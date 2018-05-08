@@ -187,6 +187,10 @@ $responsive_mobile = '<link rel="stylesheet" type="text/css" href="' . $template
 $responsive_tablet = '<link rel="stylesheet" type="text/css" href="' . $template->get_template_dir('.css',DIR_WS_TEMPLATE, $current_page_base,'css') . '/' . 'responsive_tablet.css' . '" /><link rel="stylesheet" type="text/css" href="' . $template->get_template_dir('.css',DIR_WS_TEMPLATE, $current_page_base,'css') . '/' . 'jquery.mmenu.all.css' . '" />';
 $responsive_default = '<link rel="stylesheet" type="text/css" href="' . $template->get_template_dir('.css',DIR_WS_TEMPLATE, $current_page_base,'css') . '/' . 'responsive_default.css' . '" />';
 
+if (!isset($_SESSION['layoutType'])) {
+  $_SESSION['layoutType'] = 'legacy';
+}
+
 if (in_array($current_page_base,explode(",",'popup_image,popup_image_additional')) ) {
   echo '';
 } else {

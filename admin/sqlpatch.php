@@ -71,12 +71,27 @@ WHERE p.othercol_f = pm.othercol_f;</li>
   define('REASON_PRIMARY_KEY_ALREADY_EXISTS','Cannot add primary key to table %s because a primary key already exists.');
   define('REASON_NO_PRIVILEGES','User '.DB_SERVER_USERNAME.'@'.DB_SERVER.' does not have %s privileges to database '.DB_DATABASE.'.');
   if (isset($_GET['debug']) && $_GET['debug']=='ON') $debug=true;
+  if (!isset($debug)) {
+    $debug = false;
+  }
+  if (!isset($_POST['debug'])) {
+    $_POST['debug'] = '';
+  }
+  if (!isset($_POST['debug2'])) {
+    $_POST['debug2'] = '';
+  }
+  if (!isset($_POST['debug3'])) {
+    $_POST['debug3'] = '';
+  }
   if (!isset($_GET['debug'])  && !zen_not_null($_POST['debug']) && $debug!=true)  define('ZC_UPG_DEBUG',false);
   if (!isset($_GET['debug2']) && !zen_not_null($_POST['debug2']) && $debug!=true) define('ZC_UPG_DEBUG2',false);
   if (!isset($_GET['debug3']) && !zen_not_null($_POST['debug3']) && $debug!=true) define('ZC_UPG_DEBUG3',false);
 
   $keepslashes = (isset($_GET['keepslashes']) && ($_GET['keepslashes']=='1' || $_GET['keepslashes']=='true')) ? true : false;
 
+  if (!isset($skip_stripslashes)) {
+    $skip_stripslashes = false;
+  }
 
 //NOTE: THIS IS INTENTIONALLY ON 2 LINES:
 $linebreak = '
@@ -94,9 +109,18 @@ $linebreak = '
    $ignored_count=0;
    $return_output=array();
    $errors = array();
+   $lines_to_keep_together_counter = 0;
+   $results = 0;
+   $ignore_line = false;
+   $string = '';
+   $result = '';
+   $complete_line = false;
+   if (!isset($_GET['debug'])) {
+     $_GET['debug'] = 'OFF';
+   }
 
    foreach ($lines as $line) {
-if ($_GET['debug']=='ON') echo $line . '<br />';
+     if ($_GET['debug']=='ON') echo $line . '<br />';
 
 
      $line = trim($line);
@@ -336,8 +360,11 @@ if ($_GET['debug']=='ON') echo $line . '<br />';
 
   function zen_table_exists($tablename, $pre_install=false) {
     global $db;
+    if(!defined('ZC_UPG_DEBUG3')) {
+      define('ZC_UPG_DEBUG3', false);
+    }
     $tables = $db->Execute("SHOW TABLES like '" . DB_PREFIX . $tablename . "'");
-    if (ZC_UPG_DEBUG3==true) echo 'Table check ('.$tablename.') = '. $tables->RecordCount() .'<br>';
+    if (defined('ZC_UPG_DEBUG3') && ZC_UPG_DEBUG3==true) echo 'Table check ('.$tablename.') = '. $tables->RecordCount() .'<br>';
     if ($tables->RecordCount() > 0) {
       return true;
     } else {
@@ -361,6 +388,7 @@ if ($_GET['debug']=='ON') echo $line . '<br />';
     global $db;
     global $db_test;
     $granted_privs_list='';
+    if (!defined('ZC_UPG_DEBUG3')) define('ZC_UPG_DEBUG3', false);
     if (ZC_UPG_DEBUG3==true) echo '<br />Checking for priv: ['.(zen_not_null($priv) ? $priv : 'none specified').']<br />';
     if (!defined('DB_SERVER'))          define('DB_SERVER',$zdb_server);
     if (!defined('DB_SERVER_USERNAME')) define('DB_SERVER_USERNAME',$zdb_user);
@@ -411,10 +439,13 @@ if ($_GET['debug']=='ON') echo $line . '<br />';
     global $db;
     if (!zen_not_null($param)) return "Empty SQL Statement";
     $index = $param[2];
+    if(!defined('ZC_UPG_DEBUG3')) {
+      define('ZC_UPG_DEBUG3', false);
+    }
     $sql = "show index from " . DB_PREFIX . $param[4];
     $result = $db->Execute($sql);
     while (!$result->EOF) {
-      if (ZC_UPG_DEBUG3==true) echo $result->fields['Key_name'].'<br />';
+      if (defined('ZC_UPG_DEBUG3') && ZC_UPG_DEBUG3==true) echo $result->fields['Key_name'].'<br />';
       if  ($result->fields['Key_name'] == $index) {
 //        if (!$checkprivs = zen_check_database_privs('INDEX')) return sprintf(REASON_NO_PRIVILEGES,'INDEX');
         return; // if we get here, the index exists, and we have index privileges, so return with no error
@@ -432,11 +463,14 @@ if ($_GET['debug']=='ON') echo $line . '<br />';
     if (!zen_not_null($param)) return "Empty SQL Statement";
     $index = (strtoupper($param[1])=='INDEX') ? $param[2] : $param[3];
     if (in_array('USING',$param)) return 'USING parameter found. Cannot validate syntax. Please run manually in phpMyAdmin.';
+    if(!defined('ZC_UPG_DEBUG3')) {
+      define('ZC_UPG_DEBUG3', false);
+    }
     $table = (strtoupper($param[2])=='INDEX' && strtoupper($param[4])=='ON') ? $param[5] : $param[4];
     $sql = "show index from " . DB_PREFIX . $table;
     $result = $db->Execute($sql);
     while (!$result->EOF) {
-      if (ZC_UPG_DEBUG3==true) echo $result->fields['Key_name'].'<br />';
+      if (defined('ZC_UPG_DEBUG3') && ZC_UPG_DEBUG3==true) echo $result->fields['Key_name'].'<br />';
       if (strtoupper($result->fields['Key_name']) == strtoupper($index)) {
         return sprintf(REASON_INDEX_ALREADY_EXISTS,$index,$table);
       }
@@ -453,6 +487,7 @@ if ($_GET['debug']=='ON') echo $line . '<br />';
     global $db;
     if (!zen_not_null($param)) return "Empty SQL Statement";
     if (!$checkprivs = zen_check_database_privs('ALTER')) return sprintf(REASON_NO_PRIVILEGES,'ALTER');
+    if (!defined('ZC_UPG_DEBUG3')) define('ZC_UPG_DEBUG3', false);
     switch (strtoupper($param[3])) {
       case ("ADD"):
         if (strtoupper($param[4]) == 'INDEX') {
@@ -624,12 +659,15 @@ if ($_GET['debug']=='ON') echo $line . '<br />';
 
   function zen_write_to_upgrade_exceptions_table($line, $reason, $sql_file) {
     global $db;
+    if(!defined('ZC_UPG_DEBUG3')) {
+      define('ZC_UPG_DEBUG3', false);
+    }
     zen_create_exceptions_table();
     $sql="INSERT INTO " . DB_PREFIX . TABLE_UPGRADE_EXCEPTIONS . " (sql_file, reason, errordate, sqlstatement) VALUES (:file:, :reason:, now(), :line:)";
     $sql = $db->bindVars($sql, ':file:', $sql_file, 'string');
     $sql = $db->bindVars($sql, ':reason:', $reason, 'string');
     $sql = $db->bindVars($sql, ':line:', $line, 'string');
-    if (ZC_UPG_DEBUG3==true) echo '<br />sql='.$sql.'<br />';
+    if (defined('ZC_UPG_DEBUG3') && ZC_UPG_DEBUG3==true) echo '<br />sql='.$sql.'<br />';
     $result = $db->Execute($sql);
     return $result;
   }
@@ -660,6 +698,9 @@ if ($_GET['debug']=='ON') echo $line . '<br />';
 //------------------------------------------------------
 
   if (isset($_GET['debug']) && $_GET['debug']=='ON') $debug=true;
+  if (!isset($debug)) {
+    $debug = false;
+  }
   $action = (isset($_GET['action']) ? $_GET['action'] : '');
   if (zen_not_null($action)) {
     switch ($action) {

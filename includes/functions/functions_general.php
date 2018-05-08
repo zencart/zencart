@@ -1161,7 +1161,7 @@
         $login_for_price = TEXT_AUTHORIZATION_PENDING_BUTTON_REPLACE;
         return $login_for_price;
         break;
-        case ((int)$_SESSION['customers_authorization'] >= 2):
+        case (isset($_SESSION['customers_authorization']) && (int)$_SESSION['customers_authorization'] >= 2):
         // customer is logged in and was changed to must be approved to buy
         $login_for_price = TEXT_AUTHORIZATION_PENDING_BUTTON_REPLACE;
         return $login_for_price;
