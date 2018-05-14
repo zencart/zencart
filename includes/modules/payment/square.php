@@ -32,7 +32,7 @@ class square extends base
     /**
      * $moduleVersion is the plugin version number
      */
-    public $moduleVersion = '0.92';
+    public $moduleVersion = '0.93';
     /**
      * $title is the displayed name for this payment method
      *
@@ -337,7 +337,7 @@ class square extends base
                 trigger_error("Square Connect [configuration] error. \nResponse Body:\n" . print_r($e->getResponseBody(), true) . "\nResponse Headers:\n" . print_r($e->getResponseHeaders(), true), E_USER_NOTICE);
                 $messageStack->add_session('checkout_payment', MODULE_PAYMENT_SQUARE_TEXT_MISCONFIGURATION, 'error');
                 zen_redirect(zen_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL', true, false));
-            } 
+            }
             else
 
             // only display payment-related errors to customers
@@ -558,7 +558,6 @@ class square extends base
         curl_setopt($ch, CURLOPT_POSTFIELDS, $body);
         curl_setopt($ch, CURLOPT_TIMEOUT, 9);
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 9);
-        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
         curl_setopt($ch, CURLOPT_FRESH_CONNECT, true);
         curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json', 'Authorization: Client ' . MODULE_PAYMENT_SQUARE_APPLICATION_SECRET));
         curl_setopt($ch, CURLOPT_USERAGENT, 'Zen Cart token refresh [' . preg_replace('#https?://#', '', HTTP_SERVER) . '] ');
@@ -622,7 +621,6 @@ class square extends base
         curl_setopt($ch, CURLOPT_POSTFIELDS, $body);
         curl_setopt($ch, CURLOPT_TIMEOUT, 9);
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 9);
-        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
         curl_setopt($ch, CURLOPT_FRESH_CONNECT, true);
         curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
         curl_setopt($ch, CURLOPT_USERAGENT, 'Zen Cart token request [' . preg_replace('#https?://#', '', HTTP_SERVER) . '] ');
