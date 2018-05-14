@@ -473,13 +473,14 @@
     if (!file_exists (DIR_FS_EMAIL_TEMPLATES . $css_lang_folder . 'email_common.css')) {
       if ($css_lang_folder == '' || !file_exists (DIR_FS_EMAIL_TEMPLATES . 'email_common.css')) {
         trigger_error ('Missing common email CSS file: ' . DIR_FS_EMAIL_TEMPLATES . $css_lang_folder . 'email_common.css', E_USER_ERROR);
+        $block['EMAIL_COMMON_CSS'] = ''; 
 
       } else {
         $css_lang_folder = '';
+        $block['EMAIL_COMMON_CSS'] = file_get_contents (DIR_FS_EMAIL_TEMPLATES . $css_lang_folder . 'email_common.css');
 
       }
     }
-    $block['EMAIL_COMMON_CSS'] = file_get_contents (DIR_FS_EMAIL_TEMPLATES . $css_lang_folder . 'email_common.css');
 
     if (!isset ($block['EMAIL_LOGO_FILE']) || $block['EMAIL_LOGO_FILE'] == '') {
       if (IS_ADMIN_FLAG === true) {
