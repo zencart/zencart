@@ -38,7 +38,7 @@
  * If using "PHP" transport method, the SMTP Server or other mail application should be configured correctly in server's php.ini
  *
  * @param string $to_name           The name of the recipient, e.g. "Jim Johanssen"
- * @param string $to_email_address  The email address of the recipient, e.g. john.smith@hzq.com
+ * @param string $to_address  The email address of the recipient, e.g. john.smith@hzq.com
  * @param string $email_subject     The subject of the email
  * @param string $email_text        The text of the email, may contain HTML entities
  * @param string $from_email_name   The name of the sender, e.g. Shop Administration
