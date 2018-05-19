@@ -38,6 +38,7 @@ if (zen_has_product_attributes($pInfo->products_id, 'false')) {
   $contents[] = array('text' => zen_draw_label(TEXT_COPY_ATTRIBUTES, 'copy_attributes', 'class="control-label"') . '<div class="radio"><label>' . zen_draw_radio_field('copy_attributes', 'copy_attributes_yes', true) . TEXT_COPY_ATTRIBUTES_YES . '</label></div><div class="radio"><label>' . zen_draw_radio_field('copy_attributes', 'copy_attributes_no') . TEXT_COPY_ATTRIBUTES_NO . '</label></div>');
   // future          $contents[] = array('align' => 'center', 'text' => '<br />' . ATTRIBUTES_NAMES_HELPER . '<br />' . zen_draw_separator('pixel_trans.gif', '1', '10'));
   $contents[] = array('text' => zen_image(DIR_WS_IMAGES . 'pixel_black.gif', '', '100%', '3'));
+  $zco_notifier->notify('NOTIFY_ADMIN_PRODUCT_COPY_TO_ATTRIBUTES', $pInfo, $contents);
 }
 
 // only ask if product has qty discounts
