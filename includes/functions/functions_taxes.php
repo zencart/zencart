@@ -62,6 +62,23 @@
   function zen_get_tax_description($class_id, $country_id = -1, $zone_id = -1) {
     global $db;
     
+    // -----
+    // Give an observer the chance to override this function's return.
+    //
+    $tax_description = '';
+    $GLOBALS['zco_notifier']->notify(
+        'NOTIFY_ZEN_GET_TAX_DESCRIPTION_OVERRIDE',
+        array(
+            'class_id' => $class_id,
+            'country_id' => $country_id,
+            'zone_id' => $zone_id
+        ),
+        $tax_description
+    );
+    if ($tax_description != '') {
+        return $tax_description;
+    }
+    
     if ( ($country_id == -1) && ($zone_id == -1) ) {
       if (isset($_SESSION['customer_id'])) {
         $country_id = $_SESSION['customer_country_id'];
@@ -104,7 +121,26 @@
 // @returns array(description => tax_rate)
   function zen_get_multiple_tax_rates($class_id, $country_id, $zone_id, $tax_description=array()) {
     global $db;
-
+    // -----
+    // Give an observer the chance to override this function's return.
+    //
+    $rates_array = '';
+    $GLOBALS['zco_notifier']->notify(
+        'NOTIFY_ZEN_GET_MULTIPLE_TAX_RATES_OVERRIDE',
+        array(
+            'class_id' => $class_id,
+            'country_id' => $country_id,
+            'zone_id' => $zone_id,
+            'tax_description' => $tax_description
+        ),
+        $rates_array
+    );
+    if (is_array($rates_array)) {
+        return $rates_array;
+    }
+    
+    $rates_array = array();
+    
     if ( ($country_id == -1) && ($zone_id == -1) ) {
       if (isset($_SESSION['customer_id'])) {
         $country_id = $_SESSION['customer_country_id'];
@@ -227,7 +263,23 @@
   }
 
  function zen_get_tax_locations($store_country = -1, $store_zone = -1) {
-  global $db;
+    // -----
+    // Give an observer the chance to modify the function's output.
+    //
+    $tax_address = false;
+    $zco_notifier->notify(
+        'ZEN_GET_TAX_LOCATIONS',
+        array(
+            'country' => $store_country,
+            'zone' => $store_zone
+        ),
+        $tax_address
+    );
+    if (is_array($tax_address)) {
+        return $tax_address;
+    }
+    
+    global $db;
     switch (STORE_PRODUCT_TAX_BASIS) {
 
       case 'Shipping':
@@ -273,6 +325,22 @@
  function zen_get_all_tax_descriptions($country_id = -1, $zone_id = -1) 
  {
    global $db;
+    // -----
+    // Give an observer the chance to override this function's return.
+    //
+    $tax_descriptions = '';
+    $GLOBALS['zco_notifier']->notify(
+        'NOTIFY_ZEN_GET_ALL_TAX_DESCRIPTIONS_OVERRIDE',
+        array(
+            'country_id' => $country_id,
+            'zone_id' => $zone_id
+        ),
+        $tax_descriptions
+    );
+    if (is_array($tax_descriptions)) {
+        return $tax_descriptions;
+    }
+    
     if ( ($country_id == -1) && ($zone_id == -1) ) {
       if (isset($_SESSION['customer_id'])) {
         $country_id = $_SESSION['customer_country_id'];

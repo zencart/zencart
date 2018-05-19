@@ -11,7 +11,7 @@
   $content = '';
   $content .= '<div id="' . str_replace('_', '-', $box_id . 'Content') . '" class="sideBoxContent">';
   $content .= "\n" . '<ul class="list-links">' . "\n";
-  for ($i=0, $n=sizeof($information); $i<$j; $i++) {
+  for ($i=0, $n=sizeof($information); $i<$n; $i++) {
     $content .= '<li>' . $information[$i] . '</li>' . "\n";
   }
   $content .= '</ul>' .  "\n";

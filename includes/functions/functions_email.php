@@ -38,7 +38,7 @@
  * If using "PHP" transport method, the SMTP Server or other mail application should be configured correctly in server's php.ini
  *
  * @param string $to_name           The name of the recipient, e.g. "Jim Johanssen"
- * @param string $to_email_address  The email address of the recipient, e.g. john.smith@hzq.com
+ * @param string $to_address        The email address of the recipient, e.g. john.smith@hzq.com
  * @param string $email_subject     The subject of the email
  * @param string $email_text        The text of the email, may contain HTML entities
  * @param string $from_email_name   The name of the sender, e.g. Shop Administration
@@ -473,13 +473,14 @@
     if (!file_exists (DIR_FS_EMAIL_TEMPLATES . $css_lang_folder . 'email_common.css')) {
       if ($css_lang_folder == '' || !file_exists (DIR_FS_EMAIL_TEMPLATES . 'email_common.css')) {
         trigger_error ('Missing common email CSS file: ' . DIR_FS_EMAIL_TEMPLATES . $css_lang_folder . 'email_common.css', E_USER_ERROR);
+        $block['EMAIL_COMMON_CSS'] = ''; 
 
       } else {
         $css_lang_folder = '';
+        $block['EMAIL_COMMON_CSS'] = file_get_contents (DIR_FS_EMAIL_TEMPLATES . $css_lang_folder . 'email_common.css');
 
       }
     }
-    $block['EMAIL_COMMON_CSS'] = file_get_contents (DIR_FS_EMAIL_TEMPLATES . $css_lang_folder . 'email_common.css');
 
     if (!isset ($block['EMAIL_LOGO_FILE']) || $block['EMAIL_LOGO_FILE'] == '') {
       if (IS_ADMIN_FLAG === true) {

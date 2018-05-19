@@ -110,7 +110,7 @@ if (zen_not_null($action)) {
         $page_error = true;
       }
       if (empty($pages_html_text)) {
-        
+
       }
 
       $zv_link_method_cnt = 0;
@@ -120,7 +120,7 @@ if (zen_not_null($action)) {
       if ($alt_url_external != '') {
         $zv_link_method_cnt++;
       }
-      if ($pages_html_text != '' and strlen(trim($pages_html_text)) > 6) {
+      if ($pages_html_text != '' && strlen(trim($pages_html_text)) > 6) {
         $zv_link_method_cnt++;
       }
       if ($zv_link_method_cnt > 1) {
@@ -172,7 +172,8 @@ if (zen_not_null($action)) {
       break;
     case 'deleteconfirm':
       $pages_id = zen_db_prepare_input($_POST['ezID']);
-      $db->Execute("delete from " . TABLE_EZPAGES . " where pages_id = '" . (int)$pages_id . "'");
+      $db->Execute("DELETE FROM " . TABLE_EZPAGES . "
+                    WHERE pages_id = " . (int)$pages_id);
       $messageStack->add(SUCCESS_PAGE_REMOVED, 'success');
       zen_record_admin_activity('EZ-Page with ID ' . (int)$pages_id . ' deleted.', 'notice');
       zen_redirect(zen_href_link(FILENAME_EZPAGES_ADMIN, 'page=' . $_GET['page']));
@@ -249,8 +250,6 @@ if (zen_not_null($action)) {
 
         $parameters = array(
           'pages_title' => '',
-          'page_open_new_window' => '',
-          'page_is_ssl' => '',
           'pages_html_text' => '',
           'alt_url' => '',
           'alt_url_external' => '',
@@ -259,12 +258,12 @@ if (zen_not_null($action)) {
           'footer_sort_order' => '',
           'toc_sort_order' => '',
           'toc_chapter' => '',
-          'status_header' => '',
-          'status_sidebox' => '',
-          'status_footer' => '',
-          'status_toc' => '',
-          'page_open_new_window' => '',
-          'page_is_ssl' => ''
+          'status_header' => '1',
+          'status_sidebox' => '1',
+          'status_footer' => '1',
+          'status_toc' => '1',
+          'page_open_new_window' => '1',
+          'page_is_ssl' => '1'
         );
 
         $ezInfo = new objectInfo($parameters);
@@ -283,93 +282,6 @@ if (zen_not_null($action)) {
           $ezInfo->updateObjectInfo($_POST);
         }
 
-// set all status settings and switches
-        if (!isset($ezInfo->status_header)) {
-          $ezInfo->status_header = '1';
-        }
-        switch ($ezInfo->status_header) {
-          case '0': $is_status_header = false;
-            $not_status_header = true;
-            break;
-          case '1': $is_status_header = true;
-            $not_status_header = false;
-            break;
-          default: $is_status_header = true;
-            $not_status_header = false;
-            break;
-        }
-        if (!isset($ezInfo->status_sidebox)) {
-          $ezInfo->status_sidebox = '1';
-        }
-        switch ($ezInfo->status_sidebox) {
-          case '0': $is_status_sidebox = false;
-            $not_status_sidebox = true;
-            break;
-          case '1': $is_status_sidebox = true;
-            $not_status_sidebox = false;
-            break;
-          default: $is_status_sidebox = true;
-            $not_status_sidebox = false;
-            break;
-        }
-        if (!isset($ezInfo->status_footer)) {
-          $ezInfo->status_footer = '1';
-        }
-        switch ($ezInfo->status_footer) {
-          case '0': $is_status_footer = false;
-            $not_status_footer = true;
-            break;
-          case '1': $is_status_footer = true;
-            $not_status_footer = false;
-            break;
-          default: $is_status_footer = true;
-            $not_status_footer = false;
-            break;
-        }
-        if (!isset($ezInfo->status_toc)) {
-          $ezInfo->status_toc = '1';
-        }
-        switch ($ezInfo->status_toc) {
-          case '0': $is_status_toc = false;
-            $not_status_toc = true;
-            break;
-          case '1': $is_status_toc = true;
-            $not_status_toc = false;
-            break;
-          default: $is_status_toc = true;
-            $not_status_toc = false;
-            break;
-        }
-        if (!isset($ezInfo->page_open_new_window)) {
-          $ezInfo->not_page_open_new_window = '1';
-        }
-        switch ($ezInfo->page_open_new_window) {
-          case '0': $is_page_open_new_window = false;
-            $not_page_open_new_window = true;
-            break;
-          case '1': $is_page_open_new_window = true;
-            $not_page_open_new_window = false;
-            break;
-          default: $is_page_open_new_window = false;
-            $not_page_open_new_window = true;
-            break;
-        }
-        if (!isset($ezInfo->page_is_ssl)) {
-          $ezInfo->page_is_ssl = '1';
-        }
-        switch ($ezInfo->page_is_ssl) {
-          case '0': $is_page_is_ssl = false;
-            $not_page_is_ssl = true;
-            break;
-          case '1': $is_page_is_ssl = true;
-            $not_page_is_ssl = false;
-            break;
-          default: $is_page_is_ssl = false;
-            $not_page_is_ssl = true;
-            break;
-        }
-        ?>
-        <?php
         echo zen_draw_form('new_page', FILENAME_EZPAGES_ADMIN, (isset($_GET['page']) ? 'page=' . zen_db_prepare_input($_GET['page']) . '&' : '') . 'action=' . $form_action, 'post', 'enctype="multipart/form-data" class="form-horizontal"');
         if ($form_action == 'update') {
           echo zen_draw_hidden_field('pages_id', $ezID);
@@ -377,92 +289,95 @@ if (zen_not_null($action)) {
         ?>
 
         <div class="form-group">
-          <div class="col-sm-12"><?php echo (($form_action == 'insert') ? '<button type="sumit" class="btn btn-primary">' . IMAGE_INSERT . '</button>' : '<button type="sumit" class="btn btn-primary">' . IMAGE_UPDATE . '</button>') . ' <a href="' . zen_href_link(FILENAME_EZPAGES_ADMIN, (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . (isset($_GET['ezID']) ? 'ezID=' . $_GET['ezID'] : '')) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>'; ?></div>
+          <div class="col-sm-12"><?php echo (($form_action == 'insert') ? '<button type="submit" class="btn btn-primary">' . IMAGE_INSERT . '</button>' : '<button type="submit" class="btn btn-primary">' . IMAGE_UPDATE . '</button>') . ' <a href="' . zen_href_link(FILENAME_EZPAGES_ADMIN, (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . (isset($_GET['ezID']) ? 'ezID=' . $_GET['ezID'] : '')) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>'; ?></div>
         </div>
         <div class="form-group">
             <?php echo zen_draw_label(TEXT_PAGES_TITLE, 'pages_title', 'class="col-sm-3 control-label"'); ?>
-          <div class="col-sm-9"><?php echo zen_draw_input_field('pages_title', htmlspecialchars($ezInfo->pages_title, ENT_COMPAT, CHARSET, TRUE), zen_set_field_length(TABLE_EZPAGES, 'pages_title') . ' class="form-control"', true); ?></div>
+          <div class="col-sm-9 col-md-6"><?php echo zen_draw_input_field('pages_title', htmlspecialchars($ezInfo->pages_title, ENT_COMPAT, CHARSET, TRUE), zen_set_field_length(TABLE_EZPAGES, 'pages_title') . ' class="form-control"', true); ?></div>
         </div>
         <div class="form-group">
             <?php echo zen_draw_label(TABLE_HEADING_PAGE_OPEN_NEW_WINDOW, 'page_open_new_window', 'class="col-sm-3 control-label"'); ?>
-          <div class="col-sm-9">
-            <label class="radio-inline"><?php echo zen_draw_radio_field('page_open_new_window', '1', $is_page_open_new_window) . TEXT_YES; ?></label>
-            <label class="radio-inline"><?php echo zen_draw_radio_field('page_open_new_window', '0', $not_page_open_new_window) . TEXT_NO; ?>
+          <div class="col-sm-9 col-md-6">
+            <label class="radio-inline"><?php echo zen_draw_radio_field('page_open_new_window', '1', ($ezInfo->page_open_new_window == 1)) . TEXT_YES; ?></label>
+            <label class="radio-inline"><?php echo zen_draw_radio_field('page_open_new_window', '0', ($ezInfo->page_open_new_window == 0)) . TEXT_NO; ?></label>
           </div>
         </div>
         <div class="form-group">
             <?php echo zen_draw_label(TABLE_HEADING_PAGE_IS_SSL, 'page_is_ssl', 'class="col-sm-3 control-label"'); ?>
-          <div class="col-sm-9">
-            <label class="radio-inline"><?php echo zen_draw_radio_field('page_is_ssl', '1', $is_page_is_ssl) . TEXT_YES; ?></label>
-            <label class="radio-inline"><?php echo zen_draw_radio_field('page_is_ssl', '0', $not_page_is_ssl) . TEXT_NO; ?></label>
+          <div class="col-sm-9 col-md-6">
+            <label class="radio-inline"><?php echo zen_draw_radio_field('page_is_ssl', '1', ($ezInfo->page_is_ssl == 1)) . TEXT_YES; ?></label>
+            <label class="radio-inline"><?php echo zen_draw_radio_field('page_is_ssl', '0', ($ezInfo->page_is_ssl == 0)) . TEXT_NO; ?></label>
           </div>
         </div>
         <div class="row"><?php echo zen_draw_separator('pixel_black.gif', '100%', '1'); ?></div>
         <div class="form-group">
-          <div class="col-sm-3">
-              <?php echo zen_draw_label(TABLE_HEADING_STATUS_HEADER, 'status_header', 'class="control-label"'); ?>
-            <label class="radio-inline"><?php echo zen_draw_radio_field('status_header', '1', $is_status_header) . TEXT_YES; ?></label>
-            <label class="radio-inline"><?php echo zen_draw_radio_field('status_header', '0', $not_status_header) . TEXT_NO; ?></label>
-            <br>
-            <?php echo zen_draw_label(TEXT_HEADER_SORT_ORDER, 'header_sort_order', 'class="control-label"'); ?>
-            <?php echo zen_draw_input_field('header_sort_order', $ezInfo->header_sort_order, zen_set_field_length(TABLE_EZPAGES, 'header_sort_order') . ' class="form-control"', false); ?>
-            <br>
+          <div class="col-md-offset-1 col-md-10">
+            <div class="col-sm-3">
+                <?php echo zen_draw_label(TABLE_HEADING_STATUS_HEADER, 'status_header', 'class="control-label"'); ?>
+              <label class="radio-inline"><?php echo zen_draw_radio_field('status_header', '1', ($ezInfo->status_header == 1)) . TEXT_YES; ?></label>
+              <label class="radio-inline"><?php echo zen_draw_radio_field('status_header', '0', ($ezInfo->status_header == 0)) . TEXT_NO; ?></label>
+              <br>
+              <?php echo zen_draw_label(TEXT_HEADER_SORT_ORDER, 'header_sort_order', 'class="control-label"'); ?>
+              <?php echo zen_draw_input_field('header_sort_order', $ezInfo->header_sort_order, zen_set_field_length(TABLE_EZPAGES, 'header_sort_order') . ' class="form-control"', false); ?>
+              <br>
+            </div>
+            <div class="col-sm-3">
+                <?php echo zen_draw_label(TABLE_HEADING_STATUS_SIDEBOX, 'status_sidebox', 'class="control-label"'); ?>
+              <label class="radio-inline"><?php echo zen_draw_radio_field('status_sidebox', '1', ($ezInfo->status_sidebox == 1)) . TEXT_YES; ?></label>
+              <label class="radio-inline"><?php echo zen_draw_radio_field('status_sidebox', '0', ($ezInfo->status_sidebox == 0)) . TEXT_NO; ?></label>
+              <br>
+              <?php echo zen_draw_label(TEXT_SIDEBOX_SORT_ORDER, 'sidebox_sort_order', 'class="control-label"'); ?>
+              <?php echo zen_draw_input_field('sidebox_sort_order', $ezInfo->sidebox_sort_order, zen_set_field_length(TABLE_EZPAGES, 'sidebox_sort_order') . ' class="form-control"', false); ?>
+              <br>
+            </div>
+            <div class="col-sm-3">
+                <?php echo zen_draw_label(TABLE_HEADING_STATUS_FOOTER, 'status_footer', 'class="control-label"'); ?>
+              <label class="radio-inline"><?php echo zen_draw_radio_field('status_footer', '1', ($ezInfo->status_footer == 1)) . TEXT_YES; ?></label>
+              <label class="radio-inline"><?php echo zen_draw_radio_field('status_footer', '0', ($ezInfo->status_footer == 0)) . TEXT_NO; ?></label>
+              <br>
+              <?php echo zen_draw_label(TEXT_FOOTER_SORT_ORDER, 'status_footer', 'class="control-label"'); ?>
+              <?php echo zen_draw_input_field('footer_sort_order', $ezInfo->footer_sort_order, zen_set_field_length(TABLE_EZPAGES, 'footer_sort_order') . ' class="form-control"', false); ?>
+              <br>
+            </div>
+            <div class="col-sm-3">
+                <?php echo zen_draw_label(TABLE_HEADING_CHAPTER_PREV_NEXT, 'toc_chapter', 'class="control-label"'); ?>
+                <?php echo zen_draw_input_field('toc_chapter', $ezInfo->toc_chapter, zen_set_field_length(TABLE_EZPAGES, 'toc_chapter', '6') . ' class="form-control"', false); ?>
+              <br>
+              <?php echo zen_draw_label(TABLE_HEADING_STATUS_TOC, 'status_toc', 'class="control-label"'); ?>
+              <label class="radio-inline"><?php echo zen_draw_radio_field('status_toc', '1', ($ezInfo->status_toc == 1)) . TEXT_YES; ?></label>
+              <label class="radio-inline"><?php echo zen_draw_radio_field('status_toc', '0', ($ezInfo->status_toc == 0)) . TEXT_NO; ?></label>
+              <br>
+              <?php echo zen_draw_label(TEXT_TOC_SORT_ORDER, 'toc_sort_order', 'class="control-label"'); ?>
+              <?php echo zen_draw_input_field('toc_sort_order', $ezInfo->toc_sort_order, zen_set_field_length(TABLE_EZPAGES, 'toc_sort_order') . ' class="form-control"', false); ?>
+              <br>
+            </div>
+            <ul>
+              <li><?php echo TEXT_HEADER_SORT_ORDER_EXPLAIN; ?></li>
+              <li><?php echo TEXT_SIDEBOX_ORDER_EXPLAIN; ?></li>
+              <li><?php echo TEXT_FOOTER_ORDER_EXPLAIN; ?></li>
+              <li><?php echo TEXT_TOC_SORT_ORDER_EXPLAIN; ?></li>
+              <li><?php echo TEXT_CHAPTER_EXPLAIN; ?></li>
+            </ul>
           </div>
-          <div class="col-sm-3">
-              <?php echo zen_draw_label(TABLE_HEADING_STATUS_SIDEBOX, 'status_sidebox', 'class="control-label"'); ?>
-            <label class="radio-inline"><?php echo zen_draw_radio_field('status_sidebox', '1', $is_status_sidebox) . TEXT_YES; ?></label>
-            <label class="radio-inline"><?php echo zen_draw_radio_field('status_sidebox', '0', $not_status_sidebox) . TEXT_NO; ?></label>
-            <br>
-            <?php echo zen_draw_label(TEXT_SIDEBOX_SORT_ORDER, 'sidebox_sort_order', 'class="control-label"'); ?>
-            <?php echo zen_draw_input_field('sidebox_sort_order', $ezInfo->sidebox_sort_order, zen_set_field_length(TABLE_EZPAGES, 'sidebox_sort_order') . ' class="form-control"', false); ?>
-            <br>
-          </div>
-          <div class="col-sm-3">
-              <?php echo zen_draw_label(TABLE_HEADING_STATUS_FOOTER, 'status_footer', 'class="control-label"'); ?>
-            <label class="radio-inline"><?php echo zen_draw_radio_field('status_footer', '1', $is_status_footer) . TEXT_YES; ?></label>
-            <label class="radio-inline"><?php echo zen_draw_radio_field('status_footer', '0', $not_status_footer) . TEXT_NO; ?></label>
-            <br>
-            <?php echo zen_draw_label(TEXT_FOOTER_SORT_ORDER, 'status_footer', 'class="control-label"'); ?>
-            <?php echo zen_draw_input_field('footer_sort_order', $ezInfo->footer_sort_order, zen_set_field_length(TABLE_EZPAGES, 'footer_sort_order') . ' class="form-control"', false); ?>
-            <br>
-          </div>
-          <div class="col-sm-3">
-              <?php echo zen_draw_label(TABLE_HEADING_CHAPTER_PREV_NEXT, 'toc_chapter', 'class="control-label"'); ?>
-              <?php echo zen_draw_input_field('toc_chapter', $ezInfo->toc_chapter, zen_set_field_length(TABLE_EZPAGES, 'toc_chapter', '6') . ' class="form-control"', false); ?>
-            <br>
-            <?php echo zen_draw_label(TABLE_HEADING_STATUS_TOC, 'status_toc', 'class="control-label"'); ?>
-            <label class="radio-inline"><?php echo zen_draw_radio_field('status_toc', '1', $is_status_toc) . TEXT_YES; ?></label>
-            <label class="radio-inline"><?php echo zen_draw_radio_field('status_toc', '0', $not_status_toc) . TEXT_NO; ?></label>
-            <br>
-            <?php echo zen_draw_label(TEXT_TOC_SORT_ORDER, 'toc_sort_order', 'class="control-label"'); ?>
-            <?php echo zen_draw_input_field('toc_sort_order', $ezInfo->toc_sort_order, zen_set_field_length(TABLE_EZPAGES, 'toc_sort_order') . ' class="form-control"', false); ?>
-            <br>
-          </div>
-          <ul>
-            <li><?php echo TEXT_HEADER_SORT_ORDER_EXPLAIN; ?></li>
-            <li><?php echo TEXT_SIDEBOX_ORDER_EXPLAIN; ?></li>
-            <li><?php echo TEXT_FOOTER_ORDER_EXPLAIN; ?></li>
-            <li><?php echo TEXT_TOC_SORT_ORDER_EXPLAIN; ?></li>
-            <li><?php echo TEXT_CHAPTER_EXPLAIN; ?></li>
-          </ul>
         </div>
         <div class="row"><?php echo zen_draw_separator('pixel_black.gif', '100%', '1'); ?></div>
         <div class="form-group">
             <?php echo zen_draw_label(TEXT_PAGES_HTML_TEXT, 'pages_html_text', 'class="col-sm-3 control-label"'); ?>
-          <div class="col-sm-9"><?php echo zen_draw_textarea_field('pages_html_text', 'soft', '100%', '25', htmlspecialchars($ezInfo->pages_html_text, ENT_COMPAT, CHARSET, TRUE), 'class="editorHook form-control"'); ?>
+          <div class="col-sm-9 col-md-6"><?php echo zen_draw_textarea_field('pages_html_text', 'soft', '100%', '25', htmlspecialchars($ezInfo->pages_html_text, ENT_COMPAT, CHARSET, TRUE), 'class="editorHook form-control"'); ?>
           </div>
         </div>
         <div class="form-group">
             <?php echo zen_draw_label(TEXT_ALT_URL, 'alt_url', 'class="col-sm-3 control-label"'); ?>
-          <div class="col-sm-9"><?php echo zen_draw_input_field('alt_url', $ezInfo->alt_url, 'size="100" class="form-control"'); ?><br><?php echo TEXT_ALT_URL_EXPLAIN; ?></div>
+          <div class="col-sm-9 col-md-6"><?php echo zen_draw_input_field('alt_url', $ezInfo->alt_url, 'size="100" class="form-control"'); ?><br><?php echo TEXT_ALT_URL_EXPLAIN; ?></div>
         </div>
         <div class="form-group">
             <?php echo zen_draw_label(TEXT_ALT_URL_EXTERNAL, 'alt_url_external', 'class="col-sm-3 control-label"'); ?>
-          <div class="col-sm-9"><?php echo zen_draw_input_field('alt_url_external', $ezInfo->alt_url_external, 'size="100" class="form-control"'); ?><br><?php echo TEXT_ALT_URL_EXTERNAL_EXPLAIN; ?></div>
+          <div class="col-sm-9 col-md-6"><?php echo zen_draw_input_field('alt_url_external', $ezInfo->alt_url_external, 'size="100" class="form-control"'); ?><br><?php echo TEXT_ALT_URL_EXTERNAL_EXPLAIN; ?></div>
         </div>
         <div class="form-group">
-          <div class="col-sm-12"><?php echo (($form_action == 'insert') ? '<button type="sumit" class="btn btn-primary">' . IMAGE_INSERT . '</button>' : '<button type="sumit" class="btn btn-primary">' . IMAGE_UPDATE . '</button>') . ' <a href="' . zen_href_link(FILENAME_EZPAGES_ADMIN, (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . (isset($_GET['ezID']) ? 'ezID=' . $_GET['ezID'] : '')) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>'; ?></div>
+          <div class="col-sm-12"><?php echo (($form_action == 'insert') ? '<button type="submit" class="btn btn-primary">' . IMAGE_INSERT . '</button>' : '<button type="submit" class="btn btn-primary">' . IMAGE_UPDATE . '</button>') . ' <a href="' . zen_href_link(FILENAME_EZPAGES_ADMIN, (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . (isset($_GET['ezID']) ? 'ezID=' . $_GET['ezID'] : '')) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>'; ?></div>
         </div>
+        <?php echo '</form>'; ?>
         <?php
       } else {
         ?>
@@ -489,29 +404,31 @@ if (zen_not_null($action)) {
 // set display order
                 switch (true) {
                   case ($_SESSION['ez_sort_order'] == 0):
-                    $ez_order_by = " order by toc_chapter, toc_sort_order, pages_title";
+                    $ez_order_by = " ORDER BY toc_chapter, toc_sort_order, pages_title";
                     break;
                   case ($_SESSION['ez_sort_order'] == 1):
-                    $ez_order_by = " order by header_sort_order, pages_title";
+                    $ez_order_by = " ORDER BY header_sort_order, pages_title";
                     break;
                   case ($_SESSION['ez_sort_order'] == 2):
-                    $ez_order_by = " order by sidebox_sort_order, pages_title";
+                    $ez_order_by = " ORDER BY sidebox_sort_order, pages_title";
                     break;
                   case ($_SESSION['ez_sort_order'] == 3):
-                    $ez_order_by = " order by footer_sort_order, pages_title";
+                    $ez_order_by = " ORDER BY footer_sort_order, pages_title";
                     break;
                   case ($_SESSION['ez_sort_order'] == 4):
-                    $ez_order_by = " order by pages_title";
+                    $ez_order_by = " ORDER BY pages_title";
                     break;
                   case ($_SESSION['ez_sort_order'] == 5):
-                    $ez_order_by = " order by  pages_id, pages_title";
+                    $ez_order_by = " ORDER BY pages_id, pages_title";
                     break;
                   default:
-                    $ez_order_by = " order by toc_chapter, toc_sort_order, pages_title";
+                    $ez_order_by = " ORDER BY toc_chapter, toc_sort_order, pages_title";
                     break;
                 }
 
-                $pages_query_raw = "select * from " . TABLE_EZPAGES . $ez_order_by;
+                $pages_query_raw = "SELECT *
+                                    FROM " . TABLE_EZPAGES .
+                                    $ez_order_by;
 
 // Split Page
 // reset page when page is unknown
@@ -564,7 +481,7 @@ if (zen_not_null($action)) {
                 <td class="dataTableContent text-right"><?php echo $page['footer_sort_order'] . '&nbsp;' . ($page['status_footer'] == 1 ? '<a href="' . zen_href_link(FILENAME_EZPAGES_ADMIN, 'action=status_footer&current=' . $page['status_footer'] . '&ezID=' . $page['pages_id'] . ($_GET['page'] > 0 ? '&page=' . $_GET['page'] : ''), 'NONSSL') . '">' . zen_image(DIR_WS_IMAGES . 'icon_green_on.gif', IMAGE_ICON_STATUS_ON) . '</a>' : '<a href="' . zen_href_link(FILENAME_EZPAGES_ADMIN, 'action=status_footer&current=' . $page['status_footer'] . '&ezID=' . $page['pages_id'] . ($_GET['page'] > 0 ? '&page=' . $_GET['page'] : ''), 'NONSSL') . '">' . zen_image(DIR_WS_IMAGES . 'icon_red_on.gif', IMAGE_ICON_STATUS_OFF) . '</a>'); ?></td>
                 <td class="dataTableContent text-right"><?php echo $page['toc_chapter']; ?></td>
                 <td class="dataTableContent text-right"><?php echo $page['toc_sort_order'] . '&nbsp;' . ($page['status_toc'] == 1 ? '<a href="' . zen_href_link(FILENAME_EZPAGES_ADMIN, 'action=status_toc&current=' . $page['status_toc'] . '&ezID=' . $page['pages_id'] . ($_GET['page'] > 0 ? '&page=' . $_GET['page'] : ''), 'NONSSL') . '">' . zen_image(DIR_WS_IMAGES . 'icon_green_on.gif', IMAGE_ICON_STATUS_ON) . '</a>' : '<a href="' . zen_href_link(FILENAME_EZPAGES_ADMIN, 'action=status_toc&current=' . $page['status_toc'] . '&ezID=' . $page['pages_id'] . ($_GET['page'] > 0 ? '&page=' . $_GET['page'] : ''), 'NONSSL') . '">' . zen_image(DIR_WS_IMAGES . 'icon_red_on.gif', IMAGE_ICON_STATUS_OFF) . '</a>'); ?></td>
-                <td class="dataTableContent text-center">&nbsp;&nbsp;<?php echo '<a href="' . zen_href_link(FILENAME_EZPAGES_ADMIN, (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . (isset($ezInfo) && is_object($ezInfo) && ($page['pages_id'] == $ezInfo->pages_id)) ? 'ezID=' . $page['pages_id'] . '&action=new' : '') . '">' . zen_image(DIR_WS_IMAGES . 'icon_edit.gif', ICON_EDIT) . '</a>'; ?>
+                <td class="dataTableContent text-center"><?php echo '<a href="' . zen_href_link(FILENAME_EZPAGES_ADMIN, (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . (isset($ezInfo) && is_object($ezInfo) && ($page['pages_id'] == $ezInfo->pages_id)) ? 'ezID=' . $page['pages_id'] . '&action=new' : '') . '">' . zen_image(DIR_WS_IMAGES . 'icon_edit.gif', ICON_EDIT) . '</a>'; ?>
                     <?php
                     if (isset($ezInfo) && is_object($ezInfo) && ($page['pages_id'] == $ezInfo->pages_id)) {
                       echo zen_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', '');

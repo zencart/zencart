@@ -15,7 +15,7 @@ if (!defined('IS_ADMIN_FLAG')) {
 // -----
 // This notifier lets an observer know that the module has begun its processing.
 //
-$zco_notifier->notify('NOTIFY_MODULES_MAIN_PRODUCT_IMAGE_START');
+$GLOBALS['zco_notifier']->notify('NOTIFY_MODULES_MAIN_PRODUCT_IMAGE_START');
 
 $products_image_extension = substr($products_image, strrpos($products_image, '.'));
 $products_image_base = str_replace($products_image_extension, '', $products_image);
@@ -37,7 +37,7 @@ $products_image_large = $products_image_base . IMAGE_SUFFIX_LARGE . $products_im
 // other values have been updated for separate handling.
 //
 $main_image_handled = false;
-$zco_notifier->notify(
+$GLOBALS['zco_notifier']->notify(
     'NOTIFY_MODULES_MAIN_PRODUCT_IMAGE_FILENAME',
     $products_image,
     $main_image_handled,
@@ -74,4 +74,4 @@ if ($main_image_handled !== true) {
     // to be built into a single variable string
 }
 
-$zco_notifier->notify('NOTIFY_MODULES_MAIN_PRODUCT_IMAGE_END');
+$GLOBALS['zco_notifier']->notify('NOTIFY_MODULES_MAIN_PRODUCT_IMAGE_END');
