@@ -35,7 +35,7 @@ if (!defined('IS_ADMIN_FLAG')) {
 // include the language translations
   require(DIR_WS_LANGUAGES . $_SESSION['language'] . '.php');
   $current_page = basename($PHP_SELF);
-  if (file_exists(DIR_WS_LANGUAGES . $_SESSION['language'] . '/' . $current_page)) {
+  if (is_file(DIR_WS_LANGUAGES . $_SESSION['language'] . '/' . $current_page)) {
     include(DIR_WS_LANGUAGES . $_SESSION['language'] . '/' . $current_page);
   }
 
