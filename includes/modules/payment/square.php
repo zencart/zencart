@@ -32,7 +32,7 @@ class square extends base
     /**
      * $moduleVersion is the plugin version number
      */
-    public $moduleVersion = '0.93';
+    public $moduleVersion = '0.94';
     /**
      * $title is the displayed name for this payment method
      *
@@ -107,6 +107,7 @@ class square extends base
                     $this->title .= '<span class="alert">' . ' - NOTE: A NEW VERSION OF THIS PLUGIN IS AVAILABLE. <a href="' . $new_version_details['link'] . '" target="_blank">[Details]</a>' . '</span>';
                 }
             }
+            $this->tableCheckup();
         }
 
         // determine order-status for transactions
@@ -833,13 +834,18 @@ class square extends base
               `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
               `order_id` int(11) UNSIGNED NOT NULL,
               `location_id` varchar(40) NOT NULL,
-              `transaction_id` varchar(40) NOT NULL,
-              `tender_id` varchar(40),
+              `transaction_id` varchar(255) NOT NULL,
+              `tender_id` varchar(64),
               `action` varchar(40),
               `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
               PRIMARY KEY (`id`)
             )";
             $db->Execute($sql);
+        }
+        $fieldOkay1 = (method_exists($sniffer, 'field_type')) ? $sniffer->field_type(TABLE_SQUARE_PAYMENTS, 'transaction_id', 'varchar(255)', false) : false;
+        if ($fieldOkay1 !== true) {
+            $db->Execute("ALTER TABLE " . TABLE_SQUARE_PAYMENTS . " MODIFY transaction_id varchar(255) NOT NULL");
+            $db->Execute("ALTER TABLE " . TABLE_SQUARE_PAYMENTS . " MODIFY tender_id varchar(64)");
         }
     }
 
