@@ -7,7 +7,8 @@
  * @version $Id:  New in v1.5.5 $
  */
 
-define('FILENAME_STATS_SALES_REPORT_GRAPHS', 'stats_sales_report_graphs');
+//Defined in catalog/includes/filenames.php
+//define('FILENAME_STATS_SALES_REPORT_GRAPHS', 'stats_sales_report_graphs');
 
 
 // adjust and uncomment
