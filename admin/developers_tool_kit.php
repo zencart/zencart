@@ -213,7 +213,7 @@
             $show_file .= '</span>';
             if ($max_context_lines_before > 0) $show_file .= '</strong>';
 
-            for($j=1, $m = min($max_context_lines_after, sizeof($lines)-$line_num); $j < $m+1; $j++) {
+            for($j=1, $m = min($max_context_lines_after, sizeof($lines)-$line_numpos); $j < $m+1; $j++) {
               $show_file .= '<br>Line #<span class="dtk-linenum">' . number_pad_with_spaces($line_numpos+$j, $padding_length) . '</span> : ';
               $show_file .= '<span class="dtk-contextline">';
               $show_file .= cleanup_dtk_output_text($lines[($line_num+$j)]);
