@@ -95,7 +95,7 @@
 ?>
               <tr class="dataTableRow" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="document.location.href='<?php echo zen_href_link($type_handler, '&product_type=' . $products->fields['products_type'] . '&cPath=' . $cPath . '&pID=' . $products->fields['products_id'] . '&action=new_product'); ?>'">
                 <td class="dataTableContent" align="right"><?php echo $products->fields['products_id']; ?>&nbsp;&nbsp;</td>
-                <td class="dataTableContent"><?php echo '<a href="' . zen_href_link(FILENAME_CATEGORIES, 'cPath=' . $cPath . '&pID=' . $products->fields['products_id']) . '">' . $products->fields['products_name'] . '</a>'; ?></td>
+                <td class="dataTableContent"><?php echo '<a href="' . zen_href_link(FILENAME_PRODUCT, 'cPath=' . $cPath . '&pID=' . $products->fields['products_id']) . '">' . $products->fields['products_name'] . '</a>'; ?></td>
                 <td class="dataTableContent" align="center"><?php echo $products->fields['products_quantity']; ?>&nbsp;</td>
               </tr>
 <?php

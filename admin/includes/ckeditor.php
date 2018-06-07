@@ -20,10 +20,10 @@ foreach ($var as $key)
 <script>window.jQuery || document.write('<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"><\/script>');</script>
 <script>window.jQuery || document.write('<script src="includes/javascript/jquery-1.12.4.min.js"><\/script>');</script>
 <script type="text/javascript" src="../<?php echo DIR_WS_EDITORS ?>ckeditor/ckeditor.js"></script>
-<script type="text/javascript"><!--
+<script type="text/javascript">
 $(document).ready(function() {
   <?php echo $jsLanguageLookupArray ?>
-  $('textarea').each(function()	{
+  $('textarea').each(function() {
     if ($(this).hasClass('editorHook') || ($(this).attr('name') != 'message' && ! $(this).hasClass('noEditor')))
     {
       index = $(this).attr('name').match(/\d+/);
@@ -31,10 +31,10 @@ $(document).ready(function() {
       CKEDITOR.replace($(this).attr('name'),
         {
           coreStyles_underline : { element : 'u' },
-          width : 760,
+          width : '100%',
           language: lang[index]
         });
     }
   });
 });
-//--></script>
+</script>

@@ -24,4 +24,7 @@ define('BOX_CATALOG_RECORD_COMPANY', 'Record Companies');
 define('BOX_CATALOG_MUSIC_GENRE', 'Music Genre');
 define('BOX_CATALOG_MEDIA_MANAGER', 'Media Manager');
 define('BOX_CATALOG_MEDIA_TYPES', 'Media Types');
-?>
+
+define('TEXT_PRODUCTS_RECORD_ARTIST', 'Recording Artist:');
+define('TEXT_PRODUCTS_RECORD_COMPANY', 'Record Company:');
+define('TEXT_PRODUCTS_MUSIC_GENRE', 'Music Genre:');

@@ -27,7 +27,9 @@ define('DATE_FORMAT_LONG', '%A %d %B, %Y'); // this is used for strftime()
 define('DATE_FORMAT', 'm/d/Y'); // this is used for date()
 define('PHP_DATE_TIME_FORMAT', 'm/d/Y H:i:s'); // this is used for date()
 define('DATE_TIME_FORMAT', DATE_FORMAT_SHORT . ' %H:%M:%S');
+// for now both defines are needed until Spiffy is completely removed.
 define('DATE_FORMAT_SPIFFYCAL', 'MM/dd/yyyy');  //Use only 'dd', 'MM' and 'yyyy' here in any order
+define('DATE_FORMAT_DATE_PICKER', 'yy-mm-dd');  //Use only 'dd', 'mm' and 'yy' here in any order
 define('ADMIN_NAV_DATE_TIME_FORMAT', '%A %d %b %Y %X'); // this is used for strftime()
 ////
 // Return date in raw format
@@ -142,6 +144,7 @@ define('BOX_CATALOG_SALEMAKER', 'SaleMaker');
 define('BOX_CATALOG_PRODUCTS_PRICE_MANAGER', 'Products Price Manager');
 define('BOX_CATALOG_PRODUCT', 'Product');
 define('BOX_CATALOG_PRODUCTS_TO_CATEGORIES', 'Products to Categories');
+define('BOX_CATALOG_CATEGORY', 'Category');
 
 // customers box text
 define('BOX_HEADING_CUSTOMERS', 'Customers');

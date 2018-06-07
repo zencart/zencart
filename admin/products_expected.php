@@ -74,7 +74,7 @@ $db->Execute("UPDATE " . TABLE_PRODUCTS . "
                   }
 
                   if (isset($pInfo) && is_object($pInfo) && ($product['products_id'] == $pInfo->products_id)) {
-                    echo '                  <tr id="defaultSelected" class="dataTableRowSelected" onclick="document.location.href=\'' . zen_href_link(FILENAME_CATEGORIES, 'action=new_product' . '&cPath=' . zen_get_products_category_id($pInfo->products_id) . '&pID=' . $pInfo->products_id . '&product_type=' . zen_get_products_type($pInfo->products_id)) . '\'" role="button">' . "\n";
+                    echo '                  <tr id="defaultSelected" class="dataTableRowSelected" onclick="document.location.href=\'' . zen_href_link(FILENAME_PRODUCT, 'action=new_product' . '&cPath=' . zen_get_products_category_id($pInfo->products_id) . '&pID=' . $pInfo->products_id . '&product_type=' . zen_get_products_type($pInfo->products_id)) . '\'" role="button">' . "\n";
                   } else {
                     echo '                  <tr class="dataTableRow" onclick="document.location.href=\'' . zen_href_link(FILENAME_PRODUCTS_EXPECTED, 'page=' . $_GET['page'] . '&pID=' . $product['products_id']) . '\'" role="button">' . "\n";
                   }
@@ -103,7 +103,7 @@ $db->Execute("UPDATE " . TABLE_PRODUCTS . "
             if (isset($pInfo) && is_object($pInfo)) {
               $heading[] = array('text' => '<h4>' . $pInfo->products_name . '</h4>');
 
-              $contents[] = array('align' => 'text-center', 'text' => '<a href="' . zen_href_link(FILENAME_CATEGORIES, 'action=new_product' . '&cPath=' . zen_get_products_category_id($pInfo->products_id) . '&pID=' . $pInfo->products_id . '&product_type=' . zen_get_products_type($pInfo->products_id)) . '" class="btn btn-primary" role="button">' . IMAGE_EDIT . '</a>');
+              $contents[] = array('align' => 'text-center', 'text' => '<a href="' . zen_href_link(FILENAME_PRODUCT, 'action=new_product' . '&cPath=' . zen_get_products_category_id($pInfo->products_id) . '&pID=' . $pInfo->products_id . '&product_type=' . zen_get_products_type($pInfo->products_id)) . '" class="btn btn-primary" role="button">' . IMAGE_EDIT . '</a>');
               $contents[] = array('text' => '<br>' . TEXT_INFO_DATE_EXPECTED . ' ' . zen_date_short($pInfo->products_date_available));
             }
 

@@ -93,3 +93,5 @@ define('BUTTON_RESET_CATEGORY_MASTER', 'Reset Master Categories ID');
 
 define('WARNING_RESET_ALL_PRODUCTS_TO_CATEGORY_FROM_MASTER', 'WARNING: Invalid Category selected ...');
 define('SUCCESS_RESET_ALL_PRODUCTS_TO_CATEGORY_FROM_MASTER', 'Successful update of all Products to new Master Categories ID for Category: ');
+
+define('TEXT_CATEGORIES_NAME', 'Categories Name');
