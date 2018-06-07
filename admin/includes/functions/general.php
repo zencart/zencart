@@ -3143,18 +3143,19 @@ function zen_limit_image_filename($filename, $table_name, $field_name, $extensio
 
     $master_category_array = array();
 
-    $master_categories_query = $db->Execute("select ptc.products_id, cd.categories_name, cd.categories_id
-                                    from " . TABLE_PRODUCTS_TO_CATEGORIES . " ptc
-                                    left join " . TABLE_CATEGORIES_DESCRIPTION . " cd
-                                    on cd.categories_id = ptc.categories_id
-                                    where ptc.products_id='" . (int)$product_id . "'
-                                    and cd.language_id = '" . (int)$_SESSION['languages_id'] . "'
-                                    ");
+    $master_categories_query = $db->Execute("SELECT ptc.products_id, cd.categories_name, cd.categories_id
+                                             FROM " . TABLE_PRODUCTS_TO_CATEGORIES . " ptc
+                                             LEFT JOIN " . TABLE_CATEGORIES_DESCRIPTION . " cd ON cd.categories_id = ptc.categories_id
+                                             WHERE ptc.products_id = " . (int)$product_id . "
+                                             AND cd.language_id = " . (int)$_SESSION['languages_id']);
 
-    $master_category_array[] = array('id' => '0', 'text' => TEXT_INFO_SET_MASTER_CATEGORIES_ID);
-    while (!$master_categories_query->EOF) {
-      $master_category_array[] = array('id' => $master_categories_query->fields['categories_id'], 'text' => $master_categories_query->fields['categories_name'] . TEXT_INFO_ID . $master_categories_query->fields['categories_id']);
-      $master_categories_query->MoveNext();
+    $master_category_array[] = array(
+      'id' => '0',
+      'text' => TEXT_INFO_SET_MASTER_CATEGORIES_ID);
+    foreach ($master_categories_query as $item) {
+      $master_category_array[] = array(
+        'id' => $item['categories_id'],
+        'text' => $item['categories_name'] . ' - ' . TEXT_INFO_ID . $item['categories_id']);
     }
 
     return $master_category_array;
