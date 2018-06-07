@@ -1,4 +1,4 @@
-/*! Zen CSS for Zencart. Based on Hydrogen CSS */
+/*! CSS for Zen Cart docs. Based on Hydrogen CSS */
 
 /*! Hydrogen v1.x | Copyright 2018 Pim Brouwers | Licensed under MIT | https://github.com/pimbrouwers/hydrogen */
 
@@ -82,7 +82,7 @@ img {
   text-align: right;
 }
 
-/*! Zencart Overrides */
+/*! Zen Cart Overrides */
 
 body {
   background: #fff;
@@ -245,6 +245,7 @@ h4 {
   }
   body {
     font-size: 1.25rem;
+    max-width: 80rem;
   }
   h2 {
     font-size: 2.25rem;
