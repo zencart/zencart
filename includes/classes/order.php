@@ -376,7 +376,7 @@ class order extends base {
     //                          'cc_cvv' => (isset($GLOBALS['cc_cvv']) ? $GLOBALS['cc_cvv'] : ''),
                         'shipping_method' => (isset($_SESSION['shipping']['title'])) ? $_SESSION['shipping']['title'] : '',
                         'shipping_module_code' => (isset($_SESSION['shipping']['id']) && strpos($_SESSION['shipping']['id'], '_') > 0 ? $_SESSION['shipping']['id'] : $_SESSION['shipping']),
-                        'shipping_cost' => isset($_SESSION['shipping']['cost']) ? $_SESSION['shipping']['cost'] : 0,
+                        'shipping_cost' => !empty($_SESSION['shipping']['cost']) ? $_SESSION['shipping']['cost'] : 0,
                         'subtotal' => 0,
                         'shipping_tax' => 0,
                         'tax' => 0,
