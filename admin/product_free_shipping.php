@@ -13,6 +13,8 @@
 
   $action = (isset($_GET['action']) ? $_GET['action'] : '');
 
+  $zco_notifier->notify('NOTIFY_BEGIN_ADMIN_PRODUCTS_FREE_SHIPPING', $action);
+
   if (zen_not_null($action)) {
     switch ($action) {
       case 'setflag':
@@ -22,10 +24,16 @@
           }
         }
 
-        zen_redirect(zen_href_link(FILENAME_CATEGORIES, 'cPath=' . $_GET['cPath'] . '&pID=' . $_GET['pID'] . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '')));
+        zen_redirect(zen_href_link(FILENAME_CATEGORIES, 'cPath=' . $_GET['cPath'] . '&pID=' . $_GET['pID'] . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '') . ((isset($_GET['search']) && !empty($_GET['search'])) ? '&search=' . $_GET['search'] : '')));
         break;
 
       case 'delete_product_confirm':
+      $delete_linked = 'true';
+      if ($_POST['delete_linked'] == 'delete_linked_no') {
+        $delete_linked = 'false';
+      } else {
+        $delete_linked = 'true';
+      }
         if (file_exists(DIR_WS_MODULES . $zc_products->get_handler($product_type) . '/delete_product_confirm.php')) {
           require(DIR_WS_MODULES . $zc_products->get_handler($product_type) . '/delete_product_confirm.php');
          } else {
@@ -123,22 +131,15 @@
 <!-- body_text //-->
     <td width="100%" valign="top">
 <?php
-  if ($action == 'new_product' or $action == 'new_product_meta_tags') {
-
-    if ($action == 'new_product_meta_tags') {
-      require(DIR_WS_MODULES . $zc_products->get_handler($product_type) . '/collect_info_metatags.php');
-    } else {
-      require(DIR_WS_MODULES . $zc_products->get_handler($product_type) . '/collect_info.php');
-    }
-
-  } elseif ($action == 'new_product_preview' or $action == 'new_product_preview_meta_tags') {
-    if ($action == 'new_product_preview_meta_tags') {
-      require(DIR_WS_MODULES . $zc_products->get_handler($product_type) . '/preview_info_meta_tags.php');
-    } else {
-      require(DIR_WS_MODULES . $zc_products->get_handler($product_type) . '/preview_info.php');
-    }
-
-  } else {
+if ($action == 'new_product_meta_tags') {
+  require(DIR_WS_MODULES . $zc_products->get_handler($product_type) . '/collect_info_metatags.php');
+} elseif ($action == 'new_product') {
+  require(DIR_WS_MODULES . $zc_products->get_handler($product_type) . '/collect_info.php');
+} elseif ($action == 'new_product_preview_meta_tags') {
+  require(DIR_WS_MODULES . $zc_products->get_handler($product_type) . '/preview_info_meta_tags.php');
+} elseif ($action == 'new_product_preview') {
+  require(DIR_WS_MODULES . $zc_products->get_handler($product_type) . '/preview_info.php');
+} else {
 
   require(DIR_WS_MODULES . 'category_product_listing.php');
 
@@ -224,12 +225,20 @@
         $contents[] = array('text' => '<br />' . TEXT_CATEGORIES . '<br />' . zen_draw_pull_down_menu('categories_id', zen_get_category_tree(), $current_category_id));
         $contents[] = array('text' => '<br />' . TEXT_HOW_TO_COPY . '<br />' . zen_draw_radio_field('copy_as', 'link', true) . ' ' . TEXT_COPY_AS_LINK . '<br />' . zen_draw_radio_field('copy_as', 'duplicate') . ' ' . TEXT_COPY_AS_DUPLICATE);
 
+        $contents[] = array('text' => '<br />' . zen_image(DIR_WS_IMAGES . 'pixel_black.gif','','100%','3'));
+
         // only ask about attributes if they exist
         if (zen_has_product_attributes($pInfo->products_id, 'false')) {
-          $contents[] = array('text' => '<br />' . zen_image(DIR_WS_IMAGES . 'pixel_black.gif','','100%','3'));
           $contents[] = array('text' => '<br />' . TEXT_COPY_ATTRIBUTES_ONLY);
           $contents[] = array('text' => '<br />' . TEXT_COPY_ATTRIBUTES . '<br />' . zen_draw_radio_field('copy_attributes', 'copy_attributes_yes', true) . ' ' . TEXT_COPY_ATTRIBUTES_YES . '<br />' . zen_draw_radio_field('copy_attributes', 'copy_attributes_no') . ' ' . TEXT_COPY_ATTRIBUTES_NO);
 // future          $contents[] = array('align' => 'center', 'text' => '<br />' . ATTRIBUTES_NAMES_HELPER . '<br />' . zen_draw_separator('pixel_trans.gif', '1', '10'));
+          $contents[] = array('text' => '<br />' . zen_image(DIR_WS_IMAGES . 'pixel_black.gif','','100%','3'));
+        }
+
+        // only ask if product has qty discounts
+        if (zen_has_product_discounts($pInfo->products_id) == 'true') {
+          $contents[] = array('text' => '<br />' . TEXT_COPY_DISCOUNTS_ONLY);
+          $contents[] = array('text' => '<br />' . TEXT_COPY_DISCOUNTS . '<br />' . zen_draw_radio_field('copy_discounts', 'copy_discounts_yes', true) . ' ' . TEXT_COPY_DISCOUNTS_YES . '<br />' . zen_draw_radio_field('copy_discounts', 'copy_discounts_no') . ' ' . TEXT_COPY_DISCOUNTS_NO);
           $contents[] = array('text' => '<br />' . zen_image(DIR_WS_IMAGES . 'pixel_black.gif','','100%','3'));
         }
 
@@ -237,7 +246,7 @@
         $contents[] = array('text' => '</form>');
 
         $contents[] = array('text' => '<br />' . zen_image(DIR_WS_IMAGES . 'pixel_black.gif','','100%','3'));
-        $contents[] = array('text' => '<form action="' . FILENAME_PRODUCTS_TO_CATEGORIES . '.php' . '?products_filter=' . $pInfo->products_id . '" method="post">');
+        $contents[] = array('text' => '<form action="' . FILENAME_PRODUCTS_TO_CATEGORIES . '.php' . '?products_filter=' . $pInfo->products_id . '&current_category_id=' . $current_category_id . '" method="post">'  . zen_hide_session_id());
         $contents[] = array('align' => 'center', 'text' => '<input type="submit" value="' . BUTTON_PRODUCTS_TO_CATEGORIES . '"></form>');
 
         break;
@@ -253,8 +262,8 @@
         $contents[] = array('align' => 'center', 'text' => '<br />' . '<strong>' . TEXT_PRODUCTS_ATTRIBUTES_INFO . '</strong>' . '<br />');
 
         $contents[] = array('align' => 'center', 'text' => '<br />' . '<strong>' . zen_get_products_name($pInfo->products_id, $languages_id) . ' ID# ' . $pInfo->products_id . '</strong><br /><br />' .
-                                                           '<a href="' . zen_href_link(FILENAME_ATTRIBUTES_CONTROLLER, '&action=attributes_preview' . '&products_filter=' . $pInfo->products_id) . '">' . zen_image_button('button_preview.gif', IMAGE_PREVIEW) . '</a>' .
-                                                           '&nbsp;&nbsp;' . '<a href="' . zen_href_link(FILENAME_ATTRIBUTES_CONTROLLER, 'products_filter=' . $pInfo->products_id) . '">' . zen_image_button('button_edit_attribs.gif', IMAGE_EDIT_ATTRIBUTES) . '</a>' .
+                                                           '<a href="' . zen_href_link(FILENAME_ATTRIBUTES_CONTROLLER, '&action=attributes_preview' . '&products_filter=' . $pInfo->products_id . '&current_category_id=' . $current_category_id) . '">' . zen_image_button('button_preview.gif', IMAGE_PREVIEW) . '</a>' .
+                                                           '&nbsp;&nbsp;' . '<a href="' . zen_href_link(FILENAME_ATTRIBUTES_CONTROLLER, 'products_filter=' . $pInfo->products_id . '&current_category_id=' . $current_category_id) . '">' . zen_image_button('button_edit_attribs.gif', IMAGE_EDIT_ATTRIBUTES) . '</a>' .
                                                            '<br /><br />');
         $contents[] = array('align' => 'left', 'text' => '<br />' . '<strong>' . TEXT_PRODUCT_ATTRIBUTES_DOWNLOADS . '</strong>' . zen_has_product_attributes_downloads($pInfo->products_id) . zen_has_product_attributes_downloads($pInfo->products_id, true));
         $contents[] = array('align' => 'left', 'text' => '<br />' . TEXT_INFO_ATTRIBUTES_FEATURES_DELETE . '<strong>' . zen_get_products_name($pInfo->products_id) . ' ID# ' . $pInfo->products_id . '</strong><br /><a href="' . zen_href_link(FILENAME_CATEGORIES, 'cPath=' . $cPath . '&pID=' . $pInfo->products_id . '&action=delete_attributes' . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '') . '&products_id=' . $pInfo->products_id) . '">' . zen_image_button('button_delete.gif', IMAGE_DELETE) . '</a>');
