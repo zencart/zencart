@@ -7,9 +7,5 @@
  * @version $Id:  New in v1.5.5 $
  */
 
-//Defined in catalog/includes/filenames.php
-//define('FILENAME_STATS_SALES_REPORT_GRAPHS', 'stats_sales_report_graphs');
-
-
-// adjust and uncomment
+// adjust and uncomment if a different value is desired
 //define('SALES_REPORT_GRAPHS_FILTER_DEFAULT', '00000000110000000000');
