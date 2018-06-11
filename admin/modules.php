@@ -295,7 +295,7 @@ if (zen_not_null($action)) {
             case 'remove':
               $heading[] = array('text' => '<h4>' . $mInfo->title . '</h4>');
 
-              $contents = array('form' => zen_draw_form('module_delete', FILENAME_MODULES, '&action=removeconfirm'));
+              $contents = array('form' => zen_draw_form('module_delete', FILENAME_MODULES, '&action=removeconfirm' . (isset($_GET['set']) ? '&set=' . $_GET['set'] : '')));
               $contents[] = array('text' => zen_draw_hidden_field('set', (isset($_GET['set']) ? $_GET['set'] : '')));
               $contents[] = array('text' => zen_draw_hidden_field('module', (isset($_GET['module']) ? $_GET['module'] : '')));
               $contents[] = array('text' => TEXT_DELETE_INTRO);
