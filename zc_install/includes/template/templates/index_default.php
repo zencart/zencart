@@ -10,6 +10,7 @@ require(DIR_FS_INSTALL . DIR_WS_INSTALL_TEMPLATE . 'partials/partial_modal_help.
 <form id="systemCheck" name="systemCheck" method="post" action="index.php?main_page=<?php echo $formAction; ?>">
 <input type="hidden" name="lng" value="<?php echo $lng; ?>" >
 <?php if ($hasMultipleAdmins) { ?>
+	<?php $adjustWarnIssues = True ?>
     <div class="alert-box alert">
     <?php if ($selectedAdminDir != '') { ?>
     <?php  echo TEXT_ERROR_MULTIPLE_ADMINS_SELECTED; ?>
@@ -23,6 +24,7 @@ require(DIR_FS_INSTALL . DIR_WS_INSTALL_TEMPLATE . 'partials/partial_modal_help.
 <?php } ?>
 <?php if ($selectedAdminDir != '') { ?>
 <?php if ($hasSaneConfigFile && !$isCurrentDb && !$otherConfigErrors && $hasUpdatedConfigFile) { ?>
+	<?php $adjustWarnIssues = True ?>
     <div class="alert-box success">
     <?php  echo TEXT_ERROR_SUCCESS_EXISTING_CONFIGURE; ?>
     </div>
@@ -32,12 +34,14 @@ require(DIR_FS_INSTALL . DIR_WS_INSTALL_TEMPLATE . 'partials/partial_modal_help.
     </div>
 <?php } ?>
 <?php if (!$hasUpdatedConfigFile && $hasSaneConfigFile) { ?>
+	<?php $adjustWarnIssues = True ?>
         <div class="alert-box alert">
             <?php  echo TEXT_ERROR_CONFIGURE_REQUIRES_UPDATE; ?>
         </div>
 
 <?php } ?>
 <?php if ($hasFatalErrors) { ?>
+	<?php $adjustWarnIssues = True ?>
 <div id="fatalErrors" class="errorList">
   <h2><?php echo TEXT_INDEX_FATAL_ERRORS; ?></h2>
     <?php foreach ($listFatalErrors as $error) { ?>
@@ -53,6 +57,7 @@ require(DIR_FS_INSTALL . DIR_WS_INSTALL_TEMPLATE . 'partials/partial_modal_help.
 </div>
 <?php } ?>
 <?php if ($hasLocalAlerts) { ?>
+	<?php $adjustWarnIssues = True ?>
 <div id="alerts" class="errorList">
   <h2><?php echo TEXT_INDEX_ALERTS; ?></h2>
     <?php foreach ($listLocalAlerts as $error) { ?>
@@ -69,10 +74,19 @@ require(DIR_FS_INSTALL . DIR_WS_INSTALL_TEMPLATE . 'partials/partial_modal_help.
 <?php } ?>
 <?php if ($hasWarnErrors) { ?>
 <div id="warnErrors" class="errorList">
+	<?php if ($adjustWarnIssues) { ?>
   <h2><?php echo TEXT_INDEX_WARN_ERRORS; ?></h2>
+  <?php } else { ?>
+  <h2><?php echo TEXT_INDEX_WARN_ERRORS_ALT; ?></h2>
+  <?php } ?>
     <?php foreach ($listWarnErrors as $error) { ?>
+    	<?php if (strpos($error['mainErrorText'], 'PRO TIP:') !== false) { ?>
+    <div class="alert-box">
+      <?php echo($error['mainErrorText']); ?>
+      	<?php } else { ?>
     <div class="alert-box secondary">
       <a href="" <?php echo (isset($error['mainErrorTextHelpId'])) ? 'class="hasHelpText" id="' . $error['mainErrorTextHelpId'] . '"' : 'class="hasNoHelpText"' ?>><?php echo($error['mainErrorText']); ?></a>
+      	<?php } ?>
       <?php if (isset($error['extraErrors'])) { ?>
       <?php foreach ($error['extraErrors'] as $detailError) { ?>
       <br><?php echo $detailError ?>
