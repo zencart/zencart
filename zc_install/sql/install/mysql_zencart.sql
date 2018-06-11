@@ -1891,14 +1891,14 @@ CREATE TABLE salemaker_sales (
 
 #
 # Table structure for table 'sessions'
-# requires minimum MySQL 5.0.3 for varchar(256)
-# NOTE: When using charset utf8mb4, we use InnoDB because the MyISAM engine may only support 250 chars, but PHP "could" be using 256. Alternate is to specify utf8 charset instead.
+# NOTE: requires minimum MySQL 5.0.3 for varchar(256)
+# NOTE: leaving it at (191) to be compatible with utf8mb4, but if PHP is configured to use 256 char session IDs then this will break.
 #
 
 DROP TABLE IF EXISTS sessions;
 CREATE TABLE sessions (
-  sesskey varchar(256) default NULL,
-  expiry int(11) unsigned NOT NULL default '0',
+  sesskey varchar(191) default NULL,
+  expiry int(11) unsigned NOT NULL default 0,
   value mediumblob NOT NULL,
   PRIMARY KEY  (sesskey)
 ) ENGINE=InnoDB;
@@ -1984,7 +1984,7 @@ CREATE TABLE template_select (
 
 #
 # Table structure for table 'whos_online'
-# NOTE: session_id needs to be same length as defined in 'sessions' table.
+# NOTE: session_id needs to be same length (er, at least as long) as sesskey in 'sessions' table.
 #
 
 DROP TABLE IF EXISTS whos_online;
