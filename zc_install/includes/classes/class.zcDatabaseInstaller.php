@@ -195,7 +195,9 @@ class zcDatabaseInstaller
     } else
     {
       $this->line = (strtoupper($this->lineSplit[2].' '.$this->lineSplit[3].' '.$this->lineSplit[4]) == 'IF NOT EXISTS') ? 'CREATE TABLE IF NOT EXISTS ' . $this->dbPrefix . substr($this->line, 27) : 'CREATE TABLE ' . $this->dbPrefix . substr($this->line, 13);
-      $this->collateSuffix = (strtoupper($this->lineSplit[3]) == 'AS' || (isset($this->lineSplit[6]) && strtoupper($this->lineSplit[6]) == 'AS')) ? '' : ' COLLATE ' . $this->dbCharset . '_general_ci';
+      if (! stristr($this->line, ' COLLATE ')) {
+          $this->collateSuffix = (strtoupper($this->lineSplit[3]) == 'AS' || (isset($this->lineSplit[6]) && strtoupper($this->lineSplit[6]) == 'AS')) ? '' : ' COLLATE ' . $this->dbCharset . '_general_ci';
+      }
     }
   }
   public function parserInsertInto()
