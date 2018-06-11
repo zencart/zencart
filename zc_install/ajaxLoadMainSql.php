@@ -36,7 +36,7 @@ if ($error)
 }
 // localization file
 $charset = $_POST['db_charset'];
-if (!in_array(array('utf8', 'latin1'), $charset)) $charset = 'utf8';
+if (!in_array($charset, array('utf8', 'latin1'))) $charset = 'utf8';
 $file = DIR_FS_INSTALL . 'sql/install/mysql_' . $charset . '.sql';
 if (file_exists($file))
 {
