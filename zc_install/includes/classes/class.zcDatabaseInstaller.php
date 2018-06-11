@@ -379,11 +379,11 @@ class zcDatabaseInstaller
     {
       $result = $this->db->Execute("CREATE TABLE " . $this->dbPrefix . TABLE_UPGRADE_EXCEPTIONS ." (
             upgrade_exception_id smallint(5) NOT NULL auto_increment,
-            sql_file varchar(50) default NULL,
-            reason varchar(200) default NULL,
-            errordate datetime default '0001-01-01 00:00:00',
+            sql_file varchar(128) default NULL,
+            reason text default NULL,
+            errordate datetime default NULL,
             sqlstatement text, PRIMARY KEY  (upgrade_exception_id)
-          )");
+          ) ENGINE=MyISAM");
     return $result;
     }
   }
