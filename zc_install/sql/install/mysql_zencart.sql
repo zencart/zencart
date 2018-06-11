@@ -1984,7 +1984,7 @@ CREATE TABLE template_select (
 
 #
 # Table structure for table 'whos_online'
-# NOTE: if session_id needs to be same length as defined in 'sessions' table.
+# NOTE: session_id needs to be same length as defined in 'sessions' table.
 #
 
 DROP TABLE IF EXISTS whos_online;
