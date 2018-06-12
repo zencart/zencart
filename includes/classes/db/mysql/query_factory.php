@@ -299,7 +299,7 @@ class queryFactory extends base {
         return $this->Execute ($zf_sql, false, false, 0, true);
     }
 
-  function ExecuteRandomMulti($zf_sql, $zf_limit = 0, $zf_cache = false, $zf_cachetime=0, $remove_from_queryCache = false) {
+  function ExecuteRandomMulti($zf_sql, $zf_limit = 0, $zf_cache = false, $zf_cachetime=0, $remove_from_queryCache = false, $int_key = true) {
     $this->zf_sql = $zf_sql;
     $time_start = explode(' ', microtime());
     $obj = new queryFactoryResult($this->link);
@@ -328,6 +328,10 @@ class queryFactory extends base {
           if ($zp_result_array) {
             $obj->result[$zp_ii] = array();
             while (list($key, $value) = each($zp_result_array)) {
+              $add_key = ($int_key === true ? true : !preg_match('/^[0-9]/', $key)); // mc12345678 support controlling presence of the integer key result
+
+              if (!$add_key) continue;
+
               $obj->result[$zp_ii][$key] = $value;
             }
           } else {
@@ -657,7 +661,7 @@ class queryFactoryResult implements Countable, Iterator {
   public function rewind() {
       $this->EOF = ($this->RecordCount() == 0);
       if ($this->RecordCount() !== 0) {
-          $this->Move(0);
+          $this->Move(0, false); // mc12345678 eliminate return of integer based key
       }
   }
 
@@ -695,7 +699,7 @@ class queryFactoryResult implements Countable, Iterator {
    *
    * @param int $zp_row the row to move to
    */
-  public function Move($zp_row) {
+  public function Move($zp_row, $int_key = true) {
     global $db;
     if ($this->is_cached) {
       if($zp_row >= sizeof($this->result)) {
@@ -711,6 +715,10 @@ class queryFactoryResult implements Countable, Iterator {
     } else if (@mysqli_data_seek($this->resource, $zp_row)) {
       $zp_result_array = @mysqli_fetch_array($this->resource);
       while (list($key, $value) = each($zp_result_array)) {
+        $add_key = ($int_key === true ? true : !preg_match('/^[0-9]/', $key)); // mc12345678 support controlling presence of the integer key result
+
+        if (!$add_key) continue;
+
         $this->fields[$key] = $value;
       }
       $this->cursor = $zp_row;
