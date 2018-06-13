@@ -164,12 +164,15 @@ h4 {
 }
 
 .h-alert {
-  background: #efefef;
+  background: #dfefdf;
   border: 1px solid #ccc;
   color: #333;
   margin: 0 0 1rem 0;
   padding: 3rem;
   position: relative;
+  -webkit-box-shadow: 4px 10px 41px 0px rgba(161, 161, 161, 0.75);
+  -moz-box-shadow: 4px 10px 41px 0px rgba(161, 161, 161, 0.75);
+  box-shadow: 4px 10px 41px 0px rgba(161, 161, 161, 0.75);
 }
 
 .h-btn {
@@ -186,6 +189,12 @@ h4 {
 
 .h-btn: hover {
   background: #006edb;
+}
+
+.h-box-shadow {
+  -webkit-box-shadow: 4px 10px 41px 0px rgba(161, 161, 161, 0.75);
+  -moz-box-shadow: 4px 10px 41px 0px rgba(161, 161, 161, 0.75);
+  box-shadow: 4px 10px 41px 0px rgba(161, 161, 161, 0.75);
 }
 
 .prime-string {
