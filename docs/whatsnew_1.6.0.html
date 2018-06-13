@@ -1,160 +1,403 @@
 <!DOCTYPE html>
-<!--
-/**
- * @package documentation
- * @copyright Copyright 2003-2016 Zen Cart Development Team
- * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id:  New in v1.6.0 $
- */
-//-->
 <html>
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<style type="text/css">
 <!--
-body, table{ font-family:Verdana, Arial, Helvetica, sans-serif; font-size:14px; }
-fieldset.intro {border-color:#C96E29; }
-.intro{background-color:#EEEEEE; border-color:#5778ce; font-size:14px; }
-td.plainbox, div.callout {border: 1px dashed;border-color: #C96E29;margin:5px 40px 5px 40px;}
-.heading {background-color:#5778CE; font-weight:bold; font-size:14px; width: 100%; }
-.title1 {color:#C96E29; font-weight:bold; font-size:22px; }
-.title2 {color:#C96E29; font-weight:bold; font-size:13px; }
-.small {font-size:10px ;}
-.error {color:#FF0000; }
-.filename {font-family: mono, "Courier New", Courier ; font-size:14px; color:#c96e29;}
-.pseudolink {text-decoration:underline; color:#5778CE;}
-h1.intro { color: #ffffff; border:1px solid #aca893; background-color: #c96e29;  font-size: 22px;   padding: 4px;}
-h1 { color: #ffffff;    border:1px solid #aca893;   background-color: #5778ce;   font-size: 20px;   padding: 4px;}
-h2 { color: #c96e29;  font-size: 18px;}
-h3 { color: #5778ce;  font-size: 16px; margin-bottom:0px;}
-h4 { color: #c96e29;  font-size: 14px;}
-h5 { color: #5778ce;  font-size: 16px; margin-bottom:0px; margin-top:0px; }
-.style1 {
-  font-size: 18px;
-  font-weight: bold;
-}
-.emphasize {
-  color: #336600;
-}
-fieldset {max-width: 748px; margin: auto}
-.center {text-align: center}
-
-
--->
-</style>
-<title>What's New in Zen Cart(R) v1.6.0</title>
-<meta http-equiv="imagetoolbar" content="no">
-<meta name="author" content="The Zen Cart&reg; Team">
-<meta name="robots" content="noindex, nofollow">
+	/**
+	 * @package documentation
+	 * @copyright Copyright 2003-2018 Zen Cart Development Team
+	 * @license https://www.zen-cart.com/license/2_0.txt GNU Public License v2.0
+	 * @version $Id: whatsnew_1.6.0.html  New in v1.6.0 $
+	 */
+	//-->
+<head>
+	<title>What's New in Zen Cart&reg; v1.6.0</title>
+	<meta charset="utf-8">
+	<meta http-equiv="x-ua-compatible" content="ie=edge">
+	<meta http-equiv="Content-Type" content="text/html">
+	<meta http-equiv="imagetoolbar" content="no">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<meta name="keywords" content="">
+	<meta name="description" content="">
+	<meta name="authors" content="The Zen Cart&reg; Team">
+	<meta name="generator" content="shopping cart program by Zen Cart&reg;, https://www.zen-cart.com">
+	<meta name="robots" content="noindex, nofollow">
+	<link rel="stylesheet" href="./zen.css">
 </head>
 <body>
 
-<fieldset class="intro">
-<h1 class="intro" style="text-align: center;">Welcome to Zen Cart&reg;</h1>
-<br>
-The Zen Cart&reg; software is made available to you for use, additions, changes, modifications, etc. without charge, under the GNU General Public License.
-<br>
-<br>
-While we do not charge for this software, donations are greatly appreciated each time you download a new version, to help cover the expenses of maintenance, upgrades, updates, the free support forum and the continued development of this software for your online e-commerce store.
-<br>
-<br>
-Donations can be made at:
-<a href="http://www.zen-cart.com/donate" target="_blank">The Zen Cart&reg; Team Page</a>
-<br>
-<br>
-We appreciate your support.<br>
-<em>The Zen Cart&reg; Team</em><br>
-<br>
-
-<p class="small center">
-Zen Cart&reg; is derived from: Copyright  2003 osCommerce<br>
-This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;<br>
-without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE<br>
-and is redistributable under the GNU General Public License<br><br>
-</p>
-</fieldset>
-
-<br>
-<fieldset>
-<p class="center"><img src="osi-certified-120x100.png" alt="O S I Certified"><br>
-This software is OSI Certified Open Source Software.<br>
-OSI Certified is a certification mark of the Open Source Initiative.
-</p>
-</fieldset>
-<br>
-
-<fieldset>
-<h1>About PHP versions</h1>
-<p>Zen Cart&reg; v1.6.0 is compatible with PHP 5.5 through PHP 7.0.x</p>
-<p class="small"><em>(The core code utilizes class-member-access-on-instantiation constructs as well as array-dereferencing and callable typehinting, supported since PHP 5.4.0)</em></p>
-
-<h1>Upgrade Instructions</h1>
-The <a href="http://www.zen-cart.com/upgrades">standard complete site upgrade</a> instructions apply here.</p>
-
-<h1>CHANGELOG - List of Changed Files </h1>
-<p>For a list of files that have been changed since v1.5.5, see the <a href="changed_files-v1-6-0.html" target="_blank">changed_files-v1-6-0.html</a> </p>
-
-<h1>Whats New ... Changes from v1.5.5 to v1.6.0 </h1>
-<h3><strong>The following improvements and bugfixes are included in v1.6.0 since v1.5.5: </strong></h3>
-<br />
-Easier install/setup:<br />
-- no more need for /admin/includes/configure.php !!!!!!  The site will run from just a single /includes/configure.php file for all its settings.<br />
-<br />
-Checkout:<br />
-- guest checkout and other checkout flows (no password required until end of checkout; optional abbreviated checkout for virtual+free purchases)<br />
-- shipping supports insurance calculations for carriers that offer it in their modules<br />
-<br />
-Languages:<br />
-- language files simplified to relocate locale-specific content into a new locale.php file ... so most sites will now touch fewer files for customization<br />
-- multilingual &quot;country names&quot;, configuration menu<br />
-- orders remember the customer's language, so order updates are sent in that language<br />
-<br />
-Product Features:<br />
-- single-attribute products can be added-to-cart from product-listing (instead of via “more info” taking you to the product page first)<br />
-- support for externally-hosted downloadable virtual products (storable on AWS S3, and other places including Dropbox URLs and whatever else someone writes a plugin for)<br />
-- product microdata markup<br />
-- product-stock &quot;availability&quot; and product-&quot;condition&quot; indicators available <br />
-<br />
-Admin improvements:<br />
-- the Admin has a templating system, which allows for restyling to suit own theme preferences<br />
-- added a dashboard widget system for the admin home page, which includes new things like Current Customer Activity, banner-imprint graphs, sales history graph from last several days<br />
-- spiffycal replaced with a more modern jQuery plugin for date-selection<br />
-<br />
-Promotional Tools:<br />
-- numerous improvements to Coupon capabilities (combine Free Shipping with amount or percent discount, support more rules such as combining with sales, minimum order amount, limit by number of orders, export option, and more)<br />
-- allow Gift Certificates to be put on special, or disallowed for specials<br />
-<br />
-Developers will love:<br />
-- more cart-content helper/inspector functions to allow for more custom actions to be built around what’s in the shopping basket, including reacting to product weight, category, value, and more<br />
-- additional notifier hooks for things like customizing category-tabs, reviews, cart contents, downloads, product images and popups<br />
-- several features which lend support to multi-tenancy capability<br />
-- code modernization, progressively incorporating namespaced OOP rewrites of various segments<br />
-- functions consolidation: functions that were &quot;duplicates&quot; (or partial-duplicates) in both the admin and non-admin, are now shared from one place: no more duplication<br />
-- nginx configuration template<br />
-<br />
-Designers will love:<br />
-- modernized for HTML5<br />
-- templating system allows for various CSS frameworks (think Bootstrap etc) to be adapted using simple hooks<br />
-- template hooks which could be used to trigger minification of CSS, JS, etc<br />
-- more flexibility for custom per-page CSS and javascript placement-on-page<br />
-- using font-icons and CSS buttons instead of requiring creation of custom graphics<br />
-- added a middle-tier to the template structure, to allow for &quot;shared&quot; customizations which might apply to multiple templates<br />
-<br />
-Developer Documentation on the new 1.6.0 features is available on the 
-<a href="http://docs.zencart.com/Developer_Documentation/intro">Zen Cart Documentation Site</a>. 
-<br /><br />
-
-<b>Fixes:</b>
-<ul>
-<li>CHANGE-343 - Updates for even greater consistency with the logs folder rename</li>
-<li>CHANGE-345 - Fix typo in whos_online legend</li>
-<li>CHANGE-346 - Fix outdated language in configuration menu help texts</li>
-<li>CHANGE-347 - Fix TRY currency code in paypal modules </li>
-</ul>
-
-</fieldset>
-<br><br>
-<p class="center"><em>Copyright 2003 - 2016 Zen Ventures, LLC &mdash; Zen Cart&reg; www.zen-cart.com</em></p>
-<br><br>
+	<section id="pageHeader">
+		<div class="h-g">
+			<div class="h-u-md-6-12 h-u-sm-1-12">
+				<a href="./index.html">
+					<img src="../includes/templates/template_default/images/logo.gif" alt="Zen Cart&reg;" title="Zen Cart&reg;" width="192" height="68" border="0" />
+				</a>
+			</div>
+			<div class="h-u-md-6-12 h-u-sm-hidden h-text-right">
+				<a class="h-btn h-box-shadow" href="./index.html">
+					Documentation Home
+				</a>
+			</div>
+		</div>
+	</section> <!-- End pageHeader //-->
+	
+	<section id="zenTeamMessage">
+		<h1>Welcome to Zen Cart&reg;</h1>
+		<div class="h-alert h-box-shadow">
+			<em>Dear Zen Cart&reg; User</em>,
+			<p>
+				Zen Cart&reg; is made available to you for your use, addition, changes, modification, etc. without charge, under Version 2 of the GNU General Public License.
+			</p>
+			<p>
+				While we do not charge for this software, donations are greatly appreciated, each time you install a new version, to help cover the expenses of maintenance, upgrades, updates, the free support forum and the continued development of this software for your online E-Commerce store.
+			</p>
+			<p>
+				Donations can be made on the <a href="https://www.zen-cart.com/donate" target="_blank">Zen Cart&reg; Team Page</a>
+			</p>
+			<p>
+				We appreciate your support.
+				<br>
+				<em>The Zen Cart&reg; Team</em>&nbsp;
+			</p>
+		</div>
+	</section> <!-- End zenTeamMessage //-->
+	
+	<section id="aboutPHPVersions">
+		<div>
+			<h1>
+				About PHP versions
+			</h1>
+			<p>
+				Zen Cart&reg; v1.6.0 is compatible with PHP 5.5 to 7.0.x and MySQL 5.1 to 5.6
+				<br>
+				<span class="small-string">
+					<em>The core code utilizes class-member-access-on-instantiation constructs as well as array-dereferencing and callable typehinting, supported since PHP 5.4.0.</em>&nbsp;
+				</span>
+			</p>
+		</div>
+	</section> <!-- End aboutPHPVersions //-->
+	
+	<section id="upgradeInstructions">
+		<div>
+			<h1>
+				Upgrade Instructions
+			</h1>
+			<p>
+				The <a href="http://www.zen-cart.com/upgrades">standard complete site upgrade</a> instructions apply for upgrading to Zen Cart&reg; v1.6.0 from any previous version.
+			</p>
+		</div>
+	</section> <!-- End upgradeInstructions //-->
+	
+	<section id="changeLog">
+		<div>
+			<h1>
+				CHANGELOG - List of Changed Files 
+			</h1>
+			<p>
+				For a list of files that have been changed since v1.5.6, see the <a href="changed_files-v1-6-0.html" target="_blank">changed_files-v1-6-0.html</a> document.
+			</p>
+		</div>
+		<div class="back-to-top">
+			^^ <a href="#pageHeader">Back to Top</a> ^^
+		</div>
+	</section> <!-- End changeLog //-->
+	
+	<section id="whatsNew">
+		<div>
+			<h1>
+				Whats New ... Changes from v1.5.6 to v1.6.0 
+			</h1>
+			<h2>
+				Improvements and Fixes since v1.5.6 
+			</h2>
+		</div>
+		<div>
+			<h3 id="improvements">
+				Improvements:
+			</h3>
+			<ul>
+				<li>
+					Installation and Setup:
+					<ul class="dash">
+						<li>
+							Streamlined Configuration
+							<ol class="noteList">
+								<li>All site settings now only in /includes/configure.php.</li>
+								<li>The /admin/includes/configure.php file is no longer required.</li>
+							</ol>
+						</li>
+					</ul>
+				</li>
+				<li>
+					Checkout:
+					<ul class="dash">
+						<li>
+							Product Shipping Insurance Support.
+							<ol class="noteList">
+								<li>For shipping carriers that offer this in their modules.</li>
+							</ol>
+						</li>
+						<li>
+							Improvements to Guest and Other Checkout Flows.
+							<ol class="noteList">
+								<li>Passwords are not required until end of checkout.</li>
+								<li>Optional abbreviated checkout for virtual+free purchases.</li>
+							</ol>
+						</li>
+					</ul>
+				</li>
+				<li>
+					Languages:
+					<ul class="dash">
+						<li>
+							Multilingual Configuration Menu for Country Names.
+							<ol><!-- THIS IS A SPACER //--></ol>
+						</li>
+						<li>
+							Remembers Customer's Order Language.
+							<ol class="noteList">
+								<li>Order updates automaitically sent in saved language.</li>
+							</ol>
+						</li>
+						<li>
+							Language files simplified to relocate locale-specific content into a new locale.php file.
+							<ol class="noteList">
+								<li>Most sites will now touch fewer files for customization.</li>
+							</ol>
+						</li>
+					</ul>
+				</li>
+				<li>
+					Product Features:
+					<ul class="dash">
+						<li>
+							Product Microdata Markup.
+							<ol><!-- THIS IS A SPACER //--></ol>
+						</li>
+						<li>
+							New Product Indicators.
+							<ol class="noteList">
+								<li>Product stock availability and product condition indicators.</li>
+							</ol>
+						</li>
+						<li>
+							Single Attribute Products Improvements.
+							<ol class="noteList">
+								<li>Can now be added to cart from product listing.</li>
+								<li>Instead of via “more info” taking you to the product page first</li>
+							</ol>
+						</li>
+						<li>
+							Externally Hosted Downloadable Virtual Products.
+							<ol class="noteList">
+								<li>Storable on AWS S3, Dropbox and any other service with an available plugin.</li>
+							</ol>
+						</li>
+					</ul>
+				</li>
+				<li>
+					Admin Improvements:
+					<ul class="dash">
+						<li>
+							Date Selection Improvements.
+							<ol class="noteList">
+								<li>Spiffycal replaced with powerful jQuery plugin.</li>
+							</ol>
+						</li>
+						<li>
+							Flexible Admin Templating System.
+							<ol class="noteList">
+								<li>Allows restyling to suit theme preferences.</li>
+							</ol>
+						</li>
+						<li>
+							Admin Home Page Dashboard Widget.
+							<ol class="noteList">
+								<li>
+									Displays metrics such as:
+									<ol class="noteList">
+										<li>current customer activity</li>
+										<li>banner imprint graphs</li>
+										<li>sales history graphs</li>
+										<li>... and more.</li>
+									</ol>
+								</li>
+							</ol>
+						</li>
+					</ul>
+				</li>
+				<li>
+					Promotional Tools:
+					<ul class="dash">
+						<li>
+							Allow or Disallow Gift Certificates to be Put on &quot;Special&quot;.
+							<ol><!-- THIS IS A SPACER //--></ol>
+						</li>
+						<li>
+							Coupon Capability Improvements.
+							<ol class="noteList">
+								<li>Combine free shipping with amount or percent discount</li>
+								<li>
+									Support rules such as:
+									<ol class="noteList">
+										<li>combining with sales</li>
+										<li>minimum order amount</li>
+										<li>limit by number of orders</li>
+										<li>export option</li>
+										<li>... and more.</li>
+									</ol>
+								</li>
+							</ol>
+						</li>
+					</ul>
+				</li>
+				<li>
+					Designers will Love:
+					<ul class="dash">
+						<li>
+							HTML 5 Codebase.
+							<ol class="noteList">
+								<li>The codebase has been modernised to leverage HTML 5 features</li>
+							</ol>
+						</li>
+						<li>
+							No Need for Custom Graphics.
+							<ol class="noteList">
+								<li>Use CSS buttons and font icons in place of custom graphics.</li>
+							</ol>
+						</li>
+						<li>
+							Flexibile CSS Framework Adaption.
+							<ol class="noteList">
+								<li>Templating system allows for adoption of CSS frameworks such as Bootstrap.</li>
+							</ol>
+						</li>
+						<li>
+							Painless Minification of CSS, JS and More.
+							<ol class="noteList">
+								<li>Template hooks provided to trigger minification of CSS, JS and more.</li>
+							</ol>
+						</li>
+						<li>
+							Flexibile CSS and JS Placement.
+							<ol class="noteList">
+								<li>Increased flexibility for custom &quot;per page&quot; CSS and JS placement on pages.</li>
+							</ol>
+						</li>
+						<li>
+							Powerful New Template &quot;Middle Tier&quot;.
+							<ol class="noteList">
+								<li>Allows for &quot;shared&quot; customizations which might apply to multiple templates.</li>
+							</ol>
+						</li>
+					</ul>
+				</li>
+				<li>
+					Developers will Love:
+					<ul class="dash">
+						<li>
+							Multi Tenancy Capability.
+							<ol><!-- THIS IS A SPACER //--></ol>
+						</li>
+						<li>
+							Nginx Configuration Template.
+							<ol class="noteList">
+								<li>Nginx directives equivalent to Apache htaccess rules to secure Zen Cart® are provided after installation to serve as a start point.</li>
+							</ol>
+						</li>
+						<li>
+							Cart Content Inspector Functions.
+							<ol class="noteList">
+								<li>Allows custom actions to be built around cart contents.</li>
+								<li>Includes reacting to product weight, category, value, ... and more.</li>
+							</ol>
+						</li>
+						<li>
+							Additional Notifier Hooks.
+							<ol class="noteList">
+								<li>Allows for customizing category tabs, reviews, cart contents, downloads, product images and popups.</li>
+							</ol>
+						</li>
+						<li>
+							Indepth Code Modernization.
+							<ol class="noteList">
+								<li>Progressively incorporating namespaced &quot;OOP&quot; rewrites of various segments.</li>
+							</ol>
+						</li>
+						<li>
+							Function Consolidation.
+							<ol class="noteList">
+								<li>Previously duplicated functions, across admin and catalog, are now shared from one instance.</li>
+							</ol>
+						</li>
+					</ul>
+					Documentation for developers on features of v1.6.0 is available on the Zen Cart&reg; <a href="http://docs.zencart.com/Developer_Documentation/intro">Developer Documentation Page</a>.
+				</li>
+			</ul>
+			<div class="back-to-top">
+				^^ <a href="#pageHeader">Back to Top</a> ^^
+			</div>
+			<h3 id="bugfixes">
+				Fixes:
+			</h3>
+			<ul>
+				<li>
+					CHANGE-343 - Updates for even greater consistency with the logs folder rename
+					<ol><!-- THIS IS A SPACER //--></ol>
+				</li>
+				<li>
+					CHANGE-345 - Fix typo in whos_online legend
+					<ol><!-- THIS IS A SPACER //--></ol>
+				</li>
+				<li>
+					CHANGE-346 - Fix outdated language in configuration menu help texts
+					<ol><!-- THIS IS A SPACER //--></ol>
+				</li>
+				<li>
+					CHANGE-347 - Fix TRY currency code in paypal modules
+					<ol><!-- THIS IS A SPACER //--></ol>
+				</li>
+			</ul>
+			<div class="back-to-top">
+				^^ <a href="#pageHeader">Back to Top</a> ^^
+			</div>
+		</div>
+	</section> <!-- End whatsNew //-->
+	
+	<section id="helpSupport">
+		<div>
+			<h1>Help and Support</h1>
+			<p>
+				For additional help and support, visit the <a href="https://www.zen-cart.com/tutorials" target="_blank">Zen Cart&reg; FAQ</a> and the <a href="https://www.zen-cart.com/forum.php" target="_blank">Zen Cart&reg; Support Forum</a>.
+			</p>
+		</div>
+	</section> <!-- End helpSupport //-->
+	
+	<section id="footerBlock">
+		<div class="appInfo">
+			<p>
+				Zen Cart&reg; is derived from: Copyright 2003 osCommerce
+				<br><br>
+				This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+				<br>
+				without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE
+				<br>
+				and is redistributable under Version 2 of the GNU General Public License.
+			<p>
+			<p>
+				<img src="osi-certified-120x100.png" alt="O S I Certified">
+				<br>
+				This software is OSI Certified Open Source Software.
+				<br>
+				OSI Certified is a certification mark of the Open Source Initiative.
+			<p>
+			<p class="zenData">
+				Copyright 2003 - 2014 Zen Ventures, LLC
+				<br><br>
+				Zen Cart&reg; 
+				<br>
+				<a href="https://www.zen-cart.com" target="_blank">www.zen-cart.com</a>
+			</p>
+		</div>
+	</section> <!-- End footerBlock //-->
+	
 </body>
 </html>
