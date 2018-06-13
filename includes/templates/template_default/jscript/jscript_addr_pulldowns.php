@@ -74,7 +74,7 @@ function update_zone(theForm) {
     theForm.zone_id.options[NumState] = null;
   }
   // build dynamic list of countries/zones for pulldown
-<?php echo zen_js_zone_list('SelectedCountry', 'theForm', 'zone_id'); ?>
+<?php echo zen_js_zone_list('SelectedCountry', 'theForm', 'zone_id', isset($zone_id) ? $zone_id : -1); ?>
 
   // if we had a value before reset, set it again
   if (SelectedZone != "") theForm.elements["zone_id"].value = SelectedZone;
