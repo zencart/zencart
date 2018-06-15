@@ -153,7 +153,7 @@ function check_form(form_name) {
   check_input("city", <?php echo (int)ENTRY_CITY_MIN_LENGTH; ?>, "<?php echo ENTRY_CITY_ERROR; ?>");
 <?php } ?>
 <?php if (ACCOUNT_STATE == 'true') { ?>
-  check_state(<?php echo (int)ENTRY_STATE_MIN_LENGTH . ', "' . ENTRY_STATE_ERROR . '", "' . ENTRY_STATE_ERROR_SELECT; ?>");
+  check_state(<?php echo (int)ENTRY_STATE_MIN_LENGTH . ', "' . ENTRY_STATE_ERROR . '", "' . ENTRY_STATE_ERROR_SELECT . '"'; ?>);
 <?php } ?>
 
   check_select("country", "", "<?php echo ENTRY_COUNTRY_ERROR; ?>");
