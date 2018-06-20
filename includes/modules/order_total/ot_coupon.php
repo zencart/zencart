@@ -212,7 +212,7 @@ class ot_coupon {
 // left for total order amount vs qualified order amount just switch the commented lines
 //        if ($order_total['totalFull'] < $coupon_result->fields['coupon_minimum_order'])
 //        if (strval($order_total['orderTotal']) > 0 && strval($order_total['orderTotal']) < $coupon_result->fields['coupon_minimum_order'])
-//        if ($coupon_result->fields['coupon_minimum_order'] > 0 && strval($order_total['orderTotal']) < $coupon_result->fields['coupon_minimum_order']) {
+//        if ($coupon_result->fields['coupon_minimum_order'] > 0 && strval($order_total['orderTotal']) < $coupon_result->fields['coupon_minimum_order'])
 //        if (strval($coupon_total) > 0 && strval($coupon_total) < $coupon_result->fields['coupon_minimum_order'])
         if (strval($coupon_total) > 0 && strval($coupon_total_minimum) < $coupon_result->fields['coupon_minimum_order'])
         {
@@ -398,7 +398,6 @@ class ot_coupon {
               if ($check->fields['zone_id'] < 1) {
                 $check_flag = true;
                 break;
-//              } elseif ($check->fields['zone_id'] == $order->billing['zone_id']) {
               } elseif ($check->fields['zone_id'] == $check_zone_id) {
                 $check_flag = true;
                 break;
