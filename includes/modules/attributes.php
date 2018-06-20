@@ -242,7 +242,7 @@ $sql = "select count(*) as total
                       break;
                       case '3':
                       $tmp_attributes_image_row++;
-                      //                  if ($tmp_attributes_image_row > PRODUCTS_IMAGES_ATTRIBUTES_PER_ROW) {
+                      //                  if ($tmp_attributes_image_row > PRODUCTS_IMAGES_ATTRIBUTES_PER_ROW) 
                       if ($tmp_attributes_image_row > $products_options_names->fields['products_options_images_per_row']) {
                         $tmp_attributes_image .= '<br class="clearBoth" />' . "\n";
                         $tmp_attributes_image_row = 1;
@@ -258,7 +258,6 @@ $sql = "select count(*) as total
                       case '4':
                       $tmp_attributes_image_row++;
 
-                      //                  if ($tmp_attributes_image_row > PRODUCTS_IMAGES_ATTRIBUTES_PER_ROW) {
                       if ($tmp_attributes_image_row > $products_options_names->fields['products_options_images_per_row']) {
                         $tmp_attributes_image .= '<br class="clearBoth" />' . "\n";
                         $tmp_attributes_image_row = 1;
@@ -274,7 +273,6 @@ $sql = "select count(*) as total
                       case '5':
                       $tmp_attributes_image_row++;
 
-                      //                  if ($tmp_attributes_image_row > PRODUCTS_IMAGES_ATTRIBUTES_PER_ROW) {
                       if ($tmp_attributes_image_row > $products_options_names->fields['products_options_images_per_row']) {
                         $tmp_attributes_image .= '<br class="clearBoth" />' . "\n";
                         $tmp_attributes_image_row = 1;
@@ -341,7 +339,6 @@ $sql = "select count(*) as total
                       case '3':
                       $tmp_attributes_image_row++;
 
-                      //                  if ($tmp_attributes_image_row > PRODUCTS_IMAGES_ATTRIBUTES_PER_ROW) {
                       if ($tmp_attributes_image_row > $products_options_names->fields['products_options_images_per_row']) {
                         $tmp_attributes_image .= '<br class="clearBoth" />' . "\n";
                         $tmp_attributes_image_row = 1;
@@ -357,7 +354,6 @@ $sql = "select count(*) as total
                       case '4':
                       $tmp_attributes_image_row++;
 
-                      //                  if ($tmp_attributes_image_row > PRODUCTS_IMAGES_ATTRIBUTES_PER_ROW) {
                       if ($tmp_attributes_image_row > $products_options_names->fields['products_options_images_per_row']) {
                         $tmp_attributes_image .= '<br class="clearBoth" />' . "\n";
                         $tmp_attributes_image_row = 1;
@@ -373,7 +369,6 @@ $sql = "select count(*) as total
                       case '5':
                       $tmp_attributes_image_row++;
 
-                      //                  if ($tmp_attributes_image_row > PRODUCTS_IMAGES_ATTRIBUTES_PER_ROW) {
                       if ($tmp_attributes_image_row > $products_options_names->fields['products_options_images_per_row']) {
                         $tmp_attributes_image .= '<br class="clearBoth" />' . "\n";
                         $tmp_attributes_image_row = 1;
@@ -478,7 +473,6 @@ $sql = "select count(*) as total
                     if ($products_options->fields['attributes_image'] != '') {
                       $tmp_attributes_image_row++;
 
-                      //              if ($tmp_attributes_image_row > PRODUCTS_IMAGES_ATTRIBUTES_PER_ROW) {
                       if ($tmp_attributes_image_row > $products_options_names->fields['products_options_images_per_row']) {
                         $tmp_attributes_image .= '<br class="clearBoth" />' . "\n";
                         $tmp_attributes_image_row = 1;
