@@ -1,0 +1,43 @@
+version: 2
+jobs:
+    build:
+        docker:
+            # ref: https://circleci.com/docs/2.0/circleci-images/
+            - image: circleci/php:7.2.4-zts-node-browsers
+              environment:
+              - CIRCLE_TEST_REPORTS: /tmp/circleci-test-results
+
+        steps:
+            - checkout
+
+            - run:
+                name: Setup CI environment
+                command: |
+                  touch includes/configure.php
+
+            - run: php --version
+
+            - restore_cache:
+                keys:
+                # "composer.lock" can be used if it is committed to the repo
+                - v1-dependencies-{{ checksum "composer.json" }}
+                # fallback to using the latest cache if no exact match is found
+                - v1-dependencies-
+
+            - run:
+                name: Install Composer
+                command: composer install --no-interaction --no-suggest --ignore-platform-reqs
+
+            - save_cache:
+                key: v1-dependencies-{{ checksum "composer.json" }}
+                paths:
+                  - ./vendor
+                  - ~/.composer
+
+#            - run:
+#                name: Run PHPunit tests
+#                command: vendor/bin/phpunit -c not_for_release/testFramework/unittests/phpunit.xml
+
+            - run:
+                name: Notify Webhook
+                command: if [ -n "${DEPLOY_WEBHOOK}" ]; then wget -O - $DEPLOY_WEBHOOK ; fi
