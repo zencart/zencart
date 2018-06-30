@@ -1,10 +1,10 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2016 Zen Cart Development Team
+ * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: DrByte  Fri Feb 26 00:34:34 2016 -0500 Modified in v1.5.5 $
+ * @version $Id: Author: DrByte  Modified in v1.5.6 $
  */
 
   require('includes/application_top.php');
@@ -88,6 +88,7 @@ pre {margin: 0; font-family: monospace;}
 .v {background-color: #ddd; max-width: 300px; overflow-x: auto; word-wrap: break-word;}
 .v i {color: #999;}
 .phpinfo img {float: right; border: 0;}
+.phpinfo-is-disabled {color: red; font-weight: bold; text-align: center; padding-top: 1em; border: 1px solid red; height: 4em; width: 75%;}
 </style>
 </head>
 <body onLoad="init()" class="sysinfoBody">
@@ -120,6 +121,10 @@ pre {margin: 0; font-family: monospace;}
 <br class="clearBoth">
 <?php echo $sinfo; ?>
 <br>
+<?php 
+$disabled_functions = ini_get('disable_functions');
+if (strpos($disabled_functions,"phpinfo") === false) {
+?>
 <div class="phpinfo">
 <?php
   if (function_exists('ob_start')) {
@@ -135,6 +140,9 @@ pre {margin: 0; font-family: monospace;}
   }
 ?>
 </div>
+<?php } else { ?>
+<div class="phpinfo phpinfo-is-disabled"><?php echo ERROR_UNABLE_TO_DISPLAY_SERVER_INFORMATION; ?></div>
+<?php } ?>
 <!-- body_text_eof //-->
 
 <!-- body_eof //-->
