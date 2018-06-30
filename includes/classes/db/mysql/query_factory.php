@@ -262,7 +262,7 @@ class queryFactory extends base {
         if ($obj->RecordCount() > 0) {
           $zp_result_array = mysqli_fetch_assoc($zp_db_resource);
           if ($zp_result_array) {
-            $obj->fields = array_replace($obj->fields, mysqli_fetch_assoc($zp_db_resource));
+            $obj->fields = array_replace($obj->fields, $zp_result_array);
             $obj->EOF = false;
           }
         }
@@ -284,7 +284,7 @@ class queryFactory extends base {
         return $this->Execute ($zf_sql, false, false, 0, true);
     }
 
-  function ExecuteRandomMulti($zf_sql, $zf_limit = 0, $zf_cache = false, $zf_cachetime=0, $remove_from_queryCache = false, $int_key = true) {
+  function ExecuteRandomMulti($zf_sql, $zf_limit = 0, $zf_cache = false, $zf_cachetime=0, $remove_from_queryCache = false) {
     $this->zf_sql = $zf_sql;
     $time_start = explode(' ', microtime());
     $obj = new queryFactoryResult($this->link);
@@ -310,13 +310,7 @@ class queryFactory extends base {
         $zp_ii = 0;
         while ($zp_ii < $zf_limit) {
           $obj->result[$zp_ii] = array();
-          if ($int_key === true) {
-            $obj->result[$zp_ii] = @mysqli_fetch_array($zp_db_resource);
-          } else if ($int_key === 'only') {
-            $obj->result[$zp_ii] = @mysqli_fetch_row($zp_db_resource);
-          } else {
-            $obj->result[$zp_ii] = @mysqli_fetch_assoc($zp_db_resource);
-          }
+          $obj->result[$zp_ii] = @mysqli_fetch_assoc($zp_db_resource);
           if (!$obj->result[$zp_ii]) {
             unset($obj->result[$zp_ii]);
             $obj->limit = $zp_ii;
@@ -532,7 +526,7 @@ class queryFactoryResult implements Countable, Iterator {
    *
    * @var array of field => value pairs
    */
-  public $fields;
+  public $fields = array();
 
   /**
    * Indicates if the result is cached.
@@ -682,7 +676,7 @@ class queryFactoryResult implements Countable, Iterator {
    *
    * @param int $zp_row the row to move to
    */
-  public function Move($zp_row, $int_key = true) {
+  public function Move($zp_row) {
     global $db;
     if ($this->is_cached) {
       if($zp_row >= sizeof($this->result)) {
@@ -694,13 +688,7 @@ class queryFactoryResult implements Countable, Iterator {
         $this->EOF = false;
       }
     } else if (@mysqli_data_seek($this->resource, $zp_row)) {
-      if ($int_key === true) {
-        $this->fields = array_replace($this->fields, @mysqli_fetch_array($this->resource));
-      } else if ($int_key == 'only') {
-        $this->fields = array_replace($this->fields, @mysqli_fetch_row($this->resource));
-      } else {
-        $this->fields = array_replace($this->fields, @mysqli_fetch_assoc($this->resource));
-      }
+      $this->fields = array_replace($this->fields, @mysqli_fetch_assoc($this->resource));
       $this->cursor = $zp_row;
       $this->EOF = false;
     } else {
