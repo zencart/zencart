@@ -25,20 +25,22 @@
 
   $current_category_id = (isset($_GET['current_category_id']) ? (int)$_GET['current_category_id'] : 0);
 
+  $sql = "SELECT ptc.*
+        FROM " . TABLE_PRODUCTS_TO_CATEGORIES . " ptc
+        LEFT JOIN " . TABLE_PRODUCTS_DESCRIPTION . " pd
+        ON ptc.products_id = pd.products_id
+        AND pd.language_id = '" . (int)$_SESSION['languages_id'] . "'
+        LEFT join " . TABLE_PRODUCTS . " p
+        ON p.products_id = pd.products_id
+        LEFT JOIN " . TABLE_PRODUCT_TYPES  . " pt
+        ON p.products_type = pt.type_id
+        WHERE ptc.categories_id=':category_id'
+        AND pt.allow_add_to_cart = 'Y'
+        ORDER by pd.products_name";
+
   if ($action == 'new_cat') {
     $current_category_id = (isset($_GET['current_category_id']) ? (int)$_GET['current_category_id'] : $current_category_id);
-    $sql = "SELECT ptc.*
-            FROM " . TABLE_PRODUCTS_TO_CATEGORIES . " ptc
-            LEFT JOIN " . TABLE_PRODUCTS_DESCRIPTION . " pd
-            ON ptc.products_id = pd.products_id
-            AND pd.language_id = '" . (int)$_SESSION['languages_id'] . "'
-            LEFT join " . TABLE_PRODUCTS . " p
-            ON p.products_id = pd.products_id
-            LEFT JOIN " . TABLE_PRODUCT_TYPES  . " pt
-            ON p.products_type = pt.type_id
-            WHERE ptc.categories_id='" . $current_category_id . "'
-            AND pt.allow_add_to_cart = 'Y'
-            ORDER by pd.products_name";
+    $sql = $db->bindVars($sql, ':category_id', $current_category_id, 'integer');
     $new_product_query = $db->Execute($sql);
     $products_filter = (!$new_product_query->EOF) ? $new_product_query->fields['products_id'] : '';
     zen_redirect(zen_href_link(FILENAME_PRODUCTS_PRICE_MANAGER, 'products_filter=' . $products_filter . '&current_category_id=' . $current_category_id));
@@ -46,18 +48,7 @@
 
 // set categories and products if not set
   if ($products_filter == '' and $current_category_id != '') {
-    $sql = "SELECT ptc.*
-            FROM " . TABLE_PRODUCTS_TO_CATEGORIES . " ptc
-            LEFT JOIN " . TABLE_PRODUCTS_DESCRIPTION . " pd
-            ON ptc.products_id = pd.products_id
-            AND pd.language_id = '" . (int)$_SESSION['languages_id'] . "'
-            LEFT join " . TABLE_PRODUCTS . " p
-            ON p.products_id = pd.products_id
-            LEFT JOIN " . TABLE_PRODUCT_TYPES  . " pt
-            ON p.products_type = pt.type_id
-            WHERE ptc.categories_id='" . $current_category_id . "'
-            AND pt.allow_add_to_cart = 'Y'
-            ORDER by pd.products_name";
+    $sql = $db->bindVars($sql, ':category_id', $current_category_id, 'integer');
     $new_product_query = $db->Execute($sql);
     $products_filter = (!$new_product_query->EOF) ? $new_product_query->fields['products_id'] : '';
     if ($products_filter != '') {
@@ -67,18 +58,7 @@
     if ($products_filter == '' and $current_category_id == '') {
       $reset_categories_id = zen_get_category_tree('', '', '0', '', '', true);
       $current_category_id = $reset_categories_id[0]['id'];
-      $sql = "SELECT ptc.*
-            FROM " . TABLE_PRODUCTS_TO_CATEGORIES . " ptc
-            LEFT JOIN " . TABLE_PRODUCTS_DESCRIPTION . " pd
-            ON ptc.products_id = pd.products_id
-            AND pd.language_id = '" . (int)$_SESSION['languages_id'] . "'
-            LEFT join " . TABLE_PRODUCTS . " p
-            ON p.products_id = pd.products_id
-            LEFT JOIN " . TABLE_PRODUCT_TYPES  . " pt
-            ON p.products_type = pt.type_id
-            WHERE ptc.categories_id='" . $current_category_id . "'
-            AND pt.allow_add_to_cart = 'Y'
-            ORDER by pd.products_name";
+      $sql = $db->bindVars($sql, ':category_id', $current_category_id, 'integer');
       $new_product_query = $db->Execute($sql);
       $products_filter = (!$new_product_query->EOF) ? $new_product_query->fields['products_id'] : '';
       $_GET['products_filter'] = $products_filter;
