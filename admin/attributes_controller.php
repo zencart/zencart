@@ -1818,6 +1818,9 @@ function zen_js_option_values_list($selectedName, $fieldName) {
                     <div class="row row-eq-height">
                       <div class="col-xs-1 col-sm-1">
                         <strong><?php echo $next_id; ?></strong>
+                        <?php echo zen_draw_hidden_field('attribute_id', $next_id); ?>
+                        <?php echo zen_draw_hidden_field('products_id', $products_filter); ?>
+                        <?php echo zen_draw_hidden_field('current_category_id', $current_category_id); ?>
                       </div>
                       <?php
                       $options_values = $db->Execute("SELECT products_options_id, products_options_name, products_options_type
