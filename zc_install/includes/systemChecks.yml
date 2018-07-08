@@ -9,7 +9,7 @@ systemChecks:
   backupConfigureFiles:
     runLevel: always
     errorLevel: FAIL
-    mainErrorText: <?php echo TEXT_ERROR_ADMIN_CONFIGURE .PHP_EOL; ?>
+    mainErrorText: <?php echo TEXT_ERROR_STORE_CONFIGURE .PHP_EOL; ?>
     methods:
       backupConfigureFiles:
   checkStoreConfigureFile:
