@@ -3,7 +3,7 @@
  * Main English language file for installer
  * @package Installer
  * @copyright Copyright 2003-2018 Zen Cart Development Team
- * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
+ * @license http://www.zen-cart.com/license/2_0.txt GNU Public License v2.0
  * @version $Id: Author: DrByte  Modified in v1.5.6 $
  */
 /**
@@ -17,7 +17,7 @@ define('TEXT_INDEX_FATAL_ERRORS', 'Some problems that need fixing before we cont
 define('TEXT_INDEX_WARN_ERRORS', 'Some Other Issues:');
 define('TEXT_INDEX_WARN_ERRORS_ALT', 'Some Issues:');
 define('TEXT_HEADER_MAIN', 'TIP: The field titles are clickable help links which explain what each field means.');
-define('TEXT_INDEX_HEADER_MAIN', 'TIP: For some errors and warnings below, more information may be available by clicking on the error/warning title.');
+define('TEXT_INDEX_HEADER_MAIN', 'TIP: More information may be available by clicking on the titles of some errors and warnings.');
 define('TEXT_INSTALLER_CHOOSE_LANGUAGE', 'Choose Language');
 define('TEXT_HELP_CONTENT_CHOOSE_LANG', 'Zen Cart&reg; is multi-lingual, supporting as many languages as there are language packs available. Simply install the necessary language pack and your entire store can operate in multiple languages, including this installer.');
 

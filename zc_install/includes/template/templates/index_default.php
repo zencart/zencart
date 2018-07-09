@@ -73,12 +73,22 @@ require(DIR_FS_INSTALL . DIR_WS_INSTALL_TEMPLATE . 'partials/partial_modal_help.
 </div>
 <?php } ?>
 <?php if ($hasWarnErrors) { ?>
+    <?php foreach ($listWarnErrors as $error) { ?>
+        <?php if (strpos($error['mainErrorText'], 'PRO TIP:') === false) { ?>
+            <?php $errorHeadingFlag = true; ?>
+            
+            <?php break; ?>
+        <?php } ?>
+    <?php } ?>
+
 <div id="warnErrors" class="errorList">
-	<?php if ($adjustWarnIssues) { ?>
+    <?php if ($errorHeadingFlag) { ?>
+        <?php if ($adjustWarnIssues) { ?>
   <h2><?php echo TEXT_INDEX_WARN_ERRORS; ?></h2>
-  <?php } else { ?>
+        <?php } else { ?>
   <h2><?php echo TEXT_INDEX_WARN_ERRORS_ALT; ?></h2>
-  <?php } ?>
+        <?php } ?>
+    <?php } ?>
     <?php foreach ($listWarnErrors as $error) { ?>
     	<?php if (strpos($error['mainErrorText'], 'PRO TIP:') !== false) { ?>
     <div class="alert-box">
