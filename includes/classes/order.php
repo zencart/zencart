@@ -217,8 +217,9 @@ class order extends base {
       $attributes_query = "select products_options_id, products_options_values_id, products_options, products_options_values,
                               options_values_price, price_prefix, product_attribute_is_free 
                               from " . TABLE_ORDERS_PRODUCTS_ATTRIBUTES . "
-                               where orders_id = '" . (int)$order_id . "'
-                               and orders_products_id = '" . (int)$orders_products->fields['orders_products_id'] . "'";
+                               where orders_id = " . (int)$order_id . "
+                               and orders_products_id = " . (int)$orders_products->fields['orders_products_id'] . "
+                          ORDER BY orders_products_attributes_id ASC";
 
       $attributes = $db->Execute($attributes_query);
       if ($attributes->RecordCount()) {
