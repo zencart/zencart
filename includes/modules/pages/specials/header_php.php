@@ -8,9 +8,8 @@
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: header_php.php 3000 2006-02-09 21:11:37Z wilt $
  */
-
+$zco_notifier->notify('NOTIFY_HEADER_START_SPECIALS');
 require(DIR_WS_MODULES . zen_get_module_directory('require_languages.php'));
 $breadcrumb->add(NAVBAR_TITLE);
 
 //lines25-71 moved to main_template_vars
-?>

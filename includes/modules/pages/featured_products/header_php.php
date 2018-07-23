@@ -35,7 +35,7 @@ $order_by;
 $featured_products_query_raw = $db->bindVars($featured_products_query_raw, ':languagesID', $_SESSION['languages_id'], 'integer');
 
 // Notifier Point
-$zco_notifier->notify('NOTIFY_FEATURED_PRODUCTS_SQL_STRING');
+$zco_notifier->notify('NOTIFY_FEATURED_PRODUCTS_SQL_STRING', array(), $featured_products_query_raw);
 
 $featured_products_split = new splitPageResults($featured_products_query_raw, MAX_DISPLAY_PRODUCTS_FEATURED_PRODUCTS);
 
@@ -82,5 +82,5 @@ if (PRODUCT_FEATURED_LISTING_MULTIPLE_ADD_TO_CART > 0 and $show_submit == true a
 }
 
 // This should be last line of the script:
-$zco_notifier->notify('NOTIFY_HEADER_END_FEATURED_PRODUCTS', $keywords);
+$zco_notifier->notify('NOTIFY_HEADER_END_FEATURED_PRODUCTS', $how_many);
 //EOF
