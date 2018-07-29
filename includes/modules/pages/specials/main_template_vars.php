@@ -21,6 +21,9 @@ if (MAX_DISPLAY_SPECIAL_PRODUCTS > 0 ) {
                          ORDER BY s.specials_date_added DESC";
 
   $specials_query_raw = $db->bindVars($specials_query_raw, ':languagesID', $_SESSION['languages_id'], 'integer');
+  
+  $zco_notifier->notify('NOTIFY_SPECIALS_MAIN_TEMPLATE_VARS_SQL_STRING', array(), $specials_query_raw);
+  
   $specials_split = new splitPageResults($specials_query_raw, MAX_DISPLAY_SPECIAL_PRODUCTS);
   $specials = $db->Execute($specials_split->sql_query);
   $row = 0;
@@ -50,6 +53,9 @@ if (MAX_DISPLAY_SPECIAL_PRODUCTS > 0 ) {
       }
       $specials->MoveNext();
     }
+    
+    $zco_notifier->notify('NOTIFY_SPECIALS_MAIN_TEMPLATE_VARS_END', array(), $list_box_contents);
+    
     require($template->get_template_dir('tpl_specials_default.php',DIR_WS_TEMPLATE, $current_page_base,'templates'). '/tpl_specials_default.php');
   }
 }
