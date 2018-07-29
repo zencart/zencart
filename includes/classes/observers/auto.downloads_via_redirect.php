@@ -38,7 +38,8 @@ class zcObserverDownloadsViaRedirect extends base {
   /**
    * Class constructor
    */
-  public function __construct() {
+  public function __construct() 
+  {
 
     if (DOWNLOAD_BY_REDIRECT != 'true') return false;
 
@@ -48,7 +49,10 @@ class zcObserverDownloadsViaRedirect extends base {
     // attach listener
     $this->attach($this, array('NOTIFY_DOWNLOAD_READY_TO_REDIRECT'));
 
-    if (defined('SYMLINK_GARBAGE_COLLECTION_THRESHOLD') && (int)SYMLINK_GARBAGE_COLLECTION_THRESHOLD > 300) $this->gc_cleanup_time = (int)SYMLINK_GARBAGE_COLLECTION_THRESHOLD;
+    $this->gc_cleanup_time = 0;
+    if (defined('SYMLINK_GARBAGE_COLLECTION_THRESHOLD') && (int)SYMLINK_GARBAGE_COLLECTION_THRESHOLD > 300) {
+        $this->gc_cleanup_time = (int)SYMLINK_GARBAGE_COLLECTION_THRESHOLD;
+    }
   }
 
   /**
@@ -116,7 +120,7 @@ class zcObserverDownloadsViaRedirect extends base {
       // Loop and unlink files in subdirectory
       $h2 = opendir($dir . $subdir);
       list($fn, $exptime) = explode('-', $subdir);
-      if ($exptime + SYMLINK_GARBAGE_COLLECTION_THRESHOLD > time()) continue;
+      if ($exptime + $this->gc_cleanup_time > time()) continue;
       while ($file = readdir($h2)) {
         if ($file == '.' || $file == '..') continue;
         @unlink($dir . $subdir . '/' . $file);
