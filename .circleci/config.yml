@@ -3,7 +3,7 @@ jobs:
     build:
         docker:
             # ref: https://circleci.com/docs/2.0/circleci-images/
-            - image: circleci/php:7.2.4-zts-node-browsers
+            - image: circleci/php:7.2.8-zts-node-browsers
               environment:
               - CIRCLE_TEST_REPORTS: /tmp/circleci-test-results
               - CIRCLE_ARTIFACTS: /tmp/circleci-artifacts
