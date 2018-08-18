@@ -23,10 +23,11 @@ if (isset($_POST['db_name']))
   zcRegistry::setValue('db_password', $_POST['db_password']);
   zcRegistry::setValue('db_name', $_POST['db_name']);
   zcRegistry::setValue('db_charset', $_POST['db_charset']);
-  $errorList = $systemChecker -> runTests('database');
-  if (count($errorList) != 0)
+  $results = $systemChecker -> runTests('database');
+  if (count($results) != 0)
   {
-    $errorList = $errorList['newDatabaseCheck'];
+    $keys = array_keys($results); 
+    $errorList = $results[$keys[0]]; 
     $error = TRUE;
   } else
   {
