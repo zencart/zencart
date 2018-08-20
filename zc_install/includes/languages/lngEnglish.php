@@ -3,8 +3,8 @@
  * Main English language file for installer
  * @package Installer
  * @copyright Copyright 2003-2016 Zen Cart Development Team
- * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: DrByte  Tue Feb 16 15:03:47 2016 -0500 New in v1.5.5 $
+ * @license http://www.zen-cart.com/license/2_0.txt GNU Public License v2.0
+ * @version $Id: Author: DrByte  Modified in v1.6.0 $
  */
 /**
  * defining language components for the page
@@ -14,9 +14,10 @@ define('HTML_PARAMS','dir="ltr" lang="en"');
 define('ZC_VERSION_STRING', '%s v%s');
 define('TEXT_PAGE_HEADING_INDEX', 'System Inspection');
 define('TEXT_INDEX_FATAL_ERRORS', 'Some problems that need fixing before we continue');
-define('TEXT_INDEX_WARN_ERRORS', 'Some other problems');
+define('TEXT_INDEX_WARN_ERRORS', 'Some Other Issues:');
+define('TEXT_INDEX_WARN_ERRORS_ALT', 'Some Issues:');
 define('TEXT_HEADER_MAIN', 'TIP: The field titles are clickable help links which explain what each field means.');
-define('TEXT_INDEX_HEADER_MAIN', 'TIP: For some errors and warnings below, more information may be available by clicking on the error/warning title.');
+define('TEXT_INDEX_HEADER_MAIN', 'TIP: More information may be available by clicking on the titles of some errors and warnings.');
 define('TEXT_INSTALLER_CHOOSE_LANGUAGE', 'Choose Language');
 define('TEXT_HELP_CONTENT_CHOOSE_LANG', 'Zen Cart&reg; is multi-lingual, supporting as many languages as there are language packs available. Simply install the necessary language pack and your entire store can operate in multiple languages, including this installer.');
 
@@ -55,7 +56,9 @@ define('TEXT_DATABASE_SETUP_DB_PREFIX', 'Store Prefix: ');
 define('TEXT_DATABASE_SETUP_SQL_CACHE_METHOD', 'SQL Cache Method: ');
 define('TEXT_DATABASE_SETUP_JSCRIPT_SQL_ERRORS1', '<p>Some errors occurred when running the SQL install file');
 define('TEXT_DATABASE_SETUP_JSCRIPT_SQL_ERRORS2', '<br>Please see error logs for more details<p>');
-define('TEXT_DATABASE_SETUP_CHARSET_OPTION_UTF8', 'UTF8 (default setting)');
+define('TEXT_DATABASE_SETUP_CHARSET_OPTION_UTF8MB4', 'utf8mb4 (default setting)');
+define('TEXT_DATABASE_SETUP_CHARSET_OPTION_UTF8', 'utf8 (older format)');
+define('TEXT_DATABASE_SETUP_CHARSET_OPTION_LATIN1', 'latin1 (much older format)');
 define('TEXT_DATABASE_SETUP_CACHE_TYPE_OPTION_NONE', 'No SQL Caching');
 define('TEXT_DATABASE_SETUP_CACHE_TYPE_OPTION_DATABASE', 'Database');
 define('TEXT_DATABASE_SETUP_CACHE_TYPE_OPTION_FILE', 'File');
@@ -96,15 +99,15 @@ define('TEXT_ADMIN_SETUP_NEWSLETTER_OPTIN', 'Opt In: ');
 
 define('TEXT_PAGE_HEADING_COMPLETION', 'Setup Finished');
 define('TEXT_COMPLETION_HEADER_MAIN', '');
-define('TEXT_COMPLETION_INSTALL_COMPLETE', 'Installation is now complete.');
-define('TEXT_COMPLETION_INSTALL_LINKS_BELOW', 'You can access your storefront and your Administration area using the links below.');
+define('TEXT_COMPLETION_INSTALL_COMPLETE', 'Installation completed.');
+define('TEXT_COMPLETION_INSTALL_LINKS_BELOW', 'You can now access your Storefront and Admin are using the links below.');
 define('TEXT_COMPLETION_UPGRADE_COMPLETE', 'Congratulations, your upgrade is now complete.');
 define('TEXT_COMPLETION_ADMIN_DIRECTORY_WARNING', 'Your admin directory could not be renamed automatically, you will need to rename your admin directory before accessing it');
 define('TEXT_COMPLETION_INSTALLATION_DIRECTORY_WARNING', "Please delete the 'zc_install' folder now");
 define('TEXT_COMPLETION_INSTALLATION_DIRECTORY_EXPLANATION', "To prevent unauthorized persons from overwriting your installation, administering your installation will be disabled until the folder has been deleted.");
 
 define('TEXT_COMPLETION_CATALOG_LINK_TEXT', 'Your Storefront');
-define('TEXT_COMPLETION_ADMIN_LINK_TEXT', 'Your Admin Backend');
+define('TEXT_COMPLETION_ADMIN_LINK_TEXT', 'Your Admin Area');
 
 define('TEXT_PAGE_HEADING_DATABASE_UPGRADE', 'Database Upgrade');
 define('TEXT_DATABASE_UPGRADE_HEADER_MAIN', '');
@@ -146,10 +149,10 @@ define('TEXT_ERROR_COULD_NOT_WRITE_CONFIGFILE', 'Could not write the generated c
 
 define('TEXT_ERROR_DATABASE_INSTALL', 'There was a problem during the database installation.  Please check the files in the /logs/ folder for details');
 
-define('TEXT_ERROR_STORE_CONFIGURE', "Main /includes/configure.php file does not exist (isn't readable) or is not writeable");
+define('TEXT_ERROR_STORE_CONFIGURE', "Main /includes/configure.php file either does not exist, is not readable, or is not writeable");
 define('TEXT_ERROR_PHP_VERSION', str_replace(array("\n", "\r"), '', 'Incorrect PHP Version.
 <p>The PHP version you are using (' . PHP_VERSION . ') is not suitable.</p>
-<p>This version of Zen Cart&reg; is compatible with PHP versions 5.4 to 7.2.x.<br>
+<p>This version of Zen Cart&reg; is compatible with PHP versions 5.4 to 7.3.x.<br>
 Check the <a href="https://www.zen-cart.com">www.zen-cart.com</a> website for the latest version of Zen Cart&reg;.</p>
 '));
 define('TEXT_ERROR_PHP_VERSION_RECOMMENDED', 'For maximum security and compatibility you should be using PHP %s or newer. This installer can proceed, but this is just letting you know that your site will not be PCI Compliant when running out-of-date software.');
@@ -178,13 +181,13 @@ define('TEXT_ERROR_ZLIB', 'Zlib Extension not enabled');
 define('TEXT_ERROR_OPENSSL', 'Openssl Extension not enabled');
 define('TEXT_ERROR_CURL', 'Problems with the CURL extension - PHP is reporting that CURL is not present.');
 define('TEXT_ERROR_UPLOADS', 'Upload Extension for PHP is not enabled');
-define('TEXT_ERROR_XML', 'XML Extension in PHP is not enabled');
-define('TEXT_ERROR_GZIP', 'Gzip Extension in PHP is not enabled');
+define('TEXT_ERROR_XML', 'The XML Extension in PHP is not enabled');
+define('TEXT_ERROR_GZIP', 'The GZip Extension in PHP is not enabled<br>[ <i><b>NOTE:</b> This may not be relevant if you are using Nginx and handling GZip within Nginx.</i> ]');
 define('TEXT_ERROR_EXTENSION_NOT_LOADED', '%s extension does not seem to be loaded');
 define('TEXT_ERROR_FUNCTION_DOES_NOT_EXIST', 'PHP function %s does not exist');
 define('TEXT_ERROR_CURL_LIVE_TEST', 'Could not use CURL to contact a live server');
-define('TEXT_ERROR_HTTPS', 'PRO TIP: If possible you should already have installed an SSL certificate, and run the installer using https://');
-define('TEXT_ERROR_HTTPS_CONFIGURE', 'As soon as possible, you should install an SSL certificate, and set the URL and ENABLE_SSL settings in your configure.php file.');
+define('TEXT_ERROR_HTTPS', 'PRO TIP: If possible, you should already have installed an SSL certificate, and run zc_install using https://');
+define('TEXT_ERROR_HTTPS_CONFIGURE', 'As soon as possible, you should install an SSL certificate, and set the HTTP_SERVER and HTTPS_SERVER URLs and ENABLE_SSL settings in your configure.php file.');
 define('TEXT_ERROR_SUCCESS_EXISTING_CONFIGURE', 'An existing configure.php file was found. The installer will attempt to upgrade your database structure if you choose "Upgrade..." below.');
 define('TEXT_ERROR_SUCCESS_EXISTING_CONFIGURE_NO_UPDATE', 'An existing configure.php file was found. However your database seems to be current. This suggests you are on a live site. Proceeding with Install will wipe out the current database contents! Are you sure you want to install?');
 define('TEXT_ERROR_MULTIPLE_ADMINS_NONE_SELECTED', 'Multiple Admin directories seem to exist. Either remove old admin directories and click Refresh or select the correct admin directory below and click Refresh.');
@@ -201,7 +204,31 @@ define('TEXT_NAVBAR_FORUM_LINK', 'Forum');
 define('TEXT_NAVBAR_WIKI_LINK', 'Wiki');
 
 define('TEXT_HELP_TITLE_HTACCESSSUPPORT', '.htaccess support');
-define('TEXT_HELP_CONTENT_HTACCESSSUPPORT', 'There appears to be a problem with the htaccess support on your server.<br><br>.htaccess support is used to provide security for preventing access to certain files/folders.<br><br>Possible causes of this problem include: maybe you are not using Apache as your Web Server or .htaccess support is disabled or not configured correctly, OR MORE LIKELY: the .htaccess files that come with Zen Cart (in its various subdirectories) have not been uploaded to your server.<br><br><strong>(Note that any file starting with a "." is usually treated as a "hidden" file, so it could be that your FTP program failed to upload these because you have the display/transfer of hidden files turned off in its settings.)</strong><br><br>This message is shown after zc_install attempted to access files on your server that should normally be blocked by the security rules in the built-in .htaccess files.<br><br>You may proceed with installing despite this situation, but be advised that your site is less secure than it ought to be. Your hosting company should be able to assist you with ensuring .htaccess support is enabled in your site.');
+define('TEXT_HELP_CONTENT_HTACCESSSUPPORT', 'There appears to be a problem with support for ".htaccess" files.<br>Sensitive files and folders on your site, that should normally be blocked by security rules in the built-in ".htaccess" files that come with Zen Cart, are currently accessible.
+	<br><br>
+	Possible causes: 
+	<ul style="list-style-type:square">
+		<li>
+			You may not be using Apache as your Webserver (".htaccess" files are unique to the Apache Webserver), or,
+		</li>
+		<li>
+			Support for ".htaccess" is disabled or misconfigured, or,
+		</li>
+		<li>
+			The ".htaccess" files that come with Zen Cart have not been uploaded to your site.
+			<br>
+			<strong>
+				<i>Files starting with ".", such as ".htaccess" files, are usually treated as "hidden" files and your FTP program may have failed to upload these if you have turned off the display and/or transfer of such hidden files in its settings.</i>
+			</strong>
+		</li>
+	</ul>
+	<br>
+	You may proceed with installing despite this situation, but please be advised that your site will be less secure than it ought to be (If using the Apache Webserver).
+	<br><br>
+	If you are using the Nginx Webserver, please proceed with installing and secure your installation using the equivalent Nginx directives provided under "<strong>Important Security Information for Nginx</strong>" in the "Setup Finished" section of this installation wizard.
+	<br><br>
+	If you do not know which Webserver is in use, please proceed on the assumption that it is the Apache Webserver and request assistance with enabling ".htaccess" support from your web hosting provider.
+	<br><br>');
 define('TEXT_HELP_TITLE_FOLDERPERMS', 'Folder Permissions');
 define('TEXT_HELP_CONTENT_FOLDERPERMS', 'The permissions for this folder are not set correctly. This folder needs to be writeable. You can find out more about folder permissions at <a href="http://www.zen-cart.com/content.php?51-how-do-i-set-permissions-on-files-folders" target="_blank">http://www.zen-cart.com/content.php?51-how-do-i-set-permissions-on-files-folders</a>');
 define('TEXT_HELP_TITLE_CONNECTIONDATABASECHECK', 'Initial Database Connection');
@@ -236,7 +263,7 @@ define('TEXT_HELP_CONTENT_DBNAME', "What is the name of the database used to hol
 define('TEXT_HELP_TITLE_DEMODATA', TEXT_DATABASE_SETUP_LOAD_DEMO);
 define('TEXT_HELP_CONTENT_DEMODATA', "If you choose to load Demo Data, we will install a base set of products and categories, with sales and specials and attributes and more. These are useful for you to play around and see how various combinations can be set up and how they can look on your storefront.<br><br>You can certainly delete the demo products (by hand) later, or once you've toyed with the samples, you can re-run this install and choose to not install the demo data, and thus have a fully clean site for setting up your own new store.");
 define('TEXT_HELP_TITLE_DBCHARSET', 'Database Character Set');
-define('TEXT_HELP_CONTENT_DBCHARSET', "Most stores will use UTF8.<br>If you don't have a reason to use something else, use UTF8.");
+define('TEXT_HELP_CONTENT_DBCHARSET', "Most stores will use UTF8MB4 or UTF8.<br>If you don't have a reason to use something else, use UTF8MB4.");
 define('TEXT_HELP_TITLE_DBPREFIX', 'Database Tablename Prefix');
 define('TEXT_HELP_CONTENT_DBPREFIX', "What is the prefix you would like used for database tables?  Example: <strong>zen_</strong><br><strong class='alert'>TIP: Leave empty if no prefix is needed.</strong><br />You can use prefixes to allow more than one store to share the same database.");
 define('TEXT_HELP_TITLE_SQLCACHEMETHOD', 'SQL Cache Method');
