@@ -426,7 +426,7 @@ function translate_type_to_name($opt_type) {
     <script>
       function go_option() {
           if ($('#sortOrder').val() != 'none') {
-              location = '<?php echo zen_href_link(FILENAME_OPTIONS_NAME_MANAGER, 'option_page=' . ($_GET['option_page'] ? $_GET['option_page'] : 1)); ?>&option_order_by=' + $('#sortOrder').val();
+              location = '<?php echo zen_href_link(FILENAME_OPTIONS_NAME_MANAGER, 'option_page=' . (!empty($_GET['option_page']) ? $_GET['option_page'] : 1)); ?>&option_order_by=' + $('#sortOrder').val();
           }
       }
     </script>

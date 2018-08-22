@@ -40,7 +40,7 @@ if ($_SESSION['cart']->count_contents() > 0) {
    $zip_code = (isset($_POST['zip_code'])) ? strip_tags(addslashes($_POST['zip_code'])) : $zip_code;
    $state_zone_id = (isset($_SESSION['cart_zone'])) ? (int)$_SESSION['cart_zone'] : '';
    $state_zone_id = (isset($_POST['zone_id'])) ? (int)$_POST['zone_id'] : $state_zone_id;
-   $selectedState = zen_output_string_protected($_POST['state']);
+   $selectedState = (isset($_POST['state']) ? zen_output_string_protected($_POST['state']) : '');
   // Could be placed in english.php
   // shopping cart quotes
   // shipping cost
@@ -49,12 +49,12 @@ if ($_SESSION['cart']->count_contents() > 0) {
   if (file_exists(DIR_WS_CLASSES . 'http_client.php')) require_once(DIR_WS_CLASSES . 'http_client.php'); // shipping in basket
 
 
-  if ($_SESSION['customer_id']) {
+  if (!empty($_SESSION['customer_id'])) {
     // user is logged in
     if (isset($_POST['address_id'])){
       // user changed address
       $sendto = $_POST['address_id'];
-    }elseif ($_SESSION['cart_address_id']){
+    }elseif (!empty($_SESSION['cart_address_id'])){
       // user once changed address
       $sendto = $_SESSION['cart_address_id'];
       //        $sendto = $_SESSION['customer_default_address_id'];
@@ -88,7 +88,7 @@ if ($_SESSION['cart']->count_contents() > 0) {
       //add state zone_id
       $_SESSION['cart_zone'] = $state_zone_id;
       $_SESSION['cart_zip_code'] = $zip_code;
-    } elseif ($_SESSION['cart_country_id']){
+    } elseif (!empty($_SESSION['cart_country_id'])){
       // session is available
       $_SESSION['country_info'] = zen_get_countries($_SESSION['cart_country_id'],true);
       $country_info = $_SESSION['country_info'];
@@ -107,7 +107,7 @@ if ($_SESSION['cart']->count_contents() > 0) {
                                'country' => array('id' => STORE_COUNTRY, 'title' => $country_info['countries_name'], 'iso_code_2' => $country_info['countries_iso_code_2'], 'iso_code_3' =>  $country_info['countries_iso_code_3']),
                                'country_id' => STORE_COUNTRY,
                                'zone_id' => $state_zone_id,
-                               'format_id' => zen_get_address_format_id($_POST['zone_country_id']));
+                               'format_id' => zen_get_address_format_id(isset($_POST['zone_country_id']) ? $_POST['zone_country_id'] : 0));
     }
     // set the cost to be able to calculate free shipping
     $order->info = array('total' => $_SESSION['cart']->show_total(), // TAX ????

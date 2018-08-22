@@ -737,6 +737,8 @@ class shoppingCart extends base {
 
           $attribute_price = $db->Execute($attribute_price_query);
 
+          if ($attribute_price->EOF) continue;
+
           $new_attributes_price = 0;
         // calculate Product Price without Specials, Sales or Discounts
 //          $new_attributes_price_before_discounts = 0;
@@ -1971,7 +1973,7 @@ class shoppingCart extends base {
         if ($this->display_debug_messages) $messageStack->add_session('header', 'E: FUNCTION ' . __FUNCTION__ . '<br>' . ERROR_MAXIMUM_QTY . zen_get_products_name($_POST['products_id']), 'caution');
       }
     }
-    if ($the_list == '') {
+    if (empty($the_list) || isset($the_list) && $the_list != '0') {
       // no errors
 // display message if all is good and not on shopping_cart page
       if (DISPLAY_CART == 'false' && $_GET['main_page'] != FILENAME_SHOPPING_CART && $messageStack->size('shopping_cart') == 0) {

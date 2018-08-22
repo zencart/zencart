@@ -174,7 +174,7 @@ if (defined('MODULE_ORDER_TOTAL_GV_SHOW_QUEUE_IN_ADMIN') && MODULE_ORDER_TOTAL_G
     </div>
 
     <div class="col-xs-6 col-sm-3 col-sm-pull-3 noprint adminHeaderAlerts">
-        <?php if ($new_gv_queue_cnt > 0) echo $goto_gv . '<br />' . sprintf(TEXT_SHOW_GV_QUEUE, $new_gv_queue_cnt); ?>
+        <?php if (!empty($new_gv_queue_cnt)) echo $goto_gv . '<br />' . sprintf(TEXT_SHOW_GV_QUEUE, $new_gv_queue_cnt); ?>
     </div>
 
   </div>
