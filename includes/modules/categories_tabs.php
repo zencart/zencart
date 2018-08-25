@@ -13,7 +13,7 @@ if (!defined('IS_ADMIN_FLAG')) {
 }
 $order_by = " order by c.sort_order, cd.categories_name ";
 
-$categories_tab_query = "select c.categories_id, cd.categories_name from " .
+$categories_tab_query = "select c.sort_order, c.categories_id, cd.categories_name from " .
 TABLE_CATEGORIES . " c, " . TABLE_CATEGORIES_DESCRIPTION . " cd
                           where c.categories_id=cd.categories_id and c.parent_id= '0' and cd.language_id='" . (int)$_SESSION['languages_id'] . "' and c.categories_status='1'" .
 $order_by;
