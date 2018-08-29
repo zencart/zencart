@@ -15,6 +15,8 @@ $zco_notifier->notify('NOTIFY_HEADER_START_CONTACT_US');
 require(DIR_WS_MODULES . zen_get_module_directory('require_languages.php'));
 
 $error = false;
+$enquiry = '';
+
 if (isset($_GET['action']) && ($_GET['action'] == 'send')) {
   $name = zen_db_prepare_input($_POST['contactname']);
   $email_address = zen_db_prepare_input($_POST['email']);
@@ -95,8 +97,11 @@ if (ENABLE_SSL == 'true' && $request_type != 'SSL') {
   zen_redirect(zen_href_link(FILENAME_CONTACT_US, '', 'SSL'));
 }
 
+$email_address = '';
+$name = '';
+
 // default email and name if customer is logged in
-if($_SESSION['customer_id']) {
+if(!empty($_SESSION['customer_id'])) {
   $sql = "SELECT customers_id, customers_firstname, customers_lastname, customers_password, customers_email_address, customers_default_address_id
           FROM " . TABLE_CUSTOMERS . "
           WHERE customers_id = :customersID";

@@ -86,10 +86,10 @@ class VersionServer
     public function hasProjectPatches($newVersionInfo)
     {
         $result = 0;
-        if (trim($newVersionInfo['versionPatch1']) > (int)PROJECT_VERSION_PATCH1) {
+        if (isset($newVersionInfo['versionPatch1']) && trim($newVersionInfo['versionPatch1']) > (int)PROJECT_VERSION_PATCH1) {
             $result++;
         }
-        if (trim($newVersionInfo['versionPatch2']) > (int)PROJECT_VERSION_PATCH2) {
+        if (isset($newVersionInfo['versionPatch2']) && trim($newVersionInfo['versionPatch2']) > (int)PROJECT_VERSION_PATCH2) {
             $result++;
             $result++;
         }

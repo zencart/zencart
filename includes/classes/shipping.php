@@ -181,7 +181,7 @@ class shipping extends base {
 
       foreach($this->modules as $value) {
         $class = substr($value, 0, strrpos($value, '.'));
-        if ($GLOBALS[$class]->enabled) {
+        if (isset($GLOBALS[$class]) && is_object($GLOBALS[$class]) && $GLOBALS[$class]->enabled) {
           $quotes = $GLOBALS[$class]->quotes;
           $size = sizeof($quotes['methods']);
           for ($i=0; $i<$size; $i++) {
