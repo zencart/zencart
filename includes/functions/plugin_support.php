@@ -38,7 +38,7 @@ function plugin_version_check_for_updates($plugin_file_id = 0, $version_string_t
     $data = json_decode($versionServer->getPluginVersion($plugin_file_id), true);
 
     if (null === $data || isset($data['error'])) {
-        trigger_error('CURL error checking plugin versions: ' . $data['error']);
+        trigger_error('CURL error checking plugin versions: ' . print_r($data['error'], true));
         return false;
     }
 
