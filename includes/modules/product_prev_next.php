@@ -77,26 +77,24 @@ if (PRODUCT_INFO_PREVIOUS_NEXT != 0) {
   $products_ids = $db->Execute($sql);
   $products_found_count = $products_ids->RecordCount();
 
-  while (!$products_ids->EOF) {
-    $id_array[] = $products_ids->fields['products_id'];
-    $products_ids->MoveNext();
+  // if invalid product id skip
+  if ($products_found_count > 0) {
+
+    foreach ($products_ids as $products_id) {
+      $id_array[] = $products_id['products_id'];
   }
 
-  // if invalid product id skip
-  if (is_array($id_array)) {
-    $counter = 0;
+    $position = $counter = 0;
+    $previous = -1; // identify as needing to go to the end of the list.
+    $next_item = $id_array[0]; // set the next as the first initially.
     foreach ($id_array as $key => $value) {
       if ($value == (int)$_GET['products_id']) {
         $position = $counter;
-        if ($key == 0) {
-          $previous = -1; // it was the first to be found
-        } else {
+        if ($key != 0) {
           $previous = $id_array[$key - 1];
         }
         if (isset($id_array[$key + 1]) && $id_array[$key + 1]) {
           $next_item = $id_array[$key + 1];
-        } else {
-          $next_item = $id_array[0];
         }
       }
       $last = $value;
