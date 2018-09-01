@@ -16,14 +16,14 @@
     global $db;
     $address_format_query = "select address_format_id as format_id
                              from " . TABLE_COUNTRIES . "
-                             where countries_id = '" . (int)$country_id . "'";
+                             where countries_id = " . (int)$country_id;
 
     $address_format = $db->Execute($address_format_query);
 
     if ($address_format->RecordCount() > 0) {
       return $address_format->fields['format_id'];
     } else {
-      return '1';
+      return 1;
     }
   }
 
@@ -32,9 +32,10 @@
 // TABLES: address_format
   function zen_address_format($address_format_id, $address, $html, $boln, $eoln) {
     global $db;
+    $address_out = '';
     $address_format_query = "select address_format as format
                              from " . TABLE_ADDRESS_FORMAT . "
-                             where address_format_id = '" . (int)$address_format_id . "'";
+                             where address_format_id = " . (int)$address_format_id;
 
     $address_format = $db->Execute($address_format_query);
     $company = zen_output_string_protected($address['company']);
@@ -123,8 +124,8 @@
                              entry_state as state, entry_zone_id as zone_id,
                              entry_country_id as country_id
                       from " . TABLE_ADDRESS_BOOK . "
-                      where customers_id = '" . (int)$customers_id . "'
-                      and address_book_id = '" . (int)$address_id . "'";
+                      where customers_id = " . (int)$customers_id . "
+                      and address_book_id = " . (int)$address_id;
 
     $address = $db->Execute($address_query);
 
@@ -164,7 +165,7 @@
 
     $orders_check_query = "select count(*) as total
                            from " . TABLE_ORDERS . "
-                           where customers_id = '" . (int)$id . "'";
+                           where customers_id = " . (int)$id;
 
     $orders_check = $db->Execute($orders_check_query);
 
@@ -190,7 +191,7 @@
 
     $addresses_query = "select count(*) as total
                         from " . TABLE_ADDRESS_BOOK . "
-                        where customers_id = '" . (int)$id . "'";
+                        where customers_id = " . (int)$id;
 
     $addresses = $db->Execute($addresses_query);
 
