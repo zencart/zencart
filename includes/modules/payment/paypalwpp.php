@@ -2946,7 +2946,7 @@ if (false) { // disabled until clarification is received about coupons in PayPal
           if ($response['L_ERRORCODE0'] == 10422 || $response['L_ERRORCODE0'] == 10486) {
             header("HTTP/1.1 302 Object Moved");
             zen_redirect($this->ec_redirect_url);
-            die();
+            die("Funding source problem; please go to Paypal.com (Error " . zen_output_string_protected($response['L_ERRORCODE0']) . ")");
           }
 
           // some other error condition
