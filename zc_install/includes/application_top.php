@@ -11,7 +11,7 @@
 @set_time_limit(250);
 
 if (file_exists(DIR_FS_INSTALL . 'includes/localConfig.php')) {
-  require (DIR_FS_INSTALL . 'includes/localConfig.php');
+  require DIR_FS_INSTALL . 'includes/localConfig.php';
 }
 
 $val = getenv('HABITAT');
@@ -52,7 +52,7 @@ if (VERBOSE_SYSTEMCHECKER == 'screen' && $controller == 'cli') echo 'Verbose mod
 /**
  * read some file locations from the "store / catalog" configure.php
  */
-require (DIR_FS_INSTALL . 'includes/classes/class.zcConfigureFileReader.php');
+require DIR_FS_INSTALL . 'includes/classes/class.zcConfigureFileReader.php';
 $configFile = DIR_FS_ROOT . 'includes/configure.php';
 $configFileLocal = DIR_FS_ROOT . 'includes/local/configure.php';
 if (file_exists($configFileLocal)) $configFile = $configFileLocal;
@@ -81,7 +81,8 @@ if (!defined('DIR_FS_DOWNLOAD_PUBLIC')) {
  * set the level of error reporting
  */
 if (!defined('DEBUG_LOG_FOLDER')) define('DEBUG_LOG_FOLDER', DIR_FS_LOGS);
-error_reporting(version_compare(PHP_VERSION, 5.3, '>=') ? E_ALL & ~E_DEPRECATED & ~E_NOTICE : version_compare(PHP_VERSION, 5.4, '>=') ? E_ALL & ~E_DEPRECATED & ~E_NOTICE & ~E_STRICT : E_ALL & ~E_NOTICE);
+//error_reporting(E_ALL & ~E_DEPRECATED & ~E_NOTICE & ~E_STRICT);
+error_reporting(E_ALL);
 $debug_logfile_path = DEBUG_LOG_FOLDER . '/zcInstallDEBUG-' . time() . '-' . mt_rand(1000, 999999) . '.log';
 @ini_set('log_errors', 1);
 @ini_set('log_errors_max_len', 0);
@@ -98,16 +99,14 @@ if (defined('STRICT_ERROR_REPORTING') && STRICT_ERROR_REPORTING == true)
  */
 if (ini_get('date.timezone') == '' && @date_default_timezone_get() == '')
 {
-  include (DIR_FS_ROOT . '/includes/extra_configures/set_time_zone.php');
+  include DIR_FS_ROOT . '/includes/extra_configures/set_time_zone.php';
 }
 // re-test
 if (ini_get('date.timezone') == '' && @date_default_timezone_get() == '')
 {
   die('ERROR: date.timezone is not set in php.ini. You have two options: 1-Edit /includes/extra_configures/set_time_zone.php to set the $TZ variable manually, or 2-Contact your hosting company to set the timezone correctly in the server PHP configuration before continuing.');
-} else
-{
-  @date_default_timezone_set(date_default_timezone_get());
 }
+@date_default_timezone_set(date_default_timezone_get());
 
 /*
  * Bypass PHP file caching systems if active, since it interferes with files changed by zc_install (such as progress.json and configure.php)
@@ -151,10 +150,10 @@ zen_sanitize_request();
 /**
  * set the type of request (secure or not)
  */
-$request_type = (((isset($_SERVER['HTTPS']) && (strtolower($_SERVER['HTTPS']) == 'on' || $_SERVER['HTTPS'] == '1'))) ||
-                 (isset($_SERVER['HTTP_X_FORWARDED_BY']) && strpos(strtoupper($_SERVER['HTTP_X_FORWARDED_BY']), 'SSL') !== false) ||
-                 (isset($_SERVER['HTTP_X_FORWARDED_HOST']) && (strpos(strtoupper($_SERVER['HTTP_X_FORWARDED_HOST']), 'SSL') !== false || strpos(strtoupper($_SERVER['HTTP_X_FORWARDED_HOST']), str_replace('https://', '', HTTPS_SERVER)) !== false)) ||
-                 (isset($_SERVER['SCRIPT_URI']) && strtolower(substr($_SERVER['SCRIPT_URI'], 0, 6)) == 'https:') ||
+$request_type = ((isset($_SERVER['HTTPS']) && (strtolower($_SERVER['HTTPS']) == 'on' || $_SERVER['HTTPS'] == '1')) ||
+                 (isset($_SERVER['HTTP_X_FORWARDED_BY']) && stripos($_SERVER['HTTP_X_FORWARDED_BY'], 'SSL') !== false) ||
+                 (isset($_SERVER['HTTP_X_FORWARDED_HOST']) && (stripos($_SERVER['HTTP_X_FORWARDED_HOST'], 'SSL') !== false || stripos($_SERVER['HTTP_X_FORWARDED_HOST'], str_replace('https://', '', HTTPS_SERVER)) !== false)) ||
+                 (isset($_SERVER['SCRIPT_URI']) && stripos($_SERVER['SCRIPT_URI'], 'https:') === 0) ||
                  (isset($_SERVER['HTTP_X_FORWARDED_SSL']) && ($_SERVER['HTTP_X_FORWARDED_SSL'] == '1' || strtolower($_SERVER['HTTP_X_FORWARDED_SSL']) == 'on')) ||
                  (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && (strtolower($_SERVER['HTTP_X_FORWARDED_PROTO']) == 'ssl' || strtolower($_SERVER['HTTP_X_FORWARDED_PROTO']) == 'https')) ||
                  (isset($_SERVER['HTTP_SSLSESSIONID']) && $_SERVER['HTTP_SSLSESSIONID'] != '') ||
@@ -163,10 +162,9 @@ $request_type = (((isset($_SERVER['HTTPS']) && (strtolower($_SERVER['HTTPS']) ==
 /*
  * debug params
  */
-define('ZC_UPG_DEBUG',  (!isset($_GET['debug'])  && !isset($_POST['debug'])  || (isset($_POST['debug'])  && $_POST['debug'] == '')) ? false : true);
-define('ZC_UPG_DEBUG2', (!isset($_GET['debug2']) && !isset($_POST['debug2']) || (isset($_POST['debug2']) && $_POST['debug2'] == '')) ? false : true);
-define('ZC_UPG_DEBUG3', (!isset($_GET['debug3']) && !isset($_POST['debug3']) || (isset($_POST['debug3']) && $_POST['debug3'] == '')) ? false : true);
-
+define('ZC_UPG_DEBUG', !(empty($_GET['debug']) && empty($_POST['debug'])));
+define('ZC_UPG_DEBUG2', !(empty($_GET['debug2']) && empty($_POST['debug2'])));
+define('ZC_UPG_DEBUG3', !(empty($_GET['debug3']) && empty($_POST['debug3'])));
 
 
 /*
@@ -178,14 +176,16 @@ require (DIR_FS_INSTALL . 'includes/vendors/yaml/lib/class.sfYaml.php');
 require (DIR_FS_INSTALL . 'includes/classes/class.zcRegistry.php');
 require (DIR_FS_INSTALL . 'includes/vendors/yaml/lib/class.sfYamlParser.php');
 require (DIR_FS_INSTALL . 'includes/vendors/yaml/lib/class.sfYamlInline.php');
+
 if (!isset($_GET['main_page'])) $_GET['main_page'] = 'index';
 $current_page = preg_replace('/[^a-z0-9_]/', '', $_GET['main_page']);
 if ($current_page == '' || !file_exists('includes/modules/pages/' . $current_page)) $_GET['main_page'] = $current_page = 'index';
 $page_directory = 'includes/modules/pages/' . $current_page;
+
 /*
  * language determination
  */
-$language = NULL;
+$language = null;
 if (isset($_POST['lng']))
 {
   $lng = preg_replace('/[^a-zA-Z_]/', '', $_POST['lng']);

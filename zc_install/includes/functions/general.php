@@ -92,7 +92,7 @@ function zen_get_select_options($optionList, $setDefault)
     $t1['host'] = $s2[0];
     array_shift($s2);
     // adjust host to accommodate /~username shared-ssl scenarios
-    if ($detect_tilde && substr($s2[0], 0, 1) == '~') {
+    if ($detect_tilde && isset($s2[0]) && strpos($s2[0], '~') === 0) {
       $t1['host'] .= '/' . $s2[0];
       // array_shift also therefore removes it from ['path'] below
       array_shift($s2);

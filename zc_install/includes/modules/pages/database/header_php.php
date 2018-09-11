@@ -34,5 +34,7 @@ if (defined('DEVELOPER_MODE') && DEVELOPER_MODE === true) {
 $db_prefix = isset($db_prefix) ? $db_prefix : '';
 
 // attempt to intelligently manage user-adjusted subdirectory values if they are different from detected defaults
+if (!isset($_POST['detected_http_server_catalog'])) $_POST['detected_http_server_catalog'] = '';
+if (!isset($_POST['detected_https_server_catalog'])) $_POST['detected_https_server_catalog'] = '';
 if ($_POST['http_server_catalog'] != $_POST['detected_http_server_catalog']) $_POST['dir_ws_http_catalog'] = rtrim(str_replace($_POST['http_server_catalog'], '', $_POST['http_url_catalog']), '/') .'/';
 if ($_POST['https_server_catalog'] != $_POST['detected_https_server_catalog']) $_POST['dir_ws_https_catalog'] = rtrim(str_replace($_POST['https_server_catalog'], '', $_POST['https_url_catalog']), '/') .'/';
