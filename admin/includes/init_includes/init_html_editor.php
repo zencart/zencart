@@ -23,7 +23,7 @@ if (!defined('IS_ADMIN_FLAG')) {
  */
   $editors_list['NONE'] = array('desc' => EDITOR_NONE, 'handler' => '', 'special_needs' => ''); // plain text
   if (is_dir(DIR_FS_CATALOG . DIR_WS_EDITORS . 'ckeditor')) $editors_list['CKEDITOR']  = array('desc' => EDITOR_CKEDITOR,  'handler' => 'ckeditor.php',  'special_needs' => '');
-  if (is_dir(DIR_FS_CATALOG . DIR_WS_EDITORS . 'tiny_mce')) $editors_list['TINYMCE']   = array('desc' => EDITOR_TINYMCE,   'handler' => 'tinymce.php',   'special_needs' => '');
+  if (is_dir(DIR_FS_CATALOG . DIR_WS_EDITORS . 'tinymce')) $editors_list['TINYMCE']   = array('desc' => EDITOR_TINYMCE,   'handler' => 'tinymce.php',   'special_needs' => '');
 
 /**
  * Prepare pulldown menu for use in various pages where editor selections should be offered
