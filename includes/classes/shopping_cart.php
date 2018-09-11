@@ -1850,10 +1850,11 @@ class shoppingCart extends base {
     global $db, $messageStack;
     if ($this->display_debug_messages) $messageStack->add_session('header', 'A: FUNCTION ' . __FUNCTION__, 'caution');
 
+    $the_list = '';
+
     if (isset($_POST['products_id']) && is_numeric($_POST['products_id'])) {
       // verify attributes and quantity first
       if ($this->display_debug_messages) $messageStack->add_session('header', 'A2: FUNCTION ' . __FUNCTION__, 'caution');
-      $the_list = '';
       $adjust_max= 'false';
       if (isset($_POST['id'])) {
         foreach ($_POST['id'] as $key => $value) {
@@ -1973,7 +1974,7 @@ class shoppingCart extends base {
         if ($this->display_debug_messages) $messageStack->add_session('header', 'E: FUNCTION ' . __FUNCTION__ . '<br>' . ERROR_MAXIMUM_QTY . zen_get_products_name($_POST['products_id']), 'caution');
       }
     }
-    if (empty($the_list) || isset($the_list) && $the_list != '0') {
+    if (empty($the_list)) {
       // no errors
 // display message if all is good and not on shopping_cart page
       if (DISPLAY_CART == 'false' && $_GET['main_page'] != FILENAME_SHOPPING_CART && $messageStack->size('shopping_cart') == 0) {
