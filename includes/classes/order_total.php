@@ -158,7 +158,7 @@ class order_total extends base {
         $class = substr($value, 0, strrpos($value, '.'));
         if (isset($GLOBALS[$class]->credit_class) && $GLOBALS[$class]->credit_class == true ) {
           $post_var = 'c' . $GLOBALS[$class]->code;
-          if ($_POST[$post_var]) $_SESSION[$post_var] = $_POST[$post_var];
+          if (isset($_POST[$post_var]) && $_POST[$post_var]) $_SESSION[$post_var] = $_POST[$post_var];
           $GLOBALS[$class]->collect_posts();
         }
       }

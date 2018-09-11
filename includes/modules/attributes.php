@@ -101,6 +101,10 @@ $sql = "select count(*) as total
 
                 $zco_notifier->notify('NOTIFY_ATTRIBUTES_MODULE_START_OPTION', $products_options_names->fields);
 
+                if (!isset($products_options_names->fields['products_options_comment_position'])) {
+                  $products_options_names->fields['products_options_comment_position'] = '0';
+                }
+
                 while (!$products_options->EOF) {
                   // reset
                   $products_options_display_price='';
@@ -213,7 +217,7 @@ $sql = "select count(*) as total
                     } else {
                       //              $selected_attribute = ($products_options->fields['attributes_default']=='1' ? true : false);
                       // if an error, set to customer setting
-                      if ($_POST['id'] !='') {
+                      if (isset($_POST['id']) && $_POST['id'] !='') {
                         $selected_attribute= false;
                         foreach ($_POST['id'] as $key => $value) {
                           if (($key == $products_options_names->fields['products_options_id'] and $value == $products_options->fields['products_options_values_id'])) {
@@ -242,7 +246,7 @@ $sql = "select count(*) as total
                       break;
                       case '3':
                       $tmp_attributes_image_row++;
-                      //                  if ($tmp_attributes_image_row > PRODUCTS_IMAGES_ATTRIBUTES_PER_ROW) 
+                      //                  if ($tmp_attributes_image_row > PRODUCTS_IMAGES_ATTRIBUTES_PER_ROW) {
                       if ($tmp_attributes_image_row > $products_options_names->fields['products_options_images_per_row']) {
                         $tmp_attributes_image .= '<br class="clearBoth" />' . "\n";
                         $tmp_attributes_image_row = 1;
@@ -299,7 +303,7 @@ $sql = "select count(*) as total
                     } else {
                       //              $selected_attribute = ($products_options->fields['attributes_default']=='1' ? true : false);
                       // if an error, set to customer setting
-                      if ($_POST['id'] !='') {
+                      if (isset($_POST['id']) && $_POST['id'] !='') {
                         $selected_attribute= false;
                         foreach ($_POST['id'] as $key => $value) {
                           if (is_array($value)) {
@@ -389,7 +393,7 @@ $sql = "select count(*) as total
                     //CLR 030714 Add logic for text option
                     //            $products_attribs_query = zen_db_query("select distinct patrib.options_values_price, patrib.price_prefix from " . TABLE_PRODUCTS_ATTRIBUTES . " patrib where patrib.products_id='" . (int)$_GET['products_id'] . "' and patrib.options_id = '" . $products_options_name['products_options_id'] . "'");
                     //            $products_attribs_array = zen_db_fetch_array($products_attribs_query);
-                    if ($_POST['id']) {
+                    if (isset($_POST['id']) && $_POST['id'] !='') {
                       foreach ($_POST['id'] as $key => $value) {
                         //echo preg_replace('/txt_/', '', $key) . '#';
                         //print_r($_POST['id']);
@@ -581,7 +585,7 @@ $sql = "select count(*) as total
                     $selected_attribute = $_SESSION['cart']->contents[$prod_id]['attributes'][$products_options_names->fields['products_options_id']];
                   } else {
                     // use customer-selected values
-                    if ($_POST['id'] !='') {
+                    if (isset($_POST['id']) && $_POST['id'] !='') {
                       foreach ($_POST['id'] as $key => $value) {
                         if ($key == $products_options_names->fields['products_options_id']) {
                           $selected_attribute = $value;
