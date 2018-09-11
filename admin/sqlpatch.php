@@ -360,9 +360,6 @@ $linebreak = '
 
   function zen_table_exists($tablename, $pre_install=false) {
     global $db;
-    if(!defined('ZC_UPG_DEBUG3')) {
-      define('ZC_UPG_DEBUG3', false);
-    }
     $tables = $db->Execute("SHOW TABLES like '" . DB_PREFIX . $tablename . "'");
     if (defined('ZC_UPG_DEBUG3') && ZC_UPG_DEBUG3==true) echo 'Table check ('.$tablename.') = '. $tables->RecordCount() .'<br>';
     if ($tables->RecordCount() > 0) {
@@ -388,8 +385,7 @@ $linebreak = '
     global $db;
     global $db_test;
     $granted_privs_list='';
-    if (!defined('ZC_UPG_DEBUG3')) define('ZC_UPG_DEBUG3', false);
-    if (ZC_UPG_DEBUG3==true) echo '<br />Checking for priv: ['.(zen_not_null($priv) ? $priv : 'none specified').']<br />';
+    if (defined('ZC_UPG_DEBUG3') && ZC_UPG_DEBUG3==true) echo '<br />Checking for priv: ['.(zen_not_null($priv) ? $priv : 'none specified').']<br />';
     if (!defined('DB_SERVER'))          define('DB_SERVER',$zdb_server);
     if (!defined('DB_SERVER_USERNAME')) define('DB_SERVER_USERNAME',$zdb_user);
     if (!defined('DB_DATABASE'))        define('DB_DATABASE',$zdb_name);
@@ -439,9 +435,6 @@ $linebreak = '
     global $db;
     if (!zen_not_null($param)) return "Empty SQL Statement";
     $index = $param[2];
-    if(!defined('ZC_UPG_DEBUG3')) {
-      define('ZC_UPG_DEBUG3', false);
-    }
     $sql = "show index from " . DB_PREFIX . $param[4];
     $result = $db->Execute($sql);
     while (!$result->EOF) {
@@ -463,9 +456,6 @@ $linebreak = '
     if (!zen_not_null($param)) return "Empty SQL Statement";
     $index = (strtoupper($param[1])=='INDEX') ? $param[2] : $param[3];
     if (in_array('USING',$param)) return 'USING parameter found. Cannot validate syntax. Please run manually in phpMyAdmin.';
-    if(!defined('ZC_UPG_DEBUG3')) {
-      define('ZC_UPG_DEBUG3', false);
-    }
     $table = (strtoupper($param[2])=='INDEX' && strtoupper($param[4])=='ON') ? $param[5] : $param[4];
     $sql = "show index from " . DB_PREFIX . $table;
     $result = $db->Execute($sql);
@@ -659,9 +649,6 @@ $linebreak = '
 
   function zen_write_to_upgrade_exceptions_table($line, $reason, $sql_file) {
     global $db;
-    if(!defined('ZC_UPG_DEBUG3')) {
-      define('ZC_UPG_DEBUG3', false);
-    }
     zen_create_exceptions_table();
     $sql="INSERT INTO " . DB_PREFIX . TABLE_UPGRADE_EXCEPTIONS . " (sql_file, reason, errordate, sqlstatement) VALUES (:file:, :reason:, now(), :line:)";
     $sql = $db->bindVars($sql, ':file:', $sql_file, 'string');
@@ -697,10 +684,7 @@ $linebreak = '
 // END FUNCTIONS LIST
 //------------------------------------------------------
 
-  if (isset($_GET['debug']) && $_GET['debug']=='ON') $debug=true;
-  if (!isset($debug)) {
-    $debug = false;
-  }
+  $debug = (isset($_GET['debug']) && $_GET['debug']=='ON');
   $action = (isset($_GET['action']) ? $_GET['action'] : '');
   if (zen_not_null($action)) {
     switch ($action) {
