@@ -160,11 +160,11 @@ ALTER TABLE media_manager DROP KEY idx_media_name_zen;
 ALTER TABLE media_manager ADD KEY idx_media_name_zen (media_name(191));
 # truncate was done earlier in this file already, but if copy/pasting for some reason, do the truncate below, to cleanup the table
 #TRUNCATE TABLE whos_online;
-ALTER TABLE whos_online MODIFY session_id varchar(256) default NULL;
+ALTER TABLE whos_online MODIFY session_id varchar(191) NOT NULL default '';
 # recreating sessions table since its storage engine is changing to InnoDB:
 DROP TABLE IF EXISTS sessions;
 CREATE TABLE sessions (
-  sesskey varchar(256) default NULL,
+  sesskey varchar(191) NOT NULL default '',
   expiry int(11) unsigned NOT NULL default 0,
   value mediumblob NOT NULL,
   PRIMARY KEY  (sesskey)
