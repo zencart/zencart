@@ -15,6 +15,12 @@ $zco_notifier->notify('NOTIFY_HEADER_START_ADVANCED_SEARCH_RESULTS');
 if (!defined('KEYWORD_FORMAT_STRING')) define('KEYWORD_FORMAT_STRING','keywords');
 
 require(DIR_WS_MODULES . zen_get_module_directory('require_languages.php'));
+// set the product filters according to selected product type
+
+$typefilter = 'default';
+if (isset($_GET['typefilter'])) $typefilter = $_GET['typefilter'];
+require(zen_get_index_filters_directory($typefilter . '_filter.php'));
+
 $error = false;
 $missing_one_input = false;
 

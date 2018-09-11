@@ -24,6 +24,11 @@ if (isset($_GET['alpha_filter_id']) && (int)$_GET['alpha_filter_id'] > 0) {
   $alpha_sort = '';
 }
 if (!isset($select_column_list)) $select_column_list = "";
+
+if (!isset($do_filter_list)) {
+  $do_filter_list = false;
+}
+
  // show the products of a specified record-company
   if (isset($_GET['record_company_id']))
   {

@@ -25,6 +25,9 @@ if (isset($_GET['alpha_filter_id']) && (int)$_GET['alpha_filter_id'] > 0) {
   }
   if (!isset($select_column_list)) $select_column_list = "";
    // show the products of a specified manufacturer
+  if (!isset($do_filter_list)) {
+    $do_filter_list = false;
+  }
   if (isset($_GET['manufacturers_id']) && $_GET['manufacturers_id'] != '' ) {
     if (isset($_GET['filter_id']) && zen_not_null($_GET['filter_id'])) {
 // We are asked to show only a specific category
