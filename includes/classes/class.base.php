@@ -92,8 +92,8 @@ class base {
     $observers = & base::getStaticObserver();
     if (is_null($observers)) {
       return;
-    } else
-    {
+    }
+
       foreach($observers as $key=>$obs) {
         if ($obs['eventID'] == $eventID || $obs['eventID'] === '*') {
          $method = 'update';
@@ -103,7 +103,6 @@ class base {
          $obs['obs']->{$method}($this, $eventID, $param1,$param2,$param3,$param4,$param5,$param6,$param7,$param8,$param9);
         }
       }
-    }
   }
   function & getStaticProperty($var)
   {
@@ -133,9 +132,6 @@ class base {
     if ($camelFirst)
     {
       $rawName[0] = strtoupper($rawName[0]);
-    }
-    if (version_compare(PHP_VERSION, '5.3.0', '<')) {
-      return preg_replace_callback('/[_-]([0-9,a-z])/', create_function('$matches', 'return strtoupper($matches[1]);'), $rawName);
     }
     return preg_replace_callback('/[_-]([0-9,a-z])/', function($matches) {return strtoupper($matches[1]);}, $rawName);
   }

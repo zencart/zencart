@@ -8,8 +8,6 @@
 /*
  * Set time zone
 */
-if (version_compare(PHP_VERSION, 5.3, '>='))
-{
   // put your timezone here. Refer to http://www.php.net/manual/en/timezones.php
   $TZ = '';  // eg: 'Europe/Oslo'
 
@@ -28,4 +26,3 @@ if (version_compare(PHP_VERSION, 5.3, '>='))
     putenv('TZ=' . $TZ);
     @date_default_timezone_set($TZ);
   }
-}
