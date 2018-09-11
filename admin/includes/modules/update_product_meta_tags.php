@@ -50,7 +50,7 @@ if (isset($_POST['edit_x']) || isset($_POST['edit_y'])) {
 
     $sql_data_array = array(
       'metatags_title' => zen_db_prepare_input(isset($_POST['metatags_title'][$language_id]) ? $_POST['metatags_title'][$language_id] : ''),
-      'metatags_keywords' => zen_db_prepare_input(isset($_POST['metatags_title'][$language_id]) ? $_POST['metatags_title'][$language_id] : ''),
+      'metatags_keywords' => zen_db_prepare_input(isset($_POST['metatags_keywords'][$language_id]) ? $_POST['metatags_keywords'][$language_id] : ''),
       'metatags_description' => zen_db_prepare_input(isset($_POST['metatags_description'][$language_id]) ? $_POST['metatags_description'][$language_id] : ''));
 
     if ($action == 'new_product_meta_tags') {
