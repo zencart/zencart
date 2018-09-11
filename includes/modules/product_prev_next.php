@@ -82,7 +82,7 @@ if (PRODUCT_INFO_PREVIOUS_NEXT != 0) {
 
     foreach ($products_ids as $products_id) {
       $id_array[] = $products_id['products_id'];
-  }
+    }
 
     $position = $counter = 0;
     $previous = -1; // identify as needing to go to the end of the list.
