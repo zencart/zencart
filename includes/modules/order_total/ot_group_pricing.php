@@ -31,8 +31,8 @@ class ot_group_pricing {
     global $order, $currencies, $db;
     $order_total = $this->get_order_total();
     $od_amount = $this->calculate_deductions($order_total['total']);
-    $this->deduction = $od_amount['total'];
-    if ($od_amount['total'] > 0) {
+    $this->deduction = isset($od_amount['total']) ? $od_amount['total'] : 0;
+    if (isset($od_amount['total']) && $od_amount['total'] > 0) {
       $tax = 0;
       foreach($order->info['tax_groups'] as $key => $value) {
         if ($od_amount['tax_groups'][$key]) {
@@ -137,6 +137,7 @@ class ot_group_pricing {
   }
 
   function credit_selection() {
+    $selection = false;
     return $selection;
   }
 

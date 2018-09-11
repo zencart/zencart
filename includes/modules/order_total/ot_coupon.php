@@ -137,6 +137,9 @@ class ot_coupon {
    */
   function credit_selection() {
     global $discount_coupon, $request_type;
+    if (!isset($discount_coupon->fields['coupon_code'])) {
+      $discount_coupon->fields['coupon_code'] = '';
+    }
     // note the placement of the redeem code can be moved within the array on the instructions or the title
     $selection = array('id' => $this->code,
                        'module' => $this->title,
@@ -154,7 +157,7 @@ class ot_coupon {
   function collect_posts() {
     global $db, $currencies, $messageStack, $order;
     global $discount_coupon;
-    $_POST['dc_redeem_code'] = trim($_POST['dc_redeem_code']);
+    $_POST['dc_redeem_code'] = isset($_POST['dc_redeem_code']) ? trim($_POST['dc_redeem_code']) : '';
     // remove discount coupon by request
     if (isset($_POST['dc_redeem_code']) && strtoupper($_POST['dc_redeem_code']) == 'REMOVE') {
       unset($_POST['dc_redeem_code']);
@@ -458,7 +461,7 @@ class ot_coupon {
     global $db, $order, $messageStack, $currencies;
     $currencyDecimalPlaces = $currencies->get_decimal_places($_SESSION['currency']);
     $od_amount = array('tax'=>0, 'total'=>0);
-    if ($_SESSION['cc_id'])
+    if (!empty($_SESSION['cc_id']))
     {
       $coupon = $db->Execute("select * from " . TABLE_COUPONS . " where coupon_id = '" . (int)$_SESSION['cc_id'] . "'");
       $this->coupon_code = $coupon->fields['coupon_code'];

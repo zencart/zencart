@@ -10,6 +10,10 @@ Thumbs.db
 clover.xml
 .DS_Store
 
+docs/phpdocs*
+phpdoc.xml
+dev-*.*
+
 # IDE-specific things...
 # Ignore eclipse project files
 .project

@@ -55,7 +55,7 @@ if (!defined('IS_ADMIN_FLAG')) {
 
     function add_session($message, $type = 'error') {
 
-      if (!$_SESSION['messageToStack']) {
+      if (!(!empty($_SESSION['messageToStack']) && is_array($_SESSION['messageToStack']))) {
         $_SESSION['messageToStack'] = array();
       }
 

@@ -25,6 +25,10 @@ if (isset($_GET['alpha_filter_id']) && (int)$_GET['alpha_filter_id'] > 0) {
 }
 if (!isset($select_column_list)) $select_column_list = "";
 
+if (!isset($do_filter_list)) {
+  $do_filter_list = false;
+}
+
   // show the products of a specified music_genre
   if (isset($_GET['music_genre_id']))
   {

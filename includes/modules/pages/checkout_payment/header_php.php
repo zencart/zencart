@@ -62,7 +62,7 @@ if ( (STOCK_CHECK == 'true') && (STOCK_ALLOW_CHECKOUT != 'true') ) {
 }
 
 // get coupon code
-if ($_SESSION['cc_id']) {
+if (!empty($_SESSION['cc_id'])) {
   $discount_coupon_query = "SELECT coupon_code
                             FROM " . TABLE_COUPONS . "
                             WHERE coupon_id = :couponID";
@@ -72,7 +72,7 @@ if ($_SESSION['cc_id']) {
 }
 
 // if no billing destination address was selected, use the customers own address as default
-if (!$_SESSION['billto']) {
+if (empty($_SESSION['billto'])) {
   $_SESSION['billto'] = $_SESSION['customer_default_address_id'];
 } else {
   // verify the selected billing address
@@ -101,7 +101,7 @@ $order_total_modules->collect_posts();
 $order_total_modules->pre_confirmation_check();
 
 //  $_SESSION['comments'] = '';
-$comments = $_SESSION['comments'];
+$comments = !empty($_SESSION['comments']) ? $_SESSION['comments'] : '';
 
 $total_weight = $_SESSION['cart']->show_weight();
 $total_count = $_SESSION['cart']->count_contents();

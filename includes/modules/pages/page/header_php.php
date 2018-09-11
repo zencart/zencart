@@ -22,8 +22,8 @@ $zco_notifier->notify('NOTIFY_HEADER_START_EZPAGE');
 $ezpage_id = (int)$_GET['id'];
 if ($ezpage_id == 0) zen_redirect(zen_href_link(FILENAME_DEFAULT));
 
-$chapter_id = (int)$_GET['chapter'];
-$chapter_link = (int)$_GET['chapter'];
+$chapter_id = isset($_GET['chapter']) ? (int)$_GET['chapter'] : 0;
+$chapter_link = isset($_GET['chapter']) ? (int)$_GET['chapter'] : 0;
 
 $sql = "select * from " . TABLE_EZPAGES . " where pages_id = " . (int)$ezpage_id;
 // comment the following line to allow access to pages which don't have a status switch set to Yes:

@@ -148,6 +148,8 @@
       $dest_country = $order->delivery['country']['iso_code_2'];
       $dest_zone = 0;
       $error = false;
+      $shipping_method = '';
+      $shipping_cost = 0;
 
     $order_total_amount = $_SESSION['cart']->show_total() - $_SESSION['cart']->free_shipping_prices() ;
 

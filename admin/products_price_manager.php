@@ -34,7 +34,7 @@
         ON p.products_id = pd.products_id
         LEFT JOIN " . TABLE_PRODUCT_TYPES  . " pt
         ON p.products_type = pt.type_id
-        WHERE ptc.categories_id=':category_id'
+        WHERE ptc.categories_id=:category_id
         AND pt.allow_add_to_cart = 'Y'
         ORDER by pd.products_name";
 
@@ -307,7 +307,7 @@
 
       <tr>
       <?php echo zen_draw_form('set_products_filter', FILENAME_PRODUCTS_PRICE_MANAGER, 'action=set_products_filter', 'post'); ?>
-      <?php echo zen_draw_hidden_field('products_filter', $_GET['products_filter']); ?><?php echo zen_draw_hidden_field('current_category_id', $_GET['current_category_id']); ?>
+      <?php echo zen_draw_hidden_field('products_filter', isset($_GET['products_filter']) ? $_GET['products_filter'] : ''); ?><?php echo zen_draw_hidden_field('current_category_id', isset($_GET['current_category_id']) ? $_GET['current_category_id'] : ''); ?>
         <td colspan="2"><table border="0" cellspacing="0" cellpadding="2">
 
 <?php
@@ -327,9 +327,8 @@ if ($_GET['products_filter'] != '') {
   echo zen_get_products_display_price($_GET['products_filter']) . '<br /><br />';
   echo zen_get_products_quantity_min_units_display($_GET['products_filter'], $include_break = true);
   $not_for_cart = $db->Execute("select p.products_id from " . TABLE_PRODUCTS . " p left join " . TABLE_PRODUCT_TYPES . " pt on p.products_type= pt.type_id where pt.allow_add_to_cart = 'N'");
-  while (!$not_for_cart->EOF) {
-    $not_for_cart_array[] = $not_for_cart->fields['products_id'];
-    $not_for_cart->MoveNext();
+  foreach ($not_for_cart as $not_for) {
+    $not_for_cart_array[] = $not_for['products_id'];
    }
 ?>
             </td>
@@ -528,7 +527,7 @@ if ($products_filter == '') {
       $tax_class->MoveNext();
     }
 ?>
-<?php if ($pInfo->products_id != '' || $sInfo->products_id !='') { ?>
+<?php if (isset($pInfo->products_id) && $pInfo->products_id != '' || isset($sInfo->products_id) && $sInfo->products_id !='') { ?>
 <script language="javascript"><!--
 var tax_rates = new Array();
 <?php
@@ -555,7 +554,7 @@ function getTaxRate() {
 }
 //--></script>
 <?php } ?>
-<?php if ($pInfo->products_id != '') { ?>
+<?php if (isset($pInfo->products_id) && $pInfo->products_id != '') { ?>
 <script language="javascript">
 var ProductStartDate = new ctlSpiffyCalendarBox("ProductStartDate", "new_prices", "product_start", "btnDate1","<?php echo (($pInfo->products_date_available <= '0001-01-01') ? '' : zen_date_short($pInfo->products_date_available)); ?>",scBTNMODE_CUSTOMBLUE);
 </script>
@@ -584,14 +583,14 @@ function updateNet() {
 //--></script>
 <?php } ?>
 
-<?php if ($fInfo->products_id != '') { ?>
+<?php if (isset($fInfo->products_id) && $fInfo->products_id != '') { ?>
 <script language="javascript">
 var FeaturedStartDate = new ctlSpiffyCalendarBox("FeaturedStartDate", "new_prices", "featured_start", "btnDate2","<?php echo (($fInfo->featured_date_available <= '0001-01-01') ? '' : zen_date_short($fInfo->featured_date_available)); ?>",scBTNMODE_CUSTOMBLUE);
 var FeaturedEndDate = new ctlSpiffyCalendarBox("FeaturedEndDate", "new_prices", "featured_end", "btnDate3","<?php echo (($fInfo->expires_date <= '0001-01-01') ? '' : zen_date_short($fInfo->expires_date)); ?>",scBTNMODE_CUSTOMBLUE);
 </script>
 <?php } ?>
 
-<?php if ($sInfo->products_id != '') { ?>
+<?php if (isset($sInfo->products_id) && $sInfo->products_id != '') { ?>
 <script language="javascript">
 var SpecialStartDate = new ctlSpiffyCalendarBox("SpecialStartDate", "new_prices", "special_start", "btnDate4","<?php echo (($sInfo->specials_date_available <= '0001-01-01') ? '' : zen_date_short($sInfo->specials_date_available)); ?>",scBTNMODE_CUSTOMBLUE);
 var SpecialEndDate = new ctlSpiffyCalendarBox("SpecialEndDate", "new_prices", "special_end", "btnDate5","<?php echo (($sInfo->expires_date <= '0001-01-01') ? '' : zen_date_short($sInfo->expires_date)); ?>",scBTNMODE_CUSTOMBLUE);
@@ -639,7 +638,7 @@ function updateSpecialsNet() {
 ?>
 
 <?php
-  if ($pInfo->products_id != '') {
+  if (isset($pInfo->products_id) && $pInfo->products_id != '') {
 ?>
       <tr>
         <td><?php echo zen_draw_separator('pixel_black.gif', '100%', '2'); ?></td>
@@ -688,7 +687,7 @@ function updateSpecialsNet() {
       <?php } ?>
 
       <?php echo zen_draw_form('new_prices', FILENAME_PRODUCTS_PRICE_MANAGER, zen_get_all_get_params(array('action', 'info', $_GET['products_filter'])) . 'action=' . 'update', 'post'); ?>
-      <?php echo zen_draw_hidden_field('products_id', $_GET['products_filter']); echo zen_draw_hidden_field('specials_id', $sInfo->specials_id); echo zen_draw_hidden_field('featured_id', $fInfo->featured_id); echo zen_draw_hidden_field('discounts_list', $discounts_qty); ?>
+      <?php echo zen_draw_hidden_field('products_id', $_GET['products_filter']); echo zen_draw_hidden_field('specials_id', isset($sInfo->specials_id) ? $sInfo->specials_id : ''); echo zen_draw_hidden_field('featured_id', $fInfo->featured_id); echo zen_draw_hidden_field('discounts_list', $discounts_qty); ?>
       <tr>
         <td colspan="4"><table border="0" cellspacing="0" cellpadding="2" align="center" width="100%">
           <tr>
@@ -807,10 +806,10 @@ echo zen_draw_hidden_field('master_categories_id', $pInfo->master_categories_id)
 
 
 <?php
-  if ($pInfo->products_id != '') {
+  if (isset($pInfo->products_id) && $pInfo->products_id != '') {
 ?>
 <?php
-  if ($sInfo->products_id != '') {
+  if (isset($sInfo->products_id) && $sInfo->products_id != '') {
 ?>
       <tr>
         <td><br><table border="0" cellspacing="0" cellpadding="2">
@@ -847,7 +846,7 @@ echo zen_draw_hidden_field('master_categories_id', $pInfo->master_categories_id)
 // Specials cannot be added to Gift Vouchers when false
       if((substr($pInfo->products_model, 0, 4) != 'GIFT') || (substr($pInfo->products_model, 0, 4) == 'GIFT' && (defined('MODULE_ORDER_TOTAL_GV_SPECIAL') && MODULE_ORDER_TOTAL_GV_SPECIAL == 'true')) ) {
 ?>
-            <td class="main" align="center"><?php echo '<a href="' . zen_href_link(FILENAME_SPECIALS, 'add_products_id=' . $_GET['products_filter'] . '&action=new' . '&sID=' . $sInfo->specials_id . '&go_back=ON' . '&current_category_id=' . $current_category_id) . '">' .  zen_image_button('button_install.gif', IMAGE_INSTALL_SPECIAL) . '</a>'; ?></td>
+            <td class="main" align="center"><?php echo '<a href="' . zen_href_link(FILENAME_SPECIALS, 'add_products_id=' . $_GET['products_filter'] . '&action=new' . '&sID=' . (isset($sInfo->specials_id) ? $sInfo->specials_id : '') . '&go_back=ON' . '&current_category_id=' . $current_category_id) . '">' .  zen_image_button('button_install.gif', IMAGE_INSTALL_SPECIAL) . '</a>'; ?></td>
 <?php  } else { ?>
             <td class="main" align="center"><?php echo TEXT_SPECIALS_NO_GIFTS; ?></td>
 <?php } ?>
@@ -856,19 +855,19 @@ echo zen_draw_hidden_field('master_categories_id', $pInfo->master_categories_id)
       </tr>
 <?php  } ?>
 
-<?php if ($pInfo->products_id !='') { ?>
+<?php if (isset($pInfo->products_id) && $pInfo->products_id !='') { ?>
 <script language="javascript"><!--
 updateGross();
 //--></script>
 <?php } ?>
-<?php if ($sInfo->products_id !='') { ?>
+<?php if (isset($sInfo->products_id) && $sInfo->products_id !='') { ?>
 <script language="javascript"><!--
 updateSpecialsGross();
 //--></script>
 <?php } ?>
 
 <?php
-  if ($fInfo->products_id != '') {
+  if (isset($fInfo->products_id) && $fInfo->products_id != '') {
 ?>
       <tr>
         <td><br><table border="0" cellspacing="0" cellpadding="2">

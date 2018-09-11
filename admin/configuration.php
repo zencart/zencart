@@ -124,7 +124,7 @@ if ($gID == 7) {
                     $use_function = $item['use_function'];
                     if (preg_match('/->/', $use_function)) {
                       $class_method = explode('->', $use_function);
-                      if (!is_object(${$class_method[0]})) {
+                      if (!(isset(${$class_method[0]}) && is_object(${$class_method[0]}))) {
                         include(DIR_WS_CLASSES . $class_method[0] . '.php');
                         ${$class_method[0]} = new $class_method[0]();
                       }

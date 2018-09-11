@@ -15,7 +15,7 @@ if (isset($_GET['pID'])) {
 }
 if (isset($_POST['edit_x']) || isset($_POST['edit_y'])) {
   $action = 'new_product';
-} elseif ($_POST['products_model'] . $_POST['products_url'] . $_POST['products_name'] . $_POST['products_description'] != '') {
+} elseif ((isset($_POST['products_model']) ? $_POST['products_model'] : '') . (isset($_POST['products_url']) ? implode('', $_POST['products_url']) : '') . (isset($_POST['products_name']) ? implode('', $_POST['products_name']) : '') . (isset($_POST['products_description']) ? implode('', $_POST['products_description']) : '') != '') {
   $products_date_available = zen_db_prepare_input($_POST['products_date_available']);
   $products_date_available = (date('Y-m-d') < $products_date_available) ? $products_date_available : 'null';
 

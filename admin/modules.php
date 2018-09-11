@@ -244,6 +244,8 @@ if (zen_not_null($action)) {
                   </td>
                   <?php
                   if ($set == 'payment') {
+                    if (!isset($module->order_status)) $module->order_status = 0;
+                    
                     $orders_status_name = $db->Execute("SELECT orders_status_id, orders_status_name
                                                         FROM " . TABLE_ORDERS_STATUS . "
                                                         WHERE orders_status_id = " . (int)$module->order_status . "

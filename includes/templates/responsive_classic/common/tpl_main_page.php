@@ -125,7 +125,7 @@ if (COLUMN_LEFT_STATUS == 0 || (CUSTOMERS_APPROVAL == '1' and $_SESSION['custome
   // global disable of column_left
   $flag_disable_left = true;
 }
-if (!isset($flag_disable_left) || !$flag_disable_left) {
+if (!$flag_disable_left) {
 ?>
   <div class="<?php echo $box_width_left_new; ?>">
 <?php

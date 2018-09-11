@@ -14,9 +14,11 @@
  */
 class zcDatabaseInstaller
 {
-  public function __construct($options)
+    public $ignoreLine;
+
+    public function __construct($options)
   {
-    $this->func = create_function('$matches', 'return strtoupper($matches[1]);');
+    $this->func = function($matches) {return strtoupper($matches[1]);};
     $dbtypes = array();
     $path = DIR_FS_ROOT . 'includes/classes/db/';
     $dir = dir($path);
@@ -347,7 +349,7 @@ class zcDatabaseInstaller
   }
   public function parserRenameTable()
   {
-    if (!$this->tableExists($this->lineSplit[2])) 
+    if (!$this->tableExists($this->lineSplit[2]))
     {
       if (!isset($result)) $result = sprintf(REASON_TABLE_NOT_FOUND, $table).' CHECK PREFIXES!';
       $this->writeUpgradeExceptions($this->line, $result, $this->fileName);
@@ -462,7 +464,7 @@ class zcDatabaseInstaller
   }
   public function updateConfigKeys()
   {
-    $sql = "update ". $this->dbPrefix ."configuration set configuration_value='". preg_replace('~/cache$~', '/logs', $this->sqlCacheDir) ."/page_parse_time.log' where configuration_key = 'STORE_PAGE_PARSE_TIME_LOG'";
+    $sql = "update ". $this->dbPrefix ."configuration set configuration_value='". DIR_FS_ROOT . "logs/page_parse_time.log' where configuration_key = 'STORE_PAGE_PARSE_TIME_LOG'";
     $this->db->Execute($sql);
     if (isset($_POST['http_server_catalog']) && $_POST['http_server_catalog'] != '') {
       $email_stub = preg_replace('~.*\/\/(www.)*~', 'YOUR_EMAIL@', $_POST['http_server_catalog']);

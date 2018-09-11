@@ -437,7 +437,7 @@ if (zen_not_null($action)) {
                   $check_count = 1;
                   if ($check_page->RecordCount() > MAX_DISPLAY_SEARCH_RESULTS_EZPAGE) {
                     foreach ($check_page as $item) {
-                      if ($item['customers_id'] == $_GET['cID']) {
+                      if ($item['pages_id'] == $_GET['ezID']) {
                         break;
                       }
                       $check_count++;

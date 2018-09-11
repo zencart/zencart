@@ -117,7 +117,7 @@ if (STOCK_CHECK == 'true') {
 }
 
 // update customers_referral with $_SESSION['gv_id']
-if ($_SESSION['cc_id']) {
+if (!empty($_SESSION['cc_id'])) {
   $discount_coupon_query = "SELECT coupon_code
                             FROM " . TABLE_COUPONS . "
                             WHERE coupon_id = :couponID";

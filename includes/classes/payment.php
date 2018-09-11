@@ -188,7 +188,7 @@ class payment extends base {
     if (is_array($this->modules)) {
       foreach($this->modules as $value) {
         $class = substr($value, 0, strrpos($value, '.'));
-        if ($GLOBALS[$class]->enabled && method_exists($GLOBALS[$class], 'in_special_checkout')) {
+        if (isset($GLOBALS[$class]) && is_object($GLOBALS[$class]) && $GLOBALS[$class]->enabled && method_exists($GLOBALS[$class], 'in_special_checkout')) {
           $module_result = $GLOBALS[$class]->in_special_checkout();
           if ($module_result === true) $result = true;
         }
@@ -217,7 +217,8 @@ class payment extends base {
       if (is_object($GLOBALS[$this->selected_module]) && ($GLOBALS[$this->selected_module]->enabled) ) {
         $confirmation = $GLOBALS[$this->selected_module]->confirmation();
         if (!is_array($confirmation)) $confirmation = array('title' => '');
-        if (!is_array($confirmation['fields'])) $confirmation['fields'] = array();
+        if (!(isset($confirmation['fields']) && is_array($confirmation['fields']))) $confirmation['fields'] = array();
+        if (!isset($confirmation['title'])) $confirmation['title'] = '';
         return $confirmation;
       }
     }
