@@ -319,7 +319,7 @@ switch ($metatag_page_name) {
 // EZ-Pages:
   case 'page':
   $ezpage_id = (int)$_GET['id'];
-  $chapter_id = (int)$_GET['chapter'];
+  $chapter_id = isset($_GET['chapter']) ? (int)$_GET['chapter'] : 0;
   if (defined('META_TAG_TITLE_EZPAGE_'.$ezpage_id)) define('META_TAG_TITLE', constant('META_TAG_TITLE_EZPAGE_'.$ezpage_id));
   if (defined('META_TAG_DESCRIPTION_EZPAGE_'.$ezpage_id)) define('META_TAG_DESCRIPTION', constant('META_TAG_DESCRIPTION_EZPAGE_'.$ezpage_id));
   if (defined('META_TAG_KEYWORDS_EZPAGE_'.$ezpage_id)) define('META_TAG_KEYWORDS', constant('META_TAG_KEYWORDS_EZPAGE_'.$ezpage_id));
