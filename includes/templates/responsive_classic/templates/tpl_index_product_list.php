@@ -56,7 +56,7 @@ if (PRODUCT_LIST_CATEGORIES_IMAGE_STATUS == 'true') {
 ?>
 <?php
   // draw cPath if known
-  if (!(isset($getoption_set) && $getoption_set)) {
+  if (empty($getoption_set)) {
     echo zen_draw_hidden_field('cPath', $cPath);
   } else {
     // draw manufacturers_id
