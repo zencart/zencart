@@ -629,7 +629,7 @@ function zen_get_uprid($prid, $params)
 function zen_get_prid($uprid)
 {
     $pieces = explode(':', $uprid);
-    return $pieces[0];
+    return (int)$pieces[0];
 }
 
 
@@ -1759,7 +1759,7 @@ while (!$chk_sale_categories_all->EOF) {
     global $customer_zone_id, $customer_country_id;
 
     if ( ($country_id == -1) && ($zone_id == -1) ) {
-      if (!$_SESSION['customer_id']) {
+      if (empty($_SESSION['customer_id'])) {
         $country_id = STORE_COUNTRY;
         $zone_id = STORE_ZONE;
       } else {

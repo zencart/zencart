@@ -47,7 +47,7 @@ if (DOWN_FOR_MAINTENANCE == 'true') {
 /**
  * recheck customer status for authorization
  */
-if ((int)$_SESSION['customer_id'] > 0) {
+if (isset($_SESSION['customer_id']) && (int)$_SESSION['customer_id'] > 0) {
   $check_customer_query = "select customers_id, customers_authorization
                              from " . TABLE_CUSTOMERS . "
                              where customers_id = " . (int)$_SESSION['customer_id'];
@@ -174,7 +174,7 @@ switch (true) {
   }
   */
   break;
-  case ((CUSTOMERS_APPROVAL_AUTHORIZATION == '1' and $_SESSION['customers_authorization'] != '0') || (int)$_SESSION['customers_authorization'] == 1):
+  case (isset($_SESSION['customers_authorization']) && ((CUSTOMERS_APPROVAL_AUTHORIZATION == '1' && $_SESSION['customers_authorization'] != '0') || (int)$_SESSION['customers_authorization'] == 1)):
   /**
    * customer is pending approval
    * customer must be logged in to browse
