@@ -14,7 +14,7 @@ if (!defined('IS_ADMIN_FLAG')) {
 
 // build alpha sorter dropdown
   if (PRODUCT_LIST_ALPHA_SORTER == 'true') {
-    if (!isset($_GET['alpha_filter_id']) || (int)$_GET['alpha_filter_id'] == 0) {
+    if (empty($_GET['alpha_filter_id'])) {
       $letters_list[] = array('id' => '0', 'text' => TEXT_PRODUCTS_LISTING_ALPHA_SORTER_NAMES);
     } else {
       $letters_list[] = array('id' => '0', 'text' => TEXT_PRODUCTS_LISTING_ALPHA_SORTER_NAMES_RESET);
