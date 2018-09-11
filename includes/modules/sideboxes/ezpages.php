@@ -16,7 +16,14 @@
     if (isset($var_linksList)) {
       unset($var_linksList);
     }
-    $page_query = $db->Execute("select * from " . TABLE_EZPAGES . " where status_sidebox = 1 and sidebox_sort_order > 0 order by sidebox_sort_order, pages_title");
+    $page_query = $db->Execute("SELECT e.*, et.*
+                                FROM " . TABLE_EZPAGES . " e,
+                                     " . TABLE_EZPAGES_TEXT . " et
+                                WHERE e.pages_id = et.pages_id
+                                AND et.languages_id = " . (int)$_SESSION['languages_id'] . "
+                                AND e.status_sidebox = 1
+                                AND e.sidebox_sort_order > 0
+                                ORDER BY e.sidebox_sort_order, et.pages_title");
     if ($page_query->RecordCount()>0) {
       $title =  BOX_HEADING_EZPAGES;
       $box_id =  'ezpages';
@@ -49,7 +56,7 @@
         $page_query_list_sidebox[$rows]['link'] = ($page_query_list_sidebox[$rows]['altURL'] =='') ?
         zen_href_link(FILENAME_EZPAGES, 'id=' . $page_query->fields['pages_id'] . ($page_query->fields['toc_chapter'] > 0 ? '&chapter=' . $page_query->fields['toc_chapter'] : ''), ($page_query->fields['page_is_ssl']=='0' ? 'NONSSL' : 'SSL')) :
         $page_query_list_sidebox[$rows]['altURL'];
-        $page_query_list_sidebox[$rows]['link'] .= ($page_query->fields['page_open_new_window'] == '1' ? '" target="_blank' : '');
+        $page_query_list_sidebox[$rows]['link'] .= ($page_query->fields['page_open_new_window'] == '1' ? '" rel="noreferrer noopener" target="_blank' : '');
         $page_query->MoveNext();
       }
 
