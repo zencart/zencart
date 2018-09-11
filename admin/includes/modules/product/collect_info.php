@@ -67,9 +67,9 @@ if (isset($_GET['pID']) && empty($_POST)) {
   $pInfo->updateObjectInfo($product->fields);
 } elseif (zen_not_null($_POST)) {
   $pInfo->updateObjectInfo($_POST);
-  $products_name = $_POST['products_name'];
-  $products_description = $_POST['products_description'];
-  $products_url = $_POST['products_url'];
+  $products_name = isset($_POST['products_name']) ? $_POST['products_name'] : '';
+  $products_description = isset($_POST['products_description']) ? $_POST['products_description'] : '';
+  $products_url = isset($_POST['products_url']) ? $_POST['products_url'] : '';
 }
 
 $category_lookup = $db->Execute("SELECT *
@@ -177,7 +177,7 @@ for ($i = 0, $n = sizeof($tax_class_array); $i < $n; $i++) {
   <div class="form-group">
       <?php
 // show when product is linked
-      if (zen_get_product_is_linked($_GET['pID']) == 'true' && $_GET['pID'] > 0) {
+      if (isset($_GET['pID']) && zen_get_product_is_linked($_GET['pID']) == 'true' && $_GET['pID'] > 0) {
         ?>
         <?php echo zen_draw_label(TEXT_MASTER_CATEGORIES_ID, 'master_category', 'class="col-sm-3 control-label"'); ?>
       <div class="col-sm-9 col-md-6">
@@ -198,7 +198,7 @@ for ($i = 0, $n = sizeof($tax_class_array); $i < $n; $i++) {
             <?php echo TEXT_MASTER_CATEGORIES_ID; ?>
         </strong>
       </div>
-      <div class="col-sm-9 col-md-6"><?php echo TEXT_INFO_ID . ($_GET['pID'] > 0 ? $pInfo->master_categories_id . ' ' . zen_get_category_name($pInfo->master_categories_id, $_SESSION['languages_id']) : $current_category_id . ' ' . zen_get_category_name($current_category_id, $_SESSION['languages_id'])); ?></div>
+      <div class="col-sm-9 col-md-6"><?php echo TEXT_INFO_ID . (isset($_GET['pID']) && $_GET['pID'] > 0 ? $pInfo->master_categories_id . ' ' . zen_get_category_name($pInfo->master_categories_id, $_SESSION['languages_id']) : $current_category_id . ' ' . zen_get_category_name($current_category_id, $_SESSION['languages_id'])); ?></div>
     <?php } ?>
   </div>
   <div class="form-group">
@@ -213,7 +213,7 @@ for ($i = 0, $n = sizeof($tax_class_array); $i < $n; $i++) {
   echo zen_draw_hidden_field('products_discount_type_from', $pInfo->products_discount_type_from);
   echo zen_draw_hidden_field('products_price_sorter', $pInfo->products_price_sorter);
   ?>
-  <div class="col-sm-12 text-center"><?php echo (zen_get_categories_status($current_category_id) == '0' ? TEXT_CATEGORIES_STATUS_INFO_OFF : '') . ($out_status == true ? ' ' . TEXT_PRODUCTS_STATUS_INFO_OFF : ''); ?></div>
+  <div class="col-sm-12 text-center"><?php echo (zen_get_categories_status($current_category_id) == '0' ? TEXT_CATEGORIES_STATUS_INFO_OFF : '') . (isset($out_status) && $out_status == true ? ' ' . TEXT_PRODUCTS_STATUS_INFO_OFF : ''); ?></div>
   <div class="form-group">
       <?php echo zen_draw_label(TEXT_PRODUCTS_STATUS, 'products_status', 'class="col-sm-3 control-label"'); ?>
     <div class="col-sm-9 col-md-6">

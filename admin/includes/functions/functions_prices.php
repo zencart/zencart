@@ -1053,6 +1053,8 @@ If a special exist * 10+9
   function zen_get_attributes_price_final_onetime($attribute, $qty= 1, $pre_selected_onetime) {
     global $db;
 
+    $attributes_price_final_onetime = 0.0;
+
     if ($pre_selected_onetime == '' or $attribute != $pre_selected_onetime->fields["products_attributes_id"]) {
       $pre_selected_onetime = $db->Execute("select pa.* from " . TABLE_PRODUCTS_ATTRIBUTES . " pa where pa.products_attributes_id= '" . (int)$attribute . "'");
     } else {
