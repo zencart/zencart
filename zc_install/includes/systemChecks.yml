@@ -56,24 +56,24 @@ systemChecks:
       checkPhpVersionMin:
         method: checkPhpVersion
         parameters:
-          version: 5.4.0
+          version: 5.5.0
           versionTest: ge
-          localErrorText: <?php echo sprintf(TEXT_ERROR_PHP_VERSION_MIN, '5.4.0') . PHP_EOL; ?>
+          localErrorText: <?php echo sprintf(TEXT_ERROR_PHP_VERSION_MIN, '5.5.0') . PHP_EOL; ?>
       checkPhpVersionMax:
         method: checkPhpVersion
         parameters:
-          version: 7.3.0
+          version: 7.4.0
           versionTest: lt
-          localErrorText: <?php echo sprintf(TEXT_ERROR_PHP_VERSION_MAX, '7.2.x') . PHP_EOL; ?>
+          localErrorText: <?php echo sprintf(TEXT_ERROR_PHP_VERSION_MAX, '7.3.x') . PHP_EOL; ?>
   checkPhpVersionRecommendation:
     runLevel: always
     errorLevel: WARN
-    mainErrorText: <?php echo sprintf(TEXT_ERROR_PHP_VERSION_RECOMMENDED, '7.1') . PHP_EOL; ?>
+    mainErrorText: <?php echo sprintf(TEXT_ERROR_PHP_VERSION_RECOMMENDED, '7.2') . PHP_EOL; ?>
     methods:
       checkPhpVersionRecommended:
         method: checkPhpVersion
         parameters:
-          version: 7.1.0
+          version: 7.2.9
           versionTest: ge
   checkZCversion:
     runLevel: always
@@ -266,15 +266,20 @@ systemChecks:
       dbVersionChecker:
         parameters:
           - checkType: fieldSchema
-            tableName: product_options
-            fieldName: products_options_comment
+            tableName: sessions
+            fieldName: sesskey
             fieldCheck: Type
-            expectedResult: 'VARCHAR(255)'
+            expectedResult: 'VARCHAR(191)'
           - checkType: fieldSchema
-            tableName: orders_products
-            fieldName: products_virtual
+            tableName: whos_online
+            fieldName: session_id
             fieldCheck: Type
-            expectedResult: 'tinyint(1)'
+            expectedResult: 'VARCHAR(191)'
+          - checkType: fieldSchema
+            tableName: configuration
+            fieldName: val_function
+            fieldCheck: Type
+            expectedResult: 'TEXT'
 
   checkDBVersion155:
     runLevel: dbVersion
