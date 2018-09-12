@@ -1276,7 +1276,7 @@ if (zen_not_null($action)) {
                     $zc_address_book_count_list = zen_get_customers_address_book($customer['customers_id']);
                     $zc_address_book_count = $zc_address_book_count_list->RecordCount();
                     ?>
-                <td class="dataTableContent text-right"><?php echo $customer['customers_id'] . ($zc_address_book_count == 1 ? TEXT_INFO_ADDRESS_BOOK_COUNT_SINGLE : sprintf(TEXT_INFO_ADDRESS_BOOK_COUNT, zen_href_link(FILENAME_CUSTOMERS, 'action=list_addresses' . '&cID=' . $customer['customers_id'] . ($_GET['page'] > 0 ? '&page=' . $_GET['page'] : '')), $zc_address_book_count) . '</a>'); ?></td>
+                <td class="dataTableContent text-right"><?php echo $customer['customers_id'] . ($zc_address_book_count == 1 ? TEXT_INFO_ADDRESS_BOOK_COUNT_SINGLE : sprintf(TEXT_INFO_ADDRESS_BOOK_COUNT, zen_href_link(FILENAME_CUSTOMERS, 'action=list_addresses' . '&cID=' . $customer['customers_id'] . ($_GET['page'] > 0 ? '&page=' . $_GET['page'] : '')), $zc_address_book_count)); ?></td>
                 <td class="dataTableContent"><?php echo $customer['customers_lastname']; ?></td>
                 <td class="dataTableContent"><?php echo $customer['customers_firstname']; ?></td>
                 <td class="dataTableContent"><?php echo $customer['entry_company']; ?></td>
