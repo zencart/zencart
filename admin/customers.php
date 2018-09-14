@@ -1,10 +1,10 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2016 Zen Cart Development Team
+ * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: zcwilt  Fri Apr 15 Modified in v1.5.5 $
+ * @version $Id: Author: zcwilt  Wed Sept 18 Modified in v1.5.6 $
  */
 require('includes/application_top.php');
 
@@ -1276,7 +1276,7 @@ if (zen_not_null($action)) {
                     $zc_address_book_count_list = zen_get_customers_address_book($customer['customers_id']);
                     $zc_address_book_count = $zc_address_book_count_list->RecordCount();
                     ?>
-                <td class="dataTableContent text-right"><?php echo $customer['customers_id'] . ($zc_address_book_count == 1 ? TEXT_INFO_ADDRESS_BOOK_COUNT . $zc_address_book_count : '<a href="' . zen_href_link(FILENAME_CUSTOMERS, 'action=list_addresses' . '&cID=' . $customer['customers_id'] . ($_GET['page'] > 0 ? '&page=' . $_GET['page'] : '')) . '">' . TEXT_INFO_ADDRESS_BOOK_COUNT . $zc_address_book_count . '</a>'); ?></td>
+                <td class="dataTableContent text-right"><?php echo $customer['customers_id'] . ($zc_address_book_count == 1 ? TEXT_INFO_ADDRESS_BOOK_COUNT_SINGLE : sprintf(TEXT_INFO_ADDRESS_BOOK_COUNT, zen_href_link(FILENAME_CUSTOMERS, 'action=list_addresses' . '&cID=' . $customer['customers_id'] . ($_GET['page'] > 0 ? '&page=' . $_GET['page'] : '')), $zc_address_book_count)); ?></td>
                 <td class="dataTableContent"><?php echo $customer['customers_lastname']; ?></td>
                 <td class="dataTableContent"><?php echo $customer['customers_firstname']; ?></td>
                 <td class="dataTableContent"><?php echo $customer['entry_company']; ?></td>

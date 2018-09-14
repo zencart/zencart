@@ -466,32 +466,32 @@ use PHPMailer\PHPMailer\SMTP;
     } else {
       $block['EMAIL_MESSAGE_HTML'] = $content;
     }
+
     // Identify and Read the template file for the type of message being sent
     $langfolder = (strtolower($_SESSION['languages_code']) == 'en') ? '' : strtolower($_SESSION['languages_code']) . '/';
 
-    // Handle CSS and logo image
-    $common_css = '';
-    $css_lang_folder = $langfolder;
-    if (!file_exists (DIR_FS_EMAIL_TEMPLATES . $css_lang_folder . 'email_common.css')) {
-      if ($css_lang_folder == '' || !file_exists (DIR_FS_EMAIL_TEMPLATES . 'email_common.css')) {
-        trigger_error ('Missing common email CSS file: ' . DIR_FS_EMAIL_TEMPLATES . $css_lang_folder . 'email_common.css', E_USER_WARNING);
-        $block['EMAIL_COMMON_CSS'] = '';
-
-      } else {
-        $css_lang_folder = '';
-        $block['EMAIL_COMMON_CSS'] = file_get_contents (DIR_FS_EMAIL_TEMPLATES . $css_lang_folder . 'email_common.css');
-
-      }
+    // Handle CSS
+    $block['EMAIL_COMMON_CSS'] = '';
+    $filesToTest = array(
+        DIR_FS_EMAIL_TEMPLATES . $langfolder . 'email_common.css',
+        DIR_FS_EMAIL_TEMPLATES . 'email_common.css'
+    );
+    $found = false;
+    foreach($filesToTest as $val) {
+        if (file_exists($val)) {
+            $block['EMAIL_COMMON_CSS'] = file_get_contents ($val);
+            $found = true;
+            break;
+        }
+    }
+    if (false === $found) {
+        trigger_error('Missing common email CSS file: ' . DIR_FS_EMAIL_TEMPLATES . 'email_common.css', E_USER_WARNING);
     }
 
-    if (!isset ($block['EMAIL_LOGO_FILE']) || $block['EMAIL_LOGO_FILE'] == '') {
-      if (IS_ADMIN_FLAG === true) {
-        $block['EMAIL_LOGO_FILE'] = HTTP_CATALOG_SERVER . DIR_WS_CATALOG . 'email/' . EMAIL_LOGO_FILENAME;
-
-      } else {
-        $block['EMAIL_LOGO_FILE'] = HTTP_SERVER . DIR_WS_CATALOG . 'email/' . EMAIL_LOGO_FILENAME;
-
-      }
+    // Handle logo image
+    if (empty($block['EMAIL_LOGO_FILE'])) {
+        $domain = (IS_ADMIN_FLAG === true) ? HTTP_CATALOG_SERVER : HTTP_SERVER;
+        $block['EMAIL_LOGO_FILE'] = $domain . DIR_WS_CATALOG . 'email/' . EMAIL_LOGO_FILENAME;
     }
     if (!isset ($block['EMAIL_LOGO_ALT_TEXT']) || $block['EMAIL_LOGO_ALT_TEXT'] == '') $block['EMAIL_LOGO_ALT_TEXT'] = EMAIL_LOGO_ALT_TITLE_TEXT;
     if (!isset ($block['EMAIL_LOGO_WIDTH']) || $block['EMAIL_LOGO_WIDTH'] == '') $block['EMAIL_LOGO_WIDTH'] = EMAIL_LOGO_WIDTH;
