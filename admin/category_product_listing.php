@@ -4,7 +4,7 @@
  * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: Zen4All
+ * @version $Id: Author: Zen4All modified in v1.5.6 $
  */
 require('includes/application_top.php');
 $languages = zen_get_languages();
@@ -1111,7 +1111,7 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
             case 'attribute_features_copy_to_product':
               $_GET['products_update_id'] = '';
               // excluded current product from the pull down menu of products
-              $products_exclude_array = array();
+              $products_exclude_array = [];
               $products_exclude_array[] = $pInfo->products_id;
 
               $heading[] = array('text' => '<h4>' . TEXT_INFO_HEADING_ATTRIBUTE_FEATURES . $pInfo->products_id . '</h4>');
@@ -1179,33 +1179,28 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
                 <?php echo zen_draw_form('newproduct', FILENAME_PRODUCT, 'action=new_product', 'post', 'class="form-horizontal"'); ?>
                 <?php echo (empty($_GET['search']) ? '<div class="col-sm-3"><button type="submit" class="btn btn-primary">' . IMAGE_NEW_PRODUCT . '</button></div>' : ''); ?>
                 <?php
-                $sql = "SELECT ptc.product_type_id, pt.type_name
+                $sql = "SELECT ptc.product_type_id as type_id, pt.type_name
                         FROM " . TABLE_PRODUCT_TYPES_TO_CATEGORY . " ptc,
                              " . TABLE_PRODUCT_TYPES . " pt
                         WHERE ptc.category_id = " . (int)$current_category_id . "
                         AND pt.type_id = ptc.product_type_id";
-                $restrict_types = $db->Execute($sql);
-                if ($restrict_types->RecordCount() > 0) {
-                  $product_restrict_types_array = array();
-                  foreach ($restrict_types as $restrict_type) {
-                    $product_restrict_types_array[] = array(
-                      'id' => $restrict_type['product_type_id'],
-                      'text' => $restrict_type['type_name']);
-                  }
-                } else {
+                $product_types = $db->Execute($sql);
 
-// make array for product types
+                if ($product_types->RecordCount() == 0) {
+// There are no restricted product types so make array of available product types.
 
                   $sql = "SELECT * FROM " . TABLE_PRODUCT_TYPES;
                   $product_types = $db->Execute($sql);
-                  $product_types_array = [];
-                  foreach ($product_types as $product_type) {
-                    $product_types_array[] = array(
-                      'id' => $product_type['type_id'],
-                      'text' => $product_type['type_name']);
-                  }
-                  $product_restrict_types_array = $product_types_array;
                 }
+
+                $product_restrict_types_array = [];
+
+                foreach ($product_types as $restrict_type) {
+                  $product_restrict_types_array[] = array(
+                    'id' => $restrict_type['type_id'],
+                    'text' => $restrict_type['type_name']);
+                }
+
                 ?>
                 <?php
                 echo '<div class="col-sm-6">' . zen_draw_pull_down_menu('product_type', $product_restrict_types_array, '', 'class="form-control"') . '</div>';
