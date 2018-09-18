@@ -160,7 +160,7 @@ $form_action = (isset($_GET['pID'])) ? 'update_product' : 'insert_product';
       ?>
       <a href="<?php echo zen_href_link(FILENAME_CATEGORY_PRODUCT_LISTING, 'cPath=' . $cPath . (isset($_GET['pID']) ? '&pID=' . $_GET['pID'] : '') . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '') . (isset($_GET['search']) ? '&search=' . $_GET['search'] : '')); ?>" class="btn btn-default" role="button"><?php echo IMAGE_CANCEL; ?></a>
       <?php 
-      if (!(isset($_GET['read']) && ($_GET['read'] === 'only')) {
+      if (!(isset($_GET['read']) && ($_GET['read'] === 'only'))) {
         echo '</form>'; 
       } ?>
     </div>
