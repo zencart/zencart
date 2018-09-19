@@ -437,7 +437,7 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
               <?php
               // check for which buttons to show for categories and products
               $check_categories = zen_has_category_subcategories($current_category_id);
-              $check_products = zen_products_in_category_count($current_category_id, false, false, 1);
+              $check_products = zen_products_in_category_count($current_category_id, true, false, 1);
 
               $zc_skip_products = false;
               $zc_skip_categories = false;
