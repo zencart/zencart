@@ -1179,6 +1179,7 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
                 <?php echo zen_draw_form('newproduct', FILENAME_PRODUCT, 'action=new_product', 'post', 'class="form-horizontal"'); ?>
                 <?php echo (empty($_GET['search']) ? '<div class="col-sm-3"><button type="submit" class="btn btn-primary">' . IMAGE_NEW_PRODUCT . '</button></div>' : ''); ?>
                 <?php
+                // Query product types based on the ones this category is restricted to
                 $sql = "SELECT ptc.product_type_id as type_id, pt.type_name
                         FROM " . TABLE_PRODUCT_TYPES_TO_CATEGORY . " ptc,
                              " . TABLE_PRODUCT_TYPES . " pt
@@ -1187,8 +1188,7 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
                 $product_types = $db->Execute($sql);
 
                 if ($product_types->RecordCount() == 0) {
-// There are no restricted product types so make array of available product types.
-
+                  // There are no restricted product types so make we offer all types instead
                   $sql = "SELECT * FROM " . TABLE_PRODUCT_TYPES;
                   $product_types = $db->Execute($sql);
                 }
@@ -1196,9 +1196,10 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
                 $product_restrict_types_array = [];
 
                 foreach ($product_types as $restrict_type) {
-                  $product_restrict_types_array[] = array(
+                  $product_restrict_types_array[] = [
                     'id' => $restrict_type['type_id'],
-                    'text' => $restrict_type['type_name']);
+                    'text' => $restrict_type['type_name'],
+                  ];
                 }
 
                 ?>
