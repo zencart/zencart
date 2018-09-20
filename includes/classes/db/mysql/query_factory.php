@@ -180,7 +180,20 @@ class queryFactory extends base {
       if (strtoupper(substr($zf_sql,0,6))=='SELECT' /*&& strstr($zf_sql,'products_id')*/) {
         $f=@fopen(DIR_FS_LOGS.'/query_selects_' . $current_page_base . '_' . time() . '.txt','a');
         if ($f) {
-          fwrite($f,  "\n\n" . 'I AM HERE ' . $current_page_base . /*zen_get_all_get_params() .*/ "\n" . 'sidebox: ' . $box_id . "\n\n" . "Explain \n" . $zf_sql.";\n\n");
+          $backtrace = '';
+
+          if (defined('STORE_DB_TRANSACTIONS_BACKTRACE') && !empty(STORE_DB_TRANSACTIONS_BACKTRACE)) {
+            ob_start();
+            debug_print_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
+            $backtrace = ob_get_contents();
+            ob_end_clean();
+
+            $backtrace = preg_replace('/^#0\s+' . __FUNCTION__ . '[^\n]*\n/', '', $backtrace, 1);
+
+            $backtrace = 'query trace: ' . "\n" . $backtrace . "\n";
+          }
+
+          fwrite($f,  "\n\n" . 'I AM HERE ' . $current_page_base . /*zen_get_all_get_params() .*/ "\n" . $backtrace . 'sidebox: ' . $box_id . "\n\n" . "Explain \n" . $zf_sql.";\n\n");
           fclose($f);
         }
         unset($f);
