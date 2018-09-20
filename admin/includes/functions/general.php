@@ -3539,14 +3539,13 @@ function zen_limit_image_filename($filename, $table_name, $field_name, $extensio
 
     if (empty($language)) $language = $_SESSION['languages_id'];
 
-    $product_lookup = $db->Execute("select " . zen_db_input($what_field) . " as lookup_field
-                              from " . TABLE_PRODUCTS . " p, " . TABLE_PRODUCTS_DESCRIPTION . " pd
-                              where  p.products_id ='" . (int)$product_id . "'
-                              and pd.products_id = p.products_id
-                              and pd.language_id = '" . (int)$language . "'");
-    $return_field = $product_lookup->fields['lookup_field'];
-    if ($return_field->EOF) return '';
-    return $return_field;
+    $product_lookup = $db->Execute("SELECT " . zen_db_input($what_field) . " AS lookup_field
+                              FROM " . TABLE_PRODUCTS . " p, " . TABLE_PRODUCTS_DESCRIPTION . " pd
+                              WHERE  p.products_id = " . (int)$product_id . "
+                              AND pd.products_id = p.products_id
+                              AND pd.language_id = " . (int)$language);
+    if ($product_lookup->EOF) return '';
+    return $product_lookup->fields['lookup_field'];
   }
 
   function zen_count_days($start_date, $end_date, $lookup = 'm') {
