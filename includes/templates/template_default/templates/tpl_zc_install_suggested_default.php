@@ -22,7 +22,6 @@ $docsPath = (file_exists('docs/index.html')) ? 'docs/index.html' : (file_exists(
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="keywords" content="">
     <meta name="description" content="">
-    <meta http-equiv="imagetoolbar" content="no">
     <meta name="authors" content="The Zen Cart&reg; Team and others">
     <meta name="generator" content="shopping cart program by Zen Cart&reg;, http://www.zen-cart.com">
     <meta name="robots" content="noindex, nofollow">
@@ -93,7 +92,7 @@ $docsPath = (file_exists('docs/index.html')) ? 'docs/index.html' : (file_exists(
           align-items: flex-start;
       }
 
-      .h-g: after {
+      .h-g:after {
           content: "";
           clear: both;
           display: table;
@@ -129,7 +128,7 @@ $docsPath = (file_exists('docs/index.html')) ? 'docs/index.html' : (file_exists(
           text-decoration: none;
       }
 
-      a: visited {
+      a:visited {
           color: #0080ff;
       }
 
@@ -216,7 +215,7 @@ $docsPath = (file_exists('docs/index.html')) ? 'docs/index.html' : (file_exists(
           text-decoration: none;
       }
 
-      .h-btn: hover {
+      .h-btn:hover {
           background: #006edb;
       }
 
