@@ -638,7 +638,7 @@ class queryFactoryResult implements Countable, Iterator {
   public function rewind() {
       $this->EOF = ($this->RecordCount() == 0);
       if ($this->RecordCount() !== 0) {
-          $this->Move(0, false); // mc12345678 eliminate return of integer based key
+          $this->Move(0);
       }
   }
 
