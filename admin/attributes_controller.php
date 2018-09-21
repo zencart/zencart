@@ -450,7 +450,7 @@ if (zen_not_null($action)) {
           $products_options_query = $db->Execute("SELECT products_options_type
                                                   FROM " . TABLE_PRODUCTS_OPTIONS . "
                                                   WHERE products_options_id = " . (int)$_POST['options_id']);
-          switch ($products_options_array->fields['products_options_type']) {
+          switch ($products_options_query->fields['products_options_type']) {
             case PRODUCTS_OPTIONS_TYPE_TEXT:
             case PRODUCTS_OPTIONS_TYPE_FILE:
               $values_id = PRODUCTS_OPTIONS_VALUES_TEXT_ID;

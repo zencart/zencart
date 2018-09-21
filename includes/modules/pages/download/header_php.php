@@ -19,13 +19,13 @@ require(DIR_WS_MODULES . zen_get_module_directory('require_languages.php'));
 
 // if the customer is not logged on and no email_address set (i.e. guest checkout), redirect the customer to the time out page
 if (empty($_SESSION['customer_id']) && empty($_SESSION['email_address'])) {
-    zen_redirect(zen_href_link(FILENAME_TIME_OUT));
+    zen_redirect(zen_href_link(FILENAME_TIME_OUT, '', 'SSL'));
 }
 
 // Check download.php was called with proper GET parameters
 if ((isset($_GET['order']) && !is_numeric($_GET['order'])) || (isset($_GET['id']) && !is_numeric($_GET['id'])) ) {
     // if the paramaters are wrong, redirect them to the time out page
-    zen_redirect(zen_href_link(FILENAME_TIME_OUT));
+    zen_redirect(zen_href_link(FILENAME_TIME_OUT, '', 'SSL'));
 }
 
 if (isset($_SESSION['email_address'])) {
@@ -90,7 +90,7 @@ $isExpired = !$unlimited && ($download_timestamp <= time() || $remainingCount <=
 $zco_notifier->notify('NOTIFY_CHECK_DOWNLOAD_HANDLER', $downloads, $downloads->fields, $origin_filename, $browser_filename, $source_directory, $file_exists, $service, $isExpired, $download_timestamp);
 
 if ($isExpired) {
-    zen_redirect(zen_href_link(FILENAME_DOWNLOAD_TIME_OUT));
+    zen_redirect(zen_href_link(FILENAME_DOWNLOAD_TIME_OUT, '', 'SSL'));
 }
 
 // FIX HERE AND GIVE ERROR PAGE FOR MISSING FILE
