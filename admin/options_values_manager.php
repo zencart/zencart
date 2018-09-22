@@ -94,7 +94,7 @@ if (zen_not_null($action)) {
                                  FROM " . TABLE_PRODUCTS_OPTIONS_VALUES . " pov
                                  LEFT JOIN " . TABLE_PRODUCTS_OPTIONS_VALUES_TO_PRODUCTS_OPTIONS . " pov2po ON pov.products_options_values_id = pov2po.products_options_values_id
                                  WHERE pov.language_id = " . (int)$languages[$i]['id'] . "
-                                 AND pov.products_options_values_name = " . zen_db_input($value_name) . "
+                                 AND pov.products_options_values_name = '" . zen_db_input($value_name) . "'
                                  AND pov2po.products_options_id = " . (int)$option_id);
           if ($check->RecordCount() > 1) {
             foreach ($check as $item) {
