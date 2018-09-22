@@ -673,7 +673,7 @@ if (zen_not_null($action)) {
               </tr>
               <tr>
                 <td class="text-right" colspan="4">
-                  <a href="<?php echo zen_href_link(FILENAME_OPTIONS_VALUES_MANAGER, 'action=delete_value&value_id=' . $_GET['value_id'] . (isset($_GET['option_page']) ? '&option_page=' . $_GET['option_page'] . '&' : '') . (isset($_GET['value_page']) ? '&value_page=' . $_GET['value_page'] . '&' : '') . (isset($_GET['attribute_page']) ? '&attribute_page=' . $_GET['attribute_page'] : '')); ?>" class="btn btn-danger" role="button">'; ?><?php echo IMAGE_DELETE; ?></a>
+                  <a href="<?php echo zen_href_link(FILENAME_OPTIONS_VALUES_MANAGER, 'action=delete_value&value_id=' . $_GET['value_id'] . (isset($_GET['option_page']) ? '&option_page=' . $_GET['option_page'] . '&' : '') . (isset($_GET['value_page']) ? '&value_page=' . $_GET['value_page'] . '&' : '') . (isset($_GET['attribute_page']) ? '&attribute_page=' . $_GET['attribute_page'] : '')); ?>" class="btn btn-danger" role="button"><?php echo IMAGE_DELETE; ?></a>
                   <a href="<?php echo zen_href_link(FILENAME_OPTIONS_VALUES_MANAGER, (isset($_GET['option_page']) ? '&option_page=' . $_GET['option_page'] . '&' : '') . (isset($_GET['value_page']) ? '&value_page=' . $_GET['value_page'] . '&' : '') . (isset($_GET['attribute_page']) ? '&attribute_page=' . $_GET['attribute_page'] : '')); ?>" class="btn btn-default" role="button"><?php echo TEXT_CANCEL; ?></a>
                 </td>
               </tr>
