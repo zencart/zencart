@@ -16,3 +16,7 @@ if (!defined('IS_ADMIN_FLAG')) {
 if ( isset($_GET['layoutType']) ) { 
   $_SESSION['layoutType'] = preg_replace('/[^a-z0-9_-]/i', '', $_GET['layoutType']);
 }
+
+if (!isset($_SESSION['layoutType'])) {
+  $_SESSION['layoutType'] = 'legacy';
+}

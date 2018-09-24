@@ -38,6 +38,9 @@ $form_action = (isset($_GET['pID'])) ? 'update_product' : 'insert_product';
 ?>
 <div class="container-fluid">
     <?php
+    if (!isset($_GET['read']) || ($_GET['read'] !== 'only')) {
+      echo zen_draw_form($form_action, FILENAME_PRODUCT, 'cPath=' . $cPath . (isset($_GET['product_type']) ? '&product_type=' . $_GET['product_type'] : '') . (isset($_GET['pID']) ? '&pID=' . $_GET['pID'] : '') . '&action=' . $form_action . (isset($_GET['page']) ? '&page=' . $_GET['page'] : ''), 'post', 'enctype="multipart/form-data"');
+    }
     for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
       if (isset($_GET['read']) && ($_GET['read'] == 'only')) {
         $pInfo->products_name = zen_get_products_name($pInfo->products_id, $languages[$i]['id']);
@@ -49,7 +52,9 @@ $form_action = (isset($_GET['pID'])) ? 'update_product' : 'insert_product';
         $pInfo->products_url = zen_db_prepare_input($products_url[$languages[$i]['id']]);
       }
 
-      $specials_price = zen_get_products_special_price($pID);
+      if (isset($_GET['pID'])) {
+        $specials_price = zen_get_products_special_price($_GET['pID']);
+      }
       ?>
     <div class="row">
       <div class="col-sm-6 pageHeading">
@@ -63,7 +68,7 @@ $form_action = (isset($_GET['pID'])) ? 'update_product' : 'insert_product';
           <?php echo ($pInfo->product_is_free == 1 ? '<div class="errorText">' . '<br>' . TEXT_PRODUCTS_IS_FREE_PREVIEW . '</div>' : ''); ?>
           <?php echo ($pInfo->product_is_call == 1 ? '<div class="errorText">' . '<br>' . TEXT_PRODUCTS_IS_CALL_PREVIEW . '</div>' : '') ?>
           <?php echo ($pInfo->products_qty_box_status == 0 ? '<div class="errorText">' . '<br>' . TEXT_PRODUCTS_QTY_BOX_STATUS_PREVIEW . '</div>' : ''); ?>
-          <?php echo ($pInfo->products_priced_by_attribute == 1 ? '<br>' . zen_get_products_display_price($_GET['pID']) : ''); ?>
+          <?php echo (isset($_GET['pID']) && $pInfo->products_priced_by_attribute == 1 ? '<br>' . zen_get_products_display_price($_GET['pID']) : ''); ?>
       </div>
     </div>
     <div class="row"><?php echo zen_draw_separator('pixel_trans.gif', '1', '10'); ?></div>
@@ -128,7 +133,6 @@ $form_action = (isset($_GET['pID'])) ? 'update_product' : 'insert_product';
     ?>
     <div class="row text-right">
         <?php
-        echo zen_draw_form($form_action, $type_handler, 'cPath=' . $cPath . (isset($_GET['product_type']) ? '&product_type=' . $_GET['product_type'] : '') . (isset($_GET['pID']) ? '&pID=' . $_GET['pID'] : '') . '&action=' . $form_action . (isset($_GET['page']) ? '&page=' . $_GET['page'] : ''), 'post', 'enctype="multipart/form-data"');
         /* Re-Post all POST'ed variables */
         foreach ($_POST as $key => $value) {
           if (!is_array($_POST[$key])) {
@@ -155,7 +159,10 @@ $form_action = (isset($_GET['pID'])) ? 'update_product' : 'insert_product';
       }
       ?>
       <a href="<?php echo zen_href_link(FILENAME_CATEGORY_PRODUCT_LISTING, 'cPath=' . $cPath . (isset($_GET['pID']) ? '&pID=' . $_GET['pID'] : '') . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '') . (isset($_GET['search']) ? '&search=' . $_GET['search'] : '')); ?>" class="btn btn-default" role="button"><?php echo IMAGE_CANCEL; ?></a>
-      <?php echo '</form>'; ?>
+      <?php 
+      if (!(isset($_GET['read']) && ($_GET['read'] === 'only'))) {
+        echo '</form>'; 
+      } ?>
     </div>
     <?php
   }

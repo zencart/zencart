@@ -15,6 +15,12 @@ $zco_notifier->notify('NOTIFY_HEADER_START_ADVANCED_SEARCH_RESULTS');
 if (!defined('KEYWORD_FORMAT_STRING')) define('KEYWORD_FORMAT_STRING','keywords');
 
 require(DIR_WS_MODULES . zen_get_module_directory('require_languages.php'));
+// set the product filters according to selected product type
+
+$typefilter = 'default';
+if (isset($_GET['typefilter'])) $typefilter = $_GET['typefilter'];
+require(zen_get_index_filters_directory($typefilter . '_filter.php'));
+
 $error = false;
 $missing_one_input = false;
 
@@ -364,9 +370,16 @@ if (isset($_GET['dto']) && zen_not_null($_GET['dto']) && ($_GET['dto'] != DOB_FO
 }
 
 $rate = $currencies->get_value($_SESSION['currency']);
+$pfrom = 0.0;
+$pto = 0.0;
+
 if ($rate) {
-  $pfrom = (float)$_GET['pfrom'] / $rate;
-  $pto = (float)$_GET['pto'] / $rate;
+  if (!empty($_GET['pfrom'])) {
+    $pfrom = (float)$_GET['pfrom'] / $rate;
+  }
+  if (!empty($_GET['pto'])) {
+    $pto = (float)$_GET['pto'] / $rate;
+  }
 }
 
 if (DISPLAY_PRICE_WITH_TAX == 'true') {
@@ -390,6 +403,8 @@ if (DISPLAY_PRICE_WITH_TAX == 'true') {
 }
 
 
+$order_str = '';
+
 // Notifier Point
 $zco_notifier->notify('NOTIFY_SEARCH_WHERE_STRING');
 
@@ -407,7 +422,7 @@ if ((!isset($_GET['sort'])) || (!preg_match('/[1-8][ad]/', $_GET['sort'])) || (s
   for ($col=0, $n=sizeof($column_list); $col<$n; $col++) {
     if ($column_list[$col] == 'PRODUCT_LIST_NAME') {
       $_GET['sort'] = $col+1 . 'a';
-      $order_str = ' order by pd.products_name';
+      $order_str .= ' ORDER BY pd.products_name';
       break;
     } else {
       // sort by products_sort_order when PRODUCT_LISTING_DEFAULT_SORT_ORDER ia left blank

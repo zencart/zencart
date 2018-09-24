@@ -154,7 +154,7 @@ if (zen_not_null($action)) {
     <div class="container-fluid">
       <!-- body //-->
       <?php
-      if ($_GET['action'] == 'layout' || $_GET['action'] == 'layout_edit') {
+      if (isset($_GET['action']) && ($_GET['action'] == 'layout' || $_GET['action'] == 'layout_edit')) {
         $sql = "SELECT type_name
                 FROM " . TABLE_PRODUCT_TYPES . "
                 WHERE type_id = " . (int)$_GET['ptID'];

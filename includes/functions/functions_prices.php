@@ -1295,7 +1295,9 @@ If a special exist * 10
   function zen_get_attributes_type($check_attribute) {
     global $db;
     $check_options_id_query = $db->Execute("select options_id from " . TABLE_PRODUCTS_ATTRIBUTES . " where products_attributes_id='" . (int)$check_attribute . "'");
+    if ($check_options_id_query->EOF) return 0;
     $check_type_query = $db->Execute("select products_options_type from " . TABLE_PRODUCTS_OPTIONS . " where products_options_id='" . (int)$check_options_id_query->fields['options_id'] . "'");
+    if ($check_type_query->EOF) return 0;
     return $check_type_query->fields['products_options_type'];
   }
 

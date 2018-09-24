@@ -64,7 +64,7 @@ img {
   align-items: flex-start;
 }
 
-.h-g: after {
+.h-g:after {
   content: "";
   clear: both;
   display: table;
@@ -100,7 +100,7 @@ a {
   text-decoration: none;
 }
 
-a: visited {
+a:visited {
   color: #0080ff;
 }
 
@@ -187,7 +187,7 @@ h4 {
   text-decoration: none;
 }
 
-.h-btn: hover {
+.h-btn:hover {
   background: #006edb;
 }
 

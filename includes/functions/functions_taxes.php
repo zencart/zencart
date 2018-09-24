@@ -267,7 +267,7 @@
     // Give an observer the chance to modify the function's output.
     //
     $tax_address = false;
-    $zco_notifier->notify(
+    $GLOBALS['zco_notifier']->notify(
         'ZEN_GET_TAX_LOCATIONS',
         array(
             'country' => $store_country,

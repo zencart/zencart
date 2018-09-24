@@ -24,8 +24,8 @@ if ($ezpage_id == 0) {
   zen_redirect(zen_href_link(FILENAME_DEFAULT));
 }
 
-$chapter_id = (int)$_GET['chapter'];
-$chapter_link = (int)$_GET['chapter'];
+$chapter_id = isset($_GET['chapter']) ? (int)$_GET['chapter'] : 0;
+$chapter_link = isset($_GET['chapter']) ? (int)$_GET['chapter'] : 0;
 
 $sql = "SELECT *
         FROM  " . TABLE_EZPAGES . " e,

@@ -51,7 +51,7 @@
     }
 
 // if no shipping destination address was selected, use the customers own address as default
-  if (!$_SESSION['sendto']) {
+  if (empty($_SESSION['sendto'])) {
     $_SESSION['sendto'] = $_SESSION['customer_default_address_id'];
   } else {
 // verify the selected shipping address
@@ -141,7 +141,7 @@ if (isset($_SESSION['cart']->cartID)) {
     if (zen_not_null($_POST['comments'])) {
       $_SESSION['comments'] = zen_output_string_protected($_POST['comments']);
     }
-    $comments = $_SESSION['comments'];
+    $comments = isset($_SESSION['comments']) ? $_SESSION['comments'] : '';
     $quote = array();
 
     if ( (zen_count_shipping_modules() > 0) || ($free_shipping == true) ) {

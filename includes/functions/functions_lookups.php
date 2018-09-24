@@ -498,7 +498,7 @@
     $check_valid = true;
 
 // display only cannot be selected
-    if ($check_attributes->fields['attributes_display_only'] == '1') {
+    if (!$check_attributes->EOF && $check_attributes->fields['attributes_display_only'] == '1') {
       $check_valid = false;
     }
 

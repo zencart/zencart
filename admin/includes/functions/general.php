@@ -629,7 +629,7 @@ function zen_get_uprid($prid, $params)
 function zen_get_prid($uprid)
 {
     $pieces = explode(':', $uprid);
-    return $pieces[0];
+    return (int)$pieces[0];
 }
 
 
@@ -1759,7 +1759,7 @@ while (!$chk_sale_categories_all->EOF) {
     global $customer_zone_id, $customer_country_id;
 
     if ( ($country_id == -1) && ($zone_id == -1) ) {
-      if (!$_SESSION['customer_id']) {
+      if (empty($_SESSION['customer_id'])) {
         $country_id = STORE_COUNTRY;
         $zone_id = STORE_ZONE;
       } else {
@@ -3539,14 +3539,13 @@ function zen_limit_image_filename($filename, $table_name, $field_name, $extensio
 
     if (empty($language)) $language = $_SESSION['languages_id'];
 
-    $product_lookup = $db->Execute("select " . zen_db_input($what_field) . " as lookup_field
-                              from " . TABLE_PRODUCTS . " p, " . TABLE_PRODUCTS_DESCRIPTION . " pd
-                              where  p.products_id ='" . (int)$product_id . "'
-                              and pd.products_id = p.products_id
-                              and pd.language_id = '" . (int)$language . "'");
-    $return_field = $product_lookup->fields['lookup_field'];
-    if ($return_field->EOF) return '';
-    return $return_field;
+    $product_lookup = $db->Execute("SELECT " . zen_db_input($what_field) . " AS lookup_field
+                              FROM " . TABLE_PRODUCTS . " p, " . TABLE_PRODUCTS_DESCRIPTION . " pd
+                              WHERE  p.products_id = " . (int)$product_id . "
+                              AND pd.products_id = p.products_id
+                              AND pd.language_id = " . (int)$language);
+    if ($product_lookup->EOF) return '';
+    return $product_lookup->fields['lookup_field'];
   }
 
   function zen_count_days($start_date, $end_date, $lookup = 'm') {

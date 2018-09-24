@@ -7,7 +7,6 @@
  * @version $Id: Author: DrByte  Fri Oct 9 15:32:07 2015 -0400 New in v1.5.5 $
  */
 define('IS_ADMIN_FLAG', false);
-if (!defined('__DIR__')) define('__DIR__', dirname(__FILE__));
 define('DIR_FS_INSTALL', __DIR__ . '/');
 define('DIR_FS_ROOT', realpath(__DIR__ . '/../') . '/');
 
@@ -16,6 +15,7 @@ require(DIR_FS_INSTALL . 'includes/application_top.php');
 $systemChecker = new systemChecker();
 
 $error = TRUE;
+$errorList = array();
 if (isset($_POST['db_name']))
 {
   zcRegistry::setValue('db_host', $_POST['db_host']);
@@ -26,8 +26,8 @@ if (isset($_POST['db_name']))
   $results = $systemChecker -> runTests('database');
   if (count($results) != 0)
   {
-    $keys = array_keys($results); 
-    $errorList = $results[$keys[0]]; 
+    $keys = array_keys($results);
+    $errorList = $results[$keys[0]];
     $error = TRUE;
   } else
   {

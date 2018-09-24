@@ -638,7 +638,7 @@ class queryFactoryResult implements Countable, Iterator {
   public function rewind() {
       $this->EOF = ($this->RecordCount() == 0);
       if ($this->RecordCount() !== 0) {
-          $this->Move(0, false); // mc12345678 eliminate return of integer based key
+          $this->Move(0);
       }
   }
 
@@ -677,7 +677,6 @@ class queryFactoryResult implements Countable, Iterator {
    * @param int $zp_row the row to move to
    */
   public function Move($zp_row) {
-    global $db;
     if ($this->is_cached) {
       if($zp_row >= sizeof($this->result)) {
         $this->cursor = sizeof($this->result);
@@ -693,7 +692,7 @@ class queryFactoryResult implements Countable, Iterator {
       $this->EOF = false;
     } else {
       $this->EOF = true;
-      $db->set_error(mysqli_errno($this->link), mysqli_error($this->link), $db->dieOnErrors);
+      $this->set_error(mysqli_errno($this->link), mysqli_error($this->link), $this->dieOnErrors);
     }
   }
 }

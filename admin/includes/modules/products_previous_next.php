@@ -80,8 +80,8 @@ if (!isset($prev_next_list) || $prev_next_list == '') {
 }
 
 // reset if not already set for display
-($_GET['products_filter'] == '' ? (int)$_GET['products_filter'] = $products_filter : '');
-($_GET['current_category_id'] == '' ? (int)$_GET['current_category_id'] = $current_category_id : '');
+(isset($_GET['products_filter']) && $_GET['products_filter'] == '' ? (int)$_GET['products_filter'] = $products_filter : '');
+(isset($_GET['current_category_id']) && $_GET['current_category_id'] == '' ? (int)$_GET['current_category_id'] = $current_category_id : '');
 
 $id_array = [];
 foreach ($products_ids as $products_id) {
@@ -90,7 +90,8 @@ foreach ($products_ids as $products_id) {
 
 $counter = 0;
 // if invalid product id skip
-if (sizeof($id_array)) {
+$id_array_size = count($id_array);
+if ($id_array_size) {
   foreach ($id_array as $key => $value) {
     if ($value == $products_filter) {
       $position = $counter;
@@ -99,7 +100,7 @@ if (sizeof($id_array)) {
       } else {
         $previous = $id_array[$key - 1];
       }
-      if ($id_array[$key + 1]) {
+      if ((($key + 1) < $id_array_size) && $id_array[$key + 1]) {
         $next_item = $id_array[$key + 1];
       } else {
         $next_item = $id_array[0];
