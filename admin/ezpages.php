@@ -7,24 +7,6 @@
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: Author: Zen4All Modified in v1.5.6 $
  */
-// Sets the status of a page
-function zen_set_ezpage_status($pages_id, $status, $status_field) {
-  global $db;
-  if ($status == '1') {
-    zen_record_admin_activity('EZ-Page ID ' . (int)$pages_id . ' [' . $status_field . '] changed to 0', 'info');
-    return $db->Execute("UPDATE " . TABLE_EZPAGES . "
-                         SET " . zen_db_input($status_field) . " = 0
-                         WHERE pages_id = " . (int)$pages_id);
-  } elseif ($status == '0') {
-    zen_record_admin_activity('EZ-Page ID ' . (int)$pages_id . ' [' . $status_field . '] changed to 1', 'info');
-    return $db->Execute("UPDATE " . TABLE_EZPAGES . "
-                         SET " . zen_db_input($status_field) . " = 1
-                         WHERE pages_id = " . (int)$pages_id);
-  } else {
-    return -1;
-  }
-}
-
 require('includes/application_top.php');
 
 if (!isset($_SESSION['ez_sort_order'])) {
@@ -152,7 +134,7 @@ if (zen_not_null($action)) {
           'sidebox_sort_order' => $pages_sidebox_sort_order,
           'footer_sort_order' => $pages_footer_sort_order,
           'toc_sort_order' => $pages_toc_sort_order,
-          'toc_chapter' => $toc_chapter,
+          'toc_chapter' => $toc_chapter);
 
         if ($action == 'insert') {
           zen_db_perform(TABLE_EZPAGES, $sql_data_array);
@@ -167,7 +149,7 @@ if (zen_not_null($action)) {
               'languages_id' => (int)$language_id,
               'pages_id' => (int)$pages_id);
 
-            zen_db_perform(TABLE_EZPAGES_TEXT, $sql_data_array);
+            zen_db_perform(TABLE_EZPAGES_CONTENT, $sql_data_array);
           }
           $messageStack->add(SUCCESS_PAGE_INSERTED, 'success');
           zen_record_admin_activity('EZ-Page with ID ' . (int)$pages_id . ' added.', 'info');
@@ -181,7 +163,7 @@ if (zen_not_null($action)) {
               'pages_title' => $pages_title_array[$language_id],
               'pages_html_text' => $pages_html_text_array[$language_id]);
 
-            zen_db_perform(TABLE_EZPAGES_TEXT, $sql_data_array, 'update', "pages_id = " . (int)$pages_id . " and languages_id = " . (int)$language_id);
+            zen_db_perform(TABLE_EZPAGES_CONTENT, $sql_data_array, 'update', "pages_id = '" . (int)$pages_id . "' and languages_id = '" . $language_id . "'");
           }
           $messageStack->add(SUCCESS_PAGE_UPDATED, 'success');
           zen_record_admin_activity('EZ-Page with ID ' . (int)$pages_id . ' updated.', 'info');
@@ -204,7 +186,7 @@ if (zen_not_null($action)) {
       $pages_id = zen_db_prepare_input($_POST['ezID']);
       $db->Execute("DELETE FROM " . TABLE_EZPAGES . "
                     WHERE pages_id = " . (int)$pages_id);
-      $db->Execute("DELETE FROM " . TABLE_EZPAGES_TEXT . "
+      $db->Execute("DELETE FROM " . TABLE_EZPAGES_CONTENT . "
                     WHERE pages_id = " . (int)$pages_id);
       $messageStack->add(SUCCESS_PAGE_REMOVED, 'success');
       zen_record_admin_activity('EZ-Page with ID ' . (int)$pages_id . ' deleted.', 'notice');
@@ -218,8 +200,8 @@ if (zen_not_null($action)) {
   <head>
     <meta charset="<?php echo CHARSET; ?>">
     <title><?php echo TITLE; ?></title>
-    <link rel="stylesheet" type="text/css" href="includes/stylesheet.css">
-    <link rel="stylesheet" type="text/css" href="includes/cssjsmenuhover.css" media="all" id="hoverJS">
+    <link rel="stylesheet" href="includes/stylesheet.css">
+    <link rel="stylesheet" href="includes/cssjsmenuhover.css" media="all" id="hoverJS">
     <script src="includes/menu.js"></script>
     <script src="includes/general.js"></script>
     <script>
@@ -305,9 +287,12 @@ if (zen_not_null($action)) {
 
           $ezID = zen_db_prepare_input($_GET['ezID']);
 
-          $page_query = "SELECT *
-                         FROM " . TABLE_EZPAGES . "
-                         WHERE pages_id = " . (int)$_GET['ezID'];
+          $page_query = "SELECT e.*, ec.*
+                         FROM " . TABLE_EZPAGES . " e,
+                              " . TABLE_EZPAGES_CONTENT . " ec
+                         WHERE e.pages_id = " . (int)$_GET['ezID'] . "
+                         AND ec.pages_id = e.pages_id
+                         AND ec.languages_id = " . (int)$_SESSION['languages_id'];
           $page = $db->Execute($page_query);
           $ezInfo->updateObjectInfo($page->fields);
         } elseif (zen_not_null($_POST)) {
@@ -331,7 +316,7 @@ if (zen_not_null($action)) {
               for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
                 if (isset($_GET['ezID']) && zen_not_null($_GET['ezID'])) {
                   $title_query_sql = "SELECT pages_title
-                                      FROM " . TABLE_EZPAGES_TEXT . "
+                                      FROM " . TABLE_EZPAGES_CONTENT . "
                                       WHERE pages_id = " . (int)$_GET['ezID'] . "
                                       AND languages_id = " . (int)$languages[$i]['id'];
                   $title_query = $db->Execute($title_query_sql);
@@ -339,13 +324,15 @@ if (zen_not_null($action)) {
                 } else {
                   $pages_title = '';
                 }
-                echo '<div class="input-group">';
-                echo '<span class="input-group-addon">' . zen_image(DIR_WS_CATALOG_LANGUAGES . $languages[$i]['directory'] . '/images/' . $languages[$i]['image'], $languages[$i]['name']) . '</span>';
-                echo zen_draw_input_field('pages_title[' . $languages[$i]['id'] . ']', htmlspecialchars($pages_title, ENT_COMPAT, CHARSET, TRUE), zen_set_field_length(TABLE_EZPAGES_TEXT, 'pages_title') . 'class="form-control"', true);
-                echo '</div>';
-                echo '<br>';
-              }
-              ?>
+                ?>
+              <div class="input-group">
+                <span class="input-group-addon"><?php echo zen_image(DIR_WS_CATALOG_LANGUAGES . $languages[$i]['directory'] . '/images/' . $languages[$i]['image'], $languages[$i]['name']); ?></span>
+                <?php echo zen_draw_input_field('pages_title[' . $languages[$i]['id'] . ']', htmlspecialchars($pages_title, ENT_COMPAT, CHARSET, TRUE), zen_set_field_length(TABLE_EZPAGES_CONTENT, 'pages_title') . 'class="form-control"', true); ?>
+              </div>
+              <br>
+              <?php
+            }
+            ?>
           </div>
         </div>
         <div class="form-group">
@@ -417,21 +404,21 @@ if (zen_not_null($action)) {
         <div class="form-group">
             <?php echo zen_draw_label(TEXT_PAGES_HTML_TEXT, 'pages_html_text', 'class="col-sm-3 control-label"'); ?>
           <div class="col-sm-9 col-md-6">
-              <?php
-              $pages_html_text = '';
+            <?php
+            $pages_html_text = '';
 
-              for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
-                if (isset($_GET['ezID']) && zen_not_null($_GET['ezID'])) {
-                  $text_query_sql = "SELECT pages_html_text
-                                     FROM " . TABLE_EZPAGES_TEXT . "
-                                     WHERE pages_id = '" . (int)$_GET['ezID'] . "'
-                                     AND languages_id = '" . (int)$languages[$i]['id'] . "'";
-                  $text_query = $db->Execute($text_query_sql);
-                  $pages_html_text = $text_query->fields['pages_html_text'];
-                } else {
-                  $pages_html_text = '';
-                }
-                ?>
+            for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
+              if (isset($_GET['ezID']) && zen_not_null($_GET['ezID'])) {
+                $text_query_sql = "SELECT pages_html_text
+                                   FROM " . TABLE_EZPAGES_CONTENT . "
+                                   WHERE pages_id = " . (int)$_GET['ezID'] . "
+                                   AND languages_id = " . (int)$languages[$i]['id'];
+                $text_query = $db->Execute($text_query_sql);
+                $pages_html_text = $text_query->fields['pages_html_text'];
+              } else {
+                $pages_html_text = '';
+              }
+              ?>
               <div class="input-group">
                 <span class="input-group-addon"><?php echo zen_image(DIR_WS_CATALOG_LANGUAGES . $languages[$i]['directory'] . '/images/' . $languages[$i]['image'], $languages[$i]['name']); ?></span>
                 <?php echo zen_draw_textarea_field('pages_html_text[' . $languages[$i]['id'] . ']', 'soft', '100%', '20', htmlspecialchars($pages_html_text, ENT_COMPAT, CHARSET, TRUE), 'class="editorHook form-control"'); ?>
@@ -483,34 +470,31 @@ if (zen_not_null($action)) {
 // set display order
                 switch (true) {
                   case ($_SESSION['ez_sort_order'] == 0):
-                    $ez_order_by = " ORDER BY e.toc_chapter, e.toc_sort_order, et.pages_title";
+                    $ez_order_by = " ORDER BY e.toc_chapter, e.toc_sort_order, ec.pages_title";
                     break;
                   case ($_SESSION['ez_sort_order'] == 1):
-                    $ez_order_by = " ORDER BY e.header_sort_order, et.pages_title";
+                    $ez_order_by = " ORDER BY e.header_sort_order, ec.pages_title";
                     break;
                   case ($_SESSION['ez_sort_order'] == 2):
-                    $ez_order_by = " ORDER BY e.sidebox_sort_order, et.pages_title";
+                    $ez_order_by = " ORDER BY e.sidebox_sort_order, ec.pages_title";
                     break;
                   case ($_SESSION['ez_sort_order'] == 3):
-                    $ez_order_by = " ORDER BY e.footer_sort_order, et.pages_title";
+                    $ez_order_by = " ORDER BY e.footer_sort_order, ec.pages_title";
                     break;
                   case ($_SESSION['ez_sort_order'] == 4):
-                    $ez_order_by = " ORDER BY et.pages_title";
+                    $ez_order_by = " ORDER BY ec.pages_title";
                     break;
                   case ($_SESSION['ez_sort_order'] == 5):
-                    $ez_order_by = " ORDER BY e.pages_id, et.pages_title";
+                    $ez_order_by = " ORDER BY e.pages_id, ec.pages_title";
                     break;
                   default:
-                    $ez_order_by = " ORDER BY e.toc_chapter, e.toc_sort_order, et.pages_title";
+                    $ez_order_by = " ORDER BY e.toc_chapter, e.toc_sort_order, ec.pages_title";
                     break;
                 }
 
-                $pages_query_raw = "SELECT e.pages_id, e.page_open_new_window, e.page_is_ssl, e.alt_url, e.alt_url_external,
-                                           e.header_sort_order, e.sidebox_sort_order, e.footer_sort_order,
-                                           e.toc_sort_order, e.toc_chapter, e.status_header, e.status_sidebox, e.status_footer,
-                                           e.status_toc, et.pages_title, et.pages_html_text
+                $pages_query_raw = "SELECT e.*, ec.*
                                     FROM " . TABLE_EZPAGES . " e,
-                                         " . TABLE_EZPAGES_TEXT . " et
+                                         " . TABLE_EZPAGES_CONTENT . " ec
                                     WHERE e.pages_id = et.pages_id
                                     AND et.languages_id = " . (int)$_SESSION['languages_id'] .
                                     $ez_order_by;

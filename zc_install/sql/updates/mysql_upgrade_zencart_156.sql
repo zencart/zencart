@@ -45,7 +45,7 @@ INSERT IGNORE INTO configuration (configuration_title, configuration_key, config
 INSERT IGNORE INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES ('Text prefix', 'TEXT_PREFIX', 'txt_', 'Prefix used to differentiate between text option values and other option values', 6, NULL, now(), now(), NULL, NULL);
 
 # New Values
-UPDATE configuration SET configuration_description =  'Defines the method for sending mail.<br /><strong>PHP</strong> is the default, and uses built-in PHP wrappers for processing.<br /><strong>SMTPAUTH</strong> should be used by most sites!, as it provides secure sending of authenticated email. You must also configure your SMTPAUTH settings in the appropriate fields in this admin section.<br /><br /><strong>Gmail</strong> is used for sending emails using Google\'s mail service, and requires the [less secure] setting enabled in your gmail account.<br /><br /><strong>sendmail</strong> is for linux/unix hosts using the sendmail program on the server<br /><strong>"sendmail-f"</strong> is only for servers which require the use of the -f parameter to use sendmail. This is a security setting often used to prevent spoofing. Will cause errors if your host mailserver is not configured to use it.<br /><br />MOST SITES WILL USE [SMTPAUTH].', set_function = 'zen_cfg_select_option(array(\'PHP\', \'sendmail\', \'sendmail-f\', \'smtp\', \'smtpauth\', \'Gmail\'),' WHERE configuration_key = 'EMAIL_TRANSPORT'; 
+UPDATE configuration SET configuration_description =  'Defines the method for sending mail.<br /><strong>PHP</strong> is the default, and uses built-in PHP wrappers for processing.<br /><strong>SMTPAUTH</strong> should be used by most sites!, as it provides secure sending of authenticated email. You must also configure your SMTPAUTH settings in the appropriate fields in this admin section.<br /><br /><strong>Gmail</strong> is used for sending emails using Google\'s mail service, and requires the [less secure] setting enabled in your gmail account.<br /><br /><strong>sendmail</strong> is for linux/unix hosts using the sendmail program on the server<br /><strong>"sendmail-f"</strong> is only for servers which require the use of the -f parameter to use sendmail. This is a security setting often used to prevent spoofing. Will cause errors if your host mailserver is not configured to use it.<br /><br />MOST SITES WILL USE [SMTPAUTH].', set_function = 'zen_cfg_select_option(array(\'PHP\', \'sendmail\', \'sendmail-f\', \'smtp\', \'smtpauth\', \'Gmail\'),' WHERE configuration_key = 'EMAIL_TRANSPORT';
 
 # Updates
 ALTER TABLE products_options MODIFY products_options_comment varchar(256) default NULL;
@@ -144,7 +144,26 @@ DELETE FROM admin_pages WHERE page_key = 'linkpointReview';
 
 ALTER TABLE customers_basket DROP final_price;
 
+## add support for multi lingualez pages
+CREATE TABLE IF NOT EXISTS ezpages_content (
+  pages_id int(11) NOT NULL DEFAULT '0',
+  languages_id int(11) NOT NULL DEFAULT '1',
+  pages_title varchar(64) NOT NULL DEFAULT '',
+  pages_html_text text NOT NULL,
+  UNIQUE KEY ez_pages (pages_id, languages_id),
+  KEY idx_ezo_pages_title (pages_title)
+) ENGINE=MyISAM;
 
+INSERT INTO ezpages_content (pages_id, languages_id, pages_title, pages_html_text)
+SELECT e.pages_id, l.languages_id, e.pages_title, e.pages_html_text
+FROM ezpages e
+LEFT JOIN languages l
+ON 1;
+
+ALTER TABLE ezpages
+  DROP languages_id,
+  DROP pages_title,
+  DROP pages_html_text;
 
 ## support for utf8mb4 index limitations in MySQL 5.5-5.6
 ALTER TABLE admin_menus MODIFY menu_key VARCHAR(191) NOT NULL DEFAULT '';

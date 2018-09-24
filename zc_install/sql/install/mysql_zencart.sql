@@ -678,11 +678,8 @@ CREATE TABLE email_archive (
 DROP TABLE IF EXISTS ezpages;
 CREATE TABLE ezpages (
   pages_id int(11) NOT NULL auto_increment,
-  languages_id int(11) NOT NULL default '1',
-  pages_title varchar(64) NOT NULL default '',
   alt_url varchar(255) NOT NULL default '',
   alt_url_external varchar(255) NOT NULL default '',
-  pages_html_text mediumtext,
   status_header int(1) NOT NULL default '1',
   status_sidebox int(1) NOT NULL default '1',
   status_footer int(1) NOT NULL default '1',
@@ -695,7 +692,6 @@ CREATE TABLE ezpages (
   page_is_ssl int(1) NOT NULL default '0',
   toc_chapter int(11) NOT NULL default '0',
   PRIMARY KEY  (pages_id),
-  KEY idx_lang_id_zen (languages_id),
   KEY idx_ezp_status_header_zen (status_header),
   KEY idx_ezp_status_sidebox_zen (status_sidebox),
   KEY idx_ezp_status_footer_zen (status_footer),
@@ -704,6 +700,21 @@ CREATE TABLE ezpages (
 
 # --------------------------------------------------------
 
+#
+# Table structure for table 'ezpages_content'
+#
+
+DROP TABLE IF EXISTS ezpages_content;
+CREATE TABLE ezpages_content (
+  pages_id int(11) NOT NULL DEFAULT '0',
+  languages_id int(11) NOT NULL DEFAULT '1',
+  pages_title varchar(64) NOT NULL DEFAULT '',
+  pages_html_text text,
+  UNIQUE KEY idx_ezpages_content (pages_id,languages_id),
+  KEY idx_lang_id_zen (languages_id)
+) ENGINE=MyISAM;
+
+# --------------------------------------------------------
 #
 # Table structure for table 'featured'
 #

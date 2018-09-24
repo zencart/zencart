@@ -27,11 +27,11 @@ if ($ezpage_id == 0) {
 $chapter_id = isset($_GET['chapter']) ? (int)$_GET['chapter'] : 0;
 $chapter_link = isset($_GET['chapter']) ? (int)$_GET['chapter'] : 0;
 
-$sql = "SELECT *
+$sql = "SELECT e.*, ec.*
         FROM  " . TABLE_EZPAGES . " e,
-              " . TABLE_EZPAGES_TEXT . " et
-        WHERE e.pages_id = et.pages_id
-        AND et.languages_id = '" . (int)$_SESSION['languages_id'] . "'
+              " . TABLE_EZPAGES_CONTENT . " ec
+        WHERE e.pages_id = ec.pages_id
+        AND ec.languages_id = '" . (int)$_SESSION['languages_id'] . "'
         AND e.pages_id = " . (int)$ezpage_id;
 // comment the following line to allow access to pages which don't have a status switch set to Yes:
 $sql .= " AND (status_toc > 0
@@ -53,25 +53,24 @@ if ($var_pageDetails->EOF) {
 $pos = (isset($_GET['pos'])) ? $_GET['pos'] : 'v';  // v for vertical, h for horizontal  (v assumed if not specified)
 $vert_links = array();
 $toc_links = array();
-//  $pages_order_query = "SELECT pages_id FROM " . TABLE_EZPAGES . " WHERE status = 1 and vertical_sort_order <> 0 ORDER BY vertical_sort_order, horizontal_sort_order, pages_title";
-//  $pages_order_query = "SELECT * FROM " . TABLE_EZPAGES . " WHERE ((status_sidebox = 1 and sidebox_sort_order <> 0) or (status_footer = 1 and footer_sort_order <> 0) or (status_header = 1 and header_sort_order <> 0)) and alt_url_external = '' ORDER BY header_sort_order, sidebox_sort_order, footer_sort_order, pages_title";
-$pages_order_query = "SELECT *
+$pages_order_query = "SELECT e.*,ec.*
                       FROM  " . TABLE_EZPAGES . " e,
-                            " . TABLE_EZPAGES_TEXT . " et
+                            " . TABLE_EZPAGES_CONTENT . " ec
                       WHERE ((e.status_toc = 1 AND e.toc_sort_order <> 0) AND e.toc_chapter= :chapterID )
                       AND e.alt_url_external = ''
                       AND e.alt_url = ''
-                      AND et.languages_id = '" . (int)$_SESSION['languages_id'] . "' 
-                      AND e.pages_id = et.pages_id
-                      ORDER BY e.toc_sort_order, et.pages_title";
+                      AND ec.languages_id = '" . (int)$_SESSION['languages_id'] . "' 
+                      AND e.pages_id = ec.pages_id
+                      ORDER BY e.toc_sort_order, ec.pages_title";
 
 $pages_order_query = $db->bindVars($pages_order_query, ':chapterID', $chapter_id, 'integer');
 $pages_ordering = $db->execute($pages_order_query);
 
-while (!$pages_ordering->EOF) {
-  $vert_links[] = $pages_ordering->fields['pages_id'];
-  $toc_links[] = array('pages_id' => $pages_ordering->fields['pages_id'], 'pages_title' => $pages_ordering->fields['pages_title']);
-  $pages_ordering->MoveNext();
+foreach ($pages_ordering as $page_order) {
+  $vert_links[] = $page_order['pages_id'];
+  $toc_links[] = array(
+    'pages_id' => $page_order['pages_id'],
+    'pages_title' => $page_order['pages_title']);
 }
 
 /**
