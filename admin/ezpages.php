@@ -495,8 +495,8 @@ if (zen_not_null($action)) {
                 $pages_query_raw = "SELECT e.*, ec.*
                                     FROM " . TABLE_EZPAGES . " e,
                                          " . TABLE_EZPAGES_CONTENT . " ec
-                                    WHERE e.pages_id = et.pages_id
-                                    AND et.languages_id = " . (int)$_SESSION['languages_id'] .
+                                    WHERE e.pages_id = ec.pages_id
+                                    AND ec.languages_id = " . (int)$_SESSION['languages_id'] .
                                     $ez_order_by;
 
 // Split Page
