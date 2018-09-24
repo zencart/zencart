@@ -154,7 +154,7 @@ CREATE TABLE IF NOT EXISTS ezpages_content (
   KEY idx_ezo_pages_title (pages_title)
 ) ENGINE=MyISAM;
 
-INSERT INTO ezpages_content (pages_id, languages_id, pages_title, pages_html_text)
+INSERT INTO IGNORE ezpages_content (pages_id, languages_id, pages_title, pages_html_text)
 SELECT e.pages_id, l.languages_id, e.pages_title, e.pages_html_text
 FROM ezpages e
 LEFT JOIN languages l
