@@ -26,7 +26,7 @@
     $manufacturers_id = (!zen_not_null($tmp_value) || $tmp_value=='' || $tmp_value == 0) ? 0 : $tmp_value;
 
     $sql_data_array = array('products_quantity' => $products_quantity,
-                            'products_type' => zen_db_prepare_input($_GET['product_type']),
+                            'products_type' => zen_db_prepare_input($_POST['product_type']),
                             'products_model' => zen_db_prepare_input($_POST['products_model']),
                             'products_price' => $products_price,
                             'products_date_available' => $products_date_available,
