@@ -94,7 +94,7 @@ if (zen_not_null($action)) {
                                  FROM " . TABLE_PRODUCTS_OPTIONS_VALUES . " pov
                                  LEFT JOIN " . TABLE_PRODUCTS_OPTIONS_VALUES_TO_PRODUCTS_OPTIONS . " pov2po ON pov.products_options_values_id = pov2po.products_options_values_id
                                  WHERE pov.language_id = " . (int)$languages[$i]['id'] . "
-                                 AND pov.products_options_values_name = " . zen_db_input($value_name) . "
+                                 AND pov.products_options_values_name = '" . zen_db_input($value_name) . "'
                                  AND pov2po.products_options_id = " . (int)$option_id);
           if ($check->RecordCount() > 1) {
             foreach ($check as $item) {
@@ -673,7 +673,7 @@ if (zen_not_null($action)) {
               </tr>
               <tr>
                 <td class="text-right" colspan="4">
-                  <a href="<?php echo zen_href_link(FILENAME_OPTIONS_VALUES_MANAGER, 'action=delete_value&value_id=' . $_GET['value_id'] . (isset($_GET['option_page']) ? '&option_page=' . $_GET['option_page'] . '&' : '') . (isset($_GET['value_page']) ? '&value_page=' . $_GET['value_page'] . '&' : '') . (isset($_GET['attribute_page']) ? '&attribute_page=' . $_GET['attribute_page'] : '')); ?>" class="btn btn-danger" role="button">'; ?><?php echo IMAGE_DELETE; ?></a>
+                  <a href="<?php echo zen_href_link(FILENAME_OPTIONS_VALUES_MANAGER, 'action=delete_value&value_id=' . $_GET['value_id'] . (isset($_GET['option_page']) ? '&option_page=' . $_GET['option_page'] . '&' : '') . (isset($_GET['value_page']) ? '&value_page=' . $_GET['value_page'] . '&' : '') . (isset($_GET['attribute_page']) ? '&attribute_page=' . $_GET['attribute_page'] : '')); ?>" class="btn btn-danger" role="button"><?php echo IMAGE_DELETE; ?></a>
                   <a href="<?php echo zen_href_link(FILENAME_OPTIONS_VALUES_MANAGER, (isset($_GET['option_page']) ? '&option_page=' . $_GET['option_page'] . '&' : '') . (isset($_GET['value_page']) ? '&value_page=' . $_GET['value_page'] . '&' : '') . (isset($_GET['attribute_page']) ? '&attribute_page=' . $_GET['attribute_page'] : '')); ?>" class="btn btn-default" role="button"><?php echo TEXT_CANCEL; ?></a>
                 </td>
               </tr>

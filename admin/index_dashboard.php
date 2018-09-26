@@ -41,6 +41,7 @@ $visit_history = array();
 //  Get the visitor history data
 $visits_query = "select startdate, counter, session_counter from " . TABLE_COUNTER_HISTORY . " order by startdate DESC";
 $visits       = $db->Execute($visits_query, $number_of_visitors_history,true, 1800);
+$counterData = '';
 foreach ($visits as $data) {
     // table
     $countdate = $data['startdate'];
@@ -63,8 +64,8 @@ $endDate = mktime(0, 0, 0, date("m"), date("d"), date("Y"));
 $startDate = mktime() - (365 * 2) * 3600 * 24;
 
 //$startDate = mktime() - (365)*3600*24;
-$report = new statsSalesReportGraph($report, $startDate, $endDate, $sales_report_filter);
-for ($i = 0; $i < $report->size; $i++) {
+$report = new statsSalesReportGraph($report, $startDate, $endDate);
+for ($i = 0, $salesData = ''; $i < $report->size; $i++) {
     $month     = $report->info[$i]['text'];
     $salesData .= "['$month'," . round($report->info[$i]['sum'], 2) . "]";
     if ($i < $report->size - 1) {
