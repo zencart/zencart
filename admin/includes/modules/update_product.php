@@ -22,7 +22,7 @@ if (isset($_POST['edit_x']) || isset($_POST['edit_y'])) {
   // Data-cleaning to prevent data-type mismatch errors:
   $sql_data_array = array(
     'products_quantity' => convertToFloat($_POST['products_quantity']),
-    'products_type' => (int)$_GET['product_type'],
+    'products_type' => (int)$_POST['product_type'],
     'products_model' => zen_db_prepare_input($_POST['products_model']),
     'products_price' => convertToFloat($_POST['products_price']),
     'products_date_available' => $products_date_available,
