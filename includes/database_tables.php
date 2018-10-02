@@ -45,6 +45,7 @@ define('TABLE_CUSTOMERS_INFO', DB_PREFIX . 'customers_info');
 define('TABLE_DB_CACHE', DB_PREFIX . 'db_cache');
 define('TABLE_EMAIL_ARCHIVE', DB_PREFIX . 'email_archive');
 define('TABLE_EZPAGES', DB_PREFIX . 'ezpages');
+define('TABLE_EZPAGES_CONTENT', DB_PREFIX . 'ezpages_content');
 define('TABLE_FEATURED', DB_PREFIX . 'featured');
 define('TABLE_FILES_UPLOADED', DB_PREFIX . 'files_uploaded');
 define('TABLE_GROUP_PRICING', DB_PREFIX . 'group_pricing');
