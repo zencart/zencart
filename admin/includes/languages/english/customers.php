@@ -31,6 +31,7 @@ define('TEXT_INFO_HEADING_DELETE_CUSTOMER', 'Delete Customer');
 define('TYPE_BELOW', 'Type below');
 define('PLEASE_SELECT', 'Select One');
 define('TEXT_INFO_NUMBER_OF_ORDERS', 'Number of Orders:');
+define('TEXT_INFO_LIFETIME_VALUE', 'Customer Lifetime Value:');
 define('TEXT_INFO_LAST_ORDER','Last Order:');
 define('TEXT_INFO_ORDERS_TOTAL', 'Total:');
 define('CUSTOMERS_REFERRAL', 'Customer Referral<br />1st Discount Coupon');
