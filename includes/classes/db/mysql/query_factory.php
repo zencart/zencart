@@ -182,7 +182,7 @@ class queryFactory extends base {
         if ($f) {
           $backtrace = '';
 
-          if (STORE_DB_TRANSACTIONS == 'backtrace')) {
+          if (STORE_DB_TRANSACTIONS == 'backtrace') {
             ob_start();
             debug_print_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
             $backtrace = ob_get_contents();
