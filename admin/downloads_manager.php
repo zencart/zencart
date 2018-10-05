@@ -135,7 +135,7 @@ if (zen_not_null($action)) {
                   if (!defined('DIR_FS_DOWNLOAD')) define('DIR_FS_DOWNLOAD', DIR_FS_CATALOG . 'download/');
 
                   $filename_is_missing = '';
-                  if (!zen_orders_products_downloads(DIR_FS_DOWNLOAD . $products_downloads['products_attributes_filename'])) {
+                  if (!zen_orders_products_downloads($products_downloads['products_attributes_filename'])) {
                     $filename_is_missing = zen_image(DIR_WS_IMAGES . 'icon_status_red.gif');
                   } else {
                     $filename_is_missing = zen_image(DIR_WS_IMAGES . 'icon_status_green.gif');
@@ -143,9 +143,9 @@ if (zen_not_null($action)) {
                   ?>
                   <?php
                   if (isset($padInfo) && is_object($padInfo) && ($products_downloads['products_attributes_id'] == $padInfo->products_attributes_id)) {
-                    echo '              <tr id="defaultSelected" class="dataTableRowSelected" onclick="document.location.href=\'' . zen_href_link(FILENAME_DOWNLOADS_MANAGER, zen_get_all_get_params(array('padID', 'action')) . 'padID=' . $padInfo->products_attributes_id . '&action=edit' . '&page=' . $_GET['page']) . '\'" role="button">' . "\n";
+                    echo '              <tr id="defaultSelected" class="dataTableRowSelected" onclick="document.location.href=\'' . zen_href_link(FILENAME_DOWNLOADS_MANAGER, zen_get_all_get_params(array('padID', 'action', 'page')) . 'padID=' . $padInfo->products_attributes_id . '&action=edit&page=' . $_GET['page']) . '\'" role="button">' . "\n";
                   } else {
-                    echo '              <tr class="dataTableRow" onclick="document.location.href=\'' . zen_href_link(FILENAME_DOWNLOADS_MANAGER, zen_get_all_get_params(array('padID')) . 'padID=' . $products_downloads['products_attributes_id'] . '&page=' . $_GET['page']) . '\'" role="button">' . "\n";
+                    echo '              <tr class="dataTableRow" onclick="document.location.href=\'' . zen_href_link(FILENAME_DOWNLOADS_MANAGER, zen_get_all_get_params(array('padID', 'action', 'page')) . 'padID=' . $products_downloads['products_attributes_id'] . '&page=' . $_GET['page']) . '\'" role="button">' . "\n";
                   }
                   ?>
 
