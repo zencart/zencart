@@ -346,16 +346,9 @@ systemChecks:
     methods:
       dbVersionChecker:
         parameters:
-          - checkType: fieldSchema
-            tableName: sessions
-            fieldName: sesskey
-            fieldCheck: Type
-            expectedResult: 'VARCHAR(255)'
-          - checkType: fieldSchema
-            tableName: whos_online
-            fieldName: session_id
-            fieldCheck: Type
-            expectedResult: 'VARCHAR(255)'
+          - checkType: configValue
+            fieldName: PADSS_ADMIN_SESSION_TIMEOUT_ENFORCED
+            expectedResult: 'PA-DSS Admin Session Timeout Enforced?'
           - checkType: configValue
             fieldName: SHOW_CATEGORY_PRODUCTS_LINKED_STATUS
             expectedResult: 'Show linked status for categories'
