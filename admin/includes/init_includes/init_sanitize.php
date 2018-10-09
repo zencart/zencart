@@ -244,4 +244,7 @@ $sanitizer->addSimpleSanitization('FLOAT_VALUE_REGEX', $group);
 $group = array('products_name' => array('sanitizerType' => 'WORDS_AND_SYMBOLS_REGEX', 'method' => 'post', 'pages' => array('reviews')));
 $sanitizer->addComplexSanitization($group);
 
+$group = array('query_string' => array('sanitizerType' => 'NULL_ACTION', 'method' => 'post', 'pages' => array('sqlpatch')));
+$sanitizer->addComplexSanitization($group);
+
 $sanitizer->runSanitizers();
