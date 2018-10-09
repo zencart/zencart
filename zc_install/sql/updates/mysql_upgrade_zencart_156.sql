@@ -144,7 +144,7 @@ DELETE FROM admin_pages WHERE page_key = 'linkpointReview';
 
 ALTER TABLE customers_basket DROP final_price;
 
-## add support for multi lingualez pages
+## add support for multi lingual ezpages
 CREATE TABLE IF NOT EXISTS ezpages_content (
   pages_id int(11) NOT NULL DEFAULT '0',
   languages_id int(11) NOT NULL DEFAULT '1',
