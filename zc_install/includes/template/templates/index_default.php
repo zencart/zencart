@@ -6,6 +6,7 @@
  * @version $Id: Author: zcwilt   Modified in v1.5.6 $
  */
 require(DIR_FS_INSTALL . DIR_WS_INSTALL_TEMPLATE . 'partials/partial_modal_help.php');
+$adjustWarnIssues = false;
 ?>
 <form id="systemCheck" name="systemCheck" method="post" action="index.php?main_page=<?php echo $formAction; ?>">
 <input type="hidden" name="lng" value="<?php echo $lng; ?>" >
@@ -76,7 +77,7 @@ require(DIR_FS_INSTALL . DIR_WS_INSTALL_TEMPLATE . 'partials/partial_modal_help.
     <?php foreach ($listWarnErrors as $error) { ?>
         <?php if (strpos($error['mainErrorText'], 'PRO TIP:') === false) { ?>
             <?php $errorHeadingFlag = true; ?>
-            
+
             <?php break; ?>
         <?php } ?>
     <?php } ?>

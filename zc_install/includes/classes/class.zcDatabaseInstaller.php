@@ -15,6 +15,7 @@
 class zcDatabaseInstaller
 {
     public $ignoreLine;
+    var $jsonProgressLoggingCount = 0;
 
     public function __construct($options)
   {

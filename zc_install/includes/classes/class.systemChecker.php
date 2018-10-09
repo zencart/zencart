@@ -249,9 +249,9 @@ class systemChecker
     $retVal = FALSE;
     $sql = "select configuration_title from " . $dbPrefix . "configuration where configuration_key = '" . $parameters['fieldName'] . "'";
     $result = $db->execute($sql);
-    if ($result)
+    if ($result && isset($result->fields['configuration_title']))
     {
-      $retVal  = ($result->fields['configuration_title'] == $parameters['expectedResult']) ? TRUE : FALSE;
+      $retVal = ($result->fields['configuration_title'] == $parameters['expectedResult']) ? TRUE : FALSE;
     }
     return $retVal;
   }
@@ -260,9 +260,9 @@ class systemChecker
     $retVal = FALSE;
     $sql = "select configuration_description from " . $dbPrefix . "configuration where configuration_key = '" . $parameters['fieldName'] . "'";
     $result = $db->execute($sql);
-    if ($result)
+    if ($result && isset($result->fields['configuration_description']))
     {
-      $retVal  = ($result->fields['configuration_description'] == $parameters['expectedResult']) ? TRUE : FALSE;
+      $retVal = ($result->fields['configuration_description'] == $parameters['expectedResult']) ? TRUE : FALSE;
     }
     return $retVal;
   }
