@@ -35,7 +35,7 @@ define('TEXT_PRODUCTS_MODEL', 'Products Model:');
 define('TEXT_PRODUCTS_IMAGE', 'Products Image:');
 define('TEXT_PRODUCTS_IMAGE_DIR', 'Upload to directory:');
 define('TEXT_PRODUCTS_URL', 'Products URL:');
-define('TEXT_PRODUCTS_URL_WITHOUT_HTTP', '<small>(without http://)</small>');
+define('TEXT_PRODUCTS_URL_WITHOUT_HTTP', '(without http://)');
 define('TEXT_PRODUCTS_PRICE_NET', 'Products Price (Net):');
 define('TEXT_PRODUCTS_PRICE_GROSS', 'Products Price (Gross):');
 define('TEXT_PRODUCTS_WEIGHT', 'Products Shipping Weight:');
