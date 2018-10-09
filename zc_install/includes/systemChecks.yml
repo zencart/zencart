@@ -271,10 +271,9 @@ systemChecks:
             fieldCheck: Type
             expectedResult: 'VARCHAR(191)'
           - checkType: fieldSchema
-            tableName: whos_online
-            fieldName: session_id
-            fieldCheck: Type
-            expectedResult: 'VARCHAR(191)'
+            tableName: ezpages_content
+            fieldName: pages_html_text
+            fieldCheck: Exists
           - checkType: fieldSchema
             tableName: configuration
             fieldName: val_function

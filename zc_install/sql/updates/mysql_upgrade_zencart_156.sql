@@ -96,14 +96,14 @@ ALTER TABLE orders MODIFY order_total decimal(15,4) default NULL;
 ALTER TABLE orders MODIFY order_tax decimal(15,4) default NULL;
 
 ALTER TABLE orders_products ADD products_weight float default NULL;
-ALTER TABLE orders_products ADD products_virtual tinyint( 1 ) default NULL;
-ALTER TABLE orders_products ADD product_is_always_free_shipping tinyint( 1 ) default NULL;
+ALTER TABLE orders_products ADD products_virtual tinyint(1) default NULL;
+ALTER TABLE orders_products ADD product_is_always_free_shipping tinyint(1) default NULL;
 ALTER TABLE orders_products ADD products_quantity_order_min float default NULL;
 ALTER TABLE orders_products ADD products_quantity_order_units float default NULL;
 ALTER TABLE orders_products ADD products_quantity_order_max float default NULL;
-ALTER TABLE orders_products ADD products_quantity_mixed tinyint( 1 ) default NULL;
-ALTER TABLE orders_products ADD products_mixed_discount_quantity tinyint( 1 ) default NULL;
-ALTER TABLE orders_products_download ADD products_attributes_id int( 11 ) default NULL;
+ALTER TABLE orders_products ADD products_quantity_mixed tinyint(1) default NULL;
+ALTER TABLE orders_products ADD products_mixed_discount_quantity tinyint(1) default NULL;
+ALTER TABLE orders_products_download ADD products_attributes_id int(11) default NULL;
 
 # Clean up expired prids from baskets
 DELETE FROM customers_basket WHERE CAST(products_id AS unsigned) NOT IN (
@@ -114,43 +114,31 @@ SELECT products_id
 FROM products WHERE products_status > 0);
 
 # Clean up missing relations for deleted products
-DELETE FROM specials WHERE products_id NOT IN (
-SELECT products_id
-FROM products);
-DELETE FROM products_to_categories WHERE products_id NOT IN (
-SELECT products_id
-FROM products);
-DELETE FROM products_description WHERE products_id NOT IN (
-SELECT products_id
-FROM products);
-DELETE FROM meta_tags_products_description WHERE products_id NOT IN (
-SELECT products_id
-FROM products);
-DELETE FROM products_attributes WHERE products_id NOT IN (
-SELECT products_id
-FROM products);
-DELETE FROM reviews WHERE products_id NOT IN (
-SELECT products_id
-FROM products);
-DELETE FROM reviews_description WHERE reviews_id NOT IN (
-SELECT reviews_id
-FROM reviews);
-DELETE FROM featured WHERE products_id NOT IN (
-SELECT products_id
-FROM products);
-DELETE FROM products_discount_quantity WHERE products_id NOT IN (
-SELECT products_id
-FROM products);
-DELETE FROM coupon_restrict WHERE product_id NOT IN (
-SELECT products_id
-FROM products);
-DELETE FROM products_notifications WHERE products_id NOT IN (
-SELECT products_id
-FROM products);
-DELETE FROM products_attributes_download WHERE products_attributes_id IN (
-SELECT products_attributes_id FROM products_attributes WHERE products_id NOT IN (
-SELECT products_id
-FROM products));
+DELETE FROM specials WHERE products_id NOT IN ( SELECT products_id
+FROM products );
+DELETE FROM products_to_categories WHERE products_id NOT IN ( SELECT products_id
+FROM products );
+DELETE FROM products_description WHERE products_id NOT IN ( SELECT products_id
+FROM products );
+DELETE FROM meta_tags_products_description WHERE products_id NOT IN ( SELECT products_id
+FROM products );
+DELETE FROM products_attributes WHERE products_id NOT IN ( SELECT products_id
+FROM products );
+DELETE FROM reviews WHERE products_id NOT IN ( SELECT products_id
+FROM products );
+DELETE FROM reviews_description WHERE reviews_id NOT IN ( SELECT reviews_id
+FROM reviews );
+DELETE FROM featured WHERE products_id NOT IN ( SELECT products_id
+FROM products );
+DELETE FROM products_discount_quantity WHERE products_id NOT IN ( SELECT products_id
+FROM products );
+DELETE FROM coupon_restrict WHERE product_id NOT IN ( SELECT products_id
+FROM products );
+DELETE FROM products_notifications WHERE products_id NOT IN ( SELECT products_id
+FROM products );
+DELETE FROM products_attributes_download WHERE products_attributes_id IN ( SELECT products_attributes_id
+FROM products_attributes WHERE products_id NOT IN ( SELECT products_id
+FROM products ));
 
 ## alter admin_pages for new product listing pages
 UPDATE admin_pages
@@ -180,13 +168,8 @@ CREATE TABLE IF NOT EXISTS ezpages_content (
 INSERT IGNORE INTO ezpages_content (pages_id, languages_id, pages_title, pages_html_text)
 SELECT e.pages_id, l.languages_id, e.pages_title, e.pages_html_text
 FROM ezpages e
-LEFT JOIN languages l
-ON 1;
-
-ALTER TABLE ezpages
-  DROP languages_id,
-  DROP pages_title,
-  DROP pages_html_text;
+LEFT JOIN languages l ON 1;
+ALTER TABLE ezpages DROP languages_id, DROP pages_title, DROP pages_html_text;
 
 ## support for utf8mb4 index limitations in MySQL 5.5-5.6
 ALTER TABLE admin_menus MODIFY menu_key VARCHAR(191) NOT NULL DEFAULT '';
