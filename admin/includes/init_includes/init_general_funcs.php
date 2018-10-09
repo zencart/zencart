@@ -59,7 +59,7 @@ $e = (substr(HTTP_SERVER, 0, 5) == 'https') ? '1' : '0';
 if (SSLPWSTATUSCHECK == '') {
   $sql = "UPDATE " . TABLE_CONFIGURATION . " set configuration_value = '".$e.':'.$e."', last_modified = now() where configuration_key = 'SSLPWSTATUSCHECK'";
   $db->Execute($sql);
-  die('One-time auto-configuration completed. Please refresh the page.');
+  die('<meta http-equiv="Refresh" content="0">One-time auto-configuration completed. Please refresh the page.');
 }
 list($a, $c) = explode(':', SSLPWSTATUSCHECK); $a = (int)$a; $c = (int)$c;
 if ($a == 0) {
