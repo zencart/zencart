@@ -564,10 +564,10 @@ if (zen_not_null($action)) {
           array('id' => '1', 'text' => ENTRY_NEWSLETTER_YES),
           array('id' => '0', 'text' => ENTRY_NEWSLETTER_NO));
         ?>
-            <?php
-            echo zen_draw_form('customers', FILENAME_CUSTOMERS, zen_get_all_get_params(array('action')) . 'action=update', 'post', 'onsubmit="return check_form(customers);" class="form-horizontal"', true) . zen_draw_hidden_field('default_address_id', $cInfo->customers_default_address_id);
-            echo zen_hide_session_id();
-            ?>
+        <?php
+        echo zen_draw_form('customers', FILENAME_CUSTOMERS, zen_get_all_get_params(array('action')) . 'action=update', 'post', 'onsubmit="return check_form(customers);" class="form-horizontal"', true) . zen_draw_hidden_field('default_address_id', $cInfo->customers_default_address_id);
+        echo zen_hide_session_id();
+        ?>
         <div class="row formAreaTitle"><?php echo CATEGORY_PERSONAL; ?></div>
         <div class="formArea">
             <?php
