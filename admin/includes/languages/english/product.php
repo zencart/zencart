@@ -2,10 +2,10 @@
 
 /**
  * @package admin
- * @copyright Copyright 2003-2017 Zen Cart Development Team
+ * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: product.php 15883 2010-04-11 16:41:26Z wilt $
+ * @version $Id: product.php  Modified in v1.5.6 $
  */
 
 
@@ -77,13 +77,13 @@ define('TEXT_IMAGES_DELETE_NOTE', '');
 /* EOF Zen4All - CITTINS - 2 of 2 */
 
 // meta tags
-define('TEXT_META_TAG_TITLE_INCLUDES', '<strong>Mark What the Product\'s Meta Tag Title Should Include:</strong>');
+define('TEXT_META_TAG_TITLE_INCLUDES', '<strong>Mark What the Product\'s Meta Tag Title Should Include:</strong><br><span class="alert">NOTE: These switches have NO effect if no Keywords or Description text are entered below.</span>');
 define('TEXT_PRODUCTS_METATAGS_PRODUCTS_NAME_STATUS', '<strong>Product Name:</strong>');
 define('TEXT_PRODUCTS_METATAGS_TITLE_STATUS', '<strong>Title:</strong>');
 define('TEXT_PRODUCTS_METATAGS_MODEL_STATUS', '<strong>Model:</strong>');
 define('TEXT_PRODUCTS_METATAGS_PRICE_STATUS', '<strong>Price:</strong>');
 define('TEXT_PRODUCTS_METATAGS_TITLE_TAGLINE_STATUS', '<strong>Title/Tagline:</strong>');
-define('TEXT_META_TAGS_TITLE', '<strong>Meta Tag Title:</strong>');
+define('TEXT_META_TAGS_TITLE', '<strong>Meta Tag Title:</strong><br><span class="alert">NOTE: Metatags-Title has NO effect if no Keywords or Description text are entered below.</span>');
 define('TEXT_META_TAGS_KEYWORDS', '<strong>Meta Tag Keywords:</strong>');
 define('TEXT_META_TAGS_DESCRIPTION', '<strong>Meta Tag Description:</strong>');
 define('TEXT_META_EXCLUDED', '<span class="alert">EXCLUDED</span>');
