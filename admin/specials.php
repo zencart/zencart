@@ -1,7 +1,7 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2017 Zen Cart Development Team
+ * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: specials.php  drbyte Modified in v1.5.6 $
@@ -293,15 +293,15 @@ if (zen_not_null($action)) {
             }
           }
         }
-// do not include things that cannot go in the cart
-          $not_for_cart = $db->Execute("SELECT p.products_id
-                                        FROM " . TABLE_PRODUCTS . " p
-                                        LEFT JOIN " . TABLE_PRODUCT_TYPES . " pt ON p.products_type = pt.type_id
-                                        WHERE pt.allow_add_to_cart = 'N'");
+// uncomment the following to not include things that cannot go in the cart
+//          $not_for_cart = $db->Execute("SELECT p.products_id
+//                                        FROM " . TABLE_PRODUCTS . " p
+//                                        LEFT JOIN " . TABLE_PRODUCT_TYPES . " pt ON p.products_type = pt.type_id
+//                                        WHERE pt.allow_add_to_cart = 'N'");
+//          foreach ($not_for_cart as $item) {
+//            $specials_array[] = $item['products_id'];
+//          }
 
-          foreach ($not_for_cart as $item) {
-            $specials_array[] = $item['products_id'];
-          }
         }
         ?>
         <script>
