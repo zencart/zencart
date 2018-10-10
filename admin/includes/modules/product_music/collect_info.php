@@ -472,7 +472,7 @@ for ($i = 0, $n = sizeof($tax_class_array); $i < $n; $i++) {
   </div>
   <div class="form-group">
     <div class="col-sm-3 control-label">
-      <?php echo zen_draw_label(TEXT_PRODUCTS_URL, 'products_url'); ?><span class="help-block"><?php echo TEXT_PRODUCTS_URL_WITHOUT_HTTP; ?></span>
+      <?php echo zen_draw_label(TEXT_PRODUCTS_URL, 'products_url'); ?><span class="help-block"><small><?php echo TEXT_PRODUCTS_URL_WITHOUT_HTTP; ?></small></span>
     </div>
     <div class="col-sm-9 col-md-6">
         <?php
