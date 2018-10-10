@@ -55,14 +55,9 @@
       $ez_link .= ($ez_pages_open_new_window == '1' ? '" target="_blank' : '');
     }
 
-    //    echo 'I SEE ' . '<a href=' . $ez_link . '>' . $ez_page_query->fields['pages_title'] . '</a>' . '<br>';
-
     if ($ez_pages_return_full_url == false) {
       return $ez_link;
     } else {
       return '<a href="' . $ez_link . '">' . $ez_pages_name . '</a>';
     }
   }
-
-
-?>

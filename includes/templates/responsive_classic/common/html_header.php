@@ -178,8 +178,6 @@ if (count($lng->catalog_languages) > 1) {
  */
     require($page_directory . '/' . $value); echo "\n";
   }
-
-// DEBUG: echo '<!-- I SEE cat: ' . $current_category_id . ' || vs cpath: ' . $cPath . ' || page: ' . $current_page . ' || template: ' . $current_template . ' || main = ' . ($this_is_home_page ? 'YES' : 'NO') . ' -->';
 ?>
 
 <?php // ZCAdditions.com, ZCA Responsive Template Default (BOF-addition 2 of 2)

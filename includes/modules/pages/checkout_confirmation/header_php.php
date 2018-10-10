@@ -98,8 +98,6 @@ if (is_array($payment_modules->modules)) {
 if ($messageStack->size('checkout_payment') > 0) {
   zen_redirect(zen_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'));
 }
-//echo $messageStack->size('checkout_payment');
-//die('here');
 
 // Stock Check
 $flagAnyOutOfStock = false;

@@ -550,7 +550,6 @@ class shoppingCart extends base {
    * @return boolean
    */
   function in_cart($products_id) {
-    //  die($products_id);
     $this->notify('NOTIFIER_CART_IN_CART_START', array(), $products_id);
     if (isset($this->contents[$products_id])) {
       $this->notify('NOTIFIER_CART_IN_CART_END_TRUE', array(), $products_id);
@@ -570,7 +569,6 @@ class shoppingCart extends base {
   function remove($products_id) {
     global $db;
     $this->notify('NOTIFIER_CART_REMOVE_START', array(), $products_id);
-    //die($products_id);
     //CLR 030228 add call zen_get_uprid to correctly format product ids containing quotes
     //      $products_id = zen_get_uprid($products_id, $attributes);
     unset($this->contents[$products_id]);
@@ -801,9 +799,7 @@ class shoppingCart extends base {
                 }
             // adjust for attributes price
                 $freeShippingTotal += $new_attributes_price;
-            //die('I SEE B ' . $this->free_shipping_price);
               }
-            //  echo 'I SEE ' . $this->total . ' vs ' . $this->free_shipping_price . ' items: ' . $this->free_shipping_item. '<br>';
 
             ////////////////////////////////////////////////
             // calculate additional attribute charges
