@@ -3256,15 +3256,13 @@ function zen_limit_image_filename($filename, $table_name, $field_name, $extensio
 
       if ($zv_key_value->RecordCount() > 0) {
         return $zv_key_value->fields['configuration_value'];
-      } else {
-        $sql = "select configuration_key, configuration_value from " . TABLE_CONFIGURATION . " where configuration_key='" . zen_db_input($zv_key) . "'";
-        $zv_key_value = $db->Execute($sql);
-        if ($zv_key_value->RecordCount() > 0) {
-          return $zv_key_value->fields['configuration_value'];
-        } else {
-          return $zv_key_value->fields['configuration_value'];
-        }
       }
+      $sql = "select configuration_key, configuration_value from " . TABLE_CONFIGURATION . " where configuration_key='" . zen_db_input($zv_key) . "'";
+      $zv_key_value = $db->Execute($sql);
+      if ($zv_key_value->RecordCount() > 0) {
+        return $zv_key_value->fields['configuration_value'];
+      }
+      return '';
     }
 
 /**
