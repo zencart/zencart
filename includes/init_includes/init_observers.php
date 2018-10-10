@@ -29,7 +29,6 @@
     while ($file = $dir->read()) {
       if (!is_dir($dir->path . '/' . $file)) {
         if (preg_match('~(^auto\..*\.php$)~', $file, $matches) > 0) {
-          //die('file: ' . $file . "\nmatches:" . print_r($matches, true));
           $directory_array[] = rtrim($dir->path, '/') . '/' . $file;
         }
       }

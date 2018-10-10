@@ -1394,7 +1394,6 @@ If a special exist * 10
             if ($check_amount != 0) {
               $discounted_price = $check_amount - ($check_amount * ($products_discounts_query->fields['discount_price']/100));
 //echo 'ID#' . $product_id . ' Amount is: ' . $check_amount . ' discount: ' . $discounted_price . '<br />';
-//echo 'I SEE 2 for ' . $products_query->fields['products_discount_type'] . ' - ' . $products_query->fields['products_discount_type_from'] . ' - '. $check_amount . ' new: ' . $discounted_price . ' qty: ' . $check_qty;
             } else {
               $discounted_price = $display_price - ($display_price * ($products_discounts_query->fields['discount_price']/100));
             }

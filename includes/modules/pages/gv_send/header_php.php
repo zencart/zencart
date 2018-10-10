@@ -102,7 +102,6 @@ if ($_GET['action'] == 'process') {
     $_POST['amount'] = preg_replace('/[^0-9.,%]/', '', $_POST['amount']);
 
     $new_amount = $gv_result->fields['amount'] - $currencies->value($_POST['amount'], true, DEFAULT_CURRENCY);
-    //die($currencies->value($_POST['amount'], true, $_SESSION['currency']));
     $new_db_amount = $gv_result->fields['amount'] - $currencies->value($_POST['amount'], true, DEFAULT_CURRENCY);
     if ($new_amount < 0) {
       $error= true;
