@@ -61,6 +61,3 @@
       return '<a href="' . $ez_link . '">' . $ez_pages_name . '</a>';
     }
   }
-
-
-?>
