@@ -1,10 +1,10 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2016 Zen Cart Development Team
+ * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: DrByte  Thu Aug 29 23:58:50 2013 -0400 Modified in v1.5.5 $
+ * @version $Id: Author: DrByte  Modified in v1.5.6 $
  */
 require('includes/application_top.php');
 
@@ -545,20 +545,19 @@ $products_list = $db->Execute("SELECT products_id, categories_id
                 ?>
               </div>
               <?php
-              $not_for_cart = $db->Execute("select p.products_id from " . TABLE_PRODUCTS . " p left join " . TABLE_PRODUCT_TYPES . " pt on p.products_type= pt.type_id where pt.allow_add_to_cart = 'N'");
-              while (!$not_for_cart->EOF) {
-                $not_for_cart_array[] = $not_for_cart->fields['products_id'];
-                $not_for_cart->MoveNext();
-              }
+              $excluded_products = array();
+//              $not_for_cart = $db->Execute("select p.products_id from " . TABLE_PRODUCTS . " p left join " . TABLE_PRODUCT_TYPES . " pt on p.products_type= pt.type_id where pt.allow_add_to_cart = 'N'");
+//              while (!$not_for_cart->EOF) {
+//                $excluded_products[] = $not_for_cart->fields['products_id'];
+//                $not_for_cart->MoveNext();
+//              }
               ?>
-              <div class="col-sm-4"><?php echo zen_draw_products_pull_down('products_filter', 'size="10" class="form-control"', $not_for_cart->fields, true, $_GET['products_filter'], true, true); ?></div>
+              <div class="col-sm-4"><?php echo zen_draw_products_pull_down('products_filter', 'size="10" class="form-control"', $excluded_products, true, $_GET['products_filter'], true, true); ?></div>
               <div class="col-sm-4">
                 <button type="submit" class="btn btn-info"><?php echo IMAGE_DISPLAY; ?></button>
               </div>
             </div>
             <?php
-          } else {
-            $not_for_cart = '';
           } // $_GET['products_filter'] != ''
           ?>
 
