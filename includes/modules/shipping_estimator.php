@@ -121,8 +121,6 @@ if ($_SESSION['cart']->count_contents() > 0) {
   require(DIR_WS_CLASSES . 'shipping.php');
   $shipping_modules = new shipping;
   $quotes = $shipping_modules->quote();
-  //print_r($quotes);
-  //die('here');
   $order->info['subtotal'] = $_SESSION['cart']->show_total();
 
   // set selections for displaying

@@ -96,7 +96,7 @@ function zen_get_users($limit = '')
 
 function zen_delete_user($id)
 {
-  global $db;
+  global $db, $messageStack;
   $result = $db->Execute("select count(admin_id) as count from " . TABLE_ADMIN . " where admin_id != '" . (int)$id . "'");
   if ($result->fields['count'] < 1) {
     $messageStack->add(ERROR_CANNOT_DELETE_LAST_ADMIN, 'error');

@@ -46,7 +46,6 @@ if (isset($_POST['action']) && ($_POST['action'] == 'submit')) {
       }
     }
     $country = zen_db_prepare_input($_POST['zone_country_id']);
-//echo ' I SEE: country=' . $country . '&nbsp;&nbsp;&nbsp;state=' . $state . '&nbsp;&nbsp;&nbsp;zone_id=' . $zone_id;
     if (ACCOUNT_GENDER == 'true') {
       if ( ($gender != 'm') && ($gender != 'f') ) {
         $error = true;

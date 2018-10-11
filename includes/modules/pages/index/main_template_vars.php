@@ -12,9 +12,6 @@
 // This should be first line of the script:
 $zco_notifier->notify('NOTIFY_HEADER_START_INDEX_MAIN_TEMPLATE_VARS');
 
-//die($category_depth);
-//die($_GET['music_genre_id']);
-
 // release manufacturers_id when nothing is there so a blank filter is not setup.
 // this will result in the home page, if used
 if (isset($_GET['manufacturers_id']) && $_GET['manufacturers_id'] <= 0) {

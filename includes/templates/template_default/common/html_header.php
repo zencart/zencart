@@ -162,7 +162,6 @@ if (count($lng->catalog_languages) > 1) {
     require($page_directory . '/' . $value); echo "\n";
   }
 
-// DEBUG: echo '<!-- I SEE cat: ' . $current_category_id . ' || vs cpath: ' . $cPath . ' || page: ' . $current_page . ' || template: ' . $current_template . ' || main = ' . ($this_is_home_page ? 'YES' : 'NO') . ' -->';
   $zco_notifier->notify('NOTIFY_HTML_HEAD_END', $current_page_base);
 ?>
 

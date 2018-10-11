@@ -29,7 +29,6 @@ switch(true) {
   $align='right';
   break;
 }
-//echo 'I SEE ' . $cPath . ' vs ' . $current_category_id;
 //$category_icon_display_name = zen_get_categories_name(zen_get_products_category_id((int)$_GET['products_id']), $_SESSION['languages_id']);
 //$category_icon_display_image = zen_get_categories_image(zen_get_products_category_id((int)$_GET['products_id']));
 
