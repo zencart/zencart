@@ -20,7 +20,7 @@ $content .= '<br />';
 if (strtolower(IMAGE_USE_CSS_BUTTONS) == 'yes') {
     $content .= zen_image_submit(BUTTON_IMAGE_SEARCH, HEADER_SEARCH_BUTTON);
 } else {
-    $content .= '<input type="submit" value="' . HEADER_SEARCH_BUTTON . '" style="width: 50px" />';
+    $content .= '<input type="submit" value="' . HEADER_SEARCH_BUTTON . '" style="width: 55px" />';
 }
 
 $content .= '<br />';
