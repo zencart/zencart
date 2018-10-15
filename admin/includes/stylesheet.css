@@ -747,20 +747,6 @@ footer.homeFooter, .bottom footer {
 */
 /* eof Footer */
 
-#setupWizardForm INPUT[type="text"],
-#setupWizardForm INPUT[type="email"],
-#setupWizardForm textarea {
-    width: 40%;
-    max-width: 450px;
-}
-@media (min-width: 768px) {
-    #setupWizardPage #pageWrapper{
-        margin: 1em 5% 1em 25%;
-    }
-}
-
-
-
 /* This imageless css button is based on the button that was generated initially by CSSButtonGenerator.com */
 .buttonRow a {
   text-decoration: none;
