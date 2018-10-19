@@ -1,9 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<phpunit>
+<phpunit backupGlobals="false"
+         backupStaticAttributes="false"
+         colors="true"
+         convertErrorsToExceptions="true"
+         convertNoticesToExceptions="true"
+         convertWarningsToExceptions="true"
+         processIsolation="false"
+         stopOnFailure="true">
   <testsuites>
-    <testsuite name="Password Hash Functions">
-      <file>testTestCase.php</file>
-      <file>testPasswordHashCase.php</file>
+    <testsuite name="Password Tests">
+      <directory suffix="Test.php">testsPasswordHash</directory>
+      <directory suffix="Test.php">testsAdminSanitization</directory>
+      <directory suffix="Test.php">testsSundry</directory>
     </testsuite>
   </testsuites>
 </phpunit>

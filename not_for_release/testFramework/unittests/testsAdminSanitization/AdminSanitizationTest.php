@@ -8,19 +8,16 @@
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: Author: zcwilt Wed May 11 16:59:30 2016 +0000 New in v1.5.5 $
  */
+require_once(__DIR__ . '/../support/zcTestCase.php');
 
 /**
  * Class testAdminSanitization
  */
-class testAdminSanitization extends PHPUnit_Framework_TestCase
+class AdminSanitizationTest extends zcTestCase
 {
     public function setUp()
     {
-        require_once('zcCommonTestResources.php');
-        if (!defined('DIR_FS_SQL_CACHE')) {
-            define('DIR_FS_SQL_CACHE', DIR_FS_CATALOG);
-        }
-        require_once(DIR_FS_CATALOG . '/includes/classes/class.base.php');
+        parent::setUp();
         require_once(DIR_FS_CATALOG . '/admin/includes/classes/AdminRequestSanitizer.php');
     }
 
