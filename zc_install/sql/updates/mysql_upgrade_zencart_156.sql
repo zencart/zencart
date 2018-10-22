@@ -82,6 +82,9 @@ ALTER TABLE orders_products ADD products_quantity_mixed tinyint( 1 ) default NUL
 ALTER TABLE orders_products ADD products_mixed_discount_quantity tinyint( 1 ) default NULL;
 ALTER TABLE orders_products_download ADD products_attributes_id int( 11 ) default NULL;
 
+# Add fields for updated_by field
+ALTER TABLE orders_status_history ADD updated_by varchar(45) NOT NULL default '';
+
 # Clean up expired prids from baskets
 DELETE FROM customers_basket WHERE CAST(products_id AS unsigned) NOT IN (
 SELECT products_id

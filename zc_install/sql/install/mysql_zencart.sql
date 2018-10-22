@@ -1194,6 +1194,7 @@ CREATE TABLE orders_status_history (
   date_added datetime NOT NULL default '0001-01-01 00:00:00',
   customer_notified int(1) default '0',
   comments text,
+  updated_by varchar(45) NOT NULL default '',
   PRIMARY KEY  (orders_status_history_id),
   KEY idx_orders_id_status_id_zen (orders_id,orders_status_id)
 ) ENGINE=MyISAM;
