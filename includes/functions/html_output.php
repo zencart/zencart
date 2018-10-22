@@ -98,6 +98,15 @@
     return $link;
   }
 
+/*
+ * This function, added to the storefront in zc1.5.6, provides a common method for
+ * plugins that span the admin and storefront to create a storefront (a.k.a catalog)
+ * link.
+ */
+function zen_catalog_href_link($page = '', $parameters = '', $connection = 'NONSSL') 
+{
+    return zen_href_link($page, $parameters, $connection, false);
+}
 
 /*
  * The HTML image wrapper function for non-proportional images
