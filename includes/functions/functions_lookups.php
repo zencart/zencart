@@ -986,3 +986,25 @@ function zen_has_product_attributes_downloads_status($products_id) {
 
     return $new_range;
   }
+
+/*
+ * This function, added to the storefront in zc1.5.6, mimics the like-named admin function in
+ * support of plugins that "span" both the storefront and admin.
+ *
+ * Returns the "name" associated with the specified orders_status_id.
+ *
+ */
+function zen_get_orders_status_name($orders_status_id, $language_id = '') 
+{
+    if ($language_id == '') {
+        $language_id = $_SESSION['languages_id'];
+    }
+    $orders_status = $GLOBALS['db']->Execute(
+        "SELECT orders_status_name
+           FROM " . TABLE_ORDERS_STATUS . "
+          WHERE orders_status_id = " . (int)$orders_status_id . "
+            AND language_id = " . (int)$language_id . "
+          LIMIT 1"
+    );
+    return ($orders_status->EOF) ? '' : $orders_status->fields['orders_status_name'];
+}

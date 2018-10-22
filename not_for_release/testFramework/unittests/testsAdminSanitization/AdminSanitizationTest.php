@@ -4,29 +4,21 @@
  * File contains tests for Admin Sanitization
  *
  * @package tests
- * @copyright Copyright 2003-2016 Zen Cart Development Team
+ * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: Author: zcwilt Wed May 11 16:59:30 2016 +0000 New in v1.5.5 $
  */
+require_once(__DIR__ . '/../support/zcTestCase.php');
 
 /**
  * Class testAdminSanitization
  */
-class testAdminSanitization extends PHPUnit_Framework_TestCase
+class AdminSanitizationTest extends zcTestCase
 {
     public function setUp()
     {
-        if (!defined('DIR_FS_CATALOG')) {
-            define('DIR_FS_CATALOG', realpath(dirname(__FILE__) . '/../../../'));
-        }
-        if (!defined('DIR_WS_CLASSES')) {
-            define('DIR_WS_CLASSES', '/admin/includes/classes/');
-        }
-        if (!defined('DIR_FS_SQL_CACHE')) {
-            define('DIR_FS_SQL_CACHE', DIR_FS_CATALOG);
-        }
-        require_once(DIR_FS_CATALOG . '/includes/classes/class.base.php');
-        require_once(DIR_FS_CATALOG . DIR_WS_CLASSES . 'AdminRequestSanitizer.php');
+        parent::setUp();
+        require_once(DIR_FS_CATALOG . '/admin/includes/classes/AdminRequestSanitizer.php');
     }
 
     public function testInstanceInstantitation()
@@ -413,10 +405,10 @@ class testAdminSanitization extends PHPUnit_Framework_TestCase
             'some_param_deep_array' => array(array('100xyz_</script>();'))
         );
 
-        $arq->setDoStrictSanitization(true);
+        $arq->setDoStrictSanitization(false);
         $arq->runSanitizers();
         $postAlreadySanitized = $arq->getPostKeysAlreadySanitized();
-        $this->assertTrue(count($postAlreadySanitized) == 4);
+        $this->assertTrue(count($postAlreadySanitized) == 6);
         $this->assertTrue($_POST['some_param_ignore'] == '<strong>Name</strong>');
         $this->assertTrue($_POST['some_param_simple'] == '100xyz_&lt;/script&gt;();');
         $this->assertTrue($_POST['some_param_array'][0] == '100xyz_&lt;/script&gt;();');

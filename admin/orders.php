@@ -143,80 +143,17 @@ if (zen_not_null($action) && $order_exists == true) {
     case 'update_order':
       $oID = zen_db_prepare_input($_GET['oID']);
       $comments = zen_db_prepare_input($_POST['comments']);
-      $status = (int)zen_db_prepare_input($_POST['status']);
+      $status = (int)$_POST['status'];
       if ($status < 1) {
-        break;
+         break;
       }
-
-      $order_updated = false;
-      $check_status = $db->Execute("SELECT customers_name, customers_email_address, orders_status, date_purchased
-                                    FROM " . TABLE_ORDERS . "
-                                    WHERE orders_id = " . (int)$oID);
-
-      if (($check_status->fields['orders_status'] != $status) || zen_not_null($comments)) {
-        $db->Execute("UPDATE " . TABLE_ORDERS . "
-                      SET orders_status = '" . zen_db_input($status) . "',
-                          last_modified = now()
-                      WHERE orders_id = " . (int)$oID);
-
-        $customer_notified = '0';
-        if (isset($_POST['notify']) && ($_POST['notify'] == '1')) {
-
-          $notify_comments = '';
-          if (isset($_POST['notify_comments']) && ($_POST['notify_comments'] == 'on') && zen_not_null($comments)) {
-            $notify_comments = EMAIL_TEXT_COMMENTS_UPDATE . $comments . "\n\n";
-          }
-          //send emails
-          $message = EMAIL_TEXT_ORDER_NUMBER . ' ' . $oID . "\n\n" .
-              EMAIL_TEXT_INVOICE_URL . ' ' . zen_catalog_href_link(FILENAME_CATALOG_ACCOUNT_HISTORY_INFO, 'order_id=' . $oID, 'SSL') . "\n\n" .
-              EMAIL_TEXT_DATE_ORDERED . ' ' . zen_date_long($check_status->fields['date_purchased']) . "\n\n" .
-              $notify_comments .
-              EMAIL_TEXT_STATUS_UPDATED . sprintf(EMAIL_TEXT_STATUS_LABEL, $orders_status_array[$status]) .
-              EMAIL_TEXT_STATUS_PLEASE_REPLY;
-
-          $html_msg['EMAIL_CUSTOMERS_NAME'] = $check_status->fields['customers_name'];
-          $html_msg['EMAIL_TEXT_ORDER_NUMBER'] = EMAIL_TEXT_ORDER_NUMBER . ' ' . $oID;
-          $html_msg['EMAIL_TEXT_INVOICE_URL'] = '<a href="' . zen_catalog_href_link(FILENAME_CATALOG_ACCOUNT_HISTORY_INFO, 'order_id=' . $oID, 'SSL') . '">' . str_replace(':', '', EMAIL_TEXT_INVOICE_URL) . '</a>';
-          $html_msg['EMAIL_TEXT_DATE_ORDERED'] = EMAIL_TEXT_DATE_ORDERED . ' ' . zen_date_long($check_status->fields['date_purchased']);
-          $html_msg['EMAIL_TEXT_STATUS_COMMENTS'] = nl2br($notify_comments);
-          $html_msg['EMAIL_TEXT_STATUS_UPDATED'] = str_replace('\n', '', EMAIL_TEXT_STATUS_UPDATED);
-          $html_msg['EMAIL_TEXT_STATUS_LABEL'] = str_replace('\n', '', sprintf(EMAIL_TEXT_STATUS_LABEL, $orders_status_array[$status]));
-          $html_msg['EMAIL_TEXT_NEW_STATUS'] = $orders_status_array[$status];
-          $html_msg['EMAIL_TEXT_STATUS_PLEASE_REPLY'] = str_replace('\n', '', EMAIL_TEXT_STATUS_PLEASE_REPLY);
-          $html_msg['EMAIL_PAYPAL_TRANSID'] = '';
-
-          zen_mail($check_status->fields['customers_name'], $check_status->fields['customers_email_address'], EMAIL_TEXT_SUBJECT . ' #' . $oID, $message, STORE_NAME, EMAIL_FROM, $html_msg, 'order_status');
-          $customer_notified = '1';
-
-          // PayPal Trans ID, if any
-          $sql = "SELECT txn_id, parent_txn_id
-                  FROM " . TABLE_PAYPAL . "
-                  WHERE order_id = :orderID
-                  ORDER BY last_modified DESC, date_added DESC, parent_txn_id DESC, paypal_ipn_id DESC ";
-          $sql = $db->bindVars($sql, ':orderID', $oID, 'integer');
-          $result = $db->Execute($sql);
-          if ($result->RecordCount() > 0) {
-            $message .= "\n\n" . ' PayPal Trans ID: ' . $result->fields['txn_id'];
-            $html_msg['EMAIL_PAYPAL_TRANSID'] = $result->fields['txn_id'];
-          }
-
-          //send extra emails
-          if (SEND_EXTRA_ORDERS_STATUS_ADMIN_EMAILS_TO_STATUS == '1' and SEND_EXTRA_ORDERS_STATUS_ADMIN_EMAILS_TO != '') {
-            zen_mail('', SEND_EXTRA_ORDERS_STATUS_ADMIN_EMAILS_TO, SEND_EXTRA_ORDERS_STATUS_ADMIN_EMAILS_TO_SUBJECT . ' ' . EMAIL_TEXT_SUBJECT . ' #' . $oID, $message, STORE_NAME, EMAIL_FROM, $html_msg, 'order_status_extra');
-          }
-        } elseif (isset($_POST['notify']) && ($_POST['notify'] == '-1')) {
-          // hide comment
-          $customer_notified = '-1';
-        }
-
-        $db->Execute("INSERT INTO " . TABLE_ORDERS_STATUS_HISTORY . " (orders_id, orders_status_id, date_added, customer_notified, comments)
-                      VALUES ('" . (int)$oID . "',
-                              '" . zen_db_input($status) . "',
-                              now(),
-                              '" . zen_db_input($customer_notified) . "',
-                              '" . zen_db_input($comments) . "')");
-        $order_updated = true;
-      }
+      
+      $email_include_message = (isset($_POST['notify_comments']) && $_POST['notify_comments'] == 'on');
+      $customer_notified = (int)(isset($_POST['notify'])) ? $_POST['notify'] : '0';
+      
+      $order_updated = false;      
+      $status_updated = zen_update_orders_history($oID, $comments, null, $status, $customer_notified, $email_include_message);
+      $order_updated = ($status_updated > 0);
 
       // trigger any appropriate updates which should be sent back to the payment gateway:
       $order = new order((int)$oID);
@@ -735,11 +672,12 @@ if (zen_not_null($action) && $order_exists == true) {
                 <th class="text-center"><?php echo TABLE_HEADING_CUSTOMER_NOTIFIED; ?></th>
                 <th class="text-center"><?php echo TABLE_HEADING_STATUS; ?></th>
                 <th class="text-center"><?php echo TABLE_HEADING_COMMENTS; ?></th>
+                <th class="text-center"><?php echo TABLE_HEADING_UPDATED_BY; ?></th>
               </tr>
             </thead>
             <tbody>
                 <?php
-                $orders_history = $db->Execute("SELECT orders_status_id, date_added, customer_notified, comments
+                $orders_history = $db->Execute("SELECT *
                                               FROM " . TABLE_ORDERS_STATUS_HISTORY . "
                                               WHERE orders_id = " . zen_db_input($oID) . "
                                               ORDER BY date_added");
@@ -762,6 +700,7 @@ if (zen_not_null($action) && $order_exists == true) {
                     </td>
                     <td><?php echo $orders_status_array[$item['orders_status_id']]; ?></td>
                     <td><?php echo nl2br(zen_db_output($item['comments'])); ?></td>
+                    <td class="text-center"><?php echo (zen_not_null($item['updated_by'])) ? $item['updated_by'] : '&nbsp;'; ?></td>
                   </tr>
                   <?php
                 }
