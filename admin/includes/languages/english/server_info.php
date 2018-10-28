@@ -25,6 +25,7 @@ define('TITLE_PHP_MEMORY_LIMIT', 'PHP Memory Limit:');
 define('TITLE_PHP_FILE_UPLOADS', 'PHP File Uploads:');
 define('TITLE_PHP_UPLOAD_MAX', 'Upload Max Size:');
 define('TITLE_PHP_POST_MAX_SIZE', 'POST Max Size:');
+define('PROJECT_DATABASE_NAME','Database: ');
 define('PROJECT_DATABASE_LABEL','Database Patch Level: ');
 define('TITLE_MYSQL_STRICT_MODE', '(in Strict mode)');
 define('TITLE_DATABASE_MYSQL_MODE', 'MySQL Mode:');
