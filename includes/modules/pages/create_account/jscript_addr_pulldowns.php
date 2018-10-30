@@ -42,8 +42,10 @@ function update_zone(theForm) {
     theForm.state.setAttribute('className', 'hiddenField');
     document.getElementById("stateLabel").className = 'hiddenField';
     document.getElementById("stateLabel").setAttribute('className', 'hiddenField');
-    document.getElementById("stText").className = 'hiddenField';
-    document.getElementById("stText").setAttribute('className', 'hiddenField');
+    if (document.getElementById("stText")) {
+      document.getElementById("stText").className = 'hiddenField';
+      document.getElementById("stText").setAttribute('className', 'hiddenField');
+    }
     document.getElementById("stBreak").className = 'hiddenField';
     document.getElementById("stBreak").setAttribute('className', 'hiddenField');
   }
