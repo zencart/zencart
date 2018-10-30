@@ -18,7 +18,6 @@
          '  <div class="center"><h2> ' . PROJECT_VERSION_NAME . ' ' . PROJECT_VERSION_MAJOR . '.' . PROJECT_VERSION_MINOR . '</h2>' .
                ((PROJECT_VERSION_PATCH1 =='') ? '' : '<h3>Patch: ' . PROJECT_VERSION_PATCH1 . '::' . PROJECT_VERSION_PATCH1_SOURCE . '</h3>') .
                ((PROJECT_VERSION_PATCH2 =='') ? '' : '<h3>Patch: ' . PROJECT_VERSION_PATCH2 . '::' . PROJECT_VERSION_PATCH2_SOURCE . '</h3>') .
-         '     <h2> ' . PROJECT_DATABASE_NAME . ' ' . DB_DATABASE . '</h2>' .
          '     <h2> ' . PROJECT_DATABASE_LABEL . ' ' . PROJECT_DB_VERSION_MAJOR . '.' . PROJECT_DB_VERSION_MINOR . '</h2>' .
                ((PROJECT_DB_VERSION_PATCH1 =='') ? '' : '<h3>Patch: ' . PROJECT_DB_VERSION_PATCH1 . '::' . PROJECT_DB_VERSION_PATCH1_SOURCE . '</h3>') .
                ((PROJECT_DB_VERSION_PATCH2 =='') ? '' : '<h3>Patch: ' . PROJECT_DB_VERSION_PATCH2 . '::' . PROJECT_DB_VERSION_PATCH2_SOURCE . '</h3>') ;
@@ -101,6 +100,7 @@ pre {margin: 0; font-family: monospace;}
 <h1 class="pageHeading"><?php echo HEADING_TITLE; ?></h1>
 <div class="serverInfo">
       <div class="infocell"><strong><?php echo TITLE_SERVER_HOST; ?></strong> <?php echo $system['host'] . ' (' . $system['ip'] . ')'; ?></div>
+      <div class="infocell"><strong><?php echo TITLE_DATABASE; ?></strong> <?php echo zen_output_string_protected(DB_DATABASE); ?></div>
       <div class="infocell"><strong><?php echo TITLE_SERVER_OS; ?></strong> <?php echo $system['system'] . ' ' . $system['kernel']; ?> </div>
       <div class="infocell"><strong><?php echo TITLE_SERVER_DATE; ?></strong> <?php echo $system['date']; ?> &nbsp;</div>
       <div class="infocell"><strong><?php echo TITLE_SERVER_UP_TIME; ?></strong> <?php echo $system['uptime']; ?></div>
@@ -110,7 +110,7 @@ pre {margin: 0; font-family: monospace;}
       <div class="infocell"><strong><?php echo TITLE_PHP_UPLOAD_MAX;?></strong> <?php echo $system['php_uploadmaxsize'];?></div>
       <?php echo ($system['php_memlimit'] != '' ? '<div class="infocell"><strong>' . TITLE_PHP_MEMORY_LIMIT . '</strong> ' . $system['php_memlimit'] . '</div>' : ''); ?>
       <div class="infocell"><strong><?php echo TITLE_PHP_POST_MAX_SIZE; ?></strong> <?php echo $system['php_postmaxsize']; ?></div>
-      <div class="infocell"><strong><?php echo TITLE_DATABASE; ?></strong> <?php echo $system['db_version'] . ($system['mysql_strict_mode'] == true ? '<em> ' . TITLE_MYSQL_STRICT_MODE . '</em>' : ''); ?></div>
+      <div class="infocell"><strong><?php echo TITLE_DATABASE_ENGINE; ?></strong> <?php echo $system['db_version'] . ($system['mysql_strict_mode'] == true ? '<em> ' . TITLE_MYSQL_STRICT_MODE . '</em>' : ''); ?></div>
       <div class="infocell"><strong><?php echo TITLE_DATABASE_HOST; ?></strong> <?php echo $system['db_server'] . ' (' . $system['db_ip'] . ')'; ?></div>
       <div class="infocell"><strong><?php echo TITLE_DATABASE_DATE; ?></strong> <?php echo $system['db_date']; ?></div>
       <div class="infocell"><strong><?php echo TITLE_DATABASE_DATA_SIZE; ?></strong> <?php echo number_format(($system['database_size']/1024),0); ?> kB</div>
