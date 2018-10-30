@@ -13,7 +13,16 @@ if (!isset($_SERVER['HTTP_X_REQUESTED_WITH']) || strtolower($_SERVER['HTTP_X_REQ
     http_response_code(400); // "Bad Request"
     exit();
 }
-require('includes/application_top.php');
+
+// -----
+// Since this request can also be initiated from the admin-side's ajax.php, need
+// to ensure that we're bringing in the correct 'base' processing for the
+// rest of the initialization.
+//
+if (empty($zc_ajax_base_dir)) {
+    $zc_ajax_base_dir = '';
+}
+require $zc_ajax_base_dir . 'includes/application_top.php';
 
 // deny ajax requests from spiders
 if (isset($spider_flag) && $spider_flag === true) ajaxAbort();
