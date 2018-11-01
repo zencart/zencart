@@ -52,8 +52,13 @@ if (zen_not_null($set)) {
   }
 }
 
-$action = (isset($_GET['action']) ? $_GET['action'] : '');
+$nModule = isset($_GET['module']) ? $_GET['module'] : null;
+$notificationType = $module_type . (($nModule) ? '-' . $nModule : '') ;
 
+$notifications = new AdminNotifications();
+$availableNotifications = $notifications->getNotifications($notificationType, $_SESSION['admin_id']);
+
+$action = (isset($_GET['action']) ? $_GET['action'] : '');
 if (zen_not_null($action)) {
   $admname = '{' . preg_replace('/[^\w]/', '*', zen_get_admin_name()) . '[' . (int)$_SESSION['admin_id'] . ']}';
   switch ($action) {
@@ -148,6 +153,7 @@ if (zen_not_null($action)) {
       <!-- body_text //-->
       <h1><?php echo HEADING_TITLE; ?></h1>
       <div class="row">
+          <?php require_once(DIR_WS_MODULES . 'notificationsDisplay.php');?>
         <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9 configurationColumnLeft">
           <table class="table table-hover">
             <thead>

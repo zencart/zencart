@@ -24,5 +24,6 @@ define('PROJECT_VERSION_PATCH2_SOURCE', '');
 define('NEW_VERSION_CHECKUP_URL','http://ping.zen-cart.com/version_id.txt');
 define('PROJECT_VERSIONSERVER_URL', 'https://ping.zen-cart.com/zcversioncheck');
 define('PLUGIN_VERSIONSERVER_URL', 'https://ping.zen-cart.com/plugincheck');
+define('PROJECT_NOTIFICATIONSERVER_URL', 'http://versionserver.zen-cart.com/api/notifications');
 define('EXPECTED_DATABASE_VERSION_MAJOR', '1');
 define('EXPECTED_DATABASE_VERSION_MINOR', '5.6');

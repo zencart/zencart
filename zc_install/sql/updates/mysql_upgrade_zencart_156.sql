@@ -199,6 +199,13 @@ CREATE TABLE sessions (
 ) ENGINE=InnoDB;
 
 
+## add support for admin notification
+CREATE TABLE IF NOT EXISTS admin_notifications (
+  notification_key varchar(40) NOT NULL,
+  admin_id int(11),
+  dismissed char(1),
+  UNIQUE KEY notification_key (notification_key)
+) ENGINE=MyISAM;
 
 
 
