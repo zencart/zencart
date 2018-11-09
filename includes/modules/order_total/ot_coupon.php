@@ -195,6 +195,15 @@ class ot_coupon {
           $this->clear_posts();
           zen_redirect(zen_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL',true, false));
         }
+	
+        $GLOBALS['zco_notifier']->notify(
+            'NOTIFY_OT_COUPON_COUPON_INFO', 
+            array(
+                'coupon_result' => $coupon_result->fields, 
+                'code' => $dc_check
+            )
+        );
+	
         //$order_total = $this->get_order_total($coupon_result->fields['coupon_id']);
 
         // display all error messages at once
@@ -592,7 +601,15 @@ class ot_coupon {
     $orderTotal = $order->info['total'];
     $products = $_SESSION['cart']->get_products();
     for ($i=0, $n=sizeof($products); $i<$n; $i++) {
-      if (!is_product_valid($products[$i]['id'], $couponCode) || !is_coupon_valid_for_sales($products[$i]['id'], $couponCode)) {
+      $is_product_valid = (is_product_valid($products[$i]['id'], $couponCode) && is_coupon_valid_for_sales($products[$i]['id'], $couponCode));
+      $GLOBALS['zco_notifier']->notify(
+        'NOTIFY_OT_COUPON_PRODUCT_VALIDITY', 
+        array(
+            'is_product_valid' => $is_product_valid, 
+            'i' => $i
+        )
+      );
+      if (!$is_product_valid) {
         $products_tax = zen_get_tax_rate($products[$i]['tax_class_id']);
         $productsTaxAmount = (zen_calculate_tax($products[$i]['final_price'], $products_tax))   * $products[$i]['quantity'];
         $orderTotal -= $products[$i]['final_price'] * $products[$i]['quantity'];
