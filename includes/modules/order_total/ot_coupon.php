@@ -162,6 +162,11 @@ class ot_coupon {
     if (isset($_POST['dc_redeem_code']) && strtoupper($_POST['dc_redeem_code']) == 'REMOVE') {
       unset($_POST['dc_redeem_code']);
       unset($_SESSION['cc_id']);
+      
+      $GLOBALS['zco_notifier']->notify(
+          'NOTIFY_OT_COUPON_COUPON_REMOVED'
+       );
+       
       $messageStack->add_session('checkout_payment', TEXT_REMOVE_REDEEM_COUPON, 'caution');
     }
 //    print_r($_SESSION);
