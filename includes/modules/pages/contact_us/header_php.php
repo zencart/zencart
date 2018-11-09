@@ -26,7 +26,7 @@ if (isset($_GET['action']) && ($_GET['action'] == 'send')) {
 
   $zc_validate_email = zen_validate_email($email_address);
 
-  if (($zc_validate_email && !empty($enquiry) && !empty($name)) && $error == FALSE) {
+  if ($zc_validate_email && !empty($enquiry) && !empty($name) && $error == FALSE) {
     // if anti-spam is not triggered, prepare and send email:
     if ($antiSpam != '') {
       $zco_notifier->notify('NOTIFY_SPAM_DETECTED_USING_CONTACT_US', $_POST);
