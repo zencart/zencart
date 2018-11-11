@@ -466,7 +466,7 @@ class queryFactory extends base {
         return $value;
       break;
       case 'float':
-        return (!zen_not_null($value) || $value=='' || $value == 0) ? 0 : $value;
+        return (!zen_not_null($value) || $value=='' || $value == 0) ? 0 : (float)$value;
       break;
       case 'integer':
         return (int)$value;
