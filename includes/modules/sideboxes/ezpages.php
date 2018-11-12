@@ -39,8 +39,8 @@
           $page_query_list_sidebox[$rows]['altURL']  = $page_query['alt_url_external'];
           break;
           // internal link new window
-          case ($page_query->fields['alt_url'] != '' && $page_query['page_open_new_window'] == '1'):
-          $page_query_list_sidebox[$rows]['altURL']  = (substr($page_query->fields['alt_url'],0,4) == 'http') ?
+          case ($page_query['alt_url'] != '' && $page_query['page_open_new_window'] == '1'):
+          $page_query_list_sidebox[$rows]['altURL']  = (substr($page_query['alt_url'],0,4) == 'http') ?
           $page_query['alt_url'] :
           ($page_query['alt_url']=='' ? '' : zen_href_link($page_query['alt_url'], '', ($page_query['page_is_ssl']=='0' ? 'NONSSL' : 'SSL'), true, true, true));
           break;
@@ -71,4 +71,3 @@
   } // test for display
 
   $zco_notifier->notify('NOTIFY_END_EZPAGES_SIDEBOX');
-?>
