@@ -44,7 +44,7 @@ if (EZPAGES_STATUS_FOOTER == '1' || (EZPAGES_STATUS_FOOTER == '2' && (strstr(EXC
         case ($page_query['alt_url'] != '' && $page_query['page_open_new_window'] == '1'):
         $page_query_list_footer[$rows]['altURL']  = (substr($page_query['alt_url'],0,4) == 'http') ?
         $page_query['alt_url'] :
-        ($page_query['alt_url']=='' ? '' : zen_href_link($page_query['alt_url'], '', ($page_query->fields['page_is_ssl']=='0' ? 'NONSSL' : 'SSL'), true, true, true));
+        ($page_query['alt_url']=='' ? '' : zen_href_link($page_query['alt_url'], '', ($page_query['page_is_ssl']=='0' ? 'NONSSL' : 'SSL'), true, true, true));
         break;
         // internal link same window
         case ($page_query['alt_url'] != '' && $page_query['page_open_new_window'] == '0'):
@@ -56,7 +56,7 @@ if (EZPAGES_STATUS_FOOTER == '1' || (EZPAGES_STATUS_FOOTER == '2' && (strstr(EXC
 
       // if altURL is specified, use it; otherwise, use EZPage ID to create link
       $page_query_list_footer[$rows]['link'] = ($page_query_list_footer[$rows]['altURL'] =='') ?
-      zen_href_link(FILENAME_EZPAGES, 'id=' . $page_query['pages_id'] . ($page_query['toc_chapter'] > 0 ? '&chapter=' . $page_query['toc_chapter'] : ''), ($page_query->fields['page_is_ssl']=='0' ? 'NONSSL' : 'SSL')) :
+      zen_href_link(FILENAME_EZPAGES, 'id=' . $page_query['pages_id'] . ($page_query['toc_chapter'] > 0 ? '&chapter=' . $page_query['toc_chapter'] : ''), ($page_query['page_is_ssl']=='0' ? 'NONSSL' : 'SSL')) :
       $page_query_list_footer[$rows]['altURL'];
       $page_query_list_footer[$rows]['link'] .= ($page_query['page_open_new_window'] == '1' ? '" rel="noreferrer noopener" target="_blank' : '');
     }
@@ -66,4 +66,3 @@ if (EZPAGES_STATUS_FOOTER == '1' || (EZPAGES_STATUS_FOOTER == '2' && (strstr(EXC
 } // test for display
 
 $zco_notifier->notify('NOTIFY_END_EZPAGES_FOOTERBAR');
-?>
