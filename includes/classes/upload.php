@@ -249,6 +249,7 @@ class upload extends base
         }
         if (IS_ADMIN_FLAG === true) {
             $messageStack->add_session($msg, $type);
+            $messageStack->add($msg, $type);
         } else {
             if ($this->message_location == 'direct') {
                 $messageStack->add_session('header', $msg, $type);
