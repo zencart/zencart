@@ -23,20 +23,18 @@ function zen_get_select_options($optionList, $setDefault)
   }
   return $optionString;
 }
+
   function zen_not_null($value) {
-    if (is_array($value)) {
-      if (sizeof($value) > 0) {
-        return true;
-      } else {
+    if (null === $value) {
         return false;
-      }
-    } else {
-      if (($value != '') && (strtolower($value) != 'null') && (strlen(trim($value)) > 0)) {
-        return true;
-      } else {
-        return false;
-      }
     }
+    if (is_array($value)) {
+        return count($value) > 0;
+    }
+    if (is_a($value, 'queryFactoryResult')) {
+        return count($value->result) > 0;
+    }
+    return trim($value) !== '' && strtolower($value) != 'null';
   }
 
   function logDetails($details, $location = "General") {
