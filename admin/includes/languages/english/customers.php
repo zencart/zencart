@@ -29,7 +29,7 @@ define('TEXT_DELETE_INTRO', 'Are you sure you want to delete this customer?');
 define('TEXT_DELETE_REVIEWS', 'Delete %s review(s)');
 define('TEXT_INFO_HEADING_DELETE_CUSTOMER', 'Delete Customer');
 define('TYPE_BELOW', 'Type below');
-define('PLEASE_SELECT', 'Select One');
+define('PLEASE_SELECT_ONE', 'Select One');
 define('TEXT_INFO_NUMBER_OF_ORDERS', 'Number of Orders:');
 define('TEXT_INFO_LIFETIME_VALUE', 'Customer Lifetime Value:');
 define('TEXT_INFO_LAST_ORDER','Last Order:');

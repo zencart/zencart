@@ -95,6 +95,7 @@
 }
 
 function parsed_query_string($read_string) {
+  $good_string = '';
   // extract table names from sql strings, so that prefixes are supported.
   // this will also in the future be used to reconstruct queries from query_keys_list field in query_builder table.
 

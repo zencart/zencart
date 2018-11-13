@@ -23,7 +23,7 @@ if (isset($_POST['products_id']) && isset($_POST['product_categories']) && is_ar
   }
 }
 
-if (zen_not_null($cascaded_prod_id_for_delete) && zen_not_null($cascaded_prod_cat_for_delete)) {
+if (!empty($cascaded_prod_id_for_delete) && !empty($cascaded_prod_cat_for_delete)) {
   $product_id = $cascaded_prod_id_for_delete;
   $product_categories = $cascaded_prod_cat_for_delete;
   $do_delete_flag = true;

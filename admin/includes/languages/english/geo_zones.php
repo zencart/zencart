@@ -46,9 +46,8 @@ define('TEXT_INFO_ZONE_DESCRIPTION', 'Description:');
 define('TEXT_INFO_COUNTRY', 'Country:');
 define('TEXT_INFO_COUNTRY_ZONE', 'Zone:');
 define('TYPE_BELOW', 'All Zones');
-define('PLEASE_SELECT', 'All Zones');
+define('TEXT_ALL_ZONES', 'All Zones');
 define('TEXT_ALL_COUNTRIES', 'All Countries');
 
 define('TEXT_INFO_NUMBER_TAX_RATES','Number of Tax Rates:');
 define('ERROR_TAX_RATE_EXISTS','WARNING: Tax Rate(s) are defined for this zone. Please delete the Tax Rate(s) before removing this zone');
-?>

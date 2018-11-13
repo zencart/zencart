@@ -198,7 +198,7 @@ if (zen_not_null($action)) {
                                       order by c.countries_name, association_id";
 // Split Page
 // reset page when page is unknown
-                  if ((!isset($_GET['spage']) or $_GET['spage'] == '' or $_GET['spage'] == '1') and $_GET['sID'] != '') {
+                  if ((!isset($_GET['spage']) or $_GET['spage'] == '' or $_GET['spage'] == '1') && !empty($_GET['sID'])) {
                     $check_page = $db->Execute($zones_query_raw);
                     $check_count = 1;
                     if ($check_page->RecordCount() > MAX_DISPLAY_SEARCH_RESULTS) {
@@ -228,7 +228,7 @@ if (zen_not_null($action)) {
                     }
                     ?>
                 <td class="dataTableContent"><?php echo (($zone['countries_name']) ? $zone['countries_name'] : TEXT_ALL_COUNTRIES); ?></td>
-                <td class="dataTableContent"><?php echo (($zone['zone_id']) ? $zone['zone_name'] : PLEASE_SELECT); ?></td>
+                <td class="dataTableContent"><?php echo (($zone['zone_id']) ? $zone['zone_name'] : TEXT_ALL_ZONES); ?></td>
                 <td class="dataTableContent text-right">
                     <?php
                     if (isset($sInfo) && is_object($sInfo) && ($zone['association_id'] == $sInfo->association_id)) {
@@ -269,7 +269,7 @@ if (zen_not_null($action)) {
                                         order by geo_zone_name";
 // Split Page
 // reset page when page is unknown
-                    if ((!isset($_GET['zpage']) or $_GET['zpage'] == '' or $_GET['zpage'] == '1') and $_GET['zID'] != '') {
+                    if ((!isset($_GET['zpage']) or $_GET['zpage'] == '' or $_GET['zpage'] == '1') && !empty($_GET['zID'])) {
                       $check_page = $db->Execute($zones_query_raw);
                       $check_count = 1;
                       if ($check_page->RecordCount() > MAX_DISPLAY_SEARCH_RESULTS) {

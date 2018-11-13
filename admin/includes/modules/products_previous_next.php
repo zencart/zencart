@@ -25,7 +25,7 @@ if (!isset($prev_next_list) || $prev_next_list == '') {
                           FROM " . TABLE_PRODUCTS . "
                           WHERE products_id = " . (int)$products_filter);
   $check_type = ($result->EOF) ? 0 : $result->fields['products_type'];
-  define('PRODUCT_INFO_PREVIOUS_NEXT_SORT', zen_get_configuration_key_value_layout('PRODUCT_INFO_PREVIOUS_NEXT_SORT', $check_type));
+  if (!defined('PRODUCT_INFO_PREVIOUS_NEXT_SORT')) define('PRODUCT_INFO_PREVIOUS_NEXT_SORT', zen_get_configuration_key_value_layout('PRODUCT_INFO_PREVIOUS_NEXT_SORT', $check_type));
 
   // sort order
   switch (PRODUCT_INFO_PREVIOUS_NEXT_SORT) {

@@ -8,6 +8,9 @@
  */
 require('includes/application_top.php');
 
+$_GET['products_filter'] = $products_filter = ((isset($_GET['products_filter']) && $_GET['products_filter'] > 0) ? (int)$_GET['products_filter'] : (int)$_POST['products_filter']);
+$_GET['current_category_id'] = $current_category_id = (isset($_GET['current_category_id']) ? (int)$_GET['current_category_id'] : (int)$current_category_id);
+
 // verify products exist
 $chk_products = $db->Execute("SELECT *
                               FROM " . TABLE_PRODUCTS . "
@@ -31,14 +34,9 @@ $currencies = new currencies();
 
 $languages = zen_get_languages();
 
-$_GET['products_filter'] = $products_filter = ((isset($_GET['products_filter']) && $_GET['products_filter'] > 0) ? (int)$_GET['products_filter'] : (int)$_POST['products_filter']);
-
 $action = (isset($_GET['action']) ? $_GET['action'] : '');
 
-$current_category_id = (isset($_GET['current_category_id']) ? (int)$_GET['current_category_id'] : (int)$current_category_id);
-
 if ($action == 'new_cat') {
-  $current_category_id = (isset($_GET['current_category_id']) ? (int)$_GET['current_category_id'] : $current_category_id);
   $new_product_query = $db->Execute("SELECT ptc.*
                                      FROM " . TABLE_PRODUCTS_TO_CATEGORIES . " ptc
                                      LEFT JOIN " . TABLE_PRODUCTS_DESCRIPTION . " pd ON ptc.products_id = pd.products_id
@@ -395,17 +393,19 @@ if (zen_not_null($action)) {
       break;
 
     case 'update_product':
-      $zv_check_master_categories_id = 'true';
+      $zv_check_master_categories_id = true;
       $new_categories_sort_array[] = $_POST['current_master_categories_id'];
       $current_master_categories_id = $_POST['current_master_categories_id'];
+      if (!isset($_POST['categories_add'])) $_POST['categories_add'] = array();
 
       // set the linked products master_categories_id product(s)
       for ($i = 0, $n = sizeof($_POST['categories_add']); $i < $n; $i++) {
         // is current master_categories_id in the list?
-        if ($zv_check_master_categories_id == 'true' && $_POST['categories_add'][$i] == $current_master_categories_id->fields['master_categories_id']) {
-          $zv_check_master_categories_id = 'true';
+        if ($zv_check_master_categories_id == true && $_POST['categories_add'][$i] == $current_master_categories_id) {
+          $zv_check_master_categories_id = true;
           // array is set above to master category
         } else {
+          $zv_check_master_categories_id = false;
           $new_categories_sort_array[] = (int)$_POST['categories_add'][$i];
         }
       }
@@ -437,7 +437,7 @@ if (zen_not_null($action)) {
       }
 
       // reset master_categories_id in products table
-      if ($zv_check_master_categories_id == 'true') {
+      if ($zv_check_master_categories_id == true) {
         // make sure master_categories_id is set to current master_categories_id
         $db->Execute("UPDATE " . TABLE_PRODUCTS . "
                       SET master_categories_id = " . (int)$current_master_categories_id . "
@@ -452,7 +452,7 @@ if (zen_not_null($action)) {
       // recalculate price based on new master_categories_id
       zen_update_products_price_sorter($products_filter);
 
-      if ($zv_check_master_categories_id == 'true') {
+      if ($zv_check_master_categories_id == true) {
         $messageStack->add_session(SUCCESS_MASTER_CATEGORIES_ID, 'success');
       } else {
         $messageStack->add_session(WARNING_MASTER_CATEGORIES_ID, 'warning');
@@ -624,6 +624,7 @@ $products_list = $db->Execute("SELECT products_id, categories_id
             <table class="table">
               <thead>
                   <?php
+                  $selected_categories_check = '';
                   while (!$products_list->EOF) {
                     $selected_categories_check .= $products_list->fields['categories_id'];
                     $products_list->MoveNext();
