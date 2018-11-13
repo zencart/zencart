@@ -12,16 +12,30 @@
  *
  * Handles all order-processing functions
  *
+ * Dependencies:
+ * $_SESSION['billto']
+ * $_SESSION['cart']
+ * $_SESSION['cc_id']
+ * $_SESSION['comments']
+ * $_SESSION['currency']
+ * $_SESSION['customer_id']
+ * $_SESSION['customers_ip_address']
+ * $_SESSION['languages_id']
+ * $_SESSION['payment']
+ * $_SESSION['sendto']
+ * $_SESSION['shipping']
+ *
  * @package classes
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
 }
 class order extends base {
-  var $info, $totals, $products, $customer, $delivery, $content_type, $email_low_stock, $products_ordered_attributes,
-  $products_ordered, $products_ordered_email, $attachArray;
+  var $info, $totals, $products, $customer, $delivery, $billing, $content_type, $email_low_stock, $products_ordered_attributes,
+      $products_ordered, $products_ordered_email, $products_ordered_html, $attachArray, $email_order_message, $extra_header_text,
+      $doStockDecrement, $send_low_stock_emails, $queryReturnFlag, $bestSellersUpdate, $use_external_tax_handler_only;
 
-  function __construct($order_id = '') {
+  function __construct($order_id = null) {
     $this->info = array();
     $this->totals = array();
     $this->products = array();
@@ -174,7 +188,7 @@ class order extends base {
       if (QUANTITY_DECIMALS != 0) {
         $fix_qty = $orders_products->fields['products_quantity'];
         switch (true) {
-          case (!strstr($fix_qty, '.')):
+          case (false === strpos($fix_qty, '.')):
           $new_qty = $fix_qty;
           break;
           default:
@@ -345,7 +359,7 @@ class order extends base {
           }
           if ($tax_address_query != '') {
               $tax_address = $db->Execute($tax_address_query);
-              if ($tax_address->recordCount() > 0) {
+              if ($tax_address->RecordCount() > 0) {
                   $taxCountryId = $tax_address->fields['entry_country_id'];
                   $taxZoneId = $tax_address->fields['entry_zone_id'];
               }
@@ -398,22 +412,6 @@ class order extends base {
     }
     */
 
-/*
-// bof: move below calculations
-    if ($this->info['total'] == 0) {
-      if (DEFAULT_ZERO_BALANCE_ORDERS_STATUS_ID == 0) {
-        $this->info['order_status'] = DEFAULT_ORDERS_STATUS_ID;
-      } else {
-        $this->info['order_status'] = DEFAULT_ZERO_BALANCE_ORDERS_STATUS_ID;
-      }
-    }
-    if (isset($GLOBALS[$class]) && is_object($GLOBALS[$class])) {
-      if ( isset($GLOBALS[$class]->order_status) && is_numeric($GLOBALS[$class]->order_status) && ($GLOBALS[$class]->order_status > 0) ) {
-        $this->info['order_status'] = $GLOBALS[$class]->order_status;
-      }
-    }
-// eof: move below calculations
-*/
     $this->customer = array('firstname' => $customer_address->fields['customers_firstname'],
                             'lastname' => $customer_address->fields['customers_lastname'],
                             'company' => $customer_address->fields['entry_company'],
@@ -460,7 +458,7 @@ class order extends base {
     // order's products' tax rate.
     //
     $this->notify('NOTIFY_ORDER_CART_AFTER_ADDRESSES_SET', '', $taxCountryId, $taxZoneId);
-    
+
     $index = 0;
     $products = $_SESSION['cart']->get_products();
     for ($i=0, $n=sizeof($products); $i<$n; $i++) {
@@ -602,16 +600,6 @@ class order extends base {
       $this->info['total'] = $this->info['subtotal'] + $this->info['tax'] + $this->info['shipping_cost'];
     }
 
-/*
-// moved to function create
-    if ($this->info['total'] == 0) {
-      if (DEFAULT_ZERO_BALANCE_ORDERS_STATUS_ID == 0) {
-        $this->info['order_status'] = DEFAULT_ORDERS_STATUS_ID;
-      } else {
-        $this->info['order_status'] = DEFAULT_ZERO_BALANCE_ORDERS_STATUS_ID;
-      }
-    }
-*/
     if (isset($GLOBALS[$class]) && is_object($GLOBALS[$class])) {
       if ( isset($GLOBALS[$class]->order_status) && is_numeric($GLOBALS[$class]->order_status) && ($GLOBALS[$class]->order_status > 0) ) {
         $this->info['order_status'] = $GLOBALS[$class]->order_status;
@@ -697,7 +685,7 @@ class order extends base {
                             );
 
     zen_db_perform(TABLE_ORDERS, $sql_data_array);
-    $insert_id = $db->Insert_ID();
+    $insert_id = $db->insert_ID();
     $this->notify('NOTIFY_ORDER_DURING_CREATE_ADDED_ORDER_HEADER', array_merge(array('orders_id' => $insert_id, 'shipping_weight' => $_SESSION['cart']->weight), $sql_data_array), $insert_id);
 
     for ($i=0, $n=sizeof($zf_ot_modules); $i<$n; $i++) {
@@ -832,7 +820,7 @@ class order extends base {
                               );
       zen_db_perform(TABLE_ORDERS_PRODUCTS, $sql_data_array);
 
-      $order_products_id = $db->Insert_ID();
+      $order_products_id = $db->insert_ID();
 
       $this->notify('NOTIFY_ORDER_DURING_CREATE_ADDED_PRODUCT_LINE_ITEM', array_merge(array('orders_products_id' => $order_products_id, 'i' => $i), $sql_data_array), $order_products_id);
 
@@ -1019,6 +1007,7 @@ class order extends base {
     EMAIL_TEXT_ORDER_NUMBER . ' ' . $zf_insert_id . "\n" .
     EMAIL_TEXT_DATE_ORDERED . ' ' . strftime(DATE_FORMAT_LONG) . "\n" .
     EMAIL_TEXT_INVOICE_URL . ' ' . zen_href_link(FILENAME_ACCOUNT_HISTORY_INFO, 'order_id=' . $zf_insert_id, 'SSL', false) . "\n\n";
+
     $html_msg['EMAIL_TEXT_HEADER']     = EMAIL_TEXT_HEADER;
     $html_msg['EMAIL_TEXT_FROM']       = EMAIL_TEXT_FROM;
     $html_msg['INTRO_STORE_NAME']      = STORE_NAME;
@@ -1030,27 +1019,18 @@ class order extends base {
     $html_msg['INTRO_DATE_ORDERED']    = strftime(DATE_FORMAT_LONG);
     $html_msg['INTRO_URL_TEXT']        = EMAIL_TEXT_INVOICE_URL_CLICK;
     $html_msg['INTRO_URL_VALUE']       = zen_href_link(FILENAME_ACCOUNT_HISTORY_INFO, 'order_id=' . $zf_insert_id, 'SSL', false);
-
     $html_msg['EMAIL_CUSTOMER_PHONE']  = $this->customer['telephone'];
     $html_msg['EMAIL_ORDER_DATE']      = date(ORDER_EMAIL_DATE_FORMAT);
 
-      $invoiceInfo=EMAIL_TEXT_INVOICE_URL . ' ' . zen_href_link(FILENAME_ACCOUNT_HISTORY_INFO, 'order_id=' . $zf_insert_id, 'SSL', false) . "\n\n";
-      $htmlInvoiceURL=EMAIL_TEXT_INVOICE_URL_CLICK;
-      $htmlInvoiceValue=zen_href_link(FILENAME_ACCOUNT_HISTORY_INFO, 'order_id=' . $zf_insert_id, 'SSL', false);
-      $email_order = EMAIL_TEXT_HEADER . EMAIL_TEXT_FROM . STORE_NAME . "\n\n" .
-      $this->customer['firstname'] . ' ' . $this->customer['lastname'] . "\n\n" .
-      EMAIL_THANKS_FOR_SHOPPING . "\n" . EMAIL_DETAILS_FOLLOW . "\n" .
-      EMAIL_SEPARATOR . "\n" .
-      EMAIL_TEXT_ORDER_NUMBER . ' ' . $zf_insert_id . "\n" .
-      EMAIL_TEXT_DATE_ORDERED . ' ' . strftime(DATE_FORMAT_LONG) . "\n" .
-      EMAIL_TEXT_INVOICE_URL . ' ' . zen_href_link(FILENAME_ACCOUNT_HISTORY_INFO, 'order_id=' . $zf_insert_id, 'SSL', false) . "\n\n";
+    $invoiceInfo=EMAIL_TEXT_INVOICE_URL . ' ' . zen_href_link(FILENAME_ACCOUNT_HISTORY_INFO, 'order_id=' . $zf_insert_id, 'SSL', false) . "\n\n";
+    $htmlInvoiceURL=EMAIL_TEXT_INVOICE_URL_CLICK;
+    $htmlInvoiceValue=zen_href_link(FILENAME_ACCOUNT_HISTORY_INFO, 'order_id=' . $zf_insert_id, 'SSL', false);
 
     //comments area
+    $html_msg['ORDER_COMMENTS'] = '';
     if ($this->info['comments']) {
       $email_order .= zen_db_output($this->info['comments']) . "\n\n";
       $html_msg['ORDER_COMMENTS'] = nl2br(zen_db_output($this->info['comments']));
-    } else {
-      $html_msg['ORDER_COMMENTS'] = '';
     }
 
     $this->notify('NOTIFY_ORDER_EMAIL_BEFORE_PRODUCTS', array(), $email_order, $html_msg);
@@ -1111,8 +1091,8 @@ class order extends base {
 
     // Add in store specific order message
     $this->email_order_message = defined('EMAIL_ORDER_MESSAGE') ? constant('EMAIL_ORDER_MESSAGE') : '';
-    $this->notify('NOTIFY_ORDER_SET_ORDER_MESSAGE'); 
-    if (!empty($this->email_order_message)) { 
+    $this->notify('NOTIFY_ORDER_SET_ORDER_MESSAGE');
+    if (!empty($this->email_order_message)) {
       $email_order .= "\n\n" . $this->email_order_message . "\n\n";
     }
     $html_msg['EMAIL_ORDER_MESSAGE'] = $this->email_order_message;
