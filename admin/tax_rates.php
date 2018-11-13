@@ -152,7 +152,7 @@ if (zen_not_null($action)) {
               case 'new':
                 $heading[] = array('text' => '<h4>' . TEXT_INFO_HEADING_NEW_TAX_RATE . '</h4>');
 
-                $contents = array('form' => zen_draw_form('rates', FILENAME_TAX_RATES, 'page=' . $_GET['page'] . '&action=insert', 'post', 'class="form-horizontal"'));
+                $contents = array('form' => zen_draw_form('rates', FILENAME_TAX_RATES, 'page=' . $_GET['page'] . '&action=insert', 'post', 'class="row"'));
                 $contents[] = array('text' => TEXT_INFO_INSERT_INTRO);
                 $contents[] = array('text' => '<br>' . zen_draw_label(TEXT_INFO_CLASS_TITLE, 'tax_class_id', 'class="control-label"') . zen_tax_classes_pull_down('name="tax_class_id" class="form-control"'));
                 $contents[] = array('text' => '<br>' . zen_draw_label(TEXT_INFO_ZONE_NAME, 'tax_zone_id', 'class="control-label"') . zen_geo_zones_pull_down('name="tax_zone_id" class="form-control"'));
@@ -182,7 +182,7 @@ if (zen_not_null($action)) {
                 $contents[] = array('align' => 'text-center', 'text' => '<br><button type="submit" class="btn btn-danger">' . IMAGE_DELETE . '</button> <a href="' . zen_href_link(FILENAME_TAX_RATES, 'page=' . $_GET['page'] . '&tID=' . $trInfo->tax_rates_id) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>');
                 break;
               default:
-                if (is_object($trInfo)) {
+                if (!empty($trInfo) && is_object($trInfo)) {
                   $heading[] = array('text' => '<h4>' . $trInfo->tax_class_title . '</h4>');
                   $contents[] = array('align' => 'text-center', 'text' => '<a href="' . zen_href_link(FILENAME_TAX_RATES, 'page=' . $_GET['page'] . '&tID=' . $trInfo->tax_rates_id . '&action=edit') . '" class="btn btn-primary" role="button">' . IMAGE_EDIT . '</a> <a href="' . zen_href_link(FILENAME_TAX_RATES, 'page=' . $_GET['page'] . '&tID=' . $trInfo->tax_rates_id . '&action=delete') . '" class="btn btn-warning" role="button">' . IMAGE_DELETE . '</a>');
                   $contents[] = array('align' => 'text-center', 'text' => '<a href="' . zen_href_link(FILENAME_GEO_ZONES, '', 'NONSSL') . '" class="btn btn-primary" role="button">' . IMAGE_DEFINE_ZONES . '</a>');

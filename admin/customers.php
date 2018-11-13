@@ -4,7 +4,7 @@
  * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: zcwilt  Wed Sept 18 Modified in v1.5.6 $
+ * @version $Id: Author: zcwilt  Nov 12 Modified in v1.5.6 $
  */
 require('includes/application_top.php');
 
@@ -12,9 +12,10 @@ require(DIR_WS_CLASSES . 'currencies.php');
 $currencies = new currencies();
 
 $action = (isset($_GET['action']) ? $_GET['action'] : '');
-$customers_id = zen_db_prepare_input($_GET['cID']);
-if (isset($_POST['cID']))
-  $customers_id = zen_db_prepare_input($_POST['cID']);
+$customers_id = isset($_GET['cID']) ? (int)$_GET['cID'] : 0;
+if (isset($_POST['cID'])) $customers_id = (int)$_POST['cID'];
+if (!isset($_GET['page'])) $_GET['page'] = '';
+if (!isset($_GET['list_order'])) $_GET['list_order'] = '';
 
 $error = false;
 $processed = false;
@@ -87,7 +88,7 @@ if (zen_not_null($action)) {
       $customers_newsletter = zen_db_prepare_input($_POST['customers_newsletter']);
       $customers_group_pricing = (int)zen_db_prepare_input($_POST['customers_group_pricing']);
       $customers_email_format = zen_db_prepare_input($_POST['customers_email_format']);
-      $customers_gender = zen_db_prepare_input($_POST['customers_gender']);
+      $customers_gender = !empty($_POST['customers_gender']) ? zen_db_prepare_input($_POST['customers_gender']) : '';
       $customers_dob = (empty($_POST['customers_dob']) ? zen_db_prepare_input('0001-01-01 00:00:00') : zen_db_prepare_input($_POST['customers_dob']));
 
       $customers_authorization = zen_db_prepare_input($_POST['customers_authorization']);
@@ -106,14 +107,15 @@ if (zen_not_null($action)) {
       $default_address_id = zen_db_prepare_input($_POST['default_address_id']);
       $entry_street_address = zen_db_prepare_input($_POST['entry_street_address']);
       $entry_suburb = zen_db_prepare_input($_POST['entry_suburb']);
+      $entry_suburb_error = false;
       $entry_postcode = zen_db_prepare_input($_POST['entry_postcode']);
       $entry_city = zen_db_prepare_input($_POST['entry_city']);
       $entry_country_id = zen_db_prepare_input($_POST['entry_country_id']);
 
       $entry_company = zen_db_prepare_input($_POST['entry_company']);
+      $entry_company_error = false;
       $entry_state = zen_db_prepare_input($_POST['entry_state']);
-      if (isset($_POST['entry_zone_id']))
-        $entry_zone_id = zen_db_prepare_input($_POST['entry_zone_id']);
+      if (isset($_POST['entry_zone_id'])) $entry_zone_id = zen_db_prepare_input($_POST['entry_zone_id']);
 
       if (strlen($customers_firstname) < ENTRY_FIRST_NAME_MIN_LENGTH) {
         $error = true;
@@ -1205,7 +1207,7 @@ if (zen_not_null($action)) {
 
 // Split Page
 // reset page when page is unknown
-                  if (($_GET['page'] == '' or $_GET['page'] == '1') and $_GET['cID'] != '') {
+                  if (($_GET['page'] == '' || $_GET['page'] == '1') && !empty($_GET['cID'])) {
                     $check_page = $db->Execute($customers_query_raw);
                     $check_count = 1;
                     if ($check_page->RecordCount() > MAX_DISPLAY_SEARCH_RESULTS_CUSTOMER) {
@@ -1404,7 +1406,7 @@ if (zen_not_null($action)) {
 
                       $lifetime_value = 0;
                       foreach($customers_orders as $result) {
-                         $lifetime_value+= ($result['order_total'] * $result['currency_value']); 
+                         $lifetime_value+= ($result['order_total'] * $result['currency_value']);
                       }
                       $contents[] = array('text' => TEXT_INFO_LIFETIME_VALUE. ' ' . $currencies->format($lifetime_value));
                       $contents[] = array('text' => TEXT_INFO_LAST_ORDER . ' ' . zen_date_short($customers_orders->fields['date_purchased']) . '<br>' . TEXT_INFO_ORDERS_TOTAL . ' ' . $currencies->format($customers_orders->fields['order_total'], true, $customers_orders->fields['currency'], $customers_orders->fields['currency_value']));

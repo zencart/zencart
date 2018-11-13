@@ -38,7 +38,7 @@ class zcObserverDownloadsViaRedirect extends base {
   /**
    * Class constructor
    */
-  public function __construct() 
+  public function __construct()
   {
 
     if (DOWNLOAD_BY_REDIRECT != 'true') return false;
@@ -67,6 +67,7 @@ class zcObserverDownloadsViaRedirect extends base {
    */
   protected function updateNotifyDownloadReadyToRedirect(&$class, $eventID, $array, &$service, &$origin_filename, &$browser_filename, &$source_directory, &$link_create_status)
   {
+    if (!defined('DOWNLOAD_CHMOD')) define('DOWNLOAD_CHMOD', '0777');
     $this->garbageCollectionUnlinkTempFolders($this->pubFolder);
     $tempdir = $this->generateRandomName() . '-' . time();
     umask(0000);
@@ -114,18 +115,17 @@ class zcObserverDownloadsViaRedirect extends base {
     $h1 = opendir($dir);
     while ($subdir = readdir($h1)) {
       // Ignore non directories
-      if (!is_dir($dir . $subdir)) continue;
-      // Ignore . and .. and VCS folders
-      if ($subdir == '.' || $subdir == '..' || $subdir == '.git' || $subdir == '.svn') continue;
+      if (!is_dir($dir . $subdir) || $subdir == '.' || $subdir == '..') continue;
       // Loop and unlink files in subdirectory
-      $h2 = opendir($dir . $subdir);
-      list($fn, $exptime) = explode('-', $subdir);
-      if ($exptime + $this->gc_cleanup_time > time()) continue;
-      while ($file = readdir($h2)) {
-        if ($file == '.' || $file == '..') continue;
-        @unlink($dir . $subdir . '/' . $file);
+      if ($h2 = opendir($dir . $subdir)) {
+          list($fn, $exptime) = explode('-', $subdir);
+          if ($exptime + $this->gc_cleanup_time > time()) continue;
+          while ($file = readdir($h2)) {
+              if ($file == '.' || $file == '..') continue;
+              @unlink($dir . $subdir . '/' . $file);
+          }
+          closedir($h2);
       }
-      closedir($h2);
       @rmdir($dir . $subdir);
     }
     closedir($h1);

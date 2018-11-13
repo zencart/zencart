@@ -25,6 +25,9 @@ if (isset($_GET['download_reset_on'])) {
 if (isset($_GET['download_reset_off'])) {
   $_GET['download_reset_off'] = (int)$_GET['download_reset_off'];
 }
+if (!isset($_GET['status'])) $_GET['status'] = '';
+if (!isset($_GET['list_order'])) $_GET['list_order'] = '';
+if (!isset($_GET['page'])) $_GET['page'] = '';
 
 include DIR_FS_CATALOG . DIR_WS_CLASSES . 'order.php';
 
@@ -80,7 +83,7 @@ if (zen_not_null($action) && $order_exists == true) {
   switch ($action) {
     case 'edit':
       // reset single download to on
-      if ($_GET['download_reset_on'] > 0) {
+      if (!empty($_GET['download_reset_on'])) {
         // adjust download_maxdays based on current date
         $check_status = $db->Execute("SELECT customers_name, customers_email_address, orders_status, date_purchased
                                       FROM " . TABLE_ORDERS . "
@@ -125,7 +128,7 @@ if (zen_not_null($action) && $order_exists == true) {
         zen_redirect(zen_href_link(FILENAME_ORDERS, zen_get_all_get_params(array('action')) . 'action=edit', 'NONSSL'));
       }
       // reset single download to off
-      if ($_GET['download_reset_off'] > 0) {
+      if (!empty($_GET['download_reset_off'])) {
         // adjust download_maxdays based on current date
         // *** fix: adjust count not maxdays to cancel download
 //          $update_downloads_query = "update " . TABLE_ORDERS_PRODUCTS_DOWNLOAD . " set download_maxdays='0', download_count='0' where orders_id='" . $_GET['oID'] . "' and orders_products_download_id='" . $_GET['download_reset_off'] . "'";
@@ -147,11 +150,11 @@ if (zen_not_null($action) && $order_exists == true) {
       if ($status < 1) {
          break;
       }
-      
+
       $email_include_message = (isset($_POST['notify_comments']) && $_POST['notify_comments'] == 'on');
       $customer_notified = (int)(isset($_POST['notify'])) ? $_POST['notify'] : '0';
-      
-      $order_updated = false;      
+
+      $order_updated = false;
       $status_updated = zen_update_orders_history($oID, $comments, null, $status, $customer_notified, $email_include_message);
       $order_updated = ($status_updated > 0);
 
@@ -700,7 +703,7 @@ if (zen_not_null($action) && $order_exists == true) {
                     </td>
                     <td><?php echo $orders_status_array[$item['orders_status_id']]; ?></td>
                     <td><?php echo nl2br(zen_db_output($item['comments'])); ?></td>
-                    <td class="text-center"><?php echo (zen_not_null($item['updated_by'])) ? $item['updated_by'] : '&nbsp;'; ?></td>
+                    <td class="text-center"><?php echo (!empty($item['updated_by'])) ? $item['updated_by'] : '&nbsp;'; ?></td>
                   </tr>
                   <?php
                 }
@@ -849,6 +852,7 @@ if (zen_not_null($action) && $order_exists == true) {
 // Only one or the other search
 // create search_orders_products filter
                   $search = '';
+                  $search_distinct = ' ';
                   $new_table = '';
                   $new_fields = '';
                   if (isset($_GET['search_orders_products']) && zen_not_null($_GET['search_orders_products'])) {
@@ -861,8 +865,7 @@ if (zen_not_null($action) && $order_exists == true) {
                       $search = " and op.products_id ='" . (int)$keywords . "'";
                     }
                   } else {
-                    ?>
-                    <?php
+
 // create search filter
                     $search = '';
                     if (isset($_GET['search']) && zen_not_null($_GET['search'])) {
@@ -873,8 +876,7 @@ if (zen_not_null($action) && $order_exists == true) {
                     }
                   } // eof: search orders or orders_products
                   $new_fields .= ", o.customers_company, o.customers_email_address, o.customers_street_address, o.delivery_company, o.delivery_name, o.delivery_street_address, o.billing_company, o.billing_name, o.billing_street_address, o.payment_module_code, o.shipping_module_code, o.ip_address ";
-                  ?>
-                  <?php
+
                   $orders_query_raw = "select " . $search_distinct . " o.orders_id, o.customers_id, o.customers_name, o.payment_method, o.shipping_method, o.date_purchased, o.last_modified, o.currency, o.currency_value, s.orders_status_name, ot.text as order_total" .
                       $new_fields . "
                           from (" . TABLE_ORDERS . " o " .
@@ -900,7 +902,7 @@ if (zen_not_null($action) && $order_exists == true) {
 
 // Split Page
 // reset page when page is unknown
-                  if (($_GET['page'] == '' or $_GET['page'] <= 1) and $_GET['oID'] != '') {
+                  if (($_GET['page'] == '' or $_GET['page'] <= 1) && !empty($_GET['oID'])) {
                     $check_page = $db->Execute($orders_query_raw);
                     $check_count = 1;
                     if ($check_page->RecordCount() > MAX_DISPLAY_SEARCH_RESULTS_ORDERS) {

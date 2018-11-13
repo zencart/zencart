@@ -423,7 +423,7 @@
   define('ERROR_FILE_NOT_SAVED', 'Error:  File not saved.');
   define('ERROR_DESTINATION_NOT_WRITEABLE', 'Error:  destination not writeable.');
   define('ERROR_DESTINATION_DOES_NOT_EXIST', 'Error: destination does not exist.');
-  define('ERROR_FILE_TOO_BIG', 'Warning: File was too large to upload!<br />Order can be placed but please contact the site for help with upload');
+  define('ERROR_FILE_TOO_BIG', 'Warning: File was too large to upload!<br />Order can be placed but please contact us for help with upload');
 // End iii added
 
   define('TEXT_BEFORE_DOWN_FOR_MAINTENANCE', 'NOTICE: This website is scheduled to be down for maintenance on: ');

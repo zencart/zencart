@@ -11,7 +11,7 @@ $languages = zen_get_languages();
 require(DIR_WS_CLASSES . 'currencies.php');
 $currencies = new currencies();
 
-$product_type = (isset($_POST['products_id']) ? zen_get_products_type($_POST['products_id']) : isset($_GET['product_type']) ? $_GET['product_type'] : 1);
+$product_type = (isset($_POST['products_id']) ? zen_get_products_type($_POST['products_id']) : (isset($_GET['product_type']) ? $_GET['product_type'] : 1));
 
 $action = (isset($_GET['action']) ? $_GET['action'] : '');
 
@@ -253,7 +253,7 @@ if (zen_not_null($action)) {
       break;
     case 'delete_product_confirm':
       $delete_linked = 'true';
-      if ($_POST['delete_linked'] == 'delete_linked_no') {
+      if (isset($_POST['delete_linked']) && $_POST['delete_linked'] == 'delete_linked_no') {
         $delete_linked = 'false';
       } else {
         $delete_linked = 'true';
