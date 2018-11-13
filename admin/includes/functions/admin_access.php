@@ -918,3 +918,11 @@ function zen_deregister_admin_pages($pages)
     zen_record_admin_activity('Deleted admin pages for page keys: ' . print_r($pages, true), 'warning');
   }
 }
+
+function zen_updated_by_admin($admin_id = '') 
+{
+    if ($admin_id === '') {
+        $admin_id = $_SESSION['admin_id'];
+    }
+    return zen_get_admin_name($admin_id) . " [$admin_id]";
+}
