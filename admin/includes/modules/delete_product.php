@@ -18,6 +18,7 @@ $contents[] = array('text' => '<br><strong>' . $pInfo->products_name . ' ID#' . 
 
 $product_categories_string = '';
 $product_categories = zen_generate_category_path($pInfo->products_id, 'product');
+if (!isset($category_path)) $category_path = '';
 
 if (sizeof($product_categories) > 1) {
   $contents[] = array('text' => '<strong><span class="text-danger">' . TEXT_MASTER_CATEGORIES_ID . '</span>' . '</strong>');

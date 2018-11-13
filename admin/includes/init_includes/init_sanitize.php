@@ -38,6 +38,7 @@ $adminSanitizerTypes = array(
     'NULL_ACTION' => array('type' => 'builtin'),
     'MULTI_DIMENSIONAL' => array('type' => 'builtin'),
     'SIMPLE_ARRAY' => array('type' => 'builtin'),
+    'STRICT_SANITIZE_VALUES' => array('type' => 'builtin'),
 );
 
 $sanitizer->addSanitizerTypes($adminSanitizerTypes);

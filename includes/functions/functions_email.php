@@ -5,10 +5,10 @@
  * Hooks into phpMailer class for actual email encoding and sending
  *
  * @package functions
- * @copyright Copyright 2003-2016 Zen Cart Development Team
+ * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: DrByte  Thu Jan 28 23:20:41 2016 +0100 Modified in v1.5.5 $
+ * @version $Id: Author: DrByte  Nov 12 2018  Modified in v1.5.6 $
  */
 
 use PHPMailer\PHPMailer\PHPMailer;
@@ -373,11 +373,11 @@ use PHPMailer\PHPMailer\SMTP;
     } // end foreach loop thru possible multiple email addresses
     $zco_notifier->notify('NOTIFY_EMAIL_AFTER_SEND_ALL_SPECIFIED_ADDRESSES');
 
-    if ($ErrorInfo != '') {
+    if (!empty($ErrorInfo)) {
       trigger_error('Email Error: ' . $ErrorInfo);
     }
 
-    return $ErrorInfo;
+    return isset($ErrorInfo) ? $ErrorInfo : '';
   }  // end function
 
 /**

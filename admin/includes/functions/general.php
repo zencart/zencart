@@ -3291,12 +3291,12 @@ function zen_limit_image_filename($filename, $table_name, $field_name, $extensio
   //$date1  today, or any other day
   //$date2  date to check against
 
-    $d1 = explode("-", $date1);
+    $d1 = explode("-", substr($date1, 0, 10));
     $y1 = $d1[0];
     $m1 = $d1[1];
     $d1 = $d1[2];
 
-    $d2 = explode("-", $date2);
+    $d2 = explode("-", substr($date2, 0, 10));
     $y2 = $d2[0];
     $m2 = $d2[1];
     $d2 = $d2[2];

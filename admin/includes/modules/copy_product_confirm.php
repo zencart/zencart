@@ -123,7 +123,7 @@ if (isset($_POST['products_id']) && isset($_POST['categories_id'])) {
     $products_id_to = $dup_products_id;
     $products_id = $dup_products_id;
 
-    if ($_POST['copy_attributes'] == 'copy_attributes_yes' && $_POST['copy_as'] == 'duplicate') {
+    if (!empty($_POST['copy_attributes']) && $_POST['copy_attributes'] == 'copy_attributes_yes') {
       // $products_id_to= $copy_to_products_id;
       // $products_id_from = $pID;
 //            $copy_attributes_delete_first='1';
@@ -143,7 +143,7 @@ if (isset($_POST['products_id']) && isset($_POST['categories_id'])) {
 // EOF: Attributes Copy on non-linked
 /////////////////////////////////////////////////////////////////////
     // copy product discounts to duplicate
-    if ($_POST['copy_discounts'] == 'copy_discounts_yes') {
+    if (!empty($_POST['copy_discounts']) && $_POST['copy_discounts'] == 'copy_discounts_yes') {
       zen_copy_discounts_to_product($old_products_id, (int)$dup_products_id);
     }
 
