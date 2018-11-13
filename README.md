@@ -25,8 +25,8 @@ Requirements
 Zen Cart&reg; requires you to provide your own webserver (shared or dedicated/VPS), with a standard LAMP stack (Linux/Apache/MySQL/PHP), based on the following specifications
 
 Requirements for v2:
-- Written for PHP 7.2 (backward compatible to PHP 5.6)
-- Written for MySQL 5.6 (compatible with 5.7 and MariaDB 10.1 to 10.2)
+- Written for PHP 7.3 (backward compatible to PHP 5.6)
+- Written for MySQL 5.7 (compatible with 5.7 and MariaDB 10.1 to 10.3)
 - CURL (compiled into PHP) is used for communication with payment/shipping services
 - Compatible with with Apache 2.4 and 2.2
 - Recommended Apache modules include: expires, headers, env, alias, deflate, ssl, mime, rewrite (in addition to other common modules)
