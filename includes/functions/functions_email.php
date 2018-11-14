@@ -56,9 +56,9 @@ use PHPMailer\PHPMailer\SMTP;
 **/
   function zen_mail($to_name, $to_address, $email_subject, $email_text, $from_email_name, $from_email_address, $block=array(), $module='default', $attachments_list='', $email_reply_to_name = '', $email_reply_to_address = '' ) {
     global $db, $messageStack, $zco_notifier;
-    if (!defined('DEVELOPER_OVERRIDE_EMAIL_STATUS') || (defined('DEVELOPER_OVERRIDE_EMAIL_STATUS') && DEVELOPER_OVERRIDE_EMAIL_STATUS == 'site'))
-      if (SEND_EMAILS != 'true') return false;  // if sending email is disabled in Admin, just exit
+    if (SEND_EMAILS != 'true') return false;  // if sending email is disabled in Admin, just exit
 
+    if (defined('DEVELOPER_OVERRIDE_EMAIL_STATUS') && DEVELOPER_OVERRIDE_EMAIL_STATUS == 'false') return false;  // disable email sending when in developer mode
     if (defined('DEVELOPER_OVERRIDE_EMAIL_ADDRESS') && DEVELOPER_OVERRIDE_EMAIL_ADDRESS != '') $to_address = DEVELOPER_OVERRIDE_EMAIL_ADDRESS;
 
     // ignore sending emails for any of the following pages
