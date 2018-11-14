@@ -42,7 +42,7 @@ if (zen_not_null($action)) {
     case 'insert':
     case 'save':
       if (!isset($_POST['type_name'])) {
-        continue;
+        break;
       }
       if (isset($_GET['ptID']))
         $type_id = zen_db_prepare_input($_GET['ptID']);
