@@ -649,25 +649,16 @@
 
 ////
   function zen_not_null($value) {
-    if (is_array($value)) {
-      if (sizeof($value) > 0) {
-        return true;
-      } else {
+    if (null === $value) {
         return false;
-      }
-    } elseif( is_a( $value, 'queryFactoryResult' ) ) {
-      if (sizeof($value->result) > 0) {
-        return true;
-      } else {
-        return false;
-      }
-    } else {
-      if ($value != '' && $value != 'NULL' && strlen(trim($value)) > 0) {
-        return true;
-      } else {
-        return false;
-      }
     }
+    if (is_array($value)) {
+      return count($value) > 0;
+    }
+    if (is_a($value, 'queryFactoryResult')) {
+      return count($value->result) > 0;
+    }
+    return trim($value) !== '' && $value != 'NULL';
   }
 
 
@@ -690,9 +681,8 @@
 
     if ($currency->RecordCount()) {
       return strtoupper($currency->fields['code']);
-    } else {
-      return false;
     }
+    return false;
   }
 
 ////
