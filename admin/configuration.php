@@ -163,7 +163,14 @@ if ($gID == 7) {
                   }
                   ?>
               <td class="dataTableContent"><?php echo $item['configuration_title']; ?></td>
-              <td class="dataTableContent"><?php echo htmlspecialchars($cfgValue, ENT_COMPAT, CHARSET, TRUE); ?></td>
+              <td class="dataTableContent"><?php 
+                   $setting = htmlspecialchars($cfgValue, ENT_COMPAT, CHARSET, TRUE); 
+                   if (strlen($setting) > 40) { 
+                      echo substr($setting,0, 35) . "..."; 
+                   } else { 
+                      echo $setting; 
+                   }
+              ?></td>
               <td class="dataTableContent text-right">
                   <?php
                   if ((isset($cInfo) && is_object($cInfo)) && ($item['configuration_id'] == $cInfo->configuration_id)) {
