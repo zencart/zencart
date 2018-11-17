@@ -577,7 +577,7 @@ if (zen_not_null($action)) {
               ?>
             <div class="form-group">
               <?php echo zen_draw_label(ENTRY_GENDER, 'customers_gender', 'class="col-sm-3 control-label"'); ?>
-              <div class="col-sm-9">
+              <div class="col-sm-9 col-md-6">
                   <?php
                   if ($error == true && $entry_gender_error == true) {
                     echo '<label class="radio-inline">';
@@ -612,13 +612,13 @@ if (zen_not_null($action)) {
           ?>
           <div class="form-group">
               <?php echo zen_draw_label(CUSTOMERS_AUTHORIZATION, 'customers_authorization', 'class="col-sm-3 control-label"'); ?>
-            <div class="col-sm-9">
+            <div class="col-sm-9 col-md-6">
                 <?php echo zen_draw_pull_down_menu('customers_authorization', $customers_authorization_array, $cInfo->customers_authorization, 'class="form-control"'); ?>
             </div>
           </div>
           <div class="form-group">
               <?php echo zen_draw_label(ENTRY_FIRST_NAME, 'customers_firstname', 'class="col-sm-3 control-label"'); ?>
-            <div class="col-sm-9">
+            <div class="col-sm-9 col-md-6">
                 <?php
                 if ($error == true) {
                   if ($entry_firstname_error == true) {
@@ -634,7 +634,7 @@ if (zen_not_null($action)) {
           </div>
           <div class="form-group">
               <?php echo zen_draw_label(ENTRY_LAST_NAME, 'customers_lastname', 'class="col-sm-3 control-label"'); ?>
-            <div class="col-sm-9">
+            <div class="col-sm-9 col-md-6">
                 <?php
                 if ($error == true) {
                   if ($entry_lastname_error == true) {
@@ -653,7 +653,7 @@ if (zen_not_null($action)) {
             ?>
             <div class="form-group">
                 <?php echo zen_draw_label(ENTRY_DATE_OF_BIRTH, 'customers_dob', 'class="col-sm-3 control-label"'); ?>
-              <div class="col-sm-9">
+              <div class="col-sm-9 col-md-6">
                   <?php
                   if ($error == true) {
                     if ($entry_date_of_birth_error == true) {
@@ -672,7 +672,7 @@ if (zen_not_null($action)) {
           ?>
           <div class="form-group">
               <?php echo zen_draw_label(ENTRY_EMAIL_ADDRESS, 'customers_email_address', 'class="col-sm-3 control-label"'); ?>
-            <div class="col-sm-9">
+            <div class="col-sm-9 col-md-6">
                 <?php
                 if ($error == true) {
                   if ($entry_email_address_error == true) {
@@ -701,7 +701,7 @@ if (zen_not_null($action)) {
           <div class="formArea">
             <div class="form-group">
                 <?php echo zen_draw_label(ENTRY_COMPANY, 'customers_email_address', 'class="col-sm-3 control-label"'); ?>
-              <div class="col-sm-9">
+              <div class="col-sm-9 col-md-6">
                   <?php
                   if ($error == true) {
                     if ($entry_company_error == true) {
@@ -736,7 +736,7 @@ if (zen_not_null($action)) {
                 ?>
                 <div class="form-group">
                     <?php echo zen_draw_label($current_field['label'], '', 'class="col-sm-3 control-label"'); ?>
-                  <div class="col-sm-9"><?php echo $current_field['input']; ?></div>
+                  <div class="col-sm-9 col-md-6"><?php echo $current_field['input']; ?></div>
                 </div>
                 <?php
               }
@@ -753,7 +753,7 @@ if (zen_not_null($action)) {
         <div class="formArea">
           <div class="form-group">
               <?php echo zen_draw_label(ENTRY_STREET_ADDRESS, 'entry_street_address', 'class="col-sm-3 control-label"'); ?>
-            <div class="col-sm-9">
+            <div class="col-sm-9 col-md-6">
                 <?php
                 if ($error == true) {
                   if ($entry_street_address_error == true) {
@@ -772,7 +772,7 @@ if (zen_not_null($action)) {
             ?>
             <div class="form-group">
                 <?php echo zen_draw_label(ENTRY_SUBURB, 'suburb', 'class="col-sm-3 control-label"'); ?>
-              <div class="col-sm-9">
+              <div class="col-sm-9 col-md-6">
                   <?php
                   if ($error == true) {
                     if ($entry_suburb_error == true) {
@@ -791,7 +791,7 @@ if (zen_not_null($action)) {
           ?>
           <div class="form-group">
               <?php echo zen_draw_label(ENTRY_POST_CODE, 'entry_postcode', 'class="col-sm-3 control-label"'); ?>
-            <div class="col-sm-9">
+            <div class="col-sm-9 col-md-6">
                 <?php
                 if ($error == true) {
                   if ($entry_post_code_error == true) {
@@ -806,7 +806,7 @@ if (zen_not_null($action)) {
           </div>
           <div class="form-group">
             <?php echo zen_draw_label(ENTRY_CITY, 'entry_city', 'class="col-sm-3 control-label"'); ?>
-            <div class="col-sm-9">
+            <div class="col-sm-9 col-md-6">
                 <?php
                 if ($error == true) {
                   if ($entry_city_error == true) {
@@ -824,7 +824,7 @@ if (zen_not_null($action)) {
             ?>
             <div class="form-group">
                 <?php echo zen_draw_label(ENTRY_STATE, 'entry_state', 'class="col-sm-3 control-label"'); ?>
-              <div class="col-sm-9">
+              <div class="col-sm-9 col-md-6">
                   <?php
                   $entry_state = zen_get_zone_name($cInfo->entry_country_id, $cInfo->entry_zone_id, $cInfo->entry_state);
                   if ($error == true) {
@@ -858,7 +858,7 @@ if (zen_not_null($action)) {
           ?>
           <div class="form-group">
               <?php echo zen_draw_label(ENTRY_COUNTRY, 'entry_country_id', 'class="col-sm-3 control-label"'); ?>
-            <div class="col-sm-9">
+            <div class="col-sm-9 col-md-6">
                 <?php
                 if ($error == true) {
                   if ($entry_country_error == true) {
@@ -878,7 +878,7 @@ if (zen_not_null($action)) {
         <div class="formArea">
           <div class="form-group">
               <?php echo zen_draw_label(ENTRY_TELEPHONE_NUMBER, 'customers_telephone', 'class="col-sm-3 control-label"'); ?>
-            <div class="col-sm-9">
+            <div class="col-sm-9 col-md-6">
                 <?php
                 if ($error == true) {
                   if ($entry_telephone_error == true) {
@@ -897,7 +897,7 @@ if (zen_not_null($action)) {
             ?>
             <div class="form-group">
                 <?php echo zen_draw_label(ENTRY_FAX_NUMBER, 'customers_fax', 'class="col-sm-3 control-label"'); ?>
-              <div class="col-sm-9">
+              <div class="col-sm-9 col-md-6">
                   <?php
                   if ($processed == true) {
                     echo $cInfo->customers_fax . zen_draw_hidden_field('customers_fax');
@@ -914,7 +914,7 @@ if (zen_not_null($action)) {
         <div class="formArea">
           <div class="form-group">
               <?php echo zen_draw_label(ENTRY_EMAIL_PREFERENCE, 'customers_email_format', 'class="col-sm-3 control-label"'); ?>
-            <div class="col-sm-9">
+            <div class="col-sm-9 col-md-6">
                 <?php
                 if ($processed == true) {
                   if ($cInfo->customers_email_format) {
@@ -935,7 +935,7 @@ if (zen_not_null($action)) {
           </div>
           <div class="form-group">
               <?php echo zen_draw_label(ENTRY_NEWSLETTER, 'customers_newsletter', 'class="col-sm-3 control-label"'); ?>
-            <div class="col-sm-9">
+            <div class="col-sm-9 col-md-6">
                 <?php
                 if ($processed == true) {
                   if ($cInfo->customers_newsletter == '1') {
@@ -952,7 +952,7 @@ if (zen_not_null($action)) {
           </div>
           <div class="form-group">
               <?php echo zen_draw_label(ENTRY_PRICING_GROUP, 'customers_group_pricing', 'class="col-sm-3 control-label"'); ?>
-            <div class="col-sm-9">
+            <div class="col-sm-9 col-md-6">
                 <?php
                 if ($processed == true) {
                   if ($cInfo->customers_group_pricing) {
@@ -980,7 +980,7 @@ if (zen_not_null($action)) {
           </div>
           <div class="form-group">
               <?php echo zen_draw_label(CUSTOMERS_REFERRAL, 'customers_referral', 'class="col-sm-3 control-label"'); ?>
-            <div class="col-sm-9">
+            <div class="col-sm-9 col-md-6">
                 <?php echo zen_draw_input_field('customers_referral', htmlspecialchars($cInfo->customers_referral, ENT_COMPAT, CHARSET, TRUE), zen_set_field_length(TABLE_CUSTOMERS, 'customers_referral', 15) . ' class="form-control"'); ?>
             </div>
           </div>
