@@ -505,16 +505,16 @@ div.reportBox {
     margin-right: 30px;
 }
 
-.reportBox div.row span.left {
+/*.reportBox div.row span.left {
     float: left;
     text-align: left;
     width: 74%;
-}
+}*/
 
 .reportBox div.row span.right {
     float: right;
-    text-align: right;
-    width: 21%;
+   /* text-align: right;
+    width: 21%;*/
 }
 
 div.warrantyrow {
