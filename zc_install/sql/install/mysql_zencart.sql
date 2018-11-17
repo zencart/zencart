@@ -683,6 +683,7 @@ CREATE TABLE ezpages (
   status_header int(1) NOT NULL default '1',
   status_sidebox int(1) NOT NULL default '1',
   status_footer int(1) NOT NULL default '1',
+  status_visible int(1) NOT NULL default '0',
   status_toc int(1) NOT NULL default '1',
   header_sort_order int(3) NOT NULL default '0',
   sidebox_sort_order int(3) NOT NULL default '0',

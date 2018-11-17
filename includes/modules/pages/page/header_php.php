@@ -34,7 +34,7 @@ $sql = "SELECT e.*, ec.*
         AND ec.languages_id = '" . (int)$_SESSION['languages_id'] . "'
         AND e.pages_id = " . (int)$ezpage_id;
 // comment the following line to allow access to pages which don't have a status switch set to Yes:
-$sql .= " AND (status_toc > 0 or status_header > 0 or status_sidebox > 0 or status_footer > 0)";
+$sql .= " AND (status_toc > 0 or status_header > 0 or status_sidebox > 0 or status_footer > 0 or status_visible > 0)";
 
 // Check to see if page exists and is accessible, retrieving relevant details for display if found
 $var_pageDetails = $db->Execute($sql);

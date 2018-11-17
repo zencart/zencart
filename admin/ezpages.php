@@ -41,6 +41,11 @@ if (zen_not_null($action)) {
       $messageStack->add(SUCCESS_PAGE_STATUS_UPDATED, 'success');
       zen_redirect(zen_href_link(FILENAME_EZPAGES_ADMIN, 'page=' . $_GET['page'] . '&ezID=' . $_GET['ezID']));
       break;
+    case 'status_visible':
+      zen_set_ezpage_status(zen_db_prepare_input($_GET['ezID']), zen_db_prepare_input($_GET['current']), 'status_visible');
+      $messageStack->add(SUCCESS_PAGE_STATUS_UPDATED, 'success');
+      zen_redirect(zen_href_link(FILENAME_EZPAGES_ADMIN, 'page=' . $_GET['page'] . '&ezID=' . $_GET['ezID']));
+      break;
     case 'status_header':
       zen_set_ezpage_status(zen_db_prepare_input($_GET['ezID']), zen_db_prepare_input($_GET['current']), 'status_header');
       $messageStack->add(SUCCESS_PAGE_STATUS_UPDATED, 'success');
@@ -460,6 +465,7 @@ if (zen_not_null($action)) {
                   <th class="dataTableHeadingContent text-right"><?php echo TABLE_HEADING_STATUS_SIDEBOX; ?></th>
                   <th class="dataTableHeadingContent text-right"><?php echo TABLE_HEADING_STATUS_FOOTER; ?></th>
                   <th class="dataTableHeadingContent text-right"><?php echo TABLE_HEADING_CHAPTER; ?></th>
+                  <th class="dataTableHeadingContent text-center"><?php echo TABLE_HEADING_VISIBLE; ?></th>
                   <th class="dataTableHeadingContent text-right"><?php echo TABLE_HEADING_STATUS_TOC; ?></th>
                   <th class="dataTableHeadingContent text-center">&nbsp;</th>
                 </tr>
@@ -553,6 +559,7 @@ if (zen_not_null($action)) {
                     <td class="dataTableContent text-right"><?php echo $page['sidebox_sort_order'] . '&nbsp;' . ($page['status_sidebox'] == 1 ? '<a href="' . zen_href_link(FILENAME_EZPAGES_ADMIN, 'action=status_sidebox&current=' . $page['status_sidebox'] . '&ezID=' . $page['pages_id'] . ($_GET['page'] > 0 ? '&page=' . $_GET['page'] : ''), 'NONSSL') . '">' . zen_image(DIR_WS_IMAGES . 'icon_green_on.gif', IMAGE_ICON_STATUS_ON) . '</a>' : '<a href="' . zen_href_link(FILENAME_EZPAGES_ADMIN, 'action=status_sidebox&current=' . $page['status_sidebox'] . '&ezID=' . $page['pages_id'] . ($_GET['page'] > 0 ? '&page=' . $_GET['page'] : ''), 'NONSSL') . '">' . zen_image(DIR_WS_IMAGES . 'icon_red_on.gif', IMAGE_ICON_STATUS_OFF) . '</a>'); ?></td>
                     <td class="dataTableContent text-right"><?php echo $page['footer_sort_order'] . '&nbsp;' . ($page['status_footer'] == 1 ? '<a href="' . zen_href_link(FILENAME_EZPAGES_ADMIN, 'action=status_footer&current=' . $page['status_footer'] . '&ezID=' . $page['pages_id'] . ($_GET['page'] > 0 ? '&page=' . $_GET['page'] : ''), 'NONSSL') . '">' . zen_image(DIR_WS_IMAGES . 'icon_green_on.gif', IMAGE_ICON_STATUS_ON) . '</a>' : '<a href="' . zen_href_link(FILENAME_EZPAGES_ADMIN, 'action=status_footer&current=' . $page['status_footer'] . '&ezID=' . $page['pages_id'] . ($_GET['page'] > 0 ? '&page=' . $_GET['page'] : ''), 'NONSSL') . '">' . zen_image(DIR_WS_IMAGES . 'icon_red_on.gif', IMAGE_ICON_STATUS_OFF) . '</a>'); ?></td>
                     <td class="dataTableContent text-right"><?php echo $page['toc_chapter']; ?></td>
+                    <td class="dataTableContent text-center"><?php echo ($page['status_visible'] == 1 ? '<a href="' . zen_href_link(FILENAME_EZPAGES_ADMIN, 'action=status_visible&current=' . $page['status_visible'] . '&ezID=' . $page['pages_id'] . ($_GET['page'] > 0 ? '&page=' . $_GET['page'] : ''), 'NONSSL') . '">' . zen_image(DIR_WS_IMAGES . 'icon_green_on.gif', IMAGE_ICON_STATUS_ON) . '</a>' : '<a href="' . zen_href_link(FILENAME_EZPAGES_ADMIN, 'action=status_visible&current=' . $page['status_visible'] . '&ezID=' . $page['pages_id'] . ($_GET['page'] > 0 ? '&page=' . $_GET['page'] : ''), 'NONSSL') . '">' . zen_image(DIR_WS_IMAGES . 'icon_red_on.gif', IMAGE_ICON_STATUS_OFF) . '</a>'); ?></td>
                     <td class="dataTableContent text-right"><?php echo $page['toc_sort_order'] . '&nbsp;' . ($page['status_toc'] == 1 ? '<a href="' . zen_href_link(FILENAME_EZPAGES_ADMIN, 'action=status_toc&current=' . $page['status_toc'] . '&ezID=' . $page['pages_id'] . ($_GET['page'] > 0 ? '&page=' . $_GET['page'] : ''), 'NONSSL') . '">' . zen_image(DIR_WS_IMAGES . 'icon_green_on.gif', IMAGE_ICON_STATUS_ON) . '</a>' : '<a href="' . zen_href_link(FILENAME_EZPAGES_ADMIN, 'action=status_toc&current=' . $page['status_toc'] . '&ezID=' . $page['pages_id'] . ($_GET['page'] > 0 ? '&page=' . $_GET['page'] : ''), 'NONSSL') . '">' . zen_image(DIR_WS_IMAGES . 'icon_red_on.gif', IMAGE_ICON_STATUS_OFF) . '</a>'); ?></td>
                     <td class="dataTableContent text-center"><?php echo '<a href="' . zen_href_link(FILENAME_EZPAGES_ADMIN, (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . (isset($ezInfo) && is_object($ezInfo) && ($page['pages_id'] == $ezInfo->pages_id)) ? 'ezID=' . $page['pages_id'] . '&action=new' : '') . '">' . zen_image(DIR_WS_IMAGES . 'icon_edit.gif', ICON_EDIT) . '</a>'; ?>
                         <?php

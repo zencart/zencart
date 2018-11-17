@@ -43,6 +43,7 @@ define('TABLE_HEADING_STATUS_SIDEBOX', 'Sidebox:');
 define('TABLE_HEADING_STATUS_FOOTER', 'Footer:');
 define('TABLE_HEADING_STATUS_TOC', 'TOC:');
 define('TABLE_HEADING_CHAPTER', 'Chapter:');
+define('TABLE_HEADING_VISIBLE', 'Visible:');
 
 define('TABLE_HEADING_PAGE_OPEN_NEW_WINDOW', 'Open New Window:');
 define('TABLE_HEADING_PAGE_IS_SSL', 'Page is SSL:');

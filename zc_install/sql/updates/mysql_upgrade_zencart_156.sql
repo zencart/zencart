@@ -173,7 +173,7 @@ SELECT e.pages_id, l.languages_id, e.pages_title, e.pages_html_text
 FROM ezpages e
 LEFT JOIN languages l ON 1;
 ALTER TABLE ezpages DROP languages_id, DROP pages_title, DROP pages_html_text;
-
+ALTER TABLE ezpages ADD status_visible int(1) NOT NULL default '0';
 ## support for utf8mb4 index limitations in MySQL 5.5-5.6
 ALTER TABLE admin_menus MODIFY menu_key VARCHAR(191) NOT NULL DEFAULT '';
 ALTER TABLE admin_pages MODIFY menu_key varchar(191) NOT NULL default '';
