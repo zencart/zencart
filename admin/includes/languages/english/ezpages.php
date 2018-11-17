@@ -43,9 +43,13 @@ define('TABLE_HEADING_STATUS_SIDEBOX', 'Sidebox:');
 define('TABLE_HEADING_STATUS_FOOTER', 'Footer:');
 define('TABLE_HEADING_STATUS_TOC', 'TOC:');
 define('TABLE_HEADING_CHAPTER', 'Chapter:');
+define('TABLE_HEADING_VISIBLE', 'Visible:');
 
 define('TABLE_HEADING_PAGE_OPEN_NEW_WINDOW', 'Open New Window:');
 define('TABLE_HEADING_PAGE_IS_SSL', 'Page is SSL:');
+define('TABLE_HEADING_PAGE_IS_VISIBLE', 'Page is Visible:');
+define('TABLE_HEADING_PAGE_IS_VISIBLE_EXPLANATION', ' Page shown even if not in header, footer or sidebox<br>
+(If all the settings for Visible and Header and Footer and Sidebox are all OFF then visitors attempting to see the page will get a Page-Not-Found response.)');
 
 define('TEXT_DISPLAY_NUMBER_OF_PAGES', 'Displaying <b>%d</b> to <b>%d</b> (of <b>%d</b> pages)');
 define('IMAGE_NEW_PAGE', 'New Page');
