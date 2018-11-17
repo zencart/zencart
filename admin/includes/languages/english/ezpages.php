@@ -47,6 +47,8 @@ define('TABLE_HEADING_VISIBLE', 'Visible:');
 
 define('TABLE_HEADING_PAGE_OPEN_NEW_WINDOW', 'Open New Window:');
 define('TABLE_HEADING_PAGE_IS_SSL', 'Page is SSL:');
+define('TABLE_HEADING_PAGE_IS_VISIBLE', 'Page is Visible:');
+define('TABLE_HEADING_PAGE_IS_VISIBLE_EXPLANATION', ' Page shown even if not in header, footer or sidebox');
 
 define('TEXT_DISPLAY_NUMBER_OF_PAGES', 'Displaying <b>%d</b> to <b>%d</b> (of <b>%d</b> pages)');
 define('IMAGE_NEW_PAGE', 'New Page');

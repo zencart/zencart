@@ -73,6 +73,7 @@ if (zen_not_null($action)) {
       }
       $page_open_new_window = (int)$_POST['page_open_new_window'];
       $page_is_ssl = (int)$_POST['page_is_ssl'];
+      $status_visible = (int)$_POST['status_visible'];
 
       $alt_url = zen_db_prepare_input($_POST['alt_url']);
 
@@ -135,6 +136,7 @@ if (zen_not_null($action)) {
           'status_sidebox' => $status_sidebox,
           'status_footer' => $status_footer,
           'status_toc' => $status_toc,
+          'status_visible' => $status_visible,
           'header_sort_order' => $pages_header_sort_order,
           'sidebox_sort_order' => $pages_sidebox_sort_order,
           'footer_sort_order' => $pages_footer_sort_order,
@@ -352,6 +354,14 @@ if (zen_not_null($action)) {
           <div class="col-sm-9 col-md-6">
             <label class="radio-inline"><?php echo zen_draw_radio_field('page_is_ssl', '1', ($ezInfo->page_is_ssl == 1)) . TEXT_YES; ?></label>
             <label class="radio-inline"><?php echo zen_draw_radio_field('page_is_ssl', '0', ($ezInfo->page_is_ssl == 0)) . TEXT_NO; ?></label>
+          </div>
+        </div>
+        <div class="form-group">
+            <?php echo zen_draw_label(TABLE_HEADING_PAGE_IS_VISIBLE, 'page_is_visible', 'class="col-sm-3 control-label"'); ?>
+          <div class="col-sm-9 col-md-6">
+            <label class="radio-inline"><?php echo zen_draw_radio_field('status_visible', '1', ($ezInfo->status_visible == 1)) . TEXT_YES; ?></label>
+            <label class="radio-inline"><?php echo zen_draw_radio_field('status_visible', '0', ($ezInfo->status_visible == 0)) . TEXT_NO; ?></label>
+            <br /><br /><?php echo TABLE_HEADING_PAGE_IS_VISIBLE_EXPLANATION; ?>
           </div>
         </div>
         <div class="row"><?php echo zen_draw_separator('pixel_black.gif', '100%', '1'); ?></div>
