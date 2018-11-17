@@ -844,7 +844,31 @@ if (zen_not_null($action) && $order_exists == true) {
                   <td class="dataTableHeadingContent text-center"><?php echo TABLE_HEADING_DATE_PURCHASED; ?></td>
                   <td class="dataTableHeadingContent text-right"><?php echo TABLE_HEADING_STATUS; ?></td>
                   <td class="dataTableHeadingContent text-center"><?php echo TABLE_HEADING_CUSTOMER_COMMENTS; ?></td>
-                  <?php $zco_notifier->notify('NOTIFY_ADMIN_ORDERS_LIST_EXTRA_COLUMN_HEADING'); ?>
+<?php
+  // -----
+  // A watching observer can provide an associative array in the form:
+  //
+  // $extra_headings = array(
+  //     array(
+  //       'align' => $alignment,    // One of 'center', 'right', or 'left' (optional)
+  //       'text' => $value
+  //     ),
+  // );
+  //
+  // Observer note:  Be sure to check that the $p2/$extra_headings value is specifically (bool)false before initializing, since
+  // multiple observers might be injecting content!
+  //
+  $extra_headings = false;
+  $zco_notifier->notify('NOTIFY_ADMIN_ORDERS_LIST_EXTRA_COLUMN_HEADING', array(), $extra_headings);
+  if (is_array($extra_headings)) {
+      foreach ($extra_headings as $heading_info) {
+          $align = (isset($heading_info['align'])) ? (' text-' . $heading_info['align']) : '';
+?>
+                <td class="dataTableHeadingContent<?php echo $align; ?>"><?php echo $heading_info['text']; ?></td>
+<?php
+      }
+  }
+?>
                   <td class="dataTableHeadingContent noprint text-right"><?php echo TABLE_HEADING_ACTION; ?></td>
                 </tr>
               </thead>
@@ -954,7 +978,32 @@ if (zen_not_null($action) && $order_exists == true) {
                 <td class="dataTableContent" align="center"><?php echo zen_datetime_short($orders->fields['date_purchased']); ?></td>
                 <td class="dataTableContent" align="right"><?php echo ($orders->fields['orders_status_name'] != '' ? $orders->fields['orders_status_name'] : TEXT_INVALID_ORDER_STATUS); ?></td>
                 <td class="dataTableContent" align="center"><?php echo (zen_get_orders_comments($orders->fields['orders_id']) == '' ? '' : zen_image(DIR_WS_IMAGES . 'icon_yellow_on.gif', TEXT_COMMENTS_YES, 16, 16)); ?></td>
-                <?php $zco_notifier->notify('NOTIFY_ADMIN_ORDERS_LIST_EXTRA_COLUMN_DATA', (isset($oInfo) ? $oInfo : array()), $orders->fields); ?>
+<?php
+  // -----
+  // A watching observer can provide an associative array in the form:
+  //
+  // $extra_data = array(
+  //     array(
+  //       'align' => $alignment,    // One of 'center', 'right', or 'left' (optional)
+  //       'text' => $value
+  //     ),
+  // );
+  //
+  // Observer note:  Be sure to check that the $p3/$extra_data value is specifically (bool)false before initializing, since
+  // multiple observers might be injecting content!
+  //
+  $extra_data = false;
+  $zco_notifier->notify('NOTIFY_ADMIN_ORDERS_LIST_EXTRA_COLUMN_DATA', (isset($oInfo) ? $oInfo : array()), $orders->fields, $extra_data);
+  if (is_array($extra_data)) {
+      foreach ($extra_data as $data_info) {
+          $align = (isset($data_info['align'])) ? (' text-' . $data_info['align']) : '';
+?>
+                <td class="dataTableContent<?php echo $align; ?>"><?php echo $data_info['text']; ?></td>
+<?php
+      }
+  }
+?>
+
                 <td class="dataTableContent noprint" align="right"><?php echo '<a href="' . zen_href_link(FILENAME_ORDERS, zen_get_all_get_params(array('oID', 'action')) . 'oID=' . $orders->fields['orders_id'] . '&action=edit', 'NONSSL') . '">' . zen_image(DIR_WS_IMAGES . 'icon_edit.gif', ICON_EDIT) . '</a>' . $extra_action_icons; ?>&nbsp;<?php
                     if (isset($oInfo) && is_object($oInfo) && ($orders->fields['orders_id'] == $oInfo->orders_id)) {
                       echo zen_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', '');
