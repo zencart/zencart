@@ -3849,3 +3849,16 @@ function get_logs_data($maxToList = 'count') {
         if ($val == 0) return 0;
         return (float)$val;
     }
+
+  function zen_set_ezpage_status($pages_id, $status, $status_field) {
+  global $db;
+    if ($status == '1') {
+      zen_record_admin_activity('EZ-Page ID ' . (int)$pages_id . ' [' . $status_field . '] changed to 0', 'info');
+      return $db->Execute("update " . TABLE_EZPAGES . " set " . zen_db_input($status_field) . " = '0'  where pages_id = '" . (int)$pages_id . "'");
+    } elseif ($status == '0') {
+      zen_record_admin_activity('EZ-Page ID ' . (int)$pages_id . ' [' . $status_field . '] changed to 1', 'info');
+      return $db->Execute("update " . TABLE_EZPAGES . " set " . zen_db_input($status_field) . " = '1'  where pages_id = '" . (int)$pages_id . "'");
+    } else {
+      return -1;
+    }
+  }
