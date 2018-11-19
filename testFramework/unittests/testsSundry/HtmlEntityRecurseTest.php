@@ -6,6 +6,8 @@
  * @version $Id$
  */
 
+require_once(__DIR__ . '/../support/zcTestCase.php');
+
 /**
  * Class testHtmlEntityRecurse
  */

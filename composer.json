@@ -27,7 +27,7 @@
     "autoload": {
         "classmap": ["includes/classes", "includes/modules"],
         "psr-4": {
-            "ZenCart\\": "includes/library/zencart/",
+            "ZenCart\\": "app/library/zencart/",
             "ZenCart\\Admin\\": "admin/includes/library/zencart/"
         }
     },

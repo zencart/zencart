@@ -141,7 +141,7 @@ if ($za_dir = @dir(DIR_WS_INCLUDES . 'extra_configures')) {
   unset($za_dir);
 }
 
-require DIR_CATALOG_LIBRARY . 'aura/autoload/src/Loader.php';
+require DIR_APP_LIBRARY . 'aura/autoload/src/Loader.php';
 $loader = new \Aura\Autoload\Loader;
 $loader->setClassFiles(array(
     'base'  => DIR_FS_CATALOG . DIR_WS_CLASSES . 'class.base.php',

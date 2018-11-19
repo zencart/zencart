@@ -96,8 +96,8 @@ if (!defined('DIR_FS_DOWNLOAD')) define('DIR_FS_DOWNLOAD', DIR_FS_CATALOG . 'dow
 
 if (!defined('SESSION_STORAGE')) define('SESSION_STORAGE', 'db');
 
-if (!defined('DIR_CATALOG_LIBRARY')) {
-    define('DIR_CATALOG_LIBRARY', DIR_FS_CATALOG . DIR_WS_INCLUDES . 'library/');
+if (!defined('DIR_APP_LIBRARY')) {
+    define('DIR_APP_LIBRARY', DIR_FS_CATALOG. 'app/library/');
 }
 
 //catchalls for old things that still use it ... but which should be rewritten so this can be removed fully.

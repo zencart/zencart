@@ -25,7 +25,7 @@ class testPaginationScrollerCase extends zcTestCase
         define('TEXT_DISPLAY_NUMBER_OF_PRODUCTS', '');
         $loader = new \Aura\Autoload\Loader;
         $loader->register();
-        $loader->addPrefix('\ZenCart\Paginator', DIR_CATALOG_LIBRARY . 'zencart/Paginator/src');
+        $loader->addPrefix('\ZenCart\Paginator', DIR_APP_LIBRARY . 'zencart/Paginator/src');
     }
 
     public function testRunScrollerWithResults()

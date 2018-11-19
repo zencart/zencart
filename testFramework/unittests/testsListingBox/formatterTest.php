@@ -38,9 +38,9 @@ class testFormatterCase extends zcTestCase
         require_once DIR_FS_CATALOG . DIR_WS_CLASSES . 'db/mysql/query_factory.php';
         $loader = new \Aura\Autoload\Loader;
         $loader->register();
-        $loader->addPrefix('\ZenCart\ListingQueryAndOutput', DIR_CATALOG_LIBRARY . 'zencart/ListingQueryAndOutput/src');
-        $loader->addPrefix('\Aura\Web', DIR_CATALOG_LIBRARY . 'aura/web/src');
-        $loader->addPrefix('\ZenCart\Request', DIR_CATALOG_LIBRARY . 'zencart/Request/src');
+        $loader->addPrefix('\ZenCart\ListingQueryAndOutput', DIR_APP_LIBRARY . 'zencart/ListingQueryAndOutput/src');
+        $loader->addPrefix('\Aura\Web', DIR_APP_LIBRARY . 'aura/web/src');
+        $loader->addPrefix('\ZenCart\Request', DIR_APP_LIBRARY . 'zencart/Request/src');
     }
 
     public function testColumnarFormatterNoItems()

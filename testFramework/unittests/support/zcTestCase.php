@@ -53,8 +53,8 @@ abstract class zcTestCase extends PHPUnit_Framework_TestCase
             define('DIR_WS_CATALOG', '/');
         }
 
-        if (!defined('DIR_CATALOG_LIBRARY')) {
-            define('DIR_CATALOG_LIBRARY', DIR_FS_INCLUDES . 'library/');
+        if (!defined('DIR_APP_LIBRARY')) {
+            define('DIR_APP_LIBRARY', 'app/library/');
         }
 
         if (!defined('DIR_WS_ADMIN')) {
@@ -118,7 +118,7 @@ abstract class zcTestCase extends PHPUnit_Framework_TestCase
         }
 
 
-        require_once DIR_CATALOG_LIBRARY . 'aura/autoload/src/Loader.php';
+        require_once DIR_APP_LIBRARY . 'aura/autoload/src/Loader.php';
     }
 
 

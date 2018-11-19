@@ -20,7 +20,7 @@ class ViewFactory
     public function factory($factoryType, $context = 'admin')
     {
         $result = NAMESPACE_VIEW . '\\' . ucfirst($context) . 'View';
-        $fileTest = DIR_CATALOG_LIBRARY . URL_VIEW . $context . '/' . $factoryType . '.php';
+        $fileTest = DIR_APP_LIBRARY . URL_VIEW . $context . '/' . $factoryType . '.php';
         if (file_exists($fileTest)) {
             $result = NAMESPACE_VIEW . '\\' . $context . '\\' . $factoryType;
         }

@@ -25,7 +25,7 @@ class FlowStepFactory implements FlowStepFactoryInterface
      */
     public function getFlowStep($step, CheckoutManager $manager, Request $request, $dbConn, $view)
     {
-        $fileName = DIR_CATALOG_LIBRARY . 'zencart/CheckoutFlow/src/flowSteps/' . ucfirst($step) . '.php';
+        $fileName = DIR_APP_LIBRARY . 'zencart/CheckoutFlow/src/flowSteps/' . ucfirst($step) . '.php';
         if (!file_exists($fileName)) {
             throw new InvalidArgumentException();
         }

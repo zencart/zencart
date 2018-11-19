@@ -153,7 +153,7 @@ class AjaxDashboardWidget extends AbstractAjaxController
         $className = self::camelize($id, TRUE);
         $classNameSpace = 'ZenCart\\DashboardWidget\\' . $className;
         if (!class_exists($classNameSpace, true)) {
-            $classDir = DIR_CATALOG_LIBRARY . URL_DASHBOARDWIDGETS;
+            $classDir = DIR_APP_LIBRARY . URL_DASHBOARDWIDGETS;
             require_once($classDir . $className . '.php');
         }
         return new $classNameSpace($id);
