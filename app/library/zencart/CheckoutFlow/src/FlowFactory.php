@@ -25,7 +25,7 @@ class FlowFactory implements FlowFactoryInterface
      */
     public function getFlow($flow, CheckoutManager $manager, Request $request, View $view)
     {
-        $fileName = DIR_CATALOG_LIBRARY . 'zencart/CheckoutFlow/src/flows/' . ucfirst($flow) . '.php';
+        $fileName = DIR_APP_LIBRARY . 'zencart/CheckoutFlow/src/flows/' . ucfirst($flow) . '.php';
         if (!file_exists($fileName)) {
             throw new InvalidArgumentException();
         }

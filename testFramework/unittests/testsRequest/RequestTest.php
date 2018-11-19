@@ -20,10 +20,10 @@ class testRequest extends zcTestCase
         $GLOBALS['capsule'] = new stdClass();
         $loader = new \Aura\Autoload\Loader;
         $loader->register();
-        $loader->addPrefix('\Aura\Web', DIR_CATALOG_LIBRARY . 'aura/web/src');
-        $loader->addPrefix('\Aura\Di', DIR_CATALOG_LIBRARY . 'aura/di/src');
-        $loader->addPrefix('\ZenCart\Request', DIR_CATALOG_LIBRARY . 'zencart/Request/src');
-        $loader->addPrefix('Interop\Container', DIR_CATALOG_LIBRARY . 'container-interop/container-interop/src/Interop/Container/');
+        $loader->addPrefix('\Aura\Web', DIR_APP_LIBRARY . 'aura/web/src');
+        $loader->addPrefix('\Aura\Di', DIR_APP_LIBRARY . 'aura/di/src');
+        $loader->addPrefix('\ZenCart\Request', DIR_APP_LIBRARY . 'zencart/Request/src');
+        $loader->addPrefix('Interop\Container', DIR_APP_LIBRARY . 'container-interop/container-interop/src/Interop/Container/');
         require_once DIR_FS_CATALOG . 'app/diConfigs/AuraWeb.php';
         require_once DIR_FS_CATALOG . 'app/diConfigs/ZenCartCommon.php';
     }

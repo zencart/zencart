@@ -40,10 +40,10 @@ class testAllDefaultCase extends zcTestCase
         $_SESSION['customers_authorization'] = 1;
         $loader = new \Aura\Autoload\Loader;
         $loader->register();
-        $loader->addPrefix('\ZenCart\ListingQueryAndOutput', DIR_CATALOG_LIBRARY . 'zencart/ListingQueryAndOutput/src');
-        $loader->addPrefix('\Aura\Web', DIR_CATALOG_LIBRARY . 'aura/web/src');
-        $loader->addPrefix('\Aura\Di', DIR_CATALOG_LIBRARY . 'aura/AuraDi/src');
-        $loader->addPrefix('\ZenCart\Request', DIR_CATALOG_LIBRARY . 'zencart/Request/src');
+        $loader->addPrefix('\ZenCart\ListingQueryAndOutput', DIR_APP_LIBRARY . 'zencart/ListingQueryAndOutput/src');
+        $loader->addPrefix('\Aura\Web', DIR_APP_LIBRARY . 'aura/web/src');
+        $loader->addPrefix('\Aura\Di', DIR_APP_LIBRARY . 'aura/AuraDi/src');
+        $loader->addPrefix('\ZenCart\Request', DIR_APP_LIBRARY . 'zencart/Request/src');
 //        require_once DIR_FS_CATALOG . 'includes/diConfigs/AuraWeb.php';
 //        $config = new AuraWeb();
 //        $builder = new \Aura\Di\ContainerBuilder();
