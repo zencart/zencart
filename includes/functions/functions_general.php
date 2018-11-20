@@ -1539,7 +1539,6 @@ function zen_get_minutes_since($timestamp) {
     $retVal = false;
     foreach ($query_result as $row) {
       if (isset($_GET[$row['get_term_name']]) && zen_not_null($_GET[$row['get_term_name']])) $retVal = true;
-      $query_result->MoveNext();
     }
     return $retVal;
   }
