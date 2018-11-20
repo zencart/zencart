@@ -108,8 +108,8 @@ class perweightunit extends base {
                           'module' => MODULE_SHIPPING_PERWEIGHTUNIT_TEXT_TITLE,
                           'methods' => array(array('id' => $this->code,
                                                    'title' => MODULE_SHIPPING_PERWEIGHTUNIT_TEXT_WAY,
-                                                   'cost' => MODULE_SHIPPING_PERWEIGHTUNIT_COST * ($total_weight_units * $shipping_num_boxes) +
-                                                   (MODULE_SHIPPING_PERWEIGHTUNIT_HANDLING_METHOD == 'Box' ? MODULE_SHIPPING_PERWEIGHTUNIT_HANDLING * $shipping_num_boxes : MODULE_SHIPPING_PERWEIGHTUNIT_HANDLING) ) ));
+                                                   'cost' => (float)MODULE_SHIPPING_PERWEIGHTUNIT_COST * ($total_weight_units * $shipping_num_boxes) +
+                                                   (MODULE_SHIPPING_PERWEIGHTUNIT_HANDLING_METHOD == 'Box' ? (float)MODULE_SHIPPING_PERWEIGHTUNIT_HANDLING * $shipping_num_boxes : (float)MODULE_SHIPPING_PERWEIGHTUNIT_HANDLING) ) ));
 
 
     if ($this->tax_class > 0) {
