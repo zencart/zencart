@@ -9,7 +9,7 @@
 
 class AdminNotifications
 {
-    protected $notificationServer = 'http://versionserver.zencart.com/api/notifications';
+    protected $notificationServer = 'http://versionserver.zen-cart.com/api/notifications';
 
     public function __construct()
     {
