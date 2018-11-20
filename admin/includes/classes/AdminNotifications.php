@@ -9,7 +9,7 @@
 
 class AdminNotifications
 {
-    protected $notificationServer = 'http://versionserver.zen-cart.com/api/notifications';
+    protected $notificationServer = 'https://versionserver.zen-cart.com/api/notifications';
 
     public function __construct()
     {
@@ -42,7 +42,7 @@ class AdminNotifications
         curl_setopt($ch, CURLOPT_TIMEOUT, 9);
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 9);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_USERAGENT, 'Plugin Notifications Check');
+        curl_setopt($ch, CURLOPT_USERAGENT, 'Notification Messages Check');
         $response = curl_exec($ch);
         $error = curl_error($ch);
         $errno = curl_errno($ch);
