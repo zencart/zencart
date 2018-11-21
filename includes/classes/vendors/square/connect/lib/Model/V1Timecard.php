@@ -32,7 +32,10 @@ class V1Timecard implements ArrayAccess
         'clockin_location_id' => 'string',
         'clockout_location_id' => 'string',
         'created_at' => 'string',
-        'updated_at' => 'string'
+        'updated_at' => 'string',
+        'regular_seconds_worked' => 'float',
+        'overtime_seconds_worked' => 'float',
+        'doubletime_seconds_worked' => 'float'
     );
   
     /** 
@@ -48,7 +51,10 @@ class V1Timecard implements ArrayAccess
         'clockin_location_id' => 'clockin_location_id',
         'clockout_location_id' => 'clockout_location_id',
         'created_at' => 'created_at',
-        'updated_at' => 'updated_at'
+        'updated_at' => 'updated_at',
+        'regular_seconds_worked' => 'regular_seconds_worked',
+        'overtime_seconds_worked' => 'overtime_seconds_worked',
+        'doubletime_seconds_worked' => 'doubletime_seconds_worked'
     );
   
     /**
@@ -64,7 +70,10 @@ class V1Timecard implements ArrayAccess
         'clockin_location_id' => 'setClockinLocationId',
         'clockout_location_id' => 'setClockoutLocationId',
         'created_at' => 'setCreatedAt',
-        'updated_at' => 'setUpdatedAt'
+        'updated_at' => 'setUpdatedAt',
+        'regular_seconds_worked' => 'setRegularSecondsWorked',
+        'overtime_seconds_worked' => 'setOvertimeSecondsWorked',
+        'doubletime_seconds_worked' => 'setDoubletimeSecondsWorked'
     );
   
     /**
@@ -80,7 +89,10 @@ class V1Timecard implements ArrayAccess
         'clockin_location_id' => 'getClockinLocationId',
         'clockout_location_id' => 'getClockoutLocationId',
         'created_at' => 'getCreatedAt',
-        'updated_at' => 'getUpdatedAt'
+        'updated_at' => 'getUpdatedAt',
+        'regular_seconds_worked' => 'getRegularSecondsWorked',
+        'overtime_seconds_worked' => 'getOvertimeSecondsWorked',
+        'doubletime_seconds_worked' => 'getDoubletimeSecondsWorked'
     );
   
     /**
@@ -109,7 +121,7 @@ class V1Timecard implements ArrayAccess
       */
     protected $clockout_time;
     /**
-      * $clockin_location_id The ID of the location the employee clocked in from, if any.
+      * $clockin_location_id The ID of the location the employee clocked in from. We strongly reccomend providing a clockin_location_id. Square uses the clockin_location_id to determine a timecard’s timezone and overtime rules.
       * @var string
       */
     protected $clockin_location_id;
@@ -128,6 +140,21 @@ class V1Timecard implements ArrayAccess
       * @var string
       */
     protected $updated_at;
+    /**
+      * $regular_seconds_worked The total number of regular (non-overtime) seconds worked in the timecard.
+      * @var float
+      */
+    protected $regular_seconds_worked;
+    /**
+      * $overtime_seconds_worked The total number of overtime seconds worked in the timecard.
+      * @var float
+      */
+    protected $overtime_seconds_worked;
+    /**
+      * $doubletime_seconds_worked The total number of doubletime seconds worked in the timecard.
+      * @var float
+      */
+    protected $doubletime_seconds_worked;
 
     /**
      * Constructor
@@ -180,6 +207,21 @@ class V1Timecard implements ArrayAccess
               $this->updated_at = $data["updated_at"];
             } else {
               $this->updated_at = null;
+            }
+            if (isset($data["regular_seconds_worked"])) {
+              $this->regular_seconds_worked = $data["regular_seconds_worked"];
+            } else {
+              $this->regular_seconds_worked = null;
+            }
+            if (isset($data["overtime_seconds_worked"])) {
+              $this->overtime_seconds_worked = $data["overtime_seconds_worked"];
+            } else {
+              $this->overtime_seconds_worked = null;
+            }
+            if (isset($data["doubletime_seconds_worked"])) {
+              $this->doubletime_seconds_worked = $data["doubletime_seconds_worked"];
+            } else {
+              $this->doubletime_seconds_worked = null;
             }
         }
     }
@@ -289,7 +331,7 @@ class V1Timecard implements ArrayAccess
   
     /**
      * Sets clockin_location_id
-     * @param string $clockin_location_id The ID of the location the employee clocked in from, if any.
+     * @param string $clockin_location_id The ID of the location the employee clocked in from. We strongly reccomend providing a clockin_location_id. Square uses the clockin_location_id to determine a timecard’s timezone and overtime rules.
      * @return $this
      */
     public function setClockinLocationId($clockin_location_id)
@@ -352,6 +394,63 @@ class V1Timecard implements ArrayAccess
     public function setUpdatedAt($updated_at)
     {
         $this->updated_at = $updated_at;
+        return $this;
+    }
+    /**
+     * Gets regular_seconds_worked
+     * @return float
+     */
+    public function getRegularSecondsWorked()
+    {
+        return $this->regular_seconds_worked;
+    }
+  
+    /**
+     * Sets regular_seconds_worked
+     * @param float $regular_seconds_worked The total number of regular (non-overtime) seconds worked in the timecard.
+     * @return $this
+     */
+    public function setRegularSecondsWorked($regular_seconds_worked)
+    {
+        $this->regular_seconds_worked = $regular_seconds_worked;
+        return $this;
+    }
+    /**
+     * Gets overtime_seconds_worked
+     * @return float
+     */
+    public function getOvertimeSecondsWorked()
+    {
+        return $this->overtime_seconds_worked;
+    }
+  
+    /**
+     * Sets overtime_seconds_worked
+     * @param float $overtime_seconds_worked The total number of overtime seconds worked in the timecard.
+     * @return $this
+     */
+    public function setOvertimeSecondsWorked($overtime_seconds_worked)
+    {
+        $this->overtime_seconds_worked = $overtime_seconds_worked;
+        return $this;
+    }
+    /**
+     * Gets doubletime_seconds_worked
+     * @return float
+     */
+    public function getDoubletimeSecondsWorked()
+    {
+        return $this->doubletime_seconds_worked;
+    }
+  
+    /**
+     * Sets doubletime_seconds_worked
+     * @param float $doubletime_seconds_worked The total number of doubletime seconds worked in the timecard.
+     * @return $this
+     */
+    public function setDoubletimeSecondsWorked($doubletime_seconds_worked)
+    {
+        $this->doubletime_seconds_worked = $doubletime_seconds_worked;
         return $this;
     }
     /**

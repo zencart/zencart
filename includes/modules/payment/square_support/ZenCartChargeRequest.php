@@ -21,9 +21,9 @@ use \SquareConnect\Model\ChargeRequest as ChargeRequest;
 class ZenCartChargeRequest extends ChargeRequest
 {
     /**
-      * Array of property to type mappings. Used for (de)serialization
-      * @var string[]
-      */
+     * Array of property to type mappings. Used for (de)serialization
+     * @var string[]
+     */
     static $swaggerTypes = array(
         'idempotency_key' => 'string',
         'amount_money' => '\SquareConnect\Model\Money',
@@ -42,9 +42,9 @@ class ZenCartChargeRequest extends ChargeRequest
     );
 
     /**
-      * Array of attributes where the key is the local name, and the value is the original name
-      * @var string[]
-      */
+     * Array of attributes where the key is the local name, and the value is the original name
+     * @var string[]
+     */
     static $attributeMap = array(
         'idempotency_key' => 'idempotency_key',
         'amount_money' => 'amount_money',
@@ -63,9 +63,9 @@ class ZenCartChargeRequest extends ChargeRequest
     );
 
     /**
-      * Array of attributes to setter functions (for deserialization of responses)
-      * @var string[]
-      */
+     * Array of attributes to setter functions (for deserialization of responses)
+     * @var string[]
+     */
     static $setters = array(
         'idempotency_key' => 'setIdempotencyKey',
         'amount_money' => 'setAmountMoney',
@@ -84,9 +84,9 @@ class ZenCartChargeRequest extends ChargeRequest
     );
 
     /**
-      * Array of attributes to getter functions (for serialization of requests)
-      * @var string[]
-      */
+     * Array of attributes to getter functions (for serialization of requests)
+     * @var string[]
+     */
     static $getters = array(
         'idempotency_key' => 'getIdempotencyKey',
         'amount_money' => 'getAmountMoney',
@@ -105,73 +105,73 @@ class ZenCartChargeRequest extends ChargeRequest
     );
 
     /**
-      * $idempotency_key A value you specify that uniquely identifies this transaction among transactions you've created.  If you're unsure whether a particular transaction succeeded, you can reattempt it with the same idempotency key without worrying about double-charging the buyer.  See [Idempotency keys](#idempotencykeys) for more information.
-      * @var string
-      */
+     * $idempotency_key A value you specify that uniquely identifies this transaction among transactions you've created.  If you're unsure whether a particular transaction succeeded, you can reattempt it with the same idempotency key without worrying about double-charging the buyer.  See [Idempotency keys](#idempotencykeys) for more information.
+     * @var string
+     */
     protected $idempotency_key;
     /**
-      * $amount_money The amount of money to charge.  Note that you specify the amount in the __smallest denomination of the applicable currency__. For example, US dollar amounts are specified in cents. See [Working with monetary amounts](#workingwithmonetaryamounts) for details.  The value of `currency` must match the currency associated with the business that is charging the card.
-      * @var \SquareConnect\Model\Money
-      */
+     * $amount_money The amount of money to charge.  Note that you specify the amount in the __smallest denomination of the applicable currency__. For example, US dollar amounts are specified in cents. See [Working with monetary amounts](#workingwithmonetaryamounts) for details.  The value of `currency` must match the currency associated with the business that is charging the card.
+     * @var \SquareConnect\Model\Money
+     */
     protected $amount_money;
     /**
-      * $card_nonce A nonce generated from the `SqPaymentForm` that represents the card to charge.  The application that provides a nonce to this endpoint must be the _same application_ that generated the nonce with the `SqPaymentForm`. Otherwise, the nonce is invalid.  Do not provide a value for this field if you provide a value for `customer_card_id`.
-      * @var string
-      */
+     * $card_nonce A nonce generated from the `SqPaymentForm` that represents the card to charge.  The application that provides a nonce to this endpoint must be the _same application_ that generated the nonce with the `SqPaymentForm`. Otherwise, the nonce is invalid.  Do not provide a value for this field if you provide a value for `customer_card_id`.
+     * @var string
+     */
     protected $card_nonce;
     /**
-      * $customer_card_id The ID of the customer card on file to charge. Do not provide a value for this field if you provide a value for `card_nonce`.  If you provide this value, you _must_ also provide a value for `customer_id`.
-      * @var string
-      */
+     * $customer_card_id The ID of the customer card on file to charge. Do not provide a value for this field if you provide a value for `card_nonce`.  If you provide this value, you _must_ also provide a value for `customer_id`.
+     * @var string
+     */
     protected $customer_card_id;
     /**
-      * $delay_capture If `true`, the request will only perform an Auth on the provided card. You can then later perform either a Capture (with the [CaptureTransaction](#endpoint-capturetransaction) endpoint) or a Void (with the [VoidTransaction](#endpoint-voidtransaction) endpoint).  Default value: `false`
-      * @var bool
-      */
+     * $delay_capture If `true`, the request will only perform an Auth on the provided card. You can then later perform either a Capture (with the [CaptureTransaction](#endpoint-capturetransaction) endpoint) or a Void (with the [VoidTransaction](#endpoint-voidtransaction) endpoint).  Default value: `false`
+     * @var bool
+     */
     protected $delay_capture;
     /**
-      * $reference_id An optional ID you can associate with the transaction for your own purposes (such as to associate the transaction with an entity ID in your own database).  This value cannot exceed 40 characters.
-      * @var string
-      */
+     * $reference_id An optional ID you can associate with the transaction for your own purposes (such as to associate the transaction with an entity ID in your own database).  This value cannot exceed 40 characters.
+     * @var string
+     */
     protected $reference_id;
     /**
-      * $note An optional note to associate with the transaction.  This value cannot exceed 60 characters.
-      * @var string
-      */
+     * $note
+     * @var string
+     */
     protected $note;
     /**
-      * $customer_id The ID of the customer to associate this transaction with. This field is required if you provide a value for `customer_card_id`, and optional otherwise.
-      * @var string
-      */
+     * $customer_id The ID of the customer to associate this transaction with. This field is required if you provide a value for `customer_card_id`, and optional otherwise.
+     * @var string
+     */
     protected $customer_id;
     /**
-      * $billing_address The buyer's billing address. This value is optional, but this transaction is ineligible for chargeback protection if neither this parameter nor `shipping_address` is provided.
-      * @var \SquareConnect\Model\Address
-      */
+     * $billing_address The buyer's billing address. This value is optional, but this transaction is ineligible for chargeback protection if neither this parameter nor `shipping_address` is provided.
+     * @var \SquareConnect\Model\Address
+     */
     protected $billing_address;
     /**
-      * $shipping_address The buyer's shipping address, if available. This value is optional, but this transaction is ineligible for chargeback protection if neither this parameter nor `billing_address` is provided.
-      * @var \SquareConnect\Model\Address
-      */
+     * $shipping_address The buyer's shipping address, if available. This value is optional, but this transaction is ineligible for chargeback protection if neither this parameter nor `billing_address` is provided.
+     * @var \SquareConnect\Model\Address
+     */
     protected $shipping_address;
     /**
-      * $buyer_email_address The buyer's email address, if available. This value is optional, but this transaction is ineligible for chargeback protection if it is not provided.
-      * @var string
-      */
+     * $buyer_email_address The buyer's email address, if available. This value is optional, but this transaction is ineligible for chargeback protection if it is not provided.
+     * @var string
+     */
     protected $buyer_email_address;
     /** verified integration id
      * @var string
      */
     protected $integration_id = 'sqi_b0110fe6bf154f09805ac8b7f5f27fb4';
     /**
-      * $order_id The ID of the order to associate with this transaction.  If you provide this value, the `amount_money` value of your request must __exactly match__ the `total_money` value of the order's `order_amounts` field.
-      * @var string
-      */
+     * $order_id The ID of the order to associate with this transaction.  If you provide this value, the `amount_money` value of your request must __exactly match__ the value of the order's `total_money` field.
+     * @var string
+     */
     protected $order_id;
     /**
-      * $additional_recipients The basic primitive of multi-party transaction. The value is optional. The transaction facilitated by you can be split from here.  If you provide this value, the `amount_money` value in your additional_recipients must not be more than 90% of the `amount_money` value in you charge's request. The `location_id` must be the valid location of the app owner merchant.  This field requires `PAYMENTS_WRITE_ADDITIONAL_RECIPIENTS` OAuth permission.  This field is currently not supported in sandbox.
-      * @var \SquareConnect\Model\AdditionalRecipient[]
-      */
+     * $additional_recipients The basic primitive of multi-party transaction. The value is optional. The transaction facilitated by you can be split from here.  If you provide this value, the `amount_money` value in your additional_recipients must not be more than 90% of the `amount_money` value in the charge request. The `location_id` must be the valid location of the app owner merchant.  This field requires the `PAYMENTS_WRITE_ADDITIONAL_RECIPIENTS` OAuth permission.  This field is currently not supported in sandbox.
+     * @var \SquareConnect\Model\AdditionalRecipient[]
+     */
     protected $additional_recipients;
 
     /**
@@ -182,72 +182,72 @@ class ZenCartChargeRequest extends ChargeRequest
     {
         if ($data != null) {
             if (isset($data["idempotency_key"])) {
-              $this->idempotency_key = $data["idempotency_key"];
+                $this->idempotency_key = $data["idempotency_key"];
             } else {
-              $this->idempotency_key = null;
+                $this->idempotency_key = null;
             }
             if (isset($data["amount_money"])) {
-              $this->amount_money = $data["amount_money"];
+                $this->amount_money = $data["amount_money"];
             } else {
-              $this->amount_money = null;
+                $this->amount_money = null;
             }
             if (isset($data["card_nonce"])) {
-              $this->card_nonce = $data["card_nonce"];
+                $this->card_nonce = $data["card_nonce"];
             } else {
-              $this->card_nonce = null;
+                $this->card_nonce = null;
             }
             if (isset($data["customer_card_id"])) {
-              $this->customer_card_id = $data["customer_card_id"];
+                $this->customer_card_id = $data["customer_card_id"];
             } else {
-              $this->customer_card_id = null;
+                $this->customer_card_id = null;
             }
             if (isset($data["delay_capture"])) {
-              $this->delay_capture = $data["delay_capture"];
+                $this->delay_capture = $data["delay_capture"];
             } else {
-              $this->delay_capture = null;
+                $this->delay_capture = null;
             }
             if (isset($data["reference_id"])) {
-              $this->reference_id = $data["reference_id"];
+                $this->reference_id = $data["reference_id"];
             } else {
-              $this->reference_id = null;
+                $this->reference_id = null;
             }
             if (isset($data["note"])) {
-              $this->note = $data["note"];
+                $this->note = $data["note"];
             } else {
-              $this->note = null;
+                $this->note = null;
             }
             if (isset($data["customer_id"])) {
-              $this->customer_id = $data["customer_id"];
+                $this->customer_id = $data["customer_id"];
             } else {
-              $this->customer_id = null;
+                $this->customer_id = null;
             }
             if (isset($data["billing_address"])) {
-              $this->billing_address = $data["billing_address"];
+                $this->billing_address = $data["billing_address"];
             } else {
-              $this->billing_address = null;
+                $this->billing_address = null;
             }
             if (isset($data["shipping_address"])) {
-              $this->shipping_address = $data["shipping_address"];
+                $this->shipping_address = $data["shipping_address"];
             } else {
-              $this->shipping_address = null;
+                $this->shipping_address = null;
             }
             if (isset($data["buyer_email_address"])) {
-              $this->buyer_email_address = $data["buyer_email_address"];
+                $this->buyer_email_address = $data["buyer_email_address"];
             } else {
-              $this->buyer_email_address = null;
+                $this->buyer_email_address = null;
             }
             if (isset($data["integration_id"])) {
-              $this->integration_id = $data["integration_id"];
+                $this->integration_id = $data["integration_id"];
             }
             if (isset($data["order_id"])) {
-              $this->order_id = $data["order_id"];
+                $this->order_id = $data["order_id"];
             } else {
-              $this->order_id = null;
+                $this->order_id = null;
             }
             if (isset($data["additional_recipients"])) {
-              $this->additional_recipients = $data["additional_recipients"];
+                $this->additional_recipients = $data["additional_recipients"];
             } else {
-              $this->additional_recipients = null;
+                $this->additional_recipients = null;
             }
         }
     }
@@ -395,7 +395,7 @@ class ZenCartChargeRequest extends ChargeRequest
 
     /**
      * Sets note
-     * @param string $note An optional note to associate with the transaction.  This value cannot exceed 60 characters.
+     * @param string $note
      * @return $this
      */
     public function setNote($note)
@@ -487,10 +487,10 @@ class ZenCartChargeRequest extends ChargeRequest
     {
         return $this->order_id;
     }
-  
+
     /**
      * Sets order_id
-     * @param string $order_id The ID of the order to associate with this transaction.  If you provide this value, the `amount_money` value of your request must __exactly match__ the `total_money` value of the order's `order_amounts` field.
+     * @param string $order_id The ID of the order to associate with this transaction.  If you provide this value, the `amount_money` value of your request must __exactly match__ the value of the order's `total_money` field.
      * @return $this
      */
     public function setOrderId($order_id)
@@ -506,10 +506,10 @@ class ZenCartChargeRequest extends ChargeRequest
     {
         return $this->additional_recipients;
     }
-  
+
     /**
      * Sets additional_recipients
-     * @param \SquareConnect\Model\AdditionalRecipient[] $additional_recipients The basic primitive of multi-party transaction. The value is optional. The transaction facilitated by you can be split from here.  If you provide this value, the `amount_money` value in your additional_recipients must not be more than 90% of the `amount_money` value in you charge's request. The `location_id` must be the valid location of the app owner merchant.  This field requires `PAYMENTS_WRITE_ADDITIONAL_RECIPIENTS` OAuth permission.  This field is currently not supported in sandbox.
+     * @param \SquareConnect\Model\AdditionalRecipient[] $additional_recipients The basic primitive of multi-party transaction. The value is optional. The transaction facilitated by you can be split from here.  If you provide this value, the `amount_money` value in your additional_recipients must not be more than 90% of the `amount_money` value in the charge request. The `location_id` must be the valid location of the app owner merchant.  This field requires the `PAYMENTS_WRITE_ADDITIONAL_RECIPIENTS` OAuth permission.  This field is currently not supported in sandbox.
      * @return $this
      */
     public function setAdditionalRecipients($additional_recipients)

@@ -84,7 +84,7 @@ class CreateOrderRequestLineItem implements ArrayAccess
     );
   
     /**
-      * $name Only used for ad hoc line items. The name of the line item. This value cannot exceed 500 characters.  Do not provide a value for this field if you provide values in catalog_object_id.
+      * $name Only used for ad hoc line items. The name of the line item. This value cannot exceed 500 characters.  Do not provide a value for this field if you provide a value for `catalog_object_id`.
       * @var string
       */
     protected $name;
@@ -94,7 +94,7 @@ class CreateOrderRequestLineItem implements ArrayAccess
       */
     protected $quantity;
     /**
-      * $base_price_money Only used for ad hoc line items. The base price for a single unit of the line item's associated variation.  Do not provide a value for this field if you provide a value for the `catalog_object_id`.
+      * $base_price_money The base price for a single unit of the line item.  `base_price_money` is required for ad hoc line items and variable priced [CatalogItemVariation](#type-catalogitemvariation)s. If both `catalog_object_id` and `base_price_money` are set, `base_price_money` will override the CatalogItemVariation's price.
       * @var \SquareConnect\Model\Money
       */
     protected $base_price_money;
@@ -104,12 +104,12 @@ class CreateOrderRequestLineItem implements ArrayAccess
       */
     protected $variation_name;
     /**
-      * $note The note of the line item. This value cannot exceed 50 characters.
+      * $note The note of the line item. This value cannot exceed 500 characters.
       * @var string
       */
     protected $note;
     /**
-      * $catalog_object_id Only used for Catalog line items. The catalog object ID from existing [CatalogItemVariation](#type-catalogitemvariation).  Do not provide a value for this field if you provide a value for `name` and `base_price_money`.
+      * $catalog_object_id Only used for Catalog line items. The catalog object ID for an existing [CatalogItemVariation](#type-catalogitemvariation).  Do not provide a value for this field if you provide a value for `name` and `base_price_money`.
       * @var string
       */
     protected $catalog_object_id;
@@ -194,7 +194,7 @@ class CreateOrderRequestLineItem implements ArrayAccess
   
     /**
      * Sets name
-     * @param string $name Only used for ad hoc line items. The name of the line item. This value cannot exceed 500 characters.  Do not provide a value for this field if you provide values in catalog_object_id.
+     * @param string $name Only used for ad hoc line items. The name of the line item. This value cannot exceed 500 characters.  Do not provide a value for this field if you provide a value for `catalog_object_id`.
      * @return $this
      */
     public function setName($name)
@@ -232,7 +232,7 @@ class CreateOrderRequestLineItem implements ArrayAccess
   
     /**
      * Sets base_price_money
-     * @param \SquareConnect\Model\Money $base_price_money Only used for ad hoc line items. The base price for a single unit of the line item's associated variation.  Do not provide a value for this field if you provide a value for the `catalog_object_id`.
+     * @param \SquareConnect\Model\Money $base_price_money The base price for a single unit of the line item.  `base_price_money` is required for ad hoc line items and variable priced [CatalogItemVariation](#type-catalogitemvariation)s. If both `catalog_object_id` and `base_price_money` are set, `base_price_money` will override the CatalogItemVariation's price.
      * @return $this
      */
     public function setBasePriceMoney($base_price_money)
@@ -270,7 +270,7 @@ class CreateOrderRequestLineItem implements ArrayAccess
   
     /**
      * Sets note
-     * @param string $note The note of the line item. This value cannot exceed 50 characters.
+     * @param string $note The note of the line item. This value cannot exceed 500 characters.
      * @return $this
      */
     public function setNote($note)
@@ -289,7 +289,7 @@ class CreateOrderRequestLineItem implements ArrayAccess
   
     /**
      * Sets catalog_object_id
-     * @param string $catalog_object_id Only used for Catalog line items. The catalog object ID from existing [CatalogItemVariation](#type-catalogitemvariation).  Do not provide a value for this field if you provide a value for `name` and `base_price_money`.
+     * @param string $catalog_object_id Only used for Catalog line items. The catalog object ID for an existing [CatalogItemVariation](#type-catalogitemvariation).  Do not provide a value for this field if you provide a value for `name` and `base_price_money`.
      * @return $this
      */
     public function setCatalogObjectId($catalog_object_id)

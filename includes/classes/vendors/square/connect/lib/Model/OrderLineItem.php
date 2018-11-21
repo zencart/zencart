@@ -105,7 +105,7 @@ class OrderLineItem implements ArrayAccess
       */
     protected $name;
     /**
-      * $quantity The quantity purchased, as a string representation of a number.
+      * $quantity The quantity purchased, as a string representation of a number.  This string must have a positive integer value.
       * @var string
       */
     protected $quantity;
@@ -269,7 +269,7 @@ class OrderLineItem implements ArrayAccess
   
     /**
      * Sets quantity
-     * @param string $quantity The quantity purchased, as a string representation of a number.
+     * @param string $quantity The quantity purchased, as a string representation of a number.  This string must have a positive integer value.
      * @return $this
      */
     public function setQuantity($quantity)

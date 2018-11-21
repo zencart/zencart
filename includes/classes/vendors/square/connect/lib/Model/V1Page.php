@@ -74,7 +74,7 @@ class V1Page implements ArrayAccess
       */
     protected $name;
     /**
-      * $page_index The page's position in the merchant's list of pages. Always an integer between 0 and 4, inclusive.
+      * $page_index The page's position in the merchant's list of pages. Always an integer between 0 and 6, inclusive.
       * @var int
       */
     protected $page_index;
@@ -162,7 +162,7 @@ class V1Page implements ArrayAccess
   
     /**
      * Sets page_index
-     * @param int $page_index The page's position in the merchant's list of pages. Always an integer between 0 and 4, inclusive.
+     * @param int $page_index The page's position in the merchant's list of pages. Always an integer between 0 and 6, inclusive.
      * @return $this
      */
     public function setPageIndex($page_index)

@@ -24,7 +24,9 @@ class CreateOrderRequestModifier implements ArrayAccess
       * @var string[]
       */
     static $swaggerTypes = array(
-        'catalog_object_id' => 'string'
+        'catalog_object_id' => 'string',
+        'name' => 'string',
+        'base_price_money' => '\SquareConnect\Model\Money'
     );
   
     /** 
@@ -32,7 +34,9 @@ class CreateOrderRequestModifier implements ArrayAccess
       * @var string[] 
       */
     static $attributeMap = array(
-        'catalog_object_id' => 'catalog_object_id'
+        'catalog_object_id' => 'catalog_object_id',
+        'name' => 'name',
+        'base_price_money' => 'base_price_money'
     );
   
     /**
@@ -40,7 +44,9 @@ class CreateOrderRequestModifier implements ArrayAccess
       * @var string[]
       */
     static $setters = array(
-        'catalog_object_id' => 'setCatalogObjectId'
+        'catalog_object_id' => 'setCatalogObjectId',
+        'name' => 'setName',
+        'base_price_money' => 'setBasePriceMoney'
     );
   
     /**
@@ -48,7 +54,9 @@ class CreateOrderRequestModifier implements ArrayAccess
       * @var string[]
       */
     static $getters = array(
-        'catalog_object_id' => 'getCatalogObjectId'
+        'catalog_object_id' => 'getCatalogObjectId',
+        'name' => 'getName',
+        'base_price_money' => 'getBasePriceMoney'
     );
   
     /**
@@ -56,6 +64,16 @@ class CreateOrderRequestModifier implements ArrayAccess
       * @var string
       */
     protected $catalog_object_id;
+    /**
+      * $name Only used for ad hoc modifiers. The name of the modifier. `name` cannot exceed 255 characters.  Do not provide a value for `name` if you provide a value for `catalog_object_id`.
+      * @var string
+      */
+    protected $name;
+    /**
+      * $base_price_money The base price for the modifier.  `base_price_money` is required for ad hoc modifiers. If both `catalog_object_id` and `base_price_money` are set, `base_price_money` will override the predefined [CatalogModifier](#type-catalogmodifier) price.
+      * @var \SquareConnect\Model\Money
+      */
+    protected $base_price_money;
 
     /**
      * Constructor
@@ -68,6 +86,16 @@ class CreateOrderRequestModifier implements ArrayAccess
               $this->catalog_object_id = $data["catalog_object_id"];
             } else {
               $this->catalog_object_id = null;
+            }
+            if (isset($data["name"])) {
+              $this->name = $data["name"];
+            } else {
+              $this->name = null;
+            }
+            if (isset($data["base_price_money"])) {
+              $this->base_price_money = $data["base_price_money"];
+            } else {
+              $this->base_price_money = null;
             }
         }
     }
@@ -88,6 +116,44 @@ class CreateOrderRequestModifier implements ArrayAccess
     public function setCatalogObjectId($catalog_object_id)
     {
         $this->catalog_object_id = $catalog_object_id;
+        return $this;
+    }
+    /**
+     * Gets name
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+  
+    /**
+     * Sets name
+     * @param string $name Only used for ad hoc modifiers. The name of the modifier. `name` cannot exceed 255 characters.  Do not provide a value for `name` if you provide a value for `catalog_object_id`.
+     * @return $this
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
+        return $this;
+    }
+    /**
+     * Gets base_price_money
+     * @return \SquareConnect\Model\Money
+     */
+    public function getBasePriceMoney()
+    {
+        return $this->base_price_money;
+    }
+  
+    /**
+     * Sets base_price_money
+     * @param \SquareConnect\Model\Money $base_price_money The base price for the modifier.  `base_price_money` is required for ad hoc modifiers. If both `catalog_object_id` and `base_price_money` are set, `base_price_money` will override the predefined [CatalogModifier](#type-catalogmodifier) price.
+     * @return $this
+     */
+    public function setBasePriceMoney($base_price_money)
+    {
+        $this->base_price_money = $base_price_money;
         return $this;
     }
     /**

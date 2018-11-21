@@ -32,7 +32,8 @@ class UpdateCustomerRequest implements ArrayAccess
         'address' => '\SquareConnect\Model\Address',
         'phone_number' => 'string',
         'reference_id' => 'string',
-        'note' => 'string'
+        'note' => 'string',
+        'birthday' => 'string'
     );
   
     /** 
@@ -48,7 +49,8 @@ class UpdateCustomerRequest implements ArrayAccess
         'address' => 'address',
         'phone_number' => 'phone_number',
         'reference_id' => 'reference_id',
-        'note' => 'note'
+        'note' => 'note',
+        'birthday' => 'birthday'
     );
   
     /**
@@ -64,7 +66,8 @@ class UpdateCustomerRequest implements ArrayAccess
         'address' => 'setAddress',
         'phone_number' => 'setPhoneNumber',
         'reference_id' => 'setReferenceId',
-        'note' => 'setNote'
+        'note' => 'setNote',
+        'birthday' => 'setBirthday'
     );
   
     /**
@@ -80,7 +83,8 @@ class UpdateCustomerRequest implements ArrayAccess
         'address' => 'getAddress',
         'phone_number' => 'getPhoneNumber',
         'reference_id' => 'getReferenceId',
-        'note' => 'getNote'
+        'note' => 'getNote',
+        'birthday' => 'getBirthday'
     );
   
     /**
@@ -128,6 +132,11 @@ class UpdateCustomerRequest implements ArrayAccess
       * @var string
       */
     protected $note;
+    /**
+      * $birthday The customer birthday in RFC-3339 format. Year is optional, timezone and times are not allowed. Example: `0000-09-01T00:00:00-00:00` for a birthday on September 1st. `1998-09-01T00:00:00-00:00` for a birthday on September 1st 1998.
+      * @var string
+      */
+    protected $birthday;
 
     /**
      * Constructor
@@ -180,6 +189,11 @@ class UpdateCustomerRequest implements ArrayAccess
               $this->note = $data["note"];
             } else {
               $this->note = null;
+            }
+            if (isset($data["birthday"])) {
+              $this->birthday = $data["birthday"];
+            } else {
+              $this->birthday = null;
             }
         }
     }
@@ -352,6 +366,25 @@ class UpdateCustomerRequest implements ArrayAccess
     public function setNote($note)
     {
         $this->note = $note;
+        return $this;
+    }
+    /**
+     * Gets birthday
+     * @return string
+     */
+    public function getBirthday()
+    {
+        return $this->birthday;
+    }
+  
+    /**
+     * Sets birthday
+     * @param string $birthday The customer birthday in RFC-3339 format. Year is optional, timezone and times are not allowed. Example: `0000-09-01T00:00:00-00:00` for a birthday on September 1st. `1998-09-01T00:00:00-00:00` for a birthday on September 1st 1998.
+     * @return $this
+     */
+    public function setBirthday($birthday)
+    {
+        $this->birthday = $birthday;
         return $this;
     }
     /**

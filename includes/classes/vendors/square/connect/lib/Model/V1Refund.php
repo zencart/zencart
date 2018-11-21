@@ -30,7 +30,8 @@ class V1Refund implements ArrayAccess
         'created_at' => 'string',
         'processed_at' => 'string',
         'payment_id' => 'string',
-        'merchant_id' => 'string'
+        'merchant_id' => 'string',
+        'is_exchange' => 'bool'
     );
   
     /** 
@@ -44,7 +45,8 @@ class V1Refund implements ArrayAccess
         'created_at' => 'created_at',
         'processed_at' => 'processed_at',
         'payment_id' => 'payment_id',
-        'merchant_id' => 'merchant_id'
+        'merchant_id' => 'merchant_id',
+        'is_exchange' => 'is_exchange'
     );
   
     /**
@@ -58,7 +60,8 @@ class V1Refund implements ArrayAccess
         'created_at' => 'setCreatedAt',
         'processed_at' => 'setProcessedAt',
         'payment_id' => 'setPaymentId',
-        'merchant_id' => 'setMerchantId'
+        'merchant_id' => 'setMerchantId',
+        'is_exchange' => 'setIsExchange'
     );
   
     /**
@@ -72,7 +75,8 @@ class V1Refund implements ArrayAccess
         'created_at' => 'getCreatedAt',
         'processed_at' => 'getProcessedAt',
         'payment_id' => 'getPaymentId',
-        'merchant_id' => 'getMerchantId'
+        'merchant_id' => 'getMerchantId',
+        'is_exchange' => 'getIsExchange'
     );
   
     /**
@@ -91,7 +95,7 @@ class V1Refund implements ArrayAccess
       */
     protected $refunded_money;
     /**
-      * $created_at The time when the merchant initiated the refund for Square to process, in ISO 8601 format..
+      * $created_at The time when the merchant initiated the refund for Square to process, in ISO 8601 format.
       * @var string
       */
     protected $created_at;
@@ -101,7 +105,7 @@ class V1Refund implements ArrayAccess
       */
     protected $processed_at;
     /**
-      * $payment_id The Square-issued ID of the payment the refund is applied to.
+      * $payment_id A Square-issued ID associated with the refund. For single-tender refunds, payment_id is the ID of the original payment ID. For split-tender refunds, payment_id is the ID of the original tender. For exchange-based refunds (is_exchange == true), payment_id is the ID of the original payment ID even if the payment includes other tenders.
       * @var string
       */
     protected $payment_id;
@@ -110,6 +114,11 @@ class V1Refund implements ArrayAccess
       * @var string
       */
     protected $merchant_id;
+    /**
+      * $is_exchange Indicates whether or not the refund is associated with an exchange. If is_exchange is true, the refund reflects the value of goods returned in the exchange not the total money refunded.
+      * @var bool
+      */
+    protected $is_exchange;
 
     /**
      * Constructor
@@ -152,6 +161,11 @@ class V1Refund implements ArrayAccess
               $this->merchant_id = $data["merchant_id"];
             } else {
               $this->merchant_id = null;
+            }
+            if (isset($data["is_exchange"])) {
+              $this->is_exchange = $data["is_exchange"];
+            } else {
+              $this->is_exchange = null;
             }
         }
     }
@@ -223,7 +237,7 @@ class V1Refund implements ArrayAccess
   
     /**
      * Sets created_at
-     * @param string $created_at The time when the merchant initiated the refund for Square to process, in ISO 8601 format..
+     * @param string $created_at The time when the merchant initiated the refund for Square to process, in ISO 8601 format.
      * @return $this
      */
     public function setCreatedAt($created_at)
@@ -261,7 +275,7 @@ class V1Refund implements ArrayAccess
   
     /**
      * Sets payment_id
-     * @param string $payment_id The Square-issued ID of the payment the refund is applied to.
+     * @param string $payment_id A Square-issued ID associated with the refund. For single-tender refunds, payment_id is the ID of the original payment ID. For split-tender refunds, payment_id is the ID of the original tender. For exchange-based refunds (is_exchange == true), payment_id is the ID of the original payment ID even if the payment includes other tenders.
      * @return $this
      */
     public function setPaymentId($payment_id)
@@ -286,6 +300,25 @@ class V1Refund implements ArrayAccess
     public function setMerchantId($merchant_id)
     {
         $this->merchant_id = $merchant_id;
+        return $this;
+    }
+    /**
+     * Gets is_exchange
+     * @return bool
+     */
+    public function getIsExchange()
+    {
+        return $this->is_exchange;
+    }
+  
+    /**
+     * Sets is_exchange
+     * @param bool $is_exchange Indicates whether or not the refund is associated with an exchange. If is_exchange is true, the refund reflects the value of goods returned in the exchange not the total money refunded.
+     * @return $this
+     */
+    public function setIsExchange($is_exchange)
+    {
+        $this->is_exchange = $is_exchange;
         return $this;
     }
     /**

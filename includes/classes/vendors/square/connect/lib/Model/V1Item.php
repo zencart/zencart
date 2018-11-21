@@ -37,7 +37,9 @@ class V1Item implements ArrayAccess
         'variations' => '\SquareConnect\Model\V1Variation[]',
         'modifier_lists' => '\SquareConnect\Model\V1Variation[]',
         'fees' => '\SquareConnect\Model\V1Fee[]',
-        'taxable' => 'bool'
+        'taxable' => 'bool',
+        'category_id' => 'string',
+        'available_for_pickup' => 'bool'
     );
   
     /** 
@@ -58,7 +60,9 @@ class V1Item implements ArrayAccess
         'variations' => 'variations',
         'modifier_lists' => 'modifier_lists',
         'fees' => 'fees',
-        'taxable' => 'taxable'
+        'taxable' => 'taxable',
+        'category_id' => 'category_id',
+        'available_for_pickup' => 'available_for_pickup'
     );
   
     /**
@@ -79,7 +83,9 @@ class V1Item implements ArrayAccess
         'variations' => 'setVariations',
         'modifier_lists' => 'setModifierLists',
         'fees' => 'setFees',
-        'taxable' => 'setTaxable'
+        'taxable' => 'setTaxable',
+        'category_id' => 'setCategoryId',
+        'available_for_pickup' => 'setAvailableForPickup'
     );
   
     /**
@@ -100,7 +106,9 @@ class V1Item implements ArrayAccess
         'variations' => 'getVariations',
         'modifier_lists' => 'getModifierLists',
         'fees' => 'getFees',
-        'taxable' => 'getTaxable'
+        'taxable' => 'getTaxable',
+        'category_id' => 'getCategoryId',
+        'available_for_pickup' => 'getAvailableForPickup'
     );
   
     /**
@@ -173,6 +181,16 @@ class V1Item implements ArrayAccess
       * @var bool
       */
     protected $taxable;
+    /**
+      * $category_id The ID of the item's category, if any.
+      * @var string
+      */
+    protected $category_id;
+    /**
+      * $available_for_pickup If true, the item can be added to pickup orders from the merchant's online store. Default value: false
+      * @var bool
+      */
+    protected $available_for_pickup;
 
     /**
      * Constructor
@@ -250,6 +268,16 @@ class V1Item implements ArrayAccess
               $this->taxable = $data["taxable"];
             } else {
               $this->taxable = null;
+            }
+            if (isset($data["category_id"])) {
+              $this->category_id = $data["category_id"];
+            } else {
+              $this->category_id = null;
+            }
+            if (isset($data["available_for_pickup"])) {
+              $this->available_for_pickup = $data["available_for_pickup"];
+            } else {
+              $this->available_for_pickup = null;
             }
         }
     }
@@ -517,6 +545,44 @@ class V1Item implements ArrayAccess
     public function setTaxable($taxable)
     {
         $this->taxable = $taxable;
+        return $this;
+    }
+    /**
+     * Gets category_id
+     * @return string
+     */
+    public function getCategoryId()
+    {
+        return $this->category_id;
+    }
+  
+    /**
+     * Sets category_id
+     * @param string $category_id The ID of the item's category, if any.
+     * @return $this
+     */
+    public function setCategoryId($category_id)
+    {
+        $this->category_id = $category_id;
+        return $this;
+    }
+    /**
+     * Gets available_for_pickup
+     * @return bool
+     */
+    public function getAvailableForPickup()
+    {
+        return $this->available_for_pickup;
+    }
+  
+    /**
+     * Sets available_for_pickup
+     * @param bool $available_for_pickup If true, the item can be added to pickup orders from the merchant's online store. Default value: false
+     * @return $this
+     */
+    public function setAvailableForPickup($available_for_pickup)
+    {
+        $this->available_for_pickup = $available_for_pickup;
         return $this;
     }
     /**

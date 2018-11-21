@@ -114,7 +114,8 @@ class OrdersApi
             $headerParams['Accept'] = $_header_accept;
         }
         $headerParams['Content-Type'] = ApiClient::selectHeaderContentType(array('application/json'));
-  
+        $headerParams['Square-Version'] = "2018-09-18";
+
         
         
         // path params
@@ -219,7 +220,8 @@ class OrdersApi
             $headerParams['Accept'] = $_header_accept;
         }
         $headerParams['Content-Type'] = ApiClient::selectHeaderContentType(array('application/json'));
-  
+        $headerParams['Square-Version'] = "2018-09-18";
+
         
         
         // path params
