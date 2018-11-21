@@ -2,25 +2,25 @@
 *  Bazillyo's Spiffy Popup Calendar Styles v2.1 Copyright S. Ousta
 */
 #spiffycalendar {
-	width: 185px;
-	height:130px;
-	left: 0px;
-	top: 0px;
-	background-color: black;
-	position: absolute;
-	visibility: hidden;
+    width: 250px;
+ /*   height:130px;*/
+    left: 0px;
+    top: 0px;
+/*    background-color: black;*/
+    position: absolute;
+    visibility: hidden;
 }
 
 .cal-SymbolBtn {
-	font-family: Webdings;
-	font-size: 8pt;
-	outline-style : none;
-	outline-width: 0px;	
+    font-family: Webdings;
+    font-size: 8pt;
+    outline-style : none;
+    outline-width: 0px;
 }
 
 .cal-BtnLink {
-	outline-style : none;
-	outline-width: 0px;
+    outline-style : none;
+    outline-width: 0px;
 }
 
 a.cal-DayLink {
@@ -28,9 +28,8 @@ a.cal-DayLink {
     font-size: 8pt;
     font-weight: normal;
     text-decoration: none;
-    color: black;
+    color: #000;
     background-color: transparent;
-	cursor: url('includes/javascript/spiffyCal/images/spiffycal2.cur');
 
 }
 a.cal-DayLink:hover {
@@ -40,32 +39,30 @@ a.cal-DayLink:hover {
     text-decoration: none;
     background-color: transparent;
     color: Blue;
-	cursor: url('includes/javascript/spiffyCal/images/spiffycal2.cur');
 }
 a.cal-DayLink:active {
-   font-family: Verdana,  Arial, sans-serif;
+    font-family: Verdana,  Arial, sans-serif;
     font-size: 8pt;
     font-weight: normal;
     text-decoration: none;
     background-color: transparent;
-    color: #0066FF;
-	cursor: url('includes/javascript/spiffyCal/images/spiffycal2.cur');
+    color: #06F;
 }
 .cal-TextBox{
-    color: Black;
+    color: #000;
     font-family: Verdana,  Arial, sans-serif;
     font-size: 8pt;
     font-weight: normal;
-    background-color: #FFFFCC;
+    background-color: #FFC;
 }
 
 .cal-TextBoxInvalid{
-    color: #660000;
+    color: #600;
     font-family: Verdana,  Arial, sans-serif;
     font-size: 8pt;
     font-weight: normal;
-	border-color: Red;
-	border-style:solid;
+    border-color: #f00;
+    border-style:solid;
 }
 
 .cal-TextBoxDisabled{
@@ -73,9 +70,8 @@ a.cal-DayLink:active {
     font-family: Verdana,  Arial, sans-serif;
     font-size: 8pt;
     font-weight: normal;
-	border-color: silver;
-	border-style:solid;
-  /*  background-color: #C0C0C0;*/
+    border-color: #C0C0C0;
+    border-style:solid;
 }
 
 
@@ -92,7 +88,7 @@ a.cal-DayLink:active {
     font-size: 8pt;
     font-weight: bold;
     text-decoration: none;
-    color: red;
+    color: #f00;
     background-color: transparent;
 }
 
@@ -101,7 +97,7 @@ a.cal-DayLink:active {
     font-size: 8pt;
     font-weight: normal;
     text-decoration: none;
-    color: black;
+    color: #000;
     background-color: transparent;
 }
 
@@ -111,9 +107,8 @@ a.cal-TodayLink {
     font-size: 8pt;
     font-weight: bold;
     text-decoration: none;
-    color: red;
+    color: #f00;
     background-color: transparent;
-	cursor: url('includes/javascript/spiffyCal/images/spiffycal.cur');
 }
 a.cal-TodayLink:hover {
     font-family: Verdana, Arial, sans-serif;
@@ -122,7 +117,6 @@ a.cal-TodayLink:hover {
     text-decoration: none;
     background-color: transparent;
     color: Blue;
-	cursor: url('includes/javascript/spiffyCal/images/spiffycal.cur');
 }
 a.cal-TodayLink:active {
     font-family: Verdana,  Arial, sans-serif;
@@ -130,8 +124,7 @@ a.cal-TodayLink:active {
     font-weight: bold;
     text-decoration: none;
     background-color: transparent;
-    color: #0066FF;
-	cursor: url('includes/javascript/spiffyCal/images/spiffycal.cur');
+    color: #06F;
 }
 
 .cal-GreyDate {
@@ -139,8 +132,8 @@ a.cal-TodayLink:active {
     font-size: 8pt;
     font-weight: normal;
     text-decoration: none;
-	background-color: #FFFFCC;
-    color: #999999;
+    background-color: #FFC;
+    color: #999;
 }
 
 .cal-GreyInvalidDate {
@@ -148,45 +141,43 @@ a.cal-TodayLink:active {
     font-size: 8pt;
     font-weight: normal;
     text-decoration: line-through;
-	background-color: #FFFFCC;
-    color: #999999;
+    background-color: #FFC;
+    color: #999;
 }
 
 .cal-DayCell {
     font-family: Verdana, Arial, sans-serif;
     font-size: 8pt;
     font-weight: normal;
-	background-color:White; 
+    background-color:White;
 }
 
 .cal-WeekendCell {
     font-family: Verdana, Arial, sans-serif;
     font-size: 8pt;
     font-weight: normal;
-	background-color: #B0C4DE; 
+    background-color: #B0C4DE;
 }
 
 .cal-HolidayCell {
     font-family: Verdana, Arial, sans-serif;
     font-size: 8pt;
     font-weight: normal;
-	background-color: #99FF99;
+    background-color: #9F9;
 }
 .cal-HeadCell {
     font-family: Verdana, Arial, sans-serif;
     font-size: 8pt;
     font-weight: bold;
-	color: Black;
-	background-color: #99CCFF;  /*#CCCC99; */
+    color: #000;
+    background-color: #ccc;
 }
 
 .cal-Table{
-	border-top-color: #6666FF;
-	border-left-color: #6666FF;
-	border-right-color: #6666FF;
-	border-bottom-color:  #6666FF;
-	background-color: #6666CC;
-	border-width:1px;
-	border-style: solid;
-	cursor: url('includes/javascript/spiffyCal/images/spiffycal3.cur');
+    background-color: #ddd;
+    border-width:1px;
+    border-style: solid;
+    position: relative;
+    z-index: 1000;
+    box-shadow: 2px 2px 2px 2px;
 }
