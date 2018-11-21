@@ -31,7 +31,8 @@ class CreateCheckoutRequest implements ArrayAccess
         'pre_populate_buyer_email' => 'string',
         'pre_populate_shipping_address' => '\SquareConnect\Model\Address',
         'redirect_url' => 'string',
-        'additional_recipients' => '\SquareConnect\Model\ChargeRequestAdditionalRecipient[]'
+        'additional_recipients' => '\SquareConnect\Model\ChargeRequestAdditionalRecipient[]',
+        'note' => 'string'
     );
   
     /** 
@@ -46,7 +47,8 @@ class CreateCheckoutRequest implements ArrayAccess
         'pre_populate_buyer_email' => 'pre_populate_buyer_email',
         'pre_populate_shipping_address' => 'pre_populate_shipping_address',
         'redirect_url' => 'redirect_url',
-        'additional_recipients' => 'additional_recipients'
+        'additional_recipients' => 'additional_recipients',
+        'note' => 'note'
     );
   
     /**
@@ -61,7 +63,8 @@ class CreateCheckoutRequest implements ArrayAccess
         'pre_populate_buyer_email' => 'setPrePopulateBuyerEmail',
         'pre_populate_shipping_address' => 'setPrePopulateShippingAddress',
         'redirect_url' => 'setRedirectUrl',
-        'additional_recipients' => 'setAdditionalRecipients'
+        'additional_recipients' => 'setAdditionalRecipients',
+        'note' => 'setNote'
     );
   
     /**
@@ -76,7 +79,8 @@ class CreateCheckoutRequest implements ArrayAccess
         'pre_populate_buyer_email' => 'getPrePopulateBuyerEmail',
         'pre_populate_shipping_address' => 'getPrePopulateShippingAddress',
         'redirect_url' => 'getRedirectUrl',
-        'additional_recipients' => 'getAdditionalRecipients'
+        'additional_recipients' => 'getAdditionalRecipients',
+        'note' => 'getNote'
     );
   
     /**
@@ -119,6 +123,11 @@ class CreateCheckoutRequest implements ArrayAccess
       * @var \SquareConnect\Model\ChargeRequestAdditionalRecipient[]
       */
     protected $additional_recipients;
+    /**
+      * $note An optional note to associate with the checkout object.  This value cannot exceed 60 characters.
+      * @var string
+      */
+    protected $note;
 
     /**
      * Constructor
@@ -166,6 +175,11 @@ class CreateCheckoutRequest implements ArrayAccess
               $this->additional_recipients = $data["additional_recipients"];
             } else {
               $this->additional_recipients = null;
+            }
+            if (isset($data["note"])) {
+              $this->note = $data["note"];
+            } else {
+              $this->note = null;
             }
         }
     }
@@ -319,6 +333,25 @@ class CreateCheckoutRequest implements ArrayAccess
     public function setAdditionalRecipients($additional_recipients)
     {
         $this->additional_recipients = $additional_recipients;
+        return $this;
+    }
+    /**
+     * Gets note
+     * @return string
+     */
+    public function getNote()
+    {
+        return $this->note;
+    }
+  
+    /**
+     * Sets note
+     * @param string $note An optional note to associate with the checkout object.  This value cannot exceed 60 characters.
+     * @return $this
+     */
+    public function setNote($note)
+    {
+        $this->note = $note;
         return $this;
     }
     /**

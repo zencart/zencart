@@ -115,7 +115,7 @@ class Card implements ArrayAccess
       */
     protected $billing_address;
     /**
-      * $fingerprint The unique string fingerprint for the card.  The fingerprint is based on the credit card number and is unique to the merchant.  If a card is used at multiple locations for the same merchant, it will have the same fingerprint in each case. Note: Fingerprint may not exist on old transactions.
+      * $fingerprint The unique string fingerprint for the card. The fingerprint is based on the credit card number and is unique to the merchant. If a card is used at multiple locations for the same merchant, it will have the same fingerprint in each case. Note: Fingerprint may not exist on old transactions.
       * @var string
       */
     protected $fingerprint;
@@ -313,7 +313,7 @@ class Card implements ArrayAccess
   
     /**
      * Sets fingerprint
-     * @param string $fingerprint The unique string fingerprint for the card.  The fingerprint is based on the credit card number and is unique to the merchant.  If a card is used at multiple locations for the same merchant, it will have the same fingerprint in each case. Note: Fingerprint may not exist on old transactions.
+     * @param string $fingerprint The unique string fingerprint for the card. The fingerprint is based on the credit card number and is unique to the merchant. If a card is used at multiple locations for the same merchant, it will have the same fingerprint in each case. Note: Fingerprint may not exist on old transactions.
      * @return $this
      */
     public function setFingerprint($fingerprint)

@@ -115,7 +115,7 @@ class CatalogItemVariation implements ArrayAccess
       */
     protected $sku;
     /**
-      * $upc The item variation's UPC, if any. Searchable.
+      * $upc The item variation's UPC, if any. Searchable in the Connect API. This field is only exposed in the Connect API. It is not exposed in Square's Dashboard, Square Point of Sale app or Retail Point of Sale app.
       * @var string
       */
     protected $upc;
@@ -307,7 +307,7 @@ class CatalogItemVariation implements ArrayAccess
   
     /**
      * Sets upc
-     * @param string $upc The item variation's UPC, if any. Searchable.
+     * @param string $upc The item variation's UPC, if any. Searchable in the Connect API. This field is only exposed in the Connect API. It is not exposed in Square's Dashboard, Square Point of Sale app or Retail Point of Sale app.
      * @return $this
      */
     public function setUpc($upc)

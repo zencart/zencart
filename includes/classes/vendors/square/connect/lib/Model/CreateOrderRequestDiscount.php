@@ -64,7 +64,7 @@ class CreateOrderRequestDiscount implements ArrayAccess
     );
   
     /**
-      * $catalog_object_id Only used for catalog taxes. The catalog object ID from exsiting [CatalogDiscount](#type-catalogdiscount).  Do not provide a value for this field if you provide values in other fields for an ad hoc discount.
+      * $catalog_object_id Only used for catalog discounts. The catalog object ID for an existing [CatalogDiscount](#type-catalogdiscount).  Do not provide a value for this field if you provide values in other fields for an ad hoc discount.
       * @var string
       */
     protected $catalog_object_id;
@@ -124,7 +124,7 @@ class CreateOrderRequestDiscount implements ArrayAccess
   
     /**
      * Sets catalog_object_id
-     * @param string $catalog_object_id Only used for catalog taxes. The catalog object ID from exsiting [CatalogDiscount](#type-catalogdiscount).  Do not provide a value for this field if you provide values in other fields for an ad hoc discount.
+     * @param string $catalog_object_id Only used for catalog discounts. The catalog object ID for an existing [CatalogDiscount](#type-catalogdiscount).  Do not provide a value for this field if you provide values in other fields for an ad hoc discount.
      * @return $this
      */
     public function setCatalogObjectId($catalog_object_id)

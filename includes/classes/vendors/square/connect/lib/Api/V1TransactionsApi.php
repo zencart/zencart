@@ -114,7 +114,7 @@ class V1TransactionsApi
             $headerParams['Accept'] = $_header_accept;
         }
         $headerParams['Content-Type'] = ApiClient::selectHeaderContentType(array('application/json'));
-  
+
         
         
         // path params
@@ -213,7 +213,7 @@ class V1TransactionsApi
             $headerParams['Accept'] = $_header_accept;
         }
         $headerParams['Content-Type'] = ApiClient::selectHeaderContentType(array('application/json'));
-  
+
         
         
         // path params
@@ -314,7 +314,7 @@ class V1TransactionsApi
             $headerParams['Accept'] = $_header_accept;
         }
         $headerParams['Content-Type'] = ApiClient::selectHeaderContentType(array('application/json'));
-  
+
         // query params
         if ($order !== null) {
             $queryParams['order'] = $this->apiClient->getSerializer()->toQueryValue($order);
@@ -385,12 +385,13 @@ class V1TransactionsApi
      * @param string $end_time The end of the requested reporting period, in ISO 8601 format. If this value is more than one year greater than begin_time, this endpoint returns an error. Default value: The current time. (optional)
      * @param int $limit The maximum number of payments to return in a single response. This value cannot exceed 200. (optional)
      * @param string $batch_token A pagination cursor to retrieve the next set of results for your original query to the endpoint. (optional)
+     * @param bool $include_partial Indicates whether or not to include partial payments in the response. Partial payments will have the tenders collected so far, but the itemizations will be empty until the payment is completed. (optional)
      * @return \SquareConnect\Model\V1Payment[]
      * @throws \SquareConnect\ApiException on non-2xx response
      */
-    public function listPayments($location_id, $order = null, $begin_time = null, $end_time = null, $limit = null, $batch_token = null)
+    public function listPayments($location_id, $order = null, $begin_time = null, $end_time = null, $limit = null, $batch_token = null, $include_partial = null)
     {
-        list($response, $statusCode, $httpHeader) = $this->listPaymentsWithHttpInfo ($location_id, $order, $begin_time, $end_time, $limit, $batch_token);
+        list($response, $statusCode, $httpHeader) = $this->listPaymentsWithHttpInfo ($location_id, $order, $begin_time, $end_time, $limit, $batch_token, $include_partial);
         return $response; 
     }
 
@@ -406,10 +407,11 @@ class V1TransactionsApi
      * @param string $end_time The end of the requested reporting period, in ISO 8601 format. If this value is more than one year greater than begin_time, this endpoint returns an error. Default value: The current time. (optional)
      * @param int $limit The maximum number of payments to return in a single response. This value cannot exceed 200. (optional)
      * @param string $batch_token A pagination cursor to retrieve the next set of results for your original query to the endpoint. (optional)
+     * @param bool $include_partial Indicates whether or not to include partial payments in the response. Partial payments will have the tenders collected so far, but the itemizations will be empty until the payment is completed. (optional)
      * @return Array of \SquareConnect\Model\V1Payment[], HTTP status code, HTTP response headers (array of strings)
      * @throws \SquareConnect\ApiException on non-2xx response
      */
-    public function listPaymentsWithHttpInfo($location_id, $order = null, $begin_time = null, $end_time = null, $limit = null, $batch_token = null)
+    public function listPaymentsWithHttpInfo($location_id, $order = null, $begin_time = null, $end_time = null, $limit = null, $batch_token = null, $include_partial = null)
     {
         
         // verify the required parameter 'location_id' is set
@@ -428,7 +430,7 @@ class V1TransactionsApi
             $headerParams['Accept'] = $_header_accept;
         }
         $headerParams['Content-Type'] = ApiClient::selectHeaderContentType(array('application/json'));
-  
+
         // query params
         if ($order !== null) {
             $queryParams['order'] = $this->apiClient->getSerializer()->toQueryValue($order);
@@ -444,6 +446,9 @@ class V1TransactionsApi
         }// query params
         if ($batch_token !== null) {
             $queryParams['batch_token'] = $this->apiClient->getSerializer()->toQueryValue($batch_token);
+        }// query params
+        if ($include_partial !== null) {
+            $queryParams['include_partial'] = $this->apiClient->getSerializer()->toQueryValue($include_partial);
         }
         
         // path params
@@ -503,7 +508,7 @@ class V1TransactionsApi
      * @param string $order TThe order in which payments are listed in the response. (optional)
      * @param string $begin_time The beginning of the requested reporting period, in ISO 8601 format. If this value is before January 1, 2013 (2013-01-01T00:00:00Z), this endpoint returns an error. Default value: The current time minus one year. (optional)
      * @param string $end_time The end of the requested reporting period, in ISO 8601 format. If this value is more than one year greater than begin_time, this endpoint returns an error. Default value: The current time. (optional)
-     * @param int $limit The maximum number of payments to return in a single response. This value cannot exceed 200. (optional)
+     * @param int $limit The approximate number of refunds to return in a single response. Default: 100. Max: 200. Response may contain more results than the prescribed limit when refunds are made simultaneously to multiple tenders in a payment or when refunds are generated in an exchange to account for the value of returned goods. (optional)
      * @param string $batch_token A pagination cursor to retrieve the next set of results for your original query to the endpoint. (optional)
      * @return \SquareConnect\Model\V1Refund[]
      * @throws \SquareConnect\ApiException on non-2xx response
@@ -524,7 +529,7 @@ class V1TransactionsApi
      * @param string $order TThe order in which payments are listed in the response. (optional)
      * @param string $begin_time The beginning of the requested reporting period, in ISO 8601 format. If this value is before January 1, 2013 (2013-01-01T00:00:00Z), this endpoint returns an error. Default value: The current time minus one year. (optional)
      * @param string $end_time The end of the requested reporting period, in ISO 8601 format. If this value is more than one year greater than begin_time, this endpoint returns an error. Default value: The current time. (optional)
-     * @param int $limit The maximum number of payments to return in a single response. This value cannot exceed 200. (optional)
+     * @param int $limit The approximate number of refunds to return in a single response. Default: 100. Max: 200. Response may contain more results than the prescribed limit when refunds are made simultaneously to multiple tenders in a payment or when refunds are generated in an exchange to account for the value of returned goods. (optional)
      * @param string $batch_token A pagination cursor to retrieve the next set of results for your original query to the endpoint. (optional)
      * @return Array of \SquareConnect\Model\V1Refund[], HTTP status code, HTTP response headers (array of strings)
      * @throws \SquareConnect\ApiException on non-2xx response
@@ -548,7 +553,7 @@ class V1TransactionsApi
             $headerParams['Accept'] = $_header_accept;
         }
         $headerParams['Content-Type'] = ApiClient::selectHeaderContentType(array('application/json'));
-  
+
         // query params
         if ($order !== null) {
             $queryParams['order'] = $this->apiClient->getSerializer()->toQueryValue($order);
@@ -670,7 +675,7 @@ class V1TransactionsApi
             $headerParams['Accept'] = $_header_accept;
         }
         $headerParams['Content-Type'] = ApiClient::selectHeaderContentType(array('application/json'));
-  
+
         // query params
         if ($order !== null) {
             $queryParams['order'] = $this->apiClient->getSerializer()->toQueryValue($order);
@@ -789,7 +794,7 @@ class V1TransactionsApi
             $headerParams['Accept'] = $_header_accept;
         }
         $headerParams['Content-Type'] = ApiClient::selectHeaderContentType(array('application/json'));
-  
+
         
         
         // path params
@@ -897,7 +902,7 @@ class V1TransactionsApi
             $headerParams['Accept'] = $_header_accept;
         }
         $headerParams['Content-Type'] = ApiClient::selectHeaderContentType(array('application/json'));
-  
+
         
         
         // path params
@@ -961,7 +966,7 @@ class V1TransactionsApi
      * Provides comprehensive information for a single payment.
      *
      * @param string $location_id The ID of the payment&#39;s associated location. (required)
-     * @param string $payment_id The payment&#39;s Square-issued ID. You obtain this value from Payment objects returned by the List Payments endpoint, or Settlement objects returned by the List Settlements endpoint. (required)
+     * @param string $payment_id The Square-issued payment ID. payment_id comes from Payment objects returned by the List Payments endpoint, Settlement objects returned by the List Settlements endpoint, or Refund objects returned by the List Refunds endpoint. (required)
      * @return \SquareConnect\Model\V1Payment
      * @throws \SquareConnect\ApiException on non-2xx response
      */
@@ -978,7 +983,7 @@ class V1TransactionsApi
      * Provides comprehensive information for a single payment.
      *
      * @param string $location_id The ID of the payment&#39;s associated location. (required)
-     * @param string $payment_id The payment&#39;s Square-issued ID. You obtain this value from Payment objects returned by the List Payments endpoint, or Settlement objects returned by the List Settlements endpoint. (required)
+     * @param string $payment_id The Square-issued payment ID. payment_id comes from Payment objects returned by the List Payments endpoint, Settlement objects returned by the List Settlements endpoint, or Refund objects returned by the List Refunds endpoint. (required)
      * @return Array of \SquareConnect\Model\V1Payment, HTTP status code, HTTP response headers (array of strings)
      * @throws \SquareConnect\ApiException on non-2xx response
      */
@@ -1005,7 +1010,7 @@ class V1TransactionsApi
             $headerParams['Accept'] = $_header_accept;
         }
         $headerParams['Content-Type'] = ApiClient::selectHeaderContentType(array('application/json'));
-  
+
         
         
         // path params
@@ -1113,7 +1118,7 @@ class V1TransactionsApi
             $headerParams['Accept'] = $_header_accept;
         }
         $headerParams['Content-Type'] = ApiClient::selectHeaderContentType(array('application/json'));
-  
+
         
         
         // path params
@@ -1227,7 +1232,7 @@ class V1TransactionsApi
             $headerParams['Accept'] = $_header_accept;
         }
         $headerParams['Content-Type'] = ApiClient::selectHeaderContentType(array('application/json'));
-  
+
         
         
         // path params

@@ -35,10 +35,12 @@ class Customer implements ArrayAccess
         'email_address' => 'string',
         'address' => '\SquareConnect\Model\Address',
         'phone_number' => 'string',
+        'birthday' => 'string',
         'reference_id' => 'string',
         'note' => 'string',
         'preferences' => '\SquareConnect\Model\CustomerPreferences',
-        'groups' => '\SquareConnect\Model\CustomerGroupInfo[]'
+        'groups' => '\SquareConnect\Model\CustomerGroupInfo[]',
+        'creation_source' => 'string'
     );
   
     /** 
@@ -57,10 +59,12 @@ class Customer implements ArrayAccess
         'email_address' => 'email_address',
         'address' => 'address',
         'phone_number' => 'phone_number',
+        'birthday' => 'birthday',
         'reference_id' => 'reference_id',
         'note' => 'note',
         'preferences' => 'preferences',
-        'groups' => 'groups'
+        'groups' => 'groups',
+        'creation_source' => 'creation_source'
     );
   
     /**
@@ -79,10 +83,12 @@ class Customer implements ArrayAccess
         'email_address' => 'setEmailAddress',
         'address' => 'setAddress',
         'phone_number' => 'setPhoneNumber',
+        'birthday' => 'setBirthday',
         'reference_id' => 'setReferenceId',
         'note' => 'setNote',
         'preferences' => 'setPreferences',
-        'groups' => 'setGroups'
+        'groups' => 'setGroups',
+        'creation_source' => 'setCreationSource'
     );
   
     /**
@@ -101,10 +107,12 @@ class Customer implements ArrayAccess
         'email_address' => 'getEmailAddress',
         'address' => 'getAddress',
         'phone_number' => 'getPhoneNumber',
+        'birthday' => 'getBirthday',
         'reference_id' => 'getReferenceId',
         'note' => 'getNote',
         'preferences' => 'getPreferences',
-        'groups' => 'getGroups'
+        'groups' => 'getGroups',
+        'creation_source' => 'getCreationSource'
     );
   
     /**
@@ -163,6 +171,11 @@ class Customer implements ArrayAccess
       */
     protected $phone_number;
     /**
+      * $birthday The customer's birthday in RFC-3339 format. Year is optional, timezone and times are not allowed. Example: `0000-09-01T00:00:00-00:00` for a birthday on September 1st. `1998-09-01T00:00:00-00:00` for a birthday on September 1st 1998.
+      * @var string
+      */
+    protected $birthday;
+    /**
       * $reference_id A second ID you can set to associate the customer with an entity in another system.
       * @var string
       */
@@ -182,6 +195,11 @@ class Customer implements ArrayAccess
       * @var \SquareConnect\Model\CustomerGroupInfo[]
       */
     protected $groups;
+    /**
+      * $creation_source A creation source represents the method used to create the customer profile.
+      * @var string
+      */
+    protected $creation_source;
 
     /**
      * Constructor
@@ -245,6 +263,11 @@ class Customer implements ArrayAccess
             } else {
               $this->phone_number = null;
             }
+            if (isset($data["birthday"])) {
+              $this->birthday = $data["birthday"];
+            } else {
+              $this->birthday = null;
+            }
             if (isset($data["reference_id"])) {
               $this->reference_id = $data["reference_id"];
             } else {
@@ -264,6 +287,11 @@ class Customer implements ArrayAccess
               $this->groups = $data["groups"];
             } else {
               $this->groups = null;
+            }
+            if (isset($data["creation_source"])) {
+              $this->creation_source = $data["creation_source"];
+            } else {
+              $this->creation_source = null;
             }
         }
     }
@@ -477,6 +505,25 @@ class Customer implements ArrayAccess
         return $this;
     }
     /**
+     * Gets birthday
+     * @return string
+     */
+    public function getBirthday()
+    {
+        return $this->birthday;
+    }
+  
+    /**
+     * Sets birthday
+     * @param string $birthday The customer's birthday in RFC-3339 format. Year is optional, timezone and times are not allowed. Example: `0000-09-01T00:00:00-00:00` for a birthday on September 1st. `1998-09-01T00:00:00-00:00` for a birthday on September 1st 1998.
+     * @return $this
+     */
+    public function setBirthday($birthday)
+    {
+        $this->birthday = $birthday;
+        return $this;
+    }
+    /**
      * Gets reference_id
      * @return string
      */
@@ -550,6 +597,25 @@ class Customer implements ArrayAccess
     public function setGroups($groups)
     {
         $this->groups = $groups;
+        return $this;
+    }
+    /**
+     * Gets creation_source
+     * @return string
+     */
+    public function getCreationSource()
+    {
+        return $this->creation_source;
+    }
+  
+    /**
+     * Sets creation_source
+     * @param string $creation_source A creation source represents the method used to create the customer profile.
+     * @return $this
+     */
+    public function setCreationSource($creation_source)
+    {
+        $this->creation_source = $creation_source;
         return $this;
     }
     /**
