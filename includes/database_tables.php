@@ -4,10 +4,10 @@
  * Defines the database table names used in the project
  *
  * @package initSystem
- * @copyright Copyright 2003-2010 Zen Cart Development Team
+ * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: database_tables.php 16976 2010-07-24 23:33:45Z kuroi $
+ * @version $Id: Author: zcwilt Updated in v1.5.6 $
  * @private
  */
 
@@ -15,6 +15,7 @@ if (!defined('DB_PREFIX')) define('DB_PREFIX', '');
 define('TABLE_ADDRESS_BOOK', DB_PREFIX . 'address_book');
 define('TABLE_ADDRESS_FORMAT', DB_PREFIX . 'address_format');
 define('TABLE_ADMIN', DB_PREFIX . 'admin');
+define('TABLE_ADMIN_NOTIFICATIONS', DB_PREFIX . 'admin_notifications');
 define('TABLE_ADMIN_ACTIVITY_LOG', DB_PREFIX . 'admin_activity_log');
 define('TABLE_ADMIN_MENUS', DB_PREFIX . 'admin_menus');
 define('TABLE_ADMIN_PAGES', DB_PREFIX . 'admin_pages');

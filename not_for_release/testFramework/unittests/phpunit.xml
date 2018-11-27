@@ -8,7 +8,8 @@
          processIsolation="true"
          stopOnFailure="true">
   <testsuites>
-    <testsuite name="Password Tests">
+    <testsuite name="Tests">
+      <directory suffix="Test.php">testsAdminNotifications</directory>
       <directory suffix="Test.php">testsDiscountCoupon</directory>
       <directory suffix="Test.php">testsPasswordHash</directory>
       <directory suffix="Test.php">testsAdminSanitization</directory>

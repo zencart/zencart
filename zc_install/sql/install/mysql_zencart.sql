@@ -106,6 +106,21 @@ CREATE TABLE admin (
   KEY idx_admin_profile_zen (admin_profile)
 ) ENGINE=MyISAM;
 
+
+# --------------------------------------------------------
+
+#
+# Table structure for table 'admin_notifications'
+#
+
+DROP TABLE IF EXISTS admin_notifications;
+CREATE TABLE admin_notifications (
+  notification_key varchar(40) NOT NULL,
+  admin_id int(11),
+  dismissed char(1),
+  UNIQUE KEY notification_key (notification_key)
+) ENGINE=MyISAM;
+
 # --------------------------------------------------------
 
 #
