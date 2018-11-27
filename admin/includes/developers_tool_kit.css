@@ -7,6 +7,9 @@
 
 .dtk-highlite {font-weight: bold; color: rgb(255, 10, 5);}
 .dtk-foundline-multi {background-color: rgba(4, 211, 216, 0.12);}
-.dtk-foundline, .dtk-foundline-multi {font-family: Verdana, sans-serif;}
+.dtk-foundline, .dtk-foundline-multi {
+    font-family: Verdana, sans-serif;
+    word-break: break-word;
+}
 .dtk-contextline {font-family: Verdana, sans-serif;}
 .dtk-linenum {font-family: Verdana, sans-serif;}
