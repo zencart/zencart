@@ -10,6 +10,8 @@ $number_of_customers = 15;
 $number_of_orders = 25;
 $number_of_visitors_history = 15;
 
+$notifications = new AdminNotifications();
+$availableNotifications = $notifications->getNotifications('index', $_SESSION['admin_id']);
 
 require(DIR_WS_CLASSES . 'currencies.php');
 $currencies = new currencies();
@@ -219,6 +221,7 @@ foreach ($whos_online as $session) {
     <!-- header //-->
     <?php require(DIR_WS_INCLUDES . 'header.php'); ?>
     <!-- header_eof //-->
+    <?php require_once(DIR_WS_MODULES . 'notificationsDisplay.php');?>
 
     <div id="colone" class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
       <div class="reportBox">
