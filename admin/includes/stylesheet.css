@@ -663,9 +663,11 @@ img[src*="button_cancel"], img[src*="button_reset"]{
   z-index: 100;
 }
 
+/*
 .btn {
   margin: 2px;
 }
+*/
 
 .edit i.base {
   color: #008000;
@@ -780,6 +782,7 @@ input.faint {
     font-size: 0.9em;
 }
 /* End of css buttons */
+
 
 /* Print-specific styles */
 @media print {
