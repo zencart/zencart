@@ -1,5 +1,3 @@
-<?php
-/**
  * @package admin
  * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
@@ -131,7 +129,8 @@ $products_filter_name_model = (isset($_GET['products_filter_name_model']) ? $_GE
                 // products_name or products_model
                 $cPath = zen_get_product_path($orders_products['products_id']);
               }
-              $type_handler = $zc_products->get_admin_handler($product['products_type']);
+              $product_type = zen_get_products_type($orders_products['products_id']);
+              $type_handler = $zc_products->get_admin_handler($product_type);
               ?>
               <tr class="dataTableRow">
                 <td class="dataTableContent"><a href="<?php echo zen_href_link(FILENAME_CUSTOMERS, zen_get_all_get_params(array('cID', 'action', 'page', 'products_filter')) . 'cID=' . $orders_products['customers_id'] . '&action=edit', 'NONSSL'); ?>"><?php echo $orders_products['customers_id']; ?></a></td>
@@ -139,7 +138,7 @@ $products_filter_name_model = (isset($_GET['products_filter_name_model']) ? $_GE
                 <td class="dataTableContent"><?php echo zen_date_short($orders_products['date_purchased']); ?></td>
                 <td class="dataTableContent"><?php echo $orders_products['customers_name'] . ($orders_products['customers_company'] != '' ? '<br>' . $orders_products['customers_company'] : '') . '<br>' . $orders_products['customers_email_address']; ?></td>
                 <td class="dataTableContent text-center"><?php echo $orders_products['products_quantity']; ?></td>
-                <td class="dataTableContent text-center"><a href="<?php echo zen_href_link($type_handler, '&product_type=' . $product['products_type'] . '&cPath=' . $cPath . '&pID=' . $product['products_id'] . '&action=new_product'); ?>"><?php echo $orders_products['products_name']; ?></a></td>
+                <td class="dataTableContent text-center"><a href="<?php echo zen_href_link($type_handler, '&product_type=' . $product_type . '&cPath=' . $cPath . '&pID=' . $orders_products['products_id'] . '&action=new_product'); ?>"><?php echo $orders_products['products_name']; ?></a></td>
                 <td class="dataTableContent text-center"><?php echo $orders_products['products_model']; ?></td>
               </tr>
             <?php } ?>
