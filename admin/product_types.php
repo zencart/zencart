@@ -11,7 +11,6 @@ require('includes/application_top.php');
 $action = (isset($_GET['action']) ? $_GET['action'] : '');
 if (!isset($_GET['cID'])) $_GET['cID'] = '';
 if (!isset($_GET['gID'])) $_GET['gID'] = '';
-if (!isset($_GET['ptID'])) $_GET['ptID'] = '';
 
 if (zen_not_null($action)) {
   switch ($action) {

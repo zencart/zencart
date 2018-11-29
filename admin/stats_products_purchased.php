@@ -1,3 +1,5 @@
+<?php
+/*
  * @package admin
  * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
