@@ -616,7 +616,7 @@ function ctlSpiffyCalendarBox(strVarName, strFormName, strTextBoxName, strBtnNam
     this.focusClick = false;
     this.hideButton = false;
     this.visible = false;
-    this.displayLeft = false;
+    this.displayLeft = true;
     this.displayTop = false;
     // Name Properties
     this.formName = strFormName;
@@ -1012,7 +1012,7 @@ function ctlSpiffyCalendarBox(strVarName, strFormName, strTextBoxName, strBtnNam
                 // get correct position of date btn
                 if (scIE) {
                     if (this.displayLeft) {
-                        scX = getOffsetLeft(document.images[this.btnName]) - 192 + document.images[this.btnName].width;
+                        scX = getOffsetLeft(document.images[this.btnName]) - 250 + document.images[this.btnName].width;
                     } else {
                         scX = getOffsetLeft(document.images[this.btnName]);
                     }
@@ -1023,7 +1023,7 @@ function ctlSpiffyCalendarBox(strVarName, strFormName, strTextBoxName, strBtnNam
                     }
                 } else if (scNN) {
                     if (this.displayLeft) {
-                        scX = document.images[this.btnName].x - 192 + document.images[this.btnName].width;
+                        scX = document.images[this.btnName].x - 250 + document.images[this.btnName].width;
                     } else {
                         scX = document.images[this.btnName].x;
                     }

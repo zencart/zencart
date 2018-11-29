@@ -318,7 +318,7 @@ if (zen_not_null($action)) {
             ?>
           <div class="form-group">
               <?php echo zen_draw_label(TEXT_SPECIALS_PRODUCT, 'products_id', 'class="col-sm-3 control-label"'); ?>
-            <div class="col-sm-9">
+            <div class="col-sm-9 col-md-6">
                 <?php
                 echo (isset($sInfo->products_name)) ? $sInfo->products_name . ' (' . $currencies->format($sInfo->products_price) . ')' : zen_draw_products_pull_down('products_id', 'size="15" class="form-control"', $specials_array, true, $_GET['add_products_id'], true);
                 echo zen_draw_hidden_field('products_price', (isset($sInfo->products_price) ? $sInfo->products_price : ''));
@@ -327,7 +327,7 @@ if (zen_not_null($action)) {
           </div>
           <div class="form-group">
               <?php echo zen_draw_label(TEXT_SPECIALS_SPECIAL_PRICE, 'specials_price', 'class="col-sm-3 control-label"'); ?>
-            <div class="col-sm-9">
+            <div class="col-sm-9 col-md-6">
                 <?php
                 echo zen_draw_input_field('specials_price', (isset($sInfo->specials_new_products_price) ? $sInfo->specials_new_products_price : ''), 'class="form-control"');
                 echo zen_draw_hidden_field('products_priced_by_attribute', $sInfo->products_priced_by_attribute);
@@ -338,13 +338,13 @@ if (zen_not_null($action)) {
 
           <div class="form-group">
               <?php echo zen_draw_label(TEXT_SPECIALS_AVAILABLE_DATE, 'start', 'class="col-sm-3 control-label"'); ?>
-            <div class="col-sm-9">
+            <div class="col-sm-9 col-md-6">
               <script>StartDate.writeControl(); StartDate.dateFormat = "<?php echo DATE_FORMAT_SPIFFYCAL; ?>";</script>
             </div>
           </div>
           <div class="form-group">
               <?php echo zen_draw_label(TEXT_SPECIALS_EXPIRES_DATE, 'end', 'class="col-sm-3 control-label"'); ?>
-            <div class="col-sm-9">
+            <div class="col-sm-9 col-md-6">
               <script>EndDate.writeControl(); EndDate.dateFormat = "<?php echo DATE_FORMAT_SPIFFYCAL; ?>";</script>
             </div>
           </div>
