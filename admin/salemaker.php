@@ -385,9 +385,11 @@ if (zen_not_null($action)) {
       foreach ($prev_sales as $prev_sale) {
         $prev_categories = explode(',', $prev_sale['sale_categories_all']);
         foreach ($prev_categories as $key => $value) {
-          if ($value) {
-            $prev_categories_array[$value] ++;
-          }
+            if ($value && isset($prev_categories_array[$value])) {
+                $prev_categories_array[$value] ++;
+            } else {
+                $prev_categories_array[$value] = 1;
+            }
         }
       }
 
@@ -428,7 +430,7 @@ if (zen_not_null($action)) {
             <div class="checkbox">
               <label><?php echo zen_draw_checkbox_field('categories[]', $category['path'], $selected); ?><?php echo $category['text']; ?></label>
               <?php
-              if ($prev_categories_array[$category['categories_id']]) {
+              if (isset($prev_categories_array[$category['categories_id']]) && $prev_categories_array[$category['categories_id']]) {
                 echo sprintf(TEXT_WARNING_SALEMAKER_PREVIOUS_CATEGORIES, $prev_categories_array[$category['categories_id']]);
                 ?>
                 <a href="javascript:popupWindow('<?php echo zen_href_link(FILENAME_SALEMAKER_POPUP, 'cid=' . $category['categories_id']); ?>')"><?php echo TEXT_MORE_INFO; ?></a>
