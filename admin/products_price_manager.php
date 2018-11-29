@@ -270,24 +270,22 @@ if (zen_not_null($action)) {
       <div class="row">
         <h1 class="col-sm-4"><?php echo HEADING_TITLE; ?></h1>
         <div class="col-sm-4">
-          <div class="dropdown">
+            <?php if ($products_filter != '') {?>
+            <div class="dropdown">
             <button class="btn btn-default dropdown-toggle" type="button" id="menu1" data-toggle="dropdown">
                 <?php echo BUTTON_ADDITITONAL_ACTIONS; ?>
               <span class="caret"></span>
             </button>
             <ul class="dropdown-menu" role="menu" aria-labelledby="menu1">
-                <?php
-                if ($_GET['products_filter'] != '') {
-                  ?>
-                <li role="presentation"><a role="menuitem" href="<?php echo zen_href_link(FILENAME_PRODUCT, 'cPath=' . zen_get_product_path($products_filter) . '&pID=' . $products_filter . '&product_type=' . zen_get_products_type($products_filter)); ?>"><?php echo TEXT_PRODUCT_DETAILS; ?></a></li>
-                <li role="presentation"><a role="menuitem" href="<?php echo zen_href_link(FILENAME_PRODUCT, 'action=new_product' . '&cPath=' . zen_get_product_path($products_filter) . '&pID=' . $products_filter . '&product_type=' . zen_get_products_type($products_filter)); ?>"><?php echo TEXT_PRODUCT_EDIT; ?></a></li>
-                <li role="presentation"><a role="menuitem" href="<?php echo zen_href_link(FILENAME_ATTRIBUTES_CONTROLLER, '&products_filter=' . $products_filter . '&current_category_id=' . $current_category_id, 'NONSSL'); ?>"><?php echo TEXT_ATTRIBUTE_EDIT; ?></a></li>
-              <?php } ?>
-              <?php if ($products_filter != '') { ?>
+                <li role="presentation"><a role="menuitem" href="<?php echo zen_href_link(FILENAME_PRODUCT, 'action=new_product' . '&cPath=' . zen_get_product_path($products_filter) . '&pID=' . $products_filter . '&product_type=' . zen_get_products_type($products_filter)); ?>"><?php echo IMAGE_EDIT_PRODUCT; ?></a></li>
+                <li role="presentation"><a role="menuitem" href="<?php echo zen_href_link
+                    (FILENAME_ATTRIBUTES_CONTROLLER, '&products_filter=' . $products_filter . '&current_category_id='
+                                                   . $current_category_id, 'NONSSL'); ?>"><?php echo
+                        IMAGE_EDIT_ATTRIBUTES; ?></a></li>
                 <li role="presentation"><a role="menuitem" href="<?php echo zen_href_link(FILENAME_PRODUCTS_TO_CATEGORIES, '&products_filter=' . $products_filter); ?>"><?php echo IMAGE_PRODUCTS_TO_CATEGORIES; ?></a></li>
-              <?php } ?>
             </ul>
           </div>
+            <?php } ?>
         </div>
         <div class="col-sm-4 text-right">
             <?php
