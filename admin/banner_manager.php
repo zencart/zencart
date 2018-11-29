@@ -287,10 +287,9 @@ if (zen_not_null($action)) {
         }
 
         $groups_array = array();
-        $groups = $db->Execute("SELECT DISTINCT banners_group
-                                FROM " . TABLE_BANNERS . ($_SESSION['admin_allowed_stores'][0] == '*' ? " " : "
-                                WHERE banners_owner IN('" . implode("', '", $_SESSION['admin_allowed_stores']) . "') ") . "
-                                ORDER BY banners_group");
+        $groups = $db->Execute("select distinct banners_group
+                            from " . TABLE_BANNERS . "
+                            order by banners_group");
         foreach ($groups as $group) {
           $groups_array[] = array(
             'id' => $group['banners_group'],
