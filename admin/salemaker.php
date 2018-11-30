@@ -425,19 +425,23 @@ if (zen_not_null($action)) {
           $selected = false;
         }
         ?>
-        <div class="form-group">
-          <div class="col-sm-offset-3 col-xs-10 col-sm-7" onClick="RowClick('<?php echo $category['path']; ?>')">
+        <div class="form-group row">
+          <div class="col-sm-offset-3 col-xs-5 col-sm-4 col-md-4" onClick="RowClick('<?php echo $category['path'];
+          ?>')">
             <div class="checkbox">
               <label><?php echo zen_draw_checkbox_field('categories[]', $category['path'], $selected); ?><?php echo $category['text']; ?></label>
               <?php
               if (isset($prev_categories_array[$category['categories_id']]) && $prev_categories_array[$category['categories_id']]) {
                 echo sprintf(TEXT_WARNING_SALEMAKER_PREVIOUS_CATEGORIES, $prev_categories_array[$category['categories_id']]);
-                ?>
-                <a href="javascript:popupWindow('<?php echo zen_href_link(FILENAME_SALEMAKER_POPUP, 'cid=' . $category['categories_id']); ?>')"><?php echo TEXT_MORE_INFO; ?></a>
-                <?php
-              }
-              ?>
+              } ?>
             </div>
+          </div>
+          <div class="col-xs-3 col-sm-3 col-md-1">
+          <?php
+          if (isset($prev_categories_array[$category['categories_id']]) && $prev_categories_array[$category['categories_id']]) {
+          ?>
+            <a href="javascript:popupWindow('<?php echo zen_href_link(FILENAME_SALEMAKER_POPUP, 'cid=' . $category['categories_id']); ?>')"><?php echo TEXT_MORE_INFO; ?></a>
+          <?php } ?>
           </div>
         </div>
       <?php } ?>
