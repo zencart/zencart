@@ -455,7 +455,7 @@ class queryFactory extends base {
             return $value;
         case 'inConstructString':
             $list = explode(',', $value);
-            $newList = array_map(function ($value) { return '\'' . queryFactory::prepareInput($value) . '\''; }, $list);
+            $newList = array_map(function ($value) { return '\'' . $this->prepare_input($value) . '\''; }, $list);
             $value = implode($newList, ',');
 
             return $value;
