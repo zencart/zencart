@@ -10,7 +10,7 @@
 if (!defined('MODULE_PAYMENT_SQUARE_STATUS') || MODULE_PAYMENT_SQUARE_STATUS != 'True' || (!defined('MODULE_PAYMENT_SQUARE_APPLICATION_ID') || MODULE_PAYMENT_SQUARE_ACCESS_TOKEN == '')) {
     return false;
 }
-if ($payment_modules->in_special_checkout()) {
+if ($payment_modules->in_special_checkout() || empty($square) || !$square->enabled) {
     return false;
 }
 ?>
