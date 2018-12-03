@@ -64,7 +64,7 @@ if ($do_delete_flag) {
                     WHERE products_id = " . (int)$product_id . "
                     AND artists_id = " . (int)zen_db_input($music_extra->fields['artists_id']) . "
                     AND record_company_id = " . (int)zen_db_input($music_extra->fields['record_company_id']) . "
-                    AND music_genre_id ='" . (int)zen_db_input($music_extra->fields['music_genre_id']));
+                    AND music_genre_id = " . (int)zen_db_input($music_extra->fields['music_genre_id']));
     }
   }
 
