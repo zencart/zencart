@@ -5,7 +5,7 @@
  * @package square
  * @copyright Copyright 2003-2017 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: Chris Brown <drbyte@zen-cart.com> New in v1.5.6 $
+ * @version $Id: Author: Chris Brown <drbyte@zen-cart.com> Modified in v1.5.6 $
  */
 if (!defined('MODULE_PAYMENT_SQUARE_STATUS') || MODULE_PAYMENT_SQUARE_STATUS != 'True' || (!defined('MODULE_PAYMENT_SQUARE_APPLICATION_ID') || MODULE_PAYMENT_SQUARE_ACCESS_TOKEN == '')) {
     return false;
