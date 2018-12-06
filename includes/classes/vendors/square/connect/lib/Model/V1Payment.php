@@ -166,7 +166,7 @@ class V1Payment implements ArrayAccess
       */
     protected $merchant_id;
     /**
-      * $created_at The time when the payment was created, in ISO 8601 format.
+      * $created_at The time when the payment was created, in ISO 8601 format. Reflects the time of the first payment if the object represents an incomplete partial payment, and the time of the last or complete payment otherwise.
       * @var string
       */
     protected $created_at;
@@ -484,7 +484,7 @@ class V1Payment implements ArrayAccess
   
     /**
      * Sets created_at
-     * @param string $created_at The time when the payment was created, in ISO 8601 format.
+     * @param string $created_at The time when the payment was created, in ISO 8601 format. Reflects the time of the first payment if the object represents an incomplete partial payment, and the time of the last or complete payment otherwise.
      * @return $this
      */
     public function setCreatedAt($created_at)
