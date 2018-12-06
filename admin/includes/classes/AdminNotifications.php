@@ -11,15 +11,25 @@ class AdminNotifications
 {
     protected $notificationServer = 'https://versionserver.zen-cart.com/api/notifications';
 
+    protected $enabled = true;
+
     public function __construct()
     {
         if (defined('PROJECT_NOTIFICATIONSERVER_URL')) {
             $this->projectNotificationServer = PROJECT_NOTIFICATIONSERVER_URL;
         }
+
+        if (defined('DISABLE_ADMIN_NOTIFICATIONS_CHECKING') && DISABLE_ADMIN_NOTIFICATIONS_CHECKING === true) {
+            $this->enabled = false;
+        }
     }
 
     public function getNotifications($target, $adminId)
     {
+        if ($this->enabled === false) {
+            return [];
+        }
+
         $notificationList = $this->getNotificationInfo();
         $this->pruneSavedState($notificationList);
         $savedState = $this->getSavedState($adminId);
@@ -131,7 +141,6 @@ class AdminNotifications
     {
         return new DateTime("now");
     }
-
 
     protected function pruneSavedState($notificationList)
     {
