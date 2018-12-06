@@ -979,7 +979,7 @@ function check_form(form_name) {
       <tr>
         <td align="left" class="main"><?php echo COUPON_TOTAL; ?></td>
         <td align="left">
-          <?php echo ((int)$_POST['coupon_calc_base'] == 0 ? TEXT_COUPON_TOTAL_PRODUCTS . TEXT_COUPONT_TOTAL_PRODUCTS_BASED : TEXT_COUPONT_TOTAL_ORDER . TEXT_COUPONT_TOTAL_ORDER_BASED); ?>
+          <?php echo ((int)$_POST['coupon_calc_base'] == 0 ? TEXT_COUPON_TOTAL_PRODUCTS . TEXT_COUPON_TOTAL_PRODUCTS_BASED : TEXT_COUPON_TOTAL_ORDER . TEXT_COUPON_TOTAL_ORDER_BASED); ?>
         </td>
       </tr>
 
@@ -1073,7 +1073,7 @@ function check_form(form_name) {
 ?>
      <tr>
         <td align="left"><?php echo zen_image_submit('button_confirm.gif',COUPON_BUTTON_CONFIRM, (isset($_GET['status']) ? '&status=' . $_GET['status'] : '') . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '')); ?></td>
-        <td align="left"><?php echo zen_image_submit('button_cancel.gif',COUPON_BUTTON_CANCEL, 'name=back'); ?></td>
+        <td align="left"><?php echo zen_image_submit('button_cancel.gif',IMAGE_CANCEL, 'name=back'); ?></td>
       </tr>
 
       </td></table></form></td>
@@ -1441,14 +1441,14 @@ function check_form(form_name) {
         if ($_GET['action'] == 'voucherdelete') {
           $contents[] = array('text'=> TEXT_CONFIRM_DELETE . '</br></br>' .
                   '<a href="'.zen_href_link(FILENAME_COUPON_ADMIN,'action=confirmdelete&cid='.$_GET['cid'] . (isset($_GET['status']) ? '&status=' . $_GET['status'] : '') . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '')).'">'.zen_image_button('button_confirm.gif', TEXT_DISCOUNT_COUPON_CONFIRM_DELETE).'</a>' .
-                  '<a href="'.zen_href_link(FILENAME_COUPON_ADMIN,'cid='.$cInfo->coupon_id . (isset($_GET['status']) ? '&status=' . $_GET['status'] : '') . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '')).'">'.zen_image_button('button_cancel.gif','Cancel').'</a>'
+                  '<a href="'.zen_href_link(FILENAME_COUPON_ADMIN,'cid='.$cInfo->coupon_id . (isset($_GET['status']) ? '&status=' . $_GET['status'] : '') . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '')).'">'.zen_image_button('button_cancel.gif',IMAGE_CANCEL).'</a>'
                   );
         }
 
         if ($_GET['action'] == 'voucherreactivate') {
           $contents[] = array('text'=> TEXT_CONFIRM_REACTIVATE . '</br></br>' .
                   '<a href="'.zen_href_link(FILENAME_COUPON_ADMIN,'action=confirmreactivate&cid='.$_GET['cid'] . (isset($_GET['status']) ? '&status=' . $_GET['status'] : '') . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '')).'">'.zen_image_button('button_confirm.gif', TEXT_DISCOUNT_COUPON_CONFIRM_RESTORE).'</a>' .
-                  '<a href="'.zen_href_link(FILENAME_COUPON_ADMIN,'cid='.$cInfo->coupon_id . (isset($_GET['status']) ? '&status=' . $_GET['status'] : '') . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '')).'">'.zen_image_button('button_cancel.gif','Cancel').'</a>'
+                  '<a href="'.zen_href_link(FILENAME_COUPON_ADMIN,'cid='.$cInfo->coupon_id . (isset($_GET['status']) ? '&status=' . $_GET['status'] : '') . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '')).'">'.zen_image_button('button_cancel.gif',IMAGE_CANCEL).'</a>'
                   );
         }
 
@@ -1460,7 +1460,7 @@ function check_form(form_name) {
           $contents[] = array('text'=> TEXT_CONFIRM_COPY . '</br>');
           $contents[] = array('text'=> zen_image_submit('button_save.gif', IMAGE_SAVE));
           $contents[] = array('text'=>
-                  '<a href="'.zen_href_link(FILENAME_COUPON_ADMIN,'cid='.$cInfo->coupon_id . (isset($_GET['status']) ? '&status=' . $_GET['status'] : '') . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '')).'">'.zen_image_button('button_cancel.gif','Cancel').'</a>'
+                  '<a href="'.zen_href_link(FILENAME_COUPON_ADMIN,'cid='.$cInfo->coupon_id . (isset($_GET['status']) ? '&status=' . $_GET['status'] : '') . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '')).'">'.zen_image_button('button_cancel.gif',IMAGE_CANCEL).'</a>'
                   );
         }
 // base code - create multiple duplicate coupons from basecode
@@ -1474,7 +1474,7 @@ function check_form(form_name) {
           $contents[] = array('text'=> TEXT_CONFIRM_COPY . '</br>');
           $contents[] = array('text'=> zen_image_submit('button_save.gif', IMAGE_SAVE));
           $contents[] = array('text'=>
-                  '<a href="'.zen_href_link(FILENAME_COUPON_ADMIN,'cid='.$cInfo->coupon_id . (isset($_GET['status']) ? '&status=' . $_GET['status'] : '') . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '')).'">'.zen_image_button('button_cancel.gif','Cancel').'</a>'
+                  '<a href="'.zen_href_link(FILENAME_COUPON_ADMIN,'cid='.$cInfo->coupon_id . (isset($_GET['status']) ? '&status=' . $_GET['status'] : '') . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '')).'">'.zen_image_button('button_cancel.gif',IMAGE_CANCEL).'</a>'
                   );
         }
 // base code - delete multiple duplicate coupons from basecode
@@ -1486,7 +1486,7 @@ function check_form(form_name) {
           $contents[] = array('text' => '<br>' . TEXT_COUPON_DELETE_DUPLICATE . '&nbsp;' . zen_draw_input_field('coupon_delete_duplicate_code', $chk_duplicate_delete->fields['coupon_code'], 6, 6));
           $contents[] = array('text'=> zen_image_submit('button_confirm.gif', 'Confirm Delete of Multiple Discount Coupons'));
           $contents[] = array('text'=>
-                  '<a href="'.zen_href_link(FILENAME_COUPON_ADMIN,'cid='.$cInfo->coupon_id . (isset($_GET['status']) ? '&status=' . $_GET['status'] : '') . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '')).'">'.zen_image_button('button_cancel.gif','Cancel').'</a>'
+                  '<a href="'.zen_href_link(FILENAME_COUPON_ADMIN,'cid='.$cInfo->coupon_id . (isset($_GET['status']) ? '&status=' . $_GET['status'] : '') . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '')).'">'.zen_image_button('button_cancel.gif',IMAGE_CANCEL).'</a>'
                   );
 
         }

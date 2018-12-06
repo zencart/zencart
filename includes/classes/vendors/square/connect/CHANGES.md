@@ -1,5 +1,17 @@
 # Change Log
 
+## Version 2.20181205.0 (2018-12-05)
+
+## New feature: Idempotent customer profile creation in Connect v2
+
+Requests to the CreateCustomer endpoint now include a `idempotency_key` field to
+ensure idempotent creation of new profiles.
+
+## New feature: Refund Adjustment fields for Refunds in Connect v1
+
+The Connect SDK now supports refund adjustments for the Connect v1
+Refunds API with the addition of multiple new fields in the `Refund` data type
+
 ## Version 2.20180918.1 (2018-10-24)
 
 ### New feature: Support for Partial Payments in Connect v1

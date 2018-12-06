@@ -131,7 +131,7 @@ class Customer implements ArrayAccess
       */
     protected $updated_at;
     /**
-      * $cards The non-confidential details of the customer's cards on file.
+      * $cards The payment details of the customer's cards on file.
       * @var \SquareConnect\Model\Card[]
       */
     protected $cards;
@@ -363,7 +363,7 @@ class Customer implements ArrayAccess
   
     /**
      * Sets cards
-     * @param \SquareConnect\Model\Card[] $cards The non-confidential details of the customer's cards on file.
+     * @param \SquareConnect\Model\Card[] $cards The payment details of the customer's cards on file.
      * @return $this
      */
     public function setCards($cards)

@@ -24,6 +24,7 @@ class CreateCustomerRequest implements ArrayAccess
       * @var string[]
       */
     static $swaggerTypes = array(
+        'idempotency_key' => 'string',
         'given_name' => 'string',
         'family_name' => 'string',
         'company_name' => 'string',
@@ -41,6 +42,7 @@ class CreateCustomerRequest implements ArrayAccess
       * @var string[] 
       */
     static $attributeMap = array(
+        'idempotency_key' => 'idempotency_key',
         'given_name' => 'given_name',
         'family_name' => 'family_name',
         'company_name' => 'company_name',
@@ -58,6 +60,7 @@ class CreateCustomerRequest implements ArrayAccess
       * @var string[]
       */
     static $setters = array(
+        'idempotency_key' => 'setIdempotencyKey',
         'given_name' => 'setGivenName',
         'family_name' => 'setFamilyName',
         'company_name' => 'setCompanyName',
@@ -75,6 +78,7 @@ class CreateCustomerRequest implements ArrayAccess
       * @var string[]
       */
     static $getters = array(
+        'idempotency_key' => 'getIdempotencyKey',
         'given_name' => 'getGivenName',
         'family_name' => 'getFamilyName',
         'company_name' => 'getCompanyName',
@@ -87,6 +91,11 @@ class CreateCustomerRequest implements ArrayAccess
         'birthday' => 'getBirthday'
     );
   
+    /**
+      * $idempotency_key The idempotency key for the request. See the [Idempotency](/basics/api101/idempotency) guide for more information.
+      * @var string
+      */
+    protected $idempotency_key;
     /**
       * $given_name The customer's given (i.e., first) name.
       * @var string
@@ -145,6 +154,11 @@ class CreateCustomerRequest implements ArrayAccess
     public function __construct(array $data = null)
     {
         if ($data != null) {
+            if (isset($data["idempotency_key"])) {
+              $this->idempotency_key = $data["idempotency_key"];
+            } else {
+              $this->idempotency_key = null;
+            }
             if (isset($data["given_name"])) {
               $this->given_name = $data["given_name"];
             } else {
@@ -196,6 +210,25 @@ class CreateCustomerRequest implements ArrayAccess
               $this->birthday = null;
             }
         }
+    }
+    /**
+     * Gets idempotency_key
+     * @return string
+     */
+    public function getIdempotencyKey()
+    {
+        return $this->idempotency_key;
+    }
+  
+    /**
+     * Sets idempotency_key
+     * @param string $idempotency_key The idempotency key for the request. See the [Idempotency](/basics/api101/idempotency) guide for more information.
+     * @return $this
+     */
+    public function setIdempotencyKey($idempotency_key)
+    {
+        $this->idempotency_key = $idempotency_key;
+        return $this;
     }
     /**
      * Gets given_name

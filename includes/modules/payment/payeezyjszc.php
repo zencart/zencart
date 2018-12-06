@@ -38,7 +38,7 @@ class payeezyjszc extends base
     /**
      * $moduleVersion is the plugin version number
      */
-    var $moduleVersion = '0.98';
+    var $moduleVersion = '0.99';
     /**
      * $title is the displayed name for this payment method
      *
@@ -235,6 +235,7 @@ class payeezyjszc extends base
                 array(
                     'title' => '',
                     'field' => zen_draw_hidden_field($this->code . '_fdtoken', '', 'id="' . $this->code . '_fdtoken"') . '<div id="payeezy-payment-errors"></div>' .
+                        zen_draw_hidden_field($this->code . '_cc_number', '', 'id="' . $this->code . '_cc_number') .
                         zen_draw_hidden_field($this->code . '_currency', $order->info['currency'], 'payeezy-data="currency"') .
                         zen_draw_hidden_field($this->code . '_billing_street', $order->billing['street_address'], 'payeezy-data="billing.street"') .
                         zen_draw_hidden_field($this->code . '_billing_city', $order->billing['city'], 'payeezy-data="billing.city"') .

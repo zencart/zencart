@@ -3,7 +3,7 @@
  * Square payments module
  * www.squareup.com
  *
- * Integrated using SquareConnect PHP SDK v2.5.1 thru 2.20180918.1
+ * Integrated using SquareConnect PHP SDK v2.5.1 thru 2.20181205.0
  *
  * REQUIRES PHP 5.4 or newer
  *
@@ -32,7 +32,7 @@ class square extends base
     /**
      * $moduleVersion is the plugin version number
      */
-    public $moduleVersion = '0.95';
+    public $moduleVersion = '0.96';
     /**
      * $title is the displayed name for this payment method
      *

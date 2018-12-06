@@ -108,7 +108,7 @@ class InventoryApi
             $headerParams['Accept'] = $_header_accept;
         }
         $headerParams['Content-Type'] = ApiClient::selectHeaderContentType(array('application/json'));
-        $headerParams['Square-Version'] = "2018-09-18";
+        $headerParams['Square-Version'] = "2018-12-05";
 
         
         
@@ -201,7 +201,7 @@ class InventoryApi
             $headerParams['Accept'] = $_header_accept;
         }
         $headerParams['Content-Type'] = ApiClient::selectHeaderContentType(array('application/json'));
-        $headerParams['Square-Version'] = "2018-09-18";
+        $headerParams['Square-Version'] = "2018-12-05";
 
         
         
@@ -294,7 +294,7 @@ class InventoryApi
             $headerParams['Accept'] = $_header_accept;
         }
         $headerParams['Content-Type'] = ApiClient::selectHeaderContentType(array('application/json'));
-        $headerParams['Square-Version'] = "2018-09-18";
+        $headerParams['Square-Version'] = "2018-12-05";
 
         
         
@@ -387,7 +387,7 @@ class InventoryApi
             $headerParams['Accept'] = $_header_accept;
         }
         $headerParams['Content-Type'] = ApiClient::selectHeaderContentType(array('application/json'));
-        $headerParams['Square-Version'] = "2018-09-18";
+        $headerParams['Square-Version'] = "2018-12-05";
 
         
         
@@ -487,7 +487,7 @@ class InventoryApi
             $headerParams['Accept'] = $_header_accept;
         }
         $headerParams['Content-Type'] = ApiClient::selectHeaderContentType(array('application/json'));
-        $headerParams['Square-Version'] = "2018-09-18";
+        $headerParams['Square-Version'] = "2018-12-05";
 
         // query params
         if ($location_ids !== null) {
@@ -593,7 +593,7 @@ class InventoryApi
             $headerParams['Accept'] = $_header_accept;
         }
         $headerParams['Content-Type'] = ApiClient::selectHeaderContentType(array('application/json'));
-        $headerParams['Square-Version'] = "2018-09-18";
+        $headerParams['Square-Version'] = "2018-12-05";
 
         // query params
         if ($location_ids !== null) {
@@ -695,7 +695,7 @@ class InventoryApi
             $headerParams['Accept'] = $_header_accept;
         }
         $headerParams['Content-Type'] = ApiClient::selectHeaderContentType(array('application/json'));
-        $headerParams['Square-Version'] = "2018-09-18";
+        $headerParams['Square-Version'] = "2018-12-05";
 
         
         
