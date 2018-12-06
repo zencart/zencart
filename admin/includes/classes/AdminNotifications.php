@@ -30,7 +30,6 @@ class AdminNotifications
             }
         }
         return $result;
-
     }
 
     protected function getNotificationInfo()
@@ -47,7 +46,7 @@ class AdminNotifications
         $error = curl_error($ch);
         $errno = curl_errno($ch);
         if ($errno > 0) {
-            return $this->formatCurlError($errno, $error);
+            return [];
         }
         $result = json_decode($response, true);
         return $result;
@@ -143,6 +142,5 @@ class AdminNotifications
         $sql = "DELETE FROM " . TABLE_ADMIN_NOTIFICATIONS . " WHERE notification_key NOT IN (:keys:)";
         $sql = $db->bindVars($sql, ':keys:', $keys, 'inConstructString');
         $db->execute($sql);
-
     }
 }
