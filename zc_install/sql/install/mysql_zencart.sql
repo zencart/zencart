@@ -1896,7 +1896,7 @@ DROP TABLE IF EXISTS salemaker_sales;
 CREATE TABLE salemaker_sales (
   sale_id int(11) NOT NULL auto_increment,
   sale_status tinyint(4) NOT NULL default '0',
-  sale_name varchar(30) NOT NULL default '',
+  sale_name varchar(128) NOT NULL default '',
   sale_deduction_value decimal(15,4) NOT NULL default '0.0000',
   sale_deduction_type tinyint(4) NOT NULL default '0',
   sale_pricerange_from decimal(15,4) NOT NULL default '0.0000',
