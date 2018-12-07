@@ -11,15 +11,25 @@ class AdminNotifications
 {
     protected $notificationServer = 'https://versionserver.zen-cart.com/api/notifications';
 
+    protected $enabled = true;
+
     public function __construct()
     {
         if (defined('PROJECT_NOTIFICATIONSERVER_URL')) {
             $this->projectNotificationServer = PROJECT_NOTIFICATIONSERVER_URL;
         }
+
+        if (defined('DISABLE_ADMIN_NOTIFICATIONS_CHECKING') && DISABLE_ADMIN_NOTIFICATIONS_CHECKING === true) {
+            $this->enabled = false;
+        }
     }
 
     public function getNotifications($target, $adminId)
     {
+        if ($this->enabled === false) {
+            return [];
+        }
+
         $notificationList = $this->getNotificationInfo();
         $this->pruneSavedState($notificationList);
         $savedState = $this->getSavedState($adminId);
@@ -30,7 +40,6 @@ class AdminNotifications
             }
         }
         return $result;
-
     }
 
     protected function getNotificationInfo()
@@ -47,7 +56,7 @@ class AdminNotifications
         $error = curl_error($ch);
         $errno = curl_errno($ch);
         if ($errno > 0) {
-            return $this->formatCurlError($errno, $error);
+            return [];
         }
         $result = json_decode($response, true);
         return $result;
@@ -133,7 +142,6 @@ class AdminNotifications
         return new DateTime("now");
     }
 
-
     protected function pruneSavedState($notificationList)
     {
         global $db;
@@ -143,6 +151,5 @@ class AdminNotifications
         $sql = "DELETE FROM " . TABLE_ADMIN_NOTIFICATIONS . " WHERE notification_key NOT IN (:keys:)";
         $sql = $db->bindVars($sql, ':keys:', $keys, 'inConstructString');
         $db->execute($sql);
-
     }
 }

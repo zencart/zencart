@@ -83,6 +83,8 @@ ALTER TABLE manufacturers MODIFY manufacturers_image varchar(255) default NULL;
 ALTER TABLE record_artists MODIFY artists_image varchar(255) default NULL;
 ALTER TABLE record_company MODIFY record_company_image varchar(255) default NULL;
 
+ALTER TABLE salemaker_sales MODIFY sale_name varchar(128) NOT NULL DEFAULT '';
+
 ALTER TABLE coupons ADD coupon_calc_base TINYINT(1) NOT NULL DEFAULT 0;
 ALTER TABLE coupons ADD coupon_order_limit INT( 4 ) NOT NULL DEFAULT 0;
 ALTER TABLE coupons ADD coupon_is_valid_for_sales TINYINT(1) NOT NULL DEFAULT 1;
