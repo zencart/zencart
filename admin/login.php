@@ -1,10 +1,10 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2016 Zen Cart Development Team
+ * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: bislewl  Tue Feb 16 23:14:29 2016 -0600 Modified in v1.5.5 $
+ * @version $Id:  Modified in v1.5.6 $
  */
 require('includes/application_top.php');
 
@@ -127,28 +127,28 @@ if ($expired && $message == '')
             <div class="messageStackError"><?php echo $message; ?></div>
             <br class="clearBoth"/>
             <div class="row">
-              <div class="col-xs-12 col-sm-10 col-sm-offset-1 col-md-10 col-md-offset-2">
+              <div class="col-xs-12">
                 <div class="form-group">
-                  <label class="col-xs-4 col-xs-offset-1 col-sm-4 col-md-6 control-label" for="admin_name-<?php echo $_SESSION['securityToken']; ?>"><?php echo TEXT_ADMIN_NAME; ?>:</label>
-                  <div class="col-xs-6 col-sm-7 col-md-6">
+                  <label class="col-xs-5 control-label" for="admin_name-<?php echo $_SESSION['securityToken']; ?>"><?php echo TEXT_ADMIN_NAME; ?>:</label>
+                  <div class="col-xs-6">
                       <?php echo zen_draw_input_field('admin_name-' . $_SESSION['securityToken'], zen_output_string($admin_name), 'class="form-control" id="admin_name" autocapitalize="none" spellcheck="false" autocomplete="off" placeholder="' . TEXT_ADMIN_NAME . '"'); ?>
                   </div>
                 </div>
                 <div class="form-group">
-                  <label class="col-xs-4 col-xs-offset-1 col-sm-4 col-md-6 control-label" for="oldpwd-<?php echo $_SESSION['securityToken']; ?>"><?php echo TEXT_ADMIN_OLD_PASSWORD; ?>:</label>
-                  <div class="col-xs-6 col-sm-7 col-md-6">
+                  <label class="col-xs-5 control-label" for="oldpwd-<?php echo $_SESSION['securityToken']; ?>"><?php echo TEXT_ADMIN_OLD_PASSWORD; ?>:</label>
+                  <div class="col-xs-6">
                       <?php echo zen_draw_password_field('oldpwd-' . $_SESSION['securityToken'], '', false, 'class="form-control" id="old_pwd" placeholder="' . TEXT_ADMIN_OLD_PASSWORD . '"', false); ?>
                   </div>
                 </div>
                 <div class="form-group">
-                  <label class="col-xs-4 col-xs-offset-1 col-sm-4 col-md-6 control-label" for="newpwd-<?php echo $_SESSION['securityToken']; ?>"><?php echo TEXT_ADMIN_NEW_PASSWORD; ?>:</label>
-                  <div class="col-xs-6 col-sm-7 col-md-6">
+                  <label class="col-xs-5 control-label" for="newpwd-<?php echo $_SESSION['securityToken']; ?>"><?php echo TEXT_ADMIN_NEW_PASSWORD; ?>:</label>
+                  <div class="col-xs-6">
                       <?php echo zen_draw_password_field('newpwd-' . $_SESSION['securityToken'], '', false, 'class="form-control" id="admin_pass" placeholder="' . TEXT_ADMIN_NEW_PASSWORD . '"', false); ?>
                   </div>
                 </div>
                 <div class="form-group">
-                  <label class="col-xs-4 col-xs-offset-1 col-sm-4 col-md-6 control-label" for="confpwd-<?php echo $_SESSION['securityToken']; ?>"><?php echo TEXT_ADMIN_CONFIRM_PASSWORD; ?>:</label>
-                  <div class="col-xs-6 col-sm-7 col-md-6">
+                  <label class="col-xs-5 control-label" for="confpwd-<?php echo $_SESSION['securityToken']; ?>"><?php echo TEXT_ADMIN_CONFIRM_PASSWORD; ?>:</label>
+                  <div class="col-xs-6">
                       <?php echo zen_draw_password_field('confpwd-' . $_SESSION['securityToken'], '', false, 'class="form-control" id="admin_pass2" placeholder="' . TEXT_ADMIN_CONFIRM_PASSWORD . '"', false); ?>
                   </div>
                 </div>
