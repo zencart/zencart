@@ -2,10 +2,10 @@
 
 /**
  * @package admin
- * @copyright Copyright 2003-2016 Zen Cart Development Team
+ * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: zcwilt  Wed Apr 8 19:58:15 2015 +0100 Modified in v1.5.5 $
+ * @version $Id: Zen4All Thu Nov 9 12:37:01 2017 +0100 Modified in v1.5.6 $
  */
 class boxTableBlock {
 

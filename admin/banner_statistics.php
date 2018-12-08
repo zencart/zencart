@@ -1,10 +1,10 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2017 Zen Cart Development Team
+ * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte   Modified in v1.5.6 $
+ * @version $Id: Zen4All Mon Nov 19 12:27:27 2018 +0100 Modified in v1.5.6 $
  *
  * @TODO - align .flot_chart.flot-x-axis smarter in relation to .flot_chart, and add styling, such as slightly larger font and bold, etc
  * @TODO - expand the functionality to enable hover-points and hover-text describing each point on the graphs

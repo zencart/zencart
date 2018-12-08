@@ -3,10 +3,10 @@
  * main_product_image module
  *
  * @package templateSystem
- * @copyright Copyright 2003-2006 Zen Cart Development Team
+ * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: main_product_image.php 4663 2006-10-02 04:08:32Z drbyte $
+ * @version $Id: lat9 Thu May 17 09:25:19 2018 -0400 Modified in v1.5.6 $
  */
 if (!defined('IS_ADMIN_FLAG')) {
     die('Illegal Access');

@@ -4,7 +4,7 @@
  * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: banner_manager.php Author: ajeh  Modified in v1.5.6 $
+ * @version $Id: Scott C Wilson Thu Nov 29 07:29:46 2018 -0500 Modified in v1.5.6 $
  */
 require('includes/application_top.php');
 require('includes/functions/functions_graphs.php');

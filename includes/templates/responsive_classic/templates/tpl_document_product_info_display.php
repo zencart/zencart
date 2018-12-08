@@ -6,10 +6,10 @@
  * Displays template according to "document-product" product-type needs
  *
  * @package templateSystem
- * @copyright Copyright 2003-2016 Zen Cart Development Team
+ * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: picaflor-azul Sun Dec 13 16:32:43 2015 -0500 New in v1.5.5 $
+ * @version $Id: picaflor-azul Thu Sep 21 10:37:10 2017 -0400 Modified in v1.5.6 $
  */
 ?>
 <div class="centerColumn" id="docProductDisplay">

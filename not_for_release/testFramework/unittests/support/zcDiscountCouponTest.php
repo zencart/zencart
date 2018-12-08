@@ -3,7 +3,7 @@
  * @package tests
  * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id$
+ * @version $Id: Zcwilt Sat Oct 20 21:10:01 2018 +0100 New in v1.5.6 $
  */
 require_once(__DIR__ . '/../support/zcTestCase.php');
 

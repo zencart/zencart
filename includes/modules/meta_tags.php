@@ -3,10 +3,10 @@
  * meta_tags module
  *
  * @package modules
- * @copyright Copyright 2003-2016 Zen Cart Development Team
+ * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: DrByte  Mon Feb 8 15:28:43 2016 -0500 Modified in v1.5.5 $
+ * @version $Id: mc12345678 Sun Jun 3 20:28:21 2018 -0400 Modified in v1.5.6 $
  */
 $meta_tags_over_ride = false;
 $metatag_page_name = $current_page_base;

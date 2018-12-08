@@ -8,7 +8,7 @@
  * @package templateSystem
  * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @license https://www.zen-cart.com/license/2_0.txt GNU Public License v2.0
- * @version $Id: tpl_zc_install_suggested_default.php  Modified in v1.5.6 $
+ * @version $Id: Zen4All Thu Sep 20 12:23:12 2018 +0200 Modified in v1.5.6 $
  */
 $relPath = (file_exists('includes/templates/template_default/images/logo.gif')) ? '' : '../';
 $instPath = (file_exists('zc_install/index.php')) ? 'zc_install/index.php' : (file_exists('../zc_install/index.php') ? '../zc_install/index.php' : '');
