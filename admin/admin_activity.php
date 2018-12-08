@@ -335,7 +335,7 @@ if ($action != '') {
       <?php if ($action == '') { ?>
         <div class="row">
             <?php echo zen_draw_form('export', FILENAME_ADMIN_ACTIVITY, 'action=save', 'post', 'class="form-horizontal"'); //, 'onsubmit="return check_form(export);"');     ?>
-          <h4><?php echo HEADING_SUB1; ?></h2>
+          <h4><?php echo HEADING_SUB1; ?></h4>
             <div class="row"><?php echo TEXT_INSTRUCTIONS; ?></div>
             <div class="form-group"><?php echo zen_draw_label(TEXT_ACTIVITY_EXPORT_FILTER, 'filter', 'class="col-sm-3 control-label"'); ?>
               <div class="col-sm-9 col-md-6">
