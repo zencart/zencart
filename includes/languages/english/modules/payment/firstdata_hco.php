@@ -6,7 +6,7 @@
  * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: DrByte  Modified in v1.5.6 $
+ * @version $Id: Drbyte Sun Jan 7 21:30:21 2018 -0500 Modified in v1.5.6 $
  *
  * To create a USD sandbox account for testing, see: https://support.payeezy.com/hc/en-us/articles/203730579-Payeezy-Gateway-Demo-Accounts
  * And find test credit card numbers (for sandbox only) at https://support.payeezy.com/hc/en-us/articles/204504235-Using-test-credit-card-numbers

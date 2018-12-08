@@ -16,7 +16,7 @@
  * @package payeezy
  * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: zcwilt  Modified in v1.5.6 $
+ * @version $Id: Drbyte Tue Dec 4 13:24:10 2018 -0500 Modified in v1.5.6 $
  */
 
 // required to prevent PHP 5.3 from throwing errors:

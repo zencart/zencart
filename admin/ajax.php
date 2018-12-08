@@ -7,7 +7,7 @@
  * @package core
  * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id:  Sept 2018 New in v1.5.6 $
+ * @version $Id: lat9 Fri Oct 26 10:04:06 2018 -0400 New in v1.5.6 $
  */
 // -----
 // Let the "base" ajax.php processing "know" that this request came from the admin,

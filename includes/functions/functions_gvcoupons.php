@@ -4,10 +4,10 @@
  * Functions related to processing Gift Vouchers/Certificates and coupons
  *
  * @package functions
- * @copyright Copyright 2003-2017 Zen Cart Development Team
+ * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: functions_gvcoupons.php Ajeh  Modified in v1.5.6 $
+ * @version $Id: Drbyte Wed Aug 2 14:55:16 2017 -0400 Modified in v1.5.6 $
  */
 
 ////

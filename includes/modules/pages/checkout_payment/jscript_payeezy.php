@@ -5,7 +5,7 @@
  * @package payeezy
  * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: Ian Wilson   Modified in v1.5.6 $
+ * @version $Id: Drbyte Tue Dec 4 13:24:10 2018 -0500 Modified in v1.5.6 $
  */
 if (!defined('MODULE_PAYMENT_PAYEEZYJSZC_STATUS') || MODULE_PAYMENT_PAYEEZYJSZC_STATUS != 'True' || (!defined('MODULE_PAYMENT_PAYEEZYJSZC_JSSECURITY_KEY') && !defined('MODULE_PAYMENT_PAYEEZYJSZC_JSSECURITY_KEY_SANDBOX') )) {
 	return false;

@@ -7,7 +7,7 @@
  * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: zcwilt Updated in v1.5.6 $
+ * @version $Id: Zcwilt Thu Nov 1 17:28:42 2018 +0000 Modified in v1.5.6 $
  * @private
  */
 

@@ -10,7 +10,7 @@
  * @package square
  * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: Chris Brown <drbyte@zen-cart.com> Modified 2018-11-20  New in v1.5.5f $
+ * @version $Id: Drbyte Wed Dec 5 22:40:06 2018 -0500 Modified in v1.5.6 $
  */
 
 if (!defined('TABLE_SQUARE_PAYMENTS')) define('TABLE_SQUARE_PAYMENTS', DB_PREFIX . 'square_payments');
