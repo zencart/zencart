@@ -3,9 +3,9 @@
  * init_sanitize
  *
  * @package initSystem
- * @copyright Copyright 2003-2017 Zen Cart Development Team
+ * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: zcwilt June 2017 Modified in v1.5.5f $
+ * @version $Id: Drbyte Mon Nov 12 20:38:09 2018 -0500 Modified in v1.5.6 $
  */
 
 if (!defined('DO_STRICT_SANITIZATION')) {

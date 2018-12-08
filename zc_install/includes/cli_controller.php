@@ -4,7 +4,7 @@
  * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: zcwilt  Modified in v1.5.6 $
+ * @version $Id: Drbyte Sun Jan 14 00:20:07 2018 -0500 Modified in v1.5.6 $
  */
 
 if (!file_exists(DIR_FS_INSTALL . 'includes/custom_settings.php')) {
