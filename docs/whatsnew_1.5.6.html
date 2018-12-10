@@ -176,23 +176,24 @@
                 The most notable improvements and bugfixes in v1.5.6 since v1.5.5 include:
             </h3>
             <ul>
+                <li>Core - Updated dozens of files for compatibility with PHP 7.2, and 7.3</li>
                 <li>Admin - Sales-Report graphs on Admin dashboard</li>
                 <li>Checkout - customer confirmation emails now include customer delivery telephone number</li>
                 <li>Checkout - Square Payment support is now built-in. Start taking credit card payments in just 5 minutes! See www.zen-cart.com/partners/square_setup </li>
                 <li>Admin - Reworded "in stock"/"out of stock" to "enabled"/"disabled" on product-edit pages due to popular request</li>
-                <li>Admin - Attribute-related pages updated to cleaner styling (credits @Zen4All)</li>
-                <li>Admin - Most of the Admin pages have received styling updates for consistency and improved support for smaller screens</li>
+                <li>Admin - Most of the Admin pages have received styling updates for consistency and improved support for smaller screens (credits @Zen4All)</li>
                 <li>Admin - Admin pages now show their name in browser tabs, instead of generic "Admin"</li>
                 <li>Admin - Order pages now have some observer hooks to allow plugins to display "more data" with less code-changes</li>
-                <li>Added - Coupon features: search, export, reactivate, delete duplicates, clone existing coupons</li>
-                <li>Added - Coupons can now be restricted to amount of an order or of a specific product</li>
-                <li>Added - Coupons can now be restricted to customers having a specified number of previous purchases</li>
-                <li>Added - Coupons can now be restricted to products not on sale</li>
-                <li>Added - Coupons restrictions can now be bulk-added via manufacturer filter</li>
-                <li>Added - Coupon Usage Report added</li>
-                <li>Added - GV Queue indicator in Admin Header bar can be enabled/disabled in GV Module settings</li>
+                <li>Admin - GV Queue indicator in Admin Header bar can be enabled/disabled in GV Module settings</li>
+                <li>Coupon new features added: search, export, reactivate, delete duplicates, clone existing coupons</li>
+                <li>Coupons can now be restricted to amount of an order or of a specific product</li>
+                <li>Coupons can now be restricted to customers having a specified number of previous purchases</li>
+                <li>Coupons can now be restricted to products not on sale</li>
+                <li>Coupons restrictions can now be bulk-added via manufacturer filter</li>
+                <li>Coupon Usage Report added</li>
                 <li>Template - CSS spans added around product-qty min/max/unit output, so that these items can be selectively hidden if needed. (Credits @lat9)</li>
                 <li>Template - Compatibility updates to accommodate OnePageCheckout plugin integration </li>
+                <li>Core: Added language-change notifier hooks</li>
                 <li>Enhancement - Updated database to store more order-related data for easier order-reconstruction. This can help allow plugins to do more with completed order details.</li>
                 <li>Enhancement - File-Uploading now gives more detailed feedback about failures related to invalid file types.</li>
                 <li>Fixed - date display on Admin warning about log data is now formatted with store's default date format</li>
@@ -201,9 +202,7 @@
                 <li>Utility - CurlTester has more links to external diagnostic tools, including TLS Testing verification</li>
                 <li>Utility - Plugin version-check utility optimized to allow specific version-comparisons, and adapt to timeouts more quickly.</li>
                 <li>DB: Remove unused basket 'final_price' field from database</li>
-                <li>Core: Added language-change notifier hooks</li>
-                <li>Core - Updated dozens of files for compatibility with PHP 7.3 </li>
-                <li>Removed old sagepay_form payment module, and old authorizenet_echeck payment module.
+                <li>Removed old sagepay_form payment module, and old authorizenet_echeck payment module.</li>
                 <li>All known v1.5.5 bugfixes and security fixes are included in v1.5.6</li>
                 <li>... and numerous other small improvements to make things work faster, sleeker, smarter and be easier to use</li>
             </ul>
