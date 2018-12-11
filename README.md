@@ -6,7 +6,7 @@
 
 You are currently viewing code for our development branch, which will be our next larger release, initially dubbed as Zen Cart&reg; v2, which brings architectural improvements to allow for increased flexibility for customizing each storeowner's own preferences.
 
-The latest stable version is currently [v1.5.5f](https://github.com/zencart/zencart/releases).
+The latest stable version is currently [v1.5.6](https://github.com/zencart/zencart/releases).
 
 [![Download Latest Official Zen Cart&reg; Release](https://a.fsdn.com/con/app/sf-download-button)<br>Download Latest Official Zen Cart&reg; Release](http://sourceforge.net/projects/zencart/files/latest/download)
 
@@ -28,7 +28,7 @@ Requirements for v2:
 - Written for PHP 7.3 (backward compatible to PHP 5.6)
 - Written for MySQL 5.7 (compatible with 5.7 and MariaDB 10.1 to 10.3)
 - CURL (compiled into PHP) is used for communication with payment/shipping services
-- Compatible with with Apache 2.4 and 2.2
+- Apache 2.4 or 2.2
 - Recommended Apache modules include: expires, headers, env, alias, deflate, ssl, mime, rewrite (in addition to other common modules)
 
 Zen Cart&reg; can also run on Nginx, but requires that the server administrator understand properly configuring the nginx *.conf files when prompted with the recommended directives at the end of the zc_install setup phase.
@@ -52,26 +52,24 @@ Installation is simple:
 7. Also make the `/cache` and `/logs` folders writable. (You will be prompted about making other folders writable during installation)
 8. Follow the instructions that appear in your browser for installation. 
 
-If some of the terms used in these brief instructions are things you don't understand, there is a much more detailed set of instructions in the [/docs/Implementation-Guide](https://www.zen-cart.com/docs/implementation-guide-v155.pdf) PDF.
+If some of the terms used in these brief instructions are things you don't understand, there is a much more detailed set of instructions in the [/docs/Implementation-Guide](https://www.zen-cart.com/docs/implementation-guide-v156.pdf) PDF.
 
 
 Guidance for Secure Installations
 ---------------------------------
-__The [Implementation Guide](https://www.zen-cart.com/docs/implementation-guide-v155.pdf) document is provided to give detailed instructions on how to install and secure your site in accordance with PCI Compliance requirements.__ Whether your site "needs" PCI Compliance or not is up to you to decide, but you should still follow the documented principles to maximize your site's resiliance against troublesome access attempted by any undesired/unauthorized visitors.
+__The [Implementation Guide](https://www.zen-cart.com/docs/implementation-guide-v156.pdf) document is provided to give detailed instructions on how to install and secure your site in accordance with PCI Compliance requirements.__ Whether your site "needs" PCI Compliance or not is up to you to decide, but you should still follow the documented principles to maximize your site's resiliance against troublesome access attempted by any undesired/unauthorized visitors.
 
 
 Documentation
 -------------
-Use your browser to open the [/docs/index.html](http://www.zen-cart.com/docs/index.html) page for links to documentation and the [Implementation Guide](https://www.zen-cart.com/docs/implementation-guide-v155.pdf).
+Use your browser to open the [/docs/index.html](http://www.zen-cart.com/docs/index.html) page for links to documentation and the [Implementation Guide](https://www.zen-cart.com/docs/implementation-guide-v156.pdf).
 
 
 Developer Documentation
 -----------------------
-Developers wishing to contribute to the Zen Cart&reg; core code may fork the [zencart/zencart](https://github.com/zencart/zencart) repository on github and issue Pull Requests from their own feature branches. For detailed help on using github, forking, branching, and contributing see [Contributing to Zen Cart code](http://docs.zen-cart.com/Contributing/).
+Developers wishing to contribute to the Zen Cart&reg; core code may fork the [zencart/zencart](https://github.com/zencart/zencart) repository on github and issue Pull Requests from their own feature branches. For detailed help on using github, forking, branching, and contributing see [Contributing to Zen Cart code](https://docs.zen-cart.com/Contributing/).
 
-Visit [docs.zen-cart.com](http://docs.zen-cart.com) for version-specific guidance on issues relevant to developers.  You may also help with this site by forking the [zencart/documentation](https://github.com/zencart/documentation) repository on github and submitting pull requests.
-
-Developers will find the standalone [Habitat VM](http://docs.zen-cart.com/Habitat/main) to be a useful tool for staging site upgrades and doing offline feature development or testing. Designers may like it for testing new templates without affecting the live site.
+Visit [docs.zen-cart.com](https://docs.zen-cart.com) for version-specific guidance on issues relevant to developers.  You may also help with this site by forking the [zencart/documentation](https://github.com/zencart/documentation) repository on github and submitting pull requests.
 
 
 Support
