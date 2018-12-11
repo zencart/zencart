@@ -2,15 +2,12 @@
 /**
  * file contains systemChecker Class
  * @package Installer
- * @copyright Copyright 2003-2016 Zen Cart Development Team
+ * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: DrByte  Tue Feb 16 17:44:40 2016 -0500 New in v1.5.5 $
- *
+ * @version $Id: Author: DrByte  Modified in v1.5.6 $
  */
 /**
- *
  * systemChecker Class
- *
  */
 class systemChecker
 {
@@ -20,6 +17,10 @@ class systemChecker
     $res = sfYaml::load(DIR_FS_INSTALL . 'includes/systemChecks.yml');
     $this->systemChecks = $res['systemChecks'];
     $this->extraRunLevels = array();
+
+    if (file_exists(DIR_FS_ROOT . 'includes/local/configure.php')) {
+        $this->extraRunLevels[] = 'localdev';
+    }
 
     if ($selectedAdminDir == 'UNSPECIFIED' || $selectedAdminDir == '' || !file_exists(DIR_FS_ROOT . $selectedAdminDir))
     {
@@ -107,7 +108,7 @@ class systemChecker
     if ($this->getServerConfig()->fileLoaded())
     {
 
-      // if the new var added in v160 is present, then this deems the file to be already updated
+      // if the new define added in v155 is present, then this deems the file to be already updated
       $sessionStorage = $this->getServerConfig()->getDefine('SESSION_STORAGE');
       if (isset($sessionStorage))
       {
@@ -144,8 +145,11 @@ class systemChecker
   public function getServerConfig()
   {
     if(!isset($this->serverConfig)) {
-      $this->serverConfig = new zcConfigureFileReader(DIR_FS_ROOT . 'includes/configure.php');
-  }
+      $configFile = DIR_FS_ROOT . 'includes/configure.php';
+      $configFileLocal = DIR_FS_ROOT . 'includes/local/configure.php';
+      if (file_exists($configFileLocal)) $configFile = $configFileLocal;
+      $this->serverConfig = new zcConfigureFileReader($configFile);
+    }
     return $this->serverConfig;
   }
   public function findCurrentDbVersion()
@@ -261,6 +265,10 @@ class systemChecker
       $retVal  = ($result->fields['configuration_description'] == $parameters['expectedResult']) ? TRUE : FALSE;
     }
     return $retVal;
+  }
+  public function checkFileExists($filepath)
+  {
+    return file_exists($filepath);
   }
   public function checkWriteableDir($parameters)
   {
@@ -624,9 +632,11 @@ class systemChecker
     if (VERBOSE_SYSTEMCHECKER == 'screen' || VERBOSE_SYSTEMCHECKER === TRUE || VERBOSE_SYSTEMCHECKER == 'TRUE')
     {
       echo $methodName . "<br>";
-      foreach ($methodDetail['parameters'] as $key=>$value)
-      {
-        echo $key . " : " . $value . "<br>";
+      if (is_array($methodDetail['parameters'])) {
+        foreach ($methodDetail['parameters'] as $key=>$value)
+        {
+          echo $key . " : " . $value . "<br>";
+        }
       }
       echo (($result == 1) ? 'PASSED' : 'FAILED') . "<br>";
       echo "------------------<br><br>";

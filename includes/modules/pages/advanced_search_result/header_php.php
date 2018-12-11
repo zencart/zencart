@@ -34,6 +34,8 @@ if ( (isset($_GET['keyword']) && (empty($_GET['keyword']) || $_GET['keyword']==H
   $pfrom = '';
   $pto = '';
   $keywords = '';
+  $dfrom_array = array();
+  $dto_array = array();
 
   if (isset($_GET['dfrom'])) {
     $dfrom = (($_GET['dfrom'] == DOB_FORMAT_STRING) ? '' : $_GET['dfrom']);
@@ -364,8 +366,8 @@ if (isset($_GET['dto']) && zen_not_null($_GET['dto']) && ($_GET['dto'] != DOB_FO
 
 $rate = $currencies->get_value($_SESSION['currency']);
 if ($rate) {
-  $pfrom = $_GET['pfrom'] / $rate;
-  $pto = $_GET['pto'] / $rate;
+  $pfrom = (float)$_GET['pfrom'] / $rate;
+  $pto = (float)$_GET['pto'] / $rate;
 }
 
 if (DISPLAY_PRICE_WITH_TAX == 'true') {

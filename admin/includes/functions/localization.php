@@ -1,10 +1,10 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2016 Zen Cart Development Team
+ * @copyright Copyright 2003-2017 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: DrByte  May 2 2016 Modified in v1.5.5a $
+ * @version $Id: Author: DrByte  July 2017 Modified in v1.5.6 $
  */
 /**
  * Dependencies:
@@ -16,7 +16,7 @@
 
 function zen_update_currencies($cli_Output = FALSE)
 {
-  global $db, $messageStack;
+  global $db, $messageStack, $zco_notifier;
   zen_set_time_limit(600);
   $currency = $db->Execute("select currencies_id, code, title, decimal_places from " . TABLE_CURRENCIES);
   while (!$currency->EOF) {
@@ -39,8 +39,10 @@ function zen_update_currencies($cli_Output = FALSE)
     }
     if (zen_not_null($rate) && $rate > 0) {
       /* Add currency uplift */
-      if ($rate != 1 && defined('CURRENCY_UPLIFT_RATIO') && (int)CURRENCY_UPLIFT_RATIO != 0) {
-        $rate = (string)((float)$rate * (float)CURRENCY_UPLIFT_RATIO);
+      $multiplier = (defined('CURRENCY_UPLIFT_RATIO') && (int)CURRENCY_UPLIFT_RATIO != 0) ? CURRENCY_UPLIFT_RATIO : 0;
+      $zco_notifier->notify('ADMIN_CURRENCY_EXCHANGE_RATE_MULTIPLIER', $currency->fields['code'], $multiplier, $rate);
+      if ($rate != 1 && $multiplier > 0) {
+        $rate = (string)((float)$rate * (float)$multiplier);
       }
 
       // special handling for currencies which don't support decimal places
@@ -49,10 +51,11 @@ function zen_update_currencies($cli_Output = FALSE)
       }
 
       if (zen_not_null($rate) && $rate > 0) {
+        $zco_notifier->notify('ADMIN_CURRENCY_EXCHANGE_RATE_SINGLE', $currency->fields['code'], $rate);
         $db->Execute("update " . TABLE_CURRENCIES . "
-                            set value = '" . (float)$rate . "', last_updated = now()
-                            where currencies_id = '" . (int)$currency->fields['currencies_id'] . "'");
-        $msg = sprintf(TEXT_INFO_CURRENCY_UPDATED, $currency->fields['title'], $currency->fields['code'], $rate, $server_used);
+                      set value = '" . round((float)$rate, 8) . "', last_updated = now()
+                      where currencies_id = '" . (int)$currency->fields['currencies_id'] . "'");
+        $msg = sprintf(TEXT_INFO_CURRENCY_UPDATED, $currency->fields['title'], $currency->fields['code'], round((float)$rate, 8), $server_used);
         if (is_object($messageStack)) {
           $messageStack->add_session($msg, 'success');
         } elseif ($cli_Output) {
@@ -69,26 +72,31 @@ function zen_update_currencies($cli_Output = FALSE)
     }
     $currency->MoveNext();
   }
-  zen_record_admin_activity('Currency exchange rates updated.', 'info');
+  if (function_exists('zen_record_admin_activity')) zen_record_admin_activity('Currency exchange rates updated: ' . $msg, 'info');
+  $zco_notifier->notify('ADMIN_CURRENCY_EXCHANGE_RATES_UPDATED', $msg);
 }
 
+/**
+ * ECB Rates - based on data format in July 2017
+ *
+ * @param string $currencyCode requested
+ * @param string $base currency code
+ * @return int|float
+ */
 function quote_ecb_currency($currencyCode = '', $base = DEFAULT_CURRENCY)
 {
-  // NOTE: checks via file() ... may fail if php file Wrapper disabled.
   if ($currencyCode == $base) return 1;
-  static $XMLContent;
+  static $XMLContent = array();
   $url = 'http://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml';
-  $data = '';
-  if (!isset($XMLContent) || !is_array($XMLContent) || sizeof($XMLContent) < 1) {
-    $XMLContent = file($url);
+  if (empty($XMLContent)) {
+    $XMLContent = @file($url);
     if (! is_object($XMLContent) && function_exists('curl_init')) {
-      // check via CURL instead.
-      $XMLContent = doCurlCurrencyRequest('POST', $url, $data);
+      $XMLContent = doCurlCurrencyRequest('GET', $url);
       $XMLContent = explode("\n", $XMLContent);
     }
   }
   $currencyArray = array();
-  $currencyArray['EUR'] = 1; // this is the ECB bank, so EUR always = 1
+  $currencyArray['EUR'] = 1; // quoting ECB bank, so EUR is always = 1
   $rate = 1;
   $line = '';
   foreach ($XMLContent as $line) {
@@ -98,40 +106,49 @@ function quote_ecb_currency($currencyCode = '', $base = DEFAULT_CURRENCY)
       }
     }
   }
-  if (!isset($currencyArray[DEFAULT_CURRENCY]) || 0 == $currencyArray[DEFAULT_CURRENCY]) return ''; // no valid value, so abort
-  $rate = (string)((float)$currencyArray[$currencyCode] / $currencyArray[DEFAULT_CURRENCY]);
+  if (!isset($currencyArray[$base]) || 0 == $currencyArray[$base]) return ''; // no valid value, so abort
+  $rate = (string)((float)$currencyArray[$currencyCode] / $currencyArray[$base]);
   return $rate;
 }
 
+/**
+ * BOC Rates - based on data format in July 2017
+ *
+ * @param string $currencyCode requested
+ * @param string $base currency code
+ * @return bool|float
+ */
 function quote_boc_currency($currencyCode = '', $base = DEFAULT_CURRENCY)
 {
   if ($currencyCode == $base) return 1;
-  static $CSVContent;
   $requested = $currencyCode;
-  $url = 'http://www.bankofcanada.ca/stats/assets/csv/fx-seven-day.csv';
-  $currencyArray = array();
-  $currencyArray['CAD'] = 1;
-  if (!isset($CSVContent) || $CSVContent == '') {
-    $CSVContent = file($url);
-    if (! is_object($CSVContent) && function_exists('curl_init')) {
-      $CSVContent = doCurlCurrencyRequest('GET', $url);
-      $CSVContent = explode("\n", $CSVContent);
-    }
+  $url = 'http://www.bankofcanada.ca/valet/observations/group/FX_RATES_DAILY/json';
+  static $BOCdata = array();
+  if (empty($BOCdata)) {
+    $result = doCurlCurrencyRequest('GET', $url);
+    // if still empty, abort
+    if (empty($result)) return false;
+    $BOCdata = json_decode($result, true);
+    if (empty($BOCdata) || empty($BOCdata['observations'])) return false; // no data means unable to continue with updates
   }
-  foreach ($CSVContent as $line) {
-    if (substr($line, 0, 1) == '#' || substr($line, 0, 4) == 'Date' || trim($line) == '') continue;
-    $data = explode(',', $line); // make an array, where each value is a separate column from the CSV
-    $curName = substr(trim($data[1]), 0, 3); // take only first 3 chars of currency code (ie: removes "_NOON" suffix, or whatever future suffix BOC adds)
-    $curRate = trim($data[sizeof($data)-1]);  // grab the value from the last column
-    // if the value isn't already set and isn't (basically) zero, update it in the array
-    if (!isset($currencyArray[trim($curName)]) || $currencyArray[trim($curName)] < 0.00001) $currencyArray[trim($curName)] = (float)$curRate;
-  }
-  // sanity checks
-  if (!isset($currencyArray[$requested])) return false; // $requested not found
-  if ($currencyArray[$requested] == 0) return false; // can't divide by zero
 
-  $rate = (string)($currencyArray[DEFAULT_CURRENCY]/(float)$currencyArray[$requested]);
-  return $rate;
+  // grab the last date data reported
+  $values = array_pop($BOCdata['observations']);
+  // if nothing found, attempt to get the next-last item
+  if (empty($values)) {
+      $values = array_pop($BOCdata['observations']);
+  }
+  if (empty($values) || !is_array($values)) return false;
+
+  $lookup = 'FX' . strtoupper($requested) . 'CAD';
+  $default = 'FX' . strtoupper($base) . 'CAD';
+
+  $values['FXCADCAD']['v'] = 1; // quoting BOC so CAD is always = 1
+
+  if (!empty($values[$default]['v']) && !empty($values[$lookup]['v'])) {
+      return (string)($values[$default]['v'] / $values[$lookup]['v']);
+  }
+  return false;
 }
 
 
@@ -142,11 +159,10 @@ function quote_boc_currency($currencyCode = '', $base = DEFAULT_CURRENCY)
     curl_setopt($ch, CURLOPT_URL,$url);
     curl_setopt($ch, CURLOPT_VERBOSE, 0);
     curl_setopt($ch, CURLOPT_HEADER, false);
-    curl_setopt($ch, CURLOPT_USERAGENT, $_SERVER['HTTP_USER_AGENT']);
-    curl_setopt($ch, CURLOPT_FOLLOWLOCATION, false);
+    curl_setopt($ch, CURLOPT_USERAGENT, empty($_SERVER['HTTP_USER_AGENT']) ? HTTP_CATALOG_SERVER . DIR_WS_CATALOG : $_SERVER['HTTP_USER_AGENT']);
+    curl_setopt($ch, CURLOPT_REFERER, HTTP_CATALOG_SERVER . DIR_WS_CATALOG);
+    curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-//  curl_setopt($ch, CURLOPT_COOKIEJAR, 'cookie.txt');
-//  curl_setopt($ch, CURLOPT_COOKIEFILE, 'cookie.txt');
     if (strtoupper($method) == 'POST' && $vars != '') {
       curl_setopt($ch, CURLOPT_POST, true);
       curl_setopt($ch, CURLOPT_POSTFIELDS, $vars);
@@ -172,7 +188,6 @@ function quote_boc_currency($currencyCode = '', $base = DEFAULT_CURRENCY)
 
     if ($data != '') {
       return $data;
-    } else {
-      return $error;
     }
+    return $error;
   }

@@ -2,14 +2,12 @@
 /**
  * file contains zcConfigureFileWriter class
  * @package Installer
- * @copyright Copyright 2003-2016 Zen Cart Development Team
+ * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: DrByte  Tue Feb 16 15:03:47 2016 -0500 New in v1.5.5 $
+ * @version $Id: Author: DrByte  Modified in v1.5.6 $
  */
 /**
- *
  * zcConfigureFileWriter class
- *
  */
 class zcConfigureFileWriter
 {
@@ -55,11 +53,17 @@ class zcConfigureFileWriter
   {
     $tplFile = DIR_FS_INSTALL . 'includes/catalog-configure-template.php';
     $outputFile = rtrim($this->inputs['physical_path'], '/') . '/includes/configure.php';
+    $outputFileLocal = rtrim($this->inputs['physical_path'], '/') . '/includes/local/configure.php';
+    if (file_exists($outputFileLocal)) $outputFile = $outputFileLocal;
+
     $result1 = $this->transformConfigureTplFile($tplFile, $outputFile);
     if ((int)$result1 == 0) logDetails('catalogConfig size: ' . (int)$result1 . ' (will be greater than 0 if file was written correctly)', 'store configure.php');
 
     $tplFile = DIR_FS_INSTALL . 'includes/admin-configure-template.php';
     $outputFile = rtrim($this->inputs['physical_path'], '/') . '/'. $adminDir . '/includes/configure.php';
+    $outputFileLocal = rtrim($this->inputs['physical_path'], '/') . '/'. $adminDir . '/includes/local/configure.php';
+    if (file_exists($outputFileLocal)) $outputFile = $outputFileLocal;
+
     $result2 = $this->transformConfigureTplFile($tplFile, $outputFile);
     if ((int)$result2 == 0) logDetails('adminConfig size: ' . (int)$result2 . ' (will be greater than 0 if file was written correctly)', 'admin configure.php');
 

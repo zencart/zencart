@@ -20,6 +20,7 @@ if (!isset($_SESSION['language']) || isset($_GET['language'])) {
   } else {
     if (LANGUAGE_DEFAULT_SELECTOR=='Browser') {
       $lng->get_browser_language();
+      if (!zen_not_null($lng->language['id'])) $lng->set_language(DEFAULT_LANGUAGE);
     } else {
       $lng->set_language(DEFAULT_LANGUAGE);
     }

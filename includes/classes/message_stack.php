@@ -3,10 +3,10 @@
  * messageStack Class.
  *
  * @package classes
- * @copyright Copyright 2003-2016 Zen Cart Development Team
+ * @copyright Copyright 2003-2017 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: DrByte  Sat Oct 17 22:52:38 2015 -0400 Modified in v1.5.5 $
+ * @version $Id:  Aug 2017 Modified in v1.5.6 $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
@@ -29,8 +29,8 @@ class messageStack extends base {
       for ($i=0, $n=sizeof($messageToStack); $i<$n; $i++) {
         $this->add($messageToStack[$i]['class'], $messageToStack[$i]['text'], $messageToStack[$i]['type']);
       }
-      $_SESSION['messageToStack']= '';
     }
+
   }
 
   function add($class, $message, $type = 'error') {
@@ -77,6 +77,8 @@ class messageStack extends base {
   function output($class) {
     global $template, $current_page_base;
 
+    $_SESSION['messageToStack'] = '';
+
     $output = array();
     for ($i=0, $n=sizeof($this->messages); $i<$n; $i++) {
       if ($this->messages[$i]['class'] == $class) {
@@ -101,5 +103,5 @@ class messageStack extends base {
 
     return $count;
   }
+
 }
-?>

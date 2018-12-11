@@ -42,6 +42,7 @@ class currencies extends base {
 
   // class methods
   function format($number, $calculate_currency_value = true, $currency_type = '', $currency_value = '') {
+    if (empty($number)) $number = 0;
 
     if (empty($currency_type)) $currency_type = (isset($_SESSION['currency']) ? $_SESSION['currency'] : DEFAULT_CURRENCY);
 

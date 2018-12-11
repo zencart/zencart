@@ -3,12 +3,15 @@
  * Javascript to prep functionality for Payeezy payment module
  *
  * @package payeezy
- * @copyright Copyright 2003-2016 Zen Cart Development Team
+ * @copyright Copyright 2003-2017 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version GIT: $Id: Author: Ian Wilson   New in v1.5.5 $
  */
 if (!defined(MODULE_PAYMENT_PAYEEZYJSZC_STATUS) || MODULE_PAYMENT_PAYEEZYJSZC_STATUS != 'True' || (!defined('MODULE_PAYMENT_PAYEEZYJSZC_JSSECURITY_KEY') && !defined('MODULE_PAYMENT_PAYEEZYJSZC_JSSECURITY_KEY_SANDBOX') )) {
 	return false;
+}
+if ($payment_modules->in_special_checkout()) {
+    return false;
 }
 ?>
 <script type="text/javascript"><!--
@@ -17,7 +20,7 @@ var Payeezy = function() {
     function e(e) {
         var t = {
             visa: /^4[0-9]{12}(?:[0-9]{3})?$/,
-            mastercard: /^5[1-5][0-9]{14}$/,
+            mastercard: /^(5[1-5][0-9]{2}|222[1-9]|22[3-9][0-9]|2[3-6][0-9]{2}|27[01][0-9]|2720)[0-9]{12}$/,
             amex: /^3[47][0-9]{13}$/,
             diners: /^3(?:0[0-5]|[68][0-9])[0-9]{11}$/,
             discover: /^6(?:011|5[0-9]{2})[0-9]{12}$/,
@@ -133,7 +136,7 @@ var Payeezy = function() {
 }();
 
 var responseHandler = function(status, response) {
-    var $form = $('form[name="checkout_payment"]');
+    var $form = jQuery('form[name="checkout_payment"]');
 
     // alert('Status = ' + status);
 
@@ -160,18 +163,18 @@ var responseHandler = function(status, response) {
         // alert('success');
         console.log(response);
         var result = response.token.value;
-        $('#payeezyjszc_fdtoken').val(result);
+        jQuery('#payeezyjszc_fdtoken').val(result);
 
-        // alert('FDToken:' + $('#payeezyjszc_fdtoken').val());
+        // alert('FDToken:' + jQuery('#payeezyjszc_fdtoken').val());
 
         $form.unbind();
         $form.off();
 
-        var cc_num = $('#payeezyjszc_cc-number').val();
+        var cc_num = jQuery('#payeezyjszc_cc-number').val();
         var lastFour = cc_num.substr(cc_num.length - 4)
         var firstFour = cc_num.substr(0, 4)
         var new_cc_num = firstFour + '-XXXX-XXXX-' + lastFour;
-        $('#payeezyjszc_cc-number').val(new_cc_num);
+        jQuery('#payeezyjszc_cc-number').val(new_cc_num);
 
         // delay for DOM update
         setTimeout($form.submit(), 800);
@@ -185,7 +188,7 @@ var apiEndpoint = '<?php echo MODULE_PAYMENT_PAYEEZYJSZC_TESTING_MODE == 'Sandbo
 
 jQuery(function($) {
     $('form[name="checkout_payment"]').submit(function(e) {
-        if($('#pmt-payeezyjszc').is(':checked') || this['payment'].value == 'payeezyjszc') {
+        if($('#pmt-payeezyjszc').is(':checked') || this['payment'].value == 'payeezyjszc' || document.getElementById('pmt-payeezyjszc').checked == true) {
             var $form = $(this);
             $form.find('button').prop('disabled', true);
             e.preventDefault();

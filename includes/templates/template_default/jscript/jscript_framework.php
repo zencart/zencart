@@ -1,9 +1,9 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2016 Zen Cart Development Team
+ * @copyright Copyright 2003-2017 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: zcwilt  Fri Feb 5 10:22:33 2016 +0000 Modified in v1.5.5 $
+ * @version $Id: Author: zcwilt  lat9 Modified in v1.5.6 $
  */
 ?>
 <script type="text/javascript"><!--//<![CDATA[
@@ -12,8 +12,8 @@ if (typeof zcJS == "undefined" || !zcJS) {
 };
 
 zcJS.ajax = function (options) {
-  options.url = options.url.replace("&amp;", "&");
-  var deferred = $.Deferred(function (d) {
+  options.url = options.url.replace("&amp;", unescape("&amp;"));
+  var deferred = jQuery.Deferred(function (d) {
       var securityToken = '<?php echo $_SESSION['securityToken']; ?>';
       var defaults = {
           cache: false,
@@ -21,26 +21,33 @@ zcJS.ajax = function (options) {
           traditional: true,
           dataType: 'json',
           timeout: 5000,
-          data: $.extend(true,{
+          data: jQuery.extend(true,{
             securityToken: securityToken
         }, options.data)
       },
-      settings = $.extend(true, {}, defaults, options);
+      settings = jQuery.extend(true, {}, defaults, options);
+      if (typeof(console.log) == 'function') {
+          console.log( settings );
+      }
 
       d.done(settings.success);
       d.fail(settings.error);
       d.done(settings.complete);
-      var jqXHRSettings = $.extend(true, {}, settings, {
+      var jqXHRSettings = jQuery.extend(true, {}, settings, {
           success: function (response, textStatus, jqXHR) {
             d.resolve(response, textStatus, jqXHR);
           },
           error: function (jqXHR, textStatus, errorThrown) {
-              console.log(jqXHR);
+              if (window.console) {
+                if (typeof(console.log) == 'function') {
+                  console.log(jqXHR);
+                }
+              }
               d.reject(jqXHR, textStatus, errorThrown);
           },
           complete: d.resolve
       });
-      $.ajax(jqXHRSettings);
+      jQuery.ajax(jqXHRSettings);
    }).fail(function(jqXHR, textStatus, errorThrown) {
    var response = jqXHR.getResponseHeader('status');
    var responseHtml = jqXHR.responseText;
@@ -64,10 +71,12 @@ zcJS.ajax = function (options) {
          }
        break;
        default:
-        if (jqXHR.status === 200 && contentType.toLowerCase().indexOf("text/html") >= 0) {
-         document.open();
-         document.write(responseHtml);
-         document.close();
+        if (jqXHR.status === 200) {
+            if (contentType.toLowerCase().indexOf("text/html") >= 0) {
+                document.open();
+                document.write(responseHtml);
+                document.close();
+            }
          }
      }
    });
@@ -83,7 +92,7 @@ zcJS.timer = function (options) {
     stopEvent: null
 
 },
-  settings = $.extend(true, {}, defaults, options);
+  settings = jQuery.extend(true, {}, defaults, options);
 
   var enabled = new Boolean(false);
   var timerId = 0;
@@ -120,4 +129,5 @@ zcJS.timer = function (options) {
     }
   };
 };
+
 //]] --></script>

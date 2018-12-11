@@ -46,7 +46,7 @@ if ($products_image != '' && $flag_show_product_info_additional_images != 0) {
     while ($file = $dir->read()) {
       if (!is_dir($products_image_directory . $file)) {
         if (substr($file, strrpos($file, '.')) == $file_extension) {
-          if(preg_match('/\Q' . $products_image_base . '\E/i', $file) == 1) {
+          if(preg_match('/' . preg_quote($products_image_base, '/') . '/i', $file) == 1) {
             if ($file != $products_image) {
               if ($products_image_base . str_replace($products_image_base, '', $file) == $file) {
                 //  echo 'I AM A MATCH ' . $file . '<br>';
