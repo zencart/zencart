@@ -3,10 +3,10 @@
  * Override Template for common/tpl_main_page.php
  *
  * @package templateSystem
- * @copyright Copyright 2003-2016 Zen Cart Development Team
+ * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: DrByte  Fri Jan 8 13:28:20 2016 -0500 Modified in v1.5.5 $
+ * @version $Id: Drbyte Wed Aug 2 14:55:16 2017 -0400 Modified in v1.5.6 $
  */
 ?>
 <body id="popupCouponHelp" onload="resize();">
@@ -25,17 +25,25 @@
   if (zen_not_null($coupon_desc->fields['coupon_description'])) $text_coupon_help .= sprintf(TEXT_COUPON_HELP_DESC, $coupon_desc->fields['coupon_description']);
   $coupon_amount = $coupon->fields['coupon_amount'];
   switch ($coupon->fields['coupon_type']) {
-    case 'F':
+    case 'F': // amount Off
     $text_coupon_help .= sprintf(TEXT_COUPON_HELP_FIXED, $currencies->format($coupon->fields['coupon_amount']));
     break;
-    case 'P':
+    case 'P': // percentage
     $text_coupon_help .= sprintf(TEXT_COUPON_HELP_FIXED, number_format($coupon->fields['coupon_amount'],2). '%');
     break;
-    case 'S':
+    case 'S': // Free Shipping
     $text_coupon_help .= TEXT_COUPON_HELP_FREESHIP;
+    break;
+    case 'E': // percentage & Free Shipping
+    $text_coupon_help .= TEXT_COUPON_HELP_FREESHIP . sprintf(TEXT_COUPON_HELP_FIXED, number_format($coupon->fields['coupon_amount'],2). '%');
+    break;
+    case 'O': // amount off & Free Shipping
+    $text_coupon_help .= TEXT_COUPON_HELP_FREESHIP . sprintf(TEXT_COUPON_HELP_FIXED, $currencies->format($coupon->fields['coupon_amount']));
     break;
     default:
   }
+  if ($coupon->fields['coupon_is_valid_for_sales'] == 0 ) $text_coupon_help .= TEXT_NO_PROD_SALES;
+
   if ($coupon->fields['coupon_minimum_order'] > 0 ) $text_coupon_help .= sprintf(TEXT_COUPON_HELP_MINORDER, $currencies->format($coupon->fields['coupon_minimum_order']));
   $text_coupon_help .= sprintf(TEXT_COUPON_HELP_DATE, zen_date_short($coupon->fields['coupon_start_date']),zen_date_short($coupon->fields['coupon_expire_date']));
   $text_coupon_help .= '<strong>' . TEXT_COUPON_HELP_RESTRICT . '</strong>';

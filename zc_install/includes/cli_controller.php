@@ -1,10 +1,10 @@
 <?php
 /**
  * @package Installer
- * @copyright Copyright 2003-2016 Zen Cart Development Team
+ * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: zcwilt  Wed Sep 23 20:04:38 2015 +0100 New in v1.5.5 $
+ * @version $Id: Drbyte Sun Jan 14 00:20:07 2018 -0500 Modified in v1.5.6 $
  */
 
 if (!file_exists(DIR_FS_INSTALL . 'includes/custom_settings.php')) {
@@ -56,7 +56,7 @@ if (count($adminDirectoryList) > 1)
 // do auto-detections
 list($adminDir, $documentRoot, $adminServer, $catalogHttpServer, $catalogHttpUrl, $catalogHttpsServer, $catalogHttpsUrl, $dir_ws_http_catalog, $dir_ws_https_catalog) = getDetectedURIs();
 $db_type = 'mysql';
-$db_charset = 'utf8';
+$db_charset = 'utf8mb4';
 $db_prefix = '';
 $sql_cache_method = 'none'; // 'file', 'database'
 $db_host = isset($zc_settings['db_host']) ? $zc_settings['db_host'] : 'localhost';

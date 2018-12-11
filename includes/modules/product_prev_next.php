@@ -3,10 +3,10 @@
  *  product_prev_next.php
  *
  * @package productTypes
- * @copyright Copyright 2003-2006 Zen Cart Development Team
+ * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: product_prev_next.php 6912 2007-09-02 02:23:45Z drbyte $
+ * @version $Id: Drbyte Tue Sep 11 11:33:40 2018 -0400 Modified in v1.5.6 $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
@@ -77,27 +77,24 @@ if (PRODUCT_INFO_PREVIOUS_NEXT != 0) {
   $products_ids = $db->Execute($sql);
   $products_found_count = $products_ids->RecordCount();
 
-  while (!$products_ids->EOF) {
-    $id_array[] = $products_ids->fields['products_id'];
-    $products_ids->MoveNext();
-  }
-
   // if invalid product id skip
-  if (is_array($id_array)) {
-    reset ($id_array);
-    $counter = 0;
+  if ($products_found_count > 0) {
+
+    foreach ($products_ids as $products_id) {
+      $id_array[] = $products_id['products_id'];
+    }
+
+    $position = $counter = 0;
+    $previous = -1; // identify as needing to go to the end of the list.
+    $next_item = $id_array[0]; // set the next as the first initially.
     foreach ($id_array as $key => $value) {
       if ($value == (int)$_GET['products_id']) {
         $position = $counter;
-        if ($key == 0) {
-          $previous = -1; // it was the first to be found
-        } else {
+        if ($key != 0) {
           $previous = $id_array[$key - 1];
         }
         if (isset($id_array[$key + 1]) && $id_array[$key + 1]) {
           $next_item = $id_array[$key + 1];
-        } else {
-          $next_item = $id_array[0];
         }
       }
       $last = $value;
@@ -140,4 +137,3 @@ if (PRODUCT_INFO_PREVIOUS_NEXT != 0) {
   }
 }
 // eof: previous next
-?>

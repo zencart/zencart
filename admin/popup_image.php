@@ -17,13 +17,12 @@
 // | to obtain it through the world-wide-web, please send a note to       |
 // | license@zen-cart.com so we can mail you a copy immediately.          |
 // +----------------------------------------------------------------------+
-//  $Id: popup_image.php 1969 2005-09-13 06:57:21Z drbyte $
+//  $Id: popup_image.php   drbyte  Modified in v1.5.6 $
 //
 
   require('includes/application_top.php');
 
-  reset($_GET);
-  while (list($key, ) = each($_GET)) {
+  foreach($_GET as $key => $value) {
     switch ($key) {
       case 'banner':
         $banners_id = zen_db_prepare_input($_GET['banner']);

@@ -1,10 +1,10 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2016 Zen Cart Development Team
+ * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: DrByte  Sun Oct 18 23:54:03 2015 -0400 Modified in v1.5.5 $
+ * @version $Id: Drbyte Mon Nov 12 20:38:09 2018 -0500 Modified in v1.5.6 $
  */
 
 define('HEADING_TITLE', 'Customers');
@@ -29,8 +29,9 @@ define('TEXT_DELETE_INTRO', 'Are you sure you want to delete this customer?');
 define('TEXT_DELETE_REVIEWS', 'Delete %s review(s)');
 define('TEXT_INFO_HEADING_DELETE_CUSTOMER', 'Delete Customer');
 define('TYPE_BELOW', 'Type below');
-define('PLEASE_SELECT', 'Select One');
+define('PLEASE_SELECT_ONE', 'Select One');
 define('TEXT_INFO_NUMBER_OF_ORDERS', 'Number of Orders:');
+define('TEXT_INFO_LIFETIME_VALUE', 'Customer Lifetime Value:');
 define('TEXT_INFO_LAST_ORDER','Last Order:');
 define('TEXT_INFO_ORDERS_TOTAL', 'Total:');
 define('CUSTOMERS_REFERRAL', 'Customer Referral<br />1st Discount Coupon');
@@ -66,4 +67,5 @@ define('EMAIL_CUSTOMER_STATUS_CHANGE_SUBJECT', 'Customer Status Updated');
 define('ADDRESS_BOOK_TITLE', 'Address Book Entries');
 define('PRIMARY_ADDRESS', '(primary address)');
 define('TEXT_MAXIMUM_ENTRIES', '<span class="coming"><strong>NOTE:</strong></span> A maximum of %s address book entries allowed.');
-define('TEXT_INFO_ADDRESS_BOOK_COUNT', ' | 1 of  ');
+define('TEXT_INFO_ADDRESS_BOOK_COUNT', ' | <a href="%s">%s Entries</a>');
+define('TEXT_INFO_ADDRESS_BOOK_COUNT_SINGLE', '');

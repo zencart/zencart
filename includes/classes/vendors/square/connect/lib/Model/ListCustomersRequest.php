@@ -24,7 +24,9 @@ class ListCustomersRequest implements ArrayAccess
       * @var string[]
       */
     static $swaggerTypes = array(
-        'cursor' => 'string'
+        'cursor' => 'string',
+        'sort_field' => 'string',
+        'sort_order' => 'string'
     );
   
     /** 
@@ -32,7 +34,9 @@ class ListCustomersRequest implements ArrayAccess
       * @var string[] 
       */
     static $attributeMap = array(
-        'cursor' => 'cursor'
+        'cursor' => 'cursor',
+        'sort_field' => 'sort_field',
+        'sort_order' => 'sort_order'
     );
   
     /**
@@ -40,7 +44,9 @@ class ListCustomersRequest implements ArrayAccess
       * @var string[]
       */
     static $setters = array(
-        'cursor' => 'setCursor'
+        'cursor' => 'setCursor',
+        'sort_field' => 'setSortField',
+        'sort_order' => 'setSortOrder'
     );
   
     /**
@@ -48,7 +54,9 @@ class ListCustomersRequest implements ArrayAccess
       * @var string[]
       */
     static $getters = array(
-        'cursor' => 'getCursor'
+        'cursor' => 'getCursor',
+        'sort_field' => 'getSortField',
+        'sort_order' => 'getSortOrder'
     );
   
     /**
@@ -56,6 +64,16 @@ class ListCustomersRequest implements ArrayAccess
       * @var string
       */
     protected $cursor;
+    /**
+      * $sort_field Indicates how Customers should be sorted. Default: `DEFAULT`. See [CustomerSortField](#type-customersortfield) for possible values.
+      * @var string
+      */
+    protected $sort_field;
+    /**
+      * $sort_order Indicates whether Customers should be sorted in ascending (`ASC`) or descending (`DESC`) order. Default: `ASC`. See [SortOrder](#type-sortorder) for possible values.
+      * @var string
+      */
+    protected $sort_order;
 
     /**
      * Constructor
@@ -68,6 +86,16 @@ class ListCustomersRequest implements ArrayAccess
               $this->cursor = $data["cursor"];
             } else {
               $this->cursor = null;
+            }
+            if (isset($data["sort_field"])) {
+              $this->sort_field = $data["sort_field"];
+            } else {
+              $this->sort_field = null;
+            }
+            if (isset($data["sort_order"])) {
+              $this->sort_order = $data["sort_order"];
+            } else {
+              $this->sort_order = null;
             }
         }
     }
@@ -88,6 +116,44 @@ class ListCustomersRequest implements ArrayAccess
     public function setCursor($cursor)
     {
         $this->cursor = $cursor;
+        return $this;
+    }
+    /**
+     * Gets sort_field
+     * @return string
+     */
+    public function getSortField()
+    {
+        return $this->sort_field;
+    }
+  
+    /**
+     * Sets sort_field
+     * @param string $sort_field Indicates how Customers should be sorted. Default: `DEFAULT`. See [CustomerSortField](#type-customersortfield) for possible values.
+     * @return $this
+     */
+    public function setSortField($sort_field)
+    {
+        $this->sort_field = $sort_field;
+        return $this;
+    }
+    /**
+     * Gets sort_order
+     * @return string
+     */
+    public function getSortOrder()
+    {
+        return $this->sort_order;
+    }
+  
+    /**
+     * Sets sort_order
+     * @param string $sort_order Indicates whether Customers should be sorted in ascending (`ASC`) or descending (`DESC`) order. Default: `ASC`. See [SortOrder](#type-sortorder) for possible values.
+     * @return $this
+     */
+    public function setSortOrder($sort_order)
+    {
+        $this->sort_order = $sort_order;
         return $this;
     }
     /**

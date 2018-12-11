@@ -3,9 +3,9 @@
  * init_sanitize
  *
  * @package initSystem
- * @copyright Copyright 2003-2017 Zen Cart Development Team
+ * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: zcwilt June 2017 Modified in v1.5.5f $
+ * @version $Id: Drbyte Mon Nov 12 20:38:09 2018 -0500 Modified in v1.5.6 $
  */
 
 if (!defined('DO_STRICT_SANITIZATION')) {
@@ -31,11 +31,14 @@ $adminSanitizerTypes = array(
     'SANITIZE_EMAIL_AUDIENCE' => array('type' => 'builtin'),
     'PRODUCT_DESC_REGEX' => array('type' => 'builtin'),
     'PRODUCT_URL_REGEX' => array('type' => 'builtin'),
+    'FILE_PATH_OR_URL' => array('type' => 'builtin'),
     'CURRENCY_VALUE_REGEX' => array('type' => 'builtin'),
     'FLOAT_VALUE_REGEX' => array('type' => 'builtin'),
     'PRODUCT_NAME_DEEP_REGEX' => array('type' => 'builtin'),
     'NULL_ACTION' => array('type' => 'builtin'),
     'MULTI_DIMENSIONAL' => array('type' => 'builtin'),
+    'SIMPLE_ARRAY' => array('type' => 'builtin'),
+    'STRICT_SANITIZE_VALUES' => array('type' => 'builtin'),
 );
 
 $sanitizer->addSanitizerTypes($adminSanitizerTypes);
@@ -174,15 +177,21 @@ $group = array(
     'coupon_uses_coupon',
     'coupon_uses_user',
     'coupon_zone_restriction',
+    'coupon_copy_to_count',
+    'coupon_product_count',
+    'coupon_calc_base',
+    'coupon_order_limit',
+    'coupon_is_valid_for_sales',
 );
 $sanitizer->addSimpleSanitization('CONVERT_INT', $group);
 
-$group = array('img_dir', 'products_previous_image', 'products_image_manual', 'products_attributes_filename', 'manufacturers_image_manual');
+$group = array('img_dir', 'products_previous_image', 'products_image_manual', 'manufacturers_image_manual');
 $sanitizer->addSimpleSanitization('FILE_DIR_REGEX', $group);
 
 $group = array(
     'handler',
     'action',
+    'oldaction',
     'product_attribute_is_free',
     'attributes_default',
     'attributes_price_base_included',
@@ -196,7 +205,7 @@ $group = array(
 $sanitizer->addSimpleSanitization('ALPHANUM_DASH_UNDERSCORE', $group);
 
 $group = array('pages_title', 'page_params', 'music_genre_name', 'artists_name', 'record_company_name', 'countries_name', 'name', 'type_name', 'manufacturers_name',
-               'title', 'coupon_name', 'banners_title', 'coupon_code',
+               'title', 'coupon_name', 'coupon_copy_to_dup_name', 'banners_title', 'coupon_code', 'coupon_delete_duplicate_code', 'coupon_type',
                'group_name', 'geo_zone_name', 'geo_zone_description',
                'tax_class_description', 'tax_class_title', 'tax_description', 'entry_company', 'customers_firstname',
                'customers_lastname', 'entry_street_address', 'entry_suburb', 'entry_city', 'entry_state', 'customers_referral',
@@ -218,6 +227,9 @@ $sanitizer->addSimpleSanitization('PRODUCT_DESC_REGEX', $group);
 $group = array('products_url', 'manufacturers_url');
 $sanitizer->addSimpleSanitization('PRODUCT_URL_REGEX', $group);
 
+$group = array('products_attributes_filename');
+$sanitizer->addSimpleSanitization('FILE_PATH_OR_URL', $group);
+
 $group = array('coupon_min_order');
 $sanitizer->addSimpleSanitization('CURRENCY_VALUE_REGEX', $group);
 
@@ -227,10 +239,13 @@ $sanitizer->addSimpleSanitization('PRODUCT_NAME_DEEP_REGEX', $group);
 $group = array('configuration_value', 'configuration_key', 'search', 'query_string');
 $sanitizer->addSimpleSanitization('STRICT_SANITIZE_VALUES', $group);
 
-$group = array();
-$sanitizer->addSimpleSanitization('STRICT_SANITIZE_KEYS', $group);
+$group = array('report', 'startDate', 'endDate', 'filter');
+$sanitizer->addSimpleSanitization('FLOAT_VALUE_REGEX', $group);
 
 $group = array('products_name' => array('sanitizerType' => 'WORDS_AND_SYMBOLS_REGEX', 'method' => 'post', 'pages' => array('reviews')));
+$sanitizer->addComplexSanitization($group);
+
+$group = array('query_string' => array('sanitizerType' => 'NULL_ACTION', 'method' => 'post', 'pages' => array('sqlpatch')));
 $sanitizer->addComplexSanitization($group);
 
 $sanitizer->runSanitizers();

@@ -1,10 +1,10 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2016 Zen Cart Development Team
+ * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: DrByte  Sun Feb 28 02:42:59 2016 -0500 Modified in v1.5.5 $
+ * @version $Id: lat9 Fri Nov 9 08:33:17 2018 -0500 Modified in v1.5.6 $
  */
 
 define('HEADING_TITLE', 'Orders');
@@ -37,6 +37,7 @@ define('TABLE_HEADING_PRICE_EXCLUDING_TAX', 'Price (excl)');
 define('TABLE_HEADING_PRICE_INCLUDING_TAX', 'Price (incl)');
 define('TABLE_HEADING_TOTAL_EXCLUDING_TAX', 'Total (excl)');
 define('TABLE_HEADING_TOTAL_INCLUDING_TAX', 'Total (incl)');
+define('TABLE_HEADING_UPDATED_BY', 'Updated By');
 
 define('TABLE_HEADING_CUSTOMER_NOTIFIED', 'Customer Notified');
 define('TABLE_HEADING_DATE_ADDED', 'Date Added');
@@ -129,3 +130,8 @@ define('TEXT_INVALID_ORDER_STATUS', '<span class="alert">(Invalid Order Status)<
 
 define('BUTTON_TO_LIST', 'Order List');
 define('SELECT_ORDER_LIST', 'Jump to Order:');
+
+define('TEXT_MAP_CUSTOMER_ADDRESS', 'Map Customer Address');
+define('TEXT_MAP_SHIPPING_ADDRESS', 'Map Shipping Address');
+define('TEXT_MAP_BILLING_ADDRESS', 'Map Billing Address');
+

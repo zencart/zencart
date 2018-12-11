@@ -1,10 +1,10 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2016 Zen Cart Development Team
+ * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: zcwilt  Fri Apr 22 12:16:32 2016 -0500 Modified in v1.5.5 $
+ * @version $Id: Scott C Wilson Sat Nov 17 02:48:59 2018 -0500 Modified in v1.5.6 $
  */
 
 ////
@@ -79,7 +79,7 @@
         $cPath_new = implode('_', $cPath_array);
       }
     } else {
-      if (sizeof($cPath_array) == 0) {
+      if (empty($cPath_array)) {
         $cPath_new = $current_category_id;
       } else {
         $cPath_new = '';
@@ -117,8 +117,7 @@
     $exclude_array = array_merge($exclude_array, array(zen_session_name(), 'error', 'x', 'y')); // de-duplicating this is less performant than just letting it repeat the loop on duplicates
     $get_url = '';
     if (is_array($_GET) && (sizeof($_GET) > 0)) {
-      reset($_GET);
-      while (list($key, $value) = each($_GET)) {
+      foreach($_GET as $key => $value) {
         if (!in_array($key, $exclude_array)) {
           if (!is_array($value)) {
 //             if (is_numeric($value) || (is_string($value) && strlen($value) > 0)) {
@@ -151,15 +150,14 @@
     $exclude_array = array_merge($exclude_array, array(zen_session_name(), 'error', 'x', 'y'));
     $fields = '';
     if (is_array($_GET) && (sizeof($_GET) > 0)) {
-      reset($_GET);
-      while (list($key, $value) = each($_GET)) {
+      foreach($_GET as $key => $value) {
         if (!in_array($key, $exclude_array)) {
           if (!is_array($value)) {
             if (strlen($value) > 0) {
               if ($hidden) {
                 $fields .= zen_draw_hidden_field($key, $value);
               } else {
-                $fields .= zen_draw_input_field($key, $value);
+                $fields .= zen_draw_input_field($key, $value, 'class="form-control"');
               }
             }
           } else {
@@ -167,7 +165,7 @@
               if ($hidden) {
                 $fields .= zen_draw_hidden_field($key . '[]', $arr);
               } else {
-                $fields .= zen_draw_input_field($key . '[]', $arr);
+                $fields .= zen_draw_input_field($key . '[]', $arr, 'class="form-control"');
               }
             }
           }
@@ -423,29 +421,18 @@
     }
   }
 
-
   function zen_not_null($value) {
-    if (is_array($value)) {
-      if (sizeof($value) > 0) {
-        return true;
-      } else {
+    if (null === $value) {
         return false;
-      }
-    } elseif( is_a( $value, 'queryFactoryResult' ) ) {
-      if (sizeof($value->result) > 0) {
-        return true;
-      } else {
-        return false;
-      }
-    } else {
-      if ($value != '' && $value != 'NULL' && strlen(trim($value)) > 0) {
-        return true;
-      } else {
-        return false;
-      }
     }
+    if (is_array($value)) {
+        return count($value) > 0;
+    }
+    if (is_a($value, 'queryFactoryResult')) {
+        return count($value->result) > 0;
+    }
+    return trim($value) !== '' && $value != 'NULL';
   }
-
 
   function zen_browser_detect($component) {
 
@@ -507,80 +494,6 @@
   }
 
 
-// USED FROM functions_customers
-/*
-  function zen_address_format($address_format_id, $address, $html, $boln, $eoln) {
-    global $db;
-    $address_format = $db->Execute("select address_format as format
-                             from " . TABLE_ADDRESS_FORMAT . "
-                             where address_format_id = '" . (int)$address_format_id . "'");
-
-    $company = zen_output_string_protected($address['company']);
-    if (isset($address['firstname']) && zen_not_null($address['firstname'])) {
-      $firstname = zen_output_string_protected($address['firstname']);
-      $lastname = zen_output_string_protected($address['lastname']);
-    } elseif (isset($address['name']) && zen_not_null($address['name'])) {
-      $firstname = zen_output_string_protected($address['name']);
-      $lastname = '';
-    } else {
-      $firstname = '';
-      $lastname = '';
-    }
-    $street = zen_output_string_protected($address['street_address']);
-    $suburb = zen_output_string_protected($address['suburb']);
-    $city = zen_output_string_protected($address['city']);
-    $state = zen_output_string_protected($address['state']);
-    if (isset($address['country_id']) && zen_not_null($address['country_id'])) {
-      $country = zen_get_country_name($address['country_id']);
-
-      if (isset($address['zone_id']) && zen_not_null($address['zone_id'])) {
-        $state = zen_get_zone_code($address['country_id'], $address['zone_id'], $state);
-      }
-    } elseif (isset($address['country']) && zen_not_null($address['country'])) {
-      $country = zen_output_string_protected($address['country']);
-    } else {
-      $country = '';
-    }
-    $postcode = zen_output_string_protected($address['postcode']);
-    $zip = $postcode;
-
-    if ($html) {
-// HTML Mode
-      $HR = '<hr />';
-      $hr = '<hr />';
-      if ( ($boln == '') && ($eoln == "\n") ) { // Values not specified, use rational defaults
-        $CR = '<br />';
-        $cr = '<br />';
-        $eoln = $cr;
-      } else { // Use values supplied
-        $CR = $eoln . $boln;
-        $cr = $CR;
-      }
-    } else {
-// Text Mode
-      $CR = $eoln;
-      $cr = $CR;
-      $HR = '----------------------------------------';
-      $hr = '----------------------------------------';
-    }
-
-    $statecomma = '';
-    $streets = $street;
-    if ($suburb != '') $streets = $street . $cr . $suburb;
-    if ($country == '') $country = zen_output_string_protected($address['country']);
-    if ($state != '') $statecomma = $state . ', ';
-
-    $fmt = $address_format->fields['format'];
-    eval("\$address = \"$fmt\";");
-
-    if ( (ACCOUNT_COMPANY == 'true') && (zen_not_null($company)) ) {
-      $address = $company . $cr . $address;
-    }
-
-    return $address;
-  }
-*/
-
   ////////////////////////////////////////////////////////////////////////////////////////////////
   //
   // Function    : zen_get_zone_code
@@ -631,7 +544,7 @@ function zen_get_uprid($prid, $params)
 function zen_get_prid($uprid)
 {
     $pieces = explode(':', $uprid);
-    return $pieces[0];
+    return (int)$pieces[0];
 }
 
 
@@ -922,7 +835,7 @@ function zen_get_prid($uprid)
                               'text' => $coupons->fields['coupon_name']);
       $coupons->MoveNext();
     }
-    return zen_draw_pull_down_menu($name, $coupon_array, $coupon_id);
+    return zen_draw_pull_down_menu($name, $coupon_array, $coupon_id, 'class="form-control"');
   }
 
 
@@ -930,7 +843,7 @@ function zen_get_prid($uprid)
 // Alias function for Store configuration values in the Administration Tool
   function zen_cfg_pull_down_country_list($country_id, $key = '') {
     $name = (($key) ? 'configuration[' . $key . ']' : 'configuration_value');
-    return zen_draw_pull_down_menu($name, zen_get_countries(), $country_id);
+    return zen_draw_pull_down_menu($name, zen_get_countries(), $country_id, 'class="form-control"');
   }
 
 
@@ -938,14 +851,14 @@ function zen_get_prid($uprid)
   function zen_cfg_pull_down_country_list_none($country_id, $key = '') {
     $country_array = zen_get_countries('None');
     $name = (($key) ? 'configuration[' . $key . ']' : 'configuration_value');
-    return zen_draw_pull_down_menu($name, $country_array, $country_id);
+    return zen_draw_pull_down_menu($name, $country_array, $country_id, 'class="form-control"');
   }
 
 
 ////
   function zen_cfg_pull_down_zone_list($zone_id, $key = '') {
     $name = (($key) ? 'configuration[' . $key . ']' : 'configuration_value');
-    return zen_draw_pull_down_menu($name, zen_get_country_zones(STORE_COUNTRY), $zone_id);
+    return zen_draw_pull_down_menu($name, zen_get_country_zones(STORE_COUNTRY), $zone_id, 'class="form-control"');
   }
 
 
@@ -965,7 +878,7 @@ function zen_get_prid($uprid)
       $tax_class->MoveNext();
     }
 
-    return zen_draw_pull_down_menu($name, $tax_class_array, $tax_class_id);
+    return zen_draw_pull_down_menu($name, $tax_class_array, $tax_class_id, 'class="form-control"');
   }
 
 
@@ -973,7 +886,7 @@ function zen_get_prid($uprid)
 // Function to read in text area in admin
  function zen_cfg_textarea($text, $key = '') {
     $name = (($key) ? 'configuration[' . $key . ']' : 'configuration_value');
-    return zen_draw_textarea_field($name, false, 60, 5, htmlspecialchars($text, ENT_COMPAT, CHARSET, FALSE));
+    return zen_draw_textarea_field($name, false, 60, 5, htmlspecialchars($text, ENT_COMPAT, CHARSET, FALSE), 'class="form-control"');
   }
 
 
@@ -981,7 +894,7 @@ function zen_get_prid($uprid)
 // Function to read in text area in admin
  function zen_cfg_textarea_small($text, $key = '') {
     $name = (($key) ? 'configuration[' . $key . ']' : 'configuration_value');
-    return zen_draw_textarea_field($name, false, 35, 1, htmlspecialchars($text, ENT_COMPAT, CHARSET, FALSE), 'class="noEditor" autofocus');
+    return zen_draw_textarea_field($name, false, 35, 1, htmlspecialchars($text, ENT_COMPAT, CHARSET, FALSE), 'class="noEditor form-control" autofocus');
   }
 
 
@@ -998,15 +911,15 @@ function zen_get_prid($uprid)
     }
   }
 
-  function zen_cfg_pull_down_htmleditors($html_editor, $key = '') {
+  function zen_cfg_pull_down_htmleditors($html_editor, $index = null) {
     global $editors_list;
-    $name = (($key) ? 'configuration[' . $key . ']' : 'configuration_value');
+    $name = $index ? 'configuration[' . $index . ']' : 'configuration_value';
 
     $editors_pulldown = array();
     foreach($editors_list as $key=>$value) {
       $editors_pulldown[] = array('id' => $key, 'text' => $value['desc']);
     }
-    return zen_draw_pull_down_menu($name, $editors_pulldown, $html_editor);
+    return zen_draw_pull_down_menu($name, $editors_pulldown, $html_editor, 'class="form-control"');
   }
 
   function zen_cfg_pull_down_exchange_rate_sources($source, $key = '') {
@@ -1028,7 +941,7 @@ function zen_get_prid($uprid)
     if (function_exists('dbenc_is_encrypted_value_key') && dbenc_is_encrypted_value_key($key)) {
       $value = dbenc_decrypt($value);
     }
-    return zen_draw_password_field('configuration[' . $key . ']', $value);
+    return zen_draw_password_field('configuration[' . $key . ']', $value, 'class="form-control"');
   }
 
   function zen_cfg_password_display($value) {
@@ -1074,11 +987,7 @@ function zen_get_prid($uprid)
     for ($i=0, $n=sizeof($select_array); $i<$n; $i++) {
       $name = ((zen_not_null($key)) ? 'configuration[' . $key . ']' : 'configuration_value');
 
-      $string .= '<br><input type="radio" name="' . $name . '" value="' . $select_array[$i] . '"';
-
-      if ($key_value == $select_array[$i]) $string .= ' CHECKED';
-
-      $string .= ' id="' . strtolower($select_array[$i] . '-' . $name) . '"> ' . '<label for="' . strtolower($select_array[$i] . '-' . $name) . '" class="inputSelect">' . $select_array[$i] . '</label>';
+      $string .= '<div class="radio"><label>' . zen_draw_radio_field($name, $select_array[$i], ($key_value == $select_array[$i] ? true : false), '', 'id="' . strtolower($select_array[$i] . '-' . $name) . '" class="inputSelect"') . $select_array[$i] . '</label></div>';
     }
 
     return $string;
@@ -1089,18 +998,16 @@ function zen_get_prid($uprid)
     $string = '';
 
     $name = ((zen_not_null($key)) ? 'configuration[' . $key . ']' : 'configuration_value');
-    return zen_draw_pull_down_menu($name, $select_array, (int)$key_value);
+    return zen_draw_pull_down_menu($name, $select_array, (int)$key_value, 'class="form-control"');
   }
 
 ////
 // Alias function for module configuration keys
   function zen_mod_select_option($select_array, $key_name, $key_value) {
-    reset($select_array);
-    while (list($key, $value) = each($select_array)) {
+    $string = '';
+    foreach($select_array as $key => $value) {
       if (is_int($key)) $key = $value;
-      $string .= '<br><input type="radio" name="configuration[' . $key_name . ']" value="' . $key . '"';
-      if ($key_value == $key) $string .= ' CHECKED';
-      $string .= '> ' . $value;
+      $string .= '<div class="radio"><label>' . zen_draw_radio_field('configuration[' . $key_name . ']', $key, ($key_value == $key ? true : false)) . $value . '</label></div>';
     }
 
     return $string;
@@ -1712,7 +1619,7 @@ while (!$chk_sale_categories_all->EOF) {
     }
   }
 
-  function zen_banner_image_extension() {
+  function zen_supported_image_extension() {
     if (function_exists('imagetypes')) {
       if (imagetypes() & IMG_PNG) {
         return 'png';
@@ -1767,7 +1674,7 @@ while (!$chk_sale_categories_all->EOF) {
     global $customer_zone_id, $customer_country_id;
 
     if ( ($country_id == -1) && ($zone_id == -1) ) {
-      if (!$_SESSION['customer_id']) {
+      if (empty($_SESSION['customer_id'])) {
         $country_id = STORE_COUNTRY;
         $zone_id = STORE_ZONE;
       } else {
@@ -1846,7 +1753,7 @@ while (!$chk_sale_categories_all->EOF) {
       $zone_class->MoveNext();
     }
 
-    return zen_draw_pull_down_menu($name, $zone_class_array, $zone_class_id);
+    return zen_draw_pull_down_menu($name, $zone_class_array, $zone_class_id, 'class="form-control"');
   }
 
 
@@ -1867,7 +1774,7 @@ while (!$chk_sale_categories_all->EOF) {
       $statuses->MoveNext();
     }
 
-    return zen_draw_pull_down_menu($name, $statuses_array, $order_status_id);
+    return zen_draw_pull_down_menu($name, $statuses_array, $order_status_id, 'class="form-control"');
   }
 
   function zen_get_order_status_name($order_status_id, $language_id = '') {
@@ -1937,6 +1844,14 @@ while (!$chk_sale_categories_all->EOF) {
     return $tmp_array;
   }
 ////
+  /**
+   * alias to zen_create_coupon_code()
+   *
+   * @deprecated: use zen_create_coupon_code() instead (since v1.5.6)
+   */
+  function create_coupon_code($salt="secret", $length=SECURITY_CODE_LENGTH, $prefix = '') {
+    return zen_create_coupon_code($salt, $length, $prefix);
+  }
 /**
  * Create a Coupon Code. Returns blank if cannot generate a unique code using the passed criteria.
  * @param string $salt - this is an optional string to help seed the random code with greater entropy
@@ -1944,7 +1859,7 @@ while (!$chk_sale_categories_all->EOF) {
  * @param string $prefix - include a prefix string if you want to force the generated code to start with a specific string
  * @return string (new coupon code) (will be blank if the function failed)
  */
-  function create_coupon_code($salt="secret", $length=SECURITY_CODE_LENGTH, $prefix = '') {
+  function zen_create_coupon_code($salt="secret", $length=SECURITY_CODE_LENGTH, $prefix = '') {
     global $db;
     $length = (int)$length;
     static $max_db_length;
@@ -1959,13 +1874,16 @@ while (!$chk_sale_categories_all->EOF) {
     $ccid .= md5(uniqid("",$salt));
     srand((double)microtime()*1000000); // seed the random number generator
     $good_result = 0;
+    $id1 = '';
     while ($good_result == 0) {
       $random_start = @rand(0, (128-$length));
       $id1=substr($ccid, $random_start, $length);
-      $query = $db->Execute("select coupon_code
-                             from " . TABLE_COUPONS . "
-                             where coupon_code = '" . $prefix . $id1 . "'");
-      if ($query->RecordCount() < 1 ) $good_result = 1;
+      $sql = "select coupon_code
+              from " . TABLE_COUPONS . "
+              where coupon_code = :couponcode";
+      $sql = $db->bindVars($sql, ':couponcode', $prefix . $id1, 'string');
+      $result = $db->Execute($sql);
+      if ($result->RecordCount() < 1 ) $good_result = 1;
     }
     return ($good_result == 1) ? $prefix . $id1 : ''; // blank means couldn't generate a unique code (typically because the max length was encountered before being able to generate unique)
   }
@@ -2322,6 +2240,32 @@ function zen_copy_products_attributes($products_id_from, $products_id_to) {
   } // end of no attributes or other errors
 } // eof: zen_copy_products_attributes
 
+/**
+ * Get a shortened filename to fit within the db field constraints
+ *
+ * @param string $filename (could also be a URL)
+ * @param string $table_name
+ * @param string $field_name
+ * @param string $extension String to denote the extension. The right-most "." is used as a fallback.
+ * @return string
+ */
+function zen_limit_image_filename($filename, $table_name, $field_name, $extension = '.') {
+    if ($filename === 'none') return $filename;
+
+    $max_length = zen_field_length($table_name, $field_name);
+    $filename_length = function_exists('mb_strlen') ? mb_strlen($filename) : strlen($filename);
+
+    if ($filename_length <= $max_length) return $filename;
+    $divider_position = function_exists('mb_strrpos') ? mb_strrpos($filename, $extension) : strrpos($filename, $extension);
+    $base = substr($filename, 0, $divider_position);
+    $original_suffix = substr($filename, $divider_position);
+    $suffix_length = function_exists('mb_strlen') ? mb_strlen($original_suffix) : strlen($original_suffix);
+    $chop_length = $filename_length - $max_length;
+    $shorter_length = $filename_length - $suffix_length - $chop_length;
+    $shorter_base = substr($base, 0, $shorter_length);
+
+    return $shorter_base . $original_suffix;
+}
 
 /**
  * function to return field type
@@ -2598,7 +2542,7 @@ function zen_copy_products_attributes($products_id_from, $products_id_to) {
       if ($check_valid == true) {
         $valid_downloads = '';
         while (!$download_display->EOF) {
-          if (!file_exists(DIR_FS_DOWNLOAD . $download_display->fields['products_attributes_filename'])) {
+          if (!file_exists(zen_get_download_handler($download_display->fields['products_attributes_filename']))) {
             $valid_downloads .= '<br />&nbsp;&nbsp;' . zen_image(DIR_WS_IMAGES . 'icon_status_red.gif') . ' Invalid: ' . $download_display->fields['products_attributes_filename'];
             // break;
           } else {
@@ -3114,18 +3058,19 @@ function zen_copy_products_attributes($products_id_from, $products_id_to) {
 
     $master_category_array = array();
 
-    $master_categories_query = $db->Execute("select ptc.products_id, cd.categories_name, cd.categories_id
-                                    from " . TABLE_PRODUCTS_TO_CATEGORIES . " ptc
-                                    left join " . TABLE_CATEGORIES_DESCRIPTION . " cd
-                                    on cd.categories_id = ptc.categories_id
-                                    where ptc.products_id='" . (int)$product_id . "'
-                                    and cd.language_id = '" . (int)$_SESSION['languages_id'] . "'
-                                    ");
+    $master_categories_query = $db->Execute("SELECT ptc.products_id, cd.categories_name, cd.categories_id
+                                             FROM " . TABLE_PRODUCTS_TO_CATEGORIES . " ptc
+                                             LEFT JOIN " . TABLE_CATEGORIES_DESCRIPTION . " cd ON cd.categories_id = ptc.categories_id
+                                             WHERE ptc.products_id = " . (int)$product_id . "
+                                             AND cd.language_id = " . (int)$_SESSION['languages_id']);
 
-    $master_category_array[] = array('id' => '0', 'text' => TEXT_INFO_SET_MASTER_CATEGORIES_ID);
-    while (!$master_categories_query->EOF) {
-      $master_category_array[] = array('id' => $master_categories_query->fields['categories_id'], 'text' => $master_categories_query->fields['categories_name'] . TEXT_INFO_ID . $master_categories_query->fields['categories_id']);
-      $master_categories_query->MoveNext();
+    $master_category_array[] = array(
+      'id' => '0',
+      'text' => TEXT_INFO_SET_MASTER_CATEGORIES_ID);
+    foreach ($master_categories_query as $item) {
+      $master_category_array[] = array(
+        'id' => $item['categories_id'],
+        'text' => $item['categories_name'] . ' - ' . TEXT_INFO_ID . $item['categories_id']);
     }
 
     return $master_category_array;
@@ -3147,14 +3092,13 @@ function zen_copy_products_attributes($products_id_from, $products_id_to) {
  * adapted from USPS-related contributions by Brad Waite and Fritz Clapp
  */
   function zen_cfg_select_multioption($select_array, $key_value, $key = '') {
-    for ($i=0; $i<sizeof($select_array); $i++) {
+    $string = '';
+    for ($i=0, $n=sizeof($select_array); $i<$n; $i++) {
       $name = (($key) ? 'configuration[' . $key . '][]' : 'configuration_value');
-      $string .= '<br><input type="checkbox" name="' . $name . '" value="' . $select_array[$i] . '"';
       $key_values = explode( ", ", $key_value);
-      if ( in_array($select_array[$i], $key_values) ) $string .= ' CHECKED';
-      $string .= ' id="' . strtolower($select_array[$i] . '-' . $name) . '"> ' . '<label for="' . strtolower($select_array[$i] . '-' . $name) . '" class="inputSelect">' . $select_array[$i] . '</label>' . "\n";
+      $string .= '<div class="checkbox"><label>' . zen_draw_checkbox_field($name, $select_array[$i], (in_array($select_array[$i], $key_values) ? true : false), 'id="' . strtolower($select_array[$i] . '-' . $name) . '"') . $select_array[$i] . '</label></div>' . "\n";
     }
-    $string .= '<input type="hidden" name="' . $name . '" value="--none--">';
+    $string .= zen_draw_hidden_field($name, '--none--');
     return $string;
   }
 
@@ -3301,15 +3245,13 @@ function zen_copy_products_attributes($products_id_from, $products_id_to) {
 
       if ($zv_key_value->RecordCount() > 0) {
         return $zv_key_value->fields['configuration_value'];
-      } else {
-        $sql = "select configuration_key, configuration_value from " . TABLE_CONFIGURATION . " where configuration_key='" . zen_db_input($zv_key) . "'";
-        $zv_key_value = $db->Execute($sql);
-        if ($zv_key_value->RecordCount() > 0) {
-          return $zv_key_value->fields['configuration_value'];
-        } else {
-          return $zv_key_value->fields['configuration_value'];
-        }
       }
+      $sql = "select configuration_key, configuration_value from " . TABLE_CONFIGURATION . " where configuration_key='" . zen_db_input($zv_key) . "'";
+      $zv_key_value = $db->Execute($sql);
+      if ($zv_key_value->RecordCount() > 0) {
+        return $zv_key_value->fields['configuration_value'];
+      }
+      return '';
     }
 
 /**
@@ -3338,12 +3280,12 @@ function zen_copy_products_attributes($products_id_from, $products_id_to) {
   //$date1  today, or any other day
   //$date2  date to check against
 
-    $d1 = explode("-", $date1);
+    $d1 = explode("-", substr($date1, 0, 10));
     $y1 = $d1[0];
     $m1 = $d1[1];
     $d1 = $d1[2];
 
-    $d2 = explode("-", $date2);
+    $d2 = explode("-", substr($date2, 0, 10));
     $y2 = $d2[0];
     $m2 = $d2[1];
     $d2 = $d2[2];
@@ -3358,19 +3300,41 @@ function zen_copy_products_attributes($products_id_from, $products_id_to) {
  * check that the specified download filename exists on the filesystem
  */
   function zen_orders_products_downloads($check_filename) {
-    global $db;
+    global $zco_notifier;
 
-    $valid_downloads = true;
-    if (!defined('DIR_FS_DOWNLOAD')) define('DIR_FS_DOWNLOAD', DIR_FS_CATALOG . 'download/');
+    $handler = zen_get_download_handler($check_filename);
 
-    if (!file_exists(DIR_FS_DOWNLOAD . $check_filename)) {
-      $valid_downloads = false;
-    // break;
-    } else {
-      $valid_downloads = true;
+    if ($handler == 'local') {
+      return file_exists(DIR_FS_DOWNLOAD . $check_filename);
     }
 
-    return $valid_downloads;
+    /**
+     * An observer hooking this notifier should set $handler to blank if it tries a validation and fails.
+     * Or, if validation passes, simply set $handler to the service name (first chars before first colon in filename)
+     * Or, or there is no way to verify, do nothing to $handler.
+     */
+    $zco_notifier->notify('NOTIFY_TEST_DOWNLOADABLE_FILE_EXISTS', $check_filename, $handler);
+
+    // if handler is set but isn't local (internal) then we simply return true since there's no way to "test"
+    if ($handler != '') return true;
+
+    // else if the notifier caused $handler to be empty then that means it failed verification, so we return false
+    return false;
+  }
+
+/**
+ * check if the specified download filename matches a handler for an external download service
+ * If yes, it will be because the filename contains colons as delimiters ... service:filename:filesize
+ */
+  function zen_get_download_handler($filename) {
+    $file_parts = explode(':', $filename);
+
+    // if the filename doesn't contain any colons, then there's no delimiter to return, so must be using built-in file handling
+    if (sizeof($file_parts) < 2) {
+      return 'local';
+    }
+
+    return $file_parts[0];
   }
 
 /**
@@ -3488,14 +3452,13 @@ function zen_copy_products_attributes($products_id_from, $products_id_to) {
 
     if (empty($language)) $language = $_SESSION['languages_id'];
 
-    $product_lookup = $db->Execute("select " . zen_db_input($what_field) . " as lookup_field
-                              from " . TABLE_PRODUCTS . " p, " . TABLE_PRODUCTS_DESCRIPTION . " pd
-                              where  p.products_id ='" . (int)$product_id . "'
-                              and pd.products_id = p.products_id
-                              and pd.language_id = '" . (int)$language . "'");
-    $return_field = $product_lookup->fields['lookup_field'];
-    if ($return_field->EOF) return '';
-    return $return_field;
+    $product_lookup = $db->Execute("SELECT " . zen_db_input($what_field) . " AS lookup_field
+                              FROM " . TABLE_PRODUCTS . " p, " . TABLE_PRODUCTS_DESCRIPTION . " pd
+                              WHERE  p.products_id = " . (int)$product_id . "
+                              AND pd.products_id = p.products_id
+                              AND pd.language_id = " . (int)$language);
+    if ($product_lookup->EOF) return '';
+    return $product_lookup->fields['lookup_field'];
   }
 
   function zen_count_days($start_date, $end_date, $lookup = 'm') {
@@ -3840,4 +3803,62 @@ function get_logs_data($maxToList = 'count') {
  */
   function set_unwritable($filepath) {
     return @chmod($filepath, 0444);
+  }
+
+
+/**
+ * is coupon valid for specials and sales
+ * @param int $product_id
+ * @param int $coupon_id
+ * @return bool
+ */
+  function is_coupon_valid_for_sales($product_id, $coupon_id) {
+    global $db;
+    $sql = "SELECT coupon_id, coupon_is_valid_for_sales
+            FROM " . TABLE_COUPONS . "
+            WHERE coupon_id = " . (int)$coupon_id;
+
+    $result = $db->Execute($sql);
+
+    // check whether coupon has been flagged for valid with sales
+    if ($result->fields['coupon_is_valid_for_sales']) {
+      return true;
+    }
+
+    // check for any special on $product_id
+    $chk_product_on_sale = zen_get_products_special_price($product_id, true);
+    if (!$chk_product_on_sale) {
+      // check for any sale on $product_id
+      $chk_product_on_sale = zen_get_products_special_price($product_id, false);
+    }
+    if ($chk_product_on_sale) {
+      return false;
+    }
+    return true; // is not on special or sale
+  }
+
+/**
+ * Convert value to a float -- mainly used for sanitizing and returning non-empty strings or nulls
+ * @param int|float|string $input
+ * @return float|int
+ */
+    function convertToFloat($input = 0) {
+        if ($input === null) return 0;
+        $val = preg_replace('/[^0-9,\.\-]/', '', $input);
+        // do a non-strict compare here:
+        if ($val == 0) return 0;
+        return (float)$val;
+    }
+
+  function zen_set_ezpage_status($pages_id, $status, $status_field) {
+  global $db;
+    if ($status == '1') {
+      zen_record_admin_activity('EZ-Page ID ' . (int)$pages_id . ' [' . $status_field . '] changed to 0', 'info');
+      return $db->Execute("update " . TABLE_EZPAGES . " set " . zen_db_input($status_field) . " = '0'  where pages_id = '" . (int)$pages_id . "'");
+    } elseif ($status == '0') {
+      zen_record_admin_activity('EZ-Page ID ' . (int)$pages_id . ' [' . $status_field . '] changed to 1', 'info');
+      return $db->Execute("update " . TABLE_EZPAGES . " set " . zen_db_input($status_field) . " = '1'  where pages_id = '" . (int)$pages_id . "'");
+    } else {
+      return -1;
+    }
   }

@@ -3,7 +3,7 @@
  * @package Installer
  * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: DrByte  Modified in v1.5.6 $
+ * @version $Id: dakanji Mon Jun 11 18:38:26 2018 +0300 Modified in v1.5.6 $
  */
 
 $otherConfigErrors = FALSE;
@@ -47,10 +47,7 @@ $currentDbVersion = EXPECTED_DATABASE_VERSION_MAJOR . '.' . EXPECTED_DATABASE_VE
 $isCurrentDb = ($dbVersion == $currentDbVersion) ? TRUE : FALSE;
 $hasSaneConfigFile = $systemChecker->hasSaneConfigFile();
 $hasUpdatedConfigFile = $systemChecker->hasUpdatedConfigFile();
-// echo var_dump($dbVersion);
-// echo var_dump($isCurrentDb);
-// echo var_dump($hasSaneConfigFile);
-// echo var_dump($hasUpdatedConfigFile);
+
 
 if ($hasSaneConfigFile && $hasUpdatedConfigFile)
 {

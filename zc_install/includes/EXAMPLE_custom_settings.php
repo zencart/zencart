@@ -1,9 +1,10 @@
 <?php
 /**
  * Custom Settings used by the CLI version of zc_install
+ * NOTE: Not Currently Used
  *
  * @package installer
- * @copyright Copyright 2003-2016 Zen Cart Development Team
+ * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  */
 $zc_settings = array();
@@ -84,10 +85,10 @@ $zc_settings['db_prefix'] = '';
 
 /**
  * The character-set to use when talking to the database.
- * Possible values: 'utf8' or 'latin1'.
- * Default: 'utf8'
+ * Possible values: 'utf8mb4' or older 'utf8' / 'latin1'
+ * Default: 'utf8mb4'
  */
-$zc_settings['db_charset'] = 'utf8';
+$zc_settings['db_charset'] = 'utf8mb4';
 
 /**
  * Provide the internally-resolvable hostname to connect with the MySQL database.

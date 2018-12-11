@@ -74,7 +74,7 @@ class OrderLineItemModifier implements ArrayAccess
       */
     protected $name;
     /**
-      * $base_price_money The base price of the item modifier.
+      * $base_price_money The base price for the modifier.  `base_price_money` is required for ad hoc modifiers. If both `catalog_object_id` and `base_price_money` are set, `base_price_money` will override the predefined [CatalogModifier](#type-catalogmodifier) price.
       * @var \SquareConnect\Model\Money
       */
     protected $base_price_money;
@@ -162,7 +162,7 @@ class OrderLineItemModifier implements ArrayAccess
   
     /**
      * Sets base_price_money
-     * @param \SquareConnect\Model\Money $base_price_money The base price of the item modifier.
+     * @param \SquareConnect\Model\Money $base_price_money The base price for the modifier.  `base_price_money` is required for ad hoc modifiers. If both `catalog_object_id` and `base_price_money` are set, `base_price_money` will override the predefined [CatalogModifier](#type-catalogmodifier) price.
      * @return $this
      */
     public function setBasePriceMoney($base_price_money)

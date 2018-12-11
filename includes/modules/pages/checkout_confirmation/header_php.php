@@ -3,10 +3,10 @@
  * checkout_confirmation header_php.php
  *
  * @package page
- * @copyright Copyright 2003-2016 Zen Cart Development Team
+ * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: DrByte  Mon Dec 7 14:40:03 2015 -0500 Modified in v1.5.5 $
+ * @version $Id: Scott C Wilson Wed Oct 10 07:03:50 2018 -0400 Modified in v1.5.6 $
  */
 
 // This should be first line of the script:
@@ -98,8 +98,6 @@ if (is_array($payment_modules->modules)) {
 if ($messageStack->size('checkout_payment') > 0) {
   zen_redirect(zen_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'));
 }
-//echo $messageStack->size('checkout_payment');
-//die('here');
 
 // Stock Check
 $flagAnyOutOfStock = false;
@@ -117,7 +115,7 @@ if (STOCK_CHECK == 'true') {
 }
 
 // update customers_referral with $_SESSION['gv_id']
-if ($_SESSION['cc_id']) {
+if (!empty($_SESSION['cc_id'])) {
   $discount_coupon_query = "SELECT coupon_code
                             FROM " . TABLE_COUPONS . "
                             WHERE coupon_id = :couponID";

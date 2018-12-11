@@ -69,7 +69,7 @@ class CreateOrderRequestTax implements ArrayAccess
       */
     protected $catalog_object_id;
     /**
-      * $name Only used for ad hoc taxes. The tax's name.  Do not provide a value for this field if you set catalog_object_id.
+      * $name Only used for ad hoc taxes. The tax's name.  Do not provide a value for this field if you set `catalog_object_id`.
       * @var string
       */
     protected $name;
@@ -143,7 +143,7 @@ class CreateOrderRequestTax implements ArrayAccess
   
     /**
      * Sets name
-     * @param string $name Only used for ad hoc taxes. The tax's name.  Do not provide a value for this field if you set catalog_object_id.
+     * @param string $name Only used for ad hoc taxes. The tax's name.  Do not provide a value for this field if you set `catalog_object_id`.
      * @return $this
      */
     public function setName($name)

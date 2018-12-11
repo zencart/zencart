@@ -3,10 +3,10 @@
  * Payment Class.
  *
  * @package classes
- * @copyright Copyright 2003-2016 Zen Cart Development Team
+ * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: zcwilt  Sat Feb 6 10:07:47 2016 +0000 Modified in v1.5.5 $
+ * @version $Id: mc12345678 Tue May 8 00:42:18 2018 -0400 Modified in v1.5.6 $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
@@ -35,7 +35,6 @@ class payment extends base {
 
         $include_modules[] = array('class' => $module, 'file' => $module . '.php');
       } else {
-        reset($this->modules);
 
         // Free Payment Only shows
         if (zen_get_configuration_key_value('MODULE_PAYMENT_FREECHARGER_STATUS') and ($_SESSION['cart']->show_total()==0 and (!isset($_SESSION['shipping']['cost']) || $_SESSION['shipping']['cost'] == 0))) {
@@ -45,7 +44,7 @@ class payment extends base {
           }
         } else {
           // All Other Payment Modules show
-          while (list(, $value) = each($this->modules)) {
+          foreach($this->modules as $value) {
             // double check that the module really exists before adding to the array
             if (file_exists(DIR_FS_CATALOG . DIR_WS_MODULES . '/payment/' . $value)) {
               $class = substr($value, 0, strrpos($value, '.'));
@@ -139,10 +138,9 @@ class payment extends base {
       '    }' . "\n" .
       '  }' . "\n\n";
 
-      reset($this->modules);
-      while (list(, $value) = each($this->modules)) {
+      foreach($this->modules as $value) {
         $class = substr($value, 0, strrpos($value, '.'));
-        if ($GLOBALS[$class]->enabled) {
+        if (isset($GLOBALS[$class]->enabled) && $GLOBALS[$class]->enabled == true) {
           $js .= $GLOBALS[$class]->javascript_validation();
         }
       }
@@ -169,10 +167,9 @@ class payment extends base {
   function selection() {
     $selection_array = array();
     if (is_array($this->modules)) {
-      reset($this->modules);
-      while (list(, $value) = each($this->modules)) {
+      foreach($this->modules as $value) {
         $class = substr($value, 0, strrpos($value, '.'));
-        if ($GLOBALS[$class]->enabled) {
+        if (isset($GLOBALS[$class]->enabled) && $GLOBALS[$class]->enabled == true) {
           $selection = $GLOBALS[$class]->selection();
           if (isset($GLOBALS[$class]->collectsCardDataOnsite) && $GLOBALS[$class]->collectsCardDataOnsite == true) {
             $selection['fields'][] = array('title' => '',
@@ -189,10 +186,9 @@ class payment extends base {
   function in_special_checkout() {
     $result = false;
     if (is_array($this->modules)) {
-      reset($this->modules);
-      while (list(, $value) = each($this->modules)) {
+      foreach($this->modules as $value) {
         $class = substr($value, 0, strrpos($value, '.'));
-        if ($GLOBALS[$class]->enabled && method_exists($GLOBALS[$class], 'in_special_checkout')) {
+        if (isset($GLOBALS[$class]) && is_object($GLOBALS[$class]) && $GLOBALS[$class]->enabled && method_exists($GLOBALS[$class], 'in_special_checkout')) {
           $module_result = $GLOBALS[$class]->in_special_checkout();
           if ($module_result === true) $result = true;
         }
@@ -219,7 +215,11 @@ class payment extends base {
   function confirmation() {
     if (is_array($this->modules)) {
       if (is_object($GLOBALS[$this->selected_module]) && ($GLOBALS[$this->selected_module]->enabled) ) {
-        return $GLOBALS[$this->selected_module]->confirmation();
+        $confirmation = $GLOBALS[$this->selected_module]->confirmation();
+        if (!is_array($confirmation)) $confirmation = array('title' => '');
+        if (!(isset($confirmation['fields']) && is_array($confirmation['fields']))) $confirmation['fields'] = array();
+        if (!isset($confirmation['title'])) $confirmation['title'] = '';
+        return $confirmation;
       }
     }
   }

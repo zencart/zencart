@@ -3,10 +3,10 @@
  * COD Payment Module
  *
  * @package paymentMethod
- * @copyright Copyright 2003-2016 Zen Cart Development Team
+ * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: DrByte  Mon Dec 9 15:09:07 2013 -0500 Modified in v1.5.5 $
+ * @version $Id: Drbyte Sun Jan 7 21:30:21 2018 -0500 Modified in v1.5.6 $
  */
   class cod {
     var $code, $title, $description, $enabled;
@@ -18,10 +18,10 @@
       $this->code = 'cod';
       $this->title = MODULE_PAYMENT_COD_TEXT_TITLE;
       $this->description = MODULE_PAYMENT_COD_TEXT_DESCRIPTION;
-      $this->sort_order = MODULE_PAYMENT_COD_SORT_ORDER;
-      $this->enabled = ((MODULE_PAYMENT_COD_STATUS == 'True') ? true : false);
+      $this->sort_order = defined('MODULE_PAYMENT_COD_SORT_ORDER') ? MODULE_PAYMENT_COD_SORT_ORDER : null;
+      $this->enabled = (defined('MODULE_PAYMENT_COD_STATUS') && MODULE_PAYMENT_COD_STATUS == 'True');
 
-      if ((int)MODULE_PAYMENT_COD_ORDER_STATUS_ID > 0) {
+      if (defined('MODULE_PAYMENT_COD_ORDER_STATUS_ID') && (int)MODULE_PAYMENT_COD_ORDER_STATUS_ID > 0) {
         $this->order_status = MODULE_PAYMENT_COD_ORDER_STATUS_ID;
       }
 

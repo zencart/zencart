@@ -2,21 +2,37 @@
 /**
  * Module Template
  *
+ * NOTE: The clickable download links will appear only if:
+ * - Download remaining count is > 0, AND
+ * - The file is present in the DOWNLOAD directory, AND EITHER
+ * - No expiry date is enforced (maxdays == 0), OR
+ * - The expiry date is not reached
+ *
  * @package templateSystem
- * @copyright Copyright 2003-2016 Zen Cart Development Team
+ * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: DrByte  Fri Jan 8 13:28:51 2016 -0500 Modified in v1.5.5 $
+ * @version $Id: Drbyte Sat Dec 23 12:42:13 2017 -0500 Modified in v1.5.6 $
  */
 /**
  * require the downloads module
  */
   require(DIR_WS_MODULES . zen_get_module_directory('downloads.php'));
-?>
 
+// if download is not available yet
+if ($downloadsNotAvailableYet) {
+?>
+ <fieldset><?php echo DOWNLOADS_CONTROLLER_ON_HOLD_MSG ?></fieldset>
 <?php
+  return;
+}
+
+if ($numberOfDownloads < 1) {
+  return;
+}
+
+
 // download is available
-  if ($downloads->RecordCount() > 0) {
 ?>
 
 <h4 id="headingDownloads"><?php echo HEADING_DOWNLOAD; ?></h4>
@@ -28,77 +44,38 @@
       <th scope="col" id="dlDateHeading"><?php echo TABLE_HEADING_DOWNLOAD_DATE; ?></th>
       <th scope="col" id="dlCountHeading"><?php echo TABLE_HEADING_DOWNLOAD_COUNT; ?></th>
       <th scope="col" id="dlButtonHeading">&nbsp;</th>
-          </tr>
+  </tr>
 <!-- list of products -->
 <?php
-    while (!$downloads->EOF) {
-// MySQL 3.22 does not have INTERVAL
-      list($dt_year, $dt_month, $dt_day) = explode('-', $downloads->fields['date_purchased_day']);
-      $download_timestamp = mktime(23, 59, 59, $dt_month, $dt_day + $downloads->fields['download_maxdays'], $dt_year);
-      $download_expiry = date('Y-m-d H:i:s', $download_timestamp);
-
-      $is_downloadable = ( (file_exists(DIR_FS_DOWNLOAD . $downloads->fields['orders_products_filename']) && (($downloads->fields['download_count'] > 0 && $download_timestamp > time()) || $downloads->fields['download_maxdays'] == 0)) ) ? true : false;
-      $zv_filesize = filesize (DIR_FS_DOWNLOAD . $downloads->fields['orders_products_filename']);
-      if ($zv_filesize >= 1024) {
-        $zv_filesize = number_format($zv_filesize/1024/1024,2);
-        $zv_filesize_units = TEXT_FILESIZE_MEGS;
-      } else {
-        $zv_filesize = number_format($zv_filesize);
-        $zv_filesize_units = TEXT_FILESIZE_BYTES;
-      }
+    foreach($downloads as $file) {
 ?>
-          <tr class="tableRow">
+  <tr class="tableRow">
 <!-- left box -->
 <?php
-// The link will appear only if:
-// - Download remaining count is > 0, AND
-// - The file is present in the DOWNLOAD directory, AND EITHER
-// - No expiry date is enforced (maxdays == 0), OR
-// - The expiry date is not reached
-
-//      if ( ($downloads->fields['download_count'] > 0) && (file_exists(DIR_FS_DOWNLOAD . $downloads->fields['orders_products_filename'])) && ( ($downloads->fields['download_maxdays'] == 0) || ($download_timestamp > time())) ) {
-      if  ($is_downloadable) {
+  if ($file['is_downloadable']) {
 ?>
-      <td class=""><?php echo '<a href="' . zen_href_link(FILENAME_DOWNLOAD, 'order=' . $last_order . '&id=' . $downloads->fields['orders_products_download_id']) . '">' . $downloads->fields['products_name'] . '</a>'; ?></td>
+      <td class="downloadProductNameLink"><?php echo '<a href="' . $file['link_url'] . '" download="' . $file['filename'] . '">' . $file['products_name'] . '</a>'; ?></td>
 <?php } else { ?>
-      <td class=""><?php echo $downloads->fields['products_name']; ?></td>
+      <td class="downloadProductName"><?php echo $file['products_name']; ?></td>
 <?php
-      }
+  }
 ?>
-      <td class=""><?php echo $zv_filesize . $zv_filesize_units; ?></td>
-      <td class=""><?php echo $downloads->fields['orders_products_filename']; ?></td>
-      <td class=""><?php echo ($downloads->fields['download_maxdays'] == 0 ? TEXT_DOWNLOADS_UNLIMITED : zen_date_short($download_expiry)); ?></td>
-      <td class="centeredContent"><?php echo ($downloads->fields['download_maxdays'] == 0 ? TEXT_DOWNLOADS_UNLIMITED_COUNT : $downloads->fields['download_count']); ?></td>
-      <td class="centeredContent"><?php echo ($is_downloadable) ? '<a href="' . zen_href_link(FILENAME_DOWNLOAD, 'order=' . $last_order . '&id=' . $downloads->fields['orders_products_download_id']) . '">' . zen_image_button(BUTTON_IMAGE_DOWNLOAD, BUTTON_DOWNLOAD_ALT) . '</a>' : '&nbsp;'; ?></td>
+      <td class="downloadFilesize"><?php echo $file['filesize'] . $file['filesize_units']; ?></td>
+      <td class="downloadFilename"><?php echo $file['filename']; ?></td>
+      <td class="downloadExpiry"><?php echo ($file['unlimited_downloads'] ? TEXT_DOWNLOADS_UNLIMITED : zen_date_short($file['expiry'])); ?></td>
+      <td class="downloadCounts centeredContent"><?php echo ($file['unlimited_downloads'] ? TEXT_DOWNLOADS_UNLIMITED_COUNT : $file['download_count']); ?></td>
+      <td class="downloadButton centeredContent"><?php echo ($file['is_downloadable']) ? '<a href="' . $file['link_url'] . '" download="' . $file['filename'] . '">' . zen_image_button(BUTTON_IMAGE_DOWNLOAD, BUTTON_DOWNLOAD_ALT) . '</a>' : '&nbsp;'; ?></td>
     </tr>
 <?php
-    $downloads->MoveNext();
-    }
+    } // end foreach
 ?>
   </table>
 
 <?php
-// old way
-//    if (!strstr($PHP_SELF, FILENAME_ACCOUNT_HISTORY_INFO)) {
-// new way
-      if (!($_GET['main_page']==FILENAME_ACCOUNT_HISTORY_INFO)) {
+  if ($show_footer_link_to_my_account) {
 ?>
 <p><?php printf(FOOTER_DOWNLOAD, '<a href="' . zen_href_link(FILENAME_ACCOUNT, '', 'SSL') . '">' . HEADER_TITLE_MY_ACCOUNT . '</a>'); ?></p>
-<?php } else { ?>
 <?php
-// other pages if needed
-      }
+  }
 ?>
 
-<?php
-} // $downloads->RecordCount() > 0
-?>
-
-<?php
-// download is not available yet
-if ($downloads_check_query->RecordCount() > 0 and $downloads->RecordCount() < 1) {
-?>
- <fieldset><?php echo DOWNLOADS_CONTROLLER_ON_HOLD_MSG ?></fieldset>
-<?php
-}
-?>

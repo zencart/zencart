@@ -2,9 +2,9 @@
 /**
  * file contains zcDatabaseInstaller Class
  * @package Installer
- * @copyright Copyright 2003-2016 Zen Cart Development Team
+ * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: DrByte  Thu Mar 21 16:18:21 2016 -0500 New in v1.5.5 $
+ * @version $Id: Drbyte Tue Oct 9 18:48:15 2018 -0400 Modified in v1.5.6 $
  *
  */
 /**
@@ -14,9 +14,12 @@
  */
 class zcDatabaseInstaller
 {
-  public function __construct($options)
+    public $ignoreLine;
+    var $jsonProgressLoggingCount = 0;
+
+    public function __construct($options)
   {
-    $this->func = create_function('$matches', 'return strtoupper($matches[1]);');
+    $this->func = function($matches) {return strtoupper($matches[1]);};
     $dbtypes = array();
     $path = DIR_FS_ROOT . 'includes/classes/db/';
     $dir = dir($path);
@@ -32,7 +35,7 @@ class zcDatabaseInstaller
     $this->dbPassword = $options['db_password'];
     $this->dbName = $options['db_name'];
     $this->dbPrefix = $options['db_prefix'];
-    $this->dbCharset = trim($options['db_charset']) == '' ? 'utf8' : $options['db_charset'];
+    $this->dbCharset = trim($options['db_charset']) == '' ? 'utf8mb4' : $options['db_charset'];
     $this->dbType = in_array($options['db_type'], $dbtypes) ? $options['db_type'] : 'mysql';
     $this->dieOnErrors = isset($options['dieOnErrors']) ? (bool)$options['dieOnErrors'] : FALSE;
     $this->errors = array();
@@ -195,7 +198,9 @@ class zcDatabaseInstaller
     } else
     {
       $this->line = (strtoupper($this->lineSplit[2].' '.$this->lineSplit[3].' '.$this->lineSplit[4]) == 'IF NOT EXISTS') ? 'CREATE TABLE IF NOT EXISTS ' . $this->dbPrefix . substr($this->line, 27) : 'CREATE TABLE ' . $this->dbPrefix . substr($this->line, 13);
-      $this->collateSuffix = (strtoupper($this->lineSplit[3]) == 'AS' || (isset($this->lineSplit[6]) && strtoupper($this->lineSplit[6]) == 'AS')) ? '' : ' COLLATE ' . $this->dbCharset . '_general_ci';
+      if (! stristr($this->line, ' COLLATE ')) {
+          $this->collateSuffix = (strtoupper($this->lineSplit[3]) == 'AS' || (isset($this->lineSplit[6]) && strtoupper($this->lineSplit[6]) == 'AS')) ? '' : ' COLLATE ' . $this->dbCharset . '_general_ci';
+      }
     }
   }
   public function parserInsertInto()
@@ -345,7 +350,7 @@ class zcDatabaseInstaller
   }
   public function parserRenameTable()
   {
-    if (!$this->tableExists($this->lineSplit[2])) 
+    if (!$this->tableExists($this->lineSplit[2]))
     {
       if (!isset($result)) $result = sprintf(REASON_TABLE_NOT_FOUND, $table).' CHECK PREFIXES!';
       $this->writeUpgradeExceptions($this->line, $result, $this->fileName);
@@ -379,11 +384,11 @@ class zcDatabaseInstaller
     {
       $result = $this->db->Execute("CREATE TABLE " . $this->dbPrefix . TABLE_UPGRADE_EXCEPTIONS ." (
             upgrade_exception_id smallint(5) NOT NULL auto_increment,
-            sql_file varchar(50) default NULL,
-            reason varchar(200) default NULL,
-            errordate datetime default '0001-01-01 00:00:00',
+            sql_file varchar(128) default NULL,
+            reason text default NULL,
+            errordate datetime default NULL,
             sqlstatement text, PRIMARY KEY  (upgrade_exception_id)
-          )");
+          ) ENGINE=MyISAM");
     return $result;
     }
   }
@@ -460,7 +465,7 @@ class zcDatabaseInstaller
   }
   public function updateConfigKeys()
   {
-    $sql = "update ". $this->dbPrefix ."configuration set configuration_value='". preg_replace('~/cache$~', '/logs', $this->sqlCacheDir) ."/page_parse_time.log' where configuration_key = 'STORE_PAGE_PARSE_TIME_LOG'";
+    $sql = "update ". $this->dbPrefix ."configuration set configuration_value='". DIR_FS_ROOT . "logs/page_parse_time.log' where configuration_key = 'STORE_PAGE_PARSE_TIME_LOG'";
     $this->db->Execute($sql);
     if (isset($_POST['http_server_catalog']) && $_POST['http_server_catalog'] != '') {
       $email_stub = preg_replace('~.*\/\/(www.)*~', 'YOUR_EMAIL@', $_POST['http_server_catalog']);

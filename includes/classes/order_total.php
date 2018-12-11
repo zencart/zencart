@@ -3,10 +3,10 @@
  * File contains the order-totals-processing class ("order-total")
  *
  * @package classes
- * @copyright Copyright 2003-2016 Zen Cart Development Team
+ * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: DrByte  Sun Oct 18 01:47:46 2015 -0400 Modified in v1.5.5 $
+ * @version $Id: mc12345678 Tue May 8 00:42:18 2018 -0400 Modified in v1.5.6 $
  */
 /**
  * order-total class
@@ -27,8 +27,7 @@ class order_total extends base {
     if (defined('MODULE_ORDER_TOTAL_INSTALLED') && zen_not_null(MODULE_ORDER_TOTAL_INSTALLED)) {
       $module_list = explode(';', MODULE_ORDER_TOTAL_INSTALLED);
 
-      reset($module_list);
-      while (list(, $value) = each($module_list)) {
+      foreach($module_list as $value) {
         $lang_file = null;
         $module_file = DIR_WS_MODULES . 'order_total/' . $value;
         if (IS_ADMIN_FLAG === true) {
@@ -60,8 +59,7 @@ class order_total extends base {
     global $order;
     $order_total_array = array();
     if (is_array($this->modules)) {
-      reset($this->modules);
-      while (list(, $value) = each($this->modules)) {
+      foreach($this->modules as $value) {
         $class = substr($value, 0, strrpos($value, '.'));
         if (!isset($GLOBALS[$class])) continue;
         $GLOBALS[$class]->process();
@@ -84,8 +82,7 @@ class order_total extends base {
     global $template, $current_page_base;
     $output_string = '';
     if (is_array($this->modules)) {
-      reset($this->modules);
-      while (list(, $value) = each($this->modules)) {
+      foreach($this->modules as $value) {
         $class = substr($value, 0, strrpos($value, '.'));
         $size = sizeof($GLOBALS[$class]->output);
 
@@ -119,10 +116,9 @@ class order_total extends base {
   function credit_selection() {
     $selection_array = array();
     if (is_array($this->modules)) {
-      reset($this->modules);
-      while (list(, $value) = each($this->modules)) {
+      foreach($this->modules as $value) {
         $class = substr($value, 0, strrpos($value, '.'));
-        if ($GLOBALS[$class]->credit_class ) {
+        if (isset($GLOBALS[$class]->credit_class) && $GLOBALS[$class]->credit_class == true ) {
           $selection = $GLOBALS[$class]->credit_selection();
           if (is_array($selection)) $selection_array[] = $selection;
         }
@@ -140,10 +136,9 @@ class order_total extends base {
   //
   function update_credit_account($i) {
     if (MODULE_ORDER_TOTAL_INSTALLED) {
-      reset($this->modules);
-      while (list(, $value) = each($this->modules)) {
+      foreach($this->modules as $value) {
         $class = substr($value, 0, strrpos($value, '.'));
-        if ( $GLOBALS[$class]->credit_class ) {
+        if (isset($GLOBALS[$class]->credit_class) && $GLOBALS[$class]->credit_class == true ) {
           $GLOBALS[$class]->update_credit_account($i);
         }
       }
@@ -159,12 +154,11 @@ class order_total extends base {
 
   function collect_posts() {
     if (MODULE_ORDER_TOTAL_INSTALLED) {
-      reset($this->modules);
-      while (list(, $value) = each($this->modules)) {
+      foreach($this->modules as $value) {
         $class = substr($value, 0, strrpos($value, '.'));
-        if ( $GLOBALS[$class]->credit_class ) {
+        if (isset($GLOBALS[$class]->credit_class) && $GLOBALS[$class]->credit_class == true ) {
           $post_var = 'c' . $GLOBALS[$class]->code;
-          if ($_POST[$post_var]) $_SESSION[$post_var] = $_POST[$post_var];
+          if (isset($_POST[$post_var]) && $_POST[$post_var]) $_SESSION[$post_var] = $_POST[$post_var];
           $GLOBALS[$class]->collect_posts();
         }
       }
@@ -178,9 +172,8 @@ class order_total extends base {
   function pre_confirmation_check($returnOrderTotalOnly = false) {
     global $order, $credit_covers;
     if (MODULE_ORDER_TOTAL_INSTALLED) {
-      reset($this->modules);
       $orderInfoSaved = $order->info;
-      while (list(, $value) = each($this->modules)) {
+      foreach($this->modules as $value) {
         $class = substr($value, 0, strrpos($value, '.'));
         $GLOBALS[$class]->process();
         $GLOBALS[$class]->output = array();
@@ -199,10 +192,9 @@ class order_total extends base {
   //
   function apply_credit() {
     if (MODULE_ORDER_TOTAL_INSTALLED) {
-      reset($this->modules);
-      while (list(, $value) = each($this->modules)) {
+      foreach($this->modules as $value) {
         $class = substr($value, 0, strrpos($value, '.'));
-        if ( $GLOBALS[$class]->credit_class) {
+        if (isset($GLOBALS[$class]->credit_class) && $GLOBALS[$class]->credit_class == true ) {
           $GLOBALS[$class]->apply_credit();
         }
       }
@@ -213,8 +205,7 @@ class order_total extends base {
   //
   function clear_posts() {
     if (MODULE_ORDER_TOTAL_INSTALLED) {
-      reset($this->modules);
-      while (list(, $value) = each($this->modules)) {
+      foreach($this->modules as $value) {
         $class = substr($value, 0, strrpos($value, '.'));
         if ( $GLOBALS[$class]->credit_class && method_exists($GLOBALS[$class], 'clear_posts')) {
           $GLOBALS[$class]->clear_posts();

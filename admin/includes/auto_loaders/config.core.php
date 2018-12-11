@@ -1,10 +1,10 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2016 Zen Cart Development Team
+ * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: DrByte  Mon Oct 19 13:08:52 2015 -0400 Modified in v1.5.5 $
+ * @version $Id: lat9 Mon Oct 22 13:19:39 2018 -0400 Modified in v1.5.6 $
  */
 if (!defined('USE_PCONNECT')) define('USE_PCONNECT', 'false');
 /**
@@ -126,6 +126,8 @@ if (!defined('USE_PCONNECT')) define('USE_PCONNECT', 'false');
  */
   $autoLoadConfig[40][] = array('autoType'=>'init_script',
                                 'loadFile'=> 'init_general_funcs.php');
+  $autoLoadConfig[40][] = array('autoType'=>'require',
+                                'loadFile'=> DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'functions_osh_update.php');
   $autoLoadConfig[40][] = array('autoType'=>'init_script',
                                 'loadFile'=> 'init_tlds.php');
 /**
@@ -202,14 +204,6 @@ if (!defined('USE_PCONNECT')) define('USE_PCONNECT', 'false');
   $autoLoadConfig[130][] = array('autoType'=>'init_script',
                                  'loadFile'=> 'init_category_path.php');
 /**
- * Breakpoint 140.
- *
- * require('includes/init_includes/init_errors.php');
- *
- */
-  $autoLoadConfig[140][] = array('autoType'=>'init_script',
-                                 'loadFile'=> 'init_errors.php');
-/**
  * Breakpoint 150.
  *
  * require('includes/init_includes/init_admin_auth.php');
@@ -242,3 +236,11 @@ if (!defined('USE_PCONNECT')) define('USE_PCONNECT', 'false');
 
   $autoLoadConfig[180][] = array('autoType'=>'init_script',
                                  'loadFile'=> 'init_html_editor.php');
+/**
+ * Breakpoint 181.
+ *
+ * require('includes/init_includes/init_errors.php');
+ *
+ */
+  $autoLoadConfig[181][] = array('autoType'=>'init_script',
+                                 'loadFile'=> 'init_errors.php');

@@ -14,6 +14,6 @@ before_install:
 - composer config -g repositories.packagist composer https://packagist.jp
 - composer install -vvv
 install:
-- openssl aes-256-cbc -K $encrypted_c2c0feadb429_key -iv $encrypted_c2c0feadb429_iv -in ./travis-ci/accounts.enc -out ./travis-ci/accounts.json -d
+- openssl aes-256-cbc -K $encrypted_afef0992877c_key -iv $encrypted_afef0992877c_iv -in ./travis-ci/accounts.enc -out ./travis-ci/accounts.json -d
 script:
 - vendor/bin/phpunit test

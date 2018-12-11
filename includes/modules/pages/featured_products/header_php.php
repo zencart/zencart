@@ -3,11 +3,15 @@
  * Featured Products
  *
  * @package page
- * @copyright Copyright 2003-2006 Zen Cart Development Team
+ * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: header_php.php 6912 2007-09-02 02:23:45Z drbyte $
+ * @version $Id: lat9 Mon Jul 23 14:00:26 2018 -0400 Modified in v1.5.6 $
  */
+
+// This should be first line of the script:
+$zco_notifier->notify('NOTIFY_HEADER_START_FEATURED_PRODUCTS');
+
 require(DIR_WS_MODULES . zen_get_module_directory('require_languages.php'));
 $breadcrumb->add(NAVBAR_TITLE);
 // display order dropdown
@@ -29,6 +33,10 @@ TABLE_PRODUCTS_DESCRIPTION . " pd
 $order_by;
 
 $featured_products_query_raw = $db->bindVars($featured_products_query_raw, ':languagesID', $_SESSION['languages_id'], 'integer');
+
+// Notifier Point
+$zco_notifier->notify('NOTIFY_FEATURED_PRODUCTS_SQL_STRING', array(), $featured_products_query_raw);
+
 $featured_products_split = new splitPageResults($featured_products_query_raw, MAX_DISPLAY_PRODUCTS_FEATURED_PRODUCTS);
 
 //check to see if we are in normal mode ... not showcase, not maintenance, etc
@@ -72,4 +80,7 @@ if (PRODUCT_FEATURED_LISTING_MULTIPLE_ADD_TO_CART > 0 and $show_submit == true a
     $show_bottom_submit_button = false;
   }
 }
-?>
+
+// This should be last line of the script:
+$zco_notifier->notify('NOTIFY_HEADER_END_FEATURED_PRODUCTS', $how_many);
+//EOF

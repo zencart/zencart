@@ -3,11 +3,11 @@
  * ot_cod_fee order-total module
  *
  * @package orderTotal
- * @copyright Copyright 2003-2016 Zen Cart Development Team
+ * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @copyright Portions Copyright (c) 2002 Thomas Plänkers http://www.oscommerce.at
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: DrByte  Sun Oct 18 01:50:12 2015 -0400 Modified in v1.5.5 $
+ * @version $Id: Drbyte Sun Jan 7 21:31:50 2018 -0500 Modified in v1.5.6 $
  */
 /**
  * COD-FEE Order Totals Module
@@ -21,8 +21,9 @@
       $this->code = 'ot_cod_fee';
       $this->title = MODULE_ORDER_TOTAL_COD_TITLE;
       $this->description = MODULE_ORDER_TOTAL_COD_DESCRIPTION;
-      $this->enabled = ((MODULE_ORDER_TOTAL_COD_STATUS == 'true') ? true : false);
-      $this->sort_order = MODULE_ORDER_TOTAL_COD_SORT_ORDER;
+      $this->enabled = (defined('MODULE_ORDER_TOTAL_COD_STATUS') && MODULE_ORDER_TOTAL_COD_STATUS == 'true');
+      $this->sort_order = defined('MODULE_ORDER_TOTAL_COD_SORT_ORDER') ? MODULE_ORDER_TOTAL_COD_SORT_ORDER : null;
+      if (null === $this->sort_order) return false;
 
       $this->output = array();
     }
@@ -55,7 +56,7 @@
           //satt inn av Pompel
           if (substr_count($_SESSION['shipping']['id'], 'servicepakke') !=0) $cod_zones = preg_split("/[:,]/", str_replace(' ', '', MODULE_ORDER_TOTAL_COD_FEE_SERVICEPAKKE));
 
-            for ($i = 0; $i < count($cod_zones); $i++) {
+            for ($i = 0, $n=count($cod_zones); $i < $n; $i++) {
               if ($cod_zones[$i] == $order->delivery['country']['iso_code_2']) {
                   $cod_cost = $cod_zones[$i + 1];
                   $cod_country = true;

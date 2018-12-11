@@ -1,10 +1,10 @@
 <?php
 /**
  * @package languageDefines
- * @copyright Copyright 2003-2016 Zen Cart Development Team
+ * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: DrByte  Fri Sep 11 15:56:13 2015 -0400 Modified in v1.5.5 $
+ * @version $Id: Drbyte Fri Sep 8 13:33:50 2017 -0400 Modified in v1.5.6 $
  */
 
 define('TEXT_INFORMATION', 'You may proceed with your purchase by clicking the Checkout button below. Shipping and Taxes and Discounts will be handled on subsequent pages.');
@@ -27,5 +27,5 @@ define('TEXT_TOTAL_ITEMS', 'Total Items: ');
 define('TEXT_TOTAL_WEIGHT', '&nbsp;&nbsp;Weight: ');
 define('TEXT_TOTAL_AMOUNT', '&nbsp;&nbsp;Amount: ');
 
-define('TEXT_VISITORS_CART', '<a href="javascript:session_win();">[help (?)]</a>');
+define('TEXT_CART_HELP', '<a href="javascript:session_win();">[help (?)]</a>');
 define('TEXT_OPTION_DIVIDER', '&nbsp;-&nbsp;');

@@ -4,10 +4,10 @@
  * Lookup Functions for various core activities related to countries, prices, products, product types, etc
  *
  * @package functions
- * @copyright Copyright 2003-2016 Zen Cart Development Team
+ * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: mc12345678  Tue Feb 2 16:23:08 2016 -0500 Modified in v1.5.5 $
+ * @version $Id: lat9 Mon Oct 22 13:19:39 2018 -0400 Modified in v1.5.6 $
  */
 
 /**
@@ -157,10 +157,26 @@
 */
   function zen_get_products_stock($products_id) {
     global $db;
+    
+    // -----
+    // Give an observer the chance to modify this function's return value.
+    //
     $products_id = zen_get_prid($products_id);
+    $products_quantity = 0;
+    $quantity_handled = false;
+    $GLOBALS['zco_notifier']->notify(
+        'ZEN_GET_PRODUCTS_STOCK',
+        $products_id,
+        $products_quantity,
+        $quantity_handled
+    );
+    if ($quantity_handled) {
+        return $products_quantity;
+    }
+    
     $stock_query = "select products_quantity
                     from " . TABLE_PRODUCTS . "
-                    where products_id = '" . (int)$products_id . "'";
+                    where products_id = " . (int)$products_id . " LIMIT 1";
 
     $stock_values = $db->Execute($stock_query);
 
@@ -176,8 +192,24 @@
 */
   function zen_check_stock($products_id, $products_quantity) {
     $stock_left = zen_get_products_stock($products_id) - $products_quantity;
-
-    return ($stock_left < 0) ? '<span class="markProductOutOfStock">' . STOCK_MARK_PRODUCT_OUT_OF_STOCK . '</span>' : '';
+    
+    // -----
+    // Give an observer the opportunity to change the out-of-stock message.
+    //
+    $the_message = '';
+    if ($stock_left < 0) {
+        $out_of_stock_message = STOCK_MARK_PRODUCT_OUT_OF_STOCK;
+        $GLOBALS['zco_notifier']->notify(
+            'ZEN_CHECK_STOCK_MESSAGE', 
+            array(
+                $products_id, 
+                $products_quantity
+            ), 
+            $out_of_stock_message
+        );
+        $the_message = '<span class="markProductOutOfStock">' . $out_of_stock_message . '</span>';
+    }
+    return $the_message;
   }
 
 /*
@@ -247,7 +279,7 @@
     if (!is_array($option_name_id)) {
       $option_name_id = array($option_name_id);
     }
-    
+
     $sql = "SELECT products_options_type FROM " . TABLE_PRODUCTS_OPTIONS . " WHERE products_options_id :option_name_id:";
     if (sizeof($option_name_id) > 1 ) {
       $sql2 = 'in (';
@@ -261,11 +293,11 @@
       $sql2 = ' = :option_id:';
       $sql2 = $db->bindVars($sql2, ':option_id:', $option_name_id[0], 'integer');
     }
-      
+
     $sql = $db->bindVars($sql, ':option_name_id:', $sql2, 'noquotestring');
-    
+
     $sql_result = $db->Execute($sql);
-    
+
     foreach($sql_result as $opt_type) {
 
       $test_var = true; // Set to false in observer if the name is not supposed to have a value associated
@@ -276,7 +308,7 @@
         break;
       }
     }
-    
+
     return $option_name_no_value;
   }
 
@@ -285,17 +317,14 @@
  */
   function zen_has_product_attributes_values($products_id) {
     global $db;
-    $attributes_query = "select sum(options_values_price) as total
+    $attributes_query = "select count(options_values_price) as total
                          from " . TABLE_PRODUCTS_ATTRIBUTES . "
-                         where products_id = '" . (int)$products_id . "'";
+                         where products_id = " . (int)$products_id . "
+                         and options_values_price <> 0";
 
     $attributes = $db->Execute($attributes_query);
 
-    if ($attributes->fields['total'] != 0) {
-      return true;
-    } else {
-      return false;
-    }
+    return ($attributes->fields['total'] != 0);
   }
 
 /*
@@ -469,7 +498,7 @@
     $check_valid = true;
 
 // display only cannot be selected
-    if ($check_attributes->fields['attributes_display_only'] == '1') {
+    if (!$check_attributes->EOF && $check_attributes->fields['attributes_display_only'] == '1') {
       $check_valid = false;
     }
 
@@ -957,3 +986,25 @@ function zen_has_product_attributes_downloads_status($products_id) {
 
     return $new_range;
   }
+
+/*
+ * This function, added to the storefront in zc1.5.6, mimics the like-named admin function in
+ * support of plugins that "span" both the storefront and admin.
+ *
+ * Returns the "name" associated with the specified orders_status_id.
+ *
+ */
+function zen_get_orders_status_name($orders_status_id, $language_id = '') 
+{
+    if ($language_id == '') {
+        $language_id = $_SESSION['languages_id'];
+    }
+    $orders_status = $GLOBALS['db']->Execute(
+        "SELECT orders_status_name
+           FROM " . TABLE_ORDERS_STATUS . "
+          WHERE orders_status_id = " . (int)$orders_status_id . "
+            AND language_id = " . (int)$language_id . "
+          LIMIT 1"
+    );
+    return ($orders_status->EOF) ? '' : $orders_status->fields['orders_status_name'];
+}

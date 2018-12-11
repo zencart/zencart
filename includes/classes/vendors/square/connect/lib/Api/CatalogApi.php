@@ -108,7 +108,8 @@ class CatalogApi
             $headerParams['Accept'] = $_header_accept;
         }
         $headerParams['Content-Type'] = ApiClient::selectHeaderContentType(array('application/json'));
-  
+        $headerParams['Square-Version'] = "2018-12-05";
+
         
         
         
@@ -200,7 +201,8 @@ class CatalogApi
             $headerParams['Accept'] = $_header_accept;
         }
         $headerParams['Content-Type'] = ApiClient::selectHeaderContentType(array('application/json'));
-  
+        $headerParams['Square-Version'] = "2018-12-05";
+
         
         
         
@@ -292,7 +294,8 @@ class CatalogApi
             $headerParams['Accept'] = $_header_accept;
         }
         $headerParams['Content-Type'] = ApiClient::selectHeaderContentType(array('application/json'));
-  
+        $headerParams['Square-Version'] = "2018-12-05";
+
         
         
         
@@ -378,7 +381,8 @@ class CatalogApi
             $headerParams['Accept'] = $_header_accept;
         }
         $headerParams['Content-Type'] = ApiClient::selectHeaderContentType(array('application/json'));
-  
+        $headerParams['Square-Version'] = "2018-12-05";
+
         
         
         
@@ -466,7 +470,8 @@ class CatalogApi
             $headerParams['Accept'] = $_header_accept;
         }
         $headerParams['Content-Type'] = ApiClient::selectHeaderContentType(array('application/json'));
-  
+        $headerParams['Square-Version'] = "2018-12-05";
+
         
         
         // path params
@@ -559,7 +564,8 @@ class CatalogApi
             $headerParams['Accept'] = $_header_accept;
         }
         $headerParams['Content-Type'] = ApiClient::selectHeaderContentType(array('application/json'));
-  
+        $headerParams['Square-Version'] = "2018-12-05";
+
         // query params
         if ($cursor !== null) {
             $queryParams['cursor'] = $this->apiClient->getSerializer()->toQueryValue($cursor);
@@ -655,7 +661,8 @@ class CatalogApi
             $headerParams['Accept'] = $_header_accept;
         }
         $headerParams['Content-Type'] = ApiClient::selectHeaderContentType(array('application/json'));
-  
+        $headerParams['Square-Version'] = "2018-12-05";
+
         // query params
         if ($include_related_objects !== null) {
             $queryParams['include_related_objects'] = $this->apiClient->getSerializer()->toQueryValue($include_related_objects);
@@ -753,7 +760,8 @@ class CatalogApi
             $headerParams['Accept'] = $_header_accept;
         }
         $headerParams['Content-Type'] = ApiClient::selectHeaderContentType(array('application/json'));
-  
+        $headerParams['Square-Version'] = "2018-12-05";
+
         
         
         
@@ -845,7 +853,8 @@ class CatalogApi
             $headerParams['Accept'] = $_header_accept;
         }
         $headerParams['Content-Type'] = ApiClient::selectHeaderContentType(array('application/json'));
-  
+        $headerParams['Square-Version'] = "2018-12-05";
+
         
         
         
@@ -937,7 +946,8 @@ class CatalogApi
             $headerParams['Accept'] = $_header_accept;
         }
         $headerParams['Content-Type'] = ApiClient::selectHeaderContentType(array('application/json'));
-  
+        $headerParams['Square-Version'] = "2018-12-05";
+
         
         
         
@@ -1029,7 +1039,8 @@ class CatalogApi
             $headerParams['Accept'] = $_header_accept;
         }
         $headerParams['Content-Type'] = ApiClient::selectHeaderContentType(array('application/json'));
-  
+        $headerParams['Square-Version'] = "2018-12-05";
+
         
         
         

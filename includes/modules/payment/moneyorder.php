@@ -3,10 +3,10 @@
  * @package money order payment module
  *
  * @package paymentMethod
- * @copyright Copyright 2003-2016 Zen Cart Development Team
+ * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: DrByte  Mon Jul 15 17:13:18 2013 -0400 Modified in v1.5.5 $
+ * @version $Id: Drbyte Sun Jan 7 21:30:21 2018 -0500 Modified in v1.5.6 $
  */
   class moneyorder {
     var $code, $title, $description, $enabled;
@@ -17,10 +17,13 @@
 
       $this->code = 'moneyorder';
       $this->title = MODULE_PAYMENT_MONEYORDER_TEXT_TITLE;
-      if (IS_ADMIN_FLAG === true && (MODULE_PAYMENT_MONEYORDER_PAYTO == 'the Store Owner/Website Name' || MODULE_PAYMENT_MONEYORDER_PAYTO == '')) $this->title .= '<span class="alert"> (not configured - needs pay-to)</span>';
       $this->description = MODULE_PAYMENT_MONEYORDER_TEXT_DESCRIPTION;
-      $this->sort_order = MODULE_PAYMENT_MONEYORDER_SORT_ORDER;
-      $this->enabled = ((MODULE_PAYMENT_MONEYORDER_STATUS == 'True') ? true : false);
+      $this->sort_order = defined('MODULE_PAYMENT_MONEYORDER_SORT_ORDER') ? MODULE_PAYMENT_MONEYORDER_SORT_ORDER : null;
+      $this->enabled = (defined('MODULE_PAYMENT_MONEYORDER_STATUS') && MODULE_PAYMENT_MONEYORDER_STATUS == 'True');
+
+      if (null === $this->sort_order) return false;
+
+      if (IS_ADMIN_FLAG === true && (MODULE_PAYMENT_MONEYORDER_PAYTO == 'the Store Owner/Website Name' || MODULE_PAYMENT_MONEYORDER_PAYTO == '')) $this->title .= '<span class="alert"> (not configured - needs pay-to)</span>';
 
       if ((int)MODULE_PAYMENT_MONEYORDER_ORDER_STATUS_ID > 0) {
         $this->order_status = MODULE_PAYMENT_MONEYORDER_ORDER_STATUS_ID;

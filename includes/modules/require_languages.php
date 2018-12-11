@@ -3,9 +3,9 @@
  * loads template specific language override files
  *
  * @package initSystem
- * @copyright Copyright 2003-2006 Zen Cart Development Team
+ * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: require_languages.php 4274 2006-08-26 03:16:53Z drbyte $
+ * @version $Id: Drbyte Sun Jan 7 21:32:45 2018 -0500 Modified in v1.5.6 $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
@@ -23,7 +23,7 @@ if (file_exists($language_page_directory . $template_dir . '/' . $current_page_b
 
 // set language or template language file
 $directory_array = $template->get_template_part($language_page_directory . $template_dir_select, '/^'.$current_page_base . '/');
-while(list ($key, $value) = each($directory_array)) {
+foreach($directory_array as $key => $value) {
   //echo "I AM LOADING: " . $language_page_directory . $template_dir_select . $value . '<br />';
   require_once($language_page_directory . $template_dir_select . $value);
 }
@@ -31,10 +31,8 @@ while(list ($key, $value) = each($directory_array)) {
 // load master language file(s) if lang files loaded previously were "overrides" and not masters.
 if ($template_dir_select != '') {
   $directory_array = $template->get_template_part($language_page_directory, '/^'.$current_page_base . '/');
-  while(list ($key, $value) = each($directory_array)) {
+  foreach($directory_array as $key => $value) {
     //echo "I AM LOADING MASTER: " . $language_page_directory . $value.'<br />';
     require_once($language_page_directory . $value);
   }
 }
-
-?>

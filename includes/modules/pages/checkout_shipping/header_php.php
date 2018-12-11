@@ -3,10 +3,10 @@
  * Checkout Shipping Page
  *
  * @package page
- * @copyright Copyright 2003-2016 Zen Cart Development Team
+ * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: DrByte  Mon Dec 7 14:40:03 2015 -0500 Modified in v1.5.5 $
+ * @version $Id: mc12345678 Tue May 8 00:42:18 2018 -0400 Modified in v1.5.6 $
  */
 // This should be first line of the script:
   $zco_notifier->notify('NOTIFY_HEADER_START_CHECKOUT_SHIPPING');
@@ -51,7 +51,7 @@
     }
 
 // if no shipping destination address was selected, use the customers own address as default
-  if (!$_SESSION['sendto']) {
+  if (empty($_SESSION['sendto'])) {
     $_SESSION['sendto'] = $_SESSION['customer_default_address_id'];
   } else {
 // verify the selected shipping address
@@ -141,7 +141,7 @@ if (isset($_SESSION['cart']->cartID)) {
     if (zen_not_null($_POST['comments'])) {
       $_SESSION['comments'] = zen_output_string_protected($_POST['comments']);
     }
-    $comments = $_SESSION['comments'];
+    $comments = isset($_SESSION['comments']) ? $_SESSION['comments'] : '';
     $quote = array();
 
     if ( (zen_count_shipping_modules() > 0) || ($free_shipping == true) ) {

@@ -1,127 +1,167 @@
 <?php
 /**
- * currencies Class.
+ * currencies class
  *
  * @package classes
- * @copyright Copyright 2003-2016 Zen Cart Development Team
+ * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: DrByte  Sun Oct 18 03:20:05 2015 -0400 Modified in v1.5.5 $
+ * @version $Id: Drbyte Tue Nov 20 12:59:17 2018 -0500 Modified in v1.5.6 $
  */
 if (!defined('IS_ADMIN_FLAG')) {
-  die('Illegal Access');
+    die('Illegal Access');
 }
+
 /**
- * currencies Class.
- * Class to handle currencies
+ * currencies class
  *
  * @package classes
  */
-class currencies extends base {
-  var $currencies;
+class currencies extends base
+{
+    var $currencies;
 
-  function __construct() {
-    global $db;
-    $this->currencies = array();
-    $currencies_query = "select code, title, symbol_left, symbol_right, decimal_point, thousands_point, decimal_places, value
-                         from " . TABLE_CURRENCIES;
-    $currencies = $db->Execute($currencies_query);
+    function __construct()
+    {
+        global $db;
+        $this->currencies = [];
 
-    while (!$currencies->EOF) {
-      $this->currencies[$currencies->fields['code']] = array(
-            'title' => $currencies->fields['title'],
-            'symbol_left' => $currencies->fields['symbol_left'],
-            'symbol_right' => $currencies->fields['symbol_right'],
-            'decimal_point' => $currencies->fields['decimal_point'],
-            'thousands_point' => $currencies->fields['thousands_point'],
-            'decimal_places' => (int)$currencies->fields['decimal_places'],
-            'value' => $currencies->fields['value']);
-      $currencies->MoveNext();
-    }
-  }
+        $query   = "select code, title, symbol_left, symbol_right, decimal_point, thousands_point, decimal_places, `value`
+                    from " . TABLE_CURRENCIES;
+        $results = $db->Execute($query);
 
-  // class methods
-  function format($number, $calculate_currency_value = true, $currency_type = '', $currency_value = '') {
-    if (empty($number)) $number = 0;
-
-    if (empty($currency_type)) $currency_type = (isset($_SESSION['currency']) ? $_SESSION['currency'] : DEFAULT_CURRENCY);
-
-    if ($calculate_currency_value == true) {
-      $rate = (zen_not_null($currency_value)) ? $currency_value : $this->currencies[$currency_type]['value'];
-      $format_string = $this->currencies[$currency_type]['symbol_left'] . number_format(zen_round($number * $rate, $this->currencies[$currency_type]['decimal_places']), $this->currencies[$currency_type]['decimal_places'], $this->currencies[$currency_type]['decimal_point'], $this->currencies[$currency_type]['thousands_point']) . $this->currencies[$currency_type]['symbol_right'];
-
-      // Special Case: if the selected currency is in the european euro-conversion and the default currency is euro,
-      // then the currency will displayed in both the national currency and euro currency
-      if ( (DEFAULT_CURRENCY == 'EUR') && ($currency_type == 'DEM' || $currency_type == 'BEF' || $currency_type == 'LUF' || $currency_type == 'ESP' || $currency_type == 'FRF' || $currency_type == 'IEP' || $currency_type == 'ITL' || $currency_type == 'NLG' || $currency_type == 'ATS' || $currency_type == 'PTE' || $currency_type == 'FIM' || $currency_type == 'GRD') ) {
-        $format_string .= ' <small>[' . $this->format($number, true, 'EUR') . ']</small>';
-      }
-
-    } else {
-      $format_string = $this->currencies[$currency_type]['symbol_left'] . number_format(zen_round($number, $this->currencies[$currency_type]['decimal_places']), $this->currencies[$currency_type]['decimal_places'], $this->currencies[$currency_type]['decimal_point'], $this->currencies[$currency_type]['thousands_point']) . $this->currencies[$currency_type]['symbol_right'];
+        foreach ($results as $result) {
+            $this->currencies[$result['code']] = [
+                'title'           => $result['title'],
+                'symbol_left'     => $result['symbol_left'],
+                'symbol_right'    => $result['symbol_right'],
+                'decimal_point'   => $result['decimal_point'],
+                'thousands_point' => $result['thousands_point'],
+                'decimal_places'  => (int)$result['decimal_places'],
+                'value'           => $result['value'],
+            ];
+        }
     }
 
-    if (IS_ADMIN_FLAG === false && (DOWN_FOR_MAINTENANCE=='true' and DOWN_FOR_MAINTENANCE_PRICES_OFF=='true') and (!strstr(EXCLUDE_ADMIN_IP_FOR_MAINTENANCE, $_SERVER['REMOTE_ADDR']))) {
-      $format_string= '';
+    /**
+     * Format the specified number according to the specified currency's rules
+     * @param float $number
+     * @param bool $calculate_using_exchange_rate
+     * @param string $currency_type
+     * @param float $currency_value
+     * @return string
+     */
+    function format($number, $calculate_using_exchange_rate = true, $currency_type = '', $currency_value = '')
+    {
+        if (IS_ADMIN_FLAG === false && (DOWN_FOR_MAINTENANCE == 'true' && DOWN_FOR_MAINTENANCE_PRICES_OFF == 'true') && (!strstr(EXCLUDE_ADMIN_IP_FOR_MAINTENANCE, $_SERVER['REMOTE_ADDR']))) {
+            return '';
+        }
+
+        if (empty($number)) $number = 0;
+
+        if (empty($currency_type)) $currency_type = (isset($_SESSION['currency']) ? $_SESSION['currency'] : DEFAULT_CURRENCY);
+
+        $formatted_string = $this->currencies[$currency_type]['symbol_left'] .
+            number_format(
+                $this->rateAdjusted($number, $calculate_using_exchange_rate, $currency_type, $currency_value),
+                $this->currencies[$currency_type]['decimal_places'],
+                $this->currencies[$currency_type]['decimal_point'],
+                $this->currencies[$currency_type]['thousands_point']
+            ) . $this->currencies[$currency_type]['symbol_right'];
+
+        if ($calculate_using_exchange_rate == true) {
+            // Special Case: if the selected currency is in the european euro-conversion and the default currency is euro,
+            // then the currency will displayed in both the national currency and euro currency
+            if (DEFAULT_CURRENCY == 'EUR' && in_array($currency_type, ['DEM', 'BEF', 'LUF', 'ESP', 'FRF', 'IEP', 'ITL', 'NLG', 'ATS', 'PTE', 'FIM', 'GRD'])) {
+                $formatted_string .= ' <small>[' . $this->format($number, true, 'EUR') . ']</small>';
+            }
+        }
+
+        return $formatted_string;
     }
 
-    return $format_string;
-  }
+    /**
+     * Convert amount based on currency values
+     * Or at least round it to the relevant decimal places
+     *
+     * @param float $number
+     * @param bool $calculate_using_exchange_rate
+     * @param string $currency_type
+     * @param float $currency_value
+     * @return float
+     */
+    function rateAdjusted($number, $calculate_using_exchange_rate = true, $currency_type = '', $currency_value = null)
+    {
+        if (empty($currency_type)) $currency_type = (isset($_SESSION['currency']) ? $_SESSION['currency'] : DEFAULT_CURRENCY);
 
-  function rateAdjusted($number, $calculate_currency_value = true, $currency_type = '', $currency_value = '') {
+        if ($calculate_using_exchange_rate == true) {
+            $rate   = zen_not_null($currency_value) ? $currency_value : $this->currencies[$currency_type]['value'];
+            $number = $number * $rate;
+        }
 
-    if (empty($currency_type)) $currency_type = (isset($_SESSION['currency']) ? $_SESSION['currency'] : DEFAULT_CURRENCY);
-
-    if ($calculate_currency_value == true) {
-      $rate = (zen_not_null($currency_value)) ? $currency_value : $this->currencies[$currency_type]['value'];
-      $result = zen_round($number * $rate, $this->currencies[$currency_type]['decimal_places']);
-    } else {
-      $result = zen_round($number, $this->currencies[$currency_type]['decimal_places']);
-    }
-    return $result;
-  }
-
-  function value($number, $calculate_currency_value = true, $currency_type = '', $currency_value = '') {
-
-    if (empty($currency_type)) $currency_type = (isset($_SESSION['currency']) ? $_SESSION['currency'] : DEFAULT_CURRENCY);
-
-    if ($calculate_currency_value == true) {
-      if ($currency_type == DEFAULT_CURRENCY) {
-        $rate = (zen_not_null($currency_value)) ? $currency_value : 1/$this->currencies[$_SESSION['currency']]['value'];
-      } else {
-        $rate = (zen_not_null($currency_value)) ? $currency_value : $this->currencies[$currency_type]['value'];
-      }
-      $currency_value = zen_round($number * $rate, $this->currencies[$currency_type]['decimal_places']);
-    } else {
-      $currency_value = zen_round($number, $this->currencies[$currency_type]['decimal_places']);
+        return zen_round($number, $this->currencies[$currency_type]['decimal_places']);
     }
 
-    return $currency_value;
-  }
+    function value($number, $calculate_using_exchange_rate = true, $currency_type = '', $currency_value = null)
+    {
+        if (empty($currency_type)) $currency_type = (isset($_SESSION['currency']) ? $_SESSION['currency'] : DEFAULT_CURRENCY);
 
-  function normalizeValue($valueIn, $currencyType = NULL)
-  {
-    if (!isset($currencyType)) $currencyType = (isset($_SESSION['currency']) ? $_SESSION['currency'] : DEFAULT_CURRENCY);
-    $value = str_replace($this->currencies[$currencyType]['decimal_point'], '.', $valueIn);
-    return $value;
-  }
+        if ($calculate_using_exchange_rate == true) {
+            $multiplier = ($currency_type == DEFAULT_CURRENCY) ? 1 / $this->currencies[$_SESSION['currency']]['value'] : $this->currencies[$currency_type]['value'];
+            $rate = zen_not_null($currency_value) ? $currency_value : $multiplier;
+            $number = $number * $rate;
+        }
 
-  function is_set($code) {
-    if (isset($this->currencies[$code]) && zen_not_null($this->currencies[$code])) {
-      return true;
-    } else {
-      return false;
+        return zen_round($number, $this->currencies[$currency_type]['decimal_places']);
     }
-  }
 
-  function get_value($code) {
-    return $this->currencies[$code]['value'];
-  }
+    /**
+     * Normalize "decimal" placeholder to actually use "."
+     * @param $valueIn
+     * @param string $currencyCode
+     * @return string
+     */
+    function normalizeValue($valueIn, $currencyCode = null)
+    {
+        if ($currencyCode === null) $currencyCode = (isset($_SESSION['currency']) ? $_SESSION['currency'] : DEFAULT_CURRENCY);
+        $value = str_replace($this->currencies[$currencyCode]['decimal_point'], '.', $valueIn);
 
-  function get_decimal_places($code) {
-    return $this->currencies[$code]['decimal_places'];
-  }
+        return $value;
+    }
 
-  function display_price($products_price, $products_tax, $quantity = 1) {
-    return $this->format(zen_add_tax($products_price, $products_tax) * $quantity);
-  }
+    function is_set($code)
+    {
+        return isset($this->currencies[$code]) && zen_not_null($this->currencies[$code]);
+    }
+
+    /**
+     * Retrieve the exchange-rate of a specified currency
+     * @param string $code currency code
+     * @return float
+     */
+    function get_value($code)
+    {
+        return $this->currencies[$code]['value'];
+    }
+
+    /**
+     * @param string $code currency code
+     * @return int
+     */
+    function get_decimal_places($code)
+    {
+        return $this->currencies[$code]['decimal_places'];
+    }
+
+    /**
+     * Calculate amount based on $quantity, and format it according to current currency
+     * @param $product_price
+     * @param $product_tax
+     * @param int $quantity
+     * @return string
+     */
+    function display_price($product_price, $product_tax, $quantity = 1)
+    {
+        return $this->format(zen_add_tax($product_price, $product_tax) * $quantity);
+    }
 }

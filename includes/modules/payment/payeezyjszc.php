@@ -14,9 +14,9 @@
  * REQUIRES PHP 5.4 or newer
  *
  * @package payeezy
- * @copyright Copyright 2003-2017 Zen Cart Development Team
+ * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: Ian Wilson <ian@zen-cart.com> New in v1.5.5 $
+ * @version $Id: Drbyte Tue Dec 4 13:24:10 2018 -0500 Modified in v1.5.6 $
  */
 
 // required to prevent PHP 5.3 from throwing errors:
@@ -38,7 +38,7 @@ class payeezyjszc extends base
     /**
      * $moduleVersion is the plugin version number
      */
-    var $moduleVersion = '0.98';
+    var $moduleVersion = '0.99';
     /**
      * $title is the displayed name for this payment method
      *
@@ -88,7 +88,6 @@ class payeezyjszc extends base
 
         $this->code  = 'payeezyjszc';
         $this->title = MODULE_PAYMENT_PAYEEZYJSZC_TEXT_CATALOG_TITLE; // Payment module title in Catalog
-        $this->mode  = MODULE_PAYMENT_PAYEEZYJSZC_TESTING_MODE;
         if (IS_ADMIN_FLAG === true) {
             $this->title = MODULE_PAYMENT_PAYEEZYJSZC_TEXT_ADMIN_TITLE;
             if (defined('MODULE_PAYMENT_PAYEEZYJSZC_STATUS')) {
@@ -106,8 +105,12 @@ class payeezyjszc extends base
         }
 
         $this->description = 'PayeezyJS ' . $this->moduleVersion . '<br>' . MODULE_PAYMENT_PAYEEZYJSZC_TEXT_DESCRIPTION;
-        $this->enabled     = ((MODULE_PAYMENT_PAYEEZYJSZC_STATUS == 'True') ? true : false);
-        $this->sort_order  = MODULE_PAYMENT_PAYEEZYJSZC_SORT_ORDER;
+        $this->enabled     = (defined('MODULE_PAYMENT_PAYEEZYJSZC_STATUS') && MODULE_PAYMENT_PAYEEZYJSZC_STATUS == 'True');
+        $this->sort_order  = defined('MODULE_PAYMENT_PAYEEZYJSZC_SORT_ORDER') ? MODULE_PAYMENT_PAYEEZYJSZC_SORT_ORDER : null;
+
+        if (null === $this->sort_order) return false;
+
+        $this->mode  = MODULE_PAYMENT_PAYEEZYJSZC_TESTING_MODE;
 
         // determine order-status for transactions
         if ((int)MODULE_PAYMENT_PAYEEZYJSZC_ORDER_STATUS_ID > 0) {
@@ -232,6 +235,7 @@ class payeezyjszc extends base
                 array(
                     'title' => '',
                     'field' => zen_draw_hidden_field($this->code . '_fdtoken', '', 'id="' . $this->code . '_fdtoken"') . '<div id="payeezy-payment-errors"></div>' .
+                        zen_draw_hidden_field($this->code . '_cc_number', '', 'id="' . $this->code . '_cc_number') .
                         zen_draw_hidden_field($this->code . '_currency', $order->info['currency'], 'payeezy-data="currency"') .
                         zen_draw_hidden_field($this->code . '_billing_street', $order->billing['street_address'], 'payeezy-data="billing.street"') .
                         zen_draw_hidden_field($this->code . '_billing_city', $order->billing['city'], 'payeezy-data="billing.city"') .
@@ -571,7 +575,7 @@ class payeezyjszc extends base
                 // 258 = soft_descriptors not allowed/configured on this merchant account
                 // 260 = AVS - Authorization network could not reach the bank which issued the card
                 // 264 = Duplicate transaction; rejected.
-                // 301 = Issuer Unavailable. Try again. 
+                // 301 = Issuer Unavailable. Try again.
                 // 303 = (Generic) Processor Decline: no other explanation offered
                 // 351, 353, 354 = Transarmor errors
 
@@ -581,7 +585,7 @@ class payeezyjszc extends base
                 //     $this->logTransactionData($response, $payload_logged);
                 // }
 
-                // check for soft-descriptor failure, and resubmit without 
+                // check for soft-descriptor failure, and resubmit without
                 if ($response['bank_resp_code'] == 258 && MODULE_PAYMENT_PAYEEZYJSZC_SEND_SOFT_DESCRIPTORS == 'Yes') {
                     $payload = $payload_logged;
                     unset($payload['soft_descriptors']);
@@ -604,7 +608,7 @@ class payeezyjszc extends base
                     }
                 }
 
-                // check for level 3 failure, and resubmit without 
+                // check for level 3 failure, and resubmit without
                 if ($response['bank_resp_code'] == 243 && MODULE_PAYMENT_PAYEEZYJSZC_SEND_LEVEL3 == 'Yes') {
                     $payload = $payload_logged;
                     unset($payload['level3']);

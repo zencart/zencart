@@ -46,7 +46,8 @@ $EMAIL_COMMON_CSS
         <td class="content-line-title"><strong>$ADDRESS_DELIVERY_TITLE</strong></td>
       </tr>
       <tr>
-        <td class="address">$ADDRESS_DELIVERY_DETAIL</td>
+        <td class="address">$ADDRESS_DELIVERY_DETAIL<br>
+        $EMAIL_TEXT_TELEPHONE $EMAIL_CUSTOMER_PHONE</td>
       </tr>
 
       <tr>
@@ -81,6 +82,10 @@ $EMAIL_COMMON_CSS
  </div>
 </div>
 
+  <div class="order_message">
+    <div class="order_message">$EMAIL_ORDER_MESSAGE</div>
+  </div>
+
   <!-- Footer Section -->
   <div class="footer">
     <div class="copyright">$EMAIL_FOOTER_COPYRIGHT</div>
@@ -91,6 +96,8 @@ $EMAIL_COMMON_CSS
   <div class="disclaimer1">$EMAIL_DISCLAIMER</div>
   <div class="disclaimer2">$EMAIL_SPAM_DISCLAIMER</div>
 </div>
+<div class="extra-info">
 $EXTRA_INFO
+</div>
 </body>
 </html>

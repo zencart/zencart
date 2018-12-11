@@ -3,10 +3,10 @@
  * ot_group_pricing order-total module
  *
  * @package orderTotal
- * @copyright Copyright 2003-2016 Zen Cart Development Team
+ * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: DrByte  Thu Apr 2 14:27:45 2015 -0400 Modified in v1.5.5 $
+ * @version $Id: mc12345678 Tue May 8 00:42:18 2018 -0400 Modified in v1.5.6 $
  */
 
 class ot_group_pricing {
@@ -16,7 +16,9 @@ class ot_group_pricing {
     $this->code = 'ot_group_pricing';
     $this->title = MODULE_ORDER_TOTAL_GROUP_PRICING_TITLE;
     $this->description = MODULE_ORDER_TOTAL_GROUP_PRICING_DESCRIPTION;
-    $this->sort_order = MODULE_ORDER_TOTAL_GROUP_PRICING_SORT_ORDER;
+    $this->sort_order = defined('MODULE_ORDER_TOTAL_GROUP_PRICING_SORT_ORDER') ? MODULE_ORDER_TOTAL_GROUP_PRICING_SORT_ORDER : null;
+    if (null === $this->sort_order) return false;
+
     $this->include_shipping = MODULE_ORDER_TOTAL_GROUP_PRICING_INC_SHIPPING;
     $this->include_tax = MODULE_ORDER_TOTAL_GROUP_PRICING_INC_TAX;
     $this->calculate_tax = MODULE_ORDER_TOTAL_GROUP_PRICING_CALC_TAX;
@@ -29,11 +31,10 @@ class ot_group_pricing {
     global $order, $currencies, $db;
     $order_total = $this->get_order_total();
     $od_amount = $this->calculate_deductions($order_total['total']);
-    $this->deduction = $od_amount['total'];
-    if ($od_amount['total'] > 0) {
-      reset($order->info['tax_groups']);
+    $this->deduction = isset($od_amount['total']) ? $od_amount['total'] : 0;
+    if (isset($od_amount['total']) && $od_amount['total'] > 0) {
       $tax = 0;
-      while (list($key, $value) = each($order->info['tax_groups'])) {
+      foreach($order->info['tax_groups'] as $key => $value) {
         if ($od_amount['tax_groups'][$key]) {
           $order->info['tax_groups'][$key] -= $od_amount['tax_groups'][$key];
           $tax += $od_amount['tax_groups'][$key];
@@ -99,7 +100,6 @@ class ot_group_pricing {
       switch ($this->calculate_tax) {
         case 'None':
           if ($this->include_tax) {
-            reset($order->info['tax_groups']);
             foreach ($order->info['tax_groups'] as $key=>$value) {
               $od_amount['tax_groups'][$key] = $order->info['tax_groups'][$key] * $ratio;
             }
@@ -112,7 +112,6 @@ class ot_group_pricing {
           $adjustedTax = $orderTotalTax * $ratio;
           if ($order->info['tax'] == 0) return $od_amount;
           $ratioTax = ($orderTotalTax != 0 ) ? $adjustedTax/$orderTotalTax : 0;
-          reset($order->info['tax_groups']);
           $tax_deduct = 0;
           foreach ($taxGroups as $key=>$value) {
             $od_amount['tax_groups'][$key] = $value * $ratioTax;
@@ -138,6 +137,7 @@ class ot_group_pricing {
   }
 
   function credit_selection() {
+    $selection = false;
     return $selection;
   }
 

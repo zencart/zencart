@@ -2,9 +2,9 @@
 /**
  * ajaxLoadMainSql.php
  * @package Installer
- * @copyright Copyright 2003-2016 Zen Cart Development Team
+ * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: DrByte  Fri Oct 9 15:32:07 2015 -0400 New in v1.5.5 $
+ * @version $Id: Drbyte Sun Jun 10 23:03:21 2018 -0400 Modified in v1.5.6 $
  */
 define('IS_ADMIN_FLAG', false);
 if (!defined('__DIR__')) define('__DIR__', dirname(__FILE__));
@@ -35,10 +35,12 @@ if ($error)
   echo json_encode(array('error'=>$error, 'file'=>$file)); die();
 }
 // localization file
-if (file_exists(DIR_FS_INSTALL . 'sql/install/mysql_' . $_POST['db_charset'] . '.sql'))
+$charset = $_POST['db_charset'];
+if (!in_array($charset, array('utf8', 'latin1'))) $charset = 'utf8';
+$file = DIR_FS_INSTALL . 'sql/install/mysql_' . $charset . '.sql';
+if (file_exists($file))
 {
   $extendedOptions = array('doJsonProgressLogging'=>TRUE, 'doJsonProgressLoggingFileName'=>DEBUG_LOG_FOLDER . '/progress.json', 'id'=>'main', 'message'=>TEXT_LOADING_CHARSET_SPECIFIC);
-  $file = DIR_FS_INSTALL . 'sql/install/mysql_' . $_POST['db_charset'] . '.sql';
   logDetails('processing file ' . $file);
   $error = $dbInstaller->parseSqlFile($file, $extendedOptions);
 }

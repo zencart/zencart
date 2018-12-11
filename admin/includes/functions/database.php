@@ -1,24 +1,22 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2014 Zen Cart Development Team
+ * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: Ian Wilson  Modified in v1.5.4 $
+ * @version $Id: Drbyte Sun Jan 7 21:39:26 2018 -0500 Modified in v1.5.6 $
  */
 
 
   function zen_db_perform($table, $data, $action = 'insert', $parameters = '', $link = 'db_link') {
     global $db;
-    reset($data);
     if ($action == 'insert') {
       $query = 'insert into ' . $table . ' (';
-      while (list($columns, ) = each($data)) {
+      foreach($data as $columns => $value) {
         $query .= $columns . ', ';
       }
       $query = substr($query, 0, -2) . ') values (';
-      reset($data);
-      while (list(, $value) = each($data)) {
+      foreach($data as $value) {
         switch ((string)$value) {
           case 'now()':
             $query .= 'now(), ';
@@ -34,7 +32,7 @@
       $query = substr($query, 0, -2) . ')';
     } elseif ($action == 'update') {
       $query = 'update ' . $table . ' set ';
-      while (list($columns, $value) = each($data)) {
+      foreach($data as $columns => $value) {
         switch ((string)$value) {
           case 'now()':
             $query .= $columns . ' = now(), ';
@@ -54,14 +52,12 @@
   }
   function zen_db_perform_language($table, $data, $keyIdName, $keyId, $languageId, $link = 'db_link') {
     global $db;
-    reset($data);
     $sql = "INSERT INTO " . $table . "(" . $keyIdName . ", languages_id, ";
-    while (list($columns, ) = each($data)) {
+    foreach($data as $columns => $value) {
       $sql .= $columns . ', ';
     }
     $sql = substr($sql, 0, -2) . ') values (' . (int)$keyId . ", " . (int)$languageId . ", ";
-    reset($data);
-    while (list(, $value) = each($data)) {
+    foreach($data as $value) {
       switch ((string)$value) {
         case 'now()':
           $sql .= 'now(), ';
@@ -76,8 +72,7 @@
     }
     $sql = substr($sql, 0, -2) . ')';
     $sql .= ' ON DUPLICATE KEY UPDATE ';
-    reset($data);
-    while (list($columns, $value) = each($data)) {
+    foreach($data as $columns => $value) {
       switch ((string)$value) {
         case 'now()':
           $sql .= $columns . ' = now(), ';
@@ -116,8 +111,7 @@
         return stripslashes($string);
       }
     } elseif (is_array($string)) {
-      reset($string);
-      while (list($key, $value) = each($string)) {
+      foreach($string as $key => $value) {
         $string[$key] = zen_db_prepare_input($value);
       }
       return $string;

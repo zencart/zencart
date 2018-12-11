@@ -3,13 +3,13 @@
  * FreeCharger Payment Module
  *
  * @package paymentMethod
- * @copyright Copyright 2003-2016 Zen Cart Development Team
+ * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: DrByte  Mon Jul 15 17:13:18 2013 -0400 Modified in v1.5.5 $
+ * @version $Id: Drbyte Sun Jan 7 21:30:21 2018 -0500 Modified in v1.5.6 $
  */
   class freecharger {
-    var $code, $title, $description, $enabled, $payment;
+    var $code, $title, $description, $enabled;
 
 // class constructor
     function __construct() {
@@ -17,16 +17,13 @@
       $this->code = 'freecharger';
       $this->title = MODULE_PAYMENT_FREECHARGER_TEXT_TITLE;
       $this->description = MODULE_PAYMENT_FREECHARGER_TEXT_DESCRIPTION;
-      $this->sort_order = MODULE_PAYMENT_FREECHARGER_SORT_ORDER;
-      $this->enabled = ((MODULE_PAYMENT_FREECHARGER_STATUS == 'True') ? true : false);
+      $this->sort_order = defined('MODULE_PAYMENT_FREECHARGER_SORT_ORDER') ? MODULE_PAYMENT_FREECHARGER_SORT_ORDER : null;
+      $this->enabled = (defined('MODULE_PAYMENT_FREECHARGER_STATUS') && MODULE_PAYMENT_FREECHARGER_STATUS == 'True');
+
+      if (null === $this->sort_order) return false;
 
       if ((int)MODULE_PAYMENT_FREECHARGER_ORDER_STATUS_ID > 0) {
         $this->order_status = MODULE_PAYMENT_FREECHARGER_ORDER_STATUS_ID;
-        $payment='freecharger';
-      } else {
-        if ($payment=='freecharger') {
-          $payment='';
-        }
       }
 
       if (is_object($order)) $this->update_status();
@@ -110,7 +107,7 @@
       global $db, $messageStack;
       if (defined('MODULE_PAYMENT_FREECHARGER_STATUS')) {
         $messageStack->add_session('FreeCharger module already installed.', 'error');
-        zen_redirect(zen_href_link(FILENAME_MODULES, 'set=payment&module=freecharger', 'NONSSL'));
+        zen_redirect(zen_href_link(FILENAME_MODULES, 'set=payment&module=freecharger', 'SSL'));
         return 'failed';
       }
       $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Enable Free Charge Module', 'MODULE_PAYMENT_FREECHARGER_STATUS', 'True', 'Do you want to accept Free Charge payments?', '6', '1', 'zen_cfg_select_option(array(\'True\', \'False\'), ', now());");

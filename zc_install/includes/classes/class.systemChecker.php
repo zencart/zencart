@@ -4,7 +4,7 @@
  * @package Installer
  * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: DrByte  Modified in v1.5.6 $
+ * @version $Id: Drbyte Tue Oct 9 18:48:15 2018 -0400 Modified in v1.5.6 $
  */
 /**
  * systemChecker Class
@@ -249,9 +249,9 @@ class systemChecker
     $retVal = FALSE;
     $sql = "select configuration_title from " . $dbPrefix . "configuration where configuration_key = '" . $parameters['fieldName'] . "'";
     $result = $db->execute($sql);
-    if ($result)
+    if ($result && isset($result->fields['configuration_title']))
     {
-      $retVal  = ($result->fields['configuration_title'] == $parameters['expectedResult']) ? TRUE : FALSE;
+      $retVal = ($result->fields['configuration_title'] == $parameters['expectedResult']) ? TRUE : FALSE;
     }
     return $retVal;
   }
@@ -260,9 +260,9 @@ class systemChecker
     $retVal = FALSE;
     $sql = "select configuration_description from " . $dbPrefix . "configuration where configuration_key = '" . $parameters['fieldName'] . "'";
     $result = $db->execute($sql);
-    if ($result)
+    if ($result && isset($result->fields['configuration_description']))
     {
-      $retVal  = ($result->fields['configuration_description'] == $parameters['expectedResult']) ? TRUE : FALSE;
+      $retVal = ($result->fields['configuration_description'] == $parameters['expectedResult']) ? TRUE : FALSE;
     }
     return $retVal;
   }

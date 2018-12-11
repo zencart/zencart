@@ -5,10 +5,10 @@
  * -- ADMIN version --
  *
  * @package initSystem
- * @copyright Copyright 2003-2016 Zen Cart Development Team
+ * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: DrByte  Sat Jan 9 22:19:03 2016 -0500 New in v1.5.5 $
+ * @version $Id: Zen4All Wed Nov 15 10:59:33 2017 +0100 Modified in v1.5.6 $
  */
 function zen_parse_url($url, $element = 'array')
 {
@@ -71,6 +71,7 @@ if (!defined('DIR_FS_CATALOG_TEMPLATES')) define('DIR_FS_CATALOG_TEMPLATES', DIR
 if (!defined('DIR_FS_BACKUP')) define('DIR_FS_BACKUP', DIR_FS_ADMIN . 'backups/');
 if (!defined('DIR_FS_EMAIL_TEMPLATES')) define('DIR_FS_EMAIL_TEMPLATES', DIR_FS_CATALOG . 'email/');
 if (!defined('SQL_CACHE_METHOD')) define('SQL_CACHE_METHOD', 'none');
+if (!defined('DIR_WS_EDITORS')) define('DIR_WS_EDITORS', 'editors/');
 
 if (!defined('DIR_FS_SQL_CACHE')) define('DIR_FS_SQL_CACHE', DIR_FS_CATALOG . 'cache'); // trailing slash omitted
 if (!defined('DIR_FS_LOGS')) define('DIR_FS_LOGS', DIR_FS_CATALOG . 'logs'); // trailing slash omitted

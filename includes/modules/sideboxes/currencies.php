@@ -3,10 +3,10 @@
  * currencies sidebox - allows customer to select from available currencies
  *
  * @package templateSystem
- * @copyright Copyright 2003-2013 Zen Cart Development Team
+ * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte  Sun Feb 17 22:58:47 2013 -0500 Modified in v1.5.2 $
+ * @version $Id: Drbyte Sun Jan 7 21:28:50 2018 -0500 Modified in v1.5.6 $
  */
 
 // test if box should display
@@ -20,9 +20,8 @@
   if ($show_currencies == true) {
     if (isset($currencies) && is_object($currencies)) {
 
-      reset($currencies->currencies);
       $currencies_array = array();
-      while (list($key, $value) = each($currencies->currencies)) {
+      foreach($currencies->currencies as $key => $value) {
         $currencies_array[] = array('id' => $key, 'text' => $value['title']);
       }
 

@@ -3,10 +3,10 @@
  * functions_categories.php
  *
  * @package functions
- * @copyright Copyright 2003-2009 Zen Cart Development Team
+ * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: functions_categories.php 14141 2009-08-10 19:34:47Z wilt $
+ * @version $Id: mc12345678 Wed Jan 24 21:14:33 2018 -0500 Modified in v1.5.6 $
  */
 
 ////

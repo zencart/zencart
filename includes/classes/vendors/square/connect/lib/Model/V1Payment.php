@@ -47,7 +47,10 @@ class V1Payment implements ArrayAccess
         'additive_tax' => '\SquareConnect\Model\V1PaymentTax[]',
         'tender' => '\SquareConnect\Model\V1Tender[]',
         'refunds' => '\SquareConnect\Model\V1Refund[]',
-        'itemizations' => '\SquareConnect\Model\V1PaymentItemization[]'
+        'itemizations' => '\SquareConnect\Model\V1PaymentItemization[]',
+        'surcharge_money' => '\SquareConnect\Model\V1Money',
+        'surcharges' => '\SquareConnect\Model\V1PaymentSurcharge[]',
+        'is_partial' => 'bool'
     );
   
     /** 
@@ -78,7 +81,10 @@ class V1Payment implements ArrayAccess
         'additive_tax' => 'additive_tax',
         'tender' => 'tender',
         'refunds' => 'refunds',
-        'itemizations' => 'itemizations'
+        'itemizations' => 'itemizations',
+        'surcharge_money' => 'surcharge_money',
+        'surcharges' => 'surcharges',
+        'is_partial' => 'is_partial'
     );
   
     /**
@@ -109,7 +115,10 @@ class V1Payment implements ArrayAccess
         'additive_tax' => 'setAdditiveTax',
         'tender' => 'setTender',
         'refunds' => 'setRefunds',
-        'itemizations' => 'setItemizations'
+        'itemizations' => 'setItemizations',
+        'surcharge_money' => 'setSurchargeMoney',
+        'surcharges' => 'setSurcharges',
+        'is_partial' => 'setIsPartial'
     );
   
     /**
@@ -140,7 +149,10 @@ class V1Payment implements ArrayAccess
         'additive_tax' => 'getAdditiveTax',
         'tender' => 'getTender',
         'refunds' => 'getRefunds',
-        'itemizations' => 'getItemizations'
+        'itemizations' => 'getItemizations',
+        'surcharge_money' => 'getSurchargeMoney',
+        'surcharges' => 'getSurcharges',
+        'is_partial' => 'getIsPartial'
     );
   
     /**
@@ -154,7 +166,7 @@ class V1Payment implements ArrayAccess
       */
     protected $merchant_id;
     /**
-      * $created_at The time when the payment was created, in ISO 8601 format.
+      * $created_at The time when the payment was created, in ISO 8601 format. Reflects the time of the first payment if the object represents an incomplete partial payment, and the time of the last or complete payment otherwise.
       * @var string
       */
     protected $created_at;
@@ -254,7 +266,7 @@ class V1Payment implements ArrayAccess
       */
     protected $tender;
     /**
-      * $refunds All of the refunds applied to the payment.
+      * $refunds All of the refunds applied to the payment. Note that the value of all refunds on a payment can exceed the value of all tenders if a merchant chooses to refund money to a tender after previously accepting returned goods as part of an exchange.
       * @var \SquareConnect\Model\V1Refund[]
       */
     protected $refunds;
@@ -263,6 +275,21 @@ class V1Payment implements ArrayAccess
       * @var \SquareConnect\Model\V1PaymentItemization[]
       */
     protected $itemizations;
+    /**
+      * $surcharge_money The total of all surcharges applied to the payment.
+      * @var \SquareConnect\Model\V1Money
+      */
+    protected $surcharge_money;
+    /**
+      * $surcharges A list of all surcharges associated with the payment.
+      * @var \SquareConnect\Model\V1PaymentSurcharge[]
+      */
+    protected $surcharges;
+    /**
+      * $is_partial Indicates whether or not the payment is only partially paid for. If true, this payment will have the tenders collected so far, but the itemizations will be empty until the payment is completed.
+      * @var bool
+      */
+    protected $is_partial;
 
     /**
      * Constructor
@@ -391,6 +418,21 @@ class V1Payment implements ArrayAccess
             } else {
               $this->itemizations = null;
             }
+            if (isset($data["surcharge_money"])) {
+              $this->surcharge_money = $data["surcharge_money"];
+            } else {
+              $this->surcharge_money = null;
+            }
+            if (isset($data["surcharges"])) {
+              $this->surcharges = $data["surcharges"];
+            } else {
+              $this->surcharges = null;
+            }
+            if (isset($data["is_partial"])) {
+              $this->is_partial = $data["is_partial"];
+            } else {
+              $this->is_partial = null;
+            }
         }
     }
     /**
@@ -442,7 +484,7 @@ class V1Payment implements ArrayAccess
   
     /**
      * Sets created_at
-     * @param string $created_at The time when the payment was created, in ISO 8601 format.
+     * @param string $created_at The time when the payment was created, in ISO 8601 format. Reflects the time of the first payment if the object represents an incomplete partial payment, and the time of the last or complete payment otherwise.
      * @return $this
      */
     public function setCreatedAt($created_at)
@@ -822,7 +864,7 @@ class V1Payment implements ArrayAccess
   
     /**
      * Sets refunds
-     * @param \SquareConnect\Model\V1Refund[] $refunds All of the refunds applied to the payment.
+     * @param \SquareConnect\Model\V1Refund[] $refunds All of the refunds applied to the payment. Note that the value of all refunds on a payment can exceed the value of all tenders if a merchant chooses to refund money to a tender after previously accepting returned goods as part of an exchange.
      * @return $this
      */
     public function setRefunds($refunds)
@@ -847,6 +889,63 @@ class V1Payment implements ArrayAccess
     public function setItemizations($itemizations)
     {
         $this->itemizations = $itemizations;
+        return $this;
+    }
+    /**
+     * Gets surcharge_money
+     * @return \SquareConnect\Model\V1Money
+     */
+    public function getSurchargeMoney()
+    {
+        return $this->surcharge_money;
+    }
+  
+    /**
+     * Sets surcharge_money
+     * @param \SquareConnect\Model\V1Money $surcharge_money The total of all surcharges applied to the payment.
+     * @return $this
+     */
+    public function setSurchargeMoney($surcharge_money)
+    {
+        $this->surcharge_money = $surcharge_money;
+        return $this;
+    }
+    /**
+     * Gets surcharges
+     * @return \SquareConnect\Model\V1PaymentSurcharge[]
+     */
+    public function getSurcharges()
+    {
+        return $this->surcharges;
+    }
+  
+    /**
+     * Sets surcharges
+     * @param \SquareConnect\Model\V1PaymentSurcharge[] $surcharges A list of all surcharges associated with the payment.
+     * @return $this
+     */
+    public function setSurcharges($surcharges)
+    {
+        $this->surcharges = $surcharges;
+        return $this;
+    }
+    /**
+     * Gets is_partial
+     * @return bool
+     */
+    public function getIsPartial()
+    {
+        return $this->is_partial;
+    }
+  
+    /**
+     * Sets is_partial
+     * @param bool $is_partial Indicates whether or not the payment is only partially paid for. If true, this payment will have the tenders collected so far, but the itemizations will be empty until the payment is completed.
+     * @return $this
+     */
+    public function setIsPartial($is_partial)
+    {
+        $this->is_partial = $is_partial;
         return $this;
     }
     /**

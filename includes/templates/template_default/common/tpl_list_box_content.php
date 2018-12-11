@@ -5,10 +5,10 @@
  * This file is used for generating tabular output where needed, based on the supplied array of table-cell contents.
  *
  * @package templateSystem
- * @copyright Copyright 2003-2016 Zen Cart Development Team
+ * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: DrByte  Wed Jan 6 16:47:38 2016 -0500 Modified in v1.5.5 $
+ * @version $Id: Drbyte Sun Jan 7 21:28:50 2018 -0500 Modified in v1.5.6 $
  */
 
 //print_r($list_box_contents);
@@ -18,13 +18,13 @@
 ?>
 <table class="listBoxContentTable">
 <?php
-  for($row=0; $row<sizeof($list_box_contents); $row++) {
+  for($row=0, $n=sizeof($list_box_contents);  $row<$n; $row++) {
     $params = "";
     if (isset($list_box_contents[$row]['params'])) $params .= ' ' . $list_box_contents[$row]['params'];
 ?>
   <tr <?php echo $params; ?>>
 <?php
-    for($col=0;$col<sizeof($list_box_contents[$row]);$col++) {
+    for($col=0, $j=sizeof($list_box_contents[$row]); $col<$j; $col++) {
       $r_params = "";
       $cell_type = ($row==0) ? 'th' : 'td';
       if (isset($list_box_contents[$row][$col]['params'])) $r_params .= ' ' . $list_box_contents[$row][$col]['params'];

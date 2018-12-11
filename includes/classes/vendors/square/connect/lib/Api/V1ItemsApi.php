@@ -120,7 +120,7 @@ class V1ItemsApi
             $headerParams['Accept'] = $_header_accept;
         }
         $headerParams['Content-Type'] = ApiClient::selectHeaderContentType(array('application/json'));
-  
+
         
         
         // path params
@@ -238,7 +238,7 @@ class V1ItemsApi
             $headerParams['Accept'] = $_header_accept;
         }
         $headerParams['Content-Type'] = ApiClient::selectHeaderContentType(array('application/json'));
-  
+
         
         
         // path params
@@ -359,7 +359,7 @@ class V1ItemsApi
             $headerParams['Accept'] = $_header_accept;
         }
         $headerParams['Content-Type'] = ApiClient::selectHeaderContentType(array('application/json'));
-  
+
         
         
         // path params
@@ -474,7 +474,7 @@ class V1ItemsApi
             $headerParams['Accept'] = $_header_accept;
         }
         $headerParams['Content-Type'] = ApiClient::selectHeaderContentType(array('application/json'));
-  
+
         
         
         // path params
@@ -579,7 +579,7 @@ class V1ItemsApi
             $headerParams['Accept'] = $_header_accept;
         }
         $headerParams['Content-Type'] = ApiClient::selectHeaderContentType(array('application/json'));
-  
+
         
         
         // path params
@@ -684,7 +684,7 @@ class V1ItemsApi
             $headerParams['Accept'] = $_header_accept;
         }
         $headerParams['Content-Type'] = ApiClient::selectHeaderContentType(array('application/json'));
-  
+
         
         
         // path params
@@ -789,7 +789,7 @@ class V1ItemsApi
             $headerParams['Accept'] = $_header_accept;
         }
         $headerParams['Content-Type'] = ApiClient::selectHeaderContentType(array('application/json'));
-  
+
         
         
         // path params
@@ -894,7 +894,7 @@ class V1ItemsApi
             $headerParams['Accept'] = $_header_accept;
         }
         $headerParams['Content-Type'] = ApiClient::selectHeaderContentType(array('application/json'));
-  
+
         
         
         // path params
@@ -1005,7 +1005,7 @@ class V1ItemsApi
             $headerParams['Accept'] = $_header_accept;
         }
         $headerParams['Content-Type'] = ApiClient::selectHeaderContentType(array('application/json'));
-  
+
         
         
         // path params
@@ -1117,7 +1117,7 @@ class V1ItemsApi
             $headerParams['Accept'] = $_header_accept;
         }
         $headerParams['Content-Type'] = ApiClient::selectHeaderContentType(array('application/json'));
-  
+
         
         
         // path params
@@ -1228,7 +1228,7 @@ class V1ItemsApi
             $headerParams['Accept'] = $_header_accept;
         }
         $headerParams['Content-Type'] = ApiClient::selectHeaderContentType(array('application/json'));
-  
+
         
         
         // path params
@@ -1340,7 +1340,7 @@ class V1ItemsApi
             $headerParams['Accept'] = $_header_accept;
         }
         $headerParams['Content-Type'] = ApiClient::selectHeaderContentType(array('application/json'));
-  
+
         
         
         // path params
@@ -1448,7 +1448,7 @@ class V1ItemsApi
             $headerParams['Accept'] = $_header_accept;
         }
         $headerParams['Content-Type'] = ApiClient::selectHeaderContentType(array('application/json'));
-  
+
         
         
         // path params
@@ -1556,7 +1556,7 @@ class V1ItemsApi
             $headerParams['Accept'] = $_header_accept;
         }
         $headerParams['Content-Type'] = ApiClient::selectHeaderContentType(array('application/json'));
-  
+
         
         
         // path params
@@ -1664,7 +1664,7 @@ class V1ItemsApi
             $headerParams['Accept'] = $_header_accept;
         }
         $headerParams['Content-Type'] = ApiClient::selectHeaderContentType(array('application/json'));
-  
+
         
         
         // path params
@@ -1772,7 +1772,7 @@ class V1ItemsApi
             $headerParams['Accept'] = $_header_accept;
         }
         $headerParams['Content-Type'] = ApiClient::selectHeaderContentType(array('application/json'));
-  
+
         
         
         // path params
@@ -1886,7 +1886,7 @@ class V1ItemsApi
             $headerParams['Accept'] = $_header_accept;
         }
         $headerParams['Content-Type'] = ApiClient::selectHeaderContentType(array('application/json'));
-  
+
         
         
         // path params
@@ -2001,7 +2001,7 @@ class V1ItemsApi
             $headerParams['Accept'] = $_header_accept;
         }
         $headerParams['Content-Type'] = ApiClient::selectHeaderContentType(array('application/json'));
-  
+
         
         
         // path params
@@ -2113,7 +2113,7 @@ class V1ItemsApi
             $headerParams['Accept'] = $_header_accept;
         }
         $headerParams['Content-Type'] = ApiClient::selectHeaderContentType(array('application/json'));
-  
+
         // query params
         if ($row !== null) {
             $queryParams['row'] = $this->apiClient->getSerializer()->toQueryValue($row);
@@ -2233,7 +2233,7 @@ class V1ItemsApi
             $headerParams['Accept'] = $_header_accept;
         }
         $headerParams['Content-Type'] = ApiClient::selectHeaderContentType(array('application/json'));
-  
+
         
         
         // path params
@@ -2342,7 +2342,7 @@ class V1ItemsApi
             $headerParams['Accept'] = $_header_accept;
         }
         $headerParams['Content-Type'] = ApiClient::selectHeaderContentType(array('application/json'));
-  
+
         
         
         // path params
@@ -2437,7 +2437,7 @@ class V1ItemsApi
             $headerParams['Accept'] = $_header_accept;
         }
         $headerParams['Content-Type'] = ApiClient::selectHeaderContentType(array('application/json'));
-  
+
         
         
         // path params
@@ -2532,7 +2532,7 @@ class V1ItemsApi
             $headerParams['Accept'] = $_header_accept;
         }
         $headerParams['Content-Type'] = ApiClient::selectHeaderContentType(array('application/json'));
-  
+
         
         
         // path params
@@ -2631,7 +2631,7 @@ class V1ItemsApi
             $headerParams['Accept'] = $_header_accept;
         }
         $headerParams['Content-Type'] = ApiClient::selectHeaderContentType(array('application/json'));
-  
+
         // query params
         if ($limit !== null) {
             $queryParams['limit'] = $this->apiClient->getSerializer()->toQueryValue($limit);
@@ -2734,7 +2734,7 @@ class V1ItemsApi
             $headerParams['Accept'] = $_header_accept;
         }
         $headerParams['Content-Type'] = ApiClient::selectHeaderContentType(array('application/json'));
-  
+
         // query params
         if ($batch_token !== null) {
             $queryParams['batch_token'] = $this->apiClient->getSerializer()->toQueryValue($batch_token);
@@ -2832,7 +2832,7 @@ class V1ItemsApi
             $headerParams['Accept'] = $_header_accept;
         }
         $headerParams['Content-Type'] = ApiClient::selectHeaderContentType(array('application/json'));
-  
+
         
         
         // path params
@@ -2927,7 +2927,7 @@ class V1ItemsApi
             $headerParams['Accept'] = $_header_accept;
         }
         $headerParams['Content-Type'] = ApiClient::selectHeaderContentType(array('application/json'));
-  
+
         
         
         // path params
@@ -3034,7 +3034,7 @@ class V1ItemsApi
             $headerParams['Accept'] = $_header_accept;
         }
         $headerParams['Content-Type'] = ApiClient::selectHeaderContentType(array('application/json'));
-  
+
         
         
         // path params
@@ -3155,7 +3155,7 @@ class V1ItemsApi
             $headerParams['Accept'] = $_header_accept;
         }
         $headerParams['Content-Type'] = ApiClient::selectHeaderContentType(array('application/json'));
-  
+
         
         
         // path params
@@ -3270,7 +3270,7 @@ class V1ItemsApi
             $headerParams['Accept'] = $_header_accept;
         }
         $headerParams['Content-Type'] = ApiClient::selectHeaderContentType(array('application/json'));
-  
+
         
         
         // path params
@@ -3378,7 +3378,7 @@ class V1ItemsApi
             $headerParams['Accept'] = $_header_accept;
         }
         $headerParams['Content-Type'] = ApiClient::selectHeaderContentType(array('application/json'));
-  
+
         
         
         // path params
@@ -3492,7 +3492,7 @@ class V1ItemsApi
             $headerParams['Accept'] = $_header_accept;
         }
         $headerParams['Content-Type'] = ApiClient::selectHeaderContentType(array('application/json'));
-  
+
         
         
         // path params
@@ -3610,7 +3610,7 @@ class V1ItemsApi
             $headerParams['Accept'] = $_header_accept;
         }
         $headerParams['Content-Type'] = ApiClient::selectHeaderContentType(array('application/json'));
-  
+
         
         
         // path params
@@ -3728,7 +3728,7 @@ class V1ItemsApi
             $headerParams['Accept'] = $_header_accept;
         }
         $headerParams['Content-Type'] = ApiClient::selectHeaderContentType(array('application/json'));
-  
+
         
         
         // path params
@@ -3846,7 +3846,7 @@ class V1ItemsApi
             $headerParams['Accept'] = $_header_accept;
         }
         $headerParams['Content-Type'] = ApiClient::selectHeaderContentType(array('application/json'));
-  
+
         
         
         // path params
@@ -3964,7 +3964,7 @@ class V1ItemsApi
             $headerParams['Accept'] = $_header_accept;
         }
         $headerParams['Content-Type'] = ApiClient::selectHeaderContentType(array('application/json'));
-  
+
         
         
         // path params
@@ -4088,7 +4088,7 @@ class V1ItemsApi
             $headerParams['Accept'] = $_header_accept;
         }
         $headerParams['Content-Type'] = ApiClient::selectHeaderContentType(array('application/json'));
-  
+
         
         
         // path params
@@ -4213,7 +4213,7 @@ class V1ItemsApi
             $headerParams['Accept'] = $_header_accept;
         }
         $headerParams['Content-Type'] = ApiClient::selectHeaderContentType(array('application/json'));
-  
+
         
         
         // path params
@@ -4331,7 +4331,7 @@ class V1ItemsApi
             $headerParams['Accept'] = $_header_accept;
         }
         $headerParams['Content-Type'] = ApiClient::selectHeaderContentType(array('application/json'));
-  
+
         
         
         // path params
@@ -4455,7 +4455,7 @@ class V1ItemsApi
             $headerParams['Accept'] = $_header_accept;
         }
         $headerParams['Content-Type'] = ApiClient::selectHeaderContentType(array('application/json'));
-  
+
         
         
         // path params

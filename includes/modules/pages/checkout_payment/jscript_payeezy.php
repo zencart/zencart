@@ -3,14 +3,14 @@
  * Javascript to prep functionality for Payeezy payment module
  *
  * @package payeezy
- * @copyright Copyright 2003-2017 Zen Cart Development Team
+ * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: Ian Wilson   New in v1.5.5 $
+ * @version $Id: Drbyte Tue Dec 4 13:24:10 2018 -0500 Modified in v1.5.6 $
  */
-if (!defined(MODULE_PAYMENT_PAYEEZYJSZC_STATUS) || MODULE_PAYMENT_PAYEEZYJSZC_STATUS != 'True' || (!defined('MODULE_PAYMENT_PAYEEZYJSZC_JSSECURITY_KEY') && !defined('MODULE_PAYMENT_PAYEEZYJSZC_JSSECURITY_KEY_SANDBOX') )) {
+if (!defined('MODULE_PAYMENT_PAYEEZYJSZC_STATUS') || MODULE_PAYMENT_PAYEEZYJSZC_STATUS != 'True' || (!defined('MODULE_PAYMENT_PAYEEZYJSZC_JSSECURITY_KEY') && !defined('MODULE_PAYMENT_PAYEEZYJSZC_JSSECURITY_KEY_SANDBOX') )) {
 	return false;
 }
-if ($payment_modules->in_special_checkout()) {
+if ($payment_modules->in_special_checkout() || empty($payeezyjszc) || !$payeezyjszc->enabled) {
     return false;
 }
 ?>
@@ -94,10 +94,10 @@ var Payeezy = function() {
                 return false
             }
 
-            var a = "https://" + this.apiEndpoint + "/v1/securitytokens?apikey=" + this.apikey + "&js_security_key=" + this.js_security_key 
-                  + "&callback=Payeezy.callback&auth=" + this.auth + "&ta_token=" + this.ta_token + "&type=FDToken&credit_card.type=" + encodeURIComponent(r["card_type"]) 
-                  + "&credit_card.cardholder_name=" + encodeURIComponent(r["cardholder_name"]) + "&credit_card.card_number=" + r["cc_number"].replace(/[^0-9]/g,'') 
-                  + "&credit_card.exp_date=" + r["exp_month"].replace(/[^0-9]/g,'') + r["exp_year"].replace(/[^0-9]/g,'') 
+            var a = "https://" + this.apiEndpoint + "/v1/securitytokens?apikey=" + this.apikey + "&js_security_key=" + this.js_security_key
+                  + "&callback=Payeezy.callback&auth=" + this.auth + "&ta_token=" + this.ta_token + "&type=FDToken&credit_card.type=" + encodeURIComponent(r["card_type"])
+                  + "&credit_card.cardholder_name=" + encodeURIComponent(r["cardholder_name"]) + "&credit_card.card_number=" + r["cc_number"].replace(/[^0-9]/g,'')
+                  + "&credit_card.exp_date=" + r["exp_month"].replace(/[^0-9]/g,'') + r["exp_year"].replace(/[^0-9]/g,'')
                   + "&credit_card.cvv=" + r["cvv_code"].replace(/[^0-9]/g,'');
 
             if (r["currency"]        != undefined) a = a + "&currency=" + encodeURIComponent(r["currency"]);
@@ -174,7 +174,7 @@ var responseHandler = function(status, response) {
         var lastFour = cc_num.substr(cc_num.length - 4)
         var firstFour = cc_num.substr(0, 4)
         var new_cc_num = firstFour + '-XXXX-XXXX-' + lastFour;
-        jQuery('#payeezyjszc_cc-number').val(new_cc_num);
+        jQuery('#payeezyjszc_cc_number').val(new_cc_num);
 
         // delay for DOM update
         setTimeout($form.submit(), 800);

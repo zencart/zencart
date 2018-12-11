@@ -1,10 +1,10 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2016 Zen Cart Development Team
+ * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: DrByte  Fri Jan 1 12:23:19 2016 -0500 Modified in v1.5.5 $
+ * @version $Id: Drbyte Sun Jan 7 21:34:43 2018 -0500 Modified in v1.5.6 $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
@@ -58,6 +58,7 @@ if (!defined('IS_ADMIN_FLAG')) {
       $discount_amount = zen_get_discount_calc((int)$_GET['products_id']);
       $show_onetime_charges_description = 'false';
       $show_attributes_qty_prices_description = 'false';
+      $products_price_is_priced_by_attributes = zen_get_products_price_is_priced_by_attributes((int)$_GET['products_id']);
 
       while (!$products_options_names->EOF) {
         $products_options_array = array();
@@ -114,8 +115,8 @@ if (!defined('IS_ADMIN_FLAG')) {
             if ($products_options->fields['attributes_discounted'] == 1) {
 // apply product discount to attributes if discount is on
 //              $new_attributes_price = $products_options->fields['options_values_price'];
-              $new_attributes_price = zen_get_attributes_price_final($products_options->fields["products_attributes_id"], 1, '', 'false');
-              $new_attributes_price = zen_get_discount_calc((int)$_GET['products_id'], true, $new_attributes_price);
+              $new_attributes_price = zen_get_attributes_price_final($products_options->fields["products_attributes_id"], 1, '', 'false', $products_price_is_priced_by_attributes);
+//              $new_attributes_price = zen_get_discount_calc((int)$_GET['products_id'], true, $new_attributes_price);
             } else {
 // discount is off do not apply
               $new_attributes_price = $products_options->fields['options_values_price'];
@@ -184,11 +185,11 @@ if (!defined('IS_ADMIN_FLAG')) {
               $products_options_details = '';
             }
             if ($products_options_names->fields['products_options_images_style'] >= 3) {
-              $products_options_details .= $products_options_display_price . ($products_options->fields['options_values_price'] != 0 ? '<br />' . $products_options_display_weight : '');
-              $products_options_details_noname = $products_options_display_price . ($products_options->fields['options_values_price'] != 0 ? '<br />' . $products_options_display_weight : '');
+              $products_options_details .= $products_options_display_price . ($products_options->fields['products_attributes_weight'] != 0 ? '<br />' . $products_options_display_weight : '');
+              $products_options_details_noname = $products_options_display_price . ($products_options->fields['products_attributes_weight'] != 0 ? '<br />' . $products_options_display_weight : '');
             } else {
-              $products_options_details .= $products_options_display_price . ($products_options->fields['options_values_price'] != 0 ? '&nbsp;' . $products_options_display_weight : '');
-              $products_options_details_noname = $products_options_display_price . ($products_options->fields['options_values_price'] != 0 ? '&nbsp;' . $products_options_display_weight : '');
+              $products_options_details .= $products_options_display_price . ($products_options->fields['products_attributes_weight'] != 0 ? '&nbsp;' . $products_options_display_weight : '');
+              $products_options_details_noname = $products_options_display_price . ($products_options->fields['products_attributes_weight'] != 0 ? '&nbsp;' . $products_options_display_weight : '');
             }
           }
 
@@ -210,8 +211,7 @@ if (!defined('IS_ADMIN_FLAG')) {
               // if an error, set to customer setting
               if ($_POST['id'] !='') {
                 $selected_attribute= false;
-                reset($_POST['id']);
-                while(list($key,$value) = each($_POST['id'])) {
+                foreach($_POST['id'] as $key => $value) {
                   if (($key == $products_options_names->fields['products_options_id'] and $value == $products_options->fields['products_options_values_id'])) {
                   // zen_get_products_name($_POST['products_id']) .
                     $selected_attribute = true;
@@ -219,7 +219,7 @@ if (!defined('IS_ADMIN_FLAG')) {
                   }
                 }
               } else {
-                $selected_attribute = ($products_options->fields['attributes_default']=='1' ? true : false);
+                $selected_attribute = ($products_options->fields['attributes_default']=='1' ? true : ($products_options->RecordCount() == 1 ? true : false));
               }
             }
 
@@ -308,10 +308,9 @@ if (!defined('IS_ADMIN_FLAG')) {
               // if an error, set to customer setting
               if ($_POST['id'] !='') {
                 $selected_attribute= false;
-                reset($_POST['id']);
-                while(list($key,$value) = each($_POST['id'])) {
+                foreach($_POST['id'] as $key => $value) {
                   if (is_array($value)) {
-                    while(list($kkey,$vvalue) = each($value)) {
+                    foreach($value as $kkey => $vvalue) {
                       if (($key == $products_options_names->fields['products_options_id'] and $vvalue == $products_options->fields['products_options_values_id'])) {
                         $selected_attribute = true;
                         break;
@@ -412,8 +411,7 @@ if (!defined('IS_ADMIN_FLAG')) {
 //            $products_attribs_query = zen_db_query("select distinct patrib.options_values_price, patrib.price_prefix from " . TABLE_PRODUCTS_ATTRIBUTES . " patrib where patrib.products_id='" . (int)$_GET['products_id'] . "' and patrib.options_id = '" . $products_options_name['products_options_id'] . "'");
 //            $products_attribs_array = zen_db_fetch_array($products_attribs_query);
             if ($_POST['id']) {
-                reset($_POST['id']);
-                while(list($key,$value) = each($_POST['id'])) {
+                foreach($_POST['id'] as $key => $value) {
                   if ((preg_replace('/txt_/', '', $key) == $products_options_names->fields['products_options_id'])) {
                     $tmp_html = '<input type="text" name ="id[' . TEXT_PREFIX . $products_options_names->fields['products_options_id'] . ']" size="' . $products_options_names->fields['products_options_size'] .'" maxlength="' . $products_options_names->fields['products_options_length'] . '" value="' . stripslashes($value) .'" />  ';
                     $tmp_html .= $products_options_details;
@@ -570,7 +568,8 @@ if (!defined('IS_ADMIN_FLAG')) {
             $options_comment[] = $products_options_names->fields['products_options_comment'];
             $options_comment_position[] = ($products_options_names->fields['products_options_comment_position'] == '1' ? '1' : '0');
           break;
-          default:
+
+          case ($products_options_names->fields['products_options_type'] == PRODUCTS_OPTIONS_TYPE_SELECT):
             // normal dropdown menu display
             if (isset($_SESSION['cart']->contents[$prod_id]['attributes'][$products_options_names->fields['products_options_id']])) {
               $selected_attribute = $_SESSION['cart']->contents[$prod_id]['attributes'][$products_options_names->fields['products_options_id']];
@@ -591,10 +590,17 @@ if (!defined('IS_ADMIN_FLAG')) {
             $options_comment[] = $products_options_names->fields['products_options_comment'];
             $options_comment_position[] = ($products_options_names->fields['products_options_comment_position'] == '1' ? '1' : '0');
           break;
+
+            default:
+            $zco_notifier->notify('NOTIFY_ATTRIBUTES_MODULE_DEFAULT_SWITCH', $products_options_names->fields, $options_name, $options_menu, $options_comment, $options_comment_position, $options_html_id);
+          break;
         }
 
         // attributes images table
-        $options_attributes_image[] = $tmp_attributes_image;
+        $options_attributes_image[] = trim($tmp_attributes_image);
+
+        $zco_notifier->notify('NOTIFY_ATTRIBUTES_MODULE_OPTION_BUILT', $products_options_names->fields, $options_name, $options_menu, $options_comment, $options_comment_position, $options_html_id, $options_attributes_image);
+
         $products_options_names->MoveNext();
       }
       // manage filename uploads

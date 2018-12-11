@@ -3,17 +3,26 @@
  * ajax front controller
  *
  * @package core
- * @copyright Copyright 2003-2017 Zen Cart Development Team
+ * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id:  Aug 2017 Modified in v1.5.6 $
+ * @version $Id: lat9 Fri Oct 26 10:04:06 2018 -0400 Modified in v1.5.6 $
  */
 // Abort if the request was not an AJAX call
 if (!isset($_SERVER['HTTP_X_REQUESTED_WITH']) || strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) != 'xmlhttprequest') {
     http_response_code(400); // "Bad Request"
     exit();
 }
-require('includes/application_top.php');
+
+// -----
+// Since this request can also be initiated from the admin-side's ajax.php, need
+// to ensure that we're bringing in the correct 'base' processing for the
+// rest of the initialization.
+//
+if (empty($zc_ajax_base_dir)) {
+    $zc_ajax_base_dir = '';
+}
+require $zc_ajax_base_dir . 'includes/application_top.php';
 
 // deny ajax requests from spiders
 if (isset($spider_flag) && $spider_flag === true) ajaxAbort();
