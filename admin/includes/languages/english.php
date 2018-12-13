@@ -603,7 +603,7 @@ define('TEXT_LEGEND', 'LEGEND: ');
 define('TEXT_LEGEND_STATUS_OFF', 'Status OFF ');
 define('TEXT_LEGEND_STATUS_ON', 'Status ON ');
 
-define('TEXT_INFO_MASTER_CATEGORIES_ID', '<strong>NOTE: Master Category is used for pricing purposes where the<br />product category affects the pricing on linked products, example: Sales</strong>');
+define('TEXT_INFO_MASTER_CATEGORIES_ID', '<strong>NOTE: Master Category is used for pricing purposes where the product category affects the pricing on linked products, example: Sales</strong>');
 define('TEXT_YES', 'Yes');
 define('TEXT_NO', 'No');
 define('TEXT_CANCEL', 'Cancel');
