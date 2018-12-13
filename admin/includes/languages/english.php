@@ -52,9 +52,9 @@ function zen_date_raw($date, $reverse = false) {
 //   require(DIR_FS_CATALOG_LANGUAGES . $_SESSION['language'] . '/' . $template_dir_select . 'meta_tags.php');
 
 // used for prefix to browser tabs in admin pages
-define('TEXT_ADMIN_TAB_PREFIX', 'Webstore ');
+define('TEXT_ADMIN_TAB_PREFIX', 'Admin ');
 // if you have multiple stores and want the Store Name to be part of the admin title (ie: for browser tabs), swap this line with the one above
-//define('TEXT_ADMIN_TAB_PREFIX', 'Webstore ' . STORE_NAME);
+//define('TEXT_ADMIN_TAB_PREFIX', 'Admin ' . STORE_NAME);
 
 // meta tags
 define('ICON_METATAGS_ON', 'Meta Tags Defined');
@@ -603,7 +603,7 @@ define('TEXT_LEGEND', 'LEGEND: ');
 define('TEXT_LEGEND_STATUS_OFF', 'Status OFF ');
 define('TEXT_LEGEND_STATUS_ON', 'Status ON ');
 
-define('TEXT_INFO_MASTER_CATEGORIES_ID', '<strong>NOTE: Master Category is used for pricing purposes where the<br />product category affects the pricing on linked products, example: Sales</strong>');
+define('TEXT_INFO_MASTER_CATEGORIES_ID', '<strong>NOTE: Master Category is used for pricing purposes where the product category affects the pricing on linked products, example: Sales</strong>');
 define('TEXT_YES', 'Yes');
 define('TEXT_NO', 'No');
 define('TEXT_CANCEL', 'Cancel');
