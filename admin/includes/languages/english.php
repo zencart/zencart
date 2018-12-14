@@ -241,19 +241,19 @@ define('JS_PRODUCTS_IMAGE', '* The new product needs an image value\n');
 
 define('JS_SPECIALS_PRODUCTS_PRICE', '* A new price for this product needs to be set\n');
 
-define('JS_GENDER', '* The "Gender" value must be chosen.\n');
-define('JS_FIRST_NAME', '* The "First Name" entry must have at least ' . ENTRY_FIRST_NAME_MIN_LENGTH . ' characters.\n');
-define('JS_LAST_NAME', '* The "Last Name" entry must have at least ' . ENTRY_LAST_NAME_MIN_LENGTH . ' characters.\n');
-define('JS_DOB', '* The "Date of Birth" entry must be in the format: xx/xx/xxxx (month/date/year).\n');
-define('JS_EMAIL_ADDRESS', '* The "E-Mail Address" entry must have at least ' . ENTRY_EMAIL_ADDRESS_MIN_LENGTH . ' characters.\n');
-define('JS_ADDRESS', '* The "Street Address" entry must have at least ' . ENTRY_STREET_ADDRESS_MIN_LENGTH . ' characters.\n');
-define('JS_POST_CODE', '* The "Post Code" entry must have at least ' . ENTRY_POSTCODE_MIN_LENGTH . ' characters.\n');
-define('JS_CITY', '* The "City" entry must have at least ' . ENTRY_CITY_MIN_LENGTH . ' characters.\n');
-define('JS_STATE', '* The "State" entry must be selected.\n');
+define('JS_GENDER', '* The Gender value must be chosen.\n');
+define('JS_FIRST_NAME', '* The First Name entry must have at least ' . ENTRY_FIRST_NAME_MIN_LENGTH . ' characters.\n');
+define('JS_LAST_NAME', '* The Last Name entry must have at least ' . ENTRY_LAST_NAME_MIN_LENGTH . ' characters.\n');
+define('JS_DOB', '* The Date of Birth entry must be in the format: xx/xx/xxxx (month/date/year).\n');
+define('JS_EMAIL_ADDRESS', '* The E-Mail Address entry must have at least ' . ENTRY_EMAIL_ADDRESS_MIN_LENGTH . ' characters.\n');
+define('JS_ADDRESS', '* The Street Address entry must have at least ' . ENTRY_STREET_ADDRESS_MIN_LENGTH . ' characters.\n');
+define('JS_POST_CODE', '* The Post Code entry must have at least ' . ENTRY_POSTCODE_MIN_LENGTH . ' characters.\n');
+define('JS_CITY', '* The City entry must have at least ' . ENTRY_CITY_MIN_LENGTH . ' characters.\n');
+define('JS_STATE', '* The State entry must be selected.\n');
 define('JS_STATE_SELECT', '-- Select Above --');
-define('JS_ZONE', '* The "State" entry must be selected from the list for this country.');
-define('JS_COUNTRY', '* The "Country" value must be chosen.\n');
-define('JS_TELEPHONE', '* The "Telephone Number" entry must have at least ' . ENTRY_TELEPHONE_MIN_LENGTH . ' characters.\n');
+define('JS_ZONE', '* The State entry must be selected from the list for this country.');
+define('JS_COUNTRY', '* The Country value must be chosen.\n');
+define('JS_TELEPHONE', '* The Telephone Number entry must have at least ' . ENTRY_TELEPHONE_MIN_LENGTH . ' characters.\n');
 
 define('JS_ERROR_SUBMITTED', 'This form has already been submitted. Please press OK and wait for this process to be completed.');
 
