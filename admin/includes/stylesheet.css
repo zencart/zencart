@@ -797,9 +797,3 @@ input.faint {
     }
 }
 /* end of print-specific styles */
-/* Mobile styles */ 
-@media (max-width:767px){
-.nomobile {
-   display: none; 
-}
-
