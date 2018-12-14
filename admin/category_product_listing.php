@@ -649,7 +649,7 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
                 ?>
                 <tr onclick="document.location.href = '<?php echo zen_href_link(FILENAME_CATEGORY_PRODUCT_LISTING, zen_get_path($category['categories_id'])); ?>'" role="button">
                   <td class="text-right hidden-md hidden-sm hidden-xs"><?php echo $category['categories_id']; ?></td>
-                  <td hidden-md hidden-sm hidden-xs><?php echo zen_image(DIR_WS_ICONS . 'folder.gif', ICON_FOLDER); ?>&nbsp;<strong><?php echo $category['categories_name']; ?></strong></td>
+                  <td><?php echo zen_image(DIR_WS_ICONS . 'folder.gif', ICON_FOLDER); ?>&nbsp;<strong><?php echo $category['categories_name']; ?></strong></td>
                   <td class="text-center hidden-md hidden-sm hidden-xs">&nbsp;</td>
                   <td class="text-right hidden-md hidden-sm hidden-xs"><?php echo zen_get_products_sale_discount('', $category['categories_id'], true); ?></td>
                   <td class="text-center hidden-md hidden-sm hidden-xs">&nbsp;</td>
@@ -682,7 +682,7 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
                   <?php
                   if ($action == '') {
                     ?>
-                    <td class="text-right"><?php echo $category['sort_order']; ?></td>
+                    <td class="text-right hidden-md hidden-sm hidden-xs"><?php echo $category['sort_order']; ?></td>
                     <td class="text-right">
                       <a href="<?php echo zen_href_link(FILENAME_CATEGORIES, 'cPath=' . $cPath . '&cID=' . $category['categories_id'] . '&action=edit_category' . ((isset($_GET['search']) && !empty($_GET['search'])) ? '&search=' . $_GET['search'] : '')); ?>" style="text-decoration: none">
                         <div class="fa-stack fa-lg edit">
