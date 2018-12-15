@@ -12,6 +12,8 @@ if (!defined('IS_ADMIN_FLAG')) {
 // calculate category path
   if (isset($_GET['cPath'])) {
     $cPath = $_GET['cPath'];
+  } else if (isset($_POST['cPath'])) {
+    $cPath = $_POST['cPath'];
   } else {
     $cPath = '';
   }
