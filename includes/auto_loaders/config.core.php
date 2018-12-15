@@ -141,8 +141,6 @@ if (!defined('USE_PCONNECT')) define('USE_PCONNECT', 'false');
                                 'objectName'=>'navigation',
                                 'checkInstantiated'=>true,
                                 'classSession'=>true);
-  $autoLoadConfig[100][] = array('autoType'=>'init_script',
-                                 'loadFile'=> 'init_counter.php');
 /**
  * Breakpoint 110.
  *
@@ -154,6 +152,8 @@ if (!defined('USE_PCONNECT')) define('USE_PCONNECT', 'false');
                                  'loadFile'=> 'init_languages.php');
   $autoLoadConfig[110][] = array('autoType'=>'init_script',
                                  'loadFile'=> 'init_templates.php');
+  $autoLoadConfig[110][] = array('autoType'=>'init_script',
+                               'loadFile'=> 'init_counter.php');
 /**
  * Breakpoint 120.
  *
