@@ -6,7 +6,7 @@
  * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Drbyte Mon Nov 12 17:09:17 2018 -0500 Modified in v1.5.6 $
+ * @version $Id: Drbyte Mon Dec 14 2018  Modified in v1.5.6 $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
@@ -28,6 +28,7 @@ if (EZPAGES_STATUS_HEADER == '1' || (EZPAGES_STATUS_HEADER == '2' && (strstr(EXC
                               ORDER BY e.header_sort_order, ec.pages_title");
   if ($pages_query->RecordCount()>0) {
     $rows = 0;
+    $page_query_list_header = array();
     foreach ($pages_query as $page_query) {
       $rows++;
       $page_query_list_header[$rows]['id'] = $page_query['pages_id'];
