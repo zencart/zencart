@@ -69,7 +69,6 @@ if ($expired && $message == '')
     <meta charset="<?php echo CHARSET; ?>"/>
     <title><?php echo TITLE; ?></title>
     <link href="includes/stylesheet.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/>
     <meta name="robots" content="noindex, nofollow"/>
     <script>
       function waiting_spinner(f) {

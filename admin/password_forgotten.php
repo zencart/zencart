@@ -68,7 +68,6 @@ if (isset($_POST['submit'])) {
         <meta http-equiv="Content-Type" content="text/html; charset=<?php echo CHARSET; ?>">
         <title><?php echo TITLE; ?></title>
         <link href="includes/stylesheet.css" rel="stylesheet" type="text/css">
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
         <meta name="robots" content="noindex, nofollow"/>
     </head>
     <body id="login" onload="document.getElementById('admin_email').focus()">
