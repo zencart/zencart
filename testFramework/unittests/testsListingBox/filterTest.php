@@ -21,9 +21,6 @@ class testFilterCase extends zcTestCase
         define('PRODUCT_LIST_ALPHA_SORTER', 1);
         define('PRODUCT_LIST_ALPHA_SORTER_LIST', 'A - C:A,B,C;D - F:D,E,F;G - I:G,H,I;J - L:J,K,L;M - N:M,N;O - Q:O,P,Q;R - T:R,S,T;U - W:U,V,W;X - Z:X,Y,Z;#:0,1,2,3,4,5,6,7,8,9');
         define('DOB_FORMAT_STRING', '##/##/##');
-        define('TABLE_PRODUCT_MUSIC_EXTRA', DB_PREFIX . 'product_music_extra');
-        define('TABLE_MUSIC_GENRE', DB_PREFIX . 'music_genre');
-        define('TABLE_RECORD_COMPANY', DB_PREFIX . 'record_company');
         define('PRODUCT_LIST_FILTER', 1);
         $_SESSION['languages_id'] = 1;
 
