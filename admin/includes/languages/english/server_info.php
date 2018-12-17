@@ -18,6 +18,7 @@ define('TITLE_PHP_VERSION', 'PHP Version:');
 define('TITLE_ZEND_VERSION', 'Zend:');
 define('TITLE_DATABASE_HOST', 'Database Host:');
 define('TITLE_DATABASE', 'Database:');
+define('TITLE_DATABASE_VERSION', 'Database Version:');
 define('TITLE_DATABASE_DATE', 'Database Date:');
 define('TITLE_DATABASE_DATA_SIZE', 'Database Data Size:');
 define('TITLE_DATABASE_INDEX_SIZE', 'Database Index Size:');
