@@ -528,7 +528,7 @@ class shoppingCart extends base {
    * Method to get the quantity of an item in the cart
    * NOTE: This accepts attribute hash as $products_id, such as: 12:a35de52391fcb3134
    * ... and treats 12 as unique from 12:a35de52391fcb3134
-   * To lookup based only on 12 regardless of the attribute hash, use another method: in_cart_product_total_quantity()
+   * To lookup based only on prid (ie: 12 here) regardless of the attribute hash, use another method: in_cart_product_total_quantity()
    *
    * @param mixed product ID of item to check
    * @return float the quantity of the item
@@ -2541,7 +2541,6 @@ class shoppingCart extends base {
     return $chk_cart_quantity;
   }
 
-
 /**
  * calculate shopping cart stats for a products_id to obtain data about submitted (posted) items as compared to what is in the cart.
  * USAGE:  $mix_increase = in_cart_product_mixed_changed($product_id, 'increase');
@@ -2550,7 +2549,7 @@ class shoppingCart extends base {
  * USAGE:  $mix_all = in_cart_product_mixed_changed($product_id, 'all'); (Second value anything other than 'increase' or 'decrease')
  *
  * @param mixed $product_id
- * return array
+ * @return array
  */
   function in_cart_product_mixed_changed($product_id, $chk = false) {
     global $db;
