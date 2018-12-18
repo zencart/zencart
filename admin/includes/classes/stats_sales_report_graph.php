@@ -1,38 +1,46 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2016 Zen Cart Development Team
+ * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @author inspired from sales_report_graphs.php,v 0.01 2002/11/27 19:02:22 cwi Exp  Released under the GNU General Public License $
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id:  New in v1.6.0 $
+ * @version $Id: lat9 Tue Sep 25 09:35:40 2018 -0400 New in v1.5.6 $
  */
 
 class statsSalesReportGraph {
 
-  var $mode, $globalStartDate, $startDate, $endDate, $info, $previous, $next, $startDates, $endDates, $size;
+  protected $mode = 4;
+  protected $globalStartDate, $startDate, $endDate, $startDates, $endDates;
+  public $info = array();
+  public $previous, $next, $filter = '';
+  public $size = 0;
 
-  function __construct($mode, $startDate = "", $endDate = "", $filter = "") {
-    // startDate and endDate have to be a unix timestamp. Use mktime !
-    // if set then both have to be valid startDate and endDate
+    /**
+     * statsSalesReportGraph constructor.
+     *
+     * startDate and endDate have to be a unix timestamp. Use mktime !
+     * if set then both have to be valid startDate and endDate
+     *
+     * @param integer $mode number indicating report format
+     * @param string $startDate unix timestamp
+     * @param string $endDate unix timestamp
+     * @param string $filter filter string
+     */
+  public function __construct($mode, $startDate = '', $endDate = '', $filter = '') {
     global $db;
     $this->mode = $mode;
-    $this->previous = "";
-    $this->next = "";
-    $this->filter = "";
-    $this->info = array(array());
     // get date of first sale
     $first = $db->Execute("select UNIX_TIMESTAMP(min(date_purchased)) as first FROM " . TABLE_ORDERS);
-    $this->globalStartDate = mktime(0, 0, 0, date("m", $first->first), date("d", $first->first), date("Y", $first->first));
+    $this->globalStartDate = mktime(0, 0, 0, date("m", $first->fields['first']), date("d", $first->fields['first']), date("Y", $first->fields['first']));
     // get all possible status for filter
-    $status = $db->Execute("SELECT * FROM " . TABLE_ORDERS_STATUS . " WHERE language_id = " . (int)$_SESSION['languages_id']);
+    $statuses = $db->Execute("SELECT * FROM " . TABLE_ORDERS_STATUS . " WHERE language_id = " . (int)$_SESSION['languages_id'], false,true, 1800);
     $tmp = array();
-    while (!$status->EOF) {
-      $tmp[] = array('index'=> $status->fields['orders_status_id'], 'value' => $status->fields['orders_status_name']);
-      $status->MoveNext();
+    foreach ($statuses as $status) {
+      $tmp[] = array('index'=> $status['orders_status_id'], 'value' => $status['orders_status_name']);
     }
     $this->status_available = $tmp;
-    $this->status_available_size = sizeof($tmp);
-    if ($endDate == "" or $startDate == "") {
+    $this->status_available_size = count($tmp);
+    if ($endDate == '' or $startDate == '') {
       // set startDate to nothing
       $dateGiven = false;
       $startDate = 0;
@@ -213,9 +221,9 @@ class statsSalesReportGraph {
     // handle filters
     // submit the filters that way:
     // 01001 means use filter for status 2 and 5 set.
-    if (strlen($filter) > 0) {
-      $tmp = "";
-      $tmp1 = "";
+    $tmp = '';
+    $tmp1 = '';
+    if (is_string($filter) && strlen($filter) > 0) {
       for ($i = 0; $i < $this->status_available_size; $i++) {
         if (substr($filter, $i, 1) == "1") {
           $tmp1 .= "1";
@@ -228,9 +236,9 @@ class statsSalesReportGraph {
           $tmp1 .= "0";
         }
       }
-      $this->filter_sql = $tmp;
-      $this->filter = $tmp1;
     }
+    $this->filter_sql = $tmp;
+    $this->filter = $tmp1;
     $this->filter_link = "report=" . $this->mode . "&startDate=" . $startDate . "&endDate=" . $endDate;
     // if ($dateGiven) {
     //  echo "<br>" . strftime("%H %x", $this->startDate). " - " . strftime("%H %x", $this->endDate);
@@ -238,14 +246,14 @@ class statsSalesReportGraph {
       $this->query();
     //}
   }
-  function query() {
+  protected function query() {
     global $db;
     $tmp_query = "SELECT sum(ot.value) as value, avg(ot.value) as avg, count(ot.value) as count FROM " . TABLE_ORDERS_TOTAL . " ot, " . TABLE_ORDERS . " o WHERE ot.orders_id = o.orders_id and ot.class = 'ot_subtotal'";
     if (strlen($this->filter_sql) > 0) {
       $tmp_query .= " AND (" . $this->filter_sql . ")";
     }
     for ($i = 0; $i < $this->size; $i++) {
-      $report = $db->Execute($tmp_query . " AND o.date_purchased >= '" . zen_db_input(date("Y-m-d\TH:i:s", $this->startDates[$i])) . "' AND o.date_purchased < '" . zen_db_input(date("Y-m-d\TH:i:s", $this->endDates[$i])) . "'");
+      $report = $db->Execute($tmp_query . " AND o.date_purchased >= '" . zen_db_input(date("Y-m-d\TH:i:s", $this->startDates[$i])) . "' AND o.date_purchased < '" . zen_db_input(date("Y-m-d\TH:i:s", $this->endDates[$i])) . "'", false,true, 1800);
       //$GLOBALS['report_test'] = $report;
 
       $this->info[$i]['sum'] = $report->fields['value'];
@@ -255,7 +263,7 @@ class statsSalesReportGraph {
         // hourly
         case '1':
           $this->info[$i]['text'] = strftime("%H", $this->startDates[$i]) . " - " . strftime("%H", $this->endDates[$i]);
-          $this->info[$i]['link'] = "";
+          $this->info[$i]['link'] = '';
           break;
         // daily
         case '2':
@@ -281,8 +289,8 @@ class statsSalesReportGraph {
     }
     $tmp_query =  "select sum(ot.value) as shipping FROM " . TABLE_ORDERS_TOTAL . " ot, " . TABLE_ORDERS . " o WHERE ot.orders_id = o.orders_id and ot.class = 'ot_shipping'";
     for ($i = 0; $i < $this->size; $i++) {
-      $report = $db->Execute($tmp_query . " AND o.date_purchased >= '" . zen_db_input(date("Y-m-d\TH:i:s", $this->startDates[$i])) . "' AND o.date_purchased < '" . zen_db_input(date("Y-m-d\TH:i:s", $this->endDates[$i])) . "'");
-      $this->info[$i]['shipping'] = $report->shipping;
+      $report = $db->Execute($tmp_query . " AND o.date_purchased >= '" . zen_db_input(date("Y-m-d\TH:i:s", $this->startDates[$i])) . "' AND o.date_purchased < '" . zen_db_input(date("Y-m-d\TH:i:s", $this->endDates[$i])) . "'", false,true, 1800);
+      $this->info[$i]['shipping'] = (isset($report->shipping)) ? $report->shipping : 0;
     }
   }
 }
