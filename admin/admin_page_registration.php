@@ -101,13 +101,16 @@ foreach ($menu_titles as $id => $title) {
 }
 
 
-require('includes/admin_html_head.php');
 ?>
 <link rel="stylesheet" type="text/css" href="includes/template/css/admin_access.css" />
+<?php
+require_once('includes/template/common/tplHtmlHeadLegacy.php');
+require_once('includes/template/common/tplHtmlHead.php');
+?>
 </head>
 <body>
 <!-- header //-->
-<?php require(DIR_WS_INCLUDES . 'header.php'); ?>
+<?php require('includes/template/common/tplHeader.php'); ?>
 <!-- header_eof //-->
 
 <!-- body //-->
