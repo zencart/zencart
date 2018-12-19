@@ -68,8 +68,8 @@ jobs:
                 command: dockerize -wait tcp://127.0.0.1:3306 -timeout 120s
 
             - run:
-               name: Run Web Tests
-               command: vendor/bin/behat
+#               name: Run Web Tests
+#               command: vendor/bin/behat
 
             - store_artifacts:
                 path: /home/circleci/project/screenshots
