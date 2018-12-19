@@ -31,7 +31,7 @@ class statsSalesReportGraph {
     $this->mode = $mode;
     // get date of first sale
     $first = $db->Execute("select UNIX_TIMESTAMP(min(date_purchased)) as first FROM " . TABLE_ORDERS);
-    $this->globalStartDate = mktime(0, 0, 0, date("m", $first->first), date("d", $first->first), date("Y", $first->first));
+    $this->globalStartDate = mktime(0, 0, 0, date("m", $first->fields['first']), date("d", $first->fields['first']), date("Y", $first->fields['first']));
     // get all possible status for filter
     $statuses = $db->Execute("SELECT * FROM " . TABLE_ORDERS_STATUS . " WHERE language_id = " . (int)$_SESSION['languages_id'], false,true, 1800);
     $tmp = array();
@@ -256,9 +256,9 @@ class statsSalesReportGraph {
       $report = $db->Execute($tmp_query . " AND o.date_purchased >= '" . zen_db_input(date("Y-m-d\TH:i:s", $this->startDates[$i])) . "' AND o.date_purchased < '" . zen_db_input(date("Y-m-d\TH:i:s", $this->endDates[$i])) . "'", false,true, 1800);
       //$GLOBALS['report_test'] = $report;
 
-      $this->info[$i]['sum'] = $report->value;
-      $this->info[$i]['avg'] = $report->avg;
-      $this->info[$i]['count'] = $report->count;
+      $this->info[$i]['sum'] = $report->fields['value'];
+      $this->info[$i]['avg'] = $report->fields['avg'];
+      $this->info[$i]['count'] = $report->fields['count'];
       switch ($this->mode) {
         // hourly
         case '1':
