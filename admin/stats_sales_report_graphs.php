@@ -83,7 +83,6 @@ if (strlen($sales_report_filter) == 0) {
     $sales_report_filter_link = "";
 }
 
-require('includes/admin_html_head.php');
 ?>
   <script type="text/javascript" src="https://www.google.com/jsapi"></script>
   <script type="text/javascript">
@@ -159,12 +158,14 @@ require('includes/admin_html_head.php');
      chart.draw(data, options);
    }
 </script>
+<?php
+require_once('includes/template/common/tplHtmlHeadLegacy.php');
+require_once('includes/template/common/tplHtmlHead.php');
+?>
 </head>
 <body onload="init()">
 <!-- header //-->
-<div class="header-area">
-    <?php require(DIR_WS_INCLUDES . 'header.php'); ?>
-</div>
+<?php require('includes/template/common/tplHeader.php'); ?>
 <!-- header_eof //-->
 <!-- body //-->
 <h1><?php echo $report_desc . ' ' . HEADING_TITLE; ?></h1>
