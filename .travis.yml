@@ -78,7 +78,7 @@ script:
 # unittests
   - php vendor/bin/phpunit -c testFramework/unittests/phpunit.xml
 # webtests
-  - vendor/bin/behat
+#  - vendor/bin/behat
 
 after_script:
   #- vendor/bin/phpcs --standard=PSR2 includes/ testFramework/
