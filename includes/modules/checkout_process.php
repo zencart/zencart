@@ -3,10 +3,10 @@
  * module to process a completed checkout
  *
  * @package procedureCheckout
- * @copyright Copyright 2003-2017 Zen Cart Development Team
+ * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: DrByte  July 2017 Modified in v1.5.6 $
+ * @version $Id: Author: DrByte  Dec 2018  Modified in v1.5.6a $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
@@ -125,7 +125,8 @@ if (isset($_SESSION['payment_attempt'])) unset($_SESSION['payment_attempt']);
   $_SESSION['order_summary']['currency_value'] = $order->info['currency_value'];
   $_SESSION['order_summary']['payment_module_code'] = $order->info['payment_module_code'];
   $_SESSION['order_summary']['shipping_method'] = $order->info['shipping_method'];
-  $_SESSION['order_summary']['orders_status'] = $order->info['orders_status'];
+  $_SESSION['order_summary']['order_status'] = $order->info['order_status'];
+  $_SESSION['order_summary']['orders_status'] = $order->info['order_status']; // alias for older versions
   $_SESSION['order_summary']['tax'] = $otax;
   $_SESSION['order_summary']['shipping'] = $oshipping;
   $products_array = array();
