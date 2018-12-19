@@ -61,6 +61,8 @@ $db_prefix = '';
 $sql_cache_method = 'none'; // 'file', 'database'
 $db_host = isset($zc_settings['db_host']) ? $zc_settings['db_host'] : 'localhost';
 $db_name = isset($zc_settings['db_name']) ? $zc_settings['db_name'] : 'zencart';
+$db_user = isset($zc_settings['db_user']) ? $zc_settings['db_user'] : '';
+$db_password= isset($zc_settings['db_password']) ? $zc_settings['db_password'] : '';
 
 require (DIR_FS_INSTALL . 'includes/classes/class.zcDatabaseInstaller.php');
 
