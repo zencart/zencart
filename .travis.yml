@@ -51,6 +51,7 @@ install:
   - echo $TRAVIS_PHP_VERSION
 # downgrade phpunit for older PHP version
   - if [ "${TRAVIS_PHP_VERSION}" == "5.5" ]; then rm composer.lock && cp testFramework/composer-php55.lock composer.lock ; fi
+  - if [ "${TRAVIS_PHP_VERSION}" == "5.6" ]; then rm composer.lock && cp testFramework/composer-php55.lock composer.lock ; fi
 # do composer install
   - travis_wait composer install --no-interaction
 
@@ -72,7 +73,7 @@ before_script:
 # start PHP webserver
   - "php -S 127.0.0.1:8000 > /dev/null &"
 # Start PhantomJS
-  - "phantomjs --webdriver=8643 --ignore-ssl-errors=true > /dev/null &"
+#  - "phantomjs --webdriver=8643 --ignore-ssl-errors=true > /dev/null &"
 
 script:
 # unittests

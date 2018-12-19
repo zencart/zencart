@@ -67,7 +67,7 @@ jobs:
                 name: Wait for MySQL container
                 command: dockerize -wait tcp://127.0.0.1:3306 -timeout 120s
 
-            - run:
+#            - run:
 #               name: Run Web Tests
 #               command: vendor/bin/behat
 
