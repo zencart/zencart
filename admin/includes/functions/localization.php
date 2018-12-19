@@ -101,8 +101,8 @@ function quote_ecb_currency($currencyCode = '', $base = DEFAULT_CURRENCY)
   $line = '';
   foreach ($XMLContent as $line) {
     if (preg_match("/currency='([[:alpha:]]+)'/", $line, $reg)) {
-      if (preg_match("/rate='([[:graph:]]+)'/", $line, $rate)) {
-        $currencyArray[$reg[1]] = (float)$rate[1];
+      if (preg_match("/rate='([[:graph:]]+)'/", $line, $rateVal)) {
+        $currencyArray[$reg[1]] = (float)$rateVal[1];
       }
     }
   }
