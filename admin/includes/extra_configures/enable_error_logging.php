@@ -18,20 +18,56 @@ function zen_debug_error_handler ($errno, $errstr, $errfile, $errline)
     if (!(error_reporting() & $errno)) {
         return;
     }
-    ob_start();
-    if (version_compare(PHP_VERSION, '5.3.6') >= 0) {
-        debug_print_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
-    } else {
-        debug_print_backtrace();
+
+    $handled = true;                    //-For known error types, we'll handle them here.
+    switch ($errno) {
+        case E_NOTICE:
+        case E_USER_NOTICE:
+            $error_type = 'Notice';
+            break;
+        case E_DEPRECATED:
+        case E_USER_DEPRECATED:
+            $error_type = 'Deprecated';
+            break;
+        case E_WARNING:
+        case E_USER_WARNING:
+            $error_type = 'Warning';
+            break;
+        default:
+            $handled_here = false;      //-Unknown error type, let PHP's built-in handler do its thing.
+            break;
     }
-    $backtrace = ob_get_contents();
-    ob_end_clean();
-    // The following line removes the call to this zen_debug_error_handler function (as it's not relevant)
-    $backtrace = preg_replace ('/^#0\s+' . __FUNCTION__ . "[^\n]*\n/", '', rtrim($backtrace), 1);
-    $message = date('[d-M-Y H:i:s e]') . ' Request URI: ' . $_SERVER['REQUEST_URI'] . ', IP address: ' . (isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : 'not set') . PHP_EOL . $backtrace;
-    error_log(PHP_EOL . $message . PHP_EOL, 3, $GLOBALS['debug_logfile_path']);
+
+    if ($handled) {
+        ob_start();
+        if (version_compare(PHP_VERSION, '5.3.6') >= 0) {
+            debug_print_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
+        } else {
+            debug_print_backtrace();
+        }
+        $backtrace = ob_get_contents();
+        ob_end_clean();
+        // The following line removes the call to this zen_debug_error_handler function (as it's not relevant)
+        $backtrace = preg_replace ('/^#0\s+' . __FUNCTION__ . "[^\n]*\n/", '', rtrim($backtrace), 1);
+        $message = date('[d-M-Y H:i:s e]') . ' Request URI: ' . $_SERVER['REQUEST_URI'] . ', IP address: ' . (isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : 'not set') . PHP_EOL . $backtrace;
+    
+        $message .= PHP_EOL . "--> PHP $error_type: $errstr in $errfile on line $errline.";
+        
+        error_log(PHP_EOL . $message . PHP_EOL, 3, $GLOBALS['debug_logfile_path']);
+    }
   
-    return false;  // Let PHP's built-in error handler do its thing.
+    return $handled;
+}
+
+function zen_fatal_error_handler()
+{
+    $last_error = error_get_last();
+    
+    if ($last_error['type'] == E_ERROR || $last_error['type'] == E_USER_ERROR) {
+        $message = date('[d-M-Y H:i:s e]') . ' Request URI: ' . $_SERVER['REQUEST_URI'] . ', IP address: ' . (isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : 'not set') . PHP_EOL;
+        $message .= "--> PHP Fatal error: {$last_error['message']} in {$last_error['file']} on line {$last_error['line']}.";
+        error_log(PHP_EOL . $message . PHP_EOL, 3, $GLOBALS['debug_logfile_path']);
+    }
 }
 
 if (!defined('DIR_FS_LOGS')) {
@@ -75,6 +111,7 @@ if (in_array('*', $pages_to_debug) || in_array($current_page_base, $pages_to_deb
     @ini_set('error_log', $debug_logfile_path);  // the filename to log errors into
     @ini_set('error_reporting', $errors_to_log ); // log only errors according to defined rules
     set_error_handler('zen_debug_error_handler', $errors_to_log);
+    register_shutdown_function('zen_fatal_error_handler');
 }
 
 if (defined('IS_CLI') && IS_CLI == 'VERBOSE') {
