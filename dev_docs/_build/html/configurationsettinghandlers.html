@@ -1,0 +1,290 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Setting Type Handlers &mdash; Zen Cart v2.0 Developer Docs 2.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Template Partials" href="configurationsettingtemplates.html" /> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> Zen Cart v2.0 Developer Docs
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="dashboardwidgets.html">Dashboard Widgets</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="dashboardwidgetsconfig.html">Widget Configuration Settings</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="dashboardwidgetsconfigtables.html">Database Tables</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="dashboardwidgetsconfigtables.html#dashboard-widgets-settings">dashboard_widgets_settings</a></li>
+<li class="toctree-l4"><a class="reference internal" href="dashboardwidgetsconfigtables.html#dashboard-widgets-settings-to-widget">dashboard_widgets_settings_to_widget</a></li>
+<li class="toctree-l4"><a class="reference internal" href="dashboardwidgetsconfigtables.html#dashboard-widgets-settings-to-user">dashboard_widgets_settings_to_user</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="dashboardwidgetsconfigusage.html">Using Widget Configuration Settings</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="reference internal" href="configurationsettings.html">Configuration Settings</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="configurationsettingtypes.html">Setting Types</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="configurationsettingtypes.html#text-type">text Type</a></li>
+<li class="toctree-l3"><a class="reference internal" href="configurationsettingtypes.html#boolean-type">boolean Type</a></li>
+<li class="toctree-l3"><a class="reference internal" href="configurationsettingtypes.html#selectfromarray-type">selectFromArray Type</a></li>
+<li class="toctree-l3"><a class="reference internal" href="configurationsettingtypes.html#selectfrommodel-type">selectFromModel Type</a></li>
+<li class="toctree-l3"><a class="reference internal" href="configurationsettingtypes.html#simpledate-type">simpleDate Type</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="configurationsettingtemplates.html">Template Partials</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Setting Type Handlers</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Zen Cart v2.0 Developer Docs</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="configurationsettings.html">Configuration Settings</a> &raquo;</li>
+        
+      <li>Setting Type Handlers</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/configurationsettinghandlers.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="setting-type-handlers">
+<h1>Setting Type Handlers<a class="headerlink" href="#setting-type-handlers" title="Permalink to this headline">¶</a></h1>
+<p>Setting type handlers can be defined in <code class="docutils literal notranslate"><span class="pre">app/library/zencart/ConfigSettings/src/settingTypes</span></code></p>
+<p>Some settings types may not need a handler, in which case the DefaultType handler will be used.
+Any custom handlers must extend the <cite>DefaultType</cite>.</p>
+<p>The <cite>DefaulType</cite> currently provides 2 methods which may be overriden.</p>
+<ul class="simple">
+<li>getValueFromRequest</li>
+</ul>
+<p>returns the value from the form, if present, otherwise returns <code class="docutils literal notranslate"><span class="pre">null</span></code></p>
+<ul class="simple">
+<li>transformSettingsFromDefinition</li>
+</ul>
+<p>In the <cite>DefaultType</cite> this performs no actions, simply returning it’s input as is.</p>
+<p>As examples of why we might need to override these methods, let’s first consider the <cite>boolean</cite> type.</p>
+<p>The <cite>boolean</cite> type uses a checkbox, however checkboxes do not return anything from a form if the checkbox is not checked.</p>
+<p>To work around this, and to return a value even when no checked we can override the
+<code class="docutils literal notranslate"><span class="pre">getValueFromRequest</span></code> method.</p>
+<p>e.g.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>class BooleanType extends DefaultType
+{
+    public function getValueFromRequest($request, $setting)
+    {
+        return $request-&gt;readPost($setting[&#39;setting_key&#39;], &#39;off&#39;);
+    }
+}
+</pre></div>
+</div>
+<p>Another example is the <cite>selectFromArray</cite> type. This can store language define keys for the select dropdown options.
+However as these are stored as strings in the database, we need to resolve them at runtime to their language definitions.</p>
+<p>To do this we can use the <code class="docutils literal notranslate"><span class="pre">transformSettingsFromDefinition</span></code> method.</p>
+<p>e.g.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>public function transformSettingsFromDefinition(array $setting)
+{
+    $definition = json_decode($setting[&#39;setting_definition&#39;], true);
+    $options = $definition[&#39;options&#39;];
+    $newOptions = [];
+    foreach ($options as $option) {
+        $id = $option[&#39;id&#39;];
+        $text = $option[&#39;text&#39;];
+        if (defined($text)) {
+            $text = constant($text);
+        }
+        $newOptions[] = [&#39;id&#39; =&gt; $id, &#39;text&#39; =&gt; $text];
+    }
+    $definition[&#39;options&#39;] = $newOptions;
+    $definition = json_encode($definition, true);
+    $setting[&#39;setting_definition&#39;] = $definition;
+    return $setting;
+}
+</pre></div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+      
+        <a href="configurationsettingtemplates.html" class="btn btn-neutral" title="Template Partials" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, Zen-Cart Team &amp; Contributors.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'2.0',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+
+  
+
+  <script type="text/javascript" src="_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

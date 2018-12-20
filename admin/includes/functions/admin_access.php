@@ -670,12 +670,11 @@ function zen_get_admin_pages($menu_only)
   {
     $productTypes['_productTypes_'.$row['type_handler']] = array('name'=>$row['type_name'], 'file'=>$row['type_handler'], 'params'=>'');
   }
-  $sql = "SELECT * FROM " . TABLE_DASHBOARD_WIDGETS . " as tdw
-          LEFT JOIN " . TABLE_DASHBOARD_WIDGETS_DESCRIPTION . " as tdwd ON tdwd.widget_key = tdw.widget_key"; 
+  $sql = "SELECT * FROM " . TABLE_DASHBOARD_WIDGETS . " as tdw";
   $result = $db->Execute($sql);
   foreach($result as $row)
   {
-    if (defined($row['widget_name'])) continue;
+    if (!defined($row['widget_name'])) continue;
     $dashboardWidgets['_dashboardwidgets_'.$row['widget_key']] = array('name'=>constant($row['widget_name']), 'file'=>$row['widget_key'], 'params'=>'');
   }
 

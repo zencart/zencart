@@ -8,7 +8,7 @@ class AdminUser extends \base
 
     public function __construct($session, ModelFactory $modelFactory, $notifications)
     {
-        $this->model = $modelFactory->factory('admin');
+        $this->model = $modelFactory->make('admin');
         $this->id = $session->get('admin_id');
         $this->notifications = $notifications;
         $this->setUserDetails();
@@ -16,17 +16,11 @@ class AdminUser extends \base
 
     private function setUserDetails()
     {
-        $admins = $this->model->find($this->id);
-        $this->adminName = $admins->admin_name;
-        $this->adminEmail = $admins->admin_email;
-        $this->adminGravatar = $this->getGravatar($admins->admin_email, 90);
+        $this->admins = $this->model->find($this->id);
+        $this->adminName = $this->admins->admin_name;
+        $this->adminEmail = $this->admins->admin_email;
+        $this->adminGravatar = $this->getGravatar($this->admins->admin_email, 90);
 
-//        $sql = "SELECT * FROM " . TABLE_ADMIN . " WHERE admin_id = :adminId:";
-//        $sql = $this->dbConn->bindVars($sql, ':adminId:', $this->id, 'integer');
-//        $result = $this->dbConn->execute($sql);
-//        $this->adminName = $result->fields['admin_name'];
-//        $this->adminEmail = $result->fields['admin_email'];
-//        $this->adminGravatar = $this->getGravatar($this->adminEmail, 90);
     }
 
     protected function getGravatar( $email, $s = 20, $d = 'mm', $r = 'g', $img = false, $atts = array() )
@@ -48,6 +42,12 @@ class AdminUser extends \base
     {
         return (array)$this;
     }
+
+    public function getModel()
+    {
+        return $this->admins;
+    }
+
 
     public function getNotifications()
     {

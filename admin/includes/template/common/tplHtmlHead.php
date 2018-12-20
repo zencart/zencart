@@ -56,3 +56,6 @@
     <script type="text/javascript" src='includes/template/javascript/lodash.js'></script>
     <script type="text/javascript" src='includes/template/javascript/gridstack.js-master/dist/gridstack.js'></script>
     <script type="text/javascript" src='includes/template/javascript/gridstack.js-master/dist/gridstack.jQueryUI.js'></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+

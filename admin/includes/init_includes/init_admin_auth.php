@@ -55,7 +55,8 @@ if ($zcRequest->readGet('cmd') != FILENAME_ALERT_PAGE && !$authError) {
         FILENAME_ALERT_PAGE,
         FILENAME_PASSWORD_FORGOTTEN,
         FILENAME_DENIED,
-        FILENAME_ALT_NAV
+        FILENAME_ALT_NAV,
+        'zcAjaxHandler'
     )) && ! zen_is_superuser() && !$authError) {
       if (check_page($zcRequest->readGet('cmd'), $zcRequest->all('get')) == false) {
           if (check_related_page($zcRequest->readGet('cmd'), $zcRequest->all('get')) == false) {

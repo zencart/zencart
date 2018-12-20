@@ -50,6 +50,9 @@ define('TABLE_DASHBOARD_WIDGETS_GROUPS', DB_PREFIX . 'dashboard_widgets_groups')
 define('TABLE_DASHBOARD_WIDGETS_DESCRIPTION', DB_PREFIX . 'dashboard_widgets_description');
 define('TABLE_DASHBOARD_WIDGETS_TO_PROFILES', DB_PREFIX . 'dashboard_widgets_to_profiles');
 define('TABLE_DASHBOARD_WIDGETS_TO_USERS', DB_PREFIX . 'dashboard_widgets_to_users');
+define('TABLE_DASHBOARD_WIDGETS_SETTINGS', DB_PREFIX . 'dashboard_widgets_settings');
+define('TABLE_DASHBOARD_WIDGETS_SETTINGS_TO_USER', DB_PREFIX . 'dashboard_widgets_settings_to_user');
+define('TABLE_DASHBOARD_WIDGETS_SETTINGS_TO_WIDGET', DB_PREFIX . 'dashboard_widgets_settings_to_widget');
 define('TABLE_EMAIL_ARCHIVE', DB_PREFIX . 'email_archive');
 define('TABLE_EZPAGES', DB_PREFIX . 'ezpages');
 define('TABLE_EZPAGES_CONTENT', DB_PREFIX . 'ezpages_content');
