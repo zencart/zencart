@@ -44,6 +44,10 @@ class testAdminLoggingCase extends zcTestCase
         global $PHP_SELF;
         $PHP_SELF = 'testsuite';
         define('WARNING_REVIEW_ROGUE_ACTIVITY', 'Warning: review rogue activity');
+        global $db; 
+        $db = $this->getMockBuilder('queryFactory')->getMock();
+        $metaCol = (object)['max_length' => '255']; 
+        $db->method('MetaColumns')->willReturn(array('ATTENTION' => $metaCol)); 
     }
 
     private function initTestFileSystem($hasFile = true, $contents = '')
@@ -107,10 +111,6 @@ class testAdminLoggingCase extends zcTestCase
         $requested_severity = 'warning';
         $_POST = array('name' => 'x', 'desc' => 'y');
         $observer = new zcObserverLogEventListener();
-        global $db; 
-        $db = $this->getMockBuilder('queryFactory')->getMock();
-        $metaCol = (object)['max_length' => '255']; 
-        $db->method('MetaColumns')->willReturn(array('ATTENTION' => $metaCol)); 
         $result = $observer::prepareLogdata($message_to_log, $requested_severity);
 
         $this->assertEquals($result['severity'], 'warning');
@@ -131,10 +131,6 @@ class testAdminLoggingCase extends zcTestCase
         // test for expected notice
         $observer2 = new zcObserverLogEventListener();
         $stdClass = new stdClass();
-        global $db; 
-        $db = $this->getMockBuilder('queryFactory')->getMock();
-        $metaCol = (object)['max_length' => '255']; 
-        $db->method('MetaColumns')->willReturn(array('ATTENTION' => $metaCol)); 
         $result = $observer2->updateNotifyAdminActivityLogEvent($stdClass, '', $message_to_log, $requested_severity);
 
         // and test that the malicious code doesn't appear in the log
@@ -306,10 +302,6 @@ class testAdminLoggingCase extends zcTestCase
         $observer = new zcObserverLogWriterTextfile($file);
         $observer2 = new zcObserverLogEventListener();
 
-        global $db; 
-        $db = $this->getMockBuilder('queryFactory')->getMock();
-        $metaCol = (object)['max_length' => '255']; 
-        $db->method('MetaColumns')->willReturn(array('ATTENTION' => $metaCol)); 
         zen_record_admin_activity($message, $severity);
 
         $this->assertFileExists($file);
