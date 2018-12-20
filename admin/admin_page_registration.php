@@ -8,6 +8,8 @@
  */
 
 require('includes/application_top.php');
+require_once('includes/template/common/tplHtmlHead.php');
+require_once('includes/template/common/tplHtmlHeadLegacy.php');
 
 // initialise form values
 $page_key = $language_key = $main_page = $page_params = $menu_key = $checked = '';
@@ -103,10 +105,6 @@ foreach ($menu_titles as $id => $title) {
 
 ?>
 <link rel="stylesheet" type="text/css" href="includes/template/css/admin_access.css" />
-<?php
-require_once('includes/template/common/tplHtmlHeadLegacy.php');
-require_once('includes/template/common/tplHtmlHead.php');
-?>
 </head>
 <body>
 <!-- header //-->
