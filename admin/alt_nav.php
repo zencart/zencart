@@ -7,12 +7,13 @@
  * @version $Id: alt_nav.php 19301 2011-07-28 21:50:05Z kuroi $
  */
 require('includes/application_top.php');
-require('includes/admin_html_head.php');
+require_once('includes/template/common/tplHtmlHeadLegacy.php');
+require_once('includes/template/common/tplHtmlHead.php');
 ?>
 </head>
 <body class="altnavBody">
 <!-- header //-->
-<?php require(DIR_WS_INCLUDES . 'header.php'); ?>
+<?php require('includes/template/common/tplHeader.php'); ?>
 <!-- header_eof //-->
 
 <!-- body //-->
