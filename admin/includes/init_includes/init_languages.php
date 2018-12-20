@@ -4,7 +4,7 @@
  * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: lat9 Wed May 30 15:34:35 2018 -0400 Modified in v1.5.6 $
+ * @version $Id: mc12345678 Wed Dec 19 20:34:35 2018 -0400 Modified in v1.5.6 $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
@@ -33,7 +33,6 @@ if (!defined('IS_ADMIN_FLAG')) {
   $template_dir = $template_query->fields['template_dir'];
 
 // include the language translations
-  require(DIR_WS_LANGUAGES . $_SESSION['language'] . '.php');
   $current_page = basename($PHP_SELF);
   if (is_file(DIR_WS_LANGUAGES . $_SESSION['language'] . '/' . $current_page)) {
     include(DIR_WS_LANGUAGES . $_SESSION['language'] . '/' . $current_page);
@@ -47,3 +46,4 @@ if (!defined('IS_ADMIN_FLAG')) {
     }
     $za_dir->close();
   }
+  require(DIR_WS_LANGUAGES . $_SESSION['language'] . '.php');
