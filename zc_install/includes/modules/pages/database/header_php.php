@@ -32,6 +32,8 @@ if (defined('DEVELOPER_MODE') && DEVELOPER_MODE === true) {
     $db_password = $db_password_fallback;
 }
 $db_prefix = isset($db_prefix) ? $db_prefix : '';
+$db_user = isset($db_user) ? $db_user : '';
+$db_password = isset($db_password) ? $db_password : '';
 
 // attempt to intelligently manage user-adjusted subdirectory values if they are different from detected defaults
 if (!isset($_POST['detected_http_server_catalog'])) $_POST['detected_http_server_catalog'] = '';

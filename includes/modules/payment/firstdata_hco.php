@@ -566,7 +566,7 @@ if (!function_exists('plugin_version_check_for_updates')) {
         }
         curl_close($ch);
     } else {
-        $errono = 9999;
+        $errno = 9999;
         $error = 'curl_init not found in PHP';
     }
     if ($errno > 0 || $response == '') {

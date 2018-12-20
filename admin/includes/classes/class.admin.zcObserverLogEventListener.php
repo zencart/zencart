@@ -142,7 +142,7 @@ class zcObserverLogEventListener extends base {
         'ip_address'      => substr($_SERVER['REMOTE_ADDR'],0,45),
         'postdata'        => $postdata,
         'flagged'         => $flagged,
-        'attention'       => ($notes === false ? '' : $notes),
+        'attention'       => ($notes === false ? '' : substr($notes,0,zen_field_length(TABLE_ADMIN_ACTIVITY_LOG, 'attention'))),
         'severity'        => strtolower($levels[$severity]),  // converts int to corresponding string
     );
 
