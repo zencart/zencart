@@ -10,10 +10,10 @@ if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
 }
 // calculate category path
-  if (isset($_GET['cPath'])) {
-    $cPath = $_GET['cPath'];
-  } else if (isset($_POST['cPath'])) {
+  if (isset($_POST['cPath'])) {
     $cPath = $_POST['cPath'];
+  } elseif (isset($_GET['cPath'])) {
+    $cPath = $_GET['cPath'];
   } else {
     $cPath = '';
   }
