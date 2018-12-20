@@ -48,8 +48,10 @@ class item extends base {
     $this->code = 'item';
     $this->title = MODULE_SHIPPING_ITEM_TEXT_TITLE;
     $this->description = MODULE_SHIPPING_ITEM_TEXT_DESCRIPTION;
-    $this->sort_order = MODULE_SHIPPING_ITEM_SORT_ORDER;
-    $this->icon = ''; // add image filename here; must be uploaded to the /images/ subdirectory
+      $this->sort_order = defined('MODULE_SHIPPING_ITEM_SORT_ORDER') ? MODULE_SHIPPING_ITEM_SORT_ORDER : null;
+      if (null === $this->sort_order) return false;
+
+      $this->icon = '';
     $this->tax_class = MODULE_SHIPPING_ITEM_TAX_CLASS;
     $this->tax_basis = MODULE_SHIPPING_ITEM_TAX_BASIS;
     $this->enabled = (MODULE_SHIPPING_ITEM_STATUS == 'True') ? true : false;

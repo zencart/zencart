@@ -34,6 +34,8 @@ if ( (isset($_GET['keyword']) && (empty($_GET['keyword']) || $_GET['keyword']==H
   $pfrom = '';
   $pto = '';
   $keywords = '';
+  $dfrom_array = array();
+  $dto_array = array();
 
   if (isset($_GET['dfrom'])) {
     $dfrom = (($_GET['dfrom'] == DOB_FORMAT_STRING) ? '' : $_GET['dfrom']);

@@ -16,6 +16,15 @@ header('Cache-Control: no-cache, no-store, must-revalidate');
 ?>
 <html><head><meta name="robots" content="noindex, nofollow" /><title>Communications Test</title></head>
 <body>
+<p>
+<?php
+    $ch = curl_init('https://www.howsmyssl.com/a/check');
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    $data = curl_exec($ch);
+    curl_close($ch);
+    $json = json_decode($data);
+    echo "Connection uses " . $json->tls_version ."\n";
+?></p>
 <p>Testing communications to various destinations. This is a simple diagnostic to determine whether your server can connect to common destinations.<br>
 <em>For advanced "details" mode, add </em><strong>?details=on</strong><em> to the URL.</em></p>
 <p><em>(Another resource you may find useful for testing your server's overall customer-facing SSL configuration: <a href="https://www.ssllabs.com/ssltest/index.html" target="_blank">https://www.ssllabs.com/ssltest/index.html</a> )</em></p>
@@ -64,6 +73,9 @@ doCurlTest('https://www.ups.com/ups.app/xml/Rate');
 echo 'Connecting to UPSXML (SSL) (onlinetools.ups.com) ...<br>';
 doCurlTest('https://onlinetools.ups.com/ups.app/xml/Rate');
 
+echo 'Connecting to UPSXML (sandbox) ...<br>';
+doCurlTest('https://wwwcie.ups.com/ups.app/xml/Rate');
+
 echo 'Connecting to FedEx (port 80)...<br>';
 dofsockTest('fedex.com', 80);
 
@@ -95,8 +107,17 @@ doCurlTest('https://api-3t.sandbox.paypal.com/nvp');
 echo 'Connecting to PayPal Payflowpro Server ...<br>';
 doCurlTest('https://payflowpro.paypal.com/transaction');
 
+echo 'Connecting to PayPal Payflowpro Pilot/Sandbox Server ...<br>';
+doCurlTest('https://pilot-payflowpro.paypal.com/transaction');
+
+echo 'Connecting to PayPal TLSTest Server ...<br>';
+doCurlTest('https://tlstest.paypal.com/transaction');
+
 echo 'Connecting to Cardinal Commerce 3D-Secure Server ...<br>';
 doCurlTest('https://paypal.cardinalcommerce.com/maps/processormodule.asp');
+
+echo 'Connecting to Square Payments Server ...<br>';
+doCurlTest('https://connect.squareup.com');
 
 echo 'Connecting to AuthorizeNet Production Server ...<br>';
 doCurlTest('https://secure.authorize.net/gateway/transact.dll');
@@ -115,6 +136,12 @@ doCurlTest('https://api.payeezy.com/v1/transactions');
 
 echo 'Connecting to Payeezy Sandbox Server...<br>';
 doCurlTest('https://api-cert.payeezy.com/v1/transactions');
+
+echo 'Connecting to Elavon Server...<br>';
+doCurlTest('https://www.myvirtualmerchant.com/VirtualMerchant/process.do');
+
+echo 'Connecting to Elavon Sandbox Server...<br>';
+doCurlTest('https://demo.myvirtualmerchant.com/VirtualMerchantDemo/process.do');
 
 ?>
 

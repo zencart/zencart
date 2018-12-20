@@ -46,6 +46,7 @@ if ($hasSaneConfigFile && $hasUpdatedConfigFile)
 $errorList = $systemChecker->runTests();
 list($hasFatalErrors, $listFatalErrors) = $systemChecker->getErrorList();
 list($hasWarnErrors, $listWarnErrors) = $systemChecker->getErrorList('WARN');
+list($hasLocalAlerts, $listLocalAlerts) = $systemChecker->getErrorList('ALERT');
 if (isset($listFatalErrors[0]['methods']))
 {
   $res = key($listFatalErrors[0]['methods']);

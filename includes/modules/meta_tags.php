@@ -278,7 +278,7 @@ switch ($metatag_page_name) {
       $meta_products_description = zen_clean_html($meta_products_description);
 
       define('META_TAG_TITLE', str_replace($bad_characters,'',$review_on . $meta_products_name . $meta_products_price . PRIMARY_SECTION . TITLE . TAGLINE));
-      define('META_TAG_DESCRIPTION', str_replace($bad_characters,'',TITLE . ' ' . $meta_products_name . SECONDARY_SECTION . $meta_products_description));
+      define('META_TAG_DESCRIPTION', str_replace($bad_characters,'',TITLE . ' ' . $meta_products_name . SECONDARY_SECTION . $meta_products_description . ' '));
       define('META_TAG_KEYWORDS', str_replace($bad_characters,'',$meta_products_name . METATAGS_DIVIDER . KEYWORDS));
 
     } // CUSTOM META TAGS
@@ -320,7 +320,7 @@ switch ($metatag_page_name) {
 // EZ-Pages:
   case 'page':
   $ezpage_id = (int)$_GET['id'];
-  $chapter_id = (int)$_GET['chapter'];
+  $chapter_id = isset($_GET['chapter']) ? (int)$_GET['chapter'] : 0;
   if (defined('META_TAG_TITLE_EZPAGE_'.$ezpage_id)) define('META_TAG_TITLE', constant('META_TAG_TITLE_EZPAGE_'.$ezpage_id));
   if (defined('META_TAG_DESCRIPTION_EZPAGE_'.$ezpage_id)) define('META_TAG_DESCRIPTION', constant('META_TAG_DESCRIPTION_EZPAGE_'.$ezpage_id));
   if (defined('META_TAG_KEYWORDS_EZPAGE_'.$ezpage_id)) define('META_TAG_KEYWORDS', constant('META_TAG_KEYWORDS_EZPAGE_'.$ezpage_id));

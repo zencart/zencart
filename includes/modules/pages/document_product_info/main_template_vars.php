@@ -185,8 +185,8 @@
 
 // build show flags from product type layout settings
   $flag_show_product_info_starting_at = zen_get_show_product_switch($_GET['products_id'], 'starting_at');
-  $flag_show_product_info_model = zen_get_show_product_switch($_GET['products_id'], 'model') == 1 and $products_model !='';
-  $flag_show_product_info_weight = zen_get_show_product_switch($_GET['products_id'], 'weight') == 1 and $products_weight !=0;
+  $flag_show_product_info_model = zen_get_show_product_switch($_GET['products_id'], 'model') == 1 && $products_model !='';
+  $flag_show_product_info_weight = zen_get_show_product_switch($_GET['products_id'], 'weight') == 1 && $products_weight !=0;
   $flag_show_product_info_quantity = zen_get_show_product_switch($_GET['products_id'], 'quantity') == 1;
   $flag_show_product_info_manufacturer = zen_get_show_product_switch($_GET['products_id'], 'manufacturer') and !empty($manufacturers_name);
   $flag_show_product_info_in_cart_qty = zen_get_show_product_switch($_GET['products_id'], 'in_cart_qty');

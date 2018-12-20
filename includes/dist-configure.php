@@ -58,7 +58,7 @@ define('SQL_CACHE_METHOD', 'none');
 /**
  * Reserved for future use
  */
-define('SESSION_STORAGE', 'temporary value added by v160 installer');
+define('SESSION_STORAGE', 'temporary value added by zc_install');
 
 /**
  * Advanced use only:

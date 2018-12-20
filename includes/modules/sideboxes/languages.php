@@ -3,7 +3,7 @@
  * languages sidebox - allows customer to select from available languages installed on your site
  *
  * @package templateSystem
- * @copyright Copyright 2003-2016 Zen Cart Development Team
+ * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: languages.php  Modified in v1.6.0 $

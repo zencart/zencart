@@ -65,10 +65,10 @@
 <?php if (!empty($external_bb_url) && !empty($external_bb_text)) { ?>
             <li><?php echo '<a href="' . $external_bb_url . '" target="_blank">' . $external_bb_text . '</a>'; ?></li>
 <?php } ?>
-<?php if (MODULE_ORDER_TOTAL_GV_STATUS == 'true') { ?>
+<?php if (defined('MODULE_ORDER_TOTAL_GV_STATUS') && MODULE_ORDER_TOTAL_GV_STATUS == 'true') { ?>
             <li><?php echo '<a href="' . zen_href_link(FILENAME_GV_FAQ) . '">' . BOX_INFORMATION_GV . '</a>'; ?></li>
 <?php } ?>
-<?php if (MODULE_ORDER_TOTAL_COUPON_STATUS == 'true') { ?>
+<?php if (defined('MODULE_ORDER_TOTAL_COUPON_STATUS') && MODULE_ORDER_TOTAL_COUPON_STATUS == 'true') { ?>
             <li><?php echo '<a href="' . zen_href_link(FILENAME_DISCOUNT_COUPON) . '">' . BOX_INFORMATION_DISCOUNT_COUPONS . '</a>'; ?></li>
 <?php } ?>
 <?php if (SHOW_NEWSLETTER_UNSUBSCRIBE_LINK == 'true') { ?>

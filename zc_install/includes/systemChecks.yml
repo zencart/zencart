@@ -22,6 +22,14 @@ systemChecks:
           fileDir: <?php echo DIR_FS_ROOT . 'includes/configure.php' . PHP_EOL; ?>
           changePerms: '0664'
           createFile: TRUE
+  checkLocalStoreConfigureFile:
+    runLevel: localdev
+    errorLevel: ALERT
+    mainErrorText: <?php echo TEXT_FOUND_LOCAL_STORE_CONFIGURE . PHP_EOL; ?>
+    methods:
+      checkFileExists:
+        parameters:
+          fileDir: <?php echo DIR_FS_ROOT . 'includes/local/configure.php' . PHP_EOL; ?>
   checkPhpVersion:
     runLevel: always
     errorLevel: FAIL
@@ -274,6 +282,15 @@ systemChecks:
             fieldName: products_virtual
             fieldCheck: Type
             expectedResult: 'tinyint(1)'
+          - checkType: fieldSchema
+            tableName: ezpages_content
+            fieldName: pages_html_text
+            fieldCheck: Exists
+          - checkType: fieldSchema
+            tableName: configuration
+            fieldName: val_function
+            fieldCheck: Type
+            expectedResult: 'TEXT'
 
   checkDBVersion155:
     runLevel: dbVersion
@@ -340,16 +357,9 @@ systemChecks:
     methods:
       dbVersionChecker:
         parameters:
-          - checkType: fieldSchema
-            tableName: sessions
-            fieldName: sesskey
-            fieldCheck: Type
-            expectedResult: 'VARCHAR(255)'
-          - checkType: fieldSchema
-            tableName: whos_online
-            fieldName: session_id
-            fieldCheck: Type
-            expectedResult: 'VARCHAR(255)'
+          - checkType: configValue
+            fieldName: PADSS_ADMIN_SESSION_TIMEOUT_ENFORCED
+            expectedResult: 'PA-DSS Admin Session Timeout Enforced?'
           - checkType: configValue
             fieldName: SHOW_CATEGORY_PRODUCTS_LINKED_STATUS
             expectedResult: 'Show linked status for categories'

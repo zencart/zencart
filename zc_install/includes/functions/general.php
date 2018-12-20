@@ -3,10 +3,10 @@
  * general functions
  *
  * @package functions
- * @copyright Copyright 2003-2016 Zen Cart Development Team
+ * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: zcwilt  Wed Sep 23 20:04:38 2015 +0100 Modified in v1.6.0 $
+ * @version $Id: Drbyte Mon Nov 12 15:55:25 2018 -0500 Modified in v1.5.6 $
  */
 
 if (!defined('TABLE_UPGRADE_EXCEPTIONS')) define('TABLE_UPGRADE_EXCEPTIONS','upgrade_exceptions');
@@ -23,20 +23,18 @@ function zen_get_select_options($optionList, $setDefault)
   }
   return $optionString;
 }
+
   function zen_not_null($value) {
-    if (is_array($value)) {
-      if (sizeof($value) > 0) {
-        return true;
-      } else {
+    if (null === $value) {
         return false;
-      }
-    } else {
-      if (($value != '') && (strtolower($value) != 'null') && (strlen(trim($value)) > 0)) {
-        return true;
-      } else {
-        return false;
-      }
     }
+    if (is_array($value)) {
+        return count($value) > 0;
+    }
+    if (is_a($value, 'queryFactoryResult')) {
+        return count($value->result) > 0;
+    }
+    return trim($value) !== '' && strtolower($value) != 'null';
   }
 
   function logDetails($details, $location = "General") {
@@ -92,7 +90,7 @@ function zen_get_select_options($optionList, $setDefault)
     $t1['host'] = $s2[0];
     array_shift($s2);
     // adjust host to accommodate /~username shared-ssl scenarios
-    if ($detect_tilde && substr($s2[0], 0, 1) == '~') {
+    if ($detect_tilde && isset($s2[0]) && strpos($s2[0], '~') === 0) {
       $t1['host'] .= '/' . $s2[0];
       // array_shift also therefore removes it from ['path'] below
       array_shift($s2);
