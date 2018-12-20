@@ -14,6 +14,8 @@ define('HEADING_TITLE', 'Thank You! We Appreciate your Business!');
 
 define('TEXT_SUCCESS', '');
 define('TEXT_NOTIFY_PRODUCTS', 'Please notify me of updates to these products');
+// Still used by some older templates
+define('TEXT_SEE_ORDERS', 'You can view your order history by going to the <a href="' . zen_href_link(FILENAME_ACCOUNT, '', 'SSL') . '" name="linkMyAccount">My Account</a> page and by clicking on "View All Orders".');
 define('TEXT_CONTACT_STORE_OWNER', 'Please direct any questions to customer service.');
 define('TEXT_THANKS_FOR_SHOPPING', 'Thanks for shopping with us online!');
 
