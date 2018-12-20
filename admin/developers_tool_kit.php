@@ -8,6 +8,8 @@
  */
 
   require('includes/application_top.php');
+  require_once('includes/template/common/tplHtmlHead.php');
+  require_once('includes/template/common/tplHtmlHeadLegacy.php');
 
   $default_context_lines = 0;
 
@@ -690,14 +692,13 @@
       echo '<table width="90%" align="center"><tr><td>' . zen_draw_separator('pixel_black.gif', '100%', '2') . '</td></tr><tr><td>&nbsp;</td></tr></table>' . "\n";
     }
 
-require('includes/admin_html_head.php');
 ?>
 <link rel="stylesheet" type="text/css" href="includes/template/css/developers_tool_kit.css" />
 <style>.dataTableGroupChange {border-top: 2px solid black;}</style>
 </head>
 <body>
 <!-- header //-->
-<?php require(DIR_WS_INCLUDES . 'header.php'); ?>
+<?php require('includes/template/common/tplHeader.php'); ?>
 <!-- header_eof //-->
 
 <!-- body //-->

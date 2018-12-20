@@ -8,6 +8,8 @@
  */
 
   require('includes/application_top.php');
+  require_once('includes/template/common/tplHtmlHead.php');
+  require_once('includes/template/common/tplHtmlHeadLegacy.php');
 
   if (!defined('ENTRY_EMAIL_NEVER_SEND_EMAILS')) define('ENTRY_EMAIL_NEVER_SEND_EMAILS', 'Never (Note: this will prevent ALL emails, including important order-confirmation messages!)');
 
@@ -304,9 +306,6 @@
         $cInfo = new objectInfo($customers->fields);
     }
   }
-
-require('includes/admin_html_head.php');
-
 ?>
 <?php
   if ($action == 'edit' || $action == 'update') {
@@ -413,7 +412,7 @@ function check_form() {
 </head>
 <body>
 <!-- header //-->
-<?php require(DIR_WS_INCLUDES . 'header.php'); ?>
+<?php require('includes/template/common/tplHeader.php'); ?>
 <!-- header_eof //-->
 
 <!-- body //-->
