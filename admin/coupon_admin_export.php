@@ -10,6 +10,8 @@
  *
  */
 require ('includes/application_top.php');
+require_once('includes/template/common/tplHtmlHead.php');
+require_once('includes/template/common/tplHtmlHeadLegacy.php');
 
 // change destination here for path when using "save to file on server"
 if (!defined('DIR_FS_COUPON_EXPORT')) define('DIR_FS_COUPON_EXPORT', DIR_FS_ADMIN . 'backups/');
@@ -264,10 +266,6 @@ if ($action != '')
   } //end switch / case
 } //endif $action
 
-?>
-<?php
-require_once('includes/template/common/tplHtmlHeadLegacy.php');
-require_once('includes/template/common/tplHtmlHead.php');
 ?>
 </head>
 <body>

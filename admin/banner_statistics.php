@@ -14,6 +14,8 @@
  */
 
   require('includes/application_top.php');
+  require_once('includes/template/common/tplHtmlHead.php');
+  require_once('includes/template/common/tplHtmlHeadLegacy.php');
   require('includes/functions/functions_graphs.php');
 
   $banner_id = (isset($_GET['bID'])) ? (int)$_GET['bID'] : 0;
@@ -61,10 +63,6 @@
 <!--[if lte IE 8]><script src="includes/template/javascript/flot/excanvas.min.js"></script><![endif]-->
 <script src="includes/template/javascript/flot/jquery.flot.min.js"></script>
 <script src="includes/template/javascript/flot/jquery.flot.resize.min.js"></script>
-<?php
-require_once('includes/template/common/tplHtmlHeadLegacy.php');
-require_once('includes/template/common/tplHtmlHead.php');
-?>
 </head>
 <body>
 <!-- header //-->

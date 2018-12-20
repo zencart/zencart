@@ -8,6 +8,8 @@
  */
   //define('MAX_DISPLAY_RESTRICT_ENTRIES', 10);
   require('includes/application_top.php');
+  require_once('includes/template/common/tplHtmlHead.php');
+  require_once('includes/template/common/tplHtmlHeadLegacy.php');
   $restrict_array = array();
   $restrict_array[] = array('id'=>'Deny', text=>TEXT_PULLDOWN_DENY);
   $restrict_array[] = array('id'=>'Allow', text=>TEXT_PULLDOWN_ALLOW);
@@ -139,10 +141,6 @@
       $db->Execute("delete from " . TABLE_COUPON_RESTRICT . " where restrict_id = '" . $_GET['info'] . "'");
     }
   }
-?>
-<?php
-require_once('includes/template/common/tplHtmlHeadLegacy.php');
-require_once('includes/template/common/tplHtmlHead.php');
 ?>
 </head>
 <body marginwidth="0" marginheight="0" topmargin="0" bottommargin="0" leftmargin="0" rightmargin="0" bgcolor="#FFFFFF">

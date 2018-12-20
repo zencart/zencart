@@ -8,6 +8,8 @@
  */
 
   require('includes/application_top.php');
+  require_once('includes/template/common/tplHtmlHead.php');
+  require_once('includes/template/common/tplHtmlHeadLegacy.php');
 
   $default_context_lines = 0;
 
@@ -693,10 +695,6 @@
 ?>
 <link rel="stylesheet" type="text/css" href="includes/template/css/developers_tool_kit.css" />
 <style>.dataTableGroupChange {border-top: 2px solid black;}</style>
-<?php
-require_once('includes/template/common/tplHtmlHeadLegacy.php');
-require_once('includes/template/common/tplHtmlHead.php');
-?>
 </head>
 <body>
 <!-- header //-->
