@@ -8,6 +8,8 @@
  */
 
 require('includes/application_top.php');
+require_once('includes/template/common/tplHtmlHead.php');
+require_once('includes/template/common/tplHtmlHeadLegacy.php');
 if (file_exists(DIR_WS_LANGUAGES . $_SESSION['language'] . '/' . 'users.php')) {
   include(DIR_WS_LANGUAGES . $_SESSION['language'] . '/' . 'users.php');
 }
@@ -80,10 +82,6 @@ $userDetails = $userList[0];
 
 ?>
 <link rel="stylesheet" type="text/css" href="includes/admin_access.css" />
-<?php
-require_once('includes/template/common/tplHtmlHeadLegacy.php');
-require_once('includes/template/common/tplHtmlHead.php');
-?>
 </head>
 <body>
 <!-- header //-->
