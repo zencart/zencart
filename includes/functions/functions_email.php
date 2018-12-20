@@ -191,6 +191,7 @@
       $zco_notifier->notify('NOTIFY_EMAIL_AFTER_EMAIL_FORMAT_DETERMINED');
 
       // now lets build the mail object with the phpmailer class
+      require DIR_APP_LIBRARY . 'PHPMailer/src/PHPMailer.php'; 
       $mail = new PHPMailer\PHPMailer\PHPMailer;
       // optionally intercept to use something like XOAUTH2 for Google, using an observer which watches the following hook, and replaces $mail with an alterate
       $zco_notifier->notify('NOTIFY_EMAIL_INTERCEPT_MAILER_OBJECT', array(), $mail);

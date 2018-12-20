@@ -19,6 +19,7 @@ define('NAMESPACE_PAGE', 'ZenCart\Page');
 define('NAMESPACE_CHECKOUTFLOW', 'ZenCart\CheckoutFlow');
 define('NAMESPACE_VIEW', 'ZenCart\View');
 define('NAMESPACE_ADMINUSER', 'ZenCart\AdminUser');
+define('NAMESPACE_PHPMAILER', 'PHPMailer');
 define('NAMESPACE_VALITRON', 'Valitron');
 define('NAMESPACE_FORMVALIDATION', 'ZenCart\FormValidation');
 define('NAMESPACE_AURADI', 'Aura\Di');
@@ -40,6 +41,7 @@ define('URL_PAGE', 'zencart/Page/src/');
 define('URL_CHECKOUTFLOW', 'zencart/CheckoutFlow/src/');
 define('URL_VIEW', 'zencart/View/src/');
 define('URL_ADMINUSER', 'zencart/AdminUser/src/');
+define('URL_PHPMAILER', 'PHPMailer/src/');
 define('URL_VALITRON', 'vlucas/valitron/src/Valitron');
 define('URL_FORMVALIDATION', 'zencart/FormValidation/src/');
 define('URL_AURADI', 'aura/di/src/');
@@ -71,6 +73,7 @@ return array(
     NAMESPACE_CHECKOUTFLOW => DIR_APP_LIBRARY. URL_CHECKOUTFLOW,
     NAMESPACE_VIEW => DIR_APP_LIBRARY. URL_VIEW,
     NAMESPACE_ADMINUSER => DIR_APP_LIBRARY. URL_ADMINUSER,
+    NAMESPACE_PHPMAILER => DIR_APP_LIBRARY. URL_PHPMAILER,
     NAMESPACE_VALITRON => DIR_APP_LIBRARY. URL_VALITRON,
     NAMESPACE_FORMVALIDATION => DIR_APP_LIBRARY. URL_FORMVALIDATION,
     NAMESPACE_AURADI => DIR_APP_LIBRARY. URL_AURADI,
