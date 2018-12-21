@@ -199,10 +199,10 @@ class AdminRequestSanitizer extends base
      */
     private function runSpecificSanitizer($parameterName, $parameterDefinition)
     {
-        if ($this->adminSanitizerTypes[$parameterDefinition['sanitizerType']]['type'] === 'builtin') {
+        if (isset($this->adminSanitizerTypes[$parameterDefinition['sanitizerType']]['type']) && $this->adminSanitizerTypes[$parameterDefinition['sanitizerType']]['type'] === 'builtin') {
             $this->processBuiltIn($parameterDefinition['sanitizerType'], $parameterName, $parameterDefinition);
         }
-        if ($this->adminSanitizerTypes[$parameterDefinition['sanitizerType']]['type'] === 'custom') {
+        if (isset($this->adminSanitizerTypes[$parameterDefinition['sanitizerType']]['type']) && $this->adminSanitizerTypes[$parameterDefinition['sanitizerType']]['type'] === 'custom') {
             $this->processCustom($parameterDefinition['sanitizerType'], $parameterName, $parameterDefinition);
         }
     }
