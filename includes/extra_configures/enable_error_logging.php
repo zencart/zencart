@@ -12,8 +12,11 @@
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: lat9 Sun Feb 25 13:09:11 2018 -0500 Modified in v1.5.6 $
  */
+if (!defined('IS_ADMIN_FLAG')) {
+    exit('Invalid Access');
+}
 
-function zen_debug_error_handler ($errno, $errstr, $errfile, $errline) 
+function zen_debug_error_handler($errno, $errstr, $errfile, $errline) 
 {
     if (!(error_reporting() & $errno)) {
         return;
@@ -33,8 +36,12 @@ function zen_debug_error_handler ($errno, $errstr, $errfile, $errline)
         case E_USER_WARNING:
             $error_type = 'Warning';
             break;
+        case E_ERROR:
+        case E_USER_ERROR:
+            $error_type = 'Fatal error';
+            break;
         default:
-            $handled_here = false;      //-Unknown error type, let PHP's built-in handler do its thing.
+            $handled = false;      //-Unknown error type, let PHP's built-in handler do its thing.
             break;
     }
 
@@ -48,12 +55,15 @@ function zen_debug_error_handler ($errno, $errstr, $errfile, $errline)
         $backtrace = ob_get_contents();
         ob_end_clean();
         // The following line removes the call to this zen_debug_error_handler function (as it's not relevant)
-        $backtrace = preg_replace ('/^#0\s+' . __FUNCTION__ . "[^\n]*\n/", '', rtrim($backtrace), 1);
-        $message = date('[d-M-Y H:i:s e]') . ' Request URI: ' . $_SERVER['REQUEST_URI'] . ', IP address: ' . (isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : 'not set') . PHP_EOL . $backtrace;
+        $backtrace = preg_replace ('/^#0\s+' . __FUNCTION__ . "[^\n]*\n/", '', $backtrace, 1);
+        if (!empty($backtrace)) {
+            $backtrace = PHP_EOL . rtrim($backtrace);
+        }
+        $message = date('[d-M-Y H:i:s e]') . ' Request URI: ' . $_SERVER['REQUEST_URI'] . ', IP address: ' . (isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : 'not set')  . $backtrace;
     
         $message .= PHP_EOL . "--> PHP $error_type: $errstr in $errfile on line $errline.";
         
-        error_log(PHP_EOL . $message . PHP_EOL, 3, $GLOBALS['debug_logfile_path']);
+        error_log($message . PHP_EOL . PHP_EOL, 3, $GLOBALS['debug_logfile_path']);
     }
   
     return $handled;
@@ -63,9 +73,10 @@ function zen_fatal_error_handler()
 {
     $last_error = error_get_last();
     
-    if ($last_error['type'] == E_ERROR || $last_error['type'] == E_USER_ERROR) {
+    if ($last_error['type'] == E_ERROR || $last_error['type'] == E_USER_ERROR || $last_error['type'] == E_PARSE) {
         $message = date('[d-M-Y H:i:s e]') . ' Request URI: ' . $_SERVER['REQUEST_URI'] . ', IP address: ' . (isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : 'not set') . PHP_EOL;
-        $message .= "--> PHP Fatal error: {$last_error['message']} in {$last_error['file']} on line {$last_error['line']}.";
+        $message_type = ($last_error['type'] == E_PARSE) ? 'Parse' : (($last_error['type'] == E_RECOVERABLE_ERROR) ? 'Catchable Fatal' : 'Fatal');
+        $message .= "--> PHP $message_type error: {$last_error['message']} in {$last_error['file']} on line {$last_error['line']}.";
         error_log(PHP_EOL . $message . PHP_EOL, 3, $GLOBALS['debug_logfile_path']);
     }
 }
@@ -88,18 +99,30 @@ $pages_to_debug[] = '*';
 
 /**
  * The path where the debug log file will be located
- * Default value is: DIR_FS_LOGS . '/myDEBUG-999999-00000000.log'
- * ... which puts it in the /logs/ folder:   /logs/myDEBUG-999999-00000000.log  (where 999999 is a random number, and 00000000 is the server's timestamp)
+ * Default value is: DIR_FS_LOGS . '/myDEBUG-yyyymmdd-hhssmm-xxxxx.log'
+ * ... which puts it in the /logs/ folder:   /logs/myDEBUG-yyyymmdd-hhiiss-xxxxx.log
+ *     where:
+ *      - yyyy .... is the 4-digit year
+ *      - mm ...... is the 2-digit month
+ *      - dd ..... is the 2-digit day-of-month
+ *      - hh ..... is the 2-digit hour
+ *      - ii ..... is the 2-digit minute
+ *      - ss ..... is the 2-digit second
+ *      - xxxxx ... is the time in milliseconds
+ *
  *    (or if you don't have a /logs/ folder, it will use the /cache/ folder instead)
  */
-$debug_logfile_path = DIR_FS_LOGS . '/myDEBUG-' . time() . '-' . mt_rand(1000,999999) . '.log';
+$log_prefix = (IS_ADMIN_FLAG) ? '/myDEBUG-adm-' : '/myDEBUG-';
+$log_date = new DateTime();
+$debug_logfile_path = DIR_FS_LOGS . $log_prefix . $log_date->format('Ymd-His-u') . '.log';
+unset($log_prefix, $log_date);
 
 /**
  * Error reporting level to log
  * Default: E_ALL ^E_NOTICE
  */
 $errors_to_log = (version_compare(PHP_VERSION, 5.3, '>=') ? E_ALL & ~E_DEPRECATED & ~E_NOTICE : version_compare(PHP_VERSION, 5.4, '>=') ? E_ALL & ~E_DEPRECATED & ~E_NOTICE & ~E_STRICT : E_ALL & ~E_NOTICE);
-
+$errors_to_log = -1;
 ///// DO NOT EDIT BELOW THIS LINE /////
 
 //////////////////// DEBUG HANDLING //////////////////////////////////
