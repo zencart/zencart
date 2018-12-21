@@ -4,7 +4,7 @@
  *
  * Sometimes it is difficult to debug PHP background activities, especially when most information cannot be safely output to the screen.
  * However, using the PHP error logging facility we can store all PHP errors to a file, and then review separately.
- * Using this method, the debug details are stored at: /logs/myDEBUG-999999-00000000.log
+ * Using this method, the debug details are stored at: /logs/myDEBUG-yyyymmdd-hhiiss-xxxxx.log (see below for details).
  * Credits to @lat9 for adding backtrace functionality
  *
  * @package debug
@@ -22,7 +22,6 @@ function zen_debug_error_handler($errno, $errstr, $errfile, $errline)
         return;
     }
 
-    $handled = true;                    //-For known error types, we'll handle them here.
     switch ($errno) {
         case E_NOTICE:
         case E_USER_NOTICE:
@@ -41,32 +40,30 @@ function zen_debug_error_handler($errno, $errstr, $errfile, $errline)
             $error_type = 'Fatal error';
             break;
         default:
-            $handled = false;      //-Unknown error type, let PHP's built-in handler do its thing.
+            return false;      //-Unknown error type, let PHP's built-in handler do its thing.
             break;
     }
 
-    if ($handled) {
-        ob_start();
-        if (version_compare(PHP_VERSION, '5.3.6') >= 0) {
-            debug_print_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
-        } else {
-            debug_print_backtrace();
-        }
-        $backtrace = ob_get_contents();
-        ob_end_clean();
-        // The following line removes the call to this zen_debug_error_handler function (as it's not relevant)
-        $backtrace = preg_replace ('/^#0\s+' . __FUNCTION__ . "[^\n]*\n/", '', $backtrace, 1);
-        if (!empty($backtrace)) {
-            $backtrace = PHP_EOL . rtrim($backtrace);
-        }
-        $message = date('[d-M-Y H:i:s e]') . ' Request URI: ' . $_SERVER['REQUEST_URI'] . ', IP address: ' . (isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : 'not set')  . $backtrace;
-    
-        $message .= PHP_EOL . "--> PHP $error_type: $errstr in $errfile on line $errline.";
-        
-        error_log($message . PHP_EOL . PHP_EOL, 3, $GLOBALS['debug_logfile_path']);
+    ob_start();
+    if (version_compare(PHP_VERSION, '5.3.6') >= 0) {
+        debug_print_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
+    } else {
+        debug_print_backtrace();
     }
+    $backtrace = ob_get_contents();
+    ob_end_clean();
+    // The following line removes the call to this zen_debug_error_handler function (as it's not relevant)
+    $backtrace = preg_replace ('/^#0\s+' . __FUNCTION__ . "[^\n]*\n/", '', $backtrace, 1);
+    if (!empty($backtrace)) {
+        $backtrace = PHP_EOL . rtrim($backtrace);
+    }
+    $message = date('[d-M-Y H:i:s e]') . ' Request URI: ' . $_SERVER['REQUEST_URI'] . ', IP address: ' . (isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : 'not set')  . $backtrace;
+
+    $message .= PHP_EOL . "--> PHP $error_type: $errstr in $errfile on line $errline.";
+    
+    error_log($message . PHP_EOL . PHP_EOL, 3, $GLOBALS['debug_logfile_path']);
   
-    return $handled;
+    return true;    //-Indicate that we've handled this error-type.
 }
 
 function zen_fatal_error_handler()
@@ -99,7 +96,7 @@ $pages_to_debug[] = '*';
 
 /**
  * The path where the debug log file will be located
- * Default value is: DIR_FS_LOGS . '/myDEBUG-yyyymmdd-hhssmm-xxxxx.log'
+ * Default value is: DIR_FS_LOGS . '/myDEBUG-yyyymmdd-hhiiss-xxxxx.log'
  * ... which puts it in the /logs/ folder:   /logs/myDEBUG-yyyymmdd-hhiiss-xxxxx.log
  *     where:
  *      - yyyy .... is the 4-digit year
