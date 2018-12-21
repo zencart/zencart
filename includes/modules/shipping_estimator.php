@@ -48,6 +48,7 @@ if ($_SESSION['cart']->count_contents() > 0) {
   // deprecated; to be removed
   if (file_exists(DIR_WS_CLASSES . 'http_client.php')) require_once(DIR_WS_CLASSES . 'http_client.php'); // shipping in basket
 
+  $sendto = 0;
 
   if (!empty($_SESSION['customer_id'])) {
     // user is logged in
@@ -88,7 +89,7 @@ if ($_SESSION['cart']->count_contents() > 0) {
       //add state zone_id
       $_SESSION['cart_zone'] = $state_zone_id;
       $_SESSION['cart_zip_code'] = $zip_code;
-    } elseif (!empty($_SESSION['cart_country_id'])){
+    } elseif (!empty($_SESSION['cart_country_id']) && !empty($_SESSION['cart_zip_code'])){
       // session is available
       $_SESSION['country_info'] = zen_get_countries($_SESSION['cart_country_id'],true);
       $country_info = $_SESSION['country_info'];
@@ -111,8 +112,8 @@ if ($_SESSION['cart']->count_contents() > 0) {
     }
     // set the cost to be able to calculate free shipping
     $order->info = array('total' => $_SESSION['cart']->show_total(), // TAX ????
-                         'currency' => $currency,
-                         'currency_value'=> $currencies->currencies[$currency]['value']);
+                         'currency' => isset($currency) ? $currency : DEFAULT_CURRENCY,
+                         'currency_value'=> isset($currency) && isset($currencies->currencies[$currency]['value']) ? $currencies->currencies[$currency]['value'] : 1);
   }
   // weight and count needed for shipping !
   $total_weight = $_SESSION['cart']->show_weight();
@@ -150,10 +151,10 @@ if ($_SESSION['cart']->count_contents() > 0) {
   }
   // begin shipping cost
   if(!$free_shipping && $_SESSION['cart']->get_content_type() !== 'virtual'){
-    if (zen_not_null($_POST['scid'])){
+    if (isset($_POST['scid']) && zen_not_null($_POST['scid'])){
       list($module, $method) = explode('_', $_POST['scid']);
       $_SESSION['cart_sid'] = $_POST['scid'];
-    }elseif ($_SESSION['cart_sid']){
+    }elseif (isset($_SESSION['cart_sid']) && $_SESSION['cart_sid']){
       list($module, $method) = explode('_', $_SESSION['cart_sid']);
     }else{
       $module="";
@@ -175,11 +176,11 @@ if ($_SESSION['cart']->count_contents() > 0) {
         }
       }
 
-      if($selected_quote[0]['error'] || !zen_not_null($selected_quote[0]['methods'][0]['cost'])){
+      if(isset($selected_quote[0]['error']) && $selected_quote[0]['error'] || !zen_not_null($selected_quote[0]['methods'][0]['cost'])){
 //        $selected_shipping = $shipping_modules->cheapest();
-        $order->info['shipping_method'] = $selected_shipping['title'];
-        $order->info['shipping_cost'] = $selected_shipping['cost'];
-        $order->info['total']+= $selected_shipping['cost'];
+        $order->info['shipping_method'] = isset($selected_shipping['title']) ? $selected_shipping['title'] : '';
+        $order->info['shipping_cost'] = isset($selected_shipping['cost']) ? $selected_shipping['cost'] : 0;
+        $order->info['total']+= isset($selected_shipping['cost']) ? $selected_shipping['cost'] : 0;
       }else{
         $order->info['shipping_method'] = $selected_quote[0]['module'].' ('.$selected_quote[0]['methods'][0]['title'].')';
         $order->info['shipping_cost'] = $selected_quote[0]['methods'][0]['cost'];
@@ -190,9 +191,9 @@ if ($_SESSION['cart']->count_contents() > 0) {
       }
     }else{
 //      $selected_shipping = $shipping_modules->cheapest();
-      $order->info['shipping_method'] = $selected_shipping['title'];
-      $order->info['shipping_cost'] = $selected_shipping['cost'];
-      $order->info['total']+= $selected_shipping['cost'];
+      $order->info['shipping_method'] = isset($selected_shipping['title']) ? $selected_shipping['title'] : '';
+      $order->info['shipping_cost'] = isset($selected_shipping['cost']) ? $selected_shipping['cost'] : 0;
+      $order->info['total']+= isset($selected_shipping['cost']) ? $selected_shipping['cost'] : 0;
     }
   }
   // virtual products need a free shipping
