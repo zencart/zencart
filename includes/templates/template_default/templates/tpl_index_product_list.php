@@ -65,7 +65,7 @@ if (PRODUCT_LIST_CATEGORIES_IMAGE_STATUS == 'true') {
   if (isset($_GET['typefilter']) && $_GET['typefilter'] != '') echo zen_draw_hidden_field('typefilter', $_GET['typefilter']);
 
   // draw manufacturers_id if not already done earlier
-  if (!(isset($get_option_variable) && $get_option_variable == 'manufacturers_id') && isset($_GET['manufacturers_id']) && $_GET['manufacturers_id'] > 0) {
+  if (!(isset($get_option_variable) && $get_option_variable == 'manufacturers_id') && !empty($_GET['manufacturers_id'])) {
     echo zen_draw_hidden_field('manufacturers_id', $_GET['manufacturers_id']);
   }
 
