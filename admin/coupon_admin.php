@@ -8,8 +8,8 @@
  */
 
   require('includes/application_top.php');
-  require_once('includes/template/common/tplHtmlHead.php');
   require_once('includes/template/common/tplHtmlHeadLegacy.php');
+  require_once('includes/template/common/tplHtmlHead.php');
   $currencies = new currencies();
 
   if (isset($_GET['search']) && zen_not_null($_GET['search'])) {

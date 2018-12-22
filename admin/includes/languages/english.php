@@ -195,6 +195,7 @@ define('BOX_ADMIN_ACCESS_LOGS', 'Admin Activity Logs');
 define('IMAGE_RELEASE', 'Redeem ' . TEXT_GV_NAME);
 
 // javascript messages
+define('JS_ERROR_SUBMITTED', 'This form has already been submitted. Please press OK and wait for this process to be completed.');
 define('JS_ERROR', 'Errors have occurred during the processing of your form!\nPlease make the following corrections:\n\n');
 
 define('JS_OPTIONS_VALUE_PRICE', '* The new product attribute needs a price value\n');
@@ -352,6 +353,7 @@ define('IMAGE_REMOVE_SPECIAL','Remove Special Price Info');
 define('IMAGE_REMOVE_FEATURED','Remove Featured Product Info');
 define('IMAGE_INSTALL_SPECIAL', 'Add Special Price Info');
 define('IMAGE_INSTALL_FEATURED', 'Add Featured Product Info');
+define('TEXT_NONEXISTENT_IMAGE', 'Non existent image'); 
 
 define('TEXT_VERSION_CHECK_BUTTON', 'Check for New Version');
 define('TEXT_BUTTON_RESET_ACTIVITY_LOG', 'View Activity Log');

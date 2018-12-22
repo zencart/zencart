@@ -8,8 +8,8 @@
  */
 
   require('includes/application_top.php');
-  require_once('includes/template/common/tplHtmlHead.php');
   require_once('includes/template/common/tplHtmlHeadLegacy.php');
+  require_once('includes/template/common/tplHtmlHead.php');
 
   if (!defined('ENTRY_EMAIL_NEVER_SEND_EMAILS')) define('ENTRY_EMAIL_NEVER_SEND_EMAILS', 'Never (Note: this will prevent ALL emails, including important order-confirmation messages!)');
 

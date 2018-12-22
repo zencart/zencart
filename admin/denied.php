@@ -8,8 +8,8 @@
  */
 
 require('includes/application_top.php');
-require_once('includes/template/common/tplHtmlHead.php');
 require_once('includes/template/common/tplHtmlHeadLegacy.php');
+require_once('includes/template/common/tplHtmlHead.php');
 ?>
 <link rel="stylesheet" type="text/css" href="includes/admin_access.css" />
 </head>

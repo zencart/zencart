@@ -7,8 +7,8 @@
  * @version $Id: drbyte  Modified in v1.6.0 $
  */
   require('includes/application_top.php');
-  require_once('includes/template/common/tplHtmlHead.php');
   require_once('includes/template/common/tplHtmlHeadLegacy.php');
+  require_once('includes/template/common/tplHtmlHead.php');
 
   // troubleshooting/debug of option name/value IDs:
   $show_name_numbers = true;

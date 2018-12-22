@@ -6,7 +6,7 @@
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: modules.php 19287 2011-07-28 15:51:25Z drbyte $
  */
-
+define('HEADING_TITLE', 'Modules');
 define('HEADING_TITLE_MODULES_PAYMENT', 'Payment Modules');
 define('HEADING_TITLE_MODULES_SHIPPING', 'Shipping Modules');
 define('HEADING_TITLE_MODULES_ORDER_TOTAL', 'Order Total Modules');

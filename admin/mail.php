@@ -8,8 +8,8 @@
  */
 
   require('includes/application_top.php');
-  require_once('includes/template/common/tplHtmlHead.php');
   require_once('includes/template/common/tplHtmlHeadLegacy.php');
+  require_once('includes/template/common/tplHtmlHead.php');
 
   //DEBUG:  // these defines will become configuration switches in ADMIN in a future version.
   //DEBUG:  // right now, attachments aren't working right unless only sending HTML messages with NO text-only version supplied.

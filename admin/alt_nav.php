@@ -7,8 +7,8 @@
  * @version $Id: alt_nav.php 19301 2011-07-28 21:50:05Z kuroi $
  */
 require('includes/application_top.php');
-require_once('includes/template/common/tplHtmlHead.php');
 require_once('includes/template/common/tplHtmlHeadLegacy.php');
+require_once('includes/template/common/tplHtmlHead.php');
 ?>
 </head>
 <body class="altnavBody">

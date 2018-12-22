@@ -8,11 +8,11 @@
  */
   //define('MAX_DISPLAY_RESTRICT_ENTRIES', 10);
   require('includes/application_top.php');
-  require_once('includes/template/common/tplHtmlHead.php');
   require_once('includes/template/common/tplHtmlHeadLegacy.php');
+  require_once('includes/template/common/tplHtmlHead.php');
   $restrict_array = array();
-  $restrict_array[] = array('id'=>'Deny', text=>TEXT_PULLDOWN_DENY);
-  $restrict_array[] = array('id'=>'Allow', text=>TEXT_PULLDOWN_ALLOW);
+  $restrict_array[] = array('id'=>'Deny', 'text'=>TEXT_PULLDOWN_DENY);
+  $restrict_array[] = array('id'=>'Allow', 'text'=>TEXT_PULLDOWN_ALLOW);
 
   if ($_POST['cPath_prod'] > 0 and $_POST['manufacturers_id'] > 0) {
     $current_category_id = 0;

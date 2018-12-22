@@ -9,8 +9,8 @@
  */
 
   require('includes/application_top.php');
-  require_once('includes/template/common/tplHtmlHead.php');
   require_once('includes/template/common/tplHtmlHeadLegacy.php');
+  require_once('includes/template/common/tplHtmlHead.php');
 
   $paypal_ipn_sort_order_array = array(array('id' => '0', 'text' => TEXT_SORT_PAYPAL_ID_DESC),
                              array('id' => '1', 'text' => TEXT_SORT_PAYPAL_ID),
