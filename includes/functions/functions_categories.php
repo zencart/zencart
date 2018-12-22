@@ -14,7 +14,7 @@
   function zen_get_path($current_category_id = '') {
     global $cPath_array, $db;
 
-    if (zen_not_null($current_category_id)) {
+    if (zen_not_null($current_category_id) && !empty($cPath_array)) {
       $cp_size = sizeof($cPath_array);
       if ($cp_size == 0) {
         $cPath_new = $current_category_id;
@@ -48,7 +48,11 @@
         }
       }
     } else {
-      $cPath_new = implode('_', $cPath_array);
+      if (!empty($cPath_array)) {
+         $cPath_new = implode('_', $cPath_array);
+      } else {
+         $cPath_new = ''; 
+      }
     }
 
     return 'cPath=' . $cPath_new;
