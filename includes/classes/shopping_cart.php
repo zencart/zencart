@@ -898,6 +898,10 @@ class shoppingCart extends base {
 
           $attribute_weight = $db->Execute($attribute_weight_query);
 
+          if ($attribute_weight->EOF) {
+            continue;
+          }
+
           // adjusted count for free shipping
           if ($product->fields['product_is_always_free_shipping'] != 1) {
             $new_attributes_weight = $attribute_weight->fields['products_attributes_weight'];
@@ -975,11 +979,15 @@ class shoppingCart extends base {
 
         $attribute_price = $db->Execute($attribute_price_query);
 
+        if ($attribute_price->EOF) {
+          continue;
+        }
+
         $new_attributes_price = 0;
         $discount_type_id = '';
         $sale_maker_discount = '';
 
-        if ($attribute_price->fields['product_attribute_is_free'] == '1' and zen_get_products_price_is_free((int)$products_id)) {
+        if ($attribute_price->fields['product_attribute_is_free'] == '1' && zen_get_products_price_is_free((int)$products_id)) {
           // no charge
         } else {
           // + or blank adds
@@ -1076,6 +1084,10 @@ class shoppingCart extends base {
 
         $attribute_price = $db->Execute($attribute_price_query);
 
+        if ($attribute_price->EOF) {
+          continue;
+        }
+
         $new_attributes_price = 0;
         $discount_type_id = '';
         $sale_maker_discount = '';
@@ -1142,6 +1154,10 @@ class shoppingCart extends base {
                                     and options_values_id = '" . (int)$value . "'";
 
         $attribute_weight_info = $db->Execute($attribute_weight_query);
+
+        if ($attribute_weight_info->EOF) {
+          continue;
+        }
 
         // adjusted count for free shipping
         $product = $db->Execute("select products_id, product_is_always_free_shipping
