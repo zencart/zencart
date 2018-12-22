@@ -40,7 +40,7 @@
 
 
 <?php
-if ($options_attributes_image[$i] != '') {
+if (isset($options_attributes_image[$i]) && $options_attributes_image[$i] != '') {
 ?>
 <?php echo $options_attributes_image[$i]; ?>
 <?php

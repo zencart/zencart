@@ -3,10 +3,10 @@
  * authorize.net SIM payment method class
  *
  * @package paymentMethod
- * @copyright Copyright 2003-2016 Zen Cart Development Team
+ * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte  Modified in v1.6.0 $
+ * @version $Id: Drbyte Sun Jan 7 21:30:21 2018 -0500 Modified in v1.5.6 $
  */
 /**
  * authorize.net SIM payment method class
@@ -35,7 +35,7 @@ class authorizenet extends base {
    *
    * @var boolean
    */
-  var $enabled;
+  var $enabled = false;
   /**
    * log file folder
    *
@@ -55,6 +55,11 @@ class authorizenet extends base {
    * @var string the currency enabled in this gateway's merchant account
    */
   private $gateway_currency;
+  /**
+   * What order this module displays in relation to other enabled modules
+   * @var int $sort_order
+   */
+  var $sort_order = 0;
 
 
   /**
@@ -64,8 +69,19 @@ class authorizenet extends base {
     global $order;
 
     $this->code = 'authorizenet';
+    $this->title = MODULE_PAYMENT_AUTHORIZENET_TEXT_CATALOG_TITLE; // Payment module title in Catalog
+    $this->description = MODULE_PAYMENT_AUTHORIZENET_TEXT_DESCRIPTION;
+
     if (IS_ADMIN_FLAG === true) {
       $this->title = MODULE_PAYMENT_AUTHORIZENET_TEXT_ADMIN_TITLE; // Payment module title in Admin
+    }
+
+    $this->sort_order = defined('MODULE_PAYMENT_AUTHORIZENET_SORT_ORDER') ? MODULE_PAYMENT_AUTHORIZENET_SORT_ORDER : null;
+    $this->enabled = defined('MODULE_PAYMENT_AUTHORIZENET_STATUS') && MODULE_PAYMENT_AUTHORIZENET_STATUS == 'True';
+
+    if (null === $this->sort_order) return false;
+
+    if (IS_ADMIN_FLAG === true) {
       if (MODULE_PAYMENT_AUTHORIZENET_STATUS == 'True' && (MODULE_PAYMENT_AUTHORIZENET_LOGIN == 'testing' || MODULE_PAYMENT_AUTHORIZENET_TXNKEY == 'Test' || MODULE_PAYMENT_AUTHORIZENET_MD5HASH == '*Set A Hash Value at AuthNet Admin*')) {
         $this->title .=  '<span class="alert"> (Not Configured)</span>';
       } elseif (MODULE_PAYMENT_AUTHORIZENET_TESTMODE == 'Test') {
@@ -73,18 +89,14 @@ class authorizenet extends base {
       } elseif (MODULE_PAYMENT_AUTHORIZENET_TESTMODE == 'Sandbox') {
         $this->title .= '<span class="alert"> (in Sandbox Developer mode)</span>';
       }
-    } else {
-      $this->title = MODULE_PAYMENT_AUTHORIZENET_TEXT_CATALOG_TITLE; // Payment module title in Catalog
     }
-    $this->description = MODULE_PAYMENT_AUTHORIZENET_TEXT_DESCRIPTION;
-    $this->enabled = ((MODULE_PAYMENT_AUTHORIZENET_STATUS == 'True') ? true : false);
-    $this->sort_order = MODULE_PAYMENT_AUTHORIZENET_SORT_ORDER;
 
-    if ((int)MODULE_PAYMENT_AUTHORIZENET_ORDER_STATUS_ID > 0) {
+    if (defined('MODULE_PAYMENT_AUTHORIZENET_ORDER_STATUS_ID') && (int)MODULE_PAYMENT_AUTHORIZENET_ORDER_STATUS_ID > 0) {
       $this->order_status = MODULE_PAYMENT_AUTHORIZENET_ORDER_STATUS_ID;
+
+      // Reset order status to pending if capture pending:
+      if (MODULE_PAYMENT_AUTHORIZENET_AUTHORIZATION_TYPE == 'Authorize') $this->order_status = 1;
     }
-    // Reset order status to pending if capture pending:
-    if (MODULE_PAYMENT_AUTHORIZENET_AUTHORIZATION_TYPE == 'Authorize') $this->order_status = 1;
 
     if (is_object($order)) $this->update_status();
 
@@ -93,8 +105,8 @@ class authorizenet extends base {
 
 //     $this->form_action_url = 'https://www.eprocessingnetwork.com/cgi-bin/an/order.pl';
 
-    if (AUTHORIZENET_DEVELOPER_MODE == 'echo' || MODULE_PAYMENT_AUTHORIZENET_DEBUGGING == 'echo') $this->form_action_url = 'https://developer.authorize.net/param_dump.asp';
-    if (AUTHORIZENET_DEVELOPER_MODE == 'certify') $this->form_action_url = 'https://certification.authorize.net/gateway/transact.dll';
+    if ((defined('AUTHORIZNET_DEVELOPER_MODE') && AUTHORIZENET_DEVELOPER_MODE == 'echo') || MODULE_PAYMENT_AUTHORIZENET_DEBUGGING == 'echo') $this->form_action_url = 'https://developer.authorize.net/param_dump.asp';
+    if (defined('AUTHORIZNET_DEVELOPER_MODE') && AUTHORIZENET_DEVELOPER_MODE == 'certify') $this->form_action_url = 'https://certification.authorize.net/gateway/transact.dll';
 
     $this->gateway_mode = MODULE_PAYMENT_AUTHORIZENET_GATEWAY_MODE;
 
@@ -265,7 +277,7 @@ class authorizenet extends base {
                          'module' => $this->title,
                          'fields' => array(array('title' => MODULE_PAYMENT_AUTHORIZENET_TEXT_CREDIT_CARD_OWNER,
                                                  'field' => zen_draw_input_field('authorizenet_cc_owner', $order->billing['firstname'] . ' ' . $order->billing['lastname'], 'id="'.$this->code.'-cc-owner"' . $onFocus . ' autocomplete="off"'),
-                                               'tag' => $this->code.'-cc-owner'),
+                                                 'tag' => $this->code.'-cc-owner'),
                                          array('title' => MODULE_PAYMENT_AUTHORIZENET_TEXT_CREDIT_CARD_NUMBER,
                                                'field' => zen_draw_input_field('authorizenet_cc_number', '', 'id="'.$this->code.'-cc-number"' . $onFocus . ' autocomplete="off"','number'),
                                                'tag' => $this->code.'-cc-number'),
@@ -349,7 +361,7 @@ class authorizenet extends base {
     $sequence = rand(1, 1000);
     $submit_data_core = array(
       'x_login' => MODULE_PAYMENT_AUTHORIZENET_LOGIN,
-      'x_amount' => number_format($order->info['total'], 2),
+      'x_amount' => round($order->info['total'], 2),
       'x_currency_code' => $_SESSION['currency'],
       'x_method' => ((MODULE_PAYMENT_AUTHORIZENET_METHOD == 'Credit Card') ? 'CC' : 'ECHECK'),
       'x_type' => MODULE_PAYMENT_AUTHORIZENET_AUTHORIZATION_TYPE == 'Authorize' ? 'AUTH_ONLY': 'AUTH_CAPTURE',
@@ -388,7 +400,7 @@ class authorizenet extends base {
     // force conversion to supported currencies: USD, GBP, CAD, EUR, AUD, NZD
     if ($order->info['currency'] != $this->gateway_currency) {
       global $currencies;
-      $submit_data_core['x_amount'] = number_format($order->info['total'] * $currencies->get_value($this->gateway_currency), 2);
+      $submit_data_core['x_amount'] = round($order->info['total'] * $currencies->get_value($this->gateway_currency), 2);
       $submit_data_core['x_currency_code'] = $this->gateway_currency;
       $submit_data_core['x_description'] .= ' (Converted from: ' . number_format($order->info['total'] * $order->info['currency_value'], 2) . ' ' . $order->info['currency'] . ')';
     }
@@ -466,7 +478,7 @@ class authorizenet extends base {
     unset($this->authorize['btn_submit_x'], $this->authorize['btn_submit_y']);
     $this->authorize['HashValidationValue'] = $this->calc_md5_response($this->authorize['x_trans_id'], $this->authorize['x_amount']);
     $this->authorize['HashMatchStatus'] = ($this->authorize['x_MD5_Hash'] == $this->authorize['HashValidationValue']) ? 'PASS' : 'FAIL';
-    
+
     $this->notify('NOTIFY_PAYMENT_AUTHNETSIM_POSTSUBMIT_HOOK', $this->authorize);
     $this->_debugActions($this->authorize, 'Response-Data', '', zen_session_id());
 
@@ -655,9 +667,9 @@ class authorizenet extends base {
    */
   function tableCheckup() {
     global $db, $sniffer;
-    $fieldOkay1 = (method_exists($sniffer, 'field_type')) ? $sniffer->field_type(TABLE_AUTHORIZENET, 'transaction_id', 'varchar(32)', true) : -1;
+    $fieldOkay1 = (method_exists($sniffer, 'field_type')) ? $sniffer->field_type(TABLE_AUTHORIZENET, 'transaction_id', 'varchar(64)', true) : -1;
     if ($fieldOkay1 !== true) {
-      $db->Execute("ALTER TABLE " . TABLE_AUTHORIZENET . " CHANGE transaction_id transaction_id varchar(32) default NULL");
+      $db->Execute("ALTER TABLE " . TABLE_AUTHORIZENET . " CHANGE transaction_id transaction_id varchar(64) default NULL");
     }
   }
 }

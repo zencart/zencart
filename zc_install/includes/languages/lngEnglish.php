@@ -263,7 +263,7 @@ define('TEXT_HELP_CONTENT_DBNAME', "What is the name of the database used to hol
 define('TEXT_HELP_TITLE_DEMODATA', TEXT_DATABASE_SETUP_LOAD_DEMO);
 define('TEXT_HELP_CONTENT_DEMODATA', "If you choose to load Demo Data, we will install a base set of products and categories, with sales and specials and attributes and more. These are useful for you to play around and see how various combinations can be set up and how they can look on your storefront.<br><br>You can certainly delete the demo products (by hand) later, or once you've toyed with the samples, you can re-run this install and choose to not install the demo data, and thus have a fully clean site for setting up your own new store.");
 define('TEXT_HELP_TITLE_DBCHARSET', 'Database Character Set');
-define('TEXT_HELP_CONTENT_DBCHARSET', "Most stores will use UTF8MB4 or UTF8.<br>If you don't have a reason to use something else, use UTF8MB4.");
+define('TEXT_HELP_CONTENT_DBCHARSET', "Most stores will use utf8mb4 or utf8.<br>If you don't have a reason to use something else, use utf8mb4.");
 define('TEXT_HELP_TITLE_DBPREFIX', 'Database Tablename Prefix');
 define('TEXT_HELP_CONTENT_DBPREFIX', "What is the prefix you would like used for database tables?  Example: <strong>zen_</strong><br><strong class='alert'>TIP: Leave empty if no prefix is needed.</strong><br />You can use prefixes to allow more than one store to share the same database.");
 define('TEXT_HELP_TITLE_SQLCACHEMETHOD', 'SQL Cache Method');

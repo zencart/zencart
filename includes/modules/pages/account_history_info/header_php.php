@@ -42,13 +42,14 @@ $statuses_query = "SELECT os.orders_status_name, osh.date_added, osh.comments
 $statuses_query = $db->bindVars($statuses_query, ':ordersID', $_GET['order_id'], 'integer');
 $statuses_query = $db->bindVars($statuses_query, ':languagesID', $_SESSION['languages_id'], 'integer');
 $statuses = $db->Execute($statuses_query);
+$statusArray = array();
 
 while (!$statuses->EOF) {
-
-  $statusArray[] = array('date_added'=>$statuses->fields['date_added'],
-  'orders_status_name'=>$statuses->fields['orders_status_name'],
-  'comments'=>$statuses->fields['comments']);
-
+  $statusArray[] = array(
+      'date_added'=>$statuses->fields['date_added'],
+      'orders_status_name'=>$statuses->fields['orders_status_name'],
+      'comments'=>$statuses->fields['comments'],
+      );
   $statuses->MoveNext();
 }
 

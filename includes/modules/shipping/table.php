@@ -48,7 +48,9 @@ class table extends base {
     $this->code = 'table';
     $this->title = MODULE_SHIPPING_TABLE_TEXT_TITLE;
     $this->description = MODULE_SHIPPING_TABLE_TEXT_DESCRIPTION;
-    $this->sort_order = MODULE_SHIPPING_TABLE_SORT_ORDER;
+    $this->sort_order = defined('MODULE_SHIPPING_TABLE_SORT_ORDER') ? MODULE_SHIPPING_TABLE_SORT_ORDER : null;
+    if (null === $this->sort_order) return false;
+
     $this->icon = '';
     $this->tax_class = MODULE_SHIPPING_TABLE_TAX_CLASS;
     $this->tax_basis = MODULE_SHIPPING_TABLE_TAX_BASIS;

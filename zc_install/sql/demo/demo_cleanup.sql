@@ -9,6 +9,7 @@ TRUNCATE TABLE categories_description;
 TRUNCATE TABLE customers;
 TRUNCATE TABLE customers_info; 
 TRUNCATE TABLE ezpages; 
+TRUNCATE TABLE ezpages_content; 
 TRUNCATE TABLE featured; 
 TRUNCATE TABLE group_pricing; 
 TRUNCATE TABLE manufacturers; 

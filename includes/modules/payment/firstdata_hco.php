@@ -3,10 +3,10 @@
  * First Data Hosted Checkout Payment Pages Module
  *
  * @package paymentMethod
- * @copyright Copyright 2003-2016 Zen Cart Development Team
+ * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: DrByte  Sat Feb 27 11:58:17 2016 -0500 New in v1.5.5 $
+ * @version $Id: mc12345678 Thu Apr 26 00:20:48 2018 -0400 Modified in v1.5.6 $
  */
 /**
  * First Data Hosted Checkout Payment Pages Module
@@ -21,7 +21,7 @@ class firstdata_hco extends base {
   /**
    * $moduleVersion is the plugin version number
    */
-  var $moduleVersion = '1.00';
+  var $moduleVersion = '1.04';
 
   /**
    * $title is the displayed name for this payment method
@@ -76,13 +76,6 @@ class firstdata_hco extends base {
     if (IS_ADMIN_FLAG === true) {
       $this->description = MODULE_PAYMENT_FIRSTDATA_PAYMENTPAGES_TEXT_DESCRIPTION;
       $this->title = MODULE_PAYMENT_FIRSTDATA_PAYMENTPAGES_TEXT_ADMIN_TITLE; // Payment module title in Admin
-      if (MODULE_PAYMENT_FIRSTDATA_PAYMENTPAGES_STATUS == 'True' && (MODULE_PAYMENT_FIRSTDATA_PAYMENTPAGES_LOGIN == 'testing' || MODULE_PAYMENT_FIRSTDATA_PAYMENTPAGES_TXNKEY == 'Test' || MODULE_PAYMENT_FIRSTDATA_PAYMENTPAGES_RESPONSEKEY == '*Enter the Response Key here*')) {
-        $this->title .=  '<span class="alert"> (Not Configured)</span>';
-      } elseif (MODULE_PAYMENT_FIRSTDATA_PAYMENTPAGES_TESTMODE == 'Test') {
-        $this->title .= '<span class="alert"> (in Testing mode)</span>';
-      } elseif (MODULE_PAYMENT_FIRSTDATA_PAYMENTPAGES_TESTMODE == 'Sandbox') {
-        $this->title .= '<span class="alert"> (in Sandbox Developer mode)</span>';
-      }
 
       if (defined('MODULE_PAYMENT_FIRSTDATA_PAYMENTPAGES_STATUS')) {
         $new_version_details = plugin_version_check_for_updates(2051, $this->moduleVersion);
@@ -92,24 +85,36 @@ class firstdata_hco extends base {
       }
     }
 
-    $this->enabled = (MODULE_PAYMENT_FIRSTDATA_PAYMENTPAGES_STATUS == 'True');
-    $this->sort_order = MODULE_PAYMENT_FIRSTDATA_PAYMENTPAGES_SORT_ORDER;
+    $this->enabled = (defined('MODULE_PAYMENT_FIRSTDATA_PAYMENTPAGES_STATUS') && MODULE_PAYMENT_FIRSTDATA_PAYMENTPAGES_STATUS == 'True');
+    $this->sort_order = defined('MODULE_PAYMENT_FIRSTDATA_PAYMENTPAGES_SORT_ORDER') ? MODULE_PAYMENT_FIRSTDATA_PAYMENTPAGES_SORT_ORDER : null;
 
-    if ((int)MODULE_PAYMENT_FIRSTDATA_PAYMENTPAGES_ORDER_STATUS_ID > 0) {
+    if (null === $this->sort_order) return false;
+
+    if (MODULE_PAYMENT_FIRSTDATA_PAYMENTPAGES_STATUS == 'True' && (MODULE_PAYMENT_FIRSTDATA_PAYMENTPAGES_PAGEID == 'testing' || MODULE_PAYMENT_FIRSTDATA_PAYMENTPAGES_TXNKEY == 'Test' || MODULE_PAYMENT_FIRSTDATA_PAYMENTPAGES_RESPONSEKEY == '*Enter the Response Key here*')) {
+      $this->title .=  '<span class="alert"> (Not Configured)</span>';
+    } elseif (MODULE_PAYMENT_FIRSTDATA_PAYMENTPAGES_TESTMODE == 'Test') {
+      $this->title .= '<span class="alert"> (in Testing mode)</span>';
+    } elseif (MODULE_PAYMENT_FIRSTDATA_PAYMENTPAGES_TESTMODE == 'Sandbox') {
+      $this->title .= '<span class="alert"> (in Sandbox Developer mode)</span>';
+    }
+
+    $this->form_action_url = 'https://checkout.globalgatewaye4.firstdata.com/payment';
+    if (MODULE_PAYMENT_FIRSTDATA_PAYMENTPAGES_TESTMODE == 'Sandbox') $this->form_action_url = 'https://demo.globalgatewaye4.firstdata.com/payment';
+
+    // set the currency for the gateway (others will be converted to this one before submission)
+    $this->gateway_currency = MODULE_PAYMENT_FIRSTDATA_PAYMENTPAGES_CURRENCY;
+
+
+    if (defined('MODULE_PAYMENT_FIRSTDATA_PAYMENTPAGES_ORDER_STATUS_ID') && (int)MODULE_PAYMENT_FIRSTDATA_PAYMENTPAGES_ORDER_STATUS_ID > 0) {
       $this->order_status = MODULE_PAYMENT_FIRSTDATA_PAYMENTPAGES_ORDER_STATUS_ID;
     }
+
     // Reset order status to pending if capture pending:
     if (MODULE_PAYMENT_FIRSTDATA_PAYMENTPAGES_AUTHORIZATION_TYPE == 'Authorize') $this->order_status = 1;
 
     if (is_object($order)) $this->update_status();
 
-    $this->form_action_url = 'https://checkout.globalgatewaye4.firstdata.com/payment';
-    if (MODULE_PAYMENT_FIRSTDATA_PAYMENTPAGES_TESTMODE == 'Sandbox') $this->form_action_url = 'https://demo.globalgatewaye4.firstdata.com/payment';
-
     $this->_logDir = defined('DIR_FS_LOGS') ? DIR_FS_LOGS : DIR_FS_SQL_CACHE;
-
-    // set the currency for the gateway (others will be converted to this one before submission)
-    $this->gateway_currency = MODULE_PAYMENT_FIRSTDATA_PAYMENTPAGES_CURRENCY;
   }
 
   /**
@@ -195,11 +200,10 @@ class firstdata_hco extends base {
     $submit_data_core = array(
       'x_login' => html_entity_decode(MODULE_PAYMENT_FIRSTDATA_PAYMENTPAGES_PAGEID),
       'x_user3' => 'EZN001', // First Data mode
-      'x_amount' => number_format($order->info['total'], 2),
+      'x_amount' => round($order->info['total'], 2),
       'x_currency_code' => $_SESSION['currency'],
       'x_type' => MODULE_PAYMENT_FIRSTDATA_PAYMENTPAGES_AUTHORIZATION_TYPE == 'Authorize' ? 'AUTH_ONLY': 'AUTH_CAPTURE',
       'x_email_customer' => ((MODULE_PAYMENT_FIRSTDATA_PAYMENTPAGES_EMAIL_CUSTOMER == 'True') ? 'TRUE': 'FALSE'),
-      'enable_level3_processing' => 'TRUE',
       'x_cust_id' => $_SESSION['customer_id'],
       'x_company' => $order->billing['company'],
       'x_first_name' => $order->billing['firstname'],
@@ -223,8 +227,14 @@ class firstdata_hco extends base {
       'x_customer_ip' => zen_get_ip_address(),
       'x_description' => 'Website Purchase from ' . str_replace('"',"'", STORE_NAME),
       'x_invoice_num' => $next_order_id,
+      'x_po_num' => $next_order_id, // customer reference number; in this case we pass the proposed order ID value.
 //       'x_method' => 'CC', // if not passed, then the payment types can be configured in the PaymentPage including enabling PayPal and other features.
+//       'x_ga_tracking_id' => '', // Enter Google Analytics Tracking ID if you want this payment page included in your funnel
     );
+
+    if (MODULE_PAYMENT_FIRSTDATA_PAYMENTPAGES_ENABLE_LEVEL3 == 'Yes') {
+      $submit_data_core['enable_level3_processing'] = 'TRUE';
+    }
 
     // lookup shipping and discount amounts
     if (sizeof($order_totals)) {
@@ -248,12 +258,12 @@ class firstdata_hco extends base {
     if ($order->info['currency'] != $this->gateway_currency) {
       global $currencies;
       $exchange_factor = $currencies->get_value($this->gateway_currency);
-      $submit_data_core['x_amount'] = number_format($order->info['total'] * $exchange_factor, 2);
-      if (isset($submit_data_core['x_freight'])) $submit_data_core['x_freight'] = number_format($submit_data_core['x_freight'] * $exchange_factor, 2);
-      if (isset($submit_data_core['x_tax'])) $submit_data_core['x_tax'] = number_format($submit_data_core['x_tax'] * $exchange_factor, 2);
-      if (isset($submit_data_core['discount_amount'])) $submit_data_core['discount_amount'] = number_format($submit_data_core['discount_amount'] * $exchange_factor, 2);
+      $submit_data_core['x_amount'] = round($order->info['total'] * $exchange_factor, 2);
+      if (isset($submit_data_core['x_freight'])) $submit_data_core['x_freight'] = round($submit_data_core['x_freight'] * $exchange_factor, 2);
+      if (isset($submit_data_core['x_tax'])) $submit_data_core['x_tax'] = round($submit_data_core['x_tax'] * $exchange_factor, 2);
+      if (isset($submit_data_core['discount_amount'])) $submit_data_core['discount_amount'] = round($submit_data_core['discount_amount'] * $exchange_factor, 2);
       $submit_data_core['x_currency_code'] = $this->gateway_currency;
-      $submit_data_core['x_description'] .= ' (Converted from: ' . number_format($order->info['total'] * $order->info['currency_value'], 2) . ' ' . $order->info['currency'] . ')';
+      $submit_data_core['x_description'] .= ' (Converted from: ' . round($order->info['total'] * $order->info['currency_value'], 2) . ' ' . $order->info['currency'] . ')';
     }
 
 
@@ -262,20 +272,20 @@ class firstdata_hco extends base {
 
 
     // Add line-item data to transaction
+    $items = '';
+    $item_log = array();
     if (sizeof($order->products) < 100) {
-      $items = '';
       $delim = '<|>';
       $product_code = $commodity_code = ''; // not submitted
-      $item_log = array();
-      for ($i=0; $i<sizeof($order->products); $i++) {
+      for ($i=0, $n=sizeof($order->products); $i<$n; $i++) {
         $p = $order->products[$i];
         // Item ID<|>Item Title<|>Item Description<|>Quantity<|>Unit Price<|>Taxable (Y or N)<|>Product Code<|>Commodity Code<|>Unit of Measure<|>Tax Rate<|>Tax Type<|>Tax Amount<|>Discount Indicator<|>Discount Amount<|>Line Item Total
-        $line = $p['model'] . $delim . $p['name'] . $delim . $p['name'] . $delim . $p['qty'] . $delim . number_format($p['final_price'] * $exchange_factor,2) . $delim;
+        $line = $p['model'] . $delim . $p['name'] . $delim . $p['name'] . $delim . $p['qty'] . $delim . round($p['final_price'] * $exchange_factor,2) . $delim;
         $line .= (is_array($p['tax_groups']) && sizeof($p['tax_groups']) ? 'Y' : 'N') . $delim;
         $line .= $product_code . $delim . $commodity_code . $delim . '' . $delim;
-        $line .= $p['tax'] . $delim . '' . number_format(zen_calculate_tax($p['final_price'] * $exchange_factor, $p['tax']),2) . $delim;
+        $line .= $p['tax'] . $delim . '' . round(zen_calculate_tax($p['final_price'] * $exchange_factor, $p['tax']),2) . $delim;
         $line .= '' . $delim . '' . $delim;
-        $line .= number_format(zen_add_tax($p['final_price'] * $exchange_factor, $p['tax']) * $p['qty'],2);
+        $line .= round(zen_add_tax($p['final_price'] * $exchange_factor, $p['tax']) * $p['qty'],2);
 
         $items .= zen_draw_hidden_field('x_line_item', $line);
         $item_log[] = $line;
@@ -333,7 +343,7 @@ class firstdata_hco extends base {
   function before_process() {
     global $messageStack, $order;
     $this->authorize = $_POST;
-    $this->authorize['HashValidationValue'] = $this->calc_md5_response($this->authorize['x_trans_id'], $this->authorize['x_amount']);
+    $this->authorize['HashValidationValue'] = $this->calc_md5_response($this->authorize['x_trans_id'], number_format($this->authorize['x_amount'], 2, '.', ''));
     $this->authorize['HashMatchStatus'] = ($this->authorize['x_MD5_Hash'] == $this->authorize['HashValidationValue']) ? 'PASS' : 'FAIL';
 
     $this->notify('MODULE_PAYMENT_FIRSTDATA_PAYMENTPAGES_POSTSUBMIT_HOOK', $this->authorize);
@@ -379,7 +389,7 @@ class firstdata_hco extends base {
     $sql = "insert into " . TABLE_ORDERS_STATUS_HISTORY . " (comments, orders_id, orders_status_id, customer_notified, date_added) values (:orderComments, :orderID, :orderStatus, -1, now() )";
     $currency_comment = '';
     if ($order->info['currency'] != $this->gateway_currency) {
-      $currency_comment = ' (' . number_format($order->info['total'] * $currencies->get_value($this->gateway_currency), 2) . ' ' . $this->gateway_currency . ')';
+      $currency_comment = ' (' . round($order->info['total'] * $currencies->get_value($this->gateway_currency), 2) . ' ' . $this->gateway_currency . ')';
     }
     $sql = $db->bindVars($sql, ':orderComments', 'Credit Card payment.  AUTH: ' . $this->auth_code . ' TransID: ' . $this->transaction_id . ' ' . $currency_comment, 'string');
     $sql = $db->bindVars($sql, ':orderID', $insert_id, 'integer');
@@ -394,6 +404,10 @@ class firstdata_hco extends base {
    */
   function check() {
     global $db;
+    // install newer switches, if relevant
+    if (defined('MODULE_PAYMENT_FIRSTDATA_PAYMENTPAGES_STATUS') && !defined('MODULE_PAYMENT_FIRSTDATA_PAYMENTPAGES_ENABLE_LEVEL3')) {
+            $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Enable Level 3 Support', 'MODULE_PAYMENT_FIRSTDATA_PAYMENTPAGES_ENABLE_LEVEL3', 'No', 'Should transactions be sent with Level 3 Processing enabled? (This is usually only to support Government cards) (You must enable Level 3 processing in your account Terminal and Hosted Page settings, else this will result in errors and reversals.)', '6', '0', 'zen_cfg_select_option(array(\'Yes\', \'No\'), ', now())");
+    }
     if (!isset($this->_check)) {
       $check_query = $db->Execute("select configuration_value from " . TABLE_CONFIGURATION . " where configuration_key = 'MODULE_PAYMENT_FIRSTDATA_PAYMENTPAGES_STATUS'");
       $this->_check = $check_query->RecordCount();
@@ -424,6 +438,7 @@ class firstdata_hco extends base {
     $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Debug Mode', 'MODULE_PAYMENT_FIRSTDATA_PAYMENTPAGES_DEBUGGING', 'Alerts Only', 'Would you like to enable debug mode?  A  detailed log of failed transactions may be emailed to the store owner.', '6', '0', 'zen_cfg_select_option(array(\'Off\', \'Alerts Only\', \'Log File\', \'Log and Email\'), ', now())");
     $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Currency Supported', 'MODULE_PAYMENT_FIRSTDATA_PAYMENTPAGES_CURRENCY', 'USD', 'Which currency is your First Data Payment Page Account configured to accept?<br>(Purchases in any other currency will be pre-converted to this currency before submission using the exchange rates in your store admin.)', '6', '0', 'zen_cfg_select_option(array(\'USD\', \'CAD\', \'GBP\', \'EUR\', \'AUD\', \'NZD\'), ', now())");
     $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('HMAC Calculation', 'MODULE_PAYMENT_FIRSTDATA_PAYMENTPAGES_HMAC_MODE', 'MD5', 'The HMAC Encryption Type (from Payment Page Settings, under 9:Security)', '6', '0', 'zen_cfg_select_option(array(\'MD5\'), ', now())");
+    $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Enable Level 3 Support', 'MODULE_PAYMENT_FIRSTDATA_PAYMENTPAGES_ENABLE_LEVEL3', 'No', 'Should transactions be sent with Level 3 Processing enabled? (This is usually only to support Government cards) (You must enable Level 3 processing in your account Terminal and Hosted Page settings, else this will result in errors and reversals.)', '6', '0', 'zen_cfg_select_option(array(\'Yes\', \'No\'), ', now())");
   }
   /**
    * Remove the module and all its settings
@@ -450,14 +465,15 @@ class firstdata_hco extends base {
             'MODULE_PAYMENT_FIRSTDATA_PAYMENTPAGES_CURRENCY',
             'MODULE_PAYMENT_FIRSTDATA_PAYMENTPAGES_AUTHORIZATION_TYPE',
             'MODULE_PAYMENT_FIRSTDATA_PAYMENTPAGES_EMAIL_CUSTOMER',
+            'MODULE_PAYMENT_FIRSTDATA_PAYMENTPAGES_ENABLE_LEVEL3',
             'MODULE_PAYMENT_FIRSTDATA_PAYMENTPAGES_HMAC_MODE',
             'MODULE_PAYMENT_FIRSTDATA_PAYMENTPAGES_DEBUGGING');
   }
 
   protected function hmacAuthorizationToken($amount, $currency)
   {
-    $nonce = strval(hexdec(bin2hex(openssl_random_pseudo_bytes(4, $cstrong))));
-    $timestamp = strval(time()); //time stamp as a string
+    $nonce = (string)hexdec(bin2hex(openssl_random_pseudo_bytes(4, $cstrong)));
+    $timestamp = (string)time(); //time stamp as a string
     $data = html_entity_decode(MODULE_PAYMENT_FIRSTDATA_PAYMENTPAGES_PAGEID) . "^" . $nonce . "^" . $timestamp . "^" . $amount . "^" . $currency;
     $hashAlgorithm = "md5"; // According to First Data they recommend MD5 here
     $hmac = hash_hmac($hashAlgorithm, $data, MODULE_PAYMENT_FIRSTDATA_PAYMENTPAGES_TXNKEY, false); // HMAC Hash in hex
@@ -512,42 +528,48 @@ class firstdata_hco extends base {
 
 // for backward compatibility with older ZC versions before v152 which didn't have this function:
 if (!function_exists('plugin_version_check_for_updates')) {
-  function plugin_version_check_for_updates($plugin_file_id = 0, $version_string_to_compare = '')
+  function plugin_version_check_for_updates($plugin_file_id = 0, $version_string_to_compare = '', $strict_zc_version_compare = false)
   {
-    if ($plugin_file_id == 0) return FALSE;
-    $new_version_available = FALSE;
-    $lookup_index = 0;
+    if ($plugin_file_id == 0) return false;
+    $new_version_available = false;
+    $lookup_index = $errno = 0;
+    $response = $error = '';
     $url1 = 'https://plugins.zen-cart.com/versioncheck/'.(int)$plugin_file_id;
     $url2 = 'https://www.zen-cart.com/versioncheck/'.(int)$plugin_file_id;
 
-    $ch = curl_init();
-    curl_setopt($ch, CURLOPT_URL,$url1);
-    curl_setopt($ch, CURLOPT_VERBOSE, 0);
-    curl_setopt($ch, CURLOPT_HEADER, false);
-    curl_setopt($ch, CURLOPT_TIMEOUT, 9);
-    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 9);
-    curl_setopt($ch, CURLOPT_USERAGENT, 'Plugin Version Check [' . (int)$plugin_file_id . '] ' . HTTP_SERVER);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    $response = curl_exec($ch);
-    $error = curl_error($ch);
-    $errno = curl_errno($ch);
+    if (function_exists('curl_init')) {
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL,$url1);
+        curl_setopt($ch, CURLOPT_VERBOSE, 0);
+        curl_setopt($ch, CURLOPT_HEADER, false);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 9);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 9);
+        curl_setopt($ch, CURLOPT_USERAGENT, 'Plugin Version Check [' . (int)$plugin_file_id . '] ' . HTTP_SERVER);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        $response = curl_exec($ch);
+        $error = curl_error($ch);
+        $errno = curl_errno($ch);
 
-    if ($error > 0) {
-      trigger_error('CURL error checking plugin versions: ' . $errno . ':' . $error . "\nTrying http instead.");
-      curl_setopt($ch, CURLOPT_URL, str_replace('tps:', 'tp:', $url1));
-      $response = curl_exec($ch);
-      $error = curl_error($ch);
-      $errno = curl_errno($ch);
+        if ($errno > 0) {
+          trigger_error('CURL error checking plugin versions: ' . $errno . ':' . $error . "\nTrying http instead.");
+          curl_setopt($ch, CURLOPT_URL, str_replace('tps:', 'tp:', $url1));
+          $response = curl_exec($ch);
+          $error = curl_error($ch);
+          $errno = curl_errno($ch);
+        }
+        if ($errno > 0) {
+          trigger_error('CURL error checking plugin versions: ' . $errno . ':' . $error . "\nTrying www instead.");
+          curl_setopt($ch, CURLOPT_URL, str_replace('tps:', 'tp:', $url2));
+          $response = curl_exec($ch);
+          $error = curl_error($ch);
+          $errno = curl_errno($ch);
+        }
+        curl_close($ch);
+    } else {
+        $errno = 9999;
+        $error = 'curl_init not found in PHP';
     }
-    if ($error > 0) {
-      trigger_error('CURL error checking plugin versions: ' . $errno . ':' . $error . "\nTrying www instead.");
-      curl_setopt($ch, CURLOPT_URL, str_replace('tps:', 'tp:', $url2));
-      $response = curl_exec($ch);
-      $error = curl_error($ch);
-      $errno = curl_errno($ch);
-    }
-    curl_close($ch);
-    if ($error > 0 || $response == '') {
+    if ($errno > 0 || $response == '') {
       trigger_error('CURL error checking plugin versions: ' . $errno . ':' . $error . "\nTrying file_get_contents() instead.");
       $ctx = stream_context_create(array('http' => array('timeout' => 5)));
       $response = file_get_contents($url1, null, $ctx);
@@ -564,9 +586,11 @@ if (!function_exists('plugin_version_check_for_updates')) {
     $data = json_decode($response, true);
     if (!$data || !is_array($data)) return false;
     // compare versions
-    if (strcmp($data[$lookup_index]['latest_plugin_version'], $version_string_to_compare) > 0) $new_version_available = TRUE;
+    if (strcmp($data[$lookup_index]['latest_plugin_version'], $version_string_to_compare) > 0) $new_version_available = true;
     // check whether present ZC version is compatible with the latest available plugin version
-    if (!in_array('v'. PROJECT_VERSION_MAJOR . '.' . PROJECT_VERSION_MINOR, $data[$lookup_index]['zcversions'])) $new_version_available = FALSE;
-    return ($new_version_available) ? $data[$lookup_index] : FALSE;
+    $zc_version = PROJECT_VERSION_MAJOR . '.' . preg_replace('/[^0-9.]/', '', PROJECT_VERSION_MINOR);
+    if ($strict_zc_version_compare) $zc_version = PROJECT_VERSION_MAJOR . '.' . PROJECT_VERSION_MINOR;
+    if (!in_array('v'. $zc_version, $data[$lookup_index]['zcversions'])) $new_version_available = false;
+    return ($new_version_available) ? $data[$lookup_index] : false;
   }
 }

@@ -11,7 +11,7 @@
 ?>
 <div class="centerColumn" id="timeoutDefault">
 <?php
-    if ($_SESSION['customer_id']) {
+    if (!empty($_SESSION['customer_id'])) {
 ?>
 <h1 id="timeoutDefaultHeading"><?php echo HEADING_TITLE_LOGGED_IN; ?></h1>
 <div id="timeoutDefaultContent" class="content"><?php echo TEXT_INFORMATION_LOGGED_IN; ?></div>

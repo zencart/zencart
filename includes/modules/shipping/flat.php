@@ -1,7 +1,7 @@
 <?php
 /**
  * @package shippingMethod
- * @copyright Copyright 2003-2016 Zen Cart Development Team
+ * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: flat.php  ajeh  Modified in v1.6.0 $
@@ -48,8 +48,10 @@ class flat extends base {
     $this->code = 'flat';
     $this->title = MODULE_SHIPPING_FLAT_TEXT_TITLE;
     $this->description = MODULE_SHIPPING_FLAT_TEXT_DESCRIPTION;
-    $this->sort_order = MODULE_SHIPPING_FLAT_SORT_ORDER;
-    $this->icon = ''; // add image filename here; must be uploaded to the /images/ subdirectory
+      $this->sort_order = defined('MODULE_SHIPPING_FLAT_SORT_ORDER') ? MODULE_SHIPPING_FLAT_SORT_ORDER : null;
+      if (null === $this->sort_order) return false;
+
+      $this->icon = '';
     $this->tax_class = MODULE_SHIPPING_FLAT_TAX_CLASS;
     $this->tax_basis = MODULE_SHIPPING_FLAT_TAX_BASIS;
     $this->enabled = (MODULE_SHIPPING_FLAT_STATUS == 'True') ? true : false;

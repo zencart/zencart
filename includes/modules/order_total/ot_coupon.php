@@ -22,7 +22,7 @@ class ot_coupon {
   /**
    * Output used on checkout pages
    *
-   * @var unknown_type
+   * @var string
    */
   var $output;
   /**
@@ -36,7 +36,9 @@ class ot_coupon {
     $this->title = MODULE_ORDER_TOTAL_COUPON_TITLE;
     $this->description = MODULE_ORDER_TOTAL_COUPON_DESCRIPTION;
     $this->user_prompt = '';
-    $this->sort_order = MODULE_ORDER_TOTAL_COUPON_SORT_ORDER;
+    $this->sort_order = defined('MODULE_ORDER_TOTAL_COUPON_SORT_ORDER') ? MODULE_ORDER_TOTAL_COUPON_SORT_ORDER : null;
+    if (null === $this->sort_order) return false;
+
     $this->include_shipping = MODULE_ORDER_TOTAL_COUPON_INC_SHIPPING;
     $this->include_tax = MODULE_ORDER_TOTAL_COUPON_INC_TAX;
     $this->calculate_tax = MODULE_ORDER_TOTAL_COUPON_CALC_TAX;
@@ -135,6 +137,9 @@ class ot_coupon {
    */
   function credit_selection() {
     global $discount_coupon, $request_type;
+    if (!isset($discount_coupon->fields['coupon_code'])) {
+      $discount_coupon->fields['coupon_code'] = '';
+    }
     // note the placement of the redeem code can be moved within the array on the instructions or the title
     $selection = array('id' => $this->code,
                        'module' => $this->title,
@@ -152,11 +157,16 @@ class ot_coupon {
   function collect_posts() {
     global $db, $currencies, $messageStack, $order;
     global $discount_coupon;
-    $_POST['dc_redeem_code'] = trim($_POST['dc_redeem_code']);
+    $_POST['dc_redeem_code'] = isset($_POST['dc_redeem_code']) ? trim($_POST['dc_redeem_code']) : '';
     // remove discount coupon by request
     if (isset($_POST['dc_redeem_code']) && strtoupper($_POST['dc_redeem_code']) == 'REMOVE') {
       unset($_POST['dc_redeem_code']);
       unset($_SESSION['cc_id']);
+      
+      $GLOBALS['zco_notifier']->notify(
+          'NOTIFY_OT_COUPON_COUPON_REMOVED'
+       );
+       
       $messageStack->add_session('checkout_payment', TEXT_REMOVE_REDEEM_COUPON, 'caution');
     }
 //    print_r($_SESSION);
@@ -173,7 +183,7 @@ class ot_coupon {
 
 
       $sql = "select coupon_id, coupon_amount, coupon_type, coupon_minimum_order, uses_per_coupon, uses_per_user,
-              restrict_to_products, restrict_to_categories, coupon_zone_restriction, coupon_total, coupon_order_limit
+              restrict_to_products, restrict_to_categories, coupon_zone_restriction, coupon_calc_base, coupon_order_limit
               from " . TABLE_COUPONS . "
               where coupon_code= :couponCodeEntered
               and coupon_active='Y'
@@ -190,6 +200,15 @@ class ot_coupon {
           $this->clear_posts();
           zen_redirect(zen_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL',true, false));
         }
+	
+        $GLOBALS['zco_notifier']->notify(
+            'NOTIFY_OT_COUPON_COUPON_INFO', 
+            array(
+                'coupon_result' => $coupon_result->fields, 
+                'code' => $dc_check
+            )
+        );
+	
         //$order_total = $this->get_order_total($coupon_result->fields['coupon_id']);
 
         // display all error messages at once
@@ -197,20 +216,19 @@ class ot_coupon {
         $dc_link_count = 0;
         $dc_link = ' <a href="javascript:couponpopupWindow(\'' . zen_href_link(FILENAME_POPUP_COUPON_HELP, 'cID=' . $coupon_result->fields['coupon_id']) . '\')">' . $dc_check . '</a>';
         $orderTotalDetails = $this->get_order_total($coupon_result->fields['coupon_id']);
-        if ($coupon_result->fields['coupon_total'] == 0) {
+        if ($coupon_result->fields['coupon_calc_base'] == 0) {
           $coupon_total_minimum = $orderTotalDetails['orderTotal']; // restricted products
           $coupon_total = $orderTotalDetails['orderTotal']; // restricted products
         }
-        if ($coupon_result->fields['coupon_total'] == 1) {
+        if ($coupon_result->fields['coupon_calc_base'] == 1) {
           $coupon_total_minimum = $orderTotalDetails['orderTotal']; // restricted products
           $coupon_total = $orderTotalDetails['totalFull']; // all products
         }
 //echo 'Product: ' . $orderTotalDetails['orderTotal'] . ' Order: ' . $orderTotalDetails['totalFull'] . ' $coupon_total: ' . $coupon_total . '<br>';
-//die('DONE!');
 // left for total order amount vs qualified order amount just switch the commented lines
 //        if ($order_total['totalFull'] < $coupon_result->fields['coupon_minimum_order']) 
 //        if (strval($order_total['orderTotal']) > 0 && strval($order_total['orderTotal']) < $coupon_result->fields['coupon_minimum_order']) 
-//        if ($coupon_result->fields['coupon_minimum_order'] > 0 && strval($order_total['orderTotal']) < $coupon_result->fields['coupon_minimum_order']) {
+//        if ($coupon_result->fields['coupon_minimum_order'] > 0 && strval($order_total['orderTotal']) < $coupon_result->fields['coupon_minimum_order'])
 //        if (strval($coupon_total) > 0 && strval($coupon_total) < $coupon_result->fields['coupon_minimum_order']) 
         if (strval($coupon_total) > 0 && strval($coupon_total_minimum) < $coupon_result->fields['coupon_minimum_order']) 
         {
@@ -240,8 +258,7 @@ class ot_coupon {
         if ($foundvalid == true) {
           // check if products on special or sale are valid
           $foundvalid = false;
-          reset($products);
-          for ($i=0; $i<sizeof($products); $i++) {
+          for ($i=0, $n=sizeof($products); $i<$n; $i++) {
             if (is_coupon_valid_for_sales($products[$i]['id'], $coupon_result->fields['coupon_id'])) {
               $foundvalid = true;
               continue;
@@ -397,7 +414,6 @@ class ot_coupon {
               if ($check->fields['zone_id'] < 1) {
                 $check_flag = true;
                 break;
-//              } elseif ($check->fields['zone_id'] == $order->billing['zone_id']) {
               } elseif ($check->fields['zone_id'] == $check_zone_id) {
                 $check_flag = true;
                 break;
@@ -458,22 +474,22 @@ class ot_coupon {
     global $db, $order, $messageStack, $currencies;
     $currencyDecimalPlaces = $currencies->get_decimal_places($_SESSION['currency']);
     $od_amount = array('tax'=>0, 'total'=>0);
-    if ($_SESSION['cc_id'])
+    if (!empty($_SESSION['cc_id']))
     {
       $coupon = $db->Execute("select * from " . TABLE_COUPONS . " where coupon_id = '" . (int)$_SESSION['cc_id'] . "'");
       $this->coupon_code = $coupon->fields['coupon_code'];
       $orderTotalDetails = $this->get_order_total($_SESSION['cc_id']);
 // left for total order amount ($orderTotalDetails['totalFull']) vs qualified order amount ($order_total['orderTotal']) just switch the commented lines 2 of 3
-      if ($coupon->fields['coupon_total'] == 0) {
+      if ($coupon->fields['coupon_calc_base'] == 0) {
         $coupon_total_minimum = $orderTotalDetails['orderTotal']; // restricted products
         $coupon_total = $orderTotalDetails['orderTotal']; // restricted products
       }
-      if ($coupon->fields['coupon_total'] == 1) {
+      if ($coupon->fields['coupon_calc_base'] == 1) {
         $coupon_total_minimum = $orderTotalDetails['orderTotal']; // restricted products
         $coupon_total = $orderTotalDetails['totalFull']; // all products
       }
-//echo 'ot_coupon coupon_total: ' . $coupon->fields['coupon_total'] . '<br>$orderTotalDetails[orderTotal]: ' . $orderTotalDetails['orderTotal'] . '<br>$orderTotalDetails[totalFull]: ' . $orderTotalDetails['totalFull'] . '<br>$coupon_total: ' . $coupon_total . '<br><br>$coupon->fields[coupon_minimum_order]: ' . $coupon->fields['coupon_minimum_order'] . '<br>$coupon_total_minimum: ' . $coupon_total_minimum . '<br>';
-// @@TODO - adjust all Totals to use $coupon_total but strong reveiw for what total applies where for Percentage, Amount, etc.
+//echo 'ot_coupon coupon_total: ' . $coupon->fields['coupon_calc_base'] . '<br>$orderTotalDetails[orderTotal]: ' . $orderTotalDetails['orderTotal'] . '<br>$orderTotalDetails[totalFull]: ' . $orderTotalDetails['totalFull'] . '<br>$coupon_total: ' . $coupon_total . '<br><br>$coupon->fields[coupon_minimum_order]: ' . $coupon->fields['coupon_minimum_order'] . '<br>$coupon_total_minimum: ' . $coupon_total_minimum . '<br>';
+// @@TODO - adjust all Totals to use $coupon_total but strong review for what total applies where for Percentage, Amount, etc.
 //      if ($coupon->RecordCount() > 0 && $orderTotalDetails['totalFull'] != 0) {
       if ($coupon->RecordCount() > 0 && $orderTotalDetails['orderTotal'] != 0 ) {
 // left for total order amount ($orderTotalDetails['totalFull']) vs qualified order amount ($order_total['orderTotal']) just switch the commented lines 3 of 3
@@ -488,7 +504,7 @@ class ot_coupon {
           if ($coupon->fields['coupon_product_count'] && ($coupon->fields['coupon_type'] == 'F' || $coupon->fields['coupon_type'] == 'O')) {
             $products = $_SESSION['cart']->get_products();
             $coupon_product_count = 0;
-            for ($i=0; $i<sizeof($products); $i++) {
+            for ($i=0, $n=sizeof($products); $i<$n; $i++) {
               if (is_product_valid($products[$i]['id'], $coupon->fields['coupon_id'])) {
                 $coupon_product_count += $_SESSION['cart']->get_quantity($products[$i]['id']);
               }
@@ -589,8 +605,16 @@ class ot_coupon {
     $orderTotalTax = $order->info['tax'];
     $orderTotal = $order->info['total'];
     $products = $_SESSION['cart']->get_products();
-    for ($i=0; $i<sizeof($products); $i++) {
-      if (!is_product_valid($products[$i]['id'], $couponCode) || !is_coupon_valid_for_sales($products[$i]['id'], $couponCode)) {
+    for ($i=0, $n=sizeof($products); $i<$n; $i++) {
+      $is_product_valid = (is_product_valid($products[$i]['id'], $couponCode) && is_coupon_valid_for_sales($products[$i]['id'], $couponCode));
+      $GLOBALS['zco_notifier']->notify(
+        'NOTIFY_OT_COUPON_PRODUCT_VALIDITY', 
+        array(
+            'is_product_valid' => $is_product_valid, 
+            'i' => $i
+        )
+      );
+      if (!$is_product_valid) {
         $products_tax = zen_get_tax_rate($products[$i]['tax_class_id']);
         $productsTaxAmount = (zen_calculate_tax($products[$i]['final_price'], $products_tax))   * $products[$i]['quantity'];
         $orderTotal -= $products[$i]['final_price'] * $products[$i]['quantity'];
@@ -673,7 +697,7 @@ class ot_coupon {
     global $db;
     $keys = '';
     $keys_array = $this->keys();
-    for ($i=0; $i<sizeof($keys_array); $i++) {
+    for ($i=0, $n=sizeof($keys_array); $i<$n; $i++) {
       $keys .= "'" . $keys_array[$i] . "',";
     }
     $keys = substr($keys, 0, -1);

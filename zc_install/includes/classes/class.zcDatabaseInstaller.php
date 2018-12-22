@@ -2,9 +2,9 @@
 /**
  * file contains zcDatabaseInstaller Class
  * @package Installer
- * @copyright Copyright 2003-2016 Zen Cart Development Team
+ * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: DrByte  Thu Mar 21 16:18:21 2016 -0500 New in v1.5.5 $
+ * @version $Id: Drbyte Tue Oct 9 18:48:15 2018 -0400 Modified in v1.5.6 $
  *
  */
 /**
@@ -14,7 +14,10 @@
  */
 class zcDatabaseInstaller
 {
-  public function __construct($options)
+    public $ignoreLine;
+    var $jsonProgressLoggingCount = 0;
+
+    public function __construct($options)
   {
     $dbtypes = array();
     $path = DIR_FS_ROOT . 'includes/classes/db/';
@@ -31,12 +34,12 @@ class zcDatabaseInstaller
     $this->dbPassword = $options['db_password'];
     $this->dbName = $options['db_name'];
     $this->dbPrefix = $options['db_prefix'];
-    $this->dbCharset = trim($options['db_charset']) == '' ? 'utf8' : $options['db_charset'];
+    $this->dbCharset = trim($options['db_charset']) == '' ? 'utf8mb4' : $options['db_charset'];
     $this->dbType = in_array($options['db_type'], $dbtypes) ? $options['db_type'] : 'mysql';
     $this->dieOnErrors = isset($options['dieOnErrors']) ? (bool)$options['dieOnErrors'] : FALSE;
     $this->errors = array();
     $this->basicParseStrings = array(
-    'DROP TABLE IF EXISTS ',
+    'DROP TABLE ',
     'CREATE TABLE ',
     'REPLACE INTO ',
     'INSERT INTO ',
@@ -102,6 +105,7 @@ class zcDatabaseInstaller
       if ( substr($this->line,-1) ==  ';')
       {
         if (substr($this->newLine,-1)==' ') $this->newLine = substr($this->newLine,0,(strlen($this->newLine)-1));
+        if (substr($this->newLine,-1)==')') $this->newLine = substr($this->newLine,0,(strlen($this->newLine)-1)) . ' )';
         $this->keepTogetherCount++;
         if ($this->keepTogetherCount == $this->keepTogetherLines)
         {
@@ -166,9 +170,23 @@ class zcDatabaseInstaller
       return 0;
     }
   }
-  public function parserDropTableIfExists ()
+  public function parserDropTable()
   {
-    $this->line = 'DROP TABLE IF EXISTS ' . $this->dbPrefix . substr($this->line, 21);
+    $table = (strtoupper($this->lineSplit[2].' '.$this->lineSplit[3]) == 'IF EXISTS') ? $this->lineSplit[4] : $this->lineSplit[2];
+
+    if (!$this->tableExists($table) && (strtoupper($this->lineSplit[2].' '.$this->lineSplit[3]) != 'IF EXISTS'))
+    {
+      $result = sprintf(REASON_TABLE_NOT_FOUND, $table).' CHECK PREFIXES!';
+      $this->writeUpgradeExceptions($this->line, $result, $this->fileName);
+      $this->ignoreLine = true;
+    } else {
+      if (strtoupper($this->lineSplit[2].' '.$this->lineSplit[3]) != 'IF EXISTS')
+      {
+        $this->line = 'DROP TABLE ' . $this->dbPrefix . substr($this->line, 11);
+      } else {
+        $this->line = 'DROP TABLE IF EXISTS ' . $this->dbPrefix . substr($this->line, 21);
+      }
+    }
   }
   public function parserCreateTable()
   {
@@ -183,7 +201,9 @@ class zcDatabaseInstaller
     } else
     {
       $this->line = (strtoupper($this->lineSplit[2].' '.$this->lineSplit[3].' '.$this->lineSplit[4]) == 'IF NOT EXISTS') ? 'CREATE TABLE IF NOT EXISTS ' . $this->dbPrefix . substr($this->line, 27) : 'CREATE TABLE ' . $this->dbPrefix . substr($this->line, 13);
-      $this->collateSuffix = (strtoupper($this->lineSplit[3]) == 'AS' || (isset($this->lineSplit[6]) && strtoupper($this->lineSplit[6]) == 'AS')) ? '' : ' COLLATE ' . $this->dbCharset . '_general_ci';
+      if (! stristr($this->line, ' COLLATE ')) {
+          $this->collateSuffix = (strtoupper($this->lineSplit[3]) == 'AS' || (isset($this->lineSplit[6]) && strtoupper($this->lineSplit[6]) == 'AS')) ? '' : ' COLLATE ' . $this->dbCharset . '_general_ci';
+      }
     }
   }
   public function parserInsertInto()
@@ -331,6 +351,24 @@ class zcDatabaseInstaller
       }
     }
   }
+  public function parserRenameTable()
+  {
+    if (!$this->tableExists($this->lineSplit[2]))
+    {
+      if (!isset($result)) $result = sprintf(REASON_TABLE_NOT_FOUND, $table).' CHECK PREFIXES!';
+      $this->writeUpgradeExceptions($this->line, $result, $this->fileName);
+      $this->ignoreLine = true;
+    } else {
+      if ($this->tableExists($this->lineSplit[4]))
+      {
+        if (!isset($result)) $result = sprintf(REASON_TABLE_ALREADY_EXISTS, $table);
+        $this->writeUpgradeExceptions($this->line, $result, $this->fileName);
+        $this->ignoreLine = true;
+      } else {
+        $this->line = 'RENAME TABLE ' . $this->dbPrefix . $this->lineSplit[2] . ' TO ' . $this->dbPrefix . substr($this->line, (13 + strlen($this->lineSplit[2]) + 4));
+      }
+    }
+  }
   public function writeUpgradeExceptions($line, $message, $sqlFile = '')
   {
     logDetails($line . '  ' . $message . '  ' . $sqlFile, 'upgradeException');
@@ -349,11 +387,11 @@ class zcDatabaseInstaller
     {
       $result = $this->db->Execute("CREATE TABLE " . $this->dbPrefix . TABLE_UPGRADE_EXCEPTIONS ." (
             upgrade_exception_id smallint(5) NOT NULL auto_increment,
-            sql_file varchar(50) default NULL,
-            reason varchar(200) default NULL,
-            errordate datetime default '0001-01-01 00:00:00',
+            sql_file varchar(128) default NULL,
+            reason text default NULL,
+            errordate datetime default NULL,
             sqlstatement text, PRIMARY KEY  (upgrade_exception_id)
-          )");
+          ) ENGINE=MyISAM");
     return $result;
     }
   }
@@ -412,6 +450,7 @@ class zcDatabaseInstaller
   }
   public function tableColumnExists($table, $column)
   {
+    if (!defined('DB_DATABASE')) define('DB_DATABASE', $this->dbName);
     $check = $this->db->Execute(
       'SHOW COLUMNS FROM `' . DB_DATABASE . '`.`' . $this->db->prepare_input($table) . '` ' .
       'WHERE `Field` = \'' . $this->db->prepare_input($column) . '\''
@@ -420,6 +459,7 @@ class zcDatabaseInstaller
   }
   public function tableIndexExists($table, $index)
   {
+    if (!defined('DB_DATABASE')) define('DB_DATABASE', $this->dbName);
     $check = $this->db->Execute(
       'SHOW INDEX FROM `' . DB_DATABASE . '`.`' . $this->db->prepare_input($table) . '` ' .
       'WHERE `Key_name` = \'' . $this->db->prepare_input($index) . '\''

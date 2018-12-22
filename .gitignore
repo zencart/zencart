@@ -1,12 +1,14 @@
 configure.php
+local/configure.php
 /vendor
 dbencdata*.ini
-clover.xml
 
 *.php1
 *.bak
 *.old
+devtools.php
 Thumbs.db
+clover.xml
 .DS_Store
 
 docs/phpdocs*

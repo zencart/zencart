@@ -8,7 +8,7 @@
 ?>
 <script>
 if (typeof zcJS == "undefined" || !zcJS) {
-  window.zcJS = { name: 'zcJS', version: '0.1.0.0' };
+  window.zcJS = { name: 'zcJS', version: '0.1.2.0' };
 };
 
 zcJS.securityToken = '<?php echo $_SESSION['securityToken']; ?>';

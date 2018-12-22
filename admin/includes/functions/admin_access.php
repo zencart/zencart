@@ -100,7 +100,7 @@ function zen_get_users($limit = '')
 
 function zen_delete_user($id)
 {
-  global $db;
+  global $db, $messageStack;
   $result = $db->Execute("select count(admin_id) as count from " . TABLE_ADMIN . " where admin_id != '" . (int)$id . "'");
   if ($result->fields['count'] < 1) {
     $messageStack->add(ERROR_CANNOT_DELETE_LAST_ADMIN, 'error');
@@ -924,7 +924,7 @@ function zen_page_key_exists($page_key)
   $sql = "SELECT page_key FROM " . TABLE_ADMIN_PAGES . " WHERE page_key = :page_key:";
   $sql = $db->bindVars($sql, ':page_key:', $page_key, 'string');
   $result = $db->Execute($sql);
-  return $result->RecordCount() >= 1 ? true : false;
+  return ($result->RecordCount() >= 1);
 }
 
 function zen_register_admin_page($page_key, $language_key, $main_page, $page_params, $menu_key, $display_on_menu, $sort_order = -1)
@@ -977,6 +977,15 @@ function zen_deregister_admin_pages($pages)
     $db->Execute($sql);
     zen_record_admin_activity('Deleted admin pages for page keys: ' . print_r($pages, true), 'warning');
   }
+}
+
+
+function zen_updated_by_admin($admin_id = '') 
+{
+    if ($admin_id === '') {
+        $admin_id = $_SESSION['admin_id'];
+    }
+    return zen_get_admin_name($admin_id) . " [$admin_id]";
 }
 
 /**

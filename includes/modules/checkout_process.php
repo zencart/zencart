@@ -3,10 +3,10 @@
  * module to process a completed checkout
  *
  * @package procedureCheckout
- * @copyright Copyright 2003-2016 Zen Cart Development Team
+ * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: DrByte  Tue Oct 13 15:33:13 2015 -0400 Modified in v1.5.5 $
+ * @version $Id: Author: DrByte  Dec 2018  Modified in v1.5.6a $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
@@ -32,10 +32,11 @@ if (!strstr($_SERVER['HTTP_REFERER'], FILENAME_CHECKOUT_CONFIRMATION)) {
 }
 
 // BEGIN CC SLAM PREVENTION
+$slamming_threshold = 3;
 if (!isset($_SESSION['payment_attempt'])) $_SESSION['payment_attempt'] = 0;
 $_SESSION['payment_attempt']++;
-$zco_notifier->notify('NOTIFY_CHECKOUT_SLAMMING_ALERT');
-if ($_SESSION['payment_attempt'] > 3) {
+$zco_notifier->notify('NOTIFY_CHECKOUT_SLAMMING_ALERT', $_SESSION['payment_attempt'], $slamming_threshold);
+if ($_SESSION['payment_attempt'] > $slamming_threshold) {
   $zco_notifier->notify('NOTIFY_CHECKOUT_SLAMMING_LOCKOUT');
   $_SESSION['cart']->reset(TRUE);
   zen_session_destroy();
@@ -124,8 +125,8 @@ if (isset($_SESSION['payment_attempt'])) unset($_SESSION['payment_attempt']);
   $_SESSION['order_summary']['currency_value'] = $order->info['currency_value'];
   $_SESSION['order_summary']['payment_module_code'] = $order->info['payment_module_code'];
   $_SESSION['order_summary']['shipping_method'] = $order->info['shipping_method'];
-  $_SESSION['order_summary']['orders_status'] = $order->info['orders_status'];
-  $_SESSION['order_summary']['orders_status_name'] = $order->info['orders_status_name'];
+  $_SESSION['order_summary']['order_status'] = $order->info['order_status'];
+  $_SESSION['order_summary']['order_status_name'] = $order->info['order_status_name'];
   $_SESSION['order_summary']['tax'] = $otax;
   $_SESSION['order_summary']['shipping'] = $oshipping;
   $products_array = array();

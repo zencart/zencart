@@ -27,8 +27,8 @@ include(DIR_WS_MODULES . zen_get_module_directory(FILENAME_CREATE_ACCOUNT));
 
 $error = false;
 if (isset($_GET['action']) && ($_GET['action'] == 'process')) {
-  $email_address = zen_db_prepare_input($_POST['email_address']);
-  $password = zen_db_prepare_input($_POST['password']);
+  $email_address = zen_db_prepare_input(isset($_POST['email_address']) ? $_POST['email_address'] : '');
+  $password = zen_db_prepare_input(isset($_POST['password']) ? $_POST['password'] : '');
   $loginAuthorized = false;
 
     // Check if email exists

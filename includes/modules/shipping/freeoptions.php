@@ -52,7 +52,9 @@ class freeoptions extends base {
       $this->code = 'freeoptions';
       $this->title = MODULE_SHIPPING_FREEOPTIONS_TEXT_TITLE;
       $this->description = MODULE_SHIPPING_FREEOPTIONS_TEXT_DESCRIPTION;
-      $this->sort_order = MODULE_SHIPPING_FREEOPTIONS_SORT_ORDER;
+      $this->sort_order = defined('MODULE_SHIPPING_FREEOPTIONS_SORT_ORDER') ? MODULE_SHIPPING_FREEOPTIONS_SORT_ORDER : null;
+      if (null === $this->sort_order) return false;
+
       $this->icon = '';
       $this->tax_class = MODULE_SHIPPING_FREEOPTIONS_TAX_CLASS;
       $this->tax_basis = MODULE_SHIPPING_FREEOPTIONS_TAX_BASIS;

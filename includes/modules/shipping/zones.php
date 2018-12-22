@@ -148,7 +148,9 @@ class zones extends base {
     $this->code = 'zones';
     $this->title = MODULE_SHIPPING_ZONES_TEXT_TITLE;
     $this->description = MODULE_SHIPPING_ZONES_TEXT_DESCRIPTION;
-    $this->sort_order = MODULE_SHIPPING_ZONES_SORT_ORDER;
+      $this->sort_order = defined('MODULE_SHIPPING_ZONES_SORT_ORDER') ? MODULE_SHIPPING_ZONES_SORT_ORDER : null;
+      if (null === $this->sort_order) return false;
+
     $this->icon = '';
     $this->tax_class = MODULE_SHIPPING_ZONES_TAX_CLASS;
     $this->tax_basis = MODULE_SHIPPING_ZONES_TAX_BASIS;
@@ -252,6 +254,8 @@ class zones extends base {
     $dest_country = $order->delivery['country']['iso_code_2'];
     $dest_zone = 0;
     $error = false;
+      $shipping_method = '';
+      $shipping_cost = 0;
 
     // works on adjusted weight, total and count in cart
     $order_total_amount = $_SESSION['cart']->show_total() - $_SESSION['cart']->free_shipping_prices();

@@ -2,15 +2,12 @@
 /**
  * file contains systemChecker Class
  * @package Installer
- * @copyright Copyright 2003-2016 Zen Cart Development Team
+ * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: DrByte  Tue Feb 16 17:44:40 2016 -0500 New in v1.5.5 $
- *
+ * @version $Id: Drbyte Tue Oct 9 18:48:15 2018 -0400 Modified in v1.5.6 $
  */
 /**
- *
  * systemChecker Class
- *
  */
 class systemChecker
 {
@@ -20,6 +17,10 @@ class systemChecker
     $res = sfYaml::load(DIR_FS_INSTALL . 'includes/systemChecks.yml');
     $this->systemChecks = $res['systemChecks'];
     $this->extraRunLevels = array();
+
+    if (file_exists(DIR_FS_ROOT . 'includes/local/configure.php')) {
+        $this->extraRunLevels[] = 'localdev';
+    }
 
     if ($selectedAdminDir == 'UNSPECIFIED' || $selectedAdminDir == '' || !file_exists(DIR_FS_ROOT . $selectedAdminDir))
     {
@@ -107,7 +108,7 @@ class systemChecker
     if ($this->getServerConfig()->fileLoaded())
     {
 
-      // if the new var added in v160 is present, then this deems the file to be already updated
+      // if the new define added in v155 is present, then this deems the file to be already updated
       $sessionStorage = $this->getServerConfig()->getDefine('SESSION_STORAGE');
       if (isset($sessionStorage))
       {
@@ -144,7 +145,10 @@ class systemChecker
   public function getServerConfig()
   {
     if(!isset($this->serverConfig)) {
-      $this->serverConfig = new zcConfigureFileReader(DIR_FS_ROOT . 'includes/configure.php');
+      $configFile = DIR_FS_ROOT . 'includes/configure.php';
+      $configFileLocal = DIR_FS_ROOT . 'includes/local/configure.php';
+      if (file_exists($configFileLocal)) $configFile = $configFileLocal;
+      $this->serverConfig = new zcConfigureFileReader($configFile);
   }
     return $this->serverConfig;
   }
@@ -200,7 +204,7 @@ class systemChecker
       $systemCheck['extraErrors'][] = $db -> error_number . ':' . $db -> error_text;
     } else
     {
-      $result = $db -> selectdb($dbNameVal);
+      $result = $db -> selectdb($dbNameVal, $db -> link);
     }
     if (!$result)
     {
@@ -245,7 +249,7 @@ class systemChecker
     $retVal = FALSE;
     $sql = "select configuration_title from " . $dbPrefix . "configuration where configuration_key = '" . $parameters['fieldName'] . "'";
     $result = $db->execute($sql);
-    if ($result)
+    if ($result && isset($result->fields['configuration_title']))
     {
       $retVal  = ($result->fields['configuration_title'] == $parameters['expectedResult']) ? TRUE : FALSE;
     }
@@ -256,11 +260,15 @@ class systemChecker
     $retVal = FALSE;
     $sql = "select configuration_description from " . $dbPrefix . "configuration where configuration_key = '" . $parameters['fieldName'] . "'";
     $result = $db->execute($sql);
-    if ($result)
+    if ($result && isset($result->fields['configuration_description']))
     {
       $retVal  = ($result->fields['configuration_description'] == $parameters['expectedResult']) ? TRUE : FALSE;
     }
     return $retVal;
+  }
+  public function checkFileExists($filepath)
+  {
+    return file_exists($filepath);
   }
   public function checkWriteableDir($parameters)
   {
@@ -379,7 +387,7 @@ class systemChecker
       $this->localErrors = $db -> error_number . ':' . $db -> error_text;
     } else
     {
-      $result = $db -> selectdb($dbNameVal);
+      $result = $db -> selectdb($dbNameVal, $db -> link);
     }
     if (!$result)
     {
@@ -419,7 +427,7 @@ class systemChecker
       $this->localErrors = $db -> error_number . ':' . $db -> error_text;
     } else
     {
-      $result = $db -> selectdb(zcRegistry::getValue('db_name'));
+      $result = $db -> selectdb(zcRegistry::getValue('db_name'), $db -> link);
       if (!$result)
       {
         $sql = "CREATE DATABASE " . zcRegistry::getValue('db_name') . " CHARACTER SET " . zcRegistry::getValue('db_charset');
@@ -516,7 +524,7 @@ if ($errnum != 0) error_log('CURL Connect: ' . $errnum . ' ' . $errtext . "\n" .
       $systemCheck['extraErrors'][] = $db -> error_number . ':' . $db -> error_text;
     } else
     {
-      $result = $db -> selectdb($dbNameVal);
+      $result = $db -> selectdb($dbNameVal, $db -> link);
     }
     if (!$result)
     {
@@ -688,7 +696,7 @@ if ($errnum != 0) error_log('CURL Connect: ' . $errnum . ' ' . $errtext . "\n" .
       require_once (DIR_FS_ROOT . 'includes/classes/db/mysql/query_factory.php');
       $db = new queryFactory();
       $result = $db -> simpleConnect($dbServerVal, $dbUserVal, $dbPasswordVal, $dbNameVal);
-      $result = $db -> selectdb($dbNameVal);
+      $result = $db -> selectdb($dbNameVal, $db -> link);
 
       $sql = "select configuration_value from " . $dbPrefixVal . "configuration where configuration_key = 'EXCLUDE_ADMIN_IP_FOR_MAINTENANCE'";
       $result = $db->Execute($sql);
