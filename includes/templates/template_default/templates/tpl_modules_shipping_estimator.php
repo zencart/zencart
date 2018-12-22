@@ -85,7 +85,7 @@
     }else{
 ?>
 <table id="seQuoteResults">
-<?php if (!isset($_SESSION['customer_id']) || $_SESSION['customer_id'] < 1 ){ ?>
+<?php if (empty($_SESSION['customer_id'])){ ?>
     <tr>
       <td colspan="2" class="seDisplayedAddressLabel">
         <?php echo CART_SHIPPING_QUOTE_CRITERIA; ?><br />
@@ -102,7 +102,8 @@
         $extra = '';
       }
       for ($i=0, $n=sizeof($quotes); $i<$n; $i++) {
-        if(isset($quotes[$i]['id']) && sizeof($quotes[$i]['methods'])==1 && isset($quotes[$i]['methods'][0]['id'])){
+        $thisquoteid = '';
+	      if(isset($quotes[$i]['id']) && sizeof($quotes[$i]['methods'])==1 && isset($quotes[$i]['methods'][0]['id'])){
           // simple shipping method
           $thisquoteid = $quotes[$i]['id'].'_'.$quotes[$i]['methods'][0]['id'];
 ?>
@@ -133,12 +134,12 @@
           for ($j=0, $n2=sizeof($quotes[$i]['methods']); $j<$n2; $j++) {
             $thisquoteid = '';
             if (isset($quotes[$i]['id']) && isset($quotes[$i]['methods'][$j]['id'])) {
-            $thisquoteid = $quotes[$i]['id'].'_'.$quotes[$i]['methods'][$j]['id'];
+                $thisquoteid = $quotes[$i]['id'].'_'.$quotes[$i]['methods'][$j]['id'];
             }
 ?>
     <tr class="<?php echo $extra; ?>">
 <?php
-            if(isset($quotes[$i]['error']) && $quotes[$i]['error']){
+            if(!empty($quotes[$i]['error'])){
 ?>
          <td colspan="2"><?php echo $quotes[$i]['module']; ?>&nbsp;(<?php echo $quotes[$i]['error']; ?>)</td>
        </tr>
