@@ -85,7 +85,7 @@
     }else{
 ?>
 <table id="seQuoteResults">
-<?php if (!isset($_SESSION['customer_id']) || $_SESSION['customer_id'] < 1 ){ ?>
+<?php if (!empty($_SESSION['customer_id'])){ ?>
     <tr>
       <td colspan="2" class="seDisplayedAddressLabel">
         <?php echo CART_SHIPPING_QUOTE_CRITERIA; ?><br />
