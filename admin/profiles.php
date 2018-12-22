@@ -8,8 +8,8 @@
  */
 
 require('includes/application_top.php');
-require_once('includes/template/common/tplHtmlHead.php');
 require_once('includes/template/common/tplHtmlHeadLegacy.php');
+require_once('includes/template/common/tplHtmlHead.php');
 
 // determine whether an action has been requested
 if (isset($_POST['action']) && in_array($_POST['action'], array('insert','update','update_name')))

@@ -8,8 +8,8 @@
  */
 
   require('includes/application_top.php');
-  require_once('includes/template/common/tplHtmlHead.php');
   require_once('includes/template/common/tplHtmlHeadLegacy.php');
+  require_once('includes/template/common/tplHtmlHead.php');
 
   // verify products exist
   $chk_products = $db->Execute("select * from " . TABLE_PRODUCTS . " limit 1");

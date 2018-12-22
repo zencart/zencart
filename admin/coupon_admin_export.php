@@ -10,8 +10,8 @@
  *
  */
 require ('includes/application_top.php');
-require_once('includes/template/common/tplHtmlHead.php');
 require_once('includes/template/common/tplHtmlHeadLegacy.php');
+require_once('includes/template/common/tplHtmlHead.php');
 
 // change destination here for path when using "save to file on server"
 if (!defined('DIR_FS_COUPON_EXPORT')) define('DIR_FS_COUPON_EXPORT', DIR_FS_ADMIN . 'backups/');

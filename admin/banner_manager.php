@@ -8,8 +8,8 @@
  */
 
   require('includes/application_top.php');
-  require_once('includes/template/common/tplHtmlHead.php');
   require_once('includes/template/common/tplHtmlHeadLegacy.php');
+  require_once('includes/template/common/tplHtmlHead.php');
   require('includes/functions/functions_graphs.php');
 
   $action = (isset($_GET['action']) ? $_GET['action'] : '');

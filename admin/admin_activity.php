@@ -13,8 +13,8 @@
  * @TODO: Consider streaming to file line-by-line as an alternate output method in case of RAM blowout with large data quantities or low RAM config on servers.
  */
 require ('includes/application_top.php');
-require_once('includes/template/common/tplHtmlHead.php');
 require_once('includes/template/common/tplHtmlHeadLegacy.php');
+require_once('includes/template/common/tplHtmlHead.php');
 
 
 // change destination here for path when using "save to file on server"
