@@ -9,6 +9,8 @@
  */
 
   require('includes/application_top.php');
+  require_once('includes/template/common/tplHtmlHead.php');
+  require_once('includes/template/common/tplHtmlHeadLegacy.php');
 
   $paypal_ipn_sort_order_array = array(array('id' => '0', 'text' => TEXT_SORT_PAYPAL_ID_DESC),
                              array('id' => '1', 'text' => TEXT_SORT_PAYPAL_ID),
@@ -62,12 +64,11 @@
     $payment_status_trans->MoveNext();
   }
 
-require('includes/admin_html_head.php');
 ?>
 </head>
 <body marginwidth="0" marginheight="0" topmargin="0" bottommargin="0" leftmargin="0" rightmargin="0" bgcolor="#FFFFFF" onLoad="SetFocus()">
 <!-- header //-->
-<?php require(DIR_WS_INCLUDES . 'header.php'); ?>
+<?php require('includes/template/common/tplHeader.php'); ?>
 <!-- header_eof //-->
 
 <!-- body //-->

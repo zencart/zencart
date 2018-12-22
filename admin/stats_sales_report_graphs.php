@@ -8,6 +8,9 @@
  */
 
 require('includes/application_top.php');
+require_once('includes/template/common/tplHtmlHead.php');
+require_once('includes/template/common/tplHtmlHeadLegacy.php');
+
 $currencies = new currencies();
 
 if (!defined('SALES_REPORT_GRAPHS_FILTER_DEFAULT')) define('SALES_REPORT_GRAPHS_FILTER_DEFAULT', '00000000110000000000');
@@ -158,10 +161,6 @@ if (strlen($sales_report_filter) == 0) {
      chart.draw(data, options);
    }
 </script>
-<?php
-require_once('includes/template/common/tplHtmlHeadLegacy.php');
-require_once('includes/template/common/tplHtmlHead.php');
-?>
 </head>
 <body onload="init()">
 <!-- header //-->

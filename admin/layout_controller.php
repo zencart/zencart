@@ -8,6 +8,8 @@
  */
 
   require('includes/application_top.php');
+  require_once('includes/template/common/tplHtmlHead.php');
+  require_once('includes/template/common/tplHtmlHeadLegacy.php');
 
 // Check all existing boxes are in the main /sideboxes
   $boxes_directory = DIR_FS_CATALOG_MODULES . 'sideboxes/';
@@ -153,7 +155,6 @@
     }
   }
 
-require('includes/admin_html_head.php');
 ?>
 <style>
 .alignTop {
@@ -163,7 +164,7 @@ require('includes/admin_html_head.php');
 </head>
 <body>
 <!-- header //-->
-<?php require(DIR_WS_INCLUDES . 'header.php'); ?>
+<?php require('includes/template/common/tplHeader.php'); ?>
 <!-- header_eof //-->
 
 <!-- body //-->

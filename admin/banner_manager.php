@@ -8,6 +8,8 @@
  */
 
   require('includes/application_top.php');
+  require_once('includes/template/common/tplHtmlHead.php');
+  require_once('includes/template/common/tplHtmlHeadLegacy.php');
   require('includes/functions/functions_graphs.php');
 
   $action = (isset($_GET['action']) ? $_GET['action'] : '');
@@ -177,7 +179,6 @@
     }
   }
 
-require('includes/admin_html_head.php');
 ?>
 <link rel="stylesheet" type="text/css" href="includes/banner_tools.css" />
 <!--[if lte IE 8]><script type="text/javascript" src="includes/template/javascript/flot/excanvas.min.js"></script><![endif]-->
@@ -192,7 +193,7 @@ function popupImageWindow(url) {
 </head>
 <body>
 <!-- header //-->
-<?php require(DIR_WS_INCLUDES . 'header.php'); ?>
+<?php require('includes/template/common/tplHeader.php'); ?>
 <!-- header_eof //-->
 
 <!-- body //-->

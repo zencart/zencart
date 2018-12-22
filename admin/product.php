@@ -8,6 +8,8 @@
  */
 
   require('includes/application_top.php');
+  require_once('includes/template/common/tplHtmlHead.php');
+  require_once('includes/template/common/tplHtmlHeadLegacy.php');
 
   require(DIR_WS_MODULES . 'prod_cat_header_code.php');
 
@@ -93,8 +95,6 @@
   } else {
     $messageStack->add(ERROR_CATALOG_IMAGE_DIRECTORY_DOES_NOT_EXIST, 'error');
   }
-require_once('includes/template/common/tplHtmlHeadLegacy.php');
-require_once('includes/template/common/tplHtmlHead.php');
 ?>
 <?php if ($action != 'new_product_meta_tags' && $editor_handler != '') include ($editor_handler); ?>
 </head>

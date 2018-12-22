@@ -9,7 +9,7 @@
             "homepage": "https://github.com/zencart/zencart/graphs/contributors"
         }
     ],
-    "_comment": "compatible with PHP 5.5-7.3",
+    "__comment": "compatible with PHP 5.5-7.3",
     "require": {
         "php": ">=5.5"
     },
@@ -36,7 +36,9 @@
     },
     "include-path": ["includes/"],
     "config": {
-        "bin-dir": "vendor/bin"
+        "bin-dir": "vendor/bin",
+        "sort-packages": true,
+        "optimize-autoloader": true
     },
     "scripts": {
         "post-install-cmd": [

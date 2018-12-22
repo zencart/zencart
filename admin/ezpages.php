@@ -25,6 +25,8 @@
 
 
   require('includes/application_top.php');
+  require_once('includes/template/common/tplHtmlHead.php');
+  require_once('includes/template/common/tplHtmlHeadLegacy.php');
 
   if (!isset($_SESSION['ez_sort_order'])) {
     $_SESSION['ez_sort_order'] = 0;
@@ -178,12 +180,12 @@
         break;
     }
   }
-require('includes/admin_html_head.php');
 ?>
 <?php if ($editor_handler != '') include ($editor_handler); ?>
 </head>
 <body marginwidth="0" marginheight="0" topmargin="0" bottommargin="0" leftmargin="0" rightmargin="0" bgcolor="#FFFFFF">
-<?php require(DIR_WS_INCLUDES . 'header.php'); ?>
+<!-- header_bof //-->
+<?php require('includes/template/common/tplHeader.php'); ?>
 <!-- header_eof //-->
 <!-- body //-->
 <table border="0" width="100%" cellspacing="2" cellpadding="2">
