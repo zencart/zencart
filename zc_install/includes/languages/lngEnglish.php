@@ -150,6 +150,7 @@ define('TEXT_ERROR_COULD_NOT_WRITE_CONFIGFILE', 'Could not write the generated c
 define('TEXT_ERROR_DATABASE_INSTALL', 'There was a problem during the database installation.  Please check the files in the /logs/ folder for details');
 
 define('TEXT_ERROR_STORE_CONFIGURE', "Main /includes/configure.php file either does not exist, is not readable, or is not writeable");
+define('TEXT_FOUND_LOCAL_STORE_CONFIGURE','Found local /includes/configure.php'); 
 define('TEXT_ERROR_PHP_VERSION', str_replace(array("\n", "\r"), '', 'Incorrect PHP Version.
 <p>The PHP version you are using (' . PHP_VERSION . ') is not suitable.</p>
 <p>This version of Zen Cart&reg; is compatible with PHP versions 5.4 to 7.3.x.<br>
