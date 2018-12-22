@@ -36,4 +36,3 @@ define('TEXT_CHOOSE_PROFILE', 'Choose Profile');
 define('ERROR_NO_USER_DEFINED', 'The option that you requested cannot be undertaken without specifying a user');
 define('SUCCESS_NEW_USER_ADDED', 'New user added');
 define('SUCCESS_USER_DETAILS_UPDATED', 'User details updated');
-define('SUCCESS_PASSWORD_UPDATED', 'Password updated');

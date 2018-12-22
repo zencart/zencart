@@ -6,7 +6,7 @@
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version GIT: $Id:  Modified in v1.6.0 $
  */
-
+if (!defined('ADMIN_PASSWORD_MIN_LENGTH')) define('ADMIN_PASSWORD_MIN_LENGTH', 7); 
 /**
  * This function checks whether the currently logged on user has permission to access
  * the page passed as parameter $page, with GET $params . The function returns boolean
