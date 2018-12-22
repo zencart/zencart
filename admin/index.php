@@ -32,5 +32,11 @@ if ($actualController) {
 if ($foundAction) {
     exit(0);
 } else {
-    require(preg_replace('/[^a-zA-Z0-9_-]/', '', $cmd) . '.php');
+    $filename = preg_replace('/[^a-zA-Z0-9_-]/', '', $cmd) . '.php';
+    if (file_exists($filename)) { 
+       require(preg_replace('/[^a-zA-Z0-9_-]/', '', $cmd) . '.php');
+    } else {
+      require_once('includes/application_top.php');
+      zen_redirect(zen_admin_href_link(FILENAME_DEFAULT));
+    }
 }
