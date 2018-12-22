@@ -45,7 +45,6 @@ define('TEXT_PWDRESET_INTRO', 'To reset the password for this customer, enter a 
 define('TEXT_CUST_NEW_PASSWORD', 'New Password:');
 define('TEXT_CUST_CONFIRM_PASSWORD', 'Confirm Password:');
 define('ERROR_PWD_TOO_SHORT', 'Error: password is shorter than the number of characters configured for this store.');
-define('SUCCESS_PASSWORD_UPDATED', 'Password updated.');
 
 define('EMAIL_CUSTOMER_PWD_CHANGE_MESSAGE', 'Your password has been changed by the store administrator. Your new password is: ');
 define('EMAIL_CUSTOMER_PWD_CHANGE_SUBJECT', 'Account password reset');
