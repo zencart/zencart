@@ -24,7 +24,7 @@
         <?php if (!$tplVars['hasFoundAdminPages']) { ?>
             <?php echo NO_NEW_PAGES; ?>
         <?php } ?>
-        <?php if ($tplVars['hasAdminPages']) { ?>
+        <?php if (!empty($tplVars['newAdminPages']) && $tplVars['hasAdminPages']) { ?>
             <table class="table">
                 <thead>
                 <tr>
