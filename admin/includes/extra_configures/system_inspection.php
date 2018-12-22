@@ -80,6 +80,7 @@ $built_in_boxes = array(
 'BOX_REPORTS_PRODUCTS_PURCHASED',
 'BOX_REPORTS_ORDERS_TOTAL',
 'BOX_REPORTS_PRODUCTS_LOWSTOCK',
+'BOX_REPORTS_SALES_REPORT_GRAPHS',
 'BOX_REPORTS_CUSTOMERS_REFERRALS',
 
 // tools text
@@ -90,6 +91,7 @@ $built_in_boxes = array(
 'BOX_TOOLS_CACHE',
 'BOX_TOOLS_DEFINE_LANGUAGE',
 'BOX_TOOLS_FILE_MANAGER',
+'BOX_TOOLS_FINDDUPMODELS',
 'BOX_TOOLS_MAIL',
 'BOX_TOOLS_SERVER_INFO',
 'BOX_TOOLS_WHOS_ONLINE',
@@ -152,6 +154,7 @@ $built_in_tables = array(
 'admin',
 'admin_activity_log',
 'admin_menus',
+'admin_notifications',
 'admin_pages',
 'admin_profiles',
 'admin_pages_to_profiles',
@@ -186,6 +189,7 @@ $built_in_tables = array(
 'db_cache',
 'email_archive',
 'ezpages',
+'ezpages_content',
 'featured',
 'files_uploaded',
 'geo_zones',
