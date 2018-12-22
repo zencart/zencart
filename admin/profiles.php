@@ -8,6 +8,8 @@
  */
 
 require('includes/application_top.php');
+require_once('includes/template/common/tplHtmlHead.php');
+require_once('includes/template/common/tplHtmlHeadLegacy.php');
 
 // determine whether an action has been requested
 if (isset($_POST['action']) && in_array($_POST['action'], array('insert','update','update_name')))
@@ -100,7 +102,6 @@ switch ($action) {
     $profileList = zen_get_profiles(TRUE);
     break;
 }
-require('includes/admin_html_head.php');
 ?>
 <link rel="stylesheet" type="text/css" href="includes/template/css/admin_access.css">
 <script type="text/javascript">
@@ -117,7 +118,7 @@ require('includes/admin_html_head.php');
 </head>
 <body>
 <!-- header //-->
-<?php require(DIR_WS_INCLUDES . 'header.php'); ?>
+<?php require('includes/template/common/tplHeader.php'); ?>
 <!-- header_eof //-->
 
 <!-- body //-->
