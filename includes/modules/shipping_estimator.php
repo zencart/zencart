@@ -151,10 +151,10 @@ if ($_SESSION['cart']->count_contents() > 0) {
   }
   // begin shipping cost
   if(!$free_shipping && $_SESSION['cart']->get_content_type() !== 'virtual'){
-    if (isset($_POST['scid']) && zen_not_null($_POST['scid'])){
+    if (!empty($_POST['scid'])){
       list($module, $method) = explode('_', $_POST['scid']);
       $_SESSION['cart_sid'] = $_POST['scid'];
-    }elseif (isset($_SESSION['cart_sid']) && $_SESSION['cart_sid']){
+    }elseif (!empty($_SESSION['cart_sid'])){
       list($module, $method) = explode('_', $_SESSION['cart_sid']);
     }else{
       $module="";
