@@ -23,33 +23,34 @@
  * @param string $url url to redirect to
  * @param string $httpResponseCode
  */
-  function zen_redirect($url, $httpResponseCode = '') {
+function zen_redirect($url, $httpResponseCode = '')
+{
     global $request_type;
     // Are we loading an SSL page?
-    if ( (ENABLE_SSL == 'true') && ($request_type == 'SSL') ) {
-      // yes, but a NONSSL url was supplied
-      if (substr($url, 0, strlen(HTTP_SERVER . DIR_WS_CATALOG)) == HTTP_SERVER . DIR_WS_CATALOG) {
-        // So, change it to SSL, based on site's configuration for SSL
-        $url = HTTPS_SERVER . DIR_WS_HTTPS_CATALOG . substr($url, strlen(HTTP_SERVER . DIR_WS_CATALOG));
-      }
+    if ((ENABLE_SSL == 'true') && ($request_type == 'SSL')) {
+        // yes, but a NONSSL url was supplied
+        if (substr($url, 0, strlen(HTTP_SERVER . DIR_WS_CATALOG)) == HTTP_SERVER . DIR_WS_CATALOG) {
+            // So, change it to SSL, based on site's configuration for SSL
+            $url = HTTPS_SERVER . DIR_WS_HTTPS_CATALOG . substr($url, strlen(HTTP_SERVER . DIR_WS_CATALOG));
+        }
     }
 
-  // clean up URL before executing it
+    // clean up URL before executing it
     $url = preg_replace('/&{2,}/', '&', $url);
     $url = preg_replace('/(&amp;)+/', '&amp;', $url);
     // header locates should not have the &amp; in the address it breaks things
     $url = preg_replace('/(&amp;)+/', '&', $url);
 
     if ($httpResponseCode == '') {
-      session_write_close();
-      header('Location: ' . $url);
+        session_write_close();
+        header('Location: ' . $url);
     } else {
-      session_write_close();
-      header('Location: ' . $url, TRUE, (int)$httpResponseCode);
+        session_write_close();
+        header('Location: ' . $url, true, (int)$httpResponseCode);
     }
 
     exit();
-  }
+}
 
 /**
  * Parse the data used in the html tags to ensure the tags will not break.
@@ -59,9 +60,10 @@
  * @param array $parse needle to find
  * @return string
  */
-  function zen_parse_input_field_data($data, array $parse) {
+function zen_parse_input_field_data($data, array $parse)
+{
     return strtr(trim($data), $parse);
-  }
+}
 
 /**
  * Returns a string with conversions for security.
@@ -71,17 +73,18 @@
  * @param boolean $protected Do we run htmlspecialchars over the string
  * @return string
  */
-  function zen_output_string($string, $translate = false, $protected = false) {
+function zen_output_string($string, $translate = false, $protected = false)
+{
     if ($protected == true) {
-      return htmlspecialchars($string, ENT_COMPAT, CHARSET, TRUE);
-    } else {
-      if ($translate === false) {
-        return zen_parse_input_field_data($string, array('"' => '&quot;'));
-      } else {
-        return zen_parse_input_field_data($string, $translate);
-      }
+        return htmlspecialchars($string, ENT_COMPAT, CHARSET, true);
     }
-  }
+
+    if ($translate === false) {
+        return zen_parse_input_field_data($string, ['"' => '&quot;']);
+    }
+
+    return zen_parse_input_field_data($string, $translate);
+}
 
 /**
  * Returns a string with conversions for security.
@@ -93,9 +96,10 @@
  * @param string $string string to be parsed
  * @return string
  */
-  function zen_output_string_protected($string) {
+function zen_output_string_protected($string)
+{
     return zen_output_string($string, false, true);
-  }
+}
 
 /**
  * Returns a string with conversions for security.
@@ -104,11 +108,12 @@
  * @return mixed
  */
 
-  function zen_sanitize_string($string) {
+function zen_sanitize_string($string)
+{
     $string = preg_replace('/ +/', ' ', $string);
-    return preg_replace("/[<>]/", '_', $string);
-  }
 
+    return preg_replace("/[<>]/", '_', $string);
+}
 
 /**
  * Break a word in a string if it is longer than a specified length ($len)
@@ -118,25 +123,26 @@
  * @param string $break_char character to use at the end of the broken line
  * @return string
  */
-  function zen_break_string($string, $len, $break_char = '-') {
+function zen_break_string($string, $len, $break_char = '-')
+{
     $l = 0;
     $output = '';
-    for ($i=0, $n=strlen($string); $i<$n; $i++) {
-      $char = substr($string, $i, 1);
-      if ($char != ' ') {
-        $l++;
-      } else {
-        $l = 0;
-      }
-      if ($l > $len) {
-        $l = 1;
-        $output .= $break_char;
-      }
-      $output .= $char;
+    for ($i = 0, $n = strlen($string); $i < $n; $i++) {
+        $char = substr($string, $i, 1);
+        if ($char != ' ') {
+            $l++;
+        } else {
+            $l = 0;
+        }
+        if ($l > $len) {
+            $l = 1;
+            $output .= $break_char;
+        }
+        $output .= $char;
     }
 
     return $output;
-  }
+}
 
 /**
  * Return all HTTP GET variables, except those passed as a parameter
@@ -146,69 +152,78 @@
  * @param mixed $exclude_array either a single or array of parameter names to be excluded from output
  * @return mixed|string
  */
-  function zen_get_all_get_params($exclude_array = array()) {
-    if (!is_array($exclude_array)) $exclude_array = array();
-    $exclude_array = array_merge($exclude_array, array('main_page', 'cmd', 'error', 'x', 'y')); // de-duplicating this is less performant than just letting it repeat the loop on duplicates
+function zen_get_all_get_params($exclude_array = [])
+{
+    if (!is_array($exclude_array)) {
+        $exclude_array = [];
+    }
+    $exclude_array = array_merge($exclude_array, ['main_page', 'cmd', 'error', 'x', 'y']); // de-duplicating this is less performant than just letting it repeat the loop on duplicates
     if (function_exists('zen_session_name')) {
-      $exclude_array[] = zen_session_name();
+        $exclude_array[] = zen_session_name();
     }
     $get_url = '';
-    if (is_array($_GET) && (sizeof($_GET) > 0)) {
-      foreach($_GET as $key => $value) {
-        if (!in_array($key, $exclude_array)) {
-          if (!is_array($value)) {
-            if (strlen($value) > 0) {
-              $get_url .= zen_sanitize_string($key) . '=' . rawurlencode(stripslashes($value)) . '&';
+    if (is_array($_GET) && (count($_GET) > 0)) {
+        foreach ($_GET as $key => $value) {
+            if (!in_array($key, $exclude_array)) {
+                if (!is_array($value)) {
+                    if (strlen($value) > 0) {
+                        $get_url .= zen_sanitize_string($key) . '=' . rawurlencode(stripslashes($value)) . '&';
+                    }
+                } else {
+                    foreach (array_filter($value) as $arr) {
+                        $get_url .= zen_sanitize_string($key) . '[]=' . rawurlencode(stripslashes($arr)) . '&';
+                    }
+                }
             }
-          } else {
-            foreach(array_filter($value) as $arr){
-              $get_url .= zen_sanitize_string($key) . '[]=' . rawurlencode(stripslashes($arr)) . '&';
-            }
-          }
         }
-      }
     }
 
     $get_url = preg_replace('/&{2,}/', '&', $get_url);
     $get_url = preg_replace('/(&amp;)+/', '&amp;', $get_url);
 
     return $get_url;
-  }
+}
+
 /**
  * Return all GET params as (usually hidden) POST params
+ *
  * @param array $exclude_array parameters to exclude
  * @param boolean $hidden post as hidden
  * @return string
  */
-  function zen_post_all_get_params($exclude_array = array(), $hidden = true) {
-    if (!is_array($exclude_array)) $exclude_array = array();
-    $exclude_array = array_merge($exclude_array, array(zen_session_name(), 'cmd', 'error', 'x', 'y'));
-    $fields = '';
-    if (is_array($_GET) && (sizeof($_GET) > 0)) {
-      foreach($_GET as $key => $value) {
-        if (!in_array($key, $exclude_array)) {
-          if (!is_array($value)) {
-            if (strlen($value) > 0) {
-              if ($hidden) {
-                $fields .= zen_draw_hidden_field($key, $value);
-              } else {
-                $fields .= zen_draw_input_field($key, $value);
-              }
-            }
-          } else {
-            foreach(array_filter($value) as $arr){
-              if ($hidden) {
-                $fields .= zen_draw_hidden_field($key . '[]', $arr);
-              } else {
-                $fields .= zen_draw_input_field($key . '[]', $arr);
-              }
-            }
-          }
-        }
-      }
+function zen_post_all_get_params($exclude_array = [], $hidden = true)
+{
+    if (!is_array($exclude_array)) {
+        $exclude_array = [];
     }
+    $exclude_array = array_merge($exclude_array, [zen_session_name(), 'cmd', 'error', 'x', 'y']);
+    $fields = '';
+    if (is_array($_GET) && (count($_GET) > 0)) {
+        foreach ($_GET as $key => $value) {
+            if (!in_array($key, $exclude_array)) {
+                if (!is_array($value)) {
+                    if (strlen($value) > 0) {
+                        if ($hidden) {
+                            $fields .= zen_draw_hidden_field($key, $value);
+                        } else {
+                            $fields .= zen_draw_input_field($key, $value);
+                        }
+                    }
+                } else {
+                    foreach (array_filter($value) as $arr) {
+                        if ($hidden) {
+                            $fields .= zen_draw_hidden_field($key . '[]', $arr);
+                        } else {
+                            $fields .= zen_draw_input_field($key . '[]', $arr);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     return $fields;
-  }
+}
 
 /**
  * Returns details about the visitor's browser: pass the string you want to detect and this will return true/false
@@ -216,44 +231,37 @@
  * @param string $component feature to report
  * @return string
  */
-  function zen_browser_detect($component) {
+function zen_browser_detect($component)
+{
     return stristr($_SERVER['HTTP_USER_AGENT'], $component);
-  }
+}
 
-
-////
-// Wrapper function for round()
 /**
+ * Wrapper function for round()
+ *
  * @param float $value
  * @param int $precision
  * @return float
  */
-  function zen_round($value, $precision) {
-    $value =  round($value *pow(10,$precision),0);
-    $value = $value/pow(10,$precision);
+function zen_round($value, $precision)
+{
+    $value = round($value * pow(10, $precision), 0);
+    $value = $value / pow(10, $precision);
+
     return $value;
-  }
-
-
-/**
- * @param float $number
- * @param string $filler  default filler is a 0
- * @return string
- */
-  function zen_row_number_format($number, $filler='0') {
-    if ( ($number < 10) && (substr($number, 0, 1) != '0') ) $number = $filler . $number;
-
-    return $number;
-  }
-
+}
 
 /**
  * Output a long raw date string in the active locale date format
+ *
  * @param string $raw_date needs to be in this format: YYYY-MM-DD HH:MM:SS
  * @return bool|string
  */
-  function zen_date_long($raw_date) {
-    if ($raw_date <= '0001-01-01 00:00:00' || $raw_date == '') return false;
+function zen_date_long($raw_date)
+{
+    if ($raw_date <= '0001-01-01 00:00:00' || $raw_date == '') {
+        return false;
+    }
 
     $year = (int)substr($raw_date, 0, 4);
     $month = (int)substr($raw_date, 5, 2);
@@ -263,9 +271,13 @@
     $second = (int)substr($raw_date, 17, 2);
 
     $retVal = strftime(DATE_FORMAT_LONG, mktime($hour, $minute, $second, $month, $day, $year));
-    if (stristr(PHP_OS, 'win')) return utf8_encode($retVal);
+
+    if (false !== stripos(PHP_OS, 'win')) {
+        return utf8_encode($retVal);
+    }
+
     return $retVal;
-  }
+}
 
 
 /**
@@ -275,8 +287,11 @@
  * @param string $raw_date needs to be in this format: YYYY-MM-DD HH:MM:SS
  * @return bool|string
  */
-  function zen_date_short($raw_date) {
-    if ($raw_date <= '0001-01-01 00:00:00' || empty($raw_date)) return false;
+function zen_date_short($raw_date)
+{
+    if ($raw_date <= '0001-01-01 00:00:00' || empty($raw_date)) {
+        return false;
+    }
 
     $year = substr($raw_date, 0, 4);
     $month = (int)substr($raw_date, 5, 2);
@@ -287,18 +302,23 @@
 
     // error on 1969 only allows for leap year
     if ($year != 1969 && @date('Y', mktime($hour, $minute, $second, $month, $day, $year)) == $year) {
-      return date(DATE_FORMAT, mktime($hour, $minute, $second, $month, $day, $year));
-    } else {
-      return preg_replace('/2037$/', $year, date(DATE_FORMAT, mktime($hour, $minute, $second, $month, $day, 2037)));
+        return date(DATE_FORMAT, mktime($hour, $minute, $second, $month, $day, $year));
     }
-  }
+
+    return preg_replace('/2037$/', $year, date(DATE_FORMAT, mktime($hour, $minute, $second, $month, $day, 2037)));
+}
 
 /**
+ * Output a short raw datetime string in the active locale date format
+ *
  * @param string $raw_datetime
  * @return bool|string
  */
-  function zen_datetime_short($raw_datetime) {
-    if ($raw_datetime <= '0001-01-01 00:00:00' || $raw_datetime == '') return false;
+function zen_datetime_short($raw_datetime)
+{
+    if ($raw_datetime <= '0001-01-01 00:00:00' || $raw_datetime == '') {
+        return false;
+    }
 
     $year = (int)substr($raw_datetime, 0, 4);
     $month = (int)substr($raw_datetime, 5, 2);
@@ -308,11 +328,12 @@
     $second = (int)substr($raw_datetime, 17, 2);
 
     return strftime(DATE_TIME_FORMAT, mktime($hour, $minute, $second, $month, $day, $year));
-  }
+}
 
 
 /**
  * Format date
+ *
  * @param string $date
  * @param string $formatOut mysql|raw|raw-reverse
  * @param mixed $formatIn default is DATE_FORMAT_DATEPICKER_ADMIN
@@ -320,27 +341,29 @@
  */
 function zen_format_date_raw($date, $formatOut = 'mysql', $formatIn = DATE_FORMAT_DATEPICKER_ADMIN)
 {
-  if ($date == 'null' || $date == '') return $date;
-  $mpos = strpos($formatIn, 'm');
-  $dpos = strpos($formatIn, 'd');
-  $ypos = strpos($formatIn, 'y');
-  $d = substr($date, $dpos, 2);
-  $m = substr($date, $mpos, 2);
-  $y = substr($date, $ypos, 4);
-  switch ($formatOut)
-  {
-    case 'raw':
-      $mdate = $y . $m . $d;
-      break;
-    case 'raw-reverse':
-      $mdate = $d . $m . $y;
-      break;
-    case 'mysql':
-    default:
-     $mdate = $y . '-' . $m . '-' . $d;
+    if ($date == 'null' || $date == '') {
+        return $date;
+    }
+    $mpos = strpos($formatIn, 'm');
+    $dpos = strpos($formatIn, 'd');
+    $ypos = strpos($formatIn, 'y');
+    $d = substr($date, $dpos, 2);
+    $m = substr($date, $mpos, 2);
+    $y = substr($date, $ypos, 4);
+    switch ($formatOut) {
+        case 'raw':
+            $mdate = $y . $m . $d;
+            break;
+        case 'raw-reverse':
+            $mdate = $d . $m . $y;
+            break;
+        case 'mysql':
+        default:
+            $mdate = $y . '-' . $m . '-' . $d;
 
-  }
-  return $mdate;
+    }
+
+    return $mdate;
 }
 
 /**
@@ -352,8 +375,8 @@ function zen_format_date_raw($date, $formatOut = 'mysql', $formatIn = DATE_FORMA
  */
 function zen_get_minutes_since($timestamp) {
   $the_seconds = (time() - $timestamp);
-  $the_time_since= gmdate('H:i:s', $the_seconds);
-  return $the_time_since;
+
+    return gmdate('H:i:s', $the_seconds);
 }
 
 
@@ -828,15 +851,14 @@ function zen_get_minutes_since($timestamp) {
       $seeded = true;
     }
 
-    if (isset($min) && isset($max)) {
+    if (isset($min, $max)) {
       if ($min >= $max) {
         return $min;
-      } else {
-        return mt_rand($min, $max);
       }
-    } else {
-      return mt_rand();
+      return mt_rand($min, $max);
     }
+
+    return mt_rand();
   }
 
 /**
@@ -850,22 +872,23 @@ function zen_get_minutes_since($timestamp) {
       $url = $url['host'];
     }
     $domain_array = explode('.', $url);
-    $domain_size = sizeof($domain_array);
+    $domain_size = count($domain_array);
     if ($domain_size > 1) {
       if (SESSION_USE_FQDN == 'True') return $url;
       if (is_numeric($domain_array[$domain_size-2]) && is_numeric($domain_array[$domain_size-1])) {
         return false;
-      } else {
-        $tld = "";
+      }
+
+        $tld = '';
         foreach ($domain_array as $dPart)
         {
-          if ($dPart != "www") $tld = $tld . "." . $dPart;
+          if ($dPart !== 'www') $tld = $tld . '.' . $dPart;
         }
+
         return substr($tld, 1);
-      }
-    } else {
-      return false;
     }
+
+      return false;
   }
 
   /**
@@ -895,7 +918,7 @@ function zen_get_minutes_since($timestamp) {
         $ip = $_SERVER['REMOTE_ADDR'];
       }
     }
-    if (trim($ip) == '') {
+    if (empty($ip)) {
       if (getenv('HTTP_X_FORWARDED_FOR')) {
         $ip = getenv('HTTP_X_FORWARDED_FOR');
       } elseif (getenv('HTTP_CLIENT_IP')) {
@@ -913,7 +936,7 @@ function zen_get_minutes_since($timestamp) {
     /**
      *  if it's still blank, set to a single dot
      */
-    if (trim($ip) == '') $ip = '.';
+    if (empty($ip)) $ip = '.';
 
     return $ip;
   }
@@ -945,7 +968,7 @@ function zen_get_minutes_since($timestamp) {
 // modified to manage restrictions better - leave commented for now
     if ($coupons->RecordCount() == 0) return true;
     if ($coupons->RecordCount() == 1) {
-// If product is restricted(deny) and is same as tested prodcut deny
+// If product is restricted(deny) and is same as tested product, deny
       if (($coupons->fields['product_id'] != 0) && $coupons->fields['product_id'] == (int)$product_id && $coupons->fields['coupon_restrict']=='Y') return false;
 // If product is not restricted(allow) and is not same as tested prodcut deny
       if (($coupons->fields['product_id'] != 0) && $coupons->fields['product_id'] != (int)$product_id && $coupons->fields['coupon_restrict']=='N') return false;
@@ -959,7 +982,7 @@ function zen_get_minutes_since($timestamp) {
     $allow_for_product = validate_for_product($product_id, $coupon_id);
 //    echo '#'.$product_id . '#' . $allow_for_category;
 //    echo '#'.$product_id . '#' . $allow_for_product;
-    if ($allow_for_category == 'none') {
+    if ($allow_for_category === 'none') {
       if ($allow_for_product === 'none') return true;
       if ($allow_for_product === true) return true;
       if ($allow_for_product === false) return false;
@@ -1004,9 +1027,9 @@ function zen_get_minutes_since($timestamp) {
     }
     if ($checkQuery->fields['total'] > 0) {
       return false;
-    } else {
-      return 'none';
     }
+
+    return 'none';
   }
 
 /**
