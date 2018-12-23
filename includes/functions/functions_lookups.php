@@ -393,9 +393,11 @@
  */
   function zen_get_categories_name($who_am_i) {
     global $db;
-    $the_categories_name_query= "select categories_name from " . TABLE_CATEGORIES_DESCRIPTION . " where categories_id= '" . $who_am_i . "' and language_id= '" . $_SESSION['languages_id'] . "'";
+    $the_categories_name_query= "select categories_name from " . TABLE_CATEGORIES_DESCRIPTION . " where categories_id= '" . (int)$who_am_i . "' and language_id= '" . (int)$_SESSION['languages_id'] . "'";
 
     $the_categories_name = $db->Execute($the_categories_name_query);
+    
+    if ($the_categories_name->EOF) return '';
 
     return $the_categories_name->fields['categories_name'];
   }
@@ -432,7 +434,7 @@
                       and p.manufacturers_id = m.manufacturers_id";
 
     $product =$db->Execute($product_query);
-
+    if ($product->EOF) return '';
     return $product->fields['manufacturers_image'];
   }
 
