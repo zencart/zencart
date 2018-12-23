@@ -67,24 +67,17 @@ if (SESSION_FORCE_COOKIE_USE == 'True') {
     zen_session_start();
     $session_started = true;
   }
+
 } elseif (SESSION_BLOCK_SPIDERS == 'True') {
-  $user_agent = strtolower($_SERVER['HTTP_USER_AGENT']);
-  $spider_flag = false;
-  if (zen_not_null($user_agent)) {
-    $spiders = file(DIR_WS_INCLUDES . 'spiders.txt');
-    for ($i=0, $n=sizeof($spiders); $i<$n; $i++) {
-      if (zen_not_null($spiders[$i]) && substr($spiders[$i], 0, 4) != '$Id:') {
-        if (is_integer(strpos($user_agent, trim($spiders[$i])))) {
-          $spider_flag = true;
-          break;
-        }
-      }
-    }
-  }
+
+  $CrawlerDetect = new \Jaybizzle\CrawlerDetect\CrawlerDetect;
+  $spider_flag = $CrawlerDetect->isCrawler();
+
   if ($spider_flag == false) {
     zen_session_start();
     $session_started = true;
   } else {
+
     // if a spider has a zenid in the URL, redirect it back without the zenid
     if (isset($_GET['zenid']) && $_GET['zenid'] != '') {
       $tmp = zcRequest::readGet('main_page', FILENAME_DEFAULT);
@@ -98,7 +91,7 @@ if (SESSION_FORCE_COOKIE_USE == 'True') {
   zen_session_start();
   $session_started = true;
 }
-unset($spiders);
+
 /**
  * set host_address (once per session to reduce load on server, since gethostbyaddr() can be slow on many servers)
  */
