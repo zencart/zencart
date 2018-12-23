@@ -379,10 +379,12 @@
   function zen_get_categories_image($what_am_i) {
     global $db;
 
-    $the_categories_image_query= "select categories_image from " . TABLE_CATEGORIES . " where categories_id= '" . $what_am_i . "'";
-    $the_products_category = $db->Execute($the_categories_image_query);
+    $the_categories_image_query= "select categories_image from " . TABLE_CATEGORIES . " where categories_id= '" . (int)$what_am_i . "'";
+    $result = $db->Execute($the_categories_image_query);
 
-    return isset($the_products_category->fields['categories_image']) ? $the_products_category->fields['categories_image'] : '';
+    if ($result->EOF) return '';
+    
+    return $result->fields['categories_image'];
   }
 
 /*
