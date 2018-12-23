@@ -268,6 +268,7 @@ class systemChecker
   }
   public function checkFileExists($filepath)
   {
+    if (is_array($filepath)) $filepath = $filepath['fileDir'];
     return file_exists($filepath);
   }
   public function checkWriteableDir($parameters)
