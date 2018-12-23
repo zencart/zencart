@@ -8,6 +8,8 @@
  */
 
 require('includes/application_top.php');
+require_once('includes/template/common/tplHtmlHeadLegacy.php');
+require_once('includes/template/common/tplHtmlHead.php');
 
 // Check if session has timed out
 if (!isset($_SESSION['admin_id'])) zen_redirect(zen_admin_href_link(FILENAME_LOGIN));
@@ -117,13 +119,12 @@ switch ($action) {
 
 // we'll always display a list of the available users
 $userList = zen_get_users();
-require('includes/admin_html_head.php');
 ?>
 <link rel="stylesheet" type="text/css" href="includes/template/css/admin_access.css" />
 </head>
 <body>
 <!-- header //-->
-<?php require(DIR_WS_INCLUDES . 'header.php'); ?>
+<?php require('includes/template/common/tplHeader.php'); ?>
 <!-- header_eof //-->
 
 <!-- body //-->
