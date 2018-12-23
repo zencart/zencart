@@ -1,9 +1,9 @@
 #
-# * This SQL script upgrades the core Zen Cart database structure from v1.5.4 to v1.6.0
+# * This SQL script upgrades the core Zen Cart database structure from v1.5.6 to v1.6.0
 # *
 # * @package Installer
 # * @access private
-# * @copyright Copyright 2003-2015 Zen Cart Development Team
+# * @copyright Copyright 2003-2018 Zen Cart Development Team
 # * @copyright Portions copyright COWOA authors see https://www.zen-cart.com/downloads.php?do=file&id=1115
 # * @copyright Portions Copyright 2003 osCommerce
 # * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
@@ -42,8 +42,6 @@ TRUNCATE TABLE sessions;
 
 #############
 UPDATE configuration SET date_added='0001-01-01' where date_added < '0001-01-01';
-
-ALTER TABLE configuration ADD val_function text default NULL AFTER set_function;
 
 DELETE FROM configuration WHERE configuration_key in ('SESSION_WRITE_DIRECTORY', 'SESSION_CHECK_USER_AGENT', 'SESSION_CHECK_IP_ADDRESS', 'SESSION_CHECK_SSL_SESSION_ID');
 
