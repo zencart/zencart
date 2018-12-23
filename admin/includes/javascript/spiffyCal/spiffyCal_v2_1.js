@@ -196,8 +196,16 @@ function spiffyCalManager() {
         var secondMatchAt = 0;
         var bOK = false;
         var bIsEmpty = false;
-        var strStart = MONTH_NAMES[dStartDate.getMonth()] + '-' + dStartDate.getDate() + '-' + dStartDate.getFullYear();
-        var strEnd = MONTH_NAMES[dEndDate.getMonth()] + '-' + dEndDate.getDate() + '-' + dEndDate.getFullYear();
+
+        var strStart = ''; 
+        if (dStartDate != null) { 
+           strStart = MONTH_NAMES[dStartDate.getMonth()] + '-' + dStartDate.getDate() + '-' + dStartDate.getFullYear();
+        } 
+       
+        var strEnd = ''; 
+        if (dEndDate != null) { 
+           strEnd = MONTH_NAMES[dEndDate.getMonth()] + '-' + dEndDate.getDate() + '-' + dEndDate.getFullYear();
+        }
         var rangeMsg = 'This input box is set up to accept dates between:\n\n   ' +
                 strStart + '\n\nand\n\n   ' + strEnd + '\n\nPlease enter a date no ';
 
@@ -225,7 +233,6 @@ function spiffyCalManager() {
                 }
             }
         }
-        alert('formatMatchCount=' + formatMatchCount);
         if (formatMatchCount > 1) {
 
             if (this.showHelpAlerts) {
@@ -251,7 +258,6 @@ function spiffyCalManager() {
                 bOK = true;
             }
         }
-        alert('TEST    ' + dThis.getDate() + "-" + dThis.getMonth());
 
         if (bOK == true) {
             eInput.className = "cal-TextBox form-control";
@@ -311,6 +317,7 @@ function spiffyCalManager() {
             setTimeout('focusHack.focus();focusHack.select();');
             return false;
         }
+        return true; 
     }
     this.validateDate = validateDate;
 
@@ -1422,5 +1429,10 @@ function makeArray0() {
         this[i] = makeArray0.arguments[i];
 }
 
+function check_dates() {
+   if (!calMgr.validateDate(document.new_special.start,StartDate.required)) return false; 
+   if (!calMgr.validateDate(document.new_special.end,EndDate.required)) return false; 
+   return true;
+}
 //---------------------------------------
 
