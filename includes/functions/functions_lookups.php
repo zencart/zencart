@@ -382,7 +382,7 @@
     $the_categories_image_query= "select categories_image from " . TABLE_CATEGORIES . " where categories_id= '" . $what_am_i . "'";
     $the_products_category = $db->Execute($the_categories_image_query);
 
-    return $the_products_category->fields['categories_image'];
+    return isset($the_products_category->fields['categories_image']) ? $the_products_category->fields['categories_image'] : '';
   }
 
 /*
