@@ -125,7 +125,7 @@ class shoppingCart extends base {
             foreach($this->contents[$products_id]['attributes'] as $option => $value) {
 
               //clr 031714 udate query to include attribute value. This is needed for text attributes.
-              $attr_value = $this->contents[$products_id]['attributes_values'][$option];
+              $attr_value = isset($this->contents[$products_id]['attributes_values'][$option]) ? $this->contents[$products_id]['attributes_values'][$option] : '';
               //                zen_db_query("insert into " . TABLE_CUSTOMERS_BASKET_ATTRIBUTES . " (customers_id, products_id, products_options_id, products_options_value_id, products_options_value_text) values ('" . (int)$customer_id . "', '" . zen_db_input($products_id) . "', '" . (int)$option . "', '" . (int)$value . "', '" . zen_db_input($attr_value) . "')");
               $products_options_sort_order= zen_get_attributes_options_sort_order(zen_get_prid($products_id), $option, $value);
               if ($attr_value) {
