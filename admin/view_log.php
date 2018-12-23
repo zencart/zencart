@@ -7,13 +7,14 @@
  */
 
   require('includes/application_top.php');
-  require('includes/admin_html_head.php');
+  require_once('includes/template/common/tplHtmlHeadLegacy.php');
+  require_once('includes/template/common/tplHtmlHead.php');
 ?>
 </head>
 <body>
 <!-- header //-->
 <div class="header-area">
-<?php require(DIR_WS_INCLUDES . 'header.php'); ?>
+<?php require('includes/template/common/tplHeader.php'); ?>
 </div>
 <!-- header_eof //-->
 

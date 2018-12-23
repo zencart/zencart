@@ -10,6 +10,8 @@
   define('AUTOCHECK', 'False');
 
   require('includes/application_top.php');
+  require_once('includes/template/common/tplHtmlHeadLegacy.php');
+  require_once('includes/template/common/tplHtmlHead.php');
 
   $currencies = new currencies();
 
@@ -149,7 +151,6 @@
         break;
     }
   }
-require('includes/admin_html_head.php');
 
   if ( ($action == 'new') || ($action == 'edit') ) {
 ?>
@@ -238,7 +239,7 @@ function SetCategories() {
   }
 ?>
 <!-- header //-->
-<?php require(DIR_WS_INCLUDES . 'header.php'); ?>
+<?php require('includes/template/common/tplHeader.php'); ?>
 <!-- header_eof //-->
 
 <!-- body //-->
