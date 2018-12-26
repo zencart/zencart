@@ -4,7 +4,7 @@
  * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Zcwilt Thu Nov 1 17:28:42 2018 +0000 Modified in v1.5.6 $
+ * @version $Id: Zcwilt Thu Nov 1 17:28:42 2018 +0000 Modified in v1.5.6a $
  */
 require('includes/application_top.php');
 if (file_exists(DIR_FS_CATALOG . 'includes/classes/dbencdata.php')) {
@@ -257,7 +257,7 @@ if (zen_not_null($action)) {
                                                         WHERE orders_status_id = " . (int)$module->order_status . "
                                                         AND language_id = " . (int)$_SESSION['languages_id']);
                     ?>
-                    <td class="dataTableContent text-left">&nbsp;&nbsp;&nbsp;<?php echo(is_numeric($module->sort_order) ? (($orders_status_name->fields['orders_status_id'] < 1) ? TEXT_DEFAULT : $orders_status_name->fields['orders_status_name']) : ''); ?>&nbsp;&nbsp;&nbsp;</td>
+                    <td class="dataTableContent text-left">&nbsp;&nbsp;&nbsp;<?php echo(is_numeric($module->sort_order) ? (empty($orders_status_name->fields['orders_status_id']) ? TEXT_DEFAULT : $orders_status_name->fields['orders_status_name']) : ''); ?>&nbsp;&nbsp;&nbsp;</td>
                   <?php } ?>
                   <td class="dataTableContent text-right">
                       <?php
