@@ -69,7 +69,10 @@ if (SESSION_FORCE_COOKIE_USE == 'True') {
     $session_started = true;
   }
 } elseif (SESSION_BLOCK_SPIDERS == 'True') {
-  $user_agent = strtolower($_SERVER['HTTP_USER_AGENT']);
+  $user_agent = '';
+  if (isset($_SERVER['HTTP_USER_AGENT'])) {
+    $user_agent = strtolower($_SERVER['HTTP_USER_AGENT']);
+  }
   $spider_flag = false;
   if (zen_not_null($user_agent)) {
     $spiders = file(DIR_WS_INCLUDES . 'spiders.txt');
