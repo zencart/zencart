@@ -16,7 +16,7 @@ $zco_notifier->notify('NOTIFY_CHECKOUT_PROCESS_BEGIN');
 require(DIR_WS_MODULES . zen_get_module_directory('require_languages.php'));
 
 // if the customer is not logged on, redirect them to the time out page
-  if (!$_SESSION['customer_id']) {
+  if (empty($_SESSION['customer_id'])) {
     zen_redirect(zen_href_link(FILENAME_TIME_OUT));
   } else {
     // validate customer
