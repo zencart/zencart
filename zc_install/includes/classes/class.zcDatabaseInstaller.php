@@ -366,6 +366,17 @@ class zcDatabaseInstaller
       }
     }
   }
+  public function parserLeftJoin()
+  {
+    if (!$this->tableExists($this->lineSplit[2]))
+    {
+      if (!isset($result)) $result = sprintf(REASON_TABLE_NOT_FOUND, $this->lineSplit[2]).' CHECK PREFIXES!';
+      $this->writeUpgradeExceptions($this->line, $result, $this->fileName);
+      error_log($result . "\n" . $this->line . "\n---------------\n\n");
+    } else {
+      $this->line = 'LEFT JOIN ' . $this->dbPrefix . substr($this->line, 10);
+    }
+  }
   public function writeUpgradeExceptions($line, $message, $sqlFile = '')
   {
     logDetails($line . '  ' . $message . '  ' . $sqlFile, 'upgradeException');
