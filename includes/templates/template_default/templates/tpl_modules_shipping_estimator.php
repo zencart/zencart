@@ -103,7 +103,7 @@
       }
       for ($i=0, $n=sizeof($quotes); $i<$n; $i++) {
         $thisquoteid = '';
-	      if(isset($quotes[$i]['id']) && sizeof($quotes[$i]['methods'])==1 && isset($quotes[$i]['methods'][0]['id'])){
+        if(isset($quotes[$i]['id']) && sizeof($quotes[$i]['methods'])==1 && isset($quotes[$i]['methods'][0]['id'])){
           // simple shipping method
           $thisquoteid = $quotes[$i]['id'].'_'.$quotes[$i]['methods'][0]['id'];
 ?>

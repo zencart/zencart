@@ -6,7 +6,7 @@
  * @copyright Copyright 2003-2013 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: ajeh  Wed Jun 26 12:17:51 2013 -0400 Modified in v1.5.2 $
+ * @version GIT: $Id: Author: ajeh  Wed Jun 26 12:17:51 2013 -0400 Modified by mc12345678 in v1.5.6a $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
@@ -70,7 +70,7 @@ if ($display_specials_price == false) {
 }
 
 switch (true) {
-  case ($products_discounts_query->fields['discount_qty'] <= 2):
+  case (!$products_discounts_query->RecordCount() || $products_discounts_query->fields['discount_qty'] <= 2):
   $show_qty = '1';
   break;
   case ($products_quantity_order_min == ($products_discounts_query->fields['discount_qty']-1) || $products_quantity_order_min == ($products_discounts_query->fields['discount_qty'])):
