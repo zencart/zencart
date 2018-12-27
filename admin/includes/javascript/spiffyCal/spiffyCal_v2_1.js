@@ -196,7 +196,11 @@ function spiffyCalManager() {
         var secondMatchAt = 0;
         var bOK = false;
         var bIsEmpty = false;
-
+        if (dStartDate == null &&  dEndDate == null && bRequired == false) {  
+            if (eInput.value  == null || eInput.value.trim() == '') {
+               return true; 
+            }
+        } 
         var strStart = ''; 
         if (dStartDate != null) { 
            strStart = MONTH_NAMES[dStartDate.getMonth()] + '-' + dStartDate.getDate() + '-' + dStartDate.getFullYear();
@@ -1429,9 +1433,9 @@ function makeArray0() {
         this[i] = makeArray0.arguments[i];
 }
 
-function check_dates() {
-   if (!calMgr.validateDate(document.new_special.start,StartDate.required)) return false; 
-   if (!calMgr.validateDate(document.new_special.end,EndDate.required)) return false; 
+function check_dates(date1, setting1, date2, setting2) {
+   if (!calMgr.validateDate(date1,setting1)) return false; 
+   if (!calMgr.validateDate(date2,setting2)) return false; 
    return true;
 }
 //---------------------------------------
