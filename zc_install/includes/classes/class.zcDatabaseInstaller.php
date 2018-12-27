@@ -352,13 +352,13 @@ class zcDatabaseInstaller
   {
     if (!$this->tableExists($this->lineSplit[2]))
     {
-      if (!isset($result)) $result = sprintf(REASON_TABLE_NOT_FOUND, $table).' CHECK PREFIXES!';
+      if (!isset($result)) $result = sprintf(REASON_TABLE_NOT_FOUND, $this->lineSplit[2]).' CHECK PREFIXES!';
       $this->writeUpgradeExceptions($this->line, $result, $this->fileName);
       $this->ignoreLine = true;
     } else {
       if ($this->tableExists($this->lineSplit[4]))
       {
-        if (!isset($result)) $result = sprintf(REASON_TABLE_ALREADY_EXISTS, $table);
+        if (!isset($result)) $result = sprintf(REASON_TABLE_ALREADY_EXISTS, $this->lineSplit[4]);
         $this->writeUpgradeExceptions($this->line, $result, $this->fileName);
         $this->ignoreLine = true;
       } else {
