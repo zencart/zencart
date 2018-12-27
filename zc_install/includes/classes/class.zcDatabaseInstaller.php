@@ -193,7 +193,7 @@ class zcDatabaseInstaller
       $this->ignoreLine = TRUE;
       if (strtoupper($this->lineSplit[2].' '.$this->lineSplit[3].' '.$this->lineSplit[4]) != 'IF NOT EXISTS')
       {
-        $this->writeUpgradeExceptions($this->line, sprintf(REASON_TABLE_ALREADY_EXISTS, $table), $this->filename);
+        $this->writeUpgradeExceptions($this->line, sprintf(REASON_TABLE_ALREADY_EXISTS, $table), $this->fileName);
       }
     } else
     {
@@ -295,7 +295,7 @@ class zcDatabaseInstaller
   public function parserAlterTable() {
     if(!$this->tableExists($this->lineSplit[2])) {
       $result = sprintf(REASON_TABLE_NOT_FOUND, $this->lineSplit[2]).' CHECK PREFIXES!';
-      $this->writeUpgradeExceptions($this->line, $result, $this->filename);
+      $this->writeUpgradeExceptions($this->line, $result, $this->fileName);
     }
     else {
       $this->line = 'ALTER TABLE ' . $this->dbPrefix . substr($this->line, 12);
