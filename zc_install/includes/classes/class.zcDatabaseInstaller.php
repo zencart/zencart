@@ -177,7 +177,7 @@ class zcDatabaseInstaller
       $this->writeUpgradeExceptions($this->line, $result, $this->fileName);
       $this->ignoreLine = true;
     } else {
-      if (strtoupper($this->lineSplit[2].' '.$this->lineSplit[3]) != 'IF EXISTS')
+      if (!(empty($this->lineSplit[2]) && empty($this->lineSplit[3])) || strtoupper($this->lineSplit[2].' '.$this->lineSplit[3]) != 'IF EXISTS')
       {
         $this->line = 'DROP TABLE ' . $this->dbPrefix . substr($this->line, 11);
       } else {
