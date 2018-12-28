@@ -175,8 +175,6 @@ function zen_session_recreate()
         $oldSessID   = session_id();
         session_regenerate_id();
         $newSessID = session_id();
-        session_id($oldSessID);
-        session_id($newSessID);
         $_SESSION = $saveSession;
         if (IS_ADMIN_FLAG !== true) {
             whos_online_session_recreate($oldSessID, $newSessID);
