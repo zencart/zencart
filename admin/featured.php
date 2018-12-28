@@ -244,7 +244,7 @@ if (zen_not_null($action)) {
         </script>
         <div class="row"><?php echo zen_draw_separator('pixel_trans.gif', '100%', '5'); ?></div>
         <div class="row">
-            <?php echo zen_draw_form('new_featured', FILENAME_FEATURED, zen_get_all_get_params(array('action', 'info', 'fID')) . 'action=' . $form_action . '&go_back=' . $_GET['go_back'], 'post', 'class="form-horizontal"'); ?>
+            <?php echo zen_draw_form('new_featured', FILENAME_FEATURED, zen_get_all_get_params(array('action', 'info', 'fID')) . 'action=' . $form_action . '&go_back=' . $_GET['go_back'], 'post', 'onsubmit="return check_dates(start,StartDate.required, end, EndDate.required);" class="form-horizontal"'); ?>
             <?php
             if ($form_action == 'update') {
               echo zen_draw_hidden_field('featured_id', $_GET['fID']);

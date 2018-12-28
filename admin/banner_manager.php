@@ -305,7 +305,7 @@ if (zen_not_null($action)) {
 
         <div class="row">
             <?php
-            echo zen_draw_form('new_banner', FILENAME_BANNER_MANAGER, (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . 'action=' . $form_action, 'post', 'enctype="multipart/form-data" class="form-horizontal"');
+            echo zen_draw_form('new_banner', FILENAME_BANNER_MANAGER, (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . 'action=' . $form_action, 'post', 'onsubmit="return check_dates(date_scheduled, dateScheduled.required, expires_date, dateExpires.required);" enctype="multipart/form-data" class="form-horizontal"');
             if ($form_action == 'upd') {
               echo zen_draw_hidden_field('banners_id', $bID);
             }
