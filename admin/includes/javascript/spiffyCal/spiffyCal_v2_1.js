@@ -1438,5 +1438,11 @@ function check_dates(date1, setting1, date2, setting2) {
    if (!calMgr.validateDate(date2,setting2)) return false; 
    return true;
 }
+function check_dates_ppm(date1, setting1, date2, setting2, date3, setting3) {
+   if (!calMgr.validateDate(date1,setting1)) return false; 
+   if (!calMgr.validateDate(date2,setting2)) return false; 
+   if (!calMgr.validateDate(date3,setting3)) return false; 
+   return true;
+}
 //---------------------------------------
 
