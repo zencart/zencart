@@ -878,7 +878,7 @@ class shoppingCart extends base {
               $added_charge = zen_get_attributes_qty_prices_onetime($attribute_price->fields['attributes_qty_prices_onetime'], $qty);
               $totalOnetimeCharge += $added_charge;
         // calculate Product Price without Specials, Sales or Discounts
-              $added_charge = zen_get_attributes_qty_prices_onetime($chk_price, $chk_price, $attribute_price->fields['attributes_price_factor_onetime'], $attribute_price->fields['attributes_price_factor_onetime_offset']);
+              $added_charge = zen_get_attributes_qty_prices_onetime($attribute_price->fields['attributes_qty_prices_onetime'], 1);
               $totalOnetimeChargeNoDiscount += $added_charge;
             }
             ////////////////////////////////////////////////
