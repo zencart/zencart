@@ -196,8 +196,20 @@ function spiffyCalManager() {
         var secondMatchAt = 0;
         var bOK = false;
         var bIsEmpty = false;
-        var strStart = MONTH_NAMES[dStartDate.getMonth()] + '-' + dStartDate.getDate() + '-' + dStartDate.getFullYear();
-        var strEnd = MONTH_NAMES[dEndDate.getMonth()] + '-' + dEndDate.getDate() + '-' + dEndDate.getFullYear();
+        if (dStartDate == null &&  dEndDate == null && bRequired == false) {  
+            if (eInput.value  == null || eInput.value.trim() == '') {
+               return true; 
+            }
+        } 
+        var strStart = ''; 
+        if (dStartDate != null) { 
+           strStart = MONTH_NAMES[dStartDate.getMonth()] + '-' + dStartDate.getDate() + '-' + dStartDate.getFullYear();
+        } 
+       
+        var strEnd = ''; 
+        if (dEndDate != null) { 
+           strEnd = MONTH_NAMES[dEndDate.getMonth()] + '-' + dEndDate.getDate() + '-' + dEndDate.getFullYear();
+        }
         var rangeMsg = 'This input box is set up to accept dates between:\n\n   ' +
                 strStart + '\n\nand\n\n   ' + strEnd + '\n\nPlease enter a date no ';
 
@@ -225,7 +237,6 @@ function spiffyCalManager() {
                 }
             }
         }
-        alert('formatMatchCount=' + formatMatchCount);
         if (formatMatchCount > 1) {
 
             if (this.showHelpAlerts) {
@@ -251,7 +262,6 @@ function spiffyCalManager() {
                 bOK = true;
             }
         }
-        alert('TEST    ' + dThis.getDate() + "-" + dThis.getMonth());
 
         if (bOK == true) {
             eInput.className = "cal-TextBox form-control";
@@ -311,6 +321,7 @@ function spiffyCalManager() {
             setTimeout('focusHack.focus();focusHack.select();');
             return false;
         }
+        return true; 
     }
     this.validateDate = validateDate;
 
@@ -1422,5 +1433,16 @@ function makeArray0() {
         this[i] = makeArray0.arguments[i];
 }
 
+function check_dates(date1, setting1, date2, setting2) {
+   if (!calMgr.validateDate(date1,setting1)) return false; 
+   if (!calMgr.validateDate(date2,setting2)) return false; 
+   return true;
+}
+function check_dates_ppm(date1, setting1, date2, setting2, date3, setting3) {
+   if (!calMgr.validateDate(date1,setting1)) return false; 
+   if (!calMgr.validateDate(date2,setting2)) return false; 
+   if (!calMgr.validateDate(date3,setting3)) return false; 
+   return true;
+}
 //---------------------------------------
 

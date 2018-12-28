@@ -627,7 +627,7 @@ if (zen_not_null($action)) {
             </table>
           <?php } ?>
 
-          <?php echo zen_draw_form('new_prices', FILENAME_PRODUCTS_PRICE_MANAGER, zen_get_all_get_params(array('action', 'info', $_GET['products_filter'])) . 'action=' . 'update', 'post', 'class="form-horizontal"'); ?>
+          <?php echo zen_draw_form('new_prices', FILENAME_PRODUCTS_PRICE_MANAGER, zen_get_all_get_params(array('action', 'info', $_GET['products_filter'])) . 'action=' . 'update', 'post', 'onsubmit="return check_dates_ppm(featured_start,FeaturedStartDate.required, featured_end, FeaturedEndDate.required, product_start, ProductStartDate.required);" class="form-horizontal"'); ?>
           <?php
           echo zen_draw_hidden_field('products_id', $_GET['products_filter']);
           echo zen_draw_hidden_field('specials_id', isset($sInfo->specials_id) ? $sInfo->specials_id : '');
