@@ -139,6 +139,7 @@ class zcDatabaseInstaller
   private function parseLineContent()
   {
     $this->lineSplit = explode(" ",(substr($this->line,-1)==';') ? substr($this->line,0,strlen($this->line)-1) : $this->line);
+    if (!isset($this->lineSplit[3])) $this->lineSplit[3] = "";
     if (!isset($this->lineSplit[4])) $this->lineSplit[4] = "";
     if (!isset($this->lineSplit[5])) $this->lineSplit[5] = "";
     foreach ($this->basicParseStrings as $parseString)
@@ -177,7 +178,7 @@ class zcDatabaseInstaller
       $this->writeUpgradeExceptions($this->line, $result, $this->fileName);
       $this->ignoreLine = true;
     } else {
-      if (!(empty($this->lineSplit[2]) && empty($this->lineSplit[3])) || strtoupper($this->lineSplit[2].' '.$this->lineSplit[3]) != 'IF EXISTS')
+      if (strtoupper($this->lineSplit[2].' '.$this->lineSplit[3]) != 'IF EXISTS')
       {
         $this->line = 'DROP TABLE ' . $this->dbPrefix . substr($this->line, 11);
       } else {
