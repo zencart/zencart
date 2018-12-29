@@ -873,12 +873,10 @@ class shoppingCart extends base {
             // attributes_qty_prices_onetime
             $added_charge = 0;
             if ($attribute_price->fields['attributes_qty_prices_onetime'] != '') {
-              $chk_price = zen_get_products_base_price($products_id);
-              $chk_special = zen_get_products_special_price($products_id, false);
               $added_charge = zen_get_attributes_qty_prices_onetime($attribute_price->fields['attributes_qty_prices_onetime'], $qty);
               $totalOnetimeCharge += $added_charge;
         // calculate Product Price without Specials, Sales or Discounts
-              $added_charge = zen_get_attributes_qty_prices_onetime($chk_price, $chk_price, $attribute_price->fields['attributes_price_factor_onetime'], $attribute_price->fields['attributes_price_factor_onetime_offset']);
+              $added_charge = zen_get_attributes_qty_prices_onetime($attribute_price->fields['attributes_qty_prices_onetime'], 1);
               $totalOnetimeChargeNoDiscount += $added_charge;
             }
             ////////////////////////////////////////////////
