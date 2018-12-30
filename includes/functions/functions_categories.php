@@ -53,7 +53,7 @@ function zen_get_path($current_category_id = '')
         if (!empty($cPath_array)) {
             $cPath_new = implode('_', $cPath_array);
         } else {
-            $cPath_new = '';
+            $cPath_new = $current_category_id; 
         }
     }
 
