@@ -217,3 +217,9 @@ if (isset ($_SESSION['shipping']['extras']) && is_array ($_SESSION['shipping']['
 <div class="buttonRow back"><?php echo TITLE_CONTINUE_CHECKOUT_PROCEDURE . '<br />' . TEXT_CONTINUE_CHECKOUT_PROCEDURE; ?></div>
 
 </div>
+<script>
+    $(document).ready(function () {
+        // $(window).scrollTop(0);
+        $("html, body").animate({ scrollTop: 0 }, "fast");
+    });
+</script>

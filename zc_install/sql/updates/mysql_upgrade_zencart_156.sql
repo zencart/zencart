@@ -163,6 +163,7 @@ DELETE FROM admin_pages WHERE page_key = 'linkpointReview';
 ALTER TABLE customers_basket DROP final_price;
 
 ## add support for multi lingual ezpages
+#NEXT_X_ROWS_AS_ONE_COMMAND:8
 CREATE TABLE IF NOT EXISTS ezpages_content (
   pages_id int(11) NOT NULL DEFAULT '0',
   languages_id int(11) NOT NULL DEFAULT '1',
@@ -172,6 +173,7 @@ CREATE TABLE IF NOT EXISTS ezpages_content (
   KEY idx_lang_id_zen (languages_id)
 ) ENGINE=MyISAM;
 
+#NEXT_X_ROWS_AS_ONE_COMMAND:4
 INSERT IGNORE INTO ezpages_content (pages_id, languages_id, pages_title, pages_html_text)
 SELECT e.pages_id, l.languages_id, e.pages_title, e.pages_html_text
 FROM ezpages e
@@ -195,6 +197,7 @@ ALTER TABLE media_manager ADD KEY idx_media_name_zen (media_name(191));
 ALTER TABLE whos_online MODIFY session_id varchar(191) NOT NULL default '';
 # recreating sessions table since its storage engine is changing to InnoDB:
 DROP TABLE IF EXISTS sessions;
+#NEXT_X_ROWS_AS_ONE_COMMAND:6
 CREATE TABLE sessions (
   sesskey varchar(191) NOT NULL default '',
   expiry int(11) unsigned NOT NULL default 0,
@@ -204,6 +207,7 @@ CREATE TABLE sessions (
 
 
 ## add support for admin notification
+#NEXT_X_ROWS_AS_ONE_COMMAND:6
 CREATE TABLE IF NOT EXISTS admin_notifications (
   notification_key varchar(40) NOT NULL,
   admin_id int(11),
