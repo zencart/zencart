@@ -161,7 +161,6 @@
     // -----
     // Give an observer the chance to modify this function's return value.
     //
-    $products_id = zen_get_prid($products_id);
     $products_quantity = 0;
     $quantity_handled = false;
     $GLOBALS['zco_notifier']->notify(
@@ -173,7 +172,7 @@
     if ($quantity_handled) {
         return $products_quantity;
     }
-    
+    $products_id = zen_get_prid($products_id);
     $stock_query = "select products_quantity
                     from " . TABLE_PRODUCTS . "
                     where products_id = " . (int)$products_id . " LIMIT 1";
