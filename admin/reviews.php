@@ -8,8 +8,6 @@
  */
 
   require('includes/application_top.php');
-  require_once('includes/template/common/tplHtmlHeadLegacy.php');
-  require_once('includes/template/common/tplHtmlHead.php');
 
   $action = (isset($_GET['action']) ? $_GET['action'] : '');
   $status_filter = (isset($_GET['status']) ? $_GET['status'] : '');
@@ -60,6 +58,8 @@
         break;
     }
   }
+  require_once('includes/template/common/tplHtmlHeadLegacy.php');
+  require_once('includes/template/common/tplHtmlHead.php');
 ?>
 <?php if ($editor_handler != '') include ($editor_handler); ?>
 </head>

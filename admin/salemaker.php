@@ -10,8 +10,6 @@
   define('AUTOCHECK', 'False');
 
   require('includes/application_top.php');
-  require_once('includes/template/common/tplHtmlHeadLegacy.php');
-  require_once('includes/template/common/tplHtmlHead.php');
 
   $currencies = new currencies();
 
@@ -151,7 +149,12 @@
         break;
     }
   }
-
+?>
+<?php
+  require_once('includes/template/common/tplHtmlHeadLegacy.php');
+  require_once('includes/template/common/tplHtmlHead.php');
+?>
+<?php 
   if ( ($action == 'new') || ($action == 'edit') ) {
 ?>
 <script type="text/javascript">
