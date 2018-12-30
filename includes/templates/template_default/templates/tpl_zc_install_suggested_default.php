@@ -26,305 +26,208 @@ $docsPath = (file_exists('docs/index.html')) ? 'docs/index.html' : (file_exists(
     <meta name="generator" content="shopping cart program by Zen Cart&reg;, http://www.zen-cart.com">
     <meta name="robots" content="noindex, nofollow">
     <style type="text/css">
-      /*! CSS for Zen Cart docs. Based on Hydrogen CSS */
+      /*! Twitter Bootstrap */
+      @import url("https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css");
 
-      /*! Hydrogen v1.x | Copyright 2018 Pim Brouwers | Licensed under MIT | https://github.com/pimbrouwers/hydrogen */
-
-      /*! Vanilla from Hydrogen CSS */
-
+      /*! Zen Cart Overrides */
       * {
-          box-sizing: border-box;
+        box-sizing: border-box;
       }
 
       h5, h6 {
-          font-weight: 700;
+        font-weight: 700;
       }
 
       h5 {
-          font-size: 1.25rem;
+        font-size: 1.25rem;
       }
 
       h6 {
-          font-size: 1rem;
+        font-size: 1rem;
       }
 
       h5, h6, ol, p, ul {
-          margin: 0 0 1rem 0;
+        margin: 0 0 1rem 0;
       }
 
       ol, p, ul {
-          line-height: 1.5;
+        line-height: 1.5;
       }
 
       ol, ul {
-          padding: 0;
+        padding: 0;
       }
 
-      ol li, ul li {
-          margin-left: 1.125rem;
+      ol li,
+      ul li {
+        margin-left: 1.125rem;
       }
 
       img {
-          border: 0;
+        border: 0;
       }
 
       .h-margin-left-0 {
-          margin-left: 0;
+        margin-left: 0;
       }
-
-      .h-img {
-          display: inline-block;
-          max-width: 100%;
-      }
-
-      .h-g {
-          display: -webkit-box;
-          display: -ms-flexbox;
-          display: flex;
-          -webkit-box-orient: horizontal;
-          -webkit-box-direction: normal;
-          -ms-flex-direction: row;
-          flex-direction: row;
-          -ms-flex-wrap: wrap;
-          flex-wrap: wrap;
-          -webkit-box-align: start;
-          -ms-flex-align: start;
-          align-items: flex-start;
-      }
-
-      .h-g:after {
-          content: "";
-          clear: both;
-          display: table;
-      }
-
-      .h-g>[class^="h-u-"] {
-          float: left;
-      }
-
-      .h-u-1 {
-          width: 100%;
-      }
-
-      .h-text-right {
-          text-align: right;
-      }
-
-      /*! Zen Cart Overrides */
 
       body {
-          background: #fff;
-          color: #777;
-          font: 16px/1 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
-          font-weight: 200;
-          margin: 10px auto;
-          max-width: 60rem;
-          padding: 0 2rem;
+        background: #fff;
+        color: #777;
+        font: 16px/1 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+        font-weight: 200;
+        margin: 10px auto;
+        padding: 0 2rem;
       }
 
       a {
-          color: #0080ff;
-          font-weight: 300;
-          text-decoration: none;
+        color: #0080ff;
+        font-weight: 300;
+        text-decoration: none;
       }
 
       a:visited {
-          color: #0080ff;
+        color: #0080ff;
       }
 
       em {
-          color: #444;
-          font-weight: 500;
-          font-style: italic;
+        color: #444;
+        font-weight: 500;
+        font-style: italic;
       }
 
       .errorDetails {
-          color: red;
-          font-weight: 300;
+        color: red;
+        font-weight: 300;
       }
 
       ol.noteList {
-          list-style-type: lower-alpha;
-          font-size: small;
+        list-style-type: lower-alpha;
+        font-size: small;
       }
 
-      ul.noStyle, ol.noStyle {
-          list-style-type: none;
+      ul.noStyle,
+      ol.noStyle {
+        list-style-type: none;
       }
 
       ul {
-          list-style-type: square;
+        list-style-type: square;
       }
 
       ol {
-          list-style-type: upper-roman;
+        list-style-type: upper-roman;
       }
 
       h1 {
-          font-size: 2.5rem;
-          font-weight: 100;
-          color: #000;
-          letter-spacing: 1px;
-          margin: 3rem 0 1.5rem;
+        font-size: 2.5rem;
+        font-weight: 100;
+        color: #000;
+        letter-spacing: 1px;
+        margin: 3rem 0 1.5rem;
       }
 
       h2 {
-          font-size: 2rem;
-          border-bottom: 1px solid #e3e3e3;
-          font-weight: 300;
-          margin: 2.25rem 0 1rem;
-          padding: 0.5rem 0 1rem;
+        font-size: 2rem;
+        border-bottom: 1px solid #e3e3e3;
+        font-weight: 300;
+        margin: 2.25rem 0 1rem;
+        padding: 0.5rem 0 1rem;
       }
 
       h3 {
-          font-size: 1.5rem;
-          font-weight: 400;
-          color: #606060;
-          margin: 1.75rem 0 0.25rem 0;
+        font-size: 1.5rem;
+        font-weight: 400;
+        color: #606060;
+        margin: 1.75rem 0 0.25rem 0;
       }
 
       h4 {
-          font-size: 1.25rem;
-          font-weight: 300;
-          margin: 1.25rem 0 0.25rem 0;
-          color: maroon;
-          font-variant: small-caps;
+        font-size: 1.25rem;
+        font-weight: 300;
+        margin: 1.25rem 0 0.25rem 0;
+        color: maroon;
+        font-variant: small-caps;
       }
 
-      .h-alert {
-          background: #dfefdf;
-          border: 1px solid #ccc;
-          color: #333;
-          margin: 0 0 1rem 0;
-          padding: 3rem;
-          position: relative;
-          -webkit-box-shadow: 4px 10px 41px 0px rgba(161, 161, 161, 0.75);
-          -moz-box-shadow: 4px 10px 41px 0px rgba(161, 161, 161, 0.75);
-          box-shadow: 4px 10px 41px 0px rgba(161, 161, 161, 0.75);
-      }
-
-      .h-btn {
-          font: inherit;
-          font-weight: 200;
-          letter-spacing: 1px;
-          display: inline-block;
-          background: #0080ff;
-          border: 0;
-          color: #fff;
-          padding: .75rem 1.5rem;
-          text-decoration: none;
-      }
-
-      .h-btn:hover {
-          background: #006edb;
-      }
-
-      .h-box-shadow {
-          -webkit-box-shadow: 4px 10px 41px 0px rgba(161, 161, 161, 0.75);
-          -moz-box-shadow: 4px 10px 41px 0px rgba(161, 161, 161, 0.75);
-          box-shadow: 4px 10px 41px 0px rgba(161, 161, 161, 0.75);
+      .add-shadow {
+        -webkit-box-shadow: 4px 10px 41px 0px rgba(161, 161, 161, 0.75);
+        -moz-box-shadow: 4px 10px 41px 0px rgba(161, 161, 161, 0.75);
+        box-shadow: 4px 10px 41px 0px rgba(161, 161, 161, 0.75);
       }
 
       .prime-string {
-          font-size: 1.25rem;
+        font-size: 2.0rem;
+        font-weight: bold;
       }
 
       .bold-string {
-          font-weight: bold;
+        font-weight: bold;
       }
 
-      .small-string, .back-to-top, .appInfo {
-          font-size: small;
+      .small-string,
+      .back-to-top,
+      .appInfo {
+        font-size: small;
       }
 
-      .h-text-center, .back-to-top, .appInfo {
-          text-align: center;
+      .back-to-top,
+      .appInfo {
+        text-align: center;
       }
 
       .back-to-top {
-          margin: 2rem 0 2rem 0;
+        margin: 2rem 0 2rem 0;
       }
 
       .back-to-top a {
-          text-decoration: none;
+        text-decoration: none;
       }
 
       .appInfo {
-          margin: 4rem 0 2rem 0;
-          color: #888;
+        margin: 4rem 0 2rem 0;
+        color: #888;
       }
 
       .zenData {
-          margin: 2rem 0 0 0;
+        margin: 2rem 0 0 0;
       }
 
-      @media only screen and (min-width: 30rem) {
-          .h-u-sm-1-12 {
-              width: 100%;
-          }
+      @media only screen and (min-width: 1199px) {
+        body {
+          font-size: 1.75rem;
+        }
+
+        h2 {
+          font-size: 2.25rem;
+        }
+
+        h1 {
+          font-size: 4.0rem;
+          margin-top: 5rem;
+        }
       }
 
-      @media only screen and (min-width: 48rem) {
-          .h-u-md-5-12 {
-              width: 41.667%;
-          }
-          .h-u-md-6-12 {
-              width: 50%;
-          }
-          .h-u-md-7-12 {
-              width: 58.333%;
-          }
+      @media screen and (max-width: 1198px) {
+
+        .small-string,
+        .small-string a {
+          font-size: 1.20rem;
+        }
+
+        .prime-string,
+        .prime-string a {
+          font-size: 1.55rem;
+          font-weight: 500;
+        }
       }
 
-      @media only screen and (min-width: 64rem) {
-          .h-u-lg-6-12 {
-              width: 50%;
-          }
-          body {
-              font-size: 1.25rem;
-              max-width: 80rem;
-          }
-          h2 {
-              font-size: 2.25rem;
-          }
-          h1 {
-              font-size: 4.0rem;
-              margin-top: 5rem;
-          }
+      @media screen and (max-width: 990px) {
+        .alert {
+          padding: 1rem;
+          margin: 1rem 1rem 1rem 1rem;
+        }
       }
-
-      @media screen and (max-width: 63.999rem) {
-          body {
-              padding: 0 3rem;
-          }
-          .small-string, .small-string a {
-              font-size: 0.80rem;
-          }
-          .prime-string, .prime-string a {
-              font-size: 1.15rem;
-              font-weight: 500;
-          }
-      }
-
-      @media screen and (max-width: 47.999rem) {
-          body {
-              padding: 0 2rem;
-          }
-          .h-u-sm-hidden {
-              display: none;
-          }
-          .h-alert {
-              padding: 1rem;
-              margin: 1rem 1rem 1rem 1rem;
-          }
-      }
-
-      @media screen and (max-width: 29.999rem) {
-          body {
-              padding: 0 1rem;
-          }
-      }
-
     </style>
   </head>
 
