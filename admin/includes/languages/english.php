@@ -353,7 +353,8 @@ define('IMAGE_REMOVE_SPECIAL','Remove Special Price Info');
 define('IMAGE_REMOVE_FEATURED','Remove Featured Product Info');
 define('IMAGE_INSTALL_SPECIAL', 'Add Special Price Info');
 define('IMAGE_INSTALL_FEATURED', 'Add Featured Product Info');
-define('TEXT_NONEXISTENT_IMAGE', 'Non existent image'); 
+define('TEXT_IMAGE_NONEXISTENT', 'IMAGE DOES NOT EXIST');
+
 
 define('TEXT_VERSION_CHECK_BUTTON', 'Check for New Version');
 define('TEXT_BUTTON_RESET_ACTIVITY_LOG', 'View Activity Log');
