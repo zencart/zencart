@@ -8,8 +8,6 @@
  */
 
   require('includes/application_top.php');
-  require_once('includes/template/common/tplHtmlHeadLegacy.php');
-  require_once('includes/template/common/tplHtmlHead.php');
   $currencies = new currencies();
 
   if (isset($_GET['search']) && zen_not_null($_GET['search'])) {
@@ -453,6 +451,10 @@
       }
       zen_redirect(zen_admin_href_link(FILENAME_COUPON_ADMIN, 'cid=' . $_GET['cid'] . (isset($_GET['status']) ? '&status=' . $_GET['status'] : '') . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '')));
   }
+?>
+<?php
+  require_once('includes/template/common/tplHtmlHeadLegacy.php');
+  require_once('includes/template/common/tplHtmlHead.php');
 ?>
 <script type="text/javascript">
 var form = "";

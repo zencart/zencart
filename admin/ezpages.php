@@ -25,8 +25,6 @@
 
 
   require('includes/application_top.php');
-  require_once('includes/template/common/tplHtmlHeadLegacy.php');
-  require_once('includes/template/common/tplHtmlHead.php');
 
   if (!isset($_SESSION['ez_sort_order'])) {
     $_SESSION['ez_sort_order'] = 0;
@@ -180,6 +178,10 @@
         break;
     }
   }
+?>
+<?php
+  require_once('includes/template/common/tplHtmlHeadLegacy.php');
+  require_once('includes/template/common/tplHtmlHead.php');
 ?>
 <?php if ($editor_handler != '') include ($editor_handler); ?>
 </head>

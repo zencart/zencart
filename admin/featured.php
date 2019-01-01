@@ -8,8 +8,6 @@
  */
 
   require('includes/application_top.php');
-  require_once('includes/template/common/tplHtmlHeadLegacy.php');
-  require_once('includes/template/common/tplHtmlHead.php');
 
   $currencies = new currencies();
 
@@ -134,6 +132,10 @@
 
     }
   }
+?>
+<?php
+  require_once('includes/template/common/tplHtmlHeadLegacy.php');
+  require_once('includes/template/common/tplHtmlHead.php');
 ?>
 </head>
 <body>
