@@ -691,14 +691,14 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
                         </div>
                         <?php // echo zen_image(DIR_WS_IMAGES . 'icon_edit.gif', ICON_EDIT); ?>
                       </a>
-                      <a href="<?php echo zen_href_link(FILENAME_CATEGORY_PRODUCT_LISTING, 'cPath=' . $cPath . '&cID=' . $category['categories_id'] . '&action=delete_category'); ?>" style="text-decoration: none">
+                      <a href="<?php echo zen_href_link(FILENAME_CATEGORY_PRODUCT_LISTING, 'cPath=' . $cPath . '&cID=' . $category['categories_id'] . '&action=delete_category' . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '')); ?>" style="text-decoration: none">
                         <div class="fa-stack fa-lg delete">
                           <i class="fa fa-circle fa-stack-2x base"></i>
                           <i class="fa fa-trash-o fa-stack-1x overlay" aria-hidden="true"></i>
                         </div>
                         <?php // echo zen_image(DIR_WS_IMAGES . 'icon_delete.gif', ICON_DELETE); ?>
                       </a>
-                      <a href="<?php echo zen_href_link(FILENAME_CATEGORY_PRODUCT_LISTING, 'cPath=' . $cPath . '&cID=' . $category['categories_id'] . '&action=move_category'); ?>" style="text-decoration: none">
+                      <a href="<?php echo zen_href_link(FILENAME_CATEGORY_PRODUCT_LISTING, 'cPath=' . $cPath . '&cID=' . $category['categories_id'] . '&action=move_category' . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '')); ?>" style="text-decoration: none">
                         <div class="fa-stack fa-lg move">
                           <i class="fa fa-circle fa-stack-2x base"></i>
                           <i class="fa fa-stack-1x overlay" aria-hidden="true"><strong>M</strong></i>
@@ -901,21 +901,21 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
                         </div>
                         <?php // echo zen_image(DIR_WS_IMAGES . 'icon_edit.gif', ICON_EDIT); ?>
                       </a>
-                      <a href="<?php echo zen_href_link(FILENAME_CATEGORY_PRODUCT_LISTING, 'cPath=' . $cPath . '&product_type=' . $product['products_type'] . '&pID=' . $product['products_id'] . '&action=delete_product'); ?>" style="text-decoration: none">
+                      <a href="<?php echo zen_href_link(FILENAME_CATEGORY_PRODUCT_LISTING, 'cPath=' . $cPath . '&product_type=' . $product['products_type'] . '&pID=' . $product['products_id'] . '&action=delete_product' . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '')); ?>" style="text-decoration: none">
                         <div class="fa-stack fa-lg delete">
                           <i class="fa fa-circle fa-stack-2x base"></i>
                           <i class="fa fa-trash-o fa-stack-1x overlay" aria-hidden="true"></i>
                         </div>
                         <?php // echo zen_image(DIR_WS_IMAGES . 'icon_delete.gif', ICON_DELETE); ?>
                       </a>
-                      <a href="<?php echo zen_href_link(FILENAME_CATEGORY_PRODUCT_LISTING, 'cPath=' . $cPath . '&product_type=' . $product['products_type'] . '&pID=' . $product['products_id'] . '&action=move_product'); ?>" style="text-decoration: none">
+                      <a href="<?php echo zen_href_link(FILENAME_CATEGORY_PRODUCT_LISTING, 'cPath=' . $cPath . '&product_type=' . $product['products_type'] . '&pID=' . $product['products_id'] . '&action=move_product' . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '')); ?>" style="text-decoration: none">
                         <div class="fa-stack fa-lg move">
                           <i class="fa fa-circle fa-stack-2x base"></i>
                           <i class="fa fa-stack-1x overlay" aria-hidden="true"><strong>M</strong></i>
                         </div>
                         <?php // echo zen_image(DIR_WS_IMAGES . 'icon_move.gif', ICON_MOVE); ?>
                       </a>
-                      <a href="<?php echo zen_href_link(FILENAME_CATEGORY_PRODUCT_LISTING, 'cPath=' . $cPath . '&product_type=' . $product['products_type'] . '&pID=' . $product['products_id'] . '&action=copy_product'); ?>" style="text-decoration: none">
+                      <a href="<?php echo zen_href_link(FILENAME_CATEGORY_PRODUCT_LISTING, 'cPath=' . $cPath . '&product_type=' . $product['products_type'] . '&pID=' . $product['products_id'] . '&action=copy_product' . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '')); ?>" style="text-decoration: none">
                         <div class="fa-stack fa-lg copy">
                           <i class="fa fa-circle fa-stack-2x base"></i>
                           <i class="fa fa-stack-1x overlay" aria-hidden="true"><strong>C</strong></i>
