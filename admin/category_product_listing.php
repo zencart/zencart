@@ -863,6 +863,11 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
                   <td colspan="2" class="text-right hidden-md hidden-sm hidden-xs"><?php echo zen_get_products_display_price($product['products_id']); ?></td>
                   <td class="text-right hidden-md hidden-sm hidden-xs"><?php echo $product['products_quantity']; ?></td>
                   <td class="text-right hidden-md hidden-sm hidden-xs">
+<?php
+                      $additional_icons = '';
+                      $zco_notifier->notify('NOTIFY_ADMIN_PROD_LISTING_ADD_ICON', $product, $additional_icons);
+                      echo $additional_icons;
+?>
                       <?php
                       if (zen_get_product_is_linked($product['products_id']) == 'true') {
                         echo zen_image(DIR_WS_IMAGES . 'icon_yellow_on.gif', IMAGE_ICON_LINKED, '', '', 'style="vertical-align:top;"') . '&nbsp;&nbsp;';
