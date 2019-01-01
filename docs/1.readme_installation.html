@@ -1,700 +1,700 @@
 <!DOCTYPE html>
 <html>
 <!--
-	/**
-	 * @package documentation
-	 * @copyright Copyright 2003-2018 Zen Cart Development Team
-	 * @license https://www.zen-cart.com/license/2_0.txt GNU Public License v2.0
-	 * @version $Id: dakanji Fri Jun 8 18:04:58 2018 +0300 Modified in v1.5.6 $
-	 */
-	//-->
+    /**
+     * @package documentation
+     * @copyright Copyright 2003-2018 Zen Cart Development Team
+     * @license https://www.zen-cart.com/license/2_0.txt GNU Public License v2.0
+     * @version $Id: dakanji Fri Jun 8 18:04:58 2018 +0300 Modified in v1.5.6 $
+     */
+//-->
 <head>
-	<title>Installing Zen Cart</title>
-	<meta charset="utf-8">
-	<meta http-equiv="x-ua-compatible" content="ie=edge">
-	<meta http-equiv="Content-Type" content="text/html">
-	<meta http-equiv="imagetoolbar" content="no">
-	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-	<meta name="keywords" content="">
-	<meta name="description" content="">
-	<meta name="authors" content="The Zen Cart&reg; Team">
-	<meta name="generator" content="shopping cart program by Zen Cart&reg;, https://www.zen-cart.com">
-	<meta name="robots" content="noindex, nofollow">
-	<link rel="stylesheet" href="./zen.css">
+    <title>Installing Zen Cart</title>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta http-equiv="Content-Type" content="text/html">
+    <meta http-equiv="imagetoolbar" content="no">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <meta name="authors" content="The Zen Cart&reg; Team">
+    <meta name="generator" content="shopping cart program by Zen Cart&reg;, https://www.zen-cart.com">
+    <meta name="robots" content="noindex, nofollow">
+    <link rel="stylesheet" href="./zen.css">
 </head>
 <body>
 <div class="container">
 
-	<section id="pageHeader">
-		<div class="row">
-			<div class="col-md-6 col-sm-12">
-				<a href="./index.html">
-					<img src="../includes/templates/template_default/images/logo.gif" alt="Zen Cart&reg;" title="Zen Cart&reg;" width="192" height="68" border="0" />
-				</a>
-			</div>
-			<div class="col-md-6 hidden-xs hidden-sm text-right">
-				<a class="btn btn-primary add-shadow" href="./index.html">
-					Documentation Home
-				</a>
-			</div>
-		</div>
-	</section> <!-- End pageHeader //-->
-	
-	<section id="zenTeamMessage">
-		<h1>Welcome to Zen Cart&reg;</h1>	
-		<div class="alert add-shadow">
-			<em>Dear Zen Cart&reg; User</em>,
-			<p>
-				Zen Cart&reg; is made available to you for your use, addition, changes, modification, etc. without charge, under Version 2 of the GNU General Public License.
-			</p>
-			<p>
-				While we do not charge for this software, donations are greatly appreciated, each time you install a new version, to help cover the expenses of maintenance, upgrades, updates, the free support forum and the continued development of this software for your online E-Commerce store.
-			</p>
-			<p>
-				Donations can be made on the <a href="https://www.zen-cart.com/donate" target="_blank">Zen Cart&reg; Team Page</a>
-			</p>
-			<p>
-				We appreciate your support.
-				<br>
-				<em>The Zen Cart&reg; Team</em>
-			</p>
-		</div>
-	</section> <!-- End zenTeamMessage //-->
-	
-	<section id="zenCartRequirements">
-		<div>
-			<h1>Zen Cart&reg; Requirements</h1>
-			<ul>
-				<li>For up-to-date requirements, see: <a href="https://www.zen-cart.com/content.php?48-what-are-the-server-requirements-to-run-zen-cart" target="_blank"> Zen Cart&reg; Server Requirements</a></li>
-				<li>Apache must be configured with AllowOverride set to either "All" or at least both "Limit" and "Indexes" parameters, and preferably the "Options" parameter as well.</li>
-				<li>PHP must be configured to support CURL with OpenSSL</li>
-			</ul>
-			<p>
-				While Zen Cart&reg; can run on Windows/IIS servers, <em>Linux/Apache servers are recommended for best results</em>.
-			</p>
-		</div>
-	</section> <!-- End zenCartRequirements //-->
-	
-	<section id="newInstallation">
-		<div>
-			<h1>Installing for PA-DSS Compliance</h1>
-			<p>
-				For installation instructions related to PA-DSS Compliance, see the Implementation Guide in your /docs/ folder.
-			</p>
-		</div>
-		
-		<div id="gettingStarted">
-			<h1>Getting Started</h1>
-			<h2>The Basics </h2>
-			<p>
-				You have downloaded the Zen Cart&reg; software for an online shopping cart.
-			</p>
-			<p>
-				Since you're reading this file, you have likely already unzipped the <a href="http://sourceforge.net/projects/zencart/files/" target="_blank">Zen Cart&reg; distribution file</a> and its contents into a folder on your personal computer. If for some reason you have not already done so, unzip the files to your PC now, retaining the file structure within the zip file.
-			</p>
-			<p>
-				This is a basic guide for new installations of Zen Cart&reg;. If you already have Zen Cart&reg; installed and wish to upgrade from a previous version, please see the <a href="./2.readme_how_to_upgrade.html">Upgrade Instructions</a> and the <a href="./index.html" target="_blank">What's New documentation</a>.
-			</p>
-			<h2>Preinstallation Questions</h2>
-			<ol>
-				<li>
-					<em>Do you have a domain?</em>
-				</li>
-				<ul class="noStyle">
-					<li>
-						If No, stop ... see our <a href="https://www.zen-cart.com/hosting" target="_blank">Compatible Hosting</a> list and find a fast, reliable web hosting provider who can help you register your own personal domain as well as provide for your hosting needs that meet the Zen Cart&reg; software requirements.
-					</li>
-				</ul>
-				<li>
-					<em>Do you have reliable FTP software?</em>
-				</li>
-				<ul class="noStyle">
-					<li>
-						If No, stop ... you need to obtain a reliable FTP software package such as <a href="http://filezilla.sourceforge.net/" target="_blank">FileZilla</a> (free), <a href="http://www.flashfxp.com/" target="_blank">FlashFXP</a> or another FTP software program to transfer files back and forth from your computer to your webserver.
-					</li>
-					<li>
-						<ol class="noteList">
-							<em>NOTES: </em>
-							<li>
-								"Webserver" is the computer on the internet where you have your domain hosted (See Item 1)
-							</li>
-							<li>
-								<span class="errorDetails">
-										Many users have had timeout and other problems when using programs like SmartFTP and CuteFTP. We recommend that you do <em>NOT</em> use these problematic programs.
-								</span>
-							</li>
-							<li>
-								If your web hosting provider provides an FTP program that runs inside your browser, we recommend that you do NOT use that for uploading large amounts of files such as a fresh install of Zen Cart. Those are okay for single-file uploads, but unreliable for several files at once.
-							</li>
-						</ol>
-					</li>
-				</ul>
-				<li>
-					<em>Do you have a good Text Editor?</em>
-				</li>
-				<ul class="noStyle">
-					<li>
-						If No, stop ... you will need a good Text Editing software such as <a href="http://ultraedit.com/" target="_blank">UltraEdit</a>, <a href="http://notepad-plus.sourceforge.net" target="_blank">Notepad++</a> (free), <a href="http://crimsoneditor.com" target="_blank">CrimsonEditor</a> (free), <a href="http://www.barebones.com" target="_blank">BBedit</a>(Mac), Kedit (linux), or some other type of Text Editor for modifying the files in Zen Cart&reg;.
-					</li>
-					<li>
-						<ol class="noteList">
-							<em>NOTES: </em>
-							<li>
-								<span class="errorDetails">
-										Do <em>NOT</em> use CPanel for editing files, nor MS Word or other software designed for fancy writing ... you want a nice clean Text Editor.
-								</span>
-							</li>
-							<li>
-								You can use the Windows Notepad... but this is limited in capabilities and the size of files that it can open and often can cause more harm than good.
-							</li>
-						</ol>
-					</li>
-				</ul>
-				<li>
-					<em>Do you have access to your webhosting control panel to create a MySQL database and user?</em>
-				</li>
-				<ul class="noStyle">
-					<li>
-						BEFORE YOU PROCEED, make sure you have access to a MySQL database, and username/password to that database. You may need to create the database using your webhosting control panel. Contact your web hosting provider for assistance.
-					</li>
-					<li>
-						<ol class="noteList">
-							<em>NOTES: </em>
-							<li>
-								Zen Cart&reg; cannot create the database for you.
-							</li>
-							<li>
-								You need the following permissions on your MySQL user: SELECT, INSERT, UPDATE, DELETE, CREATE, ALTER, INDEX, DROP.
-							</li>
-							<li>
-								On an hSphere host, this would be &quot;dba&quot; access, or at least read/write.
-							</li>
-						</ol>
-					</li>
-				</ul>
-			</ol>
-			<em>If you have answered "Yes" to ALL four questions, you are ready to go on.</em>
-		</div> <!-- End gettingStarted //-->
-		
-		<div id="uploadFileset">
-			<h1>Upload the Zen Cart&reg; Fileset</h1>
-			<h2>How do I Upload Files?</h2>
-			<p>
-				Using FTP software, upload the whole Zen Cart&reg; fileset into a directory on your server. Example: <em>/catalog/</em>
-			</p>
-			<p>
-				We will use &quot;<em>/catalog/</em>&quot; as an example here. You can choose &quot;no&quot; foldername, or something else if you prefer, such as &quot;<em>/zencart</em>&quot;, or &quot;<em>/store/</em>&quot; etc
-			</p>
-			<h2>What Folder do I Upload Into?</h2>
-			<p>
-				Each web hosting provider has their own preference in naming folders running a website.
-			</p>
-			<p>
-				You can have many files that do not even get shown to the public. The ones that are available for access via a browser are usually in a folder called something like:
-			</p>
-			<p class="text-center">
-				/home/YOURNAME/public_html
-				<br> - or -
-				<br> /var/www/YOURNAME/httpdocs
-				<br> - or -
-				<br> /usr/accounts/a/b/YOURNAME/httpd
-				<br> - or -
-				<br> - etc, etc, etc -
-			</p>
-			<p>
-				Basically, in your FTP software, look for a &quot;www&quot; or &quot;public_html&quot; or &quot;htdocs&quot; or &quot;httpdocs&quot; or &quot;wwwroot&quot; folder. These are the common folder names for what is referred to as the &quot;webroot&quot;, which is where all website content is served from.
-			</p>
-			<p>
-				Your Zen Cart files need to be under that folder. If they are not, then you will get &quot;not found&quot; errors ... because the content is not found!
-			</p>
-			<p>
-				If it is unclear where the publicly accessible files are to be uploaded, ask your web hosting provider for assistance.
-			</p>
-		</div> <!-- End uploadFileset //-->
-		
-		<div id="creatingConfigureFiles">
-			<h1>Creating Configure.php Files</h1>
-			<ol>
-				<li>
-					Two files need to be created on the server. These are the configure.php files that identify the settings of your particular server and the location of the files that you just loaded. After they have been created, you will then need to change the permissions on these files.
-					<ol class="noteList">
-						<li>
-							Changing permissions can be done via your FTP program with the chmod feature.
-						</li>
-						<li>
-							Usually right clicking on a directory or filename will open a menu with this option (perhaps under &quot;Properties&quot;)
-						</li>
-					</ol>
-				</li>
-				<li>
-					On the server locate the file: <em><em>/catalog/includes/</em>dist-configure.php</em>
-					<ul>
-						<li>
-							Rename this file to <em>configure.php</em> and change the permissions to 777 <em>(read-write-execute for all)</em>
-						</li>
-					</ul>
-				</li>
-				<li>
-					Next, on the server locate the file: <em><em>/catalog/admin/</em>includes/dist-configure.php</em>
-					<ul>
-						<li>
-							Rename this file to <em>configure.php</em> and change the permissions to 777 <em>(read-write-execute for all)</em>
-						</li>
-					</ul>
-				</li>
-				<ol class="noteList">
-					<em>NOTES FOR IIS USERS:</em>
-					<li>
-						If using IIS for Windows hosting, the &quot;chmod 777&quot; idea for permissions settings is likely foreign to you. In IIS, under Windows, you need to right-click on the file (or folders in <a href="#mainFolderPermissions">the next section</a> below), and choose "Properties".
-					</li>
-					<li>
-						Then under the Security tab, ensure that the&quot;<em><em>Internet Guest Account</em></em>&quot;, identified usually as: MACHINE_NAME\IUSR_MACHINE_NAME ... has at least &quot;read&quot; and &quot;write&quot; privileges ... likely best to give &quot;modify&quot; as well.
-					</li>
-					<li>
-						This should be done on each file/folder indicated.
-					</li>
-					<li>
-						If the IUSR_MACHINE_NAME account is not listed, click &quot;Add&quot; and add that account from the list, and then set the required permissions.
-					</li>
-					<li>
-						 &quot;_MACHINE_NAME&quot; above refers to the &quot;machine name&quot; or &quot;computer name&quot; configured by the server administrator to &quot;name&quot; the server.
-					</li>
-				</ol>
-			</ol>
-		</div> <!-- End creatingConfigureFiles //-->
-		
-		<div id="setFolderPermissions">
-			<h1>Setting Permissions</h1>
-			
-			<div id="mainFolderPermissions">
-				<h2>Main Folder Permissions</h2>
-				<ul>
-					Now, change the permissions on the following directories to 777 (read/write/execute):
-					<li>/catalog/cache</li>
-					<li>/catalog/images</li>
-					<li>/catalog/includes/languages/english/html_includes</li>
-					<li>/catalog/logs</li>
-					<li>/catalog/media</li>
-					<li>/catalog/pub</li>
-					<li>/catalog/admin/backups </li>
-					<li>/catalog/admin/images/graphs</li>
-				</ul>
-				<ul>
-					Open the <em>/catalog/images</em> directory and change <em>ALL</em> of the subdirectories and their subdirectories to 777 as well. For example (this is a partial list):
-					<li>/catalog/images/attributes</li>
-					<li>/catalog/images/dvd</li>
-					<li>/catalog/images/large</li>
-					<li>/catalog/images/large/dvd</li>
-					<li>/catalog/images/medium </li>
-					<li>/catalog/images/upload</li>
-				</ul>
-				<ul class="noStyle">
-					<li class="h-margin-left-0 small-string">
-			    		If you miss any of the images directories and subdirectories inside <em>/images</em> and try to use them later, you will get an error message that you cannot write to these directories.
-					</li>
-				</ul>
-			</div> <!-- End mainFolderPermissions //-->
-			
-			<div id="setOtherFolderPermissions">
-				<h2>Other Folder and File Permissions</h2>
-				<ul>
-					Depending on your webserver configuration, other folders and files can be set to:
-					<li>
-						Folders: CHMOD 755
-						<ul class="noStyle">
-							<li class="h-margin-left-0 small-string">
-			    				&quot;CHMOD&quot; is a linux/unix term for setting/changing permission levels
-							</li>
-						</ul>
-					</li>
-					<li>
-						Files: CHMOD 644<br> 
-						<ul class="noStyle">
-							<li class="h-margin-left-0 small-string">
-			    				These are typically the defaults that your FTP program will use when uploading, so usually do not need to be set manually.
-							</li>
-						</ul>
-					</li>
-				</ul>
-			</div> <!-- End setOtherFolderPermissions //-->
-		</div> <!-- End setFolderPermissions //-->
-		
-		<br>
-		<div class="back-to-top">
-			^^ <a href="#pageHeader">Back to Top</a> ^^
-		</div>
-	</section> <!-- End newInstallation //-->
-	
-	<section id="preInstaller">
-				
-		<div id="beforeInstaller">
-			<h1>Before Running the Installer</h1>
-			<p>
-				The installer is fairly intelligent and should be able to automatically supply answers to the questions listed below.
-			</p>
-			<p>
-				You will, however, need to confirm that the auto-detected answers are, in fact, correct as on some servers they may differ.
-			</p>
-			<p>
-				You will need the following information for the installation:
-			<ul>
-				<li>
-					<em>The  physical path to your new Zen Cart&reg; directory</em>
-					<br>
-					Example: /home2/zencart/public_html/catalog
-				</li>
-				<li>
-					<em>The Virtual HTTP Path</em> (the URL to your domain and directory for your shop)
-					<br>
-					Example: http://www.mydomain.com/catalog
-				</li>
-			</ul>
-		</div> <!-- End beforeInstaller //-->
-		
-		<div id="sslConsiderations">
-			<h1>SSL Considerations</h1>
-			<p>
-				A Secure Sockets Layer (SSL) is the standard security technology for establishing an encrypted link between a web server and a browser.
-			</p>
-			<p>
-				If you are installing onto a live webserver where you intend to process real transactions, you should plan on securing your customers' transaction data with SSL.
-			</p>
-			<p>
-				If you do not already have an SSL certificate, talk to your web hosting provider about your available options. You will need to enter your SSL details as below. In most cases they will be correct, unless you are using a "shared SSL" service. Your web hosting provider can give you the correct details.
-			</p>
-			<ul>
-				<li>
-					<em>The Virtual HTTPS Server</em> (the secure URL to your domain)
-					<br>
-					Example: https://www.mydomain.com
-					<ul class="small-string noStyle">
-						If you have a shared certificate on a virtual server this may look like:
-						<li>
-							https://mydomain.secureservername.net/
-						<li>
-					 - or - 
-						<li>
-							https://secure.sharedservername.net/~username
-						<li>
-					</ul>
-				</li>
-				<li>
-					<em>The Virtual HTTPS Path</em> (the secure URL to your domain and directory for your shop)
-					<br> 
-					Example: https://www.mydomain.com/catalog
-					<br>
-					 - or - 
-					<br>
-					 https://secure.sharedservername.net/~username/catalog
-				</li>
-			</ul>
-			<p>
-				If you are installing to a local PC or to a development server where you do not need to protect sensitive data, you can leave the SSL settings at their defaults, and when asked about enabling SSL later in the installation process, just leave it off if you are not on a live production server.
-			</p>
-		</div> <!-- End sslConsiderations //-->
-		
-		<br>
-		<div class="back-to-top">
-			^^ <a href="#pageHeader">Back to Top</a> ^^
-		</div>
-	</section> <!-- End preInstaller //-->
-	
-	<section id="Installer">
-		<div id="runningInstaller">
-			<h1>Running the Installer</h1>
-			
-			<div id="startingInstaller">
-				<h2>Starting the Installer</h2>
-				<ul class="noStyle">
-					<li class="h-margin-left-0">
-						In your browser, enter the URL to your new shop, and the Installer should automatically start.
-						<ul class="small-string noStyle">
-							<li class="h-margin-left-0">
-								Example: http://www.mydomain.com/catalog
-								<br>
-								- or - , to start the installer directly, 
-								<br>
-								http://www.mydomain.com/catalog/zc_install
-							</li>
-						</ul>
-					</li>
-				</ul>
-				<ul class="noStyle">
-					You will be presented with a &quot;Welcome to Zen Cart&reg;&quot; page, explaining the features of Zen Cart&reg;.
-					<li class="h-margin-left-0 small-string">
-						If you now see a list of filenames and directories, you should speak to your web hosting provider about how to setup your server to auto-detect PHP filename extensions
-					</li>
-				</ul>
-				<p>
-					Clicking on <em>Continue</em> takes you to the license screen where you are asked to read and confirm acceptance of the GPL licensing agreement.
-				</p>
-			</div> <!-- End startingInstaller //-->
-			
-			<div id="systemInspectionStep">
-				<h2>System Inspection Step</h2>
-				<div>
-					<p>
-						The Installer examine your server for compliance with technical requirements for running Zen Cart&reg;, presenting you with several items you may need or want to address with your host. 
-					</p>
-					<p>
-						Anything marked in red or with an &quot;X&quot; must be addressed before the installer can continue. Things marked with an orange or yellow &quot;caution&quot; symbol are simply warnings that may or may not apply to your setup now. The image folders and others as described earlier in this document are also noted. 
-					</p>
-					<p>
-						If you make changes to your server, you can click <em>Re-Check</em> or press F5 in your browser to refresh the display and reflect the changes you've made before proceeding.
-					</p>
-					<p>
-						If a previous version of Zen Cart&reg; is found on your server, the installer will attempt to determine the database patch level and display that on the screen as well. In this case, an &quot;<em>upgrade</em>&quot; button will display at the bottom of the screen offering you the ability to upgrade if needed.
-					</p>
-					<p>
-						See the <a href="./2.readme_how_to_upgrade.html" target="_blank">Upgrade Instructions</a>.
-					</p>
-					<ul class="noStyle">
-						Once you are satisfied that the &quot;pre-flight-check&quot; inspection is OK for your needs (ideally, all green check-marks), you may click the &quot;<em>Install</em>&quot; button at the bottom of the screen.
-						<li class="h-margin-left-0 small-string">
-							If you receive any of the following error messages, go through the above steps to make sure you have not left anything out. All error messages have context-sensitive help via a popup window if you click on the <em>"more info..."</em> links supplied.
-						</li>
-					</ul>
-				</div>
-				<div class="alert alert-info add-shadow">
-					<ul>
-						<em>Warning: Problems Found</em>
-						<li>
-							<span class="error">
-								/includes/configure.php does not exist.</span>&nbsp;&nbsp;<span class="pseudolink">more info...
-							</span>
-						</li>
-						<li>
-							<span class="error">
-								/admin/includes/configure.php does not exist.</span>&nbsp;&nbsp;<span class="pseudolink">more info...
-							</span>
-						</li>
-					</ul>
-				</div>
-			</div> <!-- End systemInspectionStep //-->
-			
-			<div id="databaseSetupStep">
-				<h2>Database Setup Step</h2>
-				<div>
-					<p>
-						On the next screen, you are asked for Database Information about your MySQL database, username and password. These can be obtained from your cPanel or equivalent control screen provided by your host. 
-					</p>
-					<p>
-						If you do not have a clean MySQL database setup with a username and password, you will need to create one. 
-					</p>
-					<ul class="noStyle">
-						Contact your web hosting provider if you need assistance in creating a MySQL database table and/or username and password. 
-						<li class="h-margin-left-0 small-string">
-							You need to have your database and userID created before the Zen Cart&reg; installer can continue past this screen.
-						</li>
-					</ul>
-				</div>
-				<div class="alert alert-info add-shadow">
-					<ul>
-						<em>Other information on this screen:</em>
-						<li>
-							At this time, MySQL is the primary operational database type. 
-							<br> 
-							Future releases may support other database types.
-						</li>
-						<li>
-							We recommend that you store your Database Sessions in your database for security purposes.
-						</li>
-					</ul>
-				</div>
-			</div> <!-- End databaseSetupStep //-->
-			
-			<div id="systemSetupStep">
-				<h2>System Setup Step</h2>
-				<p>
-					On the System Setup page you will need to complete the information we described in &quot;Before Running the Installer&quot; earlier in this document.
-				</p>
-				<p> 
-					Indicate if you want to Enable SSL (the secure pages where required, in Login, Checkout, and optionally Admin areas) on your server.
-				</p>
-				<p> 
-					If you do not have an SSL certificate yet, <em>do not</em> enable this feature now. It can be changed at a later date. 
-				</p>
-				<p> 
-					See the <a href="https://www.zen-cart.com/content.php?56" target="_blank">Enabling SSL Tutorial</a> for detailed instructions.
-				</p>
-			</div> <!-- End systemSetupStep //-->
-			
-			<div id="storeSetupStep">
-				<h2>Store Setup Step</h2>
-				<div>
-					<p>
-						Now, complete the Store Information about your Shop.<br>
-					</p>
-				</div>
-				<div class="alert alert-info add-shadow">
-					<em>Demo Data</em>
-					<p>
-						If you would like to install the demo data, select "Yes".
-					</p>
-				</div>
-				<div>
-					<p> 
-						We recommend that you install the demo data to familiarize yourself with many of the examples created that explain and demonstrate the vast number of features available in Zen Cart&reg;. 
-					</p>
-					<ul class="noStyle">
-						You may also decide later, to set up a test site with the demo data AND a separate working site for your live data so that you have the ability to refer back to the demo data for help and to see examples of a feature.
-						<li class="h-margin-left-0 small-string">
-							Except for &quot;demo data&quot;, all of the information here can be (re)configured later in the Admin area of your shop.
-						</li>
-					</ul>
-					<p>
-						After you click <em>Save Store Settings</em>, there will a brief delay as the database tables are created and the demo data is optionally loaded.
-					</p>
-				</div>
-			</div> <!-- End storeSetupStep //-->
-			
-			<div id="adminSetupStep">
-				<h2>Admin Setup Step</h2>
-				<ul class="noStyle">
-					<li class="h-margin-left-0">
-						Now, complete the Admin Information to set your Login name, Admin email address and password.
-						<ol class="noteList">
-							<li>
-								Both the login name and password are case sensitive.
-							</li>
-							<li>
-								Admin passwords must contain letters and numbers and be a minimum of 7 characters.
-							</li>
-							<li>
-								The admin password you enter here IS ONLY TEMPORARY, and will be expired on first use, for your protection.
-							</li>
-						</ol>
-					</li>
-				</ul>
-			</div> <!-- End adminSetupStep //-->
-		</div> <!-- End runningInstaller //-->
-		
-		<br>
-		<div class="back-to-top">
-			^^ <a href="#pageHeader">Back to Top</a> ^^
-		</div>
-	</section> <!-- End Installer //-->
-	
-	<section id="postInstallation">			
-		<div>
-			<h1>Post Installation</h1>
-			<h2>Configure.php Files</h2>
-			<ul class="noStyle">
-				<li class="h-margin-left-0">
-					You will now want to change the permissions on the <em>configure.php</em> files with <em>chmod 644 or 444</em> depending on your server.
-					<ul class="noteList noStyle">
-						<li class="h-margin-left-0 small-string">
-							Sometimes setting 444 cannot be done via FTP, in which case, use your webhosting control panel or file manager to set the permissions level
-						</li>
-					</ul>
-				</li>
-				<li class="h-margin-left-0">
-					These are located in:
-					<ul class="noteList">
-						<li>
-							/catalog/includes/configure.php
-						</li>
-						<li>
-							/catalog/admin/includes/configure.php
-						</li>
-					</ul>
-				</li>
-				<li class="h-margin-left-0">
-					It would also be a good idea to download a copy of these files to your computer from the server as they have been setup and configured to your server specifications based on the Installation process. 
-					<ol><!-- THIS IS A SPACER //--></ol>
-				</li>
-				<li class="h-margin-left-0">
-					If you have any errors or problems, most of these can be corrected by minor adjustments to these two files. 
-					<ol><!-- THIS IS A SPACER //--></ol>
-				</li>
-			</ul>
-			<h2>Delete the "zc_install" Directory</h2>
-			<p> 
-				You must DELETE the <em>/catalog/zc_install</em> directory so that nobody can misuse the scripts in there to wipe out your store.
-			</p>
-			<h2>Update Nginx Directives if Required</h2>
-			<ul class="noStyle">
-				<li class="h-margin-left-0">
-					The Zen Cart&reg; Installer includes base directives equivalent to <em>".htaccess"</em> rules to help secure your store.
-					<ul class="noteList noStyle">
-						<li class="h-margin-left-0 small-string">
-							These should be activated and Nignx reloaded before going live with the store
-						</li>
-					</ul>
-				</li>
-			</ul>
-		</div>
-		<br>
-		<div class="back-to-top">
-			^^ <a href="#pageHeader">Back to Top</a> ^^
-		</div>
-	</section> <!-- End postInstallation //-->
-	
-	<section id="nextSteps">			
-		<div>
-			<h1>Next Steps</h1>
-			<p>
-				To set up your online store, see the Zen Cart&reg; Wiki entry outlining a <em><a href="https://www.zen-cart.com/wiki/index.php/Basic_Checklist" target="_blank">Basic Checklist</a></em>
-			</p>
-			<ul class="noStyle">
-				Familiarize yourself with the Zen Cart&reg; Developers Toolkit
-				<li class="h-margin-left-0 small-string">
-					Located in your store Admin area, under &quot;Tools&quot;.
-				</li>
-				<li class="h-margin-left-0 small-string">
-					This will help you locate almost anything you want to customize in your Zen Cart&reg; store!
-				</li>
-			</ul>
-			<ul class="noStyle">
-				Review the Zen Cart&reg; <a href="important_site_security_recommendations.html">Site Security Recommendations</a> to be sure your site is not vulnerable to hackers
-				<li class="h-margin-left-0 small-string">
-					The most up-to-date version of the security recommendations can be found on the <a href="https://www.zen-cart.com/wiki/index.php/Important_Site_Security_Recommendations" target="_blank">Zen Cart&reg; Wiki</a>
-				</li>
-			</ul>
-		</div>
-		<br>
-		<div class="back-to-top">
-			^^ <a href="#pageHeader">Back to Top</a> ^^
-		</div>
-	</section> <!-- End nextSteps //-->
-	
-	<section id="helpSupport">
-		<div>
-			<h1>Help and Support</h1>
-			<p>
-				For additional help and support, visit the <a href="https://www.zen-cart.com/tutorials" target="_blank">Zen Cart&reg; FAQ</a> and the <a href="https://www.zen-cart.com/forum.php" target="_blank">Zen Cart&reg; Support Forum</a>.
-			</p>
-		</div>
-	</section> <!-- End helpSupport //-->
-	
-	<section id="footerBlock">
-		<div class="appInfo">
-			<p>
-				Zen Cart&reg; is derived from: Copyright 2003 osCommerce
-				<br><br>
-				This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
-				<br>
-				without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE
-				<br>
-				and is redistributable under Version 2 of the GNU General Public License.
-			<p>
-			<p>
-				<img src="osi-certified-120x100.png" alt="O S I Certified">
-				<br>
-				This software is OSI Certified Open Source Software.
-				<br>
-				OSI Certified is a certification mark of the Open Source Initiative.
-			<p>
-			<p class="zenData">
-				Copyright 2003 - 2018 Zen Ventures, LLC
-				<br><br>
-				Zen Cart&reg; 
-				<br>
-				<a href="https://www.zen-cart.com" target="_blank">www.zen-cart.com</a>
-			</p>
-		</div>
-	</section> <!-- End footerBlock //-->
-	
-</div>    
+    <section id="pageHeader">
+        <div class="row">
+            <div class="col-md-6 col-sm-12">
+                <a href="./index.html">
+                    <img src="../includes/templates/template_default/images/logo.gif" alt="Zen Cart&reg;" title="Zen Cart&reg;" width="192" height="68" border="0" />
+                </a>
+            </div>
+            <div class="col-md-6 hidden-xs hidden-sm text-right">
+                <a class="btn btn-primary add-shadow" href="./index.html">
+                    Documentation Home
+                </a>
+            </div>
+        </div>
+    </section> <!-- End pageHeader //-->
+    
+    <section id="zenTeamMessage">
+        <h1>Welcome to Zen Cart&reg;</h1>    
+        <div class="alert add-shadow">
+            <em>Dear Zen Cart&reg; User</em>,
+            <p>
+                Zen Cart&reg; is made available to you for your use, addition, changes, modification, etc. without charge, under Version 2 of the GNU General Public License.
+            </p>
+            <p>
+                While we do not charge for this software, donations are greatly appreciated, each time you install a new version, to help cover the expenses of maintenance, upgrades, updates, the free support forum and the continued development of this software for your online E-Commerce store.
+            </p>
+            <p>
+                Donations can be made on the <a href="https://www.zen-cart.com/donate" target="_blank">Zen Cart&reg; Team Page</a>
+            </p>
+            <p>
+                We appreciate your support.
+                <br>
+                <em>The Zen Cart&reg; Team</em>
+            </p>
+        </div>
+    </section> <!-- End zenTeamMessage //-->
+    
+    <section id="zenCartRequirements">
+        <div>
+            <h1>Zen Cart&reg; Requirements</h1>
+            <ul>
+                <li>For up-to-date requirements, see: <a href="https://www.zen-cart.com/content.php?48-what-are-the-server-requirements-to-run-zen-cart" target="_blank"> Zen Cart&reg; Server Requirements</a></li>
+                <li>Apache must be configured with AllowOverride set to either "All" or at least both "Limit" and "Indexes" parameters, and preferably the "Options" parameter as well.</li>
+                <li>PHP must be configured to support CURL with OpenSSL</li>
+            </ul>
+            <p>
+                While Zen Cart&reg; can run on Windows/IIS servers, <em>Linux/Apache servers are recommended for best results</em>.
+            </p>
+        </div>
+    </section> <!-- End zenCartRequirements //-->
+    
+    <section id="newInstallation">
+        <div>
+            <h1>Installing for PA-DSS Compliance</h1>
+            <p>
+                For installation instructions related to PA-DSS Compliance, see the Implementation Guide in your /docs/ folder.
+            </p>
+        </div>
+        
+        <div id="gettingStarted">
+            <h1>Getting Started</h1>
+            <h2>The Basics </h2>
+            <p>
+                You have downloaded the Zen Cart&reg; software for an online shopping cart.
+            </p>
+            <p>
+                Since you're reading this file, you have likely already unzipped the <a href="http://sourceforge.net/projects/zencart/files/" target="_blank">Zen Cart&reg; distribution file</a> and its contents into a folder on your personal computer. If for some reason you have not already done so, unzip the files to your PC now, retaining the file structure within the zip file.
+            </p>
+            <p>
+                This is a basic guide for new installations of Zen Cart&reg;. If you already have Zen Cart&reg; installed and wish to upgrade from a previous version, please see the <a href="./2.readme_how_to_upgrade.html">Upgrade Instructions</a> and the <a href="./index.html" target="_blank">What's New documentation</a>.
+            </p>
+            <h2>Preinstallation Questions</h2>
+            <ol>
+                <li>
+                    <em>Do you have a domain?</em>
+                </li>
+                <ul class="noStyle">
+                    <li>
+                        If No, stop ... see our <a href="https://www.zen-cart.com/hosting" target="_blank">Compatible Hosting</a> list and find a fast, reliable web hosting provider who can help you register your own personal domain as well as provide for your hosting needs that meet the Zen Cart&reg; software requirements.
+                    </li>
+                </ul>
+                <li>
+                    <em>Do you have reliable FTP software?</em>
+                </li>
+                <ul class="noStyle">
+                    <li>
+                        If No, stop ... you need to obtain a reliable FTP software package such as <a href="http://filezilla.sourceforge.net/" target="_blank">FileZilla</a> (free), <a href="http://www.flashfxp.com/" target="_blank">FlashFXP</a> or another FTP software program to transfer files back and forth from your computer to your webserver.
+                    </li>
+                    <li>
+                        <ol class="noteList">
+                            <em>NOTES: </em>
+                            <li>
+                                "Webserver" is the computer on the internet where you have your domain hosted (See Item 1)
+                            </li>
+                            <li>
+                                <span class="errorDetails">
+                                        Many users have had timeout and other problems when using programs like SmartFTP and CuteFTP. We recommend that you do <em>NOT</em> use these problematic programs.
+                                </span>
+                            </li>
+                            <li>
+                                If your web hosting provider provides an FTP program that runs inside your browser, we recommend that you do NOT use that for uploading large amounts of files such as a fresh install of Zen Cart. Those are okay for single-file uploads, but unreliable for several files at once.
+                            </li>
+                        </ol>
+                    </li>
+                </ul>
+                <li>
+                    <em>Do you have a good Text Editor?</em>
+                </li>
+                <ul class="noStyle">
+                    <li>
+                        If No, stop ... you will need a good Text Editing software such as <a href="http://ultraedit.com/" target="_blank">UltraEdit</a>, <a href="http://notepad-plus.sourceforge.net" target="_blank">Notepad++</a> (free), <a href="http://crimsoneditor.com" target="_blank">CrimsonEditor</a> (free), <a href="http://www.barebones.com" target="_blank">BBedit</a>(Mac), Kedit (linux), or some other type of Text Editor for modifying the files in Zen Cart&reg;.
+                    </li>
+                    <li>
+                        <ol class="noteList">
+                            <em>NOTES: </em>
+                            <li>
+                                <span class="errorDetails">
+                                        Do <em>NOT</em> use CPanel for editing files, nor MS Word or other software designed for fancy writing ... you want a nice clean Text Editor.
+                                </span>
+                            </li>
+                            <li>
+                                You can use the Windows Notepad... but this is limited in capabilities and the size of files that it can open and often can cause more harm than good.
+                            </li>
+                        </ol>
+                    </li>
+                </ul>
+                <li>
+                    <em>Do you have access to your webhosting control panel to create a MySQL database and user?</em>
+                </li>
+                <ul class="noStyle">
+                    <li>
+                        BEFORE YOU PROCEED, make sure you have access to a MySQL database, and username/password to that database. You may need to create the database using your webhosting control panel. Contact your web hosting provider for assistance.
+                    </li>
+                    <li>
+                        <ol class="noteList">
+                            <em>NOTES: </em>
+                            <li>
+                                Zen Cart&reg; cannot create the database for you.
+                            </li>
+                            <li>
+                                You need the following permissions on your MySQL user: SELECT, INSERT, UPDATE, DELETE, CREATE, ALTER, INDEX, DROP.
+                            </li>
+                            <li>
+                                On an hSphere host, this would be &quot;dba&quot; access, or at least read/write.
+                            </li>
+                        </ol>
+                    </li>
+                </ul>
+            </ol>
+            <em>If you have answered "Yes" to ALL four questions, you are ready to go on.</em>
+        </div> <!-- End gettingStarted //-->
+        
+        <div id="uploadFileset">
+            <h1>Upload the Zen Cart&reg; Fileset</h1>
+            <h2>How do I Upload Files?</h2>
+            <p>
+                Using FTP software, upload the whole Zen Cart&reg; fileset into a directory on your server. Example: <em>/catalog/</em>
+            </p>
+            <p>
+                We will use &quot;<em>/catalog/</em>&quot; as an example here. You can choose &quot;no&quot; foldername, or something else if you prefer, such as &quot;<em>/zencart</em>&quot;, or &quot;<em>/store/</em>&quot; etc
+            </p>
+            <h2>What Folder do I Upload Into?</h2>
+            <p>
+                Each web hosting provider has their own preference in naming folders running a website.
+            </p>
+            <p>
+                You can have many files that do not even get shown to the public. The ones that are available for access via a browser are usually in a folder called something like:
+            </p>
+            <p class="text-center">
+                /home/YOURNAME/public_html
+                <br> - or -
+                <br> /var/www/YOURNAME/httpdocs
+                <br> - or -
+                <br> /usr/accounts/a/b/YOURNAME/httpd
+                <br> - or -
+                <br> - etc, etc, etc -
+            </p>
+            <p>
+                Basically, in your FTP software, look for a &quot;www&quot; or &quot;public_html&quot; or &quot;htdocs&quot; or &quot;httpdocs&quot; or &quot;wwwroot&quot; folder. These are the common folder names for what is referred to as the &quot;webroot&quot;, which is where all website content is served from.
+            </p>
+            <p>
+                Your Zen Cart files need to be under that folder. If they are not, then you will get &quot;not found&quot; errors ... because the content is not found!
+            </p>
+            <p>
+                If it is unclear where the publicly accessible files are to be uploaded, ask your web hosting provider for assistance.
+            </p>
+        </div> <!-- End uploadFileset //-->
+        
+        <div id="creatingConfigureFiles">
+            <h1>Creating Configure.php Files</h1>
+            <ol>
+                <li>
+                    Two files need to be created on the server. These are the configure.php files that identify the settings of your particular server and the location of the files that you just loaded. After they have been created, you will then need to change the permissions on these files.
+                    <ol class="noteList">
+                        <li>
+                            Changing permissions can be done via your FTP program with the chmod feature.
+                        </li>
+                        <li>
+                            Usually right clicking on a directory or filename will open a menu with this option (perhaps under &quot;Properties&quot;)
+                        </li>
+                    </ol>
+                </li>
+                <li>
+                    On the server locate the file: <em><em>/catalog/includes/</em>dist-configure.php</em>
+                    <ul>
+                        <li>
+                            Rename this file to <em>configure.php</em> and change the permissions to 777 <em>(read-write-execute for all)</em>
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    Next, on the server locate the file: <em><em>/catalog/admin/</em>includes/dist-configure.php</em>
+                    <ul>
+                        <li>
+                            Rename this file to <em>configure.php</em> and change the permissions to 777 <em>(read-write-execute for all)</em>
+                        </li>
+                    </ul>
+                </li>
+                <ol class="noteList">
+                    <em>NOTES FOR IIS USERS:</em>
+                    <li>
+                        If using IIS for Windows hosting, the &quot;chmod 777&quot; idea for permissions settings is likely foreign to you. In IIS, under Windows, you need to right-click on the file (or folders in <a href="#mainFolderPermissions">the next section</a> below), and choose "Properties".
+                    </li>
+                    <li>
+                        Then under the Security tab, ensure that the&quot;<em><em>Internet Guest Account</em></em>&quot;, identified usually as: MACHINE_NAME\IUSR_MACHINE_NAME ... has at least &quot;read&quot; and &quot;write&quot; privileges ... likely best to give &quot;modify&quot; as well.
+                    </li>
+                    <li>
+                        This should be done on each file/folder indicated.
+                    </li>
+                    <li>
+                        If the IUSR_MACHINE_NAME account is not listed, click &quot;Add&quot; and add that account from the list, and then set the required permissions.
+                    </li>
+                    <li>
+                         &quot;_MACHINE_NAME&quot; above refers to the &quot;machine name&quot; or &quot;computer name&quot; configured by the server administrator to &quot;name&quot; the server.
+                    </li>
+                </ol>
+            </ol>
+        </div> <!-- End creatingConfigureFiles //-->
+        
+        <div id="setFolderPermissions">
+            <h1>Setting Permissions</h1>
+            
+            <div id="mainFolderPermissions">
+                <h2>Main Folder Permissions</h2>
+                <ul>
+                    Now, change the permissions on the following directories to 777 (read/write/execute):
+                    <li>/catalog/cache</li>
+                    <li>/catalog/images</li>
+                    <li>/catalog/includes/languages/english/html_includes</li>
+                    <li>/catalog/logs</li>
+                    <li>/catalog/media</li>
+                    <li>/catalog/pub</li>
+                    <li>/catalog/admin/backups </li>
+                    <li>/catalog/admin/images/graphs</li>
+                </ul>
+                <ul>
+                    Open the <em>/catalog/images</em> directory and change <em>ALL</em> of the subdirectories and their subdirectories to 777 as well. For example (this is a partial list):
+                    <li>/catalog/images/attributes</li>
+                    <li>/catalog/images/dvd</li>
+                    <li>/catalog/images/large</li>
+                    <li>/catalog/images/large/dvd</li>
+                    <li>/catalog/images/medium </li>
+                    <li>/catalog/images/upload</li>
+                </ul>
+                <ul class="noStyle">
+                    <li class="h-margin-left-0 small-string">
+                        If you miss any of the images directories and subdirectories inside <em>/images</em> and try to use them later, you will get an error message that you cannot write to these directories.
+                    </li>
+                </ul>
+            </div> <!-- End mainFolderPermissions //-->
+            
+            <div id="setOtherFolderPermissions">
+                <h2>Other Folder and File Permissions</h2>
+                <ul>
+                    Depending on your webserver configuration, other folders and files can be set to:
+                    <li>
+                        Folders: CHMOD 755
+                        <ul class="noStyle">
+                            <li class="h-margin-left-0 small-string">
+                                &quot;CHMOD&quot; is a linux/unix term for setting/changing permission levels
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        Files: CHMOD 644<br> 
+                        <ul class="noStyle">
+                            <li class="h-margin-left-0 small-string">
+                                These are typically the defaults that your FTP program will use when uploading, so usually do not need to be set manually.
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div> <!-- End setOtherFolderPermissions //-->
+        </div> <!-- End setFolderPermissions //-->
+        
+        <br>
+        <div class="back-to-top">
+            ^^ <a href="#pageHeader">Back to Top</a> ^^
+        </div>
+    </section> <!-- End newInstallation //-->
+    
+    <section id="preInstaller">
+                
+        <div id="beforeInstaller">
+            <h1>Before Running the Installer</h1>
+            <p>
+                The installer is fairly intelligent and should be able to automatically supply answers to the questions listed below.
+            </p>
+            <p>
+                You will, however, need to confirm that the auto-detected answers are, in fact, correct as on some servers they may differ.
+            </p>
+            <p>
+                You will need the following information for the installation:
+            <ul>
+                <li>
+                    <em>The    physical path to your new Zen Cart&reg; directory</em>
+                    <br>
+                    Example: /home2/zencart/public_html/catalog
+                </li>
+                <li>
+                    <em>The Virtual HTTP Path</em> (the URL to your domain and directory for your shop)
+                    <br>
+                    Example: http://www.mydomain.com/catalog
+                </li>
+            </ul>
+        </div> <!-- End beforeInstaller //-->
+        
+        <div id="sslConsiderations">
+            <h1>SSL Considerations</h1>
+            <p>
+                A Secure Sockets Layer (SSL) is the standard security technology for establishing an encrypted link between a web server and a browser.
+            </p>
+            <p>
+                If you are installing onto a live webserver where you intend to process real transactions, you should plan on securing your customers' transaction data with SSL.
+            </p>
+            <p>
+                If you do not already have an SSL certificate, talk to your web hosting provider about your available options. You will need to enter your SSL details as below. In most cases they will be correct, unless you are using a "shared SSL" service. Your web hosting provider can give you the correct details.
+            </p>
+            <ul>
+                <li>
+                    <em>The Virtual HTTPS Server</em> (the secure URL to your domain)
+                    <br>
+                    Example: https://www.mydomain.com
+                    <ul class="small-string noStyle">
+                        If you have a shared certificate on a virtual server this may look like:
+                        <li>
+                            https://mydomain.secureservername.net/
+                        <li>
+                     - or - 
+                        <li>
+                            https://secure.sharedservername.net/~username
+                        <li>
+                    </ul>
+                </li>
+                <li>
+                    <em>The Virtual HTTPS Path</em> (the secure URL to your domain and directory for your shop)
+                    <br> 
+                    Example: https://www.mydomain.com/catalog
+                    <br>
+                     - or - 
+                    <br>
+                     https://secure.sharedservername.net/~username/catalog
+                </li>
+            </ul>
+            <p>
+                If you are installing to a local PC or to a development server where you do not need to protect sensitive data, you can leave the SSL settings at their defaults, and when asked about enabling SSL later in the installation process, just leave it off if you are not on a live production server.
+            </p>
+        </div> <!-- End sslConsiderations //-->
+        
+        <br>
+        <div class="back-to-top">
+            ^^ <a href="#pageHeader">Back to Top</a> ^^
+        </div>
+    </section> <!-- End preInstaller //-->
+    
+    <section id="Installer">
+        <div id="runningInstaller">
+            <h1>Running the Installer</h1>
+            
+            <div id="startingInstaller">
+                <h2>Starting the Installer</h2>
+                <ul class="noStyle">
+                    <li class="h-margin-left-0">
+                        In your browser, enter the URL to your new shop, and the Installer should automatically start.
+                        <ul class="small-string noStyle">
+                            <li class="h-margin-left-0">
+                                Example: http://www.mydomain.com/catalog
+                                <br>
+                                - or - , to start the installer directly, 
+                                <br>
+                                http://www.mydomain.com/catalog/zc_install
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+                <ul class="noStyle">
+                    You will be presented with a &quot;Welcome to Zen Cart&reg;&quot; page, explaining the features of Zen Cart&reg;.
+                    <li class="h-margin-left-0 small-string">
+                        If you now see a list of filenames and directories, you should speak to your web hosting provider about how to setup your server to auto-detect PHP filename extensions
+                    </li>
+                </ul>
+                <p>
+                    Clicking on <em>Continue</em> takes you to the license screen where you are asked to read and confirm acceptance of the GPL licensing agreement.
+                </p>
+            </div> <!-- End startingInstaller //-->
+            
+            <div id="systemInspectionStep">
+                <h2>System Inspection Step</h2>
+                <div>
+                    <p>
+                        The Installer examine your server for compliance with technical requirements for running Zen Cart&reg;, presenting you with several items you may need or want to address with your host. 
+                    </p>
+                    <p>
+                        Anything marked in red or with an &quot;X&quot; must be addressed before the installer can continue. Things marked with an orange or yellow &quot;caution&quot; symbol are simply warnings that may or may not apply to your setup now. The image folders and others as described earlier in this document are also noted. 
+                    </p>
+                    <p>
+                        If you make changes to your server, you can click <em>Re-Check</em> or press F5 in your browser to refresh the display and reflect the changes you've made before proceeding.
+                    </p>
+                    <p>
+                        If a previous version of Zen Cart&reg; is found on your server, the installer will attempt to determine the database patch level and display that on the screen as well. In this case, an &quot;<em>upgrade</em>&quot; button will display at the bottom of the screen offering you the ability to upgrade if needed.
+                    </p>
+                    <p>
+                        See the <a href="./2.readme_how_to_upgrade.html" target="_blank">Upgrade Instructions</a>.
+                    </p>
+                    <ul class="noStyle">
+                        Once you are satisfied that the &quot;pre-flight-check&quot; inspection is OK for your needs (ideally, all green check-marks), you may click the &quot;<em>Install</em>&quot; button at the bottom of the screen.
+                        <li class="h-margin-left-0 small-string">
+                            If you receive any of the following error messages, go through the above steps to make sure you have not left anything out. All error messages have context-sensitive help via a popup window if you click on the <em>"more info..."</em> links supplied.
+                        </li>
+                    </ul>
+                </div>
+                <div class="alert alert-info add-shadow">
+                    <ul>
+                        <em>Warning: Problems Found</em>
+                        <li>
+                            <span class="error">
+                                /includes/configure.php does not exist.</span>&nbsp;&nbsp;<span class="pseudolink">more info...
+                            </span>
+                        </li>
+                        <li>
+                            <span class="error">
+                                /admin/includes/configure.php does not exist.</span>&nbsp;&nbsp;<span class="pseudolink">more info...
+                            </span>
+                        </li>
+                    </ul>
+                </div>
+            </div> <!-- End systemInspectionStep //-->
+            
+            <div id="databaseSetupStep">
+                <h2>Database Setup Step</h2>
+                <div>
+                    <p>
+                        On the next screen, you are asked for Database Information about your MySQL database, username and password. These can be obtained from your cPanel or equivalent control screen provided by your host. 
+                    </p>
+                    <p>
+                        If you do not have a clean MySQL database setup with a username and password, you will need to create one. 
+                    </p>
+                    <ul class="noStyle">
+                        Contact your web hosting provider if you need assistance in creating a MySQL database table and/or username and password. 
+                        <li class="h-margin-left-0 small-string">
+                            You need to have your database and userID created before the Zen Cart&reg; installer can continue past this screen.
+                        </li>
+                    </ul>
+                </div>
+                <div class="alert alert-info add-shadow">
+                    <ul>
+                        <em>Other information on this screen:</em>
+                        <li>
+                            At this time, MySQL is the primary operational database type. 
+                            <br> 
+                            Future releases may support other database types.
+                        </li>
+                        <li>
+                            We recommend that you store your Database Sessions in your database for security purposes.
+                        </li>
+                    </ul>
+                </div>
+            </div> <!-- End databaseSetupStep //-->
+            
+            <div id="systemSetupStep">
+                <h2>System Setup Step</h2>
+                <p>
+                    On the System Setup page you will need to complete the information we described in &quot;Before Running the Installer&quot; earlier in this document.
+                </p>
+                <p> 
+                    Indicate if you want to Enable SSL (the secure pages where required, in Login, Checkout, and optionally Admin areas) on your server.
+                </p>
+                <p> 
+                    If you do not have an SSL certificate yet, <em>do not</em> enable this feature now. It can be changed at a later date. 
+                </p>
+                <p> 
+                    See the <a href="https://www.zen-cart.com/content.php?56" target="_blank">Enabling SSL Tutorial</a> for detailed instructions.
+                </p>
+            </div> <!-- End systemSetupStep //-->
+            
+            <div id="storeSetupStep">
+                <h2>Store Setup Step</h2>
+                <div>
+                    <p>
+                        Now, complete the Store Information about your Shop.<br>
+                    </p>
+                </div>
+                <div class="alert alert-info add-shadow">
+                    <em>Demo Data</em>
+                    <p>
+                        If you would like to install the demo data, select "Yes".
+                    </p>
+                </div>
+                <div>
+                    <p> 
+                        We recommend that you install the demo data to familiarize yourself with many of the examples created that explain and demonstrate the vast number of features available in Zen Cart&reg;. 
+                    </p>
+                    <ul class="noStyle">
+                        You may also decide later, to set up a test site with the demo data AND a separate working site for your live data so that you have the ability to refer back to the demo data for help and to see examples of a feature.
+                        <li class="h-margin-left-0 small-string">
+                            Except for &quot;demo data&quot;, all of the information here can be (re)configured later in the Admin area of your shop.
+                        </li>
+                    </ul>
+                    <p>
+                        After you click <em>Save Store Settings</em>, there will a brief delay as the database tables are created and the demo data is optionally loaded.
+                    </p>
+                </div>
+            </div> <!-- End storeSetupStep //-->
+            
+            <div id="adminSetupStep">
+                <h2>Admin Setup Step</h2>
+                <ul class="noStyle">
+                    <li class="h-margin-left-0">
+                        Now, complete the Admin Information to set your Login name, Admin email address and password.
+                        <ol class="noteList">
+                            <li>
+                                Both the login name and password are case sensitive.
+                            </li>
+                            <li>
+                                Admin passwords must contain letters and numbers and be a minimum of 7 characters.
+                            </li>
+                            <li>
+                                The admin password you enter here IS ONLY TEMPORARY, and will be expired on first use, for your protection.
+                            </li>
+                        </ol>
+                    </li>
+                </ul>
+            </div> <!-- End adminSetupStep //-->
+        </div> <!-- End runningInstaller //-->
+        
+        <br>
+        <div class="back-to-top">
+            ^^ <a href="#pageHeader">Back to Top</a> ^^
+        </div>
+    </section> <!-- End Installer //-->
+    
+    <section id="postInstallation">            
+        <div>
+            <h1>Post Installation</h1>
+            <h2>Configure.php Files</h2>
+            <ul class="noStyle">
+                <li class="h-margin-left-0">
+                    You will now want to change the permissions on the <em>configure.php</em> files with <em>chmod 644 or 444</em> depending on your server.
+                    <ul class="noteList noStyle">
+                        <li class="h-margin-left-0 small-string">
+                            Sometimes setting 444 cannot be done via FTP, in which case, use your webhosting control panel or file manager to set the permissions level
+                        </li>
+                    </ul>
+                </li>
+                <li class="h-margin-left-0">
+                    These are located in:
+                    <ul class="noteList">
+                        <li>
+                            /catalog/includes/configure.php
+                        </li>
+                        <li>
+                            /catalog/admin/includes/configure.php
+                        </li>
+                    </ul>
+                </li>
+                <li class="h-margin-left-0">
+                    It would also be a good idea to download a copy of these files to your computer from the server as they have been setup and configured to your server specifications based on the Installation process. 
+                    <ol><!-- THIS IS A SPACER //--></ol>
+                </li>
+                <li class="h-margin-left-0">
+                    If you have any errors or problems, most of these can be corrected by minor adjustments to these two files. 
+                    <ol><!-- THIS IS A SPACER //--></ol>
+                </li>
+            </ul>
+            <h2>Delete the "zc_install" Directory</h2>
+            <p> 
+                You must DELETE the <em>/catalog/zc_install</em> directory so that nobody can misuse the scripts in there to wipe out your store.
+            </p>
+            <h2>Update Nginx Directives if Required</h2>
+            <ul class="noStyle">
+                <li class="h-margin-left-0">
+                    The Zen Cart&reg; Installer includes base directives equivalent to <em>".htaccess"</em> rules to help secure your store.
+                    <ul class="noteList noStyle">
+                        <li class="h-margin-left-0 small-string">
+                            These should be activated and Nignx reloaded before going live with the store
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+        <br>
+        <div class="back-to-top">
+            ^^ <a href="#pageHeader">Back to Top</a> ^^
+        </div>
+    </section> <!-- End postInstallation //-->
+    
+    <section id="nextSteps">            
+        <div>
+            <h1>Next Steps</h1>
+            <p>
+                To set up your online store, see the Zen Cart&reg; Wiki entry outlining a <em><a href="https://www.zen-cart.com/wiki/index.php/Basic_Checklist" target="_blank">Basic Checklist</a></em>
+            </p>
+            <ul class="noStyle">
+                Familiarize yourself with the Zen Cart&reg; Developers Toolkit
+                <li class="h-margin-left-0 small-string">
+                    Located in your store Admin area, under &quot;Tools&quot;.
+                </li>
+                <li class="h-margin-left-0 small-string">
+                    This will help you locate almost anything you want to customize in your Zen Cart&reg; store!
+                </li>
+            </ul>
+            <ul class="noStyle">
+                Review the Zen Cart&reg; <a href="important_site_security_recommendations.html">Site Security Recommendations</a> to be sure your site is not vulnerable to hackers
+                <li class="h-margin-left-0 small-string">
+                    The most up-to-date version of the security recommendations can be found on the <a href="https://www.zen-cart.com/wiki/index.php/Important_Site_Security_Recommendations" target="_blank">Zen Cart&reg; Wiki</a>
+                </li>
+            </ul>
+        </div>
+        <br>
+        <div class="back-to-top">
+            ^^ <a href="#pageHeader">Back to Top</a> ^^
+        </div>
+    </section> <!-- End nextSteps //-->
+    
+    <section id="helpSupport">
+        <div>
+            <h1>Help and Support</h1>
+            <p>
+                For additional help and support, visit the <a href="https://www.zen-cart.com/tutorials" target="_blank">Zen Cart&reg; FAQ</a> and the <a href="https://www.zen-cart.com/forum.php" target="_blank">Zen Cart&reg; Support Forum</a>.
+            </p>
+        </div>
+    </section> <!-- End helpSupport //-->
+    
+    <section id="footerBlock">
+        <div class="appInfo">
+            <p>
+                Zen Cart&reg; is derived from: Copyright 2003 osCommerce
+                <br><br>
+                This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+                <br>
+                without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE
+                <br>
+                and is redistributable under Version 2 of the GNU General Public License.
+            <p>
+            <p>
+                <img src="osi-certified-120x100.png" alt="O S I Certified">
+                <br>
+                This software is OSI Certified Open Source Software.
+                <br>
+                OSI Certified is a certification mark of the Open Source Initiative.
+            <p>
+            <p class="zenData">
+                Copyright 2003 - 2018 Zen Ventures, LLC
+                <br><br>
+                Zen Cart&reg; 
+                <br>
+                <a href="https://www.zen-cart.com" target="_blank">www.zen-cart.com</a>
+            </p>
+        </div>
+    </section> <!-- End footerBlock //-->
+    
+</div>
 </body>
 </html>
