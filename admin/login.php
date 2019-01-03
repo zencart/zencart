@@ -146,7 +146,7 @@ if ($expired && $message == '')
           </div>
 
           <div class="form-group">
-            <?php echo zen_draw_input_field('submit', TEXT_SUBMIT, 'id="btn_submit" class="btn btn-primary"', false, '<h3>Submit</h3>'); ?>
+            <?php echo zen_draw_input_field('submit', TEXT_SUBMIT, 'id="btn_submit" class="btn btn-primary"', false, 'submit'); ?>
           </div>
 
         </form>
