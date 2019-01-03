@@ -254,11 +254,6 @@ systemChecks:
             fieldCheck: Type
             expectedResult: 'VARCHAR(64)'
           - checkType: fieldSchema
-            tableName: dashboard_widgets_description
-            fieldName: widget_key
-            fieldCheck: Type
-            expectedResult: 'VARCHAR(64)'
-          - checkType: fieldSchema
             tableName: dashboard_widgets_groups
             fieldName: widget_group
             fieldCheck: Type
@@ -272,11 +267,6 @@ systemChecks:
     methods:
       dbVersionChecker:
         parameters:
-          - checkType: fieldSchema
-            tableName: product_options
-            fieldName: products_options_comment
-            fieldCheck: Type
-            expectedResult: 'VARCHAR(255)'
           - checkType: fieldSchema
             tableName: orders_products
             fieldName: products_virtual
