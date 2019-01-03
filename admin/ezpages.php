@@ -16,7 +16,7 @@ if (!isset($_GET['reset_ez_sort_order'])) {
   $reset_ez_sort_order = $_SESSION['ez_sort_order'];
 }
 
-if ($_GET['action'] == 'set_editor') {
+if (isset($_GET['action']) && $_GET['action'] == 'set_editor') {
   // Reset will be done by init_html_editor.php. Now we simply redirect to refresh page properly.
   $action = '';
   zen_redirect(zen_href_link(FILENAME_EZPAGES_ADMIN));
@@ -113,8 +113,9 @@ if (zen_not_null($action)) {
       if ($alt_url_external != '') {
         $zv_link_method_cnt++;
       }
+      $pages_html_text_count = 0;
       for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
-        if ($pages_html_text[$languages[$i]['id']] != '' && strlen(trim($pages_html_text[$languages[$i]['id']])) > 6) {
+        if (isset($pages_html_text[$languages[$i]['id']]) && $pages_html_text[$languages[$i]['id']] != '' && strlen(trim($pages_html_text[$languages[$i]['id']])) > 6) {
           $pages_html_text_count = $i + 1;
         }
       }
@@ -231,7 +232,7 @@ if (zen_not_null($action)) {
     <!-- header_eof //-->
     <!-- body //-->
     <div class="container-fluid">
-      <h1><?php echo HEADING_TITLE . ' ' . ($_GET['ezID'] != '' ? TEXT_INFO_PAGES_ID . $_GET['ezID'] : TEXT_INFO_PAGES_ID_SELECT); ?></h1>
+      <h1><?php echo HEADING_TITLE . ' ' . (!empty($_GET['ezID']) ? TEXT_INFO_PAGES_ID . $_GET['ezID'] : TEXT_INFO_PAGES_ID_SELECT); ?></h1>
       <div class="row">
         <!-- body_text //-->
         <?php
@@ -250,7 +251,7 @@ if (zen_not_null($action)) {
               <?php echo zen_draw_form('set_ez_sort_order_form', FILENAME_EZPAGES_ADMIN, '', 'get'); ?>
               <?php echo TEXT_SORT_CHAPTER_TOC_TITLE_INFO . '&nbsp;&nbsp;' . zen_draw_pull_down_menu('reset_ez_sort_order', $ez_sort_order_array, $reset_ez_sort_order, 'onChange="this.form.submit();"'); ?>
               <?php echo zen_hide_session_id(); ?>
-              <?php echo ($_GET['page'] != '' ? zen_draw_hidden_field('page', $_GET['page']) : ''); ?>
+              <?php echo (!empty($_GET['page']) ? zen_draw_hidden_field('page', $_GET['page']) : ''); ?>
               <?php echo zen_draw_hidden_field('action', 'set_ez_sort_order'); ?>
               <?php echo '</form>'; ?>
           </div>
@@ -517,7 +518,7 @@ if (zen_not_null($action)) {
 
 // Split Page
 // reset page when page is unknown
-                if (($_GET['page'] == '' || $_GET['page'] == '1') && $_GET['ezID'] != '') {
+                if ((empty($_GET['page']) || $_GET['page'] == '1') && !empty($_GET['ezID'])) {
                   $check_page = $db->Execute($pages_query_raw);
                   $check_count = 1;
                   if ($check_page->RecordCount() > MAX_DISPLAY_SEARCH_RESULTS_EZPAGE) {
