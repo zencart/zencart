@@ -69,6 +69,10 @@ define('SALES_GRAPH_COLUMN_MONTH', 'Month');
 define('SALES_GRAPH_COLUMN_SALES', 'Sales');
 
 
+define('TEXT_DASHBOARD_ADD_WIDGETS', '+ Add Widget(s)');
+define('TITLE_MODAL_DASHBOARD_ADD_WIDGETS', 'Add Widget');
+define('TITLE_MODAL_DASHBOARD_WIDGETS_SETTINGS', 'Widget Settings');
+
 
 /* NOTE: defines for additional contributed "plugin" widgets should be placed into
  * a new file in the extra_definitions folder, not in this file, since

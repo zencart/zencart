@@ -28,6 +28,7 @@ define('NAMESPACE_INTEROPCONTAINER', 'Interop\Container');
 define('NAMESPACE_ADMINNOTIFICATIONS', 'ZenCart\AdminNotifications');
 define('NAMESPACE_MODEL', 'App\Model');
 define('NAMESPACE_CONFIGLOADER', 'ZenCart\ConfigLoader');
+define('NAMESPACE_CONFIGSETTINGS', 'ZenCart\ConfigSettings');
 
 
 define('URL_SERVICES', 'zencart/Services/src/');
@@ -51,6 +52,8 @@ define('URL_INTEROPCONTAINER', 'container-interop/container-interop/src/Interop/
 define('URL_ADMINNOTIFICATIONS', 'zencart/AdminNotifications/src/');
 define('URL_MODEL', '/app/Model/');
 define('URL_CONFIGLOADER', 'zencart/ConfigLoader/src/');
+define('URL_CONFIGSETTINGS', 'zencart/ConfigSettings/src/');
+
 
 /**
  * An array of namespace => basedir configurations
@@ -84,4 +87,5 @@ return array(
     NAMESPACE_ADMINNOTIFICATIONS => DIR_APP_LIBRARY. URL_ADMINNOTIFICATIONS,
     NAMESPACE_MODEL => DIR_FS_CATALOG . URL_MODEL,
     NAMESPACE_CONFIGLOADER => DIR_APP_LIBRARY. URL_CONFIGLOADER,
+    NAMESPACE_CONFIGSETTINGS => DIR_APP_LIBRARY. URL_CONFIGSETTINGS,
 );

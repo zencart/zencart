@@ -685,23 +685,11 @@ CREATE TABLE IF NOT EXISTS dashboard_widgets (
   widget_key varchar(64) NOT NULL,
   widget_group varchar(64) NOT NULL,
   widget_status int(1) NOT NULL DEFAULT '1',
+  widget_name varchar(255) NOT NULL,
   widget_icon varchar(64) NOT NULL,
   widget_theme varchar(64) NOT NULL,
   widget_height int(11) NOT NULL DEFAULT '1',
   widget_width int(11) NOT NULL DEFAULT '1',
-  PRIMARY KEY (widget_key)
-) ENGINE=MyISAM;
-
-# --------------------------------------------------------
-
-#
-# Table structure for table 'dashboard_widgets_description'
-#
-
-DROP TABLE IF EXISTS dashboard_widgets_description;
-CREATE TABLE IF NOT EXISTS dashboard_widgets_description (
-  widget_key varchar(64) NOT NULL,
-  widget_name varchar(255) NOT NULL,
   PRIMARY KEY (widget_key)
 ) ENGINE=MyISAM;
 
@@ -732,10 +720,53 @@ CREATE TABLE IF NOT EXISTS dashboard_widgets_to_users (
   widget_column int(11) NOT NULL DEFAULT '0',
   widget_height int(11) NOT NULL DEFAULT '1',
   widget_width int(11) NOT NULL DEFAULT '1',
-  widget_refresh int(11) NOT NULL DEFAULT '0',
   widget_icon varchar(64) NOT NULL,
   widget_theme varchar(64) NOT NULL,
   PRIMARY KEY (widget_key,admin_id)
+) ENGINE=MyISAM;
+
+# --------------------------------------------------------
+
+#
+# Table structure for table 'dashboard_widgets_settings'
+#
+
+DROP TABLE IF EXISTS dashboard_widgets_settings;
+CREATE TABLE dashboard_widgets_settings (
+  setting_key varchar(64) NOT NULL,
+  setting_name varchar(255) NOT NULL,
+  setting_definition longtext NOT NULL,
+  setting_type varchar(32) NOT NULL,
+  PRIMARY KEY (setting_key)
+) ENGINE=MyISAM;
+
+# --------------------------------------------------------
+
+#
+# Table structure for table 'dashboard_widgets_settings_to_widget'
+#
+
+DROP TABLE IF EXISTS dashboard_widgets_settings_to_widget;
+CREATE TABLE dashboard_widgets_settings_to_widget (
+  setting_key varchar(64) NOT NULL,
+  widget_key varchar(64) NOT NULL,
+  initial_value longtext,
+  PRIMARY KEY (setting_key,widget_key)
+) ENGINE=MyISAM;
+
+# --------------------------------------------------------
+
+#
+# Table structure for table 'dashboard_widgets_settings_to_user'
+#
+
+DROP TABLE IF EXISTS dashboard_widgets_settings_to_user;
+CREATE TABLE dashboard_widgets_settings_to_user (
+  setting_key varchar(64) NOT NULL,
+  widget_key varchar(64) NOT NULL,
+  admin_id int(10) unsigned NOT NULL,
+  setting_value longtext,
+  PRIMARY KEY (setting_key,widget_key,admin_id)
 ) ENGINE=MyISAM;
 
 # --------------------------------------------------------
@@ -3229,22 +3260,13 @@ INSERT INTO query_builder ( query_id , query_category , query_name , query_descr
 
 INSERT INTO get_terms_to_filter VALUES ('manufacturers_id', 'TABLE_MANUFACTURERS', 'manufacturers_name');
 
-INSERT INTO dashboard_widgets (widget_key, widget_group, widget_status, widget_icon, widget_theme, widget_height, widget_width) VALUES
-('general-statistics', 'general-statistics', 1, 'fa-area-chart', 'bg-light-blue-gradient', 2, 1),
-('order-summary', 'order-summary', 1, 'fa-shopping-cart', 'bg-light-blue-gradient', 1, 1),
-('new-customers', 'new-customers', 1, 'fa-user-plus', 'bg-light-blue-gradient', 1, 1),
-('counter-history', 'counter-history', 1, 'fa-calendar', 'bg-light-blue-gradient', 1, 1),
-('new-orders', 'new-orders', 1, 'fa-shopping-cart', 'bg-light-blue-gradient', 1, 1),
-('logs', 'logs', 1, 'fa-thumbs-o-up', 'bg-light-blue-gradient', 1, 1)
-;
-
-INSERT INTO dashboard_widgets_description (widget_key, widget_name) VALUES
-('general-statistics', 'GENERAL_STATISTICS'),
-('order-summary', 'ORDER_SUMMARY'),
-('new-customers', 'NEW_CUSTOMERS'),
-('counter-history', 'COUNTER_HISTORY'),
-('new-orders', 'NEW_ORDERS'),
-('logs', 'LOGS')
+INSERT INTO dashboard_widgets (widget_key, widget_name, widget_group, widget_status, widget_icon, widget_theme, widget_height, widget_width) VALUES
+('general-statistics', 'GENERAL_STATISTICS', 'general-statistics', 1, 'fa-area-chart', 'bg-light-blue-gradient', 2, 1),
+('order-summary', 'ORDER_SUMMARY', 'order-summary', 1, 'fa-shopping-cart', 'bg-light-blue-gradient', 1, 1),
+('new-customers', 'NEW_CUSTOMERS', 'new-customers', 1, 'fa-user-plus', 'bg-light-blue-gradient', 1, 1),
+('counter-history', 'COUNTER_HISTORY', 'counter-history', 1, 'fa-calendar', 'bg-light-blue-gradient', 1, 1),
+('new-orders', 'NEW_ORDERS', 'new-orders', 1, 'fa-shopping-cart', 'bg-light-blue-gradient', 1, 1),
+('logs', 'LOGS', 'logs', 1, 'fa-thumbs-o-up', 'bg-light-blue-gradient', 1, 1)
 ;
 
 INSERT INTO dashboard_widgets_groups (widget_group, widget_group_name) VALUES
@@ -3256,20 +3278,16 @@ INSERT INTO dashboard_widgets_groups (widget_group, widget_group_name) VALUES
 ('logs', 'LOGS_GROUP')
 ;
 
-INSERT INTO dashboard_widgets (widget_key, widget_group, widget_status, widget_icon, widget_theme, widget_height, widget_width) VALUES ('banner-statistics', 'banner-statistics', 1, 'fa-area-chart', 'bg-light-blue-gradient', 2, 1);
-INSERT INTO dashboard_widgets_description (widget_key, widget_name) VALUES ('banner-statistics', 'BANNER_STATISTICS');
+INSERT INTO dashboard_widgets (widget_key, widget_name, widget_group, widget_status, widget_icon, widget_theme, widget_height, widget_width) VALUES ('banner-statistics', 'BANNER_STATISTICS', 'banner-statistics', 1, 'fa-area-chart', 'bg-light-blue-gradient', 2, 1);
 INSERT INTO dashboard_widgets_groups (widget_group, widget_group_name) VALUES ('banner-statistics', 'BANNER_STATISTICS_GROUP');
 
-INSERT INTO dashboard_widgets (widget_key, widget_group, widget_status, widget_icon, widget_theme, widget_height, widget_width) VALUES ('whos-online', 'whos-online', 1, 'fa-area-chart', 'bg-light-blue-gradient', 1, 1);
-INSERT INTO dashboard_widgets_description (widget_key, widget_name) VALUES ('whos-online', 'WHOSONLINE_ACTIVITY');
+INSERT INTO dashboard_widgets (widget_key, widget_name, widget_group, widget_status, widget_icon, widget_theme, widget_height, widget_width) VALUES ('whos-online', 'WHOSONLINE_ACTIVITY', 'whos-online', 1, 'fa-area-chart', 'bg-light-blue-gradient', 1, 1);
 INSERT INTO dashboard_widgets_groups (widget_group, widget_group_name) VALUES ('whos-online', 'WHOSONLINE_GROUP');
 
-INSERT INTO dashboard_widgets (widget_key, widget_group, widget_status, widget_icon, widget_theme, widget_height, widget_width) VALUES ('counter-history-graph', 'counter-history-graph', 1, 'fa-calendar', 'bg-light-blue-gradient', 2, 1);
-INSERT INTO dashboard_widgets_description (widget_key, widget_name) VALUES ('counter-history-graph', 'COUNTER_HISTORY_GRAPH');
+INSERT INTO dashboard_widgets (widget_key, widget_name, widget_group, widget_status, widget_icon, widget_theme, widget_height, widget_width) VALUES ('counter-history-graph', 'COUNTER_HISTORY_GRAPH', 'counter-history-graph', 1, 'fa-calendar', 'bg-light-blue-gradient', 2, 1);
 INSERT INTO dashboard_widgets_groups (widget_group, widget_group_name) VALUES ('counter-history-graph', 'COUNTER_HISTORY_GRAPH_GROUP');
 
-INSERT INTO dashboard_widgets (widget_key, widget_group, widget_status, widget_icon, widget_theme, widget_height, widget_width) VALUES ('sales-graph-report', 'sales-graph-report', 1, 'fa-line-chart', 'bg-light-blue-gradient', 2, 1);
-INSERT INTO dashboard_widgets_description (widget_key, widget_name) VALUES ('sales-graph-report', 'SALES_GRAPH_REPORT');
+INSERT INTO dashboard_widgets (widget_key, widget_name, widget_group, widget_status, widget_icon, widget_theme, widget_height, widget_width) VALUES ('sales-graph-report', 'SALES_GRAPH_REPORT', 'sales-graph-report', 1, 'fa-line-chart', 'bg-light-blue-gradient', 2, 1);
 INSERT INTO dashboard_widgets_groups (widget_group, widget_group_name) VALUES ('sales-graph-report', 'SALES_GRAPH_REPORT_GROUP');
 
 
@@ -3287,6 +3305,22 @@ INSERT INTO dashboard_widgets_to_users (widget_key, admin_id, widget_row, widget
 ,('sales-graph-report', 1, 0, 0, 'fa-line-chart', 'bg-light-blue-gradient', 2, 1)
 ;
 
+# @todo testing settings - remove for release
+
+INSERT INTO dashboard_widgets_settings (setting_key, setting_name, setting_definition, setting_type) VALUES ('some-text', 'INPUT_LABEL_SOME_TEXT', '{}', 'text');
+INSERT INTO dashboard_widgets_settings (setting_key, setting_name, setting_definition, setting_type) VALUES ('date-from', 'INPUT_LABEL_DATE_FROM', '', 'simpleDate');
+
+# Banner Statistics dashboard widget settings
+
+INSERT INTO dashboard_widgets_settings (setting_key, setting_name, setting_definition, setting_type) VALUES ('banner-id', 'INPUT_LABEL_BANNER_ID', '{"model": "banner", "id": "banners_id", "text": "banners_title"}', 'selectFromModel');
+INSERT INTO dashboard_widgets_settings (setting_key, setting_name, setting_definition, setting_type) VALUES ('banner-date-range', 'INPUT_LABEL_BANNER_DATE_RANGE', '{"options":[{"id":"yearly","text":"OPTIONS_DATERANGE_YEARLY"},{"id":"monthly","text":"OPTIONS_DATERANGE_MONTHLY"},{"id":"daily","text":"OPTIONS_DATERANGE_DAILY"},{"id":"recent","text":"OPTIONS_DATERANGE_RECENT"}]}', 'selectFromArray');
+INSERT INTO dashboard_widgets_settings (setting_key, setting_name, setting_definition, setting_type) VALUES ('banner-show-lines', 'INPUT_LABEL_BANNER_SHOW_LINES', '{}', 'boolean');
+
+INSERT INTO dashboard_widgets_settings_to_widget (setting_key, widget_key, initial_value) VALUES ('banner-id', 'banner-statistics', 'monthly');
+INSERT INTO dashboard_widgets_settings_to_widget (setting_key, widget_key, initial_value) VALUES ('banner-date-range', 'banner-statistics', 'monthly');
+INSERT INTO dashboard_widgets_settings_to_widget (setting_key, widget_key, initial_value) VALUES ('banner-show-lines', 'banner-statistics', 'on');
+INSERT INTO dashboard_widgets_settings_to_widget (setting_key, widget_key, initial_value) VALUES ('some-text', 'banner-statistics', '');
+INSERT INTO dashboard_widgets_settings_to_widget (setting_key, widget_key, initial_value) VALUES ('date-from', 'banner-statistics', '');
 
 
 INSERT INTO listingbox_locations (location_key, location_name) VALUES

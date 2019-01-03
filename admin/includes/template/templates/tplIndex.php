@@ -7,11 +7,10 @@
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version GIT: $Id: $
  */
-//print_r($tplVars['widgets']);
 ?>
-<section class="content-header">
-    <h1><a href="#" class="widget-add">+ Add Widget</a></h1>
-</section>
+<div class="row">
+    <h1><a href="#" class="widget-add"><?php echo TEXT_DASHBOARD_ADD_WIDGETS; ?></a></h1>
+</div>
 <div class="grid-stack grid-stack-3">
     <?php foreach ($tplVars['widgets'] as $widgetKey => $widget) { ?>
       <?php $tplVars['widget']['content'] = $widget['content']; ?>
@@ -19,17 +18,17 @@
              data-gs-x="<?php echo $widget['widgetInfo']['widget_column']; ?>"
              data-gs-y="<?php echo $widget['widgetInfo']['widget_row']; ?>"
              data-gs-width="<?php echo $widget['widgetInfo']['widget_width']; ?>" data-gs-height="<?php echo $widget['widgetInfo']['widget_height']; ?>">
-            <div id="<?php echo $widget['widgetBaseId']; ?>" class="flipable grid-stack-item-content">
-                <div class="flip-front box box-solid <?php echo $widget['widgetInfo']['widget_theme']; ?> sortable">
+            <div id="<?php echo $widget['widgetBaseId']; ?>" class="grid-stack-item-content">
+                <div class="box box-solid <?php echo $widget['widgetInfo']['widget_theme']; ?> sortable">
                     <div class="box-header ui-sortable-handle" style="cursor: move;">
                         <i class="fa <?php echo $widget['widgetInfo']['widget_icon']; ?>"></i>
-
                         <h3 class="box-title"><?php echo $widget['widgetTitle']; ?></h3>
-
                         <div class="pull-right box-tools">
-                            <button class="btn btn-success btn-sm" data-widget="settings" type="button">
+                            <?php if ($widget['widgetInfo']['has_settings']) { ?>
+                            <button class="btn btn-success btn-sm settings-toggle" type="button">
                                 <i class="fa fa-wrench"></i>
                             </button>
+                            <?php } ?>
                             <button class="btn btn-success btn-sm" data-widget="collapse" type="button">
                                 <i class="fa fa-minus"></i>
                             </button>
@@ -58,10 +57,17 @@
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
                         aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title">Add Widget</h4>
+                <h4 class="modal-title"><?php echo TITLE_MODAL_DASHBOARD_ADD_WIDGETS; ?></h4>
             </div>
             <div class="modal-body add-widget-container">
             </div>
+        </div>
+    </div>
+</div>
+
+<div id="widget-settings" class="modal fade " tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content widget-settings-container" >
         </div>
     </div>
 </div>
@@ -108,5 +114,16 @@
 
     });
 
+    $('.settings-toggle').click(function(e) {
+        var widgetId = $(this).parents(".box").first().parent().attr('id')
+        $('#widget-settings').modal('show');
+        zcJS.ajax({
+            url: "zcAjaxHandler.php?act=dashboardWidget&method=getWidgetSettingsFields",
+            data: {widget: widgetId}
+        }).done(function( response ) {
+            $('.widget-settings-container').html(response.html);
+            $('#widget-settings').modal('show');
+        });
+    });
 
 </script>

@@ -10,264 +10,284 @@
 
 namespace ZenCart\DashboardWidget;
 
-if (!defined('IS_ADMIN_FLAG')) {
-  die('Illegal Access');
-}
-
+use App\Model\ModelFactory;
 use base;
+use ZenCart\AdminUser\AdminUser;
+use ZenCart\ConfigSettings\ConfigSettingsFactory;
 
 /**
  * Class WidgetManager
  * @package ZenCart\DashboardWidget
  */
-final class WidgetManager
+class WidgetManager
 {
-  public static function getWidgetsForUser($user)
-  {
-    global $db;
-    $widgets = array();
-    $sql = "SELECT * FROM " . TABLE_DASHBOARD_WIDGETS_TO_USERS . " as tdwtu
-            LEFT JOIN " . TABLE_DASHBOARD_WIDGETS_DESCRIPTION . " as tdwd ON tdwd.widget_key = tdwtu.widget_key
-            WHERE tdwtu.admin_id = :adminId:
-            ORDER BY widget_column, widget_row";
-    $sql = $db->bindVars($sql, ':adminId:', $user, 'integer');
-    $result = $db->execute($sql);
-    while (!$result->EOF)
-    {
-      $widgets[$result->fields['widget_key']] = $result->fields;
-      $result->moveNext();
-    }
-    return $widgets;
-  }
 
-  public static function getWidgetsForProfile($user)
-  {
-    global $db;
-    $widgets = array();
-    if (zen_is_superuser())
+    public function __construct(
+        ModelFactory $modelFactory, AdminUser $adminUser, ConfigSettingsFactory $configSettingsFactory
+    ) {
+        $this->adminUser = $adminUser->getModel();
+        $this->modelFactory = $modelFactory;
+        $this->configSettingsFactory = $configSettingsFactory;
+    }
+
+    public function getWidgetInfoForUser()
     {
-      $sql = "SELECT * FROM " . TABLE_DASHBOARD_WIDGETS . " as tdw
-                 LEFT JOIN " . TABLE_DASHBOARD_WIDGETS_DESCRIPTION . " as tdwd ON tdwd.widget_key = tdw.widget_key";
-      $result = $db->execute($sql);
-      while (!$result->EOF)
-      {
-        $widgets[$result->fields['widget_key']] = $result->fields;
-        $result->moveNext();
-      }
-    } else
+        $model = $this->modelFactory->make('DashboardWidgetsToUsers');
+        $widgets = $model->getWidgetInfoForUser($this->adminUser->admin_id)->toArray();
+        $widgetinfoList = [];
+        foreach ($widgets as $widget) {
+            $widget['config_settings'] =  $this->getCombinedWidgetInfo($widget['widget_key']);
+            $widget['widget_name'] = $widget['dashboard_widget']['widget_name'];
+            $widget['has_settings'] = (count($widget['dashboard_widget_settings']) > 0);
+            $widgetinfoList[$widget['widget_column']][$widget['widget_row']] = $widget;
+        }
+        return $widgetinfoList;
+    }
+
+    public function loadWidgetClasses(array $widgetInfoList)
     {
-      $sql = "SELECT admin_profile FROM " . TABLE_ADMIN . " WHERE admin_id = :adminId:";
-      $sql = $db->bindVars($sql, ':adminId:', $user, 'integer');
-      $result = $db->execute($sql);
-      $profileId = $result->fields['admin_profile'];
-      $sql = "   SELECT * FROM " . TABLE_ADMIN_PAGES_TO_PROFILES . " as tdwtp
+        $widgetList = array();
+        foreach ($widgetInfoList as $widgets) {
+            foreach ($widgets as $widget) {
+                $classNameSpace = __NAMESPACE__ . '\\';
+                $className = base::camelize(strtolower(str_replace('-', '_', $widget['widget_key'])), TRUE);
+                $classFile = __DIR__ . DIRECTORY_SEPARATOR . $className . '.php';
+                $className = $classNameSpace . $className;
+
+                if (!class_exists($className, true) && is_readable($classFile)) {
+                    require_once($classFile);
+                }
+                if (!class_exists($className)) continue;
+
+                $widgetClass = new $className($widget['widget_key'], $widget);
+                $widgetList[$widget['widget_key']] = $widgetClass;
+            }
+        }
+        return $widgetList;
+    }
+
+    public function prepareTemplateVariables(array $widgetList)
+    {
+        $tplVars = array();
+        foreach ($widgetList as $widgetkey => $widget) {
+            $tplVars[$widgetkey] = $widget->prepareContent();
+            $tplVars[$widgetkey]['templateFile'] = $widget->getTemplateFile();
+            $tplVars[$widgetkey]['widgetTitle'] = $widget->getWidgetTitle();
+            $tplVars[$widgetkey]['widgetBaseId'] = $widget->getWidgetBaseId();
+            $tplVars[$widgetkey]['widgetInfo'] = $widget->getWidgetInfo();
+            $widget->updatewidgetInfo($widgetList[$widgetkey]->widgetInfo);
+        }
+        return $tplVars;
+    }
+
+    public function applyPositionSettings(array $items)
+    {
+        //@todo transaction
+        $model = $this->modelFactory->make('DashboardWidgetsToUsers');
+        foreach ($items as $detail) {
+            $model->where('admin_id', '=', $this->adminUser->admin_id)->where('widget_key', '=', $detail['id'])
+                  ->update(
+                      ['widget_column' => $detail['x'],
+                       'widget_row'    => $detail['y'],
+                       'widget_width'  => $detail['width'],
+                       'widget_height' => $detail['height'],
+                      ]);
+        }
+
+    }
+
+    public function removeWidget(string $item)
+    {
+        $model = $this->modelFactory->make('DashboardWidgetsToUsers');
+        $model->where('widget_key', '=', $item)->where('admin_id', '=', $this->adminUser->admin_id)->delete();
+    }
+
+
+    public function getWidgetsForProfile()
+    {
+        global $db;
+        $widgetList = array();
+        if ($this->adminUser->isSuperUser()) {
+            $dashboardWidgetsModel = $this->modelFactory->make('DashboardWidgets');
+            $widgets = $dashboardWidgetsModel->all()->toArray();
+        }
+        if (!$this->adminUser->isSuperUser()) {
+            $profileId = $this->adminUser->admin_profile;
+            // @todo convert to eloquent
+            $sql = "   SELECT * FROM " . TABLE_ADMIN_PAGES_TO_PROFILES . " as tdwtp
                  LEFT JOIN " .TABLE_DASHBOARD_WIDGETS . " as tdw ON tdw.widget_key = REPLACE(page_key, '_dashboardwidgets_', '')
                  LEFT JOIN " . TABLE_DASHBOARD_WIDGETS_DESCRIPTION . " as tdwd ON tdwd.widget_key = tdw.widget_key
                  WHERE tdwtp.profile_id = :profileId: AND page_key LIKE '_dashboardwidgets_%'";
-      $sql = $db->bindVars($sql, ':profileId:', $profileId, 'integer');
-      $result = $db->execute($sql);
-      while (!$result->EOF)
-      {
-        $widgets[$result->fields['widget_key']] = $result->fields;
-        $result->moveNext();
-      }
-    }
-    return $widgets;
-  }
-
-  public static function setWidgetTitle($name) {
-    if (defined($name)) $name = constant($name);
-    return $name;
-  }
-  public static function setWidgetDescription($name) {
-    if (defined($name."_DESCRIPTION")) {
-        $desc = constant($name."_DESCRIPTION");
-    } else {
-        $desc = "";
-    }
-    return $desc;
-  }
-
-  public static function getWidgetInfoForUser($user)
-  {
-    global $db;
-    $sql = "SELECT * FROM " . TABLE_DASHBOARD_WIDGETS_TO_USERS . " as tdwtu
-            LEFT JOIN " . TABLE_DASHBOARD_WIDGETS_DESCRIPTION . " as tdwd ON tdwd.widget_key = tdwtu.widget_key
-            WHERE tdwtu.admin_id = :adminId:
-            ORDER BY widget_column, widget_row";
-    $sql = $db->bindVars($sql, ':adminId:', $user, 'integer');
-    $result = $db->execute($sql);
-    $widgets = array();
-    while (!$result->EOF)
-    {
-      $widgets[$result->fields['widget_column']][$result->fields['widget_row']] = $result->fields;
-      $result->moveNext();
-    }
-    return $widgets;
-  }
-
-  /**
-   * @param  array $widgetList
-   * @return array
-   * @todo   Is this necessary or valid with the new autoloading?
-   */
-  public static function loadWidgetClasses(array $widgetInfoList)
-  {
-    $widgetList = array();
-
-    foreach ($widgetInfoList as $widgets) {
-      foreach ($widgets as $widget) {
-        $classNameSpace = __NAMESPACE__ . '\\';
-        $className = base::camelize(strtolower(str_replace('-', '_', $widget['widget_key'])), TRUE);
-        $classFile = __DIR__ . DIRECTORY_SEPARATOR . $className . '.php';
-        $className = $classNameSpace . $className;
-
-        if (!class_exists($className, true) && is_readable($classFile)) {
-          require_once($classFile);
+            $sql = $db->bindVars($sql, ':profileId:', $profileId, 'integer');
+            $results = $db->execute($sql);
+            foreach ($results as $result) {
+                $widgets[$result['widget_key']] = $result;
+            }
         }
-        if (!class_exists($className)) continue;
+        foreach ($widgets as $widget) {
+            $widgetList[$widget['widget_key']] = $widget;
+        }
 
-        $widgetClass = new $className($widget['widget_key'], $widget);
-        $widgetList[$widget['widget_key']] = $widgetClass;
-      }
+        return $widgetList;
     }
 
-    return $widgetList;
-  }
 
-  public static function prepareTemplateVariables($widgetList)
-  {
-    $tplVars = array();
-
-    foreach ($widgetList as $widgetkey => $widget) {
-      $tplVars[$widgetkey] = $widget->prepareContent();
-      $tplVars[$widgetkey]['templateFile'] = $widget->getTemplateFile();
-      $tplVars[$widgetkey]['widgetTitle']  = $widget->getWidgetTitle();
-      $tplVars[$widgetkey]['widgetBaseId'] = $widget->getWidgetBaseId();
-      $tplVars[$widgetkey]['widgetInfo'] = $widget->getWidgetInfo();
-      $widget->updatewidgetInfo($widgetList[$widgetkey]->widgetInfo);
-    }
-
-    return $tplVars;
-  }
-
-  public static function applyPositionSettings($items, $user)
-  {
-    global $db;
-    foreach ($items as $key => $detail)
+    public function getWidgetsForUser()
     {
-      $sql = "UPDATE " . TABLE_DASHBOARD_WIDGETS_TO_USERS . "
-              SET widget_column = :column:, widget_row = :row:,
-                  widget_width = :width:, widget_height = :height:
-              WHERE admin_id = :adminId: AND widget_key = :key:";
-      $sql = $db->bindVars($sql, ':column:', $detail['x'], 'integer');
-      $sql = $db->bindVars($sql, ':row:', $detail['y'], 'integer');
-      $sql = $db->bindVars($sql, ':width:', $detail['width'], 'integer');
-      $sql = $db->bindVars($sql, ':height:', $detail['height'], 'integer');
-      $sql = $db->bindVars($sql, ':key:', $detail['id'], 'string');
-      $sql = $db->bindVars($sql, ':adminId:', $user, 'integer');
-      $db->execute($sql);
+        $model = $this->modelFactory->make('DashboardWidgetsToUsers');
+        $widgets = $model->getWidgetInfoForUser($this->adminUser->admin_id)->toArray();
+        $widgetList = array();
+        foreach ($widgets as $widget) {
+            $widget['widget_name'] = $widget['dashboard_widget']['widget_name'];
+            $widgetList[$widget['widget_key']] = $widget;
+        }
+        return $widgetList;
     }
-  }
-
-  public static function removeWidget($item, $user)
-  {
-    global $db;
-    $sql = "DELETE FROM ". TABLE_DASHBOARD_WIDGETS_TO_USERS . " WHERE widget_key = :key: AND admin_id = :user:";
-    $sql = $db->bindVars($sql, ':key:', $item, 'string');
-    $sql = $db->bindVars($sql, ':user:', $user, 'integer');
-    $db->execute($sql);
-  }
 
 
-  public static function setWidgetRefresh($widgetRefresh, $item, $user)
-  {
-    global $db;
-    $sql = "UPDATE ". TABLE_DASHBOARD_WIDGETS_TO_USERS . " SET widget_refresh = :refresh: WHERE widget_key = :key: AND admin_id = :user:";
-    $sql = $db->bindVars($sql, ':key:', $item, 'string');
-    $sql = $db->bindVars($sql, ':user:', $user, 'integer');
-    $sql = $db->bindVars($sql, ':refresh:', $widgetRefresh, 'integer');
-    $db->execute($sql);
-
-  }
-
-  public static function getWidgetTimerSelect($id)
-  {
-    global $db;
-    $optionList = array(
-      array('id' => 0,   'text' => TEXT_TIMER_SELECT_NONE),
-      array('id' => 60,  'text' => TEXT_TIMER_SELECT_1MIN),
-      array('id' => 300, 'text' => TEXT_TIMER_SELECT_5MIN),
-      array('id' => 600, 'text' => TEXT_TIMER_SELECT_10MIN),
-      array('id' => 900, 'text' => TEXT_TIMER_SELECT_15MIN),
-    );
-    return $optionList;
-  }
-
-  public static function getWidgetRefresh($item, $user)
-  {
-    global $db;
-    $sql = "SELECT * FROM " . TABLE_DASHBOARD_WIDGETS_TO_USERS . " WHERE admin_id = :user: and widget_key = :key:";
-    $sql = $db->bindVars($sql, ':key:', $item, 'string');
-    $sql = $db->bindVars($sql, ':user:', $user, 'integer');
-    $result = $db->execute($sql);
-    return $result->fields['widget_refresh'];
-  }
-
-  public static function getInstallableWidgets($adminId)
-  {
-    $groups = self::getWidgetGroups();
-    $installableWidgets = self::getInstallableWidgetsList($_SESSION['admin_id']);
-    foreach ($installableWidgets as &$w) {
-      $w['widget_description'] = self::setWidgetDescription($w['widget_name']);
-      $w['widget_name'] = self::setWidgetTitle($w['widget_name']);
-    }
-    return $installableWidgets;
-  }
-
-  public static function getWidgetGroups()
-  {
-    global $db;
-    $groups = array();
-    $sql = "SELECT * FROM " . TABLE_DASHBOARD_WIDGETS_GROUPS;
-    $result = $db->execute($sql);
-    while (!$result->EOF)
+    public function getWidgetTitle(string $name)
     {
-      $groups[$result->fields['widget_group']] = array('name'=>$result->fields['widget_group_name'], 'count'=>0);
-      $result->moveNext();
+        if (defined($name)) $name = constant($name);
+        return $name;
     }
-    return $groups;
-  }
 
-  public static function getInstallableWidgetsList($user)
-  {
-    $profileWidgets = self::getWidgetsForProfile($user);
-    $installedWidgets = self::getWidgetsForUser($user);
-    //print_r($profileWidgets);
-    //print_r($installedWidgets);
-    $installableWidgets = array_diff_key($profileWidgets, $installedWidgets);
-    return $installableWidgets;
-  }
+    public function getSettingsTitle(string $widgetName, string $settingsName)
+    {
+        if (defined($widgetName . '_' . $settingsName)) {
+            $name = constant($widgetName . '_' . $settingsName);
+            return $name;
+        }
+        if (defined($settingsName)) {
+            $name = constant($settingsName);
+            return $name;
+        }
+        return 'UNDEFINED';
+    }
 
-  public static function addWidgetForUser($widget, $user)
-  {
-    global $db;
-    $sql = "SELECT * FROM " . TABLE_DASHBOARD_WIDGETS . " WHERE widget_key = :widgetKey:";
-    $sql = $db->bindVars($sql, ':widgetKey:', $widget, 'string');
-    $widgetDetail = $db->execute($sql);
-    $widgetIcon =  $widgetDetail->fields['widget_icon'];
-    $widgetTheme =  $widgetDetail->fields['widget_theme'];
 
-    $sql = "SELECT MAX(widget_row) as max FROM " . TABLE_DASHBOARD_WIDGETS_TO_USERS;
-    $result = $db->execute($sql);
-    $max = (int)$result->fields['max'];
-    $max++;
-    $sql = "INSERT INTO " . TABLE_DASHBOARD_WIDGETS_TO_USERS . "
-            (widget_key, admin_id, widget_row, widget_column, widget_icon, widget_theme) VALUES (:widgetId:, :adminId:, $max, 0, :widgetIcon:, :widgetHeaderColor:) ";
-    $sql = $db->bindVars($sql, ':widgetId:', $widget, 'string');
-    $sql = $db->bindVars($sql, ':adminId:', $user, 'integer');
-    $sql = $db->bindVars($sql, ':widgetIcon:', $widgetIcon, 'string');
-    $sql = $db->bindVars($sql, ':widgetHeaderColor:', $widgetTheme, 'string');
-    $db->execute($sql);
-  }
+    public function getWidgetDescription(string $name)
+    {
+        if (defined($name . "_DESCRIPTION")) {
+            $desc = constant($name . "_DESCRIPTION");
+        } else {
+            $desc = "";
+        }
+        return $desc;
+    }
+
+
+    public function getInstallableWidgets()
+    {
+        $installableWidgets = $this->getInstallableWidgetsList();
+        foreach ($installableWidgets as &$w) {
+            $w['widget_description'] = $this->getWidgetDescription($w['widget_name']);
+            $w['widget_name'] = $this->getWidgetTitle($w['widget_name']);
+        }
+        return $installableWidgets;
+    }
+
+    public function getInstallableWidgetsList()
+    {
+        $profileWidgets = $this->getWidgetsForProfile();
+        $installedWidgets = $this->getWidgetsForUser();
+        $installableWidgets = array_diff_key($profileWidgets, $installedWidgets);
+        return $installableWidgets;
+    }
+
+    public function getWidgetGroups()
+    {
+        $dashboardWidgetsGroups = $this->modelFactory->make('DashboardWidgetsGroups');
+        $groups = $dashboardWidgetsGroups->all()->toArray();
+        return $groups;
+    }
+
+    public function addWidgetForUser(string $widgetKey)
+    {
+        $dashboardWidgets = $this->modelFactory->make('DashboardWidgets');
+        $widgetDetail = $dashboardWidgets->where('widget_key', '=', $widgetKey)->first()->toArray();
+        $widgetIcon = $widgetDetail['widget_icon'];
+        $widgetTheme = $widgetDetail['widget_theme'];
+        $dashboardWidgetsToUser = $this->modelFactory->make('DashboardWidgetsToUsers');
+        $max = $dashboardWidgetsToUser->max('widget_row') + 1;
+        $dashboardWidgetsToUser->create(
+            ['widget_key'    => $widgetKey, 'admin_id' => $this->adminUser->admin_id, 'widget_row' => $max,
+             'widget_column' => 0, 'widget_icon' => $widgetIcon, 'widget_theme' => $widgetTheme]);
+    }
+
+    public function getWidgetInfoForEdit(string $widgetKey)
+    {
+        $dashboardWidgets = $this->modelFactory->make('DashboardWidgets');
+        $widgetInfo = $dashboardWidgets->where('widget_key', '=', $widgetKey)->first()->toArray();
+        $widgetSettings = $this->getCombinedWidgetInfo($widgetKey);
+        $widget['info'] = $widgetInfo;
+        $widget['settings'] = $widgetSettings;
+        return $widget;
+    }
+
+    public function updateWidgetSettings($request)
+    {
+        $widgetKey = $request->readPost('widget_key');
+        $widget = $this->getCombinedWidgetInfo($widgetKey);
+        $updateList = [];
+        foreach ($widget as $setting) {
+            $configValue = $this->configSettingsFactory->make($setting['setting_type'])
+                                                       ->getValueFromRequest($request, $setting);
+            if (!isset($configValue)) {
+                continue;
+            }
+            $updateList[] = ['widget_key'    => $widgetKey, 'setting_key' => $setting['setting_key'],
+                             'admin_id'      => $this->adminUser->admin_id,
+                             'setting_value' => $configValue];
+        }
+        $this->commitUpdatedWidgetSettings($updateList);
+    }
+
+    protected function mapToNewKey(array $input, string $key)
+    {
+        $output = [];
+        foreach ($input as $element) {
+            $output[$element[$key]] = $element;
+        }
+        return $output;
+    }
+
+    protected function getCombinedWidgetInfo(string $widgetKey)
+    {
+        $model = $this->modelFactory->make('DashboardWidgets');
+        $widget = $model->with('dashboardWidgetSettings')->where('widget_key', '=', $widgetKey)->first()->toArray();
+        $widget['title'] = $this->getWidgetTitle($widget['widget_name']);
+        $settingKeys = array_column($widget['dashboard_widget_settings'], 'setting_key');
+        $dwt = $this->mapToNewKey($widget['dashboard_widget_settings'], 'setting_key');
+        $model = $this->modelFactory->make('DashboardWidgetsSettings');
+        $settings = $model->whereIn('setting_key', $settingKeys)->get()->toArray();
+        $settingsList = [];
+        foreach ($settings as $setting) {
+            $settingClass = $this->configSettingsFactory->make($setting['setting_type']);
+//            $setting['class'] = $settingClass;
+            $setting = $settingClass->transformSettingsFromDefinition($setting);
+            $setting['title'] = $this->getSettingsTitle($widget['widget_name'], $setting['setting_name']);
+            $settingsList[$setting['setting_key']] = $setting;
+
+        }
+        $model = $this->modelFactory->make('DashboardWidgetsSettingsToUser');
+        $userSettings = $model->where('admin_id', '=', $this->adminUser->admin_id)->where(
+            'widget_key', '=',
+            $widgetKey)->get()->toArray();
+        $userSettings = $this->mapToNewKey($userSettings, 'setting_key');
+
+        $settingsList = array_replace_recursive($userSettings, $dwt, $settingsList);
+        unset($widget['dashboard_widget_settings']);
+        return $settingsList;
+    }
+
+    protected function commitUpdatedWidgetSettings(array $updateList)
+    {
+        //@ todo db transaction
+        $model = $this->modelFactory->make('DashboardWidgetsSettingsToUser');
+        foreach ($updateList as $update) {
+            $model->updateOrCreate(
+                ['setting_key' => $update['setting_key'], 'widget_key' => $update['widget_key'],
+                 'admin_id'    => $update['admin_id']], ['setting_value' => $update['setting_value']]);
+        }
+    }
 }

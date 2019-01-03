@@ -22,6 +22,8 @@ class ZenCartCommon extends Config
         $di->set('zencart_notifications', $di->lazyNew('ZenCart\AdminNotifications\AdminNotifications'));
         $di->set('zencart_view', $di->lazyNew('ZenCart\View\ViewFactory'));
         $di->set('zencart_eloquent', $GLOBALS['capsule']);
+        $di->set('zencart_widgetmanager', $di->lazyNew('ZenCart\DashboardWidget\WidgetManager'));
+        $di->set('zencart_configsettings', $di->lazyNew('ZenCart\ConfigSettings\ConfigSettingsFactory'));
 
         $di->params['ZenCart\AdminNotifications\AdminNotifications'] = array(
             'session' => $di->lazyGet('zencart_session'),
@@ -46,6 +48,7 @@ class ZenCartCommon extends Config
             'webRequest' => $di->lazyNew('Aura\Web\Request'),
             'session' => $di->lazyGet('zencart_session'),
         );
+
         $di->params['App\Controllers\AbstractAdminController'] = array(
             'request' => $di->lazyGet('zencart_request'),
             'modelFactory' => $di->lazyGet('zencart_model'),
@@ -63,6 +66,25 @@ class ZenCartCommon extends Config
             'user' => $di->lazyGet('zencart_adminuser'),
             'view' => $di->lazyGet('zencart_view'),
             'paginator' => $di->lazyGet('zencart_paginator'),
+        );
+
+        $di->params['ZenCart\DashboardWidget\WidgetManager'] = array(
+            'modelFactory' => $di->lazyGet('zencart_model'),
+            'adminUser' => $di->lazyGet('zencart_adminuser'),
+            'configSettingsFactory' => $di->lazyGet('zencart_configsettings'),
+        );
+
+        $di->params['App\Controllers\admin\Index'] = array(
+            'request' => $di->lazyGet('zencart_request'),
+            'modelFactory' => $di->lazyGet('zencart_model'),
+            'user' => $di->lazyGet('zencart_adminuser'),
+            'view' => $di->lazyGet('zencart_view'),
+            'widgetManager' => $di->lazyGet('zencart_widgetmanager'),
+        );
+
+        $di->params['App\Controllers\AjaxDashboardWidget'] = array(
+            'request' => $di->lazyGet('zencart_request'),
+            'widgetManager' => $di->lazyGet('zencart_widgetmanager'),
         );
 
 //        $di->params['ZenCart\Controllers\AbstractLeadController'] = array(

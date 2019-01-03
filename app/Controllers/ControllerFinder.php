@@ -32,7 +32,7 @@ class ControllerFinder
         $realName = ucfirst(camel_case($controllerName));
         $this->controllerFile =  DIR_FS_CATALOG . URL_CONTROLLERS . $scope . '/' . $realName . '.php';
         if (file_exists($this->controllerFile)) {
-            return 'App\\Controllers\\' . $realName;
+            return 'App\\Controllers\\' . $scope . '\\' . $realName;
         }
         $baseClass = 'Base' . ucfirst($controllerMap[$controllerName]['type']) . 'Controller';
         $this->controllerFile =  DIR_FS_CATALOG . URL_CONTROLLERS . $scope . '/' . $baseClass . '.php';

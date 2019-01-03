@@ -19,6 +19,7 @@ class AjaxDispatch extends \base
      */
     public static function run($action, $request)
     {
+        global $di;
         $className = 'Ajax' . self::camelize($action, TRUE);
         $namespaceClassName = 'App\\Controllers\\' . $className;
         $fileName =  DIR_FS_CATALOG . URL_CONTROLLERS . $className . '.php';
@@ -31,7 +32,7 @@ class AjaxDispatch extends \base
             $exitResponse = 1;
             require_once($fileName);
             if (class_exists($namespaceClassName)) {
-                $action = new $namespaceClassName($request);
+                $action = $di->newInstance($namespaceClassName);
                 $action->dispatch();
                 $headerResponse = null;
                 $exitResponse = 0;

@@ -18,6 +18,7 @@ define('TEXT_BANNERS_BANNER_CLICKS', 'Banner Clicks');
 define('TEXT_BANNERS_DAILY_STATISTICS', '%s Daily Statistics For %s %s');
 define('TEXT_BANNERS_MONTHLY_STATISTICS', '%s Monthly Statistics For %s');
 define('TEXT_BANNERS_YEARLY_STATISTICS', '%s Yearly Statistics');
+define('TEXT_BANNERS_RECENT_STATISTICS', '%s Recent Statistics for last %s Days');
 
 define('STATISTICS_TYPE_DAILY', 'Daily');
 define('STATISTICS_TYPE_MONTHLY', 'Monthly');
