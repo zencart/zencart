@@ -496,6 +496,37 @@ $listingURL = FILENAME_WHOS_ONLINE . '.php?' . zen_get_all_get_params(array('q',
             }
 
             if ($length = strlen($session_data)) {
+
+              $start_field = [];
+              $session_data_field = [];
+
+              $session_fields = [
+                                  'id' => 'customer_id|s',
+                                  'currency' => 'currency|s',
+                                  'country' => 'customer_country_id|s',
+                                  'zone' => 'customer_zone_id|s',
+                                  'cart' => 'cart|O',
+                                ];
+
+              foreach ($session_fields as $key => $value) {
+                $start_field[$key] = strpos($session_data, $value);
+
+                // If the session type is not found then don't try to initiate it.
+                if (false === $start_field[$key]) {
+                  continue;
+                }
+
+                $session_data_field[$key] = substr($session_data, $start_field[$key], (strpos($session_data, ';', $start_field[$key]) - $start_field[$key] + 1));
+
+                if ('cart' === $key) {
+                  $end_cart = (int)strpos($session_data, '|', $start_field[$key] + strlen($value));
+                  $end_cart = (int)strrpos(substr($session_data, 0, $end_cart), ';}');
+                  $session_data_field[$key] = substr($session_data, $start_field[$key], ($end_cart - $start_field[$key] + 2));
+                }
+
+                session_decode($session_data_field[$key]);
+              }
+/*
               $start_id = (int)strpos($session_data, 'customer_id|s');
               $start_currency = (int)strpos($session_data, 'currency|s');
               $start_country = (int)strpos($session_data, 'customer_country_id|s');
@@ -515,6 +546,7 @@ $listingURL = FILENAME_WHOS_ONLINE . '.php?' . zen_get_all_get_params(array('q',
               session_decode($session_data_country);
               session_decode($session_data_zone);
               session_decode($session_data_cart);
+*/
 
               if (isset($_SESSION['cart']) && is_object($_SESSION['cart'])) {
                 $contents[] = array('text' => $full_name . ' - ' . $ip_address . '<br />' . $info);
