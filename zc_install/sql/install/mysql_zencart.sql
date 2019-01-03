@@ -1127,7 +1127,7 @@ CREATE TABLE orders (
   paypal_ipn_id int(11) NOT NULL default 0,
   ip_address varchar(96) NOT NULL default '',
   is_guest_order tinyint(1) NOT NULL default 0,
-  order_weight float NULL,
+  order_weight float default NULL,
   language_code VARCHAR(2) NOT NULL DEFAULT 'en',
   PRIMARY KEY  (orders_id),
   KEY idx_status_orders_cust_zen (orders_status,orders_id,customers_id),
