@@ -289,7 +289,7 @@
                     <li>/catalog/images/upload</li>
                 </ul>
                 <ul class="noStyle">
-                    <li class="h-margin-left-0 small-string">
+                    <li class="no-left-margin small-string">
                         If you miss any of the images directories and subdirectories inside <em>/images</em> and try to use them later, you will get an error message that you cannot write to these directories.
                     </li>
                 </ul>
@@ -302,7 +302,7 @@
                     <li>
                         Folders: CHMOD 755
                         <ul class="noStyle">
-                            <li class="h-margin-left-0 small-string">
+                            <li class="no-left-margin small-string">
                                 &quot;CHMOD&quot; is a linux/unix term for setting/changing permission levels
                             </li>
                         </ul>
@@ -310,7 +310,7 @@
                     <li>
                         Files: CHMOD 644<br> 
                         <ul class="noStyle">
-                            <li class="h-margin-left-0 small-string">
+                            <li class="no-left-margin small-string">
                                 These are typically the defaults that your FTP program will use when uploading, so usually do not need to be set manually.
                             </li>
                         </ul>
@@ -406,10 +406,10 @@
             <div id="startingInstaller">
                 <h2>Starting the Installer</h2>
                 <ul class="noStyle">
-                    <li class="h-margin-left-0">
+                    <li class="no-left-margin">
                         In your browser, enter the URL to your new shop, and the Installer should automatically start.
                         <ul class="small-string noStyle">
-                            <li class="h-margin-left-0">
+                            <li class="no-left-margin">
                                 Example: http://www.mydomain.com/catalog
                                 <br>
                                 - or - , to start the installer directly, 
@@ -421,7 +421,7 @@
                 </ul>
                 <ul class="noStyle">
                     You will be presented with a &quot;Welcome to Zen Cart&reg;&quot; page, explaining the features of Zen Cart&reg;.
-                    <li class="h-margin-left-0 small-string">
+                    <li class="no-left-margin small-string">
                         If you now see a list of filenames and directories, you should speak to your web hosting provider about how to setup your server to auto-detect PHP filename extensions
                     </li>
                 </ul>
@@ -450,7 +450,7 @@
                     </p>
                     <ul class="noStyle">
                         Once you are satisfied that the &quot;pre-flight-check&quot; inspection is OK for your needs (ideally, all green check-marks), you may click the &quot;<em>Install</em>&quot; button at the bottom of the screen.
-                        <li class="h-margin-left-0 small-string">
+                        <li class="no-left-margin small-string">
                             If you receive any of the following error messages, go through the above steps to make sure you have not left anything out. All error messages have context-sensitive help via a popup window if you click on the <em>"more info..."</em> links supplied.
                         </li>
                     </ul>
@@ -483,7 +483,7 @@
                     </p>
                     <ul class="noStyle">
                         Contact your web hosting provider if you need assistance in creating a MySQL database table and/or username and password. 
-                        <li class="h-margin-left-0 small-string">
+                        <li class="no-left-margin small-string">
                             You need to have your database and userID created before the Zen Cart&reg; installer can continue past this screen.
                         </li>
                     </ul>
@@ -538,7 +538,7 @@
                     </p>
                     <ul class="noStyle">
                         You may also decide later, to set up a test site with the demo data AND a separate working site for your live data so that you have the ability to refer back to the demo data for help and to see examples of a feature.
-                        <li class="h-margin-left-0 small-string">
+                        <li class="no-left-margin small-string">
                             Except for &quot;demo data&quot;, all of the information here can be (re)configured later in the Admin area of your shop.
                         </li>
                     </ul>
@@ -551,7 +551,7 @@
             <div id="adminSetupStep">
                 <h2>Admin Setup Step</h2>
                 <ul class="noStyle">
-                    <li class="h-margin-left-0">
+                    <li class="no-left-margin">
                         Now, complete the Admin Information to set your Login name, Admin email address and password.
                         <ol class="noteList">
                             <li>
@@ -580,15 +580,15 @@
             <h1>Post Installation</h1>
             <h2>Configure.php Files</h2>
             <ul class="noStyle">
-                <li class="h-margin-left-0">
+                <li class="no-left-margin">
                     You will now want to change the permissions on the <em>configure.php</em> files with <em>chmod 644 or 444</em> depending on your server.
                     <ul class="noteList noStyle">
-                        <li class="h-margin-left-0 small-string">
+                        <li class="no-left-margin small-string">
                             Sometimes setting 444 cannot be done via FTP, in which case, use your webhosting control panel or file manager to set the permissions level
                         </li>
                     </ul>
                 </li>
-                <li class="h-margin-left-0">
+                <li class="no-left-margin">
                     These are located in:
                     <ul class="noteList">
                         <li>
@@ -599,11 +599,11 @@
                         </li>
                     </ul>
                 </li>
-                <li class="h-margin-left-0">
+                <li class="no-left-margin">
                     It would also be a good idea to download a copy of these files to your computer from the server as they have been setup and configured to your server specifications based on the Installation process. 
                     <ol><!-- THIS IS A SPACER //--></ol>
                 </li>
-                <li class="h-margin-left-0">
+                <li class="no-left-margin">
                     If you have any errors or problems, most of these can be corrected by minor adjustments to these two files. 
                     <ol><!-- THIS IS A SPACER //--></ol>
                 </li>
@@ -614,10 +614,10 @@
             </p>
             <h2>Update Nginx Directives if Required</h2>
             <ul class="noStyle">
-                <li class="h-margin-left-0">
+                <li class="no-left-margin">
                     The Zen Cart&reg; Installer includes base directives equivalent to <em>".htaccess"</em> rules to help secure your store.
                     <ul class="noteList noStyle">
-                        <li class="h-margin-left-0 small-string">
+                        <li class="no-left-margin small-string">
                             These should be activated and Nignx reloaded before going live with the store
                         </li>
                     </ul>
@@ -638,16 +638,16 @@
             </p>
             <ul class="noStyle">
                 Familiarize yourself with the Zen Cart&reg; Developers Toolkit
-                <li class="h-margin-left-0 small-string">
+                <li class="no-left-margin small-string">
                     Located in your store Admin area, under &quot;Tools&quot;.
                 </li>
-                <li class="h-margin-left-0 small-string">
+                <li class="no-left-margin small-string">
                     This will help you locate almost anything you want to customize in your Zen Cart&reg; store!
                 </li>
             </ul>
             <ul class="noStyle">
                 Review the Zen Cart&reg; <a href="important_site_security_recommendations.html">Site Security Recommendations</a> to be sure your site is not vulnerable to hackers
-                <li class="h-margin-left-0 small-string">
+                <li class="no-left-margin small-string">
                     The most up-to-date version of the security recommendations can be found on the <a href="https://www.zen-cart.com/wiki/index.php/Important_Site_Security_Recommendations" target="_blank">Zen Cart&reg; Wiki</a>
                 </li>
             </ul>
