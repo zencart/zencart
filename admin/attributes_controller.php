@@ -954,7 +954,7 @@ function zen_js_option_values_list($selectedName, $fieldName) {
       if ($action == 'attribute_features_copy_to_category') {
         ?>
         <div class="row">
-            <?php zen_draw_form('product_copy_to_category', FILENAME_ATTRIBUTES_CONTROLLER, 'action=update_attributes_copy_to_category', 'post', 'class="form-horizontal"'); ?>
+            <?php echo zen_draw_form('product_copy_to_category', FILENAME_ATTRIBUTES_CONTROLLER, 'action=update_attributes_copy_to_category', 'post', 'class="form-horizontal"'); ?>
             <?php echo zen_draw_hidden_field('products_filter', $_GET['products_filter']); ?>
             <?php echo zen_draw_hidden_field('products_id', $_GET['products_filter']); ?>
             <?php echo zen_draw_hidden_field('products_update_id', $_GET['products_update_id']); ?>
