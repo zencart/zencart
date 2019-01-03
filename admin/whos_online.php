@@ -482,15 +482,18 @@ $listingURL = FILENAME_WHOS_ONLINE . '.php?' . zen_get_all_get_params(array('q',
             $suhosinSetting = strtoupper(@ini_get('suhosin.session.encrypt'));
 
 //    if (!$suhosinExtension) {
-            if (strpos($session_data, 'cart|O') == 0)
+            if (strpos($session_data, 'cart|O') == 0) {
               $session_data = base64_decode($session_data);
-            if (strpos($session_data, 'cart|O') == 0)
+            }
+            if (strpos($session_data, 'cart|O') == 0) {
               $session_data = '';
+            }
 //    }
             // uncomment the following line if you have suhosin enabled and see errors on the cart-contents sidebar
             //$hardenedStatus = ($suhosinExtension == TRUE || $suhosinSetting == 'On' || $suhosinSetting == 1) ? TRUE : FALSE;
-            if ($session_data != '' && $hardenedStatus == TRUE)
+            if ($session_data != '' && $hardenedStatus == TRUE) {
               $session_data = '';
+            }
 
             if ($length = strlen($session_data)) {
               $start_id = (int)strpos($session_data, 'customer_id|s');
