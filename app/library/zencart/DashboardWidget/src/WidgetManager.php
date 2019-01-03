@@ -209,9 +209,10 @@ class WidgetManager
         $widgetTheme = $widgetDetail['widget_theme'];
         $dashboardWidgetsToUser = $this->modelFactory->make('DashboardWidgetsToUsers');
         $max = $dashboardWidgetsToUser->max('widget_row') + 1;
-        $dashboardWidgetsToUser->create(
-            ['widget_key'    => $widgetKey, 'admin_id' => $this->adminUser->admin_id, 'widget_row' => $max,
-             'widget_column' => 0, 'widget_icon' => $widgetIcon, 'widget_theme' => $widgetTheme]);
+        $widgetInfo = ['widget_key'    => $widgetKey, 'admin_id' => $this->adminUser->admin_id, 'widget_row' => $max,
+                       'widget_column' => 0, 'widget_icon' => $widgetIcon, 'widget_theme' => $widgetTheme];
+        $dashboardWidgetsToUser->create($widgetInfo);
+        return $widgetDetail;
     }
 
     public function getWidgetInfoForEdit(string $widgetKey)
