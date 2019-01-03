@@ -179,15 +179,11 @@ if (zen_not_null($action)) {
 
         zen_redirect(zen_href_link(FILENAME_EZPAGES_ADMIN, (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . 'ezID=' . $pages_id));
       } else {
-        if ($page_error == false) {
-          $action = 'new';
-        } else {
           $_GET['pages_id'] = $pages_id;
           $_GET['ezID'] = $pages_id;
           $_GET['action'] = 'new';
           $action = 'new';
           $ezID = $pages_id;
-        }
       }
       break;
     case 'deleteconfirm':
