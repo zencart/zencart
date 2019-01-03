@@ -353,7 +353,7 @@ if (zen_not_null($action)) {
               <td><?php echo TEXT_SPECIALS_PRICE_TIP; ?></td>
               <td class="text-right">
                 <button type="submit" class="btn btn-primary"><?php echo (($form_action == 'insert') ? IMAGE_INSERT : IMAGE_UPDATE); ?></button>
-                <?php echo ((int)$_GET['manual'] == 0 ? '&nbsp;<a href="' . ($_GET['go_back'] == 'ON' ? zen_href_link(FILENAME_PRODUCTS_PRICE_MANAGER, 'products_filter=' . $_GET['add_products_id'] . '&current_category_id=' . $_GET['current_category_id']) : zen_href_link(FILENAME_SPECIALS, 'page=' . $_GET['page'] . ((isset($_GET['sID']) && $_GET['sID'] != '') ? '&sID=' . $_GET['sID'] : '') . (isset($_GET['search']) ? '&search=' . $_GET['search'] : ''))) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>' : ''); ?>
+                <?php echo ((empty($_GET['manual']) || (int)$_GET['manual'] == 0) ? '&nbsp;<a href="' . ($_GET['go_back'] == 'ON' ? zen_href_link(FILENAME_PRODUCTS_PRICE_MANAGER, 'products_filter=' . $_GET['add_products_id'] . '&current_category_id=' . $_GET['current_category_id']) : zen_href_link(FILENAME_SPECIALS, 'page=' . $_GET['page'] . ((isset($_GET['sID']) && $_GET['sID'] != '') ? '&sID=' . $_GET['sID'] : '') . (isset($_GET['search']) ? '&search=' . $_GET['search'] : ''))) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>' : ''); ?>
               </td>
             </tr>
           </table>
