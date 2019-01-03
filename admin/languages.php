@@ -164,6 +164,19 @@ if (zen_not_null($action)) {
                                 '" . zen_db_input($coupon['coupon_description']) . "')");
         }
 
+        // create additional ez-page_description records
+        $ezpages = $db->Execute("SELECT pages_id, pages_title, pages_html_text
+                                 FROM " . TABLE_EZPAGES_CONTENT . "
+                                 WHERE languages_id = " . (int)$_SESSION['languages_id']);
+
+        foreach ($ezpages as $ezpage) {
+          $db->Execute("INSERT INTO " . TABLE_EZPAGES_CONTENT . " (pages_id, languages_id, pages_title, pages_html_text)
+                        VALUES ('" . (int)$coupon['pages_id'] . "',
+                                '" . (int)$insert_id . "',
+                                '" . zen_db_input($ezpage['pages_title']) . "',
+                                '" . zen_db_input($ezpage['pages_html_text']) . "')");
+        }
+
         zen_redirect(zen_href_link(FILENAME_LANGUAGES, (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . 'lID=' . $insert_id));
       }
 
@@ -229,6 +242,7 @@ if (zen_not_null($action)) {
       $db->Execute("DELETE FROM " . TABLE_COUPONS_DESCRIPTION . " WHERE language_id = " . (int)$lID);
       $db->Execute("DELETE FROM " . TABLE_META_TAGS_PRODUCTS_DESCRIPTION . " WHERE language_id = " . (int)$lID);
       $db->Execute("DELETE FROM " . TABLE_METATAGS_CATEGORIES_DESCRIPTION . " WHERE language_id = " . (int)$lID);
+      $db->Execute("DELETE FROM " . TABLE_EZPAGES_CONTENT . " WHERE language_id = " . (int)$lID);
 
       // if we just deleted our currently-selected language, need to switch to default lang:
       $lng = $db->Execute("SELECT languages_id
