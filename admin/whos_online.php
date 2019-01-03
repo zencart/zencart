@@ -105,7 +105,7 @@ if (!isset($_SESSION['wo_timeout']) || $_SESSION['wo_timeout'] < 3) {
   $_SESSION['wo_timeout'] = 0;
 }
 
-$listing = $_GET['q'];
+$listing = isset($_GET['q']) ? $_GET['q'] : '';
 switch ($listing) {
   case "full_name-desc":
     $order = "full_name DESC, LPAD(ip_address,11,'0')";
@@ -338,7 +338,7 @@ $listingURL = FILENAME_WHOS_ONLINE . '.php?' . zen_get_all_get_params(array('q',
                   foreach ($whos_online as $item) {
                     $time_online = (time() - $item['time_entry']);
 
-                    if ((!$_GET['info'] || $_GET['info'] == $item['session_id']) && !$info) {
+                    if ((empty($_GET['info']) || $_GET['info'] == $item['session_id']) && empty($info)) {
                       $info = $item['session_id'];
                       $ip_address = $item['ip_address'];
                       $full_name = $item['full_name'];
@@ -468,7 +468,7 @@ $listingURL = FILENAME_WHOS_ONLINE . '.php?' . zen_get_all_get_params(array('q',
           <?php
           $heading = array();
           $contents = array();
-          if ($info) {
+          if (!empty($info)) {
             $heading[] = array('text' => '<h4>' . TABLE_HEADING_SHOPPING_CART . '</h4>');
             $tag = 0;
             $session_data = '';
@@ -513,7 +513,7 @@ $listingURL = FILENAME_WHOS_ONLINE . '.php?' . zen_get_all_get_params(array('q',
               session_decode($session_data_zone);
               session_decode($session_data_cart);
 
-              if (is_object($_SESSION['cart'])) {
+              if (isset($_SESSION['cart']) && is_object($_SESSION['cart'])) {
                 $contents[] = array('text' => $full_name . ' - ' . $ip_address . '<br />' . $info);
                 $products = $_SESSION['cart']->get_products();
                 for ($i = 0, $n = sizeof($products); $i < $n; $i++) {
