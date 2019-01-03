@@ -271,7 +271,7 @@ systemChecks:
             tableName: orders_products
             fieldName: products_virtual
             fieldCheck: Type
-            expectedResult: 'tinyint(1)'
+            expectedResult: 'TINYINT(1)'
           - checkType: fieldSchema
             tableName: ezpages_content
             fieldName: pages_html_text
