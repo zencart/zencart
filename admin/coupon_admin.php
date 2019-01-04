@@ -1,10 +1,10 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2018 Zen Cart Development Team
+ * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Drbyte Tue Dec 4 12:55:53 2018 -0500 Modified in v1.5.6 $
+ * @version $Id: DrByte 2019 Jan 04 Modified in v1.5.6a $
  */
   require('includes/application_top.php');
   require(DIR_WS_CLASSES . 'currencies.php');
@@ -351,7 +351,9 @@
           $_POST['coupon_desc'][$language_id] = trim($_POST['coupon_desc'][$language_id]);
         }
       $_POST['coupon_amount'] = trim($_POST['coupon_amount']);
-      $_POST['coupon_amount'] = (float)preg_replace('/[^0-9.%]/', '', $_POST['coupon_amount']);
+      $is_pct = (substr($_POST['coupon_amount'], -1) == '%'); 
+      $_POST['coupon_amount'] = (float)preg_replace('/[^0-9.]/', '', $_POST['coupon_amount']);
+      if ($is_pct) $_POST['coupon_amount'] .= "%"; 
       if (!$_POST['coupon_name']) {
         $update_errors = 1;
         $messageStack->add(ERROR_NO_COUPON_NAME, 'error');

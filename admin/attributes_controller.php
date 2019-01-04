@@ -1,10 +1,10 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2018 Zen Cart Development Team
+ * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: mc12345678 Wed Sep 19 23:29:44 2018 -0400 Modified in v1.5.6 $
+ * @version $Id: DrByte 2019 Jan 04 Modified in v1.5.6a $
  */
 require('includes/application_top.php');
 
@@ -954,7 +954,7 @@ function zen_js_option_values_list($selectedName, $fieldName) {
       if ($action == 'attribute_features_copy_to_category') {
         ?>
         <div class="row">
-            <?php zen_draw_form('product_copy_to_category', FILENAME_ATTRIBUTES_CONTROLLER, 'action=update_attributes_copy_to_category', 'post', 'class="form-horizontal"'); ?>
+            <?php echo zen_draw_form('product_copy_to_category', FILENAME_ATTRIBUTES_CONTROLLER, 'action=update_attributes_copy_to_category', 'post', 'class="form-horizontal"'); ?>
             <?php echo zen_draw_hidden_field('products_filter', $_GET['products_filter']); ?>
             <?php echo zen_draw_hidden_field('products_id', $_GET['products_filter']); ?>
             <?php echo zen_draw_hidden_field('products_update_id', $_GET['products_update_id']); ?>

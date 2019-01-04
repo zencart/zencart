@@ -1,10 +1,10 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2018 Zen Cart Development Team
+ * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Zen4All Sun Nov 25 15:18:47 2018 +0100 Modified in v1.5.6 $
+ * @version $Id: DrByte 2019 Jan 04 Modified in v1.5.6a $
  */
 // Default refresh interval (0=off).  NOTE: Using automated refresh may put you in breach of PCI Compliance
 $defaultRefreshInterval = 0;
@@ -105,7 +105,7 @@ if (!isset($_SESSION['wo_timeout']) || $_SESSION['wo_timeout'] < 3) {
   $_SESSION['wo_timeout'] = 0;
 }
 
-$listing = $_GET['q'];
+$listing = isset($_GET['q']) ? $_GET['q'] : '';
 switch ($listing) {
   case "full_name-desc":
     $order = "full_name DESC, LPAD(ip_address,11,'0')";
@@ -182,8 +182,8 @@ if (!$found_entry) {
 $whos_online->rewind();
 $total_sess = $whos_online->RecordCount();
 
-$optURL = FILENAME_WHOS_ONLINE . '.php?' . zen_get_all_get_params(array('t', 'na', 'ns'));
-$listingURL = FILENAME_WHOS_ONLINE . '.php?' . zen_get_all_get_params(array('q', 't', 'na', 'ns'));
+$optURL = FILENAME_WHOS_ONLINE . '.php?' . zen_get_all_get_params(['t', 'na', 'ns']);
+$listingURL = FILENAME_WHOS_ONLINE . '.php?' . zen_get_all_get_params(['q', 't', 'na', 'ns']);
 ?>
 <!doctype html>
 <html <?php echo HTML_PARAMS; ?>>
@@ -333,12 +333,12 @@ $listingURL = FILENAME_WHOS_ONLINE . '.php?' . zen_get_all_get_params(array('q',
               </thead>
               <tbody>
                   <?php
-                  $ip_array = array();
+                  $ip_array = [];
                   $d = 0;
                   foreach ($whos_online as $item) {
                     $time_online = (time() - $item['time_entry']);
 
-                    if ((!$_GET['info'] || $_GET['info'] == $item['session_id']) && !$info) {
+                    if ((empty($_GET['info']) || $_GET['info'] == $item['session_id']) && empty($info)) {
                       $info = $item['session_id'];
                       $ip_address = $item['ip_address'];
                       $full_name = $item['full_name'];
@@ -361,9 +361,9 @@ $listingURL = FILENAME_WHOS_ONLINE . '.php?' . zen_get_all_get_params(array('q',
                       }
                     } else {
                       if ($is_a_bot == true) {
-                        echo '              <tr class="dataTableRowBot" onmouseover="this.className=\'dataTableRowOverBot\';this.style.cursor=\'hand\'" onmouseout="this.className=\'dataTableRowBot\'" onclick="document.location.href=\'' . zen_href_link(FILENAME_WHOS_ONLINE, zen_get_all_get_params(array('info', 'action')) . 'info=' . $item['session_id'], 'NONSSL') . '\'">' . "\n";
+                        echo '              <tr class="dataTableRowBot" onmouseover="this.className=\'dataTableRowOverBot\';this.style.cursor=\'hand\'" onmouseout="this.className=\'dataTableRowBot\'" onclick="document.location.href=\'' . zen_href_link(FILENAME_WHOS_ONLINE, zen_get_all_get_params(['info', 'action']) . 'info=' . $item['session_id'], 'NONSSL') . '\'">' . "\n";
                       } else {
-                        echo '              <tr class="dataTableRowWhois" onmouseover="this.className=\'dataTableRowOverWhois\';this.style.cursor=\'hand\'" onmouseout="this.className=\'dataTableRowWhois\'" onclick="document.location.href=\'' . zen_href_link(FILENAME_WHOS_ONLINE, zen_get_all_get_params(array('info', 'action')) . 'info=' . $item['session_id'], 'NONSSL') . '\'">' . "\n";
+                        echo '              <tr class="dataTableRowWhois" onmouseover="this.className=\'dataTableRowOverWhois\';this.style.cursor=\'hand\'" onmouseout="this.className=\'dataTableRowWhois\'" onclick="document.location.href=\'' . zen_href_link(FILENAME_WHOS_ONLINE, zen_get_all_get_params(['info', 'action']) . 'info=' . $item['session_id'], 'NONSSL') . '\'">' . "\n";
                       }
                     }
                     ?>
@@ -371,7 +371,7 @@ $listingURL = FILENAME_WHOS_ONLINE . '.php?' . zen_get_all_get_params(array('q',
                 <td class="dataTableContentWhois" align="center">
                     <?php
                     if ($item['customer_id'] != 0) {
-                      echo '<a href="' . zen_href_link(FILENAME_CUSTOMERS, zen_get_all_get_params(array('cID', 'action')) . 'cID=' . $item['customer_id'] . '&action=edit', 'NONSSL') . '"><u>' . $item['customer_id'] . '</u></a>';
+                      echo '<a href="' . zen_href_link(FILENAME_CUSTOMERS, zen_get_all_get_params(['cID', 'action']) . 'cID=' . $item['customer_id'] . '&action=edit', 'NONSSL') . '"><u>' . $item['customer_id'] . '</u></a>';
                     } else {
                       echo $item['customer_id'];
                     }
@@ -403,9 +403,9 @@ $listingURL = FILENAME_WHOS_ONLINE . '.php?' . zen_get_all_get_params(array('q',
                     }
                   } else {
                     if ($is_a_bot == true) {
-                      echo '              <tr class="dataTableRowBot" onmouseout="this.className=\'dataTableRowBot\'" onclick="document.location.href=\'' . zen_href_link(FILENAME_WHOS_ONLINE, zen_get_all_get_params(array('info', 'action')) . 'info=' . zen_output_string_protected($item['session_id']), 'NONSSL') . '\'">' . "\n";
+                      echo '              <tr class="dataTableRowBot" onmouseout="this.className=\'dataTableRowBot\'" onclick="document.location.href=\'' . zen_href_link(FILENAME_WHOS_ONLINE, zen_get_all_get_params(['info', 'action']) . 'info=' . zen_output_string_protected($item['session_id']), 'NONSSL') . '\'">' . "\n";
                     } else {
-                      echo '              <tr class="dataTableRowWhois" onmouseout="this.className=\'dataTableRowWhois\'" onclick="document.location.href=\'' . zen_href_link(FILENAME_WHOS_ONLINE, zen_get_all_get_params(array('info', 'action')) . 'info=' . zen_output_string_protected($item['session_id']), 'NONSSL') . '\'">' . "\n";
+                      echo '              <tr class="dataTableRowWhois" onmouseout="this.className=\'dataTableRowWhois\'" onclick="document.location.href=\'' . zen_href_link(FILENAME_WHOS_ONLINE, zen_get_all_get_params(['info', 'action']) . 'info=' . zen_output_string_protected($item['session_id']), 'NONSSL') . '\'">' . "\n";
                     }
                   }
                   ?>
@@ -466,10 +466,10 @@ $listingURL = FILENAME_WHOS_ONLINE . '.php?' . zen_get_all_get_params(array('q',
         </div>
         <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3 configurationColumnRight">
           <?php
-          $heading = array();
-          $contents = array();
-          if ($info) {
-            $heading[] = array('text' => '<h4>' . TABLE_HEADING_SHOPPING_CART . '</h4>');
+          $heading = [];
+          $contents = [];
+          if (!empty($info)) {
+            $heading[] = ['text' => '<h4>' . TABLE_HEADING_SHOPPING_CART . '</h4>'];
             $tag = 0;
             $session_data = '';
             $result = $db->Execute("SELECT value
@@ -482,17 +482,51 @@ $listingURL = FILENAME_WHOS_ONLINE . '.php?' . zen_get_all_get_params(array('q',
             $suhosinSetting = strtoupper(@ini_get('suhosin.session.encrypt'));
 
 //    if (!$suhosinExtension) {
-            if (strpos($session_data, 'cart|O') == 0)
+            if (strpos($session_data, 'cart|O') == 0) {
               $session_data = base64_decode($session_data);
-            if (strpos($session_data, 'cart|O') == 0)
+            }
+            if (strpos($session_data, 'cart|O') == 0) {
               $session_data = '';
+            }
 //    }
             // uncomment the following line if you have suhosin enabled and see errors on the cart-contents sidebar
             //$hardenedStatus = ($suhosinExtension == TRUE || $suhosinSetting == 'On' || $suhosinSetting == 1) ? TRUE : FALSE;
-            if ($session_data != '' && $hardenedStatus == TRUE)
+            if ($session_data != '' && $hardenedStatus == TRUE) {
               $session_data = '';
+            }
 
             if ($length = strlen($session_data)) {
+
+              $start_field = [];
+              $session_data_field = [];
+
+              $session_fields = [
+                                  'id' => 'customer_id|s',
+                                  'currency' => 'currency|s',
+                                  'country' => 'customer_country_id|s',
+                                  'zone' => 'customer_zone_id|s',
+                                  'cart' => 'cart|O',
+                                ];
+
+              foreach ($session_fields as $key => $value) {
+                $start_field[$key] = strpos($session_data, $value);
+
+                // If the session type is not found then don't try to initiate it.
+                if (false === $start_field[$key]) {
+                  continue;
+                }
+
+                $session_data_field[$key] = substr($session_data, $start_field[$key], (strpos($session_data, ';', $start_field[$key]) - $start_field[$key] + 1));
+
+                if ('cart' === $key) {
+                  $end_cart = (int)strpos($session_data, '|', $start_field[$key] + strlen($value));
+                  $end_cart = (int)strrpos(substr($session_data, 0, $end_cart), ';}');
+                  $session_data_field[$key] = substr($session_data, $start_field[$key], ($end_cart - $start_field[$key] + 2));
+                }
+
+                session_decode($session_data_field[$key]);
+              }
+/*
               $start_id = (int)strpos($session_data, 'customer_id|s');
               $start_currency = (int)strpos($session_data, 'currency|s');
               $start_country = (int)strpos($session_data, 'customer_country_id|s');
@@ -512,19 +546,20 @@ $listingURL = FILENAME_WHOS_ONLINE . '.php?' . zen_get_all_get_params(array('q',
               session_decode($session_data_country);
               session_decode($session_data_zone);
               session_decode($session_data_cart);
+*/
 
-              if (is_object($_SESSION['cart'])) {
-                $contents[] = array('text' => $full_name . ' - ' . $ip_address . '<br />' . $info);
+              if (isset($_SESSION['cart']) && is_object($_SESSION['cart'])) {
+                $contents[] = ['text' => $full_name . ' - ' . $ip_address . '<br />' . $info];
                 $products = $_SESSION['cart']->get_products();
                 for ($i = 0, $n = sizeof($products); $i < $n; $i++) {
-                  $contents[] = array('text' => $products[$i]['quantity'] . ' x ' . '<a href="' . zen_href_link(FILENAME_PRODUCT, 'cPath=' . zen_get_product_path($products[$i]['id']) . '&pID=' . $products[$i]['id']) . '">' . $products[$i]['name'] . '</a>');
+                  $contents[] = ['text' => $products[$i]['quantity'] . ' x ' . '<a href="' . zen_href_link(FILENAME_PRODUCT, 'cPath=' . zen_get_product_path($products[$i]['id']) . '&pID=' . $products[$i]['id']) . '">' . $products[$i]['name'] . '</a>'];
                 }
 
                 if (sizeof($products) > 0) {
-                  $contents[] = array('text' => zen_draw_separator('pixel_black.gif', '100%', '1'));
-                  $contents[] = array('align' => 'right', 'text' => TEXT_SHOPPING_CART_SUBTOTAL . ' ' . $currencies->format($_SESSION['cart']->show_total(), true, $_SESSION['currency']));
+                  $contents[] = ['text' => zen_draw_separator('pixel_black.gif', '100%', '1')];
+                  $contents[] = ['align' => 'right', 'text' => TEXT_SHOPPING_CART_SUBTOTAL . ' ' . $currencies->format($_SESSION['cart']->show_total(), true, $_SESSION['currency'])];
                 } else {
-                  $contents[] = array('text' => TEXT_EMPTY_CART);
+                  $contents[] = ['text' => TEXT_EMPTY_CART];
                 }
               }
             }

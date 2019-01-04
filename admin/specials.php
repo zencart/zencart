@@ -1,10 +1,10 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2018 Zen Cart Development Team
+ * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Zen4All Thu Nov 29 13:31:36 2018 +0100 Modified in v1.5.6 $
+ * @version $Id: DrByte 2019 Jan 04 Modified in v1.5.6a $
  */
 require('includes/application_top.php');
 
@@ -353,7 +353,7 @@ if (zen_not_null($action)) {
               <td><?php echo TEXT_SPECIALS_PRICE_TIP; ?></td>
               <td class="text-right">
                 <button type="submit" class="btn btn-primary"><?php echo (($form_action == 'insert') ? IMAGE_INSERT : IMAGE_UPDATE); ?></button>
-                <?php echo ((int)$_GET['manual'] == 0 ? '&nbsp;<a href="' . ($_GET['go_back'] == 'ON' ? zen_href_link(FILENAME_PRODUCTS_PRICE_MANAGER, 'products_filter=' . $_GET['add_products_id'] . '&current_category_id=' . $_GET['current_category_id']) : zen_href_link(FILENAME_SPECIALS, 'page=' . $_GET['page'] . ((isset($_GET['sID']) && $_GET['sID'] != '') ? '&sID=' . $_GET['sID'] : '') . (isset($_GET['search']) ? '&search=' . $_GET['search'] : ''))) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>' : ''); ?>
+                <?php echo ((empty($_GET['manual']) || (int)$_GET['manual'] == 0) ? '&nbsp;<a href="' . ($_GET['go_back'] == 'ON' ? zen_href_link(FILENAME_PRODUCTS_PRICE_MANAGER, 'products_filter=' . $_GET['add_products_id'] . '&current_category_id=' . $_GET['current_category_id']) : zen_href_link(FILENAME_SPECIALS, 'page=' . $_GET['page'] . ((isset($_GET['sID']) && $_GET['sID'] != '') ? '&sID=' . $_GET['sID'] : '') . (isset($_GET['search']) ? '&search=' . $_GET['search'] : ''))) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>' : ''); ?>
               </td>
             </tr>
           </table>

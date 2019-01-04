@@ -6,9 +6,9 @@
  * It is intended simply to recommend clicking on the zc_install link to begin installation.
  *
  * @package templateSystem
- * @copyright Copyright 2003-2018 Zen Cart Development Team
+ * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @license https://www.zen-cart.com/license/2_0.txt GNU Public License v2.0
- * @version $Id: Zen4All Thu Sep 20 12:23:12 2018 +0200 Modified in v1.5.6 $
+ * @version $Id: DrByte 2019 Jan 04 Modified in v1.5.6a $
  */
 $relPath = (file_exists('includes/templates/template_default/images/logo.gif')) ? '' : '../';
 $instPath = (file_exists('zc_install/index.php')) ? 'zc_install/index.php' : (file_exists('../zc_install/index.php') ? '../zc_install/index.php' : '');
@@ -25,213 +25,197 @@ $docsPath = (file_exists('docs/index.html')) ? 'docs/index.html' : (file_exists(
     <meta name="authors" content="The Zen Cart&reg; Team and others">
     <meta name="generator" content="shopping cart program by Zen Cart&reg;, http://www.zen-cart.com">
     <meta name="robots" content="noindex, nofollow">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <style type="text/css">
-      /*! Twitter Bootstrap */
-      @import url("https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css");
-
-      /*! Zen Cart Overrides */
-      * {
-        box-sizing: border-box;
-      }
-
-      h5, h6 {
-        font-weight: 700;
-      }
-
-      h5 {
-        font-size: 1.25rem;
-      }
-
-      h6 {
-        font-size: 1rem;
-      }
-
-      h5, h6, ol, p, ul {
-        margin: 0 0 1rem 0;
-      }
-
-      ol, p, ul {
-        line-height: 1.5;
-      }
-
-      ol, ul {
-        padding: 0;
-      }
-
-      ol li,
-      ul li {
-        margin-left: 1.125rem;
-      }
-
-      img {
-        border: 0;
-      }
-
-      .h-margin-left-0 {
-        margin-left: 0;
-      }
-
-      body {
-        background: #fff;
-        color: #777;
-        font: 16px/1 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
-        font-weight: 200;
-        margin: 10px auto;
-        padding: 0 2rem;
-      }
-
-      a {
-        color: #0080ff;
-        font-weight: 300;
-        text-decoration: none;
-      }
-
-      a:visited {
-        color: #0080ff;
-      }
-
-      em {
-        color: #444;
-        font-weight: 500;
-        font-style: italic;
-      }
-
-      .errorDetails {
-        color: red;
-        font-weight: 300;
-      }
-
-      ol.noteList {
-        list-style-type: lower-alpha;
-        font-size: small;
-      }
-
-      ul.noStyle,
-      ol.noStyle {
-        list-style-type: none;
-      }
-
-      ul {
-        list-style-type: square;
-      }
-
-      ol {
-        list-style-type: upper-roman;
-      }
-
-      h1 {
-        font-size: 2.5rem;
-        font-weight: 100;
-        color: #000;
-        letter-spacing: 1px;
-        margin: 3rem 0 1.5rem;
-      }
-
-      h2 {
-        font-size: 2rem;
-        border-bottom: 1px solid #e3e3e3;
-        font-weight: 300;
-        margin: 2.25rem 0 1rem;
-        padding: 0.5rem 0 1rem;
-      }
-
-      h3 {
-        font-size: 1.5rem;
-        font-weight: 400;
-        color: #606060;
-        margin: 1.75rem 0 0.25rem 0;
-      }
-
-      h4 {
-        font-size: 1.25rem;
-        font-weight: 300;
-        margin: 1.25rem 0 0.25rem 0;
-        color: maroon;
-        font-variant: small-caps;
-      }
-
-      .add-shadow {
-        -webkit-box-shadow: 4px 10px 41px 0px rgba(161, 161, 161, 0.75);
-        -moz-box-shadow: 4px 10px 41px 0px rgba(161, 161, 161, 0.75);
-        box-shadow: 4px 10px 41px 0px rgba(161, 161, 161, 0.75);
-      }
-
-      .prime-string {
-        font-size: 2.0rem;
-        font-weight: bold;
-      }
-
-      .bold-string {
-        font-weight: bold;
-      }
-
-      .small-string,
-      .back-to-top,
-      .appInfo {
-        font-size: small;
-      }
-
-      .back-to-top,
-      .appInfo {
-        text-align: center;
-      }
-
-      .back-to-top {
-        margin: 2rem 0 2rem 0;
-      }
-
-      .back-to-top a {
-        text-decoration: none;
-      }
-
-      .appInfo {
-        margin: 4rem 0 2rem 0;
-        color: #888;
-      }
-
-      .zenData {
-        margin: 2rem 0 0 0;
-      }
-
-      @media only screen and (min-width: 1199px) {
         body {
-          font-size: 1.75rem;
+        	background: #fff;
+        	color: #777;
+        	font: 16px/1 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+        	font-weight: 200;
+        	margin: 10px auto;
+        	padding: 0 2rem;
         }
-
-        h2 {
-          font-size: 2.25rem;
-        }
-
+        
         h1 {
-          font-size: 4.0rem;
-          margin-top: 5rem;
+        	font-size: 2.25rem;
+        	font-weight: 100;
+        	color: #000;
+        	letter-spacing: 1px;
+        	margin: 3rem 0 1.5rem;
         }
-      }
-
-      @media screen and (max-width: 1198px) {
-
-        .small-string,
-        .small-string a {
-          font-size: 1.20rem;
+        
+        h2 {
+        	font-size: 2rem;
+        	border-bottom: 1px solid #e3e3e3;
+        	font-weight: 300;
+        	margin: 2.25rem 0 1rem;
+        	padding: 0.5rem 0 1rem;
+        }
+        
+        h3 {
+        	font-size: 1.5rem;
+        	font-weight: 400;
+        	color: #606060;
+        	margin: 1.75rem 0 0.25rem 0;
         }
 
-        .prime-string,
-        .prime-string a {
-          font-size: 1.55rem;
-          font-weight: 500;
+        h4 {
+        	font-size: 1.25rem;
+        	font-weight: 300;
+        	margin: 1.25rem 0 0.25rem 0;
+        	color: maroon;
+        	font-variant: small-caps;
         }
-      }
 
-      @media screen and (max-width: 990px) {
-        .alert {
-          padding: 1rem;
-          margin: 1rem 1rem 1rem 1rem;
+        h5, h6 {
+        	font-weight: 700;
         }
-      }
+
+        h5 {
+        	font-size: 1.25rem;
+        }
+
+        h6 {
+        	font-size: 1rem;
+        }
+
+        h5, h6, ol, p, ul {
+        	margin: 0 0 1rem 0;
+        }
+
+        ul {
+        	list-style-type: square;
+        }
+
+        ol {
+        	list-style-type: upper-roman;
+        }
+
+        ol, p, ul {
+        	line-height: 1.5;
+        }
+
+        ol, ul {
+        	padding: 0;
+        }
+
+        ol li, ul li {
+        	margin-left: 1.125rem;
+        }
+
+        ol.noteList {
+        	list-style-type: lower-alpha;
+        	font-size: small;
+        }
+
+        ul.noStyle, ol.noStyle {
+        	list-style-type: none;
+        }
+
+        a {
+        	color: #0080ff;
+        	font-weight: 300;
+        	text-decoration: none;
+        }
+
+        a:visited {
+        	color: #0080ff;
+        }
+
+        em {
+        	color: #444;
+        	font-weight: 500;
+        	font-style: italic;
+        }
+
+        .img-center {
+        	display: inline-block;
+        	max-width: 100%;
+        }
+
+        .no-left-margin {
+        	margin-left: 0;
+        }
+
+        .errorDetails {
+        	color: red;
+        	font-weight: 300;
+        }
+
+        .add-shadow {
+        	-webkit-box-shadow: 4px 10px 41px 0px rgba(161, 161, 161, 0.75);
+        	   -moz-box-shadow: 4px 10px 41px 0px rgba(161, 161, 161, 0.75);
+        	        box-shadow: 4px 10px 41px 0px rgba(161, 161, 161, 0.75);
+        }
+
+        .prime-string {
+        	font-size: 2.5rem;
+        	font-weight: bold;
+        }
+
+        .bold-string {
+        	font-weight: bold;
+        }
+
+        .small-string, .back-to-top, .appInfo {
+        	font-size: small;
+        }
+
+        .back-to-top, .appInfo {
+        	text-align: center;
+        }
+
+        .back-to-top {
+        	margin: 2rem 0 2rem 0;
+        }
+
+        .back-to-top a {
+        	text-decoration: none;
+        }
+
+        .appInfo {
+        	margin: 4rem 0 2rem 0;
+        	color: #888;
+        }
+
+        .zenData {
+        	margin: 2rem 0 0 0;
+        }
+
+        @media screen and (min-width: 1200px) {
+        	body {
+        		font-size: 1.75rem;
+        	}
+        	h2 {
+        		font-size: 2.25rem;
+        	}
+        	h1 {
+        		font-size: 4.0rem;
+        		margin-top: 5rem;
+        	}
+        }
+
+        @media screen and (max-width: 1199px) {
+        	.small-string, .small-string a {
+        		font-size: 1.20rem;
+        	}
+        	.prime-string, .prime-string a {
+        		font-size: 1.75rem;
+        		font-weight: 500;
+        	}
+        }
+
+        @media screen and (max-width: 991px) {
+        	.alert {
+        		padding: 1rem;
+        		margin: 1rem 1rem 1rem 1rem;
+        	}
+        }
     </style>
   </head>
 
   <body>
+  <div class="container">
     <img src="<?php echo $relPath; ?>includes/templates/template_default/images/logo.gif" alt="Zen Cart&reg;" title=" Zen Cart&reg; " width="192" height="68" border="0" class="h-img"/> 
     <h1>Welcome to Zen Cart<sup>&reg;</sup></h1>
     <div>
@@ -340,5 +324,6 @@ $docsPath = (file_exists('docs/index.html')) ? 'docs/index.html' : (file_exists(
         </p>
       </div>
     </section> <!-- End footerBlock //-->
+  </div>
   </body>
 </html>

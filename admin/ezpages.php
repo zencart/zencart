@@ -2,10 +2,10 @@
 
 /**
  * @package admin
- * @copyright Copyright 2003-2018 Zen Cart Development Team
+ * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Scott C Wilson Sat Nov 17 14:56:13 2018 -0500 Modified in v1.5.6 $
+ * @version $Id: DrByte 2019 Jan 04 Modified in v1.5.6a $
  */
 require('includes/application_top.php');
 
@@ -16,7 +16,7 @@ if (!isset($_GET['reset_ez_sort_order'])) {
   $reset_ez_sort_order = $_SESSION['ez_sort_order'];
 }
 
-if ($_GET['action'] == 'set_editor') {
+if (isset($_GET['action']) && $_GET['action'] == 'set_editor') {
   // Reset will be done by init_html_editor.php. Now we simply redirect to refresh page properly.
   $action = '';
   zen_redirect(zen_href_link(FILENAME_EZPAGES_ADMIN));
@@ -113,8 +113,9 @@ if (zen_not_null($action)) {
       if ($alt_url_external != '') {
         $zv_link_method_cnt++;
       }
+      $pages_html_text_count = 0;
       for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
-        if ($pages_html_text[$languages[$i]['id']] != '' && strlen(trim($pages_html_text[$languages[$i]['id']])) > 6) {
+        if (!empty($pages_html_text[$languages[$i]['id']]) && strlen(trim($pages_html_text[$languages[$i]['id']])) > 6) {
           $pages_html_text_count = $i + 1;
         }
       }
@@ -178,15 +179,11 @@ if (zen_not_null($action)) {
 
         zen_redirect(zen_href_link(FILENAME_EZPAGES_ADMIN, (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . 'ezID=' . $pages_id));
       } else {
-        if ($page_error == false) {
-          $action = 'new';
-        } else {
           $_GET['pages_id'] = $pages_id;
           $_GET['ezID'] = $pages_id;
           $_GET['action'] = 'new';
           $action = 'new';
           $ezID = $pages_id;
-        }
       }
       break;
     case 'deleteconfirm':
@@ -231,7 +228,7 @@ if (zen_not_null($action)) {
     <!-- header_eof //-->
     <!-- body //-->
     <div class="container-fluid">
-      <h1><?php echo HEADING_TITLE . ' ' . ($_GET['ezID'] != '' ? TEXT_INFO_PAGES_ID . $_GET['ezID'] : TEXT_INFO_PAGES_ID_SELECT); ?></h1>
+      <h1><?php echo HEADING_TITLE . ' ' . (!empty($_GET['ezID']) ? TEXT_INFO_PAGES_ID . $_GET['ezID'] : TEXT_INFO_PAGES_ID_SELECT); ?></h1>
       <div class="row">
         <!-- body_text //-->
         <?php
@@ -250,7 +247,7 @@ if (zen_not_null($action)) {
               <?php echo zen_draw_form('set_ez_sort_order_form', FILENAME_EZPAGES_ADMIN, '', 'get'); ?>
               <?php echo TEXT_SORT_CHAPTER_TOC_TITLE_INFO . '&nbsp;&nbsp;' . zen_draw_pull_down_menu('reset_ez_sort_order', $ez_sort_order_array, $reset_ez_sort_order, 'onChange="this.form.submit();"'); ?>
               <?php echo zen_hide_session_id(); ?>
-              <?php echo ($_GET['page'] != '' ? zen_draw_hidden_field('page', $_GET['page']) : ''); ?>
+              <?php echo (!empty($_GET['page']) ? zen_draw_hidden_field('page', $_GET['page']) : ''); ?>
               <?php echo zen_draw_hidden_field('action', 'set_ez_sort_order'); ?>
               <?php echo '</form>'; ?>
           </div>
@@ -334,7 +331,7 @@ if (zen_not_null($action)) {
                 ?>
               <div class="input-group">
                 <span class="input-group-addon"><?php echo zen_image(DIR_WS_CATALOG_LANGUAGES . $languages[$i]['directory'] . '/images/' . $languages[$i]['image'], $languages[$i]['name']); ?></span>
-                <?php echo zen_draw_input_field('pages_title[' . $languages[$i]['id'] . ']', htmlspecialchars($pages_title, ENT_COMPAT, CHARSET, TRUE), zen_set_field_length(TABLE_EZPAGES_CONTENT, 'pages_title') . 'class="form-control"', true); ?>
+                <?php echo zen_draw_input_field('pages_title[' . $languages[$i]['id'] . ']', htmlspecialchars($pages_title, ENT_COMPAT, CHARSET, TRUE), zen_set_field_length(TABLE_EZPAGES_CONTENT, 'pages_title') . ' class="form-control"', true); ?>
               </div>
               <br>
               <?php
@@ -517,7 +514,7 @@ if (zen_not_null($action)) {
 
 // Split Page
 // reset page when page is unknown
-                if (($_GET['page'] == '' || $_GET['page'] == '1') && $_GET['ezID'] != '') {
+                if ((empty($_GET['page']) || $_GET['page'] == '1') && !empty($_GET['ezID'])) {
                   $check_page = $db->Execute($pages_query_raw);
                   $check_count = 1;
                   if ($check_page->RecordCount() > MAX_DISPLAY_SEARCH_RESULTS_EZPAGE) {
