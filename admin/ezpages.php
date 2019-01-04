@@ -115,7 +115,7 @@ if (zen_not_null($action)) {
       }
       $pages_html_text_count = 0;
       for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
-        if (isset($pages_html_text[$languages[$i]['id']]) && $pages_html_text[$languages[$i]['id']] != '' && strlen(trim($pages_html_text[$languages[$i]['id']])) > 6) {
+        if (!empty($pages_html_text[$languages[$i]['id']]) && strlen(trim($pages_html_text[$languages[$i]['id']])) > 6) {
           $pages_html_text_count = $i + 1;
         }
       }
