@@ -351,7 +351,9 @@
           $_POST['coupon_desc'][$language_id] = trim($_POST['coupon_desc'][$language_id]);
         }
       $_POST['coupon_amount'] = trim($_POST['coupon_amount']);
-      $_POST['coupon_amount'] = (float)preg_replace('/[^0-9.][\^%]/', '', $_POST['coupon_amount']);
+      $is_pct = (substr($_POST['coupon_amount'], -1) == '%'); 
+      $_POST['coupon_amount'] = (float)preg_replace('/[^0-9.]/', '', $_POST['coupon_amount']);
+      if ($is_pct) $_POST['coupon_amount'] .= "%"; 
       if (!$_POST['coupon_name']) {
         $update_errors = 1;
         $messageStack->add(ERROR_NO_COUPON_NAME, 'error');
