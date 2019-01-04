@@ -1,15 +1,21 @@
 <?php
 /**
  * @package Installer
- * @copyright Copyright 2003-2018 Zen Cart Development Team
+ * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: dakanji Mon Jun 11 18:38:26 2018 +0300 Modified in v1.5.6 $
+ * @version $Id: DrByte 2019 Jan 04 Modified in v1.5.6a $
  */
 
 $otherConfigErrors = FALSE;
 $hasUpgradeErrors = FALSE;
 $selectedAdminDir = '';
+
 $adminDirectoryList = systemChecker::getAdminDirectoryList();
+if (empty($adminDirectoryList)) {
+    // This should never happen, and zc_install does NOT require it to be named "admin", however the message here says
+    // to rename it to "admin" for simplicity of giving instructions and directing the reader to go fix the missing dir problem.
+    die('ERROR: unable to locate your admin directory. For simplicity, please be sure it exists and rename it to "admin" before proceeding.');
+}
 $selectedAdminDir = $adminDirectoryList[0];
 $hasMultipleAdmins = FALSE;
 if (count($adminDirectoryList) > 1)

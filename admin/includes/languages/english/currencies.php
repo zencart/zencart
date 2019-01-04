@@ -1,10 +1,10 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2016 Zen Cart Development Team
+ * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: DrByte  Sat Oct 17 20:09:58 2015 -0400 Modified in v1.5.5 $
+ * @version $Id: DrByte 2019 Jan 04 Modified in v1.5.6a $
  */
 
 define('HEADING_TITLE', 'Currencies');
@@ -30,6 +30,6 @@ define('TEXT_INFO_DELETE_INTRO', 'Are you sure you want to delete this currency?
 define('TEXT_INFO_HEADING_NEW_CURRENCY', 'New Currency');
 define('TEXT_INFO_HEADING_EDIT_CURRENCY', 'Edit Currency');
 define('TEXT_INFO_HEADING_DELETE_CURRENCY', 'Delete Currency');
-define('TEXT_INFO_SET_AS_DEFAULT', TEXT_SET_DEFAULT . ' (requires a manual update of currency values)');
+define('TEXT_INFO_SET_AS_DEFAULT', 'Set as default (requires a manual update of currency values)');
 define('ERROR_REMOVE_DEFAULT_CURRENCY', 'Error: The default currency can not be removed. Please set another currency as default, and try again.');
 define('ERROR_INVALID_CURRENCY_ENTRY', 'ERROR: The information you submitted was incomplete, and has not been saved. You must specify a currency code and a name.');

@@ -14,9 +14,9 @@
  * REQUIRES PHP 5.4 or newer
  *
  * @package payeezy
- * @copyright Copyright 2003-2018 Zen Cart Development Team
+ * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Drbyte Tue Dec 4 13:24:10 2018 -0500 Modified in v1.5.6 $
+ * @version $Id: DrByte 2019 Jan 04 Modified in v1.5.6a $
  */
 
 // required to prevent PHP 5.3 from throwing errors:
@@ -996,7 +996,7 @@ if (!function_exists('plugin_version_check_for_updates')) {
         }
         curl_close($ch);
     } else {
-        $errono = 9999;
+        $errno = 9999;
         $error = 'curl_init not found in PHP';
     }
     if ($errno > 0 || $response == '') {

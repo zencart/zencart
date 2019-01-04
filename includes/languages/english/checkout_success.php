@@ -1,10 +1,10 @@
 <?php
 /**
  * @package languageDefines
- * @copyright Copyright 2003-2018 Zen Cart Development Team
+ * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Drbyte Thu Jan 11 13:38:43 2018 -0500 Modified in v1.5.6 $
+ * @version $Id: DrByte 2019 Jan 04 Modified in v1.5.6a $
  */
 
 define('NAVBAR_TITLE_1', 'Checkout');
@@ -14,6 +14,8 @@ define('HEADING_TITLE', 'Thank You! We Appreciate your Business!');
 
 define('TEXT_SUCCESS', '');
 define('TEXT_NOTIFY_PRODUCTS', 'Please notify me of updates to these products');
+// Still used by some older templates
+define('TEXT_SEE_ORDERS', 'You can view your order history by going to the <a href="' . zen_href_link(FILENAME_ACCOUNT, '', 'SSL') . '" name="linkMyAccount">My Account</a> page and by clicking on "View All Orders".');
 define('TEXT_CONTACT_STORE_OWNER', 'Please direct any questions to customer service.');
 define('TEXT_THANKS_FOR_SHOPPING', 'Thanks for shopping with us online!');
 

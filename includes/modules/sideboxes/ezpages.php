@@ -3,10 +3,10 @@
  * ezpages sidebox - used to display links to EZ-Pages content
  *
  * @package templateSystem
- * @copyright Copyright 2003-2018 Zen Cart Development Team
+ * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Drbyte Mon Nov 12 17:09:17 2018 -0500 Modified in v1.5.6 $
+ * @version $Id: DrByte 2019 Jan 04 Modified in v1.5.6a $
  */
 
   $zco_notifier->notify('NOTIFY_START_EZPAGES_SIDEBOX');
@@ -28,6 +28,7 @@
       $title =  BOX_HEADING_EZPAGES;
       $box_id =  'ezpages';
       $rows = 0;
+      $page_query_list_sidebox = array();
       foreach ($pages_query as $page_query) {
         $rows++;
         $page_query_list_sidebox[$rows]['id'] = $page_query['pages_id'];

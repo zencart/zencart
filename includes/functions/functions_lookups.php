@@ -4,10 +4,10 @@
  * Lookup Functions for various core activities related to countries, prices, products, product types, etc
  *
  * @package functions
- * @copyright Copyright 2003-2018 Zen Cart Development Team
+ * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: lat9 Mon Oct 22 13:19:39 2018 -0400 Modified in v1.5.6 $
+ * @version $Id: DrByte 2019 Jan 04 Modified in v1.5.6a $
  */
 
 /**
@@ -161,7 +161,6 @@
     // -----
     // Give an observer the chance to modify this function's return value.
     //
-    $products_id = zen_get_prid($products_id);
     $products_quantity = 0;
     $quantity_handled = false;
     $GLOBALS['zco_notifier']->notify(
@@ -173,7 +172,7 @@
     if ($quantity_handled) {
         return $products_quantity;
     }
-    
+    $products_id = zen_get_prid($products_id);
     $stock_query = "select products_quantity
                     from " . TABLE_PRODUCTS . "
                     where products_id = " . (int)$products_id . " LIMIT 1";
@@ -379,10 +378,12 @@
   function zen_get_categories_image($what_am_i) {
     global $db;
 
-    $the_categories_image_query= "select categories_image from " . TABLE_CATEGORIES . " where categories_id= '" . $what_am_i . "'";
-    $the_products_category = $db->Execute($the_categories_image_query);
+    $the_categories_image_query= "select categories_image from " . TABLE_CATEGORIES . " where categories_id= '" . (int)$what_am_i . "'";
+    $result = $db->Execute($the_categories_image_query);
 
-    return $the_products_category->fields['categories_image'];
+    if ($result->EOF) return '';
+    
+    return $result->fields['categories_image'];
   }
 
 /*
@@ -391,9 +392,11 @@
  */
   function zen_get_categories_name($who_am_i) {
     global $db;
-    $the_categories_name_query= "select categories_name from " . TABLE_CATEGORIES_DESCRIPTION . " where categories_id= '" . $who_am_i . "' and language_id= '" . $_SESSION['languages_id'] . "'";
+    $the_categories_name_query= "select categories_name from " . TABLE_CATEGORIES_DESCRIPTION . " where categories_id= '" . (int)$who_am_i . "' and language_id= '" . (int)$_SESSION['languages_id'] . "'";
 
     $the_categories_name = $db->Execute($the_categories_name_query);
+    
+    if ($the_categories_name->EOF) return '';
 
     return $the_categories_name->fields['categories_name'];
   }
@@ -430,7 +433,7 @@
                       and p.manufacturers_id = m.manufacturers_id";
 
     $product =$db->Execute($product_query);
-
+    if ($product->EOF) return '';
     return $product->fields['manufacturers_image'];
   }
 

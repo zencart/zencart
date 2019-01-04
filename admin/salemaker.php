@@ -1,10 +1,10 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2018 Zen Cart Development Team
+ * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Drbyte Thu Dec 6 15:04:13 2018 -0500 Modified in v1.5.6 $
+ * @version $Id: DrByte 2019 Jan 04 Modified in v1.5.6a $
  */
 //
 define('AUTOCHECK', 'False');
@@ -296,7 +296,7 @@ if (zen_not_null($action)) {
         var StartDate = new ctlSpiffyCalendarBox("StartDate", "sale_form", "start", "btnDate1", "<?php echo (($sInfo->sale_date_start == '0001-01-01') ? '' : zen_date_short($sInfo->sale_date_start)); ?>", scBTNMODE_CUSTOMBLUE);
         var EndDate = new ctlSpiffyCalendarBox("EndDate", "sale_form", "end", "btnDate2", "<?php echo (($sInfo->sale_date_end == '0001-01-01') ? '' : zen_date_short($sInfo->sale_date_end)); ?>", scBTNMODE_CUSTOMBLUE);
       </script>
-      <?php echo zen_draw_form("sale_form", FILENAME_SALEMAKER, zen_get_all_get_params(array('action', 'info', 'sID')) . 'action=' . $form_action, 'post', 'class="form-horizontal"'); ?>
+      <?php echo zen_draw_form("sale_form", FILENAME_SALEMAKER, zen_get_all_get_params(array('action', 'info', 'sID')) . 'action=' . $form_action, 'post', 'onsubmit="return check_dates(start,StartDate.required, end, EndDate.required);" class="form-horizontal"'); ?>
       <?php if ($form_action == 'update') echo zen_draw_hidden_field('sID', $_GET['sID']); ?>
       <div class="row">
         <div class="col-sm-6"><?php echo TEXT_SALEMAKER_POPUP; ?></div>

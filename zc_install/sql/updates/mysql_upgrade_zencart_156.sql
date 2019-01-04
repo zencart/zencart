@@ -3,10 +3,10 @@
 # *
 # * @package Installer
 # * @access private
-# * @copyright Copyright 2003-2018 Zen Cart Development Team
+# * @copyright Copyright 2003-2019 Zen Cart Development Team
 # * @copyright Portions Copyright 2003 osCommerce
 # * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
-# * @version $Id: Drbyte Thu Dec 6 15:04:13 2018 -0500 New in v1.5.6 $
+# * @version $Id: DrByte 2019 Jan 04 Modified in v1.5.6a $
 #
 
 ############ IMPORTANT INSTRUCTIONS ###############
@@ -66,6 +66,8 @@ ALTER TABLE admin_profiles MODIFY profile_name VARCHAR(255) NOT NULL DEFAULT '';
 ALTER TABLE countries ADD status tinyint(1) DEFAULT 1;
 # end of repeats from v152
 
+# handle old dates
+UPDATE configuration SET date_added='0001-01-01' where date_added < '0001-01-01';
 
 # New Values
 UPDATE configuration SET configuration_description =  'Defines the method for sending mail.<br /><strong>PHP</strong> is the default, and uses built-in PHP wrappers for processing.<br /><strong>SMTPAUTH</strong> should be used by most sites!, as it provides secure sending of authenticated email. You must also configure your SMTPAUTH settings in the appropriate fields in this admin section.<br /><br /><strong>Gmail</strong> is used for sending emails using Google\'s mail service, and requires the [less secure] setting enabled in your gmail account.<br /><br /><strong>sendmail</strong> is for linux/unix hosts using the sendmail program on the server<br /><strong>"sendmail-f"</strong> is only for servers which require the use of the -f parameter to use sendmail. This is a security setting often used to prevent spoofing. Will cause errors if your host mailserver is not configured to use it.<br /><br />MOST SITES WILL USE [SMTPAUTH].', set_function = 'zen_cfg_select_option(array(\'PHP\', \'sendmail\', \'sendmail-f\', \'smtp\', \'smtpauth\', \'Gmail\'),' WHERE configuration_key = 'EMAIL_TRANSPORT';
@@ -161,6 +163,7 @@ DELETE FROM admin_pages WHERE page_key = 'linkpointReview';
 ALTER TABLE customers_basket DROP final_price;
 
 ## add support for multi lingual ezpages
+#NEXT_X_ROWS_AS_ONE_COMMAND:8
 CREATE TABLE IF NOT EXISTS ezpages_content (
   pages_id int(11) NOT NULL DEFAULT '0',
   languages_id int(11) NOT NULL DEFAULT '1',
@@ -170,6 +173,7 @@ CREATE TABLE IF NOT EXISTS ezpages_content (
   KEY idx_lang_id_zen (languages_id)
 ) ENGINE=MyISAM;
 
+#NEXT_X_ROWS_AS_ONE_COMMAND:4
 INSERT IGNORE INTO ezpages_content (pages_id, languages_id, pages_title, pages_html_text)
 SELECT e.pages_id, l.languages_id, e.pages_title, e.pages_html_text
 FROM ezpages e
@@ -193,6 +197,7 @@ ALTER TABLE media_manager ADD KEY idx_media_name_zen (media_name(191));
 ALTER TABLE whos_online MODIFY session_id varchar(191) NOT NULL default '';
 # recreating sessions table since its storage engine is changing to InnoDB:
 DROP TABLE IF EXISTS sessions;
+#NEXT_X_ROWS_AS_ONE_COMMAND:6
 CREATE TABLE sessions (
   sesskey varchar(191) NOT NULL default '',
   expiry int(11) unsigned NOT NULL default 0,
@@ -202,6 +207,7 @@ CREATE TABLE sessions (
 
 
 ## add support for admin notification
+#NEXT_X_ROWS_AS_ONE_COMMAND:6
 CREATE TABLE IF NOT EXISTS admin_notifications (
   notification_key varchar(40) NOT NULL,
   admin_id int(11),
@@ -223,7 +229,7 @@ SELECT project_version_key, project_version_major, project_version_minor, projec
 FROM project_version;
 
 ## Now set to new version
-UPDATE project_version SET project_version_major='1', project_version_minor='5.6', project_version_patch1='', project_version_patch1_source='', project_version_patch2='', project_version_patch2_source='', project_version_comment='Version Update 1.5.5->1.5.6', project_version_date_applied=now() WHERE project_version_key = 'Zen-Cart Main';
-UPDATE project_version SET project_version_major='1', project_version_minor='5.6', project_version_patch1='', project_version_patch1_source='', project_version_patch2='', project_version_patch2_source='', project_version_comment='Version Update 1.5.5->1.5.6', project_version_date_applied=now() WHERE project_version_key = 'Zen-Cart Database';
+UPDATE project_version SET project_version_major='1', project_version_minor='5.6a', project_version_patch1='', project_version_patch1_source='', project_version_patch2='', project_version_patch2_source='', project_version_comment='Version Update 1.5.5->1.5.6a', project_version_date_applied=now() WHERE project_version_key = 'Zen-Cart Main';
+UPDATE project_version SET project_version_major='1', project_version_minor='5.6', project_version_patch1='', project_version_patch1_source='', project_version_patch2='', project_version_patch2_source='', project_version_comment='Version Update 1.5.5->1.5.6a', project_version_date_applied=now() WHERE project_version_key = 'Zen-Cart Database';
 
 #####  END OF UPGRADE SCRIPT

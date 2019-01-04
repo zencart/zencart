@@ -1,10 +1,10 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2018 Zen Cart Development Team
+ * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Zen4All Sat Mar 24 15:57:20 2018 +0100 Modified in v1.5.6 $
+ * @version $Id: DrByte 2019 Jan 04 Modified in v1.5.6a $
  */
 
 ////
@@ -174,17 +174,9 @@
   function zen_draw_form($name, $action, $parameters = '', $method = 'post', $params = '', $usessl = 'false') {
     $form = '<form name="' . zen_output_string($name) . '" action="';
     if (zen_not_null($parameters)) {
-      if ($usessl) {
-        $form .= zen_href_link($action, $parameters, 'NONSSL');
-      } else {
-        $form .= zen_href_link($action, $parameters, 'NONSSL');
-      }
+      $form .= zen_href_link($action, $parameters, 'NONSSL');
     } else {
-      if ($usessl) {
-        $form .= zen_href_link($action, '', 'NONSSL');
-      } else {
-        $form .= zen_href_link($action, '', 'NONSSL');
-      }
+      $form .= zen_href_link($action, '', 'NONSSL');
     }
     $form .= '" method="' . zen_output_string($method) . '"';
     if (zen_not_null($params)) {

@@ -2,9 +2,9 @@
 /**
  * file contains zcDatabaseInstaller Class
  * @package Installer
- * @copyright Copyright 2003-2018 Zen Cart Development Team
+ * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Drbyte Tue Oct 9 18:48:15 2018 -0400 Modified in v1.5.6 $
+ * @version $Id: DrByte 2019 Jan 04 Modified in v1.5.6a $
  *
  */
 /**
@@ -139,6 +139,7 @@ class zcDatabaseInstaller
   private function parseLineContent()
   {
     $this->lineSplit = explode(" ",(substr($this->line,-1)==';') ? substr($this->line,0,strlen($this->line)-1) : $this->line);
+    if (!isset($this->lineSplit[3])) $this->lineSplit[3] = "";
     if (!isset($this->lineSplit[4])) $this->lineSplit[4] = "";
     if (!isset($this->lineSplit[5])) $this->lineSplit[5] = "";
     foreach ($this->basicParseStrings as $parseString)
@@ -193,7 +194,7 @@ class zcDatabaseInstaller
       $this->ignoreLine = TRUE;
       if (strtoupper($this->lineSplit[2].' '.$this->lineSplit[3].' '.$this->lineSplit[4]) != 'IF NOT EXISTS')
       {
-        $this->writeUpgradeExceptions($this->line, sprintf(REASON_TABLE_ALREADY_EXISTS, $table), $this->filename);
+        $this->writeUpgradeExceptions($this->line, sprintf(REASON_TABLE_ALREADY_EXISTS, $table), $this->fileName);
       }
     } else
     {
@@ -295,7 +296,7 @@ class zcDatabaseInstaller
   public function parserAlterTable() {
     if(!$this->tableExists($this->lineSplit[2])) {
       $result = sprintf(REASON_TABLE_NOT_FOUND, $this->lineSplit[2]).' CHECK PREFIXES!';
-      $this->writeUpgradeExceptions($this->line, $result, $this->filename);
+      $this->writeUpgradeExceptions($this->line, $result, $this->fileName);
     }
     else {
       $this->line = 'ALTER TABLE ' . $this->dbPrefix . substr($this->line, 12);
@@ -352,18 +353,29 @@ class zcDatabaseInstaller
   {
     if (!$this->tableExists($this->lineSplit[2]))
     {
-      if (!isset($result)) $result = sprintf(REASON_TABLE_NOT_FOUND, $table).' CHECK PREFIXES!';
+      if (!isset($result)) $result = sprintf(REASON_TABLE_NOT_FOUND, $this->lineSplit[2]).' CHECK PREFIXES!';
       $this->writeUpgradeExceptions($this->line, $result, $this->fileName);
       $this->ignoreLine = true;
     } else {
       if ($this->tableExists($this->lineSplit[4]))
       {
-        if (!isset($result)) $result = sprintf(REASON_TABLE_ALREADY_EXISTS, $table);
+        if (!isset($result)) $result = sprintf(REASON_TABLE_ALREADY_EXISTS, $this->lineSplit[4]);
         $this->writeUpgradeExceptions($this->line, $result, $this->fileName);
         $this->ignoreLine = true;
       } else {
         $this->line = 'RENAME TABLE ' . $this->dbPrefix . $this->lineSplit[2] . ' TO ' . $this->dbPrefix . substr($this->line, (13 + strlen($this->lineSplit[2]) + 4));
       }
+    }
+  }
+  public function parserLeftJoin()
+  {
+    if (!$this->tableExists($this->lineSplit[2]))
+    {
+      if (!isset($result)) $result = sprintf(REASON_TABLE_NOT_FOUND, $this->lineSplit[2]).' CHECK PREFIXES!';
+      $this->writeUpgradeExceptions($this->line, $result, $this->fileName);
+      error_log($result . "\n" . $this->line . "\n---------------\n\n");
+    } else {
+      $this->line = 'LEFT JOIN ' . $this->dbPrefix . substr($this->line, 10);
     }
   }
   public function writeUpgradeExceptions($line, $message, $sqlFile = '')

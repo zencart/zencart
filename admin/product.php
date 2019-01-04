@@ -1,10 +1,10 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2018 Zen Cart Development Team
+ * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: mc12345678 Tue Sep 18 16:05:09 2018 -0400 Modified in v1.5.6 $
+ * @version $Id: DrByte 2019 Jan 04 Modified in v1.5.6a $
  */
 require('includes/application_top.php');
 
@@ -13,7 +13,6 @@ require(DIR_WS_CLASSES . 'currencies.php');
 $currencies = new currencies();
 $product_type = (isset($_POST['product_type']) ? $_POST['product_type'] : (isset($_GET['pID']) ? zen_get_products_type($_GET['pID']) : 1));
 $type_handler = $zc_products->get_admin_handler($product_type);
-$current_category_id = (isset($_POST['cPath']) ? $_POST['cPath'] : (isset($_GET['cPath']) ? $_GET['cPath'] : 0));
 $zco_notifier->notify('NOTIFY_BEGIN_ADMIN_PRODUCTS', $action);
 
 if (zen_not_null($action)) {

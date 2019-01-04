@@ -6,10 +6,10 @@
  *       Windows hosts require special setup (and Windows servers couldn't do any symlinking in PHP versions older than 5.3.0)
  *
  * @package page
- * @copyright Copyright 2003-2018 Zen Cart Development Team
+ * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: lat9 Thu Sep 20 13:58:53 2018 -0400 Modified in v1.5.6 $
+ * @version $Id: DrByte 2019 Jan 04 Modified in v1.5.6a $
  */
 
 // This should be first line of the script:
@@ -81,9 +81,9 @@ $downloadFilesize = (int)@filesize($source_directory . $origin_filename);
 
 // calculate days
 list($dt_year, $dt_month, $dt_day) = explode('-', $downloads->fields['date_purchased_day']);
-$download_timestamp = mktime(23, 59, 59, $dt_month, $dt_day + $downloads->fields['download_maxdays'], $dt_year);
+$download_timestamp = mktime(23, 59, 59, $dt_month, $dt_day + (int)$downloads->fields['download_maxdays'], $dt_year);
 // determine limits
-$unlimited = $downloads->fields['download_maxdays'] == 0;
+$unlimited = (int)$downloads->fields['download_maxdays'] == 0;
 $remainingCount = $downloads->fields['download_count'];
 $isExpired = !$unlimited && ($download_timestamp <= time() || $remainingCount <= 0);
 

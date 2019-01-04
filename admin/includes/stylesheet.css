@@ -1,9 +1,9 @@
 /**
  * @package admin
- * @copyright Copyright 2003-2018 Zen Cart Development Team
+ * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Zen4All Mon Nov 26 10:20:09 2018 +0100 Modified in v1.5.6 $
+ * @version $Id: DrByte 2019 Jan 04 Modified in v1.5.6a $
  */
 
 @import url("css/bootstrap.min.css");
@@ -23,10 +23,7 @@ a {
 a, body, html, table {
     font: normal normal 11px Verdana, sans-serif;
 }
-body table {
-  padding: 1px 3px;
-  border-collapse: initial;
-}
+
 body {padding: 0 4px;}
 
 td,th {padding: 1px;}
@@ -303,22 +300,18 @@ tr.attributeBoxContent {
 
 .dataTableHeadingContent {
     color: #333333;
-    font-weight: bold;
 }
 
 .dataTableHeadingContentWhois {
     color: #333333;
-    font-weight: bold;
 }
 
 .dataTableHeadingContentWhois a:link, .dataTableHeadingContentWhois a:visited {
     color: #0000ff;
-    font-weight: bold;
 }
 
 .dataTableHeadingContentWhois a:hover {
     color: #ffffff;
-    font-weight: bold;
 }
 
 .dataTableHeadingRow {

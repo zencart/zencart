@@ -1,10 +1,10 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2018 Zen Cart Development Team
+ * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Scott C Wilson Sat Nov 17 02:48:59 2018 -0500 Modified in v1.5.6 $
+ * @version $Id: DrByte 2019 Jan 04 Modified in v1.5.6a $
  */
 
 ////
@@ -2542,7 +2542,7 @@ function zen_limit_image_filename($filename, $table_name, $field_name, $extensio
       if ($check_valid == true) {
         $valid_downloads = '';
         while (!$download_display->EOF) {
-          if (!file_exists(zen_get_download_handler($download_display->fields['products_attributes_filename']))) {
+          if (!zen_orders_products_downloads($download_display->fields['products_attributes_filename'])) {
             $valid_downloads .= '<br />&nbsp;&nbsp;' . zen_image(DIR_WS_IMAGES . 'icon_status_red.gif') . ' Invalid: ' . $download_display->fields['products_attributes_filename'];
             // break;
           } else {

@@ -1,10 +1,10 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2018 Zen Cart Development Team
+ * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Zcwilt Thu Nov 29 15:57:26 2018 +0000 Modified in v1.5.6 $
+ * @version $Id: DrByte 2019 Jan 04 Modified in v1.5.6a $
  */
 require('includes/application_top.php');
 
@@ -627,7 +627,7 @@ if (zen_not_null($action)) {
             </table>
           <?php } ?>
 
-          <?php echo zen_draw_form('new_prices', FILENAME_PRODUCTS_PRICE_MANAGER, zen_get_all_get_params(array('action', 'info', $_GET['products_filter'])) . 'action=' . 'update', 'post', 'class="form-horizontal"'); ?>
+          <?php echo zen_draw_form('new_prices', FILENAME_PRODUCTS_PRICE_MANAGER, zen_get_all_get_params(array('action', 'info', $_GET['products_filter'])) . 'action=' . 'update', 'post', 'onsubmit="return check_dates_ppm(featured_start,FeaturedStartDate.required, featured_end, FeaturedEndDate.required, product_start, ProductStartDate.required);" class="form-horizontal"'); ?>
           <?php
           echo zen_draw_hidden_field('products_id', $_GET['products_filter']);
           echo zen_draw_hidden_field('specials_id', isset($sInfo->specials_id) ? $sInfo->specials_id : '');

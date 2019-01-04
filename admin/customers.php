@@ -1,10 +1,10 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2018 Zen Cart Development Team
+ * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Zen4All Thu Nov 15 22:41:52 2018 +0100 Modified in v1.5.6 $
+ * @version $Id: DrByte 2019 Jan 04 Modified in v1.5.6a $
  */
 require('includes/application_top.php');
 
@@ -1157,7 +1157,7 @@ if (zen_not_null($action)) {
                     <a href="<?php echo zen_href_link(basename($PHP_SELF), zen_get_all_get_params(array('list_order', 'page')) . 'list_order=group-desc', 'NONSSL'); ?>"><?php echo ($_GET['list_order'] == 'group-desc' ? '<span class="SortOrderHeader">Desc</span>' : '<span class="SortOrderHeaderLink">Desc</span>'); ?></a>
                   </th>
 
-                  <?php if (MODULE_ORDER_TOTAL_GV_STATUS == 'true') { ?>
+                  <?php if (defined('MODULE_ORDER_TOTAL_GV_STATUS') && MODULE_ORDER_TOTAL_GV_STATUS == 'true') { ?>
                     <th class="dataTableHeadingContent">
                       <?php echo (($_GET['list_order'] == 'gv_balance-asc' or $_GET['list_order'] == 'gv_balance-desc') ? '<span class="SortOrderHeader">' . TABLE_HEADING_GV_AMOUNT . '</span>' : TABLE_HEADING_GV_AMOUNT); ?><br>
                       <a href="<?php echo zen_href_link(basename($PHP_SELF), zen_get_all_get_params(array('list_order', 'page')) . 'list_order=gv_balance-asc', 'NONSSL'); ?>"><?php echo ($_GET['list_order'] == 'gv_balance-asc' ? '<span class="SortOrderHeader">Asc</span>' : '<span class="SortOrderHeaderLink">Asc</span>'); ?></a>&nbsp;
@@ -1319,7 +1319,7 @@ if (zen_not_null($action)) {
                 <td class="dataTableContent"><?php echo zen_date_short($info->fields['date_account_created']); ?></td>
                 <td class="dataTableContent"><?php echo zen_date_short($customer['customers_info_date_of_last_logon']); ?></td>
                 <td class="dataTableContent"><?php echo $group_name_entry; ?></td>
-                <?php if (MODULE_ORDER_TOTAL_GV_STATUS == 'true') { ?>
+                <?php if (defined('MODULE_ORDER_TOTAL_GV_STATUS') && MODULE_ORDER_TOTAL_GV_STATUS == 'true') { ?>
                   <td class="dataTableContent text-right"><?php echo $currencies->format($customer['amount']); ?></td>
                 <?php } ?>
                 <td class="dataTableContent text-center">

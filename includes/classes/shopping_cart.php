@@ -3,10 +3,10 @@
  * Class for managing the Shopping Cart
  *
  * @package classes
- * @copyright Copyright 2003-2018 Zen Cart Development Team
+ * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Scott C Wilson Wed Oct 10 07:03:50 2018 -0400 Modified in v1.5.6 $
+ * @version $Id: DrByte 2019 Jan 04 Modified in v1.5.6a $
  */
 
 if (!defined('IS_ADMIN_FLAG')) {
@@ -125,7 +125,7 @@ class shoppingCart extends base {
             foreach($this->contents[$products_id]['attributes'] as $option => $value) {
 
               //clr 031714 udate query to include attribute value. This is needed for text attributes.
-              $attr_value = $this->contents[$products_id]['attributes_values'][$option];
+              $attr_value = isset($this->contents[$products_id]['attributes_values'][$option]) ? $this->contents[$products_id]['attributes_values'][$option] : '';
               //                zen_db_query("insert into " . TABLE_CUSTOMERS_BASKET_ATTRIBUTES . " (customers_id, products_id, products_options_id, products_options_value_id, products_options_value_text) values ('" . (int)$customer_id . "', '" . zen_db_input($products_id) . "', '" . (int)$option . "', '" . (int)$value . "', '" . zen_db_input($attr_value) . "')");
               $products_options_sort_order= zen_get_attributes_options_sort_order(zen_get_prid($products_id), $option, $value);
               if ($attr_value) {
@@ -873,12 +873,10 @@ class shoppingCart extends base {
             // attributes_qty_prices_onetime
             $added_charge = 0;
             if ($attribute_price->fields['attributes_qty_prices_onetime'] != '') {
-              $chk_price = zen_get_products_base_price($products_id);
-              $chk_special = zen_get_products_special_price($products_id, false);
               $added_charge = zen_get_attributes_qty_prices_onetime($attribute_price->fields['attributes_qty_prices_onetime'], $qty);
               $totalOnetimeCharge += $added_charge;
         // calculate Product Price without Specials, Sales or Discounts
-              $added_charge = zen_get_attributes_qty_prices_onetime($chk_price, $chk_price, $attribute_price->fields['attributes_price_factor_onetime'], $attribute_price->fields['attributes_price_factor_onetime_offset']);
+              $added_charge = zen_get_attributes_qty_prices_onetime($attribute_price->fields['attributes_qty_prices_onetime'], 1);
               $totalOnetimeChargeNoDiscount += $added_charge;
             }
             ////////////////////////////////////////////////
@@ -897,6 +895,10 @@ class shoppingCart extends base {
                                        and options_values_id = '" . (int)$value . "'";
 
           $attribute_weight = $db->Execute($attribute_weight_query);
+
+          if ($attribute_weight->EOF) {
+            continue;
+          }
 
           // adjusted count for free shipping
           if ($product->fields['product_is_always_free_shipping'] != 1) {
@@ -975,11 +977,15 @@ class shoppingCart extends base {
 
         $attribute_price = $db->Execute($attribute_price_query);
 
+        if ($attribute_price->EOF) {
+          continue;
+        }
+
         $new_attributes_price = 0;
         $discount_type_id = '';
         $sale_maker_discount = '';
 
-        if ($attribute_price->fields['product_attribute_is_free'] == '1' and zen_get_products_price_is_free((int)$products_id)) {
+        if ($attribute_price->fields['product_attribute_is_free'] == '1' && zen_get_products_price_is_free((int)$products_id)) {
           // no charge
         } else {
           // + or blank adds
@@ -1076,6 +1082,10 @@ class shoppingCart extends base {
 
         $attribute_price = $db->Execute($attribute_price_query);
 
+        if ($attribute_price->EOF) {
+          continue;
+        }
+
         $new_attributes_price = 0;
         $discount_type_id = '';
         $sale_maker_discount = '';
@@ -1142,6 +1152,10 @@ class shoppingCart extends base {
                                     and options_values_id = '" . (int)$value . "'";
 
         $attribute_weight_info = $db->Execute($attribute_weight_query);
+
+        if ($attribute_weight_info->EOF) {
+          continue;
+        }
 
         // adjusted count for free shipping
         $product = $db->Execute("select products_id, product_is_always_free_shipping
