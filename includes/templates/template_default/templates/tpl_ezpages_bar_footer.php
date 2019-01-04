@@ -5,10 +5,10 @@
  * Displays EZ-Pages footer-bar content.<br />
  *
  * @package templateSystem
- * @copyright Copyright 2003-2010 Zen Cart Development Team
+ * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: tpl_ezpages_bar_footer.php 15645 2010-03-07 18:17:19Z drbyte $
+ * @version $Id: Scott C Wilson Thu Dec 20 10:44:20 2018 -0500 Modified in v1.5.6a $
  */
 
    /**

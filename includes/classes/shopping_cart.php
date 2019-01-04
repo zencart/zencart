@@ -3,10 +3,10 @@
  * Class for managing the Shopping Cart
  *
  * @package classes
- * @copyright Copyright 2003-2018 Zen Cart Development Team
+ * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Scott C Wilson Wed Oct 10 07:03:50 2018 -0400 Modified in v1.5.6 $
+ * @version $Id: DrByte Fri Dec 28 20:18:16 2018 -0500 Modified in v1.5.6a $
  */
 
 if (!defined('IS_ADMIN_FLAG')) {

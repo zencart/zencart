@@ -3,10 +3,10 @@
  * ezpages bar (footer) - used to display links to EZ-Pages content in horizontal format (usually as a footer element)
  *
  * @package templateSystem
- * @copyright Copyright 2003-2018 Zen Cart Development Team
+ * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Drbyte Mon Dec 14 2018  Modified in v1.5.6 $
+ * @version $Id: DrByte Fri Dec 14 14:54:46 2018 -0500 Modified in v1.5.6a $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');

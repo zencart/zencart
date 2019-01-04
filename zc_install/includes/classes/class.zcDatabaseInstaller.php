@@ -2,9 +2,9 @@
 /**
  * file contains zcDatabaseInstaller Class
  * @package Installer
- * @copyright Copyright 2003-2018 Zen Cart Development Team
+ * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Drbyte Tue Oct 9 18:48:15 2018 -0400 Modified in v1.5.6 $
+ * @version $Id: mc12345678 Thu Dec 27 21:32:50 2018 -0500 Modified in v1.5.6a $
  *
  */
 /**

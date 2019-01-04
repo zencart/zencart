@@ -2,10 +2,10 @@
 
 /**
  * @package admin
- * @copyright Copyright 2003-2018 Zen Cart Development Team
+ * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Zen4All Tue Nov 27 11:11:11 2018 +0100 Modified in v1.5.6 $
+ * @version $Id: DrByte Fri Jan 4 12:38:27 2019 -0500 Modified in v1.5.6a $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');

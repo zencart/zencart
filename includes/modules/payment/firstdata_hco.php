@@ -3,10 +3,10 @@
  * First Data Hosted Checkout Payment Pages Module
  *
  * @package paymentMethod
- * @copyright Copyright 2003-2018 Zen Cart Development Team
+ * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: mc12345678 Thu Apr 26 00:20:48 2018 -0400 Modified in v1.5.6 $
+ * @version $Id: DrByte Wed Dec 19 17:16:29 2018 -0500 Modified in v1.5.6a $
  */
 /**
  * First Data Hosted Checkout Payment Pages Module

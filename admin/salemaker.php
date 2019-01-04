@@ -1,10 +1,10 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2018 Zen Cart Development Team
+ * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Drbyte Thu Dec 6 15:04:13 2018 -0500 Modified in v1.5.6 $
+ * @version $Id: Scott C Wilson Wed Dec 26 19:59:29 2018 -0500 Modified in v1.5.6a $
  */
 //
 define('AUTOCHECK', 'False');

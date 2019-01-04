@@ -6,10 +6,10 @@
  *       Windows hosts require special setup (and Windows servers couldn't do any symlinking in PHP versions older than 5.3.0)
  *
  * @package page
- * @copyright Copyright 2003-2018 Zen Cart Development Team
+ * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte Dec 19 2018  Modified in v1.5.6a $
+ * @version $Id: DrByte Wed Dec 19 23:02:30 2018 -0500 Modified in v1.5.6a $
  */
 
 // This should be first line of the script:

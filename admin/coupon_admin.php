@@ -1,10 +1,10 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2018 Zen Cart Development Team
+ * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Drbyte Tue Dec 4 12:55:53 2018 -0500 Modified in v1.5.6 $
+ * @version $Id: Scott C Wilson Fri Jan 4 10:49:01 2019 -0500 Modified in v1.5.6a $
  */
   require('includes/application_top.php');
   require(DIR_WS_CLASSES . 'currencies.php');

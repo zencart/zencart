@@ -14,9 +14,9 @@
  * REQUIRES PHP 5.4 or newer
  *
  * @package payeezy
- * @copyright Copyright 2003-2018 Zen Cart Development Team
+ * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Drbyte Tue Dec 4 13:24:10 2018 -0500 Modified in v1.5.6 $
+ * @version $Id: DrByte Wed Dec 19 17:16:29 2018 -0500 Modified in v1.5.6a $
  */
 
 // required to prevent PHP 5.3 from throwing errors:

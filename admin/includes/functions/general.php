@@ -1,10 +1,10 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2018 Zen Cart Development Team
+ * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Scott C Wilson Sat Nov 17 02:48:59 2018 -0500 Modified in v1.5.6 $
+ * @version $Id: DrByte Tue Jan 1 13:41:42 2019 -0500 Modified in v1.5.6a $
  */
 
 ////

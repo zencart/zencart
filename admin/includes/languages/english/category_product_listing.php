@@ -2,10 +2,10 @@
 
 /**
  * @package admin
- * @copyright Copyright 2003-2018 Zen Cart Development Team
+ * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Zen4All Thu Feb 1 15:28:20 2018 +0100 New in v1.5.6 $
+ * @version $Id: Scott C Wilson Thu Dec 20 08:22:36 2018 -0500 Modified in v1.5.6a $
  */
 define('HEADING_TITLE', 'Categories / Products');
 define('HEADING_TITLE_GOTO', 'Go To:');

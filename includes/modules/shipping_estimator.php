@@ -7,11 +7,11 @@
  * - Shows Free Shipping on Virtual products
  *
  * @package modules
- * @copyright Copyright 2003-2018 Zen Cart Development Team
+ * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * portions Copyright (c) 2003 Edwin Bekaert (edwin@ednique.com)
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Scott C Wilson Wed Oct 10 07:03:50 2018 -0400 Modified in v1.5.6 $
+ * @version $Id: DrByte Sat Dec 22 14:43:01 2018 -0500 Modified in v1.5.6a $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');

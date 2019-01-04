@@ -6,10 +6,10 @@
  * Displays site-map and some hard-coded navigation components
  *
  * @package templateSystem
- * @copyright Copyright 2003-2016 Zen Cart Development Team
+ * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: DrByte  Sat Oct 17 21:54:07 2015 -0400 Modified in v1.5.5 $
+ * @version $Id: Scott C Wilson Thu Dec 20 08:30:53 2018 -0500 Modified in v1.5.6a $
  */
 ?>
 <div class="centerColumn" id="siteMap">
