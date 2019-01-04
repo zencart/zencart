@@ -6,7 +6,7 @@
 
 You are currently viewing code for our development branch, which will be our next larger release, initially dubbed as Zen Cart&reg; v2, which brings architectural improvements to allow for increased flexibility for customizing each storeowner's own preferences.
 
-The latest stable version is currently [v1.5.6](https://github.com/zencart/zencart/releases).
+The latest stable version is currently [v1.5.6a](https://github.com/zencart/zencart/releases).
 
 [![Download Latest Official Zen Cart&reg; Release](https://a.fsdn.com/con/app/sf-download-button)<br>Download Latest Official Zen Cart&reg; Release](http://sourceforge.net/projects/zencart/files/latest/download)
 
@@ -25,7 +25,7 @@ Requirements
 Zen Cart&reg; requires you to provide your own webserver (shared or dedicated/VPS), with a standard LAMP stack (Linux/Apache/MySQL/PHP), based on the following specifications
 
 Requirements for v2:
-- Written for PHP 7.3 (backward compatible to PHP 5.6)
+- Written for PHP 7.3 (backward compatible to PHP 7.0)
 - Written for MySQL 5.7 (compatible with 5.7 and MariaDB 10.1 to 10.3)
 - CURL (compiled into PHP) is used for communication with payment/shipping services
 - Apache 2.4 or 2.2
@@ -87,4 +87,4 @@ Subscribe to [Critical News Updates And Release Announcements](https://www.zen-c
 
 &nbsp;  
   
-*&copy;Copyright 2003-2018, Zen Cart&reg;. All rights reserved.*
+*&copy;Copyright 2003-2019, Zen Cart&reg;. All rights reserved.*
