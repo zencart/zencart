@@ -10,7 +10,7 @@ It's free software, with free community-driven support available 24/7 on the Zen
 --------------------
 
 
-Zen Cart&reg; v1.5.6
+Zen Cart&reg; v1.5.6a
 ---------------------
 
 Compatibility
@@ -77,5 +77,5 @@ Subscribe to [Critical News Updates And Release Announcements](https://www.zen-c
 
 &nbsp;  
 
-*&copy;Copyright 2003-2018, Zen Cart&reg;. All rights reserved.*
+*&copy;Copyright 2003-2019, Zen Cart&reg;. All rights reserved.*
 

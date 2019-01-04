@@ -8,15 +8,15 @@
  * THIS FILE SHOULD NEVER BE EDITED MANUALLY !!!!!!!!
  *
  * @package general
- * @copyright Copyright 2003-2018 Zen Cart Development Team
+ * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Drbyte Dec 10 2018 Modified in v1.5.6 $
+ * @version $Id: DrByte 2019 Jan 4 Modified in v1.5.6a $
  * @private
  */
 
 define('PROJECT_VERSION_NAME', 'Zen Cart');
 define('PROJECT_VERSION_MAJOR', '1');
-define('PROJECT_VERSION_MINOR', '5.6');
+define('PROJECT_VERSION_MINOR', '5.6a');
 define('PROJECT_VERSION_PATCH1', '');
 define('PROJECT_VERSION_PATCH2', '');
 define('PROJECT_VERSION_PATCH1_SOURCE', '');
