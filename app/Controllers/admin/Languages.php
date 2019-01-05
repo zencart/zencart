@@ -64,7 +64,7 @@ class Languages extends AbstractLeadController
                 )
             ),
             array(
-                'table' => TABLE_META_TAGS_PRODUCTS_DESCRIPTION,
+                'table' => TABLE_METATAGS_PRODUCTS_DESCRIPTION,
                 'orderBy' => 'products_id',
                 'fields' => array(
                     'products_id' => 'integer',

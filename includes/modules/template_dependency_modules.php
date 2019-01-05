@@ -13,7 +13,7 @@ if (!defined('IS_ADMIN_FLAG')) {
 }
 $zco_notifier->notify('NOTIFY_MODULE_TEMPLATE_DEPENDENCY_MODULES', $current_page_base);
 
-require(DIR_WS_MODULES . zen_get_module_directory('meta_tags.php'));
+require(DIR_WS_MODULES . zen_get_module_directory('metatags.php'));
 
 if (file_exists(DIR_WS_TEMPLATE . 'template_info.php')) {
    include(DIR_WS_TEMPLATE . 'template_info.php');

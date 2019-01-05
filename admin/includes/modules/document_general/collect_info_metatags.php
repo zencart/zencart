@@ -28,8 +28,8 @@ if (!defined('IS_ADMIN_FLAG')) {
 
     if (isset($_GET['pID']) && empty($_POST)) {
 // check if new meta tags or existing
-    $check_meta_tags_description = $db->Execute("select products_id from " . TABLE_META_TAGS_PRODUCTS_DESCRIPTION . " where products_id='" . (int)$_GET['pID'] . "'");
-    if ($check_meta_tags_description->RecordCount() <= 0) {
+    $check_metatags_description = $db->Execute("select products_id from " . TABLE_METATAGS_PRODUCTS_DESCRIPTION . " where products_id='" . (int)$_GET['pID'] . "'");
+    if ($check_metatags_description->RecordCount() <= 0) {
       $product = $db->Execute("select pd.products_name, p.products_model, p.products_price_sorter,
                                       p.metatags_title_status, p.metatags_products_name_status, p.metatags_model_status,
                                       p.products_id, p.metatags_price_status, p.metatags_title_tagline_status
@@ -42,7 +42,7 @@ if (!defined('IS_ADMIN_FLAG')) {
                                       p.metatags_title_status, p.metatags_products_name_status, p.metatags_model_status,
                                       p.products_id, p.metatags_price_status, p.metatags_title_tagline_status,
                                       mtpd.metatags_title, mtpd.metatags_keywords, mtpd.metatags_description
-                              from " . TABLE_PRODUCTS . " p, " . TABLE_PRODUCTS_DESCRIPTION . " pd, " . TABLE_META_TAGS_PRODUCTS_DESCRIPTION . " mtpd
+                              from " . TABLE_PRODUCTS . " p, " . TABLE_PRODUCTS_DESCRIPTION . " pd, " . TABLE_METATAGS_PRODUCTS_DESCRIPTION . " mtpd
                               where p.products_id = '" . (int)$_GET['pID'] . "'
                               and p.products_id = pd.products_id
                               and pd.language_id = '" . (int)$_SESSION['languages_id'] . "'
@@ -98,7 +98,7 @@ if (!defined('IS_ADMIN_FLAG')) {
 ?>
     <?php
 //  echo $type_admin_handler;
-echo zen_draw_form('new_product_meta_tags', $type_admin_handler , 'cPath=' . $cPath . (isset($_GET['product_type']) ? '&product_type=' . $_GET['product_type'] : '') . (isset($_GET['pID']) ? '&pID=' . $_GET['pID'] : '') . '&action=new_product_preview_meta_tags' . (isset($_GET['page']) ? '&page=' . $_GET['page'] : ''), 'post', 'enctype="multipart/form-data"'); ?>
+echo zen_draw_form('new_product_metatags', $type_admin_handler , 'cPath=' . $cPath . (isset($_GET['product_type']) ? '&product_type=' . $_GET['product_type'] : '') . (isset($_GET['pID']) ? '&pID=' . $_GET['pID'] : '') . '&action=new_product_preview_metatags' . (isset($_GET['page']) ? '&page=' . $_GET['page'] : ''), 'post', 'enctype="multipart/form-data"'); ?>
     <table border="0" width="100%" cellspacing="0" cellpadding="2">
       <tr>
         <td><table border="0" width="100%" cellspacing="0" cellpadding="0">
@@ -115,7 +115,7 @@ echo zen_draw_form('new_product_meta_tags', $type_admin_handler , 'cPath=' . $cP
         <td class="main" colspan="2">
           <table border="1" cellspacing="0" cellpadding="2">
             <tr>
-              <td class="main" colspan="3" align="center"><?php echo TEXT_META_TAG_TITLE_INCLUDES; ?></td>
+              <td class="main" colspan="3" align="center"><?php echo TEXT_METATAG_TITLE_INCLUDES; ?></td>
             </tr>
             <tr>
               <td class="main" align="center">
@@ -156,19 +156,19 @@ echo zen_draw_form('new_product_meta_tags', $type_admin_handler , 'cPath=' . $cP
 
           </tr>
           <tr>
-            <td class="main"valign="top"><?php echo TEXT_META_TAGS_TITLE; ?>&nbsp;</td>
+            <td class="main"valign="top"><?php echo TEXT_METATAGS_TITLE; ?>&nbsp;</td>
             <td class="main">
-              <?php echo zen_draw_input_field('metatags_title[' . $languages[$i]['id'] . ']', htmlspecialchars(isset($metatags_title[$languages[$i]['id']]) ? stripslashes($metatags_title[$languages[$i]['id']]) : zen_get_metatags_title($pInfo->products_id, $languages[$i]['id']), ENT_COMPAT, CHARSET, TRUE), zen_set_field_length(TABLE_META_TAGS_PRODUCTS_DESCRIPTION, 'metatags_title', '150', false)); //,'id="'.'metatags_title' . $languages[$i]['id'] . '"');?>
+              <?php echo zen_draw_input_field('metatags_title[' . $languages[$i]['id'] . ']', htmlspecialchars(isset($metatags_title[$languages[$i]['id']]) ? stripslashes($metatags_title[$languages[$i]['id']]) : zen_get_metatags_title($pInfo->products_id, $languages[$i]['id']), ENT_COMPAT, CHARSET, TRUE), zen_set_field_length(TABLE_METATAGS_PRODUCTS_DESCRIPTION, 'metatags_title', '150', false)); //,'id="'.'metatags_title' . $languages[$i]['id'] . '"');?>
             </td>
           </tr>
           <tr>
-            <td class="main"valign="top"><?php echo TEXT_META_TAGS_KEYWORDS; ?>&nbsp;</td>
+            <td class="main"valign="top"><?php echo TEXT_METATAGS_KEYWORDS; ?>&nbsp;</td>
             <td class="main">
               <?php echo zen_draw_textarea_field('metatags_keywords[' . $languages[$i]['id'] . ']', 'soft', '100%', '10', htmlspecialchars((isset($metatags_keywords[$languages[$i]['id']])) ? stripslashes($metatags_keywords[$languages[$i]['id']]) : zen_get_metatags_keywords($pInfo->products_id, $languages[$i]['id']), ENT_COMPAT, CHARSET, TRUE), 'class="noEditor"'); //,'id="'.'metatags_keywords' . $languages[$i]['id'] . '"'); ?>
             </td>
           </tr>
           <tr>
-            <td class="main"valign="top"><?php echo TEXT_META_TAGS_DESCRIPTION; ?>&nbsp;</td>
+            <td class="main"valign="top"><?php echo TEXT_METATAGS_DESCRIPTION; ?>&nbsp;</td>
             <td class="main">
               <?php echo zen_draw_textarea_field('metatags_description[' . $languages[$i]['id'] . ']', 'soft', '100%', '10', htmlspecialchars((isset($metatags_description[$languages[$i]['id']])) ? stripslashes($metatags_description[$languages[$i]['id']]) : zen_get_metatags_description($pInfo->products_id, $languages[$i]['id']), ENT_COMPAT, CHARSET, TRUE), 'class="noEditor"'); //,'id="'.'metatags_description' . $languages[$i]['id'] . '"'); ?>
             </td>
@@ -179,7 +179,7 @@ echo zen_draw_form('new_product_meta_tags', $type_admin_handler , 'cPath=' . $cP
     }
 ?>
       <tr>
-        <td class="main" align="left"><?php echo TEXT_INFO_META_TAGS_USAGE; ?></td>
+        <td class="main" align="left"><?php echo TEXT_INFO_METATAGS_USAGE; ?></td>
       </tr>
       <tr>
         <td class="main" align="right"><?php echo zen_draw_hidden_field('products_model', $pInfo->products_model) . zen_draw_hidden_field('products_price_sorter', $pInfo->products_price_sorter) . zen_image_submit('button_preview.gif', IMAGE_PREVIEW) . '&nbsp;&nbsp;<a href="' . zen_admin_href_link(FILENAME_CATEGORIES, 'cPath=' . $cPath . (isset($_GET['pID']) ? '&pID=' . $_GET['pID'] : '') . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '')) . '">' . zen_image_button('button_cancel.gif', IMAGE_CANCEL) . '</a>'; ?></td>

@@ -42,12 +42,12 @@
           require(DIR_WS_MODULES . 'move_product_confirm.php');
          }
         break;
-      case 'insert_product_meta_tags':
-      case 'update_product_meta_tags':
-        if (file_exists(DIR_WS_MODULES . $zc_products->get_handler($product_type) . '/update_product_meta_tags.php')) {
-          require(DIR_WS_MODULES . $zc_products->get_handler($product_type) . '/update_product_meta_tags.php');
+      case 'insert_product_metatags':
+      case 'update_product_metatags':
+        if (file_exists(DIR_WS_MODULES . $zc_products->get_handler($product_type) . '/update_product_metatags.php')) {
+          require(DIR_WS_MODULES . $zc_products->get_handler($product_type) . '/update_product_metatags.php');
          } else {
-          require(DIR_WS_MODULES . 'update_product_meta_tags.php');
+          require(DIR_WS_MODULES . 'update_product_metatags.php');
          }
         break;
       case 'insert_product':
@@ -66,11 +66,11 @@
           require(DIR_WS_MODULES . 'copy_to_confirm.php');
          }
         break;
-      case 'new_product_preview_meta_tags':
-        if (file_exists(DIR_WS_MODULES . $zc_products->get_handler($product_type) . '/new_product_preview_meta_tags.php')) {
-          require(DIR_WS_MODULES . $zc_products->get_handler($product_type) . '/new_product_preview_meta_tags.php');
+      case 'new_product_preview_metatags':
+        if (file_exists(DIR_WS_MODULES . $zc_products->get_handler($product_type) . '/new_product_preview_metatags.php')) {
+          require(DIR_WS_MODULES . $zc_products->get_handler($product_type) . '/new_product_preview_metatags.php');
          } else {
-          require(DIR_WS_MODULES . 'new_product_preview_meta_tags.php');
+          require(DIR_WS_MODULES . 'new_product_preview_metatags.php');
          }
         break;
       case 'new_product_preview':
@@ -91,7 +91,7 @@
     $messageStack->add(ERROR_CATALOG_IMAGE_DIRECTORY_DOES_NOT_EXIST, 'error');
   }
 ?>
-<?php if ($action != 'new_product_meta_tags' && $editor_handler != '') include ($editor_handler); ?>
+<?php if ($action != 'new_product_metatags' && $editor_handler != '') include ($editor_handler); ?>
 </head>
 <body marginwidth="0" marginheight="0" topmargin="0" bottommargin="0" leftmargin="0" rightmargin="0" bgcolor="#FFFFFF">
 <!-- header //-->
@@ -104,17 +104,17 @@
 <!-- body_text //-->
     <td width="100%" valign="top">
 <?php
-  if ($action == 'new_product' or $action == 'new_product_meta_tags') {
+  if ($action == 'new_product' or $action == 'new_product_metatags') {
 
-    if ($action == 'new_product_meta_tags') {
+    if ($action == 'new_product_metatags') {
       require(DIR_WS_MODULES . $zc_products->get_handler($product_type) . '/collect_info_metatags.php');
     } else {
       require(DIR_WS_MODULES . $zc_products->get_handler($product_type) . '/collect_info.php');
     }
 
-  } elseif ($action == 'new_product_preview' or $action == 'new_product_preview_meta_tags') {
-    if ($action == 'new_product_preview_meta_tags') {
-      require(DIR_WS_MODULES . $zc_products->get_handler($product_type) . '/preview_info_meta_tags.php');
+  } elseif ($action == 'new_product_preview' or $action == 'new_product_preview_metatags') {
+    if ($action == 'new_product_preview_metatags') {
+      require(DIR_WS_MODULES . $zc_products->get_handler($product_type) . '/preview_info_metatags.php');
     } else {
       require(DIR_WS_MODULES . $zc_products->get_handler($product_type) . '/preview_info.php');
     }

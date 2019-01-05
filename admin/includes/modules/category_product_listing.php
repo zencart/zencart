@@ -189,9 +189,9 @@ if (!isset($_SESSION['display_categories_dropdown'])) {
 <?php
 // bof: categories meta tags
         if (zen_get_category_metatags_keywords($categories->fields['categories_id'], (int)$_SESSION['languages_id']) or zen_get_category_metatags_description($categories->fields['categories_id'], (int)$_SESSION['languages_id'])) {
-          echo '<a href="' . zen_admin_href_link(FILENAME_CATEGORIES, 'cPath=' . $cPath . '&cID=' . $categories->fields['categories_id'] . '&action=edit_category_meta_tags') . '">' . zen_image(DIR_WS_IMAGES . 'icon_edit_metatags_on.gif', ICON_METATAGS_ON) . '</a>';
+          echo '<a href="' . zen_admin_href_link(FILENAME_CATEGORIES, 'cPath=' . $cPath . '&cID=' . $categories->fields['categories_id'] . '&action=edit_category_metatags') . '">' . zen_image(DIR_WS_IMAGES . 'icon_edit_metatags_on.gif', ICON_METATAGS_ON) . '</a>';
         } else {
-          echo '<a href="' . zen_admin_href_link(FILENAME_CATEGORIES, 'cPath=' . $cPath . '&cID=' . $categories->fields['categories_id'] . '&action=edit_category_meta_tags') . '">' . zen_image(DIR_WS_IMAGES . 'icon_edit_metatags_off.gif', ICON_METATAGS_OFF) . '</a>';
+          echo '<a href="' . zen_admin_href_link(FILENAME_CATEGORIES, 'cPath=' . $cPath . '&cID=' . $categories->fields['categories_id'] . '&action=edit_category_metatags') . '">' . zen_image(DIR_WS_IMAGES . 'icon_edit_metatags_off.gif', ICON_METATAGS_OFF) . '</a>';
         }
 // eof: categories meta tags
 ?>
@@ -384,9 +384,9 @@ if (($_GET['page'] == '1' or $_GET['page'] == '') and isset($_GET['pID']) && $_G
         }
 // meta tags
         if (zen_get_metatags_keywords($products->fields['products_id'], (int)$_SESSION['languages_id']) or zen_get_metatags_description($products->fields['products_id'], (int)$_SESSION['languages_id'])) {
-          echo ' <a href="' . zen_admin_href_link($type_handler, 'page=' . $_GET['page'] . '&product_type=' . $products->fields['products_type'] . '&cPath=' . $cPath . '&pID=' . $products->fields['products_id']  . '&action=new_product_meta_tags') . '">' . zen_image(DIR_WS_IMAGES . 'icon_edit_metatags_on.gif', ICON_METATAGS_ON) . '</a>';
+          echo ' <a href="' . zen_admin_href_link($type_handler, 'page=' . $_GET['page'] . '&product_type=' . $products->fields['products_type'] . '&cPath=' . $cPath . '&pID=' . $products->fields['products_id']  . '&action=new_product_metatags') . '">' . zen_image(DIR_WS_IMAGES . 'icon_edit_metatags_on.gif', ICON_METATAGS_ON) . '</a>';
         } else {
-          echo ' <a href="' . zen_admin_href_link($type_handler, 'page=' . $_GET['page'] . '&product_type=' . $products->fields['products_type'] . '&cPath=' . $cPath . '&pID=' . $products->fields['products_id']  . '&action=new_product_meta_tags') . '">' . zen_image(DIR_WS_IMAGES . 'icon_edit_metatags_off.gif', ICON_METATAGS_OFF) . '</a>';
+          echo ' <a href="' . zen_admin_href_link($type_handler, 'page=' . $_GET['page'] . '&product_type=' . $products->fields['products_type'] . '&cPath=' . $cPath . '&pID=' . $products->fields['products_id']  . '&action=new_product_metatags') . '">' . zen_image(DIR_WS_IMAGES . 'icon_edit_metatags_off.gif', ICON_METATAGS_OFF) . '</a>';
         }
 ?>
 <?php } // action == '' ?>

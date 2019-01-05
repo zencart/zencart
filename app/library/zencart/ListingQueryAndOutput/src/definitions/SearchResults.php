@@ -83,8 +83,8 @@ class SearchResults extends AbstractDefinition
                     'fkeyFieldLeft' => 'products_id',
                     'addColumns' => false
                 ),
-                'TABLE_META_TAGS_PRODUCTS_DESCRIPTION' => array(
-                    'table' => TABLE_META_TAGS_PRODUCTS_DESCRIPTION,
+                'TABLE_METATAGS_PRODUCTS_DESCRIPTION' => array(
+                    'table' => TABLE_METATAGS_PRODUCTS_DESCRIPTION,
                     'type' => 'left',
                     'fkeyFieldLeft' => 'products_id',
                     'addColumns' => false

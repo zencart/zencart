@@ -182,7 +182,7 @@ class zcAjaxPayment extends base
     $current_page_base = FILENAME_CHECKOUT_CONFIRMATION;
     require_once (DIR_WS_LANGUAGES.$_SESSION['language'].'.php');
     require_once (DIR_WS_MODULES.zen_get_module_directory ('require_languages.php'));
-    require_once (DIR_WS_MODULES.zen_get_module_directory ('meta_tags.php'));
+    require_once (DIR_WS_MODULES.zen_get_module_directory ('metatags.php'));
     $breadcrumb->add (NAVBAR_TITLE_1, zen_href_link (FILENAME_CHECKOUT_SHIPPING, '', 'SSL'));
     $breadcrumb->add (NAVBAR_TITLE_2);
 
@@ -196,7 +196,7 @@ class zcAjaxPayment extends base
     return (array(
         'breadCrumbHtml' => $breadCrumbHtml,
         'confirmationHtml' => $confirmationHtml,
-        'pageTitle' => META_TAG_TITLE
+        'pageTitle' => METATAG_TITLE
     ));
   }
 }

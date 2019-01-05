@@ -20,12 +20,12 @@ define('HEADER_LOGO_HEIGHT', '70px');
 define('HEADER_LOGO_IMAGE', 'logo.gif');
 
 // include template specific meta tags defines
-  if (file_exists(DIR_FS_CATALOG_LANGUAGES . $_SESSION['language'] . '/' . $template_dir . '/meta_tags.php')) {
+  if (file_exists(DIR_FS_CATALOG_LANGUAGES . $_SESSION['language'] . '/' . $template_dir . '/metatags.php')) {
     $template_dir_select = $template_dir . '/';
   } else {
     $template_dir_select = '';
   }
-  require(DIR_FS_CATALOG_LANGUAGES . $_SESSION['language'] . '/' . $template_dir_select . 'meta_tags.php');
+  require(DIR_FS_CATALOG_LANGUAGES . $_SESSION['language'] . '/' . $template_dir_select . 'metatags.php');
 
 // used for prefix to browser tabs in admin pages
 define('TEXT_ADMIN_TAB_PREFIX', 'Admin ');
@@ -34,8 +34,8 @@ define('TEXT_ADMIN_TAB_PREFIX', 'Admin ');
 // meta tags
 define('ICON_METATAGS_ON', 'Meta Tags Defined');
 define('ICON_METATAGS_OFF', 'Meta Tags Undefined');
-define('TEXT_LEGEND_META_TAGS', 'Meta Tags Defined:');
-define('TEXT_INFO_META_TAGS_USAGE', '<strong>NOTE:</strong> The Site/Tagline is your defined definition for your site in the meta_tags.php file.');
+define('TEXT_LEGEND_METATAGS', 'Meta Tags Defined:');
+define('TEXT_INFO_METATAGS_USAGE', '<strong>NOTE:</strong> The Site/Tagline is your defined definition for your site in the metatags.php file.');
 
 // header text in includes/header.php
 define('HEADER_TITLE_TOP', 'Admin Home');

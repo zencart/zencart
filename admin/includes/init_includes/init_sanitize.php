@@ -26,7 +26,7 @@ $adminSanitizerTypes = array(
     'FILE_DIR_REGEX' => array('type' => 'builtin'),
     'ALPHANUM_DASH_UNDERSCORE' => array('type' => 'builtin'),
     'WORDS_AND_SYMBOLS_REGEX' => array('type' => 'builtin'),
-    'META_TAGS' => array('type' => 'builtin'),
+    'METATAGS' => array('type' => 'builtin'),
     'SANITIZE_EMAIL' => array('type' => 'builtin'),
     'SANITIZE_EMAIL_AUDIENCE' => array('type' => 'builtin'),
     'PRODUCT_DESC_REGEX' => array('type' => 'builtin'),
@@ -203,7 +203,7 @@ $group = array('title', 'coupon_name', 'banners_title', 'coupon_code', 'group_na
 $sanitizer->addSimpleSanitization('WORDS_AND_SYMBOLS_REGEX', $group);
 
 $group = array('metatags_title', 'metatags_keywords', 'metatags_description');
-$sanitizer->addSimpleSanitization('META_TAGS', $group);
+$sanitizer->addSimpleSanitization('METATAGS', $group);
 
 $group = array('customers_email_address' => array('sanitizerType' => 'SANITIZE_EMAIL_AUDIENCE', 'method' => 'post', 'pages' => array('mail')));
 $sanitizer->addComplexSanitization($group);

@@ -4,7 +4,7 @@
  * @copyright Copyright 2003-2015 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: meta_tags.php  Modified in v1.5.4 $
+ * @version $Id: metatags.php  Modified in v1.5.4 $
  */
 
 // page title
@@ -28,19 +28,19 @@
 // If you wish to use defaults for any of the 3 items for a given page, simply do not define it.
 // (ie: the Title tag is best not set, so that site-wide defaults can be used.)
 // repeat pattern as necessary
-  define('META_TAG_DESCRIPTION_EZPAGE_#','');
-  define('META_TAG_KEYWORDS_EZPAGE_#','');
-  define('META_TAG_TITLE_EZPAGE_#', '');
+  define('METATAG_DESCRIPTION_EZPAGE_#','');
+  define('METATAG_KEYWORDS_EZPAGE_#','');
+  define('METATAG_TITLE_EZPAGE_#', '');
 
 // Per-Page meta-tags. Follow this pattern for individual pages you wish to override. This is useful mainly for additional pages.
 // replace "page_name" with the UPPERCASE name of your main_page= value, such as ABOUT_US or SHIPPINGINFO etc.
 // repeat pattern as necessary
-  define('META_TAG_DESCRIPTION_page_name','');
-  define('META_TAG_KEYWORDS_page_name','');
-  define('META_TAG_TITLE_page_name', '');
+  define('METATAG_DESCRIPTION_page_name','');
+  define('METATAG_KEYWORDS_page_name','');
+  define('METATAG_TITLE_page_name', '');
 
 // Review Page can have a lead in:
-  define('META_TAGS_REVIEW', 'Reviews: ');
+  define('METATAGS_REVIEW', 'Reviews: ');
 
 // separators for meta tag definitions
 // Define Primary Section Output

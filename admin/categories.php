@@ -245,7 +245,7 @@
       break;
 
       // bof: categories meta tags
-      case 'update_category_meta_tags':
+      case 'update_category_metatags':
       // add or update meta tags
       //die('I SEE ' . $action . ' - ' . $_POST['categories_id']);
       $categories_id = $_POST['categories_id'];
@@ -257,27 +257,27 @@
                                where categories_id = '" . (int)$categories_id . "'
                                and language_id = '" . (int)$language_id . "'");
         if ($check->RecordCount() > 0) {
-          $action = 'update_category_meta_tags';
+          $action = 'update_category_metatags';
         } else {
-          $action = 'insert_categories_meta_tags';
+          $action = 'insert_categories_metatags';
         }
         if (empty($_POST['metatags_title'][$language_id]) && empty($_POST['metatags_keywords'][$language_id]) && empty($_POST['metatags_description'][$language_id])) {
-          $action = 'delete_category_meta_tags';
+          $action = 'delete_category_metatags';
         }
 
         $sql_data_array = array('metatags_title' => zen_db_prepare_input($_POST['metatags_title'][$language_id]),
                                 'metatags_keywords' => zen_db_prepare_input($_POST['metatags_keywords'][$language_id]),
                                 'metatags_description' => zen_db_prepare_input($_POST['metatags_description'][$language_id]));
 
-        if ($action == 'insert_categories_meta_tags') {
+        if ($action == 'insert_categories_metatags') {
           $insert_sql_data = array('categories_id' => (int)$categories_id,
                                    'language_id' => (int)$language_id);
           $sql_data_array = array_merge($sql_data_array, $insert_sql_data);
 
           zen_db_perform(TABLE_METATAGS_CATEGORIES_DESCRIPTION, $sql_data_array);
-        } elseif ($action == 'update_category_meta_tags') {
+        } elseif ($action == 'update_category_metatags') {
           zen_db_perform(TABLE_METATAGS_CATEGORIES_DESCRIPTION, $sql_data_array, 'update', "categories_id = '" . (int)$categories_id . "' and language_id = '" . (int)$language_id . "'");
-        } elseif ($action == 'delete_category_meta_tags') {
+        } elseif ($action == 'delete_category_metatags') {
           $remove_categories_metatag = "DELETE from " . TABLE_METATAGS_CATEGORIES_DESCRIPTION . " WHERE categories_id = '" . (int)$categories_id . "' and language_id = '" . (int)$language_id . "'";
           $db->Execute($remove_categories_metatag);
         }
@@ -523,7 +523,7 @@
       case 'new_category':
       case 'edit_category':
       case 'delete_category':
-      case 'edit_category_meta_tags':
+      case 'edit_category_metatags':
       case 'move_category':
       case 'delete_product':
       case 'move_product':
@@ -565,7 +565,7 @@ require_once('includes/template/common/tplHtmlHead.php');
             <td class="smallText" align="center" width="100" valign="top"><?php echo TEXT_LEGEND_STATUS_OFF . '<br />' . zen_image(DIR_WS_IMAGES . 'icon_red_on.gif', IMAGE_ICON_STATUS_OFF); ?></td>
             <td class="smallText" align="center" width="100" valign="top"><?php echo TEXT_LEGEND_STATUS_ON . '<br />' . zen_image(DIR_WS_IMAGES . 'icon_green_on.gif', IMAGE_ICON_STATUS_ON); ?></td>
             <td class="smallText" align="center" width="100" valign="top"><?php echo TEXT_LEGEND_LINKED . '<br />' . zen_image(DIR_WS_IMAGES . 'icon_yellow_on.gif', IMAGE_ICON_LINKED); ?></td>
-            <td class="smallText" align="center" width="150" valign="top"><?php echo TEXT_LEGEND_META_TAGS . '<br />' . TEXT_YES . '&nbsp;' . TEXT_NO . '<br />' . zen_image(DIR_WS_IMAGES . 'icon_edit_metatags_on.gif', ICON_METATAGS_ON) . '&nbsp;' . zen_image(DIR_WS_IMAGES . 'icon_edit_metatags_off.gif', ICON_METATAGS_OFF); ?></td>
+            <td class="smallText" align="center" width="150" valign="top"><?php echo TEXT_LEGEND_METATAGS . '<br />' . TEXT_YES . '&nbsp;' . TEXT_NO . '<br />' . zen_image(DIR_WS_IMAGES . 'icon_edit_metatags_on.gif', ICON_METATAGS_ON) . '&nbsp;' . zen_image(DIR_WS_IMAGES . 'icon_edit_metatags_off.gif', ICON_METATAGS_OFF); ?></td>
           </tr>
         </table></td>
       </tr>
@@ -783,11 +783,11 @@ require_once('includes/template/common/tplHtmlHead.php');
     break;
 
     // bof: categories meta tags
-    case 'edit_category_meta_tags':
-    $heading[] = array('text' => '<strong>' . TEXT_INFO_HEADING_EDIT_CATEGORY_META_TAGS . '</strong>');
+    case 'edit_category_metatags':
+    $heading[] = array('text' => '<strong>' . TEXT_INFO_HEADING_EDIT_CATEGORY_METATAGS . '</strong>');
 
-    $contents = array('form' => zen_draw_form('categories', FILENAME_CATEGORIES, 'action=update_category_meta_tags&cPath=' . $cPath, 'post', 'enctype="multipart/form-data"') . zen_draw_hidden_field('categories_id', $cInfo->categories_id));
-    $contents[] = array('text' => TEXT_EDIT_CATEGORIES_META_TAGS_INTRO . ' - <strong>' . $cInfo->categories_id . ' ' . $cInfo->categories_name . '</strong>');
+    $contents = array('form' => zen_draw_form('categories', FILENAME_CATEGORIES, 'action=update_category_metatags&cPath=' . $cPath, 'post', 'enctype="multipart/form-data"') . zen_draw_hidden_field('categories_id', $cInfo->categories_id));
+    $contents[] = array('text' => TEXT_EDIT_CATEGORIES_METATAGS_INTRO . ' - <strong>' . $cInfo->categories_id . ' ' . $cInfo->categories_name . '</strong>');
 
     $languages = zen_get_languages();
 
@@ -795,21 +795,21 @@ require_once('includes/template/common/tplHtmlHead.php');
     for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
       $category_inputs_string_metatags_title .= '<br />' . zen_image(DIR_WS_CATALOG_LANGUAGES . $languages[$i]['directory'] . '/images/' . $languages[$i]['image'], $languages[$i]['metatags_title']) . '&nbsp;' . zen_draw_input_field('metatags_title[' . $languages[$i]['id'] . ']', htmlspecialchars(zen_get_category_metatags_title($cInfo->categories_id, $languages[$i]['id']), ENT_COMPAT, CHARSET, TRUE), zen_set_field_length(TABLE_METATAGS_CATEGORIES_DESCRIPTION, 'metatags_title'));
     }
-    $contents[] = array('text' => '<br />' . TEXT_EDIT_CATEGORIES_META_TAGS_TITLE . $category_inputs_string_metatags_title);
+    $contents[] = array('text' => '<br />' . TEXT_EDIT_CATEGORIES_METATAGS_TITLE . $category_inputs_string_metatags_title);
 
     $category_inputs_string_metatags_keywords = '';
     for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
       $category_inputs_string_metatags_keywords .= '<br />' . zen_image(DIR_WS_CATALOG_LANGUAGES . $languages[$i]['directory'] . '/images/' . $languages[$i]['image'], $languages[$i]['metatags_keywords']) . '&nbsp;' ;
       $category_inputs_string_metatags_keywords .= zen_draw_textarea_field('metatags_keywords[' . $languages[$i]['id'] . ']', 'soft', '100%', '20', htmlspecialchars(zen_get_category_metatags_keywords($cInfo->categories_id, $languages[$i]['id']), ENT_COMPAT, CHARSET, TRUE), 'class="noEditor"');
     }
-    $contents[] = array('text' => '<br />' . TEXT_EDIT_CATEGORIES_META_TAGS_KEYWORDS . $category_inputs_string_metatags_keywords);
+    $contents[] = array('text' => '<br />' . TEXT_EDIT_CATEGORIES_METATAGS_KEYWORDS . $category_inputs_string_metatags_keywords);
 
     $category_inputs_string_metatags_description = '';
     for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
       $category_inputs_string_metatags_description .= '<br />' . zen_image(DIR_WS_CATALOG_LANGUAGES . $languages[$i]['directory'] . '/images/' . $languages[$i]['image'], $languages[$i]['name']) . '&nbsp;' ;
       $category_inputs_string_metatags_description .= zen_draw_textarea_field('metatags_description[' . $languages[$i]['id'] . ']', 'soft', '100%', '20', htmlspecialchars(zen_get_category_metatags_description($cInfo->categories_id, $languages[$i]['id']), ENT_COMPAT, CHARSET, TRUE), 'class="noEditor"');
     }
-    $contents[] = array('text' => '<br />' . TEXT_EDIT_CATEGORIES_META_TAGS_DESCRIPTION . $category_inputs_string_metatags_description);
+    $contents[] = array('text' => '<br />' . TEXT_EDIT_CATEGORIES_METATAGS_DESCRIPTION . $category_inputs_string_metatags_description);
 
     $contents[] = array('align' => 'center', 'text' => '<br />' . zen_image_submit('button_save.gif', IMAGE_SAVE) . ' <a href="' . zen_admin_href_link(FILENAME_CATEGORIES, 'cPath=' . $cPath . '&cID=' . $cInfo->categories_id) . '">' . zen_image_button('button_cancel.gif', IMAGE_CANCEL) . '</a>');
     break;
