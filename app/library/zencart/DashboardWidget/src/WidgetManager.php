@@ -96,7 +96,7 @@ class WidgetManager
 
     }
 
-    public function removeWidget(string $item)
+    public function removeWidget($item)
     {
         $model = $this->modelFactory->make('DashboardWidgetsToUsers');
         $model->where('widget_key', '=', $item)->where('admin_id', '=', $this->adminUser->admin_id)->delete();
@@ -145,7 +145,7 @@ class WidgetManager
     }
 
 
-    public function getWidgetTitle(string $name)
+    public function getWidgetTitle($name)
     {
         if (defined($name)) $name = constant($name);
         return $name;
@@ -165,7 +165,7 @@ class WidgetManager
     }
 
 
-    public function getWidgetDescription(string $name)
+    public function getWidgetDescription($name)
     {
         if (defined($name . "_DESCRIPTION")) {
             $desc = constant($name . "_DESCRIPTION");
@@ -201,7 +201,7 @@ class WidgetManager
         return $groups;
     }
 
-    public function addWidgetForUser(string $widgetKey)
+    public function addWidgetForUser($widgetKey)
     {
         $dashboardWidgets = $this->modelFactory->make('DashboardWidgets');
         $widgetDetail = $dashboardWidgets->where('widget_key', '=', $widgetKey)->first()->toArray();
@@ -214,7 +214,7 @@ class WidgetManager
              'widget_column' => 0, 'widget_icon' => $widgetIcon, 'widget_theme' => $widgetTheme]);
     }
 
-    public function getWidgetInfoForEdit(string $widgetKey)
+    public function getWidgetInfoForEdit($widgetKey)
     {
         $dashboardWidgets = $this->modelFactory->make('DashboardWidgets');
         $widgetInfo = $dashboardWidgets->where('widget_key', '=', $widgetKey)->first()->toArray();
@@ -251,7 +251,7 @@ class WidgetManager
         return $output;
     }
 
-    protected function getCombinedWidgetInfo(string $widgetKey)
+    protected function getCombinedWidgetInfo($widgetKey)
     {
         $model = $this->modelFactory->make('DashboardWidgets');
         $widget = $model->with('dashboardWidgetSettings')->where('widget_key', '=', $widgetKey)->first()->toArray();
