@@ -151,7 +151,7 @@ class WidgetManager
         return $name;
     }
 
-    public function getSettingsTitle(string $widgetName, string $settingsName)
+    public function getSettingsTitle($widgetName, $settingsName)
     {
         if (defined($widgetName . '_' . $settingsName)) {
             $name = constant($widgetName . '_' . $settingsName);
@@ -243,7 +243,7 @@ class WidgetManager
         $this->commitUpdatedWidgetSettings($updateList);
     }
 
-    protected function mapToNewKey(array $input, string $key)
+    protected function mapToNewKey(array $input, $key)
     {
         $output = [];
         foreach ($input as $element) {
