@@ -592,13 +592,16 @@ function _init() {
     remove: function (element) {
       //Find the box parent
       var box = element.parents(".box").first();
-      var itemStr = box.parent().attr('id');
+      var item = box.parent().parent();
+      var itemStr = box.parent().parent().attr('data-gs-id');
+      var that = this;
       zcJS.ajax({
         url: "zcAjaxHandler.php?act=dashboardWidget&method=removeWidget",
         data: {'item': itemStr}
       }).done(function( response ) {
+        var grid = $('.grid-stack').data('gridstack');
+        grid.removeWidget(item);
       });
-      box.slideUp(this.animationSpeed);
     },
   };
 }

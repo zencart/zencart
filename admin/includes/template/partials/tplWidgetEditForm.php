@@ -36,15 +36,16 @@
 $(function() {
   $('.widget-edit-form').submit(function(f) {
     var str = $(this).serialize()
-    var id =  $(this).find("input[name='id']").val()
-    zcJS.ajax({
+    var id =  $(this).find("input[name='widget_key']").val()
+      zcJS.ajax({
         url: "zcAjaxHandler.php?act=dashboardWidget&method=submitWidgetEdit",
         data: str
       }).done(function( response ) {
         if (response && !response.errors)
         {
-          $('#widget-settings').modal('hide');
-            window.location.replace("<?php echo zen_admin_href_link(FILENAME_DEFAULT);?>");
+            $('#widget-settings').modal('hide');
+            $('#main-widget-container').html(response.html);
+            initGridStack();
         } else if (response && response.error && response.errorType == 'FORM_VALIDATION')
         {
           handleFormValidationErrors(response.errorList);

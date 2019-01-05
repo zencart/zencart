@@ -88,16 +88,16 @@ class AjaxDashboardWidget extends AbstractAjaxController
     public function addWidgetExecute()
     {
         $id = str_replace('add-widget-', '', $this->request->readPost('id'));
-        $this->widgetManager->addWidgetForUser($id);
+        $widgetInfo = $this->widgetManager->addWidgetForUser($id);
         $widgetInfoList = $this->widgetManager->getWidgetInfoForUser();
         $widgetList = $this->widgetManager->loadWidgetClasses($widgetInfoList);
         $tplVars = $this->widgetManager->prepareTemplateVariables($widgetList);
         $tplVars['widgetInfoList'] = $widgetInfoList;
         $tplVars['widgetList'] = $this->widgetManager->loadWidgetClasses($widgetInfoList);
         $tplVars['widgets'] = $this->widgetManager->prepareTemplateVariables($tplVars['widgetList']);
-        $this->response = array();
+        $html = $this->loadTemplateAsString(DIR_FS_ADMIN . DIR_WS_INCLUDES . 'template/partials/tplDashboardWidgets.php', $tplVars);
+        $this->response = array('html' => $html, 'widgetInfo' => $widgetInfo, 'id' => $id);
     }
-
 
     public function getWidgetSettingsFieldsExecute()
     {
@@ -110,7 +110,14 @@ class AjaxDashboardWidget extends AbstractAjaxController
     public function submitWidgetEditExecute()
     {
         $result = $this->widgetManager->updateWidgetSettings($this->request);
-        $this->response = array('errors' => false);
+        $widgetInfoList = $this->widgetManager->getWidgetInfoForUser();
+        $widgetList = $this->widgetManager->loadWidgetClasses($widgetInfoList);
+        $tplVars = $this->widgetManager->prepareTemplateVariables($widgetList);
+        $tplVars['widgetInfoList'] = $widgetInfoList;
+        $tplVars['widgetList'] = $this->widgetManager->loadWidgetClasses($widgetInfoList);
+        $tplVars['widgets'] = $this->widgetManager->prepareTemplateVariables($tplVars['widgetList']);
+        $html = $this->loadTemplateAsString(DIR_FS_ADMIN . DIR_WS_INCLUDES . 'template/partials/tplDashboardWidgets.php', $tplVars);
+        $this->response = array('errors' => false, 'html' => $html);
 
     }
 
