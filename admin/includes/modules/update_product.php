@@ -136,16 +136,16 @@
                               'metatags_keywords' => zen_db_prepare_input($_POST['metatags_keywords'][$language_id]),
                               'metatags_description' => zen_db_prepare_input($_POST['metatags_description'][$language_id]));
 
-      if ($action == 'insert_product_meta_tags') {
+      if ($action == 'insert_product_metatags') {
 
         $insert_sql_data = array('products_id' => (int)$products_id,
                                  'language_id' => (int)$language_id);
 
         $sql_data_array = array_merge($sql_data_array, $insert_sql_data);
 
-        zen_db_perform(TABLE_META_TAGS_PRODUCTS_DESCRIPTION, $sql_data_array);
-      } elseif ($action == 'update_product_meta_tags') {
-        zen_db_perform(TABLE_META_TAGS_PRODUCTS_DESCRIPTION, $sql_data_array, 'update', "products_id = '" . (int)$products_id . "' and language_id = '" . (int)$language_id . "'");
+        zen_db_perform(TABLE_METATAGS_PRODUCTS_DESCRIPTION, $sql_data_array);
+      } elseif ($action == 'update_product_metatags') {
+        zen_db_perform(TABLE_METATAGS_PRODUCTS_DESCRIPTION, $sql_data_array, 'update', "products_id = '" . (int)$products_id . "' and language_id = '" . (int)$language_id . "'");
       }
     }
 

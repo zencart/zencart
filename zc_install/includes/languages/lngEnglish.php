@@ -9,7 +9,7 @@
 /**
  * defining language components for the page
  */
-define('META_TAG_TITLE', 'Zen Cart&reg; Installer');
+define('METATAG_TITLE', 'Zen Cart&reg; Installer');
 define('HTML_PARAMS','dir="ltr" lang="en"');
 define('ZC_VERSION_STRING', '%s v%s');
 define('TEXT_PAGE_HEADING_INDEX', 'System Inspection');

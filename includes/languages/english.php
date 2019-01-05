@@ -478,7 +478,7 @@
   define('SUMMARY_TABLE_UPCOMING_PRODUCTS','table contains a list of products that are due to be in stock soon and the dates the items are expected');
 
 // meta tags special defines
-  define('META_TAG_PRODUCTS_PRICE_IS_FREE_TEXT','It\'s Free!');
+  define('METATAG_PRODUCTS_PRICE_IS_FREE_TEXT','It\'s Free!');
 
 // customer login
   define('TEXT_SHOWCASE_ONLY','Contact Us');
@@ -687,14 +687,14 @@
   require_once(DIR_WS_LANGUAGES . $_SESSION['language'] . '/' . $template_dir_select . FILENAME_WHOS_ONLINE . '.php');
 
 // include template specific meta tags defines
-  if (file_exists(DIR_WS_LANGUAGES . $_SESSION['language'] . '/' . 'shared'. '/meta_tags.php')) {
-    require_once(DIR_WS_LANGUAGES . $_SESSION['language'] . '/' . 'shared'. '/meta_tags.php'); 
+  if (file_exists(DIR_WS_LANGUAGES . $_SESSION['language'] . '/' . 'shared'. '/metatags.php')) {
+    require_once(DIR_WS_LANGUAGES . $_SESSION['language'] . '/' . 'shared'. '/metatags.php'); 
   }
-  if (file_exists(DIR_WS_LANGUAGES . $_SESSION['language'] . '/' . $template_dir . '/meta_tags.php')) {
+  if (file_exists(DIR_WS_LANGUAGES . $_SESSION['language'] . '/' . $template_dir . '/metatags.php')) {
     $template_dir_select = $template_dir . '/';
   } else {
     $template_dir_select = '';
   }
-  require_once(DIR_WS_LANGUAGES . $_SESSION['language'] . '/' . $template_dir_select . 'meta_tags.php');
+  require_once(DIR_WS_LANGUAGES . $_SESSION['language'] . '/' . $template_dir_select . 'metatags.php');
 
 // END OF EXTERNAL LANGUAGE LINKS

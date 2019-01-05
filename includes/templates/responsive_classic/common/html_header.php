@@ -19,7 +19,7 @@ header('X-Frame-Options:SAMEORIGIN');
 /**
  * load the module for generating page meta-tags
  */
-require(DIR_WS_MODULES . zen_get_module_directory('meta_tags.php'));
+require(DIR_WS_MODULES . zen_get_module_directory('metatags.php'));
 /**
  * output main page HEAD tag and related headers/meta-tags, etc
  */
@@ -43,9 +43,9 @@ if (!class_exists('Mobile_Detect')) {
 <html <?php echo HTML_PARAMS; ?>>
   <head>
   <meta charset="<?php echo CHARSET; ?>">
-  <title><?php echo META_TAG_TITLE; ?></title>
-  <meta name="keywords" content="<?php echo META_TAG_KEYWORDS; ?>" />
-  <meta name="description" content="<?php echo META_TAG_DESCRIPTION; ?>" />
+  <title><?php echo METATAG_TITLE; ?></title>
+  <meta name="keywords" content="<?php echo METATAG_KEYWORDS; ?>" />
+  <meta name="description" content="<?php echo METATAG_DESCRIPTION; ?>" />
   <meta name="author" content="<?php echo STORE_NAME ?>" />
   <meta name="generator" content="shopping cart program by Zen Cart&reg;, http://www.zen-cart.com eCommerce" />
 <?php if (defined('ROBOTS_PAGES_TO_SKIP') && in_array($current_page_base,explode(",",constant('ROBOTS_PAGES_TO_SKIP'))) || $current_page_base=='down_for_maintenance' || $robotsNoIndex === true) { ?>

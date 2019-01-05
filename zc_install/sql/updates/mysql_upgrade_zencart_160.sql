@@ -85,6 +85,10 @@ INSERT INTO configuration (configuration_title, configuration_key, configuration
 
 DELETE FROM configuration where configuration_key = 'PHPBB_LINKS_ENABLED' && configuration_value != 'true';
 
+UPDATE configuration SET configuration_key = 'MAX_METATAG_DESCRIPTION_LENGTH' WHERE configuration_key = 'MAX_META_TAG_DESCRIPTION_LENGTH'; 
+UPDATE configuration SET configuration_key = 'METATAG_INCLUDE_PRICE' WHERE configuration_key = 'META_TAG_INCLUDE_PRICE'; 
+UPDATE configuration SET configuration_key = 'METATAG_INCLUDE_MODEL' WHERE configuration_key = 'META_TAG_INCLUDE_MODEL'; 
+
 ALTER TABLE paypal_payment_status_history MODIFY pending_reason varchar(32) default NULL;
 ALTER TABLE admin_activity_log ADD KEY idx_severity_zen (severity); 
 ALTER TABLE sessions MODIFY sesskey varchar(191) NOT NULL default '';
@@ -477,6 +481,9 @@ DROP TABLE IF EXISTS `record_artists`;
 DROP TABLE IF EXISTS `record_artists_info`;
 DROP TABLE IF EXISTS `record_company`;
 DROP TABLE IF EXISTS `record_company_info`;
+
+RENAME TABLE meta_tags_categories_description TO metatags_categories_description; 
+RENAME TABLE meta_tags_products_description TO metatags_products_description; 
 
 #############
 

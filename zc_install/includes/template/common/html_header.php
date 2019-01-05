@@ -14,7 +14,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title><?php echo META_TAG_TITLE; ?></title>
+<title><?php echo METATAG_TITLE; ?></title>
 
 <meta name="robots" content="noindex, nofollow" />
 <link rel="icon" href="favicon.ico" type="image/x-icon" />

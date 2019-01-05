@@ -9,7 +9,6 @@
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
 }
-
     if (zen_not_null($_POST)) {
       $pInfo = new objectInfo($_POST);
       $metatags_title = $_POST['metatags_title'];
@@ -20,7 +19,7 @@ if (!defined('IS_ADMIN_FLAG')) {
                                       p.metatags_title_status, p.metatags_products_name_status, p.metatags_model_status,
                                       p.products_id, p.metatags_price_status, p.metatags_title_tagline_status,
                                       mtpd.metatags_title, mtpd.metatags_keywords, mtpd.metatags_description
-                              from " . TABLE_PRODUCTS . " p, " . TABLE_PRODUCTS_DESCRIPTION . " pd, " . TABLE_META_TAGS_PRODUCTS_DESCRIPTION . " mtpd
+                              from " . TABLE_PRODUCTS . " p, " . TABLE_PRODUCTS_DESCRIPTION . " pd, " . TABLE_METATAGS_PRODUCTS_DESCRIPTION . " mtpd
                               where p.products_id = '" . (int)$_GET['pID'] . "'
                               and p.products_id = pd.products_id
                               and pd.language_id = '" . (int)$_SESSION['languages_id'] . "'
@@ -31,7 +30,7 @@ if (!defined('IS_ADMIN_FLAG')) {
       $pInfo = new objectInfo($product->fields);
     }
 
-    $form_action = (isset($_GET['pID'])) ? 'update_product_meta_tags' : 'insert_product_meta_tags';
+    $form_action = (isset($_GET['pID'])) ? 'update_product_metatags' : 'insert_product_metatags';
 
     echo zen_draw_form($form_action, $type_admin_handler, 'cPath=' . $cPath . (isset($_GET['product_type']) ? '&product_type=' . $_GET['product_type'] : '') . (isset($_GET['pID']) ? '&pID=' . $_GET['pID'] : '') . '&action=' . $form_action . (isset($_GET['page']) ? '&page=' . $_GET['page'] : ''), 'post', 'enctype="multipart/form-data"');
 
@@ -51,30 +50,28 @@ if (!defined('IS_ADMIN_FLAG')) {
       <tr>
         <td><table border="3" cellspacing="4" cellpadding="6">
             <td class="main" valign="top">
-              <?php echo zen_image(DIR_WS_CATALOG_LANGUAGES . $languages[$i]['directory'] . '/images/' . $languages[$i]['image'], $languages[$i]['name']) . '&nbsp;' . '<strong>' . TEXT_DOCUMENT_NAME . '</strong>' . '&nbsp;' . ($pInfo->metatags_products_name_status == '1' ? zen_get_products_name($_GET['pID'], $languages[$i]['id']) : TEXT_META_EXCLUDED); ?>
+              <?php echo zen_image(DIR_WS_CATALOG_LANGUAGES . $languages[$i]['directory'] . '/images/' . $languages[$i]['image'], $languages[$i]['name']) . '&nbsp;' . '<strong>' . TEXT_PRODUCTS_NAME . '</strong>' . '&nbsp;' . ($pInfo->metatags_products_name_status == '1' ? zen_get_products_name($_GET['pID'], $languages[$i]['id']) : TEXT_META_EXCLUDED); ?>
             </td>
-<!-- // not used for documents
             <td class="main" valign="top">
                <?php echo '<strong>' . TEXT_PRODUCTS_MODEL . '</strong>&nbsp;' . ($pInfo->metatags_model_status == '1' ? $pInfo->products_model : TEXT_META_EXCLUDED); ?>
             </td>
             <td class="main" valign="top">
                <?php echo '<strong>' . TEXT_PRODUCTS_PRICE_INFO . '</strong>&nbsp;' . ($pInfo->metatags_price_status == '1' ? $currencies->format($pInfo->products_price_sorter) : TEXT_META_EXCLUDED); ?>
             </td>
--->
             <td class="main" valign="top">
                <?php echo '<strong>' . TEXT_PRODUCTS_METATAGS_TITLE_TAGLINE_STATUS . '</strong>&nbsp;' . ($pInfo->metatags_title_tagline_status == '1' ? TITLE . ' ' . SITE_TAGLINE : TEXT_META_EXCLUDED); ?>
             </td>
 
           <tr>
-            <td class="main" valign="top"><?php echo TEXT_META_TAGS_TITLE; ?>&nbsp;</td>
+            <td class="main" valign="top"><?php echo TEXT_METATAGS_TITLE; ?>&nbsp;</td>
             <td class="main" colspan="3"><?php echo ($pInfo->metatags_title_status == '1' ? $pInfo->metatags_title : TEXT_META_EXCLUDED) ; ?></td>
           </tr>
           <tr>
-            <td class="main" valign="top"><?php echo TEXT_META_TAGS_KEYWORDS; ?>&nbsp;</td>
+            <td class="main" valign="top"><?php echo TEXT_METATAGS_KEYWORDS; ?>&nbsp;</td>
             <td class="main" colspan="3"><?php echo $pInfo->metatags_keywords; ?></td>
           </tr>
           <tr>
-            <td class="main" valign="top"><?php echo TEXT_META_TAGS_DESCRIPTION; ?>&nbsp;</td>
+            <td class="main" valign="top"><?php echo TEXT_METATAGS_DESCRIPTION; ?>&nbsp;</td>
             <td class="main" colspan="3"><?php echo $pInfo->metatags_description; ?></td>
           </tr>
         </table></td>

@@ -689,7 +689,7 @@
     $addparms = '';
     // if nofollow has already been set, ignore this function
     if (stristr($parameters, 'nofollow')) return $parameters;
-    // if list of skippable pages has been set in meta_tags.php lang file (is by default), use that to add rel=nofollow params
+    // if list of skippable pages has been set in metatags.php lang file (is by default), use that to add rel=nofollow params
     if (defined('ROBOTS_PAGES_TO_SKIP') && in_array($page, explode(",", constant('ROBOTS_PAGES_TO_SKIP')))
         || $current_page_base=='down_for_maintenance') $addparms = 'rel="nofollow"';
     return ($parameters == '' ? $addparms : $parameters . ' ' . $addparms);

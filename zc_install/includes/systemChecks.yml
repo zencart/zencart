@@ -435,9 +435,6 @@ systemChecks:
       dbVersionChecker:
         parameters:
           - checkType: configValue
-            fieldName: META_TAG_INCLUDE_MODEL
-            expectedResult: 'Meta Tags - Include Product Model in Title'
-          - checkType: configValue
             fieldName: SHOW_SHOPPING_CART_EMPTY_UPCOMING
             expectedResult: 'Show Upcoming Products on empty Shopping Cart Page'
 

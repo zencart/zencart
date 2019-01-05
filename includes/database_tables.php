@@ -67,8 +67,8 @@ define('TABLE_LISTINGBOXGROUPS_TO_LOCATIONS', DB_PREFIX . 'listingboxgroups_to_l
 define('TABLE_LISTINGBOXES_TO_LISTINGBOXGROUPS', DB_PREFIX . 'listingboxes_to_listingboxgroups');
 define('TABLE_MANUFACTURERS', DB_PREFIX . 'manufacturers');
 define('TABLE_MANUFACTURERS_INFO', DB_PREFIX . 'manufacturers_info');
-define('TABLE_META_TAGS_PRODUCTS_DESCRIPTION', DB_PREFIX . 'meta_tags_products_description');
-define('TABLE_METATAGS_CATEGORIES_DESCRIPTION', DB_PREFIX . 'meta_tags_categories_description');
+define('TABLE_METATAGS_PRODUCTS_DESCRIPTION', DB_PREFIX . 'metatags_products_description');
+define('TABLE_METATAGS_CATEGORIES_DESCRIPTION', DB_PREFIX . 'metatags_categories_description');
 define('TABLE_NEWSLETTERS', DB_PREFIX . 'newsletters');
 define('TABLE_ORDERS', DB_PREFIX . 'orders');
 define('TABLE_ORDERS_PRODUCTS', DB_PREFIX . 'orders_products');

@@ -431,7 +431,7 @@ class AdminRequestSanitizer extends base
     private function filterMetaTags($parameterName)
     {
         if (isset($_POST[$parameterName])) {
-            $this->debugMessages[] = 'PROCESSING META_TAGS == ' . $parameterName;
+            $this->debugMessages[] = 'PROCESSING METATAGS == ' . $parameterName;
             foreach ($_POST[$parameterName] as $pKey => $pValue) {
                 $_POST[$parameterName][$pKey] = htmlspecialchars($_POST[$parameterName][$pKey], ENT_COMPAT, 'utf-8', false);
                 $this->postKeysAlreadySanitized[] = $parameterName;

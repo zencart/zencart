@@ -170,13 +170,13 @@ define('TEXT_COPY_AS_DUPLICATE', 'Duplicate product');
   define('TEXT_ATTRIBUTE_COPY_UPDATING','<strong>Updating from Attribute </strong>');
 
 // meta tags
-  define('TEXT_META_TAG_TITLE_INCLUDES','<strong>Mark What the Product\'s Meta Tag Title Should Include:</strong>');
+  define('TEXT_METATAG_TITLE_INCLUDES','<strong>Mark What the Product\'s Meta Tag Title Should Include:</strong>');
   define('TEXT_PRODUCTS_METATAGS_PRODUCTS_NAME_STATUS','<strong>Product Name:</strong>');
   define('TEXT_PRODUCTS_METATAGS_TITLE_STATUS','<strong>Title:</strong>');
   define('TEXT_PRODUCTS_METATAGS_MODEL_STATUS','<strong>Model:</strong>');
   define('TEXT_PRODUCTS_METATAGS_PRICE_STATUS','<strong>Price:</strong>');
   define('TEXT_PRODUCTS_METATAGS_TITLE_TAGLINE_STATUS','<strong>Title/Tagline:</strong>');
-  define('TEXT_META_TAGS_TITLE','<strong>Meta Tag Title:</strong>');
-  define('TEXT_META_TAGS_KEYWORDS','<strong>Meta Tag Keywords:</strong>');
-  define('TEXT_META_TAGS_DESCRIPTION','<strong>Meta Tag Description:</strong>');
+  define('TEXT_METATAGS_TITLE','<strong>Meta Tag Title:</strong>');
+  define('TEXT_METATAGS_KEYWORDS','<strong>Meta Tag Keywords:</strong>');
+  define('TEXT_METATAGS_DESCRIPTION','<strong>Meta Tag Description:</strong>');
   define('TEXT_META_EXCLUDED', '<span class="alert">EXCLUDED</span>');
