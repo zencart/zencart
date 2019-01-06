@@ -265,6 +265,78 @@
   }
 
 ////
+// Output a form
+  // Uses parameters in a different order than catalog side.
+  // FIXME we should resolve and consolidate. 
+  function zen_draw_form($name, $action, $parameters = '', $method = 'post', $params = '', $usessl = 'false') {
+    $form = '<form name="' . zen_output_string($name) . '" action="';
+    if (zen_not_null($parameters)) {
+        $form .= zen_admin_href_link($action, $parameters);
+    } else {
+        $form .= zen_admin_href_link($action);
+    }
+    $form .= '" method="' . zen_output_string($method) . '"';
+    if (zen_not_null($params)) {
+      $form .= ' ' . $params;
+    }
+    $form .= '>';
+    if (strtolower($method) == 'post') $form .= '<input type="hidden" name="securityToken" value="' . $_SESSION['securityToken'] . '" />';
+    if (strtolower($method) == 'get') $form .= '<input type="hidden" name="cmd" value="' . $action . '" />';
+    return $form;
+  }
+
+// The HTML form submit button wrapper function
+// Outputs a button in the selected language
+  function zen_image_submit($image, $alt = '', $parameters = '') {
+    global $language;
+
+    $image_submit = '<input type="image" src="' . zen_output_string(DIR_WS_LANGUAGES . $_SESSION['language'] . '/images/buttons/' . $image) . '" border="0" alt="' . zen_output_string($alt) . '"';
+
+    if (zen_not_null($alt)) $image_submit .= ' title=" ' . zen_output_string($alt) . ' "';
+
+    if (zen_not_null($parameters)) $image_submit .= ' ' . $parameters;
+
+    $image_submit .= '>';
+
+    return $image_submit;
+  }
+
+// Output a function button in the selected language
+  function zen_image_button($image, $alt = '', $params = '') {
+    global $language;
+
+    return zen_image(DIR_WS_LANGUAGES . $_SESSION['language'] . '/images/buttons/' . $image, $alt, '', '', $params);
+  }
+
+// Output a form input field
+  function zen_draw_input_field($name, $value = '~*~*#', $parameters = '', $required = false, $type = 'text', $reinsert_value = true) {
+    $field = '<input type="' . zen_output_string($type) . '" name="' . zen_output_string($name) . '"';
+
+    if ( $value == '~*~*#' && (isset($GLOBALS[$name]) && is_string($GLOBALS[$name])) && ($reinsert_value == true) ) {
+      $field .= ' value="' . zen_output_string(stripslashes($GLOBALS[$name])) . '"';
+    } elseif ($value != '~*~*#' && zen_not_null($value)) {
+      $field .= ' value="' . zen_output_string($value) . '"';
+    }
+
+    if (zen_not_null($parameters)) $field .= ' ' . $parameters;
+
+    $field .= ' />';
+
+    return $field;
+  }
+
+// Output a form password field
+  function zen_draw_password_field($name, $value = '', $required = false, $parameters = '',$autocomplete = false) {
+    $parameters .= ' maxlength="40"';
+    if($autocomplete == false){
+      $parameters .= ' autocomplete="off"';
+    }
+    $field = zen_draw_input_field($name, $value, $parameters, $required, 'password', false);
+
+    return $field;
+  }
+
+////
 // The HTML image wrapper function
 /**
  * @param string $page
