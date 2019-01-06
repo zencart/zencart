@@ -68,6 +68,7 @@
    *
    * @return string
    */
+if (!function_exists('zen_href_link')) { 
   function zen_href_link($page = '', $parameters = '', $connection = 'NONSSL', $add_session_id = true, $search_engine_safe = true, $static = false, $use_dir_ws_catalog = true) {
     global $request_type, $session_started, $http_domain, $https_domain, $zco_notifier;
 
@@ -181,6 +182,7 @@
     $link = str_replace('&', '&amp;', $link);
     return $link;
   }
+}
 
 /*
  * The HTML image wrapper function for non-proportional images
