@@ -12,10 +12,10 @@ use Illuminate\Database\Eloquent\Model as Eloquent;
  * Class Admin
  * @package ZenCart\Model
  */
-class DashboardWidgetsSettings extends Eloquent
+class ConfigurationSettingsToWidget extends Eloquent
 {
-    protected $table = TABLE_DASHBOARD_WIDGETS_SETTINGS;
-    protected $primaryKey = 'setting_key';
+    protected $table = TABLE_CONFIGURATION_SETTINGS_TO_WIDGET;
+    protected $primaryKey = 'widget_key';
     public $incrementing = false;
 
 }

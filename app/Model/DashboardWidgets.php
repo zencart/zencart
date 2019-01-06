@@ -21,7 +21,7 @@ class DashboardWidgets extends Eloquent
 
     public function dashboardWidgetSettings()
     {
-        return $this->hasMany('App\Model\DashboardWidgetsSettingsToWidget', 'widget_key', 'widget_key');
+        return $this->hasMany('App\Model\ConfigurationSettingsToWidget', 'widget_key', 'widget_key');
     }
 
 }

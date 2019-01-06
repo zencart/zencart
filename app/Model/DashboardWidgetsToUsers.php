@@ -28,7 +28,7 @@ class DashboardWidgetsToUsers extends Eloquent
 
     public function DashboardWidgetSettings()
     {
-        return $this->hasMany('App\Model\DashboardWidgetsSettingsToWidget', 'widget_key', 'widget_key');
+        return $this->hasMany('App\Model\ConfigurationSettingsToWidget', 'widget_key', 'widget_key');
     }
 
     public function getWidgetInfoForUser($adminId)
