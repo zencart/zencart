@@ -164,6 +164,12 @@ if (isset($_POST['action']) && (($_POST['action'] == 'process') || ($_POST['acti
     $messageStack->add('addressbook', ENTRY_COUNTRY_ERROR);
   }
 
+  // -----
+  // Give an observer the opportunity to check the data submitted and identify
+  // an additional error.
+  //
+  $zco_notifier->notify('NOTIFY_ADDRESS_BOOK_PROCESS_VALIDATION', array(), $error);
+
   if ($error == false) {
     $sql_data_array= array(array('fieldName'=>'entry_firstname', 'value'=>$firstname, 'type'=>'stringIgnoreNull'),
                            array('fieldName'=>'entry_lastname', 'value'=>$lastname, 'type'=>'stringIgnoreNull'),
