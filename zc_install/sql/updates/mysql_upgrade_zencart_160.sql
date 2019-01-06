@@ -252,11 +252,11 @@ CREATE TABLE IF NOT EXISTS dashboard_widgets_to_users (
 # --------------------------------------------------------
 
 #
-# Table structure for table 'dashboard_widgets_settings'
+# Table structure for table 'configuration_settings'
 #
 
-DROP TABLE IF EXISTS dashboard_widgets_settings;
-CREATE TABLE dashboard_widgets_settings (
+DROP TABLE IF EXISTS configuration_settings;
+CREATE TABLE configuration_settings (
   setting_key varchar(64) NOT NULL,
   setting_name varchar(255) NOT NULL,
   setting_definition longtext NOT NULL,
@@ -267,11 +267,11 @@ CREATE TABLE dashboard_widgets_settings (
 # --------------------------------------------------------
 
 #
-# Table structure for table 'dashboard_widgets_settings_to_widget'
+# Table structure for table 'configuration_settings_to_widget'
 #
 
-DROP TABLE IF EXISTS dashboard_widgets_settings_to_widget;
-CREATE TABLE dashboard_widgets_settings_to_widget (
+DROP TABLE IF EXISTS configuration_settings_to_widget;
+CREATE TABLE configuration_settings_to_widget (
   setting_key varchar(64) NOT NULL,
   widget_key varchar(64) NOT NULL,
   initial_value longtext,
@@ -342,20 +342,20 @@ INSERT INTO dashboard_widgets_to_users (widget_key, admin_id, widget_row, widget
 
 # @todo testing settings - remove for release
 
-INSERT INTO dashboard_widgets_settings (setting_key, setting_name, setting_definition, setting_type) VALUES ('some-text', 'INPUT_LABEL_SOME_TEXT', '{}', 'text');
-INSERT INTO dashboard_widgets_settings (setting_key, setting_name, setting_definition, setting_type) VALUES ('date-from', 'INPUT_LABEL_DATE_FROM', '', 'simpleDate');
+INSERT INTO configuration_settings (setting_key, setting_name, setting_definition, setting_type) VALUES ('some-text', 'INPUT_LABEL_SOME_TEXT', '{}', 'text');
+INSERT INTO configuration_settings (setting_key, setting_name, setting_definition, setting_type) VALUES ('date-from', 'INPUT_LABEL_DATE_FROM', '', 'simpleDate');
 
 # Banner Statistics dashboard widget settings
 
-INSERT INTO dashboard_widgets_settings (setting_key, setting_name, setting_definition, setting_type) VALUES ('banner-id', 'INPUT_LABEL_BANNER_ID', '{"model": "banner", "id": "banners_id", "text": "banners_title"}', 'selectFromModel');
-INSERT INTO dashboard_widgets_settings (setting_key, setting_name, setting_definition, setting_type) VALUES ('banner-date-range', 'INPUT_LABEL_BANNER_DATE_RANGE', '{"options":[{"id":"yearly","text":"OPTIONS_DATERANGE_YEARLY"},{"id":"monthly","text":"OPTIONS_DATERANGE_MONTHLY"},{"id":"daily","text":"OPTIONS_DATERANGE_DAILY"},{"id":"recent","text":"OPTIONS_DATERANGE_RECENT"}]}', 'selectFromArray');
-INSERT INTO dashboard_widgets_settings (setting_key, setting_name, setting_definition, setting_type) VALUES ('banner-show-lines', 'INPUT_LABEL_BANNER_SHOW_LINES', '{}', 'boolean');
+INSERT INTO configuration_settings (setting_key, setting_name, setting_definition, setting_type) VALUES ('banner-id', 'INPUT_LABEL_BANNER_ID', '{"model": "banner", "id": "banners_id", "text": "banners_title"}', 'selectFromModel');
+INSERT INTO configuration_settings (setting_key, setting_name, setting_definition, setting_type) VALUES ('banner-date-range', 'INPUT_LABEL_BANNER_DATE_RANGE', '{"options":[{"id":"yearly","text":"OPTIONS_DATERANGE_YEARLY"},{"id":"monthly","text":"OPTIONS_DATERANGE_MONTHLY"},{"id":"daily","text":"OPTIONS_DATERANGE_DAILY"},{"id":"recent","text":"OPTIONS_DATERANGE_RECENT"}]}', 'selectFromArray');
+INSERT INTO configuration_settings (setting_key, setting_name, setting_definition, setting_type) VALUES ('banner-show-lines', 'INPUT_LABEL_BANNER_SHOW_LINES', '{}', 'boolean');
 
-INSERT INTO dashboard_widgets_settings_to_widget (setting_key, widget_key, initial_value) VALUES ('banner-id', 'banner-statistics', 'monthly');
-INSERT INTO dashboard_widgets_settings_to_widget (setting_key, widget_key, initial_value) VALUES ('banner-date-range', 'banner-statistics', 'monthly');
-INSERT INTO dashboard_widgets_settings_to_widget (setting_key, widget_key, initial_value) VALUES ('banner-show-lines', 'banner-statistics', 'on');
-INSERT INTO dashboard_widgets_settings_to_widget (setting_key, widget_key, initial_value) VALUES ('some-text', 'banner-statistics', '');
-INSERT INTO dashboard_widgets_settings_to_widget (setting_key, widget_key, initial_value) VALUES ('date-from', 'banner-statistics', '');
+INSERT INTO configuration_settings_to_widget (setting_key, widget_key, initial_value) VALUES ('banner-id', 'banner-statistics', 'monthly');
+INSERT INTO configuration_settings_to_widget (setting_key, widget_key, initial_value) VALUES ('banner-date-range', 'banner-statistics', 'monthly');
+INSERT INTO configuration_settings_to_widget (setting_key, widget_key, initial_value) VALUES ('banner-show-lines', 'banner-statistics', 'on');
+INSERT INTO configuration_settings_to_widget (setting_key, widget_key, initial_value) VALUES ('some-text', 'banner-statistics', '');
+INSERT INTO configuration_settings_to_widget (setting_key, widget_key, initial_value) VALUES ('date-from', 'banner-statistics', '');
 
 
 

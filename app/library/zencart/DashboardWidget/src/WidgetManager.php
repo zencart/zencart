@@ -259,7 +259,7 @@ class WidgetManager
         $widget['title'] = $this->getWidgetTitle($widget['widget_name']);
         $settingKeys = array_column($widget['dashboard_widget_settings'], 'setting_key');
         $dwt = $this->mapToNewKey($widget['dashboard_widget_settings'], 'setting_key');
-        $model = $this->modelFactory->make('DashboardWidgetsSettings');
+        $model = $this->modelFactory->make('ConfigurationSettings');
         $settings = $model->whereIn('setting_key', $settingKeys)->get()->toArray();
         $settingsList = [];
         foreach ($settings as $setting) {

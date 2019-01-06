@@ -28,6 +28,8 @@ define('TABLE_CATEGORIES', DB_PREFIX . 'categories');
 define('TABLE_CATEGORIES_DESCRIPTION', DB_PREFIX . 'categories_description');
 define('TABLE_CONFIGURATION', DB_PREFIX . 'configuration');
 define('TABLE_CONFIGURATION_GROUP', DB_PREFIX . 'configuration_group');
+define('TABLE_CONFIGURATION_SETTINGS', DB_PREFIX . 'configuration_settings');
+define('TABLE_CONFIGURATION_SETTINGS_TO_WIDGET', DB_PREFIX . 'configuration_settings_to_widget');
 define('TABLE_COUNTER', DB_PREFIX . 'counter');
 define('TABLE_COUNTER_HISTORY', DB_PREFIX . 'counter_history');
 define('TABLE_COUNTRIES', DB_PREFIX . 'countries');
@@ -50,9 +52,7 @@ define('TABLE_DASHBOARD_WIDGETS_GROUPS', DB_PREFIX . 'dashboard_widgets_groups')
 define('TABLE_DASHBOARD_WIDGETS_DESCRIPTION', DB_PREFIX . 'dashboard_widgets_description');
 define('TABLE_DASHBOARD_WIDGETS_TO_PROFILES', DB_PREFIX . 'dashboard_widgets_to_profiles');
 define('TABLE_DASHBOARD_WIDGETS_TO_USERS', DB_PREFIX . 'dashboard_widgets_to_users');
-define('TABLE_DASHBOARD_WIDGETS_SETTINGS', DB_PREFIX . 'dashboard_widgets_settings');
 define('TABLE_DASHBOARD_WIDGETS_SETTINGS_TO_USER', DB_PREFIX . 'dashboard_widgets_settings_to_user');
-define('TABLE_DASHBOARD_WIDGETS_SETTINGS_TO_WIDGET', DB_PREFIX . 'dashboard_widgets_settings_to_widget');
 define('TABLE_EMAIL_ARCHIVE', DB_PREFIX . 'email_archive');
 define('TABLE_EZPAGES', DB_PREFIX . 'ezpages');
 define('TABLE_EZPAGES_CONTENT', DB_PREFIX . 'ezpages_content');
