@@ -2920,9 +2920,17 @@ function zen_limit_image_filename($filename, $table_name, $field_name, $extensio
   function zen_get_categories_name_from_product($product_id) {
     global $db;
 
-//    $check_products_category= $db->Execute("select products_id, categories_id from " . TABLE_PRODUCTS_TO_CATEGORIES . " where products_id='" . $product_id . "' limit 1");
-    $check_products_category = $db->Execute("select products_id, master_categories_id from " . TABLE_PRODUCTS . " where products_id = '" . (int)$product_id . "'");
-    $the_categories_name= $db->Execute("select categories_name from " . TABLE_CATEGORIES_DESCRIPTION . " where categories_id= '" . $check_products_category->fields['master_categories_id'] . "' and language_id= '" . (int)$_SESSION['languages_id'] . "'");
+//    $check_products_category= $db->Execute("SELECT products_id, categories_id FROM " . TABLE_PRODUCTS_TO_CATEGORIES . " WHERE products_id = " . (int)$product_id . " LIMIT 1");
+    $check_products_category = $db->Execute("SELECT products_id, master_categories_id
+                                             FROM " . TABLE_PRODUCTS . "
+                                             WHERE products_id = " . (int)$product_id
+                                           );
+    if ($check_products_category->EOF) return '';
+    $the_categories_name= $db->Execute("SELECT categories_name
+                                        FROM " . TABLE_CATEGORIES_DESCRIPTION . " 
+                                        WHERE categories_id= " . (int)$check_products_category->fields['master_categories_id'] . "
+                                        AND language_id= " . (int)$_SESSION['languages_id']
+                                      );
     if ($the_categories_name->EOF) return '';
     return $the_categories_name->fields['categories_name'];
   }
