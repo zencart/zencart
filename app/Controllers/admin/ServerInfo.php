@@ -6,7 +6,7 @@
  */
 namespace App\Controllers\admin;
 
-use App\Controllers\AbstractLeadController;
+use App\Controllers\AbstractInfoController;
 use ZenCart\Services\IndexRoute;
 use ZenCart\Request\Request as Request;
 use ZenCart\AdminUser\AdminUser as User;
