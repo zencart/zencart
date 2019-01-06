@@ -2921,14 +2921,12 @@ function zen_limit_image_filename($filename, $table_name, $field_name, $extensio
     global $db;
 
 //    $check_products_category= $db->Execute("SELECT products_id, categories_id FROM " . TABLE_PRODUCTS_TO_CATEGORIES . " WHERE products_id = " . (int)$product_id . " LIMIT 1");
-    $check_products_category = $db->Execute("
-                                             SELECT products_id, master_categories_id
+    $check_products_category = $db->Execute("SELECT products_id, master_categories_id
                                              FROM " . TABLE_PRODUCTS . "
                                              WHERE products_id = " . (int)$product_id
                                            );
     if ($check_products_category->EOF) return '';
-    $the_categories_name= $db->Execute("
-                                        SELECT categories_name
+    $the_categories_name= $db->Execute("SELECT categories_name
                                         FROM " . TABLE_CATEGORIES_DESCRIPTION . " 
                                         WHERE categories_id= " . (int)$check_products_category->fields['master_categories_id'] . "
                                         AND language_id= " . (int)$_SESSION['languages_id']
