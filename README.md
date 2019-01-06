@@ -26,8 +26,8 @@ Zen Cart&reg; requires you to provide your own webserver (shared or dedicated/VP
 
 Requirements for v2:
 - Written for PHP 7.3 (backward compatible to PHP 7.0)
-- Written for MySQL 5.7 (compatible with 5.7 and MariaDB 10.1 to 10.3)
-- CURL (compiled into PHP) is used for communication with payment/shipping services
+- Written for MySQL 5.7 (compatible with 5.6 and MariaDB 10.1 to 10.3)
+- cURL (compiled into PHP) is used for communication with payment/shipping services
 - Apache 2.4 or 2.2
 - Recommended Apache modules include: expires, headers, env, alias, deflate, ssl, mime, rewrite (in addition to other common modules)
 
@@ -57,13 +57,22 @@ If some of the terms used in these brief instructions are things you don't under
 
 Guidance for Secure Installations
 ---------------------------------
-__The [Implementation Guide](https://www.zen-cart.com/docs/implementation-guide-v156.pdf) document is provided to give detailed instructions on how to install and secure your site in accordance with PCI Compliance requirements.__ Whether your site "needs" PCI Compliance or not is up to you to decide, but you should still follow the documented principles to maximize your site's resiliance against troublesome access attempted by any undesired/unauthorized visitors.
+__The [Implementation Guide](https://www.zen-cart.com/docs/implementation-guide-v156.pdf) document is provided to give detailed instructions on how to install and secure your site in accordance with PCI Compliance requirements.__ Whether your site "needs" PCI Compliance or not is up to you to decide, but you should still follow the documented principles to maximize your site's resilience against troublesome access attempted by any undesired/unauthorized visitors.
 
 
 Documentation
 -------------
+
+### Zen Cart v1.5.x 
 Use your browser to open the [/docs/index.html](http://www.zen-cart.com/docs/index.html) page for links to documentation and the [Implementation Guide](https://www.zen-cart.com/docs/implementation-guide-v156.pdf).
 
+### Zen Cart v2
+For v2 documentation, please use the following links: 
+* [v2 Public Road Map](https://github.com/zencart/zencart/projects/1)
+* [Bug List on the Zen Cart forum](https://www.zen-cart.com/forumdisplay.php?165-ZCDEV-v160-Development-Bugs)
+* [What's New in v2](https://github.com/zencart/zencart/blob/develop/docs/whatsnew_2.0.html)
+
+Developers should also see the links below; resources exist for both Zen Cart 1.5.x and Zen Cart v2.
 
 Developer Documentation
 -----------------------
