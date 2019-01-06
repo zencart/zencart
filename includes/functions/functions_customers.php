@@ -87,6 +87,29 @@ function zen_address_format($address_format_id = 1, $incoming = array(), $html =
         $address_out = $address['company'] . $address['cr'] . $address_out;
     }
 
+    // -----
+    // "Package up" the various elements of an address and issue a notification that will enable
+    // an observer to make modifications if needed.
+    //
+    $GLOBALS['zco_notifier']->notify(
+        'NOTIFY_END_ZEN_ADDRESS_FORMAT',
+        array(
+            'format' => $fmt,
+            'address' => $address,
+            'firstname' => $firstname,
+            'lastname' => $lastname,
+            'street' => $street,
+            'suburb' => $suburb,
+            'city' => $city,
+            'state' => $state,
+            'country' => $country,
+            'postcode' => $postcode,
+            'cr' => $cr,
+            'hr' => $hr,
+        ),
+        $address_out
+    );
+
     return $address_out;
 }
 
@@ -105,6 +128,9 @@ function zen_address_format($address_format_id = 1, $incoming = array(), $html =
                       and address_book_id = " . (int)$address_id;
 
     $address = $db->Execute($address_query);
+
+    $GLOBALS['zco_notifier']->notify('NOTIFY_ZEN_ADDRESS_LABEL', array(), $customers_id, $address_id, $address->fields);
+
 
     $format_id = zen_get_address_format_id($address->fields['country_id']);
     return zen_address_format($format_id, $address->fields, $html, $boln, $eoln);
