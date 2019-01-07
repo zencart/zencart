@@ -207,19 +207,7 @@ if (zen_not_null($action)) {
   <head>
     <meta charset="<?php echo CHARSET; ?>">
     <title><?php echo TITLE; ?></title>
-    <link rel="stylesheet" href="includes/stylesheet.css">
-    <link rel="stylesheet" href="includes/cssjsmenuhover.css" media="all" id="hoverJS">
-    <script src="includes/menu.js"></script>
     <script src="includes/general.js"></script>
-    <script>
-      function init() {
-          cssjsmenu('navbar');
-          if (document.getElementById) {
-              var kill = document.getElementById('hoverJS');
-              kill.disabled = true;
-          }
-      }
-    </script>
     <?php
     if ($editor_handler != '') {
       include ($editor_handler);
@@ -230,7 +218,7 @@ if (zen_not_null($action)) {
   require_once('includes/template/common/tplHtmlHead.php');
 ?>
   </head>
-  <body onLoad="init()">
+  <body>
 <?php require('includes/template/common/tplHeader.php'); ?>
     <!-- header_eof //-->
     <!-- body //-->

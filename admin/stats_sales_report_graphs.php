@@ -162,7 +162,7 @@ if (strlen($sales_report_filter) == 0) {
    }
 </script>
 </head>
-<body onload="init()">
+<body>
 <!-- header //-->
 <?php require('includes/template/common/tplHeader.php'); ?>
 <!-- header_eof //-->
