@@ -35,6 +35,7 @@
     <?php /** CDN for jQuery UI components **/ ?>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js" integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU=" crossorigin="anonymous"></script>
     <script>window.jQuery.Widget || document.write('<script src="includes/template/javascript/jquery-ui.min.js"><\/script>');</script>
+    <script src="includes/general.js"></script>
     <script src="includes/template/javascript/jquery-ui-i18n.min.js"></script>
     <script src="includes/template/javascript/bootstrap.min.js"></script>
     <script src="includes/template/AdminLTE2/dist/js/app.js"></script>

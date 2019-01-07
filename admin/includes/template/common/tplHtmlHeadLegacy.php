@@ -36,4 +36,3 @@ $tplVars['notifications'] = $currentUser->getNotifications()->getNotificationLis
 $tplVars['menuTitles'] = zen_get_menu_titles();
 $tplVars['adminMenuForUser'] = zen_get_admin_menu_for_user();
 ?>
-<script src="includes/general.js"></script>
