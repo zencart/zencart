@@ -69,7 +69,7 @@ Use your browser to open the [/docs/index.html](http://www.zen-cart.com/docs/ind
 ### Zen Cart v2
 For v2 documentation, please use the following links: 
 * [v2 Public Road Map](https://github.com/zencart/zencart/projects/1)
-* [Bug List on the Zen Cart forum](https://www.zen-cart.com/forumdisplay.php?165-ZCDEV-v160-Development-Bugs)
+* [Bug List on the Zen Cart forum](https://www.zen-cart.com/forumdisplay.php?165-ZCDEV-v2-Development-Bugs)
 * [What's New in v2](https://github.com/zencart/zencart/blob/develop/docs/whatsnew_2.0.html)
 
 Developers should also see the links below; resources exist for both Zen Cart 1.5.x and Zen Cart v2.
@@ -78,7 +78,7 @@ Developer Documentation
 -----------------------
 Developers wishing to contribute to the Zen Cart&reg; core code may fork the [zencart/zencart](https://github.com/zencart/zencart) repository on github and issue Pull Requests from their own feature branches. For detailed help on using github, forking, branching, and contributing see [Contributing to Zen Cart code](https://docs.zen-cart.com/Contributing/).
 
-Visit [docs.zen-cart.com](https://docs.zen-cart.com) for version-specific guidance on issues relevant to developers.  You may also help with this site by forking the [zencart/documentation](https://github.com/zencart/documentation) repository on github and submitting pull requests.
+Visit [docs.zen-cart.com](https://docs.zen-cart.com) for version-specific guidance on issues relevant to developers.  Both the current release and v2 are covered.  You may also help with this site by forking the [zencart/documentation](https://github.com/zencart/documentation) repository on github and submitting pull requests.
 
 
 Support
