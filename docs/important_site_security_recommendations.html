@@ -108,8 +108,10 @@
 					<p>
 						It is important that after you have installed your Zen Cart&reg; Store and are satisfied that it is working properly, including test transactions to test <em>ALL</em>&nbsp; the payment and shipping modules you are using.
 					</p>
-					<ul>
+          <p>
 						Remove the following folders and all the files inside them, to minimize security risks:
+          </p>
+					<ul>
 						<li>/docs</li>
 						<li>/extras</li>
 						<li>/zc_install</li>
@@ -118,8 +120,10 @@
 					<p>
 						It is safe to keep these files on your <em>Local PC</em>, since they can be used as references/documentation, or used to aid in troubleshooting as diagnostic tools, or for upgrading/installing again in the future. However, those folders and files should <em>NOT</em>&nbsp; be on a live webserver.
 					</p>
-					<ul>
+          <p>
 						If you have no intentions of supporting downloadable products or music-media products, you can <em>optionally</em>&nbsp; also remove these folders:
+          </p>
+					<ul>
 						<li>/download</li>
 						<li>/media</li>
 						<li>/pub</li>
@@ -199,8 +203,10 @@
 			<div id="adminAccessProtection">
 				<h2>Admin Access Protection</h2>
 				<div>
-					<ul>
+          <p>
 						Exercise caution while working in your admin area:
+          </p>
+					<ul>
 						<li>
 							Use only one browser tab to access your ADMIN AREA
 						</li>
@@ -217,8 +223,8 @@
 			<div id="protectDefinePages">
 				<h2>Protect "define pages" in "html_includes"</h2>
 				<div>
+          <p>Protect <em>define pages</em>&nbsp; (Admin->Tools->Define Pages Editor) after editing:</p>
 					<ul>
-						Protect <em>define pages</em>&nbsp; (Admin->Tools->Define Pages Editor) after editing:
 						<li>
 							Download a copy to your Local PC using your FTP software. 
 							<ol class="noteList">
@@ -238,8 +244,8 @@
 							</ol>
 						</li>
 					</ul>
+          <p>If you make them <em>"Read Only"</em>, then a would-be hacker cannot edit them if they gain access to your system, unless they can get permissions to change the <em>"Read Only"</em>&nbsp; status, which is more complicated.</p>
 					<ul>
-						If you make them <em>"Read Only"</em>, then a would-be hacker cannot edit them if they gain access to your system, unless they can get permissions to change the <em>"Read Only"</em>&nbsp; status, which is more complicated.
 						<li>
 							<span class="errorDetails">
 							Once you set them <em>"Read Only"</em>, you will need to go and set them back to <em>"Read/Write"</em>&nbsp; before making additional changes using the define-pages editor, or uploading replacements via FTP, and then set back as <em>"Read Only"</em>&nbsp; again when done.
@@ -258,8 +264,8 @@
 					<p>
 						If you delete these files, you run the risk of leaving yourself open to people snooping around.
 					</p>
+          <p>There are also some blank <em>index.html</em>&nbsp; files in several folders. </p>
 					<ul>
-						There are also some blank <em>index.html</em>&nbsp; files in several folders. 
 						<li>
 							These files are there to protect you in case your FTP software would not upload <em>".htaccess"</em>&nbsp; files, or your server would not accept them.
 						</li>
@@ -306,8 +312,8 @@
 					<p>
 						However, leaving the images (or any other) folder in read/write mode means that hackers might be able to put malicious files in this (or other) folder(s) and thus create access points from which to attempt nasty exploits.
 					</p>
+          <p>Hence, once your site is built and your images have been created/loaded, you should increase the permission setting from <em>"Read/Write"</em>&nbsp; to <em>"Read Only"</em>.</p>
 					<ul>
-						Hence, once your site is built and your images have been created/loaded, you should increase the permission setting from <em>"Read/Write"</em>&nbsp; to <em>"Read Only"</em>.
 						<li>
 							On Linux/Unix hosts, permission setting recommendations for basic security are:
 							<ol class="noteList">
@@ -430,8 +436,8 @@
 			<div id="removePrintURL">
 				<h2>Remove Print URLs from Browser Headers</h2>
 				<div>
+          <p>Stop your browser from printing a URL on invoices (May disclose your <em>ADMIN</em>&nbsp; folder path):</p>
 					<ul>
-						Stop your browser from printing a URL on invoices (May disclose your <em>ADMIN</em>&nbsp; folder path):
 						<li>
 							On Internet Explorer:
 							<ol class="noteList">
@@ -587,13 +593,12 @@
 				<br>
 				and is redistributable under Version 2 of the GNU General Public License.
 			<p>
-			<p>
 				<img src="osi-certified-120x100.png" alt="O S I Certified">
 				<br>
 				This software is OSI Certified Open Source Software.
 				<br>
 				OSI Certified is a certification mark of the Open Source Initiative.
-			<p>
+			</p>
 			<p class="zenData">
 				Copyright 2003 - 2018 Zen Ventures, LLC
 				<br><br>
