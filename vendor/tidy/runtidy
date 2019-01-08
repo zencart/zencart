@@ -1,0 +1,6 @@
+#!/bin/bash
+# Run from docs folder 
+for i in `ls *.html`
+do
+   tidy -m -config ../vendor/tidy/tidy.conf $i 
+done
