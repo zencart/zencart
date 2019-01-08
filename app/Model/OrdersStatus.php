@@ -12,9 +12,11 @@ use Illuminate\Database\Eloquent\Model as Eloquent;
  * Class OrdersStatus
  * @package ZenCart\Model
  */
-class OrdersStatus extends Eloquent
+class OrdersStatus extends TranslatedModel
 {
     protected $table = TABLE_ORDERS_STATUS;
     protected $primaryKey = 'orders_status_id';
+    protected $translationTable = TABLE_ORDERS_STATUS;
+    public $translatedAttributes = ['orders_status_name'];
 
 }
