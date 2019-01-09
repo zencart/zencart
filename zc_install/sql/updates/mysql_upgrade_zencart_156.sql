@@ -113,41 +113,56 @@ ALTER TABLE orders_products_download ADD products_attributes_id int(11) default 
 ALTER TABLE orders_status_history ADD updated_by varchar(45) NOT NULL default '';
 
 # Clean up expired prids from baskets
+#NEXT_X_ROWS_AS_ONE_COMMAND:3
 DELETE FROM customers_basket WHERE CAST(products_id AS unsigned) NOT IN (
 SELECT products_id
 FROM products WHERE products_status > 0);
+#NEXT_X_ROWS_AS_ONE_COMMAND:3
 DELETE FROM customers_basket_attributes WHERE CAST(products_id AS unsigned) NOT IN (
 SELECT products_id
 FROM products WHERE products_status > 0);
 
 # Clean up missing relations for deleted products
+#NEXT_X_ROWS_AS_ONE_COMMAND:2
 DELETE FROM specials WHERE products_id NOT IN ( SELECT products_id
 FROM products );
+#NEXT_X_ROWS_AS_ONE_COMMAND:2
 DELETE FROM products_to_categories WHERE products_id NOT IN ( SELECT products_id
 FROM products );
+#NEXT_X_ROWS_AS_ONE_COMMAND:2
 DELETE FROM products_description WHERE products_id NOT IN ( SELECT products_id
 FROM products );
+#NEXT_X_ROWS_AS_ONE_COMMAND:2
 DELETE FROM meta_tags_products_description WHERE products_id NOT IN ( SELECT products_id
 FROM products );
+#NEXT_X_ROWS_AS_ONE_COMMAND:2
 DELETE FROM products_attributes WHERE products_id NOT IN ( SELECT products_id
 FROM products );
+#NEXT_X_ROWS_AS_ONE_COMMAND:2
 DELETE FROM reviews WHERE products_id NOT IN ( SELECT products_id
 FROM products );
+#NEXT_X_ROWS_AS_ONE_COMMAND:2
 DELETE FROM reviews_description WHERE reviews_id NOT IN ( SELECT reviews_id
 FROM reviews );
+#NEXT_X_ROWS_AS_ONE_COMMAND:2
 DELETE FROM featured WHERE products_id NOT IN ( SELECT products_id
 FROM products );
+#NEXT_X_ROWS_AS_ONE_COMMAND:2
 DELETE FROM products_discount_quantity WHERE products_id NOT IN ( SELECT products_id
 FROM products );
+#NEXT_X_ROWS_AS_ONE_COMMAND:2
 DELETE FROM coupon_restrict WHERE product_id NOT IN ( SELECT products_id
 FROM products );
+#NEXT_X_ROWS_AS_ONE_COMMAND:2
 DELETE FROM products_notifications WHERE products_id NOT IN ( SELECT products_id
 FROM products );
+#NEXT_X_ROWS_AS_ONE_COMMAND:3
 DELETE FROM products_attributes_download WHERE products_attributes_id IN ( SELECT products_attributes_id
 FROM products_attributes WHERE products_id NOT IN ( SELECT products_id
 FROM products ));
 
 ## alter admin_pages for new product listing pages
+#NEXT_X_ROWS_AS_ONE_COMMAND:6
 UPDATE admin_pages
 SET language_key = 'BOX_CATALOG_CATEGORY',
     main_page = 'FILENAME_CATEGORY_PRODUCT_LISTING',
@@ -155,6 +170,7 @@ SET language_key = 'BOX_CATALOG_CATEGORY',
     sort_order = 18
 WHERE page_key = 'categories';
 
+#NEXT_X_ROWS_AS_ONE_COMMAND:2
 INSERT INTO admin_pages (page_key, language_key, main_page, page_params, menu_key, display_on_menu, sort_order)
 VALUES ('categoriesProductListing', 'BOX_CATALOG_CATEGORIES_PRODUCTS', 'FILENAME_CATEGORY_PRODUCT_LISTING', '', 'catalog', 'Y', 1);
 
