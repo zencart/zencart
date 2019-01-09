@@ -6,7 +6,7 @@
 # * @copyright Copyright 2003-2019 Zen Cart Development Team
 # * @copyright Portions Copyright 2003 osCommerce
 # * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
-# * @version $Id: DrByte 2019 Jan 04 Modified in v1.5.6a $
+# * @version $Id: DrByte 2019 Jan 09 Modified in v1.5.6b $
 #
 
 ############ IMPORTANT INSTRUCTIONS ###############
@@ -67,7 +67,99 @@ ALTER TABLE countries ADD status tinyint(1) DEFAULT 1;
 # end of repeats from v152
 
 # handle old dates
-UPDATE configuration SET date_added='0001-01-01' where date_added < '0001-01-01';
+UPDATE admin SET pwd_last_change_date = '0001-01-01 00:00:00' WHERE pwd_last_change_date < '0001-01-01' AND pwd_last_change_date IS NOT null;
+UPDATE admin SET last_modified = '0001-01-01 00:00:00' WHERE last_modified < '0001-01-01' AND last_modified IS NOT null;
+UPDATE admin SET last_login_date = '0001-01-01 00:00:00' WHERE last_login_date < '0001-01-01' AND last_login_date IS NOT null;
+UPDATE admin SET last_failed_attempt = '0001-01-01 00:00:00' WHERE last_failed_attempt < '0001-01-01' AND last_failed_attempt IS NOT null;
+UPDATE admin_activity_log SET access_date = '0001-01-01 00:00:00' WHERE access_date < '0001-01-01' AND access_date IS NOT null;
+UPDATE banners SET expires_date = NULL WHERE expires_date < '0001-01-01' AND expires_date IS NOT null;
+UPDATE banners SET date_scheduled = NULL WHERE date_scheduled < '0001-01-01' AND date_scheduled IS NOT null;
+UPDATE banners SET date_added = '0001-01-01 00:00:00' WHERE date_added < '0001-01-01' AND date_added IS NOT null;
+UPDATE banners SET date_status_change = NULL WHERE date_status_change < '0001-01-01' AND date_status_change IS NOT null;
+UPDATE banners_history SET banners_history_date = '0001-01-01 00:00:00' WHERE banners_history_date < '0001-01-01' AND banners_history_date IS NOT null;
+UPDATE categories SET date_added = NULL WHERE date_added < '0001-01-01' AND date_added IS NOT null;
+UPDATE categories SET last_modified = NULL WHERE last_modified < '0001-01-01' AND last_modified IS NOT null;
+UPDATE configuration SET last_modified = NULL WHERE last_modified < '0001-01-01' AND last_modified IS NOT null;
+UPDATE configuration SET date_added = '0001-01-01 00:00:00' WHERE date_added < '0001-01-01' AND date_added IS NOT null;
+UPDATE coupon_email_track SET date_sent = '0001-01-01 00:00:00' WHERE date_sent < '0001-01-01' AND date_sent IS NOT null;
+UPDATE coupon_gv_queue SET date_created = '0001-01-01 00:00:00' WHERE date_created < '0001-01-01' AND date_created IS NOT null;
+UPDATE coupon_redeem_track SET redeem_date = '0001-01-01 00:00:00' WHERE redeem_date < '0001-01-01' AND redeem_date IS NOT null;
+UPDATE coupons SET coupon_start_date = '0001-01-01 00:00:00' WHERE coupon_start_date < '0001-01-01' AND coupon_start_date IS NOT null;
+UPDATE coupons SET coupon_expire_date = '0001-01-01 00:00:00' WHERE coupon_expire_date < '0001-01-01' AND coupon_expire_date IS NOT null;
+UPDATE coupons SET date_created = '0001-01-01 00:00:00' WHERE date_created < '0001-01-01' AND date_created IS NOT null;
+UPDATE coupons SET date_modified = '0001-01-01 00:00:00' WHERE date_modified < '0001-01-01' AND date_modified IS NOT null;
+UPDATE currencies SET last_updated = NULL WHERE last_updated < '0001-01-01' AND last_updated IS NOT null;
+UPDATE customers SET customers_dob = '0001-01-01 00:00:00' WHERE customers_dob < '0001-01-01' AND customers_dob IS NOT null;
+UPDATE customers_info SET customers_info_date_of_last_logon = NULL WHERE customers_info_date_of_last_logon < '0001-01-01' AND customers_info_date_of_last_logon IS NOT null;
+UPDATE customers_info SET customers_info_date_account_created = NULL WHERE customers_info_date_account_created < '0001-01-01' AND customers_info_date_account_created IS NOT null;
+UPDATE customers_info SET customers_info_date_account_last_modified = NULL WHERE customers_info_date_account_last_modified < '0001-01-01' AND customers_info_date_account_last_modified IS NOT null;
+UPDATE email_archive SET date_sent = '0001-01-01 00:00:00' WHERE date_sent < '0001-01-01' AND date_sent IS NOT null;
+UPDATE featured SET featured_date_added = NULL WHERE featured_date_added < '0001-01-01' AND featured_date_added IS NOT null;
+UPDATE featured SET featured_last_modified = NULL WHERE featured_last_modified < '0001-01-01' AND featured_last_modified IS NOT null;
+UPDATE featured SET expires_date = '0001-01-01' WHERE expires_date < '0001-01-01' AND expires_date IS NOT null;
+UPDATE featured SET date_status_change = NULL WHERE date_status_change < '0001-01-01' AND date_status_change IS NOT null;
+UPDATE featured SET featured_date_available = '0001-01-01' WHERE featured_date_available < '0001-01-01' AND featured_date_available IS NOT null;
+UPDATE geo_zones SET last_modified = NULL WHERE last_modified < '0001-01-01' AND last_modified IS NOT null;
+UPDATE geo_zones SET date_added = '0001-01-01 00:00:00' WHERE date_added < '0001-01-01' AND date_added IS NOT null;
+UPDATE group_pricing SET last_modified = NULL WHERE last_modified < '0001-01-01' AND last_modified IS NOT null;
+UPDATE group_pricing SET date_added = '0001-01-01 00:00:00' WHERE date_added < '0001-01-01' AND date_added IS NOT null;
+UPDATE manufacturers SET date_added = NULL WHERE date_added < '0001-01-01' AND date_added IS NOT null;
+UPDATE manufacturers SET last_modified = NULL WHERE last_modified < '0001-01-01' AND last_modified IS NOT null;
+UPDATE manufacturers_info SET date_last_click = NULL WHERE date_last_click < '0001-01-01' AND date_last_click IS NOT null;
+UPDATE newsletters SET date_added = '0001-01-01 00:00:00' WHERE date_added < '0001-01-01' AND date_added IS NOT null;
+UPDATE newsletters SET date_sent = NULL WHERE date_sent < '0001-01-01' AND date_sent IS NOT null;
+UPDATE orders SET last_modified = NULL WHERE last_modified < '0001-01-01' AND last_modified IS NOT null;
+UPDATE orders SET date_purchased = NULL WHERE date_purchased < '0001-01-01' AND date_purchased IS NOT null;
+UPDATE orders SET orders_date_finished = NULL WHERE orders_date_finished < '0001-01-01' AND orders_date_finished IS NOT null;
+UPDATE orders_status_history SET date_added = '0001-01-01 00:00:00' WHERE date_added < '0001-01-01' AND date_added IS NOT null;
+UPDATE paypal SET payment_date = '0001-01-01 00:00:00' WHERE payment_date < '0001-01-01' AND payment_date IS NOT null;
+UPDATE paypal SET last_modified = '0001-01-01 00:00:00' WHERE last_modified < '0001-01-01' AND last_modified IS NOT null;
+UPDATE paypal SET date_added = '0001-01-01 00:00:00' WHERE date_added < '0001-01-01' AND date_added IS NOT null;
+UPDATE paypal_payment_status_history SET date_added = '0001-01-01 00:00:00' WHERE date_added < '0001-01-01' AND date_added IS NOT null;
+UPDATE paypal_testing SET payment_date = '0001-01-01 00:00:00' WHERE payment_date < '0001-01-01' AND payment_date IS NOT null;
+UPDATE paypal_testing SET last_modified = '0001-01-01 00:00:00' WHERE last_modified < '0001-01-01' AND last_modified IS NOT null;
+UPDATE paypal_testing SET date_added = '0001-01-01 00:00:00' WHERE date_added < '0001-01-01' AND date_added IS NOT null;
+UPDATE product_type_layout SET last_modified = NULL WHERE last_modified < '0001-01-01' AND last_modified IS NOT null;
+UPDATE product_type_layout SET date_added = '0001-01-01 00:00:00' WHERE date_added < '0001-01-01' AND date_added IS NOT null;
+UPDATE product_types SET date_added = '0001-01-01 00:00:00' WHERE date_added < '0001-01-01' AND date_added IS NOT null;
+UPDATE product_types SET last_modified = '0001-01-01 00:00:00' WHERE last_modified < '0001-01-01' AND last_modified IS NOT null;
+UPDATE products SET products_date_added = '0001-01-01 00:00:00' WHERE products_date_added < '0001-01-01' AND products_date_added IS NOT null;
+UPDATE products SET products_last_modified = NULL WHERE products_last_modified < '0001-01-01' AND products_last_modified IS NOT null;
+UPDATE products SET products_date_available = NULL WHERE products_date_available < '0001-01-01' AND products_date_available IS NOT null;
+UPDATE products_notifications SET date_added = '0001-01-01 00:00:00' WHERE date_added < '0001-01-01' AND date_added IS NOT null;
+UPDATE project_version SET project_version_date_applied = '0001-01-01 01:01:01' WHERE project_version_date_applied < '0001-01-01' AND project_version_date_applied IS NOT null;
+UPDATE project_version_history SET project_version_date_applied = '0001-01-01 01:01:01' WHERE project_version_date_applied < '0001-01-01' AND project_version_date_applied IS NOT null;
+UPDATE reviews SET date_added = NULL WHERE date_added < '0001-01-01' AND date_added IS NOT null;
+UPDATE reviews SET last_modified = NULL WHERE last_modified < '0001-01-01' AND last_modified IS NOT null;
+UPDATE salemaker_sales SET sale_date_start = '0001-01-01' WHERE sale_date_start < '0001-01-01' AND sale_date_start IS NOT null;
+UPDATE salemaker_sales SET sale_date_end = '0001-01-01' WHERE sale_date_end < '0001-01-01' AND sale_date_end IS NOT null;
+UPDATE salemaker_sales SET sale_date_added = '0001-01-01' WHERE sale_date_added < '0001-01-01' AND sale_date_added IS NOT null;
+UPDATE salemaker_sales SET sale_date_last_modified = '0001-01-01' WHERE sale_date_last_modified < '0001-01-01' AND sale_date_last_modified IS NOT null;
+UPDATE salemaker_sales SET sale_date_status_change = '0001-01-01' WHERE sale_date_status_change < '0001-01-01' AND sale_date_status_change IS NOT null;
+UPDATE specials SET specials_date_added = NULL WHERE specials_date_added < '0001-01-01' AND specials_date_added IS NOT null;
+UPDATE specials SET specials_last_modified = NULL WHERE specials_last_modified < '0001-01-01' AND specials_last_modified IS NOT null;
+UPDATE specials SET expires_date = '0001-01-01' WHERE expires_date < '0001-01-01' AND expires_date IS NOT null;
+UPDATE specials SET date_status_change = NULL WHERE date_status_change < '0001-01-01' AND date_status_change IS NOT null;
+UPDATE specials SET specials_date_available = '0001-01-01' WHERE specials_date_available < '0001-01-01' AND specials_date_available IS NOT null;
+UPDATE tax_class SET last_modified = NULL WHERE last_modified < '0001-01-01' AND last_modified IS NOT null;
+UPDATE tax_class SET date_added = '0001-01-01 00:00:00' WHERE date_added < '0001-01-01' AND date_added IS NOT null;
+UPDATE tax_rates SET last_modified = NULL WHERE last_modified < '0001-01-01' AND last_modified IS NOT null;
+UPDATE tax_rates SET date_added = '0001-01-01 00:00:00' WHERE date_added < '0001-01-01' AND date_added IS NOT null;
+UPDATE upgrade_exceptions SET errordate = NULL WHERE errordate < '0001-01-01' AND errordate IS NOT null;
+UPDATE zones_to_geo_zones SET last_modified = NULL WHERE last_modified < '0001-01-01' AND last_modified IS NOT null;
+UPDATE zones_to_geo_zones SET date_added = '0001-01-01 00:00:00' WHERE date_added < '0001-01-01' AND date_added IS NOT null;
+UPDATE media_clips SET date_added = '0001-01-01 00:00:00' WHERE date_added < '0001-01-01' AND date_added IS NOT null;
+UPDATE media_clips SET last_modified = '0001-01-01 00:00:00' WHERE last_modified < '0001-01-01' AND last_modified IS NOT null;
+UPDATE media_manager SET last_modified = '0001-01-01 00:00:00' WHERE last_modified < '0001-01-01' AND last_modified IS NOT null;
+UPDATE media_manager SET date_added = '0001-01-01 00:00:00' WHERE date_added < '0001-01-01' AND date_added IS NOT null;
+UPDATE music_genre SET date_added = NULL WHERE date_added < '0001-01-01' AND date_added IS NOT null;
+UPDATE music_genre SET last_modified = NULL WHERE last_modified < '0001-01-01' AND last_modified IS NOT null;
+UPDATE record_artists SET date_added = NULL WHERE date_added < '0001-01-01' AND date_added IS NOT null;
+UPDATE record_artists SET last_modified = NULL WHERE last_modified < '0001-01-01' AND last_modified IS NOT null;
+UPDATE record_artists_info SET date_last_click = NULL WHERE date_last_click < '0001-01-01' AND date_last_click IS NOT null;
+UPDATE record_company SET date_added = NULL WHERE date_added < '0001-01-01' AND date_added IS NOT null;
+UPDATE record_company SET last_modified = NULL WHERE last_modified < '0001-01-01' AND last_modified IS NOT null;
+UPDATE record_company_info SET date_last_click = NULL WHERE date_last_click < '0001-01-01' AND date_last_click IS NOT null;
 
 # New Values
 UPDATE configuration SET configuration_description =  'Defines the method for sending mail.<br /><strong>PHP</strong> is the default, and uses built-in PHP wrappers for processing.<br /><strong>SMTPAUTH</strong> should be used by most sites!, as it provides secure sending of authenticated email. You must also configure your SMTPAUTH settings in the appropriate fields in this admin section.<br /><br /><strong>Gmail</strong> is used for sending emails using Google\'s mail service, and requires the [less secure] setting enabled in your gmail account.<br /><br /><strong>sendmail</strong> is for linux/unix hosts using the sendmail program on the server<br /><strong>"sendmail-f"</strong> is only for servers which require the use of the -f parameter to use sendmail. This is a security setting often used to prevent spoofing. Will cause errors if your host mailserver is not configured to use it.<br /><br />MOST SITES WILL USE [SMTPAUTH].', set_function = 'zen_cfg_select_option(array(\'PHP\', \'sendmail\', \'sendmail-f\', \'smtp\', \'smtpauth\', \'Gmail\'),' WHERE configuration_key = 'EMAIL_TRANSPORT';
