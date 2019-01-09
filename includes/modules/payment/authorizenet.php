@@ -540,6 +540,7 @@ class authorizenet extends base {
       $check_query = $db->Execute("select configuration_value from " . TABLE_CONFIGURATION . " where configuration_key = 'MODULE_PAYMENT_AUTHORIZENET_STATUS'");
       $this->_check = $check_query->RecordCount();
     }
+    if ($this->_check > 0) $this->keys(); // install any missing keys
     return $this->_check;
   }
   /**
