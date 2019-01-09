@@ -2,7 +2,7 @@
 <!--
 	/**
 	 * @package documentation
-	 * @copyright Copyright 2003-2018 Zen Cart Development Team
+ * @copyright Copyright 2003-2019 Zen Cart Development Team
 	 * @license https://www.zen-cart.com/license/2_0.txt GNU Public License v2.0
 	 * @version $Id: 0.about_zen_cart.html  Modified in v2.0 $
 	 */
@@ -23,16 +23,17 @@
 	<link rel="stylesheet" href="./zen.css">
 </head>
 <body>
+<div class="container">
 
 	<section id="pageHeader">
-		<div class="h-g">
-			<div class="h-u-md-6-12 h-u-sm-1-12">
+        <div class="row">
+            <div class="col-md-6 col-sm-12">
 				<a href="./index.html">
 					<img src="../includes/templates/template_default/images/logo.gif" alt="Zen Cart&reg;" title="Zen Cart&reg;" width="192" height="68" border="0" />
 				</a>
 			</div>
-			<div class="h-u-md-6-12 h-u-sm-hidden h-text-right">
-				<a class="h-btn  h-box-shadow" href="./index.html">
+            <div class="col-md-6 hidden-xs hidden-sm text-right">
+                <a class="btn btn-primary add-shadow" href="./index.html">
 					Documentation Home
 				</a>
 			</div>
@@ -41,7 +42,7 @@
 	
 	<section id="zenTeamMessage">
 		<h1>Welcome to Zen Cart&reg;</h1>	
-		<div class="h-alert h-box-shadow">
+        <div class="alert add-shadow">
 			<em>Dear Zen Cart&reg; User</em>,
 			<p>
 				Zen Cart&reg; is made available to you for your use, addition, changes, modification, etc. without charge, under Version 2 of the GNU General Public License.
@@ -91,11 +92,9 @@
 			Once a product is added to the shopping cart, secure checkout is a simple 3-Step process including collecting address information, shipping selection (multiple shipping methods including real-time internet shipping quotes are built-in), payment selection (<em>PayPal&trade; and AuthorizeNet&trade;</em> are just two of the various included modules) and confirming the final order including taxes and discounts/coupons/sales/gift-certificates applied.
 		</p>
 		<p>
-			You are immediately notified of the order and your customer automatically receives an e-mail confirmation.
-    </p>
+			You are immediately notified of the order and your customer automatically receives an e-mail confirmation.</p>
 		<p>
 			The goals of Zen Cart&reg; include:
-    </p>
 			<ul>
 			<li>make the program easy to set up</li>
 			<li>make it easy to customize</li>
@@ -107,7 +106,6 @@
 			<li>password protected Administration Tool</li>
 			<li>support multiple languages, currencies and tax structures </li>
 		</ul>
-    <p>
 			In short, Zen Cart&reg; is shopping cart software the way it should have been all along.
 		</p>
 		<p>
@@ -228,6 +226,7 @@
 				without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE
 				<br>
 				and is redistributable under Version 2 of the GNU General Public License.
+            </p>
 			<p>
 				<img src="osi-certified-120x100.png" alt="O S I Certified">
 				<br>
@@ -245,5 +244,6 @@
 		</div>
 	</section> <!-- End footerBlock //-->
 	
+</div>
 </body>
 </html>

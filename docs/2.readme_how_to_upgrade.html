@@ -3,7 +3,7 @@
 <!--
 	/**
 	 * @package documentation
-	 * @copyright Copyright 2003-2018 Zen Cart Development Team
+         * @copyright Copyright 2003-2019 Zen Cart Development Team
 	 * @license https://www.zen-cart.com/license/2_0.txt GNU Public License v2.0
 	 * @version $Id: 2.readme_how_to_upgrade.html  Modified in v2.0 $
 	 */
@@ -23,16 +23,17 @@
 	<link rel="stylesheet" href="./zen.css">
 </head>
 <body>
+<div class="container">
 
 	<section id="pageHeader">
-		<div class="h-g">
-			<div class="h-u-md-6-12 h-u-sm-1-12">
+        <div class="row">
+            <div class="col-md-6 col-sm-12">
 				<a href="./index.html">
 					<img src="../includes/templates/template_default/images/logo.gif" alt="Zen Cart&reg;" title="Zen Cart&reg;" width="192" height="68" border="0" />
 				</a>
 			</div>
-			<div class="h-u-md-6-12 h-u-sm-hidden h-text-right">
-				<a class="h-btn  h-box-shadow" href="./index.html">
+            <div class="col-md-6 hidden-xs hidden-sm text-right">
+                <a class="btn btn-primary add-shadow" href="./index.html">
 					Documentation Home
 				</a>
 			</div>
@@ -41,7 +42,7 @@
 	
 	<section id="zenTeamMessage">
 		<h1>Welcome to Zen Cart&reg;</h1>	
-		<div class="h-alert h-box-shadow">
+        <div class="alert add-shadow">
 			<em>Dear Zen Cart&reg; User</em>,
 			<p>
 				Zen Cart&reg; is made available to you for your use, addition, changes, modification, etc. without charge, under Version 2 of the GNU General Public License.
@@ -115,9 +116,9 @@
 			</p>
 			<ul>
 				<li>
-					<em>BEFORE UPGRADING</em>&nbsp;: Take note of the login IDs, transaction keys, email addresses and other settings already configured in EACH of your Payment and Shipping modules.
+                    <em>BEFORE UPGRADING</em>, Take note of the login IDs, transaction keys, email addresses and other settings already configured in EACH of your Payment and Shipping modules.
 					<ul class="noteList noStyle">
-						<li class="h-margin-left-0 small-string">
+                        <li class="no-left-margin small-string">
 		    				You will need this information so you can re-enter it after re-installing the modules.
 						</li>
 					</ul>
@@ -138,9 +139,9 @@
 					</ol>
 				</li>
 				<li>
-					<em>REMEMBER</em>&nbsp;: Re-enter all your configuration settings for each module as you go along. 
+					<em>REMEMBER</em>: Re-enter all your configuration settings for each module as you go along. 
 					<ul class="noteList noStyle">
-						<li class="h-margin-left-0 small-string">
+                        <li class="no-left-margin small-string">
 		    				BE SURE TO TEST each one before you take your store live again, to make sure you've got all your settings entered correctly.
 						</li>
 					</ul>
@@ -175,15 +176,15 @@
 			<div id="backupCurrentInstallation">
 				<h3>Backup Current Zen Cart&reg; Installation</h3>
 				<ul class="noStyle">
-					<li class="h-margin-left-0">
+                    <li class="no-left-margin">
 			    		Make a list of any add-ons you have installed, for later reference.
 						<ol><!-- THIS IS A SPACER //--></ol>
 					</li>
-					<li class="h-margin-left-0">
+                    <li class="no-left-margin">
 			    		Create a backup of your current Zen Cart&reg; installation on your Local PC
 						<ol class="noteList">
 							<li>
-								Perhaps call this folder <em>&quot;zen_backup&quot;</em>&nbsp;
+								Perhaps call this folder <em>&quot;zen_backup&quot;</em>
 							</li>
 							<li>
 								Make a full backup of your database (dump to SQL file). Store this file on your PC for later reference.
@@ -199,12 +200,12 @@
 			<div id="tryNewVersion">
 				<h3>Try New Zen Cart&reg; Version</h3>
 				<ul class="noStyle">
-					<li class="h-margin-left-0">
+                    <li class="no-left-margin">
 			    		Download and unzip the latest Zen Cart&reg; version to your Local PC
 						<ol><!-- THIS IS A SPACER //--></ol>
 					</li>
-					<li class="h-margin-left-0">
-			    		Upload this fileset to your website under a <em>&quot;demo&quot;</em>&nbsp; folder
+                    <li class="no-left-margin">
+                        Upload this fileset to your website under a <em>"demo"</em> folder
 						<ol class="noteList">
 							<li>
 								Install this new version into a separate database and include the Demo products.
@@ -217,8 +218,8 @@
 							</li>
 						</ol>
 					</li>
-					<li class="h-margin-left-0">
-			    		Study the new features and any documented changes to the template structure as well as the &quot;changelog&quot;.  
+                    <li class="no-left-margin">
+                        Study the new features and any documented changes to the template structure as well as the "changelog".    
 						<ol class="noteList">
 							<li>
 								Use the demo products in the demo shop as examples.
@@ -234,14 +235,14 @@
 			<div id="determineCustomizationsEdits">
 				<h3>Determine Customizations and Edits</h3>
 				<ul class="noStyle">
-					<li class="h-margin-left-0">
-			    		Download and unzip a copy of the Zen Cart&reg; version you <em>originally installed</em>&nbsp; or last upgraded to. 
+                    <li class="no-left-margin">
+                        Download and unzip a copy of the Zen Cart&reg; version you <em>originally installed</em> or last upgraded to. 
 						<ol class="noteList">
 							<li>
-								Place in a separate working folder on your Local PC (perhaps <em>&quot;zen_orig&quot;</em>&nbsp;).
+                                Place in a separate working folder on your Local PC (perhaps <em>"zen_orig"</em>).
 							</li>
 							<li>
-								This should be a <em>&quot;vanilla&quot;</em>&nbsp; version without any changes or modifications.
+                                This should be a <em>"vanilla"</em> version without any changes or modifications.
 								<ul>
 									<li class="small-string">
 										Download a copy from the <a href="https://sourceforge.net/projects/zencart/files/">Zen Cart&reg; Archives.</a>
@@ -250,8 +251,8 @@
 							</li>
 						</ol>
 					</li>
-					<li class="h-margin-left-0">
-			    		Run a tool like <a href="http://winmerge.sf.net" target="_blank">WinMerge</a> to compare the files in <em>&quot;zen_orig&quot;</em>&nbsp; against those in <em>&quot;zen_backup&quot;</em>&nbsp; to determine the customization details/differences between your installation and the <em>&quot;vanilla&quot;</em>&nbsp; Zen Cart version.  
+                    <li class="no-left-margin">
+                        Run a tool like <a href="http://winmerge.sf.net" target="_blank">WinMerge</a> to compare the files in <em>"zen_orig"</em> against those in <em>"zen_backup"</em> to determine the customization details/differences between your installation and the <em>"vanilla"</em> Zen Cart version.    
 						<ol class="noteList">
 							<li>
 								Make a list of all the files that are &quot;different&quot;.
@@ -269,7 +270,7 @@
 							</li>
 						</ol>
 					</li>
-					<li class="h-margin-left-0">
+                    <li class="no-left-margin">
 			    		Any mods/add-ons installed may contain programming changes not compatible with a new release.  
 						<ol class="noteList">
 							<li>
@@ -283,10 +284,10 @@
 							</li>
 						</ol>
 					</li>
-					<li class="h-margin-left-0">
+                    <li class="no-left-margin">
 			    		As you make a list of changes, you may want to move things into the Zen Cart&reg; template override system   
 						<ul class="noteList noStyle">
-							<li class="h-margin-left-0 small-string">
+                            <li class="no-left-margin small-string">
 								See the Zen Cart&reg; site for <a href="https://www.zen-cart.com/content.php?27-template-customization-building-overrides" target="_blank">Template System FAQ</a>.
 							</li>
 						</ul>
@@ -297,16 +298,16 @@
 			<div id="personalizeUpgrade">
 				<h3>Personalize Zen Cart&reg; Upgrade</h3>
 				<ul class="noStyle">
-					<li class="h-margin-left-0">
+                    <li class="no-left-margin">
 			    		Create another copy of the latest Zen Cart&reg; version on your Local PC. 
 						<ul class="noteList noStyle">
-							<li class="h-margin-left-0 small-string">
-								Place in a 3rd directory (perhaps <em>&quot;zen_new&quot;</em>&nbsp;), separate from the other two folders compared above.
+                            <li class="no-left-margin small-string">
+                                Place in a 3rd directory (perhaps <em>"zen_new"</em>), separate from the other two folders compared above.
 							</li>
 						</ul>
 					</li>
-					<li class="h-margin-left-0">
-			    		Using the list of files you made earlier, go through each &quot;changed&quot; file, and make your changes from the old version into the new version. 
+                    <li class="no-left-margin">
+                        Using the list of files you made earlier, go through each "changed" file, and make your changes from the old version into the new version. 
 						<ol class="noteList">
 							<li>
 								Simple language edits will be just a matter of copy-and-paste.
@@ -316,8 +317,8 @@
 							</li>
 						</ol>
 					</li>
-					<li class="h-margin-left-0">
-						You may find <em>WinMerge</em>&nbsp; handy at this stage as well
+                    <li class="no-left-margin">
+                        You may find <em>WinMerge</em> handy at this stage as well
 						<ol class="noteList">
 							<li>
 								However, you may find many extra differences that may not be related to your own customizations, or that may conflict. 
@@ -327,12 +328,12 @@
 							</li>
 						</ol>
 					</li>
-					<li class="h-margin-left-0">
+                    <li class="no-left-margin">
 						There may be several changes to be made to files previously overridden using the template overrides system
 						<ol class="noteList">
 							</li>
 							<li>
-								Compare files from <em>/includes/templates/MYTEMPLATE/*</em>&nbsp; to <em>/includes/template/template_default/*</em>.
+                                Compare files from <em>/includes/templates/MYTEMPLATE/*</em> to <em>/includes/template/template_default/*</em>.
 							</li>
 							<li>
 							 	Also with language file overrides, sideboxes, etc
@@ -347,8 +348,8 @@
 			<h2>Step 2: Zen Cart&reg; Upgrade Testing</h2>
 			<div>				
 				<ul class="noStyle">
-					<li class="h-margin-left-0">
-						Create a <em>new separate</em>&nbsp; database for the new version of Zen Cart&reg;
+					<li class="no-left-margin">
+                        Make a NEW database to install the new version of Zen Cart&reg; into.
 						<ol class="noteList">
 							<li>
 								Use your hosting control panel or phpMyAdmin to do this. 
@@ -361,8 +362,8 @@
 							</li>
 						</ol>
 					</li>
-					<li class="h-margin-left-0">
-						Edit the <em>&quot;/zen_new/includes/configure.php&quot;</em>&nbsp; file 
+                    <li class="no-left-margin">
+                        Edit the <em>"/zen_new/includes/configure.php"</em> file 
 						<ol class="noteList">
 							<li>
 								Ensure that your DATABASE_NAME matches your NEW database.   
@@ -375,53 +376,53 @@
 							</li>
 						</ol>
 					</li>
-					<li class="h-margin-left-0">
-						Upload the files from your modified &quot;new version&quot; (created in <a href="#personalizeUpgrade">Personalize Upgrade</a>) to your server
+                    <li class="no-left-margin">
+                        Upload the files from your modified "new version" (created in <a href="#personalizeUpgrade">Personalize Upgrade</a>) to your server
 						<ol class="noteList">
 							<li>
-								Place in an alternate folder, perhaps called <em>&quot;/store_new&quot;</em>.
+                                Place in an alternate folder (perhaps called <em>"/store_new"</em>)
 							</li>
 							<li>
-								Ensure that you have uploaded the <em>&quot;/zen_new/zc_install&quot;</em>&nbsp; folder to your server. 
+                                Ensure that you have uploaded the <em>"/zen_new/zc_install"</em> folder to your server. 
 							</li>
 							<li>
-								If your <em>/zen_new</em>&nbsp; folder does not have the <em>&quot;/includes/configure.php&quot;</em>&nbsp; file, copy this from the <em>&quot;zen_backup&quot;</em>&nbsp; folder.
+								If your <em>/zen_new</em> folder does not have the <em>&quot;/includes/configure.php&quot;</em>&nbsp; file, copy this from the <em>&quot;zen_backup&quot;</em> folder.
 							</li>
 						</ol>
 					</li>
-					<li class="h-margin-left-0">
-						Navigate to  <em>/store_new/zc_install/index.php</em>&nbsp; using your browser
+                    <li class="no-left-margin">
+                        Navigate to    <em>/store_new/zc_install/index.php</em> using your browser
 						<ol class="noteList">
 							<li>
-								Choose <em>&quot;Database Upgrade&quot;</em>&nbsp; when prompted.  
+                                Choose <em>"Database Upgrade"</em> when prompted.    
 							</li>
 							<li>
-								Do not select <em>&quot;Install&quot;</em>, or you will overwrite your database.  
+                                Do not select "Install", or you will overwrite your database.    
 							</li>
 							<li>
-								If <em>&quot;Upgrade&quot;</em>&nbsp; is not offered, then the installer was unable to connect to your database to confirm what version its structure is at.
+                                If "Upgrade" is not offered, then the installer was unable to connect to your database to confirm what version its structure is at.
 							</li>
 							<li>
 								Check your configure.php settings.
 							</li>
 						</ol>
 					</li>
-					<li class="h-margin-left-0">
+                    <li class="no-left-margin">
 						Install each module in Admin-&gt;Modules-&gt;Payment and Admin-&gt;Modules-&gt;Shipping.
 						<ol class="noteList">
 							<li>
-								You do <em>NOT</em>&nbsp; need to do this with modules you are <em>NOT</em>&nbsp; using.
+                                You do NOT need to do this with modules you are NOT using.
 							</li>
 							<li>
-								If you are no longer using a certain module and it does not have a red dot next to it, click the &quot;Remove&quot; button to save on processing performance.
+                                If you are no longer using a certain module and it does not have a red dot next to it, click the "Remove" button to save on processing performance.
 							</li>
 						</ol>
 					</li>
-					<li class="h-margin-left-0">
+                    <li class="no-left-margin">
 						Test your customizations.  
 						<ol class="noteList">
 							<li>
-								Compare with the <em>&quot;test/demo&quot;</em>&nbsp; install performed earlier.  
+                                Compare with the test/demo install performed earlier.    
 							</li>
 							<li>
 								Edit as needed.
@@ -436,43 +437,43 @@
 			<h2>Step 3: Zen Cart&reg; Upgrade Execution</h2>
 			<div>				
 				<ul class="noStyle">
-					<li class="h-margin-left-0">
+                    <li class="no-left-margin">
 						When satisfied that all is OK, go live.
 						<ol><!-- THIS IS A SPACER //--></ol>
 					</li>
-					<li class="h-margin-left-0">
-						If significant time has passed since you did your last backup, you may want to repeat the steps in this &quot;Testing&quot; section again, using a fresh backup from your live shop.  
+                    <li class="no-left-margin">
+                        If significant time has passed since you did your last backup, you may want to repeat the steps in this "Testing" section again, using a fresh backup from your live shop.    
 						<ul class="noteList noStyle">
-							<li class="h-margin-left-0 small-string">
+                            <li class="no-left-margin small-string">
 								You do not need to re-upload files again ... simply do the database restore, and run the installer to do the database upgrade again.   
 							</li>
 						</ul>
 					</li>
-					<li class="h-margin-left-0">
-						Put your shop into &quot;Down for Maintenance&quot; mode in the admin area.  
+                    <li class="no-left-margin">
+                        Put your shop into "Down for Maintenance" mode in the admin area.    
 						<ul class="noteList noStyle">
-							<li class="h-margin-left-0 small-string">
+                            <li class="no-left-margin small-string">
 								Be sure to add your IP address to the list of allowed addresses to get into the site for previewing. 
 							</li>
 						</ul>
 					</li>
-					<li class="h-margin-left-0">
-						Rename the existing Zen Cart&reg; folder, perhaps <em>&quot;store&quot;</em>, on your site to <em>&quot;store_old&quot;</em>.
+                    <li class="no-left-margin">
+                        Rename the existing Zen Cart&reg; folder (perhaps <em>"store"</em>) on your site to <em>"store_old"</em>
 						<ol><!-- THIS IS A SPACER //--></ol>
 					</li>
-					<li class="h-margin-left-0">
-						Rename the <em>&quot;store_new&quot;</em>&nbsp; folder to <em>&quot;store&quot;</em>.
+                    <li class="no-left-margin">
+                        Rename the <em>"store_new"</em> folder to <em>"store"</em>
 						<ul class="noteList noStyle">
-							<li class="h-margin-left-0 small-string">
+                            <li class="no-left-margin small-string">
 								At this point the new version is live. 
 							</li>
 						</ul>
 					</li>
-					<li class="h-margin-left-0">
-						Test to make sure things are operating as desired. 
+                    <li class="no-left-margin">
+                        Test it to be sure that things are operating as desired. 
 						<ul class="noteList noStyle">
-							<li class="h-margin-left-0 small-string">
-								If you have issues to fix, turn <em>&quot;Down for maintenance&quot;</em>&nbsp; on and off again as necessary.  
+                            <li class="no-left-margin small-string">
+                                If you have small problems to repair, turn "Down for maintenance" on and off again as necessary.    
 							</li>
 						</ul>
 					</li>
@@ -504,6 +505,7 @@
 				without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE
 				<br>
 				and is redistributable under Version 2 of the GNU General Public License.
+            </p>
 			<p>
 				<img src="osi-certified-120x100.png" alt="O S I Certified">
 				<br>
@@ -521,5 +523,6 @@
 		</div>
 	</section> <!-- End footerBlock //-->
 	
+</div>
 </body>
 </html>

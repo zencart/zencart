@@ -1,156 +1,18 @@
-/*! CSS for Zen Cart docs. Based on Hydrogen CSS */
+/*! Twitter Bootstrap */
+@import url("https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css");
 
-/*! Hydrogen v1.x | Copyright 2018 Pim Brouwers | Licensed under MIT | https://github.com/pimbrouwers/hydrogen */
-
-/*! Vanilla from Hydrogen CSS */
-
-* {
-  box-sizing: border-box;
-}
-
-h5, h6 {
-  font-weight: 700;
-}
-
-h5 {
-  font-size: 1.25rem;
-}
-
-h6 {
-  font-size: 1rem;
-}
-
-h5, h6, ol, p, ul {
-  margin: 0 0 1rem 0;
-}
-
-ol, p, ul {
-  line-height: 1.5;
-}
-
-ol, ul {
-  padding: 0;
-}
-
-ol li, ul li {
-  margin-left: 1.125rem;
-}
-
-img {
-  border: 0;
-}
-
-.h-margin-left-0 {
-  margin-left: 0;
-}
-
-.h-img {
-  display: inline-block;
-  max-width: 100%;
-}
-
-.h-g {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-orient: horizontal;
-  -webkit-box-direction: normal;
-  -ms-flex-direction: row;
-  flex-direction: row;
-  -ms-flex-wrap: wrap;
-  flex-wrap: wrap;
-  -webkit-box-align: start;
-  -ms-flex-align: start;
-  align-items: flex-start;
-}
-
-.h-g: after {
-  content: "";
-  clear: both;
-  display: table;
-}
-
-.h-g>[class^="h-u-"] {
-  float: left;
-}
-
-.h-u-1 {
-  width: 100%;
-}
-
-.h-text-right {
-  text-align: right;
-}
-
-/*! Zen Cart Flavouring */
-
+/*! Zen Cart Overrides */
 body {
   background: #fff;
   color: #777;
   font: 16px/1 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
   font-weight: 200;
   margin: 10px auto;
-  max-width: 60rem;
   padding: 0 2rem;
 }
 
-a {
-  color: #0080ff;
-  font-weight: 300;
-  text-decoration: none;
-}
-
-a: visited {
-  color: #0080ff;
-}
-
-em {
-  color: #444;
-  font-weight: 500;
-  font-style: italic;
-}
-
-.errorDetails {
-  color: red;
-  font-weight: 300;
-}
-
-ul {
-  list-style-type: square;
-}
-
-ol {
-  list-style-type: upper-roman;
-}
-
-ol.noteList {
-  list-style-type: disc;
-  font-size: small;
-}
-
-ul.noStyle, ol.noStyle {
-  list-style-type: none;
-}
-
-ul.lower-alpha, ol.lower-alpha {
-  list-style-type: lower-alpha;
-}
-
-ul.dash {
-  list-style-type: none;
-  margin-left: 0;
-  padding-left: 1em;
-}
-
-ul.dash>li:before {
-  display: inline-block;
-  content: "-";
-  width: 1em;
-  margin-left: -1em;
-}
-
 h1 {
-  font-size: 2.5rem;
+  font-size: 2.25rem;
   font-weight: 100;
   color: #000;
   letter-spacing: 1px;
@@ -180,39 +42,90 @@ h4 {
   font-variant: small-caps;
 }
 
-.h-alert {
-  background: #dfefdf;
-  border: 1px solid #ccc;
-  color: #333;
-  margin: 0 0 1rem 0;
-  padding: 3rem;
-  position: relative;
+h5, h6 {
+  font-weight: 700;
 }
 
-.h-btn {
-  font: inherit;
-  font-weight: 200;
-  letter-spacing: 1px;
-  display: inline-block;
-  background: #0080ff;
-  border: 0;
-  color: #fff;
-  padding: .75rem 1.5rem;
+h5 {
+  font-size: 1.25rem;
+}
+
+h6 {
+  font-size: 1rem;
+}
+
+h5, h6, ol, p, ul {
+  margin: 0 0 1rem 0;
+}
+
+ul {
+  list-style-type: square;
+}
+
+ol {
+  list-style-type: upper-roman;
+}
+
+ol, p, ul {
+  line-height: 1.5;
+}
+
+ol, ul {
+  padding: 0;
+}
+
+ol li, ul li {
+  margin-left: 1.125rem;
+}
+
+ol.noteList {
+  list-style-type: lower-alpha;
+  font-size: small;
+}
+
+ul.noStyle, ol.noStyle {
+  list-style-type: none;
+}
+
+a {
+  color: #0080ff;
+  font-weight: 300;
   text-decoration: none;
 }
 
-.h-btn: hover {
-  background: #006edb;
+a:visited {
+  color: #0080ff;
 }
 
-.h-box-shadow {
+em {
+  color: #444;
+  font-weight: 500;
+  font-style: italic;
+}
+
+.img-center {
+  display: inline-block;
+  max-width: 100%;
+}
+
+.no-left-margin {
+  margin-left: 0;
+}
+
+.errorDetails {
+  color: red;
+  font-weight: 300;
+}
+
+.add-shadow {
   -webkit-box-shadow: 4px 10px 41px 0px rgba(161, 161, 161, 0.75);
-  -moz-box-shadow: 4px 10px 41px 0px rgba(161, 161, 161, 0.75);
-  box-shadow: 4px 10px 41px 0px rgba(161, 161, 161, 0.75);
+     -moz-box-shadow: 4px 10px 41px 0px rgba(161, 161, 161, 0.75);
+          box-shadow: 4px 10px 41px 0px rgba(161, 161, 161, 0.75);
 }
 
 .prime-string {
-  font-size: 1.25rem;
+  font-size: 2.5rem;
+  font-weight: bold;
 }
 
 .bold-string {
@@ -223,7 +136,7 @@ h4 {
   font-size: small;
 }
 
-.h-text-center, .back-to-top, .appInfo {
+.back-to-top, .appInfo {
   text-align: center;
 }
 
@@ -244,31 +157,9 @@ h4 {
   margin: 2rem 0 0 0;
 }
 
-@media only screen and (min-width: 30rem) {
-  .h-u-sm-1-12 {
-    width: 100%;
-  }
-}
-
-@media only screen and (min-width: 48rem) {
-  .h-u-md-5-12 {
-    width: 41.667%;
-  }
-  .h-u-md-6-12 {
-    width: 50%;
-  }
-  .h-u-md-7-12 {
-    width: 58.333%;
-  }
-}
-
-@media only screen and (min-width: 64rem) {
-  .h-u-lg-6-12 {
-    width: 50%;
-  }
+@media screen and (min-width: 1200px) {
   body {
-    font-size: 1.25rem;
-    max-width: 80rem;
+    font-size: 1.75rem;
   }
   h2 {
     font-size: 2.25rem;
@@ -279,34 +170,19 @@ h4 {
   }
 }
 
-@media screen and (max-width: 63.999rem) {
-  body {
-    padding: 0 3rem;
-  }
+@media screen and (max-width: 1199px) {
   .small-string, .small-string a {
-    font-size: 0.80rem;
+    font-size: 1.20rem;
   }
   .prime-string, .prime-string a {
-    font-size: 1.15rem;
+    font-size: 1.75rem;
     font-weight: 500;
   }
 }
 
-@media screen and (max-width: 47.999rem) {
-  body {
-    padding: 0 2rem;
-  }
-  .h-u-sm-hidden {
-    display: none;
-  }
-  .h-alert {
+@media screen and (max-width: 991px) {
+  .alert {
     padding: 1rem;
     margin: 1rem 1rem 1rem 1rem;
-  }
-}
-
-@media screen and (max-width: 29.999rem) {
-  body {
-    padding: 0 1rem;
   }
 }

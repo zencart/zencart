@@ -3,7 +3,7 @@
 <!--
 	/**
 	 * @package documentation
-	 * @copyright Copyright 2003-2018 Zen Cart Development Team
+     * @copyright Copyright 2003-2019 Zen Cart Development Team
 	 * @license https://www.zen-cart.com/license/2_0.txt GNU Public License v2.0
 	 * @version $Id: whatsnew_2.0.html  New in v2.0 $
 	 */
@@ -23,16 +23,17 @@
 	<link rel="stylesheet" href="./zen.css">
 </head>
 <body>
+<div class="container">
 
 	<section id="pageHeader">
-		<div class="h-g">
-			<div class="h-u-md-6-12 h-u-sm-1-12">
+        <div class="row">
+            <div class="col-md-6 col-sm-12">
 				<a href="./index.html">
 					<img src="../includes/templates/template_default/images/logo.gif" alt="Zen Cart&reg;" title="Zen Cart&reg;" width="192" height="68" border="0" />
 				</a>
 			</div>
-			<div class="h-u-md-6-12 h-u-sm-hidden h-text-right">
-				<a class="h-btn h-box-shadow" href="./index.html">
+            <div class="col-md-6 hidden-xs hidden-sm text-right">
+                <a class="btn btn-primary add-shadow" href="./index.html">
 					Documentation Home
 				</a>
 			</div>
@@ -41,7 +42,7 @@
 	
 	<section id="zenTeamMessage">
 		<h1>Welcome to Zen Cart&reg;</h1>
-		<div class="h-alert h-box-shadow">
+        <div class="alert add-shadow">
 			<em>Dear Zen Cart&reg; User</em>,
 			<p>
 				Zen Cart&reg; is made available to you for your use, addition, changes, modification, etc. without charge, under Version 2 of the GNU General Public License.
@@ -55,7 +56,7 @@
 			<p>
 				We appreciate your support.
 				<br>
-				<em>The Zen Cart&reg; Team</em>&nbsp;
+                <em>The Zen Cart&reg; Team</em>
 			</p>
 		</div>
 	</section> <!-- End zenTeamMessage //-->
@@ -66,8 +67,10 @@
 				About PHP versions
 			</h1>
 			<p>
-				Zen Cart&reg; v2.0 is compatible with PHP 5.6 to 7.3.x and MySQL 5.6 to 5.7
-				<br>
+                Zen Cart&reg; v2.0 is compatible with PHP 5.6 to 7.3, with MySQL 5.1 to 5.7 (or MariaDB 10.0-10.3) and Apache 2.2/2.4
+            </p>
+            <p class="small-string">
+                While it is compatible with PHP 5.4.9 through PHP 7.3 for backward-compatibility while upgrading your site, you should be using a newer version whenever possible. As of the time of writing this, <a href="http://php.net/supported-versions.php" target="_blank">PHP 5.6 is considered obsolete.</a> and you should be using <em> PHP 7.1 or greater</em>.
 			</p>
 		</div>
 	</section> <!-- End aboutPHPVersions //-->
@@ -398,6 +401,7 @@
 				without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE
 				<br>
 				and is redistributable under Version 2 of the GNU General Public License.
+            </p>
 			<p>
 				<img src="osi-certified-120x100.png" alt="O S I Certified">
 				<br>
@@ -406,7 +410,7 @@
 				OSI Certified is a certification mark of the Open Source Initiative.
 			</p>
 			<p class="zenData">
-				Copyright 2003 - 2018 Zen Ventures, LLC
+                Copyright 2003 - 2019 Zen Ventures, LLC
 				<br><br>
 				Zen Cart&reg; 
 				<br>
@@ -415,5 +419,6 @@
 		</div>
 	</section> <!-- End footerBlock //-->
 	
+</div>
 </body>
 </html>
