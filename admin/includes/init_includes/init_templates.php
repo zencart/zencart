@@ -43,5 +43,9 @@ $pagename = ucwords($pagename);
 if ($pagename == '') {
   $pagename = STORE_NAME;
 }
-$title = TEXT_ADMIN_TAB_PREFIX . ' ' . $pagename;
+if (strncmp(TEXT_ADMIN_TAB_PREFIX, $pagename, strlen(TEXT_ADMIN_TAB_PREFIX)) == 0) {
+   $title = $pagename;
+} else {
+   $title = TEXT_ADMIN_TAB_PREFIX . ' ' . $pagename;
+}
 define('TITLE', $title);
