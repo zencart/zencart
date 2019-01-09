@@ -68,7 +68,7 @@ if (zen_not_null($action)) {
       }
 
       $salemaker_sales_data_array = array(
-        'sale_name' => substr(zen_db_prepare_input($_POST['name'], 0, 128)),
+        'sale_name' => substr(zen_db_prepare_input($_POST['name']), 0, 128),
         'sale_deduction_value' => zen_db_prepare_input((float)$_POST['deduction']),
         'sale_deduction_type' => zen_db_prepare_input($_POST['type']),
         'sale_pricerange_from' => zen_db_prepare_input((float)$_POST['from']),
