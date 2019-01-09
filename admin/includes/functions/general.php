@@ -184,6 +184,8 @@
     $hour = (int)substr($raw_date, 11, 2);
     $minute = (int)substr($raw_date, 14, 2);
     $second = (int)substr($raw_date, 17, 2);
+    
+    if (empty($year) && empty($month) && empty($day) && empty($hour) && empty($minute) && empty($second)) return false;
 
     return strftime(DATE_FORMAT_LONG, mktime($hour, $minute, $second, $month, $day, $year));
   }
@@ -202,6 +204,8 @@
     $hour = (int)substr($raw_date, 11, 2);
     $minute = (int)substr($raw_date, 14, 2);
     $second = (int)substr($raw_date, 17, 2);
+
+    if (empty($year) && empty($month) && empty($day) && empty($hour) && empty($minute) && empty($second)) return false;
 
 // error on 1969 only allows for leap year
     if ($year != 1969 && @date('Y', mktime($hour, $minute, $second, $month, $day, $year)) == $year) {
@@ -222,6 +226,8 @@
     $hour = (int)substr($raw_datetime, 11, 2);
     $minute = (int)substr($raw_datetime, 14, 2);
     $second = (int)substr($raw_datetime, 17, 2);
+
+    if (empty($year) && empty($month) && empty($day) && empty($hour) && empty($minute) && empty($second)) return false;
 
     return strftime(DATE_TIME_FORMAT, mktime($hour, $minute, $second, $month, $day, $year));
   }
