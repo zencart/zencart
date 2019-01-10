@@ -71,12 +71,6 @@ define('TEXT_PRODUCT_MORE_INFORMATION', 'For more information, please visit this
 define('TEXT_PRODUCT_DATE_ADDED', 'This product was added to our catalog on %s.');
 define('TEXT_PRODUCT_DATE_AVAILABLE', 'This product will be in stock on %s.');
 
-/* BOF Zen4All - CITTINS - 2 of 2 */
-define('TEXT_ACTION', 'Action');
-define('TEXT_CLICK_TO_ENLARGE', 'larger image');
-define('TEXT_IMAGES_DELETE_NOTE', '');
-/* EOF Zen4All - CITTINS - 2 of 2 */
-
 // meta tags
 define('TEXT_META_TAG_TITLE_INCLUDES', '<strong>Mark What the Product\'s Meta Tag Title Should Include:</strong><br><span class="alert">NOTE: These switches have NO effect if no Keywords or Description text are entered below.</span>');
 define('TEXT_PRODUCTS_METATAGS_PRODUCTS_NAME_STATUS', '<strong>Product Name:</strong>');
