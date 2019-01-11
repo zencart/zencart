@@ -453,7 +453,7 @@ class AdminRequestSanitizer extends base
             $this->debugMessages[] = 'PROCESSING META_TAGS == ' . $this->arrayName;
             foreach ($_POST[$parameterName] as $pKey => $pValue) {
                 $currentArrayName = $this->setCurrentArrayName($pKey);
-                $_POST[$parameterName][$pKey] = htmlspecialchars($_POST[$parameterName][$pKey], ENT_COMPAT, 'utf-8', false);
+                $_POST[$parameterName][$pKey] = htmlspecialchars($_POST[$parameterName][$pKey], ENT_COMPAT, CHARSET, false);
                 $this->postKeysAlreadySanitized[] = $currentArrayName;
             }
         }
@@ -488,7 +488,7 @@ class AdminRequestSanitizer extends base
             // Add the parameterName to the base arrayname.
             $this->arrayName = $this->setCurrentArrayName($parameterName);
             $this->debugMessages[] = 'PROCESSING SANITIZE_EMAIL_AUDIENCE (POST) == ' . $this->arrayName;
-            $_POST[$parameterName] = htmlspecialchars($_POST[$parameterName]);
+            $_POST[$parameterName] = htmlspecialchars($_POST[$parameterName], ENT_COMPAT, CHARSET, true);
             $this->postKeysAlreadySanitized[] = $this->arrayName;
         }
     }
@@ -779,7 +779,7 @@ class AdminRequestSanitizer extends base
                 } else {
                     if (!in_array($this->arrayName, $ignore)) {
                         $this->debugMessages[] = 'PROCESSING STRICT_SANITIZE_VALUES == ' . $this->arrayName;
-                        $item[$k] = htmlspecialchars($item[$k]);
+                        $item[$k] = htmlspecialchars($item[$k], ENT_COMPAT, CHARSET, true);
                         if ($inner) {
                             if ($type == 'post') {
                                 if (!in_array($this->arrayName, $ignore)) {
