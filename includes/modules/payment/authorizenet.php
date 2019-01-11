@@ -3,13 +3,14 @@
  * authorize.net SIM payment method class
  *
  * @package paymentMethod
- * @copyright Copyright 2003-2018 Zen Cart Development Team
+ * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Drbyte Sun Jan 7 21:30:21 2018 -0500 Modified in v1.5.6 $
+ * @version $Id: DrByte 2019-01-11 Modified in v1.5.6b $
  */
 /**
  * authorize.net SIM payment method class
+ * Ref: https://www.authorize.net/content/dam/authorize/documents/SIM_guide.pdf
  */
 class authorizenet extends base {
   /**
@@ -119,54 +120,6 @@ class authorizenet extends base {
     $this->gateway_currency = MODULE_PAYMENT_AUTHORIZENET_CURRENCY;
   }
 
-  // Authorize.net utility functions
-  // DISCLAIMER:
-  //     This code is distributed in the hope that it will be useful, but without any warranty;
-  //     without even the implied warranty of merchantability or fitness for a particular purpose.
-
-  // Main Interfaces:
-  //
-  // function InsertFP ($loginid, $txnkey, $amount, $sequence) - Insert HTML form elements required for SIM
-  // function CalculateFP ($loginid, $txnkey, $amount, $sequence, $tstamp) - Returns Fingerprint.
-
-  // compute HMAC-MD5
-  // Uses PHP mhash extension. Be sure to enable the extension
-  // function hmac ($key, $data) {
-  //   return (bin2hex (mhash(MHASH_MD5, $data, $key)));
-  //}
-
-  // Thanks is lance from http://www.php.net/manual/en/function.mhash.php
-  //lance_rushing at hot* spamfree *mail dot com
-  //27-Nov-2002 09:36
-  //
-  /**
-   * compute HMAC-MD5
-   *
-   * @param string $key
-   * @param string $data
-   * @return string
-   */
-  function hmac ($key, $data)
-  {
-    // RFC 2104 HMAC implementation for php.
-    // Creates an md5 HMAC.
-    // Eliminates the need to install mhash to compute a HMAC
-    // by Lance Rushing
-
-    $b = 64; // byte length for md5
-    if (strlen($key) > $b) {
-      $key = pack("H*",md5($key));
-    }
-    $key  = str_pad($key, $b, chr(0x00));
-    $ipad = str_pad('', $b, chr(0x36));
-    $opad = str_pad('', $b, chr(0x5c));
-    $k_ipad = $key ^ $ipad ;
-    $k_opad = $key ^ $opad;
-
-    return md5($k_opad  . pack("H*",md5($k_ipad . $data)));
-  }
-  // end code from lance (resume authorize.net code)
-
   /**
    * Inserts the hidden variables in the HTML FORM required for SIM
    * Invokes hmac function to calculate fingerprint.
@@ -175,20 +128,18 @@ class authorizenet extends base {
    * @param string $txnkey
    * @param float $amount
    * @param string $sequence
-   * @param float $currency
-   * @return string
+   * @param string $currency
+   * @return array
    */
   function InsertFP ($loginid, $txnkey, $amount, $sequence, $currency = "") {
     $tstamp = time ();
-    $fingerprint = $this->hmac ($txnkey, $loginid . "^" . $sequence . "^" . $tstamp . "^" . $amount . "^" . $currency);
+    $fingerprint = hash_hmac ('md5', $loginid . "^" . $sequence . "^" . $tstamp . "^" . $amount . "^" . $currency, $txnkey);
     $security_array = array('x_fp_sequence' => $sequence,
                             'x_fp_timestamp' => $tstamp,
                             'x_fp_hash' => $fingerprint);
     return $security_array;
   }
-  // end authorize.net-provided code
 
-  // class methods
   /**
    * Calculate zone matches and flag settings to determine whether this module should display to customers or not
    */
@@ -475,14 +426,14 @@ class authorizenet extends base {
     global $messageStack, $order;
     $this->authorize = $_POST;
     unset($this->authorize['btn_submit_x'], $this->authorize['btn_submit_y']);
-    $this->authorize['HashValidationValue'] = $this->calc_md5_response($this->authorize['x_trans_id'], $this->authorize['x_amount']);
-    $this->authorize['HashMatchStatus'] = ($this->authorize['x_MD5_Hash'] == $this->authorize['HashValidationValue']) ? 'PASS' : 'FAIL';
+    $this->authorize['HashValidationValue'] = $this->formatHashedResponseCheckString($this->authorize['x_trans_id'], $this->authorize['x_amount']);
+    $this->authorize['HashMatchStatus'] = hash_equals($this->authorize['x_MD5_Hash'], $this->authorize['HashValidationValue']) ? 'PASS' : 'FAIL';
 
     $this->notify('NOTIFY_PAYMENT_AUTHNETSIM_POSTSUBMIT_HOOK', $this->authorize);
     $this->_debugActions($this->authorize, 'Response-Data', '', zen_session_id());
 
     // if in 'echo' mode, dump the returned data to the browser and stop execution
-    if (AUTHORIZENET_DEVELOPER_MODE == 'echo' || MODULE_PAYMENT_AUTHORIZENET_DEBUGGING == 'echo') {
+    if ((defined('AUTHORIZENET_DEVELOPER_MODE') && AUTHORIZENET_DEVELOPER_MODE == 'echo') || MODULE_PAYMENT_AUTHORIZENET_DEBUGGING == 'echo') {
       echo 'Returned Response Codes:<br /><pre>' . print_r($_POST, true) . '</pre><br />';
       die('Press the BACK button in your browser to return to the previous page.');
     }
@@ -594,12 +545,11 @@ class authorizenet extends base {
     return array('MODULE_PAYMENT_AUTHORIZENET_STATUS', 'MODULE_PAYMENT_AUTHORIZENET_LOGIN', 'MODULE_PAYMENT_AUTHORIZENET_TXNKEY', 'MODULE_PAYMENT_AUTHORIZENET_MD5HASH', 'MODULE_PAYMENT_AUTHORIZENET_TESTMODE', 'MODULE_PAYMENT_AUTHORIZENET_CURRENCY', 'MODULE_PAYMENT_AUTHORIZENET_METHOD', 'MODULE_PAYMENT_AUTHORIZENET_AUTHORIZATION_TYPE', 'MODULE_PAYMENT_AUTHORIZENET_USE_CVV', 'MODULE_PAYMENT_AUTHORIZENET_EMAIL_CUSTOMER', 'MODULE_PAYMENT_AUTHORIZENET_ZONE', 'MODULE_PAYMENT_AUTHORIZENET_ORDER_STATUS_ID', 'MODULE_PAYMENT_AUTHORIZENET_SORT_ORDER', 'MODULE_PAYMENT_AUTHORIZENET_GATEWAY_MODE', 'MODULE_PAYMENT_AUTHORIZENET_STORE_DATA', 'MODULE_PAYMENT_AUTHORIZENET_DEBUGGING');
   }
   /**
-   * Calculate validity of response
+   * Format hashed response string for validation with hash_match
    */
-  function calc_md5_response($trans_id = '', $amount = '') {
-    if ($amount == '' || $amount == '0') $amount = '0.00';
-    $validating = md5(MODULE_PAYMENT_AUTHORIZENET_MD5HASH . MODULE_PAYMENT_AUTHORIZENET_LOGIN . $trans_id . $amount);
-    return strtoupper($validating);
+  function formatHashedResponseCheckString($trans_id = '', $amount = '') {
+    if (empty($amount)) $amount = '0.00';
+    return strtoupper(hash('md5',MODULE_PAYMENT_AUTHORIZENET_MD5HASH . MODULE_PAYMENT_AUTHORIZENET_LOGIN . $trans_id . $amount));
   }
   /**
    * Used to do any debug logging / tracking / storage as required.

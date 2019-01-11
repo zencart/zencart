@@ -3,14 +3,14 @@
  * authorize.net AIM payment method class
  *
  * @package paymentMethod
- * @copyright Copyright 2003-2018 Zen Cart Development Team
+ * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Drbyte Sun Jan 7 21:30:21 2018 -0500 Modified in v1.5.6 $
+ * @version $Id: DrByte 2019-01-11 Modified in v1.5.6b $
  */
 /**
  * Authorize.net Payment Module (AIM version)
- * You must have SSL active on your server to be compliant with merchant TOS
+ * Ref: https://www.authorize.net/content/dam/authorize/documents/AIM_guide.pdf
  */
 class authorizenet_aim extends base {
   /**
@@ -456,8 +456,8 @@ class authorizenet_aim extends base {
     }
 
     if (isset($response[6])) {
-      $response['Expected-MD5-Hash'] = $this->calc_md5_response($response[6], $response[9]);
-      $response['HashMatchStatus'] = ($response[37] == $response['Expected-MD5-Hash']) ? 'PASS' : 'FAIL';
+      $response['Expected-MD5-Hash'] = $this->formatHashedResponseCheckString($response[6], $response[9]);
+      $response['HashMatchStatus'] = hash_equals($response[37], $response['Expected-MD5-Hash']) ? 'PASS' : 'FAIL';
     }
 
     $this->_debugActions($response, $order_time, $sessID);
@@ -709,12 +709,11 @@ class authorizenet_aim extends base {
     return $response;
   }
   /**
-   * Calculate validity of response
+   * Format hashed response string for validation with hash_match
    */
-  function calc_md5_response($trans_id = '', $amount = '') {
-    if ($amount == '' || $amount == '0') $amount = '0.00';
-    $validating = md5(MODULE_PAYMENT_AUTHORIZENET_AIM_MD5HASH . MODULE_PAYMENT_AUTHORIZENET_AIM_LOGIN . $trans_id . $amount);
-    return strtoupper($validating);
+  function formatHashedResponseCheckString($trans_id = '', $amount = '') {
+    if (empty($amount)) $amount = '0.00';
+    return strtoupper(hash('md5',MODULE_PAYMENT_AUTHORIZENET_MD5HASH . MODULE_PAYMENT_AUTHORIZENET_LOGIN . $trans_id . $amount));
   }
   /**
    * Used to do any debug logging / tracking / storage as required.
