@@ -15,6 +15,7 @@ use ZenCart\AdminUser\AdminUser as User;
 use ZenCart\View\ViewFactory as View;
 use ZenCart\Services\ServiceFactory;
 use ZenCart\ListingQueryAndOutput\ViewDefinitionFactory;
+use Zencart\PluginManager\PluginManager;
 
 /**
  * Class AbstractListingController
@@ -65,9 +66,10 @@ abstract class AbstractListingController extends AbstractAdminController
      * @param View $view
      * @param Paginator $paginator
      */
-    public function __construct(Request $request, $modelFactory, User $user, View $view, Paginator $paginator)
+    public function __construct(Request $request, $modelFactory, User $user, View $view, Paginator $paginator,
+                                PluginManager $pluginManager)
     {
-        parent::__construct($request, $modelFactory, $user, $view);
+        parent::__construct($request, $modelFactory, $user, $view, $pluginManager);
         $this->paginator = $paginator;
         $this->initQueryBuilderDefinition(new ViewDefinitionFactory());
         $this->initPageBuilderFactory(new PageBuilderFactory());

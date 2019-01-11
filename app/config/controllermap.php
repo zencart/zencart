@@ -18,6 +18,7 @@ return [
     'orders_status' => ['type' => 'lead'],
     'dup_models' => ['type' => 'lead'],
     'gv_queue' => ['type' => 'lead'],
+    'plugins' => ['type' => 'lead'],
     'gv_sent' => ['type' => 'report'],
     'stats_customers' => ['type' => 'report'],
     'stats_customers_referrals' => ['type' => 'report'],

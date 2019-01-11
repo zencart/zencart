@@ -100,6 +100,7 @@ define('BOX_MODULES_PAYMENT', 'Payment');
 define('BOX_MODULES_SHIPPING', 'Shipping');
 define('BOX_MODULES_ORDER_TOTAL', 'Order Total');
 define('BOX_MODULES_PRODUCT_TYPES', 'Product Types');
+define('BOX_MODULES_PLUGINS', 'Plugins');
 
 // categories box text
 define('BOX_HEADING_CATALOG', 'Catalog');
