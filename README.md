@@ -71,7 +71,7 @@ For v2 documentation, please use the following links:
 * [v2 Public Road Map](https://github.com/zencart/zencart/projects/1)
 * [v2 Admin Road Map](https://github.com/zencart/zencart/issues/2057) 
 * [v2 Bug List on the Zen Cart forum](https://www.zen-cart.com/forumdisplay.php?165-ZCDEV-v2-Development-Bugs)
-* [What's New in v2](https://github.com/zencart/zencart/blob/develop/docs/whatsnew_2.0.html)
+* [What's New in v2](https://htmlpreview.github.io/?https://github.com/zencart/zencart/blob/develop/docs/whatsnew_2.0.html)
 
 Developers should also see the links below; resources exist for both Zen Cart 1.5.x and Zen Cart v2.
 
