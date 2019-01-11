@@ -412,45 +412,51 @@ class order extends base {
     }
     */
 
-    $this->customer = array('firstname' => $customer_address->fields['customers_firstname'],
-                            'lastname' => $customer_address->fields['customers_lastname'],
-                            'company' => $customer_address->fields['entry_company'],
-                            'street_address' => $customer_address->fields['entry_street_address'],
-                            'suburb' => $customer_address->fields['entry_suburb'],
-                            'city' => $customer_address->fields['entry_city'],
-                            'postcode' => $customer_address->fields['entry_postcode'],
-                            'state' => ((zen_not_null($customer_address->fields['entry_state'])) ? $customer_address->fields['entry_state'] : $customer_address->fields['zone_name']),
-                            'zone_id' => $customer_address->fields['entry_zone_id'],
-                            'country' => array('id' => $customer_address->fields['countries_id'], 'title' => $customer_address->fields['countries_name'], 'iso_code_2' => $customer_address->fields['countries_iso_code_2'], 'iso_code_3' => $customer_address->fields['countries_iso_code_3']),
-                            'format_id' => (int)$customer_address->fields['address_format_id'],
-                            'telephone' => $customer_address->fields['customers_telephone'],
-                            'email_address' => $customer_address->fields['customers_email_address']);
+    if ($customer_address->RecordCount() > 0) {
+      $this->customer = array('firstname' => $customer_address->fields['customers_firstname'],
+                              'lastname' => $customer_address->fields['customers_lastname'],
+                              'company' => $customer_address->fields['entry_company'],
+                              'street_address' => $customer_address->fields['entry_street_address'],
+                              'suburb' => $customer_address->fields['entry_suburb'],
+                              'city' => $customer_address->fields['entry_city'],
+                              'postcode' => $customer_address->fields['entry_postcode'],
+                              'state' => ((zen_not_null($customer_address->fields['entry_state'])) ? $customer_address->fields['entry_state'] : $customer_address->fields['zone_name']),
+                              'zone_id' => $customer_address->fields['entry_zone_id'],
+                              'country' => array('id' => $customer_address->fields['countries_id'], 'title' => $customer_address->fields['countries_name'], 'iso_code_2' => $customer_address->fields['countries_iso_code_2'], 'iso_code_3' => $customer_address->fields['countries_iso_code_3']),
+                              'format_id' => (int)$customer_address->fields['address_format_id'],
+                              'telephone' => $customer_address->fields['customers_telephone'],
+                              'email_address' => $customer_address->fields['customers_email_address']);
+    }
 
-    $this->delivery = array('firstname' => $shipping_address->fields['entry_firstname'],
-                            'lastname' => $shipping_address->fields['entry_lastname'],
-                            'company' => $shipping_address->fields['entry_company'],
-                            'street_address' => $shipping_address->fields['entry_street_address'],
-                            'suburb' => $shipping_address->fields['entry_suburb'],
-                            'city' => $shipping_address->fields['entry_city'],
-                            'postcode' => $shipping_address->fields['entry_postcode'],
-                            'state' => ((zen_not_null($shipping_address->fields['entry_state'])) ? $shipping_address->fields['entry_state'] : $shipping_address->fields['zone_name']),
-                            'zone_id' => $shipping_address->fields['entry_zone_id'],
-                            'country' => array('id' => $shipping_address->fields['countries_id'], 'title' => $shipping_address->fields['countries_name'], 'iso_code_2' => $shipping_address->fields['countries_iso_code_2'], 'iso_code_3' => $shipping_address->fields['countries_iso_code_3']),
-                            'country_id' => $shipping_address->fields['entry_country_id'],
-                            'format_id' => (int)$shipping_address->fields['address_format_id']);
+    if ($shipping_address->RecordCount() > 0) {
+      $this->delivery = array('firstname' => $shipping_address->fields['entry_firstname'],
+                              'lastname' => $shipping_address->fields['entry_lastname'],
+                              'company' => $shipping_address->fields['entry_company'],
+                              'street_address' => $shipping_address->fields['entry_street_address'],
+                              'suburb' => $shipping_address->fields['entry_suburb'],
+                              'city' => $shipping_address->fields['entry_city'],
+                              'postcode' => $shipping_address->fields['entry_postcode'],
+                              'state' => ((zen_not_null($shipping_address->fields['entry_state'])) ? $shipping_address->fields['entry_state'] : $shipping_address->fields['zone_name']),
+                              'zone_id' => $shipping_address->fields['entry_zone_id'],
+                              'country' => array('id' => $shipping_address->fields['countries_id'], 'title' => $shipping_address->fields['countries_name'], 'iso_code_2' => $shipping_address->fields['countries_iso_code_2'], 'iso_code_3' => $shipping_address->fields['countries_iso_code_3']),
+                              'country_id' => $shipping_address->fields['entry_country_id'],
+                              'format_id' => (int)$shipping_address->fields['address_format_id']);
+    }
 
-    $this->billing = array('firstname' => $billing_address->fields['entry_firstname'],
-                           'lastname' => $billing_address->fields['entry_lastname'],
-                           'company' => $billing_address->fields['entry_company'],
-                           'street_address' => $billing_address->fields['entry_street_address'],
-                           'suburb' => $billing_address->fields['entry_suburb'],
-                           'city' => $billing_address->fields['entry_city'],
-                           'postcode' => $billing_address->fields['entry_postcode'],
-                           'state' => ((zen_not_null($billing_address->fields['entry_state'])) ? $billing_address->fields['entry_state'] : $billing_address->fields['zone_name']),
-                           'zone_id' => $billing_address->fields['entry_zone_id'],
-                           'country' => array('id' => $billing_address->fields['countries_id'], 'title' => $billing_address->fields['countries_name'], 'iso_code_2' => $billing_address->fields['countries_iso_code_2'], 'iso_code_3' => $billing_address->fields['countries_iso_code_3']),
-                           'country_id' => $billing_address->fields['entry_country_id'],
-                           'format_id' => (int)$billing_address->fields['address_format_id']);
+    if ($billing_address->RecordCount() > 0) {
+      $this->billing = array('firstname' => $billing_address->fields['entry_firstname'],
+                             'lastname' => $billing_address->fields['entry_lastname'],
+                             'company' => $billing_address->fields['entry_company'],
+                             'street_address' => $billing_address->fields['entry_street_address'],
+                             'suburb' => $billing_address->fields['entry_suburb'],
+                             'city' => $billing_address->fields['entry_city'],
+                             'postcode' => $billing_address->fields['entry_postcode'],
+                             'state' => ((zen_not_null($billing_address->fields['entry_state'])) ? $billing_address->fields['entry_state'] : $billing_address->fields['zone_name']),
+                             'zone_id' => $billing_address->fields['entry_zone_id'],
+                             'country' => array('id' => $billing_address->fields['countries_id'], 'title' => $billing_address->fields['countries_name'], 'iso_code_2' => $billing_address->fields['countries_iso_code_2'], 'iso_code_3' => $billing_address->fields['countries_iso_code_3']),
+                             'country_id' => $billing_address->fields['entry_country_id'],
+                             'format_id' => (int)$billing_address->fields['address_format_id']);
+    }
 
     // -----
     // Issue a notification, allowing an observer to potentially make changes to any of the
