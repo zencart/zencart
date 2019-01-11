@@ -12,6 +12,7 @@ use ZenCart\Request\Request as Request;
 use ZenCart\AdminUser\AdminUser as User;
 use ZenCart\View\ViewFactory as View;
 use App\Model\ModelFactory;
+use Zencart\PluginManager\PluginManager;
 
 /**
  * Class AbstractAdminController
@@ -54,18 +55,14 @@ abstract class AbstractAdminController extends \base
      */
     protected $mainTemplate = null;
 
-    /**
-     * AbstractAdminController constructor.
-     * @param Request $request
-     * @param $db
-     * @param User $user
-     */
-    public function __construct(Request $request, ModelFactory $modelFactory, User $user, View $view)
+    public function __construct(Request $request, ModelFactory $modelFactory, User $user, View $view,
+                                PluginManager $pluginManager)
     {
         $this->request = $request;
         $this->currentUser = $user;
         $this->dbConn = $modelFactory->getConnection();
         $this->modelFactory = $modelFactory;
+        $this->pluginManager = $pluginManager;
         //$this->modelLanguages = $modelFactory->factory('languages');
         $this->tplVars = array();
         $this->response = null;
@@ -74,6 +71,7 @@ abstract class AbstractAdminController extends \base
         $this->view->setMainTemplate($this->mainTemplate);
         $this->tplVarManager = $this->view->getTplVarManager();
         $this->prepareCommonTplVars();
+        $this->pluginManager->buildPluginListToDb();
     }
 
     /**

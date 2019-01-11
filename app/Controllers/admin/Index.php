@@ -7,6 +7,7 @@
 namespace App\Controllers\admin;
 
 use App\Controllers\AbstractAdminController;
+use ZenCart\PluginManager\PluginManager;
 use ZenCart\Services\IndexRoute;
 use ZenCart\Request\Request as Request;
 use ZenCart\AdminUser\AdminUser as User;
@@ -24,16 +25,10 @@ class Index extends AbstractAdminController
      */
     protected $service;
 
-    /**
-     * Index constructor.
-     * @param Request $request
-     * @param \App\Model\ModelFactory $modelFactory
-     * @param User $user
-     * @param View $view
-     */
-    public function __construct(Request $request, $modelFactory, User $user, View $view, WidgetManager $widgetManager)
-    {
-        parent::__construct($request, $modelFactory, $user, $view);
+    public function __construct(
+        Request $request, $modelFactory, User $user, View $view, WidgetManager $widgetManager, PluginManager $pluginManager
+    ) {
+        parent::__construct($request, $modelFactory, $user, $view, $pluginManager);
         $this->widgetManager = $widgetManager;
         $this->service = new IndexRoute($this, $request, $modelFactory);
     }

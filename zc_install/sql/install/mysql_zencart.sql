@@ -1487,6 +1487,28 @@ CREATE TABLE paypal_testing (
   KEY idx_order_id_zen (order_id)
 ) ENGINE=MyISAM;
 
+# --------------------------------------------------------
+
+#
+# Table structure for table 'plugins'
+#
+
+DROP TABLE IF EXISTS plugins;
+CREATE TABLE plugins (
+  id int NOT NULL auto_increment,
+  plugin_key varchar(255) NOT NULL,
+  plugin_name varchar(255) NOT NULL,
+  plugin_description text NOT NULL,
+  plugin_version varchar(64) NOT NULL,
+  plugin_definition varchar(255) NOT NULL,
+  plugin_status smallint NOT NULL default 0,
+  plugin_group varchar(64) NOT NULL default 'OTHER',
+  plugin_locked smallint NOT NULL default 0,
+  plugin_internal_state smallint NOT NULL default 0,
+  PRIMARY KEY  (id),
+  KEY plugin_status (plugin_status)
+) ENGINE=MyISAM;
+
 
 # --------------------------------------------------------
 
@@ -2160,6 +2182,7 @@ VALUES ('configMyStore', 'BOX_CONFIGURATION_MY_STORE', 'FILENAME_CONFIGURATION',
        ('payment', 'BOX_MODULES_PAYMENT', 'FILENAME_MODULES', 'set=payment', 'modules', 'Y', 1),
        ('shipping', 'BOX_MODULES_SHIPPING', 'FILENAME_MODULES', 'set=shipping', 'modules', 'Y', 2),
        ('orderTotal', 'BOX_MODULES_ORDER_TOTAL', 'FILENAME_MODULES', 'set=ordertotal', 'modules', 'Y', 3),
+       ('plugins', 'BOX_MODULES_PLUGINS', 'FILENAME_PLUGINS', '', 'modules', 'Y', 4),
        ('customers', 'BOX_CUSTOMERS_CUSTOMERS', 'FILENAME_CUSTOMERS', '', 'customers', 'Y', 1),
        ('orders', 'BOX_CUSTOMERS_ORDERS', 'FILENAME_ORDERS', '', 'customers', 'Y', 2),
        ('groupPricing', 'BOX_CUSTOMERS_GROUP_PRICING', 'FILENAME_GROUP_PRICING', '', 'customers', 'Y', 3),
