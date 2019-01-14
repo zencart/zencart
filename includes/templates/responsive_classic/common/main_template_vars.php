@@ -29,6 +29,7 @@
   if (!isset($flag_disable_right)) {
     $flag_disable_right = false;
   }
+  $display_as_mobile = ($detect->isMobile() && !$detect->isTablet() || $_SESSION['layoutType'] == 'mobile' or  $detect->isTablet() || $_SESSION['layoutType'] == 'tablet'); 
 
 /**
  * load page-specific main_template_vars if present, or jump directly to template file
