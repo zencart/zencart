@@ -6,7 +6,7 @@
  * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2019-01-11 Modified in v1.5.6b $
+ * @version $Id: DrByte  2019-01-14  Modified in v1.5.6b $
  */
 /**
  * Authorize.net Payment Module (AIM version)
@@ -398,7 +398,7 @@ class authorizenet_aim extends base {
                          'IP' => zen_get_ip_address(),
                          'Session' => $sessID );
 
-    $this->notify('NOTIFY_PAYMENT_AUTHNET_EMULATOR_CHECK', array(), $submit_data);
+    $this->notify('NOTIFY_PAYMENT_AUTHNET_EMULATOR_CHECK', $this->code, $submit_data);
     if ($this->include_x_type) {
       $submit_data['x_type'] = MODULE_PAYMENT_AUTHORIZENET_AIM_AUTHORIZATION_TYPE == 'Authorize' ? 'AUTH_ONLY': 'AUTH_CAPTURE';
     }
@@ -413,13 +413,13 @@ class authorizenet_aim extends base {
     }
 
     $this->submit_extras = array();
-    $this->notify('NOTIFY_PAYMENT_AUTHNET_PRESUBMIT_HOOK', array(), $submit_data);
+    $this->notify('NOTIFY_PAYMENT_AUTHNET_PRESUBMIT_HOOK', $this->code, $submit_data);
     unset($this->submit_extras['x_login'], $this->submit_extras['x_tran_key']);
     if (sizeof($this->submit_extras)) $submit_data = array_merge($submit_data, $this->submit_extras);
 
     unset($response);
     $response = $this->_sendRequest($submit_data);
-    $this->notify('NOTIFY_PAYMENT_AUTHNET_POSTSUBMIT_HOOK', array(), $response);
+    $this->notify('NOTIFY_PAYMENT_AUTHNET_POSTSUBMIT_HOOK', $this->code, $response);
     $response_code = $response[0];
     $response_text = $response[3];
     $this->auth_code = $response[4];
