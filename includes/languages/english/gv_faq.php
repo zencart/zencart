@@ -29,8 +29,7 @@ define('SUB_HEADING_TEXT', TEXT_GV_NAMES . ' are purchased just like any other i
   break;
   case '2':
 define('SUB_HEADING_TITLE','How to Send ' . TEXT_GV_NAMES);
-define('SUB_HEADING_TEXT','To send a ' . TEXT_GV_NAME . ' you need to go to our <a href="' . zen_href_link(FILENAME_GV_SEND) . '">' . 'Send ' . TEXT_GV_NAME . ' Page</a>. You can
-  find the link to this page in the My Account page. 
+define('SUB_HEADING_TEXT','You may send a ' . TEXT_GV_NAME . ' from the My Account page. 
   When you send a ' . TEXT_GV_NAME . ' you need to specify the following:
   The name of the person to whom you are sending the ' . TEXT_GV_NAME . ';
   The email address of the person to whom you are sending the ' . TEXT_GV_NAME . ';
