@@ -183,6 +183,9 @@ class shipping extends base {
         $class = substr($value, 0, strrpos($value, '.'));
         if (isset($GLOBALS[$class]) && is_object($GLOBALS[$class]) && $GLOBALS[$class]->enabled) {
           $quotes = $GLOBALS[$class]->quotes;
+          if (empty($quotes['methods'])) {
+            return;
+          }
           $size = sizeof($quotes['methods']);
           for ($i=0; $i<$size; $i++) {
             if (isset($quotes['methods'][$i]['cost'])){
