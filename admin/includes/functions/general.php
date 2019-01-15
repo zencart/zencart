@@ -196,7 +196,7 @@
   function zen_date_short($raw_date) {
     if ( ($raw_date == '0001-01-01 00:00:00') || ($raw_date == '') ) return false;
 
-    $year = substr($raw_date, 0, 4);
+    $year = (int)substr($raw_date, 0, 4);
     $month = (int)substr($raw_date, 5, 2);
     $day = (int)substr($raw_date, 8, 2);
     $hour = (int)substr($raw_date, 11, 2);
