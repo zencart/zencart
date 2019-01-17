@@ -1063,7 +1063,8 @@ class order extends base {
     $html_msg['HEADING_ADDRESS_INFORMATION']= HEADING_ADDRESS_INFORMATION;
     $html_msg['ADDRESS_DELIVERY_TITLE']     = EMAIL_TEXT_DELIVERY_ADDRESS;
 
-    if ($this->content_type != 'virtual' && $this->info['shipping_module_code'] != "storepickup") {
+    $storepickup = (strpos($this->info['shipping_module_code'], "storepickup") !== false); 
+    if ($this->content_type != 'virtual' && !$storepickup) {
       $html_msg['ADDRESS_DELIVERY_DETAIL']    = zen_address_label($_SESSION['customer_id'], $_SESSION['sendto'], true, '', "<br />");
     } else {
        $html_msg['ADDRESS_DELIVERY_DETAIL']    = 'n/a'; 
@@ -1071,7 +1072,7 @@ class order extends base {
     $html_msg['SHIPPING_METHOD_TITLE']      = HEADING_SHIPPING_METHOD;
     $html_msg['SHIPPING_METHOD_DETAIL']     = (zen_not_null($this->info['shipping_method'])) ? $this->info['shipping_method'] : 'n/a';
 
-    if ($this->content_type != 'virtual' && $this->info['shipping_module_code'] != "storepickup") {
+    if ($this->content_type != 'virtual' && !$storepickup) {
       $email_order .= "\n" . EMAIL_TEXT_DELIVERY_ADDRESS . "\n" .
       EMAIL_SEPARATOR . "\n" .
       zen_address_label($_SESSION['customer_id'], $_SESSION['sendto'], 0, '', "\n") . "\n";
