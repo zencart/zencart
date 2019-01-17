@@ -162,7 +162,7 @@ class order extends base {
                             'format_id' => $order->fields['delivery_address_format_id']);
 
     if (($order->fields['shipping_module_code'] == 'storepickup') || 
-        empty($this->delivery['name']) && empty($this->delivery['street_address'])) {
+        (empty($this->delivery['name']) && empty($this->delivery['street_address']))) {
       $this->delivery = false;
     }
 
