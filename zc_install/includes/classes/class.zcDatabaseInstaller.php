@@ -67,6 +67,12 @@ class zcDatabaseInstaller
     $result = $this->db->Connect($this->dbHost, $this->dbUser, $this->dbPassword, $this->dbName, 'false', $this->dieOnErrors, $options);
     return $result;
   }
+
+  public function runZeroDateSql($options = null)
+  {
+      $file = DIR_FS_INSTALL . 'sql/install/zero_dates_cleanup.sql';
+      return $this->parseSqlFile($file, $options);
+  }
   public function parseSqlFile($fileName, $options = NULL)
   {
     $this->extendedOptions = (isset($options)) ? $options : array();
