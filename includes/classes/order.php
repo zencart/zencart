@@ -161,7 +161,8 @@ class order extends base {
                             'country' => $order->fields['delivery_country'],
                             'format_id' => $order->fields['delivery_address_format_id']);
 
-    if (empty($this->delivery['name']) && empty($this->delivery['street_address'])) {
+    if (($order->fields['shipping_module_code'] == 'storepickup') || 
+        empty($this->delivery['name']) && empty($this->delivery['street_address'])) {
       $this->delivery = false;
     }
 
@@ -1061,11 +1062,16 @@ class order extends base {
     //addresses area: Delivery
     $html_msg['HEADING_ADDRESS_INFORMATION']= HEADING_ADDRESS_INFORMATION;
     $html_msg['ADDRESS_DELIVERY_TITLE']     = EMAIL_TEXT_DELIVERY_ADDRESS;
-    $html_msg['ADDRESS_DELIVERY_DETAIL']    = ($this->content_type != 'virtual') ? zen_address_label($_SESSION['customer_id'], $_SESSION['sendto'], true, '', "<br />") : 'n/a';
+
+    if ($this->content_type != 'virtual' && $this->info['shipping_module_code'] != "storepickup") {
+      $html_msg['ADDRESS_DELIVERY_DETAIL']    = zen_address_label($_SESSION['customer_id'], $_SESSION['sendto'], true, '', "<br />");
+    } else {
+       $html_msg['ADDRESS_DELIVERY_DETAIL']    = 'n/a'; 
+    }
     $html_msg['SHIPPING_METHOD_TITLE']      = HEADING_SHIPPING_METHOD;
     $html_msg['SHIPPING_METHOD_DETAIL']     = (zen_not_null($this->info['shipping_method'])) ? $this->info['shipping_method'] : 'n/a';
 
-    if ($this->content_type != 'virtual') {
+    if ($this->content_type != 'virtual' && $this->info['shipping_module_code'] != "storepickup") {
       $email_order .= "\n" . EMAIL_TEXT_DELIVERY_ADDRESS . "\n" .
       EMAIL_SEPARATOR . "\n" .
       zen_address_label($_SESSION['customer_id'], $_SESSION['sendto'], 0, '', "\n") . "\n";
