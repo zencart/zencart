@@ -20,7 +20,7 @@
 //  $Id: gv_sent.php 2388 2005-11-18 00:18:35Z ajeh $
 //
 
-require("gv_name.php"); 
+require 'gv_name.php';
 define('HEADING_TITLE', TEXT_GV_NAMES . ' Sent');
 
 define('TABLE_HEADING_SENDERS_NAME', 'Senders Name');
