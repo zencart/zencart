@@ -78,6 +78,9 @@ define('HEADER_TITLE_LOGOFF', 'Logoff');
 //define('HEADER_TITLE_ADMINISTRATION', 'Administration');
 
 // TEXT_GV_NAME, TEXT_GV_NAMES moved to gv_name.php
+if (!defined('TEXT_GV_NAME')) {
+require 'gv_name.php';
+}
   define('TEXT_DISCOUNT_COUPON', 'Discount Coupon');
 
 // used for redeem code, redemption code, or redemption id
