@@ -111,14 +111,6 @@ if (zen_not_null($action)) {
       break;
   }
 }
-
-// Ensure default currency has value of 1.0 
-$currency = $db->Execute("SELECT value 
-                          FROM " . TABLE_CURRENCIES . "
-                          WHERE code = '" . zen_db_input(DEFAULT_CURRENCY) . "'");
-if ($currency->fields['value'] != 1.0) {
-        $messageStack->add(ERROR_DEFAULT_CURRENCY_VALUE, 'error');
-}
 ?>
 <!doctype html>
 <html <?php echo HTML_PARAMS; ?>>
@@ -263,11 +255,7 @@ if ($currency->fields['value'] != 1.0) {
                   $contents[] = array('text' => TEXT_INFO_CURRENCY_DECIMAL_PLACES . ' ' . $cInfo->decimal_places);
                   $contents[] = array('text' => '<br>' . TEXT_INFO_CURRENCY_LAST_UPDATED . ': ' . zen_datetime_short($cInfo->last_updated));
                   $contents[] = array('text' => TEXT_INFO_CURRENCY_VALUE . ' ' . number_format($cInfo->value, 8));
-                  $example = TEXT_INFO_CURRENCY_EXAMPLE . '<br>' . $currencies->format('30', false, DEFAULT_CURRENCY) . ' = ' . $currencies->format('30', true, $cInfo->code);
-                  if (DEFAULT_CURRENCY == $cInfo->code) {
-                    $example .= TEXT_INFO_CURRENCY_DEFAULT; 
-                  }
-                  $contents[] = array('text' => '<br>' . $example);  
+                  $contents[] = array('text' => '<br>' . TEXT_INFO_CURRENCY_EXAMPLE . '<br>' . $currencies->format('30', false, DEFAULT_CURRENCY) . ' = ' . $currencies->format('30', true, $cInfo->code));
                 }
                 break;
             }
