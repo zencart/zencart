@@ -384,4 +384,11 @@ function get_logs_data($maxToList = 'count') {
   return $logs;
 }
 
+///////////////////////////////////////////////////////////////////////////////////////////
 
+
+function trans($key, array $replace = [], $locale = null) {
+    $loader = new ZenCart\Translator\LanguageLoader();
+    $translator = new ZenCart\Translator\Translator($loader, $_SESSION['languages_code'], DEFAULT_LANGUAGE);
+    return $translator->trans($key, $replace, $locale);
+}
