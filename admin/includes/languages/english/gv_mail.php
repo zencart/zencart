@@ -20,6 +20,7 @@
 //  $Id: gv_mail.php 1105 2005-04-04 22:05:35Z birdbrain $
 //
 
+require("gv_name.php"); 
 define('HEADING_TITLE', 'Send ' . TEXT_GV_NAME . ' To Customers');
 
 define('TEXT_CUSTOMER', 'Customer:');
