@@ -43,4 +43,3 @@ define('TEXT_REDEEM_GV_SUBJECT_ORDER',' Order #');
 
 define('TEXT_EDIT_ORDER','Edit Order ID# ');
 define('TEXT_GV_NONE','No ' . TEXT_GV_NAME . ' to release');
-?>
