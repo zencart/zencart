@@ -37,6 +37,12 @@ class ZenCartCommon extends Config
 
         $di->set('zencart_model', $di->lazyNew('App\Model\ModelFactory'));
 
+        $di->params['ZenCart\PluginManager\PluginManager'] = [
+            'modelFactory' => $di->lazyGet('zencart_model'),
+        ];
+
+        $di->set('zencart_pluginmanager', $di->lazyNew('ZenCart\PluginManager\PluginManager'));
+
         $di->params['ZenCart\AdminUser\AdminUser'] = array(
             'session' => $di->lazyGet('zencart_session'),
             'modelFactory' => $di->lazyGet('zencart_model'),
@@ -54,6 +60,7 @@ class ZenCartCommon extends Config
             'modelFactory' => $di->lazyGet('zencart_model'),
             'user' => $di->lazyGet('zencart_adminuser'),
             'view' => $di->lazyGet('zencart_view'),
+            'pluginManager' => $di->lazyNew('ZenCart\PluginManager\PluginManager'),
         );
 
         $di->params['ZenCart\Paginator\Paginator'] = array(
@@ -66,6 +73,7 @@ class ZenCartCommon extends Config
             'user' => $di->lazyGet('zencart_adminuser'),
             'view' => $di->lazyGet('zencart_view'),
             'paginator' => $di->lazyGet('zencart_paginator'),
+            'pluginManager' => $di->lazyGet('zencart_pluginmanager'),
         );
 
         $di->params['ZenCart\DashboardWidget\WidgetManager'] = array(
