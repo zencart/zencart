@@ -357,7 +357,7 @@ if (zen_not_null($action)) {
               </td>
             </tr>
           </table>
-          <?php echo '<form>'; ?>
+          <?php echo '</form>'; ?>
           <?php
         } else {
           ?>
