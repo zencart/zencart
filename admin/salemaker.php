@@ -181,9 +181,11 @@ if (zen_not_null($action)) {
         function popupWindow(url) {
             window.open(url, 'popupWindow', 'toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=no,resizable=yes,copyhistory=no,width=600,height=460,screenX=150,screenY=150,top=150,left=150')
         }
-        function session_win1() {
-            window.open("<?php echo zen_href_link(FILENAME_SALEMAKER_POPUP, 'cid=' . $category['categories_id']); ?>", "salemaker_info", "height=460,width=600,scrollbars=yes,resizable=yes").focus();
-        }
+<?php /*
+//        function session_win1() {
+//            window.open("<?php echo zen_href_link(FILENAME_SALEMAKER_POPUP, 'cid=' . $category['categories_id']); ?>//", "salemaker_info", "height=460,width=600,scrollbars=yes,resizable=yes").focus();
+//        }
+*/?>
         function init() {
             cssjsmenu('navbar');
             if (document.getElementById) {
@@ -508,7 +510,7 @@ if (zen_not_null($action)) {
                     ?>
                   </td>
                   <td class="dataTableContent" align="right"><?php
-                      if ((is_object($sInfo)) && ($salemaker_sale['sale_id'] == $sInfo->sale_id)) {
+                      if (!empty($sInfo) && (is_object($sInfo)) && !empty($salemaker_sale) && isset($salemaker_sale['sale_id']) && ($salemaker_sale['sale_id'] == $sInfo->sale_id)) {
                         echo zen_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', '');
                       } else {
                         echo '<a href="' . zen_href_link(FILENAME_SALEMAKER, 'page=' . $_GET['page'] . '&sID=' . $salemaker_sale['sale_id']) . '">' . zen_image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>';
