@@ -101,7 +101,7 @@ if (zen_not_null($action)) {
   switch ($action) {
     case ('update'):
 
-      if ($_POST['master_category']) {
+      if (!empty($_POST['master_category'])) {
         $master_categories_id = $_POST['master_category'];
       } else {
         $master_categories_id = $_POST['master_categories_id'];
@@ -112,10 +112,10 @@ if (zen_not_null($action)) {
       $specials_date_available = ((zen_db_prepare_input($_POST['special_start']) == '') ? '0001-01-01' : zen_date_raw($_POST['special_start']));
       $specials_expires_date = ((zen_db_prepare_input($_POST['special_end']) == '') ? '0001-01-01' : zen_date_raw($_POST['special_end']));
 
-      $featured_date_available = ((zen_db_prepare_input($_POST['featured_start']) == '') ? '0001-01-01' : zen_date_raw($_POST['featured_start']));
-      $featured_expires_date = ((zen_db_prepare_input($_POST['featured_end']) == '') ? '0001-01-01' : zen_date_raw($_POST['featured_end']));
+      $featured_date_available = ((isset($_POST['featured_start']) && zen_db_prepare_input($_POST['featured_start']) == '') ? '0001-01-01' : zen_date_raw($_POST['featured_start']));
+      $featured_expires_date = ((isset($_POST['featured_end']) && zen_db_prepare_input($_POST['featured_end']) == '') ? '0001-01-01' : zen_date_raw($_POST['featured_end']));
 
-      $tmp_value = zen_db_prepare_input($_POST['products_price_sorter']);
+      $tmp_value = (isset($_POST['products_price_sorter']) ? zen_db_prepare_input($_POST['products_price_sorter']) : '');
       $products_price_sorter = (!zen_not_null($tmp_value) || $tmp_value == '' || $tmp_value == 0) ? 0 : $tmp_value;
 
       $sql = "UPDATE " . TABLE_PRODUCTS . "
@@ -149,11 +149,11 @@ if (zen_not_null($action)) {
       $sql = $db->bindVars($sql, ':isCall:', $_POST['product_is_call'], 'integer');
       $sql = $db->bindVars($sql, ':qtyMixed:', $_POST['products_quantity_mixed'], 'integer');
       $sql = $db->bindVars($sql, ':pricedByAttr:', $_POST['products_priced_by_attribute'], 'integer');
-      $sql = $db->bindVars($sql, ':discType:', $_POST['products_discount_type'], 'integer');
-      $sql = $db->bindVars($sql, ':discTypeFrom:', $_POST['products_discount_type_from'], 'integer');
+      $sql = $db->bindVars($sql, ':discType:', (isset($_POST['products_discount_type']) ? $_POST['products_discount_type'] : 0), 'integer');
+      $sql = $db->bindVars($sql, ':discTypeFrom:', (isset($_POST['products_discount_type_from']) ? $_POST['products_discount_type_from'] : 0), 'integer');
       $sql = $db->bindVars($sql, ':discPriceSorter:', $products_price_sorter, 'string');
       $sql = $db->bindVars($sql, ':masterCatId:', $master_categories_id, 'integer');
-      $sql = $db->bindVars($sql, ':discQty:', $_POST['products_mixed_discount_quantity'], 'integer');
+      $sql = $db->bindVars($sql, ':discQty:', (isset($_POST['products_mixed_discount_quantity']) ? $_POST['products_mixed_discount_quantity'] : 0), 'integer');
 
       $db->Execute($sql);
 
@@ -169,7 +169,7 @@ if (zen_not_null($action)) {
 
         $specials_price = zen_db_prepare_input($_POST['specials_price']);
         if (substr($specials_price, -1) == '%') {
-          $specials_price = ($products_price - (($specials_price / 100) * $products_price));
+          $specials_price = ((float)$products_price - (((float)$specials_price / 100) * (float)$products_price));
         }
         $db->Execute("UPDATE " . TABLE_SPECIALS . "
                       SET specials_new_products_price = '" . zen_db_input($specials_price) . "',
@@ -632,7 +632,7 @@ if (zen_not_null($action)) {
           echo zen_draw_hidden_field('products_id', $_GET['products_filter']);
           echo zen_draw_hidden_field('specials_id', isset($sInfo->specials_id) ? $sInfo->specials_id : '');
           echo zen_draw_hidden_field('featured_id', $fInfo->featured_id);
-          echo zen_draw_hidden_field('discounts_list', $discounts_qty);
+//          echo zen_draw_hidden_field('discounts_list', $discounts_qty);
           ?>
 
           <table class="table">
