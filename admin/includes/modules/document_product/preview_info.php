@@ -32,6 +32,9 @@ if (zen_not_null($_POST)) {
 
   $pInfo = new objectInfo($product->fields);
   $products_image_name = $pInfo->products_image;
+  $products_name = $pInfo->products_name;
+  $products_description = $pInfo->products_description;
+  $products_url = $pInfo->products_url;
 }
 
 $form_action = (isset($_GET['pID'])) ? 'update_product' : 'insert_product';
@@ -75,11 +78,11 @@ $form_action = (isset($_GET['pID'])) ? 'update_product' : 'insert_product';
     <div class="row">
         <?php
 //auto replace with defined missing image
-        if ($_POST['products_image_manual'] != '') {
+        if (isset($_POST['products_image_manual']) && $_POST['products_image_manual'] != '') {
           $products_image_name = $_POST['img_dir'] . $_POST['products_image_manual'];
           $pInfo->products_name = $products_image_name;
         }
-        if ($_POST['image_delete'] == 1 || $products_image_name == '' && PRODUCTS_IMAGE_NO_IMAGE_STATUS == '1') {
+        if (isset($_POST['image_delete']) && $_POST['image_delete'] == 1 || $products_image_name == '' && PRODUCTS_IMAGE_NO_IMAGE_STATUS == '1') {
           echo zen_image(DIR_WS_CATALOG_IMAGES . PRODUCTS_IMAGE_NO_IMAGE, $pInfo->products_name, SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT, 'align="right" hspace="5" vspace="5"') . $pInfo->products_description;
         } else {
           echo zen_image(DIR_WS_CATALOG_IMAGES . $products_image_name, $pInfo->products_name, SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT, 'align="right" hspace="5" vspace="5"') . $pInfo->products_description;
