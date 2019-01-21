@@ -79,7 +79,7 @@ define('HEADER_TITLE_LOGOFF', 'Logoff');
 
 // TEXT_GV_NAME, TEXT_GV_NAMES moved to gv_name.php
 if (!defined('TEXT_GV_NAME')) {
-require 'gv_name.php';
+  require DIR_WS_LANGUAGES . $_SESSION['language'] . '/' . 'gv_name.php'; 
 }
   define('TEXT_DISCOUNT_COUPON', 'Discount Coupon');
 
