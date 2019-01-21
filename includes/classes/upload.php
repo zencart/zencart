@@ -79,7 +79,7 @@ class upload extends base
                 'name'     => (isset($GLOBALS[$this->file . '_name']) ? $GLOBALS[$this->file . '_name'] : ''),
                 'type'     => (isset($GLOBALS[$this->file . '_type']) ? $GLOBALS[$this->file . '_type'] : ''),
                 'size'     => (isset($GLOBALS[$this->file . '_size']) ? $GLOBALS[$this->file . '_size'] : ''),
-                'tmp_name' => (isset($GLOBALS[$this->file]) ? $GLOBALS[$this->file] : ''),
+                'tmp_name' => (isset($GLOBALS[$this->file]) && isset($GLOBALS[$this->file]->filename) && zen_not_null($GLOBALS[$this->file]->filename) ? $GLOBALS[$this->file]->filename : ''),
             );
         }
         if (!zen_not_null($file['tmp_name'])) return false;
