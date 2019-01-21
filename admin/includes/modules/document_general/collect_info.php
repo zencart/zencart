@@ -256,7 +256,7 @@ for ($i = 0, $n = sizeof($tax_class_array); $i < $n; $i++) {
         </div>
         <div class="row">&nbsp;</div>
         <div class="row">
-            <?php echo zen_draw_label(TEXT_IMAGE_CURRENT, 'products_previous_image', 'class="conrol-label"') . '&nbsp;' . ($pInfo->products_image != '' ? $pInfo->products_image : NONE); ?>
+            <?php echo zen_draw_label(TEXT_IMAGE_CURRENT, 'products_previous_image', 'class="control-label"') . '&nbsp;' . ($pInfo->products_image != '' ? $pInfo->products_image : NONE); ?>
             <?php echo zen_draw_hidden_field('products_previous_image', $pInfo->products_image); ?>
         </div>
         <div class="row">&nbsp;</div>
