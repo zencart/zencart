@@ -282,9 +282,8 @@ function zen_get_zone_class_title($zone_class_id) {
       $sql = "select distinct m.manufacturers_id, m.manufacturers_name
               from " . TABLE_MANUFACTURERS . " m
               left join " . TABLE_PRODUCTS . " p on m.manufacturers_id = p.manufacturers_id
-              where p.manufacturers_id = m.manufacturers_id
-              and (p.products_status = 1
-              and p.products_quantity > 0)
+              where p.products_status = 1
+              and p.products_quantity > 0
               order by m.manufacturers_name";
     }
     $result = $db->Execute($sql);
