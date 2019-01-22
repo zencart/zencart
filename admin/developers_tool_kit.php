@@ -10,6 +10,10 @@ require('includes/application_top.php');
 
 $default_context_lines = 0;
 
+if (!empty($_POST) && !isset($_POST['context_lines'])) {
+  $_POST['context_lines'] = abs((int)$default_context_lines);
+}
+
 if (isset($_GET['configuration_key_lookup']) && $_GET['configuration_key_lookup'] != '') {
   $_POST['configuration_key'] = strtoupper($_GET['configuration_key_lookup']);
   $_POST['zv_files'] = 1;
