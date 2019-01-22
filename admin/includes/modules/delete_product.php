@@ -24,11 +24,11 @@ if (sizeof($product_categories) > 1) {
   $contents[] = array('text' => '<strong><span class="text-danger">' . TEXT_MASTER_CATEGORIES_ID . '</span>' . '</strong>');
 }
 for ($i = 0, $n = sizeof($product_categories); $i < $n; $i++) {
-//  $category_path = '';
+  $category_path = '';
   for ($j = 0, $k = sizeof($product_categories[$i]); $j < $k; $j++) {
-    $category_path .= $product_categories[$i][$j]['text'] . '&nbsp;&gt;&nbsp;';
+    $category_path .= $product_categories[$i][$j]['text'];
+    if ($j+1 < $k)  $category_path .= '&nbsp;&gt;&nbsp;';
   }
-  $category_path = substr($category_path, 0, -16);
   if (sizeof($product_categories) > 1 && zen_get_parent_category_id($pInfo->products_id) == $product_categories[$i][sizeof($product_categories[$i]) - 1]['id']) {
     $product_categories_string .= '<div class="checkbox text-danger"><label><strong>' . zen_draw_checkbox_field('product_categories[]', $product_categories[$i][sizeof($product_categories[$i]) - 1]['id'], true) . $category_path . '</strong></label></div>';
   } else {
