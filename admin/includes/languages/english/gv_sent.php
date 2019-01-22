@@ -20,7 +20,8 @@
 //  $Id: gv_sent.php 2388 2005-11-18 00:18:35Z ajeh $
 //
 
-define('HEADING_TITLE', 'Gift Voucher\'s Sent');
+require 'gv_name.php';
+define('HEADING_TITLE', TEXT_GV_NAMES . ' Sent');
 
 define('TABLE_HEADING_SENDERS_NAME', 'Senders Name');
 define('TABLE_HEADING_VOUCHER_VALUE', TEXT_GV_NAME . ' Value');
@@ -38,4 +39,3 @@ define('TEXT_INFO_DATE_REDEEMED', 'Date Redeemed:');
 define('TEXT_INFO_IP_ADDRESS', 'IP Address:');
 define('TEXT_INFO_CUSTOMERS_ID', 'Customer Id:');
 define('TEXT_INFO_NOT_REDEEMED', 'Not Redeemed');
-?>

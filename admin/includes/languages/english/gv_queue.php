@@ -19,7 +19,7 @@
 // +----------------------------------------------------------------------+
 //  $Id: gv_queue.php 1105 2005-04-04 22:05:35Z birdbrain $
 //
-
+require 'gv_name.php';
 define('HEADING_TITLE', TEXT_GV_NAME . ' Release Queue');
 
 define('TABLE_HEADING_CUSTOMERS', 'Customers');
@@ -43,4 +43,3 @@ define('TEXT_REDEEM_GV_SUBJECT_ORDER',' Order #');
 
 define('TEXT_EDIT_ORDER','Edit Order ID# ');
 define('TEXT_GV_NONE','No ' . TEXT_GV_NAME . ' to release');
-?>
