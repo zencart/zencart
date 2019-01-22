@@ -52,6 +52,7 @@ if (!$error)
   $options = $systemChecker->getDbConfigOptions();
   $dbInstaller = new zcDatabaseInstaller($options);
   $result = $dbInstaller->getConnection();
+  $errDates = $dbInstaller->runZeroDateSql($options);
   $errorUpg = $dbInstaller->parseSqlFile($file);
 }
 echo json_encode(array('error'=>$error, 'version'=>$_POST['version'], 'errorList'=>$errorList));

@@ -88,9 +88,9 @@ class shoppingCart extends base {
    * For customers who login, cart contents are also stored in the database.
    * {TABLE_CUSTOMER_BASKET et al}. This allows the system to remember the
    * contents of their cart over multiple sessions.
-   * This method simply retrieve the content of the databse store cart
+   * This method simply retrieve the content of the database store cart
    * for a given customer. Note also that if the customer already has
-   * some items in their cart before thet login, these are merged with
+   * some items in their cart before they login, these are merged with
    * the stored contents.
    *
    * @return void

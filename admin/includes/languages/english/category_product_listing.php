@@ -50,6 +50,7 @@ define('TEXT_COPY_ATTRIBUTES_CONDITIONS', '<strong>How should existing product a
 define('TEXT_COPY_ATTRIBUTES_DELETE', '<strong>Delete</strong> first, then copy new attributes');
 define('TEXT_COPY_ATTRIBUTES_UPDATE', '<strong>Update</strong> with new settings/prices, then add new ones');
 define('TEXT_COPY_ATTRIBUTES_IGNORE', '<strong>Ignore</strong> and add only new attributes');
+define('TEXT_ATTRIBUTE_COPY_INSERTING', '<strong>Inserting New Attribute from </strong>');
 define('ICON_ATTRIBUTES', 'Attribute Features');
 
 // Products and Attribute Copy Options

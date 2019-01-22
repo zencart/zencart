@@ -11,6 +11,11 @@ require("includes/application_top.php");
 
 require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/' . FILENAME_SALEMAKER_POPUP . '.php');
 $cname = zen_get_category_name($_GET['cid'], (int)$_SESSION['languages_id']);
+$deduction_type_array = array(
+  array('id' => '0', 'text' => DEDUCTION_TYPE_DROPDOWN_0),
+  array('id' => '1', 'text' => DEDUCTION_TYPE_DROPDOWN_1),
+  array('id' => '2', 'text' => DEDUCTION_TYPE_DROPDOWN_2));
+
 ?>
 <!doctype html>
 <html <?php echo HTML_PARAMS; ?>>
