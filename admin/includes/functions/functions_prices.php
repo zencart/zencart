@@ -925,29 +925,30 @@ If a special exist * 10+9
 // Actual Price Retail
 // Specials and Tax Included
   function zen_get_products_actual_price($products_id) {
-    global $db, $currencies;
+    global $db;
     $product_check = $db->Execute("select products_tax_class_id, products_price, products_priced_by_attribute, product_is_free, product_is_call from " . TABLE_PRODUCTS . " where products_id = '" . (int)$products_id . "'" . " limit 1");
 
-    $show_display_price = '';
-    $display_normal_price = zen_get_products_base_price($products_id);
-    $display_special_price = zen_get_products_special_price($products_id, true);
+    // If Free, Show it
+    if ((int)$product_check->fields['product_is_free'] === 1) {
+      return 0;
+    }
+
     $display_sale_price = zen_get_products_special_price($products_id, false);
 
-    $products_actual_price = $display_normal_price;
 
-    if ($display_special_price) {
-      $products_actual_price = $display_special_price;
-    }
-    if ($display_sale_price) {
-      $products_actual_price = $display_sale_price;
+    if ($display_sale_price !== false) {
+      return $display_sale_price;
     }
 
+    $display_special_price = zen_get_products_special_price($products_id, true);
+
+    if ($display_special_price !== false) {
     // If Free, Show it
-    if ($product_check->fields['product_is_free'] == '1') {
-      $products_actual_price = 0;
+      return $display_special_price;
     }
 
-    return $products_actual_price;
+    $display_normal_price = zen_get_products_base_price($products_id);
+    return $display_normal_price;
   }
 
 ////
@@ -1094,7 +1095,9 @@ If a special exist * 10+9
   function zen_get_attributes_type($check_attribute) {
     global $db;
     $check_options_id_query = $db->Execute("select options_id from " . TABLE_PRODUCTS_ATTRIBUTES . " where products_attributes_id='" . (int)$check_attribute . "'");
+    if ($check_options_id_query->EOF) return 0;
     $check_type_query = $db->Execute("select products_options_type from " . TABLE_PRODUCTS_OPTIONS . " where products_options_id='" . (int)$check_options_id_query->fields['options_id'] . "'");
+    if ($check_type_query->EOF) return 0;
     return $check_type_query->fields['products_options_type'];
   }
 
@@ -1102,6 +1105,7 @@ If a special exist * 10+9
 ////
 // calculate words
   function zen_get_word_count($string, $free=0) {
+    $string = str_replace(array("\r\n", "\n", "\r", "\t"), ' ', $string);
     if ($string != '') {
       $string = preg_replace('/[ ]+/', ' ', $string);
       $string = trim($string);
@@ -1129,6 +1133,7 @@ If a special exist * 10+9
 ////
 // calculate letters
   function zen_get_letters_count($string, $free=0) {
+    $string = str_replace(array("\r\n", "\n", "\r", "\t"), ' ', $string);
     $string = preg_replace('/[ ]+/', ' ', $string);
     $string = trim($string);
     if (TEXT_SPACES_FREE == '1') {
