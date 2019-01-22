@@ -30,6 +30,7 @@ define('NAMESPACE_MODEL', 'App\Model');
 define('NAMESPACE_CONFIGLOADER', 'ZenCart\ConfigLoader');
 define('NAMESPACE_CONFIGSETTINGS', 'ZenCart\ConfigSettings');
 define('NAMESPACE_PLUGINMANAGER', 'ZenCart\PluginManager');
+define('NAMESPACE_TRANSLATOR', 'ZenCart\Translator');
 
 
 define('URL_SERVICES', 'zencart/Services/src/');
@@ -55,6 +56,7 @@ define('URL_MODEL', '/app/Model/');
 define('URL_CONFIGLOADER', 'zencart/ConfigLoader/src/');
 define('URL_CONFIGSETTINGS', 'zencart/ConfigSettings/src/');
 define('URL_PLUGINMANAGER', 'zencart/PluginManager/src/');
+define('URL_TRANSLATOR', 'zencart/Translator/src/');
 
 
 /**
@@ -91,4 +93,5 @@ return array(
     NAMESPACE_CONFIGLOADER => DIR_APP_LIBRARY. URL_CONFIGLOADER,
     NAMESPACE_CONFIGSETTINGS => DIR_APP_LIBRARY. URL_CONFIGSETTINGS,
     NAMESPACE_PLUGINMANAGER => DIR_APP_LIBRARY. URL_PLUGINMANAGER,
+    NAMESPACE_TRANSLATOR => DIR_APP_LIBRARY. URL_TRANSLATOR,
 );

@@ -95,6 +95,13 @@ class ZenCartCommon extends Config
             'widgetManager' => $di->lazyGet('zencart_widgetmanager'),
         );
 
+//        $di->params['ZenCart\Translator\Translator'] = array(
+//            'loader' => $di->lazyNew('ZenCart\Translator\LanguageLoader'),
+//            'session' => $di->lazyGet('zencart_session'),
+//       );
+//
+//        $di->set('zencart_translator', $di->lazyNew('ZenCart\Translator\Translator'));
+//
 //        $di->params['ZenCart\Controllers\AbstractLeadController'] = array(
 //            'request' => $di->lazyGet('zencart_request'),
 //            'modelFactory' => $di->lazyGet('zencart_model'),

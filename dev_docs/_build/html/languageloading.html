@@ -1,0 +1,380 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Language Loading &mdash; Zen Cart v2.0 Developer Docs 2.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Plugins" href="plugins.html" /> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> Zen Cart v2.0 Developer Docs
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="dashboardwidgets.html">Dashboard Widgets</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="dashboardwidgetsconfig.html">Widget Configuration Settings</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="dashboardwidgetsconfigtables.html">Database Tables</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="dashboardwidgetsconfigtables.html#dashboard-widgets-settings">dashboard_widgets_settings</a></li>
+<li class="toctree-l4"><a class="reference internal" href="dashboardwidgetsconfigtables.html#dashboard-widgets-settings-to-widget">dashboard_widgets_settings_to_widget</a></li>
+<li class="toctree-l4"><a class="reference internal" href="dashboardwidgetsconfigtables.html#dashboard-widgets-settings-to-user">dashboard_widgets_settings_to_user</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="dashboardwidgetsconfigusage.html">Using Widget Configuration Settings</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="configurationsettings.html">Configuration Settings</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="configurationsettingtypes.html">Setting Types</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="configurationsettingtypes.html#text-type">text Type</a></li>
+<li class="toctree-l3"><a class="reference internal" href="configurationsettingtypes.html#boolean-type">boolean Type</a></li>
+<li class="toctree-l3"><a class="reference internal" href="configurationsettingtypes.html#selectfromarray-type">selectFromArray Type</a></li>
+<li class="toctree-l3"><a class="reference internal" href="configurationsettingtypes.html#selectfrommodel-type">selectFromModel Type</a></li>
+<li class="toctree-l3"><a class="reference internal" href="configurationsettingtypes.html#simpledate-type">simpleDate Type</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="configurationsettingtemplates.html">Template Partials</a></li>
+<li class="toctree-l2"><a class="reference internal" href="configurationsettinghandlers.html">Setting Type Handlers</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="plugins.html">Plugins</a><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Language Loading</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#overrides">Overrides</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#string-interpolation">String Interpolation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#plugins">Plugins</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#templates">Templates</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Zen Cart v2.0 Developer Docs</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>Language Loading</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/languageloading.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="language-loading">
+<h1>Language Loading<a class="headerlink" href="#language-loading" title="Permalink to this headline">¶</a></h1>
+<p>Legacy versions of Zen Cart use PHP defines to create multi language web sites.</p>
+<p>PHP defines are <cite>idempotent</cite> in the sense that once a define has been set it cannot be altered using another define.</p>
+<p>e.g. Doing</p>
+<p>define(‘SOME_KEY’, ‘Original Value’);
+define(‘SOME_KEY’, ‘New Value’);</p>
+<p>will not change the value of <cite>SOME_KEY</cite> to <cite>New Value</cite></p>
+<p>In fact doing so will generate a PHP warning.</p>
+<p>This fact meant the current method for loading defines is somewhat cumbersome.</p>
+<p>Furthermore the difficulty in correctly overriding these defines leads developers/store owners etc to
+edit the original define files, leading to problems updating sites to new versions.</p>
+<p>To mitigate this, a new way of defining language strings in V2 haas been introduced.</p>
+<p>As it may take some time to convert V2 code legacy defines will still be honoured.</p>
+<p>The structure of a language file is a simple php array of key/value pairs.</p>
+<p>e.g.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>&lt;?php
+    return [
+        &#39;header-title-logoff&#39;, &#39;Logoff&#39;,
+        &#39;header-title-login&#39;, &#39;Login&#39;,
+        &#39;some-key&#39;, &#39;some-value&#39;,
+    ]
+</pre></div>
+</div>
+<p>Two things should be noted here.</p>
+<p>First the naming of the file has no meaning in terms of loading the file.
+Unlike legacy code, language strings are loaded on demand, instead of up front.</p>
+<p>Secondly, as these are not <code class="docutils literal notranslate"><span class="pre">defines</span></code> in the coding sense, we don’t use uppercase constants for the key.</p>
+<p>To access a language conversion we use a helper method</p>
+<p>e.g.</p>
+<p>if the file above was called auth.php we would do</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">echo</span> <span class="n">trans</span><span class="p">(</span><span class="s1">&#39;auth.header-title-logoff&#39;</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>Also note, to access a legacy define you can also do</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">echo</span> <span class="n">trans</span><span class="p">(</span><span class="s1">&#39;SOME_DEFINE_NAME&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>although if you are converting legacy code, we would argue it’s better to just go ahead and create
+a new language define file using the new system.</p>
+<div class="section" id="overrides">
+<h2>Overrides<a class="headerlink" href="#overrides" title="Permalink to this headline">¶</a></h2>
+<p>Even given the new system, people will still want to override the base language definitions.
+In the past this may have meant site owners etc touching the original release file, such as english.php
+As mentioned above, this has an impact on upgrading.</p>
+<p>The new system uses a specific filesystem layout to mitigate this.</p>
+<p>The base path for storing language definitions is</p>
+<p><code class="docutils literal notranslate"><span class="pre">app/resources/lang</span></code> and under this directory are 2 futher directories, <code class="docutils literal notranslate"><span class="pre">default</span></code> and <code class="docutils literal notranslate"><span class="pre">local</span></code></p>
+<p>The <code class="docutils literal notranslate"><span class="pre">default</span></code> directory represents <cite>release</cite> files and files within this directory should never be altered.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">local</span></code> directory is where any customizations should occur.</p>
+<p>Under both the <code class="docutils literal notranslate"><span class="pre">default</span></code> and <code class="docutils literal notranslate"><span class="pre">local</span></code> directories, definitions are then stored in a directory named after the language code.</p>
+<p>e.g.</p>
+<ul class="simple">
+<li><dl class="first docutils">
+<dt>app</dt>
+<dd><ul class="first last">
+<li><dl class="first docutils">
+<dt>resources</dt>
+<dd><ul class="first last">
+<li><dl class="first docutils">
+<dt>lang</dt>
+<dd><ul class="first last">
+<li><dl class="first docutils">
+<dt>default</dt>
+<dd><ul class="first last">
+<li>en</li>
+<li>de</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>local</dt>
+<dd><ul class="first last">
+<li>en</li>
+<li>de</li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+<p>So if we wanted to override <code class="docutils literal notranslate"><span class="pre">header-title-logoff</span></code> we would create a new file
+in <code class="docutils literal notranslate"><span class="pre">app/resources/lang/local/en/auth.php</span></code> containing</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>&lt;?php
+    return [
+        &#39;header-title-logoff&#39;, &#39;My Logoff String&#39;,
+    ]
+</pre></div>
+</div>
+</div>
+<div class="section" id="string-interpolation">
+<h2>String Interpolation<a class="headerlink" href="#string-interpolation" title="Permalink to this headline">¶</a></h2>
+<p>Legacy defines do not allow for direct variable interpolation.</p>
+<p>For example</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">define</span><span class="p">(</span><span class="s1">&#39;TEXT_DISPLAY_NUMBER_OF_BANNERS&#39;</span><span class="p">,</span> <span class="s1">&#39;Displaying &lt;b&gt;</span><span class="si">%d</span><span class="s1">&lt;/b&gt; to &lt;b&gt;</span><span class="si">%d</span><span class="s1">&lt;/b&gt; (of &lt;b&gt;</span><span class="si">%d</span><span class="s1">&lt;/b&gt; banners)&#39;</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>would require the use of <code class="docutils literal notranslate"><span class="pre">sprintf</span></code> or similar to correctly output the define.</p>
+<p>In v2 the Translator <code class="docutils literal notranslate"><span class="pre">trans</span></code> method (or the <code class="docutils literal notranslate"><span class="pre">trans</span></code> helper function) instead can take an array of substitution items.</p>
+<p>e.g. if we define the language definition as</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="s1">&#39;display-number-of-banners&#39;</span><span class="p">,</span> <span class="s1">&#39;Displaying &lt;b&gt;:start&lt;/b&gt; to &lt;b&gt;:end&lt;/b&gt; (of &lt;b&gt;:count&lt;/b&gt; banners)&#39;</span>
+</pre></div>
+</div>
+<p>we can properly display this with</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">echo</span> <span class="n">trans</span><span class="p">(</span><span class="s1">&#39;display-number-of-banners&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;start&#39;</span> <span class="o">=&gt;</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;end&#39;</span> <span class="o">=&gt;</span> <span class="mi">5</span><span class="p">,</span> <span class="s1">&#39;count&#39;</span> <span class="o">=&gt;</span> <span class="mi">10</span><span class="p">]);</span>
+</pre></div>
+</div>
+<p>Now while this may feel slightly more verbose, the name hinting of interpolated strings makes it easier to see how the string will finally be displayed</p>
+</div>
+<div class="section" id="plugins">
+<h2>Plugins<a class="headerlink" href="#plugins" title="Permalink to this headline">¶</a></h2>
+<p>See &#64;todo plugins link</p>
+<p>although as a quick hint plugins would access their defintions as</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">echo</span> <span class="n">trans</span><span class="p">(</span><span class="s1">&#39;pluginname::auth.header-title-logoff&#39;</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="templates">
+<h2>Templates<a class="headerlink" href="#templates" title="Permalink to this headline">¶</a></h2>
+<p>&#64;todo template language override not supported at the moment as we are focused on admin
+will be needed for store front support</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+      
+        <a href="plugins.html" class="btn btn-neutral" title="Plugins" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, Zen-Cart Team &amp; Contributors.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'2.0',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+
+  
+
+  <script type="text/javascript" src="_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
