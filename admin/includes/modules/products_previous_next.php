@@ -56,13 +56,18 @@ if (!isset($prev_next_list) || $prev_next_list == '') {
 // set current category
   $current_category_id = (isset($_GET['current_category_id']) ? (int)$_GET['current_category_id'] : $current_category_id);
 
-  if (!$current_category_id) {
+  if (empty($current_category_id)) {
     $sql = "SELECT categories_id
             FROM   " . TABLE_PRODUCTS_TO_CATEGORIES . "
             WHERE  products_id = " . (int)$products_filter;
 
     $cPath_row = $db->Execute($sql);
-    $current_category_id = $cPath_row->fields['categories_id'];
+
+    $current_category_id = 0;
+
+    if (!$cPath_row->EOF) {
+      $current_category_id = $cPath_row->fields['categories_id'];
+    }
   }
 
   $sql = "SELECT p.products_id, pd.products_name
