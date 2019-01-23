@@ -32,9 +32,12 @@ if (zen_not_null($_POST)) {
 
   $pInfo = new objectInfo($product->fields);
   $products_image_name = $pInfo->products_image;
-  $products_name = $pInfo->products_name;
-  $products_description = $pInfo->products_description;
-  $products_url = $pInfo->products_url;
+
+  foreach($product as $prod) {
+    $products_name[$prod['language_id']] = $prod['products_name'];
+    $products_description[$prod['language_id']] = $prod['products_description'];
+    $products_url[$prod['language_id']] = $prod['products_url'];
+  }
 }
 
 $form_action = (isset($_GET['pID'])) ? 'update_product' : 'insert_product';
