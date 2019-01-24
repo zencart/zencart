@@ -114,11 +114,11 @@ ALTER TABLE orders_status_history ADD updated_by varchar(45) NOT NULL default ''
 
 # Clean up expired prids from baskets
 #NEXT_X_ROWS_AS_ONE_COMMAND:3
-DELETE FROM customers_basket WHERE CAST(products_id AS unsigned) NOT IN (
+DELETE FROM customers_basket WHERE CAST(SUBSTRING_INDEX(products_id, ":", 1) AS unsigned) NOT IN (
 SELECT products_id
 FROM products WHERE products_status > 0);
 #NEXT_X_ROWS_AS_ONE_COMMAND:3
-DELETE FROM customers_basket_attributes WHERE CAST(products_id AS unsigned) NOT IN (
+DELETE FROM customers_basket_attributes WHERE CAST(SUBSTRING_INDEX(products_id, ":", 1) AS unsigned) NOT IN (
 SELECT products_id
 FROM products WHERE products_status > 0);
 
