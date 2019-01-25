@@ -184,7 +184,7 @@ class shipping extends base {
         if (isset($GLOBALS[$class]) && is_object($GLOBALS[$class]) && $GLOBALS[$class]->enabled) {
           $quotes = $GLOBALS[$class]->quotes;
           if (empty($quotes['methods'])) {
-            break;
+            continue;
           }
           $size = sizeof($quotes['methods']);
           for ($i=0; $i<$size; $i++) {

@@ -83,8 +83,8 @@ function zen_address_format($address_format_id = 1, $incoming = array(), $html =
     // do the substitutions
     $address_out = str_replace(array_keys($address), array_values($address), $fmt);
 
-    if (ACCOUNT_COMPANY == 'true' && !empty($address['company']) && false === strpos($fmt, '$company')) {
-        $address_out = $address['company'] . $address['cr'] . $address_out;
+    if (ACCOUNT_COMPANY == 'true' && !empty($address['$company']) && false === strpos($fmt, '$company')) {
+        $address_out = $address['$company'] . $address['$cr'] . $address_out;
     }
 
     // -----
