@@ -60,7 +60,7 @@ require('includes/application_top.php');
             if (isset($_GET['page']) && ($_GET['page'] > 1))
               $rows = $_GET['page'] * MAX_DISPLAY_SEARCH_RESULTS_REPORTS - MAX_DISPLAY_SEARCH_RESULTS_REPORTS;
             $rows = 0;
-            $products_query_raw = "SELECT p.products_id, pd.products_name, pd.products_viewed, l.name
+            $products_query_raw = "SELECT p.products_id, pd.products_name, pd.products_viewed, l.name, p.products_type
                                    FROM " . TABLE_PRODUCTS . " p,
                                         " . TABLE_PRODUCTS_DESCRIPTION . " pd,
                                         " . TABLE_LANGUAGES . " l
@@ -105,4 +105,4 @@ require('includes/application_top.php');
     <!-- footer_eof //-->
   </body>
 </html>
-<?php require(DIR_WS_INCLUDES . 'application_bottom.php'); ?>
+<?php require(DIR_WS_INCLUDES . 'application_bottom.php');

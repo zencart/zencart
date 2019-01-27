@@ -364,7 +364,7 @@ if (zen_not_null($action)) {
           <div class="form-group">
               <?php echo zen_draw_label(TEXT_BANNERS_IMAGE_TARGET, 'banners_image_target', 'class="col-sm-3 control-label"'); ?>
             <div class="col-sm-9 col-md-6">
-                <?php echo zen_draw_input_field('banners_image_target', '', 'class="form-control'); ?>
+                <?php echo zen_draw_input_field('banners_image_target', '', 'class="form-control"'); ?>
               <span class="help-block"><?php echo DIR_FS_CATALOG_IMAGES; ?></span>
               <div>
                   <?php echo TEXT_BANNER_IMAGE_TARGET_INFO; ?>
@@ -398,7 +398,7 @@ if (zen_not_null($action)) {
           </div>
           <div class="form-group">
             <div class="col-sm-12 text-right">
-              <button type="submit" class="btn btn-primary"><?php echo (($form_action == 'add') ? IMAGE_INSERT : IMAGE_UPDATE); ?></button> <a href="<?php echo zen_href_link(FILENAME_BANNER_MANAGER, (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . (isset($_GET['bID']) ? 'bID=' . $_GET['bID'] : '')); ?>" class="btn btn-default" role="button"><?php echo IMAGE_CANCEL; ?></a>
+              <button type="submit" class="btn btn-primary"><?php echo (($form_action == 'add') ? IMAGE_INSERT : IMAGE_UPDATE); ?></button> <a href="<?php echo zen_href_link(FILENAME_BANNER_MANAGER, (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . (isset($_GET['bID']) ? 'bID=' . (int)$_GET['bID'] : '')); ?>" class="btn btn-default" role="button"><?php echo IMAGE_CANCEL; ?></a>
             </div>
           </div>
           <div class="form-group">
@@ -435,12 +435,12 @@ if (zen_not_null($action)) {
                                         ORDER BY banners_title, banners_group";
 // Split Page
 // reset page when page is unknown
-                  if (($_GET['page'] == '' || $_GET['page'] == '1') && $_GET['bID'] != '') {
+                  if (empty($_GET['page']) || $_GET['page'] == '1') && !empty($_GET['bID'])) {
                     $check_page = $db->Execute($banners_query_raw);
                     $check_count = 1;
                     if ($check_page->RecordCount() > MAX_DISPLAY_SEARCH_RESULTS) {
                       foreach ($check_page as $item) {
-                        if ($item['banners_id'] == $_GET['bID']) {
+                        if ($item['banners_id'] == (int)$_GET['bID']) {
                           break;
                         }
                         $check_count++;
@@ -458,7 +458,7 @@ if (zen_not_null($action)) {
                                           FROM " . TABLE_BANNERS_HISTORY . "
                                           WHERE banners_id = " . (int)$banner['banners_id']);
 
-                    if ((!isset($_GET['bID']) || (isset($_GET['bID']) && ($_GET['bID'] == $banner['banners_id']))) && !isset($bInfo) && (substr($action, 0, 3) != 'new')) {
+                    if (empty($_GET['bID']) || $_GET['bID'] == $banner['banners_id']) && empty($bInfo) && substr($action, 0, 3) != 'new') {
                       $bInfo_array = array_merge($banner, $info->fields);
                       $bInfo = new objectInfo($bInfo_array);
                     }
