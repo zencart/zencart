@@ -364,7 +364,7 @@ if (zen_not_null($action)) {
           <div class="form-group">
               <?php echo zen_draw_label(TEXT_BANNERS_IMAGE_TARGET, 'banners_image_target', 'class="col-sm-3 control-label"'); ?>
             <div class="col-sm-9 col-md-6">
-                <?php echo zen_draw_input_field('banners_image_target', '', 'class="form-control'); ?>
+                <?php echo zen_draw_input_field('banners_image_target', '', 'class="form-control"'); ?>
               <span class="help-block"><?php echo DIR_FS_CATALOG_IMAGES; ?></span>
               <div>
                   <?php echo TEXT_BANNER_IMAGE_TARGET_INFO; ?>
