@@ -68,12 +68,12 @@
       $message .= TEXT_VOUCHER_IS . $coupon_result->fields['coupon_code'] . "\n\n";
       $message .= $text_coupon_help . "\n\n";
       if ($coupon_result->fields['coupon_is_valid_for_sales']) {
-        $message .= TEXT_COUPON_IS_VALID_FOR_SALES . "\n\n";
+        $message .= TEXT_COUPON_IS_VALID_FOR_SALES_EMAIL . "\n\n";
       } else {
-        $message .= TEXT_NO_COUPON_IS_VALID_FOR_SALES . "\n\n";
+        $message .= TEXT_NO_COUPON_IS_VALID_FOR_SALES_EMAIL . "\n\n";
       }
       if ($coupon_result->fields['coupon_product_count']) {
-        $message .= TEXT_COUPON_PRODUCT_COUNT_PER_QUANTY . "\n\n";
+        $message .= TEXT_COUPON_PRODUCT_COUNT_PER_PRODUCT . "\n\n";
       } else {
         $message .= TEXT_COUPON_PRODUCT_COUNT_PER_ORDER . "\n\n";
       }
