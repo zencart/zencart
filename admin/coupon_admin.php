@@ -9,7 +9,7 @@
   require('includes/application_top.php');
   require(DIR_WS_CLASSES . 'currencies.php');
   $currencies = new currencies();
-  if ($_GET['selected_box']) {
+  if (!empty($_GET['selected_box'])) {
     $_GET['action']='';
     $_GET['old_action']='';
   }
@@ -33,7 +33,7 @@
   if (isset($_GET['reports_page'])) $_GET['reports_page'] = (int)$_GET['reports_page'];
   if (isset($_GET['status'])) $_GET['status'] = preg_replace('/[^YNA]/','',$_GET['status']);
   if (isset($_GET['codebase'])) $_GET['codebase'] = preg_replace('/[^A-Za-z0-9\-\][\^!@#$%&*)(+=}{]/', '', $_GET['codebase']);
-  if (($_GET['action'] == 'send_email_to_user') && ($_POST['customers_email_address']) && (!$_POST['back_x'])) {
+  if (isset($_GET['action']) && ($_GET['action'] == 'send_email_to_user') && ($_POST['customers_email_address']) && (!$_POST['back_x'])) {
     $audience_select = get_audience_sql_query($_POST['customers_email_address'], 'email');
     $mail = $db->Execute($audience_select['query_string']);
     $mail_sent_to = $audience_select['query_name'];
@@ -109,15 +109,17 @@
     zen_redirect(zen_href_link(FILENAME_COUPON_ADMIN, 'mail_sent_to=' . urlencode($mail_sent_to) . '&recip_count='. $recip_count ));
   }
 
-  if ( ($_GET['action'] == 'preview_email') && (!$_POST['customers_email_address']) ) {
+  if ( isset($_GET['action']) && ($_GET['action'] == 'preview_email') && (!$_POST['customers_email_address']) ) {
     $_GET['action'] = 'email';
     $messageStack->add(ERROR_NO_CUSTOMER_SELECTED, 'error');
   }
 
-  if ($_GET['mail_sent_to']) {
+  if (!empty($_GET['mail_sent_to'])) {
     $messageStack->add(sprintf(NOTICE_EMAIL_SENT_TO, $_GET['mail_sent_to']. '(' . $_GET['recip_count'] . ')'), 'success');
     $_GET['mail_sent_to'] = '';
   }
+
+  if (!isset($_GET['action'])) $_GET['action'] = '';
 
   switch ($_GET['action']) {
       case 'set_editor':
@@ -1332,7 +1334,7 @@ function check_form(form_name) {
     $cc_split = new splitPageResults($_GET['page'], $maxDisplaySearchResults, $cc_query_raw, $cc_query_numrows);
     $cc_list = $db->Execute($cc_query_raw);
     while (!$cc_list->EOF) {
-      if (((!$_GET['cid']) || (@$_GET['cid'] == $cc_list->fields['coupon_id'])) && (!$cInfo)) {
+      if ((empty($_GET['cid']) || @$_GET['cid'] == $cc_list->fields['coupon_id']) && empty($cInfo)) {
         $cInfo = new objectInfo($cc_list->fields);
       }
       if ( (is_object($cInfo)) && ($cc_list->fields['coupon_id'] == $cInfo->coupon_id) ) {
@@ -1497,10 +1499,11 @@ $product_query = $db->Execute("select * from " . TABLE_COUPON_RESTRICT . " where
 //bof 12-6ke
 $category_query = $db->Execute("select * from " . TABLE_COUPON_RESTRICT . " where coupon_id = '" . $cInfo->coupon_id . "' and category_id != '0'");        if ($category_query->RecordCount() > 0) $cat_details = TEXT_SEE_RESTRICT;
 //eof 12-6ke
-        $coupon_name = $db->Execute("select coupon_name
-                                     from " . TABLE_COUPONS_DESCRIPTION . "
-                                     where coupon_id = '" . $cInfo->coupon_id . "'
-                                     and language_id = '" . (int)$_SESSION['languages_id'] . "'");
+        $coupon_name = $db->Execute("SELECT cd.coupon_name, c.coupon_type
+                                     FROM " . TABLE_COUPONS_DESCRIPTION . " cd
+                                     LEFT JOIN " . TABLE_COUPONS . " c ON c.coupon_id = cd.coupon_id
+                                     WHERE cd.coupon_id = " . $cInfo->coupon_id . "
+                                     AND cd.language_id = " . (int)$_SESSION['languages_id']);
         $uses_coupon = $cInfo->uses_per_coupon;
         $uses_user = $cInfo->uses_per_user;
         $coupon_order_limit = $cInfo->coupon_order_limit;
