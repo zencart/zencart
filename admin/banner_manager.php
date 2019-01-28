@@ -435,7 +435,7 @@ if (zen_not_null($action)) {
                                         ORDER BY banners_title, banners_group";
 // Split Page
 // reset page when page is unknown
-                  if (empty($_GET['page']) || $_GET['page'] == '1') && !empty($_GET['bID'])) {
+                  if ((empty($_GET['page']) || $_GET['page'] == '1') && !empty($_GET['bID'])) {
                     $check_page = $db->Execute($banners_query_raw);
                     $check_count = 1;
                     if ($check_page->RecordCount() > MAX_DISPLAY_SEARCH_RESULTS) {
