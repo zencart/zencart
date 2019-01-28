@@ -458,7 +458,7 @@ if (zen_not_null($action)) {
                                           FROM " . TABLE_BANNERS_HISTORY . "
                                           WHERE banners_id = " . (int)$banner['banners_id']);
 
-                    if (empty($_GET['bID']) || $_GET['bID'] == $banner['banners_id']) && empty($bInfo) && substr($action, 0, 3) != 'new') {
+                    if ((empty($_GET['bID']) || $_GET['bID'] == $banner['banners_id']) && empty($bInfo) && substr($action, 0, 3) != 'new') {
                       $bInfo_array = array_merge($banner, $info->fields);
                       $bInfo = new objectInfo($bInfo_array);
                     }
@@ -466,7 +466,7 @@ if (zen_not_null($action)) {
                     $banners_shown = ($info->fields['banners_shown'] != '') ? $info->fields['banners_shown'] : '0';
                     $banners_clicked = ($info->fields['banners_clicked'] != '') ? $info->fields['banners_clicked'] : '0';
 
-                    if ((isset($bInfo) && is_object($bInfo) && ($banner['banners_id'] == $bInfo->banners_id)) {
+                    if (isset($bInfo) && is_object($bInfo) && ($banner['banners_id'] == $bInfo->banners_id)) {
                       ?>
                     <tr id="defaultSelected" class="dataTableRowSelected" onclick="document.location.href = '<?php echo zen_href_link(FILENAME_BANNER_MANAGER, 'page=' . $_GET['page'] . '&bID=' . $bInfo->banners_id . '&action=new'); ?>'" role="button">
                         <?php
