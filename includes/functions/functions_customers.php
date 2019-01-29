@@ -74,6 +74,9 @@ function zen_address_format($address_format_id = 1, $incoming = array(), $html =
     // sort to put longer keys at the top of the array so that longer variants are replaced before shorter ones
     array_multisort(array_map('strlen', array_keys($address)), SORT_DESC, $address);
 
+    // store translated values into original array, just for the sake of the notifier
+    $incoming = $address;
+    
     // convert into $-prefixed keys
     foreach ($address as $key => $value) {
         $address['$' . $key] = $value;
