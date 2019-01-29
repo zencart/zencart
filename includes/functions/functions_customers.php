@@ -74,6 +74,9 @@ function zen_address_format($address_format_id = 1, $incoming = array(), $html =
     // sort to put longer keys at the top of the array so that longer variants are replaced before shorter ones
     array_multisort(array_map('strlen', array_keys($address)), SORT_DESC, $address);
 
+    // store translated values into original array, just for the sake of the notifier
+    $incoming = $address;
+    
     // convert into $-prefixed keys
     foreach ($address as $key => $value) {
         $address['$' . $key] = $value;
@@ -95,17 +98,21 @@ function zen_address_format($address_format_id = 1, $incoming = array(), $html =
         'NOTIFY_END_ZEN_ADDRESS_FORMAT',
         array(
             'format' => $fmt,
-            'address' => $address,
-            'firstname' => $firstname,
-            'lastname' => $lastname,
-            'street' => $street,
-            'suburb' => $suburb,
-            'city' => $city,
-            'state' => $state,
-            'country' => $country,
-            'postcode' => $postcode,
-            'cr' => $cr,
-            'hr' => $hr,
+            'address' => $incoming,
+            'firstname' => $address['$firstname'],
+            'lastname' => $address['$lastname'],
+            'street' => $address['$street'],
+            'suburb' => $address['$suburb'],
+            'city' => $address['$city'],
+            'state' => $address['$state'],
+            'country' => $address['$country'],
+            'postcode' => $address['$postcode'],
+            'company' => $address['$company'],
+            'streets' => $address['$streets'],
+            'statecomma' => $address['$statecomma'],
+            'zip' => $address['$zip'],
+            'cr' => $address['$cr'],
+            'hr' => $address['$hr'],
         ),
         $address_out
     );
