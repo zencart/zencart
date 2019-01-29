@@ -428,7 +428,12 @@ if (zen_not_null($action)) {
                                  WHERE a.customers_id = c.customers_id
                                  AND c.customers_id = " . (int)$customers_id);
 
-      $cInfo = new objectInfo($customers->fields);
+      $reviews = $db->Execute("SELECT COUNT(*) AS number_of_reviews
+                               FROM " . TABLE_REVIEWS . "
+                               WHERE customers_id = " . (int)$customers_id);
+
+      $cInfo_array = array_merge($customers->fields, $reviews->fields);
+      $cInfo = new objectInfo($cInfo_array);
   }
 }
 ?>
