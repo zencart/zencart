@@ -55,6 +55,7 @@ if (zen_not_null($action)) {
       $sql = $db->bindVars($sql, ':tpl:', $_POST['ln'], 'string');
       $sql = $db->bindVars($sql, ':id:', $_GET['tID'], 'integer');
       $db->Execute($sql);
+      zen_redirect(zen_href_link(FILENAME_TEMPLATE_SELECT, zen_get_all_get_params(array('action'))));
       break;
     case 'deleteconfirm':
       $check_query = $db->Execute("SELECT template_language
