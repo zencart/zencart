@@ -124,7 +124,7 @@ function selectAll(FormName, SelectBox) {
 
       $ids = zen_db_input(implode(',', $chosen));
 
-      $products = $db->Execute("SELCET DISTINCT customers_id
+      $products = $db->Execute("SELECT DISTINCT customers_id
                                 FROM " . TABLE_PRODUCTS_NOTIFICATIONS . "
                                 WHERE products_id in (" . $ids . ")");
 
