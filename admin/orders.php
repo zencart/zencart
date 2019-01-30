@@ -358,7 +358,7 @@ if (zen_not_null($action) && $order_exists == true) {
               <div class="input-group">
                   <?php
                   echo zen_draw_input_field('search', '', 'id="allSearch" class="form-control" placeholder="' . $placeholder . '"');
-                  if ((isset($_GET['search']) && zen_not_null($_GET['search'])) or $_GET['cID'] != '') {
+                  if (isset($_GET['search']) && zen_not_null($_GET['search']) || !empty($_GET['cID'])) {
                     ?>
                   <a class="btn btn-info input-group-addon" role="button" aria-label="<?php echo TEXT_RESET_FILTER; ?>" href="<?php echo zen_href_link(FILENAME_ORDERS); ?>">
                     <i class="fa fa-times" aria-hidden="true"></i>
@@ -376,7 +376,7 @@ if (zen_not_null($action) && $order_exists == true) {
               <div class="input-group">
                   <?php
                   echo zen_draw_input_field('search_orders_products', '', 'id="productSearch" class="form-control" aria-describedby="helpBlock3" placeholder="' . $placeholder . '"');
-                  if ((isset($_GET['search_orders_products']) && zen_not_null($_GET['search_orders_products'])) or $_GET['cID'] != '') {
+                  if (isset($_GET['search_orders_products']) && zen_not_null($_GET['search_orders_products']) || !empty($_GET['cID'])) {
                     ?>
                   <a class="btn btn-info input-group-addon" role="button" aria-label="<?php echo TEXT_RESET_FILTER; ?>" href="<?php echo zen_href_link(FILENAME_ORDERS); ?>">
                     <i class="fa fa-times" aria-hidden="true"></i>
@@ -910,7 +910,7 @@ if (zen_not_null($action) && $order_exists == true) {
                           left join " . TABLE_ORDERS_TOTAL . " ot on (o.orders_id = ot.orders_id and ot.class = 'ot_total') ";
 
 
-                  if (isset($_GET['cID'])) {
+                  if (!empty($_GET['cID'])) {
                     $cID = (int)zen_db_prepare_input($_GET['cID']);
                     $orders_query_raw .= " WHERE o.customers_id = " . (int)$cID;
 //echo '<br><br>I SEE A: ' . $orders_query_raw . '<br><br>';
