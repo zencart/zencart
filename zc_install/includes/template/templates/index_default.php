@@ -74,6 +74,7 @@ $adjustWarnIssues = false;
 </div>
 <?php } ?>
 <?php if ($hasWarnErrors) { ?>
+    <?php if (empty($errorHeadingFlag)) $errorHeadingFlag = false; ?>
     <?php foreach ($listWarnErrors as $error) { ?>
         <?php if (strpos($error['mainErrorText'], 'PRO TIP:') === false) { ?>
             <?php $errorHeadingFlag = true; ?>
