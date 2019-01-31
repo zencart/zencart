@@ -259,7 +259,7 @@ if (zen_not_null($action)) {
                                               AND options_values_id = " . $options_values_values_id_to . "
                                               LIMIT 1");
               // do not add duplicate attributes
-              if ($check_previous->RecorCount() < 1) {
+              if ($check_previous->RecordCount() < 1) {
                 $db->Execute($sql);
                 $new_attribute++;
               }

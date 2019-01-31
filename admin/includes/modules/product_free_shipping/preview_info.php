@@ -10,6 +10,10 @@ if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
 }
 $languages = zen_get_languages();
+if (empty($products_description)) $products_description = [];
+if (empty($products_name)) $products_name = [];
+if (empty($products_url)) $products_url = [];
+
 if (zen_not_null($_POST)) {
   $pInfo = new objectInfo($_POST);
   $products_name = $_POST['products_name'];
