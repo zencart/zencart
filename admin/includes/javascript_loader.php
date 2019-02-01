@@ -13,7 +13,7 @@
 <script>window.jQuery || document.write('<script src="includes/javascript/jquery-3.3.1.min.js"><\/script>');</script>
 
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-<!--<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>-->
+<!--<script src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js" integrity="sha384-vhJnz1OVIdLktyixHY4Uk3OHEwdQqPppqYR8+5mjsauETgLOcEynD9oPHhhz18Nw" crossorigin="anonymous"></script>-->
 <script src="includes/javascript/bootstrap.min.js"></script>
 
 <script src="includes/javascript/jquery-ui-i18n.min.js"></script>
