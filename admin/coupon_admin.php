@@ -13,6 +13,7 @@
     $_GET['action']='';
     $_GET['old_action']='';
   }
+  if (!isset($_GET['action'])) $_GET['action'] = '';
 
   if (isset($_GET['search']) && zen_not_null($_GET['search'])) {
     $sql = "SELECT coupon_id, coupon_active from " . TABLE_COUPONS . " WHERE coupon_code = :couponCode:";
@@ -33,7 +34,7 @@
   if (isset($_GET['reports_page'])) $_GET['reports_page'] = (int)$_GET['reports_page'];
   if (isset($_GET['status'])) $_GET['status'] = preg_replace('/[^YNA]/','',$_GET['status']);
   if (isset($_GET['codebase'])) $_GET['codebase'] = preg_replace('/[^A-Za-z0-9\-\][\^!@#$%&*)(+=}{]/', '', $_GET['codebase']);
-  if (isset($_GET['action']) && ($_GET['action'] == 'send_email_to_user') && ($_POST['customers_email_address']) && (!$_POST['back_x'])) {
+  if (($_GET['action'] == 'send_email_to_user') && ($_POST['customers_email_address']) && (!$_POST['back_x'])) {
     $audience_select = get_audience_sql_query($_POST['customers_email_address'], 'email');
     $mail = $db->Execute($audience_select['query_string']);
     $mail_sent_to = $audience_select['query_name'];
@@ -109,7 +110,7 @@
     zen_redirect(zen_href_link(FILENAME_COUPON_ADMIN, 'mail_sent_to=' . urlencode($mail_sent_to) . '&recip_count='. $recip_count ));
   }
 
-  if ( isset($_GET['action']) && ($_GET['action'] == 'preview_email') && (!$_POST['customers_email_address']) ) {
+  if ( ($_GET['action'] == 'preview_email') && (!$_POST['customers_email_address']) ) {
     $_GET['action'] = 'email';
     $messageStack->add(ERROR_NO_CUSTOMER_SELECTED, 'error');
   }
@@ -118,8 +119,6 @@
     $messageStack->add(sprintf(NOTICE_EMAIL_SENT_TO, $_GET['mail_sent_to']. '(' . $_GET['recip_count'] . ')'), 'success');
     $_GET['mail_sent_to'] = '';
   }
-
-  if (!isset($_GET['action'])) $_GET['action'] = '';
 
   switch ($_GET['action']) {
       case 'set_editor':
