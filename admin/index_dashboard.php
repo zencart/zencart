@@ -115,11 +115,14 @@ foreach ($whos_online as $session) {
   }
 
   if (empty($session['session_id'])) {
+    if (empty($spider_array[$status])) $spider_array[$status] = 0;
     $spider_array[$status] += 1;
   } else {
     if ($session['full_name'] == "&yen;Guest") {
+      if (empty($guest_array[$status])) $guest_array[$status] = 0;
       $guest_array[$status] += 1;
     } else {
+      if (empty($user_array[$status])) $user_array[$status] = 0;
       $user_array[$status] += 1;
     }
   }
