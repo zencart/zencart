@@ -64,7 +64,7 @@ $report = 4;
 require_once DIR_WS_CLASSES . 'stats_sales_report_graph.php';
 $endDate = mktime(0, 0, 0, date("m"), date("d"), date("Y"));
 //$startDate = mktime() - (365 + 182) * 3600 * 24;
-$startDate = mktime() - (365 * 2) * 3600 * 24;
+$startDate = time() - (365 * 2) * 3600 * 24;
 
 //$startDate = mktime() - (365)*3600*24;
 $report = new statsSalesReportGraph($report, $startDate, $endDate);
