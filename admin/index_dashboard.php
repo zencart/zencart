@@ -78,9 +78,8 @@ for ($i = 0, $salesData = ''; $i < $report->size; $i++) {
 
 // Build the whos-online graph
 $whos_online = $db->Execute("select customer_id, full_name, ip_address, time_entry, time_last_click, last_page_url, session_id, host_address, user_agent from " . TABLE_WHOS_ONLINE);
-$user_array = [];
-$guest_array = [];
-$spider_array = [];
+// Initialize array variables for display.
+$user_array = $guest_array = $spider_array = [0=>0, 1=>0, 2=>0, 3=>0];
 $status = 0;
 
 foreach ($whos_online as $session) {
@@ -115,14 +114,11 @@ foreach ($whos_online as $session) {
   }
 
   if (empty($session['session_id'])) {
-    if (empty($spider_array[$status])) $spider_array[$status] = 0;
     $spider_array[$status] += 1;
   } else {
     if ($session['full_name'] == "&yen;Guest") {
-      if (empty($guest_array[$status])) $guest_array[$status] = 0;
       $guest_array[$status] += 1;
     } else {
-      if (empty($user_array[$status])) $user_array[$status] = 0;
       $user_array[$status] += 1;
     }
   }
@@ -345,24 +341,24 @@ foreach ($whos_online as $session) {
         <div class="header"><?php echo WO_GRAPH_TITLE . '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="' . zen_href_link(FILENAME_WHOS_ONLINE) . '">' . WO_GRAPH_MORE . '</a>'; ?></div>
         <div class="row">
           <div class="first"><?php echo WO_GRAPH_REGISTERED; ?></div>
-          <div class="col"><?php echo zen_image(DIR_WS_IMAGES . 'icon_status_green.gif'); ?>&nbsp;&nbsp;<?php echo (!empty($user_array[0]) ? $user_array[0] : ''); ?></div>
-          <div class="col"><?php echo zen_image(DIR_WS_IMAGES . 'icon_status_yellow.gif'); ?>&nbsp;&nbsp;<?php echo (!empty($user_array[1]) ? $user_array[1] : ''); ?></div>
-          <div class="col"><?php echo zen_image(DIR_WS_IMAGES . 'icon_status_red.gif'); ?>&nbsp;&nbsp;<?php echo (!empty($user_array[2]) ? $user_array[2] : ''); ?></div>
-          <div class="col"><?php echo zen_image(DIR_WS_IMAGES . 'icon_status_red_light.gif'); ?>&nbsp;&nbsp;<?php echo (!empty($user_array[3]) ? $user_array[3] : ''); ?></div>&nbsp;
+          <div class="col"><?php echo zen_image(DIR_WS_IMAGES . 'icon_status_green.gif'); ?>&nbsp;&nbsp;<?php echo ($user_array[0] ?: ''); ?></div>
+          <div class="col"><?php echo zen_image(DIR_WS_IMAGES . 'icon_status_yellow.gif'); ?>&nbsp;&nbsp;<?php echo ($user_array[1] ?: ''); ?></div>
+          <div class="col"><?php echo zen_image(DIR_WS_IMAGES . 'icon_status_red.gif'); ?>&nbsp;&nbsp;<?php echo ($user_array[2] ?: ''); ?></div>
+          <div class="col"><?php echo zen_image(DIR_WS_IMAGES . 'icon_status_red_light.gif'); ?>&nbsp;&nbsp;<?php echo ($user_array[3] ?: ''); ?></div>&nbsp;
         </div>
         <div class="row">
           <div class="first"><?php echo WO_GRAPH_GUEST; ?></div>
-          <div class="col"><?php echo zen_image(DIR_WS_IMAGES . 'icon_status_green.gif'); ?>&nbsp;&nbsp;<?php echo (!empty($guest_array[0]) ? $guest_array[0] : ''); ?></div>
-          <div class="col"><?php echo zen_image(DIR_WS_IMAGES . 'icon_status_yellow.gif'); ?>&nbsp;&nbsp;<?php echo (!empty($guest_array[1]) ? $guest_array[1] : ''); ?></div>
-          <div class="col"><?php echo zen_image(DIR_WS_IMAGES . 'icon_status_red.gif'); ?>&nbsp;&nbsp;<?php echo (!empty($guest_array[2]) ? $guest_array[2] : ''); ?></div>
-          <div class="col"><?php echo zen_image(DIR_WS_IMAGES . 'icon_status_red_light.gif'); ?>&nbsp;&nbsp;<?php echo (!empty($guest_array[3]) ? $guest_array[3] : ''); ?></div>&nbsp;
+          <div class="col"><?php echo zen_image(DIR_WS_IMAGES . 'icon_status_green.gif'); ?>&nbsp;&nbsp;<?php echo ($guest_array[0] ?: ''); ?></div>
+          <div class="col"><?php echo zen_image(DIR_WS_IMAGES . 'icon_status_yellow.gif'); ?>&nbsp;&nbsp;<?php echo ($guest_array[1] ?: ''); ?></div>
+          <div class="col"><?php echo zen_image(DIR_WS_IMAGES . 'icon_status_red.gif'); ?>&nbsp;&nbsp;<?php echo ($guest_array[2] ?: ''); ?></div>
+          <div class="col"><?php echo zen_image(DIR_WS_IMAGES . 'icon_status_red_light.gif'); ?>&nbsp;&nbsp;<?php echo ($guest_array[3] ?: ''); ?></div>&nbsp;
         </div>
         <div class="row">
           <div class="first"><?php echo WO_GRAPH_SPIDER; ?></div>
-          <div class="col"><?php echo zen_image(DIR_WS_IMAGES . 'icon_status_green.gif'); ?>&nbsp;&nbsp;<?php echo (!empty($spider_array[0]) ? $spider_array[0] : ''); ?></div>
-          <div class="col"><?php echo zen_image(DIR_WS_IMAGES . 'icon_status_yellow.gif'); ?>&nbsp;&nbsp;<?php echo (!empty($spider_array[1]) ? $spider_array[1] : ''); ?></div>
-          <div class="col"><?php echo zen_image(DIR_WS_IMAGES . 'icon_status_red.gif'); ?>&nbsp;&nbsp;<?php echo (!empty($spider_array[2]) ? $spider_array[2] : ''); ?></div>
-          <div class="col"><?php echo zen_image(DIR_WS_IMAGES . 'icon_status_red_light.gif'); ?>&nbsp;&nbsp;<?php echo (!empty($spider_array[3]) ? $spider_array[3] : ''); ?></div>&nbsp;
+          <div class="col"><?php echo zen_image(DIR_WS_IMAGES . 'icon_status_green.gif'); ?>&nbsp;&nbsp;<?php echo ($spider_array[0] ?: ''); ?></div>
+          <div class="col"><?php echo zen_image(DIR_WS_IMAGES . 'icon_status_yellow.gif'); ?>&nbsp;&nbsp;<?php echo ($spider_array[1] ?: ''); ?></div>
+          <div class="col"><?php echo zen_image(DIR_WS_IMAGES . 'icon_status_red.gif'); ?>&nbsp;&nbsp;<?php echo ($spider_array[2] ?: ''); ?></div>
+          <div class="col"><?php echo zen_image(DIR_WS_IMAGES . 'icon_status_red_light.gif'); ?>&nbsp;&nbsp;<?php echo ($spider_array[3] ?: ''); ?></div>&nbsp;
         </div>
         <div class="row">
           <div class="first"><?php echo WO_GRAPH_TOTAL; ?></div>
