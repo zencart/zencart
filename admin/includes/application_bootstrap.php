@@ -121,7 +121,7 @@ if ($za_dir = @dir(DIR_WS_INCLUDES . 'extra_configures')) {
     }
     $za_dir->close();
 }
-
+require DIR_FS_CATALOG . '/vendor/autoload.php';
 require DIR_APP_LIBRARY . 'aura/autoload/src/Loader.php';
 $loader = new \Aura\Autoload\Loader;
 $loader->register();

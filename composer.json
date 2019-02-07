@@ -11,7 +11,12 @@
     ],
     "__comment": "compatible with PHP 5.5-7.3",
     "require": {
-        "php": ">=5.5"
+        "php": ">=5.5",
+        "aura/di": "^3.4",
+        "aura/web": "^2.1",
+        "illuminate/database": "~5.7",
+        "jaybizzle/crawler-detect": "^1.2",
+        "vlucas/valitron": "^1.4"
     },
     "require-dev": {
         "jakoch/phantomjs-installer": "^2.1",

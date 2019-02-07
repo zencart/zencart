@@ -1,6 +1,6 @@
 configure.php
 local/configure.php
-/vendor
+
 dbencdata*.ini
 
 *.php1
