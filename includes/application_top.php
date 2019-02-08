@@ -124,6 +124,7 @@ if (file_exists('includes/defined_paths.php')) {
 
 // load the default autoload config
 $autoloadNamespaces = require DIR_WS_INCLUDES .  '/autoload_namespaces.php';
+require DIR_FS_CATALOG . '/vendor/autoload.php';
 
 /**
  * include the extra_configures files

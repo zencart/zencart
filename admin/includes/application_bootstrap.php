@@ -143,8 +143,6 @@ if (!defined('DIR_WS_TEMPLATES')) {
 /**
  * Load configuration stuff
  */
-require(DIR_APP_LIBRARY . 'illuminate/support/helpers.php');
-
 $configLoader = new ZenCart\ConfigLoader\ConfigLoader();
 $configLoader->load();
 
