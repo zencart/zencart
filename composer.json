@@ -16,6 +16,7 @@
         "aura/web": "^2.1",
         "illuminate/database": "~5.7",
         "jaybizzle/crawler-detect": "^1.2",
+        "jenssegers/blade": "^1.1",
         "vlucas/valitron": "^1.4"
     },
     "require-dev": {

@@ -1,17 +1,17 @@
 <div class="grid-stack grid-stack-3">
-    <?php foreach ($tplVars['widgets'] as $widgetKey => $widget) { ?>
+    @foreach ($tplVars['widgets'] as $widgetKey => $widget)
   <?php $tplVars['widget']['content'] = $widget['content']; ?>
-    <div class="grid-stack-item" data-gs-id="<?php echo $widget['widgetBaseId']; ?>" id="gs-<?php echo $widget['widgetBaseId']; ?>"
-         data-gs-x="<?php echo $widget['widgetInfo']['widget_column']; ?>"
-         data-gs-y="<?php echo $widget['widgetInfo']['widget_row']; ?>"
-         data-gs-width="<?php echo $widget['widgetInfo']['widget_width']; ?>"
-         data-gs-height="<?php echo $widget['widgetInfo']['widget_height']; ?>"
+    <div class="grid-stack-item" data-gs-id="{{ $widget['widgetBaseId'] }}" id="gs-{{$widget['widgetBaseId']}}"
+         data-gs-x="{{$widget['widgetInfo']['widget_column']}}"
+         data-gs-y="{{$widget['widgetInfo']['widget_row']}}"
+         data-gs-width="{{$widget['widgetInfo']['widget_width']}}"
+         data-gs-height="{{$widget['widgetInfo']['widget_height']}}"
          >
-        <div id="<?php echo $widget['widgetBaseId']; ?>" class="grid-stack-item-content">
-            <div class="box box-solid <?php echo $widget['widgetInfo']['widget_theme']; ?> sortable">
+        <div id="{{$widget['widgetBaseId']}}" class="grid-stack-item-content">
+            <div class="box box-solid {{$widget['widgetInfo']['widget_theme']}} sortable">
                 <div class="box-header ui-sortable-handle" style="cursor: move;">
-                    <i class="fa <?php echo $widget['widgetInfo']['widget_icon']; ?>"></i>
-                    <h3 class="box-title"><?php echo $widget['widgetTitle']; ?></h3>
+                    <i class="fa {{$widget['widgetInfo']['widget_icon'] }}"></i>
+                    <h3 class="box-title">{{$widget['widgetTitle']}}</h3>
                     <div class="pull-right box-tools">
                         <?php if ($widget['widgetInfo']['has_settings']) { ?>
                         <button class="btn btn-success btn-sm settings-toggle" type="button">
@@ -36,7 +36,7 @@
             </div>
         </div>
     </div>
-<?php } ?>
+@endforeach
 </div>
 
 
