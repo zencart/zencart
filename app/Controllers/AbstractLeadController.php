@@ -29,7 +29,7 @@ abstract class AbstractLeadController extends AbstractListingController
     /**
      * @var string
      */
-    protected $mainTemplate = 'tplAdminLead.php';
+    protected $mainTemplate = 'adminLead';
 
     /**
      *
