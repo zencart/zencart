@@ -766,3 +766,6 @@ define('TEXT_DATE_RANGE_LAST_7_DAYS', 'Last 7 Days');
 define('TEXT_DATE_RANGE_LAST_30_DAYS', 'Last 30 Days');
 define('TEXT_DATE_RANGE_THIS_MONTH', 'This Month');
 define('TEXT_DATE_RANGE_LAST_MONTH', 'Last Month');
+
+
+define('TEXT_NONEXISTENT_IMAGE', '');
