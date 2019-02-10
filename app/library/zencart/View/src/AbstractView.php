@@ -6,6 +6,8 @@
  */
 namespace ZenCart\View;
 
+use Jenssegers\Blade\Blade;
+
 /**
  * Class AbstractView
  * @package ZenCart\View
@@ -20,6 +22,10 @@ Abstract class AbstractView
      * @var string
      */
     protected $templateLayout = 'default';
+
+    protected $viewRoot = DIR_FS_CATALOG . 'app/resources/views/admin/';
+
+    protected $templateRoot = DIR_FS_ADMIN . 'includes/template/';
 
     /**
      * AbstractView constructor.
@@ -86,9 +92,17 @@ Abstract class AbstractView
             zen_redirect($response['redirect']);
         }
         $useTemplate = $this->getMainTemplate();
-        $this->tplVarManager->set('mainTemplate', $useTemplate);
+        $templateType = $this->getTemplateType($useTemplate);
         $tplVars = $this->tplVarManager->getTplVars();
-        require_once('includes/template/layouts/' . $this->templateLayout . '.php');
+        if ($templateType === 'legacy') {
+            $this->tplVarManager->set('mainTemplate', $this->templateRoot . 'templates/' . $useTemplate);
+            $tplVars = $this->tplVarManager->getTplVars();
+            require_once($this->templateRoot . 'layouts/' . $this->templateLayout . '.php');
+        }
+        if ($templateType === 'blade') {
+            $blade = new Blade($this->viewRoot, DIR_FS_CATALOG . 'cache');
+            echo $blade->make($useTemplate, ['tplVars' => $tplVars]);
+        }
     }
 
     /**
@@ -118,12 +132,17 @@ Abstract class AbstractView
      */
     protected function getMainTemplate()
     {
+
         if (isset($this->mainTemplate)) {
-            return ('includes/template/templates/' . $this->mainTemplate);
+            return $this->mainTemplate;
         }
         $tryTemplate = 'tpl' . ucfirst($this->command) . '.php';
-        if (file_exists('includes/template/templates/' . $tryTemplate)) {
-            return ('includes/template/templates/' . $tryTemplate);
+        if (file_exists($this->templateRoot . $tryTemplate)) {
+            return $tryTemplate;
+        }
+        $tryTemplate = lcfirst($this->command) . '.blade.php';
+        if (file_exists($this->viewRoot . $tryTemplate)) {
+            return lcfirst($this->command);
         }
         return null;
     }
@@ -134,5 +153,11 @@ Abstract class AbstractView
     public function setMainTemplate($templateName)
     {
         $this->mainTemplate = $templateName;
+    }
+
+    protected function getTemplateType($template)
+    {
+        $bEndsWith = strrpos($template, '.php') == strlen($template)-strlen('.php');
+        return $bEndsWith ? 'legacy' : 'blade';
     }
 }

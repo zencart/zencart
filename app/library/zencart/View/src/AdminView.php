@@ -41,48 +41,6 @@ class AdminView extends AbstractView
         $this->tplVarManager->set('cssList', $cssList);
     }
 
-    /**
-     * @param $response
-     */
-    public function doOutput($response)
-    {
-        if (isset($response['header_response_code'])) {
-            http_response_code($response['header_response_code']);
-        }
-        if (!$this->useView($response)) {
-            $this->doNonViewOutput($response);
-        } else {
-            $this->doViewOutput($response);
-        }
-    }
-
-    /**
-     * @return bool
-     */
-    protected function useView($response)
-    {
-        if (!isset($response)) {
-            return true;
-        }
-        if (isset($response['redirect'])) {
-            return true;
-        }
-        return false;
-    }
-
-    /**
-     * @param $response
-     */
-    protected function doViewOutput($response)
-    {
-        if (isset($response['redirect'])) {
-            zen_redirect($response['redirect']);
-        }
-        $useTemplate = $this->getMainTemplate();
-        $this->tplVarManager->set('mainTemplate', $useTemplate);
-        $tplVars = $this->tplVarManager->getTplVars();
-        require_once('includes/template/layouts/' . $this->templateLayout . '.php');
-    }
 
     /**
      *
