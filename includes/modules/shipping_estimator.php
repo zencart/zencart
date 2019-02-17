@@ -163,6 +163,7 @@ if ($_SESSION['cart']->count_contents() > 0) {
 
     if (zen_not_null($module)){
       foreach ($quotes as $key=>$value) {
+        if (!isset($value['id'])) continue;
         if ($value['id'] == $module) {
           $selected_quote[0] = $value;
           if (zen_not_null($method)) {
