@@ -61,7 +61,7 @@
 
     $manufacturers_name= zen_get_products_manufacturers_name((int)$_GET['products_id']);
 
-    if ($new_price = zen_get_products_special_price($product_info->fields['products_id'])) {
+    if ($new_price == zen_get_products_special_price($product_info->fields['products_id'])) {
 
       $specials_price = $currencies->display_price($new_price,
                         zen_get_tax_rate($product_info->fields['products_tax_class_id']));
