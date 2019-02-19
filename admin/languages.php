@@ -171,7 +171,7 @@ if (zen_not_null($action)) {
 
         foreach ($ezpages as $ezpage) {
           $db->Execute("INSERT INTO " . TABLE_EZPAGES_CONTENT . " (pages_id, languages_id, pages_title, pages_html_text)
-                        VALUES ('" . (int)$coupon['pages_id'] . "',
+                        VALUES ('" . (int)$ezpage['pages_id'] . "',
                                 '" . (int)$insert_id . "',
                                 '" . zen_db_input($ezpage['pages_title']) . "',
                                 '" . zen_db_input($ezpage['pages_html_text']) . "')");
