@@ -629,6 +629,13 @@ if (zen_not_null($action)) {
 
           <?php echo zen_draw_form('new_prices', FILENAME_PRODUCTS_PRICE_MANAGER, zen_get_all_get_params(array('action', 'info', $_GET['products_filter'])) . 'action=' . 'update', 'post', 'onsubmit="return check_dates_ppm(featured_start,FeaturedStartDate.required, featured_end, FeaturedEndDate.required, product_start, ProductStartDate.required);" class="form-horizontal"'); ?>
           <?php
+          if ($action == 'edit' || $action == 'edit_update') { 
+            $readonly = ''; 
+            $jsreadonly=''; 
+          } else {
+            $readonly=" readonly"; 
+            $jsreadonly = " disabled"; 
+          }
           echo zen_draw_hidden_field('products_id', $_GET['products_filter']);
           echo zen_draw_hidden_field('specials_id', isset($sInfo->specials_id) ? $sInfo->specials_id : '');
           echo zen_draw_hidden_field('featured_id', $fInfo->featured_id);
@@ -681,7 +688,7 @@ if (zen_not_null($action)) {
           <div class="well" style="color: #31708f;background-color: #d9edf7;border-color: #bce8f1;;padding: 10px 10px 0 0;">
             <div class="form-group"><?php echo zen_draw_label(TEXT_PRODUCTS_TAX_CLASS, 'products_tax_class_id', 'class="col-sm-3 control-label"'); ?>
               <div class="col-sm-9 col-md-6">
-                  <?php echo zen_draw_pull_down_menu('products_tax_class_id', $tax_class_array, $pInfo->products_tax_class_id, 'class="form-control"'); ?>
+                  <?php echo zen_draw_pull_down_menu('products_tax_class_id', $tax_class_array, $pInfo->products_tax_class_id, 'class="form-control"'.$readonly); ?>
               </div>
             </div>
           </div>
@@ -690,13 +697,13 @@ if (zen_not_null($action)) {
             <div class="form-group">
                 <?php echo zen_draw_label(TEXT_PRICE_NET, 'products_price', 'class="col-sm-3 control-label"'); ?>
               <div class="col-sm-9 col-md-6">
-                  <?php echo zen_draw_input_field('products_price', (isset($pInfo->products_price) ? $pInfo->products_price : ''), 'OnKeyUp="updateGross()" class="form-control"'); ?>
+                  <?php echo zen_draw_input_field('products_price', (isset($pInfo->products_price) ? $pInfo->products_price : ''), 'OnKeyUp="updateGross()" class="form-control"' . $readonly); ?>
               </div>
             </div>
             <div class="form-group">
                 <?php echo zen_draw_label(TEXT_PRICE_GROSS, 'products_price_gross', 'class="col-sm-3 control-label"'); ?>
               <div class="col-sm-9 col-md-6">
-                  <?php echo zen_draw_input_field('products_price_gross', (isset($pInfo->products_price) ? $pInfo->products_price : ''), 'OnKeyUp="updateNet()" class="form-control"'); ?>
+                  <?php echo zen_draw_input_field('products_price_gross', (isset($pInfo->products_price) ? $pInfo->products_price : ''), 'OnKeyUp="updateNet()" class="form-control"' . $readonly); ?>
               </div>
             </div>
           </div>
@@ -704,6 +711,9 @@ if (zen_not_null($action)) {
               <?php echo zen_draw_label(TEXT_PRODUCT_AVAILABLE_DATE, 'product_start', 'class="col-sm-3 control-label"'); ?>
             <div class="col-sm-9 col-md-6">
               <script>
+              <?php if (!empty($readonly)) { ?>
+                ProductStartDate.readonly = true; 
+              <?php } ?>
                 ProductStartDate.writeControl();
                 ProductStartDate.dateFormat = "<?php echo DATE_FORMAT_SPIFFYCAL; ?>";
               </script>
@@ -712,39 +722,39 @@ if (zen_not_null($action)) {
           <div class="form-group">
             <div class="col-sm-offset-3 col-sm-9 col-md-6">
               <div class="radio-inline">
-                <label><?php echo zen_draw_radio_field('products_status', '1', $pInfo->products_status == '1') . TEXT_PRODUCT_AVAILABLE; ?></label>
+                <label><?php echo zen_draw_radio_field('products_status', '1', $pInfo->products_status == '1', '', $jsreadonly) . TEXT_PRODUCT_AVAILABLE; ?></label>
               </div>
               <div class="radio-inline">
-                <label><?php echo zen_draw_radio_field('products_status', '0', $pInfo->products_status == '0') . TEXT_PRODUCT_NOT_AVAILABLE; ?></label>
+                <label><?php echo zen_draw_radio_field('products_status', '0', $pInfo->products_status == '0', '', $jsreadonly) . TEXT_PRODUCT_NOT_AVAILABLE; ?></label>
               </div>
             </div>
           </div>
           <div class="form-group">
               <?php echo zen_draw_label(TEXT_PRODUCTS_QUANTITY_MIN_RETAIL, 'products_quantity_order_min', 'class="col-sm-3 control-label"'); ?>
             <div class="col-sm-9 col-md-6">
-                <?php echo zen_draw_input_field('products_quantity_order_min', ($pInfo->products_quantity_order_min == 0 ? 1 : $pInfo->products_quantity_order_min), 'size="6" class="form-control"'); ?>
+                <?php echo zen_draw_input_field('products_quantity_order_min', ($pInfo->products_quantity_order_min == 0 ? 1 : $pInfo->products_quantity_order_min), 'size="6" class="form-control"'.$readonly); ?>
             </div>
           </div>
           <div class="form-group">
               <?php echo zen_draw_label(TEXT_PRODUCTS_QUANTITY_UNITS_RETAIL, 'products_quantity_order_units', 'class="col-sm-3 control-label"'); ?>
             <div class="col-sm-9 col-md-6">
-                <?php echo zen_draw_input_field('products_quantity_order_units', ($pInfo->products_quantity_order_units == 0 ? 1 : $pInfo->products_quantity_order_units), 'size="6" class="form-control"'); ?>
+                <?php echo zen_draw_input_field('products_quantity_order_units', ($pInfo->products_quantity_order_units == 0 ? 1 : $pInfo->products_quantity_order_units), 'size="6" class="form-control"'.$readonly); ?>
             </div>
           </div>
           <div class="form-group">
               <?php echo zen_draw_label(TEXT_PRODUCTS_QUANTITY_MAX_RETAIL, 'products_quantity_order_max', 'class="col-sm-3 control-label"'); ?>
             <div class="col-sm-9 col-md-6">
-              <?php echo zen_draw_input_field('products_quantity_order_max', $pInfo->products_quantity_order_max, 'size="6" class="form-control"'); ?><span class="help-block"><?php echo TEXT_PRODUCTS_QUANTITY_MAX_RETAIL_EDIT; ?></span>
+              <?php echo zen_draw_input_field('products_quantity_order_max', $pInfo->products_quantity_order_max, 'size="6" class="form-control"'.$readonly); ?><span class="help-block"><?php echo TEXT_PRODUCTS_QUANTITY_MAX_RETAIL_EDIT; ?></span>
             </div>
           </div>
           <div class="form-group">
               <?php echo zen_draw_label(TEXT_PRODUCTS_MIXED, 'products_quantity_mixed', 'class="col-sm-3 control-label"'); ?>
             <div class="col-sm-9 col-md-6">
               <div class="radio-inline">
-                <label><?php echo zen_draw_radio_field('products_quantity_mixed', '1', $pInfo->products_quantity_mixed == 1) . TEXT_YES; ?></label>
+                <label><?php echo zen_draw_radio_field('products_quantity_mixed', '1', $pInfo->products_quantity_mixed == 1, '', $jsreadonly) . TEXT_YES; ?></label>
               </div>
               <div class="radio-inline">
-                <label><?php echo zen_draw_radio_field('products_quantity_mixed', '0', $pInfo->products_quantity_mixed == 0) . TEXT_NO; ?></label>
+                <label><?php echo zen_draw_radio_field('products_quantity_mixed', '0', $pInfo->products_quantity_mixed == 0, '', $jsreadonly) . TEXT_NO; ?></label>
               </div>
             </div>
           </div>
@@ -752,10 +762,10 @@ if (zen_not_null($action)) {
               <?php echo zen_draw_label(TEXT_PRODUCT_IS_FREE, 'product_is_free', 'class="col-sm-3 control-label"'); ?>
             <div class="col-sm-9 col-md-6">
               <div class="radio-inline">
-                <label><?php echo zen_draw_radio_field('product_is_free', '1', ($pInfo->product_is_free == 1)) . TEXT_YES; ?></label>
+                <label><?php echo zen_draw_radio_field('product_is_free', '1', ($pInfo->product_is_free == 1), '', $jsreadonly) . TEXT_YES; ?></label>
               </div>
               <div class="radio-inline">
-                <label><?php echo zen_draw_radio_field('product_is_free', '0', ($pInfo->product_is_free == 0)) . TEXT_NO; ?></label>
+                <label><?php echo zen_draw_radio_field('product_is_free', '0', ($pInfo->product_is_free == 0), '', $jsreadonly) . TEXT_NO; ?></label>
               </div>
               <?php echo ($pInfo->product_is_free == 1 ? '<span class="help-block errorText">' . TEXT_PRODUCTS_IS_FREE_EDIT . '</span>' : ''); ?>
             </div>
@@ -764,10 +774,10 @@ if (zen_not_null($action)) {
               <?php echo zen_draw_label(TEXT_PRODUCT_IS_CALL, 'product_is_call', 'class="col-sm-3 control-label"'); ?>
             <div class="col-sm-9 col-md-6">
               <div class="radio-inline">
-                <label><?php echo zen_draw_radio_field('product_is_call', '1', ($pInfo->product_is_call == 1)) . TEXT_YES; ?></label>
+                <label><?php echo zen_draw_radio_field('product_is_call', '1', ($pInfo->product_is_call == 1), '', $jsreadonly) . TEXT_YES; ?></label>
               </div>
               <div class="radio-inline">
-                <label><?php echo zen_draw_radio_field('product_is_call', '0', ($pInfo->product_is_call == 0)) . TEXT_NO; ?></label>
+                <label><?php echo zen_draw_radio_field('product_is_call', '0', ($pInfo->product_is_call == 0), '', $jsreadonly) . TEXT_NO; ?></label>
               </div>
               <?php echo ($pInfo->product_is_call == 1 ? '<span class="help-block errorText">' . TEXT_PRODUCTS_IS_CALL_EDIT . '</span>' : ''); ?>
             </div>
@@ -776,10 +786,10 @@ if (zen_not_null($action)) {
               <?php echo zen_draw_label(TEXT_PRODUCTS_PRICED_BY_ATTRIBUTES, 'products_priced_by_attribute', 'class="col-sm-3 control-label"'); ?>
             <div class="col-sm-9 col-md-6">
               <div class="radio-inline">
-                <label><?php echo zen_draw_radio_field('products_priced_by_attribute', '1', $pInfo->products_priced_by_attribute == 1) . TEXT_PRODUCT_IS_PRICED_BY_ATTRIBUTE; ?></label>
+                <label><?php echo zen_draw_radio_field('products_priced_by_attribute', '1', $pInfo->products_priced_by_attribute == 1, '', $jsreadonly) . TEXT_PRODUCT_IS_PRICED_BY_ATTRIBUTE; ?></label>
               </div>
               <div class="radio-inline">
-                <label><?php echo zen_draw_radio_field('products_priced_by_attribute', '0', $pInfo->products_priced_by_attribute == 0) . TEXT_PRODUCT_NOT_PRICED_BY_ATTRIBUTE; ?></label>
+                <label><?php echo zen_draw_radio_field('products_priced_by_attribute', '0', $pInfo->products_priced_by_attribute == 0, '', $jsreadonly) . TEXT_PRODUCT_NOT_PRICED_BY_ATTRIBUTE; ?></label>
               </div>
               <?php echo ($pInfo->products_priced_by_attribute == 1 ? '<span class="help-block errorText">' . TEXT_PRODUCTS_PRICED_BY_ATTRIBUTES_EDIT . '</span>' : ''); ?>
             </div>
@@ -796,13 +806,13 @@ if (zen_not_null($action)) {
               <div class="form-group">
                   <?php echo zen_draw_label(TEXT_SPECIALS_SPECIAL_PRICE_NET, 'specials_price', 'class="col-sm-3 control-label"'); ?>
                 <div class="col-sm-9 col-md-6">
-                    <?php echo zen_draw_input_field('specials_price', (isset($sInfo->specials_new_products_price) ? $sInfo->specials_new_products_price : ''), 'OnKeyUp="updateSpecialsGross()" class="form-control"'); ?>
+                    <?php echo zen_draw_input_field('specials_price', (isset($sInfo->specials_new_products_price) ? $sInfo->specials_new_products_price : ''), 'OnKeyUp="updateSpecialsGross()" class="form-control"' . $readonly); ?>
                 </div>
               </div>
               <div class="form-group">
                   <?php echo zen_draw_label(TEXT_SPECIALS_SPECIAL_PRICE_GROSS, 'specials_price_gross', 'class="col-sm-3 control-label"'); ?>
                 <div class="col-sm-9 col-md-6">
-                    <?php echo zen_draw_input_field('specials_price_gross', (isset($sInfo->specials_new_products_price) ? $sInfo->specials_new_products_price : ''), 'OnKeyUp="updateSpecialsNet()" class="form-control"'); ?>
+                    <?php echo zen_draw_input_field('specials_price_gross', (isset($sInfo->specials_new_products_price) ? $sInfo->specials_new_products_price : ''), 'OnKeyUp="updateSpecialsNet()" class="form-control"' . $readonly); ?>
                 </div>
               </div>
             </div>
@@ -810,6 +820,9 @@ if (zen_not_null($action)) {
                 <?php echo zen_draw_label(TEXT_SPECIALS_AVAILABLE_DATE, 'special_start', 'class="col-sm-3 control-label"'); ?>
               <div class="col-sm-9 col-md-6">
                 <script>
+              <?php if (!empty($readonly)) { ?>
+                SpecialStartDate.readonly = true; 
+              <?php } ?>
                   SpecialStartDate.writeControl();
                   SpecialStartDate.dateFormat = "<?php echo DATE_FORMAT_SPIFFYCAL; ?>";
                 </script>
@@ -819,6 +832,9 @@ if (zen_not_null($action)) {
                 <?php echo zen_draw_label(TEXT_SPECIALS_EXPIRES_DATE, 'special_end', 'class="col-sm-3 control-label"'); ?>
               <div class="col-sm-9 col-md-6">
                 <script>
+              <?php if (!empty($readonly)) { ?>
+                SpecialEndDate.readonly = true; 
+              <?php } ?>
                   SpecialEndDate.writeControl();
                   SpecialEndDate.dateFormat = "<?php echo DATE_FORMAT_SPIFFYCAL; ?>";
                 </script>
@@ -828,10 +844,10 @@ if (zen_not_null($action)) {
                 <?php echo zen_draw_label(TEXT_SPECIALS_PRODUCTS_STATUS, 'special_status', 'class="col-sm-3 control-label"'); ?>
               <div class="col-sm-9 col-md-6">
                 <div class="radio-inline">
-                  <label><?php echo zen_draw_radio_field('special_status', '1', $sInfo->status == 1) . TEXT_SPECIALS_PRODUCT_AVAILABLE; ?></label>
+                  <label><?php echo zen_draw_radio_field('special_status', '1', $sInfo->status == 1, '', $jsreadonly) . TEXT_SPECIALS_PRODUCT_AVAILABLE; ?></label>
                 </div>
                 <div class="radio-inline">
-                  <label><?php echo zen_draw_radio_field('special_status', '0', $sInfo->status == 0) . TEXT_SPECIALS_PRODUCT_NOT_AVAILABLE; ?></label>
+                  <label><?php echo zen_draw_radio_field('special_status', '0', $sInfo->status == 0, '', $jsreadonly) . TEXT_SPECIALS_PRODUCT_NOT_AVAILABLE; ?></label>
                 </div>
               </div>
             </div>
@@ -886,6 +902,9 @@ if (zen_not_null($action)) {
                 <?php echo zen_draw_label(TEXT_FEATURED_AVAILABLE_DATE, 'featured_start', 'class="control-label col-sm-3"'); ?>
               <div class="col-sm-9 col-md-6">
                 <script>
+              <?php if (!empty($readonly)) { ?>
+                FeaturedStartDate.readonly = true; 
+              <?php } ?>
                   FeaturedStartDate.writeControl();
                   FeaturedStartDate.dateFormat = "<?php echo DATE_FORMAT_SPIFFYCAL; ?>";
                 </script>
@@ -895,6 +914,9 @@ if (zen_not_null($action)) {
                 <?php echo zen_draw_label(TEXT_FEATURED_EXPIRES_DATE, 'featured_end', 'class="control-label col-sm-3"'); ?>
               <div class="col-sm-9 col-md-6">
                 <script>
+              <?php if (!empty($readonly)) { ?>
+                FeaturedEndDate.readonly = true; 
+              <?php } ?>
                   FeaturedEndDate.writeControl();
                   FeaturedEndDate.dateFormat = "<?php echo DATE_FORMAT_SPIFFYCAL; ?>";
                 </script>
@@ -904,10 +926,10 @@ if (zen_not_null($action)) {
                 <?php echo zen_draw_label(TEXT_FEATURED_PRODUCTS_STATUS, 'featured_status', 'class="control-label col-sm-3"'); ?>
               <div class="col-sm-9 col-md-6">
                 <div class="radio-inline">
-                  <label><?php echo zen_draw_radio_field('featured_status', '1', $fInfo->status == 1) . TEXT_FEATURED_PRODUCT_AVAILABLE; ?></label>
+                  <label><?php echo zen_draw_radio_field('featured_status', '1', $fInfo->status == 1, '', $jsreadonly) . TEXT_FEATURED_PRODUCT_AVAILABLE; ?></label>
                 </div>
                 <div class="radio-inline">
-                  <label><?php echo zen_draw_radio_field('featured_status', '0', $fInfo->status == 0) . TEXT_FEATURED_PRODUCT_NOT_AVAILABLE; ?></label>
+                  <label><?php echo zen_draw_radio_field('featured_status', '0', $fInfo->status == 0, '', $jsreadonly) . TEXT_FEATURED_PRODUCT_NOT_AVAILABLE; ?></label>
                 </div>
               </div>
             </div>
@@ -952,23 +974,23 @@ if (zen_not_null($action)) {
                 <?php echo zen_draw_label(TEXT_PRODUCTS_MIXED_DISCOUNT_QUANTITY, 'products_mixed_discount_quantity', 'class="control-label col-sm-3"'); ?>
               <div class="col-sm-9 col-md-6">
                 <div class="radio-inline">
-                  <label><?php echo zen_draw_radio_field('products_mixed_discount_quantity', '1', $pInfo->products_mixed_discount_quantity == 1) . TEXT_YES; ?></label>
+                  <label><?php echo zen_draw_radio_field('products_mixed_discount_quantity', '1', $pInfo->products_mixed_discount_quantity == 1, '', $jsreadonly) . TEXT_YES; ?></label>
                 </div>
                 <div class="radio-inline">
-                  <label><?php echo zen_draw_radio_field('products_mixed_discount_quantity', '0', $pInfo->products_mixed_discount_quantity == 0) . TEXT_NO; ?></label>
+                  <label><?php echo zen_draw_radio_field('products_mixed_discount_quantity', '0', $pInfo->products_mixed_discount_quantity == 0, '', $jsreadonly) . TEXT_NO; ?></label>
                 </div>
               </div>
             </div>
             <div class="form-group">
                 <?php echo zen_draw_label(TEXT_DISCOUNT_TYPE, 'products_discount_type', 'class="control-label col-sm-3"'); ?>
               <div class="col-sm-9 col-md-6">
-                  <?php echo zen_draw_pull_down_menu('products_discount_type', $discount_type_array, $pInfo->products_discount_type, 'class="form-control"'); ?>
+                  <?php echo zen_draw_pull_down_menu('products_discount_type', $discount_type_array, $pInfo->products_discount_type, 'class="form-control"'.$readonly); ?>
               </div>
             </div>
             <div class="form-group">
                 <?php echo zen_draw_label(TEXT_DISCOUNT_TYPE_FROM, 'products_discount_type_from', 'class="control-label col-sm-3"'); ?>
               <div class="col-sm-9 col-md-6">
-                  <?php echo zen_draw_pull_down_menu('products_discount_type_from', $discount_type_from_array, $pInfo->products_discount_type_from, 'class="form-control"'); ?>
+                  <?php echo zen_draw_pull_down_menu('products_discount_type_from', $discount_type_from_array, $pInfo->products_discount_type_from, 'class="form-control"'. $readonly); ?>
               </div>
             </div>
             <div class="table-responsive">
@@ -1039,8 +1061,8 @@ if (zen_not_null($action)) {
                       ?>
                     <tr>
                       <td class="main"><?php echo TEXT_PRODUCTS_DISCOUNT . ' ' . $discount_name[$i]['id']; ?></td>
-                      <td class="main"><?php echo zen_draw_input_field('discount_qty[' . $discount_name[$i]['id'] . ']', $discount_name[$i]['discount_qty'], 'class="form-control"'); ?></td>
-                      <td class="main"><?php echo zen_draw_input_field('discount_price[' . $discount_name[$i]['id'] . ']', $discount_name[$i]['discount_price'], 'class="form-control"'); ?></td>
+                      <td class="main"><?php echo zen_draw_input_field('discount_qty[' . $discount_name[$i]['id'] . ']', $discount_name[$i]['discount_qty'], 'class="form-control"'.$readonly); ?></td>
+                      <td class="main"><?php echo zen_draw_input_field('discount_price[' . $discount_name[$i]['id'] . ']', $discount_name[$i]['discount_price'], 'class="form-control"' . $readonly); ?></td>
                       <?php
                       if (DISPLAY_PRICE_WITH_TAX_ADMIN == 'true') {
                         ?>
