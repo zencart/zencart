@@ -130,8 +130,8 @@
             }
           }
         } else {
-          // shipping method with sub methods (multipickup)
-          for ($j=0, $n2=sizeof($quotes[$i]['methods']); $j<$n2; $j++) {
+          // shipping method with sub methods (multipickup) or none
+          for ($j=0, $n2=(empty($quotes[$i]['methods']) ? 0 : sizeof($quotes[$i]['methods'])); $j<$n2; $j++) {
             $thisquoteid = '';
             if (isset($quotes[$i]['id']) && isset($quotes[$i]['methods'][$j]['id'])) {
                 $thisquoteid = $quotes[$i]['id'].'_'.$quotes[$i]['methods'][$j]['id'];
