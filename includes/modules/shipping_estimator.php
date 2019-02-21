@@ -121,8 +121,9 @@ if ($_SESSION['cart']->count_contents() > 0) {
   $total_count = $_SESSION['cart']->count_contents();
   require(DIR_WS_CLASSES . 'shipping.php');
   $shipping_modules = new shipping;
-  $quotes = $shipping_modules->quote();
+  // some shipping modules need subtotal to be set.
   $order->info['subtotal'] = $_SESSION['cart']->show_total();
+  $quotes = $shipping_modules->quote();
 
   // set selections for displaying
   $selected_country = $order->delivery['country']['id'];
