@@ -70,7 +70,7 @@ class shoppingCart extends base {
    */
   var $display_debug_messages = FALSE;
   var $flag_duplicate_msgs_set = FALSE;
-  var $flag_duplicate_quantity_msgs_set = FALSE;
+  var $flag_duplicate_quantity_msgs_set = [];
   /**
    * constructor method
    *
@@ -1246,6 +1246,7 @@ class shoppingCart extends base {
 
 // validate cart contents for checkout
         if ($check_for_valid_cart == true) {
+          if (empty($this->flag_duplicate_quantity_msgs_set['keep'])) $this->flag_duplicate_quantity_msgs_set = [];
           $fix_once = 0;
           // Check products_status if not already
           $check_status = $products->fields['products_status'];
@@ -1295,7 +1296,7 @@ class shoppingCart extends base {
 
           // Check Quantity Max if not already an error on Minimum
           if ($fix_once == 0) {
-            if ($products->fields['products_quantity_order_max'] != 0 && $check_quantity > $products->fields['products_quantity_order_max'] && !$this->flag_duplicate_quantity_msgs_set[(int)$prid]['max']) {
+            if ($products->fields['products_quantity_order_max'] != 0 && $check_quantity > $products->fields['products_quantity_order_max'] && !isset($this->flag_duplicate_quantity_msgs_set[(int)$prid]['max'])) {
               $fix_once ++;
               $_SESSION['valid_to_checkout'] = false;
               $_SESSION['cart_errors'] .= ERROR_PRODUCT . $products->fields['products_name'] . ERROR_PRODUCT_QUANTITY_MAX_SHOPPING_CART . ERROR_PRODUCT_QUANTITY_ORDERED . $check_quantity  . ' <span class="alertBlack">' . zen_get_products_quantity_min_units_display((int)$prid, false, true) . '</span> ' . '<br />';
@@ -1304,7 +1305,7 @@ class shoppingCart extends base {
           }
 
           if ($fix_once == 0) {
-            if ($check_quantity < $check_quantity_min && !$this->flag_duplicate_quantity_msgs_set[(int)$prid]['min']) {
+            if ($check_quantity < $check_quantity_min && !isset($this->flag_duplicate_quantity_msgs_set[(int)$prid]['min'])) {
               $fix_once ++;
               $_SESSION['valid_to_checkout'] = false;
               $_SESSION['cart_errors'] .= ERROR_PRODUCT . $products->fields['products_name'] . ERROR_PRODUCT_QUANTITY_MIN_SHOPPING_CART . ERROR_PRODUCT_QUANTITY_ORDERED . $check_quantity  . ' <span class="alertBlack">' . zen_get_products_quantity_min_units_display((int)$prid, false, true) . '</span> ' . '<br />';
@@ -1315,7 +1316,7 @@ class shoppingCart extends base {
           // Check Quantity Units if not already an error on Quantity Minimum
           if ($fix_once == 0) {
             $check_units = $products->fields['products_quantity_order_units'];
-            if ( fmod_round($check_quantity,$check_units) != 0 && !$this->flag_duplicate_quantity_msgs_set[(int)$prid]['units'] ) {
+            if ( fmod_round($check_quantity,$check_units) != 0 && !isset($this->flag_duplicate_quantity_msgs_set[(int)$prid]['units']) ) {
               $_SESSION['valid_to_checkout'] = false;
               $_SESSION['cart_errors'] .= ERROR_PRODUCT . $products->fields['products_name'] . ERROR_PRODUCT_QUANTITY_UNITS_SHOPPING_CART . ERROR_PRODUCT_QUANTITY_ORDERED . $check_quantity  . ' <span class="alertBlack">' . zen_get_products_quantity_min_units_display((int)$prid, false, true) . '</span> ' . '<br />';
               $this->flag_duplicate_quantity_msgs_set[(int)$prid]['units'] = true;
@@ -1732,7 +1733,7 @@ class shoppingCart extends base {
     if ($this->display_debug_messages) $messageStack->add_session('header', 'FUNCTION ' . __FUNCTION__, 'caution');
 
     $change_state = array();
-    $this->flag_duplicate_quantity_msgs_set = FALSE;
+    $this->flag_duplicate_quantity_msgs_set = [];
     for ($i=0, $n=sizeof($_POST['products_id']); $i<$n; $i++) {
       $adjust_max= 'false';
       if ($_POST['cart_quantity'][$i] == '') {
