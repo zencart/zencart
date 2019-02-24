@@ -36,14 +36,7 @@ abstract class AbstractWidget
 
     public function getTemplateFile()
     {
-        $tplFile = DIR_FS_ADMIN . DIR_WS_INCLUDES . 'template/dashboardWidgets/tpl' . base::camelize(
-                strtolower
-                (
-                    $this->widgetKey),
-                true) . '.php';
-        if (!file_exists($tplFile)) {
-            $tplFile = DIR_FS_ADMIN . DIR_WS_INCLUDES . 'template/dashboardWidgets/tplDefault.php';
-        }
+        $tplFile = base::camelize(strtolower($this->widgetKey), false) . 'Content';
         return $tplFile;
     }
 

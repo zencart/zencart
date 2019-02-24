@@ -116,5 +116,6 @@ abstract class AbstractAdminController extends \base
         $this->tplVarManager->set('messageStack', $GLOBALS['messageStack']);
         $this->tplVarManager->set('notifications', $this->currentUser->getNotifications()->getNotificationList());
         $this->tplVarManager->set('jscriptVars', ['securityToken' => $this->request->getSession()->get('securityToken')]);
+        $this->tplVarManager->set('csrfToken', $this->request->getSession()->get('securityToken'));
     }
 }

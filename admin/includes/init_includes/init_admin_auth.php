@@ -84,6 +84,7 @@ if ($zcRequest->readGet('cmd') != FILENAME_ALERT_PAGE && !$authError) {
   }
 }
 
+
 if ($zcRequest->getWebFactoryRequest()->isXhr() && $authError) {
     header("Status: 403 Forbidden", true, 403);
     echo json_encode(array('error'=>true, 'errorType'=>$authError, 'redirect' => $redirectTo));

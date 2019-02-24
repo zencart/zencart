@@ -146,4 +146,5 @@ class Request extends \base
     {
         return $this->session;
     }
+
 }

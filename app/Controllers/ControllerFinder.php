@@ -25,9 +25,6 @@ class ControllerFinder
      */
     public function getControllerName($controllerMap, $controllerName)
     {
-        if (!isset($controllerMap[$controllerName])) {
-            return false;
-        }
         $scope = isset($controllerMap[$controllerName]['scope']) ? $controllerMap[$controllerName]['scope']: 'admin';
         $realName = ucfirst(camel_case($controllerName));
         $this->controllerFile =  DIR_FS_CATALOG . URL_CONTROLLERS . $scope . '/' . $realName . '.php';

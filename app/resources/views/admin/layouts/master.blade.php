@@ -6,7 +6,7 @@
     <div class="container-fluid">
         @yield('content')
     </div>
-    <?php require('includes/template/common/tplFooter.php'); ?>
+    @include('partials/common/footer')
 </div>
 </body>
 </html>

@@ -127,7 +127,7 @@ abstract class AbstractBuilder extends \base
     {
         $defaultMap = array(
             'pageTitle' => HEADING_TITLE,
-            'contentTemplate' => 'tplAdminLeadListContent.php',
+            'contentTemplate' => 'partials/lead/listContent',
             'deleteItemHandlerTemplate' => 'tplItemRowDeleteHandler.php',
             'inputLabelTemplate' => 'leadInputTypes/tplInputLabel.php',
             'select2DriverTemplate' => '/tplSelect2Driver.php',
@@ -246,7 +246,7 @@ abstract class AbstractBuilder extends \base
         $this->notify('NOTIFY_LEADBUILDER_SETLEADDEFINITIONACTIONLINKS_START');
         if ($this->pageDefinition ['showActionLinkListList']) {
             $this->pageDefinition ['actionLinksList'] ['listView'] = array(
-                'linkTitle' => TEXT_LEAD_ACTION_LIST,
+                'linkTitle' => trans('admin/lead-common.button-title-list-entries'),
                 'linkCmd' => $this->request->readGet('cmd'),
                 'linkGetAllGetParams' => false,
                 'linkGetAllGetParamsIgnore' => array(
@@ -257,7 +257,7 @@ abstract class AbstractBuilder extends \base
         }
         if ($this->pageDefinition ['allowAdd']) {
             $this->pageDefinition ['actionLinksList'] ['addView'] = array(
-                'linkTitle' => TEXT_LEAD_ACTION_ADD_ENTRY,
+                'linkTitle' => trans('admin/lead-common.button-title-add-entry'),
                 'linkCmd' => $this->request->readGet('cmd'),
                 'linkGetAllGetParams' => false,
                 'linkGetAllGetParamsIgnore' => array(

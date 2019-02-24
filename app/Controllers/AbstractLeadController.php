@@ -41,7 +41,7 @@ abstract class AbstractLeadController extends AbstractListingController
         $this->tplVarManager->set('legendTitle', TEXT_LEAD_EDIT_ENTRY);
         $this->tplVarManager->set('pageDefinition', $this->pageDefinitionBuilder->getPageDefinition());
         $this->tplVarManager->set('pageDefinition.languages', $languages);
-        $this->tplVarManager->set('pageDefinition.contentTemplate', 'tplAdminLeadAddEditContent.php');
+        $this->tplVarManager->set('pageDefinition.contentTemplate', 'partials/lead/addEditContent');
         $this->tplVarManager->set('pageDefinition.action', 'edit');
         $this->tplVarManager->set('pageDefinition.formAction', 'update');
         $this->tplVarManager->set('pageDefinition.cancelButtonAction',  zen_href_link($this->request->readGet('cmd'),
@@ -114,7 +114,7 @@ abstract class AbstractLeadController extends AbstractListingController
         $this->tplVarManager->set('legendTitle', TEXT_LEAD_ADD_ENTRY);
         $this->tplVarManager->set('pageDefinition', $this->pageDefinitionBuilder->getPageDefinition());
         $this->tplVarManager->set('pageDefinition.languages', $languages);
-        $this->tplVarManager->set('pageDefinition.contentTemplate', 'tplAdminLeadAddEditContent.php');
+        $this->tplVarManager->set('pageDefinition.contentTemplate', 'partials/lead/addEditContent');
         $this->tplVarManager->set('pageDefinition.action', 'add');
         $this->tplVarManager->set('pageDefinition.formAction', 'insert');
         $this->tplVarManager->set('pageDefinition.cancelButtonAction',  zen_href_link($this->request->readGet('cmd'),

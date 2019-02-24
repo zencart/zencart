@@ -80,7 +80,7 @@ class LeadGeoZones extends AbstractLeadDefinition
                     )
                 )
             ),
-            'headerTemplate' => 'tplAdminLeadGeoZonesHeader.php',
+            'headerTemplate' => 'partials/lead/leadGeoZonesHeader',
             'extraRowActions' => array(
                     array(
                         'key' => 'edit',
