@@ -212,7 +212,7 @@
         },
         {
             "name": "illuminate/container",
-            "version": "v5.7.27",
+            "version": "v5.7.28",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/container.git",
@@ -257,7 +257,7 @@
         },
         {
             "name": "illuminate/contracts",
-            "version": "v5.7.27",
+            "version": "v5.7.28",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/contracts.git",
@@ -301,16 +301,16 @@
         },
         {
             "name": "illuminate/database",
-            "version": "v5.7.27",
+            "version": "v5.7.28",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/database.git",
-                "reference": "3f72c0acfa2737d571de0d4240182ab72bd9c4f3"
+                "reference": "c0702cb8c665cab8d080a81de5a44ac672b26d62"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/illuminate/database/zipball/3f72c0acfa2737d571de0d4240182ab72bd9c4f3",
-                "reference": "3f72c0acfa2737d571de0d4240182ab72bd9c4f3",
+                "url": "https://api.github.com/repos/illuminate/database/zipball/c0702cb8c665cab8d080a81de5a44ac672b26d62",
+                "reference": "c0702cb8c665cab8d080a81de5a44ac672b26d62",
                 "shasum": ""
             },
             "require": {
@@ -356,7 +356,7 @@
                 "orm",
                 "sql"
             ],
-            "time": "2019-02-11T13:48:57+00:00"
+            "time": "2019-02-20T03:55:15+00:00"
         },
         {
             "name": "illuminate/events",
@@ -457,7 +457,7 @@
         },
         {
             "name": "illuminate/support",
-            "version": "v5.7.27",
+            "version": "v5.7.28",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/support.git",
