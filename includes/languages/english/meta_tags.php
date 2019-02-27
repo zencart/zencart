@@ -9,7 +9,9 @@
 
 // page title
 define('SITE_TITLE', 'Zen Cart!');
-define('TITLE', SITE_TITLE); 
+if (!defined('IS_ADMIN_FLAG')) { 
+  define('TITLE', SITE_TITLE); 
+}
 
 // Site Tagline
 define('SITE_TAGLINE', 'The Art of E-commerce');
