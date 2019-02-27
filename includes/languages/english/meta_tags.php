@@ -8,7 +8,8 @@
  */
 
 // page title
-define('TITLE', 'Zen Cart!');
+define('SITE_TITLE', 'Zen Cart!');
+define('TITLE', SITE_TITLE); 
 
 // Site Tagline
 define('SITE_TAGLINE', 'The Art of E-commerce');

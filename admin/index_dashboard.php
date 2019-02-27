@@ -128,7 +128,7 @@ foreach ($whos_online as $session) {
 <html <?php echo HTML_PARAMS; ?>>
   <head>
     <meta charset="<?php echo CHARSET; ?>">
-    <title><?php echo TITLE; ?></title>
+    <title><?php echo TEXT_ADMIN_TAB_PREFIX . SITE_TITLE; ?></title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <meta name="robots" content="noindex, nofollow">
     <link href="includes/stylesheet.css" rel="stylesheet" type="text/css">

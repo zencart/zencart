@@ -43,13 +43,16 @@ function zen_date_raw($date, $reverse = false) {
   }
 }
 
-// // include template specific meta tags defines
-//   if (file_exists(DIR_FS_CATALOG_LANGUAGES . $_SESSION['language'] . '/' . $template_dir . '/meta_tags.php')) {
-//     $template_dir_select = $template_dir . '/';
-//   } else {
-//     $template_dir_select = '';
-//   }
-//   require(DIR_FS_CATALOG_LANGUAGES . $_SESSION['language'] . '/' . $template_dir_select . 'meta_tags.php');
+// include template specific meta tags defines
+if (file_exists(DIR_FS_CATALOG_LANGUAGES . $_SESSION['language'] . '/' . $template_dir . '/meta_tags.php')) {
+ $template_dir_select = $template_dir . '/';
+} else {
+ $template_dir_select = '';
+}
+require(DIR_FS_CATALOG_LANGUAGES . $_SESSION['language'] . '/' . $template_dir_select . 'meta_tags.php');
+if (!defined('SITE_TITLE')) {
+   define('SITE_TITLE', TITLE); 
+}
 
 // used for prefix to browser tabs in admin pages
 define('TEXT_ADMIN_TAB_PREFIX', 'Admin ');

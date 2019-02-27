@@ -69,7 +69,7 @@ if ($expired && $message == '')
   <meta http-equiv="Content-Type" content="text/html; charset=<?php echo CHARSET; ?>">
   <link href="includes/alt-stylesheet.css" rel="stylesheet">
   <title>
-    <?php echo TITLE; ?>
+    <?php echo TEXT_ADMIN_TAB_PREFIX . SITE_TITLE; ?>
 
   </title>
   <meta name="robots" content="noindex, nofollow" />
