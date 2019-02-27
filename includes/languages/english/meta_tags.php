@@ -9,7 +9,7 @@
 
 // page title
 define('SITE_TITLE', 'Zen Cart!');
-if (!defined('IS_ADMIN_FLAG')) { 
+if (!defined('IS_ADMIN_FLAG') || IS_ADMIN_FLAG == 0) {
   define('TITLE', SITE_TITLE); 
 }
 
