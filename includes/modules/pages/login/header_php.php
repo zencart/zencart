@@ -17,9 +17,9 @@ if ($session_started == false) {
   zen_redirect(zen_href_link(FILENAME_COOKIE_USAGE));
 }
 
-// if the customer is logged in already, redirect them to the My account page
-if (isset($_SESSION['customer_id']) and $_SESSION['customer_id'] != '') {
-  zen_redirect(zen_href_link(FILENAME_ACCOUNT, '', 'SSL'));
+// if the customer is logged in already (and not in guest-checkout), redirect them to the My account page
+if (!zen_in_guest_checkout() && zen_is_logged_in()) {
+    zen_redirect(zen_href_link(FILENAME_ACCOUNT, '', 'SSL'));
 }
 
 require(DIR_WS_MODULES . zen_get_module_directory('require_languages.php'));
