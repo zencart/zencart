@@ -25,7 +25,7 @@
 
 @if ($tplVars['pageDefinition']['headerTemplate'])
 <section class="content-header row">
-    <?php require 'includes/template/partials/'.$tplVars['pageDefinition']['headerTemplate']; ?>
+    @include($tplVars['pageDefinition']['headerTemplate'])
 </section>
 @endif
 
@@ -54,7 +54,7 @@
     </aside>
     <section class="col-md-10">
         <div class="panel">
-        <?php require 'includes/template/partials/'.$tplVars['pageDefinition']['contentTemplate']; ?>
+        @include($tplVars['pageDefinition']['contentTemplate'])
         </div>
     </section>
 </section>

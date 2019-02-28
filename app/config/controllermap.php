@@ -28,4 +28,6 @@ return [
     'index' => ['type' => 'admin'],
     'server_info' => ['type' => 'info'],
     'system_inspection' => ['type' => 'info'],
+//    'login' => ['type' => 'info'],
+//    'password_forgotten' => ['type' => 'info'],
 ];

@@ -34,5 +34,13 @@ class Session
     public function set($key, $value)
     {
         $_SESSION[$key] = $value;
+        return $value;
+    }
+
+    public function increment($key, $default = 0)
+    {
+        $_SESSION[$key] = isset($_SESSION[$key]) ? $_SESSION[$key] : $default;
+        $_SESSION[$key] ++;
+        return $_SESSION[$key];
     }
 }

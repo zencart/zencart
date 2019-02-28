@@ -3,6 +3,7 @@
 namespace Illuminate\Database\Eloquent;
 
 use Closure;
+use Exception;
 use BadMethodCallException;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
@@ -14,6 +15,8 @@ use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Database\Query\Builder as QueryBuilder;
 
 /**
+ * @property-read HigherOrderBuilderProxy $orWhere
+ *
  * @mixin \Illuminate\Database\Query\Builder
  */
 class Builder
@@ -853,14 +856,23 @@ class Builder
      */
     protected function addUpdatedAtColumn(array $values)
     {
-        if (! $this->model->usesTimestamps()) {
+        if (! $this->model->usesTimestamps() ||
+            is_null($this->model->getUpdatedAtColumn())) {
             return $values;
         }
 
-        return Arr::add(
-            $values, $this->model->getUpdatedAtColumn(),
-            $this->model->freshTimestampString()
+        $column = $this->model->getUpdatedAtColumn();
+
+        $values = array_merge(
+            [$column => $this->model->freshTimestampString()],
+            $values
         );
+
+        $values[$this->qualifyColumn($column)] = $values[$column];
+
+        unset($values[$column]);
+
+        return $values;
     }
 
     /**
@@ -904,7 +916,7 @@ class Builder
      * Call the given local model scopes.
      *
      * @param  array  $scopes
-     * @return mixed
+     * @return static|mixed
      */
     public function scopes(array $scopes)
     {
@@ -933,7 +945,7 @@ class Builder
     /**
      * Apply the scopes to the Eloquent builder instance and return it.
      *
-     * @return \Illuminate\Database\Eloquent\Builder|static
+     * @return static
      */
     public function applyScopes()
     {
@@ -1279,6 +1291,23 @@ class Builder
     public function getMacro($name)
     {
         return Arr::get($this->localMacros, $name);
+    }
+
+    /**
+     * Dynamically access builder proxies.
+     *
+     * @param  string  $key
+     * @return mixed
+     *
+     * @throws \Exception
+     */
+    public function __get($key)
+    {
+        if ($key === 'orWhere') {
+            return new HigherOrderBuilderProxy($this, $key);
+        }
+
+        throw new Exception("Property [{$key}] does not exist on the Eloquent builder instance.");
     }
 
     /**

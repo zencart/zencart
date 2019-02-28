@@ -90,6 +90,10 @@ class ComposerStaticInit5bb9647ddd436acc528ee06f55d162ac
             'Doctrine\\Common\\Inflector\\' => 26,
             'DeepCopy\\' => 9,
         ),
+        'C' => 
+        array (
+            'Carbon\\' => 7,
+        ),
         'B' => 
         array (
             'Behat\\Mink\\Driver\\' => 18,
@@ -274,6 +278,10 @@ class ComposerStaticInit5bb9647ddd436acc528ee06f55d162ac
         array (
             0 => __DIR__ . '/..' . '/myclabs/deep-copy/src/DeepCopy',
         ),
+        'Carbon\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/nesbot/carbon/src/Carbon',
+        ),
         'Behat\\Mink\\Driver\\' => 
         array (
             0 => __DIR__ . '/..' . '/behat/mink-browserkit-driver/src',
@@ -296,10 +304,6 @@ class ComposerStaticInit5bb9647ddd436acc528ee06f55d162ac
         array (
             0 => __DIR__ . '/..' . '/aura/di/src',
         ),
-    );
-
-    public static $fallbackDirsPsr4 = array (
-        0 => __DIR__ . '/..' . '/nesbot/carbon/src',
     );
 
     public static $prefixesPsr0 = array (
@@ -983,10 +987,33 @@ class ComposerStaticInit5bb9647ddd436acc528ee06f55d162ac
         'Breadcrumb' => __DIR__ . '/../..' . '/includes/classes/breadcrumb.php',
         'BreadcrumbTest' => __DIR__ . '/../..' . '/testFramework/unittests/testsSundry/BreadcrumbTest.php',
         'Carbon\\Carbon' => __DIR__ . '/..' . '/nesbot/carbon/src/Carbon/Carbon.php',
+        'Carbon\\CarbonImmutable' => __DIR__ . '/..' . '/nesbot/carbon/src/Carbon/CarbonImmutable.php',
+        'Carbon\\CarbonInterface' => __DIR__ . '/..' . '/nesbot/carbon/src/Carbon/CarbonInterface.php',
         'Carbon\\CarbonInterval' => __DIR__ . '/..' . '/nesbot/carbon/src/Carbon/CarbonInterval.php',
         'Carbon\\CarbonPeriod' => __DIR__ . '/..' . '/nesbot/carbon/src/Carbon/CarbonPeriod.php',
+        'Carbon\\CarbonTimeZone' => __DIR__ . '/..' . '/nesbot/carbon/src/Carbon/CarbonTimeZone.php',
         'Carbon\\Exceptions\\InvalidDateException' => __DIR__ . '/..' . '/nesbot/carbon/src/Carbon/Exceptions/InvalidDateException.php',
+        'Carbon\\Factory' => __DIR__ . '/..' . '/nesbot/carbon/src/Carbon/Factory.php',
+        'Carbon\\FactoryImmutable' => __DIR__ . '/..' . '/nesbot/carbon/src/Carbon/FactoryImmutable.php',
+        'Carbon\\Language' => __DIR__ . '/..' . '/nesbot/carbon/src/Carbon/Language.php',
         'Carbon\\Laravel\\ServiceProvider' => __DIR__ . '/..' . '/nesbot/carbon/src/Carbon/Laravel/ServiceProvider.php',
+        'Carbon\\Traits\\Boundaries' => __DIR__ . '/..' . '/nesbot/carbon/src/Carbon/Traits/Boundaries.php',
+        'Carbon\\Traits\\Comparison' => __DIR__ . '/..' . '/nesbot/carbon/src/Carbon/Traits/Comparison.php',
+        'Carbon\\Traits\\Converter' => __DIR__ . '/..' . '/nesbot/carbon/src/Carbon/Traits/Converter.php',
+        'Carbon\\Traits\\Creator' => __DIR__ . '/..' . '/nesbot/carbon/src/Carbon/Traits/Creator.php',
+        'Carbon\\Traits\\Date' => __DIR__ . '/..' . '/nesbot/carbon/src/Carbon/Traits/Date.php',
+        'Carbon\\Traits\\Difference' => __DIR__ . '/..' . '/nesbot/carbon/src/Carbon/Traits/Difference.php',
+        'Carbon\\Traits\\Localization' => __DIR__ . '/..' . '/nesbot/carbon/src/Carbon/Traits/Localization.php',
+        'Carbon\\Traits\\Macro' => __DIR__ . '/..' . '/nesbot/carbon/src/Carbon/Traits/Macro.php',
+        'Carbon\\Traits\\Modifiers' => __DIR__ . '/..' . '/nesbot/carbon/src/Carbon/Traits/Modifiers.php',
+        'Carbon\\Traits\\Mutability' => __DIR__ . '/..' . '/nesbot/carbon/src/Carbon/Traits/Mutability.php',
+        'Carbon\\Traits\\Options' => __DIR__ . '/..' . '/nesbot/carbon/src/Carbon/Traits/Options.php',
+        'Carbon\\Traits\\Rounding' => __DIR__ . '/..' . '/nesbot/carbon/src/Carbon/Traits/Rounding.php',
+        'Carbon\\Traits\\Serialization' => __DIR__ . '/..' . '/nesbot/carbon/src/Carbon/Traits/Serialization.php',
+        'Carbon\\Traits\\Test' => __DIR__ . '/..' . '/nesbot/carbon/src/Carbon/Traits/Test.php',
+        'Carbon\\Traits\\Timestamp' => __DIR__ . '/..' . '/nesbot/carbon/src/Carbon/Traits/Timestamp.php',
+        'Carbon\\Traits\\Units' => __DIR__ . '/..' . '/nesbot/carbon/src/Carbon/Traits/Units.php',
+        'Carbon\\Traits\\Week' => __DIR__ . '/..' . '/nesbot/carbon/src/Carbon/Traits/Week.php',
         'Carbon\\Translator' => __DIR__ . '/..' . '/nesbot/carbon/src/Carbon/Translator.php',
         'CardinalXMLParser' => __DIR__ . '/../..' . '/includes/modules/payment/paypaldp.php',
         'CommonTestResources' => __DIR__ . '/../..' . '/testFramework/webtests/support/CommonTestResources.php',
@@ -1100,6 +1127,7 @@ class ComposerStaticInit5bb9647ddd436acc528ee06f55d162ac
         'Illuminate\\Container\\Container' => __DIR__ . '/..' . '/illuminate/container/Container.php',
         'Illuminate\\Container\\ContextualBindingBuilder' => __DIR__ . '/..' . '/illuminate/container/ContextualBindingBuilder.php',
         'Illuminate\\Container\\EntryNotFoundException' => __DIR__ . '/..' . '/illuminate/container/EntryNotFoundException.php',
+        'Illuminate\\Container\\RewindableGenerator' => __DIR__ . '/..' . '/illuminate/container/RewindableGenerator.php',
         'Illuminate\\Contracts\\Auth\\Access\\Authorizable' => __DIR__ . '/..' . '/illuminate/contracts/Auth/Access/Authorizable.php',
         'Illuminate\\Contracts\\Auth\\Access\\Gate' => __DIR__ . '/..' . '/illuminate/contracts/Auth/Access/Gate.php',
         'Illuminate\\Contracts\\Auth\\Authenticatable' => __DIR__ . '/..' . '/illuminate/contracts/Auth/Authenticatable.php',
@@ -1174,6 +1202,7 @@ class ComposerStaticInit5bb9647ddd436acc528ee06f55d162ac
         'Illuminate\\Contracts\\Routing\\UrlRoutable' => __DIR__ . '/..' . '/illuminate/contracts/Routing/UrlRoutable.php',
         'Illuminate\\Contracts\\Session\\Session' => __DIR__ . '/..' . '/illuminate/contracts/Session/Session.php',
         'Illuminate\\Contracts\\Support\\Arrayable' => __DIR__ . '/..' . '/illuminate/contracts/Support/Arrayable.php',
+        'Illuminate\\Contracts\\Support\\DeferrableProvider' => __DIR__ . '/..' . '/illuminate/contracts/Support/DeferrableProvider.php',
         'Illuminate\\Contracts\\Support\\Htmlable' => __DIR__ . '/..' . '/illuminate/contracts/Support/Htmlable.php',
         'Illuminate\\Contracts\\Support\\Jsonable' => __DIR__ . '/..' . '/illuminate/contracts/Support/Jsonable.php',
         'Illuminate\\Contracts\\Support\\MessageBag' => __DIR__ . '/..' . '/illuminate/contracts/Support/MessageBag.php',
@@ -1234,6 +1263,7 @@ class ComposerStaticInit5bb9647ddd436acc528ee06f55d162ac
         'Illuminate\\Database\\Eloquent\\Concerns\\QueriesRelationships' => __DIR__ . '/..' . '/illuminate/database/Eloquent/Concerns/QueriesRelationships.php',
         'Illuminate\\Database\\Eloquent\\Factory' => __DIR__ . '/..' . '/illuminate/database/Eloquent/Factory.php',
         'Illuminate\\Database\\Eloquent\\FactoryBuilder' => __DIR__ . '/..' . '/illuminate/database/Eloquent/FactoryBuilder.php',
+        'Illuminate\\Database\\Eloquent\\HigherOrderBuilderProxy' => __DIR__ . '/..' . '/illuminate/database/Eloquent/HigherOrderBuilderProxy.php',
         'Illuminate\\Database\\Eloquent\\JsonEncodingException' => __DIR__ . '/..' . '/illuminate/database/Eloquent/JsonEncodingException.php',
         'Illuminate\\Database\\Eloquent\\MassAssignmentException' => __DIR__ . '/..' . '/illuminate/database/Eloquent/MassAssignmentException.php',
         'Illuminate\\Database\\Eloquent\\Model' => __DIR__ . '/..' . '/illuminate/database/Eloquent/Model.php',
@@ -1249,6 +1279,7 @@ class ComposerStaticInit5bb9647ddd436acc528ee06f55d162ac
         'Illuminate\\Database\\Eloquent\\Relations\\HasManyThrough' => __DIR__ . '/..' . '/illuminate/database/Eloquent/Relations/HasManyThrough.php',
         'Illuminate\\Database\\Eloquent\\Relations\\HasOne' => __DIR__ . '/..' . '/illuminate/database/Eloquent/Relations/HasOne.php',
         'Illuminate\\Database\\Eloquent\\Relations\\HasOneOrMany' => __DIR__ . '/..' . '/illuminate/database/Eloquent/Relations/HasOneOrMany.php',
+        'Illuminate\\Database\\Eloquent\\Relations\\HasOneThrough' => __DIR__ . '/..' . '/illuminate/database/Eloquent/Relations/HasOneThrough.php',
         'Illuminate\\Database\\Eloquent\\Relations\\MorphMany' => __DIR__ . '/..' . '/illuminate/database/Eloquent/Relations/MorphMany.php',
         'Illuminate\\Database\\Eloquent\\Relations\\MorphOne' => __DIR__ . '/..' . '/illuminate/database/Eloquent/Relations/MorphOne.php',
         'Illuminate\\Database\\Eloquent\\Relations\\MorphOneOrMany' => __DIR__ . '/..' . '/illuminate/database/Eloquent/Relations/MorphOneOrMany.php',
@@ -1320,6 +1351,7 @@ class ComposerStaticInit5bb9647ddd436acc528ee06f55d162ac
         'Illuminate\\Support\\Carbon' => __DIR__ . '/..' . '/illuminate/support/Carbon.php',
         'Illuminate\\Support\\Collection' => __DIR__ . '/..' . '/illuminate/support/Collection.php',
         'Illuminate\\Support\\Composer' => __DIR__ . '/..' . '/illuminate/support/Composer.php',
+        'Illuminate\\Support\\DateFactory' => __DIR__ . '/..' . '/illuminate/support/DateFactory.php',
         'Illuminate\\Support\\Facades\\App' => __DIR__ . '/..' . '/illuminate/support/Facades/App.php',
         'Illuminate\\Support\\Facades\\Artisan' => __DIR__ . '/..' . '/illuminate/support/Facades/Artisan.php',
         'Illuminate\\Support\\Facades\\Auth' => __DIR__ . '/..' . '/illuminate/support/Facades/Auth.php',
@@ -1331,6 +1363,7 @@ class ComposerStaticInit5bb9647ddd436acc528ee06f55d162ac
         'Illuminate\\Support\\Facades\\Cookie' => __DIR__ . '/..' . '/illuminate/support/Facades/Cookie.php',
         'Illuminate\\Support\\Facades\\Crypt' => __DIR__ . '/..' . '/illuminate/support/Facades/Crypt.php',
         'Illuminate\\Support\\Facades\\DB' => __DIR__ . '/..' . '/illuminate/support/Facades/DB.php',
+        'Illuminate\\Support\\Facades\\Date' => __DIR__ . '/..' . '/illuminate/support/Facades/Date.php',
         'Illuminate\\Support\\Facades\\Event' => __DIR__ . '/..' . '/illuminate/support/Facades/Event.php',
         'Illuminate\\Support\\Facades\\Facade' => __DIR__ . '/..' . '/illuminate/support/Facades/Facade.php',
         'Illuminate\\Support\\Facades\\File' => __DIR__ . '/..' . '/illuminate/support/Facades/File.php',
@@ -1422,7 +1455,6 @@ class ComposerStaticInit5bb9647ddd436acc528ee06f55d162ac
         'Jaybizzle\\CrawlerDetect\\Fixtures\\Exclusions' => __DIR__ . '/..' . '/jaybizzle/crawler-detect/src/Fixtures/Exclusions.php',
         'Jaybizzle\\CrawlerDetect\\Fixtures\\Headers' => __DIR__ . '/..' . '/jaybizzle/crawler-detect/src/Fixtures/Headers.php',
         'Jenssegers\\Blade\\Blade' => __DIR__ . '/..' . '/jenssegers/blade/src/Blade.php',
-        'JsonSerializable' => __DIR__ . '/..' . '/nesbot/carbon/src/JsonSerializable.php',
         'LowOrderFeeTrait' => __DIR__ . '/../..' . '/testFramework/webtests/support/LowOrderFeeTrait.php',
         'MainContext' => __DIR__ . '/../..' . '/testFramework/behat/features/bootstrap/MainContext.php',
         'Mobile_Detect' => __DIR__ . '/../..' . '/includes/classes/Mobile_Detect.php',
@@ -2995,7 +3027,6 @@ class ComposerStaticInit5bb9647ddd436acc528ee06f55d162ac
         return \Closure::bind(function () use ($loader) {
             $loader->prefixLengthsPsr4 = ComposerStaticInit5bb9647ddd436acc528ee06f55d162ac::$prefixLengthsPsr4;
             $loader->prefixDirsPsr4 = ComposerStaticInit5bb9647ddd436acc528ee06f55d162ac::$prefixDirsPsr4;
-            $loader->fallbackDirsPsr4 = ComposerStaticInit5bb9647ddd436acc528ee06f55d162ac::$fallbackDirsPsr4;
             $loader->prefixesPsr0 = ComposerStaticInit5bb9647ddd436acc528ee06f55d162ac::$prefixesPsr0;
             $loader->classMap = ComposerStaticInit5bb9647ddd436acc528ee06f55d162ac::$classMap;
 

@@ -88,7 +88,6 @@ Abstract class AbstractView
     protected function doViewOutput($response)
     {
         if (isset($response['redirect'])) {
-            $this->notify('NOTIFIER_ADMIN_BASE_DO_VIEW_OUTPUT_REDIRECT_BEFORE');
             zen_redirect($response['redirect']);
         }
         $useTemplate = $this->getMainTemplate();

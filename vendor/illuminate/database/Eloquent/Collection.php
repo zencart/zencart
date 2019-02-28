@@ -6,7 +6,7 @@ use LogicException;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 use Illuminate\Contracts\Support\Arrayable;
-use Illuminate\Database\Eloquent\Relations\Pivot;
+use Illuminate\Contracts\Queue\QueueableEntity;
 use Illuminate\Contracts\Queue\QueueableCollection;
 use Illuminate\Support\Collection as BaseCollection;
 
@@ -185,19 +185,6 @@ class Collection extends BaseCollection implements QueueableCollection
             ->each(function ($models, $className) use ($relations) {
                 static::make($models)->load($relations[$className] ?? []);
             });
-
-        return $this;
-    }
-
-    /**
-     * Add an item to the collection.
-     *
-     * @param  mixed  $item
-     * @return $this
-     */
-    public function add($item)
-    {
-        $this->items[] = $item;
 
         return $this;
     }
@@ -541,7 +528,7 @@ class Collection extends BaseCollection implements QueueableCollection
             return [];
         }
 
-        return $this->first() instanceof Pivot
+        return $this->first() instanceof QueueableEntity
                     ? $this->map->getQueueableId()->all()
                     : $this->modelKeys();
     }
