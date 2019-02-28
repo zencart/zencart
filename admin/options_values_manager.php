@@ -218,18 +218,6 @@ if (zen_not_null($action)) {
                                        AND pa.options_values_id = " . (int)$options_values_values_id_from);
       }
 
-      /*
-        // debug code
-        while(!$products_only->EOF) {
-        echo 'Product ' . $products_only->fields['products_id'] . '<br>';
-        $products_only->MoveNext();
-        }
-
-
-        die('I SEE match from: ' . $options_id_from . '-' . $options_values_values_id_from . ' add to: ' . $options_id_to . ' -' . $options_values_values_id_to . ' | only for cat ' . $_POST['copy_to_categories_id'] . ' | found matches ' . $products_only->RecordCount());
-       */
-
-
       if ($_POST['copy_to_categories_id'] == '') {
         $zc_categories = ' All Products ';
       } else {
@@ -342,21 +330,6 @@ if (zen_not_null($action)) {
         $attributes_price_letters_free = zen_db_prepare_input($products_attributes_defaults->fields['attributes_price_letters_free']);
         $attributes_required = zen_db_prepare_input($products_attributes_defaults->fields['attributes_required']);
       }
-
-      /*
-        /////
-        // debug code
-        while(!$products_only->EOF) {
-        echo 'Product ' . $products_only->fields['products_id'] . '<br>';
-        $products_only->MoveNext();
-        }
-
-
-        die('I SEE match from products_id:' . $copy_from_products_id . ' options_id_from: ' . $options_id_from . '-' . $options_values_values_id_from . ' add to: ' . $options_id_to . ' | only for cat ' . $_POST['copy_to_categories_id'] . ' | found matches ' . $products_only->RecordCount() . '<br>' .
-        'from products_id: ' . $products_attributes_defaults->fields['products_id'] . ' option_id: ' . $products_attributes_defaults->fields['options_id'] . ' options_values_id: ' . $products_attributes_defaults->fields['options_values_id']
-        );
-        /////
-       */
 
       if ($_POST['copy_to_categories_id'] == '') {
         $zc_categories = ' All Products ';

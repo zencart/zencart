@@ -11,7 +11,6 @@ require('includes/application_top.php');
 function zen_display_files() {
   global $check_directory, $found, $configuration_key_lookup;
     for ($i = 0, $n = sizeof($check_directory); $i < $n; $i++) {
-//echo 'I SEE ' . $check_directory[$i] . '<br>';
 
     $dir_check = $check_directory[$i];
 

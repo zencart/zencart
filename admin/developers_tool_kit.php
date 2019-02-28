@@ -50,7 +50,6 @@ function zen_display_files($include_root = false, $filetypesincluded = 1) {
 
   $directory_array = array();
   for ($i = 0, $n = sizeof($check_directory); $i < $n; $i++) {
-//echo 'I SEE ' . $check_directory[$i] . '<br>';
 
     $dir_check = $check_directory[$i];
 
@@ -137,7 +136,6 @@ function zen_display_files($include_root = false, $filetypesincluded = 1) {
   } else {
     // don't ask about configuration table
   }
-//die('I SEE ' . $check_configure->RecordCount() . ' vs ' . $check_database);
   echo '<table class="table">' . "\n";
   if (isset($check_database) && ($check_database == true && $check_configure->RecordCount() >= 1)) {
     // only ask if found
@@ -154,7 +152,6 @@ function zen_display_files($include_root = false, $filetypesincluded = 1) {
     // build file content of matching lines
     $file_cnt++;
     $file = $directory_array[$i];
-//echo 'I SEE ' . $directory_array[$i] . '<br>';
     // clean path name
     $file = preg_replace('~/+~', '/', $file);
 
