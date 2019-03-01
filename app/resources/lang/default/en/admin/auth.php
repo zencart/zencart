@@ -31,5 +31,5 @@ return [
     'log-error-security-token' => 'Attempted login without CSRF token.',
     'log-error-wrong-login' => 'Attempted login without username.',
 
-    'alert-reset-token-sent' => 'Thank you. If the email address you entered matches an admin account in our database, then a new password will be sent to that email address.<br />Please read that email and then click "login" below to login with the new temporary password.',
+    'alert-reset-token-sent' => 'Thank you. If the email address you entered matches an admin account in our database, then a new password will be sent to that email address. Please read that email and then click "login" below to login with the new temporary password.',
 ];
