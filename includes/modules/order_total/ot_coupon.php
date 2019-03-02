@@ -462,7 +462,7 @@ class ot_coupon {
    */
   function apply_credit() {
     global $db, $insert_id;
-    $cc_id = $_SESSION['cc_id'];
+    $cc_id = empty($_SESSION['cc_id']) ? 0 : $_SESSION['cc_id'];
     if ($this->deduction !=0) {
       $db->Execute("insert into " . TABLE_COUPON_REDEEM_TRACK . "
                     (coupon_id, redeem_date, redeem_ip, customer_id, order_id)
