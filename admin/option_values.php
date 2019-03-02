@@ -20,6 +20,10 @@ if ($chk_option_values->RecordCount() < 1) {
 require(DIR_WS_CLASSES . 'currencies.php');
 $currencies = new currencies();
 
+if (!isset($_GET['action'])) {
+  $_GET['action'] = '';
+}
+
 switch ($_GET['action']) {
   case ('update_sort_order'):
     foreach ($_POST['options_values_new_sort_order'] as $id => $new_sort_order) {
@@ -101,7 +105,7 @@ switch ($_GET['action']) {
         <h1><?php echo HEADING_TITLE; ?></h1>
         <!-- body_text //-->
         <?php
-        if ($_GET['options_id'] == '') {
+        if (empty($_GET['options_id'])) {
           ?>
           <?php echo zen_draw_form('quick_jump', FILENAME_PRODUCTS_OPTIONS_VALUES, '', 'get', 'class="form-horizontal"'); ?>
           <table class="table table-condensed">
@@ -225,7 +229,7 @@ switch ($_GET['action']) {
         </div>
         <div class="row">
             <?php echo zen_draw_form('update_product_attributes', FILENAME_PRODUCTS_OPTIONS_VALUES, 'action=update_product', 'post', 'class="form-horizontal"'); ?>
-            <?php echo zen_draw_hidden_field('products_update_id', $_GET['products_update_id']); ?>
+            <?php echo zen_draw_hidden_field('products_update_id', (isset($_GET['products_update_id']) ? (int)$_GET['products_update_id'] : '0')); ?>
           <div class="col-sm-6"><?php echo zen_draw_products_pull_down_attributes('products_update_id', 'class="form-control"'); ?></div>
           <div class="col-sm-2">
             <button type="submit" class="btn btn-warning"><?php echo IMAGE_UPDATE; ?></button>
@@ -244,7 +248,7 @@ switch ($_GET['action']) {
         </div>
         <div class="row">
             <?php echo zen_draw_form('update_categories_attributes', FILENAME_PRODUCTS_OPTIONS_VALUES, 'action=update_categories_attributes', 'post', 'class="form-horizontal"'); ?>
-            <?php echo zen_draw_hidden_field('categories_update_id', $_GET['categories_update_id']); ?>
+            <?php echo zen_draw_hidden_field('categories_update_id', (isset($_GET['categories_update_id']) ? $_GET['categories_update_id'] : '0')); ?>
           <div class="col-sm-3"><?php echo zen_draw_products_pull_down_categories_attributes('categories_update_id', 'class="form-control"'); ?></div>
           <div class="col-sm-2"><button type="submit" class="btn btn-warning"><?php echo IMAGE_UPDATE; ?></button></div>
           <?php echo '</form>'; ?>
