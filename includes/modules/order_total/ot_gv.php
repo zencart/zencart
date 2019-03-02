@@ -208,8 +208,9 @@ class ot_gv {
    */
   function apply_credit() {
     global $db, $order, $messageStack;
+    $gv_payment_amount = 0;
     // check for valid redemption amount vs available credit for current customer
-    if ($_SESSION['cot_gv'] != 0) {
+    if (!empty($_SESSION['cot_gv'])) {
       $gv_result = $db->Execute("select amount from " . TABLE_COUPON_GV_CUSTOMER . " where customer_id = '" . (int)$_SESSION['customer_id'] . "'");
       // obtain final "deduction" amount
       $gv_payment_amount = $this->deduction;
