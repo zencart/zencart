@@ -21,7 +21,7 @@ if ($dir = @dir($boxes_directory)) {
       }
     }
   }
-    if (sizeof($directory_array)) {
+  if (sizeof($directory_array)) {
     sort($directory_array);
   }
   $dir->close();
