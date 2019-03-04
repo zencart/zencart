@@ -318,8 +318,10 @@ class ot_coupon {
         $coupon_count_customer = $db->Execute("select coupon_id from " . TABLE_COUPON_REDEEM_TRACK . "
                                                where coupon_id = '" . $coupon_result->fields['coupon_id']."' and
                                                customer_id = '" . (int)$_SESSION['customer_id'] . "'");
-
-        if ($coupon_count->RecordCount() >= $coupon_result->fields['uses_per_coupon'] && $coupon_result->fields['uses_per_coupon'] > 0) {
+                                               
+        $coupon_uses_per_user_exceeded = ($coupon_count_customer->RecordCount() >= $coupon_result->fields['uses_per_user'] && $coupon_result->fields['uses_per_user'] > 0);
+        $GLOBALS['zco_notifier']->notify('NOTIFY_OT_COUPON_USES_PER_USER_CHECK', $coupon_result->fields, $coupon_uses_per_user_exceeded);
+        if ($coupon_uses_per_user_exceeded) {
           $messageStack->add_session('redemptions', TEXT_INVALID_USES_COUPON . $coupon_result->fields['uses_per_coupon'] . TIMES . ' ' . ($dc_link_count ==0 ? $dc_link : '') ,'caution');
           $error_issues ++;
           $dc_link_count ++;
@@ -462,7 +464,7 @@ class ot_coupon {
    */
   function apply_credit() {
     global $db, $insert_id;
-    $cc_id = $_SESSION['cc_id'];
+    $cc_id = empty($_SESSION['cc_id']) ? 0 : $_SESSION['cc_id'];
     if ($this->deduction !=0) {
       $db->Execute("insert into " . TABLE_COUPON_REDEEM_TRACK . "
                     (coupon_id, redeem_date, redeem_ip, customer_id, order_id)

@@ -110,7 +110,7 @@
     $result = $db->Execute($sql);
 
     // check whether coupon has been flagged for not valid with sales
-    if ($result->fields['coupon_is_valid_for_sales']) {
+    if (!empty($result->fields['coupon_is_valid_for_sales'])) {
       return true;
     }
 

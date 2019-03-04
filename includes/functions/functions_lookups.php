@@ -552,15 +552,16 @@
  *  configuration key value lookup
  *  TABLE: configuration
  */
-  function zen_get_configuration_key_value($lookup) {
+function zen_get_configuration_key_value($lookup) 
+{
     global $db;
-    $configuration_query= $db->Execute("select configuration_value from " . TABLE_CONFIGURATION . " where configuration_key='" . $lookup . "'");
-    $lookup_value= $configuration_query->fields['configuration_value'];
-    if ( !($lookup_value) ) {
-      $lookup_value='<span class="lookupAttention">' . $lookup . '</span>';
+    $configuration_query = $db->Execute("select configuration_value from " . TABLE_CONFIGURATION . " where configuration_key='" . $lookup . "' LIMIT 1");
+    $lookup_value = ($configuration_query->EOF) ? '' : $configuration_query->fields['configuration_value'];
+    if (empty($lookup_value)) {
+        $lookup_value = '<span class="lookupAttention">' . $lookup . '</span>';
     }
     return $lookup_value;
-  }
+}
 
 /*
  *  Return products description, based on specified language (or current lang if not specified)
