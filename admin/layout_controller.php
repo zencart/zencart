@@ -66,7 +66,7 @@ for ($i = 0, $n = sizeof($directory_array); $i < $n; $i++) {
   }
 }
 
-$page = 'page=' . (isset($_GET['page']) && (int)$_GET['page'] > 0 ? . (int)$_GET['page'] : '1'); // page=1 used to prevent concatenation issues.
+$page = 'page=' . (isset($_GET['page']) && (int)$_GET['page'] > 0 ? (int)$_GET['page'] : '1'); // page=1 used to prevent concatenation issues.
 if (!isset($_GET['action'])) $_GET['action'] = '';
 
 ////////////////////////////////////
