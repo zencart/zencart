@@ -254,7 +254,6 @@ if (zen_not_null($action)) {
         $_SESSION['languages_id'] = $lng->fields['languages_id'];
 
       $zco_notifier->notify('NOTIFY_ADMIN_LANGUAGE_DELETE', (int)$lID);
-
       
       zen_redirect(zen_href_link(FILENAME_LANGUAGES, 'page=' . $_GET['page']));
       break;
