@@ -257,7 +257,7 @@
         },
         {
             "name": "illuminate/contracts",
-            "version": "v5.8.0",
+            "version": "v5.8.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/contracts.git",
@@ -458,16 +458,16 @@
         },
         {
             "name": "illuminate/support",
-            "version": "v5.8.0",
+            "version": "v5.8.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/support.git",
-                "reference": "f4eef6632fa23bcfb02d8029b7dce37ceb6a5801"
+                "reference": "013cfab5d44c530b56d70cc9ccb891c8b25ebbce"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/illuminate/support/zipball/f4eef6632fa23bcfb02d8029b7dce37ceb6a5801",
-                "reference": "f4eef6632fa23bcfb02d8029b7dce37ceb6a5801",
+                "url": "https://api.github.com/repos/illuminate/support/zipball/013cfab5d44c530b56d70cc9ccb891c8b25ebbce",
+                "reference": "013cfab5d44c530b56d70cc9ccb891c8b25ebbce",
                 "shasum": ""
             },
             "require": {
@@ -515,7 +515,7 @@
             ],
             "description": "The Illuminate Support package.",
             "homepage": "https://laravel.com",
-            "time": "2019-02-23T15:01:19+00:00"
+            "time": "2019-02-27T14:00:44+00:00"
         },
         {
             "name": "illuminate/view",
@@ -665,16 +665,16 @@
         },
         {
             "name": "nesbot/carbon",
-            "version": "2.14.0",
+            "version": "2.14.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/briannesbitt/Carbon.git",
-                "reference": "7a748bc397bd14b8a43b13beca73a8ffec554fd9"
+                "reference": "a1f4f9abcde8241ce33bf5090896e9c16d0b4232"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/briannesbitt/Carbon/zipball/7a748bc397bd14b8a43b13beca73a8ffec554fd9",
-                "reference": "7a748bc397bd14b8a43b13beca73a8ffec554fd9",
+                "url": "https://api.github.com/repos/briannesbitt/Carbon/zipball/a1f4f9abcde8241ce33bf5090896e9c16d0b4232",
+                "reference": "a1f4f9abcde8241ce33bf5090896e9c16d0b4232",
                 "shasum": ""
             },
             "require": {
@@ -721,7 +721,7 @@
                 "datetime",
                 "time"
             ],
-            "time": "2019-02-25T20:57:37+00:00"
+            "time": "2019-02-28T09:07:12+00:00"
         },
         {
             "name": "psr/container",
@@ -1101,16 +1101,16 @@
         },
         {
             "name": "symfony/translation",
-            "version": "v4.2.3",
+            "version": "v4.2.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/translation.git",
-                "reference": "23fd7aac70d99a17a8e6473a41fec8fab3331050"
+                "reference": "748464177a77011f8f4cdd076773862ce4915f8f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/translation/zipball/23fd7aac70d99a17a8e6473a41fec8fab3331050",
-                "reference": "23fd7aac70d99a17a8e6473a41fec8fab3331050",
+                "url": "https://api.github.com/repos/symfony/translation/zipball/748464177a77011f8f4cdd076773862ce4915f8f",
+                "reference": "748464177a77011f8f4cdd076773862ce4915f8f",
                 "shasum": ""
             },
             "require": {
@@ -1170,7 +1170,7 @@
             ],
             "description": "Symfony Translation Component",
             "homepage": "https://symfony.com",
-            "time": "2019-01-27T23:11:39+00:00"
+            "time": "2019-02-27T03:31:50+00:00"
         },
         {
             "name": "vlucas/valitron",
