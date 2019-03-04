@@ -177,6 +177,8 @@ if (zen_not_null($action)) {
                                 '" . zen_db_input($ezpage['pages_html_text']) . "')");
         }
 
+        $zco_notifier->notify('NOTIFY_ADMIN_LANGUAGE_INSERT', (int)$insert_id);
+
         zen_redirect(zen_href_link(FILENAME_LANGUAGES, (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . 'lID=' . $insert_id));
       }
 
@@ -251,6 +253,9 @@ if (zen_not_null($action)) {
       if ((int)$_SESSION['languages_id'] == (int)$_POST['lID'])
         $_SESSION['languages_id'] = $lng->fields['languages_id'];
 
+      $zco_notifier->notify('NOTIFY_ADMIN_LANGUAGE_DELETE', (int)$lID);
+
+      
       zen_redirect(zen_href_link(FILENAME_LANGUAGES, 'page=' . $_GET['page']));
       break;
     case 'delete':
