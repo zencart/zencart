@@ -370,7 +370,6 @@
       $products_array = array();
       }
 
-// echo 'I see  ' . $current_category_id . ' vs' . $current_manufacturers_id;
       if (!$products->EOF && $current_category_id > 0) {
         $products_array[] = array('id' => '-1',
                                    'text' => TEXT_ALL_PRODUCTS_ADD);
