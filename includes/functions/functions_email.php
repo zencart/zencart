@@ -404,7 +404,7 @@ use PHPMailer\PHPMailer\SMTP;
     $from_email_name = zen_db_prepare_input($from_email_name);
     $from_email_address = zen_db_prepare_input($from_email_address);
     $email_subject = zen_db_prepare_input($email_subject);
-    $email_html = (EMAIL_USE_HTML=='true') ? zen_db_prepare_input($email_html) : zen_db_prepare_input('HTML disabled in admin');
+    $email_html = (EMAIL_USE_HTML=='true') ? zen_db_prepare_input_html_safe($email_html) : zen_db_prepare_input('HTML disabled in admin');
     $email_text = zen_db_prepare_input($email_text);
     $module = zen_db_prepare_input($module);
     $error_msgs = zen_db_prepare_input($error_msgs);
@@ -783,3 +783,19 @@ use PHPMailer\PHPMailer\SMTP;
     if ($customers_values->EOF) return '';
     return $customers_values->fields['customers_email_address'];
   }
+
+
+  function zen_db_prepare_input_html_safe($string) {
+    if (is_string($string)) {
+      return trim(stripslashes($string));
+    } elseif (is_array($string)) {
+      reset($string);
+      while (list($key, $value) = each($string)) {
+        $string[$key] = zen_db_prepare_input($value);
+      }
+      return $string;
+    } else {
+      return $string;
+    }
+  }
+
