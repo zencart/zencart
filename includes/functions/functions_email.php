@@ -784,7 +784,6 @@ use PHPMailer\PHPMailer\SMTP;
     return $customers_values->fields['customers_email_address'];
   }
 
-
   function zen_db_prepare_input_html_safe($string) {
     if (is_string($string)) {
       return trim(stripslashes($string));
@@ -792,9 +791,6 @@ use PHPMailer\PHPMailer\SMTP;
       foreach ($string as $key => $value) { 
         $string[$key] = zen_db_prepare_input($value);
       }
-      return $string;
-    } else {
-      return $string;
     }
+    return $string;
   }
-
