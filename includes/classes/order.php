@@ -754,8 +754,8 @@ class order extends base {
 
           // Will work with only one option for downloadable products
           // otherwise, we have to build the query dynamically with a loop
-          $products_attributes = $this->products[$i]['attributes'];
-          if (is_array($products_attributes)) {
+          if (!empty($this->products[$i]['attributes']) && is_array($this->products[$i]['attributes'])) {
+            $products_attributes = $this->products[$i]['attributes'];
             $stock_query_raw .= " AND pa.options_id = '" . $products_attributes[0]['option_id'] . "' AND pa.options_values_id = '" . $products_attributes[0]['value_id'] . "'";
           }
           $stock_values = $db->Execute($stock_query_raw, false, false, 0, true);

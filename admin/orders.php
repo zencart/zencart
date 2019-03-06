@@ -913,14 +913,11 @@ if (zen_not_null($action) && $order_exists == true) {
                   if (!empty($_GET['cID'])) {
                     $cID = (int)zen_db_prepare_input($_GET['cID']);
                     $orders_query_raw .= " WHERE o.customers_id = " . (int)$cID;
-//echo '<br><br>I SEE A: ' . $orders_query_raw . '<br><br>';
                   } elseif ($_GET['status'] != '') {
                     $status = (int)zen_db_prepare_input($_GET['status']);
                     $orders_query_raw .= " WHERE s.orders_status_id = " . (int)$status . $search;
-//echo '<br><br>I SEE B: ' . $orders_query_raw . '<br><br>';
                   } else {
                     $orders_query_raw .= (trim($search) != '') ? preg_replace('/ *AND /i', ' WHERE ', $search) : '';
-//echo '<br><br>I SEE C: ' . $orders_query_raw . '<br><br>';
                   }
 
                   $orders_query_raw .= " order by o.orders_id DESC";
