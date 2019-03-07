@@ -212,16 +212,16 @@
         },
         {
             "name": "illuminate/container",
-            "version": "v5.8.2",
+            "version": "v5.8.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/container.git",
-                "reference": "2b390ea16656162a7c1a5f2ad547b4de917324bf"
+                "reference": "b984960d2634c6be97b0dd368a8953e8c4e06ec7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/illuminate/container/zipball/2b390ea16656162a7c1a5f2ad547b4de917324bf",
-                "reference": "2b390ea16656162a7c1a5f2ad547b4de917324bf",
+                "url": "https://api.github.com/repos/illuminate/container/zipball/b984960d2634c6be97b0dd368a8953e8c4e06ec7",
+                "reference": "b984960d2634c6be97b0dd368a8953e8c4e06ec7",
                 "shasum": ""
             },
             "require": {
@@ -253,11 +253,11 @@
             ],
             "description": "The Illuminate Container package.",
             "homepage": "https://laravel.com",
-            "time": "2019-02-23T13:57:12+00:00"
+            "time": "2019-03-03T15:13:35+00:00"
         },
         {
             "name": "illuminate/contracts",
-            "version": "v5.8.2",
+            "version": "v5.8.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/contracts.git",
@@ -301,16 +301,16 @@
         },
         {
             "name": "illuminate/database",
-            "version": "v5.8.2",
+            "version": "v5.8.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/database.git",
-                "reference": "a9696050ee570fd1f59b0045aa3fe27458c48986"
+                "reference": "9a0895e9237f61ce7b974c26fe0e52ded35f8668"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/illuminate/database/zipball/a9696050ee570fd1f59b0045aa3fe27458c48986",
-                "reference": "a9696050ee570fd1f59b0045aa3fe27458c48986",
+                "url": "https://api.github.com/repos/illuminate/database/zipball/9a0895e9237f61ce7b974c26fe0e52ded35f8668",
+                "reference": "9a0895e9237f61ce7b974c26fe0e52ded35f8668",
                 "shasum": ""
             },
             "require": {
@@ -357,7 +357,7 @@
                 "orm",
                 "sql"
             ],
-            "time": "2019-02-27T13:46:50+00:00"
+            "time": "2019-03-05T13:45:48+00:00"
         },
         {
             "name": "illuminate/events",
@@ -4046,7 +4046,7 @@
                 },
                 {
                     "name": "Gert de Pagter",
-                    "email": "BackEndTea@gmail.com"
+                    "email": "backendtea@gmail.com"
                 }
             ],
             "description": "Symfony polyfill for ctype functions",
