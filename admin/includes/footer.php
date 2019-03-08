@@ -15,7 +15,6 @@
     $current_sinfo .=  'v' . $check_hist_details->fields['project_version_major'] . '.' . $check_hist_details->fields['project_version_minor'];
     if (zen_not_null($check_hist_details->fields['project_version_patch1'])) $current_sinfo .= '&nbsp;&nbsp;Patch: ' . $check_hist_details->fields['project_version_patch1'];
   }
-$zco_notifier->notify('NOTIFY_ADMIN_FOOTER_END');
 ?>
 <footer>
   <div id="footer">
@@ -25,3 +24,5 @@ $zco_notifier->notify('NOTIFY_ADMIN_FOOTER_END');
     <?php echo '<a href="' . zen_href_link(FILENAME_SERVER_INFO) . '">' . $current_sinfo . '</a>'; ?>
   </div>
 </footer>
+<?php
+$zco_notifier->notify('NOTIFY_ADMIN_FOOTER_END');
