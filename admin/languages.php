@@ -244,7 +244,7 @@ if (zen_not_null($action)) {
       $db->Execute("DELETE FROM " . TABLE_COUPONS_DESCRIPTION . " WHERE language_id = " . (int)$lID);
       $db->Execute("DELETE FROM " . TABLE_META_TAGS_PRODUCTS_DESCRIPTION . " WHERE language_id = " . (int)$lID);
       $db->Execute("DELETE FROM " . TABLE_METATAGS_CATEGORIES_DESCRIPTION . " WHERE language_id = " . (int)$lID);
-      $db->Execute("DELETE FROM " . TABLE_EZPAGES_CONTENT . " WHERE language_id = " . (int)$lID);
+      $db->Execute("DELETE FROM " . TABLE_EZPAGES_CONTENT . " WHERE languages_id = " . (int)$lID);
 
       // if we just deleted our currently-selected language, need to switch to default lang:
       $lng = $db->Execute("SELECT languages_id
