@@ -187,7 +187,7 @@ if (zen_not_null($action)) {
                           expires_date = '" . zen_db_input($featured_expires_date) . "',
                           featured_last_modified = now(),
                           status = " . zen_db_input($_POST['featured_status']) . "
-                      WHRE products_id = " . (int)$products_filter);
+                      WHERE products_id = " . (int)$products_filter);
       }
 
       $db->Execute("DELETE FROM " . TABLE_PRODUCTS_DISCOUNT_QUANTITY . " WHERE products_id = " . (int)$products_filter);
