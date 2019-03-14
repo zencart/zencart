@@ -207,7 +207,7 @@ class order_total extends base {
     if (MODULE_ORDER_TOTAL_INSTALLED) {
       foreach($this->modules as $value) {
         $class = substr($value, 0, strrpos($value, '.'));
-        if ( $GLOBALS[$class]->credit_class && method_exists($GLOBALS[$class], 'clear_posts')) {
+        if (!empty($GLOBALS[$class]->credit_class) && method_exists($GLOBALS[$class], 'clear_posts')) {
           $GLOBALS[$class]->clear_posts();
         }
       }
