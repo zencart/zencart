@@ -24,3 +24,5 @@
     <?php echo '<a href="' . zen_href_link(FILENAME_SERVER_INFO) . '">' . $current_sinfo . '</a>'; ?>
   </div>
 </footer>
+<?php
+$zco_notifier->notify('NOTIFY_ADMIN_FOOTER_END');
