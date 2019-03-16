@@ -219,23 +219,25 @@
     if (!is_array($manufacturers_array)) $manufacturers_array = array();
 
     if ($have_products == true) {
-      $manufacturers_query = "select distinct m.manufacturers_id, m.manufacturers_name
-                              from " . TABLE_MANUFACTURERS . " m
-                              left join " . TABLE_PRODUCTS . " p on m.manufacturers_id = p.manufacturers_id
-                              where p.manufacturers_id = m.manufacturers_id
-                              and (p.products_status = 1
-                              and p.products_quantity > 0)
-                              order by m.manufacturers_name";
+      $manufacturers_query = "SELECT DISTINCT m.manufacturers_id, m.manufacturers_name
+                              FROM " . TABLE_MANUFACTURERS . " m
+                              LEFT JOIN " . TABLE_PRODUCTS . " p ON m.manufacturers_id = p.manufacturers_id
+                              WHERE p.products_status = 1
+                              AND p.products_quantity > 0
+                              ORDER BY m.manufacturers_name";
     } else {
-      $manufacturers_query = "select manufacturers_id, manufacturers_name
-                              from " . TABLE_MANUFACTURERS . " order by manufacturers_name";
+      $manufacturers_query = "SELECT manufacturers_id, manufacturers_name
+                              FROM " . TABLE_MANUFACTURERS . "
+                              ORDER BY manufacturers_name";
     }
 
     $manufacturers = $db->Execute($manufacturers_query);
 
-    while (!$manufacturers->EOF) {
-      $manufacturers_array[] = array('id' => $manufacturers->fields['manufacturers_id'], 'text' => $manufacturers->fields['manufacturers_name']);
-      $manufacturers->MoveNext();
+    foreach ($manufacturers as $manufacturer) {
+      $manufacturers_array[] = array(
+        'id' => $manufacturer['manufacturers_id'],
+        'text' => $manufacturer['manufacturers_name']
+      );
     }
 
     return $manufacturers_array;
