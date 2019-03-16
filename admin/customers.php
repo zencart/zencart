@@ -962,8 +962,8 @@ if (zen_not_null($action)) {
                 if ($processed == true) {
                   if ($cInfo->customers_group_pricing) {
                     $group_query = $db->Execute("SELECT group_name, group_percentage
-                                               FORM " . TABLE_GROUP_PRICING . "
-                                               WHERE group_id = " . (int)$cInfo->customers_group_pricing);
+                                                 FROM " . TABLE_GROUP_PRICING . "
+                                                 WHERE group_id = " . (int)$cInfo->customers_group_pricing);
                     echo $group_query->fields['group_name'] . '&nbsp;' . $group_query->fields['group_percentage'] . '%';
                   } else {
                     echo ENTRY_NONE;
@@ -971,7 +971,7 @@ if (zen_not_null($action)) {
                   echo zen_draw_hidden_field('customers_group_pricing', $cInfo->customers_group_pricing);
                 } else {
                   $group_array_query = $db->execute("SELECT group_id, group_name, group_percentage
-                                                   FROM " . TABLE_GROUP_PRICING);
+                                                     FROM " . TABLE_GROUP_PRICING);
                   $group_array[] = array('id' => 0, 'text' => TEXT_NONE);
                   foreach ($group_array_query as $item) {
                     $group_array[] = array(
