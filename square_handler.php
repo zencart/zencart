@@ -1,6 +1,7 @@
 <?php
 /**
  * Callback module for Square payment module
+ * Updated 2019-03-15
  */
 header('Access-Control-Allow-Origin: *');
 
