@@ -236,7 +236,8 @@
     foreach ($manufacturers as $manufacturer) {
       $manufacturers_array[] = array(
         'id' => $manufacturer['manufacturers_id'],
-        'text' => $manufacturer['manufacturers_name']);
+        'text' => $manufacturer['manufacturers_name']
+      );
     }
 
     return $manufacturers_array;
