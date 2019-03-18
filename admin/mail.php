@@ -115,7 +115,6 @@ if ($action == 'preview') {
               kill.disabled = true;
           }
       }
-      // -->
     </script>
     <?php if ($editor_handler != '') include ($editor_handler); ?>
     <script>
@@ -188,7 +187,7 @@ if ($action == 'preview') {
               return true;
           }
       }
-      //--></script>
+    </script>
   </head>
   <body onLoad="init()">
     <!-- header //-->
