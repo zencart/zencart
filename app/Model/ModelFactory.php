@@ -9,7 +9,17 @@ class ModelFactory
         $this->db = $db;
     }
 
+    /*
+     * @deprecated
+     */
     public function factory($table, $namespace = __NAMESPACE__)
+    {
+        $table = str_replace(DB_PREFIX, '' , $table);
+        $class = $namespace . '\\' . ucfirst(\base::camelize($table));
+        return new $class;
+    }
+
+    public function make($table, $namespace = __NAMESPACE__)
     {
         $table = str_replace(DB_PREFIX, '' , $table);
         $class = $namespace . '\\' . ucfirst(\base::camelize($table));

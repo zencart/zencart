@@ -44,6 +44,10 @@ class testAdminLoggingCase extends zcTestCase
         global $PHP_SELF;
         $PHP_SELF = 'testsuite';
         define('WARNING_REVIEW_ROGUE_ACTIVITY', 'Warning: review rogue activity');
+        global $db; 
+        $db = $this->getMockBuilder('queryFactory')->getMock();
+        $metaCol = (object)['max_length' => '255']; 
+        $db->method('MetaColumns')->willReturn(array('ATTENTION' => $metaCol)); 
     }
 
     private function initTestFileSystem($hasFile = true, $contents = '')

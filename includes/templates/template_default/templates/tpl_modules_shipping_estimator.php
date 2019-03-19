@@ -106,7 +106,7 @@
           // simple shipping method
           $thisquoteid = $quotes[$i]['id'].'_'.$quotes[$i]['methods'][0]['id'];
 ?>
-     <tr>
+     <tr class="<?php echo $extra; ?>">
 <?php
           if($quotes[$i]['error']){
 ?>
@@ -133,7 +133,7 @@
           for ($j=0, $n2=sizeof($quotes[$i]['methods']); $j<$n2; $j++) {
             $thisquoteid = $quotes[$i]['id'].'_'.$quotes[$i]['methods'][$j]['id'];
 ?>
-    <tr>
+    <tr class="<?php echo $extra; ?>">
 <?php
             if($quotes[$i]['error']){
 ?>

@@ -15,7 +15,7 @@
   function zen_get_metatags_title($product_id, $language_id) {
     global $db;
     $product = $db->Execute("select metatags_title
-                             from " . TABLE_META_TAGS_PRODUCTS_DESCRIPTION . "
+                             from " . TABLE_METATAGS_PRODUCTS_DESCRIPTION . "
                              where products_id = '" . (int)$product_id . "'
                              and language_id = '" . (int)$language_id . "'");
     if ($product->EOF) return '';
@@ -25,7 +25,7 @@
   function zen_get_metatags_keywords($product_id, $language_id) {
     global $db;
     $product = $db->Execute("select metatags_keywords
-                             from " . TABLE_META_TAGS_PRODUCTS_DESCRIPTION . "
+                             from " . TABLE_METATAGS_PRODUCTS_DESCRIPTION . "
                              where products_id = '" . (int)$product_id . "'
                              and language_id = '" . (int)$language_id . "'");
     if ($product->EOF) return '';
@@ -35,7 +35,7 @@
   function zen_get_metatags_description($product_id, $language_id) {
     global $db;
     $product = $db->Execute("select metatags_description
-                             from " . TABLE_META_TAGS_PRODUCTS_DESCRIPTION . "
+                             from " . TABLE_METATAGS_PRODUCTS_DESCRIPTION . "
                              where products_id = '" . (int)$product_id . "'
                              and language_id = '" . (int)$language_id . "'");
     if ($product->EOF) return '';

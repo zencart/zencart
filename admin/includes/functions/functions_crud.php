@@ -215,7 +215,7 @@ while (!$chk_sale_categories_all->EOF) {
     $db->Execute("delete from " . TABLE_PRODUCTS_DESCRIPTION . "
                   where products_id = '" . (int)$product_id . "'");
 
-    $db->Execute("delete from " . TABLE_META_TAGS_PRODUCTS_DESCRIPTION . "
+    $db->Execute("delete from " . TABLE_METATAGS_PRODUCTS_DESCRIPTION . "
                   where products_id = '" . (int)$product_id . "'");
 
     zen_products_attributes_download_delete($product_id);

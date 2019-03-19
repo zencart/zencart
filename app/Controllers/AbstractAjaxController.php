@@ -8,6 +8,8 @@
  */
 namespace App\Controllers;
 
+use ZenCart\Request\Request;
+
 /**
  * Class AbstractAjaxController
  * @package App\Controllers
@@ -26,7 +28,7 @@ class AbstractAjaxController extends \base
     /**
      * @param \ZenCart\Request\Request $request
      */
-    public function __construct(\ZenCart\Request\Request $request)
+    public function __construct(Request $request)
     {
         $this->tplVars = array();
         $this->response = null;

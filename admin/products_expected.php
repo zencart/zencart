@@ -7,17 +7,18 @@
  * @version GIT: $Id: Author: DrByte  Tue Jul 17 11:18:56 2012 -0400 Modified in v1.5.1 $
  */
   require('includes/application_top.php');
+  require_once('includes/template/common/tplHtmlHeadLegacy.php');
+  require_once('includes/template/common/tplHtmlHead.php');
 
   $db->Execute("update " . TABLE_PRODUCTS . "
                 set products_date_available = NULL
                 where to_days(now()) > to_days(products_date_available)");
 
-require('includes/admin_html_head.php');
 ?>
 </head>
 <body>
 <!-- header //-->
-<?php require(DIR_WS_INCLUDES . 'header.php'); ?>
+<?php require('includes/template/common/tplHeader.php'); ?>
 <!-- header_eof //-->
 
 <!-- body //-->

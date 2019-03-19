@@ -2,7 +2,7 @@
 /**
  * @package Installer
  * @copyright Copyright 2003-2016 Zen Cart Development Team
- * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
+ * @license http://www.zen-cart.com/license/2_0.txt GNU Public License v2.0
  * @version $Id: Author: zcwilt  Sat Dec 5 18:49:20 2015 +0000 Modified in v1.5.5 $
  */
 
@@ -38,10 +38,6 @@ $currentDbVersion = EXPECTED_DATABASE_VERSION_MAJOR . '.' . EXPECTED_DATABASE_VE
 $isCurrentDb = ($dbVersion == $currentDbVersion) ? TRUE : FALSE;
 $hasSaneConfigFile = $systemChecker->hasSaneConfigFile();
 $hasUpdatedConfigFile = $systemChecker->hasUpdatedConfigFile();
-// echo var_dump($dbVersion);
-// echo var_dump($isCurrentDb);
-// echo var_dump($hasSaneConfigFile);
-// echo var_dump($hasUpdatedConfigFile);
 
 if ($hasSaneConfigFile && $hasUpdatedConfigFile)
 {
@@ -50,6 +46,7 @@ if ($hasSaneConfigFile && $hasUpdatedConfigFile)
 $errorList = $systemChecker->runTests();
 list($hasFatalErrors, $listFatalErrors) = $systemChecker->getErrorList();
 list($hasWarnErrors, $listWarnErrors) = $systemChecker->getErrorList('WARN');
+list($hasLocalAlerts, $listLocalAlerts) = $systemChecker->getErrorList('ALERT');
 if (isset($listFatalErrors[0]['methods']))
 {
   $res = key($listFatalErrors[0]['methods']);

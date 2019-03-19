@@ -4,8 +4,9 @@
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id:  New in v1.6.0 $
  */
-namespace App\Controllers;
+namespace App\Controllers\admin;
 
+use App\Controllers\AbstractInfoController;
 use ZenCart\Services\IndexRoute;
 use ZenCart\Request\Request as Request;
 use ZenCart\AdminUser\AdminUser as User;
@@ -69,7 +70,8 @@ class ServerInfo extends AbstractInfoController
         $systemInfo['left'][] = array('title' => TITLE_PHP_MEMORY_LIMIT, 'content' => $system['php_memlimit']);
         $systemInfo['left'][] = array('title' => TITLE_PHP_POST_MAX_SIZE, 'content' => $system['php_postmaxsize']);
 
-        $systemInfo['right'][] = array('title' => TITLE_DATABASE, 'content' => $system['db_version'] . ($system['mysql_strict_mode'] == true ? '<em> ' . TITLE_MYSQL_STRICT_MODE . '</em>' : ''));
+        $systemInfo['right'][] = array('title' => TITLE_DATABASE, 'content' => DB_DATABASE); 
+        $systemInfo['right'][] = array('title' => TITLE_DATABASE_VERSION, 'content' => $system['db_version'] . ($system['mysql_strict_mode'] == true ? '<em> ' . TITLE_MYSQL_STRICT_MODE . '</em>' : ''));
         $systemInfo['right'][] = array('title' => TITLE_DATABASE_HOST, 'content' => $system['db_server'] . ' (' . $system['db_ip'] . ')');
         $systemInfo['right'][] = array('title' => TITLE_DATABASE_DATE, 'content' => $system['db_date']);
         $systemInfo['right'][] = array('title' => TITLE_DATABASE_DATA_SIZE, 'content' => number_format(($system['database_size']/1024),0));

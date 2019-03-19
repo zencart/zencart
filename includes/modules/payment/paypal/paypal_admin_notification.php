@@ -3,11 +3,11 @@
  * admin subtemplate for Paypal Website Payments Standard payment method
  *
  * @package paymentMethod
- * @copyright Copyright 2003-2010 Zen Cart Development Team
+ * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @copyright Portions Copyright 2004 DevosC.com
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: paypal_admin_notification.php 15560 2010-02-22 07:50:28Z drbyte $
+ * @version $Id: Zen4All Thu Nov 9 13:16:10 2017 +0100 Modified in v1.5.6 $
  */
 
 // strip slashes in case they were added to handle apostrophes:
@@ -16,7 +16,7 @@
   }
 
 // display all paypal status fields (in admin Orders page):
-          $output = '<td><table>'."\n";
+          $output = '<table>'."\n";
           $output .= '<tr style="background-color : #cccccc; border-style : dotted;">'."\n";
 
           $output .= '<td valign="top"><table>'."\n";
@@ -199,4 +199,4 @@
           $output .= '</table></td>'."\n";
         }
           $output .= '</tr>'."\n";
-          $output .='</table></td>'."\n";
+          $output .='</table>'."\n";

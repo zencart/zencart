@@ -4,7 +4,10 @@
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id:  New in v1.6.0 $
  */
-namespace App\Controllers;
+namespace App\Controllers\admin;
+
+use App\Controllers\AbstractAdminController;
+use ZenCart\PluginManager\PluginManager;
 use ZenCart\Services\IndexRoute;
 use ZenCart\Request\Request as Request;
 use ZenCart\AdminUser\AdminUser as User;
@@ -22,16 +25,11 @@ class Index extends AbstractAdminController
      */
     protected $service;
 
-    /**
-     * Index constructor.
-     * @param Request $request
-     * @param \App\Model\ModelFactory $modelFactory
-     * @param User $user
-     * @param View $view
-     */
-    public function __construct(Request $request, $modelFactory, User $user, View $view)
-    {
-        parent::__construct($request, $modelFactory, $user, $view);
+    public function __construct(
+        Request $request, $modelFactory, User $user, View $view, WidgetManager $widgetManager, PluginManager $pluginManager
+    ) {
+        parent::__construct($request, $modelFactory, $user, $view, $pluginManager);
+        $this->widgetManager = $widgetManager;
         $this->service = new IndexRoute($this, $request, $modelFactory);
     }
 
@@ -72,10 +70,11 @@ class Index extends AbstractAdminController
      */
     public function doWidgetsDisplay()
     {
-        $widgetInfoList = WidgetManager::getWidgetInfoForUser($this->request->getSession()->get('admin_id'));
-        $widgetList = widgetManager::loadWidgetClasses($widgetInfoList);
+//        $widgetManager = new WidgetManager($this->modelFactory, $this->request->getSession()->get('admin_id'));
+        $widgetInfoList = $this->widgetManager->getWidgetInfoForUser();
+        $widgetList = $this->widgetManager->loadWidgetClasses($widgetInfoList);
         $this->tplVarManager->set('widgetList', $widgetList);
-        $this->tplVarManager->set('widgets', WidgetManager::prepareTemplateVariables($widgetList));
+        $this->tplVarManager->set('widgets', $this->widgetManager->prepareTemplateVariables($widgetList));
         // Update $widgetInfoList with $widgetList changes
         foreach ($widgetInfoList as &$widgets) {
             foreach ($widgets as &$widget) {

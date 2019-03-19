@@ -8,7 +8,7 @@
  * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte  Modified in v1.5.6 $
+ * @version $Id: Scott C Wilson Wed Oct 10 07:03:50 2018 -0400 Modified in v1.5.6 $
  */
 
 $zco_notifier->notify('NOTIFY_HTML_HEAD_START', $current_page_base, $template_dir);
@@ -19,7 +19,7 @@ header('X-Frame-Options:SAMEORIGIN');
 /**
  * load the module for generating page meta-tags
  */
-require(DIR_WS_MODULES . zen_get_module_directory('meta_tags.php'));
+require(DIR_WS_MODULES . zen_get_module_directory('metatags.php'));
 /**
  * output main page HEAD tag and related headers/meta-tags, etc
  */
@@ -43,9 +43,9 @@ if (!class_exists('Mobile_Detect')) {
 <html <?php echo HTML_PARAMS; ?>>
   <head>
   <meta charset="<?php echo CHARSET; ?>">
-  <title><?php echo META_TAG_TITLE; ?></title>
-  <meta name="keywords" content="<?php echo META_TAG_KEYWORDS; ?>" />
-  <meta name="description" content="<?php echo META_TAG_DESCRIPTION; ?>" />
+  <title><?php echo METATAG_TITLE; ?></title>
+  <meta name="keywords" content="<?php echo METATAG_KEYWORDS; ?>" />
+  <meta name="description" content="<?php echo METATAG_DESCRIPTION; ?>" />
   <meta name="author" content="<?php echo STORE_NAME ?>" />
   <meta name="generator" content="shopping cart program by Zen Cart&reg;, http://www.zen-cart.com eCommerce" />
 <?php if (defined('ROBOTS_PAGES_TO_SKIP') && in_array($current_page_base,explode(",",constant('ROBOTS_PAGES_TO_SKIP'))) || $current_page_base=='down_for_maintenance' || $robotsNoIndex === true) { ?>
@@ -133,8 +133,11 @@ if (count($lng->catalog_languages) > 1) {
 /** CDN for jQuery core **/
 ?>
 
-<script type="text/javascript">window.jQuery || document.write(unescape('%3Cscript type="text/javascript" src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"%3E%3C/script%3E'));</script>
+<script type="text/javascript">window.jQuery || document.write(unescape('%3Cscript type="text/javascript" src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"%3E%3C/script%3E'));</script>
+<?php if (file_exists(DIR_WS_TEMPLATE . "jscript/jquery.min.js")) { ?>
 <script type="text/javascript">window.jQuery || document.write(unescape('%3Cscript type="text/javascript" src="<?php echo $template->get_template_dir('.js',DIR_WS_TEMPLATE, $current_page_base,'jscript'); ?>/jquery.min.js"%3E%3C/script%3E'));</script>
+<?php } ?>
+<script type="text/javascript">window.jQuery || document.write(unescape('%3Cscript type="text/javascript" src="<?php echo $template->get_template_dir('.js','template_default', $current_page_base,'jscript'); ?>/jquery.min.js"%3E%3C/script%3E'));</script>
 
 <?php
 /**
@@ -175,14 +178,16 @@ if (count($lng->catalog_languages) > 1) {
  */
     require($page_directory . '/' . $value); echo "\n";
   }
-
-// DEBUG: echo '<!-- I SEE cat: ' . $current_category_id . ' || vs cpath: ' . $cPath . ' || page: ' . $current_page . ' || template: ' . $current_template . ' || main = ' . ($this_is_home_page ? 'YES' : 'NO') . ' -->';
 ?>
 
 <?php // ZCAdditions.com, ZCA Responsive Template Default (BOF-addition 2 of 2)
 $responsive_mobile = '<link rel="stylesheet" type="text/css" href="' . $template->get_template_dir('.css',DIR_WS_TEMPLATE, $current_page_base,'css') . '/' . 'responsive_mobile.css' . '" /><link rel="stylesheet" type="text/css" href="' . $template->get_template_dir('.css',DIR_WS_TEMPLATE, $current_page_base,'css') . '/' . 'jquery.mmenu.all.css' . '" />';
 $responsive_tablet = '<link rel="stylesheet" type="text/css" href="' . $template->get_template_dir('.css',DIR_WS_TEMPLATE, $current_page_base,'css') . '/' . 'responsive_tablet.css' . '" /><link rel="stylesheet" type="text/css" href="' . $template->get_template_dir('.css',DIR_WS_TEMPLATE, $current_page_base,'css') . '/' . 'jquery.mmenu.all.css' . '" />';
 $responsive_default = '<link rel="stylesheet" type="text/css" href="' . $template->get_template_dir('.css',DIR_WS_TEMPLATE, $current_page_base,'css') . '/' . 'responsive_default.css' . '" />';
+
+if (!isset($_SESSION['layoutType'])) {
+  $_SESSION['layoutType'] = 'legacy';
+}
 
 if (in_array($current_page_base,explode(",",'popup_image,popup_image_additional')) ) {
   echo '';

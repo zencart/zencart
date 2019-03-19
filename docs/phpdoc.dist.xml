@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <phpdocumentor>
-    <title>Zen Cart v1.6.0 phpDocs</title>
+    <title>Zen Cart v2.0 phpDocs</title>
     <parser>
         <default-package-name>general</default-package-name>
         <target>./phpdocs</target>

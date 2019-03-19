@@ -8,6 +8,8 @@
  */
 
   require('includes/application_top.php');
+  require_once('includes/template/common/tplHtmlHeadLegacy.php');
+  require_once('includes/template/common/tplHtmlHead.php');
 
   // verify option names and values
   $chk_option_names = $db->Execute("select count(*) as count from " . TABLE_PRODUCTS_OPTIONS . " where language_id='" . (int)$_SESSION['languages_id'] . "' limit 1");
@@ -515,7 +517,6 @@ die('I SEE match from products_id:' . $copy_from_products_id . ' options_id_from
 
 
   }
-require('includes/admin_html_head.php');
 ?>
 <script type="text/javascript">
 function go_option() {
@@ -526,8 +527,10 @@ function go_option() {
 </script>
 </head>
 <body>
-<!-- header //-->
-<?php require(DIR_WS_INCLUDES . 'header.php'); ?>
+<!-- bof header //-->
+<?php require('includes/template/common/tplHeader.php'); ?>
+<!-- eof header -->
+
   <table border="0" width="75%" cellspacing="0" cellpadding="0" align="center">
       <tr>
         <td width="100%">

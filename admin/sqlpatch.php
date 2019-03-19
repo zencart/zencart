@@ -8,6 +8,8 @@
  */
 
   require('includes/application_top.php');
+  require_once('includes/template/common/tplHtmlHeadLegacy.php');
+  require_once('includes/template/common/tplHtmlHead.php');
 
   define('HEADING_TITLE','SQL Query Executor');
   define('HEADING_WARNING','BE SURE TO DO A FULL DATABASE BACKUP BEFORE RUNNING SCRIPTS HERE');
@@ -725,7 +727,6 @@ if ($_GET['debug']=='ON') echo $line . '<br />';
   }
 ?>
 <?php if ($action != 'help') {
-require('includes/admin_html_head.php');
 ?>
 <script type="text/javascript">
   <!--
@@ -737,7 +738,7 @@ require('includes/admin_html_head.php');
 </head>
 <body>
 <!-- header //-->
-<?php require(DIR_WS_INCLUDES . 'header.php'); ?>
+<?php require('includes/template/common/tplHeader.php'); ?>
 <!-- header_eof //-->
 
 

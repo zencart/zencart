@@ -9,7 +9,7 @@ systemChecks:
   backupConfigureFiles:
     runLevel: always
     errorLevel: FAIL
-    mainErrorText: <?php echo TEXT_ERROR_ADMIN_CONFIGURE .PHP_EOL; ?>
+    mainErrorText: <?php echo TEXT_ERROR_STORE_CONFIGURE .PHP_EOL; ?>
     methods:
       backupConfigureFiles:
   checkStoreConfigureFile:
@@ -22,6 +22,14 @@ systemChecks:
           fileDir: <?php echo DIR_FS_ROOT . 'includes/configure.php' . PHP_EOL; ?>
           changePerms: '0664'
           createFile: TRUE
+  checkLocalStoreConfigureFile:
+    runLevel: localdev
+    errorLevel: ALERT
+    mainErrorText: <?php echo TEXT_FOUND_LOCAL_STORE_CONFIGURE . PHP_EOL; ?>
+    methods:
+      checkFileExists:
+        parameters:
+          fileDir: <?php echo DIR_FS_ROOT . 'includes/local/configure.php' . PHP_EOL; ?>
   checkPhpVersion:
     runLevel: always
     errorLevel: FAIL
@@ -36,18 +44,18 @@ systemChecks:
       checkPhpVersionMax:
         method: checkPhpVersion
         parameters:
-          version: 7.3.0
+          version: 7.4.0
           versionTest: lt
-          localErrorText: <?php echo sprintf(TEXT_ERROR_PHP_VERSION_MAX, '7.2.x') . PHP_EOL; ?>
+          localErrorText: <?php echo sprintf(TEXT_ERROR_PHP_VERSION_MAX, '7.3.x') . PHP_EOL; ?>
   checkPhpVersionRecommendation:
     runLevel: always
     errorLevel: WARN
-    mainErrorText: <?php echo sprintf(TEXT_ERROR_PHP_VERSION_RECOMMENDED, '7.1') . PHP_EOL; ?>
+    mainErrorText: <?php echo sprintf(TEXT_ERROR_PHP_VERSION_RECOMMENDED, '7.3') . PHP_EOL; ?>
     methods:
       checkPhpVersionRecommended:
         method: checkPhpVersion
         parameters:
-          version: 7.1.0
+          version: 7.3.0
           versionTest: ge
   checkIniSet:
     runLevel: always
@@ -246,11 +254,6 @@ systemChecks:
             fieldCheck: Type
             expectedResult: 'VARCHAR(64)'
           - checkType: fieldSchema
-            tableName: dashboard_widgets_description
-            fieldName: widget_key
-            fieldCheck: Type
-            expectedResult: 'VARCHAR(64)'
-          - checkType: fieldSchema
             tableName: dashboard_widgets_groups
             fieldName: widget_group
             fieldCheck: Type
@@ -265,15 +268,19 @@ systemChecks:
       dbVersionChecker:
         parameters:
           - checkType: fieldSchema
-            tableName: product_options
-            fieldName: products_options_comment
-            fieldCheck: Type
-            expectedResult: 'VARCHAR(255)'
-          - checkType: fieldSchema
             tableName: orders_products
             fieldName: products_virtual
             fieldCheck: Type
-            expectedResult: 'tinyint(1)'
+            expectedResult: 'TINYINT(1)'
+          - checkType: fieldSchema
+            tableName: ezpages_content
+            fieldName: pages_html_text
+            fieldCheck: Exists
+          - checkType: fieldSchema
+            tableName: configuration
+            fieldName: val_function
+            fieldCheck: Type
+            expectedResult: 'TEXT'
 
   checkDBVersion155:
     runLevel: dbVersion
@@ -340,16 +347,9 @@ systemChecks:
     methods:
       dbVersionChecker:
         parameters:
-          - checkType: fieldSchema
-            tableName: sessions
-            fieldName: sesskey
-            fieldCheck: Type
-            expectedResult: 'VARCHAR(255)'
-          - checkType: fieldSchema
-            tableName: whos_online
-            fieldName: session_id
-            fieldCheck: Type
-            expectedResult: 'VARCHAR(255)'
+          - checkType: configValue
+            fieldName: PADSS_ADMIN_SESSION_TIMEOUT_ENFORCED
+            expectedResult: 'PA-DSS Admin Session Timeout Enforced?'
           - checkType: configValue
             fieldName: SHOW_CATEGORY_PRODUCTS_LINKED_STATUS
             expectedResult: 'Show linked status for categories'
@@ -434,9 +434,6 @@ systemChecks:
     methods:
       dbVersionChecker:
         parameters:
-          - checkType: configValue
-            fieldName: META_TAG_INCLUDE_MODEL
-            expectedResult: 'Meta Tags - Include Product Model in Title'
           - checkType: configValue
             fieldName: SHOW_SHOPPING_CART_EMPTY_UPCOMING
             expectedResult: 'Show Upcoming Products on empty Shopping Cart Page'

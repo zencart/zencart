@@ -7,7 +7,10 @@
  * @version GIT: $Id: Author: Ian Wilson  Fri Aug 17 17:42:37 2012 +0100 New in v1.5.1 $
  */
 namespace App\Controllers;
+
+use ZenCart\AdminUser\AdminUser;
 use ZenCart\DashboardWidget\WidgetManager;
+use ZenCart\Request\Request;
 
 /**
  * Class AjaxDashboardWidget
@@ -15,14 +18,21 @@ use ZenCart\DashboardWidget\WidgetManager;
  */
 class AjaxDashboardWidget extends AbstractAjaxController
 {
+
+    public function __construct(Request $request, WidgetManager $widgetManager)
+    {
+        parent::__construct($request);
+        $this->widgetManager = $widgetManager;
+    }
+
     /**
      *
      */
     public function updateWidgetPositionsExecute()
     {
-        if (isset($_POST['items'])) {
-            $items = json_decode($_POST['items'], true);
-            WidgetManager::applyPositionSettings($items, $_SESSION['admin_id']);
+        if ($this->request->has('items', 'post')) {
+            $items = json_decode($this->request->readPost('items'), true);
+            $this->widgetManager->applyPositionSettings($items);
         }
     }
 
@@ -31,34 +41,22 @@ class AjaxDashboardWidget extends AbstractAjaxController
      */
     public function removeWidgetExecute()
     {
-        if (isset($_POST['item'])) {
-            WidgetManager::removeWidget($_POST['item'], $_SESSION['admin_id']);
+        if ($this->request->has('item', 'post')) {
+            $this->widgetManager->removeWidget($this->request->readPost('item'));
         }
     }
 
-    /**
-     *
-     */
-    public function getWidgetEditExecute()
-    {
-        if (isset($_POST['id'])) {
-            $this->tplVars['id'] = $_POST['id'];
-            $this->getFormDefaults();
-            $html = $this->loadTemplateAsString(DIR_FS_ADMIN . DIR_WS_INCLUDES . 'template/partials/tplWidgetEditForm.php', $this->tplVars);
-            $this->response = array('html' => $html);
-        }
-    }
 
     /**
      * @param bool $addUpdateDiv
      */
     public function rebuildWidgetExecute($addUpdateDiv = FALSE)
     {
-        if (!isset($_POST['id'])) {
+        if (!$this->request->has('id', 'post')) {
             return;
         }
 
-        $key = str_replace('widget-edit-dismiss-', '', $_POST['id']);
+        $key = str_replace('widget-edit-dismiss-', '', $this->request->readPost('id'));
         $widget = $this->loadClass($key);
         $tplVars['widget'] = $widget->prepareContent();
         $html = "";
@@ -75,48 +73,9 @@ class AjaxDashboardWidget extends AbstractAjaxController
     /**
      *
      */
-    public function submitWidgetEditExecute()
-    {
-        $widget = $this->loadClass($_POST['id']);
-        $result = $widget->validateEditForm();
-
-        if ($result == FALSE) {
-            $this->response = array(
-                'error' => TRUE,
-                'errorType' => 'FORM_VALIDATION',
-                'errorList' => $widget->getFormValidationErrors()
-            );
-            return;
-        }
-        $widget->executeEditForm();
-        $interval = $_POST['widget-refresh'];
-        $this->response['timerInterval'] = $interval;
-        $this->response['timerKey'] = $_POST['id'];
-        $_POST['id'] = 'widget-edit-dismiss-' . $_POST['id'];
-        $this->rebuildWidgetExecute(TRUE);
-    }
-
-    /**
-     *
-     */
-    public function getFormDefaults()
-    {
-        $widget = $this->loadClass($_POST['id']);
-        $widget->getFormDefaults($_POST['id'], $this);
-    }
-
-    public function timerUpdateExecute()
-    {
-        $_POST['id'] = 'widget-edit-dismiss-' . $_POST['id'];
-        $this->rebuildWidgetExecute();
-    }
-
-    /**
-     *
-     */
     public function getInstallableWidgetsExecute()
     {
-        $widgets = WidgetManager::getInstallableWidgets($_SESSION['admin_id']);
+        $widgets = $this->widgetManager->getInstallableWidgets();
         $this->tplVars['widgets'] = $widgets;
         $this->tplVars['flagHasWidgets'] = (count($widgets) > 0) ? TRUE : FALSE;
         $html = $this->loadTemplateAsString(DIR_FS_ADMIN . DIR_WS_INCLUDES . 'template/partials/tplWidgetInstallableList.php', $this->tplVars);
@@ -124,24 +83,42 @@ class AjaxDashboardWidget extends AbstractAjaxController
     }
 
     /**
-     *
+     * @todo
      */
     public function addWidgetExecute()
     {
-        $id = str_replace('add-widget-', '', $_POST['id']);
-        WidgetManager::addWidgetForUser($id, $_SESSION['admin_id']);
-        $widgetInfoList = WidgetManager::getWidgetInfoForUser($_SESSION['admin_id']);
-        $widgetList = WidgetManager::loadWidgetClasses($widgetInfoList);
-        $tplVars = WidgetManager::prepareTemplateVariables($widgetList);
+        $id = str_replace('add-widget-', '', $this->request->readPost('id'));
+        $widgetInfo = $this->widgetManager->addWidgetForUser($id);
+        $widgetInfoList = $this->widgetManager->getWidgetInfoForUser();
+        $widgetList = $this->widgetManager->loadWidgetClasses($widgetInfoList);
+        $tplVars = $this->widgetManager->prepareTemplateVariables($widgetList);
         $tplVars['widgetInfoList'] = $widgetInfoList;
-        $tplVars['widgetList'] = WidgetManager::loadWidgetClasses($widgetInfoList);
-        $tplVars['widgets'] = WidgetManager::prepareTemplateVariables($tplVars['widgetList']);
-// commented out because these lines are not actually needed to install a widget,
-// and since loadClass() isn't also called, the template doesn't have some necessary variables
-// so errors are thrown
-//        $template = DIR_FS_ADMIN . DIR_WS_INCLUDES . 'template/partials/tplDashboardMainSortables.php';
-//        $html = $this->loadTemplateAsString($template, $tplVars);
-//        $this->response = array('html' => $html);
+        $tplVars['widgetList'] = $this->widgetManager->loadWidgetClasses($widgetInfoList);
+        $tplVars['widgets'] = $this->widgetManager->prepareTemplateVariables($tplVars['widgetList']);
+        $html = $this->loadTemplateAsString(DIR_FS_ADMIN . DIR_WS_INCLUDES . 'template/partials/tplDashboardWidgets.php', $tplVars);
+        $this->response = array('html' => $html, 'widgetInfo' => $widgetInfo, 'id' => $id);
+    }
+
+    public function getWidgetSettingsFieldsExecute()
+    {
+        $widget = $this->widgetManager->getWidgetInfoForEdit($this->request->readPost('widget'));
+        $this->tplVars['widget'] = $widget;
+        $html = $this->loadTemplateAsString(DIR_FS_ADMIN . DIR_WS_INCLUDES . 'template/partials/tplWidgetEditForm.php', $this->tplVars);
+        $this->response = array('html' => $html);
+    }
+
+    public function submitWidgetEditExecute()
+    {
+        $result = $this->widgetManager->updateWidgetSettings($this->request);
+        $widgetInfoList = $this->widgetManager->getWidgetInfoForUser();
+        $widgetList = $this->widgetManager->loadWidgetClasses($widgetInfoList);
+        $tplVars = $this->widgetManager->prepareTemplateVariables($widgetList);
+        $tplVars['widgetInfoList'] = $widgetInfoList;
+        $tplVars['widgetList'] = $this->widgetManager->loadWidgetClasses($widgetInfoList);
+        $tplVars['widgets'] = $this->widgetManager->prepareTemplateVariables($tplVars['widgetList']);
+        $html = $this->loadTemplateAsString(DIR_FS_ADMIN . DIR_WS_INCLUDES . 'template/partials/tplDashboardWidgets.php', $tplVars);
+        $this->response = array('errors' => false, 'html' => $html);
+
     }
 
     /**
@@ -153,7 +130,7 @@ class AjaxDashboardWidget extends AbstractAjaxController
         $className = self::camelize($id, TRUE);
         $classNameSpace = 'ZenCart\\DashboardWidget\\' . $className;
         if (!class_exists($classNameSpace, true)) {
-            $classDir = DIR_CATALOG_LIBRARY . URL_DASHBOARDWIDGETS;
+            $classDir = DIR_APP_LIBRARY . URL_DASHBOARDWIDGETS;
             require_once($classDir . $className . '.php');
         }
         return new $classNameSpace($id);

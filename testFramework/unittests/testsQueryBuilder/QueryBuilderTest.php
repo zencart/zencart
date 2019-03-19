@@ -18,7 +18,7 @@ class testQueryBuilder extends zcTestCase
         require DIR_FS_CATALOG . 'includes/functions/functions_general.php';
         $loader = new \Aura\Autoload\Loader;
         $loader->register();
-        $loader->addPrefix('\ZenCart\QueryBuilder', DIR_CATALOG_LIBRARY . 'zencart/QueryBuilder/src');
+        $loader->addPrefix('\ZenCart\QueryBuilder', DIR_APP_LIBRARY . 'zencart/QueryBuilder/src');
     }
 
     public function testInstantiate()

@@ -9,6 +9,8 @@
  */
 
   require('includes/application_top.php');
+  require_once('includes/template/common/tplHtmlHeadLegacy.php');
+  require_once('includes/template/common/tplHtmlHead.php');
 
   // unset variable which is sometimes tainted by bad plugins like magneticOne tools
   if (isset($module)) unset($module);
@@ -124,7 +126,6 @@ if (!empty($oID) && !empty($action)) {
         break;
     }
   }
-require('includes/admin_html_head.php');
 ?>
 <script type="text/javascript">
 function couponpopupWindow(url) {
@@ -135,9 +136,7 @@ function couponpopupWindow(url) {
 <body>
 <!-- header //-->
 <div class="header-area">
-<?php
-  require(DIR_WS_INCLUDES . 'header.php');
-?>
+<?php require('includes/template/common/tplHeader.php'); ?>
 </div>
 <!-- header_eof //-->
 

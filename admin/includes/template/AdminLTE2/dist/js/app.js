@@ -92,7 +92,7 @@ $.AdminLTE.options = {
       //Collapse button selector
       collapse: '[data-widget="collapse"]',
       //Collapse button selector
-      settings: '[data-widget="settings"]'
+      //settings: '[data-widget="settings"]'
     }
   },
   //Direct Chat plugin options
@@ -557,10 +557,10 @@ function _init() {
       });
 
       //Listen for remove event triggers
-      $(_box).on('click', _this.selectors.settings, function (e) {
-        e.preventDefault();
-        _this.settings($(this));
-      });
+      // $(_box).on('click', _this.selectors.settings, function (e) {
+      //   e.preventDefault();
+      //   _this.settings($(this));
+      // });
 
     },
     collapse: function (element) {
@@ -592,20 +592,17 @@ function _init() {
     remove: function (element) {
       //Find the box parent
       var box = element.parents(".box").first();
-      var itemStr = box.parent().attr('id');
+      var item = box.parent().parent();
+      var itemStr = box.parent().parent().attr('data-gs-id');
+      var that = this;
       zcJS.ajax({
         url: "zcAjaxHandler.php?act=dashboardWidget&method=removeWidget",
         data: {'item': itemStr}
       }).done(function( response ) {
+        var grid = $('.grid-stack').data('gridstack');
+        grid.removeWidget(item);
       });
-      box.slideUp(this.animationSpeed);
     },
-    settings: function (element) {
-      //Find the box parent
-      var box = element.parents(".box").first();
-      var itemStr = box.attr('id');
-      alert(itemStr);
-    }
   };
 }
 

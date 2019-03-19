@@ -61,6 +61,7 @@ if ($pr_attr->fields['total'] > 0) {
 
   $discount_type = zen_get_products_sale_discount_type((int)$_GET['products_id']);
   $discount_amount = zen_get_discount_calc((int)$_GET['products_id']);
+              $products_price_is_priced_by_attributes = zen_get_products_price_is_priced_by_attributes((int)$_GET['products_id']);
 
   $zv_display_select_option = 0;
 
@@ -94,6 +95,10 @@ if ($pr_attr->fields['total'] > 0) {
  
      $zco_notifier->notify('NOTIFY_ATTRIBUTES_MODULE_START_OPTION', $products_options_names->fields);
  
+                if (!isset($products_options_names->fields['products_options_comment_position'])) {
+                  $products_options_names->fields['products_options_comment_position'] = '0';
+                }
+
      while (!$products_options->EOF) {
        // reset
        $products_options_display_price='';
@@ -213,9 +218,8 @@ if ($pr_attr->fields['total'] > 0) {
            }
          } else {
            // if an error, set to customer setting
-           if ($_POST['id'] !='') {
+                      if (!empty($_POST['id']) && is_array($_POST['id'])) {
              $selected_attribute= false;
-             reset($_POST['id']);
              foreach ($_POST['id'] as $key => $value) {
                if (($key == $products_options_names->fields['products_options_id'] and $value == $products_options->fields['products_options_values_id'])) {
                  $selected_attribute = true;
@@ -297,9 +301,8 @@ if ($pr_attr->fields['total'] > 0) {
            }
          } else {
            // if an error, set to customer setting
-           if ($_POST['id'] !='') {
+                      if (!empty($_POST['id']) && is_array($_POST['id'])) {
              $selected_attribute= false;
-             reset($_POST['id']);
              foreach ($_POST['id'] as $key => $value) {
                if (is_array($value)) {
                  foreach ($value as $kkey => $vvalue) {
@@ -381,8 +384,7 @@ if ($pr_attr->fields['total'] > 0) {
  
        // text
        if (($products_options_names->fields['products_options_type'] == PRODUCTS_OPTIONS_TYPE_TEXT)) {
-         if ($_POST['id']) {
-           reset($_POST['id']);
+        if (!empty($_POST['id']) && is_array($_POST['id'])) {
            foreach ($_POST['id'] as $key => $value) {
              if ((preg_replace('/txt_/', '', $key) == $products_options_names->fields['products_options_id'])) {
                // use text area or input box based on setting of products_options_rows in the products_options table
@@ -553,7 +555,7 @@ if ($pr_attr->fields['total'] > 0) {
          $options_name[] = $products_options_names->fields['products_options_name'];
        }
        $options_html_id[] = 'drp-attrib-' . $products_options_names->fields['products_options_id'];
-       $options_menu[] = zen_draw_radio_field('id[' . $products_options_names->fields['products_options_id'] . ']', $products_options_value_id, 'selected', 'id="' . 'attrib-' . $products_options_names->fields['products_options_id'] . '-' . $products_options_value_id . '"') . '<label class="attribsRadioButton" for="' . 'attrib-' . $products_options_names->fields['products_options_id'] . '-' . $products_options_value_id . '">' . $products_options_details . '</label>' . "\n";
+                  $options_menu[] = zen_draw_radio_field('id[' . $products_options_names->fields['products_options_id'] . ']', $products_options_value_id, true, 'id="' . 'attrib-' . $products_options_names->fields['products_options_id'] . '-' . $products_options_value_id . '"') . '<label class="attribsRadioButton" for="' . 'attrib-' . $products_options_names->fields['products_options_id'] . '-' . $products_options_value_id . '">' . $products_options_details . '</label>' . "\n";
        $options_comment[] = $products_options_names->fields['products_options_comment'];
        $options_comment_position[] = ($products_options_names->fields['products_options_comment_position'] == '1' ? '1' : '0');
        break;
@@ -564,8 +566,7 @@ if ($pr_attr->fields['total'] > 0) {
          $selected_attribute = $_SESSION['cart']->contents[$prod_id]['attributes'][$products_options_names->fields['products_options_id']];
        } else {
          // use customer-selected values
-         if ($_POST['id'] !='') {
-           reset($_POST['id']);
+                    if (!empty($_POST['id']) && is_array($_POST['id'])) {
            foreach ($_POST['id'] as $key => $value) {
              if ($key == $products_options_names->fields['products_options_id']) {
                $selected_attribute = $value;

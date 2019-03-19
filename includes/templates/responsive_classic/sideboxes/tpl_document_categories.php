@@ -11,7 +11,7 @@
   $content = "";
 
   $content .= '<div id="' . str_replace('_', '-', $box_id . 'Content') . '" class="sideBoxContent"><ul class="list-links">';
-  for ($i=0, $j=sizeof($box_categories_array); $i<$j; $i++) {
+  for ($i=0, $n=sizeof($box_categories_array);$i<$n;$i++) {
 /*
     if ($box_categories_array[$i]['has_sub_cat'] or $box_categories_array[$i]['parent'] == 'true') {
       $new_style = 'category-parent';

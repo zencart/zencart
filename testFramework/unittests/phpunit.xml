@@ -4,30 +4,38 @@
         verbose="true"
         processIsolation="true"
         bootstrap="../config/bootstrap.php"
-        >
+>
     <testsuites>
 
+
+        <!--<testsuite name="Dashboard Widget Tests">-->
+            <!--<directory suffix="Test.php">testsDashboardWidgets</directory>-->
+        <!--</testsuite>-->
+        <testsuite name="URL Tests">
+            <directory suffix="Test.php">testsHtmlOutput</directory>
+        </testsuite>
         <testsuite name="Listing Box">
             <directory suffix="Test.php">testsListingBox</directory>
         </testsuite>
         <testsuite name="Paginator">
             <directory suffix="Test.php">testsPaginator</directory>
         </testsuite>
-        <testsuite name="Sundry Tests">
-            <directory suffix="Test.php">testsSundry</directory>
-        </testsuite>
         <testsuite name="Password Tests">
             <directory suffix="Test.php">testsPasswordHash</directory>
-        </testsuite>
-        <testsuite name="Request Tests">
-            <directory suffix="Test.php">testsRequest</directory>
         </testsuite>
         <testsuite name="QueryBuilder Tests">
             <directory suffix="Test.php">testsQueryBuilder</directory>
         </testsuite>
-        <testsuite name="URL Tests">
-            <directory suffix="Test.php">testsHtmlOutput</directory>
+        <testsuite name="Request Tests">
+            <directory suffix="Test.php">testsRequest</directory>
         </testsuite>
+        <testsuite name="Sundry Tests">
+            <directory suffix="Test.php">testsSundry</directory>
+        </testsuite>
+        <testsuite name="Translator Tests">
+            <directory suffix="Test.php">testsTranslator</directory>
+        </testsuite>
+
 
     </testsuites>
 

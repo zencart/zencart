@@ -3,14 +3,18 @@
  * downloads module - prepares information for use in downloadable files delivery
  *
  * @package modules
- * @copyright Copyright 2003-2015 Zen Cart Development Team
+ * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: downloads.php  Modified in v1.6.0 $
+ * @version $Id: DrByte Dec 19 2018  Modified in v1.5.6a $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
 }
+
+if (!defined('TEXT_FILESIZE_KBS')) define('TEXT_FILESIZE_KBS', ' KB');
+if (!defined('TEXT_FILESIZE_MEGS')) define('TEXT_FILESIZE_MEGS', ' MB');
+if (!defined('TEXT_FILESIZE_UNKNOWN')) define('TEXT_FILESIZE_UNKNOWN', 'Unknown');
 
 $last_order = isset($_GET['order_id']) ? $_GET['order_id'] : 0;
 $customer_lookup_method = 'customerid';
@@ -47,11 +51,11 @@ $downloads_check_query = $db->Execute("select o.orders_id, opd.orders_products_d
 $downloadsOnThisOrder = $downloads_check_query->RecordCount();
 
 if ($downloadsOnThisOrder) {
-  if ($customer_lookup_method == 'email') {
+  if ($customer_lookup_method === 'email') {
     $lookup_clause = " AND o.customers_email_address = :email_address ";
     $lookup_clause = $db->bindVars($lookup_clause, ':email_address', $_SESSION['email_address'], 'string');
   }
-  if ($customer_lookup_method == 'customerid') {
+  if ($customer_lookup_method === 'customerid') {
     $lookup_clause = " AND o.customers_id = '" . (int)$_SESSION['customer_id'] . "'";
   }
   // Now get all downloadable products in that order
@@ -66,27 +70,23 @@ if ($downloadsOnThisOrder) {
                         and o.orders_id = op.orders_id
                         and op.orders_products_id = opd.orders_products_id
                         and opd.orders_products_filename != ''";
-
   $result = $db->Execute($downloads_query);
 
-  $numberOfDownloads = $result->RecordCount();
-
-  while (!$result->EOF) {
-    $data = $result->fields;
+  foreach($result as $data) {
     $data['service'] = 'local';
     $data['filename'] = $data['orders_products_filename'];
-    list($dt_year, $dt_month, $dt_day) = explode('-', $result->fields['date_purchased_day']);
-    $data['expiry_timestamp'] = mktime(23, 59, 59, $dt_month, $dt_day + $result->fields['download_maxdays'], $dt_year);
+    list($dt_year, $dt_month, $dt_day) = explode('-', $data['date_purchased_day']);
+    $data['expiry_timestamp'] = mktime(23, 59, 59, $dt_month, $dt_day + (int)$data['download_maxdays'], $dt_year);
     $data['expiry'] = date('Y-m-d H:i:s', $data['expiry_timestamp']);
-    $data['downloads_remaining'] = $data['download_count'];
-    $data['unlimited_downloads'] = ($data['download_maxdays'] == 0);
+    $data['downloads_remaining'] = (int)$data['download_count'];
+    $data['unlimited_downloads'] = (int)$data['download_maxdays'] == 0;
     $data['file_exists'] = file_exists(DIR_FS_DOWNLOAD . $data['orders_products_filename']);
-    $data['is_downloadable'] = $data['file_exists'] && ($data['downloads_remaining'] > 0 && $data['expiry_timestamp'] > time()) || $data['unlimited_downloads'];
+    $data['counts_not_expired'] = $data['downloads_remaining'] > 0 && $data['expiry_timestamp'] > time();
+    $data['is_downloadable'] = $data['file_exists'] && ($data['counts_not_expired'] === true || $data['unlimited_downloads']);
     $data['link_url'] = zen_href_link(FILENAME_DOWNLOAD, 'order=' . $last_order . '&id=' . $data['orders_products_download_id']);
 
-    $data['filesize'] = ($data['file_exists']) ? filesize(DIR_FS_DOWNLOAD . $data['orders_products_filename']) : 0;
-
     // calculate filesize/units
+    $data['filesize'] = $data['file_exists'] ? filesize(DIR_FS_DOWNLOAD . $data['orders_products_filename']) : 0;
     $zv_filesize_units = '';
     $zv_filesize = TEXT_FILESIZE_UNKNOWN;
     if ($data['filesize'] > 0) {
@@ -106,12 +106,11 @@ if ($downloadsOnThisOrder) {
     $data['filesize_units'] = $zv_filesize_units;
 
     // pubsub
-    $zco_notifier->notify('NOTIFY_MODULE_DOWNLOAD_TEMPLATE_DETAILS', $result->fields, $data);
+    $zco_notifier->notify('NOTIFY_MODULE_DOWNLOAD_TEMPLATE_DETAILS', $data, $data);
 
     $downloads[] = $data;
-    $result->MoveNext();
   }
 }
 
-$downloadsNotAvailableYet = $downloadsOnThisOrder && sizeof($downloads) < 1;
-
+$numberOfDownloads = count($downloads);
+$downloadsNotAvailableYet = $downloadsOnThisOrder && $numberOfDownloads < 1;

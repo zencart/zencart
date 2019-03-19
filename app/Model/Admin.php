@@ -16,5 +16,12 @@ class Admin extends Eloquent
 {
     protected $table = TABLE_ADMIN;
     protected $primaryKey = 'admin_id';
+    protected $guarded = [];
+    public $timestamps = false;
 
+
+    public function isSuperUser()
+    {
+        return ($this->admin_profile == SUPERUSER_PROFILE);
+    }
 }

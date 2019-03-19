@@ -6,10 +6,10 @@
  * They can send up to the amount of GV accumlated in their account by way of purchased GV's or GV's sent to them.
  *
  * @package page
- * @copyright Copyright 2003-2016 Zen Cart Development Team
+ * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: DrByte  Sun Oct 18 03:26:56 2015 -0400 Modified in v1.5.5 $
+ * @version $Id: Scott C Wilson Wed Oct 10 07:03:50 2018 -0400 Modified in v1.5.6 $
  */
 
 // This should be first line of the script:
@@ -88,7 +88,7 @@ if ($_GET['action'] == 'send') {
     $messageStack->add('gv_send', ERROR_ENTRY_AMOUNT_CHECK, 'error');
   }
   $gv_amount = $currencies->normalizeValue($gv_amount);
-  if ( $currencies->value($gv_amount, true, DEFAULT_CURRENCY) > $customer_amount || $gv_amount == 0) {
+  if ( $currencies->value($gv_amount, true,DEFAULT_CURRENCY) > $customer_amount || $gv_amount == 0) {
     //echo $currencies->value($customer_amount, true,DEFAULT_CURRENCY);
     $error = true;
     $messageStack->add('gv_send', ERROR_ENTRY_AMOUNT_CHECK, 'error');
@@ -102,7 +102,6 @@ if ($_GET['action'] == 'process') {
     $_POST['amount'] = preg_replace('/[^0-9.,%]/', '', $_POST['amount']);
 
     $new_amount = $gv_result->fields['amount'] - $currencies->value($_POST['amount'], true, DEFAULT_CURRENCY);
-    //die($currencies->value($_POST['amount'], true, $_SESSION['currency']));
     $new_db_amount = $gv_result->fields['amount'] - $currencies->value($_POST['amount'], true, DEFAULT_CURRENCY);
     if ($new_amount < 0) {
       $error= true;

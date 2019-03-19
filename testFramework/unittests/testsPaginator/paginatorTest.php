@@ -26,9 +26,9 @@ class testPaginationCase extends zcTestCase
         define('TEXT_DISPLAY_NUMBER_OF_PRODUCTS', '');
         $loader = new \Aura\Autoload\Loader;
         $loader->register();
-        $loader->addPrefix('\ZenCart\Paginator', DIR_CATALOG_LIBRARY . 'zencart/Paginator/src');
-        $loader->addPrefix('\Aura\Web', DIR_CATALOG_LIBRARY . 'aura/web/src');
-        $loader->addPrefix('\ZenCart\Request', DIR_CATALOG_LIBRARY . 'zencart/Request/src');
+        $loader->addPrefix('\ZenCart\Paginator', DIR_APP_LIBRARY . 'zencart/Paginator/src');
+        $loader->addPrefix('\Aura\Web', DIR_APP_LIBRARY . 'aura/web/src');
+        $loader->addPrefix('\ZenCart\Request', DIR_APP_LIBRARY . 'zencart/Request/src');
     }
 
     public function testMain()

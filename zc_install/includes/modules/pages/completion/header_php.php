@@ -2,8 +2,8 @@
 /**
  * @package Installer
  * @copyright Copyright 2003-2016 Zen Cart Development Team
- * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: zcwilt  Wed Sep 23 20:04:38 2015 +0100 Modified in v1.6.0 $
+ * @license http://www.zen-cart.com/license/2_0.txt GNU Public License v2.0
+ * @version $Id: Author: zcwilt  Modified in v1.5.6 $
  */
 
   require (DIR_FS_INSTALL . 'includes/classes/class.zcDatabaseInstaller.php');

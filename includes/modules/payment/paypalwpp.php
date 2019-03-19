@@ -3,10 +3,10 @@
  * paypalwpp.php payment module class for PayPal Express Checkout payment method
  *
  * @package paymentMethod
- * @copyright Copyright 2003-2016 Zen Cart Development Team
+ * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte  Modified in v1.6.0 $
+ * @version $Id: Drbyte Thu Sep 13 14:51:41 2018 -0400 Modified in v1.5.6 $
  */
 /**
  * load the communications layer code
@@ -109,7 +109,7 @@ class paypalwpp extends base {
     $this->codeTitle = MODULE_PAYMENT_PAYPALWPP_TEXT_ADMIN_TITLE_EC;
     $this->codeVersion = '1.6.0';
     $this->enableDirectPayment = FALSE;
-    $this->enabled = (MODULE_PAYMENT_PAYPALWPP_STATUS == 'True');
+    $this->enabled = (defined('MODULE_PAYMENT_PAYPALWPP_STATUS') && MODULE_PAYMENT_PAYPALWPP_STATUS == 'True');
     // Set the title & description text based on the mode we're in ... EC vs US/UK vs admin
     if (IS_ADMIN_FLAG === true) {
       $this->description = sprintf(MODULE_PAYMENT_PAYPALWPP_TEXT_ADMIN_DESCRIPTION, ' (rev' . $this->codeVersion . ')');
@@ -130,6 +130,11 @@ class paypalwpp extends base {
         default:
           $this->title = MODULE_PAYMENT_PAYPALWPP_TEXT_ADMIN_TITLE_EC;
       }
+
+      $this->sort_order = defined('MODULE_PAYMENT_PAYPALWPP_SORT_ORDER') ? MODULE_PAYMENT_PAYPALWPP_SORT_ORDER : null;
+
+      if (null === $this->sort_order) return false;
+
       if ($this->enabled) {
         if ( (MODULE_PAYMENT_PAYPALWPP_MODULE_MODE == 'PayPal' && (MODULE_PAYMENT_PAYPALWPP_APISIGNATURE == '' || MODULE_PAYMENT_PAYPALWPP_APIUSERNAME == '' || MODULE_PAYMENT_PAYPALWPP_APIPASSWORD == ''))
           || (substr(MODULE_PAYMENT_PAYPALWPP_MODULE_MODE,0,7) == 'Payflow' && (MODULE_PAYMENT_PAYPALWPP_PFPARTNER == '' || MODULE_PAYMENT_PAYPALWPP_PFVENDOR == '' || MODULE_PAYMENT_PAYPALWPP_PFUSER == '' || MODULE_PAYMENT_PAYPALWPP_PFPASSWORD == ''))
@@ -149,7 +154,6 @@ class paypalwpp extends base {
     $this->emailAlerts = (MODULE_PAYMENT_PAYPALWPP_DEBUGGING == 'Log File' || MODULE_PAYMENT_PAYPALWPP_DEBUGGING =='Log and Email' || MODULE_PAYMENT_PAYPALWPP_DEBUGGING == 'Alerts Only');
     $this->doDPonly = (MODULE_PAYMENT_PAYPALWPP_MODULE_MODE =='Payflow-US' && !(defined('MODULE_PAYMENT_PAYPALWPP_PAYFLOW_EC') && MODULE_PAYMENT_PAYPALWPP_PAYFLOW_EC == 'Yes'));
     $this->showPaymentPage = (MODULE_PAYMENT_PAYPALWPP_SKIP_PAYMENT_PAGE == 'No') ? true : false;
-    $this->sort_order = MODULE_PAYMENT_PAYPALWPP_SORT_ORDER;
 
     $this->buttonSourceEC = 'ZenCart-EC_us';
     $this->buttonSourceDP = 'ZenCart-DP_us';
@@ -306,7 +310,7 @@ class paypalwpp extends base {
     if ($this->use_incontext_checkout == false) return '';
 
     // send the PayPal-provided javascript to trigger the incontext checkout experience
-    return "      <script type=\"text/javascript\">
+    return "      <script>
         window.paypalCheckoutReady = function () {
         paypal.checkout.setup('" . MODULE_PAYMENT_PAYPALWPP_MERCHANTID . "', {
           //locale: '" . $this->getLanguageCode('incontext') . "',"
@@ -329,6 +333,7 @@ class paypalwpp extends base {
         });
       };
       </script>
+      <script src=\"//www.paypalobjects.com/api/checkout.js\" async></script>
       <div data-paypal-button=\"yes\" data-paypal-id=\"" . MODULE_PAYMENT_PAYPALWPP_MERCHANTID . "\"></div>";
   }
   /**
@@ -412,7 +417,7 @@ class paypalwpp extends base {
       $order_amount = $this->calc_order_amount($order->info['total'], $options['PAYMENTREQUEST_0_CURRENCYCODE'], FALSE);
 
       if (isset($options['PAYMENTREQUEST_0_DESC']) && $options['PAYMENTREQUEST_0_DESC'] == '') unset($options['PAYMENTREQUEST_0_DESC']);
-      if (!isset($options['PAYMENTREQUEST_0_AMT'])) $options['PAYMENTREQUEST_0_AMT'] = number_format($order_amount, 2, '.', '');
+      if (!isset($options['PAYMENTREQUEST_0_AMT'])) $options['PAYMENTREQUEST_0_AMT'] = round($order_amount, 2);
 
 
 if (false) { // disabled until clarification is received about coupons in PayPal Wallet
@@ -434,7 +439,7 @@ if (false) { // disabled until clarification is received about coupons in PayPal
 }
 
       // debug output
-      $this->zcLog('before_process - EC-4', 'info being submitted:' . "\n" . $_SESSION['paypal_ec_token'] . ' ' . $_SESSION['paypal_ec_payer_id'] . ' ' . number_format($order_amount, 2) .  "\n" . print_r($options, true));
+      $this->zcLog('before_process - EC-4', 'info being submitted:' . "\n" . $_SESSION['paypal_ec_token'] . ' ' . $_SESSION['paypal_ec_payer_id'] . ' ' . round($order_amount, 2) .  "\n" . print_r($options, true));
 
       $this->notify('NOTIFY_PAYPALWPP_BEFORE_DOEXPRESSCHECKOUT');
 
@@ -691,7 +696,7 @@ if (false) { // disabled until clarification is received about coupons in PayPal
     $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('PayPal Page Style', 'MODULE_PAYMENT_PAYPALWPP_PAGE_STYLE', 'Primary', 'The page-layout style you want customers to see when they visit the PayPal site. You can configure your <strong>Custom Page Styles</strong> in your PayPal Profile settings. This value is case-sensitive.', '6', '25', now())");
     $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Store (Brand) Name at PayPal', 'MODULE_PAYMENT_PAYPALWPP_BRANDNAME', '', 'The name of your store as it should appear on the PayPal login page. If blank, your store name will be used.', '6', '25', now())");
     $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Payment Action', 'MODULE_PAYMENT_PAYPALWPP_TRANSACTION_MODE', 'Final Sale', 'How do you want to obtain payment?<br /><strong>Default: Final Sale</strong>', '6', '25', 'zen_cfg_select_option(array(\'Auth Only\', \'Final Sale\'), ',  now())");
-    $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Transaction Currency', 'MODULE_PAYMENT_PAYPALWPP_CURRENCY', 'Selected Currency', 'Which currency should the order be sent to PayPal as? <br />NOTE: if an unsupported currency is sent to PayPal, it will be auto-converted to USD (or GBP if using UK account)<br /><strong>Default: Selected Currency</strong>', '6', '25', 'zen_cfg_select_option(array(\'Selected Currency\', \'Only USD\', \'Only AUD\', \'Only CAD\', \'Only EUR\', \'Only GBP\', \'Only CHF\', \'Only CZK\', \'Only DKK\', \'Only HKD\', \'Only HUF\', \'Only JPY\', \'Only NOK\', \'Only NZD\', \'Only PLN\', \'Only SEK\', \'Only SGD\', \'Only THB\', \'Only MXN\', \'Only ILS\', \'Only PHP\', \'Only TWD\', \'Only BRL\', \'Only MYR\', \'Only TRY\'), ', now())");
+    $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Transaction Currency', 'MODULE_PAYMENT_PAYPALWPP_CURRENCY', 'Selected Currency', 'Which currency should the order be sent to PayPal as? <br />NOTE: if an unsupported currency is sent to PayPal, it will be auto-converted to USD (or GBP if using UK account)<br /><strong>Default: Selected Currency</strong>', '6', '25', 'zen_cfg_select_option(array(\'Selected Currency\', \'Only USD\', \'Only AUD\', \'Only CAD\', \'Only EUR\', \'Only GBP\', \'Only CHF\', \'Only CZK\', \'Only DKK\', \'Only HKD\', \'Only HUF\', \'Only JPY\', \'Only NOK\', \'Only NZD\', \'Only PLN\', \'Only SEK\', \'Only SGD\', \'Only THB\', \'Only MXN\', \'Only ILS\', \'Only PHP\', \'Only TWD\', \'Only BRL\', \'Only MYR\', \'Only TRY\', \'Only INR\'), ', now())");
     $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Allow eCheck?', 'MODULE_PAYMENT_PAYPALEC_ALLOWEDPAYMENT', 'Any', 'Do you want to allow non-instant payments like eCheck/EFT/ELV?', '6', '25', 'zen_cfg_select_option(array(\'Any\', \'Instant Only\'), ', now())");
 
     $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Fraud Mgmt Filters - FMF', 'MODULE_PAYMENT_PAYPALWPP_EC_RETURN_FMF_DETAILS', 'No', 'If you have enabled FMF support in your PayPal account and wish to utilize it in your transactions, set this to yes. Otherwise, leave it at No.', '6', '25','zen_cfg_select_option(array(\'No\', \'Yes\'), ', now())");
@@ -742,7 +747,7 @@ if (false) { // disabled until clarification is received about coupons in PayPal
 
     }
     $keys_list = array('MODULE_PAYMENT_PAYPALWPP_STATUS', 'MODULE_PAYMENT_PAYPALWPP_SORT_ORDER', 'MODULE_PAYMENT_PAYPALWPP_ZONE', 'MODULE_PAYMENT_PAYPALWPP_ECS_BUTTON', 'MODULE_PAYMENT_PAYPALWPP_ORDER_STATUS_ID', 'MODULE_PAYMENT_PAYPALWPP_ORDER_PENDING_STATUS_ID', 'MODULE_PAYMENT_PAYPALWPP_REFUNDED_STATUS_ID', 'MODULE_PAYMENT_PAYPALWPP_CONFIRMED_ADDRESS', 'MODULE_PAYMENT_PAYPALWPP_AUTOSELECT_CHEAPEST_SHIPPING', 'MODULE_PAYMENT_PAYPALWPP_SKIP_PAYMENT_PAGE', 'MODULE_PAYMENT_PAYPALWPP_NEW_ACCT_NOTIFY', 'MODULE_PAYMENT_PAYPALWPP_TRANSACTION_MODE', 'MODULE_PAYMENT_PAYPALWPP_CURRENCY', 'MODULE_PAYMENT_PAYPALWPP_BRANDNAME', 'MODULE_PAYMENT_PAYPALEC_ALLOWEDPAYMENT', 'MODULE_PAYMENT_PAYPALWPP_PAGE_STYLE', 'MODULE_PAYMENT_PAYPALWPP_APIUSERNAME', 'MODULE_PAYMENT_PAYPALWPP_APIPASSWORD', 'MODULE_PAYMENT_PAYPALWPP_APISIGNATURE', 'MODULE_PAYMENT_PAYPALWPP_MERCHANTID', 'MODULE_PAYMENT_PAYPALWPP_MODULE_MODE', 'MODULE_PAYMENT_PAYPALWPP_CHECKOUTSTYLE', 'MODULE_PAYMENT_PAYPALWPP_INCONTEXTSIZE', 'MODULE_PAYMENT_PAYPALWPP_INCONTEXTSHAPE', 'MODULE_PAYMENT_PAYPALWPP_SERVER', 'MODULE_PAYMENT_PAYPALWPP_DEBUGGING');
-    if (IS_ADMIN_FLAG === true && (PAYPAL_DEV_MODE == 'true' || strstr(MODULE_PAYMENT_PAYPALWPP_MODULE_MODE, 'Payflow'))) {
+    if (defined('PAYPAL_DEV_MODE') && IS_ADMIN_FLAG === true && (PAYPAL_DEV_MODE == 'true' || strstr(MODULE_PAYMENT_PAYPALWPP_MODULE_MODE, 'Payflow'))) {
       $keys_list = array_merge($keys_list, array('MODULE_PAYMENT_PAYPALWPP_PFPARTNER', 'MODULE_PAYMENT_PAYPALWPP_PFVENDOR', 'MODULE_PAYMENT_PAYPALWPP_PFUSER', 'MODULE_PAYMENT_PAYPALWPP_PFPASSWORD'));
     }
     return $keys_list;
@@ -755,7 +760,7 @@ if (false) { // disabled until clarification is received about coupons in PayPal
     // cannot remove EC if DP installed:
     if (defined('MODULE_PAYMENT_PAYPALDP_STATUS')) {
       // this language text is hard-coded in english since Website Payments Pro is not yet available in any countries that speak any other language at this time.
-      $messageStack->add_session('<strong>Sorry, you must remove PayPal Payments Pro (paypaldp) first.</strong> PayPal Payments Pro (Website Payments Pro) requires that you offer Express Checkout to your customers.<br /><a href="' . zen_href_link(FILENAME_MODULES . '?set=payment&module=paypaldp', '', 'NONSSL') . '">Click here to edit or remove your PayPal Payments Pro module.</a>' , 'error');
+      $messageStack->add_session('<strong>Sorry, you must remove PayPal Payments Pro (paypaldp) first.</strong> PayPal Payments Pro (Website Payments Pro) requires that you offer Express Checkout to your customers.<br /><a href="' . zen_href_link(FILENAME_MODULES . '?set=payment&module=paypaldp', '', 'SSL') . '">Click here to edit or remove your PayPal Payments Pro module.</a>' , 'error');
       zen_redirect(zen_href_link(FILENAME_MODULES, 'set=payment&module=paypalwpp', 'NONSSL'));
       return 'failed';
     }
@@ -781,6 +786,9 @@ if (false) { // disabled until clarification is received about coupons in PayPal
    */
   function alterShippingEditButton() {
     return false;
+    if ($this->in_special_checkout() && empty($_SESSION['paypal_ec_markflow'])) {
+      return zen_href_link('ipn_main_handler.php', 'type=ec&clearSess=1', 'SSL', true,true, true);
+    }
   }
   /**
    * Debug Logging support
@@ -1182,7 +1190,7 @@ if (false) { // disabled until clarification is received about coupons in PayPal
    * Set the currency code -- use defaults if active currency is not a currency accepted by PayPal
    */
   function selectCurrency($val = '', $subset = 'EC') {
-    $ec_currencies = array('CAD', 'EUR', 'GBP', 'JPY', 'USD', 'AUD', 'CHF', 'CZK', 'DKK', 'HKD', 'HUF', 'NOK', 'NZD', 'PLN', 'SEK', 'SGD', 'THB', 'MXN', 'ILS', 'PHP', 'TWD', 'BRL', 'MYR', 'TRY', 'RUB');
+    $ec_currencies = array('CAD', 'EUR', 'GBP', 'JPY', 'USD', 'AUD', 'CHF', 'CZK', 'DKK', 'HKD', 'HUF', 'NOK', 'NZD', 'PLN', 'SEK', 'SGD', 'THB', 'MXN', 'ILS', 'PHP', 'TWD', 'BRL', 'MYR', 'TRY', 'RUB', 'INR');
     $dp_currencies = array('CAD', 'EUR', 'GBP', 'JPY', 'USD', 'AUD');
     $paypalSupportedCurrencies = ($subset == 'EC') ? $ec_currencies : $dp_currencies;
 
@@ -1209,7 +1217,7 @@ if (false) { // disabled until clarification is received about coupons in PayPal
       $amount = (int)$amount;
       $applyFormatting = FALSE;
     }
-    return ($applyFormatting ? number_format($amount, $currencies->get_decimal_places($paypalCurrency)) : $amount);
+    return ($applyFormatting ? round($amount, $currencies->get_decimal_places($paypalCurrency)) : $amount);
   }
   /**
    * Set the state field depending on what PayPal requires for that country.
@@ -1553,21 +1561,21 @@ if (false) { // disabled until clarification is received about coupons in PayPal
     if (isset($optionsST['PAYMENTREQUEST_0_HANDLINGAMT']) && $optionsST['PAYMENTREQUEST_0_HANDLINGAMT'] == 0) unset($optionsST['PAYMENTREQUEST_0_HANDLINGAMT']);
     if (isset($optionsST['PAYMENTREQUEST_0_INSURANCEAMT']) && $optionsST['PAYMENTREQUEST_0_INSURANCEAMT'] == 0) unset($optionsST['PAYMENTREQUEST_0_INSURANCEAMT']);
 
-    // tidy up all values so that they comply with proper format (number_format(xxxx,2) for PayPal US use )
+    // tidy up all values so that they comply with proper format (rounded to 2 decimals for PayPal US use )
     if (!defined('PAYPALWPP_SKIP_LINE_ITEM_DETAIL_FORMATTING') || PAYPALWPP_SKIP_LINE_ITEM_DETAIL_FORMATTING != 'true' || in_array($order->info['currency'], array('JPY', 'NOK', 'HUF', 'TWD'))) {
       if (is_array($optionsST)) foreach ($optionsST as $key=>$value) {
-        $optionsST[$key] = number_format($value, ((int)$currencies->get_decimal_places($restrictedCurrency) == 0 ? 0 : 2));
+        $optionsST[$key] = round($value, ((int)$currencies->get_decimal_places($restrictedCurrency) == 0 ? 0 : 2));
       }
       if (is_array($optionsLI)) foreach ($optionsLI as $key=>$value) {
         if (substr($key, -6) == 'TAXAMT' && ($optionsLI[$key] == '' || $optionsLI[$key] == 0)) {
           unset($optionsLI[$key]);
         } else {
-          if (strstr($key, 'AMT')) $optionsLI[$key] = number_format($value, ((int)$currencies->get_decimal_places($restrictedCurrency) == 0 ? 0 : 2));
+          if (strstr($key, 'AMT')) $optionsLI[$key] = round($value, ((int)$currencies->get_decimal_places($restrictedCurrency) == 0 ? 0 : 2));
         }
       }
     }
 
-    $this->zcLog('getLineItemDetails 8', 'checking subtotals... ' . "\n" . print_r(array_merge(array('calculated total'=>number_format($stAll, ((int)$currencies->get_decimal_places($restrictedCurrency) == 0 ? 0 : 2))), $optionsST), true) . "\n-------------------\ndifference: " . ($stDiff + 0) . '  (abs+rounded: ' . ($stDiffRounded + 0) . ')');
+    $this->zcLog('getLineItemDetails 8', 'checking subtotals... ' . "\n" . print_r(array_merge(array('calculated total'=>round($stAll, ((int)$currencies->get_decimal_places($restrictedCurrency) == 0 ? 0 : 2))), $optionsST), true) . "\n-------------------\ndifference: " . ($stDiff + 0) . '  (abs+rounded: ' . ($stDiffRounded + 0) . ')');
 
     if ( $stDiffRounded != 0) {
       $this->zcLog('getLineItemDetails 9', 'Subtotals Bad. Skipping line-item/subtotal details');
@@ -1599,7 +1607,7 @@ if (false) { // disabled until clarification is received about coupons in PayPal
 
     // init new order object
     require(DIR_WS_CLASSES . 'order.php');
-    $order = new order('', $this->selectCurrency());
+    $order = new order(null, $this->selectCurrency());
 
     // load the selected shipping module so that shipping taxes can be assessed
     require(DIR_WS_CLASSES . 'shipping.php');
@@ -1721,7 +1729,7 @@ if (false) { // disabled until clarification is received about coupons in PayPal
       }
     }
 
-    if (!isset($options['PAYMENTREQUEST_0_AMT'])) $options['PAYMENTREQUEST_0_AMT'] = number_format($order_amount, 2);
+    if (!isset($options['PAYMENTREQUEST_0_AMT'])) $options['PAYMENTREQUEST_0_AMT'] = round($order_amount, 2);
 
     $this->zcLog('ec_step1 - 2 -submit', print_r(array_merge($options, array('RETURNURL' => $return_url, 'CANCELURL' => $cancel_url)), true));
 
@@ -2995,7 +3003,7 @@ if (false) { // disabled until clarification is received about coupons in PayPal
           if ($response['L_ERRORCODE0'] == 10422 || $response['L_ERRORCODE0'] == 10486) {
             header("HTTP/1.1 302 Object Moved");
             zen_redirect($this->ec_redirect_url);
-            die();
+            die("Funding source problem; please go to Paypal.com (Error " . zen_output_string_protected($response['L_ERRORCODE0']) . ")");
           }
 
           // some other error condition

@@ -30,7 +30,7 @@ abstract class AbstractReportController extends AbstractListingController
     /**
      * @var string
      */
-    protected $mainTemplate = 'tplAdminReport.php';
+    protected $mainTemplate = 'adminReport';
 
     public function mainExecute()
     {

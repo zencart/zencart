@@ -76,6 +76,10 @@ if (!defined('USE_PCONNECT')) define('USE_PCONNECT', 'false');
   $autoLoadConfig[0][] = array('autoType'=>'classInstantiate',
                                'className'=>'zcPassword',
                                'objectName'=>'zcPassword');
+  $autoLoadConfig[0][] = array('autoType'=>'class',
+                               'loadFile'=> 'VersionServer.php',
+                               'classPath'=>DIR_WS_CLASSES);
+
 /**
  * Breakpoint 10.
  *
@@ -126,6 +130,8 @@ if (!defined('USE_PCONNECT')) define('USE_PCONNECT', 'false');
  */
   $autoLoadConfig[40][] = array('autoType'=>'init_script',
                                 'loadFile'=> 'init_general_funcs.php');
+  $autoLoadConfig[40][] = array('autoType'=>'require',
+                                'loadFile'=> DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'functions_osh_update.php');
   $autoLoadConfig[40][] = array('autoType'=>'init_script',
                                 'loadFile'=> 'init_tlds.php');
 /**
@@ -199,14 +205,6 @@ $autoLoadConfig[60][] = array('autoType'=>'init_script',
   $autoLoadConfig[130][] = array('autoType'=>'init_script',
                                  'loadFile'=> 'init_category_path.php');
 /**
- * Breakpoint 140.
- *
- * require('includes/init_includes/init_errors.php');
- *
- */
-  $autoLoadConfig[140][] = array('autoType'=>'init_script',
-                                 'loadFile'=> 'init_errors.php');
-/**
  * Breakpoint 150.
  *
  * require('includes/init_includes/init_admin_auth.php');
@@ -246,7 +244,14 @@ $autoLoadConfig[60][] = array('autoType'=>'init_script',
                                  'loadFile'=> 'init_header.php');
   $autoLoadConfig[180][] = array('autoType'=>'init_script',
                                  'loadFile'=> 'init_html_editor.php');
-
+/**
+ * Breakpoint 181.
+ *
+ * require('includes/init_includes/init_errors.php');
+ *
+ */
+  $autoLoadConfig[181][] = array('autoType'=>'init_script',
+                                 'loadFile'=> 'init_errors.php');
 
 /**
  * Breakpoint 190.

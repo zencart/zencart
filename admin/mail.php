@@ -8,6 +8,8 @@
  */
 
   require('includes/application_top.php');
+  require_once('includes/template/common/tplHtmlHeadLegacy.php');
+  require_once('includes/template/common/tplHtmlHead.php');
 
   //DEBUG:  // these defines will become configuration switches in ADMIN in a future version.
   //DEBUG:  // right now, attachments aren't working right unless only sending HTML messages with NO text-only version supplied.
@@ -104,7 +106,6 @@
     }
   }
 
-require('includes/admin_html_head.php');
 ?>
 <?php if ($editor_handler != '') include ($editor_handler); ?>
 <script type="text/javascript">
@@ -181,7 +182,7 @@ function check_form(form_name) {
 </head>
 <body>
 <!-- header //-->
-<?php require(DIR_WS_INCLUDES . 'header.php'); ?>
+<?php require('includes/template/common/tplHeader.php'); ?>
 <!-- header_eof //-->
 
 <!-- body //-->

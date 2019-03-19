@@ -14,6 +14,8 @@
  */
 
   require('includes/application_top.php');
+  require_once('includes/template/common/tplHtmlHeadLegacy.php');
+  require_once('includes/template/common/tplHtmlHead.php');
   require('includes/functions/functions_graphs.php');
 
   $banner_id = (isset($_GET['bID'])) ? (int)$_GET['bID'] : 0;
@@ -56,7 +58,6 @@
                 'colors' => array('blue', 'red'),
                 );
 
-require('includes/admin_html_head.php');
 ?>
 <link rel="stylesheet" type="text/css" href="includes/template/css/banner_tools.css" />
 <!--[if lte IE 8]><script src="includes/template/javascript/flot/excanvas.min.js"></script><![endif]-->
@@ -65,7 +66,7 @@ require('includes/admin_html_head.php');
 </head>
 <body>
 <!-- header //-->
-<?php require(DIR_WS_INCLUDES . 'header.php'); ?>
+<?php require('includes/template/common/tplHeader.php'); ?>
 <!-- header_eof //-->
 
 <!-- body //-->

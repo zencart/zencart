@@ -25,15 +25,15 @@ header('X-Frame-Options:SAMEORIGIN');
 <!--[if gt IE 8]><!--> <html class="no-js" <?php echo HTML_PARAMS; ?>> <!--<![endif]-->
   <head>
     <meta charset="<?php echo CHARSET; ?>">
-    <title><?php echo META_TAG_TITLE; ?></title>
+    <title><?php echo METATAG_TITLE; ?></title>
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=yes"/>
     <meta name="author" content="<?php echo STORE_NAME ?>">
     <meta name="generator" content="shopping cart program by Zen Cart(R), http://www.zen-cart.com eCommerce software">
-<?php if (META_TAG_KEYWORDS != '') { ?>
-    <meta name="keywords" content="<?php echo META_TAG_KEYWORDS; ?>">
+<?php if (METATAG_KEYWORDS != '') { ?>
+    <meta name="keywords" content="<?php echo METATAG_KEYWORDS; ?>">
 <?php } ?>
-<?php if (META_TAG_DESCRIPTION != '') { ?>
-    <meta name="description" content="<?php echo META_TAG_DESCRIPTION; ?>">
+<?php if (METATAG_DESCRIPTION != '') { ?>
+    <meta name="description" content="<?php echo METATAG_DESCRIPTION; ?>">
 <?php } ?>
 <?php if ($robotsNoIndex === true) { ?>
     <meta name="robots" content="noindex, nofollow"<?php if ($isRobotsMaintenanceMode) echo ' mode="maintenance"'; ?>>

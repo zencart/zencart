@@ -68,6 +68,7 @@
    *
    * @return string
    */
+if (!function_exists('zen_href_link')) { 
   function zen_href_link($page = '', $parameters = '', $connection = 'NONSSL', $add_session_id = true, $search_engine_safe = true, $static = false, $use_dir_ws_catalog = true) {
     global $request_type, $session_started, $http_domain, $https_domain, $zco_notifier;
 
@@ -181,6 +182,7 @@
     $link = str_replace('&', '&amp;', $link);
     return $link;
   }
+}
 
 /*
  * The HTML image wrapper function for non-proportional images
@@ -364,6 +366,7 @@
  * The HTML form submit button wrapper function
  * Outputs a "submit" button in the selected language
  */
+if (!function_exists('zen_image_submit')) { 
   function zen_image_submit($image, $alt = '', $parameters = '', $sec_class = '') {
     global $template, $current_page_base, $zco_notifier;
     if (strtolower(IMAGE_USE_CSS_BUTTONS) == 'yes' && strlen($alt)<30) return zenCssButton($image, $alt, 'submit', $sec_class, $parameters);
@@ -379,10 +382,12 @@
 
     return $image_submit;
   }
+}
 
 /*
  * Output a function button in the selected language
  */
+if (!function_exists('zen_image_button')) { 
   function zen_image_button($image, $alt = '', $parameters = '', $sec_class = '') {
     global $template, $current_page_base, $zco_notifier;
 
@@ -395,7 +400,7 @@
     if (strtolower(IMAGE_USE_CSS_BUTTONS) == 'yes') return zenCssButton($image, $alt, 'button', $sec_class, $parameters);
     return zen_image($template->get_template_dir($image, DIR_WS_TEMPLATE, $current_page_base, 'buttons/' . $_SESSION['language'] . '/') . $image, $alt, '', '', $parameters);
   }
-
+}
 
 /**
  * generate CSS buttons in the current language
@@ -483,6 +488,7 @@
 /*
  *  Output a form
  */
+if (!function_exists('zen_draw_form')) { 
   function zen_draw_form($name, $action, $method = 'post', $parameters = '') {
     $form = '<form name="' . zen_output_string($name) . '" action="' . zen_output_string($action) . '" method="' . zen_output_string($method) . '"';
 
@@ -492,10 +498,12 @@
     if (strtolower($method) == 'post') $form .= '<input type="hidden" name="securityToken" value="' . $_SESSION['securityToken'] . '" />';
     return $form;
   }
+}
 
 /*
  *  Output a form input field
  */
+if (!function_exists('zen_draw_input_field')) { 
   function zen_draw_input_field($name, $value = '', $parameters = '', $type = 'text', $reinsert_value = true) {
     $field = '<input type="' . zen_output_string($type) . '" name="' . zen_sanitize_string(zen_output_string($name)) . '"';
     if ( (isset($GLOBALS[$name]) && is_string($GLOBALS[$name])) && ($reinsert_value == true) ) {
@@ -510,13 +518,16 @@
 
     return $field;
   }
+}
 
 /*
  *  Output a form password field
  */
+if (!function_exists('zen_draw_password_field')) { 
   function zen_draw_password_field($name, $value = '', $parameters = 'maxlength="40"') {
     return zen_draw_input_field($name, $value, $parameters, 'password', false);
   }
+}
 
 /*
  *  Output a selection field - alias function for zen_draw_checkbox_field() and zen_draw_radio_field()
@@ -689,7 +700,7 @@
     $addparms = '';
     // if nofollow has already been set, ignore this function
     if (stristr($parameters, 'nofollow')) return $parameters;
-    // if list of skippable pages has been set in meta_tags.php lang file (is by default), use that to add rel=nofollow params
+    // if list of skippable pages has been set in metatags.php lang file (is by default), use that to add rel=nofollow params
     if (defined('ROBOTS_PAGES_TO_SKIP') && in_array($page, explode(",", constant('ROBOTS_PAGES_TO_SKIP')))
         || $current_page_base=='down_for_maintenance') $addparms = 'rel="nofollow"';
     return ($parameters == '' ? $addparms : $parameters . ' ' . $addparms);

@@ -89,5 +89,23 @@ define('TEXT_FORM_LABEL_STORE_ZONE', 'Store Zone');
 define('TEXT_FORM_LABEL_STORE_ADDRESS', 'Store Address');
 define('TEXT_EXAMPLE_STORENAME', 'Enter your Store Name here');
 define('TEXT_EXAMPLE_STOREOWNER', 'Store Owner Name - displayed in emails, personalizes the customer experience');
+define('TEXT_EXAMPLE_STOREOWNEREMAIL', 'Store Owner Email Address'); 
 define('TEXT_EXAMPLE_STOREADDRESS', 'Enter the Mailing Address of your store - displayed on Contact-Us page, and in Invoices/Packing Slips');
 define('TEXT_STORE_DETAILS', 'Please provide details of your store. All fields are required');
+
+//======== dashboard widget settings @todo
+
+define('INPUT_LABEL_SOME_TEXT', 'Some Text');
+define('INPUT_LABEL_REFRESH_RATE', 'Refresh rate');
+define('INPUT_LABEL_SOME_BOOLEAN', 'Boolean');
+define('INPUT_LABEL_DATE_RANGE', 'Date Range');
+define('INPUT_LABEL_DATE_FROM', 'Date From');
+
+define('INPUT_LABEL_BANNER_ID', 'Banner Id');
+define('INPUT_LABEL_BANNER_DATE_RANGE', 'Date Range');
+define('INPUT_LABEL_BANNER_SHOW_LINES', 'Show Graph Lines');
+
+define('OPTIONS_DATERANGE_YEARLY', 'Yearly');
+define('OPTIONS_DATERANGE_MONTHLY', 'Monthly');
+define('OPTIONS_DATERANGE_DAILY', 'Daily');
+define('OPTIONS_DATERANGE_RECENT', 'Recent');

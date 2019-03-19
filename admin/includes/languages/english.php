@@ -20,12 +20,12 @@ define('HEADER_LOGO_HEIGHT', '70px');
 define('HEADER_LOGO_IMAGE', 'logo.gif');
 
 // include template specific meta tags defines
-  if (file_exists(DIR_FS_CATALOG_LANGUAGES . $_SESSION['language'] . '/' . $template_dir . '/meta_tags.php')) {
+  if (file_exists(DIR_FS_CATALOG_LANGUAGES . $_SESSION['language'] . '/' . $template_dir . '/metatags.php')) {
     $template_dir_select = $template_dir . '/';
   } else {
     $template_dir_select = '';
   }
-  require(DIR_FS_CATALOG_LANGUAGES . $_SESSION['language'] . '/' . $template_dir_select . 'meta_tags.php');
+  require(DIR_FS_CATALOG_LANGUAGES . $_SESSION['language'] . '/' . $template_dir_select . 'metatags.php');
 
 // used for prefix to browser tabs in admin pages
 define('TEXT_ADMIN_TAB_PREFIX', 'Admin ');
@@ -34,8 +34,8 @@ define('TEXT_ADMIN_TAB_PREFIX', 'Admin ');
 // meta tags
 define('ICON_METATAGS_ON', 'Meta Tags Defined');
 define('ICON_METATAGS_OFF', 'Meta Tags Undefined');
-define('TEXT_LEGEND_META_TAGS', 'Meta Tags Defined:');
-define('TEXT_INFO_META_TAGS_USAGE', '<strong>NOTE:</strong> The Site/Tagline is your defined definition for your site in the meta_tags.php file.');
+define('TEXT_LEGEND_METATAGS', 'Meta Tags Defined:');
+define('TEXT_INFO_METATAGS_USAGE', '<strong>NOTE:</strong> The Site/Tagline is your defined definition for your site in the metatags.php file.');
 
 // header text in includes/header.php
 define('HEADER_TITLE_TOP', 'Admin Home');
@@ -100,6 +100,7 @@ define('BOX_MODULES_PAYMENT', 'Payment');
 define('BOX_MODULES_SHIPPING', 'Shipping');
 define('BOX_MODULES_ORDER_TOTAL', 'Order Total');
 define('BOX_MODULES_PRODUCT_TYPES', 'Product Types');
+define('BOX_MODULES_PLUGINS', 'Plugins');
 
 // categories box text
 define('BOX_HEADING_CATALOG', 'Catalog');
@@ -195,6 +196,7 @@ define('BOX_ADMIN_ACCESS_LOGS', 'Admin Activity Logs');
 define('IMAGE_RELEASE', 'Redeem ' . TEXT_GV_NAME);
 
 // javascript messages
+define('JS_ERROR_SUBMITTED', 'This form has already been submitted. Please press OK and wait for this process to be completed.');
 define('JS_ERROR', 'Errors have occurred during the processing of your form!\nPlease make the following corrections:\n\n');
 
 define('JS_OPTIONS_VALUE_PRICE', '* The new product attribute needs a price value\n');
@@ -273,7 +275,7 @@ define('ERROR_PASSWORDS_NOT_MATCHING', 'Password and confirmation must match');
 define('ENTRY_PASSWORD_CHANGE_ERROR', '<strong>Sorry, your new password was rejected.</strong><br />');
 define('ERROR_PASSWORD_RULES', 'Passwords must contain both letters and numbers, must be at least %s characters long, and must not be the same as the last 4 passwords used. Passwords expire every 90 days, after which you will be prompted to choose a new password.');
 define('ERROR_TOKEN_EXPIRED_PLEASE_RESUBMIT', 'ERROR: Sorry, there was an error processing your data. Please re-submit the information again.');
-
+define('SUCCESS_PASSWORD_UPDATED', 'Password updated.');
 // images
 //define('IMAGE_ANI_SEND_EMAIL', 'Sending E-Mail');
 define('IMAGE_BACK', 'Back');
@@ -352,6 +354,8 @@ define('IMAGE_REMOVE_SPECIAL','Remove Special Price Info');
 define('IMAGE_REMOVE_FEATURED','Remove Featured Product Info');
 define('IMAGE_INSTALL_SPECIAL', 'Add Special Price Info');
 define('IMAGE_INSTALL_FEATURED', 'Add Featured Product Info');
+define('TEXT_IMAGE_NONEXISTENT', 'IMAGE DOES NOT EXIST');
+
 
 define('TEXT_VERSION_CHECK_BUTTON', 'Check for New Version');
 define('TEXT_BUTTON_RESET_ACTIVITY_LOG', 'View Activity Log');
@@ -400,8 +404,6 @@ define('TEXT_DISPLAY_NUMBER_OF_PRODUCTS', 'Displaying <b>%d</b> to <b>%d</b> (of
 define('TEXT_DISPLAY_NUMBER_OF_PRODUCT_TYPES', 'Displaying <b>%d</b> to <b>%d</b> (of <b>%d</b> product types)');
 define('TEXT_DISPLAY_NUMBER_OF_PRODUCTS_EXPECTED', 'Displaying <b>%d</b> to <b>%d</b> (of <b>%d</b> products expected)');
 define('TEXT_DISPLAY_NUMBER_OF_REVIEWS', 'Displaying <b>%d</b> to <b>%d</b> (of <b>%d</b> product reviews)');
-define('TEXT_DISPLAY_NUMBER_OF_RECORD_ARTISTS', 'Displaying <b>%d</b> to <b>%d</b> (of <b>%d</b> record artists)');
-define('TEXT_DISPLAY_NUMBER_OF_RECORD_COMPANIES', 'Displaying <b>%d</b> to <b>%d</b> (of <b>%d</b> record companies)');
 define('TEXT_DISPLAY_NUMBER_OF_SALES', 'Displaying <b>%d</b> to <b>%d</b> (of <b>%d</b> sales)');
 define('TEXT_DISPLAY_NUMBER_OF_SPECIALS', 'Displaying <b>%d</b> to <b>%d</b> (of <b>%d</b> products on special)');
 define('TEXT_DISPLAY_NUMBER_OF_TAX_CLASSES', 'Displaying <b>%d</b> to <b>%d</b> (of <b>%d</b> tax classes)');
@@ -764,3 +766,6 @@ define('TEXT_DATE_RANGE_LAST_7_DAYS', 'Last 7 Days');
 define('TEXT_DATE_RANGE_LAST_30_DAYS', 'Last 30 Days');
 define('TEXT_DATE_RANGE_THIS_MONTH', 'This Month');
 define('TEXT_DATE_RANGE_LAST_MONTH', 'Last Month');
+
+
+define('TEXT_NONEXISTENT_IMAGE', '');

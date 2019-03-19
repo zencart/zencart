@@ -1,12 +1,14 @@
 configure.php
-/vendor
+local/configure.php
+
 dbencdata*.ini
-clover.xml
 
 *.php1
 *.bak
 *.old
+devtools.php
 Thumbs.db
+clover.xml
 .DS_Store
 
 docs/phpdocs*
@@ -26,3 +28,7 @@ localconfig_*.php
 !localconfig_travis.php
 !localconfig_EXAMPLE.php
 !localconfig_vagrant.php
+
+node_modules
+
+

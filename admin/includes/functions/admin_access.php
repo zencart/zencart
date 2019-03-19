@@ -6,7 +6,7 @@
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version GIT: $Id:  Modified in v1.6.0 $
  */
-
+if (!defined('ADMIN_PASSWORD_MIN_LENGTH')) define('ADMIN_PASSWORD_MIN_LENGTH', 7); 
 /**
  * This function checks whether the currently logged on user has permission to access
  * the page passed as parameter $page, with GET $params . The function returns boolean
@@ -100,7 +100,7 @@ function zen_get_users($limit = '')
 
 function zen_delete_user($id)
 {
-  global $db;
+  global $db, $messageStack;
   $result = $db->Execute("select count(admin_id) as count from " . TABLE_ADMIN . " where admin_id != '" . (int)$id . "'");
   if ($result->fields['count'] < 1) {
     $messageStack->add(ERROR_CANNOT_DELETE_LAST_ADMIN, 'error');
@@ -670,12 +670,11 @@ function zen_get_admin_pages($menu_only)
   {
     $productTypes['_productTypes_'.$row['type_handler']] = array('name'=>$row['type_name'], 'file'=>$row['type_handler'], 'params'=>'');
   }
-  $sql = "SELECT * FROM " . TABLE_DASHBOARD_WIDGETS . " as tdw
-          LEFT JOIN " . TABLE_DASHBOARD_WIDGETS_DESCRIPTION . " as tdwd ON tdwd.widget_key = tdw.widget_key"; 
+  $sql = "SELECT * FROM " . TABLE_DASHBOARD_WIDGETS . " as tdw";
   $result = $db->Execute($sql);
   foreach($result as $row)
   {
-    if (defined($row['widget_name'])) continue;
+    if (!defined($row['widget_name'])) continue;
     $dashboardWidgets['_dashboardwidgets_'.$row['widget_key']] = array('name'=>constant($row['widget_name']), 'file'=>$row['widget_key'], 'params'=>'');
   }
 
@@ -924,7 +923,7 @@ function zen_page_key_exists($page_key)
   $sql = "SELECT page_key FROM " . TABLE_ADMIN_PAGES . " WHERE page_key = :page_key:";
   $sql = $db->bindVars($sql, ':page_key:', $page_key, 'string');
   $result = $db->Execute($sql);
-  return $result->RecordCount() >= 1 ? true : false;
+  return ($result->RecordCount() >= 1);
 }
 
 function zen_register_admin_page($page_key, $language_key, $main_page, $page_params, $menu_key, $display_on_menu, $sort_order = -1)
@@ -977,6 +976,15 @@ function zen_deregister_admin_pages($pages)
     $db->Execute($sql);
     zen_record_admin_activity('Deleted admin pages for page keys: ' . print_r($pages, true), 'warning');
   }
+}
+
+
+function zen_updated_by_admin($admin_id = '') 
+{
+    if ($admin_id === '') {
+        $admin_id = $_SESSION['admin_id'];
+    }
+    return zen_get_admin_name($admin_id) . " [$admin_id]";
 }
 
 /**

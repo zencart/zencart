@@ -3,10 +3,10 @@
  * ot_tax order-total module
  *
  * @package orderTotal
- * @copyright Copyright 2003-2016 Zen Cart Development Team
+ * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: DrByte  Thu Apr 2 14:27:45 2015 -0400 Modified in v1.5.5 $
+ * @version $Id: Drbyte Sun Jan 7 21:31:50 2018 -0500 Modified in v1.5.6 $
  */
   class ot_tax {
     var $title, $output;
@@ -15,7 +15,8 @@
       $this->code = 'ot_tax';
       $this->title = MODULE_ORDER_TOTAL_TAX_TITLE;
       $this->description = MODULE_ORDER_TOTAL_TAX_DESCRIPTION;
-      $this->sort_order = MODULE_ORDER_TOTAL_TAX_SORT_ORDER;
+      $this->sort_order = defined('MODULE_ORDER_TOTAL_TAX_SORT_ORDER') ? MODULE_ORDER_TOTAL_TAX_SORT_ORDER : null;
+      if (null === $this->sort_order) return false;
 
       $this->output = array();
     }
@@ -23,7 +24,6 @@
     function process() {
       global $order, $currencies;
 
-      reset($order->info['tax_groups']);
       $taxDescription = '';
       $taxValue = 0;
       if (STORE_TAX_DISPLAY_STATUS == 1)
@@ -69,7 +69,7 @@
     }
 
     function check() {
-      global $db;
+	  global $db;
       if (!isset($this->_check)) {
         $check_query = $db->Execute("select configuration_value from " . TABLE_CONFIGURATION . " where configuration_key = 'MODULE_ORDER_TOTAL_TAX_STATUS'");
         $this->_check = $check_query->RecordCount();
@@ -83,14 +83,13 @@
     }
 
     function install() {
-      global $db;
+	  global $db;
       $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('This module is installed', 'MODULE_ORDER_TOTAL_TAX_STATUS', 'true', '', '6', '1','zen_cfg_select_option(array(\'true\'), ', now())");
       $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Sort Order', 'MODULE_ORDER_TOTAL_TAX_SORT_ORDER', '300', 'Sort order of display.', '6', '2', now())");
     }
 
     function remove() {
-      global $db;
+	  global $db;
       $db->Execute("delete from " . TABLE_CONFIGURATION . " where configuration_key in ('" . implode("', '", $this->keys()) . "')");
     }
   }
-

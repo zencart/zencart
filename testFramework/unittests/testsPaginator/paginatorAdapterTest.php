@@ -21,7 +21,7 @@ class testPaginationAdapterCase extends zcTestCase
         require_once DIR_FS_CATALOG . DIR_WS_CLASSES . 'db/mysql/query_factory.php';
         $loader = new \Aura\Autoload\Loader;
         $loader->register();
-        $loader->addPrefix('\ZenCart\Paginator', DIR_CATALOG_LIBRARY . 'zencart/Paginator/src');
+        $loader->addPrefix('\ZenCart\Paginator', DIR_APP_LIBRARY . 'zencart/Paginator/src');
     }
 
     public function testRunAdapter()

@@ -32,4 +32,3 @@ if (SEARCH_ENGINE_FRIENDLY_URLS == 'true') {
     }
   }
 }
-?>

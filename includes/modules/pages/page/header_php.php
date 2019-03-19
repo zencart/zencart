@@ -3,31 +3,38 @@
  * ez_pages ("page") header_php.php
  *
  * @package page
- * @copyright Copyright 2003-2014 Zen Cart Development Team
+ * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: header_php.php 4881 2006-11-04 17:51:31Z ajeh $
+ * @version $Id: Scott C Wilson Sat Nov 17 12:07:47 2018 -0500 Modified in v1.5.6 $
  */
 /*
-* This "page" page is the display component of the ez-pages module
-* It is called "page" instead of "ez-pages" due to the way the URL would display in the browser
-* Aesthetically speaking, "page" is more professional in appearance than "ez-page" in the URL
-*
-* The EZ-Pages concept was adapted from the InfoPages contribution for Zen Cart v1.2.x, with thanks to Sunrom et al.
-*/
+ * This "page" page is the display component of the ez-pages module
+ * It is called "page" instead of "ez-pages" due to the way the URL would display in the browser
+ * Aesthetically speaking, "page" is more professional in appearance than "ez-page" in the URL
+ *
+ * The EZ-Pages concept was adapted from the InfoPages contribution for Zen Cart v1.2.x, with thanks to Sunrom et al.
+ */
 
 // This should be first line of the script:
 $zco_notifier->notify('NOTIFY_HEADER_START_EZPAGE');
 
 $ezpage_id = (int)$_GET['id'];
-if ($ezpage_id == 0) zen_redirect(zen_href_link(FILENAME_DEFAULT));
+if ($ezpage_id == 0) {
+  zen_redirect(zen_href_link(FILENAME_DEFAULT));
+}
 
-$chapter_id = (int)$_GET['chapter'];
-$chapter_link = (int)$_GET['chapter'];
+$chapter_id = isset($_GET['chapter']) ? (int)$_GET['chapter'] : 0;
+$chapter_link = isset($_GET['chapter']) ? (int)$_GET['chapter'] : 0;
 
-$sql = "select * from " . TABLE_EZPAGES . " where pages_id = " . (int)$ezpage_id;
+$sql = "SELECT e.*, ec.*
+        FROM  " . TABLE_EZPAGES . " e,
+              " . TABLE_EZPAGES_CONTENT . " ec
+        WHERE e.pages_id = ec.pages_id
+        AND ec.languages_id = '" . (int)$_SESSION['languages_id'] . "'
+        AND e.pages_id = " . (int)$ezpage_id;
 // comment the following line to allow access to pages which don't have a status switch set to Yes:
-$sql .= " AND (status_toc > 0 or status_header > 0 or status_sidebox > 0 or status_footer > 0)";
+$sql .= " AND (status_toc > 0 or status_header > 0 or status_sidebox > 0 or status_footer > 0 or status_visible > 0)";
 
 // Check to see if page exists and is accessible, retrieving relevant details for display if found
 $var_pageDetails = $db->Execute($sql);
@@ -43,21 +50,24 @@ if ($var_pageDetails->EOF) {
 $pos = (isset($_GET['pos'])) ? $_GET['pos'] : 'v';  // v for vertical, h for horizontal  (v assumed if not specified)
 $vert_links = array();
 $toc_links = array();
-//  $pages_order_query = "SELECT pages_id FROM " . TABLE_EZPAGES . " WHERE status = 1 and vertical_sort_order <> 0 ORDER BY vertical_sort_order, horizontal_sort_order, pages_title";
-//  $pages_order_query = "SELECT * FROM " . TABLE_EZPAGES . " WHERE ((status_sidebox = 1 and sidebox_sort_order <> 0) or (status_footer = 1 and footer_sort_order <> 0) or (status_header = 1 and header_sort_order <> 0)) and alt_url_external = '' ORDER BY header_sort_order, sidebox_sort_order, footer_sort_order, pages_title";
-$pages_order_query = "SELECT *
-                      FROM " . TABLE_EZPAGES . "
-                      WHERE ((status_toc = 1 and toc_sort_order <> 0) and toc_chapter= :chapterID )
-                      AND alt_url_external = '' and alt_url = ''
-                      ORDER BY toc_sort_order, pages_title";
+$pages_order_query = "SELECT e.*,ec.*
+                      FROM  " . TABLE_EZPAGES . " e,
+                            " . TABLE_EZPAGES_CONTENT . " ec
+                      WHERE ((e.status_toc = 1 AND e.toc_sort_order <> 0) AND e.toc_chapter= :chapterID )
+                      AND e.alt_url_external = ''
+                      AND e.alt_url = ''
+                      AND ec.languages_id = '" . (int)$_SESSION['languages_id'] . "' 
+                      AND e.pages_id = ec.pages_id
+                      ORDER BY e.toc_sort_order, ec.pages_title";
 
 $pages_order_query = $db->bindVars($pages_order_query, ':chapterID', $chapter_id, 'integer');
 $pages_ordering = $db->execute($pages_order_query);
 
-while (!$pages_ordering->EOF) {
-  $vert_links[] = $pages_ordering->fields['pages_id'];
-  $toc_links[] = array('pages_id' => $pages_ordering->fields['pages_id'], 'pages_title' => $pages_ordering->fields['pages_title']);
-  $pages_ordering->MoveNext();
+foreach ($pages_ordering as $page_order) {
+  $vert_links[] = $page_order['pages_id'];
+  $toc_links[] = array(
+    'pages_id' => $page_order['pages_id'],
+    'pages_title' => $page_order['pages_title']);
 }
 
 /**
@@ -71,7 +81,6 @@ $pages_ordering->MoveNext();
 }
 */
 // now let's determine prev/next
-reset ($vert_links);
 $counter = 0;
 $previous_v = -1;
 $last_v = 0;
@@ -97,11 +106,12 @@ foreach($vert_links as $key => $value) {
   $last_v = $value;
   $counter++;
 }
-if ($previous_v == -1) $previous_v = $last_v;
+if ($previous_v == -1) {
+  $previous_v = $last_v;
+}
 
 /**
 //prev/next for horiz now
-reset ($horiz_links);
 $counter = 0;
 foreach($horiz_links as $key => $value) {
 if ($value == $ezpage_id) {
@@ -145,26 +155,38 @@ define('NAVBAR_TITLE', $var_pageDetails->fields['pages_title']);
 define('HEADING_TITLE', $var_pageDetails->fields['pages_title']);
 $breadcrumb->add($var_pageDetails->fields['pages_title']);
 
-// @TODO - confirm whether the following line might be needed. Preliminary testing suggests it's not needed by any current built-in functionality
-// require(DIR_WS_MODULES . zen_get_module_directory('require_languages.php'));
+
+require(DIR_WS_MODULES . zen_get_module_directory('require_languages.php'));
 
 
 // Pull settings from admin switches to determine what, if any, header/column/footer "disable" options need to be set
 // Note that these are defined normally under Admin->Configuration->EZ-Pages-Settings
-if (!defined('EZPAGES_DISABLE_HEADER_DISPLAY_LIST')) define('EZPAGES_DISABLE_HEADER_DISPLAY_LIST','');
-if (!defined('EZPAGES_DISABLE_FOOTER_DISPLAY_LIST')) define('EZPAGES_DISABLE_FOOTER_DISPLAY_LIST','');
-if (!defined('EZPAGES_DISABLE_LEFTCOLUMN_DISPLAY_LIST')) define('EZPAGES_DISABLE_LEFTCOLUMN_DISPLAY_LIST','');
-if (!defined('EZPAGES_DISABLE_RIGHTCOLUMN_DISPLAY_LIST')) define('EZPAGES_DISABLE_RIGHTCOLUMN_DISPLAY_LIST','');
-if ($ezpage_id > 0 ) {
-  if (in_array($ezpage_id, explode(",",EZPAGES_DISABLE_HEADER_DISPLAY_LIST)) || strstr(EZPAGES_DISABLE_HEADER_DISPLAY_LIST,'*')) $flag_disable_header = true;
-  if (in_array($ezpage_id, explode(",",EZPAGES_DISABLE_FOOTER_DISPLAY_LIST)) || strstr(EZPAGES_DISABLE_FOOTER_DISPLAY_LIST,'*')) $flag_disable_footer = true;
-  if (in_array($ezpage_id, explode(",",EZPAGES_DISABLE_LEFTCOLUMN_DISPLAY_LIST)) || strstr(EZPAGES_DISABLE_LEFTCOLUMN_DISPLAY_LIST,'*')) $flag_disable_left = true;
-  if (in_array($ezpage_id, explode(",",EZPAGES_DISABLE_RIGHTCOLUMN_DISPLAY_LIST)) || strstr(EZPAGES_DISABLE_RIGHTCOLUMN_DISPLAY_LIST,'*')) $flag_disable_right = true;
+if (!defined('EZPAGES_DISABLE_HEADER_DISPLAY_LIST')) {
+  define('EZPAGES_DISABLE_HEADER_DISPLAY_LIST', '');
+}
+if (!defined('EZPAGES_DISABLE_FOOTER_DISPLAY_LIST')) {
+  define('EZPAGES_DISABLE_FOOTER_DISPLAY_LIST', '');
+}
+if (!defined('EZPAGES_DISABLE_LEFTCOLUMN_DISPLAY_LIST')) {
+  define('EZPAGES_DISABLE_LEFTCOLUMN_DISPLAY_LIST', '');
+}
+if (!defined('EZPAGES_DISABLE_RIGHTCOLUMN_DISPLAY_LIST')) {
+  define('EZPAGES_DISABLE_RIGHTCOLUMN_DISPLAY_LIST', '');
+}
+if ($ezpage_id > 0) {
+  if (in_array($ezpage_id, explode(",", EZPAGES_DISABLE_HEADER_DISPLAY_LIST)) || strstr(EZPAGES_DISABLE_HEADER_DISPLAY_LIST, '*')) {
+    $flag_disable_header = true;
+  }
+  if (in_array($ezpage_id, explode(",", EZPAGES_DISABLE_FOOTER_DISPLAY_LIST)) || strstr(EZPAGES_DISABLE_FOOTER_DISPLAY_LIST, '*')) {
+    $flag_disable_footer = true;
+  }
+  if (in_array($ezpage_id, explode(",", EZPAGES_DISABLE_LEFTCOLUMN_DISPLAY_LIST)) || strstr(EZPAGES_DISABLE_LEFTCOLUMN_DISPLAY_LIST, '*')) {
+    $flag_disable_left = true;
+  }
+  if (in_array($ezpage_id, explode(",", EZPAGES_DISABLE_RIGHTCOLUMN_DISPLAY_LIST)) || strstr(EZPAGES_DISABLE_RIGHTCOLUMN_DISPLAY_LIST, '*')) {
+    $flag_disable_right = true;
+  }
 }
 // end flag settings for sections to disable
-
-
-
-
 // This should be last line of the script:
 $zco_notifier->notify('NOTIFY_HEADER_END_EZPAGE');

@@ -1,9 +1,9 @@
 #
-# * This SQL script upgrades the core Zen Cart database structure from v1.5.4 to v1.6.0
+# * This SQL script upgrades the core Zen Cart database structure from v1.5.6 to v1.6.0
 # *
 # * @package Installer
 # * @access private
-# * @copyright Copyright 2003-2015 Zen Cart Development Team
+# * @copyright Copyright 2003-2018 Zen Cart Development Team
 # * @copyright Portions copyright COWOA authors see https://www.zen-cart.com/downloads.php?do=file&id=1115
 # * @copyright Portions Copyright 2003 osCommerce
 # * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
@@ -43,8 +43,6 @@ TRUNCATE TABLE sessions;
 #############
 UPDATE configuration SET date_added='0001-01-01' where date_added < '0001-01-01';
 
-ALTER TABLE configuration ADD val_function text default NULL AFTER set_function;
-
 DELETE FROM configuration WHERE configuration_key in ('SESSION_WRITE_DIRECTORY', 'SESSION_CHECK_USER_AGENT', 'SESSION_CHECK_IP_ADDRESS', 'SESSION_CHECK_SSL_SESSION_ID');
 
 UPDATE configuration set configuration_title = 'Log Page Parse Time', configuration_description = 'Record (to a log file) the time it takes to parse a page' WHERE configuration_key = 'STORE_PAGE_PARSE_TIME';
@@ -61,8 +59,8 @@ UPDATE configuration set sort_order = '2', configuration_description = 'Defines 
 UPDATE configuration set configuration_description = 'Enter the IP port number that your SMTP mailserver operates on.<br />Only required if using SMTP Authentication for email.<br><br>Default: 25<br>Typical values are:<br>25 - normal unencrypted SMTP<br>587 - encrypted SMTP<br>465 - older MS SMTP port' WHERE configuration_key = 'EMAIL_SMTPAUTH_MAIL_SERVER_PORT';
 
 INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added, use_function, set_function) VALUES ('Search Engines - Disable Indexing', 'ROBOTS_NOINDEX_MAINTENANCE_MODE', 'Normal', 'When in development it is sometimes desirable to discourage search engines from indexing your site. To do that, set this to Maintenance. This will cause a noindex,nofollow tag to be generated on all pages, thus discouraging search engines from indexing your pages until you set this back to Normal.<br>Default: Normal', 1, 12, NOW(), NULL, 'zen_cfg_select_option(array(\'Normal\', \'Maintenance\'),');
-INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) VALUES ('Currency Exchange Rate: Primary Source', 'CURRENCY_SERVER_PRIMARY', 'ecb', 'Where to request external currency updates from (Primary source)<br><br>Additional sources can be installed via plugins.', '1', '55', 'zen_cfg_pull_down_exchange_rate_sources(', now());
-INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) VALUES ('Currency Exchange Rate: Secondary Source', 'CURRENCY_SERVER_BACKUP', 'boc', 'Where to request external currency updates from (Secondary source)<br><br>Additional sources can be installed via plugins.', '1', '55', 'zen_cfg_pull_down_exchange_rate_sources(', now());
+INSERT IGNORE INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) VALUES ('Currency Exchange Rate: Primary Source', 'CURRENCY_SERVER_PRIMARY', 'ecb', 'Where to request external currency updates from (Primary source)<br><br>Additional sources can be installed via plugins.', '1', '55', 'zen_cfg_pull_down_exchange_rate_sources(', now());
+INSERT IGNORE INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) VALUES ('Currency Exchange Rate: Secondary Source', 'CURRENCY_SERVER_BACKUP', 'boc', 'Where to request external currency updates from (Secondary source)<br><br>Additional sources can be installed via plugins.', '1', '55', 'zen_cfg_pull_down_exchange_rate_sources(', now());
 UPDATE configuration SET val_function = '{"error":"TEXT_MIN_ADMIN_USER_LENGTH","id":"FILTER_VALIDATE_INT","options":{"options":{"min_range":4}}}', configuration_description = 'Minimum length of admin usernames (must be 4 or more)' WHERE configuration_key = 'ADMIN_NAME_MINIMUM_LENGTH';
 
 INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) VALUES ('Specials Product Display - Default Sort Order', 'PRODUCT_SPECIALS_LIST_SORT_DEFAULT', '1', 'What Sort Order Default should be used for Specials Display?<br />Default= 1 for Product Name<br /><br />1= Products Name<br />2= Products Name Desc<br />3= Price low to high, Products Name<br />4= Price high to low, Products Name<br />5= Model<br />6= Date Added desc<br />7= Date Added<br />8= Product Sort Order', '19', '8', 'zen_cfg_select_option(array(\'1\', \'2\', \'3\', \'4\', \'5\', \'6\', \'7\', \'8\'), ', now());
@@ -87,15 +85,19 @@ INSERT INTO configuration (configuration_title, configuration_key, configuration
 
 DELETE FROM configuration where configuration_key = 'PHPBB_LINKS_ENABLED' && configuration_value != 'true';
 
-ALTER TABLE paypal_payment_status_history MODIFY pending_reason varchar(32) default NULL;
+UPDATE configuration SET configuration_key = 'MAX_METATAG_DESCRIPTION_LENGTH' WHERE configuration_key = 'MAX_META_TAG_DESCRIPTION_LENGTH'; 
+UPDATE configuration SET configuration_key = 'METATAG_INCLUDE_PRICE' WHERE configuration_key = 'META_TAG_INCLUDE_PRICE'; 
+UPDATE configuration SET configuration_key = 'METATAG_INCLUDE_MODEL' WHERE configuration_key = 'META_TAG_INCLUDE_MODEL'; 
 
-ALTER TABLE sessions MODIFY sesskey varchar(255) NOT NULL default '';
+ALTER TABLE paypal_payment_status_history MODIFY pending_reason varchar(32) default NULL;
+ALTER TABLE admin_activity_log ADD KEY idx_severity_zen (severity); 
+ALTER TABLE sessions MODIFY sesskey varchar(191) NOT NULL default '';
 ALTER TABLE whos_online MODIFY session_id varchar(255) NOT NULL default '';
-ALTER TABLE admin_menus MODIFY menu_key VARCHAR(255) NOT NULL DEFAULT '';
+ALTER TABLE admin_menus MODIFY menu_key VARCHAR(191) NOT NULL DEFAULT '';
 ALTER TABLE admin_pages MODIFY page_key VARCHAR(255) NOT NULL DEFAULT '';
 ALTER TABLE admin_pages MODIFY main_page VARCHAR(255) NOT NULL DEFAULT '';
 ALTER TABLE admin_pages MODIFY page_params VARCHAR(255) NOT NULL DEFAULT '';
-ALTER TABLE admin_pages MODIFY menu_key VARCHAR(255) NOT NULL DEFAULT '';
+ALTER TABLE admin_pages MODIFY menu_key VARCHAR(191) NOT NULL DEFAULT '';
 ALTER TABLE admin_profiles MODIFY profile_name VARCHAR(255) NOT NULL DEFAULT '';
 ALTER TABLE admin_pages_to_profiles MODIFY page_key varchar(255) NOT NULL default '';
 UPDATE admin_pages SET sort_order = 1 WHERE page_key = 'users';
@@ -130,7 +132,7 @@ ALTER TABLE admin MODIFY reset_token VARCHAR( 255 ) NOT NULL DEFAULT '';
 ALTER TABLE customers MODIFY customers_password VARCHAR( 255 ) NOT NULL DEFAULT '';
 ALTER TABLE admin ADD mobile_phone VARCHAR(20) NOT NULL DEFAULT '' AFTER admin_email;
 
-ALTER TABLE orders MODIFY shipping_method VARCHAR(255) NOT NULL DEFAULT '';
+ALTER TABLE orders MODIFY shipping_method VARCHAR(255) DEFAULT NULL; 
 ALTER TABLE orders ADD language_code VARCHAR(2) NOT NULL DEFAULT 'en';
 ALTER TABLE orders MODIFY order_total decimal(15,4) default NULL;
 ALTER TABLE orders MODIFY order_tax decimal(15,4) default NULL;
@@ -159,7 +161,7 @@ UPDATE configuration SET configuration_title='Credit Card Enable Status - Debit'
 
 ## Guest Checkout
 ALTER TABLE customers ADD COLUMN is_guest_account tinyint(1) NOT NULL default 0;
-ALTER TABLE orders ADD COLUMN is_guest_order tinyint(1) NOT NULL default 0;
+ALTER TABLE orders ADD COLUMN is_guest_order tinyint(1) NOT NULL default 0 AFTER ip_address;
 INSERT INTO configuration_group VALUES (NULL, 'Guest Checkout', 'Set Checkout Without an Account', '100', '1');
 
 #NEXT_X_ROWS_AS_ONE_COMMAND:4
@@ -183,7 +185,7 @@ INSERT INTO configuration (configuration_title, configuration_key, configuration
 
 INSERT INTO admin_pages (page_key, language_key, main_page, page_params, menu_key, display_on_menu, sort_order) VALUES ('system_inspection', 'BOX_TOOLS_SYSTEM_INSPECTION', 'FILENAME_SYSTEM_INSPECTION', '', 'tools', 'Y', 14) ;
 INSERT INTO admin_pages (page_key, language_key, main_page, page_params, menu_key, display_on_menu, sort_order) VALUES ('findDuplicateModels', 'BOX_TOOLS_FINDDUPMODELS', 'FILENAME_FINDDUPMODELS', '', 'tools', 'Y', 100);
-INSERT INTO admin_pages (page_key, language_key, main_page, page_params, menu_key, display_on_menu, sort_order) VALUES ('reportSalesWithGraphs','BOX_REPORTS_SALES_REPORT_GRAPHS','FILENAME_STATS_SALES_REPORT_GRAPHS','', 'reports', 'Y', 4);
+INSERT IGNORE INTO admin_pages (page_key, language_key, main_page, page_params, menu_key, display_on_menu, sort_order) VALUES ('reportSalesWithGraphs','BOX_REPORTS_SALES_REPORT_GRAPHS','FILENAME_STATS_SALES_REPORT_GRAPHS','', 'reports', 'Y', 4);
 
 INSERT INTO query_builder (query_category , query_name , query_description , query_string, query_keys_list ) VALUES ('email,newsletters', 'Permanent Account Holders Only', 'Send email only to permanent account holders ', 'select customers_email_address, customers_firstname, customers_lastname from TABLE_CUSTOMERS where is_guest_account != 1 order by customers_lastname, customers_firstname, customers_email_address', '');
 
@@ -207,22 +209,11 @@ CREATE TABLE IF NOT EXISTS dashboard_widgets (
   widget_key varchar(64) NOT NULL,
   widget_group varchar(64) NOT NULL,
   widget_status int(1) NOT NULL DEFAULT '1',
+  widget_name varchar(255) NOT NULL,
   widget_icon varchar(64) NOT NULL,
   widget_theme varchar(64) NOT NULL,
   widget_height int(11) NOT NULL DEFAULT '1',
   widget_width int(11) NOT NULL DEFAULT '1',
-  PRIMARY KEY (widget_key)
-) ENGINE=MyISAM;
-# --------------------------------------------------------
-
-#
-# Table structure for table 'dashboard_widgets_description'
-#
-
-DROP TABLE IF EXISTS dashboard_widgets_description;
-CREATE TABLE IF NOT EXISTS dashboard_widgets_description (
-  widget_key varchar(64) NOT NULL,
-  widget_name varchar(255) NOT NULL,
   PRIMARY KEY (widget_key)
 ) ENGINE=MyISAM;
 
@@ -253,33 +244,67 @@ CREATE TABLE IF NOT EXISTS dashboard_widgets_to_users (
   widget_column int(11) NOT NULL DEFAULT '0',
   widget_height int(11) NOT NULL DEFAULT '1',
   widget_width int(11) NOT NULL DEFAULT '1',
-  widget_refresh int(11) NOT NULL DEFAULT '0',
   widget_icon varchar(64) NOT NULL,
   widget_theme varchar(64) NOT NULL,
   PRIMARY KEY (widget_key,admin_id)
 ) ENGINE=MyISAM;
+
+# --------------------------------------------------------
+
 #
-# Set up default widgets
+# Table structure for table 'configuration_settings'
 #
-INSERT INTO dashboard_widgets (widget_key, widget_group, widget_status, widget_icon, widget_theme, widget_height, widget_width) VALUES
-('general-statistics', 'general-statistics', 1, 'fa-area-chart', 'bg-light-blue-gradient', 2, 1),
-('order-summary', 'order-summary', 1, 'fa-shopping-cart', 'bg-light-blue-gradient', 1, 1),
-('new-customers', 'new-customers', 1, 'fa-user-plus', 'bg-light-blue-gradient', 1,1),
-('counter-history', 'counter-history', 1, 'fa-calendar', 'bg-light-blue-gradient', 1, 1),
-('new-orders', 'new-orders', 1, 'fa-shopping-cart', 'bg-light-blue-gradient', 1, 1),
-('logs', 'logs', 1, 'fa-thumbs-o-up', 'bg-light-blue-gradient', 1,1)
+
+DROP TABLE IF EXISTS configuration_settings;
+CREATE TABLE configuration_settings (
+  setting_key varchar(64) NOT NULL,
+  setting_name varchar(255) NOT NULL,
+  setting_definition longtext NOT NULL,
+  setting_type varchar(32) NOT NULL,
+  PRIMARY KEY (setting_key)
+) ENGINE=MyISAM;
+
+# --------------------------------------------------------
+
+#
+# Table structure for table 'configuration_settings_to_widget'
+#
+
+DROP TABLE IF EXISTS configuration_settings_to_widget;
+CREATE TABLE configuration_settings_to_widget (
+  setting_key varchar(64) NOT NULL,
+  widget_key varchar(64) NOT NULL,
+  initial_value longtext,
+  PRIMARY KEY (setting_key,widget_key)
+) ENGINE=MyISAM;
+
+# --------------------------------------------------------
+
+#
+# Table structure for table 'dashboard_widgets_settings_to_user'
+#
+
+DROP TABLE IF EXISTS dashboard_widgets_settings_to_user;
+CREATE TABLE dashboard_widgets_settings_to_user (
+  setting_key varchar(64) NOT NULL,
+  widget_key varchar(64) NOT NULL,
+  admin_id int(10) unsigned NOT NULL,
+  setting_value longtext,
+  PRIMARY KEY (setting_key,widget_key,admin_id)
+) ENGINE=MyISAM;
+
+# --------------------------------------------------------
+
+INSERT INTO dashboard_widgets (widget_key, widget_name, widget_group, widget_status, widget_icon, widget_theme, widget_height, widget_width) VALUES
+('general-statistics', 'GENERAL_STATISTICS', 'general-statistics', 1, 'fa-area-chart', 'bg-light-blue-gradient', 2, 1),
+('order-summary', 'ORDER_SUMMARY', 'order-summary', 1, 'fa-shopping-cart', 'bg-light-blue-gradient', 1, 1),
+('new-customers', 'NEW_CUSTOMERS', 'new-customers', 1, 'fa-user-plus', 'bg-light-blue-gradient', 1, 1),
+('counter-history', 'COUNTER_HISTORY', 'counter-history', 1, 'fa-calendar', 'bg-light-blue-gradient', 1, 1),
+('new-orders', 'NEW_ORDERS', 'new-orders', 1, 'fa-shopping-cart', 'bg-light-blue-gradient', 1, 1),
+('logs', 'LOGS', 'logs', 1, 'fa-thumbs-o-up', 'bg-light-blue-gradient', 1, 1)
 ;
 
-INSERT INTO dashboard_widgets_description (widget_key, widget_name) VALUES
-('general-statistics', 'GENERAL_STATISTICS'),
-('order-summary', 'ORDER_SUMMARY'),
-('new-customers', 'NEW_CUSTOMERS'),
-('counter-history', 'COUNTER_HISTORY'),
-('new-orders', 'NEW_ORDERS'),
-('logs', 'LOGS')
-;
-
-INSERT INTO dashboard_widgets_groups (widget_group, language_id, widget_group_name) VALUES
+INSERT INTO dashboard_widgets_groups (widget_group, widget_group_name) VALUES
 ('general-statistics', 'GENERAL_STATISTICS_GROUP'),
 ('order-summary', 'ORDER_SUMMARY_GROUP'),
 ('new-customers', 'NEW_CUSTOMERS_GROUP'),
@@ -288,21 +313,18 @@ INSERT INTO dashboard_widgets_groups (widget_group, language_id, widget_group_na
 ('logs', 'LOGS_GROUP')
 ;
 
-INSERT INTO dashboard_widgets (widget_key, widget_group, widget_status, widget_icon, widget_theme, widget_height, widget_width) VALUES ('banner-statistics', 'banner-statistics', 1, 'fa-area-chart', 'bg-light-blue-gradient', 2, 1);
-INSERT INTO dashboard_widgets_description (widget_key, widget_name) VALUES ('banner-statistics', 'BANNER_STATISTICS');
+INSERT INTO dashboard_widgets (widget_key, widget_name, widget_group, widget_status, widget_icon, widget_theme, widget_height, widget_width) VALUES ('banner-statistics', 'BANNER_STATISTICS', 'banner-statistics', 1, 'fa-area-chart', 'bg-light-blue-gradient', 2, 1);
 INSERT INTO dashboard_widgets_groups (widget_group, widget_group_name) VALUES ('banner-statistics', 'BANNER_STATISTICS_GROUP');
 
-INSERT INTO dashboard_widgets (widget_key, widget_group, widget_status, widget_icon, widget_theme, widget_height, widget_width) VALUES ('whos-online', 'whos-online', 1, 'fa-area-chart', 'bg-light-blue-gradient', 1, 1);
-INSERT INTO dashboard_widgets_description (widget_key, widget_name) VALUES ('whos-online', 'WHOSONLINE_ACTIVITY');
+INSERT INTO dashboard_widgets (widget_key, widget_name, widget_group, widget_status, widget_icon, widget_theme, widget_height, widget_width) VALUES ('whos-online', 'WHOSONLINE_ACTIVITY', 'whos-online', 1, 'fa-area-chart', 'bg-light-blue-gradient', 1, 1);
 INSERT INTO dashboard_widgets_groups (widget_group, widget_group_name) VALUES ('whos-online', 'WHOSONLINE_GROUP');
 
-INSERT INTO dashboard_widgets (widget_key, widget_group, widget_status, widget_icon, widget_theme, widget_height, widget_width) VALUES ('counter-history-graph', 'counter-history-graph', 1, 'fa-calendar', 'bg-light-blue-gradient', 2, 1);
-INSERT INTO dashboard_widgets_description (widget_key, widget_name) VALUES ('counter-history-graph', 'COUNTER_HISTORY_GRAPH');
+INSERT INTO dashboard_widgets (widget_key, widget_name, widget_group, widget_status, widget_icon, widget_theme, widget_height, widget_width) VALUES ('counter-history-graph', 'COUNTER_HISTORY_GRAPH', 'counter-history-graph', 1, 'fa-calendar', 'bg-light-blue-gradient', 2, 1);
 INSERT INTO dashboard_widgets_groups (widget_group, widget_group_name) VALUES ('counter-history-graph', 'COUNTER_HISTORY_GRAPH_GROUP');
 
-INSERT INTO dashboard_widgets (widget_key, widget_group, widget_status, widget_icon, widget_theme, widget_height, widget_width) VALUES ('sales-graph-report', 'sales-graph-report', 1, 'fa-line-chart', 'bg-light-blue-gradient', 2, 1);
-INSERT INTO dashboard_widgets_description (widget_key, widget_name) VALUES ('sales-graph-report', 'SALES_GRAPH_REPORT');
+INSERT INTO dashboard_widgets (widget_key, widget_name, widget_group, widget_status, widget_icon, widget_theme, widget_height, widget_width) VALUES ('sales-graph-report', 'SALES_GRAPH_REPORT', 'sales-graph-report', 1, 'fa-line-chart', 'bg-light-blue-gradient', 2, 1);
 INSERT INTO dashboard_widgets_groups (widget_group, widget_group_name) VALUES ('sales-graph-report', 'SALES_GRAPH_REPORT_GROUP');
+
 
 # default widgets for first user
 INSERT INTO dashboard_widgets_to_users (widget_key, admin_id, widget_row, widget_column, widget_icon, widget_theme, widget_height, widget_width) VALUES
@@ -318,6 +340,22 @@ INSERT INTO dashboard_widgets_to_users (widget_key, admin_id, widget_row, widget
 ,('sales-graph-report', 1, 0, 0, 'fa-line-chart', 'bg-light-blue-gradient', 2, 1)
 ;
 
+# @todo testing settings - remove for release
+
+INSERT INTO configuration_settings (setting_key, setting_name, setting_definition, setting_type) VALUES ('some-text', 'INPUT_LABEL_SOME_TEXT', '{}', 'text');
+INSERT INTO configuration_settings (setting_key, setting_name, setting_definition, setting_type) VALUES ('date-from', 'INPUT_LABEL_DATE_FROM', '', 'simpleDate');
+
+# Banner Statistics dashboard widget settings
+
+INSERT INTO configuration_settings (setting_key, setting_name, setting_definition, setting_type) VALUES ('banner-id', 'INPUT_LABEL_BANNER_ID', '{"model": "banner", "id": "banners_id", "text": "banners_title"}', 'selectFromModel');
+INSERT INTO configuration_settings (setting_key, setting_name, setting_definition, setting_type) VALUES ('banner-date-range', 'INPUT_LABEL_BANNER_DATE_RANGE', '{"options":[{"id":"yearly","text":"OPTIONS_DATERANGE_YEARLY"},{"id":"monthly","text":"OPTIONS_DATERANGE_MONTHLY"},{"id":"daily","text":"OPTIONS_DATERANGE_DAILY"},{"id":"recent","text":"OPTIONS_DATERANGE_RECENT"}]}', 'selectFromArray');
+INSERT INTO configuration_settings (setting_key, setting_name, setting_definition, setting_type) VALUES ('banner-show-lines', 'INPUT_LABEL_BANNER_SHOW_LINES', '{}', 'boolean');
+
+INSERT INTO configuration_settings_to_widget (setting_key, widget_key, initial_value) VALUES ('banner-id', 'banner-statistics', 'monthly');
+INSERT INTO configuration_settings_to_widget (setting_key, widget_key, initial_value) VALUES ('banner-date-range', 'banner-statistics', 'monthly');
+INSERT INTO configuration_settings_to_widget (setting_key, widget_key, initial_value) VALUES ('banner-show-lines', 'banner-statistics', 'on');
+INSERT INTO configuration_settings_to_widget (setting_key, widget_key, initial_value) VALUES ('some-text', 'banner-statistics', '');
+INSERT INTO configuration_settings_to_widget (setting_key, widget_key, initial_value) VALUES ('date-from', 'banner-statistics', '');
 
 
 
@@ -387,6 +425,8 @@ INSERT INTO listingboxes_to_listingboxgroups (listingbox, group_id, sort_order) 
 
 UPDATE countries set address_format_id = 7 where countries_iso_code_3 = 'AUS';
 UPDATE countries set address_format_id = 5 where countries_iso_code_3 IN ('BEL', 'NLD', 'SWE', 'ITA');
+# Continue using countries_name field in countries table 
+# until data is migrated out of this table below
 UPDATE countries set countries_name = 'Åland Islands' where countries_iso_code_3 = 'ALA';
 UPDATE countries set countries_name = 'Réunion' where countries_iso_code_3 = 'REU';
 UPDATE countries set countries_name = "Côte d'Ivoire" where countries_iso_code_3 = 'CIV';
@@ -399,6 +439,7 @@ INSERT INTO countries (countries_name, countries_iso_code_2, countries_iso_code_
 INSERT INTO countries (countries_name, countries_iso_code_2, countries_iso_code_3, address_format_id) VALUES ('Saint-Barthélemy','BL','BLM','1');
 INSERT INTO countries (countries_name, countries_iso_code_2, countries_iso_code_3, address_format_id) VALUES ('Congo - Kinshasa','CD','COD','1');
 INSERT INTO countries (countries_name, countries_iso_code_2, countries_iso_code_3, address_format_id) VALUES ('St. Martin','MF','MAF','1');
+ALTER TABLE countries ADD INDEX idx_status_zen (status, countries_id);
 ALTER TABLE countries ADD INDEX idx_status_zen (status, countries_id);
 
 CREATE TABLE countries_name (
@@ -414,6 +455,8 @@ SELECT c.countries_id, l.languages_id, c.countries_name
 FROM countries c
 LEFT JOIN languages l
 ON 1;
+
+ALTER TABLE countries DROP INDEX idx_countries_name_zen; 
 ALTER TABLE countries DROP countries_name;
 
 INSERT IGNORE INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) 
@@ -426,6 +469,21 @@ UPDATE configuration SET set_function ="zen_cfg_select_option(array(\'All\', \'N
 ## CHANGE-346 - Fix outdated language in configuration menu help texts
 ## CHANGE-411 increase size of fileds in admin profile related tables
 ## CHANGE-367 - Dashboard Widgets for 1.6 Admin Home Page (including ajax infrastructure)
+
+DROP TABLE IF EXISTS `media_clips`;
+DROP TABLE IF EXISTS `media_manager`;
+DROP TABLE IF EXISTS `media_to_products`;
+DROP TABLE IF EXISTS `media_types`;
+DROP TABLE IF EXISTS `music_genre`;
+DROP TABLE IF EXISTS `newsletters`;
+DROP TABLE IF EXISTS `product_music_extra`;
+DROP TABLE IF EXISTS `record_artists`;
+DROP TABLE IF EXISTS `record_artists_info`;
+DROP TABLE IF EXISTS `record_company`;
+DROP TABLE IF EXISTS `record_company_info`;
+
+RENAME TABLE meta_tags_categories_description TO metatags_categories_description; 
+RENAME TABLE meta_tags_products_description TO metatags_products_description; 
 
 #############
 

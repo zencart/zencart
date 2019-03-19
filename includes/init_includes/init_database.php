@@ -14,7 +14,6 @@ if (!defined('IS_ADMIN_FLAG')) {
 }
 
 use Illuminate\Database\Capsule\Manager as Capsule;
-require(DIR_CATALOG_LIBRARY . 'illuminate/support/helpers.php');
 
 /**
  * require the query_factory clsss based on the DB_TYPE

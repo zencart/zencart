@@ -27,7 +27,7 @@ foreach($paramsToAvoid as $key) {
     break;
   }
 }
-$paramsToCheck = array('main_page', 'cPath', 'products_id', 'language', 'currency', 'action', 'manufacturers_id', 'pID', 'pid', 'reviews_id', 'filter_id', 'zenid', 'sort', 'number_of_uploads', 'notify', 'page_holder', 'chapter', 'alpha_filter_id', 'typefilter', 'disp_order', 'id', 'key', 'music_genre_id', 'record_company_id', 'set_session_login', 'faq_item', 'edit', 'delete', 'search_in_description', 'dfrom', 'pfrom', 'dto', 'pto', 'inc_subcat', 'payment_error', 'order', 'gv_no', 'pos', 'addr', 'error', 'count', 'error_message', 'info_message', 'cID', 'page', 'credit_class_error_code');
+$paramsToCheck = array('main_page', 'cPath', 'products_id', 'language', 'currency', 'action', 'manufacturers_id', 'pID', 'pid', 'reviews_id', 'filter_id', 'zenid', 'sort', 'number_of_uploads', 'notify', 'page_holder', 'chapter', 'alpha_filter_id', 'typefilter', 'disp_order', 'id', 'key', 'set_session_login', 'faq_item', 'edit', 'delete', 'search_in_description', 'dfrom', 'pfrom', 'dto', 'pto', 'inc_subcat', 'payment_error', 'order', 'gv_no', 'pos', 'addr', 'error', 'count', 'error_message', 'info_message', 'cID', 'page', 'credit_class_error_code');
 if (!$contaminated) {
   foreach($paramsToCheck as $key) {
     if (isset($_GET[$key]) && !is_array($_GET[$key])) {
@@ -124,6 +124,7 @@ if (file_exists('includes/defined_paths.php')) {
 
 // load the default autoload config
 $autoloadNamespaces = require DIR_WS_INCLUDES .  '/autoload_namespaces.php';
+require DIR_FS_CATALOG . '/vendor/autoload.php';
 
 /**
  * include the extra_configures files
@@ -141,7 +142,7 @@ if ($za_dir = @dir(DIR_WS_INCLUDES . 'extra_configures')) {
   unset($za_dir);
 }
 
-require DIR_CATALOG_LIBRARY . 'aura/autoload/src/Loader.php';
+require DIR_APP_LIBRARY . 'aura/autoload/src/Loader.php';
 $loader = new \Aura\Autoload\Loader;
 $loader->setClassFiles(array(
     'base'  => DIR_FS_CATALOG . DIR_WS_CLASSES . 'class.base.php',

@@ -8,6 +8,8 @@
  */
 
   require('includes/application_top.php');
+  require_once('includes/template/common/tplHtmlHeadLegacy.php');
+  require_once('includes/template/common/tplHtmlHead.php');
   $languages = zen_get_languages();
 
   $currencies = new currencies();
@@ -379,7 +381,6 @@ function translate_type_to_name($opt_type) {
   return 'Error ' . $opt_type;
 }
 
-require('includes/admin_html_head.php');
 ?>
 <script type="text/javascript">
 function go_option() {
@@ -391,7 +392,7 @@ function go_option() {
 </head>
 <body>
 <!-- header //-->
-<?php require(DIR_WS_INCLUDES . 'header.php'); ?>
+<?php require('includes/template/common/tplHeader.php'); ?>
 <!-- header_eof //-->
 
 <!-- body //-->

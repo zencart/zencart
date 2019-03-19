@@ -21,9 +21,6 @@ class testFilterCase extends zcTestCase
         define('PRODUCT_LIST_ALPHA_SORTER', 1);
         define('PRODUCT_LIST_ALPHA_SORTER_LIST', 'A - C:A,B,C;D - F:D,E,F;G - I:G,H,I;J - L:J,K,L;M - N:M,N;O - Q:O,P,Q;R - T:R,S,T;U - W:U,V,W;X - Z:X,Y,Z;#:0,1,2,3,4,5,6,7,8,9');
         define('DOB_FORMAT_STRING', '##/##/##');
-        define('TABLE_PRODUCT_MUSIC_EXTRA', DB_PREFIX . 'product_music_extra');
-        define('TABLE_MUSIC_GENRE', DB_PREFIX . 'music_genre');
-        define('TABLE_RECORD_COMPANY', DB_PREFIX . 'record_company');
         define('PRODUCT_LIST_FILTER', 1);
         $_SESSION['languages_id'] = 1;
 
@@ -33,9 +30,9 @@ class testFilterCase extends zcTestCase
         require_once DIR_FS_CATALOG . DIR_WS_CLASSES . 'currencies.php';
         $loader = new \Aura\Autoload\Loader;
         $loader->register();
-        $loader->addPrefix('\ZenCart\ListingQueryAndOutput', DIR_CATALOG_LIBRARY . 'zencart/ListingQueryAndOutput/src');
-        $loader->addPrefix('\Aura\Web', DIR_CATALOG_LIBRARY . 'aura/web/src');
-        $loader->addPrefix('\ZenCart\Request', DIR_CATALOG_LIBRARY . 'zencart/Request/src');
+        $loader->addPrefix('\ZenCart\ListingQueryAndOutput', DIR_APP_LIBRARY . 'zencart/ListingQueryAndOutput/src');
+        $loader->addPrefix('\Aura\Web', DIR_APP_LIBRARY . 'aura/web/src');
+        $loader->addPrefix('\ZenCart\Request', DIR_APP_LIBRARY . 'zencart/Request/src');
     }
 
     public function testAlphaFilterNoRequestParams()
@@ -132,7 +129,7 @@ class testFilterCase extends zcTestCase
         $listingQuery = array();
         $f = new \ZenCart\ListingQueryAndOutput\filters\CategoryFilter($request, $params);
         $pq = $f->filterItem($listingQuery);
-        $this->assertTrue(count($pq) === 2);
+        $this->assertTrue(count($pq) === 0);
     }
 
     public function testDisplaySorterNoRequestParams()
@@ -456,115 +453,4 @@ class testFilterCase extends zcTestCase
         $f->filterItem($listingQuery);
     }
 
-    public function testTypeFilterMusicGenre()
-    {
-        $qfr = $this->getMockBuilder('queryFactoryResult')
-            ->disableOriginalConstructor()
-            ->getMock();
-        $qfr->EOF = true;
-        $db = $this->getMockBuilder('queryFactory')
-            ->getMock();
-        $GLOBALS['db'] = $db;
-        $db->method('Execute')->willReturn($qfr);
-        $request = $this->getMockBuilder('\ZenCart\Request\Request')
-            ->disableOriginalConstructor()
-            ->getMock();
-        $map = array(array('typefilter', 'get', true));
-        $request->method('has')
-            ->will($this->returnValueMap($map
-            ));
-        $map = array(array('typefilter', null, 'music_genre'), array('filter_id', null, '1'));
-        $request->method('readGet')
-            ->will($this->returnValueMap($map));
-        $params = array('currentCategoryId' => 1);
-        $listingQuery = array();
-        $f = new \ZenCart\ListingQueryAndOutput\filters\TypeFilter($request, $params);
-        $f->setDBConnection($db);
-        $f->filterItem($listingQuery);
-    }
-
-    public function testTypeFilterMusicGenreWithId()
-    {
-        $qfr = $this->getMockBuilder('queryFactoryResult')
-            ->disableOriginalConstructor()
-            ->getMock();
-        $qfr->EOF = true;
-        $db = $this->getMockBuilder('queryFactory')
-            ->getMock();
-        $GLOBALS['db'] = $db;
-        $db->method('Execute')->willReturn($qfr);
-        $request = $this->getMockBuilder('\ZenCart\Request\Request')
-            ->disableOriginalConstructor()
-            ->getMock();
-        $map = array(array('typefilter', 'get', true));
-        $request->method('has')
-            ->will($this->returnValueMap($map
-            ));
-        $map = array(array('typefilter', null, 'music_genre'), array('music_genre_id', null, '1'), array('filter_id', null, '1'));
-        $request->method('readGet')
-            ->will($this->returnValueMap($map));
-        $params = array('currentCategoryId' => 1);
-        $listingQuery = array();
-        $f = new \ZenCart\ListingQueryAndOutput\filters\TypeFilter($request, $params);
-        $f->setDBConnection($db);
-        $f->filterItem($listingQuery);
-    }
-
-    public function testTypeFilterRecordCompany()
-    {
-        $qfr = $this->getMockBuilder('queryFactoryResult')
-            ->disableOriginalConstructor()
-            ->getMock();
-        $qfr->EOF = true;
-        $db = $this->getMockBuilder('queryFactory')
-            ->getMock();
-        $GLOBALS['db'] = $db;
-        $db->method('Execute')->willReturn($qfr);
-        $request = $this->getMockBuilder('\ZenCart\Request\Request')
-            ->disableOriginalConstructor()
-            ->getMock();
-        $map = array(array('typefilter', 'get', true));
-        $request->method('has')
-            ->will($this->returnValueMap($map
-            ));
-        $map = array(array('typefilter', null, 'record_company'), array('filter_id', null, '1'));
-        $request->method('readGet')
-            ->will($this->returnValueMap($map));
-        $params = array('currentCategoryId' => 1);
-        $listingQuery = array();
-        $f = new \ZenCart\ListingQueryAndOutput\filters\TypeFilter($request, $params);
-        $f->setDBConnection($db);
-        $f->filterItem($listingQuery);
-    }
-
-    public function testTypeFilterRecordCompanyWithId()
-    {
-        $qfr = $this->getMockBuilder('queryFactoryResult')
-            ->disableOriginalConstructor()
-            ->getMock();
-        $qfr->EOF = true;
-        $db = $this->getMockBuilder('queryFactory')
-            ->getMock();
-        $GLOBALS['db'] = $db;
-        $db->method('Execute')->willReturn($qfr);
-        $request = $this->getMockBuilder('\ZenCart\Request\Request')
-            ->disableOriginalConstructor()
-            ->getMock();
-        $map = array(array('typefilter', 'get', true));
-        $request->method('has')
-            ->will($this->returnValueMap($map
-            ));
-        $map = array(
-            array('typefilter', null, 'record_company'),
-            array('record_company_id', null, '1'),
-            array('filter_id', null, '1')
-        );
-        $request->method('readGet')
-            ->will($this->returnValueMap($map));
-        $params = array('currentCategoryId' => 1);
-        $listingQuery = array();
-        $f = new \ZenCart\ListingQueryAndOutput\filters\TypeFilter($request, $params);
-        $f->setDBConnection($db);
-        $f->filterItem($listingQuery);
-    }
 }

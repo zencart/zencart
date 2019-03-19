@@ -58,13 +58,14 @@
         break;
     }
   }
-require('includes/admin_html_head.php');
+  require_once('includes/template/common/tplHtmlHeadLegacy.php');
+  require_once('includes/template/common/tplHtmlHead.php');
 ?>
 <?php if ($editor_handler != '') include ($editor_handler); ?>
 </head>
 <body>
 <!-- header //-->
-<?php require(DIR_WS_INCLUDES . 'header.php'); ?>
+<?php require('includes/template/common/tplHeader.php'); ?>
 <!-- header_eof //-->
 
 <!-- body //-->

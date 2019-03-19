@@ -30,7 +30,6 @@ define('TEXT_PRODUCTS_QUANTITY_INFO', 'Quantity:');
 define('TEXT_DATE_ADDED', 'Date Added:');
 define('TEXT_DATE_AVAILABLE', 'Date Available:');
 define('TEXT_LAST_MODIFIED', 'Last Modified:');
-define('TEXT_IMAGE_NONEXISTENT', 'IMAGE DOES NOT EXIST');
 define('TEXT_NO_CHILD_CATEGORIES_OR_PRODUCTS', 'Please insert a new category or product in this level.');
 define('TEXT_PRODUCT_MORE_INFORMATION', 'For more information, please visit this products <a href="http://%s" target="blank">webpage</a>.');
 define('TEXT_PRODUCT_DATE_ADDED', 'This product was added to our catalog on %s.');
@@ -193,11 +192,11 @@ define('TEXT_PRODUCTS_STATUS_ACTIVE',' active ');
 define('TEXT_CATEGORIES_DESCRIPTION', 'Categories Description:');
 
 // Metatags
-define('TEXT_INFO_HEADING_EDIT_CATEGORY_META_TAGS', 'Categories Meta Tags Definitions');
-define('TEXT_EDIT_CATEGORIES_META_TAGS_INTRO', 'Define Custom Meta Tags');
-define('TEXT_EDIT_CATEGORIES_META_TAGS_TITLE', 'Title:');
-define('TEXT_EDIT_CATEGORIES_META_TAGS_KEYWORDS', 'Keywords:');
-define('TEXT_EDIT_CATEGORIES_META_TAGS_DESCRIPTION', 'Description:');
+define('TEXT_INFO_HEADING_EDIT_CATEGORY_METATAGS', 'Categories Meta Tags Definitions');
+define('TEXT_EDIT_CATEGORIES_METATAGS_INTRO', 'Define Custom Meta Tags');
+define('TEXT_EDIT_CATEGORIES_METATAGS_TITLE', 'Title:');
+define('TEXT_EDIT_CATEGORIES_METATAGS_KEYWORDS', 'Keywords:');
+define('TEXT_EDIT_CATEGORIES_METATAGS_DESCRIPTION', 'Description:');
 
 define('WARNING_PRODUCTS_IN_TOP_INFO', 'WARNING: You have Products in the Top Level Category. This will cause pricing to not work properly in the Catalog. Products found: ');
 

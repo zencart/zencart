@@ -8,6 +8,9 @@
  */
 
   require('includes/application_top.php');
+  require_once('includes/template/common/tplHtmlHeadLegacy.php');
+  require_once('includes/template/common/tplHtmlHead.php');
+
   if (file_exists(DIR_FS_CATALOG . 'includes/classes/dbencdata.php')) require_once(DIR_FS_CATALOG . 'includes/classes/dbencdata.php');
 
   $set = (isset($_GET['set']) ? $_GET['set'] : (isset($_POST['set']) ? $_POST['set'] : ''));
@@ -128,12 +131,11 @@
        break;
     }
   }
-require('includes/admin_html_head.php');
 ?>
 </head>
 <body>
 <!-- header //-->
-<?php require(DIR_WS_INCLUDES . 'header.php'); ?>
+<?php require('includes/template/common/tplHeader.php'); ?>
 <!-- header_eof //-->
 
 <!-- body //-->

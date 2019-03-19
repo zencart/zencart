@@ -8,6 +8,8 @@
  */
 
   require('includes/application_top.php');
+  require_once('includes/template/common/tplHtmlHeadLegacy.php');
+  require_once('includes/template/common/tplHtmlHead.php');
 
   $action = (isset($_GET['action']) ? $_GET['action'] : '');
 
@@ -224,13 +226,12 @@
 
     } // eof: action
 
-require('includes/admin_html_head.php');
 ?>
 <?php if ($processing_message != '' && $processing_action_url != '') echo '<meta http-equiv="refresh" content="2;URL=' . $processing_action_url . '">'; ?>
 </head>
 <body>
 <!-- header //-->
-<?php require(DIR_WS_INCLUDES . 'header.php'); ?>
+<?php require('includes/template/common/tplHeader.php'); ?>
 <!-- header_eof //-->
 
 <!-- body //-->

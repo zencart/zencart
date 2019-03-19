@@ -8,63 +8,44 @@
  * @version  $Id: New in v1.6.0 $
  */
 
-use ZenCart\DashboardWidget\WidgetManager;
 ?>
-<div>
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                aria-hidden="true">&times;</span></button>
+    <h4 class="modal-title"><?php echo TITLE_MODAL_DASHBOARD_WIDGETS_SETTINGS; ?></h4>
+</div>
+<div class="modal-body">
     <form name="widget-edit" action="#" method="post" class="widget-edit-form">
         <input type="hidden" name="securityToken" value="<?php echo $_SESSION['securityToken']; ?>">
-        <input type="hidden" name="id" value="<?php echo $tplVars['id']; ?>">
-        <fieldset>
-            <legend><?php echo 'Widget Settings'; ?></legend>
-            <div class="row">
-                <div class="small-3 columns">
-                    <label class="inline" for="widget-refresh"><?php echo 'Refresh'; ?></label>
-                </div>
-                <div class="small-9 columns">
-                    <?php echo zen_draw_pull_down_menu('widget-refresh', WidgetManager::getWidgetTimerSelect($tplVars['id']),
-                        $tplVars['widget-refresh']); ?>
-                </div>
+        <input type="hidden" name="widget_key" value="<?php echo $tplVars['widget']['info']['widget_key']; ?>">
+        <?php foreach($tplVars['widget']['settings'] as $setting) { ?>
+            <div class="form-group">
+                <label for=""><?php echo $setting['title']; ?>
+                    <?php require('includes/template/partials/settingTypes/' . $setting['setting_type'] . '.php'); ?>
+                </label>
             </div>
-        </fieldset>
-        <input type="submit" value="<?php echo TEXT_UPDATE; ?>" class="radius button"
-               id="widget-edit-submit-<?php echo $tplVars['id']; ?>">
-        <a class="secondary button right widget-edit-dismiss" id="widget-edit-dismiss-<?php echo $tplVars['id']; ?>"
+        <?php } ?>
+        <input type="submit" value="<?php echo TEXT_UPDATE; ?>" class="radius button" id="widget-edit-submit-">
+        <a class="secondary button right widget-edit-dismiss" data-dismiss="modal" aria-label="Close"
            href="#"><?php echo TEXT_CANCEL; ?></a>
     </form>
 </div>
+
+
 <script>
 $(function() {
-  $('.widget-edit-dismiss').on('click', function() {
-    var id = $(this).attr('id');
-    zcJS.ajax({
-        url: "zcAjaxHandler.php?act=dashboardWidget&method=rebuildWidget",
-        data: {'id': id}
-      }).done(function( response ) {
-        if (response && response.html)
-        {
-          id = id.replace('widget-edit-dismiss-', '');
-          $('#'+ id).find('.widget-body').html(response.html);
-        }
-      });
-  });
   $('.widget-edit-form').submit(function(f) {
     var str = $(this).serialize()
-    var id =  $(this).find("input[name='id']").val()
-    zcJS.ajax({
+    var id =  $(this).find("input[name='widget_key']").val()
+      zcJS.ajax({
         url: "zcAjaxHandler.php?act=dashboardWidget&method=submitWidgetEdit",
         data: str
       }).done(function( response ) {
-        if (response && response.timerKey)
+        if (response && !response.errors)
         {
-          createWidgetIntervalTimer(response.timerKey, response.timerInterval);
-        }
-        if (response && response.html)
-        {
-          $('#'+ id).find('.widget-body').html(response.html);
-
-          $('.widget-update-header').fadeOut(3500, function () {
-            $('.widget-update-header').remove();
-          });
+            $('#widget-settings').modal('hide');
+            $('#main-widget-container').html(response.html);
+            initGridStack();
         } else if (response && response.error && response.errorType == 'FORM_VALIDATION')
         {
           handleFormValidationErrors(response.errorList);

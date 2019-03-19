@@ -8,6 +8,9 @@
  */
 
 require('includes/application_top.php');
+require_once('includes/template/common/tplHtmlHeadLegacy.php');
+require_once('includes/template/common/tplHtmlHead.php');
+
 $currencies = new currencies();
 
 if (!defined('SALES_REPORT_GRAPHS_FILTER_DEFAULT')) define('SALES_REPORT_GRAPHS_FILTER_DEFAULT', '00000000110000000000');
@@ -83,7 +86,6 @@ if (strlen($sales_report_filter) == 0) {
     $sales_report_filter_link = "";
 }
 
-require('includes/admin_html_head.php');
 ?>
   <script type="text/javascript" src="https://www.google.com/jsapi"></script>
   <script type="text/javascript">
@@ -160,11 +162,9 @@ require('includes/admin_html_head.php');
    }
 </script>
 </head>
-<body onload="init()">
+<body>
 <!-- header //-->
-<div class="header-area">
-    <?php require(DIR_WS_INCLUDES . 'header.php'); ?>
-</div>
+<?php require('includes/template/common/tplHeader.php'); ?>
 <!-- header_eof //-->
 <!-- body //-->
 <h1><?php echo $report_desc . ' ' . HEADING_TITLE; ?></h1>

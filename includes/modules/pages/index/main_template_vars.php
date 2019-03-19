@@ -11,8 +11,6 @@
 
 // This should be first line of the script:
 $zco_notifier->notify ( 'NOTIFY_HEADER_START_INDEX_MAIN_TEMPLATE_VARS' );
-// die($category_depth);
-// die($_GET['music_genre_id']);
 
 // release manufacturers_id when nothing is there so a blank filter is not setup.
 // this will result in the home page, if used
@@ -20,30 +18,6 @@ if (isset ( $_GET['manufacturers_id'] ) && $_GET['manufacturers_id'] <= 0)
 {
   unset ( $_GET['manufacturers_id'] );
   unset ( $manufacturers_id );
-}
-
-// release music_genre_id when nothing is there so a blank filter is not setup.
-// this will result in the home page, if used
-if (isset ( $_GET['music_genre_id'] ) && $_GET['music_genre_id'] <= 0)
-{
-  unset ( $_GET['music_genre_id'] );
-  unset ( $music_genre_id );
-}
-
-// release record_company_id when nothing is there so a blank filter is not setup.
-// this will result in the home page, if used
-if (isset ( $_GET['record_company_id'] ) && $_GET['record_company_id'] <= 0)
-{
-  unset ( $_GET['record_company_id'] );
-  unset ( $record_company_id );
-}
-
-// only release typefilter if both record_company_id and music_genre_id are blank
-// this will result in the home page, if used
-if ((isset ( $_GET['record_company_id'] ) && $_GET['record_company_id'] <= 0) and (isset ( $_GET['music_genre_id'] ) && $_GET['music_genre_id'] <= 0))
-{
-  unset ( $_GET['typefilter'] );
-  unset ( $typefilter );
 }
 
 // release filter for category or manufacturer when nothing is there
@@ -131,7 +105,6 @@ if ($category_depth == 'nested')
   $tpl_page_body = 'tpl_index_categories.php';
   // ///////////////////////////////////////////////////////////////////////////////////////////////////
 
-  // } elseif ($category_depth == 'products' || isset($_GET['manufacturers_id']) || isset($_GET['music_genre_id'])) {
 } elseif ($category_depth == 'products' || zen_check_url_get_terms ())
 {
   if (SHOW_PRODUCT_INFO_ALL_PRODUCTS == '1')
@@ -183,16 +156,6 @@ if ($current_categories_name == '' && isset($_GET['manufacturers_id'])) {
   $result = $db->Execute( "SELECT * FROM " . TABLE_MANUFACTURERS . "
                            WHERE manufacturers_id = " . (int)$_GET['manufacturers_id'] . " LIMIT 1");
   if (!$result->EOF) $current_categories_name = $result->fields['manufacturers_name'];
-}
-if ($current_categories_name == '' && isset($_GET['record_company_id'])) {
-  $result = $db->Execute( "SELECT * FROM " . TABLE_RECORD_COMPANY . "
-                           WHERE record_company_id = " . (int)$_GET['record_company_id'] . " LIMIT 1");
-  if (!$result->EOF) $current_categories_name = $result->fields['record_company_name'];
-}
-if ($current_categories_name == '' && isset($_GET['music_genre_id'])) {
-  $result = $db->Execute( "SELECT * FROM " . TABLE_MUSIC_GENRE . "
-                           WHERE music_genre_id = " . (int)$_GET['music_genre_id'] . " LIMIT 1");
-  if (!$result->EOF) $current_categories_name = $result->fields['music_genre_name'];
 }
 $zco_notifier->notify('NOTIFY_HEADER_INDEX_MAIN_TEMPLATE_VARS_PAGE_BODY', NULL, $tpl_page_body, $current_categories_name);
 

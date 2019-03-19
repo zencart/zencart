@@ -265,7 +265,7 @@ class order extends base {
       $this->status_history[] = $row;
     }
 
-    $this->notify('NOTIFY_ORDER_AFTER_QUERY', array(), $this->id);
+    $this->notify('NOTIFY_ORDER_AFTER_QUERY', IS_ADMIN_FLAG, $this->id);
   }
 
     /**

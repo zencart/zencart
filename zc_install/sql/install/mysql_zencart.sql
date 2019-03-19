@@ -30,9 +30,9 @@
 DROP TABLE IF EXISTS upgrade_exceptions;
 CREATE TABLE upgrade_exceptions (
   upgrade_exception_id smallint(5) NOT NULL auto_increment,
-  sql_file varchar(50) default NULL,
-  reason varchar(200) default NULL,
-  errordate datetime default '0001-01-01 00:00:00',
+  sql_file varchar(128) default NULL,
+  reason text default NULL,
+  errordate datetime default NULL,
   sqlstatement text,
   PRIMARY KEY  (upgrade_exception_id)
 ) ENGINE=MyISAM;
@@ -108,6 +108,21 @@ CREATE TABLE admin (
   KEY idx_admin_profile_zen (admin_profile)
 ) ENGINE=MyISAM;
 
+
+# --------------------------------------------------------
+
+#
+# Table structure for table 'admin_notifications'
+#
+
+DROP TABLE IF EXISTS admin_notifications;
+CREATE TABLE admin_notifications (
+  notification_key varchar(40) NOT NULL,
+  admin_id int(11),
+  dismissed char(1),
+  UNIQUE KEY notification_key (notification_key)
+) ENGINE=MyISAM;
+
 # --------------------------------------------------------
 
 #
@@ -143,7 +158,7 @@ CREATE TABLE admin_activity_log (
 
 DROP TABLE IF EXISTS admin_menus;
 CREATE TABLE admin_menus (
-  menu_key VARCHAR(255) NOT NULL DEFAULT '',
+  menu_key VARCHAR(191) NOT NULL DEFAULT '',
   language_key VARCHAR(255) NOT NULL DEFAULT '',
   sort_order INT(11) NOT NULL DEFAULT 0,
   UNIQUE KEY menu_key (menu_key)
@@ -157,11 +172,11 @@ CREATE TABLE admin_menus (
 
 DROP TABLE IF EXISTS admin_pages;
 CREATE TABLE admin_pages (
-  page_key VARCHAR(255) NOT NULL DEFAULT '',
+  page_key VARCHAR(191) NOT NULL DEFAULT '',
   language_key VARCHAR(255) NOT NULL DEFAULT '',
   main_page varchar(255) NOT NULL default '',
   page_params varchar(255) NOT NULL default '',
-  menu_key varchar(255) NOT NULL default '',
+  menu_key varchar(191) NOT NULL default '',
   display_on_menu char(1) NOT NULL default 'N',
   sort_order int(11) NOT NULL default 0,
   UNIQUE KEY page_key (page_key)
@@ -189,7 +204,7 @@ CREATE TABLE admin_profiles (
 DROP TABLE IF EXISTS admin_pages_to_profiles;
 CREATE TABLE admin_pages_to_profiles (
   profile_id int(11) NOT NULL default '0',
-  page_key varchar(255) NOT NULL default '',
+  page_key varchar(191) NOT NULL default '',
   UNIQUE KEY profile_page (profile_id, page_key),
   UNIQUE KEY page_profile (page_key, profile_id)
 ) ENGINE=MyISAM;
@@ -226,7 +241,7 @@ CREATE TABLE banners (
   banners_id int(11) NOT NULL auto_increment,
   banners_title varchar(64) NOT NULL default '',
   banners_url varchar(255) NOT NULL default '',
-  banners_image varchar(64) NOT NULL default '',
+  banners_image varchar(255) NOT NULL default '',
   banners_group varchar(15) NOT NULL default '',
   banners_html_text text,
   expires_impressions int(7) default '0',
@@ -271,7 +286,7 @@ CREATE TABLE banners_history (
 DROP TABLE IF EXISTS categories;
 CREATE TABLE categories (
   categories_id int(11) NOT NULL auto_increment,
-  categories_image varchar(64) default NULL,
+  categories_image varchar(255) default NULL,
   parent_id int(11) NOT NULL default '0',
   sort_order int(3) default NULL,
   date_added datetime default NULL,
@@ -309,7 +324,7 @@ DROP TABLE IF EXISTS configuration;
 CREATE TABLE configuration (
   configuration_id int(11) NOT NULL auto_increment,
   configuration_title text NOT NULL,
-  configuration_key varchar(255) NOT NULL default '',
+  configuration_key varchar(180) NOT NULL default '',
   configuration_value text NOT NULL,
   configuration_description text NOT NULL,
   configuration_group_id int(11) NOT NULL default '0',
@@ -505,19 +520,20 @@ CREATE TABLE coupons (
   coupon_minimum_order decimal(15,4) NOT NULL default '0.0000',
   coupon_start_date datetime NOT NULL default '0001-01-01 00:00:00',
   coupon_expire_date datetime NOT NULL default '0001-01-01 00:00:00',
-  uses_per_coupon int(5) NOT NULL default '1',
-  uses_per_user int(5) NOT NULL default '0',
+  uses_per_coupon int(5) NOT NULL default 1,
+  uses_per_user int(5) NOT NULL default 0,
   restrict_to_products varchar(255) default NULL,
   restrict_to_categories varchar(255) default NULL,
   restrict_to_customers text,
   coupon_active char(1) NOT NULL default 'Y',
   date_created datetime NOT NULL default '0001-01-01 00:00:00',
   date_modified datetime NOT NULL default '0001-01-01 00:00:00',
-  coupon_zone_restriction int(11) NOT NULL default '0',
-  coupon_total tinyint(1) NOT NULL DEFAULT '0',
-  coupon_order_limit int(4) NOT NULL default '0',
-  coupon_is_valid_for_sales tinyint(1) NOT NULL DEFAULT '1',
-  coupon_product_count tinyint(1) NOT NULL DEFAULT '0',
+  coupon_zone_restriction int(11) NOT NULL default 0,
+  coupon_calc_base tinyint(1) NOT NULL DEFAULT 0,
+  coupon_order_limit int(4) NOT NULL default 0,
+  coupon_is_valid_for_sales tinyint(1) NOT NULL DEFAULT 1,
+  coupon_product_count tinyint(1) NOT NULL DEFAULT 0,
+  coupon_total TINYINT(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (coupon_id),
   KEY idx_active_type_zen (coupon_active,coupon_type),
   KEY idx_coupon_code_zen (coupon_code),
@@ -669,23 +685,11 @@ CREATE TABLE IF NOT EXISTS dashboard_widgets (
   widget_key varchar(64) NOT NULL,
   widget_group varchar(64) NOT NULL,
   widget_status int(1) NOT NULL DEFAULT '1',
+  widget_name varchar(255) NOT NULL,
   widget_icon varchar(64) NOT NULL,
   widget_theme varchar(64) NOT NULL,
   widget_height int(11) NOT NULL DEFAULT '1',
   widget_width int(11) NOT NULL DEFAULT '1',
-  PRIMARY KEY (widget_key)
-) ENGINE=MyISAM;
-
-# --------------------------------------------------------
-
-#
-# Table structure for table 'dashboard_widgets_description'
-#
-
-DROP TABLE IF EXISTS dashboard_widgets_description;
-CREATE TABLE IF NOT EXISTS dashboard_widgets_description (
-  widget_key varchar(64) NOT NULL,
-  widget_name varchar(255) NOT NULL,
   PRIMARY KEY (widget_key)
 ) ENGINE=MyISAM;
 
@@ -716,10 +720,53 @@ CREATE TABLE IF NOT EXISTS dashboard_widgets_to_users (
   widget_column int(11) NOT NULL DEFAULT '0',
   widget_height int(11) NOT NULL DEFAULT '1',
   widget_width int(11) NOT NULL DEFAULT '1',
-  widget_refresh int(11) NOT NULL DEFAULT '0',
   widget_icon varchar(64) NOT NULL,
   widget_theme varchar(64) NOT NULL,
   PRIMARY KEY (widget_key,admin_id)
+) ENGINE=MyISAM;
+
+# --------------------------------------------------------
+
+#
+# Table structure for table 'configuration_settings'
+#
+
+DROP TABLE IF EXISTS configuration_settings;
+CREATE TABLE configuration_settings (
+  setting_key varchar(64) NOT NULL,
+  setting_name varchar(255) NOT NULL,
+  setting_definition longtext NOT NULL,
+  setting_type varchar(32) NOT NULL,
+  PRIMARY KEY (setting_key)
+) ENGINE=MyISAM;
+
+# --------------------------------------------------------
+
+#
+# Table structure for table 'configuration_settings_to_widget'
+#
+
+DROP TABLE IF EXISTS configuration_settings_to_widget;
+CREATE TABLE configuration_settings_to_widget (
+  setting_key varchar(64) NOT NULL,
+  widget_key varchar(64) NOT NULL,
+  initial_value longtext,
+  PRIMARY KEY (setting_key,widget_key)
+) ENGINE=MyISAM;
+
+# --------------------------------------------------------
+
+#
+# Table structure for table 'dashboard_widgets_settings_to_user'
+#
+
+DROP TABLE IF EXISTS dashboard_widgets_settings_to_user;
+CREATE TABLE dashboard_widgets_settings_to_user (
+  setting_key varchar(64) NOT NULL,
+  widget_key varchar(64) NOT NULL,
+  admin_id int(10) unsigned NOT NULL,
+  setting_value longtext,
+  PRIMARY KEY (setting_key,widget_key,admin_id)
 ) ENGINE=MyISAM;
 
 # --------------------------------------------------------
@@ -771,14 +818,12 @@ CREATE TABLE email_archive (
 DROP TABLE IF EXISTS ezpages;
 CREATE TABLE ezpages (
   pages_id int(11) NOT NULL auto_increment,
-  languages_id int(11) NOT NULL default '1',
-  pages_title varchar(64) NOT NULL default '',
   alt_url varchar(255) NOT NULL default '',
   alt_url_external varchar(255) NOT NULL default '',
-  pages_html_text mediumtext,
   status_header int(1) NOT NULL default '1',
   status_sidebox int(1) NOT NULL default '1',
   status_footer int(1) NOT NULL default '1',
+  status_visible int(1) NOT NULL default '0',
   status_toc int(1) NOT NULL default '1',
   header_sort_order int(3) NOT NULL default '0',
   sidebox_sort_order int(3) NOT NULL default '0',
@@ -788,7 +833,6 @@ CREATE TABLE ezpages (
   page_is_ssl int(1) NOT NULL default '0',
   toc_chapter int(11) NOT NULL default '0',
   PRIMARY KEY  (pages_id),
-  KEY idx_lang_id_zen (languages_id),
   KEY idx_ezp_status_header_zen (status_header),
   KEY idx_ezp_status_sidebox_zen (status_sidebox),
   KEY idx_ezp_status_footer_zen (status_footer),
@@ -797,6 +841,21 @@ CREATE TABLE ezpages (
 
 # --------------------------------------------------------
 
+#
+# Table structure for table 'ezpages_content'
+#
+
+DROP TABLE IF EXISTS ezpages_content;
+CREATE TABLE ezpages_content (
+  pages_id int(11) NOT NULL DEFAULT '0',
+  languages_id int(11) NOT NULL DEFAULT '1',
+  pages_title varchar(64) NOT NULL DEFAULT '',
+  pages_html_text text,
+  UNIQUE KEY idx_ezpages_content (pages_id,languages_id),
+  KEY idx_lang_id_zen (languages_id)
+) ENGINE=MyISAM;
+
+# --------------------------------------------------------
 #
 # Table structure for table 'featured'
 #
@@ -857,7 +916,7 @@ CREATE TABLE geo_zones (
 #
 DROP TABLE IF EXISTS get_terms_to_filter;
 CREATE TABLE get_terms_to_filter (
-  get_term_name varchar(255) NOT NULL default '',
+  get_term_name varchar(191) NOT NULL default '',
   get_term_table varchar(64) NOT NULL,
   get_term_name_field varchar(64) NOT NULL,
   PRIMARY KEY  (get_term_name)
@@ -984,7 +1043,7 @@ DROP TABLE IF EXISTS manufacturers;
 CREATE TABLE manufacturers (
   manufacturers_id int(11) NOT NULL auto_increment,
   manufacturers_name varchar(32) NOT NULL default '',
-  manufacturers_image varchar(64) default NULL,
+  manufacturers_image varchar(255) default NULL,
   date_added datetime default NULL,
   last_modified datetime default NULL,
   PRIMARY KEY  (manufacturers_id),
@@ -1010,77 +1069,11 @@ CREATE TABLE manufacturers_info (
 # --------------------------------------------------------
 
 #
-# Table structure for table 'media_clips'
+# Table structure for table 'metatags_categories_description'
 #
 
-DROP TABLE IF EXISTS media_clips;
-CREATE TABLE media_clips (
-  clip_id int(11) NOT NULL auto_increment,
-  media_id int(11) NOT NULL default '0',
-  clip_type smallint(6) NOT NULL default '0',
-  clip_filename text NOT NULL,
-  date_added datetime NOT NULL default '0001-01-01 00:00:00',
-  last_modified datetime NOT NULL default '0001-01-01 00:00:00',
-  PRIMARY KEY  (clip_id),
-  KEY idx_media_id_zen (media_id),
-  KEY idx_clip_type_zen (clip_type)
-) ENGINE=MyISAM;
-
-# --------------------------------------------------------
-
-#
-# Table structure for table 'media_manager'
-#
-
-DROP TABLE IF EXISTS media_manager;
-CREATE TABLE media_manager (
-  media_id int(11) NOT NULL auto_increment,
-  media_name varchar(255) NOT NULL default '',
-  last_modified datetime NOT NULL default '0001-01-01 00:00:00',
-  date_added datetime NOT NULL default '0001-01-01 00:00:00',
-  PRIMARY KEY  (media_id),
-  KEY idx_media_name_zen (media_name)
-) ENGINE=MyISAM;
-
-# --------------------------------------------------------
-
-#
-# Table structure for table 'media_to_products'
-#
-
-DROP TABLE IF EXISTS media_to_products;
-CREATE TABLE media_to_products (
-  association_id int(11) NOT NULL auto_increment,
-  media_id int(11) NOT NULL default '0',
-  product_id int (11) NOT NULL default '0',
-  PRIMARY KEY  (association_id)
-) ENGINE=MyISAM;
-
-# --------------------------------------------------------
-
-#
-# Table structure for table 'media_types'
-#
-
-DROP TABLE IF EXISTS media_types;
-CREATE TABLE media_types (
-  type_id int(11) NOT NULL auto_increment,
-  type_name varchar(64) NOT NULL default '',
-  type_ext varchar(8) NOT NULL default '',
-  PRIMARY KEY  (type_id),
-  KEY idx_type_name_zen (type_name)
-) ENGINE=MyISAM;
-
-INSERT INTO media_types (type_name, type_ext) VALUES ('MP3','.mp3');
-
-# -------------------------------------------------------
-
-#
-# Table structure for table 'meta_tags_categories_description'
-#
-
-DROP TABLE IF EXISTS meta_tags_categories_description;
-CREATE TABLE meta_tags_categories_description (
+DROP TABLE IF EXISTS metatags_categories_description;
+CREATE TABLE metatags_categories_description (
   categories_id int(11) NOT NULL,
   language_id int(11) NOT NULL default '1',
   metatags_title varchar(255) NOT NULL default '',
@@ -1092,11 +1085,11 @@ CREATE TABLE meta_tags_categories_description (
 # --------------------------------------------------------
 
 #
-# Table structure for table 'meta_tags_products_description'
+# Table structure for table 'metatags_products_description'
 #
 
-DROP TABLE IF EXISTS meta_tags_products_description;
-CREATE TABLE meta_tags_products_description (
+DROP TABLE IF EXISTS metatags_products_description;
+CREATE TABLE metatags_products_description (
   products_id int(11) NOT NULL,
   language_id int(11) NOT NULL default '1',
   metatags_title varchar(255) NOT NULL default '',
@@ -1108,29 +1101,13 @@ CREATE TABLE meta_tags_products_description (
 # --------------------------------------------------------
 
 #
-# Table structure for table 'music_genre'
-#
-
-DROP TABLE IF EXISTS music_genre;
-CREATE TABLE music_genre (
-  music_genre_id int(11) NOT NULL auto_increment,
-  music_genre_name varchar(32) NOT NULL default '',
-  date_added datetime default NULL,
-  last_modified datetime default NULL,
-  PRIMARY KEY  (music_genre_id),
-  KEY idx_music_genre_name_zen (music_genre_name)
-) ENGINE=MyISAM;
-
-# --------------------------------------------------------
-
-#
 # Table structure for table 'orders'
 #
 
 DROP TABLE IF EXISTS orders;
 CREATE TABLE orders (
   orders_id int(11) NOT NULL auto_increment,
-  customers_id int(11) NOT NULL default '0',
+  customers_id int(11) NOT NULL default 0,
   customers_name varchar(64) NOT NULL default '',
   customers_company varchar(64) default NULL,
   customers_street_address varchar(64) NOT NULL default '',
@@ -1141,7 +1118,7 @@ CREATE TABLE orders (
   customers_country varchar(32) NOT NULL default '',
   customers_telephone varchar(32) NOT NULL default '',
   customers_email_address varchar(96) NOT NULL default '',
-  customers_address_format_id int(5) NOT NULL default '0',
+  customers_address_format_id int(5) NOT NULL default 0,
   delivery_name varchar(64) NOT NULL default '',
   delivery_company varchar(64) default NULL,
   delivery_street_address varchar(64) NOT NULL default '',
@@ -1150,7 +1127,7 @@ CREATE TABLE orders (
   delivery_postcode varchar(10) NOT NULL default '',
   delivery_state varchar(32) default NULL,
   delivery_country varchar(32) NOT NULL default '',
-  delivery_address_format_id int(5) NOT NULL default '0',
+  delivery_address_format_id int(5) NOT NULL default 0,
   billing_name varchar(64) NOT NULL default '',
   billing_company varchar(64) default NULL,
   billing_street_address varchar(64) NOT NULL default '',
@@ -1159,10 +1136,10 @@ CREATE TABLE orders (
   billing_postcode varchar(10) NOT NULL default '',
   billing_state varchar(32) default NULL,
   billing_country varchar(32) NOT NULL default '',
-  billing_address_format_id int(5) NOT NULL default '0',
+  billing_address_format_id int(5) NOT NULL default 0,
   payment_method varchar(128) NOT NULL default '',
   payment_module_code varchar(32) NOT NULL default '',
-  shipping_method varchar(255) NOT NULL default '',
+  shipping_method varchar(255) default NULL,
   shipping_module_code varchar(32) NOT NULL default '',
   coupon_code varchar(32) NOT NULL default '',
   cc_type varchar(20) default NULL,
@@ -1172,16 +1149,16 @@ CREATE TABLE orders (
   cc_cvv blob,
   last_modified datetime default NULL,
   date_purchased datetime default NULL,
-  orders_status int(5) NOT NULL default '0',
+  orders_status int(5) NOT NULL default 0,
   orders_date_finished datetime default NULL,
   currency char(3) default NULL,
   currency_value decimal(14,6) default NULL,
   order_total decimal(15,4) default NULL,
   order_tax decimal(15,4) default NULL,
-  paypal_ipn_id int(11) NOT NULL default '0',
+  paypal_ipn_id int(11) NOT NULL default 0,
   ip_address varchar(96) NOT NULL default '',
   is_guest_order tinyint(1) NOT NULL default 0,
-  order_weight float NOT NULL default '0',
+  order_weight float default NULL,
   language_code VARCHAR(2) NOT NULL DEFAULT 'en',
   PRIMARY KEY  (orders_id),
   KEY idx_status_orders_cust_zen (orders_status,orders_id,customers_id),
@@ -1208,19 +1185,19 @@ CREATE TABLE orders_products (
   products_tax decimal(7,4) NOT NULL default '0.0000',
   products_quantity float NOT NULL default '0',
   onetime_charges decimal(15,4) NOT NULL default '0.0000',
-  products_priced_by_attribute tinyint(1) NOT NULL default '0',
-  product_is_free tinyint(1) NOT NULL default '0',
-  products_discount_type tinyint(1) NOT NULL default '0',
-  products_discount_type_from tinyint(1) NOT NULL default '0',
+  products_priced_by_attribute tinyint(1) NOT NULL default 0,
+  product_is_free tinyint(1) NOT NULL default 0,
+  products_discount_type tinyint(1) NOT NULL default 0,
+  products_discount_type_from tinyint(1) NOT NULL default 0,
   products_prid tinytext NOT NULL,
-  products_weight FLOAT NOT NULL DEFAULT '0',
-  products_virtual tinyint(1) NOT NULL default '0',
-  product_is_always_free_shipping tinyint(1) NOT NULL default '0',
-  products_quantity_order_min float NOT NULL default '1',
-  products_quantity_order_units float NOT NULL default '1',
-  products_quantity_order_max float NOT NULL default '0',
-  products_quantity_mixed tinyint(1) NOT NULL default '0',
-  products_mixed_discount_quantity tinyint(1) NOT NULL default '1',
+  products_weight FLOAT default NULL,
+  products_virtual tinyint(1) default NULL,
+  product_is_always_free_shipping tinyint(1) default NULL,
+  products_quantity_order_min float default NULL,
+  products_quantity_order_units float default NULL,
+  products_quantity_order_max float default NULL,
+  products_quantity_mixed tinyint(1) default NULL,
+  products_mixed_discount_quantity tinyint(1) default NULL,
   PRIMARY KEY  (orders_products_id),
   KEY idx_orders_id_prod_id_zen (orders_id,products_id),
   KEY idx_prod_id_orders_id_zen (products_id,orders_id)
@@ -1273,13 +1250,13 @@ CREATE TABLE orders_products_attributes (
 DROP TABLE IF EXISTS orders_products_download;
 CREATE TABLE orders_products_download (
   orders_products_download_id int(11) NOT NULL auto_increment,
-  orders_id int(11) NOT NULL default '0',
-  orders_products_id int(11) NOT NULL default '0',
+  orders_id int(11) NOT NULL default 0,
+  orders_products_id int(11) NOT NULL default 0,
   orders_products_filename varchar(255) NOT NULL default '',
-  download_maxdays int(2) NOT NULL default '0',
-  download_count int(2) NOT NULL default '0',
+  download_maxdays int(2) NOT NULL default 0,
+  download_count int(2) NOT NULL default 0,
   products_prid tinytext NOT NULL,
-  products_attributes_id int(11) NOT NULL,
+  products_attributes_id int(11) default NULL,
   PRIMARY KEY  (orders_products_download_id),
   KEY idx_orders_id_zen (orders_id),
   KEY idx_orders_products_id_zen (orders_products_id)
@@ -1314,6 +1291,7 @@ CREATE TABLE orders_status_history (
   date_added datetime NOT NULL default '0001-01-01 00:00:00',
   customer_notified int(1) default '0',
   comments text,
+  updated_by varchar(45) NOT NULL default '',
   PRIMARY KEY  (orders_status_history_id),
   KEY idx_orders_id_status_id_zen (orders_id,orders_status_id)
 ) ENGINE=MyISAM;
@@ -1512,19 +1490,23 @@ CREATE TABLE paypal_testing (
 # --------------------------------------------------------
 
 #
-# Table structure for table 'product_music_extra'
+# Table structure for table 'plugins'
 #
 
-DROP TABLE IF EXISTS product_music_extra;
-CREATE TABLE product_music_extra (
-  products_id int(11) NOT NULL default '0',
-  artists_id int(11) NOT NULL default '0',
-  record_company_id int(11) NOT NULL default '0',
-  music_genre_id int(11) NOT NULL default '0',
-  PRIMARY KEY  (products_id),
-  KEY idx_music_genre_id_zen (music_genre_id),
-  KEY idx_artists_id_zen (artists_id),
-  KEY idx_record_company_id_zen (record_company_id)
+DROP TABLE IF EXISTS plugins;
+CREATE TABLE plugins (
+  id int NOT NULL auto_increment,
+  plugin_key varchar(255) NOT NULL,
+  plugin_name varchar(255) NOT NULL,
+  plugin_description text NOT NULL,
+  plugin_version varchar(64) NOT NULL,
+  plugin_definition varchar(255) NOT NULL,
+  plugin_status smallint NOT NULL default 0,
+  plugin_group varchar(64) NOT NULL default 'OTHER',
+  plugin_locked smallint NOT NULL default 0,
+  plugin_internal_state smallint NOT NULL default 0,
+  PRIMARY KEY  (id),
+  KEY plugin_status (plugin_status)
 ) ENGINE=MyISAM;
 
 
@@ -1537,7 +1519,7 @@ DROP TABLE IF EXISTS product_type_layout;
 CREATE TABLE product_type_layout (
   configuration_id int(11) NOT NULL auto_increment,
   configuration_title text NOT NULL,
-  configuration_key varchar(255) NOT NULL default '',
+  configuration_key varchar(180) NOT NULL default '',
   configuration_value text NOT NULL,
   configuration_description text NOT NULL,
   product_type_id int(11) NOT NULL default '0',
@@ -1599,7 +1581,7 @@ CREATE TABLE products (
   products_type int(11) NOT NULL default '1',
   products_quantity float NOT NULL default '0',
   products_model varchar(32) default NULL,
-  products_image varchar(64) default NULL,
+  products_image varchar(255) default NULL,
   products_price decimal(15,4) NOT NULL default '0.0000',
   products_virtual tinyint(1) NOT NULL default '0',
   products_date_added datetime NOT NULL default '0001-01-01 00:00:00',
@@ -1662,7 +1644,7 @@ CREATE TABLE products_attributes (
   attributes_display_only tinyint(1) NOT NULL default '0',
   attributes_default tinyint(1) NOT NULL default '0',
   attributes_discounted tinyint(1) NOT NULL default '1',
-  attributes_image varchar(64) default NULL,
+  attributes_image varchar(255) default NULL,
   attributes_price_base_included tinyint(1) NOT NULL default '1',
   attributes_price_onetime decimal(15,4) NOT NULL default '0.0000',
   attributes_price_factor decimal(15,4) NOT NULL default '0.0000',
@@ -1756,7 +1738,7 @@ CREATE TABLE products_options (
   products_options_sort_order int(11) NOT NULL default '0',
   products_options_type int(5) NOT NULL default '0',
   products_options_length smallint(2) NOT NULL default '32',
-  products_options_comment varchar(64) default NULL,
+  products_options_comment varchar(255) default NULL,
   products_options_size smallint(2) NOT NULL default '32',
   products_options_images_per_row int(2) default '5',
   products_options_images_style int(1) default '0',
@@ -1888,72 +1870,6 @@ CREATE TABLE query_builder (
 # --------------------------------------------------------
 
 #
-# Table structure for table 'record_artists'
-#
-
-DROP TABLE IF EXISTS record_artists;
-CREATE TABLE record_artists (
-  artists_id int(11) NOT NULL auto_increment,
-  artists_name varchar(32) NOT NULL default '',
-  artists_image varchar(64) default NULL,
-  date_added datetime default NULL,
-  last_modified datetime default NULL,
-  PRIMARY KEY  (artists_id),
-  KEY idx_rec_artists_name_zen (artists_name)
-) ENGINE=MyISAM;
-
-# --------------------------------------------------------
-
-#
-# Table structure for table 'record_artists_info'
-#
-
-DROP TABLE IF EXISTS record_artists_info;
-CREATE TABLE record_artists_info (
-  artists_id int(11) NOT NULL default '0',
-  languages_id int(11) NOT NULL default '0',
-  artists_url varchar(255) NOT NULL default '',
-  url_clicked int(5) NOT NULL default '0',
-  date_last_click datetime default NULL,
-  PRIMARY KEY  (artists_id,languages_id)
-) ENGINE=MyISAM;
-
-# --------------------------------------------------------
-
-#
-# Table structure for table 'record_company'
-#
-
-DROP TABLE IF EXISTS record_company;
-CREATE TABLE record_company (
-  record_company_id int(11) NOT NULL auto_increment,
-  record_company_name varchar(32) NOT NULL default '',
-  record_company_image varchar(64) default NULL,
-  date_added datetime default NULL,
-  last_modified datetime default NULL,
-  PRIMARY KEY  (record_company_id),
-  KEY idx_rec_company_name_zen (record_company_name)
-) ENGINE=MyISAM;
-
-# --------------------------------------------------------
-
-#
-# Table structure for table 'record_company_info'
-#
-
-DROP TABLE IF EXISTS record_company_info;
-CREATE TABLE record_company_info (
-  record_company_id int(11) NOT NULL default '0',
-  languages_id int(11) NOT NULL default '0',
-  record_company_url varchar(255) NOT NULL default '',
-  url_clicked int(5) NOT NULL default '0',
-  date_last_click datetime default NULL,
-  PRIMARY KEY  (record_company_id,languages_id)
-) ENGINE=MyISAM;
-
-# --------------------------------------------------------
-
-#
 # Table structure for table 'reviews'
 #
 
@@ -1999,7 +1915,7 @@ DROP TABLE IF EXISTS salemaker_sales;
 CREATE TABLE salemaker_sales (
   sale_id int(11) NOT NULL auto_increment,
   sale_status tinyint(4) NOT NULL default '0',
-  sale_name varchar(30) NOT NULL default '',
+  sale_name varchar(128) NOT NULL default '',
   sale_deduction_value decimal(15,4) NOT NULL default '0.0000',
   sale_deduction_type tinyint(4) NOT NULL default '0',
   sale_pricerange_from decimal(15,4) NOT NULL default '0.0000',
@@ -2022,15 +1938,17 @@ CREATE TABLE salemaker_sales (
 
 #
 # Table structure for table 'sessions'
+# NOTE: requires minimum MySQL 5.0.3 for varchar(256)
+# NOTE: leaving it at (191) to be compatible with utf8mb4, but if PHP is configured to use 256 char session IDs then this will break.
 #
 
 DROP TABLE IF EXISTS sessions;
 CREATE TABLE sessions (
-  sesskey varchar(255) NOT NULL default '',
-  expiry int(11) unsigned NOT NULL default '0',
+  sesskey varchar(191) NOT NULL default '',
+  expiry int(11) unsigned NOT NULL default 0,
   value mediumblob NOT NULL,
   PRIMARY KEY  (sesskey)
-) ENGINE=MyISAM;
+) ENGINE=InnoDB;
 
 # --------------------------------------------------------
 
@@ -2113,13 +2031,14 @@ CREATE TABLE template_select (
 
 #
 # Table structure for table 'whos_online'
+# NOTE: session_id needs to be same length (er, at least as long) as sesskey in 'sessions' table.
 #
 
 DROP TABLE IF EXISTS whos_online;
 CREATE TABLE whos_online (
   customer_id int(11) default NULL,
   full_name varchar(64) NOT NULL default '',
-  session_id varchar(255) NOT NULL default '',
+  session_id varchar(191) NOT NULL default '',
   ip_address varchar(45) NOT NULL default '',
   time_entry varchar(14) NOT NULL default '',
   time_last_click varchar(14) NOT NULL default '',
@@ -2131,7 +2050,7 @@ CREATE TABLE whos_online (
   KEY idx_customer_id_zen (customer_id),
   KEY idx_time_entry_zen (time_entry),
   KEY idx_time_last_click_zen (time_last_click),
-  KEY idx_last_page_url_zen (last_page_url)
+  KEY idx_last_page_url_zen (last_page_url(191))
 ) ENGINE=MyISAM;
 
 # --------------------------------------------------------
@@ -2185,7 +2104,7 @@ CREATE TABLE zones_to_geo_zones (
 
 # default data
 
-INSERT INTO template_select (template_dir, template_language) VALUES ('classic', 0);
+INSERT INTO template_select (template_id, template_dir, template_language) VALUES (1, 'responsive_classic', '0');
 
 # 1 - Default, 2 - USA, 3 - Spain, 4 - Singapore, 5 - Germany, 6 - UK/GB, 7 - Australia
 INSERT INTO address_format VALUES (1, '$firstname $lastname$cr$streets$cr$city, $postcode$cr$statecomma$country','$city / $country');
@@ -2263,6 +2182,7 @@ VALUES ('configMyStore', 'BOX_CONFIGURATION_MY_STORE', 'FILENAME_CONFIGURATION',
        ('payment', 'BOX_MODULES_PAYMENT', 'FILENAME_MODULES', 'set=payment', 'modules', 'Y', 1),
        ('shipping', 'BOX_MODULES_SHIPPING', 'FILENAME_MODULES', 'set=shipping', 'modules', 'Y', 2),
        ('orderTotal', 'BOX_MODULES_ORDER_TOTAL', 'FILENAME_MODULES', 'set=ordertotal', 'modules', 'Y', 3),
+       ('plugins', 'BOX_MODULES_PLUGINS', 'FILENAME_PLUGINS', '', 'modules', 'Y', 4),
        ('customers', 'BOX_CUSTOMERS_CUSTOMERS', 'FILENAME_CUSTOMERS', '', 'customers', 'Y', 1),
        ('orders', 'BOX_CUSTOMERS_ORDERS', 'FILENAME_ORDERS', '', 'customers', 'Y', 2),
        ('groupPricing', 'BOX_CUSTOMERS_GROUP_PRICING', 'FILENAME_GROUP_PRICING', '', 'customers', 'Y', 3),
@@ -2303,12 +2223,7 @@ VALUES ('configMyStore', 'BOX_CONFIGURATION_MY_STORE', 'FILENAME_CONFIGURATION',
        ('users', 'BOX_ADMIN_ACCESS_USERS', 'FILENAME_USERS', '', 'access', 'Y', 1),
        ('profiles', 'BOX_ADMIN_ACCESS_PROFILES', 'FILENAME_PROFILES', '', 'access', 'Y', 2),
        ('pageRegistration', 'BOX_ADMIN_ACCESS_PAGE_REGISTRATION', 'FILENAME_ADMIN_PAGE_REGISTRATION', '', 'access', 'Y', 3),
-       ('adminlogs', 'BOX_ADMIN_ACCESS_LOGS', 'FILENAME_ADMIN_ACTIVITY', '', 'access', 'Y', 4),
-       ('recordArtists', 'BOX_CATALOG_RECORD_ARTISTS', 'FILENAME_RECORD_ARTISTS', '', 'extras', 'Y', 1),
-       ('recordCompanies', 'BOX_CATALOG_RECORD_COMPANY', 'FILENAME_RECORD_COMPANY', '', 'extras', 'Y', 2),
-       ('musicGenre', 'BOX_CATALOG_MUSIC_GENRE', 'FILENAME_MUSIC_GENRE', '', 'extras', 'Y', 3),
-       ('mediaManager', 'BOX_CATALOG_MEDIA_MANAGER', 'FILENAME_MEDIA_MANAGER', '', 'extras', 'Y', 4),
-       ('mediaTypes', 'BOX_CATALOG_MEDIA_TYPES', 'FILENAME_MEDIA_TYPES', '', 'extras', 'Y', 5);
+       ('adminlogs', 'BOX_ADMIN_ACCESS_LOGS', 'FILENAME_ADMIN_ACTIVITY', '', 'access', 'Y', 4);
 
 INSERT INTO admin_pages (page_key, language_key, main_page, page_params, menu_key, display_on_menu, sort_order)
 VALUES ('configCheckoutSettings','BOX_CONFIGURATION_CHECKOUT_SETTINGS','FILENAME_CONFIGURATION','gID=26', 'configuration', 'Y', 26);
@@ -2339,13 +2254,15 @@ INSERT INTO admin_pages_to_profiles (profile_id, page_key) VALUES
 (@profile_id, 'gvSent'),
 (@profile_id, 'whosOnline');
 
-INSERT INTO banners (banners_title, banners_url, banners_image, banners_group, banners_html_text, expires_impressions, expires_date, date_scheduled, date_added, date_status_change, status, banners_open_new_windows, banners_on_ssl, banners_sort_order) VALUES ('Zen Cart the art of e-commerce', 'http://www.zen-cart.com', 'banners/125zen_logo.gif', 'SideBox-Banners', '', 0, NULL, NULL, '2004-01-11 20:59:12', NULL, 1, 1, 1, 0);
-INSERT INTO banners (banners_title, banners_url, banners_image, banners_group, banners_html_text, expires_impressions, expires_date, date_scheduled, date_added, date_status_change, status, banners_open_new_windows, banners_on_ssl, banners_sort_order) VALUES ('Zen Cart the art of e-commerce', 'http://www.zen-cart.com', 'banners/125x125_zen_logo.gif', 'SideBox-Banners', '', 0, NULL, NULL, '2004-01-11 20:59:12', NULL, 1, 1, 1, 0);
-INSERT INTO banners (banners_title, banners_url, banners_image, banners_group, banners_html_text, expires_impressions, expires_date, date_scheduled, date_added, date_status_change, status, banners_open_new_windows, banners_on_ssl, banners_sort_order) VALUES ('Zen Cart the art of e-commerce', 'http://www.zen-cart.com', 'banners/bw_zen_88wide.gif', 'BannersAll', '', 0, NULL, NULL, '2005-05-13 10:54:38', NULL, 1, 1, 1, 10);
-INSERT INTO banners (banners_title, banners_url, banners_image, banners_group, banners_html_text, expires_impressions, expires_date, date_scheduled, date_added, date_status_change, status, banners_open_new_windows, banners_on_ssl, banners_sort_order) VALUES ('eStart Your Web Store with Zen Cart(R)', 'http://www.zen-cart.com/book', 'banners/tall-book.gif', 'SideBox-Banners', '', '0', NULL, NULL, '2007-02-10 00:00:00',NULL,'1','1','1','1');
-INSERT INTO banners (banners_title, banners_url, banners_image, banners_group, banners_html_text, expires_impressions, expires_date, date_scheduled, date_added, date_status_change, status, banners_open_new_windows, banners_on_ssl, banners_sort_order) VALUES ('eStart Your Web Store with Zen Cart(R)', 'http://www.zen-cart.com/book', 'banners/tall-book.gif', 'BannersAll', '', '0', NULL, NULL, '2007-02-10 00:00:00',NULL,'1','1','1','15');
-INSERT INTO banners (banners_title, banners_url, banners_image, banners_group, banners_html_text, expires_impressions, expires_date, date_scheduled, date_added, date_status_change, status, banners_open_new_windows, banners_on_ssl, banners_sort_order) VALUES ('Zen Cart', 'http://www.zen-cart.com', '', 'Wide-Banners', '<script><!--//<![CDATA[\r\n   var loc = \'//pan.zen-cart.com/display/group/1/\';\r\n   var rd = Math.floor(Math.random()*99999999999);\r\n   document.write (\"<scr\"+\"ipt src=\'\"+loc);\r\n   document.write (\'?rd=\' + rd);\r\n   document.write (\"\'></scr\"+\"ipt>\");\r\n//]]>--></script>', 0, NULL, NULL, '2004-01-11 20:59:12', NULL, 1, 1, 1, 0);
-INSERT INTO banners (banners_title, banners_url, banners_image, banners_group, banners_html_text, expires_impressions, expires_date, date_scheduled, date_added, date_status_change, status, banners_open_new_windows, banners_on_ssl, banners_sort_order) VALUES ('Promotions', 'http://www.zen-cart.com', '', 'Wide-Banners', '<script><!--//<![CDATA[\r\n   var loc = \'//pan.zen-cart.com/display/group/1/\';\r\n   var rd = Math.floor(Math.random()*99999999999);\r\n   document.write (\"<scr\"+\"ipt src=\'\"+loc);\r\n   document.write (\'?rd=\' + rd);\r\n   document.write (\"\'></scr\"+\"ipt>\");\r\n//]]>--></script>', 0, NULL, NULL, '2004-01-11 20:59:12', NULL, 1, 1, 1, 0);
+
+INSERT INTO banners (banners_title, banners_url, banners_image, banners_group, banners_html_text, expires_impressions, expires_date, date_scheduled, date_added, date_status_change, status, banners_open_new_windows, banners_on_ssl, banners_sort_order) VALUES ('Zen Cart', 'https://www.zen-cart.com', 'banners/zencart_468_60_02.gif', 'Wide-Banners', '', 0, NULL, NULL, '2004-01-11 20:59:12', NULL, 1, 1, 1, 0);
+INSERT INTO banners (banners_title, banners_url, banners_image, banners_group, banners_html_text, expires_impressions, expires_date, date_scheduled, date_added, date_status_change, status, banners_open_new_windows, banners_on_ssl, banners_sort_order) VALUES ('Zen Cart the art of e-commerce', 'https://www.zen-cart.com', 'banners/125zen_logo.gif', 'SideBox-Banners', '', 0, NULL, NULL, '2004-01-11 20:59:12', NULL, 1, 1, 1, 0);
+INSERT INTO banners (banners_title, banners_url, banners_image, banners_group, banners_html_text, expires_impressions, expires_date, date_scheduled, date_added, date_status_change, status, banners_open_new_windows, banners_on_ssl, banners_sort_order) VALUES ('Zen Cart the art of e-commerce', 'https://www.zen-cart.com', 'banners/125x125_zen_logo.gif', 'SideBox-Banners', '', 0, NULL, NULL, '2004-01-11 20:59:12', NULL, 1, 1, 1, 0);
+INSERT INTO banners (banners_title, banners_url, banners_image, banners_group, banners_html_text, expires_impressions, expires_date, date_scheduled, date_added, date_status_change, status, banners_open_new_windows, banners_on_ssl, banners_sort_order) VALUES ('if you have to think ... you haven''t been Zenned!', 'https://www.zen-cart.com', 'banners/think_anim.gif', 'Wide-Banners', '', 0, NULL, NULL, '2004-01-12 20:53:18', NULL, 1, 1, 1, 0);
+INSERT INTO banners (banners_title, banners_url, banners_image, banners_group, banners_html_text, expires_impressions, expires_date, date_scheduled, date_added, date_status_change, status, banners_open_new_windows, banners_on_ssl, banners_sort_order) VALUES ('Zen Cart the art of e-commerce', 'https://www.zen-cart.com', 'banners/bw_zen_88wide.gif', 'BannersAll', '', 0, NULL, NULL, '2005-05-13 10:54:38', NULL, 1, 1, 1, 10);
+INSERT INTO banners (banners_title, banners_url, banners_image, banners_group, banners_html_text, expires_impressions, expires_date, date_scheduled, date_added, date_status_change, status, banners_open_new_windows, banners_on_ssl, banners_sort_order) VALUES ('Zen Cart', 'https://www.zen-cart.com', '', 'Wide-Banners', '<script><!--//<![CDATA[\r\n   var loc = \'//pan.zen-cart.com/display/group/1/\';\r\n   var rd = Math.floor(Math.random()*99999999999);\r\n   document.write (\"<scr\"+\"ipt src=\'\"+loc);\r\n   document.write (\'?rd=\' + rd);\r\n   document.write (\"\'></scr\"+\"ipt>\");\r\n//]]>--></script>', 0, NULL, NULL, '2004-01-11 20:59:12', NULL, 1, 1, 1, 0);
+INSERT INTO banners (banners_title, banners_url, banners_image, banners_group, banners_html_text, expires_impressions, expires_date, date_scheduled, date_added, date_status_change, status, banners_open_new_windows, banners_on_ssl, banners_sort_order) VALUES ('Credit Card Processing', 'https://www.zen-cart.com/partners/square_promo', 'banners/cardsvcs_468x60.gif', 'Wide-Banners', '', 0, NULL, NULL, '2005-05-13 10:54:38', NULL, 1, 1, 1, 0);
+
 
 INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) VALUES ('Store Name', 'STORE_NAME', '', 'The name of my store', '1', '1', now());
 INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) VALUES ('Store Owner', 'STORE_OWNER', '', 'The name of my store owner', '1', '2', now());
@@ -2373,6 +2290,7 @@ INSERT INTO configuration (configuration_title, configuration_key, configuration
 
 INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES ('PA-DSS Admin Session Timeout Enforced?', 'PADSS_ADMIN_SESSION_TIMEOUT_ENFORCED', '1', 'PA-DSS Compliance requires that any Admin login sessions expire after 15 minutes of inactivity. <strong>Disabling this makes your site NON-COMPLIANT with PA-DSS rules, thus invalidating any certification.</strong>', 1, 30, now(), now(), NULL, 'zen_cfg_select_drop_down(array(array(\'id\'=>\'0\', \'text\'=>\'Non-Compliant\'), array(\'id\'=>\'1\', \'text\'=>\'On\')),');
 INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES ('PA-DSS Strong Password Rules Enforced?', 'PADSS_PWD_EXPIRY_ENFORCED', '1', 'PA-DSS Compliance requires that admin passwords must be changed after 90 days and cannot re-use the last 4 passwords. <strong>Disabling this makes your site NON-COMPLIANT with PA-DSS rules, thus invalidating any certification.</strong>', 1, 30, now(), now(), NULL, 'zen_cfg_select_drop_down(array(array(\'id\'=>\'0\', \'text\'=>\'Non-Compliant\'), array(\'id\'=>\'1\', \'text\'=>\'On\')),');
+INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES ('PA-DSS Ajax Checkout?', 'PADSS_AJAX_CHECKOUT', '1', 'PA-DSS Compliance requires that for some inbuilt payment methods, that we use ajax to draw the checkout confirmation screen. While this will only happen if one of those payment methods is actually present, some people may want the traditional checkout flow <strong>Disabling this makes your site NON-COMPLIANT with PA-DSS rules, thus invalidating any certification.</strong>', 1, 30, now(), now(), NULL, 'zen_cfg_select_drop_down(array(array(\'id\'=>\'0\', \'text\'=>\'Non-Compliant\'), array(\'id\'=>\'1\', \'text\'=>\'On\')),');
 
 INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, last_modified, date_added) VALUES ('Admin Session Time Out in Seconds', 'SESSION_TIMEOUT_ADMIN', '900', 'Enter the time in seconds.<br />Max allowed is 900 for PCI Compliance Reasons.<br /> Default=900<br />Example: 900= 15 min <br /><br />Note: Too few seconds can result in timeout issues when adding/editing products', 1, 40, NULL, now());
 INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES ('Admin Set max_execution_time for processes', 'GLOBAL_SET_TIME_LIMIT', '60', 'Enter the time in seconds for how long the max_execution_time of processes should be. Default=60<br />Example: 60= 1 minute<br /><br />Note: Changing the time limit is only needed if you are having problems with the execution time of a process', 1, 42, NULL, now(), NULL, NULL);
@@ -2427,10 +2345,6 @@ INSERT INTO configuration (configuration_title, configuration_key, configuration
 
 INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) VALUES ('Manufacturers List - Verify Product Exist', 'PRODUCTS_MANUFACTURERS_STATUS', '1', 'Verify that at least 1 product exists and is active for the manufacturer name to show<br /><br />Note: When this feature is ON it can produce slower results on sites with a large number of products and/or manufacturers<br />0= off 1= on', 3, 7, 'zen_cfg_select_option(array(\'0\', \'1\'), ', now());
 
-INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) VALUES ('Music Genre List - Scroll Box Size/Style', 'MAX_MUSIC_GENRES_LIST', '3', 'Number of music genre names to be displayed in the scroll box window. Setting this to 1 or 0 will display a dropdown list.', '3', '7', now());
-INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) VALUES ('Record Company List - Scroll Box Size/Style', 'MAX_RECORD_COMPANY_LIST', '3', 'Number of record company names to be displayed in the scroll box window. Setting this to 1 or 0 will display a dropdown list.', '3', '7', now());
-INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) VALUES ('Length of Record Company Name', 'MAX_DISPLAY_RECORD_COMPANY_NAME_LEN', '15', 'Used in record companies box; maximum length of record company name to display. Longer names will be truncated.', '3', '8', now());
-INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) VALUES ('Length of Music Genre Name', 'MAX_DISPLAY_MUSIC_GENRES_NAME_LEN', '15', 'Used in music genres box; maximum length of music genre name to display. Longer names will be truncated.', '3', '8', now());
 INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) VALUES ('Length of Manufacturers Name', 'MAX_DISPLAY_MANUFACTURER_NAME_LEN', '15', 'Used in manufacturers box; maximum length of manufacturers name to display. Longer names will be truncated.', '3', '8', now());
 INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) VALUES ('New Product Reviews Per Page', 'MAX_DISPLAY_NEW_REVIEWS', '6', 'Number of new reviews to display on each page', '3', '9', now());
 
@@ -2830,10 +2744,10 @@ INSERT INTO configuration (configuration_title, configuration_key, configuration
 INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) VALUES ('Product Quantity Box Status - Adding New Products', 'PRODUCTS_QTY_BOX_STATUS', '1', 'What should the Default Quantity Box Status be set to when adding New Products?<br /><br />0= off<br />1= on<br />NOTE: This will show a Qty Box when ON and default the Add to Cart to 1', '18', '55', 'zen_cfg_select_option(array(\'0\', \'1\'), ', now());
 INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) VALUES ('Product Reviews Require Approval', 'REVIEWS_APPROVAL', '1', 'Do product reviews require approval?<br /><br />Note: When Review Status is off, it will also not show<br /><br />0= off 1= on', '18', '62', 'zen_cfg_select_option(array(\'0\', \'1\'), ', now());
 
-INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) VALUES ('Meta Tags - Include Product Model in Title', 'META_TAG_INCLUDE_MODEL', '1', 'Do you want to include the Product Model in the Meta Tag Title?<br /><br />0= off 1= on', '18', '69', 'zen_cfg_select_option(array(\'0\', \'1\'), ', now());
-INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) VALUES ('Meta Tags - Include Product Price in Title', 'META_TAG_INCLUDE_PRICE', '1', 'Do you want to include the Product Price in the Meta Tag Title?<br /><br />0= off 1= on', '18', '70', 'zen_cfg_select_option(array(\'0\', \'1\'), ', now());
+INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) VALUES ('Meta Tags - Include Product Model in Title', 'METATAG_INCLUDE_MODEL', '1', 'Do you want to include the Product Model in the Meta Tag Title?<br /><br />0= off 1= on', '18', '69', 'zen_cfg_select_option(array(\'0\', \'1\'), ', now());
+INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) VALUES ('Meta Tags - Include Product Price in Title', 'METATAG_INCLUDE_PRICE', '1', 'Do you want to include the Product Price in the Meta Tag Title?<br /><br />0= off 1= on', '18', '70', 'zen_cfg_select_option(array(\'0\', \'1\'), ', now());
 
-INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, use_function, set_function, date_added) VALUES ('Meta Tags Generated Description Maximum Length?', 'MAX_META_TAG_DESCRIPTION_LENGTH', '50', 'Set Generated Meta Tag Description Maximum Length to (words) Default 50:', '18', '71', '', '', now());
+INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, use_function, set_function, date_added) VALUES ('Meta Tags Generated Description Maximum Length?', 'MAX_METATAG_DESCRIPTION_LENGTH', '50', 'Set Generated Meta Tag Description Maximum Length to (words) Default 50:', '18', '71', '', '', now());
 INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) VALUES ('Also Purchased Products Columns per Row', 'SHOW_PRODUCT_INFO_COLUMNS_ALSO_PURCHASED_PRODUCTS', '3', 'Also Purchased Products Columns per Row<br />0= off or set the sort order', '18', '72', 'zen_cfg_select_option(array(\'0\', \'1\', \'2\', \'3\', \'4\', \'5\', \'6\', \'7\', \'8\', \'9\', \'10\', \'11\', \'12\'), ', now());
 
 INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES ('Previous Next - Navigation Bar Position', 'PRODUCT_INFO_PREVIOUS_NEXT', '1', 'Location of Previous/Next Navigation Bar<br />0= off<br />1= Top of Page<br />2= Bottom of Page<br />3= Both Top and Bottom of Page', 18, 21, now(), now(), NULL, 'zen_cfg_select_drop_down(array(array(\'id\'=>\'0\', \'text\'=>\'Off\'), array(\'id\'=>\'1\', \'text\'=>\'Top of Page\'), array(\'id\'=>\'2\', \'text\'=>\'Bottom of Page\'), array(\'id\'=>\'3\', \'text\'=>\'Both Top & Bottom of Page\')),');
@@ -3103,10 +3017,8 @@ INSERT INTO layout_boxes (layout_template, layout_box_name, layout_box_status, l
 INSERT INTO layout_boxes (layout_template, layout_box_name, layout_box_status, layout_box_location, layout_box_sort_order, layout_box_sort_order_single, layout_box_status_single) VALUES ('default_template_settings', 'manufacturers.php', 1, 0, 30, 20, 1);
 INSERT INTO layout_boxes (layout_template, layout_box_name, layout_box_status, layout_box_location, layout_box_sort_order, layout_box_sort_order_single, layout_box_status_single) VALUES ('default_template_settings', 'manufacturer_info.php', 1, 1, 35, 95, 1);
 INSERT INTO layout_boxes (layout_template, layout_box_name, layout_box_status, layout_box_location, layout_box_sort_order, layout_box_sort_order_single, layout_box_status_single) VALUES ('default_template_settings', 'more_information.php', 1, 0, 200, 200, 1);
-INSERT INTO layout_boxes (layout_template, layout_box_name, layout_box_status, layout_box_location, layout_box_sort_order, layout_box_sort_order_single, layout_box_status_single) VALUES ('default_template_settings', 'music_genres.php', 1, 1, 0, 0, 0);
 INSERT INTO layout_boxes (layout_template, layout_box_name, layout_box_status, layout_box_location, layout_box_sort_order, layout_box_sort_order_single, layout_box_status_single) VALUES ('default_template_settings', 'order_history.php', 1, 1, 0, 0, 0);
 INSERT INTO layout_boxes (layout_template, layout_box_name, layout_box_status, layout_box_location, layout_box_sort_order, layout_box_sort_order_single, layout_box_status_single) VALUES ('default_template_settings', 'product_notifications.php', 1, 1, 55, 85, 1);
-INSERT INTO layout_boxes (layout_template, layout_box_name, layout_box_status, layout_box_location, layout_box_sort_order, layout_box_sort_order_single, layout_box_status_single) VALUES ('default_template_settings', 'record_companies.php', 1, 1, 0, 0, 0);
 INSERT INTO layout_boxes (layout_template, layout_box_name, layout_box_status, layout_box_location, layout_box_sort_order, layout_box_sort_order_single, layout_box_status_single) VALUES ('default_template_settings', 'reviews.php', 1, 0, 40, 0, 0);
 INSERT INTO layout_boxes (layout_template, layout_box_name, layout_box_status, layout_box_location, layout_box_sort_order, layout_box_sort_order_single, layout_box_status_single) VALUES ('default_template_settings', 'search.php', 1, 1, 10, 0, 0);
 INSERT INTO layout_boxes (layout_template, layout_box_name, layout_box_status, layout_box_location, layout_box_sort_order, layout_box_sort_order_single, layout_box_status_single) VALUES ('default_template_settings', 'search_header.php', 0, 0, 0, 0, 1);
@@ -3153,10 +3065,8 @@ INSERT INTO layout_boxes (layout_template, layout_box_name, layout_box_status, l
 INSERT INTO layout_boxes (layout_template, layout_box_name, layout_box_status, layout_box_location, layout_box_sort_order, layout_box_sort_order_single, layout_box_status_single) VALUES ('classic', 'manufacturers.php', 1, 0, 30, 20, 1);
 INSERT INTO layout_boxes (layout_template, layout_box_name, layout_box_status, layout_box_location, layout_box_sort_order, layout_box_sort_order_single, layout_box_status_single) VALUES ('classic', 'manufacturer_info.php', 1, 1, 35, 95, 1);
 INSERT INTO layout_boxes (layout_template, layout_box_name, layout_box_status, layout_box_location, layout_box_sort_order, layout_box_sort_order_single, layout_box_status_single) VALUES ('classic', 'more_information.php', 1, 0, 200, 200, 1);
-INSERT INTO layout_boxes (layout_template, layout_box_name, layout_box_status, layout_box_location, layout_box_sort_order, layout_box_sort_order_single, layout_box_status_single) VALUES ('classic', 'music_genres.php', 1, 1, 0, 0, 0);
 INSERT INTO layout_boxes (layout_template, layout_box_name, layout_box_status, layout_box_location, layout_box_sort_order, layout_box_sort_order_single, layout_box_status_single) VALUES ('classic', 'order_history.php', 1, 1, 0, 0, 0);
 INSERT INTO layout_boxes (layout_template, layout_box_name, layout_box_status, layout_box_location, layout_box_sort_order, layout_box_sort_order_single, layout_box_status_single) VALUES ('classic', 'product_notifications.php', 1, 1, 55, 85, 1);
-INSERT INTO layout_boxes (layout_template, layout_box_name, layout_box_status, layout_box_location, layout_box_sort_order, layout_box_sort_order_single, layout_box_status_single) VALUES ('classic', 'record_companies.php', 1, 1, 0, 0, 0);
 INSERT INTO layout_boxes (layout_template, layout_box_name, layout_box_status, layout_box_location, layout_box_sort_order, layout_box_sort_order_single, layout_box_status_single) VALUES ('classic', 'reviews.php', 1, 0, 40, 0, 0);
 INSERT INTO layout_boxes (layout_template, layout_box_name, layout_box_status, layout_box_location, layout_box_sort_order, layout_box_sort_order_single, layout_box_status_single) VALUES ('classic', 'search.php', 1, 1, 10, 0, 0);
 INSERT INTO layout_boxes (layout_template, layout_box_name, layout_box_status, layout_box_location, layout_box_sort_order, layout_box_sort_order_single, layout_box_status_single) VALUES ('classic', 'search_header.php', 0, 0, 0, 0, 1);
@@ -3179,10 +3089,8 @@ INSERT INTO layout_boxes (layout_template, layout_box_name, layout_box_status, l
 INSERT INTO layout_boxes (layout_template, layout_box_name, layout_box_status, layout_box_location, layout_box_sort_order, layout_box_sort_order_single, layout_box_status_single) VALUES ('responsive_classic', 'manufacturers.php', 1, 0, 30, 20, 1);
 INSERT INTO layout_boxes (layout_template, layout_box_name, layout_box_status, layout_box_location, layout_box_sort_order, layout_box_sort_order_single, layout_box_status_single) VALUES ('responsive_classic', 'manufacturer_info.php', 1, 1, 35, 95, 1);
 INSERT INTO layout_boxes (layout_template, layout_box_name, layout_box_status, layout_box_location, layout_box_sort_order, layout_box_sort_order_single, layout_box_status_single) VALUES ('responsive_classic', 'more_information.php', 1, 0, 200, 200, 1);
-INSERT INTO layout_boxes (layout_template, layout_box_name, layout_box_status, layout_box_location, layout_box_sort_order, layout_box_sort_order_single, layout_box_status_single) VALUES ('responsive_classic', 'music_genres.php', 1, 1, 0, 0, 0);
 INSERT INTO layout_boxes (layout_template, layout_box_name, layout_box_status, layout_box_location, layout_box_sort_order, layout_box_sort_order_single, layout_box_status_single) VALUES ('responsive_classic', 'order_history.php', 1, 1, 0, 0, 0);
 INSERT INTO layout_boxes (layout_template, layout_box_name, layout_box_status, layout_box_location, layout_box_sort_order, layout_box_sort_order_single, layout_box_status_single) VALUES ('responsive_classic', 'product_notifications.php', 1, 1, 55, 85, 1);
-INSERT INTO layout_boxes (layout_template, layout_box_name, layout_box_status, layout_box_location, layout_box_sort_order, layout_box_sort_order_single, layout_box_status_single) VALUES ('responsive_classic', 'record_companies.php', 1, 1, 0, 0, 0);
 INSERT INTO layout_boxes (layout_template, layout_box_name, layout_box_status, layout_box_location, layout_box_sort_order, layout_box_sort_order_single, layout_box_status_single) VALUES ('responsive_classic', 'reviews.php', 1, 0, 40, 0, 0);
 INSERT INTO layout_boxes (layout_template, layout_box_name, layout_box_status, layout_box_location, layout_box_sort_order, layout_box_sort_order_single, layout_box_status_single) VALUES ('responsive_classic', 'search.php', 1, 1, 10, 0, 0);
 INSERT INTO layout_boxes (layout_template, layout_box_name, layout_box_status, layout_box_location, layout_box_sort_order, layout_box_sort_order_single, layout_box_status_single) VALUES ('responsive_classic', 'search_header.php', 0, 0, 0, 0, 1);
@@ -3197,10 +3105,9 @@ INSERT INTO orders_status VALUES ( '3', '1', 'Delivered');
 INSERT INTO orders_status VALUES ( '4', '1', 'Update');
 
 INSERT INTO product_types VALUES (1, 'Product - General', 'product', '1', 'Y', '', now(), now());
-INSERT INTO product_types VALUES (2, 'Product - Music', 'product_music', '1', 'Y', '', now(), now());
-INSERT INTO product_types VALUES (3, 'Document - General', 'document_general', '3', 'N', '', now(), now());
-INSERT INTO product_types VALUES (4, 'Document - Product', 'document_product', '3', 'Y', '', now(), now());
-INSERT INTO product_types VALUES (5, 'Product - Free Shipping', 'product_free_shipping', '1', 'Y', '', now(), now());
+INSERT INTO product_types VALUES (2, 'Document - General', 'document_general', '3', 'N', '', now(), now());
+INSERT INTO product_types VALUES (3, 'Document - Product', 'document_product', '3', 'Y', '', now(), now());
+INSERT INTO product_types VALUES (4, 'Product - Free Shipping', 'product_free_shipping', '1', 'Y', '', now(), now());
 
 INSERT INTO products_options_types (products_options_types_id, products_options_types_name) VALUES (0, 'Dropdown');
 INSERT INTO products_options_types (products_options_types_id, products_options_types_name) VALUES (1, 'Text');
@@ -3238,30 +3145,6 @@ INSERT INTO product_type_layout (configuration_title, configuration_key, configu
 INSERT INTO product_type_layout (configuration_title, configuration_key, configuration_value, configuration_description, product_type_id, sort_order, set_function, date_added) VALUES ('Product Virtual Default Status - Skip Shipping Address - When adding new products?', 'DEFAULT_PRODUCT_PRODUCTS_VIRTUAL', '0', 'Default Virtual Product status to be ON when adding new products?', '1', '101', 'zen_cfg_select_drop_down(array(array(\'id\'=>\'1\', \'text\'=>\'True\'), array(\'id\'=>\'0\', \'text\'=>\'False\')), ', now());
 
 INSERT INTO product_type_layout (configuration_title, configuration_key, configuration_value, configuration_description, product_type_id, sort_order, set_function, date_added) VALUES ('Product Free Shipping Default Status - Normal Shipping Rules - When adding new products?', 'DEFAULT_PRODUCT_PRODUCTS_IS_ALWAYS_FREE_SHIPPING', '0', 'What should the Default Free Shipping status be when adding new products?<br />Yes, Always Free Shipping ON<br />No, Always Free Shipping OFF<br />Special, Product/Download Requires Shipping', '1', '102', 'zen_cfg_select_drop_down(array(array(\'id\'=>\'1\', \'text\'=>\'Yes, Always ON\'), array(\'id\'=>\'0\', \'text\'=>\'No, Always OFF\'), array(\'id\'=>\'2\', \'text\'=>\'Special\')), ', now());
-
-
-INSERT INTO product_type_layout (configuration_title, configuration_key, configuration_value, configuration_description, product_type_id, sort_order, set_function, date_added) VALUES ('Show Model Number', 'SHOW_PRODUCT_MUSIC_INFO_MODEL', '1', 'Display Model Number on Product Info 0= off 1= on', '2', '1', 'zen_cfg_select_drop_down(array(array(\'id\'=>\'1\', \'text\'=>\'True\'), array(\'id\'=>\'0\', \'text\'=>\'False\')), ', now());
-INSERT INTO product_type_layout (configuration_title, configuration_key, configuration_value, configuration_description, product_type_id, sort_order, set_function, date_added) VALUES ('Show Weight', 'SHOW_PRODUCT_MUSIC_INFO_WEIGHT', '0', 'Display Weight on Product Info 0= off 1= on', '2', '2', 'zen_cfg_select_drop_down(array(array(\'id\'=>\'1\', \'text\'=>\'True\'), array(\'id\'=>\'0\', \'text\'=>\'False\')), ', now());
-INSERT INTO product_type_layout (configuration_title, configuration_key, configuration_value, configuration_description, product_type_id, sort_order, set_function, date_added) VALUES ('Show Attribute Weight', 'SHOW_PRODUCT_MUSIC_INFO_WEIGHT_ATTRIBUTES', '1', 'Display Attribute Weight on Product Info 0= off 1= on', '2', '3', 'zen_cfg_select_drop_down(array(array(\'id\'=>\'1\', \'text\'=>\'True\'), array(\'id\'=>\'0\', \'text\'=>\'False\')), ', now());
-INSERT INTO product_type_layout (configuration_title, configuration_key, configuration_value, configuration_description, product_type_id, sort_order, set_function, date_added) VALUES ('Show Artist', 'SHOW_PRODUCT_MUSIC_INFO_ARTIST', '1', 'Display Artists Name on Product Info 0= off 1= on', '2', '4', 'zen_cfg_select_drop_down(array(array(\'id\'=>\'1\', \'text\'=>\'True\'), array(\'id\'=>\'0\', \'text\'=>\'False\')), ', now());
-INSERT INTO product_type_layout (configuration_title, configuration_key, configuration_value, configuration_description, product_type_id, sort_order, set_function, date_added) VALUES ('Show Music Genre', 'SHOW_PRODUCT_MUSIC_INFO_GENRE', '1', 'Display Music Genre on Product Info 0= off 1= on', '2', '4', 'zen_cfg_select_drop_down(array(array(\'id\'=>\'1\', \'text\'=>\'True\'), array(\'id\'=>\'0\', \'text\'=>\'False\')), ', now());
-INSERT INTO product_type_layout (configuration_title, configuration_key, configuration_value, configuration_description, product_type_id, sort_order, set_function, date_added) VALUES ('Show Record Company', 'SHOW_PRODUCT_MUSIC_INFO_RECORD_COMPANY', '1', 'Display Record Company on Product Info 0= off 1= on', '2', '4', 'zen_cfg_select_drop_down(array(array(\'id\'=>\'1\', \'text\'=>\'True\'), array(\'id\'=>\'0\', \'text\'=>\'False\')), ', now());
-INSERT INTO product_type_layout (configuration_title, configuration_key, configuration_value, configuration_description, product_type_id, sort_order, set_function, date_added) VALUES ('Show Quantity in Shopping Cart', 'SHOW_PRODUCT_MUSIC_INFO_IN_CART_QTY', '1', 'Display Quantity in Current Shopping Cart on Product Info 0= off 1= on', '2', '5', 'zen_cfg_select_drop_down(array(array(\'id\'=>\'1\', \'text\'=>\'True\'), array(\'id\'=>\'0\', \'text\'=>\'False\')), ', now());
-INSERT INTO product_type_layout (configuration_title, configuration_key, configuration_value, configuration_description, product_type_id, sort_order, set_function, date_added) VALUES ('Show Quantity in Stock', 'SHOW_PRODUCT_MUSIC_INFO_QUANTITY', '0', 'Display Quantity in Stock on Product Info 0= off 1= on', '2', '6', 'zen_cfg_select_drop_down(array(array(\'id\'=>\'1\', \'text\'=>\'True\'), array(\'id\'=>\'0\', \'text\'=>\'False\')), ', now());
-INSERT INTO product_type_layout (configuration_title, configuration_key, configuration_value, configuration_description, product_type_id, sort_order, set_function, date_added) VALUES ('Show Product Reviews Count', 'SHOW_PRODUCT_MUSIC_INFO_REVIEWS_COUNT', '1', 'Display Product Reviews Count on Product Info 0= off 1= on', '2', '7', 'zen_cfg_select_drop_down(array(array(\'id\'=>\'1\', \'text\'=>\'True\'), array(\'id\'=>\'0\', \'text\'=>\'False\')), ', now());
-INSERT INTO product_type_layout (configuration_title, configuration_key, configuration_value, configuration_description, product_type_id, sort_order, set_function, date_added) VALUES ('Show Product Reviews Button', 'SHOW_PRODUCT_MUSIC_INFO_REVIEWS', '1', 'Display Product Reviews Button on Product Info 0= off 1= on', '2', '8', 'zen_cfg_select_drop_down(array(array(\'id\'=>\'1\', \'text\'=>\'True\'), array(\'id\'=>\'0\', \'text\'=>\'False\')), ', now());
-INSERT INTO product_type_layout (configuration_title, configuration_key, configuration_value, configuration_description, product_type_id, sort_order, set_function, date_added) VALUES ('Show Date Available', 'SHOW_PRODUCT_MUSIC_INFO_DATE_AVAILABLE', '1', 'Display Date Available on Product Info 0= off 1= on', '2', '9', 'zen_cfg_select_drop_down(array(array(\'id\'=>\'1\', \'text\'=>\'True\'), array(\'id\'=>\'0\', \'text\'=>\'False\')), ', now());
-INSERT INTO product_type_layout (configuration_title, configuration_key, configuration_value, configuration_description, product_type_id, sort_order, set_function, date_added) VALUES ('Show Date Added', 'SHOW_PRODUCT_MUSIC_INFO_DATE_ADDED', '1', 'Display Date Added on Product Info 0= off 1= on', '2', '10', 'zen_cfg_select_drop_down(array(array(\'id\'=>\'1\', \'text\'=>\'True\'), array(\'id\'=>\'0\', \'text\'=>\'False\')), ', now());
-
-INSERT INTO product_type_layout (configuration_title, configuration_key, configuration_value, configuration_description, product_type_id, sort_order, set_function, date_added) VALUES ('Show Starting At text on Price', 'SHOW_PRODUCT_MUSIC_INFO_STARTING_AT', '1', 'Display Starting At text on products with attributes Product Info 0= off 1= on', '2', '12', 'zen_cfg_select_drop_down(array(array(\'id\'=>\'1\', \'text\'=>\'True\'), array(\'id\'=>\'0\', \'text\'=>\'False\')), ', now());
-INSERT INTO product_type_layout (configuration_title, configuration_key, configuration_value, configuration_description, product_type_id, sort_order, set_function, date_added) VALUES ('Show Product Additional Images', 'SHOW_PRODUCT_MUSIC_INFO_ADDITIONAL_IMAGES', '1', 'Display Additional Images on Product Info 0= off 1= on', '2', '13', 'zen_cfg_select_drop_down(array(array(\'id\'=>\'1\', \'text\'=>\'True\'), array(\'id\'=>\'0\', \'text\'=>\'False\')), ', now());
-
-INSERT INTO product_type_layout (configuration_title, configuration_key, configuration_value, configuration_description, product_type_id, sort_order, set_function, date_added) VALUES ('Product Free Shipping Image Status - Catalog', 'SHOW_PRODUCT_MUSIC_INFO_ALWAYS_FREE_SHIPPING_IMAGE_SWITCH', '0', 'Show the Free Shipping image/text in the catalog?', '2', '16', 'zen_cfg_select_drop_down(array(array(\'id\'=>\'1\', \'text\'=>\'Yes\'), array(\'id\'=>\'0\', \'text\'=>\'No\')), ', now());
-#admin defaults
-INSERT INTO product_type_layout (configuration_title, configuration_key, configuration_value, configuration_description, product_type_id, sort_order, use_function, set_function, date_added) VALUES ('Product Price Tax Class Default - When adding new products?', 'DEFAULT_PRODUCT_MUSIC_TAX_CLASS_ID', '0', 'What should the Product Price Tax Class Default ID be when adding new products?', '2', '100', '', '', now());
-INSERT INTO product_type_layout (configuration_title, configuration_key, configuration_value, configuration_description, product_type_id, sort_order, set_function, date_added) VALUES ('Product Virtual Default Status - Skip Shipping Address - When adding new products?', 'DEFAULT_PRODUCT_MUSIC_PRODUCTS_VIRTUAL', '0', 'Default Virtual Product status to be ON when adding new products?', '2', '101', 'zen_cfg_select_drop_down(array(array(\'id\'=>\'1\', \'text\'=>\'True\'), array(\'id\'=>\'0\', \'text\'=>\'False\')), ', now());
-INSERT INTO product_type_layout (configuration_title, configuration_key, configuration_value, configuration_description, product_type_id, sort_order, set_function, date_added) VALUES ('Product Free Shipping Default Status - Normal Shipping Rules - When adding new products?', 'DEFAULT_PRODUCT_MUSIC_PRODUCTS_IS_ALWAYS_FREE_SHIPPING', '0', 'What should the Default Free Shipping status be when adding new products?<br />Yes, Always Free Shipping ON<br />No, Always Free Shipping OFF<br />Special, Product/Download Requires Shipping', '2', '102', 'zen_cfg_select_drop_down(array(array(\'id\'=>\'1\', \'text\'=>\'Yes, Always ON\'), array(\'id\'=>\'0\', \'text\'=>\'No, Always OFF\'), array(\'id\'=>\'2\', \'text\'=>\'Special\')), ', now());
-
 
 INSERT INTO product_type_layout (configuration_title, configuration_key, configuration_value, configuration_description, product_type_id, sort_order, set_function, date_added) VALUES ('Show Product Reviews Count', 'SHOW_DOCUMENT_GENERAL_INFO_REVIEWS_COUNT', '1', 'Display Product Reviews Count on Product Info 0= off 1= on', '3', '7', 'zen_cfg_select_drop_down(array(array(\'id\'=>\'1\', \'text\'=>\'True\'), array(\'id\'=>\'0\', \'text\'=>\'False\')), ', now());
 INSERT INTO product_type_layout (configuration_title, configuration_key, configuration_value, configuration_description, product_type_id, sort_order, set_function, date_added) VALUES ('Show Product Reviews Button', 'SHOW_DOCUMENT_GENERAL_INFO_REVIEWS', '1', 'Display Product Reviews Button on Product Info 0= off 1= on', '3', '8', 'zen_cfg_select_drop_down(array(array(\'id\'=>\'1\', \'text\'=>\'True\'), array(\'id\'=>\'0\', \'text\'=>\'False\')), ', now());
@@ -3317,18 +3200,12 @@ INSERT INTO product_type_layout (configuration_title, configuration_key, configu
 INSERT INTO product_type_layout (configuration_title, configuration_key, configuration_value, configuration_description, product_type_id, sort_order, set_function, date_added) VALUES ('Product Virtual Default Status - Skip Shipping Address - When adding new products?', 'DEFAULT_PRODUCT_FREE_SHIPPING_PRODUCTS_VIRTUAL', '0', 'Default Virtual Product status to be ON when adding new products?', '5', '101', 'zen_cfg_select_drop_down(array(array(\'id\'=>\'1\', \'text\'=>\'True\'), array(\'id\'=>\'0\', \'text\'=>\'False\')), ', now());
 INSERT INTO product_type_layout (configuration_title, configuration_key, configuration_value, configuration_description, product_type_id, sort_order, set_function, date_added) VALUES ('Product Free Shipping Default Status - Normal Shipping Rules - When adding new products?', 'DEFAULT_PRODUCT_FREE_SHIPPING_PRODUCTS_IS_ALWAYS_FREE_SHIPPING', '1', 'What should the Default Free Shipping status be when adding new products?<br />Yes, Always Free Shipping ON<br />No, Always Free Shipping OFF<br />Special, Product/Download Requires Shipping', '5', '102', 'zen_cfg_select_drop_down(array(array(\'id\'=>\'1\', \'text\'=>\'Yes, Always ON\'), array(\'id\'=>\'0\', \'text\'=>\'No, Always OFF\'), array(\'id\'=>\'2\', \'text\'=>\'Special\')), ', now());
 
-#insert product type layout settings for meta-tags
+#insert product type layout settings for metatags
 INSERT INTO product_type_layout (configuration_title, configuration_key, configuration_value, configuration_description, product_type_id, sort_order, set_function, date_added) VALUES ('Show Metatags Title Default - Product Title', 'SHOW_PRODUCT_INFO_METATAGS_TITLE_STATUS', '1', 'Display Product Title in Meta Tags Title 0= off 1= on', '1', '50', 'zen_cfg_select_drop_down(array(array(\'id\'=>\'1\', \'text\'=>\'True\'), array(\'id\'=>\'0\', \'text\'=>\'False\')), ', now());
 INSERT INTO product_type_layout (configuration_title, configuration_key, configuration_value, configuration_description, product_type_id, sort_order, set_function, date_added) VALUES ('Show Metatags Title Default - Product Name', 'SHOW_PRODUCT_INFO_METATAGS_PRODUCTS_NAME_STATUS', '1', 'Display Product Name in Meta Tags Title 0= off 1= on', '1', '51', 'zen_cfg_select_drop_down(array(array(\'id\'=>\'1\', \'text\'=>\'True\'), array(\'id\'=>\'0\', \'text\'=>\'False\')), ', now());
 INSERT INTO product_type_layout (configuration_title, configuration_key, configuration_value, configuration_description, product_type_id, sort_order, set_function, date_added) VALUES ('Show Metatags Title Default - Product Model', 'SHOW_PRODUCT_INFO_METATAGS_MODEL_STATUS', '1', 'Display Product Model in Meta Tags Title 0= off 1= on', '1', '52', 'zen_cfg_select_drop_down(array(array(\'id\'=>\'1\', \'text\'=>\'True\'), array(\'id\'=>\'0\', \'text\'=>\'False\')), ', now());
 INSERT INTO product_type_layout (configuration_title, configuration_key, configuration_value, configuration_description, product_type_id, sort_order, set_function, date_added) VALUES ('Show Metatags Title Default - Product Price', 'SHOW_PRODUCT_INFO_METATAGS_PRICE_STATUS', '1', 'Display Product Price in Meta Tags Title 0= off 1= on', '1', '53', 'zen_cfg_select_drop_down(array(array(\'id\'=>\'1\', \'text\'=>\'True\'), array(\'id\'=>\'0\', \'text\'=>\'False\')), ', now());
 INSERT INTO product_type_layout (configuration_title, configuration_key, configuration_value, configuration_description, product_type_id, sort_order, set_function, date_added) VALUES ('Show Metatags Title Default - Product Tagline', 'SHOW_PRODUCT_INFO_METATAGS_TITLE_TAGLINE_STATUS', '1', 'Display Product Tagline in Meta Tags Title 0= off 1= on', '1', '54', 'zen_cfg_select_drop_down(array(array(\'id\'=>\'1\', \'text\'=>\'True\'), array(\'id\'=>\'0\', \'text\'=>\'False\')), ', now());
-
-INSERT INTO product_type_layout (configuration_title, configuration_key, configuration_value, configuration_description, product_type_id, sort_order, set_function, date_added) VALUES ('Show Metatags Title Default - Product Title', 'SHOW_PRODUCT_MUSIC_INFO_METATAGS_TITLE_STATUS', '1', 'Display Product Title in Meta Tags Title 0= off 1= on', '2', '50', 'zen_cfg_select_drop_down(array(array(\'id\'=>\'1\', \'text\'=>\'True\'), array(\'id\'=>\'0\', \'text\'=>\'False\')), ', now());
-INSERT INTO product_type_layout (configuration_title, configuration_key, configuration_value, configuration_description, product_type_id, sort_order, set_function, date_added) VALUES ('Show Metatags Title Default - Product Name', 'SHOW_PRODUCT_MUSIC_INFO_METATAGS_PRODUCTS_NAME_STATUS', '1', 'Display Product Name in Meta Tags Title 0= off 1= on', '2', '51', 'zen_cfg_select_drop_down(array(array(\'id\'=>\'1\', \'text\'=>\'True\'), array(\'id\'=>\'0\', \'text\'=>\'False\')), ', now());
-INSERT INTO product_type_layout (configuration_title, configuration_key, configuration_value, configuration_description, product_type_id, sort_order, set_function, date_added) VALUES ('Show Metatags Title Default - Product Model', 'SHOW_PRODUCT_MUSIC_INFO_METATAGS_MODEL_STATUS', '1', 'Display Product Model in Meta Tags Title 0= off 1= on', '2', '52', 'zen_cfg_select_drop_down(array(array(\'id\'=>\'1\', \'text\'=>\'True\'), array(\'id\'=>\'0\', \'text\'=>\'False\')), ', now());
-INSERT INTO product_type_layout (configuration_title, configuration_key, configuration_value, configuration_description, product_type_id, sort_order, set_function, date_added) VALUES ('Show Metatags Title Default - Product Price', 'SHOW_PRODUCT_MUSIC_INFO_METATAGS_PRICE_STATUS', '1', 'Display Product Price in Meta Tags Title 0= off 1= on', '2', '53', 'zen_cfg_select_drop_down(array(array(\'id\'=>\'1\', \'text\'=>\'True\'), array(\'id\'=>\'0\', \'text\'=>\'False\')), ', now());
-INSERT INTO product_type_layout (configuration_title, configuration_key, configuration_value, configuration_description, product_type_id, sort_order, set_function, date_added) VALUES ('Show Metatags Title Default - Product Tagline', 'SHOW_PRODUCT_MUSIC_INFO_METATAGS_TITLE_TAGLINE_STATUS', '1', 'Display Product Tagline in Meta Tags Title 0= off 1= on', '2', '54', 'zen_cfg_select_drop_down(array(array(\'id\'=>\'1\', \'text\'=>\'True\'), array(\'id\'=>\'0\', \'text\'=>\'False\')), ', now());
 
 INSERT INTO product_type_layout (configuration_title, configuration_key, configuration_value, configuration_description, product_type_id, sort_order, set_function, date_added) VALUES ('Show Metatags Title Default - Document Title', 'SHOW_DOCUMENT_GENERAL_INFO_METATAGS_TITLE_STATUS', '1', 'Display Document Title in Meta Tags Title 0= off 1= on', '3', '50', 'zen_cfg_select_drop_down(array(array(\'id\'=>\'1\', \'text\'=>\'True\'), array(\'id\'=>\'0\', \'text\'=>\'False\')), ', now());
 INSERT INTO product_type_layout (configuration_title, configuration_key, configuration_value, configuration_description, product_type_id, sort_order, set_function, date_added) VALUES ('Show Metatags Title Default - Document Name', 'SHOW_DOCUMENT_GENERAL_INFO_METATAGS_PRODUCTS_NAME_STATUS', '1', 'Display Document Name in Meta Tags Title 0= off 1= on', '3', '51', 'zen_cfg_select_drop_down(array(array(\'id\'=>\'1\', \'text\'=>\'True\'), array(\'id\'=>\'0\', \'text\'=>\'False\')), ', now());
@@ -3356,15 +3233,6 @@ INSERT INTO product_type_layout (configuration_title, configuration_key, configu
 INSERT INTO product_type_layout (configuration_title, configuration_key, configuration_value, configuration_description, product_type_id, sort_order, set_function, date_added) VALUES ('PRODUCT Attribute is Required - Default', 'DEFAULT_PRODUCT_ATTRIBUTES_REQUIRED', '0', 'PRODUCT Attribute is Required<br />Attribute Required for Text<br />0= No 1= Yes', '1', '205', 'zen_cfg_select_drop_down(array(array(\'id\'=>\'1\', \'text\'=>\'Yes\'), array(\'id\'=>\'0\', \'text\'=>\'No\')), ', now());
 INSERT INTO product_type_layout (configuration_title, configuration_key, configuration_value, configuration_description, product_type_id, sort_order, set_function, date_added) VALUES ('PRODUCT Attribute Price Prefix - Default', 'DEFAULT_PRODUCT_PRICE_PREFIX', '1', 'PRODUCT Attribute Price Prefix<br />Default Attribute Price Prefix for Adding<br />Blank, + or -', '1', '206', 'zen_cfg_select_drop_down(array(array(\'id\'=>\'0\', \'text\'=>\'Blank\'), array(\'id\'=>\'1\', \'text\'=>\'+\'), array(\'id\'=>\'2\', \'text\'=>\'-\')), ', now());
 INSERT INTO product_type_layout (configuration_title, configuration_key, configuration_value, configuration_description, product_type_id, sort_order, set_function, date_added) VALUES ('PRODUCT Attribute Weight Prefix - Default', 'DEFAULT_PRODUCT_PRODUCTS_ATTRIBUTES_WEIGHT_PREFIX', '1', 'PRODUCT Attribute Weight Prefix<br />Default Attribute Weight Prefix<br />Blank, + or -', '1', '207', 'zen_cfg_select_drop_down(array(array(\'id\'=>\'0\', \'text\'=>\'Blank\'), array(\'id\'=>\'1\', \'text\'=>\'+\'), array(\'id\'=>\'2\', \'text\'=>\'-\')), ', now());
-
-INSERT INTO product_type_layout (configuration_title, configuration_key, configuration_value, configuration_description, product_type_id, sort_order, set_function, date_added) VALUES ('MUSIC Attribute is Display Only - Default', 'DEFAULT_PRODUCT_MUSIC_ATTRIBUTES_DISPLAY_ONLY', '0', 'MUSIC Attribute is Display Only<br />Used For Display Purposes Only<br />0= No 1= Yes', '2', '200', 'zen_cfg_select_drop_down(array(array(\'id\'=>\'1\', \'text\'=>\'Yes\'), array(\'id\'=>\'0\', \'text\'=>\'No\')), ', now());
-INSERT INTO product_type_layout (configuration_title, configuration_key, configuration_value, configuration_description, product_type_id, sort_order, set_function, date_added) VALUES ('MUSIC Attribute is Free - Default', 'DEFAULT_PRODUCT_MUSIC_ATTRIBUTE_IS_FREE', '1', 'MUSIC Attribute is Free<br />Attribute is Free When Product is Free<br />0= No 1= Yes', '2', '201', 'zen_cfg_select_drop_down(array(array(\'id\'=>\'1\', \'text\'=>\'Yes\'), array(\'id\'=>\'0\', \'text\'=>\'No\')), ', now());
-INSERT INTO product_type_layout (configuration_title, configuration_key, configuration_value, configuration_description, product_type_id, sort_order, set_function, date_added) VALUES ('MUSIC Attribute is Default - Default', 'DEFAULT_PRODUCT_MUSIC_ATTRIBUTES_DEFAULT', '0', 'MUSIC Attribute is Default<br />Default Attribute to be Marked Selected<br />0= No 1= Yes', '2', '202', 'zen_cfg_select_drop_down(array(array(\'id\'=>\'1\', \'text\'=>\'Yes\'), array(\'id\'=>\'0\', \'text\'=>\'No\')), ', now());
-INSERT INTO product_type_layout (configuration_title, configuration_key, configuration_value, configuration_description, product_type_id, sort_order, set_function, date_added) VALUES ('MUSIC Attribute is Discounted - Default', 'DEFAULT_PRODUCT_MUSIC_ATTRIBUTES_DISCOUNTED', '1', 'MUSIC Attribute is Discounted<br />Apply Discounts Used by Product Special/Sale<br />0= No 1= Yes', '2', '203', 'zen_cfg_select_drop_down(array(array(\'id\'=>\'1\', \'text\'=>\'Yes\'), array(\'id\'=>\'0\', \'text\'=>\'No\')), ', now());
-INSERT INTO product_type_layout (configuration_title, configuration_key, configuration_value, configuration_description, product_type_id, sort_order, set_function, date_added) VALUES ('MUSIC Attribute is Included in Base Price - Default', 'DEFAULT_PRODUCT_MUSIC_ATTRIBUTES_PRICE_BASE_INCLUDED', '1', 'MUSIC Attribute is Included in Base Price<br />Include in Base Price When Priced by Attributes<br />0= No 1= Yes', '2', '204', 'zen_cfg_select_drop_down(array(array(\'id\'=>\'1\', \'text\'=>\'Yes\'), array(\'id\'=>\'0\', \'text\'=>\'No\')), ', now());
-INSERT INTO product_type_layout (configuration_title, configuration_key, configuration_value, configuration_description, product_type_id, sort_order, set_function, date_added) VALUES ('MUSIC Attribute is Required - Default', 'DEFAULT_PRODUCT_MUSIC_ATTRIBUTES_REQUIRED', '0', 'MUSIC Attribute is Required<br />Attribute Required for Text<br />0= No 1= Yes', '2', '205', 'zen_cfg_select_drop_down(array(array(\'id\'=>\'1\', \'text\'=>\'Yes\'), array(\'id\'=>\'0\', \'text\'=>\'No\')), ', now());
-INSERT INTO product_type_layout (configuration_title, configuration_key, configuration_value, configuration_description, product_type_id, sort_order, set_function, date_added) VALUES ('MUSIC Attribute Price Prefix - Default', 'DEFAULT_PRODUCT_MUSIC_PRICE_PREFIX', '1', 'MUSIC Attribute Price Prefix<br />Default Attribute Price Prefix for Adding<br />Blank, + or -', '2', '206', 'zen_cfg_select_drop_down(array(array(\'id\'=>\'0\', \'text\'=>\'Blank\'), array(\'id\'=>\'1\', \'text\'=>\'+\'), array(\'id\'=>\'2\', \'text\'=>\'-\')), ', now());
-INSERT INTO product_type_layout (configuration_title, configuration_key, configuration_value, configuration_description, product_type_id, sort_order, set_function, date_added) VALUES ('MUSIC Attribute Weight Prefix - Default', 'DEFAULT_PRODUCT_MUSIC_PRODUCTS_ATTRIBUTES_WEIGHT_PREFIX', '1', 'MUSIC Attribute Weight Prefix<br />Default Attribute Weight Prefix<br />Blank, + or -', '2', '207', 'zen_cfg_select_drop_down(array(array(\'id\'=>\'0\', \'text\'=>\'Blank\'), array(\'id\'=>\'1\', \'text\'=>\'+\'), array(\'id\'=>\'2\', \'text\'=>\'-\')), ', now());
 
 INSERT INTO product_type_layout (configuration_title, configuration_key, configuration_value, configuration_description, product_type_id, sort_order, set_function, date_added) VALUES ('DOCUMENT GENERAL Attribute is Display Only - Default', 'DEFAULT_DOCUMENT_GENERAL_ATTRIBUTES_DISPLAY_ONLY', '0', 'DOCUMENT GENERAL Attribute is Display Only<br />Used For Display Purposes Only<br />0= No 1= Yes', '3', '200', 'zen_cfg_select_drop_down(array(array(\'id\'=>\'1\', \'text\'=>\'Yes\'), array(\'id\'=>\'0\', \'text\'=>\'No\')), ', now());
 INSERT INTO product_type_layout (configuration_title, configuration_key, configuration_value, configuration_description, product_type_id, sort_order, set_function, date_added) VALUES ('DOCUMENT GENERAL Attribute is Free - Default', 'DEFAULT_DOCUMENT_GENERAL_ATTRIBUTE_IS_FREE', '1', 'DOCUMENT GENERAL Attribute is Free<br />Attribute is Free When Product is Free<br />0= No 1= Yes', '3', '201', 'zen_cfg_select_drop_down(array(array(\'id\'=>\'1\', \'text\'=>\'Yes\'), array(\'id\'=>\'0\', \'text\'=>\'No\')), ', now());
@@ -3414,26 +3282,14 @@ INSERT INTO query_builder ( query_id , query_category , query_name , query_descr
 #
 
 INSERT INTO get_terms_to_filter VALUES ('manufacturers_id', 'TABLE_MANUFACTURERS', 'manufacturers_name');
-INSERT INTO get_terms_to_filter VALUES ('music_genre_id', 'TABLE_MUSIC_GENRE', 'music_genre_name');
-INSERT INTO get_terms_to_filter VALUES ('record_company_id', 'TABLE_RECORD_COMPANY', 'record_company_name');
 
-
-INSERT INTO dashboard_widgets (widget_key, widget_group, widget_status, widget_icon, widget_theme, widget_height, widget_width) VALUES
-('general-statistics', 'general-statistics', 1, 'fa-area-chart', 'bg-light-blue-gradient', 2, 1),
-('order-summary', 'order-summary', 1, 'fa-shopping-cart', 'bg-light-blue-gradient', 1, 1),
-('new-customers', 'new-customers', 1, 'fa-user-plus', 'bg-light-blue-gradient', 1, 1),
-('counter-history', 'counter-history', 1, 'fa-calendar', 'bg-light-blue-gradient', 1, 1),
-('new-orders', 'new-orders', 1, 'fa-shopping-cart', 'bg-light-blue-gradient', 1, 1),
-('logs', 'logs', 1, 'fa-thumbs-o-up', 'bg-light-blue-gradient', 1, 1)
-;
-
-INSERT INTO dashboard_widgets_description (widget_key, widget_name) VALUES
-('general-statistics', 'GENERAL_STATISTICS'),
-('order-summary', 'ORDER_SUMMARY'),
-('new-customers', 'NEW_CUSTOMERS'),
-('counter-history', 'COUNTER_HISTORY'),
-('new-orders', 'NEW_ORDERS'),
-('logs', 'LOGS')
+INSERT INTO dashboard_widgets (widget_key, widget_name, widget_group, widget_status, widget_icon, widget_theme, widget_height, widget_width) VALUES
+('general-statistics', 'GENERAL_STATISTICS', 'general-statistics', 1, 'fa-area-chart', 'bg-light-blue-gradient', 2, 1),
+('order-summary', 'ORDER_SUMMARY', 'order-summary', 1, 'fa-shopping-cart', 'bg-light-blue-gradient', 1, 1),
+('new-customers', 'NEW_CUSTOMERS', 'new-customers', 1, 'fa-user-plus', 'bg-light-blue-gradient', 1, 1),
+('counter-history', 'COUNTER_HISTORY', 'counter-history', 1, 'fa-calendar', 'bg-light-blue-gradient', 1, 1),
+('new-orders', 'NEW_ORDERS', 'new-orders', 1, 'fa-shopping-cart', 'bg-light-blue-gradient', 1, 1),
+('logs', 'LOGS', 'logs', 1, 'fa-thumbs-o-up', 'bg-light-blue-gradient', 1, 1)
 ;
 
 INSERT INTO dashboard_widgets_groups (widget_group, widget_group_name) VALUES
@@ -3445,20 +3301,16 @@ INSERT INTO dashboard_widgets_groups (widget_group, widget_group_name) VALUES
 ('logs', 'LOGS_GROUP')
 ;
 
-INSERT INTO dashboard_widgets (widget_key, widget_group, widget_status, widget_icon, widget_theme, widget_height, widget_width) VALUES ('banner-statistics', 'banner-statistics', 1, 'fa-area-chart', 'bg-light-blue-gradient', 2, 1);
-INSERT INTO dashboard_widgets_description (widget_key, widget_name) VALUES ('banner-statistics', 'BANNER_STATISTICS');
+INSERT INTO dashboard_widgets (widget_key, widget_name, widget_group, widget_status, widget_icon, widget_theme, widget_height, widget_width) VALUES ('banner-statistics', 'BANNER_STATISTICS', 'banner-statistics', 1, 'fa-area-chart', 'bg-light-blue-gradient', 2, 1);
 INSERT INTO dashboard_widgets_groups (widget_group, widget_group_name) VALUES ('banner-statistics', 'BANNER_STATISTICS_GROUP');
 
-INSERT INTO dashboard_widgets (widget_key, widget_group, widget_status, widget_icon, widget_theme, widget_height, widget_width) VALUES ('whos-online', 'whos-online', 1, 'fa-area-chart', 'bg-light-blue-gradient', 1, 1);
-INSERT INTO dashboard_widgets_description (widget_key, widget_name) VALUES ('whos-online', 'WHOSONLINE_ACTIVITY');
+INSERT INTO dashboard_widgets (widget_key, widget_name, widget_group, widget_status, widget_icon, widget_theme, widget_height, widget_width) VALUES ('whos-online', 'WHOSONLINE_ACTIVITY', 'whos-online', 1, 'fa-area-chart', 'bg-light-blue-gradient', 1, 1);
 INSERT INTO dashboard_widgets_groups (widget_group, widget_group_name) VALUES ('whos-online', 'WHOSONLINE_GROUP');
 
-INSERT INTO dashboard_widgets (widget_key, widget_group, widget_status, widget_icon, widget_theme, widget_height, widget_width) VALUES ('counter-history-graph', 'counter-history-graph', 1, 'fa-calendar', 'bg-light-blue-gradient', 2, 1);
-INSERT INTO dashboard_widgets_description (widget_key, widget_name) VALUES ('counter-history-graph', 'COUNTER_HISTORY_GRAPH');
+INSERT INTO dashboard_widgets (widget_key, widget_name, widget_group, widget_status, widget_icon, widget_theme, widget_height, widget_width) VALUES ('counter-history-graph', 'COUNTER_HISTORY_GRAPH', 'counter-history-graph', 1, 'fa-calendar', 'bg-light-blue-gradient', 2, 1);
 INSERT INTO dashboard_widgets_groups (widget_group, widget_group_name) VALUES ('counter-history-graph', 'COUNTER_HISTORY_GRAPH_GROUP');
 
-INSERT INTO dashboard_widgets (widget_key, widget_group, widget_status, widget_icon, widget_theme, widget_height, widget_width) VALUES ('sales-graph-report', 'sales-graph-report', 1, 'fa-line-chart', 'bg-light-blue-gradient', 2, 1);
-INSERT INTO dashboard_widgets_description (widget_key, widget_name) VALUES ('sales-graph-report', 'SALES_GRAPH_REPORT');
+INSERT INTO dashboard_widgets (widget_key, widget_name, widget_group, widget_status, widget_icon, widget_theme, widget_height, widget_width) VALUES ('sales-graph-report', 'SALES_GRAPH_REPORT', 'sales-graph-report', 1, 'fa-line-chart', 'bg-light-blue-gradient', 2, 1);
 INSERT INTO dashboard_widgets_groups (widget_group, widget_group_name) VALUES ('sales-graph-report', 'SALES_GRAPH_REPORT_GROUP');
 
 
@@ -3476,6 +3328,22 @@ INSERT INTO dashboard_widgets_to_users (widget_key, admin_id, widget_row, widget
 ,('sales-graph-report', 1, 0, 0, 'fa-line-chart', 'bg-light-blue-gradient', 2, 1)
 ;
 
+# @todo testing settings - remove for release
+
+INSERT INTO configuration_settings (setting_key, setting_name, setting_definition, setting_type) VALUES ('some-text', 'INPUT_LABEL_SOME_TEXT', '{}', 'text');
+INSERT INTO configuration_settings (setting_key, setting_name, setting_definition, setting_type) VALUES ('date-from', 'INPUT_LABEL_DATE_FROM', '', 'simpleDate');
+
+# Banner Statistics dashboard widget settings
+
+INSERT INTO configuration_settings (setting_key, setting_name, setting_definition, setting_type) VALUES ('banner-id', 'INPUT_LABEL_BANNER_ID', '{"model": "banner", "id": "banners_id", "text": "banners_title"}', 'selectFromModel');
+INSERT INTO configuration_settings (setting_key, setting_name, setting_definition, setting_type) VALUES ('banner-date-range', 'INPUT_LABEL_BANNER_DATE_RANGE', '{"options":[{"id":"yearly","text":"OPTIONS_DATERANGE_YEARLY"},{"id":"monthly","text":"OPTIONS_DATERANGE_MONTHLY"},{"id":"daily","text":"OPTIONS_DATERANGE_DAILY"},{"id":"recent","text":"OPTIONS_DATERANGE_RECENT"}]}', 'selectFromArray');
+INSERT INTO configuration_settings (setting_key, setting_name, setting_definition, setting_type) VALUES ('banner-show-lines', 'INPUT_LABEL_BANNER_SHOW_LINES', '{}', 'boolean');
+
+INSERT INTO configuration_settings_to_widget (setting_key, widget_key, initial_value) VALUES ('banner-id', 'banner-statistics', 'monthly');
+INSERT INTO configuration_settings_to_widget (setting_key, widget_key, initial_value) VALUES ('banner-date-range', 'banner-statistics', 'monthly');
+INSERT INTO configuration_settings_to_widget (setting_key, widget_key, initial_value) VALUES ('banner-show-lines', 'banner-statistics', 'on');
+INSERT INTO configuration_settings_to_widget (setting_key, widget_key, initial_value) VALUES ('some-text', 'banner-statistics', '');
+INSERT INTO configuration_settings_to_widget (setting_key, widget_key, initial_value) VALUES ('date-from', 'banner-statistics', '');
 
 
 INSERT INTO listingbox_locations (location_key, location_name) VALUES

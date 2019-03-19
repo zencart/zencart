@@ -1,0 +1,310 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Setting Types &mdash; Zen Cart v2.0 Developer Docs 2.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Template Partials" href="configurationsettingtemplates.html" />
+    <link rel="prev" title="Configuration Settings" href="configurationsettings.html" /> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> Zen Cart v2.0 Developer Docs
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="dashboardwidgets.html">Dashboard Widgets</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="dashboardwidgetsconfig.html">Widget Configuration Settings</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="dashboardwidgetsconfigtables.html">Database Tables</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="dashboardwidgetsconfigtables.html#dashboard-widgets-settings">dashboard_widgets_settings</a></li>
+<li class="toctree-l4"><a class="reference internal" href="dashboardwidgetsconfigtables.html#dashboard-widgets-settings-to-widget">dashboard_widgets_settings_to_widget</a></li>
+<li class="toctree-l4"><a class="reference internal" href="dashboardwidgetsconfigtables.html#dashboard-widgets-settings-to-user">dashboard_widgets_settings_to_user</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="dashboardwidgetsconfigusage.html">Using Widget Configuration Settings</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="reference internal" href="configurationsettings.html">Configuration Settings</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Setting Types</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#text-type">text Type</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#boolean-type">boolean Type</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#selectfromarray-type">selectFromArray Type</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#selectfrommodel-type">selectFromModel Type</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#simpledate-type">simpleDate Type</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="configurationsettingtemplates.html">Template Partials</a></li>
+<li class="toctree-l2"><a class="reference internal" href="configurationsettinghandlers.html">Setting Type Handlers</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="plugins.html">Plugins</a><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="languageloading.html">Language Loading</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="languageloading.html#overrides">Overrides</a></li>
+<li class="toctree-l2"><a class="reference internal" href="languageloading.html#string-interpolation">String Interpolation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="languageloading.html#plugins">Plugins</a></li>
+<li class="toctree-l2"><a class="reference internal" href="languageloading.html#templates">Templates</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Zen Cart v2.0 Developer Docs</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="configurationsettings.html">Configuration Settings</a> &raquo;</li>
+        
+      <li>Setting Types</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/configurationsettingtypes.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="setting-types">
+<h1>Setting Types<a class="headerlink" href="#setting-types" title="Permalink to this headline">¶</a></h1>
+<p>The following setting types are available.</p>
+<ul class="simple">
+<li>text</li>
+<li>boolean</li>
+<li>selectFromArray</li>
+<li>selectFromModel</li>
+<li>simpleDate</li>
+</ul>
+<div class="section" id="text-type">
+<h2>text Type<a class="headerlink" href="#text-type" title="Permalink to this headline">¶</a></h2>
+<p>A simple text input box. Requires no <code class="docutils literal notranslate"><span class="pre">setting_definition</span></code> field entry.</p>
+</div>
+<div class="section" id="boolean-type">
+<h2>boolean Type<a class="headerlink" href="#boolean-type" title="Permalink to this headline">¶</a></h2>
+<p>Displays a checkbox. Requires no <code class="docutils literal notranslate"><span class="pre">setting_definition</span></code> field entry.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Boolean Type stores either <code class="docutils literal notranslate"><span class="pre">on</span></code> or <code class="docutils literal notranslate"><span class="pre">off</span></code> as the value in the database. You may need to convert this to true/false depending on how you are using the value.</p>
+</div>
+</div>
+<div class="section" id="selectfromarray-type">
+<h2>selectFromArray Type<a class="headerlink" href="#selectfromarray-type" title="Permalink to this headline">¶</a></h2>
+<p>Displays a select dropdown. Requires an entry in <code class="docutils literal notranslate"><span class="pre">setting_definition</span></code> field.</p>
+<p>The entry is a json encoded array.</p>
+<p>e.g. unencoded the array would look like :-</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="s1">&#39;options&#39;</span> <span class="o">=&gt;</span> <span class="p">[</span>
+    <span class="p">[</span><span class="s1">&#39;id&#39;</span> <span class="o">=&gt;</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;text&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;DEFINE_FOR_OPTION1&#39;</span><span class="p">],</span>
+    <span class="p">[</span><span class="s1">&#39;id&#39;</span> <span class="o">=&gt;</span> <span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;text&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;DEFINE_FOR_OPTION2&#39;</span><span class="p">],</span>
+    <span class="p">[</span><span class="s1">&#39;id&#39;</span> <span class="o">=&gt;</span> <span class="mi">3</span><span class="p">,</span> <span class="s1">&#39;text&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;DEFINE_FOR_OPTION3&#39;</span><span class="p">],</span>
+<span class="p">]</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last"><cite>text</cite> values can be plain strings but for multi-language usage should be language defines.</p>
+</div>
+</div>
+<div class="section" id="selectfrommodel-type">
+<h2>selectFromModel Type<a class="headerlink" href="#selectfrommodel-type" title="Permalink to this headline">¶</a></h2>
+<p>Displays a select dropdown. Requires an entry in <code class="docutils literal notranslate"><span class="pre">setting_definition</span></code> field.</p>
+<p>The entry is a json encoded array.</p>
+<p>e.g. unencoded the array would look like :-</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="s1">&#39;model&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;banner&#39;</span><span class="p">,</span>
+<span class="s1">&#39;id&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;banners_id&#39;</span><span class="p">,</span>
+<span class="s1">&#39;text&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;banners_title&#39;</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><cite>model</cite> is a reference to an Eloquent model in <code class="docutils literal notranslate"><span class="pre">app/Model</span></code></li>
+<li><cite>id</cite> would normally be the models primary key</li>
+<li><cite>text</cite> would be a model field used to provide the select option text</li>
+</ul>
+</div>
+<div class="section" id="simpledate-type">
+<h2>simpleDate Type<a class="headerlink" href="#simpledate-type" title="Permalink to this headline">¶</a></h2>
+<p>Displays a <cite>flatpickr</cite> date dropdown. Requires no <code class="docutils literal notranslate"><span class="pre">setting_definition</span></code> field entry.</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="configurationsettingtemplates.html" class="btn btn-neutral float-right" title="Template Partials" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="configurationsettings.html" class="btn btn-neutral" title="Configuration Settings" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, Zen-Cart Team &amp; Contributors.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'2.0',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+
+  
+
+  <script type="text/javascript" src="_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

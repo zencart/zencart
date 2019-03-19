@@ -11,6 +11,8 @@
   $defaultRefreshInterval = 0;
 
   require('includes/application_top.php');
+  require_once('includes/template/common/tplHtmlHeadLegacy.php');
+  require_once('includes/template/common/tplHtmlHead.php');
 
   $currencies = new currencies();
 
@@ -124,7 +126,6 @@
 
   $optURL = 'index.php?cmd=' . FILENAME_WHOS_ONLINE . '&' . zen_get_all_get_params(array('t', 'na', 'ns'));
   $listingURL = 'index.php?cmd=' . FILENAME_WHOS_ONLINE . '&' . zen_get_all_get_params(array('q', 't', 'na', 'ns'));
-require('includes/admin_html_head.php');
 ?>
 <script type="text/javascript">
   <!--
@@ -176,7 +177,7 @@ require('includes/admin_html_head.php');
 </head>
 <body>
 <!-- header //-->
-<?php require(DIR_WS_INCLUDES . 'header.php'); ?>
+<?php require('includes/template/common/tplHeader.php'); ?>
 <!-- header_eof //-->
 
 <!-- body //-->

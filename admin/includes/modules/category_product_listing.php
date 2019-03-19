@@ -9,6 +9,7 @@
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
 }
+include_once(DIR_WS_LANGUAGES . $_SESSION['language'] . '/' . FILENAME_CATEGORIES . '.php');
 if (!isset($_GET['page'])) $_GET['page'] = '';
 if (isset($_GET['set_display_categories_dropdown'])) {
   $_SESSION['display_categories_dropdown'] = $_GET['set_display_categories_dropdown'];
@@ -188,9 +189,9 @@ if (!isset($_SESSION['display_categories_dropdown'])) {
 <?php
 // bof: categories meta tags
         if (zen_get_category_metatags_keywords($categories->fields['categories_id'], (int)$_SESSION['languages_id']) or zen_get_category_metatags_description($categories->fields['categories_id'], (int)$_SESSION['languages_id'])) {
-          echo '<a href="' . zen_admin_href_link(FILENAME_CATEGORIES, 'cPath=' . $cPath . '&cID=' . $categories->fields['categories_id'] . '&action=edit_category_meta_tags') . '">' . zen_image(DIR_WS_IMAGES . 'icon_edit_metatags_on.gif', ICON_METATAGS_ON) . '</a>';
+          echo '<a href="' . zen_admin_href_link(FILENAME_CATEGORIES, 'cPath=' . $cPath . '&cID=' . $categories->fields['categories_id'] . '&action=edit_category_metatags') . '">' . zen_image(DIR_WS_IMAGES . 'icon_edit_metatags_on.gif', ICON_METATAGS_ON) . '</a>';
         } else {
-          echo '<a href="' . zen_admin_href_link(FILENAME_CATEGORIES, 'cPath=' . $cPath . '&cID=' . $categories->fields['categories_id'] . '&action=edit_category_meta_tags') . '">' . zen_image(DIR_WS_IMAGES . 'icon_edit_metatags_off.gif', ICON_METATAGS_OFF) . '</a>';
+          echo '<a href="' . zen_admin_href_link(FILENAME_CATEGORIES, 'cPath=' . $cPath . '&cID=' . $categories->fields['categories_id'] . '&action=edit_category_metatags') . '">' . zen_image(DIR_WS_IMAGES . 'icon_edit_metatags_off.gif', ICON_METATAGS_OFF) . '</a>';
         }
 // eof: categories meta tags
 ?>
@@ -383,9 +384,9 @@ if (($_GET['page'] == '1' or $_GET['page'] == '') and isset($_GET['pID']) && $_G
         }
 // meta tags
         if (zen_get_metatags_keywords($products->fields['products_id'], (int)$_SESSION['languages_id']) or zen_get_metatags_description($products->fields['products_id'], (int)$_SESSION['languages_id'])) {
-          echo ' <a href="' . zen_admin_href_link($type_handler, 'page=' . $_GET['page'] . '&product_type=' . $products->fields['products_type'] . '&cPath=' . $cPath . '&pID=' . $products->fields['products_id']  . '&action=new_product_meta_tags') . '">' . zen_image(DIR_WS_IMAGES . 'icon_edit_metatags_on.gif', ICON_METATAGS_ON) . '</a>';
+          echo ' <a href="' . zen_admin_href_link($type_handler, 'page=' . $_GET['page'] . '&product_type=' . $products->fields['products_type'] . '&cPath=' . $cPath . '&pID=' . $products->fields['products_id']  . '&action=new_product_metatags') . '">' . zen_image(DIR_WS_IMAGES . 'icon_edit_metatags_on.gif', ICON_METATAGS_ON) . '</a>';
         } else {
-          echo ' <a href="' . zen_admin_href_link($type_handler, 'page=' . $_GET['page'] . '&product_type=' . $products->fields['products_type'] . '&cPath=' . $cPath . '&pID=' . $products->fields['products_id']  . '&action=new_product_meta_tags') . '">' . zen_image(DIR_WS_IMAGES . 'icon_edit_metatags_off.gif', ICON_METATAGS_OFF) . '</a>';
+          echo ' <a href="' . zen_admin_href_link($type_handler, 'page=' . $_GET['page'] . '&product_type=' . $products->fields['products_type'] . '&cPath=' . $cPath . '&pID=' . $products->fields['products_id']  . '&action=new_product_metatags') . '">' . zen_image(DIR_WS_IMAGES . 'icon_edit_metatags_off.gif', ICON_METATAGS_OFF) . '</a>';
         }
 ?>
 <?php } // action == '' ?>
@@ -397,7 +398,7 @@ if (($_GET['page'] == '1' or $_GET['page'] == '') and isset($_GET['pID']) && $_G
     }
 
     $cPath_back = '';
-    if (sizeof($cPath_array) > 0) {
+    if (!empty($cPath_array)) {
       for ($i=0, $n=sizeof($cPath_array)-1; $i<$n; $i++) {
         if (empty($cPath_back)) {
           $cPath_back .= $cPath_array[$i];
@@ -414,7 +415,7 @@ if (($_GET['page'] == '1' or $_GET['page'] == '') and isset($_GET['pID']) && $_G
                 <td colspan="3"><table border="0" width="100%" cellspacing="0" cellpadding="2">
                   <tr>
                     <td class="smallText"><?php echo TEXT_CATEGORIES . '&nbsp;' . $categories_count . '<br />' . TEXT_PRODUCTS . '&nbsp;' . $products_count; ?></td>
-                    <td align="right" class="smallText"><?php if (sizeof($cPath_array) > 0) echo '<a href="' . zen_admin_href_link(FILENAME_CATEGORIES, $cPath_back . 'cID=' . $current_category_id) . '">' . zen_image_button('button_back.gif', IMAGE_BACK) . '</a>&nbsp;'; if (!isset($_GET['search'])) echo (!$zc_skip_categories ? '<a href="' . zen_admin_href_link(FILENAME_CATEGORIES, 'cPath=' . $cPath . '&action=new_category') . '">' . zen_image_button('button_new_category.gif', IMAGE_NEW_CATEGORY) . '</a>&nbsp;' : ''); ?>
+                    <td align="right" class="smallText"><?php if (!empty($cPath_array)) echo '<a href="' . zen_admin_href_link(FILENAME_CATEGORIES, $cPath_back . 'cID=' . $current_category_id) . '">' . zen_image_button('button_back.gif', IMAGE_BACK) . '</a>&nbsp;'; if (!isset($_GET['search'])) echo (!$zc_skip_categories ? '<a href="' . zen_admin_href_link(FILENAME_CATEGORIES, 'cPath=' . $cPath . '&action=new_category') . '">' . zen_image_button('button_new_category.gif', IMAGE_NEW_CATEGORY) . '</a>&nbsp;' : ''); ?>
 
 <?php if ($zc_skip_products == false) { ?>
 <form name="newproduct" action="<?php echo zen_admin_href_link(FILENAME_CATEGORIES); ?>" method = "get"><?php echo (empty($_GET['search']) ? zen_image_submit('button_new_product.gif', IMAGE_NEW_PRODUCT) : ''); ?>

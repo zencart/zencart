@@ -32,7 +32,9 @@ $(function() {
       url: "zcAjaxHandler.php?act=dashboardWidget&method=addWidget",
       data: {'id': id}
     }).done(function( response ) {
-        window.location.replace("<?php echo zen_admin_href_link(FILENAME_DEFAULT);?>");
+        $('#add-widget').modal('hide');
+        $('#main-widget-container').html(response.html);
+        initGridStack();
     });
 
   });
