@@ -2035,7 +2035,7 @@ if (false) { // disabled until clarification is received about coupons in PayPal
       $bypass_address_creation = false;
       $this->notify('NOTIFY_PAYPALEXPRESS_BYPASS_ADDRESS_CREATION', $paypal_ec_payer_info, $bypass_address_creation);
       if ($bypass_address_creation) {
-          $this->zcLog('ec_step2_finish - 2a, address-creation bypassed based on observer setting.');
+          $this->zcLog('ec_step2_finish - 2a', 'address-creation bypassed based on observer setting.');
       }
 
       // if no address required for shipping (or overridden by above), leave shipping portion alone
