@@ -2038,7 +2038,7 @@ if (false) { // disabled until clarification is received about coupons in PayPal
           $this->zcLog('ec_step2_finish - 2a, address-creation bypassed based on observer setting.');
       }
 
-      // if no address required for shipping (or overriden by above), leave shipping portion alone
+      // if no address required for shipping (or overridden by above), leave shipping portion alone
       if (!$bypass_address_creation && strtoupper($_SESSION['paypal_ec_payer_info']['ship_address_status']) != 'NONE' && $_SESSION['paypal_ec_payer_info']['ship_street_1'] != '') {
         // set the session info for the sendto
         $_SESSION['sendto'] = $_SESSION['customer_default_address_id'];
