@@ -10,7 +10,7 @@ cache:
 php:
   - 7.3
   - 7.1
-  - nightly
+#  - nightly
 
 matrix:
   fast_finish: true
@@ -20,7 +20,7 @@ matrix:
     - php: 5.5
       env: 'COMPOSER_FLAGS="--prefer-stable --prefer-lowest"'
   allow_failures:
-    - php: nightly
+#    - php: nightly
     - php: 5.6
     - php: 5.5
 
@@ -32,8 +32,6 @@ env:
 
 addons:
   chrome: stable
-
-services: memcached
 
 git:
   submodules: false
@@ -78,14 +76,9 @@ script:
 # unittests
   - php vendor/bin/phpunit -c testFramework/unittests/phpunit.xml
 # webtests
-  - vendor/bin/phpunit
+#  - vendor/bin/phpunit
 
 after_script:
   #- vendor/bin/phpcs --standard=PSR2 includes/ testFramework/
   #- php vendor/bin/coveralls
   #- vendor/bin/phpmd includes/ text cleancode,codesize,controversial,design,naming,unusedcode
-
-notifications:
-  slack:
-    secure: srX7adSXCcUZKL26uVDUSwjZmIz9+l93G78RXOFY+nTvh1WMgjyYKdoSWLM9HanCBbMGuQ2xYup/w6Bl7yIwyo6ubgigGG1pIqlfLDaa8BPvV+K6p9XD5tK9izrzHK6T6Z/NHIuC41Tjka4IXT424aIPmsN5SkcfbWHeLuX6WOo=
-

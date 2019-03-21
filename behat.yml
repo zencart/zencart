@@ -36,4 +36,11 @@ default:
         guzzle_parameters:
           verify: false
       selenium2:
-        wd_host: "http://localhost:8643/wd/hub"
+        browser: chrome
+        wd_host: http://127.0.0.1:9515
+        capabilities:
+          chrome:
+            switches:
+              - "--headless"
+              - "--disable-gpu"
+              - "--no-sandbox"
