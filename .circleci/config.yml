@@ -67,12 +67,21 @@ jobs:
                 name: Wait for MySQL container
                 command: dockerize -wait tcp://127.0.0.1:3306 -timeout 120s
 
-#            - run:
-#               name: Run Web Tests
-#               command: vendor/bin/behat
+            - run:
+               name: Start Chrome Driver
+               command: ./vendor/laravel/dusk/bin/chromedriver-linux
+               background: true
 
+            - run:
+               name: Run Dusk Tests
+               command: vendor/bin/phpunit -c phpunit.xml
+ 
             - store_artifacts:
                 path: /home/circleci/project/screenshots
+            - store_artifacts:
+                path: tests/Browser/screenshots
+            - store_artifacts:
+                path: tests/Browser/console
 
             - run:
                 name: Notify Webhook
