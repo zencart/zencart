@@ -69,6 +69,8 @@ before_script:
   - mkdir -p build/logs
 # start PHP webserver
   - "php -S 127.0.0.1:8000 > /dev/null &"
+# Start Chrome Headless
+  - google-chrome-stable --headless --disable-gpu --remote-debugging-port=9222 http://localhost &
 # Start PhantomJS
 #  - "phantomjs --webdriver=8643 --ignore-ssl-errors=true > /dev/null &"
 
