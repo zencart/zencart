@@ -50,8 +50,8 @@ install:
 # show version, just for quick reference when viewing output in the UI
   - echo $TRAVIS_PHP_VERSION
 # downgrade phpunit for older PHP version
-  - if [ "${TRAVIS_PHP_VERSION}" == "5.5" ]; then rm composer.lock && cp testFramework/composer-php55.lock composer.lock ; fi
-  - if [ "${TRAVIS_PHP_VERSION}" == "5.6" ]; then rm composer.lock && cp testFramework/composer-php55.lock composer.lock ; fi
+  - if [ "${TRAVIS_PHP_VERSION}" == "5.5" ]; then rm -rf composer.lock vendor; fi
+  - if [ "${TRAVIS_PHP_VERSION}" == "5.6" ]; then rm -rf composer.lock vendor; fi
 # do composer install
   - travis_wait composer install --no-interaction
 
@@ -79,7 +79,7 @@ script:
 # unittests
   - php vendor/bin/phpunit -c testFramework/unittests/phpunit.xml
 # webtests
-#  - vendor/bin/behat
+  - vendor/bin/phpunit
 
 after_script:
   #- vendor/bin/phpcs --standard=PSR2 includes/ testFramework/
