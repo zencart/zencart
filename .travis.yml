@@ -31,8 +31,7 @@ env:
   - secure: RceQiWqq7eknG2MPN8IlpdH7nfGaqe7xm17vQndfbXPuED8a87dU4lJHPWCInaqcYte1IDmYsqR59+Ksq8ryC0CbScCf+QKT6kY6FwnzzPCzTU88FrYRXXRbJdfodHb3QTRY747ek4sBdUyaG8Jq28lHH8ZbM6onqrOyylf+pA8=
 
 addons:
-  #uncomment the following to trigger sauce webtests
-#  sauce_connect: true
+  chrome: stable
 
 services: memcached
 
