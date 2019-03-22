@@ -217,7 +217,7 @@
 // if it's not unique or linked to a parent, then:
 // 1. could be an e-check denied / cleared
 // 2. could be an express-checkout "pending" transaction which has been Accepted in the merchant's PayPal console and needs activation in Zen Cart
-    if ($postArray['payment_status']=='Completed' && txn_type=='express_checkout' && $postArray['payment_type']=='echeck') {
+    if ($postArray['payment_status']=='Completed' && $txn_type=='express_checkout' && $postArray['payment_type']=='echeck') {
       $txn_type = 'express-checkout-cleared';
       return $txn_type;
     }
@@ -439,7 +439,7 @@
     $scheme = 'https://';
     //Parse url
     $web = parse_url($scheme . 'ipnpb.paypal.com/cgi-bin/webscr');
-    if ((isset($_POST['test_ipn']) && $_POST['test_ipn'] == 1) || MODULE_PAYMENT_PAYPAL_HANDLER == 'sandbox') {
+    if ((isset($_POST['test_ipn']) && $_POST['test_ipn'] == 1) || (defined('MODULE_PAYMENT_PAYPAL_HANDLER') && MODULE_PAYMENT_PAYPAL_HANDLER == 'sandbox')) {
       $web = parse_url($scheme . 'ipnpb.sandbox.paypal.com/cgi-bin/webscr');
     }
     //Set the port number

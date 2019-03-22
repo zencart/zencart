@@ -78,8 +78,8 @@ use PHPMailer\PHPMailer\SMTP;
       $from_email_name = trim($regs[1]);
       $from_email_address = $regs[2];
     }
-    // if email name is same as email address, use the Store Name as the senders 'Name'
-    if ($from_email_name == $from_email_address) $from_email_name = STORE_NAME;
+    // if email name is empty or the same as email address, use the Store Name as the senders 'Name'
+    if (empty($from_email_name) || $from_email_name == $from_email_address) $from_email_name = STORE_NAME;
 
     // loop thru multiple email recipients if more than one listed  --- (esp for the admin's "Extra" emails)...
     foreach(explode(',',$to_address) as $key=>$value) {
