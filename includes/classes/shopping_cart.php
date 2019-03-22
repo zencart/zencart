@@ -70,7 +70,7 @@ class shoppingCart extends base {
    */
   var $display_debug_messages = FALSE;
   var $flag_duplicate_msgs_set = FALSE;
-  var $flag_duplicate_quantity_msgs_set = [];
+  var $flag_duplicate_quantity_msgs_set = array();
   /**
    * constructor method
    *
@@ -1246,7 +1246,7 @@ class shoppingCart extends base {
 
 // validate cart contents for checkout
         if ($check_for_valid_cart == true) {
-          if (empty($this->flag_duplicate_quantity_msgs_set['keep'])) $this->flag_duplicate_quantity_msgs_set = [];
+          if (empty($this->flag_duplicate_quantity_msgs_set['keep'])) $this->flag_duplicate_quantity_msgs_set = array();
           $fix_once = 0;
           // Check products_status if not already
           $check_status = $products->fields['products_status'];
@@ -1733,7 +1733,7 @@ class shoppingCart extends base {
     if ($this->display_debug_messages) $messageStack->add_session('header', 'FUNCTION ' . __FUNCTION__, 'caution');
 
     $change_state = array();
-    $this->flag_duplicate_quantity_msgs_set = [];
+    $this->flag_duplicate_quantity_msgs_set = array();
     for ($i=0, $n=sizeof($_POST['products_id']); $i<$n; $i++) {
       $adjust_max= 'false';
       if ($_POST['cart_quantity'][$i] == '') {
