@@ -126,10 +126,10 @@ if (!defined('USE_PCONNECT')) define('USE_PCONNECT', 'false');
  * require('includes/init_includes/init_tlds.php');
  *
  */
-  $autoLoadConfig[40][] = array('autoType'=>'init_script',
-                                'loadFile'=> 'init_general_funcs.php');
   $autoLoadConfig[40][] = array('autoType'=>'require',
                                 'loadFile'=> DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'functions_osh_update.php');
+  $autoLoadConfig[40][] = array('autoType'=>'init_script',
+                                'loadFile'=> 'init_general_funcs.php');
   $autoLoadConfig[40][] = array('autoType'=>'init_script',
                                 'loadFile'=> 'init_tlds.php');
 /**
