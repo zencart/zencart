@@ -122,7 +122,7 @@ if ((SHOW_VERSION_UPDATE_IN_HEADER == 'true' && $version_from_ini != 'off' && ($
     if ($new_version != '' && $new_version != TEXT_VERSION_CHECK_CURRENT) $new_version .= '<br /><a href="' . $newinfo['versionDownloadURI'] . '" target="_blank"><input type="button" class="btn btn-success" value="' . TEXT_VERSION_CHECK_DOWNLOAD . '"/></a>';
 }
 
-if (!$doVersionCheck || ($versionCheckError && $version_check_requested == true)) {
+if (!$doVersionCheck || $versionCheckError) {
     $new_version = '';
     if ($versionCheckError) {
         $new_version = ERROR_CONTACTING_PROJECT_VERSION_SERVER . '<br>';

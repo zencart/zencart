@@ -43,7 +43,7 @@ class VersionServer
         $error = curl_error($ch);
         $errno = curl_errno($ch);
         if ($errno > 0) {
-            return $this->formatCurlError($errno, $error);
+            return json_decode($this->formatCurlError($errno, $error), true);
         }
         return json_decode($response, true);
 
