@@ -181,11 +181,9 @@ $products_filter_name_model = (isset($_GET['products_filter_name_model']) ? $_GE
 
 // The new query uses real order info from the orders_products table, and is theoretically more accurate.
 // To use this newer query, remove the "1" from the following line ($products_query_raw1 becomes $products_query_raw )
-          $products_query_raw = "SELECT SUM(op.products_quantity) AS products_ordered, pd.products_name, op.products_id
-                                 FROM " . TABLE_ORDERS_PRODUCTS . " op
-                                 LEFT JOIN " . TABLE_PRODUCTS_DESCRIPTION . " pd ON (pd.products_id = op.products_id )
-                                 WHERE pd.language_id = " . (int)$_SESSION['languages_id'] . "
-                                 GROUP BY op.products_id, pd.products_name
+          $products_query_raw = "SELECT SUM(products_quantity) AS products_ordered, products_name, products_id
+                                 FROM " . TABLE_ORDERS_PRODUCTS . "
+                                 GROUP BY products_id, products_name
                                  ORDER BY products_ordered DESC, products_name";
 
           $products_query_numrows = '';
