@@ -20,6 +20,7 @@ $db = new queryFactory();
 
 $down_for_maint_source = 'nddbc.html';
 
+if (!defined('USE_PCONNECT')) define('USE_PCONNECT', 'false'); 
 if (!$db->connect(DB_SERVER, DB_SERVER_USERNAME, DB_SERVER_PASSWORD, DB_DATABASE, USE_PCONNECT, false)) {
   session_write_close();
   // If can't connect, send 503 Service Unavailable header and redirect to install or message page
