@@ -11,6 +11,7 @@
 /**
  * PayPal NVP (v124.0) and Payflow Pro (v4 HTTP API) implementation via cURL.
  */
+if (!defined('PAYPAL_DEV_MODE')) define('PAYPAL_DEV_MODE', 'false'); 
 class paypal_curl extends base {
 
   /**
