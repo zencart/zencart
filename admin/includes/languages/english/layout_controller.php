@@ -58,6 +58,8 @@ define('TABLE_HEADING_LAYOUT_TITLE', 'Title');
 define('TABLE_HEADING_LAYOUT_VALUE', 'Value');
 define('TABLE_HEADING_ACTION', 'Action');
 
+define('TABLE_HEADING_BOXES_PATH', 'Boxes Path: ');
+define('TEXT_WARNING_NEW_BOXES_FOUND', 'WARNING: New boxes found: ');
 
 define('TEXT_MODULE_DIRECTORY', 'Site Layout Directory:');
 define('TEXT_INFO_DATE_ADDED', 'Date Added:');

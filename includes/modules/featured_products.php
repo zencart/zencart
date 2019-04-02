@@ -23,9 +23,9 @@ if ( (($manufacturers_id > 0 && empty($_GET['filter_id'])) || !empty($_GET['musi
                               FROM " . TABLE_PRODUCTS . " p
                               LEFT JOIN " . TABLE_FEATURED . " f ON p.products_id = f.products_id
                               LEFT JOIN " . TABLE_PRODUCTS_DESCRIPTION . " pd ON p.products_id = pd.products_id
-                                AND pd.language_id = " . (int)$_SESSION['languages_id']
+                              AND pd.language_id = " . (int)$_SESSION['languages_id'] . "
                               WHERE p.products_status = 1
-                              AND f.status = 1;
+                              AND f.status = 1";
 } else {
   // get all products and cPaths in this subcat tree
   $productsInCategory = zen_get_categories_products_list( (($manufacturers_id > 0 && !empty($_GET['filter_id'])) ? zen_get_generated_category_path_rev($_GET['filter_id']) : $cPath), false, true, 0, $display_limit);
