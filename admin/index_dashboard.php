@@ -79,7 +79,7 @@ for ($i = 0, $salesData = ''; $i < $report->size; $i++) {
 // Build the whos-online graph
 $whos_online = $db->Execute("select customer_id, full_name, ip_address, time_entry, time_last_click, last_page_url, session_id, host_address, user_agent from " . TABLE_WHOS_ONLINE);
 // Initialize array variables for display.
-$user_array = $guest_array = $spider_array = [0=>0, 1=>0, 2=>0, 3=>0];
+$user_array = $guest_array = $spider_array = [0 => 0, 1 => 0, 2 => 0, 3 => 0];
 $status = 0;
 
 foreach ($whos_online as $session) {
@@ -131,7 +131,7 @@ foreach ($whos_online as $session) {
     <title><?php echo TITLE; ?></title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <meta name="robots" content="noindex, nofollow">
-    <link href="includes/stylesheet.css" rel="stylesheet" type="text/css">
+    <link href="includes/stylesheet.css" rel="stylesheet">
     <link rel="stylesheet" href="includes/cssjsmenuhover.css" media="all" id="hoverJS">
     <script src="includes/menu.js"></script>
     <script title="menu_init">
@@ -220,176 +220,263 @@ foreach ($whos_online as $session) {
     <!-- header //-->
     <?php require(DIR_WS_INCLUDES . 'header.php'); ?>
     <!-- header_eof //-->
-    <?php require_once(DIR_WS_MODULES . 'notificationsDisplay.php');?>
+    <?php require_once(DIR_WS_MODULES . 'notificationsDisplay.php'); ?>
 
     <div id="colone" class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
-      <div class="reportBox">
-        <div class="header"><?php echo BOX_TITLE_STATISTICS; ?> </div>
-        <?php
-        if ($counter->RecordCount()) {
+      <div class="panel panel-default reportBox">
+        <div class="panel-heading header"><?php echo BOX_TITLE_STATISTICS; ?> </div>
+        <table class="table table-striped table-condensed">
+            <?php
+            if ($counter->RecordCount()) {
+              ?>
+            <tr>
+              <td><?php echo BOX_ENTRY_COUNTER_DATE; ?></td>
+              <td class="text-right"><?php echo $counter_startdate_formatted; ?></td>
+            </tr>
+            <tr>
+              <td><?php echo BOX_ENTRY_COUNTER; ?></td>
+              <td class="text-right"><?php echo $counter->fields['counter']; ?></td>
+            </tr>
+            <?php
+          }
           ?>
-          <div class="row">
-            <span><?php echo BOX_ENTRY_COUNTER_DATE; ?></span>
-            <span class="right"><?php echo $counter_startdate_formatted; ?></span>
-          </div>
-          <div class="row">
-            <span><?php echo BOX_ENTRY_COUNTER; ?></span>
-            <span class="right"><?php echo $counter->fields['counter']; ?></span>
-          </div>
-          <?php
-        }
-        ?>
-        <div class="row">
-          <span><?php echo BOX_ENTRY_CUSTOMERS; ?></span>
-          <span class="right"><?php echo $customers->fields['count']; ?></span>
-        </div>
-        <div class="row">
-          <span><?php echo BOX_ENTRY_PRODUCTS; ?></span>
-          <span class="right"><?php echo $products->fields['count']; ?></span>
-        </div>
-        <div class="row">
-          <span><?php echo BOX_ENTRY_PRODUCTS_OFF; ?></span>
-          <span class="right"><?php echo $products_off->fields['count']; ?></span>
-        </div>
-        <div class="row">
-          <span><?php echo BOX_ENTRY_REVIEWS; ?></span>
-          <span class="right"><?php echo $reviews->fields['count']; ?></span>
-        </div>
-        <?php if (REVIEWS_APPROVAL == '1') { ?>
-          <div class="row">
-            <span><a href="<?php echo zen_href_link(FILENAME_REVIEWS, 'status=1'); ?>"><?php echo BOX_ENTRY_REVIEWS_PENDING; ?></a></span>
-            <span class="right"><?php echo $reviews_pending->fields['count']; ?></span>
-          </div>
-        <?php } ?>
-        <div class="row">
-          <span><?php echo BOX_ENTRY_NEWSLETTERS; ?></span>
-          <span class="right"><?php echo $newsletters->fields['count']; ?></span>
-        </div>
+          <tr>
+            <td><?php echo BOX_ENTRY_CUSTOMERS; ?></td>
+            <td class="text-right"><?php echo $customers->fields['count']; ?></td>
+          </tr>
+          <tr>
+            <td><?php echo BOX_ENTRY_PRODUCTS; ?></td>
+            <td class="text-right"><?php echo $products->fields['count']; ?></td>
+          </tr>
+          <tr>
+            <td><?php echo BOX_ENTRY_PRODUCTS_OFF; ?></td>
+            <td class="text-right"><?php echo $products_off->fields['count']; ?></td>
+          </tr>
+          <tr>
+            <td><?php echo BOX_ENTRY_REVIEWS; ?></td>
+            <td class="text-right"><?php echo $reviews->fields['count']; ?></td>
+          </tr>
+          <?php if (REVIEWS_APPROVAL == '1') { ?>
+            <tr>
+              <td><a href="<?php echo zen_href_link(FILENAME_REVIEWS, 'status=1'); ?>"><?php echo BOX_ENTRY_REVIEWS_PENDING; ?></a></td>
+              <td class="text-right"><?php echo $reviews_pending->fields['count']; ?></td>
+            </tr>
+          <?php } ?>
+          <tr>
+            <td><?php echo BOX_ENTRY_NEWSLETTERS; ?></td>
+            <td class="text-right"><?php echo $newsletters->fields['count']; ?></td>
+          </tr>
+        </table>
       </div>
-      <div class="reportBox">
-        <div class="header"><?php echo BOX_TITLE_FEATURES_SALES; ?></div>
-        <div class="row">
-          <span><?php echo BOX_ENTRY_SPECIALS_EXPIRED; ?></span>
-          <span class="right"><?php echo $specials->fields['count']; ?></span>
-        </div>
-        <div class="row">
-          <span><?php echo BOX_ENTRY_SPECIALS_ACTIVE; ?></span>
-          <span class="right"><?php echo $specials_act->fields['count']; ?></span>
-        </div>
-        <div class="row">
-          <span><?php echo BOX_ENTRY_FEATURED_EXPIRED; ?></span>
-          <span class="right"><?php echo $featured->fields['count']; ?></span>
-        </div>
-        <div class="row">
-          <span><?php echo BOX_ENTRY_FEATURED_ACTIVE; ?></span>
-          <span class="right"><?php echo $featured_act->fields['count']; ?></span>
-        </div>
-        <div class="row">
-          <span><?php echo BOX_ENTRY_SALEMAKER_EXPIRED; ?></span>
-          <span class="right"><?php echo $salemaker->fields['count']; ?></span>
-        </div>
-        <div class="row">
-          <span><?php echo BOX_ENTRY_SALEMAKER_ACTIVE; ?></span>
-          <span class="right"><?php echo $salemaker_act->fields['count']; ?></span>
-        </div>
+      <div class="panel panel-default reportBox">
+        <div class="panel-heading header"><?php echo BOX_TITLE_FEATURES_SALES; ?></div>
+        <table class="table table-striped table-condensed">
+          <tr>
+            <td><?php echo BOX_ENTRY_SPECIALS_EXPIRED; ?></td>
+            <td class="text-right"><?php echo $specials->fields['count']; ?></td>
+          </tr>
+          <tr>
+            <td><?php echo BOX_ENTRY_SPECIALS_ACTIVE; ?></td>
+            <td class="text-right"><?php echo $specials_act->fields['count']; ?></td>
+          </tr>
+          <tr>
+            <td><?php echo BOX_ENTRY_FEATURED_EXPIRED; ?></td>
+            <td class="text-right"><?php echo $featured->fields['count']; ?></td>
+          </tr>
+          <tr>
+            <td><?php echo BOX_ENTRY_FEATURED_ACTIVE; ?></td>
+            <td class="text-right"><?php echo $featured_act->fields['count']; ?></td>
+          </tr>
+          <tr>
+            <td><?php echo BOX_ENTRY_SALEMAKER_EXPIRED; ?></td>
+            <td class="text-right"><?php echo $salemaker->fields['count']; ?></td>
+          </tr>
+          <tr>
+            <td><?php echo BOX_ENTRY_SALEMAKER_ACTIVE; ?></td>
+            <td class="text-right"><?php echo $salemaker_act->fields['count']; ?></td>
+          </tr>
+        </table>
       </div>
-      <div class="reportBox">
-        <div class="header"><?php echo BOX_TITLE_ORDERS; ?> </div>
-        <?php
-        $orders_status = $db->Execute("select orders_status_name, orders_status_id from " . TABLE_ORDERS_STATUS . " where language_id = " . (int)$_SESSION['languages_id'], false, true, 3600);
+      <div class="panel panel-default reportBox">
+        <div class="panel-heading header"><?php echo BOX_TITLE_ORDERS; ?> </div>
+        <table class="table table-striped table-condensed">
+            <?php
+            $orders_status = $db->Execute("select orders_status_name, orders_status_id from " . TABLE_ORDERS_STATUS . " where language_id = " . (int)$_SESSION['languages_id'], false, true, 3600);
 
-        foreach ($orders_status as $row) {
-          $orders_pending = $db->Execute("select count(*) as count from " . TABLE_ORDERS . " where orders_status = " . (int)$row['orders_status_id'], false, true, 1800);
+            foreach ($orders_status as $row) {
+              $orders_pending = $db->Execute("select count(*) as count from " . TABLE_ORDERS . " where orders_status = " . (int)$row['orders_status_id'], false, true, 1800);
+              ?>
+            <tr>
+              <td><a href="<?php echo zen_href_link(FILENAME_ORDERS, 'selected_box=customers&status=' . $row['orders_status_id']); ?>"><?php echo $row['orders_status_name']; ?></a>:</td>
+              <td class="text-right"> <?php echo $orders_pending->fields['count']; ?></td>
+            </tr>
+            <?php
+          }
           ?>
-          <div class="row">
-            <span><a href="<?php echo zen_href_link(FILENAME_ORDERS, 'selected_box=customers&status=' . $row['orders_status_id']); ?>"><?php echo $row['orders_status_name']; ?></a>:</span>
-            <span class="right"> <?php echo $orders_pending->fields['count']; ?></span>
-          </div>
-          <?php
-        }
-        ?>
+        </table>
       </div>
     </div>
     <div id="coltwo" class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
-      <div class="reportBox">
-        <div class="header"><?php echo BOX_ENTRY_NEW_CUSTOMERS; ?> </div>
-        <?php
-        $customers = $db->Execute("SELECT c.customers_id as customers_id, c.customers_firstname as customers_firstname,
+      <div class="panel panel-default reportBox">
+        <div class="panel-heading header"><?php echo BOX_ENTRY_NEW_CUSTOMERS; ?> </div>
+        <table class="table table-striped table-condensed">
+            <?php
+            $customers = $db->Execute("SELECT c.customers_id as customers_id, c.customers_firstname as customers_firstname,
                                           c.customers_lastname as customers_lastname, c.customers_email_address as customers_email_address,
                                           a.customers_info_date_account_created as customers_info_date_account_created, a.customers_info_id
                                    FROM " . TABLE_CUSTOMERS . " c
                                    LEFT JOIN " . TABLE_CUSTOMERS_INFO . " a ON c.customers_id = a.customers_info_id
                                    ORDER BY a.customers_info_date_account_created DESC",
-            $number_of_customers, true, 1800);
+                $number_of_customers, true, 1800);
 
-        foreach ($customers as $customer) {
-          $customer['customers_firstname'] = zen_output_string_protected($customer['customers_firstname']);
-          $customer['customers_lastname'] = zen_output_string_protected($customer['customers_lastname']);
+            foreach ($customers as $customer) {
+              $customer['customers_firstname'] = zen_output_string_protected($customer['customers_firstname']);
+              $customer['customers_lastname'] = zen_output_string_protected($customer['customers_lastname']);
+              ?>
+            <tr>
+              <td>
+                <a href="<?php echo zen_href_link(FILENAME_CUSTOMERS, 'search=' . $customer['customers_email_address'] . '&origin=' . FILENAME_DEFAULT); ?>" class="contentlink"><?php echo $customer['customers_firstname'] . ' ' . $customer['customers_lastname']; ?></a>
+              </td>
+              <td class="text-right"><?php echo zen_date_short($customer['customers_info_date_account_created']); ?></td>
+            </tr>
+            <?php
+          }
           ?>
-          <div class="row">
-            <span>
-              <a href="<?php echo zen_href_link(FILENAME_CUSTOMERS, 'search=' . $customer['customers_email_address'] . '&origin=' . FILENAME_DEFAULT); ?>" class="contentlink"><?php echo $customer['customers_firstname'] . ' ' . $customer['customers_lastname']; ?></a>
-            </span>
-            <span class="right"><?php echo zen_date_short($customer['customers_info_date_account_created']); ?></span>
-          </div>
-          <?php
-        }
-        ?>
+        </table>
       </div>
 
-      <div class="reportBox">
-        <div class="header"><?php echo WO_GRAPH_TITLE . '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="' . zen_href_link(FILENAME_WHOS_ONLINE) . '">' . WO_GRAPH_MORE . '</a>'; ?></div>
-        <div class="row">
-          <div class="first"><?php echo WO_GRAPH_REGISTERED; ?></div>
-          <div class="col"><?php echo zen_image(DIR_WS_IMAGES . 'icon_status_green.gif'); ?>&nbsp;&nbsp;<?php echo ($user_array[0] ?: ''); ?></div>
-          <div class="col"><?php echo zen_image(DIR_WS_IMAGES . 'icon_status_yellow.gif'); ?>&nbsp;&nbsp;<?php echo ($user_array[1] ?: ''); ?></div>
-          <div class="col"><?php echo zen_image(DIR_WS_IMAGES . 'icon_status_red.gif'); ?>&nbsp;&nbsp;<?php echo ($user_array[2] ?: ''); ?></div>
-          <div class="col"><?php echo zen_image(DIR_WS_IMAGES . 'icon_status_red_light.gif'); ?>&nbsp;&nbsp;<?php echo ($user_array[3] ?: ''); ?></div>&nbsp;
-        </div>
-        <div class="row">
-          <div class="first"><?php echo WO_GRAPH_GUEST; ?></div>
-          <div class="col"><?php echo zen_image(DIR_WS_IMAGES . 'icon_status_green.gif'); ?>&nbsp;&nbsp;<?php echo ($guest_array[0] ?: ''); ?></div>
-          <div class="col"><?php echo zen_image(DIR_WS_IMAGES . 'icon_status_yellow.gif'); ?>&nbsp;&nbsp;<?php echo ($guest_array[1] ?: ''); ?></div>
-          <div class="col"><?php echo zen_image(DIR_WS_IMAGES . 'icon_status_red.gif'); ?>&nbsp;&nbsp;<?php echo ($guest_array[2] ?: ''); ?></div>
-          <div class="col"><?php echo zen_image(DIR_WS_IMAGES . 'icon_status_red_light.gif'); ?>&nbsp;&nbsp;<?php echo ($guest_array[3] ?: ''); ?></div>&nbsp;
-        </div>
-        <div class="row">
-          <div class="first"><?php echo WO_GRAPH_SPIDER; ?></div>
-          <div class="col"><?php echo zen_image(DIR_WS_IMAGES . 'icon_status_green.gif'); ?>&nbsp;&nbsp;<?php echo ($spider_array[0] ?: ''); ?></div>
-          <div class="col"><?php echo zen_image(DIR_WS_IMAGES . 'icon_status_yellow.gif'); ?>&nbsp;&nbsp;<?php echo ($spider_array[1] ?: ''); ?></div>
-          <div class="col"><?php echo zen_image(DIR_WS_IMAGES . 'icon_status_red.gif'); ?>&nbsp;&nbsp;<?php echo ($spider_array[2] ?: ''); ?></div>
-          <div class="col"><?php echo zen_image(DIR_WS_IMAGES . 'icon_status_red_light.gif'); ?>&nbsp;&nbsp;<?php echo ($spider_array[3] ?: ''); ?></div>&nbsp;
-        </div>
-        <div class="row">
-          <div class="first"><?php echo WO_GRAPH_TOTAL; ?></div>
-          <div class="col"><?php echo $whos_online->RecordCount(); ?></div>&nbsp;
-        </div>
-        <div class="row smallText">
-            <?php echo zen_image(DIR_WS_IMAGES . 'icon_status_green.gif') . '&nbsp;' . WHOS_ONLINE_ACTIVE_TEXT . '&nbsp;&nbsp;'; ?>
-            <?php echo zen_image(DIR_WS_IMAGES . 'icon_status_yellow.gif') . '&nbsp;' . WHOS_ONLINE_INACTIVE_TEXT . '&nbsp;&nbsp;'; ?>
-            <?php echo zen_image(DIR_WS_IMAGES . 'icon_status_red.gif') . '&nbsp;' . WHOS_ONLINE_ACTIVE_NO_CART_TEXT . '&nbsp;&nbsp;'; ?>
-            <?php echo zen_image(DIR_WS_IMAGES . 'icon_status_red_light.gif') . '&nbsp;' . WHOS_ONLINE_INACTIVE_NO_CART_TEXT; ?>
-        </div>
+      <div class="panel panel-default reportBox">
+        <div class="panel-heading header"><?php echo WO_GRAPH_TITLE . '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="' . zen_href_link(FILENAME_WHOS_ONLINE) . '">' . WO_GRAPH_MORE . '</a>'; ?></div>
+        <table class="table table-striped table-condensed">
+          <tr>
+            <td><?php echo WO_GRAPH_REGISTERED; ?></td>
+            <td>
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-1x" style="color: #5ce400;"></i>
+                <i class="fa fa-circle-o fa-stack-1x"></i>
+              </span>&nbsp;&nbsp;<?php echo ($user_array[0] ?: ''); ?>
+            </td>
+            <td>
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-1x" style="color: #fc0;"></i>
+                <i class="fa fa-circle-o fa-stack-1x"></i>
+              </span>&nbsp;&nbsp;<?php echo ($user_array[1] ?: ''); ?>
+            </td>
+            <td>
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-1x" style="color: #f00;"></i>
+                <i class="fa fa-circle-o fa-stack-1x"></i>
+              </span>&nbsp;&nbsp;<?php echo ($user_array[2] ?: ''); ?>
+            </td>
+            <td>
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-1x" style="color: #ffbaba;"></i>
+                <i class="fa fa-circle-o fa-stack-1x"></i>
+              </span>&nbsp;&nbsp;<?php echo ($user_array[3] ?: ''); ?>
+            </td>
+          </tr>
+          <tr>
+            <td><?php echo WO_GRAPH_GUEST; ?></td>
+            <td>
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-1x" style="color: #5ce400;"></i>
+                <i class="fa fa-circle-o fa-stack-1x"></i>
+              </span>&nbsp;&nbsp;<?php echo ($guest_array[0] ?: ''); ?>
+            </td>
+            <td>
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-1x" style="color: #fc0;"></i>
+                <i class="fa fa-circle-o fa-stack-1x"></i>
+              </span>&nbsp;&nbsp;<?php echo ($guest_array[1] ?: ''); ?>
+            </td>
+            <td>
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-1x" style="color: #f00;"></i>
+                <i class="fa fa-circle-o fa-stack-1x"></i>
+              </span>&nbsp;&nbsp;<?php echo ($guest_array[2] ?: ''); ?>
+            </td>
+            <td>
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-1x" style="color: #ffbaba;"></i>
+                <i class="fa fa-circle-o fa-stack-1x"></i>
+              </span>&nbsp;&nbsp;<?php echo ($guest_array[3] ?: ''); ?>
+            </td>
+          </tr>
+          <tr>
+            <td><?php echo WO_GRAPH_SPIDER; ?></td>
+            <td>
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-1x" style="color: #5ce400;"></i>
+                <i class="fa fa-circle-o fa-stack-1x"></i>
+              </span>&nbsp;&nbsp;<?php echo ($spider_array[0] ?: ''); ?>
+            </td>
+            <td>
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-1x" style="color: #fc0;"></i>
+                <i class="fa fa-circle-o fa-stack-1x"></i>
+              </span>&nbsp;&nbsp;<?php echo ($spider_array[1] ?: ''); ?></td>
+            <td>
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-1x" style="color: #f00;"></i>
+                <i class="fa fa-circle-o fa-stack-1x"></i>
+              </span>&nbsp;&nbsp;<?php echo ($spider_array[2] ?: ''); ?>
+            </td>
+            <td>
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-1x" style="color: #ffbaba;"></i>
+                <i class="fa fa-circle-o fa-stack-1x"></i>
+              </span>&nbsp;&nbsp;<?php echo ($spider_array[3] ?: ''); ?>
+            </td>
+          </tr>
+          <tr>
+            <td colspan="4"><?php echo WO_GRAPH_TOTAL; ?></td>
+            <td class="text-right"><?php echo $whos_online->RecordCount(); ?></td>
+          </tr>
+          <tr class="smallText">
+            <td colspan="5">
+              <span class="fa-stack">
+                <i class="fa fa-circle fa-stack-1x" style="color: #5ce400;"></i>
+                <i class="fa fa-circle-o fa-stack-1x"></i>
+              </span>&nbsp;<?php echo WHOS_ONLINE_ACTIVE_TEXT; ?>&nbsp;&nbsp;
+              <span class="fa-stack">
+                <i class="fa fa-circle fa-stack-1x" style="color: #fc0;"></i>
+                <i class="fa fa-circle-o fa-stack-1x"></i>
+              </span>&nbsp;<?php echo WHOS_ONLINE_INACTIVE_TEXT; ?>&nbsp;&nbsp;
+              <span class="fa-stack">
+                <i class="fa fa-circle fa-stack-1x" style="color: #f00;"></i>
+                <i class="fa fa-circle-o fa-stack-1x"></i>
+              </span>&nbsp;<?php echo WHOS_ONLINE_ACTIVE_NO_CART_TEXT; ?>&nbsp;&nbsp;
+              <span class="fa-stack">
+                <i class="fa fa-circle fa-stack-1x" style="color: #ffbaba;"></i>
+                <i class="fa fa-circle-o fa-stack-1x"></i>
+              </span>&nbsp;<?php echo WHOS_ONLINE_INACTIVE_NO_CART_TEXT; ?>
+            </td>
+          </tr>
+        </table>
       </div>
 
       <!--// Counters graph = populated by javascript  //-->
-      <div class="reportBox">
-        <div class="header"><?php echo TEXT_COUNTER_HISTORY_TITLE; ?></div>
+      <div class="panel panel-default reportBox">
+        <div class="panel-heading header"><?php echo TEXT_COUNTER_HISTORY_TITLE; ?></div>
         <?php if (count($visit_history)) { ?>
-          <div id="graph"></div>
-          <div class="row">
-            <span class="indented"><?php echo DASHBOARD_DAY; ?></span>
-            <span class="right indented"> <?php echo DASHBOARD_SESSIONS; ?> - <?php echo DASHBOARD_TOTAL; ?></span>
+          <div class="panel-body">
+            <div id="graph"></div>
           </div>
-          <?php
-          // table
-          foreach ($visit_history as $row) {
-            ?>
-            <div class="row">
-              <span class="indented"><?php echo $row['date']; ?></span>
-              <span class="right indented"> <?php echo $row['sessions']; ?> - <?php echo $row['count']; ?></span>
-            </div>
-          <?php } ?>
+          <table class="table table-striped table-condensed">
+            <tr>
+              <td class="indented"><?php echo DASHBOARD_DAY; ?></td>
+              <td class="text-right indented"> <?php echo DASHBOARD_SESSIONS; ?> - <?php echo DASHBOARD_TOTAL; ?></td>
+            </tr>
+            <?php
+            // table
+            foreach ($visit_history as $row) {
+              ?>
+              <tr>
+                <td class="indented"><?php echo $row['date']; ?></td>
+                <td class="text-right indented"> <?php echo $row['sessions']; ?> - <?php echo $row['count']; ?></td>
+              </tr>
+            <?php } ?>
+          </table>
         <?php } else { ?>
           <div class="row">
             <p><?php echo TEXT_NONE; ?></p>
@@ -400,57 +487,63 @@ foreach ($whos_online as $session) {
 
     </div>
     <div id="colthree" class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
-      <div class="reportBox">
-        <div class="header"><?php echo BOX_ENTRY_NEW_ORDERS; ?> </div>
-        <?php
-        $orders = $db->Execute("SELECT o.orders_id as orders_id, o.customers_name as customers_name, o.customers_id,
-                                       o.date_purchased as date_purchased, o.currency, o.currency_value, ot.class, ot.text as order_total, ot.value as order_value
-                                FROM " . TABLE_ORDERS . " o
-                                LEFT JOIN " . TABLE_ORDERS_TOTAL . " ot ON (o.orders_id = ot.orders_id AND class = 'ot_total')
-                                ORDER BY orders_id DESC",
-            $number_of_orders, true, 1800);
+      <div class="panel panel-default reportBox">
+        <div class="panel-heading header"><?php echo BOX_ENTRY_NEW_ORDERS; ?> </div>
+        <table class="table table-striped table-condensed">
+            <?php
+            $orders = $db->Execute("SELECT o.orders_id as orders_id, o.customers_name as customers_name, o.customers_id,
+                                           o.date_purchased as date_purchased, o.currency, o.currency_value, ot.class, ot.text as order_total, ot.value as order_value
+                                    FROM " . TABLE_ORDERS . " o
+                                    LEFT JOIN " . TABLE_ORDERS_TOTAL . " ot ON (o.orders_id = ot.orders_id
+                                      AND class = 'ot_total')
+                                    ORDER BY orders_id DESC",
+                $number_of_orders, true, 1800);
 
-        $ds = $dsc = $ys = $ysc = $msc = 0;
+            $ds = $dsc = $ys = $ysc = $msc = 0;
 
-        $now = date(DATE_FORMAT);
-        $yesterday = date(DATE_FORMAT, strtotime('-1 days'));
+            $now = date(DATE_FORMAT);
+            $yesterday = date(DATE_FORMAT, strtotime('-1 days'));
 
-        foreach ($orders as $order) {
+            foreach ($orders as $order) {
 
-          if (zen_date_short($order['date_purchased']) == $now) {
-            $ds += (float)$order['order_value'];
-            $dsc++;
-          }
-          if (zen_date_short($order['date_purchased']) == $yesterday) {
-            $ys += (float)$order['order_value'];
-            $ysc++;
-          }
+              if (zen_date_short($order['date_purchased']) == $now) {
+                $ds += (float)$order['order_value'];
+                $dsc++;
+              }
+              if (zen_date_short($order['date_purchased']) == $yesterday) {
+                $ys += (float)$order['order_value'];
+                $ysc++;
+              }
 
-          $order['customers_name'] = str_replace("N/A", "", $order['customers_name']);
+              $order['customers_name'] = str_replace("N/A", "", $order['customers_name']);
 
-          $amt = $currencies->format($order['order_value'], false);
-          if ($order['currency'] != DEFAULT_CURRENCY) {
-            $amt .= " (" . $order['order_total'] . ")";
-          }
-          ?>
-          <div class="row">
-            <span class="left">
-              <a href="<?php echo zen_href_link(FILENAME_ORDERS, 'oID=' . $order['orders_id'] . '&origin=' . FILENAME_DEFAULT); ?>" class="contentlink"><?php echo substr($order['customers_name'], 0, 20); ?></a>
-            </span>
-            <span class="center"><?php echo $amt; ?></span>
-            <span class="right"><?php echo zen_date_short($order['date_purchased']); ?></span>
-          </div>
-        <?php } ?>
+              $amt = $currencies->format($order['order_value'], false);
+              if ($order['currency'] != DEFAULT_CURRENCY) {
+                $amt .= " (" . $order['order_total'] . ")";
+              }
+              ?>
+            <tr>
+              <td>
+                <a href="<?php echo zen_href_link(FILENAME_ORDERS, 'oID=' . $order['orders_id'] . '&origin=' . FILENAME_DEFAULT); ?>" class="contentlink"><?php echo substr($order['customers_name'], 0, 20); ?></a>
+              </td>
+              <td class="text-center"><?php echo $amt; ?></td>
+              <td class="text-right"><?php echo zen_date_short($order['date_purchased']); ?></td>
+            </tr>
+          <?php } ?>
+        </table>
       </div>
 
       <!--//  sales graph  populated by javascript  //-->
-      <div class="reportBox">
-        <div class="header"><?php echo TEXT_MONTHLY_SALES_TITLE; ?><a href="<?php echo zen_href_link(FILENAME_STATS_SALES_REPORT_GRAPHS); ?>"><?php echo TEXT_CLICK_FOR_COMPLETE_DETAILS; ?></a></div>
-        <div id="graph2"></div>
-        <div class="row">
-          <span><?php echo sprintf(TEXT_SALES_TODAY, $dsc, number_format($ds, 2)); ?></span>
-          <span class="right"><?php echo sprintf(TEXT_SALES_YESTERDAY, $ysc, number_format($ys, 2)); ?></span>
+      <div class="panel panel-default reportBox">
+        <div class="panel-heading header"><?php echo TEXT_MONTHLY_SALES_TITLE; ?><a href="<?php echo zen_href_link(FILENAME_STATS_SALES_REPORT_GRAPHS); ?>"><?php echo TEXT_CLICK_FOR_COMPLETE_DETAILS; ?></a></div>
+        <div class="panel-body">
+          <div id="graph2"></div>
         </div>
+        <table class="table table-striped table-condensed">
+          <tr>
+            <td><?php echo sprintf(TEXT_SALES_TODAY, $dsc, number_format($ds, 2)); ?></td>
+            <td class="text-right"><?php echo sprintf(TEXT_SALES_YESTERDAY, $ysc, number_format($ys, 2)); ?></td>
+          </tr>
+        </table>
       </div>
-
     </div>
