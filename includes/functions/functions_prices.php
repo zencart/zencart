@@ -122,7 +122,18 @@
 ////
 // computes products_price + option groups lowest attributes price of each group when on
   function zen_get_products_base_price($products_id) {
-    global $db;
+      global $db, $zco_notifier;
+    
+      // -----
+      // Give an observer the chance to override the product's base price.
+      //
+      $base_price_is_handled = false;
+      $products_base_price = 0;
+      $zco_notifier->notify('ZEN_GET_PRODUCTS_BASE_PRICE', $products_id, $products_base_price, $base_price_is_handled);
+      if ($base_price_is_handled === true) {
+          return $products_base_price;
+      }
+      
       $product_check = $db->Execute("select products_price, products_priced_by_attribute from " . TABLE_PRODUCTS . " where products_id = '" . (int)$products_id . "'");
 
 // is there a products_price to add to attributes
