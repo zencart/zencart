@@ -905,7 +905,8 @@ class shoppingCart extends base {
             continue;
           }
 
-          $this->notify 'NOTIFY_CART_CALCULATE_ATTRIBUTE_WEIGHT', array('products_id' => $products_id, 'options_id' => $option), $attribute_weight->fields);
+          $this->notify('NOTIFY_CART_CALCULATE_ATTRIBUTE_WEIGHT', array('products_id' => $products_id, 'options_id'
+          => $option), $attribute_weight->fields);
 
           // adjusted count for free shipping
           if ($product->fields['product_is_always_free_shipping'] != 1) {
