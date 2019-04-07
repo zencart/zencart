@@ -318,6 +318,16 @@
  */
   function zen_has_product_attributes_values($products_id) {
     global $db;
+    
+    // -----
+    // Allow a watching observer to override this function's return value.
+    //
+    $value_to_return = '';
+    $GLOBALS['zco_notifier']->notify('NOTIFY_ZEN_HAS_PRODUCT_ATTRIBUTES_VALUES', $products_id, $value_to_return);
+    if ($value_to_return !== '') {
+        return $value_to_return;
+    }
+    
     $attributes_query = "select count(options_values_price) as total
                          from " . TABLE_PRODUCTS_ATTRIBUTES . "
                          where products_id = " . (int)$products_id . "
