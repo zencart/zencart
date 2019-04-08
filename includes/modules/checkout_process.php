@@ -104,7 +104,7 @@ if (isset($_SESSION['payment_attempt'])) unset($_SESSION['payment_attempt']);
  * Calculate order amount for display purposes on checkout-success page as well as adword campaigns etc
  * Takes the product subtotal and subtracts all credits from it
  */
-  $ototal = $order_subtotal = $credits_applied = 0;
+  $oshipping = $otax = $ototal = $order_subtotal = $credits_applied = 0;
   for ($i=0, $n=sizeof($order_totals); $i<$n; $i++) {
     if ($order_totals[$i]['code'] == 'ot_subtotal') $order_subtotal = $order_totals[$i]['value'];
     if (!empty(${$order_totals[$i]['code']}->credit_class)) $credits_applied += $order_totals[$i]['value'];
