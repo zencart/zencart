@@ -564,8 +564,7 @@
  *  configuration key value lookup
  *  TABLE: configuration
  */
-function zen_get_configuration_key_value($lookup) 
-{
+function zen_get_configuration_key_value($lookup) {
     global $db;
     $configuration_query = $db->Execute("select configuration_value from " . TABLE_CONFIGURATION . " where configuration_key='" . $lookup . "' LIMIT 1");
     $lookup_value = ($configuration_query->EOF) ? '' : $configuration_query->fields['configuration_value'];
