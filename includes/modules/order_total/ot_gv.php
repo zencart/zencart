@@ -211,13 +211,13 @@ class ot_gv {
     $gv_payment_amount = 0;
     // check for valid redemption amount vs available credit for current customer
     if (!empty($_SESSION['cot_gv'])) {
-      $gv_result = $db->Execute("select amount from " . TABLE_COUPON_GV_CUSTOMER . " where customer_id = '" . (int)$_SESSION['customer_id'] . "'");
+      $gv_result = $db->Execute("SELECT amount FROM " . TABLE_COUPON_GV_CUSTOMER . " WHERE customer_id = " . (int)$_SESSION['customer_id']);
       // obtain final "deduction" amount
       $gv_payment_amount = $this->deduction;
       // determine amount of GV to redeem based on available balance minus qualified/calculated deduction suitable to this order
-      $gv_amount = $gv_result->fields['amount'] - $gv_payment_amount;
+      $gv_amount = (!$gv_result->EOF ? $gv_result->fields['amount'] : 0) - $gv_payment_amount;
       // reduce customer's GV balance by the amount redeemed
-      $db->Execute("update " . TABLE_COUPON_GV_CUSTOMER . " set amount = '" . $gv_amount . "' where customer_id = '" . (int)$_SESSION['customer_id'] . "'");
+      $db->Execute("UPDATE " . TABLE_COUPON_GV_CUSTOMER . " SET amount = '" . $gv_amount . "' WHERE customer_id = " . (int)$_SESSION['customer_id']);
     }
     // clear GV redemption flag since it's already been claimed and deducted
     $_SESSION['cot_gv'] = false;
