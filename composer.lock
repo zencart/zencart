@@ -568,16 +568,16 @@
         },
         {
             "name": "jaybizzle/crawler-detect",
-            "version": "v1.2.79",
+            "version": "v1.2.80",
             "source": {
                 "type": "git",
                 "url": "https://github.com/JayBizzle/Crawler-Detect.git",
-                "reference": "e6ce66e9c892c42898cf84a35ecbfec5b4ab481c"
+                "reference": "af6a36e6d69670df3f0a3ed8e21d4b8cc67a7847"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/JayBizzle/Crawler-Detect/zipball/e6ce66e9c892c42898cf84a35ecbfec5b4ab481c",
-                "reference": "e6ce66e9c892c42898cf84a35ecbfec5b4ab481c",
+                "url": "https://api.github.com/repos/JayBizzle/Crawler-Detect/zipball/af6a36e6d69670df3f0a3ed8e21d4b8cc67a7847",
+                "reference": "af6a36e6d69670df3f0a3ed8e21d4b8cc67a7847",
                 "shasum": ""
             },
             "require": {
@@ -613,7 +613,7 @@
                 "crawlerdetect",
                 "php crawler detect"
             ],
-            "time": "2019-03-04T19:10:41+00:00"
+            "time": "2019-04-05T19:52:02+00:00"
         },
         {
             "name": "jenssegers/blade",
