@@ -512,7 +512,7 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
               echo zen_draw_label(HEADING_TITLE_SEARCH_DETAIL, 'search');
               ?>
             </div>
-            <div class="col-sm-6 col-md-8"><?php echo zen_draw_input_field('search', '', ($action == '' ? 'autofocus="autofocus"' : '') . 'class="form-control"'); ?></div>
+            <div class="col-sm-6 col-md-8"><?php echo zen_draw_input_field('search', '', ($action == '' ? 'autofocus="autofocus"' : '') . ' class="form-control"'); ?></div>
             <div class="col"><?php echo zen_draw_separator('pixel_trans.gif', '100%', '1'); ?></div>
             <?php
             echo zen_hide_session_id();
@@ -1247,7 +1247,7 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
         }
         ?>
       </div>
-    </div>
+    <!--</div>-->
     <!-- footer //-->
     <?php require(DIR_WS_INCLUDES . 'footer.php'); ?>
     <!-- footer_eof //-->
