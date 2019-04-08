@@ -468,46 +468,14 @@ div.copyrightrow {
     padding: 25px;
     text-align: center;
 }
+div.reportBox a {
+    color: #1e90ff;
+}
 
-div.header {
-    clear: both;
-    color: #ffffff;
+div.header{
+    background-color: #333 !important;
+    color: #f5f5f5 !important;
     font-weight: bold;
-    padding: 3px;
-}
-
-div.reportBox {
-    background: #666;
-    border: 1px solid #666;
-    margin-top: 1em;
-}
-
-.reportBox div.row {
-    background: #f7f6ef;
-    clear: both;
-    margin-top: 1px;
-    padding: 3px;
-    margin: 0px;
-}
-
-.reportBox div.row:nth-of-type(2n) {
-    background-color: #ffffff;
-}
-
-.reportBox div.row span.center {
-    margin-right: 30px;
-}
-
-/*.reportBox div.row span.left {
-    float: left;
-    text-align: left;
-    width: 74%;
-}*/
-
-.reportBox div.row span.right {
-    float: right;
-   /* text-align: right;
-    width: 21%;*/
 }
 
 div.warrantyrow {

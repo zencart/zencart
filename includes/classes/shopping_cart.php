@@ -659,6 +659,9 @@ class shoppingCart extends base {
 
       if ($product = $db->Execute($product_query)) {
         $prid = $product->fields['products_id'];
+        
+        $this->notify('NOTIFY_CART_CALCULATE_PRODUCT_PRICE', $products_id, $product->fields);
+
         $products_tax = zen_get_tax_rate($product->fields['products_tax_class_id']);
         $products_price = $product->fields['products_price'];
 
@@ -736,6 +739,8 @@ class shoppingCart extends base {
           $attribute_price = $db->Execute($attribute_price_query);
 
           if ($attribute_price->EOF) continue;
+
+          $this->notify('NOTIFY_CART_CALCULATE_ATTRIBUTE_PRICE', $products_id, $attribute_price->fields);
 
           $new_attributes_price = 0;
         // calculate Product Price without Specials, Sales or Discounts
@@ -900,6 +905,10 @@ class shoppingCart extends base {
             continue;
           }
 
+          $this->notify('NOTIFY_CART_CALCULATE_ATTRIBUTE_WEIGHT', 
+                        array('products_id' => $products_id, 'options_id' => $option), 
+                        $attribute_weight->fields);
+
           // adjusted count for free shipping
           if ($product->fields['product_is_always_free_shipping'] != 1) {
             $new_attributes_weight = $attribute_weight->fields['products_attributes_weight'];
@@ -963,6 +972,8 @@ class shoppingCart extends base {
 
     $total_attributes_price = 0;
     $qty = $this->contents[$products_id]['qty'];
+    
+    $this->notify('NOTIFY_CART_ATTRIBUTES_PRICE_START', $products_id);
 
     if (isset($this->contents[$products_id]['attributes'])) {
 
@@ -980,6 +991,8 @@ class shoppingCart extends base {
         if ($attribute_price->EOF) {
           continue;
         }
+    
+        $this->notify('NOTIFY_CART_ATTRIBUTES_PRICE_NEXT', $products_id, $attribute_price->fields);
 
         $new_attributes_price = 0;
         $discount_type_id = '';
@@ -1070,6 +1083,8 @@ class shoppingCart extends base {
     global $db;
 
     $attributes_price_onetime = 0;
+    
+    $this->notify('NOTIFY_CART_ATTRIBUTES_PRICE_ONETIME_CHARGES_START', $products_id);
 
     if (isset($this->contents[$products_id]['attributes'])) {
       foreach($this->contents[$products_id]['attributes'] as $option => $value) {
@@ -1085,6 +1100,8 @@ class shoppingCart extends base {
         if ($attribute_price->EOF) {
           continue;
         }
+   
+        $this->notify('NOTIFY_CART_ATTRIBUTES_PRICE_ONETIME_CHARGES_NEXT', $products_id, $attribute_price->fields);
 
         $new_attributes_price = 0;
         $discount_type_id = '';
@@ -1144,6 +1161,9 @@ class shoppingCart extends base {
     $attribute_weight = 0;
 
     if (isset($this->contents[$products_id]['attributes'])) {
+    
+      $this->notify('NOTIFY_CART_ATTRIBUTES_WEIGHT_START', $products_id);
+
       foreach($this->contents[$products_id]['attributes'] as $option => $value) {
         $attribute_weight_query = "select products_attributes_weight, products_attributes_weight_prefix
                                     from " . TABLE_PRODUCTS_ATTRIBUTES . "
@@ -1156,6 +1176,8 @@ class shoppingCart extends base {
         if ($attribute_weight_info->EOF) {
           continue;
         }
+   
+        $this->notify('NOTIFY_CART_ATTRIBUTES_WEIGHT_NEXT', $products_id, $attribute_weight_info->fields);
 
         // adjusted count for free shipping
         $product = $db->Execute("select products_id, product_is_always_free_shipping
@@ -1203,9 +1225,10 @@ class shoppingCart extends base {
                            from " . TABLE_PRODUCTS . " p, " . TABLE_PRODUCTS_DESCRIPTION . " pd
                            where p.products_id = '" . (int)$products_id . "'
                            and pd.products_id = p.products_id
-                           and pd.language_id = '" . (int)$_SESSION['languages_id'] . "'";
+                           and pd.language_id = " . (int)$_SESSION['languages_id'] . " LIMIT 1";
 
       if ($products = $db->Execute($products_query)) {
+        $this->notify('NOTIFY_CART_GET_PRODUCTS_NEXT', $products_id, $products->fields);
 
         $prid = $products->fields['products_id'];
         $products_price = $products->fields['products_price'];
@@ -1795,12 +1818,12 @@ class shoppingCart extends base {
           // adjust quantity if needed
         switch (true) {
           case ($new_qty == $current_qty): // no change
-            $adjust_max= 'false';
+            $adjust_max = 'false';
             $new_qty = $current_qty;
             break;
           case ($new_qty > $add_max && $chk_mixed == false):
-            $adjust_max= 'true';
-            $new_qty = $add_max;
+            $adjust_max = 'true';
+            $new_qty = $add_max ;
             break;
           case (($add_max - $cart_qty + $new_qty >= $add_max) && $new_qty > $add_max && $chk_mixed == true):
             $adjust_max = 'true';
@@ -1810,14 +1833,14 @@ class shoppingCart extends base {
             $new_qty = ($alter_qty > 0 ? $alter_qty : $current_qty);
             break;
           case (($cart_qty + $new_qty - $current_qty > $add_max) && $chk_mixed == true):
-            $adjust_max= 'true';
+            $adjust_max = 'true';
             $requested_qty = $new_qty;
 //            $new_qty = $current_qty;
             $alter_qty = $add_max - $cart_qty + $current_qty;
             $new_qty = ($alter_qty > 0 ? $alter_qty : $current_qty);
             break;
           default:
-            $adjust_max= 'false';
+            $adjust_max = 'false';
           }
 
 // bof: notify about adjustment to new quantity to be same as current in stock or maximum to add

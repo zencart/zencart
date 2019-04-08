@@ -69,7 +69,7 @@ function zen_address_format($address_format_id = 1, $incoming = array(), $html =
 
     $sql    = "select address_format as format from " . TABLE_ADDRESS_FORMAT . " where address_format_id = " . (int)$address_format_id;
     $result = $db->Execute($sql);
-    $fmt    = $result->fields['format'];
+    $fmt    = (!$result->EOF ? $result->fields['format'] : '');
 
     // sort to put longer keys at the top of the array so that longer variants are replaced before shorter ones
     array_multisort(array_map('strlen', array_keys($address)), SORT_DESC, $address);

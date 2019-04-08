@@ -23,7 +23,7 @@ class category_tree extends base {
     global $db, $cPath, $cPath_array;
     if ($product_type != 'all') {
       $sql = "select type_master_type from " . TABLE_PRODUCT_TYPES . "
-                where type_master_type = " . $product_type . "";
+              where type_master_type = " . $product_type;
       $master_type_result = $db->Execute($sql);
       $master_type = $master_type_result->fields['type_master_type'];
     }
