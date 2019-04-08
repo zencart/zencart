@@ -1247,7 +1247,7 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
         }
         ?>
       </div>
-    <!--</div>-->
+    </div>
     <!-- footer //-->
     <?php require(DIR_WS_INCLUDES . 'footer.php'); ?>
     <!-- footer_eof //-->
