@@ -79,6 +79,9 @@ if (!defined('USE_PCONNECT')) define('USE_PCONNECT', 'false');
   $autoLoadConfig[0][] = array('autoType'=>'class',
                                'loadFile'=> 'VersionServer.php',
                                'classPath'=>DIR_WS_CLASSES);
+  $autoLoadConfig[0][] = array('autoType'=>'class',
+                               'loadFile'=> 'configurationValidation.php',
+                               'classPath'=>DIR_WS_CLASSES);
 
 /**
  * Breakpoint 10.
@@ -234,6 +237,15 @@ if (!defined('USE_PCONNECT')) define('USE_PCONNECT', 'false');
  */
   $autoLoadConfig[170][] = array('autoType'=>'init_script',
                                  'loadFile'=> 'init_admin_history.php');
+/**
+ * Breakpoint 175.
+ *
+ * require('includes/init_includes/init_admin_history.php');
+ *
+ */
+  $autoLoadConfig[175][] = array('autoType'=>'classInstantiate',
+                                 'className'=>'configurationValidation',
+                                 'objectName'=>'configurationValidation');
 /**
  * Breakpoint 180.
  *
