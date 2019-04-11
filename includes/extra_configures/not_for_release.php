@@ -37,7 +37,6 @@ for ($i = 0, $n = sizeof($directory_array); $i < $n; $i++) {
   $file_cnt++;
   $file = $directory_array[$i];
 
-  //      echo 'LOADING: ' . $wsDir . $file . ' ' . $file_cnt . '<br />';
   if (file_exists($wsDir . $file)) {
     include($wsDir . $file);
   }
