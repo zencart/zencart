@@ -257,16 +257,16 @@
         },
         {
             "name": "illuminate/contracts",
-            "version": "v5.8.9",
+            "version": "v5.8.12",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/contracts.git",
-                "reference": "7224ed316427ae5f67c4888679bbf7f6e7773660"
+                "reference": "053c578b5a95fc50fa62266ff720ef74790e938e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/illuminate/contracts/zipball/7224ed316427ae5f67c4888679bbf7f6e7773660",
-                "reference": "7224ed316427ae5f67c4888679bbf7f6e7773660",
+                "url": "https://api.github.com/repos/illuminate/contracts/zipball/053c578b5a95fc50fa62266ff720ef74790e938e",
+                "reference": "053c578b5a95fc50fa62266ff720ef74790e938e",
                 "shasum": ""
             },
             "require": {
@@ -297,7 +297,7 @@
             ],
             "description": "The Illuminate Contracts package.",
             "homepage": "https://laravel.com",
-            "time": "2019-03-06T19:39:19+00:00"
+            "time": "2019-04-16T12:47:20+00:00"
         },
         {
             "name": "illuminate/database",
@@ -458,16 +458,16 @@
         },
         {
             "name": "illuminate/support",
-            "version": "v5.8.9",
+            "version": "v5.8.12",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/support.git",
-                "reference": "e275519c58246cc4011c798f9b0a0f83aae2aab7"
+                "reference": "5541fa4ee4b5ab4635056fae0eecad7d328b86b4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/illuminate/support/zipball/e275519c58246cc4011c798f9b0a0f83aae2aab7",
-                "reference": "e275519c58246cc4011c798f9b0a0f83aae2aab7",
+                "url": "https://api.github.com/repos/illuminate/support/zipball/5541fa4ee4b5ab4635056fae0eecad7d328b86b4",
+                "reference": "5541fa4ee4b5ab4635056fae0eecad7d328b86b4",
                 "shasum": ""
             },
             "require": {
@@ -515,7 +515,7 @@
             ],
             "description": "The Illuminate Support package.",
             "homepage": "https://laravel.com",
-            "time": "2019-04-01T19:02:05+00:00"
+            "time": "2019-04-14T05:44:06+00:00"
         },
         {
             "name": "illuminate/view",
@@ -665,16 +665,16 @@
         },
         {
             "name": "nesbot/carbon",
-            "version": "2.16.2",
+            "version": "2.16.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/briannesbitt/Carbon.git",
-                "reference": "720a9c36927396efeeb48a972e9d129d44b6dc28"
+                "reference": "373d9f0d58651af366435148c39beb702c2b7ef4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/briannesbitt/Carbon/zipball/720a9c36927396efeeb48a972e9d129d44b6dc28",
-                "reference": "720a9c36927396efeeb48a972e9d129d44b6dc28",
+                "url": "https://api.github.com/repos/briannesbitt/Carbon/zipball/373d9f0d58651af366435148c39beb702c2b7ef4",
+                "reference": "373d9f0d58651af366435148c39beb702c2b7ef4",
                 "shasum": ""
             },
             "require": {
@@ -721,7 +721,7 @@
                 "datetime",
                 "time"
             ],
-            "time": "2019-03-29T12:23:12+00:00"
+            "time": "2019-04-06T17:09:23+00:00"
         },
         {
             "name": "psr/container",
@@ -1101,16 +1101,16 @@
         },
         {
             "name": "symfony/translation",
-            "version": "v4.2.5",
+            "version": "v4.2.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/translation.git",
-                "reference": "e46933cc31b68f51f7fc5470fb55550407520f56"
+                "reference": "46c0dede1f925383d13dc783857be2c41efd0b24"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/translation/zipball/e46933cc31b68f51f7fc5470fb55550407520f56",
-                "reference": "e46933cc31b68f51f7fc5470fb55550407520f56",
+                "url": "https://api.github.com/repos/symfony/translation/zipball/46c0dede1f925383d13dc783857be2c41efd0b24",
+                "reference": "46c0dede1f925383d13dc783857be2c41efd0b24",
                 "shasum": ""
             },
             "require": {
@@ -1132,7 +1132,9 @@
                 "symfony/console": "~3.4|~4.0",
                 "symfony/dependency-injection": "~3.4|~4.0",
                 "symfony/finder": "~2.8|~3.0|~4.0",
+                "symfony/http-kernel": "~3.4|~4.0",
                 "symfony/intl": "~3.4|~4.0",
+                "symfony/var-dumper": "~3.4|~4.0",
                 "symfony/yaml": "~3.4|~4.0"
             },
             "suggest": {
@@ -1170,7 +1172,7 @@
             ],
             "description": "Symfony Translation Component",
             "homepage": "https://symfony.com",
-            "time": "2019-04-01T14:13:08+00:00"
+            "time": "2019-04-10T16:20:36+00:00"
         },
         {
             "name": "vlucas/valitron",
@@ -2090,12 +2092,12 @@
             "version": "v1.6.5",
             "source": {
                 "type": "git",
-                "url": "https://github.com/mikey179/vfsStream.git",
+                "url": "https://github.com/bovigo/vfsStream.git",
                 "reference": "d5fec95f541d4d71c4823bb5e30cf9b9e5b96145"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mikey179/vfsStream/zipball/d5fec95f541d4d71c4823bb5e30cf9b9e5b96145",
+                "url": "https://api.github.com/repos/bovigo/vfsStream/zipball/d5fec95f541d4d71c4823bb5e30cf9b9e5b96145",
                 "reference": "d5fec95f541d4d71c4823bb5e30cf9b9e5b96145",
                 "shasum": ""
             },
