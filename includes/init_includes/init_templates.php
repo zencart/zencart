@@ -52,7 +52,7 @@
  * Load the appropriate Language files, based on the currently-selected template
  */
 
-  include_once(zen_get_file_directory(DIR_FS_CATALOG . DIR_WS_LANGUAGES . "/", $_SESSION['language'].'.php', 'false'));
+  include_once(zen_get_file_directory(DIR_FS_CATALOG . DIR_WS_LANGUAGES, $_SESSION['language'].'.php', 'false'));
 
 /**
  * include the template language master (to catch all items not defined in the override file).
