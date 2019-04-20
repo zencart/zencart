@@ -1205,7 +1205,7 @@ function check_form(form_name) {
           <?php echo zen_draw_radio_field('coupon_is_valid_for_sales', '1', (!empty($_POST['coupon_is_valid_for_sales']))) . '&nbsp;' . TEXT_COUPON_IS_VALID_FOR_SALES; ?><br />
           <?php echo zen_draw_radio_field('coupon_is_valid_for_sales', '0', (empty($_POST['coupon_is_valid_for_sales']))) . '&nbsp;' . TEXT_NO_COUPON_IS_VALID_FOR_SALES; ?><br />
         </td>
-        <td align="left" valign="top" class="main"><?php echo COUPON_TOTAL_HELP; ?></td>
+        <td align="left" valign="top" class="main"><?php echo COUPON_SALE_HELP; ?></td>
       </tr>
 
       <tr>
