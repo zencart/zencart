@@ -126,7 +126,7 @@ echo $menulist;
       <ul>
 <?php
   include(DIR_WS_MODULES . zen_get_module_directory('ezpages_bar_header.php'));
-  if (sizeof($var_linksList) >= 1) {
+  if (!empty($var_linksList)) {
     for ($i=1, $n=sizeof($var_linksList); $i<=$n; $i++) {
       echo '<li><a href="' . $var_linksList[$i]['link'] . '">' . $var_linksList[$i]['name'] . '</a></li>' . "\n";
     }
