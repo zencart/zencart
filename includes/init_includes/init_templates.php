@@ -52,16 +52,8 @@
  * Load the appropriate Language files, based on the currently-selected template
  */
 
-  if (file_exists(DIR_WS_LANGUAGES . $template_dir . '/' . $_SESSION['language'] . '.php')) {
-    $template_dir_select = $template_dir . '/';
-  /**
-   * include the template language overrides
-   */
-      include_once(DIR_WS_LANGUAGES . $template_dir_select . $_SESSION['language'] . '.php');
-  } else {
-    $template_dir_select = '';
-      //  include_once(DIR_WS_LANGUAGES . $template_dir_select . $_SESSION['language'] . '.php');
-  }
+  include_once(zen_get_file_directory(DIR_FS_CATALOG . DIR_WS_LANGUAGES, $_SESSION['language'].'.php', 'false'));
+
 /**
  * include the template language master (to catch all items not defined in the override file).
  * The intent here is to: load the override version to catch preferencial changes; 
