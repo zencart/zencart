@@ -72,5 +72,5 @@
 /**
  * include the extra language definitions
  */
-  include(DIR_WS_MODULES . 'extra_definitions.php');
+  include(DIR_WS_MODULES . zen_get_module_directory('extra_definitions.php'));
 ?>
