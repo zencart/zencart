@@ -77,10 +77,6 @@ if (zen_not_null($action)) {
       break;
   }
 }
-
-if ($_GET['mail_sent_to']) {
-  $messageStack->add(sprintf(NOTICE_EMAIL_SENT_TO, $_GET['mail_sent_to']), 'success');
-}
 ?>
 <!doctype html>
 <html <?php echo HTML_PARAMS; ?>>
