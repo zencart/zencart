@@ -122,10 +122,10 @@ if (!empty($_SESSION['customer_id'])) {
     $name = $check_customer->fields['customers_firstname'] . ' ' . $check_customer->fields['customers_lastname'];
 }
 
-$send_to_array = [];
+$send_to_array = array();
 if (CONTACT_US_LIST !=''){
     foreach (explode(",", CONTACT_US_LIST) as $k => $v) {
-        $send_to_array[] = ['id' => $k, 'text' => preg_replace('/\<[^*]*/', '', $v)];
+    $send_to_array[] = array('id' => $k, 'text' => preg_replace('/\<[^*]*/', '', $v));
     }
 }
 
