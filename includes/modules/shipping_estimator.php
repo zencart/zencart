@@ -55,6 +55,9 @@ if ($_SESSION['cart']->count_contents() > 0) {
     if (isset($_POST['address_id'])){
       // user changed address
       $sendto = $_POST['address_id'];
+    } else if (!empty($_SESSION['sendto'])) {
+      // user has previously selected a destination address
+      $sendto = $_SESSION['sendto'];
     }elseif (!empty($_SESSION['cart_address_id'])){
       // user once changed address
       $sendto = $_SESSION['cart_address_id'];
@@ -89,12 +92,12 @@ if ($_SESSION['cart']->count_contents() > 0) {
       //add state zone_id
       $_SESSION['cart_zone'] = $state_zone_id;
       $_SESSION['cart_zip_code'] = $zip_code;
-    } elseif (!empty($_SESSION['cart_country_id']) && !empty($_SESSION['cart_zip_code'])){
+    } elseif (!empty($_SESSION['cart_country_id'])){
       // session is available
       $_SESSION['country_info'] = zen_get_countries($_SESSION['cart_country_id'],true);
       $country_info = $_SESSION['country_info'];
       // fix here - check for error on $cart_country_id
-      $order->delivery = array('postcode' => $_SESSION['cart_zip_code'],
+      $order->delivery = array('postcode' => $zip_code,
                                'country' => array('id' => $_SESSION['cart_country_id'], 'title' => $country_info['countries_name'], 'iso_code_2' => $country_info['countries_iso_code_2'], 'iso_code_3' =>  $country_info['countries_iso_code_3']),
                                'country_id' => $_SESSION['cart_country_id'],
                                'zone_id' => $state_zone_id,
@@ -145,7 +148,7 @@ if ($_SESSION['cart']->count_contents() > 0) {
     $free_shipping = false;
     if ( ($pass == true) && ($_SESSION['cart']->show_total() >= MODULE_ORDER_TOTAL_SHIPPING_FREE_SHIPPING_OVER)) {
       $free_shipping = true;
-      include(DIR_WS_LANGUAGES . $_SESSION['language'] . '/modules/order_total/ot_shipping.php');
+      include(zen_get_file_directory(DIR_FS_CATALOG . DIR_WS_LANGUAGES . $_SESSION['language'] . '/modules/order_total/', 'ot_shipping.php', 'false'));
     }
   } else {
     $free_shipping = false;
