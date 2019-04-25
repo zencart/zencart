@@ -1,298 +1,300 @@
 <!DOCTYPE html>
 <html>
 <!--
-	/**
-	 * @package documentation
-	 * @copyright Copyright 2003-2018 Zen Cart Development Team
-	 * @license https://www.zen-cart.com/license/2_0.txt GNU Public License v2.0
-	 * @version $Id: changed_files-v1-5-1.html  Modified in v1.5.6 $
-	 */
-	//-->
+    /**
+     * @package documentation
+ * @copyright Copyright 2003-2019 Zen Cart Development Team
+     * @license https://www.zen-cart.com/license/2_0.txt GNU Public License v2.0
+     * @version $Id: DrByte 2019 Jan 04 Modified in v1.5.6a $
+     */
+//-->
 <head>
-	<title>Zen Cart&reg; Changed Files</title>
-	<meta charset="utf-8">
-	<meta http-equiv="x-ua-compatible" content="ie=edge">
-	<meta http-equiv="Content-Type" content="text/html">
-	<meta http-equiv="imagetoolbar" content="no">
-	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-	<meta name="keywords" content="">
-	<meta name="description" content="">
-	<meta name="authors" content="The Zen Cart&reg; Team">
-	<meta name="generator" content="shopping cart program by Zen Cart&reg;, https://www.zen-cart.com">
-	<meta name="robots" content="noindex, nofollow">
-	<link rel="stylesheet" href="./zen.css">
+    <title>Zen Cart&reg; Changed Files</title>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta http-equiv="Content-Type" content="text/html">
+    <meta http-equiv="imagetoolbar" content="no">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <meta name="authors" content="The Zen Cart&reg; Team">
+    <meta name="generator" content="shopping cart program by Zen Cart&reg;, https://www.zen-cart.com">
+    <meta name="robots" content="noindex, nofollow">
+    <link rel="stylesheet" href="./zen.css">
 </head>
 <body>
+<div class="container">
 
-	<section id="pageHeader">
-		<div class="h-g">
-			<div class="h-u-md-6-12 h-u-sm-1-12">
-				<a href="./index.html">
-					<img src="../includes/templates/template_default/images/logo.gif" alt="Zen Cart&reg;" title="Zen Cart&reg;" width="192" height="68" border="0" />
-				</a>
-			</div>
-			<div class="h-u-md-6-12 h-u-sm-hidden h-text-right">
-				<a class="h-btn h-box-shadow" href="./index.html">
-					Documentation Home
-				</a>
-			</div>
-		</div>
-	</section> <!-- End pageHeader //-->
-	
-	<section id="zenTeamMessage">
-		<h1>Welcome to Zen Cart&reg;</h1>	
-		<div class="h-alert h-box-shadow ">
-			<em>Dear Zen Cart&reg; User</em>,
-			<p>
-				Zen Cart&reg; is made available to you for your use, addition, changes, modification, etc. without charge, under Version 2 of the GNU General Public License.
-			</p>
-			<p>
-				While we do not charge for this software, donations are greatly appreciated, each time you install a new version, to help cover the expenses of maintenance, upgrades, updates, the free support forum and the continued development of this software for your online E-Commerce store.
-			</p>
-			<p>
-				Donations can be made on the <a href="https://www.zen-cart.com/donate" target="_blank">Zen Cart&reg; Team Page</a>
-			</p>
-			<p>
-				We appreciate your support.
-				<br>
-				<em>The Zen Cart&reg; Team</em>
-			</p>
-		</div>
-	</section> <!-- End zenTeamMessage //-->
-	
-	<section id="introCenter">
-		<div>
-			<h1>Zen Cart&reg; Version 1.5.1</h1>
-			<p>
-				For a listing of what is new in this release, please see the <a href="whatsnew_1.5.1.html">whatsnew_1.5.1.html</a> file in the <span class="filename">/docs</span> folder.
-				<br>
-				You may also consult the <a href="https://www.zen-cart.com/forumdisplay.php?2-Zen-Cart-Release-Announcements" target="_blank">Zen Cart&reg; Support Forum</a>.
-			</p>
-		</div>
-	</section> <!-- End introCenter //-->
-	
-	<section id="deletedFiles">
-		<div>
-			<h1>DELETED Files (since v1.5.0)</h1>
-			<ul>
-				<li>/admin/includes/functions/password_funcs.php   (replaced with updated /includes/functions/password_funcs.php which is now shared with both admin and non-admin)</li>
-				<li>/includes/templates/classic/css/CSS_read_me.txt (see the template_default one instead)</li>
-			</ul>
-		</div>
-		<div class="back-to-top">
-			^^ <a href="#pageHeader">Back to Top</a> ^^
-		</div>
-	</section> <!-- End deletedFiles //-->
-	
-	<section id="newFiles">
-		<div>
-			<h1>NEW Files (since v1.5.0)</h1>
-			<ul>
-				<li>/logs/  -- NEW FOLDER!</li>
-				<li>/logs/.htaccess</li>
-				<li>/logs/index.html</li>
-				<li>/logs/index.php</li>
-			</ul>
-			
-			and:
-			<ul>
-			
-				<li>/admin/includes/classes/split_page_results_new.php</li>
-				<li>/includes/auto_loaders/config.products_viewed_counter.php</li>
-				<li>/includes/classes/observers/class.products_viewed_counter.php</li>
-				<li>/includes/classes/query_cache.php</li>
-				<li>/includes/extra_datafiles/products_viewed_counter.php</li>
-				<li>/includes/modules/pages/advanced_search_result/jscript_onload_helper.php</li>
-				<li>/includes/modules/pages/advanced_search_result/on_load_focus.js</li>
-			</ul>
-		</div>
-		<div class="back-to-top">
-			^^ <a href="#pageHeader">Back to Top</a> ^^
-		</div>
-	</section> <!-- End newFiles //-->
-	
-	<section id="changedFiles">
-		<div>
-			<h1>CHANGED Files (since v1.5.0)</h1>
-			<ul>
-				<li>/admin/admin_activity.php</li>
-				<li>/admin/admin_page_registration.php</li>
-				<li>/admin/attributes_controller.php</li>
-				<li>/admin/categories.php</li>
-				<li>/admin/configuration.php</li>
-				<li>/admin/coupon_admin.php</li>
-				<li>/admin/customers.php</li>
-				<li>/admin/gv_mail.php</li>
-				<li>/admin/mail.php</li>
-				<li>/admin/modules.php</li>
-				<li>/admin/options_name_manager.php</li>
-				<li>/admin/options_values_manager.php</li>
-				<li>/admin/password_forgotten.php</li>
-				<li>/admin/product_types.php</li>
-				<li>/admin/profiles.php</li>
-				<li>/admin/sqlpatch.php</li>
-				<li>/admin/stats_customers_referrals.php</li>
-				<li>/admin/store_manager.php</li>
-				<li>/admin/users.php</li>
-				<li>/admin/includes/.htaccess</li>
-				<li>/admin/includes/application_top.php</li>
-				<li>/admin/includes/attributes_preview.php</li>
-				<li>/admin/includes/dist-configure.php (this is ONLY a basic example file, and is not used by a live store, so doesn't need upgrading on a live site)</li>
-				<li>/admin/includes/initsystem.php</li>
-				<li>/admin/includes/menu.js</li>
-				<li>/admin/includes/extra_configures/enable_error_logging.php</li>
-				<li>/admin/includes/functions/admin_access.php</li>
-				<li>/admin/includes/functions/database.php</li>
-				<li>/admin/includes/functions/general.php</li>
-				<li>/admin/includes/functions/localization.php</li>
-				<li>/admin/includes/init_includes/init_admin_auth.php</li>
-				<li>/admin/includes/init_includes/init_admin_history.php</li>
-				<li>/admin/includes/init_includes/init_errors.php</li>
-				<li>/admin/includes/init_includes/init_file_db_names.php</li>
-				<li>/admin/includes/init_includes/init_general_funcs.php</li>
-				<li>/admin/includes/init_includes/init_html_editor.php</li>
-				<li>/admin/includes/init_includes/init_languages.php</li>
-				<li>/admin/includes/languages/english/login.php</li>
-				<li>/admin/includes/languages/english/profiles.php</li>
-				<li>/admin/includes/languages/english/stats_customers_referrals.php</li>
-				<li>/admin/includes/languages/english.php</li>
-				<li>/admin/includes/modules/document_general/preview_info.php</li>
-				<li>/admin/includes/modules/document_general/preview_info_meta_tags.php</li>
-				<li>/admin/includes/modules/document_product/preview_info.php</li>
-				<li>/admin/includes/modules/document_product/preview_info_meta_tags.php</li>
-				<li>/admin/includes/modules/product/preview_info.php</li>
-				<li>/admin/includes/modules/product/preview_info_meta_tags.php</li>
-				<li>/admin/includes/modules/product_free_shipping/preview_info.php</li>
-				<li>/admin/includes/modules/product_free_shipping/preview_info_meta_tags.php</li>
-				<li>/admin/includes/modules/product_music/preview_info.php</li>
-				<li>/admin/includes/modules/product_music/preview_info_meta_tags.php</li>
-				<br>
-				<li>/docs/ &lt;VARIOUS FILES HERE&gt;</li>
-				<li>/extras/ &lt;VARIOUS FILES HERE&gt;</li>
-				<br>
-				<li>/ipn_main_handler.php</li>
-				<br>
-				<li>/includes/application_top.php</li>
-				<li>/includes/dist-configure.php (this is ONLY a basic example file, and is not used by a live store, so doesn't need upgrading on a live site)</li>
-				<li>/includes/initsystem.php</li>
-				<li>/includes/main_cart_actions.php</li>
-				<li>/includes/version.php</li>
-				<li>/includes/auto_loaders/config.core.php</li>
-				<li>/includes/classes/db/mysql/query_factory.php</li>
-				<li>/includes/classes/order.php</li>
-				<li>/includes/classes/payment.php</li>
-				<li>/includes/classes/shipping.php</li>
-				<li>/includes/classes/shopping_cart.php</li>
-				<li>/includes/classes/split_page_results.php</li>
-				<li>/includes/extra_configures/enable_error_logging.php</li>
-				<li>/includes/functions/functions_customers.php</li>
-				<li>/includes/functions/functions_email.php</li>
-				<li>/includes/functions/functions_general.php</li>
-				<li>/includes/functions/password_funcs.php</li>
-				<li>/includes/index_filters/record_company_filter.php</li>
-				<li>/includes/init_includes/init_file_db_names.php</li>
-				<li>/includes/init_includes/init_general_funcs.php</li>
-				<li>/includes/init_includes/init_sanitize.php</li>
-				<li>/includes/init_includes/init_special_funcs.php</li>
-				<li>/includes/languages/english/html_includes/classic/define_main_page.php</li>
-				<li>/includes/languages/english/html_includes/define_main_page.php</li>
-				<li>/includes/languages/english/modules/payment/paypal.php</li>
-				<li>/includes/languages/english/modules/payment/paypaldp.php</li>
-				<li>/includes/languages/english/modules/payment/paypalwpp.php</li>
-				<li>/includes/languages/english/create_account.php</li>
-				<li>/includes/modules/pages/contact_us/header_php.php</li>
-				<li>/includes/modules/pages/checkout_success/header_php.php</li>
-				<li>/includes/modules/pages/document_general_info/main_template_vars.php</li>
-				<li>/includes/modules/pages/document_product_info/main_template_vars.php</li>
-				<li>/includes/modules/pages/download/header_php.php</li>
-				<li>/includes/modules/pages/password_forgotten/header_php.php</li>
-				<li>/includes/modules/pages/product_free_shipping_info/main_template_vars.php</li>
-				<li>/includes/modules/pages/product_info/main_template_vars.php</li>
-				<li>/includes/modules/pages/product_music_info/main_template_vars.php</li>
-				<li>/includes/modules/pages/product_reviews_write/header_php.php</li>
-				<li>/includes/modules/payment/authorizenet.php</li>
-				<li>/includes/modules/payment/authorizenet_aim.php</li>
-				<li>/includes/modules/payment/authorizenet_echeck.php</li>
-				<li>/includes/modules/payment/linkpoint_api/class.linkpoint_api.php</li>
-				<li>/includes/modules/payment/linkpoint_api.php</li>
-				<li>/includes/modules/payment/paypal/paypal_curl.php</li>
-				<li>/includes/modules/payment/paypal/paypal_functions.php</li>
-				<li>/includes/modules/payment/paypal.php</li>
-				<li>/includes/modules/payment/paypaldp.php</li>
-				<li>/includes/modules/payment/paypalwpp.php</li>
-				<li>/includes/modules/sideboxes/manufacturers.php</li>
-				<li>/includes/modules/attributes.php</li>
-				<li>/includes/modules/create_account.php</li>
-				<li>/includes/modules/extra_definitions.php</li>
-				<li>/includes/modules/extra_functions.php</li>
-				<li>/includes/templates/template_default/common/html_header.php</li>
-				<li>/includes/templates/template_default/common/tpl_header.php</li>
-				<li>/includes/templates/template_default/css/CSS_read_me.txt (just a help-text file)</li>
-				<li>/includes/templates/template_default/jscript/on_load/read_me.txt (just a help-text file)</li>
-				<li>/includes/templates/template_default/jscript/read_me.txt (just a help-text file)</li>
-				<li>/includes/templates/template_default/popup_search_help/tpl_main_page.php</li>
-				<li>/includes/templates/template_default/templates/tpl_account_default.php</li>
-				<li>/includes/templates/template_default/templates/tpl_contact_us_default.php</li>
-				<li>/includes/templates/template_default/templates/tpl_modules_create_account.php</li>
-				<li>/includes/templates/template_default/templates/tpl_product_reviews_write_default.php</li>
-				<li>/includes/templates/template_default/templates/tpl_zc_install_suggested_default.php</li>
-				<br>
-				<li>/zc_install/ ... assume *all* of /zc_install/ has changed
-			</ul>
-		</div>
-		<div class="back-to-top">
-			^^ <a href="#pageHeader">Back to Top</a> ^^
-		</div>
-	</section> <!-- End changedFiles //-->
+    <section id="pageHeader">
+        <div class="row">
+            <div class="col-md-6 col-sm-12">
+                <a href="./index.html">
+                    <img src="../includes/templates/template_default/images/logo.gif" alt="Zen Cart&reg;" title="Zen Cart&reg;" width="192" height="68" border="0" />
+                </a>
+            </div>
+            <div class="col-md-6 hidden-xs hidden-sm text-right">
+                <a class="btn btn-primary add-shadow" href="./index.html">
+                    Documentation Home
+                </a>
+            </div>
+        </div>
+    </section> <!-- End pageHeader //-->
+    
+    <section id="zenTeamMessage">
+        <h1>Welcome to Zen Cart&reg;</h1>    
+        <div class="alert add-shadow">
+            <em>Dear Zen Cart&reg; User</em>,
+            <p>
+                Zen Cart&reg; is made available to you for your use, addition, changes, modification, etc. without charge, under Version 2 of the GNU General Public License.
+            </p>
+            <p>
+                While we do not charge for this software, donations are greatly appreciated, each time you install a new version, to help cover the expenses of maintenance, upgrades, updates, the free support forum and the continued development of this software for your online E-Commerce store.
+            </p>
+            <p>
+                Donations can be made on the <a href="https://www.zen-cart.com/donate" target="_blank">Zen Cart&reg; Team Page</a>
+            </p>
+            <p>
+                We appreciate your support.
+                <br>
+                <em>The Zen Cart&reg; Team</em>
+            </p>
+        </div>
+    </section> <!-- End zenTeamMessage //-->
+    
+    <section id="introCenter">
+        <div>
+            <h1>Zen Cart&reg; Version 1.5.1</h1>
+            <p>
+                For a listing of what is new in this release, please see the <a href="whatsnew_1.5.1.html">whatsnew_1.5.1.html</a> file in the <span class="filename">/docs</span> folder.
+                <br>
+                You may also consult the <a href="https://www.zen-cart.com/forumdisplay.php?2-Zen-Cart-Release-Announcements" target="_blank">Zen Cart&reg; Support Forum</a>.
+            </p>
+        </div>
+    </section> <!-- End introCenter //-->
+    
+    <section id="deletedFiles">
+        <div>
+            <h1>DELETED Files (since v1.5.0)</h1>
+            <ul>
+                <li>/admin/includes/functions/password_funcs.php     (replaced with updated /includes/functions/password_funcs.php which is now shared with both admin and non-admin)</li>
+                <li>/includes/templates/classic/css/CSS_read_me.txt (see the template_default one instead)</li>
+            </ul>
+        </div>
+        <div class="back-to-top">
+            ^^ <a href="#pageHeader">Back to Top</a> ^^
+        </div>
+    </section> <!-- End deletedFiles //-->
+    
+    <section id="newFiles">
+        <div>
+            <h1>NEW Files (since v1.5.0)</h1>
+            <ul>
+                <li>/logs/    -- NEW FOLDER!</li>
+                <li>/logs/.htaccess</li>
+                <li>/logs/index.html</li>
+                <li>/logs/index.php</li>
+            </ul>
+            
+            and:
+            <ul>
+            
+                <li>/admin/includes/classes/split_page_results_new.php</li>
+                <li>/includes/auto_loaders/config.products_viewed_counter.php</li>
+                <li>/includes/classes/observers/class.products_viewed_counter.php</li>
+                <li>/includes/classes/query_cache.php</li>
+                <li>/includes/extra_datafiles/products_viewed_counter.php</li>
+                <li>/includes/modules/pages/advanced_search_result/jscript_onload_helper.php</li>
+                <li>/includes/modules/pages/advanced_search_result/on_load_focus.js</li>
+            </ul>
+        </div>
+        <div class="back-to-top">
+            ^^ <a href="#pageHeader">Back to Top</a> ^^
+        </div>
+    </section> <!-- End newFiles //-->
+    
+    <section id="changedFiles">
+        <div>
+            <h1>CHANGED Files (since v1.5.0)</h1>
+            <ul>
+                <li>/admin/admin_activity.php</li>
+                <li>/admin/admin_page_registration.php</li>
+                <li>/admin/attributes_controller.php</li>
+                <li>/admin/categories.php</li>
+                <li>/admin/configuration.php</li>
+                <li>/admin/coupon_admin.php</li>
+                <li>/admin/customers.php</li>
+                <li>/admin/gv_mail.php</li>
+                <li>/admin/mail.php</li>
+                <li>/admin/modules.php</li>
+                <li>/admin/options_name_manager.php</li>
+                <li>/admin/options_values_manager.php</li>
+                <li>/admin/password_forgotten.php</li>
+                <li>/admin/product_types.php</li>
+                <li>/admin/profiles.php</li>
+                <li>/admin/sqlpatch.php</li>
+                <li>/admin/stats_customers_referrals.php</li>
+                <li>/admin/store_manager.php</li>
+                <li>/admin/users.php</li>
+                <li>/admin/includes/.htaccess</li>
+                <li>/admin/includes/application_top.php</li>
+                <li>/admin/includes/attributes_preview.php</li>
+                <li>/admin/includes/dist-configure.php (this is ONLY a basic example file, and is not used by a live store, so doesn't need upgrading on a live site)</li>
+                <li>/admin/includes/initsystem.php</li>
+                <li>/admin/includes/menu.js</li>
+                <li>/admin/includes/extra_configures/enable_error_logging.php</li>
+                <li>/admin/includes/functions/admin_access.php</li>
+                <li>/admin/includes/functions/database.php</li>
+                <li>/admin/includes/functions/general.php</li>
+                <li>/admin/includes/functions/localization.php</li>
+                <li>/admin/includes/init_includes/init_admin_auth.php</li>
+                <li>/admin/includes/init_includes/init_admin_history.php</li>
+                <li>/admin/includes/init_includes/init_errors.php</li>
+                <li>/admin/includes/init_includes/init_file_db_names.php</li>
+                <li>/admin/includes/init_includes/init_general_funcs.php</li>
+                <li>/admin/includes/init_includes/init_html_editor.php</li>
+                <li>/admin/includes/init_includes/init_languages.php</li>
+                <li>/admin/includes/languages/english/login.php</li>
+                <li>/admin/includes/languages/english/profiles.php</li>
+                <li>/admin/includes/languages/english/stats_customers_referrals.php</li>
+                <li>/admin/includes/languages/english.php</li>
+                <li>/admin/includes/modules/document_general/preview_info.php</li>
+                <li>/admin/includes/modules/document_general/preview_info_meta_tags.php</li>
+                <li>/admin/includes/modules/document_product/preview_info.php</li>
+                <li>/admin/includes/modules/document_product/preview_info_meta_tags.php</li>
+                <li>/admin/includes/modules/product/preview_info.php</li>
+                <li>/admin/includes/modules/product/preview_info_meta_tags.php</li>
+                <li>/admin/includes/modules/product_free_shipping/preview_info.php</li>
+                <li>/admin/includes/modules/product_free_shipping/preview_info_meta_tags.php</li>
+                <li>/admin/includes/modules/product_music/preview_info.php</li>
+                <li>/admin/includes/modules/product_music/preview_info_meta_tags.php</li>
+                <br>
+                <li>/docs/ &lt;VARIOUS FILES HERE&gt;</li>
+                <li>/extras/ &lt;VARIOUS FILES HERE&gt;</li>
+                <br>
+                <li>/ipn_main_handler.php</li>
+                <br>
+                <li>/includes/application_top.php</li>
+                <li>/includes/dist-configure.php (this is ONLY a basic example file, and is not used by a live store, so doesn't need upgrading on a live site)</li>
+                <li>/includes/initsystem.php</li>
+                <li>/includes/main_cart_actions.php</li>
+                <li>/includes/version.php</li>
+                <li>/includes/auto_loaders/config.core.php</li>
+                <li>/includes/classes/db/mysql/query_factory.php</li>
+                <li>/includes/classes/order.php</li>
+                <li>/includes/classes/payment.php</li>
+                <li>/includes/classes/shipping.php</li>
+                <li>/includes/classes/shopping_cart.php</li>
+                <li>/includes/classes/split_page_results.php</li>
+                <li>/includes/extra_configures/enable_error_logging.php</li>
+                <li>/includes/functions/functions_customers.php</li>
+                <li>/includes/functions/functions_email.php</li>
+                <li>/includes/functions/functions_general.php</li>
+                <li>/includes/functions/password_funcs.php</li>
+                <li>/includes/index_filters/record_company_filter.php</li>
+                <li>/includes/init_includes/init_file_db_names.php</li>
+                <li>/includes/init_includes/init_general_funcs.php</li>
+                <li>/includes/init_includes/init_sanitize.php</li>
+                <li>/includes/init_includes/init_special_funcs.php</li>
+                <li>/includes/languages/english/html_includes/classic/define_main_page.php</li>
+                <li>/includes/languages/english/html_includes/define_main_page.php</li>
+                <li>/includes/languages/english/modules/payment/paypal.php</li>
+                <li>/includes/languages/english/modules/payment/paypaldp.php</li>
+                <li>/includes/languages/english/modules/payment/paypalwpp.php</li>
+                <li>/includes/languages/english/create_account.php</li>
+                <li>/includes/modules/pages/contact_us/header_php.php</li>
+                <li>/includes/modules/pages/checkout_success/header_php.php</li>
+                <li>/includes/modules/pages/document_general_info/main_template_vars.php</li>
+                <li>/includes/modules/pages/document_product_info/main_template_vars.php</li>
+                <li>/includes/modules/pages/download/header_php.php</li>
+                <li>/includes/modules/pages/password_forgotten/header_php.php</li>
+                <li>/includes/modules/pages/product_free_shipping_info/main_template_vars.php</li>
+                <li>/includes/modules/pages/product_info/main_template_vars.php</li>
+                <li>/includes/modules/pages/product_music_info/main_template_vars.php</li>
+                <li>/includes/modules/pages/product_reviews_write/header_php.php</li>
+                <li>/includes/modules/payment/authorizenet.php</li>
+                <li>/includes/modules/payment/authorizenet_aim.php</li>
+                <li>/includes/modules/payment/authorizenet_echeck.php</li>
+                <li>/includes/modules/payment/linkpoint_api/class.linkpoint_api.php</li>
+                <li>/includes/modules/payment/linkpoint_api.php</li>
+                <li>/includes/modules/payment/paypal/paypal_curl.php</li>
+                <li>/includes/modules/payment/paypal/paypal_functions.php</li>
+                <li>/includes/modules/payment/paypal.php</li>
+                <li>/includes/modules/payment/paypaldp.php</li>
+                <li>/includes/modules/payment/paypalwpp.php</li>
+                <li>/includes/modules/sideboxes/manufacturers.php</li>
+                <li>/includes/modules/attributes.php</li>
+                <li>/includes/modules/create_account.php</li>
+                <li>/includes/modules/extra_definitions.php</li>
+                <li>/includes/modules/extra_functions.php</li>
+                <li>/includes/templates/template_default/common/html_header.php</li>
+                <li>/includes/templates/template_default/common/tpl_header.php</li>
+                <li>/includes/templates/template_default/css/CSS_read_me.txt (just a help-text file)</li>
+                <li>/includes/templates/template_default/jscript/on_load/read_me.txt (just a help-text file)</li>
+                <li>/includes/templates/template_default/jscript/read_me.txt (just a help-text file)</li>
+                <li>/includes/templates/template_default/popup_search_help/tpl_main_page.php</li>
+                <li>/includes/templates/template_default/templates/tpl_account_default.php</li>
+                <li>/includes/templates/template_default/templates/tpl_contact_us_default.php</li>
+                <li>/includes/templates/template_default/templates/tpl_modules_create_account.php</li>
+                <li>/includes/templates/template_default/templates/tpl_product_reviews_write_default.php</li>
+                <li>/includes/templates/template_default/templates/tpl_zc_install_suggested_default.php</li>
+                <br>
+                <li>/zc_install/ ... assume *all* of /zc_install/ has changed
+            </ul>
+        </div>
+        <div class="back-to-top">
+            ^^ <a href="#pageHeader">Back to Top</a> ^^
+        </div>
+    </section> <!-- End changedFiles //-->
 
-	<section id="movedFiles">
-		<div>
-			<h1>Moved Files (since v1.5.0)</h1>
-			<ul>
-				<li>None</li>
-			</ul>
-		</div>
-		<div class="back-to-top">
-			^^ <a href="#pageHeader">Back to Top</a> ^^
-		</div>
-	</section> <!-- End movedFiles //-->
-	
-	<section id="helpSupport">
-		<div>
-			<h1>Help and Support</h1>
-			<p>
-				For additional help and support, visit the <a href="https://www.zen-cart.com/tutorials" target="_blank">Zen Cart&reg; FAQ</a> and the <a href="https://www.zen-cart.com/forum.php" target="_blank">Zen Cart&reg; Support Forum</a>.
-			</p>
-		</div>
-	</section> <!-- End helpSupport //-->
-	
-	<section id="footerBlock">
-		<div class="appInfo">
-			<p>
-				Zen Cart&reg; is derived from: Copyright 2003 osCommerce
-				<br><br>
-				This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
-				<br>
-				without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE
-				<br>
-				and is redistributable under Version 2 of the GNU General Public License.
-			<p>
-			<p>
-				<img src="osi-certified-120x100.png" alt="O S I Certified">
-				<br>
-				This software is OSI Certified Open Source Software.
-				<br>
-				OSI Certified is a certification mark of the Open Source Initiative.
-			<p>
-			<p class="zenData">
-				Copyright 2003 - 2012 Zen Ventures, LLC
-				<br><br>
-				Zen Cart&reg; 
-				<br>
-				<a href="https://www.zen-cart.com" target="_blank">www.zen-cart.com</a>
-			</p>
-		</div>
-	</section> <!-- End footerBlock //-->
-	
+    <section id="movedFiles">
+        <div>
+            <h1>Moved Files (since v1.5.0)</h1>
+            <ul>
+                <li>None</li>
+            </ul>
+        </div>
+        <div class="back-to-top">
+            ^^ <a href="#pageHeader">Back to Top</a> ^^
+        </div>
+    </section> <!-- End movedFiles //-->
+    
+    <section id="helpSupport">
+        <div>
+            <h1>Help and Support</h1>
+            <p>
+                For additional help and support, visit the <a href="https://www.zen-cart.com/tutorials" target="_blank">Zen Cart&reg; FAQ</a> and the <a href="https://www.zen-cart.com/forum.php" target="_blank">Zen Cart&reg; Support Forum</a>.
+            </p>
+        </div>
+    </section> <!-- End helpSupport //-->
+    
+    <section id="footerBlock">
+        <div class="appInfo">
+            <p>
+                Zen Cart&reg; is derived from: Copyright 2003 osCommerce
+                <br><br>
+                This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+                <br>
+                without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE
+                <br>
+                and is redistributable under Version 2 of the GNU General Public License.
+            </p>
+            <p>
+                <img src="osi-certified-120x100.png" alt="O S I Certified">
+                <br>
+                This software is OSI Certified Open Source Software.
+                <br>
+                OSI Certified is a certification mark of the Open Source Initiative.
+            </p>
+            <p class="zenData">
+                Copyright 2003 - 2012 Zen Ventures, LLC
+                <br><br>
+                Zen Cart&reg; 
+                <br>
+                <a href="https://www.zen-cart.com" target="_blank">www.zen-cart.com</a>
+            </p>
+        </div>
+    </section> <!-- End footerBlock //-->
+    
+</div>
 </body>
 </html>

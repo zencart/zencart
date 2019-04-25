@@ -1,10 +1,10 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2018 Zen Cart Development Team
+ * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: english.php   Modified in v1.5.6 $
+ * @version $Id: DrByte 2019 Jan 04 Modified in v1.5.6a $
  */
 if (!defined('IS_ADMIN_FLAG'))
 {
@@ -52,9 +52,9 @@ function zen_date_raw($date, $reverse = false) {
 //   require(DIR_FS_CATALOG_LANGUAGES . $_SESSION['language'] . '/' . $template_dir_select . 'meta_tags.php');
 
 // used for prefix to browser tabs in admin pages
-define('TEXT_ADMIN_TAB_PREFIX', 'Webstore ');
+define('TEXT_ADMIN_TAB_PREFIX', 'Admin ');
 // if you have multiple stores and want the Store Name to be part of the admin title (ie: for browser tabs), swap this line with the one above
-//define('TEXT_ADMIN_TAB_PREFIX', 'Webstore ' . STORE_NAME);
+//define('TEXT_ADMIN_TAB_PREFIX', 'Admin ' . STORE_NAME);
 
 // meta tags
 define('ICON_METATAGS_ON', 'Meta Tags Defined');
@@ -77,9 +77,10 @@ define('HEADER_TITLE_ACCOUNT', 'Account');
 define('HEADER_TITLE_LOGOFF', 'Logoff');
 //define('HEADER_TITLE_ADMINISTRATION', 'Administration');
 
-// Define the name of your Gift Certificate as Gift Voucher, Gift Certificate, Zen Cart Dollars, etc. here for use through out the shop
-  define('TEXT_GV_NAME','Gift Certificate');
-  define('TEXT_GV_NAMES','Gift Certificates');
+// TEXT_GV_NAME, TEXT_GV_NAMES moved to gv_name.php
+if (!defined('TEXT_GV_NAME')) {
+  require DIR_WS_LANGUAGES . $_SESSION['language'] . '/' . 'gv_name.php'; 
+}
   define('TEXT_DISCOUNT_COUPON', 'Discount Coupon');
 
 // used for redeem code, redemption code, or redemption id
@@ -241,19 +242,19 @@ define('JS_PRODUCTS_IMAGE', '* The new product needs an image value\n');
 
 define('JS_SPECIALS_PRODUCTS_PRICE', '* A new price for this product needs to be set\n');
 
-define('JS_GENDER', '* The \'Gender\' value must be chosen.\n');
-define('JS_FIRST_NAME', '* The \'First Name\' entry must have at least ' . ENTRY_FIRST_NAME_MIN_LENGTH . ' characters.\n');
-define('JS_LAST_NAME', '* The \'Last Name\' entry must have at least ' . ENTRY_LAST_NAME_MIN_LENGTH . ' characters.\n');
-define('JS_DOB', '* The \'Date of Birth\' entry must be in the format: xx/xx/xxxx (month/date/year).\n');
-define('JS_EMAIL_ADDRESS', '* The \'E-Mail Address\' entry must have at least ' . ENTRY_EMAIL_ADDRESS_MIN_LENGTH . ' characters.\n');
-define('JS_ADDRESS', '* The \'Street Address\' entry must have at least ' . ENTRY_STREET_ADDRESS_MIN_LENGTH . ' characters.\n');
-define('JS_POST_CODE', '* The \'Post Code\' entry must have at least ' . ENTRY_POSTCODE_MIN_LENGTH . ' characters.\n');
-define('JS_CITY', '* The \'City\' entry must have at least ' . ENTRY_CITY_MIN_LENGTH . ' characters.\n');
-define('JS_STATE', '* The \'State\' entry must be selected.\n');
+define('JS_GENDER', '* The Gender value must be chosen.\n');
+define('JS_FIRST_NAME', '* The First Name entry must have at least ' . ENTRY_FIRST_NAME_MIN_LENGTH . ' characters.\n');
+define('JS_LAST_NAME', '* The Last Name entry must have at least ' . ENTRY_LAST_NAME_MIN_LENGTH . ' characters.\n');
+define('JS_DOB', '* The Date of Birth entry must be in the format: xx/xx/xxxx (month/date/year).\n');
+define('JS_EMAIL_ADDRESS', '* The E-Mail Address entry must have at least ' . ENTRY_EMAIL_ADDRESS_MIN_LENGTH . ' characters.\n');
+define('JS_ADDRESS', '* The Street Address entry must have at least ' . ENTRY_STREET_ADDRESS_MIN_LENGTH . ' characters.\n');
+define('JS_POST_CODE', '* The Post Code entry must have at least ' . ENTRY_POSTCODE_MIN_LENGTH . ' characters.\n');
+define('JS_CITY', '* The City entry must have at least ' . ENTRY_CITY_MIN_LENGTH . ' characters.\n');
+define('JS_STATE', '* The State entry must be selected.\n');
 define('JS_STATE_SELECT', '-- Select Above --');
-define('JS_ZONE', '* The \'State\' entry must be selected from the list for this country.');
-define('JS_COUNTRY', '* The \'Country\' value must be chosen.\n');
-define('JS_TELEPHONE', '* The \'Telephone Number\' entry must have at least ' . ENTRY_TELEPHONE_MIN_LENGTH . ' characters.\n');
+define('JS_ZONE', '* The State entry must be selected from the list for this country.');
+define('JS_COUNTRY', '* The Country value must be chosen.\n');
+define('JS_TELEPHONE', '* The Telephone Number entry must have at least ' . ENTRY_TELEPHONE_MIN_LENGTH . ' characters.\n');
 
 define('JS_ERROR_SUBMITTED', 'This form has already been submitted. Please press OK and wait for this process to be completed.');
 
@@ -603,7 +604,7 @@ define('TEXT_LEGEND', 'LEGEND: ');
 define('TEXT_LEGEND_STATUS_OFF', 'Status OFF ');
 define('TEXT_LEGEND_STATUS_ON', 'Status ON ');
 
-define('TEXT_INFO_MASTER_CATEGORIES_ID', '<strong>NOTE: Master Category is used for pricing purposes where the<br />product category affects the pricing on linked products, example: Sales</strong>');
+define('TEXT_INFO_MASTER_CATEGORIES_ID', '<strong>NOTE: Master Category is used for pricing purposes where the product category affects the pricing on linked products, example: Sales</strong>');
 define('TEXT_YES', 'Yes');
 define('TEXT_NO', 'No');
 define('TEXT_CANCEL', 'Cancel');

@@ -6,7 +6,7 @@
  * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte Modified in v1.5.6 $
+ * @version $Id: mc12345678 Tue May 8 00:42:18 2018 -0400 Modified in v1.5.6 $
  */
 
 ////
@@ -122,7 +122,18 @@
 ////
 // computes products_price + option groups lowest attributes price of each group when on
   function zen_get_products_base_price($products_id) {
-    global $db;
+      global $db, $zco_notifier;
+    
+      // -----
+      // Give an observer the chance to override the product's base price.
+      //
+      $base_price_is_handled = false;
+      $products_base_price = 0;
+      $zco_notifier->notify('ZEN_GET_PRODUCTS_BASE_PRICE', $products_id, $products_base_price, $base_price_is_handled);
+      if ($base_price_is_handled === true) {
+          return $products_base_price;
+      }
+      
       $product_check = $db->Execute("select products_price, products_priced_by_attribute from " . TABLE_PRODUCTS . " where products_id = '" . (int)$products_id . "'");
 
 // is there a products_price to add to attributes
@@ -1214,13 +1225,13 @@ If a special exist * 10
 
 ////
 // attributes final price
-  function zen_get_attributes_price_final($attribute, $qty = 1, $pre_selected, $include_onetime = 'false', $prod_priced_by_attr = false, $attributes_discounted = 0) {
+  function zen_get_attributes_price_final($attribute, $qty = 1, $pre_selected, $include_onetime = 'false', $prod_priced_by_attr = false, $attributes_discounted = 0, $include_products_price_in = false) {
     global $db;
 
     $attributes_price_final = 0;
 
-    if ($pre_selected == '' or $attribute != $pre_selected->fields["products_attributes_id"]) {
-      $pre_selected = $db->Execute("select pa.* from " . TABLE_PRODUCTS_ATTRIBUTES . " pa where pa.products_attributes_id= '" . (int)$attribute . "'");
+    if (empty($pre_selected) || $attribute != $pre_selected->fields["products_attributes_id"]) {
+      $pre_selected = $db->Execute("SELECT pa.* FROM " . TABLE_PRODUCTS_ATTRIBUTES . " pa WHERE pa.products_attributes_id = " . (int)$attribute);
     } else {
       // use existing select
     }
@@ -1228,19 +1239,27 @@ If a special exist * 10
     // normal attributes price discounted by sales/specials or not discounted if neither a sale nor a special
     if ($pre_selected->fields["price_prefix"] == '-') {
 //      $attributes_price_final -= $pre_selected->fields["options_values_price"];
-      $attributes_price_final -= zen_get_discount_calc($pre_selected->fields["products_id"], $pre_selected->fields["products_attributes_id"], ($prod_priced_by_attr ? zen_products_lookup($pre_selected->fields["products_id"], 'products_price') : 0) + ($prod_priced_by_attr ? -1 : 1) * $pre_selected->fields["options_values_price"]);
+      $attributes_price_final -= zen_get_discount_calc($pre_selected->fields["products_id"], $pre_selected->fields["products_attributes_id"], ($prod_priced_by_attr ? $products_price = zen_products_lookup($pre_selected->fields["products_id"], 'products_price') : 0) + ($prod_priced_by_attr ? -1 : 1) * $pre_selected->fields["options_values_price"]);
     } else {
 //      $attributes_price_final += $pre_selected->fields["options_values_price"];
-      $attributes_price_final += zen_get_discount_calc($pre_selected->fields["products_id"], $pre_selected->fields["products_attributes_id"], $pre_selected->fields["options_values_price"] + ($prod_priced_by_attr ? zen_products_lookup($pre_selected->fields["products_id"], 'products_price') : 0));
+      $attributes_price_final += zen_get_discount_calc($pre_selected->fields["products_id"], $pre_selected->fields["products_attributes_id"], ($prod_priced_by_attr ? $products_price = zen_products_lookup($pre_selected->fields["products_id"], 'products_price') : 0) + $pre_selected->fields["options_values_price"]);
     }
     // qty discounts
     $attributes_price_final += zen_get_attributes_qty_prices_onetime($pre_selected->fields["attributes_qty_prices"], $qty);
 
     // price factor
-    if ($attributes_discounted == 1) {
-      $display_normal_price = zen_get_products_actual_price($pre_selected->fields["products_id"]);
-    } else {
-      $display_normal_price = zen_get_products_base_price($pre_selected->fields["products_id"]);
+    /*
+    $display_normal_price = zen_get_products_actual_price($pre_selected->fields["products_id"]);
+    */
+    $display_normal_price = zen_get_discount_calc($pre_selected->fields['products_id'], $pre_selected->fields['products_attributes_id'], zen_products_lookup($pre_selected->fields['products_id'], 'products_price') + $pre_selected->fields['options_values_price']);
+
+    // if the product is priced by attributes
+    if ($prod_priced_by_attr && empty($pre_selected->fields['options_values_price'])) {
+      if ($pre_selected->fields['price_prefix'] == '-') {
+        $attributes_price_final += $display_normal_price;
+      } else {
+        $attributes_price_final -= $display_normal_price;
+      }
     }
     $display_special_price = zen_get_products_special_price($pre_selected->fields["products_id"]);
 
@@ -1295,7 +1314,9 @@ If a special exist * 10
   function zen_get_attributes_type($check_attribute) {
     global $db;
     $check_options_id_query = $db->Execute("select options_id from " . TABLE_PRODUCTS_ATTRIBUTES . " where products_attributes_id='" . (int)$check_attribute . "'");
+    if ($check_options_id_query->EOF) return 0;
     $check_type_query = $db->Execute("select products_options_type from " . TABLE_PRODUCTS_OPTIONS . " where products_options_id='" . (int)$check_options_id_query->fields['options_id'] . "'");
+    if ($check_type_query->EOF) return 0;
     return $check_type_query->fields['products_options_type'];
   }
 
@@ -1391,8 +1412,6 @@ If a special exist * 10
             // priced by attributes
             if ($check_amount != 0) {
               $discounted_price = $check_amount - ($check_amount * ($products_discounts_query->fields['discount_price']/100));
-//echo 'ID#' . $product_id . ' Amount is: ' . $check_amount . ' discount: ' . $discounted_price . '<br />';
-//echo 'I SEE 2 for ' . $products_query->fields['products_discount_type'] . ' - ' . $products_query->fields['products_discount_type_from'] . ' - '. $check_amount . ' new: ' . $discounted_price . ' qty: ' . $check_qty;
             } else {
               $discounted_price = $display_price - ($display_price * ($products_discounts_query->fields['discount_price']/100));
             }

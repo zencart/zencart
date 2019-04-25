@@ -3,10 +3,10 @@
  * functions_taxes
  *
  * @package functions
- * @copyright Copyright 2003-2017 Zen Cart Development Team
+ * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: functions_taxes.php 2017-05-30 $
+ * @version $Id: lat9 Fri Nov 9 09:32:23 2018 -0500 Modified in v1.5.6 $
  */
 
 ////
@@ -14,6 +14,22 @@
 // TABLES: tax_rates, zones_to_geo_zones
   function zen_get_tax_rate($class_id, $country_id = -1, $zone_id = -1) {
     global $db;
+    // -----
+    // Give an observer a chance to override this function's return.
+    //
+    $tax_rate = false;
+    $GLOBALS['zco_notifier']->notify(
+        'NOTIFY_ZEN_GET_TAX_RATE_OVERRIDE', 
+        array(
+            'class_id' => $class_id, 
+            'country_id' => $country_id, 
+            'zone_id' => $zone_id
+        ), 
+        $tax_rate
+    );
+    if ($tax_rate !== false) {
+        return $tax_rate;
+    }
 
     if ( ($country_id == -1) && ($zone_id == -1) ) {
       if (isset($_SESSION['customer_id'])) {
@@ -267,7 +283,7 @@
     // Give an observer the chance to modify the function's output.
     //
     $tax_address = false;
-    $zco_notifier->notify(
+    $GLOBALS['zco_notifier']->notify(
         'ZEN_GET_TAX_LOCATIONS',
         array(
             'country' => $store_country,

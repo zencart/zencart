@@ -6,7 +6,7 @@
  * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte  Modified in v1.5.6 $
+ * @version $Id: mc12345678 Sat Sep 1 17:50:42 2018 -0400 Modified in v1.5.6 $
  */
 /*
  * Extracts and constructs the data to be used in the product-type template tpl_TYPEHANDLER_info_display.php
@@ -91,7 +91,8 @@
 
   $products_name = $product_info->fields['products_name'];
   $products_model = $product_info->fields['products_model'];
-  $products_description = $product_info->fields['products_description'];
+  // if no common markup tags in description, add line breaks for readability:
+  $products_description = (!preg_match('/(<br|<p|<div|<dd|<li|<span)/i', $product_info->fields['products_description']) ? nl2br($product_info->fields['products_description']) : $product_info->fields['products_description']);
 
   if ($product_info->fields['products_image'] == '' and PRODUCTS_IMAGE_NO_IMAGE_STATUS == '1') {
     $products_image = PRODUCTS_IMAGE_NO_IMAGE;
@@ -102,7 +103,7 @@
   $products_url = $product_info->fields['products_url'];
   $products_date_available = $product_info->fields['products_date_available'];
   $products_date_added = $product_info->fields['products_date_added'];
-  $products_manufacturer = $product_info->fields['manufacturers_name'];
+  $products_manufacturer = $manufacturers_name;
   $products_weight = $product_info->fields['products_weight'];
   $products_quantity = $product_info->fields['products_quantity'];
 

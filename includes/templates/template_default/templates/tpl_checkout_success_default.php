@@ -9,7 +9,7 @@
  * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: DrByte  Modified in v1.5.6 $
+ * @version $Id: Drbyte Mon Nov 12 17:39:07 2018 -0500 Modified in v1.5.6 $
  */
 ?>
 <div class="centerColumn" id="checkoutSuccess">
@@ -60,7 +60,7 @@ if (isset($additional_payment_messages) && $additional_payment_messages != '') {
 ?>
 </div>
 <div class="buttonRow forward">
-    <a href="<?php echo zen_href_link(FILENAME_CONTACT_US, '', 'SSL'); ?>" name="linkContactUs"><?php echo zen_image_button(BUTTON_IMAGE_LOG_OFF , BUTTON_CONTACT_US_TEXT); ?></a>
+    <a href="<?php echo zen_href_link(FILENAME_CONTACT_US, '', 'SSL'); ?>" name="linkContactUs"><?php echo zen_image_button(BUTTON_IMAGE_CONTACT_US , BUTTON_CONTACT_US_TEXT); ?></a>
     <a href="<?php echo zen_href_link(FILENAME_ACCOUNT, '', 'SSL'); ?>" name="linkMyAccount"><?php echo zen_image_button(BUTTON_IMAGE_MY_ORDERS , BUTTON_MY_ORDERS_TEXT); ?></a>
     <a href="<?php echo zen_href_link(FILENAME_LOGOFF, '', 'SSL'); ?>" name="linkLogoff"><?php echo zen_image_button(BUTTON_IMAGE_LOG_OFF , BUTTON_LOG_OFF_ALT); ?></a>
 </div>

@@ -13,8 +13,8 @@ if (!defined('IS_ADMIN_FLAG')) {
   if (!isset($_GET['read']) || $_GET['read'] !== 'only') {
     $products_image = new upload('products_image');
     $products_image->set_extensions(array('jpg','jpeg','gif','png','webp','flv','webm','ogg'));
-    $products_image->set_destination(DIR_FS_CATALOG_IMAGES . $_POST['img_dir']);
-    if ($products_image->parse() && $products_image->save($_POST['overwrite'])) {
+    $products_image->set_destination(DIR_FS_CATALOG_IMAGES . (isset($_POST['img_dir']) ? $_POST['img_dir'] : ''));
+    if ($products_image->parse() && $products_image->save(isset($_POST['overwrite']) ? $_POST['overwrite'] : false)) {
       $products_image_name = $_POST['img_dir'] . $products_image->filename;
     } else {
       $products_image_name = (isset($_POST['products_previous_image']) ? $_POST['products_previous_image'] : '');

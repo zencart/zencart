@@ -122,7 +122,7 @@ if (sizeof($statusArray)) {
 <hr />
 <div id="myAccountShipInfo" class="floatingBox back">
 <?php
-  if ($order->delivery != false) {
+  if (!empty($order->delivery['format_id'])) {
 ?>
 <h3><?php echo HEADING_DELIVERY_ADDRESS; ?></h3>
 <address><?php echo zen_address_format($order->delivery['format_id'], $order->delivery, 1, ' ', '<br />'); ?></address>

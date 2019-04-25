@@ -4,10 +4,10 @@
  * Defines the filenames used in the project
  *
  * @package general
- * @copyright Copyright 2003-2017 Zen Cart Development Team
+ * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: filenames.php  Modified in v1.5.6 $
+ * @version $Id: lat9 Tue Oct 2 13:32:43 2018 -0400 Modified in v1.5.6 $
  */
 /**
  * define project filenames
@@ -26,6 +26,7 @@ define('FILENAME_ADMIN_ACTIVITY', 'admin_activity');
 define('FILENAME_ADMIN_PAGE_REGISTRATION', 'admin_page_registration');
 define('FILENAME_ADVANCED_SEARCH', 'advanced_search');
 define('FILENAME_ADVANCED_SEARCH_RESULT', 'advanced_search_result');
+define('FILENAME_AJAX', 'ajax');
 define('FILENAME_ALT_NAV', 'alt_nav');
 define('FILENAME_ALERT_PAGE', 'alert_page');
 define('FILENAME_ATTRIBUTES', 'attributes');
@@ -98,6 +99,7 @@ define('FILENAME_LOGOFF', 'logoff');
 define('FILENAME_MAIL', 'mail');
 define('FILENAME_MAIN_PRODUCT_IMAGE', 'main_product_image');
 define('FILENAME_MANUFACTURERS', 'manufacturers');
+define('FILENAME_META_TAGS', 'meta_tags');
 define('FILENAME_MODULES', 'modules');
 define('FILENAME_NEWSLETTERS', 'newsletters');
 define('FILENAME_ORDERS', 'orders');

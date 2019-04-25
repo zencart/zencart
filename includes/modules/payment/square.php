@@ -3,14 +3,14 @@
  * Square payments module
  * www.squareup.com
  *
- * Integrated using SquareConnect PHP SDK v2.5.1
+ * Integrated using SquareConnect PHP SDK v2.5.1 thru 2.20181205.0
  *
  * REQUIRES PHP 5.4 or newer
  *
  * @package square
- * @copyright Copyright 2003-2017 Zen Cart Development Team
+ * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: Chris Brown <drbyte@zen-cart.com> New in v1.5.5f $
+ * @version $Id: DrByte 2019 Jan 04 Modified in v1.5.6a $
  */
 
 if (!defined('TABLE_SQUARE_PAYMENTS')) define('TABLE_SQUARE_PAYMENTS', DB_PREFIX . 'square_payments');
@@ -32,7 +32,8 @@ class square extends base
     /**
      * $moduleVersion is the plugin version number
      */
-    public $moduleVersion = '0.94';
+    public $moduleVersion = '0.97';
+    protected $SquareApiVersion = '2018-12-05';
     /**
      * $title is the displayed name for this payment method
      *
@@ -137,7 +138,7 @@ class square extends base
         if ($this->enabled == false || (int)MODULE_PAYMENT_SQUARE_ZONE == 0) {
             return;
         }
-        if (!isset($order->billing['country'])) return;
+        if (!isset($order->billing['country']['id'])) return;
 
         $check_flag = false;
         $sql        = "SELECT zone_id FROM " . TABLE_ZONES_TO_GEO_ZONES . " WHERE geo_zone_id = '" . (int)MODULE_PAYMENT_SQUARE_ZONE . "' AND zone_country_id = '" . (int)$order->billing['country']['id'] . "' ORDER BY zone_id";
@@ -271,13 +272,14 @@ class square extends base
         $this->currency_comment = '';
 
         // force conversion to Square Account's currency:
-        if ($order->info['currency'] != $location->currency) {
-            global $currencies;
-            $payment_amount         = round($order->info['total'] * $currencies->get_value($location->currency), 2);
-            $currency_code          = $location->currency;
-            $this->currency_comment = '(Converted from: ' . round($order->info['total'] * $order->info['currency_value'], 2) . ' ' . $order->info['currency'] . ')';
-            // @TODO - if Square adds support for transmission of tax and shipping amounts, these may need recalculation here too
+        if ($order->info['currency'] != $location->currency || $order->info['currency'] != DEFAULT_CURRENCY) {
+            $payment_amount = $currencies->rateAdjusted($order->info['total'], true, $location->currency);
+            $currency_code  = $location->currency;
+            if ($order->info['currency'] != $location->currency) {
+                $this->currency_comment = '(Converted from: ' . round($order->info['total'] * $order->info['currency_value'], 2) . ' ' . $order->info['currency'] . ')';
+            }
         }
+        // @TODO - if Square adds support for transmission of tax and shipping amounts, these may need recalculation here too
 
         $billing_address = array(
             'address_line'                    => (string)$order->billing['street_address'],
@@ -560,7 +562,11 @@ class square extends base
         curl_setopt($ch, CURLOPT_TIMEOUT, 9);
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 9);
         curl_setopt($ch, CURLOPT_FRESH_CONNECT, true);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json', 'Authorization: Client ' . MODULE_PAYMENT_SQUARE_APPLICATION_SECRET));
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+            'Content-Type: application/json',
+            'Authorization: Client ' . MODULE_PAYMENT_SQUARE_APPLICATION_SECRET,
+            'Square-Version: ' . $this->SquareApiVersion,
+        ));
         curl_setopt($ch, CURLOPT_USERAGENT, 'Zen Cart token refresh [' . preg_replace('#https?://#', '', HTTP_SERVER) . '] ');
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         $response = curl_exec($ch);
@@ -623,7 +629,10 @@ class square extends base
         curl_setopt($ch, CURLOPT_TIMEOUT, 9);
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 9);
         curl_setopt($ch, CURLOPT_FRESH_CONNECT, true);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+            'Content-Type: application/json',
+            'Square-Version: ' . $this->SquareApiVersion,
+        ));
         curl_setopt($ch, CURLOPT_USERAGENT, 'Zen Cart token request [' . preg_replace('#https?://#', '', HTTP_SERVER) . '] ');
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         $response = curl_exec($ch);
@@ -1178,7 +1187,7 @@ if (!function_exists('plugin_version_check_for_updates')) {
         }
         curl_close($ch);
     } else {
-        $errono = 9999;
+        $errno = 9999;
         $error = 'curl_init not found in PHP';
     }
     if ($errno > 0 || $response == '') {

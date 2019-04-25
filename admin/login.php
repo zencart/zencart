@@ -1,10 +1,10 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2016 Zen Cart Development Team
+ * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
- * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: bislewl  Tue Feb 16 23:14:29 2016 -0600 Modified in v1.5.5 $
+ * @license http://www.zen-cart.com/license/2_0.txt GNU Public License v2.0
+ * @version $Id: DrByte 2019 Jan 04 Modified in v1.5.6a $
  */
 require('includes/application_top.php');
 
@@ -65,106 +65,98 @@ if ($expired && $message == '')
 ?>
 <!DOCTYPE html>
 <html <?php echo HTML_PARAMS; ?>>
-  <head>
-    <meta charset="<?php echo CHARSET; ?>"/>
-    <title><?php echo TITLE; ?></title>
-    <link href="includes/stylesheet.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/>
-    <meta name="robots" content="noindex, nofollow"/>
-    <script>
-      function waiting_spinner(f) {
-          var button = document.getElementById("btn_submit");
-          var img = document.getElementById("actionImg");
-          button.style.cursor = "wait";
-          button.disabled = true;
-          button.className = 'hiddenField';
-          img.className = '';
-          return true;
-      }
-    </script>
-  </head>
-  <body id="login">
-    <div class="container-fluid">
-      <div id="loginFormDiv" class="col-xs-12 col-sm-12 col-md-6 col-md-offset-3 col-lg-4 col-lg-offset-4">
-          <?php if (!isset($expired) || $expired == FALSE) { ?>
-            <?php
-            echo zen_draw_form('loginForm', FILENAME_LOGIN, zen_get_all_get_params(), 'post', 'id="loginForm" onsubmit="waiting_spinner(this)" class="form-horizontal"', 'true');
-            echo zen_draw_hidden_field('action', 'do' . $_SESSION['securityToken'], 'id="action1"');
-            ?>
-          <fieldset>
-            <legend><?php echo HEADING_TITLE; ?></legend>
-            <div class="form-group">
-              <label class="col-xs-4 col-sm-4 col-md-4 control-label" for="admin_name-<?php echo $_SESSION['securityToken']; ?>"><?php echo TEXT_ADMIN_NAME; ?>:</label>
-              <div class="col-xs-7 col-sm-7 col-md-7">
-                  <?php echo zen_draw_input_field('admin_name', zen_output_string($admin_name), 'class="form-control" id="admin_name-' . $_SESSION['securityToken'] . '" autocapitalize="none" spellcheck="false" autocomplete="off" autofocus placeholder="' . TEXT_ADMIN_NAME . '"'); ?>
-              </div>
-            </div>
-            <div class="form-group">
-              <label class="col-xs-4 col-sm-4 col-md-4 control-label" for="admin_pass"><?php echo TEXT_ADMIN_PASS; ?>:</label>
-              <div class="col-xs-7 col-sm-7 col-md-7">
-                  <?php echo zen_draw_password_field('admin_pass', '', false, 'class="form-control" id="admin_pass" placeholder="' . TEXT_ADMIN_PASS . '"', false); ?>
-              </div>
-            </div>
-            <div class="form-group">
-              <div class="col-xs-12">
-                  <?php echo zen_draw_input_field('submit', TEXT_SUBMIT, 'id="btn_submit" class="button btn btn-default"', false, 'submit'); ?>
-              </div>
-            </div>
-            <br class="clearBoth"/>
-            <p class="messageStackError"><?php echo $message; ?></p>
-            <img id="actionImg" src="images/loading.gif" class="hiddenField"/>
-            <br/><a href="<?php echo zen_href_link(FILENAME_PASSWORD_FORGOTTEN, '', 'SSL'); ?>"><?php echo TEXT_PASSWORD_FORGOTTEN; ?></a>
-          </fieldset>
-          <?php echo '</form>'; ?>
-          <div id="loginExpiryPolicy"><?php echo LOGIN_EXPIRY_NOTICE; ?></div>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=<?php echo CHARSET; ?>">
+  <link href="includes/alt-stylesheet.css" rel="stylesheet">
+  <title>
+    <?php echo TITLE; ?>
+
+  </title>
+  <meta name="robots" content="noindex, nofollow" />
+</head>
+<body id="login">
+  <div class="container-fluid">
+    <div class="login-form">
+      <div class="login-main-div login-box-shadow">
+        <img class="login-img" src="../includes/templates/template_default/images/logo.gif" alt="Zen Cart®" title="Zen Cart®" width="192" height="68" border="0">
+        <br>
+        <?php if (!isset($expired) || $expired == FALSE) { ?>
+          <?php echo zen_draw_form('loginForm', FILENAME_LOGIN, zen_get_all_get_params(), 'post', 'id="loginForm"', 'true'); ?>
+          <?php echo zen_draw_hidden_field('action', 'do' . $_SESSION['securityToken'], 'id="action1"'); ?>
+
+          <h2>
+            <?php echo HEADING_TITLE; ?>
+          </h2>
+          <div class="form-group">
+            <?php echo zen_draw_input_field('admin_name', zen_output_string($admin_name), 'class="form-control" id="admin_name-' . $_SESSION['securityToken'] . '" autocapitalize="none" spellcheck="false" autocomplete="off" autofocus placeholder="' . TEXT_ADMIN_NAME . '"'); ?>
+          </div>
+
+          <div class="form-group">
+            <?php echo zen_draw_password_field('admin_pass', '', false, 'class="form-control" id="admin_pass" placeholder="' . TEXT_ADMIN_PASS . '"', false); ?>
+          </div>
+
+          <div class="form-group">
+            <?php echo zen_draw_input_field('submit', TEXT_SUBMIT, 'id="btn_submit" class="btn btn-primary"', false, 'submit'); ?>
+          </div>
+
+          <div class="login-forgot">
+            <a href="<?php echo zen_href_link(FILENAME_PASSWORD_FORGOTTEN, '', 'SSL'); ?>">
+              <?php echo TEXT_PASSWORD_FORGOTTEN . "?"; ?>
+            </a>
+          </div>
+
+          <br class="clearBoth" />
+          <?php if ($message) { ?>
+          <p class="login-alert-warning"><?php echo $message; ?></p>
+          <?php } ?>
+
+        </form>
+
+        <div id="loginExpiryPolicy">
+          <?php echo LOGIN_EXPIRY_NOTICE; ?>
+        </div>
+
         <?php } else { ?>
-          <?php
-          echo zen_draw_form('loginForm', FILENAME_LOGIN, '', 'post', 'id="loginForm" onsubmit="waiting_spinner(this)" class="form-horizontal"', 'true');
-          echo zen_draw_hidden_field('action', 'rs' . $_SESSION['securityToken'], 'id="action1"');
-          ?>
-          <fieldset>
-            <legend><?php echo HEADING_TITLE_EXPIRED; ?></legend>
-            <div class="messageStackError"><?php echo $message; ?></div>
-            <br class="clearBoth"/>
-            <div class="row">
-              <div class="col-xs-12 col-sm-10 col-sm-offset-1 col-md-10 col-md-offset-2">
-                <div class="form-group">
-                  <label class="col-xs-4 col-xs-offset-1 col-sm-4 col-md-6 control-label" for="admin_name-<?php echo $_SESSION['securityToken']; ?>"><?php echo TEXT_ADMIN_NAME; ?>:</label>
-                  <div class="col-xs-6 col-sm-7 col-md-6">
-                      <?php echo zen_draw_input_field('admin_name-' . $_SESSION['securityToken'], zen_output_string($admin_name), 'class="form-control" id="admin_name" autocapitalize="none" spellcheck="false" autocomplete="off" placeholder="' . TEXT_ADMIN_NAME . '"'); ?>
-                  </div>
-                </div>
-                <div class="form-group">
-                  <label class="col-xs-4 col-xs-offset-1 col-sm-4 col-md-6 control-label" for="oldpwd-<?php echo $_SESSION['securityToken']; ?>"><?php echo TEXT_ADMIN_OLD_PASSWORD; ?>:</label>
-                  <div class="col-xs-6 col-sm-7 col-md-6">
-                      <?php echo zen_draw_password_field('oldpwd-' . $_SESSION['securityToken'], '', false, 'class="form-control" id="old_pwd" placeholder="' . TEXT_ADMIN_OLD_PASSWORD . '"', false); ?>
-                  </div>
-                </div>
-                <div class="form-group">
-                  <label class="col-xs-4 col-xs-offset-1 col-sm-4 col-md-6 control-label" for="newpwd-<?php echo $_SESSION['securityToken']; ?>"><?php echo TEXT_ADMIN_NEW_PASSWORD; ?>:</label>
-                  <div class="col-xs-6 col-sm-7 col-md-6">
-                      <?php echo zen_draw_password_field('newpwd-' . $_SESSION['securityToken'], '', false, 'class="form-control" id="admin_pass" placeholder="' . TEXT_ADMIN_NEW_PASSWORD . '"', false); ?>
-                  </div>
-                </div>
-                <div class="form-group">
-                  <label class="col-xs-4 col-xs-offset-1 col-sm-4 col-md-6 control-label" for="confpwd-<?php echo $_SESSION['securityToken']; ?>"><?php echo TEXT_ADMIN_CONFIRM_PASSWORD; ?>:</label>
-                  <div class="col-xs-6 col-sm-7 col-md-6">
-                      <?php echo zen_draw_password_field('confpwd-' . $_SESSION['securityToken'], '', false, 'class="form-control" id="admin_pass2" placeholder="' . TEXT_ADMIN_CONFIRM_PASSWORD . '"', false); ?>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="form-group">
-              <div class="col-xs-12">
-                  <?php echo zen_draw_input_field('submit', TEXT_SUBMIT, 'id="btn_submit" class="button btn btn-default"', false, 'submit'); ?>
-              </div>
-            </div>
-            <img id="actionImg" src="images/loading.gif" class="hiddenField"/>
-          </fieldset>
-          <?php echo '</form>'; ?>
+          <?php echo zen_draw_form('loginForm', FILENAME_LOGIN, '', 'post', 'id="loginForm"', 'true'); ?>
+          <?php echo zen_draw_hidden_field('action', 'rs' . $_SESSION['securityToken'], 'id="action1"'); ?>
+
+          <h2>
+            <?php echo HEADING_TITLE_EXPIRED; ?>
+          </h2>
+
+          <?php if ($message) { ?>
+          <p class="login-alert-warning"><?php echo $message; ?></p>
+          <?php } ?>
+
+          <br class="clearBoth" />
+          <div class="form-group">
+            <?php echo zen_draw_input_field('admin_name-' . $_SESSION['securityToken'], zen_output_string($admin_name), 'class="form-control" id="admin_name" autocapitalize="none" spellcheck="false" autocomplete="off" placeholder="' . TEXT_ADMIN_NAME . '"'); ?>
+          </div>
+
+          <div class="form-group">
+            <?php echo zen_draw_password_field('oldpwd-' . $_SESSION['securityToken'], '', false, 'class="form-control" id="old_pwd" placeholder="' . TEXT_ADMIN_OLD_PASSWORD . '"', false); ?>
+          </div>
+
+          <div class="form-group">
+            <?php echo zen_draw_password_field('newpwd-' . $_SESSION['securityToken'], '', false, 'class="form-control" id="admin_pass" placeholder="' . TEXT_ADMIN_NEW_PASSWORD . '"', false); ?>
+          </div>
+
+          <div class="form-group">
+            <?php echo zen_draw_password_field('confpwd-' . $_SESSION['securityToken'], '', false, 'class="form-control" id="admin_pass2" placeholder="' . TEXT_ADMIN_CONFIRM_PASSWORD . '"', false); ?>
+          </div>
+
+          <div class="form-group">
+            <?php echo zen_draw_input_field('submit', TEXT_SUBMIT, 'id="btn_submit" class="btn btn-primary"', false, 'submit'); ?>
+          </div>
+
+        </form>
+
         <?php } ?>
+
       </div>
     </div>
-  </body>
+  </div>
+</body>
 </html>
+
 <?php require('includes/application_bottom.php'); ?>

@@ -78,6 +78,5 @@ for ($i = 0, $n = sizeof($directory_array); $i < $n; $i++) {
        * require 3rd party datafiles (ussually to add extra filename/DB Table name definitions)
        */
     include($ws_extra_datafiles_directory . $file);
-    //    echo 'LOADING: ' . $ws_extra_datafiles_directory . $file . ' ' . $file_cnt . '<br />';
   }
 }

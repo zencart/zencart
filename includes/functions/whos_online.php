@@ -3,10 +3,10 @@
  * whos_online functions
  *
  * @package functions
- * @copyright Copyright 2003-2016 Zen Cart Development Team
+ * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: whos_online.php 6113 2007-04-04 06:11:02Z drbyte $
+ * @version $Id: DrByte 2019 Jan 04 Modified in v1.5.6a $
  */
 /**
  * zen_update_whos_online
@@ -31,7 +31,7 @@ function zen_update_whos_online() {
 
   $wo_session_id = zen_session_id();
   $wo_ip_address = (isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : 'Unknown');
-  $wo_user_agent = substr(zen_db_prepare_input($_SERVER['HTTP_USER_AGENT']), 0, 254);
+  $wo_user_agent = substr(zen_db_prepare_input(isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : ''), 0, 254);
 
 	$_SERVER['QUERY_STRING'] = (isset($_SERVER['QUERY_STRING']) && $_SERVER['QUERY_STRING'] != '') ? $_SERVER['QUERY_STRING'] : zen_get_all_get_params();
   if (isset($_SERVER['REQUEST_URI'])) {

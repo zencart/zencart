@@ -7,7 +7,7 @@
  * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: zcwilt  Modified in v1.5.6 $
+ * @version $Id: Drbyte Mon Nov 12 15:55:25 2018 -0500 Modified in v1.5.6 $
  */
 /**
  * Stop from parsing any further PHP code
@@ -649,25 +649,16 @@
 
 ////
   function zen_not_null($value) {
-    if (is_array($value)) {
-      if (sizeof($value) > 0) {
-        return true;
-      } else {
+    if (null === $value) {
         return false;
-      }
-    } elseif( is_a( $value, 'queryFactoryResult' ) ) {
-      if (sizeof($value->result) > 0) {
-        return true;
-      } else {
-        return false;
-      }
-    } else {
-      if ($value != '' && $value != 'NULL' && strlen(trim($value)) > 0) {
-        return true;
-      } else {
-        return false;
-      }
     }
+    if (is_array($value)) {
+      return count($value) > 0;
+    }
+    if (is_a($value, 'queryFactoryResult')) {
+      return count($value->result) > 0;
+    }
+    return trim($value) !== '' && $value != 'NULL';
   }
 
 
@@ -690,9 +681,8 @@
 
     if ($currency->RecordCount()) {
       return strtoupper($currency->fields['code']);
-    } else {
-      return false;
     }
+    return false;
   }
 
 ////
@@ -1161,7 +1151,7 @@
         $login_for_price = TEXT_AUTHORIZATION_PENDING_BUTTON_REPLACE;
         return $login_for_price;
         break;
-        case ((int)$_SESSION['customers_authorization'] >= 2):
+        case (isset($_SESSION['customers_authorization']) && (int)$_SESSION['customers_authorization'] >= 2):
         // customer is logged in and was changed to must be approved to buy
         $login_for_price = TEXT_AUTHORIZATION_PENDING_BUTTON_REPLACE;
         return $login_for_price;

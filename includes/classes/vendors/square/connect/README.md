@@ -1,7 +1,7 @@
 Square Connect PHP SDK [![Build Status](https://travis-ci.org/square/connect-php-sdk.svg?branch=master)](https://travis-ci.org/square/connect-php-sdk)
 ==================
 
-**If you have feedback about the new SDKs, or just want to talk to other Square Developers, request an invite to the new [slack community for Square Developers](https://docs.google.com/forms/d/e/1FAIpQLSfAZGIEZoNs-XryKqUoW3atFQHdQw5UqXLMOVPq3V4DEq-AJw/viewform?usp=sf_link#response=ACYDBNj5LFgPy8Tcac2gSgv_IjXvgWsPy2CO2xTXwnc0OSSxCvWFgc7SCDHvVQ)**
+**If you have feedback about the new SDKs, or just want to talk to other Square Developers, request an invite to the new [slack community for Square Developers](https://squ.re/2JkDBcO)**
 
 This repository contains a generated PHP client SDK for the Square Connect APIs. Check out our [API
 specification repository](https://github.com/square/connect-api-specification)
@@ -62,9 +62,11 @@ Please follow the [installation procedure](#installation--usage):
 ```php
 require 'vendor/autoload.php';
 
+$access_token = 'YOUR_ACCESS_TOKEN';
 # setup authorization
 \SquareConnect\Configuration::getDefaultConfiguration()->setAccessToken($access_token);
-# create an instance of the Location API $locations_api = new \SquareConnect\Api\LocationsApi();
+# create an instance of the Location API
+$locations_api = new \SquareConnect\Api\LocationsApi();
 
 try {
   $locations = $locations_api->listLocations();
@@ -83,7 +85,7 @@ try {
 ```php
 require 'vendor/autoload.php';
 
-
+$access_token = 'YOUR_ACCESS_TOKEN';
 # setup authorization
 \SquareConnect\Configuration::getDefaultConfiguration()->setAccessToken($access_token);
 # create an instance of the Transaction API class
@@ -141,8 +143,20 @@ Class | Method | HTTP request | Description
 *CustomersApi* | [**deleteCustomerCard**](docs/Api/CustomersApi.md#deletecustomercard) | **DELETE** /v2/customers/{customer_id}/cards/{card_id} | DeleteCustomerCard
 *CustomersApi* | [**listCustomers**](docs/Api/CustomersApi.md#listcustomers) | **GET** /v2/customers | ListCustomers
 *CustomersApi* | [**retrieveCustomer**](docs/Api/CustomersApi.md#retrievecustomer) | **GET** /v2/customers/{customer_id} | RetrieveCustomer
+*CustomersApi* | [**searchCustomers**](docs/Api/CustomersApi.md#searchcustomers) | **POST** /v2/customers/search | SearchCustomers
 *CustomersApi* | [**updateCustomer**](docs/Api/CustomersApi.md#updatecustomer) | **PUT** /v2/customers/{customer_id} | UpdateCustomer
+*InventoryApi* | [**batchChangeInventory**](docs/Api/InventoryApi.md#batchchangeinventory) | **POST** /v2/inventory/batch-change | BatchChangeInventory
+*InventoryApi* | [**batchRetrieveInventoryChanges**](docs/Api/InventoryApi.md#batchretrieveinventorychanges) | **POST** /v2/inventory/batch-retrieve-changes | BatchRetrieveInventoryChanges
+*InventoryApi* | [**batchRetrieveInventoryCounts**](docs/Api/InventoryApi.md#batchretrieveinventorycounts) | **POST** /v2/inventory/batch-retrieve-counts | BatchRetrieveInventoryCounts
+*InventoryApi* | [**retrieveInventoryAdjustment**](docs/Api/InventoryApi.md#retrieveinventoryadjustment) | **GET** /v2/inventory/adjustment/{adjustment_id} | RetrieveInventoryAdjustment
+*InventoryApi* | [**retrieveInventoryChanges**](docs/Api/InventoryApi.md#retrieveinventorychanges) | **GET** /v2/inventory/{catalog_object_id}/changes | RetrieveInventoryChanges
+*InventoryApi* | [**retrieveInventoryCount**](docs/Api/InventoryApi.md#retrieveinventorycount) | **GET** /v2/inventory/{catalog_object_id} | RetrieveInventoryCount
+*InventoryApi* | [**retrieveInventoryPhysicalCount**](docs/Api/InventoryApi.md#retrieveinventoryphysicalcount) | **GET** /v2/inventory/physical-count/{physical_count_id} | RetrieveInventoryPhysicalCount
 *LocationsApi* | [**listLocations**](docs/Api/LocationsApi.md#listlocations) | **GET** /v2/locations | ListLocations
+*MobileAuthorizationApi* | [**createMobileAuthorizationCode**](docs/Api/MobileAuthorizationApi.md#createmobileauthorizationcode) | **POST** /mobile/authorization-code | CreateMobileAuthorizationCode
+*OAuthApi* | [**obtainToken**](docs/Api/OAuthApi.md#obtaintoken) | **POST** /oauth2/token | ObtainToken
+*OAuthApi* | [**renewToken**](docs/Api/OAuthApi.md#renewtoken) | **POST** /oauth2/clients/{client_id}/access-token/renew | RenewToken
+*OAuthApi* | [**revokeToken**](docs/Api/OAuthApi.md#revoketoken) | **POST** /oauth2/revoke | RevokeToken
 *OrdersApi* | [**batchRetrieveOrders**](docs/Api/OrdersApi.md#batchretrieveorders) | **POST** /v2/locations/{location_id}/orders/batch-retrieve | BatchRetrieveOrders
 *OrdersApi* | [**createOrder**](docs/Api/OrdersApi.md#createorder) | **POST** /v2/locations/{location_id}/orders | CreateOrder
 *ReportingApi* | [**listAdditionalRecipientReceivableRefunds**](docs/Api/ReportingApi.md#listadditionalrecipientreceivablerefunds) | **GET** /v2/locations/{location_id}/additional-recipient-receivable-refunds | ListAdditionalRecipientReceivableRefunds
@@ -231,10 +245,16 @@ Class | Method | HTTP request | Description
  - [AdditionalRecipientReceivable](docs/Model/AdditionalRecipientReceivable.md)
  - [AdditionalRecipientReceivableRefund](docs/Model/AdditionalRecipientReceivableRefund.md)
  - [Address](docs/Model/Address.md)
+ - [BatchChangeInventoryRequest](docs/Model/BatchChangeInventoryRequest.md)
+ - [BatchChangeInventoryResponse](docs/Model/BatchChangeInventoryResponse.md)
  - [BatchDeleteCatalogObjectsRequest](docs/Model/BatchDeleteCatalogObjectsRequest.md)
  - [BatchDeleteCatalogObjectsResponse](docs/Model/BatchDeleteCatalogObjectsResponse.md)
  - [BatchRetrieveCatalogObjectsRequest](docs/Model/BatchRetrieveCatalogObjectsRequest.md)
  - [BatchRetrieveCatalogObjectsResponse](docs/Model/BatchRetrieveCatalogObjectsResponse.md)
+ - [BatchRetrieveInventoryChangesRequest](docs/Model/BatchRetrieveInventoryChangesRequest.md)
+ - [BatchRetrieveInventoryChangesResponse](docs/Model/BatchRetrieveInventoryChangesResponse.md)
+ - [BatchRetrieveInventoryCountsRequest](docs/Model/BatchRetrieveInventoryCountsRequest.md)
+ - [BatchRetrieveInventoryCountsResponse](docs/Model/BatchRetrieveInventoryCountsResponse.md)
  - [BatchRetrieveOrdersRequest](docs/Model/BatchRetrieveOrdersRequest.md)
  - [BatchRetrieveOrdersResponse](docs/Model/BatchRetrieveOrdersResponse.md)
  - [BatchUpsertCatalogObjectsRequest](docs/Model/BatchUpsertCatalogObjectsRequest.md)
@@ -283,6 +303,8 @@ Class | Method | HTTP request | Description
  - [CreateCustomerCardResponse](docs/Model/CreateCustomerCardResponse.md)
  - [CreateCustomerRequest](docs/Model/CreateCustomerRequest.md)
  - [CreateCustomerResponse](docs/Model/CreateCustomerResponse.md)
+ - [CreateMobileAuthorizationCodeRequest](docs/Model/CreateMobileAuthorizationCodeRequest.md)
+ - [CreateMobileAuthorizationCodeResponse](docs/Model/CreateMobileAuthorizationCodeResponse.md)
  - [CreateOrderRequest](docs/Model/CreateOrderRequest.md)
  - [CreateOrderRequestDiscount](docs/Model/CreateOrderRequestDiscount.md)
  - [CreateOrderRequestLineItem](docs/Model/CreateOrderRequestLineItem.md)
@@ -293,8 +315,15 @@ Class | Method | HTTP request | Description
  - [CreateRefundResponse](docs/Model/CreateRefundResponse.md)
  - [Currency](docs/Model/Currency.md)
  - [Customer](docs/Model/Customer.md)
+ - [CustomerCreationSource](docs/Model/CustomerCreationSource.md)
+ - [CustomerCreationSourceFilter](docs/Model/CustomerCreationSourceFilter.md)
+ - [CustomerFilter](docs/Model/CustomerFilter.md)
  - [CustomerGroupInfo](docs/Model/CustomerGroupInfo.md)
+ - [CustomerInclusionExclusion](docs/Model/CustomerInclusionExclusion.md)
  - [CustomerPreferences](docs/Model/CustomerPreferences.md)
+ - [CustomerQuery](docs/Model/CustomerQuery.md)
+ - [CustomerSort](docs/Model/CustomerSort.md)
+ - [CustomerSortField](docs/Model/CustomerSortField.md)
  - [DeleteCatalogObjectRequest](docs/Model/DeleteCatalogObjectRequest.md)
  - [DeleteCatalogObjectResponse](docs/Model/DeleteCatalogObjectResponse.md)
  - [DeleteCustomerCardRequest](docs/Model/DeleteCustomerCardRequest.md)
@@ -305,7 +334,14 @@ Class | Method | HTTP request | Description
  - [Error](docs/Model/Error.md)
  - [ErrorCategory](docs/Model/ErrorCategory.md)
  - [ErrorCode](docs/Model/ErrorCode.md)
+ - [InventoryAdjustment](docs/Model/InventoryAdjustment.md)
  - [InventoryAlertType](docs/Model/InventoryAlertType.md)
+ - [InventoryChange](docs/Model/InventoryChange.md)
+ - [InventoryChangeType](docs/Model/InventoryChangeType.md)
+ - [InventoryCount](docs/Model/InventoryCount.md)
+ - [InventoryPhysicalCount](docs/Model/InventoryPhysicalCount.md)
+ - [InventoryState](docs/Model/InventoryState.md)
+ - [InventoryTransfer](docs/Model/InventoryTransfer.md)
  - [ItemVariationLocationOverrides](docs/Model/ItemVariationLocationOverrides.md)
  - [ListAdditionalRecipientReceivableRefundsRequest](docs/Model/ListAdditionalRecipientReceivableRefundsRequest.md)
  - [ListAdditionalRecipientReceivableRefundsResponse](docs/Model/ListAdditionalRecipientReceivableRefundsResponse.md)
@@ -326,6 +362,8 @@ Class | Method | HTTP request | Description
  - [LocationStatus](docs/Model/LocationStatus.md)
  - [LocationType](docs/Model/LocationType.md)
  - [Money](docs/Model/Money.md)
+ - [ObtainTokenRequest](docs/Model/ObtainTokenRequest.md)
+ - [ObtainTokenResponse](docs/Model/ObtainTokenResponse.md)
  - [Order](docs/Model/Order.md)
  - [OrderLineItem](docs/Model/OrderLineItem.md)
  - [OrderLineItemDiscount](docs/Model/OrderLineItemDiscount.md)
@@ -334,20 +372,36 @@ Class | Method | HTTP request | Description
  - [OrderLineItemModifier](docs/Model/OrderLineItemModifier.md)
  - [OrderLineItemTax](docs/Model/OrderLineItemTax.md)
  - [OrderLineItemTaxType](docs/Model/OrderLineItemTaxType.md)
+ - [Product](docs/Model/Product.md)
  - [Refund](docs/Model/Refund.md)
  - [RefundStatus](docs/Model/RefundStatus.md)
  - [RegisterDomainRequest](docs/Model/RegisterDomainRequest.md)
  - [RegisterDomainResponse](docs/Model/RegisterDomainResponse.md)
  - [RegisterDomainResponseStatus](docs/Model/RegisterDomainResponseStatus.md)
+ - [RenewTokenRequest](docs/Model/RenewTokenRequest.md)
+ - [RenewTokenResponse](docs/Model/RenewTokenResponse.md)
  - [RetrieveCatalogObjectRequest](docs/Model/RetrieveCatalogObjectRequest.md)
  - [RetrieveCatalogObjectResponse](docs/Model/RetrieveCatalogObjectResponse.md)
  - [RetrieveCustomerRequest](docs/Model/RetrieveCustomerRequest.md)
  - [RetrieveCustomerResponse](docs/Model/RetrieveCustomerResponse.md)
+ - [RetrieveInventoryAdjustmentRequest](docs/Model/RetrieveInventoryAdjustmentRequest.md)
+ - [RetrieveInventoryAdjustmentResponse](docs/Model/RetrieveInventoryAdjustmentResponse.md)
+ - [RetrieveInventoryChangesRequest](docs/Model/RetrieveInventoryChangesRequest.md)
+ - [RetrieveInventoryChangesResponse](docs/Model/RetrieveInventoryChangesResponse.md)
+ - [RetrieveInventoryCountRequest](docs/Model/RetrieveInventoryCountRequest.md)
+ - [RetrieveInventoryCountResponse](docs/Model/RetrieveInventoryCountResponse.md)
+ - [RetrieveInventoryPhysicalCountRequest](docs/Model/RetrieveInventoryPhysicalCountRequest.md)
+ - [RetrieveInventoryPhysicalCountResponse](docs/Model/RetrieveInventoryPhysicalCountResponse.md)
  - [RetrieveTransactionRequest](docs/Model/RetrieveTransactionRequest.md)
  - [RetrieveTransactionResponse](docs/Model/RetrieveTransactionResponse.md)
+ - [RevokeTokenRequest](docs/Model/RevokeTokenRequest.md)
+ - [RevokeTokenResponse](docs/Model/RevokeTokenResponse.md)
  - [SearchCatalogObjectsRequest](docs/Model/SearchCatalogObjectsRequest.md)
  - [SearchCatalogObjectsResponse](docs/Model/SearchCatalogObjectsResponse.md)
+ - [SearchCustomersRequest](docs/Model/SearchCustomersRequest.md)
+ - [SearchCustomersResponse](docs/Model/SearchCustomersResponse.md)
  - [SortOrder](docs/Model/SortOrder.md)
+ - [SourceApplication](docs/Model/SourceApplication.md)
  - [TaxCalculationPhase](docs/Model/TaxCalculationPhase.md)
  - [TaxInclusionType](docs/Model/TaxInclusionType.md)
  - [Tender](docs/Model/Tender.md)
@@ -356,6 +410,7 @@ Class | Method | HTTP request | Description
  - [TenderCardDetailsStatus](docs/Model/TenderCardDetailsStatus.md)
  - [TenderCashDetails](docs/Model/TenderCashDetails.md)
  - [TenderType](docs/Model/TenderType.md)
+ - [TimeRange](docs/Model/TimeRange.md)
  - [Transaction](docs/Model/Transaction.md)
  - [TransactionProduct](docs/Model/TransactionProduct.md)
  - [UpdateCustomerRequest](docs/Model/UpdateCustomerRequest.md)
@@ -393,6 +448,7 @@ Class | Method | HTTP request | Description
  - [V1PaymentItemDetail](docs/Model/V1PaymentItemDetail.md)
  - [V1PaymentItemization](docs/Model/V1PaymentItemization.md)
  - [V1PaymentModifier](docs/Model/V1PaymentModifier.md)
+ - [V1PaymentSurcharge](docs/Model/V1PaymentSurcharge.md)
  - [V1PaymentTax](docs/Model/V1PaymentTax.md)
  - [V1PhoneNumber](docs/Model/V1PhoneNumber.md)
  - [V1Refund](docs/Model/V1Refund.md)
@@ -415,7 +471,7 @@ Class | Method | HTTP request | Description
 - **Type**: OAuth
 - **Flow**: accessCode
 - **Authorization URL**: `https://connect.squareup.com/oauth2/authorize`
-- **Scopes**: 
+- **Scopes**:
  - **MERCHANT_PROFILE_READ**: GET endpoints related to a merchant's business and location entities. Almost all Connect API applications need this permission in order to obtain a merchant's location IDs
  - **PAYMENTS_READ**: GET endpoints related to transactions and refunds
  - **PAYMENTS_WRITE**: POST, PUT, and DELETE endpoints related to transactions and refunds. E-commerce applications must request this permission
@@ -432,6 +488,9 @@ Class | Method | HTTP request | Description
  - **TIMECARDS_READ**: GET endpoints related to employee timecards
  - **TIMECARDS_WRITE**: POST, PUT, and DELETE endpoints related to employee timecards
  - **PAYMENTS_WRITE_ADDITIONAL_RECIPIENTS**: Allow third party applications to deduct a portion of each transaction amount.
+ - **PAYMENTS_WRITE_IN_PERSON**: POST, PUT, and DELETE endpoints. Grants write access to transaction and refunds information.
+ - **INVENTORY_READ**: GET endpoints related to a merchant's inventory
+ - **INVENTORY_WRITE**: POST, PUT, and DELETE endpoints related to a merchant's inventory
 
 ## oauth2ClientSecret
 

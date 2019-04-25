@@ -3,11 +3,11 @@
  * functions used by payment module class for Paypal IPN payment method
  *
  * @package paymentMethod
- * @copyright Copyright 2003-2016 Zen Cart Development Team
+ * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @copyright Portions Copyright 2004 DevosC.com
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: DrByte  Wed Mar 16 16:12:21 2016 -0500 Modified in v1.5.5 $
+ * @version $Id: Drbyte Thu Sep 13 14:51:41 2018 -0400 Modified in v1.5.6 $
  */
 
 // Functions for paypal processing
@@ -184,7 +184,7 @@
     } else {
       $my_currency = substr(MODULE_PAYMENT_PAYPAL_CURRENCY, 5);
     }
-    $pp_currencies = array('CAD', 'EUR', 'GBP', 'JPY', 'USD', 'AUD', 'CHF', 'CZK', 'DKK', 'HKD', 'HUF', 'NOK', 'NZD', 'PLN', 'SEK', 'SGD', 'THB', 'MXN', 'ILS', 'PHP', 'TWD', 'BRL', 'MYR');
+    $pp_currencies = array('CAD', 'EUR', 'GBP', 'JPY', 'USD', 'AUD', 'CHF', 'CZK', 'DKK', 'HKD', 'HUF', 'NOK', 'NZD', 'PLN', 'SEK', 'SGD', 'THB', 'MXN', 'ILS', 'PHP', 'TWD', 'BRL', 'MYR', 'INR');
     if (!in_array($my_currency, $pp_currencies)) {
       $my_currency = 'USD';
     }
@@ -196,7 +196,7 @@
     $my_currency = select_pp_currency();
     $exchanged_amount = ($mode == 'IPN' ? ($amount * $currencies->get_value($my_currency)) : $amount);
     $transaction_amount = preg_replace('/[^0-9.]/', '', number_format($exchanged_amount, $currencies->get_decimal_places($my_currency), '.', ''));
-    if ( ($_POST['mc_currency'] != $my_currency) || ($_POST['mc_gross'] != $transaction_amount && $_POST['mc_gross'] != -0.01) && MODULE_PAYMENT_PAYPAL_TESTING != 'Test' ) {
+    if ($_POST['mc_currency'] != $my_currency || ($_POST['mc_gross'] != $transaction_amount && $_POST['mc_gross'] != -0.01) && (!defined('MODULE_PAYMENT_PAYPAL_TESTING') || MODULE_PAYMENT_PAYPAL_TESTING != 'Test') ) {
       ipn_debug_email('IPN WARNING :: Currency/Amount Mismatch.  Details: ' . "\n" . 'PayPal email address = ' . $_POST['business'] . "\n" . ' | mc_currency = ' . $_POST['mc_currency'] . "\n" . ' | submitted_currency = ' . $my_currency . "\n" . ' | order_currency = ' . $currency . "\n" . ' | mc_gross = ' . $_POST['mc_gross'] . "\n" . ' | converted_amount = ' . $transaction_amount . "\n" . ' | order_amount = ' . $amount );
       return false;
     }
@@ -217,7 +217,7 @@
 // if it's not unique or linked to a parent, then:
 // 1. could be an e-check denied / cleared
 // 2. could be an express-checkout "pending" transaction which has been Accepted in the merchant's PayPal console and needs activation in Zen Cart
-    if ($postArray['payment_status']=='Completed' && txn_type=='express_checkout' && $postArray['payment_type']=='echeck') {
+    if ($postArray['payment_status']=='Completed' && $txn_type=='express_checkout' && $postArray['payment_type']=='echeck') {
       $txn_type = 'express-checkout-cleared';
       return $txn_type;
     }
@@ -439,7 +439,7 @@
     $scheme = 'https://';
     //Parse url
     $web = parse_url($scheme . 'ipnpb.paypal.com/cgi-bin/webscr');
-    if ((isset($_POST['test_ipn']) && $_POST['test_ipn'] == 1) || MODULE_PAYMENT_PAYPAL_HANDLER == 'sandbox') {
+    if ((isset($_POST['test_ipn']) && $_POST['test_ipn'] == 1) || (defined('MODULE_PAYMENT_PAYPAL_HANDLER') && MODULE_PAYMENT_PAYPAL_HANDLER == 'sandbox')) {
       $web = parse_url($scheme . 'ipnpb.sandbox.paypal.com/cgi-bin/webscr');
     }
     //Set the port number

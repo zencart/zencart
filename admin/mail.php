@@ -4,7 +4,7 @@
  * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: DrByte  Modified in v1.5.6 $
+ * @version $Id: Drbyte Mon Nov 12 20:38:09 2018 -0500 Modified in v1.5.6 $
  */
 require('includes/application_top.php');
 
@@ -17,8 +17,9 @@ if (!defined('EMAIL_ATTACHMENT_UPLOADS_ENABLED')) {
   define('EMAIL_ATTACHMENT_UPLOADS_ENABLED', false);
 }
 
-
 $action = (isset($_GET['action']) ? $_GET['action'] : '');
+$file_list = array();
+$upload_file_name = $attachment_file = $attachment_filetype = '';
 
 if ($action == 'set_editor') {
   // Reset will be done by init_html_editor.php. Now we simply redirect to refresh page properly.
@@ -30,7 +31,7 @@ if (($action == 'send_email_to_user') && isset($_POST['customers_email_address']
   $audience_select = get_audience_sql_query(zen_db_input($_POST['customers_email_address']), 'email');
   $mail = $db->Execute($audience_select['query_string']);
   $mail_sent_to = $audience_select['query_name'];
-  if ($_POST['email_to']) {
+  if (!empty($_POST['email_to'])) {
     $mail_sent_to = zen_db_prepare_input($_POST['email_to']);
   }
 
@@ -44,7 +45,7 @@ if (($action == 'send_email_to_user') && isset($_POST['customers_email_address']
   $from = zen_db_prepare_input($_POST['from']);
   $subject = zen_db_prepare_input($_POST['subject']);
   $message = zen_db_prepare_input($_POST['message']);
-  $html_msg['EMAIL_MESSAGE_HTML'] = zen_db_prepare_input($_POST['message_html']);
+  $html_msg['EMAIL_MESSAGE_HTML'] = zen_db_prepare_input(isset($_POST['message_html']) ? $_POST['message_html'] : '');
   $attachment_file = $_POST['attachment_file'];
   $attachment_fname = basename($_POST['attachment_file']);
   $attachment_filetype = $_POST['attachment_filetype'];
@@ -114,7 +115,6 @@ if ($action == 'preview') {
               kill.disabled = true;
           }
       }
-      // -->
     </script>
     <?php if ($editor_handler != '') include ($editor_handler); ?>
     <script>
@@ -187,7 +187,7 @@ if ($action == 'preview') {
               return true;
           }
       }
-      //--></script>
+    </script>
   </head>
   <body onLoad="init()">
     <!-- header //-->
@@ -226,16 +226,16 @@ if ($action == 'preview') {
           <div class="col-sm-9">
               <?php if (EMAIL_USE_HTML != 'true') echo TEXT_WARNING_HTML_DISABLED . '<br />'; ?>
               <?php
-              $html_preview = zen_output_string_protected($_POST['message_html']);
-              echo (stristr($html_preview, '<br') ? $html_preview : nl2br($html_preview));
+              $html_preview = zen_output_string(isset($_POST['message_html']) ? $_POST['message_html'] : '');
+              echo (false !== stripos($html_preview, '<br') ? $html_preview : nl2br($html_preview));
               ?>
           </div>
           <div class="col-sm-12"><hr></div>
           <div class="col-sm-3 text-right"><b><?php echo strip_tags(TEXT_MESSAGE); ?></b></div>
           <div class="col-sm-9">
               <?php
-              $message_preview = ((is_null($_POST['message']) || $_POST['message'] == '') ? $_POST['message_html'] : $_POST['message'] );
-              $message_preview = (stristr($message_preview, '<br') ? $message_preview : nl2br($message_preview));
+              $message_preview = empty($_POST['message']) ? $_POST['message_html'] : $_POST['message'];
+              $message_preview = (false !== stripos($message_preview, '<br') ? $message_preview : nl2br($message_preview));
               $message_preview = str_replace(array('<br>', '<br />'), "<br />\n", $message_preview);
               $message_preview = str_replace('</p>', "</p>\n", $message_preview);
               echo '<tt>' . nl2br(htmlspecialchars(stripslashes(strip_tags($message_preview)), ENT_COMPAT, CHARSET, TRUE)) . '</tt>';
@@ -265,7 +265,7 @@ if ($action == 'preview') {
             <button type="button" class="btn btn-default" name="back"><?php echo IMAGE_BACK; ?></button>
           </div>
           <div class="col-sm-6 text-right">
-            <a href="<?php echo zen_href_link(FILENAME_MAIL, 'cID=' . zen_db_prepare_input($_GET['cID']) . (isset($_GET['customer']) ? '&customer=' . zen_output_string_protected($_GET['customer']) : '') . (isset($_GET['origin']) ? '&origin=' . zen_output_string_protected($_GET['origin']) : '')); ?>" class="btn btn-default" role="button"><?php echo IMAGE_CANCEL; ?></a> <button type="submit" class="btn btn-primary"><?php echo IMAGE_SEND_EMAIL; ?></button>
+            <a href="<?php echo zen_href_link(FILENAME_MAIL, (isset($_GET['cID']) ? 'cID=' . (int)$_GET['cID'] : '') . (isset($_GET['customer']) ? '&customer=' . zen_output_string_protected($_GET['customer']) : '') . (isset($_GET['origin']) ? '&origin=' . zen_output_string_protected($_GET['origin']) : '')); ?>" class="btn btn-default" role="button"><?php echo IMAGE_CANCEL; ?></a> <button type="submit" class="btn btn-primary"><?php echo IMAGE_SEND_EMAIL; ?></button>
           </div>
           <?php echo '</form>'; ?>
         </div>
@@ -275,11 +275,11 @@ if ($action == 'preview') {
         <div class="row">
             <?php echo zen_draw_form('mail', FILENAME_MAIL, 'action=preview' . (isset($_GET['cID']) ? '&cID=' . (int)$_GET['cID'] : '') . (isset($_GET['customer']) ? '&customer=' . zen_output_string_protected($_GET['customer']) : '') . (isset($_GET['origin']) ? '&origin=' . zen_output_string_protected($_GET['origin']) : ''), 'post', 'onsubmit="return check_form(mail);" enctype="multipart/form-data" class="form-horizontal"'); ?>
             <?php
-            $customers = get_audiences_list('email', 'customers_email_address', (isset($_GET['customer']) ? $_GET['customer'] : ''));
+            $customers = get_audiences_list('email', 'customers_email_address', (isset($_GET['customer']) ? zen_output_string_protected($_GET['customer']) : ''));
             ?>
           <div class="form-group">
               <?php echo zen_draw_label(TEXT_CUSTOMER, 'customers_email_address', 'class="col-sm-3 control-label"'); ?>
-            <div class="col-sm-9"><?php echo zen_draw_pull_down_menu('customers_email_address', $customers, (isset($_GET['customer']) ? $_GET['customer'] : ''), 'class="form-control"');  //, 'multiple'        ?></div>
+            <div class="col-sm-9"><?php echo zen_draw_pull_down_menu('customers_email_address', $customers, (isset($_GET['customer']) ? zen_output_string_protected($_GET['customer']) : ''), 'class="form-control"');  //, 'multiple'        ?></div>
           </div>
           <div class="form-group">
               <?php echo zen_draw_label(TEXT_FROM, 'from', 'class="col-sm-3 control-label"'); ?>
@@ -287,7 +287,7 @@ if ($action == 'preview') {
           </div>
           <div class="form-group">
               <?php echo zen_draw_label(TEXT_SUBJECT, 'subject', 'class="col-sm-3 control-label"'); ?>
-            <div class="col-sm-9"><?php echo zen_draw_input_field('subject', htmlspecialchars($_POST['subject'], ENT_COMPAT, CHARSET, TRUE), 'size="50" class="form-control"'); ?></div>
+            <div class="col-sm-9"><?php echo zen_draw_input_field('subject', htmlspecialchars(isset($_POST['subject']) ? $_POST['subject'] : '', ENT_COMPAT, CHARSET, TRUE), 'size="50" class="form-control"'); ?></div>
           </div>
           <div class="form-group">
             <?php echo zen_draw_label(TEXT_MESSAGE_HTML, 'message_html', 'class="col-sm-3 control-label"'); //HTML version   ?>
@@ -303,7 +303,7 @@ if ($action == 'preview') {
           </div>
           <div class="form-group">
               <?php echo zen_draw_label(TEXT_MESSAGE, 'message', 'class="col-sm-3 control-label"'); ?>
-            <div class="col-sm-9"><?php echo zen_draw_textarea_field('message', 'soft', '100%', '15', htmlspecialchars($_POST['message'], ENT_COMPAT, CHARSET, TRUE), 'class="noEditor form-control"'); ?></div>
+            <div class="col-sm-9"><?php echo zen_draw_textarea_field('message', 'soft', '100%', '15', htmlspecialchars(isset($_POST['message']) ? $_POST['message'] : '', ENT_COMPAT, CHARSET, TRUE), 'class="noEditor form-control"'); ?></div>
           </div>
 
           <?php if (defined('EMAIL_ATTACHMENTS_ENABLED') && EMAIL_ATTACHMENTS_ENABLED === true && defined('DIR_WS_ADMIN_ATTACHMENTS') && is_dir(DIR_WS_ADMIN_ATTACHMENTS) && is_writable(DIR_WS_ADMIN_ATTACHMENTS)) { ?>
@@ -329,13 +329,13 @@ if ($action == 'preview') {
         <?php } // end attachments fields   ?>
         <?php
         if (isset($_GET['origin'])) {
-          $origin = $_GET['origin'];
+          $origin = zen_output_string_protected($_GET['origin']);
         } else {
           $origin = FILENAME_DEFAULT;
         }
         ?>
         <div class="row text-right">
-          <button type="submit" class="btn btn-primary"><?php echo IMAGE_PREVIEW; ?></button> <a href="<?php echo zen_href_link($origin, 'cID=' . zen_db_prepare_input($_GET['cID']), $request_type); ?>" class="btn btn-default"><?php echo IMAGE_CANCEL; ?></a>
+          <button type="submit" class="btn btn-primary"><?php echo IMAGE_PREVIEW; ?></button> <a href="<?php echo zen_href_link($origin, (!empty($_GET['cID']) ? 'cID=' . (int)$_GET['cID'] : ''), $request_type); ?>" class="btn btn-default"><?php echo IMAGE_CANCEL; ?></a>
         </div>
         <?php
       }

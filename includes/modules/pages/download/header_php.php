@@ -6,10 +6,10 @@
  *       Windows hosts require special setup (and Windows servers couldn't do any symlinking in PHP versions older than 5.3.0)
  *
  * @package page
- * @copyright Copyright 2003-2017 Zen Cart Development Team
+ * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: DrByte  Modified in v1.5.6 $
+ * @version $Id: DrByte 2019 Jan 04 Modified in v1.5.6a $
  */
 
 // This should be first line of the script:
@@ -19,13 +19,13 @@ require(DIR_WS_MODULES . zen_get_module_directory('require_languages.php'));
 
 // if the customer is not logged on and no email_address set (i.e. guest checkout), redirect the customer to the time out page
 if (empty($_SESSION['customer_id']) && empty($_SESSION['email_address'])) {
-    zen_redirect(zen_href_link(FILENAME_TIME_OUT));
+    zen_redirect(zen_href_link(FILENAME_TIME_OUT, '', 'SSL'));
 }
 
 // Check download.php was called with proper GET parameters
 if ((isset($_GET['order']) && !is_numeric($_GET['order'])) || (isset($_GET['id']) && !is_numeric($_GET['id'])) ) {
     // if the paramaters are wrong, redirect them to the time out page
-    zen_redirect(zen_href_link(FILENAME_TIME_OUT));
+    zen_redirect(zen_href_link(FILENAME_TIME_OUT, '', 'SSL'));
 }
 
 if (isset($_SESSION['email_address'])) {
@@ -81,16 +81,16 @@ $downloadFilesize = (int)@filesize($source_directory . $origin_filename);
 
 // calculate days
 list($dt_year, $dt_month, $dt_day) = explode('-', $downloads->fields['date_purchased_day']);
-$download_timestamp = mktime(23, 59, 59, $dt_month, $dt_day + $downloads->fields['download_maxdays'], $dt_year);
+$download_timestamp = mktime(23, 59, 59, $dt_month, $dt_day + (int)$downloads->fields['download_maxdays'], $dt_year);
 // determine limits
-$unlimited = $downloads->fields['download_maxdays'] == 0;
+$unlimited = (int)$downloads->fields['download_maxdays'] == 0;
 $remainingCount = $downloads->fields['download_count'];
 $isExpired = !$unlimited && ($download_timestamp <= time() || $remainingCount <= 0);
 
 $zco_notifier->notify('NOTIFY_CHECK_DOWNLOAD_HANDLER', $downloads, $downloads->fields, $origin_filename, $browser_filename, $source_directory, $file_exists, $service, $isExpired, $download_timestamp);
 
 if ($isExpired) {
-    zen_redirect(zen_href_link(FILENAME_DOWNLOAD_TIME_OUT));
+    zen_redirect(zen_href_link(FILENAME_DOWNLOAD_TIME_OUT, '', 'SSL'));
 }
 
 // FIX HERE AND GIVE ERROR PAGE FOR MISSING FILE

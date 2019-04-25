@@ -3,9 +3,9 @@
  * init_sanitize
  *
  * @package initSystem
- * @copyright Copyright 2003-2017 Zen Cart Development Team
+ * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: zcwilt June 2017 Modified in v1.5.5f $
+ * @version $Id: Drbyte Mon Nov 12 20:38:09 2018 -0500 Modified in v1.5.6 $
  */
 
 if (!defined('DO_STRICT_SANITIZATION')) {
@@ -38,6 +38,7 @@ $adminSanitizerTypes = array(
     'NULL_ACTION' => array('type' => 'builtin'),
     'MULTI_DIMENSIONAL' => array('type' => 'builtin'),
     'SIMPLE_ARRAY' => array('type' => 'builtin'),
+    'STRICT_SANITIZE_VALUES' => array('type' => 'builtin'),
 );
 
 $sanitizer->addSanitizerTypes($adminSanitizerTypes);
@@ -242,6 +243,9 @@ $group = array('report', 'startDate', 'endDate', 'filter');
 $sanitizer->addSimpleSanitization('FLOAT_VALUE_REGEX', $group);
 
 $group = array('products_name' => array('sanitizerType' => 'WORDS_AND_SYMBOLS_REGEX', 'method' => 'post', 'pages' => array('reviews')));
+$sanitizer->addComplexSanitization($group);
+
+$group = array('query_string' => array('sanitizerType' => 'NULL_ACTION', 'method' => 'post', 'pages' => array('sqlpatch')));
 $sanitizer->addComplexSanitization($group);
 
 $sanitizer->runSanitizers();

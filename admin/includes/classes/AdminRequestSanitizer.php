@@ -1,9 +1,9 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2016 Zen Cart Development Team
+ * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: zcwilt  Wed May 11 17:34:47 2016 -0500 New in v1.5.5 $
+ * @version $Id: Drbyte Tue Jan 2 12:19:13 2018 -0500 Modified in v1.5.6 $
  */
 
 /**
@@ -50,6 +50,11 @@ class AdminRequestSanitizer extends base
     private $requestParameterList;
 
     /**
+     * @var string
+     */
+    private $charset;
+
+    /**
      * @return AdminRequestSanitizer
      */
     public static function getInstance()
@@ -75,6 +80,7 @@ class AdminRequestSanitizer extends base
         $this->arrayName = '';
         $this->debugMessages[] = 'Incoming GET Request ' . print_r($_GET, true);
         $this->debugMessages[] = 'Incoming POST Request ' . print_r($_POST, true);
+        $this->charset = (defined('CHARSET') ? CHARSET : 'utf-8');
     }
 
     /**
@@ -453,7 +459,7 @@ class AdminRequestSanitizer extends base
             $this->debugMessages[] = 'PROCESSING META_TAGS == ' . $this->arrayName;
             foreach ($_POST[$parameterName] as $pKey => $pValue) {
                 $currentArrayName = $this->setCurrentArrayName($pKey);
-                $_POST[$parameterName][$pKey] = htmlspecialchars($_POST[$parameterName][$pKey], ENT_COMPAT, 'utf-8', false);
+                $_POST[$parameterName][$pKey] = htmlspecialchars($_POST[$parameterName][$pKey], ENT_COMPAT, $this->charset, false);
                 $this->postKeysAlreadySanitized[] = $currentArrayName;
             }
         }
@@ -488,7 +494,7 @@ class AdminRequestSanitizer extends base
             // Add the parameterName to the base arrayname.
             $this->arrayName = $this->setCurrentArrayName($parameterName);
             $this->debugMessages[] = 'PROCESSING SANITIZE_EMAIL_AUDIENCE (POST) == ' . $this->arrayName;
-            $_POST[$parameterName] = htmlspecialchars($_POST[$parameterName]);
+            $_POST[$parameterName] = htmlspecialchars($_POST[$parameterName], ENT_COMPAT, $this->charset, true);
             $this->postKeysAlreadySanitized[] = $this->arrayName;
         }
     }
@@ -779,7 +785,7 @@ class AdminRequestSanitizer extends base
                 } else {
                     if (!in_array($this->arrayName, $ignore)) {
                         $this->debugMessages[] = 'PROCESSING STRICT_SANITIZE_VALUES == ' . $this->arrayName;
-                        $item[$k] = htmlspecialchars($item[$k]);
+                        $item[$k] = htmlspecialchars($item[$k], ENT_COMPAT, $this->charset, true);
                         if ($inner) {
                             if ($type == 'post') {
                                 if (!in_array($this->arrayName, $ignore)) {

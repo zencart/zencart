@@ -1,17 +1,19 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2017 Zen Cart Development Team
+ * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: DrByte   Modified in v1.5.6 $
+ * @version $Id: DrByte 2019 Jan 04 Modified in v1.5.6a $
  */
 
 ////
 // The HTML href link wrapper function
   function zen_href_link($page = '', $parameters = '', $connection = 'SSL', $add_session_id = true) {
-    global $request_type, $session_started, $http_domain, $https_domain;
+    global $session_started;
     if ($page == '') {
+      trigger_error("zen_href_link($page, $parameters, $connection), unable to determine the page link.",
+            E_USER_ERROR);
       die('</td></tr></table></td></tr></table><br><br><font color="#ff0000"><b>Error!</b></font><br><br><b>Unable to determine the page link!<br><br>Function used:<br><br>zen_href_link(\'' . $page . '\', \'' . $parameters . '\', \'' . $connection . '\')</b>');
     }
 
@@ -57,7 +59,8 @@
         $link = HTTP_CATALOG_SERVER . DIR_WS_CATALOG;
       }
     } else {
-      die('</td></tr></table></td></tr></table><br><br><font color="#ff0000"><b>Error!</b></font><br><br><b>Unable to determine connection method on a link!<br><br>Known methods: NONSSL SSL<br><br>Function used:<br><br>zen_href_link(\'' . $page . '\', \'' . $parameters . '\', \'' . $connection . '\')</b>');
+      trigger_error("zen_catalog_href_link($page, $parameters, $connection), Unable to determine connection method on a link! Known methods: NONSSL SSL", E_USER_ERROR);
+      die('</td></tr></table></td></tr></table><br><br><font color="#ff0000"><b>Error!</b></font><br><br><b>Unable to determine connection method on a link!<br><br>Known methods: NONSSL SSL<br><br>Function used:<br><br>zen_catalog_href_link(\'' . $page . '\', \'' . $parameters . '\', \'' . $connection . '\')</b>');
     }
     if ($parameters == '') {
       $link .= 'index.php?main_page='. $page;
@@ -174,17 +177,9 @@
   function zen_draw_form($name, $action, $parameters = '', $method = 'post', $params = '', $usessl = 'false') {
     $form = '<form name="' . zen_output_string($name) . '" action="';
     if (zen_not_null($parameters)) {
-      if ($usessl) {
-        $form .= zen_href_link($action, $parameters, 'NONSSL');
-      } else {
-        $form .= zen_href_link($action, $parameters, 'NONSSL');
-      }
+      $form .= zen_href_link($action, $parameters, 'NONSSL');
     } else {
-      if ($usessl) {
-        $form .= zen_href_link($action, '', 'NONSSL');
-      } else {
-        $form .= zen_href_link($action, '', 'NONSSL');
-      }
+      $form .= zen_href_link($action, '', 'NONSSL');
     }
     $form .= '" method="' . zen_output_string($method) . '"';
     if (zen_not_null($params)) {

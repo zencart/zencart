@@ -1,9 +1,9 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2017 Zen Cart Development Team
+ * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: zcwilt  Dec 2017 New in v1.5.6 $
+ * @version $Id: mc12345678 Tue Aug 28 21:18:16 2018 -0400 Modified in v1.5.6 $
  */
 
 class VersionServer
@@ -43,7 +43,7 @@ class VersionServer
         $error = curl_error($ch);
         $errno = curl_errno($ch);
         if ($errno > 0) {
-            return $this->formatCurlError($errno, $error);
+            return json_decode($this->formatCurlError($errno, $error), true);
         }
         return json_decode($response, true);
 
@@ -86,10 +86,10 @@ class VersionServer
     public function hasProjectPatches($newVersionInfo)
     {
         $result = 0;
-        if (trim($newVersionInfo['versionPatch1']) > (int)PROJECT_VERSION_PATCH1) {
+        if (isset($newVersionInfo['versionPatch1']) && trim($newVersionInfo['versionPatch1']) > (int)PROJECT_VERSION_PATCH1) {
             $result++;
         }
-        if (trim($newVersionInfo['versionPatch2']) > (int)PROJECT_VERSION_PATCH2) {
+        if (isset($newVersionInfo['versionPatch2']) && trim($newVersionInfo['versionPatch2']) > (int)PROJECT_VERSION_PATCH2) {
             $result++;
             $result++;
         }

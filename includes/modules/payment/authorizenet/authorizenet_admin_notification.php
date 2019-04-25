@@ -3,9 +3,9 @@
  * authorizenet_admin_notification.php admin display component
  *
  * @package paymentMethod
- * @copyright Copyright 2003-2017 Zen Cart Development Team
+ * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: authorizenet_admin_notification.php - Modified in v1.5.6 $
+ * @version $Id: Zen4All Thu Nov 9 13:16:10 2017 +0100 Modified in v1.5.6 $
  */
 
   $outputStartBlock = '';

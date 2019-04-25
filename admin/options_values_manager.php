@@ -1,10 +1,10 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2016 Zen Cart Development Team
+ * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: DrByte  Thu Mar 3 12:16:32 2016 -0500 Modified in v1.5.5 $
+ * @version $Id: Zen4All Sat Sep 22 09:15:58 2018 +0200 Modified in v1.5.6 $
  */
 require('includes/application_top.php');
 $languages = zen_get_languages();
@@ -94,7 +94,7 @@ if (zen_not_null($action)) {
                                  FROM " . TABLE_PRODUCTS_OPTIONS_VALUES . " pov
                                  LEFT JOIN " . TABLE_PRODUCTS_OPTIONS_VALUES_TO_PRODUCTS_OPTIONS . " pov2po ON pov.products_options_values_id = pov2po.products_options_values_id
                                  WHERE pov.language_id = " . (int)$languages[$i]['id'] . "
-                                 AND pov.products_options_values_name = " . zen_db_input($value_name) . "
+                                 AND pov.products_options_values_name = '" . zen_db_input($value_name) . "'
                                  AND pov2po.products_options_id = " . (int)$option_id);
           if ($check->RecordCount() > 1) {
             foreach ($check as $item) {
@@ -218,18 +218,6 @@ if (zen_not_null($action)) {
                                        AND pa.options_values_id = " . (int)$options_values_values_id_from);
       }
 
-      /*
-        // debug code
-        while(!$products_only->EOF) {
-        echo 'Product ' . $products_only->fields['products_id'] . '<br>';
-        $products_only->MoveNext();
-        }
-
-
-        die('I SEE match from: ' . $options_id_from . '-' . $options_values_values_id_from . ' add to: ' . $options_id_to . ' -' . $options_values_values_id_to . ' | only for cat ' . $_POST['copy_to_categories_id'] . ' | found matches ' . $products_only->RecordCount());
-       */
-
-
       if ($_POST['copy_to_categories_id'] == '') {
         $zc_categories = ' All Products ';
       } else {
@@ -259,7 +247,7 @@ if (zen_not_null($action)) {
                                               AND options_values_id = " . $options_values_values_id_to . "
                                               LIMIT 1");
               // do not add duplicate attributes
-              if ($check_previous->RecorCount() < 1) {
+              if ($check_previous->RecordCount() < 1) {
                 $db->Execute($sql);
                 $new_attribute++;
               }
@@ -342,21 +330,6 @@ if (zen_not_null($action)) {
         $attributes_price_letters_free = zen_db_prepare_input($products_attributes_defaults->fields['attributes_price_letters_free']);
         $attributes_required = zen_db_prepare_input($products_attributes_defaults->fields['attributes_required']);
       }
-
-      /*
-        /////
-        // debug code
-        while(!$products_only->EOF) {
-        echo 'Product ' . $products_only->fields['products_id'] . '<br>';
-        $products_only->MoveNext();
-        }
-
-
-        die('I SEE match from products_id:' . $copy_from_products_id . ' options_id_from: ' . $options_id_from . '-' . $options_values_values_id_from . ' add to: ' . $options_id_to . ' | only for cat ' . $_POST['copy_to_categories_id'] . ' | found matches ' . $products_only->RecordCount() . '<br>' .
-        'from products_id: ' . $products_attributes_defaults->fields['products_id'] . ' option_id: ' . $products_attributes_defaults->fields['options_id'] . ' options_values_id: ' . $products_attributes_defaults->fields['options_values_id']
-        );
-        /////
-       */
 
       if ($_POST['copy_to_categories_id'] == '') {
         $zc_categories = ' All Products ';
@@ -673,7 +646,7 @@ if (zen_not_null($action)) {
               </tr>
               <tr>
                 <td class="text-right" colspan="4">
-                  <a href="<?php echo zen_href_link(FILENAME_OPTIONS_VALUES_MANAGER, 'action=delete_value&value_id=' . $_GET['value_id'] . (isset($_GET['option_page']) ? '&option_page=' . $_GET['option_page'] . '&' : '') . (isset($_GET['value_page']) ? '&value_page=' . $_GET['value_page'] . '&' : '') . (isset($_GET['attribute_page']) ? '&attribute_page=' . $_GET['attribute_page'] : '')); ?>" class="btn btn-danger" role="button">'; ?><?php echo IMAGE_DELETE; ?></a>
+                  <a href="<?php echo zen_href_link(FILENAME_OPTIONS_VALUES_MANAGER, 'action=delete_value&value_id=' . $_GET['value_id'] . (isset($_GET['option_page']) ? '&option_page=' . $_GET['option_page'] . '&' : '') . (isset($_GET['value_page']) ? '&value_page=' . $_GET['value_page'] . '&' : '') . (isset($_GET['attribute_page']) ? '&attribute_page=' . $_GET['attribute_page'] : '')); ?>" class="btn btn-danger" role="button"><?php echo IMAGE_DELETE; ?></a>
                   <a href="<?php echo zen_href_link(FILENAME_OPTIONS_VALUES_MANAGER, (isset($_GET['option_page']) ? '&option_page=' . $_GET['option_page'] . '&' : '') . (isset($_GET['value_page']) ? '&value_page=' . $_GET['value_page'] . '&' : '') . (isset($_GET['attribute_page']) ? '&attribute_page=' . $_GET['attribute_page'] : '')); ?>" class="btn btn-default" role="button"><?php echo TEXT_CANCEL; ?></a>
                 </td>
               </tr>

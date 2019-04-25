@@ -4,7 +4,7 @@
  * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: DrByte  Modified in v1.5.6 $
+ * @version $Id: Scott C Wilson Fri Nov 16 12:01:55 2018 -0500 Modified in v1.5.6 $
  */
 require('includes/application_top.php');
 
@@ -124,7 +124,7 @@ if ($gID == 7) {
                     $use_function = $item['use_function'];
                     if (preg_match('/->/', $use_function)) {
                       $class_method = explode('->', $use_function);
-                      if (!is_object(${$class_method[0]})) {
+                      if (!(isset(${$class_method[0]}) && is_object(${$class_method[0]}))) {
                         include(DIR_WS_CLASSES . $class_method[0] . '.php');
                         ${$class_method[0]} = new $class_method[0]();
                       }
@@ -163,7 +163,14 @@ if ($gID == 7) {
                   }
                   ?>
               <td class="dataTableContent"><?php echo $item['configuration_title']; ?></td>
-              <td class="dataTableContent"><?php echo htmlspecialchars($cfgValue, ENT_COMPAT, CHARSET, TRUE); ?></td>
+              <td class="dataTableContent"><?php 
+                   $setting = htmlspecialchars($cfgValue, ENT_COMPAT, CHARSET, TRUE); 
+                   if (strlen($setting) > 40) { 
+                      echo substr($setting,0, 35) . "..."; 
+                   } else { 
+                      echo $setting; 
+                   }
+              ?></td>
               <td class="dataTableContent text-right">
                   <?php
                   if ((isset($cInfo) && is_object($cInfo)) && ($item['configuration_id'] == $cInfo->configuration_id)) {

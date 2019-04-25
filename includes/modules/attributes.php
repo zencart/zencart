@@ -9,7 +9,7 @@
  * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: DrByte  Modified in v1.5.6 $
+ * @version $Id: mc12345678 Fri Nov 9 21:03:09 2018 -0500 Modified in v1.5.6 $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
@@ -101,6 +101,10 @@ $sql = "select count(*) as total
 
                 $zco_notifier->notify('NOTIFY_ATTRIBUTES_MODULE_START_OPTION', $products_options_names->fields);
 
+                if (!isset($products_options_names->fields['products_options_comment_position'])) {
+                  $products_options_names->fields['products_options_comment_position'] = '0';
+                }
+
                 while (!$products_options->EOF) {
                   // reset
                   $products_options_display_price='';
@@ -184,7 +188,6 @@ $sql = "select count(*) as total
 
                   // prepare product options details
                   $prod_id = $_GET['products_id'];
-                  //die($prod_id);
                   if ($products_options_names->fields['products_options_type'] == PRODUCTS_OPTIONS_TYPE_FILE or $products_options_names->fields['products_options_type'] == PRODUCTS_OPTIONS_TYPE_TEXT or $products_options_names->fields['products_options_type'] == PRODUCTS_OPTIONS_TYPE_CHECKBOX or $products_options_names->fields['products_options_type'] == PRODUCTS_OPTIONS_TYPE_RADIO or $products_options->RecordCount() == 1 or $products_options_names->fields['products_options_type'] == PRODUCTS_OPTIONS_TYPE_READONLY) {
                     $products_options_value_id = $products_options->fields['products_options_values_id'];
                     if ($products_options_names->fields['products_options_type'] != PRODUCTS_OPTIONS_TYPE_TEXT and $products_options_names->fields['products_options_type'] != PRODUCTS_OPTIONS_TYPE_FILE) {
@@ -205,7 +208,7 @@ $sql = "select count(*) as total
                   // radio buttons
                   if ($products_options_names->fields['products_options_type'] == PRODUCTS_OPTIONS_TYPE_RADIO) {
                     if ($_SESSION['cart']->in_cart($prod_id)) {
-                      if ($_SESSION['cart']->contents[$prod_id]['attributes'][$products_options_names->fields['products_options_id']] == $products_options->fields['products_options_values_id']) {
+                      if (isset($_SESSION['cart']->contents[$prod_id]['attributes'][$products_options_names->fields['products_options_id']]) && $_SESSION['cart']->contents[$prod_id]['attributes'][$products_options_names->fields['products_options_id']] == $products_options->fields['products_options_values_id']) {
                         $selected_attribute = $_SESSION['cart']->contents[$prod_id]['attributes'][$products_options_names->fields['products_options_id']];
                       } else {
                         $selected_attribute = false;
@@ -213,7 +216,7 @@ $sql = "select count(*) as total
                     } else {
                       //              $selected_attribute = ($products_options->fields['attributes_default']=='1' ? true : false);
                       // if an error, set to customer setting
-                      if ($_POST['id'] !='') {
+                      if (!empty($_POST['id']) && is_array($_POST['id'])) {
                         $selected_attribute= false;
                         foreach ($_POST['id'] as $key => $value) {
                           if (($key == $products_options_names->fields['products_options_id'] and $value == $products_options->fields['products_options_values_id'])) {
@@ -242,7 +245,7 @@ $sql = "select count(*) as total
                       break;
                       case '3':
                       $tmp_attributes_image_row++;
-                      //                  if ($tmp_attributes_image_row > PRODUCTS_IMAGES_ATTRIBUTES_PER_ROW) 
+                      //                  if ($tmp_attributes_image_row > PRODUCTS_IMAGES_ATTRIBUTES_PER_ROW) {
                       if ($tmp_attributes_image_row > $products_options_names->fields['products_options_images_per_row']) {
                         $tmp_attributes_image .= '<br class="clearBoth" />' . "\n";
                         $tmp_attributes_image_row = 1;
@@ -299,7 +302,7 @@ $sql = "select count(*) as total
                     } else {
                       //              $selected_attribute = ($products_options->fields['attributes_default']=='1' ? true : false);
                       // if an error, set to customer setting
-                      if ($_POST['id'] !='') {
+                      if (!empty($_POST['id']) && is_array($_POST['id'])) {
                         $selected_attribute= false;
                         foreach ($_POST['id'] as $key => $value) {
                           if (is_array($value)) {
@@ -389,7 +392,7 @@ $sql = "select count(*) as total
                     //CLR 030714 Add logic for text option
                     //            $products_attribs_query = zen_db_query("select distinct patrib.options_values_price, patrib.price_prefix from " . TABLE_PRODUCTS_ATTRIBUTES . " patrib where patrib.products_id='" . (int)$_GET['products_id'] . "' and patrib.options_id = '" . $products_options_name['products_options_id'] . "'");
                     //            $products_attribs_array = zen_db_fetch_array($products_attribs_query);
-                    if ($_POST['id']) {
+                    if (!empty($_POST['id']) && is_array($_POST['id'])) {
                       foreach ($_POST['id'] as $key => $value) {
                         //echo preg_replace('/txt_/', '', $key) . '#';
                         //print_r($_POST['id']);
@@ -569,7 +572,7 @@ $sql = "select count(*) as total
                     $options_name[] = $products_options_names->fields['products_options_name'];
                   }
                   $options_html_id[] = 'drp-attrib-' . $products_options_names->fields['products_options_id'];
-                  $options_menu[] = zen_draw_radio_field('id[' . $products_options_names->fields['products_options_id'] . ']', $products_options_value_id, 'selected', 'id="' . 'attrib-' . $products_options_names->fields['products_options_id'] . '-' . $products_options_value_id . '"') . '<label class="attribsRadioButton" for="' . 'attrib-' . $products_options_names->fields['products_options_id'] . '-' . $products_options_value_id . '">' . $products_options_details . '</label>' . "\n";
+                  $options_menu[] = zen_draw_radio_field('id[' . $products_options_names->fields['products_options_id'] . ']', $products_options_value_id, true, 'id="' . 'attrib-' . $products_options_names->fields['products_options_id'] . '-' . $products_options_value_id . '"') . '<label class="attribsRadioButton" for="' . 'attrib-' . $products_options_names->fields['products_options_id'] . '-' . $products_options_value_id . '">' . $products_options_details . '</label>' . "\n";
                   $options_comment[] = $products_options_names->fields['products_options_comment'];
                   $options_comment_position[] = ($products_options_names->fields['products_options_comment_position'] == '1' ? '1' : '0');
                   break;
@@ -581,7 +584,7 @@ $sql = "select count(*) as total
                     $selected_attribute = $_SESSION['cart']->contents[$prod_id]['attributes'][$products_options_names->fields['products_options_id']];
                   } else {
                     // use customer-selected values
-                    if ($_POST['id'] !='') {
+                    if (!empty($_POST['id']) && is_array($_POST['id'])) {
                       foreach ($_POST['id'] as $key => $value) {
                         if ($key == $products_options_names->fields['products_options_id']) {
                           $selected_attribute = $value;

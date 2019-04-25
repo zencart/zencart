@@ -4,9 +4,9 @@
  * see  {@link  http://www.zen-cart.com/wiki/index.php/Developers_API_Tutorials#InitSystem wikitutorials} for more details.
  *
  * @package initSystem
- * @copyright Copyright 2003-2016 Zen Cart Development Team
+ * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: DrByte  Mon Dec 7 14:53:08 2015 -0500 Modified in v1.5.5 $
+ * @version $Id: lat9 Mon Oct 22 13:19:39 2018 -0400 Modified in v1.5.6 $
  */
 if (!defined('IS_ADMIN_FLAG')) {
  die('Illegal Access');
@@ -131,6 +131,8 @@ if (!defined('USE_PCONNECT')) define('USE_PCONNECT', 'false');
  * require('includes/init_includes/init_tlds.php');
  *
  */
+  $autoLoadConfig[60][] = array('autoType' => 'require',
+                                'loadFile' => DIR_WS_FUNCTIONS . 'functions_osh_update.php');
   $autoLoadConfig[60][] = array('autoType'=>'init_script',
                                 'loadFile'=> 'init_general_funcs.php');
   $autoLoadConfig[60][] = array('autoType'=>'init_script',

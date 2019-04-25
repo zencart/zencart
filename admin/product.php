@@ -1,18 +1,18 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2017 Zen Cart Development Team
+ * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: DrByte  Aug 2017  Modified in v1.5.6 $
+ * @version $Id: DrByte 2019 Jan 04 Modified in v1.5.6a $
  */
 require('includes/application_top.php');
 
 $action = (isset($_GET['action']) ? $_GET['action'] : '');
 require(DIR_WS_CLASSES . 'currencies.php');
 $currencies = new currencies();
-$type_handler = $zc_products->get_admin_handler($product['products_type']);
-$product_type = (isset($_POST['products_id']) ? zen_get_products_type($_POST['products_id']) : isset($_GET['product_type']) ? $_GET['product_type'] : 1);
+$product_type = (isset($_POST['product_type']) ? $_POST['product_type'] : (isset($_GET['pID']) ? zen_get_products_type($_GET['pID']) : 1));
+$type_handler = $zc_products->get_admin_handler($product_type);
 $zco_notifier->notify('NOTIFY_BEGIN_ADMIN_PRODUCTS', $action);
 
 if (zen_not_null($action)) {

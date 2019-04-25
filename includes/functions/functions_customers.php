@@ -6,115 +6,123 @@
  * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Modified in v1.5.6 $
+ * @version $Id: Drbyte Tue Oct 9 16:42:37 2018 -0400 Modified in v1.5.6 $
  */
 
-////
-// Returns the address_format_id for the given country
-// TABLES: countries;
-  function zen_get_address_format_id($country_id) {
+/**
+ * Returns the address_format_id for the given country
+ */
+function zen_get_address_format_id($country_id) {
     global $db;
     $address_format_query = "select address_format_id as format_id
                              from " . TABLE_COUNTRIES . "
-                             where countries_id = '" . (int)$country_id . "'";
+                             where countries_id = " . (int)$country_id;
 
     $address_format = $db->Execute($address_format_query);
 
     if ($address_format->RecordCount() > 0) {
-      return $address_format->fields['format_id'];
-    } else {
-      return '1';
+        return $address_format->fields['format_id'];
     }
-  }
+    return 1;
+}
 
-////
-// Return a formatted address
-// TABLES: address_format
-  function zen_address_format($address_format_id, $address, $html, $boln, $eoln) {
+/**
+ * Return a formatted address, based on specified formatting pattern id
+ */
+function zen_address_format($address_format_id = 1, $incoming = array(), $html = false, $boln = '', $eoln = "\n") {
     global $db;
-    $address_format_query = "select address_format as format
-                             from " . TABLE_ADDRESS_FORMAT . "
-                             where address_format_id = '" . (int)$address_format_id . "'";
+    $address = array();
+    $address['hr'] = $html ? '<hr>' : '----------------------------------------';
+    $address['cr'] = $html ? ($boln == '' && $eoln == "\n" ? '<br>' : $eoln . $boln) : $eoln;
 
-    $address_format = $db->Execute($address_format_query);
-    $company = zen_output_string_protected($address['company']);
-    if (isset($address['firstname']) && zen_not_null($address['firstname'])) {
-      $firstname = zen_output_string_protected($address['firstname']);
-      $lastname = zen_output_string_protected($address['lastname']);
-    } elseif (isset($address['name']) && zen_not_null($address['name'])) {
-      $firstname = zen_output_string_protected($address['name']);
-      $lastname = '';
-    } else {
-      $firstname = '';
-      $lastname = '';
+    $address['company'] = !empty($incoming['company']) ? zen_output_string_protected($incoming['company']) : '';
+    $address['firstname'] = !empty($incoming['firstname']) ? zen_output_string_protected($incoming['firstname']) : (!empty($incoming['name']) ? zen_output_string_protected($incoming['name']) : '');
+    $address['lastname'] = !empty($incoming['lastname']) ? zen_output_string_protected($incoming['lastname']) : '';
+    $address['street'] = !empty($incoming['street_address']) ? zen_output_string_protected($incoming['street_address']) : '';
+    $address['suburb'] = !empty($incoming['suburb']) ? zen_output_string_protected($incoming['suburb']) : '';
+    $address['city'] = !empty($incoming['city']) ? zen_output_string_protected($incoming['city']) : '';
+    $address['state'] = !empty($incoming['state']) ? zen_output_string_protected($incoming['state']) : '';
+    $address['postcode'] = !empty($incoming['postcode']) ? zen_output_string_protected($incoming['postcode']) : '';
+    $address['zip'] = $address['postcode'];
+
+    $address['streets'] = !empty($address['suburb']) ? $address['street'] . $address['cr'] . $address['suburb'] : $address['street'];
+    $address['statecomma'] = !empty($address['state']) ? $address['state'] . ', ' : '';
+
+    $country = '';
+    if (!empty($incoming['country_id'])) {
+        $country = zen_get_country_name($incoming['country_id']);
+        if (!empty($incoming['zone_id'])) {
+            $address['state'] = zen_get_zone_code($incoming['country_id'], $incoming['zone_id'], $address['state']);
+        }
+    } elseif (!empty($incoming['country'])) {
+        if (is_array($incoming['country'])) {
+            $country = zen_output_string_protected($incoming['country']['countries_name']);
+        } else {
+            $country = zen_output_string_protected($incoming['country']);
+        }
     }
-    $street = zen_output_string_protected($address['street_address']);
-    $suburb = zen_output_string_protected($address['suburb']);
-    $city = zen_output_string_protected($address['city']);
-    $state = zen_output_string_protected($address['state']);
-    if (isset($address['country_id']) && zen_not_null($address['country_id'])) {
-      $country = zen_get_country_name($address['country_id']);
+    $address['country'] = $country;
 
-      if (isset($address['zone_id']) && zen_not_null($address['zone_id'])) {
-        $state = zen_get_zone_code($address['country_id'], $address['zone_id'], $state);
-      }
-    } elseif (isset($address['country']) && zen_not_null($address['country'])) {
-      if (is_array($address['country'])) {
-        $country = zen_output_string_protected($address['country']['countries_name']);
-      } else {
-      $country = zen_output_string_protected($address['country']);
-      }
-    } else {
-      $country = '';
-    }
-    $postcode = zen_output_string_protected($address['postcode']);
-    $zip = $postcode;
+    // add uppercase variants for backward compatibility
+    $address['HR'] = $address['hr'];
+    $address['CR'] = $address['cr'];
 
-    if ($html) {
-// HTML Mode
-      $HR = '<hr />';
-      $hr = '<hr />';
-      if ( ($boln == '') && ($eoln == "\n") ) { // Values not specified, use rational defaults
-        $CR = '<br />';
-        $cr = '<br />';
-        $eoln = $cr;
-      } else { // Use values supplied
-        $CR = $eoln . $boln;
-        $cr = $CR;
-      }
-    } else {
-// Text Mode
-      $CR = $eoln;
-      $cr = $CR;
-      $HR = '----------------------------------------';
-      $hr = '----------------------------------------';
+    $sql    = "select address_format as format from " . TABLE_ADDRESS_FORMAT . " where address_format_id = " . (int)$address_format_id;
+    $result = $db->Execute($sql);
+    $fmt    = (!$result->EOF ? $result->fields['format'] : '');
+
+    // sort to put longer keys at the top of the array so that longer variants are replaced before shorter ones
+    array_multisort(array_map('strlen', array_keys($address)), SORT_DESC, $address);
+
+    // store translated values into original array, just for the sake of the notifier
+    $incoming = $address;
+    
+    // convert into $-prefixed keys
+    foreach ($address as $key => $value) {
+        $address['$' . $key] = $value;
+        unset($address[$key]);
     }
 
-    $statecomma = '';
-    $streets = $street;
-    if ($suburb != '') $streets = $street . $cr . $suburb;
-    if ($country == '') {
-      if (is_array($address['country'])) {
-        $country = zen_output_string_protected($address['country']['countries_name']);
-      } else {
-      $country = zen_output_string_protected($address['country']);
-      }
-    }
-    if ($state != '') $statecomma = $state . ', ';
+    // do the substitutions
+    $address_out = str_replace(array_keys($address), array_values($address), $fmt);
 
-    $fmt = $address_format->fields['format'];
-    eval("\$address_out = \"$fmt\";");
-
-    if ( (ACCOUNT_COMPANY == 'true') && (zen_not_null($company)) ) {
-      $address_out = $company . $cr . $address_out;
+    if (ACCOUNT_COMPANY == 'true' && !empty($address['$company']) && false === strpos($fmt, '$company')) {
+        $address_out = $address['$company'] . $address['$cr'] . $address_out;
     }
+
+    // -----
+    // "Package up" the various elements of an address and issue a notification that will enable
+    // an observer to make modifications if needed.
+    //
+    $GLOBALS['zco_notifier']->notify(
+        'NOTIFY_END_ZEN_ADDRESS_FORMAT',
+        array(
+            'format' => $fmt,
+            'address' => $incoming,
+            'firstname' => $address['$firstname'],
+            'lastname' => $address['$lastname'],
+            'street' => $address['$street'],
+            'suburb' => $address['$suburb'],
+            'city' => $address['$city'],
+            'state' => $address['$state'],
+            'country' => $address['$country'],
+            'postcode' => $address['$postcode'],
+            'company' => $address['$company'],
+            'streets' => $address['$streets'],
+            'statecomma' => $address['$statecomma'],
+            'zip' => $address['$zip'],
+            'cr' => $address['$cr'],
+            'hr' => $address['$hr'],
+        ),
+        $address_out
+    );
 
     return $address_out;
-  }
+}
 
-////
-// Return a formatted address
-// TABLES: customers, address_book
+/**
+ * Return a formatted address, based on customer's address's country format
+ */
   function zen_address_label($customers_id, $address_id = 1, $html = false, $boln = '', $eoln = "\n") {
     global $db;
     $address_query = "select entry_firstname as firstname, entry_lastname as lastname,
@@ -123,13 +131,29 @@
                              entry_state as state, entry_zone_id as zone_id,
                              entry_country_id as country_id
                       from " . TABLE_ADDRESS_BOOK . "
-                      where customers_id = '" . (int)$customers_id . "'
-                      and address_book_id = '" . (int)$address_id . "'";
+                      where customers_id = " . (int)$customers_id . "
+                      and address_book_id = " . (int)$address_id;
 
     $address = $db->Execute($address_query);
 
+    $GLOBALS['zco_notifier']->notify('NOTIFY_ZEN_ADDRESS_LABEL', array(), $customers_id, $address_id, $address->fields);
+
+
     $format_id = zen_get_address_format_id($address->fields['country_id']);
     return zen_address_format($format_id, $address->fields, $html, $boln, $eoln);
+  }
+
+// look up customers default or primary address
+  function zen_get_customers_address_primary($customer_id) {
+    global $db;
+
+    $lookup_customers_primary_address_query = "SELECT customers_default_address_id
+                                              from " . TABLE_CUSTOMERS . "
+                                              WHERE customers_id = " . (int)$customer_id;
+
+    $lookup_customers_primary_address = $db->Execute($lookup_customers_primary_address_query);
+
+    return $lookup_customers_primary_address->fields['customers_default_address_id'];
   }
 
 ////
@@ -164,7 +188,7 @@
 
     $orders_check_query = "select count(*) as total
                            from " . TABLE_ORDERS . "
-                           where customers_id = '" . (int)$id . "'";
+                           where customers_id = " . (int)$id;
 
     $orders_check = $db->Execute($orders_check_query);
 
@@ -190,7 +214,7 @@
 
     $addresses_query = "select count(*) as total
                         from " . TABLE_ADDRESS_BOOK . "
-                        where customers_id = '" . (int)$id . "'";
+                        where customers_id = " . (int)$id;
 
     $addresses = $db->Execute($addresses_query);
 

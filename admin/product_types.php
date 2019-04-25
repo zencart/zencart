@@ -1,14 +1,16 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2016 Zen Cart Development Team
+ * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: DrByte  Sun Oct 18 02:03:48 2015 -0400 Modified in v1.5.5 $
+ * @version $Id: Scott C Wilson Thu Nov 29 07:31:14 2018 -0500 Modified in v1.5.6 $
  */
 require('includes/application_top.php');
 
 $action = (isset($_GET['action']) ? $_GET['action'] : '');
+if (!isset($_GET['cID'])) $_GET['cID'] = '';
+if (!isset($_GET['gID'])) $_GET['gID'] = '';
 
 if (zen_not_null($action)) {
   switch ($action) {
@@ -39,7 +41,7 @@ if (zen_not_null($action)) {
     case 'insert':
     case 'save':
       if (!isset($_POST['type_name'])) {
-        continue;
+        break;
       }
       if (isset($_GET['ptID']))
         $type_id = zen_db_prepare_input($_GET['ptID']);
@@ -154,7 +156,7 @@ if (zen_not_null($action)) {
     <div class="container-fluid">
       <!-- body //-->
       <?php
-      if ($_GET['action'] == 'layout' || $_GET['action'] == 'layout_edit') {
+      if (isset($_GET['action']) && ($_GET['action'] == 'layout' || $_GET['action'] == 'layout_edit')) {
         $sql = "SELECT type_name
                 FROM " . TABLE_PRODUCT_TYPES . "
                 WHERE type_id = " . (int)$_GET['ptID'];

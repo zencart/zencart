@@ -4,7 +4,7 @@
  * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: DrByte  Modified in v1.5.6 $
+ * @version $Id: lat9 Tue Nov 13 08:12:48 2018 -0500 Modified in v1.5.6 $
  */
 
 if (!defined('ADMIN_PASSWORD_MIN_LENGTH')) define('ADMIN_PASSWORD_MIN_LENGTH', 7);
@@ -96,7 +96,7 @@ function zen_get_users($limit = '')
 
 function zen_delete_user($id)
 {
-  global $db;
+  global $db, $messageStack;
   $result = $db->Execute("select count(admin_id) as count from " . TABLE_ADMIN . " where admin_id != '" . (int)$id . "'");
   if ($result->fields['count'] < 1) {
     $messageStack->add(ERROR_CANNOT_DELETE_LAST_ADMIN, 'error');
@@ -917,4 +917,12 @@ function zen_deregister_admin_pages($pages)
     $db->Execute($sql);
     zen_record_admin_activity('Deleted admin pages for page keys: ' . print_r($pages, true), 'warning');
   }
+}
+
+function zen_updated_by_admin($admin_id = '') 
+{
+    if ($admin_id === '') {
+        $admin_id = $_SESSION['admin_id'];
+    }
+    return zen_get_admin_name($admin_id) . " [$admin_id]";
 }

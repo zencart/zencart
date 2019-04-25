@@ -6,7 +6,7 @@
  * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: category_tree.php  Modified in v1.5.6 $
+ * @version $Id: mc12345678 Tue Aug 28 21:18:16 2018 -0400 Modified in v1.5.6 $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
@@ -23,7 +23,7 @@ class category_tree extends base {
     global $db, $cPath, $cPath_array;
     if ($product_type != 'all') {
       $sql = "select type_master_type from " . TABLE_PRODUCT_TYPES . "
-                where type_master_type = " . $product_type . "";
+              where type_master_type = " . $product_type;
       $master_type_result = $db->Execute($sql);
       $master_type = $master_type_result->fields['type_master_type'];
     }
@@ -128,7 +128,9 @@ class category_tree extends base {
             $last_id = $rows->fields['categories_id'];
             $rows->MoveNext();
           }
-          $this->tree[$last_id]['next_id'] = $this->tree[$value]['next_id'];
+          if (!empty($value)) {
+            $this->tree[$last_id]['next_id'] = $this->tree[$value]['next_id'];
+          }
           $this->tree[$value]['next_id'] = $first_id;
           $new_path .= '_';
         } else {

@@ -1,10 +1,10 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2018 Zen Cart Development Team
+ * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: zcwilt  Modified in v1.5.6 $
+ * @version $Id: DrByte 2019 Jan 04 Modified in v1.5.6a $
  */
 
 ////
@@ -176,7 +176,7 @@
   }
 
   function zen_date_long($raw_date) {
-    if ( ($raw_date == '0001-01-01 00:00:00') || ($raw_date == '') ) return false;
+    if (empty($raw_date) || $raw_date <= '0001-01-01 00:00:00') return false;
 
     $year = (int)substr($raw_date, 0, 4);
     $month = (int)substr($raw_date, 5, 2);
@@ -194,9 +194,9 @@
 // $raw_date needs to be in this format: YYYY-MM-DD HH:MM:SS
 // NOTE: Includes a workaround for dates before 01/01/1970 that fail on windows servers
   function zen_date_short($raw_date) {
-    if ( ($raw_date == '0001-01-01 00:00:00') || ($raw_date == '') ) return false;
+    if (empty($raw_date) || $raw_date <= '0001-01-01 00:00:00') return false;
 
-    $year = substr($raw_date, 0, 4);
+    $year = (int)substr($raw_date, 0, 4);
     $month = (int)substr($raw_date, 5, 2);
     $day = (int)substr($raw_date, 8, 2);
     $hour = (int)substr($raw_date, 11, 2);
@@ -214,7 +214,7 @@
 
 
   function zen_datetime_short($raw_datetime) {
-    if ( ($raw_datetime == '0001-01-01 00:00:00') || ($raw_datetime == '') ) return false;
+    if (empty($raw_datetime) || $raw_datetime <= '0001-01-01 00:00:00') return false;
 
     $year = (int)substr($raw_datetime, 0, 4);
     $month = (int)substr($raw_datetime, 5, 2);
@@ -421,29 +421,18 @@
     }
   }
 
-
   function zen_not_null($value) {
-    if (is_array($value)) {
-      if (sizeof($value) > 0) {
-        return true;
-      } else {
+    if (null === $value) {
         return false;
-      }
-    } elseif( is_a( $value, 'queryFactoryResult' ) ) {
-      if (sizeof($value->result) > 0) {
-        return true;
-      } else {
-        return false;
-      }
-    } else {
-      if ($value != '' && $value != 'NULL' && strlen(trim($value)) > 0) {
-        return true;
-      } else {
-        return false;
-      }
     }
+    if (is_array($value)) {
+        return count($value) > 0;
+    }
+    if (is_a($value, 'queryFactoryResult')) {
+        return count($value->result) > 0;
+    }
+    return trim($value) !== '' && $value != 'NULL';
   }
-
 
   function zen_browser_detect($component) {
 
@@ -505,80 +494,6 @@
   }
 
 
-// USED FROM functions_customers
-/*
-  function zen_address_format($address_format_id, $address, $html, $boln, $eoln) {
-    global $db;
-    $address_format = $db->Execute("select address_format as format
-                             from " . TABLE_ADDRESS_FORMAT . "
-                             where address_format_id = '" . (int)$address_format_id . "'");
-
-    $company = zen_output_string_protected($address['company']);
-    if (isset($address['firstname']) && zen_not_null($address['firstname'])) {
-      $firstname = zen_output_string_protected($address['firstname']);
-      $lastname = zen_output_string_protected($address['lastname']);
-    } elseif (isset($address['name']) && zen_not_null($address['name'])) {
-      $firstname = zen_output_string_protected($address['name']);
-      $lastname = '';
-    } else {
-      $firstname = '';
-      $lastname = '';
-    }
-    $street = zen_output_string_protected($address['street_address']);
-    $suburb = zen_output_string_protected($address['suburb']);
-    $city = zen_output_string_protected($address['city']);
-    $state = zen_output_string_protected($address['state']);
-    if (isset($address['country_id']) && zen_not_null($address['country_id'])) {
-      $country = zen_get_country_name($address['country_id']);
-
-      if (isset($address['zone_id']) && zen_not_null($address['zone_id'])) {
-        $state = zen_get_zone_code($address['country_id'], $address['zone_id'], $state);
-      }
-    } elseif (isset($address['country']) && zen_not_null($address['country'])) {
-      $country = zen_output_string_protected($address['country']);
-    } else {
-      $country = '';
-    }
-    $postcode = zen_output_string_protected($address['postcode']);
-    $zip = $postcode;
-
-    if ($html) {
-// HTML Mode
-      $HR = '<hr />';
-      $hr = '<hr />';
-      if ( ($boln == '') && ($eoln == "\n") ) { // Values not specified, use rational defaults
-        $CR = '<br />';
-        $cr = '<br />';
-        $eoln = $cr;
-      } else { // Use values supplied
-        $CR = $eoln . $boln;
-        $cr = $CR;
-      }
-    } else {
-// Text Mode
-      $CR = $eoln;
-      $cr = $CR;
-      $HR = '----------------------------------------';
-      $hr = '----------------------------------------';
-    }
-
-    $statecomma = '';
-    $streets = $street;
-    if ($suburb != '') $streets = $street . $cr . $suburb;
-    if ($country == '') $country = zen_output_string_protected($address['country']);
-    if ($state != '') $statecomma = $state . ', ';
-
-    $fmt = $address_format->fields['format'];
-    eval("\$address = \"$fmt\";");
-
-    if ( (ACCOUNT_COMPANY == 'true') && (zen_not_null($company)) ) {
-      $address = $company . $cr . $address;
-    }
-
-    return $address;
-  }
-*/
-
   ////////////////////////////////////////////////////////////////////////////////////////////////
   //
   // Function    : zen_get_zone_code
@@ -629,7 +544,7 @@ function zen_get_uprid($prid, $params)
 function zen_get_prid($uprid)
 {
     $pieces = explode(':', $uprid);
-    return $pieces[0];
+    return (int)$pieces[0];
 }
 
 
@@ -1759,7 +1674,7 @@ while (!$chk_sale_categories_all->EOF) {
     global $customer_zone_id, $customer_country_id;
 
     if ( ($country_id == -1) && ($zone_id == -1) ) {
-      if (!$_SESSION['customer_id']) {
+      if (empty($_SESSION['customer_id'])) {
         $country_id = STORE_COUNTRY;
         $zone_id = STORE_ZONE;
       } else {
@@ -2627,7 +2542,7 @@ function zen_limit_image_filename($filename, $table_name, $field_name, $extensio
       if ($check_valid == true) {
         $valid_downloads = '';
         while (!$download_display->EOF) {
-          if (!file_exists(zen_get_download_handler($download_display->fields['products_attributes_filename']))) {
+          if (!zen_orders_products_downloads($download_display->fields['products_attributes_filename'])) {
             $valid_downloads .= '<br />&nbsp;&nbsp;' . zen_image(DIR_WS_IMAGES . 'icon_status_red.gif') . ' Invalid: ' . $download_display->fields['products_attributes_filename'];
             // break;
           } else {
@@ -3005,9 +2920,17 @@ function zen_limit_image_filename($filename, $table_name, $field_name, $extensio
   function zen_get_categories_name_from_product($product_id) {
     global $db;
 
-//    $check_products_category= $db->Execute("select products_id, categories_id from " . TABLE_PRODUCTS_TO_CATEGORIES . " where products_id='" . $product_id . "' limit 1");
-    $check_products_category = $db->Execute("select products_id, master_categories_id from " . TABLE_PRODUCTS . " where products_id = '" . (int)$product_id . "'");
-    $the_categories_name= $db->Execute("select categories_name from " . TABLE_CATEGORIES_DESCRIPTION . " where categories_id= '" . $check_products_category->fields['master_categories_id'] . "' and language_id= '" . (int)$_SESSION['languages_id'] . "'");
+//    $check_products_category= $db->Execute("SELECT products_id, categories_id FROM " . TABLE_PRODUCTS_TO_CATEGORIES . " WHERE products_id = " . (int)$product_id . " LIMIT 1");
+    $check_products_category = $db->Execute("SELECT products_id, master_categories_id
+                                             FROM " . TABLE_PRODUCTS . "
+                                             WHERE products_id = " . (int)$product_id
+                                           );
+    if ($check_products_category->EOF) return '';
+    $the_categories_name= $db->Execute("SELECT categories_name
+                                        FROM " . TABLE_CATEGORIES_DESCRIPTION . " 
+                                        WHERE categories_id= " . (int)$check_products_category->fields['master_categories_id'] . "
+                                        AND language_id= " . (int)$_SESSION['languages_id']
+                                      );
     if ($the_categories_name->EOF) return '';
     return $the_categories_name->fields['categories_name'];
   }
@@ -3330,15 +3253,13 @@ function zen_limit_image_filename($filename, $table_name, $field_name, $extensio
 
       if ($zv_key_value->RecordCount() > 0) {
         return $zv_key_value->fields['configuration_value'];
-      } else {
-        $sql = "select configuration_key, configuration_value from " . TABLE_CONFIGURATION . " where configuration_key='" . zen_db_input($zv_key) . "'";
-        $zv_key_value = $db->Execute($sql);
-        if ($zv_key_value->RecordCount() > 0) {
-          return $zv_key_value->fields['configuration_value'];
-        } else {
-          return $zv_key_value->fields['configuration_value'];
-        }
       }
+      $sql = "select configuration_key, configuration_value from " . TABLE_CONFIGURATION . " where configuration_key='" . zen_db_input($zv_key) . "'";
+      $zv_key_value = $db->Execute($sql);
+      if ($zv_key_value->RecordCount() > 0) {
+        return $zv_key_value->fields['configuration_value'];
+      }
+      return '';
     }
 
 /**
@@ -3367,12 +3288,12 @@ function zen_limit_image_filename($filename, $table_name, $field_name, $extensio
   //$date1  today, or any other day
   //$date2  date to check against
 
-    $d1 = explode("-", $date1);
+    $d1 = explode("-", substr($date1, 0, 10));
     $y1 = $d1[0];
     $m1 = $d1[1];
     $d1 = $d1[2];
 
-    $d2 = explode("-", $date2);
+    $d2 = explode("-", substr($date2, 0, 10));
     $y2 = $d2[0];
     $m2 = $d2[1];
     $d2 = $d2[2];
@@ -3539,14 +3460,13 @@ function zen_limit_image_filename($filename, $table_name, $field_name, $extensio
 
     if (empty($language)) $language = $_SESSION['languages_id'];
 
-    $product_lookup = $db->Execute("select " . zen_db_input($what_field) . " as lookup_field
-                              from " . TABLE_PRODUCTS . " p, " . TABLE_PRODUCTS_DESCRIPTION . " pd
-                              where  p.products_id ='" . (int)$product_id . "'
-                              and pd.products_id = p.products_id
-                              and pd.language_id = '" . (int)$language . "'");
-    $return_field = $product_lookup->fields['lookup_field'];
-    if ($return_field->EOF) return '';
-    return $return_field;
+    $product_lookup = $db->Execute("SELECT " . zen_db_input($what_field) . " AS lookup_field
+                              FROM " . TABLE_PRODUCTS . " p, " . TABLE_PRODUCTS_DESCRIPTION . " pd
+                              WHERE  p.products_id = " . (int)$product_id . "
+                              AND pd.products_id = p.products_id
+                              AND pd.language_id = " . (int)$language);
+    if ($product_lookup->EOF) return '';
+    return $product_lookup->fields['lookup_field'];
   }
 
   function zen_count_days($start_date, $end_date, $lookup = 'm') {
@@ -3937,3 +3857,16 @@ function get_logs_data($maxToList = 'count') {
         if ($val == 0) return 0;
         return (float)$val;
     }
+
+  function zen_set_ezpage_status($pages_id, $status, $status_field) {
+  global $db;
+    if ($status == '1') {
+      zen_record_admin_activity('EZ-Page ID ' . (int)$pages_id . ' [' . $status_field . '] changed to 0', 'info');
+      return $db->Execute("update " . TABLE_EZPAGES . " set " . zen_db_input($status_field) . " = '0'  where pages_id = '" . (int)$pages_id . "'");
+    } elseif ($status == '0') {
+      zen_record_admin_activity('EZ-Page ID ' . (int)$pages_id . ' [' . $status_field . '] changed to 1', 'info');
+      return $db->Execute("update " . TABLE_EZPAGES . " set " . zen_db_input($status_field) . " = '1'  where pages_id = '" . (int)$pages_id . "'");
+    } else {
+      return -1;
+    }
+  }

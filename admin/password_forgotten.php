@@ -1,10 +1,10 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2016 Zen Cart Development Team
+ * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
- * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: bislewl  Tue Feb 16 23:14:29 2016 -0600 Modified in v1.5.5 $
+ * @license http://www.zen-cart.com/license/2_0.txt GNU Public License v2.0
+ * @version $Id: DrByte 2019 Jan 04 Modified in v1.5.6a $
  */
 // reset-token is good for only 24 hours:
 define('ADMIN_PWD_TOKEN_DURATION', (24 * 60 * 60));
@@ -62,44 +62,68 @@ if (isset($_POST['submit'])) {
     }
 }
 ?>
-    <!DOCTYPE html >
-    <html <?php echo HTML_PARAMS; ?>>
-    <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=<?php echo CHARSET; ?>">
-        <title><?php echo TITLE; ?></title>
-        <link href="includes/stylesheet.css" rel="stylesheet" type="text/css">
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-        <meta name="robots" content="noindex, nofollow"/>
-    </head>
-    <body id="login" onload="document.getElementById('admin_email').focus()">
-    <div class="col-xs-12 col-sm-12 col-md-6 col-md-offset-3 col-lg-4 col-lg-offset-4">
-        <?php
-        echo zen_draw_form('loginForm', FILENAME_PASSWORD_FORGOTTEN, 'action=update', 'post', 'id="loginForm"', 'true');
-        ?>
-        <fieldset>
-            <legend><?php echo HEADING_TITLE; ?></legend>
-            <?php
-            if ($resetToken == '')
-            { ?>
-                <label for="admin_email"><?php echo TEXT_ADMIN_EMAIL; ?></label>
-                <?php
-                echo zen_draw_input_field('admin_email','','id="admin_email" class="left inline" autocomplete="off"');
-            } ?>
-            <p class="messageStackSuccess"><?php echo $email_message; ?></p>
-            <?php
-            if
-            ($resetToken == '')
-            {
-                echo zen_draw_input_field('submit',TEXT_BUTTON_REQUEST_RESET,'class="button"',false,'submit');
-                echo zen_draw_input_field('login',TEXT_BUTTON_CANCEL,'class="button"',false,'submit');
-            } else {
-                echo zen_draw_input_field('login',TEXT_BUTTON_LOGIN,'class="button"',false,'submit');
-            }
-            ?>
-        </fieldset>
-        </form>
-    </div>
-    </body>
-    </html>
-<?php require('includes/application_bottom.php');
+<!DOCTYPE html >
+<html <?php echo HTML_PARAMS; ?>>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=<?php echo CHARSET; ?>">
+  <link href="includes/alt-stylesheet.css" rel="stylesheet">
+  <title>
+    <?php echo TITLE; ?>
 
+  </title>
+  <meta name="robots" content="noindex, nofollow" />
+</head>
+<body id="login" onload="document.getElementById('admin_email').focus()">
+  <div class="container-fluid">
+    <div class="login-form">
+      <div class="login-main-div login-box-shadow">
+        <img class="login-img" src="../includes/templates/template_default/images/logo.gif" alt="Zen Cart®" title="Zen Cart®" width="192" height="68" border="0">
+        <br>
+        <?php echo zen_draw_form('loginForm', FILENAME_PASSWORD_FORGOTTEN, 'action=update', 'post', 'id="loginForm"', 'true'); ?>
+
+        <h2>
+          <?php echo HEADING_TITLE; ?>
+
+        </h2>
+        <?php if ($resetToken == '') { ?>
+
+        <div class="form-group">
+          <?php echo zen_draw_input_field('admin_email', '', 'class="form-control" id="admin_email" autocapitalize="none" spellcheck="false" autocomplete="off" placeholder="' . TEXT_ADMIN_EMAIL . '"'); ?>
+
+        </div>
+        <?php } ?>
+        <?php if ($resetToken == '') { ?>
+ 
+        <div class="form-group">
+          <?php echo zen_draw_input_field('submit', TEXT_BUTTON_REQUEST_RESET, 'class="btn btn-primary"', false, 'submit'); ?>
+
+        </div>
+        <div class="form-group">
+          <?php echo zen_draw_input_field('login', TEXT_BUTTON_CANCEL, 'class="btn btn-secondary"', false, 'submit'); ?>
+
+        </div>
+        <?php } else { ?>
+
+        <div class="form-group">
+          <?php echo zen_draw_input_field('login', TEXT_BUTTON_LOGIN, 'class="btn btn-primary"', false, 'submit'); ?>
+
+        </div>
+        <?php } ?>
+
+        <br class="clearBoth" />
+        <?php if ($email_message) { ?>
+
+        <p class="login-alert-warning">
+          <?php echo $email_message; ?>
+
+        </p>
+        <?php } ?>
+
+        </form>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
+
+<?php require('includes/application_bottom.php');

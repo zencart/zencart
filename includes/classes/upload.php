@@ -3,10 +3,10 @@
  * upload Class.
  *
  * @package classes
- * @copyright Copyright 2003-2017 Zen Cart Development Team
+ * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: DrByte  Thu Apr 2 14:27:45 2015 -0400 Modified in v1.5.5 $
+ * @version $Id: Drbyte Mon Nov 12 20:38:09 2018 -0500 Modified in v1.5.6 $
  */
 if (!defined('IS_ADMIN_FLAG')) {
     die('Illegal Access');
@@ -29,7 +29,7 @@ class upload extends base
         $this->set_permissions($permissions);
 
         if (!zen_not_null($extensions)) {
-            if (!defined(UPLOAD_FILENAME_EXTENSIONS)) {
+            if (!defined('UPLOAD_FILENAME_EXTENSIONS')) {
                 define('UPLOAD_FILENAME_EXTENSIONS', 'jpg,jpeg,gif,png,eps,cdr,ai,pdf,tif,tiff,bmp,zip');
             }
             $extensions = explode(" ", preg_replace('/[.,;\s]+/', ' ', UPLOAD_FILENAME_EXTENSIONS));
@@ -42,14 +42,12 @@ class upload extends base
             $this->set_output_messages('session');
 
             if (($this->parse() == true) && ($this->save() == true)) {
-                return true;
-            } else {
-                // self destruct
-                foreach ($this as $key => $val) {
-                    $this->$key = null;
-                }
+                return;
+            }
 
-                return false;
+            // self destruct
+            foreach ($this as $key => $val) {
+                $this->$key = null;
             }
         }
     }
@@ -60,35 +58,29 @@ class upload extends base
      */
     function parse($key = '')
     {
-        if (isset($_FILES[$this->file])) {
-            if (zen_not_null($key)) {
-                $file = array(
-                    'name'     => $_FILES[$this->file]['name'][$key],
-                    'type'     => $_FILES[$this->file]['type'][$key],
-                    'size'     => $_FILES[$this->file]['size'][$key],
-                    'tmp_name' => $_FILES[$this->file]['tmp_name'][$key],
-                );
-            } else {
-                $file = array(
-                    'name'     => $_FILES[$this->file]['name'],
-                    'type'     => $_FILES[$this->file]['type'],
-                    'size'     => $_FILES[$this->file]['size'],
-                    'tmp_name' => $_FILES[$this->file]['tmp_name'],
-                );
-            }
+        if (empty($_FILES[$this->file])) {
+            return false;
+        }
+        if (zen_not_null($key)) {
+            $file = array(
+                'name'     => $_FILES[$this->file]['name'][$key],
+                'type'     => $_FILES[$this->file]['type'][$key],
+                'size'     => $_FILES[$this->file]['size'][$key],
+                'tmp_name' => $_FILES[$this->file]['tmp_name'][$key],
+            );
         } else {
             $file = array(
-                'name'     => (isset($GLOBALS[$this->file . '_name']) ? $GLOBALS[$this->file . '_name'] : ''),
-                'type'     => (isset($GLOBALS[$this->file . '_type']) ? $GLOBALS[$this->file . '_type'] : ''),
-                'size'     => (isset($GLOBALS[$this->file . '_size']) ? $GLOBALS[$this->file . '_size'] : ''),
-                'tmp_name' => (isset($GLOBALS[$this->file]) ? $GLOBALS[$this->file] : ''),
+                'name'     => $_FILES[$this->file]['name'],
+                'type'     => $_FILES[$this->file]['type'],
+                'size'     => $_FILES[$this->file]['size'],
+                'tmp_name' => $_FILES[$this->file]['tmp_name'],
             );
         }
+
         if (!zen_not_null($file['tmp_name'])) return false;
         //if ($file['tmp_name'] == 'none') return false;
         //if (!is_uploaded_file($file['tmp_name'])) return false;
 
-// not working at this time to test for server limit error
         if (!is_uploaded_file($file['tmp_name'])) {
             $this->message_stack(WARNING_NO_FILE_UPLOADED, 'warning');
 
@@ -112,8 +104,9 @@ class upload extends base
             $this->set_tmp_filename($file['tmp_name']);
 
             return $this->check_destination();
-            
-        } elseif ($file['name'] != '' && $file['tmp_name'] != '') {
+
+        }
+        if ($file['name'] != '' && $file['tmp_name'] != '') {
             $this->message_stack(WARNING_NO_FILE_UPLOADED, 'warning');
 
             return false;
@@ -249,6 +242,7 @@ class upload extends base
         }
         if (IS_ADMIN_FLAG === true) {
             $messageStack->add_session($msg, $type);
+            $messageStack->add($msg, $type);
         } else {
             if ($this->message_location == 'direct') {
                 $messageStack->add_session('header', $msg, $type);

@@ -3,10 +3,10 @@
  * specials_index module
  *
  * @package modules
- * @copyright Copyright 2003-2007 Zen Cart Development Team
+ * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: specials_index.php 6424 2007-05-31 05:59:21Z ajeh $
+ * @version $Id: mc12345678 Wed Jan 24 21:14:33 2018 -0500 Modified in v1.5.6 $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
@@ -69,6 +69,8 @@ if ($num_products_count > 0) {
   while (!$specials_index->EOF) {
     $products_price = zen_get_products_display_price($specials_index->fields['products_id']);
     if (!isset($productsInCategory[$specials_index->fields['products_id']])) $productsInCategory[$specials_index->fields['products_id']] = zen_get_generated_category_path_rev($specials_index->fields['master_categories_id']);
+
+    $zco_notifier->notify('NOTIFY_MODULES_SPECIALS_INDEX_B4_LIST_BOX', array(), $specials_index->fields, $products_price);
 
     $specials_index->fields['products_name'] = zen_get_products_name($specials_index->fields['products_id']);
     $list_box_contents[$row][$col] = array('params' => 'class="centerBoxContentsSpecials centeredContent back"' . ' ' . 'style="width:' . $col_width . '%;"',

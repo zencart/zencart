@@ -1,12 +1,15 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2016 Zen Cart Development Team
+ * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: DrByte  Thu Aug 29 23:58:50 2013 -0400 Modified in v1.5.5 $
+ * @version $Id: Drbyte Mon Nov 12 20:38:09 2018 -0500 Modified in v1.5.6 $
  */
 require('includes/application_top.php');
+
+$_GET['products_filter'] = $products_filter = ((isset($_GET['products_filter']) && $_GET['products_filter'] > 0) ? (int)$_GET['products_filter'] : (int)$_POST['products_filter']);
+$_GET['current_category_id'] = $current_category_id = (isset($_GET['current_category_id']) ? (int)$_GET['current_category_id'] : (int)$current_category_id);
 
 // verify products exist
 $chk_products = $db->Execute("SELECT *
@@ -31,14 +34,9 @@ $currencies = new currencies();
 
 $languages = zen_get_languages();
 
-$_GET['products_filter'] = $products_filter = ((isset($_GET['products_filter']) && $_GET['products_filter'] > 0) ? (int)$_GET['products_filter'] : (int)$_POST['products_filter']);
-
 $action = (isset($_GET['action']) ? $_GET['action'] : '');
 
-$current_category_id = (isset($_GET['current_category_id']) ? (int)$_GET['current_category_id'] : (int)$current_category_id);
-
 if ($action == 'new_cat') {
-  $current_category_id = (isset($_GET['current_category_id']) ? (int)$_GET['current_category_id'] : $current_category_id);
   $new_product_query = $db->Execute("SELECT ptc.*
                                      FROM " . TABLE_PRODUCTS_TO_CATEGORIES . " ptc
                                      LEFT JOIN " . TABLE_PRODUCTS_DESCRIPTION . " pd ON ptc.products_id = pd.products_id
@@ -395,17 +393,19 @@ if (zen_not_null($action)) {
       break;
 
     case 'update_product':
-      $zv_check_master_categories_id = 'true';
+      $zv_check_master_categories_id = true;
       $new_categories_sort_array[] = $_POST['current_master_categories_id'];
       $current_master_categories_id = $_POST['current_master_categories_id'];
+      if (!isset($_POST['categories_add'])) $_POST['categories_add'] = array();
 
       // set the linked products master_categories_id product(s)
       for ($i = 0, $n = sizeof($_POST['categories_add']); $i < $n; $i++) {
         // is current master_categories_id in the list?
-        if ($zv_check_master_categories_id == 'true' && $_POST['categories_add'][$i] == $current_master_categories_id->fields['master_categories_id']) {
-          $zv_check_master_categories_id = 'true';
+        if ($zv_check_master_categories_id == true && $_POST['categories_add'][$i] == $current_master_categories_id) {
+          $zv_check_master_categories_id = true;
           // array is set above to master category
         } else {
+          $zv_check_master_categories_id = false;
           $new_categories_sort_array[] = (int)$_POST['categories_add'][$i];
         }
       }
@@ -437,7 +437,7 @@ if (zen_not_null($action)) {
       }
 
       // reset master_categories_id in products table
-      if ($zv_check_master_categories_id == 'true') {
+      if ($zv_check_master_categories_id == true) {
         // make sure master_categories_id is set to current master_categories_id
         $db->Execute("UPDATE " . TABLE_PRODUCTS . "
                       SET master_categories_id = " . (int)$current_master_categories_id . "
@@ -452,7 +452,7 @@ if (zen_not_null($action)) {
       // recalculate price based on new master_categories_id
       zen_update_products_price_sorter($products_filter);
 
-      if ($zv_check_master_categories_id == 'true') {
+      if ($zv_check_master_categories_id == true) {
         $messageStack->add_session(SUCCESS_MASTER_CATEGORIES_ID, 'success');
       } else {
         $messageStack->add_session(WARNING_MASTER_CATEGORIES_ID, 'warning');
@@ -545,20 +545,19 @@ $products_list = $db->Execute("SELECT products_id, categories_id
                 ?>
               </div>
               <?php
-              $not_for_cart = $db->Execute("select p.products_id from " . TABLE_PRODUCTS . " p left join " . TABLE_PRODUCT_TYPES . " pt on p.products_type= pt.type_id where pt.allow_add_to_cart = 'N'");
-              while (!$not_for_cart->EOF) {
-                $not_for_cart_array[] = $not_for_cart->fields['products_id'];
-                $not_for_cart->MoveNext();
-              }
+              $excluded_products = array();
+//              $not_for_cart = $db->Execute("select p.products_id from " . TABLE_PRODUCTS . " p left join " . TABLE_PRODUCT_TYPES . " pt on p.products_type= pt.type_id where pt.allow_add_to_cart = 'N'");
+//              while (!$not_for_cart->EOF) {
+//                $excluded_products[] = $not_for_cart->fields['products_id'];
+//                $not_for_cart->MoveNext();
+//              }
               ?>
-              <div class="col-sm-4"><?php echo zen_draw_products_pull_down('products_filter', 'size="10" class="form-control"', $not_for_cart->fields, true, $_GET['products_filter'], true, true); ?></div>
+              <div class="col-sm-4"><?php echo zen_draw_products_pull_down('products_filter', 'size="10" class="form-control"', $excluded_products, true, $_GET['products_filter'], true, true); ?></div>
               <div class="col-sm-4">
                 <button type="submit" class="btn btn-info"><?php echo IMAGE_DISPLAY; ?></button>
               </div>
             </div>
             <?php
-          } else {
-            $not_for_cart = '';
           } // $_GET['products_filter'] != ''
           ?>
 
@@ -625,6 +624,7 @@ $products_list = $db->Execute("SELECT products_id, categories_id
             <table class="table">
               <thead>
                   <?php
+                  $selected_categories_check = '';
                   while (!$products_list->EOF) {
                     $selected_categories_check .= $products_list->fields['categories_id'];
                     $products_list->MoveNext();
@@ -755,7 +755,7 @@ $products_list = $db->Execute("SELECT products_id, categories_id
                       $contents[] = array('align' => 'center', 'text' =>
                         '<a href="' . zen_href_link(FILENAME_ATTRIBUTES_CONTROLLER, 'products_filter=' . $products_filter . '&current_category_id=' . $current_category_id) . '" class="btn btn-info" role="button">' . IMAGE_EDIT_ATTRIBUTES . '</a>&nbsp;&nbsp;' .
                         '<a href="' . zen_href_link(FILENAME_PRODUCTS_PRICE_MANAGER, '&products_filter=' . $products_filter . '&current_category_id=' . $current_category_id) . '" class="btn btn-info" role="button">' . IMAGE_PRODUCTS_PRICE_MANAGER . '</a><br /><br />' .
-                        '<a href="' . zen_href_link(FILENAME_PRODUCT, 'cPath=' . zen_get_parent_category_id($products_filter) . '&pID=' . $products_filter . '&product_type=' . zen_get_products_type($products_filter)) . '" class="btn btn-info" role="button">' . IMAGE_DETAILS . '</a>&nbsp;&nbsp;' .
+                        '<a href="' . zen_href_link(FILENAME_CATEGORY_PRODUCT_LISTING, 'cPath=' . zen_get_parent_category_id($products_filter) . '&pID=' . $products_filter) . '" class="btn btn-info" role="button">' . IMAGE_DETAILS . '</a>&nbsp;&nbsp;' .
                         '<a href="' . zen_href_link(FILENAME_PRODUCT, 'action=new_product' . '&cPath=' . zen_get_parent_category_id($products_filter) . '&pID=' . $products_filter . '&product_type=' . zen_get_products_type($products_filter)) . '" class="btn btn-info" role="button">' . IMAGE_EDIT_PRODUCT . '</a>'
                       );
                       break;

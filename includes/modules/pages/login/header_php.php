@@ -3,10 +3,10 @@
  * Login Page
  *
  * @package page
- * @copyright Copyright 2003-2016 Zen Cart Development Team
+ * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: DrByte  Mon Oct 19 10:48:31 2015 -0400 Modified in v1.5.5 $
+ * @version $Id: mc12345678 Tue Aug 28 21:18:16 2018 -0400 Modified in v1.5.6 $
  */
 
 // This should be first line of the script:
@@ -17,9 +17,9 @@ if ($session_started == false) {
   zen_redirect(zen_href_link(FILENAME_COOKIE_USAGE));
 }
 
-// if the customer is logged in already, redirect them to the My account page
-if (isset($_SESSION['customer_id']) and $_SESSION['customer_id'] != '') {
-  zen_redirect(zen_href_link(FILENAME_ACCOUNT, '', 'SSL'));
+// if the customer is logged in already (and not in guest-checkout), redirect them to the My account page
+if (!zen_in_guest_checkout() && zen_is_logged_in()) {
+    zen_redirect(zen_href_link(FILENAME_ACCOUNT, '', 'SSL'));
 }
 
 require(DIR_WS_MODULES . zen_get_module_directory('require_languages.php'));
@@ -27,8 +27,8 @@ include(DIR_WS_MODULES . zen_get_module_directory(FILENAME_CREATE_ACCOUNT));
 
 $error = false;
 if (isset($_GET['action']) && ($_GET['action'] == 'process')) {
-  $email_address = zen_db_prepare_input($_POST['email_address']);
-  $password = zen_db_prepare_input($_POST['password']);
+  $email_address = zen_db_prepare_input(isset($_POST['email_address']) ? $_POST['email_address'] : '');
+  $password = zen_db_prepare_input(isset($_POST['password']) ? $_POST['password'] : '');
   $loginAuthorized = false;
 
   /* Privacy-policy-read does not need to be checked during "login"

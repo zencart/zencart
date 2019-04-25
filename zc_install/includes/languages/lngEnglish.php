@@ -3,8 +3,8 @@
  * Main English language file for installer
  * @package Installer
  * @copyright Copyright 2003-2018 Zen Cart Development Team
- * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: DrByte  Modified in v1.5.6 $
+ * @license http://www.zen-cart.com/license/2_0.txt GNU Public License v2.0
+ * @version $Id: Drbyte Tue Sep 11 15:53:41 2018 -0400 Modified in v1.5.6 $
  */
 /**
  * defining language components for the page
@@ -17,7 +17,7 @@ define('TEXT_INDEX_FATAL_ERRORS', 'Some problems that need fixing before we cont
 define('TEXT_INDEX_WARN_ERRORS', 'Some Other Issues:');
 define('TEXT_INDEX_WARN_ERRORS_ALT', 'Some Issues:');
 define('TEXT_HEADER_MAIN', 'TIP: The field titles are clickable help links which explain what each field means.');
-define('TEXT_INDEX_HEADER_MAIN', 'TIP: For some errors and warnings below, more information may be available by clicking on the error/warning title.');
+define('TEXT_INDEX_HEADER_MAIN', 'TIP: More information may be available by clicking on the titles of some errors and warnings.');
 define('TEXT_INSTALLER_CHOOSE_LANGUAGE', 'Choose Language');
 define('TEXT_HELP_CONTENT_CHOOSE_LANG', 'Zen Cart&reg; is multi-lingual, supporting as many languages as there are language packs available. Simply install the necessary language pack and your entire store can operate in multiple languages, including this installer.');
 
@@ -153,7 +153,7 @@ define('TEXT_ERROR_STORE_CONFIGURE', "Main /includes/configure.php file either d
 define('TEXT_ERROR_ADMIN_CONFIGURE', "Admin /admin/includes/configure.php file either does not exist, is not readable or is not writeable");
 define('TEXT_ERROR_PHP_VERSION', str_replace(array("\n", "\r"), '', 'Incorrect PHP Version.
 <p>The PHP version you are using (' . PHP_VERSION . ') is not suitable.</p>
-<p>This version of Zen Cart&reg; is compatible with PHP versions 5.4 to 7.2.x.<br>
+<p>This version of Zen Cart&reg; is compatible with PHP versions 5.5 to 7.3.x.<br>
 Check the <a href="https://www.zen-cart.com">www.zen-cart.com</a> website for the latest version of Zen Cart&reg;.</p>
 '));
 define('TEXT_ERROR_PHP_VERSION_RECOMMENDED', 'For maximum security and compatibility you should be using PHP %s or newer. This installer can proceed, but this is just letting you know that your site will not be PCI Compliant when running out-of-date software.');

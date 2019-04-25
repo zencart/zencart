@@ -3,10 +3,10 @@
  * Class for managing the Shopping Cart
  *
  * @package classes
- * @copyright Copyright 2003-2018 Zen Cart Development Team
+ * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: DrByte  Modified in v1.5.6 $
+ * @version $Id: DrByte 2019 Jan 04 Modified in v1.5.6a $
  */
 
 if (!defined('IS_ADMIN_FLAG')) {
@@ -70,7 +70,7 @@ class shoppingCart extends base {
    */
   var $display_debug_messages = FALSE;
   var $flag_duplicate_msgs_set = FALSE;
-  var $flag_duplicate_quantity_msgs_set = FALSE;
+  var $flag_duplicate_quantity_msgs_set = array();
   /**
    * constructor method
    *
@@ -88,9 +88,9 @@ class shoppingCart extends base {
    * For customers who login, cart contents are also stored in the database.
    * {TABLE_CUSTOMER_BASKET et al}. This allows the system to remember the
    * contents of their cart over multiple sessions.
-   * This method simply retrieve the content of the databse store cart
+   * This method simply retrieve the content of the database store cart
    * for a given customer. Note also that if the customer already has
-   * some items in their cart before thet login, these are merged with
+   * some items in their cart before they login, these are merged with
    * the stored contents.
    *
    * @return void
@@ -125,7 +125,7 @@ class shoppingCart extends base {
             foreach($this->contents[$products_id]['attributes'] as $option => $value) {
 
               //clr 031714 udate query to include attribute value. This is needed for text attributes.
-              $attr_value = $this->contents[$products_id]['attributes_values'][$option];
+              $attr_value = isset($this->contents[$products_id]['attributes_values'][$option]) ? $this->contents[$products_id]['attributes_values'][$option] : '';
               //                zen_db_query("insert into " . TABLE_CUSTOMERS_BASKET_ATTRIBUTES . " (customers_id, products_id, products_options_id, products_options_value_id, products_options_value_text) values ('" . (int)$customer_id . "', '" . zen_db_input($products_id) . "', '" . (int)$option . "', '" . (int)$value . "', '" . zen_db_input($attr_value) . "')");
               $products_options_sort_order= zen_get_attributes_options_sort_order(zen_get_prid($products_id), $option, $value);
               if ($attr_value) {
@@ -550,7 +550,6 @@ class shoppingCart extends base {
    * @return boolean
    */
   function in_cart($products_id) {
-    //  die($products_id);
     $this->notify('NOTIFIER_CART_IN_CART_START', array(), $products_id);
     if (isset($this->contents[$products_id])) {
       $this->notify('NOTIFIER_CART_IN_CART_END_TRUE', array(), $products_id);
@@ -570,7 +569,6 @@ class shoppingCart extends base {
   function remove($products_id) {
     global $db;
     $this->notify('NOTIFIER_CART_REMOVE_START', array(), $products_id);
-    //die($products_id);
     //CLR 030228 add call zen_get_uprid to correctly format product ids containing quotes
     //      $products_id = zen_get_uprid($products_id, $attributes);
     unset($this->contents[$products_id]);
@@ -661,6 +659,9 @@ class shoppingCart extends base {
 
       if ($product = $db->Execute($product_query)) {
         $prid = $product->fields['products_id'];
+        
+        $this->notify('NOTIFY_CART_CALCULATE_PRODUCT_PRICE', $products_id, $product->fields);
+
         $products_tax = zen_get_tax_rate($product->fields['products_tax_class_id']);
         $products_price = $product->fields['products_price'];
 
@@ -737,6 +738,10 @@ class shoppingCart extends base {
 
           $attribute_price = $db->Execute($attribute_price_query);
 
+          if ($attribute_price->EOF) continue;
+
+          $this->notify('NOTIFY_CART_CALCULATE_ATTRIBUTE_PRICE', $products_id, $attribute_price->fields);
+
           $new_attributes_price = 0;
         // calculate Product Price without Specials, Sales or Discounts
 //          $new_attributes_price_before_discounts = 0;
@@ -799,9 +804,7 @@ class shoppingCart extends base {
                 }
             // adjust for attributes price
                 $freeShippingTotal += $new_attributes_price;
-            //die('I SEE B ' . $this->free_shipping_price);
               }
-            //  echo 'I SEE ' . $this->total . ' vs ' . $this->free_shipping_price . ' items: ' . $this->free_shipping_item. '<br>';
 
             ////////////////////////////////////////////////
             // calculate additional attribute charges
@@ -875,12 +878,10 @@ class shoppingCart extends base {
             // attributes_qty_prices_onetime
             $added_charge = 0;
             if ($attribute_price->fields['attributes_qty_prices_onetime'] != '') {
-              $chk_price = zen_get_products_base_price($products_id);
-              $chk_special = zen_get_products_special_price($products_id, false);
               $added_charge = zen_get_attributes_qty_prices_onetime($attribute_price->fields['attributes_qty_prices_onetime'], $qty);
               $totalOnetimeCharge += $added_charge;
         // calculate Product Price without Specials, Sales or Discounts
-              $added_charge = zen_get_attributes_qty_prices_onetime($chk_price, $chk_price, $attribute_price->fields['attributes_price_factor_onetime'], $attribute_price->fields['attributes_price_factor_onetime_offset']);
+              $added_charge = zen_get_attributes_qty_prices_onetime($attribute_price->fields['attributes_qty_prices_onetime'], 1);
               $totalOnetimeChargeNoDiscount += $added_charge;
             }
             ////////////////////////////////////////////////
@@ -899,6 +900,14 @@ class shoppingCart extends base {
                                        and options_values_id = '" . (int)$value . "'";
 
           $attribute_weight = $db->Execute($attribute_weight_query);
+
+          if ($attribute_weight->EOF) {
+            continue;
+          }
+
+          $this->notify('NOTIFY_CART_CALCULATE_ATTRIBUTE_WEIGHT', 
+                        array('products_id' => $products_id, 'options_id' => $option), 
+                        $attribute_weight->fields);
 
           // adjusted count for free shipping
           if ($product->fields['product_is_always_free_shipping'] != 1) {
@@ -963,6 +972,8 @@ class shoppingCart extends base {
 
     $total_attributes_price = 0;
     $qty = $this->contents[$products_id]['qty'];
+    
+    $this->notify('NOTIFY_CART_ATTRIBUTES_PRICE_START', $products_id);
 
     if (isset($this->contents[$products_id]['attributes'])) {
 
@@ -977,11 +988,17 @@ class shoppingCart extends base {
 
         $attribute_price = $db->Execute($attribute_price_query);
 
+        if ($attribute_price->EOF) {
+          continue;
+        }
+    
+        $this->notify('NOTIFY_CART_ATTRIBUTES_PRICE_NEXT', $products_id, $attribute_price->fields);
+
         $new_attributes_price = 0;
         $discount_type_id = '';
         $sale_maker_discount = '';
 
-        if ($attribute_price->fields['product_attribute_is_free'] == '1' and zen_get_products_price_is_free((int)$products_id)) {
+        if ($attribute_price->fields['product_attribute_is_free'] == '1' && zen_get_products_price_is_free((int)$products_id)) {
           // no charge
         } else {
           // + or blank adds
@@ -1066,6 +1083,8 @@ class shoppingCart extends base {
     global $db;
 
     $attributes_price_onetime = 0;
+    
+    $this->notify('NOTIFY_CART_ATTRIBUTES_PRICE_ONETIME_CHARGES_START', $products_id);
 
     if (isset($this->contents[$products_id]['attributes'])) {
       foreach($this->contents[$products_id]['attributes'] as $option => $value) {
@@ -1077,6 +1096,12 @@ class shoppingCart extends base {
                                     and options_values_id = '" . (int)$value . "'";
 
         $attribute_price = $db->Execute($attribute_price_query);
+
+        if ($attribute_price->EOF) {
+          continue;
+        }
+   
+        $this->notify('NOTIFY_CART_ATTRIBUTES_PRICE_ONETIME_CHARGES_NEXT', $products_id, $attribute_price->fields);
 
         $new_attributes_price = 0;
         $discount_type_id = '';
@@ -1136,6 +1161,9 @@ class shoppingCart extends base {
     $attribute_weight = 0;
 
     if (isset($this->contents[$products_id]['attributes'])) {
+    
+      $this->notify('NOTIFY_CART_ATTRIBUTES_WEIGHT_START', $products_id);
+
       foreach($this->contents[$products_id]['attributes'] as $option => $value) {
         $attribute_weight_query = "select products_attributes_weight, products_attributes_weight_prefix
                                     from " . TABLE_PRODUCTS_ATTRIBUTES . "
@@ -1144,6 +1172,12 @@ class shoppingCart extends base {
                                     and options_values_id = '" . (int)$value . "'";
 
         $attribute_weight_info = $db->Execute($attribute_weight_query);
+
+        if ($attribute_weight_info->EOF) {
+          continue;
+        }
+   
+        $this->notify('NOTIFY_CART_ATTRIBUTES_WEIGHT_NEXT', $products_id, $attribute_weight_info->fields);
 
         // adjusted count for free shipping
         $product = $db->Execute("select products_id, product_is_always_free_shipping
@@ -1191,9 +1225,10 @@ class shoppingCart extends base {
                            from " . TABLE_PRODUCTS . " p, " . TABLE_PRODUCTS_DESCRIPTION . " pd
                            where p.products_id = '" . (int)$products_id . "'
                            and pd.products_id = p.products_id
-                           and pd.language_id = '" . (int)$_SESSION['languages_id'] . "'";
+                           and pd.language_id = " . (int)$_SESSION['languages_id'] . " LIMIT 1";
 
       if ($products = $db->Execute($products_query)) {
+        $this->notify('NOTIFY_CART_GET_PRODUCTS_NEXT', $products_id, $products->fields);
 
         $prid = $products->fields['products_id'];
         $products_price = $products->fields['products_price'];
@@ -1234,6 +1269,7 @@ class shoppingCart extends base {
 
 // validate cart contents for checkout
         if ($check_for_valid_cart == true) {
+          if (empty($this->flag_duplicate_quantity_msgs_set['keep'])) $this->flag_duplicate_quantity_msgs_set = array();
           $fix_once = 0;
           // Check products_status if not already
           $check_status = $products->fields['products_status'];
@@ -1283,7 +1319,7 @@ class shoppingCart extends base {
 
           // Check Quantity Max if not already an error on Minimum
           if ($fix_once == 0) {
-            if ($products->fields['products_quantity_order_max'] != 0 && $check_quantity > $products->fields['products_quantity_order_max'] && !$this->flag_duplicate_quantity_msgs_set[(int)$prid]['max']) {
+            if ($products->fields['products_quantity_order_max'] != 0 && $check_quantity > $products->fields['products_quantity_order_max'] && !isset($this->flag_duplicate_quantity_msgs_set[(int)$prid]['max'])) {
               $fix_once ++;
               $_SESSION['valid_to_checkout'] = false;
               $_SESSION['cart_errors'] .= ERROR_PRODUCT . $products->fields['products_name'] . ERROR_PRODUCT_QUANTITY_MAX_SHOPPING_CART . ERROR_PRODUCT_QUANTITY_ORDERED . $check_quantity  . ' <span class="alertBlack">' . zen_get_products_quantity_min_units_display((int)$prid, false, true) . '</span> ' . '<br />';
@@ -1292,7 +1328,7 @@ class shoppingCart extends base {
           }
 
           if ($fix_once == 0) {
-            if ($check_quantity < $check_quantity_min && !$this->flag_duplicate_quantity_msgs_set[(int)$prid]['min']) {
+            if ($check_quantity < $check_quantity_min && !isset($this->flag_duplicate_quantity_msgs_set[(int)$prid]['min'])) {
               $fix_once ++;
               $_SESSION['valid_to_checkout'] = false;
               $_SESSION['cart_errors'] .= ERROR_PRODUCT . $products->fields['products_name'] . ERROR_PRODUCT_QUANTITY_MIN_SHOPPING_CART . ERROR_PRODUCT_QUANTITY_ORDERED . $check_quantity  . ' <span class="alertBlack">' . zen_get_products_quantity_min_units_display((int)$prid, false, true) . '</span> ' . '<br />';
@@ -1303,7 +1339,7 @@ class shoppingCart extends base {
           // Check Quantity Units if not already an error on Quantity Minimum
           if ($fix_once == 0) {
             $check_units = $products->fields['products_quantity_order_units'];
-            if ( fmod_round($check_quantity,$check_units) != 0 && !$this->flag_duplicate_quantity_msgs_set[(int)$prid]['units'] ) {
+            if ( fmod_round($check_quantity,$check_units) != 0 && !isset($this->flag_duplicate_quantity_msgs_set[(int)$prid]['units']) ) {
               $_SESSION['valid_to_checkout'] = false;
               $_SESSION['cart_errors'] .= ERROR_PRODUCT . $products->fields['products_name'] . ERROR_PRODUCT_QUANTITY_UNITS_SHOPPING_CART . ERROR_PRODUCT_QUANTITY_ORDERED . $check_quantity  . ' <span class="alertBlack">' . zen_get_products_quantity_min_units_display((int)$prid, false, true) . '</span> ' . '<br />';
               $this->flag_duplicate_quantity_msgs_set[(int)$prid]['units'] = true;
@@ -1720,7 +1756,7 @@ class shoppingCart extends base {
     if ($this->display_debug_messages) $messageStack->add_session('header', 'FUNCTION ' . __FUNCTION__, 'caution');
 
     $change_state = array();
-    $this->flag_duplicate_quantity_msgs_set = FALSE;
+    $this->flag_duplicate_quantity_msgs_set = array();
     for ($i=0, $n=sizeof($_POST['products_id']); $i<$n; $i++) {
       $adjust_max= 'false';
       if ($_POST['cart_quantity'][$i] == '') {
@@ -1782,12 +1818,12 @@ class shoppingCart extends base {
           // adjust quantity if needed
         switch (true) {
           case ($new_qty == $current_qty): // no change
-            $adjust_max= 'false';
+            $adjust_max = 'false';
             $new_qty = $current_qty;
             break;
           case ($new_qty > $add_max && $chk_mixed == false):
-            $adjust_max= 'true';
-            $new_qty = $add_max;
+            $adjust_max = 'true';
+            $new_qty = $add_max ;
             break;
           case (($add_max - $cart_qty + $new_qty >= $add_max) && $new_qty > $add_max && $chk_mixed == true):
             $adjust_max = 'true';
@@ -1797,14 +1833,14 @@ class shoppingCart extends base {
             $new_qty = ($alter_qty > 0 ? $alter_qty : $current_qty);
             break;
           case (($cart_qty + $new_qty - $current_qty > $add_max) && $chk_mixed == true):
-            $adjust_max= 'true';
+            $adjust_max = 'true';
             $requested_qty = $new_qty;
 //            $new_qty = $current_qty;
             $alter_qty = $add_max - $cart_qty + $current_qty;
             $new_qty = ($alter_qty > 0 ? $alter_qty : $current_qty);
             break;
           default:
-            $adjust_max= 'false';
+            $adjust_max = 'false';
           }
 
 // bof: notify about adjustment to new quantity to be same as current in stock or maximum to add
@@ -1848,10 +1884,11 @@ class shoppingCart extends base {
     global $db, $messageStack;
     if ($this->display_debug_messages) $messageStack->add_session('header', 'A: FUNCTION ' . __FUNCTION__, 'caution');
 
+    $the_list = '';
+
     if (isset($_POST['products_id']) && is_numeric($_POST['products_id'])) {
       // verify attributes and quantity first
       if ($this->display_debug_messages) $messageStack->add_session('header', 'A2: FUNCTION ' . __FUNCTION__, 'caution');
-      $the_list = '';
       $adjust_max= 'false';
       if (isset($_POST['id'])) {
         foreach ($_POST['id'] as $key => $value) {
@@ -1971,7 +2008,7 @@ class shoppingCart extends base {
         if ($this->display_debug_messages) $messageStack->add_session('header', 'E: FUNCTION ' . __FUNCTION__ . '<br>' . ERROR_MAXIMUM_QTY . zen_get_products_name($_POST['products_id']), 'caution');
       }
     }
-    if ($the_list == '') {
+    if (empty($the_list)) {
       // no errors
 // display message if all is good and not on shopping_cart page
       if (DISPLAY_CART == 'false' && $_GET['main_page'] != FILENAME_SHOPPING_CART && $messageStack->size('shopping_cart') == 0) {

@@ -1,10 +1,10 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2016 Zen Cart Development Team
+ * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: zcwilt  Fri Apr 15 Modified in v1.5.5 $
+ * @version $Id: DrByte 2019 Jan 04 Modified in v1.5.6a $
  */
 require('includes/application_top.php');
 
@@ -12,9 +12,10 @@ require(DIR_WS_CLASSES . 'currencies.php');
 $currencies = new currencies();
 
 $action = (isset($_GET['action']) ? $_GET['action'] : '');
-$customers_id = zen_db_prepare_input($_GET['cID']);
-if (isset($_POST['cID']))
-  $customers_id = zen_db_prepare_input($_POST['cID']);
+$customers_id = isset($_GET['cID']) ? (int)$_GET['cID'] : 0;
+if (isset($_POST['cID'])) $customers_id = (int)$_POST['cID'];
+if (!isset($_GET['page'])) $_GET['page'] = '';
+if (!isset($_GET['list_order'])) $_GET['list_order'] = '';
 
 $error = false;
 $processed = false;
@@ -87,7 +88,7 @@ if (zen_not_null($action)) {
       $customers_newsletter = zen_db_prepare_input($_POST['customers_newsletter']);
       $customers_group_pricing = (int)zen_db_prepare_input($_POST['customers_group_pricing']);
       $customers_email_format = zen_db_prepare_input($_POST['customers_email_format']);
-      $customers_gender = zen_db_prepare_input($_POST['customers_gender']);
+      $customers_gender = !empty($_POST['customers_gender']) ? zen_db_prepare_input($_POST['customers_gender']) : '';
       $customers_dob = (empty($_POST['customers_dob']) ? zen_db_prepare_input('0001-01-01 00:00:00') : zen_db_prepare_input($_POST['customers_dob']));
 
       $customers_authorization = zen_db_prepare_input($_POST['customers_authorization']);
@@ -106,14 +107,15 @@ if (zen_not_null($action)) {
       $default_address_id = zen_db_prepare_input($_POST['default_address_id']);
       $entry_street_address = zen_db_prepare_input($_POST['entry_street_address']);
       $entry_suburb = zen_db_prepare_input($_POST['entry_suburb']);
+      $entry_suburb_error = false;
       $entry_postcode = zen_db_prepare_input($_POST['entry_postcode']);
       $entry_city = zen_db_prepare_input($_POST['entry_city']);
       $entry_country_id = zen_db_prepare_input($_POST['entry_country_id']);
 
       $entry_company = zen_db_prepare_input($_POST['entry_company']);
+      $entry_company_error = false;
       $entry_state = zen_db_prepare_input($_POST['entry_state']);
-      if (isset($_POST['entry_zone_id']))
-        $entry_zone_id = zen_db_prepare_input($_POST['entry_zone_id']);
+      if (isset($_POST['entry_zone_id'])) $entry_zone_id = zen_db_prepare_input($_POST['entry_zone_id']);
 
       if (strlen($customers_firstname) < ENTRY_FIRST_NAME_MIN_LENGTH) {
         $error = true;
@@ -426,7 +428,12 @@ if (zen_not_null($action)) {
                                  WHERE a.customers_id = c.customers_id
                                  AND c.customers_id = " . (int)$customers_id);
 
-      $cInfo = new objectInfo($customers->fields);
+      $reviews = $db->Execute("SELECT COUNT(*) AS number_of_reviews
+                               FROM " . TABLE_REVIEWS . "
+                               WHERE customers_id = " . (int)$customers_id);
+
+      $cInfo_array = array_merge($customers->fields, $reviews->fields);
+      $cInfo = new objectInfo($cInfo_array);
   }
 }
 ?>
@@ -564,11 +571,10 @@ if (zen_not_null($action)) {
           array('id' => '1', 'text' => ENTRY_NEWSLETTER_YES),
           array('id' => '0', 'text' => ENTRY_NEWSLETTER_NO));
         ?>
-        <tr>
-            <?php
-            echo zen_draw_form('customers', FILENAME_CUSTOMERS, zen_get_all_get_params(array('action')) . 'action=update', 'post', 'onsubmit="return check_form(customers);" class="form-horizontal"', true) . zen_draw_hidden_field('default_address_id', $cInfo->customers_default_address_id);
-            echo zen_hide_session_id();
-            ?>
+        <?php
+        echo zen_draw_form('customers', FILENAME_CUSTOMERS, zen_get_all_get_params(array('action')) . 'action=update', 'post', 'onsubmit="return check_form(customers);" class="form-horizontal"', true) . zen_draw_hidden_field('default_address_id', $cInfo->customers_default_address_id);
+        echo zen_hide_session_id();
+        ?>
         <div class="row formAreaTitle"><?php echo CATEGORY_PERSONAL; ?></div>
         <div class="formArea">
             <?php
@@ -576,7 +582,7 @@ if (zen_not_null($action)) {
               ?>
             <div class="form-group">
               <?php echo zen_draw_label(ENTRY_GENDER, 'customers_gender', 'class="col-sm-3 control-label"'); ?>
-              <div class="col-sm-9">
+              <div class="col-sm-9 col-md-6">
                   <?php
                   if ($error == true && $entry_gender_error == true) {
                     echo '<label class="radio-inline">';
@@ -611,13 +617,13 @@ if (zen_not_null($action)) {
           ?>
           <div class="form-group">
               <?php echo zen_draw_label(CUSTOMERS_AUTHORIZATION, 'customers_authorization', 'class="col-sm-3 control-label"'); ?>
-            <div class="col-sm-9">
+            <div class="col-sm-9 col-md-6">
                 <?php echo zen_draw_pull_down_menu('customers_authorization', $customers_authorization_array, $cInfo->customers_authorization, 'class="form-control"'); ?>
             </div>
           </div>
           <div class="form-group">
               <?php echo zen_draw_label(ENTRY_FIRST_NAME, 'customers_firstname', 'class="col-sm-3 control-label"'); ?>
-            <div class="col-sm-9">
+            <div class="col-sm-9 col-md-6">
                 <?php
                 if ($error == true) {
                   if ($entry_firstname_error == true) {
@@ -633,7 +639,7 @@ if (zen_not_null($action)) {
           </div>
           <div class="form-group">
               <?php echo zen_draw_label(ENTRY_LAST_NAME, 'customers_lastname', 'class="col-sm-3 control-label"'); ?>
-            <div class="col-sm-9">
+            <div class="col-sm-9 col-md-6">
                 <?php
                 if ($error == true) {
                   if ($entry_lastname_error == true) {
@@ -652,16 +658,16 @@ if (zen_not_null($action)) {
             ?>
             <div class="form-group">
                 <?php echo zen_draw_label(ENTRY_DATE_OF_BIRTH, 'customers_dob', 'class="col-sm-3 control-label"'); ?>
-              <div class="col-sm-9">
+              <div class="col-sm-9 col-md-6">
                   <?php
                   if ($error == true) {
                     if ($entry_date_of_birth_error == true) {
                       echo zen_draw_input_field('customers_dob', ($cInfo->customers_dob == '0001-01-01 00:00:00' ? '' : zen_date_short($cInfo->customers_dob)), 'maxlength="10" class="form-control"') . '&nbsp;' . ENTRY_DATE_OF_BIRTH_ERROR;
                     } else {
-                      echo $cInfo->customers_dob . ($customers_dob == '0001-01-01 00:00:00' ? 'N/A' : zen_draw_hidden_field('customers_dob'));
+                      echo $cInfo->customers_dob . ((empty($customers_dob) || $customers_dob <= '0001-01-01' || $customers_dob == '0001-01-01 00:00:00') ? 'N/A' : zen_draw_hidden_field('customers_dob'));
                     }
                   } else {
-                    echo zen_draw_input_field('customers_dob', ($customers_dob == '0001-01-01 00:00:00' ? '' : zen_date_short($cInfo->customers_dob)), 'maxlength="10" class="form-control"', true);
+                    echo zen_draw_input_field('customers_dob', ((empty($customers_dob) || $customers_dob <= '0001-01-01' || $customers_dob == '0001-01-01 00:00:00') ? '' : zen_date_short($cInfo->customers_dob)), 'maxlength="10" class="form-control"', true);
                   }
                   ?>
               </div>
@@ -671,7 +677,7 @@ if (zen_not_null($action)) {
           ?>
           <div class="form-group">
               <?php echo zen_draw_label(ENTRY_EMAIL_ADDRESS, 'customers_email_address', 'class="col-sm-3 control-label"'); ?>
-            <div class="col-sm-9">
+            <div class="col-sm-9 col-md-6">
                 <?php
                 if ($error == true) {
                   if ($entry_email_address_error == true) {
@@ -700,7 +706,7 @@ if (zen_not_null($action)) {
           <div class="formArea">
             <div class="form-group">
                 <?php echo zen_draw_label(ENTRY_COMPANY, 'customers_email_address', 'class="col-sm-3 control-label"'); ?>
-              <div class="col-sm-9">
+              <div class="col-sm-9 col-md-6">
                   <?php
                   if ($error == true) {
                     if ($entry_company_error == true) {
@@ -735,7 +741,7 @@ if (zen_not_null($action)) {
                 ?>
                 <div class="form-group">
                     <?php echo zen_draw_label($current_field['label'], '', 'class="col-sm-3 control-label"'); ?>
-                  <div class="col-sm-9"><?php echo $current_field['input']; ?></div>
+                  <div class="col-sm-9 col-md-6"><?php echo $current_field['input']; ?></div>
                 </div>
                 <?php
               }
@@ -752,7 +758,7 @@ if (zen_not_null($action)) {
         <div class="formArea">
           <div class="form-group">
               <?php echo zen_draw_label(ENTRY_STREET_ADDRESS, 'entry_street_address', 'class="col-sm-3 control-label"'); ?>
-            <div class="col-sm-9">
+            <div class="col-sm-9 col-md-6">
                 <?php
                 if ($error == true) {
                   if ($entry_street_address_error == true) {
@@ -771,7 +777,7 @@ if (zen_not_null($action)) {
             ?>
             <div class="form-group">
                 <?php echo zen_draw_label(ENTRY_SUBURB, 'suburb', 'class="col-sm-3 control-label"'); ?>
-              <div class="col-sm-9">
+              <div class="col-sm-9 col-md-6">
                   <?php
                   if ($error == true) {
                     if ($entry_suburb_error == true) {
@@ -790,7 +796,7 @@ if (zen_not_null($action)) {
           ?>
           <div class="form-group">
               <?php echo zen_draw_label(ENTRY_POST_CODE, 'entry_postcode', 'class="col-sm-3 control-label"'); ?>
-            <div class="col-sm-9">
+            <div class="col-sm-9 col-md-6">
                 <?php
                 if ($error == true) {
                   if ($entry_post_code_error == true) {
@@ -805,7 +811,7 @@ if (zen_not_null($action)) {
           </div>
           <div class="form-group">
             <?php echo zen_draw_label(ENTRY_CITY, 'entry_city', 'class="col-sm-3 control-label"'); ?>
-            <div class="col-sm-9">
+            <div class="col-sm-9 col-md-6">
                 <?php
                 if ($error == true) {
                   if ($entry_city_error == true) {
@@ -823,7 +829,7 @@ if (zen_not_null($action)) {
             ?>
             <div class="form-group">
                 <?php echo zen_draw_label(ENTRY_STATE, 'entry_state', 'class="col-sm-3 control-label"'); ?>
-              <div class="col-sm-9">
+              <div class="col-sm-9 col-md-6">
                   <?php
                   $entry_state = zen_get_zone_name($cInfo->entry_country_id, $cInfo->entry_zone_id, $cInfo->entry_state);
                   if ($error == true) {
@@ -857,7 +863,7 @@ if (zen_not_null($action)) {
           ?>
           <div class="form-group">
               <?php echo zen_draw_label(ENTRY_COUNTRY, 'entry_country_id', 'class="col-sm-3 control-label"'); ?>
-            <div class="col-sm-9">
+            <div class="col-sm-9 col-md-6">
                 <?php
                 if ($error == true) {
                   if ($entry_country_error == true) {
@@ -877,7 +883,7 @@ if (zen_not_null($action)) {
         <div class="formArea">
           <div class="form-group">
               <?php echo zen_draw_label(ENTRY_TELEPHONE_NUMBER, 'customers_telephone', 'class="col-sm-3 control-label"'); ?>
-            <div class="col-sm-9">
+            <div class="col-sm-9 col-md-6">
                 <?php
                 if ($error == true) {
                   if ($entry_telephone_error == true) {
@@ -896,7 +902,7 @@ if (zen_not_null($action)) {
             ?>
             <div class="form-group">
                 <?php echo zen_draw_label(ENTRY_FAX_NUMBER, 'customers_fax', 'class="col-sm-3 control-label"'); ?>
-              <div class="col-sm-9">
+              <div class="col-sm-9 col-md-6">
                   <?php
                   if ($processed == true) {
                     echo $cInfo->customers_fax . zen_draw_hidden_field('customers_fax');
@@ -913,7 +919,7 @@ if (zen_not_null($action)) {
         <div class="formArea">
           <div class="form-group">
               <?php echo zen_draw_label(ENTRY_EMAIL_PREFERENCE, 'customers_email_format', 'class="col-sm-3 control-label"'); ?>
-            <div class="col-sm-9">
+            <div class="col-sm-9 col-md-6">
                 <?php
                 if ($processed == true) {
                   if ($cInfo->customers_email_format) {
@@ -934,7 +940,7 @@ if (zen_not_null($action)) {
           </div>
           <div class="form-group">
               <?php echo zen_draw_label(ENTRY_NEWSLETTER, 'customers_newsletter', 'class="col-sm-3 control-label"'); ?>
-            <div class="col-sm-9">
+            <div class="col-sm-9 col-md-6">
                 <?php
                 if ($processed == true) {
                   if ($cInfo->customers_newsletter == '1') {
@@ -951,13 +957,13 @@ if (zen_not_null($action)) {
           </div>
           <div class="form-group">
               <?php echo zen_draw_label(ENTRY_PRICING_GROUP, 'customers_group_pricing', 'class="col-sm-3 control-label"'); ?>
-            <div class="col-sm-9">
+            <div class="col-sm-9 col-md-6">
                 <?php
                 if ($processed == true) {
                   if ($cInfo->customers_group_pricing) {
                     $group_query = $db->Execute("SELECT group_name, group_percentage
-                                               FORM " . TABLE_GROUP_PRICING . "
-                                               WHERE group_id = " . (int)$cInfo->customers_group_pricing);
+                                                 FROM " . TABLE_GROUP_PRICING . "
+                                                 WHERE group_id = " . (int)$cInfo->customers_group_pricing);
                     echo $group_query->fields['group_name'] . '&nbsp;' . $group_query->fields['group_percentage'] . '%';
                   } else {
                     echo ENTRY_NONE;
@@ -965,7 +971,7 @@ if (zen_not_null($action)) {
                   echo zen_draw_hidden_field('customers_group_pricing', $cInfo->customers_group_pricing);
                 } else {
                   $group_array_query = $db->execute("SELECT group_id, group_name, group_percentage
-                                                   FROM " . TABLE_GROUP_PRICING);
+                                                     FROM " . TABLE_GROUP_PRICING);
                   $group_array[] = array('id' => 0, 'text' => TEXT_NONE);
                   foreach ($group_array_query as $item) {
                     $group_array[] = array(
@@ -979,7 +985,7 @@ if (zen_not_null($action)) {
           </div>
           <div class="form-group">
               <?php echo zen_draw_label(CUSTOMERS_REFERRAL, 'customers_referral', 'class="col-sm-3 control-label"'); ?>
-            <div class="col-sm-9">
+            <div class="col-sm-9 col-md-6">
                 <?php echo zen_draw_input_field('customers_referral', htmlspecialchars($cInfo->customers_referral, ENT_COMPAT, CHARSET, TRUE), zen_set_field_length(TABLE_CUSTOMERS, 'customers_referral', 15) . ' class="form-control"'); ?>
             </div>
           </div>
@@ -1156,7 +1162,7 @@ if (zen_not_null($action)) {
                     <a href="<?php echo zen_href_link(basename($PHP_SELF), zen_get_all_get_params(array('list_order', 'page')) . 'list_order=group-desc', 'NONSSL'); ?>"><?php echo ($_GET['list_order'] == 'group-desc' ? '<span class="SortOrderHeader">Desc</span>' : '<span class="SortOrderHeaderLink">Desc</span>'); ?></a>
                   </th>
 
-                  <?php if (MODULE_ORDER_TOTAL_GV_STATUS == 'true') { ?>
+                  <?php if (defined('MODULE_ORDER_TOTAL_GV_STATUS') && MODULE_ORDER_TOTAL_GV_STATUS == 'true') { ?>
                     <th class="dataTableHeadingContent">
                       <?php echo (($_GET['list_order'] == 'gv_balance-asc' or $_GET['list_order'] == 'gv_balance-desc') ? '<span class="SortOrderHeader">' . TABLE_HEADING_GV_AMOUNT . '</span>' : TABLE_HEADING_GV_AMOUNT); ?><br>
                       <a href="<?php echo zen_href_link(basename($PHP_SELF), zen_get_all_get_params(array('list_order', 'page')) . 'list_order=gv_balance-asc', 'NONSSL'); ?>"><?php echo ($_GET['list_order'] == 'gv_balance-asc' ? '<span class="SortOrderHeader">Asc</span>' : '<span class="SortOrderHeaderLink">Asc</span>'); ?></a>&nbsp;
@@ -1206,7 +1212,7 @@ if (zen_not_null($action)) {
 
 // Split Page
 // reset page when page is unknown
-                  if (($_GET['page'] == '' or $_GET['page'] == '1') and $_GET['cID'] != '') {
+                  if (($_GET['page'] == '' || $_GET['page'] == '1') && !empty($_GET['cID'])) {
                     $check_page = $db->Execute($customers_query_raw);
                     $check_count = 1;
                     if ($check_page->RecordCount() > MAX_DISPLAY_SEARCH_RESULTS_CUSTOMER) {
@@ -1276,7 +1282,7 @@ if (zen_not_null($action)) {
                     $zc_address_book_count_list = zen_get_customers_address_book($customer['customers_id']);
                     $zc_address_book_count = $zc_address_book_count_list->RecordCount();
                     ?>
-                <td class="dataTableContent text-right"><?php echo $customer['customers_id'] . ($zc_address_book_count == 1 ? TEXT_INFO_ADDRESS_BOOK_COUNT . $zc_address_book_count : '<a href="' . zen_href_link(FILENAME_CUSTOMERS, 'action=list_addresses' . '&cID=' . $customer['customers_id'] . ($_GET['page'] > 0 ? '&page=' . $_GET['page'] : '')) . '">' . TEXT_INFO_ADDRESS_BOOK_COUNT . $zc_address_book_count . '</a>'); ?></td>
+                <td class="dataTableContent text-right"><?php echo $customer['customers_id'] . ($zc_address_book_count == 1 ? TEXT_INFO_ADDRESS_BOOK_COUNT_SINGLE : sprintf(TEXT_INFO_ADDRESS_BOOK_COUNT, zen_href_link(FILENAME_CUSTOMERS, 'action=list_addresses' . '&cID=' . $customer['customers_id'] . ($_GET['page'] > 0 ? '&page=' . $_GET['page'] : '')), $zc_address_book_count)); ?></td>
                 <td class="dataTableContent"><?php echo $customer['customers_lastname']; ?></td>
                 <td class="dataTableContent"><?php echo $customer['customers_firstname']; ?></td>
                 <td class="dataTableContent"><?php echo $customer['entry_company']; ?></td>
@@ -1318,7 +1324,7 @@ if (zen_not_null($action)) {
                 <td class="dataTableContent"><?php echo zen_date_short($info->fields['date_account_created']); ?></td>
                 <td class="dataTableContent"><?php echo zen_date_short($customer['customers_info_date_of_last_logon']); ?></td>
                 <td class="dataTableContent"><?php echo $group_name_entry; ?></td>
-                <?php if (MODULE_ORDER_TOTAL_GV_STATUS == 'true') { ?>
+                <?php if (defined('MODULE_ORDER_TOTAL_GV_STATUS') && MODULE_ORDER_TOTAL_GV_STATUS == 'true') { ?>
                   <td class="dataTableContent text-right"><?php echo $currencies->format($customer['amount']); ?></td>
                 <?php } ?>
                 <td class="dataTableContent text-center">
@@ -1402,6 +1408,12 @@ if (zen_not_null($action)) {
 
                     $contents[] = array('text' => '<br>' . TEXT_INFO_NUMBER_OF_ORDERS . ' ' . $customers_orders->RecordCount());
                     if ($customers_orders->RecordCount() != 0) {
+
+                      $lifetime_value = 0;
+                      foreach($customers_orders as $result) {
+                         $lifetime_value+= ($result['order_total'] * $result['currency_value']);
+                      }
+                      $contents[] = array('text' => TEXT_INFO_LIFETIME_VALUE. ' ' . $currencies->format($lifetime_value));
                       $contents[] = array('text' => TEXT_INFO_LAST_ORDER . ' ' . zen_date_short($customers_orders->fields['date_purchased']) . '<br>' . TEXT_INFO_ORDERS_TOTAL . ' ' . $currencies->format($customers_orders->fields['order_total'], true, $customers_orders->fields['currency'], $customers_orders->fields['currency_value']));
                     }
                     $contents[] = array('text' => '<br>' . TEXT_INFO_COUNTRY . ' ' . $cInfo->countries_name);

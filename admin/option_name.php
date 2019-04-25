@@ -4,7 +4,7 @@
  * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: option_name.php  Modified in v1.5.6 $
+ * @version $Id: Drbyte Sun Jan 7 21:39:26 2018 -0500 Modified in v1.5.6 $
  */
 require('includes/application_top.php');
 
@@ -23,6 +23,9 @@ if ($chk_option_names->RecordCount() < 1) {
 $languages_array = array();
 $languages = zen_get_languages();
 $_GET['lng_exists'] = false;
+if (!isset($_GET['lng_id'])) {
+  $_GET['lng_id'] = 0;
+}
 for ($i = 0, $j=sizeof($languages);$i<$j; $i++) {
   if ($languages[$i]['id'] == $_GET['lng_id']) {
     $_GET['lng_exists'] = true;
@@ -36,6 +39,9 @@ for ($i = 0, $j=sizeof($languages);$i<$j; $i++) {
 if (!$_GET['lng_exists'] == true) {
   $_GET['lng_id'] = (int)$_SESSION['languages_id'];
 }
+if (!isset($_GET['action'])) {
+  $_GET['action'] = '';
+}
 
 if ($_GET['action'] == "update_sort_order") {
   foreach ($_POST['products_options_sort_order'] as $id => $new_sort_order) {
@@ -46,7 +52,7 @@ if ($_GET['action'] == "update_sort_order") {
   }
   $messageStack->add_session(SUCCESS_OPTION_SORT_ORDER, 'success');
   $_GET['action'] = '';
-  zen_redirect(zen_href_link(FILENAME_PRODUCTS_OPTIONS_NAME, 'options_id=' . (int)$options_id . '&lng_id=' . (int)$_GET['lng_id']));
+  zen_redirect(zen_href_link(FILENAME_PRODUCTS_OPTIONS_NAME, 'lng_id=' . (int)$_GET['lng_id']));
 }
 ?>
 <!doctype html>

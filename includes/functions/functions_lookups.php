@@ -4,10 +4,10 @@
  * Lookup Functions for various core activities related to countries, prices, products, product types, etc
  *
  * @package functions
- * @copyright Copyright 2003-2016 Zen Cart Development Team
+ * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: mc12345678  Tue Feb 2 16:23:08 2016 -0500 Modified in v1.5.5 $
+ * @version $Id: DrByte 2019 Jan 04 Modified in v1.5.6a $
  */
 
 /**
@@ -161,7 +161,6 @@
     // -----
     // Give an observer the chance to modify this function's return value.
     //
-    $products_id = zen_get_prid($products_id);
     $products_quantity = 0;
     $quantity_handled = false;
     $GLOBALS['zco_notifier']->notify(
@@ -173,7 +172,7 @@
     if ($quantity_handled) {
         return $products_quantity;
     }
-    
+    $products_id = zen_get_prid($products_id);
     $stock_query = "select products_quantity
                     from " . TABLE_PRODUCTS . "
                     where products_id = " . (int)$products_id . " LIMIT 1";
@@ -220,23 +219,25 @@
     if (!is_array($manufacturers_array)) $manufacturers_array = array();
 
     if ($have_products == true) {
-      $manufacturers_query = "select distinct m.manufacturers_id, m.manufacturers_name
-                              from " . TABLE_MANUFACTURERS . " m
-                              left join " . TABLE_PRODUCTS . " p on m.manufacturers_id = p.manufacturers_id
-                              where p.manufacturers_id = m.manufacturers_id
-                              and (p.products_status = 1
-                              and p.products_quantity > 0)
-                              order by m.manufacturers_name";
+      $manufacturers_query = "SELECT DISTINCT m.manufacturers_id, m.manufacturers_name
+                              FROM " . TABLE_MANUFACTURERS . " m
+                              LEFT JOIN " . TABLE_PRODUCTS . " p ON m.manufacturers_id = p.manufacturers_id
+                              WHERE p.products_status = 1
+                              AND p.products_quantity > 0
+                              ORDER BY m.manufacturers_name";
     } else {
-      $manufacturers_query = "select manufacturers_id, manufacturers_name
-                              from " . TABLE_MANUFACTURERS . " order by manufacturers_name";
+      $manufacturers_query = "SELECT manufacturers_id, manufacturers_name
+                              FROM " . TABLE_MANUFACTURERS . "
+                              ORDER BY manufacturers_name";
     }
 
     $manufacturers = $db->Execute($manufacturers_query);
 
-    while (!$manufacturers->EOF) {
-      $manufacturers_array[] = array('id' => $manufacturers->fields['manufacturers_id'], 'text' => $manufacturers->fields['manufacturers_name']);
-      $manufacturers->MoveNext();
+    foreach ($manufacturers as $manufacturer) {
+      $manufacturers_array[] = array(
+        'id' => $manufacturer['manufacturers_id'],
+        'text' => $manufacturer['manufacturers_name']
+      );
     }
 
     return $manufacturers_array;
@@ -317,6 +318,16 @@
  */
   function zen_has_product_attributes_values($products_id) {
     global $db;
+    
+    // -----
+    // Allow a watching observer to override this function's return value.
+    //
+    $value_to_return = '';
+    $GLOBALS['zco_notifier']->notify('NOTIFY_ZEN_HAS_PRODUCT_ATTRIBUTES_VALUES', $products_id, $value_to_return);
+    if ($value_to_return !== '') {
+        return $value_to_return;
+    }
+    
     $attributes_query = "select count(options_values_price) as total
                          from " . TABLE_PRODUCTS_ATTRIBUTES . "
                          where products_id = " . (int)$products_id . "
@@ -379,10 +390,12 @@
   function zen_get_categories_image($what_am_i) {
     global $db;
 
-    $the_categories_image_query= "select categories_image from " . TABLE_CATEGORIES . " where categories_id= '" . $what_am_i . "'";
-    $the_products_category = $db->Execute($the_categories_image_query);
+    $the_categories_image_query= "select categories_image from " . TABLE_CATEGORIES . " where categories_id= '" . (int)$what_am_i . "'";
+    $result = $db->Execute($the_categories_image_query);
 
-    return $the_products_category->fields['categories_image'];
+    if ($result->EOF) return '';
+    
+    return $result->fields['categories_image'];
   }
 
 /*
@@ -391,9 +404,11 @@
  */
   function zen_get_categories_name($who_am_i) {
     global $db;
-    $the_categories_name_query= "select categories_name from " . TABLE_CATEGORIES_DESCRIPTION . " where categories_id= '" . $who_am_i . "' and language_id= '" . $_SESSION['languages_id'] . "'";
+    $the_categories_name_query= "select categories_name from " . TABLE_CATEGORIES_DESCRIPTION . " where categories_id= '" . (int)$who_am_i . "' and language_id= '" . (int)$_SESSION['languages_id'] . "'";
 
     $the_categories_name = $db->Execute($the_categories_name_query);
+    
+    if ($the_categories_name->EOF) return '';
 
     return $the_categories_name->fields['categories_name'];
   }
@@ -430,7 +445,7 @@
                       and p.manufacturers_id = m.manufacturers_id";
 
     $product =$db->Execute($product_query);
-
+    if ($product->EOF) return '';
     return $product->fields['manufacturers_image'];
   }
 
@@ -498,7 +513,7 @@
     $check_valid = true;
 
 // display only cannot be selected
-    if ($check_attributes->fields['attributes_display_only'] == '1') {
+    if (!$check_attributes->EOF && $check_attributes->fields['attributes_display_only'] == '1') {
       $check_valid = false;
     }
 
@@ -549,15 +564,16 @@
  *  configuration key value lookup
  *  TABLE: configuration
  */
-  function zen_get_configuration_key_value($lookup) {
+function zen_get_configuration_key_value($lookup) 
+{
     global $db;
-    $configuration_query= $db->Execute("select configuration_value from " . TABLE_CONFIGURATION . " where configuration_key='" . $lookup . "'");
-    $lookup_value= $configuration_query->fields['configuration_value'];
-    if ( !($lookup_value) ) {
-      $lookup_value='<span class="lookupAttention">' . $lookup . '</span>';
+    $configuration_query = $db->Execute("select configuration_value from " . TABLE_CONFIGURATION . " where configuration_key='" . $lookup . "' LIMIT 1");
+    $lookup_value = ($configuration_query->EOF) ? '' : $configuration_query->fields['configuration_value'];
+    if (empty($lookup_value)) {
+        $lookup_value = '<span class="lookupAttention">' . $lookup . '</span>';
     }
     return $lookup_value;
-  }
+}
 
 /*
  *  Return products description, based on specified language (or current lang if not specified)
@@ -986,3 +1002,25 @@ function zen_has_product_attributes_downloads_status($products_id) {
 
     return $new_range;
   }
+
+/*
+ * This function, added to the storefront in zc1.5.6, mimics the like-named admin function in
+ * support of plugins that "span" both the storefront and admin.
+ *
+ * Returns the "name" associated with the specified orders_status_id.
+ *
+ */
+function zen_get_orders_status_name($orders_status_id, $language_id = '') 
+{
+    if ($language_id == '') {
+        $language_id = $_SESSION['languages_id'];
+    }
+    $orders_status = $GLOBALS['db']->Execute(
+        "SELECT orders_status_name
+           FROM " . TABLE_ORDERS_STATUS . "
+          WHERE orders_status_id = " . (int)$orders_status_id . "
+            AND language_id = " . (int)$language_id . "
+          LIMIT 1"
+    );
+    return ($orders_status->EOF) ? '' : $orders_status->fields['orders_status_name'];
+}

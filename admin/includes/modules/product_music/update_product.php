@@ -2,10 +2,10 @@
 
 /**
  * @package admin
- * @copyright Copyright 2003-2017 Zen Cart Development Team
+ * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: ajeh  Sept 2017  Modified in v1.5.6 $
+ * @version $Id: DrByte 2019 Jan 04 Modified in v1.5.6a $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
@@ -22,7 +22,7 @@ if (isset($_POST['edit_x']) || isset($_POST['edit_y'])) {
   // Data-cleaning to prevent data-type mismatch errors:
   $sql_data_array = array(
     'products_quantity' => convertToFloat($_POST['products_quantity']),
-    'products_type' => (int)$_GET['product_type'],
+    'products_type' => (int)$_POST['product_type'],
     'products_model' => zen_db_prepare_input($_POST['products_model']),
     'products_price' => convertToFloat($_POST['products_price']),
     'products_date_available' => $products_date_available,
@@ -68,7 +68,7 @@ if (isset($_POST['edit_x']) || isset($_POST['edit_y'])) {
     zen_update_products_price_sorter($products_id);
 
     $db->Execute("INSERT INTO " . TABLE_PRODUCTS_TO_CATEGORIES . " (products_id, categories_id)
-                  VALUES ('" . (int)$products_id . "', '" . (int)$current_category_id . "')");
+                  VALUES (" . (int)$products_id . ", " . (int)$current_category_id . ")");
 
     zen_record_admin_activity('New product ' . (int)$products_id . ' added via admin console.', 'info');
 
@@ -88,7 +88,7 @@ if (isset($_POST['edit_x']) || isset($_POST['edit_y'])) {
     ///////////////////////////////////////////////////////
   } elseif ($action == 'update_product') {
     $sql_data_array['products_last_modified'] = 'now()';
-    $sql_data_array['master_categories_id'] = ((int)$_POST['master_category'] > 0 ? (int)$_POST['master_category'] : (int)$_POST['master_categories_id']);
+    $sql_data_array['master_categories_id'] = (!empty($_POST['master_category']) && (int)$_POST['master_category'] > 0 ? (int)$_POST['master_category'] : (int)$_POST['master_categories_id']);
 
     zen_db_perform(TABLE_PRODUCTS, $sql_data_array, 'update', "products_id = " . (int)$products_id);
 

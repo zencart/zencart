@@ -25,7 +25,7 @@ class V1AdjustInventoryRequest implements ArrayAccess
       */
     static $swaggerTypes = array(
         'quantity_delta' => 'float',
-        'adjustment_type' => 'float',
+        'adjustment_type' => 'string',
         'memo' => 'string'
     );
   
@@ -66,7 +66,7 @@ class V1AdjustInventoryRequest implements ArrayAccess
     protected $quantity_delta;
     /**
       * $adjustment_type The reason for the inventory adjustment.
-      * @var float
+      * @var string
       */
     protected $adjustment_type;
     /**
@@ -120,7 +120,7 @@ class V1AdjustInventoryRequest implements ArrayAccess
     }
     /**
      * Gets adjustment_type
-     * @return float
+     * @return string
      */
     public function getAdjustmentType()
     {
@@ -129,7 +129,7 @@ class V1AdjustInventoryRequest implements ArrayAccess
   
     /**
      * Sets adjustment_type
-     * @param float $adjustment_type The reason for the inventory adjustment.
+     * @param string $adjustment_type The reason for the inventory adjustment.
      * @return $this
      */
     public function setAdjustmentType($adjustment_type)

@@ -3,10 +3,10 @@
  * Module Template for responsive mobile support
  *
  * @package templateSystem
- * @copyright Copyright 2003-2016 Zen Cart Development Team
+ * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: picaflor-azul Tue Dec 29 16:44:24 2015 -0500 New in v1.5.5 $
+ * @version $Id: DrByte 2019 Jan 04 Modified in v1.5.6a $
  */
 ?>
 
@@ -17,7 +17,7 @@
     <li><a href="<?php echo zen_href_link(FILENAME_CONTACT_US, '', 'SSL'); ?>"><?php echo BOX_INFORMATION_CONTACT; ?></a></li>
 <?php  } ?>
 
-<?php if ($_SESSION['customer_id']) { ?>
+<?php if (!empty($_SESSION['customer_id'])) { ?>
     <li><a href="<?php echo zen_href_link(FILENAME_LOGOFF, '', 'SSL'); ?>"><?php echo HEADER_TITLE_LOGOFF; ?></a></li>
     <li><a href="<?php echo zen_href_link(FILENAME_ACCOUNT, '', 'SSL'); ?>"><?php echo HEADER_TITLE_MY_ACCOUNT; ?></a></li>
 <?php
@@ -101,10 +101,10 @@ echo $menulist;
 <?php if (DEFINE_SITE_MAP_STATUS <= 1) { ?>
         <li><a href="<?php echo zen_href_link(FILENAME_SITE_MAP); ?>"><?php echo BOX_INFORMATION_SITE_MAP; ?></a></li>
 <?php } ?>
-<?php if (MODULE_ORDER_TOTAL_GV_STATUS == 'true') { ?>
+<?php if (defined('MODULE_ORDER_TOTAL_GV_STATUS') && MODULE_ORDER_TOTAL_GV_STATUS == 'true') { ?>
         <li><a href="<?php echo zen_href_link(FILENAME_GV_FAQ); ?>"><?php echo BOX_INFORMATION_GV; ?></a></li>
 <?php } ?>
-<?php if (DEFINE_DISCOUNT_COUPON_STATUS <= 1 && MODULE_ORDER_TOTAL_COUPON_STATUS == 'true') { ?>
+<?php if (DEFINE_DISCOUNT_COUPON_STATUS <= 1 && defined('MODULE_ORDER_TOTAL_COUPON_STATUS') && MODULE_ORDER_TOTAL_COUPON_STATUS == 'true') { ?>
         <li><a href="<?php echo zen_href_link(FILENAME_DISCOUNT_COUPON); ?>"><?php echo BOX_INFORMATION_DISCOUNT_COUPONS; ?></a></li>
 <?php } ?>
 <?php if (SHOW_NEWSLETTER_UNSUBSCRIBE_LINK == 'true') { ?>
@@ -126,7 +126,7 @@ echo $menulist;
       <ul>
 <?php
   include(DIR_WS_MODULES . zen_get_module_directory('ezpages_bar_header.php'));
-  if (sizeof($var_linksList) >= 1) {
+  if (!empty($var_linksList)) {
     for ($i=1, $n=sizeof($var_linksList); $i<=$n; $i++) {
       echo '<li><a href="' . $var_linksList[$i]['link'] . '">' . $var_linksList[$i]['name'] . '</a></li>' . "\n";
     }

@@ -4,7 +4,7 @@
  * @package Installer
  * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: DrByte  Modified in v1.5.6 $
+ * @version $Id: Drbyte Tue Jan 16 14:25:28 2018 -0500 Modified in v1.5.6 $
  */
 /**
  * zcConfigureFileWriter class

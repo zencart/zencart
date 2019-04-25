@@ -3,10 +3,10 @@
  * index header_php.php
  *
  * @package page
- * @copyright Copyright 2003-2016 Zen Cart Development Team
+ * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: ajeh  Tue Dec 29 13:57:24 2015 -0500 Modified in v1.5.5 $
+ * @version $Id: Drbyte Thu Oct 4 13:29:04 2018 -0400 Modified in v1.5.6 $
  */
 
 // This should be first line of the script:
@@ -51,8 +51,8 @@ require(zen_get_index_filters_directory($typefilter . '_filter.php'));
 // query the database based on the selected filters
 $listing = $db->Execute($listing_sql);
 
-// category is invalid or has no products, so don't index it:
-if ($category_depth == 'products' && $listing->RecordCount() == 0) $robotsNoIndex = true;
+// UNCOMMENT THE FOLLOWING LINE if you want to skip Search Engine indexing if the category has no products:
+//if ($category_depth == 'products' && $listing->RecordCount() == 0) $robotsNoIndex = true;
 
 // if only one product in this category, go directly to the product page, instead of displaying a link to just one item:
 // if filter_id exists the 1 product redirect is ignored

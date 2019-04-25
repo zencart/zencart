@@ -6,7 +6,7 @@
  * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: Ajeh  Modified in v1.5.6 $
+ * @version $Id: mc12345678 Tue May 8 00:42:18 2018 -0400 Modified in v1.5.6 $
  */
 /**
  * Enter description here...
@@ -47,7 +47,7 @@ class ot_gv {
     $this->tax_class  = MODULE_ORDER_TOTAL_GV_TAX_CLASS;
     // $this->show_redeem_box = MODULE_ORDER_TOTAL_GV_REDEEM_BOX;
     $this->credit_class = true;
-    if (!zen_not_null(ltrim($_SESSION['cot_gv'], ' 0')) || $_SESSION['cot_gv'] == '0') $_SESSION['cot_gv'] = '0.00';
+    if (!(isset($_SESSION['cot_gv']) && zen_not_null(ltrim($_SESSION['cot_gv'], ' 0'))) || $_SESSION['cot_gv'] == '0') $_SESSION['cot_gv'] = '0.00';
     if (IS_ADMIN_FLAG !== true) {
       $this->checkbox = $this->user_prompt . '<input type="text" size="6" onkeyup="submitFunction()" name="cot_gv" value="' . number_format($_SESSION['cot_gv'], 2) . '" onfocus="if (this.value == \'' . number_format($_SESSION['cot_gv'], 2) . '\') this.value = \'\';" />' . ($this->user_has_gv_account($_SESSION['customer_id']) > 0 ? '<br />' . MODULE_ORDER_TOTAL_GV_USER_BALANCE . $currencies->format($this->user_has_gv_account($_SESSION['customer_id'])) : '');
     }
@@ -134,6 +134,7 @@ class ot_gv {
    * if customer has a GV balance, then we display the input field to allow entry of desired GV redemption amount
    */
   function use_credit_amount() {
+    $output_string = '';
     if ($this->selection_test()) {
       $output_string = $this->checkbox;
     }
@@ -186,6 +187,7 @@ class ot_gv {
    */
   function credit_selection() {
     global $db, $currencies;
+    $selection = array();
     $gv_query = $db->Execute("select coupon_id from " . TABLE_COUPONS . " where coupon_type = 'G' and coupon_active='Y'");
     // checks to see if any GVs are in the system and active or if the current customer has any GV balance
     if ($gv_query->RecordCount() > 0 || $this->use_credit_amount()) {
@@ -206,15 +208,16 @@ class ot_gv {
    */
   function apply_credit() {
     global $db, $order, $messageStack;
+    $gv_payment_amount = 0;
     // check for valid redemption amount vs available credit for current customer
-    if ($_SESSION['cot_gv'] != 0) {
-      $gv_result = $db->Execute("select amount from " . TABLE_COUPON_GV_CUSTOMER . " where customer_id = '" . (int)$_SESSION['customer_id'] . "'");
+    if (!empty($_SESSION['cot_gv'])) {
+      $gv_result = $db->Execute("SELECT amount FROM " . TABLE_COUPON_GV_CUSTOMER . " WHERE customer_id = " . (int)$_SESSION['customer_id']);
       // obtain final "deduction" amount
       $gv_payment_amount = $this->deduction;
       // determine amount of GV to redeem based on available balance minus qualified/calculated deduction suitable to this order
-      $gv_amount = $gv_result->fields['amount'] - $gv_payment_amount;
+      $gv_amount = (!$gv_result->EOF ? $gv_result->fields['amount'] : 0) - $gv_payment_amount;
       // reduce customer's GV balance by the amount redeemed
-      $db->Execute("update " . TABLE_COUPON_GV_CUSTOMER . " set amount = '" . $gv_amount . "' where customer_id = '" . (int)$_SESSION['customer_id'] . "'");
+      $db->Execute("UPDATE " . TABLE_COUPON_GV_CUSTOMER . " SET amount = '" . $gv_amount . "' WHERE customer_id = " . (int)$_SESSION['customer_id']);
     }
     // clear GV redemption flag since it's already been claimed and deducted
     $_SESSION['cot_gv'] = false;
@@ -236,7 +239,7 @@ class ot_gv {
     if (isset($_POST['cot_gv']) && $_POST['cot_gv'] == 0) $_SESSION['cot_gv'] = '0.00';
 
     // if we have a GV redemption code submitted, process it
-    if ($_POST['gv_redeem_code']) {
+    if (!empty($_POST['gv_redeem_code'])) {
       // check for validity
       $_POST['gv_redeem_code'] = preg_replace('/[^0-9a-zA-Z]/', '', $_POST['gv_redeem_code']);
       $gv_result = $db->Execute("select coupon_id, coupon_type, coupon_amount from " . TABLE_COUPONS . " where coupon_code = '" . zen_db_prepare_input($_POST['gv_redeem_code']) . "' and coupon_type = 'G'");
@@ -282,7 +285,7 @@ class ot_gv {
         zen_redirect(zen_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL',true, false));
       }
     }
-    if ($_POST['submit_redeem_x'] && $gv_result->fields['coupon_type'] == 'G') zen_redirect(zen_href_link(FILENAME_CHECKOUT_PAYMENT, 'error_message=' . urlencode(ERROR_NO_REDEEM_CODE), 'SSL'));
+    if (isset($_POST['submit_redeem_x']) && $_POST['submit_redeem_x'] && $gv_result->fields['coupon_type'] == 'G') zen_redirect(zen_href_link(FILENAME_CHECKOUT_PAYMENT, 'error_message=' . urlencode(ERROR_NO_REDEEM_CODE), 'SSL'));
   }
   /**
    * Calculate GV claim amount (GV amounts are always based on the STORE's default currency value)

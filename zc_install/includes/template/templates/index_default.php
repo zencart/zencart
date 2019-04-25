@@ -3,9 +3,10 @@
  * @package Installer
  * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: zcwilt   Modified in v1.5.6 $
+ * @version $Id: Drbyte Tue Oct 9 18:48:15 2018 -0400 Modified in v1.5.6 $
  */
 require(DIR_FS_INSTALL . DIR_WS_INSTALL_TEMPLATE . 'partials/partial_modal_help.php');
+$adjustWarnIssues = false;
 ?>
 <form id="systemCheck" name="systemCheck" method="post" action="index.php?main_page=<?php echo $formAction; ?>">
 <input type="hidden" name="lng" value="<?php echo $lng; ?>" >
@@ -73,12 +74,23 @@ require(DIR_FS_INSTALL . DIR_WS_INSTALL_TEMPLATE . 'partials/partial_modal_help.
 </div>
 <?php } ?>
 <?php if ($hasWarnErrors) { ?>
+    <?php if (empty($errorHeadingFlag)) $errorHeadingFlag = false; ?>
+    <?php foreach ($listWarnErrors as $error) { ?>
+        <?php if (strpos($error['mainErrorText'], 'PRO TIP:') === false) { ?>
+            <?php $errorHeadingFlag = true; ?>
+
+            <?php break; ?>
+        <?php } ?>
+    <?php } ?>
+
 <div id="warnErrors" class="errorList">
-	<?php if ($adjustWarnIssues) { ?>
+    <?php if ($errorHeadingFlag) { ?>
+        <?php if ($adjustWarnIssues) { ?>
   <h2><?php echo TEXT_INDEX_WARN_ERRORS; ?></h2>
-  <?php } else { ?>
+        <?php } else { ?>
   <h2><?php echo TEXT_INDEX_WARN_ERRORS_ALT; ?></h2>
-  <?php } ?>
+        <?php } ?>
+    <?php } ?>
     <?php foreach ($listWarnErrors as $error) { ?>
     	<?php if (strpos($error['mainErrorText'], 'PRO TIP:') !== false) { ?>
     <div class="alert-box">

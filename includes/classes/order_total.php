@@ -6,7 +6,7 @@
  * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: DrByte  Modified in v1.5.6 $
+ * @version $Id: mc12345678 Tue May 8 00:42:18 2018 -0400 Modified in v1.5.6 $
  */
 /**
  * order-total class
@@ -158,7 +158,7 @@ class order_total extends base {
         $class = substr($value, 0, strrpos($value, '.'));
         if (isset($GLOBALS[$class]->credit_class) && $GLOBALS[$class]->credit_class == true ) {
           $post_var = 'c' . $GLOBALS[$class]->code;
-          if ($_POST[$post_var]) $_SESSION[$post_var] = $_POST[$post_var];
+          if (isset($_POST[$post_var]) && $_POST[$post_var]) $_SESSION[$post_var] = $_POST[$post_var];
           $GLOBALS[$class]->collect_posts();
         }
       }
@@ -207,7 +207,7 @@ class order_total extends base {
     if (MODULE_ORDER_TOTAL_INSTALLED) {
       foreach($this->modules as $value) {
         $class = substr($value, 0, strrpos($value, '.'));
-        if ( $GLOBALS[$class]->credit_class && method_exists($GLOBALS[$class], 'clear_posts')) {
+        if (!empty($GLOBALS[$class]->credit_class) && method_exists($GLOBALS[$class], 'clear_posts')) {
           $GLOBALS[$class]->clear_posts();
         }
       }

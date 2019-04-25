@@ -3,17 +3,17 @@
  * categories_tabs.php module
  *
  * @package templateSystem
- * @copyright Copyright 2003-2006 Zen Cart Development Team
+ * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: categories_tabs.php 3018 2006-02-12 21:04:04Z wilt $
+ * @version $Id: Scott C Wilson Sat Aug 25 07:25:23 2018 -0400 Modified in v1.5.6 $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
 }
 $order_by = " order by c.sort_order, cd.categories_name ";
 
-$categories_tab_query = "select c.categories_id, cd.categories_name from " .
+$categories_tab_query = "select c.sort_order, c.categories_id, cd.categories_name from " .
 TABLE_CATEGORIES . " c, " . TABLE_CATEGORIES_DESCRIPTION . " cd
                           where c.categories_id=cd.categories_id and c.parent_id= '0' and cd.language_id='" . (int)$_SESSION['languages_id'] . "' and c.categories_status='1'" .
 $order_by;

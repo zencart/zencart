@@ -1,10 +1,10 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2017 Zen Cart Development Team
+ * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte  Modified in v1.5.6 $
+ * @version $Id: DrByte 2019 Jan 04 Modified in v1.5.6a $
  */
 require('includes/application_top.php');
 
@@ -61,7 +61,7 @@ $currencies = new currencies();
 
 $action = (isset($_GET['action']) ? $_GET['action'] : '');
 
-$_GET['products_filter'] = $products_filter = (isset($_GET['products_filter']) ? (int)$_GET['products_filter'] : (int)$products_filter);
+$_GET['products_filter'] = $products_filter = (isset($_GET['products_filter']) ? (int)$_GET['products_filter'] : (isset($products_filter) ? (int)$products_filter : 0));
 $_GET['attributes_id'] = (isset($_GET['attributes_id']) ? (int)$_GET['attributes_id'] : 0);
 
 $_GET['current_category_id'] = $current_category_id = (isset($_GET['current_category_id']) ? (int)$_GET['current_category_id'] : (int)$current_category_id);
@@ -450,7 +450,7 @@ if (zen_not_null($action)) {
           $products_options_query = $db->Execute("SELECT products_options_type
                                                   FROM " . TABLE_PRODUCTS_OPTIONS . "
                                                   WHERE products_options_id = " . (int)$_POST['options_id']);
-          switch ($products_options_array->fields['products_options_type']) {
+          switch ($products_options_query->fields['products_options_type']) {
             case PRODUCTS_OPTIONS_TYPE_TEXT:
             case PRODUCTS_OPTIONS_TYPE_FILE:
               $values_id = PRODUCTS_OPTIONS_VALUES_TEXT_ID;
@@ -503,14 +503,14 @@ if (zen_not_null($action)) {
 
           $attributes_image = new upload('attributes_image');
           $attributes_image->set_extensions(array('jpg', 'jpeg', 'gif', 'png', 'webp', 'flv', 'webm', 'ogg'));
-          $attributes_image->set_destination(DIR_FS_CATALOG_IMAGES . $_POST['img_dir']);
+          $attributes_image->set_destination(DIR_FS_CATALOG_IMAGES . (isset($_POST['img_dir']) ? $_POST['img_dir']: ''));
           if ($attributes_image->parse() && $attributes_image->save($_POST['overwrite'])) {
             $attributes_image_name = ($attributes_image->filename != 'none' ? ($_POST['img_dir'] . $attributes_image->filename) : '');
           } else {
-            $attributes_image_name = ((isset($_POST['attributes_previous_image']) && $_POST['attributes_image'] != 'none') ? $_POST['attributes_previous_image'] : '');
+            $attributes_image_name = ((isset($_POST['attributes_previous_image']) && !(isset($_POST['attributes_image']) && $_POST['attributes_image'] == 'none')) ? $_POST['attributes_previous_image'] : '');
           }
 
-          if ($_POST['image_delete'] == 1) {
+          if (isset($_POST['image_delete']) && $_POST['image_delete'] == 1) {
             $attributes_image_name = '';
           }
 
@@ -791,7 +791,7 @@ function zen_js_option_values_list($selectedName, $fieldName) {
     <script>
       function go_option() {
           if (document.option_order_by.selected.options[document.option_order_by.selected.selectedIndex].value != "none") {
-              location = "<?php echo zen_href_link(FILENAME_ATTRIBUTES_CONTROLLER, 'option_page=' . ($_GET['option_page'] ? $_GET['option_page'] : 1)); ?>&option_order_by=" + document.option_order_by.selected.options[document.option_order_by.selected.selectedIndex].value;
+              location = "<?php echo zen_href_link(FILENAME_ATTRIBUTES_CONTROLLER, 'option_page=' . (isset($_GET['option_page']) && $_GET['option_page'] ? $_GET['option_page'] : 1)); ?>&option_order_by=" + document.option_order_by.selected.options[document.option_order_by.selected.selectedIndex].value;
           }
       }
       function popupWindow(url) {
@@ -954,7 +954,7 @@ function zen_js_option_values_list($selectedName, $fieldName) {
       if ($action == 'attribute_features_copy_to_category') {
         ?>
         <div class="row">
-            <?php zen_draw_form('product_copy_to_category', FILENAME_ATTRIBUTES_CONTROLLER, 'action=update_attributes_copy_to_category', 'post', 'class="form-horizontal"'); ?>
+            <?php echo zen_draw_form('product_copy_to_category', FILENAME_ATTRIBUTES_CONTROLLER, 'action=update_attributes_copy_to_category', 'post', 'class="form-horizontal"'); ?>
             <?php echo zen_draw_hidden_field('products_filter', $_GET['products_filter']); ?>
             <?php echo zen_draw_hidden_field('products_id', $_GET['products_filter']); ?>
             <?php echo zen_draw_hidden_field('products_update_id', $_GET['products_update_id']); ?>
@@ -1214,6 +1214,7 @@ function zen_js_option_values_list($selectedName, $fieldName) {
                                              FROM " . TABLE_PRODUCTS . "
                                              WHERE products_id = " . (int)$products_filter . "
                                              LIMIT 1");
+              $rows = 0;
 //  echo '$products_filter: ' . $products_filter . ' tax id: ' . $product_check->fields['products_tax_class_id'] . '<br>';
               foreach ($attributes_values as $attributes_value) {
                 $current_attributes_products_id = $attributes_value['products_id'];
@@ -1571,6 +1572,9 @@ function zen_js_option_values_list($selectedName, $fieldName) {
                                                FROM " . TABLE_PRODUCTS_ATTRIBUTES_DOWNLOAD . "
                                                WHERE products_attributes_id = " . (int)$attributes_value['products_attributes_id'];
                         $download = $db->Execute($download_query_raw);
+                        $products_attributes_filename = '';
+                        $products_attributes_maxdays = 0;
+                        $products_attributes_maxcount = 0;
                         if ($download->RecordCount() > 0) {
                           $products_attributes_filename = $download->fields['products_attributes_filename'];
                           $products_attributes_maxdays = $download->fields['products_attributes_maxdays'];
@@ -2024,6 +2028,7 @@ function zen_js_option_values_list($selectedName, $fieldName) {
                     ?>
                     <?php
                     if (DOWNLOAD_ENABLED == 'true') {
+                      $products_attributes_filename = '';
                       $products_attributes_maxdays = DOWNLOAD_MAX_DAYS;
                       $products_attributes_maxcount = DOWNLOAD_MAX_COUNT;
                       ?>

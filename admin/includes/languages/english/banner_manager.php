@@ -1,9 +1,9 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2013 Zen Cart Development Team
+ * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: banner_manager.php 3131 2006-03-07 22:53:04Z ajeh $
+ * @version $Id: DrByte Sat Jul 5 15:44:37 2014 -0400 Modified in v1.5.6 $
  */
 
 define('HEADING_TITLE', 'Banner Manager');

@@ -4,7 +4,7 @@
  * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: DrByte  Modified in v1.5.6 $
+ * @version $Id: mc12345678 Tue Aug 28 21:18:16 2018 -0400 Modified in v1.5.6 $
  */
 /*
 
@@ -148,6 +148,8 @@
       $dest_country = $order->delivery['country']['iso_code_2'];
       $dest_zone = 0;
       $error = false;
+      $shipping_method = '';
+      $shipping_cost = 0;
 
     $order_total_amount = $_SESSION['cart']->show_total() - $_SESSION['cart']->free_shipping_prices() ;
 

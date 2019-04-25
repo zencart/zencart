@@ -1,229 +1,231 @@
 <!DOCTYPE html>
 <html>
 <!--
-	/**
-	 * @package documentation
-	 * @copyright Copyright 2003-2018 Zen Cart Development Team
-	 * @license https://www.zen-cart.com/license/2_0.txt GNU Public License v2.0
-	 * @version $Id: whatsnew_1.5.1.html  Modified in v1.5.6 $
-	 */
-	//-->
+    /**
+     * @package documentation
+ * @copyright Copyright 2003-2019 Zen Cart Development Team
+     * @license https://www.zen-cart.com/license/2_0.txt GNU Public License v2.0
+     * @version $Id: DrByte 2019 Jan 04 Modified in v1.5.6a $
+     */
+//-->
 <head>
-	<title>What's New in Zen Cart&reg; v1.5.1</title>
-	<meta charset="utf-8">
-	<meta http-equiv="x-ua-compatible" content="ie=edge">
-	<meta http-equiv="Content-Type" content="text/html">
-	<meta http-equiv="imagetoolbar" content="no">
-	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-	<meta name="keywords" content="">
-	<meta name="description" content="">
-	<meta name="authors" content="The Zen Cart&reg; Team">
-	<meta name="generator" content="shopping cart program by Zen Cart&reg;, https://www.zen-cart.com">
-	<meta name="robots" content="noindex, nofollow">
-	<link rel="stylesheet" href="./zen.css">
+    <title>What's New in Zen Cart&reg; v1.5.1</title>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta http-equiv="Content-Type" content="text/html">
+    <meta http-equiv="imagetoolbar" content="no">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <meta name="authors" content="The Zen Cart&reg; Team">
+    <meta name="generator" content="shopping cart program by Zen Cart&reg;, https://www.zen-cart.com">
+    <meta name="robots" content="noindex, nofollow">
+    <link rel="stylesheet" href="./zen.css">
 </head>
 <body>
+<div class="container">
 
-	<section id="pageHeader">
-		<div class="h-g">
-			<div class="h-u-md-6-12 h-u-sm-1-12">
-				<a href="./index.html">
-					<img src="../includes/templates/template_default/images/logo.gif" alt="Zen Cart&reg;" title="Zen Cart&reg;" width="192" height="68" border="0" />
-				</a>
-			</div>
-			<div class="h-u-md-6-12 h-u-sm-hidden h-text-right">
-				<a class="h-btn h-box-shadow" href="./index.html">
-					Documentation Home
-				</a>
-			</div>
-		</div>
-	</section> <!-- End pageHeader //-->
-	
-	<section id="zenTeamMessage">
-		<h1>Welcome to Zen Cart&reg;</h1>	
-		<div class="h-alert h-box-shadow ">
-			<em>Dear Zen Cart&reg; User</em>,
-			<p>
-				Zen Cart&reg; is made available to you for your use, addition, changes, modification, etc. without charge, under Version 2 of the GNU General Public License.
-			</p>
-			<p>
-				While we do not charge for this software, donations are greatly appreciated, each time you install a new version, to help cover the expenses of maintenance, upgrades, updates, the free support forum and the continued development of this software for your online E-Commerce store.
-			</p>
-			<p>
-				Donations can be made on the <a href="https://www.zen-cart.com/donate" target="_blank">Zen Cart&reg; Team Page</a>
-			</p>
-			<p>
-				We appreciate your support.
-				<br>
-				<em>The Zen Cart&reg; Team</em>
-			</p>
-		</div>
-	</section> <!-- End zenTeamMessage //-->
-	
-	<section id="upgradeInstructions">
-		<div>
-			<h1>
-				Upgrade Instructions
-			</h1>
-			<h2>
-				From v1.5.0 to v1.5.1
-			</h2>
-			<p>
-				If you are already using v1.5.0 and have <em>not customized or altered</em> any of the files listed in the <em>changed_files-v1-5-1.html</em> document, then simply replace those files with the new versions contained herein.
-			</p>
-			<p>
-				If you have <em>customized or altered</em> certain files, simply re-do your customizations in the new version of those particular files by making the same changes needed.
-			</p>
-			<p>
-				If you are using Addons/Plugins that have made alterations to those files, it is best to compare those changed files against the original v1.5.0 files, and see what changes were there ... and then re-build those changes in the v1.5.1 file.
-			</p>
-			<h2>
-				To v1.5.1 from v1.3.9h or older
-			</h2>
-			<p>
-				If you are upgrading from a version OLDER than v1.5.0, then please do a <a href="https://www.zen-cart.com/upgrades">standard complete site upgrade</a>.
-			</p>
-		</div>
-	</section> <!-- End upgradeInstructions //-->
-	
-	<section id="changeLog">
-		<div>
-			<h1>
-				CHANGELOG - List of Changed Files 
-			</h1>
-			<p>
-				For a list of files that have been changed since v1.5.0, see <a href="changed_files-v1-5-1.html" target="_blank">changed_files-v1-5-1.html</a>
-			</p>
-		</div>
-	</section> <!-- End changeLog //-->
-	
-	<section id="whatsNew">
-		<div>
-			<h1>
-				Whats New ... Changes from v1.5.0 to v1.5.1 
-			</h1>
-			<h2>
-				Improvements and Bugfixes Included Since v1.5.0
-			</h2>
-		</div>
-		<div>
-			<h3>
-				Added:
-			</h3>
-			<ul>
-				<li>CHANGE-207 - Add bypass to bandage the performance/caching problem with products_viewed counter on busy sites, inspired by an idea from data-diggers. This step simply splits the logic out into an observer class, and adds a switch to turn it on or off. Doesn't change any schema or any reports. But of course if the switch is set to something other than 'on', then the reports will be useless too unless alternate custom data tracking code is added to the observer class.</li>
-				<li>CHANGE-208 - Implement data-diggers querycache</li>
-				<li>CHANGE-220 - Add optional constant 'DOWNLOADS_SKIP_DOT_PREFIX_ON_REDIRECT' to overcome rare problem on some servers which won't allow use of dot-prefixed temporary files.    Usage: define('DOWNLOADS_SKIP_DOT_PREFIX_ON_REDIRECT', TRUE); in /includes/extra_configures/ folder.</li>
-				<li>CHANGE-238 - php 5.4 Updates, mainly for htmlentities() calls</li>
-				<li>CHANGE-240 - Add form auto-focus on advanced-search results and admin category lookups</li>
-				<li>CHANGE-265 - Add children support to category-specific stylesheet overrides -- ie: c_XX_XX_children.css</li>
-				<li>CHANGE-273 - Add css-driven antispam support to contact-us, create-account, and product reviews</li>
-				<li>CHANGE-282 - Add improved notifier support for the shipping calculate_boxes_weight_and_tare() function to allow for easier intercept by plugins</li>
-				<li>CHANGE-283 - Add coders the ability to allow for a custom count query in split page results class</li>
-				<li>CHANGE-284 - Update db schema and various code bits to handle longer lengths for IP addresses, to accommodate IPv6</li>
-				<li>CHANGE-287 - Add hooks for encryption tools needed by modules such as PPA</li>
-				<li>CHANGE-297 - Add improvements to notifier support for Downloads script (add all order data to observer resources)</li>
-				<li>CHANGE-298 - Move debug logging to separate /logs/ folder, as a performance improvement measure, and be more semantically meaningful</li>
-			</ul>
-			<div class="back-to-top">
-				^^ <a href="#pageHeader">Back to Top</a> ^^
-			</div>
-		</div>
-		<div>
-			<h3>
-				Fixes:
-			</h3>
-			<ul>
-				<li>CHANGE-201 - Fix JS_STATE typo in /admin/includes/languages/english.php</li>
-				<li>CHANGE-202 - Fix compounding or multiple tax problems</li>
-				<li>CHANGE-204 - Fix problem with unescaped error messages in zc_install</li>
-				<li>CHANGE-205 - Fix error on Windows hosts: 'gzpost' can't have default value</li>
-				<li>CHANGE-206 - Fix admin profiles code to also manage product types</li>
-				<li>CHANGE-209 - Prevent the "apple double" effect in auto-loading folders ... ie: skip all files starting with "." or "_"</li>
-				<li>CHANGE-211 - Fix for bug where renaming an Admin Profile name allowed a blank entry.</li>
-				<li>CHANGE-213 - Fix missing check for EMAIL_DISCLAIMER constant, to help prevent problems caused by people who incorrectly delete the define from the language files.</li>
-				<li>CHANGE-214 - Fix various documentation errors</li>
-				<li>CHANGE-215 - Fix BOC currency exchange rate lookup to use newer source. Fix bug which could return 0.00 mistakenly in some cases.</li>
-				<li>CHANGE-216 - Fix handler for HTML Editor plugins - was missing trailing slash in lookup path</li>
-				<li>CHANGE-218 - Fix Admin alert email text (HTML content missing) on change of user details</li>
-				<li>CHANGE-219 - Fix multiple-content-length headers when downloading by redirect</li>
-				<li>CHANGE-221 - Fix cause of error message: PHP Warning: strlen() expects parameter 1 to be string, when triggered by customer notification preferences submission at checkout</li>
-				<li>CHANGE-222 - Fix the .htaccess restriction which was preventing the .cur image files from working with spiffyCal</li>
-				<li>CHANGE-223 - Fix Authorize.net SIM/echeck module "currency code invalid" error when customer is shopping in non-USD currency</li>
-				<li>CHANGE-230 - Fix password reset vulnerability (random seed/entropy issue)</li>
-				<li>CHANGE-231 - Fix page_not_found on session timeout to time_out instead</li>
-				<li>CHANGE-233 - Fix HTML error in admin/profiles.php page - /head should have been /thead</li>
-				<li>CHANGE-236 - Fix: Customer authorization e-mail not sent out on pressing "the red button".</li>
-				<li>CHANGE-239 - Fix virtual cart problem causing error: "PayPal has unexpectedly returned a blank address" only on carts with all virtual products</li>
-				<li>CHANGE-241 - Fix Improper handling of '0' as search keyword</li>
-				<li>CHANGE-242 - Fix output/display errors in admin user/profile tools.</li>
-				<li>CHANGE-244 - Fix name of form field for javascript character count which could break in non-english translations</li>
-				<li>CHANGE-246 - Improve exceptions for testing Authnet in Test Mode</li>
-				<li>CHANGE-249 - Fix to allow more than one onetime fee in the shopping basket</li>
-				<li>CHANGE-255 - Fix missing [close]  from popup_search_help template file</li>
-				<li>CHANGE-256 - Fix validation errors in manufacturers sidebox if manufacturer_name contains ampersands</li>
-				<li>CHANGE-259 - Fix Admin menu problem occurring only in Opera 12 on Windows</li>
-				<li>CHANGE-261 - Fix outdated error message text about PHP 5.4 and configure.php file problems</li>
-				<li>CHANGE-262 - Fix PHP Error when no Record Company ID with Typefilter</li>
-				<li>CHANGE-263 - Clarify password-expiry language to minimize alarmist reactions for those who don't understand the common use of expiring passwords</li>
-				<li>CHANGE-264 - Fix PHP Fatal error: 1062:Duplicate entry '1-1' for key 1 when adding option values</li>
-				<li>CHANGE-268 - Fix Hardcoded text in Reports/Customer Referrals</li>
-				<li>CHANGE-269 - Fix misspelled Germany state (zones table)</li>
-				<li>CHANGE-275 - Fix json_encode error on non-UTF8 sites</li>
-				<li>CHANGE-277 - Rebrand PayPal products (for USA merchants only) according to changes implemented by PayPal in Q2 2012</li>
-				<li>CHANGE-279 - Fix PayPal Processor Decline Fails to Show Error Message when debug logging disabled</li>
-				<li>CHANGE-280 - Fix inconsistency in dist-configure.php example files</li>
-				<li>CHANGE-281 - Fix incorrect database constant used in tpl_account_default.php</li>
-				<li>CHANGE-294 - Fix issue where a customer who is banned after login could still checkout</li>
-				<li>CHANGE-296 - Update outdated Admin error message text for secure usernames</li>
-				<li>CHANGE-299 - update to change-230</li>
-				<li>CHANGE-199 - Fix various vulnerabilities in zc_install</li>
-				<li>CHANGE-325 - Admin Configuration does not correctly encode html entities in text boxes</li>
-				<li>CHANGE-327 - Update PayPal sandbox endpoints</li>
-				<li>CHANGE-334 - PHP Warning: strip_tags() expects at most 2 parameters, 4 given in coupon_admin.php</li>
-			</ul>
-			<div class="back-to-top">
-				^^ <a href="#pageHeader">Back to Top</a> ^^
-			</div>
-		</div>
-	</section> <!-- End whatsNew //-->
-	
-	<section id="helpSupport">
-		<div>
-			<h1>Help and Support</h1>
-			<p>
-				For additional help and support, visit the <a href="https://www.zen-cart.com/tutorials" target="_blank">Zen Cart&reg; FAQ</a> and the <a href="https://www.zen-cart.com/forum.php" target="_blank">Zen Cart&reg; Support Forum</a>.
-			</p>
-		</div>
-	</section> <!-- End helpSupport //-->
-	
-	<section id="footerBlock">
-		<div class="appInfo">
-			<p>
-				Zen Cart&reg; is derived from: Copyright 2003 osCommerce
-				<br><br>
-				This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
-				<br>
-				without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE
-				<br>
-				and is redistributable under Version 2 of the GNU General Public License.
-			<p>
-			<p>
-				<img src="osi-certified-120x100.png" alt="O S I Certified">
-				<br>
-				This software is OSI Certified Open Source Software.
-				<br>
-				OSI Certified is a certification mark of the Open Source Initiative.
-			<p>
-			<p class="zenData">
-				Copyright 2003 - 2011 Zen Ventures, LLC
-				<br><br>
-				Zen Cart&reg; 
-				<br>
-				<a href="https://www.zen-cart.com" target="_blank">www.zen-cart.com</a>
-			</p>
-		</div>
-	</section> <!-- End footerBlock //-->
-	
+    <section id="pageHeader">
+        <div class="row">
+            <div class="col-md-6 col-sm-12">
+                <a href="./index.html">
+                    <img src="../includes/templates/template_default/images/logo.gif" alt="Zen Cart&reg;" title="Zen Cart&reg;" width="192" height="68" border="0" />
+                </a>
+            </div>
+            <div class="col-md-6 hidden-xs hidden-sm text-right">
+                <a class="btn btn-primary add-shadow" href="./index.html">
+                    Documentation Home
+                </a>
+            </div>
+        </div>
+    </section> <!-- End pageHeader //-->
+    
+    <section id="zenTeamMessage">
+        <h1>Welcome to Zen Cart&reg;</h1>    
+        <div class="alert add-shadow">
+            <em>Dear Zen Cart&reg; User</em>,
+            <p>
+                Zen Cart&reg; is made available to you for your use, addition, changes, modification, etc. without charge, under Version 2 of the GNU General Public License.
+            </p>
+            <p>
+                While we do not charge for this software, donations are greatly appreciated, each time you install a new version, to help cover the expenses of maintenance, upgrades, updates, the free support forum and the continued development of this software for your online E-Commerce store.
+            </p>
+            <p>
+                Donations can be made on the <a href="https://www.zen-cart.com/donate" target="_blank">Zen Cart&reg; Team Page</a>
+            </p>
+            <p>
+                We appreciate your support.
+                <br>
+                <em>The Zen Cart&reg; Team</em>
+            </p>
+        </div>
+    </section> <!-- End zenTeamMessage //-->
+    
+    <section id="upgradeInstructions">
+        <div>
+            <h1>
+                Upgrade Instructions
+            </h1>
+            <h2>
+                From v1.5.0 to v1.5.1
+            </h2>
+            <p>
+                If you are already using v1.5.0 and have <em>not customized or altered</em> any of the files listed in the <em>changed_files-v1-5-1.html</em> document, then simply replace those files with the new versions contained herein.
+            </p>
+            <p>
+                If you have <em>customized or altered</em> certain files, simply re-do your customizations in the new version of those particular files by making the same changes needed.
+            </p>
+            <p>
+                If you are using Addons/Plugins that have made alterations to those files, it is best to compare those changed files against the original v1.5.0 files, and see what changes were there ... and then re-build those changes in the v1.5.1 file.
+            </p>
+            <h2>
+                To v1.5.1 from v1.3.9h or older
+            </h2>
+            <p>
+                If you are upgrading from a version OLDER than v1.5.0, then please do a <a href="https://www.zen-cart.com/upgrades">standard complete site upgrade</a>.
+            </p>
+        </div>
+    </section> <!-- End upgradeInstructions //-->
+    
+    <section id="changeLog">
+        <div>
+            <h1>
+                CHANGELOG - List of Changed Files 
+            </h1>
+            <p>
+                For a list of files that have been changed since v1.5.0, see <a href="changed_files-v1-5-1.html" target="_blank">changed_files-v1-5-1.html</a>
+            </p>
+        </div>
+    </section> <!-- End changeLog //-->
+    
+    <section id="whatsNew">
+        <div>
+            <h1>
+                Whats New ... Changes from v1.5.0 to v1.5.1 
+            </h1>
+            <h2>
+                Improvements and Bugfixes Included Since v1.5.0
+            </h2>
+        </div>
+        <div>
+            <h3>
+                Added:
+            </h3>
+            <ul>
+                <li>CHANGE-207 - Add bypass to bandage the performance/caching problem with products_viewed counter on busy sites, inspired by an idea from data-diggers. This step simply splits the logic out into an observer class, and adds a switch to turn it on or off. Doesn't change any schema or any reports. But of course if the switch is set to something other than 'on', then the reports will be useless too unless alternate custom data tracking code is added to the observer class.</li>
+                <li>CHANGE-208 - Implement data-diggers querycache</li>
+                <li>CHANGE-220 - Add optional constant 'DOWNLOADS_SKIP_DOT_PREFIX_ON_REDIRECT' to overcome rare problem on some servers which won't allow use of dot-prefixed temporary files.    Usage: define('DOWNLOADS_SKIP_DOT_PREFIX_ON_REDIRECT', TRUE); in /includes/extra_configures/ folder.</li>
+                <li>CHANGE-238 - php 5.4 Updates, mainly for htmlentities() calls</li>
+                <li>CHANGE-240 - Add form auto-focus on advanced-search results and admin category lookups</li>
+                <li>CHANGE-265 - Add children support to category-specific stylesheet overrides -- ie: c_XX_XX_children.css</li>
+                <li>CHANGE-273 - Add css-driven antispam support to contact-us, create-account, and product reviews</li>
+                <li>CHANGE-282 - Add improved notifier support for the shipping calculate_boxes_weight_and_tare() function to allow for easier intercept by plugins</li>
+                <li>CHANGE-283 - Add coders the ability to allow for a custom count query in split page results class</li>
+                <li>CHANGE-284 - Update db schema and various code bits to handle longer lengths for IP addresses, to accommodate IPv6</li>
+                <li>CHANGE-287 - Add hooks for encryption tools needed by modules such as PPA</li>
+                <li>CHANGE-297 - Add improvements to notifier support for Downloads script (add all order data to observer resources)</li>
+                <li>CHANGE-298 - Move debug logging to separate /logs/ folder, as a performance improvement measure, and be more semantically meaningful</li>
+            </ul>
+            <div class="back-to-top">
+                ^^ <a href="#pageHeader">Back to Top</a> ^^
+            </div>
+        </div>
+        <div>
+            <h3>
+                Fixes:
+            </h3>
+            <ul>
+                <li>CHANGE-201 - Fix JS_STATE typo in /admin/includes/languages/english.php</li>
+                <li>CHANGE-202 - Fix compounding or multiple tax problems</li>
+                <li>CHANGE-204 - Fix problem with unescaped error messages in zc_install</li>
+                <li>CHANGE-205 - Fix error on Windows hosts: 'gzpost' can't have default value</li>
+                <li>CHANGE-206 - Fix admin profiles code to also manage product types</li>
+                <li>CHANGE-209 - Prevent the "apple double" effect in auto-loading folders ... ie: skip all files starting with "." or "_"</li>
+                <li>CHANGE-211 - Fix for bug where renaming an Admin Profile name allowed a blank entry.</li>
+                <li>CHANGE-213 - Fix missing check for EMAIL_DISCLAIMER constant, to help prevent problems caused by people who incorrectly delete the define from the language files.</li>
+                <li>CHANGE-214 - Fix various documentation errors</li>
+                <li>CHANGE-215 - Fix BOC currency exchange rate lookup to use newer source. Fix bug which could return 0.00 mistakenly in some cases.</li>
+                <li>CHANGE-216 - Fix handler for HTML Editor plugins - was missing trailing slash in lookup path</li>
+                <li>CHANGE-218 - Fix Admin alert email text (HTML content missing) on change of user details</li>
+                <li>CHANGE-219 - Fix multiple-content-length headers when downloading by redirect</li>
+                <li>CHANGE-221 - Fix cause of error message: PHP Warning: strlen() expects parameter 1 to be string, when triggered by customer notification preferences submission at checkout</li>
+                <li>CHANGE-222 - Fix the .htaccess restriction which was preventing the .cur image files from working with spiffyCal</li>
+                <li>CHANGE-223 - Fix Authorize.net SIM/echeck module "currency code invalid" error when customer is shopping in non-USD currency</li>
+                <li>CHANGE-230 - Fix password reset vulnerability (random seed/entropy issue)</li>
+                <li>CHANGE-231 - Fix page_not_found on session timeout to time_out instead</li>
+                <li>CHANGE-233 - Fix HTML error in admin/profiles.php page - /head should have been /thead</li>
+                <li>CHANGE-236 - Fix: Customer authorization e-mail not sent out on pressing "the red button".</li>
+                <li>CHANGE-239 - Fix virtual cart problem causing error: "PayPal has unexpectedly returned a blank address" only on carts with all virtual products</li>
+                <li>CHANGE-241 - Fix Improper handling of '0' as search keyword</li>
+                <li>CHANGE-242 - Fix output/display errors in admin user/profile tools.</li>
+                <li>CHANGE-244 - Fix name of form field for javascript character count which could break in non-english translations</li>
+                <li>CHANGE-246 - Improve exceptions for testing Authnet in Test Mode</li>
+                <li>CHANGE-249 - Fix to allow more than one onetime fee in the shopping basket</li>
+                <li>CHANGE-255 - Fix missing [close]    from popup_search_help template file</li>
+                <li>CHANGE-256 - Fix validation errors in manufacturers sidebox if manufacturer_name contains ampersands</li>
+                <li>CHANGE-259 - Fix Admin menu problem occurring only in Opera 12 on Windows</li>
+                <li>CHANGE-261 - Fix outdated error message text about PHP 5.4 and configure.php file problems</li>
+                <li>CHANGE-262 - Fix PHP Error when no Record Company ID with Typefilter</li>
+                <li>CHANGE-263 - Clarify password-expiry language to minimize alarmist reactions for those who don't understand the common use of expiring passwords</li>
+                <li>CHANGE-264 - Fix PHP Fatal error: 1062:Duplicate entry '1-1' for key 1 when adding option values</li>
+                <li>CHANGE-268 - Fix Hardcoded text in Reports/Customer Referrals</li>
+                <li>CHANGE-269 - Fix misspelled Germany state (zones table)</li>
+                <li>CHANGE-275 - Fix json_encode error on non-UTF8 sites</li>
+                <li>CHANGE-277 - Rebrand PayPal products (for USA merchants only) according to changes implemented by PayPal in Q2 2012</li>
+                <li>CHANGE-279 - Fix PayPal Processor Decline Fails to Show Error Message when debug logging disabled</li>
+                <li>CHANGE-280 - Fix inconsistency in dist-configure.php example files</li>
+                <li>CHANGE-281 - Fix incorrect database constant used in tpl_account_default.php</li>
+                <li>CHANGE-294 - Fix issue where a customer who is banned after login could still checkout</li>
+                <li>CHANGE-296 - Update outdated Admin error message text for secure usernames</li>
+                <li>CHANGE-299 - update to change-230</li>
+                <li>CHANGE-199 - Fix various vulnerabilities in zc_install</li>
+                <li>CHANGE-325 - Admin Configuration does not correctly encode html entities in text boxes</li>
+                <li>CHANGE-327 - Update PayPal sandbox endpoints</li>
+                <li>CHANGE-334 - PHP Warning: strip_tags() expects at most 2 parameters, 4 given in coupon_admin.php</li>
+            </ul>
+            <div class="back-to-top">
+                ^^ <a href="#pageHeader">Back to Top</a> ^^
+            </div>
+        </div>
+    </section> <!-- End whatsNew //-->
+    
+    <section id="helpSupport">
+        <div>
+            <h1>Help and Support</h1>
+            <p>
+                For additional help and support, visit the <a href="https://www.zen-cart.com/tutorials" target="_blank">Zen Cart&reg; FAQ</a> and the <a href="https://www.zen-cart.com/forum.php" target="_blank">Zen Cart&reg; Support Forum</a>.
+            </p>
+        </div>
+    </section> <!-- End helpSupport //-->
+    
+    <section id="footerBlock">
+        <div class="appInfo">
+            <p>
+                Zen Cart&reg; is derived from: Copyright 2003 osCommerce
+                <br><br>
+                This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+                <br>
+                without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE
+                <br>
+                and is redistributable under Version 2 of the GNU General Public License.
+            </p>
+            <p>
+                <img src="osi-certified-120x100.png" alt="O S I Certified">
+                <br>
+                This software is OSI Certified Open Source Software.
+                <br>
+                OSI Certified is a certification mark of the Open Source Initiative.
+            </p>
+            <p class="zenData">
+                Copyright 2003 - 2011 Zen Ventures, LLC
+                <br><br>
+                Zen Cart&reg; 
+                <br>
+                <a href="https://www.zen-cart.com" target="_blank">www.zen-cart.com</a>
+            </p>
+        </div>
+    </section> <!-- End footerBlock //-->
+    
+</div>
 </body>
 </html>

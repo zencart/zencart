@@ -1,10 +1,10 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2017 Zen Cart Development Team
+ * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: DrByte  Nov 2017  Modified in v1.5.6 $
+ * @version $Id: Drbyte Mon Nov 12 20:38:09 2018 -0500 Modified in v1.5.6 $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
@@ -49,27 +49,27 @@ if (!defined('IS_ADMIN_FLAG')) {
 /**
  * should a message be displayed if install directory exists
  */
-define('WARN_INSTALL_EXISTENCE', 'true');
+if (!defined('WARN_INSTALL_EXISTENCE')) define('WARN_INSTALL_EXISTENCE', 'true');
 /**
  * should a message be displayed if  config directory is writeable
  */
-define('WARN_CONFIG_WRITEABLE', 'true');
+if (!defined('WARN_CONFIG_WRITEABLE')) define('WARN_CONFIG_WRITEABLE', 'true');
 /**
  * should a message be displayed if sql cache directory not writeable
  */
-define('WARN_SQL_CACHE_DIRECTORY_NOT_WRITEABLE', 'true');
+if (!defined('WARN_SQL_CACHE_DIRECTORY_NOT_WRITEABLE')) define('WARN_SQL_CACHE_DIRECTORY_NOT_WRITEABLE', 'true');
 /**
  * should a message be displayed if session.autostart is on in php.ini
  */
-define('WARN_SESSION_AUTO_START', 'true');
+if (!defined('WARN_SESSION_AUTO_START')) define('WARN_SESSION_AUTO_START', 'true');
 /**
  * should a message be displayed if download directory not readable
  */
-define('WARN_DOWNLOAD_DIRECTORY_NOT_READABLE', 'true');
+if (!defined('WARN_DOWNLOAD_DIRECTORY_NOT_READABLE')) define('WARN_DOWNLOAD_DIRECTORY_NOT_READABLE', 'true');
 /**
  * should a message be displayed if system detects version problem with the database
  */
-define('WARN_DATABASE_VERSION_PROBLEM','true');
+if (!defined('WARN_DATABASE_VERSION_PROBLEM')) define('WARN_DATABASE_VERSION_PROBLEM','true');
 // check if the installer directory exists, and warn of its existence
 if (WARN_INSTALL_EXISTENCE == 'true') {
   $check_path = realpath(DIR_FS_CATALOG . '/zc_install');

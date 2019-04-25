@@ -5,10 +5,10 @@
  * handles pulldown menu dependencies for state/country selection
  *
  * @package page
- * @copyright Copyright 2003-2016 Zen Cart Development Team
+ * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: DrByte  Wed Jan 6 12:47:43 2016 -0500 Modified in v1.5.5 $
+ * @version $Id: Scott C Wilson Sat Oct 27 01:31:20 2018 -0400 Modified in v1.5.6 $
  */
 ?>
 <script type="text/javascript"><!--
@@ -42,8 +42,10 @@ function update_zone(theForm) {
     theForm.state.setAttribute('className', 'hiddenField');
     document.getElementById("stateLabel").className = 'hiddenField';
     document.getElementById("stateLabel").setAttribute('className', 'hiddenField');
-    document.getElementById("stText").className = 'hiddenField';
-    document.getElementById("stText").setAttribute('className', 'hiddenField');
+    if (document.getElementById("stText")) {
+      document.getElementById("stText").className = 'hiddenField';
+      document.getElementById("stText").setAttribute('className', 'hiddenField');
+    }
     document.getElementById("stBreak").className = 'hiddenField';
     document.getElementById("stBreak").setAttribute('className', 'hiddenField');
   }

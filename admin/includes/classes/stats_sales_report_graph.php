@@ -1,10 +1,10 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2017 Zen Cart Development Team
+ * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @author inspired from sales_report_graphs.php,v 0.01 2002/11/27 19:02:22 cwi Exp  Released under the GNU General Public License $
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id:  New in v1.5.6 $
+ * @version $Id: lat9 Tue Sep 25 09:35:40 2018 -0400 New in v1.5.6 $
  */
 
 class statsSalesReportGraph {
@@ -221,9 +221,9 @@ class statsSalesReportGraph {
     // handle filters
     // submit the filters that way:
     // 01001 means use filter for status 2 and 5 set.
-    if (strlen($filter) > 0) {
-      $tmp = '';
-      $tmp1 = '';
+    $tmp = '';
+    $tmp1 = '';
+    if (is_string($filter) && strlen($filter) > 0) {
       for ($i = 0; $i < $this->status_available_size; $i++) {
         if (substr($filter, $i, 1) == "1") {
           $tmp1 .= "1";
@@ -236,9 +236,9 @@ class statsSalesReportGraph {
           $tmp1 .= "0";
         }
       }
-      $this->filter_sql = $tmp;
-      $this->filter = $tmp1;
     }
+    $this->filter_sql = $tmp;
+    $this->filter = $tmp1;
     $this->filter_link = "report=" . $this->mode . "&startDate=" . $startDate . "&endDate=" . $endDate;
     // if ($dateGiven) {
     //  echo "<br>" . strftime("%H %x", $this->startDate). " - " . strftime("%H %x", $this->endDate);
@@ -290,7 +290,7 @@ class statsSalesReportGraph {
     $tmp_query =  "select sum(ot.value) as shipping FROM " . TABLE_ORDERS_TOTAL . " ot, " . TABLE_ORDERS . " o WHERE ot.orders_id = o.orders_id and ot.class = 'ot_shipping'";
     for ($i = 0; $i < $this->size; $i++) {
       $report = $db->Execute($tmp_query . " AND o.date_purchased >= '" . zen_db_input(date("Y-m-d\TH:i:s", $this->startDates[$i])) . "' AND o.date_purchased < '" . zen_db_input(date("Y-m-d\TH:i:s", $this->endDates[$i])) . "'", false,true, 1800);
-      $this->info[$i]['shipping'] = $report->shipping;
+      $this->info[$i]['shipping'] = (isset($report->shipping)) ? $report->shipping : 0;
     }
   }
 }

@@ -4,7 +4,7 @@
  * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: DrByte  Modified in v1.5.6 $
+ * @version $Id: lat9 Sat Nov 17 14:38:22 2018 -0500 Modified in v1.5.6 $
  */
 require('includes/application_top.php');
 
@@ -25,6 +25,9 @@ if (isset($_GET['download_reset_on'])) {
 if (isset($_GET['download_reset_off'])) {
   $_GET['download_reset_off'] = (int)$_GET['download_reset_off'];
 }
+if (!isset($_GET['status'])) $_GET['status'] = '';
+if (!isset($_GET['list_order'])) $_GET['list_order'] = '';
+if (!isset($_GET['page'])) $_GET['page'] = '';
 
 include DIR_FS_CATALOG . DIR_WS_CLASSES . 'order.php';
 
@@ -80,7 +83,7 @@ if (zen_not_null($action) && $order_exists == true) {
   switch ($action) {
     case 'edit':
       // reset single download to on
-      if ($_GET['download_reset_on'] > 0) {
+      if (!empty($_GET['download_reset_on'])) {
         // adjust download_maxdays based on current date
         $check_status = $db->Execute("SELECT customers_name, customers_email_address, orders_status, date_purchased
                                       FROM " . TABLE_ORDERS . "
@@ -113,7 +116,7 @@ if (zen_not_null($action) && $order_exists == true) {
           $zc_max_days = ($chk_products_download_time->fields['products_attributes_maxdays'] == 0 ? 0 : zen_date_diff($check_status->fields['date_purchased'], date('Y-m-d H:i:s', time())) + $chk_products_download_time->fields['products_attributes_maxdays']);
           $update_downloads_query = "UPDATE " . TABLE_ORDERS_PRODUCTS_DOWNLOAD . "
                                      SET download_maxdays = " . (int)$zc_max_days . ",
-                                         download_count  " . (int)$chk_products_download_time->fields['products_attributes_maxcount'] . "
+                                         download_count = " . (int)$chk_products_download_time->fields['products_attributes_maxcount'] . "
                                      WHERE orders_id = " . (int)$_GET['oID'] . "
                                      AND orders_products_download_id = " . (int)$_GET['download_reset_on'];
         }
@@ -125,7 +128,7 @@ if (zen_not_null($action) && $order_exists == true) {
         zen_redirect(zen_href_link(FILENAME_ORDERS, zen_get_all_get_params(array('action')) . 'action=edit', 'NONSSL'));
       }
       // reset single download to off
-      if ($_GET['download_reset_off'] > 0) {
+      if (!empty($_GET['download_reset_off'])) {
         // adjust download_maxdays based on current date
         // *** fix: adjust count not maxdays to cancel download
 //          $update_downloads_query = "update " . TABLE_ORDERS_PRODUCTS_DOWNLOAD . " set download_maxdays='0', download_count='0' where orders_id='" . $_GET['oID'] . "' and orders_products_download_id='" . $_GET['download_reset_off'] . "'";
@@ -143,80 +146,17 @@ if (zen_not_null($action) && $order_exists == true) {
     case 'update_order':
       $oID = zen_db_prepare_input($_GET['oID']);
       $comments = zen_db_prepare_input($_POST['comments']);
-      $status = (int)zen_db_prepare_input($_POST['status']);
+      $status = (int)$_POST['status'];
       if ($status < 1) {
-        break;
+         break;
       }
+
+      $email_include_message = (isset($_POST['notify_comments']) && $_POST['notify_comments'] == 'on');
+      $customer_notified = (int)(isset($_POST['notify'])) ? $_POST['notify'] : '0';
 
       $order_updated = false;
-      $check_status = $db->Execute("SELECT customers_name, customers_email_address, orders_status, date_purchased
-                                    FROM " . TABLE_ORDERS . "
-                                    WHERE orders_id = " . (int)$oID);
-
-      if (($check_status->fields['orders_status'] != $status) || zen_not_null($comments)) {
-        $db->Execute("UPDATE " . TABLE_ORDERS . "
-                      SET orders_status = '" . zen_db_input($status) . "',
-                          last_modified = now()
-                      WHERE orders_id = " . (int)$oID);
-
-        $customer_notified = '0';
-        if (isset($_POST['notify']) && ($_POST['notify'] == '1')) {
-
-          $notify_comments = '';
-          if (isset($_POST['notify_comments']) && ($_POST['notify_comments'] == 'on') && zen_not_null($comments)) {
-            $notify_comments = EMAIL_TEXT_COMMENTS_UPDATE . $comments . "\n\n";
-          }
-          //send emails
-          $message = EMAIL_TEXT_ORDER_NUMBER . ' ' . $oID . "\n\n" .
-              EMAIL_TEXT_INVOICE_URL . ' ' . zen_catalog_href_link(FILENAME_CATALOG_ACCOUNT_HISTORY_INFO, 'order_id=' . $oID, 'SSL') . "\n\n" .
-              EMAIL_TEXT_DATE_ORDERED . ' ' . zen_date_long($check_status->fields['date_purchased']) . "\n\n" .
-              $notify_comments .
-              EMAIL_TEXT_STATUS_UPDATED . sprintf(EMAIL_TEXT_STATUS_LABEL, $orders_status_array[$status]) .
-              EMAIL_TEXT_STATUS_PLEASE_REPLY;
-
-          $html_msg['EMAIL_CUSTOMERS_NAME'] = $check_status->fields['customers_name'];
-          $html_msg['EMAIL_TEXT_ORDER_NUMBER'] = EMAIL_TEXT_ORDER_NUMBER . ' ' . $oID;
-          $html_msg['EMAIL_TEXT_INVOICE_URL'] = '<a href="' . zen_catalog_href_link(FILENAME_CATALOG_ACCOUNT_HISTORY_INFO, 'order_id=' . $oID, 'SSL') . '">' . str_replace(':', '', EMAIL_TEXT_INVOICE_URL) . '</a>';
-          $html_msg['EMAIL_TEXT_DATE_ORDERED'] = EMAIL_TEXT_DATE_ORDERED . ' ' . zen_date_long($check_status->fields['date_purchased']);
-          $html_msg['EMAIL_TEXT_STATUS_COMMENTS'] = nl2br($notify_comments);
-          $html_msg['EMAIL_TEXT_STATUS_UPDATED'] = str_replace('\n', '', EMAIL_TEXT_STATUS_UPDATED);
-          $html_msg['EMAIL_TEXT_STATUS_LABEL'] = str_replace('\n', '', sprintf(EMAIL_TEXT_STATUS_LABEL, $orders_status_array[$status]));
-          $html_msg['EMAIL_TEXT_NEW_STATUS'] = $orders_status_array[$status];
-          $html_msg['EMAIL_TEXT_STATUS_PLEASE_REPLY'] = str_replace('\n', '', EMAIL_TEXT_STATUS_PLEASE_REPLY);
-          $html_msg['EMAIL_PAYPAL_TRANSID'] = '';
-
-          zen_mail($check_status->fields['customers_name'], $check_status->fields['customers_email_address'], EMAIL_TEXT_SUBJECT . ' #' . $oID, $message, STORE_NAME, EMAIL_FROM, $html_msg, 'order_status');
-          $customer_notified = '1';
-
-          // PayPal Trans ID, if any
-          $sql = "SELECT txn_id, parent_txn_id
-                  FROM " . TABLE_PAYPAL . "
-                  WHERE order_id = :orderID
-                  ORDER BY last_modified DESC, date_added DESC, parent_txn_id DESC, paypal_ipn_id DESC ";
-          $sql = $db->bindVars($sql, ':orderID', $oID, 'integer');
-          $result = $db->Execute($sql);
-          if ($result->RecordCount() > 0) {
-            $message .= "\n\n" . ' PayPal Trans ID: ' . $result->fields['txn_id'];
-            $html_msg['EMAIL_PAYPAL_TRANSID'] = $result->fields['txn_id'];
-          }
-
-          //send extra emails
-          if (SEND_EXTRA_ORDERS_STATUS_ADMIN_EMAILS_TO_STATUS == '1' and SEND_EXTRA_ORDERS_STATUS_ADMIN_EMAILS_TO != '') {
-            zen_mail('', SEND_EXTRA_ORDERS_STATUS_ADMIN_EMAILS_TO, SEND_EXTRA_ORDERS_STATUS_ADMIN_EMAILS_TO_SUBJECT . ' ' . EMAIL_TEXT_SUBJECT . ' #' . $oID, $message, STORE_NAME, EMAIL_FROM, $html_msg, 'order_status_extra');
-          }
-        } elseif (isset($_POST['notify']) && ($_POST['notify'] == '-1')) {
-          // hide comment
-          $customer_notified = '-1';
-        }
-
-        $db->Execute("INSERT INTO " . TABLE_ORDERS_STATUS_HISTORY . " (orders_id, orders_status_id, date_added, customer_notified, comments)
-                      VALUES ('" . (int)$oID . "',
-                              '" . zen_db_input($status) . "',
-                              now(),
-                              '" . zen_db_input($customer_notified) . "',
-                              '" . zen_db_input($comments) . "')");
-        $order_updated = true;
-      }
+      $status_updated = zen_update_orders_history($oID, $comments, null, $status, $customer_notified, $email_include_message);
+      $order_updated = ($status_updated > 0);
 
       // trigger any appropriate updates which should be sent back to the payment gateway:
       $order = new order((int)$oID);
@@ -418,7 +358,7 @@ if (zen_not_null($action) && $order_exists == true) {
               <div class="input-group">
                   <?php
                   echo zen_draw_input_field('search', '', 'id="allSearch" class="form-control" placeholder="' . $placeholder . '"');
-                  if ((isset($_GET['search']) && zen_not_null($_GET['search'])) or $_GET['cID'] != '') {
+                  if (isset($_GET['search']) && zen_not_null($_GET['search']) || !empty($_GET['cID'])) {
                     ?>
                   <a class="btn btn-info input-group-addon" role="button" aria-label="<?php echo TEXT_RESET_FILTER; ?>" href="<?php echo zen_href_link(FILENAME_ORDERS); ?>">
                     <i class="fa fa-times" aria-hidden="true"></i>
@@ -436,7 +376,7 @@ if (zen_not_null($action) && $order_exists == true) {
               <div class="input-group">
                   <?php
                   echo zen_draw_input_field('search_orders_products', '', 'id="productSearch" class="form-control" aria-describedby="helpBlock3" placeholder="' . $placeholder . '"');
-                  if ((isset($_GET['search_orders_products']) && zen_not_null($_GET['search_orders_products'])) or $_GET['cID'] != '') {
+                  if (isset($_GET['search_orders_products']) && zen_not_null($_GET['search_orders_products']) || !empty($_GET['cID'])) {
                     ?>
                   <a class="btn btn-info input-group-addon" role="button" aria-label="<?php echo TEXT_RESET_FILTER; ?>" href="<?php echo zen_href_link(FILENAME_ORDERS); ?>">
                     <i class="fa fa-times" aria-hidden="true"></i>
@@ -735,11 +675,12 @@ if (zen_not_null($action) && $order_exists == true) {
                 <th class="text-center"><?php echo TABLE_HEADING_CUSTOMER_NOTIFIED; ?></th>
                 <th class="text-center"><?php echo TABLE_HEADING_STATUS; ?></th>
                 <th class="text-center"><?php echo TABLE_HEADING_COMMENTS; ?></th>
+                <th class="text-center"><?php echo TABLE_HEADING_UPDATED_BY; ?></th>
               </tr>
             </thead>
             <tbody>
                 <?php
-                $orders_history = $db->Execute("SELECT orders_status_id, date_added, customer_notified, comments
+                $orders_history = $db->Execute("SELECT *
                                               FROM " . TABLE_ORDERS_STATUS_HISTORY . "
                                               WHERE orders_id = " . zen_db_input($oID) . "
                                               ORDER BY date_added");
@@ -762,6 +703,7 @@ if (zen_not_null($action) && $order_exists == true) {
                     </td>
                     <td><?php echo $orders_status_array[$item['orders_status_id']]; ?></td>
                     <td><?php echo nl2br(zen_db_output($item['comments'])); ?></td>
+                    <td class="text-center"><?php echo (!empty($item['updated_by'])) ? $item['updated_by'] : '&nbsp;'; ?></td>
                   </tr>
                   <?php
                 }
@@ -902,6 +844,31 @@ if (zen_not_null($action) && $order_exists == true) {
                   <td class="dataTableHeadingContent text-center"><?php echo TABLE_HEADING_DATE_PURCHASED; ?></td>
                   <td class="dataTableHeadingContent text-right"><?php echo TABLE_HEADING_STATUS; ?></td>
                   <td class="dataTableHeadingContent text-center"><?php echo TABLE_HEADING_CUSTOMER_COMMENTS; ?></td>
+<?php
+  // -----
+  // A watching observer can provide an associative array in the form:
+  //
+  // $extra_headings = array(
+  //     array(
+  //       'align' => $alignment,    // One of 'center', 'right', or 'left' (optional)
+  //       'text' => $value
+  //     ),
+  // );
+  //
+  // Observer note:  Be sure to check that the $p2/$extra_headings value is specifically (bool)false before initializing, since
+  // multiple observers might be injecting content!
+  //
+  $extra_headings = false;
+  $zco_notifier->notify('NOTIFY_ADMIN_ORDERS_LIST_EXTRA_COLUMN_HEADING', array(), $extra_headings);
+  if (is_array($extra_headings)) {
+      foreach ($extra_headings as $heading_info) {
+          $align = (isset($heading_info['align'])) ? (' text-' . $heading_info['align']) : '';
+?>
+                <td class="dataTableHeadingContent<?php echo $align; ?>"><?php echo $heading_info['text']; ?></td>
+<?php
+      }
+  }
+?>
                   <td class="dataTableHeadingContent noprint text-right"><?php echo TABLE_HEADING_ACTION; ?></td>
                 </tr>
               </thead>
@@ -910,6 +877,7 @@ if (zen_not_null($action) && $order_exists == true) {
 // Only one or the other search
 // create search_orders_products filter
                   $search = '';
+                  $search_distinct = ' ';
                   $new_table = '';
                   $new_fields = '';
                   if (isset($_GET['search_orders_products']) && zen_not_null($_GET['search_orders_products'])) {
@@ -922,8 +890,7 @@ if (zen_not_null($action) && $order_exists == true) {
                       $search = " and op.products_id ='" . (int)$keywords . "'";
                     }
                   } else {
-                    ?>
-                    <?php
+
 // create search filter
                     $search = '';
                     if (isset($_GET['search']) && zen_not_null($_GET['search'])) {
@@ -934,8 +901,7 @@ if (zen_not_null($action) && $order_exists == true) {
                     }
                   } // eof: search orders or orders_products
                   $new_fields .= ", o.customers_company, o.customers_email_address, o.customers_street_address, o.delivery_company, o.delivery_name, o.delivery_street_address, o.billing_company, o.billing_name, o.billing_street_address, o.payment_module_code, o.shipping_module_code, o.ip_address ";
-                  ?>
-                  <?php
+
                   $orders_query_raw = "select " . $search_distinct . " o.orders_id, o.customers_id, o.customers_name, o.payment_method, o.shipping_method, o.date_purchased, o.last_modified, o.currency, o.currency_value, s.orders_status_name, ot.text as order_total" .
                       $new_fields . "
                           from (" . TABLE_ORDERS . " o " .
@@ -944,24 +910,21 @@ if (zen_not_null($action) && $order_exists == true) {
                           left join " . TABLE_ORDERS_TOTAL . " ot on (o.orders_id = ot.orders_id and ot.class = 'ot_total') ";
 
 
-                  if (isset($_GET['cID'])) {
+                  if (!empty($_GET['cID'])) {
                     $cID = (int)zen_db_prepare_input($_GET['cID']);
                     $orders_query_raw .= " WHERE o.customers_id = " . (int)$cID;
-//echo '<br><br>I SEE A: ' . $orders_query_raw . '<br><br>';
                   } elseif ($_GET['status'] != '') {
                     $status = (int)zen_db_prepare_input($_GET['status']);
                     $orders_query_raw .= " WHERE s.orders_status_id = " . (int)$status . $search;
-//echo '<br><br>I SEE B: ' . $orders_query_raw . '<br><br>';
                   } else {
                     $orders_query_raw .= (trim($search) != '') ? preg_replace('/ *AND /i', ' WHERE ', $search) : '';
-//echo '<br><br>I SEE C: ' . $orders_query_raw . '<br><br>';
                   }
 
                   $orders_query_raw .= " order by o.orders_id DESC";
 
 // Split Page
 // reset page when page is unknown
-                  if (($_GET['page'] == '' or $_GET['page'] <= 1) and $_GET['oID'] != '') {
+                  if (($_GET['page'] == '' or $_GET['page'] <= 1) && !empty($_GET['oID'])) {
                     $check_page = $db->Execute($orders_query_raw);
                     $check_count = 1;
                     if ($check_page->RecordCount() > MAX_DISPLAY_SEARCH_RESULTS_ORDERS) {
@@ -1012,7 +975,32 @@ if (zen_not_null($action) && $order_exists == true) {
                 <td class="dataTableContent" align="center"><?php echo zen_datetime_short($orders->fields['date_purchased']); ?></td>
                 <td class="dataTableContent" align="right"><?php echo ($orders->fields['orders_status_name'] != '' ? $orders->fields['orders_status_name'] : TEXT_INVALID_ORDER_STATUS); ?></td>
                 <td class="dataTableContent" align="center"><?php echo (zen_get_orders_comments($orders->fields['orders_id']) == '' ? '' : zen_image(DIR_WS_IMAGES . 'icon_yellow_on.gif', TEXT_COMMENTS_YES, 16, 16)); ?></td>
-                <?php $zco_notifier->notify('NOTIFY_ADMIN_ORDERS_LIST_EXTRA_COLUMN_DATA', (isset($oInfo) ? $oInfo : array()), $orders->fields); ?>
+<?php
+  // -----
+  // A watching observer can provide an associative array in the form:
+  //
+  // $extra_data = array(
+  //     array(
+  //       'align' => $alignment,    // One of 'center', 'right', or 'left' (optional)
+  //       'text' => $value
+  //     ),
+  // );
+  //
+  // Observer note:  Be sure to check that the $p3/$extra_data value is specifically (bool)false before initializing, since
+  // multiple observers might be injecting content!
+  //
+  $extra_data = false;
+  $zco_notifier->notify('NOTIFY_ADMIN_ORDERS_LIST_EXTRA_COLUMN_DATA', (isset($oInfo) ? $oInfo : array()), $orders->fields, $extra_data);
+  if (is_array($extra_data)) {
+      foreach ($extra_data as $data_info) {
+          $align = (isset($data_info['align'])) ? (' text-' . $data_info['align']) : '';
+?>
+                <td class="dataTableContent<?php echo $align; ?>"><?php echo $data_info['text']; ?></td>
+<?php
+      }
+  }
+?>
+
                 <td class="dataTableContent noprint" align="right"><?php echo '<a href="' . zen_href_link(FILENAME_ORDERS, zen_get_all_get_params(array('oID', 'action')) . 'oID=' . $orders->fields['orders_id'] . '&action=edit', 'NONSSL') . '">' . zen_image(DIR_WS_IMAGES . 'icon_edit.gif', ICON_EDIT) . '</a>' . $extra_action_icons; ?>&nbsp;<?php
                     if (isset($oInfo) && is_object($oInfo) && ($orders->fields['orders_id'] == $oInfo->orders_id)) {
                       echo zen_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', '');

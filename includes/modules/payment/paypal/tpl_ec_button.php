@@ -3,9 +3,9 @@
  * paypal EC button display template
  *
  * @package paymentMethod
- * @copyright Copyright 2003-2016 Zen Cart Development Team
+ * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: DrByte  Wed Dec 30 13:42:03 2015 -0500 Modified in v1.5.5 $
+ * @version $Id: Drbyte Tue Sep 25 11:55:32 2018 -0400 Modified in v1.5.6 $
  */
 
 $paypalec_enabled = (defined('MODULE_PAYMENT_PAYPALWPP_STATUS') && MODULE_PAYMENT_PAYPALWPP_STATUS == 'True');
@@ -56,6 +56,7 @@ if ($paypalec_enabled) {
     unset($_SESSION['paypal_ec_token']);
     unset($_SESSION['paypal_ec_payer_id']);
     unset($_SESSION['paypal_ec_payer_info']);
+    unset($_SESSION['paypal_ec_markflow']);
 
     include zen_get_file_directory(DIR_FS_CATALOG . DIR_WS_LANGUAGES . $_SESSION['language'] . '/modules/payment/','paypalwpp.php', 'false');
 ?>

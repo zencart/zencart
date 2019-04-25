@@ -8,7 +8,7 @@
  * @copyright Portions Copyright 2003 osCommerce
  * @copyright Portions adapted from http://www.data-diggers.com/
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: zcwuilt  Modified in v1.5.6 $
+ * @version $Id: Drbyte Fri Nov 30 19:22:41 2018 -0500 Modified in v1.5.6 $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
@@ -175,12 +175,23 @@ class queryFactory extends base {
 
   function Execute($zf_sql, $zf_limit = false, $zf_cache = false, $zf_cachetime=0, $remove_from_queryCache = false) {
     // bof: collect database queries
-    if (defined('STORE_DB_TRANSACTIONS') && STORE_DB_TRANSACTIONS=='true') {
+    if (defined('STORE_DB_TRANSACTIONS') && STORE_DB_TRANSACTIONS != 'false') {
       global $PHP_SELF, $box_id, $current_page_base;
       if (strtoupper(substr($zf_sql,0,6))=='SELECT' /*&& strstr($zf_sql,'products_id')*/) {
         $f=@fopen(DIR_FS_LOGS.'/query_selects_' . $current_page_base . '_' . time() . '.txt','a');
         if ($f) {
-          fwrite($f,  "\n\n" . 'I AM HERE ' . $current_page_base . /*zen_get_all_get_params() .*/ "\n" . 'sidebox: ' . $box_id . "\n\n" . "Explain \n" . $zf_sql.";\n\n");
+          $backtrace = '';
+
+          if (STORE_DB_TRANSACTIONS == 'backtrace') {
+            ob_start();
+            debug_print_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
+            $backtrace = ob_get_contents();
+            ob_end_clean();
+            $backtrace = preg_replace('/^#0\s+' . __FUNCTION__ . '[^\n]*\n/', '', $backtrace, 1);
+            $backtrace = 'query trace: ' . "\n" . $backtrace . "\n";
+          }
+
+          fwrite($f,  "\n\n" . 'I AM HERE ' . $current_page_base . /*zen_get_all_get_params() .*/ "\n" . $backtrace . 'sidebox: ' . $box_id . "\n\n" . "Explain \n" . $zf_sql.";\n\n");
           fclose($f);
         }
         unset($f);
@@ -444,7 +455,7 @@ class queryFactory extends base {
             return $value;
         case 'inConstructString':
             $list = explode(',', $value);
-            $newList = array_map(function ($value) { return '\'' . queryFactory::prepareInput($value) . '\''; }, $list);
+            $newList = array_map(function ($value) { return '\'' . $this->prepare_input($value) . '\''; }, $list);
             $value = implode($newList, ',');
 
             return $value;
@@ -455,7 +466,7 @@ class queryFactory extends base {
         return $value;
       break;
       case 'float':
-        return (!zen_not_null($value) || $value=='' || $value == 0) ? 0 : $value;
+        return (!zen_not_null($value) || $value=='' || $value == 0) ? 0 : (float)$value;
       break;
       case 'integer':
         return (int)$value;
@@ -638,7 +649,7 @@ class queryFactoryResult implements Countable, Iterator {
   public function rewind() {
       $this->EOF = ($this->RecordCount() == 0);
       if ($this->RecordCount() !== 0) {
-          $this->Move(0, false); // mc12345678 eliminate return of integer based key
+          $this->Move(0);
       }
   }
 
@@ -677,7 +688,6 @@ class queryFactoryResult implements Countable, Iterator {
    * @param int $zp_row the row to move to
    */
   public function Move($zp_row) {
-    global $db;
     if ($this->is_cached) {
       if($zp_row >= sizeof($this->result)) {
         $this->cursor = sizeof($this->result);
@@ -693,7 +703,7 @@ class queryFactoryResult implements Countable, Iterator {
       $this->EOF = false;
     } else {
       $this->EOF = true;
-      $db->set_error(mysqli_errno($this->link), mysqli_error($this->link), $db->dieOnErrors);
+      $this->set_error(mysqli_errno($this->link), mysqli_error($this->link), $this->dieOnErrors);
     }
   }
 }

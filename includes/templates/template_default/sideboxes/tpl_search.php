@@ -6,7 +6,7 @@
  * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: DrByte  Modified in v1.5.6 $
+ * @version $Id: Scott C Wilson Fri Oct 12 20:38:41 2018 -0400 Modified in v1.5.6 $
  */
 $content = '';
 $content .= '<div id="' . str_replace('_', '-', $box_id . 'Content') . '" class="sideBoxContent centeredContent">';
@@ -20,7 +20,7 @@ $content .= '<br />';
 if (strtolower(IMAGE_USE_CSS_BUTTONS) == 'yes') {
     $content .= zen_image_submit(BUTTON_IMAGE_SEARCH, HEADER_SEARCH_BUTTON);
 } else {
-    $content .= '<input type="submit" value="' . HEADER_SEARCH_BUTTON . '" style="width: 50px" />';
+    $content .= '<input type="submit" value="' . HEADER_SEARCH_BUTTON . '" style="width: 55px" />';
 }
 
 $content .= '<br />';

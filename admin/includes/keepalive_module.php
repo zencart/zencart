@@ -17,6 +17,7 @@ if (!defined('TEXT_TIMEOUT_TIMED_OUT_MESSAGE')) define('TEXT_TIMEOUT_TIMED_OUT_M
 // Read default timeout value from the site's configuration:
 $timeoutAfter = ini_get('session.gc_maxlifetime');
 if ((int)$timeoutAfter < 30) $timeoutAfter = 1440;
+$camefrom = basename($PHP_SELF) . (empty($params = zen_get_all_get_params()) ? '' : '?' . trim($params, '&'));
 ?>
 
 <link rel="stylesheet" type="text/css" href="includes/css/jAlert.css">
@@ -33,7 +34,7 @@ $(function(){
     'mouseDebounce': 120, //How many seconds between extending the session when the mouse is moved (instead of extending a billion times within 5 seconds)
     'extendUrl': 'keepalive.php', //URL to request in order to extend the session.
     'logoutUrl': 'logoff.php', //URL to request in order to force a logout after the timeout.
-    'loginUrl': 'index.php', //URL to send a customer to when they want to log back in
+    'loginUrl': '<?= $camefrom; ?>', //URL to send a customer to when they want to log back in
     'secondsPrior': <?= (int)$timeoutAfter/3; ?>, //how many seconds before timing out to run the next callback (onPriorCallback)
     'onPriorCallback': function(timeout, seconds){
         $.jAlert({

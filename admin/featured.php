@@ -1,10 +1,10 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2011 Zen Cart Development Team
+ * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- *  $Id: featured.php 19294 2011-07-28 18:15:46Z drbyte $
+ *  $Id: featured.php  Modified in v1.5.6 $
  */
 require('includes/application_top.php');
 
@@ -227,15 +227,15 @@ if (zen_not_null($action)) {
             $featured_array[] = $item['products_id'];
           }
 
-// do not include things that cannot go in the cart
-          $not_for_cart = $db->Execute("SELECT p.products_id
-                                        FROM " . TABLE_PRODUCTS . " p
-                                        LEFT JOIN " . TABLE_PRODUCT_TYPES . " pt ON p.products_type = pt.type_id
-                                        WHERE pt.allow_add_to_cart = 'N'");
+// Uncomment the following in order to also not include things that cannot go in the cart
+//          $not_for_cart = $db->Execute("SELECT p.products_id
+//                                        FROM " . TABLE_PRODUCTS . " p
+//                                        LEFT JOIN " . TABLE_PRODUCT_TYPES . " pt ON p.products_type = pt.type_id
+//                                        WHERE pt.allow_add_to_cart = 'N'");
+//          foreach ($not_for_cart as $item) {
+//            $featured_array[] = $item['products_id'];
+//          }
 
-          foreach ($not_for_cart as $item) {
-            $featured_array[] = $item['products_id'];
-          }
         }
         ?>
         <script>
@@ -244,7 +244,7 @@ if (zen_not_null($action)) {
         </script>
         <div class="row"><?php echo zen_draw_separator('pixel_trans.gif', '100%', '5'); ?></div>
         <div class="row">
-            <?php echo zen_draw_form('new_featured', FILENAME_FEATURED, zen_get_all_get_params(array('action', 'info', 'fID')) . 'action=' . $form_action . '&go_back=' . $_GET['go_back'], 'post', 'class="form-horizontal"'); ?>
+            <?php echo zen_draw_form('new_featured', FILENAME_FEATURED, zen_get_all_get_params(array('action', 'info', 'fID')) . 'action=' . $form_action . '&go_back=' . $_GET['go_back'], 'post', 'onsubmit="return check_dates(start,StartDate.required, end, EndDate.required);" class="form-horizontal"'); ?>
             <?php
             if ($form_action == 'update') {
               echo zen_draw_hidden_field('featured_id', $_GET['fID']);

@@ -4,7 +4,7 @@
  * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: DrByte  Modified in v1.5.6 $
+ * @version $Id: Drbyte Tue Nov 20 12:58:03 2018 -0500 Modified in v1.5.6 $
  */
 /**
  * "Per Weight Unit" shipping module, allowing you to offer per-unit-rate shipping options
@@ -108,8 +108,8 @@ class perweightunit extends base {
                           'module' => MODULE_SHIPPING_PERWEIGHTUNIT_TEXT_TITLE,
                           'methods' => array(array('id' => $this->code,
                                                    'title' => MODULE_SHIPPING_PERWEIGHTUNIT_TEXT_WAY,
-                                                   'cost' => MODULE_SHIPPING_PERWEIGHTUNIT_COST * ($total_weight_units * $shipping_num_boxes) +
-                                                   (MODULE_SHIPPING_PERWEIGHTUNIT_HANDLING_METHOD == 'Box' ? MODULE_SHIPPING_PERWEIGHTUNIT_HANDLING * $shipping_num_boxes : MODULE_SHIPPING_PERWEIGHTUNIT_HANDLING) ) ));
+                                                   'cost' => (float)MODULE_SHIPPING_PERWEIGHTUNIT_COST * ($total_weight_units * $shipping_num_boxes) +
+                                                   (MODULE_SHIPPING_PERWEIGHTUNIT_HANDLING_METHOD == 'Box' ? (float)MODULE_SHIPPING_PERWEIGHTUNIT_HANDLING * $shipping_num_boxes : (float)MODULE_SHIPPING_PERWEIGHTUNIT_HANDLING) ) ));
 
 
     if ($this->tax_class > 0) {

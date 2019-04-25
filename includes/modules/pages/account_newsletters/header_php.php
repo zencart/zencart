@@ -3,10 +3,10 @@
  * Header code file for the Account Newsletters page - To change customers Newsletter options
  *
  * @package page
- * @copyright Copyright 2003-2006 Zen Cart Development Team
+ * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: header_php.php 3162 2006-03-11 01:39:16Z drbyte $
+ * @version $Id: Zcwilt Sat Sep 15 18:30:02 2018 +0100 Modified in v1.5.6 $
  */
 // This should be first line of the script:
 $zco_notifier->notify('NOTIFY_HEADER_START_ACCOUNT_NEWSLETTERS');
@@ -46,9 +46,9 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
 
   $zco_notifier->notify('NOTIFY_HEADER_ACCOUNT_NEWSLETTER_UPDATED', $newsletter_general);
 
-  $messageStack->add_session('account', SUCCESS_NEWSLETTER_UPDATED, 'success');
+  $messageStack->add_session('newsletter', SUCCESS_NEWSLETTER_UPDATED, 'success');
 
-  zen_redirect(zen_href_link(FILENAME_ACCOUNT, '', 'SSL'));
+  zen_redirect(zen_href_link(FILENAME_ACCOUNT_NEWSLETTERS, '', 'SSL'));
 }
 
 $breadcrumb->add(NAVBAR_TITLE_1, zen_href_link(FILENAME_ACCOUNT, '', 'SSL'));

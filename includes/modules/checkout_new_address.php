@@ -3,10 +3,10 @@
  * checkout_new_address.php
  *
  * @package modules
- * @copyright Copyright 2003-2013 Zen Cart Development Team
+ * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: Ian Wilson  Mon Oct 28 17:54:33 2013 +0000 Modified in v1.5.2 $
+ * @version $Id: Scott C Wilson Wed Oct 10 07:03:50 2018 -0400 Modified in v1.5.6 $
  */
 // This should be first line of the script:
 $zco_notifier->notify('NOTIFY_MODULE_START_CHECKOUT_NEW_ADDRESS');
@@ -27,7 +27,7 @@ if (!defined('IS_ADMIN_FLAG')) {
 
 if (isset($_POST['action']) && ($_POST['action'] == 'submit')) {
   // process a new address
-  if (zen_not_null($_POST['firstname']) && zen_not_null($_POST['lastname']) && zen_not_null($_POST['street_address'])) {
+  if (!empty($_POST['firstname']) && !empty($_POST['lastname']) && !empty($_POST['street_address'])) {
     $process = true;
     if (ACCOUNT_GENDER == 'true') $gender = zen_db_prepare_input($_POST['gender']);
     if (ACCOUNT_COMPANY == 'true') $company = zen_db_prepare_input($_POST['company']);
@@ -46,7 +46,6 @@ if (isset($_POST['action']) && ($_POST['action'] == 'submit')) {
       }
     }
     $country = zen_db_prepare_input($_POST['zone_country_id']);
-//echo ' I SEE: country=' . $country . '&nbsp;&nbsp;&nbsp;state=' . $state . '&nbsp;&nbsp;&nbsp;zone_id=' . $zone_id;
     if (ACCOUNT_GENDER == 'true') {
       if ( ($gender != 'm') && ($gender != 'f') ) {
         $error = true;

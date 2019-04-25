@@ -6,10 +6,10 @@
  * Displays site-map and some hard-coded navigation components
  *
  * @package templateSystem
- * @copyright Copyright 2003-2016 Zen Cart Development Team
+ * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: DrByte  Sat Oct 17 21:54:07 2015 -0400 Modified in v1.5.5 $
+ * @version $Id: DrByte 2019 Jan 04 Modified in v1.5.6a $
  */
 ?>
 <div class="centerColumn" id="siteMap">
@@ -61,10 +61,10 @@
 <?php if (!empty($external_bb_url) && !empty($external_bb_text)) { ?>
             <li><?php echo '<a href="' . $external_bb_url . '" target="_blank">' . $external_bb_text . '</a>'; ?></li>
 <?php } ?>
-<?php if (MODULE_ORDER_TOTAL_GV_STATUS == 'true') { ?>
+<?php if (defined('MODULE_ORDER_TOTAL_GV_STATUS') && MODULE_ORDER_TOTAL_GV_STATUS == 'true') { ?>
             <li><?php echo '<a href="' . zen_href_link(FILENAME_GV_FAQ) . '">' . BOX_INFORMATION_GV . '</a>'; ?></li>
 <?php } ?>
-<?php if (MODULE_ORDER_TOTAL_COUPON_STATUS == 'true') { ?>
+<?php if (defined('MODULE_ORDER_TOTAL_COUPON_STATUS') && MODULE_ORDER_TOTAL_COUPON_STATUS == 'true') { ?>
             <li><?php echo '<a href="' . zen_href_link(FILENAME_DISCOUNT_COUPON) . '">' . BOX_INFORMATION_DISCOUNT_COUPONS . '</a>'; ?></li>
 <?php } ?>
 <?php if (SHOW_NEWSLETTER_UNSUBSCRIBE_LINK == 'true') { ?>

@@ -1,10 +1,10 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2018 Zen Cart Development Team
+ * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: modules.php  Modified in v1.5.6 $
+ * @version $Id: DrByte 2019 Jan 04 Modified in v1.5.6a $
  */
 require('includes/application_top.php');
 if (file_exists(DIR_FS_CATALOG . 'includes/classes/dbencdata.php')) {
@@ -52,8 +52,13 @@ if (zen_not_null($set)) {
   }
 }
 
-$action = (isset($_GET['action']) ? $_GET['action'] : '');
+$nModule = isset($_GET['module']) ? $_GET['module'] : null;
+$notificationType = $module_type . (($nModule) ? '-' . $nModule : '') ;
 
+$notifications = new AdminNotifications();
+$availableNotifications = $notifications->getNotifications($notificationType, $_SESSION['admin_id']);
+
+$action = (isset($_GET['action']) ? $_GET['action'] : '');
 if (zen_not_null($action)) {
   $admname = '{' . preg_replace('/[^\w]/', '*', zen_get_admin_name()) . '[' . (int)$_SESSION['admin_id'] . ']}';
   switch ($action) {
@@ -148,6 +153,7 @@ if (zen_not_null($action)) {
       <!-- body_text //-->
       <h1><?php echo HEADING_TITLE; ?></h1>
       <div class="row">
+          <?php require_once(DIR_WS_MODULES . 'notificationsDisplay.php');?>
         <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9 configurationColumnLeft">
           <table class="table table-hover">
             <thead>
@@ -244,12 +250,14 @@ if (zen_not_null($action)) {
                   </td>
                   <?php
                   if ($set == 'payment') {
+                    if (!isset($module->order_status)) $module->order_status = 0;
+                    
                     $orders_status_name = $db->Execute("SELECT orders_status_id, orders_status_name
                                                         FROM " . TABLE_ORDERS_STATUS . "
                                                         WHERE orders_status_id = " . (int)$module->order_status . "
                                                         AND language_id = " . (int)$_SESSION['languages_id']);
                     ?>
-                    <td class="dataTableContent text-left">&nbsp;&nbsp;&nbsp;<?php echo(is_numeric($module->sort_order) ? (($orders_status_name->fields['orders_status_id'] < 1) ? TEXT_DEFAULT : $orders_status_name->fields['orders_status_name']) : ''); ?>&nbsp;&nbsp;&nbsp;</td>
+                    <td class="dataTableContent text-left">&nbsp;&nbsp;&nbsp;<?php echo(is_numeric($module->sort_order) ? (empty($orders_status_name->fields['orders_status_id']) ? TEXT_DEFAULT : $orders_status_name->fields['orders_status_name']) : ''); ?>&nbsp;&nbsp;&nbsp;</td>
                   <?php } ?>
                   <td class="dataTableContent text-right">
                       <?php

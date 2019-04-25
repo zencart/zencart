@@ -4,10 +4,10 @@
  * HTML-generating functions used throughout the core
  *
  * @package functions
- * @copyright Copyright 2003-2017 Zen Cart Development Team
+ * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: DrByte   Modified in v1.5.5 $
+ * @version $Id: lat9 Mon Oct 22 13:19:39 2018 -0400 Modified in v1.5.6 $
  */
 
 /*
@@ -20,6 +20,8 @@
     if($link !== null) return $link;
 
     if (!zen_not_null($page)) {
+      trigger_error("zen_href_link($page, $parameters, $connection), unable to determine the page link.",
+            E_USER_ERROR);
       die('</td></tr></table></td></tr></table><br /><br /><strong class="note">Error!<br /><br />Unable to determine the page link!</strong><br /><br /><!--' . $page . '<br />' . $parameters . ' -->');
     }
 
@@ -32,6 +34,7 @@
         $link = HTTP_SERVER;
       }
     } else {
+      trigger_error("zen_href_link($page, $parameters, $connection), Unable to determine connection method on a link! Known methods: NONSSL SSL", E_USER_ERROR);
       die('</td></tr></table></td></tr></table><br /><br /><strong class="note">Error!<br /><br />Unable to determine connection method on a link!<br /><br />Known methods: NONSSL SSL</strong><br /><br />');
     }
 
@@ -98,6 +101,15 @@
     return $link;
   }
 
+/*
+ * This function, added to the storefront in zc1.5.6, provides a common method for
+ * plugins that span the admin and storefront to create a storefront (a.k.a catalog)
+ * link.
+ */
+function zen_catalog_href_link($page = '', $parameters = '', $connection = 'NONSSL') 
+{
+    return zen_href_link($page, $parameters, $connection, false);
+}
 
 /*
  * The HTML image wrapper function for non-proportional images

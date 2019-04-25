@@ -1,16 +1,18 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2018 Zen Cart Development Team
+ * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: init_category_path.php  Modified in v1.5.6 $
+ * @version $Id: DrByte 2019 Jan 04 Modified in v1.5.6a $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
 }
 // calculate category path
-  if (isset($_GET['cPath'])) {
+  if (isset($_POST['cPath'])) {
+    $cPath = $_POST['cPath'];
+  } elseif (isset($_GET['cPath'])) {
     $cPath = $_GET['cPath'];
   } else {
     $cPath = '';

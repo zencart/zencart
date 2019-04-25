@@ -3,10 +3,10 @@
  * ezpages functions - used to prepare links for EZ-Pages
  *
  * @package functions
- * @copyright Copyright 2003-2007 Zen Cart Development Team
+ * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: functions_ezpages.php 5662 2007-01-22 17:19:26Z drbyte $
+ * @version $Id: Drbyte Wed Oct 10 18:24:41 2018 -0400 Modified in v1.5.6 $
  */
 
 
@@ -55,14 +55,9 @@
       $ez_link .= ($ez_pages_open_new_window == '1' ? '" target="_blank' : '');
     }
 
-    //    echo 'I SEE ' . '<a href=' . $ez_link . '>' . $ez_page_query->fields['pages_title'] . '</a>' . '<br>';
-
     if ($ez_pages_return_full_url == false) {
       return $ez_link;
     } else {
       return '<a href="' . $ez_link . '">' . $ez_pages_name . '</a>';
     }
   }
-
-
-?>

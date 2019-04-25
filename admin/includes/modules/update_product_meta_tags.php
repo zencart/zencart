@@ -2,10 +2,10 @@
 
 /**
  * @package admin
- * @copyright Copyright 2003-2017 Zen Cart Development Team
+ * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: ajeh  Sept 2017  Modified in v1.5.6 $
+ * @version $Id: Drbyte Tue Sep 11 11:09:59 2018 -0400 Modified in v1.5.6 $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
@@ -49,9 +49,9 @@ if (isset($_POST['edit_x']) || isset($_POST['edit_y'])) {
     $language_id = $languages[$i]['id'];
 
     $sql_data_array = array(
-      'metatags_title' => zen_db_prepare_input($_POST['metatags_title'][$language_id]),
-      'metatags_keywords' => zen_db_prepare_input($_POST['metatags_keywords'][$language_id]),
-      'metatags_description' => zen_db_prepare_input($_POST['metatags_description'][$language_id]));
+      'metatags_title' => zen_db_prepare_input(isset($_POST['metatags_title'][$language_id]) ? $_POST['metatags_title'][$language_id] : ''),
+      'metatags_keywords' => zen_db_prepare_input(isset($_POST['metatags_keywords'][$language_id]) ? $_POST['metatags_keywords'][$language_id] : ''),
+      'metatags_description' => zen_db_prepare_input(isset($_POST['metatags_description'][$language_id]) ? $_POST['metatags_description'][$language_id] : ''));
 
     if ($action == 'new_product_meta_tags') {
       $insert_sql_data = array(

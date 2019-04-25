@@ -5,10 +5,10 @@
  * -- ADMIN version --
  *
  * @package initSystem
- * @copyright Copyright 2003-2016 Zen Cart Development Team
+ * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: DrByte  Sat Jan 9 22:19:03 2016 -0500 New in v1.5.5 $
+ * @version $Id: Zen4All Wed Nov 15 10:59:33 2017 +0100 Modified in v1.5.6 $
  */
 function zen_parse_url($url, $element = 'array')
 {

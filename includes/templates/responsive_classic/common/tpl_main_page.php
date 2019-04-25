@@ -32,10 +32,10 @@
  * }<br />
  *
  * @package templateSystem
- * @copyright Copyright 2003-2016 Zen Cart Development Team
+ * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: rbarbour zcadditions.com Fri Jan 8 14:09:45 2016 -0500 New in v1.5.5 $
+ * @version $Id: rbarbour zcadditions.com Tue May 8 00:42:18 2018 -0400 Modified in v1.5.6 $
  */
 
 /** bof DESIGNER TESTING ONLY: */
@@ -125,7 +125,7 @@ if (COLUMN_LEFT_STATUS == 0 || (CUSTOMERS_APPROVAL == '1' and $_SESSION['custome
   // global disable of column_left
   $flag_disable_left = true;
 }
-if (!isset($flag_disable_left) || !$flag_disable_left) {
+if (!$flag_disable_left) {
 ?>
   <div class="<?php echo $box_width_left_new; ?>">
 <?php

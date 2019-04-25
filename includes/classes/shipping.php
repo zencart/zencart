@@ -6,7 +6,7 @@
  * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: DrByte  Modified in v1.5.6 $
+ * @version $Id: mc12345678 Tue Aug 28 21:18:16 2018 -0400 Modified in v1.5.6 $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
@@ -181,8 +181,11 @@ class shipping extends base {
 
       foreach($this->modules as $value) {
         $class = substr($value, 0, strrpos($value, '.'));
-        if ($GLOBALS[$class]->enabled) {
+        if (isset($GLOBALS[$class]) && is_object($GLOBALS[$class]) && $GLOBALS[$class]->enabled) {
           $quotes = $GLOBALS[$class]->quotes;
+          if (empty($quotes['methods'])) {
+            continue;
+          }
           $size = sizeof($quotes['methods']);
           for ($i=0; $i<$size; $i++) {
             if (isset($quotes['methods'][$i]['cost'])){

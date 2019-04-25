@@ -3,10 +3,10 @@
  * downloads module - prepares information for use in downloadable files delivery
  *
  * @package modules
- * @copyright Copyright 2003-2017 Zen Cart Development Team
+ * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: downloads.php  Modified in v1.5.6 $
+ * @version $Id: DrByte 2019 Jan 04 Modified in v1.5.6a $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
@@ -76,10 +76,10 @@ if ($downloadsOnThisOrder) {
     $data['service'] = 'local';
     $data['filename'] = $data['orders_products_filename'];
     list($dt_year, $dt_month, $dt_day) = explode('-', $data['date_purchased_day']);
-    $data['expiry_timestamp'] = mktime(23, 59, 59, $dt_month, $dt_day + $data['download_maxdays'], $dt_year);
+    $data['expiry_timestamp'] = mktime(23, 59, 59, $dt_month, $dt_day + (int)$data['download_maxdays'], $dt_year);
     $data['expiry'] = date('Y-m-d H:i:s', $data['expiry_timestamp']);
     $data['downloads_remaining'] = (int)$data['download_count'];
-    $data['unlimited_downloads'] = ($data['download_maxdays'] === 0);
+    $data['unlimited_downloads'] = (int)$data['download_maxdays'] == 0;
     $data['file_exists'] = file_exists(DIR_FS_DOWNLOAD . $data['orders_products_filename']);
     $data['counts_not_expired'] = $data['downloads_remaining'] > 0 && $data['expiry_timestamp'] > time();
     $data['is_downloadable'] = $data['file_exists'] && ($data['counts_not_expired'] === true || $data['unlimited_downloads']);
