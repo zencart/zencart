@@ -33,23 +33,19 @@ if (!isset($do_filter_list)) {
 $and = '';
 // show the products of a specified manufacturer
 if (isset($_GET['manufacturers_id']) && $_GET['manufacturers_id'] != '') {
+  // We show them all
+  $and = " AND m.manufacturers_id = " . (int)$_GET['manufacturers_id'] . " ";
   if (isset($_GET['filter_id']) && zen_not_null($_GET['filter_id'])) {
 // We are asked to show only a specific category
-    $and = " AND m.manufacturers_id = " . (int)$_GET['manufacturers_id'] . "
-            AND p2c.categories_id = " . (int)$_GET['filter_id'] . " ";
-  } else {
-    // We show them all
-    $and = " AND m.manufacturers_id = " . (int)$_GET['manufacturers_id'] . " ";
+    $and .= "AND p2c.categories_id = " . (int)$_GET['filter_id'] . " ";
   }
 } else {
   // show the products in a given category
+  // We show them all
+  $and = " AND p2c.categories_id = " . (int)$current_category_id . " ";
   if (isset($_GET['filter_id']) && zen_not_null($_GET['filter_id'])) {
     // We are asked to show only specific category
-    $and = " AND m.manufacturers_id = " . (int)$_GET['filter_id'] . "
-            AND p2c.categories_id = " . (int)$current_category_id . " ";
-  } else {
-    // We show them all
-    $and = " AND p2c.categories_id = " . (int)$current_category_id . " ";
+    $and .= " AND m.manufacturers_id = " . (int)$_GET['filter_id'] . " ";
   }
 }
 $listing_sql = "SELECT " . $select_column_list . " p.products_id, p.products_type, p.master_categories_id, p.manufacturers_id, p.products_price, p.products_tax_class_id, pd.products_description,
