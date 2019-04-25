@@ -1039,41 +1039,29 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
                   if ($cInfo->categories_status == '1') {//category is currently Enabled, so Disable it
 
                       $contents[] = array(
-                          'text' => zen_draw_label(TEXT_PRODUCTS_STATUS_INFO, 'set_products_status',
-                                  'class="control-label"') .
-                              (zen_has_category_subcategories($_GET['cID']) ? '<div class="radio"><label>' .
-                                  zen_draw_radio_field('set_subcategories_status', 'set_subcategories_status_off',
-                                      true) . TEXT_SUBCATEGORIES_STATUS_OFF . '</label></div>' .
-                                  '<div class="radio"><label>' .
-                                  zen_draw_radio_field('set_subcategories_status',
-                                      'set_subcategories_status_nochange') . TEXT_SUBCATEGORIES_STATUS_NOCHANGE . '</label></div>' : '') .
-                              '<div class="radio"><label>' .
-                              zen_draw_radio_field('set_products_status', 'set_products_status_off',
-                                  true) . TEXT_PRODUCTS_STATUS_OFF . '</label></div>' .
-                              '<div class="radio"><label>' .
-                              zen_draw_radio_field('set_products_status',
-                                  'set_products_status_nochange') . TEXT_PRODUCTS_STATUS_NOCHANGE . '</label></div>'
+                          'text' => (
+                                  //hide subcategory selection if no subcategories
+                                  zen_has_category_subcategories($_GET['cID']) ? zen_draw_label(TEXT_SUBCATEGORIES_STATUS_INFO, 'set_subcategories_status', 'class="control-label"') .
+                              '<div class="radio"><label>' . zen_draw_radio_field('set_subcategories_status', 'set_subcategories_status_off', true) . TEXT_SUBCATEGORIES_STATUS_OFF . '</label></div>' .
+                              '<div class="radio"><label>' . zen_draw_radio_field('set_subcategories_status', 'set_subcategories_status_nochange') . TEXT_SUBCATEGORIES_STATUS_NOCHANGE . '</label></div>' : '') .
+
+                              //hide products selection if no products
+                              (zen_get_products_to_categories($_GET['cID']) > 0 ? zen_draw_label(TEXT_PRODUCTS_STATUS_INFO, 'set_products_status', 'class="control-label"') .
+                              '<div class="radio"><label>' . zen_draw_radio_field('set_products_status', 'set_products_status_off', true) . TEXT_PRODUCTS_STATUS_OFF . '</label></div>' .
+                              '<div class="radio"><label>' . zen_draw_radio_field('set_products_status', 'set_products_status_nochange') . TEXT_PRODUCTS_STATUS_NOCHANGE . '</label></div>' : '')
                       );
 
                   } else {//category is currently Disabled, so Enable it
                       $contents[] = array(
-                          'text' =>
-                              (zen_has_category_subcategories($_GET['cID']) ? zen_draw_label(TEXT_SUBCATEGORIES_STATUS_INFO,
-                                      'set_subcategories_status',
-                                      'class="control-label"') . '<div class="radio"><label>' .
-                                  zen_draw_radio_field('set_subcategories_status', 'set_subcategories_status_on',
-                                      true) . TEXT_SUBCATEGORIES_STATUS_ON . '</label></div>' .
-                                  '<div class="radio"><label>' .
-                                  zen_draw_radio_field('set_subcategories_status',
-                                      'set_subcategories_status_nochange') . TEXT_SUBCATEGORIES_STATUS_NOCHANGE . '</label></div>' : '') .
-                              zen_draw_label(TEXT_PRODUCTS_STATUS_INFO, 'set_products_status',
-                                  'class="control-label"') .
-                              '<div class="radio"><label>' .
-                              zen_draw_radio_field('set_products_status', 'set_products_status_on',
-                                  true) . TEXT_PRODUCTS_STATUS_ON . '</label></div>' .
-                              '<div class="radio"><label>' .
-                              zen_draw_radio_field('set_products_status',
-                                  'set_products_status_nochange') . TEXT_PRODUCTS_STATUS_NOCHANGE . '</label></div>'
+                          'text' => (//hide subcategory selection if no subcategories
+                                  zen_has_category_subcategories($_GET['cID']) ? zen_draw_label(TEXT_SUBCATEGORIES_STATUS_INFO, 'set_subcategories_status','class="control-label"') .
+                                  '<div class="radio"><label>' . zen_draw_radio_field('set_subcategories_status', 'set_subcategories_status_on', true) . TEXT_SUBCATEGORIES_STATUS_ON . '</label></div>' .
+                                  '<div class="radio"><label>' . zen_draw_radio_field('set_subcategories_status', 'set_subcategories_status_nochange') . TEXT_SUBCATEGORIES_STATUS_NOCHANGE . '</label></div>' : '') .
+
+                              //hide products selection if no products
+                              (zen_get_products_to_categories($_GET['cID']) > 0 ? zen_draw_label(TEXT_PRODUCTS_STATUS_INFO, 'set_products_status','class="control-label"') .
+                              '<div class="radio"><label>' . zen_draw_radio_field('set_products_status', 'set_products_status_on', true) . TEXT_PRODUCTS_STATUS_ON . '</label></div>' .
+                              '<div class="radio"><label>' . zen_draw_radio_field('set_products_status', 'set_products_status_nochange') . TEXT_PRODUCTS_STATUS_NOCHANGE . '</label></div>' : '')
                       );
                   }
 
