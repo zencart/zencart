@@ -56,8 +56,8 @@ define('TEXT_COUNTER_HISTORY_TITLE', 'Visitor History - Last 14 days');
 define('TEXT_MONTHLY_SALES_TITLE', 'Monthly Sales (excludes shipping)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;');
 define('TEXT_CLICK_FOR_COMPLETE_DETAILS', 'Click here for complete details...');
 
-define('TEXT_SALES_TODAY', 'Sales <strong>Today</strong> (%s) &nbsp;<strong>$%d</strong>');
-define('TEXT_SALES_YESTERDAY', '<strong>Yesterday</strong> (%s) &nbsp;<strong>$%d</strong>');
+define('TEXT_SALES_TODAY', 'Sales <strong>Today</strong> (%s) &nbsp;<strong>$%s</strong>');
+define('TEXT_SALES_YESTERDAY', '<strong>Yesterday</strong> (%s) &nbsp;<strong>$%s</strong>');
 
 define('REPORTS_PRODUCTS', 'Products');
 define('REPORTS_ORDERS', 'Orders');
