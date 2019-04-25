@@ -645,6 +645,8 @@ if (false) { // disabled until clarification is received about coupons in PayPal
       $check_query = $db->Execute("select configuration_value from " . TABLE_CONFIGURATION . " where configuration_key = 'MODULE_PAYMENT_PAYPALWPP_STATUS'");
       $this->_check = !$check_query->EOF;
     }
+
+    if ($this->_check) $this->keys(); // install any missing keys
     return $this->_check;
   }
   /**
