@@ -75,7 +75,7 @@ define('TEXT_PRODUCTS_STATUS_INFO', 'Change ALL included products status to:');
 define('TEXT_PRODUCTS_STATUS_OFF', 'Disabled');
 define('TEXT_PRODUCTS_STATUS_ON', 'Enabled');
 define('TEXT_PRODUCTS_STATUS_NOCHANGE', 'Unchanged');
-define('TEXT_CATEGORIES_STATUS_WARNING', '<strong>WARNING ...</strong><br />Note: Disabling a category will disable all products in this category. Linked products located in this category that are shared with other categories will also be disabled.');
+define('TEXT_CATEGORIES_STATUS_WARNING', '<strong>WARNING ...</strong><br />Note: Disabling products (whether they are linked or master products) in a category will result in ALL instances of that product being disabled in ALL categories.');
 define('TEXT_SUBCATEGORIES_STATUS_INFO', 'Change ALL subcategories status to:');
 define('TEXT_SUBCATEGORIES_STATUS_OFF', 'Disabled');
 define('TEXT_SUBCATEGORIES_STATUS_ON', 'Enabled');

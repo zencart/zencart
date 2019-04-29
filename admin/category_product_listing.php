@@ -1035,6 +1035,7 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
                   );
 
                   $contents[] = array('text' => TEXT_CATEGORIES_STATUS_INTRO . ' <strong>' . ($cInfo->categories_status == '1' ? TEXT_CATEGORIES_STATUS_OFF : TEXT_CATEGORIES_STATUS_ON) . '</strong>');
+                  $contents[] = array('text' => TEXT_CATEGORIES_STATUS_WARNING . '<br /><br />');
 
                   if ($cInfo->categories_status == '1') {//category is currently Enabled, so Disable it
 
