@@ -111,7 +111,7 @@ $email_address = '';
 $name = '';
 
 // default email and name if customer is logged in
-if (!empty($_SESSION['customer_id'])) {
+if (zen_is_logged_in()) {
     $sql = "SELECT customers_id, customers_firstname, customers_lastname, customers_password, customers_email_address, customers_default_address_id
             FROM " . TABLE_CUSTOMERS . "
             WHERE customers_id = :customersID";
