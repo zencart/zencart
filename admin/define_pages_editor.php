@@ -86,7 +86,7 @@ switch ($_GET['action']) {
     break;
 }
 
-if (!$_SESSION['language']) {
+if (empty($_SESSION['language'])) {
   $_SESSION['language'] = $language;
 }
 
