@@ -17,8 +17,8 @@ if (!empty($_POST) && !isset($_POST['context_lines'])) {
 if (isset($_GET['configuration_key_lookup']) && $_GET['configuration_key_lookup'] != '') {
   $_POST['configuration_key'] = strtoupper($_GET['configuration_key_lookup']);
   $_POST['zv_files'] = 1;
-  $_POST['zv_filestype'] = $_POST['zv_filestype'];
-  $_POST['case_sensitive'] = $_POST['case_sensitive'];
+  $_POST['zv_filestype'] = !empty($_POST['zv_filestype']) ? $_POST['zv_filestype'] : 0;
+  $_POST['case_sensitive'] = !empty($_POST['case_sensitive']) ? $_POST['case_sensitive'] : 0;
 }
 $configuration_key_lookup = (isset($_POST['configuration_key'])) ? $_POST['configuration_key'] : '';
 $q_const = $q_func = $q_class = $q_tpl = $q_all = '';
