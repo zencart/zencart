@@ -591,7 +591,7 @@ use PHPMailer\PHPMailer\SMTP;
   function email_collect_extra_info($from, $email_from, $login, $login_email, $login_phone='', $login_fax='', $moreinfo = array()) {
     $email_host_address = '';
     // get host_address from either session or one time for both email types to save server load
-    if (!$_SESSION['customers_host_address']) {
+    if (empty($_SESSION['customers_host_address'])) {
       if (SESSION_IP_TO_HOST_ADDRESS == 'true') {
         $email_host_address = @gethostbyaddr($_SERVER['REMOTE_ADDR']);
       }
