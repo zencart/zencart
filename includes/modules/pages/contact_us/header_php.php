@@ -125,7 +125,7 @@ if (!empty($_SESSION['customer_id'])) {
 $send_to_array = array();
 if (CONTACT_US_LIST !=''){
     foreach (explode(",", CONTACT_US_LIST) as $k => $v) {
-    $send_to_array[] = array('id' => $k, 'text' => preg_replace('/\<[^*]*/', '', $v));
+        $send_to_array[] = array('id' => $k, 'text' => preg_replace('/\<[^*]*/', '', $v));
     }
 }
 
