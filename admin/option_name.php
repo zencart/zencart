@@ -118,28 +118,19 @@ if ($_GET['action'] == "update_sort_order") {
           <tbody>
             <tr>
                 <?php
+                $options_types = $db->Execute("SELECT * FROM " . TABLE_PRODUCTS_OPTIONS_TYPES);
+                $options_types_names = array();
+                foreach ($options_types as $options_type) {
+                    $options_types_names[$options_type['products_options_types_id']] = ' (' . strtoupper($options_type['products_options_types_name']) . ')';
+                }
+
                 $rows = $db->Execute("SELECT *
                                       FROM " . TABLE_PRODUCTS_OPTIONS . "
                                       WHERE language_id = '" . (int)$_GET['lng_id'] . "'
                                       ORDER BY products_options_sort_order, products_options_id");
                 foreach ($rows as $row) {
-                  switch (true) {
-                    case ($row['products_options_type'] == PRODUCTS_OPTIONS_TYPE_RADIO):
-                      $the_attributes_type = '(RADIO)';
-                      break;
-                    case ($row['products_options_type'] == PRODUCTS_OPTIONS_TYPE_TEXT):
-                      $the_attributes_type = '(TEXT)';
-                      break;
-                    case ($row['products_options_type'] == PRODUCTS_OPTIONS_TYPE_FILE):
-                      $the_attributes_type = '(FILE)';
-                      break;
-                    case ($row['products_options_type'] == PRODUCTS_OPTIONS_TYPE_CHECKBOX):
-                      $the_attributes_type = '(CHECKBOX)';
-                      break;
-                    default:
-                      $the_attributes_type = '(DROPDOWN)';
-                      break;
-                  }
+                  $option_type = $row['products_options_type'];
+                  $the_attributes_type = (isset($options_types_names[$option_type])) ? $options_types_names[$option_type] : " (UNKNOWN: $option_type)";
 
                   if ($_GET['lng_id'] != $_SESSION['languages_id']) {
                     ?>
