@@ -98,9 +98,9 @@ class VersionServer
 
     protected function buildCurrentInfo()
     {
-        $systemInfo = json_encode(zen_get_system_information(true), true);
+        $systemInfo = json_encode(zen_get_system_information(true));
 
-        $moduleInfo = json_encode($this->getModuleInfo(), true);
+        $moduleInfo = json_encode($this->getModuleInfo());
 
         $country_iso = $this->getCountryIso();
 

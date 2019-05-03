@@ -65,18 +65,20 @@ if (zen_not_null($action)) {
         // change the status of categories and products
         zen_set_time_limit(600);
         for ($i = 0, $n = sizeof($categories); $i < $n; $i++) {
-          if ($_POST['categories_status'] == '1') {
-            $categories_status = '0';
-            $products_status = '0';
-          } else {
-            $categories_status = '1';
-            $products_status = '1';
+          if ($_POST['categories_status'] == '1') {//form is coming from an Enabled category which is to be changed to Disabled
+            $categories_status = '0';//Disable this category
+            $update_subcategories = $_POST['set_subcategories_status'] == 'set_subcategories_status_off' ? '1' : '0'; //also Disable subcategories?
+          } else {//form is coming from a Disabled category which is to be changed to Enabled
+            $categories_status = '1';//Enable this category
+            $update_subcategories = $_POST['set_subcategories_status'] == 'set_subcategories_status_on' ? '1' : '0'; //also Enable subcategories?
           }
 
-          $sql = "UPDATE " . TABLE_CATEGORIES . "
+            if ($categories[$i]['id'] == $categories_id || $update_subcategories) {//always update THIS category, optionally update subcategories
+                $sql = "UPDATE " . TABLE_CATEGORIES . "
                   SET categories_status = " . (int)$categories_status . "
                   WHERE categories_id = " . (int)$categories[$i]['id'];
-          $db->Execute($sql);
+                $db->Execute($sql);
+            }
 
           // set products_status based on selection
           if ($_POST['set_products_status'] == 'set_products_status_nochange') {
@@ -100,7 +102,7 @@ if (zen_not_null($action)) {
               $db->Execute($sql);
             }
           }
-        } // for
+        }
       }
       zen_redirect(zen_href_link(FILENAME_CATEGORY_PRODUCT_LISTING, 'cPath=' . $_GET['cPath'] . '&cID=' . $_GET['cID'] . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '') . ((isset($_GET['search']) && !empty($_GET['search'])) ? '&search=' . $_GET['search'] : '')));
       break;
@@ -1019,26 +1021,57 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
           $heading = [];
           $contents = [];
           switch ($action) {
-            case 'setflag_categories':
-              $heading[] = array('text' => '<h4>' . TEXT_INFO_HEADING_STATUS_CATEGORY . '</h4>');
-              $contents = array('form' => zen_draw_form('categories', FILENAME_CATEGORY_PRODUCT_LISTING, 'action=update_category_status&cPath=' . $_GET['cPath'] . '&cID=' . $_GET['cID'] . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '') . ((isset($_GET['search']) && !empty($_GET['search'])) ? '&search=' . $_GET['search'] : ''), 'post', 'enctype="multipart/form-data"') . zen_draw_hidden_field('categories_id', $cInfo->categories_id) . zen_draw_hidden_field('categories_status', $cInfo->categories_status));
-              $contents[] = array('text' => '<strong>' . zen_get_category_name($cInfo->categories_id, $_SESSION['languages_id']) . '</strong>');
-              $contents[] = array('text' => TEXT_CATEGORIES_STATUS_WARNING . '<br /><br />');
-              $contents[] = array('text' => TEXT_CATEGORIES_STATUS_INTRO . ' ' . ($cInfo->categories_status == '1' ? TEXT_CATEGORIES_STATUS_OFF : TEXT_CATEGORIES_STATUS_ON));
-              if ($cInfo->categories_status == '1') {
-                $contents[] = array('text' => TEXT_PRODUCTS_STATUS_INFO . ' ' . TEXT_PRODUCTS_STATUS_OFF . zen_draw_hidden_field('set_products_status_off', true));
-              } else {
-                $contents[] = array('text' => zen_draw_label(TEXT_PRODUCTS_STATUS_INFO, 'set_products_status', 'class="control-label"') . '<div class="radio"><label>' .
-                  zen_draw_radio_field('set_products_status', 'set_products_status_on', true) . TEXT_PRODUCTS_STATUS_ON . '</label></div><div class="radio"><label>' .
-                  zen_draw_radio_field('set_products_status', 'set_products_status_off') . TEXT_PRODUCTS_STATUS_OFF . '</label></div><div class="radio"><label>' .
-                  zen_draw_radio_field('set_products_status', 'set_products_status_nochange') . TEXT_PRODUCTS_STATUS_NOCHANGE . '</label></div>');
-              }
+              case 'setflag_categories':
+                  $heading[] = array(
+                      'text' => '<h5>' . TEXT_INFO_HEADING_STATUS_CATEGORY . '</h5>' . '<h4>' . zen_output_generated_category_path($current_category_id) . ' > ' . zen_get_category_name($cInfo->categories_id,
+                              $_SESSION['languages_id']) . '</h4>'
+                  );
+                  $contents = array(
+                      'form' => zen_draw_form('categories', FILENAME_CATEGORY_PRODUCT_LISTING,
+                              'action=update_category_status&cPath=' . $_GET['cPath'] . '&cID=' . $_GET['cID'] . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '') . ((isset($_GET['search']) && !empty($_GET['search'])) ? '&search=' . $_GET['search'] : ''),
+                              'post', 'enctype="multipart/form-data"') . zen_draw_hidden_field('categories_id',
+                              $cInfo->categories_id) . zen_draw_hidden_field('categories_status',
+                              $cInfo->categories_status)
+                  );
 
+                  $contents[] = array('text' => TEXT_CATEGORIES_STATUS_INTRO . ' <strong>' . ($cInfo->categories_status == '1' ? TEXT_CATEGORIES_STATUS_OFF : TEXT_CATEGORIES_STATUS_ON) . '</strong>');
+                  $contents[] = array('text' => TEXT_CATEGORIES_STATUS_WARNING . '<br /><br />');
 
-              //        $contents[] = array('text' => '<br />' . TEXT_PRODUCTS_STATUS_INFO . '<br />' . zen_draw_radio_field('set_products_status', 'set_products_status_off', true) . ' ' . TEXT_PRODUCTS_STATUS_OFF . '<br />' . zen_draw_radio_field('set_products_status', 'set_products_status_on') . ' ' . TEXT_PRODUCTS_STATUS_ON);
+                  if ($cInfo->categories_status == '1') {//category is currently Enabled, so Disable it
 
-              $contents[] = array('align' => 'center', 'text' => '<button type="submit" class="btn btn-primary">' . IMAGE_UPDATE . '</button> <a href="' . zen_href_link(FILENAME_CATEGORY_PRODUCT_LISTING, 'cPath=' . $cPath . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '') . ((isset($_GET['search']) && !empty($_GET['search'])) ? '&search=' . $_GET['search'] : '')) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>');
-              break;
+                      $contents[] = array(
+                          'text' => (
+                                  //hide subcategory selection if no subcategories
+                                  zen_has_category_subcategories($_GET['cID']) ? zen_draw_label(TEXT_SUBCATEGORIES_STATUS_INFO, 'set_subcategories_status', 'class="control-label"') .
+                              '<div class="radio"><label>' . zen_draw_radio_field('set_subcategories_status', 'set_subcategories_status_off', true) . TEXT_SUBCATEGORIES_STATUS_OFF . '</label></div>' .
+                              '<div class="radio"><label>' . zen_draw_radio_field('set_subcategories_status', 'set_subcategories_status_nochange') . TEXT_SUBCATEGORIES_STATUS_NOCHANGE . '</label></div>' : '') .
+
+                              //hide products selection if no products
+                              (zen_get_products_to_categories($_GET['cID']) > 0 ? zen_draw_label(TEXT_PRODUCTS_STATUS_INFO, 'set_products_status', 'class="control-label"') .
+                              '<div class="radio"><label>' . zen_draw_radio_field('set_products_status', 'set_products_status_off', true) . TEXT_PRODUCTS_STATUS_OFF . '</label></div>' .
+                              '<div class="radio"><label>' . zen_draw_radio_field('set_products_status', 'set_products_status_nochange') . TEXT_PRODUCTS_STATUS_NOCHANGE . '</label></div>' : '')
+                      );
+
+                  } else {//category is currently Disabled, so Enable it
+                      $contents[] = array(
+                          'text' => (//hide subcategory selection if no subcategories
+                                  zen_has_category_subcategories($_GET['cID']) ? zen_draw_label(TEXT_SUBCATEGORIES_STATUS_INFO, 'set_subcategories_status','class="control-label"') .
+                                  '<div class="radio"><label>' . zen_draw_radio_field('set_subcategories_status', 'set_subcategories_status_on', true) . TEXT_SUBCATEGORIES_STATUS_ON . '</label></div>' .
+                                  '<div class="radio"><label>' . zen_draw_radio_field('set_subcategories_status', 'set_subcategories_status_nochange') . TEXT_SUBCATEGORIES_STATUS_NOCHANGE . '</label></div>' : '') .
+
+                              //hide products selection if no products
+                              (zen_get_products_to_categories($_GET['cID']) > 0 ? zen_draw_label(TEXT_PRODUCTS_STATUS_INFO, 'set_products_status','class="control-label"') .
+                              '<div class="radio"><label>' . zen_draw_radio_field('set_products_status', 'set_products_status_on', true) . TEXT_PRODUCTS_STATUS_ON . '</label></div>' .
+                              '<div class="radio"><label>' . zen_draw_radio_field('set_products_status', 'set_products_status_nochange') . TEXT_PRODUCTS_STATUS_NOCHANGE . '</label></div>' : '')
+                      );
+                  }
+
+                  $contents[] = array(
+                      'align' => 'center',
+                      'text' => '<button type="submit" class="btn btn-primary">' . IMAGE_UPDATE . '</button> <a href="' . zen_href_link(FILENAME_CATEGORY_PRODUCT_LISTING,
+                              'cPath=' . $cPath . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '') . ((isset($_GET['search']) && !empty($_GET['search'])) ? '&search=' . $_GET['search'] : '')) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>'
+                  );
+                  break;
             case 'delete_category':
               $heading[] = array('text' => '<h4>' . TEXT_INFO_HEADING_DELETE_CATEGORY . '</h4>');
 
