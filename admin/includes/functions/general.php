@@ -185,7 +185,9 @@
     $minute = (int)substr($raw_date, 14, 2);
     $second = (int)substr($raw_date, 17, 2);
 
-    return strftime(DATE_FORMAT_LONG, mktime($hour, $minute, $second, $month, $day, $year));
+   $retVal = strftime(DATE_FORMAT_LONG, mktime($hour, $minute, $second, $month, $day, $year));
+  if (stristr(PHP_OS, 'win')) return utf8_encode($retVal);
+  return $retVal;
   }
 
 
@@ -2315,7 +2317,7 @@ function zen_limit_image_filename($filename, $table_name, $field_name, $extensio
     global $db;
     $languages_icon = $db->Execute("select directory, image from " . TABLE_LANGUAGES . " where languages_id = '" . zen_db_input($lookup) . "'");
     if ($languages_icon->EOF) return '';
-    $icon= zen_image(DIR_WS_CATALOG_LANGUAGES . $languages_icon->fields['directory'] . '/images/' . $languages_icon->fields['image']);
+    $icon= zen_image(DIR_WS_CATALOG_LANGUAGES . $languages_icon->fields['directory'] . '/images/' . $languages_icon->fields['image'], $languages_icon->fields['directory']);
     return $icon;
   }
 
@@ -2927,7 +2929,7 @@ function zen_limit_image_filename($filename, $table_name, $field_name, $extensio
                                            );
     if ($check_products_category->EOF) return '';
     $the_categories_name= $db->Execute("SELECT categories_name
-                                        FROM " . TABLE_CATEGORIES_DESCRIPTION . " 
+                                        FROM " . TABLE_CATEGORIES_DESCRIPTION . "
                                         WHERE categories_id= " . (int)$check_products_category->fields['master_categories_id'] . "
                                         AND language_id= " . (int)$_SESSION['languages_id']
                                       );
