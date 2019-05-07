@@ -1096,7 +1096,7 @@ if (zen_not_null($action) && $order_exists == true) {
 
                       if (!empty($order->products[$i]['attributes'])) {
                         for ($j = 0, $nn=sizeof($order->products[$i]['attributes']); $j < $nn; $j++) {
-                          $contents[] = array('text' => '&nbsp;<i> - ' . $order->products[$i]['attributes'][$j]['option'] . ': ' . nl2br(zen_output_string_protected($order->products[$i]['attributes'][$j]['value'])) . '</i></nobr>');
+                          $contents[] = array('text' => '&nbsp;<i> - ' . $order->products[$i]['attributes'][$j]['option'] . ': ' . nl2br(zen_output_string_protected($order->products[$i]['attributes'][$j]['value'])) . '</i>');
                         }
                       }
                       if ($i > MAX_DISPLAY_RESULTS_ORDERS_DETAILS_LISTING and MAX_DISPLAY_RESULTS_ORDERS_DETAILS_LISTING != 0) {
