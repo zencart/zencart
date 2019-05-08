@@ -422,7 +422,7 @@ if (zen_not_null($action)) {
                   $contents[] = array('align' => 'center', 'text' => '<br><button type="submit" class="btn btn-danger">' . IMAGE_DELETE . '</button> <a href="' . zen_href_link(FILENAME_NEWSLETTERS, 'page=' . $_GET['page'] . '&nID=' . $_GET['nID']) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>');
                   break;
                 default:
-                  if (is_object($nInfo)) {
+                  if (!empty($nInfo) && is_object($nInfo)) {
                     $heading[] = array('text' => '<h4>' . $nInfo->title . '</h4>');
 
                     $contents[] = array('align' => 'center', 'text' => '<a href="' . zen_href_link(FILENAME_NEWSLETTERS, 'page=' . $_GET['page'] . '&nID=' . $nInfo->newsletters_id . '&action=new') . '" class="btn btn-primary" role="button">' . IMAGE_EDIT . '</a> <a href="' . zen_href_link(FILENAME_NEWSLETTERS, 'page=' . $_GET['page'] . '&nID=' . $nInfo->newsletters_id . '&action=delete') . '" class="btn btn-warning" role="button">' . IMAGE_DELETE . '</a> <a href="' . zen_href_link(FILENAME_NEWSLETTERS, 'page=' . $_GET['page'] . '&nID=' . $nInfo->newsletters_id . '&action=preview') . '" class="btn btn-primary" role="button">' . IMAGE_PREVIEW . '</a> <a href="' . zen_href_link(FILENAME_NEWSLETTERS, 'page=' . $_GET['page'] . '&nID=' . $nInfo->newsletters_id . '&action=send') . '" class="btn btn-primary" role="button">' . IMAGE_SEND . '</a>');
