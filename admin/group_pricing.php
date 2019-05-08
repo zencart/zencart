@@ -113,7 +113,7 @@ if ($query->fields['count'] > 0 && (!defined('MODULE_ORDER_TOTAL_GROUP_PRICING_S
 
 // Split Page
 // reset page when page is unknown
-                if (($_GET['page'] == '' or $_GET['page'] == '1') and $_GET['gID'] != '') {
+                if ((empty($_GET['page']) || $_GET['page'] == '1') && !empty($_GET['gID'])) {
                   $check_page = $db->Execute($groups_query_raw);
                   $check_count = 1;
                   if ($check_page->RecordCount() > MAX_DISPLAY_SEARCH_RESULTS) {

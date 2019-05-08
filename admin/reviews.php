@@ -285,7 +285,7 @@ if (zen_not_null($action)) {
                                          where r.products_id = p.products_id " . $search . $order_by);
 
 // reset page when page is unknown
-                  if (($_GET['page'] == '' or $_GET['page'] == '1') and $_GET['rID'] != '') {
+                  if ((empty($_GET['page']) || $_GET['page'] == '1') && !empty($_GET['rID'])) {
                     $check_page = $db->Execute($reviews_query_raw);
                     $check_count = 1;
                     if ($check_page->RecordCount() > MAX_DISPLAY_SEARCH_RESULTS) {
