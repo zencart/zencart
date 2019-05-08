@@ -73,12 +73,12 @@ if (zen_not_null($action)) {
             $update_subcategories = $_POST['set_subcategories_status'] == 'set_subcategories_status_on' ? '1' : '0'; //also Enable subcategories?
           }
 
-            if ($categories[$i]['id'] == $categories_id || $update_subcategories) {//always update THIS category, optionally update subcategories
-                $sql = "UPDATE " . TABLE_CATEGORIES . "
-                  SET categories_status = " . (int)$categories_status . "
-                  WHERE categories_id = " . (int)$categories[$i]['id'];
-                $db->Execute($sql);
-            }
+          if ($categories[$i]['id'] == $categories_id || $update_subcategories) {//always update THIS category, optionally update subcategories
+            $sql = "UPDATE " . TABLE_CATEGORIES . "
+                    SET categories_status = " . (int)$categories_status . "
+                    WHERE categories_id = " . (int)$categories[$i]['id'];
+            $db->Execute($sql);
+          }
 
           // set products_status based on selection
           if ($_POST['set_products_status'] == 'set_products_status_nochange') {
