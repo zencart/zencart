@@ -1327,14 +1327,14 @@ class paypaldp extends base {
         $sql_data_array = array('orders_id' => (int)$oID,
                                 'orders_status_id' => (int)$new_order_status,
                                 'date_added' => 'now()',
-                                'comments' => 'FUNDS COLLECTED. Trans ID: ' . urldecode($response['TRANSACTIONID']) . $response['PNREF']. "\n" . ' Amount: ' . urldecode($response['AMT']) . ' ' . $currency . "\n" . 'Time: ' . urldecode($response['ORDERTIME']) . "\n" . (isset($response['RECEIPTID']) ? 'Receipt ID: ' . urldecode($response['RECEIPTID']) : 'Auth Code: ' . $response['AUTHCODE']) . (isset($response['PPREF']) ? "\nPPRef: " . $response['PPREF'] : '') . "\n" . $captureNote,
+                                'comments' => 'FUNDS CAPTURED. Trans ID: ' . urldecode($response['TRANSACTIONID']) . $response['PNREF']. "\n" . ' Amount: ' . urldecode($response['AMT']) . ' ' . $currency . "\n" . 'Time: ' . urldecode($response['ORDERTIME']) . "\n" . 'Auth Code: ' . $response['AUTHCODE'] . (isset($response['PPREF']) ? "\nPPRef: " . $response['PPREF'] : '') . "\n" . $captureNote,
                                 'customer_notified' => 0
                              );
         zen_db_perform(TABLE_ORDERS_STATUS_HISTORY, $sql_data_array);
         $db->Execute("update " . TABLE_ORDERS  . "
                       set orders_status = '" . (int)$new_order_status . "'
                       where orders_id = '" . (int)$oID . "'");
-        $messageStack->add_session(sprintf(MODULE_PAYMENT_PAYPALDP_TEXT_CAPT_INITIATED, urldecode($response['AMT']), urldecode($response['RECEIPTID'] . $response['AUTHCODE']). $response['PNREF']), 'success');
+        $messageStack->add_session(sprintf(MODULE_PAYMENT_PAYPALDP_TEXT_CAPT_INITIATED, urldecode($response['AMT']), urldecode($response['AUTHCODE']). $response['PNREF']), 'success');
         return true;
       }
     }
