@@ -740,7 +740,7 @@ function zen_catalog_href_link($page = '', $parameters = '', $connection = 'NONS
         {
           // If you don't want to exclude entries already at the top of the list, comment out this next line:
           $alreadyInList = TRUE;
-          continue;
+          break; // found the duplicate, no further need to process this loop
         }
       }
       if (!$alreadyInList) $countries_array[] = array('id' => $countries[$i]['countries_id'], 'text' => $countries[$i]['countries_name']);
