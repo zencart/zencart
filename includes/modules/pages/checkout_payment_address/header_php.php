@@ -33,7 +33,7 @@ require(DIR_WS_MODULES . zen_get_module_directory('require_languages.php'));
 $addressType = "billto";
 require(DIR_WS_MODULES . zen_get_module_directory('checkout_new_address'));
 // if no billing destination address was selected, use their own address as default
-if (!$_SESSION['billto']) {
+if (empty($_SESSION['billto'])) {
   $_SESSION['billto'] = $_SESSION['customer_default_address_id'];
 }
 
