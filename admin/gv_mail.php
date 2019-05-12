@@ -144,14 +144,14 @@
     zen_redirect(zen_href_link(FILENAME_GV_MAIL, 'mail_sent_to=' . urlencode($mail_sent_to) . '&recip_count='. $recip_count ));
   }
 
-  if ( !empty($_GET['action']) && ($_GET['action'] == 'preview') && (empty($_POST['customers_email_address'])) && (empty($_POST['email_to'])) ) {
+  if ( !empty($_GET['action']) && $_GET['action'] == 'preview' && empty($_POST['customers_email_address']) && empty($_POST['email_to']) ) {
     $messageStack->add(ERROR_NO_CUSTOMER_SELECTED, 'error');
   }
 
-  if ( !empty($_GET['action']) && ($_GET['action'] == 'preview') && (empty($_POST['subject'])) ) {
+  if ( !empty($_GET['action']) && $_GET['action'] == 'preview' && empty($_POST['subject']) ) {
     $messageStack->add(ERROR_NO_SUBJECT, 'error');
   }
-  if ( !empty($_GET['action']) && ($_GET['action'] == 'preview') && (empty($_POST['amount']) || $_POST['amount'] <= 0) ) {
+  if ( !empty($_GET['action']) && $_GET['action'] == 'preview' && (empty($_POST['amount']) || $_POST['amount'] <= 0) ) {
     $messageStack->add(ERROR_NO_AMOUNT_SELECTED, 'error');
   }
 
@@ -284,7 +284,7 @@ function check_form(form_name) {
       <tr>
         <td><table border="0" width="100%" cellspacing="0" cellpadding="2">
 <?php
-  if ( !empty($_GET['action']) && ($_GET['action'] == 'preview') && (!empty($_POST['customers_email_address']) || !empty($_POST['email_to'])) ) {
+  if ( !empty($_GET['action']) && $_GET['action'] == 'preview' && (!empty($_POST['customers_email_address']) || !empty($_POST['email_to'])) ) {
   $audience_select = get_audience_sql_query($_POST['customers_email_address']);
     $mail_sent_to = $audience_select['query_name'];
         if ($_POST['email_to']) {
@@ -397,12 +397,12 @@ function check_form(form_name) {
 <?php if (EMAIL_USE_HTML == 'true') {?>
               <tr>
                 <td valign="top" class="main"><?php echo TEXT_RICH_TEXT_MESSAGE; ?></td>
-                <td><?php echo zen_draw_textarea_field('message_html', 'soft', '100%', '20', htmlspecialchars(($_POST['message_html']=='') ? TEXT_GV_ANNOUNCE : stripslashes($_POST['message_html']), ENT_COMPAT, CHARSET, TRUE), 'id="message_html" class="editorHook"'); ?></td>
+                <td><?php echo zen_draw_textarea_field('message_html', 'soft', '100%', '20', htmlspecialchars(empty($_POST['message_html']) ? TEXT_GV_ANNOUNCE : stripslashes($_POST['message_html']), ENT_COMPAT, CHARSET, TRUE), 'id="message_html" class="editorHook"'); ?></td>
               </tr>
 <?php } ?>
               <tr>
                 <td valign="top" class="main"><?php echo TEXT_MESSAGE; ?></td>
-                <td><?php echo zen_draw_textarea_field('message', 'soft', '60', '15', htmlspecialchars((empty($_POST['message'])) ? strip_tags(TEXT_GV_ANNOUNCE) : stripslashes($_POST['message']), ENT_COMPAT, CHARSET, TRUE), 'class="noEditor"'); ?></td>
+                <td><?php echo zen_draw_textarea_field('message', 'soft', '60', '15', htmlspecialchars(empty($_POST['message']) ? strip_tags(TEXT_GV_ANNOUNCE) : stripslashes($_POST['message']), ENT_COMPAT, CHARSET, TRUE), 'class="noEditor"'); ?></td>
               </tr>
               <tr>
                 <td colspan="2"><?php echo zen_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
