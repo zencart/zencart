@@ -77,7 +77,7 @@ if (isset($_POST['submit'])) {
   <div class="container-fluid">
     <div class="login-form">
       <div class="login-main-div login-box-shadow">
-        <img class="login-img" src="../includes/templates/template_default/images/logo.gif" alt="Zen Cart®" title="Zen Cart®" width="192" height="68" border="0">
+        <?php echo zen_image(DIR_WS_IMAGES . HEADER_LOGO_IMAGE, HEADER_ALT_TEXT, HEADER_LOGO_WIDTH, HEADER_LOGO_HEIGHT, 'class="login-img"'); ?>
         <br>
         <?php echo zen_draw_form('loginForm', FILENAME_PASSWORD_FORGOTTEN, 'action=update', 'post', 'id="loginForm"', 'true'); ?>
 
