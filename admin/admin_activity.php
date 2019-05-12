@@ -370,7 +370,7 @@ if ($action != '') {
         <!-- bof: reset admin_activity_log -->
         <h4><?php echo HEADING_SUB2; ?></h4>
         <div class="row">
-          <div class="col <?php echo ($_SESSION['reset_admin_activity_log'] == true ? "text-danger" : "main"); ?>"><?php echo TEXT_INFO_ADMIN_ACTIVITY_LOG; ?></div>
+          <div class="col <?php echo (!empty($_SESSION['reset_admin_activity_log']) ? "text-danger" : "main"); ?>"><?php echo TEXT_INFO_ADMIN_ACTIVITY_LOG; ?></div>
           <div class="text-right"><a href="<?php echo zen_href_link(FILENAME_ADMIN_ACTIVITY, 'action=clean_admin_activity_log'); ?>" class="btn btn-primary" role="button"><?php echo IMAGE_RESET; ?></a></div>
         </div>
         <!-- eof: reset admin_activity_log -->

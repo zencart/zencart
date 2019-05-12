@@ -321,7 +321,7 @@ if (zen_not_null($action)) {
 
 // Split Page
 // reset page when page is unknown
-                    if (($_GET['page'] == '1' or $_GET['page'] == '') and $_GET['fID'] != '') {
+                    if ((empty($_GET['page']) || $_GET['page'] == '1') && !empty($_GET['fID'])) {
                       $old_page = $_GET['page'];
                       $check_page = $db->Execute($featured_query_raw);
                       if ($check_page->RecordCount() > MAX_DISPLAY_SEARCH_RESULTS_FEATURED_ADMIN) {

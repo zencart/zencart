@@ -292,7 +292,7 @@ if (zen_not_null($action)) {
                                                  WHERE geo_zone_id = " . (int)$zone['geo_zone_id'] . "
                                                  GROUP BY geo_zone_id");
 
-                      if ($num_zones->fields['num_zones'] > 0) {
+                      if (!$num_zones->EOF && $num_zones->fields['num_zones'] > 0) {
                         $zone['num_zones'] = $num_zones->fields['num_zones'];
                       } else {
                         $zone['num_zones'] = 0;
