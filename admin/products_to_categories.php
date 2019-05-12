@@ -393,21 +393,15 @@ if (zen_not_null($action)) {
       break;
 
     case 'update_product':
-      $zv_check_master_categories_id = true;
+      $zv_check_master_categories_id = ('' !== $_POST['current_master_categories_id']);
       $new_categories_sort_array[] = $_POST['current_master_categories_id'];
       $current_master_categories_id = $_POST['current_master_categories_id'];
       if (!isset($_POST['categories_add'])) $_POST['categories_add'] = array();
 
       // set the linked products master_categories_id product(s)
       for ($i = 0, $n = sizeof($_POST['categories_add']); $i < $n; $i++) {
-        // is current master_categories_id in the list?
-        if ($zv_check_master_categories_id == true && $_POST['categories_add'][$i] == $current_master_categories_id) {
-          $zv_check_master_categories_id = true;
-          // array is set above to master category
-        } else {
-          $zv_check_master_categories_id = false;
-          $new_categories_sort_array[] = (int)$_POST['categories_add'][$i];
-        }
+        // Populate the list of remaining categories in the selection list.
+        $new_categories_sort_array[] = (int)$_POST['categories_add'][$i];
       }
 
       // remove existing products_to_categories for current product
@@ -444,6 +438,12 @@ if (zen_not_null($action)) {
                       WHERE products_id = " . $products_filter);
       } else {
         // reset master_categories_id to current_category_id because it was unselected
+        if ($reset_master_categories_id == '') {
+          $reset_master_categories_id = $current_category_id;
+          // Ensure that product is reachable by product/category relationship.
+          $db->Execute("INSERT INTO " . TABLE_PRODUCTS_TO_CATEGORIES . " (products_id, categories_id)
+                        VALUES (" . $products_filter . ", " . (int)$reset_master_categories_id . ")");
+        }
         $db->Execute("UPDATE " . TABLE_PRODUCTS . "
                       SET master_categories_id = " . (int)$reset_master_categories_id . "
                       WHERE products_id = " . $products_filter);
