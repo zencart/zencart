@@ -31,7 +31,7 @@
   }
 
   // ensure navigation snapshot in case must-be-logged-in-for-price is enabled
-  if (empty($_SESSION['customer_id'])) {
+  if (!zen_is_logged_in()) {
     $_SESSION['navigation']->set_snapshot();
   }
 

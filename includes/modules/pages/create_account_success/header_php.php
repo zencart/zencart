@@ -19,7 +19,7 @@ $breadcrumb->add(NAVBAR_TITLE_2);
 //-BOF-lat9
 // Remove this page from the navigation history and if the customer returns to this page after time-out, redirect them to the time_out page
 $_SESSION['navigation']->remove_current_page();
-if (!$_SESSION['customer_id']) {
+if (!zen_is_logged_in()) {
   zen_redirect(zen_href_link(FILENAME_TIME_OUT, '', 'NONSSL'));
 }
 //-EOF-lat9

@@ -15,7 +15,7 @@
 <?php echo zen_draw_hidden_field('action', 'submit'); ?>
 <?php
   if($_SESSION['cart']->count_contents()) {
-    if (!empty($_SESSION['customer_id'])) {
+    if (zen_is_logged_in()) {
 ?>
 <h2><?php echo CART_SHIPPING_OPTIONS; ?></h2>
 
@@ -85,7 +85,7 @@
     }else{
 ?>
 <table id="seQuoteResults">
-<?php if (empty($_SESSION['customer_id'])){ ?>
+<?php if (!zen_is_logged_in()){ ?>
     <tr>
       <td colspan="2" class="seDisplayedAddressLabel">
         <?php echo CART_SHIPPING_QUOTE_CRITERIA; ?><br />

@@ -13,7 +13,7 @@
 $zco_notifier->notify('NOTIFY_HEADER_START_CHECKOUT_SUCCESS');
 
 // if the customer is not logged on, redirect them to the shopping cart page
-if (!$_SESSION['customer_id']) {
+if (!zen_is_logged_in()) {
   zen_redirect(zen_href_link(FILENAME_TIME_OUT));
 }
 

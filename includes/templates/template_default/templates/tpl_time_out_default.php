@@ -11,7 +11,7 @@
 ?>
 <div class="centerColumn" id="timeoutDefault">
 <?php
-    if (!empty($_SESSION['customer_id'])) {
+    if (zen_is_logged_in()) {
 ?>
 <h1 id="timeoutDefaultHeading"><?php echo HEADING_TITLE_LOGGED_IN; ?></h1>
 <div id="timeoutDefaultContent" class="content"><?php echo TEXT_INFORMATION_LOGGED_IN; ?></div>

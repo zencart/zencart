@@ -46,7 +46,7 @@
  */
 
 // if the customer is not logged on, redirect them to the login page
-  if (!$_SESSION['customer_id']) {
+  if (!zen_is_logged_in()) {
     die(WARNING_SESSION_TIMEOUT);
   }
 

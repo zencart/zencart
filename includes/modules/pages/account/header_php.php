@@ -13,7 +13,7 @@ $zco_notifier->notify('NOTIFY_HEADER_START_ACCOUNT');
 $customer_has_gv_balance = false;
 $customer_gv_balance = false;
 
-if (!$_SESSION['customer_id']) {
+if (!zen_is_logged_in()) {
   $_SESSION['navigation']->set_snapshot();
   zen_redirect(zen_href_link(FILENAME_LOGIN, '', 'SSL'));
 }
