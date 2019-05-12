@@ -78,7 +78,7 @@ if ($expired && $message == '')
   <div class="container-fluid">
     <div class="login-form">
       <div class="login-main-div login-box-shadow">
-        <?php echo zen_image(DIR_WS_IMAGES . HEADER_LOGO_IMAGE, HEADER_ALT_TEXT, HEADER_LOGO_WIDTH, HEADER_LOGO_HEIGHT) ?>
+        <?php echo zen_image(DIR_WS_IMAGES . HEADER_LOGO_IMAGE, HEADER_ALT_TEXT, HEADER_LOGO_WIDTH, HEADER_LOGO_HEIGHT, 'class="login-img"'); ?>
         <br>
         <?php if (!isset($expired) || $expired == FALSE) { ?>
           <?php echo zen_draw_form('loginForm', FILENAME_LOGIN, zen_get_all_get_params(), 'post', 'id="loginForm"', 'true'); ?>
