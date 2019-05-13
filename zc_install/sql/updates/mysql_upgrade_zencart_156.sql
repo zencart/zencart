@@ -233,6 +233,15 @@ CREATE TABLE IF NOT EXISTS admin_notifications (
 
 
 
+## Added in v1.5.6b for MySQL 8.0.17 compatibility
+ALTER TABLE paypal MODIFY mc_gross decimal(15,4) NOT NULL default '0.00';
+ALTER TABLE paypal MODIFY mc_fee decimal(15,4) NOT NULL default '0.00';
+ALTER TABLE paypal MODIFY payment_gross decimal(15,4) default NULL;
+ALTER TABLE paypal MODIFY payment_fee decimal(15,4) default NULL;
+ALTER TABLE paypal MODIFY settle_amount decimal(15,4) default NULL;
+ALTER TABLE paypal MODIFY exchange_rate decimal(15,4) default NULL;
+ALTER TABLE currencies MODIFY value decimal(14,6) default NULL;
+
 
 #############
 
