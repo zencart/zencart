@@ -135,7 +135,7 @@ if (PRODUCT_LIST_FILTER > 0) {
                        JOIN " . TABLE_RECORD_COMPANY . " r ON r.record_company_id = pme.record_company_id
                        WHERE p.products_status = 1
                        AND p2c.categories_id = " . (int)$current_category_id . "
-                       GROUP BY r.record_company_id
+                       GROUP BY r.record_company_id, r.record_company_name
                        ORDER BY r.record_company_name";
   }
   $getoption_set = false;

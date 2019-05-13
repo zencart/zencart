@@ -135,7 +135,7 @@ if (PRODUCT_LIST_FILTER > 0) {
                        JOIN " . TABLE_MUSIC_GENRE . " m ON m.music_genre_id = pme.music_genre_id
                        WHERE p.products_status = 1
                        AND p2c.categories_id = " . (int)$current_category_id . "
-                       GROUP BY m.music_genre_id
+                       GROUP BY m.music_genre_id, m.music_genre_name
                        ORDER BY m.music_genre_name";
   }
   $getoption_set = false;

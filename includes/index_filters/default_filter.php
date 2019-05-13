@@ -134,7 +134,7 @@ if (PRODUCT_LIST_FILTER > 0) {
                        JOIN " . TABLE_MANUFACTURERS . " m ON m.manufacturers_id = p.manufacturers_id
                        WHERE p.products_status = 1
                        AND p2c.categories_id = " . (int)$current_category_id . "
-                       GROUP BY m.manufacturers_id
+                       GROUP BY m.manufacturers_id, m.manufacturers_name
                        ORDER BY m.manufacturers_name";
   }
   $do_filter_list = false;
