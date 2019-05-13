@@ -83,3 +83,4 @@ define('TEXT_SUBCATEGORIES_STATUS_NOCHANGE', 'Unchanged');
 
 define('WARNING_PRODUCTS_IN_TOP_INFO', 'WARNING: You have Products in the Top Level Category. This will cause pricing to not work properly in the Catalog. Products found: ');
 
+define('TEXT_COPY_MEDIA_MANAGER', 'Copy media?');
