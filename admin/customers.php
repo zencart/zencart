@@ -667,7 +667,7 @@ if (zen_not_null($action)) {
                       echo $cInfo->customers_dob . ((empty($customers_dob) || $customers_dob <= '0001-01-01' || $customers_dob == '0001-01-01 00:00:00') ? 'N/A' : zen_draw_hidden_field('customers_dob'));
                     }
                   } else {
-                    echo zen_draw_input_field('customers_dob', ((empty($customers_dob) || $customers_dob <= '0001-01-01' || $customers_dob == '0001-01-01 00:00:00') ? '' : zen_date_short($cInfo->customers_dob)), 'maxlength="10" class="form-control"', true);
+                    echo zen_draw_input_field('customers_dob', ((empty($cInfo->customers_dob) || $cInfo->customers_dob <= '0001-01-01' || $cInfo->customers_dob == '0001-01-01 00:00:00') ? '' : zen_date_short($cInfo->customers_dob)), 'maxlength="10" class="form-control"', true);
                   }
                   ?>
               </div>
