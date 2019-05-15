@@ -248,4 +248,7 @@ $sanitizer->addComplexSanitization($group);
 $group = array('query_string' => array('sanitizerType' => 'NULL_ACTION', 'method' => 'post', 'pages' => array('sqlpatch')));
 $sanitizer->addComplexSanitization($group);
 
+$group = array('configuration_key' => array('sanitizerType' => 'NULL_ACTION', 'method' => 'post', 'pages' => array('developers_tool_kit')));
+$sanitizer->addComplexSanitization($group);
+
 $sanitizer->runSanitizers();
