@@ -176,6 +176,15 @@ if (ACCOUNT_GENDER == 'true') {
   $female = !$male;
 }
 
+if (!(isset($_POST['action']) && ($_POST['action'] == 'process'))) {
+  // Posted page content is not requested to be processed, populate dob with customer's database entry.
+  // Using ISO-8601 format of date display to support javascript/jQuery driven date picker data handling.
+  $dob = zen_date_raw(zen_date_short($account->fields['customers_dob']));
+  $dob = substr($dob, 0, 4) . '-' . substr($dob, 4, 2) . '-' . substr($dob, 6, 2);
+  if ($dob <= '0001-01-01') {
+    $dob = '0001-01-01 00:00:00';
+  }
+}
 // if DOB field has database default setting, show blank:
 $dob = ($dob == '0001-01-01 00:00:00') ? '' : $dob;
 
