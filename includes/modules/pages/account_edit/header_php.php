@@ -181,12 +181,12 @@ if (isset($customers_email_format)) {
   $email_pref_html = (($customers_email_format == 'HTML') ? true : false);
   $email_pref_none = (($customers_email_format == 'NONE') ? true : false);
   $email_pref_optout = (($customers_email_format == 'OUT')  ? true : false);
-  $email_pref_text = (($email_pref_html || $email_pref_none || $email_pref_out) ? false : true);  // if not in any of the others, assume TEXT
+  $email_pref_text = (($email_pref_html || $email_pref_none || $email_pref_optout) ? false : true);  // if not in any of the others, assume TEXT
 } else {
   $email_pref_html = (($account->fields['customers_email_format'] == 'HTML') ? true : false);
   $email_pref_none = (($account->fields['customers_email_format'] == 'NONE') ? true : false);
   $email_pref_optout = (($account->fields['customers_email_format'] == 'OUT')  ? true : false);
-  $email_pref_text = (($email_pref_html || $email_pref_none || $email_pref_out) ? false : true);  // if not in any of the others, assume TEXT
+  $email_pref_text = (($email_pref_html || $email_pref_none || $email_pref_optout) ? false : true);  // if not in any of the others, assume TEXT
 }
 
 $breadcrumb->add(NAVBAR_TITLE_1, zen_href_link(FILENAME_ACCOUNT, '', 'SSL'));
