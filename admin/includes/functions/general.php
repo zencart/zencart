@@ -3824,9 +3824,13 @@ function get_logs_data($maxToList = 'count') {
     global $db;
     $sql = "SELECT coupon_id, coupon_is_valid_for_sales
             FROM " . TABLE_COUPONS . "
-            WHERE coupon_id = " . (int)$coupon_id;
+            WHERE coupon_id = " . (int)$coupon_id . "
+            LIMIT 1";
 
     $result = $db->Execute($sql);
+    if ($result->EOF) {
+        return false;
+    }
 
     // check whether coupon has been flagged for valid with sales
     if ($result->fields['coupon_is_valid_for_sales']) {
