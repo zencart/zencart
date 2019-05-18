@@ -400,6 +400,10 @@
       if ( (!empty($_POST['back_x'])) || (!empty($_POST['back_y'])) ) {
         $_GET['action'] = 'new';
       } else {
+        if (empty($_POST['coupon_amount'])) {
+            $_POST['coupon_amount'] = '0';
+        }
+        
         $coupon_type = 'F'; // amount off
         if ($_POST['coupon_free_ship']) $coupon_type = 'S'; // free shipping
         if (substr($_POST['coupon_amount'], -1) == '%') $coupon_type = 'P'; // percentage off
