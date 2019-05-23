@@ -566,17 +566,7 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
       <?php } ?>
       <div class="row"><?php echo zen_draw_separator('pixel_black.gif', '100%', '1px'); ?></div>
       <div class="row">
-          <?php
-          if ($action != '') {
-            ?>
-          <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9 configurationColumnLeft">
-              <?php
-            } else {
-              ?>
-            <div>
-                <?php
-              }
-              ?>
+        <div class="<?php echo (empty($action)) ? '' : 'col-xs-12 col-sm-12 col-md-9 col-lg-9 configurationColumnLeft'; ?>">
             <table class="table table-striped table-hover">
               <thead>
                 <tr>
@@ -1279,7 +1269,6 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
           <?php
         }
         ?>
-      </div>
     </div>
     <!-- footer //-->
     <?php require(DIR_WS_INCLUDES . 'footer.php'); ?>
