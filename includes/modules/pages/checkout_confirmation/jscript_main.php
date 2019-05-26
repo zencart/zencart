@@ -35,8 +35,8 @@ function submitonce()
 }
 function button_timeout() {
   var button = document.getElementById("btn_submit");
-  button.style.cursor="pointer";
-  button.disabled = false;
+  button.style.cursor="wait";
+  button.disabled = true;
 }
 
 //--></script>

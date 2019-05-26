@@ -231,7 +231,7 @@ $from_str = "FROM (" . TABLE_PRODUCTS . " p
 $from_str = $db->bindVars($from_str, ':languagesID', $_SESSION['languages_id'], 'integer');
 
 if ((DISPLAY_PRICE_WITH_TAX == 'true') && ((isset($_GET['pfrom']) && zen_not_null($_GET['pfrom'])) || (isset($_GET['pto']) && zen_not_null($_GET['pto'])))) {
-  if (!$_SESSION['customer_country_id']) {
+  if (empty($_SESSION['customer_country_id'])) {
     $_SESSION['customer_country_id'] = STORE_COUNTRY;
     $_SESSION['customer_zone_id'] = STORE_ZONE;
   }

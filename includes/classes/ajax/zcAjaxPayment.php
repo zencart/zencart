@@ -39,7 +39,7 @@ class zcAjaxPayment extends base
     if ($_SESSION['cart']->count_contents ()<=0) {
       zen_redirect (zen_href_link (FILENAME_TIME_OUT));
     }
-    if (!$_SESSION['customer_id']) {
+    if (!zen_is_logged_in()) {
       $_SESSION['navigation']->set_snapshot (array(
           'mode' => 'SSL',
           'page' => FILENAME_CHECKOUT_PAYMENT
@@ -180,7 +180,7 @@ class zcAjaxPayment extends base
     }
 
     $current_page_base = FILENAME_CHECKOUT_CONFIRMATION;
-    require_once (DIR_WS_LANGUAGES.$_SESSION['language'].'.php');
+    require_once(zen_get_file_directory(DIR_FS_CATALOG . DIR_WS_LANGUAGES, $_SESSION['language'].'.php', 'false'));
     require_once (DIR_WS_MODULES.zen_get_module_directory ('require_languages.php'));
     require_once (DIR_WS_MODULES.zen_get_module_directory ('meta_tags.php'));
     $breadcrumb->add (NAVBAR_TITLE_1, zen_href_link (FILENAME_CHECKOUT_SHIPPING, '', 'SSL'));

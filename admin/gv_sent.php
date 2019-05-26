@@ -121,31 +121,33 @@
   $heading = array();
   $contents = array();
 
-  $heading[] = array('text' => '[' . $gInfo->coupon_id . '] ' . ' ' . $currencies->format($gInfo->coupon_amount));
-  $redeem = $db->Execute("select * from " . TABLE_COUPON_REDEEM_TRACK . "
-                          where coupon_id = '" . $gInfo->coupon_id . "'");
-  $redeemed = 'No';
-  if ($redeem->RecordCount() > 0) $redeemed = 'Yes';
-  $contents[] = array('text' => TEXT_INFO_SENDERS_ID . ' ' . $gInfo->customer_id_sent);
-  $contents[] = array('text' => TEXT_INFO_AMOUNT_SENT . ' ' . $currencies->format($gInfo->coupon_amount));
-  $contents[] = array('text' => TEXT_INFO_DATE_SENT . ' ' . zen_date_short($gInfo->date_sent));
-  $contents[] = array('text' => TEXT_INFO_VOUCHER_CODE . ' ' . $gInfo->coupon_code);
-  $contents[] = array('text' => TEXT_INFO_EMAIL_ADDRESS . ' ' . $gInfo->emailed_to);
-  if ($redeemed=='Yes') {
-    $contents[] = array('text' => '<br />' . TEXT_INFO_DATE_REDEEMED . ' ' . zen_date_short($redeem->fields['redeem_date']));
-    $contents[] = array('text' => TEXT_INFO_IP_ADDRESS . ' ' . $redeem->fields['redeem_ip']);
-    $contents[] = array('text' => TEXT_INFO_CUSTOMERS_ID . ' ' . $redeem->fields['customer_id']);
-  } else {
-    $contents[] = array('text' => '<br />' . TEXT_INFO_NOT_REDEEMED);
-  }
+  if (isset($gInfo)) {
+    $heading[] = array('text' => '[' . $gInfo->coupon_id . '] ' . ' ' . $currencies->format($gInfo->coupon_amount));
+    $redeem = $db->Execute("select * from " . TABLE_COUPON_REDEEM_TRACK . "
+                            where coupon_id = '" . $gInfo->coupon_id . "'");
+    $redeemed = 'No';
+    if ($redeem->RecordCount() > 0) $redeemed = 'Yes';
+    $contents[] = array('text' => TEXT_INFO_SENDERS_ID . ' ' . $gInfo->customer_id_sent);
+    $contents[] = array('text' => TEXT_INFO_AMOUNT_SENT . ' ' . $currencies->format($gInfo->coupon_amount));
+    $contents[] = array('text' => TEXT_INFO_DATE_SENT . ' ' . zen_date_short($gInfo->date_sent));
+    $contents[] = array('text' => TEXT_INFO_VOUCHER_CODE . ' ' . $gInfo->coupon_code);
+    $contents[] = array('text' => TEXT_INFO_EMAIL_ADDRESS . ' ' . $gInfo->emailed_to);
+    if ($redeemed=='Yes') {
+      $contents[] = array('text' => '<br />' . TEXT_INFO_DATE_REDEEMED . ' ' . zen_date_short($redeem->fields['redeem_date']));
+      $contents[] = array('text' => TEXT_INFO_IP_ADDRESS . ' ' . $redeem->fields['redeem_ip']);
+      $contents[] = array('text' => TEXT_INFO_CUSTOMERS_ID . ' ' . $redeem->fields['customer_id']);
+    } else {
+      $contents[] = array('text' => '<br />' . TEXT_INFO_NOT_REDEEMED);
+    }
 
-  if ( (zen_not_null($heading)) && (zen_not_null($contents)) ) {
-    echo '            <td width="25%" valign="top">' . "\n";
+    if ( (zen_not_null($heading)) && (zen_not_null($contents)) ) {
+      echo '            <td width="25%" valign="top">' . "\n";
 
-    $box = new box;
-    echo $box->infoBox($heading, $contents);
+      $box = new box;
+      echo $box->infoBox($heading, $contents);
 
-    echo '            </td>' . "\n";
+      echo '            </td>' . "\n";
+    }
   }
 ?>
           </tr>

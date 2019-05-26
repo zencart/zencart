@@ -158,7 +158,9 @@ $form_action = (isset($_GET['pID'])) ? 'update_product' : 'insert_product';
         }
         echo zen_draw_hidden_field('products_image', stripslashes($products_image_name));
         echo ( (isset($_GET['search']) && !empty($_GET['search'])) ? zen_draw_hidden_field('search', $_GET['search']) : '') . ( (isset($_POST['search']) && !empty($_POST['search']) && empty($_GET['search'])) ? zen_draw_hidden_field('search', $_POST['search']) : '');
-        echo zen_image_submit('button_back.gif', IMAGE_BACK, 'name="edit"') . '&nbsp;&nbsp;';
+      ?>
+        <button type="submit" name="edit" value="edit" class="btn btn-default"><?php echo IMAGE_BACK; ?></button>
+      <?php
         if (isset($_GET['pID'])) {
           ?>
         <button type="submit" class="btn btn-primary"><?php echo IMAGE_UPDATE; ?></button>

@@ -68,15 +68,19 @@ define('TEXT_COPY_DISCOUNTS_NO', 'No');
 // From categories.php in 1.5.5
 // categories status
 define('TEXT_INFO_HEADING_STATUS_CATEGORY', 'Change Category Status for:');
-define('TEXT_CATEGORIES_STATUS_INTRO', 'Change the Category Status to: ');
-define('TEXT_CATEGORIES_STATUS_OFF', 'OFF');
-define('TEXT_CATEGORIES_STATUS_ON', 'ON');
-define('TEXT_PRODUCTS_STATUS_INFO', 'Change ALL Product Status to: ');
-define('TEXT_PRODUCTS_STATUS_OFF', 'OFF');
-define('TEXT_PRODUCTS_STATUS_ON', 'ON');
+define('TEXT_CATEGORIES_STATUS_INTRO', 'Change <strong>this</strong> category\'s status to: ');
+define('TEXT_CATEGORIES_STATUS_OFF', 'Disabled');
+define('TEXT_CATEGORIES_STATUS_ON', 'Enabled');
+define('TEXT_PRODUCTS_STATUS_INFO', 'Change ALL included products status to:');
+define('TEXT_PRODUCTS_STATUS_OFF', 'Disabled');
+define('TEXT_PRODUCTS_STATUS_ON', 'Enabled');
 define('TEXT_PRODUCTS_STATUS_NOCHANGE', 'Unchanged');
-define('TEXT_CATEGORIES_STATUS_WARNING', '<strong>WARNING ...</strong><br />Note: Disabling a category will disable all products in this category. Linked products located in this category that are shared with other categories will also be disabled.');
-
+define('TEXT_CATEGORIES_STATUS_WARNING', '<strong>WARNING ...</strong><br />Note: Disabling products (whether they are linked or master products) in a category will result in ALL instances of that product being disabled in ALL categories.');
+define('TEXT_SUBCATEGORIES_STATUS_INFO', 'Change ALL subcategories status to:');
+define('TEXT_SUBCATEGORIES_STATUS_OFF', 'Disabled');
+define('TEXT_SUBCATEGORIES_STATUS_ON', 'Enabled');
+define('TEXT_SUBCATEGORIES_STATUS_NOCHANGE', 'Unchanged');
 
 define('WARNING_PRODUCTS_IN_TOP_INFO', 'WARNING: You have Products in the Top Level Category. This will cause pricing to not work properly in the Catalog. Products found: ');
 
+define('TEXT_COPY_MEDIA_MANAGER', 'Copy media?');

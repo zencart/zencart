@@ -97,7 +97,7 @@ foreach($vert_links as $key => $value) {
       $previous_v = $vert_links[$key - 1];
     }
     $next_vssl = '0';
-    if ($vert_links[$key + 1]) {
+    if (!empty($vert_links[$key + 1])) {
       $next_item_v = $vert_links[$key + 1];
     } else {
       $next_item_v = $vert_links[0];

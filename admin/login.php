@@ -78,7 +78,7 @@ if ($expired && $message == '')
   <div class="container-fluid">
     <div class="login-form">
       <div class="login-main-div login-box-shadow">
-        <img class="login-img" src="../includes/templates/template_default/images/logo.gif" alt="Zen Cart®" title="Zen Cart®" width="192" height="68" border="0">
+        <?php echo zen_image(DIR_WS_IMAGES . HEADER_LOGO_IMAGE, HEADER_ALT_TEXT, HEADER_LOGO_WIDTH, HEADER_LOGO_HEIGHT, 'class="login-img"'); ?>
         <br>
         <?php if (!isset($expired) || $expired == FALSE) { ?>
           <?php echo zen_draw_form('loginForm', FILENAME_LOGIN, zen_get_all_get_params(), 'post', 'id="loginForm"', 'true'); ?>
@@ -101,7 +101,7 @@ if ($expired && $message == '')
 
           <div class="login-forgot">
             <a href="<?php echo zen_href_link(FILENAME_PASSWORD_FORGOTTEN, '', 'SSL'); ?>">
-              <?php echo TEXT_PASSWORD_FORGOTTEN . "?"; ?>
+              <?php echo TEXT_PASSWORD_FORGOTTEN; ?>
             </a>
           </div>
 

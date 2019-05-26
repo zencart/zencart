@@ -13,7 +13,7 @@ if (!defined('IS_ADMIN_FLAG')) {
 if (isset($_GET['pID'])) {
   $products_id = zen_db_prepare_input($_GET['pID']);
 }
-if (isset($_POST['edit_x']) || isset($_POST['edit_y'])) {
+if (isset($_POST['edit']) && $_POST['edit'] == 'edit') {
   $action = 'new_product';
 } elseif ((isset($_POST['products_model']) ? $_POST['products_model'] : '') . (isset($_POST['products_url']) ? implode('', $_POST['products_url']) : '') . (isset($_POST['products_name']) ? implode('', $_POST['products_name']) : '') . (isset($_POST['products_description']) ? implode('', $_POST['products_description']) : '') != '') {
   $products_date_available = zen_db_prepare_input($_POST['products_date_available']);

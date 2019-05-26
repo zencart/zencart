@@ -18,7 +18,7 @@ if ($_SESSION['cart']->count_contents() <= 0) {
 }
 
 // if the customer is not logged on, redirect them to the login page
-  if (!$_SESSION['customer_id']) {
+  if (!zen_is_logged_in()) {
     $_SESSION['navigation']->set_snapshot();
     zen_redirect(zen_href_link(FILENAME_LOGIN, '', 'SSL'));
   } else {
@@ -33,7 +33,7 @@ require(DIR_WS_MODULES . zen_get_module_directory('require_languages.php'));
 $addressType = "billto";
 require(DIR_WS_MODULES . zen_get_module_directory('checkout_new_address'));
 // if no billing destination address was selected, use their own address as default
-if (!$_SESSION['billto']) {
+if (empty($_SESSION['billto'])) {
   $_SESSION['billto'] = $_SESSION['customer_default_address_id'];
 }
 

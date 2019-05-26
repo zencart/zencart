@@ -158,8 +158,10 @@ class ot_coupon {
     global $db, $currencies, $messageStack, $order;
     global $discount_coupon;
     $_POST['dc_redeem_code'] = isset($_POST['dc_redeem_code']) ? trim($_POST['dc_redeem_code']) : '';
+
+    if (!defined('TEXT_COMMAND_TO_DELETE_CURRENT_COUPON_FROM_ORDER')) define('TEXT_COMMAND_TO_DELETE_CURRENT_COUPON_FROM_ORDER', 'REMOVE');
     // remove discount coupon by request
-    if (isset($_POST['dc_redeem_code']) && strtoupper($_POST['dc_redeem_code']) == 'REMOVE') {
+    if (isset($_POST['dc_redeem_code']) && strtoupper($_POST['dc_redeem_code']) == TEXT_COMMAND_TO_DELETE_CURRENT_COUPON_FROM_ORDER) {
       unset($_POST['dc_redeem_code']);
       unset($_SESSION['cc_id']);
       
@@ -577,7 +579,6 @@ class ot_coupon {
               {
                 $od_amount['tax_groups'][$key] = zen_round($orderTotalDetails['orderTaxGroups'][$key] * $ratio, $currencyDecimalPlaces);
                 $od_amount['tax'] += $od_amount['tax_groups'][$key];
-                if ($od_amount['tax_groups'][$key] == 0) unset($od_amount['tax_groups'][$key]);
               }
               if (DISPLAY_PRICE_WITH_TAX == 'true' && $coupon->fields['coupon_type'] == 'F') $od_amount['total'] = $od_amount['total'] + $od_amount['tax'];
               break;
@@ -593,7 +594,6 @@ class ot_coupon {
         }
       }
     }
-
 //    print_r($order->info);
 //    print_r($orderTotalDetails);echo "<br><br>";
 //    echo 'RATIo = '. $ratio;
@@ -636,7 +636,6 @@ class ot_coupon {
       $orderTotal -= $order->info['shipping_cost'];
       if (isset($_SESSION['shipping_tax_description']) && $_SESSION['shipping_tax_description'] != '')
       {
-         $orderTaxGroups[$_SESSION['shipping_tax_description']] -= $order->info['shipping_tax'];
          $orderTotalTax -= $order->info['shipping_tax'];
       }
     }

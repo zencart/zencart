@@ -6,7 +6,7 @@
 # * @copyright Copyright 2003-2019 Zen Cart Development Team
 # * @copyright Portions Copyright 2003 osCommerce
 # * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
-# * @version $Id: DrByte 2019 Jan 04 Modified in v1.5.6a $
+# * @version $Id: DrByte 2019 May Modified in v1.5.6b $
 #
 
 ############ IMPORTANT INSTRUCTIONS ###############
@@ -233,6 +233,15 @@ CREATE TABLE IF NOT EXISTS admin_notifications (
 
 
 
+## Added in v1.5.6b for MySQL 8.0.17 compatibility
+ALTER TABLE paypal MODIFY mc_gross decimal(15,4) NOT NULL default '0.00';
+ALTER TABLE paypal MODIFY mc_fee decimal(15,4) NOT NULL default '0.00';
+ALTER TABLE paypal MODIFY payment_gross decimal(15,4) default NULL;
+ALTER TABLE paypal MODIFY payment_fee decimal(15,4) default NULL;
+ALTER TABLE paypal MODIFY settle_amount decimal(15,4) default NULL;
+ALTER TABLE paypal MODIFY exchange_rate decimal(15,4) default NULL;
+ALTER TABLE currencies MODIFY value decimal(14,6) default NULL;
+
 
 #############
 
@@ -245,7 +254,7 @@ SELECT project_version_key, project_version_major, project_version_minor, projec
 FROM project_version;
 
 ## Now set to new version
-UPDATE project_version SET project_version_major='1', project_version_minor='5.6a', project_version_patch1='', project_version_patch1_source='', project_version_patch2='', project_version_patch2_source='', project_version_comment='Version Update 1.5.5->1.5.6a', project_version_date_applied=now() WHERE project_version_key = 'Zen-Cart Main';
-UPDATE project_version SET project_version_major='1', project_version_minor='5.6', project_version_patch1='', project_version_patch1_source='', project_version_patch2='', project_version_patch2_source='', project_version_comment='Version Update 1.5.5->1.5.6a', project_version_date_applied=now() WHERE project_version_key = 'Zen-Cart Database';
+UPDATE project_version SET project_version_major='1', project_version_minor='5.6b', project_version_patch1='', project_version_patch1_source='', project_version_patch2='', project_version_patch2_source='', project_version_comment='Version Update 1.5.5->1.5.6b', project_version_date_applied=now() WHERE project_version_key = 'Zen-Cart Main';
+UPDATE project_version SET project_version_major='1', project_version_minor='5.6', project_version_patch1='', project_version_patch1_source='', project_version_patch2='', project_version_patch2_source='', project_version_comment='Version Update 1.5.5->1.5.6b', project_version_date_applied=now() WHERE project_version_key = 'Zen-Cart Database';
 
 #####  END OF UPGRADE SCRIPT

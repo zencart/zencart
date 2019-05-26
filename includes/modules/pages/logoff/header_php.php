@@ -25,7 +25,7 @@ $breadcrumb->add(NAVBAR_TITLE);
   * If so, kill the session, and redirect back to the logoff page
   * This will cause the header logic to see that the customer_id is gone, and thus not display another logoff link
   */
-if (!empty($_SESSION['customer_id']) || !empty($_SESSION['customer_guest_id'])) {
+if (zen_is_logged_in() || !empty($_SESSION['customer_guest_id'])) {
   zen_session_destroy();
   zen_redirect(zen_href_link(FILENAME_LOGOFF, $logoff_lang));
 }

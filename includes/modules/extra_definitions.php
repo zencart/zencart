@@ -66,11 +66,9 @@ for ($i = 0, $n = sizeof($directory_array); $i < $n; $i++) {
   $file_cnt++;
   $file = $directory_array[$i];
 
-  //      echo 'LOADING: ' . $ws_languages_extra_definitions_directory_template . $file . ' ' . $file_cnt . '<br />';
   if (file_exists($ws_languages_extra_definitions_directory_template . $file)) {
     include($ws_languages_extra_definitions_directory_template . $file);
   } else {
     include($ws_languages_extra_definitions_directory . $file);
-    //      echo 'LOADING: ' . $ws_languages_extra_definitions_directory . $file . ' ' . $file_cnt . '<br />';
   }
 }

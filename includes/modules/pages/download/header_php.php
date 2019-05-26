@@ -18,7 +18,7 @@ $zco_notifier->notify('NOTIFY_HEADER_START_DOWNLOAD');
 require(DIR_WS_MODULES . zen_get_module_directory('require_languages.php'));
 
 // if the customer is not logged on and no email_address set (i.e. guest checkout), redirect the customer to the time out page
-if (empty($_SESSION['customer_id']) && empty($_SESSION['email_address'])) {
+if (!zen_is_logged_in() && empty($_SESSION['email_address'])) {
     zen_redirect(zen_href_link(FILENAME_TIME_OUT, '', 'SSL'));
 }
 

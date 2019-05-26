@@ -19,12 +19,12 @@ if (isset($_POST['message'])) $_POST['message'] = zen_output_string_protected($_
 require_once('includes/classes/http_client.php');
 
 // verify no timeout has occurred on the send or process
-if (!$_SESSION['customer_id'] and ($_GET['action'] == 'send' or $_GET['action'] == 'process')) {
+if (!zen_is_logged_in() && isset($_GET['action']) && ($_GET['action'] == 'send' or $_GET['action'] == 'process')) {
   zen_redirect(zen_href_link(FILENAME_TIME_OUT));
 }
 
 // if the customer is not logged on, redirect them to the login page
-if (!$_SESSION['customer_id']) {
+if (!zen_is_logged_in()) {
   $_SESSION['navigation']->set_snapshot();
   zen_redirect(zen_href_link(FILENAME_LOGIN, '', 'SSL'));
 }
