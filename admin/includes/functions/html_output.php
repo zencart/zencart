@@ -76,7 +76,7 @@
 ////
 // The HTML image wrapper function
   function zen_image($src, $alt = '', $width = '', $height = '', $params = '') {
-    $image = '<img src="' . $src . '" border="0" alt="' . $alt . '"';
+      $image = '<img src="' . $src . '" alt="' . $alt . '"';
     if ($alt) {
       $image .= ' title=" ' . $alt . ' "';
     }
@@ -113,13 +113,14 @@
 ////
 // Draw a 1 pixel black line
   function zen_black_line() {
-    return zen_image(DIR_WS_IMAGES . 'pixel_black.gif', '', '100%', '1');
+    return zen_image(DIR_WS_IMAGES . 'pixel_black.gif', '', '', '1', 'style="width:100%;"');
   }
 
 ////
 // Output a separator either through whitespace, or with an image
   function zen_draw_separator($image = 'pixel_black.gif', $width = '100%', $height = '1') {
-    return zen_image(DIR_WS_IMAGES . $image, '', $width, $height);
+      if (substr(rtrim($width), -1) != "%") $width = $width . 'px';
+    return zen_image(DIR_WS_IMAGES . $image, '', '', $height, 'style="width:' . $width . ';"');
   }
 
 ////

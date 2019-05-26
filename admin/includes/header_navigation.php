@@ -11,14 +11,14 @@ if (!defined('IS_ADMIN_FLAG')) die('Illegal Access');
 
 $menuTitles = zen_get_menu_titles();
 ?>
-<nav class="navbar navbar-default" role="navigation">
+<nav class="navbar navbar-default">
   <!-- Brand and toggle get grouped for better mobile display -->
   <div class="navbar-header">
     <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-adm1-collapse">
       <span class="sr-only">Toggle navigation</span>
-      <span class="icon-bar"></span>
-      <span class="icon-bar"></span>
-      <span class="icon-bar"></span>
+      <span class="icon-bar">&nbsp;</span>
+      <span class="icon-bar">&nbsp;</span>
+      <span class="icon-bar">&nbsp;</span>
     </button>
   </div>
   <!-- Collect the nav links, forms, and other content for toggling -->
