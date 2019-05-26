@@ -544,7 +544,7 @@ use PHPMailer\PHPMailer\SMTP;
     if (!isset($block['EMAIL_STORE_URL']) || $block['EMAIL_STORE_URL'] == '')       $block['EMAIL_STORE_URL']   = '<a href="'.HTTP_CATALOG_SERVER . DIR_WS_CATALOG.'">'.STORE_NAME.'</a>';
     if (!isset($block['EMAIL_STORE_OWNER']) || $block['EMAIL_STORE_OWNER'] == '')   $block['EMAIL_STORE_OWNER'] = STORE_OWNER;
     if (!isset($block['EMAIL_FOOTER_COPYRIGHT']) || $block['EMAIL_FOOTER_COPYRIGHT'] == '') $block['EMAIL_FOOTER_COPYRIGHT'] = EMAIL_FOOTER_COPYRIGHT;
-    if (!isset($block['EMAIL_DISCLAIMER']) || $block['EMAIL_DISCLAIMER'] == '')     $block['EMAIL_DISCLAIMER']  = sprintf(EMAIL_DISCLAIMER, '<a href="mailto:' . STORE_OWNER_EMAIL_ADDRESS . '">'. STORE_OWNER_EMAIL_ADDRESS .' </a>');
+    if (!isset($block['EMAIL_DISCLAIMER']) || $block['EMAIL_DISCLAIMER'] == '')     $block['EMAIL_DISCLAIMER']  = sprintf(EMAIL_DISCLAIMER, '<a href="mailto:' . STORE_OWNER_EMAIL_ADDRESS . '">'. STORE_OWNER_EMAIL_ADDRESS .'</a>');
     if (!isset($block['EMAIL_SPAM_DISCLAIMER']) || $block['EMAIL_SPAM_DISCLAIMER'] == '')   $block['EMAIL_SPAM_DISCLAIMER']  = EMAIL_SPAM_DISCLAIMER;
     if (!isset($block['EMAIL_DATE_SHORT']) || $block['EMAIL_DATE_SHORT'] == '')     $block['EMAIL_DATE_SHORT']  = zen_date_short(date("Y-m-d"));
     if (!isset($block['EMAIL_DATE_LONG']) || $block['EMAIL_DATE_LONG'] == '')       $block['EMAIL_DATE_LONG']   = zen_date_long(date("Y-m-d"));
