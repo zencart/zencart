@@ -490,7 +490,7 @@ if (zen_not_null($action) && $order_exists == true) {
                 if ($order->info['ip_address'] != '') {
                   $lookup_ip = substr($order->info['ip_address'], 0, strpos($order->info['ip_address'], ' '));
                   ?>
-                  <td><a href="https://www.dnsstuff.com/tools#whois%7Ctype=ipv4&&value=<?php echo $lookup_ip; ?>" target="_blank"><?php echo $order->info['ip_address']; ?></a></td>
+                  <td><a href="https://tools.dnsstuff.com/#whois|type=ipv4&&value=<?php echo $lookup_ip; ?>" target="_blank"><?php echo $order->info['ip_address']; ?></a></td>
                 <?php } else { ?>
                   <td><?php echo TEXT_UNKNOWN; ?></td>
                 <?php } ?>
