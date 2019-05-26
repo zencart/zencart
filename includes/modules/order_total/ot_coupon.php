@@ -158,8 +158,10 @@ class ot_coupon {
     global $db, $currencies, $messageStack, $order;
     global $discount_coupon;
     $_POST['dc_redeem_code'] = isset($_POST['dc_redeem_code']) ? trim($_POST['dc_redeem_code']) : '';
+
+    if (!defined('TEXT_COMMAND_TO_DELETE_CURRENT_COUPON_FROM_ORDER')) define('TEXT_COMMAND_TO_DELETE_CURRENT_COUPON_FROM_ORDER', 'REMOVE');
     // remove discount coupon by request
-    if (isset($_POST['dc_redeem_code']) && strtoupper($_POST['dc_redeem_code']) == 'REMOVE') {
+    if (isset($_POST['dc_redeem_code']) && strtoupper($_POST['dc_redeem_code']) == TEXT_COMMAND_TO_DELETE_CURRENT_COUPON_FROM_ORDER) {
       unset($_POST['dc_redeem_code']);
       unset($_SESSION['cc_id']);
       

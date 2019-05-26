@@ -352,6 +352,7 @@
   define('TEXT_INVALID_COUPON_PRODUCT', 'This coupon code is not valid for any product currently in your cart.');
   define('TEXT_VALID_COUPON', 'Congratulations you have redeemed the Discount Coupon');
   define('TEXT_REMOVE_REDEEM_COUPON_ZONE', 'The coupon code you entered is not valid for the address you have selected.');
+  define('TEXT_COMMAND_TO_DELETE_CURRENT_COUPON_FROM_ORDER', 'REMOVE');
 
 // more info in place of buy now
   define('MORE_INFO_TEXT','... more info');
