@@ -5,6 +5,9 @@
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: DrByte 2019 Jan 04 Modified in v1.5.6a $
+ *
+ * ALERT: This file requires PHP 5.4 or newer because it uses the short-array syntax.
+ * 
  */
 // Default refresh interval (0=off).  NOTE: Using automated refresh may put you in breach of PCI Compliance
 $defaultRefreshInterval = 0;
