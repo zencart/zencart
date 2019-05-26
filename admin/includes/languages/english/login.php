@@ -21,7 +21,7 @@ define('TEXT_ADMIN_CONFIRM_PASSWORD', 'Confirm Password');
 define('ERROR_WRONG_LOGIN', 'You entered the wrong username or password.');
 define('ERROR_SECURITY_ERROR', 'There was a security error when trying to login.');
 
-define('TEXT_PASSWORD_FORGOTTEN', 'Forgot Password');
+define('TEXT_PASSWORD_FORGOTTEN', 'Forgot Password?');
 
 define('LOGIN_EXPIRY_NOTICE', '');
 define('ERROR_PASSWORD_EXPIRED', 'NOTE: Your password has expired. Please select a new password. Your password <strong>must contain both NUMBERS and LETTERS and minimum 7 characters.</strong>');

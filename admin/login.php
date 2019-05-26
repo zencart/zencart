@@ -101,7 +101,7 @@ if ($expired && $message == '')
 
           <div class="login-forgot">
             <a href="<?php echo zen_href_link(FILENAME_PASSWORD_FORGOTTEN, '', 'SSL'); ?>">
-              <?php echo TEXT_PASSWORD_FORGOTTEN . "?"; ?>
+              <?php echo TEXT_PASSWORD_FORGOTTEN; ?>
             </a>
           </div>
 
