@@ -11,7 +11,7 @@ if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
 }
 
-if (isset($_POST['edit_x']) || isset($_POST['edit_y'])) {
+if (isset($_POST['edit']) && $_POST['edit'] == 'edit') {
   $action = 'new_product_meta_tags';
 } else {
   if (isset($_GET['pID'])) {
