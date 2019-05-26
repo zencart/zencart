@@ -295,6 +295,7 @@
         return $tax_address;
     }
     
+    $tax_address = array();
     global $db;
     switch (STORE_PRODUCT_TAX_BASIS) {
 
