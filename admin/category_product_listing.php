@@ -864,22 +864,20 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
                       if (zen_get_product_is_linked($product['products_id']) == 'true') {
                         echo zen_image(DIR_WS_IMAGES . 'icon_yellow_on.gif', IMAGE_ICON_LINKED, '', '', 'style="vertical-align:top;"') . '&nbsp;&nbsp;';
                       }
+                      echo zen_draw_form('setflag_products' . $product['products_id'], FILENAME_CATEGORY_PRODUCT_LISTING, 'action=setflag&pID=' . $product['products_id'] . '&cPath=' . $cPath . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '') . ((isset($_GET['search']) && !empty($_GET['search'])) ? '&search=' . $_GET['search'] : ''));
                       if ($product['products_status'] == '1') {
-                        echo zen_draw_form('setflag_products', FILENAME_CATEGORY_PRODUCT_LISTING, 'action=setflag&pID=' . $product['products_id'] . '&cPath=' . $cPath . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '') . ((isset($_GET['search']) && !empty($_GET['search'])) ? '&search=' . $_GET['search'] : ''));
                         ?>
                       <input type="image" src="<?php echo DIR_WS_IMAGES ?>icon_green_on.gif" title="<?php echo IMAGE_ICON_STATUS_ON; ?>" />
                       <?php echo zen_draw_hidden_field('flag', '0'); ?>
-                      <?php echo '</form>'; ?>
                       <?php
-                    } else {
-                      echo zen_draw_form('setflag_products', FILENAME_CATEGORY_PRODUCT_LISTING, 'action=setflag&pID=' . $product['products_id'] . '&cPath=' . $cPath . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '') . ((isset($_GET['search']) && !empty($_GET['search'])) ? '&search=' . $_GET['search'] : ''));
+                      } else {
                       ?>
                       <input type="image" src="<?php echo DIR_WS_IMAGES ?>icon_red_on.gif" title="<?php echo IMAGE_ICON_STATUS_OFF; ?>"/>
                       <?php echo zen_draw_hidden_field('flag', '1'); ?>
-                      <?php echo '</form>'; ?>
                       <?php
-                    }
-                    ?>
+                      }
+                      ?>
+                      <?php echo '</form>'; ?>
                   </td>
                   <?php
                   if ($action == '') {
