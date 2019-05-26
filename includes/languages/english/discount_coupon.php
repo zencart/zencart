@@ -28,7 +28,7 @@ define('TEXT_COUPON_HELP_PRODUCTS', '<p class="bold">Product Restrictions:</p>')
 define('TEXT_ALLOW', 'Allow');
 define('TEXT_DENY', 'Deny');
 
-define('TEXT_NO_CAT_TOP_ONLY_DENY', '<p>This coupon has specific Product Restrictions.');
+define('TEXT_NO_CAT_TOP_ONLY_DENY', '<p>This coupon has specific Product Restrictions.</p>');
 define('TEXT_NO_CAT_RESTRICTIONS', '<p>This coupon is valid for all categories.</p>');
 define('TEXT_NO_PROD_RESTRICTIONS', '<p>This coupon is valid for all products.</p>');
 define('TEXT_CAT_ALLOWED', ' (Valid for this category)');
@@ -42,4 +42,3 @@ define('TEXT_DISCOUNT_COUPON_ID_INFO', 'Look-up Discount Coupon ... ');
 define('TEXT_DISCOUNT_COUPON_ID', 'Your Code: ');
 
 define('TEXT_COUPON_GV_RESTRICTION_ZONES', 'Billing Address Restrictions apply.');
-?>
