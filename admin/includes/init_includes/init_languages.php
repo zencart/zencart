@@ -23,6 +23,10 @@ if (!defined('IS_ADMIN_FLAG')) {
       $lng->set_language(DEFAULT_LANGUAGE);
     }
 
+    if (!is_file(DIR_WS_LANGUAGES . $lng->language['directory'] . '.php')) {
+      $lng->set_language('en');
+    }
+
     $_SESSION['language'] = (zen_not_null($lng->language['directory']) ? $lng->language['directory'] : 'english');
     $_SESSION['languages_id'] = (zen_not_null($lng->language['id']) ? $lng->language['id'] : 1);
     $_SESSION['languages_code'] = (zen_not_null($lng->language['code']) ? $lng->language['code'] : 'en');
