@@ -57,7 +57,7 @@ $form_action = (isset($_GET['pID'])) ? 'update_product_meta_tags' : 'insert_prod
             <?php echo '<strong>' . TEXT_PRODUCTS_PRICE_INFO . '</strong>&nbsp;' . ($pInfo->metatags_price_status == '1' ? $currencies->format($pInfo->products_price_sorter) : TEXT_META_EXCLUDED); ?>
         </td>
         <td class="main" valign="top">
-            <?php echo '<strong>' . TEXT_PRODUCTS_METATAGS_TITLE_TAGLINE_STATUS . '</strong>&nbsp;' . ($pInfo->metatags_title_tagline_status == '1' ? TITLE . ' ' . SITE_TAGLINE : TEXT_META_EXCLUDED); ?>
+            <?php echo '<strong>' . TEXT_PRODUCTS_METATAGS_TITLE_TAGLINE_STATUS . '</strong>&nbsp;' . ($pInfo->metatags_title_tagline_status == '1' ? TEXT_TITLE_PLUS_TAGLINE : TEXT_META_EXCLUDED); ?>
         </td>
       </tr>
       <tr>
@@ -92,7 +92,7 @@ $form_action = (isset($_GET['pID'])) ? 'update_product_meta_tags' : 'insert_prod
     }
 ?>
     <button type="submit" name="edit" value="edit" class="btn btn-default"><?php echo IMAGE_BACK; ?></button>
-    <button type="submit" class="btn btn-primary"><?php echo (isset($_GET['pID']) ? IMAGE_UPDATE : IMAGE_INSERT); ?></button> 
+    <button type="submit" class="btn btn-primary"><?php echo (isset($_GET['pID']) ? IMAGE_UPDATE : IMAGE_INSERT); ?></button>
     <a href="<?php echo zen_href_link(FILENAME_CATEGORY_PRODUCT_LISTING, 'cPath=' . $cPath . (isset($_GET['pID']) ? '&pID=' . $_GET['pID'] : '') . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '')); ?>" class="btn btn-default" role="button"><?php echo IMAGE_CANCEL; ?></a>
   </div>
   <?php echo '</form>'; ?>

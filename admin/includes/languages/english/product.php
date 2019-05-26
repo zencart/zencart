@@ -82,5 +82,6 @@ define('TEXT_META_TAGS_TITLE', '<strong>Meta Tag Title:</strong><br><span class=
 define('TEXT_META_TAGS_KEYWORDS', '<strong>Meta Tag Keywords:</strong>');
 define('TEXT_META_TAGS_DESCRIPTION', '<strong>Meta Tag Description:</strong>');
 define('TEXT_META_EXCLUDED', '<span class="alert">EXCLUDED</span>');
+define('TEXT_TITLE_PLUS_TAGLINE', 'Store Title+Tagline'); // this refers to whatever rules the storeowner has built into customizing their catalog /includes/modules/meta_tags.php and its lang file.
 
 define('TEXT_PRODUCTS_PRICE_INFO', 'Price:');
