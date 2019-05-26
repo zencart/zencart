@@ -152,7 +152,7 @@ if ($_GET['action'] == "update_sort_order") {
             <tr class="dataTableHeadingRow">
               <td <?php echo ($_GET['lng_id'] == $_SESSION['languages_id'] ? '' : 'colspan="4"'); ?> class="dataTableHeadingContent">&nbsp;</td>
               <td colspan="4" class="dataTableHeadingContent text-center align-middle">
-                <button type="submit" class="btn btn-primary">Update Sort Order</button>
+                <button type="submit" class="btn btn-primary"><?php echo TEXT_UPDATE_SUBMIT; ?></button>
               </td>
             </tr>
             <?php echo '</form>'; ?>

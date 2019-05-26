@@ -15,5 +15,6 @@
   define('TEXT_OPTION_TYPE', 'Type');
   define('TEXT_OPTION_NAME', 'Option Name');
   define('TEXT_SELECTED_LANGUAGE','Selected Language: ');
+  define('TEXT_UPDATE_SUBMIT','Update Sort Order');
 
   define('SUCCESS_OPTION_SORT_ORDER','Successful Update of Option Name Sort Orders');
