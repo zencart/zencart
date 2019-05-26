@@ -12,6 +12,24 @@
 		<div align="center" class="showModal button warning radius" id="NGINXCONF">
 			<h6><?php echo TEXT_COMPLETION_NGINX_TEXT; ?></h6>
 		</div>
+
+<?php if ($adminDir == 'admin' && !defined('DEVELOPER_MODE')) { ?>
+		<br><br>
+		<div class="alert-box  secondary">
+			<h6><?php echo TEXT_COMPLETION_ADMIN_DIRECTORY_WARNING; ?></h6>
+		</div>
+		<br>
+<?php } ?>
+<?php if (file_exists(DIR_FS_INSTALL) && !defined('DEVELOPER_MODE')) { ?>
+
+		<br>
+		<div class="alert-box  secondary">
+			<h6><?php echo TEXT_COMPLETION_INSTALLATION_DIRECTORY_WARNING; ?></h6>
+			<h6><?php echo TEXT_COMPLETION_INSTALLATION_DIRECTORY_EXPLANATION; ?></h6>
+		</div>
+		<br>
+<?php } ?>
+
 		<h5><font color="white">
 		
 <?php if ($isUpgrade) { ?>
@@ -40,23 +58,6 @@
 				<u><?php echo $catalogLink; ?></u>
 			</a>
 		</div>
-<?php } ?>
-
-<?php if ($adminDir == 'admin' && !defined('DEVELOPER_MODE')) { ?>
-		<br><br>
-		<div class="alert-box  secondary">
-			<h6><?php echo TEXT_COMPLETION_ADMIN_DIRECTORY_WARNING; ?></h6>
-		</div>
-		<br>
-<?php } ?>
-<?php if (file_exists(DIR_FS_INSTALL) && !defined('DEVELOPER_MODE')) { ?>
-
-		<br>
-		<div class="alert-box  secondary">
-			<h6><?php echo TEXT_COMPLETION_INSTALLATION_DIRECTORY_WARNING; ?></h6>
-			<h6><?php echo TEXT_COMPLETION_INSTALLATION_DIRECTORY_EXPLANATION; ?></h6>
-		</div>
-		<br>
 <?php } ?>
 
 	</div>
