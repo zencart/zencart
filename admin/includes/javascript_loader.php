@@ -3,10 +3,10 @@
  * This file is inserted at the start of the body tag, just above the header menu, and loads most of the admin javascript components
  *
  * @package admin
- * @copyright Copyright 2003-2018 Zen Cart Development Team
+ * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: lat9 Tue Oct 2 13:32:43 2018 -0400 New in v1.5.6 $
+ * @version $Id: Zen4All 2019 Apr 25 Modified in v1.5.6b $
  */
 ?>
 <script>window.jQuery || document.write('<script src="https://code.jquery.com/jquery-3.4.0.min.js" integrity="sha256-BJeo0qm959uMBGb65z40ejJYGSgR7REI4+CW1fNKwOg=" crossorigin="anonymous""><\/script>');</script>

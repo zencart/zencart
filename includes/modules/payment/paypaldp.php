@@ -3,11 +3,11 @@
  * paypaldp.php payment module class for Paypal Payments Pro (aka Website Payments Pro)
  *
  * @package paymentMethod
- * @copyright Copyright 2003-2018 Zen Cart Development Team
+ * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @copyright Portions Copyright 2005 CardinalCommerce
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Drbyte Tue Dec 4 13:18:01 2018 -0500 Modified in v1.5.6 $
+ * @version $Id: DrByte 2019 May 10 Modified in v1.5.6b $
  */
 /**
  * The transaction URL for the Cardinal Centinel 3D-Secure service.

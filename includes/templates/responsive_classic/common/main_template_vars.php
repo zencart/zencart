@@ -10,9 +10,9 @@
  * allows you to override this page and choose the template that loads.<br />
  *
  * @package templateSystem
- * @copyright Copyright 2003-2018 Zen Cart Development Team
+ * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: mc12345678 Tue May 8 00:42:18 2018 -0400 Modified in v1.5.6 $
+ * @version $Id: Scott C Wilson 2019 Jan 14 Modified in v1.5.6b $
  */
 
   $zco_notifier->notify('NOTIFY_MAIN_TEMPLATE_VARS_START', $template_dir);

@@ -3,10 +3,10 @@
  * Page to let customer change their shipping address(ship to)
  *
  * @package page
- * @copyright Copyright 2003-2013 Zen Cart Development Team
+ * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: ajeh  Wed Nov 6 14:38:22 2013 -0500 Modified in v1.5.2 $
+ * @version $Id: DrByte 2019 May 12 Modified in v1.5.6b $
  */
 
 // This should be first line of the script:

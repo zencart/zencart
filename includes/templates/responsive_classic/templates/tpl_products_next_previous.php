@@ -3,10 +3,10 @@
  * Page Template
  *
  * @package templateSystem
- * @copyright Copyright 2003-2016 Zen Cart Development Team
+ * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: picaflor-azul Sun Dec 13 16:32:43 2015 -0500 New in v1.5.5 $
+ * @version $Id: Scott C Wilson 2019 Jan 14 Modified in v1.5.6b $
  * @author Linda McGrath osCommerce@WebMakers.com
  * @author Thanks to Nirvana, Yoja and Joachim de Boer
  */
