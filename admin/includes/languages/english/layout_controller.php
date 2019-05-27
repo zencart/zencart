@@ -3,7 +3,7 @@
  * @package admin
  * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: George Cooksey 2014 May 31 Modified in v1.5.6b $
+ * @version $Id: DrByte 2019 May 27 Modified in v1.5.6b $
  */
 
 define('HEADING_TITLE', 'Column Boxes');
@@ -42,7 +42,6 @@ define('HEADING_TITLE_LAYOUT_TEMPLATE', 'Site Template Layout');
 
 define('TABLE_HEADING_LAYOUT_TITLE', 'Title');
 define('TABLE_HEADING_LAYOUT_VALUE', 'Value');
-define('TABLE_HEADING_ACTION', 'Action');
 
 define('TABLE_HEADING_BOXES_PATH', 'Boxes Path: ');
 define('TEXT_WARNING_NEW_BOXES_FOUND', 'WARNING: New boxes found: ');
@@ -69,5 +68,3 @@ define('TEXT_ON',' ON ');
 define('TEXT_OFF',' OFF ');
 define('TEXT_LEFT',' LEFT ');
 define('TEXT_RIGHT',' RIGHT ');
-
-?>
