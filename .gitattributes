@@ -9,3 +9,5 @@
 phpdoc.xml        export-ignore
 phpdoc.dist.xml   export-ignore
 /.circleci         export-ignore
+
+* text=auto
