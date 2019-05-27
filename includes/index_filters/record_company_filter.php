@@ -7,11 +7,11 @@
  * show the products of a specified record company
  *
  * @package productTypes
- * @copyright Copyright 2003-2018 Zen Cart Development Team
+ * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @todo Need to add/fine-tune ability to override or insert entry-points on a per-product-type basis
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: mc12345678 Sat Sep 1 19:43:45 2018 -0400 Modified in v1.5.6 $
+ * @version $Id: DrByte 2019 May 13 Modified in v1.5.6b $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');

@@ -6,10 +6,10 @@
  * Prepares HTML for input fields with required uniqueness so template can display them as needed and keep collected data in proper fields
  *
  * @package modules
- * @copyright Copyright 2003-2018 Zen Cart Development Team
+ * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: mc12345678 Fri Nov 9 21:03:09 2018 -0500 Modified in v1.5.6 $
+ * @version $Id: DrByte 2019 May 26 Modified in v1.5.6b $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');

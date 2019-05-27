@@ -4,10 +4,10 @@
  * see {@link  http://www.zen-cart.com/wiki/index.php/Developers_API_Tutorials#InitSystem wikitutorials} for more details.
  *
  * @package initSystem
- * @copyright Copyright 2003-2007 Zen Cart Development Team
+ * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: init_ipn_postcfg.php 6548 2007-07-05 03:40:59Z drbyte $
+ * @version $Id: Scott C Wilson 2019 Apr 19 Modified in v1.5.6b $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');

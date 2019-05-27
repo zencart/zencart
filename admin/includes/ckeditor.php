@@ -1,10 +1,10 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2018 Zen Cart Development Team
+ * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @copyright Portions Copyright 2010 Kuroi Web Design
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Zen4All Sun Mar 18 10:12:14 2018 +0100 Modified in v1.5.6 $
+ * @version $Id: Zen4All 2019 Apr 25 Modified in v1.5.6b $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');

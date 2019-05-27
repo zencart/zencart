@@ -3,10 +3,10 @@
  * ez_pages ("page") header_php.php
  *
  * @package page
- * @copyright Copyright 2003-2018 Zen Cart Development Team
+ * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Scott C Wilson Sat Nov 17 12:07:47 2018 -0500 Modified in v1.5.6 $
+ * @version $Id: mc12345678 2019 May 16 Modified in v1.5.6b $
  */
 /*
  * This "page" page is the display component of the ez-pages module
