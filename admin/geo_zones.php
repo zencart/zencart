@@ -174,6 +174,7 @@ if (zen_not_null($action)) {
     <!-- body //-->
     <div class="container-fluid">
       <h1><?php echo HEADING_TITLE; ?></h1>
+      <p><?php if (!empty($_GET['zID'])) echo zen_get_geo_zone_name($_GET['zID']); ?></p>
       <!-- body_text //-->
       <?php
       if ($action == 'list') {
@@ -452,7 +453,7 @@ if (zen_not_null($action)) {
             <?php if ($action == 'list') { ?>
             <table class="table">
               <tr>
-                <td><?php echo $zones_split->display_count($zones_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, $_GET['spage'], TEXT_DISPLAY_NUMBER_OF_COUNTRIES); ?></td>
+                <td><?php echo $zones_split->display_count($zones_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, $_GET['spage'], TEXT_DISPLAY_NUMBER_OF_TAX_ZONES); ?></td>
                 <td class="text-right"><?php echo $zones_split->display_links($zones_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, MAX_DISPLAY_PAGE_LINKS, $_GET['spage'], 'zpage=' . $_GET['zpage'] . '&zID=' . $_GET['zID'] . '&action=list', 'spage'); ?></td>
               </tr>
               <tr>
