@@ -17,7 +17,7 @@
         "illuminate/database": "~5.7",
         "illuminate/support": "~5.7",
         "jaybizzle/crawler-detect": "^1.2",
-        "jenssegers/blade": "^1.1",
+        "jenssegers/blade": "1.1.0",
         "vlucas/valitron": "^1.4"
     },
     "require-dev": {
