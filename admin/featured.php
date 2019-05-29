@@ -358,15 +358,15 @@ if (zen_not_null($action)) {
                       if (isset($fInfo) && is_object($fInfo) && ($featured_line['featured_id'] == $fInfo->featured_id)) {
                         echo '                  <tr id="defaultSelected" class="dataTableRowSelected"  onclick="document.location.href=\'' . zen_href_link(FILENAME_FEATURED, 'page=' . $_GET['page'] . '&fID=' . $fInfo->featured_id . '&action=edit' . (isset($_GET['search']) ? '&search=' . $_GET['search'] : '')) . '\'" role="button">' . "\n";
                       } else {
-                        echo '                  <tr class="dataTableRow"" onclick="document.location.href=\'' . zen_href_link(FILENAME_FEATURED, 'page=' . $_GET['page'] . '&fID=' . $featured_line['featured_id'] . '&action=edit' . (isset($_GET['search']) ? '&search=' . $_GET['search'] : '')) . '\'" role="button">' . "\n";
+                        echo '                  <tr class="dataTableRow" onclick="document.location.href=\'' . zen_href_link(FILENAME_FEATURED, 'page=' . $_GET['page'] . '&fID=' . $featured_line['featured_id'] . '&action=edit' . (isset($_GET['search']) ? '&search=' . $_GET['search'] : '')) . '\'" role="button">' . "\n";
                       }
                       ?>
-                  <td  class="dataTableContent text-right"><?php echo $featured_line['products_id']; ?></td>
-                  <td  class="dataTableContent"><?php echo $featured_line['products_name']; ?></td>
-                  <td  class="dataTableContent"><?php echo $featured_line['products_model']; ?></td>
-                  <td  class="dataTableContent text-center"><?php echo (($featured_line['featured_date_available'] != '0001-01-01' && $featured_line['featured_date_available'] != '') ? zen_date_short($featured_line['featured_date_available']) : TEXT_NONE); ?></td>
-                  <td  class="dataTableContent text-center"><?php echo (($featured_line['expires_date'] != '0001-01-01' && $featured_line['expires_date'] != '') ? zen_date_short($featured_line['expires_date']) : TEXT_NONE); ?></td>
-                  <td  class="dataTableContent text-center">
+                  <td class="dataTableContent text-right"><?php echo $featured_line['products_id']; ?></td>
+                  <td class="dataTableContent"><?php echo $featured_line['products_name']; ?></td>
+                  <td class="dataTableContent"><?php echo $featured_line['products_model']; ?></td>
+                  <td class="dataTableContent text-center"><?php echo (($featured_line['featured_date_available'] != '0001-01-01' && $featured_line['featured_date_available'] != '') ? zen_date_short($featured_line['featured_date_available']) : TEXT_NONE); ?></td>
+                  <td class="dataTableContent text-center"><?php echo (($featured_line['expires_date'] != '0001-01-01' && $featured_line['expires_date'] != '') ? zen_date_short($featured_line['expires_date']) : TEXT_NONE); ?></td>
+                  <td class="dataTableContent text-center">
                       <?php
                       if ($featured_line['status'] == '1') {
                         echo zen_draw_form('setflag_products', FILENAME_FEATURED, 'action=setflag&id=' . $featured_line['featured_id'] . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '') . (isset($_GET['search']) ? '&search=' . $_GET['search'] : ''));

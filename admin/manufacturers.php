@@ -160,6 +160,7 @@ if (zen_not_null($action)) {
           <table class="table table-hover">
             <thead>
               <tr class="dataTableHeadingRow">
+                <th class="dataTableHeadingContent">&nbsp;</th>
                 <th class="dataTableHeadingContent"><?php echo TABLE_HEADING_MANUFACTURERS; ?></th>
                 <th class="dataTableHeadingContent text-right"><?php echo TABLE_HEADING_ACTION; ?>&nbsp;</th>
               </tr>
@@ -205,6 +206,7 @@ if (zen_not_null($action)) {
                     echo '              <tr class="dataTableRow" onclick="document.location.href=\'' . zen_href_link(FILENAME_MANUFACTURERS, 'page=' . $_GET['page'] . '&mID=' . $manufacturer['manufacturers_id'] . '&action=edit') . '\'" role="button">' . "\n";
                   }
                   ?>
+              <td class="dataTableContent"><?php echo $manufacturer['manufacturers_id']; ?></td>
               <td class="dataTableContent"><?php echo $manufacturer['manufacturers_name']; ?></td>
               <td class="dataTableContent" align="right">
                   <?php echo '<a href="' . zen_href_link(FILENAME_MANUFACTURERS, 'page=' . $_GET['page'] . '&mID=' . $manufacturer['manufacturers_id'] . '&action=edit') . '">' . zen_image(DIR_WS_IMAGES . 'icon_edit.gif', ICON_EDIT) . '</a>'; ?>
