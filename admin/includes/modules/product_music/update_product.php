@@ -5,7 +5,7 @@
  * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2019 Jan 04 Modified in v1.5.6a $
+ * @version $Id: DrByte 2019 May 25 Modified in v1.5.6b $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
@@ -13,7 +13,7 @@ if (!defined('IS_ADMIN_FLAG')) {
 if (isset($_GET['pID'])) {
   $products_id = zen_db_prepare_input($_GET['pID']);
 }
-if (isset($_POST['edit_x']) || isset($_POST['edit_y'])) {
+if (isset($_POST['edit']) && $_POST['edit'] == 'edit') {
   $action = 'new_product';
 } elseif ($_POST['products_model'] . $_POST['products_url'] . $_POST['products_name'] . $_POST['products_description'] != '') {
   $products_date_available = zen_db_prepare_input($_POST['products_date_available']);

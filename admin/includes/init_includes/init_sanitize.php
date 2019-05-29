@@ -3,9 +3,9 @@
  * init_sanitize
  *
  * @package initSystem
- * @copyright Copyright 2003-2018 Zen Cart Development Team
+ * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Drbyte Mon Nov 12 20:38:09 2018 -0500 Modified in v1.5.6 $
+ * @version $Id: lat9 2019 May 15 Modified in v1.5.6b $
  */
 
 if (!defined('DO_STRICT_SANITIZATION')) {
@@ -246,6 +246,9 @@ $group = array('products_name' => array('sanitizerType' => 'WORDS_AND_SYMBOLS_RE
 $sanitizer->addComplexSanitization($group);
 
 $group = array('query_string' => array('sanitizerType' => 'NULL_ACTION', 'method' => 'post', 'pages' => array('sqlpatch')));
+$sanitizer->addComplexSanitization($group);
+
+$group = array('configuration_key' => array('sanitizerType' => 'NULL_ACTION', 'method' => 'post', 'pages' => array('developers_tool_kit')));
 $sanitizer->addComplexSanitization($group);
 
 $sanitizer->runSanitizers();

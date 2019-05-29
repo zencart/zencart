@@ -1,10 +1,10 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2018 Zen Cart Development Team
+ * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Scott C Wilson Fri Nov 16 12:01:55 2018 -0500 Modified in v1.5.6 $
+ * @version $Id: mc12345678 2019 Apr 30 Modified in v1.5.6b $
  */
 require('includes/application_top.php');
 
@@ -23,7 +23,7 @@ if (zen_not_null($action)) {
 
       $configuration_value = zen_db_prepare_input($_POST['configuration_value']);
         // See if there are any configuration checks
-        $checks = $db->Execute("SELECT val_function FROM " . TABLE_CONFIGURATION . " WHERE configuration_id = '" . (int)$cID . "'");
+        $checks = $db->Execute("SELECT val_function FROM " . TABLE_CONFIGURATION . " WHERE configuration_id = " . (int)$cID);
         if (!$checks->EOF && $checks->fields['val_function'] != NULL) {
            require_once('includes/functions/configuration_checks.php');
            zen_validate_configuration_entry($configuration_value, $checks->fields['val_function']);

@@ -3,9 +3,9 @@
  * zcAjaxPayment
  *
  * @package templateSystem
- * @copyright Copyright 2003-2016 Zen Cart Development Team
+ * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: zcwilt  Fri Feb 5 10:22:33 2016 +0000 Modified in v1.5.5 $
+ * @version $Id: mc12345678 2019 Apr 30 Modified in v1.5.6b $
  */
 class zcAjaxPayment extends base
 {
@@ -39,7 +39,7 @@ class zcAjaxPayment extends base
     if ($_SESSION['cart']->count_contents ()<=0) {
       zen_redirect (zen_href_link (FILENAME_TIME_OUT));
     }
-    if (!$_SESSION['customer_id']) {
+    if (!zen_is_logged_in()) {
       $_SESSION['navigation']->set_snapshot (array(
           'mode' => 'SSL',
           'page' => FILENAME_CHECKOUT_PAYMENT

@@ -1,10 +1,10 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2018 Zen Cart Development Team
+ * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Zen4All Tue Oct 31 21:16:27 2017 +0100 Modified in v1.5.6 $
+ * @version $Id: Scott C Wilson 2019 Jan 24 Modified in v1.5.6b $
  */
 
 define('HEADING_TITLE', 'CATEGORIES: ');

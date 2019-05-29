@@ -7,7 +7,7 @@
  * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2019 Jan 04 Modified in v1.5.6a $
+ * @version $Id: mc12345678 2019 Apr 30 Modified in v1.5.6b $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
@@ -117,7 +117,7 @@ if (!isset($_SESSION['customers_host_address'])) {
  */
 if ( ($request_type == 'SSL') && (SESSION_CHECK_SSL_SESSION_ID == 'True') && (ENABLE_SSL == 'true') && ($session_started == true) ) {
   $ssl_session_id = $_SERVER['SSL_SESSION_ID'];
-  if (!$_SESSION['SSL_SESSION_ID']) {
+  if (empty($_SESSION['SSL_SESSION_ID'])) {
     $_SESSION['SSL_SESSION_ID'] = $ssl_session_id;
   }
   if ($_SESSION['SSL_SESSION_ID'] != $ssl_session_id) {
@@ -130,7 +130,7 @@ if ( ($request_type == 'SSL') && (SESSION_CHECK_SSL_SESSION_ID == 'True') && (EN
  */
 if (SESSION_CHECK_USER_AGENT == 'True') {
   $http_user_agent = $_SERVER['HTTP_USER_AGENT'];
-  if (!$_SESSION['SESSION_USER_AGENT']) {
+  if (empty($_SESSION['SESSION_USER_AGENT'])) {
     $_SESSION['SESSION_USER_AGENT'] = $http_user_agent;
   }
   if ($_SESSION['SESSION_USER_AGENT'] != $http_user_agent) {
@@ -143,7 +143,7 @@ if (SESSION_CHECK_USER_AGENT == 'True') {
  */
 if (SESSION_CHECK_IP_ADDRESS == 'True') {
   $ip_address = zen_get_ip_address();
-  if (!$_SESSION['SESSION_IP_ADDRESS']) {
+  if (empty($_SESSION['SESSION_IP_ADDRESS'])) {
     $_SESSION['SESSION_IP_ADDRESS'] = $ip_address;
   }
   if ($_SESSION['SESSION_IP_ADDRESS'] != $ip_address) {

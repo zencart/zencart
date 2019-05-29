@@ -4,7 +4,7 @@
  * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2019 Jan 04 Modified in v1.5.6a $
+ * @version $Id: DrByte 2019 May 26 Modified in v1.5.6b $
  */
 require('includes/application_top.php');
 $languages = zen_get_languages();
@@ -73,12 +73,12 @@ if (zen_not_null($action)) {
             $update_subcategories = $_POST['set_subcategories_status'] == 'set_subcategories_status_on' ? '1' : '0'; //also Enable subcategories?
           }
 
-            if ($categories[$i]['id'] == $categories_id || $update_subcategories) {//always update THIS category, optionally update subcategories
-                $sql = "UPDATE " . TABLE_CATEGORIES . "
-                  SET categories_status = " . (int)$categories_status . "
-                  WHERE categories_id = " . (int)$categories[$i]['id'];
-                $db->Execute($sql);
-            }
+          if ($categories[$i]['id'] == $categories_id || $update_subcategories) {//always update THIS category, optionally update subcategories
+            $sql = "UPDATE " . TABLE_CATEGORIES . "
+                    SET categories_status = " . (int)$categories_status . "
+                    WHERE categories_id = " . (int)$categories[$i]['id'];
+            $db->Execute($sql);
+          }
 
           // set products_status based on selection
           if ($_POST['set_products_status'] == 'set_products_status_nochange') {
@@ -566,17 +566,7 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
       <?php } ?>
       <div class="row"><?php echo zen_draw_separator('pixel_black.gif', '100%', '1px'); ?></div>
       <div class="row">
-          <?php
-          if ($action != '') {
-            ?>
-          <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9 configurationColumnLeft">
-              <?php
-            } else {
-              ?>
-            <div>
-                <?php
-              }
-              ?>
+        <div class="<?php echo (empty($action)) ? '' : 'col-xs-12 col-sm-12 col-md-9 col-lg-9 configurationColumnLeft'; ?>">
             <table class="table table-striped table-hover">
               <thead>
                 <tr>
@@ -874,22 +864,20 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
                       if (zen_get_product_is_linked($product['products_id']) == 'true') {
                         echo zen_image(DIR_WS_IMAGES . 'icon_yellow_on.gif', IMAGE_ICON_LINKED, '', '', 'style="vertical-align:top;"') . '&nbsp;&nbsp;';
                       }
+                      echo zen_draw_form('setflag_products' . $product['products_id'], FILENAME_CATEGORY_PRODUCT_LISTING, 'action=setflag&pID=' . $product['products_id'] . '&cPath=' . $cPath . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '') . ((isset($_GET['search']) && !empty($_GET['search'])) ? '&search=' . $_GET['search'] : ''));
                       if ($product['products_status'] == '1') {
-                        echo zen_draw_form('setflag_products', FILENAME_CATEGORY_PRODUCT_LISTING, 'action=setflag&pID=' . $product['products_id'] . '&cPath=' . $cPath . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '') . ((isset($_GET['search']) && !empty($_GET['search'])) ? '&search=' . $_GET['search'] : ''));
                         ?>
                       <input type="image" src="<?php echo DIR_WS_IMAGES ?>icon_green_on.gif" title="<?php echo IMAGE_ICON_STATUS_ON; ?>" />
                       <?php echo zen_draw_hidden_field('flag', '0'); ?>
-                      <?php echo '</form>'; ?>
                       <?php
-                    } else {
-                      echo zen_draw_form('setflag_products', FILENAME_CATEGORY_PRODUCT_LISTING, 'action=setflag&pID=' . $product['products_id'] . '&cPath=' . $cPath . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '') . ((isset($_GET['search']) && !empty($_GET['search'])) ? '&search=' . $_GET['search'] : ''));
+                      } else {
                       ?>
                       <input type="image" src="<?php echo DIR_WS_IMAGES ?>icon_red_on.gif" title="<?php echo IMAGE_ICON_STATUS_OFF; ?>"/>
                       <?php echo zen_draw_hidden_field('flag', '1'); ?>
-                      <?php echo '</form>'; ?>
                       <?php
-                    }
-                    ?>
+                      }
+                      ?>
+                      <?php echo '</form>'; ?>
                   </td>
                   <?php
                   if ($action == '') {
@@ -1279,7 +1267,6 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
           <?php
         }
         ?>
-      </div>
     </div>
     <!-- footer //-->
     <?php require(DIR_WS_INCLUDES . 'footer.php'); ?>

@@ -4,7 +4,7 @@
  * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2019 Jan 04 Modified in v1.5.6a $
+ * @version $Id: lat9 2019 May 18 Modified in v1.5.6b $
  */
   require('includes/application_top.php');
   require(DIR_WS_CLASSES . 'currencies.php');
@@ -400,6 +400,10 @@
       if ( (!empty($_POST['back_x'])) || (!empty($_POST['back_y'])) ) {
         $_GET['action'] = 'new';
       } else {
+        if (empty($_POST['coupon_amount'])) {
+            $_POST['coupon_amount'] = '0';
+        }
+        
         $coupon_type = 'F'; // amount off
         if ($_POST['coupon_free_ship']) $coupon_type = 'S'; // free shipping
         if (substr($_POST['coupon_amount'], -1) == '%') $coupon_type = 'P'; // percentage off

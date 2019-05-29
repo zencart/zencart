@@ -6,7 +6,7 @@
  * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2019 Jan 04 Modified in v1.5.6a $
+ * @version $Id: mc12345678 2019 Apr 30 Modified in v1.5.6b $
  */
 ?>
 <div id="shippingEstimatorContent">
@@ -15,7 +15,7 @@
 <?php echo zen_draw_hidden_field('action', 'submit'); ?>
 <?php
   if($_SESSION['cart']->count_contents()) {
-    if (!empty($_SESSION['customer_id'])) {
+    if (zen_is_logged_in()) {
 ?>
 <h2><?php echo CART_SHIPPING_OPTIONS; ?></h2>
 
@@ -85,7 +85,7 @@
     }else{
 ?>
 <table id="seQuoteResults">
-<?php if (empty($_SESSION['customer_id'])){ ?>
+<?php if (!zen_is_logged_in()){ ?>
     <tr>
       <td colspan="2" class="seDisplayedAddressLabel">
         <?php echo CART_SHIPPING_QUOTE_CRITERIA; ?><br />

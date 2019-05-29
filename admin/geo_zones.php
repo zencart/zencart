@@ -4,7 +4,7 @@
  * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2019 Jan 04 Modified in v1.5.6a $
+ * @version $Id: mc12345678 2019 May 08 Modified in v1.5.6b $
  */
 require('includes/application_top.php');
 
@@ -292,7 +292,7 @@ if (zen_not_null($action)) {
                                                  WHERE geo_zone_id = " . (int)$zone['geo_zone_id'] . "
                                                  GROUP BY geo_zone_id");
 
-                      if ($num_zones->fields['num_zones'] > 0) {
+                      if (!$num_zones->EOF && $num_zones->fields['num_zones'] > 0) {
                         $zone['num_zones'] = $num_zones->fields['num_zones'];
                       } else {
                         $zone['num_zones'] = 0;
