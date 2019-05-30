@@ -494,15 +494,16 @@ class ot_coupon {
       }
 //echo 'ot_coupon coupon_total: ' . $coupon->fields['coupon_calc_base'] . '<br>$orderTotalDetails[orderTotal]: ' . $orderTotalDetails['orderTotal'] . '<br>$orderTotalDetails[totalFull]: ' . $orderTotalDetails['totalFull'] . '<br>$coupon_total: ' . $coupon_total . '<br><br>$coupon->fields[coupon_minimum_order]: ' . $coupon->fields['coupon_minimum_order'] . '<br>$coupon_total_minimum: ' . $coupon_total_minimum . '<br>';
 // @@TODO - adjust all Totals to use $coupon_total but strong review for what total applies where for Percentage, Amount, etc.
-//      if ($coupon->RecordCount() > 0 && $orderTotalDetails['totalFull'] != 0) {
-      if ($coupon->RecordCount() > 0 && $orderTotalDetails['orderTotal'] != 0 ) {
+//      if ($coupon->RecordCount() > 0 && $orderTotalDetails['totalFull'] != 0)
+      if ($coupon->RecordCount() > 0 && $orderTotalDetails['orderTotal'] != 0 ) 
+      {
 // left for total order amount ($orderTotalDetails['totalFull']) vs qualified order amount ($order_total['orderTotal']) just switch the commented lines 3 of 3
-//        if (strval($orderTotalDetails['totalFull']) >= $coupon->fields['coupon_minimum_order']) {
-//        if (strval($orderTotalDetails['orderTotal']) >= $coupon->fields['coupon_minimum_order']) {
+//        if (strval($orderTotalDetails['totalFull']) >= $coupon->fields['coupon_minimum_order'])
+//        if (strval($orderTotalDetails['orderTotal']) >= $coupon->fields['coupon_minimum_order'])
 
-//        if (strval($coupon_total) >= $coupon->fields['coupon_minimum_order']) {
-        if (strval($coupon_total_minimum) >= $coupon->fields['coupon_minimum_order']) {
-
+//        if (strval($coupon_total) >= $coupon->fields['coupon_minimum_order']) 
+          if (strval($coupon_total_minimum) >= $coupon->fields['coupon_minimum_order']) 
+          {
           // calculate quantity when coupon_per_quantity && coupon_type F amount off || O amount off & Free Shipping
           $coupon_product_count = 1;
           if ($coupon->fields['coupon_product_count'] && ($coupon->fields['coupon_type'] == 'F' || $coupon->fields['coupon_type'] == 'O')) {
