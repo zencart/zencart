@@ -274,20 +274,20 @@ use PHPMailer\PHPMailer\SMTP;
       $zco_notifier->notify('NOTIFY_EMAIL_BEFORE_PROCESS_ATTACHMENTS', array('attachments'=>$attachments_list, 'module'=>$module));
       if (isset($newAttachmentsList) && is_array($newAttachmentsList)) $attachments_list = $newAttachmentsList;
       if (defined('EMAIL_ATTACHMENTS_ENABLED') && EMAIL_ATTACHMENTS_ENABLED && is_array($attachments_list) && sizeof($attachments_list) > 0) {
-        foreach($attachments_list as $key => $val) {
-          $fname = (isset($val['name']) ? $val['name'] : null);
-          $mimeType = (isset($val['mime_type']) && $val['mime_type'] != '' && $val['mime_type'] != 'application/octet-stream') ? $val['mime_type'] : '';
+        foreach($attachments_list as $akey => $aval) {
+          $fname = (isset($aval['name']) ? $aval['name'] : null);
+          $mimeType = (isset($aval['mime_type']) && $aval['mime_type'] != '' && $aval['mime_type'] != 'application/octet-stream') ? $aval['mime_type'] : '';
           switch (true) {
-            case (isset($val['raw_data']) && $val['raw_data'] != ''):
-              $fdata = $val['raw_data'];
+            case (isset($aval['raw_data']) && $aval['raw_data'] != ''):
+              $fdata = $aval['raw_data'];
               if ($mimeType != '') {
                 $mail->addStringAttachment($fdata, $fname, "base64", $mimeType);
               } else {
                 $mail->addStringAttachment($fdata, $fname);
               }
               break;
-            case (isset($val['file']) && file_exists($val['file'])): //'file' portion must contain the full path to the file to be attached
-              $fdata = $val['file'];
+            case (isset($aval['file']) && file_exists($aval['file'])): //'file' portion must contain the full path to the file to be attached
+              $fdata = $aval['file'];
               try {
                   if ($mimeType != '') {
                       $mail->addAttachment($fdata, $fname, "base64", $mimeType);
@@ -325,13 +325,13 @@ use PHPMailer\PHPMailer\SMTP;
       }
 
       $oldVars = array(); $tmpVars = array('REMOTE_ADDR', 'HTTP_X_FORWARDED_FOR', 'PHP_SELF', $mail->Mailer === 'smtp' ? null : 'SERVER_NAME');
-      foreach ($tmpVars as $key) {
-        if (isset($_SERVER[$key])) {
-          $oldVars[$key] = $_SERVER[$key];
-          $_SERVER[$key] = '';
+      foreach ($tmpVars as $okey) {
+        if (isset($_SERVER[$okey])) {
+          $oldVars[$okey] = $_SERVER[$okey];
+          $_SERVER[$okey] = '';
         }
-        if ($key == 'REMOTE_ADDR') $_SERVER[$key] = HTTP_SERVER;
-        if ($key == 'PHP_SELF') $_SERVER[$key] = '/obf'.'us'.'cated';
+        if ($okey == 'REMOTE_ADDR') $_SERVER[$okey] = HTTP_SERVER;
+        if ($okey == 'PHP_SELF') $_SERVER[$okey] = '/obf'.'us'.'cated';
       }
       @ini_set('mail.add_x_header', 0);
 
@@ -360,8 +360,8 @@ use PHPMailer\PHPMailer\SMTP;
         $ErrorInfo .= ($mail->ErrorInfo != '') ? $mail->ErrorInfo . '<br />' : '';
       }
       $zco_notifier->notify('NOTIFY_EMAIL_AFTER_SEND');
-      foreach($oldVars as $key => $val) {
-        $_SERVER[$key] = $val;
+      foreach($oldVars as $okey => $oval) {
+        $_SERVER[$okey] = $oval;
       }
 
       $zco_notifier->notify('NOTIFY_EMAIL_AFTER_SEND_WITH_ALL_PARAMS', array($to_name, $to_email_address, $from_email_name, $from_email_address, $email_subject, $email_html, $text, $module, $ErrorInfo));
