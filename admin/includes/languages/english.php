@@ -79,7 +79,7 @@ define('HEADER_TITLE_LOGOFF', 'Logoff');
 
 // TEXT_GV_NAME, TEXT_GV_NAMES moved to gv_name.php
 if (!defined('TEXT_GV_NAME')) {
-  require DIR_WS_LANGUAGES . $_SESSION['language'] . '/' . 'gv_name.php'; 
+  require DIR_WS_LANGUAGES . $_SESSION['language'] . '/' . 'gv_name.php';
 }
   define('TEXT_DISCOUNT_COUPON', 'Discount Coupon');
 
@@ -712,14 +712,22 @@ define('ENTRY_NOTHING_TO_SEND','You haven\'t entered any content for your messag
   define('TEXT_SHOW_OPTION_NAMES_VALUES_COPIER_OFF', 'Display Global Features - OFF');
 
 // moved from categories and all product type language files
-  define('ERROR_CANNOT_LINK_TO_SAME_CATEGORY', 'Error: Can not link products in the same category.');
+  define('ERROR_CANNOT_LINK_TO_SAME_CATEGORY', 'Error: a linked product cannot be created in the same category.');
   define('ERROR_CATALOG_IMAGE_DIRECTORY_NOT_WRITEABLE', 'Error: Catalog images directory is not writeable: ' . DIR_FS_CATALOG_IMAGES);
   define('ERROR_CATALOG_IMAGE_DIRECTORY_DOES_NOT_EXIST', 'Error: Catalog images directory does not exist: ' . DIR_FS_CATALOG_IMAGES);
-  define('ERROR_CANNOT_MOVE_CATEGORY_TO_PARENT', 'Error: Category cannot be moved into child category.');
+  define('ERROR_CANNOT_MOVE_CATEGORY_TO_PARENT', 'Error: Category cannot be moved into a child category.');
   define('ERROR_CANNOT_MOVE_PRODUCT_TO_CATEGORY_SELF', 'Error: Cannot move product to the same category or into a category where it already exists.');
   define('ERROR_CATEGORY_HAS_PRODUCTS', 'Error: Category has Products!<br /><br />While this can be done temporarily to build your Categories ... Categories hold either Products or Categories but never both!');
   define('SUCCESS_CATEGORY_MOVED', 'Success! Category has successfully been moved ...');
   define('ERROR_CANNOT_MOVE_CATEGORY_TO_CATEGORY_SELF', 'Error: Cannot move Category to the same Category! ID#');
+
+// messages for function zen_copy_products_attributes
+  define('WARNING_ATTRIBUTE_COPY_SAME_ID','Warning: Attribute Copy aborted. Cannot copy from Product ID#%u to Product ID#%u (same ID).');
+  define('WARNING_ATTRIBUTE_COPY_NO_ATTRIBUTES','Warning: Attribute Copy aborted. No Attributes found for source Product ID#%u, "%s".');
+  define('WARNING_ATTRIBUTE_COPY_INVALID_ID','Warning: Attribute Copy to Product ID#%u aborted. Invalid ID');
+  define('TEXT_ATTRIBUTE_COPY_SKIPPING','Skipping Attribute ID#%u for Product ID#%u');
+  define('TEXT_ATTRIBUTE_COPY_INSERTING','Attribute ID#%u copied from Product ID#%u to Product ID#%u');
+  define('TEXT_ATTRIBUTE_COPY_UPDATING', 'Attribute ID#%u updated for Product ID#%u');
 
 // EZ-PAGES Alerts
   define('TEXT_EZPAGES_STATUS_HEADER_ADMIN', 'WARNING: EZ-PAGES HEADER - On for Admin IP Only');

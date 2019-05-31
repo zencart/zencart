@@ -142,10 +142,6 @@ define('TABLE_TEXT_MAX_COUNT_SHORT', 'Max:');
 
   define('TEXT_DELETE_ALL_ATTRIBUTES','Are you sure you want to delete all attributes for ID# ');
 
-  define('TEXT_ATTRIBUTE_COPY_SKIPPING','<strong>Skipping New Attribute </strong>');
-  define('TEXT_ATTRIBUTE_COPY_INSERTING','<strong>Inserting New Attribute from </strong>');
-  define('TEXT_ATTRIBUTE_COPY_UPDATING','<strong>Updating from Attribute </strong>');
-
 // preview
   define('TEXT_ATTRIBUTES_PREVIEW','PREVIEW ATTRIBUTES');
   define('TEXT_ATTRIBUTES_PREVIEW_DISPLAY','PREVIEW ATTRIBUTES DISPLAY FOR ID#');
@@ -168,7 +164,7 @@ define('TABLE_TEXT_MAX_COUNT_SHORT', 'Max:');
   define('TEXT_INFO_PRODUCTS_OPTION_NAME', '<strong>Option Name: </strong>');
   define('TEXT_INFO_PRODUCTS_OPTION_ID', '<strong>ID#</strong>');
   define('SUCCESS_ATTRIBUTES_DELETED_OPTION_NAME_VALUES', 'Successful deletion of all Option Values for Option Name: ');
-  
+
   define('BUTTON_ADDITITONAL_ACTIONS', 'Additional Actions');
   define('TEXT_UPDATE_DEFAULTE_SORT_ORDER', 'Update sort order to default');
   define('TEXT_DELETE_ALL_OPTIONS_FROM_PRODUCT', 'Delete all options from product');
