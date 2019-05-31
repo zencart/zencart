@@ -366,7 +366,7 @@ if (zen_not_null($action)) {
       if ($products_filter == '') {
         ?>
         <div class="row">
-          <h2 class="text-center"><?php echo HEADING_TITLE_PRODUCT_SELECT; ?></h2>
+          <h3 class="text-center"><?php echo HEADING_TITLE_PRODUCT_SELECT; ?></h3>
         </div>
       <?php } ?>
 
