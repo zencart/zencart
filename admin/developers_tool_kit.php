@@ -239,6 +239,7 @@ function zen_display_files($include_root = false, $filetypesincluded = 1) {
     } // show file
   }
   echo '<table class="table"><tr class="infoBoxContent"><td class="dataTableHeadingContent">' . TEXT_INFO_MATCHES_FOUND . $cnt_found . ' --- ' . TEXT_INFO_SEARCHING . sizeof($directory_array) . TEXT_INFO_FILES_FOR . zen_output_string_protected($configuration_key_lookup) . '</td></tr></table>';
+  return true;
 }
 
 // zen_display_files
