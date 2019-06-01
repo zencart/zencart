@@ -59,9 +59,6 @@ abstract class zcTestCase extends PHPUnit_Framework_TestCase
         if (!defined('DIR_FS_ADMIN')) {
             define('DIR_FS_ADMIN', DIR_FS_CATALOG . 'admin/');
         }
-        if (!defined('DIR_WS_CATALOG')) {
-            define('DIR_WS_CATALOG', '/');
-        }
         if (!defined('DIR_WS_HTTPS_CATALOG')) {
             define('DIR_WS_HTTPS_CATALOG', '/ssl/');
         }
