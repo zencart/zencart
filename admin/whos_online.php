@@ -528,8 +528,8 @@ $listingURL = FILENAME_WHOS_ONLINE . '.php?' . zen_get_all_get_params(['q', 't',
                 $backup = $_SESSION;
                 if (false === session_decode($session_data_field[$key])) {
                     $_SESSION = $backup;
-                    unset ($backup);
                 }
+                unset($backup);
               }
 
               if (isset($_SESSION['cart']) && is_object($_SESSION['cart'])) {
