@@ -111,14 +111,14 @@
   display: block;
   width: 34px;
   height: 32px;
-  background: url('../img/lines.png') no-repeat 9px 12px;
+  /* background: url('../img/lines.png') no-repeat 9px 12px; */
 }
 
-#bars span { background: url('../img/bars.png') no-repeat center 10px; }
+#bars span { /* background: url('../img/bars.png') no-repeat center 10px;*/ }
 
-#lines.active span { background-image: url('../img/lines_active.png'); }
+#lines.active span { /* background-image: url('../img/lines_active.png');*/ }
 
-#bars.active span { background-image: url('../img/bars_active.png'); }
+#bars.active span { /* background-image: url('../img/bars_active.png');*/ }
 
 /* Clear Floats */
 .graph-info:before, .graph-info:after,
