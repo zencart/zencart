@@ -44,7 +44,30 @@ class zcObserverDownloadsViaRedirect extends base {
     if (DOWNLOAD_BY_REDIRECT != 'true') return false;
 
     $this->pubFolder = DIR_FS_DOWNLOAD_PUBLIC;
-    $this->wsPubFolder = HTTP_SERVER . DIR_WS_DOWNLOAD_PUBLIC;
+
+    $server_path = HTTP_SERVER;
+
+    // Remove the protocol from the path if present.
+    if (strpos($server_path, '//') !== false) {
+      $server_path = substr($server_path, strpos($server_path, '//') + 2);
+    }
+
+    // Remove the domain name from the path, if present.
+    // if HTTP_SERVER does not contain a sub-directory then no change needed.
+    // else remove the domain name and prefix the path to begin at the domain name.
+    if (strpos($server_path, '/') === false) {
+      $server_path = '';
+    } else {
+      // Remove the domain name from the path if present.
+      $server_path = substr($server_path, strpos($server_path, '/') + 1);
+
+      // Prefix the path to ensure starting at the base of the domain name.
+      if (substr($server_path, 0, 1) !== '/') {
+        $server_path = '/' . $server_path;
+      }
+    }
+
+    $this->wsPubFolder = $server_path . DIR_WS_DOWNLOAD_PUBLIC;
 
     // attach listener
     $this->attach($this, array('NOTIFY_DOWNLOAD_READY_TO_REDIRECT'));
