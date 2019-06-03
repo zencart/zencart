@@ -65,7 +65,7 @@ if (zen_not_null($action)) {
   }
 }
 ?>
-<!doctype html public>
+<!doctype html>
 <html <?php echo HTML_PARAMS; ?>>
   <head>
     <meta charset="<?php echo CHARSET; ?>">
