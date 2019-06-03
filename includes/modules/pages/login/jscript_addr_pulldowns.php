@@ -11,7 +11,7 @@
  * @version $Id: Author: DrByte  Wed Jan 6 12:47:43 2016 -0500 Modified in v1.5.5 $
  */
 ?>
-<script type="text/javascript"><!--
+<script type="text/javascript">
 
 function update_zone(theForm) {
   // if there is no zone_id field to update, or if it is hidden from display, then exit performing no updates
@@ -59,4 +59,4 @@ function update_zone(theForm) {
     document.getElementById("stBreak").className = 'clearBoth visibleField';
     document.getElementById("stBreak").setAttribute('className', 'clearBoth visibleField');
   }
-//--></script>
+</script>

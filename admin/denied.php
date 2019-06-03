@@ -18,10 +18,9 @@ require('includes/application_top.php');
 <link rel="stylesheet" type="text/css" href="includes/stylesheet.css">
 <link rel="stylesheet" type="text/css" href="includes/cssjsmenuhover.css" media="all" id="hoverJS">
 <link rel="stylesheet" type="text/css" href="includes/admin_access.css" />
-<script language="javascript" src="includes/menu.js"></script>
-<script language="javascript" src="includes/general.js"></script>
+<script type="text/javascript" src="includes/menu.js"></script>
+<script type="text/javascript" src="includes/general.js"></script>
 <script type="text/javascript">
-  <!--
   function init()
   {
     cssjsmenu('navbar');
@@ -31,7 +30,6 @@ require('includes/application_top.php');
       kill.disabled = true;
     }
   }
-  // -->
 </script>
 </head>
 <body onload="init()">

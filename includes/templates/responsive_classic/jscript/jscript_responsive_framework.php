@@ -7,7 +7,7 @@
  */
 ?>
 
-<script type="text/javascript"><!--//
+<script type="text/javascript">
 
 (function($) {
 $(document).ready(function() {
@@ -142,4 +142,4 @@ $('.no-fouc').removeClass('no-fouc');
 
 }) (jQuery);
 
-//--></script>
+</script>

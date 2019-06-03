@@ -9,7 +9,7 @@
  * @version $Id: Fri Jul 15 2016  Modified in v1.5.5 $
  */
 ?>
-<script type="text/javascript"><!--
+<script type="text/javascript">
 var selected;
 var submitter = null;
 
@@ -74,4 +74,4 @@ function doCollectsCardDataOnsite()
       });
     });
 
-//--></script>
+</script>
