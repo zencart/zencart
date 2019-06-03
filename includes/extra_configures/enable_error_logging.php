@@ -19,7 +19,7 @@ if (!defined('IS_ADMIN_FLAG')) {
 function zen_debug_error_handler($errno, $errstr, $errfile, $errline) 
 {
     if (!(error_reporting() & $errno)) {
-        return;
+        return false;
     }
 
     switch ($errno) {
