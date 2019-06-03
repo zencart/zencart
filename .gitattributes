@@ -9,3 +9,6 @@
 phpdoc.xml        export-ignore
 phpdoc.dist.xml   export-ignore
 /.circleci         export-ignore
+
+# Auto detect text files and perform LF normalization
+* text=auto
