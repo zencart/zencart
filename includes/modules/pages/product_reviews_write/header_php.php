@@ -3,10 +3,10 @@
  * reviews Write
  *
  * @package page
- * @copyright Copyright 2003-2016 Zen Cart Development Team
+ * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: DrByte modifier: mc12345678 Sun Oct 18 23:03:39 2015 -0400 Modified in v1.5.6b $
+ * @version $Id: DrByte 2019 Apr 24 Modified in v1.5.6b $
  */
 /**
  * Header code file for product reviews "write" page

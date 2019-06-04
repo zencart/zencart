@@ -3,10 +3,10 @@
  * page for Customer to change Payment Address(bill to)
  *
  * @package page
- * @copyright Copyright 2003-2006 Zen Cart Development Team
+ * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: header_php.php 4793 2006-10-20 05:25:20Z ajeh $
+ * @version $Id: DrByte 2019 May 12 Modified in v1.5.6b $
  */
 
 // This should be first line of the script:

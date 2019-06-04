@@ -28,7 +28,7 @@ if ($num_categories > 0) {
   }
 
   while (!$categories->EOF) {
-    if (!$categories->fields['categories_image']) !$categories->fields['categories_image'] = 'pixel_trans.gif';
+    if (!$categories->fields['categories_image']) $categories->fields['categories_image'] = 'pixel_trans.gif';
     $cPath_new = zen_get_path($categories->fields['categories_id']);
 
     // strip out 0_ from top level cats

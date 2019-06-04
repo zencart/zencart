@@ -1,10 +1,10 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2018 Zen Cart Development Team
+ * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Zen4All Wed Jan 17 12:01:19 2018 +0100 Modified in v1.5.6 $
+ * @version $Id: DrByte 2019 May 26 Modified in v1.5.6b $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
@@ -57,7 +57,7 @@ $form_action = (isset($_GET['pID'])) ? 'update_product_meta_tags' : 'insert_prod
             <?php echo '<strong>' . TEXT_PRODUCTS_PRICE_INFO . '</strong>&nbsp;' . ($pInfo->metatags_price_status == '1' ? $currencies->format($pInfo->products_price_sorter) : TEXT_META_EXCLUDED); ?>
         </td>
         <td class="main" valign="top">
-            <?php echo '<strong>' . TEXT_PRODUCTS_METATAGS_TITLE_TAGLINE_STATUS . '</strong>&nbsp;' . ($pInfo->metatags_title_tagline_status == '1' ? TITLE . ' ' . SITE_TAGLINE : TEXT_META_EXCLUDED); ?>
+            <?php echo '<strong>' . TEXT_PRODUCTS_METATAGS_TITLE_TAGLINE_STATUS . '</strong>&nbsp;' . ($pInfo->metatags_title_tagline_status == '1' ? TEXT_TITLE_PLUS_TAGLINE : TEXT_META_EXCLUDED); ?>
         </td>
       </tr>
       <tr>
@@ -92,7 +92,7 @@ $form_action = (isset($_GET['pID'])) ? 'update_product_meta_tags' : 'insert_prod
     }
 ?>
     <button type="submit" name="edit" value="edit" class="btn btn-default"><?php echo IMAGE_BACK; ?></button>
-    <button type="submit" class="btn btn-primary"><?php echo (isset($_GET['pID']) ? IMAGE_UPDATE : IMAGE_INSERT); ?></button> 
+    <button type="submit" class="btn btn-primary"><?php echo (isset($_GET['pID']) ? IMAGE_UPDATE : IMAGE_INSERT); ?></button>
     <a href="<?php echo zen_href_link(FILENAME_CATEGORY_PRODUCT_LISTING, 'cPath=' . $cPath . (isset($_GET['pID']) ? '&pID=' . $_GET['pID'] : '') . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '')); ?>" class="btn btn-default" role="button"><?php echo IMAGE_CANCEL; ?></a>
   </div>
   <?php echo '</form>'; ?>

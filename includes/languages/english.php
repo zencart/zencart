@@ -1,10 +1,10 @@
 <?php
 /**
  * @package languageDefines
- * @copyright Copyright 2003-2018 Zen Cart Development Team
+ * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Drbyte Mon Nov 12 18:11:01 2018 -0500 Modified in v1.5.6 $
+ * @version $Id: DrByte 2019 May 26 Modified in v1.5.6b $
  */
 
 // FOLLOWING WERE moved to meta_tags.php
@@ -352,7 +352,6 @@
   define('TEXT_INVALID_COUPON_PRODUCT', 'This coupon code is not valid for any product currently in your cart.');
   define('TEXT_VALID_COUPON', 'Congratulations you have redeemed the Discount Coupon');
   define('TEXT_REMOVE_REDEEM_COUPON_ZONE', 'The coupon code you entered is not valid for the address you have selected.');
-  define('TEXT_COMMAND_TO_DELETE_CURRENT_COUPON_FROM_ORDER', 'REMOVE');
 
 // more info in place of buy now
   define('MORE_INFO_TEXT','... more info');

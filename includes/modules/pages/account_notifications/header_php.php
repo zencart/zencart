@@ -3,10 +3,10 @@
  * Header code file for the Account Notifications page
  *
  * @package page
- * @copyright Copyright 2003-2006 Zen Cart Development Team
+ * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: header_php.php 3007 2006-02-11 09:17:12Z drbyte $
+ * @version $Id: mc12345678 2019 Apr 30 Modified in v1.5.6b $
  */
 // This should be first line of the script:
 $zco_notifier->notify('NOTIFY_HEADER_START_ACCOUNT_NOTIFICATION');

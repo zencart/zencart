@@ -3,10 +3,10 @@
  * ot_shipping order-total module
  *
  * @package orderTotal
- * @copyright Copyright 2003-2018 Zen Cart Development Team
+ * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: lat9 Fri Nov 9 09:32:23 2018 -0500 Modified in v1.5.6 $
+ * @version $Id: lat9 2019 Mar 29 Modified in v1.5.6b $
  */
 
   class ot_shipping {
