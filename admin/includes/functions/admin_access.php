@@ -472,7 +472,7 @@ function zen_check_for_password_problems($password, $adminID = 0)
  * @param string $adminID
  */
 function zen_check_for_expired_pwd ($adminID) {
-  if (PADSS_PWD_EXPIRY_ENFORCED == 0) return;
+  if (PADSS_PWD_EXPIRY_ENFORCED == 0) return 0;
   global $db;
   $sql = "SELECT admin_id FROM " . TABLE_ADMIN . "
           WHERE admin_id = :adminID:
