@@ -43,7 +43,7 @@ UPDATE configuration set configuration_group_id = 6 where configuration_key in (
 #ISO Updates:
 UPDATE countries SET countries_name = 'Libya' WHERE countries_iso_code_3 = 'LBY';
 UPDATE countries SET countries_name = 'Palestine, State of' WHERE countries_iso_code_3 = 'PSE';
-INSERT INTO countries (countries_id, countries_name, countries_iso_code_2, countries_iso_code_3, address_format_id) VALUES (246,'South Sudan','SS','SSD','1');
+INSERT INTO countries (countries_name, countries_iso_code_2, countries_iso_code_3, address_format_id) VALUES ('South Sudan','SS','SSD','1');
 
 
 ALTER TABLE admin MODIFY COLUMN pwd_last_change_date datetime NOT NULL default '0001-01-01 00:00:00', MODIFY COLUMN last_modified datetime NOT NULL default '0001-01-01 00:00:00', MODIFY COLUMN last_login_date datetime NOT NULL default '0001-01-01 00:00:00', MODIFY COLUMN last_failed_attempt datetime NOT NULL default '0001-01-01 00:00:00';
