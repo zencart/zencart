@@ -14,7 +14,7 @@ if ($payment_modules->in_special_checkout() || empty($payeezyjszc) || !$payeezyj
     return false;
 }
 ?>
-<script type="text/javascript"><!--
+<script type="text/javascript">
 
 var Payeezy = function() {
     function e(e) {
@@ -204,4 +204,4 @@ jQuery(function($) {
     });
 });
 
---></script>
+</script>

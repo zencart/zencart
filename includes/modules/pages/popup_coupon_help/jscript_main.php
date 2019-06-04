@@ -20,7 +20,7 @@
 // $Id: jscript_main.php 1969 2005-09-13 06:57:21Z drbyte $
 //
 ?>
-<script type="text/javascript"><!--
+<script type="text/javascript">
 var i=0;
 function resize() {
   if (navigator.appName == 'Netscape') i=10;
@@ -36,4 +36,4 @@ function resize() {
   }
   self.focus();
 }
-//--></script>
+</script>

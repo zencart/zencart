@@ -9,7 +9,7 @@
  * @version $Id: Author: DrByte  Wed Jan 6 12:47:43 2016 -0500 Modified in v1.5.5 $
  */
 ?>
-<script type="text/javascript"><!--
+<script type="text/javascript">
 var i=0;
 function resize() {
   i=0;
@@ -51,4 +51,4 @@ function resize() {
   }
   self.focus();
 }
-//--></script>
+</script>

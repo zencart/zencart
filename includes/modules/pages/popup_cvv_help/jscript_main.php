@@ -4,9 +4,9 @@
 // |zen-cart Open Source E-commerce                                       |
 // +----------------------------------------------------------------------+
 // | Copyright (c) 2003 The zen-cart developers                           |
-// |                                                                      |   
-// | http://www.zen-cart.com/index.php                                    |   
-// |                                                                      |   
+// |                                                                      |
+// | http://www.zen-cart.com/index.php                                    |
+// |                                                                      |
 // | Portions Copyright (c) 2003 osCommerce                               |
 // +----------------------------------------------------------------------+
 // | This source file is subject to version 2.0 of the GPL license,       |
@@ -20,11 +20,11 @@
 // $Id: jscript_main.php 1969 2005-09-13 06:57:21Z drbyte $
 //
 ?>
-<script type="text/javascript"><!--
+<script type="text/javascript">
 var i=0;
 function resize() {
   if (navigator.appName == 'Netscape') i=40;
   if (document.images[0]) window.resizeTo(document.images[0].width +30, document.images[0].height+60-i);
   self.focus();
 }
-//--></script>
+</script>
