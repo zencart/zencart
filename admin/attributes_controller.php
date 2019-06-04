@@ -1222,7 +1222,14 @@ function zen_js_option_values_list($selectedName, $fieldName) {
 
                 $products_name_only = zen_get_products_name($attributes_value['products_id']);
                 $options_name = zen_options_name($attributes_value['options_id']);
-                $values_name = zen_values_name($attributes_value['options_values_id']);
+
+                $sql = "SELECT products_options_type FROM " . TABLE_PRODUCTS_OPTIONS . " WHERE products_options_id = " . (int)$attributes_value['options_id'];
+                $sql_result = $db->Execute($sql);
+
+                if (empty($attributes_value['options_values_id'])) {
+                  $value_type = translate_type_to_name($sql_result->fields['products_options_type']);
+                }
+                $values_name = (!empty($attributes_value['options_values_id']) ? zen_values_name($attributes_value['options_values_id']) : $value_type);
                 $rows++;
 
 // delete all option name values
