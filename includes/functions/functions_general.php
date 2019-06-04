@@ -1377,7 +1377,7 @@
 
 ////
 // return truncated paragraph
-  function zen_truncate_paragraph($paragraph, $size = 100, $word = ' ') {
+  function zen_truncate_paragraph($paragraph, $size = 100) {
     $zv_paragraph = "";
     $word = explode(" ", $paragraph);
     $zv_total = count($word);
