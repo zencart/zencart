@@ -1959,7 +1959,7 @@ class shoppingCart extends base {
         } else {
           // process normally
           // iii 030813 added: File uploading: save uploaded files with unique file names
-          $real_ids = isset($_POST['id']) ? $_POST['id'] : "";
+          $real_ids = isset($_POST['id']) ? $_POST['id'] : array();
           if (isset($_GET['number_of_uploads']) && $_GET['number_of_uploads'] > 0) {
             /**
              * Need the upload class for attribute type that allows user uploads.
@@ -1967,7 +1967,7 @@ class shoppingCart extends base {
              */
             include(DIR_WS_CLASSES . 'upload.php');
             for ($i = 1, $n = $_GET['number_of_uploads']; $i <= $n; $i++) {
-              if (zen_not_null($_FILES['id']['tmp_name'][TEXT_PREFIX . $_POST[UPLOAD_PREFIX . $i]]) and ($_FILES['id']['tmp_name'][TEXT_PREFIX . $_POST[UPLOAD_PREFIX . $i]] != 'none')) {
+              if (isset($_POST[UPLOAD_PREFIX . $i]) && isset($_FILES['id']['tmp_name'][TEXT_PREFIX . $_POST[UPLOAD_PREFIX . $i]]) && zen_not_null($_FILES['id']['tmp_name'][TEXT_PREFIX . $_POST[UPLOAD_PREFIX . $i]]) && (!isset($_POST[UPLOAD_PREFIX . $i]) || !isset($_FILES['id']['tmp_name'][TEXT_PREFIX . $_POST[UPLOAD_PREFIX . $i]]) || ($_FILES['id']['tmp_name'][TEXT_PREFIX . $_POST[UPLOAD_PREFIX . $i]] != 'none'))) {
                 $products_options_file = new upload('id');
                 $products_options_file->set_destination(DIR_FS_UPLOADS);
                 $products_options_file->set_output_messages('session');
@@ -1988,8 +1988,16 @@ class shoppingCart extends base {
                   break;
                 }
               } else { // No file uploaded -- use previous value
-                $real_ids[TEXT_PREFIX . $_POST[UPLOAD_PREFIX . $i]] = $_POST[TEXT_PREFIX . UPLOAD_PREFIX . $i];
+                $real_ids[TEXT_PREFIX . $_POST[UPLOAD_PREFIX . $i]] = isset($_POST[TEXT_PREFIX . UPLOAD_PREFIX . $i]) ? $_POST[TEXT_PREFIX . UPLOAD_PREFIX . $i] : '';
+                if (!zen_get_attributes_valid($_POST['products_id'], TEXT_PREFIX . $_POST[UPLOAD_PREFIX . $i], !empty($_POST[TEXT_PREFIX . UPLOAD_PREFIX . $i]) ? $_POST[TEXT_PREFIX . UPLOAD_PREFIX . $i] : '')) {
+                  $the_list .= TEXT_ERROR_OPTION_FOR . '<span class="alertBlack">' . zen_options_name($_POST[UPLOAD_PREFIX . $i]) . '</span>' . TEXT_INVALID_SELECTION . '<span class="alertBlack">' . ($_POST[TEXT_PREFIX . UPLOAD_PREFIX . $i] == (int)PRODUCTS_OPTIONS_VALUES_TEXT_ID ? TEXT_INVALID_USER_INPUT : zen_values_name($value)) . '</span>' . '<br />';
+                  $new_qty = 0; // Don't increase the quantity of product in the cart.
+                }
               }
+            }
+
+            if ($the_list != '') {
+              $messageStack->add('product_info', ERROR_CORRECTIONS_HEADING . $the_list, 'caution');
             }
 
             // remove helper param from URI of the upcoming redirect
