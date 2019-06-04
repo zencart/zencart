@@ -68,7 +68,7 @@ class testAdminNotifications extends zcTestCase
             'can-forget'    => true,
             'countries'     => ['USA', 'CAN']
         ],
-        'square5' => [
+        'square6' => [
             'target'        => 'payment',
             'banner-group'  => '1',
             'banner-html'   => null,
