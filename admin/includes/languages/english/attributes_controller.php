@@ -92,7 +92,7 @@ define('TABLE_TEXT_MAX_COUNT_SHORT', 'Max:');
   define('TEXT_ATTRIBUTES_DEFAULT', 'Default Attribute<br />to be Marked Selected:');
   define('TEXT_ATTRIBUTE_IS_DISCOUNTED', 'Apply Discounts Used<br />by Product Special/Sale:');
   define('TEXT_ATTRIBUTE_PRICE_BASE_INCLUDED','Include in Base Price<br />When Priced by Attributes');
-  define('TEXT_ATTRIBUTES_REQUIRED','Attribute Required<br />for Text:');
+  define('TEXT_ATTRIBUTES_REQUIRED','Attribute Required<br />for Text<br />or File:');
 
   define('LEGEND_BOX','Legend:');
   define('LEGEND_KEYS','OFF/ON');
