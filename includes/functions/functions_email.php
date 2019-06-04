@@ -161,7 +161,7 @@ use PHPMailer\PHPMailer\SMTP;
       $sql = $db->bindVars($sql, ':custEmailAddress:', $to_email_address, 'string');
       $result = $db->Execute($sql);
       $customers_email_format = ($result->RecordCount() > 0) ? $result->fields['customers_email_format'] : '';
-      if ($customers_email_format == 'NONE' || $customers_email_format == 'OUT') return; //if requested no mail, then don't send.
+      if ($customers_email_format == 'NONE' || $customers_email_format == 'OUT') return false; //if requested no mail, then don't send.
 //      if ($customers_email_format == 'HTML') $customers_email_format = 'HTML'; // if they opted-in to HTML messages, then send HTML format
 
       // handling admin/"extra"/copy emails:
