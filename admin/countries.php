@@ -132,9 +132,11 @@ if (zen_not_null($action)) {
                   }
 
                   if (isset($cInfo) && is_object($cInfo) && ($country['countries_id'] == $cInfo->countries_id)) {
-                    echo '                  <tr id="defaultSelected" class="dataTableRowSelected" onclick="document.location.href=\'' . zen_href_link(FILENAME_COUNTRIES, 'page=' . $_GET['page'] . '&cID=' . $cInfo->countries_id . '&action=edit') . '\'" role="button">' . "\n";
-                  } else {
-                    echo '                  <tr class="dataTableRow" onclick="document.location.href=\'' . zen_href_link(FILENAME_COUNTRIES, 'page=' . $_GET['page'] . '&cID=' . $country['countries_id']) . '\'" role="button">' . "\n";
+                      ?>
+              <tr id="defaultSelected" class="dataTableRowSelected" onclick="document.location.href='<?php echo zen_href_link(FILENAME_COUNTRIES, 'page=' . $_GET['page'] . '&cID=' . $cInfo->countries_id . '&action=edit')?>'" role="button">
+                  <?php } else { ?>
+              <tr class="dataTableRow" onclick="document.location.href='<?php echo zen_href_link(FILENAME_COUNTRIES, 'page=' . $_GET['page'] . '&cID=' . $country['countries_id'])?>'" role="button">
+                     <?php
                   }
                   ?>
               <td class="dataTableContent"><?php echo zen_output_string_protected($country['countries_name']); ?></td>
