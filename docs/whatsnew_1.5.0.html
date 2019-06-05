@@ -65,14 +65,14 @@
         <h1>Zen Cart&reg; Requirements</h1>
         <p>
             Zen Cart&reg; v1.5.0 requires a minimum of the following:
-            <ul>
-                    <li>PHP 5.2.14 or higher</li>
-                    <li>MySQL 4.1.3 or higher</li>
-                    <li>Apache 2.0 or higher.</li>
-                    <li>Apache configured with AllowOverride set to either 'All' or at least both 'Limit' and 'Indexes' parameters, and preferably the 'Options' parameter as well.</li>
-                    <li>PHP configured to support CURL with OpenSSL</li>
-            </ul>
         </p>
+        <ul>
+            <li>PHP 5.2.14 or higher</li>
+            <li>MySQL 4.1.3 or higher</li>
+            <li>Apache 2.0 or higher.</li>
+            <li>Apache configured with AllowOverride set to either 'All' or at least both 'Limit' and 'Indexes' parameters, and preferably the 'Options' parameter as well.</li>
+            <li>PHP configured to support CURL with OpenSSL</li>
+        </ul>
         <p>
             While Zen Cart&reg; can run on Windows/IIS servers, Linux/Apache servers are recommended for best results, superior performance, and easier use by shopowners.
         </p>
@@ -248,17 +248,19 @@
         </p>
         <p>
             However, for these built-in protections to work, your web hosting server administrator MUST set the AllowOverride directive in the server's apache configuration (the server's master httpd.conf file)    to "All" or at least ensure it includes these parameters: 'Limit Indexes'.
+        </p>
+        <br>
+        <pre>
+            ie:&nbsp;&nbsp;&nbsp;&nbsp;AllowOverride All
             <br>
-            <pre>
-                ie:&nbsp;&nbsp;&nbsp;&nbsp;AllowOverride All
-                <br>
-                or: &nbsp;&nbsp;&nbsp;AllowOverride Limit Indexes&nbsp;&nbsp;&nbsp;&nbsp;
-            </pre>
-            <br>
-            <em>
+            or: &nbsp;&nbsp;&nbsp;AllowOverride Limit Indexes&nbsp;&nbsp;&nbsp;&nbsp;
+        </pre>
+        <br>
+        <em>
                 (NOTE: You must also add "Options" if uncommenting OPTIONS directives in your .htaccess files)
-            </em>
-            <br><br>
+        </em>
+        <br><br>
+        <p>
             Without these settings, you will likely encounter "<em>500 Internal Server Error</em>" messages when attempting to access various parts of your site, including perhaps the zc_install installer script. 
         </p>
         <p>
