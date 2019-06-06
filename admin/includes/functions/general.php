@@ -2115,14 +2115,14 @@ function zen_copy_products_attributes($products_id_from, $products_id_to) {
   if ( (!zen_has_product_attributes($products_id_from, 'false') or !zen_products_id_valid($products_id_to)) or $products_id_to == $products_id_from ) {
     if ($products_id_to == $products_id_from) {
       // same products_id
-      $messageStack->add_session('<b>WARNING: Cannot copy from Product ID #' . $products_id_from . ' to Product ID # ' . $products_id_to . ' ... No copy was made' . '</b>', 'caution');
+      $messageStack->add_session(sprintf(WARNING_ATTRIBUTE_COPY_SAME_ID, $products_id_from, $products_id_to), 'caution');
     } else {
       if (!zen_has_product_attributes($products_id_from, 'false')) {
         // no attributes found to copy
-        $messageStack->add_session('<b>WARNING: No Attributes to copy from Product ID #' . $products_id_from . ' for: ' . zen_get_products_name($products_id_from) . ' ... No copy was made' . '</b>', 'caution');
+        $messageStack->add_session(sprintf(WARNING_ATTRIBUTE_COPY_NO_ATTRIBUTES, $products_id_from, zen_get_products_name($products_id_from)), 'caution');
       } else {
         // invalid products_id
-        $messageStack->add_session('<b>WARNING: There is no Product ID #' . $products_id_to . ' ... No copy was made' . '</b>', 'caution');
+        $messageStack->add_session(sprintf(WARNING_ATTRIBUTE_COPY_INVALID_ID, $products_id_to), 'caution');
       }
     }
   } else {
@@ -2169,7 +2169,7 @@ function zen_copy_products_attributes($products_id_from, $products_id_to) {
 
       if ($copy_attributes_duplicates_skipped == '1' and $check_duplicate->RecordCount() != 0) {
         // skip it
-          $messageStack->add_session(TEXT_ATTRIBUTE_COPY_SKIPPING . $products_copy_from->fields['products_attributes_id'] . ' for Products ID#' . $products_id_to, 'caution');
+          $messageStack->add_session(sprintf(TEXT_ATTRIBUTE_COPY_SKIPPING, (int)$products_copy_from->fields['products_attributes_id'], (int)$products_id_to), 'caution');
       } else {
         if ($add_attribute == true) {
           // New attribute - insert it
@@ -2200,7 +2200,7 @@ function zen_copy_products_attributes($products_id_from, $products_id_to) {
           '" . $products_copy_from->fields['attributes_price_letters'] . "',
           '" . $products_copy_from->fields['attributes_price_letters_free'] . "',
           '" . $products_copy_from->fields['attributes_required'] . "')");
-          $messageStack->add_session(TEXT_ATTRIBUTE_COPY_INSERTING . $products_copy_from->fields['products_attributes_id'] . ' for Products ID#' . $products_id_to, 'caution');
+          $messageStack->add_session(sprintf(TEXT_ATTRIBUTE_COPY_INSERTING, (int)$products_copy_from->fields['products_attributes_id'], (int)$products_id_from, (int)$products_id_to), 'success');
         }
         if ($update_attribute == true) {
           // Update attribute - Just attribute settings not ids
@@ -2230,7 +2230,7 @@ function zen_copy_products_attributes($products_id_from, $products_id_to) {
           attributes_required='" . $products_copy_from->fields['attributes_required'] . "'"
            . " where products_id='" . (int)$products_id_to . "'" . " and options_id= '" . $products_copy_from->fields['options_id'] . "' and options_values_id='" . $products_copy_from->fields['options_values_id'] . "'");
 //           . " where products_id='" . $products_id_to . "'" . " and options_id= '" . $products_copy_from->fields['options_id'] . "' and options_values_id='" . $products_copy_from->fields['options_values_id'] . "' and attributes_image='" . $products_copy_from->fields['attributes_image'] . "' and attributes_price_base_included='" . $products_copy_from->fields['attributes_price_base_included'] .  "'");
-          $messageStack->add_session(TEXT_ATTRIBUTE_COPY_UPDATING . $products_copy_from->fields['products_attributes_id'] . ' for Products ID#' . $products_id_to, 'caution');
+          $messageStack->add_session(sprintf(TEXT_ATTRIBUTE_COPY_UPDATING, (int)$products_copy_from->fields['products_attributes_id'], (int)$products_id_to), 'success');
         }
       }
 

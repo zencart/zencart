@@ -38,8 +38,13 @@ define('TEXT_INFO_HEADING_COPY_TO', 'Copy To');
 define('TEXT_INFO_COPY_TO_INTRO', 'Please choose a new category you wish to copy this product to');
 define('TEXT_INFO_CURRENT_PRODUCT', 'Current Product: ');
 define('TEXT_HOW_TO_COPY', 'Copy Method:');
-define('TEXT_COPY_AS_LINK', 'Link product');
-define('TEXT_COPY_AS_DUPLICATE', 'Duplicate product');
+define('TEXT_COPY_AS_LINK','Link this product into another category as selected above');
+define('TEXT_COPY_AS_DUPLICATE','Create a Duplicate product in the category selected above');
+define('TEXT_COPY_METATAGS','Copy Metatags to Duplicate?');
+define('TEXT_COPY_LINKED_CATEGORIES','Copy Linked Categories to Duplicate?');
+define('TEXT_COPY_AS_DUPLICATE_METATAGS', 'Metatags for Language ID#%u copied from Product ID#%u to duplicate Product ID#%u');
+define('TEXT_COPY_AS_DUPLICATE_CATEGORIES', 'Linked Category ID#%u copied from Product ID#%u to duplicate Product ID#%u');
+define('TEXT_COPY_AS_DUPLICATE_DISCOUNTS', 'Discounts copied from Product ID#%u to duplicate Product ID#%u');
 define('TEXT_INFO_HEADING_ATTRIBUTE_FEATURES', 'Attributes Changes for Products ID# ');
 define('TEXT_PRODUCTS_ATTRIBUTES_INFO', 'Attribute Features For:');
 define('TEXT_PRODUCT_ATTRIBUTES_DOWNLOADS', 'Downloads: ');
@@ -50,7 +55,6 @@ define('TEXT_COPY_ATTRIBUTES_CONDITIONS', '<strong>How should existing product a
 define('TEXT_COPY_ATTRIBUTES_DELETE', '<strong>Delete</strong> first, then copy new attributes');
 define('TEXT_COPY_ATTRIBUTES_UPDATE', '<strong>Update</strong> with new settings/prices, then add new ones');
 define('TEXT_COPY_ATTRIBUTES_IGNORE', '<strong>Ignore</strong> and add only new attributes');
-define('TEXT_ATTRIBUTE_COPY_INSERTING', '<strong>Inserting New Attribute from </strong>');
 define('ICON_ATTRIBUTES', 'Attribute Features');
 
 // Products and Attribute Copy Options
