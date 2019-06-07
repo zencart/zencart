@@ -430,7 +430,27 @@ class order extends base {
                               'email_address' => $customer_address->fields['customers_email_address']);
     }
 
-    if ($shipping_address->RecordCount() > 0) {
+    if ($this->content_type == 'virtual') {
+      $this->delivery = array(
+        'firstname' => '',
+        'lastname' => '',
+        'company' => '',
+        'street_address' => '',
+        'suburb' => '',
+        'city' => '',
+        'postcode' => '',
+        'state' => '',
+        'zone_id' => 0,
+        'country' => array(
+            'id' => 0, 
+            'title' => '', 
+            'iso_code_2' => '', 
+            'iso_code_3' => ''
+        ),
+        'country_id' => 0,
+        'format_id' => 0
+      );
+    } elseif ($shipping_address->RecordCount() > 0) {
       $this->delivery = array('firstname' => $shipping_address->fields['entry_firstname'],
                               'lastname' => $shipping_address->fields['entry_lastname'],
                               'company' => $shipping_address->fields['entry_company'],
