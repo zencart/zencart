@@ -7,7 +7,7 @@
  * @version $Id: Scott C Wilson 2019 Jan 24 Modified in v1.5.6b $
  */
 
-define('HEADING_TITLE', 'CATEGORIES: ');
+define('HEADING_TITLE', 'Attributes Controller');
 
 define('HEADING_TITLE_OPT', 'Product Options');
 define('HEADING_TITLE_VAL', 'Option Values');
@@ -165,8 +165,8 @@ define('TABLE_TEXT_MAX_COUNT_SHORT', 'Max:');
   define('TEXT_INFO_PRODUCTS_OPTION_ID', '<strong>ID#</strong>');
   define('SUCCESS_ATTRIBUTES_DELETED_OPTION_NAME_VALUES', 'Successful deletion of all Option Values for Option Name: ');
 
-  define('BUTTON_ADDITITONAL_ACTIONS', 'Additional Actions');
-  define('TEXT_UPDATE_DEFAULTE_SORT_ORDER', 'Update sort order to default');
+  define('BUTTON_ADDITIONAL_ACTIONS', 'Additional Actions');
+  define('TEXT_UPDATE_DEFAULT_SORT_ORDER', 'Update Sort Order to default');
   define('TEXT_DELETE_ALL_OPTIONS_FROM_PRODUCT', 'Delete all options from product');
   define('TEXT_COPY_ALL_OPTIONS_TO_PRODUCT', 'Copy options to another product');
   define('TEXT_COPY_ALL_OPTIONS_TO_CATEGORY', 'Copy options to a whole category');
