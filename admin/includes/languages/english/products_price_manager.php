@@ -136,4 +136,4 @@ define('PRODUCT_WARNING_UPDATE_CANCEL', 'Changes were Cancelled and not saved ..
 define('TEXT_INFO_EDIT_CAUTION', '<strong>Click to begin Editing ...</strong>');
 define('TEXT_INFO_PREVIEW_ONLY', 'Preview Only ... Current Price Status ... Preview Only');
 define('TEXT_INFO_UPDATE_REMINDER', '<strong>Edit Product Information then Update to save</strong>');
-define('BUTTON_ADDITITONAL_ACTIONS', 'Additional Actions');
+define('BUTTON_ADDITIONAL_ACTIONS', 'Additional Actions');
