@@ -154,6 +154,12 @@ if (zen_not_null($action) && $order_exists == true) {
       $email_include_message = (isset($_POST['notify_comments']) && $_POST['notify_comments'] == 'on');
       $customer_notified = (int)(isset($_POST['notify'])) ? $_POST['notify'] : '0';
 
+      // -----
+      // Give an observer the opportunity to add to the to-be-recorded comments and/or
+      // capture any posted values that it has inserted into the order-update form.
+      //
+      $zco_notifier->notify('NOTIFY_ADMIN_ORDERS_UPDATE_ORDER_START', $oID);
+
       $order_updated = false;
       $status_updated = zen_update_orders_history($oID, $comments, null, $status, $customer_notified, $email_include_message);
       $order_updated = ($status_updated > 0);
@@ -734,6 +740,34 @@ if (zen_not_null($action) && $order_exists == true) {
                   <?php echo zen_draw_pull_down_menu('status', $orders_statuses, $order->info['orders_status'], 'id="status" class="form-control"'); ?>
               </div>
             </div>
+<?php
+        // -----
+        // Give an observer the chance to supply some additional status-related inputs.  Each
+        // entry in the $extra_status_inputs returned contains:
+        //
+        // array(
+        //    'label' => array(
+        //        'text' => 'The label text',   (required)
+        //        'addl_class' => {Any additional class to be applied to the label} (optional)
+        //        'parms' => {Any additional parameters for the label, e.g. 'style="font-weight: 700;"} (optional)
+        //    ),
+        //    'input' => 'The HTML to be inserted' (required)
+        // )
+        $extra_status_inputs = array();
+        $zco_notifier->notify('NOTIFY_ADMIN_ORDERS_EXTRA_STATUS_INPUTS', $order, $extra_status_inputs);
+        if (count($extra_status_inputs) != 0) {
+            foreach ($extra_status_inputs as $extra_status) {
+                $addl_class = (isset($extra_status['label']['addl_class'])) ? (' ' . $extra_status['label']['addl_class']) : '';
+                $parms = (isset($extra_status['label']['parms'])) ? (' ' . $extra_status['label']['parms']) : '';
+?>
+            <div class="form-group">
+                <div class="col-sm-3 control-label<?php echo $addl_class; ?>"<?php echo $parms; ?>><?php echo $extra_status['label']['text']; ?></div>
+                <div class="col-sm-9"><?php echo $extra_status['input']; ?></div>
+            </div>
+<?php
+            }
+        }
+?>
             <div class="form-group">
                 <div class="col-sm-3 control-label" style="font-weight: 700;"><?php echo ENTRY_NOTIFY_CUSTOMER; ?></div>
               <div class="col-sm-9">
