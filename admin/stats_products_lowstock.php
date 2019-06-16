@@ -50,7 +50,7 @@ require('includes/application_top.php');
       <table class="table table-hover">
         <thead>
           <tr class="dataTableHeadingRow">
-            <th class="dataTableHeadingContent"><?php echo TABLE_HEADING_NUMBER; ?></th>
+            <th class="dataTableHeadingContent right"><?php echo TABLE_HEADING_NUMBER; ?></th>
             <th class="dataTableHeadingContent"><?php echo TABLE_HEADING_PRODUCTS; ?></th>
             <th class="dataTableHeadingContent text-center"><?php echo TABLE_HEADING_VIEWED; ?></th>
           </tr>
