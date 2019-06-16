@@ -21,15 +21,14 @@ class shipping extends base {
   var $modules;
 
   // class constructor
-  function __construct($module = '') {
+  function __construct($module = null) {
     global $PHP_SELF, $messageStack;
-
     if (defined('MODULE_SHIPPING_INSTALLED') && zen_not_null(MODULE_SHIPPING_INSTALLED)) {
       $this->modules = explode(';', MODULE_SHIPPING_INSTALLED);
 
       $include_modules = array();
 
-      if ( (zen_not_null($module)) && (in_array(substr($module['id'], 0, strpos($module['id'], '_')) . '.' . substr($PHP_SELF, (strrpos($PHP_SELF, '.')+1)), $this->modules)) ) {
+      if ( (!zen_not_null($module)) && (in_array(substr($module['id'], 0, strpos($module['id'], '_')) . '.' . substr($PHP_SELF, (strrpos($PHP_SELF, '.')+1)), $this->modules)) ) {
         $include_modules[] = array('class' => substr($module['id'], 0, strpos($module['id'], '_')), 'file' => substr($module['id'], 0, strpos($module['id'], '_')) . '.' . substr($PHP_SELF, (strrpos($PHP_SELF, '.')+1)));
       } else {
         foreach($this->modules as $value) {
