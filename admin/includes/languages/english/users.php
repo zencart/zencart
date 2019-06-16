@@ -13,7 +13,6 @@ define('IMAGE_ADD_USER', 'Add User');
 
 define('TEXT_ID', 'ID');
 define('TEXT_NAME', 'Name');
-define('TEXT_EMAIL', 'Email');
 define('TEXT_PROFILE', 'Profile');
 define('TEXT_CHOOSE_PROFILE', 'Choose Profile');
 define('TEXT_PASSWORD', 'Password');
