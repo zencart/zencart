@@ -304,7 +304,7 @@ if (zen_not_null($action)) {
                                                      WHERE tax_zone_id = " . (int)$zone['geo_zone_id'] . "
                                                      GROUP BY tax_zone_id");
 
-                      if ($num_tax_rates->fields['num_tax_rates'] > 0) {
+                      if (!$num_tax_rates->EOF) { 
                         $zone['num_tax_rates'] = $num_tax_rates->fields['num_tax_rates'];
                       } else {
                         $zone['num_tax_rates'] = 0;
