@@ -294,7 +294,7 @@ if ($action == 'preview') {
             <div class="col-sm-9">
                 <?php
                 if (EMAIL_USE_HTML == 'true') {
-                  echo zen_draw_textarea_field('message_html', 'soft', '100%', '25', htmlspecialchars(stripslashes($_POST['message_html']), ENT_COMPAT, CHARSET, TRUE), 'id="message_html" class="editorHook form-control"');
+                  echo zen_draw_textarea_field('message_html', 'soft', '100%', '25', htmlspecialchars(stripslashes(isset($_POST['message_html'])?$_POST['message_html']:''), ENT_COMPAT, CHARSET, TRUE), 'id="message_html" class="editorHook form-control"');
                 } else {
                   echo TEXT_WARNING_HTML_DISABLED;
                 }
