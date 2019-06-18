@@ -588,6 +588,7 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
                 </tr>
               </thead>
               <?php
+              $order_by = " ";
               switch ($_SESSION['categories_products_sort_order']) {
                 case (0):
                   $order_by = " ORDER BY c.sort_order, cd.categories_name";
@@ -728,6 +729,7 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
               }
 
 
+              $order_by = " "; 
               switch ($_SESSION['categories_products_sort_order']) {
                 case (0):
                   $order_by = " ORDER BY p.products_sort_order, pd.products_name";
