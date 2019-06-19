@@ -105,7 +105,9 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
 
   if ($error == false) {
     //update external bb system with new email address
-    $zco_notifier->notify('NOTIFY_NICK_UPDATE_EMAIL_ADDRESS', $nick, $db->prepareInput($email_address));
+    $new_email_address = $db->prepareInput($email_address);
+    $zco_notifier->notify('NOTIFY_NICK_UPDATE_EMAIL_ADDRESS', $nick, $new_email_address);
+    unset($new_email_address);
 
     // build array of data to store the requested changes
     $sql_data_array = array(array('fieldName'=>'customers_firstname', 'value'=>$firstname, 'type'=>'stringIgnoreNull'),
