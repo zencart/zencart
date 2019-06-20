@@ -20,6 +20,7 @@ $copy_attributes_include_filename = '1';
 $heading[] = array('text' => '<h4>' . TEXT_INFO_HEADING_COPY_TO . '</h4>');
 // WebMakers.com Added: Split Page
 if (empty($pInfo->products_id)) {
+  if (!is_object($pInfo)) $pInfo = new StdClass();
   $pInfo->products_id = $pID;
 }
 
