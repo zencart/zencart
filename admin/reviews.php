@@ -56,7 +56,7 @@ if (zen_not_null($action)) {
 <html <?php echo HTML_PARAMS; ?>>
   <head>
     <meta charset="<?php echo CHARSET; ?>">
-    <title><?php echo TITLE; ?></title>
+    <title><?php echo HEADING_TITLE; ?></title>
     <link rel="stylesheet" type="text/css" href="includes/stylesheet.css">
     <link rel="stylesheet" type="text/css" href="includes/cssjsmenuhover.css" media="all" id="hoverJS">
     <script src="includes/menu.js"></script>
@@ -129,18 +129,16 @@ if (zen_not_null($action)) {
         $rInfo = new objectInfo($rInfo_array);
         ?>
         <div class="row">
+            <div><?php echo zen_info_image($rInfo->products_image, $rInfo->products_name, SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT); ?></div>
             <?php echo zen_draw_form('review', FILENAME_REVIEWS, (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . (isset($_GET['status']) ? 'status=' . $_GET['status'] . '&' : '') . 'rID=' . $_GET['rID'] . '&action=preview'); ?>
           <div class="form-group">
-            <div class="col-sm-6"><strong><?php echo ENTRY_PRODUCT; ?></strong> <?php echo $rInfo->products_name; ?><br>
-              <b><?php echo ENTRY_FROM; ?></b> <?php echo $rInfo->customers_name; ?><br><br>
-              <b><?php echo ENTRY_DATE; ?></b> <?php echo zen_date_short($rInfo->date_added); ?></div>
-            <div class="col-sm-6 text-right"><?php echo zen_info_image($rInfo->products_image, $rInfo->products_name, SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT); ?></div>
-          </div>
-          <div class="form-group">
+            <strong><?php echo ENTRY_PRODUCT; ?></strong> <?php echo $rInfo->products_name; ?><br>
+            <strong><?php echo ENTRY_FROM; ?></strong> <?php echo $rInfo->customers_name; ?><br>
+            <strong><?php echo ENTRY_DATE; ?></strong> <?php echo zen_date_short($rInfo->date_added); ?><br>
               <?php echo zen_draw_label(ENTRY_REVIEW, 'reviews_text', 'class="control-label"'); ?>
-              <?php echo zen_draw_textarea_field('reviews_text', 'soft', '70', '15', htmlspecialchars(stripslashes($rInfo->reviews_text), ENT_COMPAT, CHARSET, TRUE), 'class="noEditor form-control"'); ?>
+              <?php echo zen_draw_textarea_field('reviews_text', 'soft', '70', '15', htmlspecialchars(stripslashes($rInfo->reviews_text), ENT_COMPAT, CHARSET, TRUE), 'class="noEditor form-control" id="reviews_text"'); ?>
           </div>
-          <div class="row text-right"><?php echo ENTRY_REVIEW_TEXT; ?></div>
+          <div class="row"><?php echo ENTRY_REVIEW_TEXT; ?></div>
         </div>
         <div class="row"><?php echo zen_draw_separator('pixel_trans.gif', '1', '10'); ?></div>
         <div class="row">
@@ -187,43 +185,30 @@ if (zen_not_null($action)) {
         }
         ?>
         <div class="row">
+            <div><?php echo zen_info_image($rInfo->products_image, $rInfo->products_name, SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT); ?></div>
             <?php echo zen_draw_form('update', FILENAME_REVIEWS, (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . (isset($_GET['status']) ? 'status=' . $_GET['status'] . '&' : '') . 'rID=' . $_GET['rID'] . '&action=update', 'post', 'enctype="multipart/form-data"'); ?>
-          <td>
-            <table border="0" width="100%" cellspacing="0" cellpadding="0">
-              <tr>
-                <td class="main" valign="top"><b><?php echo ENTRY_PRODUCT; ?></b> <?php echo $rInfo->products_name; ?><br><b><?php echo ENTRY_FROM; ?></b> <?php echo $rInfo->customers_name; ?><br><br><b><?php echo ENTRY_DATE; ?></b> <?php echo zen_date_short($rInfo->date_added); ?></td>
-                <td class="main" align="right" valign="top"><?php echo zen_info_image($rInfo->products_image, $rInfo->products_name, SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT); ?></td>
-              </tr>
-            </table>
-            </tr>
-          <tr>
-            <td>
-              <table width="100%" border="0" cellspacing="0" cellpadding="0">
-                <tr>
-                  <td valign="top" class="main"><b><?php echo ENTRY_REVIEW; ?></b><br><br><?php echo nl2br(zen_db_output(zen_break_string($rInfo->reviews_text, 15))); ?></td>
-                </tr>
-              </table>
-            </td>
-          </tr>
-          <tr>
-            <td><?php echo zen_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
-          </tr>
-          <tr>
-            <td class="main"><b><?php echo ENTRY_RATING; ?></b>&nbsp;<?php echo zen_image(DIR_WS_TEMPLATE_IMAGES . 'stars_' . $rInfo->reviews_rating . '.gif', sprintf(TEXT_OF_5_STARS, $rInfo->reviews_rating)); ?>&nbsp;<small>[<?php echo sprintf(TEXT_OF_5_STARS, $rInfo->reviews_rating); ?>]</small></td>
-          </tr>
-          <tr>
-            <td><?php echo zen_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
-          </tr>
+            <div class="main">
+                <strong><?php echo ENTRY_PRODUCT; ?></strong> <?php echo $rInfo->products_name; ?><br>
+                <strong><?php echo ENTRY_FROM; ?></strong> <?php echo $rInfo->customers_name; ?><br>
+                <strong><?php echo ENTRY_DATE; ?></strong> <?php echo zen_date_short($rInfo->date_added); ?>
+            </div>
+             <div class="main"><b><?php echo ENTRY_REVIEW; ?></b><br><br><?php echo nl2br(zen_db_output(zen_break_string($rInfo->reviews_text, 15))); ?></div>
+
+            <?php echo zen_draw_separator('pixel_trans.gif', '1', '10'); ?>
+
+            <div class="main"><b><?php echo ENTRY_RATING; ?></b>&nbsp;<?php echo zen_image(DIR_WS_TEMPLATE_IMAGES . 'stars_' . $rInfo->reviews_rating . '.gif', sprintf(TEXT_OF_5_STARS, $rInfo->reviews_rating)); ?>&nbsp;<small>[<?php echo sprintf(TEXT_OF_5_STARS, $rInfo->reviews_rating); ?>]</small></div>
+
+            <div><?php echo zen_draw_separator('pixel_trans.gif', '1', '10'); ?></div>
+
           <?php
           if (zen_not_null($_POST)) {
             /* Re-Post all POST'ed variables */
             foreach($_POST as $key => $value)
               echo zen_draw_hidden_field($key, $value);
             ?>
-            <tr>
-              <td align="right" class="smallText"><?php echo '<a href="' . zen_href_link(FILENAME_REVIEWS, (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . (isset($_GET['status']) ? 'status=' . $_GET['status'] . '&' : '') . 'rID=' . $rInfo->reviews_id . '&action=edit') . '">' . zen_image_button('button_back.gif', IMAGE_BACK) . '</a> ' . zen_image_submit('button_update.gif', IMAGE_UPDATE) . ' <a href="' . zen_href_link(FILENAME_REVIEWS, (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . (isset($_GET['status']) ? 'status=' . $_GET['status'] . '&' : '') . 'rID=' . $rInfo->reviews_id) . '">' . zen_image_button('button_cancel.gif', IMAGE_CANCEL) . '</a>'; ?></td>
+              <div class="smallText text-right"><?php echo '<a href="' . zen_href_link(FILENAME_REVIEWS, (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . (isset($_GET['status']) ? 'status=' . $_GET['status'] . '&' : '') . 'rID=' . $rInfo->reviews_id . '&action=edit') . '">' . zen_image_button('button_back.gif', IMAGE_BACK) . '</a> ' . zen_image_submit('button_update.gif', IMAGE_UPDATE) . ' <a href="' . zen_href_link(FILENAME_REVIEWS, (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . (isset($_GET['status']) ? 'status=' . $_GET['status'] . '&' : '') . 'rID=' . $rInfo->reviews_id) . '">' . zen_image_button('button_cancel.gif', IMAGE_CANCEL) . '</a>'; ?></div>
               </form>
-            </tr>
+
             <?php
           } else {
             if (isset($_GET['origin'])) {
@@ -234,9 +219,7 @@ if (zen_not_null($action)) {
               $back_url_params = (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . (isset($_GET['status']) ? 'status=' . $_GET['status'] . '&' : '') . 'rID=' . $rInfo->reviews_id;
             }
             ?>
-            <tr>
-              <td align="right"><?php echo '<a href="' . zen_href_link($back_url, $back_url_params, 'NONSSL') . '">' . zen_image_button('button_back.gif', IMAGE_BACK) . '</a>'; ?></td>
-            </tr>
+              <div class="text-right"><?php echo '<a href="' . zen_href_link($back_url, $back_url_params, 'NONSSL') . '">' . zen_image_button('button_back.gif', IMAGE_BACK) . '</a>'; ?></div>
             <?php
           }
           ?>
@@ -249,12 +232,16 @@ if (zen_not_null($action)) {
             <table class="table table-hover">
               <thead>
                 <tr class="dataTableHeadingRow">
-                  <th class="dataTableHeadingContent"><?php echo TABLE_HEADING_PRODUCTS; ?></th>
+                  <th class="dataTableHeadingContent"><?php echo TABLE_HEADING_MODEL; ?></th>
+                  <th class="dataTableHeadingContent"><?php echo TABLE_HEADING_PRODUCT; ?></th>
                   <th class="dataTableHeadingContent"><?php echo TABLE_HEADING_CUSTOMER_NAME; ?></th>
-                  <th class="dataTableHeadingContent" align="right"><?php echo TABLE_HEADING_RATING; ?></th>
-                  <th class="dataTableHeadingContent" align="right"><?php echo TABLE_HEADING_DATE_ADDED; ?></th>
-                  <th class="dataTableHeadingContent" align="center"><?php echo TABLE_HEADING_STATUS; ?></th>
-                  <th class="dataTableHeadingContent" align="right"><?php echo TABLE_HEADING_ACTION; ?></th>
+             <?php if (count($languages_array) > 1) {?>
+                    <th class="dataTableHeadingContent text-center"><?php echo TABLE_HEADING_LANGUAGE; ?></th>
+             <?php } ?>
+                  <th class="dataTableHeadingContent"><?php echo TABLE_HEADING_RATING; ?></th>
+                  <th class="dataTableHeadingContent text-center"><?php echo TABLE_HEADING_DATE_ADDED; ?></th>
+                  <th class="dataTableHeadingContent text-center"><?php echo TABLE_HEADING_STATUS; ?></th>
+                  <th class="dataTableHeadingContent text-right"><?php echo TABLE_HEADING_ACTION; ?></th>
                 </tr>
               </thead>
               <tbody>
@@ -271,18 +258,18 @@ if (zen_not_null($action)) {
                   }
 
                   if ($status_filter != '' && $status_filter > 0) {
-                    $search .= " and r.status=" . ((int)$status_filter - 1) . " ";
+                    $search .= " and r.status=" . ((int)$status_filter - 1);
                   }
 
-                  $order_by = " order by pd.products_name";
+	              $order_by = " order by r.status, r.date_added DESC";
 
-                  $reviews_query_raw = ("select r.*, rd.*, pd.*, p.*
+                  $reviews_query_raw = "select r.*, rd.*, pd.*, p.*
                                          from (" . TABLE_REVIEWS . " r
                                            left join " . TABLE_REVIEWS_DESCRIPTION . " rd on r.reviews_id = rd.reviews_id
                                            left join " . TABLE_PRODUCTS_DESCRIPTION . " pd on r.products_id = pd.products_id
                                              and pd.language_id ='" . (int)$_SESSION['languages_id'] . "'
                                            left join " . TABLE_PRODUCTS . " p on p.products_id= r.products_id)
-                                         where r.products_id = p.products_id " . $search . $order_by);
+                                         where r.products_id = p.products_id" . $search . $order_by;
 
 // reset page when page is unknown
                   if ((empty($_GET['page']) || $_GET['page'] == '1') && !empty($_GET['rID'])) {
@@ -306,7 +293,7 @@ if (zen_not_null($action)) {
                   $reviews = $db->Execute($reviews_query_raw);
                   foreach ($reviews as $review) {
                     if ((!isset($_GET['rID']) || (isset($_GET['rID']) && ($_GET['rID'] == $review['reviews_id']))) && !isset($rInfo)) {
-                      $reviews_text = $db->Execute("SELECT r.reviews_read, r.customers_name, length(rd.reviews_text) AS reviews_text_size
+                      $reviews_text = $db->Execute("SELECT r.reviews_read, r.customers_name, length(rd.reviews_text) AS reviews_text_size, rd.languages_id 
                                                     FROM " . TABLE_REVIEWS . " r,
                                                          " . TABLE_REVIEWS_DESCRIPTION . " rd
                                                     WHERE r.reviews_id = " . (int)$review['reviews_id'] . "
@@ -315,7 +302,10 @@ if (zen_not_null($action)) {
                       $products_image = $db->Execute("SELECT products_image
                                                       FROM " . TABLE_PRODUCTS . "
                                                       WHERE products_id = " . (int)$review['products_id']);
-
+	
+		             $products_model = $db->Execute("select products_model
+                                        from " . TABLE_PRODUCTS . "
+                                        where products_id = '" . (int)$review['products_id'] . "'");
 
                       $products_name = $db->Execute("SELECT products_name
                                        FROM " . TABLE_PRODUCTS_DESCRIPTION . "
@@ -326,41 +316,44 @@ if (zen_not_null($action)) {
                                          FROM " . TABLE_REVIEWS . "
                                          WHERE products_id = " . (int)$review['products_id']);
 
-                      $review_info = array_merge($reviews_text->fields, $reviews_average->fields, $products_name->fields);
+                      $review_info = array_merge($reviews_text->fields, $reviews_average->fields, $products_name->fields, $products_model->fields);
                       $rInfo_array = array_merge($review, $review_info, $products_image->fields);
                       $rInfo = new objectInfo($rInfo_array);
                     }
 
-                    if (isset($rInfo) && is_object($rInfo) && ($review['reviews_id'] == $rInfo->reviews_id)) {
-                      echo '              <tr id="defaultSelected" class="dataTableRowSelected" onclick="document.location.href=\'' . zen_href_link(FILENAME_REVIEWS, (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . (isset($_GET['status']) ? 'status=' . $_GET['status'] . '&' : '') . 'rID=' . $rInfo->reviews_id . '&action=preview') . '\'" role="button">' . "\n";
-                    } else {
-                      echo '              <tr class="dataTableRow" onclick="document.location.href=\'' . zen_href_link(FILENAME_REVIEWS, (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . (isset($_GET['status']) ? 'status=' . $_GET['status'] . '&' : '') . 'rID=' . $review['reviews_id']) . '\'" role="button">' . "\n";
-                    }
-                    ?>
+                    if (isset($rInfo) && is_object($rInfo) && ($review['reviews_id'] == $rInfo->reviews_id)) { ?>
+                      <tr id="defaultSelected" class="dataTableRowSelected" onclick="document.location.href='<?php echo zen_href_link(FILENAME_REVIEWS, (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . (isset($_GET['status']) ? 'status=' . $_GET['status'] . '&' : '') . 'rID=' . $rInfo->reviews_id . '&action=preview'); ?>'">
+                    <?php } else { ?>
+                      <tr class="dataTableRow" onclick="document.location.href='<?php echo zen_href_link(FILENAME_REVIEWS, (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . (isset($_GET['status']) ? 'status=' . $_GET['status'] . '&' : '') . 'rID=' . $review['reviews_id']) ?>'">
+                    <?php } ?>
+                <td class="dataTableContent" style="white-space:nowrap"><?php echo $reviews->fields['products_model']; ?></td>
                 <td class="dataTableContent"><?php echo '<a href="' . zen_href_link(FILENAME_REVIEWS, (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . (isset($_GET['status']) ? 'status=' . $_GET['status'] . '&' : '') . 'rID=' . $review['reviews_id'] . '&action=preview') . '">' . zen_image(DIR_WS_ICONS . 'preview.gif', ICON_PREVIEW) . '</a>&nbsp;' . zen_get_products_name($review['products_id']); ?></td>
                 <td class="dataTableContent"><?php echo $review['customers_name']; ?></td>
-                <td class="dataTableContent text-right"><?php echo zen_image(DIR_WS_TEMPLATE_IMAGES . 'stars_' . $review['reviews_rating'] . '.gif'); ?></td>
-                <td class="dataTableContent text-right"><?php echo zen_date_short($review['date_added']); ?></td>
+    <?php if (count($languages_array) > 1) { ?>
+                <td class="dataTableContent text-center"><?php echo zen_get_language_icon($review['languages_id']); ?></td>
+     <?php } ?>
+                <td class="dataTableContent"><?php echo zen_image(DIR_WS_TEMPLATE_IMAGES . 'stars_' . $review['reviews_rating'] . '.gif'); ?></td>
+                <td class="dataTableContent text-center"><?php echo zen_date_short($review['date_added']); ?></td>
                 <td  class="dataTableContent text-center">
                     <?php
                     if ($review['status'] == '1') {
                       echo zen_draw_form('setflag_products', FILENAME_REVIEWS, 'action=setflag&rID=' . $review['reviews_id'] . (isset($_GET['page']) ? '&page=' . $_GET['page'] : ''));
                       ?>
-                    <input type="image" src="<?php echo DIR_WS_IMAGES ?>icon_green_on.gif" title="<?php echo IMAGE_ICON_STATUS_ON; ?>" />
+                    <input type="image" src="<?php echo DIR_WS_IMAGES ?>icon_green_on.gif" title="<?php echo IMAGE_ICON_STATUS_ON; ?>" alt="<?php echo IMAGE_ICON_STATUS_ON; ?>"/>
                     <?php echo zen_draw_hidden_field('flag', '0'); ?>
                     <?php echo '</form>'; ?>
                     <?php
                   } else {
                     echo zen_draw_form('setflag_products', FILENAME_REVIEWS, 'action=setflag&rID=' . $review['reviews_id'] . (isset($_GET['page']) ? '&page=' . $_GET['page'] : ''));
                     ?>
-                    <input type="image" src="<?php echo DIR_WS_IMAGES ?>icon_red_on.gif" title="<?php echo IMAGE_ICON_STATUS_OFF; ?>" />
+                    <input type="image" src="<?php echo DIR_WS_IMAGES ?>icon_red_on.gif" title="<?php echo IMAGE_ICON_STATUS_OFF; ?>" alt="<?php echo IMAGE_ICON_STATUS_OFF; ?>"/>
                     <?php echo zen_draw_hidden_field('flag', '1'); ?>
                     <?php echo '</form>'; ?>
                     <?php
                   }
                   ?>
                 </td>
-                <td class="dataTableContent" align="right"><?php
+                <td class="dataTableContent text-right"><?php
                     if ((is_object($rInfo)) && ($review['reviews_id'] == $rInfo->reviews_id)) {
                       echo zen_image(DIR_WS_IMAGES . 'icon_arrow_right.gif');
                     } else {
@@ -392,11 +385,17 @@ if (zen_not_null($action)) {
                   if (isset($rInfo) && is_object($rInfo)) {
                     $heading[] = array('text' => '<h4>' . $rInfo->products_name . '</h4>');
 
-                    $contents[] = array('align' => 'text-center', 'text' => '<a href="' . zen_href_link(FILENAME_REVIEWS, (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . (isset($_GET['status']) ? 'status=' . $_GET['status'] . '&' : '') . 'rID=' . $rInfo->reviews_id . '&action=edit') . '" class="btn btn-primary" role="button">' . IMAGE_EDIT . '</a> <a href="' . zen_href_link(FILENAME_REVIEWS, (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . (isset($_GET['status']) ? 'status=' . $_GET['status'] . '&' : '') . 'rID=' . $rInfo->reviews_id . '&action=delete') . '" class="btn btn-warning" role="button">' . IMAGE_DELETE . '</a> ' . ' <a href="' . zen_href_link(FILENAME_PRODUCT, 'cPath=' . zen_get_products_category_id($rInfo->products_id) . '&pID=' . $rInfo->products_id) . '" class="btn btn-default" role="button">' . IMAGE_DETAILS . '</a>');
+                    $contents[] = array('align' => 'text-center', 'text' => 
+					    '<a href="' . zen_href_link(FILENAME_REVIEWS, (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . (isset($_GET['status']) ? 'status=' . $_GET['status'] . '&' : '') . 'rID=' . $rInfo->reviews_id . '&action=edit') . '" class="btn btn-primary" role="button">' . TEXT_EDIT_REVIEW . '</a> ' .
+                        '<a href="' . zen_href_link(FILENAME_REVIEWS, (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . (isset($_GET['status']) ? 'status=' . $_GET['status'] . '&' : '') . 'rID=' . $rInfo->reviews_id . '&action=delete') . '" class="btn btn-warning" role="button">' . TEXT_DELETE_REVIEW . '</a> ' .
+                        '<a target="_blank" href="' . zen_catalog_href_link(FILENAME_PRODUCT_REVIEWS_INFO, 'products_id=' . $rInfo->products_id . '&reviews_id=' . $rInfo->reviews_id) . '" class="btn btn-default" role="button">' . TEXT_VIEW_REVIEW . '</a> ' .
+                        '<a href="' . zen_href_link(FILENAME_PRODUCT, 'cPath=' . zen_get_products_category_id($rInfo->products_id) . '&pID=' . $rInfo->products_id . '&action=new_product') . '" class="btn btn-default" role="button">' . TEXT_EDIT_PRODUCT . '</a>');
+
                     $contents[] = array('text' => '<br>' . TEXT_INFO_DATE_ADDED . ' ' . zen_date_short($rInfo->date_added));
                     if (zen_not_null($rInfo->last_modified))
                       $contents[] = array('text' => TEXT_INFO_LAST_MODIFIED . ' ' . zen_date_short($rInfo->last_modified));
                     $contents[] = array('text' => '<br>' . zen_info_image($rInfo->products_image, $rInfo->products_name, SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT));
+                    $contents[] = array('text' => '<br>' . ENTRY_REVIEW . '<br>' . $rInfo->reviews_text);
                     $contents[] = array('text' => '<br>' . TEXT_INFO_REVIEW_AUTHOR . ' ' . $rInfo->customers_name);
                     $contents[] = array('text' => TEXT_INFO_REVIEW_RATING . ' ' . zen_image(DIR_WS_TEMPLATE_IMAGES . 'stars_' . $rInfo->reviews_rating . '.gif'));
                     $contents[] = array('text' => TEXT_INFO_REVIEW_READ . ' ' . $rInfo->reviews_read);
