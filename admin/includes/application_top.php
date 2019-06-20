@@ -28,21 +28,6 @@ define('IS_ADMIN_FLAG', true);
  */
 // Start the clock for the page parse time log
 define('PAGE_PARSE_START_TIME', microtime());
-/**
- * set the level of error reporting
- *
- * Note STRICT_ERROR_REPORTING should never be set to true on a production site. <br />
- * It is mainly there to show php warnings during testing/bug fixing phases.<br />
- * note for strict error reporting we also turn on show_errors as this may be disabled<br />
- * in php.ini. Otherwise we respect the php.ini setting
- *
- */
-if (defined('STRICT_ERROR_REPORTING') && STRICT_ERROR_REPORTING == true) {
-  @ini_set('display_errors', TRUE);
-  error_reporting(E_ALL); 
-} else {
-  error_reporting(0);
-}
 // set php_self in the local scope
 if (!isset($PHP_SELF)) $PHP_SELF = $_SERVER['SCRIPT_NAME'];
 $PHP_SELF = htmlspecialchars($PHP_SELF);
@@ -73,6 +58,21 @@ if (file_exists('includes/configure.php')) {
    * load the main configure file.
    */
   include('includes/configure.php');
+}
+/**
+ * set the level of error reporting
+ *
+ * Note STRICT_ERROR_REPORTING should never be set to true on a production site. <br />
+ * It is mainly there to show php warnings during testing/bug fixing phases.<br />
+ * note for strict error reporting we also turn on show_errors as this may be disabled<br />
+ * in php.ini. Otherwise we respect the php.ini setting
+ *
+ */
+if (defined('STRICT_ERROR_REPORTING') && STRICT_ERROR_REPORTING == true) {
+  @ini_set('display_errors', TRUE);
+  error_reporting(E_ALL); 
+} else {
+  error_reporting(0);
 }
 if (!defined('DIR_FS_CATALOG') || !is_dir(DIR_FS_CATALOG.'/includes/classes') || !defined('DB_TYPE') || DB_TYPE == '') {
   if (file_exists('../includes/templates/template_default/templates/tpl_zc_install_suggested_default.php')) {
