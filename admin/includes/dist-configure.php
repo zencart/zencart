@@ -87,9 +87,13 @@ define('SESSION_STORAGE', 'temporary value added by zc_install');
  * Advanced use only:
  * The following are OPTIONAL, and should NOT be set unless you intend to change their normal use. Most sites will leave these untouched.
  * To use them, uncomment AND add a proper defined value to them.
+ * For security, it is recommended to put DIR_FS_BACKUP and DIR_FS_DOWNLOAD 
+ * ABOVE your public_html folder, e.g. 
+ * define('DIR_FS_BACKUP', '/var/www/vhost/accountname/backups/');
  */
 // define('DIR_FS_SQL_CACHE' ...
 // define('DIR_FS_DOWNLOAD' ...
+// define('DIR_FS_BACKUP' ...
 // define('DIR_FS_LOGS' ...
 
 // End Of File
