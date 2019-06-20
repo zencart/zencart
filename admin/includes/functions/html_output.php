@@ -300,14 +300,14 @@
   }
 
   /**
-   * Output a form pull down menu
-   * @param string $name name
-   * @param array $values values
-   * @param string $default default value
-   * @param string $parameters parameters
-   * @param boolean $required required
-   * @return string
-   */
+ * Output a form pull down menu
+ * @param string $name name
+ * @param array $values values
+ * @param string $default default value
+ * @param string $parameters parameters
+ * @param boolean $required required
+ * @return string
+ */
 function zen_draw_pull_down_menu($name, $values, $default = '', $parameters = '', $required = false)
 {
 //    $field = '<select name="' . zen_output_string($name) . '"';
@@ -339,6 +339,7 @@ function zen_draw_pull_down_menu($name, $values, $default = '', $parameters = ''
 
   return $field;
 }
+
 ////
 // Hide form elements
   function zen_hide_session_id() {
