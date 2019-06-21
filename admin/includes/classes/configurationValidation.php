@@ -14,12 +14,15 @@ if (!defined('IS_ADMIN_FLAG')) {
     die('Illegal Access');
 }
 
-if (!empty($_SESSION['language'])) {
-    require zen_get_file_directory(DIR_WS_LANGUAGES . $_SESSION['language'] . '/', 'configuration_validation.php', 'false');
-}
 
 class configurationValidation extends base
 {
+    public function __construct() {
+        if (!empty($_SESSION['language'])) {
+            require_once zen_get_file_directory(DIR_WS_LANGUAGES . $_SESSION['language'] . '/', 'configuration_validation.php', 'false');
+        }
+    }
+
     static public function sanitizeEmail(&$val) {
         $results = array();
         $send_email_array = array();
