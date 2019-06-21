@@ -240,7 +240,7 @@ if (!defined('USE_PCONNECT')) define('USE_PCONNECT', 'false');
 /**
  * Breakpoint 175.
  *
- * require('includes/init_includes/init_admin_history.php');
+ * require(DIR_WS_CLASSES . 'configurationValidation');
  *
  */
   $autoLoadConfig[175][] = array('autoType'=>'classInstantiate',
