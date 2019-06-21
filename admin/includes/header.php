@@ -10,6 +10,9 @@ if (!defined('IS_ADMIN_FLAG')) {
     die('Illegal Access');
 }
 
+if (defined('STRICT_ERROR_REPORTING') && STRICT_ERROR_REPORTING == true) {
+  $messageStack->add('STRICT ERROR REPORTING IS ON', 'error');
+}
 // pull in any necessary JS for the page
 require(DIR_WS_INCLUDES . 'javascript_loader.php');
 
