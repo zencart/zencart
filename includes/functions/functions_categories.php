@@ -268,7 +268,8 @@
 
   function zen_product_in_parent_category($product_id, $cat_id, $parent_cat_id) {
     global $db;
-//echo $cat_id . '#' . $parent_cat_id;
+
+    $in_cat = false;
     if ($cat_id == $parent_cat_id) {
       $in_cat = true;
     } else {
