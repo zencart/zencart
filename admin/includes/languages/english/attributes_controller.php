@@ -148,7 +148,6 @@ define('TABLE_TEXT_MAX_COUNT_SHORT', 'Max:');
   define('TEXT_PRODUCT_OPTIONS', '<strong>Please Choose:</strong>');
 
   define('TEXT_ATTRIBUTES_INSERT_INFO', '<strong>Define the Attribute Settings then press Insert to apply</strong>');
-  define('TEXT_PRICED_BY_ATTRIBUTES', 'Priced by Attributes');
   define('TEXT_PRODUCTS_PRICE', 'Products Price: ');
   define('TEXT_SPECIAL_PRICE', 'Special Price: ');
   define('TEXT_SALE_PRICE', 'Sale Price: ');
@@ -156,7 +155,6 @@ define('TABLE_TEXT_MAX_COUNT_SHORT', 'Max:');
   define('TEXT_CALL_FOR_PRICE', 'Call for Price');
   define('TEXT_SAVE_CHANGES','UPDATE AND SAVE CHANGES:');
 
-  define('TEXT_INFO_ID', 'ID#');
   define('TEXT_INFO_ALLOW_ADD_TO_CART_NO', 'No adding to cart');
 
   define('TEXT_DELETE_ATTRIBUTES_OPTION_NAME_VALUES', 'Confirm deletion of ALL of the Product Option Values for Option Name ...');
