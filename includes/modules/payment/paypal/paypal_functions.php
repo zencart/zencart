@@ -481,7 +481,7 @@
     ipn_debug_email('IPN INFO - POST VARS to be sent back (unsorted) for validation (using fsockopen): ' . "\n" . 'To: ' . $ssl . $web['host'] . ':' . $web['port'] . "\n" . $header . stripslashes(print_r($postback_array, true)));
 
     //Create paypal connection
-    if (MODULE_PAYMENT_PAYPAL_IPN_DEBUG == 'Yes') {
+    if (defined('MODULE_PAYMENT_PAYPAL_IPN_DEBUG') && MODULE_PAYMENT_PAYPAL_IPN_DEBUG == 'Yes') {
       $fp=fsockopen($ssl . $web['host'], $web['port'], $errnum, $errstr, 30);
     } else {
       $fp=@fsockopen($ssl . $web['host'], $web['port'], $errnum, $errstr, 30);
