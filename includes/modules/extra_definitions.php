@@ -29,7 +29,9 @@ foreach ($folderlist as $folder) {
         if (array_key_exists($file, $file_array)) {
           // skip name exists
         } else {
-          $file_array[$file] = $folder . $file;
+          if (preg_match('~^[^\._].*\.php$~i', $file) > 0) {
+             $file_array[$file] = $folder . $file;
+          }
         }
       }
     }
@@ -44,5 +46,5 @@ if (sizeof($file_array)) {
 $file_cnt=0;
 foreach ($file_array as $file => $include_file) { 
   $file_cnt++;
-  require($include_file);
+  include($include_file);
 }
