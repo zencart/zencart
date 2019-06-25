@@ -17,22 +17,15 @@ $column_right_display= $db->Execute("select layout_box_name from " . TABLE_LAYOU
 
 // safety row stop
 $box_cnt=0;
+$column_width = BOX_WIDTH_RIGHT;
 while (!$column_right_display->EOF and $box_cnt < 100) {
   $box_cnt++;
-  if ( file_exists(DIR_WS_MODULES . 'sideboxes/' . $column_right_display->fields['layout_box_name']) or file_exists(DIR_WS_MODULES . 'sideboxes/' . $template_dir . '/' . $column_right_display->fields['layout_box_name']) ) {
-?>
-<?php
-//$column_box_spacer = 'column_box_spacer_right';
-$column_width = BOX_WIDTH_RIGHT;
-if ( file_exists(DIR_WS_MODULES . 'sideboxes/' . $template_dir . '/' . $column_right_display->fields['layout_box_name']) ) {
-  $box_id = zen_get_box_id($column_right_display->fields['layout_box_name']);
-  require(DIR_WS_MODULES . 'sideboxes/' . $template_dir . '/' . $column_right_display->fields['layout_box_name']);
-} else {
-  $box_id = zen_get_box_id($column_right_display->fields['layout_box_name']);
-  require(DIR_WS_MODULES . 'sideboxes/' . $column_right_display->fields['layout_box_name']);
-}
-  } // file_exists
+  $box_file = zen_get_file_directory(DIR_WS_MODULES . 'sideboxes/', $column_right_display->fields['layout_box_name']); 
+  if (file_exists($box_file)) {
+    $box_id = zen_get_box_id($column_right_display->fields['layout_box_name']);
+    require($box_file); 
+  }
   $column_right_display->MoveNext();
-} // while column_right
+} 
 $box_id = '';
 ?>
