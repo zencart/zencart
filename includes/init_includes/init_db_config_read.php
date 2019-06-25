@@ -15,13 +15,18 @@ if (!defined('IS_ADMIN_FLAG')) {
 }
 
 $use_cache = (isset($_GET['nocache']) ? false : true ) ;
-$configuration = $db->Execute('select configuration_key as cfgkey, configuration_value as cfgvalue
+$configuration = $db->Execute('select configuration_key as cfgkey, configuration_value as cfgvalue, configuration_group_id  
                                  from ' . TABLE_CONFIGURATION, '', $use_cache, 150);
 while (!$configuration->EOF) {
   /**
  * dynamic define based on info read from DB
  */
-  define(strtoupper($configuration->fields['cfgkey']), $configuration->fields['cfgvalue']);
+  if ($configuration->fields['configuration_group_id'] == 2 || 
+    $configuration->fields['configuration_group_id'] == 3) { 
+    define(strtoupper($configuration->fields['cfgkey']), (int)$configuration->fields['cfgvalue']);
+  } else { 
+    define(strtoupper($configuration->fields['cfgkey']), $configuration->fields['cfgvalue']);
+  }
   $configuration->MoveNext();
 }
 $configuration = $db->Execute('select configuration_key as cfgkey, configuration_value as cfgvalue
