@@ -24,7 +24,7 @@ $folderlist = array($lang_extra_defs_dir_template, $lang_extra_defs_dir);
 foreach ($folderlist as $folder) { 
   $this_folder = DIR_FS_CATALOG . $folder; 
   if ($dir = @dir($this_folder)) {
-    while ($file = $dir->read()) {
+    while (false !== ($file = $dir->read())) {
       if (!is_dir($this_folder. $file)) {
         if (array_key_exists($file, $file_array)) {
           // skip name exists
