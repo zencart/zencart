@@ -1,16 +1,7 @@
-$Id: spiders.txt 2015-09-11 drbyte $
-bot
-robot
-crawl
-scrape
-seek.
-seeker
-slurp
-spider
-msnbot
+$Id: spiders.txt 2019-06-27 Shrimp-Gumbo $
 abcdatos
-acme
 accoona
+acme
 acoon
 adressendeutschland
 ahoy
@@ -35,9 +26,9 @@ aretha
 argus
 ariadne
 arks
+asaha
 ask jeeves
 askquickly
-asaha
 aspider
 aspseek
 asterias
@@ -60,6 +51,7 @@ bing
 bjaaland
 blackwidow
 blaiz
+blank
 blo.
 blog
 bloodhound
@@ -68,6 +60,7 @@ bonecho
 booch
 bordermanager
 borg-bot
+bot
 botlink
 boxseabot
 browsershots
@@ -79,8 +72,8 @@ ccubee
 cfetch
 changedetection
 charlotte
-checkbot
 check_http
+checkbot
 cherrypicker
 christcrawler
 churl
@@ -96,11 +89,13 @@ confuzzledbot
 converacrawler
 coolbot
 covario
+crawl
 crowsnest
 csci
 curl
 cyberspyder
 cydralspider
+datanyse
 dataparksearch
 depspid
 dienstspider
@@ -108,6 +103,7 @@ digger
 digimarc
 digital integrity robot
 direct hit grabber
+dispatch
 ditto
 dlvr.it
 dmoz
@@ -123,17 +119,17 @@ easybib
 ebin
 ecollector
 eit link verifier robot
-elfinbot
 ejupiter
+elfinbot
 emailcollector
 emailsiphon
 esculapio
-exabot
-extractor
 e-societyrobot
 evrinid
-falcon
+exabot
+extractor
 facebook
+falcon
 fast enterprise crawler
 fastbug
 fastcrawler
@@ -179,11 +175,11 @@ hambot
 harvest
 header_detector
 helix
+henrythemiragorobot
 heritrix
 holmes
 homer
 htdig
-henrythemiragorobot
 htmlgobble
 httpget
 httrack
@@ -208,8 +204,8 @@ inspectorbot
 intelliagentbot
 internet cruiser robot
 internet shinchakubin
-internetseer
 internetlinkagent
+internetseer
 irlbot
 irobot
 iron33
@@ -239,20 +235,21 @@ larbin
 libwww-mget
 libwww-perl
 limebot
-linkchecker
 link validator
+linkchecker
 linklint-checkonly
 linknzbot
 linkscan
 linkwalker
 lnspiderguy
 lockon
+ltx71
 lwp
 lycos_spider
 magpie
+mail.ru
 mantraagent
 mapoftheinternet
-mail.ru
 mattiebot
 mediafox
 mediapartners
@@ -262,29 +259,30 @@ metacarta
 metagerbot
 metauri
 mff
-url control
 mindcrawler
 minirank
 miva
+mixnodecache
 mj12bot
 mnogosearch
 moget
 momspider
 monsterbot
 msiecrawler
+msnbot
 msproxy
 muncher bot
 muninn
 muscatferret
 mysterybot
 myweb
-nationaldirectory
 nameprotect
-nazilla
-ncsa
+nationaldirectory
 naverbot
 naverbot_dloader
 naverrobot
+nazilla
+ncsa
 ndspider
 nec-meshexplorer
 nederland.zoek
@@ -345,20 +343,21 @@ pipeliner
 plumtreewebaccessor
 polybot
 pompos
-poppelsdorf
-psycheclone
-publisher
-python
 poodle predictor
+poppelsdorf
 poppi
 popular iconoclast
 portal juice spider
 portal manager
 portalb spider
 psbot
+psycheclone
+publisher
+python
 python robot
 qseero
 quepasacreep
+qwantify
 rambler
 raven search
 rbse spider
@@ -377,17 +376,21 @@ robot francoroute
 robozilla
 roverbot
 rpt-httpclient
+ruby
 safaribookmarkchecker
 safetynet robot
 salty
 sbider
 scooter
 scout
+scrape
 screenshot
 scrubby
 search agent
 search.aus-au.com
 searchprocess
+seek.
+seeker
 senrigan
 sensis
 seobility
@@ -404,10 +407,11 @@ sift
 simmany
 sitemaps
 sitetech-rover
-slider.com
 skymob.com
 slcrawler
 sleek
+slider.com
+slurp
 smart spider
 snappy
 snooper
@@ -416,6 +420,7 @@ solbot
 speedfind
 speedy
 sphider
+spider
 spinner
 spry wizard robot
 spurlbot
@@ -455,6 +460,7 @@ ultraseek
 unchaos_crawler
 unwind
 uptimebot
+url control
 urlstat
 usyd-nlp-spider
 vagabondo
@@ -473,6 +479,8 @@ walhello appie
 wallpaper
 watchmouse
 wauuu
+web hoper
+web hopper
 webalgo
 webbandit
 webcatcher
@@ -480,9 +488,6 @@ webcopy
 webcore / roots
 webfetcher
 webfoot
-web hoper
-web hopper
-web-sniffer
 webimages
 webinator
 webinator-indexer
@@ -498,6 +503,7 @@ webreaper
 websauger
 websearch
 websnarf
+web-sniffer
 webspider
 webstolperer
 webvac
