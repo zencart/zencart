@@ -23,7 +23,7 @@ while (!$column_right_display->EOF and $box_cnt < 100) {
 ?>
 <?php
 //$column_box_spacer = 'column_box_spacer_right';
-$column_width = BOX_WIDTH_RIGHT;
+$column_width = (int)BOX_WIDTH_RIGHT;
 if ( file_exists(DIR_WS_MODULES . 'sideboxes/' . $template_dir . '/' . $column_right_display->fields['layout_box_name']) ) {
   $box_id = zen_get_box_id($column_right_display->fields['layout_box_name']);
   require(DIR_WS_MODULES . 'sideboxes/' . $template_dir . '/' . $column_right_display->fields['layout_box_name']);

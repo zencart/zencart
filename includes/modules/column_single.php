@@ -23,9 +23,9 @@ while (!$column_single_display->EOF and $box_cnt < 100) {
 <?php
 //$column_box_spacer = 'column_box_spacer_single';
 if (defined('BOX_WIDTH_SINGLE')) {
-  $column_width = BOX_WIDTH_SINGLE;
+  $column_width = (int)BOX_WIDTH_SINGLE;
 } else {
-  $column_width = BOX_WIDTH_LEFT;
+  $column_width = (int)BOX_WIDTH_LEFT;
 }
 if ( file_exists(DIR_WS_MODULES . 'sideboxes/' . $template_dir . '/' . $column_single_display->fields['layout_box_name']) ) {
   $box_id = zen_get_box_id($column_single_display->fields['layout_box_name']);
