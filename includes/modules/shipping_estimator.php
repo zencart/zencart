@@ -133,6 +133,7 @@ if ($_SESSION['cart']->count_contents() > 0) {
   $selected_address = $sendto;
   // eo shipping cost
   // check free shipping based on order $total
+  $free_shipping = false;
   if ( defined('MODULE_ORDER_TOTAL_SHIPPING_FREE_SHIPPING') && (MODULE_ORDER_TOTAL_SHIPPING_FREE_SHIPPING == 'true')) {
     switch (MODULE_ORDER_TOTAL_SHIPPING_DESTINATION) {
       case 'national':
@@ -145,14 +146,11 @@ if ($_SESSION['cart']->count_contents() > 0) {
       default:
       $pass = false; break;
     }
-    $free_shipping = false;
     if ( ($pass == true) && ($_SESSION['cart']->show_total() >= MODULE_ORDER_TOTAL_SHIPPING_FREE_SHIPPING_OVER)) {
       $free_shipping = true;
       include(zen_get_file_directory(DIR_FS_CATALOG . DIR_WS_LANGUAGES . $_SESSION['language'] . '/modules/order_total/', 'ot_shipping.php', 'false'));
     }
-  } else {
-    $free_shipping = false;
-  }
+  } 
   // begin shipping cost
   if(!$free_shipping && $_SESSION['cart']->get_content_type() !== 'virtual'){
     if (!empty($_POST['scid'])){
