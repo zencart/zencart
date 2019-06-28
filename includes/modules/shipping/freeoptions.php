@@ -41,7 +41,7 @@
             $check_flag = true;
             break;
           }
-		  $check->MoveNext();
+          $check->MoveNext();
         }
 
         if ($check_flag == false) {
