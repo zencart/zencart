@@ -64,14 +64,14 @@ class configurationValidation extends base
                 
                 // If the email address is not assigned, but there is content in the name, validate that the name is a correct email address.
                 if ($results[$key]['send_to_email'] === false && !empty($results[$key]['send_to_name'])) {
-                  $results[$key]['send_to_name'] = filter_var($results[$key]['send_to_name'], FILTER_VALIDATE_EMAIL, $options);
+                    $results[$key]['send_to_name'] = filter_var($results[$key]['send_to_name'], FILTER_VALIDATE_EMAIL, $options);
                 }
                 
                 // Remove array parameters that have failed validation.
                 foreach ($results[$key] as $key2 => $value2) {
-                      if (empty($value2)) {
-                          unset($results[$key][$key2]);
-                      }
+                    if (empty($value2)) {
+                        unset($results[$key][$key2]);
+                    }
                 }
                 unset($key2, $value2);
                 
