@@ -18,8 +18,10 @@ $var_linksList = array();
 // test if bar should display:
 if (EZPAGES_STATUS_HEADER == '1' || (EZPAGES_STATUS_HEADER == '2' && (strstr(EXCLUDE_ADMIN_IP_FOR_MAINTENANCE, $_SERVER['REMOTE_ADDR'])))) {
 
-  if (defined('TABLE_EZPAGES_CONTENT')) { 
-    $pages_query = $db->Execute("SELECT e.pages_id, e.page_open_new_window, e.page_is_ssl, e.alt_url, e.alt_url_external, e.toc_chapter, ec.pages_title
+  if (!$sniffer->table_exists(TABLE_EZPAGES_CONTENT)) {
+    return; // early exit; db not upgraded
+  }
+  $pages_query = $db->Execute("SELECT e.pages_id, e.page_open_new_window, e.page_is_ssl, e.alt_url, e.alt_url_external, e.toc_chapter, ec.pages_title
                               FROM  " . TABLE_EZPAGES . " e,
                                     " . TABLE_EZPAGES_CONTENT . " ec
                               WHERE e.pages_id = ec.pages_id
@@ -28,10 +30,6 @@ if (EZPAGES_STATUS_HEADER == '1' || (EZPAGES_STATUS_HEADER == '2' && (strstr(EXC
                               AND e.header_sort_order > 0
                               ORDER BY e.header_sort_order, ec.pages_title");
 
-  } else {
-    // Failing query 
-    $pages_query = $db->Execute("SELECT * FROM " . TABLE_EZPAGES . " WHERE pages_id < 0"); 
-  }
   if ($pages_query->RecordCount()>0) {
     $rows = 0;
     $page_query_list_header = array();

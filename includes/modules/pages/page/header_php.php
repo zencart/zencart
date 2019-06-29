@@ -28,17 +28,15 @@ $chapter_id = isset($_GET['chapter']) ? (int)$_GET['chapter'] : 0;
 $chapter_link = isset($_GET['chapter']) ? (int)$_GET['chapter'] : 0;
 
 
-if (defined('TABLE_EZPAGES_CONTENT')) { 
-  $sql = "SELECT e.*, ec.*
+if (!$sniffer->table_exists(TABLE_EZPAGES_CONTENT)) {
+  return; // early exit; db not upgraded
+}
+$sql = "SELECT e.*, ec.*
         FROM  " . TABLE_EZPAGES . " e,
               " . TABLE_EZPAGES_CONTENT . " ec
         WHERE e.pages_id = ec.pages_id
         AND ec.languages_id = '" . (int)$_SESSION['languages_id'] . "'
         AND e.pages_id = " . (int)$ezpage_id;
-} else {
-  // Failing query 
-  $sql= $db->Execute("SELECT * FROM " . TABLE_EZPAGES . " WHERE pages_id < 0"); 
-}
 // comment the following line to allow access to pages which don't have a status switch set to Yes:
 $sql .= " AND (status_toc > 0 or status_header > 0 or status_sidebox > 0 or status_footer > 0 or status_visible > 0)";
 
