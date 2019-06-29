@@ -136,7 +136,6 @@ esculapio
 e-societyrobot
 evrinid
 exabot
-exabot
 exb language crawler
 extractor
 facebook
