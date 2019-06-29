@@ -16,7 +16,8 @@
     if (isset($var_linksList)) {
       unset($var_linksList);
     }
-    $pages_query = $db->Execute("SELECT e.*, ec.*
+    if (defined('TABLE_EZPAGES_CONTENT')) { 
+      $pages_query = $db->Execute("SELECT e.*, ec.*
                                 FROM " . TABLE_EZPAGES . " e,
                                      " . TABLE_EZPAGES_CONTENT . " ec
                                 WHERE e.pages_id = ec.pages_id
@@ -24,6 +25,10 @@
                                 AND e.status_sidebox = 1
                                 AND e.sidebox_sort_order > 0
                                 ORDER BY e.sidebox_sort_order, ec.pages_title");
+    } else {
+      // Failing query 
+      $pages_query = $db->Execute("SELECT * FROM " . TABLE_EZPAGES . " WHERE pages_id < 0"); 
+    }
     if ($pages_query->RecordCount()>0) {
       $title =  BOX_HEADING_EZPAGES;
       $box_id =  'ezpages';
