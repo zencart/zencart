@@ -1,10 +1,13 @@
 $Id: spiders.txt 2019-06-27 Shrimp-Gumbo $
+360spider
 abcdatos
 accoona
 acme
 acoon
+admantx
 adressendeutschland
 ahoy
+ahrefs
 akula
 alexa
 alkaline
@@ -22,6 +25,7 @@ arale
 araneo
 araybot
 architext
+archive.org_bot
 aretha
 argus
 ariadne
@@ -48,6 +52,7 @@ bdfetch
 becomebot
 big brother
 bing
+bitlybot
 bjaaland
 blackwidow
 blaiz
@@ -103,11 +108,14 @@ digger
 digimarc
 digital integrity robot
 direct hit grabber
+discobot
+discordbot
 dispatch
 ditto
 dlvr.it
 dmoz
 dnabot
+dotbot
 dotsemantic
 download express
 dragonbot
@@ -123,20 +131,26 @@ ejupiter
 elfinbot
 emailcollector
 emailsiphon
+envolk
 esculapio
 e-societyrobot
 evrinid
 exabot
+exabot
+exb language crawler
 extractor
 facebook
 falcon
 fast enterprise crawler
+fast metaweb crawler
 fastbug
 fastcrawler
 fast-webcrawler
 feedfetcher
+feedly
 fetchrover
 filangy
+findlinks
 findlinks
 fish search
 flipboard
@@ -164,6 +178,7 @@ goldfire server
 golem
 google
 gralon
+grapeshotcrawler
 grapnel
 greywyvern
 griffon
@@ -222,6 +237,7 @@ jobot
 joebot
 jubii indexing robot
 jumpstation
+jyxobot
 katipo
 kilroy
 kit-fireball
@@ -231,12 +247,15 @@ kretrieve
 kumkie
 labelgrabber
 lachesis
+lanshanbot
 larbin
+librabot
 libwww-mget
 libwww-perl
 limebot
 link validator
 linkchecker
+linkedinbot
 linklint-checkonly
 linknzbot
 linkscan
@@ -251,8 +270,10 @@ mail.ru
 mantraagent
 mapoftheinternet
 mattiebot
+meanpathbot
 mediafox
 mediapartners
+megaindex
 mercator
 merzscope
 metacarta
@@ -294,6 +315,7 @@ netmechanic
 netnosecrawler
 netresearchserver
 netscoop
+netseer
 newscan-online
 nextgensearchbot
 ng-search
@@ -314,6 +336,7 @@ ocelli
 omni
 onetszukaj
 online link
+onpagebot
 ontospider
 openbot
 openfind
@@ -350,6 +373,7 @@ popular iconoclast
 portal juice spider
 portal manager
 portalb spider
+proximic
 psbot
 psycheclone
 publisher
@@ -362,6 +386,7 @@ rambler
 raven search
 rbse spider
 readability
+renlifangbot
 resume robot
 riddler
 rixbot
@@ -381,6 +406,7 @@ safaribookmarkchecker
 safetynet robot
 salty
 sbider
+scirus
 scooter
 scout
 scrape
@@ -409,6 +435,7 @@ simmany
 sitemaps
 sitetech-rover
 skymob.com
+slackbot
 slcrawler
 sleek
 slider.com
@@ -416,8 +443,10 @@ slurp
 smart spider
 snappy
 snooper
+sogou
 sohu
 solbot
+sosospider
 speedfind
 speedy
 sphider
@@ -439,6 +468,7 @@ tach black widow
 tarantula
 tarspider
 techbot
+telegrambot
 templeton
 teoma
 theophrastus
@@ -455,6 +485,7 @@ turnitinbot
 tutorgigbot
 twiceler
 twisted
+twitterbot
 ucsd crawl
 udmsearch
 ultraseek
@@ -531,6 +562,7 @@ xget
 xift
 xirq
 xyleme
+y!j-asr
 yacybot
 yahoo! slurp
 yahoocache
@@ -545,5 +577,6 @@ zao/0
 zao-crawler
 zermelo
 zipppbot
+zoominfobot
 zoomspider
 zyborg
