@@ -17,6 +17,10 @@ $var_linksList = array();
 
 // test if bar should display:
 if (EZPAGES_STATUS_FOOTER == '1' || (EZPAGES_STATUS_FOOTER == '2' && (strstr(EXCLUDE_ADMIN_IP_FOR_MAINTENANCE, $_SERVER['REMOTE_ADDR'])))) {
+
+  if (!$sniffer->table_exists(TABLE_EZPAGES_CONTENT)) {
+    return; // early exit; db not upgraded
+  }
   $pages_query = $db->Execute("SELECT e.pages_id, e.page_open_new_window, e.page_is_ssl, e.alt_url, e.alt_url_external, e.toc_chapter, ec.pages_title
                               FROM  " . TABLE_EZPAGES . " e,
                                     " . TABLE_EZPAGES_CONTENT . " ec

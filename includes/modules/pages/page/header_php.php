@@ -27,6 +27,10 @@ if ($ezpage_id == 0) {
 $chapter_id = isset($_GET['chapter']) ? (int)$_GET['chapter'] : 0;
 $chapter_link = isset($_GET['chapter']) ? (int)$_GET['chapter'] : 0;
 
+
+if (!$sniffer->table_exists(TABLE_EZPAGES_CONTENT)) {
+  return; // early exit; db not upgraded
+}
 $sql = "SELECT e.*, ec.*
         FROM  " . TABLE_EZPAGES . " e,
               " . TABLE_EZPAGES_CONTENT . " ec
