@@ -35,7 +35,7 @@ class configurationValidation extends base
                          'options' => array(
                                       'default' => false,
                                       ),
-                         'flags' => array(''),
+                         'flags' => '',
                          );
         
         if (isset($val)) {
