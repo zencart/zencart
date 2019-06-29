@@ -384,6 +384,7 @@ sbider
 scooter
 scout
 scrape
+scrapy
 screenshot
 scrubby
 search agent
