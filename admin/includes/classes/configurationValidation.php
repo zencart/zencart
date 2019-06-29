@@ -100,4 +100,35 @@ class configurationValidation extends base
         return $GLOBALS['configuration_value'] = $final_result;
     }
     
+    
+    /**
+     *  Usage setting val_function  for the configuration key to something similar
+     *    to the below will call on this code to support storage of the boolean related value.
+     *    val_function = '{"error":"TEXT_BOOLEAN_VALIDATE","id":"FILTER_CALLBACK","options":{"options":["configurationValidation","sanitizeBoolean"]}}'
+     **/
+    static public function sanitizeBoolean(&$val) {
+        $options = array(
+                         'options' => array(
+                                      'default' => null,
+                                      ),
+                         'flags' => FILTER_NULL_ON_FAILURE,
+                         );
+        
+        // If the value is truly a boolean response then need to not return false, but need to update
+        //   the value as false and allow the change.  If the value is not a boolean, then need
+        //   to return false so that it is not permitted.
+        $result = filter_var($val, FILTER_VALIDATE_BOOLEAN, $options);
+
+        // $val is not identified as a valid Boolean type result.
+        if (null === $result) {
+            return false;
+        }
+        
+        $GLOBALS['configuration_value'] = $val;
+        
+        // Based on processing of filter_var on FILTER_VALIDATE_BOOLEAN that result
+        //   in a return of true/false for the boolean value with
+        //   null if it is not boolean.
+        return is_bool($result);
+    }
 }//end of class
