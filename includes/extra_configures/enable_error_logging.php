@@ -19,8 +19,25 @@ if (!defined('IS_ADMIN_FLAG')) {
 function zen_debug_error_handler($errno, $errstr, $errfile, $errline) 
 {
     if (!(error_reporting() & $errno)) {
+        return;
+    }
+
+//-bof-report_all_errors-lat9  *** 1 of 1 ***
+    $ignore_dups = false;
+    if (IS_ADMIN_FLAG === true) {
+        $ignore_dups = (defined('REPORT_ALL_ERRORS_ADMIN') && REPORT_ALL_ERRORS_ADMIN == 'IgnoreDups');
+    } else {
+        $ignore_dups = (defined('REPORT_ALL_ERRORS_STORE') && REPORT_ALL_ERRORS_STORE == 'IgnoreDups');
+    }
+    
+    if ($ignore_dups && preg_match('#Constant .* already defined#', $errstr)) {
+        return true;
+    }
+
+    if (($errno == E_NOTICE || $errno == E_USER_NOTICE) && defined('REPORT_ALL_ERRORS_NOTICE_BACKTRACE') && REPORT_ALL_ERRORS_NOTICE_BACKTRACE == 'No') {
         return false;
     }
+//-eof-report_all_errors-lat9  *** 1 of 1 ***
 
     switch ($errno) {
         case E_NOTICE:
