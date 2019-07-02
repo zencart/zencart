@@ -647,70 +647,85 @@ function zen_catalog_href_link($page = '', $parameters = '', $connection = 'NONS
     }
   }
 
-/*
+  /**
  *  Output a form pull down menu
  *  Pulls values from a passed array, with the indicated option pre-selected
+ * @param string $name name
+ * @param array $values values
+ * @param string $default default value
+ * @param string $parameters parameters
+ * @param boolean $required required
+ * @return string
  */
-  function zen_draw_pull_down_menu($name, $values, $default = '', $parameters = '', $required = false) {
-    // -----
-    // Give an observer the opportunity to **totally** override this function's operation.
-    //
-    $field = false;
-    $GLOBALS['zco_notifier']->notify(
-        'NOTIFY_ZEN_DRAW_PULL_DOWN_MENU_OVERRIDE',
-        array(
-            'name' => $name,
-            'values' => $values,
-            'default' => $default,
-            'parameters' => $parameters,
-            'required' => $required,
-        ),
-        $field
-    );
-    if ($field !== false) {
-        return $field;
-    }
-    
-    $field = '<select';
-
-    if (!strstr($parameters, 'id=')) $field .= ' id="select-'.zen_output_string($name).'"';
-
-    $field .= ' name="' . zen_output_string($name) . '"';
-
-    if (zen_not_null($parameters)) $field .= ' ' . $parameters;
-
-    $field .= '>' . "\n";
-
-    if (empty($default) && isset($GLOBALS[$name]) && is_string($GLOBALS[$name]) ) $default = stripslashes($GLOBALS[$name]);
-
-    for ($i=0, $n=sizeof($values); $i<$n; $i++) {
-      $field .= '  <option value="' . zen_output_string($values[$i]['id']) . '"';
-      if ($default == $values[$i]['id']) {
-        $field .= ' selected="selected"';
-      }
-
-      $field .= '>' . zen_output_string($values[$i]['text'], array('"' => '&quot;', '\'' => '&#039;', '<' => '&lt;', '>' => '&gt;')) . '</option>' . "\n";
-    }
-    $field .= '</select>' . "\n";
-
-    if ($required == true) $field .= TEXT_FIELD_REQUIRED;
-    
-    // -----
-    // Give an observer the chance to make modifications to the just-rendered field.
-    //
-    $GLOBALS['zco_notifier']->notify(
-        'NOTIFY_ZEN_DRAW_PULL_DOWN_MENU',
-        array(
-            'name' => $name,
-            'values' => $values,
-            'default' => $default,
-            'parameters' => $parameters,
-            'required' => $required,
-        ),
-        $field
-    );
+function zen_draw_pull_down_menu($name, $values, $default = '', $parameters = '', $required = false)
+{
+  // -----
+  // Give an observer the opportunity to **totally** override this function's operation.
+  //
+  $field = false;
+  $GLOBALS['zco_notifier']->notify(
+      'NOTIFY_ZEN_DRAW_PULL_DOWN_MENU_OVERRIDE',
+      array(
+        'name' => $name,
+        'values' => $values,
+        'default' => $default,
+        'parameters' => $parameters,
+        'required' => $required,
+      ),
+      $field
+  );
+  if ($field !== false) {
     return $field;
   }
+
+  $field = '<select';
+
+  if (!strstr($parameters, 'id=')) {
+    $field .= ' id="select-' . zen_output_string($name) . '"';
+  }
+
+  $field .= ' name="' . zen_output_string($name) . '"';
+
+  if (zen_not_null($parameters)) {
+    $field .= ' ' . $parameters;
+  }
+
+  $field .= '>' . "\n";
+
+  if (empty($default) && isset($GLOBALS[$name]) && is_string($GLOBALS[$name])) {
+    $default = stripslashes($GLOBALS[$name]);
+  }
+
+  foreach ($values as $value) {
+    $field .= '  <option value="' . zen_output_string($value['id']) . '"';
+    if ($default == $value['id']) {
+      $field .= ' selected="selected"';
+    }
+
+    $field .= '>' . zen_output_string($value['text'], array('"' => '&quot;', '\'' => '&#039;', '<' => '&lt;', '>' => '&gt;')) . '</option>' . "\n";
+  }
+  $field .= '</select>' . "\n";
+
+  if ($required == true) {
+    $field .= TEXT_FIELD_REQUIRED;
+  }
+
+  // -----
+  // Give an observer the chance to make modifications to the just-rendered field.
+  //
+  $GLOBALS['zco_notifier']->notify(
+      'NOTIFY_ZEN_DRAW_PULL_DOWN_MENU',
+      array(
+        'name' => $name,
+        'values' => $values,
+        'default' => $default,
+        'parameters' => $parameters,
+        'required' => $required,
+      ),
+      $field
+  );
+  return $field;
+}
 
 /*
  * Creates a pull-down list of countries
