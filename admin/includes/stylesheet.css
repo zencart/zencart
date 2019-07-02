@@ -1,4 +1,4 @@
-/**
+/** //steve edits
  * @package admin
  * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
@@ -143,9 +143,8 @@ body#login {
 body#login .button {
     cursor: pointer;
     padding: 5px 20px;
-    margin-top: 10px;
     background: #fff;
-    border: 0px;
+    border: 0;
     font-weight: bold;
     margin: 5px;
 }
@@ -182,7 +181,7 @@ body#login legend {
     margin: 20px;
 }
 
-checkbox, input, radio, select, textarea, file {
+input, select, textarea {
     font-size: 11px;
 }
 .infoBoxContent input {margin: 1px 2px;}
@@ -282,7 +281,7 @@ tr.attributeBoxContent {
 }
 
 .row {
-    margin: 0px;
+    margin: 0;
 }
 
 .dataTableContent {
@@ -333,7 +332,6 @@ tr.attributeBoxContent {
 .dataTableRowOver {
     background-color: #ffffff;
     cursor: pointer;
-    cursor: hand;
 }
 
 .dataTableRowOverBot {
@@ -437,14 +435,22 @@ tr.attributeBoxContent {
 .oldPrice {
     text-decoration: line-through;
 }
-
-h1, .pageHeading {
-    color: #333; /*727272*/
-    font-size: 16px;
+h1, .h1, h2, .h2, h3, .h3 {
+    font-weight: bold;
+}
+h1, .h1, .pageHeading {
+    color: #333;
+    font-size: 18px;
     font-variant: small-caps;
     font-weight: bold;
 }
+h2, .h2 {
+    font-size:16px;
 
+}
+h3, .h3 {
+    font-size:14px;
+}
 .SaleMakerDisabled {
     background-color: #f0f1f1;
 }
@@ -452,13 +458,11 @@ h1, .pageHeading {
 .SaleMakerOver {
     background-color: #ffffff;
     cursor: pointer;
-    cursor: hand;
 }
 
 .SaleMakerSelected {
     background-color: #dee4e8;
     cursor: pointer;
-    cursor: hand;
 }
 
 div.copyrightrow {
@@ -554,9 +558,9 @@ label.error {
 }
 
 .adminRowButton {
-    padding: 0px;
-    margin: 0px;
-    border: 0px;
+    padding: 0;
+    margin: 0;
+    border: 0;
     background: inherit;
 }
 
@@ -684,7 +688,7 @@ img[src*="button_cancel"], img[src*="button_reset"]{
 
 .edit i.overlay:hover, .delete i.overlay:hover, .move i.overlay:hover, .copy i.overlay:hover, .imagehandler i.overlay:hover, .attributes-on i.overlay:hover, .attributes-off i.overlay:hover, .pricemanager-on i.overlay:hover, .metatags-on i.overlay:hover, .metatags-off i.overlay:hover {
   color: #ccc;
-  text-shadow: 0px 0px 4px rgba(0,0,0,0.5)
+  text-shadow: 0 0 4px rgba(0,0,0,0.5)
 }
 
 /* bof Footer */
@@ -719,7 +723,7 @@ footer.homeFooter, .bottom footer {
   -webkit-border-radius:5px;
   border-radius:5px;
   display:inline-block;
-  font-family:Verdana;
+  font-family:Verdana,sans-serif;
   font-size:13px;
   font-weight:bold;
   margin: 0;

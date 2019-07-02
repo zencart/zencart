@@ -632,7 +632,7 @@ define('TEXT_ATTRIBUTES_QTY_PRICES_HELP', 'Option Quantity Discounts');
 define('TABLE_ATTRIBUTES_QTY_PRICE_QTY','QTY');
 define('TABLE_ATTRIBUTES_QTY_PRICE_PRICE','PRICE');
 define('TEXT_ATTRIBUTES_QTY_PRICES_ONETIME_HELP', 'Option Quantity Discounts Onetime Charges');
-define('TEXT_CATEGORIES_PRODUCTS', 'Select a Category with Products ... Or move between the Products');
+define('TEXT_CATEGORIES_PRODUCTS', 'Select a Category with products (indicated by an asterisk) / move between the products');
 define('TEXT_PRODUCT_TO_VIEW', 'Select a Product to View and Press Display ...');
 
 define('TEXT_INFO_SET_MASTER_CATEGORIES_ID', 'Invalid Master Category ID');
@@ -697,7 +697,7 @@ define('ENTRY_NOTHING_TO_SEND','You haven\'t entered any content for your messag
   define('ERROR_DEFINE_OPTION_NAMES', 'Warning: No Option Names have been defined');
   define('ERROR_DEFINE_OPTION_VALUES', 'Warning: No Option Values have been defined');
   define('ERROR_DEFINE_PRODUCTS', 'Warning: No Products have been defined');
-  define('ERROR_DEFINE_PRODUCTS_MASTER_CATEGORIES_ID', 'Warning: No Master Categories ID has been set for this Product');
+  define('ERROR_DEFINE_PRODUCTS_MASTER_CATEGORIES_ID', 'Warning: No Master Category ID has been set for this Product');
 
   define('BUTTON_ADD_PRODUCT_TYPES_SUBCATEGORIES_ON','Add include SubCategories');
   define('BUTTON_ADD_PRODUCT_TYPES_SUBCATEGORIES_OFF','Add without SubCategories');
