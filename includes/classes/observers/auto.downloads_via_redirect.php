@@ -44,7 +44,7 @@ class zcObserverDownloadsViaRedirect extends base {
     if (DOWNLOAD_BY_REDIRECT != 'true') return false;
 
     $this->pubFolder = DIR_FS_DOWNLOAD_PUBLIC;
-    $this->wsPubFolder = DIR_WS_DOWNLOAD_PUBLIC;
+    $this->wsPubFolder = HTTP_SERVER . DIR_WS_DOWNLOAD_PUBLIC;
 
     // attach listener
     $this->attach($this, array('NOTIFY_DOWNLOAD_READY_TO_REDIRECT'));
