@@ -34,7 +34,6 @@ if ( ($category_depth == 'products') || (zen_check_url_get_terms()) ) {
   define('TABLE_HEADING_MODEL', 'Model');
   define('TABLE_HEADING_PRODUCTS', 'Product Name');
   define('TABLE_HEADING_MANUFACTURER', 'Manufacturer');
-  define('TABLE_HEADING_QUANTITY', 'Quantity');
   define('TABLE_HEADING_PRICE', 'Price');
   define('TABLE_HEADING_WEIGHT', 'Weight');
   define('TABLE_HEADING_BUY_NOW', 'Buy Now');
