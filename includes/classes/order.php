@@ -209,6 +209,7 @@ class order extends base {
 
       $this->products[$index] = array('qty' => $new_qty,
                                       'id' => $orders_products->fields['products_id'],
+                                      'orders_products_id' => $orders_products->fields['orders_products_id'], 
                                       'name' => $orders_products->fields['products_name'],
                                       'model' => $orders_products->fields['products_model'],
                                       'tax' => $orders_products->fields['products_tax'],
