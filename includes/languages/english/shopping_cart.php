@@ -13,7 +13,6 @@ define('NAVBAR_TITLE', 'The Shopping Cart');
 define('HEADING_TITLE', 'Your Shopping Cart Contents');
 define('HEADING_TITLE_EMPTY', 'Your Shopping Cart');
 define('TABLE_HEADING_REMOVE', 'Remove');
-define('TABLE_HEADING_QUANTITY', 'Qty.');
 define('TABLE_HEADING_MODEL', 'Model');
 define('TABLE_HEADING_PRICE','Unit');
 define('TEXT_CART_EMPTY', 'Your Shopping Cart is empty.');

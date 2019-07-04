@@ -104,8 +104,8 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
   $zco_notifier->notify('NOTIFY_HEADER_ACCOUNT_EDIT_VERIFY_COMPLETE');
 
   if ($error == false) {
-    //update external bb system with new email address
-    $zco_notifier->notify('NOTIFY_NICK_UPDATE_EMAIL_ADDRESS', $nick, $db->prepareInput($email_address));
+    //update external bb system with submitted email address
+    $zco_notifier->notify('NOTIFY_NICK_UPDATE_EMAIL_ADDRESS', $nick, $email_address);
 
     // build array of data to store the requested changes
     $sql_data_array = array(array('fieldName'=>'customers_firstname', 'value'=>$firstname, 'type'=>'stringIgnoreNull'),

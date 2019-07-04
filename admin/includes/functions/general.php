@@ -1538,7 +1538,7 @@ while (!$chk_sale_categories_all->EOF) {
   function zen_remove($source) {
     global $messageStack, $zen_remove_error;
 
-    if (isset($zen_remove_error)) $zen_remove_error = false;
+    $zen_remove_error = false;
 
     if (is_dir($source)) {
       $dir = dir($source);

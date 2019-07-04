@@ -24,7 +24,6 @@ while (!$column_left_display->EOF and $box_cnt < 100) {
       $box_id = zen_get_box_id($column_left_display->fields['layout_box_name']);
       include($box_file); 
   }
-
   $column_left_display->MoveNext();
 } // while column_left
 $box_id = '';

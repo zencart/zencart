@@ -17,9 +17,9 @@ $column_single_display= $db->Execute("select layout_box_name from " . TABLE_LAYO
 // safety row stop
 $box_cnt=0;
 if (defined('BOX_WIDTH_SINGLE')) {
-  $column_width = BOX_WIDTH_SINGLE;
+  $column_width = (int)BOX_WIDTH_SINGLE;
 } else {
-  $column_width = BOX_WIDTH_LEFT;
+  $column_width = (int)BOX_WIDTH_LEFT;
 }
 while (!$column_single_display->EOF and $box_cnt < 100) {
   $box_cnt++;
