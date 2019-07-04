@@ -29,6 +29,6 @@ while (!$column_single_display->EOF and $box_cnt < 100) {
     require($box_file); 
   }
   $column_single_display->MoveNext();
-} 
+} // while column_single
 $box_id = '';
 ?>
