@@ -16,15 +16,16 @@ $column_box_default='tpl_box_default_left.php';
 $column_left_display= $db->Execute("select layout_box_name from " . TABLE_LAYOUT_BOXES . " where layout_box_location = 0 and layout_box_status= '1' and layout_template ='" . $template_dir . "'" . ' order by layout_box_sort_order');
 // safety row stop
 $box_cnt=0;
-$column_width = BOX_WIDTH_LEFT;
+$column_width = (int)BOX_WIDTH_LEFT;
 while (!$column_left_display->EOF and $box_cnt < 100) {
   $box_cnt++;
   $box_file = zen_get_file_directory(DIR_WS_MODULES . 'sideboxes/', $column_left_display->fields['layout_box_name']); 
   if (file_exists($box_file)) {
       $box_id = zen_get_box_id($column_left_display->fields['layout_box_name']);
-      require($box_file); 
+      include($box_file); 
   }
+
   $column_left_display->MoveNext();
-} 
+} // while column_left
 $box_id = '';
 ?>
