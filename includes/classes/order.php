@@ -325,6 +325,8 @@ class order extends base {
     // set default tax calculation for not-logged-in visitors
       $taxCountryId = $taxZoneId = 0;
 
+    $billto = (!empty($_SESSION['billto']) ? (int)$_SESSION['billto'] : 0);
+    $sendto = (!empty($_SESSION['sendto']) ? (int)$_SESSION['sendto'] : 0);
       // get tax zone info for logged-in visitors
       if (isset($_SESSION['customer_id']) && (int)$_SESSION['customer_id'] > 0) {
           $taxCountryId = $taxZoneId = -1;
@@ -335,7 +337,7 @@ class order extends base {
                                 from " . TABLE_ADDRESS_BOOK . " ab
                                 left join " . TABLE_ZONES . " z on (ab.entry_zone_id = z.zone_id)
                                 where ab.customers_id = " . (int)$_SESSION['customer_id'] . "
-                                and ab.address_book_id = " . ($this->content_type == 'virtual' ? (!empty($_SESSION['billto']) ? (int)$_SESSION['billto'] : 0) : (int)$_SESSION['sendto']);
+                                and ab.address_book_id = " . ($this->content_type == 'virtual' ? $billto : $sendto);
                   break;
               case 'Billing':
                   $tax_address_query = "select ab.entry_country_id, ab.entry_zone_id
@@ -357,7 +359,7 @@ class order extends base {
                                   from " . TABLE_ADDRESS_BOOK . " ab
                                   left join " . TABLE_ZONES . " z on (ab.entry_zone_id = z.zone_id)
                                   where ab.customers_id = " . (int)$_SESSION['customer_id'] . "
-                                  and ab.address_book_id = " . ($this->content_type == 'virtual' ? (int)$_SESSION['billto'] : (int)$_SESSION['sendto']);
+                                  and ab.address_book_id = " . ($this->content_type == 'virtual' ? $billto : $sendto); 
                   }
           }
           if ($tax_address_query != '') {
