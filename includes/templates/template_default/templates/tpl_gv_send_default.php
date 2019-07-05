@@ -91,11 +91,11 @@
 <br class="clearBoth" />
 
 <label class="inputLabel" for="email-address"><?php echo ENTRY_EMAIL; ?></label>
-<?php echo zen_draw_input_field('email', (!empty($_POST['email'])? $_POST['email'] : ''), 'size="40" id="email-address"', 'email') . '<span class="alert">' . ENTRY_REQUIRED_SYMBOL . '</span>'; if (isset($error_email)) echo $error_email; ?>
+<?php echo zen_draw_input_field('email', (!empty($_POST['email'])? $_POST['email'] : ''), 'size="40" id="email-address"', 'email') . '<span class="alert">' . ENTRY_REQUIRED_SYMBOL . '</span>'; ?>
 <br class="clearBoth" />
 
 <label class="inputLabel" for="amount"><?php echo ENTRY_AMOUNT; ?></label>
-<?php echo zen_draw_input_field('amount', (!empty($_POST['amount']) ? $_POST['amount'] : ''), 'id="amount"', 'text', false) . '<span class="alert">' . ENTRY_REQUIRED_SYMBOL . '</span>'; if (isset($error_amount)) echo $error_amount; ?>
+<?php echo zen_draw_input_field('amount', (!empty($_POST['amount']) ? $_POST['amount'] : ''), 'id="amount"', 'text', false) . '<span class="alert">' . ENTRY_REQUIRED_SYMBOL . '</span>'; ?>
 <br class="clearBoth" />
 
 <label for="message-area"><?php echo ENTRY_MESSAGE; ?></label>
