@@ -18,6 +18,7 @@ if (isset($_POST['message'])) $_POST['message'] = zen_output_string_protected($_
 
 require_once('includes/classes/http_client.php');
 
+if (!isset($_GET['action'])) $_GET['action'] = '';  
 // verify no timeout has occurred on the send or process
 if (!zen_is_logged_in() && isset($_GET['action']) && ($_GET['action'] == 'send' or $_GET['action'] == 'process')) {
   zen_redirect(zen_href_link(FILENAME_TIME_OUT));
@@ -97,7 +98,7 @@ if ($_GET['action'] == 'send') {
 
 if ($_GET['action'] == 'process') {
   if (!isset($_POST['back'])) { // customer didn't click the back button
-    $id1 = zen_create_coupon_code($mail['customers_email_address']);
+    $id1 = zen_create_coupon_code($account->fields['customers_email_address']);
     // sanitize and remove non-numeric characters
     $_POST['amount'] = preg_replace('/[^0-9.,%]/', '', $_POST['amount']);
 
@@ -208,6 +209,7 @@ if ($_GET['action'] == 'complete') zen_redirect(zen_href_link(FILENAME_GV_SEND, 
 $breadcrumb->add(NAVBAR_TITLE);
 
 // validate entries
+if (empty($gv_amount)) $gv_amount = 0; 
 $gv_amount = (float)$gv_amount;
 
 // This should be last line of the script:

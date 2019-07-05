@@ -17,6 +17,8 @@
 <h2><?php echo TEXT_AVAILABLE_BALANCE;?></h2>
 <p id="gvSendDefaultBalance"><?php echo TEXT_BALANCE_IS . $gv_current_balance; ?></p>
 <?php
+  if (!isset($_GET['action'])) $_GET['action'] = ''; 
+  if (!isset($error)) $error = false;
   if ($gv_result->fields['amount'] > 0 && $_GET['action'] == 'doneprocess') {
 ?>
 <p><?php echo TEXT_SEND_ANOTHER; ?></p>
@@ -85,19 +87,19 @@
 <legend><?php echo HEADING_TITLE; ?></legend>
 
 <label class="inputLabel" for="to-name"><?php echo ENTRY_NAME; ?></label>
-<?php echo zen_draw_input_field('to_name', $_POST['to_name'], 'size="40" id="to-name"') . '<span class="alert">' . ENTRY_REQUIRED_SYMBOL . '</span>';?>
+<?php echo zen_draw_input_field('to_name', (!empty($_POST['to_name']) ? $_POST['to_name'] : ''), 'size="40" id="to-name"') . '<span class="alert">' . ENTRY_REQUIRED_SYMBOL . '</span>';?>
 <br class="clearBoth" />
 
 <label class="inputLabel" for="email-address"><?php echo ENTRY_EMAIL; ?></label>
-<?php echo zen_draw_input_field('email', $_POST['email'], 'size="40" id="email-address"', 'email') . '<span class="alert">' . ENTRY_REQUIRED_SYMBOL . '</span>'; if ($error) echo $error_email; ?>
+<?php echo zen_draw_input_field('email', (!empty($_POST['email'])? $_POST['email'] : ''), 'size="40" id="email-address"', 'email') . '<span class="alert">' . ENTRY_REQUIRED_SYMBOL . '</span>'; if (isset($error_email)) echo $error_email; ?>
 <br class="clearBoth" />
 
 <label class="inputLabel" for="amount"><?php echo ENTRY_AMOUNT; ?></label>
-<?php echo zen_draw_input_field('amount', $_POST['amount'], 'id="amount"', 'text', false) . '<span class="alert">' . ENTRY_REQUIRED_SYMBOL . '</span>'; if ($error) echo $error_amount; ?>
+<?php echo zen_draw_input_field('amount', (!empty($_POST['amount']) ? $_POST['amount'] : ''), 'id="amount"', 'text', false) . '<span class="alert">' . ENTRY_REQUIRED_SYMBOL . '</span>'; if (isset($error_amount)) echo $error_amount; ?>
 <br class="clearBoth" />
 
 <label for="message-area"><?php echo ENTRY_MESSAGE; ?></label>
-<?php echo zen_draw_textarea_field('message', 50, 10, stripslashes($_POST['message']), 'id="message-area"'); ?>
+<?php echo zen_draw_textarea_field('message', 50, 10, (!empty($_POST['message']) ? stripslashes($_POST['message']) : ''), 'id="message-area"'); ?>
 </fieldset>
 
 <div class="buttonRow forward"><?php echo zen_image_submit(BUTTON_IMAGE_SEND, BUTTON_SEND_ALT); ?></div>
