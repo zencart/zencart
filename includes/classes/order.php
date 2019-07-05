@@ -335,7 +335,7 @@ class order extends base {
                                 from " . TABLE_ADDRESS_BOOK . " ab
                                 left join " . TABLE_ZONES . " z on (ab.entry_zone_id = z.zone_id)
                                 where ab.customers_id = " . (int)$_SESSION['customer_id'] . "
-                                and ab.address_book_id = " . ($this->content_type == 'virtual' ? (int)$_SESSION['billto'] : (int)$_SESSION['sendto']);
+                                and ab.address_book_id = " . ($this->content_type == 'virtual' ? (!empty($_SESSION['billto']) ? (int)$_SESSION['billto'] : 0) : (int)$_SESSION['sendto']);
                   break;
               case 'Billing':
                   $tax_address_query = "select ab.entry_country_id, ab.entry_zone_id
