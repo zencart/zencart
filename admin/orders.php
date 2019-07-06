@@ -767,18 +767,42 @@ if (zen_not_null($action) && $order_exists == true) {
 <?php
             }
         }
+        
+        // -----
+        // Determine which of the 'Notify Customer' radio buttons should be selected initially,
+        // based on configuration setting in 'My Store'.  Set a default, just in case that configuration
+        // setting isn't set!
+        //
+        if (!defined('NOTIFY_CUSTOMER_DEFAULT')) define('NOTIFY_CUSTOMER_DEFAULT', '1');
+        switch (NOTIFY_CUSTOMER_DEFAULT) {
+            case '0':
+                $notify_email = false;
+                $notify_no_email = true;
+                $notify_hidden = false;
+                break;
+            case '-1':
+                $notify_email = false;
+                $notify_no_email = false;
+                $notify_hidden = true;
+                break;
+            default:
+                $notify_email = true;
+                $notify_no_email = false;
+                $notify_hidden = false;
+                break;
+        }
 ?>
             <div class="form-group">
                 <div class="col-sm-3 control-label" style="font-weight: 700;"><?php echo ENTRY_NOTIFY_CUSTOMER; ?></div>
               <div class="col-sm-9">
                 <div class="radio">
-                  <label><?php echo zen_draw_radio_field('notify', '1', true) . TEXT_EMAIL; ?></label>
+                  <label><?php echo zen_draw_radio_field('notify', '1', $notify_email) . TEXT_EMAIL; ?></label>
                 </div>
                 <div class="radio">
-                  <label><?php echo zen_draw_radio_field('notify', '0', FALSE) . TEXT_NOEMAIL; ?></label>
+                  <label><?php echo zen_draw_radio_field('notify', '0', $notify_no_email) . TEXT_NOEMAIL; ?></label>
                 </div>
                 <div class="radio">
-                  <label><?php echo zen_draw_radio_field('notify', '-1', FALSE) . TEXT_HIDE; ?></label>
+                  <label><?php echo zen_draw_radio_field('notify', '-1', $notify_hidden) . TEXT_HIDE; ?></label>
                 </div>
               </div>
             </div>
