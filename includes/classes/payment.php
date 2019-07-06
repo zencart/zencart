@@ -218,9 +218,12 @@ class payment extends base {
     if (is_array($this->modules)) {
       if (is_object($GLOBALS[$this->selected_module]) && ($GLOBALS[$this->selected_module]->enabled) ) {
         $confirmation = $GLOBALS[$this->selected_module]->confirmation();
-        if (!is_array($confirmation)) $confirmation = array('title' => '', 'fields' => array());
-        if (!isset($confirmation['fields']) || !is_array($confirmation['fields'])) $confirmation['fields'] = array();
-        if (!isset($confirmation['title'])) $confirmation['title'] = '';
+        if (!is_array($confirmation)) {
+          $confirmation = array('title' => '', 'fields' => array());
+        } else {
+          if (!isset($confirmation['fields']) || !is_array($confirmation['fields'])) $confirmation['fields'] = array();
+          if (!isset($confirmation['title'])) $confirmation['title'] = '';
+        }
       }
     }
     return $confirmation;
