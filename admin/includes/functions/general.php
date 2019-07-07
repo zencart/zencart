@@ -2525,13 +2525,6 @@ function zen_limit_image_filename($filename, $table_name, $field_name, $extensio
     }
   }
 
-/**
- * Check if restricted-use demo mode is active
- */
-  function zen_admin_demo() {
-    return (ADMIN_DEMO == '1') ? TRUE : FALSE;
-  }
-
 
   function zen_has_product_attributes_downloads($products_id, $check_valid=false) {
     global $db;
