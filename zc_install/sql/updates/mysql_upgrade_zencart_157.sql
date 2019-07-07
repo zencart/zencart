@@ -41,6 +41,8 @@ UPDATE configuration_group set configuration_group_title = 'Email', configuratio
 # Add NOTIFY_CUSTOMER_DEFAULT
 INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES ('Default for Notify Customer on Order Status Update?', 'NOTIFY_CUSTOMER_DEFAULT', '1', 'Set the default email behavior on status update to Send Email, Do Not Send Email, or Hide Update.', 1, 120, now(), now(), NULL, 'zen_cfg_select_drop_down(array( array(\'id\'=>\'1\', \'text\'=>\'Email\'), array(\'id\'=>\'0\', \'text\'=>\'No Email\'), array(\'id\'=>\'-1\', \'text\'=>\'Hide\')),');
 
+DELETE FROM configuration WHERE configuration_key = 'ADMIN_DEMO';
+
 #############
 
 #### VERSION UPDATE STATEMENTS
