@@ -755,7 +755,7 @@ if (zen_not_null($action) && $order_exists == true) {
         // )
         $extra_status_inputs = array();
         $zco_notifier->notify('NOTIFY_ADMIN_ORDERS_EXTRA_STATUS_INPUTS', $order, $extra_status_inputs);
-        if (count($extra_status_inputs) != 0) {
+        if (!empty($extra_status_inputs)) {
             foreach ($extra_status_inputs as $extra_status) {
                 $addl_class = (isset($extra_status['label']['addl_class'])) ? (' ' . $extra_status['label']['addl_class']) : '';
                 $parms = (isset($extra_status['label']['parms'])) ? (' ' . $extra_status['label']['parms']) : '';
