@@ -245,8 +245,8 @@ if (zen_not_null($action)) {
     <title><?php echo TITLE; ?></title>
     <link rel="stylesheet" type="text/css" href="includes/stylesheet.css">
     <link rel="stylesheet" type="text/css" href="includes/cssjsmenuhover.css" media="all" id="hoverJS">
-    <script language="javascript" src="includes/menu.js"></script>
-    <script language="javascript" src="includes/general.js"></script>
+    <script src="includes/menu.js"></script>
+    <script src="includes/general.js"></script>
     <link rel="stylesheet" type="text/css" href="includes/javascript/spiffyCal/spiffyCal_v2_1.css">
     <script src="includes/javascript/spiffyCal/spiffyCal_v2_1.js"></script>
 

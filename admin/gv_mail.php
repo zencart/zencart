@@ -178,7 +178,7 @@
     }
   }
 </script>
-<script language="javascript" type="text/javascript">
+<script type="text/javascript">
 var form = "";
 var submitted = false;
 var error = false;
