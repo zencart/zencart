@@ -29,12 +29,6 @@
       $mail_sent_to = $_POST['email_to'];
     }
 
-    // demo active test
-    if (zen_admin_demo()) {
-      $_GET['action']= '';
-      $messageStack->add_session(ERROR_ADMIN_DEMO, 'caution');
-      zen_redirect(zen_href_link(FILENAME_GV_MAIL, 'mail_sent_to=' . urlencode($mail_sent_to)));
-    }
     $from = zen_db_prepare_input($_POST['from']);
     $subject = zen_db_prepare_input($_POST['subject']);
     $recip_count=0;

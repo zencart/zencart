@@ -11,12 +11,6 @@ define('ADMIN_PWD_TOKEN_DURATION', (24 * 60 * 60));
 
 /////////
 require('includes/application_top.php');
-// demo active test
-if (zen_admin_demo()) {
-    $_GET['action'] = '';
-    $messageStack->add_session(ERROR_ADMIN_DEMO, 'caution');
-    zen_redirect(zen_href_link(FILENAME_DEFAULT));
-}
 if (isset($_POST['login'])) {
     zen_redirect(zen_href_link(FILENAME_LOGIN, '', 'SSL'));
 }
