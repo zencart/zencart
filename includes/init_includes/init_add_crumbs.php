@@ -51,7 +51,7 @@ while (!$get_terms->EOF) {
       $breadcrumb->add($get_term_breadcrumb->fields[$get_terms->fields['get_term_name_field']], zen_href_link(FILENAME_DEFAULT, $get_terms->fields['get_term_name'] . "=" . $_GET[$get_terms->fields['get_term_name']]));
     }
 	}
-	$get_terms->movenext();
+	$get_terms->MoveNext();
 }
 /**
  * add the products model to the breadcrumb trail
