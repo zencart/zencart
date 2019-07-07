@@ -171,15 +171,23 @@ class ot_coupon {
        
       $messageStack->add_session('checkout_payment', TEXT_REMOVE_REDEEM_COUPON, 'caution');
     }
-//    print_r($_SESSION);
-    // bof: Discount Coupon zoned always validate coupon for payment address changes
-    // eof: Discount Coupon zoned always validate coupon for payment address changes
+
     if ((isset($_POST['dc_redeem_code']) && $_POST['dc_redeem_code'] != '') || (isset($discount_coupon->fields['coupon_code']) && $discount_coupon->fields['coupon_code'] != '')) {
       // set current Discount Coupon based on current or existing
-      if (isset($_POST['dc_redeem_code']) && $discount_coupon->fields['coupon_code'] == '') {
-        $dc_check = $_POST['dc_redeem_code'];
+      if ($discount_coupon != null) {
+        if (isset($_POST['dc_redeem_code']) && $discount_coupon->fields['coupon_code'] == '') {
+          $dc_check = $_POST['dc_redeem_code'];
+        } else {
+          $dc_check = $discount_coupon->fields['coupon_code'];
+        }
       } else {
-        $dc_check = $discount_coupon->fields['coupon_code'];
+        if (isset($_POST['dc_redeem_code'])) { 
+          $dc_check = $_POST['dc_redeem_code'];
+        } else if ($discount_coupon != null) {
+          $dc_check = $discount_coupon->fields['coupon_code'];
+        } else {
+          $dc_check = "UNKNOWN_COUPON"; 
+        }
       }
 
 
@@ -195,7 +203,7 @@ class ot_coupon {
 
       $coupon_result=$db->Execute($sql);
 
-      if ($coupon_result->fields['coupon_type'] != 'G') {
+      if (!$coupon_result->EOF && $coupon_result->fields['coupon_type'] != 'G') {
 
         if ($coupon_result->RecordCount() < 1 ) {
           $messageStack->add_session('redemptions', TEXT_INVALID_REDEEM_COUPON . ' ' . $dc_check,'caution');
