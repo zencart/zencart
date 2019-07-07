@@ -44,7 +44,11 @@ $versionInfo = $updateList[$updateVersion];
 if ($versionInfo['required'] != $dbVersion)
 {
   $error = TRUE;
-  $errorList[] = sprintf(TEXT_COULD_NOT_UPDATE_BECAUSE_ANOTHER_VERSION_REQUIRED, $updateVersion, $dbVersion, $versionInfo['required']);
+  if (!empty($versionInfo['required'])) {
+    $errorList[] = sprintf(TEXT_COULD_NOT_UPDATE_BECAUSE_ANOTHER_VERSION_REQUIRED, $updateVersion, $dbVersion, $versionInfo['required']);
+  } else {
+    $errorList[] = TEXT_COULD_NOT_UPDATE_BECAUSE_PATH_NOT_DEFINED;
+  }
 }
 if (!$error)
 {
