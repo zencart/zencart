@@ -18,7 +18,7 @@
   // ie: mail, gv_main, coupon_admin... and eventually newsletters too.
   // gets info from query_builder table
 
-  include_once(zen_get_file_directory(DIR_FS_CATALOG . DIR_WS_LANGUAGES . $_SESSION['language'] . DIRECTORY_SEPARATOR, 'audience.php', 'false'));
+  include_once(zen_get_file_directory(DIR_FS_CATALOG . DIR_WS_LANGUAGES . $_SESSION['language'] . "/", 'audience.php', 'false'));
 
   global $db;
   $count_array = array();
