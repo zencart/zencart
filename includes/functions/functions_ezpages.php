@@ -21,7 +21,7 @@
     $ez_pages_name = 'Click Here';
 
     if ($ez_pages_chapter == 0) {
-      $page_query = $db->Execute("SELECT * FROM " . TABLE_EZPAGES . " e, " . TABLE_EZPAGES_CONTENT . " ec WHERE e.pages_id = ec.pages_id AND e.pages_id='" . (int)$ez_pages_id . "' limit 1");
+      $page_query = $db->Execute("SELECT * FROM " . TABLE_EZPAGES . " e, " . TABLE_EZPAGES_CONTENT . " ec WHERE e.pages_id = ec.pages_id AND ec.languages_id = " . (int)$_SESSION['languages_id'] . " AND e.pages_id='" . (int)$ez_pages_id . "' limit 1");
 
       $ez_pages_id = $page_query->fields['pages_id'];
       $ez_pages_name = $page_query->fields['pages_title'];
