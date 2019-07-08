@@ -119,7 +119,7 @@
 ////
 // Output a separator either through whitespace, or with an image
   function zen_draw_separator($image = 'pixel_black.gif', $width = '100%', $height = '1') {
-      if (substr(rtrim($width), -1) != "%") $width = $width . 'px';
+    if (substr(rtrim($width), -1) != "%") $width = $width . 'px';
     return zen_image(DIR_WS_IMAGES . $image, '', '', $height, 'style="width:' . $width . ';"');
   }
 
@@ -299,7 +299,7 @@
     return $field;
   }
 
-  /**
+/**
  * Output a form pull down menu
  * @param string $name name
  * @param array $values values
@@ -308,37 +308,36 @@
  * @param boolean $required required
  * @return string
  */
-function zen_draw_pull_down_menu($name, $values, $default = '', $parameters = '', $required = false)
-{
-//    $field = '<select name="' . zen_output_string($name) . '"';
-  $field = '<select rel="dropdown" name="' . zen_output_string($name) . '"';
+  function zen_draw_pull_down_menu($name, $values, $default = '', $parameters = '', $required = false) {
+  //    $field = '<select name="' . zen_output_string($name) . '"';
+    $field = '<select rel="dropdown" name="' . zen_output_string($name) . '"';
 
-  if (zen_not_null($parameters)) {
-    $field .= ' ' . $parameters;
-  }
-
-  $field .= '>' . "\n";
-
-  if (empty($default) && isset($GLOBALS[$name]) && is_string($GLOBALS[$name])) {
-    $default = stripslashes($GLOBALS[$name]);
-  }
-
-  foreach ($values as $value) {
-    $field .= '<option value="' . zen_output_string($value['id']) . '"';
-    if ($default == $value['id']) {
-      $field .= ' selected="selected"';
+    if (zen_not_null($parameters)) {
+      $field .= ' ' . $parameters;
     }
 
-    $field .= '>' . zen_output_string($value['text'], array('"' => '&quot;', '\'' => '&#039;', '<' => '&lt;', '>' => '&gt;')) . '</option>' . "\n";
-  }
-  $field .= '</select>' . "\n";
+    $field .= '>' . "\n";
 
-  if ($required == true) {
-    $field .= TEXT_FIELD_REQUIRED;
-  }
+    if (empty($default) && isset($GLOBALS[$name]) && is_string($GLOBALS[$name])) {
+      $default = stripslashes($GLOBALS[$name]);
+    }
 
-  return $field;
-}
+    foreach ($values as $value) {
+      $field .= '<option value="' . zen_output_string($value['id']) . '"';
+      if ($default == $value['id']) {
+        $field .= ' selected="selected"';
+      }
+
+      $field .= '>' . zen_output_string($value['text'], array('"' => '&quot;', '\'' => '&#039;', '<' => '&lt;', '>' => '&gt;')) . '</option>' . "\n";
+    }
+    $field .= '</select>' . "\n";
+
+    if ($required == true) {
+      $field .= TEXT_FIELD_REQUIRED;
+    }
+
+    return $field;
+  }
 
 ////
 // Hide form elements
