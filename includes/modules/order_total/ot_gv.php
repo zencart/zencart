@@ -45,7 +45,6 @@ class ot_gv {
     $this->calculate_tax = MODULE_ORDER_TOTAL_GV_CALC_TAX;
     $this->credit_tax = MODULE_ORDER_TOTAL_GV_CREDIT_TAX;
     $this->tax_class  = MODULE_ORDER_TOTAL_GV_TAX_CLASS;
-    // $this->show_redeem_box = MODULE_ORDER_TOTAL_GV_REDEEM_BOX;
     $this->credit_class = true;
     if (!(isset($_SESSION['cot_gv']) && zen_not_null(ltrim($_SESSION['cot_gv'], ' 0'))) || $_SESSION['cot_gv'] == '0') $_SESSION['cot_gv'] = '0.00';
     if (IS_ADMIN_FLAG !== true) {
@@ -280,7 +279,6 @@ class ot_gv {
           // no gv_amount so insert
           $db->Execute("insert into " . TABLE_COUPON_GV_CUSTOMER . " (customer_id, amount) values ('" . (int)$_SESSION['customer_id'] . "', '" . $total_gv_amount . "')");
         }
-        //          zen_redirect(zen_href_link(FILENAME_CHECKOUT_PAYMENT, 'error_message=' . urlencode(ERROR_REDEEMED_AMOUNT. $currencies->format($gv_amount)), 'SSL'));
         $messageStack->add_session('redemptions',ERROR_REDEEMED_AMOUNT. $currencies->format($gv_amount), 'success' );
         zen_redirect(zen_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL',true, false));
       }
@@ -309,23 +307,15 @@ class ot_gv {
     $od_amount['total'] = $deduction;
     switch ($this->calculate_tax) {
       case 'None':
-        $remainder = $order->info['total'] - $od_amount['total'];
-        $tax_deduct = $order->info['tax'] - $remainder;
-        // division by 0
-        if ($order->info['tax'] <= 0) {
-          $ratio_tax = 0;
-        } else {
-          $ratio_tax = $tax_deduct/$order->info['tax'];
-        }
-        $tax_deduct = 0;
-/*
-        if ($this->include_tax) {
-          foreach ($order->info['tax_groups'] as $key=>$value) {
-            $od_amount['tax_groups'][$key] = $order->info['tax_groups'][$key] * $ratio_tax;
-            $tax_deduct += $od_amount['tax_groups'][$key];
-          }
-        }
-*/
+      $remainder = $order->info['total'] - $od_amount['total'];
+      $tax_deduct = $order->info['tax'] - $remainder;
+      // division by 0
+      if ($order->info['tax'] <= 0) {
+        $ratio_tax = 0;
+      } else {
+        $ratio_tax = $tax_deduct/$order->info['tax'];
+      }
+      $tax_deduct = 0;
       $od_amount['tax'] = $tax_deduct;
       break;
       case 'Standard':
@@ -387,7 +377,6 @@ class ot_gv {
     }
     // reduce Order Total less GVs
     $order_total = ($order_total - $chk_gv_amount);
-//echo 'GV chk_gv_amount: ' . $chk_gv_amount . ' $order_total: ' . $order_total . '<br>';
 
     return $order_total;
   }
