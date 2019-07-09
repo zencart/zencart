@@ -84,12 +84,6 @@ if (zen_not_null($action)) {
       zen_redirect(zen_href_link(FILENAME_MANUFACTURERS, (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . 'mID=' . $manufacturers_id));
       break;
     case 'deleteconfirm':
-      // demo active test
-      if (zen_admin_demo()) {
-        $_GET['action'] = '';
-        $messageStack->add_session(ERROR_ADMIN_DEMO, 'caution');
-        zen_redirect(zen_href_link(FILENAME_MANUFACTURERS, 'page=' . $_GET['page']));
-      }
       $manufacturers_id = zen_db_prepare_input($_POST['mID']);
 
       if (isset($_POST['delete_image']) && ($_POST['delete_image'] == 'on')) {

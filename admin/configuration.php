@@ -14,12 +14,6 @@ if (zen_not_null($action)) {
   switch ($action) {
     case 'save':
       $cID = zen_db_prepare_input($_GET['cID']);
-      // demo active test
-      if (zen_admin_demo()) {
-        $_GET['action'] = '';
-        $messageStack->add_session(ERROR_ADMIN_DEMO, 'caution');
-        zen_redirect(zen_href_link(FILENAME_CONFIGURATION, 'gID=' . $_GET['gID'] . '&cID=' . (int)$cID));
-      }
 
       $configuration_value = zen_db_prepare_input($_POST['configuration_value']);
         // See if there are any configuration checks
