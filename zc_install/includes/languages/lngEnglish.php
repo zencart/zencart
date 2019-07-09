@@ -75,7 +75,6 @@ define('TEXT_LOADING_DEMO_DATA', 'Loading Demo Data');
 define('TEXT_LOADING_PLUGIN_DATA', 'Loading SQL for Pre-installed Plugins');
 
 define('TEXT_COULD_NOT_UPDATE_BECAUSE_ANOTHER_VERSION_REQUIRED', 'Could not update to version %s. We detect that you currently have v%s, and must perform the updates to get to version %s first.');
-define('TEXT_COULD_NOT_UPDATE_BECAUSE_PATH_NOT_DEFINED', 'Could not update - path to new version not defined in $updateList.');
 
 define('TEXT_PAGE_HEADING_ADMIN_SETUP', 'Admin Setup');
 define('TEXT_ADMIN_SETUP_USER_SETTINGS', 'Admin User Settings');
