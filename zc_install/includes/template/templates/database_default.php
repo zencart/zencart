@@ -141,7 +141,7 @@ function ajaxTestDBConnection(form) {
           success: function(data) {
             if (data.error == true)
             {
-              var html = "<?php echo TEXT_DATABASE_SETUP_JSCRIPT_SQL_ERRORS1; ?>" + data.file + "<?php echo TEXT_DATABASE_SETUP_JSCRIPT_SQL_ERRORS2; ?>";
+              var html = "<p><?php echo TEXT_DATABASE_SETUP_JSCRIPT_SQL_ERRORS1; ?>" + data.file + "<?php echo TEXT_DATABASE_SETUP_JSCRIPT_SQL_ERRORS2; ?></p>";
               $("#install-errors-content").html(html);
               $("#install-errors").foundation('reveal', 'open');
             } else
