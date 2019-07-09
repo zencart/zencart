@@ -29,12 +29,6 @@
       $mail_sent_to = $_POST['email_to'];
     }
 
-    // demo active test
-    if (zen_admin_demo()) {
-      $_GET['action']= '';
-      $messageStack->add_session(ERROR_ADMIN_DEMO, 'caution');
-      zen_redirect(zen_href_link(FILENAME_GV_MAIL, 'mail_sent_to=' . urlencode($mail_sent_to)));
-    }
     $from = zen_db_prepare_input($_POST['from']);
     $subject = zen_db_prepare_input($_POST['subject']);
     $recip_count=0;
@@ -44,7 +38,7 @@
 
     while (!$mail->EOF) {
 
-      $id1 = create_coupon_code($mail->fields['customers_email_address']);
+      $id1 = zen_create_coupon_code($mail->fields['customers_email_address']);
       $insert_query = $db->Execute("insert into " . TABLE_COUPONS . "
                                     (coupon_code, coupon_type, coupon_amount, date_created)
                                     values ('" . zen_db_input($id1) . "', 'G', '" . zen_db_input($_POST['amount']) . "', now())");
@@ -94,7 +88,7 @@
     }
 
     if ($_POST['email_to']) {
-      $id1 = create_coupon_code($_POST['email_to']);
+      $id1 = zen_create_coupon_code($_POST['email_to']);
       $message = zen_db_prepare_input($_POST['message']);
       $message .= "\n\n" . TEXT_GV_WORTH  . $currencies->format($_POST['amount']) . "\n\n";
       $message .= TEXT_TO_REDEEM;
@@ -166,9 +160,8 @@
 <title><?php echo TITLE; ?></title>
 <link rel="stylesheet" type="text/css" href="includes/stylesheet.css">
 <link rel="stylesheet" type="text/css" href="includes/cssjsmenuhover.css" media="all" id="hoverJS">
-<script language="javascript" src="includes/menu.js"></script>
+<script type="text/javascript" src="includes/menu.js"></script>
 <script type="text/javascript">
-  <!--
   function init()
   {
     cssjsmenu('navbar');
@@ -178,9 +171,8 @@
       kill.disabled = true;
     }
   }
-  // -->
 </script>
-<script language="javascript" type="text/javascript"><!--
+<script type="text/javascript">
 var form = "";
 var submitted = false;
 var error = false;
@@ -251,7 +243,7 @@ function check_form(form_name) {
     return true;
   }
 }
-//--></script>
+</script>
 <?php if ($editor_handler != '') include ($editor_handler); ?>
 </head>
 <body onLoad="init()">

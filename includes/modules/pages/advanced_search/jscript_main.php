@@ -21,7 +21,7 @@
 //
 ?>
 <script src="includes/general.js" type="text/javascript"></script>
-<script type="text/javascript"><!--
+<script type="text/javascript">
 function check_form() {
   var error_message = "<?php echo JS_ERROR; ?>";
   var error_found = false;
@@ -108,4 +108,4 @@ function check_form() {
 function popupWindow(url) {
   window.open(url,'popupWindow','toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no,width=450,height=280,screenX=150,screenY=150,top=150,left=150')
 }
-//--></script>
+</script>

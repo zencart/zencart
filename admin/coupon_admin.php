@@ -51,12 +51,6 @@
                                  where coupon_id = '" . $_GET['cid'] . "'
                                  and language_id = '" . (int)$_SESSION['languages_id'] . "'");
 
-    // demo active test
-    if (zen_admin_demo()) {
-      $_GET['action']= '';
-      $messageStack->add_session(ERROR_ADMIN_DEMO, 'caution');
-      zen_redirect(zen_href_link(FILENAME_COUPON_ADMIN, 'mail_sent_to=' . urlencode($mail_sent_to)));
-    }
     $from = zen_db_prepare_input($_POST['from']);
     $subject = zen_db_prepare_input($_POST['subject']);
     $recip_count=0;
@@ -127,12 +121,6 @@
         zen_redirect(zen_href_link(FILENAME_COUPON_ADMIN));
         break;
     case 'confirmdelete':
-      // demo active test
-      if (zen_admin_demo()) {
-        $_GET['action']= '';
-        $messageStack->add_session(ERROR_ADMIN_DEMO, 'caution');
-        zen_redirect(zen_href_link(FILENAME_COUPON_ADMIN));
-      }
 
 // do not allow change if set to welcome coupon
       if ($_GET['cid'] == NEW_SIGNUP_DISCOUNT_COUPON) {
@@ -148,12 +136,6 @@
       break;
 
     case 'confirmreactivate':
-      // demo active test
-      if (zen_admin_demo()) {
-        $_GET['action']= '';
-        $messageStack->add_session(ERROR_ADMIN_DEMO, 'caution');
-        zen_redirect(zen_href_link(FILENAME_COUPON_ADMIN));
-      }
 
       $db->Execute("update " . TABLE_COUPONS . "
                     set coupon_active = 'Y'
@@ -470,10 +452,9 @@
 <title><?php echo TITLE; ?></title>
 <link rel="stylesheet" type="text/css" href="includes/stylesheet.css">
 <link rel="stylesheet" type="text/css" href="includes/cssjsmenuhover.css" media="all" id="hoverJS">
-<script language="javascript" src="includes/menu.js"></script>
-<script language="javascript" src="includes/general.js"></script>
+<script type="text/javascript" src="includes/menu.js"></script>
+<script type="text/javascript" src="includes/general.js"></script>
 <script type="text/javascript">
-  <!--
   function init()
   {
     cssjsmenu('navbar');
@@ -483,9 +464,8 @@
       kill.disabled = true;
     }
   }
-  // -->
 </script>
-<script language="javascript" type="text/javascript"><!--
+<script type="text/javascript">
 var form = "";
 var submitted = false;
 var error = false;
@@ -543,8 +523,7 @@ function check_form(form_name) {
     submitted = true;
     return true;
   }
-}
-//--></script>
+}</script>
 <?php if ($editor_handler != '') include ($editor_handler); ?>
 </head>
 <body onLoad="init()">

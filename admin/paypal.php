@@ -1,7 +1,7 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2011 Zen Cart Development Team
+ * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @copyright Portions Copyright (c) 2004 DevosC.com    
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
@@ -9,7 +9,7 @@
  */
 
   require('includes/application_top.php');
-
+  
   $paypal_ipn_sort_order_array = array(array('id' => '0', 'text' => TEXT_SORT_PAYPAL_ID_DESC),
                              array('id' => '1', 'text' => TEXT_SORT_PAYPAL_ID),
                              array('id' => '2', 'text' => TEXT_SORT_ZEN_ORDER_ID_DESC),
@@ -18,10 +18,9 @@
                              array('id' => '5', 'text'=> TEXT_PAYMENT_AMOUNT)
                              );
 
+  $paypal_ipn_sort_order = 0;
   if (isset($_GET['paypal_ipn_sort_order'])) {
-    $paypal_ipn_sort_order = $_GET['paypal_ipn_sort_order'];
-  } else {
-    $paypal_ipn_sort_order = 0;
+      $paypal_ipn_sort_order = (int)$_GET['paypal_ipn_sort_order'];
   }
 //        $ipn_query_raw = "select p.order_id, p.paypal_ipn_id, p.txn_type, p.payment_type, p.payment_status, p.pending_reason, p.mc_currency, p.payer_status, p.mc_currency, p.date_added, p.mc_gross, p.first_name, p.last_name, p.payer_business_name, p.parent_txn_id, p.txn_id from " . TABLE_PAYPAL . " as p, " .TABLE_ORDERS . " as o  where o.orders_id = p.order_id " . $ipn_search . " order by o.orders_id DESC";
 
@@ -70,10 +69,9 @@
 <title><?php echo TITLE; ?></title>
 <link rel="stylesheet" type="text/css" href="includes/stylesheet.css">
 <link rel="stylesheet" type="text/css" href="includes/cssjsmenuhover.css" media="all" id="hoverJS">
-<script language="javascript" src="includes/menu.js"></script>
-<script language="javascript" src="includes/general.js"></script>
+<script src="includes/menu.js"></script>
+<script src="includes/general.js"></script>
 <script type="text/javascript">
-  <!--
   function init()
   {
     cssjsmenu('navbar');
@@ -83,7 +81,6 @@
       kill.disabled = true;
     }
   }
-  // -->
 </script>
 </head>
 <body marginwidth="0" marginheight="0" topmargin="0" bottommargin="0" leftmargin="0" rightmargin="0" bgcolor="#FFFFFF" onLoad="SetFocus(), init();">
@@ -103,10 +100,10 @@
             <td class="pageHeading" align="right"><?php echo zen_draw_separator('pixel_trans.gif', HEADING_IMAGE_WIDTH, HEADING_IMAGE_HEIGHT); ?></td>
             <td class="smallText" align="right">
 <?php
-  echo zen_draw_form('payment_status', FILENAME_PAYPAL, '', 'get') . HEADING_PAYMENT_STATUS . ' ' . zen_draw_pull_down_menu('payment_status', array_merge(array(array('id' => '', 'text' => TEXT_ALL_IPNS)), $payment_statuses), $selected_status, 'onChange="this.form.submit();"') . zen_hide_session_id() . zen_draw_hidden_field('paypal_ipn_sort_order', $_GET['paypal_ipn_sort_order']) . '</form>';
+  echo zen_draw_form('payment_status', FILENAME_PAYPAL, '', 'get') . HEADING_PAYMENT_STATUS . ' ' . zen_draw_pull_down_menu('payment_status', array_merge(array(array('id' => '', 'text' => TEXT_ALL_IPNS)), $payment_statuses), $selected_status, 'onChange="this.form.submit();"') . zen_hide_session_id() . zen_draw_hidden_field('paypal_ipn_sort_order', $paypal_ipn_sort_order) . '</form>';
 ?>
 <?php
-  echo '&nbsp;&nbsp;&nbsp;' . TEXT_PAYPAL_IPN_SORT_ORDER_INFO . zen_draw_form('paypal_ipn_sort_order', FILENAME_PAYPAL, '', 'get') . '&nbsp;&nbsp;' . zen_draw_pull_down_menu('paypal_ipn_sort_order', $paypal_ipn_sort_order_array, $reset_paypal_ipn_sort_order, 'onChange="this.form.submit();"') . zen_hide_session_id() . zen_draw_hidden_field('payment_status', $_GET['payment_status']) . '</form>';
+  echo '&nbsp;&nbsp;&nbsp;' . TEXT_PAYPAL_IPN_SORT_ORDER_INFO . zen_draw_form('paypal_ipn_sort_order', FILENAME_PAYPAL, '', 'get') . '&nbsp;&nbsp;' . zen_draw_pull_down_menu('paypal_ipn_sort_order', $paypal_ipn_sort_order_array, 0, 'onChange="this.form.submit();"') . zen_hide_session_id() . zen_draw_hidden_field('payment_status', $selected_status) . '</form>';
 ?>
             </td>
             <td class="pageHeading" align="right"><?php echo zen_draw_separator('pixel_trans.gif', HEADING_IMAGE_WIDTH, HEADING_IMAGE_HEIGHT); ?></td>
@@ -184,7 +181,7 @@
     case 'delete':
       break;
     default:
-      if (is_object($ipnInfo)) {
+      if (isset($ipnInfo) && is_object($ipnInfo)) {
         $heading[] = array('text' => '<strong>' . TEXT_INFO_PAYPAL_IPN_HEADING.' #' . $ipnInfo->paypal_ipn_id . '</strong>');
         $ipn = $db->Execute("select * from " . TABLE_PAYPAL_PAYMENT_STATUS_HISTORY . " where paypal_ipn_id = '" . $ipnInfo->paypal_ipn_id . "'");
         $ipn_count = $ipn->RecordCount();
@@ -207,10 +204,8 @@
 
   if ( (zen_not_null($heading)) && (zen_not_null($contents)) ) {
     echo '            <td width="25%" valign="top">' . "\n";
-
     $box = new box;
     echo $box->infoBox($heading, $contents);
-
     echo '            </td>' . "\n";
   }
 ?>

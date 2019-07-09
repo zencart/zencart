@@ -245,8 +245,8 @@ if (zen_not_null($action)) {
     <title><?php echo TITLE; ?></title>
     <link rel="stylesheet" type="text/css" href="includes/stylesheet.css">
     <link rel="stylesheet" type="text/css" href="includes/cssjsmenuhover.css" media="all" id="hoverJS">
-    <script language="javascript" src="includes/menu.js"></script>
-    <script language="javascript" src="includes/general.js"></script>
+    <script src="includes/menu.js"></script>
+    <script src="includes/general.js"></script>
     <link rel="stylesheet" type="text/css" href="includes/javascript/spiffyCal/spiffyCal_v2_1.css">
     <script src="includes/javascript/spiffyCal/spiffyCal_v2_1.js"></script>
 
@@ -273,7 +273,7 @@ if (zen_not_null($action)) {
             <?php if ($products_filter != '') {?>
             <div class="dropdown">
             <button class="btn btn-default dropdown-toggle" type="button" id="menu1" data-toggle="dropdown">
-                <?php echo BUTTON_ADDITITONAL_ACTIONS; ?>
+                <?php echo BUTTON_ADDITIONAL_ACTIONS; ?>
               <span class="caret"></span>
             </button>
             <ul class="dropdown-menu" role="menu" aria-labelledby="menu1">
@@ -366,7 +366,7 @@ if (zen_not_null($action)) {
       if ($products_filter == '') {
         ?>
         <div class="row">
-          <h2 class="text-center"><?php echo HEADING_TITLE_PRODUCT_SELECT; ?></h2>
+          <h3 class="text-center"><?php echo HEADING_TITLE_PRODUCT_SELECT; ?></h3>
         </div>
       <?php } ?>
 
@@ -629,12 +629,12 @@ if (zen_not_null($action)) {
 
           <?php echo zen_draw_form('new_prices', FILENAME_PRODUCTS_PRICE_MANAGER, zen_get_all_get_params(array('action', 'info', $_GET['products_filter'])) . 'action=' . 'update', 'post', 'onsubmit="return check_dates_ppm(featured_start,FeaturedStartDate.required, featured_end, FeaturedEndDate.required, product_start, ProductStartDate.required);" class="form-horizontal"'); ?>
           <?php
-          if ($action == 'edit' || $action == 'edit_update') { 
-            $readonly = ''; 
-            $jsreadonly=''; 
+          if ($action == 'edit' || $action == 'edit_update') {
+            $readonly = '';
+            $jsreadonly='';
           } else {
-            $readonly=" readonly"; 
-            $jsreadonly = " disabled"; 
+            $readonly=" readonly";
+            $jsreadonly = " disabled";
           }
           echo zen_draw_hidden_field('products_id', $_GET['products_filter']);
           echo zen_draw_hidden_field('specials_id', isset($sInfo->specials_id) ? $sInfo->specials_id : '');
@@ -712,7 +712,7 @@ if (zen_not_null($action)) {
             <div class="col-sm-9 col-md-6">
               <script>
               <?php if (!empty($readonly)) { ?>
-                ProductStartDate.readonly = true; 
+                ProductStartDate.readonly = true;
               <?php } ?>
                 ProductStartDate.writeControl();
                 ProductStartDate.dateFormat = "<?php echo DATE_FORMAT_SPIFFYCAL; ?>";
@@ -821,7 +821,7 @@ if (zen_not_null($action)) {
               <div class="col-sm-9 col-md-6">
                 <script>
               <?php if (!empty($readonly)) { ?>
-                SpecialStartDate.readonly = true; 
+                SpecialStartDate.readonly = true;
               <?php } ?>
                   SpecialStartDate.writeControl();
                   SpecialStartDate.dateFormat = "<?php echo DATE_FORMAT_SPIFFYCAL; ?>";
@@ -833,7 +833,7 @@ if (zen_not_null($action)) {
               <div class="col-sm-9 col-md-6">
                 <script>
               <?php if (!empty($readonly)) { ?>
-                SpecialEndDate.readonly = true; 
+                SpecialEndDate.readonly = true;
               <?php } ?>
                   SpecialEndDate.writeControl();
                   SpecialEndDate.dateFormat = "<?php echo DATE_FORMAT_SPIFFYCAL; ?>";
@@ -903,7 +903,7 @@ if (zen_not_null($action)) {
               <div class="col-sm-9 col-md-6">
                 <script>
               <?php if (!empty($readonly)) { ?>
-                FeaturedStartDate.readonly = true; 
+                FeaturedStartDate.readonly = true;
               <?php } ?>
                   FeaturedStartDate.writeControl();
                   FeaturedStartDate.dateFormat = "<?php echo DATE_FORMAT_SPIFFYCAL; ?>";
@@ -915,7 +915,7 @@ if (zen_not_null($action)) {
               <div class="col-sm-9 col-md-6">
                 <script>
               <?php if (!empty($readonly)) { ?>
-                FeaturedEndDate.readonly = true; 
+                FeaturedEndDate.readonly = true;
               <?php } ?>
                   FeaturedEndDate.writeControl();
                   FeaturedEndDate.dateFormat = "<?php echo DATE_FORMAT_SPIFFYCAL; ?>";

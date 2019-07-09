@@ -48,9 +48,8 @@
 <title><?php echo TITLE; ?></title>
 <link rel="stylesheet" type="text/css" href="includes/stylesheet.css">
 <link rel="stylesheet" type="text/css" href="includes/cssjsmenuhover.css" media="all" id="hoverJS">
-<script language="javascript" src="includes/menu.js"></script>
+<script type="text/javascript" src="includes/menu.js"></script>
 <script type="text/javascript">
-  <!--
   function init()
   {
     cssjsmenu('navbar');
@@ -60,9 +59,8 @@
       kill.disabled = true;
     }
   }
-  // -->
 </script>
-<style>
+<style type="text/css">
 .pageHeading {font-size: 2em;}
 .serverInfo{max-width: 800px; margin-left: auto; margin-right: auto; font-size: 1.1em;}
 .infocell {float:left; width: 380px;margin-right:10px;}

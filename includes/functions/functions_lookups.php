@@ -684,6 +684,10 @@ function zen_get_configuration_key_value($lookup)
     $sql = "select p.products_image from " . TABLE_PRODUCTS . " p  where products_id='" . (int)$product_id . "'";
     $look_up = $db->Execute($sql);
 
+    if ($look_up->EOF) {
+      return false;
+    }
+
     return zen_image(DIR_WS_IMAGES . $look_up->fields['products_image'], zen_get_products_name($product_id), $width, $height);
   }
 

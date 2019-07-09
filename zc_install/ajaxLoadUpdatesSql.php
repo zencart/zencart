@@ -30,6 +30,7 @@ $updateList = array(
         '1.5.4'=>array('required'=>'1.5.3'),
         '1.5.5'=>array('required'=>'1.5.4'),
         '1.5.6'=>array('required'=>'1.5.5'),
+        '1.5.7'=>array('required'=>'1.5.6'),
         );
 
 $systemChecker = new systemChecker();
@@ -43,6 +44,7 @@ $versionInfo = $updateList[$updateVersion];
 if ($versionInfo['required'] != $dbVersion)
 {
   $error = TRUE;
+  if (empty($versionInfo['required'])) $versionInfo['required'] = '[ ERROR: NOT READY FOR UPGRADES YET. NOTIFY DEV TEAM!] ';
   $errorList[] = sprintf(TEXT_COULD_NOT_UPDATE_BECAUSE_ANOTHER_VERSION_REQUIRED, $updateVersion, $dbVersion, $versionInfo['required']);
 }
 if (!$error)

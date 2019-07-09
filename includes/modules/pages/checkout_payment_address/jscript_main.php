@@ -9,7 +9,7 @@
  * @version $Id: dakanji Thu Jun 14 20:55:08 2018 +0300 Modified in v1.5.6 $
  */
 ?>
-<script type="text/javascript"><!--
+<script type="text/javascript">
 var selected;
 
 function check_form_optional(form_name) {
@@ -175,5 +175,5 @@ function check_form(form_name) {
     return true;
   }
 }
-//--></script>
+</script>
 

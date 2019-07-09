@@ -9,7 +9,7 @@
  * @version $Id: Author: DrByte  Wed Jan 6 12:47:43 2016 -0500 Modified in v1.5.5 $
  */
 ?>
-<script type="text/javascript"><!--
+<script type="text/javascript">
 var selected;
 
 function check_form_optional(form_name) {
@@ -175,4 +175,4 @@ function check_form(form_name) {
     return true;
   }
 }
-//--></script>
+</script>

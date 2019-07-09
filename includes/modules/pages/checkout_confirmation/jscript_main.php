@@ -9,7 +9,7 @@
  * @version $Id: DrByte 2019 May 25 Modified in v1.5.6b $
  */
 ?>
-<script type="text/javascript"><!--
+<script type="text/javascript">
 var submitter = null;
 function popupWindow(url) {
   window.open(url,'popupWindow','toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no,width=450,height=320,screenX=150,screenY=150,top=150,left=150')
@@ -39,4 +39,4 @@ function button_timeout() {
   button.disabled = true;
 }
 
-//--></script>
+</script>

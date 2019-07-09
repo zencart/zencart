@@ -510,7 +510,7 @@ class AdminRequestSanitizer extends base
             $this->arrayName = $this->setCurrentArrayName($parameterName);
             $this->debugMessages[] = 'PROCESSING PRODUCT_URL_REGEX == ' . $this->arrayName;
             foreach ($_POST[$parameterName] as $pKey => $pValue) {
-                $currentArrayName = $this->setCurrentArrayname($pKey, $this->arrayName);
+                $currentArrayName = $this->setCurrentArrayname($pKey);
                 $newValue = filter_var($_POST[$parameterName][$pKey], FILTER_SANITIZE_URL);
                 if ($newValue === false) {
                     $newValue = preg_replace($urlRegex, '', $_POST[$parameterName][$pKey]);

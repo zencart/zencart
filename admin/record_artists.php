@@ -112,7 +112,7 @@ if (zen_not_null($action)) {
         }
       } else {
         $db->Execute("UPDATE " . TABLE_PRODUCT_MUSIC_EXTRA . "
-                      SET artists_id = ''
+                      SET artists_id = 0 
                       WHERE artists_id = " . (int)$artists_id);
       }
 

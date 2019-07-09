@@ -9,8 +9,8 @@
  * @version $Id: Author: DrByte  Wed Jan 6 12:47:43 2016 -0500 Modified in v1.5.5 $
  */
 ?>
-<script type="text/javascript"><!--
+<script type="text/javascript">
 function checkBox(object) {
   document.account_newsletter.elements[object].checked = !document.account_newsletter.elements[object].checked;
 }
-//--></script>
+</script>

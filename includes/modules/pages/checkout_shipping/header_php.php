@@ -102,6 +102,7 @@ if (isset($_SESSION['cart']->cartID)) {
   $shipping_modules = new shipping;
 
   $pass = true;
+  $free_shipping = false;
   if ( defined('MODULE_ORDER_TOTAL_SHIPPING_FREE_SHIPPING') && (MODULE_ORDER_TOTAL_SHIPPING_FREE_SHIPPING == 'true') ) {
     $pass = false;
 
@@ -121,12 +122,9 @@ if (isset($_SESSION['cart']->cartID)) {
         break;
     }
 
-    $free_shipping = false;
     if ( ($pass == true) && ($_SESSION['cart']->show_total() >= MODULE_ORDER_TOTAL_SHIPPING_FREE_SHIPPING_OVER) ) {
       $free_shipping = true;
     }
-  } else {
-    $free_shipping = false;
   }
 
   require(DIR_WS_MODULES . zen_get_module_directory('require_languages.php'));

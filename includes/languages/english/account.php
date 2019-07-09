@@ -17,7 +17,6 @@ define('TABLE_HEADING_DATE', 'Date');
 define('TABLE_HEADING_ORDER_NUMBER', 'No.');
 define('TABLE_HEADING_SHIPPED_TO', 'Ship To');
 define('TABLE_HEADING_STATUS', 'Status');
-define('TABLE_HEADING_TOTAL', 'Total');
 define('TABLE_HEADING_VIEW', 'View');
 
 define('MY_ACCOUNT_TITLE', 'My Account');

@@ -7,7 +7,7 @@
  * @version $Id: Scott C Wilson 2019 Jan 24 Modified in v1.5.6b $
  */
 
-define('HEADING_TITLE', 'CATEGORIES: ');
+define('HEADING_TITLE', 'Attributes Controller');
 
 define('HEADING_TITLE_OPT', 'Product Options');
 define('HEADING_TITLE_VAL', 'Option Values');
@@ -92,7 +92,7 @@ define('TABLE_TEXT_MAX_COUNT_SHORT', 'Max:');
   define('TEXT_ATTRIBUTES_DEFAULT', 'Default Attribute<br />to be Marked Selected:');
   define('TEXT_ATTRIBUTE_IS_DISCOUNTED', 'Apply Discounts Used<br />by Product Special/Sale:');
   define('TEXT_ATTRIBUTE_PRICE_BASE_INCLUDED','Include in Base Price<br />When Priced by Attributes');
-  define('TEXT_ATTRIBUTES_REQUIRED','Attribute Required<br />for Text:');
+  define('TEXT_ATTRIBUTES_REQUIRED','Attribute Required<br />for Text<br />or File:');
 
   define('LEGEND_BOX','Legend:');
   define('LEGEND_KEYS','OFF/ON');
@@ -142,17 +142,12 @@ define('TABLE_TEXT_MAX_COUNT_SHORT', 'Max:');
 
   define('TEXT_DELETE_ALL_ATTRIBUTES','Are you sure you want to delete all attributes for ID# ');
 
-  define('TEXT_ATTRIBUTE_COPY_SKIPPING','<strong>Skipping New Attribute </strong>');
-  define('TEXT_ATTRIBUTE_COPY_INSERTING','<strong>Inserting New Attribute from </strong>');
-  define('TEXT_ATTRIBUTE_COPY_UPDATING','<strong>Updating from Attribute </strong>');
-
 // preview
   define('TEXT_ATTRIBUTES_PREVIEW','PREVIEW ATTRIBUTES');
   define('TEXT_ATTRIBUTES_PREVIEW_DISPLAY','PREVIEW ATTRIBUTES DISPLAY FOR ID#');
   define('TEXT_PRODUCT_OPTIONS', '<strong>Please Choose:</strong>');
 
   define('TEXT_ATTRIBUTES_INSERT_INFO', '<strong>Define the Attribute Settings then press Insert to apply</strong>');
-  define('TEXT_PRICED_BY_ATTRIBUTES', 'Priced by Attributes');
   define('TEXT_PRODUCTS_PRICE', 'Products Price: ');
   define('TEXT_SPECIAL_PRICE', 'Special Price: ');
   define('TEXT_SALE_PRICE', 'Sale Price: ');
@@ -160,7 +155,6 @@ define('TABLE_TEXT_MAX_COUNT_SHORT', 'Max:');
   define('TEXT_CALL_FOR_PRICE', 'Call for Price');
   define('TEXT_SAVE_CHANGES','UPDATE AND SAVE CHANGES:');
 
-  define('TEXT_INFO_ID', 'ID#');
   define('TEXT_INFO_ALLOW_ADD_TO_CART_NO', 'No adding to cart');
 
   define('TEXT_DELETE_ATTRIBUTES_OPTION_NAME_VALUES', 'Confirm deletion of ALL of the Product Option Values for Option Name ...');
@@ -168,9 +162,9 @@ define('TABLE_TEXT_MAX_COUNT_SHORT', 'Max:');
   define('TEXT_INFO_PRODUCTS_OPTION_NAME', '<strong>Option Name: </strong>');
   define('TEXT_INFO_PRODUCTS_OPTION_ID', '<strong>ID#</strong>');
   define('SUCCESS_ATTRIBUTES_DELETED_OPTION_NAME_VALUES', 'Successful deletion of all Option Values for Option Name: ');
-  
-  define('BUTTON_ADDITITONAL_ACTIONS', 'Additional Actions');
-  define('TEXT_UPDATE_DEFAULTE_SORT_ORDER', 'Update sort order to default');
+
+  define('BUTTON_ADDITIONAL_ACTIONS', 'Additional Actions');
+  define('TEXT_UPDATE_DEFAULT_SORT_ORDER', 'Update Sort Order to default');
   define('TEXT_DELETE_ALL_OPTIONS_FROM_PRODUCT', 'Delete all options from product');
   define('TEXT_COPY_ALL_OPTIONS_TO_PRODUCT', 'Copy options to another product');
   define('TEXT_COPY_ALL_OPTIONS_TO_CATEGORY', 'Copy options to a whole category');

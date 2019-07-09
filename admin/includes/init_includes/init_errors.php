@@ -24,15 +24,6 @@ if (!defined('IS_ADMIN_FLAG')) {
     $messageStack->add(WARNING_FILE_UPLOADS_DISABLED, 'warning');
   }
 
-// set demo message
-  if (zen_get_configuration_key_value('ADMIN_DEMO')=='1') {
-    if (zen_admin_demo()) {
-      $messageStack->add(ADMIN_DEMO_ACTIVE, 'warning');
-    } else {
-      $messageStack->add(ADMIN_DEMO_ACTIVE_EXCLUSION, 'warning');
-    }
-  }
-
   // check if email subsystem has been disabled
   if (SEND_EMAILS != 'true') {
     $messageStack->add(WARNING_EMAIL_SYSTEM_DISABLED, 'error');

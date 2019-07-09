@@ -19,6 +19,6 @@ if (!defined('IS_ADMIN_FLAG')) {
  */
 if (!isset($_SESSION['language'])) $_SESSION['language'] = 'english';
 
-require(zen_get_file_directory(DIR_FS_CATALOG . DIR_WS_LANGUAGES . $_SESSION['language'], 'checkout_process.php', 'false'));
+require(zen_get_file_directory(DIR_FS_CATALOG . DIR_WS_LANGUAGES . $_SESSION['language'] . "/", 'checkout_process.php', 'false'));
 
 ?>

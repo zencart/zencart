@@ -21,9 +21,8 @@ class shipping extends base {
   var $modules;
 
   // class constructor
-  function __construct($module = '') {
+  function __construct($module = null) {
     global $PHP_SELF, $messageStack;
-
     if (defined('MODULE_SHIPPING_INSTALLED') && zen_not_null(MODULE_SHIPPING_INSTALLED)) {
       $this->modules = explode(';', MODULE_SHIPPING_INSTALLED);
 

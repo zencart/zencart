@@ -3,19 +3,19 @@ Zen Cart&reg; - The Art of E-Commerce
 
 Zen Cart&reg; was the first Open Source e-Commerce web application to be fully PA-DSS Certified.
 
-Zen Cart&reg; v1.5.6 is an update with several bugfix patches applied on top of the PA-DSS Certified version v1.5.4.
+Zen Cart&reg; v1.5.7 is an update with several bugfix patches applied on top of the PA-DSS Certified version v1.5.4.
 
 It's free software, with free community-driven support available 24/7 on the Zen Cart&reg; Support Site forums at <https://www.zen-cart.com/forum.php>
 
 --------------------
 
 
-Zen Cart&reg; v1.5.6b
+Zen Cart&reg; v1.5.7-dev
 ---------------------
 
 Compatibility
 -------------
-Zen Cart v1.5.6 is designed for:
+Zen Cart v1.5.7 is designed for:
  * PHP 5.6 to PHP 7.3 (it "can" work on PHP 5.5, but should use a newer version)
  * Apache 2.2 and 2.4
  * MySQL 5.1 to 5.7 (including MariaDB 10.0 to 10.3)
@@ -57,7 +57,8 @@ Developer Documentation
 -----------------------
 Developers wishing to contribute to the Zen Cart&reg; core code may fork the [zencart/zencart](https://github.com/zencart/zencart) repository on github and issue Pull Requests from their own feature branches. For detailed help on using github, forking, branching, and contributing see [Contributing to Zen Cart code](http://docs.zen-cart.com/Contributing/).
 
-Visit [docs.zen-cart.com](https://docs.zen-cart.com/Developer_Documentation/) for guidance on issues relevant to developers. This documentation site is very new, but content will be added over time.
+Visit [docs.zen-cart.com](https://docs.zen-cart.com/Developer_Documentation/) for guidance on issues relevant to developers. This documentation site is very new, but content will be added over time.  
+Developers wishing to contribute documentation should fork [zencart/documentation](https://github.com/zencart/documentation) and contribute PRs. 
 
 Developers will find the standalone [Habitat VM](http://docs.zen-cart.com/Habitat/main) to be a useful tool for staging site upgrades and doing offline feature development or testing. Designers may like it for testing new templates without affecting the live site.
 

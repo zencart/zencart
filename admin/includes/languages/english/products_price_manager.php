@@ -86,7 +86,6 @@ define('TEXT_INFO_HEADING_DELETE_FEATURED', 'Delete Featured');
 define('TEXT_INFO_DELETE_INTRO', 'Are you sure you want to delete the featured product?');
 
   define('TEXT_ATTRIBUTES_INSERT_INFO', '<strong>Define the Attribute Settings then press Insert to apply</strong>');
-  define('TEXT_PRICED_BY_ATTRIBUTES', 'Priced by Attributes');
   define('TEXT_PRODUCTS_PRICE', 'Products Price: ');
   define('TEXT_SPECIAL_PRICE', 'Special Price: ');
   define('TEXT_SALE_PRICE', 'Sale Price: ');
@@ -136,4 +135,4 @@ define('PRODUCT_WARNING_UPDATE_CANCEL', 'Changes were Cancelled and not saved ..
 define('TEXT_INFO_EDIT_CAUTION', '<strong>Click to begin Editing ...</strong>');
 define('TEXT_INFO_PREVIEW_ONLY', 'Preview Only ... Current Price Status ... Preview Only');
 define('TEXT_INFO_UPDATE_REMINDER', '<strong>Edit Product Information then Update to save</strong>');
-define('BUTTON_ADDITITONAL_ACTIONS', 'Additional Actions');
+define('BUTTON_ADDITIONAL_ACTIONS', 'Additional Actions');

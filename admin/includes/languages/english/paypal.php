@@ -1,27 +1,10 @@
 <?php
-//
-// +----------------------------------------------------------------------+
-// |zen-cart Open Source E-commerce                                       |
-// +----------------------------------------------------------------------+
-// | Copyright (c) 2003 The zen-cart developers                           |
-// |                                                                      |
-// | http://www.zen-cart.com/index.php                                    |
-// |                                                                      |
-// | Portions Copyright (c) 2003 osCommerce                               |
-// |                                                                      |
-// |   DevosC, Developing open source Code                                |
-// |   Copyright (c) 2004 DevosC.com                                      |
-// +----------------------------------------------------------------------+
-// | This source file is subject to version 2.0 of the GPL license,       |
-// | that is bundled with this package in the file LICENSE, and is        |
-// | available through the world-wide-web at the following url:           |
-// | http://www.zen-cart.com/license/2_0.txt.                             |
-// | If you did not receive a copy of the zen-cart license and are unable |
-// | to obtain it through the world-wide-web, please send a note to       |
-// | license@zen-cart.com so we can mail you a copy immediately.          |
-// +----------------------------------------------------------------------+
-//  $Id: paypal.php 3016 2006-02-12 05:26:46Z ajeh $
-//
+/**
+ * @package admin
+ * @copyright Copyright 2003-2019 Zen Cart Development Team
+ * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
+ * @version $Id: $
+ */
 
   // sort orders
   define('TEXT_PAYPAL_IPN_SORT_ORDER_INFO', 'Display Order: ');
@@ -47,7 +30,6 @@
   define('TABLE_HEADING_NUM_HISTORY_ENTRIES', 'Number of entries in Status History');
   define('TABLE_HEADING_ENTRY_NUM', 'Entry Number');
   define('TABLE_HEADING_TRANS_ID', 'Trans. ID');
-
 
 
   define('TEXT_INFO_PAYPAL_IPN_HEADING', 'PayPal IPN');
@@ -90,4 +72,3 @@
   define('TEXT_NO_IPN_HISTORY', 'No IPN history available');
   define('TEXT_TXN_SIGNATURE', 'Transaction Signature');
   //end ADMIN text
-?>

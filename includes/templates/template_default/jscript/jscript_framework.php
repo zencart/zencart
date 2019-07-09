@@ -1,12 +1,12 @@
 <?php
 /**
- * @package admin
+ * @package templateSystem
  * @copyright Copyright 2003-2017 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: Author: zcwilt  lat9 Modified in v1.5.6 $
  */
 ?>
-<script type="text/javascript"><!--//<![CDATA[
+<script type="text/javascript">
 if (typeof zcJS == "undefined" || !zcJS) {
   window.zcJS = { name: 'zcJS', version: '0.1.0.0' };
 };
@@ -130,4 +130,4 @@ zcJS.timer = function (options) {
   };
 };
 
-//]] --></script>
+</script>

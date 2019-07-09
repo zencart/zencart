@@ -257,6 +257,12 @@ systemChecks:
     methods:
       checkHttpsRequest:
 
+  checkDBVersion157:
+    runLevel: dbVersion
+    errorLevel: WARN
+    version: '1.5.7-alpha'
+    mainErrorText: <?php echo sprintf(TEXT_DB_VERSION_NOT_FOUND, 'v1.5.7-alpha') . PHP_EOL; ?>
+
   checkDBVersion156:
     runLevel: dbVersion
     errorLevel: WARN
