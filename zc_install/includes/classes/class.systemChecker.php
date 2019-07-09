@@ -160,6 +160,7 @@ class systemChecker
       if ($systemCheck['runLevel'] == 'dbVersion')
       {
         $resultCombined = TRUE;
+        if (!isset($systemCheck['methods'])) $systemCheck['methods'] = array(); 
         foreach ($systemCheck['methods'] as $methodName => $methodDetail)
         {
           if (isset($methodDetail['method'])) $methodName = $methodDetail['method'];
