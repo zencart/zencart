@@ -216,16 +216,13 @@ class payment extends base {
   }
 
   function confirmation() {
-    $confirmation = array('title' => '', 'fields' => array());
-    if (is_array($this->modules)) {
-      if (is_object($GLOBALS[$this->selected_module]) && ($GLOBALS[$this->selected_module]->enabled) ) {
-        $confirmation = $GLOBALS[$this->selected_module]->confirmation();
-        if (!is_array($confirmation)) $confirmation = array('title' => '', 'fields' => array());
-        if (!isset($confirmation['fields']) || !is_array($confirmation['fields'])) $confirmation['fields'] = array();
-        if (!isset($confirmation['title'])) $confirmation['title'] = '';
-      }
-    }
-    return $confirmation;
+    $default = array('title' => '', 'fields' => array());
+    if (!is_array($this->modules)) return $default;
+    if (!is_object($GLOBALS[$this->selected_module])) return $default;
+    if (!$GLOBALS[$this->selected_module]->enabled) return $default;
+    $confirmation = $GLOBALS[$this->selected_module]->confirmation();
+    if (!is_array($confirmation)) return $default;
+    return array_merge($default, $confirmation);
   }
 
   function process_button_ajax() {
