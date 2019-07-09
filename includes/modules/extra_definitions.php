@@ -43,8 +43,6 @@ if (sizeof($file_array)) {
 }
 
 
-$file_cnt=0;
 foreach ($file_array as $file => $include_file) { 
-  $file_cnt++;
   include($include_file);
 }
