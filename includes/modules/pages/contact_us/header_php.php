@@ -22,6 +22,8 @@ if (isset($_GET['action']) && ($_GET['action'] == 'send')) {
     $email_address = zen_db_prepare_input($_POST['email']);
     $enquiry = zen_db_prepare_input(strip_tags($_POST['enquiry']));
     $antiSpam = isset($_POST['should_be_empty']) ? zen_db_prepare_input($_POST['should_be_empty']) : '';
+    if (!empty($_POST['contactname']) && preg_match('~https?://?~', $_POST['contactname'])) $antiSpam = 'spam';
+
     $zco_notifier->notify('NOTIFY_CONTACT_US_CAPTCHA_CHECK', $_POST);
 
     $zc_validate_email = zen_validate_email($email_address);

@@ -18,9 +18,12 @@ $copy_attributes_include_downloads = '1';
 $copy_attributes_include_filename = '1';
 
 $heading[] = array('text' => '<h4>' . TEXT_INFO_HEADING_COPY_TO . '</h4>');
-// WebMakers.com Added: Split Page
 if (empty($pInfo->products_id)) {
-  $pInfo->products_id = $pID;
+  if (!is_object($pInfo)) {
+    $pInfo = new objectInfo(array('products_id' => $pID)); 
+  } else {
+    $pInfo->products_id = $pID;
+  }
 }
 
 $contents = array('form' => zen_draw_form('copy_product', FILENAME_CATEGORY_PRODUCT_LISTING, 'action=copy_product_confirm&cPath=' . $cPath . (isset($_GET['page']) ? '&page=' . $_GET['page'] : ''), 'post', 'class="form-horizontal"') . zen_draw_hidden_field('products_id', $pInfo->products_id));

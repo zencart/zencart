@@ -53,18 +53,18 @@ define('TEXT_DATABASE_SETUP_ADVANCED_SETTINGS', 'Advanced Settings');
 define('TEXT_DATABASE_SETUP_DB_CHARSET', 'Database Character Set: ');
 define('TEXT_DATABASE_SETUP_DB_PREFIX', 'Store Prefix: ');
 define('TEXT_DATABASE_SETUP_SQL_CACHE_METHOD', 'SQL Cache Method: ');
-define('TEXT_DATABASE_SETUP_JSCRIPT_SQL_ERRORS1', '<p>Some errors occurred when running the SQL install file');
-define('TEXT_DATABASE_SETUP_JSCRIPT_SQL_ERRORS2', '<br>Please see error logs for more details<p>');
+define('TEXT_DATABASE_SETUP_JSCRIPT_SQL_ERRORS1', 'Some errors occurred when running the SQL install file');
+define('TEXT_DATABASE_SETUP_JSCRIPT_SQL_ERRORS2', '<br>Please see error logs for more details');
 define('TEXT_DATABASE_SETUP_CHARSET_OPTION_UTF8MB4', 'utf8mb4 (default setting)');
 define('TEXT_DATABASE_SETUP_CHARSET_OPTION_UTF8', 'utf8 (older format)');
 define('TEXT_DATABASE_SETUP_CHARSET_OPTION_LATIN1', 'latin1 (much older format)');
 define('TEXT_DATABASE_SETUP_CACHE_TYPE_OPTION_NONE', 'No SQL Caching');
 define('TEXT_DATABASE_SETUP_CACHE_TYPE_OPTION_DATABASE', 'Database');
 define('TEXT_DATABASE_SETUP_CACHE_TYPE_OPTION_FILE', 'File');
-define('TEXT_EXAMPLE_DB_HOST', "usually 'localhost'");
+define('TEXT_EXAMPLE_DB_HOST', 'usually "localhost"');
 define('TEXT_EXAMPLE_DB_USER', 'enter your MySQL username');
 define('TEXT_EXAMPLE_DB_PWD', 'enter the password for your MySQL user');
-define('TEXT_EXAMPLE_DB_PREFIX', "usually best left blank, or use zen_");
+define('TEXT_EXAMPLE_DB_PREFIX', 'usually best left blank, or use zen_');
 define('TEXT_EXAMPLE_DB_NAME', 'enter your MySQL database name');
 define('TEXT_EXAMPLE_CACHEDIR', 'usually points to the equivalent of /your/user/home/public_html/zencart/cache folder');
 
@@ -101,8 +101,8 @@ define('TEXT_COMPLETION_INSTALL_COMPLETE', 'One more thing!');
 define('TEXT_COMPLETION_INSTALL_LINKS_BELOW', 'The links to access your storefront and admin dashboard are shown below:');
 define('TEXT_COMPLETION_UPGRADE_COMPLETE', 'Congratulations, your upgrade is now complete.');
 define('TEXT_COMPLETION_ADMIN_DIRECTORY_WARNING', 'Your admin directory could not be renamed automatically, you will need to rename your admin directory before accessing it');
-define('TEXT_COMPLETION_INSTALLATION_DIRECTORY_WARNING', "Please delete the 'zc_install' folder now");
-define('TEXT_COMPLETION_INSTALLATION_DIRECTORY_EXPLANATION', "To prevent unauthorized persons from overwriting your installation, administering your installation will be disabled until the folder has been deleted.");
+define('TEXT_COMPLETION_INSTALLATION_DIRECTORY_WARNING', 'Please delete the "zc_install" folder now');
+define('TEXT_COMPLETION_INSTALLATION_DIRECTORY_EXPLANATION', 'To prevent unauthorized persons from overwriting your installation, administering your installation will be disabled until the folder has been deleted.');
 
 define('TEXT_COMPLETION_CATALOG_LINK_TEXT', 'Your Storefront');
 define('TEXT_COMPLETION_ADMIN_LINK_TEXT', 'Your Admin Dashboard');
@@ -149,8 +149,8 @@ define('TEXT_ERROR_PROBLEMS_WRITING_CONFIGUREPHP_FILES', 'There were problems pr
 define('TEXT_ERROR_COULD_NOT_READ_CFGFILE_TEMPLATE', 'Could not read the master config file layout: %s. Please ensure the file exists and is readable.');
 define('TEXT_ERROR_COULD_NOT_WRITE_CONFIGFILE', 'Could not write the generated config file: %s. Please ensure the file exists and is writable.');
 
-define('TEXT_ERROR_STORE_CONFIGURE', "Main /includes/configure.php file either does not exist, is not readable or is not writeable");
-define('TEXT_ERROR_ADMIN_CONFIGURE', "Admin /admin/includes/configure.php file either does not exist, is not readable or is not writeable");
+define('TEXT_ERROR_STORE_CONFIGURE', 'Main /includes/configure.php file either does not exist, is not readable or is not writeable');
+define('TEXT_ERROR_ADMIN_CONFIGURE', 'Admin /admin/includes/configure.php file either does not exist, is not readable or is not writeable');
 define('TEXT_ERROR_PHP_VERSION', str_replace(array("\n", "\r"), '', 'Incorrect PHP Version.
 <p>The PHP version you are using (' . PHP_VERSION . ') is not suitable.</p>
 <p>This version of Zen Cart&reg; is compatible with PHP versions 5.5 to 7.3.x.<br>
@@ -235,51 +235,51 @@ define('TEXT_HELP_CONTENT_CONNECTIONDATABASECHECK', 'We tried to connect to MySQ
 define('TEXT_HELP_TITLE_CHECKCURL', TEXT_ERROR_CURL);
 define('TEXT_HELP_CONTENT_CHECKCURL', 'CURL is a background process used by (PHP in) your store to connect to external servers and services such as payment and shipping providers to process transactions or get real-time shipping quotes. When we tested CURL functionality on your server we were unable to establish a connection. This could indicate a problem with your webserver configuration. Please contact your hosting company for assistance to enable CURL support on your server.<br><br>If you are a developer running this site on an offline development server then it is unsurprising that CURL cannot connect for this test. CURL is not necessary for development purposes except for testing transactional activity, at which time connecting online will be required.');
 define('TEXT_HELP_TITLE_ADMINSERVERDOMAIN', 'Admin Server Domain');
-define('TEXT_HELP_CONTENT_ADMINSERVERDOMAIN', "Enter the domain name for accessing your Admin area. It is strongly recommended to use HTTPS (SSL) for this address. Consult your hosting company about enabling SSL on your site.");
+define('TEXT_HELP_CONTENT_ADMINSERVERDOMAIN', 'Enter the domain name for accessing your Admin area. It is strongly recommended to use HTTPS (SSL) for this address. Consult your hosting company about enabling SSL on your site.');
 define('TEXT_HELP_TITLE_ENABLESSLCATALOG', 'Enable SSL for Storefront?');
-define('TEXT_HELP_CONTENT_ENABLESSLCATALOG', "Check this box if you have an SSL certificate on your hosting account and you want Zen Cart&reg; to use it when displaying sensitive pages such as Login, My Account, Checkout, etc.");
+define('TEXT_HELP_CONTENT_ENABLESSLCATALOG', 'Check this box if you have an SSL certificate on your hosting account and you want Zen Cart&reg; to use it when displaying sensitive pages such as Login, My Account, Checkout, etc.');
 define('TEXT_HELP_TITLE_HTTPSERVERCATALOG', 'Storefront HTTP Domain');
-define('TEXT_HELP_CONTENT_HTTPSERVERCATALOG', "Enter the domain-part of the URL for your store. eg: http://www.example.com");
+define('TEXT_HELP_CONTENT_HTTPSERVERCATALOG', 'Enter the domain-part of the URL for your store. eg: http://www.example.com');
 define('TEXT_HELP_TITLE_HTTPURLCATALOG', 'Storefront HTTP URL');
-define('TEXT_HELP_CONTENT_HTTPURLCATALOG', "Enter the entire URL for your store.  eg: http://www.example.com/zencart/");
+define('TEXT_HELP_CONTENT_HTTPURLCATALOG', 'Enter the entire URL for your store.  eg: http://www.example.com/zencart/');
 define('TEXT_HELP_TITLE_HTTPSSERVERCATALOG', 'Storefront HTTPS Domain');
-define('TEXT_HELP_CONTENT_HTTPSSERVERCATALOG', "If you have checked the box above to enable use of SSL during checkout, you must enter here the domain-part of the https URL to your store.<br>This is typically something like:<br>https://www.example.com<br>https://www.hostingcompany.com/~username<br>https://www.hostingcompany.com/~username/subdomain.com");
+define('TEXT_HELP_CONTENT_HTTPSSERVERCATALOG', 'If you have checked the box above to enable use of SSL during checkout, you must enter here the domain-part of the https URL to your store.<br>This is typically something like:<br>https://www.example.com<br>https://www.hostingcompany.com/~username<br>https://www.hostingcompany.com/~username/subdomain.com');
 define('TEXT_HELP_TITLE_HTTPSURLCATALOG', 'Storefront HTTPS URL');
-define('TEXT_HELP_CONTENT_HTTPSURLCATALOG', "Enter the https URL to your store. This is typically the same as the HTTPS Domain, followed by the foldername in which your store's files are kept. eg: https://www.example.com/zencart");
+define('TEXT_HELP_CONTENT_HTTPSURLCATALOG', 'Enter the https URL to your store. This is typically the same as the HTTPS Domain, followed by the foldername in which your store\'s files are kept. eg: https://www.example.com/zencart');
 define('TEXT_HELP_TITLE_PHYSICALPATH', 'Storefront Physical Path');
-define('TEXT_HELP_CONTENT_PHYSICALPATH', "This is the actual path (according to your server's filesystem) where your Zen Cart&reg; files are located. Common examples look like '/users/home/public_html/zencart'. <br>It is important to provide the correct complete path, else Zen Cart&reg; will not be able to find its files in order to run.");
+define('TEXT_HELP_CONTENT_PHYSICALPATH', 'This is the actual path (according to your server\'s filesystem) where your Zen Cart&reg; files are located. Common examples look like "/users/home/public_html/zencart". <br>It is important to provide the correct complete path, else Zen Cart&reg; will not be able to find its files in order to run.');
 
 
 
 define('TEXT_HELP_TITLE_DBHOST', 'Database Host');
-define('TEXT_HELP_CONTENT_DBHOST', "What is the database host?  The database host can be in the form of a host name, such as 'localhost' or 'db1.myserver.com', or as an IP Address, such as '192.168.0.1'. Most hosting companies use 'localhost' here. <br>Your hosting company can tell you what to use, and this information is usually shown on the screen in their control panel where you create the database and assign user permissions to the database.<br>If you need assistance finding this information, consult your hosting company online FAQ documentation.");
+define('TEXT_HELP_CONTENT_DBHOST', 'What is the database host?  The database host can be in the form of a host name, such as "localhost" or "db1.myserver.com", or as an IP Address, such as "192.168.0.1". Most hosting companies use "localhost" here. <br>Your hosting company can tell you what to use, and this information is usually shown on the screen in their control panel where you create the database and assign user permissions to the database.<br>If you need assistance finding this information, consult your hosting company online FAQ documentation.');
 define('TEXT_HELP_TITLE_DBUSER', 'Database User');
-define('TEXT_HELP_CONTENT_DBUSER', "What is the MySQL username used to connect to the database? An example username is 'myusername_store'.<br>For PCI reasons you should NEVER use 'root' here when running on a server connected to the internet.<br><br>This MySQL user needs the following permissions granted to it: ALTER, CREATE, DELETE, DROP, INDEX, INSERT, LOCK TABLES, SELECT, UPDATE (or just 'Grant All').");
+define('TEXT_HELP_CONTENT_DBUSER', 'What is the MySQL username used to connect to the database? An example username is "myusername_store".<br>For PCI reasons you should NEVER use "root" here when running on a server connected to the internet.<br><br>This MySQL user needs the following permissions granted to it: ALTER, CREATE, DELETE, DROP, INDEX, INSERT, LOCK TABLES, SELECT, UPDATE (or just "Grant All").');
 define('TEXT_HELP_TITLE_DBPASSWORD', 'Database Password');
-define('TEXT_HELP_CONTENT_DBPASSWORD', "What is the password assigned to the MySQL username you created for this database.");
+define('TEXT_HELP_CONTENT_DBPASSWORD', 'What is the password assigned to the MySQL username you created for this database.');
 define('TEXT_HELP_TITLE_DBNAME', 'Database Name');
-define('TEXT_HELP_CONTENT_DBNAME', "What is the name of the database used to hold the data? An example database name is 'zencart' or 'myaccount_zencart'.<br>NOTE: You must create this database BEFORE you can proceed with Zen Cart&reg; installation here.<br>You can create your MySQL database using your hosting company's control panel.");
+define('TEXT_HELP_CONTENT_DBNAME', 'What is the name of the database used to hold the data? An example database name is "zencart" or "myaccount_zencart".<br>NOTE: You must create this database BEFORE you can proceed with Zen Cart&reg; installation here.<br>You can create your MySQL database using your hosting company\'s control panel.');
 define('TEXT_HELP_TITLE_DEMODATA', TEXT_DATABASE_SETUP_LOAD_DEMO);
-define('TEXT_HELP_CONTENT_DEMODATA', "If you choose to load Demo Data, we will install a base set of products and categories, with sales and specials and attributes and more. These are useful for you to play around and see how various combinations can be set up and how they can look on your storefront.<br><br>You can certainly delete the demo products (by hand) later, or once you've toyed with the samples, you can re-run this install and choose to not install the demo data, and thus have a fully clean site for setting up your own new store.");
+define('TEXT_HELP_CONTENT_DEMODATA', 'If you choose to load Demo Data, we will install a base set of products and categories, with sales and specials and attributes and more. These are useful for you to play around and see how various combinations can be set up and how they can look on your storefront.<br><br>You can certainly delete the demo products (by hand) later, or once you\'ve toyed with the samples, you can re-run this install and choose to not install the demo data, and thus have a fully clean site for setting up your own new store.');
 define('TEXT_HELP_TITLE_DBCHARSET', 'Database Character Set');
-define('TEXT_HELP_CONTENT_DBCHARSET', "Most stores will use utf8mb4 or utf8.<br>If you don't have a reason to use something else, use utf8mb4.");
+define('TEXT_HELP_CONTENT_DBCHARSET', 'Most stores will use utf8mb4 or utf8.<br>If you don\'t have a reason to use something else, use utf8mb4.');
 define('TEXT_HELP_TITLE_DBPREFIX', 'Database Tablename Prefix');
-define('TEXT_HELP_CONTENT_DBPREFIX', "What is the prefix you would like used for database tables?  Example: <strong>zen_</strong><br><strong class='alert'>TIP: Leave empty if no prefix is needed.</strong><br />You can use prefixes to allow more than one store to share the same database.");
+define('TEXT_HELP_CONTENT_DBPREFIX', 'What is the prefix you would like used for database tables?  Example: <strong>zen_</strong><br><strong class="alert">TIP: Leave empty if no prefix is needed.</strong><br />You can use prefixes to allow more than one store to share the same database.');
 define('TEXT_HELP_TITLE_SQLCACHEMETHOD', 'SQL Cache Method');
-define('TEXT_HELP_CONTENT_SQLCACHEMETHOD', "Default setting is 'none'. Alternatives are 'database' or 'file'. If your server is really slow, use 'none'. If your site is moderately busy, use 'database'. If your site is extremely high traffic, use 'file'. ");
+define('TEXT_HELP_CONTENT_SQLCACHEMETHOD', 'Default setting is "none". Alternatives are "database" or "file". If your server is really slow, use "none". If your site is moderately busy, use "database". If your site is extremely high traffic, use "file". ');
 define('TEXT_HELP_TITLE_SQLCACHEDIRECTORY', 'SQL Cache Directory');
-define('TEXT_HELP_CONTENT_SQLCACHEDIRECTORY', "Enter the directory to use for file-based caching. This is a directory/folder on your webserver, and its permissions must be set to writable so that the webserver (eg Apache) can write files to it.");
+define('TEXT_HELP_CONTENT_SQLCACHEDIRECTORY', 'Enter the directory to use for file-based caching. This is a directory/folder on your webserver, and its permissions must be set to writable so that the webserver (eg Apache) can write files to it.');
 
 define('TEXT_HELP_TITLE_ADMINUSER', 'Admin Superuser Name');
-define('TEXT_HELP_CONTENT_ADMINUSER', "This will be the primary username used to manage your admin access and other admin user accounts. It will have unrestricted privileges.");
+define('TEXT_HELP_CONTENT_ADMINUSER', 'This will be the primary username used to manage your admin access and other admin user accounts. It will have unrestricted privileges.');
 define('TEXT_HELP_TITLE_ADMINEMAIL', 'Admin Superuser Email');
-define('TEXT_HELP_CONTENT_ADMINEMAIL', "This email address will be used for password recovery in case you forget your password.");
+define('TEXT_HELP_CONTENT_ADMINEMAIL', 'This email address will be used for password recovery in case you forget your password.');
 define('TEXT_HELP_TITLE_ADMINEMAIL2', 'Retype Email');
-define('TEXT_HELP_CONTENT_ADMINEMAIL2', "Please re-enter the email address. This is just to help catch accidental typos!");
+define('TEXT_HELP_CONTENT_ADMINEMAIL2', 'Please re-enter the email address. This is just to help catch accidental typos!');
 define('TEXT_HELP_TITLE_ADMINPASSWORD', 'Admin Superuser Password');
-define('TEXT_HELP_CONTENT_ADMINPASSWORD', "REMEMBER THIS PASSWORD!!!!! This is the default password assigned to the admin username you specified above. You may be asked to change it on first login (thus you can personalize it a bit more at that time). You can always manually change it anytime while you're logged into your Admin.<br><br><strong>REMEMBER THIS PASSWORD, because you will need it to log in to your store!</strong>");
+define('TEXT_HELP_CONTENT_ADMINPASSWORD', 'REMEMBER THIS PASSWORD!!!!! This is the default password assigned to the admin username you specified above. You may be asked to change it on first login (thus you can personalize it a bit more at that time). You can always manually change it anytime while you\'re logged into your Admin.<br><br><strong>REMEMBER THIS PASSWORD, because you will need it to log in to your store!</strong>');
 define('TEXT_HELP_TITLE_ADMINDIRECTORY', 'Admin Directory');
-define('TEXT_HELP_CONTENT_ADMINDIRECTORY', "We try to rename your admin folder for you automatically, to offer a degree of security-by-obscurity. While we understand that this doesn't make it foolproof, it does discourage unauthorized visitors from attacking your site. You may still consider changing the foldername yourself (just rename the folder to whatever you wish it to be, by using your FTP program or your hosting company's File Manager tool in your hosting control panel).");
+define('TEXT_HELP_CONTENT_ADMINDIRECTORY', 'We try to rename your admin folder for you automatically, to offer a degree of security-by-obscurity. While we understand that this doesn\'t make it foolproof, it does discourage unauthorized visitors from attacking your site. You may still consider changing the foldername yourself (just rename the folder to whatever you wish it to be, by using your FTP program or your hosting company\'s File Manager tool in your hosting control panel).');
 
 define('TEXT_VERSION_CHECK_NEW_VER', 'New Version Available v');
 define('TEXT_VERSION_CHECK_NEW_PATCH', 'New PATCH Available: v');
@@ -304,19 +304,19 @@ define('REASON_INDEX_ALREADY_EXISTS','Cannot add index %s to table %s because it
 define('REASON_PRIMARY_KEY_ALREADY_EXISTS','Cannot add primary key to table %s because a primary key already exists.');
 
 
-define('TEXT_COMPLETION_NGINX_TEXT', "<u>Important Security Information for Nginx</u>");
-define('TEXT_HELP_TITLE_NGINXCONF', "Securing Zen Cart on Nginx Web Servers");
-define('TEXT_HELP_CONTENT_NGINXCONF', "<div>
+define('TEXT_COMPLETION_NGINX_TEXT', '<u>Important Security Information for Nginx</u>');
+define('TEXT_HELP_TITLE_NGINXCONF', 'Securing Zen Cart on Nginx Web Servers');
+define('TEXT_HELP_CONTENT_NGINXCONF', '<div>
 	<p>
 		Your Zen Cart installation comes with security measures in a format native to the Apache Webserver.
 		<br>
 		See below to implement a similar set of measures for the Nginx Webserver. 
 	</p>
 	<hr>
-	<ul style='list-style-type:square'>
+	<ul style="list-style-type:square">
 		<li>
-			Go to your <strong>'zc_install/includes/nginx_conf'</strong> folder and open the following files using a text editor such as notepad or textedit:
-			<ul style='list-style-type:circle'>
+			Go to your <strong>"zc_install/includes/nginx_conf"</strong> folder and open the following files using a text editor such as notepad or textedit:
+			<ul style="list-style-type:circle">
 				<li>
 					zencart_ngx_http.conf
 				</li>
@@ -326,22 +326,22 @@ define('TEXT_HELP_CONTENT_NGINXCONF', "<div>
 			</ul>
 		</li>
 		<li>
-			Add the contents of <strong>'zencart_ngx_http.conf'</strong> under the <strong>'http'</strong> section of your Nginx configuration file.
-			<ul style='list-style-type:circle'>
+			Add the contents of <strong>"zencart_ngx_http.conf"</strong> under the <strong>"http"</strong> section of your Nginx configuration file.
+			<ul style="list-style-type:circle">
 				<li>
-					Edit the caching durations in the <strong>'map'</strong> block to suit as required
+					Edit the caching durations in the <strong>"map"</strong> block to suit as required
 				</li>
 			</ul>
 		</li>
 		<li>
-			Add the contents of <strong>'zencart_ngx_server.conf'</strong> to the relevant <strong>'server'</strong> block for Zen Cart in your Nginx configuration file.
-			<ul style='list-style-type:circle'>
+			Add the contents of <strong>"zencart_ngx_server.conf"</strong> to the relevant <strong>"server"</strong> block for Zen Cart in your Nginx configuration file.
+			<ul style="list-style-type:circle">
 				<li>
 					The directives may be used for SSL and/or Non SSL server blocks.
 				</li>
 				<li>
 					The directives should be placed at the beginning of the server block before any other location blocks.
-					<ul style='list-style-type:none'>
+					<ul style="list-style-type:none">
 						<li>
 							- The order in which the directives appear is important.
 						</li>
@@ -360,35 +360,35 @@ define('TEXT_HELP_CONTENT_NGINXCONF', "<div>
 			... or any other location blocks that might be processed before these are.
 		</li>
 		<li>
-			Instead, edit the <strong>'zencart_php_handler'</strong> location block to match your Nginx PHP Handling Directives.
-			<ul style='list-style-type:circle'>
+			Instead, edit the <strong>"zencart_php_handler"</strong> location block to match your Nginx PHP Handling Directives.
+			<ul style="list-style-type:circle">
 				<li>
 					Simply duplicate the contents of your existing PHP handling location block.
-					<ul style='list-style-type:none'>
+					<ul style="list-style-type:none">
 						<li>
 							- That is, copy and paste in the equivalent Nginx PHP Handling Directives.
 						</li>
 						<li>
-							- If you do not have an existing PHP handling location block, please refer to available guides such as from <a href='https://www.nginx.com/resources/wiki/start/topics/examples/phpfcgi/' target='_blank'><u>The Nginx Website</u></a>.  
+							- If you do not have an existing PHP handling location block, please refer to available guides such as from <a href="https://www.nginx.com/resources/wiki/start/topics/examples/phpfcgi/" target="_blank"><u>The Nginx Website</u></a>.  
 						</li>
 					</ul>
 				</li>
 			</ul>
 		</li>
 		<li>
-			If using plugins for 'Pretty URLs', insert the relevant directives into the specified block.
+			If using plugins for "Pretty URLs", insert the relevant directives into the specified block.
 		</li>
 		<li>
 			Reload Nginx.
-			<ul style='list-style-type:circle'>
+			<ul style="list-style-type:circle">
 				<li>
 					Do this before closing this dialog box.
 				</li>
 				<li>
-					Remember to delete the <strong>'zc_install'</strong> folder when done.
-					<ul style='list-style-type:none'>
+					Remember to delete the <strong>"zc_install"</strong> folder when done.
+					<ul style="list-style-type:none">
 						<li>
-							- Including the <strong>'zc_install/includes/nginx_conf'</strong> folder and its contents.
+							- Including the <strong>"zc_install/includes/nginx_conf"</strong> folder and its contents.
 						</li>
 					</ul>
 				</li>
@@ -396,13 +396,13 @@ define('TEXT_HELP_CONTENT_NGINXCONF', "<div>
 		</li>
 	<ol>
 </div>
-<div class='alert-box alert'>
+<div class="alert-box alert">
 	<strong>IMPORTANT:</strong> These location blocks should be <strong>BEFORE</strong> any other location blocks in your Nginx configuration server block for Zen Cart.
 </div>
-<hr>");
+<hr>');
 
 define('TEXT_HELP_TITLE_AGREETOTERMS', 'Agree To Terms');
-define('TEXT_HELP_CONTENT_AGREETOTERMS', "<a href='http://www.gnu.org/licenses/old-licenses/gpl-2.0.en.html' target='_blank'>Original GPL 2.0 text</a><h2>The GNU General Public License (GPL)</h2>
+define('TEXT_HELP_CONTENT_AGREETOTERMS', '<a href="http://www.gnu.org/licenses/old-licenses/gpl-2.0.en.html" target="_blank">Original GPL 2.0 text</a><h2>The GNU General Public License (GPL)</h2>
 
 <h3>Version 2, June 1991</h3>
 
@@ -421,7 +421,7 @@ freedom to share and change it.  By contrast, the GNU General Public
 License is intended to guarantee your freedom to share and change free
 software--to make sure the software is free for all its users.  This
 General Public License applies to most of the Free Software
-Foundation's software and to any other program whose authors commit to
+Foundation\'s software and to any other program whose authors commit to
 using it.  (Some other Free Software Foundation software is covered by
 the GNU Library General Public License instead.)  You can apply it to
 your programs, too.</p>
@@ -449,18 +449,18 @@ rights.</p>
 (2) offer you this license which gives you legal permission to copy,
 distribute and/or modify the software.</p>
 
-  <p>Also, for each author's protection and ours, we want to make certain
+  <p>Also, for each author\'s protection and ours, we want to make certain
 that everyone understands that there is no warranty for this free
 software.  If the software is modified by someone else and passed on, we
 want its recipients to know that what they have is not the original, so
 that any problems introduced by others will not reflect on the original
-authors' reputations.</p>
+authors\' reputations.</p>
 
   <p>Finally, any free program is threatened constantly by software
 patents.  We wish to avoid the danger that redistributors of a free
 program will individually obtain patent licenses, in effect making the
 program proprietary.  To prevent this, we have made it clear that any
-patent must be licensed for everyone's free use or not licensed at all.</p>
+patent must be licensed for everyone\'s free use or not licensed at all.</p>
 
   <p>The precise terms and conditions for copying, distribution and
 modification follow.</p>
@@ -469,13 +469,13 @@ modification follow.</p>
 
   <p><strong>0</strong>. This License applies to any program or other work which contains
 a notice placed by the copyright holder saying it may be distributed
-under the terms of this General Public License.  The \"Program\", below,
-refers to any such program or work, and a \"work based on the Program\"
+under the terms of this General Public License.  The "Program", below,
+refers to any such program or work, and a "work based on the Program"
 means either the Program or any derivative work under copyright law:
 that is to say, a work containing the Program or a portion of it,
 either verbatim or with modifications and/or translated into another
 language.  (Hereinafter, translation is included without limitation in
-the term \"modification\".)  Each licensee is addressed as \"you\".</p>
+the term "modification".)  Each licensee is addressed as "you".</p>
 
 <p>Activities other than copying, distribution and modification are not
 covered by this License; they are outside its scope.  The act of
@@ -484,7 +484,7 @@ is covered only if its contents constitute a work based on the
 Program (independent of having been made by running the Program).
 Whether that is true depends on what the Program does.</p>
 
-  <p><strong>1</strong>. You may copy and distribute verbatim copies of the Program's
+  <p><strong>1</strong>. You may copy and distribute verbatim copies of the Program\'s
 source code as you receive it, in any medium, provided that you
 conspicuously and appropriately publish on each copy an appropriate
 copyright notice and disclaimer of warranty; keep intact all the
@@ -600,7 +600,7 @@ the Program or works based on it.</p>
 Program), the recipient automatically receives a license from the
 original licensor to copy, distribute or modify the Program subject to
 these terms and conditions.  You may not impose any further
-restrictions on the recipients' exercise of the rights granted herein.
+restrictions on the recipients\' exercise of the rights granted herein.
 You are not responsible for enforcing compliance by third parties to
 this License.</p>
 
@@ -651,8 +651,8 @@ be similar in spirit to the present version, but may differ in detail to
 address new problems or concerns.</p>
 
 <p>Each version is given a distinguishing version number.  If the Program
-specifies a version number of this License which applies to it and \"any
-later version\", you have the option of following the terms and conditions
+specifies a version number of this License which applies to it and "any
+later version", you have the option of following the terms and conditions
 either of that version or of any later version published by the Free
 Software Foundation.  If the Program does not specify a version number of
 this License, you may choose any version ever published by the Free Software
@@ -671,7 +671,7 @@ of promoting the sharing and reuse of software generally.</p>
   <p><strong>11</strong>. BECAUSE THE PROGRAM IS LICENSED FREE OF CHARGE, THERE IS NO WARRANTY
 FOR THE PROGRAM, TO THE EXTENT PERMITTED BY APPLICABLE LAW.  EXCEPT WHEN
 OTHERWISE STATED IN WRITING THE COPYRIGHT HOLDERS AND/OR OTHER PARTIES
-PROVIDE THE PROGRAM \"AS IS\" WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESSED
+PROVIDE THE PROGRAM "AS IS" WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESSED
 OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
 MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  THE ENTIRE RISK AS
 TO THE QUALITY AND PERFORMANCE OF THE PROGRAM IS WITH YOU.  SHOULD THE
@@ -688,4 +688,4 @@ YOU OR THIRD PARTIES OR A FAILURE OF THE PROGRAM TO OPERATE WITH ANY OTHER
 PROGRAMS), EVEN IF SUCH HOLDER OR OTHER PARTY HAS BEEN ADVISED OF THE
 POSSIBILITY OF SUCH DAMAGES.</p>
 
-         <p><strong>END OF TERMS AND CONDITIONS</strong></p>");
+         <p><strong>END OF TERMS AND CONDITIONS</strong></p>');

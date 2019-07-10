@@ -166,9 +166,16 @@ if (!defined('USE_PCONNECT')) define('USE_PCONNECT', 'false');
                                 'className'=>'currencies',
                                 'objectName'=>'currencies');
 /**
- * Breakpoint 100.
+ * Breakpoint 96.
  *
  * require('includes/init_includes/init_sanitize.php');
+ *
+ */
+$autoLoadConfig[96][] = array('autoType'=>'init_script',
+                              'loadFile'=> 'init_sanitize.php');
+/**
+ * Breakpoint 100.
+ *
  * if(!$_SESSION['navigaton']) $_SESSION['navigation'] = new navigationHistory();
  * $template = new template_func();
  *
@@ -176,8 +183,6 @@ if (!defined('USE_PCONNECT')) define('USE_PCONNECT', 'false');
   $autoLoadConfig[100][] = array('autoType'=>'classInstantiate',
                                  'className'=>'template_func',
                                  'objectName'=>'template');
-  $autoLoadConfig[100][] = array('autoType'=>'init_script',
-                                 'loadFile'=> 'init_sanitize.php');
   $autoLoadConfig[100][] = array('autoType'=>'classInstantiate',
                                 'className'=>'navigationHistory',
                                 'objectName'=>'navigation',

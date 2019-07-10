@@ -129,7 +129,7 @@
 /**
  * validate products_id for search engines and bookmarks, etc.
  */
-  if (isset($_GET['products_id']) && isset($_SESSION['check_valid']) &&  $_SESSION['check_valid'] != 'false') {
+  if (isset($_GET['products_id']) && (!isset($_SESSION['check_valid']) || $_SESSION['check_valid'] != 'false')) {
     $check_valid = zen_products_id_valid($_GET['products_id']);
     if (!$check_valid) {
       $_GET['main_page'] = zen_get_info_page($_GET['products_id']);
@@ -139,9 +139,9 @@
       $_SESSION['check_valid'] = 'false';
       zen_redirect(zen_href_link($_GET['main_page'], 'products_id=' . $_GET['products_id']));
     }
-  } else {
-    $_SESSION['check_valid'] = 'true';
   }
+ 
+  $_SESSION['check_valid'] = 'true';
 /**
  * We do some checks here to ensure $_GET['main_page'] has a sane value
  */

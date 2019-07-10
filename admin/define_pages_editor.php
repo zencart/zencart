@@ -212,7 +212,7 @@ if (!$lng_exists) {
             ?>
             <div class="row"><strong><?php echo sprintf(TEXT_FILE_DOES_NOT_EXIST, $file); ?></strong></div>
             <div class="row"><?php echo zen_draw_separator('pixel_trans.gif', '1', '10'); ?></div>
-            <div class="row"><a href="<?php echo zen_href_link($_GET['filename'], 'lngdir=' . $_SESSION['language']); ?>" class="btn btn-default" role="button"><?php echo IMAGE_BACK; ?></a>'; ?></div>
+            <div class="row"><a href="<?php echo zen_href_link($_GET['filename'], 'lngdir=' . $_SESSION['language']); ?>" class="btn btn-default" role="button"><?php echo IMAGE_BACK; ?></a></div>
             <?php
           }
         } else {

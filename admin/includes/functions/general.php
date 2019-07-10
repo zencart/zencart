@@ -1538,7 +1538,7 @@ while (!$chk_sale_categories_all->EOF) {
   function zen_remove($source) {
     global $messageStack, $zen_remove_error;
 
-    if (isset($zen_remove_error)) $zen_remove_error = false;
+    $zen_remove_error = false;
 
     if (is_dir($source)) {
       $dir = dir($source);
@@ -2523,13 +2523,6 @@ function zen_limit_image_filename($filename, $table_name, $field_name, $extensio
     } else {
       return false;
     }
-  }
-
-/**
- * Check if restricted-use demo mode is active
- */
-  function zen_admin_demo() {
-    return (ADMIN_DEMO == '1') ? TRUE : FALSE;
   }
 
 

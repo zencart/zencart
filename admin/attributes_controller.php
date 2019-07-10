@@ -573,12 +573,6 @@ if (zen_not_null($action)) {
       zen_redirect(zen_href_link(FILENAME_ATTRIBUTES_CONTROLLER, $_SESSION['page_info'] . '&current_category_id=' . $_POST['current_category_id']));
       break;
     case 'delete_attribute':
-      // demo active test
-      if (zen_admin_demo()) {
-        $_GET['action'] = '';
-        $messageStack->add_session(ERROR_ADMIN_DEMO, 'caution');
-        zen_redirect(zen_href_link(FILENAME_ATTRIBUTES_CONTROLLER, $_SESSION['page_info'] . '&current_category_id=' . $_POST['current_category_id']));
-      }
       if (isset($_POST['delete_attribute_id'])) {
         $attribute_id = zen_db_prepare_input($_POST['delete_attribute_id']);
 
@@ -822,7 +816,7 @@ function zen_js_option_values_list($selectedName, $fieldName) {
         <div class="col-sm-4">
           <div class="dropdown">
             <button class="btn btn-default dropdown-toggle" type="button" id="menu1" data-toggle="dropdown">
-                <?php echo BUTTON_ADDITITONAL_ACTIONS; ?>
+                <?php echo BUTTON_ADDITIONAL_ACTIONS; ?>
               <span class="caret"></span>
             </button>
             <ul class="dropdown-menu" role="menu" aria-labelledby="menu1">
@@ -839,7 +833,7 @@ function zen_js_option_values_list($selectedName, $fieldName) {
                   ?>
                   <li role="presentation">
                       <?php echo zen_draw_form('update_sort', FILENAME_ATTRIBUTES_CONTROLLER, 'action=update_attribute_sort' . '&products_filter=' . $products_filter . '&current_category_id=' . $current_category_id); ?>
-                    <button role="menuitem" type="submit" class="menuItemButton"><?php echo TEXT_UPDATE_DEFAULTE_SORT_ORDER; ?></button>
+                    <button role="menuitem" type="submit" class="menuItemButton"><?php echo TEXT_UPDATE_DEFAULT_SORT_ORDER; ?></button>
                     <?php echo zen_draw_hidden_field('confirm', 'y'); ?>
                     <?php echo '</form>'; ?>
                   </li>

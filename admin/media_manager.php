@@ -101,12 +101,6 @@
         zen_redirect(zen_href_link(FILENAME_MEDIA_MANAGER, (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . ($media_id != '' ? 'mID=' . $media_id : '')));
         break;
       case 'deleteconfirm':
-        // demo active test
-        if (zen_admin_demo()) {
-          $_GET['action']= '';
-          $messageStack->add_session(ERROR_ADMIN_DEMO, 'caution');
-          zen_redirect(zen_href_link(FILENAME_MEDIA_MANAGER, 'page=' . $_GET['page']));
-        }
         $media_id = zen_db_prepare_input($_POST['mID']);
 
         $db->Execute("delete from " . TABLE_MEDIA_MANAGER . "

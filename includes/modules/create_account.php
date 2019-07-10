@@ -35,6 +35,9 @@ if (!defined('IS_ADMIN_FLAG')) {
 if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
   $process = true;
   $antiSpam = isset($_POST['should_be_empty']) ? zen_db_prepare_input($_POST['should_be_empty']) : '';
+  if (!empty($_POST['firstname']) && preg_match('~https?://?~', $_POST['firstname'])) $antiSpam = 'spam';
+  if (!empty($_POST['lastname']) && preg_match('~https?://?~', $_POST['lastname'])) $antiSpam = 'spam';
+
   $zco_notifier->notify('NOTIFY_CREATE_ACCOUNT_CAPTCHA_CHECK');
 
   if (ACCOUNT_GENDER == 'true') {

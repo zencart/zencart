@@ -102,7 +102,7 @@ $products_filter_name_model = (isset($_GET['products_filter_name_model']) ? $_GE
         <table class="table table-hover">
           <thead>
             <tr class="dataTableHeadingRow">
-              <th class="dataTableHeadingContent"><?php echo TABLE_HEADING_CUSTOMERS_ID; ?></th>
+              <th class="dataTableHeadingContent right"><?php echo TABLE_HEADING_CUSTOMERS_ID; ?></th>
               <th class="dataTableHeadingContent"><?php echo TABLE_HEADING_ORDERS_ID; ?></th>
               <th class="dataTableHeadingContent"><?php echo TABLE_HEADING_ORDERS_DATE_PURCHASED; ?></th>
               <th class="dataTableHeadingContent"><?php echo TABLE_HEADING_CUSTOMERS_INFO; ?></th>
@@ -160,7 +160,7 @@ $products_filter_name_model = (isset($_GET['products_filter_name_model']) ? $_GE
         ?>
         <table class="table">
           <tr class="dataTableHeadingRow">
-            <th class="dataTableHeadingContent"><?php echo TABLE_HEADING_NUMBER; ?></th>
+            <th class="dataTableHeadingContent right"><?php echo TABLE_HEADING_NUMBER; ?></th>
             <th class="dataTableHeadingContent"><?php echo TABLE_HEADING_PRODUCTS; ?></th>
             <th class="dataTableHeadingContent text-center"><?php echo TABLE_HEADING_PURCHASED; ?>&nbsp;</th>
           </tr>

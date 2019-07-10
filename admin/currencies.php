@@ -91,12 +91,6 @@ if (zen_not_null($action)) {
       zen_redirect(zen_href_link(FILENAME_CURRENCIES, 'page=' . $_GET['page'] . '&cID=' . $_GET['cID']));
       break;
     case 'delete':
-      // demo active test
-      if (zen_admin_demo()) {
-        $_GET['action'] = '';
-        $messageStack->add_session(ERROR_ADMIN_DEMO, 'caution');
-        zen_redirect(zen_href_link(FILENAME_CURRENCIES, 'page=' . $_GET['page'] . '&cID=' . $_GET['cID']));
-      }
       $currencies_id = zen_db_prepare_input($_GET['cID']);
 
       $currency = $db->Execute("SELECT code

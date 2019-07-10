@@ -8,4 +8,4 @@
  */
 
 define('BOX_REPORTS_SALES_REPORT_GRAPHS', 'Sales Report with Graphs');
-define('MONTH_TO_DATE', 'Month to Date');
+

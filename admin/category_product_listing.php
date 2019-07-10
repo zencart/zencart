@@ -367,13 +367,6 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
           }
       }
     </script>
-    <?php
-    if ($action != 'edit_category_meta_tags') { // bof: categories meta tags
-      if ($editor_handler != '') {
-        include ($editor_handler);
-      }
-    } // meta tags disable editor eof: categories meta tags
-    ?>
   </head>
   <body onload="init();">
     <!-- header //-->
@@ -588,6 +581,7 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
                 </tr>
               </thead>
               <?php
+              $order_by = " ";
               switch ($_SESSION['categories_products_sort_order']) {
                 case (0):
                   $order_by = " ORDER BY c.sort_order, cd.categories_name";
@@ -728,6 +722,7 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
               }
 
 
+              $order_by = " "; 
               switch ($_SESSION['categories_products_sort_order']) {
                 case (0):
                   $order_by = " ORDER BY p.products_sort_order, pd.products_name";

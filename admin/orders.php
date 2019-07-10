@@ -154,6 +154,12 @@ if (zen_not_null($action) && $order_exists == true) {
       $email_include_message = (isset($_POST['notify_comments']) && $_POST['notify_comments'] == 'on');
       $customer_notified = (int)(isset($_POST['notify'])) ? $_POST['notify'] : '0';
 
+      // -----
+      // Give an observer the opportunity to add to the to-be-recorded comments and/or
+      // capture any posted values that it has inserted into the order-update form.
+      //
+      $zco_notifier->notify('NOTIFY_ADMIN_ORDERS_UPDATE_ORDER_START', $oID);
+
       $order_updated = false;
       $status_updated = zen_update_orders_history($oID, $comments, null, $status, $customer_notified, $email_include_message);
       $order_updated = ($status_updated > 0);
@@ -734,17 +740,69 @@ if (zen_not_null($action) && $order_exists == true) {
                   <?php echo zen_draw_pull_down_menu('status', $orders_statuses, $order->info['orders_status'], 'id="status" class="form-control"'); ?>
               </div>
             </div>
+<?php
+        // -----
+        // Give an observer the chance to supply some additional status-related inputs.  Each
+        // entry in the $extra_status_inputs returned contains:
+        //
+        // array(
+        //    'label' => array(
+        //        'text' => 'The label text',   (required)
+        //        'addl_class' => {Any additional class to be applied to the label} (optional)
+        //        'parms' => {Any additional parameters for the label, e.g. 'style="font-weight: 700;"} (optional)
+        //    ),
+        //    'input' => 'The HTML to be inserted' (required)
+        // )
+        $extra_status_inputs = array();
+        $zco_notifier->notify('NOTIFY_ADMIN_ORDERS_EXTRA_STATUS_INPUTS', $order, $extra_status_inputs);
+        if (!empty($extra_status_inputs)) {
+            foreach ($extra_status_inputs as $extra_status) {
+                $addl_class = (isset($extra_status['label']['addl_class'])) ? (' ' . $extra_status['label']['addl_class']) : '';
+                $parms = (isset($extra_status['label']['parms'])) ? (' ' . $extra_status['label']['parms']) : '';
+?>
+            <div class="form-group">
+                <div class="col-sm-3 control-label<?php echo $addl_class; ?>"<?php echo $parms; ?>><?php echo $extra_status['label']['text']; ?></div>
+                <div class="col-sm-9"><?php echo $extra_status['input']; ?></div>
+            </div>
+<?php
+            }
+        }
+        
+        // -----
+        // Determine which of the 'Notify Customer' radio buttons should be selected initially,
+        // based on configuration setting in 'My Store'.  Set a default, just in case that configuration
+        // setting isn't set!
+        //
+        if (!defined('NOTIFY_CUSTOMER_DEFAULT')) define('NOTIFY_CUSTOMER_DEFAULT', '1');
+        switch (NOTIFY_CUSTOMER_DEFAULT) {
+            case '0':
+                $notify_email = false;
+                $notify_no_email = true;
+                $notify_hidden = false;
+                break;
+            case '-1':
+                $notify_email = false;
+                $notify_no_email = false;
+                $notify_hidden = true;
+                break;
+            default:
+                $notify_email = true;
+                $notify_no_email = false;
+                $notify_hidden = false;
+                break;
+        }
+?>
             <div class="form-group">
                 <div class="col-sm-3 control-label" style="font-weight: 700;"><?php echo ENTRY_NOTIFY_CUSTOMER; ?></div>
               <div class="col-sm-9">
                 <div class="radio">
-                  <label><?php echo zen_draw_radio_field('notify', '1', true) . TEXT_EMAIL; ?></label>
+                  <label><?php echo zen_draw_radio_field('notify', '1', $notify_email) . TEXT_EMAIL; ?></label>
                 </div>
                 <div class="radio">
-                  <label><?php echo zen_draw_radio_field('notify', '0', FALSE) . TEXT_NOEMAIL; ?></label>
+                  <label><?php echo zen_draw_radio_field('notify', '0', $notify_no_email) . TEXT_NOEMAIL; ?></label>
                 </div>
                 <div class="radio">
-                  <label><?php echo zen_draw_radio_field('notify', '-1', FALSE) . TEXT_HIDE; ?></label>
+                  <label><?php echo zen_draw_radio_field('notify', '-1', $notify_hidden) . TEXT_HIDE; ?></label>
                 </div>
               </div>
             </div>

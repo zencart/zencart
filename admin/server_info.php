@@ -60,7 +60,7 @@
     }
   }
 </script>
-<style>
+<style type="text/css">
 .pageHeading {font-size: 2em;}
 .serverInfo{max-width: 800px; margin-left: auto; margin-right: auto; font-size: 1.1em;}
 .infocell {float:left; width: 380px;margin-right:10px;}

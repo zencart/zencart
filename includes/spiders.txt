@@ -1,26 +1,21 @@
-$Id: spiders.txt 2015-09-11 drbyte $
+$Id: spiders.txt 2019-06-27 Shrimp-Gumbo $
 bot
 robot
 crawl
-scrape
-seek.
-seeker
-slurp
 spider
-msnbot
 abcdatos
-acme
 accoona
+acme
 acoon
+admantx
 adressendeutschland
 ahoy
+ahrefs
 akula
 alexa
 alkaline
 almaden
 amagit
-amfibibot
-amishbot
 analyz
 ananzi
 answerbus
@@ -29,16 +24,14 @@ appie
 arach
 arale
 araneo
-araybot
 architext
 aretha
 argus
 ariadne
 arks
+asaha
 ask jeeves
 askquickly
-asaha
-aspider
 aspseek
 asterias
 atlocal
@@ -48,18 +41,15 @@ augurfind
 auresys
 avantgo
 backrub
-baiduspider
-bannana_bot
 baypup
-bbot
 bdcindexer
 bdfetch
-becomebot
 big brother
 bing
 bjaaland
 blackwidow
 blaiz
+blank
 blo.
 blog
 bloodhound
@@ -67,103 +57,69 @@ boitho
 bonecho
 booch
 bordermanager
-borg-bot
-botlink
-boxseabot
 browsershots
-bruinbot
-bspider
-cactvs chemistry spider
 cassandra
 ccubee
 cfetch
 changedetection
 charlotte
-checkbot
 check_http
 cherrypicker
-christcrawler
 churl
 cienciaficcion.net
 cireu
-clushbot
 coccoc
 collective
 comagent
 combine
 computingsite robi
-confuzzledbot
-converacrawler
-coolbot
 covario
 crowsnest
 csci
 curl
 cyberspyder
-cydralspider
+datanyse
 dataparksearch
 depspid
-dienstspider
 digger
 digimarc
-digital integrity robot
 direct hit grabber
+dispatch
 ditto
 dlvr.it
 dmoz
-dnabot
 dotsemantic
 download express
-dragonbot
 drupact
 dtaagent
 duckduck
-dumbot
 easybib
 ebin
 ecollector
-eit link verifier robot
-elfinbot
 ejupiter
 emailcollector
 emailsiphon
+envolk
 esculapio
-exabot
-extractor
-e-societyrobot
 evrinid
-falcon
+extractor
 facebook
-fast enterprise crawler
+falcon
 fastbug
-fastcrawler
-fast-webcrawler
 feedfetcher
+feedly
 fetchrover
 filangy
 findlinks
+findlinks
 fish search
 flipboard
-fluffy the spider
-fluid dynamics search engine robot
-focusedcrawler
 fouineur
-freecrawl
-frooglebot
 funnelweb
-fusionbot
-fyberspider
-gaisbot
-gammaspider
 gazz
 gcreep
 genie
-geobot
-geonabot
-getbot
 getterroboplus
-gigabot
-girafabot
 goldfire server
 golem
 google
@@ -174,8 +130,6 @@ griffon
 gromit
 grub
 gulliver
-gulperbot
-hambot
 harvest
 header_detector
 helix
@@ -183,13 +137,11 @@ heritrix
 holmes
 homer
 htdig
-henrythemiragorobot
 htmlgobble
 httpget
 httrack
 hyper-decontextualizer
 ia_archiver
-iajabot
 ibm_planetwide
 ichiro
 iconsurf
@@ -197,40 +149,27 @@ iltrovatore-setaccio
 imagelock
 incywincy
 indexer
-inelabot
 informant
 infoseek
-infospiders
 ingrid
 inktomi slurp
 inktomisearch
-inspectorbot
-intelliagentbot
-internet cruiser robot
 internet shinchakubin
-internetseer
 internetlinkagent
-irlbot
-irobot
+internetseer
 iron33
 israeli-search
 istarthere
 ivia
 jakarta
 javabee
-jbot java web robot
-jcrawler
 jeeves
 jobo
-jobot
-joebot
-jubii indexing robot
 jumpstation
 katipo
 kilroy
 kit-fireball
 knowledge
-ko_yappo_robot
 kretrieve
 kumkie
 labelgrabber
@@ -238,54 +177,39 @@ lachesis
 larbin
 libwww-mget
 libwww-perl
-limebot
-linkchecker
 link validator
+linkchecker
 linklint-checkonly
-linknzbot
 linkscan
 linkwalker
-lnspiderguy
 lockon
+ltx71
 lwp
-lycos_spider
 magpie
+mail.ru
 mantraagent
 mapoftheinternet
-mail.ru
-mattiebot
 mediafox
 mediapartners
+megaindex
 mercator
 merzscope
 metacarta
-metagerbot
 metauri
 mff
-url control
-mindcrawler
 minirank
 miva
-mj12bot
+mixnodecache
 mnogosearch
 moget
-momspider
-monsterbot
-msiecrawler
 msproxy
-muncher bot
 muninn
 muscatferret
-mysterybot
 myweb
-nationaldirectory
 nameprotect
+nationaldirectory
 nazilla
 ncsa
-naverbot
-naverbot_dloader
-naverrobot
-ndspider
 nec-meshexplorer
 nederland.zoek
 neomo
@@ -293,31 +217,25 @@ nestreader
 netcarta
 netcraft
 netmechanic
-netnosecrawler
 netresearchserver
 netscoop
+netseer
 newscan-online
-nextgensearchbot
 ng-search
 nodeping
 northstar
 noyona
-npbot
 nuhk
 nusearch
 nutch
-nwi robot
 nymesis
 nzexplorer
 objectssearch
-obot
 occam
 ocelli
 omni
 onetszukaj
 online link
-ontospider
-openbot
 openfind
 orb search
 orca
@@ -329,11 +247,8 @@ pagepeeker
 panscient
 parasite
 patric
-patwebbot
-peerbot
 pegasus
 peregrinator
-perlcrawler
 phantom
 phpdig
 pico
@@ -343,51 +258,44 @@ pingdom
 pinterest
 pipeliner
 plumtreewebaccessor
-polybot
 pompos
+poodle predictor
 poppelsdorf
+poppi
+popular iconoclast
+portal manager
+proximic
 psycheclone
 publisher
 python
-poodle predictor
-poppi
-popular iconoclast
-portal juice spider
-portal manager
-portalb spider
-psbot
-python robot
 qseero
 quepasacreep
+qwantify
 rambler
 raven search
-rbse spider
 readability
-resume robot
 riddler
-rixbot
 road runner
-roadhouse crawling system
-robbie the robot
-robocrawl spider
 robofox
 robopal
-robot
-robot francoroute
 robozilla
-roverbot
 rpt-httpclient
+ruby
 safaribookmarkchecker
-safetynet robot
 salty
 sbider
+scirus
 scooter
 scout
+scrape
+scrapy
 screenshot
 scrubby
 search agent
 search.aus-au.com
 searchprocess
+seek.
+seeker
 senrigan
 sensis
 seobility
@@ -404,21 +312,18 @@ sift
 simmany
 sitemaps
 sitetech-rover
-slider.com
 skymob.com
-slcrawler
 sleek
-smart spider
+slider.com
+slurp
 snappy
 snooper
+sogou
 sohu
-solbot
 speedfind
 speedy
 sphider
 spinner
-spry wizard robot
-spurlbot
 spyder
 sqworm
 steeler
@@ -431,48 +336,36 @@ sygol
 szukacz
 tach black widow
 tarantula
-tarspider
-techbot
 templeton
 teoma
 theophrastus
-thesubot
 thumb
 t-h-u-n-d-e-r-s-t-o-n-e
 titan
 titin
-tlspider
 topsy
 tracker
 tulipchain
-turnitinbot
-tutorgigbot
 twiceler
 twisted
-ucsd crawl
 udmsearch
 ultraseek
-unchaos_crawler
 unwind
-uptimebot
+url control
 urlstat
-usyd-nlp-spider
 vagabondo
 valkyrie
 verasys
 vermut
-verticrawl
 vision-search
-void-bot
-voilabot
 volcano
 voyager
-vspider
-vwbot
 walhello appie
 wallpaper
 watchmouse
 wauuu
+web hoper
+web hopper
 webalgo
 webbandit
 webcatcher
@@ -480,9 +373,6 @@ webcopy
 webcore / roots
 webfetcher
 webfoot
-web hoper
-web hopper
-web-sniffer
 webimages
 webinator
 webinator-indexer
@@ -498,13 +388,12 @@ webreaper
 websauger
 websearch
 websnarf
-webspider
+web-sniffer
 webstolperer
 webvac
 webwalk
 webwalker
 webwatch
-webyield robot
 webzinger
 wesee
 wget
@@ -524,19 +413,12 @@ xget
 xift
 xirq
 xyleme
-yacybot
-yahoo! slurp
-yahoocache
-yahoo-mmcrawler
-yahooseeker
+y!j-asr
+yahoo
 yandex
 yeti
 yodao
 yoono
-yottacars_bot
 zao/0
-zao-crawler
 zermelo
-zipppbot
-zoomspider
 zyborg

@@ -82,9 +82,9 @@ class order extends base {
                 where coupon_code ='" . $order->fields['coupon_code'] . "'";
         $coupon_link = $db->Execute($coupon_link_query);
         if (IS_ADMIN_FLAG === true) {
-                $zc_coupon_link = '<a href="javascript:couponpopupWindow(\'' . zen_href_link(FILENAME_POPUP_COUPON_HELP, 'cID=' . $coupon_link->fields['coupon_id']) . '\')">';
-        } else {
-          $zc_coupon_link = $coupon_link->fields['coupon_id'];
+          $zc_coupon_link = '<a href="javascript:couponpopupWindow(\'' . zen_catalog_href_link(FILENAME_POPUP_COUPON_HELP, 'cID=' . $coupon_link->fields['coupon_id']) . '\')">';
+        } else { 
+          $zc_coupon_link = '<a href="javascript:couponpopupWindow(\'' . zen_href_link(FILENAME_POPUP_COUPON_HELP, 'cID=' . $coupon_link->fields['coupon_id']) . '\')">';
         }
       }
       $this->totals[] = array('title' => ($totals->fields['class'] == 'ot_coupon' ? $zc_coupon_link . $totals->fields['title'] . '</a>' : $totals->fields['title']),
@@ -209,6 +209,7 @@ class order extends base {
 
       $this->products[$index] = array('qty' => $new_qty,
                                       'id' => $orders_products->fields['products_id'],
+                                      'orders_products_id' => $orders_products->fields['orders_products_id'], 
                                       'name' => $orders_products->fields['products_name'],
                                       'model' => $orders_products->fields['products_model'],
                                       'tax' => $orders_products->fields['products_tax'],
@@ -430,7 +431,27 @@ class order extends base {
                               'email_address' => $customer_address->fields['customers_email_address']);
     }
 
-    if ($shipping_address->RecordCount() > 0) {
+    if ($this->content_type == 'virtual') {
+      $this->delivery = array(
+        'firstname' => '',
+        'lastname' => '',
+        'company' => '',
+        'street_address' => '',
+        'suburb' => '',
+        'city' => '',
+        'postcode' => '',
+        'state' => '',
+        'zone_id' => 0,
+        'country' => array(
+            'id' => 0, 
+            'title' => '', 
+            'iso_code_2' => '', 
+            'iso_code_3' => ''
+        ),
+        'country_id' => 0,
+        'format_id' => 0
+      );
+    } elseif ($shipping_address->RecordCount() > 0) {
       $this->delivery = array('firstname' => $shipping_address->fields['entry_firstname'],
                               'lastname' => $shipping_address->fields['entry_lastname'],
                               'company' => $shipping_address->fields['entry_company'],

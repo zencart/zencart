@@ -53,9 +53,6 @@ define('TABLE_TEXT_MAX_COUNT_SHORT', 'Max:');
   define('TABLE_HEADING_OPT_SORT_ORDER','Sort Order');
   define('TABLE_HEADING_OPT_DEFAULT','Default');
 
-  define('TABLE_HEADING_YES','Yes');
-  define('TABLE_HEADING_NO','No');
-
   define('TABLE_HEADING_OPT_TYPE', 'Option Type'); //CLR 031203 add option type column
   define('TABLE_HEADING_OPTION_VALUE_SIZE','Size');
   define('TABLE_HEADING_OPTION_VALUE_MAX','Max');
