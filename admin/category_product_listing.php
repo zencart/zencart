@@ -367,13 +367,6 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
           }
       }
     </script>
-    <?php
-    if ($action != 'edit_category_meta_tags') { // bof: categories meta tags
-      if ($editor_handler != '') {
-        include ($editor_handler);
-      }
-    } // meta tags disable editor eof: categories meta tags
-    ?>
   </head>
   <body onload="init();">
     <!-- header //-->
