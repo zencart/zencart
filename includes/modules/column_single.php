@@ -16,25 +16,18 @@ $column_box_default='tpl_box_default_single.php';
 $column_single_display= $db->Execute("select layout_box_name from " . TABLE_LAYOUT_BOXES . " where (layout_box_location=0 or layout_box_location=1) and layout_box_status_single=1 and layout_template ='" . $template_dir . "'" . ' order by LPAD(layout_box_sort_order_single,11,"0")');
 // safety row stop
 $box_cnt=0;
-while (!$column_single_display->EOF and $box_cnt < 100) {
-  $box_cnt++;
-  if ( file_exists(DIR_WS_MODULES . 'sideboxes/' . $column_single_display->fields['layout_box_name']) or file_exists(DIR_WS_MODULES . 'sideboxes/' . $template_dir . '/' . $column_single_display->fields['layout_box_name']) ) {
-?>
-<?php
-//$column_box_spacer = 'column_box_spacer_single';
 if (defined('BOX_WIDTH_SINGLE')) {
   $column_width = (int)BOX_WIDTH_SINGLE;
 } else {
   $column_width = (int)BOX_WIDTH_LEFT;
 }
-if ( file_exists(DIR_WS_MODULES . 'sideboxes/' . $template_dir . '/' . $column_single_display->fields['layout_box_name']) ) {
-  $box_id = zen_get_box_id($column_single_display->fields['layout_box_name']);
-  require(DIR_WS_MODULES . 'sideboxes/' . $template_dir . '/' . $column_single_display->fields['layout_box_name']);
-} else {
-  $box_id = zen_get_box_id($column_single_display->fields['layout_box_name']);
-  require(DIR_WS_MODULES . 'sideboxes/' . $column_single_display->fields['layout_box_name']);
-}
-  } // file_exists
+while (!$column_single_display->EOF and $box_cnt < 100) {
+  $box_cnt++;
+  $box_file = zen_get_file_directory(DIR_WS_MODULES . 'sideboxes/', $column_single_display->fields['layout_box_name']); 
+  if (file_exists($box_file)) {
+    $box_id = zen_get_box_id($column_single_display->fields['layout_box_name']);
+    require($box_file); 
+  }
   $column_single_display->MoveNext();
 } // while column_single
 $box_id = '';
