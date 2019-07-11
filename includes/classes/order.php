@@ -276,6 +276,8 @@ class order extends base {
 
   function cart() {
     global $db, $currencies;
+    $billto = (!empty($_SESSION['billto']) ? (int)$_SESSION['billto'] : 0);
+    $sendto = (!empty($_SESSION['sendto']) ? (int)$_SESSION['sendto'] : 0);
 
     $decimals = $currencies->get_decimal_places($_SESSION['currency']);
 
@@ -305,7 +307,7 @@ class order extends base {
                                    left join " . TABLE_ZONES . " z on (ab.entry_zone_id = z.zone_id)
                                    left join " . TABLE_COUNTRIES . " c on (ab.entry_country_id = c.countries_id)
                                    where ab.customers_id = " . (!empty($_SESSION['customer_id']) ? (int)$_SESSION['customer_id'] : 0) . "
-                                   and ab.address_book_id = " . (!empty($_SESSION['sendto']) ? (int)$_SESSION['sendto'] : 0);
+                                   and ab.address_book_id = " . $sendto; 
 
     $shipping_address = $db->Execute($shipping_address_query);
 
@@ -318,7 +320,7 @@ class order extends base {
                                   left join " . TABLE_ZONES . " z on (ab.entry_zone_id = z.zone_id)
                                   left join " . TABLE_COUNTRIES . " c on (ab.entry_country_id = c.countries_id)
                                   where ab.customers_id = " . (!empty($_SESSION['customer_id']) ? (int)$_SESSION['customer_id'] : 0) . "
-                                  and ab.address_book_id = " . (!empty($_SESSION['billto']) ? (int)$_SESSION['billto'] : 0);
+                                  and ab.address_book_id = " . $billto; 
 
     $billing_address = $db->Execute($billing_address_query);
 
@@ -335,7 +337,7 @@ class order extends base {
                                 from " . TABLE_ADDRESS_BOOK . " ab
                                 left join " . TABLE_ZONES . " z on (ab.entry_zone_id = z.zone_id)
                                 where ab.customers_id = " . (int)$_SESSION['customer_id'] . "
-                                and ab.address_book_id = " . ($this->content_type == 'virtual' ? (int)$_SESSION['billto'] : (int)$_SESSION['sendto']);
+                                and ab.address_book_id = " . ($this->content_type == 'virtual' ? $billto : $sendto);
                   break;
               case 'Billing':
                   $tax_address_query = "select ab.entry_country_id, ab.entry_zone_id
@@ -357,7 +359,7 @@ class order extends base {
                                   from " . TABLE_ADDRESS_BOOK . " ab
                                   left join " . TABLE_ZONES . " z on (ab.entry_zone_id = z.zone_id)
                                   where ab.customers_id = " . (int)$_SESSION['customer_id'] . "
-                                  and ab.address_book_id = " . ($this->content_type == 'virtual' ? (int)$_SESSION['billto'] : (int)$_SESSION['sendto']);
+                                  and ab.address_book_id = " . ($this->content_type == 'virtual' ? $billto : $sendto); 
                   }
           }
           if ($tax_address_query != '') {
