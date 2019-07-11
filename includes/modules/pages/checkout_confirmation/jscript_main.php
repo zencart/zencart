@@ -25,18 +25,4 @@ function submitFunction($gv,$total) {
    }
 }
 
-function submitonce()
-{
-  var button = document.getElementById("btn_submit");
-  button.style.cursor="wait";
-  button.disabled = true;
-  setTimeout('button_timeout()', 4000);
-  return false;
-}
-function button_timeout() {
-  var button = document.getElementById("btn_submit");
-  button.style.cursor="wait";
-  button.disabled = true;
-}
-
 </script>
