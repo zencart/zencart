@@ -290,4 +290,13 @@ class payment extends base {
     }
     return array(false, '');
   }
+
+  function clear_payment()
+  {
+    if (!is_array($this->modules)) return;
+    if (!is_object($GLOBALS[$this->selected_module])) return;
+    if (!$GLOBALS[$this->selected_module]->enabled) return;
+    if (!method_exists($GLOBALS[$this->selected_module], 'clear_payment')) return;
+    $GLOBALS[$this->selected_module]->clear_payment();
+  }
 }
