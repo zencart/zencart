@@ -33,6 +33,7 @@ if (!isset($PHP_SELF)) $PHP_SELF = $_SERVER['SCRIPT_NAME'];
 $PHP_SELF = htmlspecialchars($PHP_SELF);
 // Suppress html from error messages
 @ini_set("html_errors","0");
+@ini_set("pcre.jit", "0");
 /*
  * Get time zone info from PHP config
 */
