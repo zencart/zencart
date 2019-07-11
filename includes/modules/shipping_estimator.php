@@ -180,7 +180,6 @@ if ($_SESSION['cart']->count_contents() > 0) {
       }
 
       if(isset($selected_quote[0]['error']) && $selected_quote[0]['error'] || !zen_not_null($selected_quote[0]['methods'][0]['cost'])){
-//        $selected_shipping = $shipping_modules->cheapest();
         $order->info['shipping_method'] = isset($selected_shipping['title']) ? $selected_shipping['title'] : '';
         $order->info['shipping_cost'] = isset($selected_shipping['cost']) ? $selected_shipping['cost'] : 0;
         $order->info['total']+= isset($selected_shipping['cost']) ? $selected_shipping['cost'] : 0;
@@ -193,7 +192,6 @@ if ($_SESSION['cart']->count_contents() > 0) {
         $selected_shipping['id'] = $selected_quote[0]['id'].'_'.$selected_quote[0]['methods'][0]['id'];
       }
     }else{
-//      $selected_shipping = $shipping_modules->cheapest();
       $order->info['shipping_method'] = isset($selected_shipping['title']) ? $selected_shipping['title'] : '';
       $order->info['shipping_cost'] = isset($selected_shipping['cost']) ? $selected_shipping['cost'] : 0;
       $order->info['total']+= isset($selected_shipping['cost']) ? $selected_shipping['cost'] : 0;
@@ -238,7 +236,8 @@ if ($_SESSION['cart']->count_contents() > 0) {
     }
   }
 
-// This is done after quote-calcs in order to include Tare info accurately.  NOTE: tare values are *not* included in weights shown on-screen.
+  // This is done after quote-calcs in order to include Tare info accurately.  
+  // NOTE: tare values are *not* included in weights shown on-screen.
   $totalsDisplay = '';
   if (SHOW_SHIPPING_ESTIMATOR_BUTTON != 2) {
     switch (true) {
