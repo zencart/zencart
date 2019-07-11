@@ -26,11 +26,6 @@ require(DIR_WS_MODULES . zen_get_module_directory('require_languages.php'));
     }
   }
 
-// confirm where link came from
-if (!strstr($_SERVER['HTTP_REFERER'], FILENAME_CHECKOUT_CONFIRMATION)) {
-  //    zen_redirect(zen_href_link(FILENAME_CHECKOUT_PAYMENT,'','SSL'));
-}
-
 // BEGIN CC SLAM PREVENTION
 $slamming_threshold = 3;
 if (!isset($_SESSION['payment_attempt'])) $_SESSION['payment_attempt'] = 0;
@@ -64,6 +59,18 @@ if (sizeof($order->products) < 1) {
 
 require(DIR_WS_CLASSES . 'order_total.php');
 $order_total_modules = new order_total;
+
+// avoid hack attempts during the checkout procedure by checking the internal cartID
+if (isset($_SESSION['cart']->cartID) && $_SESSION['cartID']) {
+    if ($_SESSION['cart']->cartID != $_SESSION['cartID']) {
+        $payment_modules->clear_payment();
+        $order_total_modules->clear_posts();
+        unset($_SESSION['payment']);
+        unset($_SESSION['shipping']);
+
+        zen_redirect(zen_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL'));
+    }
+}
 
 $zco_notifier->notify('NOTIFY_CHECKOUT_PROCESS_BEFORE_ORDER_TOTALS_PRE_CONFIRMATION_CHECK');
 if (strpos($GLOBALS[$_SESSION['payment']]->code, 'paypal') !== 0) {
