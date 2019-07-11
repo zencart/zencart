@@ -32,7 +32,6 @@ class sniffer extends base {
     // Check to see if the requested Zen Cart table exists
     $sql = "SHOW TABLES like '".$table_name."'";
     $tables = $db->Execute($sql);
-    //echo 'tables_found = '. $tables->RecordCount() .'<br>';
     if ($tables->RecordCount() > 0) {
       $found_table = true;
     }
@@ -44,7 +43,6 @@ class sniffer extends base {
     $sql = "show fields from " . $table_name;
     $result = $db->Execute($sql);
     while (!$result->EOF) {
-      // echo 'fields found='.$result->fields['Field'].'<br />';
       if  ($result->fields['Field'] == $field_name) {
         return true; // exists, so return with no error
       }
@@ -58,7 +56,6 @@ class sniffer extends base {
     $sql = "show fields from " . $table_name;
     $result = $db->Execute($sql);
     while (!$result->EOF) {
-      // echo 'fields found='.$result->fields['Field'].'<br />';
       if  ($result->fields['Field'] == $field_name) {
         if  ($result->fields['Type'] == $field_type) {
           return true; // exists and matches required type, so return with no error
