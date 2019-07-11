@@ -136,7 +136,9 @@ echo $menulist;
     </li>
 
 
-    <li id="menu-search"><?php require(DIR_WS_MODULES . 'sideboxes/search_header.php'); ?></li>
+    <li id="menu-search">
+      <?php require(DIR_WS_MODULES . zen_get_module_sidebox_directory('search_header.php')); ?>
+    </li>
 
   </ul>
 </nav>

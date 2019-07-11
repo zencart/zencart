@@ -61,7 +61,9 @@ if (!isset($flag_disable_header) || !$flag_disable_header) {
 <?php }?>
 </ul>
 </div>
-<div id="navMainSearch"><?php require(DIR_WS_MODULES . 'sideboxes/search_header.php'); ?></div>
+<div id="navMainSearch">
+  <?php require(DIR_WS_MODULES . zen_get_module_sidebox_directory('search_header.php')); ?>
+</div>
 <br class="clearBoth" />
 </div>
 <!--eof-navigation display-->
