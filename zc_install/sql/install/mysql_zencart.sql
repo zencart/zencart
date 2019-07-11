@@ -1079,6 +1079,7 @@ CREATE TABLE orders (
   paypal_ipn_id int(11) NOT NULL default 0,
   ip_address varchar(96) NOT NULL default '',
   order_weight float default NULL,
+  placed_on_mobile tinyint(1) NOT NULL default '0',
   PRIMARY KEY  (orders_id),
   KEY idx_status_orders_cust_zen (orders_status,orders_id,customers_id),
   KEY idx_date_purchased_zen (date_purchased),

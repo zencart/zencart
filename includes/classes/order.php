@@ -137,6 +137,7 @@ class order extends base {
                         'tax' => $order->fields['order_tax'],
                         'last_modified' => $order->fields['last_modified'],
                         'ip_address' => $order->fields['ip_address'],
+                        'placed_on_mobile' => $order->fields['placed_on_mobile'],
                         );
 
     $this->customer = array('id' => $order->fields['customers_id'],
@@ -664,7 +665,15 @@ class order extends base {
       $cStart = substr($this->info['cc_number'], 0, ($cOffset > 4 ? 4 : (int)$cOffset));
       $this->info['cc_number'] = str_pad($cStart, 6, 'X') . $cEnd;
     };
-
+    if (!class_exists('Mobile_Detect')) {
+       include_once(DIR_WS_CLASSES . 'Mobile_Detect.php');
+    }
+    $detect = new Mobile_Detect;
+    if ($detect->isMobile() || $detect->isTablet()) { 
+      $origin = 1; 
+    } else {
+      $origin = -1; 
+    }
     $sql_data_array = array('customers_id' => $_SESSION['customer_id'],
                             'customers_name' => $this->customer['firstname'] . ' ' . $this->customer['lastname'],
                             'customers_company' => $this->customer['company'],
@@ -710,7 +719,8 @@ class order extends base {
                             'order_tax' => $this->info['tax'],
                             'currency' => $this->info['currency'],
                             'currency_value' => $this->info['currency_value'],
-                            'ip_address' => $_SESSION['customers_ip_address'] . ' - ' . $_SERVER['REMOTE_ADDR']
+                            'ip_address' => $_SESSION['customers_ip_address'] . ' - ' . $_SERVER['REMOTE_ADDR'], 
+                            'placed_on_mobile' => $origin
                             );
 
     zen_db_perform(TABLE_ORDERS, $sql_data_array);
