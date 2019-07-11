@@ -85,7 +85,9 @@ echo '<div class="header Fixed"><a href="#menu" title="Menu"><i class="fa fa-bar
     <li class="last"><a class="blue" href="<?php echo zen_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL'); ?>"><i class="fa fa-check-square" title="Checkout"></i></a></li>
 <?php }?>
   </ul>
-<div id="navMainSearch" class="forward"><?php require(DIR_WS_MODULES . 'sideboxes/search_header.php'); ?></div>
+<div id="navMainSearch" class="forward">
+     <?php require(DIR_WS_MODULES . zen_get_module_sidebox_directory('search_header.php')); ?>
+</div>
 </div>
 </div>
 
@@ -198,9 +200,13 @@ echo '<div class="header Fixed"><a href="#menu" title="Menu"><i class="fa fa-bar
 <!--eof header logo and navigation display-->
 
 <?php if ( $detect->isMobile() && !$detect->isTablet() || $_SESSION['layoutType'] == 'mobile' ) { ?>
-  <div id="navMainSearch1" class="forward"><?php require(DIR_WS_MODULES . 'sideboxes/search_header.php'); ?></div>
+  <div id="navMainSearch1" class="forward">
+     <?php require(DIR_WS_MODULES . zen_get_module_sidebox_directory('search_header.php')); ?>
+  </div>
 <?php  } else if ( $detect->isTablet() || $_SESSION['layoutType'] == 'tablet' ) { ?>
-  <div id="navMainSearch1" class="forward"><?php require(DIR_WS_MODULES . 'sideboxes/search_header.php'); ?></div>
+  <div id="navMainSearch1" class="forward">
+     <?php require(DIR_WS_MODULES . zen_get_module_sidebox_directory('search_header.php')); ?>
+  </div>
 <?php  } else if ( $_SESSION['layoutType'] == 'full' ) {
   } else {
 //

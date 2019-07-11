@@ -1322,6 +1322,25 @@
     }
   }
 
+  function zen_get_module_sidebox_directory($check_file, $dir_only = 'false') {
+    global $template_dir;
+
+    $zv_filename = $check_file;
+    if (!strstr($zv_filename, '.php')) $zv_filename .= '.php';
+
+    if (file_exists(DIR_WS_MODULES . 'sideboxes/' . $template_dir . '/' . $zv_filename)) {
+      $template_dir_select = 'sideboxes/' . $template_dir . '/';
+    } else {
+      $template_dir_select = 'sideboxes/';
+    }
+
+    if ($dir_only == 'true') {
+      return $template_dir_select;
+    } else {
+      return $template_dir_select . $zv_filename;
+    }
+  }
+
 
 ////
 // find template or default file
