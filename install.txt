@@ -24,4 +24,4 @@ For more detailed installation instructions, please see the Implementation Guide
 
 
 
-( (c)Copyright 2003-2018, Zen Cart(R). All rights reserved.)
+( (c)Copyright 2003-2019, Zen Cart(R). All rights reserved.)
