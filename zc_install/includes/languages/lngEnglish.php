@@ -175,7 +175,7 @@ define('TEXT_ERROR_SESSION_SUPPORT_USE_TRANS_SID', 'ini setting session.use_tran
 define('TEXT_ERROR_SESSION_SUPPORT_AUTO_START', 'ini setting session.auto_start is enabled');
 define('TEXT_ERROR_DB_CONNECTION', 'Problems with Database Connection');
 define('TEXT_ERROR_DB_CONNECTION_DEFAULT', 'Possible problems with database connection');
-define('TEXT_ERROR_DB_CONNECTION_UPGRADE', 'Probems with database connection based on the entries in your current configure.php');
+define('TEXT_ERROR_DB_CONNECTION_UPGRADE', 'Problems with database connection based on the entries in your current configure.php');
 define('TEXT_ERROR_SET_TIME_LIMIT', 'max_execution_time setting disabled ');
 define('TEXT_ERROR_GD', 'GD Extension not enabled');
 define('TEXT_ERROR_ZLIB', 'Zlib Extension not enabled');
