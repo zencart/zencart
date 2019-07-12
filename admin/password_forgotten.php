@@ -28,14 +28,18 @@ if (isset($_POST['submit'])) {
         $email_message = ERROR_WRONG_EMAIL_NULL;
     }
     $admin_email = zen_db_prepare_input($_POST['admin_email']);
-    $sql = "select admin_id, admin_name, admin_email, admin_pass from " . TABLE_ADMIN . " where admin_email = :admEmail: LIMIT 1";
+    $sql = "SELECT admin_id, admin_name, admin_email, admin_pass, lockout_expires FROM " . TABLE_ADMIN . " WHERE admin_email = :admEmail: LIMIT 1";
     $sql = $db->bindVars($sql, ':admEmail:', $admin_email, 'string');
     $result = $db->Execute($sql);
     if (!($admin_email == $result->fields['admin_email'])) {
         $error = true;
         $email_message = MESSAGE_PASSWORD_SENT;
         $resetToken = 'bad';
+    } else if ($result->fields['lockout_expires'] != 0) {
+        header('HTTP/1.1 406 Not Acceptable');
+        exit(0);
     }
+    
     // BEGIN SLAM PREVENTION
     if ($_POST['admin_email'] != '') {
         if (!isset($_SESSION['login_attempt'])) $_SESSION['login_attempt'] = 0;
