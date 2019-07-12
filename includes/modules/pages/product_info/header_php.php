@@ -9,31 +9,19 @@
  * @version $Id: mc12345678 2019 Apr 30 Modified in v1.5.6b $
  */
 
-  // This should be first line of the script:
-  $zco_notifier->notify('NOTIFY_HEADER_START_PRODUCT_INFO');
+// This should be first line of the script:
+$zco_notifier->notify('NOTIFY_HEADER_START_PRODUCT_INFO');
 
-  require(DIR_WS_MODULES . zen_get_module_directory('require_languages.php'));
+require(DIR_WS_MODULES . zen_get_module_directory('require_languages.php'));
 
-  // if specified product_id is disabled or doesn't exist, ensure that metatags and breadcrumbs don't share inappropriate information
-  $sql = "select count(*) as total
-          from " . TABLE_PRODUCTS . " p, " .
-                   TABLE_PRODUCTS_DESCRIPTION . " pd
-          where    p.products_status = '1'
-          and      p.products_id = '" . (int)$_GET['products_id'] . "'
-          and      pd.products_id = p.products_id
-          and      pd.language_id = '" . (int)$_SESSION['languages_id'] . "'";
-  $res = $db->Execute($sql);
-  if ( $res->fields['total'] < 1 ) {
-    unset($_GET['products_id']);
-    unset($breadcrumb->_trail[sizeof($breadcrumb->_trail)-1]['title']);
-    $robotsNoIndex = true;
-    header('HTTP/1.1 404 Not Found');
-  }
+$product_info = zen_get_product_details($products_id_current = (int)$_GET['products_id']);
 
-  // ensure navigation snapshot in case must-be-logged-in-for-price is enabled
-  if (!zen_is_logged_in()) {
+zen_product_set_header_response($products_id_current, $product_info);
+
+// ensure navigation snapshot is set in order to "go back" in case must-be-logged-in-for-price is enabled
+if (!zen_is_logged_in()) {
     $_SESSION['navigation']->set_snapshot();
-  }
+}
 
-  // This should be last line of the script:
-  $zco_notifier->notify('NOTIFY_HEADER_END_PRODUCT_INFO');
+// This should be last line of the script:
+$zco_notifier->notify('NOTIFY_HEADER_END_PRODUCT_INFO');
