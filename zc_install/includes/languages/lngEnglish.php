@@ -302,6 +302,8 @@ define('REASON_INDEX_DOESNT_EXIST_TO_DROP','Cannot drop index %s on table %s bec
 define('REASON_PRIMARY_KEY_DOESNT_EXIST_TO_DROP','Cannot drop primary key on table %s because it does not exist.');
 define('REASON_INDEX_ALREADY_EXISTS','Cannot add index %s to table %s because it already exists.');
 define('REASON_PRIMARY_KEY_ALREADY_EXISTS','Cannot add primary key to table %s because a primary key already exists.');
+define('REASON_CONFIG_GROUP_KEY_ALREADY_EXISTS','Cannot insert configuration_group_key "%s" because it already exists');
+define('REASON_CONFIG_GROUP_ID_ALREADY_EXISTS','Cannot insert configuration_group_id "%s" because it already exists');
 
 
 define('TEXT_COMPLETION_NGINX_TEXT', '<u>Important Security Information for Nginx</u>');
