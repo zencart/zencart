@@ -193,7 +193,7 @@
   define('ENTRY_DATE_OF_BIRTH_TEXT', '* (eg. 05/21/1970 or 1970-05-21)');
   define('ENTRY_EMAIL_ADDRESS', 'Email Address:');
   define('ENTRY_EMAIL_ADDRESS_ERROR', 'Is your email address correct? It should contain at least ' . ENTRY_EMAIL_ADDRESS_MIN_LENGTH . ' characters. Please try again.');
-  define('ENTRY_EMAIL_ADDRESS_CHECK_ERROR', 'Sorry, my system does not understand your email address. Please try again.');
+  define('ENTRY_EMAIL_ADDRESS_CHECK_ERROR', 'Sorry, our system does not understand your email address. Please try again.');
   define('ENTRY_EMAIL_ADDRESS_ERROR_EXISTS', 'Our system already has a record of that email address - please try logging in with that email address. If you do not use that address any longer you can correct it in the My Account area.');
   define('ENTRY_EMAIL_ADDRESS_TEXT', '*');
   define('ENTRY_NICK', 'Forum Nick Name:');
@@ -427,7 +427,7 @@
 // End iii added
 
   define('TEXT_BEFORE_DOWN_FOR_MAINTENANCE', 'NOTICE: This website is scheduled to be down for maintenance on: ');
-  define('TEXT_ADMIN_DOWN_FOR_MAINTENANCE', 'NOTICE: The website is currently Down For Maintenance to the public');
+  define('TEXT_ADMIN_DOWN_FOR_MAINTENANCE', 'NOTICE: The website is currently down for maintenance to the public');
 
   define('PRODUCTS_PRICE_IS_FREE_TEXT','It\'s Free!');
   define('PRODUCTS_PRICE_IS_CALL_FOR_PRICE_TEXT','Call for Price');
