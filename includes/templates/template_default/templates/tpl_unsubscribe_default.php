@@ -27,7 +27,7 @@
 <div class="buttonRow forward"><?php echo '<a href="' . zen_href_link(FILENAME_DEFAULT, '', 'NONSSL') . '">' . zen_image_button(BUTTON_IMAGE_CONTINUE_SHOPPING, BUTTON_CONTINUE_SHOPPING_ALT) . '</a>'; ?></div>
 
 <?php } else {
-        zen_redirect(FILENAME_DEFAULT,'','NONSSL');
+        zen_redirect(zen_href_link(FILENAME_DEFAULT,'','NONSSL'));
    }
 ?>
 </div>
