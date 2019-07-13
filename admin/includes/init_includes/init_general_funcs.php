@@ -24,6 +24,7 @@ if (!defined('IS_ADMIN_FLAG')) {
   require(DIR_WS_FUNCTIONS . 'general.php');
   require(DIR_WS_FUNCTIONS . 'functions_prices.php');
   require(DIR_WS_FUNCTIONS . 'html_output.php');
+  require(DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'functions_shared.php');
   require(DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'functions_customers.php');
   require(DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'functions_email.php');
 
