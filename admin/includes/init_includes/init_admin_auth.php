@@ -65,7 +65,7 @@ if (basename($_SERVER['SCRIPT_FILENAME']) != FILENAME_ALERT_PAGE . '.php')
     if (!in_array($page, array(FILENAME_DEFAULT,FILENAME_ADMIN_ACCOUNT,FILENAME_LOGOFF,FILENAME_ALERT_PAGE,FILENAME_PASSWORD_FORGOTTEN,FILENAME_DENIED,FILENAME_ALT_NAV)) &&
         !zen_is_superuser())
     {
-      if (check_page($page, $_GET) == FALSE)
+      if ( (check_page($page, $_GET) == FALSE) && (check_related_page($page, $_GET) == FALSE) ) 
       {
         zen_record_admin_activity('Attempted access to unauthorized page [' . $page . ']. Redirected to DENIED page instead.', 'notice');
         zen_redirect(zen_href_link(FILENAME_DENIED, '', 'SSL'));
