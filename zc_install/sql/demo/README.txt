@@ -9,6 +9,7 @@ categories_description
 customers
 customers_info 
 ezpages 
+ezpages_content
 featured 
 group_pricing 
 manufacturers 
