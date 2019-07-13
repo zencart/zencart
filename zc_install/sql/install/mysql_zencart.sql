@@ -2215,6 +2215,7 @@ INSERT INTO admin_profiles (profile_name) values ('Order Processing');
 SET @profile_id=last_insert_id();
 INSERT INTO admin_pages_to_profiles (profile_id, page_key) VALUES
 (@profile_id, 'customers'),
+(@profile_id, 'mail'),
 (@profile_id, 'orders'),
 (@profile_id, 'invoice'),
 (@profile_id, 'packingslip'),
