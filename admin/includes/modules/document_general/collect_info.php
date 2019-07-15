@@ -175,13 +175,27 @@ for ($i = 0, $n = sizeof($tax_class_array); $i < $n; $i++) {
     </div>
   </div>
   <?php
-// hidden fields not changeable on products page
+// hidden fields not changeable on document-general products' page
   echo zen_draw_hidden_field('master_categories_id', $pInfo->master_categories_id);
   echo zen_draw_hidden_field('products_discount_type', $pInfo->products_discount_type);
   echo zen_draw_hidden_field('products_discount_type_from', $pInfo->products_discount_type_from);
   echo zen_draw_hidden_field('products_price_sorter', $pInfo->products_price_sorter);
   echo zen_draw_hidden_field('products_quantity_order_min', $pInfo->products_quantity_order_min);
   echo zen_draw_hidden_field('products_quantity_order_units', $pInfo->products_quantity_order_units);
+  echo zen_draw_hidden_field('products_quantity', $pInfo->products_quantity) .
+       zen_draw_hidden_field('products_model', $pInfo->products_model) .
+       zen_draw_hidden_field('products_price', $pInfo->products_price) .       
+       zen_draw_hidden_field('products_weight', $pInfo->products_weight) .       
+       zen_draw_hidden_field('products_virtual', $pInfo->products_virtual) .       
+       zen_draw_hidden_field('products_tax_class_id', $pInfo->products_tax_class_id) .       
+       zen_draw_hidden_field('manufacturers_id', $pInfo->manufacturers_id) .
+       zen_draw_hidden_field('products_priced_by_attribute', $pInfo->products_priced_by_attribute) .
+       zen_draw_hidden_field('product_is_free', $pInfo->product_is_free) .
+       zen_draw_hidden_field('product_is_call', $pInfo->product_is_call) .
+       zen_draw_hidden_field('products_quantity_mixed', $pInfo->products_quantity_mixed) .
+       zen_draw_hidden_field('product_is_always_free_shipping', $pInfo->product_is_always_free_shipping) .
+       zen_draw_hidden_field('products_qty_box_status', $pInfo->products_qty_box_status) .
+       zen_draw_hidden_field('products_quantity_order_max', $pInfo->products_quantity_order_max);
   ?>
   <div class="col-sm-12 text-center"><?php echo (zen_get_categories_status($current_category_id) == '0' ? TEXT_CATEGORIES_STATUS_INFO_OFF : '') . (isset($out_status) && $out_status == true ? ' ' . TEXT_PRODUCTS_STATUS_INFO_OFF : ''); ?></div>
   <div class="form-group">
