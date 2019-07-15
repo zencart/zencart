@@ -26,13 +26,13 @@ if (isset($_GET['action']) && ($_GET['action'] == 'process')) {
     exit(0);
   }
   // BEGIN SLAM PREVENTION
-  if ($_POST['email_address'] != '')
+  if (!empty($_POST['email_address']))
   {
     if (! isset($_SESSION['login_attempt'])) $_SESSION['login_attempt'] = 0;
     $_SESSION['login_attempt'] ++;
   } // END SLAM PREVENTION
 
-  $email_address = zen_db_prepare_input($_POST['email_address']);
+  $email_address = zen_db_prepare_input(trim($_POST['email_address']));
 
   $check_customer_query = "SELECT customers_firstname, customers_lastname, customers_password, customers_id
                            FROM " . TABLE_CUSTOMERS . "
