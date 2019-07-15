@@ -16,12 +16,13 @@ require DIR_WS_MODULES . zen_get_module_directory('require_languages.php');
 
 $error = false;
 $enquiry = '';
+$antiSpamFieldName = isset($_SESSION['antispam_fieldname']) ? $_SESSION['antispam_fieldname'] : 'should_be_empty';
 
 if (isset($_GET['action']) && ($_GET['action'] == 'send')) {
     $name = zen_db_prepare_input($_POST['contactname']);
     $email_address = zen_db_prepare_input($_POST['email']);
     $enquiry = zen_db_prepare_input(strip_tags($_POST['enquiry']));
-    $antiSpam = isset($_POST['should_be_empty']) ? zen_db_prepare_input($_POST['should_be_empty']) : '';
+    $antiSpam = !empty($_POST[$antiSpamFieldName]) ? 'spam' : '';
     if (!empty($_POST['contactname']) && preg_match('~https?://?~', $_POST['contactname'])) $antiSpam = 'spam';
 
     $zco_notifier->notify('NOTIFY_CONTACT_US_CAPTCHA_CHECK', $_POST);

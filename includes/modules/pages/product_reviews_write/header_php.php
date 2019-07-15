@@ -15,6 +15,8 @@
 // This should be first line of the script:
 $zco_notifier->notify('NOTIFY_HEADER_START_PRODUCT_REVIEWS_WRITE');
 
+$antiSpamFieldName = isset($_SESSION['antispam_fieldname']) ? $_SESSION['antispam_fieldname'] : 'should_be_empty';
+
 if (!zen_is_logged_in()) {
   $_SESSION['navigation']->set_snapshot();
   zen_redirect(zen_href_link(FILENAME_LOGIN, '', 'SSL'));
@@ -48,7 +50,7 @@ $error = false;
 if (isset($_GET['action']) && ($_GET['action'] == 'process')) {
   $rating = (int)$_POST['rating'];
   $review_text = $_POST['review_text'];
-  $antiSpam = isset($_POST['should_be_empty']) ? zen_db_prepare_input($_POST['should_be_empty']) : '';
+  $antiSpam = !empty($_POST[$antiSpamFieldName]) ? 'spam' : '';
   $zco_notifier->notify('NOTIFY_REVIEWS_WRITE_CAPTCHA_CHECK');
 
   if (strlen($review_text) < REVIEW_TEXT_MIN_LENGTH) {
@@ -86,7 +88,7 @@ if (isset($_GET['action']) && ($_GET['action'] == 'process')) {
       $insert_id = $db->Insert_ID();
 
       $zco_notifier->notify('NOTIFY_REVIEW_INSERTED_DURING_WRITE_REVIEW');
-     
+
       $sql = "INSERT INTO " . TABLE_REVIEWS_DESCRIPTION . " (reviews_id, languages_id, reviews_text)
               VALUES (:insertID, :languagesID, :reviewText)";
 
@@ -97,7 +99,7 @@ if (isset($_GET['action']) && ($_GET['action'] == 'process')) {
 
       $email_text = '';
       $send_admin_email = REVIEWS_APPROVAL == '1' && SEND_EXTRA_REVIEW_NOTIFICATION_EMAILS_TO_STATUS == '1' && defined('SEND_EXTRA_REVIEW_NOTIFICATION_EMAILS_TO') && SEND_EXTRA_REVIEW_NOTIFICATION_EMAILS_TO !='';
-    
+
       $zco_notifier->notify('NOTIFY_SEND_ADMIN_EMAIL_WRITE_REVIEW');
       // send review-notification email to admin
       if ($send_admin_email) {
