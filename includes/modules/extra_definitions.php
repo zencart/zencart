@@ -26,9 +26,7 @@ foreach ($folderlist as $folder) {
   if ($dir = @dir($this_folder)) {
     while (false !== ($file = $dir->read())) {
       if (!is_dir($this_folder. $file)) {
-        if (array_key_exists($file, $file_array)) {
-          // skip name exists
-        } else {
+        if (!array_key_exists($file, $file_array)) {
           if (preg_match('~^[^\._].*\.php$~i', $file) > 0) {
              $file_array[$file] = $folder . $file;
           }
@@ -38,13 +36,12 @@ foreach ($folderlist as $folder) {
     $dir->close();
   }
 }
+
 if (sizeof($file_array)) {
     ksort($file_array);
 }
 
 
-$file_cnt=0;
 foreach ($file_array as $file => $include_file) { 
-  $file_cnt++;
   include($include_file);
 }
