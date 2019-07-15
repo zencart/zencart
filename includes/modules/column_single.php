@@ -23,7 +23,7 @@ if (defined('BOX_WIDTH_SINGLE')) {
 }
 while (!$column_single_display->EOF and $box_cnt < 100) {
   $box_cnt++;
-  $box_file = zen_get_file_directory(DIR_WS_MODULES . 'sideboxes/', $column_single_display->fields['layout_box_name']); 
+  $box_file = DIR_WS_MODULES . zen_get_module_sidebox_directory($column_single_display->fields['layout_box_name']); 
   if (file_exists($box_file)) {
     $box_id = zen_get_box_id($column_single_display->fields['layout_box_name']);
     require($box_file); 

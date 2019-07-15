@@ -19,12 +19,12 @@ $box_cnt=0;
 $column_width = (int)BOX_WIDTH_LEFT;
 while (!$column_left_display->EOF and $box_cnt < 100) {
   $box_cnt++;
-  $box_file = zen_get_file_directory(DIR_WS_MODULES . 'sideboxes/', $column_left_display->fields['layout_box_name']); 
+  $box_file = DIR_WS_MODULES . zen_get_module_sidebox_directory($column_left_display->fields['layout_box_name']); 
   if (file_exists($box_file)) {
       $box_id = zen_get_box_id($column_left_display->fields['layout_box_name']);
       include($box_file); 
   }
   $column_left_display->MoveNext();
 } // while column_left
-$box_id = '';
+$box_id = ''; 
 ?>
