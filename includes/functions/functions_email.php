@@ -106,7 +106,7 @@ use PHPMailer\PHPMailer\SMTP;
       if (!isset($block['EMAIL_FROM_NAME']) || $block['EMAIL_FROM_NAME'] == '')   $block['EMAIL_FROM_NAME'] = $from_email_name;
       if (!isset($block['EMAIL_FROM_ADDRESS']) || $block['EMAIL_FROM_ADDRESS'] == '') $block['EMAIL_FROM_ADDRESS'] = $from_email_address;
       $email_html = (!is_array($block) && substr($block, 0, 6) == '<html>') ? $block : zen_build_html_email_from_template($module, $block);
-      if (!is_array($block) && $block == '' || $block == 'none') $email_html = '';
+      if (!is_array($block) && ($block == '' || $block == 'none')) $email_html = '';
 
       // Build the email based on whether customer has selected HTML or TEXT, and whether we have supplied HTML or TEXT-only components
       // special handling for XML content
