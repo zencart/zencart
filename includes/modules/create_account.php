@@ -49,7 +49,7 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
   }
 
   if (isset($_POST['email_format'])) {
-    $email_format = zen_db_prepare_input($_POST['email_format']);
+    $email_format = in_array($_POST['email_format'], array('HTML', 'TEXT', 'NONE', 'OUT'), true) ? $_POST['email_format'] : 'TEXT';
   }
 
   if (ACCOUNT_COMPANY == 'true') $company = zen_db_prepare_input($_POST['company']);

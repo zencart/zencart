@@ -26,7 +26,7 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
   $email_address = zen_db_prepare_input($_POST['email_address']);
   $telephone = zen_db_prepare_input($_POST['telephone']);
   $fax = zen_db_prepare_input($_POST['fax']);
-  $email_format = zen_db_prepare_input($_POST['email_format']);
+  $email_format = in_array($_POST['email_format'], array('HTML', 'TEXT', 'NONE', 'OUT'), true) ? $_POST['email_format'] : 'TEXT';
 
   if (CUSTOMERS_REFERRAL_STATUS == '2' and $_POST['customers_referral'] != '') $customers_referral = zen_db_prepare_input($_POST['customers_referral']);
 
