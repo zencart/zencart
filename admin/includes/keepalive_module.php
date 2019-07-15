@@ -27,6 +27,7 @@ $camefrom = basename($PHP_SELF) . (empty($params = zen_get_all_get_params()) ? '
 $(function(){
    $.jTimeout(
     {
+    'flashTitle': true, //whether or not to flash the tab/title bar when about to timeout, or after timing out
     'flashTitleSpeed': 500, //how quickly to switch between the original title, and the warning text
     'flashingTitleText': '<?php echo addslashes(TEXT_TIMEOUT_WARNING); ?>', //what to show in the tab/title bar when about to timeout, or after timing out
     'timeoutAfter': <?php echo (int)$timeoutAfter; ?>, //passed from server side. 1440 is generally the default timeout in PHP
@@ -88,6 +89,7 @@ $(function(){
         });
         /* Force logout */
         $.get(timeout.options.logoutUrl);
+        $.jTimeout().destroy();
     }
   }
 );
