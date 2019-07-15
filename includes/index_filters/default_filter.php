@@ -48,7 +48,7 @@ if (isset($_GET['manufacturers_id']) && $_GET['manufacturers_id'] != '') {
     $and .= " AND m.manufacturers_id = " . (int)$_GET['filter_id'] . " ";
   }
 }
-$listing_sql = "SELECT " . $select_column_list . " p.products_id, p.products_type, p.master_categories_id, p.manufacturers_id, p.products_price, p.products_tax_class_id, pd.products_description,
+$listing_sql = "SELECT DISTINCT " . $select_column_list . " p.products_id, p.products_type, p.master_categories_id, p.manufacturers_id, p.products_price, p.products_tax_class_id, pd.products_description,
                        IF(s.status = 1, s.specials_new_products_price, NULL) AS specials_new_products_price,
                        IF(s.status = 1, s.specials_new_products_price, p.products_price) AS final_price,
                        p.products_sort_order, p.product_is_call, p.product_is_always_free_shipping, p.products_qty_box_status
