@@ -4,7 +4,7 @@
  * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2019 May 26 Modified in v1.5.6b $
+ * @version $Id: DrByte 2019 Jul 16 Modified in v1.5.6c $
  */
 require('includes/application_top.php');
 $languages = zen_get_languages();

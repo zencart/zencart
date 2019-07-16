@@ -5,7 +5,7 @@
  * @package classes
  * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2019 May 23 Modified in v1.5.6b $
+ * @version $Id: Scott C Wilson 2019 Jul 07 Modified in v1.5.6c $
  */
 /**
  * order class
