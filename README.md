@@ -1,3 +1,5 @@
+[![Download Zen Cart E-Commerce Shopping Cart ](https://img.shields.io/sourceforge/dt/zencart.svg)](https://sourceforge.net/projects/zencart/files/latest/download)
+
 Zen Cart&reg; - The Art of E-Commerce
 ===============
 
@@ -26,7 +28,7 @@ Installation
 
 Installation is simple:
 
-1. [Download Zen Cart&reg;](http://sourceforge.net/projects/zencart/files)
+1. [![Download Zen Cart](https://a.fsdn.com/con/app/sf-download-button)](https://sourceforge.net/projects/zencart/files/latest/download)
 2. Ensure you check that the md5/sha1 hash of the Zip matches those publicly posted.
   * The md5/sha1 values for verifying the zip files hosted at Sourceforge are displayed on the [Zen Cart&reg; website](https://www.zen-cart.com/) along with [instructions on how to verify the file using the hash values](https://www.zen-cart.com/content.php?305).
 3. Unzip the downloaded zip file 
