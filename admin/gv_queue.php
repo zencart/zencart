@@ -14,9 +14,10 @@
 
   if (isset($_GET['order'])) $_GET['order'] = (int)$_GET['order'];
   if (isset($_GET['gid'])) $_GET['gid'] = (int)$_GET['gid'];
+  if (!isset($_GET['action'])) $_GET['action'] = '';  
 
 // bof: find gv for a particular order and set page
-  if ($_GET['order'] != '') {
+  if (!empty($_GET['order'])) {
     $gv_check = $db->Execute("select order_id, unique_id
                                   from " . TABLE_COUPON_GV_QUEUE . "
                                   where order_id = '" . $_GET['order'] . "' and release_flag= 'N' limit 1");
@@ -162,7 +163,7 @@
   $gv_split = new splitPageResults($_GET['page'], MAX_DISPLAY_SEARCH_RESULTS, $gv_query_raw, $gv_query_numrows);
   $gv_list = $db->Execute($gv_query_raw);
   while (!$gv_list->EOF) {
-    if (((!$_GET['gid']) || (@$_GET['gid'] == $gv_list->fields['unique_id'])) && (!$gInfo)) {
+    if (((!isset($_GET['gid'])) || (@$_GET['gid'] == $gv_list->fields['unique_id'])) && (!isset($gInfo))) {
       $gInfo = new objectInfo($gv_list->fields);
     }
     if ( (is_object($gInfo)) && ($gv_list->fields['unique_id'] == $gInfo->unique_id) ) {
@@ -200,6 +201,9 @@
 //      $contents[] = array('align' => 'center', 'text' => '<a href="' . zen_href_link('gv_queue.php', 'action=confirmrelease&gid=' . $gInfo->unique_id . '&page=' . $_GET['page'],'NONSSL') . '">' . zen_image_button('button_confirm_red.gif', IMAGE_CONFIRM) . '</a> <a href="' . zen_href_link('gv_queue.php', 'action=cancel&gid=' . $gInfo->unique_id . '&page=' . $_GET['page'],'NONSSL') . '">' . zen_image_button('button_cancel.gif', IMAGE_CANCEL) . '</a>');
       break;
     default:
+      if (!isset($gInfo) || !is_object($gInfo)) { 
+        $gInfo = new objectInfo(array());
+      }
       $heading[] = array('text' => '[' . $gInfo->unique_id . '] ' . zen_datetime_short($gInfo->date_created) . ' ' . $currencies->format($gInfo->amount));
 
       if ($gv_list->RecordCount() == 0) {
