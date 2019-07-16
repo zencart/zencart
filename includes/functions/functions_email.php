@@ -120,7 +120,7 @@ use PHPMailer\PHPMailer\SMTP;
         $email_text = str_replace('@lt@', '<', $email_text);
       }
 
-      if ($module != 'xml_record') {
+      if (zen_is_non_transactional_email($module)) {
         if (defined('EMAIL_DISCLAIMER') && EMAIL_DISCLAIMER != '' && !strstr($email_text, sprintf(EMAIL_DISCLAIMER, STORE_OWNER_EMAIL_ADDRESS)) && $to_email_address != STORE_OWNER_EMAIL_ADDRESS && !defined('EMAIL_DISCLAIMER_NEW_CUSTOMER')) $email_text .= "\n" . sprintf(EMAIL_DISCLAIMER, STORE_OWNER_EMAIL_ADDRESS);
         if (defined('EMAIL_SPAM_DISCLAIMER') && EMAIL_SPAM_DISCLAIMER != '' && !strstr($email_text, EMAIL_SPAM_DISCLAIMER) && $to_email_address != STORE_OWNER_EMAIL_ADDRESS) $email_text .= "\n\n" . EMAIL_SPAM_DISCLAIMER;
       }
@@ -318,11 +318,12 @@ use PHPMailer\PHPMailer\SMTP;
         $mail->Body = $text;
       }
 
-      // Handle auto-generated admin notices, or newsletters, or contact-us as bulk to avoid autoresponder responses and risk of spam flagging
-      if (in_array($module, array('no_archive', 'admin_settings_changed', 'newsletters', 'product_notification', 'contact_us')) || substr($module, -6) == '_extra') {
+      // Treat marketing notices as bulk
+      if (in_array($module, array('newsletters', 'product_notification'))) {
         $mail->addCustomHeader('Precedence: bulk');
-        $mail->addCustomHeader('Auto-Submitted: auto-generated');
       }
+
+      $mail->addCustomHeader('Auto-Submitted: auto-generated');
 
       $oldVars = array(); $tmpVars = array('REMOTE_ADDR', 'HTTP_X_FORWARDED_FOR', 'PHP_SELF', $mail->Mailer === 'smtp' ? null : 'SERVER_NAME');
       foreach ($tmpVars as $key) {
@@ -421,6 +422,23 @@ use PHPMailer\PHPMailer\SMTP;
                           now() ,
                           '" . zen_db_input($module) . "')");
     return $db;
+  }
+
+  /**
+   * Transactional emails don't need overly verbose disclaimers, etc
+   * However, the following email types are marketing-related or first-time-interaction with recipient, so should probably have disclaimers
+   * @param string $email_module_name
+   * @return bool
+   */
+  function zen_is_non_transactional_email($email_module_name) {
+      return in_array($email_module_name, array(
+          'newsletters',
+          'product_notification',
+          'direct_email',
+          'coupon',
+          'gv_mail',
+          'welcome',
+      ));
   }
 
   //DEFINE EMAIL-ARCHIVABLE-MODULES LIST // this array will likely be used by the email archive log VIEWER module in future
@@ -788,7 +806,7 @@ use PHPMailer\PHPMailer\SMTP;
     if (is_string($string)) {
       return trim(stripslashes($string));
     } elseif (is_array($string)) {
-      foreach ($string as $key => $value) { 
+      foreach ($string as $key => $value) {
         $string[$key] = zen_db_prepare_input($value);
       }
     }
