@@ -55,7 +55,11 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
   if (ACCOUNT_COMPANY == 'true') $company = zen_db_prepare_input($_POST['company']);
   $firstname = zen_db_prepare_input(zen_sanitize_string($_POST['firstname']));
   $lastname = zen_db_prepare_input(zen_sanitize_string($_POST['lastname']));
-  $nick = zen_db_prepare_input($_POST['nick']);
+  if (isset($_POST['nick'])) { 
+     $nick = zen_db_prepare_input($_POST['nick']);
+  } else {
+    $nick = '';
+  }
   if (ACCOUNT_DOB == 'true') $dob = zen_db_prepare_input($_POST['dob']);
   $email_address = zen_db_prepare_input($_POST['email_address']);
   $street_address = zen_db_prepare_input($_POST['street_address']);
@@ -74,7 +78,11 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
   $telephone = zen_db_prepare_input($_POST['telephone']);
   $fax = zen_db_prepare_input($_POST['fax']);
   $customers_authorization = (int)CUSTOMERS_APPROVAL_AUTHORIZATION;
-  $customers_referral = zen_db_prepare_input($_POST['customers_referral']);
+  if (isset($_POST['customers_referral'])) { 
+     $customers_referral = zen_db_prepare_input($_POST['customers_referral']);
+  } else {
+     $customers_referral = '';
+  }
 
   if (ACCOUNT_NEWSLETTER_STATUS == '1' || ACCOUNT_NEWSLETTER_STATUS == '2') {
     $newsletter = 0;
