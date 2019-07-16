@@ -29,12 +29,14 @@ if (!defined('IS_ADMIN_FLAG')) {
   $extra_welcome_text = '';
   $send_welcome_email = true;
 
+  $antiSpamFieldName = isset($_SESSION['antispam_fieldname']) ? $_SESSION['antispam_fieldname'] : 'should_be_empty';
+
 /**
  * Process form contents
  */
 if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
   $process = true;
-  $antiSpam = isset($_POST['should_be_empty']) ? zen_db_prepare_input($_POST['should_be_empty']) : '';
+  $antiSpam = !empty($_POST[$antiSpamFieldName]) ? 'spam' : '';
   if (!empty($_POST['firstname']) && preg_match('~https?://?~', $_POST['firstname'])) $antiSpam = 'spam';
   if (!empty($_POST['lastname']) && preg_match('~https?://?~', $_POST['lastname'])) $antiSpam = 'spam';
 
