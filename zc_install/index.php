@@ -7,6 +7,8 @@
  * @version $Id: Drbyte Tue Sep 11 15:53:41 2018 -0400 Modified in v1.5.6 $
  */
 
+  // Actual version check is more strict; this is just to start the program
+  // For true minimum, see includes/systemChecks.yml under checkPhpVersionMin
   if (PHP_VERSION_ID < 50500) {
     die('Sorry, requires minimum PHP 5.5');
   }
