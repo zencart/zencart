@@ -8,6 +8,10 @@
 
 @import url("css/bootstrap.min.css");
 /* @import url("https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css"); */
+.form-control {
+  width: 90%;
+  display: inline-block;
+}
 
 @import url("menu.css");
 
