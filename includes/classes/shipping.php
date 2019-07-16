@@ -166,6 +166,7 @@ class shipping extends base {
         if (FALSE == $GLOBALS[$include_quotes[$i]]->enabled) continue;
         $save_shipping_weight = $shipping_weight;
         $quotes = $GLOBALS[$include_quotes[$i]]->quote($method);
+        if (!isset($quotes['tax'])) $quotes['tax'] = 0; 
         $shipping_weight = $save_shipping_weight;
         if (is_array($quotes)) $quotes_array[] = $quotes;
       }
