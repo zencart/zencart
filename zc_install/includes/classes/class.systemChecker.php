@@ -160,6 +160,7 @@ class systemChecker
       if ($systemCheck['runLevel'] == 'dbVersion')
       {
         $resultCombined = TRUE;
+        if (!isset($systemCheck['methods'])) $systemCheck['methods'] = array(); 
         foreach ($systemCheck['methods'] as $methodName => $methodDetail)
         {
           if (isset($methodDetail['method'])) $methodName = $methodDetail['method'];
@@ -204,7 +205,7 @@ class systemChecker
       $systemCheck['extraErrors'][] = $db -> error_number . ':' . $db -> error_text;
     } else
     {
-      $result = $db -> selectdb($dbNameVal, $db -> link);
+      $result = $db -> selectdb($dbNameVal);
     }
     if (!$result)
     {
@@ -387,7 +388,7 @@ class systemChecker
       $this->localErrors = $db -> error_number . ':' . $db -> error_text;
     } else
     {
-      $result = $db -> selectdb($dbNameVal, $db -> link);
+      $result = $db -> selectdb($dbNameVal);
     }
     if (!$result)
     {
@@ -427,7 +428,7 @@ class systemChecker
       $this->localErrors = $db -> error_number . ':' . $db -> error_text;
     } else
     {
-      $result = $db -> selectdb(zcRegistry::getValue('db_name'), $db -> link);
+      $result = $db -> selectdb(zcRegistry::getValue('db_name')); 
       if (!$result)
       {
         $sql = "CREATE DATABASE " . zcRegistry::getValue('db_name') . " CHARACTER SET " . zcRegistry::getValue('db_charset');
@@ -523,7 +524,7 @@ class systemChecker
       $systemCheck['extraErrors'][] = $db -> error_number . ':' . $db -> error_text;
     } else
     {
-      $result = $db -> selectdb($dbNameVal, $db -> link);
+      $result = $db -> selectdb($dbNameVal); 
     }
     if (!$result)
     {
@@ -695,7 +696,7 @@ class systemChecker
       require_once (DIR_FS_ROOT . 'includes/classes/db/mysql/query_factory.php');
       $db = new queryFactory();
       $result = $db -> simpleConnect($dbServerVal, $dbUserVal, $dbPasswordVal, $dbNameVal);
-      $result = $db -> selectdb($dbNameVal, $db -> link);
+      $result = $db -> selectdb($dbNameVal);
 
       $sql = "select configuration_value from " . $dbPrefixVal . "configuration where configuration_key = 'EXCLUDE_ADMIN_IP_FOR_MAINTENANCE'";
       $result = $db->Execute($sql);

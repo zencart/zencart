@@ -16,6 +16,10 @@
     if (isset($var_linksList)) {
       unset($var_linksList);
     }
+
+    if (!$sniffer->table_exists(TABLE_EZPAGES_CONTENT)) {
+      return; // early exit; db not upgraded
+    }
     $pages_query = $db->Execute("SELECT e.*, ec.*
                                 FROM " . TABLE_EZPAGES . " e,
                                      " . TABLE_EZPAGES_CONTENT . " ec

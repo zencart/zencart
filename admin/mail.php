@@ -56,8 +56,8 @@ if (($action == 'send_email_to_user') && isset($_POST['customers_email_address']
   foreach ($mail as $item) {
     $html_msg['EMAIL_FIRST_NAME'] = $item['customers_firstname'];
     $html_msg['EMAIL_LAST_NAME'] = $item['customers_lastname'];
-    zen_mail($item['customers_firstname'] . ' ' . $item['customers_lastname'], $item['customers_email_address'], $subject, $message, STORE_NAME, $from, $html_msg, 'direct_email', array('file' => $attachment_file, 'name' => basename($attachment_file), 'mime_type' => $attachment_filetype));
-    $recip_count++;
+    $rc = zen_mail($item['customers_firstname'] . ' ' . $item['customers_lastname'], $item['customers_email_address'], $subject, $message, STORE_NAME, $from, $html_msg, 'direct_email', array('file' => $attachment_file, 'name' => basename($attachment_file), 'mime_type' => $attachment_filetype));
+    if ($rc === '') $recip_count++;
   }
   if ($recip_count > 0) {
     $messageStack->add_session(sprintf(NOTICE_EMAIL_SENT_TO, $mail_sent_to . ' (' . $recip_count . ')'), 'success');
@@ -294,7 +294,7 @@ if ($action == 'preview') {
             <div class="col-sm-9">
                 <?php
                 if (EMAIL_USE_HTML == 'true') {
-                  echo zen_draw_textarea_field('message_html', 'soft', '100%', '25', htmlspecialchars(stripslashes($_POST['message_html']), ENT_COMPAT, CHARSET, TRUE), 'id="message_html" class="editorHook form-control"');
+                  echo zen_draw_textarea_field('message_html', 'soft', '100%', '25', htmlspecialchars(stripslashes(isset($_POST['message_html'])?$_POST['message_html']:''), ENT_COMPAT, CHARSET, TRUE), 'id="message_html" class="editorHook form-control"');
                 } else {
                   echo TEXT_WARNING_HTML_DISABLED;
                 }

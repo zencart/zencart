@@ -37,7 +37,7 @@
      $result = filter_var($variable, $id, $options); 
      if ($result === false) { 
         $messageStack->add_session($error_msg, 'error');
-        zen_redirect(zen_href_link(FILENAME_CONFIGURATION, 'gID=' . $_GET['gID'] . '&cID=' . (int)$cID));
+        zen_redirect(zen_href_link(FILENAME_CONFIGURATION, 'gID=' . $_GET['gID'] . '&cID=' . (int)$_GET['cID'] . '&action=edit'));
      }
      return; 
   }

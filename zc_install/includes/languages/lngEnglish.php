@@ -175,7 +175,7 @@ define('TEXT_ERROR_SESSION_SUPPORT_USE_TRANS_SID', 'ini setting session.use_tran
 define('TEXT_ERROR_SESSION_SUPPORT_AUTO_START', 'ini setting session.auto_start is enabled');
 define('TEXT_ERROR_DB_CONNECTION', 'Problems with Database Connection');
 define('TEXT_ERROR_DB_CONNECTION_DEFAULT', 'Possible problems with database connection');
-define('TEXT_ERROR_DB_CONNECTION_UPGRADE', 'Probems with database connection based on the entries in your current configure.php');
+define('TEXT_ERROR_DB_CONNECTION_UPGRADE', 'Problems with database connection based on the entries in your current configure.php');
 define('TEXT_ERROR_SET_TIME_LIMIT', 'max_execution_time setting disabled ');
 define('TEXT_ERROR_GD', 'GD Extension not enabled');
 define('TEXT_ERROR_ZLIB', 'Zlib Extension not enabled');
@@ -302,6 +302,8 @@ define('REASON_INDEX_DOESNT_EXIST_TO_DROP','Cannot drop index %s on table %s bec
 define('REASON_PRIMARY_KEY_DOESNT_EXIST_TO_DROP','Cannot drop primary key on table %s because it does not exist.');
 define('REASON_INDEX_ALREADY_EXISTS','Cannot add index %s to table %s because it already exists.');
 define('REASON_PRIMARY_KEY_ALREADY_EXISTS','Cannot add primary key to table %s because a primary key already exists.');
+define('REASON_CONFIG_GROUP_KEY_ALREADY_EXISTS','Cannot insert configuration_group_key "%s" because it already exists');
+define('REASON_CONFIG_GROUP_ID_ALREADY_EXISTS','Cannot insert configuration_group_id "%s" because it already exists');
 
 
 define('TEXT_COMPLETION_NGINX_TEXT', "<u>Important Security Information for Nginx</u>");

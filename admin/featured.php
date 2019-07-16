@@ -358,7 +358,7 @@ if (zen_not_null($action)) {
                       if (isset($fInfo) && is_object($fInfo) && ($featured_line['featured_id'] == $fInfo->featured_id)) {
                         echo '                  <tr id="defaultSelected" class="dataTableRowSelected"  onclick="document.location.href=\'' . zen_href_link(FILENAME_FEATURED, 'page=' . $_GET['page'] . '&fID=' . $fInfo->featured_id . '&action=edit' . (isset($_GET['search']) ? '&search=' . $_GET['search'] : '')) . '\'" role="button">' . "\n";
                       } else {
-                        echo '                  <tr class="dataTableRow"" onclick="document.location.href=\'' . zen_href_link(FILENAME_FEATURED, 'page=' . $_GET['page'] . '&fID=' . $featured_line['featured_id'] . '&action=edit' . (isset($_GET['search']) ? '&search=' . $_GET['search'] : '')) . '\'" role="button">' . "\n";
+                        echo '                  <tr class="dataTableRow" onclick="document.location.href=\'' . zen_href_link(FILENAME_FEATURED, 'page=' . $_GET['page'] . '&fID=' . $featured_line['featured_id'] . '&action=edit' . (isset($_GET['search']) ? '&search=' . $_GET['search'] : '')) . '\'" role="button">' . "\n";
                       }
                       ?>
                   <td  class="dataTableContent text-right"><?php echo $featured_line['products_id']; ?></td>

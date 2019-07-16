@@ -178,7 +178,7 @@
                               'module' => MODULE_SHIPPING_FREEOPTIONS_TEXT_TITLE,
                               'methods' => array(array('id' => $this->code,
                                                        'title' => MODULE_SHIPPING_FREEOPTIONS_TEXT_WAY,
-                                                       'cost'  => MODULE_SHIPPING_FREEOPTIONS_COST + MODULE_SHIPPING_FREEOPTIONS_HANDLING)));
+                                                       'cost'  => (float)MODULE_SHIPPING_FREEOPTIONS_COST + (float)MODULE_SHIPPING_FREEOPTIONS_HANDLING)));
 
         if ($this->tax_class > 0) {
           $this->quotes['tax'] = zen_get_tax_rate($this->tax_class, $order->delivery['country']['id'], $order->delivery['zone_id']);

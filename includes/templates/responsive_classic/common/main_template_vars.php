@@ -29,7 +29,14 @@
   if (!isset($flag_disable_right)) {
     $flag_disable_right = false;
   }
-  $display_as_mobile = ($detect->isMobile() && !$detect->isTablet() || $_SESSION['layoutType'] == 'mobile' or  $detect->isTablet() || $_SESSION['layoutType'] == 'tablet'); 
+
+  if (!class_exists('Mobile_Detect')) {
+    include_once(DIR_WS_CLASSES . 'Mobile_Detect.php');
+  }
+  if (!isset($detect)) $detect = new Mobile_Detect;
+  if (!isset($_SESSION['layoutType'])) $_SESSION['layoutType'] = 'legacy';
+
+  $display_as_mobile = ($detect->isMobile() || $detect->isTablet() || $_SESSION['layoutType'] == 'mobile' || $_SESSION['layoutType'] == 'tablet'); 
 
 /**
  * load page-specific main_template_vars if present, or jump directly to template file

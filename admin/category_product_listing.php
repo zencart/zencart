@@ -191,7 +191,6 @@ if (zen_not_null($action)) {
               $count_categories = $db->Execute("SELECT COUNT(categories_id) AS total
                                                 FROM " . TABLE_PRODUCTS_TO_CATEGORIES . "
                                                 WHERE products_id = " . (int)$product_id);
-              // echo 'count of category links for this product=' . $count_categories->fields['total'] . '<br />';
               // if not linked to any categories, do delete:
               if ($count_categories->fields['total'] == '0') {
                 zen_remove_product($product_id, $delete_linked);
@@ -367,13 +366,6 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
           }
       }
     </script>
-    <?php
-    if ($action != 'edit_category_meta_tags') { // bof: categories meta tags
-      if ($editor_handler != '') {
-        include ($editor_handler);
-      }
-    } // meta tags disable editor eof: categories meta tags
-    ?>
   </head>
   <body onload="init();">
     <!-- header //-->
@@ -410,7 +402,6 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
                     <i class="fa fa-circle fa-stack-2x" style="color: #000"></i>
                     <i class="fa fa-asterisk fa-stack-1x" aria-hidden="true" style="color: #fff"></i>
                   </div>
-                  <?php // echo zen_image(DIR_WS_IMAGES . 'icon_edit_metatags_on.gif', ICON_METATAGS_ON) . '&nbsp;' . zen_image(DIR_WS_IMAGES . 'icon_edit_metatags_off.gif', ICON_METATAGS_OFF); ?>
                 </td>
               </tr>
             </tbody>
@@ -588,6 +579,7 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
                 </tr>
               </thead>
               <?php
+              $order_by = " ";
               switch ($_SESSION['categories_products_sort_order']) {
                 case (0):
                   $order_by = " ORDER BY c.sort_order, cd.categories_name";
@@ -681,21 +673,18 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
                           <i class="fa fa-circle fa-stack-2x base"></i>
                           <i class="fa fa-pencil fa-stack-1x overlay" aria-hidden="true"></i>
                         </div>
-                        <?php // echo zen_image(DIR_WS_IMAGES . 'icon_edit.gif', ICON_EDIT); ?>
                       </a>
                       <a href="<?php echo zen_href_link(FILENAME_CATEGORY_PRODUCT_LISTING, 'cPath=' . $cPath . '&cID=' . $category['categories_id'] . '&action=delete_category' . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '')); ?>" style="text-decoration: none">
                         <div class="fa-stack fa-lg delete">
                           <i class="fa fa-circle fa-stack-2x base"></i>
                           <i class="fa fa-trash-o fa-stack-1x overlay" aria-hidden="true"></i>
                         </div>
-                        <?php // echo zen_image(DIR_WS_IMAGES . 'icon_delete.gif', ICON_DELETE); ?>
                       </a>
                       <a href="<?php echo zen_href_link(FILENAME_CATEGORY_PRODUCT_LISTING, 'cPath=' . $cPath . '&cID=' . $category['categories_id'] . '&action=move_category' . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '')); ?>" style="text-decoration: none">
                         <div class="fa-stack fa-lg move">
                           <i class="fa fa-circle fa-stack-2x base"></i>
                           <i class="fa fa-stack-1x overlay" aria-hidden="true"><strong>M</strong></i>
                         </div>
-                        <?php // echo zen_image(DIR_WS_IMAGES . 'icon_move.gif', ICON_MOVE); ?>
                       </a>
                       <?php
 // bof: categories meta tags
@@ -706,7 +695,6 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
                             <i class="fa fa-circle fa-stack-2x base"></i>
                             <i class="fa fa-asterisk fa-stack-1x overlay" aria-hidden="true"></i>
                           </div>
-                          <?php // echo zen_image(DIR_WS_IMAGES . 'icon_edit_metatags_on.gif', ICON_METATAGS_ON); ?>
                         </a>
                       <?php } else { ?>
                         <a href="<?php echo zen_href_link(FILENAME_CATEGORIES, 'cPath=' . $cPath . '&cID=' . $category['categories_id'] . '&action=edit_category_meta_tags'); ?>" style="text-decoration: none">
@@ -714,7 +702,6 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
                             <i class="fa fa-circle fa-stack-2x base"></i>
                             <i class="fa fa-asterisk fa-stack-1x overlay" aria-hidden="true"></i>
                           </div>
-                          <?php // echo zen_image(DIR_WS_IMAGES . 'icon_edit_metatags_off.gif', ICON_METATAGS_OFF); ?>
                         </a>
                         <?php
                       } // eof: categories meta tags
@@ -728,6 +715,7 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
               }
 
 
+              $order_by = " "; 
               switch ($_SESSION['categories_products_sort_order']) {
                 case (0):
                   $order_by = " ORDER BY p.products_sort_order, pd.products_name";
@@ -889,28 +877,24 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
                           <i class="fa fa-circle fa-stack-2x base"></i>
                           <i class="fa fa-pencil fa-stack-1x overlay" aria-hidden="true"></i>
                         </div>
-                        <?php // echo zen_image(DIR_WS_IMAGES . 'icon_edit.gif', ICON_EDIT); ?>
                       </a>
                       <a href="<?php echo zen_href_link(FILENAME_CATEGORY_PRODUCT_LISTING, 'cPath=' . $cPath . '&product_type=' . $product['products_type'] . '&pID=' . $product['products_id'] . '&action=delete_product' . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '')); ?>" style="text-decoration: none">
                         <div class="fa-stack fa-lg delete">
                           <i class="fa fa-circle fa-stack-2x base"></i>
                           <i class="fa fa-trash-o fa-stack-1x overlay" aria-hidden="true"></i>
                         </div>
-                        <?php // echo zen_image(DIR_WS_IMAGES . 'icon_delete.gif', ICON_DELETE); ?>
                       </a>
                       <a href="<?php echo zen_href_link(FILENAME_CATEGORY_PRODUCT_LISTING, 'cPath=' . $cPath . '&product_type=' . $product['products_type'] . '&pID=' . $product['products_id'] . '&action=move_product' . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '')); ?>" style="text-decoration: none">
                         <div class="fa-stack fa-lg move">
                           <i class="fa fa-circle fa-stack-2x base"></i>
                           <i class="fa fa-stack-1x overlay" aria-hidden="true"><strong>M</strong></i>
                         </div>
-                        <?php // echo zen_image(DIR_WS_IMAGES . 'icon_move.gif', ICON_MOVE); ?>
                       </a>
                       <a href="<?php echo zen_href_link(FILENAME_CATEGORY_PRODUCT_LISTING, 'cPath=' . $cPath . '&product_type=' . $product['products_type'] . '&pID=' . $product['products_id'] . '&action=copy_product' . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '')); ?>" style="text-decoration: none">
                         <div class="fa-stack fa-lg copy">
                           <i class="fa fa-circle fa-stack-2x base"></i>
                           <i class="fa fa-stack-1x overlay" aria-hidden="true"><strong>C</strong></i>
                         </div>
-                        <?php // echo zen_image(DIR_WS_IMAGES . 'icon_copy_to.gif', ICON_COPY_TO); ?>
                       </a>
 
                       <?php if (defined('FILENAME_IMAGE_HANDLER') && file_exists(DIR_FS_ADMIN . FILENAME_IMAGE_HANDLER . '.php')) { ?>
@@ -919,7 +903,6 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
                             <i class="fa fa-circle fa-stack-2x base"></i>
                             <i class="fa fa-stack-1x fa-image overlay" aria-hidden="true"></i>
                           </div>
-                          <?php // echo zen_image(DIR_WS_IMAGES . 'icon_image_handler.gif', ICON_IMAGE_HANDLER); ?>
                         </a>
                       <?php } ?>
 
@@ -935,7 +918,6 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
                             <i class="fa fa-circle fa-stack-2x base"></i>
                             <i class="fa fa-stack-1x overlay" aria-hidden="true"><strong>A</strong></i>
                           </div>
-                          <?php // echo ((!empty($product['products_id']) && zen_has_product_attributes($product['products_id'], 'false')) ? zen_image(DIR_WS_IMAGES . 'icon_attributes_on.gif', ICON_ATTRIBUTES) : zen_image(DIR_WS_IMAGES . 'icon_attributes.gif', ICON_ATTRIBUTES)); ?>
                         </a>
                         <?php
                       } else {
@@ -945,7 +927,6 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
                             <i class="fa fa-circle fa-stack-2x base"></i>
                             <i class="fa fa-stack-1x overlay" aria-hidden="true"><strong>A</strong></i>
                           </div>
-                          <?php // echo zen_image(DIR_WS_IMAGES . 'icon_attributes.gif', ICON_ATTRIBUTES); ?>
                         </a>
                         <?php
                       }
@@ -961,7 +942,6 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
                             <i class="fa fa-circle fa-stack-2x base"></i>
                             <i class="fa fa-stack-1x fa-dollar overlay" aria-hidden="true"></i>
                           </div>
-                          <?php // echo zen_image(DIR_WS_IMAGES . 'icon_products_price_manager.gif', ICON_PRODUCTS_PRICE_MANAGER); ?>
                         </a>
                         <?php
                       } else {
@@ -980,7 +960,6 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
                             <i class="fa fa-circle fa-stack-2x base"></i>
                             <i class="fa fa-asterisk fa-stack-1x overlay" aria-hidden="true"></i>
                           </div>
-                          <?php // echo zen_image(DIR_WS_IMAGES . 'icon_edit_metatags_on.gif', ICON_METATAGS_ON); ?>
                         </a>
                         <?php
                       } else {
@@ -990,7 +969,6 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
                             <i class="fa fa-circle fa-stack-2x base"></i>
                             <i class="fa fa-asterisk fa-stack-1x overlay" aria-hidden="true"></i>
                           </div>
-                          <?php // echo zen_image(DIR_WS_IMAGES . 'icon_edit_metatags_off.gif', ICON_METATAGS_OFF); ?>
                         </a>
                         <?php
                       }
