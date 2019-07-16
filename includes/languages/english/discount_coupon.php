@@ -31,6 +31,7 @@ define('TEXT_DENY', 'Deny');
 define('TEXT_NO_CAT_TOP_ONLY_DENY', '<p>This coupon has specific Product Restrictions.</p>');
 define('TEXT_NO_CAT_RESTRICTIONS', '<p>This coupon is valid for all categories.</p>');
 define('TEXT_NO_PROD_RESTRICTIONS', '<p>This coupon is valid for all products.</p>');
+define('TEXT_NO_PROD_SALES', '<p>This coupon is not valid for products on sale.</p>');
 define('TEXT_CAT_ALLOWED', ' (Valid for this category)');
 define('TEXT_CAT_DENIED', ' (Not allowed on this category)');
 define('TEXT_PROD_ALLOWED', ' (Valid for this product)');
