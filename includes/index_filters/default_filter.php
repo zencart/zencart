@@ -37,9 +37,9 @@ if (isset($_GET['manufacturers_id']) && $_GET['manufacturers_id'] != '') {
   $and = " AND m.manufacturers_id = " . (int)$_GET['manufacturers_id'] . " ";
   if (isset($_GET['filter_id']) && zen_not_null($_GET['filter_id'])) {
 // We are asked to show only a specific category
-    $and .= "AND p2c.categories_id = " . (int)$_GET['filter_id'] . " ";
+    $and .= " AND p2c.categories_id = " . (int)$_GET['filter_id'] . " ";
   } else {
-    $and .= 'AND p2c.categories_id = p.master_categories_id ';
+    $and .= ' AND p2c.categories_id = p.master_categories_id ';
   }
 } else {
   // show the products in a given category
