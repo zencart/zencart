@@ -429,7 +429,7 @@ function zen_catalog_href_link($page = '', $parameters = '', $connection = 'NONS
 /*
  *  Output a form input field
  */
-  function zen_draw_input_field($name, $value = '', $parameters = '', $type = 'text', $reinsert_value = true) {
+  function zen_draw_input_field($name, $value = '', $parameters = '', $type = 'text', $reinsert_value = true, $required = false) {
     // -----
     // Give an observer the opportunity to **totally** override this function's operation.
     //
@@ -441,7 +441,8 @@ function zen_catalog_href_link($page = '', $parameters = '', $connection = 'NONS
             'value' => $value,
             'parameters' => $parameters,
             'type' => $type,
-            'reinsert_value' => $reinsert_value
+            'reinsert_value' => $reinsert_value,
+            'required' => $required,
         ),
         $field
     );
@@ -470,10 +471,16 @@ function zen_catalog_href_link($page = '', $parameters = '', $connection = 'NONS
             'value' => $value,
             'parameters' => $parameters,
             'type' => $type,
-            'reinsert_value' => $reinsert_value
+            'reinsert_value' => $reinsert_value,
+            'required' => $required,
         ),
         $field
     );
+
+    if ($required == true) {
+      $field .= TEXT_FIELD_REQUIRED;
+    }
+
     return $field;
   }
 
@@ -627,9 +634,12 @@ function zen_catalog_href_link($page = '', $parameters = '', $connection = 'NONS
 
 /*
  * Output a form file-field
+ * @param string $name name
+ * @param boolean $required required 
+ * @return string
  */
   function zen_draw_file_field($name, $required = false) {
-    $field = zen_draw_input_field($name, '', ' size="50" ', 'file');
+    $field = zen_draw_input_field($name, '', ' size="50" ', 'file', false, $required);
 
     return $field;
   }
@@ -654,7 +664,7 @@ function zen_catalog_href_link($page = '', $parameters = '', $connection = 'NONS
  * @param array $values values
  * @param string $default default value
  * @param string $parameters parameters
- * @param boolean $required required
+ * @param boolean $required required 
  * @return string
  */
 function zen_draw_pull_down_menu($name, $values, $default = '', $parameters = '', $required = false)
@@ -707,9 +717,8 @@ function zen_draw_pull_down_menu($name, $values, $default = '', $parameters = ''
   $field .= '</select>' . "\n";
 
   if ($required == true) {
-    $field .= TEXT_FIELD_REQUIRED;
-  }
-
+     $field .= TEXT_FIELD_REQUIRED;
+   }
   // -----
   // Give an observer the chance to make modifications to the just-rendered field.
   //

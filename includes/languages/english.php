@@ -250,6 +250,7 @@
 
   define('FORM_REQUIRED_INFORMATION', '* Required information');
   define('ENTRY_REQUIRED_SYMBOL', '*');
+  define('TEXT_FIELD_REQUIRED', '&nbsp;<span class="alert">*</span>');
 
   // constants for use in zen_prev_next_display function
   define('TEXT_RESULT_PAGE', '');
