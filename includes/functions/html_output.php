@@ -477,7 +477,7 @@ function zen_catalog_href_link($page = '', $parameters = '', $connection = 'NONS
         $field
     );
 
-    if ($required == true) {
+    if ($required == true && !empty(TEXT_FIELD_REQUIRED)) {
       $field .= TEXT_FIELD_REQUIRED;
     }
 
