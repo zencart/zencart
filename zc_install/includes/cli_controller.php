@@ -26,6 +26,7 @@ $dbVersion = $systemChecker->findCurrentDbVersion();
 $currentDbVersion = EXPECTED_DATABASE_VERSION_MAJOR . '.' . EXPECTED_DATABASE_VERSION_MINOR;
 $isCurrentDb = ($dbVersion == $currentDbVersion) ? TRUE : FALSE;
 $hasSaneConfigFile = $systemChecker->hasSaneConfigFile();
+$hasTables = $systemChecker->hasTables();
 $hasUpdatedConfigFile = $systemChecker->hasUpdatedConfigFile();
 $errorList = $systemChecker->runTests();
 list($hasFatalErrors, $listFatalErrors) = $systemChecker->getErrorList();

@@ -87,6 +87,17 @@ class systemChecker
     }
     return array($result, $resultList);
   }
+
+  public function hasTables()
+  {
+    $result = FALSE;
+    if ($this->hasSaneConfigFile()) { 
+      $parameters = array(array('checkType'=>'fieldSchema', 'tableName'=>'admin', 'fieldName'=>'admin_id', 'fieldCheck'=>'Type', 'expectedResult'=>'INT(11)'));
+      $result = $this->dbVersionChecker($parameters);
+    }
+    return $result; 
+  }
+
   public function hasSaneConfigFile()
   {
     $result = FALSE;
