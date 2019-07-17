@@ -21,7 +21,8 @@ class zcConfigureFileWriter
     $replaceVars['DATE_NOW'] = date('D M d Y H:i:s');
     $replaceVars['CATALOG_HTTP_SERVER'] = trim($inputs['http_server_catalog'], '/ ');
     $replaceVars['CATALOG_HTTPS_SERVER'] = trim($inputs['https_server_catalog'], '/ ');
-    $replaceVars['ENABLE_SSL_CATALOG'] = $inputs['enable_ssl_catalog'];
+    $replaceVars['ENABLE_SSL_CATALOG'] = 'false';
+    if (isset($inputs['enable_ssl_catalog']) && !empty($inputs['enable_ssl_catalog'])) $replaceVars['ENABLE_SSL_CATALOG'] = $inputs['enable_ssl_catalog'];
     $replaceVars['DIR_WS_CATALOG'] = preg_replace('~//~', '/', '/' . trim($inputs['dir_ws_http_catalog'], ' /\\') . '/');
     $replaceVars['DIR_WS_HTTPS_CATALOG'] = preg_replace('~//~', '/', '/' . trim($inputs['dir_ws_https_catalog'], ' /\\') . '/');
     $replaceVars['DIR_FS_CATALOG'] = rtrim($inputs['physical_path'], ' /\\') . '/';
