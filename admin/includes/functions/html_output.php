@@ -206,7 +206,7 @@
 
     $field .= ' />';
 
-    if ($required) {
+    if ($required && !empty(TEXT_FIELD_REQUIRED)) {
       $field .= '&nbsp;<span class="alert">' . TEXT_FIELD_REQUIRED . '</span>';
     }
     return $field;
