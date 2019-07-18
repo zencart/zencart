@@ -4,7 +4,7 @@
  * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2019 Jan 04 Modified in v1.5.6a $
+ * @version $Id: Zen4All 2019 Feb 14 Modified in v1.5.6b $
  */
 require('includes/application_top.php');
 
@@ -27,7 +27,7 @@ if (zen_not_null($action)) {
       }
       break;
     case 'insert':
-      if ($_POST['products_id'] < 1) {
+      if (empty($_POST['products_id'])) {
         $messageStack->add_session(ERROR_NOTHING_SELECTED, 'caution');
       } else {
         $products_id = zen_db_prepare_input($_POST['products_id']);
@@ -48,7 +48,7 @@ if (zen_not_null($action)) {
             $products_price = $new_special_insert->fields['products_price'];
           }
 
-          $specials_price = ($products_price - (($specials_price / 100) * $products_price));
+          $specials_price = ((float)$products_price - (((float)$specials_price / 100) * (float)$products_price));
         }
 
         $specials_date_available = ((zen_db_prepare_input($_POST['start']) == '') ? '0001-01-01' : zen_date_raw($_POST['start']));
@@ -165,9 +165,8 @@ if (zen_not_null($action)) {
       $expires_date = ((zen_db_prepare_input($_POST['end']) == '') ? '0001-01-01' : zen_date_raw($_POST['end']));
 
       $products_id = zen_db_prepare_input($_POST['pre_add_products_id']);
-      $db->Execute("INSERT INTO " . TABLE_SPECIALS . " (products_id, specials_new_products_price, specials_date_added, expires_date, status, specials_date_available)
+      $db->Execute("INSERT INTO " . TABLE_SPECIALS . " (products_id, specials_date_added, expires_date, status, specials_date_available)
                     VALUES ('" . (int)$products_id . "',
-                            '" . zen_db_input($specials_price) . "',
                             now(),
                             '" . zen_db_input($expires_date) . "',
                             '1',
@@ -310,7 +309,7 @@ if (zen_not_null($action)) {
         </script>
         <div class="row"><?php echo zen_draw_separator('pixel_trans.gif', '100%', '5'); ?></div>
         <div class="row">
-            <?php echo zen_draw_form('new_special', FILENAME_SPECIALS, zen_get_all_get_params(array('action', 'info', 'sID')) . 'action=' . $form_action . '&go_back=' . $_GET['go_back'], 'post', 'onsubmit="return check_dates(start,StartDate.required, end, EndDate.required);" class="form-horizontal"'); ?>
+            <?php echo zen_draw_form('new_special', FILENAME_SPECIALS, zen_get_all_get_params(array('action', 'info', 'sID')) . 'action=' . $form_action . (!empty($_GET['go_back']) ? '&go_back=' . $_GET['go_back'] : ''), 'post', 'onsubmit="return check_dates(start,StartDate.required, end, EndDate.required);" class="form-horizontal"'); ?>
             <?php
             if ($form_action == 'update') {
               echo zen_draw_hidden_field('specials_id', $_GET['sID']);
@@ -320,7 +319,7 @@ if (zen_not_null($action)) {
               <?php echo zen_draw_label(TEXT_SPECIALS_PRODUCT, 'products_id', 'class="col-sm-3 control-label"'); ?>
             <div class="col-sm-9 col-md-6">
                 <?php
-                echo (isset($sInfo->products_name)) ? $sInfo->products_name . ' (' . $currencies->format($sInfo->products_price) . ')' : zen_draw_products_pull_down('products_id', 'size="15" class="form-control"', $specials_array, true, $_GET['add_products_id'], true);
+                echo (isset($sInfo->products_name)) ? $sInfo->products_name . ' (' . $currencies->format($sInfo->products_price) . ')' : zen_draw_products_pull_down('products_id', 'size="15" class="form-control"', $specials_array, true, (!empty($_GET['add_products_id']) ? $_GET['add_products_id'] : ''), true);
                 echo zen_draw_hidden_field('products_price', (isset($sInfo->products_price) ? $sInfo->products_price : ''));
                 ?>
             </div>
@@ -353,11 +352,11 @@ if (zen_not_null($action)) {
               <td><?php echo TEXT_SPECIALS_PRICE_TIP; ?></td>
               <td class="text-right">
                 <button type="submit" class="btn btn-primary"><?php echo (($form_action == 'insert') ? IMAGE_INSERT : IMAGE_UPDATE); ?></button>
-                <?php echo ((empty($_GET['manual']) || (int)$_GET['manual'] == 0) ? '&nbsp;<a href="' . ($_GET['go_back'] == 'ON' ? zen_href_link(FILENAME_PRODUCTS_PRICE_MANAGER, 'products_filter=' . $_GET['add_products_id'] . '&current_category_id=' . $_GET['current_category_id']) : zen_href_link(FILENAME_SPECIALS, 'page=' . $_GET['page'] . ((isset($_GET['sID']) && $_GET['sID'] != '') ? '&sID=' . $_GET['sID'] : '') . (isset($_GET['search']) ? '&search=' . $_GET['search'] : ''))) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>' : ''); ?>
+                <?php echo ((empty($_GET['manual']) || (int)$_GET['manual'] == 0) ? '&nbsp;<a href="' . (isset($_GET['go_back']) && $_GET['go_back'] == 'ON' ? zen_href_link(FILENAME_PRODUCTS_PRICE_MANAGER, 'products_filter=' . $_GET['add_products_id'] . '&current_category_id=' . $_GET['current_category_id']) : zen_href_link(FILENAME_SPECIALS, 'page=' . $_GET['page'] . ((isset($_GET['sID']) && $_GET['sID'] != '') ? '&sID=' . $_GET['sID'] : '') . (isset($_GET['search']) ? '&search=' . $_GET['search'] : ''))) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>' : ''); ?>
               </td>
             </tr>
           </table>
-          <?php echo '<form>'; ?>
+          <?php echo '</form>'; ?>
           <?php
         } else {
           ?>
@@ -400,7 +399,7 @@ if (zen_not_null($action)) {
 
 // Split Page
 // reset page when page is unknown
-                    if (($_GET['page'] == '1' or $_GET['page'] == '') and $_GET['sID'] != '') {
+                    if ((empty($_GET['page']) || $_GET['page'] == '1') && !empty($_GET['sID'])) {
                       $old_page = $_GET['page'];
                       $check_page = $db->Execute($specials_query_raw);
                       if ($check_page->RecordCount() > MAX_DISPLAY_SEARCH_RESULTS) {
@@ -513,7 +512,7 @@ if (zen_not_null($action)) {
                     $contents[] = array('align' => 'text-center', 'text' => '<br><button type="submit" class="btn btn-primary">' . IMAGE_CONFIRM . '</button> <a href="' . zen_href_link(FILENAME_SPECIALS, 'page=' . $_GET['page'] . '&sID=' . $sInfo->specials_id . (isset($_GET['search']) ? '&search=' . $_GET['search'] : '')) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>');
                     break;
                   default:
-                    if (is_object($sInfo)) {
+                    if (isset($sInfo) && is_object($sInfo)) {
                       $heading[] = array('text' => '<h4>' . $sInfo->products_name . '</h4>');
 
                       if ($sInfo->products_priced_by_attribute == '1') {

@@ -10,9 +10,9 @@
  * allows you to override this page and choose the template that loads.<br />
  *
  * @package templateSystem
- * @copyright Copyright 2003-2018 Zen Cart Development Team
+ * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: mc12345678 Tue May 8 00:42:18 2018 -0400 Modified in v1.5.6 $
+ * @version $Id: DrByte 2019 Jul 16 Modified in v1.5.6c $
  */
 
   $zco_notifier->notify('NOTIFY_MAIN_TEMPLATE_VARS_START', $template_dir);
@@ -29,6 +29,14 @@
   if (!isset($flag_disable_right)) {
     $flag_disable_right = false;
   }
+
+  if (!class_exists('Mobile_Detect')) {
+    include_once(DIR_WS_CLASSES . 'Mobile_Detect.php');
+  }
+  if (!isset($detect)) $detect = new Mobile_Detect;
+  if (!isset($_SESSION['layoutType'])) $_SESSION['layoutType'] = 'legacy';
+
+  $display_as_mobile = ($detect->isMobile() || $detect->isTablet() || $_SESSION['layoutType'] == 'mobile' || $_SESSION['layoutType'] == 'tablet'); 
 
 /**
  * load page-specific main_template_vars if present, or jump directly to template file

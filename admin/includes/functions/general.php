@@ -4,7 +4,7 @@
  * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2019 Jan 04 Modified in v1.5.6a $
+ * @version $Id: DrByte 2019 May 26 Modified in v1.5.6b $
  */
 
 ////
@@ -176,7 +176,7 @@
   }
 
   function zen_date_long($raw_date) {
-    if ( ($raw_date == '0001-01-01 00:00:00') || ($raw_date == '') ) return false;
+    if (empty($raw_date) || $raw_date <= '0001-01-01 00:00:00') return false;
 
     $year = (int)substr($raw_date, 0, 4);
     $month = (int)substr($raw_date, 5, 2);
@@ -185,7 +185,9 @@
     $minute = (int)substr($raw_date, 14, 2);
     $second = (int)substr($raw_date, 17, 2);
 
-    return strftime(DATE_FORMAT_LONG, mktime($hour, $minute, $second, $month, $day, $year));
+   $retVal = strftime(DATE_FORMAT_LONG, mktime($hour, $minute, $second, $month, $day, $year));
+  if (stristr(PHP_OS, 'win')) return utf8_encode($retVal);
+  return $retVal;
   }
 
 
@@ -194,9 +196,9 @@
 // $raw_date needs to be in this format: YYYY-MM-DD HH:MM:SS
 // NOTE: Includes a workaround for dates before 01/01/1970 that fail on windows servers
   function zen_date_short($raw_date) {
-    if ( ($raw_date == '0001-01-01 00:00:00') || ($raw_date == '') ) return false;
+    if (empty($raw_date) || $raw_date <= '0001-01-01 00:00:00') return false;
 
-    $year = substr($raw_date, 0, 4);
+    $year = (int)substr($raw_date, 0, 4);
     $month = (int)substr($raw_date, 5, 2);
     $day = (int)substr($raw_date, 8, 2);
     $hour = (int)substr($raw_date, 11, 2);
@@ -214,7 +216,7 @@
 
 
   function zen_datetime_short($raw_datetime) {
-    if ( ($raw_datetime == '0001-01-01 00:00:00') || ($raw_datetime == '') ) return false;
+    if (empty($raw_datetime) || $raw_datetime <= '0001-01-01 00:00:00') return false;
 
     $year = (int)substr($raw_datetime, 0, 4);
     $month = (int)substr($raw_datetime, 5, 2);
@@ -2315,7 +2317,7 @@ function zen_limit_image_filename($filename, $table_name, $field_name, $extensio
     global $db;
     $languages_icon = $db->Execute("select directory, image from " . TABLE_LANGUAGES . " where languages_id = '" . zen_db_input($lookup) . "'");
     if ($languages_icon->EOF) return '';
-    $icon= zen_image(DIR_WS_CATALOG_LANGUAGES . $languages_icon->fields['directory'] . '/images/' . $languages_icon->fields['image']);
+    $icon= zen_image(DIR_WS_CATALOG_LANGUAGES . $languages_icon->fields['directory'] . '/images/' . $languages_icon->fields['image'], $languages_icon->fields['directory']);
     return $icon;
   }
 
@@ -2920,9 +2922,17 @@ function zen_limit_image_filename($filename, $table_name, $field_name, $extensio
   function zen_get_categories_name_from_product($product_id) {
     global $db;
 
-//    $check_products_category= $db->Execute("select products_id, categories_id from " . TABLE_PRODUCTS_TO_CATEGORIES . " where products_id='" . $product_id . "' limit 1");
-    $check_products_category = $db->Execute("select products_id, master_categories_id from " . TABLE_PRODUCTS . " where products_id = '" . (int)$product_id . "'");
-    $the_categories_name= $db->Execute("select categories_name from " . TABLE_CATEGORIES_DESCRIPTION . " where categories_id= '" . $check_products_category->fields['master_categories_id'] . "' and language_id= '" . (int)$_SESSION['languages_id'] . "'");
+//    $check_products_category= $db->Execute("SELECT products_id, categories_id FROM " . TABLE_PRODUCTS_TO_CATEGORIES . " WHERE products_id = " . (int)$product_id . " LIMIT 1");
+    $check_products_category = $db->Execute("SELECT products_id, master_categories_id
+                                             FROM " . TABLE_PRODUCTS . "
+                                             WHERE products_id = " . (int)$product_id
+                                           );
+    if ($check_products_category->EOF) return '';
+    $the_categories_name= $db->Execute("SELECT categories_name
+                                        FROM " . TABLE_CATEGORIES_DESCRIPTION . "
+                                        WHERE categories_id= " . (int)$check_products_category->fields['master_categories_id'] . "
+                                        AND language_id= " . (int)$_SESSION['languages_id']
+                                      );
     if ($the_categories_name->EOF) return '';
     return $the_categories_name->fields['categories_name'];
   }
@@ -3816,9 +3826,13 @@ function get_logs_data($maxToList = 'count') {
     global $db;
     $sql = "SELECT coupon_id, coupon_is_valid_for_sales
             FROM " . TABLE_COUPONS . "
-            WHERE coupon_id = " . (int)$coupon_id;
+            WHERE coupon_id = " . (int)$coupon_id . "
+            LIMIT 1";
 
     $result = $db->Execute($sql);
+    if ($result->EOF) {
+        return false;
+    }
 
     // check whether coupon has been flagged for valid with sales
     if ($result->fields['coupon_is_valid_for_sales']) {

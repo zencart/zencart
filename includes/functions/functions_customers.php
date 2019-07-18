@@ -3,10 +3,10 @@
  * functions_customers
  *
  * @package functions
- * @copyright Copyright 2003-2018 Zen Cart Development Team
+ * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Drbyte Tue Oct 9 16:42:37 2018 -0400 Modified in v1.5.6 $
+ * @version $Id: mc12345678 2019 Apr 07 Modified in v1.5.6b $
  */
 
 /**
@@ -69,11 +69,14 @@ function zen_address_format($address_format_id = 1, $incoming = array(), $html =
 
     $sql    = "select address_format as format from " . TABLE_ADDRESS_FORMAT . " where address_format_id = " . (int)$address_format_id;
     $result = $db->Execute($sql);
-    $fmt    = $result->fields['format'];
+    $fmt    = (!$result->EOF ? $result->fields['format'] : '');
 
     // sort to put longer keys at the top of the array so that longer variants are replaced before shorter ones
     array_multisort(array_map('strlen', array_keys($address)), SORT_DESC, $address);
 
+    // store translated values into original array, just for the sake of the notifier
+    $incoming = $address;
+    
     // convert into $-prefixed keys
     foreach ($address as $key => $value) {
         $address['$' . $key] = $value;
@@ -83,9 +86,36 @@ function zen_address_format($address_format_id = 1, $incoming = array(), $html =
     // do the substitutions
     $address_out = str_replace(array_keys($address), array_values($address), $fmt);
 
-    if (ACCOUNT_COMPANY == 'true' && !empty($address['company']) && false === strpos($fmt, '$company')) {
-        $address_out = $address['company'] . $address['cr'] . $address_out;
+    if (ACCOUNT_COMPANY == 'true' && !empty($address['$company']) && false === strpos($fmt, '$company')) {
+        $address_out = $address['$company'] . $address['$cr'] . $address_out;
     }
+
+    // -----
+    // "Package up" the various elements of an address and issue a notification that will enable
+    // an observer to make modifications if needed.
+    //
+    $GLOBALS['zco_notifier']->notify(
+        'NOTIFY_END_ZEN_ADDRESS_FORMAT',
+        array(
+            'format' => $fmt,
+            'address' => $incoming,
+            'firstname' => $address['$firstname'],
+            'lastname' => $address['$lastname'],
+            'street' => $address['$street'],
+            'suburb' => $address['$suburb'],
+            'city' => $address['$city'],
+            'state' => $address['$state'],
+            'country' => $address['$country'],
+            'postcode' => $address['$postcode'],
+            'company' => $address['$company'],
+            'streets' => $address['$streets'],
+            'statecomma' => $address['$statecomma'],
+            'zip' => $address['$zip'],
+            'cr' => $address['$cr'],
+            'hr' => $address['$hr'],
+        ),
+        $address_out
+    );
 
     return $address_out;
 }
@@ -105,6 +135,9 @@ function zen_address_format($address_format_id = 1, $incoming = array(), $html =
                       and address_book_id = " . (int)$address_id;
 
     $address = $db->Execute($address_query);
+
+    $GLOBALS['zco_notifier']->notify('NOTIFY_ZEN_ADDRESS_LABEL', array(), $customers_id, $address_id, $address->fields);
+
 
     $format_id = zen_get_address_format_id($address->fields['country_id']);
     return zen_address_format($format_id, $address->fields, $html, $boln, $eoln);

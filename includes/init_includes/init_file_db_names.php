@@ -4,10 +4,10 @@
  * see {@link  http://www.zen-cart.com/wiki/index.php/Developers_API_Tutorials#InitSystem wikitutorials} for more details.
  *
  * @package initSystem
- * @copyright Copyright 2003-2016 Zen Cart Development Team
+ * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: DrByte  Sun Feb 22 16:26:10 2015 -0500 Modified in v1.5.5 $
+ * @version $Id: Scott C Wilson 2019 Apr 11 Modified in v1.5.6b $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
@@ -78,6 +78,5 @@ for ($i = 0, $n = sizeof($directory_array); $i < $n; $i++) {
        * require 3rd party datafiles (ussually to add extra filename/DB Table name definitions)
        */
     include($ws_extra_datafiles_directory . $file);
-    //    echo 'LOADING: ' . $ws_extra_datafiles_directory . $file . ' ' . $file_cnt . '<br />';
   }
 }

@@ -3,10 +3,10 @@
  * column_single module 
  *
  * @package templateStructure
- * @copyright Copyright 2003-2006 Zen Cart Development Team
+ * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: column_single.php 4274 2006-08-26 03:16:53Z drbyte $
+ * @version $Id: Scott C Wilson 2019 Jun 27 Modified in v1.5.6c $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
@@ -23,9 +23,9 @@ while (!$column_single_display->EOF and $box_cnt < 100) {
 <?php
 //$column_box_spacer = 'column_box_spacer_single';
 if (defined('BOX_WIDTH_SINGLE')) {
-  $column_width = BOX_WIDTH_SINGLE;
+  $column_width = (int)BOX_WIDTH_SINGLE;
 } else {
-  $column_width = BOX_WIDTH_LEFT;
+  $column_width = (int)BOX_WIDTH_LEFT;
 }
 if ( file_exists(DIR_WS_MODULES . 'sideboxes/' . $template_dir . '/' . $column_single_display->fields['layout_box_name']) ) {
   $box_id = zen_get_box_id($column_single_display->fields['layout_box_name']);

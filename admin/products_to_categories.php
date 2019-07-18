@@ -1,10 +1,10 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2018 Zen Cart Development Team
+ * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Drbyte Mon Nov 12 20:38:09 2018 -0500 Modified in v1.5.6 $
+ * @version $Id: mc12345678 2019 May 02 Modified in v1.5.6b $
  */
 require('includes/application_top.php');
 
@@ -393,21 +393,15 @@ if (zen_not_null($action)) {
       break;
 
     case 'update_product':
-      $zv_check_master_categories_id = true;
+      $zv_check_master_categories_id = ('' !== $_POST['current_master_categories_id']);
       $new_categories_sort_array[] = $_POST['current_master_categories_id'];
       $current_master_categories_id = $_POST['current_master_categories_id'];
       if (!isset($_POST['categories_add'])) $_POST['categories_add'] = array();
 
       // set the linked products master_categories_id product(s)
       for ($i = 0, $n = sizeof($_POST['categories_add']); $i < $n; $i++) {
-        // is current master_categories_id in the list?
-        if ($zv_check_master_categories_id == true && $_POST['categories_add'][$i] == $current_master_categories_id) {
-          $zv_check_master_categories_id = true;
-          // array is set above to master category
-        } else {
-          $zv_check_master_categories_id = false;
-          $new_categories_sort_array[] = (int)$_POST['categories_add'][$i];
-        }
+        // Populate the list of remaining categories in the selection list.
+        $new_categories_sort_array[] = (int)$_POST['categories_add'][$i];
       }
 
       // remove existing products_to_categories for current product
@@ -444,6 +438,12 @@ if (zen_not_null($action)) {
                       WHERE products_id = " . $products_filter);
       } else {
         // reset master_categories_id to current_category_id because it was unselected
+        if ($reset_master_categories_id == '') {
+          $reset_master_categories_id = $current_category_id;
+          // Ensure that product is reachable by product/category relationship.
+          $db->Execute("INSERT INTO " . TABLE_PRODUCTS_TO_CATEGORIES . " (products_id, categories_id)
+                        VALUES (" . $products_filter . ", " . (int)$reset_master_categories_id . ")");
+        }
         $db->Execute("UPDATE " . TABLE_PRODUCTS . "
                       SET master_categories_id = " . (int)$reset_master_categories_id . "
                       WHERE products_id = " . $products_filter);
@@ -755,7 +755,7 @@ $products_list = $db->Execute("SELECT products_id, categories_id
                       $contents[] = array('align' => 'center', 'text' =>
                         '<a href="' . zen_href_link(FILENAME_ATTRIBUTES_CONTROLLER, 'products_filter=' . $products_filter . '&current_category_id=' . $current_category_id) . '" class="btn btn-info" role="button">' . IMAGE_EDIT_ATTRIBUTES . '</a>&nbsp;&nbsp;' .
                         '<a href="' . zen_href_link(FILENAME_PRODUCTS_PRICE_MANAGER, '&products_filter=' . $products_filter . '&current_category_id=' . $current_category_id) . '" class="btn btn-info" role="button">' . IMAGE_PRODUCTS_PRICE_MANAGER . '</a><br /><br />' .
-                        '<a href="' . zen_href_link(FILENAME_PRODUCT, 'cPath=' . zen_get_parent_category_id($products_filter) . '&pID=' . $products_filter . '&product_type=' . zen_get_products_type($products_filter)) . '" class="btn btn-info" role="button">' . IMAGE_DETAILS . '</a>&nbsp;&nbsp;' .
+                        '<a href="' . zen_href_link(FILENAME_CATEGORY_PRODUCT_LISTING, 'cPath=' . zen_get_parent_category_id($products_filter) . '&pID=' . $products_filter) . '" class="btn btn-info" role="button">' . IMAGE_DETAILS . '</a>&nbsp;&nbsp;' .
                         '<a href="' . zen_href_link(FILENAME_PRODUCT, 'action=new_product' . '&cPath=' . zen_get_parent_category_id($products_filter) . '&pID=' . $products_filter . '&product_type=' . zen_get_products_type($products_filter)) . '" class="btn btn-info" role="button">' . IMAGE_EDIT_PRODUCT . '</a>'
                       );
                       break;

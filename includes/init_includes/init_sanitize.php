@@ -4,10 +4,10 @@
  * see {@link  http://www.zen-cart.com/wiki/index.php/Developers_API_Tutorials#InitSystem wikitutorials} for more details.
  *
  * @package initSystem
- * @copyright Copyright 2003-2018 Zen Cart Development Team
+ * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Drbyte Mon Nov 12 17:13:17 2018 -0500 Modified in v1.5.6 $
+ * @version $Id: DrByte 2019 Jul 16 Modified in v1.5.6c $
  * @todo move the array process to security class
  */
 
@@ -129,7 +129,7 @@
 /**
  * validate products_id for search engines and bookmarks, etc.
  */
-  if (isset($_GET['products_id']) && isset($_SESSION['check_valid']) &&  $_SESSION['check_valid'] != 'false') {
+  if (isset($_GET['products_id']) && (!isset($_SESSION['check_valid']) || $_SESSION['check_valid'] != 'false')) {
     $check_valid = zen_products_id_valid($_GET['products_id']);
     if (!$check_valid) {
       $_GET['main_page'] = zen_get_info_page($_GET['products_id']);
@@ -139,9 +139,9 @@
       $_SESSION['check_valid'] = 'false';
       zen_redirect(zen_href_link($_GET['main_page'], 'products_id=' . $_GET['products_id']));
     }
-  } else {
-    $_SESSION['check_valid'] = 'true';
   }
+ 
+  $_SESSION['check_valid'] = 'true';
 /**
  * We do some checks here to ensure $_GET['main_page'] has a sane value
  */

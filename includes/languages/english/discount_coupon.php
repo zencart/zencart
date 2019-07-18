@@ -1,7 +1,7 @@
 <?php
 /**
  * @package languageDefines
- * @copyright Copyright 2003-2013 Zen Cart Development Team
+ * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * $Id: discount_coupon.php 14712 2009-10-28 22:05:08Z ajeh $
@@ -28,9 +28,10 @@ define('TEXT_COUPON_HELP_PRODUCTS', '<p class="bold">Product Restrictions:</p>')
 define('TEXT_ALLOW', 'Allow');
 define('TEXT_DENY', 'Deny');
 
-define('TEXT_NO_CAT_TOP_ONLY_DENY', '<p>This coupon has specific Product Restrictions.');
+define('TEXT_NO_CAT_TOP_ONLY_DENY', '<p>This coupon has specific Product Restrictions.</p>');
 define('TEXT_NO_CAT_RESTRICTIONS', '<p>This coupon is valid for all categories.</p>');
 define('TEXT_NO_PROD_RESTRICTIONS', '<p>This coupon is valid for all products.</p>');
+define('TEXT_NO_PROD_SALES', '<p>This coupon is not valid for products on sale.</p>');
 define('TEXT_CAT_ALLOWED', ' (Valid for this category)');
 define('TEXT_CAT_DENIED', ' (Not allowed on this category)');
 define('TEXT_PROD_ALLOWED', ' (Valid for this product)');
@@ -42,4 +43,3 @@ define('TEXT_DISCOUNT_COUPON_ID_INFO', 'Look-up Discount Coupon ... ');
 define('TEXT_DISCOUNT_COUPON_ID', 'Your Code: ');
 
 define('TEXT_COUPON_GV_RESTRICTION_ZONES', 'Billing Address Restrictions apply.');
-?>

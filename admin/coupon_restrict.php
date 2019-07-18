@@ -1,10 +1,10 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2018 Zen Cart Development Team
+ * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Zen4All Mon Jun 11 09:47:57 2018 +0200 Modified in v1.5.6 $
+ * @version $Id: Scott C Wilson 2019 Feb 28 Modified in v1.5.6b $
  */
   //define('MAX_DISPLAY_RESTRICT_ENTRIES', 10);
   require('includes/application_top.php');
@@ -370,7 +370,6 @@
       $products_array = array();
       }
 
-// echo 'I see  ' . $current_category_id . ' vs' . $current_manufacturers_id;
       if (!$products->EOF && $current_category_id > 0) {
         $products_array[] = array('id' => '-1',
                                    'text' => TEXT_ALL_PRODUCTS_ADD);

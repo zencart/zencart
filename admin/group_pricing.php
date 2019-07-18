@@ -1,10 +1,10 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2018 Zen Cart Development Team
+ * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Zen4All Sun Nov 12 13:52:38 2017 +0100 Modified in v1.5.6 $
+ * @version $Id: mc12345678 2019 May 08 Modified in v1.5.6b $
  */
 require('includes/application_top.php');
 
@@ -113,7 +113,7 @@ if ($query->fields['count'] > 0 && (!defined('MODULE_ORDER_TOTAL_GROUP_PRICING_S
 
 // Split Page
 // reset page when page is unknown
-                if (($_GET['page'] == '' or $_GET['page'] == '1') and $_GET['gID'] != '') {
+                if ((empty($_GET['page']) || $_GET['page'] == '1') && !empty($_GET['gID'])) {
                   $check_page = $db->Execute($groups_query_raw);
                   $check_count = 1;
                   if ($check_page->RecordCount() > MAX_DISPLAY_SEARCH_RESULTS) {

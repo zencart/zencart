@@ -1,9 +1,9 @@
 <?php
 /**
  * @package Installer
- * @copyright Copyright 2003-2016 Zen Cart Development Team
+ * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: zcwilt  Wed Sep 23 20:04:38 2015 +0100 New in v1.5.5 $
+ * @version $Id: DrByte 2019 Jul 16 Modified in v1.5.6c $
  */
 ?>
 <?php require(DIR_FS_INSTALL . DIR_WS_INSTALL_TEMPLATE . 'partials/partial_modal_progress_bar.php'); ?>
@@ -141,7 +141,7 @@ function ajaxTestDBConnection(form) {
           success: function(data) {
             if (data.error == true)
             {
-              var html = "<?php echo TEXT_DATABASE_SETUP_JSCRIPT_SQL_ERRORS1; ?>" + data.file + "<?php echo TEXT_DATABASE_SETUP_JSCRIPT_SQL_ERRORS2; ?>";
+              var html = "<p><?php echo TEXT_DATABASE_SETUP_JSCRIPT_SQL_ERRORS1; ?>" + data.file + "<?php echo TEXT_DATABASE_SETUP_JSCRIPT_SQL_ERRORS2; ?></p>";
               $("#install-errors-content").html(html);
               $("#install-errors").foundation('reveal', 'open');
             } else

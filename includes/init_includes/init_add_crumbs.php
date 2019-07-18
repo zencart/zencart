@@ -4,10 +4,10 @@
  * see {@link  http://www.zen-cart.com/wiki/index.php/Developers_API_Tutorials#InitSystem wikitutorials} for more details.
  *
  * @package initSystem
- * @copyright Copyright 2003-2018 Zen Cart Development Team
+ * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Scott C Wilson Wed Oct 10 07:03:50 2018 -0400 Modified in v1.5.6 $
+ * @version $Id: Zen4All 2019 Jul 07 Modified in v1.5.6c $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
@@ -51,7 +51,7 @@ while (!$get_terms->EOF) {
       $breadcrumb->add($get_term_breadcrumb->fields[$get_terms->fields['get_term_name_field']], zen_href_link(FILENAME_DEFAULT, $get_terms->fields['get_term_name'] . "=" . $_GET[$get_terms->fields['get_term_name']]));
     }
 	}
-	$get_terms->movenext();
+	$get_terms->MoveNext();
 }
 /**
  * add the products model to the breadcrumb trail

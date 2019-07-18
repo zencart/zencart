@@ -3,15 +3,15 @@
  * Header code file for the Account History Information/Details page (which displays details for a single specific order)
  *
  * @package page
- * @copyright Copyright 2003-2010 Zen Cart Development Team
+ * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: header_php.php 15788 2010-04-02 10:44:40Z drbyte $
+ * @version $Id: mc12345678 2019 Apr 30 Modified in v1.5.6b $
  */
 // This should be first line of the script:
 $zco_notifier->notify('NOTIFY_HEADER_START_ACCOUNT_HISTORY_INFO');
 
-if (!$_SESSION['customer_id']) {
+if (!zen_is_logged_in()) {
   $_SESSION['navigation']->set_snapshot();
   zen_redirect(zen_href_link(FILENAME_LOGIN, '', 'SSL'));
 }

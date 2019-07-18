@@ -3,10 +3,10 @@
  * Page to let customer change their shipping address(ship to)
  *
  * @package page
- * @copyright Copyright 2003-2013 Zen Cart Development Team
+ * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: ajeh  Wed Nov 6 14:38:22 2013 -0500 Modified in v1.5.2 $
+ * @version $Id: DrByte 2019 May 12 Modified in v1.5.6b $
  */
 
 // This should be first line of the script:
@@ -18,7 +18,7 @@ if ($_SESSION['cart']->count_contents() <= 0) {
 }
 
 // if the customer is not logged on, redirect them to the login page
-  if (!isset($_SESSION['customer_id'])) {
+  if (!zen_is_logged_in()) {
     $_SESSION['navigation']->set_snapshot();
     zen_redirect(zen_href_link(FILENAME_LOGIN, '', 'SSL'));
   } else {
@@ -46,7 +46,7 @@ $addressType = "shipto";
 require(DIR_WS_MODULES . zen_get_module_directory('checkout_new_address'));
 
 // if no shipping destination address was selected, use their own address as default
-if (!$_SESSION['sendto']) {
+if (empty($_SESSION['sendto'])) {
   $_SESSION['sendto'] = $_SESSION['customer_default_address_id'];
 }
 

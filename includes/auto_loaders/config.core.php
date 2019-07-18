@@ -4,9 +4,9 @@
  * see  {@link  http://www.zen-cart.com/wiki/index.php/Developers_API_Tutorials#InitSystem wikitutorials} for more details.
  *
  * @package initSystem
- * @copyright Copyright 2003-2018 Zen Cart Development Team
+ * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: lat9 Mon Oct 22 13:19:39 2018 -0400 Modified in v1.5.6 $
+ * @version $Id: DrByte 2019 Jun 11 Modified in v1.5.6c $
  */
 if (!defined('IS_ADMIN_FLAG')) {
  die('Illegal Access');
@@ -131,10 +131,10 @@ if (!defined('USE_PCONNECT')) define('USE_PCONNECT', 'false');
  * require('includes/init_includes/init_tlds.php');
  *
  */
-  $autoLoadConfig[60][] = array('autoType'=>'init_script',
-                                'loadFile'=> 'init_general_funcs.php');
   $autoLoadConfig[60][] = array('autoType' => 'require',
                                 'loadFile' => DIR_WS_FUNCTIONS . 'functions_osh_update.php');
+  $autoLoadConfig[60][] = array('autoType'=>'init_script',
+                                'loadFile'=> 'init_general_funcs.php');
   $autoLoadConfig[60][] = array('autoType'=>'init_script',
                                 'loadFile'=> 'init_tlds.php');
 /**
@@ -166,9 +166,16 @@ if (!defined('USE_PCONNECT')) define('USE_PCONNECT', 'false');
                                 'className'=>'currencies',
                                 'objectName'=>'currencies');
 /**
- * Breakpoint 100.
+ * Breakpoint 96.
  *
  * require('includes/init_includes/init_sanitize.php');
+ *
+ */
+$autoLoadConfig[96][] = array('autoType'=>'init_script',
+                              'loadFile'=> 'init_sanitize.php');
+/**
+ * Breakpoint 100.
+ *
  * if(!$_SESSION['navigaton']) $_SESSION['navigation'] = new navigationHistory();
  * $template = new template_func();
  *
@@ -176,8 +183,6 @@ if (!defined('USE_PCONNECT')) define('USE_PCONNECT', 'false');
   $autoLoadConfig[100][] = array('autoType'=>'classInstantiate',
                                  'className'=>'template_func',
                                  'objectName'=>'template');
-  $autoLoadConfig[100][] = array('autoType'=>'init_script',
-                                 'loadFile'=> 'init_sanitize.php');
   $autoLoadConfig[100][] = array('autoType'=>'classInstantiate',
                                 'className'=>'navigationHistory',
                                 'objectName'=>'navigation',

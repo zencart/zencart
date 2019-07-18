@@ -10,13 +10,13 @@ It's free software, with free community-driven support available 24/7 on the Zen
 --------------------
 
 
-Zen Cart&reg; v1.5.6a
+Zen Cart&reg; v1.5.6c
 ---------------------
 
 Compatibility
 -------------
 Zen Cart v1.5.6 is designed for:
- * PHP 5.6 to PHP 7.3 (it "can" work on PHP 5.5, but should use a newer version)
+ * PHP 5.6 to PHP 7.3 (it "can" work on PHP 5.5, but you really should use a newer version)
  * Apache 2.2 and 2.4
  * MySQL 5.1 to 5.7 (including MariaDB 10.0 to 10.3)
 
@@ -58,8 +58,7 @@ Developer Documentation
 Developers wishing to contribute to the Zen Cart&reg; core code may fork the [zencart/zencart](https://github.com/zencart/zencart) repository on github and issue Pull Requests from their own feature branches. For detailed help on using github, forking, branching, and contributing see [Contributing to Zen Cart code](http://docs.zen-cart.com/Contributing/).
 
 Visit [docs.zen-cart.com](https://docs.zen-cart.com/Developer_Documentation/) for guidance on issues relevant to developers. This documentation site is very new, but content will be added over time.
-
-Developers will find the standalone [Habitat VM](http://docs.zen-cart.com/Habitat/main) to be a useful tool for staging site upgrades and doing offline feature development or testing. Designers may like it for testing new templates without affecting the live site.
+Developers wishing to contribute documentation should fork [zencart/documentation](https://github.com/zencart/documentation) and contribute PRs. 
 
 
 Support

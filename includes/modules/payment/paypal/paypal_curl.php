@@ -3,14 +3,15 @@
  * paypal_curl.php communications class for PayPal Express Checkout / Website Payments Pro / Payflow Pro payment methods
  *
  * @package paymentMethod
- * @copyright Copyright 2003-2018 Zen Cart Development Team
+ * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: pRose_ Wed Jul 11 12:24:35 2018 -0700 Modified in v1.5.6 $
+ * @version $Id: Scott C Wilson 2019 Mar 31 Modified in v1.5.6b $
  */
 
 /**
  * PayPal NVP (v124.0) and Payflow Pro (v4 HTTP API) implementation via cURL.
  */
+if (!defined('PAYPAL_DEV_MODE')) define('PAYPAL_DEV_MODE', 'false'); 
 class paypal_curl extends base {
 
   /**

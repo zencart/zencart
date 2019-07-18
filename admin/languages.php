@@ -4,7 +4,7 @@
  * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2019 Jan 04 Modified in v1.5.6a $
+ * @version $Id: Daniel Sousa 2019 Mar 11 Modified in v1.5.6b $
  */
 require('includes/application_top.php');
 $action = (isset($_GET['action']) ? $_GET['action'] : '');
@@ -171,11 +171,13 @@ if (zen_not_null($action)) {
 
         foreach ($ezpages as $ezpage) {
           $db->Execute("INSERT INTO " . TABLE_EZPAGES_CONTENT . " (pages_id, languages_id, pages_title, pages_html_text)
-                        VALUES ('" . (int)$coupon['pages_id'] . "',
+                        VALUES ('" . (int)$ezpage['pages_id'] . "',
                                 '" . (int)$insert_id . "',
                                 '" . zen_db_input($ezpage['pages_title']) . "',
                                 '" . zen_db_input($ezpage['pages_html_text']) . "')");
         }
+
+        $zco_notifier->notify('NOTIFY_ADMIN_LANGUAGE_INSERT', (int)$insert_id);
 
         zen_redirect(zen_href_link(FILENAME_LANGUAGES, (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . 'lID=' . $insert_id));
       }
@@ -242,7 +244,7 @@ if (zen_not_null($action)) {
       $db->Execute("DELETE FROM " . TABLE_COUPONS_DESCRIPTION . " WHERE language_id = " . (int)$lID);
       $db->Execute("DELETE FROM " . TABLE_META_TAGS_PRODUCTS_DESCRIPTION . " WHERE language_id = " . (int)$lID);
       $db->Execute("DELETE FROM " . TABLE_METATAGS_CATEGORIES_DESCRIPTION . " WHERE language_id = " . (int)$lID);
-      $db->Execute("DELETE FROM " . TABLE_EZPAGES_CONTENT . " WHERE language_id = " . (int)$lID);
+      $db->Execute("DELETE FROM " . TABLE_EZPAGES_CONTENT . " WHERE languages_id = " . (int)$lID);
 
       // if we just deleted our currently-selected language, need to switch to default lang:
       $lng = $db->Execute("SELECT languages_id
@@ -251,6 +253,8 @@ if (zen_not_null($action)) {
       if ((int)$_SESSION['languages_id'] == (int)$_POST['lID'])
         $_SESSION['languages_id'] = $lng->fields['languages_id'];
 
+      $zco_notifier->notify('NOTIFY_ADMIN_LANGUAGE_DELETE', (int)$lID);
+      
       zen_redirect(zen_href_link(FILENAME_LANGUAGES, 'page=' . $_GET['page']));
       break;
     case 'delete':

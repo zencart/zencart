@@ -4,14 +4,13 @@
  * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2019 Jan 04 Modified in v1.5.6a $
+ * @version $Id: DrByte 2019 Jul 16 Modified in v1.5.6c $
  */
 require('includes/application_top.php');
 
 function zen_display_files() {
   global $check_directory, $found, $configuration_key_lookup;
     for ($i = 0, $n = sizeof($check_directory); $i < $n; $i++) {
-//echo 'I SEE ' . $check_directory[$i] . '<br>';
 
     $dir_check = $check_directory[$i];
 
@@ -87,7 +86,7 @@ switch ($_GET['action']) {
     break;
 }
 
-if (!$_SESSION['language']) {
+if (empty($_SESSION['language'])) {
   $_SESSION['language'] = $language;
 }
 
@@ -213,7 +212,7 @@ if (!$lng_exists) {
             ?>
             <div class="row"><strong><?php echo sprintf(TEXT_FILE_DOES_NOT_EXIST, $file); ?></strong></div>
             <div class="row"><?php echo zen_draw_separator('pixel_trans.gif', '1', '10'); ?></div>
-            <div class="row"><a href="<?php echo zen_href_link($_GET['filename'], 'lngdir=' . $_SESSION['language']); ?>" class="btn btn-default" role="button"><?php echo IMAGE_BACK; ?></a>'; ?></div>
+            <div class="row"><a href="<?php echo zen_href_link($_GET['filename'], 'lngdir=' . $_SESSION['language']); ?>" class="btn btn-default" role="button"><?php echo IMAGE_BACK; ?></a></div>
             <?php
           }
         } else {

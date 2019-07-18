@@ -5,7 +5,7 @@
  * @package classes
  * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2019 Jan 04 Modified in v1.5.6a $
+ * @version $Id: Scott C Wilson 2019 Jul 07 Modified in v1.5.6c $
  */
 /**
  * order class
@@ -34,6 +34,7 @@ class order extends base {
   var $info, $totals, $products, $customer, $delivery, $billing, $content_type, $email_low_stock, $products_ordered_attributes,
       $products_ordered, $products_ordered_email, $products_ordered_html, $attachArray, $email_order_message, $extra_header_text,
       $doStockDecrement, $send_low_stock_emails, $queryReturnFlag, $bestSellersUpdate, $use_external_tax_handler_only;
+  var $products_ordered_attributes_html = array();
 
   function __construct($order_id = null) {
     $this->info = array();
@@ -81,9 +82,9 @@ class order extends base {
                 where coupon_code ='" . $order->fields['coupon_code'] . "'";
         $coupon_link = $db->Execute($coupon_link_query);
         if (IS_ADMIN_FLAG === true) {
-                $zc_coupon_link = '<a href="javascript:couponpopupWindow(\'' . zen_href_link(FILENAME_POPUP_COUPON_HELP, 'cID=' . $coupon_link->fields['coupon_id']) . '\')">';
-        } else {
-          $zc_coupon_link = $coupon_link->fields['coupon_id'];
+          $zc_coupon_link = '<a href="javascript:couponpopupWindow(\'' . zen_catalog_href_link(FILENAME_POPUP_COUPON_HELP, 'cID=' . $coupon_link->fields['coupon_id']) . '\')">';
+        } else { 
+          $zc_coupon_link = '<a href="javascript:couponpopupWindow(\'' . zen_href_link(FILENAME_POPUP_COUPON_HELP, 'cID=' . $coupon_link->fields['coupon_id']) . '\')">';
         }
       }
       $this->totals[] = array('title' => ($totals->fields['class'] == 'ot_coupon' ? $zc_coupon_link . $totals->fields['title'] . '</a>' : $totals->fields['title']),
@@ -161,7 +162,8 @@ class order extends base {
                             'country' => $order->fields['delivery_country'],
                             'format_id' => $order->fields['delivery_address_format_id']);
 
-    if (empty($this->delivery['name']) && empty($this->delivery['street_address'])) {
+    if (($order->fields['shipping_module_code'] == 'storepickup') || 
+        (empty($this->delivery['name']) && empty($this->delivery['street_address']))) {
       $this->delivery = false;
     }
 
@@ -412,45 +414,51 @@ class order extends base {
     }
     */
 
-    $this->customer = array('firstname' => $customer_address->fields['customers_firstname'],
-                            'lastname' => $customer_address->fields['customers_lastname'],
-                            'company' => $customer_address->fields['entry_company'],
-                            'street_address' => $customer_address->fields['entry_street_address'],
-                            'suburb' => $customer_address->fields['entry_suburb'],
-                            'city' => $customer_address->fields['entry_city'],
-                            'postcode' => $customer_address->fields['entry_postcode'],
-                            'state' => ((zen_not_null($customer_address->fields['entry_state'])) ? $customer_address->fields['entry_state'] : $customer_address->fields['zone_name']),
-                            'zone_id' => $customer_address->fields['entry_zone_id'],
-                            'country' => array('id' => $customer_address->fields['countries_id'], 'title' => $customer_address->fields['countries_name'], 'iso_code_2' => $customer_address->fields['countries_iso_code_2'], 'iso_code_3' => $customer_address->fields['countries_iso_code_3']),
-                            'format_id' => (int)$customer_address->fields['address_format_id'],
-                            'telephone' => $customer_address->fields['customers_telephone'],
-                            'email_address' => $customer_address->fields['customers_email_address']);
+    if ($customer_address->RecordCount() > 0) {
+      $this->customer = array('firstname' => $customer_address->fields['customers_firstname'],
+                              'lastname' => $customer_address->fields['customers_lastname'],
+                              'company' => $customer_address->fields['entry_company'],
+                              'street_address' => $customer_address->fields['entry_street_address'],
+                              'suburb' => $customer_address->fields['entry_suburb'],
+                              'city' => $customer_address->fields['entry_city'],
+                              'postcode' => $customer_address->fields['entry_postcode'],
+                              'state' => ((zen_not_null($customer_address->fields['entry_state'])) ? $customer_address->fields['entry_state'] : $customer_address->fields['zone_name']),
+                              'zone_id' => $customer_address->fields['entry_zone_id'],
+                              'country' => array('id' => $customer_address->fields['countries_id'], 'title' => $customer_address->fields['countries_name'], 'iso_code_2' => $customer_address->fields['countries_iso_code_2'], 'iso_code_3' => $customer_address->fields['countries_iso_code_3']),
+                              'format_id' => (int)$customer_address->fields['address_format_id'],
+                              'telephone' => $customer_address->fields['customers_telephone'],
+                              'email_address' => $customer_address->fields['customers_email_address']);
+    }
 
-    $this->delivery = array('firstname' => $shipping_address->fields['entry_firstname'],
-                            'lastname' => $shipping_address->fields['entry_lastname'],
-                            'company' => $shipping_address->fields['entry_company'],
-                            'street_address' => $shipping_address->fields['entry_street_address'],
-                            'suburb' => $shipping_address->fields['entry_suburb'],
-                            'city' => $shipping_address->fields['entry_city'],
-                            'postcode' => $shipping_address->fields['entry_postcode'],
-                            'state' => ((zen_not_null($shipping_address->fields['entry_state'])) ? $shipping_address->fields['entry_state'] : $shipping_address->fields['zone_name']),
-                            'zone_id' => $shipping_address->fields['entry_zone_id'],
-                            'country' => array('id' => $shipping_address->fields['countries_id'], 'title' => $shipping_address->fields['countries_name'], 'iso_code_2' => $shipping_address->fields['countries_iso_code_2'], 'iso_code_3' => $shipping_address->fields['countries_iso_code_3']),
-                            'country_id' => $shipping_address->fields['entry_country_id'],
-                            'format_id' => (int)$shipping_address->fields['address_format_id']);
+    if ($shipping_address->RecordCount() > 0) {
+      $this->delivery = array('firstname' => $shipping_address->fields['entry_firstname'],
+                              'lastname' => $shipping_address->fields['entry_lastname'],
+                              'company' => $shipping_address->fields['entry_company'],
+                              'street_address' => $shipping_address->fields['entry_street_address'],
+                              'suburb' => $shipping_address->fields['entry_suburb'],
+                              'city' => $shipping_address->fields['entry_city'],
+                              'postcode' => $shipping_address->fields['entry_postcode'],
+                              'state' => ((zen_not_null($shipping_address->fields['entry_state'])) ? $shipping_address->fields['entry_state'] : $shipping_address->fields['zone_name']),
+                              'zone_id' => $shipping_address->fields['entry_zone_id'],
+                              'country' => array('id' => $shipping_address->fields['countries_id'], 'title' => $shipping_address->fields['countries_name'], 'iso_code_2' => $shipping_address->fields['countries_iso_code_2'], 'iso_code_3' => $shipping_address->fields['countries_iso_code_3']),
+                              'country_id' => $shipping_address->fields['entry_country_id'],
+                              'format_id' => (int)$shipping_address->fields['address_format_id']);
+    }
 
-    $this->billing = array('firstname' => $billing_address->fields['entry_firstname'],
-                           'lastname' => $billing_address->fields['entry_lastname'],
-                           'company' => $billing_address->fields['entry_company'],
-                           'street_address' => $billing_address->fields['entry_street_address'],
-                           'suburb' => $billing_address->fields['entry_suburb'],
-                           'city' => $billing_address->fields['entry_city'],
-                           'postcode' => $billing_address->fields['entry_postcode'],
-                           'state' => ((zen_not_null($billing_address->fields['entry_state'])) ? $billing_address->fields['entry_state'] : $billing_address->fields['zone_name']),
-                           'zone_id' => $billing_address->fields['entry_zone_id'],
-                           'country' => array('id' => $billing_address->fields['countries_id'], 'title' => $billing_address->fields['countries_name'], 'iso_code_2' => $billing_address->fields['countries_iso_code_2'], 'iso_code_3' => $billing_address->fields['countries_iso_code_3']),
-                           'country_id' => $billing_address->fields['entry_country_id'],
-                           'format_id' => (int)$billing_address->fields['address_format_id']);
+    if ($billing_address->RecordCount() > 0) {
+      $this->billing = array('firstname' => $billing_address->fields['entry_firstname'],
+                             'lastname' => $billing_address->fields['entry_lastname'],
+                             'company' => $billing_address->fields['entry_company'],
+                             'street_address' => $billing_address->fields['entry_street_address'],
+                             'suburb' => $billing_address->fields['entry_suburb'],
+                             'city' => $billing_address->fields['entry_city'],
+                             'postcode' => $billing_address->fields['entry_postcode'],
+                             'state' => ((zen_not_null($billing_address->fields['entry_state'])) ? $billing_address->fields['entry_state'] : $billing_address->fields['zone_name']),
+                             'zone_id' => $billing_address->fields['entry_zone_id'],
+                             'country' => array('id' => $billing_address->fields['countries_id'], 'title' => $billing_address->fields['countries_name'], 'iso_code_2' => $billing_address->fields['countries_iso_code_2'], 'iso_code_3' => $billing_address->fields['countries_iso_code_3']),
+                             'country_id' => $billing_address->fields['entry_country_id'],
+                             'format_id' => (int)$billing_address->fields['address_format_id']);
+    }
 
     // -----
     // Issue a notification, allowing an observer to potentially make changes to any of the
@@ -747,8 +755,8 @@ class order extends base {
 
           // Will work with only one option for downloadable products
           // otherwise, we have to build the query dynamically with a loop
-          $products_attributes = $this->products[$i]['attributes'];
-          if (is_array($products_attributes)) {
+          if (!empty($this->products[$i]['attributes']) && is_array($this->products[$i]['attributes'])) {
+            $products_attributes = $this->products[$i]['attributes'];
             $stock_query_raw .= " AND pa.options_id = '" . $products_attributes[0]['option_id'] . "' AND pa.options_values_id = '" . $products_attributes[0]['value_id'] . "'";
           }
           $stock_values = $db->Execute($stock_query_raw, false, false, 0, true);
@@ -1055,11 +1063,17 @@ class order extends base {
     //addresses area: Delivery
     $html_msg['HEADING_ADDRESS_INFORMATION']= HEADING_ADDRESS_INFORMATION;
     $html_msg['ADDRESS_DELIVERY_TITLE']     = EMAIL_TEXT_DELIVERY_ADDRESS;
-    $html_msg['ADDRESS_DELIVERY_DETAIL']    = ($this->content_type != 'virtual') ? zen_address_label($_SESSION['customer_id'], $_SESSION['sendto'], true, '', "<br />") : 'n/a';
+
+    $storepickup = (strpos($this->info['shipping_module_code'], "storepickup") !== false); 
+    if ($this->content_type != 'virtual' && !$storepickup) {
+      $html_msg['ADDRESS_DELIVERY_DETAIL']    = zen_address_label($_SESSION['customer_id'], $_SESSION['sendto'], true, '', "<br />");
+    } else {
+       $html_msg['ADDRESS_DELIVERY_DETAIL']    = 'n/a'; 
+    }
     $html_msg['SHIPPING_METHOD_TITLE']      = HEADING_SHIPPING_METHOD;
     $html_msg['SHIPPING_METHOD_DETAIL']     = (zen_not_null($this->info['shipping_method'])) ? $this->info['shipping_method'] : 'n/a';
 
-    if ($this->content_type != 'virtual') {
+    if ($this->content_type != 'virtual' && !$storepickup) {
       $email_order .= "\n" . EMAIL_TEXT_DELIVERY_ADDRESS . "\n" .
       EMAIL_SEPARATOR . "\n" .
       zen_address_label($_SESSION['customer_id'], $_SESSION['sendto'], 0, '', "\n") . "\n";
@@ -1119,8 +1133,10 @@ class order extends base {
       $html_msg['EXTRA_INFO'] = $extra_info['HTML'];
 
       // include authcode and transaction id in admin-copy of email
-      if ($GLOBALS[$_SESSION['payment']]->auth_code || $GLOBALS[$_SESSION['payment']]->transaction_id) {
-        $pmt_details = ($GLOBALS[$_SESSION['payment']]->auth_code != '' ? 'AuthCode: ' . $GLOBALS[$_SESSION['payment']]->auth_code . '  ' : '') . ($GLOBALS[$_SESSION['payment']]->transaction_id != '' ?  'TransID: ' . $GLOBALS[$_SESSION['payment']]->transaction_id : '') . "\n\n";
+      $payment_auth_code = !empty($GLOBALS[$_SESSION['payment']]->auth_code) ? $GLOBALS[$_SESSION['payment']]->auth_code : '';
+      $payment_transaction_id = !empty($GLOBALS[$_SESSION['payment']]->transaction_id) ? $GLOBALS[$_SESSION['payment']]->transaction_id : '';
+      if ($payment_auth_code !== '' || $payment_transaction_id !== '') {
+        $pmt_details = ($payment_auth_code != '' ? 'AuthCode: ' . $payment_auth_code . '  ' : '') . ($payment_transaction_id != '' ?  'TransID: ' . $payment_transaction_id : '') . "\n\n";
         $email_order = $pmt_details . $email_order;
         $html_msg['EMAIL_TEXT_HEADER'] = nl2br($pmt_details) . $html_msg['EMAIL_TEXT_HEADER'];
       }

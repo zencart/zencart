@@ -4,10 +4,10 @@
  * Functions related to processing Gift Vouchers/Certificates and coupons
  *
  * @package functions
- * @copyright Copyright 2003-2018 Zen Cart Development Team
+ * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Drbyte Wed Aug 2 14:55:16 2017 -0400 Modified in v1.5.6 $
+ * @version $Id: mc12345678 2019 Mar 02 Modified in v1.5.6b $
  */
 
 ////
@@ -110,7 +110,7 @@
     $result = $db->Execute($sql);
 
     // check whether coupon has been flagged for not valid with sales
-    if ($result->fields['coupon_is_valid_for_sales']) {
+    if (!empty($result->fields['coupon_is_valid_for_sales'])) {
       return true;
     }
 

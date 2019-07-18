@@ -3,10 +3,10 @@
  * upload Class.
  *
  * @package classes
- * @copyright Copyright 2003-2018 Zen Cart Development Team
+ * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Drbyte Mon Nov 12 20:38:09 2018 -0500 Modified in v1.5.6 $
+ * @version $Id: DrByte 2019 Mar 12 Modified in v1.5.6b $
  */
 if (!defined('IS_ADMIN_FLAG')) {
     die('Illegal Access');
@@ -58,30 +58,25 @@ class upload extends base
      */
     function parse($key = '')
     {
-        if (isset($_FILES[$this->file])) {
-            if (zen_not_null($key)) {
-                $file = array(
-                    'name'     => $_FILES[$this->file]['name'][$key],
-                    'type'     => $_FILES[$this->file]['type'][$key],
-                    'size'     => $_FILES[$this->file]['size'][$key],
-                    'tmp_name' => $_FILES[$this->file]['tmp_name'][$key],
-                );
-            } else {
-                $file = array(
-                    'name'     => $_FILES[$this->file]['name'],
-                    'type'     => $_FILES[$this->file]['type'],
-                    'size'     => $_FILES[$this->file]['size'],
-                    'tmp_name' => $_FILES[$this->file]['tmp_name'],
-                );
-            }
+        if (empty($_FILES[$this->file])) {
+            return false;
+        }
+        if (zen_not_null($key)) {
+            $file = array(
+                'name'     => $_FILES[$this->file]['name'][$key],
+                'type'     => $_FILES[$this->file]['type'][$key],
+                'size'     => $_FILES[$this->file]['size'][$key],
+                'tmp_name' => $_FILES[$this->file]['tmp_name'][$key],
+            );
         } else {
             $file = array(
-                'name'     => (isset($GLOBALS[$this->file . '_name']) ? $GLOBALS[$this->file . '_name'] : ''),
-                'type'     => (isset($GLOBALS[$this->file . '_type']) ? $GLOBALS[$this->file . '_type'] : ''),
-                'size'     => (isset($GLOBALS[$this->file . '_size']) ? $GLOBALS[$this->file . '_size'] : ''),
-                'tmp_name' => (isset($GLOBALS[$this->file]) ? $GLOBALS[$this->file] : ''),
+                'name'     => $_FILES[$this->file]['name'],
+                'type'     => $_FILES[$this->file]['type'],
+                'size'     => $_FILES[$this->file]['size'],
+                'tmp_name' => $_FILES[$this->file]['tmp_name'],
             );
         }
+
         if (!zen_not_null($file['tmp_name'])) return false;
         //if ($file['tmp_name'] == 'none') return false;
         //if (!is_uploaded_file($file['tmp_name'])) return false;

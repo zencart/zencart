@@ -3,10 +3,10 @@
  * ot_gv order-total module
  *
  * @package orderTotal
- * @copyright Copyright 2003-2018 Zen Cart Development Team
+ * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: mc12345678 Tue May 8 00:42:18 2018 -0400 Modified in v1.5.6 $
+ * @version $Id: mc12345678 2019 Apr 07 Modified in v1.5.6b $
  */
 /**
  * Enter description here...
@@ -208,15 +208,16 @@ class ot_gv {
    */
   function apply_credit() {
     global $db, $order, $messageStack;
+    $gv_payment_amount = 0;
     // check for valid redemption amount vs available credit for current customer
-    if ($_SESSION['cot_gv'] != 0) {
-      $gv_result = $db->Execute("select amount from " . TABLE_COUPON_GV_CUSTOMER . " where customer_id = '" . (int)$_SESSION['customer_id'] . "'");
+    if (!empty($_SESSION['cot_gv'])) {
+      $gv_result = $db->Execute("SELECT amount FROM " . TABLE_COUPON_GV_CUSTOMER . " WHERE customer_id = " . (int)$_SESSION['customer_id']);
       // obtain final "deduction" amount
       $gv_payment_amount = $this->deduction;
       // determine amount of GV to redeem based on available balance minus qualified/calculated deduction suitable to this order
-      $gv_amount = $gv_result->fields['amount'] - $gv_payment_amount;
+      $gv_amount = (!$gv_result->EOF ? $gv_result->fields['amount'] : 0) - $gv_payment_amount;
       // reduce customer's GV balance by the amount redeemed
-      $db->Execute("update " . TABLE_COUPON_GV_CUSTOMER . " set amount = '" . $gv_amount . "' where customer_id = '" . (int)$_SESSION['customer_id'] . "'");
+      $db->Execute("UPDATE " . TABLE_COUPON_GV_CUSTOMER . " SET amount = '" . $gv_amount . "' WHERE customer_id = " . (int)$_SESSION['customer_id']);
     }
     // clear GV redemption flag since it's already been claimed and deducted
     $_SESSION['cot_gv'] = false;

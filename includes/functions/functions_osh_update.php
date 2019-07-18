@@ -3,10 +3,10 @@
  * functions_osh_update
  *
  * @package functions
- * @copyright Copyright 2003-2018 Zen Cart Development Team
+ * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: lat9 Mon Oct 22 13:19:39 2018 -0400 New in v1.5.6 $
+ * @version $Id: DrByte 2019 Jul 16 Modified in v1.5.6c $
  */
 if (!defined('IS_ADMIN_FLAG')) {
     exit('Invalid Access');
@@ -28,7 +28,7 @@ if (!defined('IS_ADMIN_FLAG')) {
 //                              -2 ... Email sent only to configured admins; status-change hidden from customer view
 // - $email_include_message ... Identifies whether (true) or not (false) to include the status message ($osh_additional_comments) in any email sent.
 // - $email_subject ........... If specified, overrides the default email subject line.
-// - $send_xtra_mails_to ...... If specified, overrides the "standard" database settings SEND_EXTRA_ORDERS_STATUS_ADMIN_EMAILS_TO_STATUS and
+// - $send_extra_mails_to ..... If specified, overrides the "standard" database settings SEND_EXTRA_ORDERS_STATUS_ADMIN_EMAILS_TO_STATUS and
 //                              SEND_EXTRA_ORDERS_STATUS_ADMIN_EMAILS_TO.
 //
 // Returns:
@@ -36,7 +36,7 @@ if (!defined('IS_ADMIN_FLAG')) {
 //                        -2 if no order record was found for the specified $orders_id
 //                        -1 if no status change was detected (i.e. no record written).
 //
-function zen_update_orders_history($orders_id, $message = '', $updated_by = null, $orders_new_status = -1, $notify_customer = -1, $email_include_message = true, $email_subject = '', $send_xtra_emails_to = '') 
+function zen_update_orders_history($orders_id, $message = '', $updated_by = null, $orders_new_status = -1, $notify_customer = -1, $email_include_message = true, $email_subject = '', $send_extra_emails_to = '') 
 {
     global $osh_sql, $osh_additional_comments;
     
@@ -154,11 +154,11 @@ function zen_update_orders_history($orders_id, $message = '', $updated_by = null
                 }
 
                 //send extra emails
-                if (empty($send_xtra_emails_to) && SEND_EXTRA_ORDERS_STATUS_ADMIN_EMAILS_TO_STATUS == '1') {
-                    $send_xtra_emails_to = (string)SEND_EXTRA_ORDERS_STATUS_ADMIN_EMAILS_TO;
+                if (empty($send_extra_emails_to) && SEND_EXTRA_ORDERS_STATUS_ADMIN_EMAILS_TO_STATUS == '1') {
+                    $send_extra_emails_to = (string)SEND_EXTRA_ORDERS_STATUS_ADMIN_EMAILS_TO;
                 }
-                if (!empty($send_xtra_emails_to)) {
-                    zen_mail('', $send_xtra_emails_to, SEND_EXTRA_ORDERS_STATUS_ADMIN_EMAILS_TO_SUBJECT . ' ' . $email_subject, $email_text, STORE_NAME, EMAIL_FROM, $html_msg, 'order_status_extra');
+                if (!empty($send_extra_emails_to)) {
+                    zen_mail('', $send_extra_emails_to, SEND_EXTRA_ORDERS_STATUS_ADMIN_EMAILS_TO_SUBJECT . ' ' . $email_subject, $email_text, STORE_NAME, EMAIL_FROM, $html_msg, 'order_status_extra');
                 }
             }
     

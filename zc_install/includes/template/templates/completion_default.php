@@ -1,9 +1,9 @@
 <?php
 /**
  * @package Installer
- * @copyright Copyright 2003-2018 Zen Cart Development Team
+ * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: dakanji Mon Jun 11 18:38:26 2018 +0300 Modified in v1.5.6 $
+ * @version $Id: DrByte 2019 May 26 Modified in v1.5.6b $
  */
 ?>
 <?php require(DIR_FS_INSTALL . DIR_WS_INSTALL_TEMPLATE . 'partials/partial_modal_help.php'); ?>
@@ -12,6 +12,24 @@
 		<div align="center" class="showModal button warning radius" id="NGINXCONF">
 			<h6><?php echo TEXT_COMPLETION_NGINX_TEXT; ?></h6>
 		</div>
+
+<?php if ($adminDir == 'admin' && !defined('DEVELOPER_MODE')) { ?>
+		<br><br>
+		<div class="alert-box  secondary">
+			<h6><?php echo TEXT_COMPLETION_ADMIN_DIRECTORY_WARNING; ?></h6>
+		</div>
+		<br>
+<?php } ?>
+<?php if (file_exists(DIR_FS_INSTALL) && !defined('DEVELOPER_MODE')) { ?>
+
+		<br>
+		<div class="alert-box  secondary">
+			<h6><?php echo TEXT_COMPLETION_INSTALLATION_DIRECTORY_WARNING; ?></h6>
+			<h6><?php echo TEXT_COMPLETION_INSTALLATION_DIRECTORY_EXPLANATION; ?></h6>
+		</div>
+		<br>
+<?php } ?>
+
 		<h5><font color="white">
 		
 <?php if ($isUpgrade) { ?>
@@ -40,23 +58,6 @@
 				<u><?php echo $catalogLink; ?></u>
 			</a>
 		</div>
-<?php } ?>
-
-<?php if ($adminDir == 'admin' && !defined('DEVELOPER_MODE')) { ?>
-		<br><br>
-		<div class="alert-box  secondary">
-			<h6><?php echo TEXT_COMPLETION_ADMIN_DIRECTORY_WARNING; ?></h6>
-		</div>
-		<br>
-<?php } ?>
-<?php if (file_exists(DIR_FS_INSTALL) && !defined('DEVELOPER_MODE')) { ?>
-
-		<br>
-		<div class="alert-box  secondary">
-			<h6><?php echo TEXT_COMPLETION_INSTALLATION_DIRECTORY_WARNING; ?></h6>
-			<h6><?php echo TEXT_COMPLETION_INSTALLATION_DIRECTORY_EXPLANATION; ?></h6>
-		</div>
-		<br>
 <?php } ?>
 
 	</div>

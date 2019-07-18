@@ -3,10 +3,10 @@
  * GV redeem
  *
  * @package page
- * @copyright Copyright 2003-2016 Zen Cart Development Team
+ * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: Zen4All  Wed Dec 9 10:38:02 2015 +0100 Modified in v1.5.5 $
+ * @version $Id: mc12345678 2019 Apr 30 Modified in v1.5.6b $
  */
 $zco_notifier->notify('NOTIFY_HEADER_START_GV_REDEEM');
 
@@ -14,7 +14,7 @@ require(DIR_WS_MODULES . zen_get_module_directory('require_languages.php'));
 $_GET['gv_no'] = zen_sanitize_string(trim($_GET['gv_no']));
 
 // if the customer is not logged on, redirect them to the login page
-if (!$_SESSION['customer_id']) {
+if (!zen_is_logged_in()) {
   $_SESSION['navigation']->set_snapshot();
   $messageStack->add_session('login', ERROR_GV_CREATE_ACCOUNT, 'error');
   zen_redirect(zen_href_link(FILENAME_LOGIN, (isset($_GET['gv_no']) ? 'gv_no=' . preg_replace('/[^0-9.,%]/', '', $_GET['gv_no']) : '' ), 'SSL'));

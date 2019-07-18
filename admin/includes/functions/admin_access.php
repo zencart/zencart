@@ -1,10 +1,10 @@
 <?php
 /**
  * @package Admin Access Management
- * @copyright Copyright 2003-2018 Zen Cart Development Team
+ * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: lat9 Tue Nov 13 08:12:48 2018 -0500 Modified in v1.5.6 $
+ * @version $Id: DrByte 2019 Jul 16 Modified in v1.5.6c $
  */
 
 if (!defined('ADMIN_PASSWORD_MIN_LENGTH')) define('ADMIN_PASSWORD_MIN_LENGTH', 7);
@@ -472,7 +472,7 @@ function zen_check_for_password_problems($password, $adminID = 0)
  * @param string $adminID
  */
 function zen_check_for_expired_pwd ($adminID) {
-  if (PADSS_PWD_EXPIRY_ENFORCED == 0) return;
+  if (PADSS_PWD_EXPIRY_ENFORCED == 0) return 0;
   global $db;
   $sql = "SELECT admin_id FROM " . TABLE_ADMIN . "
           WHERE admin_id = :adminID:

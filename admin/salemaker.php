@@ -4,7 +4,7 @@
  * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2019 Jan 04 Modified in v1.5.6a $
+ * @version $Id: mc12345678 2019 Jan 20 Modified in v1.5.6b $
  */
 //
 define('AUTOCHECK', 'False');
@@ -68,7 +68,7 @@ if (zen_not_null($action)) {
       }
 
       $salemaker_sales_data_array = array(
-        'sale_name' => substr(zen_db_prepare_input($_POST['name'], 0, 128)),
+        'sale_name' => substr(zen_db_prepare_input($_POST['name']), 0, 128),
         'sale_deduction_value' => zen_db_prepare_input((float)$_POST['deduction']),
         'sale_deduction_type' => zen_db_prepare_input($_POST['type']),
         'sale_pricerange_from' => zen_db_prepare_input((float)$_POST['from']),
@@ -181,9 +181,11 @@ if (zen_not_null($action)) {
         function popupWindow(url) {
             window.open(url, 'popupWindow', 'toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=no,resizable=yes,copyhistory=no,width=600,height=460,screenX=150,screenY=150,top=150,left=150')
         }
-        function session_win1() {
-            window.open("<?php echo zen_href_link(FILENAME_SALEMAKER_POPUP, 'cid=' . $category['categories_id']); ?>", "salemaker_info", "height=460,width=600,scrollbars=yes,resizable=yes").focus();
-        }
+<?php /*
+//        function session_win1() {
+//            window.open("<?php echo zen_href_link(FILENAME_SALEMAKER_POPUP, 'cid=' . $category['categories_id']); ?>//", "salemaker_info", "height=460,width=600,scrollbars=yes,resizable=yes").focus();
+//        }
+*/?>
         function init() {
             cssjsmenu('navbar');
             if (document.getElementById) {
@@ -508,7 +510,7 @@ if (zen_not_null($action)) {
                     ?>
                   </td>
                   <td class="dataTableContent" align="right"><?php
-                      if ((is_object($sInfo)) && ($salemaker_sale['sale_id'] == $sInfo->sale_id)) {
+                      if (!empty($sInfo) && (is_object($sInfo)) && !empty($salemaker_sale) && isset($salemaker_sale['sale_id']) && ($salemaker_sale['sale_id'] == $sInfo->sale_id)) {
                         echo zen_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', '');
                       } else {
                         echo '<a href="' . zen_href_link(FILENAME_SALEMAKER, 'page=' . $_GET['page'] . '&sID=' . $salemaker_sale['sale_id']) . '">' . zen_image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>';

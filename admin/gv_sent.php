@@ -1,24 +1,10 @@
 <?php
-//
-// +----------------------------------------------------------------------+
-// |zen-cart Open Source E-commerce                                       |
-// +----------------------------------------------------------------------+
-// | Copyright (c) 2003 The zen-cart developers                           |
-// |                                                                      |
-// | http://www.zen-cart.com/index.php                                    |
-// |                                                                      |
-// | Portions Copyright (c) 2003 osCommerce                               |
-// +----------------------------------------------------------------------+
-// | This source file is subject to version 2.0 of the GPL license,       |
-// | that is bundled with this package in the file LICENSE, and is        |
-// | available through the world-wide-web at the following url:           |
-// | http://www.zen-cart.com/license/2_0.txt.                             |
-// | If you did not receive a copy of the zen-cart license and are unable |
-// | to obtain it through the world-wide-web, please send a note to       |
-// | license@zen-cart.com so we can mail you a copy immediately.          |
-// +----------------------------------------------------------------------+
-//  $Id: gv_sent.php 3727 2006-06-09 02:42:39Z ajeh $
-//
+/**
+ * @package admin
+ * @copyright Copyright 2003-2019 Zen Cart Development Team
+ * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
+ * @version $Id: mc12345678 2019 May 08 Modified in v1.5.6b $
+ */
 
   require('includes/application_top.php');
 
@@ -121,31 +107,33 @@
   $heading = array();
   $contents = array();
 
-  $heading[] = array('text' => '[' . $gInfo->coupon_id . '] ' . ' ' . $currencies->format($gInfo->coupon_amount));
-  $redeem = $db->Execute("select * from " . TABLE_COUPON_REDEEM_TRACK . "
-                          where coupon_id = '" . $gInfo->coupon_id . "'");
-  $redeemed = 'No';
-  if ($redeem->RecordCount() > 0) $redeemed = 'Yes';
-  $contents[] = array('text' => TEXT_INFO_SENDERS_ID . ' ' . $gInfo->customer_id_sent);
-  $contents[] = array('text' => TEXT_INFO_AMOUNT_SENT . ' ' . $currencies->format($gInfo->coupon_amount));
-  $contents[] = array('text' => TEXT_INFO_DATE_SENT . ' ' . zen_date_short($gInfo->date_sent));
-  $contents[] = array('text' => TEXT_INFO_VOUCHER_CODE . ' ' . $gInfo->coupon_code);
-  $contents[] = array('text' => TEXT_INFO_EMAIL_ADDRESS . ' ' . $gInfo->emailed_to);
-  if ($redeemed=='Yes') {
-    $contents[] = array('text' => '<br />' . TEXT_INFO_DATE_REDEEMED . ' ' . zen_date_short($redeem->fields['redeem_date']));
-    $contents[] = array('text' => TEXT_INFO_IP_ADDRESS . ' ' . $redeem->fields['redeem_ip']);
-    $contents[] = array('text' => TEXT_INFO_CUSTOMERS_ID . ' ' . $redeem->fields['customer_id']);
-  } else {
-    $contents[] = array('text' => '<br />' . TEXT_INFO_NOT_REDEEMED);
-  }
+  if (isset($gInfo)) {
+    $heading[] = array('text' => '[' . $gInfo->coupon_id . '] ' . ' ' . $currencies->format($gInfo->coupon_amount));
+    $redeem = $db->Execute("select * from " . TABLE_COUPON_REDEEM_TRACK . "
+                            where coupon_id = '" . $gInfo->coupon_id . "'");
+    $redeemed = 'No';
+    if ($redeem->RecordCount() > 0) $redeemed = 'Yes';
+    $contents[] = array('text' => TEXT_INFO_SENDERS_ID . ' ' . $gInfo->customer_id_sent);
+    $contents[] = array('text' => TEXT_INFO_AMOUNT_SENT . ' ' . $currencies->format($gInfo->coupon_amount));
+    $contents[] = array('text' => TEXT_INFO_DATE_SENT . ' ' . zen_date_short($gInfo->date_sent));
+    $contents[] = array('text' => TEXT_INFO_VOUCHER_CODE . ' ' . $gInfo->coupon_code);
+    $contents[] = array('text' => TEXT_INFO_EMAIL_ADDRESS . ' ' . $gInfo->emailed_to);
+    if ($redeemed=='Yes') {
+      $contents[] = array('text' => '<br />' . TEXT_INFO_DATE_REDEEMED . ' ' . zen_date_short($redeem->fields['redeem_date']));
+      $contents[] = array('text' => TEXT_INFO_IP_ADDRESS . ' ' . $redeem->fields['redeem_ip']);
+      $contents[] = array('text' => TEXT_INFO_CUSTOMERS_ID . ' ' . $redeem->fields['customer_id']);
+    } else {
+      $contents[] = array('text' => '<br />' . TEXT_INFO_NOT_REDEEMED);
+    }
 
-  if ( (zen_not_null($heading)) && (zen_not_null($contents)) ) {
-    echo '            <td width="25%" valign="top">' . "\n";
+    if ( (zen_not_null($heading)) && (zen_not_null($contents)) ) {
+      echo '            <td width="25%" valign="top">' . "\n";
 
-    $box = new box;
-    echo $box->infoBox($heading, $contents);
+      $box = new box;
+      echo $box->infoBox($heading, $contents);
 
-    echo '            </td>' . "\n";
+      echo '            </td>' . "\n";
+    }
   }
 ?>
           </tr>

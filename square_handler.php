@@ -1,18 +1,20 @@
 <?php
 /**
  * Callback module for Square payment module
+ * Updated 2019-03-15
  */
 header('Access-Control-Allow-Origin: *');
 
 $mode = 'cli';
-if (isset($_GET) && isset($_GET['response_type']) && $_GET['response_type'] === 'code') {
+if (!empty($_GET['code'])) {
     $mode = 'web';
 }
 $verbose = false;
 require 'includes/application_top.php';
 require DIR_WS_CLASSES . 'payment.php';
-if ($mode === 'web' && (!isset($_GET['response_type']) || $_GET['response_type'] !== 'code')) {
+if ($mode === 'web' && (empty($_GET['code']) || empty($_GET['state']))) {
     if ($verbose) echo 'INVALID PARAMS';
+    http_response_code(400);
     exit(1);
 }
 $module = new payment('square');

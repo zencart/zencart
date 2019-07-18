@@ -4,7 +4,7 @@
  * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License v2.0
- * @version $Id: DrByte 2019 Jan 04 Modified in v1.5.6a $
+ * @version $Id: DrByte 2019 May 25 Modified in v1.5.6b $
  */
 require('includes/application_top.php');
 
@@ -78,7 +78,7 @@ if ($expired && $message == '')
   <div class="container-fluid">
     <div class="login-form">
       <div class="login-main-div login-box-shadow">
-        <img class="login-img" src="../includes/templates/template_default/images/logo.gif" alt="Zen Cart®" title="Zen Cart®" width="192" height="68" border="0">
+        <?php echo zen_image(DIR_WS_IMAGES . HEADER_LOGO_IMAGE, HEADER_ALT_TEXT, HEADER_LOGO_WIDTH, HEADER_LOGO_HEIGHT, 'class="login-img"'); ?>
         <br>
         <?php if (!isset($expired) || $expired == FALSE) { ?>
           <?php echo zen_draw_form('loginForm', FILENAME_LOGIN, zen_get_all_get_params(), 'post', 'id="loginForm"', 'true'); ?>
@@ -101,7 +101,7 @@ if ($expired && $message == '')
 
           <div class="login-forgot">
             <a href="<?php echo zen_href_link(FILENAME_PASSWORD_FORGOTTEN, '', 'SSL'); ?>">
-              <?php echo TEXT_PASSWORD_FORGOTTEN . "?"; ?>
+              <?php echo TEXT_PASSWORD_FORGOTTEN; ?>
             </a>
           </div>
 

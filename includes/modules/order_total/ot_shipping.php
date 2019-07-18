@@ -3,10 +3,10 @@
  * ot_shipping order-total module
  *
  * @package orderTotal
- * @copyright Copyright 2003-2018 Zen Cart Development Team
+ * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: lat9 Fri Nov 9 09:32:23 2018 -0500 Modified in v1.5.6 $
+ * @version $Id: DrByte 2019 Jul 16 Modified in v1.5.6c $
  */
 
   class ot_shipping {
@@ -23,6 +23,7 @@
       unset($_SESSION['shipping_tax_description']);
       $this->output = array();
       if (MODULE_ORDER_TOTAL_SHIPPING_FREE_SHIPPING == 'true') {
+        $pass = false;
         switch (MODULE_ORDER_TOTAL_SHIPPING_DESTINATION) {
           case 'national':
             if ($order->delivery['country_id'] == STORE_COUNTRY) $pass = true; break;
@@ -56,7 +57,7 @@
             $shipping_tax_description
         );
         
-        if ($external_shipping_tax_handler === true || $GLOBALS[$module]->tax_class > 0) {
+        if ($external_shipping_tax_handler === true || ($module !== 'free' && $GLOBALS[$module]->tax_class > 0)) {
           if ($external_shipping_tax_handler !== true) {
             if (!isset($GLOBALS[$module]->tax_basis)) {
               $shipping_tax_basis = STORE_SHIPPING_TAX_BASIS;
@@ -85,6 +86,9 @@
           $shipping_tax_amount = zen_calculate_tax($order->info['shipping_cost'], $shipping_tax);
           $order->info['shipping_tax'] += $shipping_tax_amount;
           $order->info['tax'] += $shipping_tax_amount;
+          if (!isset($order->info['tax_groups'][$shipping_tax_description])) {
+              $order->info['tax_groups'][$shipping_tax_description] = 0;
+          }
           $order->info['tax_groups']["$shipping_tax_description"] += zen_calculate_tax($order->info['shipping_cost'], $shipping_tax);
           $order->info['total'] += zen_calculate_tax($order->info['shipping_cost'], $shipping_tax);
           $_SESSION['shipping_tax_description'] =  $shipping_tax_description;

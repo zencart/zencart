@@ -4,15 +4,16 @@
  * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2019 Jan 04 Modified in v1.5.6a $
+ * @version $Id: lat9 2019 May 18 Modified in v1.5.6b $
  */
   require('includes/application_top.php');
   require(DIR_WS_CLASSES . 'currencies.php');
   $currencies = new currencies();
-  if ($_GET['selected_box']) {
+  if (!empty($_GET['selected_box'])) {
     $_GET['action']='';
     $_GET['old_action']='';
   }
+  if (!isset($_GET['action'])) $_GET['action'] = '';
 
   if (isset($_GET['search']) && zen_not_null($_GET['search'])) {
     $sql = "SELECT coupon_id, coupon_active from " . TABLE_COUPONS . " WHERE coupon_code = :couponCode:";
@@ -68,12 +69,12 @@
       $message .= TEXT_VOUCHER_IS . $coupon_result->fields['coupon_code'] . "\n\n";
       $message .= $text_coupon_help . "\n\n";
       if ($coupon_result->fields['coupon_is_valid_for_sales']) {
-        $message .= TEXT_COUPON_IS_VALID_FOR_SALES . "\n\n";
+        $message .= TEXT_COUPON_IS_VALID_FOR_SALES_EMAIL . "\n\n";
       } else {
-        $message .= TEXT_NO_COUPON_IS_VALID_FOR_SALES . "\n\n";
+        $message .= TEXT_NO_COUPON_IS_VALID_FOR_SALES_EMAIL . "\n\n";
       }
       if ($coupon_result->fields['coupon_product_count']) {
-        $message .= TEXT_COUPON_PRODUCT_COUNT_PER_QUANTY . "\n\n";
+        $message .= TEXT_COUPON_PRODUCT_COUNT_PER_PRODUCT . "\n\n";
       } else {
         $message .= TEXT_COUPON_PRODUCT_COUNT_PER_ORDER . "\n\n";
       }
@@ -114,7 +115,7 @@
     $messageStack->add(ERROR_NO_CUSTOMER_SELECTED, 'error');
   }
 
-  if ($_GET['mail_sent_to']) {
+  if (!empty($_GET['mail_sent_to'])) {
     $messageStack->add(sprintf(NOTICE_EMAIL_SENT_TO, $_GET['mail_sent_to']. '(' . $_GET['recip_count'] . ')'), 'success');
     $_GET['mail_sent_to'] = '';
   }
@@ -396,9 +397,13 @@
       }
       break;
     case 'update_confirm':
-      if ( ($_POST['back_x']) || ($_POST['back_y']) ) {
+      if ( (!empty($_POST['back_x'])) || (!empty($_POST['back_y'])) ) {
         $_GET['action'] = 'new';
       } else {
+        if (empty($_POST['coupon_amount'])) {
+            $_POST['coupon_amount'] = '0';
+        }
+        
         $coupon_type = 'F'; // amount off
         if ($_POST['coupon_free_ship']) $coupon_type = 'S'; // free shipping
         if (substr($_POST['coupon_amount'], -1) == '%') $coupon_type = 'P'; // percentage off
@@ -581,11 +586,14 @@ function check_form(form_name) {
     $cc_query_raw = "select * from " . TABLE_COUPON_REDEEM_TRACK . " where coupon_id = '" . $_GET['cid'] . "'";
     $cc_split = new splitPageResults($_GET['reports_page'], MAX_DISPLAY_SEARCH_RESULTS_DISCOUNT_COUPONS_REPORTS, $cc_query_raw, $cc_query_numrows);
     $cc_list = $db->Execute($cc_query_raw);
+    if ($cc_list->EOF && empty($cInfo)) {
+      $cInfo = new objectInfo($cc_list->fields);
+    }
     while (!$cc_list->EOF) {
-      if (((!$_GET['uid']) || (@$_GET['uid'] == $cc_list->fields['unique_id'])) && (!$cInfo)) {
+      if ((empty($_GET['uid']) || ($_GET['uid'] == $cc_list->fields['unique_id'])) && empty($cInfo)) {
         $cInfo = new objectInfo($cc_list->fields);
       }
-      if ( (is_object($cInfo)) && ($cc_list->fields['unique_id'] == $cInfo->unique_id) ) {
+      if ( (isset($cInfo)) && ($cc_list->fields['unique_id'] == $cInfo->unique_id) ) {
         echo '          <tr class="dataTableRowSelected" onmouseover="this.style.cursor=\'hand\'" onclick="document.location.href=\'' . zen_href_link(FILENAME_COUPON_ADMIN, zen_get_all_get_params(array('cid', 'action', 'uid')) . 'cid=' . $cInfo->coupon_id . '&action=voucherreport&uid=' . $cinfo->unique_id) . '\'">' . "\n";
       } else {
         echo '          <tr class="dataTableRow" onmouseover="this.className=\'dataTableRowOver\';this.style.cursor=\'hand\'" onmouseout="this.className=\'dataTableRow\'" onclick="document.location.href=\'' . zen_href_link(FILENAME_COUPON_ADMIN, zen_get_all_get_params(array('cid', 'action', 'uid')) . 'cid=' . $cc_list->fields['coupon_id'] . '&action=voucherreport&uid=' . $cc_list->fields['unique_id']) . '\'">' . "\n";
@@ -600,7 +608,7 @@ function check_form(form_name) {
                 <td class="dataTableContent" align="center"><?php echo $cc_list->fields['redeem_ip']; ?></td>
                 <td class="dataTableContent" align="center"><?php echo zen_date_short($cc_list->fields['redeem_date']); ?></td>
                 <td class="dataTableContent" align="right"><?php echo $cc_list->fields['order_id']; ?></td>
-                <td class="dataTableContent" align="right"><?php if ( (is_object($cInfo)) && ($cc_list->fields['unique_id'] == $cInfo->unique_id) ) { echo zen_image(DIR_WS_IMAGES . 'icon_arrow_right.gif'); } else { echo '<a href="' . zen_href_link(FILENAME_COUPON_ADMIN, 'reports_page=' . $_GET['reports_page'] . '&cid=' . $cc_list->fields['coupon_id']) . '">' . zen_image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
+                <td class="dataTableContent" align="right"><?php if ( (isset($cInfo)) && ($cc_list->fields['unique_id'] == $cInfo->unique_id) ) { echo zen_image(DIR_WS_IMAGES . 'icon_arrow_right.gif'); } else { echo '<a href="' . zen_href_link(FILENAME_COUPON_ADMIN, 'reports_page=' . $_GET['reports_page'] . '&cid=' . $cc_list->fields['coupon_id']) . '">' . zen_image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
               </tr>
 <?php
       $cc_list->MoveNext();
@@ -614,7 +622,7 @@ function check_form(form_name) {
               </tr>
 
               <tr>
-                <td align="right" colspan="2" class="smallText"><?php echo '<a href="' . zen_href_link(FILENAME_COUPON_ADMIN, 'page=' . $_GET['page'] . '&cid=' . (!empty($cInfo->coupon_id) ? $cInfo->coupon_id : $_GET['cid']) . (isset($_GET['status']) ? '&status=' . $_GET['status'] : '')) . '">' . zen_image_button('button_back.gif', IMAGE_BACK) . '</a>'; ?></td>
+                <td align="right" colspan="2" class="smallText"><?php echo '<a href="' . zen_href_link(FILENAME_COUPON_ADMIN, (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . 'cid=' . (!empty($cInfo->coupon_id) ? $cInfo->coupon_id : $_GET['cid']) . (isset($_GET['status']) ? '&status=' . $_GET['status'] : '')) . '">' . zen_image_button('button_back.gif', IMAGE_BACK) . '</a>'; ?></td>
               </tr>
             </table></td>
           </tr>
@@ -682,7 +690,7 @@ function check_form(form_name) {
       if (((!$_GET['uid']) || (@$_GET['uid'] == $cc_list->fields['unique_id'])) && (!$cInfo)) {
         $cInfo = new objectInfo($cc_list->fields);
       }
-      if ( (is_object($cInfo)) && ($cc_list->fields['unique_id'] == $cInfo->unique_id) ) {
+      if ( (isset($cInfo)) && ($cc_list->fields['unique_id'] == $cInfo->unique_id) ) {
         echo '          <tr class="dataTableRowSelected" onmouseover="this.style.cursor=\'hand\'" onclick="document.location.href=\'' . zen_href_link(FILENAME_COUPON_ADMIN, zen_get_all_get_params(array('cid', 'action', 'uid')) . 'cid=' . $cInfo->coupon_id . '&action=voucherreport&uid=' . $cinfo->unique_id) . '\'">' . "\n";
       } else {
         echo '          <tr class="dataTableRow" onmouseover="this.className=\'dataTableRowOver\';this.style.cursor=\'hand\'" onmouseout="this.className=\'dataTableRow\'" onclick="document.location.href=\'' . zen_href_link(FILENAME_COUPON_ADMIN, zen_get_all_get_params(array('cid', 'action', 'uid')) . 'cid=' . $cc_list->fields['coupon_id'] . '&action=voucherreport&uid=' . $cc_list->fields['unique_id']) . '\'">' . "\n";
@@ -698,7 +706,7 @@ function check_form(form_name) {
                 <td class="dataTableContent" align="left"><?php echo $cc_list->fields['coupon_code']; ?></td>
                 <td class="dataTableContent" align="center"><?php echo zen_date_short($cc_list->fields['redeem_date']); ?></td>
                 <td class="dataTableContent" align="right"><?php echo $cc_list->fields['order_id']; ?></td>
-                <td class="dataTableContent" align="right"><?php if ( (is_object($cInfo)) && ($cc_list->fields['unique_id'] == $cInfo->unique_id) ) { echo zen_image(DIR_WS_IMAGES . 'icon_arrow_right.gif'); } else { echo '<a href="' . zen_href_link(FILENAME_COUPON_ADMIN, 'reports_page=' . $_GET['reports_page'] . '&cid=' . $cc_list->fields['coupon_id']) . '">' . zen_image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
+                <td class="dataTableContent" align="right"><?php if ( (isset($cInfo)) && ($cc_list->fields['unique_id'] == $cInfo->unique_id) ) { echo zen_image(DIR_WS_IMAGES . 'icon_arrow_right.gif'); } else { echo '<a href="' . zen_href_link(FILENAME_COUPON_ADMIN, 'reports_page=' . $_GET['reports_page'] . '&cid=' . $cc_list->fields['coupon_id']) . '">' . zen_image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
               </tr>
 <?php
       $cc_list->MoveNext();
@@ -712,7 +720,7 @@ function check_form(form_name) {
               </tr>
 
               <tr>
-                <td align="right" colspan="2" class="smallText"><?php echo '<a href="' . zen_href_link(FILENAME_COUPON_ADMIN, 'page=' . $_GET['page'] . '&cid=' . $cc_previous_cid . (isset($_GET['status']) ? '&status=' . $_GET['status'] : '')) . '">' . zen_image_button('button_back.gif', IMAGE_BACK) . '</a>'; ?></td>
+                <td align="right" colspan="2" class="smallText"><?php echo '<a href="' . zen_href_link(FILENAME_COUPON_ADMIN, (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . 'cid=' . $cc_previous_cid . (isset($_GET['status']) ? '&status=' . $_GET['status'] : '')) . '">' . zen_image_button('button_back.gif', IMAGE_BACK) . '</a>'; ?></td>
               </tr>
             </table></td>
           </tr>
@@ -865,7 +873,7 @@ function check_form(form_name) {
 ?>
               <tr>
                 <td class="main"><?php echo TEXT_CUSTOMER; ?>&nbsp;&nbsp;</td>
-                <td><?php echo zen_draw_pull_down_menu('customers_email_address', $customers, $_GET['customer']);?></td>
+                <td><?php echo zen_draw_pull_down_menu('customers_email_address', $customers, (isset($_GET['customer']) ? $_GET['customer'] : ''));?></td>
               </tr>
               <tr>
                 <td colspan="2"><?php echo zen_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
@@ -903,7 +911,7 @@ function check_form(form_name) {
 <?php } ?>
               <tr>
                 <td valign="top" class="main"><?php echo TEXT_MESSAGE; ?>&nbsp;&nbsp;</td>
-                <td><?php echo zen_draw_textarea_field('message', 'soft', '60', '15', htmlspecialchars(strip_tags(($_POST['message_html']=='') ? TEXT_COUPON_ANNOUNCE : stripslashes($_POST['message_html'])), ENT_COMPAT, CHARSET, TRUE), 'class="noEditor"'); ?></td>
+                <td><?php echo zen_draw_textarea_field('message', 'soft', '60', '15', htmlspecialchars(strip_tags((!isset($_POST['message_html']) || $_POST['message_html']=='') ? TEXT_COUPON_ANNOUNCE : stripslashes($_POST['message_html'])), ENT_COMPAT, CHARSET, TRUE), 'class="noEditor"'); ?></td>
               </tr>
               <tr>
                 <td colspan="2"><?php echo zen_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
@@ -983,7 +991,7 @@ function check_form(form_name) {
       <tr>
         <td align="left"><?php echo COUPON_FREE_SHIP; ?></td>
 <?php
-    if ($_POST['coupon_free_ship']) {
+    if (!empty($_POST['coupon_free_ship'])) {
 ?>
         <td align="left"><?php echo TEXT_FREE_SHIPPING; ?></td>
 <?php
@@ -997,7 +1005,7 @@ function check_form(form_name) {
       <tr>
         <td align="left"><?php echo COUPON_IS_VALID_FOR_SALES; ?></td>
 <?php
-    if ($_POST['coupon_is_valid_for_sales']) {
+    if (!empty($_POST['coupon_is_valid_for_sales'])) {
 ?>
         <td align="left"><?php echo TEXT_COUPON_IS_VALID_FOR_SALES; ?></td>
 <?php
@@ -1011,7 +1019,7 @@ function check_form(form_name) {
       <tr>
         <td align="left"><?php echo COUPON_CODE; ?></td>
 <?php
-    if ($_POST['coupon_code']) {
+    if (!empty($_POST['coupon_code'])) {
       $c_code = $_POST['coupon_code'];
     } else {
       $c_code = $coupon_code;
@@ -1055,12 +1063,12 @@ function check_form(form_name) {
         echo zen_draw_hidden_field('coupon_amount', $_POST['coupon_amount']);
         echo zen_draw_hidden_field('coupon_product_count', (int)$_POST['coupon_product_count']);
         echo zen_draw_hidden_field('coupon_min_order', $_POST['coupon_min_order']);
-        echo zen_draw_hidden_field('coupon_free_ship', $_POST['coupon_free_ship']);
+        echo zen_draw_hidden_field('coupon_free_ship', (!empty($_POST['coupon_free_ship']) ? $_POST['coupon_free_ship'] : ''));
         echo zen_draw_hidden_field('coupon_code', stripslashes($c_code));
         echo zen_draw_hidden_field('coupon_uses_coupon', $_POST['coupon_uses_coupon']);
         echo zen_draw_hidden_field('coupon_uses_user', $_POST['coupon_uses_user']);
-        echo zen_draw_hidden_field('coupon_products', $_POST['coupon_products']);
-        echo zen_draw_hidden_field('coupon_categories', $_POST['coupon_categories']);
+        echo zen_draw_hidden_field('coupon_products', (!empty($_POST['coupon_products']) ? $_POST['coupon_products'] : ''));
+        echo zen_draw_hidden_field('coupon_categories', (!empty($_POST['coupon_categories']) ? $_POST['coupon_categories'] : ''));
         echo zen_draw_hidden_field('coupon_startdate', date('Y-m-d', mktime(0, 0, 0, $_POST['coupon_startdate_month'],$_POST['coupon_startdate_day'] ,$_POST['coupon_startdate_year'] )));
         echo zen_draw_hidden_field('coupon_finishdate', date('Y-m-d', mktime(0, 0, 0, $_POST['coupon_finishdate_month'],$_POST['coupon_finishdate_day'] ,$_POST['coupon_finishdate_year'] )));
         echo zen_draw_hidden_field('coupon_zone_restriction', $_POST['coupon_zone_restriction']);
@@ -1150,7 +1158,7 @@ function check_form(form_name) {
 ?>
       <tr>
         <td align="left" class="main"><?php if ($i==0) echo COUPON_NAME; ?></td>
-        <td align="left"><?php echo zen_draw_input_field('coupon_name[' . $languages[$i]['id'] . ']', htmlspecialchars(stripslashes($_POST['coupon_name'][$language_id]), ENT_COMPAT, CHARSET, TRUE), zen_set_field_length(TABLE_COUPONS_DESCRIPTION, 'coupon_name')) . '&nbsp;' . zen_image(DIR_WS_CATALOG_LANGUAGES . $languages[$i]['directory'] . '/images/' . $languages[$i]['image'], $languages[$i]['name']); ?></td>
+        <td align="left"><?php echo zen_draw_input_field('coupon_name[' . $languages[$i]['id'] . ']', (!empty($_POST['coupon_name'][$language_id]) ? htmlspecialchars(stripslashes($_POST['coupon_name'][$language_id]), ENT_COMPAT, CHARSET, TRUE) : ''), zen_set_field_length(TABLE_COUPONS_DESCRIPTION, 'coupon_name')) . '&nbsp;' . zen_image(DIR_WS_CATALOG_LANGUAGES . $languages[$i]['directory'] . '/images/' . $languages[$i]['image'], $languages[$i]['name']); ?></td>
         <td align="left" class="main" width="40%"><?php if ($i==0) echo COUPON_NAME_HELP; ?></td>
       </tr>
 <?php
@@ -1164,7 +1172,7 @@ function check_form(form_name) {
 
       <tr>
         <td align="left" valign="top" class="main"><?php if ($i==0) echo COUPON_DESC; ?></td>
-        <td align="left" valign="top"><?php echo zen_draw_textarea_field('coupon_desc[' . $languages[$i]['id'] . ']','physical','24','8', htmlspecialchars(stripslashes($_POST['coupon_desc'][$language_id]), ENT_COMPAT, CHARSET, TRUE), 'class="editorHook"'); ?>
+        <td align="left" valign="top"><?php echo zen_draw_textarea_field('coupon_desc[' . $languages[$i]['id'] . ']','physical','24','8', (!empty($_POST['coupon_desc'][$language_id]) ? htmlspecialchars(stripslashes($_POST['coupon_desc'][$language_id]), ENT_COMPAT, CHARSET, TRUE) : ''), 'class="editorHook"'); ?>
             <?php echo '&nbsp;' . zen_image(DIR_WS_CATALOG_LANGUAGES . $languages[$i]['directory'] . '/images/' . $languages[$i]['image'], $languages[$i]['name']); ?></td>
         <td align="left" valign="top" class="main"><?php if ($i==0) echo COUPON_DESC_HELP; ?></td>
       </tr>
@@ -1173,60 +1181,60 @@ function check_form(form_name) {
 ?>
       <tr>
         <td align="left" class="main"><?php echo COUPON_AMOUNT; ?></td>
-        <td align="left"><?php echo zen_draw_input_field('coupon_amount', $_POST['coupon_amount']) . ' ' . zen_draw_radio_field('coupon_product_count', '0', ($_POST['coupon_product_count'] == 0)) . '&nbsp;' . TEXT_COUPON_PRODUCT_COUNT_PER_ORDER . ' ' . zen_draw_radio_field('coupon_product_count', '1', ($_POST['coupon_product_count'] ==1)) . '&nbsp;' . TEXT_COUPON_PRODUCT_COUNT_PER_PRODUCT; ?></td>
+        <td align="left"><?php echo zen_draw_input_field('coupon_amount', (!empty($_POST['coupon_amount']) ? $_POST['coupon_amount'] : 0)) . ' ' . zen_draw_radio_field('coupon_product_count', '0', (empty($_POST['coupon_product_count']))) . '&nbsp;' . TEXT_COUPON_PRODUCT_COUNT_PER_ORDER . ' ' . zen_draw_radio_field('coupon_product_count', '1', (!empty($_POST['coupon_product_count']))) . '&nbsp;' . TEXT_COUPON_PRODUCT_COUNT_PER_PRODUCT; ?></td>
         <td align="left" class="main"><?php echo COUPON_AMOUNT_HELP; ?></td>
       </tr>
       <tr>
         <td align="left" class="main"><?php echo COUPON_MIN_ORDER; ?></td>
-        <td align="left"><?php echo zen_draw_input_field('coupon_min_order', $_POST['coupon_min_order']); ?></td>
+        <td align="left"><?php echo zen_draw_input_field('coupon_min_order', (!empty($_POST['coupon_min_order']) ? $_POST['coupon_min_order'] : 0)); ?></td>
         <td align="left" class="main"><?php echo COUPON_MIN_ORDER_HELP; ?></td>
       </tr>
       <tr>
         <td align="left" valign="top" class="main"><?php echo COUPON_TOTAL; ?></td>
         <td align="left" valign="top">
-          <?php echo zen_draw_radio_field('coupon_calc_base', '0', ($_POST['coupon_calc_base'] == 0)) . '&nbsp;' . TEXT_COUPON_TOTAL_PRODUCTS . TEXT_COUPON_TOTAL_PRODUCTS_BASED; ?><br />
-          <?php echo zen_draw_radio_field('coupon_calc_base', '1', ($_POST['coupon_calc_base'] ==1)) . '&nbsp;' . TEXT_COUPON_TOTAL_ORDER . TEXT_COUPON_TOTAL_ORDER_BASED; ?><br />
+          <?php echo zen_draw_radio_field('coupon_calc_base', '0', (empty($_POST['coupon_calc_base']))) . '&nbsp;' . TEXT_COUPON_TOTAL_PRODUCTS . TEXT_COUPON_TOTAL_PRODUCTS_BASED; ?><br />
+          <?php echo zen_draw_radio_field('coupon_calc_base', '1', (!empty($_POST['coupon_calc_base']))) . '&nbsp;' . TEXT_COUPON_TOTAL_ORDER . TEXT_COUPON_TOTAL_ORDER_BASED; ?><br />
         </td>
         <td align="left" valign="top" class="main"><?php echo COUPON_TOTAL_HELP; ?></td>
       </tr>
       <tr>
         <td align="left" class="main"><?php echo COUPON_FREE_SHIP; ?></td>
-        <td align="left"><input type="checkbox" name="coupon_free_ship" <?php if ($_POST['coupon_free_ship']) echo 'CHECKED'; ?>></td>
+        <td align="left"><input type="checkbox" name="coupon_free_ship" <?php if (!empty($_POST['coupon_free_ship'])) echo 'CHECKED'; ?>></td>
         <td align="left" class="main"><?php echo COUPON_FREE_SHIP_HELP; ?></td>
       </tr>
 
       <tr>
         <td align="left" valign="top" class="main"><?php echo COUPON_IS_VALID_FOR_SALES; ?></td>
         <td align="left" valign="top">
-          <?php echo zen_draw_radio_field('coupon_is_valid_for_sales', '1', ($_POST['coupon_is_valid_for_sales'] == 1)) . '&nbsp;' . TEXT_COUPON_IS_VALID_FOR_SALES; ?><br />
-          <?php echo zen_draw_radio_field('coupon_is_valid_for_sales', '0', ($_POST['coupon_is_valid_for_sales'] == 0)) . '&nbsp;' . TEXT_NO_COUPON_IS_VALID_FOR_SALES; ?><br />
+          <?php echo zen_draw_radio_field('coupon_is_valid_for_sales', '1', (!empty($_POST['coupon_is_valid_for_sales']))) . '&nbsp;' . TEXT_COUPON_IS_VALID_FOR_SALES; ?><br />
+          <?php echo zen_draw_radio_field('coupon_is_valid_for_sales', '0', (empty($_POST['coupon_is_valid_for_sales']))) . '&nbsp;' . TEXT_NO_COUPON_IS_VALID_FOR_SALES; ?><br />
         </td>
-        <td align="left" valign="top" class="main"><?php echo COUPON_TOTAL_HELP; ?></td>
+        <td align="left" valign="top" class="main"><?php echo COUPON_SALE_HELP; ?></td>
       </tr>
 
       <tr>
         <td align="left" class="main"><?php echo COUPON_CODE; ?></td>
-        <td align="left"><?php echo zen_draw_input_field('coupon_code', htmlspecialchars($_POST['coupon_code'], ENT_COMPAT, CHARSET, TRUE)); ?></td>
+        <td align="left"><?php echo zen_draw_input_field('coupon_code', (!empty($_POST['coupon_code']) ? htmlspecialchars($_POST['coupon_code'], ENT_COMPAT, CHARSET, TRUE) : '')); ?></td>
         <td align="left" class="main"><?php echo COUPON_CODE_HELP; ?></td>
       </tr>
       <tr>
         <td align="left" class="main"><?php echo COUPON_USES_COUPON; ?></td>
-        <td align="left"><?php echo zen_draw_input_field('coupon_uses_coupon', ($_POST['coupon_uses_coupon'] >= 1 ? $_POST['coupon_uses_coupon'] : '')); ?></td>
+        <td align="left"><?php echo zen_draw_input_field('coupon_uses_coupon', (!empty($_POST['coupon_uses_coupon']) && $_POST['coupon_uses_coupon'] >= 1 ? $_POST['coupon_uses_coupon'] : '')); ?></td>
         <td align="left" class="main"><?php echo COUPON_USES_COUPON_HELP; ?></td>
       </tr>
       <tr>
         <td align="left" class="main"><?php echo COUPON_USES_USER; ?></td>
-        <td align="left"><?php echo zen_draw_input_field('coupon_uses_user', ($_POST['coupon_uses_user'] >= 1 ? $_POST['coupon_uses_user'] : '')); ?></td>
+        <td align="left"><?php echo zen_draw_input_field('coupon_uses_user', (!empty($_POST['coupon_uses_user']) && $_POST['coupon_uses_user'] >= 1 ? $_POST['coupon_uses_user'] : '')); ?></td>
         <td align="left" class="main"><?php echo COUPON_USES_USER_HELP; ?></td>
       </tr>
       <tr>
 <?php
-    if (!$_POST['coupon_startdate']) {
+    if (empty($_POST['coupon_startdate'])) {
       $coupon_startdate = preg_split("/[-]/", date('Y-m-d'));
     } else {
       $coupon_startdate = preg_split("/[-]/", $_POST['coupon_startdate']);
     }
-    if (!$_POST['coupon_finishdate']) {
+    if (empty($_POST['coupon_finishdate'])) {
       $coupon_finishdate = preg_split("/[-]/", date('Y-m-d'));
       $coupon_finishdate[0] = $coupon_finishdate[0] + 1;
     } else {
@@ -1234,22 +1242,22 @@ function check_form(form_name) {
     }
 ?>
         <td align="left" class="main"><?php echo COUPON_STARTDATE; ?></td>
-        <td align="left"><?php echo zen_draw_date_selector('coupon_startdate', mktime(0,0,0, $coupon_startdate[1], $coupon_startdate[2], $coupon_startdate[0])); ?></td>
+        <td align="left"><?php echo zen_draw_date_selector('coupon_startdate', mktime(0,0,0, $coupon_startdate[1], (int)$coupon_startdate[2], $coupon_startdate[0])); ?></td>
         <td align="left" class="main"><?php echo COUPON_STARTDATE_HELP; ?></td>
       </tr>
       <tr>
         <td align="left" class="main"><?php echo COUPON_FINISHDATE; ?></td>
-        <td align="left"><?php echo zen_draw_date_selector('coupon_finishdate', mktime(0,0,0, $coupon_finishdate[1], $coupon_finishdate[2], $coupon_finishdate[0])); ?></td>
+        <td align="left"><?php echo zen_draw_date_selector('coupon_finishdate', mktime(0,0,0, $coupon_finishdate[1], (int)$coupon_finishdate[2], $coupon_finishdate[0])); ?></td>
         <td align="left" class="main"><?php echo COUPON_FINISHDATE_HELP; ?></td>
       </tr>
       <tr>
         <td align="left" class="main"><?php echo COUPON_ZONE_RESTRICTION; ?></td>
-        <td align="left" class="main"><?php echo zen_geo_zones_pull_down_coupon('name="coupon_zone_restriction" style="font-size:10px"', $_POST['coupon_zone_restriction']); ?>
+        <td align="left" class="main"><?php echo zen_geo_zones_pull_down_coupon('name="coupon_zone_restriction" style="font-size:10px"', (!empty($_POST['coupon_zone_restriction']) ? $_POST['coupon_zone_restriction'] : 0)); ?>
         <td align="left" class="main"><?php echo TEXT_COUPON_ZONE_RESTRICTION; ?></td>
       </tr>
       <tr>
         <td align="left" class="main"><?php echo COUPON_ORDER_LIMIT; ?></td>
-        <td align="left"><?php echo zen_draw_input_field('coupon_order_limit', ($_POST['coupon_order_limit'] >= 1 ? $_POST['coupon_order_limit'] : '')); ?></td>
+        <td align="left"><?php echo zen_draw_input_field('coupon_order_limit', (!empty($_POST['coupon_order_limit']) && $_POST['coupon_order_limit'] >= 1 ? $_POST['coupon_order_limit'] : '')); ?></td>
         <td align="left" class="main"><?php echo COUPON_ORDER_LIMIT_HELP; ?></td>
       </tr>
       <tr>
@@ -1331,11 +1339,14 @@ function check_form(form_name) {
 
     $cc_split = new splitPageResults($_GET['page'], $maxDisplaySearchResults, $cc_query_raw, $cc_query_numrows);
     $cc_list = $db->Execute($cc_query_raw);
+    if ($cc_list->EOF && (empty($_GET['cid']) || ($_GET['cid'] == $cc_list->fields['coupon_id'])) && empty($cInfo)) {
+      $cInfo = new objectInfo($cc_list->fields);
+    }
     while (!$cc_list->EOF) {
-      if (((!$_GET['cid']) || (@$_GET['cid'] == $cc_list->fields['coupon_id'])) && (!$cInfo)) {
+      if ((empty($_GET['cid']) || ($_GET['cid'] == $cc_list->fields['coupon_id'])) && empty($cInfo)) {
         $cInfo = new objectInfo($cc_list->fields);
       }
-      if ( (is_object($cInfo)) && ($cc_list->fields['coupon_id'] == $cInfo->coupon_id) ) {
+      if ( (isset($cInfo)) && ($cc_list->fields['coupon_id'] == $cInfo->coupon_id) ) {
         echo '          <tr class="dataTableRowSelected" onmouseover="this.style.cursor=\'hand\'" onclick="document.location.href=\'' . zen_href_link(FILENAME_COUPON_ADMIN, zen_get_all_get_params(array('cid', 'action')) . 'cid=' . $cInfo->coupon_id . '&action=voucheredit') . '\'">' . "\n";
       } else {
         echo '          <tr class="dataTableRow" onmouseover="this.className=\'dataTableRowOver\';this.style.cursor=\'hand\'" onmouseout="this.className=\'dataTableRow\'" onclick="document.location.href=\'' . zen_href_link(FILENAME_COUPON_ADMIN, zen_get_all_get_params(array('cid', 'action')) . 'cid=' . $cc_list->fields['coupon_id']) . '\'">' . "\n";
@@ -1378,7 +1389,7 @@ function check_form(form_name) {
                 <td class="dataTableContent<?php if (strtotime($cc_list->fields['coupon_start_date']) > time()) echo ' coupon-future'; ?>" align="center"><?php echo zen_date_short($cc_list->fields['coupon_start_date']); ?></td>
                 <td class="dataTableContent<?php if (strtotime($cc_list->fields['coupon_expire_date']) < time()) echo ' coupon-expired'; ?>" align="center"><?php echo zen_date_short($cc_list->fields['coupon_expire_date']); ?></td>
                 <td class="dataTableContent" align="center"><?php echo ($coupon_restrictions->RecordCount() > 0 ? '<a href="'.zen_href_link(FILENAME_COUPON_RESTRICT,'cid='.(int)$cc_list->fields['coupon_id'] . (isset($_GET['status']) ? '&status=' . $_GET['status'] : '') . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '')).'">' . 'Y' . '</a>' : 'N'); ?></td>
-                <td class="dataTableContent" align="right"><?php if ( (is_object($cInfo)) && ($cc_list->fields['coupon_id'] == $cInfo->coupon_id) ) { echo zen_image(DIR_WS_IMAGES . 'icon_arrow_right.gif'); } else { echo '<a href="' . zen_href_link(FILENAME_COUPON_ADMIN, 'page=' . $_GET['page'] . '&cid=' . $cc_list->fields['coupon_id'] . (isset($_GET['status']) ? '&status=' . $_GET['status'] : '')) . '">' . zen_image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
+                <td class="dataTableContent" align="right"><?php if ( (isset($cInfo)) && ($cc_list->fields['coupon_id'] == $cInfo->coupon_id) ) { echo zen_image(DIR_WS_IMAGES . 'icon_arrow_right.gif'); } else { echo '<a href="' . zen_href_link(FILENAME_COUPON_ADMIN, (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . 'cid=' . $cc_list->fields['coupon_id'] . (isset($_GET['status']) ? '&status=' . $_GET['status'] : '')) . '">' . zen_image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
               </tr>
 <?php
       $cc_list->MoveNext();
@@ -1392,7 +1403,7 @@ function check_form(form_name) {
               </tr>
 
               <tr>
-                <td align="right" colspan="2" class="smallText"><?php echo '<a name="couponInsert" href="' . zen_href_link(FILENAME_COUPON_ADMIN, 'page=' . $_GET['page'] . '&cid=' . $cInfo->coupon_id . '&action=new') . '">' . zen_image_button('button_insert.gif', IMAGE_INSERT) . '</a>'; ?></td>
+                <td align="right" colspan="2" class="smallText"><?php echo '<a name="couponInsert" href="' . zen_href_link(FILENAME_COUPON_ADMIN, (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . 'cid=' . (int)$cInfo->coupon_id . '&action=new') . '">' . zen_image_button('button_insert.gif', IMAGE_INSERT) . '</a>'; ?></td>
               </tr>
             </table></td>
           </tr>
@@ -1424,7 +1435,7 @@ function check_form(form_name) {
       $contents[] = array('text' => '<br />' . COUPON_USES_COUPON . '<br />' . zen_draw_input_field('voucher_number_of'));
       break;
     default:
-      $heading[] = array('text'=>'['.$cInfo->coupon_id.']  '.$cInfo->coupon_code . ($cInfo->coupon_id == '' ? ' - (' . $_GET['cid'] . ')' : ''));
+      $heading[] = array('text'=>'['.$cInfo->coupon_id.']  '.$cInfo->coupon_code . ($cInfo->coupon_id == '' ? ' - (' . (!empty($_GET['cid']) ? $_GET['cid'] : 0) . ')' : ''));
       $amount = $cInfo->coupon_amount;
       if ($cInfo->coupon_type == 'P' || $cInfo->coupon_type == 'E') {
         $amount .= '%';
@@ -1497,10 +1508,11 @@ $product_query = $db->Execute("select * from " . TABLE_COUPON_RESTRICT . " where
 //bof 12-6ke
 $category_query = $db->Execute("select * from " . TABLE_COUPON_RESTRICT . " where coupon_id = '" . $cInfo->coupon_id . "' and category_id != '0'");        if ($category_query->RecordCount() > 0) $cat_details = TEXT_SEE_RESTRICT;
 //eof 12-6ke
-        $coupon_name = $db->Execute("select coupon_name
-                                     from " . TABLE_COUPONS_DESCRIPTION . "
-                                     where coupon_id = '" . $cInfo->coupon_id . "'
-                                     and language_id = '" . (int)$_SESSION['languages_id'] . "'");
+        $coupon_name = $db->Execute("SELECT cd.coupon_name, c.coupon_type
+                                     FROM " . TABLE_COUPONS_DESCRIPTION . " cd
+                                     LEFT JOIN " . TABLE_COUPONS . " c ON c.coupon_id = cd.coupon_id
+                                     WHERE cd.coupon_id = " . (int)$cInfo->coupon_id . "
+                                     AND cd.language_id = " . (int)$_SESSION['languages_id']);
         $uses_coupon = $cInfo->uses_per_coupon;
         $uses_user = $cInfo->uses_per_user;
         $coupon_order_limit = $cInfo->coupon_order_limit;
@@ -1527,7 +1539,7 @@ $category_query = $db->Execute("select * from " . TABLE_COUPON_RESTRICT . " wher
                      '<a href="'.zen_href_link(FILENAME_COUPON_ADMIN,'action=voucheredit&cid='.$cInfo->coupon_id . (isset($_GET['status']) ? '&status=' . $_GET['status'] : '') . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '')).'">'.zen_image_button('button_edit.gif', TEXT_DISCOUNT_COUPON_EDIT) .'</a>' .
                      ($cInfo->coupon_active != 'N' ? '<a href="'.zen_href_link(FILENAME_COUPON_ADMIN,'action=voucherdelete&cid='.$cInfo->coupon_id . (isset($_GET['status']) ? '&status=' . $_GET['status'] : '') . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '')).'">'.zen_image_button('button_delete.gif', TEXT_DISCOUNT_COUPON_DELETE).'</a>' : '<a href="'.zen_href_link(FILENAME_COUPON_ADMIN,'action=voucherreactivate&cid='.$cInfo->coupon_id . (isset($_GET['status']) ? '&status=' . $_GET['status'] : '') . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '')).'">'.zen_image_button('button_restore.gif', TEXT_DISCOUNT_COUPON_RESTORE).'</a>') .
                      '<br /><a href="'.zen_href_link(FILENAME_COUPON_RESTRICT,'cid='.$cInfo->coupon_id  . (isset($_GET['status']) ? '&status=' . $_GET['status'] : '') . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '')).'">'.zen_image_button('button_restrict.gif', TEXT_DISCOUNT_COUPON_RESTRICT).'</a>' .
-                     '<a href="'.zen_href_link(FILENAME_COUPON_ADMIN,'action=voucherreport&cid='.$cInfo->coupon_id . (isset($_GET['status']) ? '&status=' . $_GET['status'] : '') . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '')).'">'.zen_image_button('button_report.gif', TEXT_DISCOUNT_COUPON_REPORT) . '</a>' .
+                     '<a href="'.zen_href_link(FILENAME_COUPON_ADMIN,'action=voucherreport&cid='.$cInfo->coupon_id . (isset($_GET['status']) ? '&status=' . $_GET['status'] : '') . (!empty($_GET['page']) ? '&page=' . $_GET['page'] : '')).'">'.zen_image_button('button_report.gif', TEXT_DISCOUNT_COUPON_REPORT) . '</a>' .
                      '<a href="'.zen_href_link(FILENAME_COUPON_ADMIN,'action=vouchercopy&cid='.$cInfo->coupon_id).'">'.zen_image_button('button_copy.gif', TEXT_DISCOUNT_COUPON_COPY) . '</a>' .
                    '<br /><br />' . zen_draw_separator('pixel_black.gif', '100%', '2') . '<br><br>' . sprintf(TEXT_INFO_DUPLICATE_MANAGEMENT, $cInfo->coupon_code) . '<br>' .
                      ($cInfo->coupon_active != 'N' ? '<br><a href="'.zen_href_link(FILENAME_COUPON_ADMIN,'action=voucherduplicate&cid='.$cInfo->coupon_id . (isset($_GET['status']) ? '&status=' . $_GET['status'] : '') . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '')).'">'.zen_image_button('button_copy_to.gif', TEXT_DISCOUNT_COUPON_COPY_MULTIPLE) . '</a>' : '') .

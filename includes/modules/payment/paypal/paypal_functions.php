@@ -3,11 +3,11 @@
  * functions used by payment module class for Paypal IPN payment method
  *
  * @package paymentMethod
- * @copyright Copyright 2003-2018 Zen Cart Development Team
+ * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @copyright Portions Copyright 2004 DevosC.com
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Drbyte Thu Sep 13 14:51:41 2018 -0400 Modified in v1.5.6 $
+ * @version $Id: Scott C Wilson 2019 Jun 23 Modified in v1.5.6c $
  */
 
 // Functions for paypal processing
@@ -196,7 +196,7 @@
     $my_currency = select_pp_currency();
     $exchanged_amount = ($mode == 'IPN' ? ($amount * $currencies->get_value($my_currency)) : $amount);
     $transaction_amount = preg_replace('/[^0-9.]/', '', number_format($exchanged_amount, $currencies->get_decimal_places($my_currency), '.', ''));
-    if ( ($_POST['mc_currency'] != $my_currency) || ($_POST['mc_gross'] != $transaction_amount && $_POST['mc_gross'] != -0.01) && MODULE_PAYMENT_PAYPAL_TESTING != 'Test' ) {
+    if ($_POST['mc_currency'] != $my_currency || ($_POST['mc_gross'] != $transaction_amount && $_POST['mc_gross'] != -0.01) && (!defined('MODULE_PAYMENT_PAYPAL_TESTING') || MODULE_PAYMENT_PAYPAL_TESTING != 'Test') ) {
       ipn_debug_email('IPN WARNING :: Currency/Amount Mismatch.  Details: ' . "\n" . 'PayPal email address = ' . $_POST['business'] . "\n" . ' | mc_currency = ' . $_POST['mc_currency'] . "\n" . ' | submitted_currency = ' . $my_currency . "\n" . ' | order_currency = ' . $currency . "\n" . ' | mc_gross = ' . $_POST['mc_gross'] . "\n" . ' | converted_amount = ' . $transaction_amount . "\n" . ' | order_amount = ' . $amount );
       return false;
     }
@@ -217,7 +217,7 @@
 // if it's not unique or linked to a parent, then:
 // 1. could be an e-check denied / cleared
 // 2. could be an express-checkout "pending" transaction which has been Accepted in the merchant's PayPal console and needs activation in Zen Cart
-    if ($postArray['payment_status']=='Completed' && txn_type=='express_checkout' && $postArray['payment_type']=='echeck') {
+    if ($postArray['payment_status']=='Completed' && $txn_type=='express_checkout' && $postArray['payment_type']=='echeck') {
       $txn_type = 'express-checkout-cleared';
       return $txn_type;
     }
@@ -439,7 +439,7 @@
     $scheme = 'https://';
     //Parse url
     $web = parse_url($scheme . 'ipnpb.paypal.com/cgi-bin/webscr');
-    if ((isset($_POST['test_ipn']) && $_POST['test_ipn'] == 1) || MODULE_PAYMENT_PAYPAL_HANDLER == 'sandbox') {
+    if ((isset($_POST['test_ipn']) && $_POST['test_ipn'] == 1) || (defined('MODULE_PAYMENT_PAYPAL_HANDLER') && MODULE_PAYMENT_PAYPAL_HANDLER == 'sandbox')) {
       $web = parse_url($scheme . 'ipnpb.sandbox.paypal.com/cgi-bin/webscr');
     }
     //Set the port number
@@ -481,7 +481,7 @@
     ipn_debug_email('IPN INFO - POST VARS to be sent back (unsorted) for validation (using fsockopen): ' . "\n" . 'To: ' . $ssl . $web['host'] . ':' . $web['port'] . "\n" . $header . stripslashes(print_r($postback_array, true)));
 
     //Create paypal connection
-    if (MODULE_PAYMENT_PAYPAL_IPN_DEBUG == 'Yes') {
+    if (defined('MODULE_PAYMENT_PAYPAL_IPN_DEBUG') && MODULE_PAYMENT_PAYPAL_IPN_DEBUG == 'Yes') {
       $fp=fsockopen($ssl . $web['host'], $web['port'], $errnum, $errstr, 30);
     } else {
       $fp=@fsockopen($ssl . $web['host'], $web['port'], $errnum, $errstr, 30);

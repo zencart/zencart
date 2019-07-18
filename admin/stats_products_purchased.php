@@ -1,17 +1,17 @@
 <?php
 /*
  * @package admin
- * @copyright Copyright 2003-2018 Zen Cart Development Team
+ * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Scott C Wilson Thu Nov 29 07:30:55 2018 -0500 Modified in v1.5.6 $
+ * @version $Id: Zen4All 2019 Mar 26 Modified in v1.5.6b $
  */
 require('includes/application_top.php');
 
-$products_filter = (isset($_GET['products_filter']) ? $_GET['products_filter'] : $products_filter);
+$products_filter = (isset($_GET['products_filter']) ? $_GET['products_filter'] : (isset($products_filter) ? $products_filter : ''));
 $products_filter = str_replace(' ', ',', $products_filter);
 $products_filter = str_replace(',,', ',', $products_filter);
-$products_filter_name_model = (isset($_GET['products_filter_name_model']) ? $_GET['products_filter_name_model'] : $products_filter_name_model);
+$products_filter_name_model = (isset($_GET['products_filter_name_model']) ? $_GET['products_filter_name_model'] : (isset($products_filter_name_model) ? $products_filter_name_model : ''));
 ?>
 <!doctype html>
 <html <?php echo HTML_PARAMS; ?>>
@@ -181,11 +181,9 @@ $products_filter_name_model = (isset($_GET['products_filter_name_model']) ? $_GE
 
 // The new query uses real order info from the orders_products table, and is theoretically more accurate.
 // To use this newer query, remove the "1" from the following line ($products_query_raw1 becomes $products_query_raw )
-          $products_query_raw = "SELECT SUM(op.products_quantity) AS products_ordered, pd.products_name, op.products_id
-                                 FROM " . TABLE_ORDERS_PRODUCTS . " op
-                                 LEFT JOIN " . TABLE_PRODUCTS_DESCRIPTION . " pd ON (pd.products_id = op.products_id )
-                                 WHERE pd.language_id = " . (int)$_SESSION['languages_id'] . "
-                                 GROUP BY op.products_id, pd.products_name
+          $products_query_raw = "SELECT SUM(products_quantity) AS products_ordered, products_name, products_id
+                                 FROM " . TABLE_ORDERS_PRODUCTS . "
+                                 GROUP BY products_id, products_name
                                  ORDER BY products_ordered DESC, products_name";
 
           $products_query_numrows = '';
@@ -203,7 +201,7 @@ $products_filter_name_model = (isset($_GET['products_filter_name_model']) ? $_GE
             $product_type = zen_get_products_type($product['products_id']);
             $type_handler = $zc_products->get_admin_handler($product_type);
             ?>
-            <tr class="dataTableRow" onclick="document.location.href = '<?php echo zen_href_link($type_handler, '&product_type=' . $product['products_type'] . '&cPath=' . $cPath . '&pID=' . $product['products_id'] . '&action=new_product'); ?>'">
+            <tr class="dataTableRow" onclick="document.location.href = '<?php echo zen_href_link($type_handler, '&product_type=' . $product_type . '&cPath=' . $cPath . '&pID=' . $product['products_id'] . '&action=new_product'); ?>'">
               <td class="dataTableContent text-right"><a href="<?php echo zen_href_link(FILENAME_STATS_PRODUCTS_PURCHASED, zen_get_all_get_params(array('oID', 'action', 'page', 'products_filter')) . 'products_filter=' . $product['products_id']); ?>"><?php echo $product['products_id']; ?></a></td>
               <td class="dataTableContent"><a href="<?php echo zen_href_link($type_handler, '&product_type=' . $product_type . '&cPath=' . $cPath . '&pID=' . $product['products_id'] . '&action=new_product'); ?>"><?php echo $product['products_name']; ?></a></td>
               <td class="dataTableContent text-center"><?php echo $product['products_ordered']; ?></td>

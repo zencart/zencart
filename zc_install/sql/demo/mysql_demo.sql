@@ -1164,8 +1164,8 @@ INSERT INTO products_options (products_options_id, language_id, products_options
 (6, 1, 'Media Type', 60, 0, 32, '', 32, 5, 0),
 (17, 1, 'Documentation', 45, 0, 32, NULL, 32, 5, 0),
 (16, 1, 'Irons', 800, 3, 32, '', 32, 5, 0),
-(7, 1, 'Logo Back', 310, 4, 32, '', 32, 5, 0),
-(8, 1, 'Logo Front', 300, 4, 32, 'You may upload your own image file(s)', 32, 5, 0),
+(7, 1, 'Logo Back', 310, 4, 64, '', 32, 5, 0),
+(8, 1, 'Logo Front', 300, 4, 64, 'You may upload your own image file(s)', 32, 5, 0),
 (9, 1, 'Line 2', 410, 1, 64, '', 40, 5, 0),
 (10, 1, 'Line 1', 400, 1, 64, 'Enter your text up to 64 characters, punctuation and spaces', 40, 5, 0),
 (11, 1, 'Line 3', 420, 1, 64, '', 40, 5, 0),
@@ -1501,7 +1501,7 @@ INSERT INTO record_company_info (record_company_id, languages_id, record_company
 # Dumping data for table `reviews`
 #
 
-INSERT INTO reviews (reviews_id, products_id, customers_id, customers_name, reviews_rating, date_added, last_modified, reviews_read, status) VALUES (1, 19, 0, 'Bill Smith', 5, '2003-12-23 03:18:19', '0001-01-01 00:00:00', 11, 1);
+INSERT INTO reviews (reviews_id, products_id, customers_id, customers_name, reviews_rating, date_added, last_modified, reviews_read, status) VALUES (1, 19, 1, 'Bill Smith', 5, '2003-12-23 03:18:19', '0001-01-01 00:00:00', 11, 1);
 
 #
 # Dumping data for table `reviews_description`

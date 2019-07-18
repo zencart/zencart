@@ -5,7 +5,7 @@
  * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2019 Jan 04 Modified in v1.5.6a $
+ * @version $Id: mc12345678 2019 Jan 06 Modified in v1.5.6b $
  */
 require('includes/application_top.php');
 
@@ -92,11 +92,11 @@ if (zen_not_null($action)) {
       $status_toc = ($pages_toc_sort_order == 0 ? 0 : (int)$_POST['status_toc']);
 
       $pages_html_url_flag = false;
+      $page_error = false;
       for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
         if ($_POST['pages_html_text'][$languages[$i]['id']] != '' && strlen(trim($_POST['pages_html_text'][$languages[$i]['id']])) > 6) {
           $pages_html_url_flag = true;
         }
-        $page_error = false;
         if (empty($_POST['pages_title'][$languages[$i]['id']])) {
           $messageStack->add(ERROR_PAGE_TITLE_REQUIRED . ' (' . $languages[$i]['name'] . ')', 'error');
           $page_error = true;

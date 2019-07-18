@@ -4,7 +4,7 @@
  * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2019 Jan 04 Modified in v1.5.6a $
+ * @version $Id: DrByte 2019 Jul 16 Modified in v1.5.6c $
  */
 require('includes/application_top.php');
 
@@ -174,6 +174,7 @@ if (zen_not_null($action)) {
     <!-- body //-->
     <div class="container-fluid">
       <h1><?php echo HEADING_TITLE; ?></h1>
+      <p><?php if (!empty($_GET['zID'])) echo zen_get_geo_zone_name($_GET['zID']); ?></p>
       <!-- body_text //-->
       <?php
       if ($action == 'list') {
@@ -292,7 +293,7 @@ if (zen_not_null($action)) {
                                                  WHERE geo_zone_id = " . (int)$zone['geo_zone_id'] . "
                                                  GROUP BY geo_zone_id");
 
-                      if ($num_zones->fields['num_zones'] > 0) {
+                      if (!$num_zones->EOF && $num_zones->fields['num_zones'] > 0) {
                         $zone['num_zones'] = $num_zones->fields['num_zones'];
                       } else {
                         $zone['num_zones'] = 0;
@@ -303,7 +304,7 @@ if (zen_not_null($action)) {
                                                      WHERE tax_zone_id = " . (int)$zone['geo_zone_id'] . "
                                                      GROUP BY tax_zone_id");
 
-                      if ($num_tax_rates->fields['num_tax_rates'] > 0) {
+                      if (!$num_tax_rates->EOF) { 
                         $zone['num_tax_rates'] = $num_tax_rates->fields['num_tax_rates'];
                       } else {
                         $zone['num_tax_rates'] = 0;

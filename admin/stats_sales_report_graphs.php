@@ -1,10 +1,10 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2018 Zen Cart Development Team
+ * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @author inspired from sales_report_graphs.php,v 0.01 2002/11/27 19:02:22 cwi Exp  Released under the GNU General Public License $
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Zen4All Sat Nov 24 13:29:54 2018 +0100 New in v1.5.6 $
+ * @version $Id: mc12345678 2019 Jan 24 Modified in v1.5.6b $
  */
 require 'includes/application_top.php';
 
@@ -13,11 +13,11 @@ require 'includes/application_top.php';
 require(DIR_WS_CLASSES . 'currencies.php');
 $currencies = new currencies();
 
-if (($_GET['report']) && (zen_not_null($_GET['report']))) {
+if (!empty($_GET['report'])) {
   $sales_report_view = (int)$_GET['report'];
 }
 // default is 4
-if ($sales_report_view < 1 || $sales_report_view > 5) {
+if (!isset($sales_report_view) || $sales_report_view < 1 || $sales_report_view > 5) {
   $sales_report_view = 4;
 }
 
@@ -55,15 +55,16 @@ switch ($sales_report_view) {
 
 // check start and end Date
 $startDate = "";
-if (($_GET['startDate']) && (zen_not_null($_GET['startDate']))) {
+if (!empty($_GET['startDate']) && $_GET['startDate'] >= '0001-01-01') {
   $startDate = $_GET['startDate'];
 }
 $endDate = "";
-if (($_GET['endDate']) && (zen_not_null($_GET['endDate']))) {
+if (!empty($_GET['endDate']) && $_GET['endDate'] >= '0001-01-01') {
   $endDate = $_GET['endDate'];
 }
 // check filters
-if (($_GET['filter']) && (zen_not_null($_GET['filter']))) {
+$sales_report_filter = '';
+if (isset($_GET['filter']) && $_GET['filter'] && zen_not_null($_GET['filter'])) {
   $sales_report_filter = $_GET['filter'];
   $sales_report_filter_link = "&filter=$sales_report_filter";
 } elseif (defined('SALES_REPORT_GRAPHS_FILTER_DEFAULT')) {
@@ -210,6 +211,7 @@ for ($i = 0; $i < $report->size; $i++) {
                 <?php
                 $last_value = 0;
                 $sum = 0;
+                $avg = 0;
                 for ($i = 0; $i < $report->size; $i++) {
                   if ($last_value != 0) {
                     $percent = 100 * $report->info[$i]['sum'] / $last_value - 100;
@@ -272,7 +274,7 @@ for ($i = 0; $i < $report->size; $i++) {
           </table>
         </div>
         <table class="table">
-            <?php if ($order_cnt != 0) {
+            <?php if (!empty($order_cnt)) { /* This section of code does not appear to be executed */
               ?>
             <tr class="dataTableRow">
               <td class="dataTableContent text-right"><?php echo '<strong>' . AVERAGE_ORDER . ' </strong>' ?></td>

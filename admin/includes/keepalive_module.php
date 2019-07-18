@@ -17,6 +17,7 @@ if (!defined('TEXT_TIMEOUT_TIMED_OUT_MESSAGE')) define('TEXT_TIMEOUT_TIMED_OUT_M
 // Read default timeout value from the site's configuration:
 $timeoutAfter = ini_get('session.gc_maxlifetime');
 if ((int)$timeoutAfter < 30) $timeoutAfter = 1440;
+$camefrom = basename($PHP_SELF) . (empty($params = zen_get_all_get_params()) ? '' : '?' . trim($params, '&'));
 ?>
 
 <link rel="stylesheet" type="text/css" href="includes/css/jAlert.css">
@@ -26,20 +27,21 @@ if ((int)$timeoutAfter < 30) $timeoutAfter = 1440;
 $(function(){
    $.jTimeout(
     {
+    'flashTitle': true, //whether or not to flash the tab/title bar when about to timeout, or after timing out
     'flashTitleSpeed': 500, //how quickly to switch between the original title, and the warning text
-    'flashingTitleText': '<?= addslashes(TEXT_TIMEOUT_WARNING); ?>', //what to show in the tab/title bar when about to timeout, or after timing out
-    'timeoutAfter': <?= (int)$timeoutAfter; ?>, //passed from server side. 1440 is generally the default timeout in PHP
+    'flashingTitleText': '<?php echo addslashes(TEXT_TIMEOUT_WARNING); ?>', //what to show in the tab/title bar when about to timeout, or after timing out
+    'timeoutAfter': <?php echo (int)$timeoutAfter; ?>, //passed from server side. 1440 is generally the default timeout in PHP
     'extendOnMouseMove': true, //Whether or not to extend the session when the mouse is moved
     'mouseDebounce': 120, //How many seconds between extending the session when the mouse is moved (instead of extending a billion times within 5 seconds)
     'extendUrl': 'keepalive.php', //URL to request in order to extend the session.
     'logoutUrl': 'logoff.php', //URL to request in order to force a logout after the timeout.
-    'loginUrl': 'index.php', //URL to send a customer to when they want to log back in
-    'secondsPrior': <?= (int)$timeoutAfter/3; ?>, //how many seconds before timing out to run the next callback (onPriorCallback)
+    'loginUrl': '<?php echo $camefrom; ?>', //URL to send a customer to when they want to log back in
+    'secondsPrior': <?php echo (int)$timeoutAfter/3; ?>, //how many seconds before timing out to run the next callback (onPriorCallback)
     'onPriorCallback': function(timeout, seconds){
         $.jAlert({
             'id': 'jTimeoutAlert',
-            'title': '<?= addslashes(TEXT_TIMEOUT_ARE_YOU_STILL_THERE); ?>',
-            'content': '<b><?= addslashes(TEXT_TIMEOUT_WILL_LOGOUT_SOON); ?> <?= addslashes(TEXT_TIMEOUT_TIME_REMAINING); ?> <span class="jTimeout_Countdown">' + seconds + '</span> <?= addslashes(TEXT_TIMEOUT_SECONDS); ?></b>',
+            'title': '<?php echo addslashes(TEXT_TIMEOUT_ARE_YOU_STILL_THERE); ?>',
+            'content': '<b><?php echo addslashes(TEXT_TIMEOUT_WILL_LOGOUT_SOON); ?> <?php echo addslashes(TEXT_TIMEOUT_TIME_REMAINING); ?> <span class="jTimeout_Countdown">' + seconds + '</span> <?php echo addslashes(TEXT_TIMEOUT_SECONDS); ?></b>',
             'theme': 'red',
             'closeBtn': false,
             'onOpen': function (alert) {
@@ -47,7 +49,7 @@ $(function(){
             },
             'btns': [
                 {
-                    'text': '<?= addslashes(TEXT_TIMEOUT_STAY_LOGGED_IN); ?>',
+                    'text': '<?php echo addslashes(TEXT_TIMEOUT_STAY_LOGGED_IN); ?>',
                     'theme': 'green',
                     'onClick': function (e, btn) {
                         e.preventDefault();
@@ -57,7 +59,7 @@ $(function(){
                     }
                 },
                 {
-                    'text': '<?= addslashes(TEXT_TIMEOUT_LOGOUT_NOW); ?>',
+                    'text': '<?php echo addslashes(TEXT_TIMEOUT_LOGOUT_NOW); ?>',
                     'theme': 'black',
                     'onClick': function (e, btn) {
                         e.preventDefault();
@@ -72,11 +74,11 @@ $(function(){
         /* Alert User */
         $.jAlert({
             'id': 'jTimedoutAlert',
-            'title': '<?= addslashes(TEXT_TIMEOUT_TIMED_OUT_TITLE); ?>',
-            'content': '<b><?= addslashes(TEXT_TIMEOUT_TIMED_OUT_MESSAGE); ?></b>',
+            'title': '<?php echo addslashes(TEXT_TIMEOUT_TIMED_OUT_TITLE); ?>',
+            'content': '<b><?php echo addslashes(TEXT_TIMEOUT_TIMED_OUT_MESSAGE); ?></b>',
             'theme': 'red',
             'btns': {
-                'text': '<?= addslashes(TEXT_TIMEOUT_LOGIN_AGAIN); ?>',
+                'text': '<?php echo addslashes(TEXT_TIMEOUT_LOGIN_AGAIN); ?>',
                 'href': timeout.options.loginUrl,
                 'theme': 'blue',
                 'closeAlert': false
@@ -87,6 +89,7 @@ $(function(){
         });
         /* Force logout */
         $.get(timeout.options.logoutUrl);
+        $.jTimeout().destroy();
     }
   }
 );

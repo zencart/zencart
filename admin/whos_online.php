@@ -4,18 +4,17 @@
  * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2019 Jan 04 Modified in v1.5.6a $
+ * @version $Id: DrByte 2019 Jul 16 Modified in v1.5.6c $
+ *
+ * ALERT: This file requires PHP 5.4 or newer because it uses the short-array syntax.
+ * 
  */
 // Default refresh interval (0=off).  NOTE: Using automated refresh may put you in breach of PCI Compliance
 $defaultRefreshInterval = 0;
 
 // highlight bots
-function zen_check_bot($checking) {
-  if (empty($checking)) {
-    return true;
-  } else {
-    return false;
-  }
+function zen_check_bot($value) {
+  return empty($value);
 }
 
 function zen_check_quantity($which) {
@@ -64,9 +63,9 @@ function zen_check_minutes($the_time_last_click) {
   return $the_time_since;
 }
 
-require('includes/application_top.php');
+require 'includes/application_top.php';
 
-require(DIR_WS_CLASSES . 'currencies.php');
+require DIR_WS_CLASSES . 'currencies.php';
 $currencies = new currencies();
 
 // same time_entry as time_last_click for 600 seconds = 10 minutes assumed to have left immediately
@@ -85,14 +84,14 @@ if (!isset($_SESSION['wo_exclude_admins'])) {
   $_SESSION['wo_exclude_admins'] = TRUE;
 }
 if (isset($_GET['na'])) {
-  $_SESSION['wo_exclude_admins'] = ($_GET['na'] == 0) ? FALSE : TRUE;
+  $_SESSION['wo_exclude_admins'] = $_GET['na'] != 0;
 }
 
 if (!isset($_SESSION['wo_exclude_spiders'])) {
   $_SESSION['wo_exclude_spiders'] = TRUE;
 }
 if (isset($_GET['ns'])) {
-  $_SESSION['wo_exclude_spiders'] = ($_GET['ns'] == 0) ? FALSE : TRUE;
+  $_SESSION['wo_exclude_spiders'] = $_GET['ns'] != 0;
 }
 
 if (isset($_GET['t'])) {
@@ -212,7 +211,7 @@ $listingURL = FILENAME_WHOS_ONLINE . '.php?' . zen_get_all_get_params(['q', 't',
           }
       }
 <?php if (isset($_SESSION['wo_timeout']) && (int)$_SESSION['wo_timeout'] > 0) { ?>
-        var initTimer = setTimeout('location.reload(true)', <?php echo (isset($_SESSION['wo_timeout'])) ? $_SESSION['wo_timeout'] * 1000 : '60000'; ?>);
+        var initTimer = setTimeout('location.reload(true)', <?php echo isset($_SESSION['wo_timeout']) ? $_SESSION['wo_timeout'] * 1000 : '60000'; ?>);
 <?php } ?>
     </script>
     <style>
@@ -334,11 +333,11 @@ $listingURL = FILENAME_WHOS_ONLINE . '.php?' . zen_get_all_get_params(['q', 't',
               <tbody>
                   <?php
                   $ip_array = [];
-                  $d = 0;
+                  $d = 0; // duplicates counter
                   foreach ($whos_online as $item) {
                     $time_online = (time() - $item['time_entry']);
 
-                    if ((empty($_GET['info']) || $_GET['info'] == $item['session_id']) && empty($info)) {
+                    if (empty($info) && (empty($_GET['info']) || $_GET['info'] == $item['session_id'])) {
                       $info = $item['session_id'];
                       $ip_address = $item['ip_address'];
                       $full_name = $item['full_name'];
@@ -448,7 +447,16 @@ $listingURL = FILENAME_WHOS_ONLINE . '.php?' . zen_get_all_get_params(['q', 't',
                 if ($whos_online->RecordCount() >= WHOIS_REPEAT_LEGEND_BOTTOM) {
                   ?>
                   <tr>
-                    <td colspan="8">Legend: <?php echo zen_image(DIR_WS_IMAGES . 'icon_status_green.gif') . " Active cart &nbsp;&nbsp;" . zen_image(DIR_WS_IMAGES . 'icon_status_yellow.gif') . " Inactive cart &nbsp;&nbsp;" . zen_image(DIR_WS_IMAGES . 'icon_status_red.gif') . " Active no cart &nbsp;&nbsp;" . zen_image(DIR_WS_IMAGES . 'icon_status_red_light.gif') . " Inactive no cart " . "<br />Inactive is Last Click >= " . WHOIS_TIMER_INACTIVE . "s" . " &nbsp; || Inactive since arrival > " . WHOIS_TIMER_DEAD . "s will be removed"; ?></td>
+                    <td colspan="8">Legend:
+                        <?php
+                        echo zen_image(DIR_WS_IMAGES . 'icon_status_green.gif') . " Active cart &nbsp;&nbsp;"
+                            . zen_image(DIR_WS_IMAGES . 'icon_status_yellow.gif') . " Inactive cart &nbsp;&nbsp;"
+                            . zen_image(DIR_WS_IMAGES . 'icon_status_red.gif') . " Active no cart &nbsp;&nbsp;"
+                            . zen_image(DIR_WS_IMAGES . 'icon_status_red_light.gif') . " Inactive no cart "
+                            . "<br />Inactive is Last Click >= " . WHOIS_TIMER_INACTIVE . "s"
+                            . " &nbsp; || Inactive since arrival > " . WHOIS_TIMER_DEAD . "s will be removed";
+                        ?>
+                    </td>
                   </tr>
                   <?php
                 }
@@ -477,23 +485,13 @@ $listingURL = FILENAME_WHOS_ONLINE . '.php?' . zen_get_all_get_params(['q', 't',
                                     WHERE sesskey = '" . $info . "'");
             $session_data = trim($result->fields['value']);
 
-            $hardenedStatus = FALSE;
-            $suhosinExtension = extension_loaded('suhosin');
-            $suhosinSetting = strtoupper(@ini_get('suhosin.session.encrypt'));
-
-//    if (!$suhosinExtension) {
             if (strpos($session_data, 'cart|O') == 0) {
               $session_data = base64_decode($session_data);
             }
             if (strpos($session_data, 'cart|O') == 0) {
               $session_data = '';
             }
-//    }
-            // uncomment the following line if you have suhosin enabled and see errors on the cart-contents sidebar
-            //$hardenedStatus = ($suhosinExtension == TRUE || $suhosinSetting == 'On' || $suhosinSetting == 1) ? TRUE : FALSE;
-            if ($session_data != '' && $hardenedStatus == TRUE) {
-              $session_data = '';
-            }
+
 
             if ($length = strlen($session_data)) {
 
@@ -519,34 +517,20 @@ $listingURL = FILENAME_WHOS_ONLINE . '.php?' . zen_get_all_get_params(['q', 't',
                 $session_data_field[$key] = substr($session_data, $start_field[$key], (strpos($session_data, ';', $start_field[$key]) - $start_field[$key] + 1));
 
                 if ('cart' === $key) {
-                  $end_cart = (int)strpos($session_data, '|', $start_field[$key] + strlen($value));
-                  $end_cart = (int)strrpos(substr($session_data, 0, $end_cart), ';}');
-                  $session_data_field[$key] = substr($session_data, $start_field[$key], ($end_cart - $start_field[$key] + 2));
+                  $end_cart = (int)strpos($session_data, 'check_valid|s');
+                  $session_data_field[$key] = substr($session_data, $start_field[$key], ($end_cart - $start_field[$key]));
+
+//                  $end_cart = (int)strpos($session_data, '|', $start_field[$key] + strlen($value));
+//                  $end_cart = (int)strrpos(substr($session_data, 0, $end_cart), ';}');
+//                  $session_data_field[$key] = substr($session_data, $start_field[$key], ($end_cart - $start_field[$key] + 2));
                 }
 
-                session_decode($session_data_field[$key]);
+                $backup = $_SESSION;
+                if (false === session_decode($session_data_field[$key])) {
+                    $_SESSION = $backup;
+                }
+                unset($backup);
               }
-/*
-              $start_id = (int)strpos($session_data, 'customer_id|s');
-              $start_currency = (int)strpos($session_data, 'currency|s');
-              $start_country = (int)strpos($session_data, 'customer_country_id|s');
-              $start_zone = (int)strpos($session_data, 'customer_zone_id|s');
-              $start_cart = (int)strpos($session_data, 'cart|O');
-              $end_cart = (int)strpos($session_data, '|', $start_cart + 6);
-              $end_cart = (int)strrpos(substr($session_data, 0, $end_cart), ';}');
-
-              $session_data_id = substr($session_data, $start_id, (strpos($session_data, ';', $start_id) - $start_id + 1));
-              $session_data_cart = substr($session_data, $start_cart, ($end_cart - $start_cart + 2));
-              $session_data_currency = substr($session_data, $start_currency, (strpos($session_data, ';', $start_currency) - $start_currency + 1));
-              $session_data_country = substr($session_data, $start_country, (strpos($session_data, ';', $start_country) - $start_country + 1));
-              $session_data_zone = substr($session_data, $start_zone, (strpos($session_data, ';', $start_zone) - $start_zone + 1));
-
-              session_decode($session_data_id);
-              session_decode($session_data_currency);
-              session_decode($session_data_country);
-              session_decode($session_data_zone);
-              session_decode($session_data_cart);
-*/
 
               if (isset($_SESSION['cart']) && is_object($_SESSION['cart'])) {
                 $contents[] = ['text' => $full_name . ' - ' . $ip_address . '<br />' . $info];
@@ -565,8 +549,7 @@ $listingURL = FILENAME_WHOS_ONLINE . '.php?' . zen_get_all_get_params(['q', 't',
             }
           }
 
-          if ((zen_not_null($heading)) && (zen_not_null($contents))) {
-
+          if (zen_not_null($heading) && zen_not_null($contents)) {
             $box = new box;
             echo $box->infoBox($heading, $contents);
           }

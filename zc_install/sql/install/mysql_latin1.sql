@@ -2,10 +2,10 @@
 # * Country/Zones Zen Cart SQL Load for MySQL databases
 # * @package Installer
 # * @access private
-# @copyright Copyright 2003-2016 Zen Cart Development Team
+# * @copyright Copyright 2003-2019 Zen Cart Development Team
 # * @copyright Portions Copyright 2003 osCommerce
 # * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
-# * @version $Id: Author: zcwilt  Wed Sep 23 20:04:38 2015 +0100 New in v1.5.5 $
+# * @version $Id: DrByte 2019 Jul 16 Modified in v1.5.6c $
 #
 
 ## Specific to LATIN1 character set
@@ -116,7 +116,7 @@ INSERT INTO countries (countries_id, countries_name, countries_iso_code_2, count
 INSERT INTO countries (countries_id, countries_name, countries_iso_code_2, countries_iso_code_3, address_format_id) VALUES (102,'Iraq','IQ','IRQ','1');
 INSERT INTO countries (countries_id, countries_name, countries_iso_code_2, countries_iso_code_3, address_format_id) VALUES (103,'Ireland','IE','IRL','1');
 INSERT INTO countries (countries_id, countries_name, countries_iso_code_2, countries_iso_code_3, address_format_id) VALUES (104,'Israel','IL','ISR','1');
-INSERT INTO countries (countries_id, countries_name, countries_iso_code_2, countries_iso_code_3, address_format_id) VALUES (105,'Italy','IT','ITA','1');
+INSERT INTO countries (countries_id, countries_name, countries_iso_code_2, countries_iso_code_3, address_format_id) VALUES (105,'Italy','IT','ITA','5');
 INSERT INTO countries (countries_id, countries_name, countries_iso_code_2, countries_iso_code_3, address_format_id) VALUES (106,'Jamaica','JM','JAM','1');
 INSERT INTO countries (countries_id, countries_name, countries_iso_code_2, countries_iso_code_3, address_format_id) VALUES (107,'Japan','JP','JPN','1');
 INSERT INTO countries (countries_id, countries_name, countries_iso_code_2, countries_iso_code_3, address_format_id) VALUES (108,'Jordan','JO','JOR','1');

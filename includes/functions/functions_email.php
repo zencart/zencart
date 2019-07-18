@@ -5,10 +5,10 @@
  * Hooks into phpMailer class for actual email encoding and sending
  *
  * @package functions
- * @copyright Copyright 2003-2018 Zen Cart Development Team
+ * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Drbyte Tue Nov 13 15:22:28 2018 -0500 Modified in v1.5.6 $
+ * @version $Id: DrByte 2019 May 25 Modified in v1.5.6b $
  */
 
 use PHPMailer\PHPMailer\PHPMailer;
@@ -78,8 +78,8 @@ use PHPMailer\PHPMailer\SMTP;
       $from_email_name = trim($regs[1]);
       $from_email_address = $regs[2];
     }
-    // if email name is same as email address, use the Store Name as the senders 'Name'
-    if ($from_email_name == $from_email_address) $from_email_name = STORE_NAME;
+    // if email name is empty or the same as email address, use the Store Name as the senders 'Name'
+    if (empty($from_email_name) || $from_email_name == $from_email_address) $from_email_name = STORE_NAME;
 
     // loop thru multiple email recipients if more than one listed  --- (esp for the admin's "Extra" emails)...
     foreach(explode(',',$to_address) as $key=>$value) {
@@ -404,7 +404,7 @@ use PHPMailer\PHPMailer\SMTP;
     $from_email_name = zen_db_prepare_input($from_email_name);
     $from_email_address = zen_db_prepare_input($from_email_address);
     $email_subject = zen_db_prepare_input($email_subject);
-    $email_html = (EMAIL_USE_HTML=='true') ? zen_db_prepare_input($email_html) : zen_db_prepare_input('HTML disabled in admin');
+    $email_html = (EMAIL_USE_HTML=='true') ? zen_db_prepare_input_html_safe($email_html) : zen_db_prepare_input('HTML disabled in admin');
     $email_text = zen_db_prepare_input($email_text);
     $module = zen_db_prepare_input($module);
     $error_msgs = zen_db_prepare_input($error_msgs);
@@ -544,7 +544,7 @@ use PHPMailer\PHPMailer\SMTP;
     if (!isset($block['EMAIL_STORE_URL']) || $block['EMAIL_STORE_URL'] == '')       $block['EMAIL_STORE_URL']   = '<a href="'.HTTP_CATALOG_SERVER . DIR_WS_CATALOG.'">'.STORE_NAME.'</a>';
     if (!isset($block['EMAIL_STORE_OWNER']) || $block['EMAIL_STORE_OWNER'] == '')   $block['EMAIL_STORE_OWNER'] = STORE_OWNER;
     if (!isset($block['EMAIL_FOOTER_COPYRIGHT']) || $block['EMAIL_FOOTER_COPYRIGHT'] == '') $block['EMAIL_FOOTER_COPYRIGHT'] = EMAIL_FOOTER_COPYRIGHT;
-    if (!isset($block['EMAIL_DISCLAIMER']) || $block['EMAIL_DISCLAIMER'] == '')     $block['EMAIL_DISCLAIMER']  = sprintf(EMAIL_DISCLAIMER, '<a href="mailto:' . STORE_OWNER_EMAIL_ADDRESS . '">'. STORE_OWNER_EMAIL_ADDRESS .' </a>');
+    if (!isset($block['EMAIL_DISCLAIMER']) || $block['EMAIL_DISCLAIMER'] == '')     $block['EMAIL_DISCLAIMER']  = sprintf(EMAIL_DISCLAIMER, '<a href="mailto:' . STORE_OWNER_EMAIL_ADDRESS . '">'. STORE_OWNER_EMAIL_ADDRESS .'</a>');
     if (!isset($block['EMAIL_SPAM_DISCLAIMER']) || $block['EMAIL_SPAM_DISCLAIMER'] == '')   $block['EMAIL_SPAM_DISCLAIMER']  = EMAIL_SPAM_DISCLAIMER;
     if (!isset($block['EMAIL_DATE_SHORT']) || $block['EMAIL_DATE_SHORT'] == '')     $block['EMAIL_DATE_SHORT']  = zen_date_short(date("Y-m-d"));
     if (!isset($block['EMAIL_DATE_LONG']) || $block['EMAIL_DATE_LONG'] == '')       $block['EMAIL_DATE_LONG']   = zen_date_long(date("Y-m-d"));
@@ -591,7 +591,7 @@ use PHPMailer\PHPMailer\SMTP;
   function email_collect_extra_info($from, $email_from, $login, $login_email, $login_phone='', $login_fax='', $moreinfo = array()) {
     $email_host_address = '';
     // get host_address from either session or one time for both email types to save server load
-    if (!$_SESSION['customers_host_address']) {
+    if (empty($_SESSION['customers_host_address'])) {
       if (SESSION_IP_TO_HOST_ADDRESS == 'true') {
         $email_host_address = @gethostbyaddr($_SERVER['REMOTE_ADDR']);
       }
@@ -782,4 +782,15 @@ use PHPMailer\PHPMailer\SMTP;
                                where customers_id = '" . (int)$customers_id . "'");
     if ($customers_values->EOF) return '';
     return $customers_values->fields['customers_email_address'];
+  }
+
+  function zen_db_prepare_input_html_safe($string) {
+    if (is_string($string)) {
+      return trim(stripslashes($string));
+    } elseif (is_array($string)) {
+      foreach ($string as $key => $value) { 
+        $string[$key] = zen_db_prepare_input($value);
+      }
+    }
+    return $string;
   }

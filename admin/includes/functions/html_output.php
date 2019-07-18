@@ -4,14 +4,16 @@
  * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2019 Jan 04 Modified in v1.5.6a $
+ * @version $Id: torvista 2019 May 06 Modified in v1.5.6b $
  */
 
 ////
 // The HTML href link wrapper function
   function zen_href_link($page = '', $parameters = '', $connection = 'SSL', $add_session_id = true) {
-    global $request_type, $session_started, $http_domain, $https_domain;
+    global $session_started;
     if ($page == '') {
+      trigger_error("zen_href_link($page, $parameters, $connection), unable to determine the page link.",
+            E_USER_ERROR);
       die('</td></tr></table></td></tr></table><br><br><font color="#ff0000"><b>Error!</b></font><br><br><b>Unable to determine the page link!<br><br>Function used:<br><br>zen_href_link(\'' . $page . '\', \'' . $parameters . '\', \'' . $connection . '\')</b>');
     }
 
@@ -57,7 +59,8 @@
         $link = HTTP_CATALOG_SERVER . DIR_WS_CATALOG;
       }
     } else {
-      die('</td></tr></table></td></tr></table><br><br><font color="#ff0000"><b>Error!</b></font><br><br><b>Unable to determine connection method on a link!<br><br>Known methods: NONSSL SSL<br><br>Function used:<br><br>zen_href_link(\'' . $page . '\', \'' . $parameters . '\', \'' . $connection . '\')</b>');
+      trigger_error("zen_catalog_href_link($page, $parameters, $connection), Unable to determine connection method on a link! Known methods: NONSSL SSL", E_USER_ERROR);
+      die('</td></tr></table></td></tr></table><br><br><font color="#ff0000"><b>Error!</b></font><br><br><b>Unable to determine connection method on a link!<br><br>Known methods: NONSSL SSL<br><br>Function used:<br><br>zen_catalog_href_link(\'' . $page . '\', \'' . $parameters . '\', \'' . $connection . '\')</b>');
     }
     if ($parameters == '') {
       $link .= 'index.php?main_page='. $page;
@@ -73,7 +76,7 @@
 ////
 // The HTML image wrapper function
   function zen_image($src, $alt = '', $width = '', $height = '', $params = '') {
-    $image = '<img src="' . $src . '" border="0" alt="' . $alt . '"';
+      $image = '<img src="' . $src . '" alt="' . $alt . '"';
     if ($alt) {
       $image .= ' title=" ' . $alt . ' "';
     }
@@ -110,13 +113,14 @@
 ////
 // Draw a 1 pixel black line
   function zen_black_line() {
-    return zen_image(DIR_WS_IMAGES . 'pixel_black.gif', '', '100%', '1');
+    return zen_image(DIR_WS_IMAGES . 'pixel_black.gif', '', '', '1', 'style="width:100%;"');
   }
 
 ////
 // Output a separator either through whitespace, or with an image
   function zen_draw_separator($image = 'pixel_black.gif', $width = '100%', $height = '1') {
-    return zen_image(DIR_WS_IMAGES . $image, '', $width, $height);
+      if (substr(rtrim($width), -1) != "%") $width = $width . 'px';
+    return zen_image(DIR_WS_IMAGES . $image, '', '', $height, 'style="width:' . $width . ';"');
   }
 
 ////

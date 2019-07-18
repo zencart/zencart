@@ -1,9 +1,9 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2018 Zen Cart Development Team
+ * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: mc12345678 Tue Aug 28 21:18:16 2018 -0400 Modified in v1.5.6 $
+ * @version $Id: dennisns7d 2019 Apr 26 Modified in v1.5.6b $
  */
 
 class VersionServer
@@ -43,7 +43,7 @@ class VersionServer
         $error = curl_error($ch);
         $errno = curl_errno($ch);
         if ($errno > 0) {
-            return $this->formatCurlError($errno, $error);
+            return json_decode($this->formatCurlError($errno, $error), true);
         }
         return json_decode($response, true);
 
@@ -98,9 +98,9 @@ class VersionServer
 
     protected function buildCurrentInfo()
     {
-        $systemInfo = json_encode(zen_get_system_information(true), true);
+        $systemInfo = json_encode(zen_get_system_information(true));
 
-        $moduleInfo = json_encode($this->getModuleInfo(), true);
+        $moduleInfo = json_encode($this->getModuleInfo());
 
         $country_iso = $this->getCountryIso();
 

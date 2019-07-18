@@ -4,10 +4,10 @@
  * see {@link  http://www.zen-cart.com/wiki/index.php/Developers_API_Tutorials#InitSystem wikitutorials} for more details.
  *
  * @package initSystem
- * @copyright Copyright 2003-2016 Zen Cart Development Team
+ * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: DrByte  Sat Jul 5 15:28:52 2014 -0400 Modified in v1.5.5 $
+ * @version $Id: Scott C Wilson 2019 Mar 31 Modified in v1.5.6b $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
@@ -20,6 +20,7 @@ $db = new queryFactory();
 
 $down_for_maint_source = 'nddbc.html';
 
+if (!defined('USE_PCONNECT')) define('USE_PCONNECT', 'false'); 
 if (!$db->connect(DB_SERVER, DB_SERVER_USERNAME, DB_SERVER_PASSWORD, DB_DATABASE, USE_PCONNECT, false)) {
   session_write_close();
   // If can't connect, send 503 Service Unavailable header and redirect to install or message page

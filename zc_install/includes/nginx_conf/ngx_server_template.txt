@@ -23,7 +23,7 @@
 		if (!-f $document_root$fastcgi_script_name) { return 404; }
 
 		fastcgi_index   index.php;
-		fastcgi_pass    12.0.0.1:9000;
+		fastcgi_pass    127.0.0.1:9000;
 		
 		fastcgi_param	SCRIPT_FILENAME     $document_root$fastcgi_script_name;
 		fastcgi_param	QUERY_STRING        $query_string;

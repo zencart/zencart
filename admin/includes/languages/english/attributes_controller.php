@@ -1,10 +1,10 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2018 Zen Cart Development Team
+ * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Zen4All Tue Oct 31 21:16:27 2017 +0100 Modified in v1.5.6 $
+ * @version $Id: Scott C Wilson 2019 Jan 24 Modified in v1.5.6b $
  */
 
 define('HEADING_TITLE', 'CATEGORIES: ');
@@ -175,10 +175,3 @@ define('TABLE_TEXT_MAX_COUNT_SHORT', 'Max:');
   define('TEXT_COPY_ALL_OPTIONS_TO_PRODUCT', 'Copy options to another product');
   define('TEXT_COPY_ALL_OPTIONS_TO_CATEGORY', 'Copy options to a whole category');
   define('TEXT_SAVE_PRODUCT_FIRST', 'Please save the new product first. You need a product_id before you can add attributes');
-  define('TEXT_ATTRIBUTES_FLAGS', 'Attribute Flags:');
-  define('TEXT_ATTRIBUTES_DISPLAY_ONLY', 'Used For Display Purposes Only:');
-  define('TEXT_ATTRIBUTES_IS_FREE', 'Attribute is Free When Product is Free:');
-  define('TEXT_ATTRIBUTES_DEFAULT', 'Default Attribute to be Marked Selected:');
-  define('TEXT_ATTRIBUTE_IS_DISCOUNTED', 'Apply Discounts Used by Product Special/Sale:');
-  define('TEXT_ATTRIBUTE_PRICE_BASE_INCLUDED', 'Include in Base Price When Priced by Attributes');
-  define('TEXT_ATTRIBUTES_REQUIRED', 'Attribute Required for Text:');

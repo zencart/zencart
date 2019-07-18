@@ -5,10 +5,10 @@
  * Displays address-book details/selection
  *
  * @package templateSystem
- * @copyright Copyright 2003-2016 Zen Cart Development Team
+ * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: rbarbour zcadditions.com Fri Feb 26 00:03:33 2016 -0500 Modified in v1.5.5 $
+ * @version $Id: rbarbour zcadditions.com 2019 Jun 02 Modified in v1.5.6c $
  */
 ?>
 <fieldset>
@@ -98,7 +98,7 @@
 <br class="clearBoth" />
 
 <label class="inputLabel" for="country"><?php echo ENTRY_COUNTRY; ?></label>
-<?php echo zen_get_country_list('zone_country_id', $entry->fields['entry_country_id'], 'id="country" placeholder="' . ENTRY_COUNTRY_TEXT . '"' . ($flag_show_pulldown_states == true ? 'onchange="update_zone(this.form);"' : '')); ?>
+<?php echo zen_get_country_list('zone_country_id', $entry->fields['entry_country_id'], 'id="country" placeholder="' . ENTRY_COUNTRY_TEXT . '"' . ($flag_show_pulldown_states == true ? ' onchange="update_zone(this.form);"' : '')); ?>
 <br class="clearBoth" />
 
 <?php

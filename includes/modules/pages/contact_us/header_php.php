@@ -3,10 +3,10 @@
  * Contact Us Page
  *
  * @package page
- * @copyright Copyright 2003-2018 Zen Cart Development Team
+ * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: mc12345678 Wed Nov 7 07:47:06 2018 -0500 Modified in v1.5.6 $
+ * @version $Id: DrByte 2019 Jun 11 Modified in v1.5.6c $
  */
 
 // This should be first line of the script:
@@ -22,6 +22,8 @@ if (isset($_GET['action']) && ($_GET['action'] == 'send')) {
     $email_address = zen_db_prepare_input($_POST['email']);
     $enquiry = zen_db_prepare_input(strip_tags($_POST['enquiry']));
     $antiSpam = isset($_POST['should_be_empty']) ? zen_db_prepare_input($_POST['should_be_empty']) : '';
+    if (!empty($_POST['contactname']) && preg_match('~https?://?~', $_POST['contactname'])) $antiSpam = 'spam';
+
     $zco_notifier->notify('NOTIFY_CONTACT_US_CAPTCHA_CHECK', $_POST);
 
     $zc_validate_email = zen_validate_email($email_address);
@@ -111,7 +113,7 @@ $email_address = '';
 $name = '';
 
 // default email and name if customer is logged in
-if (!empty($_SESSION['customer_id'])) {
+if (zen_is_logged_in()) {
     $sql = "SELECT customers_id, customers_firstname, customers_lastname, customers_password, customers_email_address, customers_default_address_id
             FROM " . TABLE_CUSTOMERS . "
             WHERE customers_id = :customersID";
@@ -122,10 +124,10 @@ if (!empty($_SESSION['customer_id'])) {
     $name = $check_customer->fields['customers_firstname'] . ' ' . $check_customer->fields['customers_lastname'];
 }
 
-$send_to_array = [];
+$send_to_array = array();
 if (CONTACT_US_LIST !=''){
     foreach (explode(",", CONTACT_US_LIST) as $k => $v) {
-        $send_to_array[] = ['id' => $k, 'text' => preg_replace('/\<[^*]*/', '', $v)];
+        $send_to_array[] = array('id' => $k, 'text' => preg_replace('/\<[^*]*/', '', $v));
     }
 }
 

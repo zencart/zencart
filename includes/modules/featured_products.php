@@ -3,10 +3,10 @@
  * featured_products module - prepares content for display
  *
  * @package modules
- * @copyright Copyright 2003-2018 Zen Cart Development Team
+ * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: mc12345678 Wed Jan 24 21:14:33 2018 -0500 Modified in v1.5.6 $
+ * @version $Id: Pan2020 2019 Mar 27 Modified in v1.5.6b $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
@@ -19,14 +19,13 @@ $featured_products_query = '';
 $display_limit = '';
 
 if ( (($manufacturers_id > 0 && empty($_GET['filter_id'])) || !empty($_GET['music_genre_id']) || !empty($_GET['record_company_id'])) || empty($new_products_category_id) ) {
-  $featured_products_query = "SELECT DISTINCT p.products_id, p.products_image, pd.products_name, p.master_categories_id
-                           FROM (" . TABLE_PRODUCTS . " p
-                           LEFT JOIN " . TABLE_FEATURED . " f ON p.products_id = f.products_id
-                           LEFT JOIN " . TABLE_PRODUCTS_DESCRIPTION . " pd ON p.products_id = pd.products_id )
-                           WHERE p.products_id = f.products_id
-                           AND p.products_id = pd.products_id
-                           AND p.products_status = 1 AND f.status = 1
-                           AND pd.language_id = " . (int)$_SESSION['languages_id'];
+  $featured_products_query = "SELECT p.products_id, p.products_image, pd.products_name, p.master_categories_id
+                              FROM " . TABLE_PRODUCTS . " p
+                              LEFT JOIN " . TABLE_FEATURED . " f ON p.products_id = f.products_id
+                              LEFT JOIN " . TABLE_PRODUCTS_DESCRIPTION . " pd ON p.products_id = pd.products_id
+                              AND pd.language_id = " . (int)$_SESSION['languages_id'] . "
+                              WHERE p.products_status = 1
+                              AND f.status = 1";
 } else {
   // get all products and cPaths in this subcat tree
   $productsInCategory = zen_get_categories_products_list( (($manufacturers_id > 0 && !empty($_GET['filter_id'])) ? zen_get_generated_category_path_rev($_GET['filter_id']) : $cPath), false, true, 0, $display_limit);
@@ -37,14 +36,13 @@ if ( (($manufacturers_id > 0 && empty($_GET['filter_id'])) || !empty($_GET['musi
       $list_of_products .= $key . ', ';
     }
     $list_of_products = substr($list_of_products, 0, -2); // remove trailing comma
-    $featured_products_query = "SELECT DISTINCT p.products_id, p.products_image, pd.products_name, p.master_categories_id
-                                FROM (" . TABLE_PRODUCTS . " p
+    $featured_products_query = "SELECT p.products_id, p.products_image, pd.products_name, p.master_categories_id
+                                FROM " . TABLE_PRODUCTS . " p
                                 LEFT JOIN " . TABLE_FEATURED . " f ON p.products_id = f.products_id
-                                LEFT JOIN " . TABLE_PRODUCTS_DESCRIPTION . " pd ON p.products_id = pd.products_id)
-                                WHERE p.products_id = f.products_id
-                                AND p.products_id = pd.products_id
-                                AND p.products_status = 1 AND f.status = 1
-                                AND pd.language_id = " . (int)$_SESSION['languages_id'] . "
+                                LEFT JOIN " . TABLE_PRODUCTS_DESCRIPTION . " pd ON p.products_id = pd.products_id
+                                  AND pd.language_id = " . (int)$_SESSION['languages_id'] . "
+                                WHERE p.products_status = 1
+                                AND f.status = 1
                                 AND p.products_id IN (" . $list_of_products . ")";
   }
 }
@@ -67,6 +65,8 @@ if ($num_products_count > 0) {
   while (!$featured_products->EOF) {
     $products_price = zen_get_products_display_price($featured_products->fields['products_id']);
     if (!isset($productsInCategory[$featured_products->fields['products_id']])) $productsInCategory[$featured_products->fields['products_id']] = zen_get_generated_category_path_rev($featured_products->fields['master_categories_id']);
+
+    $zco_notifier->notify('NOTIFY_MODULES_FEATURED_PRODUCTS_B4_LIST_BOX', array(), $featured_products->fields, $products_price);
 
     $list_box_contents[$row][$col] = array('params' =>'class="centerBoxContentsFeatured centeredContent back"' . ' ' . 'style="width:' . $col_width . '%;"',
     'text' => (($featured_products->fields['products_image'] == '' and PRODUCTS_IMAGE_NO_IMAGE_STATUS == 0) ? '' : '<a href="' . zen_href_link(zen_get_info_page($featured_products->fields['products_id']), 'cPath=' . $productsInCategory[$featured_products->fields['products_id']] . '&products_id=' . $featured_products->fields['products_id']) . '">' . zen_image(DIR_WS_IMAGES . $featured_products->fields['products_image'], $featured_products->fields['products_name'], IMAGE_FEATURED_PRODUCTS_LISTING_WIDTH, IMAGE_FEATURED_PRODUCTS_LISTING_HEIGHT) . '</a><br />') . '<a href="' . zen_href_link(zen_get_info_page($featured_products->fields['products_id']), 'cPath=' . $productsInCategory[$featured_products->fields['products_id']] . '&products_id=' . $featured_products->fields['products_id']) . '">' . $featured_products->fields['products_name'] . '</a><br />' . $products_price);

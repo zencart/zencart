@@ -1,10 +1,10 @@
 <?php
 /**
  * @package languageDefines
- * @copyright Copyright 2003-2016 Zen Cart Development Team
+ * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: gv_faq.php $
+ * @version $Id: Scott C Wilson 2019 Jan 15 Modified in v1.5.6b $
  */
 
 define('NAVBAR_TITLE', TEXT_GV_NAME . ' FAQ');
@@ -24,13 +24,12 @@ define('SUB_HEADING_TEXT', TEXT_GV_NAMES . ' are purchased just like any other i
   pay for them using the store\'s standard payment method(s).
   Once purchased the value of the ' . TEXT_GV_NAME . ' will be added to your own personal
    ' . TEXT_GV_NAME . ' Balance. If you have funds in your ' . TEXT_GV_NAME . ' Balance, you will
-  notice that the amount now shows in the Shopping Cart box, and also provides a
+  notice that the amount now shows in the My Account page, and also provides a
   link to a page where you can send the ' . TEXT_GV_NAME . ' to someone via email.');
   break;
   case '2':
 define('SUB_HEADING_TITLE','How to Send ' . TEXT_GV_NAMES);
-define('SUB_HEADING_TEXT','To send a ' . TEXT_GV_NAME . ' you need to go to our Send ' . TEXT_GV_NAME . ' Page. You can
-  find the link to this page in the Shopping Cart Box in the right hand column of each page.
+define('SUB_HEADING_TEXT','You may send a ' . TEXT_GV_NAME . ' from the My Account page. 
   When you send a ' . TEXT_GV_NAME . ' you need to specify the following:
   The name of the person to whom you are sending the ' . TEXT_GV_NAME . ';
   The email address of the person to whom you are sending the ' . TEXT_GV_NAME . ';

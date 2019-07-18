@@ -6,7 +6,7 @@
  * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2019 Jan 04 Modified in v1.5.6a $
+ * @version $Id: DrByte 2019 Jul 16 Modified in v1.5.6c $
  */
 
   $zco_notifier->notify('NOTIFY_START_EZPAGES_SIDEBOX');
@@ -15,6 +15,10 @@
   if (EZPAGES_STATUS_SIDEBOX == '1' or (EZPAGES_STATUS_SIDEBOX== '2' and (strstr(EXCLUDE_ADMIN_IP_FOR_MAINTENANCE, $_SERVER['REMOTE_ADDR'])))) {
     if (isset($var_linksList)) {
       unset($var_linksList);
+    }
+
+    if (!$sniffer->table_exists(TABLE_EZPAGES_CONTENT)) {
+      return; // early exit; db not upgraded
     }
     $pages_query = $db->Execute("SELECT e.*, ec.*
                                 FROM " . TABLE_EZPAGES . " e,

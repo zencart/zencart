@@ -3,9 +3,9 @@
  * Load in any specialized developer and/or unit-testing scripts
  *
  * @package initSystem
- * @copyright Copyright 2003-2012 Zen Cart Development Team
+ * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: not_for_release.php 14257 2009-08-26 04:22:00Z drbyte $
+ * @version $Id: Scott C Wilson 2019 Apr 11 Modified in v1.5.6b $
  */
 // must be called appropriately
 if (!defined('IS_ADMIN_FLAG')) {
@@ -37,7 +37,6 @@ for ($i = 0, $n = sizeof($directory_array); $i < $n; $i++) {
   $file_cnt++;
   $file = $directory_array[$i];
 
-  //      echo 'LOADING: ' . $wsDir . $file . ' ' . $file_cnt . '<br />';
   if (file_exists($wsDir . $file)) {
     include($wsDir . $file);
   }

@@ -3,10 +3,10 @@
  * Admin Activity Log Viewer/Archiver
  *
  * @package admin
- * @copyright Copyright 2003-2018 Zen Cart Development Team
+ * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Drbyte Sat Dec 8 09:21:30 2018 -0500 Modified in v1.5.6 $
+ * @version $Id: mc12345678 2019 May 08 Modified in v1.5.6b $
  *
  * @TODO: prettify so on-screen output is more friendly, perhaps adding pagination support etc (using existing "s" and "p" params)
  * @TODO: prettify by hiding postdata until requested, either with hidden layers or other means
@@ -370,7 +370,7 @@ if ($action != '') {
         <!-- bof: reset admin_activity_log -->
         <h4><?php echo HEADING_SUB2; ?></h4>
         <div class="row">
-          <div class="col <?php echo ($_SESSION['reset_admin_activity_log'] == true ? "text-danger" : "main"); ?>"><?php echo TEXT_INFO_ADMIN_ACTIVITY_LOG; ?></div>
+          <div class="col <?php echo (!empty($_SESSION['reset_admin_activity_log']) ? "text-danger" : "main"); ?>"><?php echo TEXT_INFO_ADMIN_ACTIVITY_LOG; ?></div>
           <div class="text-right"><a href="<?php echo zen_href_link(FILENAME_ADMIN_ACTIVITY, 'action=clean_admin_activity_log'); ?>" class="btn btn-primary" role="button"><?php echo IMAGE_RESET; ?></a></div>
         </div>
         <!-- eof: reset admin_activity_log -->

@@ -1,10 +1,10 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2018 Zen Cart Development Team
+ * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Drbyte Mon Nov 12 20:38:09 2018 -0500 Modified in v1.5.6 $
+ * @version $Id: DrByte 2019 Jul 16 Modified in v1.5.6c $
  */
 require('includes/application_top.php');
 
@@ -56,8 +56,8 @@ if (($action == 'send_email_to_user') && isset($_POST['customers_email_address']
   foreach ($mail as $item) {
     $html_msg['EMAIL_FIRST_NAME'] = $item['customers_firstname'];
     $html_msg['EMAIL_LAST_NAME'] = $item['customers_lastname'];
-    zen_mail($item['customers_firstname'] . ' ' . $item['customers_lastname'], $item['customers_email_address'], $subject, $message, STORE_NAME, $from, $html_msg, 'direct_email', array('file' => $attachment_file, 'name' => basename($attachment_file), 'mime_type' => $attachment_filetype));
-    $recip_count++;
+    $rc = zen_mail($item['customers_firstname'] . ' ' . $item['customers_lastname'], $item['customers_email_address'], $subject, $message, STORE_NAME, $from, $html_msg, 'direct_email', array('file' => $attachment_file, 'name' => basename($attachment_file), 'mime_type' => $attachment_filetype));
+    if ($rc === '') $recip_count++;
   }
   if ($recip_count > 0) {
     $messageStack->add_session(sprintf(NOTICE_EMAIL_SENT_TO, $mail_sent_to . ' (' . $recip_count . ')'), 'success');
@@ -115,7 +115,6 @@ if ($action == 'preview') {
               kill.disabled = true;
           }
       }
-      // -->
     </script>
     <?php if ($editor_handler != '') include ($editor_handler); ?>
     <script>
@@ -188,7 +187,7 @@ if ($action == 'preview') {
               return true;
           }
       }
-      //--></script>
+    </script>
   </head>
   <body onLoad="init()">
     <!-- header //-->
@@ -227,7 +226,7 @@ if ($action == 'preview') {
           <div class="col-sm-9">
               <?php if (EMAIL_USE_HTML != 'true') echo TEXT_WARNING_HTML_DISABLED . '<br />'; ?>
               <?php
-              $html_preview = zen_output_string_protected(isset($_POST['message_html']) ? $_POST['message_html'] : '');
+              $html_preview = zen_output_string(isset($_POST['message_html']) ? $_POST['message_html'] : '');
               echo (false !== stripos($html_preview, '<br') ? $html_preview : nl2br($html_preview));
               ?>
           </div>
@@ -266,7 +265,7 @@ if ($action == 'preview') {
             <button type="button" class="btn btn-default" name="back"><?php echo IMAGE_BACK; ?></button>
           </div>
           <div class="col-sm-6 text-right">
-            <a href="<?php echo zen_href_link(FILENAME_MAIL, 'cID=' . zen_db_prepare_input($_GET['cID']) . (isset($_GET['customer']) ? '&customer=' . zen_output_string_protected($_GET['customer']) : '') . (isset($_GET['origin']) ? '&origin=' . zen_output_string_protected($_GET['origin']) : '')); ?>" class="btn btn-default" role="button"><?php echo IMAGE_CANCEL; ?></a> <button type="submit" class="btn btn-primary"><?php echo IMAGE_SEND_EMAIL; ?></button>
+            <a href="<?php echo zen_href_link(FILENAME_MAIL, (isset($_GET['cID']) ? 'cID=' . (int)$_GET['cID'] : '') . (isset($_GET['customer']) ? '&customer=' . zen_output_string_protected($_GET['customer']) : '') . (isset($_GET['origin']) ? '&origin=' . zen_output_string_protected($_GET['origin']) : '')); ?>" class="btn btn-default" role="button"><?php echo IMAGE_CANCEL; ?></a> <button type="submit" class="btn btn-primary"><?php echo IMAGE_SEND_EMAIL; ?></button>
           </div>
           <?php echo '</form>'; ?>
         </div>
@@ -276,11 +275,11 @@ if ($action == 'preview') {
         <div class="row">
             <?php echo zen_draw_form('mail', FILENAME_MAIL, 'action=preview' . (isset($_GET['cID']) ? '&cID=' . (int)$_GET['cID'] : '') . (isset($_GET['customer']) ? '&customer=' . zen_output_string_protected($_GET['customer']) : '') . (isset($_GET['origin']) ? '&origin=' . zen_output_string_protected($_GET['origin']) : ''), 'post', 'onsubmit="return check_form(mail);" enctype="multipart/form-data" class="form-horizontal"'); ?>
             <?php
-            $customers = get_audiences_list('email', 'customers_email_address', (isset($_GET['customer']) ? $_GET['customer'] : ''));
+            $customers = get_audiences_list('email', 'customers_email_address', (isset($_GET['customer']) ? zen_output_string_protected($_GET['customer']) : ''));
             ?>
           <div class="form-group">
               <?php echo zen_draw_label(TEXT_CUSTOMER, 'customers_email_address', 'class="col-sm-3 control-label"'); ?>
-            <div class="col-sm-9"><?php echo zen_draw_pull_down_menu('customers_email_address', $customers, (isset($_GET['customer']) ? $_GET['customer'] : ''), 'class="form-control"');  //, 'multiple'        ?></div>
+            <div class="col-sm-9"><?php echo zen_draw_pull_down_menu('customers_email_address', $customers, (isset($_GET['customer']) ? zen_output_string_protected($_GET['customer']) : ''), 'class="form-control"');  //, 'multiple'        ?></div>
           </div>
           <div class="form-group">
               <?php echo zen_draw_label(TEXT_FROM, 'from', 'class="col-sm-3 control-label"'); ?>
@@ -295,7 +294,7 @@ if ($action == 'preview') {
             <div class="col-sm-9">
                 <?php
                 if (EMAIL_USE_HTML == 'true') {
-                  echo zen_draw_textarea_field('message_html', 'soft', '100%', '25', htmlspecialchars(stripslashes($_POST['message_html']), ENT_COMPAT, CHARSET, TRUE), 'id="message_html" class="editorHook form-control"');
+                  echo zen_draw_textarea_field('message_html', 'soft', '100%', '25', htmlspecialchars(stripslashes(isset($_POST['message_html'])?$_POST['message_html']:''), ENT_COMPAT, CHARSET, TRUE), 'id="message_html" class="editorHook form-control"');
                 } else {
                   echo TEXT_WARNING_HTML_DISABLED;
                 }
@@ -330,13 +329,13 @@ if ($action == 'preview') {
         <?php } // end attachments fields   ?>
         <?php
         if (isset($_GET['origin'])) {
-          $origin = $_GET['origin'];
+          $origin = zen_output_string_protected($_GET['origin']);
         } else {
           $origin = FILENAME_DEFAULT;
         }
         ?>
         <div class="row text-right">
-          <button type="submit" class="btn btn-primary"><?php echo IMAGE_PREVIEW; ?></button> <a href="<?php echo zen_href_link($origin, 'cID=' . zen_db_prepare_input($_GET['cID']), $request_type); ?>" class="btn btn-default"><?php echo IMAGE_CANCEL; ?></a>
+          <button type="submit" class="btn btn-primary"><?php echo IMAGE_PREVIEW; ?></button> <a href="<?php echo zen_href_link($origin, (!empty($_GET['cID']) ? 'cID=' . (int)$_GET['cID'] : ''), $request_type); ?>" class="btn btn-default"><?php echo IMAGE_CANCEL; ?></a>
         </div>
         <?php
       }

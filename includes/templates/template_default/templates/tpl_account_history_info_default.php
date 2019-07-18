@@ -6,10 +6,10 @@
  * Displays information related to a single specific order
  *
  * @package templateSystem
- * @copyright Copyright 2003-2016 Zen Cart Development Team
+ * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: DrByte  May 3 2016  Modified in v1.5.5a $
+ * @version $Id: lat9 2019 Mar 10 Modified in v1.5.6b $
  */
 ?>
 <div class="centerColumn" id="accountHistInfo">
@@ -122,7 +122,7 @@ if (sizeof($statusArray)) {
 <hr />
 <div id="myAccountShipInfo" class="floatingBox back">
 <?php
-  if ($order->delivery != false) {
+  if (!empty($order->delivery['format_id'])) {
 ?>
 <h3><?php echo HEADING_DELIVERY_ADDRESS; ?></h3>
 <address><?php echo zen_address_format($order->delivery['format_id'], $order->delivery, 1, ' ', '<br />'); ?></address>

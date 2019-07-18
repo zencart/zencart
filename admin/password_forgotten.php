@@ -4,7 +4,7 @@
  * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License v2.0
- * @version $Id: DrByte 2019 Jan 04 Modified in v1.5.6a $
+ * @version $Id: dennisns7d 2019 May 12 Modified in v1.5.6b $
  */
 // reset-token is good for only 24 hours:
 define('ADMIN_PWD_TOKEN_DURATION', (24 * 60 * 60));
@@ -77,7 +77,7 @@ if (isset($_POST['submit'])) {
   <div class="container-fluid">
     <div class="login-form">
       <div class="login-main-div login-box-shadow">
-        <img class="login-img" src="../includes/templates/template_default/images/logo.gif" alt="Zen Cart®" title="Zen Cart®" width="192" height="68" border="0">
+        <?php echo zen_image(DIR_WS_IMAGES . HEADER_LOGO_IMAGE, HEADER_ALT_TEXT, HEADER_LOGO_WIDTH, HEADER_LOGO_HEIGHT, 'class="login-img"'); ?>
         <br>
         <?php echo zen_draw_form('loginForm', FILENAME_PASSWORD_FORGOTTEN, 'action=update', 'post', 'id="loginForm"', 'true'); ?>
 

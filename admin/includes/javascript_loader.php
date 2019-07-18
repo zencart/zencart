@@ -3,17 +3,17 @@
  * This file is inserted at the start of the body tag, just above the header menu, and loads most of the admin javascript components
  *
  * @package admin
- * @copyright Copyright 2003-2018 Zen Cart Development Team
+ * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: lat9 Tue Oct 2 13:32:43 2018 -0400 New in v1.5.6 $
+ * @version $Id: Zen4All 2019 Apr 25 Modified in v1.5.6b $
  */
 ?>
-<script>window.jQuery || document.write('<script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"><\/script>');</script>
-<script>window.jQuery || document.write('<script src="includes/javascript/jquery-3.3.1.min.js"><\/script>');</script>
+<script>window.jQuery || document.write('<script src="https://code.jquery.com/jquery-3.4.0.min.js" integrity="sha256-BJeo0qm959uMBGb65z40ejJYGSgR7REI4+CW1fNKwOg=" crossorigin="anonymous""><\/script>');</script>
+<script>window.jQuery || document.write('<script src="includes/javascript/jquery-3.4.0.min.js"><\/script>');</script>
 
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-<!--<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>-->
+<!--<script src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha384-aJ21OjlMXNL5UyIl/XNwTMqvzeRMZH2w8c5cRVpzpU8Y5bApTppSuUkhZXN0VxHd" crossorigin="anonymous"></script>-->
 <script src="includes/javascript/bootstrap.min.js"></script>
 
 <script src="includes/javascript/jquery-ui-i18n.min.js"></script>

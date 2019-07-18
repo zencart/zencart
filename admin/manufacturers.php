@@ -1,10 +1,10 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2018 Zen Cart Development Team
+ * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Drbyte Sun Jan 7 21:39:26 2018 -0500 Modified in v1.5.6 $
+ * @version $Id: mc12345678 2019 Jan 20 Modified in v1.5.6b $
  */
 require('includes/application_top.php');
 
@@ -171,7 +171,7 @@ if (zen_not_null($action)) {
                                             order by manufacturers_name";
 
 // reset page when page is unknown
-                if (($_GET['page'] == '' or $_GET['page'] == '1') and $_GET['mID'] != '') {
+                if ((empty($_GET['page']) || $_GET['page'] == '1') && !empty($_GET['mID'])) {
                   $check_page = $db->Execute($manufacturers_query_raw);
                   $check_count = 1;
                   if ($check_page->RecordCount() > MAX_DISPLAY_SEARCH_RESULTS) {

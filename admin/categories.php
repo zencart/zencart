@@ -4,7 +4,7 @@
  * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2019 Jan 04 Modified in v1.5.6a $
+ * @version $Id: Scott C Wilson 2019 Feb 28 Modified in v1.5.6b $
  */
 require('includes/application_top.php');
 $languages = zen_get_languages();
@@ -191,7 +191,6 @@ if (zen_not_null($action)) {
     // bof: categories meta tags
     case 'update_category_meta_tags':
       // add or update meta tags
-      //die('I SEE ' . $action . ' - ' . $_POST['categories_id']);
       $categories_id = $_POST['categories_id'];
       for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
         $language_id = $languages[$i]['id'];
@@ -304,7 +303,6 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
         $formAction = 'update_category';
         break;
     }
-    // echo 'I SEE ' . $_SESSION['html_editor_preference_status'];
     ?>
     <div class="container-fluid">
         <?php

@@ -3,10 +3,10 @@
  * shipping class
  *
  * @package classes
- * @copyright Copyright 2003-2018 Zen Cart Development Team
+ * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: mc12345678 Tue Aug 28 21:18:16 2018 -0400 Modified in v1.5.6 $
+ * @version $Id: DrByte 2019 Jul 16 Modified in v1.5.6c $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
@@ -21,9 +21,8 @@ class shipping extends base {
   var $modules;
 
   // class constructor
-  function __construct($module = '') {
+  function __construct($module = null) {
     global $PHP_SELF, $messageStack;
-
     if (defined('MODULE_SHIPPING_INSTALLED') && zen_not_null(MODULE_SHIPPING_INSTALLED)) {
       $this->modules = explode(';', MODULE_SHIPPING_INSTALLED);
 
@@ -167,6 +166,7 @@ class shipping extends base {
         if (FALSE == $GLOBALS[$include_quotes[$i]]->enabled) continue;
         $save_shipping_weight = $shipping_weight;
         $quotes = $GLOBALS[$include_quotes[$i]]->quote($method);
+        if (!isset($quotes['tax'])) $quotes['tax'] = 0; 
         $shipping_weight = $save_shipping_weight;
         if (is_array($quotes)) $quotes_array[] = $quotes;
       }
@@ -183,6 +183,9 @@ class shipping extends base {
         $class = substr($value, 0, strrpos($value, '.'));
         if (isset($GLOBALS[$class]) && is_object($GLOBALS[$class]) && $GLOBALS[$class]->enabled) {
           $quotes = $GLOBALS[$class]->quotes;
+          if (empty($quotes['methods'])) {
+            continue;
+          }
           $size = sizeof($quotes['methods']);
           for ($i=0; $i<$size; $i++) {
             if (isset($quotes['methods'][$i]['cost'])){

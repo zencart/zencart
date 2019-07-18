@@ -1,10 +1,10 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2018 Zen Cart Development Team
+ * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Drbyte Sun Jan 7 21:39:26 2018 -0500 Modified in v1.5.6 $
+ * @version $Id: mc12345678 2019 Jan 26 Modified in v1.5.6b $
  */
 require('includes/application_top.php');
 // get an array of template info
@@ -55,6 +55,7 @@ if (zen_not_null($action)) {
       $sql = $db->bindVars($sql, ':tpl:', $_POST['ln'], 'string');
       $sql = $db->bindVars($sql, ':id:', $_GET['tID'], 'integer');
       $db->Execute($sql);
+      zen_redirect(zen_href_link(FILENAME_TEMPLATE_SELECT, zen_get_all_get_params(array('action'))));
       break;
     case 'deleteconfirm':
       $check_query = $db->Execute("SELECT template_language

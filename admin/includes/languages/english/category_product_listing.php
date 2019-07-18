@@ -5,7 +5,7 @@
  * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2019 Jan 04 Modified in v1.5.6a $
+ * @version $Id: DrByte 2019 Jul 16 Modified in v1.5.6c $
  */
 define('HEADING_TITLE', 'Categories / Products');
 define('HEADING_TITLE_GOTO', 'Go To:');
@@ -38,8 +38,13 @@ define('TEXT_INFO_HEADING_COPY_TO', 'Copy To');
 define('TEXT_INFO_COPY_TO_INTRO', 'Please choose a new category you wish to copy this product to');
 define('TEXT_INFO_CURRENT_PRODUCT', 'Current Product: ');
 define('TEXT_HOW_TO_COPY', 'Copy Method:');
-define('TEXT_COPY_AS_LINK', 'Link product');
-define('TEXT_COPY_AS_DUPLICATE', 'Duplicate product');
+define('TEXT_COPY_AS_LINK','Link this product into another category as selected above');
+define('TEXT_COPY_AS_DUPLICATE','Create a Duplicate product in the category selected above');
+define('TEXT_COPY_METATAGS','Copy Metatags to Duplicate?');
+define('TEXT_COPY_LINKED_CATEGORIES','Copy Linked Categories to Duplicate?');
+define('TEXT_COPY_AS_DUPLICATE_METATAGS', 'Metatags for Language ID#%u copied from Product ID#%u to duplicate Product ID#%u');
+define('TEXT_COPY_AS_DUPLICATE_CATEGORIES', 'Linked Category ID#%u copied from Product ID#%u to duplicate Product ID#%u');
+define('TEXT_COPY_AS_DUPLICATE_DISCOUNTS', 'Discounts copied from Product ID#%u to duplicate Product ID#%u');
 define('TEXT_INFO_HEADING_ATTRIBUTE_FEATURES', 'Attributes Changes for Products ID# ');
 define('TEXT_PRODUCTS_ATTRIBUTES_INFO', 'Attribute Features For:');
 define('TEXT_PRODUCT_ATTRIBUTES_DOWNLOADS', 'Downloads: ');
@@ -50,6 +55,7 @@ define('TEXT_COPY_ATTRIBUTES_CONDITIONS', '<strong>How should existing product a
 define('TEXT_COPY_ATTRIBUTES_DELETE', '<strong>Delete</strong> first, then copy new attributes');
 define('TEXT_COPY_ATTRIBUTES_UPDATE', '<strong>Update</strong> with new settings/prices, then add new ones');
 define('TEXT_COPY_ATTRIBUTES_IGNORE', '<strong>Ignore</strong> and add only new attributes');
+define('TEXT_ATTRIBUTE_COPY_INSERTING', '<strong>Inserting New Attribute from </strong>');
 define('ICON_ATTRIBUTES', 'Attribute Features');
 
 // Products and Attribute Copy Options
@@ -67,15 +73,19 @@ define('TEXT_COPY_DISCOUNTS_NO', 'No');
 // From categories.php in 1.5.5
 // categories status
 define('TEXT_INFO_HEADING_STATUS_CATEGORY', 'Change Category Status for:');
-define('TEXT_CATEGORIES_STATUS_INTRO', 'Change the Category Status to: ');
-define('TEXT_CATEGORIES_STATUS_OFF', 'OFF');
-define('TEXT_CATEGORIES_STATUS_ON', 'ON');
-define('TEXT_PRODUCTS_STATUS_INFO', 'Change ALL Product Status to: ');
-define('TEXT_PRODUCTS_STATUS_OFF', 'OFF');
-define('TEXT_PRODUCTS_STATUS_ON', 'ON');
+define('TEXT_CATEGORIES_STATUS_INTRO', 'Change <strong>this</strong> category\'s status to: ');
+define('TEXT_CATEGORIES_STATUS_OFF', 'Disabled');
+define('TEXT_CATEGORIES_STATUS_ON', 'Enabled');
+define('TEXT_PRODUCTS_STATUS_INFO', 'Change ALL included products status to:');
+define('TEXT_PRODUCTS_STATUS_OFF', 'Disabled');
+define('TEXT_PRODUCTS_STATUS_ON', 'Enabled');
 define('TEXT_PRODUCTS_STATUS_NOCHANGE', 'Unchanged');
-define('TEXT_CATEGORIES_STATUS_WARNING', '<strong>WARNING ...</strong><br />Note: Disabling a category will disable all products in this category. Linked products located in this category that are shared with other categories will also be disabled.');
-
+define('TEXT_CATEGORIES_STATUS_WARNING', '<strong>WARNING ...</strong><br />Note: Disabling products (whether they are linked or master products) in a category will result in ALL instances of that product being disabled in ALL categories.');
+define('TEXT_SUBCATEGORIES_STATUS_INFO', 'Change ALL subcategories status to:');
+define('TEXT_SUBCATEGORIES_STATUS_OFF', 'Disabled');
+define('TEXT_SUBCATEGORIES_STATUS_ON', 'Enabled');
+define('TEXT_SUBCATEGORIES_STATUS_NOCHANGE', 'Unchanged');
 
 define('WARNING_PRODUCTS_IN_TOP_INFO', 'WARNING: You have Products in the Top Level Category. This will cause pricing to not work properly in the Catalog. Products found: ');
 
+define('TEXT_COPY_MEDIA_MANAGER', 'Copy media?');

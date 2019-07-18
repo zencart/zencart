@@ -6,7 +6,7 @@
  * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2019 Jan 04 Modified in v1.5.6a $
+ * @version $Id: Zcwilt 2019 Jul 11 Modified in v1.5.6c $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
@@ -25,11 +25,6 @@ require(DIR_WS_MODULES . zen_get_module_directory('require_languages.php'));
       zen_redirect(zen_href_link(FILENAME_LOGIN, '', 'SSL'));
     }
   }
-
-// confirm where link came from
-if (!strstr($_SERVER['HTTP_REFERER'], FILENAME_CHECKOUT_CONFIRMATION)) {
-  //    zen_redirect(zen_href_link(FILENAME_CHECKOUT_PAYMENT,'','SSL'));
-}
 
 // BEGIN CC SLAM PREVENTION
 $slamming_threshold = 3;
@@ -64,6 +59,18 @@ if (sizeof($order->products) < 1) {
 
 require(DIR_WS_CLASSES . 'order_total.php');
 $order_total_modules = new order_total;
+
+// avoid hack attempts during the checkout procedure by checking the internal cartID
+if (isset($_SESSION['cart']->cartID) && $_SESSION['cartID']) {
+    if ($_SESSION['cart']->cartID != $_SESSION['cartID']) {
+        $payment_modules->clear_payment();
+        $order_total_modules->clear_posts();
+        unset($_SESSION['payment']);
+        unset($_SESSION['shipping']);
+
+        zen_redirect(zen_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL'));
+    }
+}
 
 $zco_notifier->notify('NOTIFY_CHECKOUT_PROCESS_BEFORE_ORDER_TOTALS_PRE_CONFIRMATION_CHECK');
 if (strpos($GLOBALS[$_SESSION['payment']]->code, 'paypal') !== 0) {
@@ -104,10 +111,10 @@ if (isset($_SESSION['payment_attempt'])) unset($_SESSION['payment_attempt']);
  * Calculate order amount for display purposes on checkout-success page as well as adword campaigns etc
  * Takes the product subtotal and subtracts all credits from it
  */
-  $ototal = $order_subtotal = $credits_applied = 0;
+  $oshipping = $otax = $ototal = $order_subtotal = $credits_applied = 0;
   for ($i=0, $n=sizeof($order_totals); $i<$n; $i++) {
     if ($order_totals[$i]['code'] == 'ot_subtotal') $order_subtotal = $order_totals[$i]['value'];
-    if (${$order_totals[$i]['code']}->credit_class == true) $credits_applied += $order_totals[$i]['value'];
+    if (!empty(${$order_totals[$i]['code']}->credit_class)) $credits_applied += $order_totals[$i]['value'];
     if ($order_totals[$i]['code'] == 'ot_total') $ototal = $order_totals[$i]['value'];
     if ($order_totals[$i]['code'] == 'ot_tax') $otax = $order_totals[$i]['value'];
     if ($order_totals[$i]['code'] == 'ot_shipping') $oshipping = $order_totals[$i]['value'];

@@ -4,7 +4,7 @@
  * @package Installer
  * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2019 Jan 04 Modified in v1.5.6a $
+ * @version $Id: DrByte 2019 Jul 16 Modified in v1.5.6c $
  *
  */
 /**
@@ -66,6 +66,12 @@ class zcDatabaseInstaller
     $options = array('dbCharset'=>$this->dbCharset);
     $result = $this->db->Connect($this->dbHost, $this->dbUser, $this->dbPassword, $this->dbName, 'false', $this->dieOnErrors, $options);
     return $result;
+  }
+
+  public function runZeroDateSql($options = null)
+  {
+      $file = DIR_FS_INSTALL . 'sql/install/zero_dates_cleanup.sql';
+      return $this->parseSqlFile($file, $options);
   }
   public function parseSqlFile($fileName, $options = NULL)
   {
@@ -412,10 +418,10 @@ class zcDatabaseInstaller
     $title  =  $values[3];
     $sql = "select configuration_group_title from " . $this->dbPrefix . "configuration_group where configuration_group_title='".$title."'";
     $result = $this->db->Execute($sql);
-    if ($result->RecordCount() >0 ) return sprintf(REASON_CONFIGURATION_GROUP_KEY_ALREADY_EXISTS,$title);
+    if ($result->RecordCount() >0 ) return sprintf(REASON_CONFIG_GROUP_KEY_ALREADY_EXISTS,$title);
     $sql = "select configuration_group_title from " . $this->dbPrefix . "configuration_group where configuration_group_id='".$id."'";
     $result = $this->db->Execute($sql);
-    if ($result->RecordCount() >0 ) return sprintf(REASON_CONFIGURATION_GROUP_ID_ALREADY_EXISTS,$id);
+    if ($result->RecordCount() >0 ) return sprintf(REASON_CONFIG_GROUP_ID_ALREADY_EXISTS,$id);
     return FALSE;
   }
   public function checkProductTypeLayoutKey($line)

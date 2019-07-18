@@ -1,16 +1,21 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2018 Zen Cart Development Team
+ * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Zen4All Tue Nov 20 12:11:22 2018 +0100 Modified in v1.5.6 $
+ * @version $Id: mc12345678 2019 Jan 20 Modified in v1.5.6b $
  */
 //
 require("includes/application_top.php");
 
 require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/' . FILENAME_SALEMAKER_POPUP . '.php');
 $cname = zen_get_category_name($_GET['cid'], (int)$_SESSION['languages_id']);
+$deduction_type_array = array(
+  array('id' => '0', 'text' => DEDUCTION_TYPE_DROPDOWN_0),
+  array('id' => '1', 'text' => DEDUCTION_TYPE_DROPDOWN_1),
+  array('id' => '2', 'text' => DEDUCTION_TYPE_DROPDOWN_2));
+
 ?>
 <!doctype html>
 <html <?php echo HTML_PARAMS; ?>>

@@ -2,10 +2,10 @@
 
 /**
  * @package admin
- * @copyright Copyright 2003-2018 Zen Cart Development Team
+ * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Drbyte Mon Nov 12 20:38:09 2018 -0500 Modified in v1.5.6 $
+ * @version $Id: mc12345678 2019 Jan 20 Modified in v1.5.6b $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
@@ -56,13 +56,18 @@ if (!isset($prev_next_list) || $prev_next_list == '') {
 // set current category
   $current_category_id = (isset($_GET['current_category_id']) ? (int)$_GET['current_category_id'] : $current_category_id);
 
-  if (!$current_category_id) {
+  if (empty($current_category_id)) {
     $sql = "SELECT categories_id
             FROM   " . TABLE_PRODUCTS_TO_CATEGORIES . "
             WHERE  products_id = " . (int)$products_filter;
 
     $cPath_row = $db->Execute($sql);
-    $current_category_id = $cPath_row->fields['categories_id'];
+
+    $current_category_id = 0;
+
+    if (!$cPath_row->EOF) {
+      $current_category_id = $cPath_row->fields['categories_id'];
+    }
   }
 
   $sql = "SELECT p.products_id, pd.products_name
