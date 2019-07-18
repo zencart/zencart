@@ -554,7 +554,9 @@ use PHPMailer\PHPMailer\SMTP;
     //strip linebreaks and tabs out of the template
 //  $file_holder = str_replace(array("\r\n", "\n", "\r", "\t"), '', $file_holder);
     $file_holder = str_replace(array("\t"), ' ', $file_holder);
-
+	if (empty($block['EXTRA_INFO']) || empty(trim($block['EXTRA_INFO']))) {
+      $file_holder = preg_replace('/<div class="extra-info">\s?\$EXTRA_INFO\s?<\/div>/', '', $file_holder);
+	}
 
     if (!defined('HTTP_CATALOG_SERVER')) define('HTTP_CATALOG_SERVER', HTTP_SERVER);
     //check for some specifics that need to be included with all messages
