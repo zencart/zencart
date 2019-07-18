@@ -51,7 +51,7 @@ define('DASHBOARD_MONTH', 'Month');
 define('DASHBOARD_SALES', 'Sales');
 define('DASHBOARD_DOLLARS', 'Dollars');
 
-define('TEXT_COUNTER_HISTORY_TITLE', 'Visitor History - Last 14 days');
+define('TEXT_COUNTER_HISTORY_TITLE', 'Visitor History - Last %s days');
 
 define('TEXT_MONTHLY_SALES_TITLE', 'Monthly Sales (excludes shipping)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;');
 define('TEXT_CLICK_FOR_COMPLETE_DETAILS', 'Click here for complete details...');
