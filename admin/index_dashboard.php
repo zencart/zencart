@@ -457,7 +457,7 @@ foreach ($whos_online as $session) {
 
       <!--// Counters graph = populated by javascript  //-->
       <div class="panel panel-default reportBox">
-        <div class="panel-heading header"><?php echo TEXT_COUNTER_HISTORY_TITLE; ?></div>
+        <div class="panel-heading header"><?php echo sprintf(TEXT_COUNTER_HISTORY_TITLE, $number_of_visitors_history); ?></div>
         <?php if (count($visit_history)) { ?>
           <div class="panel-body">
             <div id="graph"></div>
