@@ -206,6 +206,9 @@
 
     $field .= ' />';
 
+    if ($required && !empty(TEXT_FIELD_REQUIRED)) {
+      $field .= '&nbsp;<span class="alert">' . TEXT_FIELD_REQUIRED . '</span>';
+    }
     return $field;
   }
 
@@ -222,7 +225,7 @@
   }
 
 ////
-// Output a form filefield
+// Output a form file field
   function zen_draw_file_field($name, $required = false, $parameters = '') {
     $field = zen_draw_input_field($name, '', ' size="50" ' . $parameters, $required, 'file');
 

@@ -762,3 +762,9 @@ input.faint {
     }
 }
 /* end of print-specific styles */
+
+/* Forms - put this last */ 
+.form-control {
+  width: 90%;
+  display: inline-block;
+}
