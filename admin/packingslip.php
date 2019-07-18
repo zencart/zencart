@@ -136,9 +136,7 @@ if ($order->billing['street_address'] != $order->delivery['street_address']) {
                       for ($j = 0, $k = sizeof($order->products[$i]['attributes']); $j < $k; $j++) {
                         ?>
                       <li>
-                        <small><i>
-                                <?php echo $order->products[$i]['attributes'][$j]['option'] . ': ' . nl2br(zen_output_string_protected($order->products[$i]['attributes'][$j]['value'])); ?>
-                          </i></small>
+                        <small><i><?php echo $order->products[$i]['attributes'][$j]['option'] . ': ' . nl2br(zen_output_string_protected($order->products[$i]['attributes'][$j]['value'])); ?></i></small>
                       </li>
                       <?php
                     }
