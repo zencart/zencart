@@ -781,12 +781,16 @@
     /**
      * sanitize for validity as an IPv4 or IPv6 address
      */
-    $ip = preg_replace('~[^a-fA-F0-9.:%/,]~', '', $ip);
+    $original_ip = $ip;
+    $ip = filter_var((string)$ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6 | FILTER_FLAG_IPV4);
 
     /**
-     *  if it's still blank, set to a single dot
+     *  If it's an invalid IP, set the value to a single dot and issue a notification.
      */
-    if (trim($ip) == '') $ip = '.';
+    if ($ip === false) {
+        $ip = '.';
+        $GLOBALS['zco_notifier']->notify('NOTIFY_ZEN_INVALID_IP_DETECTED', $original_ip);
+    }
 
     return $ip;
   }
