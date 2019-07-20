@@ -49,7 +49,6 @@ define('DASHBOARD_SESSIONS', 'Sessions');
 define('DASHBOARD_TOTAL', 'Total');
 define('DASHBOARD_MONTH', 'Month');
 define('DASHBOARD_SALES', 'Sales');
-define('DASHBOARD_DOLLARS', 'Dollars');
 
 define('TEXT_COUNTER_HISTORY_TITLE', 'Visitor History - Last %s days');
 
