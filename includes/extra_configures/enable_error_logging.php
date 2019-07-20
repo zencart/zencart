@@ -62,11 +62,7 @@ function zen_debug_error_handler($errno, $errstr, $errfile, $errline)
     }
 
     ob_start();
-    if (version_compare(PHP_VERSION, '5.3.6') >= 0) {
-        debug_print_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
-    } else {
-        debug_print_backtrace();
-    }
+    debug_print_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
     $backtrace = ob_get_contents();
     ob_end_clean();
     // The following line removes the call to this zen_debug_error_handler function (as it's not relevant)

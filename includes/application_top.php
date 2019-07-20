@@ -90,10 +90,7 @@ if (DEBUG_AUTOLOAD || (defined('STRICT_ERROR_REPORTING') && STRICT_ERROR_REPORTI
 /*
  * Get time zone info from PHP config
  */
-if (version_compare(PHP_VERSION, 5.3, '>='))
-{
-  @date_default_timezone_set(date_default_timezone_get());
-}
+@date_default_timezone_set(date_default_timezone_get());
 /**
  * check for and include load application parameters
  */
