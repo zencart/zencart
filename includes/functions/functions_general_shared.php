@@ -231,3 +231,34 @@
     }
     return false;
   }
+
+
+// Truncate a string
+  function zen_trunc_string($str = "", $len = 150, $more = 'true') {
+    if ($str == "") return $str;
+    if (is_array($str)) return $str;
+    $str = trim($str);
+    $len = (int)$len;
+    if ($len == 0) return '';
+    // if it's les than the size given, then return it
+    if (strlen($str) <= $len) return $str;
+    // else get that size of text
+    $str = substr($str, 0, $len);
+    // backtrack to the end of a word
+    if ($str != "") {
+      // check to see if there are any spaces left
+      if (!substr_count($str , " ")) {
+        if ($more == 'true') $str .= "...";
+        return $str;
+      }
+      // backtrack
+      while(strlen($str) && ($str[strlen($str)-1] != " ")) {
+        $str = substr($str, 0, -1);
+      }
+      $str = substr($str, 0, -1);
+      if ($more == 'true') $str .= "...";
+      if ($more != 'true' and $more != 'false') $str .= $more;
+    }
+    return $str;
+  }
+
