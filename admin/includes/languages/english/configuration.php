@@ -28,3 +28,6 @@ define('TEXT_INFO_EDIT_INTRO', 'Please make any necessary changes');
 define('TEXT_INFO_DATE_ADDED', 'Date Added:');
 define('TEXT_INFO_LAST_MODIFIED', 'Last Modified:');
 define('TEXT_MIN_ADMIN_USER_LENGTH', 'Must be of a length of 4 or more.');
+// Validation defines
+define('TEXT_DATA_OUT_OF_RANGE','Data out of range'); 
+
