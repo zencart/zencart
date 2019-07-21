@@ -14,6 +14,7 @@ define('EMAIL_SUBJECT', 'Website Inquiry from ' . STORE_NAME);
 
 define('ENTRY_NAME', 'Full Name:');
 define('ENTRY_EMAIL', 'Email Address:');
+define('ENTRY_TELEPHONE', 'Telephone Number:');
 define('ENTRY_ENQUIRY', 'Message:');
 
 define('SEND_TO_TEXT','Send Email To:');
