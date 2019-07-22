@@ -70,7 +70,7 @@
 <br class="clearBoth" />
 
 <label class="inputLabel" for="telephone"><?php echo ENTRY_TELEPHONE; ?></label>
-<?php echo zen_draw_input_field('telephone', ($telephone), ' size="20" id="telephone" autocomplete="off" placeholder="' . ENTRY_REQUIRED_SYMBOL . '" required', 'telephone'); ?>
+<?php echo zen_draw_input_field('telephone', ($telephone), ' size="20" id="telephone" autocomplete="off"'); ?>
 <br class="clearBoth" />
 
 <label for="enquiry"><?php echo ENTRY_ENQUIRY; ?></label>
