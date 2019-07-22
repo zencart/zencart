@@ -131,7 +131,6 @@ class zcDatabaseInstaller
 //      echo $this->newLine;
       if ($this->completeLine)
       {
-        if (get_magic_quotes_runtime() > 0) $this->newLine = stripslashes($this->newLine);
         $output = (trim(str_replace(';','',$this->newLine)) != '' && !$this->ignoreLine) ? $this->tryExecute($this->newLine) : '';
         $this->doJsonProgressLoggingUpdate();
         $this->newLine = "";

@@ -289,9 +289,6 @@ function executeSql($lines, $database, $table_prefix = '') {
         if ($debug == true) {
           echo ((!$ignore_line) ? '<br>About to execute.' : 'Ignoring statement. This command WILL NOT be executed.') . '<br>Debug info:<br>$ line=' . $line . '<br>$ complete_line=' . $complete_line . '<br>$ keep_together=' . $keep_together . '<br>SQL=' . $newline . '<br><br>';
         }
-        if (version_compare(PHP_VERSION, 5.4, '<') && @get_magic_quotes_runtime() > 0 && $keepslashes != true) {
-          $newline = stripslashes($newline);
-        }
         if (trim(str_replace(';', '', $newline)) != '' && !$ignore_line) {
           $output = $db->Execute($newline);
         }
@@ -730,9 +727,6 @@ if (zen_not_null($action)) {
     case 'execute':
       if (isset($_POST['query_string']) && $_POST['query_string'] != '') {
         $query_string = $_POST['query_string'];
-        if (version_compare(PHP_VERSION, 5.4, '<') && @get_magic_quotes_gpc() > 0) {
-          $query_string = stripslashes($query_string);
-        }
         if ($debug == true) {
           echo $query_string . '<br>';
         }
@@ -767,9 +761,6 @@ if (zen_not_null($action)) {
       if (isset($_FILES['sql_file']) && isset($_FILES['sql_file']['tmp_name']) && $_FILES['sql_file']['tmp_name'] != '') {
         $upload_query = file($_FILES['sql_file']['tmp_name']);
         $query_string = $upload_query;
-      }
-      if (version_compare(PHP_VERSION, 5.4, '<') && @get_magic_quotes_runtime() > 0) {
-        $query_string = zen_db_prepare_input($upload_query);
       }
       if ($query_string != '') {
         $query_results = executeSql($query_string, DB_DATABASE, DB_PREFIX);
