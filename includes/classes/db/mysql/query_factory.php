@@ -450,13 +450,13 @@ class queryFactory extends base {
         case 'inConstructInteger':
             $list = explode(',', $value);
             $newList = array_map(function ($value) { return (int) $value; }, $list);
-            $value = implode($newList, ',');
+            $value = implode(',', $newList);
 
             return $value;
         case 'inConstructString':
             $list = explode(',', $value);
             $newList = array_map(function ($value) { return '\'' . $this->prepare_input($value) . '\''; }, $list);
-            $value = implode($newList, ',');
+            $value = implode(',', $newList);
 
             return $value;
       case 'csv':
