@@ -72,8 +72,6 @@
   define('LABEL_CURL_SSL','CURL SSL Capability');
   define('LABEL_CURL_NONSSL_PROXY','CURL NON-SSL Capability via Proxy');
   define('LABEL_CURL_SSL_PROXY','CURL SSL Capability via Proxy');
-  define('LABEL_PHP_MAG_QT_RUN','PHP magic_quotes_runtime setting');
-  define('LABEL_PHP_MAG_QT_SYBASE','PHP magic_quotes_sybase setting');
   define('LABEL_PHP_EXT_GD','PHP GD Support');
   define('LABEL_GD_VER','GD Version');
   define('LABEL_PHP_EXT_OPENSSL','PHP OpenSSL Support');
