@@ -127,6 +127,16 @@ if (CUSTOMERS_APPROVAL == 3 and TEXT_LOGIN_FOR_PRICE_BUTTON_REPLACE_SHOWROOM == 
 ?>
 <!--eof Product details list -->
 
+<!--bof Ask a Question -->
+<br />
+<div id="askQuestion" class="biggerText">
+<?php echo '<a href="' . zen_href_link(FILENAME_ASK_A_QUESTION, 'products_id=' . $_GET['products_id'], 'SSL') . '">' .  zen_image_button(BUTTON_IMAGE_ASK_A_QUESTION, BUTTON_ASK_A_QUESTION_ALT) .  '</a>'; ?>
+</div>
+<br />
+<br class="clearBoth" />
+<!--eof Ask a Question -->
+
+
 <!--bof Attributes Module -->
 <?php
   if ($pr_attr->fields['total'] > 0) {
