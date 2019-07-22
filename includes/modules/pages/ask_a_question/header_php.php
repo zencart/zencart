@@ -127,7 +127,7 @@ if (ENABLE_SSL == 'true' && $request_type != 'SSL') {
 }
 
 // default email and name if customer is logged in
-if($_SESSION['customer_id']) {
+if(isset($_SESSION['customer_id']) && $_SESSION['customer_id'] != '') {
   $sql = "SELECT customers_id, customers_firstname, customers_lastname, customers_password, customers_email_address, customers_default_address_id
           FROM " . TABLE_CUSTOMERS . "
           WHERE customers_id = :customersID";
@@ -149,6 +149,11 @@ if (CONTACT_US_LIST !=''){
 $define_page = zen_get_file_directory(DIR_WS_LANGUAGES . $_SESSION['language'] . '/html_includes/', FILENAME_DEFINE_ASK_A_QUESTION, 'false');
 
 $breadcrumb->add(NAVBAR_TITLE);
+
+if (!isset($name))  $name = ''; 
+if (!isset($email_address)) $email_address = '';
+if (!isset($telephone))  $telephone = ''; 
+if (!isset($enquiry)) $enquiry = ''; 
 
 // This should be the last line of the script:
 $zco_notifier->notify('NOTIFY_HEADER_END_ASK_A_QUESTION');
