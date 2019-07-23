@@ -458,7 +458,6 @@ if (zen_not_null($action)) {
               <tr class="dataTableHeadingRow">
                 <th class="dataTableHeadingContent"><?php echo TABLE_HEADING_SALE_NAME; ?></th>
                 <th class="dataTableHeadingContent right"><?php echo TABLE_HEADING_SALE_DEDUCTION; ?></th>
-
                 <th class="dataTableHeadingContent"></td>
                 <th class="dataTableHeadingContent center"><?php echo TABLE_HEADING_SALE_DATE_START; ?></th>
                 <th class="dataTableHeadingContent center"><?php echo TABLE_HEADING_SALE_DATE_END; ?></th>
