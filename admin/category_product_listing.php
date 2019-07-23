@@ -558,26 +558,6 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
       <div class="row"><?php echo zen_draw_separator('pixel_black.gif', '100%', '1px'); ?></div>
       <div class="row">
         <div class="<?php echo (empty($action)) ? '' : 'col-xs-12 col-sm-12 col-md-9 col-lg-9 configurationColumnLeft'; ?>">
-            <table class="table table-striped table-hover">
-              <thead>
-                <tr>
-                  <th class="text-right"><?php echo TABLE_HEADING_ID; ?></th>
-                  <th><?php echo TABLE_HEADING_CATEGORIES_PRODUCTS; ?></th>
-                  <th class="hidden-md hidden-sm hidden-xs"><?php echo TABLE_HEADING_MODEL; ?></th>
-                  <th class="text-right hidden-md hidden-sm hidden-xs"><?php echo TABLE_HEADING_PRICE; ?></th>
-                  <th class="text-right hidden-md hidden-sm hidden-xs">&nbsp;</th>
-                  <th class="text-right hidden-md hidden-sm hidden-xs"><?php echo TABLE_HEADING_QUANTITY; ?></th>
-                  <th class="text-right hidden-md hidden-sm hidden-xs"><?php echo TABLE_HEADING_STATUS; ?></th>
-                  <?php
-                  if ($action == '') {
-                    ?>
-                    <th class="text-right hidden-md hidden-sm hidden-xs"><?php echo TABLE_HEADING_CATEGORIES_SORT_ORDER; ?></th>
-                    <th class="text-right"><?php echo TABLE_HEADING_ACTION; ?></th>
-                    <?php
-                  }
-                  ?>
-                </tr>
-              </thead>
               <?php
               $order_by = " ";
               switch ($_SESSION['categories_products_sort_order']) {
@@ -614,7 +594,30 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
                                             AND cd.language_id = " . (int)$_SESSION['languages_id'] .
                                             $order_by);
               }
-
+              $show_prod_labels = false; 
+              if ($categories->EOF) $show_prod_labels = true; 
+?>
+            <table class="table table-striped table-hover">
+              <thead>
+                <tr>
+                  <th class="text-right"><?php echo TABLE_HEADING_ID; ?></th>
+                  <th><?php echo TABLE_HEADING_CATEGORIES_PRODUCTS; ?></th>
+                  <th class="hidden-md hidden-sm hidden-xs"><?php if ($show_prod_labels) echo TABLE_HEADING_MODEL; ?></th>
+                  <th class="text-right hidden-md hidden-sm hidden-xs"><?php if ($show_prod_labels) echo TABLE_HEADING_PRICE; ?></th>
+                  <th class="text-right hidden-md hidden-sm hidden-xs">&nbsp;</th>
+                  <th class="text-right hidden-md hidden-sm hidden-xs"><?php echo TABLE_HEADING_QUANTITY; ?></th>
+                  <th class="text-right hidden-md hidden-sm hidden-xs"><?php echo TABLE_HEADING_STATUS; ?></th>
+                  <?php
+                  if ($action == '') {
+                    ?>
+                    <th class="text-right hidden-md hidden-sm hidden-xs"><?php echo TABLE_HEADING_CATEGORIES_SORT_ORDER; ?></th>
+                    <th class="text-right"><?php echo TABLE_HEADING_ACTION; ?></th>
+                    <?php
+                  }
+                  ?>
+                </tr>
+              </thead>
+<?php
               foreach ($categories as $category) {
                 $categories_count++;
                 $rows++;
