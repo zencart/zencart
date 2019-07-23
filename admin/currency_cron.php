@@ -56,8 +56,6 @@ $_SERVER['REQUEST_URI'] = 'cron';
 $result = require('includes/application_top.php');
 if ($result == FALSE)  die("Error: application_top not found.\nMake sure you have placed the currency_cron.php file in your (renamed) Admin folder.\n\n");
 $_SERVER['HTTP_USER_AGENT'] = 'Zen Cart update';
-// $_SERVER['REMOTE_ADDR'] = DB_SERVER;
-// echo 'PHP_SAPI = ' . PHP_SAPI . "\n";
 
 // main execution area
 if (function_exists('zen_update_currencies'))
