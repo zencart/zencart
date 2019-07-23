@@ -19,6 +19,7 @@ if (!defined('IS_ADMIN_FLAG')) {
 
 // include the database functions
   require(DIR_WS_FUNCTIONS . 'database.php');
+  require(DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'database_common.php');
 
 // define our general functions used application-wide
   require(DIR_WS_FUNCTIONS . 'general.php');

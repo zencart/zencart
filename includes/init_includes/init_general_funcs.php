@@ -18,6 +18,11 @@ if (!defined('IS_ADMIN_FLAG')) {
 require(DIR_WS_FUNCTIONS . 'functions_general.php');
 require(DIR_WS_FUNCTIONS . 'functions_general_shared.php');
 /**
+ * Database 
+ */
+require(DIR_WS_FUNCTIONS . 'database_common.php');
+
+/**
  * Product Functions
  */
 require(DIR_WS_FUNCTIONS . 'functions_products.php');

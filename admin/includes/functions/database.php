@@ -8,49 +8,7 @@
  */
 
 
-  function zen_db_perform($table, $data, $action = 'insert', $parameters = '', $link = 'db_link') {
-    global $db;
-    if ($action == 'insert') {
-      $query = 'insert into ' . $table . ' (';
-      foreach($data as $columns => $value) {
-        $query .= $columns . ', ';
-      }
-      $query = substr($query, 0, -2) . ') values (';
-      foreach($data as $value) {
-        switch ((string)$value) {
-          case 'now()':
-            $query .= 'now(), ';
-            break;
-          case 'null':
-            $query .= 'null, ';
-            break;
-          default:
-            $query .= '\'' . zen_db_input($value) . '\', ';
-            break;
-        }
-      }
-      $query = substr($query, 0, -2) . ')';
-    } elseif ($action == 'update') {
-      $query = 'update ' . $table . ' set ';
-      foreach($data as $columns => $value) {
-        switch ((string)$value) {
-          case 'now()':
-            $query .= $columns . ' = now(), ';
-            break;
-          case 'null':
-            $query .= $columns .= ' = null, ';
-            break;
-          default:
-            $query .= $columns . ' = \'' . zen_db_input($value) . '\', ';
-            break;
-        }
-      }
-      $query = substr($query, 0, -2) . ' where ' . $parameters;
-    }
-
-    return $db->Execute($query);
-  }
-  function zen_db_perform_language($table, $data, $keyIdName, $keyId, $languageId, $link = 'db_link') {
+  function zen_db_perform_language($table, $data, $keyIdName, $keyId, $languageId) {
     global $db;
     $sql = "INSERT INTO " . $table . "(" . $keyIdName . ", languages_id, ";
     foreach($data as $columns => $value) {
@@ -92,30 +50,4 @@
   function zen_db_insert_id() {
     global $db;
     return $db->insert_ID();
-  }
-
-  function zen_db_output($string) {
-    return htmlspecialchars($string, ENT_COMPAT, CHARSET, TRUE);
-  }
-
-  function zen_db_input($string) {
-    global $db;
-    return $db->prepareInput($string);
-  }
-
-  function zen_db_prepare_input($string, $trimspace = true) {
-    if (is_string($string)) {
-      if ($trimspace == true) {
-        return trim(stripslashes($string));
-      } else {
-        return stripslashes($string);
-      }
-    } elseif (is_array($string)) {
-      foreach($string as $key => $value) {
-        $string[$key] = zen_db_prepare_input($value);
-      }
-      return $string;
-    } else {
-      return $string;
-    }
   }
