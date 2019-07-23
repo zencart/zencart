@@ -259,7 +259,7 @@ if (zen_not_null($action)) {
       </script>
     </head>
 <?php } ?>
-<?php if (($action == 'new') || ($action == 'edit')) { ?>
+<?php if ($action == 'new' || $action == 'edit') { ?>
        <body onload="SetCategories(); SetFocus(); init()">
        <div id="spiffycalendar" class="text"></div>
 <?php } else { ?>
