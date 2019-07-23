@@ -909,7 +909,7 @@ function zen_get_uprid($prid, $params)
 // Sets timeout for the current script.
 // Cant be used in safe mode.
   function zen_set_time_limit($limit) {
-    if (version_compare(PHP_VERSION, 5.4, '>=') || !get_cfg_var('safe_mode')) {
+    if (!get_cfg_var('safe_mode')) {
       @set_time_limit($limit);
     }
   }
