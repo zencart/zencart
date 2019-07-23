@@ -20,16 +20,19 @@ $show_attributes_qty_prices_description = 'false';
 
 // limit to 1 for performance when processing larger tables
 $sql = "select count(*) as total
-          from " . TABLE_PRODUCTS_OPTIONS . " popt, " . TABLE_PRODUCTS_ATTRIBUTES . " patrib
-          where    patrib.products_id='" . (int)$_GET['products_id'] . "'
-            and      patrib.options_id = popt.products_options_id
-            and      popt.language_id = '" . (int)$_SESSION['languages_id'] . "'" .
-            " limit 1";
+        from " . TABLE_PRODUCTS_OPTIONS . " popt, " . TABLE_PRODUCTS_ATTRIBUTES . " patrib
+        where    patrib.products_id='" . (int)$_GET['products_id'] . "'
+        and      patrib.options_id = popt.products_options_id
+        and      popt.language_id = '" . (int)$_SESSION['languages_id'] . "'
+        limit 1";
+
+$pr_attr = $db->Execute($sql);
+
+if ($pr_attr->fields['total'] < 1) return;
 
 
-            $pr_attr = $db->Execute($sql);
 
-            if ($pr_attr->fields['total'] > 0) {
+
               if (PRODUCTS_OPTIONS_SORT_ORDER=='0') {
                 $options_order_by= ' order by LPAD(popt.products_options_sort_order,11,"0"), popt.products_options_name';
               } else {
@@ -623,5 +626,3 @@ $sql = "select count(*) as total
               $_GET['number_of_uploads'] = $number_of_uploads;
               //      zen_draw_hidden_field('number_of_uploads', $_GET['number_of_uploads']);
               zen_draw_hidden_field('number_of_uploads', $number_of_uploads);
-            }
-
