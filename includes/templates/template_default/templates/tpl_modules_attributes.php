@@ -29,8 +29,10 @@
 
 <div class="wrapperAttribsOptions" id="<?php echo $options_html_id[$i]; ?>">
 <h4 class="optionName back"><?php echo $options_name[$i]; ?></h4>
-<div class="back"><?php echo "\n" . $options_menu[$i]; ?></div>
-<br class="clearBoth" />
+<div class="back">
+    <?php echo "\n" . $options_menu[$i]; ?>
+</div>
+<br class="clearBoth">
 </div>
 
 
@@ -40,27 +42,27 @@
 
 
 <?php
-if (isset($options_attributes_image[$i]) && $options_attributes_image[$i] != '') {
+if (!empty($options_attributes_image[$i])) {
 ?>
 <?php echo $options_attributes_image[$i]; ?>
 <?php
 }
 ?>
-<br class="clearBoth" />
+<br class="clearBoth">
 <?php
     }
 ?>
 
 
 <?php
-  if ($show_onetime_charges_description == 'true') {
+  if ($show_onetime_charges_description) {
 ?>
     <div class="wrapperAttribsOneTime"><?php echo TEXT_ONETIME_CHARGE_SYMBOL . TEXT_ONETIME_CHARGE_DESCRIPTION; ?></div>
 <?php } ?>
 
 
 <?php
-  if ($show_attributes_qty_prices_description == 'true') {
+  if ($show_attributes_qty_prices_description) {
 ?>
     <div class="wrapperAttribsQtyPrices"><?php echo zen_image(DIR_WS_TEMPLATE_ICONS . 'icon_status_green.gif', TEXT_ATTRIBUTES_QTY_PRICE_HELP_LINK, 10, 10) . '&nbsp;' . '<a href="javascript:popupWindowPrice(\'' . zen_href_link(FILENAME_POPUP_ATTRIBUTES_QTY_PRICES, 'products_id=' . $_GET['products_id'] . '&products_tax_class_id=' . $products_tax_class_id) . '\')">' . TEXT_ATTRIBUTES_QTY_PRICE_HELP_LINK . '</a>'; ?></div>
 <?php } ?>
