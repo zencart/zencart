@@ -166,9 +166,6 @@ for ($i = 0; $i < $report->size; $i++) {
               'width': 600,
               'height': 450
           };
-<?php
-// echo $scale;
-?>
 
           // Instantiate and draw our chart, passing in some options.
           var chart = new google.visualization.ColumnChart(document.getElementById('chart_div'));
@@ -336,7 +333,6 @@ for ($i = 0; $i < $report->size; $i++) {
       </div>
       <!-- body_text_eof //-->
     </div>
-    <?php //die('<pre>' . print_r($report, true));  ?>
 
     <!-- body_eof //-->
     <!-- footer //-->

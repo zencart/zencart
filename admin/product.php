@@ -34,15 +34,6 @@ if (zen_not_null($action)) {
         require(DIR_WS_MODULES . 'update_product.php');
       }
       break;
-      /*
-    case 'new_product_preview_meta_tags':
-      if (file_exists(DIR_WS_MODULES . $zc_products->get_handler($product_type) . '/new_product_preview_meta_tags.php')) {
-        require(DIR_WS_MODULES . $zc_products->get_handler($product_type) . '/new_product_preview_meta_tags.php');
-      } else {
-        require(DIR_WS_MODULES . 'new_product_preview_meta_tags.php');
-      }
-      break;
-      */
     case 'new_product_preview':
       if (file_exists(DIR_WS_MODULES . $zc_products->get_handler($product_type) . '/new_product_preview.php')) {
         require(DIR_WS_MODULES . $zc_products->get_handler($product_type) . '/new_product_preview.php');
@@ -94,7 +85,6 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
     <!-- body //-->
     <!-- body_text //-->
     <?php
-    // echo DIR_WS_MODULES . $zc_products->get_handler($product_type);
     if ($action == 'new_product_meta_tags') {
       require(DIR_WS_MODULES . $zc_products->get_handler($product_type) . '/collect_info_metatags.php');
     } elseif ($action == 'new_product') {

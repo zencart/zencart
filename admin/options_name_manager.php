@@ -70,7 +70,6 @@ if (zen_not_null($action)) {
       zen_redirect(zen_href_link(FILENAME_OPTIONS_NAME_MANAGER));
       break;
     case 'add_product_options':
-      //clr 030714 update to add option type to products_option.
       $products_options_id = zen_db_prepare_input($_POST['products_options_id']);
       $option_name_array = $_POST['option_name'];
       $products_options_sort_order = $_POST['products_options_sort_order'];
@@ -93,8 +92,6 @@ if (zen_not_null($action)) {
                               '" . (int)(($products_options_rows <= 1 and $option_type == PRODUCTS_OPTIONS_TYPE_TEXT) ? 1 : zen_db_input($products_options_rows)) . "')");
       }
 
-// iii 030811 added:  For TEXT and FILE option types, automatically add
-// PRODUCTS_OPTIONS_VALUE_TEXT to the TABLE_PRODUCTS_OPTIONS_VALUES_TO_PRODUCTS_OPTIONS
       switch ($option_type) {
         case PRODUCTS_OPTIONS_TYPE_TEXT:
         case PRODUCTS_OPTIONS_TYPE_FILE:
@@ -126,7 +123,6 @@ if (zen_not_null($action)) {
       zen_redirect(zen_href_link(FILENAME_OPTIONS_NAME_MANAGER, $_SESSION['page_info'] . '&option_order_by=' . $option_order_by));
       break;
     case 'update_option_name':
-      //clr 030714 update to add option type to products_option.
       $option_name_array = $_POST['option_name'];
       $option_type = (int)$_POST['option_type'];
       $option_id = zen_db_prepare_input($_POST['option_id']);
@@ -152,8 +148,6 @@ if (zen_not_null($action)) {
         $products_options_images_per_row = (int)zen_db_prepare_input($products_options_images_per_row_array[$languages[$i]['id']]);
         $products_options_images_style = (int)zen_db_prepare_input($products_options_images_style_array[$languages[$i]['id']]);
         $products_options_rows = (int)zen_db_prepare_input($products_options_rows_array[$languages[$i]['id']]);
-
-//          zen_db_query("update " . TABLE_PRODUCTS_OPTIONS . " set products_options_name = '" . zen_db_input($option_name) . "', products_options_type = '" . $option_type . "' where products_options_id = '" . (int)$option_id . "' and language_id = '" . (int)$languages[$i]['id'] . "'");
 
         $db->Execute("UPDATE " . TABLE_PRODUCTS_OPTIONS . "
                       SET products_options_name = '" . zen_db_input($option_name) . "',
@@ -273,7 +267,6 @@ if (zen_not_null($action)) {
       if ($all_update_products->RecordCount() < 1) {
         $messageStack->add_session(ERROR_PRODUCTS_OPTIONS_VALUES, 'caution');
       } else {
-//die('I want to update ' . $_GET['update_to'] . ' : update action: ' . $update_action . ' product: ' . $_POST['product_to_update']  . ' category: ' . $_POST['category_to_update'] . ' found records: ' . $all_update_products->RecordCount() . ' - ' . $all_update_products->fields['products_id']);
 
         if ($update_action == 0) {
           // action add
@@ -322,10 +315,6 @@ if (zen_not_null($action)) {
                                                         AND options_id = " . (int)$all_options_value['products_options_id'] . "
                                                         AND options_values_id= " . (int)$all_options_value['products_options_values_id']);
               if ($check_all_options_values->RecordCount() >= 1) {
-                // delete for this product with Option Name options_value_id
-// echo '<br>This should be deleted: ' . zen_get_products_name($all_options_value['products_options_id']);
-// change to delete
-// should add download delete
                 $db->Execute("DELETE FROM " . TABLE_PRODUCTS_ATTRIBUTES . "
                               WHERE products_id = " . (int)$all_update_product['products_id'] . "
                               AND options_id = " . (int)$_POST['options_id']);
@@ -389,9 +378,7 @@ if (zen_not_null($action)) {
   }
 }
 
-//iii 031103 added to get results from database option type query
 $products_options_types_list = array();
-//  $products_options_type_array = $db->Execute("select products_options_types_id, products_options_types_name from " . TABLE_PRODUCTS_OPTIONS_TYPES . " where language_id='" . $_SESSION['languages_id'] . "' order by products_options_types_id");
 $products_options_type_array = $db->Execute("SELECT products_options_types_id, products_options_types_name
                                              FROM " . TABLE_PRODUCTS_OPTIONS_TYPES . "
                                              ORDER BY products_options_types_id");
@@ -407,9 +394,6 @@ foreach ($products_options_types_list as $id => $text) {
   );
 }
 
-//CLR 030312 add function to translate type_id to name
-// Translate option_type_values to english string
-//iii 031103 modified to use results of database option type query from above
 function translate_type_to_name($opt_type) {
   global $products_options_types_list;
   return $products_options_types_list[$opt_type];
@@ -730,8 +714,6 @@ function translate_type_to_name($opt_type) {
                       $inputs2 .= '</div>';
                       $inputs2 .= '</div>';
                     }
-
-//CLR 030212 - Add column for option type
                     ?>
                   <td class="text-center">
                       <?php echo $options_value['products_options_id']; ?>
@@ -779,7 +761,6 @@ function translate_type_to_name($opt_type) {
                 <?php
                 echo '</form>' . "\n";
               } else {
-//CLR 030212 - Add column for option type
                 ?>
                 <tr>
                   <td class="text-center"><?php echo $options_value["products_options_id"]; ?></td>
@@ -836,7 +817,6 @@ function translate_type_to_name($opt_type) {
                     $inputs2 .= zen_draw_input_field('products_options_sort_order[' . $languages[$i]['id'] . ']', '', 'size="3" class="form-control"');
                     ($i + 1 < $n ? $inputs2 .= '<br>' : '');
                   }
-//CLR 030212 - Add column for option type
                   ?>
                 <td class="text-center"><?php echo $next_id; ?></td>
                 <td><?php echo $inputs; ?></td>
