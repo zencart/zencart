@@ -628,7 +628,7 @@ use PHPMailer\PHPMailer\SMTP;
       OFFICE_EMAIL. "\t" . $email_from . "\n" .
       (trim($login) !='' ? OFFICE_LOGIN_NAME . "\t" . $login . "\n"  : '') .
       (trim($login_email) !='' ? OFFICE_LOGIN_EMAIL . "\t" . $login_email . "\n"  : '') .
-      ($login_phone !='' ? OFFICE_LOGIN_PHONE . "\t" . $login_phone . "\n" : '') .
+      (trim($login_phone) !='' ? OFFICE_LOGIN_PHONE . "\t" . $login_phone . "\n"  : '') .
       ($login_fax !='' ? OFFICE_LOGIN_FAX . "\t" . $login_fax . "\n" : '') .
       OFFICE_IP_ADDRESS . "\t" . $_SESSION['customers_ip_address'] . ' - ' . $_SERVER['REMOTE_ADDR'] . "\n" .
       ($email_host_address != '' ? OFFICE_HOST_ADDRESS . "\t" . $email_host_address  . "\n" : '') .

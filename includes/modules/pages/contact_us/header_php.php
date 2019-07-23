@@ -21,6 +21,7 @@ $antiSpamFieldName = isset($_SESSION['antispam_fieldname']) ? $_SESSION['antispa
 if (isset($_GET['action']) && ($_GET['action'] == 'send')) {
     $name = zen_db_prepare_input($_POST['contactname']);
     $email_address = zen_db_prepare_input($_POST['email']);
+    $telephone = zen_db_prepare_input($_POST['telephone']);
     $enquiry = zen_db_prepare_input(strip_tags($_POST['enquiry']));
     $antiSpam = !empty($_POST[$antiSpamFieldName]) ? 'spam' : '';
     if (!empty($_POST['contactname']) && preg_match('~https?://?~', $_POST['contactname'])) $antiSpam = 'spam';
@@ -37,7 +38,7 @@ if (isset($_GET['action']) && ($_GET['action'] == 'send')) {
 
             // auto complete when logged in
             if ($_SESSION['customer_id']) {
-                $sql = "SELECT customers_id, customers_firstname, customers_lastname, customers_password, customers_email_address, customers_default_address_id
+                $sql = "SELECT customers_id, customers_firstname, customers_lastname, customers_password, customers_email_address, customers_default_address_id, customers_telephone 
                       FROM " . TABLE_CUSTOMERS . "
                       WHERE customers_id = :customersID";
 
@@ -45,12 +46,14 @@ if (isset($_GET['action']) && ($_GET['action'] == 'send')) {
                 $check_customer = $db->Execute($sql);
                 $customer_email = $check_customer->fields['customers_email_address'];
                 $customer_name  = $check_customer->fields['customers_firstname'] . ' ' . $check_customer->fields['customers_lastname'];
+                $customer_telephone = $check_customer->fields['customers_telephone']; 
             } else {
                 $customer_email = NOT_LOGGED_IN_TEXT;
                 $customer_name = NOT_LOGGED_IN_TEXT;
+                $customer_telephone = NOT_LOGGED_IN_TEXT;
             }
 
-            $zco_notifier->notify('NOTIFY_CONTACT_US_ACTION', (isset($_SESSION['customer_id']) ? $_SESSION['customer_id'] : 0), $customer_email, $customer_name, $email_address, $name, $enquiry);
+            $zco_notifier->notify('NOTIFY_CONTACT_US_ACTION', (isset($_SESSION['customer_id']) ? $_SESSION['customer_id'] : 0), $customer_email, $customer_name, $email_address, $name, $enquiry, $telephone);
 
             // declare variable
             $send_to_array = [];
@@ -75,10 +78,12 @@ if (isset($_GET['action']) && ($_GET['action'] == 'send')) {
             }
 
             // Prepare extra-info details
-            $extra_info = email_collect_extra_info($name, $email_address, $customer_name, $customer_email);
+            $extra_info = email_collect_extra_info($name, $email_address, $customer_name, $customer_email, $customer_telephone);
             // Prepare Text-only portion of message
             $text_message = OFFICE_FROM . "\t" . $name . "\n" .
-            OFFICE_EMAIL . "\t" . $email_address . "\n\n" .
+              OFFICE_EMAIL . "\t" . $email_address . "\n";
+            if (!empty($telephone)) $text_message .= OFFICE_LOGIN_PHONE . "\t" . $telephone . "\n"; 
+            $text_message .= "\n" .
             '------------------------------------------------------' . "\n\n" .
             strip_tags($_POST['enquiry']) .  "\n\n" .
             '------------------------------------------------------' . "\n\n" .
@@ -115,7 +120,7 @@ $name = '';
 
 // default email and name if customer is logged in
 if (zen_is_logged_in()) {
-    $sql = "SELECT customers_id, customers_firstname, customers_lastname, customers_password, customers_email_address, customers_default_address_id
+    $sql = "SELECT customers_id, customers_firstname, customers_lastname, customers_password, customers_email_address, customers_default_address_id, customers_telephone 
             FROM " . TABLE_CUSTOMERS . "
             WHERE customers_id = :customersID";
 
@@ -123,6 +128,7 @@ if (zen_is_logged_in()) {
     $check_customer = $db->Execute($sql);
     $email_address = $check_customer->fields['customers_email_address'];
     $name = $check_customer->fields['customers_firstname'] . ' ' . $check_customer->fields['customers_lastname'];
+    $telephone = $check_customer->fields['customers_telephone']; 
 }
 
 $send_to_array = array();

@@ -16,6 +16,7 @@ if (!defined('IS_ADMIN_FLAG')) {
  * General Functions
  */
 require(DIR_WS_FUNCTIONS . 'functions_general.php');
+require(DIR_WS_FUNCTIONS . 'functions_general_shared.php');
 /**
  * Product Functions
  */

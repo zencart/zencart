@@ -33,8 +33,6 @@ class zcAjaxPayment extends base
   public function prepareConfirmation()
   {
     global $messageStack, $template, $breadcrumb, $template_dir_select, $template_dir, $language_page_directory, $currencies, $order, $zco_notifier, $db, $current_page_base, $order_total_modules, $credit_covers;
-    // error_reporting(E_ALL);
-    // ini_set('display_errors', 'on');
     $_GET['main_page'] = $current_page_base = $current_page = FILENAME_CHECKOUT_CONFIRMATION;
     if ($_SESSION['cart']->count_contents ()<=0) {
       zen_redirect (zen_href_link (FILENAME_TIME_OUT));
@@ -80,7 +78,6 @@ class zcAjaxPayment extends base
         $messageStack->add_session ('checkout_payment', ERROR_CONDITIONS_NOT_ACCEPTED, 'error');
       }
     }
-    // echo $messageStack->size('checkout_payment');
     // load the selected payment module
     require (DIR_WS_CLASSES.'payment.php');
     $payment_modules = new payment ($_POST['payment']);

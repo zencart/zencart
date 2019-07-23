@@ -558,26 +558,6 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
       <div class="row"><?php echo zen_draw_separator('pixel_black.gif', '100%', '1px'); ?></div>
       <div class="row">
         <div class="<?php echo (empty($action)) ? '' : 'col-xs-12 col-sm-12 col-md-9 col-lg-9 configurationColumnLeft'; ?>">
-            <table class="table table-striped table-hover">
-              <thead>
-                <tr>
-                  <th class="text-right"><?php echo TABLE_HEADING_ID; ?></th>
-                  <th><?php echo TABLE_HEADING_CATEGORIES_PRODUCTS; ?></th>
-                  <th class="hidden-md hidden-sm hidden-xs"><?php echo TABLE_HEADING_MODEL; ?></th>
-                  <th class="text-right hidden-md hidden-sm hidden-xs"><?php echo TABLE_HEADING_PRICE; ?></th>
-                  <th class="text-right hidden-md hidden-sm hidden-xs">&nbsp;</th>
-                  <th class="text-right hidden-md hidden-sm hidden-xs"><?php echo TABLE_HEADING_QUANTITY; ?></th>
-                  <th class="text-right hidden-md hidden-sm hidden-xs"><?php echo TABLE_HEADING_STATUS; ?></th>
-                  <?php
-                  if ($action == '') {
-                    ?>
-                    <th class="text-right hidden-md hidden-sm hidden-xs"><?php echo TABLE_HEADING_CATEGORIES_SORT_ORDER; ?></th>
-                    <th class="text-right"><?php echo TABLE_HEADING_ACTION; ?></th>
-                    <?php
-                  }
-                  ?>
-                </tr>
-              </thead>
               <?php
               $order_by = " ";
               switch ($_SESSION['categories_products_sort_order']) {
@@ -614,7 +594,30 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
                                             AND cd.language_id = " . (int)$_SESSION['languages_id'] .
                                             $order_by);
               }
-
+              $show_prod_labels = false; 
+              if ($categories->EOF) $show_prod_labels = true; 
+?>
+            <table class="table table-striped table-hover">
+              <thead>
+                <tr>
+                  <th class="text-right"><?php echo TABLE_HEADING_ID; ?></th>
+                  <th><?php echo TABLE_HEADING_CATEGORIES_PRODUCTS; ?></th>
+                  <th class="hidden-md hidden-sm hidden-xs"><?php if ($show_prod_labels) echo TABLE_HEADING_MODEL; ?></th>
+                  <th class="text-right hidden-md hidden-sm hidden-xs"><?php if ($show_prod_labels) echo TABLE_HEADING_PRICE; ?></th>
+                  <th class="text-right hidden-md hidden-sm hidden-xs">&nbsp;</th>
+                  <th class="text-right hidden-md hidden-sm hidden-xs"><?php echo TABLE_HEADING_QUANTITY; ?></th>
+                  <th class="text-right hidden-md hidden-sm hidden-xs"><?php echo TABLE_HEADING_STATUS; ?></th>
+                  <?php
+                  if ($action == '') {
+                    ?>
+                    <th class="text-right hidden-md hidden-sm hidden-xs"><?php echo TABLE_HEADING_CATEGORIES_SORT_ORDER; ?></th>
+                    <th class="text-right"><?php echo TABLE_HEADING_ACTION; ?></th>
+                    <?php
+                  }
+                  ?>
+                </tr>
+              </thead>
+<?php
               foreach ($categories as $category) {
                 $categories_count++;
                 $rows++;
@@ -1025,8 +1028,8 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
                                   '<div class="radio"><label>' . zen_draw_radio_field('set_subcategories_status', 'set_subcategories_status_on', true) . TEXT_SUBCATEGORIES_STATUS_ON . '</label></div>' .
                                   '<div class="radio"><label>' . zen_draw_radio_field('set_subcategories_status', 'set_subcategories_status_nochange') . TEXT_SUBCATEGORIES_STATUS_NOCHANGE . '</label></div>' : '') .
 
-                              //hide products selection if no products
-                              (zen_get_products_to_categories($_GET['cID']) > 0 ? zen_draw_label(TEXT_PRODUCTS_STATUS_INFO, 'set_products_status','class="control-label"') .
+                              //hide products selection if no enabled nor disabled products
+                              (zen_get_products_to_categories($_GET['cID'], true) > 0 ? zen_draw_label(TEXT_PRODUCTS_STATUS_INFO, 'set_products_status','class="control-label"') .
                               '<div class="radio"><label>' . zen_draw_radio_field('set_products_status', 'set_products_status_on', true) . TEXT_PRODUCTS_STATUS_ON . '</label></div>' .
                               '<div class="radio"><label>' . zen_draw_radio_field('set_products_status', 'set_products_status_nochange') . TEXT_PRODUCTS_STATUS_NOCHANGE . '</label></div>' : '')
                       );

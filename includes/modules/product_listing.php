@@ -185,19 +185,6 @@ if ($listing_split->number_of_rows > 0) {
                                               'text'  => $lc_text);
     }
 
-    // add description and match alternating colors
-    //if (PRODUCT_LIST_DESCRIPTION > 0) {
-    //  $rows++;
-    //  if ($extra_row == 1) {
-    //    $list_box_description = "productListing-data-description-even";
-    //    $extra_row=0;
-    //  } else {
-    //    $list_box_description = "productListing-data-description-odd";
-    //    $extra_row=1;
-    //  }
-    //  $list_box_contents[$rows][] = array('params' => 'class="' . $list_box_description . '" colspan="' . $zc_col_count_description . '"',
-    //  'text' => zen_trunc_string(zen_clean_html(stripslashes(zen_get_products_description($listing->fields['products_id'], $_SESSION['languages_id']))), PRODUCT_LIST_DESCRIPTION));
-    //}
     $listing->MoveNext();
   }
   $error_categories = false;

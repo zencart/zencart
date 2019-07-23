@@ -192,7 +192,7 @@ foreach ($whos_online as $session) {
 //              visibleInLegend: true
                   }
               }, // Draw a trendline for data series 0.
-              vAxis: {title: '<?php echo DASHBOARD_DOLLARS; ?>'},
+              vAxis: {title: '<?php echo DEFAULT_CURRENCY; ?>'},
               width: '100%',
               height: '100%',
               backgroundColor: {fill: "#f7f6ef"},

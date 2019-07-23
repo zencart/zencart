@@ -83,7 +83,8 @@ function executeSql($lines, $database, $table_prefix = '') {
     $line = $saveline . $line;
     $keep_together = 1; // count of number of lines to treat as a single command
     // split the line into words ... starts at $param[0] and so on.  Also remove the ';' from end of last param if exists
-    $param = explode(" ", (substr($line, -1) == ';') ? substr($line, 0, strlen($line) - 1) : $line);
+     $no_semi_line = rtrim($line, ';'); 
+     $param = preg_split('/\s+/', $no_semi_line);
 
     // The following command checks to see if we're asking for a block of commands to be run at once.
     // Syntax: #NEXT_X_ROWS_AS_ONE_COMMAND:6     for running the next 6 commands together (commands denoted by a ;)
@@ -98,7 +99,7 @@ function executeSql($lines, $database, $table_prefix = '') {
       switch (true) {
         case (substr($line_upper, 0, 21) == 'DROP TABLE IF EXISTS '):
 //            if (!$checkprivs = zen_check_database_privs('DROP')) return sprintf(REASON_NO_PRIVILEGES,'DROP');
-          $line = 'DROP TABLE IF EXISTS ' . $table_prefix . substr($line, 21);
+          $line = 'DROP TABLE IF EXISTS ' . $table_prefix . ltrim(substr($line, 21));
           break;
         case (substr($line_upper, 0, 11) == 'DROP TABLE ' && $param[2] != 'IF'):
           if (!$checkprivs = zen_check_database_privs('DROP')) {
@@ -110,7 +111,7 @@ function executeSql($lines, $database, $table_prefix = '') {
             $result = (zen_not_null($result) ? $result : sprintf(REASON_TABLE_DOESNT_EXIST, $param[2])); //duplicated here for on-screen error-reporting
             break;
           } else {
-            $line = 'DROP TABLE ' . $table_prefix . substr($line, 11);
+            $line = 'DROP TABLE ' . $table_prefix . ltrim(substr($line, 11));
           }
           break;
         case (substr($line_upper, 0, 13) == 'CREATE TABLE '):
@@ -123,7 +124,7 @@ function executeSql($lines, $database, $table_prefix = '') {
             $result = sprintf(REASON_TABLE_ALREADY_EXISTS, $table); //duplicated here for on-screen error-reporting
             break;
           } else {
-            $line = (strtoupper($param[2] . ' ' . $param[3] . ' ' . $param[4]) == 'IF NOT EXISTS') ? 'CREATE TABLE IF NOT EXISTS ' . $table_prefix . substr($line, 27) : 'CREATE TABLE ' . $table_prefix . substr($line, 13);
+            $line = (strtoupper($param[2] . ' ' . $param[3] . ' ' . $param[4]) == 'IF NOT EXISTS') ? 'CREATE TABLE IF NOT EXISTS ' . $table_prefix . ltrim(substr($line, 27)) : 'CREATE TABLE ' . $table_prefix . ltrim(substr($line, 13));
           }
           break;
         case (substr($line_upper, 0, 15) == 'TRUNCATE TABLE '):
@@ -134,7 +135,7 @@ function executeSql($lines, $database, $table_prefix = '') {
             $ignore_line = true;
             break;
           } else {
-            $line = 'TRUNCATE TABLE ' . $table_prefix . substr($line, 15);
+            $line = 'TRUNCATE TABLE ' . $table_prefix . ltrim(substr($line, 15));
           }
           break;
         case (substr($line_upper, 0, 13) == 'REPLACE INTO '):
@@ -148,7 +149,7 @@ function executeSql($lines, $database, $table_prefix = '') {
             $ignore_line = true;
             break;
           } else {
-            $line = 'REPLACE INTO ' . $table_prefix . substr($line, 13);
+            $line = 'REPLACE INTO ' . $table_prefix . ltrim(substr($line, 13));
           }
           break;
         case (substr($line_upper, 0, 12) == 'INSERT INTO '):
@@ -162,7 +163,7 @@ function executeSql($lines, $database, $table_prefix = '') {
             $ignore_line = true;
             break;
           } else {
-            $line = 'INSERT INTO ' . $table_prefix . substr($line, 12);
+            $line = 'INSERT INTO ' . $table_prefix . ltrim(substr($line, 12));
           }
           break;
         case (substr($line_upper, 0, 19) == 'INSERT IGNORE INTO '):
@@ -173,7 +174,7 @@ function executeSql($lines, $database, $table_prefix = '') {
             $ignore_line = true;
             break;
           } else {
-            $line = 'INSERT IGNORE INTO ' . $table_prefix . substr($line, 19);
+            $line = 'INSERT IGNORE INTO ' . $table_prefix . ltrim(substr($line, 19));
           }
           break;
         case (substr($line_upper, 0, 12) == 'ALTER TABLE '):
@@ -183,7 +184,7 @@ function executeSql($lines, $database, $table_prefix = '') {
             $ignore_line = true;
             break;
           } else {
-            $line = 'ALTER TABLE ' . $table_prefix . substr($line, 12);
+            $line = 'ALTER TABLE ' . $table_prefix . ltrim(substr($line, 12));
           }
           break;
         case (substr($line_upper, 0, 13) == 'RENAME TABLE '):
@@ -203,7 +204,7 @@ function executeSql($lines, $database, $table_prefix = '') {
             $ignore_line = true;
             break;
           } else {
-            $line = 'UPDATE ' . $table_prefix . substr($line, 7);
+            $line = 'UPDATE ' . $table_prefix . ltrim(substr($line, 7));
           }
           break;
         case (substr($line_upper, 0, 14) == 'UPDATE IGNORE '):
@@ -214,11 +215,11 @@ function executeSql($lines, $database, $table_prefix = '') {
             $ignore_line = true;
             break;
           } else {
-            $line = 'UPDATE IGNORE ' . $table_prefix . substr($line, 14);
+            $line = 'UPDATE IGNORE ' . $table_prefix . ltrim(substr($line, 14));
           }
           break;
         case (substr($line_upper, 0, 12) == 'DELETE FROM '):
-          $line = 'DELETE FROM ' . $table_prefix . substr($line, 12);
+          $line = 'DELETE FROM ' . $table_prefix . ltrim(substr($line, 12));
           break;
         case (substr($line_upper, 0, 11) == 'DROP INDEX '):
           // check to see if DROP INDEX command may be safely executed
@@ -248,14 +249,14 @@ function executeSql($lines, $database, $table_prefix = '') {
           $line = str_replace('FROM ', 'FROM ' . $table_prefix, $line);
           break;
         case (substr($line_upper, 0, 10) == 'LEFT JOIN '):
-          $line = 'LEFT JOIN ' . $table_prefix . substr($line, 10);
+          $line = 'LEFT JOIN ' . $table_prefix . ltrim(substr($line, 10));
           break;
         case (substr($line_upper, 0, 5) == 'FROM '):
           if (substr_count($line, ',') > 0) { // contains FROM and a comma, thus must parse for multiple tablenames
-            $tbl_list = explode(',', substr($line, 5));
+            $tbl_list = explode(',', ltrim(substr($line, 5)));
             $line = 'FROM ';
             foreach ($tbl_list as $val) {
-              $line .= $table_prefix . trim($val) . ','; // add prefix and comma
+              $line .= $table_prefix . ltrim($val) . ','; // add prefix and comma
             } //end foreach
             if (substr($line, -1) == ',') {
               $line = substr($line, 0, (strlen($line) - 1)); // remove trailing ','
@@ -287,9 +288,6 @@ function executeSql($lines, $database, $table_prefix = '') {
       if ($complete_line) {
         if ($debug == true) {
           echo ((!$ignore_line) ? '<br>About to execute.' : 'Ignoring statement. This command WILL NOT be executed.') . '<br>Debug info:<br>$ line=' . $line . '<br>$ complete_line=' . $complete_line . '<br>$ keep_together=' . $keep_together . '<br>SQL=' . $newline . '<br><br>';
-        }
-        if (version_compare(PHP_VERSION, 5.4, '<') && @get_magic_quotes_runtime() > 0 && $keepslashes != true) {
-          $newline = stripslashes($newline);
         }
         if (trim(str_replace(';', '', $newline)) != '' && !$ignore_line) {
           $output = $db->Execute($newline);
@@ -729,9 +727,6 @@ if (zen_not_null($action)) {
     case 'execute':
       if (isset($_POST['query_string']) && $_POST['query_string'] != '') {
         $query_string = $_POST['query_string'];
-        if (version_compare(PHP_VERSION, 5.4, '<') && @get_magic_quotes_gpc() > 0) {
-          $query_string = stripslashes($query_string);
-        }
         if ($debug == true) {
           echo $query_string . '<br>';
         }
@@ -766,9 +761,6 @@ if (zen_not_null($action)) {
       if (isset($_FILES['sql_file']) && isset($_FILES['sql_file']['tmp_name']) && $_FILES['sql_file']['tmp_name'] != '') {
         $upload_query = file($_FILES['sql_file']['tmp_name']);
         $query_string = $upload_query;
-      }
-      if (version_compare(PHP_VERSION, 5.4, '<') && @get_magic_quotes_runtime() > 0) {
-        $query_string = zen_db_prepare_input($upload_query);
       }
       if ($query_string != '') {
         $query_results = executeSql($query_string, DB_DATABASE, DB_PREFIX);
