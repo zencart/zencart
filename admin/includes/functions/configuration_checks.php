@@ -19,9 +19,12 @@
      global $messageStack; 
      $data = json_decode($check_string, true); 
      // check inputs - error should be a defined constant in the language files
-     if (empty($data['error']) || !defined($data['error'])) return;
-     $error_msg = constant($data['error']); 
-
+     if (empty($data['error'])) return; 
+     if (!defined($data['error'])) {
+        $error_msg = TEXT_DATA_OUT_OF_RANGE; 
+     } else { 
+        $error_msg = constant($data['error']); 
+     }
      if (defined($data['id'])) { 
         $id = constant($data['id']); 
      } else if (is_integer($data['id'])) { 
