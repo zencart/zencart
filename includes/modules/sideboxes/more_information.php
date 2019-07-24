@@ -9,9 +9,8 @@
  * @version $Id: more_information.php 3464 2006-04-19 00:07:26Z ajeh $
  */
 
-// test if box should display
-
-  unset($more_information);
+// initialize
+$more_information = array();
 
 // test if links should display
   if (DEFINE_PAGE_2_STATUS <= 1) {
@@ -37,4 +36,3 @@
     $title_link = false;
     require($template->get_template_dir($column_box_default, DIR_WS_TEMPLATE, $current_page_base,'common') . '/' . $column_box_default);
   }
-?>
