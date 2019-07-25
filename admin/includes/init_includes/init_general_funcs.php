@@ -18,7 +18,7 @@ if (!defined('IS_ADMIN_FLAG')) {
   define('BOX_WIDTH', 125); // how wide the boxes should be in pixels (default: 125)
 
 // include the database functions
-  require(DIR_WS_FUNCTIONS . 'database.php');
+  require(DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'database.php');
 
 // define our general functions used application-wide
   require(DIR_WS_FUNCTIONS . 'general.php');
