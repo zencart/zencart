@@ -31,17 +31,13 @@ if (!isset($_GET['page'])) $_GET['page'] = '';
 
 include DIR_FS_CATALOG . DIR_WS_CLASSES . 'order.php';
 
-// prepare order-status pulldown list
-$orders_statuses = array();
+// prepare order-status look-up list
 $orders_status_array = array();
 $orders_status = $db->Execute("SELECT orders_status_id, orders_status_name
                                FROM " . TABLE_ORDERS_STATUS . "
                                WHERE language_id = " . (int)$_SESSION['languages_id'] . "
                                ORDER BY orders_status_id");
 foreach ($orders_status as $status) {
-  $orders_statuses[] = array(
-    'id' => $status['orders_status_id'],
-    'text' => $status['orders_status_name'] . ' [' . $status['orders_status_id'] . ']');
   $orders_status_array[$status['orders_status_id']] = $status['orders_status_name'];
 }
 
@@ -405,7 +401,7 @@ if (zen_not_null($action) && $order_exists == true) {
                 <?php
                 echo zen_draw_form('status', FILENAME_ORDERS, '', 'get', '', true);
                 echo zen_draw_label(HEADING_TITLE_STATUS, 'selectstatus', 'class="sr-only"');
-                echo zen_draw_pull_down_menu('status', array_merge(array(array('id' => '', 'text' => TEXT_ALL_ORDERS)), $orders_statuses), (int)$_GET['status'], 'class="form-control" onChange="this.form.submit();" id="selectstatus"');
+                echo zen_draw_order_status_dropdown('status', (int)$_GET['status'], array('id' => '', 'text' => TEXT_ALL_ORDERS), 'class="form-control" onChange="this.form.submit();" id="selectstatus"');
                 echo '</form>';
                 ?>
             </div>
@@ -737,7 +733,7 @@ if (zen_not_null($action) && $order_exists == true) {
             <div class="form-group">
                 <?php echo zen_draw_label(ENTRY_STATUS, 'status', 'class="col-sm-3 control-label"'); ?>
               <div class="col-sm-9">
-                  <?php echo zen_draw_pull_down_menu('status', $orders_statuses, $order->info['orders_status'], 'id="status" class="form-control"'); ?>
+                  <?php echo zen_draw_order_status_dropdown('status', $order->info['orders_status'], '', 'id="status" class="form-control"'); ?>
               </div>
             </div>
 <?php

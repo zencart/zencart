@@ -1669,22 +1669,33 @@ while (!$chk_sale_categories_all->EOF) {
 
 ////
   function zen_cfg_pull_down_order_statuses($order_status_id, $key = '') {
-    global $db;
     $name = (($key) ? 'configuration[' . $key . ']' : 'configuration_value');
-
-    $statuses_array = array(array('id' => '0', 'text' => TEXT_DEFAULT));
-    $statuses = $db->Execute("select orders_status_id, orders_status_name
-                              from " . TABLE_ORDERS_STATUS . "
-                              where language_id = '" . (int)$_SESSION['languages_id'] . "'
-                              order by orders_status_id");
-
-    while (!$statuses->EOF) {
-      $statuses_array[] = array('id' => $statuses->fields['orders_status_id'],
-                                'text' => $statuses->fields['orders_status_name'] . ' [' . $statuses->fields['orders_status_id'] . ']');
-      $statuses->MoveNext();
+    return zen_draw_order_status_dropdown($name, $order_status_id, array('id' => 0, 'text' => TEXT_DEFAULT), 'class="form-control"');
+  }
+  /**
+   * Return a pull-down menu of the available order-status values, 
+   * optionally prefixed by a "please choose" selection.
+  */
+  function zen_draw_order_status_dropdown($field_name, $default_value, $first_selection = '', $parms = '')
+  {
+      global $db;
+      $statuses = $db->Execute(
+          "SELECT orders_status_id AS `id`, orders_status_name AS `text`
+            FROM " . TABLE_ORDERS_STATUS . "
+            WHERE language_id = " . (int)$_SESSION['languages_id'] . "
+            ORDER BY sort_order ASC, orders_status_id ASC"
+      );
+      $statuses_array = array();
+      if (is_array($first_selection)) {
+          $statuses_array[] = $first_selection;
     }
-
-    return zen_draw_pull_down_menu($name, $statuses_array, $order_status_id, 'class="form-control"');
+      foreach ($statuses as $status) {
+          $statuses_array[] = array(
+              'id' => $status['id'],
+              'text' => "{$status['text']} [{$status['id']}]"
+          );
+      }
+      return zen_draw_pull_down_menu($field_name, $statuses_array, $default_value, $parms);
   }
 
   function zen_get_order_status_name($order_status_id, $language_id = '') {

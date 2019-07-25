@@ -1189,9 +1189,10 @@ CREATE TABLE orders_products_download (
 
 DROP TABLE IF EXISTS orders_status;
 CREATE TABLE orders_status (
-  orders_status_id int(11) NOT NULL default '0',
-  language_id int(11) NOT NULL default '1',
+  orders_status_id int(11) NOT NULL default 0,
+  language_id int(11) NOT NULL default 1,
   orders_status_name varchar(32) NOT NULL default '',
+  sort_order int(11) NOT NULL default 0,
   PRIMARY KEY  (orders_status_id,language_id),
   KEY idx_orders_status_name_zen (orders_status_name)
 ) ENGINE=MyISAM;
