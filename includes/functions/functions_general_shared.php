@@ -82,6 +82,31 @@
 
 
 /**
+ * Return a product ID with attributes hash
+ * @param string|int $prid
+ * @param array|string $params
+ * @return string
+ */
+  function zen_get_uprid($prid, $params) {
+    $uprid = $prid;
+    if (!is_array($params) || strstr($prid, ':')) return $prid;
+
+    foreach($params as $option => $value) {
+      if (is_array($value)) {
+        foreach($value as $opt => $val) {
+          $uprid .= '{' . $option . '}' . trim($opt);
+        }
+      } else {
+        $uprid .= '{' . $option . '}' . trim($value);
+      }
+    }
+
+    $md_uprid = md5($uprid);
+    return $prid . ':' . $md_uprid;
+  }
+
+
+/**
  * Return a product ID from a product ID with attributes
  * Alternate: simply (int) the product id
  * @param string $uprid   ie: '11:abcdef12345'
