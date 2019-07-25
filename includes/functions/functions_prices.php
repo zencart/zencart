@@ -165,6 +165,8 @@
 ////
 // Display Price Retail
 // Specials and Tax Included
+// Note this file is shared with admin but these functions differ
+if (!function_exists('zen_get_products_display_price')) { 
   function zen_get_products_display_price($products_id) {
     global $db, $currencies;
 
@@ -388,6 +390,7 @@
 
     return $final_display_price . $free_tag . $call_tag;
   }
+}
 
 ////
 // Is the product free?
@@ -472,6 +475,8 @@
 ////
 // Return a product mixed setting
 // TABLES: products
+// Note this file is shared with admin but these functions differ
+if (!function_exists('zen_get_products_quantity_mixed')) { 
   function zen_get_products_quantity_mixed($product_id) {
     global $db;
 
@@ -490,10 +495,12 @@
 
     return $look_up;
   }
-
+}
 
 ////
 // Return a products quantity minimum and units display
+// Note this file is shared with admin but these functions differ
+if (!function_exists('zen_get_products_quantity_min_units_display')) { 
   function zen_get_products_quantity_min_units_display($product_id, $include_break = true, $shopping_cart_msg = false) {
     $check_min = zen_get_products_quantity_order_min($product_id);
     $check_units = zen_get_products_quantity_order_units($product_id);
@@ -544,7 +551,7 @@
 
     return $the_min_units;
   }
-
+}
 
 ////
 // Return quantity buy now
@@ -583,6 +590,8 @@
 
 ////
 // compute product discount to be applied to attributes or other values
+// Note this file is shared with admin but these functions differ
+if (!function_exists('zen_get_discount_calc')) { 
   function zen_get_discount_calc($product_id, $attributes_id = false, $attributes_amount = false, $check_qty= false) {
     global $discount_type_id, $sale_maker_discount;
 
@@ -912,10 +921,13 @@
 
     return $sale_maker_discount;
   }
+}
 
 ////
 // look up discount in sale makers - attributes only can have discounts if set as percentages
 // this gets the discount amount this does not determin when to apply the discount
+// Note this file is shared with admin but these functions differ
+if (!function_exists('zen_get_products_sale_discount_type')) { 
   function zen_get_products_sale_discount_type($product_id = false, $categories_id = false, $return_value = false) {
     global $currencies;
     global $db;
@@ -1024,127 +1036,20 @@ possible return values in numerical order:
     switch (true) {
       case (!$return_value):
         return $sale_maker_discount_type;
-        break;
       case ($return_value == 'amount'):
         return $sale_maker_discount;
-        break;
       default:
         return 'Unknown Request';
-        break;
     }
   }
+}
 
-/**
- * look up discount in sale makers - attributes only can have discounts if set as percentages
- * this gets the discount amount this does not determine when to apply the discount
- * @deprecated since v1.5.5 use zen_get_discount_calc()
- */
-  function zen_get_products_sale_discount($product_id = false, $categories_id = false, $display_type = false) {
-    global $currencies;
-    global $db;
-
-// NOT USED
-echo '<br />' . 'I SHOULD use zen_get_discount_calc' . '<br />';
-
-/*
-
-0 = flat amount off base price with a special
-1 = Percentage off base price with a special
-2 = New Price with a special
-
-5 = No Sale or Skip Products with Special
-
-special options + option * 10
-0 = Ignore special and apply to Price
-1 = Skip Products with Specials switch to 5
-2 = Apply to Special Price
-
-If a special exist * 10
-
-0+7 + 0+10 = flat apply to price = 17 or 170
-0+7 + 1+10 = flat skip Specials = 5 or 50
-0+7 + 2+10 = flat apply to special = 27 or 270
-
-1+7 + 0+10 = Percentage apply to price = 18 or 180
-1+7 + 1+10 = Percentage skip Specials = 5 or 50
-1+7 + 2+10 = Percentage apply to special = 20 or 200
-
-2+7 + 0+10 = New Price apply to price = 19 or 190
-2+7 + 1+10 = New Price skip Specials = 5 or 50
-2+7 + 2+10 = New Price apply to Special = 21 or 210
-
-*/
-
-/*
-// get products category
-    if ($categories_id == true) {
-      $check_category = $categories_id;
-    } else {
-      $check_category = zen_get_products_category_id($product_id);
-    }
-
-    $deduction_type_array = array(array('id' => '0', 'text' => DEDUCTION_TYPE_DROPDOWN_0),
-                                  array('id' => '1', 'text' => DEDUCTION_TYPE_DROPDOWN_1),
-                                  array('id' => '2', 'text' => DEDUCTION_TYPE_DROPDOWN_2));
-
-    $sale_maker_discount = 0;
-    $salemaker_sales = $db->Execute("select sale_id, sale_status, sale_name, sale_categories_all, sale_deduction_value, sale_deduction_type, sale_pricerange_from, sale_pricerange_to, sale_specials_condition, sale_categories_selected, sale_date_start, sale_date_end, sale_date_added, sale_date_last_modified, sale_date_status_change from " . TABLE_SALEMAKER_SALES . " where sale_status='1'");
-    while (!$salemaker_sales->EOF) {
-      $categories = explode(',', $salemaker_sales->fields['sale_categories_all']);
-      foreach($categories as $key => $value) {
-        if ($value == $check_category) {
-          $sale_maker_discount = $salemaker_sales->fields['sale_deduction_value'];
-          $sale_maker_discount_type = $salemaker_sales->fields['sale_deduction_type'];
-          break;
-        }
-      }
-      $salemaker_sales->MoveNext();
-    }
-
-    switch(true) {
-      // percentage discount only
-      case ($sale_maker_discount_type == 1):
-        $sale_maker_discount = (1 - ($sale_maker_discount / 100));
-        break;
-      case ($sale_maker_discount_type == 0 and $display_type == true):
-        $sale_maker_discount = $sale_maker_discount;
-        break;
-      case ($sale_maker_discount_type == 0 and $display_type == false):
-        $sale_maker_discount = $sale_maker_discount;
-        break;
-      case ($sale_maker_discount_type == 2 and $display_type == true):
-        $sale_maker_discount = $sale_maker_discount;
-        break;
-      default:
-        $sale_maker_discount = 1;
-        break;
-    }
-
-    if ($display_type == true) {
-      if ($sale_maker_discount != 1 and $sale_maker_discount !=0) {
-        switch(true) {
-          case ($sale_maker_discount_type == 0):
-            $sale_maker_discount = $currencies->format($sale_maker_discount) . ' ' . $deduction_type_array[$sale_maker_discount_type]['text'];
-            break;
-          case ($sale_maker_discount_type == 2):
-            $sale_maker_discount = $currencies->format($sale_maker_discount) . ' ' . $deduction_type_array[$sale_maker_discount_type]['text'];
-            break;
-          case ($sale_maker_discount_type == 1):
-            $sale_maker_discount = number_format( (1.00 - $sale_maker_discount),2,".","") . ' ' . $deduction_type_array[$sale_maker_discount_type]['text'];
-            break;
-        }
-      } else {
-        $sale_maker_discount = '';
-      }
-    }
-    return $sale_maker_discount;
-*/
-
-  }
 
 ////
 // Actual Price Retail
 // Specials and Tax Included
+// Note this file is shared with admin but these functions differ
+if (!function_exists('zen_get_products_actual_price')) { 
   function zen_get_products_actual_price($products_id) {
     global $db;
     $product_check = $db->Execute("select products_tax_class_id, products_price, products_priced_by_attribute, product_is_free, product_is_call from " . TABLE_PRODUCTS . " where products_id = '" . (int)$products_id . "'" . " limit 1");
@@ -1169,6 +1074,7 @@ If a special exist * 10
     $display_normal_price = zen_get_products_base_price($products_id);
     return $display_normal_price;
   }
+}
 
 ////
 // return attributes_price_factor
@@ -1225,6 +1131,8 @@ If a special exist * 10
 
 ////
 // attributes final price
+// Note this file is shared with admin but these functions differ
+if (!function_exists('zen_get_attributes_price_final')) { 
   function zen_get_attributes_price_final($attribute, $qty = 1, $pre_selected, $include_onetime = 'false', $prod_priced_by_attr = false, $attributes_discounted = 0, $include_products_price_in = false) {
     global $db;
 
@@ -1278,12 +1186,14 @@ If a special exist * 10
 
     return $attributes_price_final;
   }
-
+}
 
 ////
 // attributes final price onetime
   function zen_get_attributes_price_final_onetime($attribute, $qty= 1, $pre_selected_onetime) {
     global $db;
+
+    $attributes_price_final_onetime = 0.0;
 
     if ($pre_selected_onetime == '' or $attribute != $pre_selected_onetime->fields["products_attributes_id"]) {
       $pre_selected_onetime = $db->Execute("select pa.* from " . TABLE_PRODUCTS_ATTRIBUTES . " pa where pa.products_attributes_id= '" . (int)$attribute . "'");
@@ -1291,22 +1201,21 @@ If a special exist * 10
       // use existing select
     }
 
-// one time charges
     // onetime charge
-      $attributes_price_final_onetime = $pre_selected_onetime->fields["attributes_price_onetime"];
+    $attributes_price_final_onetime += $pre_selected_onetime->fields["attributes_price_onetime"];
 
     // price factor
     $display_normal_price = zen_get_products_actual_price($pre_selected_onetime->fields["products_id"]);
     $display_special_price = zen_get_products_special_price($pre_selected_onetime->fields["products_id"]);
 
     // price factor one time
-      $attributes_price_final_onetime += zen_get_attributes_price_factor($display_normal_price, $display_special_price, $pre_selected_onetime->fields["attributes_price_factor_onetime"], $pre_selected_onetime->fields["attributes_price_factor_onetime_offset"]);
+    $attributes_price_final_onetime += zen_get_attributes_price_factor($display_normal_price, $display_special_price, $pre_selected_onetime->fields["attributes_price_factor_onetime"], $pre_selected_onetime->fields["attributes_price_factor_onetime_offset"]);
 
     // onetime charge qty price
-      $attributes_price_final_onetime += zen_get_attributes_qty_prices_onetime($pre_selected_onetime->fields["attributes_qty_prices_onetime"], 1);
+    $attributes_price_final_onetime += zen_get_attributes_qty_prices_onetime($pre_selected_onetime->fields["attributes_qty_prices_onetime"], 1);
 
-      return $attributes_price_final_onetime;
-    }
+    return $attributes_price_final_onetime;
+  }
 
 
 ////
@@ -1385,30 +1294,41 @@ If a special exist * 10
 // compute discount based on qty
   function zen_get_products_discount_price_qty($product_id, $check_qty, $check_amount=0) {
     global $db;
+
+    if (!IS_ADMIN_FLAG) { 
       $new_qty = $_SESSION['cart']->in_cart_mixed_discount_quantity($product_id);
       // check for discount qty mix
       if ($new_qty > $check_qty) {
         $check_qty = $new_qty;
       }
-      $product_id = (int)$product_id;
-      $products_query = $db->Execute("select products_discount_type, products_discount_type_from, products_priced_by_attribute from " . TABLE_PRODUCTS . " where products_id='" . (int)$product_id . "'");
-      $products_discounts_query = $db->Execute("select * from " . TABLE_PRODUCTS_DISCOUNT_QUANTITY . " where products_id='" . (int)$product_id . "' and discount_qty <='" . (float)$check_qty . "' order by discount_qty desc");
+    }
+    $product_id = (int)$product_id;
+    $products_query = $db->Execute("select products_discount_type, products_discount_type_from, products_priced_by_attribute from " . TABLE_PRODUCTS . " where products_id='" . (int)$product_id . "'");
+    $products_discounts_query = $db->Execute("select * from " . TABLE_PRODUCTS_DISCOUNT_QUANTITY . " where products_id='" . (int)$product_id . "' and discount_qty <='" . zen_db_input($check_qty) . "' order by discount_qty desc");
 
-      $display_price = zen_get_products_base_price($product_id);
-      $display_specials_price = zen_get_products_special_price($product_id, false);
+    $display_price = zen_get_products_base_price($product_id);
+    $display_specials_price = zen_get_products_special_price($product_id, false);
 
-      switch ($products_query->fields['products_discount_type']) {
-        // none
-        case ($products_discounts_query->EOF):
-          //no discount applies
-          $discounted_price = zen_get_products_actual_price($product_id);
-          break;
-        case '0':
-          $discounted_price = zen_get_products_actual_price($product_id);
-          break;
-        // percentage discount
-        case '1':
-          if ($products_query->fields['products_discount_type_from'] == '0') {
+    switch ($products_query->fields['products_discount_type']) {
+      // none
+      case ($products_discounts_query->EOF):
+        //no discount applies
+        $discounted_price = zen_get_products_actual_price($product_id);
+        break;
+      case '0':
+        $discounted_price = zen_get_products_actual_price($product_id);
+        break;
+      // percentage discount
+      case '1':
+        if ($products_query->fields['products_discount_type_from'] == '0') {
+          // priced by attributes
+          if ($check_amount != 0) {
+            $discounted_price = $check_amount - ($check_amount * ($products_discounts_query->fields['discount_price']/100));
+          } else {
+            $discounted_price = $display_price - ($display_price * ($products_discounts_query->fields['discount_price']/100));
+          }
+        } else {
+          if (!$display_specials_price) {
             // priced by attributes
             if ($check_amount != 0) {
               $discounted_price = $check_amount - ($check_amount * ($products_discounts_query->fields['discount_price']/100));
@@ -1416,47 +1336,41 @@ If a special exist * 10
               $discounted_price = $display_price - ($display_price * ($products_discounts_query->fields['discount_price']/100));
             }
           } else {
-            if (!$display_specials_price) {
-              // priced by attributes
-              if ($check_amount != 0) {
-                $discounted_price = $check_amount - ($check_amount * ($products_discounts_query->fields['discount_price']/100));
-              } else {
-                $discounted_price = $display_price - ($display_price * ($products_discounts_query->fields['discount_price']/100));
-              }
-            } else {
-              $discounted_price = $display_specials_price - ($display_specials_price * ($products_discounts_query->fields['discount_price']/100));
-            }
+            $discounted_price = $display_specials_price - ($display_specials_price * ($products_discounts_query->fields['discount_price']/100));
           }
+        }
 
-          break;
-        // actual price
-        case '2':
-          if ($products_query->fields['products_discount_type_from'] == '0') {
-            $discounted_price = $products_discounts_query->fields['discount_price'];
-          } else {
-            $discounted_price = $products_discounts_query->fields['discount_price'];
-          }
-          break;
-        // amount offprice
-        case '3':
-          if ($products_query->fields['products_discount_type_from'] == '0') {
+        break;
+      // actual price
+      case '2':
+        if ($products_query->fields['products_discount_type_from'] == '0') {
+          $discounted_price = $products_discounts_query->fields['discount_price'];
+        } else {
+          $discounted_price = $products_discounts_query->fields['discount_price'];
+        }
+        break;
+      // amount offprice
+      case '3':
+        if ($products_query->fields['products_discount_type_from'] == '0') {
+          $discounted_price = $display_price - $products_discounts_query->fields['discount_price'];
+        } else {
+          if (!$display_specials_price) {
             $discounted_price = $display_price - $products_discounts_query->fields['discount_price'];
           } else {
-            if (!$display_specials_price) {
-              $discounted_price = $display_price - $products_discounts_query->fields['discount_price'];
-            } else {
-              $discounted_price = $display_specials_price - $products_discounts_query->fields['discount_price'];
-            }
+            $discounted_price = $display_specials_price - $products_discounts_query->fields['discount_price'];
           }
-          break;
-      }
+        }
+        break;
+    }
 
-      return $discounted_price;
+    return $discounted_price;
   }
 
 
 ////
 // are there discount quantities
+// Note this file is shared with admin but these functions differ
+if (!function_exists('zen_get_discount_qty')) { 
   function zen_get_discount_qty($product_id, $check_qty) {
     global $db;
 
@@ -1474,7 +1388,7 @@ If a special exist * 10
       return false;
     }
   }
-
+}
 /**
  * recalculate and set the products_price_sorter field for the specified $product_id
  */
