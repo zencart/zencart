@@ -20,7 +20,7 @@ require(DIR_WS_FUNCTIONS . 'functions_general_shared.php');
 /**
  * Database 
  */
-require(DIR_WS_FUNCTIONS . 'database_common.php');
+require(DIR_WS_FUNCTIONS . 'database.php');
 
 /**
  * Product Functions
