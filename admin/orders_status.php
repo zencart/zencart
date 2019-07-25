@@ -22,7 +22,10 @@ if (zen_not_null($action)) {
         $orders_status_name_array = $_POST['orders_status_name'];
         $language_id = $languages[$i]['id'];
 
-        $sql_data_array = array('orders_status_name' => zen_db_prepare_input($orders_status_name_array[$language_id]));
+        $sql_data_array = array(
+            'orders_status_name' => zen_db_prepare_input($orders_status_name_array[$language_id]),
+            'sort_order' => (int)$_POST['sort_order'],
+        );
 
         if ($action == 'insert') {
           if (empty($orders_status_id)) {
@@ -131,16 +134,18 @@ if (zen_not_null($action)) {
           <table class="table table-hover">
             <thead>
               <tr class="dataTableHeadingRow">
+                <th class="dataTableHeadingContent"><?php echo TABLE_HEADING_ORDERS_STATUS_ID; ?></th>
                 <th class="dataTableHeadingContent"><?php echo TABLE_HEADING_ORDERS_STATUS; ?></th>
+                <th class="dataTableHeadingContent"><?php echo TABLE_HEADING_SORT_ORDER; ?></th>
                 <th class="dataTableHeadingContent text-right"><?php echo TABLE_HEADING_ACTION; ?></th>
               </tr>
             </thead>
             <tbody>
                 <?php
-                $orders_status_query_raw = "select orders_status_id, orders_status_name
+                $orders_status_query_raw = "select *
                                             from " . TABLE_ORDERS_STATUS . "
                                             where language_id = " . (int)$_SESSION['languages_id'] . "
-                                            order by orders_status_id";
+                                            order by sort_order ASC, orders_status_id ASC";
                 $orders_status_split = new splitPageResults($_GET['page'], MAX_DISPLAY_SEARCH_RESULTS, $orders_status_query_raw, $orders_status_query_numrows);
                 $orders_status = $db->Execute($orders_status_query_raw);
                 foreach ($orders_status as $status) {
@@ -153,12 +158,14 @@ if (zen_not_null($action)) {
                   } else {
                     echo '                  <tr class="dataTableRow" onclick="document.location.href=\'' . zen_href_link(FILENAME_ORDERS_STATUS, 'page=' . $_GET['page'] . '&oID=' . $status['orders_status_id']) . '\'" role="button">' . "\n";
                   }
+                  echo '                    <td class="dataTableContent">' . $status['orders_status_id'] . '</td>';
 
                   if (DEFAULT_ORDERS_STATUS_ID == $status['orders_status_id']) {
                     echo '                <td class="dataTableContent"><strong>' . $status['orders_status_name'] . ' (' . TEXT_DEFAULT . ')</strong></td>' . "\n";
                   } else {
                     echo '                <td class="dataTableContent">' . $status['orders_status_name'] . '</td>' . "\n";
                   }
+                  echo '                    <td class="dataTableContent">' . $status['sort_order'] . '</td>';
                   ?>
               <td class="dataTableContent text-right"><?php
                   if (isset($oInfo) && is_object($oInfo) && ($status['orders_status_id'] == $oInfo->orders_status_id)) {
@@ -193,6 +200,7 @@ if (zen_not_null($action)) {
 
                 $contents[] = array('text' => '<br>' . TEXT_INFO_ORDERS_STATUS_NAME . $orders_status_inputs_string);
                 $contents[] = array('text' => '<br>' . zen_draw_checkbox_field('default') . ' ' . TEXT_SET_DEFAULT);
+                $contents[] = array('text' => '<br>' . TEXT_INFO_SORT_ORDER . '<br>&nbsp;&nbsp;&nbsp;&nbsp;' . zen_draw_input_field('sort_order', '0', 'class="form-control"'));
                 $contents[] = array('align' => 'text-center', 'text' => '<br><button type="submit" class="btn btn-primary">' . IMAGE_INSERT . '</button> <a href="' . zen_href_link(FILENAME_ORDERS_STATUS, 'page=' . $_GET['page']) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>');
                 break;
               case 'edit':
@@ -207,8 +215,10 @@ if (zen_not_null($action)) {
                 }
 
                 $contents[] = array('text' => '<br>' . TEXT_INFO_ORDERS_STATUS_NAME . $orders_status_inputs_string);
-                if (DEFAULT_ORDERS_STATUS_ID != $oInfo->orders_status_id)
+                if (DEFAULT_ORDERS_STATUS_ID != $oInfo->orders_status_id) {
                   $contents[] = array('text' => '<br>' . zen_draw_checkbox_field('default') . ' ' . TEXT_SET_DEFAULT);
+                }
+                $contents[] = array('text' => '<br>' . TEXT_INFO_SORT_ORDER . '<br />&nbsp;&nbsp;&nbsp;&nbsp;' . zen_draw_input_field('sort_order', $oInfo->sort_order, 'class="form-control"'));
                 $contents[] = array('align' => 'text-center', 'text' => '<br><button type="submit" class="btn btn-primary">' . IMAGE_UPDATE . '</button> <a href="' . zen_href_link(FILENAME_ORDERS_STATUS, 'page=' . $_GET['page'] . '&oID=' . $oInfo->orders_status_id) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>');
                 break;
               case 'delete':

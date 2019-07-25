@@ -47,6 +47,9 @@ INSERT INTO configuration (configuration_title, configuration_key, configuration
 # Country data 
 UPDATE countries set address_format_id = 5 where countries_iso_code_3 in ('ITA'); 
 
+# Add sort_order
+ALTER TABLE orders_status ADD sort_order int(11) NOT NULL default 0;
+
 DELETE FROM configuration WHERE configuration_key = 'ADMIN_DEMO';
 
 #val_function update for MIN values

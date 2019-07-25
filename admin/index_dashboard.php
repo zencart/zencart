@@ -301,7 +301,7 @@ foreach ($whos_online as $session) {
         <div class="panel-heading header"><?php echo BOX_TITLE_ORDERS; ?> </div>
         <table class="table table-striped table-condensed">
             <?php
-            $orders_status = $db->Execute(" SELECT orders_status_name, orders_status_id FROM " . TABLE_ORDERS_STATUS . " WHERE language_id = " . (int)$_SESSION['languages_id'], false, true, 3600);
+            $orders_status = $db->Execute(" SELECT orders_status_name, orders_status_id FROM " . TABLE_ORDERS_STATUS . " WHERE language_id = " . (int)$_SESSION['languages_id'] . " ORDER BY sort_order ASC, orders_status_id ASC", false, true, 3600);
 
             foreach ($orders_status as $row) {
               $orders_pending = $db->Execute(" SELECT count(*) as count FROM " . TABLE_ORDERS . " WHERE orders_status = " . (int)$row['orders_status_id'], false, true, 1800);

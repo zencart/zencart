@@ -24,6 +24,10 @@ define('HEADING_TITLE', 'Orders Status');
 
 define('TABLE_HEADING_ORDERS_STATUS', 'Orders Status');
 define('TABLE_HEADING_ACTION', 'Action');
+define('TABLE_HEADING_ORDERS_STATUS_ID', 'Orders Status ID');
+define('TABLE_HEADING_SORT_ORDER', 'Sort Order');
+
+define('TEXT_INFO_SORT_ORDER', 'Sort Order: ');
 
 define('TEXT_INFO_EDIT_INTRO', 'Please make any necessary changes');
 define('TEXT_INFO_ORDERS_STATUS_NAME', 'Orders Status:');
@@ -36,4 +40,3 @@ define('TEXT_INFO_HEADING_DELETE_ORDERS_STATUS', 'Delete Orders Status');
 define('ERROR_REMOVE_DEFAULT_ORDER_STATUS', 'Error: The default order status can not be removed. Please set another order status as default, and try again.');
 define('ERROR_STATUS_USED_IN_ORDERS', 'Error: This order status is currently used in orders.');
 define('ERROR_STATUS_USED_IN_HISTORY', 'Error: This order status is currently used in the order status history.');
-?>
