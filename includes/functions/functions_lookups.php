@@ -293,7 +293,6 @@
       $noSingles[] = PRODUCTS_OPTIONS_TYPE_READONLY;
     }
 
-    // advanced query
     $query = "select products_options_id, count(pa.options_values_id) as number_of_choices, po.products_options_type as options_type
               from " . TABLE_PRODUCTS_ATTRIBUTES . " pa
               left join " . TABLE_PRODUCTS_OPTIONS . " po on pa.options_id = po.products_options_id
@@ -302,25 +301,24 @@
               group by products_options_id, options_type";
     $result = $db->Execute($query);
 
-    // if no attributes found, return 0
-    if ($result->RecordCount() == 0) return 0;
+    // if no attributes found, return false
+    if ($result->RecordCount() == 0) return false;
 
     // loop through the results, auditing for whether each kind of attribute requires "selection" or not
-    $fail = false;
-    // Note return 1 means selections must be made, so a more-info button needs to be presented
-    foreach($result as $row=>$field) {
+    // return whether selections must be made, so a more-info button needs to be presented, if true
+    foreach($result as $row => $field) {
       // if there's more than one for any $noDoubles type, can't add from listing
       if (in_array($field['options_type'], $noDoubles) && $field['number_of_choices'] > 1) {
-        return 1; 
+        return true;
       }
       // if there's any type from $noSingles, can't add from listing
       if (in_array($field['options_type'], $noSingles)) {
-        return 1; 
+        return true;
       }
     }
 
-    // return 0 to indicate that defaults can be automatically added by just using a buy-now button
-    return 0;
+    // return false to indicate that defaults can be automatically added by just using a buy-now button
+    return false;
   }
 
 /*
