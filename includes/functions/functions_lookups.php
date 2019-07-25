@@ -270,6 +270,57 @@
     }
   }
 
+/**
+ *  Check if specified product has attributes which require selection before adding product to the cart.
+ *  This is used by various parts of the code to determine whether to allow for add-to-cart actions
+ *  since adding a product without selecting attributes could lead to undesired basket contents.
+ *
+ *  @param integer $products_id
+ *  @return integer
+ */
+  function zen_requires_attribute_selection($products_id) {
+    global $db;
+
+    $noDoubles = array();
+    $noDoubles[] = PRODUCTS_OPTIONS_TYPE_RADIO;
+    $noDoubles[] = PRODUCTS_OPTIONS_TYPE_SELECT;
+
+    $noSingles = array();
+    $noSingles[] = PRODUCTS_OPTIONS_TYPE_CHECKBOX;
+    $noSingles[] = PRODUCTS_OPTIONS_TYPE_FILE;
+    $noSingles[] = PRODUCTS_OPTIONS_TYPE_TEXT;
+    if (PRODUCTS_OPTIONS_TYPE_READONLY_IGNORED == '0') {
+      $noSingles[] = PRODUCTS_OPTIONS_TYPE_READONLY;
+    }
+
+    $query = "select products_options_id, count(pa.options_values_id) as number_of_choices, po.products_options_type as options_type
+              from " . TABLE_PRODUCTS_ATTRIBUTES . " pa
+              left join " . TABLE_PRODUCTS_OPTIONS . " po on pa.options_id = po.products_options_id
+              where pa.products_id = " . (int)$products_id . "
+              and po.language_id = " . (int)$_SESSION['languages_id'] . "
+              group by products_options_id, options_type";
+    $result = $db->Execute($query);
+
+    // if no attributes found, return false
+    if ($result->RecordCount() == 0) return false;
+
+    // loop through the results, auditing for whether each kind of attribute requires "selection" or not
+    // return whether selections must be made, so a more-info button needs to be presented, if true
+    foreach($result as $row => $field) {
+      // if there's more than one for any $noDoubles type, can't add from listing
+      if (in_array($field['options_type'], $noDoubles) && $field['number_of_choices'] > 1) {
+        return true;
+      }
+      // if there's any type from $noSingles, can't add from listing
+      if (in_array($field['options_type'], $noSingles)) {
+        return true;
+      }
+    }
+
+    // return false to indicate that defaults can be automatically added by just using a buy-now button
+    return false;
+  }
+
 /*
  *  Check if option name is not expected to have an option value (ie. text field, or File upload field)
  */
