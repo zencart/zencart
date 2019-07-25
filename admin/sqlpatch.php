@@ -53,9 +53,7 @@ $linebreak = '
 // NOTE: this line break is intentional!!!!
 
 function executeSql($lines, $database, $table_prefix = '') {
-  if (version_compare(PHP_VERSION, 5.4, '>=') || !get_cfg_var('safe_mode')) {
-    @set_time_limit(1200);
-  }
+  zen_set_time_limit(1200); 
   global $db, $debug, $messageStack;
   $sql_file = 'SQLPATCH';
   $newline = '';
