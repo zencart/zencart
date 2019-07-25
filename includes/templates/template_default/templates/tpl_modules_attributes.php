@@ -19,6 +19,9 @@
 <?php
     for($i=0, $j=sizeof($options_name); $i<$j; $i++) {
 ?>
+
+<div class="attribBlock">
+
 <?php
   if ($options_comment[$i] != '' and $options_comment_position[$i] == '0') {
 ?>
@@ -49,6 +52,8 @@ if (!empty($options_attributes_image[$i])) {
 }
 ?>
 <br class="clearBoth">
+
+</div>
 <?php
     }
 ?>
