@@ -307,21 +307,17 @@
 
     // loop through the results, auditing for whether each kind of attribute requires "selection" or not
     $fail = false;
+    // Note return 1 means selections must be made, so a more-info button needs to be presented
     foreach($result as $row=>$field) {
-      // if there's more than 1 for any $noDoubles type, we fail
+      // if there's more than one for any $noDoubles type, can't add from listing
       if (in_array($field['options_type'], $noDoubles) && $field['number_of_choices'] > 1) {
-        $fail = true;
-        break;
+        return 1; 
       }
-      // if there's any type from $noSingles, we fail
+      // if there's any type from $noSingles, can't add from listing
       if (in_array($field['options_type'], $noSingles)) {
-        $fail = true;
-        break;
+        return 1; 
       }
     }
-
-    // return 1 to indicate selections must be made, so a more-info button needs to be presented
-    if ($fail) return 1;
 
     // return 0 to indicate that defaults can be automatically added by just using a buy-now button
     return 0;
