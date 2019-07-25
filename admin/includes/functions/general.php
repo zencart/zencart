@@ -1702,7 +1702,7 @@ while (!$chk_sale_categories_all->EOF) {
       global $db;
       $statuses = $db->Execute(
           "SELECT orders_status_id AS `id`, orders_status_name AS `text`
-                              from " . TABLE_ORDERS_STATUS . "
+            FROM " . TABLE_ORDERS_STATUS . "
             WHERE language_id = " . (int)$_SESSION['languages_id'] . "
             ORDER BY sort_order ASC, orders_status_id ASC"
       );
