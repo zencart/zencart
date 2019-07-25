@@ -1694,8 +1694,8 @@ while (!$chk_sale_categories_all->EOF) {
     return zen_draw_order_status_dropdown($name, $order_status_id, array('id' => 0, 'text' => TEXT_DEFAULT), 'class="form-control"');
   }
   /**
-   * Returns a pull-down menu of the available order-status values, possibly prefixed by a "please choose"
-   * selection.
+   * Return a pull-down menu of the available order-status values, 
+   * optionally prefixed by a "please choose" selection.
   */
   function zen_draw_order_status_dropdown($field_name, $default_value, $first_selection = '', $parms = '')
   {
