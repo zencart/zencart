@@ -474,31 +474,6 @@
   }
 
 
-
-/**
- * Return a product ID with attributes hash
- * @param string|int $prid
- * @param array|string $params
- * @return string
- */
-  function zen_get_uprid($prid, $params) {
-    $uprid = $prid;
-    if ( !is_array($params) || strstr($prid, ':')) return $prid;
-
-    foreach($params as $option => $value) {
-      if (is_array($value)) {
-        foreach($value as $opt => $val) {
-          $uprid = $uprid . '{' . $option . '}' . trim($opt);
-        }
-      } else {
-        $uprid = $uprid . '{' . $option . '}' . trim($value);
-      }
-    }
-
-    $md_uprid = md5($uprid);
-    return $prid . ':' . $md_uprid;
-  }
-
 ////
 // Get the number of times a word/character is present in a string
   function zen_word_count($string, $needle) {

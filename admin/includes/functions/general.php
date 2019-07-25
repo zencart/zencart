@@ -466,24 +466,6 @@
     }
   }
 
-function zen_get_uprid($prid, $params)
-{
-    $uprid = $prid;
-    if (is_array($params) && strpos($prid, ':') === false) {
-        foreach ($params as $option => $value) {
-            if (is_array($value)) {
-                foreach ($value as $opt => $val) {
-                    $uprid .= ('{' . $option . '}' . trim($opt));
-                }
-            } else {
-                $uprid .= ('{' . $option . '}' . trim($value));
-            }
-        }
-        $uprid = $prid . ':' . md5($uprid);
-    }
-    return $uprid;
-}
-
   function zen_get_languages() {
     global $db;
     $languages = $db->Execute("select languages_id, name, code, image, directory
