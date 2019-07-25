@@ -18,17 +18,20 @@ if (!defined('IS_ADMIN_FLAG')) {
 $show_onetime_charges_description = false;
 $show_attributes_qty_prices_description = false;
 
-$sql = "select count(*) as total
-        from " . TABLE_PRODUCTS_OPTIONS . " popt, " . TABLE_PRODUCTS_ATTRIBUTES . " patrib
-        where    patrib.products_id=" . (int)$_GET['products_id'] . "
-        and      patrib.options_id = popt.products_options_id
-        and      popt.language_id = " . (int)$_SESSION['languages_id'] . "
-        limit 1";
-
+// Determine number of attributes associated with this product
+$sql = "SELECT count(*) as total
+        FROM " . TABLE_PRODUCTS_OPTIONS . " popt
+        LEFT JOIN " . TABLE_PRODUCTS_ATTRIBUTES . " patrib ON (popt.products_options_id = patrib.options_id)
+        WHERE patrib.products_id = :products_id
+        AND popt.language_id = :language_id
+        LIMIT 1";
+$sql = $db->bindVars($sql, ':products_id', $_GET['products_id'], 'integer');
+$sql = $db->bindVars($sql, ':language_id', $_SESSION['languages_id'], 'integer');
 $pr_attr = $db->Execute($sql);
 
 if ($pr_attr->fields['total'] < 1) return;
-// Only process the rest of this file if attributes are relevant
+// Only process the rest of this file if attributes are defined for this product
+
 
 $prod_id = $_GET['products_id'];
 $number_of_uploads = 0;
@@ -46,17 +49,19 @@ if (PRODUCTS_OPTIONS_SORT_ORDER == '0') {
     $options_order_by = ' order by popt.products_options_name';
 }
 
-$sql = "select distinct popt.products_options_id, popt.products_options_name, popt.products_options_sort_order,
+$sql = "SELECT DISTINCT popt.products_options_id, popt.products_options_name, popt.products_options_sort_order,
             popt.products_options_type, popt.products_options_length, popt.products_options_comment,
             popt.products_options_size,
             popt.products_options_images_per_row,
             popt.products_options_images_style,
             popt.products_options_rows
-        from " . TABLE_PRODUCTS_OPTIONS . " popt, " . TABLE_PRODUCTS_ATTRIBUTES . " patrib
-        where patrib.products_id=" . (int)$_GET['products_id'] . "
-        and   patrib.options_id = popt.products_options_id
-        and   popt.language_id = " . (int)$_SESSION['languages_id'] . " " .
-    $options_order_by;
+        FROM " . TABLE_PRODUCTS_OPTIONS . " popt
+        LEFT JOIN " . TABLE_PRODUCTS_ATTRIBUTES . " patrib ON (patrib.options_id = popt.products_options_id) 
+        WHERE patrib.products_id= :products_id
+        AND popt.language_id = :language_id " .
+        $options_order_by;
+$sql = $db->bindVars($sql, ':products_id', $_GET['products_id'], 'integer');
+$sql = $db->bindVars($sql, ':language_id', $_SESSION['languages_id'], 'integer');
 $products_options_names = $db->Execute($sql);
 
 
@@ -69,12 +74,14 @@ if (PRODUCTS_OPTIONS_SORT_BY_PRICE == '1') {
 while (!$products_options_names->EOF) {
     $products_options_array = array();
 
-    $products_options_type = $products_options_names->fields['products_options_type'];
     $products_options_id = $products_options_names->fields['products_options_id'];
+    $products_options_type = $products_options_names->fields['products_options_type'];
     $products_options_name = $products_options_names->fields['products_options_name'];
 
 
     /* Field names for dev reference
+        pov.products_options_values_id
+        pov.products_options_values_name
         pa.options_values_price
         pa.price_prefix
         pa.products_options_sort_order
@@ -85,17 +92,19 @@ while (!$products_options_names->EOF) {
         pa.attributes_discounted
         pa.attributes_image
     */
-    $sql = "select pov.products_options_values_id, pov.products_options_values_name, pa.*
-            from  " . TABLE_PRODUCTS_ATTRIBUTES . " pa, " . TABLE_PRODUCTS_OPTIONS_VALUES . " pov
-            where pa.products_id = " . (int)$_GET['products_id'] . "
-            and   pa.options_id = " . (int)$products_options_id . "
-            and   pa.options_values_id = pov.products_options_values_id
-            and   pov.language_id = " . (int)$_SESSION['languages_id'] . ' ' .
+    $sql = "SELECT pov.products_options_values_id, pov.products_options_values_name, pa.*
+            FROM  " . TABLE_PRODUCTS_ATTRIBUTES . " pa
+            LEFT JOIN " . TABLE_PRODUCTS_OPTIONS_VALUES . " pov ON (pa.options_values_id = pov.products_options_values_id)
+            WHERE pa.products_id = :products_id
+            AND   pa.options_id = :options_id
+            AND   pov.language_id = :language_id " .
             $order_by;
-
+    $sql = $db->bindVars($sql, ':products_id', $_GET['products_id'], 'integer');
+    $sql = $db->bindVars($sql, ':options_id', $products_options_id, 'integer');
+    $sql = $db->bindVars($sql, ':language_id', $_SESSION['languages_id'], 'integer');
     $products_options = $db->Execute($sql);
 
-    $products_options_value_id = '';
+    $products_options_value_id = 0;
     $products_options_details = '';
     $products_options_details_noname = '';
     $tmp_radio = '';
@@ -114,6 +123,7 @@ while (!$products_options_names->EOF) {
         $products_options_names->fields['products_options_comment_position'] = '0';
     }
 
+    // loop through each Attribute
     while (!$products_options->EOF) {
         $products_options_display_price = '';
         $new_attributes_price = '';
@@ -189,12 +199,12 @@ while (!$products_options_names->EOF) {
 
         } // approve
 
-        $products_options_array[sizeof($products_options_array) - 1]['text'] .= $products_options_display_price;
+        $products_options_array[count($products_options_array) - 1]['text'] .= $products_options_display_price;
 
         // collect weight information if it exists
         if ($flag_show_weight_attrib_for_this_prod_type == '1' && $products_options->fields['products_attributes_weight'] != '0') {
             $products_options_display_weight = ATTRIBUTES_WEIGHT_DELIMITER_PREFIX . $products_options->fields['products_attributes_weight_prefix'] . round($products_options->fields['products_attributes_weight'], 2) .  TEXT_PRODUCT_WEIGHT_UNIT . ATTRIBUTES_WEIGHT_DELIMITER_SUFFIX;
-            $products_options_array[sizeof($products_options_array) - 1]['text'] .= $products_options_display_weight;
+            $products_options_array[count($products_options_array) - 1]['text'] .= $products_options_display_weight;
         } else {
             // reset
             $products_options_display_weight = '';
