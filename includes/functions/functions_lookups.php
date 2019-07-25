@@ -270,6 +270,63 @@
     }
   }
 
+/**
+ *  Check if specified product has attributes which require selection before adding product to the cart.
+ *  This is used by various parts of the code to determine whether to allow for add-to-cart actions
+ *  since adding a product without selecting attributes could lead to undesired basket contents.
+ *
+ *  @param integer $products_id
+ *  @return integer
+ */
+  function zen_requires_attribute_selection($products_id) {
+    global $db;
+
+    $noDoubles = array();
+    $noDoubles[] = PRODUCTS_OPTIONS_TYPE_RADIO;
+    $noDoubles[] = PRODUCTS_OPTIONS_TYPE_SELECT;
+
+    $noSingles = array();
+    $noSingles[] = PRODUCTS_OPTIONS_TYPE_CHECKBOX;
+    $noSingles[] = PRODUCTS_OPTIONS_TYPE_FILE;
+    $noSingles[] = PRODUCTS_OPTIONS_TYPE_TEXT;
+    if (PRODUCTS_OPTIONS_TYPE_READONLY_IGNORED == '0') {
+      $noSingles[] = PRODUCTS_OPTIONS_TYPE_READONLY;
+    }
+
+    // advanced query
+    $query = "select products_options_id, count(pa.options_values_id) as number_of_choices, po.products_options_type as options_type
+              from " . TABLE_PRODUCTS_ATTRIBUTES . " pa
+              left join " . TABLE_PRODUCTS_OPTIONS . " po on pa.options_id = po.products_options_id
+              where pa.products_id = " . (int)$products_id . "
+              and po.language_id = " . (int)$_SESSION['languages_id'] . "
+              group by products_options_id, options_type";
+    $result = $db->Execute($query);
+
+    // if no attributes found, return 0
+    if ($result->RecordCount() == 0) return 0;
+
+    // loop through the results, auditing for whether each kind of attribute requires "selection" or not
+    $fail = false;
+    foreach($result as $row=>$field) {
+      // if there's more than 1 for any $noDoubles type, we fail
+      if (in_array($field['options_type'], $noDoubles) && $field['number_of_choices'] > 1) {
+        $fail = true;
+        break;
+      }
+      // if there's any type from $noSingles, we fail
+      if (in_array($field['options_type'], $noSingles)) {
+        $fail = true;
+        break;
+      }
+    }
+
+    // return 1 to indicate selections must be made, so a more-info button needs to be presented
+    if ($fail) return 1;
+
+    // return 0 to indicate that defaults can be automatically added by just using a buy-now button
+    return 0;
+  }
+
 /*
  *  Check if option name is not expected to have an option value (ie. text field, or File upload field)
  */

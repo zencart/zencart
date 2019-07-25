@@ -107,7 +107,7 @@ if ($listing_split->number_of_rows > 0) {
 
         // more info in place of buy now
         $lc_button = '';
-        if (zen_has_product_attributes($listing->fields['products_id']) or PRODUCT_LIST_PRICE_BUY_NOW == '0') {
+        if (zen_requires_attribute_selection($listing->fields['products_id']) or PRODUCT_LIST_PRICE_BUY_NOW == '0') {
           $lc_button = '<a class="list-more" href="' . zen_href_link(zen_get_info_page($listing->fields['products_id']), 'cPath=' . ((!empty($_GET['manufacturers_id']) && !empty($_GET['filter_id'])) ?  zen_get_generated_category_path_rev($_GET['filter_id']) : (!empty($_GET['cPath']) ? $_GET['cPath'] : zen_get_generated_category_path_rev($listing->fields['master_categories_id']))) . '&products_id=' . $listing->fields['products_id']) . '">' . MORE_INFO_TEXT . '</a>';
         } else {
           if (PRODUCT_LISTING_MULTIPLE_ADD_TO_CART != 0) {
