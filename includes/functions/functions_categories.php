@@ -112,7 +112,7 @@
   }
 
 ////
-  function zen_get_categories($categories_array = '', $parent_id = '0', $indent = '', $status_setting = '') {
+  function zen_get_categories($categories_array = array(), $parent_id = '0', $indent = '', $status_setting = '') {
     global $db;
 
     if (!is_array($categories_array)) $categories_array = array();
@@ -519,7 +519,7 @@
   }
 
 //// bof: manage master_categories_id vs cPath
-  function zen_generate_category_path($id, $from = 'category', $categories_array = '', $index = 0) {
+  function zen_generate_category_path($id, $from = 'category', $categories_array = array(), $index = 0) {
     global $db;
 
     if (!is_array($categories_array)) $categories_array = array();

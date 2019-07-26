@@ -139,7 +139,7 @@
     global $db;
     // -----
     // Give an observer the chance to override this function's return.
-    //
+    // It is *intended* to be an empty string; this is not a bug.
     $rates_array = '';
     $GLOBALS['zco_notifier']->notify(
         'NOTIFY_ZEN_GET_MULTIPLE_TAX_RATES_OVERRIDE',

@@ -229,7 +229,7 @@
   }
 
 
-  function zen_get_category_tree($parent_id = '0', $spacing = '', $exclude = '', $category_tree_array = '', $include_itself = false, $category_has_products = false, $limit = false) {
+  function zen_get_category_tree($parent_id = '0', $spacing = '', $exclude = '', $category_tree_array = array(), $include_itself = false, $category_has_products = false, $limit = false) {
     global $db;
 
     if ($limit) {
@@ -1110,7 +1110,7 @@ function zen_get_prid($uprid)
     return $systemInfo;
 }
 
-  function zen_generate_category_path($id, $from = 'category', $categories_array = '', $index = 0) {
+  function zen_generate_category_path($id, $from = 'category', $categories_array = array(), $index = 0) {
     global $db;
 
     if (!is_array($categories_array)) $categories_array = array();
@@ -2846,7 +2846,7 @@ function zen_limit_image_filename($filename, $table_name, $field_name, $extensio
   }
 
 ////
-  function zen_get_categories($categories_array = '', $parent_id = '0', $indent = '') {
+  function zen_get_categories($categories_array = array(), $parent_id = '0', $indent = '') {
     global $db;
 
     if (!is_array($categories_array)) $categories_array = array();
