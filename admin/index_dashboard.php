@@ -16,33 +16,33 @@ $availableNotifications = $notifications->getNotifications('index', $_SESSION['a
 require(DIR_WS_CLASSES . 'currencies.php');
 $currencies = new currencies();
 
-$customers = $db->Execute(" SELECT count(*) as count FROM " . TABLE_CUSTOMERS, false, true, 1800);
-$products = $db->Execute(" SELECT count(*) as count FROM " . TABLE_PRODUCTS . " WHERE products_status = 1", false, true, 1800);
-$products_off = $db->Execute(" SELECT count(*) as count FROM " . TABLE_PRODUCTS . " WHERE products_status = 0", false, true, 1800);
+$customers = $db->Execute("SELECT count(*) as count FROM " . TABLE_CUSTOMERS, false, true, 1800);
+$products = $db->Execute("SELECT count(*) as count FROM " . TABLE_PRODUCTS . " WHERE products_status = 1", false, true, 1800);
+$products_off = $db->Execute("SELECT count(*) as count FROM " . TABLE_PRODUCTS . " WHERE products_status = 0", false, true, 1800);
 
-$reviews = $db->Execute(" SELECT count(*) as count FROM " . TABLE_REVIEWS);
-$reviews_pending = $db->Execute(" SELECT count(*) as count FROM " . TABLE_REVIEWS . " WHERE status = 0", false, true, 1800);
+$reviews = $db->Execute("SELECT count(*) as count FROM " . TABLE_REVIEWS);
+$reviews_pending = $db->Execute("SELECT count(*) as count FROM " . TABLE_REVIEWS . " WHERE status = 0", false, true, 1800);
 
-$newsletters = $db->Execute(" SELECT count(*) as count FROM " . TABLE_CUSTOMERS . " WHERE customers_newsletter = 1", false, true, 1800);
+$newsletters = $db->Execute("SELECT count(*) as count FROM " . TABLE_CUSTOMERS . " WHERE customers_newsletter = 1", false, true, 1800);
 
-$counter = $db->Execute(" SELECT startdate, counter FROM " . TABLE_COUNTER, false, true, 7200);
+$counter = $db->Execute("SELECT startdate, counter FROM " . TABLE_COUNTER, false, true, 7200);
 $counter_startdate = $counter->fields['startdate'];
 if ($counter->RecordCount()) {
   $counter_startdate_formatted = strftime(DATE_FORMAT_SHORT, mktime(0, 0, 0, substr($counter_startdate, 4, 2), substr($counter_startdate, -2), substr($counter_startdate, 0, 4)));
 }
 
-$specials = $db->Execute(" SELECT count(*) as count FROM " . TABLE_SPECIALS . " WHERE status = 0", false, true, 1800);
-$specials_act = $db->Execute(" SELECT count(*) as count FROM " . TABLE_SPECIALS . " WHERE status = 1", false, true, 1800);
-$featured = $db->Execute(" SELECT count(*) as count FROM " . TABLE_FEATURED . " WHERE status = 0", false, true, 1800);
-$featured_act = $db->Execute(" SELECT count(*) as count FROM " . TABLE_FEATURED . " WHERE status = 1", false, true, 1800);
-$salemaker = $db->Execute(" SELECT count(*) as count FROM " . TABLE_SALEMAKER_SALES . " WHERE sale_status = 0", false, true, 1800);
-$salemaker_act = $db->Execute(" SELECT count(*) as count FROM " . TABLE_SALEMAKER_SALES . " WHERE sale_status = 1", false, true, 1800);
+$specials = $db->Execute("SELECT count(*) as count FROM " . TABLE_SPECIALS . " WHERE status = 0", false, true, 1800);
+$specials_act = $db->Execute("SELECT count(*) as count FROM " . TABLE_SPECIALS . " WHERE status = 1", false, true, 1800);
+$featured = $db->Execute("SELECT count(*) as count FROM " . TABLE_FEATURED . " WHERE status = 0", false, true, 1800);
+$featured_act = $db->Execute("SELECT count(*) as count FROM " . TABLE_FEATURED . " WHERE status = 1", false, true, 1800);
+$salemaker = $db->Execute("SELECT count(*) as count FROM " . TABLE_SALEMAKER_SALES . " WHERE sale_status = 0", false, true, 1800);
+$salemaker_act = $db->Execute("SELECT count(*) as count FROM " . TABLE_SALEMAKER_SALES . " WHERE sale_status = 1", false, true, 1800);
 
 
 $i = 0;
 $visit_history = array();
 //  Get the visitor history data
-$visits_query = " SELECT startdate, counter, session_counter FROM " . TABLE_COUNTER_HISTORY . " ORDER BY startdate DESC";
+$visits_query = "SELECT startdate, counter, session_counter FROM " . TABLE_COUNTER_HISTORY . " ORDER BY startdate DESC";
 $visits = $db->Execute($visits_query, $number_of_visitors_history, true, 1800);
 $counterData = '';
 foreach ($visits as $data) {
@@ -77,14 +77,14 @@ for ($i = 0, $salesData = ''; $i < $report->size; $i++) {
 }
 
 // Build the whos-online graph
-$whos_online = $db->Execute(" SELECT customer_id, full_name, ip_address, time_entry, time_last_click, last_page_url, session_id, host_address, user_agent FROM " . TABLE_WHOS_ONLINE);
+$whos_online = $db->Execute("SELECT customer_id, full_name, ip_address, time_entry, time_last_click, last_page_url, session_id, host_address, user_agent FROM " . TABLE_WHOS_ONLINE);
 // Initialize array variables for display.
 $user_array = $guest_array = $spider_array = [0 => 0, 1 => 0, 2 => 0, 3 => 0];
 $status = 0;
 
 foreach ($whos_online as $session) {
-  $which_query = $db->Execute(" SELECT sesskey, value FROM " . TABLE_SESSIONS . " WHERE sesskey = '" . $session['session_id'] . "'");
-  $who_query = $db->Execute(" SELECT session_id, time_entry, time_last_click, host_address, user_agent FROM " . TABLE_WHOS_ONLINE . " WHERE session_id = '" . $session['session_id'] . "'");
+  $which_query = $db->Execute("SELECT sesskey, value FROM " . TABLE_SESSIONS . " WHERE sesskey = '" . $session['session_id'] . "'");
+  $who_query = $db->Execute("SELECT session_id, time_entry, time_last_click, host_address, user_agent FROM " . TABLE_WHOS_ONLINE . " WHERE session_id = '" . $session['session_id'] . "'");
 
 // longer than 3 minutes light color
   $xx_mins_ago_long = (time() - 180);
@@ -301,10 +301,10 @@ foreach ($whos_online as $session) {
         <div class="panel-heading header"><?php echo BOX_TITLE_ORDERS; ?> </div>
         <table class="table table-striped table-condensed">
             <?php
-            $orders_status = $db->Execute(" SELECT orders_status_name, orders_status_id FROM " . TABLE_ORDERS_STATUS . " WHERE language_id = " . (int)$_SESSION['languages_id'] . " ORDER BY sort_order ASC, orders_status_id ASC", false, true, 3600);
+            $orders_status = $db->Execute("SELECT orders_status_name, orders_status_id FROM " . TABLE_ORDERS_STATUS . " WHERE language_id = " . (int)$_SESSION['languages_id'] . " ORDER BY sort_order ASC, orders_status_id ASC", false, true, 3600);
 
             foreach ($orders_status as $row) {
-              $orders_pending = $db->Execute(" SELECT count(*) as count FROM " . TABLE_ORDERS . " WHERE orders_status = " . (int)$row['orders_status_id'], false, true, 1800);
+              $orders_pending = $db->Execute("SELECT count(*) as count FROM " . TABLE_ORDERS . " WHERE orders_status = " . (int)$row['orders_status_id'], false, true, 1800);
               ?>
             <tr>
               <td><a href="<?php echo zen_href_link(FILENAME_ORDERS, 'selected_box=customers&status=' . $row['orders_status_id']); ?>"><?php echo $row['orders_status_name']; ?></a>:</td>
