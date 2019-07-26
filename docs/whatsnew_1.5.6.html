@@ -5,7 +5,7 @@
      * @package documentation
      * @copyright Copyright 2003-2019 Zen Cart Development Team
      * @license https://www.zen-cart.com/license/2_0.txt GNU Public License v2.0
-     * @version $Id: DrByte 2019 May 25 Modified in v1.5.6b $
+     * @version $Id: DrByte 2019 Jul 16 Modified in v1.5.6c $
      */
 //-->
 <head>
@@ -172,6 +172,28 @@
             <h1>
                 What's New ... Changes from prior versions
             </h1>
+            <h2>
+                The fixes/changes in v1.5.6c since v1.5.6b include:
+            </h2>
+            <ul>
+                <li>Security Patch to prevent malicious SQL abuse</li>
+                <li>Fix regression error from 156a/b where PHP errors would occur during PayPal processing</li>
+                <li>Bugfix: functions_osh_update had a typo, causing errors</li>
+                <li>Bugfix: download-by-redirect problem fixed when store is in a subdirectory</li>
+                <li>Bugfix: duplicate (linked) products appeared during manufacturer filtering</li>
+                <li>Bugfix: undefined TEXT_NO_PROD_SALES for coupons</li>
+                <li>Ez-pages: fix lookup errors during multilingual use</li>
+                <li>Reduce copy/paste errors during customer password reset</li>
+                <li>Improvements to anti-spam for account creation and contact-us forms</li>
+                <li>Improve DOB handling on account pages</li>
+                <li>Fix tax-related errors in situations where no tax applies</li>
+                <li>Tighter controls to prevent order tampering or spoofing</li>
+                <li>Admin: Geo-Zone editor screen now displays the current zone name</li>
+                <li>Admin: Recipient count accuracy fixed if some group emails fail</li>
+                <li>Admin Keepalive tab stops flashing after expiration</li>
+                <li>Dozens of small updates to prevent HTML errors and PHP error/notices under PHP 7.2+</li>
+            </ul>
+            <hr>
             <h2>
                 The fixes/changes in v1.5.6b since v1.5.6a include:
             </h2>
