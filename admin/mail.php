@@ -27,7 +27,7 @@ if ($action == 'set_editor') {
   zen_redirect(zen_href_link(FILENAME_MAIL));
 }
 
-if (($action == 'send_email_to_user') && isset($_POST['customers_email_address']) && !isset($_POST['back_x'])) {
+if (($action == 'send_email_to_user') && isset($_POST['customers_email_address']) && !isset($_POST['back'])) {
   $audience_select = get_audience_sql_query(zen_db_input($_POST['customers_email_address']), 'email');
   $mail = $db->Execute($audience_select['query_string']);
   $mail_sent_to = $audience_select['query_name'];
@@ -262,7 +262,7 @@ if ($action == 'preview') {
           echo zen_draw_hidden_field('attachment_filetype', $attachment_filetype);
           ?>
           <div class="col-sm-6">
-            <button type="button" class="btn btn-default" name="back"><?php echo IMAGE_BACK; ?></button>
+            <button type="submit" name="back" value="back" class="btn btn-default"><?php echo IMAGE_BACK; ?></button>
           </div>
           <div class="col-sm-6 text-right">
             <a href="<?php echo zen_href_link(FILENAME_MAIL, (isset($_GET['cID']) ? 'cID=' . (int)$_GET['cID'] : '') . (isset($_GET['customer']) ? '&customer=' . zen_output_string_protected($_GET['customer']) : '') . (isset($_GET['origin']) ? '&origin=' . zen_output_string_protected($_GET['origin']) : '')); ?>" class="btn btn-default" role="button"><?php echo IMAGE_CANCEL; ?></a> <button type="submit" class="btn btn-primary"><?php echo IMAGE_SEND_EMAIL; ?></button>
