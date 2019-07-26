@@ -5,7 +5,7 @@
      * @package documentation
      * @copyright Copyright 2003-2019 Zen Cart Development Team
      * @license https://www.zen-cart.com/license/2_0.txt GNU Public License v2.0
-     * @version $Id: DrByte 2019 May 26 Modified in v1.5.6b $
+     * @version $Id: DrByte 2019 Jul 16 Modified in v1.5.6c $
      */
 //-->
 <head>
@@ -69,12 +69,88 @@
                 A detailed list of all edits to all files can be seen on Github at:<br>
                 <a href="https://github.com/zencart/zencart/compare/v155...v156">v1.5.5f...v1.5.6b</a><br>
                 <a href="https://github.com/zencart/zencart/compare/v1.5.6...v1.5.6a">v1.5.6...v1.5.6a</a><br>
+                <a href="https://github.com/zencart/zencart/compare/v1.5.6a...v1.5.6b">v1.5.6a...v1.5.6b</a><br>
                 <a href="https://github.com/zencart/zencart/compare/v1.5.6a...v1.5.6b">v1.5.6a...v1.5.6b</a>
             </p>
         </div>
     </section> <!-- End introCenter //-->
     
     <section id="changedFiles">
+        <div>
+            <h1>CHANGED/ADDED/DELETED Files in v1.5.6c (since v1.5.6b)</h1>
+            <ul>
+                <li>ADDED: /includes/extra_configures/security_patch_notify_20190707.php</li>
+                <li>ADDED: /includes/modules/pages/checkout_confirmation/jscript_double_submit.php</li>
+                <li>ADDED: /includes/modules/pages/checkout_payment/jscript_double_submit.php</li>
+                <li>/admin/category_product_listing.php</li>
+                <li>/admin/customers.php</li>
+                <li>/admin/define_pages_editor.php</li>
+                <li>/admin/developers_tool_kit.php</li>
+                <li>/admin/featured.php</li>
+                <li>/admin/geo_zones.php</li>
+                <li>/admin/gv_mail.php</li>
+                <li>/admin/gv_queue.php</li>
+                <li>/admin/mail.php</li>
+                <li>/admin/modules.php</li>
+                <li>/admin/music_genre.php</li>
+                <li>/admin/paypal.php</li>
+                <li>/admin/record_artists.php</li>
+                <li>/admin/record_company.php</li>
+                <li>/admin/whos_online.php</li>
+                <li>/admin/includes/keepalive_module.php</li>
+                <li>/admin/includes/css/jAlert.css</li>
+                <li>/admin/includes/functions/admin_access.php</li>
+                <li>/admin/includes/functions/configuration_checks.php</li>
+                <li>/admin/includes/javascript/jAlert-functions.min.js</li>
+                <li>/admin/includes/javascript/jAlert.min.js</li>
+                <li>/admin/includes/javascript/jTimeout.min.js</li>
+                <li>/admin/includes/languages/english/category_product_listing.php</li>
+                <li>/admin/includes/modules/copy_product.php</li>
+                <li>/admin/includes/modules/product_music/copy_product.php</li>
+                <li>/includes/spiders.txt</li>
+                <li>/includes/version.php</li>
+                <li>/includes/auto_loaders/config.core.php</li>
+                <li>/includes/classes/observers/auto.downloads_via_redirect.php</li>
+                <li>/includes/classes/order.php</li>
+                <li>/includes/classes/payment.php</li>
+                <li>/includes/classes/shipping.php</li>
+                <li>/includes/classes/shopping_cart.php</li>
+                <li>/includes/extra_configures/security_patch_notify_20190707.php (ADDED NEW in 156c)</li>
+                <li>/includes/functions/functions_ezpages.php</li>
+                <li>/includes/functions/functions_lookups.php</li>
+                <li>/includes/functions/functions_osh_update.php</li>
+                <li>/includes/index_filters/default_filter.php</li>
+                <li>/includes/index_filters/music_genre_filter.php</li>
+                <li>/includes/index_filters/record_company_filter.php</li>
+                <li>/includes/init_includes/init_add_crumbs.php</li>
+                <li>/includes/init_includes/init_db_config_read.php</li>
+                <li>/includes/init_includes/init_ipn_postcfg.php</li>
+                <li>/includes/init_includes/init_sanitize.php</li>
+                <li>/includes/languages/english/discount_coupon.php</li>
+                <li>/includes/modules/checkout_process.php</li>
+                <li>/includes/modules/column_left.php</li>
+                <li>/includes/modules/column_right.php</li>
+                <li>/includes/modules/column_single.php</li>
+                <li>/includes/modules/create_account.php</li>
+                <li>/includes/modules/order_total/ot_shipping.php</li>
+                <li>/includes/modules/pages/account_edit/header_php.php</li>
+                <li>/includes/modules/pages/checkout_confirmation/jscript_double_submit.php (ADDED NEW in 156c)</li>
+                <li>/includes/modules/pages/checkout_confirmation/jscript_main.php</li>
+                <li>/includes/modules/pages/checkout_payment/jscript_double_submit.php (ADDED NEW in 156c)</li>
+                <li>/includes/modules/pages/contact_us/header_php.php</li>
+                <li>/includes/modules/pages/login/header_php.php</li>
+                <li>/includes/modules/pages/password_forgotten/header_php.php</li>
+                <li>/includes/modules/payment/paypal/paypal_functions.php</li>
+                <li>/includes/modules/payment/paypalwpp.php</li>
+                <li>/includes/modules/shipping/freeoptions.php</li>
+                <li>/includes/modules/sideboxes/ezpages.php</li>
+                <li>/includes/templates/responsive_classic/common/main_template_vars.php</li>
+                <li>/includes/templates/template_default/templates/tpl_modules_address_book_details.php</li>
+                <li>/includes/templates/template_default/templates/tpl_modules_checkout_new_address.php</li>
+                <br>
+                <li>/zc_install/ ... assume *all* of /zc_install/ has changed (BUT NO DATABASE CHANGES REQUIRED)</li>
+            </ul>
+        </div>
         <div>
             <h1>CHANGED/ADDED/DELETED Files in v1.5.6b (since v1.5.6a)</h1>
             <ul>
@@ -307,7 +383,7 @@
                 <li>/ipn_main_handler.php</li>
                 <li>/square_handler.php</li>
                 <br>
-                <li>/zc_install/ ... assume *all* of /zc_install/ has changed
+                <li>/zc_install/ ... assume *all* of /zc_install/ has changed</li>
             </ul>
         </div>
         <div>
@@ -390,7 +466,7 @@
                 <li>/includes/templates/template_default/templates/tpl_site_map_default.php</li>
                 <li>/includes/templates/template_default/templates/tpl_zc_install_suggested_default.php</li>
                 <br>
-                <li>/zc_install/ ... assume *all* of /zc_install/ has changed
+                <li>/zc_install/ ... assume *all* of /zc_install/ has changed</li>
             </ul>
         </div>
         <div class="back-to-top">
@@ -923,7 +999,7 @@
                 <li>/includes/templates/template_default/templates/tpl_time_out_default.php</li>
                 <li>/includes/templates/template_default/templates/tpl_zc_install_suggested_default.php</li>
                 <br>
-                <li>/zc_install/ ... assume *all* of /zc_install/ has changed
+                <li>/zc_install/ ... assume *all* of /zc_install/ has changed</li>
             </ul>
         </div>
         <div class="back-to-top">
