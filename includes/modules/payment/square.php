@@ -546,7 +546,7 @@ class square extends base
         $db->Execute("UPDATE " . TABLE_CONFIGURATION . " SET configuration_value = '' WHERE configuration_key = 'MODULE_PAYMENT_SQUARE_ACCESS_TOKEN'");
         $msg = "This is an alert from your Zen Cart store.\n\nYour Square Payment Module access-token has expired, or cannot be refreshed automatically. Please login to your store Admin, go to the Payment Module settings, click on the Square module, and click the button to Re/Authorize your account.\n\nSquare Payments are disabled until a new valid token can be established.";
         $msg .= "\n\n" . ' The token expired on ' . MODULE_PAYMENT_SQUARE_REFRESH_EXPIRES_AT;
-        zen_mail(STORE_OWNER_EMAIL_ADDRESS, STORE_OWNER_EMAIL_ADDRESS, 'Square Payment Module Problem: Critical', $msg, STORE_NAME, EMAIL_FROM, array('EMAIL_MESSAGE_HTML' => $msg), 'payment_module_error');
+        zen_mail(STORE_NAME, STORE_OWNER_EMAIL_ADDRESS, 'Square Payment Module Problem: Critical', $msg, STORE_NAME, EMAIL_FROM, array('EMAIL_MESSAGE_HTML' => $msg), 'payment_module_error');
         if (IS_ADMIN_FLAG !== true) trigger_error('Square Payment Module token expired' . (MODULE_PAYMENT_SQUARE_REFRESH_EXPIRES_AT != '' ? ' on ' . MODULE_PAYMENT_SQUARE_REFRESH_EXPIRES_AT : '') . '. Payment module has been disabled. Please login to Admin and re-authorize the module.',
             E_USER_ERROR);
     }
