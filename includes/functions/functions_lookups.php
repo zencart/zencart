@@ -214,7 +214,7 @@
 /*
  * List manufacturers (returned in an array)
  */
-  function zen_get_manufacturers($manufacturers_array = '', $have_products = false) {
+  function zen_get_manufacturers($manufacturers_array = array(), $have_products = false) {
     global $db;
     if (!is_array($manufacturers_array)) $manufacturers_array = array();
 
