@@ -12,7 +12,6 @@ define('HEADING_TITLE_GOTO', 'Go To:');
 
 define('TABLE_HEADING_ID', 'ID');
 define('TABLE_HEADING_CATEGORIES_PRODUCTS', 'Categories / Products');
-define('TABLE_HEADING_MODEL', 'Model');
 
 define('TABLE_HEADING_PRICE', 'Price/Special/Sale');
 define('TABLE_HEADING_QUANTITY', 'Quantity');

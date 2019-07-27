@@ -32,7 +32,6 @@ define('ENTRY_DATE_RANGE', 'Search by Date Added');
   define('TEXT_ALL_MANUFACTURERS', 'All Manufacturers');
 
   define('TABLE_HEADING_IMAGE', '');
-  define('TABLE_HEADING_MODEL', 'Model');
   define('TABLE_HEADING_PRODUCTS', 'Product Name');
   define('TABLE_HEADING_MANUFACTURER', 'Manufacturer');
   define('TABLE_HEADING_PRICE', 'Price');
@@ -50,4 +49,3 @@ define('ENTRY_DATE_RANGE', 'Search by Date Added');
   define('ERROR_PRICE_TO_LESS_THAN_PRICE_FROM', 'Price To must be greater than or equal to Price From.');
   define('ERROR_INVALID_KEYWORDS', 'Invalid keywords.');
 
-?>

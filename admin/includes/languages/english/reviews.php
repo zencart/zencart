@@ -9,7 +9,6 @@
 
 define('HEADING_TITLE', 'Reviews');
 
-define('TABLE_HEADING_MODEL', 'Model');
 define('TABLE_HEADING_PRODUCT', 'Product');
 define('TABLE_HEADING_CUSTOMER_NAME','Customer Name');
 define('TABLE_HEADING_LANGUAGE', 'Lang');

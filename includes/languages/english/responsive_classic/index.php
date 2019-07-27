@@ -31,7 +31,6 @@ if ( ($category_depth == 'products') || (zen_check_url_get_terms()) ) {
   // This section deals with product-listing page contents
   define('HEADING_TITLE', 'Available Products');
   define('TABLE_HEADING_IMAGE', '');
-  define('TABLE_HEADING_MODEL', 'Model');
   define('TABLE_HEADING_PRODUCTS', 'Product Name');
   define('TABLE_HEADING_MANUFACTURER', 'Manufacturer');
   define('TABLE_HEADING_PRICE', 'Price');
@@ -54,4 +53,3 @@ if ( ($category_depth == 'products') || (zen_check_url_get_terms()) ) {
   /*Replace this line with the headline you would like for your shop. For example: 'Welcome to My SHOP!'*/
   define('HEADING_TITLE', 'Congratulations! You have successfully installed your Zen Cart&reg; E-Commerce Solution.'); 
 }
-?>

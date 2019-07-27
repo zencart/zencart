@@ -445,6 +445,8 @@
   define('PRODUCTS_QUANTITY_ADD_ADDITIONAL_LISTING','Add Additional:');
 
   define('PRODUCTS_QUANTITY_MAX_TEXT_LISTING','Max:');
+  define('TEXT_PRODUCT_MODEL', 'Model: ');
+  define('TABLE_HEADING_MODEL', 'Model');
 
   define('TEXT_PRODUCTS_MIX_OFF','*Mixed OFF');
   define('TEXT_PRODUCTS_MIX_ON','*Mixed ON');
