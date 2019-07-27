@@ -800,6 +800,10 @@ function zen_get_configuration_key_value($lookup)
       $sql = "select products_type from " . TABLE_PRODUCTS . " where products_id='" . $lookup . "'";
       $type_lookup = $db->Execute($sql);
 
+      if ($type_lookup->RecordCount() == 0) {
+        return false;
+      }
+
       $sql = "select type_handler from " . TABLE_PRODUCT_TYPES . " where type_id = '" . $type_lookup->fields['products_type'] . "'";
       $show_key = $db->Execute($sql);
 

@@ -57,7 +57,9 @@ class breadcrumb extends base {
           $trail_string .= '  <a href="' . $this->_trail[$i]['link'] . '">' . $this->_trail[$i]['title'] . '</a>';
         }
       } else {
-        $trail_string .= $this->_trail[$i]['title'];
+        if (isset($this->_trail[$i]['title'])) {
+          $trail_string .= $this->_trail[$i]['title'];
+        }
       }
 
       if (($i+1) < $n) $trail_string .= $separator;

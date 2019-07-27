@@ -1609,7 +1609,7 @@ class shoppingCart extends base {
     $product = $db->Execute("select products_id, products_quantity_mixed from " . TABLE_PRODUCTS . " where products_id='" . zen_get_prid($products_id) . "' limit 1");
 
     // if mixed attributes is off return qty for current attribute selection
-    if ($product->fields['products_quantity_mixed'] == '0') {
+    if ($product->EOF || $product->fields['products_quantity_mixed'] == '0') {
       return $this->get_quantity($products_id);
     }
 
