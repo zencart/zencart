@@ -3,16 +3,16 @@
  * Ask a Question Page (based on Contact Us Page)
  *
  * @package page
- * @copyright Copyright 2003-2006 Zen Cart Development Team
+ * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: header_php.php 3230 2006-03-20 23:21:29Z drbyte $
  */
 
 
-  $valid_product = false;
-  $zco_notifier->notify('NOTIFY_HEADER_START_ASK_A_QUESTION');
-  if (isset($_GET['products_id'])) {
+$valid_product = false;
+$zco_notifier->notify('NOTIFY_HEADER_START_ASK_A_QUESTION');
+if (isset($_GET['products_id'])) {
     $product_info_query = "select pd.products_name, p.products_image, p.products_model
                            from " . TABLE_PRODUCTS . " p, " . TABLE_PRODUCTS_DESCRIPTION . " pd
                            where p.products_status = '1'
@@ -23,137 +23,152 @@
     $product_info = $db->Execute($product_info_query);
 
     if ($product_info->RecordCount() > 0) {
-      $valid_product = true;
+        $valid_product = true;
     }
-  }
+}
 
-  if ($valid_product == false) {
-    zen_redirect(zen_href_link(zen_get_info_page((int)$_GET['products_id']), 'products_id=' . (int)$_GET['products_id']));
-  }
+if ($valid_product == false) {
+    zen_redirect(zen_href_link(zen_get_info_page((!empty($_GET['products_id']) ? (int)$_GET['products_id'] : 0)), 'products_id=' . (!empty($_GET['products_id']) ? (int)$_GET['products_id'] : 0)));
+}
 
-require(DIR_WS_MODULES . zen_get_module_directory('require_languages.php'));
+require DIR_WS_MODULES . zen_get_module_directory('require_languages.php');
 
 $error = false;
+$enquiry = '';
+$antiSpamFieldName = isset($_SESSION['antispam_fieldname']) ? $_SESSION['antispam_fieldname'] : 'should_be_empty';
+$name = '';
+$email_address = '';
+
 if (isset($_GET['action']) && ($_GET['action'] == 'send')) {
-  $name = zen_db_prepare_input($_POST['contactname']);
-  $email_address = zen_db_prepare_input($_POST['email']);
-  $telephone = zen_db_prepare_input($_POST['telephone']);
-  $enquiry = zen_db_prepare_input(strip_tags($_POST['enquiry']));
-  $antiSpam = isset($_POST['should_be_empty']) ? zen_db_prepare_input($_POST['should_be_empty']) : '';
-  $zco_notifier->notify('NOTIFY_ASK_A_QUESTION_CAPTCHA_CHECK', $_POST);
+    $name = zen_db_prepare_input($_POST['contactname']);
+    $email_address = zen_db_prepare_input($_POST['email']);
+    $telephone = zen_db_prepare_input($_POST['telephone']);
+    $enquiry = zen_db_prepare_input(strip_tags($_POST['enquiry']));
+    $antiSpam = !empty($_POST[$antiSpamFieldName]) ? 'spam' : '';
+    if (!empty($_POST['contactname']) && preg_match('~https?://?~', $_POST['contactname'])) $antiSpam = 'spam';
 
-  $zc_validate_email = zen_validate_email($email_address);
+    $zco_notifier->notify('NOTIFY_ASK_A_QUESTION_CAPTCHA_CHECK', $_POST);
 
-  if ($zc_validate_email and !empty($enquiry) and !empty($name) && $error == FALSE) {
-    // if anti-spam is not triggered, prepare and send email:
-   if ($antiSpam != '') {
-      $zco_notifier->notify('NOTIFY_SPAM_DETECTED_USING_CONTACT_US', $_POST);
-   } elseif ($antiSpam == '') {
+    $zc_validate_email = zen_validate_email($email_address);
 
-    // auto complete when logged in
-    if($_SESSION['customer_id']) {
-      $sql = "SELECT customers_id, customers_firstname, customers_lastname, customers_password, customers_email_address, customers_default_address_id, customers_telephone  
-              FROM " . TABLE_CUSTOMERS . "
-              WHERE customers_id = :customersID";
+    if ($zc_validate_email && !empty($enquiry) && !empty($name) && $error == FALSE) {
+        // if anti-spam is not triggered, prepare and send email:
+        if ($antiSpam != '') {
+            $zco_notifier->notify('NOTIFY_SPAM_DETECTED_USING_CONTACT_US', $_POST);
+        } else if ($antiSpam == '') {
 
-      $sql = $db->bindVars($sql, ':customersID', $_SESSION['customer_id'], 'integer');
-      $check_customer = $db->Execute($sql);
-      $customer_email= $check_customer->fields['customers_email_address'];
-      $customer_name= $check_customer->fields['customers_firstname'] . ' ' . $check_customer->fields['customers_lastname'];
-      $customer_telephone = $check_customer->fields['customers_telephone'];
+            // auto complete when logged in
+            if($_SESSION['customer_id']) {
+                $sql = "SELECT customers_id, customers_firstname, customers_lastname, customers_password, customers_email_address, customers_default_address_id, customers_telephone
+                        FROM " . TABLE_CUSTOMERS . "
+                        WHERE customers_id = :customersID";
+
+                $sql = $db->bindVars($sql, ':customersID', $_SESSION['customer_id'], 'integer');
+                $check_customer = $db->Execute($sql);
+                $customer_email = $check_customer->fields['customers_email_address'];
+                $customer_name = $check_customer->fields['customers_firstname'] . ' ' . $check_customer->fields['customers_lastname'];
+                $customer_telephone = $check_customer->fields['customers_telephone'];
+            } else {
+                $customer_email = NOT_LOGGED_IN_TEXT;
+                $customer_name = NOT_LOGGED_IN_TEXT;
+                $customer_telephone = NOT_LOGGED_IN_TEXT;
+            }
+
+            $zco_notifier->notify('NOTIFY_ASK_A_QUESTION_ACTION', (isset($_SESSION['customer_id']) ? $_SESSION['customer_id'] : 0), $customer_email, $customer_name, $email_address, $name, $enquiry, $telephone);
+
+            // declare variable
+            $send_to_array = [];
+
+            // use contact us dropdown if defined and if a destination is provided
+            if (CONTACT_US_LIST != '' && isset($_POST['send_to'])){
+                $send_to_array = explode(",", CONTACT_US_LIST);
+
+                if (isset($send_to_array[$_POST['send_to']])) {
+                    preg_match('/\<[^>]+\>/', $send_to_array[$_POST['send_to']], $send_email_array);
+                }
+            }
+
+            $send_to_email = trim(EMAIL_FROM); // default to EMAIL_FROM
+            $send_to_name  = trim(STORE_NAME);  // default to STORE_NAME
+
+            // Assign email destination from array
+            if (!empty($send_email_array)) {
+                $send_to_email= preg_replace ("/>/", "", $send_email_array[0]);
+                $send_to_email= trim(preg_replace("/</", "", $send_to_email));
+                $send_to_name = trim(preg_replace('/\<[^*]*/', '', $send_to_array[$_POST['send_to']]));
+            }
+
+            // Prepare extra-info details
+            $extra_info = email_collect_extra_info($name, $email_address, $customer_name, $customer_email, $customer_telephone);
+            // Prepare Text-only portion of message
+            $text_message = OFFICE_FROM . "\t" . $name . "\n" .
+            OFFICE_EMAIL . "\t" . $email_address . "\n";
+            if (!empty($telephone)) $text_message .= OFFICE_LOGIN_PHONE . "\t" . $telephone . "\n";
+            $text_message .= PROD_NAME . "\t" . $product_info->fields['products_name'] . "\n" .
+            zen_href_link(FILENAME_PRODUCT_INFO, 'products_id=' . (int)$_GET['products_id']) .
+            "\n";
+            $text_message .= "\n" .
+            '------------------------------------------------------' . "\n\n" .
+            strip_tags($_POST['enquiry']) .  "\n\n" .
+            '------------------------------------------------------' . "\n\n" .
+            $extra_info['TEXT'];
+            // Prepare HTML-portion of message
+            $html_msg['EMAIL_MESSAGE_HTML'] = '<b>Product: </b><a href="' . zen_href_link(FILENAME_PRODUCT_INFO, 'products_id=' . (int)$_GET['products_id']) . '">' . $product_info->fields['products_name'] . '</a><br />' . strip_tags($_POST['enquiry']);
+            $html_msg['CONTACT_US_OFFICE_FROM'] = OFFICE_FROM . ' ' . $name . '<br />' . OFFICE_EMAIL . '(' . $email_address . ')';
+            $html_msg['EXTRA_INFO'] = $extra_info['HTML'];
+            // Send message
+            // reuse contact_us form so we get the correct reply-to and don't have
+            // to change includes/functions/functions_email.php (which has special
+            // hooks for contact_us.
+            zen_mail($send_to_name, $send_to_email, EMAIL_SUBJECT, $text_message, $name, $email_address, $html_msg,'contact_us');
+        }
+        zen_redirect(zen_href_link(FILENAME_ASK_A_QUESTION, 'action=success&products_id=' . $_GET['products_id'], 'SSL'));
     } else {
-      $customer_email = NOT_LOGGED_IN_TEXT;
-      $customer_name = NOT_LOGGED_IN_TEXT;
-      $customer_telephone = NOT_LOGGED_IN_TEXT;
+        $error = true;
+        if (empty($name)) {
+            $messageStack->add('contact', ENTRY_EMAIL_NAME_CHECK_ERROR);
+        }
+        if ($zc_validate_email == false) {
+            $messageStack->add('contact', ENTRY_EMAIL_ADDRESS_CHECK_ERROR);
+        }
+        if (empty($enquiry)) {
+            $messageStack->add('contact', ENTRY_EMAIL_CONTENT_CHECK_ERROR);
+        }
     }
-
-    $zco_notifier->notify('NOTIFY_ASK_A_QUESTION_ACTION', (isset($_SESSION['customer_id']) ? $_SESSION['customer_id'] : 0), $customer_email, $customer_name, $email_address, $name, $enquiry);
-
-    // use contact us dropdown if defined
-    if (CONTACT_US_LIST !=''){
-      $send_to_array=explode("," ,CONTACT_US_LIST);
-      preg_match('/\<[^>]+\>/', $send_to_array[$_POST['send_to']], $send_email_array);
-      $send_to_email= preg_replace ("/>/", "", $send_email_array[0]);
-      $send_to_email= trim(preg_replace("/</", "", $send_to_email));
-      $send_to_name = trim(preg_replace('/\<[^*]*/', '', $send_to_array[$_POST['send_to']]));
-    } else {  //otherwise default to EMAIL_FROM and store name
-    $send_to_email = trim(EMAIL_FROM);
-    $send_to_name =  trim(STORE_NAME);
-    }
-
-    // Prepare extra-info details
-    $extra_info = email_collect_extra_info($name, $email_address, $customer_name, $customer_email, $customer_telephone);
-    // Prepare Text-only portion of message
-    $text_message = OFFICE_FROM . "\t" . $name . "\n" .
-    OFFICE_EMAIL . "\t" . $email_address . "\n" .
-    OFFICE_LOGIN_PHONE . "\t" . $telephone . "\n" .
-    PROD_NAME . "\t" . $product_info->fields['products_name'] . "\n" .  
-    zen_href_link(FILENAME_PRODUCT_INFO, 'products_id=' . (int)$_GET['products_id']) .
-    "\n\n" .  
-
-    '------------------------------------------------------' . "\n\n" .
-    strip_tags($_POST['enquiry']) .  "\n\n" .
-    '------------------------------------------------------' . "\n\n" .
-    $extra_info['TEXT'];
-    // Prepare HTML-portion of message
-    $html_msg['EMAIL_MESSAGE_HTML'] = '<b>Product: </b><a href="' . zen_href_link(FILENAME_PRODUCT_INFO, 'products_id=' . (int)$_GET['products_id']) . '">' . $product_info->fields['products_name'] . '</a><br />' . strip_tags($_POST['enquiry']);
-
-    $html_msg['CONTACT_US_OFFICE_FROM'] = OFFICE_FROM . ' ' . $name . '<br />' . OFFICE_EMAIL . '(' . $email_address . ')';
-    $html_msg['EXTRA_INFO'] = $extra_info['HTML'];
-    // Send message
-    // reuse contact_us form so we get the correct reply-to and don't have
-    // to change includes/functions/functions_email.php (which has special
-    // hooks for contact_us.
-    zen_mail($send_to_name, $send_to_email, EMAIL_SUBJECT, $text_message, $name, $email_address, $html_msg,'contact_us');
-   }
-    zen_redirect(zen_href_link(FILENAME_ASK_A_QUESTION, 'action=success&products_id='.$_GET['products_id'], 'SSL'));
-  } else {
-    $error = true;
-    if (empty($name)) {
-      $messageStack->add('contact', ENTRY_EMAIL_NAME_CHECK_ERROR);
-    }
-    if ($zc_validate_email == false) {
-      $messageStack->add('contact', ENTRY_EMAIL_ADDRESS_CHECK_ERROR);
-    }
-    if (empty($enquiry)) {
-      $messageStack->add('contact', ENTRY_EMAIL_CONTENT_CHECK_ERROR);
-    }
-  }
 } // end action==send
 
 
 if (ENABLE_SSL == 'true' && $request_type != 'SSL') {
-  zen_redirect(zen_href_link(FILENAME_ASK_A_QUESTION, zen_get_all_get_params(), 'SSL'));
+    zen_redirect(zen_href_link(FILENAME_ASK_A_QUESTION, zen_get_all_get_params(), 'SSL'));
 }
 
-// default email and name if customer is logged in
-if(isset($_SESSION['customer_id']) && $_SESSION['customer_id'] != '') {
-  $sql = "SELECT customers_id, customers_firstname, customers_lastname, customers_password, customers_email_address, customers_default_address_id
-          FROM " . TABLE_CUSTOMERS . "
-          WHERE customers_id = :customersID";
+$email_address = '';
+$name = '';
 
-  $sql = $db->bindVars($sql, ':customersID', $_SESSION['customer_id'], 'integer');
-  $check_customer = $db->Execute($sql);
-  $email_address = $check_customer->fields['customers_email_address'];
-  $name= $check_customer->fields['customers_firstname'] . ' ' . $check_customer->fields['customers_lastname'];
+// default email and name if customer is logged in
+if(zen_is_logged_in()) {
+    $sql = "SELECT customers_id, customers_firstname, customers_lastname, customers_password, customers_email_address, customers_default_address_id, customers_telephone
+            FROM " . TABLE_CUSTOMERS . "
+            WHERE customers_id = :customersID";
+
+    $sql = $db->bindVars($sql, ':customersID', $_SESSION['customer_id'], 'integer');
+    $check_customer = $db->Execute($sql);
+    $email_address = $check_customer->fields['customers_email_address'];
+    $name= $check_customer->fields['customers_firstname'] . ' ' . $check_customer->fields['customers_lastname'];
+    $telephone = $check_customer->fields['customers_telephone'];
 }
 
 $send_to_array = array();
 if (CONTACT_US_LIST !=''){
-  foreach(explode(",", CONTACT_US_LIST) as $k => $v) {
-    $send_to_array[] = array('id' => $k, 'text' => preg_replace('/\<[^*]*/', '', $v));
-  }
+    foreach(explode(",", CONTACT_US_LIST) as $k => $v) {
+        $send_to_array[] = array('id' => $k, 'text' => preg_replace('/\<[^*]*/', '', $v));
+    }
 }
 
 // include template specific file name defines
 $define_page = zen_get_file_directory(DIR_WS_LANGUAGES . $_SESSION['language'] . '/html_includes/', FILENAME_DEFINE_ASK_A_QUESTION, 'false');
 
 $breadcrumb->add(NAVBAR_TITLE);
-
-if (!isset($name))  $name = ''; 
-if (!isset($email_address)) $email_address = '';
-if (!isset($telephone))  $telephone = ''; 
-if (!isset($enquiry)) $enquiry = ''; 
 
 // This should be the last line of the script:
 $zco_notifier->notify('NOTIFY_HEADER_END_ASK_A_QUESTION');
