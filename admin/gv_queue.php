@@ -202,7 +202,12 @@
       break;
     default:
       if (!isset($gInfo) || !is_object($gInfo)) { 
-        $gInfo = new objectInfo(array());
+        $gInfo = new objectInfo(array(
+                    'unique_id' => 0, 
+                    'date_created' => '0001-01-01 00:00:00', 
+                    'amount' => '0.0000',
+                    )
+                    );
       }
       $heading[] = array('text' => '[' . $gInfo->unique_id . '] ' . zen_datetime_short($gInfo->date_created) . ' ' . $currencies->format($gInfo->amount));
 
