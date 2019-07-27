@@ -17,7 +17,6 @@ define('TEXT_PRODUCT_OPTIONS', 'Please Choose:');
 define('TEXT_PRODUCT_MANUFACTURER', 'Manufactured by: ');
 define('TEXT_PRODUCT_WEIGHT', 'Shipping Weight: ');
 define('TEXT_PRODUCT_QUANTITY', ' Units in Stock');
-define('TEXT_PRODUCT_MODEL', 'Model: ');
 
 
 
@@ -45,4 +44,3 @@ define('ATTRIBUTES_PRICE_DELIMITER_SUFFIX', ' )');
 define('ATTRIBUTES_WEIGHT_DELIMITER_PREFIX', ' (');
 define('ATTRIBUTES_WEIGHT_DELIMITER_SUFFIX', ') ');
 
-?>

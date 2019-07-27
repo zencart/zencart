@@ -20,7 +20,6 @@ define('TEXT_PRODUCT_ARTIST', 'Artist: ');
 define('TEXT_PRODUCT_MUSIC_GENRE', 'Music Genre: ');
 define('TEXT_PRODUCT_WEIGHT', 'Shipping Weight: ');
 define('TEXT_PRODUCT_QUANTITY', ' Units in Stock');
-define('TEXT_PRODUCT_MODEL', 'Model: ');
 define('TEXT_PRODUCT_COLLECTIONS', 'Media Collection: ');
 
 
@@ -49,4 +48,3 @@ define('ATTRIBUTES_PRICE_DELIMITER_SUFFIX', ' )');
 define('ATTRIBUTES_WEIGHT_DELIMITER_PREFIX', ' (');
 define('ATTRIBUTES_WEIGHT_DELIMITER_SUFFIX', ') ');
 
-?>
