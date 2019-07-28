@@ -191,13 +191,13 @@
               <tr>
                 <td valign="top"><table border="0" width="100%" cellspacing="0" cellpadding="2">
                   <tr class="dataTableHeadingRow">
-                    <td class="dataTableHeadingContent"><?php echo HEADER_COUPON_ID; ?></td>
-                    <td class="dataTableHeadingContent" align="center"><?php echo HEADER_COUPON_NAME; ?></td>
-                    <td class="dataTableHeadingContent" align="center"><?php echo HEADER_CATEGORY_ID; ?></td>
-                    <td class="dataTableHeadingContent" align="center"><?php echo HEADER_CATEGORY_NAME; ?></td>
-                    <td class="dataTableHeadingContent" align="center"><?php echo HEADER_RESTRICT_ALLOW; ?></td>
-                    <td class="dataTableHeadingContent" align="center"><?php echo HEADER_RESTRICT_DENY; ?></td>
-                    <td class="dataTableHeadingContent" align="center"><?php echo HEADER_RESTRICT_REMOVE; ?></td>
+                    <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_COUPON_ID; ?></td>
+                    <td class="dataTableHeadingContent" align="center"><?php echo TABLE_HEADING_COUPON_NAME; ?></td>
+                    <td class="dataTableHeadingContent" align="center"><?php echo TABLE_HEADING_CATEGORY_ID; ?></td>
+                    <td class="dataTableHeadingContent" align="center"><?php echo TABLE_HEADING_CATEGORY_NAME; ?></td>
+                    <td class="dataTableHeadingContent" align="center"><?php echo TABLE_HEADING_RESTRICT_ALLOW; ?></td>
+                    <td class="dataTableHeadingContent" align="center"><?php echo TABLE_HEADING_RESTRICT_DENY; ?></td>
+                    <td class="dataTableHeadingContent" align="center"><?php echo TABLE_HEADING_RESTRICT_REMOVE; ?></td>
                   </tr>
 <?php
     $cr_query_raw = "select * from " . TABLE_COUPON_RESTRICT . " where coupon_id = '" . $_GET['cid'] . "' and category_id != '0'";
@@ -253,7 +253,7 @@
               <tr><form name="restrict_category" method="post" action="<?php echo zen_href_link(FILENAME_COUPON_RESTRICT, zen_get_all_get_params(array('info', 'action', 'x', 'y')) . 'action=add_category&info=' . $cInfo->restrict_id); ?>"><?php echo zen_draw_hidden_field('securityToken', $_SESSION['securityToken']); ?>
                 <td colspan="7"><table border="0" width="100%" cellspacing="0" cellpadding="2">
                   <tr>
-                    <td class="smallText" valign="top"><?php echo HEADER_CATEGORY_NAME; ?></td>
+                    <td class="smallText" valign="top"><?php echo TABLE_HEADING_CATEGORY_NAME; ?></td>
                     <td class="smallText" align="left"></td>
                     <td class="smallText" align="left"><?php echo zen_draw_pull_down_menu('cPath', zen_get_category_tree(), $current_category_id); ?></td>
                     <td class="smallText" align="left"><?php echo zen_draw_pull_down_menu('restrict_status', $restrict_array, $current_category_id, 'id="restrict_status_category"'); ?></td>
@@ -285,15 +285,15 @@
               <tr>
                 <td valign="top"><table border="0" width="100%" cellspacing="0" cellpadding="2">
                   <tr class="dataTableHeadingRow">
-                    <td class="dataTableHeadingContent"><?php echo HEADER_COUPON_ID; ?></td>
-                    <td class="dataTableHeadingContent" align="center"><?php echo HEADER_COUPON_NAME; ?></td>
-                    <td class="dataTableHeadingContent" align="center"><?php echo HEADER_PRODUCT_ID; ?></td>
-                    <td class="dataTableHeadingContent" align="center"><?php echo HEADER_PRODUCT_STATUS; ?></td>
-                    <td class="dataTableHeadingContent" align="center"><?php echo HEADER_PRODUCT_MODEL; ?></td>
-                    <td class="dataTableHeadingContent" align="center"><?php echo HEADER_PRODUCT_NAME; ?></td>
-                    <td class="dataTableHeadingContent" align="center"><?php echo HEADER_RESTRICT_ALLOW; ?></td>
-                    <td class="dataTableHeadingContent" align="center"><?php echo HEADER_RESTRICT_DENY; ?></td>
-                    <td class="dataTableHeadingContent" align="center"><?php echo HEADER_RESTRICT_REMOVE; ?></td>
+                    <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_COUPON_ID; ?></td>
+                    <td class="dataTableHeadingContent" align="center"><?php echo TABLE_HEADING_COUPON_NAME; ?></td>
+                    <td class="dataTableHeadingContent" align="center"><?php echo TABLE_HEADING_PRODUCT_ID; ?></td>
+                    <td class="dataTableHeadingContent" align="center"><?php echo TABLE_HEADING_STATUS; ?></td>
+                    <td class="dataTableHeadingContent" align="center"><?php echo TABLE_HEADING_MODEL; ?></td>
+                    <td class="dataTableHeadingContent" align="center"><?php echo TABLE_HEADING_PRODUCT_NAME; ?></td>
+                    <td class="dataTableHeadingContent" align="center"><?php echo TABLE_HEADING_RESTRICT_ALLOW; ?></td>
+                    <td class="dataTableHeadingContent" align="center"><?php echo TABLE_HEADING_RESTRICT_DENY; ?></td>
+                    <td class="dataTableHeadingContent" align="center"><?php echo TABLE_HEADING_RESTRICT_REMOVE; ?></td>
                   </tr>
 <?php
     $pr_query_raw = "select * from " . TABLE_COUPON_RESTRICT . " where coupon_id = '" . $_GET['cid'] . "' and product_id != '0'";
@@ -388,7 +388,7 @@
         $products->MoveNext();
       }
 ?>
-                    <td class="smallText" valign="top"><?php echo HEADER_CATEGORY_NAME . HEADER_MANUFACTURER_NAME; ?></td>
+                    <td class="smallText" valign="top"><?php echo TABLE_HEADING_CATEGORY_NAME . HEADER_MANUFACTURER_NAME; ?></td>
                     <td class="smallText" align="left"></td><form name="restrict_product" method="post" action="<?php echo zen_href_link(FILENAME_COUPON_RESTRICT, zen_get_all_get_params(array('info', 'action', 'x', 'y')) . 'info=' . $cInfo->restrict_id); ?>">
                     <?php echo zen_hide_session_id(); ?>
                     <td class="smallText" align="left">
@@ -417,7 +417,7 @@
 </form>
 <?php if (sizeof($products_array) > 0) { ?>
                     <form name="restrict_category" method="post" action="<?php echo zen_href_link(FILENAME_COUPON_RESTRICT, zen_get_all_get_params(array('info', 'action', 'x', 'y')) . 'action=add_product&info=' . $cInfo->restrict_id . '&build_cat=' . $current_category_id . '&build_man=' . $current_manufacturers_id); ?>"><?php echo zen_draw_hidden_field('securityToken', $_SESSION['securityToken']); ?>
-                    <td class="smallText" valign="top"><?php echo HEADER_PRODUCT_NAME; ?></td>
+                    <td class="smallText" valign="top"><?php echo TABLE_HEADING_PRODUCT_NAME; ?></td>
                     <td class="smallText" align="left"><?php echo zen_draw_pull_down_menu('products_drop', $products_array, $current_category_id); ?></td>
                     <td class="smallText" align="left"><?php echo zen_draw_pull_down_menu('restrict_status', $restrict_array, '', 'id="restrict_status_product"'); ?></td>
                     <td class="smallText" align="left"><input type="submit" name="add" value="<?php echo TEXT_SUBMIT_PRODUCT_UPDATE; ?>"></td>

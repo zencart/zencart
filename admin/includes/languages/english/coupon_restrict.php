@@ -11,15 +11,15 @@ define('HEADING_TITLE', 'Discount Coupons Product/Category Restrictions');
 define('HEADING_TITLE_CATEGORY', 'Category Restrictions');
 define('HEADING_TITLE_PRODUCT', 'Product Restrictions');
 
-define('HEADER_COUPON_ID', 'Coupon ID');
-define('HEADER_COUPON_NAME', 'Coupon Name');
-define('HEADER_CATEGORY_ID', 'Category ID');
-define('HEADER_CATEGORY_NAME', 'Category Name');
-define('HEADER_PRODUCT_ID', 'Product ID');
-define('HEADER_PRODUCT_NAME', 'Product Name');
-define('HEADER_RESTRICT_ALLOW', 'Allow');
-define('HEADER_RESTRICT_DENY', 'Deny');
-define('HEADER_RESTRICT_REMOVE', 'Remove');
+define('TABLE_HEADING_COUPON_ID', 'Coupon ID');
+define('TABLE_HEADING_COUPON_NAME', 'Coupon Name');
+define('TABLE_HEADING_CATEGORY_ID', 'Category ID');
+define('TABLE_HEADING_CATEGORY_NAME', 'Category Name');
+define('TABLE_HEADING_PRODUCT_NAME', 'Product Name');
+define('TABLE_HEADING_PRODUCT_ID', 'Product ID');
+define('TABLE_HEADING_RESTRICT_ALLOW', 'Allow');
+define('TABLE_HEADING_RESTRICT_DENY', 'Deny');
+define('TABLE_HEADING_RESTRICT_REMOVE', 'Remove');
 define('IMAGE_ALLOW', 'Allow');
 define('IMAGE_DENY', 'Deny');
 define('IMAGE_REMOVE', 'Remove');
@@ -40,8 +40,7 @@ define('HEADER_MANUFACTURER_NAME', '<br> -- OR -- <br>' . 'Manufacturer: ');
 define('TEXT_ALL_MANUFACTURERS_ADD', 'Add All Manufacturer Products');
 define('TEXT_ALL_MANUFACTURERS_REMOVE', 'Remove All Manufacturer Products');
 
-define('HEADER_PRODUCT_STATUS', 'Status');
-define('HEADER_PRODUCT_MODEL', 'Model');
+define('TABLE_HEADING_STATUS', 'Status');
 
 define('ERROR_RESET_CATEGORY_MANUFACTURER', 'Category and Manufacturer filters reset. Use filters individually.');
 
