@@ -237,7 +237,6 @@ for ($i = 0, $n = sizeof($tax_class_array); $i < $n; $i++) {
   </div>
   
 <?php
-//-bof-zen_tags-lat9  *** 1 of 1 ***
     // -----
     // Give an observer the chance to supply some additional product-related inputs.  Each
     // entry in the $extra_product_inputs returned contains:
@@ -265,7 +264,6 @@ for ($i = 0, $n = sizeof($tax_class_array); $i < $n; $i++) {
 <?php
         }
     }
-//-eof-zen_tags-lat9  *** 1 of 1
 ?>
 
   <div class="form-group">
