@@ -133,6 +133,7 @@ if (isset($_POST['edit']) && $_POST['edit'] == 'edit') {
       zen_db_perform(TABLE_PRODUCTS_DESCRIPTION, $sql_data_array, 'update', "products_id = " . (int)$products_id . " and language_id = " . (int)$language_id);
     }
   }
+  $zco_notifier->notify('NOTIFY_PRODUCT_MUSIC_UPDATE_PRODUCT_END', array('action' => $action, 'products_id' => $products_id));
 
   zen_redirect(zen_href_link(FILENAME_CATEGORY_PRODUCT_LISTING, 'cPath=' . $cPath . '&pID=' . $products_id . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '') . (isset($_POST['search']) ? '&search=' . $_POST['search'] : '')));
 } else {
