@@ -148,6 +148,7 @@
   $flag_show_product_info_url = zen_get_show_product_switch($_GET['products_id'], 'url');
   $flag_show_product_info_additional_images = zen_get_show_product_switch($_GET['products_id'], 'additional_images');
   $flag_show_product_info_free_shipping = zen_get_show_product_switch($_GET['products_id'], 'always_free_shipping_image_switch');
+  $flag_show_ask_a_question = !empty(zen_get_show_product_switch($_GET['products_id'], 'ask_a_question'));
 
   $flag_show_product_music_info_artist = zen_get_show_product_switch($_GET['products_id'], 'artist');
   $flag_show_product_music_info_genre = zen_get_show_product_switch($_GET['products_id'], 'genre');

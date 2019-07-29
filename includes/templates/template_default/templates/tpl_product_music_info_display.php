@@ -128,6 +128,20 @@ if (CUSTOMERS_APPROVAL == 3 and TEXT_LOGIN_FOR_PRICE_BUTTON_REPLACE_SHOWROOM == 
 ?>
 <!--eof Product details list -->
 
+<?php
+if ($flag_show_ask_a_question) {
+?>
+<!-- bof Ask a Question --> 
+<br />
+<span id="productQuestions" class="biggerText">
+<b><?php echo '<a href="' . zen_href_link(FILENAME_ASK_A_QUESTION, 'products_id=' . $_GET['products_id'], 'SSL') . '">' . ASK_A_QUESTION . '</a>'; ?></b>
+</span>
+<br class="clearBoth" />
+<!-- eof Ask a Question -->
+<?php
+}
+?>
+
 <!--bof Attributes Module -->
 <?php
   if ($pr_attr->fields['total'] > 0) {
