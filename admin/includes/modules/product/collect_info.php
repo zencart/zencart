@@ -274,6 +274,9 @@ for ($i = 0, $n = sizeof($tax_class_array); $i < $n; $i++) {
     //    ),
     //    'input' => 'The HTML to be inserted' (required)
     // )
+    //
+    // Note: The product's type can be found in the 'product_type' element of the passed $pInfo object.
+    //
     $extra_product_inputs = array();
     $zco_notifier->notify('NOTIFY_ADMIN_PRODUCT_COLLECT_INFO_EXTRA_INPUTS', $pInfo, $extra_product_inputs);
     if (!empty($extra_product_inputs)) {
