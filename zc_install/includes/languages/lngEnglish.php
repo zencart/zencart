@@ -169,7 +169,7 @@ define('TEXT_ERROR_PUB_FOLDER', DIR_FS_DOWNLOAD_PUBLIC . ' folder is not writeab
 
 define('TEXT_ERROR_CONFIGURE_REQUIRES_UPDATE', 'Your configure.php file is an old version and requires updating before we can continue.');
 
-define('TEXT_ERROR_HTACCESS_SUPPORT', 'Support for ".htaccess" files is not enabled.<br>[ <i><b>NOTE:</b> If you are using Nginx, continue to the <u>END</u> of this Installation Wizard for information on resolving this issue.<i> ]');
+define('TEXT_ERROR_HTACCESS_SUPPORT', 'Support for ".htaccess" files is not enabled or is not operating correctly.<br>[ <i><b>NOTE:</b> If you are using Nginx, continue to the <u>END</u> of this Installation Wizard for information on resolving this issue.<i> ]');
 define('TEXT_ERROR_SESSION_SUPPORT', 'Problems with session support');
 define('TEXT_ERROR_SESSION_SUPPORT_USE_TRANS_SID', 'ini setting session.use_trans_sid is enabled');
 define('TEXT_ERROR_SESSION_SUPPORT_AUTO_START', 'ini setting session.auto_start is enabled');
