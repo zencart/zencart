@@ -54,9 +54,8 @@ $orders_id = $orders->fields['orders_id'];
 // Needs reworking in future checkout-rewrite
 $zv_orders_id = (isset($_SESSION['order_number_created']) && $_SESSION['order_number_created'] >= 1) ? $_SESSION['order_number_created'] : $orders_id;
 $_GET['order_id'] = $orders_id = $zv_orders_id;
-$order_summary = $_SESSION['order_summary'];
-unset($_SESSION['order_summary']);
-unset($_SESSION['order_number_created']);
+$order_summary = !empty($_SESSION['order_summary']) ? $_SESSION['order_summary'] : array();
+unset($_SESSION['order_summary'], $_SESSION['order_number_created']);
 
 $additional_payment_messages = '';
 if (isset($_SESSION['payment_method_messages']) && $_SESSION['payment_method_messages'] != '') {
