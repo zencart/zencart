@@ -148,6 +148,7 @@
   $flag_show_product_info_url = zen_get_show_product_switch($_GET['products_id'], 'url');
   $flag_show_product_info_additional_images = zen_get_show_product_switch($_GET['products_id'], 'additional_images');
   $flag_show_product_info_free_shipping = zen_get_show_product_switch($_GET['products_id'], 'always_free_shipping_image_switch');
+  $flag_show_ask_a_question = !empty(zen_get_show_product_switch($_GET['products_id'], 'ask_a_question'));
   require(DIR_WS_MODULES . zen_get_module_directory(FILENAME_PRODUCTS_QUANTITY_DISCOUNTS));
 
   $zco_notifier->notify('NOTIFY_MAIN_TEMPLATE_VARS_EXTRA_DOCUMENT_PRODUCT_INFO');

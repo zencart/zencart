@@ -94,6 +94,20 @@ require($template->get_template_dir('/tpl_products_next_previous.php',DIR_WS_TEM
 ?>
 <!--eof Product details list -->
 
+<?php
+if ($flag_show_ask_a_question) {
+?>
+<!-- bof Ask a Question --> 
+<br />
+<span id="productQuestions" class="biggerText">
+<b><?php echo '<a href="' . zen_href_link(FILENAME_ASK_A_QUESTION, 'products_id=' . $_GET['products_id'], 'SSL') . '">' . ASK_A_QUESTION . '</a>'; ?></b>
+</span>
+<br class="clearBoth" />
+<!-- eof Ask a Question -->
+<?php
+}
+?>
+
 <!--bof free ship icon  -->
 <?php if(zen_get_product_is_always_free_shipping($products_id_current) && $flag_show_product_info_free_shipping) { ?>
 <div id="freeShippingIcon"><?php echo TEXT_PRODUCT_FREE_SHIPPING_ICON; ?></div>
