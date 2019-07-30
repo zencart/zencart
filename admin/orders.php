@@ -355,7 +355,7 @@ if (zen_not_null($action) && $order_exists == true) {
                 <?php
                 echo zen_draw_form('search', FILENAME_ORDERS, '', 'get', '', true);
                 echo zen_draw_label(HEADING_TITLE_SEARCH_ALL, 'searchAll', 'class="sr-only"');
-                $placeholder = zen_output_string_protected(isset($_GET['search']) && $_GET['search_orders_products'] != '' ? $_GET['search'] : HEADING_TITLE_SEARCH_ALL);
+                $placeholder = zen_output_string_protected(isset($_GET['search']) && $_GET['search'] != '' ? $_GET['search'] : HEADING_TITLE_SEARCH_ALL);
                 ?>
               <div class="input-group">
                   <?php
