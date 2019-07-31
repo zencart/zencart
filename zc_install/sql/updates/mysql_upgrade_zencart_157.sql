@@ -35,6 +35,9 @@
 TRUNCATE TABLE whos_online;
 TRUNCATE TABLE db_cache;
 
+# Enable Products to Categories as a menu option
+UPDATE admin_pages SET display_on_menu = 'Y' WHERE page_key = 'productsToCategories';
+
 # Rename 'Email Options' to just 'Email'
 UPDATE configuration_group set configuration_group_title = 'Email', configuration_group_description = 'Email-related settings' where configuration_group_title = 'E-Mail Options';
 
