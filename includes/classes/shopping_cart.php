@@ -69,7 +69,7 @@ class shoppingCart extends base {
    * @var string
    */
   var $display_debug_messages = FALSE;
-  var $flag_duplicate_msgs_set = FALSE;
+  var $flag_duplicate_msgs_set = array(); 
   var $flag_duplicate_quantity_msgs_set = array();
   /**
    * constructor method
@@ -1213,6 +1213,8 @@ class shoppingCart extends base {
     $this->notify('NOTIFIER_CART_GET_PRODUCTS_START', array(), $check_for_valid_cart);
 
     if (!is_array($this->contents)) return false;
+    $this->flag_duplicate_msgs_set = array(); 
+    $this->flag_duplicate_quantity_msgs_set = array();
 
     $products_array = array();
     foreach($this->contents as $products_id => $data) {
