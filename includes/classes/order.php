@@ -383,6 +383,24 @@ class order extends base {
 
     }
 
+    // -----
+    // A shipping-module's 'code', if present in the session, **must** contain a '_' character, separating
+    // the shipping module's name from the selected method, e.g. 'module_method'.  That '_' cannot be the first
+    // character of the 'code' value.
+    //
+    // If that's not the case, issue a PHP Notice and reset the shipping to its unselected state.
+    //
+    if (empty($_SESSION['shipping']['id'])) {
+        $shipping_module_code = '';
+    } else {
+        if (!strpos((string)$_SESSION['shipping']['id'], '_')) {
+            trigger_error('Malformed value for session-based shipping module; customer will need to re-select: ' . json_encode($_SESSION['shipping']), E_USER_NOTICE);
+            unset($_SESSION['shipping']);
+            $shipping_module_code = '';
+        } else {
+            $shipping_module_code = $_SESSION['shipping']['id'];
+        }
+    }
     $this->info = array('order_status' => DEFAULT_ORDERS_STATUS_ID,
                         'currency' => $_SESSION['currency'],
                         'currency_value' => $currencies->currencies[$_SESSION['currency']]['value'],
@@ -395,7 +413,7 @@ class order extends base {
     //                          'cc_expires' => (isset($GLOBALS['cc_expires']) ? $GLOBALS['cc_expires'] : ''),
     //                          'cc_cvv' => (isset($GLOBALS['cc_cvv']) ? $GLOBALS['cc_cvv'] : ''),
                         'shipping_method' => (isset($_SESSION['shipping']['title'])) ? $_SESSION['shipping']['title'] : '',
-                        'shipping_module_code' => (isset($_SESSION['shipping']['id']) && strpos($_SESSION['shipping']['id'], '_') > 0 ? $_SESSION['shipping']['id'] : (isset($_SESSION['shipping']) ? $_SESSION['shipping'] : array())),
+                        'shipping_module_code' => $shipping_module_code,
                         'shipping_cost' => !empty($_SESSION['shipping']['cost']) ? $_SESSION['shipping']['cost'] : 0,
                         'subtotal' => 0,
                         'shipping_tax' => 0,
