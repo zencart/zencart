@@ -18,7 +18,7 @@ $list_of_products = '';
 $specials_index_query = '';
 $display_limit = '';
 
-if ( (($manufacturers_id > 0 && empty($_GET['filter_id'])) || !empty($_GET['music_genre_id']) || !empty($_GET['record_company_id'])) || empty($new_products_category_id) ) {
+if ( ($manufacturers_id > 0 && empty($_GET['filter_id'])) || empty($new_products_category_id) ) {
   $specials_index_query = "SELECT p.products_id, p.products_image, pd.products_name, p.master_categories_id
                            FROM (" . TABLE_PRODUCTS . " p
                            LEFT JOIN " . TABLE_SPECIALS . " s ON p.products_id = s.products_id

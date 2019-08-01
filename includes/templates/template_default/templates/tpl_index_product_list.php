@@ -55,12 +55,6 @@ if (PRODUCT_LIST_CATEGORIES_IMAGE_STATUS == 'true') {
     echo zen_draw_hidden_field($get_option_variable, $_GET[$get_option_variable]);
   }
 
-  // draw music_genre_id
-  if (isset($_GET['music_genre_id']) && $_GET['music_genre_id'] != '') echo zen_draw_hidden_field('music_genre_id', $_GET['music_genre_id']);
-
-  // draw record_company_id
-  if (isset($_GET['record_company_id']) && $_GET['record_company_id'] != '') echo zen_draw_hidden_field('record_company_id', $_GET['record_company_id']);
-
   // draw typefilter
   if (isset($_GET['typefilter']) && $_GET['typefilter'] != '') echo zen_draw_hidden_field('typefilter', $_GET['typefilter']);
 

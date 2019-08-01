@@ -22,7 +22,7 @@ $display_limit = zen_get_upcoming_date_range();
 $limit_clause = "  ORDER BY " . (EXPECTED_PRODUCTS_FIELD == 'date_expected' ? 'date_expected' : 'products_name') . " " . (EXPECTED_PRODUCTS_SORT == 'asc' ? 'ASC' : 'DESC') . "
                    LIMIT " . (int)MAX_DISPLAY_UPCOMING_PRODUCTS;
 
-if ( (($manufacturers_id > 0 && empty($_GET['filter_id'])) || !empty($_GET['music_genre_id']) || !empty($_GET['record_company_id'])) || empty($new_products_category_id) ) {
+if ( ($manufacturers_id > 0 && empty($_GET['filter_id'])) || empty($new_products_category_id) ) {
   $expected_query = "SELECT p.products_id, pd.products_name, products_date_available AS date_expected, p.master_categories_id
                      FROM " . TABLE_PRODUCTS . " p, " . TABLE_PRODUCTS_DESCRIPTION . " pd
                      WHERE p.products_id = pd.products_id
