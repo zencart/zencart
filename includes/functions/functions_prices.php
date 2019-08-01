@@ -220,7 +220,7 @@
     $product_check = $db->Execute("select products_tax_class_id, products_price, products_priced_by_attribute, product_is_free, product_is_call, products_type from " . TABLE_PRODUCTS . " where products_id = '" . (int)$products_id . "'" . " limit 1");
 
     // no prices on Document General
-    if ($product_check->EOF || $product_check->fields['products_type'] == 3) {
+    if ($product_check->fields['products_type'] == 3) {
       return '';
     }
 
@@ -439,9 +439,6 @@
     global $db;
 
     $the_products_quantity_order_min = $db->Execute("select products_id, products_quantity_order_min from " . TABLE_PRODUCTS . " where products_id = '" . (int)$product_id . "'");
-    if ($the_products_quantity_order_min->EOF) {
-      return 0.0;
-    }
     return $the_products_quantity_order_min->fields['products_quantity_order_min'];
   }
 
@@ -453,9 +450,6 @@
     global $db;
 
     $the_products_quantity_order_units = $db->Execute("select products_id, products_quantity_order_units from " . TABLE_PRODUCTS . " where products_id = '" . (int)$product_id . "'");
-    if ($the_products_quantity_order_units->EOF) {
-      return 0.0;
-    }
     return $the_products_quantity_order_units->fields['products_quantity_order_units'];
   }
 
@@ -466,9 +460,6 @@
     global $db;
 
     $the_products_quantity_order_max = $db->Execute("select products_id, products_quantity_order_max from " . TABLE_PRODUCTS . " where products_id = '" . (int)$product_id . "'");
-    if ($the_products_quantity_order_max->EOF) {
-      return 0.0;
-    }
     return $the_products_quantity_order_max->fields['products_quantity_order_max'];
   }
 

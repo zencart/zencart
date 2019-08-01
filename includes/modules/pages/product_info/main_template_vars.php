@@ -62,43 +62,12 @@
 
     $reviews = $db->Execute($reviews_query);
 
-  }
-
-  require(DIR_WS_MODULES . zen_get_module_directory('product_prev_next.php'));
-
-  // Essentially set default values to be modified by product data.
-  $products_name = '';
-  $products_model = '';
-  $products_description = '';
-  $products_image = (($product_not_found || $product_info->fields['products_image'] == '') && PRODUCTS_IMAGE_NO_IMAGE_STATUS == '1') ? PRODUCTS_IMAGE_NO_IMAGE : '';
-  $products_url = '';
-  $products_date_available = '';
-  $products_date_added = '';
-  $products_manufacturer = '';
-  $products_weight = 0.0;
-  $products_quantity = 0.0;
-  $products_qty_box_status = 1; // PRODUCTS_QTY_BOX_STATUS?
-  $products_quantity_order_max = 0.0;
-  $products_get_buy_now_qty = 1.0;
-  $products_base_price = '';
-  $product_is_free = 0;
-  $products_tax_class_id = 0; // DEFAULT_PRODUCT_TAX_CLASS_ID?
-
-  $module_show_categories = PRODUCT_INFO_CATEGORIES;
-  $module_next_previous = PRODUCT_INFO_PREVIOUS_NEXT;
-
-  $products_id_current = (int)$_GET['products_id'];
-
-  $products_discount_type = 0;
-  $products_discount_type_from = 0;
-
-  // If product data exists in the database, then prepare the associated values accordingly.
-  if (!$product_not_found) {
     $products_name = $product_info->fields['products_name'];
     $products_model = $product_info->fields['products_model'];
     // if no common markup tags in description, add line breaks for readability:
     $products_description = (!preg_match('/(<br|<p|<div|<dd|<li|<span)/i', $product_info->fields['products_description']) ? nl2br($product_info->fields['products_description']) : $product_info->fields['products_description']);
 
+    $products_image = (($product_not_found || $product_info->fields['products_image'] == '') && PRODUCTS_IMAGE_NO_IMAGE_STATUS == '1') ? PRODUCTS_IMAGE_NO_IMAGE : '';
     if ($product_info->fields['products_image'] != '' || PRODUCTS_IMAGE_NO_IMAGE_STATUS != '1') {
       $products_image = $product_info->fields['products_image'];
     }
@@ -124,6 +93,13 @@
     $products_discount_type = $product_info->fields['products_discount_type'];
     $products_discount_type_from = $product_info->fields['products_discount_type_from'];
   }
+
+  require(DIR_WS_MODULES . zen_get_module_directory('product_prev_next.php'));
+
+  $module_show_categories = PRODUCT_INFO_CATEGORIES;
+  $module_next_previous = PRODUCT_INFO_PREVIOUS_NEXT;
+
+  $products_id_current = (int)$_GET['products_id'];
 
 /**
  * Load product-type-specific main_template_vars
