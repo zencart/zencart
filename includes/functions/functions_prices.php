@@ -136,6 +136,10 @@
       
       $product_check = $db->Execute("select products_price, products_priced_by_attribute from " . TABLE_PRODUCTS . " where products_id = '" . (int)$products_id . "'");
 
+      if ($product_check->EOF) {
+        return $products_base_price;
+      }
+
 // is there a products_price to add to attributes
       $products_price = $product_check->fields['products_price'];
 

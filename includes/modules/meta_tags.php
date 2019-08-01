@@ -191,6 +191,9 @@ switch ($metatag_page_name) {
   $review_on = META_TAGS_REVIEW;
   //  case 'product_info':
   case (strstr($_GET['main_page'], 'product_') or strstr($_GET['main_page'], 'document_')):
+  if (empty($_GET['products_id'])) {
+    $_GET['products_id'] = 0;
+  }
 
   $sql= "select pd.products_name, p.products_model, p.products_price_sorter, p.products_tax_class_id,
                                       p.metatags_title_status, p.metatags_products_name_status, p.metatags_model_status,

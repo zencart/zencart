@@ -51,7 +51,7 @@ switch (true) {
 
 // find out the minimum quantity for this product
 $products_min_query = $db->Execute("select products_quantity_order_min from " . TABLE_PRODUCTS . " where products_id='" . (int)$products_id_current . "'");
-$products_quantity_order_min = $products_min_query->fields['products_quantity_order_min'];
+$products_quantity_order_min = isset($products_min_query->fields['products_quantity_order_min']) ? $products_min_query->fields['products_quantity_order_min'] : 0;
 
 // retrieve the list of discount levels for this product
 $products_discounts_query = $db->Execute("select * from " . TABLE_PRODUCTS_DISCOUNT_QUANTITY . " where products_id='" . (int)$products_id_current . "' and discount_qty !=0 " . " order by discount_qty");
