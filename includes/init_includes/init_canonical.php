@@ -35,7 +35,6 @@ $excludeParams[] = 'number_of_uploads';
 // The following are additional whitelisted params used for sanitizing the generated canonical URL (to prevent rogue params from getting added to canonical maliciously)
 $keepableParams = array('page', 'id', 'chapter', 'keyword', 'products_id', 'product_id', 'cPath', 'manufacturers_id', 'categories_id',
                         'order_id', 'faq_item', 'products_image_large_additional', 'cID', 'pid', 'pID', 'reviews_id', 'typefilter');
-$keepableParams[] = 'artists_id';
 
 $zco_notifier->notify ('NOTIFY_INIT_CANONICAL_PARAM_WHITELIST', $current_page, $excludeParams, $keepableParams, $includeCPath);
 

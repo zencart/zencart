@@ -80,15 +80,3 @@ UPDATE upgrade_exceptions SET errordate = NULL WHERE errordate < '0001-01-01';
 UPDATE zones_to_geo_zones SET last_modified = NULL WHERE last_modified < '0001-01-01';
 UPDATE zones_to_geo_zones SET date_added = '0001-01-01 00:00:00' WHERE date_added < '0001-01-01' and date_added is not null;
 
-UPDATE media_clips SET date_added = '0001-01-01 00:00:00' WHERE date_added < '0001-01-01' and date_added is not null;
-UPDATE media_clips SET last_modified = '0001-01-01 00:00:00' WHERE last_modified < '0001-01-01' and last_modified is not null;
-UPDATE media_manager SET last_modified = '0001-01-01 00:00:00' WHERE last_modified < '0001-01-01' and last_modified is not null;
-UPDATE media_manager SET date_added = '0001-01-01 00:00:00' WHERE date_added < '0001-01-01' and date_added is not null;
-UPDATE music_genre SET date_added = NULL WHERE date_added < '0001-01-01';
-UPDATE music_genre SET last_modified = NULL WHERE last_modified < '0001-01-01';
-UPDATE record_artists SET date_added = NULL WHERE date_added < '0001-01-01';
-UPDATE record_artists SET last_modified = NULL WHERE last_modified < '0001-01-01';
-UPDATE record_artists_info SET date_last_click = NULL WHERE date_last_click < '0001-01-01';
-UPDATE record_company SET date_added = NULL WHERE date_added < '0001-01-01';
-UPDATE record_company SET last_modified = NULL WHERE last_modified < '0001-01-01';
-UPDATE record_company_info SET date_last_click = NULL WHERE date_last_click < '0001-01-01';

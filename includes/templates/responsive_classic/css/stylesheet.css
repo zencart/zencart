@@ -352,16 +352,12 @@ span.list-addtext{display:block;text-align:center;}
 #productDetailsList{padding:0;margin-left:30px;}
 #productPrices{font-size:1.5em;text-align:center;margin:10px 0 10px 0;font-weight:normal;}
 .productSpecialPrice{font-size:120%;}
-#mediaManagerHeading{font-weight:normal;}
 #freeShippingIcon{margin:10px 0 10px 30px;}
 #productQuantityDiscounts table{margin:0 auto 20px auto;border:none !important;border-spacing:0 !important;border-collapse:separate !important;}
 #productQuantityDiscounts td{padding:10px;border:none;}
 #productQuantityDiscounts td:last-child{border:none;}
 #productQuantityDiscounts tr:nth-child(even){}
 #productQuantityDiscounts table tr:first-child td{padding:5px 10px;border:none !important;}
-#mediaManager {width:50%;margin:0.2em 0 0.2em 30px;padding:0.5em 0;}
-.mediaTitle {float:left;}
-.mediaTypeLink {float:right;}
 #attribsOptionsText{font-weight:normal;margin-bottom:10px;}
 #cartAdd {text-align:center;}
 #cartAdd input[type=text]{-moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box;vertical-align:top;display:inline-block !important;width:11%;border:none;height:40px;margin:0;padding:7px !important;}

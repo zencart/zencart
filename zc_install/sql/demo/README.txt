@@ -14,11 +14,6 @@ featured
 group_pricing 
 manufacturers 
 manufacturers_info 
-media_clips 
-media_manager 
-media_to_products
-music_genre 
-product_music_extra 
 product_types_to_category 
 products 
 products_attributes 
@@ -29,10 +24,6 @@ products_options
 products_options_values 
 products_options_values_to_products_options 
 products_to_categories 
-record_artists 
-record_artists_info 
-record_company 
-record_company_info 
 reviews 
 reviews_description 
 salemaker_sales 

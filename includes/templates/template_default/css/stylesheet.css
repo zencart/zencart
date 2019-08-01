@@ -400,18 +400,6 @@ HR {
 	margin-left: 1em;
 	}
 
-#mediaManager {
-	width: 50%; 
-	margin: 0.2em;
-	padding: 0.5em;
-	}
-.mediaTitle {
-	float: left;
-	}
-.mediaTypeLink {
-	float: right;
-	}
-
 .normalprice, .productSpecialPriceSale {
 	text-decoration: line-through;
 	}
