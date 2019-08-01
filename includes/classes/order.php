@@ -817,7 +817,10 @@ class order extends base {
           }
           
           $products_status_update = ($stock_left <= 0 && SHOW_PRODUCTS_SOLD_OUT == '0') ? ', products_status = 0' : '';
-          $db->Execute("UPDATE " . TABLE_PRODUCTS . " SET products_quantity = $stock_left$products_status_update WHERE products_id = " . zen_get_prid($this->products[$i]['id']) . " LIMIT 1");
+		
+          $db->Execute("UPDATE " . TABLE_PRODUCTS . " SET products_quantity = " . $stock_left .
+                        $products_status_update . 
+                       " WHERE products_id = " . zen_get_prid($this->products[$i]['id']) . " LIMIT 1");
 
           // for low stock email
           if ( $stock_left <= STOCK_REORDER_LEVEL ) {
