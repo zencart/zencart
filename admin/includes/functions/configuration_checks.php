@@ -21,26 +21,12 @@
      // check inputs - error should be a defined constant in the language files
      if (empty($data['error'])) return; 
      if (!defined($data['error'])) {
-        $msg_array = explode('_', $data['error']);
-
-        $str_msg = array();
-
-        foreach ($msg_array as $key => $word) {
-          $str_msg[$key] = implode('_', array_slice($msg_array, 0, $key + 1));
-/*          if ($key == 0) {
-            $str_msg[$key] = $word;
-          } else {
-            $str_msg[$key] = $str_msg[$key - 1] . '_' . $word;
-          }*/
-        }
-
-        $str_count = count($str_msg);
 
         switch (true) {
-          case ($str_count >= 3 && $str_msg[2] == 'TEXT_MIN_ADMIN'):
+          case (str_pos($data['error'], 'TEXT_MIN_ADMIN') === 0):
             $error_msg = TEXT_MIN_GENERAL_ADMIN;
             break;
-          case ($str_count >= 3 && $str_msg[2] == 'TEXT_MAX_ADMIN');
+          case (str_pos($data['error'], 'TEXT_MAX_ADMIN') === 0);
             $error_msg = TEXT_MAX_GENERAL_ADMIN;
             break;
           default:
