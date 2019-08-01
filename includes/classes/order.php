@@ -786,23 +786,23 @@ class order extends base {
       // Stock Update - Joao Correia
       if ($this->doStockDecrement) {
         if (DOWNLOAD_ENABLED == 'true') {
-          $stock_query_raw = "select p.products_quantity, pad.products_attributes_filename, p.product_is_always_free_shipping
+          $stock_query_raw = "select p.*, pad.products_attributes_filename
                               from " . TABLE_PRODUCTS . " p
                               left join " . TABLE_PRODUCTS_ATTRIBUTES . " pa
                                on p.products_id=pa.products_id
                               left join " . TABLE_PRODUCTS_ATTRIBUTES_DOWNLOAD . " pad
                                on pa.products_attributes_id=pad.products_attributes_id
-                              WHERE p.products_id = '" . zen_get_prid($this->products[$i]['id']) . "'";
+                              WHERE p.products_id = " . zen_get_prid($this->products[$i]['id']);
 
           // Will work with only one option for downloadable products
           // otherwise, we have to build the query dynamically with a loop
           if (!empty($this->products[$i]['attributes']) && is_array($this->products[$i]['attributes'])) {
             $products_attributes = $this->products[$i]['attributes'];
-            $stock_query_raw .= " AND pa.options_id = '" . $products_attributes[0]['option_id'] . "' AND pa.options_values_id = '" . $products_attributes[0]['value_id'] . "'";
+            $stock_query_raw .= " AND pa.options_id = " . $products_attributes[0]['option_id'] . " AND pa.options_values_id = " . $products_attributes[0]['value_id'];
           }
-          $stock_values = $db->Execute($stock_query_raw, false, false, 0, true);
+          $stock_values = $db->ExecuteNoCache($stock_query_raw . ' LIMIT 1');
         } else {
-          $stock_values = $db->Execute("select * from " . TABLE_PRODUCTS . " where products_id = '" . zen_get_prid($this->products[$i]['id']) . "'", false, false, 0, true);
+          $stock_values = $db->ExecuteNoCache("select * from " . TABLE_PRODUCTS . " where products_id = " . zen_get_prid($this->products[$i]['id']) . " LIMIT 1");
         }
 
         $this->notify('NOTIFY_ORDER_PROCESSING_STOCK_DECREMENT_BEGIN', $i, $stock_values);
@@ -815,16 +815,9 @@ class order extends base {
           } else {
             $stock_left = $stock_values->fields['products_quantity'];
           }
-
-          //            $this->products[$i]['stock_value'] = $stock_values->fields['products_quantity'];
-
-          $db->Execute("update " . TABLE_PRODUCTS . " set products_quantity = '" . $stock_left . "' where products_id = '" . zen_get_prid($this->products[$i]['id']) . "'");
-          if ($stock_left <= 0) {
-            // only set status to off when not displaying sold out
-            if (SHOW_PRODUCTS_SOLD_OUT == '0') {
-              $db->Execute("update " . TABLE_PRODUCTS . " set products_status = 0 where products_id = '" . zen_get_prid($this->products[$i]['id']) . "'");
-            }
-          }
+          
+          $products_status_update = ($stock_left <= 0 && SHOW_PRODUCTS_SOLD_OUT == '0') ? ', products_status = 0' : '';
+          $db->Execute("UPDATE " . TABLE_PRODUCTS . " SET products_quantity = $stock_left$products_status_update WHERE products_id = " . zen_get_prid($this->products[$i]['id']) . " LIMIT 1");
 
           // for low stock email
           if ( $stock_left <= STOCK_REORDER_LEVEL ) {
