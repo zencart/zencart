@@ -21,7 +21,17 @@
      // check inputs - error should be a defined constant in the language files
      if (empty($data['error'])) return; 
      if (!defined($data['error'])) {
-        $error_msg = TEXT_DATA_OUT_OF_RANGE; 
+
+        switch (true) {
+          case (str_pos($data['error'], 'TEXT_MIN_ADMIN') === 0):
+            $error_msg = TEXT_MIN_GENERAL_ADMIN;
+            break;
+          case (str_pos($data['error'], 'TEXT_MAX_ADMIN') === 0);
+            $error_msg = TEXT_MAX_GENERAL_ADMIN;
+            break;
+          default:
+            $error_msg = TEXT_DATA_OUT_OF_RANGE;
+        }
      } else { 
         $error_msg = constant($data['error']); 
      }
