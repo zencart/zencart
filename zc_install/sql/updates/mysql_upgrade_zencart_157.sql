@@ -35,65 +35,6 @@
 TRUNCATE TABLE whos_online;
 TRUNCATE TABLE db_cache;
 
-# Remove music
-DROP TABLE IF EXISTS `media_clips`;
-DROP TABLE IF EXISTS `media_manager`;
-DROP TABLE IF EXISTS `media_to_products`;
-DROP TABLE IF EXISTS `media_types`;
-DROP TABLE IF EXISTS `music_genre`;
-DROP TABLE IF EXISTS `newsletters`;
-DROP TABLE IF EXISTS `product_music_extra`;
-DROP TABLE IF EXISTS `record_artists`;
-DROP TABLE IF EXISTS `record_artists_info`;
-DROP TABLE IF EXISTS `record_company`;
-DROP TABLE IF EXISTS `record_company_info`;
-
-DELETE FROM admin_pages WHERE language_key IN ('BOX_CATALOG_RECORD_ARTISTS', 'BOX_CATALOG_RECORD_COMPANY', 'BOX_CATALOG_MUSIC_GENRE', 'BOX_CATALOG_MEDIA_MANAGER', 'BOX_CATALOG_MEDIA_TYPES'); 
-
-DELETE FROM configuration WHERE configuration_key IN (
-'MAX_MUSIC_GENRES_LIST', 
-'MAX_DISPLAY_MUSIC_GENRES_NAME_LEN', 
-'SHOW_PRODUCT_MUSIC_INFO_MODEL', 
-'SHOW_PRODUCT_MUSIC_INFO_WEIGHT', 
-'SHOW_PRODUCT_MUSIC_INFO_WEIGHT_ATTRIBUTES', 
-'SHOW_PRODUCT_MUSIC_INFO_ARTIST', 
-'SHOW_PRODUCT_MUSIC_INFO_GENRE', 
-'SHOW_PRODUCT_MUSIC_INFO_RECORD_COMPANY', 
-'SHOW_PRODUCT_MUSIC_INFO_IN_CART_QTY', 
-'SHOW_PRODUCT_MUSIC_INFO_QUANTITY', 
-'SHOW_PRODUCT_MUSIC_INFO_REVIEWS_COUNT', 
-'SHOW_PRODUCT_MUSIC_INFO_REVIEWS',
-'SHOW_PRODUCT_MUSIC_INFO_DATE_AVAILABLE', 
-'SHOW_PRODUCT_MUSIC_INFO_DATE_ADDED', 
-'SHOW_PRODUCT_MUSIC_INFO_STARTING_AT', 
-'SHOW_PRODUCT_MUSIC_INFO_ADDITIONAL_IMAGES',
-'SHOW_PRODUCT_MUSIC_INFO_ALWAYS_FREE_SHIPPING_IMAGE_SWITCH',
-'DEFAULT_PRODUCT_MUSIC_TAX_CLASS_ID',
-'DEFAULT_PRODUCT_MUSIC_PRODUCTS_VIRTUAL',
-'DEFAULT_PRODUCT_MUSIC_PRODUCTS_IS_ALWAYS_FREE_SHIPPING',
-'SHOW_PRODUCT_MUSIC_INFO_METATAGS_TITLE_STATUS',
-'SHOW_PRODUCT_MUSIC_INFO_METATAGS_PRODUCTS_NAME_STATUS',
-'SHOW_PRODUCT_MUSIC_INFO_METATAGS_MODEL_STATUS',
-'SHOW_PRODUCT_MUSIC_INFO_METATAGS_PRICE_STATUS',
-'SHOW_PRODUCT_MUSIC_INFO_METATAGS_TITLE_TAGLINE_STATUS',
-'DEFAULT_PRODUCT_MUSIC_ATTRIBUTES_DISPLAY_ONLY',
-'MAX_DISPLAY_RECORD_COMPANY_NAME_LEN',
-'MAX_RECORD_COMPANY_LIST'
-); 
-
-DELETE FROM product_type_layout WHERE configuration_key IN (
-'DEFAULT_PRODUCT_MUSIC_ATTRIBUTE_IS_FREE', 
-'DEFAULT_PRODUCT_MUSIC_ATTRIBUTES_DEFAULT',
-'DEFAULT_PRODUCT_MUSIC_ATTRIBUTES_DISCOUNTED', 
-'DEFAULT_PRODUCT_MUSIC_ATTRIBUTES_PRICE_BASE_INCLUDED', 
-'DEFAULT_PRODUCT_MUSIC_ATTRIBUTES_REQUIRED',
-'DEFAULT_PRODUCT_MUSIC_PRICE_PREFIX', 
-'DEFAULT_PRODUCT_MUSIC_PRODUCTS_ATTRIBUTES_WEIGHT_PREFIX',
-'SHOW_PRODUCT_MUSIC_INFO_RECORD_COMPANY'
-);
-
-DELETE FROM get_terms_to_filter WHERE get_term_table IN ('TABLE_MUSIC_GENRE','TABLE_RECORD_COMPANY'); 
-
 # Enable Products to Categories as a menu option
 UPDATE admin_pages SET display_on_menu = 'Y' WHERE page_key = 'productsToCategories';
 
@@ -116,6 +57,7 @@ ALTER TABLE orders_status ADD sort_order int(11) NOT NULL default 0;
 
 # Add control to enable/disable the display of the 'Ask a Question' block for each product type
 INSERT INTO product_type_layout (configuration_title, configuration_key, configuration_value, configuration_description, product_type_id, sort_order, set_function, date_added) VALUES ('Show \"Ask a Question\" button?', 'SHOW_PRODUCT_INFO_ASK_A_QUESTION', '1', 'Display the \"Ask a Question\" button on product Info pages? (0 = False, 1 = True)', 1, 14, 'zen_cfg_select_drop_down(array(array(\'id\'=>\'1\', \'text\'=>\'True\'), array(\'id\'=>\'0\', \'text\'=>\'False\')), ', now());
+INSERT INTO product_type_layout (configuration_title, configuration_key, configuration_value, configuration_description, product_type_id, sort_order, set_function, date_added) VALUES ('Show \"Ask a Question\" button?', 'SHOW_PRODUCT_MUSIC_INFO_ASK_A_QUESTION', '1', 'Display the \"Ask a Question\" button on product Info pages? (0 = False, 1 = True)', 2, 14, 'zen_cfg_select_drop_down(array(array(\'id\'=>\'1\', \'text\'=>\'True\'), array(\'id\'=>\'0\', \'text\'=>\'False\')), ', now());
 INSERT INTO product_type_layout (configuration_title, configuration_key, configuration_value, configuration_description, product_type_id, sort_order, set_function, date_added) VALUES ('Show \"Ask a Question\" button?', 'SHOW_DOCUMENT_GENERAL_INFO_ASK_A_QUESTION', '1', 'Display the \"Ask a Question\" button on product Info pages? (0 = False, 1 = True)', 3, 14, 'zen_cfg_select_drop_down(array(array(\'id\'=>\'1\', \'text\'=>\'True\'), array(\'id\'=>\'0\', \'text\'=>\'False\')), ', now());
 INSERT INTO product_type_layout (configuration_title, configuration_key, configuration_value, configuration_description, product_type_id, sort_order, set_function, date_added) VALUES ('Show \"Ask a Question\" button?', 'SHOW_DOCUMENT_PRODUCT_INFO_ASK_A_QUESTION', '1', 'Display the \"Ask a Question\" button on product Info pages? (0 = False, 1 = True)', 4, 14, 'zen_cfg_select_drop_down(array(array(\'id\'=>\'1\', \'text\'=>\'True\'), array(\'id\'=>\'0\', \'text\'=>\'False\')), ', now());
 INSERT INTO product_type_layout (configuration_title, configuration_key, configuration_value, configuration_description, product_type_id, sort_order, set_function, date_added) VALUES ('Show \"Ask a Question\" button?', 'SHOW_PRODUCT_FREE_SHIPPING_INFO_ASK_A_QUESTION', '1', 'Display the \"Ask a Question\" button on product Info pages? (0 = False, 1 = True)', 5, 14, 'zen_cfg_select_drop_down(array(array(\'id\'=>\'1\', \'text\'=>\'True\'), array(\'id\'=>\'0\', \'text\'=>\'False\')), ', now());
@@ -153,6 +95,10 @@ UPDATE configuration SET val_function = '{"error":"TEXT_MAX_ADMIN_DISPLAY_SPECIA
 UPDATE configuration SET val_function = '{"error":"TEXT_MAX_ADMIN_DISPLAY_NEW_PRODUCTS_LENGTH","id":"FILTER_VALIDATE_INT","options":{"options":{"min_range":0}}}' WHERE configuration_key ='MAX_DISPLAY_NEW_PRODUCTS';
 UPDATE configuration SET val_function = '{"error":"TEXT_MAX_ADMIN_DISPLAY_UPCOMING_PRODUCTS_LENGTH","id":"FILTER_VALIDATE_INT","options":{"options":{"min_range":0}}}' WHERE configuration_key ='MAX_DISPLAY_UPCOMING_PRODUCTS';
 UPDATE configuration SET val_function = '{"error":"TEXT_MAX_ADMIN_MANUFACTURERS_LIST_LENGTH","id":"FILTER_VALIDATE_INT","options":{"options":{"min_range":0}}}' WHERE configuration_key ='MAX_MANUFACTURERS_LIST';
+UPDATE configuration SET val_function = '{"error":"TEXT_MAX_ADMIN_MUSIC_GENRES_LIST_LENGTH","id":"FILTER_VALIDATE_INT","options":{"options":{"min_range":0}}}' WHERE configuration_key ='MAX_MUSIC_GENRES_LIST';
+UPDATE configuration SET val_function = '{"error":"TEXT_MAX_ADMIN_RECORD_COMPANY_LIST_LENGTH","id":"FILTER_VALIDATE_INT","options":{"options":{"min_range":0}}}' WHERE configuration_key ='MAX_RECORD_COMPANY_LIST';
+UPDATE configuration SET val_function = '{"error":"TEXT_MAX_ADMIN_RECORD_COMPANY_NAME_LENGTH","id":"FILTER_VALIDATE_INT","options":{"options":{"min_range":0}}}' WHERE configuration_key ='MAX_DISPLAY_RECORD_COMPANY_NAME_LEN';
+UPDATE configuration SET val_function = '{"error":"TEXT_MAX_ADMIN_MUSIC_GENRES_NAME_LENGTH","id":"FILTER_VALIDATE_INT","options":{"options":{"min_range":0}}}' WHERE configuration_key ='MAX_DISPLAY_MUSIC_GENRES_NAME_LEN';
 UPDATE configuration SET val_function = '{"error":"TEXT_MAX_ADMIN_DISPLAY_MANUFACTURERS_NAME_LENGTH","id":"FILTER_VALIDATE_INT","options":{"options":{"min_range":0}}}' WHERE configuration_key ='MAX_DISPLAY_MANUFACTURER_NAME_LEN';
 UPDATE configuration SET val_function = '{"error":"TEXT_MAX_ADMIN_DISPLAY_NEW_REVIEWS_LENGTH","id":"FILTER_VALIDATE_INT","options":{"options":{"min_range":0}}}' WHERE configuration_key ='MAX_DISPLAY_NEW_REVIEWS';
 UPDATE configuration SET val_function = '{"error":"TEXT_MAX_ADMIN_RANDOM_SELECT_REVIEWS_LENGTH","id":"FILTER_VALIDATE_INT","options":{"options":{"min_range":0}}}' WHERE configuration_key ='MAX_RANDOM_SELECT_REVIEWS';
