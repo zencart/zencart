@@ -27,7 +27,8 @@ function zen_get_product_details($product_id, $language_id = null)
                      TABLE_PRODUCTS_DESCRIPTION . " pd
             WHERE    p.products_id = " . (int)$product_id . "
             AND      pd.products_id = p.products_id
-            AND      pd.language_id = " . (int)$language_id;
+            AND      pd.language_id = " . (int)$language_id . "
+            LIMIT 1";
     return $db->Execute($sql);
 }
 
