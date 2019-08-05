@@ -1396,16 +1396,17 @@ if (zen_not_null($action)) {
                     $contents[] = array('text' => '<br>' . TEXT_INFO_GV_AMOUNT . ' ' . $currencies->format($customer_gv_balance));
 
                     $contents[] = array('text' => '<br>' . TEXT_INFO_NUMBER_OF_ORDERS . ' ' . $customers_orders->RecordCount());
-                    if ($customers_orders->RecordCount() != 0) {
 
+                    if ($customers_orders->RecordCount() != 0) {
                       $lifetime_value = 0;
                       $last_order = array(
                         'date_purchased' => $customers_orders->fields['date_purchased'],
                         'order_total' => $customers_orders->fields['order_total'], 
                         'currency' => $customers_orders->fields['currency'], 
-                        'currency_value' => $customers_orders->fields['currency_value']);
-                      foreach($customers_orders as $result) {
-                         $lifetime_value+= ($result['order_total'] * $result['currency_value']);
+                        'currency_value' => $customers_orders->fields['currency_value'],
+                      );
+                      foreach ($customers_orders as $result) {
+                        $lifetime_value += ($result['order_total'] * $result['currency_value']);
                       }
                       $contents[] = array('text' => TEXT_INFO_LIFETIME_VALUE. ' ' . $currencies->format($lifetime_value));
                       $contents[] = array('text' => TEXT_INFO_LAST_ORDER . ' ' . zen_date_short($last_order['date_purchased']) . '<br>' . TEXT_INFO_ORDERS_TOTAL . ' ' . $currencies->format($last_order['order_total'], true, $last_order['currency'], $last_order['currency_value']));
