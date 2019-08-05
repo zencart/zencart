@@ -156,8 +156,6 @@ for ($i=0, $n=sizeof($products); $i<$n; $i++) {
                             'attributes'=>$attrArray);
 } // end FOR loop
 
-// include template specific file name defines
-$define_page = zen_get_file_directory(DIR_WS_LANGUAGES . $_SESSION['language'] . '/html_includes/', FILENAME_DEFINE_SHOPPING_CART, 'false');
 
 // This should be last line of the script:
 $zco_notifier->notify('NOTIFY_HEADER_END_SHOPPING_CART');
