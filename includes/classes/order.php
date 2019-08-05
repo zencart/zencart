@@ -1162,8 +1162,7 @@ class order extends base {
     $html_msg['EXTRA_INFO'] = '';
     
     // -----
-    // Enable an observer to indicate that the customer email should not be sent.
-    //
+    // Send customer confirmation email unless observer overrides it.
     $send_customer_email = true;
     $this->notify('NOTIFY_ORDER_INVOICE_CONTENT_READY_TO_SEND', array('zf_insert_id' => $zf_insert_id, 'text_email' => $email_order, 'html_email' => $html_msg), $email_order, $html_msg, $send_customer_email);
     if ($send_customer_email === true) {
