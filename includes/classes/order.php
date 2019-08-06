@@ -756,6 +756,19 @@ class order extends base {
                             'date_added' => 'now()',
                             'customer_notified' => $customer_notification,
                             'comments' => $this->info['comments']);
+                            
+    // -----
+    // If an admin has just placed an order on a customer's behalf, note that admin's
+    // name/id in the order's 'updated_by' field.
+    //
+    if (isset($_SESSION['emp_admin_id'])) {
+        $admin_id_sql = "SELECT admin_name FROM " . TABLE_ADMIN . " WHERE admin_id = :adminid: LIMIT 1";
+        $admin_id_sql = $db->bindVars($admin_id_sql, ':adminid:', $_SESSION['emp_admin_id'], 'integer');
+        $admin_info = $db->Execute($admin_id_sql);
+        
+        $admin_name = (($admin_info->EOF) ? '???' : $admin_info->fields['admin_name']) . ' [' . $_SESSION['emp_admin_id'] . ']';
+        $sql_data_array['updated_by'] = $admin_name;
+    }
 
     zen_db_perform(TABLE_ORDERS_STATUS_HISTORY, $sql_data_array);
     $osh_insert_id = $db->insert_ID();

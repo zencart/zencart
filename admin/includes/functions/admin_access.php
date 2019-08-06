@@ -933,3 +933,30 @@ function zen_updated_by_admin($admin_id = '')
     }
     return zen_get_admin_name($admin_id) . " [$admin_id]";
 }
+
+function zen_admin_authorized_to_place_order()
+{
+    global $db;
+    $admin_in_profile = false;
+    if (!empty(EMP_LOGIN_ADMIN_PROFILE_ID)) {
+        $admin_profiles = explode(',', str_replace(' ', '', EMP_LOGIN_ADMIN_PROFILE_ID));
+        $profile_list = array();
+        foreach ($admin_profiles as $current_profile) {
+            if (((int)$current_profile) != 0) {
+                $profile_list[] = (int)$current_profile;
+            }
+        }
+        if (count($profile_list) != 0) {
+            $profile_clause = ' AND admin_profile IN (' . implode(',', $profile_list) . ')';
+            $emp_sql = 
+                "SELECT admin_profile, admin_pass 
+                   FROM " . TABLE_ADMIN . " 
+                  WHERE admin_id = :adminId:$profile_clause
+                  LIMIT 1";
+            $emp_sql = $db->bindVars($emp_sql, ':adminId:', $_SESSION['admin_id'], 'integer');
+            $emp_result = $db->Execute($emp_sql);
+            $admin_in_profile = !$emp_result->EOF;
+        }
+    }
+    return ($_SESSION['admin_id'] == (int)EMP_LOGIN_ADMIN_ID || $admin_in_profile);
+}

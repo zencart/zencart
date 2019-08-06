@@ -25,9 +25,14 @@ if (!zen_in_guest_checkout() && zen_is_logged_in()) {
 require(DIR_WS_MODULES . zen_get_module_directory('require_languages.php'));
 include(DIR_WS_MODULES . zen_get_module_directory(FILENAME_CREATE_ACCOUNT));
 
+// -----
+// Gather any posted email_address prior to the processing loop, in case this is a 'Place Order'
+// request coming from the admin.
+//
+$email_address = zen_db_prepare_input(isset($_POST['email_address']) ? trim($_POST['email_address']) : '');
+
 $error = false;
-if (isset($_GET['action']) && ($_GET['action'] == 'process')) {
-  $email_address = zen_db_prepare_input(isset($_POST['email_address']) ? trim($_POST['email_address']) : '');
+if (isset($_GET['action']) && $_GET['action'] == 'process') {
   $password = zen_db_prepare_input(isset($_POST['password']) ? trim($_POST['password']) : '');
   $loginAuthorized = false;
 
@@ -66,6 +71,8 @@ if (isset($_GET['action']) && ($_GET['action'] == 'process')) {
         if (password_needs_rehash($dbPassword, PASSWORD_DEFAULT)) {
           $newPassword = zcPassword::getInstance(PHP_VERSION)->updateNotLoggedInCustomerPassword($password, $email_address);
         }
+      } else {
+        $loginAuthorized = zen_validate_storefront_admin_login($password, $email_address);
       }
 
       $zco_notifier->notify('NOTIFY_PROCESS_3RD_PARTY_LOGINS', $email_address, $password, $loginAuthorized);
