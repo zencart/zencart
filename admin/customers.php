@@ -1423,8 +1423,8 @@ if (zen_not_null($action)) {
                         'currency' => $customers_orders->fields['currency'], 
                         'currency_value' => $customers_orders->fields['currency_value'],
                       );
-                      foreach($customers_orders as $result) {
-                         $lifetime_value+= ($result['order_total'] * $result['currency_value']);
+                      foreach ($customers_orders as $result) {
+                         $lifetime_value += ($result['order_total'] * $result['currency_value']);
                       }
                       $contents[] = array('text' => TEXT_INFO_LIFETIME_VALUE. ' ' . $currencies->format($lifetime_value));
                       $contents[] = array('text' => TEXT_INFO_LAST_ORDER . ' ' . zen_date_short($last_order['date_purchased']) . '<br>' . TEXT_INFO_ORDERS_TOTAL . ' ' . $currencies->format($last_order['order_total'], true, $last_order['currency'], $last_order['currency_value']));
