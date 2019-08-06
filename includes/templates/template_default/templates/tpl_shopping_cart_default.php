@@ -31,11 +31,11 @@
 
 <?php echo zen_draw_form('cart_quantity', zen_href_link(FILENAME_SHOPPING_CART, 'action=update_product', $request_type), 'post', 'id="shoppingCartForm"'); ?>
 <div id="cartInstructionsDisplay" class="content"><?php
-		/**
-		* require the html_define for the shopping_cart page
-		*/
-		require($define_page);
-		?></div>
+/**
+ * require the html_define for the shopping_cart page
+ */
+    require($define_page);
+?></div>
 
 <?php if (!empty($totalsDisplay)) { ?>
   <div class="cartTotalsDisplay important"><?php echo $totalsDisplay; ?></div>
