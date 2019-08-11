@@ -3672,3 +3672,22 @@ function get_logs_data($maxToList = 'count') {
       return -1;
     }
   }
+
+  function zen_is_option_file($option_id) {
+    global $db;
+    $query = $db->Execute("SELECT products_options_type FROM " . TABLE_PRODUCTS_OPTIONS . " WHERE products_options_id = " . (int)$option_id); 
+    $option_type = $query->fields['products_options_type']; 
+    $query = $db->Execute("SELECT products_options_types_name FROM " . TABLE_PRODUCTS_OPTIONS_TYPES . " WHERE products_options_types_id = " . (int)$option_type); 
+    if ($query->fields['products_options_types_name'] == 'File') return true; 
+    return false; 
+  }
+
+  function zen_get_uploaded_file($filename) {
+    global $db; 
+    $parts = explode(". ", $filename, 2);
+    $filenum = $parts[0];
+    $filename = $parts[1]; 
+    $file_parts = explode(".", $filename, 2);
+    $filetype = $file_parts[sizeof($file_parts) - 1]; 
+    return $filenum . "." . $filetype; 
+  }

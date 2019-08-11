@@ -93,6 +93,7 @@ define('WARNING_ORDER_NOT_UPDATED', 'Warning: Nothing to change. The order was n
 define('ENTRY_ORDER_ID','Invoice No. ');
 define('TEXT_INFO_ATTRIBUTE_FREE', '&nbsp;-&nbsp;<span class="alert">FREE</span>');
 
+define('TEXT_DOWNLOAD','Download'); 
 define('TEXT_DOWNLOAD_TITLE', 'Order Download Status');
 define('TEXT_DOWNLOAD_STATUS', 'Status');
 define('TEXT_DOWNLOAD_FILENAME', 'Filename');
@@ -103,6 +104,8 @@ define('TEXT_DOWNLOAD_AVAILABLE', 'Available');
 define('TEXT_DOWNLOAD_EXPIRED', 'Expired');
 define('TEXT_DOWNLOAD_MISSING', 'Not on Server');
 
+define('TEXT_EXTENSION_NOT_UNDERSTOOD', 'File extension %s not supported'); 
+define('TEXT_FILE_NOT_FOUND', 'File not found'); 
 define('IMAGE_ICON_STATUS_CURRENT', 'Status - Available');
 define('IMAGE_ICON_STATUS_EXPIRED', 'Status - Expired');
 define('IMAGE_ICON_STATUS_MISSING', 'Status - Missing');

@@ -77,6 +77,73 @@ if (!empty($oID) && !empty($action)) {
 
 if (zen_not_null($action) && $order_exists == true) {
   switch ($action) {
+    case 'download': 
+ 
+      $fileName = $_GET['filename']; 
+      $file_extension = strtolower($fext = substr(strrchr($fileName, '.'), 1));
+      switch ($file_extension) {
+        case 'csv':
+          $content = 'text/csv';
+          break;
+        case 'zip':
+          $content = 'application/zip';
+          break;
+        case 'jpg':
+          $content = 'image/jpeg';
+          break;
+        case 'jpeg':
+          $content = 'image/jpeg';
+          break;
+        case 'gif':
+          $content = 'image/gif';
+          break;
+        case 'png':
+          $content = 'image/png';
+          break;
+        case 'eps':
+          $content = 'application/postscript';
+          break;
+        case 'cdr':
+          $content = 'application/cdr';
+          break;  
+        case 'ai':
+          $content = 'application/postscript';
+          break;
+        case 'pdf':
+          $content = 'application/pdf';
+          break;
+        case 'tif':
+          $content = 'image/tiff';
+          break;
+        case 'tiff':
+          $content = 'image/tiff';
+          break;
+        case 'bmp':
+          $content = 'image/bmp';
+          break;
+        case 'xls':
+          $content = 'application/vnd.ms-excel';
+          break;
+        case 'numbers':
+          $content = 'application/vnd.ms-excel';
+          break;
+        default:
+          $messageStack->add_session(sprintf(TEXT_EXTENSION_NOT_UNDERSTOOD, $file_extension), 'error');
+          zen_redirect(zen_href_link(FILENAME_ORDERS, zen_get_all_get_params(array('download', 'action'),'action=edit'), 'NONSSL'));
+      }
+      $fs_path = DIR_FS_CATALOG_IMAGES . 'uploads/' . $fileName; 
+      if (!file_exists($fs_path)) {
+        $messageStack->add_session(TEXT_FILE_NOT_FOUND, 'error');
+        zen_redirect(zen_href_link(FILENAME_ORDERS, zen_get_all_get_params(array('download', 'action'),'action=edit'), 'NONSSL'));
+      }
+      header('Content-type: ' . $content);
+      header('Content-Disposition: attachment; filename="' . $fileName . '"');
+      header('Content-Transfer-Encoding: binary');
+      header('Cache-Control: no-cache, must-revalidate');
+      header("Expires: Mon, 22 Jan 2002 00:00:00 GMT");
+      readfile($fs_path);
+      exit(); 
+
     case 'edit':
       // reset single download to on
       if (!empty($_GET['download_reset_on'])) {
@@ -611,6 +678,10 @@ if (zen_not_null($action) && $order_exists == true) {
                     if (isset($order->products[$i]['attributes']) && (sizeof($order->products[$i]['attributes']) > 0)) {
                       for ($j = 0, $k = sizeof($order->products[$i]['attributes']); $j < $k; $j++) {
                         echo '<br><span style="white-space:nowrap;"><small>&nbsp;<i> - ' . $order->products[$i]['attributes'][$j]['option'] . ': ' . nl2br(zen_output_string_protected($order->products[$i]['attributes'][$j]['value']));
+                        if (zen_is_option_file($order->products[$i]['attributes'][$j]['option_id'])) { 
+                          $upload_name = zen_get_uploaded_file($order->products[$i]['attributes'][$j]['value']); 
+                          echo ' ' . '<a href="' . zen_href_link(FILENAME_ORDERS, 'action=download&oID=' . $oID . '&filename=' .  $upload_name) . '">' . TEXT_DOWNLOAD . '</a>' . ' ';
+                        }
                         if ($order->products[$i]['attributes'][$j]['price'] != '0') {
                           echo ' (' . $order->products[$i]['attributes'][$j]['prefix'] . $currencies->format($order->products[$i]['attributes'][$j]['price'] * $order->products[$i]['qty'], true, $order->info['currency'], $order->info['currency_value']) . ')';
                         }
