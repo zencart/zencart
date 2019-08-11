@@ -152,6 +152,7 @@ if ($num_images > 0) {
                 'products_name' => $products_name,
                 'products_image_large' => $products_image_large,
                 'thumb_slashes' => $thumb_slashes,
+                'large_link' => $large_link,
                 'index' => $i
             ),
             $script_link,
