@@ -336,6 +336,36 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
             ?>
           </div>
         </div>
+<?php
+    // -----
+    // Give an observer the chance to supply some additional category-related inputs.  Each
+    // entry in the $extra_category_inputs returned contains:
+    //
+    // array(
+    //    'label' => array(
+    //        'text' => 'The label text',   (required)
+    //        'field_name' => 'The name of the field associated with the label', (required)
+    //        'addl_class' => {Any additional class to be applied to the label} (optional)
+    //        'parms' => {Any additional parameters for the label, e.g. 'style="font-weight: 700;"} (optional)
+    //    ),
+    //    'input' => 'The HTML to be inserted' (required)
+    // )
+    //
+    $extra_category_inputs = array();
+    $zco_notifier->notify('NOTIFY_ADMIN_CATEGORIES_EXTRA_INPUTS', $cInfo, $extra_category_inputs);
+    if (!empty($extra_category_inputs)) {
+        foreach ($extra_category_inputs as $extra_input) {
+            $addl_class = (isset($extra_input['label']['addl_class'])) ? (' ' . $extra_input['label']['addl_class']) : '';
+            $parms = (isset($extra_input['label']['parms'])) ? (' ' . $extra_input['label']['parms']) : '';
+?>
+            <div class="form-group">
+                <?php echo zen_draw_label($extra_input['label']['text'], $extra_input['label']['field_name'], 'class="col-sm-3 control-label' . $addl_class . '"' . $parms); ?>
+                <div class="col-sm-9 col-md-6"><?php echo $extra_input['input']; ?></div>
+            </div>
+<?php
+        }
+    }
+?>
         <div class="form-group">
             <?php echo zen_draw_label(TEXT_CATEGORIES_DESCRIPTION, 'categories_description', 'class="col-sm-3 control-label"'); ?>
           <div class="col-sm-9 col-md-6">
