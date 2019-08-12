@@ -26,7 +26,15 @@ $missing_one_input = false;
 
 $_GET['keyword'] = trim($_GET['keyword']);
 
-if ( (isset($_GET['keyword']) && (empty($_GET['keyword']) || $_GET['keyword']==HEADER_SEARCH_DEFAULT_TEXT || $_GET['keyword'] == KEYWORD_FORMAT_STRING ) ) &&
+// -----
+// Give an observer the chance to indicate that there's another element to the search
+// that **is** provided, enabling the the search to continue.
+//
+$search_additional_clause = false;
+$zco_notifier->notify('NOTIFY_ADVANCED_SEARCH_RESULTS_ADDL_CLAUSE', array(), $search_additional_clause);
+
+if ($search_additional_clause === false && 
+(isset($_GET['keyword']) && (empty($_GET['keyword']) || $_GET['keyword']== HEADER_SEARCH_DEFAULT_TEXT || $_GET['keyword'] == KEYWORD_FORMAT_STRING ) ) &&
 (isset($_GET['dfrom']) && (empty($_GET['dfrom']) || ($_GET['dfrom'] == DOB_FORMAT_STRING))) &&
 (isset($_GET['dto']) && (empty($_GET['dto']) || ($_GET['dto'] == DOB_FORMAT_STRING))) &&
 (isset($_GET['pfrom']) && !is_numeric($_GET['pfrom'])) &&
