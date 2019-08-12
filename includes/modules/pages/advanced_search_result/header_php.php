@@ -33,7 +33,8 @@ $_GET['keyword'] = trim($_GET['keyword']);
 $search_additional_clause = false;
 $zco_notifier->notify('NOTIFY_ADVANCED_SEARCH_RESULTS_ADDL_CLAUSE', array(), $search_additional_clause);
 
-if ( $search_additional_clause === false && (isset($_GET['keyword']) && (empty($_GET['keyword']) || $_GET['keyword']==HEADER_SEARCH_DEFAULT_TEXT || $_GET['keyword'] == KEYWORD_FORMAT_STRING ) ) &&
+if ($search_additional_clause === false && 
+(isset($_GET['keyword']) && (empty($_GET['keyword']) || $_GET['keyword']== HEADER_SEARCH_DEFAULT_TEXT || $_GET['keyword'] == KEYWORD_FORMAT_STRING ) ) &&
 (isset($_GET['dfrom']) && (empty($_GET['dfrom']) || ($_GET['dfrom'] == DOB_FORMAT_STRING))) &&
 (isset($_GET['dto']) && (empty($_GET['dto']) || ($_GET['dto'] == DOB_FORMAT_STRING))) &&
 (isset($_GET['pfrom']) && !is_numeric($_GET['pfrom'])) &&
