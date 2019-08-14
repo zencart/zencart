@@ -197,3 +197,15 @@ switch (true) {
    */
   break;
 }
+
+// -----
+// If an admin is currently logged into the customer's account, let that admin know who s/he is shopping for.
+//
+if (isset($_SESSION['emp_admin_id'])) {
+    $shopping_for_name = $_SESSION['customer_first_name'] . ' ' . $_SESSION['customer_last_name'];
+    $severity = EMP_SHOPPING_FOR_MESSAGE_SEVERITY;
+    if (!in_array($severity, array('success', 'caution', 'warning', 'error'))) {
+        $severity = 'success';
+    }
+    $messageStack->add('header', sprintf(EMP_SHOPPING_FOR_MESSAGE, $shopping_for_name, $_SESSION['emp_customer_email_address']), $severity);
+}

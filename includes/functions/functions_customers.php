@@ -258,3 +258,73 @@ function zen_is_logged_in()
     $GLOBALS['zco_notifier']->notify('NOTIFY_ZEN_IS_LOGGED_IN', '', $is_logged_in);
     return (bool)$is_logged_in;
 }
+
+/**
+ * This function determines if the login-password supplied is associated with a permitted
+ * admin's admin-password, returning (bool)true if so.  Normally called during the login-page's
+ * header_php.php processing.
+ */
+function zen_validate_storefront_admin_login($password, $email_address)
+{
+    global $db;
+    $admin_authorized = false;
+    
+    // -----
+    // Admin passwords might be 'sanitized', e.g. this&that becomes this&amp;that, so we'll check
+    // either the as-entered or 'sanitized' versions.
+    //
+    $pwd2 = htmlspecialchars($password, ENT_COMPAT, CHARSET);
+    $check = $db->Execute(
+        "SELECT admin_id, admin_pass 
+           FROM " . TABLE_ADMIN . " 
+          WHERE admin_id = " . (int)EMP_LOGIN_ADMIN_ID . "
+          LIMIT 1"
+    );
+    if (!$check->EOF && (zen_validate_password($password, $check->fields['admin_pass']) || zen_validate_password($pwd2, $check->fields['admin_pass']))) {
+        $admin_authorized = true;
+        $_SESSION['emp_admin_login'] = true;
+        $_SESSION['emp_admin_id'] = EMP_LOGIN_ADMIN_ID;
+        
+    } else {
+        $profile_array = explode(',', str_replace(' ', '', EMP_LOGIN_ADMIN_PROFILE_ID));
+        foreach ($profile_array as $index => $current_id) {
+            if (!(int)$current_id == 0) {
+                unset($profile_array[$index]);
+            }
+        }
+        if (count($profile_array) != 0) {
+            $profile_list = implode(', ', $profile_array);
+            $admin_profiles = $db->Execute(
+                "SELECT admin_id, admin_pass 
+                   FROM " . TABLE_ADMIN . " 
+                  WHERE admin_profile IN ($profile_list)"
+            );
+            while (!$admin_profiles->EOF && !$admin_authorized) {
+                $admin_authorized = (zen_validate_password($p2, $admin_profiles->fields['admin_pass']) || zen_validate_password($pwd2, $admin_profiles->fields['admin_pass']));
+                if ($admin_authorized) {
+                    $_SESSION['emp_admin_login'] = true;
+                    $_SESSION['emp_admin_id'] = $admin_profiles->fields['admin_id'];
+                }
+                $admin_profiles->MoveNext();
+            }
+        }
+    }
+
+    if ($admin_authorized) {
+        $_SESSION['emp_customer_email_address'] = $email_address;
+        $sql_data_array = array( 
+            'access_date' => 'now()',
+            'admin_id' => $_SESSION['emp_admin_id'],
+            'page_accessed' => 'login.php',
+            'page_parameters' => '',
+            'ip_address' => substr($_SERVER['REMOTE_ADDR'],0,45),
+            'gzpost' => gzdeflate(json_encode(array('action' => 'emp_admin_login', 'customer_email_address' => $email_address)), 7),
+            'flagged' => 0,
+            'attention' => '',
+            'severity' => 'info',
+            'logmessage' => 'EMP admin login',
+        );
+        zen_db_perform(TABLE_ADMIN_ACTIVITY_LOG, $sql_data_array);
+    }
+    return $admin_authorized;
+}
