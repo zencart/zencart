@@ -17,12 +17,15 @@ require('includes/application_top.php');
 // that are either allowed- or denied-for the associated coupon_id.  Here are some valid
 // examples (assuming a valid coupon_id and restrict_id), in the format (products_id, categories_id, coupon_restrict):
 //
-// 1) A single product that is not valid for the associated coupon (pid, 0, 'N').
-// 2) A single product that *is* valid for the associated coupon (pid, 0, 'Y').
-// 3) A category whose products are all not valid for the associated coupon (0, cid, 'N').
+// 1) A single product that is not valid for the associated coupon (pid, 0, 'Y').
+// 2) A single product that *is* valid for the associated coupon (pid, 0, 'N').
+// 3) A category whose products are all not valid for the associated coupon (0, cid, 'Y').
 //    a) Products within the category can be individually marked valid, as above in (2).
-// 4) A category whose products are all valid for the associated coupon (0, cid, 'Y').
+// 4) A category whose products are all valid for the associated coupon (0, cid, 'N').
 //    a) Products within the category can be individually marked invalid, as above in (1).
+// 5) Special case:  If the associated category_id is -1, that identifies that **all** categories
+//    are valid or invalid for the associated coupon.  Product-specific exceptions -- see (1) and (2) above --
+//    are then applied.
 //
 $restrict_array = array(
     array(
