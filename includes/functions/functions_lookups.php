@@ -279,7 +279,7 @@
  *  @return integer
  */
   function zen_requires_attribute_selection($products_id) {
-    global $db;
+    global $db, $zco_notifier;
 
     $noDoubles = array();
     $noDoubles[] = PRODUCTS_OPTIONS_TYPE_RADIO;
@@ -299,6 +299,9 @@
               where pa.products_id = " . (int)$products_id . "
               and po.language_id = " . (int)$_SESSION['languages_id'] . "
               group by products_options_id, options_type";
+
+    $zco_notifier->notify('NOTIFY_FUNCTIONS_LOOKUPS_REQUIRES_ATTRIBUTES_SELECTION', '', $query, $noSingles, $noDoubles);
+
     $result = $db->Execute($query);
 
     // if no attributes found, return false
