@@ -79,7 +79,7 @@ if (zen_not_null($action) && $order_exists == true) {
   switch ($action) {
     case 'download': 
  
-      $fileName = $_GET['filename']; 
+      $fileName = basename($_GET['filename']); 
       $file_extension = strtolower(substr(strrchr($fileName, '.'), 1));
       switch ($file_extension) {
         case 'csv':
