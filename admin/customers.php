@@ -411,7 +411,7 @@ if (zen_not_null($action)) {
                                         a.entry_country_id, c.customers_telephone, c.customers_fax,
                                         c.customers_newsletter, c.customers_default_address_id,
                                         c.customers_email_format, c.customers_group_pricing,
-                                        c.customers_authorization, c.customers_referral
+                                        c.customers_authorization, c.customers_referral, c.customers_secret
                                  FROM " . TABLE_CUSTOMERS . " c
                                  LEFT JOIN " . TABLE_ADDRESS_BOOK . " a ON c.customers_default_address_id = a.address_book_id
                                  WHERE a.customers_id = c.customers_id
@@ -1187,7 +1187,7 @@ if (zen_not_null($action)) {
 
                   $zco_notifier->notify('NOTIFY_ADMIN_CUSTOMERS_LISTING_NEW_FIELDS', array(), $new_fields, $disp_order);
 
-                  $customers_query_raw = "select c.customers_id, c.customers_lastname, c.customers_firstname, c.customers_email_address, c.customers_group_pricing, c.customers_telephone, c.customers_authorization, c.customers_referral,
+                  $customers_query_raw = "select c.customers_id, c.customers_lastname, c.customers_firstname, c.customers_email_address, c.customers_group_pricing, c.customers_telephone, c.customers_authorization, c.customers_referral, c.customers_secret,
                                            a.entry_country_id, a.entry_company, a.entry_company, a.entry_street_address, a.entry_city, a.entry_postcode,
                                            ci.customers_info_date_of_last_logon, ci.customers_info_date_account_created
                                            " . $new_fields . ",
@@ -1392,15 +1392,28 @@ if (zen_not_null($action)) {
                     //
                     $place_order_override = false;
                     $zco_notifier->notify('NOTIFY_ADMIN_CUSTOMERS_PLACE_ORDER_BUTTON', $cInfo, $contents, $place_order_override);
-                    if ($place_order_override === false) {
-                        if (zen_admin_authorized_to_place_order()) {
-                            $login_form_start = '<form target="_blank" name="login" action="' . zen_catalog_href_link(FILENAME_LOGIN, '', 'SSL') . '" method="post">';
-                            $email_hidden_field = zen_draw_hidden_field('email_address', $cInfo->customers_email_address);
-                            $contents[] = array(
-                                'align' => 'text-center',
-                                'text' => $login_form_start . $email_hidden_field . '<input class="btn btn-primary" type="submit" value="' . EMP_BUTTON_PLACEORDER . '" title="' . EMP_BUTTON_PLACEORDER_ALT . '"></form>'
-                            );
+                    if ($place_order_override === false && zen_admin_authorized_to_place_order()) {
+                        $login_form_start = '<form target="_blank" name="login" action="' .
+                            zen_catalog_href_link
+                            (FILENAME_LOGIN, '', 'SSL') . '" method="post">';
+                        $hiddenFields = zen_draw_hidden_field('email_address', $cInfo->customers_email_address);
+                        if  (defined('EMP_LOGIN_AUTOMATIC') && EMP_LOGIN_AUTOMATIC == 'true' && ENABLE_SSL_CATALOG == 'true') {
+                            $secret = zen_update_customers_secret($cInfo->customers_id);
+                            $timestamp = time();
+                            $hmacpostdata = ['cid' => $cInfo->customers_id, 'aid' => $_SESSION['admin_id'],
+                                             'email_address' => $cInfo->customers_email_address];
+                            $hmacUri = zen_create_hmac_uri($hmacpostdata, $secret);
+                            $login_form_start = '<form id="loginform" target="_blank" name="login" action="' .
+                                zen_catalog_href_link(
+                                    FILENAME_LOGIN, $hmacUri . '&action=process', 'SSL') . '" method="post">';
+                            $hiddenFields .= zen_draw_hidden_field('aid', $_SESSION['admin_id']);
+                            $hiddenFields .= zen_draw_hidden_field('cid', $cInfo->customers_id);
+                            $hiddenFields .= zen_draw_hidden_field('timestamp', $timestamp, 'id="emp-timestamp"');
                         }
+                        $contents[] = array(
+                            'align' => 'text-center',
+                            'text' => $login_form_start . $hiddenFields . '<input class="btn btn-primary" type="submit" value="' . EMP_BUTTON_PLACEORDER . '" title="' . EMP_BUTTON_PLACEORDER_ALT . '"></form>'
+                        );
                     }
                     
                     $zco_notifier->notify('NOTIFY_ADMIN_CUSTOMERS_MENU_BUTTONS', $cInfo, $contents);
@@ -1411,7 +1424,8 @@ if (zen_not_null($action)) {
                     $contents[] = array('text' => '<br>' . TEXT_INFO_NUMBER_OF_LOGONS . ' ' . $cInfo->number_of_logons);
 
                     $customer_gv_balance = zen_user_has_gv_balance($cInfo->customers_id);
-                    $contents[] = array('text' => '<br>' . TEXT_INFO_GV_AMOUNT . ' ' . $currencies->format($customer_gv_balance));
+                    $contents[] = array('text' => '<br>' . TEXT_INFO_GV_AMOUNT . ' ' . $currencies->format
+                     ($customer_gv_balance));
 
                     $contents[] = array('text' => '<br>' . TEXT_INFO_NUMBER_OF_ORDERS . ' ' . $customers_orders->RecordCount());
                     if ($customers_orders->RecordCount() != 0) {
@@ -1471,6 +1485,13 @@ if (zen_not_null($action)) {
     <!-- footer //-->
     <?php require(DIR_WS_INCLUDES . 'footer.php'); ?>
     <!-- footer_eof //-->
+    <script>
+        $(function() {
+            $( "#loginform" ).submit(function( event ) {
+                $("#emp-timestamp").val(Date.now()/1000);
+            });
+        });
+    </script>
   </body>
 </html>
 <?php require(DIR_WS_INCLUDES . 'application_bottom.php'); ?>

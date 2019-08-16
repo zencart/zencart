@@ -20,6 +20,15 @@
   {
     $_SESSION ['securityToken'] = md5 ( uniqid ( rand (), true ) );
   }
+
+  if (zen_is_hmac_login()) {
+    if (!zen_validate_hmac_login()) {
+        unset($_GET['action']);
+    } else {
+        $_POST['securityToken'] = $_SESSION['securityToken'];
+    }
+  }
+
   if ((isset ( $_GET ['action'] ) || isset($_POST['action']) ) && $_SERVER['REQUEST_METHOD'] == 'POST')
   {
     $mainPage = isset($_GET['main_page']) ? $_GET['main_page'] : FILENAME_DEFAULT;
