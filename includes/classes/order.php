@@ -540,7 +540,6 @@ class order extends base {
                                       'products_quantity_order_max' => (float)$products[$i]['products_quantity_order_max'],
                                       'products_quantity_mixed' => (int)$products[$i]['products_quantity_mixed'],
                                       'products_mixed_discount_quantity' => (int)$products[$i]['products_mixed_discount_quantity'],
-                                      'tax' => zen_get_tax_rate($products[$i]['tax_class_id'], $taxCountryId, $taxZoneId),
                                       );
 
 
