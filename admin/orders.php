@@ -134,7 +134,7 @@ if (zen_not_null($action) && $order_exists == true) {
       $fs_path = DIR_FS_CATALOG_IMAGES . 'uploads/' . $fileName; 
       if (!file_exists($fs_path)) {
         $messageStack->add_session(TEXT_FILE_NOT_FOUND, 'error');
-        zen_redirect(zen_href_link(FILENAME_ORDERS, zen_get_all_get_params(array('download', 'action'),'action=edit')); 
+        zen_redirect(zen_href_link(FILENAME_ORDERS, zen_get_all_get_params(array('download', 'action'),'action=edit'))); 
       }
       header('Content-type: ' . $content);
       header('Content-Disposition: attachment; filename="' . $fileName . '"');
@@ -999,7 +999,8 @@ if (zen_not_null($action) && $order_exists == true) {
                   $search_distinct = ' ';
                   $new_table = '';
                   $new_fields = '';
-                  if (isset($_GET['search_orders_products']) && zen_not_null($_GET['search_orders_products'])) {
+                  $keywords = '';
+                  if (!empty($_GET['search_orders_products'])) {
                     $search_distinct = ' distinct ';
                     $new_table = " left join " . TABLE_ORDERS_PRODUCTS . " op on (op.orders_id = o.orders_id) ";
                     $keywords = zen_db_input(zen_db_prepare_input($_GET['search_orders_products']));
@@ -1008,18 +1009,15 @@ if (zen_not_null($action) && $order_exists == true) {
                       $keywords = TRIM(substr($_GET['search_orders_products'], 3));
                       $search = " and op.products_id ='" . (int)$keywords . "'";
                     }
-                  } else {
-
+                  } elseif (!empty($_GET['search'])) {
 // create search filter
-                    $search = '';
-                    if (isset($_GET['search']) && zen_not_null($_GET['search'])) {
-                      $search_distinct = ' ';
                       $keywords = zen_db_input(zen_db_prepare_input($_GET['search']));
                       $search = " and (o.customers_city like '%" . $keywords . "%' or o.customers_postcode like '%" . $keywords . "%' or o.date_purchased like '%" . $keywords . "%' or o.billing_name like '%" . $keywords . "%' or o.billing_company like '%" . $keywords . "%' or o.billing_street_address like '%" . $keywords . "%' or o.delivery_city like '%" . $keywords . "%' or o.delivery_postcode like '%" . $keywords . "%' or o.delivery_name like '%" . $keywords . "%' or o.delivery_company like '%" . $keywords . "%' or o.delivery_street_address like '%" . $keywords . "%' or o.billing_city like '%" . $keywords . "%' or o.billing_postcode like '%" . $keywords . "%' or o.customers_email_address like '%" . $keywords . "%' or o.customers_name like '%" . $keywords . "%' or o.customers_company like '%" . $keywords . "%' or o.customers_street_address  like '%" . $keywords . "%' or o.customers_telephone like '%" . $keywords . "%' or o.ip_address  like '%" . $keywords . "%')";
-                      $new_table = '';
-                    }
-                  } // eof: search orders or orders_products
+                  } 
                   $new_fields .= ", o.customers_company, o.customers_email_address, o.customers_street_address, o.delivery_company, o.delivery_name, o.delivery_street_address, o.billing_company, o.billing_name, o.billing_street_address, o.payment_module_code, o.shipping_module_code, o.ip_address ";
+                  
+                  $order_by = " ORDER BY o.orders_id DESC";
+                  $zco_notifier->notify('NOTIFY_ADMIN_ORDERS_SEARCH_PARMS', $keywords, $search, $search_distinct, $new_fields, $new_table, $order_by);
 
                   $orders_query_raw = "select " . $search_distinct . " o.orders_id, o.customers_id, o.customers_name, o.payment_method, o.shipping_method, o.date_purchased, o.last_modified, o.currency, o.currency_value, s.orders_status_name, ot.text as order_total" .
                       $new_fields . "
@@ -1039,7 +1037,7 @@ if (zen_not_null($action) && $order_exists == true) {
                     $orders_query_raw .= (trim($search) != '') ? preg_replace('/ *AND /i', ' WHERE ', $search) : '';
                   }
 
-                  $orders_query_raw .= " order by o.orders_id DESC";
+                  $orders_query_raw .= $order_by;
 
 // Split Page
 // reset page when page is unknown
