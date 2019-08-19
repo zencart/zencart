@@ -353,7 +353,7 @@ function check_form(form_name) {
 ?>
               <tr>
                 <td class="main"><?php echo TEXT_CUSTOMER; ?></td>
-                <td><?php echo zen_draw_pull_down_menu('customers_email_address', $customers, (!empty($_GET['customer']) ? (int)$_GET['customer'] : 0));?></td>
+                <td><?php echo zen_draw_pull_down_menu('customers_email_address', $customers, (!empty($_GET['customer']) ? $_GET['customer'] : ''));?></td>
               </tr>
               <tr>
                 <td colspan="2"><?php echo zen_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
