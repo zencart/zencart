@@ -8,7 +8,7 @@
  */
 
 define('HEADING_TITLE', 'Orders');
-define('HEADING_TITLE_DETAILS', 'Order Details');
+define('HEADING_TITLE_DETAILS', 'Order Details (#%u)');     //-%u is filled in with the actual order-number
 define('HEADING_TITLE_SEARCH', 'Order ID:');
 define('HEADING_TITLE_STATUS', 'Status:');
 define('HEADING_TITLE_SEARCH_DETAIL_ORDERS_PRODUCTS', 'Product Name or ID:XX or Model');
