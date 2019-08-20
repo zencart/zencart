@@ -825,7 +825,7 @@ if (zen_not_null($action) && $order_exists == true) {
           //     ),
           // );
           //
-          // Observer note:  Be sure to check that the $p3/$extra_data value is specifically (bool)false before initializing, since
+          // Observer note:  Be sure to check that the $p2/$extra_data value is specifically (bool)false before initializing, since
           // multiple observers might be injecting content!
           //
           $extra_data = false;
