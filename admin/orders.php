@@ -510,9 +510,20 @@ if (zen_not_null($action) && $order_exists == true) {
         if ($result->RecordCount()) {
           $next_button = '<a role="button" class="btn btn-default" href="' . zen_href_link(FILENAME_ORDERS, 'oID=' . $result->fields['orders_id'] . '&action=edit') . '">' . $result->fields['orders_id'] . ' &raquo;</a>';
         }
+
+        // -----
+        // Enable an observer to inject additional buttons, either to the right or left (or both)
+        // of the navigation.
+        //
+        $left_side_buttons = '';
+        $right_side_buttons = '';
+        $zco_notifier->notify('NOTIFY_ADMIN_ORDERS_UPPER_BUTTONS', $oID, $left_side_buttons, $right_side_buttons);
         ?>
         <div class="row">
-          <div class="col-xs-10 col-xs-offset-1 col-sm-6 col-sm-offset-3 col-md-5 col-md-offset-3 col-lg-4 col-lg-offset-4">
+          <div class="col-sm-3 col-lg-4 text-left noprint">
+            <?php echo $left_side_buttons; ?>
+          </div>
+          <div class="col-sm-6 col-lg-4">
             <div class="input-group">
               <span class="input-group-btn">
                   <?php echo $prev_button; ?>
@@ -528,6 +539,9 @@ if (zen_not_null($action) && $order_exists == true) {
                 <button type="button" class="btn btn-default" onclick="history.back()"><i class="fa fa-undo" aria-hidden="true">&nbsp;</i> <?php echo IMAGE_BACK; ?></button>
               </div>
             </div>
+          </div>
+          <div class="col-sm-3 col-lg-4 text-right noprint">
+             <?php echo $right_side_buttons; ?>
           </div>
         </div>
         <div class="row"><?php echo zen_draw_separator(); ?></div>
@@ -747,6 +761,31 @@ if (zen_not_null($action) && $order_exists == true) {
                 <th class="text-center"><?php echo TABLE_HEADING_DATE_ADDED; ?></th>
                 <th class="text-center"><?php echo TABLE_HEADING_CUSTOMER_NOTIFIED; ?></th>
                 <th class="text-center"><?php echo TABLE_HEADING_STATUS; ?></th>
+<?php
+  // -----
+  // A watching observer can provide an associative array in the form:
+  //
+  // $extra_headings = array(
+  //     array(
+  //       'align' => $alignment,    // One of 'center', 'right', or 'left' (optional)
+  //       'text' => $value
+  //     ),
+  // );
+  //
+  // Observer note:  Be sure to check that the $p2/$extra_headings value is specifically (bool)false before initializing, since
+  // multiple observers might be injecting content!
+  //
+  $extra_headings = false;
+  $zco_notifier->notify('NOTIFY_ADMIN_ORDERS_STATUS_HISTORY_EXTRA_COLUMN_HEADING', array(), $extra_headings);
+  if (is_array($extra_headings)) {
+      foreach ($extra_headings as $heading_info) {
+          $align = (isset($heading_info['align'])) ? (' text-' . $heading_info['align']) : '';
+?>
+                <td class="smallText<?php echo $align; ?>"><strong><?php echo $heading_info['text']; ?></td></td>
+<?php
+      }
+  }
+?>
                 <th class="text-center"><?php echo TABLE_HEADING_COMMENTS; ?></th>
                 <th class="text-center"><?php echo TABLE_HEADING_UPDATED_BY; ?></th>
               </tr>
@@ -775,6 +814,31 @@ if (zen_not_null($action) && $order_exists == true) {
                         ?>
                     </td>
                     <td><?php echo $orders_status_array[$item['orders_status_id']]; ?></td>
+<?php
+          // -----
+          // A watching observer can provide an associative array in the form:
+          //
+          // $extra_data = array(
+          //     array(
+          //       'align' => $alignment,    // One of 'center', 'right', or 'left' (optional)
+          //       'text' => $value
+          //     ),
+          // );
+          //
+          // Observer note:  Be sure to check that the $p2/$extra_data value is specifically (bool)false before initializing, since
+          // multiple observers might be injecting content!
+          //
+          $extra_data = false;
+          $zco_notifier->notify('NOTIFY_ADMIN_ORDERS_STATUS_HISTORY_EXTRA_COLUMN_DATA', $orders_history->fields, $extra_data);
+          if (is_array($extra_data)) {
+              foreach ($extra_data as $data_info) {
+                  $align = (isset($data_info['align'])) ? (' text-' . $data_info['align']) : '';
+        ?>
+                        <td class="smallText<?php echo $align; ?>"><?php echo $data_info['text']; ?></td>
+        <?php
+              }
+          }
+?>
                     <td><?php echo nl2br(zen_db_output($item['comments'])); ?></td>
                     <td class="text-center"><?php echo (!empty($item['updated_by'])) ? $item['updated_by'] : '&nbsp;'; ?></td>
                   </tr>
@@ -791,6 +855,15 @@ if (zen_not_null($action) && $order_exists == true) {
             </tbody>
           </table>
         </div>
+<?php
+    $additional_content = false;
+    $zco_notifier->notify('NOTIFY_ADMIN_ORDERS_AFTER_STATUS_LISTING', $oID, $additional_content);
+    if ($additional_content !== false) {
+?>
+        <div class="row noprint"><?php echo $additional_content; ?></div>
+<?php
+    }
+?>
         <div class="row noprint"><?php echo zen_draw_separator('pixel_trans.gif', '1', '5'); ?></div>
         <div class="row noprint">
           <div class="formArea">
@@ -801,6 +874,9 @@ if (zen_not_null($action) && $order_exists == true) {
                   <?php echo zen_draw_textarea_field('comments', 'soft', '60', '5', '', 'id="comments" class="form-control"'); ?>
               </div>
             </div>
+<?php
+    $zco_notifier->notify('NOTIFY_ADMIN_ORDERS_ADDL_HISTORY_INPUTS', array());
+?>
             <div class="form-group">
                 <?php echo zen_draw_label(ENTRY_STATUS, 'status', 'class="col-sm-3 control-label"'); ?>
               <div class="col-sm-9">
