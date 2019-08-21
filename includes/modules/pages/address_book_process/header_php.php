@@ -305,6 +305,17 @@ if (isset($_GET['edit']) && is_numeric($_GET['edit'])) {
 
   $entry_query = $db->bindVars($entry_query, ':customersID', $_SESSION['customer_id'], 'integer');
   $entry = $db->Execute($entry_query);
+  
+  $entry->fields['entry_gender'] = 'm';
+  $entry->fields['entry_firstname'] = '';
+  $entry->fields['entry_lastname'] = '';
+  $entry->fields['entry_company'] = '';
+  $entry->fields['entry_street_address'] = '';
+  $entry->fields['entry_suburb'] = '';
+  $entry->fields['entry_city'] = '';
+  $entry->fields['entry_state'] = '';
+  $entry->fields['entry_zone_id'] = 0;
+  $entry->fields['entry_postcode'] = '';
 }
 /*
  * Set flags for template use:
