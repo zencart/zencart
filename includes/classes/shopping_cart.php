@@ -1757,6 +1757,7 @@ class shoppingCart extends base {
 
     $change_state = array();
     $this->flag_duplicate_quantity_msgs_set = array();
+    $cart_delete = (isset($_POST['cart_delete']) && is_array($_POST['cart_delete'])) ? $_POST['cart_delete'] : array();
     for ($i=0, $n=sizeof($_POST['products_id']); $i<$n; $i++) {
       $adjust_max= 'false';
       if ($_POST['cart_quantity'][$i] == '') {
@@ -1770,7 +1771,7 @@ class shoppingCart extends base {
         $_POST['cart_quantity'][$i] = $this->get_quantity($_POST['products_id'][$i]);
         continue;
       }
-      if ( in_array($_POST['products_id'][$i], (is_array($_POST['cart_delete']) ? $_POST['cart_delete'] : array())) or $_POST['cart_quantity'][$i]==0) {
+      if (in_array($_POST['products_id'][$i], $cart_delete) || $_POST['cart_quantity'][$i] == 0) {
         $this->remove($_POST['products_id'][$i]);
       } else {
         $add_max = zen_get_products_quantity_order_max($_POST['products_id'][$i]); // maximum allowed
@@ -1853,7 +1854,7 @@ class shoppingCart extends base {
           $this->add_cart($_POST['products_id'][$i], $new_qty, $attributes, false);
         } else {
           // adjust minimum and units
-          $attributes = ($_POST['id'][$_POST['products_id'][$i]]) ? $_POST['id'][$_POST['products_id'][$i]] : '';
+          $attributes = (isset($_POST['id'][$_POST['products_id'][$i]])) ? $_POST['id'][$_POST['products_id'][$i]] : '';
           $this->add_cart($_POST['products_id'][$i], $new_qty, $attributes, false);
         }
         }
