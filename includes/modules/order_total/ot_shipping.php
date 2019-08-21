@@ -10,7 +10,12 @@
  */
 class ot_shipping extends base
 {
-    var $title, $output;
+    public    $code,
+              $title,
+              $description,
+              $sort_order,
+              $output;
+    protected $_check;
 
     public function __construct() 
     {
@@ -18,13 +23,20 @@ class ot_shipping extends base
         $this->code = 'ot_shipping';
         $this->title = MODULE_ORDER_TOTAL_SHIPPING_TITLE;
         $this->description = MODULE_ORDER_TOTAL_SHIPPING_DESCRIPTION;
-        $this->sort_order = defined('MODULE_ORDER_TOTAL_SHIPPING_SORT_ORDER') ? MODULE_ORDER_TOTAL_SHIPPING_SORT_ORDER : null;
+        $this->sort_order = defined('MODULE_ORDER_TOTAL_SHIPPING_SORT_ORDER') ? (int)MODULE_ORDER_TOTAL_SHIPPING_SORT_ORDER : null;
         if (null === $this->sort_order) {
             return false;
         }
-
-        unset($_SESSION['shipping_tax_description']);
         $this->output = array();
+    }
+
+    public function process() 
+    {
+        global $order, $currencies;
+ 
+        $this->output = array();
+        unset($_SESSION['shipping_tax_description']);
+        
         if (MODULE_ORDER_TOTAL_SHIPPING_FREE_SHIPPING == 'true') {
             $pass = false;
             switch (MODULE_ORDER_TOTAL_SHIPPING_DESTINATION) {
@@ -99,12 +111,12 @@ class ot_shipping extends base
                 if (!isset($order->info['tax_groups'][$shipping_tax_description])) {
                     $order->info['tax_groups'][$shipping_tax_description] = 0;
                 }
-                $order->info['tax_groups'][$shipping_tax_description] += zen_calculate_tax($order->info['shipping_cost'], $shipping_tax);
-                $order->info['total'] += zen_calculate_tax($order->info['shipping_cost'], $shipping_tax);
-                $_SESSION['shipping_tax_description'] =  $shipping_tax_description;
+                $order->info['tax_groups'][$shipping_tax_description] += $shipping_tax_amount;
+                $order->info['total'] += $shipping_tax_amount;
+                $_SESSION['shipping_tax_description'] = $shipping_tax_description;
                 $_SESSION['shipping_tax_amount'] =  $shipping_tax_amount;
                 if (DISPLAY_PRICE_WITH_TAX == 'true') {
-                    $order->info['shipping_cost'] += zen_calculate_tax($order->info['shipping_cost'], $shipping_tax);
+                    $order->info['shipping_cost'] += $shipping_tax_amount;
                 }
             }
 
@@ -112,17 +124,13 @@ class ot_shipping extends base
                 $order->info['shipping_method'] = FREE_SHIPPING_TITLE;
                 $order->info['shipping_cost'] = 0;
             }
+            
+            $this->output[] = array(
+                'title' => $order->info['shipping_method'] . ':',
+                'text' => $currencies->format($order->info['shipping_cost'], true, $order->info['currency'], $order->info['currency_value']),
+                'value' => $order->info['shipping_cost']
+            );
         }
-    }
-
-    public function process() 
-    {
-        global $order, $currencies;
-        $this->output[] = array(
-            'title' => $order->info['shipping_method'] . ':',
-            'text' => $currencies->format($order->info['shipping_cost'], true, $order->info['currency'], $order->info['currency_value']),
-            'value' => $order->info['shipping_cost']
-        );
     }
 
     public function check() 
