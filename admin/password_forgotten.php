@@ -15,12 +15,12 @@ if (isset($_POST['login'])) {
     zen_redirect(zen_href_link(FILENAME_LOGIN, '', 'SSL'));
 }
 // Slam prevention:
-if ($_SESSION['login_attempt'] > 9) {
+if (isset($_SESSION['login_attempt']) && $_SESSION['login_attempt'] > 9) {
     header('HTTP/1.1 406 Not Acceptable');
     exit(0);
 }
 $error = false;
-$reset_token = '';
+$resetToken = '';
 $email_message = '';
 if (isset($_POST['submit'])) {
     if (!$_POST['admin_email']) {
