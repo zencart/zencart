@@ -5,9 +5,9 @@ use Zencart\FileSystem\FileSystem;
 require_once('includes/application_bootstrap.php');
 
 $cmd = isset($_GET['cmd']) ? $_GET['cmd'] : 'home';
-$cmd = ($cmd == FILENAME_DEFAULT) ? 'home' : $cmd;
+$cmd = ($cmd == 'index') ? 'home' : $cmd;
 
-if (file_exists(basename($cmd . '.php'))) {
+if (file_exists(basename($cmd . '.php'))) {git
     require basename($cmd . '.php');
     exit();
 }
