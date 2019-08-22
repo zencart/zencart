@@ -37,7 +37,8 @@ if (!defined('IS_ADMIN_FLAG')) {
   $template_dir = $template_query->fields['template_dir'];
 
 // include the language translations
-  $current_page = basename($PHP_SELF);
+  $current_page = isset($_GET['cmd']) ? basename($_GET['cmd'] . '.php') : 'index.php';
+  $current_page = ($current_page == 'home.php') ? 'index.php' : $current_page;
   if (is_file(DIR_WS_LANGUAGES . $_SESSION['language'] . '/' . $current_page)) {
     include(DIR_WS_LANGUAGES . $_SESSION['language'] . '/' . $current_page);
   }
