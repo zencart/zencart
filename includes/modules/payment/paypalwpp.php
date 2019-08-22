@@ -6,7 +6,7 @@
  * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2019 May 10 Modified in v1.5.6b $
+ * @version $Id: Scott C Wilson 2019 Jun 19 Modified in v1.5.6c $
  */
 /**
  * load the communications layer code
@@ -182,7 +182,7 @@ class paypalwpp extends base {
       $this->form_action_url = zen_href_link('ipn_main_handler.php', 'type=ec&markflow=1&clearSess=1&stage=final', 'SSL', true, true, true);
     }
 
-    if (MODULE_PAYMENT_PAYPALWPP_CHECKOUTSTYLE != 'InContext') {
+    if (!defined('MODULE_PAYMENT_PAYPALWPP_CHECKOUTSTYLE') || MODULE_PAYMENT_PAYPALWPP_CHECKOUTSTYLE != 'InContext') {
       $this->use_incontext_checkout = false;
     }
     if (!defined('MODULE_PAYMENT_PAYPALWPP_MERCHANTID') || MODULE_PAYMENT_PAYPALWPP_MERCHANTID == '') {
@@ -2866,11 +2866,13 @@ if (false) { // disabled until clarification is received about coupons in PayPal
     $gateway_mode = (isset($response['PNREF']) && $response['PNREF'] != '');
     $basicError = (!$response || (isset($response['RESULT']) && $response['RESULT'] != 0) || (isset($response['ACK']) && !strstr($response['ACK'], 'Success')) || (!isset($response['RESULT']) && !isset($response['ACK'])));
     $ignoreList = explode(',', str_replace(' ', '', $ignore_codes));
-    foreach($ignoreList as $key=>$value) {
-      if ($value != '' && $response['L_ERRORCODE0'] == $value) $basicError = false;
+    if (!empty($response['L_ERRORCODE0'])) {
+      foreach($ignoreList as $key=>$value) {
+        if ($value != '' && $response['L_ERRORCODE0'] == $value) $basicError = false;
+      }
     }
     /** Handle unilateral **/
-    if ($response['RESULT'] == 'Unauthorized: Unilateral') {
+    if (!empty($response['RESULT']) && $response['RESULT'] == 'Unauthorized: Unilateral') {
       $errorText = $response['RESULT'] . MODULE_PAYMENT_PAYPALWPP_TEXT_UNILATERAL;
       $messageStack->add_session($errorText, 'error');
     }
@@ -2891,7 +2893,10 @@ if (false) { // disabled until clarification is received about coupons in PayPal
     }
     if (!isset($response['L_SHORTMESSAGE0']) && isset($response['RESPMSG']) && $response['RESPMSG'] != '') $response['L_SHORTMESSAGE0'] = $response['RESPMSG'];
     //echo '<br />basicError='.$basicError.'<br />' . urldecode(print_r($response,true)); die('halted');
-    $errorInfo = 'Problem occurred while customer ' . zen_output_string_protected($_SESSION['customer_id'] . ' ' . $_SESSION['customer_first_name'] . ' ' . $_SESSION['customer_last_name']) . ' was attempting checkout with PayPal Express Checkout.' . "\n\n";
+    $errorInfo = '';
+    if (IS_ADMIN_FLAG === false) {
+        $errorInfo = 'Problem occurred while customer ' . zen_output_string_protected($_SESSION['customer_id'] . ' ' . $_SESSION['customer_first_name'] . ' ' . $_SESSION['customer_last_name']) . ' was attempting checkout with PayPal Express Checkout.' . "\n\n";
+    }
 
     $this->notify('NOTIFY_PAYPALWPP_ERROR_HANDLER', $response, $operation, $basicError, $ignoreList, $errorInfo);
 
