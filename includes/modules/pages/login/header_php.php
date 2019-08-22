@@ -8,7 +8,6 @@
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: lat9 2019 Feb 27 Modified in v1.5.6b $
  */
-
 // This should be first line of the script:
 $zco_notifier->notify('NOTIFY_HEADER_START_LOGIN');
 
@@ -33,8 +32,22 @@ $email_address = zen_db_prepare_input(isset($_POST['email_address']) ? trim($_PO
 
 $error = false;
 if (isset($_GET['action']) && $_GET['action'] == 'process') {
+    $loginAuthorized = false;
+
+    if (isset($_GET['hmac'])) {
+        // we have already validated the hmac in init_sanitize
+        // now lets check the timestamp and admin id.
+        if (!zen_validate_hmac_timestamp() || !$adminId = zen_validate_hmac_admin_id($_POST['aid'])) {
+            zen_redirect(zen_href_link(FILENAME_TIME_OUT));
+        }
+        $loginAuthorized = true;
+        $_SESSION['emp_admin_login'] = true;
+        $_SESSION['emp_admin_id'] = $adminId;
+        $_SESSION['emp_customer_email_address'] = $email_address;
+        zen_log_hmac_login(['emailAddress' => $email_address, 'message' => 'EMP Automatic Login', 'action' => 'emp_automatic_login']);
+    }
+
   $password = zen_db_prepare_input(isset($_POST['password']) ? trim($_POST['password']) : '');
-  $loginAuthorized = false;
 
   /* Privacy-policy-read does not need to be checked during "login"
   if (DISPLAY_PRIVACY_CONDITIONS == 'true') {
@@ -63,18 +76,19 @@ if (isset($_GET['action']) && $_GET['action'] == 'process') {
       $zco_notifier->notify('NOTIFY_LOGIN_BANNED');
       $messageStack->add('login', TEXT_LOGIN_BANNED);
     } else {
-
-      $dbPassword = $check_customer->fields['customers_password'];
-      // Check whether the password is good
-      if (zen_validate_password($password, $dbPassword)) {
-        $loginAuthorized = true;
-        if (password_needs_rehash($dbPassword, PASSWORD_DEFAULT)) {
-          $newPassword = zcPassword::getInstance(PHP_VERSION)->updateNotLoggedInCustomerPassword($password, $email_address);
-        }
-      } else {
-        $loginAuthorized = zen_validate_storefront_admin_login($password, $email_address);
+      if (!$loginAuthorized) {
+          $dbPassword = $check_customer->fields['customers_password'];
+          // Check whether the password is good
+          if (zen_validate_password($password, $dbPassword)) {
+              $loginAuthorized = true;
+              if (password_needs_rehash($dbPassword, PASSWORD_DEFAULT)) {
+                  $newPassword = zcPassword::getInstance(PHP_VERSION)->updateNotLoggedInCustomerPassword(
+                      $password, $email_address);
+              }
+          } else {
+              $loginAuthorized = zen_validate_storefront_admin_login($password, $email_address);
+          }
       }
-
       $zco_notifier->notify('NOTIFY_PROCESS_3RD_PARTY_LOGINS', $email_address, $password, $loginAuthorized);
 
       if (!$loginAuthorized) {
