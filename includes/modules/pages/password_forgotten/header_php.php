@@ -20,14 +20,12 @@ $_SESSION['navigation']->remove_current_page();
 
 if (isset($_GET['action']) && ($_GET['action'] == 'process')) {
 // Slam prevention:
-  if ($_SESSION['login_attempt'] > 9)
-  {
+  if (isset($_SESSION['login_attempt']) && $_SESSION['login_attempt'] > 9) {
     header('HTTP/1.1 406 Not Acceptable');
     exit(0);
   }
   // BEGIN SLAM PREVENTION
-  if (!empty($_POST['email_address']))
-  {
+  if (!empty($_POST['email_address'])) {
     if (! isset($_SESSION['login_attempt'])) $_SESSION['login_attempt'] = 0;
     $_SESSION['login_attempt'] ++;
   } // END SLAM PREVENTION
