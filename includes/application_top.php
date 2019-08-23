@@ -168,7 +168,7 @@ require('includes/psr4Autoload.php');
 /**
  * load the autoloader interpreter code.
 */
-require('includes/autoload_func.php');
+require('includes/autoload_func_old.php');
 /**
  * load the counter code
 **/
