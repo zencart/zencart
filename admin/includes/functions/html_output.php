@@ -211,7 +211,7 @@ function zen_href_link($page = '', $parameters = '', $connection = 'SSL', $add_s
     $form .= '>';
     if (strtolower($method) == 'post') $form .= '<input type="hidden" name="securityToken" value="' . $_SESSION['securityToken'] . '" />';
     if (strtolower($method) == 'get') {
-      $form .= '<input type="hidden" name="cmd" value="' . isset($_GET['cmd']) ? $_GET['cmd'] : 'home' . '">';
+      $form .= '<input type="hidden" name="cmd" value="' . (isset($_GET['cmd']) ? $_GET['cmd'] : 'home') . '">';
     }
     return $form;
   }
