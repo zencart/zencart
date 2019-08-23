@@ -24,7 +24,7 @@
 <fieldset>
 <legend><?php echo TEXT_DISCOUNT_COUPON_ID_INFO; ?></legend>
 <label class="inputLabel" for="lookup-discount-coupon"><?php echo TEXT_DISCOUNT_COUPON_ID; ?></label>
-<?php echo zen_draw_input_field('lookup_discount_coupon', $_POST['lookup_discount_coupon'], 'size="40" id="lookup-discount-coupon"');?>
+<?php echo zen_draw_input_field('lookup_discount_coupon', (isset($_POST['lookup_discount_coupon'])) ? $_POST['lookup_discount_coupon'] : '', 'size="40" id="lookup-discount-coupon"');?>
 </fieldset>
 
 <?php if ($text_coupon_help == '') { ?>
