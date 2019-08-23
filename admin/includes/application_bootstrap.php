@@ -6,6 +6,10 @@
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: DrByte 2019 May 15 Modified in v1.5.6b $
  */
+
+use Zencart\FileSystem\FileSystem;
+use Zencart\PluginManager\PluginManager;
+
 /**
  * boolean if true the autoloader scripts will be parsed and their output shown. For debugging purposes only.
  */
@@ -146,3 +150,23 @@ require DIR_FS_CATALOG . DIR_WS_CLASSES . 'vendors/AuraAutoload/src/Loader.php';
 $psr4Autoloader = new \Aura\Autoload\Loader;
 $psr4Autoloader->register();
 require('includes/psr4Autoload.php');
+
+require 'includes/init_includes/init_file_db_names.php';
+require 'includes/init_includes/init_database.php';
+
+
+$pluginManager = new PluginManager($db);
+$installedPlugins = $pluginManager->getInstalledPlugins();
+
+$fs = FileSystem::getInstance();
+$fs->loadFilesFromPluginsDirectory($installedPlugins, 'admin/includes/extra_datafiles', '~^[^\._].*\.php$~i');
+
+foreach ($installedPlugins as $plugin) {
+    $namespaceAdmin = 'Zencart\\Plugins\\Admin\\' . ucfirst($plugin['unique_key']);
+    $namespaceCatalog = 'Zencart\\Plugins\\Catalog\\' . ucfirst($plugin['unique_key']);
+    $filePath = DIR_FS_CATALOG . 'zc_plugins/' . $plugin['unique_key'] . '/' . $plugin['version'] . '/';
+    $filePathAdmin = $filePath . 'classes/admin';
+    $filePathCatalog = $filePath . 'classes/';
+    $psr4Autoloader->addPrefix($namespaceAdmin, $filePathAdmin);
+    $psr4Autoloader->addPrefix($namespaceCatalog, $filePathCatalog);
+}
