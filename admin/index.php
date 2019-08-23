@@ -7,7 +7,7 @@ require_once('includes/application_bootstrap.php');
 $cmd = isset($_GET['cmd']) ? $_GET['cmd'] : 'home';
 $cmd = ($cmd == 'index') ? 'home' : $cmd;
 
-if (file_exists(basename($cmd . '.php'))) {git
+if (file_exists(basename($cmd . '.php'))) {
     require basename($cmd . '.php');
     exit();
 }
