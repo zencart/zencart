@@ -18,6 +18,10 @@ require_once('includes/application_bootstrap.php');
 /**
  * Prepare init-system
  */
+
+use Zencart\InitSystem\InitSystem;
+use Zencart\FileSystem\FileSystem;
+
 $autoLoadConfig = array();
 if (isset($loaderPrefix)) {
  $loaderPrefix = preg_replace('/[^a-z_]/', '', $loaderPrefix);
@@ -25,9 +29,9 @@ if (isset($loaderPrefix)) {
   $loaderPrefix = 'config';
 }
 $loader_file = $loaderPrefix . '.core.php';
-require('includes/initsystem.php');
-/**
- * load the autoloader interpreter code.
- */
-  require(DIR_FS_CATALOG . 'includes/autoload_func.php');
+$initSystem = new InitSystem('admin', $loaderPrefix, FileSystem::getInstance(), $pluginManager, $installedPlugins);
+$loaderList = $initSystem->loadAutoLoaders();
+$initSystemList = $initSystem->processLoaderList($loaderList);
+
+require(DIR_FS_CATALOG . 'includes/autoload_func.php');
 
