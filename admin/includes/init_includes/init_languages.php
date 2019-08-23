@@ -6,6 +6,9 @@
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: DrByte 2019 May 26 Modified in v1.5.6b $
  */
+
+use Zencart\LanguageLoader\LanguageLoader as LanguageLoader;
+
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
 }
@@ -37,18 +40,9 @@ if (!defined('IS_ADMIN_FLAG')) {
   $template_dir = $template_query->fields['template_dir'];
 
 // include the language translations
-  $current_page = isset($_GET['cmd']) ? basename($_GET['cmd'] . '.php') : 'index.php';
-  $current_page = ($current_page == 'home.php') ? 'index.php' : $current_page;
-  if (is_file(DIR_WS_LANGUAGES . $_SESSION['language'] . '/' . $current_page)) {
-    include(DIR_WS_LANGUAGES . $_SESSION['language'] . '/' . $current_page);
-  }
 
-  if ($za_dir = @dir(DIR_WS_LANGUAGES . $_SESSION['language'] . '/extra_definitions')) {
-    while ($zv_file = $za_dir->read()) {
-      if (preg_match('~^[^\._].*\.php$~i', $zv_file) > 0) {
-        require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/extra_definitions/' . $zv_file);
-      }
-    }
-    $za_dir->close();
-  }
-  require(DIR_WS_LANGUAGES . $_SESSION['language'] . '.php');
+$currentLangPage = isset($_GET['cmd']) ? $_GET['cmd'] : 'index';
+$currentLangPage = ($currentLangPage == 'home') ? 'index' : $currentLangPage;
+$languageLoader = new LanguageLoader($installedPlugins, $currentLangPage . '.php');
+
+$languageLoader->loadlanguageDefines();
