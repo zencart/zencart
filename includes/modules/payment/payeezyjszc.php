@@ -293,7 +293,6 @@ class payeezyjszc extends base
         $process_button_string .= zen_draw_hidden_field('cc_owner', zen_output_string_protected($_POST[$this->code . '_cc_owner']));
         $process_button_string .= zen_draw_hidden_field('cc_type', zen_output_string_protected($_POST[$this->code . '_cc_type']));
         $process_button_string .= zen_draw_hidden_field('cc_number', zen_output_string_protected($_POST[$this->code . '_cc_number']));
-        $process_button_string .= zen_draw_hidden_field('cc_cvv', preg_replace('/[^0-9]/', '', $_POST[$this->code . '_cc_cvv']));
         $process_button_string .= zen_draw_hidden_field('cc_expires', preg_replace('/[^0-9]/', '', $_POST[$this->code . '_cc_expires_month']) . (int)$_POST[$this->code . '_cc_expires_year']);
 
         return $process_button_string;
