@@ -1420,8 +1420,8 @@ CREATE TABLE plugin_control (
   name varchar(64) NOT NULL default '',
   description text,
   type varchar(11) NOT NULL default 'free',
-  managed tinyint(1) NOT NULL default '0',
-  status tinyint(1) NOT NULL default '0',
+  managed tinyint(1) NOT NULL default 0,
+  status tinyint(1) NOT NULL default 0,
   author varchar(40) NOT NULL,
   version varchar(10),
   zc_versions text NOT NULL,
@@ -1464,7 +1464,7 @@ CREATE TABLE plugin_groups (
 DROP TABLE IF EXISTS plugin_groups_description;
 CREATE TABLE plugin_groups_description (
   plugin_group_unique_key varchar(20) NOT NULL,
-  language_id int(11) NOT NULL default '1',
+  language_id int(11) NOT NULL default 1,
   name varchar(64) NOT NULL default '',
   PRIMARY KEY  (plugin_group_unique_key,language_id)
 ) ENGINE=MyISAM;
