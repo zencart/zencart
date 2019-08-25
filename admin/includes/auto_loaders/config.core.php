@@ -90,10 +90,10 @@ if (!defined('USE_PCONNECT')) define('USE_PCONNECT', 'false');
  * require('includes/init_includes/init_database.php');
  *
  */
-  $autoLoadConfig[10][] = array('autoType'=>'init_script',
-                                'loadFile'=> 'init_file_db_names.php');
-  $autoLoadConfig[10][] = array('autoType'=>'init_script',
-                                'loadFile'=>'init_database.php');
+//  $autoLoadConfig[10][] = array('autoType'=>'init_script',
+//                                'loadFile'=> 'init_file_db_names.php');
+//  $autoLoadConfig[10][] = array('autoType'=>'init_script',
+//                                'loadFile'=>'init_database.php');
 /**
  * Breakpoint 20.
  *

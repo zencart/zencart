@@ -1411,6 +1411,67 @@ CREATE TABLE paypal_testing (
 # --------------------------------------------------------
 
 #
+# Table structure for table 'plugin_control'
+#
+
+DROP TABLE IF EXISTS plugin_control;
+CREATE TABLE plugin_control (
+  unique_key varchar(20) NOT NULL,
+  name varchar(64) NOT NULL default '',
+  description text,
+  type varchar(11) NOT NULL default 'free',
+  managed tinyint(1) NOT NULL default 0,
+  status tinyint(1) NOT NULL default 0,
+  author varchar(40) NOT NULL,
+  version varchar(10),
+  zc_versions text NOT NULL,
+  PRIMARY KEY  (unique_key)
+) ENGINE=MyISAM;
+
+# --------------------------------------------------------
+
+#
+# Table structure for table 'plugin_control_versions'
+#
+
+DROP TABLE IF EXISTS plugin_control_versions;
+CREATE TABLE plugin_control_versions (
+  unique_key varchar(20) NOT NULL,
+  version varchar(10),
+  author varchar(40) NOT NULL,
+  zc_versions text NOT NULL,
+  PRIMARY KEY  (unique_key, version)
+) ENGINE=MyISAM;
+
+# --------------------------------------------------------
+
+#
+# Table structure for table 'plugin_groups'
+#
+
+DROP TABLE IF EXISTS plugin_groups;
+CREATE TABLE plugin_groups (
+  unique_key varchar(20) NOT NULL,
+  PRIMARY KEY  (unique_key)
+) ENGINE=MyISAM;
+
+# --------------------------------------------------------
+
+#
+# Table structure for table 'plugin_groups_description'
+#
+
+DROP TABLE IF EXISTS plugin_groups_description;
+CREATE TABLE plugin_groups_description (
+  plugin_group_unique_key varchar(20) NOT NULL,
+  language_id int(11) NOT NULL default 1,
+  name varchar(64) NOT NULL default '',
+  PRIMARY KEY  (plugin_group_unique_key,language_id)
+) ENGINE=MyISAM;
+
+# --------------------------------------------------------
+
+#
 # Table structure for table 'product_music_extra'
 #
 
