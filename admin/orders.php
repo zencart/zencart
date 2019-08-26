@@ -1080,7 +1080,7 @@ if (zen_not_null($action) && $order_exists == true) {
                     $search_distinct = ' distinct ';
                     $new_table = " left join " . TABLE_ORDERS_PRODUCTS . " op on (op.orders_id = o.orders_id) ";
                     $keywords = zen_db_input(zen_db_prepare_input($_GET['search_orders_products']));
-                    $search = " and (op.products_model like '%" . $keywords . "%' or op.products_name like '" . $keywords . "%')";
+                    $search = " and (op.products_model like '%" . $keywords . "%' or op.products_name like '%" . $keywords . "%')";
                     if (substr(strtoupper($_GET['search_orders_products']), 0, 3) == 'ID:') {
                       $keywords = TRIM(substr($_GET['search_orders_products'], 3));
                       $search = " and op.products_id ='" . (int)$keywords . "'";
