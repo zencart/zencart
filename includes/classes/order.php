@@ -333,35 +333,24 @@ class order extends base {
           $tax_address_query = '';
           switch (STORE_PRODUCT_TAX_BASIS) {
               case 'Shipping':
-                  $tax_address_query = "select ab.entry_country_id, ab.entry_zone_id
-                                from " . TABLE_ADDRESS_BOOK . " ab
-                                left join " . TABLE_ZONES . " z on (ab.entry_zone_id = z.zone_id)
-                                where ab.customers_id = " . (int)$_SESSION['customer_id'] . "
-                                and ab.address_book_id = " . ($this->content_type == 'virtual' ? $billto : $sendto);
+                  $address_book_id = ($this->content_type == 'virtual' ? (int)$_SESSION['billto'] : (int)$_SESSION['sendto']);
                   break;
               case 'Billing':
-                  $tax_address_query = "select ab.entry_country_id, ab.entry_zone_id
-                                from " . TABLE_ADDRESS_BOOK . " ab
-                                left join " . TABLE_ZONES . " z on (ab.entry_zone_id = z.zone_id)
-                                where ab.customers_id = " . (int)$_SESSION['customer_id'] . "
-                                and ab.address_book_id = " . (int)$_SESSION['billto'];
+                  $address_book_id = (int)$_SESSION['billto'];
                   break;
               case 'Store':
                   if ($billing_address->fields['entry_zone_id'] == STORE_ZONE) {
-
-                      $tax_address_query = "select ab.entry_country_id, ab.entry_zone_id
-                                  from " . TABLE_ADDRESS_BOOK . " ab
-                                  left join " . TABLE_ZONES . " z on (ab.entry_zone_id = z.zone_id)
-                                  where ab.customers_id = " . (int)$_SESSION['customer_id'] . "
-                                  and ab.address_book_id = " . (int)$_SESSION['billto'];
+                      $address_book_id = (int)$_SESSION['billto'];
                   } else {
-                      $tax_address_query = "select ab.entry_country_id, ab.entry_zone_id
-                                  from " . TABLE_ADDRESS_BOOK . " ab
-                                  left join " . TABLE_ZONES . " z on (ab.entry_zone_id = z.zone_id)
-                                  where ab.customers_id = " . (int)$_SESSION['customer_id'] . "
-                                  and ab.address_book_id = " . ($this->content_type == 'virtual' ? $billto : $sendto); 
+                      $address_book_id = ($this->content_type == 'virtual' ? (int)$_SESSION['billto'] : (int)$_SESSION['sendto']);
                   }
           }
+          $tax_address_query = "SELECT ab.entry_country_id, ab.entry_zone_id
+                                FROM " . TABLE_ADDRESS_BOOK . " ab
+                                LEFT JOIN " . TABLE_ZONES . " z on (ab.entry_zone_id = z.zone_id)
+                                WHERE ab.customers_id = " . (int)$_SESSION['customer_id'] . "
+                                AND ab.address_book_id = ". $address_book_id;
+
           if ($tax_address_query != '') {
               $tax_address = $db->Execute($tax_address_query);
               if ($tax_address->RecordCount() > 0) {
