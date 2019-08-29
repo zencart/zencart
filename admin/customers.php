@@ -55,8 +55,13 @@ if (zen_not_null($action)) {
     case 'status':
       if (isset($_POST['current']) && is_numeric($_POST['current'])) {
         if ($_POST['current'] == CUSTOMERS_APPROVAL_AUTHORIZATION) {
+          if (CUSTOMERS_APPROVAL_AUTHORIZATION == 1 || CUSTOMERS_APPROVAL_AUTHORIZATION == 2) { 
+            $customers_authorization = 0; 
+          } else {
+            $customers_authorization = 4; 
+          }
           $sql = "UPDATE " . TABLE_CUSTOMERS . "
-                  SET customers_authorization = 0
+                  SET customers_authorization = " . $customers_authorization  . "  
                   WHERE customers_id = " . (int)$customers_id;
           $custinfo = $db->Execute("SELECT customers_email_address, customers_firstname, customers_lastname
                                     FROM " . TABLE_CUSTOMERS . "
@@ -1317,11 +1322,7 @@ if (zen_not_null($action)) {
                   <td class="dataTableContent text-right"><?php echo $currencies->format($customer['amount']); ?></td>
                 <?php } ?>
                 <td class="dataTableContent text-center">
-                    <?php if ($customer['customers_authorization'] == 4) { ?>
-                      <?php echo zen_image(DIR_WS_IMAGES . 'icon_red_off.gif', IMAGE_ICON_STATUS_OFF); ?>
-                      <?php
-                    } else {
-                      echo zen_draw_form('setstatus_' . (int)$customer['customers_id'], FILENAME_CUSTOMERS, 'action=status&cID=' . $customer['customers_id'] . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '') . (isset($_GET['search']) ? '&search=' . $_GET['search'] : ''));
+                      <?php echo zen_draw_form('setstatus_' . (int)$customer['customers_id'], FILENAME_CUSTOMERS, 'action=status&cID=' . $customer['customers_id'] . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '') . (isset($_GET['search']) ? '&search=' . $_GET['search'] : ''));
                       ?>
                       <?php if ($customer['customers_authorization'] == 0) { ?>
                       <input type="image" src="<?php echo DIR_WS_IMAGES ?>icon_green_on.gif" title="<?php echo IMAGE_ICON_STATUS_ON; ?>" />
@@ -1330,7 +1331,6 @@ if (zen_not_null($action)) {
                     <?php } ?>
                     <?php echo zen_draw_hidden_field('current', $customer['customers_authorization']); ?>
                     <?php echo '</form>'; ?>
-                  <?php } ?>
                 </td>
                 <td class="dataTableContent text-right"><?php
                     if (isset($cInfo) && is_object($cInfo) && ($customer['customers_id'] == $cInfo->customers_id)) {
