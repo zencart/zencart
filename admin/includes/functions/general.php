@@ -1237,7 +1237,6 @@ while (!$chk_sale_categories_all->EOF) {
       $chk_sale_categories_all->MoveNext();
 }
 
-//die('DONE TESTING');
 
     $category_image = $db->Execute("select categories_image
                                     from " . TABLE_CATEGORIES . "
@@ -2048,7 +2047,6 @@ function zen_copy_products_attributes($products_id_from, $products_id_to) {
     $check_attributes = zen_has_product_attributes($products_id_to, 'false');
 
     if ($copy_attributes_delete_first=='1' and $check_attributes == true) {
-// die('DELETE FIRST - Copying from ' . $products_id_from . ' to ' . $products_id_to . ' Do I delete first? ' . $copy_attributes_delete_first);
       // delete all attributes first from products_id_to
       zen_products_attributes_download_delete($products_id_to);
       $db->Execute("delete from " . TABLE_PRODUCTS_ATTRIBUTES . " where products_id = '" . (int)$products_id_to . "'");
@@ -2080,8 +2078,6 @@ function zen_copy_products_attributes($products_id_from, $products_id_to) {
         $update_attribute = false;
         $add_attribute = true;
       }
-
-// die('UPDATE/IGNORE - Checking Copying from ' . $products_id_from . ' to ' . $products_id_to . ' Do I delete first? ' . ($copy_attributes_delete_first == '1' ? TEXT_YES : TEXT_NO) . ' Do I add? ' . ($add_attribute == true ? TEXT_YES : TEXT_NO) . ' Do I Update? ' . ($update_attribute == true ? TEXT_YES : TEXT_NO) . ' Do I skip it? ' . ($copy_attributes_duplicates_skipped=='1' ? TEXT_YES : TEXT_NO) . ' Found attributes in From: ' . $check_duplicate->RecordCount());
 
       if ($copy_attributes_duplicates_skipped == '1' and $check_duplicate->RecordCount() != 0) {
         // skip it

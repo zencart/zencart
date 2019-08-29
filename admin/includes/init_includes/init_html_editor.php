@@ -77,5 +77,4 @@ if (false) {
   echo '<br />editor_handler = ' . $editor_handler;
   echo '<br /><pre>'; print_r($editors_list); echo '</pre>';
   echo '<br /><pre>'; print_r($editors_pulldown); echo '</pre>';
-  //die('debug end');
 }

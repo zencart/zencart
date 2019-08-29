@@ -219,8 +219,6 @@ if (zen_not_null($action)) {
       $master_categories_id_stop= array();
       foreach ($products_to_categories_from_linked as $item) {
         if ($item['master_categories_id'] == $remove_to_linked) {//check if a linked product in the target category has the same master category: do not unlink
-          //die('THIS IS THE MASTER CATEGORIES ID!! ' . $remove_to_linked . '<br>');
-          //break;
           $master_categories_id_stop[] = array('products_id' => $item['products_id'],
             'master_categories_id' => $item['master_categories_id']);
         }
@@ -238,8 +236,6 @@ if (zen_not_null($action)) {
         $stop_warning_message = WARNING_MASTER_CATEGORIES_ID_CONFLICT . ' ' . TEXT_MASTER_CATEGORIES_ID_CONFLICT_FROM . $remove_from_linked . TEXT_MASTER_CATEGORIES_ID_CONFLICT_TO . $remove_to_linked . '<br />' . TEXT_INFO_MASTER_CATEGORIES_ID_PURPOSE . WARNING_MASTER_CATEGORIES_ID_CONFLICT_FIX . '<br /><br />' . TEXT_INFO_MASTER_CATEGORIES_ID_CONFLICT . $remove_to_linked . '<br />' . $stop_warning . '<br />';
         $messageStack->add_session($stop_warning_message, 'warning');
         zen_redirect(zen_href_link(FILENAME_PRODUCTS_TO_CATEGORIES, 'products_filter=' . $master_categories_id_stop[0]['products_id'] . '&current_category_id=' . $current_category_id));
-//          die('THIS IS THE MASTER CATEGORIES ID!! ' . $remove_to_linked . ' - stop: ' . sizeof($master_categories_id_stop) . '<br>');
-      }
 
       // get products already in category to be removed as linked to
       $products_to_categories_to_linked = $db->Execute("SELECT products_id
