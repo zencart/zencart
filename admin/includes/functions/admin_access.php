@@ -820,34 +820,35 @@ function zen_insert_pages_into_profile($id, $pages)
 
 function zen_get_admin_menu_for_user()
 {
-  global $db;
-  if (zen_is_superuser())
-  {
-    // get all registered admin pages that should appear in the menu
-    $retVal = zen_get_admin_pages(TRUE);
-  } else
-  {
-    // get only those registered pages allowed by the current user's profile
-    $retVal = array();
-    $sql = "SELECT ap.menu_key, ap.page_key, ap.main_page, ap.page_params, ap.language_key as pageName
-            FROM " . TABLE_ADMIN . " a
-            LEFT JOIN " . TABLE_ADMIN_PAGES_TO_PROFILES . " ap2p ON ap2p.profile_id = a.admin_profile
-            LEFT JOIN " . TABLE_ADMIN_PAGES . " ap ON ap.page_key = ap2p.page_key
-            LEFT JOIN " . TABLE_ADMIN_MENUS . " am ON am.menu_key = ap.menu_key
-            WHERE a.admin_id = :user:
-            AND   ap.display_on_menu = 'Y'
-            ORDER BY am.sort_order, ap.sort_order";
-    $sql = $db->bindVars($sql, ':user:', $_SESSION['admin_id'], 'integer');
-    $result = $db->Execute($sql);
-    while (!$result->EOF)
-    {
-      $retVal[$result->fields['menu_key']][$result->fields['page_key']] = array('name' => constant($result->fields['pageName']),
-                                                                                'file' => constant($result->fields['main_page']),
-                                                                                'params' => $result->fields['page_params']);
-      $result->MoveNext();
+    global $db;
+    if (zen_is_superuser()) {
+        // get all registered admin pages that should appear in the menu
+        $retVal = zen_get_admin_pages(true);
+    } else {
+        // get only those registered pages allowed by the current user's profile
+        $retVal = array();
+        $sql = "SELECT ap.menu_key, ap.page_key, ap.main_page, ap.page_params, ap.language_key as pageName
+                FROM " . TABLE_ADMIN . " a
+                LEFT JOIN " . TABLE_ADMIN_PAGES_TO_PROFILES . " ap2p ON ap2p.profile_id = a.admin_profile
+                LEFT JOIN " . TABLE_ADMIN_PAGES . " ap ON ap.page_key = ap2p.page_key
+                LEFT JOIN " . TABLE_ADMIN_MENUS . " am ON am.menu_key = ap.menu_key
+                WHERE a.admin_id = :user:
+                AND   ap.display_on_menu = 'Y'
+                ORDER BY am.sort_order, ap.sort_order";
+        $sql = $db->bindVars($sql, ':user:', $_SESSION['admin_id'], 'integer');
+        $result = $db->Execute($sql);
+        while (!$result->EOF) {
+            if (defined($result->fields['pageName']) && defined($result->fields['main_page'])) {
+                $retVal[$result->fields['menu_key']][$result->fields['page_key']] = array(
+                    'name' => constant($result->fields['pageName']),
+                    'file' => constant($result->fields['main_page']),
+                    'params' => $result->fields['page_params']
+                );
+            }
+            $result->MoveNext();
+        }
     }
-  }
-  return $retVal;
+    return $retVal;
 }
 
 function zen_get_menu_titles()
