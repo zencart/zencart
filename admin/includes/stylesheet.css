@@ -3,7 +3,7 @@
  * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Zen4All 2019 Mar 31 Modified in v1.5.6b $
+ * @version $Id: torvista 2019 Aug 8 Modified in v1.5.7 $
  */
 
 @import url("css/bootstrap.min.css");
@@ -691,6 +691,9 @@ img[src*="button_cancel"], img[src*="button_reset"]{
   text-shadow: 0 0 4px rgba(0,0,0,0.5)
 }
 
+.tt {
+    font-family: "Lucida Console", "Menlo", "Monaco", "Courier", monospace;
+}
 /* bof Footer */
 footer, #footer {
     text-align: center;

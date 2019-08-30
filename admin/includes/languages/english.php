@@ -4,7 +4,7 @@
  * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Scott C Wilson 2019 Jan 21 Modified in v1.5.6b $
+ * @version $Id: torvista 2019 Aug 08 Modified in v1.5.7 $
  */
 if (!defined('IS_ADMIN_FLAG'))
 {
@@ -212,7 +212,7 @@ define('BOX_LOCALIZATION_ORDERS_STATUS', 'Orders Status');
 // gift vouchers box text
 define('BOX_HEADING_GV_ADMIN', 'Discounts');
 define('BOX_GV_ADMIN_QUEUE',  TEXT_GV_NAMES . ' Queue');
-define('BOX_GV_ADMIN_MAIL', 'Mail ' . TEXT_GV_NAME);
+define('BOX_GV_ADMIN_MAIL', 'Send a ' . TEXT_GV_NAME);
 define('BOX_GV_ADMIN_SENT', TEXT_GV_NAMES . ' sent');
 define('BOX_COUPON_ADMIN','Coupon Admin');
 define('BOX_COUPON_RESTRICT','Coupon Restrictions');
@@ -458,6 +458,7 @@ define('ERROR_NO_DEFAULT_CURRENCY_DEFINED', 'Error: There is currently no defaul
 define('TEXT_NONE', '--none--');
 define('TEXT_TOP', 'Top');
 define('PLEASE_SELECT', 'Please select ...');
+define('TEXT_CUSTOMER','Customer');
 
 define('ERROR_DESTINATION_DOES_NOT_EXIST', 'Error: Destination does not exist %s');
 define('ERROR_DESTINATION_NOT_WRITEABLE', 'Error: Destination not writeable %s');
@@ -666,8 +667,9 @@ define('ENTRY_EMAIL_TEXT_DISPLAY','TEXT-Only');
 define('ENTRY_EMAIL_NONE_DISPLAY','Never');
 define('ENTRY_EMAIL_OPTOUT_DISPLAY','Opted Out of Newsletters');
 define('ENTRY_NOTHING_TO_SEND','You haven\'t entered any content for your message');
- define('EMAIL_SEND_FAILED','ERROR: Failed sending email to: "%s" <%s> with subject: "%s"');
-
+define('EMAIL_SEND_FAILED','ERROR: Failed sending email to: "%s" <%s> with subject: "%s"');
+define('EMAIL_SALUTATION', 'Dear');
+  
   define('EDITOR_NONE', 'Plain Text');
   define('TEXT_EDITOR_INFO', 'Text Editor');
   define('ERROR_EDITORS_FOLDER_NOT_FOUND', 'You have an HTML editor selected in \'My Store\' but the \'/editors/\' folder cannot be located. Please disable your selection or move your editor files into the \''.DIR_WS_CATALOG.'editors/\' folder');
