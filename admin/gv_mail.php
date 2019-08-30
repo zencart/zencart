@@ -102,7 +102,7 @@ if ($action != '') {
                 $message .= TEXT_WHICH_IS . $id1 . TEXT_IN_CASE . "\n\n";
 
                 $html_msg['GV_WORTH'] = TEXT_GV_WORTH;
-                $html_msg['GV_AMOUNT'] = $currencies->format($_POST['amount']);
+                $html_msg['GV_AMOUNT'] = $currencies->format($_POST['amount']) . '.';
                 $html_msg['GV_REDEEM'] = TEXT_TO_REDEEM . TEXT_WHICH_IS . '<strong>' . $id1 . '</strong>' . TEXT_IN_CASE;
 
                 if (SEARCH_ENGINE_FRIENDLY_URLS == 'true') {
