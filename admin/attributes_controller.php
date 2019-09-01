@@ -409,7 +409,12 @@ if (zen_not_null($action)) {
             $products_attributes_maxdays = (int)zen_db_prepare_input($_POST['products_attributes_maxdays']);
             $products_attributes_maxcount = (int)zen_db_prepare_input($_POST['products_attributes_maxcount']);
 
-//die( 'I am adding ' . strlen($_POST['products_attributes_filename']) . ' vs ' . strlen(trim($_POST['products_attributes_filename'])) . ' vs ' . strlen(zen_db_prepare_input($_POST['products_attributes_filename'])) . ' vs ' . strlen(zen_db_input($products_attributes_filename)) );
+            // check to see if it's a file missing a name 
+            if ( $options_id === 1) { 
+              if (!zen_not_null($products_attributes_filename)) {
+                $products_attributes_filename = 'missing_file'; 
+              }
+            }
             if (zen_not_null($products_attributes_filename)) {
               $db->Execute("INSERT INTO " . TABLE_PRODUCTS_ATTRIBUTES_DOWNLOAD . " (products_attributes_id, products_attributes_filename, products_attributes_maxdays, products_attributes_maxcount)
                             VALUES (" . (int)$products_attributes_id . ",
