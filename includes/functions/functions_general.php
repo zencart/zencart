@@ -561,7 +561,7 @@
  */
   function zen_get_uprid($prid, $params) {
     $uprid = $prid;
-    if ( !is_array($params) || strstr($prid, ':')) return $prid;
+    if ( !is_array($params) || empty($params) || strstr($prid, ':')) return $prid;
 
     foreach($params as $option => $value) {
       if (is_array($value)) {
