@@ -411,7 +411,7 @@ if (zen_not_null($action)) {
 
             // check to see if it's a file missing a name 
             if ( $options_id === 1) { 
-              if (!zen_not_null($products_attributes_filename)) {
+              if (!zen_not_null($products_attributes_filename)) {
                 $products_attributes_filename = 'missing_file'; 
               }
             }
