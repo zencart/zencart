@@ -1920,11 +1920,13 @@ if (false) { // disabled until clarification is received about coupons in PayPal
     $original_default_address_id = $_SESSION['customer_default_address_id'];
 
     // Get the customer's country ID based on name or ISO code
-    $sql = "SELECT countries_id, address_format_id, countries_iso_code_2, countries_iso_code_3
-                FROM " . TABLE_COUNTRIES . "
-                WHERE countries_iso_code_2 = :countryId
-                   OR countries_name = :countryId
-                LIMIT 1";
+    $sql = "SELECT c.countries_id, c.address_format_id, c.countries_iso_code_2, c.countries_iso_code_3
+            FROM " . TABLE_COUNTRIES . " c
+            LEFT JOIN " . TABLE_COUNTRIES_NAME . " cn ON cn.countries_id = c.countries_id
+              AND cn.language_id = " . (int)$_SESSION['languages_id'] . "
+            WHERE c.countries_iso_code_2 = :countryId
+            OR cn.countries_name = :countryId
+            LIMIT 1";
     $sql1 = $db->bindVars($sql, ':countryId', $paypal_ec_payer_info['ship_country_name'], 'string');
     $country1 = $db->Execute($sql1);
     $sql2 = $db->bindVars($sql, ':countryId', $paypal_ec_payer_info['ship_country_code'], 'string');
@@ -2411,13 +2413,15 @@ if (false) { // disabled until clarification is received about coupons in PayPal
 
     // first get the zone id's from the 2 digit iso codes
     // country first
-    $sql = "SELECT countries_id, address_format_id
-                FROM " . TABLE_COUNTRIES . "
-                WHERE countries_iso_code_2 = :countryCode:
-                OR countries_name = :countryName:
-                OR countries_iso_code_2 = :countryName:
-                OR countries_name = :countryCode:
-                LIMIT 1";
+    $sql = "SELECT c.countries_id, c.address_format_id
+            FROM " . TABLE_COUNTRIES . " c
+            LEFT JOIN " . TABLE_COUNTRIES_NAME . " cn ON cn.countries_id = c.countries_id
+              AND cn.language_id = " . (int)$_SESSION['languages_id'] . "
+            WHERE c.countries_iso_code_2 = :countryCode:
+            OR cn.countries_name = :countryName:
+            OR c.countries_iso_code_2 = :countryName:
+            OR cn.countries_name = :countryCode:
+            LIMIT 1";
     $sql = $db->bindVars($sql, ':countryCode:', $address_question_arr['country']['iso_code_2'], 'string');
     $sql = $db->bindVars($sql, ':countryName:', $address_question_arr['country']['title'], 'string');
     $country = $db->Execute($sql);
@@ -2567,13 +2571,15 @@ if (false) { // disabled until clarification is received about coupons in PayPal
 
     // first get the zone id's from the 2 digit iso codes
     // country first
-    $sql = "SELECT countries_id, address_format_id
-                FROM " . TABLE_COUNTRIES . "
-                WHERE countries_iso_code_2 = :countryCode:
-                OR countries_name = :countryName:
-                OR countries_iso_code_2 = :countryName:
-                OR countries_name = :countryCode:
-                LIMIT 1";
+    $sql = "SELECT c.countries_id, c.address_format_id
+            FROM " . TABLE_COUNTRIES . " c
+            LEFT JOIN " . TABLE_COUNTRIES_NAME . " cn ON cn.countries_id = c.countries_id
+              AND cn.language_id = " . (int)$_SESSION['languages_id'] . "
+            WHERE c.countries_iso_code_2 = :countryCode:
+            OR cn.countries_name = :countryName:
+            OR c.countries_iso_code_2 = :countryName:
+            OR cn.countries_name = :countryCode:
+            LIMIT 1";
     $sql = $db->bindVars($sql, ':countryCode:', $address_question_arr['country']['iso_code_2'], 'string');
     $sql = $db->bindVars($sql, ':countryName:', $address_question_arr['country']['title'], 'string');
     $country = $db->Execute($sql);

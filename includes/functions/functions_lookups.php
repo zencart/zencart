@@ -21,11 +21,13 @@
     $countries_array = array();
     if (zen_not_null($countries_id)) {
       $countries_array['countries_name'] = '';
-      $countries = "select countries_name, countries_iso_code_2, countries_iso_code_3
-                    from " . TABLE_COUNTRIES . "
-                    where countries_id = '" . (int)$countries_id . "'";
-      if ($activeOnly) $countries .= " and status != 0 ";
-      $countries .= " order by countries_name";
+      $countries = "SELECT cn.countries_name, c.countries_iso_code_2, c.countries_iso_code_3
+                    FROM " . TABLE_COUNTRIES . " c
+                    LEFT JOIN " . TABLE_COUNTRIES_NAME . " cn ON cn.countries_id = c.countries_id
+                      AND cn.language_id = " . (int)$_SESSION['languages_id'] ."
+                    WHERE c.countries_id = " . (int)$countries_id;
+      if ($activeOnly) $countries .= " AND c.status != 0 ";
+      $countries .= " ORDER BY cn.countries_name";
       $countries_values = $db->Execute($countries);
 
       if ($with_iso_codes == true) {
@@ -40,10 +42,14 @@
         if (!$countries_values->EOF) $countries_array = array('countries_name' => $countries_values->fields['countries_name']);
       }
     } else {
-      $countries = "select countries_id, countries_name
-                    from " . TABLE_COUNTRIES . " ";
-      if ($activeOnly) $countries .= " where status != 0 ";
-      $countries .= " order by countries_name";
+      $countries = "SELECT c.countries_id, cn.countries_name
+                    FROM " . TABLE_COUNTRIES . " c
+                    LEFT JOIN " . TABLE_COUNTRIES_NAME . " cn ON cn.countries_id = c.countries_id
+                      AND cn.language_id = " . (int)$_SESSION['languages_id'];
+      if ($activeOnly) {
+        $countries .= " WHERE c.status != 0 ";
+      }
+      $countries .= " ORDER BY cn.countries_name";
       $countries_values = $db->Execute($countries);
       while (!$countries_values->EOF) {
         $countries_array[] = array('countries_id' => $countries_values->fields['countries_id'],

@@ -191,12 +191,13 @@ if (zen_not_null($action)) {
               </thead>
               <tbody>
                   <?php
-                  $zones_query_raw = "select a.association_id, a.zone_country_id, c.countries_name, a.zone_id, a.geo_zone_id, a.last_modified, a.date_added, z.zone_name
-                                      from (" . TABLE_ZONES_TO_GEO_ZONES . " a
-                                        left join " . TABLE_COUNTRIES . " c on a.zone_country_id = c.countries_id
-                                        left join " . TABLE_ZONES . " z on a.zone_id = z.zone_id)
-                                      where a.geo_zone_id = " . (int)$_GET['zID'] . "
-                                      order by c.countries_name, association_id";
+                  $zones_query_raw = "SELECT a.association_id, a.zone_country_id, cn.countries_name, a.zone_id, a.geo_zone_id, a.last_modified, a.date_added, z.zone_name
+                                      FROM (" . TABLE_ZONES_TO_GEO_ZONES . " a
+                                      LEFT JOIN " . TABLE_COUNTRIES_NAME . " cn ON cn.countries_id = a.zone_country_id
+                                        AND cn.language_id = " . (int)$_SESSION['languages_id'] . "
+                                      LEFT JOIN " . TABLE_ZONES . " z ON a.zone_id = z.zone_id)
+                                      WHERE a.geo_zone_id = " . (int)$_GET['zID'] . "
+                                      ORDER BY cn.countries_name, association_id";
 // Split Page
 // reset page when page is unknown
                   if ((!isset($_GET['spage']) or $_GET['spage'] == '' or $_GET['spage'] == '1') && !empty($_GET['sID'])) {
