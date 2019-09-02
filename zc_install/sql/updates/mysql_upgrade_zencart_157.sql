@@ -224,6 +224,21 @@ CREATE TABLE plugin_groups_description (
   PRIMARY KEY  (plugin_group_unique_key,language_id)
 ) ENGINE=MyISAM;
 
+CREATE TABLE countries_name (
+  countries_id int(11) NOT NULL,
+  language_id int(11) NOT NULL DEFAULT 1,
+  countries_name varchar(64) NOT NULL,
+  UNIQUE countries (countries_id, language_id),
+  KEY idx_countries_name_zen (countries_name)
+) ENGINE=MyISAM;
+
+INSERT INTO countries_name (countries_id, language_id, countries_name)
+SELECT c.countries_id, l.languages_id, c.countries_name
+FROM countries c
+LEFT JOIN languages l
+ON 1;
+ALTER TABLE countries DROP countries_name;
+
 #############
 
 #### VERSION UPDATE STATEMENTS
