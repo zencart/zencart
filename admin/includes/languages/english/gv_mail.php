@@ -1,4 +1,4 @@
-<?php //steve
+<?php
 /**
  * @package admin
  * @copyright Copyright 2003-2019 Zen Cart Development Team
