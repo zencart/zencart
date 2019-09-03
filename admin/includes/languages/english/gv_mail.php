@@ -34,8 +34,8 @@ define('ERROR_NO_AMOUNT_ENTERED', 'Error: Certificate Value invalid.');
 define('ERROR_NO_SUBJECT', 'Error: no Email Subject entered.');
 
 define('TEXT_GV_ANNOUNCE', 'We\'re pleased to offer you a ' . TEXT_GV_NAME . ' for %s.');
-define('TEXT_GV_TO_REDEEM_TEXT', 'Use the following link to redeem the ' . TEXT_GV_NAME . "\n\n%s%s\n\n" . 'or visit ' . STORE_NAME . " at " . HTTP_CATALOG_SERVER . DIR_WS_CATALOG . "\n" . 'and enter the code on the Checkout-Payment page.');
-define('TEXT_GV_TO_REDEEM_HTML', '<a href="%s%s">Click here to redeem the ' . TEXT_GV_NAME . '</a> or visit <a href="' . HTTP_CATALOG_SERVER . DIR_WS_CATALOG . '">' . STORE_NAME . '</a> and enter the code on the Checkout-Payment page.');
+define('TEXT_GV_TO_REDEEM_TEXT', 'Use the following link to redeem the ' . TEXT_GV_NAME . "\n\n ". '%1$s%2$s' . "\n\n" . 'or visit ' . STORE_NAME . " at " . HTTP_CATALOG_SERVER . DIR_WS_CATALOG . "\n" . 'and enter the code %2$s on the Checkout-Payment page.');
+define('TEXT_GV_TO_REDEEM_HTML', '<a href="%1$s%2$s">Click here to redeem the ' . TEXT_GV_NAME . '</a> or visit <a href="' . HTTP_CATALOG_SERVER . DIR_WS_CATALOG . '">' . STORE_NAME . '</a> and enter the code <strong>%2$s</strong> on the Checkout-Payment page.');
 
 define ('TEXT_REDEEM_COUPON_MESSAGE_HEADER', 'You recently purchased a  ' . TEXT_GV_NAME . ' from our site, for security reasons, the amount of the  ' . TEXT_GV_NAME . ' was not immediately credited to you. The shop owner has now released this amount.');
 define ('TEXT_REDEEM_COUPON_MESSAGE_AMOUNT', "\n\n" . 'The value of the  ' . TEXT_GV_NAME . ' was %s');
