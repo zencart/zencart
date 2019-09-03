@@ -1,4 +1,4 @@
-<?php
+<?php //steve
 /**
  * @package admin
  * @copyright Copyright 2003-2019 Zen Cart Development Team
@@ -97,24 +97,18 @@ if ($action != '') {
                 $message .= zen_db_prepare_input($_POST['message']);//steve
                 $html_msg['EMAIL_MESSAGE_HTML'] = zen_db_prepare_input($_POST['message_html']);
 
-                $message .= "\n\n" . TEXT_GV_WORTH . $currencies->format($_POST['amount']) . ".\n\n";
-                $message .= TEXT_TO_REDEEM;
-                $message .= TEXT_WHICH_IS . $id1 . TEXT_IN_CASE . "\n\n";
-
-                $html_msg['GV_WORTH'] = TEXT_GV_WORTH;
-                $html_msg['GV_AMOUNT'] = $currencies->format($_POST['amount']) . '.';
-                $html_msg['GV_REDEEM'] = TEXT_TO_REDEEM . TEXT_WHICH_IS . '<strong>' . $id1 . '</strong>' . TEXT_IN_CASE;
-
+                $gv_value = $currencies->format($_POST['amount']);
                 if (SEARCH_ENGINE_FRIENDLY_URLS == 'true') {
-                    $message .= HTTP_CATALOG_SERVER . DIR_WS_CATALOG . 'index.php/gv_redeem/gv_no/' . $id1 . "\n\n";
-                    $html_msg['GV_CODE_URL'] = '<a href="' . HTTP_CATALOG_SERVER . DIR_WS_CATALOG . 'index.php/gv_redeem/gv_no/' . $id1 . '">' . TEXT_CLICK_TO_REDEEM . '</a>' . "&nbsp;";
+                    $url = HTTP_CATALOG_SERVER . DIR_WS_CATALOG . 'index.php/gv_redeem/gv_no/' . $id1;
                 } else {
-                    $message .= HTTP_CATALOG_SERVER . DIR_WS_CATALOG . 'index.php?main_page=gv_redeem&gv_no=' . $id1 . "\n\n";
-                    $html_msg['GV_CODE_URL'] = '<a href="' . HTTP_CATALOG_SERVER . DIR_WS_CATALOG . 'index.php?main_page=gv_redeem&gv_no=' . $id1 . '">' . TEXT_CLICK_TO_REDEEM . '</a>' . "&nbsp;";
+                    $url = HTTP_CATALOG_SERVER . DIR_WS_CATALOG . 'index.php?main_page=gv_redeem&gv_no=' . $id1;
                 }
 
-                $message .= TEXT_OR_VISIT . HTTP_CATALOG_SERVER . DIR_WS_CATALOG . TEXT_ENTER_CODE . "\n\n";
-                $html_msg['GV_CODE_URL'] .= TEXT_OR_VISIT . '<a href="' . HTTP_CATALOG_SERVER . DIR_WS_CATALOG . '">' . STORE_NAME . '</a>' . TEXT_ENTER_CODE;
+                $message .= "\n\n" . sprintf(TEXT_GV_ANNOUNCE, $gv_value) . "\n\n";
+                $html_msg['GV_ANNOUNCE'] = sprintf(TEXT_GV_ANNOUNCE, $gv_value);
+
+                $message .= sprintf(TEXT_GV_TO_REDEEM_TEXT, $url, $id1);
+                $html_msg['GV_REDEEM'] = sprintf(TEXT_GV_TO_REDEEM_HTML, $url, $id1);
 
                 // disclaimer
                 $message .= "\n-----\n" . sprintf(EMAIL_DISCLAIMER, STORE_OWNER_EMAIL_ADDRESS) . "\n\n";
@@ -222,7 +216,7 @@ if (!empty($_GET['mail_sent_to']) && $_GET['mail_sent_to']) {
             check_recipient('customers_email_address', 'email_to', "<?php echo ERROR_NO_CUSTOMER_SELECTED; ?>");
             check_input('subject', '', "<?php echo ERROR_NO_SUBJECT; ?>");
             check_amount('amount', 1, "<?php echo ERROR_NO_AMOUNT_ENTERED; ?>");
-            check_message("<?php echo ENTRY_NOTHING_TO_SEND; ?>");
+            //check_message("<?php //echo ENTRY_NOTHING_TO_SEND; ?>");//text is optional
 
             if (error === true) {
                 alert(error_message);
@@ -337,8 +331,8 @@ if (!empty($_GET['mail_sent_to']) && $_GET['mail_sent_to']) {
             </tr>
             <tr>
                 <td class="main"><?php echo TEXT_TO_EMAIL; ?></td>
-                <td> <?php echo zen_draw_input_field('email_to', (!empty($_POST['email_to']) ? $_POST['email_to'] : ''), 'size="25"', false, 'email'); ?></td>
-                <td class="main text-right"><?php echo TEXT_TO_EMAIL_NAME; ?></td>
+                <td><?php echo zen_draw_input_field('email_to', (!empty($_POST['email_to']) ? $_POST['email_to'] : ''), 'size="25"', false, 'email'); ?></td>
+                <td class="main text-right">&nbsp;<?php echo TEXT_TO_EMAIL_NAME; ?></td>
                 <td><?php echo zen_draw_input_field('email_to_name', (!empty($_POST['email_to_name']) ? $_POST['email_to_name'] : ''), 'size="25"', false); ?></td>
             </tr>
             <tr>
@@ -352,23 +346,24 @@ if (!empty($_GET['mail_sent_to']) && $_GET['mail_sent_to']) {
             </tr>
             <tr>
                 <td class="main"><?php echo TEXT_AMOUNT; ?></td>
-                <td colspan="3"><?php echo zen_draw_input_field('amount', (!empty($_POST['amount']) ? $_POST['amount'] : ''), 'step="any" required', '', 'number'); ?><?php echo '&nbsp;' . TEXT_AMOUNT_INFO; ?></td>
+                <td colspan="3"><?php echo zen_draw_input_field('amount', (!empty($_POST['amount']) ? $_POST['amount'] : ''), 'step="any" style="padding: 3px 0" required', '', 'number'); ?><?php echo '&nbsp;' . TEXT_AMOUNT_INFO; ?></td>
             </tr>
             <tr>
-                <td colspan="4">
-                    <hr>
-                </td>
+                <td colspan="4"><hr></td>
+            </tr>
+            <tr>
+                <td colspan="4"><?php echo TEXT_MESSAGE_INFO; ?></td>
             </tr>
             <?php if (EMAIL_USE_HTML == 'true') { ?>
                 <tr>
                     <td class="main" style="vertical-align: top"><?php echo TEXT_HTML_MESSAGE; ?></td>
-                    <td colspan="3"><?php echo zen_draw_textarea_field('message_html', 'soft', '100', '20', htmlspecialchars(empty($_POST['message_html']) ? TEXT_GV_ANNOUNCE : stripslashes($_POST['message_html']), ENT_COMPAT, CHARSET, true),
+                    <td colspan="3"><?php echo zen_draw_textarea_field('message_html', 'soft', '', '10', htmlspecialchars(empty($_POST['message_html']) ? '' : stripslashes($_POST['message_html']), ENT_COMPAT, CHARSET, true),
                             'id="message_html" class="editorHook"'); ?></td>
                 </tr>
             <?php } ?>
             <tr>
                 <td class="main" style="vertical-align: top"><?php echo TEXT_MESSAGE; ?></td>
-                <td colspan="3"><?php echo zen_draw_textarea_field('message', 'soft', '60', '15', htmlspecialchars(empty($_POST['message']) ? strip_tags(TEXT_GV_ANNOUNCE) : stripslashes($_POST['message']), ENT_COMPAT, CHARSET, true), 'id="message" class="noEditor tt"'); ?></td>
+                <td colspan="3"><?php echo zen_draw_textarea_field('message', 'soft', '', '10', htmlspecialchars(empty($_POST['message']) ? '' : stripslashes($_POST['message']), ENT_COMPAT, CHARSET, true), 'id="message" class="noEditor tt"'); ?></td>
             </tr>
         </table>
         <div class="form-group">

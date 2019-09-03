@@ -84,7 +84,7 @@ if (!defined('TEXT_GV_NAME')) {
   define('TEXT_DISCOUNT_COUPON', 'Discount Coupon');
 
 // used for redeem code, redemption code, or redemption id
-  define('TEXT_GV_REDEEM','Redemption Code');
+define('TEXT_GV_REDEEM','Redemption Code');
 
 // text for gender
 define('MALE', 'Male');
