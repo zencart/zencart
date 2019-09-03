@@ -76,14 +76,6 @@
     <legend><?php echo TEXT_DATABASE_SETUP_ADVANCED_SETTINGS; ?></legend>
     <div class="row">
       <div class="small-3 columns">
-        <label class="inline" for="db_charset"><a href="#" class="hasHelpText" id="DBCHARSET"><?php echo TEXT_DATABASE_SETUP_DB_CHARSET; ?></a></label>
-      </div>
-      <div class="small-9 columns">
-        <select name="db_charset" id="db_charset" tabindex="6" ><?php echo $dbCharsetOptions; ?></select>
-      </div>
-    </div>
-    <div class="row">
-      <div class="small-3 columns">
         <label class="inline" for="db_prefix"><a href="#" class="hasHelpText" id="DBPREFIX"><?php echo TEXT_DATABASE_SETUP_DB_PREFIX; ?></a></label>
       </div>
       <div class="small-9 columns">
