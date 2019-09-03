@@ -95,30 +95,6 @@ class order extends base {
       $totals->MoveNext();
     }
 
-    $order_total_query = "select text, value
-                             from " . TABLE_ORDERS_TOTAL . "
-                             where orders_id = '" . (int)$order_id . "'
-                             and class = 'ot_total'";
-
-
-    $order_total = $db->Execute($order_total_query);
-
-
-    $shipping_method_query = "select title, value
-                                from " . TABLE_ORDERS_TOTAL . "
-                                where orders_id = '" . (int)$order_id . "'
-                                and class = 'ot_shipping'";
-
-
-    $shipping_method = $db->Execute($shipping_method_query);
-
-    $order_status_query = "select orders_status_name
-                             from " . TABLE_ORDERS_STATUS . "
-                             where orders_status_id = '" . $order->fields['orders_status'] . "'
-                             and language_id = '" . (int)$_SESSION['languages_id'] . "'";
-
-    $order_status = $db->Execute($order_status_query);
-
     $this->info = array('currency' => $order->fields['currency'],
                         'currency_value' => $order->fields['currency_value'],
                         'payment_method' => $order->fields['payment_method'],
