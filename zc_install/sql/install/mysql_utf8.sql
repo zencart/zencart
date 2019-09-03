@@ -261,6 +261,10 @@ INSERT INTO countries (countries_id, countries_iso_code_2, countries_iso_code_3,
 INSERT INTO countries (countries_id, countries_iso_code_2, countries_iso_code_3, address_format_id) VALUES (246,'SS','SSD','1');
 INSERT INTO countries (countries_id, countries_iso_code_2, countries_iso_code_3, address_format_id) VALUES (247,'CW','CUW','1');
 INSERT INTO countries (countries_id, countries_iso_code_2, countries_iso_code_3, address_format_id) VALUES (248,'SX','SXM','1');
+INSERT INTO countries (countries_id, countries_iso_code_2, countries_iso_code_3, address_format_id) VALUES (249,'BL','BLM','1');
+INSERT INTO countries (countries_id, countries_iso_code_2, countries_iso_code_3, address_format_id) VALUES (250,'CD','COD','1');
+INSERT INTO countries (countries_id, countries_iso_code_2, countries_iso_code_3, address_format_id) VALUES (251,'MF','MAF','1');
+
 INSERT INTO countries_name (countries_id, language_id, countries_name) VALUES(240, 1, 'Åland Islands');
 INSERT INTO countries_name (countries_id, language_id, countries_name) VALUES(1, 1, 'Afghanistan');
 INSERT INTO countries_name (countries_id, language_id, countries_name) VALUES(2, 1, 'Albania');
@@ -507,6 +511,9 @@ INSERT INTO countries_name (countries_id, language_id, countries_name) VALUES(24
 INSERT INTO countries_name (countries_id, language_id, countries_name) VALUES(246, 1, 'South Sudan');
 INSERT INTO countries_name (countries_id, language_id, countries_name) VALUES(247, 1, 'Curaçao');
 INSERT INTO countries_name (countries_id, language_id, countries_name) VALUES(248, 1, 'Sint Maarten (Dutch part)');
+INSERT INTO countries_name (countries_id, language_id, countries_name) VALUES(249, 1, 'Saint-Barthélemy');
+INSERT INTO countries_name (countries_id, language_id, countries_name) VALUES(250, 1, 'Congo - Kinshasa');
+INSERT INTO countries_name (countries_id, language_id, countries_name) VALUES(251, 1, 'St. Martin');
 
 # USA
 INSERT INTO zones (zone_id, zone_country_id, zone_code, zone_name) VALUES (1,223,'AL','Alabama');
