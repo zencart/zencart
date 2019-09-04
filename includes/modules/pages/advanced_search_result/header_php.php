@@ -478,6 +478,11 @@ if ($result->number_of_rows == 0) {
   $messageStack->add_session('search', TEXT_NO_PRODUCTS, 'caution');
   zen_redirect(zen_href_link(FILENAME_ADVANCED_SEARCH, zen_get_all_get_params('action')));
 }
+// if only one product found in search results, go directly to the product page, instead of displaying a link to just one item:
+if ($result->number_of_rows == 1 && SKIP_SINGLE_PRODUCT_CATEGORIES == 'True') {
+  $result = $db->Execute($listing_sql);
+  zen_redirect(zen_href_link(zen_get_info_page($result->fields['products_id']), 'cPath=' . zen_get_product_path($result->fields['products_id']) . '&products_id=' . $result->fields['products_id']));
+}
 // This should be last line of the script:
 $zco_notifier->notify('NOTIFY_HEADER_END_ADVANCED_SEARCH_RESULTS', $keywords);
 //EOF
