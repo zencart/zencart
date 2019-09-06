@@ -100,7 +100,7 @@ function zen_href_link($page = '', $parameters = '', $connection = 'SSL', $add_s
   function zen_image($src, $alt = '', $width = '', $height = '', $params = '') {
       $image = '<img src="' . $src . '" alt="' . $alt . '"';
     if ($alt) {
-      $image .= ' title=" ' . $alt . ' "';
+      $image .= ' title="' . $alt . '"';
     }
     if ($width) {
       $image .= ' width="' . $width . '"';
