@@ -181,10 +181,7 @@ if (!empty($_GET['mail_sent_to']) && $_GET['mail_sent_to']) {
         function check_amount(field_name, field_size, message) {
             if (form.elements[field_name] && (form.elements[field_name].type !== "hidden")) {
                 let field_value = form.elements[field_name].value;
-
-                let decimal_check = /^[-+]?[0-9]+\.[0-9]+$/;
-                decimal_check = /^(\d*\.)?\d+$/;
-
+                const decimal_check = /^(\d*\.)?\d+$/;
                 if (field_value === '' || field_value === 0 || field_value < 0 || field_value.length < field_size || !field_value.match(decimal_check)) {
                     error_message = error_message + "* " + message + "\n";
                     error = true;

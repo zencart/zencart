@@ -18,7 +18,7 @@ define('TEXT_TO_EMAIL_NAME', 'Name (optional):');
 define('TEXT_TO_EMAIL_INFO', '<span class="smallText">Choose a list from the above drop-down or use the following fields for sending a single email.</span>');
 define('TEXT_SUBJECT', 'Subject:');
 define('TEXT_AMOUNT', TEXT_GV_NAME . ' Value:');
-define('ERROR_GV_AMOUNT', '<span class="smallText">Please define the amount as a number without symbols, eg.: 25.00.</span>');
+define('ERROR_GV_AMOUNT', '<span class="smallText">Enter a number using a decimal point for fractions eg.: 25.00.</span>');
 define('TEXT_AMOUNT_INFO', '<span class="smallText">' . ERROR_GV_AMOUNT . '</span>');
 define('TEXT_HTML_MESSAGE', 'HTML<br>Message:');
 define('TEXT_MESSAGE', 'Text-Only<br>Message:');
