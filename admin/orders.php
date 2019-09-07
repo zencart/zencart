@@ -779,9 +779,9 @@ if (zen_not_null($action) && $order_exists == true) {
   $zco_notifier->notify('NOTIFY_ADMIN_ORDERS_STATUS_HISTORY_EXTRA_COLUMN_HEADING', array(), $extra_headings);
   if (is_array($extra_headings)) {
       foreach ($extra_headings as $heading_info) {
-          $align = (isset($heading_info['align'])) ? (' text-' . $heading_info['align']) : '';
+          $align = (isset($heading_info['align'])) ? (' class="text-' . $heading_info['align'] . '"') : '';
 ?>
-                <td class="smallText<?php echo $align; ?>"><strong><?php echo $heading_info['text']; ?></td></td>
+                <th<?php echo $align; ?>><strong><?php echo $heading_info['text']; ?></th>
 <?php
       }
   }
