@@ -239,7 +239,9 @@
       } else {
         $mark = '&nbsp;&nbsp;';
       }
-      if ($exclude != $categories->fields['categories_id']) $category_tree_array[] = array('id' => $categories->fields['categories_id'], 'text' => $spacing . $categories->fields['categories_name'] . $mark);
+      if ($exclude != $categories->fields['categories_id']) {
+        $category_tree_array[] = array('id' => $categories->fields['categories_id'], 'text' => $spacing . $categories->fields['categories_name'] . $mark);
+      }
       $category_tree_array = zen_get_category_tree($categories->fields['categories_id'], $spacing . '&nbsp;&nbsp;&nbsp;', $exclude, $category_tree_array, '', $category_has_products);
       $categories->MoveNext();
     }
@@ -744,6 +746,7 @@
 ////
   function zen_cfg_select_coupon_id($coupon_id, $key = '') {
     global $db;
+    $coupon_array = array();
     $name = (($key) ? 'configuration[' . $key . ']' : 'configuration_value');
     $coupons = $db->execute("select cd.coupon_name, c.coupon_id from " . TABLE_COUPONS ." c, ". TABLE_COUPONS_DESCRIPTION . " cd where cd.coupon_id = c.coupon_id and cd.language_id = '" . (int)$_SESSION['languages_id'] . "'");
     $coupon_array[] = array('id' => '0',
@@ -2997,6 +3000,7 @@ function zen_copy_products_attributes($products_id_from, $products_id_to) {
    */
   function zen_build_subdirectories_array($parent_folder = '', $default_text = 'Main Directory') {
     if ($parent_folder == '') $parent_folder = DIR_FS_CATALOG_IMAGES;
+    $dir_info = array();
     $dir_info[] = array('id' => '', 'text' => $default_text);
 
     $dir = @dir($parent_folder);
