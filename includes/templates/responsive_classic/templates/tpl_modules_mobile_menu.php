@@ -96,7 +96,7 @@ echo $menulist;
         <li><a href="<?php echo zen_href_link(FILENAME_CONDITIONS); ?>"><?php echo BOX_INFORMATION_CONDITIONS; ?></a></li>
 <?php } ?>
 <?php if (!empty($external_bb_url) && !empty($external_bb_text)) { // forum/bb link ?>
-        <li><a href="<?php echo external_bb_url; ?>" target="_blank"><?php echo external_bb_text; ?></a></li>
+        <li><a href="<?php echo $external_bb_url; ?>" target="_blank"><?php echo $external_bb_text; ?></a></li>
 <?php } ?>
 <?php if (DEFINE_SITE_MAP_STATUS <= 1) { ?>
         <li><a href="<?php echo zen_href_link(FILENAME_SITE_MAP); ?>"><?php echo BOX_INFORMATION_SITE_MAP; ?></a></li>
