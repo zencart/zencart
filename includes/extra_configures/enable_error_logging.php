@@ -99,6 +99,7 @@ if (!defined('DIR_FS_LOGS')) {
         define('DIR_FS_LOGS', DIR_FS_SQL_CACHE);
     }
 }
+$pages_to_debug = array();
 /**
  * Specify the pages you wish to enable debugging for (ie: main_page=xxxxxxxx)
  * Using '*' will cause all pages to be enabled
