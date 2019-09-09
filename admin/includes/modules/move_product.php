@@ -10,6 +10,7 @@
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
 }
+$heading = array();
 $heading[] = array('text' => '<h4>' . TEXT_INFO_HEADING_MOVE_PRODUCT . '</h4>');
 $contents = array('form' => zen_draw_form('products', FILENAME_CATEGORY_PRODUCT_LISTING, 'action=move_product_confirm&cPath=' . $cPath . (isset($_GET['page']) ? '&page=' . $_GET['page'] : ''), 'post', 'class="form-horizontal"') . zen_draw_hidden_field('products_id', $pInfo->products_id));
 $contents[] = array('text' => sprintf(TEXT_MOVE_PRODUCTS_INTRO, $pInfo->products_name));
