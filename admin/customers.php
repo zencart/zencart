@@ -10,6 +10,7 @@ require('includes/application_top.php');
 
 require(DIR_WS_CLASSES . 'currencies.php');
 $currencies = new currencies();
+$group_array = array();
 
 $action = (isset($_GET['action']) ? $_GET['action'] : '');
 $customers_id = isset($_GET['cID']) ? (int)$_GET['cID'] : 0;
