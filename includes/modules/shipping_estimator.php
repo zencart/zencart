@@ -225,6 +225,7 @@ if ($_SESSION['cart']->count_contents() > 0) {
     }
   } else {
     if($_SESSION['cart']->get_content_type() != 'virtual'){
+      $state_array = array();
       $state_array[] = array('id' => '', 'text' => PULL_DOWN_SHIPPING_ESTIMATOR_SELECT);
       $state_values = $db->Execute("select zone_name, zone_id from " . TABLE_ZONES . " where zone_country_id = '" . (int)$selected_country . "' order by zone_country_id DESC, zone_name");
       while (!$state_values->EOF) {
