@@ -51,7 +51,7 @@ if ($action == 'new_cat') {//this action from products_previous_next_display.php
 }
 
 // set categories and products if not set
-if ($products_filter == '' && $current_category_id != '') {
+if ($products_filter == '' && !empty($current_category_id)) {
   $new_product_query = $db->Execute("SELECT ptc.*
                                      FROM " . TABLE_PRODUCTS_TO_CATEGORIES . " ptc
                                      LEFT JOIN " . TABLE_PRODUCTS_DESCRIPTION . " pd ON ptc.products_id = pd.products_id
@@ -64,7 +64,7 @@ if ($products_filter == '' && $current_category_id != '') {
     zen_redirect(zen_href_link(FILENAME_PRODUCTS_TO_CATEGORIES, 'products_filter=' . $products_filter . '&current_category_id=' . $current_category_id));
   }
 } else {
-  if ($products_filter == '' && $current_category_id == '') {
+  if ($products_filter == '' && empty($current_category_id)) {
     $reset_categories_id = zen_get_category_tree('', '', '0', '', '', true);
     $current_category_id = $reset_categories_id[0]['id'];
     $new_product_query = $db->Execute("SELECT ptc.*
@@ -331,6 +331,7 @@ if (zen_not_null($action)) {
     //update the product-to-multiple-categories links
     case 'update_product':
       $zv_check_master_categories_id = ('' !== $_POST['current_master_categories_id']);
+      $new_categories_sort_array = array();
       $new_categories_sort_array[] = $_POST['current_master_categories_id'];
       $current_master_categories_id = $_POST['current_master_categories_id'];
       if (!isset($_POST['categories_add'])) $_POST['categories_add'] = array();
