@@ -92,7 +92,7 @@ if ($action == 'new_cat') {
 }
 
 // set categories and products if not set
-if ($products_filter == '' && $current_category_id != '') {
+if ($products_filter == '' && !empty($current_category_id)) {
   $sql = "SELECT *
           FROM " . TABLE_PRODUCTS_TO_CATEGORIES . "
           WHERE categories_id = " . (int)$current_category_id . "
@@ -103,7 +103,7 @@ if ($products_filter == '' && $current_category_id != '') {
     zen_redirect(zen_href_link(FILENAME_ATTRIBUTES_CONTROLLER, 'products_filter=' . $products_filter . '&current_category_id=' . $current_category_id));
   }
 } else {
-  if ($products_filter == '' && $current_category_id == '') {
+  if ($products_filter == '' && empty($current_category_id)) {
     $reset_categories_id = zen_get_category_tree('', '', '0', '', '', true);
     $current_category_id = $reset_categories_id[0]['id'];
     $sql = "SELECT *
