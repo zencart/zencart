@@ -10,6 +10,7 @@ require('includes/application_top.php');
 
 $action = (isset($_GET['action']) ? $_GET['action'] : '');
 $status_filter = (isset($_GET['status']) ? $_GET['status'] : '');
+$status_list = array();
 $status_list[] = array('id' => 1, 'text' => TEXT_PENDING_APPROVAL);
 $status_list[] = array('id' => 2, 'text' => TEXT_APPROVED);
 
