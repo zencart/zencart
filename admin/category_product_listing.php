@@ -361,7 +361,7 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
       function init() {
           cssjsmenu('navbar');
           if (document.getElementById) {
-              var kill = document.getElementById('hoverJS');
+              let kill = document.getElementById('hoverJS');
               kill.disabled = true;
           }
       }
@@ -602,7 +602,10 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
                   <?php if ($show_prod_labels) { ?>
                   <th class="hidden-sm hidden-xs"><?php echo TABLE_HEADING_MODEL; ?></th><?php }; ?>
                   <th class="text-right hidden-sm hidden-xs"><?php echo TABLE_HEADING_PRICE; ?></th>
+                  <?php 
+		  if ($show_prod_labels || SHOW_COUNTS_ADMIN == 'true') { ?>
                   <th class="text-right hidden-sm hidden-xs"><?php echo TABLE_HEADING_QUANTITY; ?></th>
+		  <?php }; ?>
                   <th class="text-right hidden-sm hidden-xs"><?php echo TABLE_HEADING_STATUS; ?></th>
                   <?php
                   if ($action == '') {
@@ -637,19 +640,18 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
                   <?php if ($show_prod_labels) { ?>
                   <td class="hidden-sm hidden-xs">&nbsp;</td><?php }; ?>
                   <td class="text-right hidden-sm hidden-xs"><?php echo zen_get_products_sale_discount('', $category['categories_id'], true); ?></td>
-
+                  <?php if ($search_result || SHOW_COUNTS_ADMIN == 'true') { ?>
                   <td class="text-right hidden-sm hidden-xs">
                       <?php
-                      if (SHOW_COUNTS_ADMIN == 'false') {
-                        // don't show counts
-                      } else {
-                        // show counts
-                        $total_products = zen_get_products_to_categories($category['categories_id'], true);
-                        $total_products_on = zen_get_products_to_categories($category['categories_id'], false);
-                        echo $total_products_on . TEXT_PRODUCTS_STATUS_ON_OF . $total_products . TEXT_PRODUCTS_STATUS_ACTIVE;
+                      if (SHOW_COUNTS_ADMIN == 'true') {
+                          // show counts
+                          $total_products = zen_get_products_to_categories($category['categories_id'], true);
+                          $total_products_on = zen_get_products_to_categories($category['categories_id'], false);
+                          echo $total_products_on . TEXT_PRODUCTS_STATUS_ON_OF . $total_products . TEXT_PRODUCTS_STATUS_ACTIVE;
                       }
                       ?>
                   </td>
+		  <?php } ?>
                   <td class="text-right hidden-sm hidden-xs">
                       <?php
                       if (SHOW_CATEGORY_PRODUCTS_LINKED_STATUS == 'true' && zen_get_products_to_categories($category['categories_id'], true, 'products_active') == 'true') {
