@@ -352,7 +352,7 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
 <html <?php echo HTML_PARAMS; ?>>
   <head>
     <meta charset="<?php echo CHARSET; ?>">
-    <title><?php echo TITLE; ?></title>
+    <title><?php echo 'Admin: ' . zen_output_generated_category_path($current_category_id); ?></title>
     <link rel="stylesheet" href="includes/stylesheet.css">
     <link rel="stylesheet" href="includes/cssjsmenuhover.css" media="all" id="hoverJS">
     <script src="includes/menu.js"></script>
