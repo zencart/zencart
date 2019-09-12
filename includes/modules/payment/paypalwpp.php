@@ -465,7 +465,7 @@ if (false) { // disabled until clarification is received about coupons in PayPal
       $this->reasoncode = $response['PAYMENTINFO_0_REASONCODE'];
       $this->numitems = sizeof($order->products);
       $this->amt = urldecode($response['PAYMENTINFO_0_AMT'] . ' ' . $response['PAYMENTINFO_0_CURRENCYCODE']);
-      $this->auth_code = (isset($this->response['AUTHCODE'])) ? $response['AUTHCODE'] : $response['TOKEN'];
+      $this->auth_code = (isset($response['AUTHCODE'])) ? $response['AUTHCODE'] : $response['TOKEN'];
 
       $this->notify('NOTIFY_PAYPALWPP_BEFORE_PROCESS_FINISHED', $response);
   }
