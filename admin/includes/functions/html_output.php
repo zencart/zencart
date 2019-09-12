@@ -91,6 +91,10 @@ function zen_href_link($page = '', $parameters = '', $connection = 'SSL', $add_s
     }
 
     while ( (substr($link, -1) == '&') || (substr($link, -1) == '?') ) $link = substr($link, 0, -1);
+      $link = preg_replace('/(&{2,}|(&amp;)+)/', '&', $link);
+
+      // Convert any remaining '&' into '&amp;' (valid URL for href)
+      $link = str_replace('&', '&amp;', $link);
 
     return $link;
   }
