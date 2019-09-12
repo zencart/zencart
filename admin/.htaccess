@@ -41,7 +41,7 @@ DirectoryIndex index.php
 </FilesMatch>
 
 # but now allow just *certain* necessary files:
-<FilesMatch "(?i).*\.(php|js|css|html?|ico|otf|jpe?g|gif|webp|png|swf|flv|xml|xsl|csv|CSV|txt|TXT)$">
+<FilesMatch "(?i).*\.(php|js|css|html?|ico|otf|jpe?g|gif|webp|png|swf|flv|xml|xsl|csv|txt)$">
   <IfModule mod_authz_core.c>
     Require all granted
   </IfModule>
