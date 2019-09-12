@@ -1586,6 +1586,23 @@ while (!$chk_sale_categories_all->EOF) {
   function zen_get_tax_rate($class_id, $country_id = -1, $zone_id = -1) {
     global $db;
     global $customer_zone_id, $customer_country_id;
+    
+    // -----
+    // Give an observer a chance to override this function's return.
+    //
+    $tax_rate = false;
+    $GLOBALS['zco_notifier']->notify(
+        'NOTIFY_ZEN_GET_TAX_RATE_OVERRIDE', 
+        array(
+            'class_id' => $class_id, 
+            'country_id' => $country_id, 
+            'zone_id' => $zone_id
+        ), 
+        $tax_rate
+    );
+    if ($tax_rate !== false) {
+        return $tax_rate;
+    }
 
     if ( ($country_id == -1) && ($zone_id == -1) ) {
       if (empty($_SESSION['customer_id'])) {
