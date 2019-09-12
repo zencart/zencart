@@ -1,10 +1,10 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2012 Zen Cart Development Team
+ * @copyright Copyright 2003-2017 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte  Tue Aug 28 16:48:39 2012 -0400 Modified in v1.5.1 $
+ * @version GIT: $Id: Author: DrByte  Aug 2017 Modified in v1.5.6 $
  */
 
   require('includes/application_top.php');
@@ -14,7 +14,7 @@
 
   $languages = zen_get_languages();
 
-  $products_filter = (isset($_GET['products_filter']) ? $_GET['products_filter'] : $products_filter);
+  $products_filter = (isset($_GET['products_filter']) ? $_GET['products_filter'] : 0);
 
   $action = (isset($_GET['action']) ? $_GET['action'] : '');
 
@@ -43,6 +43,7 @@
           $all_products_attributes->MoveNext();
         }
         $messageStack->add_session(SUCCESS_PRODUCT_UPDATE_SORT_ALL, 'success');
+        zen_record_admin_activity('Store Manager executed [update all products attributes sort order]', 'info');
         $action='';
         zen_redirect(zen_href_link(FILENAME_STORE_MANAGER));
       }
@@ -61,6 +62,7 @@
           $update_prices->MoveNext();
         }
         $messageStack->add_session(SUCCESS_PRODUCT_UPDATE_PRODUCTS_PRICE_SORTER, 'success');
+        zen_record_admin_activity('Store Manager executed [update all products price sorter]', 'info');
         $action='';
         zen_redirect(zen_href_link(FILENAME_STORE_MANAGER));
       }
@@ -74,6 +76,7 @@
         $update_viewed = $db->Execute($sql);
 
         $messageStack->add_session(SUCCESS_PRODUCT_UPDATE_PRODUCTS_VIEWED, 'success');
+        zen_record_admin_activity('Store Manager executed [update all products viewed]', 'info');
         $action='';
         zen_redirect(zen_href_link(FILENAME_STORE_MANAGER));
       }
@@ -87,6 +90,7 @@
         $update_viewed = $db->Execute($sql);
 
         $messageStack->add_session(SUCCESS_PRODUCT_UPDATE_PRODUCTS_ORDERED, 'success');
+        zen_record_admin_activity('Store Manager executed [update all products ordered]', 'info');
         $action='';
         zen_redirect(zen_href_link(FILENAME_STORE_MANAGER));
       }
@@ -98,6 +102,7 @@
     $update_counter = $db->Execute($sql);
 
     $messageStack->add_session(SUCCESS_UPDATE_COUNTER . (int)$_POST['new_counter'], 'success');
+    zen_record_admin_activity('Store Manager executed [update counter], set to ' . (int)$_POST['new_counter'], 'info');
     $action='';
     zen_redirect(zen_href_link(FILENAME_STORE_MANAGER));
     break;
@@ -125,6 +130,7 @@
           $tables->MoveNext();
         }
         $messageStack->add_session(SUCCESS_DB_OPTIMIZE . ' ' . $i, 'success');
+        zen_record_admin_activity('Store Manager executed [optimize database tables]', 'info');
         $action='';
         zen_redirect(zen_href_link(FILENAME_STORE_MANAGER));
       }
@@ -137,7 +143,7 @@
         $dir = dir($purgeFolder);
         while ($file = $dir->read()) {
           if ( ($file != '.') && ($file != '..') && substr($file, 0, 1) != '.') {
-            if (preg_match('/^(myDEBUG-|AIM_Debug_|SIM_Debug_|FirstData_Debug_|Linkpoint_Debug_|Paypal|paypal|ipn_|zcInstall).*\.log$/', $file)) {
+            if (preg_match('/^(myDEBUG-|AIM_Debug_|SIM_Debug_|FirstData_Debug_|Linkpoint_Debug_|Paypal|paypal|ipn_|zcInstall|SHIP_|PAYMENT_|usps_|.*debug).*\.log$/i', $file)) {
               if (is_writeable($purgeFolder . '/' . $file)) {
                 zen_remove($purgeFolder . '/' . $file);
               }
@@ -148,6 +154,7 @@
         unset($dir);
       }
       $messageStack->add_session(SUCCESS_CLEAN_DEBUG_FILES, 'success');
+      zen_record_admin_activity('Store Manager executed [clean debug/log files]', 'info');
       zen_redirect(zen_href_link(FILENAME_STORE_MANAGER));
     break;
 
@@ -159,8 +166,8 @@
         $sql = "select products_id from " . TABLE_PRODUCTS;
         $check_products = $db->Execute($sql);
         while (!$check_products->EOF) {
-
-          $sql = "select products_id, categories_id from " . TABLE_PRODUCTS_TO_CATEGORIES . " where products_id='" . $check_products->fields['products_id'] . "'";
+          // Note: "USE INDEX ()" is intentional, to retrieve results in original insert order
+          $sql = "select products_id, categories_id from " . TABLE_PRODUCTS_TO_CATEGORIES . " USE INDEX () where products_id='" . $check_products->fields['products_id'] . "'";
           $check_category = $db->Execute($sql);
 
           $sql = "update " . TABLE_PRODUCTS . " set master_categories_id='" . $check_category->fields['categories_id'] . "' where products_id='" . $check_products->fields['products_id'] . "'";
@@ -170,6 +177,7 @@
         }
 
         $messageStack->add_session(SUCCESS_UPDATE_ALL_MASTER_CATEGORIES_ID, 'success');
+        zen_record_admin_activity('Store Manager executed [update all master categories id]', 'info');
         $action='';
         zen_redirect(zen_href_link(FILENAME_STORE_MANAGER));
       }
@@ -191,6 +199,7 @@
       } else {
         $db->Execute("ALTER TABLE " . TABLE_ORDERS . " AUTO_INCREMENT = " . $new_orders_id);
         $messageStack->add_session(sprintf(TEXT_MSG_NEXT_ORDER, $new_orders_id), 'success');
+        zen_record_admin_activity('Store Manager executed [update next order id], set to ' . $new_orders_id, 'info');
       }
       zen_redirect(zen_href_link(FILENAME_STORE_MANAGER));
     break;
@@ -322,7 +331,7 @@ if ($processing_message != '') {
           <?php echo zen_draw_hidden_field('securityToken', $_SESSION['securityToken']); ?>
             <td class="main" align="left" valign="top"><?php echo TEXT_INFO_SET_NEXT_ORDER_NUMBER; ?>
             <br />
-            <?php echo TEXT_NEW_ORDERS_ID . '&nbsp;' . zen_draw_input_field('new_orders_id', $nextOrderNumber); ?>
+            <?php echo TEXT_NEW_ORDERS_ID . '&nbsp;' . zen_draw_input_field('new_orders_id', (isset($new_orders_id) ? $new_orders_id : '')); ?>
             <?php echo zen_image_submit('button_reset.gif', IMAGE_RESET); ?></td>
             </form>
           </tr>

@@ -6,15 +6,15 @@
  * Displays the allowed payment modules, for selection by customer.
  *
  * @package templateSystem
- * @copyright Copyright 2003-2011 Zen Cart Development Team
+ * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: tpl_checkout_payment_default.php 19358 2011-08-24 17:36:50Z drbyte $
+ * @version $Id: mc12345678 Tue May 8 00:42:18 2018 -0400 Modified in v1.5.6 $
  */
 ?>
 <?php echo $payment_modules->javascript_validation(); ?>
 <div class="centerColumn" id="checkoutPayment">
-<?php echo zen_draw_form('checkout_payment', zen_href_link(FILENAME_CHECKOUT_CONFIRMATION, '', 'SSL'), 'post', ($flagOnSubmit ? 'onsubmit="return check_form();"' : '')); ?>
+<?php echo zen_draw_form('checkout_payment', zen_href_link(FILENAME_CHECKOUT_CONFIRMATION, '', 'SSL'), 'post'); ?>
 <?php echo zen_draw_hidden_field('action', 'submit'); ?>
 
 <h1 id="checkoutPaymentHeading"><?php echo HEADING_TITLE; ?></h1>
@@ -22,19 +22,6 @@
 <?php if ($messageStack->size('redemptions') > 0) echo $messageStack->output('redemptions'); ?>
 <?php if ($messageStack->size('checkout') > 0) echo $messageStack->output('checkout'); ?>
 <?php if ($messageStack->size('checkout_payment') > 0) echo $messageStack->output('checkout_payment'); ?>
-
-<?php
-  if (DISPLAY_CONDITIONS_ON_CHECKOUT == 'true') {
-?>
-<fieldset>
-<legend><?php echo TABLE_HEADING_CONDITIONS; ?></legend>
-<div><?php echo TEXT_CONDITIONS_DESCRIPTION;?></div>
-<?php echo  zen_draw_checkbox_field('conditions', '1', false, 'id="conditions"');?>
-<label class="checkboxLabel" for="conditions"><?php echo TEXT_CONDITIONS_CONFIRM; ?></label>
-</fieldset>
-<?php
-  }
-?>
 
 <?php // ** BEGIN PAYPAL EXPRESS CHECKOUT **
       if (!$payment_modules->in_special_checkout()) {
@@ -70,18 +57,18 @@
   $selection =  $order_total_modules->credit_selection();
   if (sizeof($selection)>0) {
     for ($i=0, $n=sizeof($selection); $i<$n; $i++) {
-      if ($_GET['credit_class_error_code'] == $selection[$i]['id']) {
+      if (isset($_GET['credit_class_error_code']) && ($_GET['credit_class_error_code'] == (isset($selection[$i]['id'])) ? $selection[$i]['id'] : 0)) {
 ?>
 <div class="messageStackError"><?php echo zen_output_string_protected($_GET['credit_class_error']); ?></div>
 
 <?php
       }
-      for ($j=0, $n2=sizeof($selection[$i]['fields']); $j<$n2; $j++) {
+      for ($j=0, $n2=(isset($selection[$i]['fields']) ? sizeof($selection[$i]['fields']) : 0); $j<$n2; $j++) {
 ?>
 <fieldset>
 <legend><?php echo $selection[$i]['module']; ?></legend>
 <?php echo $selection[$i]['redeem_instructions']; ?>
-<div class="gvBal larger"><?php echo $selection[$i]['checkbox']; ?></div>
+<div class="gvBal larger"><?php echo (isset($selection[$i]['checkbox'])) ? $selection[$i]['checkbox'] : ''; ?></div>
 <label class="inputLabel"<?php echo ($selection[$i]['fields'][$j]['tag']) ? ' for="'.$selection[$i]['fields'][$j]['tag'].'"': ''; ?>><?php echo $selection[$i]['fields'][$j]['title']; ?></label>
 <?php echo $selection[$i]['fields'][$j]['field']; ?>
 </fieldset>
@@ -97,7 +84,7 @@
 <?php // ** BEGIN PAYPAL EXPRESS CHECKOUT **
       if (!$payment_modules->in_special_checkout()) {
       // ** END PAYPAL EXPRESS CHECKOUT ** ?>
-<fieldset>
+<fieldset class="payment">
 <legend><?php echo TABLE_HEADING_PAYMENT_METHOD; ?></legend>
 
 <?php
@@ -203,7 +190,21 @@
 <?php echo zen_draw_textarea_field('comments', '45', '3'); ?>
 </fieldset>
 
-<div class="buttonRow forward"><?php echo zen_image_submit(BUTTON_IMAGE_CONTINUE_CHECKOUT, BUTTON_CONTINUE_ALT, 'onclick="submitFunction('.zen_user_has_gv_account($_SESSION['customer_id']).','.$order->info['total'].')"'); ?></div>
+<?php
+  if (DISPLAY_CONDITIONS_ON_CHECKOUT == 'true') {
+?>
+<fieldset>
+<legend><?php echo TABLE_HEADING_CONDITIONS; ?></legend>
+<div><?php echo TEXT_CONDITIONS_DESCRIPTION;?></div>
+<?php echo  zen_draw_checkbox_field('conditions', '1', false, 'id="conditions"');?>
+<label class="checkboxLabel" for="conditions"><?php echo TEXT_CONDITIONS_CONFIRM; ?></label>
+</fieldset>
+<?php
+  }
+?>
+
+<div class="buttonRow forward" id="paymentSubmit"><?php echo zen_image_submit(BUTTON_IMAGE_CONTINUE_CHECKOUT, BUTTON_CONTINUE_ALT, 'onclick="submitFunction('.zen_user_has_gv_account($_SESSION['customer_id']).','.$order->info['total'].')"'); ?></div>
+
 <div class="buttonRow back"><?php echo TITLE_CONTINUE_CHECKOUT_PROCEDURE . '<br />' . TEXT_CONTINUE_CHECKOUT_PROCEDURE; ?></div>
 
 </form>

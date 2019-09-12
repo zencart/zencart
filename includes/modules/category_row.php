@@ -6,7 +6,7 @@
  * Once the data is prepared, it calls the standard tpl_list_box_content template for display.
  *
  * @package page
- * @copyright Copyright 2003-2006 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: category_row.php 4084 2006-08-06 23:59:36Z drbyte $
@@ -19,7 +19,7 @@ $num_categories = $categories->RecordCount();
 
 $row = 0;
 $col = 0;
-$list_box_contents = '';
+$list_box_contents = array();
 if ($num_categories > 0) {
   if ($num_categories < MAX_DISPLAY_CATEGORIES_PER_ROW || MAX_DISPLAY_CATEGORIES_PER_ROW == 0) {
     $col_width = floor(100/$num_categories);
@@ -28,7 +28,7 @@ if ($num_categories > 0) {
   }
 
   while (!$categories->EOF) {
-    if (!$categories->fields['categories_image']) !$categories->fields['categories_image'] = 'pixel_trans.gif';
+    if (!$categories->fields['categories_image']) $categories->fields['categories_image'] = 'pixel_trans.gif';
     $cPath_new = zen_get_path($categories->fields['categories_id']);
 
     // strip out 0_ from top level cats
@@ -47,4 +47,3 @@ if ($num_categories > 0) {
     $categories->MoveNext();
   }
 }
-?>

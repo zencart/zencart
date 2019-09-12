@@ -1,14 +1,30 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2012 Zen Cart Development Team
+ * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: Ian Wilson  Sun Jul 1 12:08:22 2012 +0100 Modified in v1.5.1 $
+ * @version $Id: lat9 Tue Oct 2 13:32:43 2018 -0400 Modified in v1.5.6 $
  */
 
 if (!defined('IS_ADMIN_FLAG')) die('Illegal Access');
 
-define(SUPERUSER_PROFILE, 1);
+define('SUPERUSER_PROFILE', 1);
+
+// -----
+// Special handling for AJAX requests.  Return a 'logged_out' error if no admin session
+// is active; otherwise, bypass the remainder of the authorization checks.
+//
+if (basename($PHP_SELF) == FILENAME_AJAX . '.php') {
+    if (empty($_SESSION['admin_id'])) {
+        $ajax_response = array(
+            'error' => 'logged_out',
+            'redirect' => zen_href_link(FILENAME_LOGIN, '', 'SSL')
+        );
+        echo json_encode($ajax_response);
+        exit;
+    }
+    return;
+}
 
 // admin folder rename required
 if (!defined('ADMIN_BLOCK_WARNING_OVERRIDE') || ADMIN_BLOCK_WARNING_OVERRIDE == '')
@@ -51,6 +67,7 @@ if (basename($_SERVER['SCRIPT_FILENAME']) != FILENAME_ALERT_PAGE . '.php')
     {
       if (check_page($page, $_GET) == FALSE)
       {
+        zen_record_admin_activity('Attempted access to unauthorized page [' . $page . ']. Redirected to DENIED page instead.', 'notice');
         zen_redirect(zen_href_link(FILENAME_DENIED, '', 'SSL'));
       }
     }

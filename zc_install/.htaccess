@@ -1,7 +1,7 @@
 #
-# @copyright Copyright 2003-2010 Zen Cart Development Team
+# @copyright Copyright 2003-2016 Zen Cart Development Team
 # @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
-# @version $Id: .htaccess 16111 2010-04-29 22:39:02Z drbyte $
+# @version $Id: Author: zcwilt  Wed Sep 23 20:04:38 2015 +0100 Modified in v1.5.5 $
 #
 # This is used with Apache WebServers
 #
@@ -10,7 +10,7 @@
 # Will also prevent people from seeing what is in the dir. and any sub-directories
 #
 # For this to work, you must include either 'All' or at least: 'Limit' and 'Indexes' parameters to the AllowOverride configuration in your apache/conf/httpd.conf file.
-# Additionally, if you want the added protection offered by the OPTIONS directive below, you'll need to add 'Options' to the AllowOverride list, if 'All' is not specified. 
+# Additionally, if you want the added protection offered by the OPTIONS directive below, you'll need to add 'Options' to the AllowOverride list, if 'All' is not specified.
 # Example:
 #<Directory "/usr/local/apache/htdocs">
 #  AllowOverride Limit Options Indexes
@@ -19,21 +19,26 @@
 
 DirectoryIndex index.php
 
-# prevents inappropriate browsing 
+# prevents inappropriate browsing
 <FilesMatch ".*\..*">
-  Order Allow,Deny
-  Deny from all
+  <IfModule mod_authz_core.c>
+    Require all denied
+  </IfModule>
+  <IfModule !mod_authz_core.c>
+    Order Allow,Deny
+    Deny from all
+  </IfModule>
 </FilesMatch>
+
 <FilesMatch "(^$|^favicon.ico$|.*\.(php|js|css|jpg|gif|png|html)$)">
-  Order Allow,Deny
-  Allow from all
+  <IfModule mod_authz_core.c>
+    Require all granted
+  </IfModule>
+  <IfModule !mod_authz_core.c>
+    Order Allow,Deny
+    Allow from all
+  </IfModule>
 </FilesMatch>
 
 IndexIgnore */*
-
-
-# Older versions of the mod_security extension in apache may cause "406" errors to appear during installation.
-# If you are running into such problems, simply remove the # from the beginning of the following lines:
-#SecFilterEngine off
-#SecFilterScanPOST Off
 

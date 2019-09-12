@@ -3,15 +3,15 @@
  * Header code file for the Address Book Process page
  *
  * @package page
- * @copyright Copyright 2003-2011 Zen Cart Development Team
+ * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: header_php.php 18695 2011-05-04 05:24:19Z drbyte $
+ * @version $Id: mc12345678 2019 Apr 30 Modified in v1.5.6b $
  */
 // This should be first line of the script:
 $zco_notifier->notify('NOTIFY_HEADER_START_ADDRESS_BOOK_PROCESS');
 
-if (!$_SESSION['customer_id']) {
+if (!zen_is_logged_in()) {
   $_SESSION['navigation']->set_snapshot();
   zen_redirect(zen_href_link(FILENAME_LOGIN, '', 'SSL'));
 }
@@ -76,7 +76,6 @@ if (isset($_POST['action']) && (($_POST['action'] == 'process') || ($_POST['acti
     }
   }
   $country = zen_db_prepare_input($_POST['zone_country_id']);
-  //echo ' I SEE: country=' . $country . '&nbsp;&nbsp;&nbsp;state=' . $state . '&nbsp;&nbsp;&nbsp;zone_id=' . $zone_id;
 
   if (ACCOUNT_GENDER == 'true') {
     if ( ($gender != 'm') && ($gender != 'f') ) {
@@ -165,24 +164,30 @@ if (isset($_POST['action']) && (($_POST['action'] == 'process') || ($_POST['acti
     $messageStack->add('addressbook', ENTRY_COUNTRY_ERROR);
   }
 
+  // -----
+  // Give an observer the opportunity to check the data submitted and identify
+  // an additional error.
+  //
+  $zco_notifier->notify('NOTIFY_ADDRESS_BOOK_PROCESS_VALIDATION', array(), $error);
+
   if ($error == false) {
-    $sql_data_array= array(array('fieldName'=>'entry_firstname', 'value'=>$firstname, 'type'=>'string'),
-                           array('fieldName'=>'entry_lastname', 'value'=>$lastname, 'type'=>'string'),
-                           array('fieldName'=>'entry_street_address', 'value'=>$street_address, 'type'=>'string'),
-                           array('fieldName'=>'entry_postcode', 'value'=>$postcode, 'type'=>'string'),
-                           array('fieldName'=>'entry_city', 'value'=>$city, 'type'=>'string'),
+    $sql_data_array= array(array('fieldName'=>'entry_firstname', 'value'=>$firstname, 'type'=>'stringIgnoreNull'),
+                           array('fieldName'=>'entry_lastname', 'value'=>$lastname, 'type'=>'stringIgnoreNull'),
+                           array('fieldName'=>'entry_street_address', 'value'=>$street_address, 'type'=>'stringIgnoreNull'),
+                           array('fieldName'=>'entry_postcode', 'value'=>$postcode, 'type'=>'stringIgnoreNull'),
+                           array('fieldName'=>'entry_city', 'value'=>$city, 'type'=>'stringIgnoreNull'),
                            array('fieldName'=>'entry_country_id', 'value'=>$country, 'type'=>'integer'));
 
     if (ACCOUNT_GENDER == 'true') $sql_data_array[] = array('fieldName'=>'entry_gender', 'value'=>$gender, 'type'=>'enum:m|f');
-    if (ACCOUNT_COMPANY == 'true') $sql_data_array[] = array('fieldName'=>'entry_company', 'value'=>$company, 'type'=>'string');
-    if (ACCOUNT_SUBURB == 'true') $sql_data_array[] = array('fieldName'=>'entry_suburb', 'value'=>$suburb, 'type'=>'string');
+    if (ACCOUNT_COMPANY == 'true') $sql_data_array[] = array('fieldName'=>'entry_company', 'value'=>$company, 'type'=>'stringIgnoreNull');
+    if (ACCOUNT_SUBURB == 'true') $sql_data_array[] = array('fieldName'=>'entry_suburb', 'value'=>$suburb, 'type'=>'stringIgnoreNull');
     if (ACCOUNT_STATE == 'true') {
       if ($zone_id > 0) {
         $sql_data_array[] = array('fieldName'=>'entry_zone_id', 'value'=>$zone_id, 'type'=>'integer');
-        $sql_data_array[] = array('fieldName'=>'entry_state', 'value'=>'', 'type'=>'string');
+        $sql_data_array[] = array('fieldName'=>'entry_state', 'value'=>'', 'type'=>'stringIgnoreNull');
       } else {
         $sql_data_array[] = array('fieldName'=>'entry_zone_id', 'value'=>'0', 'type'=>'integer');
-        $sql_data_array[] = array('fieldName'=>'entry_state', 'value'=>$state, 'type'=>'string');
+        $sql_data_array[] = array('fieldName'=>'entry_state', 'value'=>$state, 'type'=>'stringIgnoreNull');
       }
     }
 
@@ -197,12 +202,13 @@ if (isset($_POST['action']) && (($_POST['action'] == 'process') || ($_POST['acti
       // re-register session variables
       if ( (isset($_POST['primary']) && ($_POST['primary'] == 'on')) || ($_GET['edit'] == $_SESSION['customer_default_address_id']) ) {
         $_SESSION['customer_first_name'] = $firstname;
+        $_SESSION['customer_last_name'] = $lastname;
         $_SESSION['customer_country_id'] = $country;
         $_SESSION['customer_zone_id'] = (($zone_id > 0) ? (int)$zone_id : '0');
         $_SESSION['customer_default_address_id'] = (int)$_GET['edit'];
 
-        $sql_data_array = array(array('fieldName'=>'customers_firstname', 'value'=>$firstname, 'type'=>'string'),
-                                array('fieldName'=>'customers_lastname', 'value'=>$lastname, 'type'=>'string'),
+        $sql_data_array = array(array('fieldName'=>'customers_firstname', 'value'=>$firstname, 'type'=>'stringIgnoreNull'),
+                                array('fieldName'=>'customers_lastname', 'value'=>$lastname, 'type'=>'stringIgnoreNull'),
                                 array('fieldName'=>'customers_default_address_id', 'value'=>$_GET['edit'], 'type'=>'integer'));
 
         if (ACCOUNT_GENDER == 'true') $sql_data_array[] = array('fieldName'=>'customers_gender', 'value'=>$gender, 'type'=>'enum:m|f');
@@ -223,15 +229,16 @@ if (isset($_POST['action']) && (($_POST['action'] == 'process') || ($_POST['acti
       // register session variables
       if (isset($_POST['primary']) && ($_POST['primary'] == 'on')) {
         $_SESSION['customer_first_name'] = $firstname;
+        $_SESSION['customer_last_name'] = $lastname;
         $_SESSION['customer_country_id'] = $country;
         $_SESSION['customer_zone_id'] = (($zone_id > 0) ? (int)$zone_id : '0');
         //if (isset($_POST['primary']) && ($_POST['primary'] == 'on'))
         $_SESSION['customer_default_address_id'] = $new_address_book_id;
 
-        $sql_data_array = array(array('fieldName'=>'customers_firstname', 'value'=>$firstname, 'type'=>'string'),
-                                array('fieldName'=>'customers_lastname', 'value'=>$lastname, 'type'=>'string'));
+        $sql_data_array = array(array('fieldName'=>'customers_firstname', 'value'=>$firstname, 'type'=>'stringIgnoreNull'),
+                                array('fieldName'=>'customers_lastname', 'value'=>$lastname, 'type'=>'stringIgnoreNull'));
 
-        if (ACCOUNT_GENDER == 'true') $sql_data_array[] = array('fieldName'=>'customers_gender', 'value'=>$gender, 'type'=>'string');
+        if (ACCOUNT_GENDER == 'true') $sql_data_array[] = array('fieldName'=>'customers_gender', 'value'=>$gender, 'type'=>'stringIgnoreNull');
         //if (isset($_POST['primary']) && ($_POST['primary'] == 'on'))
         $sql_data_array[] = array('fieldName'=>'customers_default_address_id', 'value'=>$new_address_book_id, 'type'=>'integer');
 

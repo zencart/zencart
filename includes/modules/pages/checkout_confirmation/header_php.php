@@ -3,10 +3,10 @@
  * checkout_confirmation header_php.php
  *
  * @package page
- * @copyright Copyright 2003-2010 Zen Cart Development Team
+ * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: header_php.php 16435 2010-05-28 09:34:32Z drbyte $
+ * @version $Id: mc12345678 2019 Apr 30 Modified in v1.5.6b $
  */
 
 // This should be first line of the script:
@@ -18,7 +18,7 @@ if ($_SESSION['cart']->count_contents() <= 0) {
 }
 
 // if the customer is not logged on, redirect them to the login page
-  if (!$_SESSION['customer_id']) {
+  if (!zen_is_logged_in()) {
     $_SESSION['navigation']->set_snapshot(array('mode' => 'SSL', 'page' => FILENAME_CHECKOUT_PAYMENT));
     zen_redirect(zen_href_link(FILENAME_LOGIN, '', 'SSL'));
   } else {
@@ -37,15 +37,16 @@ if (isset($_SESSION['cart']->cartID) && $_SESSION['cartID']) {
 }
 
 // if no shipping method has been selected, redirect the customer to the shipping method selection page
-if (!$_SESSION['shipping']) {
+if (!isset($_SESSION['shipping'])) {
   zen_redirect(zen_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL'));
 }
-if (isset($_SESSION['shipping']['id']) && $_SESSION['shipping']['id'] == 'free_free' && defined('MODULE_ORDER_TOTAL_SHIPPING_FREE_SHIPPING_OVER') && $_SESSION['cart']->show_total() < MODULE_ORDER_TOTAL_SHIPPING_FREE_SHIPPING_OVER) {
+if (isset($_SESSION['shipping']['id']) && $_SESSION['shipping']['id'] == 'free_free' && $_SESSION['cart']->get_content_type() != 'virtual' && defined('MODULE_ORDER_TOTAL_SHIPPING_FREE_SHIPPING') && MODULE_ORDER_TOTAL_SHIPPING_FREE_SHIPPING == 'true' && defined('MODULE_ORDER_TOTAL_SHIPPING_FREE_SHIPPING_OVER') && $_SESSION['cart']->show_total() < MODULE_ORDER_TOTAL_SHIPPING_FREE_SHIPPING_OVER) {
   zen_redirect(zen_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL'));
 }
 
 if (isset($_POST['payment'])) $_SESSION['payment'] = $_POST['payment'];
-$_SESSION['comments'] = zen_db_prepare_input($_POST['comments']);
+
+$_SESSION['comments'] = zen_output_string_protected($_POST['comments']);
 
 //'checkout_payment_discounts'
 //zen_redirect(zen_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'));
@@ -86,7 +87,7 @@ if ($credit_covers) {
 
 $payment_modules = new payment($_SESSION['payment']);
 $payment_modules->update_status();
-if ( ($_SESSION['payment'] == '' || !is_object($$_SESSION['payment']) ) && $credit_covers === FALSE) {
+if ( ($_SESSION['payment'] == '' || !is_object(${$_SESSION['payment']}) ) && $credit_covers === FALSE) {
   $messageStack->add_session('checkout_payment', ERROR_NO_PAYMENT_MODULE_SELECTED, 'error');
 }
 
@@ -97,8 +98,6 @@ if (is_array($payment_modules->modules)) {
 if ($messageStack->size('checkout_payment') > 0) {
   zen_redirect(zen_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'));
 }
-//echo $messageStack->size('checkout_payment');
-//die('here');
 
 // Stock Check
 $flagAnyOutOfStock = false;
@@ -116,7 +115,7 @@ if (STOCK_CHECK == 'true') {
 }
 
 // update customers_referral with $_SESSION['gv_id']
-if ($_SESSION['cc_id']) {
+if (!empty($_SESSION['cc_id'])) {
   $discount_coupon_query = "SELECT coupon_code
                             FROM " . TABLE_COUPONS . "
                             WHERE coupon_id = :couponID";
@@ -145,22 +144,22 @@ if ($_SESSION['cc_id']) {
   }
 }
 
-if (isset($$_SESSION['payment']->form_action_url)) {
-  $form_action_url = $$_SESSION['payment']->form_action_url;
+if (isset(${$_SESSION['payment']}->form_action_url)) {
+  $form_action_url = ${$_SESSION['payment']}->form_action_url;
 } else {
   $form_action_url = zen_href_link(FILENAME_CHECKOUT_PROCESS, '', 'SSL');
 }
 
 // if shipping-edit button should be overridden, do so
 $editShippingButtonLink = zen_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL');
-if (method_exists($$_SESSION['payment'], 'alterShippingEditButton')) {
-  $theLink = $$_SESSION['payment']->alterShippingEditButton();
+if (method_exists(${$_SESSION['payment']}, 'alterShippingEditButton')) {
+  $theLink = ${$_SESSION['payment']}->alterShippingEditButton();
   if ($theLink) $editShippingButtonLink = $theLink;
 }
 // deal with billing address edit button
 $flagDisablePaymentAddressChange = false;
-if (isset($$_SESSION['payment']->flagDisablePaymentAddressChange)) {
-  $flagDisablePaymentAddressChange = $$_SESSION['payment']->flagDisablePaymentAddressChange;
+if (isset(${$_SESSION['payment']}->flagDisablePaymentAddressChange)) {
+  $flagDisablePaymentAddressChange = ${$_SESSION['payment']}->flagDisablePaymentAddressChange;
 }
 
 
@@ -170,4 +169,3 @@ $breadcrumb->add(NAVBAR_TITLE_2);
 
 // This should be last line of the script:
 $zco_notifier->notify('NOTIFY_HEADER_END_CHECKOUT_CONFIRMATION');
-?>

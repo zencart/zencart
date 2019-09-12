@@ -3,10 +3,10 @@
  * checkout_new_address.php
  *
  * @package modules
- * @copyright Copyright 2003-2007 Zen Cart Development Team
+ * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: checkout_new_address.php 6772 2007-08-21 12:33:29Z drbyte $
+ * @version $Id: lat9 2019 Mar 18 Modified in v1.5.6b $
  */
 // This should be first line of the script:
 $zco_notifier->notify('NOTIFY_MODULE_START_CHECKOUT_NEW_ADDRESS');
@@ -27,7 +27,7 @@ if (!defined('IS_ADMIN_FLAG')) {
 
 if (isset($_POST['action']) && ($_POST['action'] == 'submit')) {
   // process a new address
-  if (zen_not_null($_POST['firstname']) && zen_not_null($_POST['lastname']) && zen_not_null($_POST['street_address'])) {
+  if (!empty($_POST['firstname']) && !empty($_POST['lastname']) && !empty($_POST['street_address'])) {
     $process = true;
     if (ACCOUNT_GENDER == 'true') $gender = zen_db_prepare_input($_POST['gender']);
     if (ACCOUNT_COMPANY == 'true') $company = zen_db_prepare_input($_POST['company']);
@@ -46,7 +46,6 @@ if (isset($_POST['action']) && ($_POST['action'] == 'submit')) {
       }
     }
     $country = zen_db_prepare_input($_POST['zone_country_id']);
-//echo ' I SEE: country=' . $country . '&nbsp;&nbsp;&nbsp;state=' . $state . '&nbsp;&nbsp;&nbsp;zone_id=' . $zone_id;
     if (ACCOUNT_GENDER == 'true') {
       if ( ($gender != 'm') && ($gender != 'f') ) {
         $error = true;
@@ -85,7 +84,7 @@ if (isset($_POST['action']) && ($_POST['action'] == 'submit')) {
       $zone_query = "SELECT distinct zone_id, zone_name, zone_code
                        FROM " . TABLE_ZONES . "
                        WHERE zone_country_id = :zoneCountryID
-                       AND " . 
+                       AND " .
                      ((trim($state) != '' && $zone_id == 0) ? "(upper(zone_name) like ':zoneState%' OR upper(zone_code) like '%:zoneState%') OR " : "") .
                       "zone_id = :zoneID
                        ORDER BY zone_code ASC, zone_name";
@@ -133,40 +132,43 @@ if (isset($_POST['action']) && ($_POST['action'] == 'submit')) {
       $error = true;
       $messageStack->add('checkout_address', ENTRY_COUNTRY_ERROR);
     }
+    
+    $zco_notifier->notify('NOTIFY_MODULE_CHECKOUT_NEW_ADDRESS_VALIDATION', array(), $error);
 
     if ($error == false) {
       $sql_data_array = array(array('fieldName'=>'customers_id', 'value'=>$_SESSION['customer_id'], 'type'=>'integer'),
-                              array('fieldName'=>'entry_firstname', 'value'=>$firstname, 'type'=>'string'),
-                              array('fieldName'=>'entry_lastname','value'=>$lastname, 'type'=>'string'),
-                              array('fieldName'=>'entry_street_address','value'=>$street_address, 'type'=>'string'),
-                              array('fieldName'=>'entry_postcode', 'value'=>$postcode, 'type'=>'string'),
-                              array('fieldName'=>'entry_city', 'value'=>$city, 'type'=>'string'),
+                              array('fieldName'=>'entry_firstname', 'value'=>$firstname, 'type'=>'stringIgnoreNull'),
+                              array('fieldName'=>'entry_lastname','value'=>$lastname, 'type'=>'stringIgnoreNull'),
+                              array('fieldName'=>'entry_street_address','value'=>$street_address, 'type'=>'stringIgnoreNull'),
+                              array('fieldName'=>'entry_postcode', 'value'=>$postcode, 'type'=>'stringIgnoreNull'),
+                              array('fieldName'=>'entry_city', 'value'=>$city, 'type'=>'stringIgnoreNull'),
                               array('fieldName'=>'entry_country_id', 'value'=>$country, 'type'=>'integer')
       );
 
       if (ACCOUNT_GENDER == 'true') $sql_data_array[] = array('fieldName'=>'entry_gender', 'value'=>$gender, 'type'=>'enum:m|f');
-      if (ACCOUNT_COMPANY == 'true') $sql_data_array[] = array('fieldName'=>'entry_company', 'value'=>$company, 'type'=>'string');
-      if (ACCOUNT_SUBURB == 'true') $sql_data_array[] = array('fieldName'=>'entry_suburb', 'value'=>$suburb, 'type'=>'string');
+      if (ACCOUNT_COMPANY == 'true') $sql_data_array[] = array('fieldName'=>'entry_company', 'value'=>$company, 'type'=>'stringIgnoreNull');
+      if (ACCOUNT_SUBURB == 'true') $sql_data_array[] = array('fieldName'=>'entry_suburb', 'value'=>$suburb, 'type'=>'stringIgnoreNull');
       if (ACCOUNT_STATE == 'true') {
         if ($zone_id > 0) {
           $sql_data_array[] = array('fieldName'=>'entry_zone_id', 'value'=>$zone_id, 'type'=>'integer');
-          $sql_data_array[] = array('fieldName'=>'entry_state', 'value'=>'', 'type'=>'string');
+          $sql_data_array[] = array('fieldName'=>'entry_state', 'value'=>'', 'type'=>'stringIgnoreNull');
         } else {
           $sql_data_array[] = array('fieldName'=>'entry_zone_id', 'value'=>0, 'type'=>'integer');
-          $sql_data_array[] = array('fieldName'=>'entry_state', 'value'=>$state, 'type'=>'string');
+          $sql_data_array[] = array('fieldName'=>'entry_state', 'value'=>$state, 'type'=>'stringIgnoreNull');
         }
       }
       $db->perform(TABLE_ADDRESS_BOOK, $sql_data_array);
-      $zco_notifier->notify('NOTIFY_MODULE_CHECKOUT_ADDED_ADDRESS_BOOK_RECORD', array_merge(array('address_id' => $db->Insert_ID() ), $sql_data_array));
+      $address_book_id = $db->Insert_ID();
+      $zco_notifier->notify('NOTIFY_MODULE_CHECKOUT_ADDED_ADDRESS_BOOK_RECORD', array_merge(array('address_id' => $address_book_id ), $sql_data_array));
       switch($addressType) {
         case 'billto':
-        $_SESSION['billto'] = $db->Insert_ID();
+        $_SESSION['billto'] = $address_book_id;
         $_SESSION['payment'] = '';
         zen_redirect(zen_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'));
         break;
         case 'shipto':
-        $_SESSION['sendto'] = $db->Insert_ID();
-        $_SESSION['shipping'] = '';
+        $_SESSION['sendto'] = $address_book_id;
+        unset($_SESSION['shipping']);
         zen_redirect(zen_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL'));
         break;
       }
@@ -205,7 +207,7 @@ if (isset($_POST['action']) && ($_POST['action'] == 'submit')) {
       $reset_shipping = false;
       if ($_SESSION['sendto']) {
         if ($_SESSION['sendto'] != $_POST['address']) {
-          if ($_SESSION['shipping']) {
+          if (isset($_SESSION['shipping'])) {
             $reset_shipping = true;
           }
         }
@@ -220,7 +222,7 @@ if (isset($_POST['action']) && ($_POST['action'] == 'submit')) {
       $check_address_query = $db->bindVars($check_address_query, ':addressBookID', $_SESSION['sendto'], 'integer');
       $check_address = $db->Execute($check_address_query);
       if ($check_address->fields['total'] == '1') {
-        if ($reset_shipping == true) $_SESSION['shipping'] = '';
+        if ($reset_shipping == true) unset($_SESSION['shipping']);
         zen_redirect(zen_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL'));
       } else {
         $_SESSION['sendto'] = '';
@@ -252,4 +254,3 @@ if (isset($_POST['action']) && ($_POST['action'] == 'submit')) {
 
 // This should be last line of the script:
 $zco_notifier->notify('NOTIFY_MODULE_END_CHECKOUT_NEW_ADDRESS');
-?>

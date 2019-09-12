@@ -1,19 +1,18 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2011 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: admin_account.php 18698 2011-05-04 14:50:06Z wilt $
+ * @version $Id: Author: zcwilt  Fri Apr 01 22:01:13 2016 -0500 Modified in v1.5.5 $
  */
 
 require('includes/application_top.php');
 if (file_exists(DIR_WS_LANGUAGES . $_SESSION['language'] . '/' . 'users.php')) {
   include(DIR_WS_LANGUAGES . $_SESSION['language'] . '/' . 'users.php');
 }
-
 // Check if session has timed out
-if (!isset($_SESSION['admin_id'])) zen_redirect(zen_href_link(FILENAME_LOGIN));
+if (!isset($_SESSION['admin_id'])) zen_redirect(zen_href_link(FILENAME_LOGIN, '', 'SSL'));
 $user = $_SESSION['admin_id'];
 
 // determine whether an action has been requested
@@ -40,7 +39,7 @@ switch ($action) {
     $formAction = 'reset';
     break;
   case 'update': // update existing user's details in database. Post data is prep'd for db in the first function call
-    $errors = zen_update_user(FALSE, $_POST['email'], $_POST['id'], $_POST['profile']);
+    $errors = zen_update_user(FALSE, $_POST['email'], $_SESSION['admin_id'], null);
     if (sizeof($errors) > 0)
     {
       foreach ($errors as $error)
@@ -57,7 +56,7 @@ switch ($action) {
     }
     break;
   case 'reset': // reset existing user's password in database. Post data is prep'd for db in the first function call
-    $errors = zen_reset_password($_POST['user'], $_POST['password'], $_POST['confirm']);
+    $errors = zen_reset_password($_SESSION['admin_id'], $_POST['password'], $_POST['confirm']);
     if (sizeof($errors) > 0)
     {
       foreach ($errors as $error)
@@ -117,7 +116,6 @@ $userDetails = $userList[0];
 
 <form action="<?php echo zen_href_link(FILENAME_ADMIN_ACCOUNT) ?>" method="post">
 <?php if (isset($formAction)) echo zen_draw_hidden_field('action',$formAction) . zen_draw_hidden_field('securityToken', $_SESSION['securityToken']); ?>
-<?php if ($action == 'edit' || $action == 'password') echo zen_draw_hidden_field('user',$user) ?>
   <table cellspacing="0">
     <tr class="headingRow">
       <th class="name"><?php echo TEXT_NAME ?></th>
@@ -129,9 +127,9 @@ $userDetails = $userList[0];
       <th class="actions">&nbsp;</th>
     </tr>
     <tr>
-      <td class="name"><?php echo $userDetails['name'] ?><?php echo zen_draw_hidden_field('id', $userDetails['id']) . zen_draw_hidden_field('admin_name', $userDetails['name']); ?></td>
+      <td class="name"><?php echo $userDetails['name'] ?><?php echo zen_draw_hidden_field('admin_name', $userDetails['name']); ?></td>
 <?php if ($action == 'edit' && $user == $userDetails['id']) { ?>
-      <td class="email"><?php echo zen_draw_input_field('email', $userDetails['email'], 'class="field"', false, 'text', true) ?></td>
+      <td class="email"><?php echo zen_draw_input_field('email', $userDetails['email'], 'class="field"', false, 'email', true) ?></td>
 <?php } else { ?>
       <td class="email"><?php echo $userDetails['email'] ?></td>
 <?php } ?>
@@ -164,9 +162,11 @@ $userDetails = $userList[0];
 </div>
 <!-- body_eof //-->
 
+<div class="bottom">
 <!-- footer //-->
 <?php require(DIR_WS_INCLUDES . 'footer.php'); ?>
 <!-- footer_eof //-->
+</div>
 <br>
 </body>
 </html>

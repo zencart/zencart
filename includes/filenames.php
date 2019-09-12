@@ -4,11 +4,10 @@
  * Defines the filenames used in the project
  *
  * @package general
- * @copyright Copyright 2003-2011 Zen Cart Development Team
+ * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: filenames.php 19690 2011-10-04 16:41:45Z drbyte $
- * @private
+ * @version $Id: Scott C Wilson 2019 Feb 13 Modified in v1.5.6b $
  */
 /**
  * define project filenames
@@ -27,6 +26,7 @@ define('FILENAME_ADMIN_ACTIVITY', 'admin_activity');
 define('FILENAME_ADMIN_PAGE_REGISTRATION', 'admin_page_registration');
 define('FILENAME_ADVANCED_SEARCH', 'advanced_search');
 define('FILENAME_ADVANCED_SEARCH_RESULT', 'advanced_search_result');
+define('FILENAME_AJAX', 'ajax');
 define('FILENAME_ALT_NAV', 'alt_nav');
 define('FILENAME_ALERT_PAGE', 'alert_page');
 define('FILENAME_ATTRIBUTES', 'attributes');
@@ -38,6 +38,7 @@ define('FILENAME_CACHE', 'cache');
 define('FILENAME_CATALOG_ACCOUNT_HISTORY_INFO', 'account_history_info');
 define('FILENAME_CATEGORIES', 'categories');
 define('FILENAME_CATEGORY_ICON_DISPLAY', 'category_icon_display');
+define('FILENAME_CATEGORY_PRODUCT_LISTING', 'category_product_listing');
 define('FILENAME_CHECKOUT_CONFIRMATION', 'checkout_confirmation');
 define('FILENAME_CHECKOUT_PAYMENT', 'checkout_payment');
 define('FILENAME_CHECKOUT_PAYMENT_ADDRESS', 'checkout_payment_address');
@@ -52,6 +53,7 @@ define('FILENAME_COOKIE_USAGE', 'cookie_usage');
 define('FILENAME_COUNTRIES', 'countries');
 define('FILENAME_COUPON_ADMIN', 'coupon_admin');
 define('FILENAME_COUPON_RESTRICT', 'coupon_restrict');
+define('FILENAME_COUPON_ADMIN_EXPORT', 'coupon_admin_export');
 define('FILENAME_CREATE_ACCOUNT', 'create_account');
 define('FILENAME_CREATE_ACCOUNT_SUCCESS', 'create_account_success');
 define('FILENAME_CURRENCIES', 'currencies');
@@ -97,6 +99,7 @@ define('FILENAME_LOGOFF', 'logoff');
 define('FILENAME_MAIL', 'mail');
 define('FILENAME_MAIN_PRODUCT_IMAGE', 'main_product_image');
 define('FILENAME_MANUFACTURERS', 'manufacturers');
+define('FILENAME_META_TAGS', 'meta_tags');
 define('FILENAME_MODULES', 'modules');
 define('FILENAME_NEWSLETTERS', 'newsletters');
 define('FILENAME_ORDERS', 'orders');
@@ -157,6 +160,7 @@ define('FILENAME_STATS_CUSTOMERS_REFERRALS', 'stats_customers_referrals');
 define('FILENAME_STATS_PRODUCTS_PURCHASED', 'stats_products_purchased');
 define('FILENAME_STATS_PRODUCTS_VIEWED', 'stats_products_viewed');
 define('FILENAME_STATS_PRODUCTS_LOWSTOCK', 'stats_products_lowstock');
+define('FILENAME_STATS_SALES_REPORT_GRAPHS', 'stats_sales_report_graphs');
 define('FILENAME_STORE_MANAGER', 'store_manager');
 define('FILENAME_TAX_CLASSES', 'tax_classes');
 define('FILENAME_TAX_RATES', 'tax_rates');
@@ -187,6 +191,4 @@ define('FILENAME_PRODUCT_LISTING', 'product_listing.php');
 define('FILENAME_PRODUCTS_DISCOUNT_PRICES','products_discount_prices.php');
 define('FILENAME_SPECIALS_INDEX', 'specials_index.php');
 define('FILENAME_UPCOMING_PRODUCTS', 'upcoming_products.php');
-
-define('FILENAME_BB_INDEX', 'index.php'); // phpBB main index filename
 

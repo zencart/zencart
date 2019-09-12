@@ -3,11 +3,11 @@
  * payer_auth_verifier page
  *
  * @package paymentMethod
- * @copyright Copyright 2003-2010 Zen Cart Development Team
+ * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @copyright Portions Copyright 2005 CardinalCommerce
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: header_php.php 15898 2010-04-12 15:12:09Z drbyte $
+ * @version $Id: mc12345678 2019 Apr 30 Modified in v1.5.6b $
  */
 /**
  * Purpose:
@@ -46,7 +46,7 @@
  */
 
 // if the customer is not logged on, redirect them to the login page
-  if (!$_SESSION['customer_id']) {
+  if (!zen_is_logged_in()) {
     die(WARNING_SESSION_TIMEOUT);
   }
 
@@ -97,8 +97,8 @@
       $authenticate_data_array = array('transaction_id' => $_SESSION['3Dsecure_transactionId'],
                                        'payload' => $_POST["PaRes"]);
 
-      if (is_object($$payment_module)) {
-        $authenticate_resp_array = $$payment_module->get3DSecureAuthenticateResponse($authenticate_data_array);
+      if (is_object(${$payment_module})) {
+        $authenticate_resp_array = ${$payment_module}->get3DSecureAuthenticateResponse($authenticate_data_array);
       }
 
       $shouldContinue = $authenticate_resp_array['continue_flag'];
@@ -150,9 +150,9 @@
         ////////////////////////////////////////////////////////////////////
         // Business rules are set to prompt for another form of payment
         ////////////////////////////////////////////////////////////////////
-        $error = $$payment_module->get_authentication_error();
+        $error = ${$payment_module}->get_authentication_error();
 
-        $messageStack->add_session('checkout_payment', $error . '<!-- ['.$$payment_module->code.'] -->', 'error');
+        $messageStack->add_session('checkout_payment', $error . '<!-- ['.${$payment_module}->code.'] -->', 'error');
         $redirectPage = zen_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL', true, false);
       }
 
@@ -184,9 +184,9 @@ header("Cache-Control: max-age=1");  // stores for only 1 second, which prevents
 
 <?php
   // Call pre_confirmation_check on the underlying payment module.
-  $$payment_module->pre_confirmation_check();
+  ${$payment_module}->pre_confirmation_check();
   // output the appropriate POST vars so form can be processed for submission to gateway
-  echo $$payment_module->process_button();
+  echo ${$payment_module}->process_button();
 ?>
 <noscript>
   <br><br>

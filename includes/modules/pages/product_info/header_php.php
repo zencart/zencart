@@ -3,10 +3,10 @@
  * product_info header_php.php
  *
  * @package page
- * @copyright Copyright 2003-2011 Zen Cart Development Team
+ * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: header_php.php 18697 2011-05-04 14:35:20Z wilt $
+ * @version $Id: mc12345678 2019 Apr 30 Modified in v1.5.6b $
  */
 
   // This should be first line of the script:
@@ -31,7 +31,7 @@
   }
 
   // ensure navigation snapshot in case must-be-logged-in-for-price is enabled
-  if (!$_SESSION['customer_id']) {
+  if (!zen_is_logged_in()) {
     $_SESSION['navigation']->set_snapshot();
   }
 

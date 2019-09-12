@@ -3,10 +3,10 @@
  * Password Forgotten
  *
  * @package page
- * @copyright Copyright 2003-2012 Zen Cart Development Team
+ * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte  Tue Jul 31 18:47:04 2012 -0400 Modified in v1.5.1 $
+ * @version $Id: DrByte 2019 Jul 15 Modified in v1.5.6c $
  */
 
 // This should be first line of the script:
@@ -26,13 +26,13 @@ if (isset($_GET['action']) && ($_GET['action'] == 'process')) {
     exit(0);
   }
   // BEGIN SLAM PREVENTION
-  if ($_POST['email_address'] != '')
+  if (!empty($_POST['email_address']))
   {
     if (! isset($_SESSION['login_attempt'])) $_SESSION['login_attempt'] = 0;
     $_SESSION['login_attempt'] ++;
   } // END SLAM PREVENTION
 
-  $email_address = zen_db_prepare_input($_POST['email_address']);
+  $email_address = zen_db_prepare_input(trim($_POST['email_address']));
 
   $check_customer_query = "SELECT customers_firstname, customers_lastname, customers_password, customers_id
                            FROM " . TABLE_CUSTOMERS . "
@@ -43,7 +43,7 @@ if (isset($_GET['action']) && ($_GET['action'] == 'process')) {
 
   if ($check_customer->RecordCount() > 0) {
 
-    $zco_notifier->notify('NOTIFY_PASSWORD_FORGOTTEN_VALIDATED');
+    $zco_notifier->notify('NOTIFY_PASSWORD_FORGOTTEN_VALIDATED', $email_address);
 
     $new_password = zen_create_PADSS_password( (ENTRY_PASSWORD_MIN_LENGTH > 0 ? ENTRY_PASSWORD_MIN_LENGTH : 5) );
     $crypted_password = zen_encrypt_password($new_password);
@@ -58,14 +58,20 @@ if (isset($_GET['action']) && ($_GET['action'] == 'process')) {
 
     $html_msg['EMAIL_CUSTOMERS_NAME'] = $check_customer->fields['customers_firstname'] . ' ' . $check_customer->fields['customers_lastname'];
     $html_msg['EMAIL_MESSAGE_HTML'] = sprintf(EMAIL_PASSWORD_REMINDER_BODY, $new_password);
+
     // send the email
     zen_mail($check_customer->fields['customers_firstname'] . ' ' . $check_customer->fields['customers_lastname'], $email_address, EMAIL_PASSWORD_REMINDER_SUBJECT, sprintf(EMAIL_PASSWORD_REMINDER_BODY, $new_password), STORE_NAME, EMAIL_FROM, $html_msg,'password_forgotten');
 
-    $messageStack->add_session('login', SUCCESS_PASSWORD_SENT, 'success');
-    zen_redirect(zen_href_link(FILENAME_LOGIN, '', 'SSL'));
+    // handle 3rd-party integrations
+    $zco_notifier->notify('NOTIFY_PASSWORD_FORGOTTEN_CHANGED', $email_address, $check_customer->fields['customers_id'], $new_password);
+
   } else {
-    $messageStack->add('password_forgotten', TEXT_NO_EMAIL_ADDRESS_FOUND);
+    $zco_notifier->notify('NOTIFY_PASSWORD_FORGOTTEN_NOT_FOUND', $email_address);
   }
+
+    $messageStack->add_session('login', SUCCESS_PASSWORD_SENT, 'success');
+
+    zen_redirect(zen_href_link(FILENAME_LOGIN, '', 'SSL'));
 }
 
 $breadcrumb->add(NAVBAR_TITLE_1, zen_href_link(FILENAME_LOGIN, '', 'SSL'));

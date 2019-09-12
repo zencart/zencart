@@ -1,10 +1,10 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2012 Zen Cart Development Team
+ * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte  Fri Jul 6 11:57:44 2012 -0400 Modified in v1.5.1 $
+ * @version $Id: DrByte 2019 May 15 Modified in v1.5.6b $
  */
 /**
  * File contains just application_top code
@@ -17,7 +17,7 @@
 /**
  * boolean if true the autoloader scripts will be parsed and their output shown. For debugging purposes only.
  */
-define('DEBUG_AUTOLOAD', false);
+if (!defined('DEBUG_AUTOLOAD')) define('DEBUG_AUTOLOAD', false);
 /**
  * boolean used to see if we are in the admin script, obviously set to false here.
  * DO NOT REMOVE THE define BELOW. WILL BREAK ADMIN
@@ -39,7 +39,7 @@ define('PAGE_PARSE_START_TIME', microtime());
  */
 if (defined('STRICT_ERROR_REPORTING') && STRICT_ERROR_REPORTING == true) {
   @ini_set('display_errors', TRUE);
-  error_reporting(version_compare(PHP_VERSION, 5.3, '>=') ? E_ALL & ~E_DEPRECATED & ~E_NOTICE : version_compare(PHP_VERSION, 5.4, '>=') ? E_ALL & ~E_DEPRECATED & ~E_NOTICE & ~E_STRICT : E_ALL & ~E_NOTICE);
+  error_reporting(version_compare(PHP_VERSION, 5.3, '>=') ? E_ALL & ~E_DEPRECATED & ~E_NOTICE : (version_compare(PHP_VERSION, 5.4, '>=') ? E_ALL & ~E_DEPRECATED & ~E_NOTICE & ~E_STRICT : E_ALL & ~E_NOTICE));
 } else {
   error_reporting(0);
 }
@@ -49,7 +49,20 @@ if (defined('STRICT_ERROR_REPORTING') && STRICT_ERROR_REPORTING == true) {
 if (version_compare(PHP_VERSION, 5.3, '<') && function_exists('set_magic_quotes_runtime')) set_magic_quotes_runtime(0);
 if (version_compare(PHP_VERSION, 5.4, '<') && @ini_get('magic_quotes_sybase') != 0) @ini_set('magic_quotes_sybase', 0);
 // set php_self in the local scope
-if (!isset($PHP_SELF)) $PHP_SELF = $_SERVER['PHP_SELF'];
+if (!isset($PHP_SELF)) $PHP_SELF = $_SERVER['SCRIPT_NAME'];
+$PHP_SELF = htmlspecialchars($PHP_SELF);
+// Suppress html from error messages
+@ini_set("html_errors","0");
+/*
+ * Get time zone info from PHP config
+*/
+if (version_compare(PHP_VERSION, 5.3, '>='))
+{
+  @date_default_timezone_set(date_default_timezone_get());
+}
+
+if (!defined('__DIR__')) define('__DIR__', dirname(__FILE__));
+if (!defined('DIR_FS_ADMIN')) define('DIR_FS_ADMIN', preg_replace('#/includes/$#', '/', realpath(__DIR__ . '/../') . '/'));
 
 /**
  * Set the local configuration parameters - mainly for developers
@@ -78,6 +91,18 @@ if (!defined('DIR_FS_CATALOG') || !is_dir(DIR_FS_CATALOG.'/includes/classes') ||
   } else {
     die('ERROR: admin/includes/configure.php file not found. Suggest running zc_install/index.php?');
   }
+}
+/**
+ * check for and load system defined path constants
+ */
+if (file_exists('includes/defined_paths.php')) {
+    /**
+     * load the system-defined path constants
+     */
+    require('includes/defined_paths.php');
+} else {
+    die('ERROR: /includes/defined_paths.php file not found. Cannot continue.');
+    exit;
 }
 /**
  * ignore version-check if INI file setting has been set
@@ -132,7 +157,6 @@ define('DIR_WS_TEMPLATES', DIR_WS_INCLUDES . 'templates/');
 /**
  * Prepare init-system
  */
-unset($loaderPrefix); // admin doesn't need this override
 $autoLoadConfig = array();
 if (isset($loaderPrefix)) {
  $loaderPrefix = preg_replace('/[^a-z_]/', '', $loaderPrefix);
@@ -145,3 +169,4 @@ require('includes/initsystem.php');
  * load the autoloader interpreter code.
  */
   require(DIR_FS_CATALOG . 'includes/autoload_func.php');
+

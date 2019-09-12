@@ -5,11 +5,17 @@
  * outputs the html header. i,e, everything that comes before the \</head\> tag <br />
  *
  * @package templateSystem
- * @copyright Copyright 2003-2012 Zen Cart Development Team
+ * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte  Tue Jul 17 16:02:00 2012 -0400 Modified in v1.5.1 $
+ * @version $Id: Zen4All 2019 Apr 25 Modified in v1.5.6b $
  */
+
+$zco_notifier->notify('NOTIFY_HTML_HEAD_START', $current_page_base, $template_dir);
+
+// Prevent clickjacking risks by setting X-Frame-Options:SAMEORIGIN
+header('X-Frame-Options:SAMEORIGIN');
+
 /**
  * load the module for generating page meta-tags
  */
@@ -26,11 +32,14 @@ require(DIR_WS_MODULES . zen_get_module_directory('meta_tags.php'));
 <meta name="keywords" content="<?php echo META_TAG_KEYWORDS; ?>" />
 <meta name="description" content="<?php echo META_TAG_DESCRIPTION; ?>" />
 <meta http-equiv="imagetoolbar" content="no" />
-<meta name="author" content="The Zen Cart&reg; Team and others" />
+<meta name="author" content="<?php echo STORE_NAME ?>" />
 <meta name="generator" content="shopping cart program by Zen Cart&reg;, http://www.zen-cart.com eCommerce" />
 <?php if (defined('ROBOTS_PAGES_TO_SKIP') && in_array($current_page_base,explode(",",constant('ROBOTS_PAGES_TO_SKIP'))) || $current_page_base=='down_for_maintenance' || $robotsNoIndex === true) { ?>
 <meta name="robots" content="noindex, nofollow" />
 <?php } ?>
+
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=yes"/>
+
 <?php if (defined('FAVICON')) { ?>
 <link rel="icon" href="<?php echo FAVICON; ?>" type="image/x-icon" />
 <link rel="shortcut icon" href="<?php echo FAVICON; ?>" type="image/x-icon" />
@@ -40,13 +49,25 @@ require(DIR_WS_MODULES . zen_get_module_directory('meta_tags.php'));
 <?php if (isset($canonicalLink) && $canonicalLink != '') { ?>
 <link rel="canonical" href="<?php echo $canonicalLink; ?>" />
 <?php } ?>
+<?php
+// BOF hreflang for multilingual sites
+if (!isset($lng) || (isset($lng) && !is_object($lng))) {
+  $lng = new language;
+}
+if (count($lng->catalog_languages) > 1) {
+  foreach($lng->catalog_languages as $key => $value) {
+    echo '<link rel="alternate" href="' . ($this_is_home_page ? zen_href_link(FILENAME_DEFAULT, 'language=' . $key, $request_type, false) : $canonicalLink . (strpos($canonicalLink, '?') ? '&amp;' : '?') . 'language=' . $key) . '" hreflang="' . $key . '" />' . "\n";
+  }
+}
+// EOF hreflang for multilingual sites
+?>
 
 <?php
 /**
  * load all template-specific stylesheets, named like "style*.css", alphabetically
  */
   $directory_array = $template->get_template_part($template->get_template_dir('.css',DIR_WS_TEMPLATE, $current_page_base,'css'), '/^style/', '.css');
-  while(list ($key, $value) = each($directory_array)) {
+  foreach($directory_array as $key => $value) {
     echo '<link rel="stylesheet" type="text/css" href="' . $template->get_template_dir('.css',DIR_WS_TEMPLATE, $current_page_base,'css') . '/' . $value . '" />'."\n";
   }
 /**
@@ -66,7 +87,7 @@ require(DIR_WS_MODULES . zen_get_module_directory('meta_tags.php'));
                         '/p_' . $tmp_products_id,
                         '/' . $_SESSION['language'] . '_p_' . $tmp_products_id
                         );
-  while(list ($key, $value) = each($sheets_array)) {
+  foreach($sheets_array as $key => $value) {
     //echo "<!--looking for: $value-->\n";
     $perpagefile = $template->get_template_dir('.css', DIR_WS_TEMPLATE, $current_page_base, 'css') . $value . '.css';
     if (file_exists($perpagefile)) echo '<link rel="stylesheet" type="text/css" href="' . $perpagefile .'" />'."\n";
@@ -91,15 +112,22 @@ require(DIR_WS_MODULES . zen_get_module_directory('meta_tags.php'));
  */
   $directory_array = $template->get_template_part($template->get_template_dir('.css',DIR_WS_TEMPLATE, $current_page_base,'css'), '/^print/', '.css');
   sort($directory_array);
-  while(list ($key, $value) = each($directory_array)) {
+  foreach($directory_array as $key => $value) {
     echo '<link rel="stylesheet" type="text/css" media="print" href="' . $template->get_template_dir('.css',DIR_WS_TEMPLATE, $current_page_base,'css') . '/' . $value . '" />'."\n";
   }
 
+/** CDN for jQuery core **/
+?>
+
+<script type="text/javascript">window.jQuery || document.write(unescape('%3Cscript type="text/javascript" src="https://code.jquery.com/jquery-3.4.0.min.js" integrity="sha256-BJeo0qm959uMBGb65z40ejJYGSgR7REI4+CW1fNKwOg=" crossorigin="anonymous"%3E%3C/script%3E'));</script>
+<script type="text/javascript">window.jQuery || document.write(unescape('%3Cscript type="text/javascript" src="<?php echo $template->get_template_dir('.js',DIR_WS_TEMPLATE, $current_page_base,'jscript'); ?>/jquery.min.js"%3E%3C/script%3E'));</script>
+
+<?php
 /**
  * load all site-wide jscript_*.js files from includes/templates/YOURTEMPLATE/jscript, alphabetically
  */
   $directory_array = $template->get_template_part($template->get_template_dir('.js',DIR_WS_TEMPLATE, $current_page_base,'jscript'), '/^jscript_/', '.js');
-  while(list ($key, $value) = each($directory_array)) {
+  foreach($directory_array as $key => $value) {
     echo '<script type="text/javascript" src="' .  $template->get_template_dir('.js',DIR_WS_TEMPLATE, $current_page_base,'jscript') . '/' . $value . '"></script>'."\n";
   }
 
@@ -107,7 +135,7 @@ require(DIR_WS_MODULES . zen_get_module_directory('meta_tags.php'));
  * load all page-specific jscript_*.js files from includes/modules/pages/PAGENAME, alphabetically
  */
   $directory_array = $template->get_template_part($page_directory, '/^jscript_/', '.js');
-  while(list ($key, $value) = each($directory_array)) {
+  foreach($directory_array as $key => $value) {
     echo '<script type="text/javascript" src="' . $page_directory . '/' . $value . '"></script>' . "\n";
   }
 
@@ -115,7 +143,7 @@ require(DIR_WS_MODULES . zen_get_module_directory('meta_tags.php'));
  * load all site-wide jscript_*.php files from includes/templates/YOURTEMPLATE/jscript, alphabetically
  */
   $directory_array = $template->get_template_part($template->get_template_dir('.php',DIR_WS_TEMPLATE, $current_page_base,'jscript'), '/^jscript_/', '.php');
-  while(list ($key, $value) = each($directory_array)) {
+  foreach($directory_array as $key => $value) {
 /**
  * include content from all site-wide jscript_*.php files from includes/templates/YOURTEMPLATE/jscript, alphabetically.
  * These .PHP files can be manipulated by PHP when they're called, and are copied in-full to the browser page
@@ -126,7 +154,7 @@ require(DIR_WS_MODULES . zen_get_module_directory('meta_tags.php'));
  * include content from all page-specific jscript_*.php files from includes/modules/pages/PAGENAME, alphabetically.
  */
   $directory_array = $template->get_template_part($page_directory, '/^jscript_/');
-  while(list ($key, $value) = each($directory_array)) {
+  foreach($directory_array as $key => $value) {
 /**
  * include content from all page-specific jscript_*.php files from includes/modules/pages/PAGENAME, alphabetically.
  * These .PHP files can be manipulated by PHP when they're called, and are copied in-full to the browser page
@@ -134,10 +162,9 @@ require(DIR_WS_MODULES . zen_get_module_directory('meta_tags.php'));
     require($page_directory . '/' . $value); echo "\n";
   }
 
-// DEBUG: echo '<!-- I SEE cat: ' . $current_category_id . ' || vs cpath: ' . $cPath . ' || page: ' . $current_page . ' || template: ' . $current_template . ' || main = ' . ($this_is_home_page ? 'YES' : 'NO') . ' -->';
-
-
+  $zco_notifier->notify('NOTIFY_HTML_HEAD_END', $current_page_base);
 ?>
+
 </head>
 <?php // NOTE: Blank line following is intended: ?>
 

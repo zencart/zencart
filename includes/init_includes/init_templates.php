@@ -8,10 +8,10 @@
  * ie: includes/languages/classic/english.php followed by includes/languages/english.php
  *
  * @package initSystem
- * @copyright Copyright 2003-2006 Zen Cart Development Team
+ * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: init_templates.php 3123 2006-03-06 23:36:46Z drbyte $
+ * @version $Id: Scott C Wilson 2019 Apr 23 Modified in v1.5.6b $
  */
   if (!defined('IS_ADMIN_FLAG')) {
    die('Illegal Access');
@@ -52,16 +52,8 @@
  * Load the appropriate Language files, based on the currently-selected template
  */
 
-  if (file_exists(DIR_WS_LANGUAGES . $template_dir . '/' . $_SESSION['language'] . '.php')) {
-    $template_dir_select = $template_dir . '/';
-  /**
-   * include the template language overrides
-   */
-      include_once(DIR_WS_LANGUAGES . $template_dir_select . $_SESSION['language'] . '.php');
-  } else {
-    $template_dir_select = '';
-      //  include_once(DIR_WS_LANGUAGES . $template_dir_select . $_SESSION['language'] . '.php');
-  }
+  include_once(zen_get_file_directory(DIR_FS_CATALOG . DIR_WS_LANGUAGES, $_SESSION['language'].'.php', 'false'));
+
 /**
  * include the template language master (to catch all items not defined in the override file).
  * The intent here is to: load the override version to catch preferencial changes; 
@@ -80,5 +72,5 @@
 /**
  * include the extra language definitions
  */
-  include(DIR_WS_MODULES . 'extra_definitions.php');
+  include(DIR_WS_MODULES . zen_get_module_directory('extra_definitions.php'));
 ?>

@@ -3,19 +3,20 @@
  * ot_total order-total module
  *
  * @package orderTotal
- * @copyright Copyright 2003-2007 Zen Cart Development Team
+ * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: ot_loworderfee.php 6101 2007-04-01 10:30:22Z wilt $
+ * @version $Id: Drbyte Sun Jan 7 21:31:50 2018 -0500 Modified in v1.5.6 $
  */
   class ot_loworderfee {
     var $title, $output;
 
-    function ot_loworderfee() {
+    function __construct() {
       $this->code = 'ot_loworderfee';
       $this->title = MODULE_ORDER_TOTAL_LOWORDERFEE_TITLE;
       $this->description = MODULE_ORDER_TOTAL_LOWORDERFEE_DESCRIPTION;
-      $this->sort_order = MODULE_ORDER_TOTAL_LOWORDERFEE_SORT_ORDER;
+      $this->sort_order = defined('MODULE_ORDER_TOTAL_LOWORDERFEE_SORT_ORDER') ? MODULE_ORDER_TOTAL_LOWORDERFEE_SORT_ORDER : null;
+      if (null === $this->sort_order) return false;
 
       $this->output = array();
     }
@@ -124,4 +125,3 @@
       $db->Execute("delete from " . TABLE_CONFIGURATION . " where configuration_key in ('" . implode("', '", $this->keys()) . "')");
     }
   }
-?>

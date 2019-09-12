@@ -3,10 +3,10 @@
  * shopping_cart header_php.php
  *
  * @package page
- * @copyright Copyright 2003-2011 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: header_php.php 19098 2011-07-13 15:19:52Z wilt $
+ * @version $Id: Author: DrByte  Fri Dec 4 16:31:15 2015 -0500 Modified in v1.5.5 $
  */
 
 // This should be first line of the script:
@@ -14,13 +14,16 @@ $zco_notifier->notify('NOTIFY_HEADER_START_SHOPPING_CART');
 
 require(DIR_WS_MODULES . zen_get_module_directory('require_languages.php'));
 $breadcrumb->add(NAVBAR_TITLE);
-
+if (isset($_GET['jscript']) && $_GET['jscript'] == 'no') {
+  $messageStack->add('shopping_cart', PAYMENT_JAVASCRIPT_DISABLED, 'error');
+}
 // Validate Cart for checkout
 $_SESSION['valid_to_checkout'] = true;
 $_SESSION['cart_errors'] = '';
 $_SESSION['cart']->get_products(true);
 
-if (!$_SESSION['valid_to_checkout']) {
+// used to display invalid cart issues when checkout is selected that validated cart and returned to cart due to errors
+if (isset($_SESSION['valid_to_checkout']) && $_SESSION['valid_to_checkout'] == false) {
   $messageStack->add('shopping_cart', ERROR_CART_UPDATE . $_SESSION['cart_errors'] , 'caution');
 }
 
@@ -59,6 +62,7 @@ $cartShowTotal = $currencies->format($_SESSION['cart']->show_total());
 $flagAnyOutOfStock = false;
 $products = $_SESSION['cart']->get_products();
 for ($i=0, $n=sizeof($products); $i<$n; $i++) {
+  $flagStockCheck = '';
   if (($i/2) == floor($i/2)) {
     $rowClass="rowEven";
   } else {
@@ -121,12 +125,17 @@ for ($i=0, $n=sizeof($products); $i<$n; $i++) {
       $attrArray[$option]['price_prefix'] = $attributes_values->fields['price_prefix'];
     }
   } //end foreach [attributes]
+
+  // Stock Check
   if (STOCK_CHECK == 'true') {
-    $flagStockCheck = zen_check_stock($products[$i]['id'], $products[$i]['quantity']);
-    if ($flagStockCheck == true) {
+    $qtyAvailable = zen_get_products_stock($products[$i]['id']);
+    // compare against product inventory, and against mixed=YES
+    if ($qtyAvailable - $products[$i]['quantity'] < 0 || $qtyAvailable - $_SESSION['cart']->in_cart_mixed($products[$i]['id']) < 0) {
+        $flagStockCheck = '<span class="markProductOutOfStock">' . STOCK_MARK_PRODUCT_OUT_OF_STOCK . '</span>';
       $flagAnyOutOfStock = true;
     }
   }
+
   $linkProductsImage = zen_href_link(zen_get_info_page($products[$i]['id']), 'products_id=' . $products[$i]['id']);
   $linkProductsName = zen_href_link(zen_get_info_page($products[$i]['id']), 'products_id=' . $products[$i]['id']);
   $productsImage = (IMAGE_SHOPPING_CART_STATUS == 1 ? zen_image(DIR_WS_IMAGES . $products[$i]['image'], $products[$i]['name'], IMAGE_SHOPPING_CART_WIDTH, IMAGE_SHOPPING_CART_HEIGHT) : '');
@@ -136,7 +145,7 @@ for ($i=0, $n=sizeof($products); $i<$n; $i++) {
 //  $showFixedQuantityAmount = $products[$i]['quantity'] . zen_draw_hidden_field('cart_quantity[]', 1);
   $showFixedQuantityAmount = $products[$i]['quantity'] . zen_draw_hidden_field('cart_quantity[]', $products[$i]['quantity']);
   $showMinUnits = zen_get_products_quantity_min_units_display($products[$i]['id']);
-  $quantityField = zen_draw_input_field('cart_quantity[]', $products[$i]['quantity'], 'size="4"');
+  $quantityField = zen_draw_input_field('cart_quantity[]', $products[$i]['quantity'], 'size="4" class="cart_input_'.$products[$i]['id'].'"');
   $ppe = $products[$i]['final_price'];
   $ppe = zen_round(zen_add_tax($ppe, zen_get_tax_rate($products[$i]['tax_class_id'])), $currencies->get_decimal_places($_SESSION['currency']));
   $ppt = $ppe * $products[$i]['quantity'];

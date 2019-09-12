@@ -19,16 +19,28 @@
 
 # deny *everything*
 <FilesMatch ".*">
-  Order Allow,Deny
-  Deny from all
+  <IfModule mod_authz_core.c>
+    Require all denied
+  </IfModule>
+  <IfModule !mod_authz_core.c>
+    Order Allow,Deny
+    Deny from all
+  </IfModule>
 </FilesMatch>
 
 # but now allow just *certain* necessary files:
 <FilesMatch ".*\.(php|html)$">
-  Order Allow,Deny
-  Allow from all
+  <IfModule mod_authz_core.c>
+    Require all granted
+  </IfModule>
+  <IfModule !mod_authz_core.c>
+    Order Allow,Deny
+    Allow from all
+  </IfModule>
 </FilesMatch>
 
 IndexIgnore */*
 
+# NOTE: GoDaddy runs PHP as CGI, so the -ExecCGI on the line below may block .php scripts from running in this directory
 OPTIONS -Indexes -ExecCGI
+

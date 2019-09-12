@@ -1,70 +1,214 @@
 <!DOCTYPE html>
+<html>
 <!--
-/**
- * @package documentation
- * @copyright Copyright 2003-2012 Zen Cart Development Team
- * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte  Fri Sep 7 13:40:14 2012 -0400 Modified in v1.5.1 $
- */
+    /**
+     * @package documentation
+ * @copyright Copyright 2003-2019 Zen Cart Development Team
+     * @license https://www.zen-cart.com/license/2_0.txt GNU Public License v2.0
+     * @version $Id: DrByte 2019 Jul 16 Modified in v1.5.6c $
+     */
 //-->
-<html lang="en">
 <head>
-<meta charset="utf-8">
-<style type="text/css">
-<!--
-body {
-	font-family: Verdana, Arial, Helvetica, sans-serif;
-	font-size: 14px;
-	padding-bottom: 20px;
-	margin: 0;
-	padding: 0;
-	text-align: center;
-	}
-#pageWrapper {margin: 14px auto; width: 748px;}
-#linksWrapper {width: 40%; text-align: left; margin-left: 15px; float: left; line-height: 1.8;}
-#bookLink {float: left; padding-bottom: 15px;}
-h1.intro { color: #ffffff; background-color: #c96e29; font-size: 22px; text-align: center; padding: 4px;}
-h1 {color: #ffffff; border: 1px solid #aca893; background-color: #5778ce; font-size: 20px; padding: 4px;}
-h2 {color: #c96e29; font-size: 18px;}
-h3 {color: #5778ce;	font-size: 16px; margin-bottom: 0px;}
-h4 {color: #c96e29;	font-size: 14px;}
-hr {clear: both; }
-.bold { font-weight: bold; }
-.center {text-align: center;}
-
--->
-</style>
-<title>Documentation -- Zen Cart(R)</title>
-<meta http-equiv="imagetoolbar" content="no">
-<meta name="author" content="The Zen Cart&reg; Team">
-<meta name="robots" content="noindex, nofollow">
+    <title>Zen Cart Documentation</title>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta http-equiv="Content-Type" content="text/html">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <meta name="authors" content="The Zen Cart&reg; Team">
+    <meta name="generator" content="shopping cart program by Zen Cart&reg;, https://www.zen-cart.com">
+    <meta name="robots" content="noindex, nofollow">
+    <link rel="stylesheet" href="./zen.css">
 </head>
 <body>
-<div id="pageWrapper">
-  <h1 class="intro">Welcome to Zen Cart&reg;</h1>
-  <h1 class="center">Documentation</h1>
-  <p>Following is a list of some of the documentation available in the downloaded Zen Cart&reg; ZIP.<br />
-Click the link to open.</p>
-	<div id="linksWrapper">
-	<ol id="linksList">
-		<li><a href="0.about_zen_cart.html">About Zen Cart&reg;</a></li>
-    <li><a href="implementation-guide.pdf">Zen Cart&reg; Implementation Guide (PDF)</a></li>
-		<li><a href="1.readme_installation.html">Read me first -- Installation</a></li>
-		<li><a href="2.readme_how_to_upgrade.html">Read me first -- Upgrading from a prior version</a></li>
-		<li class="bold"><a href="important_site_security_recommendations.html">Security - Securing Your Site </a></li>
-		<li><a href="whatsnew_1.5.0.html">What's New in v1.5.0 (listing of new features and bugs fixed)</a></li>
-		<li><a href="whatsnew_1.5.1.html">What's New in v1.5.1 (listing of new features and bugs fixed)</a></li>
-		<li><a href="changed_files-v1-5-0.html">Changed Files for v1.5.0 (changed files since v1.3.9h)</a></li>
-		<li><a href="changed_files-v1-5-1.html">Changed Files for v1.5.1 (changed files since v1.5.0 release)</a></li>
-		<li><a href="http://tutorials.zen-cart.com" target="_blank">Tutorials and FAQs</a></li>
-		<li><a href="http://www.zen-cart.com/forum.php" target="_blank">Zen Cart&reg; Support Site</a></li>
-	</ol>
-	</div>
-	<div id="bookLink"><a href="http://www.zen-cart.com/book"><img src="../images/large/e-start-book.gif" alt="get your manual today" title="Have you got yours yet? Join the 1000's of Zen Cart users that have bought the only comprehensive owners manual !" /></a></div>
-    <br style="clear:both;" />
-    <div id="tentonvidLink" style=""align: center; clear:both;"><a href="http://www.zen-cart.com/tentonvideotraining">Also available: Online video training for Zen Cart&reg;<br /><img src="http://www.zen-cart.com/images/TenTonZC-videotraining.jpg" alt="Video Training for Zen Cart" title="Click here to access several hours worth of video training on installing and using Zen Cart to run your store." /></a></div>
-	<hr>
-	<p class="center"><em>Copyright 2003 - 2012 Zen Ventures, LLC &mdash; Zen Cart&reg; www.zen-cart.com</em></p>
+<div class="container">
+
+    <section id="pageHeader">
+        <div>
+            <a href="./index.html">
+                <img src="../includes/templates/template_default/images/logo.gif" alt="Zen Cart&reg;" title="Zen Cart&reg;" width="192" height="68" border="0" />
+            </a>
+        </div>
+    </section> <!-- End pageHeader //-->
+    
+    <section id="zenCartWelcome">
+        <div>
+            <h1>Welcome to Zen Cart&reg;</h1>
+        </div>
+    </section> <!-- End zenCartWelcome //-->
+    
+    <section id="indexData">
+        <div class="row">
+            <div class="col-xs-12">
+                <h2>Zen Cart&reg; Documentation</h2>
+            </div>
+            <div class="col-xs-12">
+                <ol>
+                    <li>
+                        <strong>Introduction</strong>
+                        <ul>
+                            <li>
+                                <span class="prime-string">
+                                    <a href="./0.about_zen_cart.html">About Zen Cart</a>&reg;
+                                </span>
+                            </li>
+                            <li>
+                                <a href="./implementation-guide-v156.pdf">Implementation Guide for v156 (PDF)</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <strong>Read Me First</strong>
+                        <ul>
+                            <li>
+                                <a href="./1.readme_installation.html">Installing Zen Cart</a>&reg;
+                            </li>
+                            <li>
+                                <a href="./2.readme_how_to_upgrade.html">Upgrading Zen Cart</a>&reg;
+                            </li>
+                            <li>
+                                <span class="prime-string">
+                                    <a href="./important_site_security_recommendations.html">Securing Your Zen Cart&reg; Store</a>
+                                </span>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <strong>New Features and Bug Fixes</strong>
+                        <ul>
+                            <li>
+                                <span class="prime-string">
+                                    <a href="./whatsnew_1.5.6.html">New in v1.5.6</a>
+                                </span>
+                            </li>
+                            <li>
+                                <span class="small-string">
+                                    <a href="./whatsnew_1.5.5.html">New in v1.5.5</a>
+                                </span>
+                            </li>
+                            <li>
+                                <span class="small-string">
+                                    <a href="./whatsnew_1.5.4.html">New in v1.5.4</a>
+                                </span>
+                            </li>
+                            <li>
+                                <span class="small-string">
+                                    <a href="./whatsnew_1.5.3.html">New in v1.5.3</a>
+                                </span>
+                            </li>
+                            <li>
+                                <span class="small-string">
+                                    <a href="./whatsnew_1.5.2.html">New in v1.5.2-beta</a>
+                                </span>
+                            </li>
+                            <li>
+                                <span class="small-string">
+                                    <a href="./whatsnew_1.5.1.html">New in v1.5.1</a>
+                                </span>
+                            </li>
+                            <li>
+                                <span class="small-string">
+                                    <a href="./whatsnew_1.5.0.html">New in v1.5.0</a>
+                                </span>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <strong>Changed Files</strong>
+                        <ul>
+                            <li>
+                                <span class="prime-string">
+                                    <a href="./changed_files-v1-5-6.html">Changed in v1.5.6 (since v1.5.5)</a>
+                                </span>
+                            </li>
+                            <li>
+                                <span class="small-string">
+                                    <a href="./changed_files-v1-5-5.html">Changed in v1.5.5 (since v1.5.4)</a>
+                                </span>
+                            </li>
+                            <li>
+                                <span class="small-string">
+                                    <a href="./changed_files-v1-5-4.html">Changed in v1.5.4 (since v1.5.3)</a>
+                                </span>
+                            </li>
+                            <li>
+                                <span class="small-string">
+                                    <a href="./changed_files-v1-5-3.html">Changed in v1.5.3 (since v1.5.2)</a>
+                                </span>
+                            </li>
+                            <li>
+                                <span class="small-string">
+                                    <a href="./changed_files-v1-5-2.html">Changed in v1.5.2-beta (since v1.5.1)</a>
+                                </span>
+                            </li>
+                            <li>
+                                <span class="small-string">
+                                    <a href="./changed_files-v1-5-1.html">Changed in v1.5.1 (since v1.5.0)</a>
+                                </span>
+                            </li>
+                            <li>
+                                <span class="small-string">
+                                    <a href="./changed_files-v1-5-0.html">Changed in v1.5.0 (since v1.3.9h)</a>
+                                </span>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <strong>Help and Support</strong>
+                        <ul>
+                            <li>
+                                <a href="https://www.zen-cart.com/tutorials" target="_blank">Tutorials and FAQs</a>
+                            </li>
+                            <li>
+                                <span class="prime-string">
+                                    <a href="https://www.zen-cart.com/forum.php" target="_blank">Support Forum</a>
+                                </span>
+                            </li>
+                        </ul>
+                    </li>
+                </ol>
+            </div>
+        </div>
+        <br>
+        <div>
+            <div class="text-center">
+                <a href="https://www.zen-cart.com/content.php?349-Square-Payments-for-Zen-Cart" target="_blank">
+                    <img class="img-responsive img-center add-shadow" src="https://dskjyajs32dqv.cloudfront.net/square_and_zencart.png" alt="Smart Payment Processing with Square" title="Get up and running with Payment processing in just 10 minutes using Square." />
+                </a>
+            </div>
+            <br>
+        </div>
+    </section> <!-- End indexData //-->
+    
+    <section id="footerBlock">
+        <div class="appInfo">
+            <p>
+                Zen Cart&reg; is derived from: Copyright 2003 osCommerce
+                <br><br>
+                This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+                <br>
+                without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE
+                <br>
+                and is redistributable under Version 2 of the GNU General Public License.
+            </p>
+            <p>
+                <img src="osi-certified-120x100.png" alt="O S I Certified">
+                <br>
+                This software is OSI Certified Open Source Software.
+                <br>
+                OSI Certified is a certification mark of the Open Source Initiative.
+            </p>
+            <p class="zenData">
+                Copyright 2003 - 2019 Zen Ventures, LLC
+                <br><br>
+                Zen Cart&reg;
+                <br>
+                <a href="https://www.zen-cart.com" target="_blank">www.zen-cart.com</a>
+            </p>
+        </div>
+    </section> <!-- End footerBlock //-->
+    
 </div>
 </body>
 </html>

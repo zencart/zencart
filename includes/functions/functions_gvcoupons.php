@@ -4,10 +4,10 @@
  * Functions related to processing Gift Vouchers/Certificates and coupons
  *
  * @package functions
- * @copyright Copyright 2003-2008 Zen Cart Development Team
+ * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: functions_gvcoupons.php 8844 2008-07-05 03:47:09Z drbyte $
+ * @version $Id: mc12345678 2019 Mar 02 Modified in v1.5.6b $
  */
 
 ////
@@ -58,29 +58,70 @@
       }
     }
 
-////
-// Create a Coupon Code. length may be between 1 and 16 Characters
-// $salt needs some thought.
-
-  function zen_create_coupon_code($salt="secret", $length = SECURITY_CODE_LENGTH) {
+/**
+ * Create a Coupon Code. Returns blank if cannot generate a unique code using the passed criteria.
+ * @param string $salt - this is an optional string to help seed the random code with greater entropy
+ * @param int $length - this is the desired length of the generated code
+ * @param string $prefix - include a prefix string if you want to force the generated code to start with a specific string
+ * @return string (new coupon code) (will be blank if the function failed)
+ */
+  function zen_create_coupon_code($salt="secret", $length=SECURITY_CODE_LENGTH, $prefix = '') {
     global $db;
-    $ccid = md5(uniqid("", $salt));
-    $ccid .= md5(uniqid("", $salt));
-    $ccid .= md5(uniqid("", $salt));
-    $ccid .= md5(uniqid("", $salt));
+    $length = (int)$length;
+    static $max_db_length;
+    if (!isset($max_db_length)) $max_db_length = zen_field_length(TABLE_COUPONS, 'coupon_code');  // schema is normally max 32 chars for this field
+    if ($length > $max_db_length) $length = $max_db_length;
+    if (strlen($prefix) > $max_db_length) return ''; // if prefix is already too long for the db, we can't generate a new code
+    if (strlen($prefix) + (int)$length > $max_db_length) $length = $max_db_length - strlen($prefix);
+    if ($length < 4) return ''; // if the recalculated length (esp in respect to prefixes) is less than 4 (for very basic entropy) then abort
+    $ccid = md5(uniqid("",$salt));
+    $ccid .= md5(uniqid("",$salt));
+    $ccid .= md5(uniqid("",$salt));
+    $ccid .= md5(uniqid("",$salt));
     srand((double)microtime()*1000000); // seed the random number generator
-    $random_start = @rand(0, (128-$length));
     $good_result = 0;
+    $id1 = '';
     while ($good_result == 0) {
-      $id1=substr($ccid, $random_start,$length);
-      $query = "select coupon_code
-                from " . TABLE_COUPONS . "
-                where coupon_code = '" . $id1 . "'";
-
-      $rs = $db->Execute($query);
-
-      if ($rs->RecordCount() == 0) $good_result = 1;
+      $random_start = @rand(0, (128-$length));
+      $id1=substr($ccid, $random_start, $length);
+      $sql = "select coupon_code
+              from " . TABLE_COUPONS . "
+              where coupon_code = :couponcode";
+      $sql = $db->bindVars($sql, ':couponcode', $prefix . $id1, 'string');
+      $result = $db->Execute($sql);
+      if ($result->RecordCount() < 1 ) $good_result = 1;
     }
-    return $id1;
+    return ($good_result == 1) ? $prefix . $id1 : ''; // blank means couldn't generate a unique code (typically because the max length was encountered before being able to generate unique)
   }
-?>
+
+
+/**
+ * is coupon valid for specials and sales
+ * @param int $product_id
+ * @param int $coupon_id
+ * @return bool
+ */
+  function is_coupon_valid_for_sales($product_id, $coupon_id) {
+    global $db;
+    $sql = "SELECT coupon_id, coupon_is_valid_for_sales
+            FROM " . TABLE_COUPONS . "
+            WHERE coupon_id = " . (int)$coupon_id;
+
+    $result = $db->Execute($sql);
+
+    // check whether coupon has been flagged for not valid with sales
+    if (!empty($result->fields['coupon_is_valid_for_sales'])) {
+      return true;
+    }
+
+    // check for any special on $product_id
+    $chk_product_on_sale = zen_get_products_special_price($product_id, true);
+    if (!$chk_product_on_sale) {
+      // check for any sale on $product_id
+      $chk_product_on_sale = zen_get_products_special_price($product_id, false);
+    }
+    if ($chk_product_on_sale) {
+      return false;
+    }
+    return true; // is on special or sale
+  }

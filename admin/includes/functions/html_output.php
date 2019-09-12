@@ -1,31 +1,24 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2011 Zen Cart Development Team
+ * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: html_output.php 19356 2011-08-22 05:22:42Z drbyte $
+ * @version $Id: torvista 2019 May 06 Modified in v1.5.6b $
  */
 
 ////
 // The HTML href link wrapper function
-  function zen_href_link($page = '', $parameters = '', $connection = 'NONSSL', $add_session_id = true) {
-    global $request_type, $session_started, $http_domain, $https_domain;
+  function zen_href_link($page = '', $parameters = '', $connection = 'SSL', $add_session_id = true) {
+    global $session_started;
     if ($page == '') {
+      trigger_error("zen_href_link($page, $parameters, $connection), unable to determine the page link.",
+            E_USER_ERROR);
       die('</td></tr></table></td></tr></table><br><br><font color="#ff0000"><b>Error!</b></font><br><br><b>Unable to determine the page link!<br><br>Function used:<br><br>zen_href_link(\'' . $page . '\', \'' . $parameters . '\', \'' . $connection . '\')</b>');
     }
 
-    if ($connection == 'NONSSL') {
-      $link = HTTP_SERVER . DIR_WS_ADMIN;
-    } elseif ($connection == 'SSL') {
-      if (ENABLE_SSL_ADMIN == 'true') {
-        $link = HTTPS_SERVER . DIR_WS_HTTPS_ADMIN;
-      } else {
-        $link = HTTP_SERVER . DIR_WS_ADMIN;
-      }
-    } else {
-      die('</td></tr></table></td></tr></table><br><br><font color="#ff0000"><b>Error!</b></font><br><br><b>Unable to determine connection method on a link!<br><br>Known methods: NONSSL SSL<br><br>Function used:<br><br>zen_href_link(\'' . $page . '\', \'' . $parameters . '\', \'' . $connection . '\')</b>');
-    }
+    $link = HTTP_SERVER . DIR_WS_ADMIN;
+
     if (!strstr($page, '.php')) $page .= '.php';
     if ($parameters == '') {
       $link = $link . $page;
@@ -39,13 +32,8 @@
 
 // Add the session ID when moving from different HTTP and HTTPS servers, or when SID is defined
     if ( ($add_session_id == true) && ($session_started == true) ) {
-      if (defined('SID') && zen_not_null(SID)) {
-        $sid = SID;
-      } elseif ( ( ($request_type == 'NONSSL') && ($connection == 'SSL') && (ENABLE_SSL_ADMIN == 'true') ) || ( ($request_type == 'SSL') && ($connection == 'NONSSL') ) ) {
-//die($connection);
-        if ($http_domain != $https_domain) {
-          $sid = zen_session_name() . '=' . zen_session_id();
-        }
+      if (defined('SID') && zen_not_null(constant('SID'))) {
+        $sid = constant('SID');
       }
     }
 
@@ -57,6 +45,11 @@
   }
 
   function zen_catalog_href_link($page = '', $parameters = '', $connection = 'NONSSL') {
+    global $zco_notifier;
+    $link = null;
+    $zco_notifier->notify('NOTIFY_SEFU_INTERCEPT_ADMCATHREF', array(), $link, $page, $parameters, $connection);
+    if($link !== null) return $link;
+
     if ($connection == 'NONSSL') {
       $link = HTTP_CATALOG_SERVER . DIR_WS_CATALOG;
     } elseif ($connection == 'SSL') {
@@ -66,7 +59,8 @@
         $link = HTTP_CATALOG_SERVER . DIR_WS_CATALOG;
       }
     } else {
-      die('</td></tr></table></td></tr></table><br><br><font color="#ff0000"><b>Error!</b></font><br><br><b>Unable to determine connection method on a link!<br><br>Known methods: NONSSL SSL<br><br>Function used:<br><br>zen_href_link(\'' . $page . '\', \'' . $parameters . '\', \'' . $connection . '\')</b>');
+      trigger_error("zen_catalog_href_link($page, $parameters, $connection), Unable to determine connection method on a link! Known methods: NONSSL SSL", E_USER_ERROR);
+      die('</td></tr></table></td></tr></table><br><br><font color="#ff0000"><b>Error!</b></font><br><br><b>Unable to determine connection method on a link!<br><br>Known methods: NONSSL SSL<br><br>Function used:<br><br>zen_catalog_href_link(\'' . $page . '\', \'' . $parameters . '\', \'' . $connection . '\')</b>');
     }
     if ($parameters == '') {
       $link .= 'index.php?main_page='. $page;
@@ -82,7 +76,7 @@
 ////
 // The HTML image wrapper function
   function zen_image($src, $alt = '', $width = '', $height = '', $params = '') {
-    $image = '<img src="' . $src . '" border="0" alt="' . $alt . '"';
+      $image = '<img src="' . $src . '" alt="' . $alt . '"';
     if ($alt) {
       $image .= ' title=" ' . $alt . ' "';
     }
@@ -104,7 +98,6 @@
 // The HTML form submit button wrapper function
 // Outputs a button in the selected language
   function zen_image_submit($image, $alt = '', $parameters = '') {
-    global $language;
 
     $image_submit = '<input type="image" src="' . zen_output_string(DIR_WS_LANGUAGES . $_SESSION['language'] . '/images/buttons/' . $image) . '" border="0" alt="' . zen_output_string($alt) . '"';
 
@@ -120,19 +113,19 @@
 ////
 // Draw a 1 pixel black line
   function zen_black_line() {
-    return zen_image(DIR_WS_IMAGES . 'pixel_black.gif', '', '100%', '1');
+    return zen_image(DIR_WS_IMAGES . 'pixel_black.gif', '', '', '1', 'style="width:100%;"');
   }
 
 ////
 // Output a separator either through whitespace, or with an image
   function zen_draw_separator($image = 'pixel_black.gif', $width = '100%', $height = '1') {
-    return zen_image(DIR_WS_IMAGES . $image, '', $width, $height);
+      if (substr(rtrim($width), -1) != "%") $width = $width . 'px';
+    return zen_image(DIR_WS_IMAGES . $image, '', '', $height, 'style="width:' . $width . ';"');
   }
 
 ////
 // Output a function button in the selected language
   function zen_image_button($image, $alt = '', $params = '') {
-    global $language;
 
     return zen_image(DIR_WS_LANGUAGES . $_SESSION['language'] . '/images/buttons/' . $image, $alt, '', '', $params);
   }
@@ -140,7 +133,7 @@
 ////
 // javascript to dynamically update the states/provinces list when the country is changed
 // TABLES: zones
-  function zen_js_zone_list($country, $form, $field) {
+  function zen_js_zone_list($country, $form, $field, $showTextField = true) {
     global $db;
     $countries = $db->Execute("select distinct zone_country_id
                                from " . TABLE_ZONES . "
@@ -171,10 +164,12 @@
       $num_country++;
       $countries->MoveNext();
     }
-    $output_string .= '  } else {' . "\n" .
-                      '    ' . $form . '.' . $field . '.options[0] = new Option("' . TYPE_BELOW . '", "");' . "\n" .
-                      '  }' . "\n";
-
+      $output_string .= '  }';
+      if ($showTextField) {
+          $output_string .= ' else {' . "\n" .
+              '    ' . $form . '.' . $field . '.options[0] = new Option("' . TYPE_BELOW . '", "");' . "\n" .
+              '  }' . "\n";
+      }
     return $output_string;
   }
 
@@ -183,17 +178,9 @@
   function zen_draw_form($name, $action, $parameters = '', $method = 'post', $params = '', $usessl = 'false') {
     $form = '<form name="' . zen_output_string($name) . '" action="';
     if (zen_not_null($parameters)) {
-      if ($usessl) {
-        $form .= zen_href_link($action, $parameters, 'NONSSL');
-      } else {
-        $form .= zen_href_link($action, $parameters, 'NONSSL');
-      }
+      $form .= zen_href_link($action, $parameters, 'NONSSL');
     } else {
-      if ($usessl) {
-        $form .= zen_href_link($action, '', 'NONSSL');
-      } else {
-        $form .= zen_href_link($action, '', 'NONSSL');
-      }
+      $form .= zen_href_link($action, '', 'NONSSL');
     }
     $form .= '" method="' . zen_output_string($method) . '"';
     if (zen_not_null($params)) {
@@ -224,16 +211,20 @@
 
 ////
 // Output a form password field
-  function zen_draw_password_field($name, $value = '', $required = false) {
-    $field = zen_draw_input_field($name, $value, 'maxlength="40"', $required, 'password', false);
+  function zen_draw_password_field($name, $value = '', $required = false, $parameters = '',$autocomplete = false) {
+    $parameters .= ' maxlength="40"';
+    if($autocomplete == false){
+      $parameters .= ' autocomplete="off"';
+    }
+    $field = zen_draw_input_field($name, $value, $parameters, $required, 'password', false);
 
     return $field;
   }
 
 ////
 // Output a form filefield
-  function zen_draw_file_field($name, $required = false) {
-    $field = zen_draw_input_field($name, '', ' size="50" ', $required, 'file');
+  function zen_draw_file_field($name, $required = false, $parameters = '') {
+    $field = zen_draw_input_field($name, '', ' size="50" ' . $parameters, $required, 'file');
 
     return $field;
   }
@@ -292,10 +283,10 @@
 
 ////
 // Output a form hidden field
-  function zen_draw_hidden_field($name, $value = '', $parameters = '') {
+  function zen_draw_hidden_field($name, $value = '~*~*#', $parameters = '') {
     $field = '<input type="hidden" name="' . zen_output_string($name) . '"';
 
-    if (zen_not_null($value)) {
+    if (zen_not_null($value) && $value != '~*~*#') {
       $field .= ' value="' . zen_output_string($value) . '"';
     } elseif (isset($GLOBALS[$name]) && is_string($GLOBALS[$name])) {
       $field .= ' value="' . zen_output_string(stripslashes($GLOBALS[$name])) . '"';
@@ -343,4 +334,9 @@
       return zen_draw_hidden_field(zen_session_name(), zen_session_id());
     }
   }
-?>
+////
+// output label for input fields
+  function zen_draw_label($text, $for, $parameters = ''){
+    $label = '<label for="' . $for . '" ' . $parameters . '>' . $text . '</label>';
+    return $label;
+  }

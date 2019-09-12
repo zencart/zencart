@@ -1,9 +1,9 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2011 Zen Cart Development Team
+ * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: products_price_manager.php 18695 2011-05-04 05:24:19Z drbyte $
+ * @version $Id: Zen4All Thu Nov 29 13:31:36 2018 +0100 Modified in v1.5.6 $
  */
 
 define('HEADING_TITLE', 'Products Price Manager');
@@ -22,10 +22,13 @@ define('TEXT_PRODUCT_INFO', 'Product Info:');
 define('TEXT_PRODUCTS_PRICE_INFO', 'Product Price Info:');
 define('TEXT_PRODUCTS_MODEL','Model:');
 define('TEXT_PRICE', 'Price');
+define('TEXT_PRICE_NET', 'Price (Net)');
+define('TEXT_PRICE_GROSS', 'Price (Gross)');
 define('TEXT_PRODUCT_AVAILABLE_DATE', 'Available Date:');
 define('TEXT_PRODUCTS_STATUS', 'Products Status:');
-define('TEXT_PRODUCT_AVAILABLE', 'In Stock');
-define('TEXT_PRODUCT_NOT_AVAILABLE', 'Out of Stock');
+define('TEXT_PRODUCT_AVAILABLE', 'Enabled');
+define('TEXT_PRODUCT_NOT_AVAILABLE', 'Disabled');
+
 
 define('TEXT_PRODUCT_INFO_NONE', 'Please select a Product from above ...');
   define('TEXT_PRODUCT_IS_FREE','Product is Free:');
@@ -56,6 +59,8 @@ define('TEXT_FEATURED_CONFIRM_DELETE', 'Please confirm that you want to delete t
 
 define('TEXT_SPECIALS_PRODUCT', 'Product:');
 define('TEXT_SPECIALS_SPECIAL_PRICE', 'Special Price:');
+define('TEXT_SPECIALS_SPECIAL_PRICE_NET', 'Special Price: (Net)');
+define('TEXT_SPECIALS_SPECIAL_PRICE_GROSS', 'Special Price: (Gross)');
 define('TEXT_SPECIALS_EXPIRES_DATE', 'Expiry Date:');
 define('TEXT_SPECIALS_AVAILABLE_DATE', 'Available Date:');
 define('TEXT_SPECIALS_PRICE_TIP', '<b>Specials Notes:</b><ul><li>You can enter a percentage to deduct in the Specials Price field, for example: <b>20%</b></li><li>If you enter a new price, the decimal separator must be a \'.\' (decimal-point), example: <b>49.99</b></li><li>Leave the expiry date empty for no expiration</li></ul>');
@@ -131,3 +136,4 @@ define('PRODUCT_WARNING_UPDATE_CANCEL', 'Changes were Cancelled and not saved ..
 define('TEXT_INFO_EDIT_CAUTION', '<strong>Click to begin Editing ...</strong>');
 define('TEXT_INFO_PREVIEW_ONLY', 'Preview Only ... Current Price Status ... Preview Only');
 define('TEXT_INFO_UPDATE_REMINDER', '<strong>Edit Product Information then Update to save</strong>');
+define('BUTTON_ADDITITONAL_ACTIONS', 'Additional Actions');

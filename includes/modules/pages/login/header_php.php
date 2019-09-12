@@ -3,10 +3,10 @@
  * Login Page
  *
  * @package page
- * @copyright Copyright 2003-2011 Zen Cart Development Team
+ * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: header_php.php 18695 2011-05-04 05:24:19Z drbyte $
+ * @version $Id: DrByte 2019 Jul 15 Modified in v1.5.6c $
  */
 
 // This should be first line of the script:
@@ -17,9 +17,9 @@ if ($session_started == false) {
   zen_redirect(zen_href_link(FILENAME_COOKIE_USAGE));
 }
 
-// if the customer is logged in already, redirect them to the My account page
-if (isset($_SESSION['customer_id']) and $_SESSION['customer_id'] != '') {
-  zen_redirect(zen_href_link(FILENAME_ACCOUNT, '', 'SSL'));
+// if the customer is logged in already (and not in guest-checkout), redirect them to the My account page
+if (!zen_in_guest_checkout() && zen_is_logged_in()) {
+    zen_redirect(zen_href_link(FILENAME_ACCOUNT, '', 'SSL'));
 }
 
 require(DIR_WS_MODULES . zen_get_module_directory('require_languages.php'));
@@ -27,8 +27,9 @@ include(DIR_WS_MODULES . zen_get_module_directory(FILENAME_CREATE_ACCOUNT));
 
 $error = false;
 if (isset($_GET['action']) && ($_GET['action'] == 'process')) {
-  $email_address = zen_db_prepare_input($_POST['email_address']);
-  $password = zen_db_prepare_input($_POST['password']);
+  $email_address = zen_db_prepare_input(isset($_POST['email_address']) ? trim($_POST['email_address']) : '');
+  $password = zen_db_prepare_input(isset($_POST['password']) ? trim($_POST['password']) : '');
+  $loginAuthorized = false;
 
   /* Privacy-policy-read does not need to be checked during "login"
   if (DISPLAY_PRIVACY_CONDITIONS == 'true') {
@@ -57,8 +58,19 @@ if (isset($_GET['action']) && ($_GET['action'] == 'process')) {
       $zco_notifier->notify('NOTIFY_LOGIN_BANNED');
       $messageStack->add('login', TEXT_LOGIN_BANNED);
     } else {
-      // Check that password is good
-      if (!zen_validate_password($password, $check_customer->fields['customers_password'])) {
+
+      $dbPassword = $check_customer->fields['customers_password'];
+      // Check whether the password is good
+      if (zen_validate_password($password, $dbPassword)) {
+        $loginAuthorized = true;
+        if (password_needs_rehash($dbPassword, PASSWORD_DEFAULT)) {
+          $newPassword = zcPassword::getInstance(PHP_VERSION)->updateNotLoggedInCustomerPassword($password, $email_address);
+        }
+      }
+
+      $zco_notifier->notify('NOTIFY_PROCESS_3RD_PARTY_LOGINS', $email_address, $password, $loginAuthorized);
+
+      if (!$loginAuthorized) {
         $error = true;
         $messageStack->add('login', TEXT_LOGIN_ERROR);
       } else {
@@ -83,9 +95,20 @@ if (isset($_GET['action']) && ($_GET['action'] == 'process')) {
         $_SESSION['customer_country_id'] = $check_country->fields['entry_country_id'];
         $_SESSION['customer_zone_id'] = $check_country->fields['entry_zone_id'];
 
+        // enforce db integrity: make sure related record exists
+        $sql = "SELECT customers_info_date_of_last_logon FROM " . TABLE_CUSTOMERS_INFO . " WHERE customers_info_id = :customersID";
+        $sql = $db->bindVars($sql, ':customersID',  $_SESSION['customer_id'], 'integer');
+        $result = $db->Execute($sql);
+        if ($result->RecordCount() == 0) {
+          $sql = "insert into " . TABLE_CUSTOMERS_INFO . " (customers_info_id) values (:customersID)";
+          $sql = $db->bindVars($sql, ':customersID',  $_SESSION['customer_id'], 'integer');
+          $db->Execute($sql);
+        }
+
+        // update login count
         $sql = "UPDATE " . TABLE_CUSTOMERS_INFO . "
               SET customers_info_date_of_last_logon = now(),
-                  customers_info_number_of_logons = customers_info_number_of_logons+1
+                  customers_info_number_of_logons = IF(customers_info_number_of_logons, customers_info_number_of_logons+1, 1)
               WHERE customers_info_id = :customersID";
 
         $sql = $db->bindVars($sql, ':customersID',  $_SESSION['customer_id'], 'integer');
@@ -104,17 +127,19 @@ if (isset($_GET['action']) && ($_GET['action'] == 'process')) {
         // eof: not require part of contents merge notice
 
         // check current cart contents count if required
-        if (SHOW_SHOPPING_CART_COMBINED > 0 && $zc_check_basket_before > 0) {
-          $zc_check_basket_after = $_SESSION['cart']->count_contents();
-          if (($zc_check_basket_before != $zc_check_basket_after) && $_SESSION['cart']->count_contents() > 0 && SHOW_SHOPPING_CART_COMBINED > 0) {
-            if (SHOW_SHOPPING_CART_COMBINED == 2) {
-              // warning only do not send to cart
-              $messageStack->add_session('header', WARNING_SHOPPING_CART_COMBINED, 'caution');
-            }
-            if (SHOW_SHOPPING_CART_COMBINED == 1) {
-              // show warning and send to shopping cart for review
+        $zc_check_basket_after = $_SESSION['cart']->count_contents();
+        if (($zc_check_basket_before != $zc_check_basket_after) && $_SESSION['cart']->count_contents() > 0 && SHOW_SHOPPING_CART_COMBINED > 0) {
+          if (SHOW_SHOPPING_CART_COMBINED == 2) {
+            // warning only do not send to cart
+            $messageStack->add_session('header', WARNING_SHOPPING_CART_COMBINED, 'caution');
+          }
+          if (SHOW_SHOPPING_CART_COMBINED == 1) {
+            // show warning and send to shopping cart for review
+            if (!(isset($_GET['gv_no']))) {
               $messageStack->add_session('shopping_cart', WARNING_SHOPPING_CART_COMBINED, 'caution');
               zen_redirect(zen_href_link(FILENAME_SHOPPING_CART, '', 'NONSSL'));
+            } else {
+              $messageStack->add_session('header', WARNING_SHOPPING_CART_COMBINED, 'caution');
             }
           }
         }
@@ -122,8 +147,6 @@ if (isset($_GET['action']) && ($_GET['action'] == 'process')) {
 
         if (sizeof($_SESSION['navigation']->snapshot) > 0) {
           //    $back = sizeof($_SESSION['navigation']->path)-2;
-          //if (isset($_SESSION['navigation']->path[$back]['page'])) {
-          //    if (sizeof($_SESSION['navigation']->path)-2 > 0) {
           $origin_href = zen_href_link($_SESSION['navigation']->snapshot['page'], zen_array_to_string($_SESSION['navigation']->snapshot['get'], array(zen_session_name())), $_SESSION['navigation']->snapshot['mode']);
           //            $origin_href = zen_back_link_only(true);
           $_SESSION['navigation']->clear_snapshot();
@@ -142,8 +165,8 @@ $breadcrumb->add(NAVBAR_TITLE);
 
 // Check for PayPal express checkout button suitability:
 $paypalec_enabled = (defined('MODULE_PAYMENT_PAYPALWPP_STATUS') && MODULE_PAYMENT_PAYPALWPP_STATUS == 'True' && defined('MODULE_PAYMENT_PAYPALWPP_ECS_BUTTON') && MODULE_PAYMENT_PAYPALWPP_ECS_BUTTON == 'On');
-// Check for express checkout button suitability:
-$ec_button_enabled = ($paypalec_enabled && ($_SESSION['cart']->count_contents() > 0 && $_SESSION['cart']->total > 0));
+// Check for express checkout button suitability (must have cart contents, value > 0, and value < 10000USD):
+$ec_button_enabled = ($paypalec_enabled && $_SESSION['cart']->count_contents() > 0 && $_SESSION['cart']->total > 0 && $currencies->value($_SESSION['cart']->total, true, 'USD') <= 10000);
 
 
 // This should be last line of the script:

@@ -1,26 +1,13 @@
 <?php
-//
-// +----------------------------------------------------------------------+
-// |zen-cart Open Source E-commerce                                       |
-// +----------------------------------------------------------------------+
-// | Copyright (c) 2003 The zen-cart developers                           |
-// |                                                                      |
-// | http://www.zen-cart.com/index.php                                    |
-// |                                                                      |
-// | Portions Copyright (c) 2003 osCommerce                               |
-// +----------------------------------------------------------------------+
-// | This source file is subject to version 2.0 of the GPL license,       |
-// | that is bundled with this package in the file LICENSE, and is        |
-// | available through the world-wide-web at the following url:           |
-// | http://www.zen-cart.com/license/2_0.txt.                             |
-// | If you did not receive a copy of the zen-cart license and are unable |
-// | to obtain it through the world-wide-web, please send a note to       |
-// | license@zen-cart.com so we can mail you a copy immediately.          |
-// +----------------------------------------------------------------------+
-//  $Id: gv_sent.php 2388 2005-11-18 00:18:35Z ajeh $
-//
+/**
+ * @package admin
+ * @copyright Copyright 2003-2019 Zen Cart Development Team
+ * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
+ * @version $Id: Scott C Wilson 2019 Jan 19 Modified in v1.5.6b $
+ */
 
-define('HEADING_TITLE', 'Gift Voucher\'s Sent');
+require 'gv_name.php';
+define('HEADING_TITLE', TEXT_GV_NAMES . ' Sent');
 
 define('TABLE_HEADING_SENDERS_NAME', 'Senders Name');
 define('TABLE_HEADING_VOUCHER_VALUE', TEXT_GV_NAME . ' Value');
@@ -38,4 +25,3 @@ define('TEXT_INFO_DATE_REDEEMED', 'Date Redeemed:');
 define('TEXT_INFO_IP_ADDRESS', 'IP Address:');
 define('TEXT_INFO_CUSTOMERS_ID', 'Customer Id:');
 define('TEXT_INFO_NOT_REDEEMED', 'Not Redeemed');
-?>

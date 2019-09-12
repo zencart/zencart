@@ -1,10 +1,10 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2011 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: developers_tool_kit.php 18698 2011-05-04 14:50:06Z wilt $
+ * @version $Id: Author: DrByte  Mon Oct 19 01:39:59 2015 -0400 Modified in v1.5.5 $
  */
   define('HEADING_TITLE', 'Developers Tool Kit');
   define('TABLE_CONFIGURATION_TABLE', 'Lookup CONSTANT Definitions');
@@ -77,7 +77,34 @@
   define('TEXT_ALL_FILES_LOOKUP_CSS', '.css only');
   define('TEXT_ALL_FILES_LOOKUP_HTMLTXT', '.html and .txt');
   define('TEXT_ALL_FILES_LOOKUP_JS', '.js only');
+  define('TEXT_ALL_FILES_LOOKUP_ALL_TYPES', 'Everything');
 
   define('TEXT_CASE_SENSITIVE', 'Case Sensitive?');
+  define('TEXT_CONTEXT_LINES', 'Context lines: ');
+  define('TEXT_SEARCH_LOOKUP_PLACEHOLDER', 'Enter search phrase or pattern');
+  define('TEXT_SEARCH_KEY_PLACEHOLDER', 'Enter key name or phrase to search for');
+  define('TEXT_SEARCH_PHRASE_PLACEHOLDER', 'Enter search phrase');
+  define('TEXT_BUTTON_SEARCH', 'Search');
+  define('TEXT_BUTTON_SEARCH_ALT', 'Execute Search');
+  define('TEXT_BUTTON_REGEX_SEARCH', 'Grep');
+  define('TEXT_BUTTON_REGEX_SEARCH_ALT', 'Search using Regex pattern');
+  define('TEXT_ERROR_REGEX_FAIL', 'ALERT: An error occurred during search. If you were doing a regex/grep search, please inspect your regex pattern for syntax errors.');
 
-?>
+  //Search Configuration Keys
+  define('SEARCH_CFG_KEYS_HEADING_TITLE','<strong>Search in Configuration Settings/Keys</strong>');
+  define('SEARCH_CFG_KEYS_SEARCH_BOX_TEXT', '<strong>Phrase to search:</strong> (This will search configuration setting names and descriptions, and also configuration_keys if exact match)');
+  define('SEARCH_CFG_KEYS_TABLE_SECTION', 'Section');
+  define('SEARCH_CFG_KEYS_TABLE_GROUP','Group');
+  define('SEARCH_CFG_KEYS_TABLE_TITLE', 'Title');
+  define('SEARCH_CFG_KEYS_TABLE_DESCRIPTION','Description');
+  define('SEARCH_CFG_KEYS_TABLE_VALUE','Value');
+  define('SEARCH_CFG_KEYS_TABLE_KEY_NAME', 'Key Name');
+  define('SEARCH_CFG_KEYS_TABLE_EDIT','Edit');
+  define('SEARCH_CFG_KEYS_NOT_FOUND_KEYS', 'No configuration key(s) found.');
+  define('SEARCH_CFG_KEYS_FOUND_KEYS', 'configuration key(s) found.');
+  define('SEARCH_CFG_KEYS_FORM_PLACEHOLDER', 'Enter words to find in configuration settings');
+  define('SEARCH_CFG_KEYS_FORM_BUTTON_SEARCH_SORTED_BY_GROUP', 'Search');
+  define('SEARCH_CFG_KEYS_FORM_BUTTON_SEARCH_SORTED_BY_KEY', 'Search (sorted by key)');
+  define('SEARCH_CFG_KEYS_FORM_BUTTON_VIEW_ALL', 'View All (Every setting)');
+  define('SEARCH_CFG_KEYS_FORM_BUTTON_RESET', 'Reset');
+  define('TEXT_RESET_BUTTON_ALT', 'Clear all search fields, to start over.');

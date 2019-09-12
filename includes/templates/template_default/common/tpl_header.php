@@ -11,10 +11,10 @@
  * $flag_disable_header = true;<br />
  *
  * @package templateSystem
- * @copyright Copyright 2003-2012 Zen Cart Development Team
+ * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: Ian Wilson  Tue Aug 14 14:56:11 2012 +0100 Modified in v1.5.1 $
+ * @version $Id: lat9 2019 Mar 03 Modified in v1.5.6b $
  */
 ?>
 
@@ -24,13 +24,11 @@
     echo $messageStack->output('header');
   }
   if (isset($_GET['error_message']) && zen_not_null($_GET['error_message'])) {
-  echo htmlspecialchars(urldecode($_GET['error_message']), ENT_COMPAT, CHARSET, TRUE);
+    echo zen_output_string_protected(urldecode($_GET['error_message']));
   }
   if (isset($_GET['info_message']) && zen_not_null($_GET['info_message'])) {
-   echo htmlspecialchars($_GET['info_message'], ENT_COMPAT, CHARSET, TRUE);
-} else {
-
-}
+   echo zen_output_string_protected($_GET['info_message']);
+  }
 ?>
 
 
@@ -45,7 +43,9 @@ if (!isset($flag_disable_header) || !$flag_disable_header) {
 <div id="navMain">
     <ul class="back">
     <li><?php echo '<a href="' . HTTP_SERVER . DIR_WS_CATALOG . '">'; ?><?php echo HEADER_TITLE_CATALOG; ?></a></li>
-<?php if ($_SESSION['customer_id']) { ?>
+<?php
+    if (zen_is_logged_in() && !zen_in_guest_checkout()) {
+?>
     <li><a href="<?php echo zen_href_link(FILENAME_LOGOFF, '', 'SSL'); ?>"><?php echo HEADER_TITLE_LOGOFF; ?></a></li>
     <li><a href="<?php echo zen_href_link(FILENAME_ACCOUNT, '', 'SSL'); ?>"><?php echo HEADER_TITLE_MY_ACCOUNT; ?></a></li>
 <?php

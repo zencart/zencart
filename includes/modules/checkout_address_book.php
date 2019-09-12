@@ -3,10 +3,10 @@
  * checkout_address_book.php
  *
  * @package modules
- * @copyright Copyright 2003-2009 Zen Cart Development Team
+ * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: checkout_address_book.php 13799 2009-07-08 02:08:33Z drbyte $
+ * @version $Id: lat9 2019 Jan 06 Modified in v1.5.6b $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
@@ -23,4 +23,5 @@ $addresses_query = "select address_book_id, entry_firstname as firstname, entry_
 
 $addresses = $db->Execute($addresses_query);
 if (!$addresses->EOF) $radio_buttons = $addresses->recordCount();
-?>
+
+$zco_notifier->notify('NOTIFY_MODULE_END_CHECKOUT_ADDRESS_BOOK', $addresses_query, $addresses);

@@ -1,10 +1,10 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2010 Zen Cart Development Team
+ * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: message_stack.php 15250 2010-01-13 16:43:56Z drbyte $
+ * @version $Id: mc12345678 Sun Jun 3 20:28:21 2018 -0400 Modified in v1.5.6 $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
@@ -19,10 +19,10 @@ if (!defined('IS_ADMIN_FLAG')) {
   if ($messageStack->size > 0) echo $messageStack->output();
 */
 
-  class messageStack extends tableBlock {
+  class messageStack extends boxTableBlock {
     var $size = 0;
 
-    function messageStack() {
+    function __construct() {
 
       $this->errors = array();
 
@@ -36,15 +36,17 @@ if (!defined('IS_ADMIN_FLAG')) {
 
     function add($message, $type = 'error') {
       if ($type == 'error') {
-        $this->errors[] = array('params' => 'class="messageStackError"', 'text' => zen_image(DIR_WS_ICONS . 'error.gif', ICON_ERROR) . '&nbsp;' . $message);
+        $this->errors[] = array('params' => 'messageStackAlert alert alert-danger', 'text' => '<i class="fa fa-2x fa-exclamation-circle"></i> ' . $message);
       } elseif ($type == 'warning') {
-        $this->errors[] = array('params' => 'class="messageStackWarning"', 'text' => zen_image(DIR_WS_ICONS . 'warning.gif', ICON_WARNING) . '&nbsp;' . $message);
+        $this->errors[] = array('params' => 'messageStackAlert alert alert-warning', 'text' => '<i class="fa fa-2x fa-question-circle"></i> ' . $message);
+      } elseif ($type == 'info') {
+        $this->errors[] = array('params' => 'messageStackAlert alert alert-info', 'text' => '<i class="fa fa-2x fa-info-circle"></i> ' . $message);
       } elseif ($type == 'success') {
-        $this->errors[] = array('params' => 'class="messageStackSuccess"', 'text' => zen_image(DIR_WS_ICONS . 'success.gif', ICON_SUCCESS) . '&nbsp;' . $message);
+        $this->errors[] = array('params' => 'messageStackAlert alert alert-success', 'text' => '<i class="fa fa-2x fa-check-circle"></i> ' . $message);
       } elseif ($type == 'caution') {
-        $this->errors[] = array('params' => 'class="messageStackCaution"', 'text' => zen_image(DIR_WS_ICONS . 'warning.gif', ICON_WARNING) . '&nbsp;' . $message);
+        $this->errors[] = array('params' => 'messageStackAlert alert alert-warning', 'text' => '<i class="fa fa-2x fa-hand-stop-o"></i> ' . $message);
       } else {
-        $this->errors[] = array('params' => 'class="messageStackError"', 'text' => $message);
+        $this->errors[] = array('params' => 'messageStackAlert alert alert-danger', 'text' => $message);
       }
 
 
@@ -53,7 +55,7 @@ if (!defined('IS_ADMIN_FLAG')) {
 
     function add_session($message, $type = 'error') {
 
-      if (!$_SESSION['messageToStack']) {
+      if (!(!empty($_SESSION['messageToStack']) && is_array($_SESSION['messageToStack']))) {
         $_SESSION['messageToStack'] = array();
       }
 

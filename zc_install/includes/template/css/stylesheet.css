@@ -1,0 +1,136 @@
+/**
+ * @package Installer
+ * @access private
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
+ * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
+ * @version $Id: Author: DrByte  Mon Feb 1 18:17:20 2016 -0500 New in v1.5.5 $
+ */
+
+@import "//maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css";
+@import "foundation-icons.css";
+
+.hero-unit {
+  height: 110px;
+  overflow: hidden;
+  box-sizing: border-box;
+  border: 0px solid rgba(0,0,0,.25);
+  border-radius: 8px;
+  box-shadow: inset 0px 0px 2px 2px rgba(0,0,0,.0);
+  padding: 15px 0;
+  margin-bottom: 20px;
+  /*background: url(../img/banner-lg-1100.jpg) right no-repeat;*/
+  /*background: url(../images/Zen-cart-hero.png) bottom right no-repeat;*/
+}
+
+.logo {
+  background: url(../images/zen-cart-logo-lg.png) left no-repeat;
+  width: 270px;
+  float: left;
+  display: block;
+  height: 100%;
+}
+
+h2 {
+  font-size: 2em;
+}
+
+.footer {
+  margin-top:10px;
+}
+
+.invalid {
+  color: #ff2222;
+}
+
+#fatalErrors a {
+  color: #ffffff;
+}
+
+.modal-help-title {
+  font-size: 1.5em;
+  padding-bottom: 5px;
+  font-weight:bold;
+}
+
+input[readonly] {
+   background: #dddddd;
+}
+
+.version {
+    text-align: right;
+    margin: 20px 20px;
+    font-style: italic;
+}
+
+
+/* breadcrumb custom styling */
+
+ul.breadcrumbs {
+ margin:  0 0 30px 0 ;
+}
+
+ul.breadcrumbs li {
+    display: inline-block;
+    height: 30px;
+    line-height: 30px;
+    /*width: 100px;*/
+    margin: 5px 1px 0 0;
+    text-indent: 35px;
+    position: relative;
+}
+
+ul.breadcrumbs li:before {
+    content: " ";
+    height: 0;
+    width: 0;
+    position: absolute;
+    left: -9px;
+    border-style: solid;
+    border-width: 15px 0 15px 15px;
+    border-color: transparent transparent transparent #BCE8F1;
+    z-index: 0;
+}
+
+ul.breadcrumbs li:first-child:before {
+    border-color: transparent;
+}
+
+ul.breadcrumbs li a:after {
+    content: " ";
+    height: 0;
+    width: 0;
+    position: absolute;
+    right: -15px;
+    border-style: solid;
+    border-width: 15px 0 15px 15px;
+    border-color: transparent transparent transparent #D9EDF7;
+    z-index: 10;
+}
+
+ul.breadcrumbs li a {
+    display: block;
+    background: #D9EDF7;
+    text-decoration:none
+ }
+
+ul.breadcrumbs li a:hover {
+    text-decoration:none
+}
+
+/*
+ul.breadcrumbs li a:hover:after {
+    border-color: transparent transparent transparent pink;
+}
+*/
+ul.breadcrumbs li.current a {
+  color: white;
+    background: #3A87AD;
+    z-index: 100;
+}
+
+ul.breadcrumbs li.current a:after {
+    border-left-color: #3A87AD;
+}
+
+
+

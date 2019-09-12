@@ -1,22 +1,31 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2011 Zen Cart Development Team
+ * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: coupon_restrict.php 18695 2011-05-04 05:24:19Z drbyte $
+ * @version $Id: Scott C Wilson 2019 Feb 28 Modified in v1.5.6b $
  */
   //define('MAX_DISPLAY_RESTRICT_ENTRIES', 10);
   require('includes/application_top.php');
   $restrict_array = array();
-  $restrict_array[] = array('id'=>'Deny', text=>'Deny');
-  $restrict_array[] = array('id'=>'Allow', text=>'Allow');
+  $restrict_array[] = array('id'=>'Deny', 'text'=>TEXT_PULLDOWN_DENY);
+  $restrict_array[] = array('id'=>'Allow', 'text'=>TEXT_PULLDOWN_ALLOW);
+
+  if ($_POST['cPath_prod'] > 0 and $_POST['manufacturers_id'] > 0) {
+    $current_category_id = 0;
+    $current_manufacturers_id = 0;
+    unset($_POST['cPath_prod']);
+    unset($_POST['manufacturers_id']);
+    $messageStack->add(ERROR_RESET_CATEGORY_MANUFACTURER, 'caution');
+  }
 
   if (isset($_GET['cid'])) $_GET['cid'] = (int)$_GET['cid'];
   if (isset($_GET['info'])) $_GET['info'] = (int)$_GET['info'];
   if (isset($_POST['cPath'])) $_POST['cPath'] = (int)$_POST['cPath'];
   if (isset($_POST['cPath_prod'])) $_POST['cPath_prod'] = (int)$_POST['cPath_prod'];
   if (isset($_GET['build_cat'])) $_GET['build_cat'] = (int)$_GET['build_cat'];
+  if (isset($_GET['build_man'])) $_GET['build_man'] = (int)$_GET['build_man'];
 
   $the_path = $_POST['cPath'];
   if (isset($_GET['action']) && $_GET['action']=='switch_status') {
@@ -34,7 +43,7 @@
     }
   }
   if ($_GET['action']=='add_category' && isset($_POST['cPath'])) {
-  	if ($_POST['cPath'] == 0) $_POST['cPath'] = -1;
+    if ($_POST['cPath'] == 0) $_POST['cPath'] = -1;
     $test_query=$db->Execute("select * from " . TABLE_COUPON_RESTRICT . "
                               where coupon_id = '" . $_GET['cid'] . "'
                               and category_id = '" . $_POST['cPath'] . "'");
@@ -63,17 +72,31 @@
 // bof: ALL ADD/DELETE of Products in one Category
         if ($_POST['products_drop'] < 0) {
         // adding new records
-          if ($_POST['products_drop'] == -1) {
+          if ($_GET['build_cat'] > 0 && $_POST['products_drop'] == -1) {
           // to insert new products from a given categories_id for a coupon_code that are not already in the table
           // products in the table from the catategories_id are skipped
             $new_products_query = "select products_id from " . TABLE_PRODUCTS_TO_CATEGORIES . " where categories_id = '" . $_GET['build_cat'] . "' and products_id not in (select product_id from " . TABLE_COUPON_RESTRICT . " where coupon_id = '" . $_GET['cid'] . "')";
             $new_products = $db->Execute($new_products_query);
           }
 
-          if ($_POST['products_drop'] == -2) {
+          if ($_GET['build_cat'] > 0 && $_POST['products_drop'] == -2) {
           // to delete existing products from a given categories_id for a coupon_code that are already in the table
           // products in the table from the catategories_id are skipped
             $new_products_query = "select products_id from " . TABLE_PRODUCTS_TO_CATEGORIES . " where categories_id = '" . $_GET['build_cat'] . "' and products_id in (select product_id from " . TABLE_COUPON_RESTRICT . " where coupon_restrict = '" . $status . "' and coupon_id = '" . $_GET['cid'] . "')";
+            $new_products = $db->Execute($new_products_query);
+          }
+
+          if ($_GET['build_man'] > 0 && $_POST['products_drop'] == -1) {
+          // to insert new products from a given manufacturers_id for a coupon_code that are not already in the table
+          // products in the table from the manufacturers_id are skipped
+            $new_products_query = "select products_id from " . TABLE_PRODUCTS . " where manufacturers_id = '" . $_GET['build_man'] . "' and products_id not in (select product_id from " . TABLE_COUPON_RESTRICT . " where coupon_id = '" . $_GET['cid'] . "')";
+            $new_products = $db->Execute($new_products_query);
+          }
+
+          if ($_GET['build_man'] > 0 && $_POST['products_drop'] == -2) {
+          // to delete existing products from a given manufacturers_id for a coupon_code that are already in the table
+          // products in the table from the manufacturers_id are skipped
+            $new_products_query = "select products_id from " . TABLE_PRODUCTS . " where manufacturers_id = '" . $_GET['build_man'] . "' and products_id in (select product_id from " . TABLE_COUPON_RESTRICT . " where coupon_restrict = '" . $status . "' and coupon_id = '" . $_GET['cid'] . "')";
             $new_products = $db->Execute($new_products_query);
           }
 
@@ -111,7 +134,7 @@
       $messageStack->add(ERROR_DISCOUNT_COUPON_DEFINED_PRODUCT . ' ' . (int)$_POST['products_drop'], 'caution');
     }
   }
-  if ($_GET['action']=='remove') { 
+  if ($_GET['action']=='remove') {
     if (isset($_GET['info']) && isset($_POST['actionRemoveProto'])) {
       $db->Execute("delete from " . TABLE_COUPON_RESTRICT . " where restrict_id = '" . $_GET['info'] . "'");
     }
@@ -139,8 +162,7 @@
   // -->
 </script>
 </head>
-<body onload="init()">
-<body marginwidth="0" marginheight="0" topmargin="0" bottommargin="0" leftmargin="0" rightmargin="0" bgcolor="#FFFFFF">
+<body onload="init()" marginwidth="0" marginheight="0" topmargin="0" bottommargin="0" leftmargin="0" rightmargin="0" bgcolor="#FFFFFF">
 <!-- header //-->
 <?php require(DIR_WS_INCLUDES . 'header.php'); ?>
 <!-- header_eof //-->
@@ -197,7 +219,7 @@
                              where coupon_id = '" . $_GET['cid'] . "' and language_id = '" . (int)$_SESSION['languages_id'] . "'");
      $category_name = zen_get_category_name($cr_list->fields['category_id'], $_SESSION['languages_id']);
      } else {
-     	$category_name = TEXT_ALL_CATEGORIES;
+       $category_name = TEXT_ALL_CATEGORIES;
      }
 ?>
                 <td class="dataTableContent"><?php echo $_GET['cid']; ?></td>
@@ -205,17 +227,17 @@
                 <td class="dataTableContent" align="center"><?php echo $cr_list->fields['category_id']; ?></td>
                 <td class="dataTableContent" align="center"><?php echo $category_name; ?></td>
 <?php
-		if ($cr_list->fields['coupon_restrict']=='N') {
-		  echo '<td class="dataTableContent" align="center"><a href="' . zen_href_link('coupon_restrict.php', zen_get_all_get_params(array('info', 'action', 'x', 'y')) . 'action=switch_status&info=' . $cr_list->fields['restrict_id'], 'NONSSL') . '" onClick="divertClickSwitchStatus(this.href);return false;" >' . zen_image(DIR_WS_IMAGES . 'icon_status_green.gif', IMAGE_ALLOW) . '</a></td>';
-		} else {
-		  echo '<td class="dataTableContent" align="center"><a href="' . zen_href_link('coupon_restrict.php', zen_get_all_get_params(array('info', 'action', 'x', 'y')) . 'action=switch_status&info=' . $cr_list->fields['restrict_id'], 'NONSSL') . '" onClick="divertClickSwitchStatus(this.href);return false;" >' . zen_image(DIR_WS_IMAGES . 'icon_status_red.gif', IMAGE_DENY) . '</a></td>';
-		}
-		if ($cr_list->fields['coupon_restrict']=='Y') {
-		  echo '<td class="dataTableContent" align="center"><a href="' . zen_href_link('coupon_restrict.php', zen_get_all_get_params(array('info', 'action', 'x', 'y')) . 'action=switch_status&info=' . $cr_list->fields['restrict_id'], 'NONSSL') . '"  onClick="divertClickSwitchStatus(this.href);return false;" >' . zen_image(DIR_WS_IMAGES . 'icon_status_green.gif', IMAGE_ALLOW) . '</a></td>';
-		} else {
-		  echo '<td class="dataTableContent" align="center"><a href="' . zen_href_link('coupon_restrict.php', zen_get_all_get_params(array('info', 'action', 'x', 'y')) . 'action=switch_status&info=' . $cr_list->fields['restrict_id'], 'NONSSL') . '"  onClick="divertClickSwitchStatus(this.href);return false;" >' . zen_image(DIR_WS_IMAGES . 'icon_status_red.gif', IMAGE_DENY) . '</a></td>';
-		}
-		  echo '<td class="dataTableContent" align="center"><a href="' . zen_href_link('coupon_restrict.php', zen_get_all_get_params(array('info', 'action', 'x', 'y')) . 'action=remove&info=' . $cr_list->fields['restrict_id'], 'NONSSL') . '" onClick="divertClickActionRemove(this.href);return false;" >' . zen_image(DIR_WS_IMAGES . 'icons/delete.gif', IMAGE_REMOVE) . '</a></td>';
+    if ($cr_list->fields['coupon_restrict']=='N') {
+      echo '<td class="dataTableContent" align="center"><a href="' . zen_href_link(FILENAME_COUPON_RESTRICT, zen_get_all_get_params(array('info', 'action', 'x', 'y')) . 'action=switch_status&info=' . $cr_list->fields['restrict_id']) . '" onClick="divertClickSwitchStatus(this.href);return false;" >' . zen_image(DIR_WS_IMAGES . 'icon_status_green.gif', IMAGE_ALLOW) . '</a></td>';
+    } else {
+      echo '<td class="dataTableContent" align="center"><a href="' . zen_href_link(FILENAME_COUPON_RESTRICT, zen_get_all_get_params(array('info', 'action', 'x', 'y')) . 'action=switch_status&info=' . $cr_list->fields['restrict_id']) . '" onClick="divertClickSwitchStatus(this.href);return false;" >' . zen_image(DIR_WS_IMAGES . 'icon_status_red.gif', IMAGE_DENY) . '</a></td>';
+    }
+    if ($cr_list->fields['coupon_restrict']=='Y') {
+      echo '<td class="dataTableContent" align="center"><a href="' . zen_href_link(FILENAME_COUPON_RESTRICT, zen_get_all_get_params(array('info', 'action', 'x', 'y')) . 'action=switch_status&info=' . $cr_list->fields['restrict_id']) . '"  onClick="divertClickSwitchStatus(this.href);return false;" >' . zen_image(DIR_WS_IMAGES . 'icon_status_green.gif', IMAGE_ALLOW) . '</a></td>';
+    } else {
+      echo '<td class="dataTableContent" align="center"><a href="' . zen_href_link(FILENAME_COUPON_RESTRICT, zen_get_all_get_params(array('info', 'action', 'x', 'y')) . 'action=switch_status&info=' . $cr_list->fields['restrict_id']) . '"  onClick="divertClickSwitchStatus(this.href);return false;" >' . zen_image(DIR_WS_IMAGES . 'icon_status_red.gif', IMAGE_DENY) . '</a></td>';
+    }
+      echo '<td class="dataTableContent" align="center"><a href="' . zen_href_link(FILENAME_COUPON_RESTRICT, zen_get_all_get_params(array('info', 'action', 'x', 'y')) . 'action=remove&info=' . $cr_list->fields['restrict_id']) . '" onClick="divertClickActionRemove(this.href);return false;" >' . zen_image(DIR_WS_IMAGES . 'icons/delete.gif', IMAGE_REMOVE) . '</a></td>';
 ?>
               </tr>
 <?php
@@ -230,14 +252,14 @@
                   </tr>
                 </table></td>
               </tr>
-              <tr><form name="restrict_category" method="post" action="<?php echo zen_href_link('coupon_restrict.php', zen_get_all_get_params(array('info', 'action', 'x', 'y')) . 'action=add_category&info=' . $cInfo->restrict_id, 'NONSSL'); ?>"><?php echo zen_draw_hidden_field('securityToken', $_SESSION['securityToken']); ?>
+              <tr><form name="restrict_category" method="post" action="<?php echo zen_href_link(FILENAME_COUPON_RESTRICT, zen_get_all_get_params(array('info', 'action', 'x', 'y')) . 'action=add_category&info=' . $cInfo->restrict_id); ?>"><?php echo zen_draw_hidden_field('securityToken', $_SESSION['securityToken']); ?>
                 <td colspan="7"><table border="0" width="100%" cellspacing="0" cellpadding="2">
                   <tr>
                     <td class="smallText" valign="top"><?php echo HEADER_CATEGORY_NAME; ?></td>
                     <td class="smallText" align="left"></td>
                     <td class="smallText" align="left"><?php echo zen_draw_pull_down_menu('cPath', zen_get_category_tree(), $current_category_id); ?></td>
-                    <td class="smallText" align="left"><?php echo zen_draw_pull_down_menu('restrict_status', $restrict_array, $current_category_id); ?></td>
-                    <td class="smallText" align="left"><input type="submit" name="add" value="Add"></td>
+                    <td class="smallText" align="left"><?php echo zen_draw_pull_down_menu('restrict_status', $restrict_array, $current_category_id, 'id="restrict_status_category"'); ?></td>
+                    <td class="smallText" align="left"><input type="submit" name="add" value="<?php echo TEXT_SUBMIT_CATEGORY_ADD;?>"></td>
                     <td class="smallText" align="left">&nbsp;</td>
                     <td class="smallText" align="left">&nbsp;</td>
                   </tr>
@@ -268,6 +290,8 @@
                     <td class="dataTableHeadingContent"><?php echo HEADER_COUPON_ID; ?></td>
                     <td class="dataTableHeadingContent" align="center"><?php echo HEADER_COUPON_NAME; ?></td>
                     <td class="dataTableHeadingContent" align="center"><?php echo HEADER_PRODUCT_ID; ?></td>
+                    <td class="dataTableHeadingContent" align="center"><?php echo HEADER_PRODUCT_STATUS; ?></td>
+                    <td class="dataTableHeadingContent" align="center"><?php echo HEADER_PRODUCT_MODEL; ?></td>
                     <td class="dataTableHeadingContent" align="center"><?php echo HEADER_PRODUCT_NAME; ?></td>
                     <td class="dataTableHeadingContent" align="center"><?php echo HEADER_RESTRICT_ALLOW; ?></td>
                     <td class="dataTableHeadingContent" align="center"><?php echo HEADER_RESTRICT_DENY; ?></td>
@@ -293,19 +317,21 @@
                 <td class="dataTableContent"><?php echo $_GET['cid']; ?></td>
                 <td class="dataTableContent" align="center"><?php echo $coupon->fields['coupon_name']; ?></td>
                 <td class="dataTableContent" align="center"><?php echo $pr_list->fields['product_id']; ?></td>
+                <td class="dataTableContent" align="center"><?php echo (zen_products_lookup($pr_list->fields['product_id'], 'products_status') == 0 ? zen_image(DIR_WS_IMAGES . 'icon_red_on.gif', IMAGE_ICON_STATUS_OFF) : zen_image(DIR_WS_IMAGES . 'icon_green_on.gif', IMAGE_ICON_STATUS_ON)); ?></td>
+                <td class="dataTableContent" align="left"><?php echo (zen_products_lookup($pr_list->fields['product_id'], 'products_model')); ?></td>
                 <td class="dataTableContent" align="left"><?php echo '<strong>' . $product_name . '</strong><br />' . TEXT_CATEGORY . zen_get_categories_name_from_product($pr_list->fields['product_id']) . '<br />' . TEXT_MANUFACTURER . zen_get_products_manufacturers_name($pr_list->fields['product_id']); ?></td>
 <?php
-		if ($pr_list->fields['coupon_restrict']=='N') {
-		  echo '<td class="dataTableContent" align="center"><a href="' . zen_href_link('coupon_restrict.php', zen_get_all_get_params(array('info', 'action', 'x', 'y')) . 'action=switch_status&info=' . $pr_list->fields['restrict_id'], 'NONSSL') . '" onClick="divertClickSwitchStatus(this.href);return false;" >' . zen_image(DIR_WS_IMAGES . 'icon_status_green.gif', IMAGE_ALLOW) . '</a></td>';
-		} else {
-		  echo '<td class="dataTableContent" align="center"><a href="' . zen_href_link('coupon_restrict.php', zen_get_all_get_params(array('info', 'action', 'x', 'y')) . 'action=switch_status&info=' . $pr_list->fields['restrict_id'], 'NONSSL') . '" onClick="divertClickSwitchStatus(this.href);return false;" >' . zen_image(DIR_WS_IMAGES . 'icon_status_red.gif', IMAGE_DENY) . '</a></td>';
-		}
-		if ($pr_list->fields['coupon_restrict']=='Y') {
-		  echo '<td class="dataTableContent" align="center"><a href="' . zen_href_link('coupon_restrict.php', zen_get_all_get_params(array('info', 'action', 'x', 'y')) . 'action=switch_status&info=' . $pr_list->fields['restrict_id'], 'NONSSL') . '" onClick="divertClickSwitchStatus(this.href);return false;" >' . zen_image(DIR_WS_IMAGES . 'icon_status_green.gif', IMAGE_DENY) . '</a></td>';
-		} else {
-		  echo '<td class="dataTableContent" align="center"><a href="' . zen_href_link('coupon_restrict.php', zen_get_all_get_params(array('info', 'action', 'x', 'y')) . 'action=switch_status&info=' . $pr_list->fields['restrict_id'], 'NONSSL') . '" onClick="divertClickSwitchStatus(this.href);return false;" >' . zen_image(DIR_WS_IMAGES . 'icon_status_red.gif', IMAGE_ALLOW) . '</a></td>';
-		}
-		  echo '<td class="dataTableContent" align="center"><a href="' . zen_href_link('coupon_restrict.php', zen_get_all_get_params(array('info', 'action', 'x', 'y')) . 'action=remove&info=' . $pr_list->fields['restrict_id'], 'NONSSL') . '" onClick="divertClickActionRemove(this.href);return false;" >' . zen_image(DIR_WS_IMAGES . 'icons/delete.gif', IMAGE_REMOVE) . '</a></td>';
+    if ($pr_list->fields['coupon_restrict']=='N') {
+      echo '<td class="dataTableContent" align="center"><a href="' . zen_href_link(FILENAME_COUPON_RESTRICT, zen_get_all_get_params(array('info', 'action', 'x', 'y')) . 'action=switch_status&info=' . $pr_list->fields['restrict_id']) . '" onClick="divertClickSwitchStatus(this.href);return false;" >' . zen_image(DIR_WS_IMAGES . 'icon_status_green.gif', IMAGE_ALLOW) . '</a></td>';
+    } else {
+      echo '<td class="dataTableContent" align="center"><a href="' . zen_href_link(FILENAME_COUPON_RESTRICT, zen_get_all_get_params(array('info', 'action', 'x', 'y')) . 'action=switch_status&info=' . $pr_list->fields['restrict_id']) . '" onClick="divertClickSwitchStatus(this.href);return false;" >' . zen_image(DIR_WS_IMAGES . 'icon_status_red.gif', IMAGE_DENY) . '</a></td>';
+    }
+    if ($pr_list->fields['coupon_restrict']=='Y') {
+      echo '<td class="dataTableContent" align="center"><a href="' . zen_href_link(FILENAME_COUPON_RESTRICT, zen_get_all_get_params(array('info', 'action', 'x', 'y')) . 'action=switch_status&info=' . $pr_list->fields['restrict_id']) . '" onClick="divertClickSwitchStatus(this.href);return false;" >' . zen_image(DIR_WS_IMAGES . 'icon_status_green.gif', IMAGE_DENY) . '</a></td>';
+    } else {
+      echo '<td class="dataTableContent" align="center"><a href="' . zen_href_link(FILENAME_COUPON_RESTRICT, zen_get_all_get_params(array('info', 'action', 'x', 'y')) . 'action=switch_status&info=' . $pr_list->fields['restrict_id']) . '" onClick="divertClickSwitchStatus(this.href);return false;" >' . zen_image(DIR_WS_IMAGES . 'icon_status_red.gif', IMAGE_ALLOW) . '</a></td>';
+    }
+      echo '<td class="dataTableContent" align="center"><a href="' . zen_href_link(FILENAME_COUPON_RESTRICT, zen_get_all_get_params(array('info', 'action', 'x', 'y')) . 'action=remove&info=' . $pr_list->fields['restrict_id']) . '" onClick="divertClickActionRemove(this.href);return false;" >' . zen_image(DIR_WS_IMAGES . 'icons/delete.gif', IMAGE_REMOVE) . '</a></td>';
 ?>
               </tr>
 <?php
@@ -320,9 +346,10 @@
                   </tr>
                 </table></td>
               </tr>
-              <tr><form name="restrict_category" method="post" action="<?php echo zen_href_link('coupon_restrict.php', zen_get_all_get_params(array('info', 'action', 'x', 'y')) . 'action=add_category&info=' . $cInfo->restrict_id, 'NONSSL'); ?>"><?php echo zen_draw_hidden_field('securityToken', $_SESSION['securityToken']); ?>
+              <tr>
                 <td colspan="7"><table border="0" width="100%" cellspacing="0" cellpadding="2">
                   <tr>
+<form name="restrict_category" method="post" action="<?php echo zen_href_link(FILENAME_COUPON_RESTRICT, zen_get_all_get_params(array('info', 'action', 'x', 'y')) . 'action=add_category&info=' . $cInfo->restrict_id); ?>"><?php echo zen_draw_hidden_field('securityToken', $_SESSION['securityToken']); ?>
 <?php
       if (isset($_POST['cPath_prod'])) $current_category_id = $_POST['cPath_prod'];
       $products = $db->Execute("select p.products_id, pd.products_name from " .
@@ -332,11 +359,29 @@
       order by pd.products_name");
       $products_array = array();
 
-      if (!$products->EOF) {
+// manufacturers products
+      $current_manufacturers_id = (isset($_POST['manufacturers_id'])) ? (int)$_POST['manufacturers_id'] : 0;
+      if ($current_manufacturers_id > 0) {
+      $products = $db->Execute("select p.products_id, pd.products_name from " .
+      TABLE_PRODUCTS . " p, " . TABLE_PRODUCTS_DESCRIPTION . " pd, " . TABLE_MANUFACTURERS . " m
+      where p.products_id = pd.products_id and pd.language_id = '" . $_SESSION['languages_id'] . "'
+      and p.manufacturers_id = m.manufacturers_id and m.manufacturers_id = '" . (int)$current_manufacturers_id . "'
+      order by pd.products_name");
+      $products_array = array();
+      }
+
+      if (!$products->EOF && $current_category_id > 0) {
         $products_array[] = array('id' => '-1',
                                    'text' => TEXT_ALL_PRODUCTS_ADD);
         $products_array[] = array('id' => '-2',
                                    'text' => TEXT_ALL_PRODUCTS_REMOVE);
+      }
+
+      if (!$products->EOF && $current_manufacturers_id > 0) {
+        $products_array[] = array('id' => '-1',
+                                   'text' => TEXT_ALL_MANUFACTURERS_ADD);
+        $products_array[] = array('id' => '-2',
+                                   'text' => TEXT_ALL_MANUFACTURERS_REMOVE);
       }
 
       while (!$products->EOF) {
@@ -345,16 +390,39 @@
         $products->MoveNext();
       }
 ?>
-                    <td class="smallText" valign="top"><?php echo HEADER_CATEGORY_NAME; ?></td>
-                    <td class="smallText" align="left"></td><form name="restrict_product" method="post" action="<?php echo zen_href_link('coupon_restrict.php', zen_get_all_get_params(array('info', 'action', 'x', 'y')) . 'info=' . $cInfo->restrict_id, 'NONSSL'); ?>">
+                    <td class="smallText" valign="top"><?php echo HEADER_CATEGORY_NAME . HEADER_MANUFACTURER_NAME; ?></td>
+                    <td class="smallText" align="left"></td><form name="restrict_product" method="post" action="<?php echo zen_href_link(FILENAME_COUPON_RESTRICT, zen_get_all_get_params(array('info', 'action', 'x', 'y')) . 'info=' . $cInfo->restrict_id); ?>">
                     <?php echo zen_hide_session_id(); ?>
-                    <td class="smallText" align="left"><?php echo zen_draw_pull_down_menu('cPath_prod', zen_get_category_tree(), $current_category_id, 'onChange="this.form.submit();"'); ?></td></form>
+                    <td class="smallText" align="left">
+<?php
+// add manufacturers picker for manufacturers with products
+      $manufacturers_array = array(array('id' => '', 'text' => TEXT_NONE));
+
+      $manufacturers = $db->Execute("select distinct m.manufacturers_id, m.manufacturers_name
+                              from " . TABLE_MANUFACTURERS . " m
+                              left join " . TABLE_PRODUCTS . " p on m.manufacturers_id = p.manufacturers_id
+                              where p.manufacturers_id = m.manufacturers_id
+                              and (p.products_status = 1
+                              and p.products_quantity > 0)
+                              order by m.manufacturers_name");
+
+      while (!$manufacturers->EOF) {
+        $manufacturers_array[] = array('id' => $manufacturers->fields['manufacturers_id'],
+                                       'text' => $manufacturers->fields['manufacturers_name'] . ' [ #' . $manufacturers->fields['manufacturers_id'] . ' ]');
+        $manufacturers->MoveNext();
+      }
+
+      echo zen_draw_pull_down_menu('cPath_prod', zen_get_category_tree(), $current_category_id, 'onChange="this.form.submit();"') . '<br>';
+      echo zen_draw_pull_down_menu('manufacturers_id', $manufacturers_array, $current_manufacturers_id, 'onChange="this.form.submit();"');
+?>
+       </td>
+</form>
 <?php if (sizeof($products_array) > 0) { ?>
-                    <form name="restrict_category" method="post" action="<?php echo zen_href_link('coupon_restrict.php', zen_get_all_get_params(array('info', 'action', 'x', 'y')) . 'action=add_product&info=' . $cInfo->restrict_id . '&build_cat=' . $current_category_id, 'NONSSL'); ?>"><?php echo zen_draw_hidden_field('securityToken', $_SESSION['securityToken']); ?>
+                    <form name="restrict_category" method="post" action="<?php echo zen_href_link(FILENAME_COUPON_RESTRICT, zen_get_all_get_params(array('info', 'action', 'x', 'y')) . 'action=add_product&info=' . $cInfo->restrict_id . '&build_cat=' . $current_category_id . '&build_man=' . $current_manufacturers_id); ?>"><?php echo zen_draw_hidden_field('securityToken', $_SESSION['securityToken']); ?>
                     <td class="smallText" valign="top"><?php echo HEADER_PRODUCT_NAME; ?></td>
                     <td class="smallText" align="left"><?php echo zen_draw_pull_down_menu('products_drop', $products_array, $current_category_id); ?></td>
-                    <td class="smallText" align="left"><?php echo zen_draw_pull_down_menu('restrict_status', $restrict_array); ?></td>
-                    <td class="smallText" align="left"><input type="submit" name="add" value="Update"></td>
+                    <td class="smallText" align="left"><?php echo zen_draw_pull_down_menu('restrict_status', $restrict_array, '', 'id="restrict_status_product"'); ?></td>
+                    <td class="smallText" align="left"><input type="submit" name="add" value="<?php echo TEXT_SUBMIT_PRODUCT_UPDATE; ?>"></td>
                     <td class="smallText" align="left">&nbsp;</td>
                     <td class="smallText" align="left">&nbsp;</td>
 <?php } else { ?>
@@ -402,15 +470,15 @@
 <script type="text/javascript">
 function divertClickActionRemove(href)
 {
-	document.getElementById('actionRemove').action = href;
-	document.getElementById('actionRemove').submit();
-	return false;
+  document.getElementById('actionRemove').action = href;
+  document.getElementById('actionRemove').submit();
+  return false;
 }
 function divertClickSwitchStatus(href)
 {
-	document.getElementById('switchStatus').action = href;
-	document.getElementById('switchStatus').submit();
-	return false;
+  document.getElementById('switchStatus').action = href;
+  document.getElementById('switchStatus').submit();
+  return false;
 }
 </script>
 </body>

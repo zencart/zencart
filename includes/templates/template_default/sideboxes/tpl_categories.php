@@ -3,15 +3,15 @@
  * Side Box Template
  *
  * @package templateSystem
- * @copyright Copyright 2003-2006 Zen Cart Development Team
+ * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: tpl_categories.php 4162 2006-08-17 03:55:02Z ajeh $
+ * @version $Id: Drbyte Sun Jan 7 21:28:50 2018 -0500 Modified in v1.5.6 $
  */
   $content = "";
-  
+
   $content .= '<div id="' . str_replace('_', '-', $box_id . 'Content') . '" class="sideBoxContent">' . "\n";
-  for ($i=0;$i<sizeof($box_categories_array);$i++) {
+  for ($i=0, $j=sizeof($box_categories_array);$i<$j;$i++) {
     switch(true) {
 // to make a specific category stand out define a new class in the stylesheet example: A.category-holiday
 // uncomment the select below and set the cPath=3 to the cPath= your_categories_id
@@ -92,4 +92,3 @@
     }
   }
   $content .= '</div>';
-?>

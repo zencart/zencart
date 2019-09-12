@@ -1,36 +1,39 @@
 <?php
 /**
- * @package Admin
- * @copyright Copyright 2003-2011 Zen Cart Development Team
+ * @package admin
+ * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: config.core.php 19562 2011-09-22 13:38:40Z drbyte $
+ * @version $Id: lat9 2019 Mar 23 Modified in v1.5.6b $
  */
 if (!defined('USE_PCONNECT')) define('USE_PCONNECT', 'false');
 /**
- * autoloader array for catalog application_top.php
- *
+ * autoloader array for admin application_top.php
+ * Where DIR_WS_CLASSES is used alone in commented text, the file loads relative
+ *   to the admin side folder.
 **/
-
 /**
- *
- * require(DIR_WS_CLASSES . 'class.base.php');
- * require(DIR_WS_CLASSES . 'class.notifier.php');
- * $zco_notifier = new notifier()'
- * require(DIR_WS_CLASSES . 'sniffer.php');
+ * require(DIR_FS_CATALOG . DIR_WS_INCLUDES . 'version.php');
+ * require(DIR_FS_CATALOG . DIR_WS_CLASSES . 'class.base.php');
+ * require(DIR_FS_CATALOG . DIR_WS_CLASSES . 'class.notifier.php');
+ * $zco_notifier = new notifier();
+ * require(DIR_FS_CATALOG . DIR_WS_CLASSES . 'sniffer.php');
  * require(DIR_WS_CLASSES . 'logger.php');
- * require(DIR_WS_CLASSES . 'shopping_cart.php');
- * require(DIR_WS_CLASSES . 'products.php');
+ * require(DIR_FS_CATALOG . DIR_WS_CLASSES . 'shopping_cart.php');
+ * require(DIR_FS_CATALOG . DIR_WS_CLASSES . 'products.php');
  * require(DIR_WS_CLASSES . 'table_block.php');
  * require(DIR_WS_CLASSES . 'box.php');
  * require(DIR_WS_CLASSES . 'message_stack.php');
  * require(DIR_WS_CLASSES . 'split_page_results.php');
  * require(DIR_WS_CLASSES . 'object_info.php');
- * require(DIR_WS_CLASSES . 'class.phpmailer.php');
- * require(DIR_WS_CLASSES . 'class.smtp.php');
- * require(DIR_WS_CLASSES . 'upload.php');
- *
+ * require(DIR_FS_CATALOG . DIR_WS_CLASSES . 'class.phpmailer.php');
+ * require(DIR_FS_CATALOG . DIR_WS_CLASSES . 'upload.php');
+ * require(DIR_FS_CATALOG . DIR_WS_CLASSES . 'class.zcPassword.php');
+ * zcPassword = new zcPassword();
+ * require(DIR_WS_CLASSES . VersionServer.php');
  */
+  $autoLoadConfig[0][] = array('autoType'=>'require',
+                               'loadFile'=> DIR_FS_CATALOG . DIR_WS_INCLUDES .  'version.php');
   $autoLoadConfig[0][] = array('autoType'=>'class',
                                'loadFile'=>'class.base.php');
   $autoLoadConfig[0][] = array('autoType'=>'class',
@@ -66,24 +69,28 @@ if (!defined('USE_PCONNECT')) define('USE_PCONNECT', 'false');
   $autoLoadConfig[0][] = array('autoType'=>'class',
                                'loadFile'=>'class.phpmailer.php');
   $autoLoadConfig[0][] = array('autoType'=>'class',
-                               'loadFile'=>'class.smtp.php');
-  $autoLoadConfig[0][] = array('autoType'=>'class',
                                'loadFile'=>'upload.php',
+                               'classPath'=>DIR_FS_CATALOG . DIR_WS_CLASSES);
+  $autoLoadConfig[0][] = array('autoType'=>'class',
+                               'loadFile'=>'class.zcPassword.php');
+  $autoLoadConfig[0][] = array('autoType'=>'classInstantiate',
+                               'className'=>'zcPassword',
+                               'objectName'=>'zcPassword');
+  $autoLoadConfig[0][] = array('autoType'=>'class',
+                               'loadFile'=> 'VersionServer.php',
                                'classPath'=>DIR_WS_CLASSES);
+
 /**
  * Breakpoint 10.
  *
  * require('includes/init_includes/init_file_db_names.php');
- * require('includes/init_includes/init_database.ph');
- * require('includes/version.php');
+ * require('includes/init_includes/init_database.php');
  *
  */
   $autoLoadConfig[10][] = array('autoType'=>'init_script',
                                 'loadFile'=> 'init_file_db_names.php');
   $autoLoadConfig[10][] = array('autoType'=>'init_script',
                                 'loadFile'=>'init_database.php');
-  $autoLoadConfig[10][] = array('autoType'=>'require',
-                                'loadFile'=> DIR_FS_CATALOG . DIR_WS_INCLUDES .  'version.php');
 /**
  * Breakpoint 20.
  *
@@ -97,7 +104,6 @@ if (!defined('USE_PCONNECT')) define('USE_PCONNECT', 'false');
  *
  * require('includes/init_includes/init_gzip.php');
  * $sniffer = new sniffer();
-
  *
  */
   $autoLoadConfig[30][] = array('autoType'=>'init_script',
@@ -120,10 +126,20 @@ if (!defined('USE_PCONNECT')) define('USE_PCONNECT', 'false');
  * require('includes/init_includes/init_tlds.php');
  *
  */
+  $autoLoadConfig[40][] = array('autoType'=>'require',
+                                'loadFile'=> DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'functions_osh_update.php');
   $autoLoadConfig[40][] = array('autoType'=>'init_script',
                                 'loadFile'=> 'init_general_funcs.php');
   $autoLoadConfig[40][] = array('autoType'=>'init_script',
                                 'loadFile'=> 'init_tlds.php');
+/**
+ * Breakpoint 50.
+ *
+ * require('includes/init_includes/init_cache_key_check.php');
+ *
+ */
+  $autoLoadConfig[50][] = array('autoType'=>'init_script',
+                                'loadFile'=> 'init_cache_key_check.php');
 /**
  * Breakpoint 60.
  *
@@ -133,14 +149,21 @@ if (!defined('USE_PCONNECT')) define('USE_PCONNECT', 'false');
   $autoLoadConfig[60][] = array('autoType'=>'init_script',
                                 'loadFile'=> 'init_sessions.php');
 /**
+ * Breakpoint 65.
+ *
+ * require('includes/init_includes/init_languages.php');
+ * Expecting nothing loaded before init_sanitize to require $_POST/$_GET sanitization.
+ */
+  $autoLoadConfig[65][] = array('autoType'=>'init_script',
+                                'loadFile'=> 'init_languages.php');
+/**
  * Breakpoint 70.
  *
- * require(DIR_WS_FUNCTIONS . 'admin_access.php');
- * require('includes/init_includes/init_languages.php');
+ * require('includes/init_includes/init_sanitize.php');
  *
  */
   $autoLoadConfig[70][] = array('autoType'=>'init_script',
-                                'loadFile'=> 'init_languages.php');
+                                'loadFile'=> 'init_sanitize.php');
 /**
  * Breakpoint 80.
  *
@@ -153,8 +176,7 @@ if (!defined('USE_PCONNECT')) define('USE_PCONNECT', 'false');
  * Breakpoint 90.
  *
  * $zc_products = new products();
- * require(DIRWS_FUNCTIONS . 'localization.php');
- * require(DIRWS_FUNCTIONS . 'validations.php');
+ * require(DIR_WS_FUNCTIONS . 'localization.php');
  *
  */
   $autoLoadConfig[90][] = array('autoType'=>'classInstantiate',
@@ -169,7 +191,6 @@ if (!defined('USE_PCONNECT')) define('USE_PCONNECT', 'false');
  *
  */
   $autoLoadConfig[100][] = array('autoType'=>'classInstantiate',
-                                'classPath'=>DIR_WS_CLASSES,
                                  'className'=>'messageStack',
                                  'objectName'=>'messageStack');
 /**
@@ -189,14 +210,6 @@ if (!defined('USE_PCONNECT')) define('USE_PCONNECT', 'false');
  */
   $autoLoadConfig[130][] = array('autoType'=>'init_script',
                                  'loadFile'=> 'init_category_path.php');
-/**
- * Breakpoint 140.
- *
- * require('includes/init_includes/init_errors.php');
- *
- */
-  $autoLoadConfig[140][] = array('autoType'=>'init_script',
-                                 'loadFile'=> 'init_errors.php');
 /**
  * Breakpoint 150.
  *
@@ -230,3 +243,11 @@ if (!defined('USE_PCONNECT')) define('USE_PCONNECT', 'false');
 
   $autoLoadConfig[180][] = array('autoType'=>'init_script',
                                  'loadFile'=> 'init_html_editor.php');
+/**
+ * Breakpoint 181.
+ *
+ * require('includes/init_includes/init_errors.php');
+ *
+ */
+  $autoLoadConfig[181][] = array('autoType'=>'init_script',
+                                 'loadFile'=> 'init_errors.php');

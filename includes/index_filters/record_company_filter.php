@@ -1,4 +1,5 @@
 <?php
+
 /**
  * record_company_filter.php  for index filters
  *
@@ -6,11 +7,11 @@
  * show the products of a specified record company
  *
  * @package productTypes
- * @copyright Copyright 2003-2012 Zen Cart Development Team
+ * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @todo Need to add/fine-tune ability to override or insert entry-points on a per-product-type basis
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte  Mon Jul 16 12:08:58 2012 -0400 Modified in v1.5.1 $
+ * @version $Id: Scott C Wilson 2019 Jun 23 Modified in v1.5.6c $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
@@ -19,201 +20,149 @@ if (isset($_GET['sort']) && strlen($_GET['sort']) > 3) {
   $_GET['sort'] = substr($_GET['sort'], 0, 3);
 }
 if (isset($_GET['alpha_filter_id']) && (int)$_GET['alpha_filter_id'] > 0) {
-  $alpha_sort = " and pd.products_name LIKE '" . chr((int)$_GET['alpha_filter_id']) . "%' ";
+  $alpha_sort = " AND pd.products_name LIKE '" . chr((int)$_GET['alpha_filter_id']) . "%' ";
 } else {
   $alpha_sort = '';
 }
-if (!isset($select_column_list)) $select_column_list = "";
- // show the products of a specified record-company
-  if (isset($_GET['record_company_id']))
-  {
-    if (isset($_GET['filter_id']) && zen_not_null($_GET['filter_id']))
-    {
-      // We are asked to show only a specific category
-      $listing_sql = "select " . $select_column_list . " p.products_id, p.products_type, p.master_categories_id, p.products_price, p.products_tax_class_id, pd.products_description, if(s.status = 1, s.specials_new_products_price, NULL) AS specials_new_products_price, IF(s.status = 1, s.specials_new_products_price, p.products_price) as final_price, p.products_sort_order, p.product_is_call, p.product_is_always_free_shipping, p.products_qty_box_status
-        from " . TABLE_PRODUCTS . " p, " .
-        TABLE_PRODUCTS_DESCRIPTION . " pd, " .
-        TABLE_PRODUCT_MUSIC_EXTRA . " pme left join " . TABLE_SPECIALS . " s on pme.products_id = s.products_id, " .
-        TABLE_PRODUCTS_TO_CATEGORIES . " p2c, " .
-        TABLE_RECORD_COMPANY . " r
-        where r.record_company_id = '" . (int)$_GET['record_company_id'] . "'
-          and p.products_id = pme.products_id
-          and p.products_status = 1
-          and pme.record_company_id = r.record_company_id
-          and pme.products_id = p2c.products_id
-          and pd.products_id = p2c.products_id
-          and pd.language_id = '" . (int)$_SESSION['languages_id'] . "'
-          and p2c.categories_id = '" . (int)$_GET['filter_id'] . "'" .
-          $alpha_sort;
-    } else {
-      // We show them all
-      $listing_sql = "select " . $select_column_list . " pme.products_id, p.products_type, p.master_categories_id, p.products_price, p.products_tax_class_id, pd.products_description, IF(s.status = 1, s.specials_new_products_price, NULL) as specials_new_products_price, IF(s.status = 1, s.specials_new_products_price, p.products_price) as final_price, p.products_sort_order, p.product_is_call, p.product_is_always_free_shipping, p.products_qty_box_status
-        from " . TABLE_PRODUCTS . " p, " .
-        TABLE_PRODUCTS_DESCRIPTION . " pd, " .
-        TABLE_PRODUCT_MUSIC_EXTRA . " pme left join " . TABLE_SPECIALS . " s on pme.products_id = s.products_id, " .
-        TABLE_RECORD_COMPANY . " r
-        where r.record_company_id = '" . (int)$_GET['record_company_id'] . "'
-          and p.products_id = pme.products_id
-          and p.products_status = 1
-          and pd.products_id = pme.products_id
-          and pd.language_id = '" . (int)$_SESSION['languages_id'] . "'
-          and pme.record_company_id = r.record_company_id" .
-          $alpha_sort;
+if (!isset($select_column_list)) {
+  $select_column_list = '';
+}
+if (!isset($do_filter_list)) {
+  $do_filter_list = false;
+}
+$and = '';
+// show the products of a specified record-company
+if (isset($_GET['record_company_id'])) {
+  // We show them all
+  $and = " AND r.record_company_id = " . (int)$_GET['record_company_id'] . " ";
+  if (isset($_GET['filter_id']) && zen_not_null($_GET['filter_id'])) {
+// We are asked to show only a specific category
+    $and .= " AND p2c.categories_id = " . (int)$_GET['filter_id'] . " ";
+  } else {
+    $and .= ' AND p2c.categories_id = p.master_categories_id ';
+  }
+} else {
+  // We show them all
+  if ($current_categories_id) {
+    $and = " AND p2c.categories_id = " . (int)$current_category_id . " ";
+  }
+  // show the products in a given category
+  if (isset($_GET['filter_id']) && zen_not_null($_GET['filter_id'])) {
+    // We are asked to show only specific category
+    $and .= " AND r.record_company_id = " . (int)$_GET['filter_id'] . " ";
+  }
+}
+$listing_sql = "SELECT " . $select_column_list . " p.products_id, p.products_type, p.master_categories_id, r.record_company_id, p.products_price, p.products_tax_class_id, pd.products_description,
+                       IF(s.status = 1, s.specials_new_products_price, NULL) AS specials_new_products_price,
+                       IF(s.status = 1, s.specials_new_products_price, p.products_price) AS final_price,
+                       p.products_sort_order, p.product_is_call, p.product_is_always_free_shipping, p.products_qty_box_status
+                FROM " . TABLE_PRODUCTS . " p
+                LEFT JOIN " . TABLE_SPECIALS . " s ON s.products_id = p.products_id
+                LEFT JOIN " . TABLE_PRODUCTS_DESCRIPTION . " pd ON pd.products_id = p.products_id
+                  AND pd.language_id = " . (int)$_SESSION['languages_id'] . "
+                LEFT JOIN " . TABLE_PRODUCTS_TO_CATEGORIES . " p2c ON p2c.products_id = p.products_id
+                LEFT JOIN " . TABLE_PRODUCT_MUSIC_EXTRA . " pme ON pme.products_id = p.products_id
+                LEFT JOIN " . TABLE_RECORD_COMPANY . " r ON r.record_company_id = pme.record_company_id
+                WHERE p.products_status = 1
+                " . $and . "
+                " . $alpha_sort;
+
+// set the default sort order setting from the Admin when not defined by customer
+if (!isset($_GET['sort']) and PRODUCT_LISTING_DEFAULT_SORT_ORDER != '') {
+  $_GET['sort'] = PRODUCT_LISTING_DEFAULT_SORT_ORDER;
+}
+
+$listing_sql = str_replace('m.manufacturers_name', 'r.record_company_name as manufacturers_name', $listing_sql);
+
+if (isset($column_list)) {
+  if ((!isset($_GET['sort'])) || (isset($_GET['sort']) && !preg_match('/[1-8][ad]/', $_GET['sort'])) || (substr($_GET['sort'], 0, 1) > sizeof($column_list))) {
+    for ($i = 0, $n = sizeof($column_list); $i < $n; $i++) {
+      if (isset($column_list[$i]) && $column_list[$i] == 'PRODUCT_LIST_NAME') {
+        $_GET['sort'] = $i + 1 . 'a';
+        $listing_sql .= " ORDER BY p.products_sort_order, pd.products_name";
+        break;
+      }
+    }
+    // if set to nothing use products_sort_order and PRODUCTS_LIST_NAME is off
+    if (PRODUCT_LISTING_DEFAULT_SORT_ORDER == '') {
+      $_GET['sort'] = '20a';
     }
   } else {
-    // show the products in a given category
-    if (isset($_GET['filter_id']) && zen_not_null($_GET['filter_id']))
-    {
-      // We are asked to show only specific category
-      $listing_sql = "select " . $select_column_list . " p.products_id, p.products_type, p.master_categories_id, r.record_company_id, p.products_price, p.products_tax_class_id, pd.products_description, IF(s.status = 1, s.specials_new_products_price, NULL) as specials_new_products_price, IF(s.status = 1, s.specials_new_products_price, p.products_price) as final_price, p.products_sort_order, p.product_is_call, p.product_is_always_free_shipping, p.products_qty_box_status
-        from " . TABLE_PRODUCTS . " p left join " . TABLE_SPECIALS . " s on p.products_id = s.products_id, " .
-        TABLE_PRODUCTS_DESCRIPTION . " pd, " .
-        TABLE_RECORD_COMPANY . " r, " .
-        TABLE_PRODUCT_MUSIC_EXTRA . " pme, " .
-        TABLE_PRODUCTS_TO_CATEGORIES . " p2c
-        where p.products_status = 1
-          and pme.record_company_id = r.record_company_id
-          and r.record_company_id = '" . (int)$_GET['filter_id'] . "'
-          and p.products_id = p2c.products_id
-          and pd.products_id = p2c.products_id
-          and pd.language_id = '" . (int)$_SESSION['languages_id'] . "'
-          and p2c.categories_id = '" . (int)$current_category_id . "'" .
-          $alpha_sort;
+    $sort_col = substr($_GET['sort'], 0, 1);
+    $sort_order = substr($_GET['sort'], -1);
+    switch ($column_list[$sort_col - 1]) {
+      case 'PRODUCT_LIST_MODEL':
+        $listing_sql .= " ORDER BY p.products_model " . ($sort_order == 'd' ? 'DESC' : '') . ", pd.products_name";
+        break;
+      case 'PRODUCT_LIST_NAME':
+        $listing_sql .= " ORDER BY pd.products_name " . ($sort_order == 'd' ? 'DESC' : '');
+        break;
+      case 'PRODUCT_LIST_MANUFACTURER':
+        $listing_sql .= " ORDER BY r.record_company_name " . ($sort_order == 'd' ? 'DESC' : '') . ", pd.products_name";
+        break;
+      case 'PRODUCT_LIST_QUANTITY':
+        $listing_sql .= " ORDER BY p.products_quantity " . ($sort_order == 'd' ? 'DESC' : '') . ", pd.products_name";
+        break;
+      case 'PRODUCT_LIST_IMAGE':
+        $listing_sql .= " ORDER BY pd.products_name";
+        break;
+      case 'PRODUCT_LIST_WEIGHT':
+        $listing_sql .= " ORDER BY p.products_weight " . ($sort_order == 'd' ? 'DESC' : '') . ", pd.products_name";
+        break;
+      case 'PRODUCT_LIST_PRICE':
+        $listing_sql .= " ORDER BY p.products_price_sorter " . ($sort_order == 'd' ? 'DESC' : '') . ", pd.products_name";
+        break;
+    }
+  }
+}
+// optional Product List Filter
+if (PRODUCT_LIST_FILTER > 0) {
+  if (isset($_GET['record_company_id']) && $_GET['record_company_id'] != '') {
+    $filterlist_sql = "SELECT c.categories_id AS id, cd.categories_name AS name
+                       FROM " . TABLE_PRODUCTS . " p
+                       LEFT JOIN " . TABLE_PRODUCTS_TO_CATEGORIES . " p2c ON p2c.products_id = p.products_id
+                       LEFT JOIN " . TABLE_CATEGORIES . " c ON c.categories_id = p2c.categories_id
+                       LEFT JOIN " . TABLE_CATEGORIES_DESCRIPTION . " cd ON cd.categories_id = p2c.categories_id
+                         AND cd.language_id = " . (int)$_SESSION['languages_id'] . "
+                       LEFT JOIN " . TABLE_PRODUCT_MUSIC_EXTRA . " pme ON pme.products_id = p.products_id
+                       WHERE p.products_status = 1
+                       AND pme.record_company_id = " . (int)$_GET['record_company_id'] . "
+                       GROUP BY c.categories_id, cd.categories_name
+                       ORDER BY cd.categories_name";
+  } else {
+    $filterlist_sql = "SELECT r.record_company_id AS id, r.record_company_name AS name
+                       FROM " . TABLE_PRODUCTS . " p
+                       LEFT JOIN " . TABLE_PRODUCTS_TO_CATEGORIES . " p2c ON p2c.products_id = p.products_id
+                       JOIN " . TABLE_PRODUCT_MUSIC_EXTRA . " pme ON pme.products_id = p.products_id
+                       JOIN " . TABLE_RECORD_COMPANY . " r ON r.record_company_id = pme.record_company_id
+                       WHERE p.products_status = 1
+                       AND p2c.categories_id = " . (int)$current_category_id . "
+                       GROUP BY r.record_company_id, r.record_company_name
+                       ORDER BY r.record_company_name";
+  }
+  $getoption_set = false;
+  $do_filter_list = false;
+  $filterlist = $db->Execute($filterlist_sql);
+  if ($filterlist->RecordCount() > 1) {
+    $do_filter_list = true;
+    if (isset($_GET['record_company_id'])) {
+      $getoption_set = true;
+      $get_option_variable = 'record_company_id';
+      $options = array(array(
+          'id' => '',
+          'text' => TEXT_ALL_CATEGORIES
+      ));
     } else {
-      // We show them all
-      if ($current_categories_id) {
-        $listing_sql = "select " . $select_column_list . " p.products_id, p.products_type, p.master_categories_id, r.record_company_id, p.products_price, p.products_tax_class_id, pd.products_description, IF(s.status = 1, s.specials_new_products_price, NULL) as specials_new_products_price, IF(s.status = 1, s.specials_new_products_price, p.products_price) as final_price, p.products_sort_order, p.product_is_call, p.product_is_always_free_shipping, p.products_qty_box_status
-        from " . TABLE_PRODUCTS . " p, " .
-        TABLE_PRODUCTS_DESCRIPTION . " pd, " .
-        TABLE_PRODUCT_MUSIC_EXTRA . " pme left join " . TABLE_SPECIALS . " s on pme.products_id = s.products_id, " .
-        TABLE_PRODUCTS_TO_CATEGORIES . " p2c, " .
-        TABLE_RECORD_COMPANY . " r
-        where  r.record_company_id = pme.record_company_id
-          and p.products_id = pme.products_id
-          and p.products_status = 1
-          and pd.products_id = pme.products_id
-          and p2c.products_id = p.products_id
-          and pd.language_id = '" . (int)$_SESSION['languages_id'] . "'
-          and p2c.categories_id = '" . (int)$current_category_id . "'" .
-          $alpha_sort;
-      } else {
-        $listing_sql = "select " . $select_column_list . " p.products_id, p.products_type, p.master_categories_id, r.record_company_id, p.products_price, p.products_tax_class_id, pd.products_description, IF(s.status = 1, s.specials_new_products_price, NULL) as specials_new_products_price, IF(s.status = 1, s.specials_new_products_price, p.products_price) as final_price, p.products_sort_order, p.product_is_call, p.product_is_always_free_shipping, p.products_qty_box_status
-        from " . TABLE_PRODUCTS . " p, " .
-        TABLE_PRODUCTS_DESCRIPTION . " pd, " .
-        TABLE_PRODUCT_MUSIC_EXTRA . " pme left join " . TABLE_SPECIALS . " s on pme.products_id = s.products_id, " .
-        TABLE_PRODUCTS_TO_CATEGORIES . " p2c, " .
-        TABLE_RECORD_COMPANY . " r
-        where r.record_company_id = pme.record_company_id
-          and p.products_id = pme.products_id
-          and p.products_status = 1
-          and pd.products_id = pme.products_id
-          and p2c.products_id = p.products_id
-          and pd.language_id = '" . (int)$_SESSION['languages_id'] . "'" .
-          $alpha_sort;
-      }
+      $options = array(array(
+          'id' => '',
+          'text' => TEXT_ALL_MUSIC_GENRE
+      ));
+    }
+    foreach ($filterlist as $item) {
+      $options[] = array(
+        'id' => $item['id'],
+        'text' => $item['name']
+      );
     }
   }
-  // set the default sort order setting from the Admin when not defined by customer
-  if (!isset($_GET['sort']) and PRODUCT_LISTING_DEFAULT_SORT_ORDER != '') {
-    $_GET['sort'] = PRODUCT_LISTING_DEFAULT_SORT_ORDER;
-  }
-
-  $listing_sql = str_replace('m.manufacturers_name', 'r.record_company_name as manufacturers_name', $listing_sql);
-
-  if (isset($column_list)) {
-    if ( (!isset($_GET['sort'])) || (isset($_GET['sort']) && !preg_match('/[1-8][ad]/', $_GET['sort'])) || (substr($_GET['sort'], 0, 1) > sizeof($column_list)) )
-    {
-      for ($i=0, $n=sizeof($column_list); $i<$n; $i++)
-      {
-        if ($column_list[$i] == 'PRODUCT_LIST_NAME')
-        {
-          $_GET['sort'] = $i+1 . 'a';
-          $listing_sql .= " order by p.products_sort_order, pd.products_name";
-          break;
-        }
-      }
-      // if set to nothing use products_sort_order and PRODUCTS_LIST_NAME is off
-      if (PRODUCT_LISTING_DEFAULT_SORT_ORDER == '') {
-        $_GET['sort'] = '20a';
-      }
-    } else {
-      $sort_col = substr($_GET['sort'], 0 , 1);
-      $sort_order = substr($_GET['sort'], 1);
-      switch ($column_list[$sort_col-1])
-      {
-        case 'PRODUCT_LIST_MODEL':
-        $listing_sql .= " order by p.products_model " . ($sort_order == 'd' ? 'desc' : '') . ", pd.products_name";
-        break;
-        case 'PRODUCT_LIST_NAME':
-        $listing_sql .= " order by pd.products_name " . ($sort_order == 'd' ? 'desc' : '');
-        break;
-        case 'PRODUCT_LIST_MANUFACTURER':
-        $listing_sql .= " order by r.record_company_name " . ($sort_order == 'd' ? 'desc' : '') . ", pd.products_name";
-        break;
-        case 'PRODUCT_LIST_QUANTITY':
-        $listing_sql .= " order by p.products_quantity " . ($sort_order == 'd' ? 'desc' : '') . ", pd.products_name";
-        break;
-        case 'PRODUCT_LIST_IMAGE':
-        $listing_sql .= " order by pd.products_name";
-        break;
-        case 'PRODUCT_LIST_WEIGHT':
-        $listing_sql .= " order by p.products_weight " . ($sort_order == 'd' ? 'desc' : '') . ", pd.products_name";
-        break;
-        case 'PRODUCT_LIST_PRICE':
-        $listing_sql .= " order by p.products_price_sorter " . ($sort_order == 'd' ? 'desc' : '') . ", pd.products_name";
-        break;
-      }
-    }
-  }
-  // optional Product List Filter
-  if (PRODUCT_LIST_FILTER > 0)
-  {
-    if (isset($_GET['record_company_id']))
-    {
-      $filterlist_sql = "select distinct c.categories_id as id, cd.categories_name as name
-        from " . TABLE_PRODUCTS . " p, " .
-        TABLE_PRODUCTS_TO_CATEGORIES . " p2c, " .
-        TABLE_CATEGORIES . " c, " .
-        TABLE_CATEGORIES_DESCRIPTION . " cd, " .
-        TABLE_PRODUCT_MUSIC_EXTRA . " pme
-        where p.products_status = 1
-          and pme.products_id = p2c.products_id
-          and p.products_id = p2c.products_id
-          and p2c.categories_id = c.categories_id
-          and p2c.categories_id = cd.categories_id
-          and cd.language_id = '" . (int)$_SESSION['languages_id'] . "'
-          and pme.record_company_id = '" . (int)$_GET['record_company_id'] . "'
-        order by cd.categories_name";
-    } else {
-      $filterlist_sql= "select distinct r.record_company_id as id, r.record_company_name as name
-        from " . TABLE_PRODUCTS . " p, " .
-        TABLE_PRODUCTS_TO_CATEGORIES . " p2c, " .
-        TABLE_PRODUCT_MUSIC_EXTRA . " pme, " .
-        TABLE_RECORD_COMPANY . " r
-        where p.products_status = 1
-          and pme.record_company_id = r.record_company_id
-          and p.products_id = p2c.products_id
-          and pme.products_id = p.products_id
-          and p2c.categories_id = '" . (int)$current_category_id . "'
-        order by r.record_company_name";
-    }
-    $getoption_set =  false;
-    $do_filter_list = false;
-    $filterlist = $db->Execute($filterlist_sql);
-    if ($filterlist->RecordCount() > 1)
-    {
-      $do_filter_list = true;
-      if (isset($_GET['record_company_id']))
-      {
-        $getoption_set =  true;
-        $get_option_variable = 'record_company_id';
-        $options = array(array('id' => '', 'text' => TEXT_ALL_CATEGORIES));
-      } else {
-        $options = array(array('id' => '', 'text' => TEXT_ALL_MUSIC_GENRE));
-      }
-      while (!$filterlist->EOF) {
-        $options[] = array('id' => $filterlist->fields['id'], 'text' => $filterlist->fields['name']);
-        $filterlist->MoveNext();
-      }
-    }
-  }
+}

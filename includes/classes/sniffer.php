@@ -3,9 +3,9 @@
  * Sniffer Class.
  *
  * @package classes
- * @copyright Copyright 2003-2007 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: sniffer.php 5645 2007-01-21 00:40:03Z drbyte $
+ * @version $Id: Author: DrByte  Sat Oct 17 21:54:07 2015 -0400 Modified in v1.5.5 $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
@@ -19,12 +19,11 @@ if (!defined('IS_ADMIN_FLAG')) {
  */
 class sniffer extends base {
 
-  function sniffer() {
+  function __construct() {
     $this->browser = Array();
     $this->php = Array();
     $this->server = Array();
     $this->database = Array();
-    $this->phpBB = Array();
   }
 
   function table_exists($table_name) {

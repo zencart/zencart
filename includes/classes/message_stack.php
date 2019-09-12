@@ -3,10 +3,10 @@
  * messageStack Class.
  *
  * @package classes
- * @copyright Copyright 2003-2009 Zen Cart Development Team
+ * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: message_stack.php 14169 2009-08-15 23:58:05Z drbyte $
+ * @version $Id: mc12345678 2019 Apr 30 Modified in v1.5.6b $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
@@ -20,7 +20,7 @@ if (!defined('IS_ADMIN_FLAG')) {
 class messageStack extends base {
 
   // class constructor
-  function messageStack() {
+  function __construct() {
 
     $this->messages = array();
 
@@ -29,8 +29,8 @@ class messageStack extends base {
       for ($i=0, $n=sizeof($messageToStack); $i<$n; $i++) {
         $this->add($messageToStack[$i]['class'], $messageToStack[$i]['text'], $messageToStack[$i]['type']);
       }
-      $_SESSION['messageToStack']= '';
     }
+
   }
 
   function add($class, $message, $type = 'error') {
@@ -59,7 +59,7 @@ class messageStack extends base {
 
   function add_session($class, $message, $type = 'error') {
 
-    if (!$_SESSION['messageToStack']) {
+    if (empty($_SESSION['messageToStack'])) {
       $messageToStack = array();
     } else {
       $messageToStack = $_SESSION['messageToStack'];
@@ -76,6 +76,8 @@ class messageStack extends base {
 
   function output($class) {
     global $template, $current_page_base;
+
+    $_SESSION['messageToStack'] = '';
 
     $output = array();
     for ($i=0, $n=sizeof($this->messages); $i<$n; $i++) {
@@ -101,5 +103,5 @@ class messageStack extends base {
 
     return $count;
   }
+
 }
-?>

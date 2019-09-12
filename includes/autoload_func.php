@@ -1,21 +1,21 @@
 <?php
 /**
  * File contains the autoloader loop
- * 
+ *
  * The autoloader loop takes the array from the auto_loaders directory
- * and uses this this to constuct the InitSysytem. 
+ * and uses this this to constuct the InitSysytem.
  * see {@link http://www.zen-cart.com/wiki/index.php/Developers_API_Tutorials#InitSystem} for more details.
  *
  * @package initSystem
- * @copyright Copyright 2003-2009 Zen Cart Development Team
+ * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: autoload_func.php 14141 2009-08-10 19:34:47Z wilt $
+ * @version $Id: mc12345678 2019 Jan 20 Modified in v1.5.6b $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
 }
-reset($autoLoadConfig);
+//reset($autoLoadConfig); // Not needed for foreach
 ksort($autoLoadConfig);
 foreach ($autoLoadConfig as $actionPoint => $row) {
   $debugOutput = "";
@@ -87,11 +87,11 @@ foreach ($autoLoadConfig as $actionPoint => $row) {
         $_SESSION[$objectName]->$methodName();
         $debugOutput .= '$_SESSION[' . $objectName . ']->' . $methodName . '();<br />';
       } else {
-        $$objectName->$methodName();
+        ${$objectName}->$methodName();
         $debugOutput .= '$' . $objectName . '->' . $methodName . '();<br />';
       }
       break;
     }
-    if (DEBUG_AUTOLOAD === true) echo $debugOutput;
+    if (DEBUG_AUTOLOAD === true) echo str_replace('<br />', '<br />' . "\n", $debugOutput);
   }
 }

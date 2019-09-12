@@ -1,35 +1,66 @@
 <?php
-//
-// +----------------------------------------------------------------------+
-// |zen-cart Open Source E-commerce                                       |
-// +----------------------------------------------------------------------+
-// | Copyright (c) 2003 The zen-cart developers                           |
-// |                                                                      |   
-// | http://www.zen-cart.com/index.php                                    |   
-// |                                                                      |   
-// | Portions Copyright (c) 2003 osCommerce                               |
-// +----------------------------------------------------------------------+
-// | This source file is subject to version 2.0 of the GPL license,       |
-// | that is bundled with this package in the file LICENSE, and is        |
-// | available through the world-wide-web at the following url:           |
-// | http://www.zen-cart.com/license/2_0.txt.                             |
-// | If you did not receive a copy of the zen-cart license and are unable |
-// | to obtain it through the world-wide-web, please send a note to       |
-// | license@zen-cart.com so we can mail you a copy immediately.          |
-// +----------------------------------------------------------------------+
-//  $Id: object_info.php 1969 2005-09-13 06:57:21Z drbyte $
-//
 
-  class objectInfo {
+/**
+ * @package admin
+ * @copyright Copyright 2003-2018 Zen Cart Development Team
+ * @copyright Portions Copyright 2003 osCommerce
+ * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
+ * @version $Id: Drbyte Sun Jan 7 21:39:26 2018 -0500 Modified in v1.5.6 $
+ */
 
-// class constructor
-    function objectInfo($object_array) {
-//this line should be added, but should be tested first:
-//      if (!is_array($object_array)) return;
-      reset($object_array);
-      while (list($key, $value) = each($object_array)) {
-        $this->$key = zen_db_prepare_input($value);
-      }
+/**
+ * Class objectInfo
+ */
+class objectInfo
+{
+    /**
+     * @param $object_array
+     */
+    public function __construct($object_array)
+    {
+        $this->updateObjectInfo($object_array);
     }
-  }
-?>
+
+    /**
+     * @param $object_array array
+     */
+    public function objectInfo($object_array)
+    {
+        if (!is_array($object_array)) return;
+
+        foreach ($object_array as $key => $value) {
+            $this->$key = zen_db_prepare_input($value);
+        }
+    }
+
+    /**
+     * @param $object_array array
+     */
+    public function updateObjectInfo($object_array)
+    {
+        if (!is_array($object_array)) return;
+
+        foreach ($object_array as $key => $value) {
+            $this->$key = zen_db_prepare_input($value);
+        }
+    }
+
+    public function __isset($field)
+    {
+        return isset($this->$field);
+    }
+
+    public function __set($field, $value)
+    {
+        $this->$field = $value;
+    }
+
+    public function __get($field)
+    {
+        if (isset($this->$field)) return $this->$field;
+
+        if ($field == 'keys') return array();
+
+        return null;
+    }
+}

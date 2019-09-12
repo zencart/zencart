@@ -3,10 +3,10 @@
  *  product_free_shipping_info main_template_vars.php
  *
  * @package productTypes
- * @copyright Copyright 2003-2012 Zen Cart Development Team
+ * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte  Fri Jul 6 11:57:44 2012 -0400 Modified in v1.5.1 $
+ * @version $Id: mc12345678 Sat Sep 1 17:50:42 2018 -0400 Modified in v1.5.6 $
  */
 /*
  * Extracts and constructs the data to be used in the product-type template tpl_TYPEHANDLER_info_display.php
@@ -14,8 +14,6 @@
 
   // This should be first line of the script:
   $zco_notifier->notify('NOTIFY_MAIN_TEMPLATE_VARS_START_PRODUCT_FREE_SHIPPING_INFO');
-
-  $module_show_categories = PRODUCT_INFO_CATEGORIES;
 
   $sql = "select count(*) as total
           from " . TABLE_PRODUCTS . " p, " .
@@ -93,7 +91,8 @@
 
   $products_name = $product_info->fields['products_name'];
   $products_model = $product_info->fields['products_model'];
-  $products_description = $product_info->fields['products_description'];
+  // if no common markup tags in description, add line breaks for readability:
+  $products_description = (!preg_match('/(<br|<p|<div|<dd|<li|<span)/i', $product_info->fields['products_description']) ? nl2br($product_info->fields['products_description']) : $product_info->fields['products_description']);
 
   if ($product_info->fields['products_image'] == '' and PRODUCTS_IMAGE_NO_IMAGE_STATUS == '1') {
     $products_image = PRODUCTS_IMAGE_NO_IMAGE;
@@ -104,12 +103,13 @@
   $products_url = $product_info->fields['products_url'];
   $products_date_available = $product_info->fields['products_date_available'];
   $products_date_added = $product_info->fields['products_date_added'];
-  $products_manufacturer = $product_info->fields['manufacturers_name'];
+  $products_manufacturer = $manufacturers_name;
   $products_weight = $product_info->fields['products_weight'];
   $products_quantity = $product_info->fields['products_quantity'];
 
   $products_qty_box_status = $product_info->fields['products_qty_box_status'];
   $products_quantity_order_max = $product_info->fields['products_quantity_order_max'];
+  $products_get_buy_now_qty = zen_get_buy_now_qty($_GET['products_id']);
 
   $products_base_price = $currencies->display_price(zen_get_products_base_price((int)$_GET['products_id']),
                       zen_get_tax_rate($product_info->fields['products_tax_class_id']));

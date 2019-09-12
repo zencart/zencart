@@ -1,21 +1,21 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2011 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: users.php 18773 2011-05-20 01:00:21Z drbyte $
+ * @version $Id: Author: DrByte  Mon Dec 14 12:44:09 2015 -0500 Modified in v1.5.5 $
  */
 
 define('HEADING_TITLE', 'Admin Users');
 
 define('IMAGE_ADD_USER', 'Add User');
-define('IMAGE_RESET_PWD', 'Reset Password');
 
 define('TEXT_ID', 'ID');
 define('TEXT_NAME', 'Name');
 define('TEXT_EMAIL', 'Email');
 define('TEXT_PROFILE', 'Profile');
+define('TEXT_CHOOSE_PROFILE', 'Choose Profile');
 define('TEXT_PASSWORD', 'Password');
 define('TEXT_CONFIRM_PASSWORD', 'Confirm Password');
 define('TEXT_NO_USERS_FOUND', 'No admin users found');

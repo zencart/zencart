@@ -5,17 +5,19 @@
  * Displays simple "product not found" message if the selected product's details cannot be located in the database
  *
  * @package templateSystem
- * @copyright Copyright 2003-2005 Zen Cart Development Team
+ * @copyright Copyright 2003-2013 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: tpl_product_info_noproduct.php 2578 2005-12-15 19:31:34Z drbyte $
+ * @version GIT: $Id: Author: DrByte  Mon Feb 11 23:15:15 2013 -0500 Modified in v1.5.2 $
  */
 ?>
 <div class="centerColumn" id="productInfoNoProduct">
 
 <div id="productInfoNoProductMainContent" class="content"><?php echo TEXT_PRODUCT_NOT_FOUND; ?></div>
 
-<div class="buttonRow back"><?php zen_back_link() . zen_image_button(BUTTON_IMAGE_CONTINUE, BUTTON_CONTINUE_ALT) . '</a>'; ?></div>
+<div class="buttonRow back"><?php echo zen_back_link() . zen_image_button(BUTTON_IMAGE_CONTINUE, BUTTON_CONTINUE_ALT) . '</a>'; ?></div>
+
+<br class="clearBoth" />
 
 <?php
 //// bof: missing
@@ -29,7 +31,7 @@ while (!$show_display_category->EOF) {
 /**
  * display the featured product center box
  */
-    include(DIR_WS_MODULES . zen_get_module_directory(FILENAME_FEATURED_PRODUCTS_MODULE));
+    require($template->get_template_dir('tpl_modules_featured_products.php', DIR_WS_TEMPLATE, $current_page_base,'templates'). '/' . 'tpl_modules_featured_products.php');
   }
 ?>
 
@@ -38,7 +40,7 @@ while (!$show_display_category->EOF) {
 /**
  * display the special product center box
  */
-    include(DIR_WS_MODULES . zen_get_module_directory(FILENAME_SPECIALS_INDEX));
+    require($template->get_template_dir('tpl_modules_specials_default.php', DIR_WS_TEMPLATE, $current_page_base,'templates'). '/' . 'tpl_modules_specials_default.php');
   }
 ?>
 
@@ -47,7 +49,7 @@ while (!$show_display_category->EOF) {
 /**
  * display the new product center box
  */
-    include(DIR_WS_MODULES . zen_get_module_directory(FILENAME_NEW_PRODUCTS));
+    require($template->get_template_dir('tpl_modules_whats_new.php', DIR_WS_TEMPLATE, $current_page_base,'templates'). '/' . 'tpl_modules_whats_new.php');
   }
 ?>
 

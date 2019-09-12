@@ -1,11 +1,11 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2011 Zen Cart Development Team
+ * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @copyright Portions Copyright (c) 2004 DevosC.com    
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: paypal.php 18799 2011-05-25 12:29:41Z wilt $
+ * @version $Id: DrByte 2019 Jul 16 Modified in v1.5.6c $
  */
 
   require('includes/application_top.php');
@@ -18,10 +18,9 @@
                              array('id' => '5', 'text'=> TEXT_PAYMENT_AMOUNT)
                              );
 
+  $paypal_ipn_sort_order = 0;
   if (isset($_GET['paypal_ipn_sort_order'])) {
-    $paypal_ipn_sort_order = $_GET['paypal_ipn_sort_order'];
-  } else {
-    $paypal_ipn_sort_order = 0;
+      $paypal_ipn_sort_order = (int)$_GET['paypal_ipn_sort_order'];
   }
 //        $ipn_query_raw = "select p.order_id, p.paypal_ipn_id, p.txn_type, p.payment_type, p.payment_status, p.pending_reason, p.mc_currency, p.payer_status, p.mc_currency, p.date_added, p.mc_gross, p.first_name, p.last_name, p.payer_business_name, p.parent_txn_id, p.txn_id from " . TABLE_PAYPAL . " as p, " .TABLE_ORDERS . " as o  where o.orders_id = p.order_id " . $ipn_search . " order by o.orders_id DESC";
 
@@ -184,7 +183,7 @@
     case 'delete':
       break;
     default:
-      if (is_object($ipnInfo)) {
+      if (isset($ipnInfo) && is_object($ipnInfo)) {
         $heading[] = array('text' => '<strong>' . TEXT_INFO_PAYPAL_IPN_HEADING.' #' . $ipnInfo->paypal_ipn_id . '</strong>');
         $ipn = $db->Execute("select * from " . TABLE_PAYPAL_PAYMENT_STATUS_HISTORY . " where paypal_ipn_id = '" . $ipnInfo->paypal_ipn_id . "'");
         $ipn_count = $ipn->RecordCount();

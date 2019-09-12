@@ -1,10 +1,10 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2006 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: init_db_config_read.php 3001 2006-02-09 21:45:06Z wilt $
+ * @version $Id: Author: DrByte  Thu May 28 13:46:55 2015 -0400 Modified in v1.5.5 $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
@@ -22,7 +22,7 @@ if (!defined('IS_ADMIN_FLAG')) {
   $configuration = $db->Execute('select configuration_key as cfgKey, configuration_value as cfgValue
                                  from ' . TABLE_CONFIGURATION);
   while (!$configuration->EOF) {
-    define($configuration->fields['cfgKey'], $configuration->fields['cfgValue']);
+    define(strtoupper($configuration->fields['cfgKey']), $configuration->fields['cfgValue']);
     $configuration->MoveNext();
   }
 
@@ -31,7 +31,6 @@ if (!defined('IS_ADMIN_FLAG')) {
                           from ' . TABLE_PRODUCT_TYPE_LAYOUT);
 
   while (!$configuration->EOF) {
-    define($configuration->fields['cfgKey'], $configuration->fields['cfgValue']);
-    $configuration->movenext();
+    define(strtoupper($configuration->fields['cfgKey']), $configuration->fields['cfgValue']);
+    $configuration->MoveNext();
   }
-?>

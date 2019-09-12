@@ -5,10 +5,10 @@
  * It pulls data from all the related tables which collectively store the info related only to this product type.
  *
  * @package productTypes
- * @copyright Copyright 2003-2005 Zen Cart Development Team
+ * @copyright Copyright 2003-2014 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: main_template_vars_product_type.php 2326 2005-11-09 23:43:14Z drbyte $
+ * @version $Id:  $
  */
 /*
  * This file contains all the logic to prepare $vars for use in the product-type-specific template (in this case product_music)
@@ -65,9 +65,8 @@
   $products_record_company_name = $record_company->fields['record_company_name'];
   $products_record_company_url = $record_company_info->fields['record_company_url'];
   $products_music_genre_name = $music_genre->fields['music_genre_name'];
-  if (!empty($products_artist_url)) $products_artist_name = '<a href="' . zen_href_link(FILENAME_REDIRECT, 'action=url&goto=' . urlencode($products_artist_url), 'NONSSL', true, false) . '" target="_BLANK">'.$products_artist_name.'</a>';
-  if (!empty($products_record_company_url)) $products_record_company_name = '<a href="' . zen_href_link(FILENAME_REDIRECT, 'action=url&goto=' . urlencode($products_record_company_url), 'NONSSL', true, false) . '" target="_BLANK">'.$products_record_company_name.'</a>';
+  if (!empty($products_artist_url)) $products_artist_name = '<a href="' . zen_href_link(FILENAME_REDIRECT, 'action=music_arist&artists_id=' . zen_output_string_protected($music_extras->fields['artists_id']), 'NONSSL', true, false) . '" target="_BLANK">'.$products_artist_name.'</a>';
+  if (!empty($products_record_company_url)) $products_record_company_name = '<a href="' . zen_href_link(FILENAME_REDIRECT, 'action=music_record_company&record_company_id=' . zen_output_string_protected($music_extras->fields['record_company_id']), 'NONSSL', true, false) . '" target="_BLANK">'.$products_record_company_name.'</a>';
 
   // This should be last line of the script:
   $zco_notifier->notify('NOTIFY_PRODUCT_TYPE_VARS_END_PRODUCT_MUSIC_INFO');
-?>

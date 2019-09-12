@@ -1,10 +1,10 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2011 Zen Cart Development Team
+ * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: gv_queue.php 18695 2011-05-04 05:24:19Z drbyte $
+ * @version $Id: DrByte 2019 Jul 16 Modified in v1.5.6c $
  */
 
   require('includes/application_top.php');
@@ -14,9 +14,10 @@
 
   if (isset($_GET['order'])) $_GET['order'] = (int)$_GET['order'];
   if (isset($_GET['gid'])) $_GET['gid'] = (int)$_GET['gid'];
+  if (!isset($_GET['action'])) $_GET['action'] = '';  
 
 // bof: find gv for a particular order and set page
-  if ($_GET['order'] != '') {
+  if (!empty($_GET['order'])) {
     $gv_check = $db->Execute("select order_id, unique_id
                                   from " . TABLE_COUPON_GV_QUEUE . "
                                   where order_id = '" . $_GET['order'] . "' and release_flag= 'N' limit 1");
@@ -50,7 +51,7 @@
       if ($gv_resulta->RecordCount() > 0) {
       $gv_amount = $gv_resulta->fields['amount'];
 
-	// Begin composing email content
+  // Begin composing email content
 //      //Let's build a message object using the email class
       $mail = $db->Execute("select customers_firstname, customers_lastname, customers_email_address
                            from " . TABLE_CUSTOMERS . "
@@ -61,7 +62,7 @@
       $message .= TEXT_REDEEM_GV_MESSAGE_THANKS . "\n" . STORE_OWNER . "\n\n" . HTTP_CATALOG_SERVER . DIR_WS_CATALOG;
       $message .= TEXT_REDEEM_GV_MESSAGE_BODY;
       $message .= TEXT_REDEEM_GV_MESSAGE_FOOTER;
-	  $message .= "\n-----\n" . sprintf(EMAIL_DISCLAIMER, STORE_OWNER_EMAIL_ADDRESS) . "\n\n";
+      $message .= "\n-----\n" . sprintf(EMAIL_DISCLAIMER, STORE_OWNER_EMAIL_ADDRESS) . "\n\n";
 
       $html_msg['EMAIL_FIRST_NAME'] = $mail->fields['customers_firstname'];
       $html_msg['EMAIL_LAST_NAME']  = $mail->fields['customers_lastname'];
@@ -74,9 +75,9 @@
       $html_msg['TEXT_REDEEM_GV_MESSAGE_FOOTER'] = TEXT_REDEEM_GV_MESSAGE_FOOTER;
 
 //send the message
-      	zen_mail($mail->fields['customers_firstname'] . ' ' . $mail->fields['customers_lastname'], $mail->fields['customers_email_address'], TEXT_REDEEM_GV_SUBJECT . TEXT_REDEEM_GV_SUBJECT_ORDER . $gv_resulta->fields['order_id'] , $message, STORE_NAME, EMAIL_FROM, $html_msg, 'gv_queue');
+        zen_mail($mail->fields['customers_firstname'] . ' ' . $mail->fields['customers_lastname'], $mail->fields['customers_email_address'], TEXT_REDEEM_GV_SUBJECT . TEXT_REDEEM_GV_SUBJECT_ORDER . $gv_resulta->fields['order_id'] , $message, STORE_NAME, EMAIL_FROM, $html_msg, 'gv_queue');
 
-
+      zen_record_admin_activity('GV Queue entry released in the amount of ' . $gv_amount . ' for ' . $mail->fields['customers_email_address'], 'info');
 
       $gv_amount=$gv_resulta->fields['amount'];
       $gv_result=$db->Execute("select amount
@@ -115,9 +116,8 @@
 <title><?php echo TITLE; ?></title>
 <link rel="stylesheet" type="text/css" href="includes/stylesheet.css">
 <link rel="stylesheet" type="text/css" href="includes/cssjsmenuhover.css" media="all" id="hoverJS">
-<script language="javascript" src="includes/menu.js"></script>
+<script type="text/javascript" src="includes/menu.js"></script>
 <script type="text/javascript">
-  <!--
   function init()
   {
     cssjsmenu('navbar');
@@ -127,7 +127,6 @@
       kill.disabled = true;
     }
   }
-  // -->
 </script>
 </head>
 <body onload="init()">
@@ -164,7 +163,7 @@
   $gv_split = new splitPageResults($_GET['page'], MAX_DISPLAY_SEARCH_RESULTS, $gv_query_raw, $gv_query_numrows);
   $gv_list = $db->Execute($gv_query_raw);
   while (!$gv_list->EOF) {
-    if (((!$_GET['gid']) || (@$_GET['gid'] == $gv_list->fields['unique_id'])) && (!$gInfo)) {
+    if (((!isset($_GET['gid'])) || (@$_GET['gid'] == $gv_list->fields['unique_id'])) && (!isset($gInfo))) {
       $gInfo = new objectInfo($gv_list->fields);
     }
     if ( (is_object($gInfo)) && ($gv_list->fields['unique_id'] == $gInfo->unique_id) ) {
@@ -202,6 +201,9 @@
 //      $contents[] = array('align' => 'center', 'text' => '<a href="' . zen_href_link('gv_queue.php', 'action=confirmrelease&gid=' . $gInfo->unique_id . '&page=' . $_GET['page'],'NONSSL') . '">' . zen_image_button('button_confirm_red.gif', IMAGE_CONFIRM) . '</a> <a href="' . zen_href_link('gv_queue.php', 'action=cancel&gid=' . $gInfo->unique_id . '&page=' . $_GET['page'],'NONSSL') . '">' . zen_image_button('button_cancel.gif', IMAGE_CANCEL) . '</a>');
       break;
     default:
+      if (!isset($gInfo) || !is_object($gInfo)) { 
+        $gInfo = new objectInfo(array());
+      }
       $heading[] = array('text' => '[' . $gInfo->unique_id . '] ' . zen_datetime_short($gInfo->date_created) . ' ' . $currencies->format($gInfo->amount));
 
       if ($gv_list->RecordCount() == 0) {

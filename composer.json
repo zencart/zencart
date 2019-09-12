@@ -1,0 +1,30 @@
+{
+    "name": "zencart/zencart",
+    "description": "Open Source E-commerce Application",
+    "homepage": "https://www.zen-cart.com",
+    "license": "GPL-2.0",
+    "authors": [
+        {
+            "name": "The Zen-Cart Team",
+            "homepage": "https://github.com/zencart/zencart/graphs/contributors"
+        }
+    ],
+    "_comment": "compatible with PHP 5.5-7.3",
+    "require": {
+        "php": ">=5.5"
+    },
+    "require-dev": {
+        "mikey179/vfsStream": ">1.6",
+        "phpunit/phpunit": "~5.7 || ~4.8"
+    },
+    "autoload": {
+        "classmap": ["includes/classes", "includes/modules"]
+    },
+    "include-path": ["includes/"],
+    "config": {
+        "bin-dir": "vendor/bin"
+    },
+    "scripts": {
+        "tests": "phpunit --verbose -c not_for_release/testFramework/unittests/phpunit.xml"
+    }
+}

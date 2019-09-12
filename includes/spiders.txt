@@ -1,55 +1,55 @@
-$Id: spiders.txt 18695 2011-05-04 05:24:19Z drbyte $
+$Id: spiders.txt 2019-06-27 Shrimp-Gumbo $
 bot
 robot
 crawl
-scrape
-seek.
-seeker
-slurp
 spider
-msnbot
 abcdatos
-acme
 accoona
+acme
 acoon
+admantx
 adressendeutschland
 ahoy
+ahrefs
+akula
+alexa
 alkaline
 almaden
-amfibibot
-amishbot
+amagit
+analyz
 ananzi
 answerbus
 anthill
 appie
-arachnophilia
+arach
 arale
 araneo
-araybot
 architext
 aretha
 argus
 ariadne
 arks
+asaha
 ask jeeves
-aspider
+askquickly
 aspseek
 asterias
 atlocal
 atomz
+attracta
 augurfind
 auresys
 avantgo
 backrub
-baiduspider
-bannana_bot
-bbot
+baypup
 bdcindexer
 bdfetch
-becomebot
 big brother
+bing
 bjaaland
 blackwidow
+blaiz
+blank
 blo.
 blog
 bloodhound
@@ -57,90 +57,69 @@ boitho
 bonecho
 booch
 bordermanager
-borg-bot
-botlink
-boxseabot
-bruinbot
-bspider
-cactvs chemistry spider
+browsershots
 cassandra
 ccubee
 cfetch
+changedetection
 charlotte
-checkbot
 check_http
 cherrypicker
-christcrawler
 churl
 cienciaficcion.net
-clushbot
+cireu
+coccoc
 collective
 comagent
 combine
-computingsite robi/1.0
-confuzzledbot
-converacrawler
-coolbot
+computingsite robi
+covario
+crowsnest
 csci
 curl
 cyberspyder
-cydralspider
+datanyse
 dataparksearch
 depspid
-dienstspider
 digger
 digimarc
-digital integrity robot
 direct hit grabber
+dispatch
 ditto
+dlvr.it
 dmoz
-dnabot
+dotsemantic
 download express
-dragonbot
+drupact
 dtaagent
-dumbot
+duckduck
+easybib
 ebin
 ecollector
-eit link verifier robot
-elfinbot
 ejupiter
 emailcollector
 emailsiphon
+envolk
 esculapio
-exabot
+evrinid
 extractor
-e-societyrobot
-falcon
 facebook
-fast enterprise crawler
+falcon
 fastbug
-fastcrawler
-fast-webcrawler
 feedfetcher
+feedly
 fetchrover
 filangy
 findlinks
+findlinks
 fish search
-fluffy the spider
-fluid dynamics search engine robot
-focusedcrawler
+flipboard
 fouineur
-freecrawl
-frooglebot
 funnelweb
-fusionbot
-fyberspider
-gaisbot
-gammaspider
 gazz
 gcreep
 genie
-geobot
-geonabot
-getbot
 getterroboplus
-gigabot
-girafabot
 goldfire server
 golem
 google
@@ -151,24 +130,18 @@ griffon
 gromit
 grub
 gulliver
-gulperbot
-h￤m￤h￤kki
-hämähäkki
-hamahakki
-hambot
 harvest
+header_detector
 helix
 heritrix
 holmes
 homer
 htdig
-henrythemiragorobot
 htmlgobble
 httpget
 httrack
 hyper-decontextualizer
 ia_archiver
-iajabot
 ibm_planetwide
 ichiro
 iconsurf
@@ -176,207 +149,185 @@ iltrovatore-setaccio
 imagelock
 incywincy
 indexer
-inelabot
 informant
 infoseek
-infospiders
 ingrid
 inktomi slurp
 inktomisearch
-inspectorbot
-intelliagentbot
-internet cruiser robot
 internet shinchakubin
 internetlinkagent
-irlbot
-irobot
+internetseer
 iron33
 israeli-search
 istarthere
 ivia
 jakarta
 javabee
-jbot java web robot
-jcrawler
 jeeves
 jobo
-jobot
-joebot
-jubii indexing robot
 jumpstation
 katipo
 kilroy
 kit-fireball
 knowledge
-ko_yappo_robot
 kretrieve
+kumkie
 labelgrabber
 lachesis
 larbin
 libwww-mget
 libwww-perl
-limebot
 link validator
+linkchecker
 linklint-checkonly
-linknzbot
 linkscan
 linkwalker
-lnspiderguy
 lockon
+ltx71
 lwp
-lycos_spider
 magpie
+mail.ru
 mantraagent
 mapoftheinternet
-mattiebot
 mediafox
 mediapartners
+megaindex
 mercator
 merzscope
 metacarta
-metagerbot
-url control
-mindcrawler
+metauri
+mff
 minirank
 miva
-mj12bot
+mixnodecache
 mnogosearch
 moget
-momspider
-monsterbot
-msiecrawler
 msproxy
-muncher bot
 muninn
 muscatferret
-mysterybot
 myweb
-nationaldirectory
 nameprotect
+nationaldirectory
 nazilla
 ncsa
-naverbot
-naverbot_dloader
-naverrobot
-ndspider
 nec-meshexplorer
 nederland.zoek
 neomo
-netcarta webmap engine
+nestreader
+netcarta
+netcraft
 netmechanic
-netnosecrawler
 netresearchserver
 netscoop
+netseer
 newscan-online
-nextgensearchbot
 ng-search
+nodeping
 northstar
 noyona
-npbot
-nusearch spider
+nuhk
+nusearch
 nutch
-nwi robot
+nymesis
 nzexplorer
 objectssearch
-obot
 occam
 ocelli
 omni
+onetszukaj
 online link
-ontospider
-openbot
-openfind data gatherer
+openfind
 orb search
 orca
 osis-project
 pack rat
 pageboy
 pagebull
+pagepeeker
 panscient
 parasite
 patric
-patwebbot
-peerbot
 pegasus
 peregrinator
-perlcrawler 1.0
 phantom
 phpdig
 pico
 piltdownman
 pimptrain
+pingdom
+pinterest
 pipeliner
 plumtreewebaccessor
-polybot
 pompos
+poodle predictor
 poppelsdorf
+poppi
+popular iconoclast
+portal manager
+proximic
 psycheclone
 publisher
 python
-poodle predictor 1.0
-poppi
-popular iconoclast
-portal juice spider
-portal manager
-portalb spider
-psbot
-python robot
+qseero
 quepasacreep
+qwantify
 rambler
 raven search
-rbse spider
-resume robot
-rixbot
+readability
+riddler
 road runner
-roadhouse crawling system
-robbie the robot
-robocrawl spider
 robofox
 robopal
-robot
-robot francoroute
 robozilla
-roverbot
 rpt-httpclient
+ruby
 safaribookmarkchecker
-safetynet robot
 salty
 sbider
+scirus
 scooter
 scout
+scrape
+scrapy
+screenshot
 scrubby
 search agent
 search.aus-au.com
 searchprocess
+seek.
+seeker
 senrigan
 sensis
+seobility
+seocheck
 seosearch
 seventwentyfour
 shagseeker
 shai'hulud
+shelob
+sherif
 shopwiki
 sidewinder
 sift
-simmany robot ver1.0
+simmany
+sitemaps
 sitetech-rover
 skymob.com
-slcrawler
 sleek
-smart spider
+slider.com
+slurp
 snappy
 snooper
+sogou
 sohu
-suntek search engine
-solbot
 speedfind
 speedy
 sphider
 spinner
-spry wizard robot
-spurlbot
 spyder
 sqworm
 steeler
+suchen
 suke
 suntek
 surf
@@ -385,54 +336,50 @@ sygol
 szukacz
 tach black widow
 tarantula
-tarspider
-techbot
 templeton
 teoma
 theophrastus
-thesubot
-thumbshots-de-bot
+thumb
 t-h-u-n-d-e-r-s-t-o-n-e
 titan
 titin
-tlspider
+topsy
+tracker
 tulipchain
-turnitinbot
-tutorgigbot
 twiceler
 twisted
-ucsd crawl
 udmsearch
 ultraseek
-unchaos_crawler
-uptimebot
-usyd-nlp-spider
+unwind
+url control
+urlstat
 vagabondo
 valkyrie
-verticrawl
+verasys
+vermut
 vision-search
-void-bot
-voilabot
 volcano
 voyager
-vspider
-vwbot
 walhello appie
 wallpaper
+watchmouse
 wauuu
+web hoper
+web hopper
+webalgo
 webbandit
 webcatcher
 webcopy
 webcore / roots
 webfetcher
 webfoot
-web hoper
-web hopper
+webimages
 webinator
 webinator-indexer
 weblayers
 weblinker
 weblog
+webminer
 webmirror
 webmoose
 webquest
@@ -441,15 +388,14 @@ webreaper
 websauger
 websearch
 websnarf
-webspider
+web-sniffer
 webstolperer
 webvac
 webwalk
 webwalker
 webwatch
-wombat
-webyield robot
 webzinger
+wesee
 wget
 whatuseek
 whizbang
@@ -457,24 +403,22 @@ whowhere
 wild
 wildferret
 wisenut
+wombat
 worio
 worldlight
+worm
+wscheck
 xenu
 xget
 xift
 xirq
 xyleme
-yacybot
-yahoo! slurp
-yahoo-mmcrawler
-yahooseeker
+y!j-asr
+yahoo
 yandex
 yeti
 yodao
-yottacars_bot
+yoono
 zao/0
-zao-crawler
 zermelo
-zipppbot
-zoomspider
 zyborg

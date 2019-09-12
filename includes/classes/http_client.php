@@ -1,20 +1,20 @@
 <?php
-/** 
+/**
  * httpClient Class.
  *
  * @package classes
- * @copyright Copyright 2003-2009 Zen Cart Development Team
+ * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2001 Leo West <west_leo@yahoo-REMOVE-.com> Net_HTTP_Client v0.6
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: http_client.php 14141 2009-08-10 19:34:47Z wilt $
+ * @version $Id: Drbyte Sun Jan 7 21:32:45 2018 -0500 Modified in v1.5.6 $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
 }
-/** 
+/**
  * httpClient Class.
- * This class is used mainly by payment modules to simulate a browser session 
+ * This class is used mainly by payment modules to simulate a browser session
  * when communicating back to another server to collect information
  *
  * @package classes
@@ -35,7 +35,7 @@ if (!defined('IS_ADMIN_FLAG')) {
  * httpClient constructor
  * Note: when host and port are defined, the connection is immediate
  **/
-    function httpClient($host = '', $port = '') {
+    function __construct($host = '', $port = '') {
       if (zen_not_null($host)) {
         $this->connect($host, $port);
       }
@@ -85,8 +85,7 @@ if (!defined('IS_ADMIN_FLAG')) {
  **/
     function setHeaders($headers) {
       if (is_array($headers)) {
-        reset($headers);
-        while (list($name, $value) = each($headers)) {
+        foreach($headers as $name => $value) {
           $this->requestHeaders[$name] = $value;
         }
       }
@@ -184,8 +183,7 @@ if (!defined('IS_ADMIN_FLAG')) {
 
       if (is_array($query_params)) {
         $postArray = array();
-        reset($query_params);
-        while (list($k, $v) = each($query_params)) {
+        foreach($query_params as $k => $v) {
           $postArray[] = urlencode($k) . '=' . urlencode($v);
         }
 
@@ -315,8 +313,7 @@ if (!defined('IS_ADMIN_FLAG')) {
         $this->request = $command;
         $cmd = $command . "\r\n";
         if (is_array($this->requestHeaders)) {
-          reset($this->requestHeaders);
-          while (list($k, $v) = each($this->requestHeaders)) {
+          foreach($this->requestHeaders as $k => $v) {
             $cmd .= $k . ': ' . $v . "\r\n";
           }
         }
@@ -430,4 +427,3 @@ if (!defined('IS_ADMIN_FLAG')) {
       return $requesturi;
     }
   }
-?>

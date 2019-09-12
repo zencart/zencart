@@ -5,13 +5,13 @@
  * handles pulldown menu dependencies for state/country selection
  *
  * @package page
- * @copyright Copyright 2003-2006 Zen Cart Development Team
+ * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: jscript_addr_pulldowns.php 4830 2006-10-24 21:58:27Z drbyte $
+ * @version $Id: Scott C Wilson Sat Oct 27 01:31:20 2018 -0400 Modified in v1.5.6 $
  */
 ?>
-<script language="javascript" type="text/javascript"><!--
+<script type="text/javascript"><!--
 
 function update_zone(theForm) {
   // if there is no zone_id field to update, or if it is hidden from display, then exit performing no updates
@@ -42,8 +42,11 @@ function update_zone(theForm) {
     theForm.state.setAttribute('className', 'hiddenField');
     document.getElementById("stateLabel").className = 'hiddenField';
     document.getElementById("stateLabel").setAttribute('className', 'hiddenField');
-    document.getElementById("stText").className = 'hiddenField';
-    document.getElementById("stText").setAttribute('className', 'hiddenField');
+
+    if (document.getElementById("stText")) {
+      document.getElementById("stText").className = 'hiddenField';
+      document.getElementById("stText").setAttribute('className', 'hiddenField');
+    }
     document.getElementById("stBreak").className = 'hiddenField';
     document.getElementById("stBreak").setAttribute('className', 'hiddenField');
   }

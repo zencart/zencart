@@ -1,10 +1,10 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2007 Zen Cart Development Team
+ * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: customers.php 6352 2007-05-20 21:05:01Z drbyte $
+ * @version $Id: Drbyte Mon Nov 12 20:38:09 2018 -0500 Modified in v1.5.6 $
  */
 
 define('HEADING_TITLE', 'Customers');
@@ -29,8 +29,9 @@ define('TEXT_DELETE_INTRO', 'Are you sure you want to delete this customer?');
 define('TEXT_DELETE_REVIEWS', 'Delete %s review(s)');
 define('TEXT_INFO_HEADING_DELETE_CUSTOMER', 'Delete Customer');
 define('TYPE_BELOW', 'Type below');
-define('PLEASE_SELECT', 'Select One');
+define('PLEASE_SELECT_ONE', 'Select One');
 define('TEXT_INFO_NUMBER_OF_ORDERS', 'Number of Orders:');
+define('TEXT_INFO_LIFETIME_VALUE', 'Customer Lifetime Value:');
 define('TEXT_INFO_LAST_ORDER','Last Order:');
 define('TEXT_INFO_ORDERS_TOTAL', 'Total:');
 define('CUSTOMERS_REFERRAL', 'Customer Referral<br />1st Discount Coupon');
@@ -39,6 +40,17 @@ define('TEXT_INFO_GV_AMOUNT', 'GV Balance');
 define('ENTRY_NONE', 'None');
 
 define('TABLE_HEADING_COMPANY','Company');
+
+define('TEXT_INFO_HEADING_RESET_CUSTOMER_PASSWORD', 'Reset Customer Password');
+define('TEXT_PWDRESET_INTRO', 'To reset the password for this customer, enter a new password, and confirm it, below. The new password must conform to the normal password rules imposed on customers.');
+define('TEXT_CUST_NEW_PASSWORD', 'New Password:');
+define('TEXT_CUST_CONFIRM_PASSWORD', 'Confirm Password:');
+define('ERROR_PWD_TOO_SHORT', 'Error: password is shorter than the number of characters configured for this store.');
+define('SUCCESS_PASSWORD_UPDATED', 'Password updated.');
+
+define('EMAIL_CUSTOMER_PWD_CHANGE_MESSAGE', 'Your password has been changed by the store administrator. Your new password is: ');
+define('EMAIL_CUSTOMER_PWD_CHANGE_SUBJECT', 'Account password reset');
+define('EMAIL_CUSTOMER_PWD_CHANGE_MESSAGE_FOR_ADMIN', 'You have reset the password for a customer: ' . "\n" . '%s' . "\n\n" . 'Administrator ID: %s');
 
 define('CUSTOMERS_AUTHORIZATION', 'Customers Authorization Status');
 define('CUSTOMERS_AUTHORIZATION_0', 'Approved');
@@ -55,5 +67,5 @@ define('EMAIL_CUSTOMER_STATUS_CHANGE_SUBJECT', 'Customer Status Updated');
 define('ADDRESS_BOOK_TITLE', 'Address Book Entries');
 define('PRIMARY_ADDRESS', '(primary address)');
 define('TEXT_MAXIMUM_ENTRIES', '<span class="coming"><strong>NOTE:</strong></span> A maximum of %s address book entries allowed.');
-define('TEXT_INFO_ADDRESS_BOOK_COUNT', ' | 1 of  ');
-?>
+define('TEXT_INFO_ADDRESS_BOOK_COUNT', ' | <a href="%s">%s Entries</a>');
+define('TEXT_INFO_ADDRESS_BOOK_COUNT_SINGLE', '');

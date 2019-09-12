@@ -1,10 +1,10 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2010 Zen Cart Development Team
+ * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: attributes_controller.php 15883 2010-04-11 16:41:26Z wilt $
+ * @version $Id: Scott C Wilson 2019 Jan 24 Modified in v1.5.6b $
  */
 
 define('HEADING_TITLE', 'CATEGORIES: ');
@@ -86,7 +86,7 @@ define('TABLE_TEXT_MAX_COUNT_SHORT', 'Max:');
   define('TEXT_ATTRIBUTES_IMAGE','Attributes Image Swatch:');
   define('TEXT_ATTRIBUTES_IMAGE_DIR','Attributes Image Directory:');
 
-  define('TEXT_ATTRIBUTES_FLAGS','Attribute<br />Flags:');
+  define('TEXT_ATTRIBUTES_FLAGS','Attribute Flags:');
   define('TEXT_ATTRIBUTES_DISPLAY_ONLY', 'Used For<br />Display Purposes Only:');
   define('TEXT_ATTRIBUTES_IS_FREE', 'Attribute is Free<br />When Product is Free:');
   define('TEXT_ATTRIBUTES_DEFAULT', 'Default Attribute<br />to be Marked Selected:');
@@ -169,3 +169,9 @@ define('TABLE_TEXT_MAX_COUNT_SHORT', 'Max:');
   define('TEXT_INFO_PRODUCTS_OPTION_ID', '<strong>ID#</strong>');
   define('SUCCESS_ATTRIBUTES_DELETED_OPTION_NAME_VALUES', 'Successful deletion of all Option Values for Option Name: ');
   
+  define('BUTTON_ADDITITONAL_ACTIONS', 'Additional Actions');
+  define('TEXT_UPDATE_DEFAULTE_SORT_ORDER', 'Update sort order to default');
+  define('TEXT_DELETE_ALL_OPTIONS_FROM_PRODUCT', 'Delete all options from product');
+  define('TEXT_COPY_ALL_OPTIONS_TO_PRODUCT', 'Copy options to another product');
+  define('TEXT_COPY_ALL_OPTIONS_TO_CATEGORY', 'Copy options to a whole category');
+  define('TEXT_SAVE_PRODUCT_FIRST', 'Please save the new product first. You need a product_id before you can add attributes');

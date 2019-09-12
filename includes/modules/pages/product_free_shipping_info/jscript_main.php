@@ -20,7 +20,7 @@
 // $Id: jscript_main.php 5444 2006-12-29 06:45:56Z drbyte $
 //
 ?>
-<script language="javascript" type="text/javascript"><!--
+<script type="text/javascript"><!--
 function popupWindow(url) {
   window.open(url,'popupWindow','toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=no,resizable=yes,copyhistory=no,width=100,height=100,screenX=150,screenY=150,top=150,left=150')
 }

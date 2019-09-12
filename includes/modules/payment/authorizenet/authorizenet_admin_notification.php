@@ -3,9 +3,9 @@
  * authorizenet_admin_notification.php admin display component
  *
  * @package paymentMethod
- * @copyright Copyright 2003-2011 Zen Cart Development Team
+ * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: authorizenet_admin_notification.php 18695 2011-05-04 05:24:19Z drbyte $
+ * @version $Id: Zen4All Thu Nov 9 13:16:10 2017 +0100 Modified in v1.5.6 $
  */
 
   $outputStartBlock = '';
@@ -17,15 +17,10 @@
   $outputEndBlock = '';
   $output = '';
 
-  // strip slashes in case they were added to handle apostrophes:
-  foreach ($aimdata->fields as $key=>$value){
-    $aimdata->fields[$key] = stripslashes($value);
-  }
-
-    $outputStartBlock .= '<td><table class="noprint">'."\n";
+    $outputStartBlock .= '<table class="noprint">'."\n";
     $outputStartBlock .= '<tr style="background-color : #bbbbbb; border-style : dotted;">'."\n";
     $outputEndBlock .= '</tr>'."\n";
-    $outputEndBlock .='</table></td>'."\n";
+    $outputEndBlock .='</table>'."\n";
 
 
   if (method_exists($this, '_doRefund')) {

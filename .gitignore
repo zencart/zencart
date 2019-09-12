@@ -1,11 +1,29 @@
-myDEBUG-*.log
-cache/*.sql
-cache/sess_*
-cache/*.log
-includes/modules/payment/paypal/logs/*.log
+configure.php
 local/configure.php
+/vendor
+
 *.php1
 *.bak
 *.old
 devtools.php
 Thumbs.db
+clover.xml
+.DS_Store
+
+docs/phpdocs*
+phpdoc.xml
+dev-*.*
+
+# IDE-specific things...
+# Ignore eclipse project files
+.project
+.settings
+.buildpath
+# Ignore phpStorm stuff 
+.idea
+# dbv
+/data/meta/revision
+localconfig_*.php
+!localconfig_travis.php
+!localconfig_EXAMPLE.php
+!localconfig_vagrant.php

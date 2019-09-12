@@ -1,0 +1,36 @@
+{
+    "name": "square/connect",
+    "version": "2.20181205.0",
+    "description": "PHP client library for the Square Connect v2 API",
+    "keywords": [
+        "swagger",
+        "php",
+        "sdk",
+        "api"
+    ],
+    "homepage": "https://github.com/square/connect-php-sdk",
+    "license": "Apache-2.0",
+    "authors": [
+        {
+            "name": "Square, Inc.",
+            "homepage": "https://squareup.com/developers"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.3",
+        "ext-curl": "*",
+        "ext-json": "*",
+        "ext-mbstring": "*"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "~4.0",
+        "satooshi/php-coveralls": "~0.6.1",
+        "squizlabs/php_codesniffer": "~2.0"
+    },
+    "autoload": {
+        "psr-4": { "SquareConnect\\" : "lib/" }
+    },
+    "autoload-dev": {
+        "psr-4": { "SquareConnect\\" : "test/" }
+    }
+}

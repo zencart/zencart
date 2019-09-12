@@ -1,31 +1,32 @@
 <?php
 /**
  * @package shippingMethod
- * @copyright Copyright 2003-2009 Zen Cart Development Team
+ * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
+ * @version $Id: Drbyte Sun Jan 7 21:29:34 2018 -0500 Modified in v1.5.6 $
  */
-// $Id: flat.php 14498 2009-10-01 20:16:16Z ajeh $
-//
 
   class flat {
     var $code, $title, $description, $icon, $enabled;
 
 // class constructor
-    function flat() {
+    function __construct() {
       global $order, $db;
 
       $this->code = 'flat';
       $this->title = MODULE_SHIPPING_FLAT_TEXT_TITLE;
       $this->description = MODULE_SHIPPING_FLAT_TEXT_DESCRIPTION;
-      $this->sort_order = MODULE_SHIPPING_FLAT_SORT_ORDER;
+      $this->sort_order = defined('MODULE_SHIPPING_FLAT_SORT_ORDER') ? MODULE_SHIPPING_FLAT_SORT_ORDER : null;
+      if (null === $this->sort_order) return false;
+
       $this->icon = '';
       $this->tax_class = MODULE_SHIPPING_FLAT_TAX_CLASS;
       $this->tax_basis = MODULE_SHIPPING_FLAT_TAX_BASIS;
 
       // disable only when entire cart is free shipping
       if (zen_get_shipping_enabled($this->code)) {
-        $this->enabled = ((MODULE_SHIPPING_FLAT_STATUS == 'True') ? true : false);
+        $this->enabled = (MODULE_SHIPPING_FLAT_STATUS == 'True');
       }
 
       if ( ($this->enabled == true) && ((int)MODULE_SHIPPING_FLAT_ZONE > 0) ) {
@@ -94,4 +95,3 @@
       return array('MODULE_SHIPPING_FLAT_STATUS', 'MODULE_SHIPPING_FLAT_COST', 'MODULE_SHIPPING_FLAT_TAX_CLASS', 'MODULE_SHIPPING_FLAT_TAX_BASIS', 'MODULE_SHIPPING_FLAT_ZONE', 'MODULE_SHIPPING_FLAT_SORT_ORDER');
     }
   }
-?>

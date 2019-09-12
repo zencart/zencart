@@ -3,10 +3,10 @@
  * ezpages functions - used to prepare links for EZ-Pages
  *
  * @package functions
- * @copyright Copyright 2003-2007 Zen Cart Development Team
+ * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: functions_ezpages.php 5662 2007-01-22 17:19:26Z drbyte $
+ * @version $Id: DrByte 2019 Jul 16 Modified in v1.5.6c $
  */
 
 
@@ -21,7 +21,7 @@
     $ez_pages_name = 'Click Here';
 
     if ($ez_pages_chapter == 0) {
-      $page_query = $db->Execute("select * from " . TABLE_EZPAGES . " where pages_id='" . (int)$ez_pages_id . "' limit 1");
+      $page_query = $db->Execute("SELECT * FROM " . TABLE_EZPAGES . " e, " . TABLE_EZPAGES_CONTENT . " ec WHERE e.pages_id = ec.pages_id AND ec.languages_id = " . (int)$_SESSION['languages_id'] . " AND e.pages_id='" . (int)$ez_pages_id . "' limit 1");
 
       $ez_pages_id = $page_query->fields['pages_id'];
       $ez_pages_name = $page_query->fields['pages_title'];
@@ -55,14 +55,9 @@
       $ez_link .= ($ez_pages_open_new_window == '1' ? '" target="_blank' : '');
     }
 
-    //    echo 'I SEE ' . '<a href=' . $ez_link . '>' . $ez_page_query->fields['pages_title'] . '</a>' . '<br>';
-
     if ($ez_pages_return_full_url == false) {
       return $ez_link;
     } else {
       return '<a href="' . $ez_link . '">' . $ez_pages_name . '</a>';
     }
   }
-
-
-?>

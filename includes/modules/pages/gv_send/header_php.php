@@ -6,10 +6,10 @@
  * They can send up to the amount of GV accumlated in their account by way of purchased GV's or GV's sent to them.
  *
  * @package page
- * @copyright Copyright 2003-2011 Zen Cart Development Team
+ * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: header_php.php 18695 2011-05-04 05:24:19Z drbyte $
+ * @version $Id: mc12345678 2019 Apr 30 Modified in v1.5.6b $
  */
 
 // This should be first line of the script:
@@ -19,12 +19,12 @@ if (isset($_POST['message'])) $_POST['message'] = zen_output_string_protected($_
 require_once('includes/classes/http_client.php');
 
 // verify no timeout has occurred on the send or process
-if (!$_SESSION['customer_id'] and ($_GET['action'] == 'send' or $_GET['action'] == 'process')) {
+if (!zen_is_logged_in() && isset($_GET['action']) && ($_GET['action'] == 'send' or $_GET['action'] == 'process')) {
   zen_redirect(zen_href_link(FILENAME_TIME_OUT));
 }
 
 // if the customer is not logged on, redirect them to the login page
-if (!$_SESSION['customer_id']) {
+if (!zen_is_logged_in()) {
   $_SESSION['navigation']->set_snapshot();
   zen_redirect(zen_href_link(FILENAME_LOGIN, '', 'SSL'));
 }
@@ -83,10 +83,11 @@ if ($_GET['action'] == 'send') {
   $_POST['amount'] = str_replace('$', '', $_POST['amount']);
 
   $gv_amount = trim($_POST['amount']);
-  if (preg_match('/[^0-9\.]/', $gv_amount)) {
+  if (preg_match('/[^0-9\.,]/', $gv_amount)) {
     $error = true;
     $messageStack->add('gv_send', ERROR_ENTRY_AMOUNT_CHECK, 'error');
   }
+  $gv_amount = $currencies->normalizeValue($gv_amount);
   if ( $currencies->value($gv_amount, true,DEFAULT_CURRENCY) > $customer_amount || $gv_amount == 0) {
     //echo $currencies->value($customer_amount, true,DEFAULT_CURRENCY);
     $error = true;
@@ -98,10 +99,9 @@ if ($_GET['action'] == 'process') {
   if (!isset($_POST['back'])) { // customer didn't click the back button
     $id1 = zen_create_coupon_code($mail['customers_email_address']);
     // sanitize and remove non-numeric characters
-    $_POST['amount'] = preg_replace('/[^0-9.%]/', '', $_POST['amount']);
+    $_POST['amount'] = preg_replace('/[^0-9.,%]/', '', $_POST['amount']);
 
     $new_amount = $gv_result->fields['amount'] - $currencies->value($_POST['amount'], true, DEFAULT_CURRENCY);
-    //die($currencies->value($_POST['amount'], true, $_SESSION['currency']));
     $new_db_amount = $gv_result->fields['amount'] - $currencies->value($_POST['amount'], true, DEFAULT_CURRENCY);
     if ($new_amount < 0) {
       $error= true;

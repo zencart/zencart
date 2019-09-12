@@ -3,12 +3,13 @@
  * paypalwpp_admin_notification.php admin display component
  *
  * @package paymentMethod
- * @copyright Copyright 2003-2011 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @copyright Portions Copyright 2004 DevosC.com
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: paypalwpp_admin_notification.php 18695 2011-05-04 05:24:19Z drbyte $
+ * @version $Id: Author: DrByte  Mon Dec 7 14:47:12 2015 -0500 Modified in v1.5.5 $
  */
+  if (!defined('TEXT_MAXIMUM_CHARACTERS_ALLOWED')) define('TEXT_MAXIMUM_CHARACTERS_ALLOWED', ' chars allowed');
 
   $outputStartBlock = '';
   $outputPayPal = '';
@@ -19,6 +20,20 @@
   $outputRefund = '';
   $outputEndBlock = '';
   $output = '';
+
+$outputStartBlock .= '
+<script>
+function characterCount(field, count, maxchars) {
+  var realchars = field.value.replace(/\t|\r|\n|\r\n/g,\'\');
+  var excesschars = realchars.length - maxchars;
+  if (excesschars > 0) {
+    field.value = field.value.substring(0, maxchars);
+    alert("Error:\n\n- You are only allowed to enter up to"+maxchars+" characters.");
+  } else {
+    count.value = maxchars - realchars.length;
+  }
+}
+</script>';
 
   // strip slashes in case they were added to handle apostrophes:
   foreach ($ipn->fields as $key=>$value){
@@ -332,7 +347,10 @@
     $outputRefund .= MODULE_PAYMENT_PAYPAL_ENTRY_REFUND_PARTIAL_TEXT . ' ' . zen_draw_input_field('refamt', 'enter amount', 'length="8"');
     $outputRefund .= '<input type="submit" name="partialrefund" value="' . MODULE_PAYMENT_PAYPAL_ENTRY_REFUND_BUTTON_TEXT_PARTIAL . '" title="' . MODULE_PAYMENT_PAYPAL_ENTRY_REFUND_BUTTON_TEXT_PARTIAL . '" /><br />';
     //comment field
-    $outputRefund .= '<br />' . MODULE_PAYMENT_PAYPAL_ENTRY_REFUND_TEXT_COMMENTS . '<br />' . zen_draw_textarea_field('refnote', 'soft', '50', '3', MODULE_PAYMENT_PAYPAL_ENTRY_REFUND_DEFAULT_MESSAGE);
+    $counterParams = ' onKeyDown="characterCount(this.form[\'refnote\'],this.form.remainingRefund,255);" onKeyUp="characterCount(this.form[\'refnote\'],this.form.remainingRefund,255);"';
+    $outputRefund .= '<br />' . MODULE_PAYMENT_PAYPAL_ENTRY_REFUND_TEXT_COMMENTS;
+    $outputRefund .= '<div style="text-align:right;margin-top:-1.2em"><input disabled="disabled" type="text" name="remainingRefund" size="3" maxlength="3" value="255" /> ' . TEXT_MAXIMUM_CHARACTERS_ALLOWED . '</div>';
+    $outputRefund .= zen_draw_textarea_field('refnote', 'soft', '50', '3', MODULE_PAYMENT_PAYPAL_ENTRY_REFUND_DEFAULT_MESSAGE, $counterParams);
     //message text
     $outputRefund .= '<br />' . MODULE_PAYMENT_PAYPAL_ENTRY_REFUND_SUFFIX;
     $outputRefund .= '</form>';
@@ -395,7 +413,7 @@
 //debug
 //$output .= '<pre>' . print_r($response, true) . '</pre>';
 
-  if (isset($response['RESPMSG']) || defined('MODULE_PAYMENT_PAYFLOW_STATUS')) { // payflow
+  if (isset($response['RESPMSG']) /*|| defined('MODULE_PAYMENT_PAYFLOW_STATUS')*/) { // payflow
     $output .= $outputPFmain;
     if (method_exists($this, '_doVoid') && (MODULE_PAYMENT_PAYPALDP_TRANSACTION_MODE == 'Auth Only' || MODULE_PAYMENT_PAYFLOW_TRANSACTION_MODE == 'Auth Only' || (isset($_GET['authcapt']) && $_GET['authcapt']=='on'))) $output .= $outputVoid;
     if (method_exists($this, '_doCapt') && (MODULE_PAYMENT_PAYPALDP_TRANSACTION_MODE == 'Auth Only' || MODULE_PAYMENT_PAYFLOW_TRANSACTION_MODE == 'Auth Only' || (isset($_GET['authcapt']) && $_GET['authcapt']=='on'))) $output .= $outputCapt;
@@ -422,3 +440,4 @@
   $output .= $outputEndBlock;
   $output .= $outputEndBlock;
   $output .= '<!-- EOF: pp admin transaction processing tools -->';
+
