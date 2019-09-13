@@ -4,7 +4,7 @@
  * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2019 May 26 Modified in v1.5.6b $
+ * @version $Id: DrByte 2019 May 26 Modified in v1.5.7 $
  */
 require('includes/application_top.php');
 $languages = zen_get_languages();
@@ -771,17 +771,15 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
                                                p.products_model, p.products_quantity_order_min, p.products_quantity_order_units, p.products_priced_by_attribute,
                                                p.product_is_free, p.product_is_call, p.products_quantity_mixed, p.product_is_always_free_shipping,
                                                p.products_quantity_order_max, p.products_sort_order, p.master_categories_id
-                                        FROM " . TABLE_PRODUCTS . " p,
-                                             " . TABLE_PRODUCTS_DESCRIPTION . " pd,
-                                             " . TABLE_PRODUCTS_TO_CATEGORIES . " p2c
-                                        WHERE p.products_id = pd.products_id
-                                        AND pd.language_id = " . (int)$_SESSION['languages_id'] . "
-                                        AND (p.products_id = p2c.products_id
-                                          AND p.master_categories_id = p2c.categories_id)
+                                        FROM " . TABLE_PRODUCTS . " p
+                                        LEFT JOIN " . TABLE_PRODUCTS_DESCRIPTION . " pd ON p.products_id = pd.products_id
+                                        LEFT JOIN " . TABLE_PRODUCTS_TO_CATEGORIES . " p2c ON p.products_id = p2c.products_id AND p.master_categories_id = p2c.categories_id
+                                        WHERE pd.language_id = " . (int)$_SESSION['languages_id'] . "
                                         AND (pd.products_name LIKE '%" . zen_db_input($_GET['search']) . "%'
                                           OR pd.products_description LIKE '%" . zen_db_input($_GET['search']) . "%'
                                           OR p.products_id = '" . zen_db_input($_GET['search']) . "'
-                                          OR p.products_model like '%" . zen_db_input($_GET['search']) . "%')
+                                          OR p.products_model like '%" . zen_db_input($_GET['search']) . "%'
+                                          )
                                         " . $order_by);
               } else {
                 $products_query_raw = ("SELECT p.products_type, p.products_id, pd.products_name, p.products_quantity, p.products_image, p.products_price,
@@ -790,11 +788,9 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
                                                p.product_is_call, p.products_quantity_mixed, p.product_is_always_free_shipping, p.products_quantity_order_max,
                                                p.products_sort_order
                                         FROM " . TABLE_PRODUCTS . " p,
-                                             " . TABLE_PRODUCTS_DESCRIPTION . " pd,
-                                             " . TABLE_PRODUCTS_TO_CATEGORIES . " p2c
-                                        WHERE p.products_id = pd.products_id
-                                        AND pd.language_id = " . (int)$_SESSION['languages_id'] . "
-                                        AND p.products_id = p2c.products_id
+                                        LEFT JOIN " . TABLE_PRODUCTS_DESCRIPTION . " pd ON p.products_id = pd.products_id
+                                        LEFT JOIN " . TABLE_PRODUCTS_TO_CATEGORIES . " p2c ON p.products_id = p2c.products_id
+                                        WHERE pd.language_id = " . (int)$_SESSION['languages_id'] . "
                                         AND p2c.categories_id = " . (int)$current_category_id .
                                         $order_by);
               }
