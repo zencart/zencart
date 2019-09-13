@@ -352,7 +352,7 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
 <html <?php echo HTML_PARAMS; ?>>
   <head>
     <meta charset="<?php echo CHARSET; ?>">
-    <title><?php echo 'Admin: ' . zen_output_generated_category_path($current_category_id); ?></title>
+    <title><?php echo TEXT_ADMIN_TAB_PREFIX . ': ' . zen_output_generated_category_path($current_category_id); ?></title>
     <link rel="stylesheet" href="includes/stylesheet.css">
     <link rel="stylesheet" href="includes/cssjsmenuhover.css" media="all" id="hoverJS">
     <script src="includes/menu.js"></script>
@@ -361,7 +361,7 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
       function init() {
           cssjsmenu('navbar');
           if (document.getElementById) {
-              let kill = document.getElementById('hoverJS');
+              var kill = document.getElementById('hoverJS');
               kill.disabled = true;
           }
       }
