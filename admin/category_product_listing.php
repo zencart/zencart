@@ -775,8 +775,8 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
                                         LEFT JOIN " . TABLE_PRODUCTS_DESCRIPTION . " pd ON pd.products_id = p.products_id
                                           AND pd.language_id = " . (int)$_SESSION['languages_id'] . "
                                         LEFT JOIN " . TABLE_PRODUCTS_TO_CATEGORIES . " p2c ON p2c.products_id = p.products_id
-                                          AND p2c.categories_id = p.master_categories_id
-                                        WHERE (pd.products_name LIKE '%" . zen_db_input($_GET['search']) . "%'
+                                        WHERE p2c.categories_id = p.master_categories_id
+                                        AND (pd.products_name LIKE '%" . zen_db_input($_GET['search']) . "%'
                                           OR pd.products_description LIKE '%" . zen_db_input($_GET['search']) . "%'
                                           OR p.products_id = '" . zen_db_input($_GET['search']) . "'
                                           OR p.products_model like '%" . zen_db_input($_GET['search']) . "%'
@@ -792,7 +792,7 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
                                         LEFT JOIN " . TABLE_PRODUCTS_DESCRIPTION . " pd ON pd.products_id = p.products_id
                                           AND pd.language_id = " . (int)$_SESSION['languages_id'] . "
                                         LEFT JOIN " . TABLE_PRODUCTS_TO_CATEGORIES . " p2c ON p2c.products_id = p.products_id
-                                          AND p2c.categories_id = " . (int)$current_category_id .
+                                        WHERE p2c.categories_id = " . (int)$current_category_id .
                                         $order_by);
               }
 // Split Page
