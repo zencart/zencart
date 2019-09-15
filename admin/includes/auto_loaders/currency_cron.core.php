@@ -21,9 +21,6 @@ if (!defined('USE_PCONNECT')) define('USE_PCONNECT', 'false');
   $autoLoadConfig[0][] = array('autoType'=>'class',
                                'loadFile'=>'sniffer.php');
   $autoLoadConfig[0][] = array('autoType'=>'class',
-                               'loadFile'=>'logger.php',
-                               'classPath'=>DIR_WS_CLASSES);
-  $autoLoadConfig[0][] = array('autoType'=>'class',
                                'loadFile'=>'object_info.php',
                                'classPath'=>DIR_WS_CLASSES);
   $autoLoadConfig[10][] = array('autoType'=>'init_script',

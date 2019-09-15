@@ -10,18 +10,12 @@
 ////
 // Redirect to another page or site
   function zen_redirect($url) {
-    global $logger;
-
-// clean up URL before executing it
+    // clean up URL before executing it
     $url = preg_replace('/&{2,}/', '&', $url);
     $url = preg_replace('/(&amp;)+/', '&amp;', $url);
     // header locates should not have the &amp; in the address it breaks things
     $url = str_replace('&amp;', '&', $url);
 
-    if (STORE_PAGE_PARSE_TIME == 'true') {
-      if (!is_object($logger)) $logger = new logger;
-      $logger->timer_stop();
-    }
     session_write_close();
     header('Location: ' . $url);
     exit;
@@ -1586,7 +1580,7 @@ while (!$chk_sale_categories_all->EOF) {
   function zen_get_tax_rate($class_id, $country_id = -1, $zone_id = -1) {
     global $db;
     global $customer_zone_id, $customer_country_id;
-    
+
     // -----
     // Give an observer a chance to override this function's return.
     //

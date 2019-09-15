@@ -63,7 +63,6 @@ define('IS_ADMIN_FLAG', false);
  * integer saves the time at which the script started.
  */
 define('PAGE_PARSE_START_TIME', microtime());
-//  define('DISPLAY_PAGE_PARSE_TIME', 'true');
 @ini_set("arg_separator.output","&");
 @ini_set("html_errors","0");
 /**

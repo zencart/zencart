@@ -22,7 +22,6 @@ define('IS_ADMIN_FLAG', true);
 /**
  * integer saves the time at which the script started.
  */
-// Start the clock for the page parse time log
 define('PAGE_PARSE_START_TIME', microtime());
 // set php_self in the local scope
 $PHP_SELF = isset($_SERVER['SCRIPT_NAME']) ? $_SERVER['SCRIPT_NAME'] : 'home.php';
