@@ -1,9 +1,9 @@
-/** //steve edits
+/**
  * @package admin
  * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Zen4All 2019 Mar 31 Modified in v1.5.6b $
+ * @version $Id: torvista 2019 Sept 10 Modified in v1.5.7 $
  */
 
 @import url("css/bootstrap.min.css");
@@ -25,6 +25,11 @@ a, body, html, table {
 }
 
 body {padding: 0 4px;}
+
+.table th.shrink, td.shrink {/*shrink column to minimum width*/
+    white-space: nowrap;
+    width: 1%;
+}
 
 td,th {padding: 1px;}
 .main table td {
@@ -181,7 +186,7 @@ body#login legend {
     margin: 20px;
 }
 
-input, select, textarea {
+checkbox, input, radio, select, textarea, file {
     font-size: 11px;
 }
 .infoBoxContent input {margin: 1px 2px;}
@@ -396,6 +401,12 @@ tr.attributeBoxContent {
 
 .infoBoxContent a img, .infoBoxContent input[type="image"] {
     margin: 4px;
+}
+
+.infoBoxContent fieldset legend {
+    font-weight: bold;
+    font-size: larger;
+    margin-bottom: 0;
 }
 
 .infoBoxHeading {
@@ -691,6 +702,9 @@ img[src*="button_cancel"], img[src*="button_reset"]{
   text-shadow: 0 0 4px rgba(0,0,0,0.5)
 }
 
+.tt {
+    font-family: "Lucida Console", "Menlo", "Monaco", "Courier", monospace;
+}
 /* bof Footer */
 footer, #footer {
     text-align: center;
