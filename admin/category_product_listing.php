@@ -772,8 +772,7 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
                                                p.product_is_free, p.product_is_call, p.products_quantity_mixed, p.product_is_always_free_shipping,
                                                p.products_quantity_order_max, p.products_sort_order, p.master_categories_id
                                         FROM " . TABLE_PRODUCTS . " p
-                                        LEFT JOIN " . TABLE_PRODUCTS_DESCRIPTION . " pd ON pd.products_id = p.products_id
-                                          AND pd.language_id = " . (int)$_SESSION['languages_id'] . "
+                                        LEFT JOIN " . TABLE_PRODUCTS_DESCRIPTION . " pd ON pd.products_id = p.products_id AND pd.language_id = " . (int)$_SESSION['languages_id'] . "
                                         LEFT JOIN " . TABLE_PRODUCTS_TO_CATEGORIES . " p2c ON p2c.products_id = p.products_id
                                         WHERE p2c.categories_id = p.master_categories_id
                                         AND (pd.products_name LIKE '%" . zen_db_input($_GET['search']) . "%'
@@ -789,8 +788,7 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
                                                p.product_is_call, p.products_quantity_mixed, p.product_is_always_free_shipping, p.products_quantity_order_max,
                                                p.products_sort_order
                                         FROM " . TABLE_PRODUCTS . " p
-                                        LEFT JOIN " . TABLE_PRODUCTS_DESCRIPTION . " pd ON pd.products_id = p.products_id
-                                          AND pd.language_id = " . (int)$_SESSION['languages_id'] . "
+                                        LEFT JOIN " . TABLE_PRODUCTS_DESCRIPTION . " pd ON pd.products_id = p.products_id AND pd.language_id = " . (int)$_SESSION['languages_id'] . "
                                         LEFT JOIN " . TABLE_PRODUCTS_TO_CATEGORIES . " p2c ON p2c.products_id = p.products_id
                                         WHERE p2c.categories_id = " . (int)$current_category_id .
                                         $order_by);
