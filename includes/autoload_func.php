@@ -36,7 +36,9 @@ foreach ($initSystemList as $entry) {
             //echo 'sessionClass ' . $entry['class'] . "\n";
             $objectName = $entry['object'];
             $className = $entry['class'];
-            $_SESSION[$objectName] = new $className();
+            if (!$entry['checkInstantiated'] || !isset($_SESSION[$objectName])) {
+                $_SESSION[$objectName] = new $className();
+            }
             break;
         case 'sessionObjectMethod':
             //echo 'sessionObjectMethod ' . $entry['class'] . "\n";
