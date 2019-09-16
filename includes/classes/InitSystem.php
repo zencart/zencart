@@ -108,16 +108,9 @@ class InitSystem
             $this->actionList[] = ['type' => 'class', 'object' => $objectName, 'class' => $className];
             return;
         }
-        if (!$checkInstantiated) {
-            $this->debugList[] = 'instantiating session bound class - ' . $className . ' as ' . $objectName;
-            $this->actionList[] = ['type' => 'sessionClass', 'object' => $objectName, 'class' => $className];
-            return;
-        }
-        if (!isset($_SESSION[$objectName])) {
-            $this->debugList[] = 'instantiating session bound class - ' . $className . ' as ' . $objectName;
-            $this->actionList[] = ['type' => 'sessionClass', 'object' => $objectName, 'class' => $className];
-        }
-        $this->debugList[] = 'NOT INSTANTIATING session bound class - ' . $className . ' as ' . $objectName;
+        $this->debugList[] = 'instantiating session bound class - ' . $className . ' as ' . $objectName;
+        $this->actionList[] = ['type' => 'sessionClass', 'object' => $objectName, 'class' => $className, 'checkInstantiated' => $checkInstantiated];
+        return;
     }
 
     protected function processObjectMethod($entry)
