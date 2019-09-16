@@ -158,6 +158,10 @@ if (zen_not_null($action) && $order_exists == true) {
       $status_updated = zen_update_orders_history($oID, $comments, null, $status, $customer_notified, $email_include_message);
       $order_updated = ($status_updated > 0);
 
+      $check_status = $db->Execute("select customers_name, customers_email_address, orders_status,
+                                      date_purchased from " . TABLE_ORDERS . "
+                                      where orders_id = '" . (int)$oID . "'");
+
       // trigger any appropriate updates which should be sent back to the payment gateway:
       $order = new order((int)$oID);
       if ($order->info['payment_module_code']) {
