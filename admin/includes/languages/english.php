@@ -379,6 +379,7 @@ define('IMAGE_PRODUCTS_TO_CATEGORIES', 'Multiple Categories Link Manager');
 define('IMAGE_ICON_STATUS_ON', 'Status - Enabled');
 define('IMAGE_ICON_STATUS_OFF', 'Status - Disabled');
 define('IMAGE_ICON_LINKED', 'Product is Linked');
+define('IMAGE_ICON_LINKED_CATEGORY', 'Category contains Linked Products');
 
 define('IMAGE_REMOVE_SPECIAL','Remove Special Price Info');
 define('IMAGE_REMOVE_FEATURED','Remove Featured Product Info');
