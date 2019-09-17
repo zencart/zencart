@@ -64,44 +64,46 @@ if (zen_not_null($action)) {
 
         // change the status of categories and products
         zen_set_time_limit(600);
-        for ($i = 0, $n = sizeof($categories); $i < $n; $i++) {
           if ($_POST['categories_status'] == '1') {//form is coming from an Enabled category which is to be changed to Disabled
-            $categories_status = '0';//Disable this category
-            $update_subcategories = $_POST['set_subcategories_status'] == 'set_subcategories_status_off' ? '1' : '0'; //also Disable subcategories?
+              $category_status = '0';//Disable this category
+              $subcategories_status = isset($_POST['set_subcategories_status']) && $_POST['set_subcategories_status'] == 'set_subcategories_status_off' ? '0' : ''; //Disable subcategories or no change?
+              $products_status = isset($_POST['set_products_status']) && $_POST['set_products_status'] == 'set_products_status_off' ? '0' : ''; //Disable products or no change?
           } else {//form is coming from a Disabled category which is to be changed to Enabled
-            $categories_status = '1';//Enable this category
-            $update_subcategories = $_POST['set_subcategories_status'] == 'set_subcategories_status_on' ? '1' : '0'; //also Enable subcategories?
+              $category_status = '1';//Enable this category
+              $subcategories_status = isset($_POST['set_subcategories_status']) && $_POST['set_subcategories_status'] == 'set_subcategories_status_on' ? '1' : ''; //also Enable subcategories or no change?
+              $products_status = isset($_POST['set_products_status']) && $_POST['set_products_status'] == 'set_products_status_on' ? '1' : ''; //Disable products or no change?
           }
 
-          if ($categories[$i]['id'] == $categories_id || $update_subcategories) {//always update THIS category, optionally update subcategories
-            $sql = "UPDATE " . TABLE_CATEGORIES . "
-                    SET categories_status = " . (int)$categories_status . "
+        for ($i = 0, $n = sizeof($categories); $i < $n; $i++) {
+
+          //set categories_status
+            if ($categories[$i]['id'] == $categories_id) {//always update THIS category
+                $sql = "UPDATE " . TABLE_CATEGORIES . "
+                    SET categories_status = " . $category_status . "
+                    WHERE categories_id = " . $categories[$i]['id'];
+                $db->Execute($sql);
+
+          } elseif ($subcategories_status != '') {//optionally update subcategories if a change was selected
+                $sql = "UPDATE " . TABLE_CATEGORIES . "
+                    SET categories_status = " . (int)$subcategories_status . "
                     WHERE categories_id = " . (int)$categories[$i]['id'];
-            $db->Execute($sql);
+                $db->Execute($sql);
           }
 
-          // set products_status based on selection
-          if ($_POST['set_products_status'] == 'set_products_status_nochange') {
-            // do not change current product status
-          } else {
-            if ($_POST['set_products_status'] == 'set_products_status_on') {
-              $products_status = '1';
-            } else {
-              $products_status = '0';
-            }
-
-            $sql = "SELECT products_id
+            //set products_status
+            if ($products_status != '') {//only execute if a change was selected
+                $sql = "SELECT products_id
                     FROM " . TABLE_PRODUCTS_TO_CATEGORIES . "
                     WHERE categories_id = " . (int)$categories[$i]['id'];
-            $category_products = $db->Execute($sql);
+                $category_products = $db->Execute($sql);
 
-            foreach ($category_products as $category_product) {
-              $sql = "UPDATE " . TABLE_PRODUCTS . "
+                foreach ($category_products as $category_product) {
+                    $sql = "UPDATE " . TABLE_PRODUCTS . "
                       SET products_status = " . (int)$products_status . "
                       WHERE products_id = " . (int)$category_product['products_id'];
-              $db->Execute($sql);
+                    $db->Execute($sql);
+                }
             }
-          }
         }
       }
       zen_redirect(zen_href_link(FILENAME_CATEGORY_PRODUCT_LISTING, 'cPath=' . $_GET['cPath'] . '&cID=' . $_GET['cID'] . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '') . ($search_result ? '&search=' . $_GET['search'] : '')));
