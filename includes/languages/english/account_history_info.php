@@ -36,5 +36,3 @@ define('TABLE_HEADING_STATUS_ORDER_STATUS', 'Order Status');
 define('TABLE_HEADING_STATUS_COMMENTS', 'Comments');
 define('QUANTITY_SUFFIX', '&nbsp;ea.  ');
 define('ORDER_HEADING_DIVIDER', '&nbsp;-&nbsp;');
-define('TEXT_OPTION_DIVIDER', '&nbsp;-&nbsp;');
-?>
