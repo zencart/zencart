@@ -482,8 +482,6 @@ class zcDatabaseInstaller
   }
   public function updateConfigKeys()
   {
-    $sql = "update ". $this->dbPrefix ."configuration set configuration_value='". DIR_FS_ROOT . "logs/page_parse_time.log' where configuration_key = 'STORE_PAGE_PARSE_TIME_LOG'";
-    $this->db->Execute($sql);
     if (isset($_POST['http_server_catalog']) && $_POST['http_server_catalog'] != '') {
       $email_stub = preg_replace('~.*\/\/(www.)*~', 'YOUR_EMAIL@', $_POST['http_server_catalog']);
       $sql = "update ". $this->dbPrefix ."configuration set configuration_value=:emailStub: where configuration_key in ('STORE_OWNER_EMAIL_ADDRESS', 'EMAIL_FROM')";

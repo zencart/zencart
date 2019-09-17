@@ -176,15 +176,6 @@ if (!isset($flag_disable_right) || !$flag_disable_right) {
 ?>
 
 </div>
-<!--bof- parse time display -->
-<?php
-  if (DISPLAY_PAGE_PARSE_TIME == 'true') {
-?>
-<div class="smallText center">Parse Time: <?php echo $parse_time; ?> - Number of Queries: <?php echo $db->queryCount(); ?> - Query Time: <?php echo $db->queryTime(); ?></div>
-<?php
-  }
-?>
-<!--eof- parse time display -->
 <!--bof- banner #6 display -->
 <?php
   if (SHOW_BANNERS_GROUP_SET6 != '' && $banner = zen_banner_exists('dynamic', SHOW_BANNERS_GROUP_SET6)) {
