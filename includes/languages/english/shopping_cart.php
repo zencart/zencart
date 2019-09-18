@@ -24,4 +24,3 @@ define('TEXT_TOTAL_AMOUNT', '&nbsp;&nbsp;Amount: ');
 
 define('TEXT_CART_HELP', '<a href="javascript:session_win();">[help (?)]</a>');
 define('TEXT_VISITORS_CART', TEXT_CART_HELP); // legacy define
-define('TEXT_OPTION_DIVIDER', '&nbsp;-&nbsp;');
