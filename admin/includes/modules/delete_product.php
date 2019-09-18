@@ -30,7 +30,7 @@ for ($i = 0, $n = sizeof($product_categories); $i < $n; $i++) {
     if ($j+1 < $k)  $category_path .= '&nbsp;&gt;&nbsp;';
   }
   if (sizeof($product_categories) > 1 && zen_get_parent_category_id($pInfo->products_id) == $product_categories[$i][sizeof($product_categories[$i]) - 1]['id']) {
-    $product_categories_string .= '<div class="checkbox text-danger"><label><strong>' . zen_draw_checkbox_field('product_categories[]', $product_categories[$i][sizeof($product_categories[$i]) - 1]['id'], true) . $category_path . '</strong></label></div>';
+    $product_categories_string .= '<div class="checkbox text-danger"><label><strong>' . zen_draw_checkbox_field('product_categories[]', $product_categories[$i][sizeof($product_categories[$i]) - 1]['id'], false) . $category_path . '</strong></label></div>';
   } else {
     $product_categories_string .= '<div class="checkbox"><label>' .zen_draw_checkbox_field('product_categories[]', $product_categories[$i][sizeof($product_categories[$i]) - 1]['id'], true) . $category_path . '</label></div>';
   }
