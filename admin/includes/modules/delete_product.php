@@ -13,8 +13,8 @@ if (!defined('IS_ADMIN_FLAG')) {
 $heading = array();
 $heading[] = array('text' => '<h4>' . TEXT_INFO_HEADING_DELETE_PRODUCT . '</h4>');
 $contents = array('form' => zen_draw_form('delete_products', FILENAME_CATEGORY_PRODUCT_LISTING, 'action=delete_product_confirm&product_type=' . $product_type . '&cPath=' . $cPath . (isset($_GET['page']) ? '&page=' . $_GET['page'] : ''), 'post', 'class="form-horizontal"') . zen_draw_hidden_field('products_id', $pInfo->products_id));
-$contents[] = array('text' => TEXT_DELETE_PRODUCT_INTRO);
-$contents[] = array('text' => '<br><strong>' . $pInfo->products_name . ' ID#' . $pInfo->products_id . '</strong>');
+$contents[] = array('text' => sprintf(TEXT_DELETE_PRODUCT_INTRO, $pInfo->products_id));
+$contents[] = array('text' => '<br><strong>' . 'ID#' . $pInfo->products_id . ': ' . $pInfo->products_name . '</strong>');
 
 $product_categories_string = '';
 $product_categories = zen_generate_category_path($pInfo->products_id, 'product');
