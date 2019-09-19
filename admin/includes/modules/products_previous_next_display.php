@@ -12,14 +12,12 @@ if (!defined('IS_ADMIN_FLAG')) {
 // used following load of products_previous_next.php
 ?>
 <!-- bof: products_previous_next_display -->
-  <tr>
-    <td>
         <div class="row"><strong>
           <?php echo (HEADING_TITLE == '' ? HEADING_TITLE2 : HEADING_TITLE); ?>&nbsp;-&nbsp;<?php echo zen_output_generated_category_path($current_category_id); ?></strong>
           <?php echo '<br />' . TEXT_CATEGORIES_PRODUCTS; ?>
         </div>
         <div class="row"><?php echo (zen_get_categories_status($current_category_id) == '0' ? TEXT_CATEGORIES_STATUS_INFO_OFF : '') . (zen_get_products_status($products_filter) == '0' ? ' ' . TEXT_PRODUCTS_STATUS_INFO_OFF : ''); ?></div>
-      <div class="row text-center"><?php echo ($counter > 0 ? (PREV_NEXT_PRODUCT) . ($position+1 . "/" . $counter) : '&nbsp;'); ?></div>
+      <div class="row"><?php echo ($counter > 0 ? (PREV_NEXT_PRODUCT) . ($position+1 . "/" . $counter) : '&nbsp;'); ?></div>
       <div class="row">
   <?php if ($counter > 0 ) { ?>
           <div class="col-sm-2 text-center">
@@ -44,6 +42,4 @@ if (!defined('IS_ADMIN_FLAG')) {
           </div>
         <?php } ?>
       </div>
-    </td>
-  </tr>
 <!-- eof: products_previous_next_display -->

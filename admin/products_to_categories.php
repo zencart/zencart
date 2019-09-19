@@ -459,11 +459,11 @@ $products_list = $db->Execute("SELECT products_id, categories_id
     <div class="container-fluid">
         <!-- body_text //-->
         <h1><?php echo HEADING_TITLE; ?></h1>
-        <div class="row"><?php echo zen_draw_separator('pixel_black.gif', '100%', '2'); ?></div>
-        <?php require(DIR_WS_MODULES . FILENAME_PREV_NEXT_DISPLAY); ?>
+	<div><?php echo zen_draw_separator('pixel_black.gif', '100%', '2'); ?></div>
+        <div class="row">
+          <?php require(DIR_WS_MODULES . FILENAME_PREV_NEXT_DISPLAY); ?>
+        </div>
         <?php if ($products_filter > 0) {//a product is selected ?>
-        <div class="row"><?php echo zen_draw_separator('pixel_trans.gif', '100%', '20'); ?></div>
-
     <div class="row"><!--Product Block-->
     <div id="leftBlock" class="col-xs-12 col-sm-9 col-md-9 col-lg-9">
     <div id="productSelect">
@@ -571,7 +571,7 @@ $products_list = $db->Execute("SELECT products_id, categories_id
                                     '<a href="' . zen_href_link(FILENAME_PRODUCT,
                                         'action=new_product' . '&cPath=' . zen_get_parent_category_id($products_filter) . '&pID=' . $products_filter . '&product_type=' . zen_get_products_type($products_filter)) . '" class="btn btn-info" role="button">' . IMAGE_EDIT_PRODUCT . '</a>'
                             );
-                            $contents[] = array('text' => zen_image(DIR_WS_IMAGES . 'pixel_black.gif', '', '100%', '3'));
+                            $contents[] = array('text' => zen_draw_separator('pixel_black.gif', '100%', '1'));
                             $contents[] = array(
                                 'align' => 'center',
                                 'text' => zen_draw_form('new_products_to_categories', FILENAME_PRODUCTS_TO_CATEGORIES,
@@ -775,8 +775,10 @@ $products_list = $db->Execute("SELECT products_id, categories_id
         <!-- eof: reset master_categories_id //-->
       </div>
     </div>
-
     <!-- body_text_eof //-->
+    </div>
+    <!-- body_eof //-->
+
     <!-- footer //-->
     <?php require(DIR_WS_INCLUDES . 'footer.php'); ?>
     <!-- footer_eof //-->
