@@ -29,7 +29,7 @@ define('TEXT_INFO_HEADING_MOVE_CATEGORY', 'Move Category');
 define('TEXT_MOVE_CATEGORIES_INTRO', 'Please select which category you wish <b>%s</b> to reside in');
 define('TEXT_MOVE', 'Move <b>%s</b> to:');
 define('TEXT_INFO_HEADING_DELETE_PRODUCT', 'Delete Product/Links');
-define('TEXT_DELETE_PRODUCT_INTRO', 'Delete this product\'s links to categories or delete the product completely.<br />For easier linking/unlinking of products to multiple categories, you may also use the <a href="index.php?cmd=products_to_categories&products_filter=%u">Multiple Categories Link Manager</a>.<br /><br />The <strong>linked categories</strong>  are pre-selected ready for deletion.<br />The highlighted <strong>Master Category</strong> is de-selected to prevent accidental deletion.<br /><br />To delete a product completely, select ALL categories including the Master Category.');
+define('TEXT_DELETE_PRODUCT_INTRO', 'Delete this product\'s links to categories or delete the product completely.<br />For easier linking/unlinking of products to multiple categories, you may also use the <a href="index.php?cmd=' . FILENAME_PRODUCTS_TO_CATEGORIES . '&products_filter=%u">Multiple Categories Link Manager</a>.<br /><br />The <strong>linked categories</strong>  are pre-selected ready for deletion.<br />The highlighted <strong>Master Category</strong> is de-selected to prevent accidental deletion.<br /><br />To delete a product completely, select ALL categories including the Master Category.');
 define('TEXT_INFO_HEADING_MOVE_PRODUCT', 'Move Product');
 define('TEXT_MOVE_PRODUCTS_INTRO', 'Please select which category you wish <b>%s</b> to reside in');
 define('TEXT_INFO_CURRENT_CATEGORIES', 'Current Categories: ');
