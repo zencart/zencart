@@ -480,7 +480,7 @@ $products_list = $db->Execute("SELECT products_id, categories_id
         <?php echo zen_draw_label(TEXT_PRODUCT_TO_VIEW, 'products_filter'); ?>
         <?php echo zen_draw_products_pull_down('products_filter', 'size="10" class="form-control" id="products_filter"', $excluded_products, true, $products_filter, true, true); ?>
         <button type="submit" class="btn btn-info"><?php echo IMAGE_DISPLAY; ?></button>
-        </form>
+        <?php echo '</form>'; ?>
         <?php echo zen_draw_separator('pixel_trans.gif', '100%', '2'); ?>
         <div><!--pricing and linked category count-->
             <?php
@@ -512,7 +512,7 @@ $products_list = $db->Execute("SELECT products_id, categories_id
             <span class="alert"><?php echo WARNING_MASTER_CATEGORIES_ID; ?></span>
             <?php } ?></div>
         <div><?php echo TEXT_INFO_MASTER_CATEGORY_CHANGE; ?></div>
-        </form>
+        <?php echo '</form>'; ?>
     </div>
     </div><!--end of masterCategorySelect-->
     </div><!-- end leftBlock-->
