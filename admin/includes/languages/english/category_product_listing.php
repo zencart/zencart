@@ -27,11 +27,11 @@ define('TEXT_DELETE_CATEGORY_INTRO', 'Are you sure you want to delete this categ
 define('TEXT_DELETE_CATEGORY_INTRO_LINKED_PRODUCTS', '<strong>Warning:</strong> Linked Products whose Master Categories ID are deleted will not price properly. You should first assure that when deleting a Category that contains Linked Products that you reset the Product(s) Master Categories ID to another Category before removing a Category');
 define('TEXT_INFO_HEADING_MOVE_CATEGORY', 'Move Category');
 define('TEXT_MOVE_CATEGORIES_INTRO', 'Please select which category you wish <b>%s</b> to reside in');
-define('TEXT_MOVE', 'Move <b>%s</b> to:');
+define('TEXT_MOVE', 'Move product<br /><strong>ID#%1$u %2$s</strong><br />from current category<br /><strong>%3$s</strong><br />to:');
 define('TEXT_INFO_HEADING_DELETE_PRODUCT', 'Delete Product');
 define('TEXT_DELETE_PRODUCT_INTRO', 'Are you sure you want to permanently delete this product?<br /><br /><strong>Warning:</strong> On Linked Products<br />1 Make sure the Master Category has been changed if you are deleting the Product from the Master Category<br />2 Check the checkbox for the Category to Delete the Product from');
 define('TEXT_INFO_HEADING_MOVE_PRODUCT', 'Move Product');
-define('TEXT_MOVE_PRODUCTS_INTRO', 'Please select which category you wish <b>%s</b> to reside in');
+define('TEXT_MOVE_PRODUCTS_INTRO', 'Move this product from this category to the selected category.<br />If this current category is also the product\'s Master Category, that will also be updated to the selected category.<br />');
 define('TEXT_INFO_CURRENT_CATEGORIES', 'Current Categories: ');
 define('TEXT_INFO_HEADING_COPY_TO', 'Copy To');
 define('TEXT_INFO_COPY_TO_INTRO', 'Please choose a new category you wish to copy this product to');
