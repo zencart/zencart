@@ -449,8 +449,7 @@ $products_list = $db->Execute("SELECT products_id, categories_id
       }
     </script>
   </head>
-  <!-- <body onload="init()"> -->
-  <body onload="init()">
+  <body onload="init();">
     <!-- header //-->
     <?php require(DIR_WS_INCLUDES . 'header.php'); ?>
     <!-- header_eof //-->
@@ -595,7 +594,6 @@ $products_list = $db->Execute("SELECT products_id, categories_id
         <?php if ($products_filter >0 && $product_to_copy->fields['master_categories_id'] > 0) { //a product is selected AND it has a master category ?>
         <div class="row">
           <!-- bof: link to categories //-->
-          <div>
               <?php echo zen_draw_separator('pixel_black.gif', '100%', '1'); ?>
               <div class="row"><?php echo TEXT_INFO_PRODUCTS_TO_CATEGORIES_LINKER_INTRO; ?></div>
               <?php echo zen_draw_separator('pixel_trans.gif', '100%', '2'); ?>
@@ -774,7 +772,6 @@ $products_list = $db->Execute("SELECT products_id, categories_id
         <?php echo '</form>'; ?>
         <!-- eof: reset master_categories_id //-->
       </div>
-    </div>
     <!-- body_text_eof //-->
     </div>
     <!-- body_eof //-->
