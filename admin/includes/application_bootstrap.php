@@ -9,6 +9,7 @@
 
 use Zencart\FileSystem\FileSystem;
 use Zencart\PluginManager\PluginManager;
+use Illuminate\Database\Capsule\Manager as Capsule;
 
 /**
  * boolean if true the autoloader scripts will be parsed and their output shown. For debugging purposes only.
@@ -154,8 +155,24 @@ $psr4Autoloader->register();
 require('includes/psr4Autoload.php');
 
 require 'includes/init_includes/init_file_db_names.php';
-require 'includes/init_includes/init_database.php';
 
+require DIR_FS_CATALOG . DIR_WS_CLASSES . 'vendors/illuminate/support/helpers.php';
+
+$capsule = new Capsule;
+$capsule->addConnection([
+                            'driver'    => 'mysql',
+                            'host'      => DB_SERVER,
+                            'database'  => DB_DATABASE,
+                            'username'  => DB_SERVER_USERNAME,
+                            'password'  => DB_SERVER_PASSWORD,
+                            'charset'   => 'utf8',
+                            'collation' => 'utf8_general_ci',
+                            'prefix'    => ''
+                        ]);
+$capsule->setAsGlobal();
+$capsule->bootEloquent();
+
+require 'includes/init_includes/init_database.php';
 
 $pluginManager = new PluginManager($db);
 $installedPlugins = $pluginManager->getInstalledPlugins();
