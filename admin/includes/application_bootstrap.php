@@ -22,11 +22,13 @@ define('IS_ADMIN_FLAG', true);
 /**
  * integer saves the time at which the script started.
  */
-// Start the clock for the page parse time log
 define('PAGE_PARSE_START_TIME', microtime());
 // set php_self in the local scope
-if (!isset($PHP_SELF)) $PHP_SELF = isset($_GET['cmd']) ? basename($_GET['cmd'] . '.php') : 'home.php';
+$serverScript = basename($_SERVER['SCRIPT_NAME']);
+$PHP_SELF = isset($_SERVER['SCRIPT_NAME']) ? $serverScript : 'home.php';
+$PHP_SELF = isset($_GET['cmd']) ? basename($_GET['cmd'] . '.php') : $PHP_SELF;
 $PHP_SELF = htmlspecialchars($PHP_SELF);
+$_SERVER['SCRIPT_NAME'] = str_replace($serverScript, '', $_SERVER['SCRIPT_NAME']) . $PHP_SELF;
 // Suppress html from error messages
 @ini_set("html_errors","0");
 /*

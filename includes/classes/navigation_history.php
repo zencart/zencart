@@ -95,7 +95,7 @@ class navigationHistory extends base {
   function remove_current_page() {
 
     $last_entry_position = sizeof($this->path) - 1;
-    if ($this->path[$last_entry_position]['page'] == $_GET['main_page']) {
+    if (isset($this->path[$last_entry_position]['page']) && $this->path[$last_entry_position]['page'] == $_GET['main_page']) {
       unset($this->path[$last_entry_position]);
     }
   }

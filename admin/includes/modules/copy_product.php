@@ -17,6 +17,7 @@ $copy_attributes_duplicates_overwrite = '0';
 $copy_attributes_include_downloads = '1';
 $copy_attributes_include_filename = '1';
 
+$heading = array();
 $heading[] = array('text' => '<h4>' . TEXT_INFO_HEADING_COPY_TO . '</h4>');
 if (empty($pInfo->products_id)) {
   if (!is_object($pInfo)) {

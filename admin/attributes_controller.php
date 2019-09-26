@@ -92,7 +92,7 @@ if ($action == 'new_cat') {
 }
 
 // set categories and products if not set
-if ($products_filter == '' && $current_category_id != '') {
+if ($products_filter == '' && !empty($current_category_id)) {
   $sql = "SELECT *
           FROM " . TABLE_PRODUCTS_TO_CATEGORIES . "
           WHERE categories_id = " . (int)$current_category_id . "
@@ -103,7 +103,7 @@ if ($products_filter == '' && $current_category_id != '') {
     zen_redirect(zen_href_link(FILENAME_ATTRIBUTES_CONTROLLER, 'products_filter=' . $products_filter . '&current_category_id=' . $current_category_id));
   }
 } else {
-  if ($products_filter == '' && $current_category_id == '') {
+  if ($products_filter == '' && empty($current_category_id)) {
     $reset_categories_id = zen_get_category_tree('', '', '0', '', '', true);
     $current_category_id = $reset_categories_id[0]['id'];
     $sql = "SELECT *
@@ -409,7 +409,12 @@ if (zen_not_null($action)) {
             $products_attributes_maxdays = (int)zen_db_prepare_input($_POST['products_attributes_maxdays']);
             $products_attributes_maxcount = (int)zen_db_prepare_input($_POST['products_attributes_maxcount']);
 
-//die( 'I am adding ' . strlen($_POST['products_attributes_filename']) . ' vs ' . strlen(trim($_POST['products_attributes_filename'])) . ' vs ' . strlen(zen_db_prepare_input($_POST['products_attributes_filename'])) . ' vs ' . strlen(zen_db_input($products_attributes_filename)) );
+            // check to see if it's a file missing a name 
+            if ( $options_id === 1) { 
+              if (!zen_not_null($products_attributes_filename)) {
+                $products_attributes_filename = 'missing_file'; 
+              }
+            }
             if (zen_not_null($products_attributes_filename)) {
               $db->Execute("INSERT INTO " . TABLE_PRODUCTS_ATTRIBUTES_DOWNLOAD . " (products_attributes_id, products_attributes_filename, products_attributes_maxdays, products_attributes_maxcount)
                             VALUES (" . (int)$products_attributes_id . ",
@@ -988,13 +993,8 @@ function zen_js_option_values_list($selectedName, $fieldName) {
       if ($action == '') {
         ?>
         <div class="row">
-          <div class="table-responsive">
-            <table class="table">
-                <?php require(DIR_WS_MODULES . FILENAME_PREV_NEXT_DISPLAY); ?>
-            </table>
-          </div>
+           <?php require(DIR_WS_MODULES . FILENAME_PREV_NEXT_DISPLAY); ?>
         </div>
-
         <div class="row">
             <?php echo zen_draw_form('set_products_filter_id', FILENAME_ATTRIBUTES_CONTROLLER, 'action=set_products_filter', 'post', 'class="form-horizontal"'); ?>
             <?php echo zen_draw_hidden_field('products_filter', $products_filter); ?>

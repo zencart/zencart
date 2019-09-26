@@ -16,6 +16,7 @@ if (SHOW_BANNERS_GROUP_SET8 == '') {
 }
 
 if ($show_banner_box2 == true) {
+  $banner_box = array();
   $banner_box[] = TEXT_BANNER_BOX2;
   $banner_box_group= SHOW_BANNERS_GROUP_SET8;
 

@@ -40,9 +40,6 @@ if (!defined('IS_ADMIN_FLAG')) {
   $template_dir = $template_query->fields['template_dir'];
 
 // include the language translations
-
-$currentLangPage = isset($_GET['cmd']) ? $_GET['cmd'] : 'index';
-$currentLangPage = ($currentLangPage == 'home') ? 'index' : $currentLangPage;
-$languageLoader = new LanguageLoader($installedPlugins, $currentLangPage . '.php');
-
+$languagePage = ($PHP_SELF == 'home.php') ? 'index.php' : $PHP_SELF;
+$languageLoader = new LanguageLoader($installedPlugins, $languagePage);
 $languageLoader->loadlanguageDefines();

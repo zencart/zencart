@@ -361,7 +361,7 @@ class payeezyjszc extends base
         $payload['token']['token_data']['value']           = preg_replace('/[^0-9a-z\-]/i', '', $_POST[$this->code . '_fdtoken']);
         $payload['token']['token_data']['cardholder_name'] = htmlentities($order->info['cc_owner']);
         $payload['token']['token_data']['exp_date']        = str_pad(preg_replace('/[^0-9]/', '', $_POST['cc_expires']), 4, '0', STR_PAD_LEFT); // ensure month is 2 digits
-        $payload['token']['token_data']['cvv']             = (string)(preg_replace('/[^0-9]/', '', $_POST['cc_cvv']));
+        $payload['token']['token_data']['cvv']             = '';
         $payload['token']['token_data']['type']            = preg_replace('/[^a-z ]/i', '', $_POST['cc_type']);
 
         if (MODULE_PAYMENT_PAYEEZYJSZC_SEND_SOFT_DESCRIPTORS == 'Yes') {
@@ -897,7 +897,7 @@ class payeezyjszc extends base
             'Transaction Status: ' . $response['transaction_status'] . "\n" .
             'Bank Message: ' . $response['bank_message'] . "\n" .
             'HTTP Response Code: ' . $response['http_code'] . "\n\n" .
-            'Sent to Payeezy: ' . str_replace($_POST['cc_cvv'], '***', print_r($payload, true)) . "\n\n" .
+            'Sent to Payeezy: ' . print_r($payload, true) . "\n\n" .
             'Results Received back from Payeezy: ' . print_r($response, true) . "\n\n" .
             'CURL communication info: ' . print_r($this->commInfo, true) . "\n";
 

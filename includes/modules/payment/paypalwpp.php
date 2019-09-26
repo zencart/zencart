@@ -324,7 +324,9 @@ class paypalwpp extends base {
     $options = $this->getLineItemDetails($this->selectCurrency($order->info['currency']));
 
     // Allow delayed payments such as eCheck? (can only use InstantPayment if Action is Sale)
-    if (MODULE_PAYMENT_PAYPALWPP_TRANSACTION_MODE != 'Auth Only' && MODULE_PAYMENT_PAYPALWPP_TRANSACTION_MODE != 'Sale' && $options['PAYMENTACTION'] == 'Sale' && defined('MODULE_PAYMENT_PAYPALEC_ALLOWEDPAYMENT') && MODULE_PAYMENT_PAYPALEC_ALLOWEDPAYMENT == 'Instant Only') $options['ALLOWEDPAYMENTMETHOD'] = 'InstantPaymentOnly';
+    if (MODULE_PAYMENT_PAYPALWPP_TRANSACTION_MODE != 'Auth Only' && MODULE_PAYMENT_PAYPALWPP_TRANSACTION_MODE != 'Sale' && $options['PAYMENTREQUEST_0_PAYMENTACTION'] == 'Sale' && defined('MODULE_PAYMENT_PAYPALEC_ALLOWEDPAYMENT') && MODULE_PAYMENT_PAYPALEC_ALLOWEDPAYMENT == 'Instant Only') {
+        $options['ALLOWEDPAYMENTMETHOD'] = 'InstantPaymentOnly';
+    }
 
     //$this->zcLog('before_process - 1', 'Have line-item details:' . "\n" . print_r($options, true));
 
@@ -437,7 +439,7 @@ if (false) { // disabled until clarification is received about coupons in PayPal
       $this->responsedata = $response;
       if ($response['PAYMENTINFO_0_PAYMENTTYPE'] != '') $this->payment_type .=  ' (' . urldecode($response['PAYMENTINFO_0_PAYMENTTYPE']) . ')';
 
-      $this->transaction_id = trim($response['PNREF'] . ' ' . $response['PAYMENTINFO_0_TRANSACTIONID']);
+      $this->transaction_id = trim((isset($response['PNREF']) ? $response['PNREF'] : '') . ' ' . $response['PAYMENTINFO_0_TRANSACTIONID']);
       if (empty($response['PAYMENTINFO_0_PENDINGREASON']) ||
           $response['PAYMENTINFO_0_PENDINGREASON'] == 'none' ||
           $response['PAYMENTINFO_0_PENDINGREASON'] == 'completed' ||
@@ -463,7 +465,7 @@ if (false) { // disabled until clarification is received about coupons in PayPal
       $this->reasoncode = $response['PAYMENTINFO_0_REASONCODE'];
       $this->numitems = sizeof($order->products);
       $this->amt = urldecode($response['PAYMENTINFO_0_AMT'] . ' ' . $response['PAYMENTINFO_0_CURRENCYCODE']);
-      $this->auth_code = (isset($this->response['AUTHCODE'])) ? $this->response['AUTHCODE'] : $this->response['TOKEN'];
+      $this->auth_code = (isset($response['AUTHCODE'])) ? $response['AUTHCODE'] : $response['TOKEN'];
 
       $this->notify('NOTIFY_PAYPALWPP_BEFORE_PROCESS_FINISHED', $response);
   }
@@ -510,7 +512,7 @@ if (false) { // disabled until clarification is received about coupons in PayPal
                           'payment_type' => $this->payment_type,
                           'payment_status' => $this->payment_status,
                           'pending_reason' => $this->pendingreason,
-                          'invoice' => urldecode($_SESSION['paypal_ec_token'] . $this->responsedata['PPREF']),
+                          'invoice' => urldecode($_SESSION['paypal_ec_token'] . (isset($this->responsedata['PPREF']) ? $this->responsedata['PPREF'] : '')),
                           'first_name' => $_SESSION['paypal_ec_payer_info']['payer_firstname'],
                           'last_name' => $_SESSION['paypal_ec_payer_info']['payer_lastname'],
                           'payer_business_name' => $_SESSION['paypal_ec_payer_info']['payer_business'],
@@ -519,7 +521,7 @@ if (false) { // disabled until clarification is received about coupons in PayPal
                           'address_city' => $_SESSION['paypal_ec_payer_info']['ship_city'],
                           'address_state' => $_SESSION['paypal_ec_payer_info']['ship_state'],
                           'address_zip' => $_SESSION['paypal_ec_payer_info']['ship_postal_code'],
-                          'address_country' => $_SESSION['paypal_ec_payer_info']['ship_country'],
+                          'address_country' => $_SESSION['paypal_ec_payer_info']['ship_country_name'],
                           'address_status' => $_SESSION['paypal_ec_payer_info']['ship_address_status'],
                           'payer_email' => $_SESSION['paypal_ec_payer_info']['payer_email'],
                           'payer_id' => $_SESSION['paypal_ec_payer_id'],
@@ -534,9 +536,9 @@ if (false) { // disabled until clarification is received about coupons in PayPal
                           'mc_gross' => (float)$this->amt,
                           'mc_fee' => (float)urldecode($this->feeamt),
                           'mc_currency' => $this->responsedata['PAYMENTINFO_0_CURRENCYCODE'],
-                          'settle_amount' => (float)urldecode($this->responsedata['PAYMENTINFO_0_SETTLEAMT']),
+                          'settle_amount' => (float)(isset(responsedata['PAYMENTINFO_0_SETTLEAMT'])) ? $this->urldecode($this->responsedata['PAYMENTINFO_0_SETTLEAMT']) : $this->amt,
                           'settle_currency' => $this->responsedata['PAYMENTINFO_0_CURRENCYCODE'],
-                          'exchange_rate' => (urldecode($this->responsedata['PAYMENTINFO_0_EXCHANGERATE']) > 0 ? urldecode($this->responsedata['PAYMENTINFO_0_EXCHANGERATE']) : 1.0),
+                          'exchange_rate' => (isset($this->responsedata['PAYMENTINFO_0_EXCHANGERATE']) && urldecode($this->responsedata['PAYMENTINFO_0_EXCHANGERATE']) > 0) ? urldecode($this->responsedata['PAYMENTINFO_0_EXCHANGERATE']) : 1.0,
                           'notify_version' => '0',
                           'verify_sign' =>'',
                           'date_added' => 'now()',
@@ -1603,7 +1605,9 @@ if (false) { // disabled until clarification is received about coupons in PayPal
     // for future:
     if (MODULE_PAYMENT_PAYPALWPP_TRANSACTION_MODE == 'Order') $options['PAYMENTREQUEST_0_PAYMENTACTION'] = 'Order';
     // Allow delayed payments such as eCheck? (can only use InstantPayment if Action is Sale)
-    if (MODULE_PAYMENT_PAYPALWPP_TRANSACTION_MODE != 'Auth Only' && MODULE_PAYMENT_PAYPALWPP_TRANSACTION_MODE != 'Sale' && $options['PAYMENTACTION'] == 'Sale' && defined('MODULE_PAYMENT_PAYPALEC_ALLOWEDPAYMENT') && MODULE_PAYMENT_PAYPALEC_ALLOWEDPAYMENT == 'Instant Only') $options['PAYMENTREQUEST_0_ALLOWEDPAYMENTMETHOD'] = 'InstantPaymentOnly';
+    if (MODULE_PAYMENT_PAYPALWPP_TRANSACTION_MODE != 'Auth Only' && MODULE_PAYMENT_PAYPALWPP_TRANSACTION_MODE != 'Sale' && $options['PAYMENTREQUEST_0_PAYMENTACTION'] == 'Sale' && defined('MODULE_PAYMENT_PAYPALEC_ALLOWEDPAYMENT') && MODULE_PAYMENT_PAYPALEC_ALLOWEDPAYMENT == 'Instant Only') {
+        $options['PAYMENTREQUEST_0_ALLOWEDPAYMENTMETHOD'] = 'InstantPaymentOnly';
+    }
 
     $options['ALLOWNOTE'] = 1;  // allow customer to enter a note on the PayPal site, which will be copied to order comments upon return to store.
 
@@ -1657,7 +1661,9 @@ if (false) { // disabled until clarification is received about coupons in PayPal
           $options['PAYMENTREQUEST_0_SHIPTOZIP']     = substr($address_arr['entry_postcode'], 0, 20);
           $options['PAYMENTREQUEST_0_SHIPTOSTATE']   = substr($address_arr['zone_code'], 0, 40);
           $options['PAYMENTREQUEST_0_SHIPTOCOUNTRYCODE'] = substr($address_arr['countries_iso_code_2'], 0, 2);
-          $options['PAYMENTREQUEST_0_SHIPTOPHONENUM'] = substr($address_arr['entry_telephone'], 0, 20);
+          if (!empty($address_arr['entry_telephone'])) {
+            $options['PAYMENTREQUEST_0_SHIPTOPHONENUM'] = substr($address_arr['entry_telephone'], 0, 20);
+          }
         }
       }
       $this->zcLog('ec-step1-addr_check3', 'address details from override check:'.($address_arr == FALSE ? ' <NONE FOUND>' : print_r($address_arr, true)));
@@ -1698,7 +1704,7 @@ if (false) { // disabled until clarification is received about coupons in PayPal
   $submissionCheckTwo = TRUE;
   if ($submissionCheckOne) {
     // If there's an error on line-item details, remove tax values and resubmit, since the most common cause of 10413 is tax mismatches
-    if ($response['L_ERRORCODE0'] == '10413') {
+    if (isset($response['L_ERRORCODE0']) && $response['L_ERRORCODE0'] == '10413') {
       $this->zcLog('ec_step1 - 3 - removing tax portion', 'Tax Subtotal does not match sum of taxes for line-items. Tax details removed from line-item submission data.' . "\n" . print_r($options, true));
           //echo '1st submission REJECTED. {'.$response['L_ERRORCODE0'].'}<pre>'.print_r($options, true) . urldecode(print_r($response, true));
       $tsubtotal = 0;
@@ -1723,7 +1729,7 @@ if (false) { // disabled until clarification is received about coupons in PayPal
 //echo '<br>2nd submission. {'.$response['L_ERRORCODE0'].'}<pre>'.print_r($options, true);
     }
     if ($submissionCheckTwo) {
-    if ($response['L_ERRORCODE0'] == '10413') {
+    if (isset($response['L_ERRORCODE0']) && $response['L_ERRORCODE0'] == '10413') {
       $this->zcLog('ec_step1 - 4 - removing line-item details', 'PayPal designed their own mathematics rules. Dumbing it down for them.' . "\n" . print_r($options, true));
 //echo '2nd submission REJECTED. {'.$response['L_ERRORCODE0'].'}<pre>'.print_r($options, true) . urldecode(print_r($response, true));
       foreach ($options as $key=>$value) {
@@ -2877,7 +2883,7 @@ if (false) { // disabled until clarification is received about coupons in PayPal
       $messageStack->add_session($errorText, 'error');
     }
     /** Handle FMF Scenarios **/
-    if (in_array($operation, array('DoExpressCheckoutPayment', 'DoDirectPayment')) && ($response['PAYMENTINFO_0_PAYMENTSTATUS'] == 'Pending' || $response['PAYMENTSTATUS'] == 'Pending') && $response['L_ERRORCODE0'] == 11610) {
+    if (in_array($operation, array('DoExpressCheckoutPayment', 'DoDirectPayment')) && ($response['PAYMENTINFO_0_PAYMENTSTATUS'] == 'Pending' || (isset($response['PAYMENTSTATUS']) && $response['PAYMENTSTATUS'] == 'Pending')) && $response['L_ERRORCODE0'] == 11610) {
       $this->fmfResponse = urldecode($response['L_SHORTMESSAGE0']);
       $this->fmfErrors = array();
       if ($response['ACK'] == 'SuccessWithWarning' && isset($response['L_PAYMENTINFO_0_FMFPENDINGID0'])) {
@@ -2954,7 +2960,7 @@ if (false) { // disabled until clarification is received about coupons in PayPal
           if ($response['L_ERRORCODE0'] == 10422 || $response['L_ERRORCODE0'] == 10486) {
             header("HTTP/1.1 302 Object Moved");
             zen_redirect($this->ec_redirect_url);
-            die("Funding source problem; please go to Paypal.com (Error " . zen_output_string_protected($response['L_ERRORCODE0']) . ")");
+            die(MODULE_PAYMENT_PAYPALWPP_FUNDING_ERROR . " (Error " . zen_output_string_protected($response['L_ERRORCODE0']) . ")");
           }
 
           // some other error condition

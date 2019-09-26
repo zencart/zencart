@@ -19,6 +19,7 @@
   }
 
   if ($show_banner_box_all == true) {
+    $banner_box = array();
     $banner_box[] = TEXT_BANNER_BOX_ALL;
     $banner_box_group= SHOW_BANNERS_GROUP_SET_ALL;
 

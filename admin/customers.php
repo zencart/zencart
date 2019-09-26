@@ -10,6 +10,7 @@ require('includes/application_top.php');
 
 require(DIR_WS_CLASSES . 'currencies.php');
 $currencies = new currencies();
+$group_array = array();
 
 $action = (isset($_GET['action']) ? $_GET['action'] : '');
 $customers_id = isset($_GET['cID']) ? (int)$_GET['cID'] : 0;
@@ -55,8 +56,13 @@ if (zen_not_null($action)) {
     case 'status':
       if (isset($_POST['current']) && is_numeric($_POST['current'])) {
         if ($_POST['current'] == CUSTOMERS_APPROVAL_AUTHORIZATION) {
+          if (CUSTOMERS_APPROVAL_AUTHORIZATION == 1 || CUSTOMERS_APPROVAL_AUTHORIZATION == 2) { 
+            $customers_authorization = 0; 
+          } else {
+            $customers_authorization = 4; 
+          }
           $sql = "UPDATE " . TABLE_CUSTOMERS . "
-                  SET customers_authorization = 0
+                  SET customers_authorization = " . $customers_authorization  . "  
                   WHERE customers_id = " . (int)$customers_id;
           $custinfo = $db->Execute("SELECT customers_email_address, customers_firstname, customers_lastname
                                     FROM " . TABLE_CUSTOMERS . "
@@ -1317,11 +1323,7 @@ if (zen_not_null($action)) {
                   <td class="dataTableContent text-right"><?php echo $currencies->format($customer['amount']); ?></td>
                 <?php } ?>
                 <td class="dataTableContent text-center">
-                    <?php if ($customer['customers_authorization'] == 4) { ?>
-                      <?php echo zen_image(DIR_WS_IMAGES . 'icon_red_off.gif', IMAGE_ICON_STATUS_OFF); ?>
-                      <?php
-                    } else {
-                      echo zen_draw_form('setstatus_' . (int)$customer['customers_id'], FILENAME_CUSTOMERS, 'action=status&cID=' . $customer['customers_id'] . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '') . (isset($_GET['search']) ? '&search=' . $_GET['search'] : ''));
+                      <?php echo zen_draw_form('setstatus_' . (int)$customer['customers_id'], FILENAME_CUSTOMERS, 'action=status&cID=' . $customer['customers_id'] . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '') . (isset($_GET['search']) ? '&search=' . $_GET['search'] : ''));
                       ?>
                       <?php if ($customer['customers_authorization'] == 0) { ?>
                       <input type="image" src="<?php echo DIR_WS_IMAGES ?>icon_green_on.gif" title="<?php echo IMAGE_ICON_STATUS_ON; ?>" />
@@ -1330,7 +1332,6 @@ if (zen_not_null($action)) {
                     <?php } ?>
                     <?php echo zen_draw_hidden_field('current', $customer['customers_authorization']); ?>
                     <?php echo '</form>'; ?>
-                  <?php } ?>
                 </td>
                 <td class="dataTableContent text-right"><?php
                     if (isset($cInfo) && is_object($cInfo) && ($customer['customers_id'] == $cInfo->customers_id)) {
@@ -1424,25 +1425,25 @@ if (zen_not_null($action)) {
                     $contents[] = array('text' => '<br>' . TEXT_INFO_NUMBER_OF_LOGONS . ' ' . $cInfo->number_of_logons);
 
                     $customer_gv_balance = zen_user_has_gv_balance($cInfo->customers_id);
-                    $contents[] = array('text' => '<br>' . TEXT_INFO_GV_AMOUNT . ' ' . $currencies->format
-                     ($customer_gv_balance));
+                    $contents[] = array('text' => '<br>' . TEXT_INFO_GV_AMOUNT . ' ' . $currencies->format($customer_gv_balance));
 
                     $contents[] = array('text' => '<br>' . TEXT_INFO_NUMBER_OF_ORDERS . ' ' . $customers_orders->RecordCount());
-                    if ($customers_orders->RecordCount() != 0) {
 
-                      $lifetime_value = 0;
-                      $last_order = array(
-                        'date_purchased' => $customers_orders->fields['date_purchased'],
-                        'order_total' => $customers_orders->fields['order_total'], 
-                        'currency' => $customers_orders->fields['currency'], 
-                        'currency_value' => $customers_orders->fields['currency_value'],
-                      );
+                    if ($customers_orders->RecordCount() != 0) {
+                        $lifetime_value = 0;
+                        $last_order = array(
+                            'date_purchased' => $customers_orders->fields['date_purchased'],
+                            'order_total' => $customers_orders->fields['order_total'], 
+                            'currency' => $customers_orders->fields['currency'], 
+                            'currency_value' => $customers_orders->fields['currency_value'],
+                          );
                       foreach ($customers_orders as $result) {
-                         $lifetime_value += ($result['order_total'] * $result['currency_value']);
+                          $lifetime_value += ($result['order_total'] * $result['currency_value']);
                       }
                       $contents[] = array('text' => TEXT_INFO_LIFETIME_VALUE. ' ' . $currencies->format($lifetime_value));
                       $contents[] = array('text' => TEXT_INFO_LAST_ORDER . ' ' . zen_date_short($last_order['date_purchased']) . '<br>' . TEXT_INFO_ORDERS_TOTAL . ' ' . $currencies->format($last_order['order_total'], true, $last_order['currency'], $last_order['currency_value']));
                     }
+
                     $contents[] = array('text' => '<br>' . TEXT_INFO_COUNTRY . ' ' . $cInfo->countries_name);
                     $contents[] = array('text' => '<br>' . TEXT_INFO_NUMBER_OF_REVIEWS . ' ' . $cInfo->number_of_reviews);
                     $contents[] = array('text' => '<br>' . CUSTOMERS_REFERRAL . ' ' . $cInfo->customers_referral);

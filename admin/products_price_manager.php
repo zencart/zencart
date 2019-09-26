@@ -43,7 +43,7 @@ if ($action == 'new_cat') {
 }
 
 // set categories and products if not set
-if ($products_filter == '' && $current_category_id != '') {
+if ($products_filter == '' && !empty($current_category_id)) {
   $sql = $db->bindVars($sql, ':category_id', $current_category_id, 'integer');
   $new_product_query = $db->Execute($sql);
   $products_filter = (!$new_product_query->EOF) ? $new_product_query->fields['products_id'] : '';
@@ -51,7 +51,7 @@ if ($products_filter == '' && $current_category_id != '') {
     zen_redirect(zen_href_link(FILENAME_PRODUCTS_PRICE_MANAGER, 'products_filter=' . $products_filter . '&current_category_id=' . $current_category_id));
   }
 } else {
-  if ($products_filter == '' && $current_category_id == '') {
+  if ($products_filter == '' && empty($current_category_id)) {
     $reset_categories_id = zen_get_category_tree('', '', '0', '', '', true);
     $current_category_id = $reset_categories_id[0]['id'];
     $sql = $db->bindVars($sql, ':category_id', $current_category_id, 'integer');
@@ -309,11 +309,7 @@ if (zen_not_null($action)) {
       if ($action != 'edit_update') {
         ?>
         <div class="row">
-          <div class="table-responsive">
-            <table class="table">
-                <?php require(DIR_WS_MODULES . FILENAME_PREV_NEXT_DISPLAY); ?>
-            </table>
-          </div>
+           <?php require(DIR_WS_MODULES . FILENAME_PREV_NEXT_DISPLAY); ?>
         </div>
         <div class="row">
             <?php echo zen_draw_form('set_products_filter', FILENAME_PRODUCTS_PRICE_MANAGER, 'action=set_products_filter', 'post', 'class="form-horizontal"'); ?>

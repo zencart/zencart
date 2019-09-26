@@ -10,18 +10,12 @@
 ////
 // Redirect to another page or site
   function zen_redirect($url) {
-    global $logger;
-
-// clean up URL before executing it
+    // clean up URL before executing it
     $url = preg_replace('/&{2,}/', '&', $url);
     $url = preg_replace('/(&amp;)+/', '&amp;', $url);
     // header locates should not have the &amp; in the address it breaks things
     $url = str_replace('&amp;', '&', $url);
 
-    if (STORE_PAGE_PARSE_TIME == 'true') {
-      if (!is_object($logger)) $logger = new logger;
-      $logger->timer_stop();
-    }
     session_write_close();
     header('Location: ' . $url);
     exit;
@@ -239,7 +233,9 @@
       } else {
         $mark = '&nbsp;&nbsp;';
       }
-      if ($exclude != $categories->fields['categories_id']) $category_tree_array[] = array('id' => $categories->fields['categories_id'], 'text' => $spacing . $categories->fields['categories_name'] . $mark);
+      if ($exclude != $categories->fields['categories_id']) {
+        $category_tree_array[] = array('id' => $categories->fields['categories_id'], 'text' => $spacing . $categories->fields['categories_name'] . $mark);
+      }
       $category_tree_array = zen_get_category_tree($categories->fields['categories_id'], $spacing . '&nbsp;&nbsp;&nbsp;', $exclude, $category_tree_array, '', $category_has_products);
       $categories->MoveNext();
     }
@@ -744,6 +740,7 @@
 ////
   function zen_cfg_select_coupon_id($coupon_id, $key = '') {
     global $db;
+    $coupon_array = array();
     $name = (($key) ? 'configuration[' . $key . ']' : 'configuration_value');
     $coupons = $db->execute("select cd.coupon_name, c.coupon_id from " . TABLE_COUPONS ." c, ". TABLE_COUPONS_DESCRIPTION . " cd where cd.coupon_id = c.coupon_id and cd.language_id = '" . (int)$_SESSION['languages_id'] . "'");
     $coupon_array[] = array('id' => '0',
@@ -1583,6 +1580,23 @@ while (!$chk_sale_categories_all->EOF) {
   function zen_get_tax_rate($class_id, $country_id = -1, $zone_id = -1) {
     global $db;
     global $customer_zone_id, $customer_country_id;
+
+    // -----
+    // Give an observer a chance to override this function's return.
+    //
+    $tax_rate = false;
+    $GLOBALS['zco_notifier']->notify(
+        'NOTIFY_ZEN_GET_TAX_RATE_OVERRIDE', 
+        array(
+            'class_id' => $class_id, 
+            'country_id' => $country_id, 
+            'zone_id' => $zone_id
+        ), 
+        $tax_rate
+    );
+    if ($tax_rate !== false) {
+        return $tax_rate;
+    }
 
     if ( ($country_id == -1) && ($zone_id == -1) ) {
       if (empty($_SESSION['customer_id'])) {
@@ -2997,6 +3011,7 @@ function zen_copy_products_attributes($products_id_from, $products_id_to) {
    */
   function zen_build_subdirectories_array($parent_folder = '', $default_text = 'Main Directory') {
     if ($parent_folder == '') $parent_folder = DIR_FS_CATALOG_IMAGES;
+    $dir_info = array();
     $dir_info[] = array('id' => '', 'text' => $default_text);
 
     $dir = @dir($parent_folder);

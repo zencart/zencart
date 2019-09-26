@@ -63,7 +63,7 @@ class splitPageResults extends base {
     $pos_having = strpos($query_lower, ' having', $pos_from);
     if (($pos_having < $pos_to) && ($pos_having != false)) $pos_to = $pos_having;
 
-    $pos_order_by = strpos($query_lower, ' order by', $pos_from);
+    $pos_order_by = strrpos($query_lower, ' order by', $pos_from);
     if (($pos_order_by < $pos_to) && ($pos_order_by != false)) $pos_to = $pos_order_by;
 
     if (strpos($query_lower, 'distinct') || strpos($query_lower, 'group by')) {

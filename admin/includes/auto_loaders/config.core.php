@@ -18,7 +18,6 @@ if (!defined('USE_PCONNECT')) define('USE_PCONNECT', 'false');
  * require(DIR_FS_CATALOG . DIR_WS_CLASSES . 'class.notifier.php');
  * $zco_notifier = new notifier();
  * require(DIR_FS_CATALOG . DIR_WS_CLASSES . 'sniffer.php');
- * require(DIR_WS_CLASSES . 'logger.php');
  * require(DIR_FS_CATALOG . DIR_WS_CLASSES . 'shopping_cart.php');
  * require(DIR_FS_CATALOG . DIR_WS_CLASSES . 'products.php');
  * require(DIR_WS_CLASSES . 'table_block.php');
@@ -43,9 +42,6 @@ if (!defined('USE_PCONNECT')) define('USE_PCONNECT', 'false');
                                'objectName'=>'zco_notifier');
   $autoLoadConfig[0][] = array('autoType'=>'class',
                                'loadFile'=>'sniffer.php');
-  $autoLoadConfig[0][] = array('autoType'=>'class',
-                               'loadFile'=>'logger.php',
-                               'classPath'=>DIR_WS_CLASSES);
   $autoLoadConfig[0][] = array('autoType'=>'class',
                                'loadFile'=>'shopping_cart.php',
                                );

@@ -19,7 +19,7 @@
     if ($status != 0 && $status != 1) return -1;
     global $db;
     $sql = "update " . TABLE_BANNERS;
-    $sql .= ($status == '1') ? " set status = 1, date_scheduled = NULL" : " set status = 0";
+    $sql .= ($status == 1) ? " set status = 1, date_scheduled = NULL" : " set status = 0";
     $sql .= ", date_status_change = now() where banners_id = '" . (int)$banners_id . "'";
     return $db->Execute($sql);
   }

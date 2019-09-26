@@ -16,6 +16,7 @@ if (!file_exists(SESSION_WRITE_DIRECTORY) || !is_writable(SESSION_WRITE_DIRECTOR
   zen_record_admin_activity('Session directory folder not found. Will attempt to re-detect and update configuration. Old value: ' . SESSION_WRITE_DIRECTORY, 'notice');
   define('DIR_FS_ROOT', realpath(dirname($_SERVER['SCRIPT_FILENAME']) . '/../') . '/');
 
+  $possible_dir = array();
   $possible_dir[] = DIR_FS_SQL_CACHE;
   $possible_dir[] = DIR_FS_CATALOG . 'cache';
   $possible_dir[] = DIR_FS_ROOT . 'cache';

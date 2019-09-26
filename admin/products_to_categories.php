@@ -51,7 +51,7 @@ if ($action == 'new_cat') {//this action from products_previous_next_display.php
 }
 
 // set categories and products if not set
-if ($products_filter == '' && $current_category_id != '') {
+if ($products_filter == '' && !empty($current_category_id)) {
   $new_product_query = $db->Execute("SELECT ptc.*
                                      FROM " . TABLE_PRODUCTS_TO_CATEGORIES . " ptc
                                      LEFT JOIN " . TABLE_PRODUCTS_DESCRIPTION . " pd ON ptc.products_id = pd.products_id
@@ -64,7 +64,7 @@ if ($products_filter == '' && $current_category_id != '') {
     zen_redirect(zen_href_link(FILENAME_PRODUCTS_TO_CATEGORIES, 'products_filter=' . $products_filter . '&current_category_id=' . $current_category_id));
   }
 } else {
-  if ($products_filter == '' && $current_category_id == '') {
+  if ($products_filter == '' && empty($current_category_id)) {
     $reset_categories_id = zen_get_category_tree('', '', '0', '', '', true);
     $current_category_id = $reset_categories_id[0]['id'];
     $new_product_query = $db->Execute("SELECT ptc.*
@@ -331,6 +331,7 @@ if (zen_not_null($action)) {
     //update the product-to-multiple-categories links
     case 'update_product':
       $zv_check_master_categories_id = ('' !== $_POST['current_master_categories_id']);
+      $new_categories_sort_array = array();
       $new_categories_sort_array[] = $_POST['current_master_categories_id'];
       $current_master_categories_id = $_POST['current_master_categories_id'];
       if (!isset($_POST['categories_add'])) $_POST['categories_add'] = array();
@@ -448,8 +449,7 @@ $products_list = $db->Execute("SELECT products_id, categories_id
       }
     </script>
   </head>
-  <!-- <body onload="init()"> -->
-  <body onload="init()">
+  <body onload="init();">
     <!-- header //-->
     <?php require(DIR_WS_INCLUDES . 'header.php'); ?>
     <!-- header_eof //-->
@@ -458,11 +458,11 @@ $products_list = $db->Execute("SELECT products_id, categories_id
     <div class="container-fluid">
         <!-- body_text //-->
         <h1><?php echo HEADING_TITLE; ?></h1>
-        <div class="row"><?php echo zen_draw_separator('pixel_black.gif', '100%', '2'); ?></div>
-        <?php require(DIR_WS_MODULES . FILENAME_PREV_NEXT_DISPLAY); ?>
+	<div><?php echo zen_draw_separator('pixel_black.gif', '100%', '2'); ?></div>
+        <div class="row">
+          <?php require(DIR_WS_MODULES . FILENAME_PREV_NEXT_DISPLAY); ?>
+        </div>
         <?php if ($products_filter > 0) {//a product is selected ?>
-        <div class="row"><?php echo zen_draw_separator('pixel_trans.gif', '100%', '20'); ?></div>
-
     <div class="row"><!--Product Block-->
     <div id="leftBlock" class="col-xs-12 col-sm-9 col-md-9 col-lg-9">
     <div id="productSelect">
@@ -480,7 +480,7 @@ $products_list = $db->Execute("SELECT products_id, categories_id
         <?php echo zen_draw_label(TEXT_PRODUCT_TO_VIEW, 'products_filter'); ?>
         <?php echo zen_draw_products_pull_down('products_filter', 'size="10" class="form-control" id="products_filter"', $excluded_products, true, $products_filter, true, true); ?>
         <button type="submit" class="btn btn-info"><?php echo IMAGE_DISPLAY; ?></button>
-        </form>
+        <?php echo '</form>'; ?>
         <?php echo zen_draw_separator('pixel_trans.gif', '100%', '2'); ?>
         <div><!--pricing and linked category count-->
             <?php
@@ -512,7 +512,7 @@ $products_list = $db->Execute("SELECT products_id, categories_id
             <span class="alert"><?php echo WARNING_MASTER_CATEGORIES_ID; ?></span>
             <?php } ?></div>
         <div><?php echo TEXT_INFO_MASTER_CATEGORY_CHANGE; ?></div>
-        </form>
+        <?php echo '</form>'; ?>
     </div>
     </div><!--end of masterCategorySelect-->
     </div><!-- end leftBlock-->
@@ -570,7 +570,7 @@ $products_list = $db->Execute("SELECT products_id, categories_id
                                     '<a href="' . zen_href_link(FILENAME_PRODUCT,
                                         'action=new_product' . '&cPath=' . zen_get_parent_category_id($products_filter) . '&pID=' . $products_filter . '&product_type=' . zen_get_products_type($products_filter)) . '" class="btn btn-info" role="button">' . IMAGE_EDIT_PRODUCT . '</a>'
                             );
-                            $contents[] = array('text' => zen_image(DIR_WS_IMAGES . 'pixel_black.gif', '', '100%', '3'));
+                            $contents[] = array('text' => zen_draw_separator('pixel_black.gif', '100%', '1'));
                             $contents[] = array(
                                 'align' => 'center',
                                 'text' => zen_draw_form('new_products_to_categories', FILENAME_PRODUCTS_TO_CATEGORIES,
@@ -594,7 +594,6 @@ $products_list = $db->Execute("SELECT products_id, categories_id
         <?php if ($products_filter >0 && $product_to_copy->fields['master_categories_id'] > 0) { //a product is selected AND it has a master category ?>
         <div class="row">
           <!-- bof: link to categories //-->
-          <div>
               <?php echo zen_draw_separator('pixel_black.gif', '100%', '1'); ?>
               <div class="row"><?php echo TEXT_INFO_PRODUCTS_TO_CATEGORIES_LINKER_INTRO; ?></div>
               <?php echo zen_draw_separator('pixel_trans.gif', '100%', '2'); ?>
@@ -773,9 +772,10 @@ $products_list = $db->Execute("SELECT products_id, categories_id
         <?php echo '</form>'; ?>
         <!-- eof: reset master_categories_id //-->
       </div>
-    </div>
-
     <!-- body_text_eof //-->
+    </div>
+    <!-- body_eof //-->
+
     <!-- footer //-->
     <?php require(DIR_WS_INCLUDES . 'footer.php'); ?>
     <!-- footer_eof //-->
