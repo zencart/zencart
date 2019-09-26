@@ -54,6 +54,7 @@
 ?>
 </fieldset>
 <div class="buttonRow forward"><?php echo zen_draw_hidden_field('action', 'submit') . zen_image_submit(BUTTON_IMAGE_CONTINUE, BUTTON_CONTINUE_ALT); ?></div>
+</form>
 <?php
      }
   }
@@ -62,7 +63,6 @@
 
 <div class="buttonRow back"><?php echo TITLE_CONTINUE_CHECKOUT_PROCEDURE . '<br />' . TEXT_CONTINUE_CHECKOUT_PROCEDURE; ?></div>
 
-</form>
 <?php
   if ($process == true) {
 ?>
