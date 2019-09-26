@@ -246,8 +246,10 @@
 
 ////
 // products with name, model and price pulldown
-  function zen_draw_products_pull_down($name, $parameters = '', $exclude = '', $show_id = false, $set_selected = false, $show_model = false, $show_current_category = false) {
-    global $currencies, $db, $current_category_id;
+function zen_draw_products_pull_down($name, $parameters = '', $exclude = '', $show_id = false, $set_selected = false, $show_model = false, $show_current_category = false) {
+    global $currencies, $db, $current_category_id, $prev_next_order;
+
+    $order_by = $prev_next_order ?? ' ORDER BY products_name';
 
     if ($exclude == '') {
       $exclude = array();
@@ -263,20 +265,20 @@
 
     if ($show_current_category) {
 // only show $current_categories_id
-      $products = $db->Execute("select p.products_id, pd.products_name, p.products_price, p.products_model, ptc.categories_id
+        $products = $db->Execute("select p.products_id, pd.products_name, p.products_sort_order, p.products_price, p.products_model, ptc.categories_id
                                 from " . TABLE_PRODUCTS . " p
                                 left join " . TABLE_PRODUCTS_TO_CATEGORIES . " ptc on ptc.products_id = p.products_id, " .
                                 TABLE_PRODUCTS_DESCRIPTION . " pd
                                 where p.products_id = pd.products_id
                                 and pd.language_id = '" . (int)$_SESSION['languages_id'] . "'
-                                and ptc.categories_id = '" . (int)$current_category_id . "'
-                                order by products_name");
+                                and ptc.categories_id = " . (int)$current_category_id .
+                                $order_by);
     } else {
-      $products = $db->Execute("select p.products_id, pd.products_name, p.products_price, p.products_model
+        $products = $db->Execute("select p.products_id, pd.products_name, p.products_sort_order, p.products_price, p.products_model
                                 from " . TABLE_PRODUCTS . " p, " . TABLE_PRODUCTS_DESCRIPTION . " pd
                                 where p.products_id = pd.products_id
-                                and pd.language_id = '" . (int)$_SESSION['languages_id'] . "'
-                                order by products_name");
+                                and pd.language_id = " . (int)$_SESSION['languages_id'] .
+                                $order_by);
     }
 
     while (!$products->EOF) {
