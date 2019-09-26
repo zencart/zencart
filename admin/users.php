@@ -131,7 +131,7 @@ $userList = zen_get_users();
     <div class="container-fluid" id="pageWrapper">
 
       <h1><?php echo HEADING_TITLE ?></h1>
-      <?php if ($action == 'edit' || $action == 'add' || $action == 'password') { ?>
+      <?php if (($action != '') && $action != 'delete') { // Hide this form when delete in use ?>
         <?php echo zen_draw_form('users', FILENAME_USERS); ?>
         <?php if (isset($formAction)) echo zen_draw_hidden_field('action', $formAction) ?>
       <?php } ?>
@@ -180,7 +180,7 @@ $userList = zen_get_users();
                 <?php if ($action == 'edit' && $user == $userDetails['id'] && $user != $currentUser) { ?>
                   <td class="profile"><?php echo zen_draw_pull_down_menu('profile', $profilesList, $userDetails['profile'], 'class="form-control"') ?></td>
                 <?php } else { ?>
-                  <td class="profile"><?php echo $userDetails['profileName'] ?></td>
+                  <td class="profile"><?php echo $userDetails['profileName'] . zen_draw_hidden_field('profile', $userDetails['profile']) ?></td>
                 <?php } ?>
                 <?php if ($action == 'password' && $user == $userDetails['id']) { ?>
                   <td class="password"><?php echo zen_draw_input_field('password', '', 'class="form-control field"', false, 'password', true) ?></td>
@@ -189,8 +189,8 @@ $userList = zen_get_users();
                   <td class="password">&nbsp;</td>
                   <td class="confirm">&nbsp;</td>
                 <?php } ?>
-                <?php if ($action == 'edit' || $action == 'password') { ?>
-                  <?php if ($user == $userDetails['id']) { ?>
+                <?php if ($action == 'add' || $action == 'edit' || $action == 'password') { ?>
+                  <?php if ($user == $userDetails['id'] && $action != 'add') { ?>
                     <td class="actions">
                       <button type="submit" class="btn btn-primary"><?php echo IMAGE_UPDATE; ?></button> <a href="<?php echo zen_href_link(FILENAME_USERS) ?>" class="btn btn-default" role="button"><?php echo IMAGE_CANCEL; ?></a>
                     </td>
@@ -232,15 +232,14 @@ $userList = zen_get_users();
             </tr>
           <?php } ?>
         </tbody>
-        <tfoot>
-            <?php if ($action != 'add' && $action != 'edit' && $action != 'password') { ?>
-            <tr>
-              <td colspan="5"><a href="<?php echo zen_href_link(FILENAME_USERS, 'action=add'); ?>" class="btn btn-primary" role="button"><?php echo IMAGE_ADD_USER; ?></a></td>
-            </tr>
-          <?php } ?>
-        </tfoot>
       </table>
-    </div>
+        <?php if ($action == '' || $action == 'delete_confirm') { ?>
+            <div><a href="<?php echo zen_href_link(FILENAME_USERS, 'action=add'); ?>" class="btn btn-primary" role="button"><?php echo IMAGE_ADD_USER; ?></a></div>
+        <?php }
+         if ($action != '' && $action != 'delete') {
+             echo '</form>';
+         } ?>
+   </div>
     <!-- body_eof //-->
 
     <!-- footer //-->
