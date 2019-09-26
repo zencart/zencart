@@ -993,13 +993,8 @@ function zen_js_option_values_list($selectedName, $fieldName) {
       if ($action == '') {
         ?>
         <div class="row">
-          <div class="table-responsive">
-            <table class="table">
-                <?php require(DIR_WS_MODULES . FILENAME_PREV_NEXT_DISPLAY); ?>
-            </table>
-          </div>
+           <?php require(DIR_WS_MODULES . FILENAME_PREV_NEXT_DISPLAY); ?>
         </div>
-
         <div class="row">
             <?php echo zen_draw_form('set_products_filter_id', FILENAME_ATTRIBUTES_CONTROLLER, 'action=set_products_filter', 'post', 'class="form-horizontal"'); ?>
             <?php echo zen_draw_hidden_field('products_filter', $products_filter); ?>

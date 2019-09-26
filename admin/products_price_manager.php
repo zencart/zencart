@@ -309,11 +309,7 @@ if (zen_not_null($action)) {
       if ($action != 'edit_update') {
         ?>
         <div class="row">
-          <div class="table-responsive">
-            <table class="table">
-                <?php require(DIR_WS_MODULES . FILENAME_PREV_NEXT_DISPLAY); ?>
-            </table>
-          </div>
+           <?php require(DIR_WS_MODULES . FILENAME_PREV_NEXT_DISPLAY); ?>
         </div>
         <div class="row">
             <?php echo zen_draw_form('set_products_filter', FILENAME_PRODUCTS_PRICE_MANAGER, 'action=set_products_filter', 'post', 'class="form-horizontal"'); ?>
