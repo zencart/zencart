@@ -126,6 +126,16 @@ if (zen_not_null($action)) {
         $messageStack->add(ERROR_MULTIPLE_HTML_URL, 'error');
         $page_error = true;
       }
+          
+      // -----
+      // Let a watching observer know that the EZ-Page's data is about to be recorded in the
+      // database, giving it the opportunity to perform its checks on any additional data and
+      // add any additional fields to be written to the 'ezpages' table.
+      //
+      // If the observer sets the $page_error (i.e. $p2) value to (bool)true, it is the observer's
+      // responsibility to add a message for display to the current admin.
+      //
+      $zco_notifier->notify('NOTIFY_ADMIN_EZPAGES_UPDATE_BASE', $action, $page_error, $sql_data_array);
 
       if ($page_error == false) {
         $sql_data_array = array(
@@ -157,6 +167,8 @@ if (zen_not_null($action)) {
               'languages_id' => (int)$language_id,
               'pages_id' => (int)$pages_id);
 
+            $zco_notifier->notify('NOTIFY_ADMIN_EZPAGES_UPDATE_LANG_INSERT', array('pages_id' => (int)$pages_id, 'languages_id' => $language_id), $sql_data_array);
+
             zen_db_perform(TABLE_EZPAGES_CONTENT, $sql_data_array);
           }
           $messageStack->add(SUCCESS_PAGE_INSERTED, 'success');
@@ -170,6 +182,8 @@ if (zen_not_null($action)) {
             $sql_data_array = array(
               'pages_title' => $pages_title_array[$language_id],
               'pages_html_text' => $pages_html_text_array[$language_id]);
+
+            $zco_notifier->notify('NOTIFY_ADMIN_EZPAGES_UPDATE_LANG_UPDATE', array('pages_id' => (int)$pages_id, 'languages_id' => $language_id), $sql_data_array);
 
             zen_db_perform(TABLE_EZPAGES_CONTENT, $sql_data_array, 'update', "pages_id = '" . (int)$pages_id . "' and languages_id = '" . $language_id . "'");
           }
@@ -284,6 +298,8 @@ if (zen_not_null($action)) {
           'page_is_ssl' => '1'
         );
 
+        $zco_notifier->notify('NOTIFY_ADMIN_EZPAGES_NEW', '', $parameters);
+
         $ezInfo = new objectInfo($parameters);
 
         if (isset($_GET['ezID'])) {
@@ -339,6 +355,36 @@ if (zen_not_null($action)) {
             ?>
           </div>
         </div>
+<?php
+        // -----
+        // Give an observer the chance to supply some additional ezpages-related inputs.  Each
+        // entry in the $extra_page_inputs returned is expected to contain:
+        //
+        // array(
+        //    'label' => array(
+        //        'text' => 'The label text',   (required)
+        //        'field_name' => 'The name of the field associated with the label', (required)
+        //        'addl_class' => {Any additional class to be applied to the label} (optional)
+        //        'parms' => {Any additional parameters for the label, e.g. 'style="font-weight: 700;"} (optional)
+        //    ),
+        //    'input' => 'The HTML to be inserted' (required)
+        // )
+        //
+        $extra_page_inputs = array();
+        $zco_notifier->notify('NOTIFY_ADMIN_EZPAGES_FORM_FIELDS', $ezInfo, $extra_page_inputs);
+        if (!empty($extra_page_inputs)) {
+            foreach ($extra_page_inputs as $extra_input) {
+                $addl_class = (isset($extra_input['label']['addl_class'])) ? (' ' . $extra_input['label']['addl_class']) : '';
+                $parms = (isset($extra_input['label']['parms'])) ? (' ' . $extra_input['label']['parms']) : '';
+    ?>
+        <div class="form-group">
+            <?php echo zen_draw_label($extra_input['label']['text'], $extra_input['label']['field_name'], 'class="col-sm-3 control-label' . $addl_class . '"' . $parms); ?>
+            <div class="col-sm-9 col-md-6"><?php echo $extra_input['input']; ?></div>
+        </div>
+    <?php
+            }
+        }
+?>
         <div class="form-group">
             <?php echo zen_draw_label(TABLE_HEADING_PAGE_OPEN_NEW_WINDOW, 'page_open_new_window', 'class="col-sm-3 control-label"'); ?>
           <div class="col-sm-9 col-md-6">
@@ -568,7 +614,14 @@ if (zen_not_null($action)) {
                     <td class="dataTableContent text-right"><?php echo $page['toc_chapter']; ?></td>
                     <td class="dataTableContent text-center"><?php echo ($page['status_visible'] == 1 ? '<a href="' . zen_href_link(FILENAME_EZPAGES_ADMIN, 'action=status_visible&current=' . $page['status_visible'] . '&ezID=' . $page['pages_id'] . ($_GET['page'] > 0 ? '&page=' . $_GET['page'] : ''), 'NONSSL') . '">' . zen_image(DIR_WS_IMAGES . 'icon_green_on.gif', IMAGE_ICON_STATUS_ON) . '</a>' : '<a href="' . zen_href_link(FILENAME_EZPAGES_ADMIN, 'action=status_visible&current=' . $page['status_visible'] . '&ezID=' . $page['pages_id'] . ($_GET['page'] > 0 ? '&page=' . $_GET['page'] : ''), 'NONSSL') . '">' . zen_image(DIR_WS_IMAGES . 'icon_red_on.gif', IMAGE_ICON_STATUS_OFF) . '</a>'); ?></td>
                     <td class="dataTableContent text-right"><?php echo $page['toc_sort_order'] . '&nbsp;' . ($page['status_toc'] == 1 ? '<a href="' . zen_href_link(FILENAME_EZPAGES_ADMIN, 'action=status_toc&current=' . $page['status_toc'] . '&ezID=' . $page['pages_id'] . ($_GET['page'] > 0 ? '&page=' . $_GET['page'] : ''), 'NONSSL') . '">' . zen_image(DIR_WS_IMAGES . 'icon_green_on.gif', IMAGE_ICON_STATUS_ON) . '</a>' : '<a href="' . zen_href_link(FILENAME_EZPAGES_ADMIN, 'action=status_toc&current=' . $page['status_toc'] . '&ezID=' . $page['pages_id'] . ($_GET['page'] > 0 ? '&page=' . $_GET['page'] : ''), 'NONSSL') . '">' . zen_image(DIR_WS_IMAGES . 'icon_red_on.gif', IMAGE_ICON_STATUS_OFF) . '</a>'); ?></td>
-                    <td class="dataTableContent text-center"><?php echo '<a href="' . zen_href_link(FILENAME_EZPAGES_ADMIN, (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . (isset($ezInfo) && is_object($ezInfo) && ($page['pages_id'] == $ezInfo->pages_id)) ? 'ezID=' . $page['pages_id'] . '&action=new' : '') . '">' . zen_image(DIR_WS_IMAGES . 'icon_edit.gif', ICON_EDIT) . '</a>'; ?>
+<?php
+                    // -----
+                    // Give a watching observer the chance to insert another icon/link to the standard list of 'action' icons.
+                    //
+                    $extra_action_icons = '';
+                    $zco_notifier->notify('NOTIFY_ADMIN_EZPAGES_EXTRA_ACTION_ICONS', $page, $extra_action_icons);
+?>
+                    <td class="dataTableContent text-center"><?php echo '<a href="' . zen_href_link(FILENAME_EZPAGES_ADMIN, (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . (isset($ezInfo) && is_object($ezInfo) && ($page['pages_id'] == $ezInfo->pages_id)) ? 'ezID=' . $page['pages_id'] . '&action=new' : '') . '">' . zen_image(DIR_WS_IMAGES . 'icon_edit.gif', ICON_EDIT) . '</a>' . $extra_action_icons; ?>
                         <?php
                         if (isset($ezInfo) && is_object($ezInfo) && ($page['pages_id'] == $ezInfo->pages_id)) {
                           echo zen_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', '');
