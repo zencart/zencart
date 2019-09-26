@@ -32,9 +32,6 @@ if (!isset($prev_next_list) || $prev_next_list == '') {
     case (0):
       $prev_next_order = ' ORDER BY LPAD(p.products_id,11,"0")';
       break;
-    case (1):
-      $prev_next_order = " ORDER BY pd.products_name";
-      break;
     case (2):
       $prev_next_order = " ORDER BY p.products_model";
       break;
@@ -47,6 +44,10 @@ if (!isset($prev_next_list) || $prev_next_list == '') {
     case (5):
       $prev_next_order = " ORDER BY pd.products_name, p.products_model";
       break;
+    case (6):
+      $prev_next_order = " ORDER BY p.products_sort_order";
+      break;
+   case (1):
     default:
       $prev_next_order = " ORDER BY pd.products_name";
       break;
