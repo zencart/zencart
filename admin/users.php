@@ -131,7 +131,7 @@ $userList = zen_get_users();
     <div class="container-fluid" id="pageWrapper">
 
       <h1><?php echo HEADING_TITLE ?></h1>
-      <?php if (($action != '') && $action != 'delete') { //steve hide this form when delete in use ?>
+      <?php if (($action != '') && $action != 'delete') { // Hide this form when delete in use ?>
         <?php echo zen_draw_form('users', FILENAME_USERS); ?>
         <?php if (isset($formAction)) echo zen_draw_hidden_field('action', $formAction) ?>
       <?php } ?>
@@ -159,7 +159,7 @@ $userList = zen_get_users();
               <td class="profile"><?php echo zen_draw_pull_down_menu('profile', $profilesList, isset($_POST['profile']) ? $_POST['profile'] : 0, 'class="form-control"') ?></td>
               <td class="password"><?php echo zen_draw_input_field('password', isset($_POST['password']) ? $_POST['password'] : '', ' class="form-control field"', true, 'password'); ?></td>
               <td class="confirm"><?php echo zen_draw_input_field('confirm', isset($_POST['confirm']) ? $_POST['confirm'] : '', ' class="form-control field"', false, 'password'); ?></td>
-              <td class="actions"><button type="submit" class="btn btn-primary"><?php echo IMAGE_INSERT; ?></button><a href="<?php echo zen_href_link(FILENAME_USERS) ?>" class="btn btn-default" role="button"><?php echo IMAGE_CANCEL; ?></a></td>
+              <td class="actions"><button type="submit" class="btn btn-primary"><?php echo IMAGE_INSERT; ?></button> <a href="<?php echo zen_href_link(FILENAME_USERS) ?>" class="btn btn-default" role="button"><?php echo IMAGE_CANCEL; ?></a></td>
             </tr>
           <?php } ?>
           <?php if (sizeof($userList) > 0) { ?>
@@ -190,9 +190,9 @@ $userList = zen_get_users();
                   <td class="confirm">&nbsp;</td>
                 <?php } ?>
                 <?php if ($action == 'add' || $action == 'edit' || $action == 'password') { ?>
-                  <?php if ($user == $userDetails['id'] && $action != 'add') { //steve for equal td on edit?>
+                  <?php if ($user == $userDetails['id'] && $action != 'add') { ?>
                     <td class="actions">
-                            <button type="submit" class="btn btn-primary"><?php echo IMAGE_UPDATE; ?></button><a href="<?php echo zen_href_link(FILENAME_USERS) ?>" class="btn btn-default" role="button"><?php echo IMAGE_CANCEL; ?></a>
+                      <button type="submit" class="btn btn-primary"><?php echo IMAGE_UPDATE; ?></button> <a href="<?php echo zen_href_link(FILENAME_USERS) ?>" class="btn btn-default" role="button"><?php echo IMAGE_CANCEL; ?></a>
                     </td>
                   <?php } else { ?>
                     <td class="actions">&nbsp;</td>
@@ -200,7 +200,7 @@ $userList = zen_get_users();
                 <?php } elseif ($action != 'add') { ?>
                   <td class="actions">
                       <?php if ($action != 'delete') { ?>
-                            <a href="<?php echo zen_href_link(FILENAME_USERS, 'action=edit&user=' . $userDetails['id']) ?>" class="btn btn-primary" role="button"><?php echo IMAGE_EDIT; ?></a> <a href="<?php echo zen_href_link(FILENAME_USERS, 'action=password&user=' . $userDetails['id']) ?>" class="btn btn-primary"><?php echo IMAGE_RESET_PWD; ?></a>
+                      <a href="<?php echo zen_href_link(FILENAME_USERS, 'action=edit&user=' . $userDetails['id']) ?>" class="btn btn-primary" role="button"><?php echo IMAGE_EDIT; ?></a> <a href="<?php echo zen_href_link(FILENAME_USERS, 'action=password&user=' . $userDetails['id']) ?>" class="btn btn-primary"><?php echo IMAGE_RESET_PWD; ?></a>
                     <?php } ?>
                     <?php
                     if ($userDetails['id'] != $currentUser) {
@@ -232,15 +232,14 @@ $userList = zen_get_users();
             </tr>
           <?php } ?>
         </tbody>
-    </table>
+      </table>
         <?php if ($action == '' || $action == 'delete_confirm') { ?>
             <div><a href="<?php echo zen_href_link(FILENAME_USERS, 'action=add'); ?>" class="btn btn-primary" role="button"><?php echo IMAGE_ADD_USER; ?></a></div>
         <?php }
          if ($action != '' && $action != 'delete') {
              echo '</form>';
          } ?>
-
-    </div>
+   </div>
     <!-- body_eof //-->
 
     <!-- footer //-->
