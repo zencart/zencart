@@ -840,7 +840,7 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
                   <td class="hidden-sm hidden-xs"><?php echo $product['products_model']; ?></td>
                   <td class="text-right hidden-sm hidden-xs"><?php echo zen_get_products_display_price($product['products_id']); ?></td>
                   <td class="text-right hidden-sm hidden-xs"><?php echo $product['products_quantity']; ?></td>
-                  <td class="text-right hidden-sm hidden-xs">
+                  <td class="text-right hidden-sm hidden-xs text-nowrap">
 <?php
                       $additional_icons = '';
                       $zco_notifier->notify('NOTIFY_ADMIN_PROD_LISTING_ADD_ICON', $product, $additional_icons);
@@ -848,7 +848,9 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
 ?>
                       <?php
                       if (zen_get_product_is_linked($product['products_id']) == 'true') {
-                        echo zen_image(DIR_WS_IMAGES . 'icon_yellow_on.gif', IMAGE_ICON_LINKED, '', '', 'style="vertical-align:top;"') . '&nbsp;&nbsp;';
+                        echo zen_image(DIR_WS_IMAGES . 'icon_yellow_on.gif', IMAGE_ICON_LINKED, '', '', 'style="vertical-align:top;"');
+                      } else {
+                          echo zen_image(DIR_WS_IMAGES . 'pixel_trans.gif', '', 16, 16);//blank icon to preserve vertical alignment with additional icons
                       }
                       echo zen_draw_form('setflag_products' . $product['products_id'], FILENAME_CATEGORY_PRODUCT_LISTING, 'action=setflag&pID=' . $product['products_id'] . '&cPath=' . $cPath . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '') . ($search_result ? '&search=' . $_GET['search'] : ''));
                       if ($product['products_status'] == '1') {
