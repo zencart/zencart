@@ -65,7 +65,7 @@ if ($action != '') {
                     $customers_firstname = '';
                     $customers_lastname = TEXT_CUSTOMER;
                 }
-                $mail = (object)array('fields' => array('customers_firstname' => $customers_firstname, 'customers_lastname' => $customers_lastname, 'customers_email_address' => $mail_sent_to));
+                $mail = array('fields' => array('customers_firstname' => $customers_firstname, 'customers_lastname' => $customers_lastname, 'customers_email_address' => $mail_sent_to));
             } else {
                 $audience_select = get_audience_sql_query($_POST['customers_email_address'], 'email');
                 $mail = $db->Execute($audience_select['query_string']);
@@ -76,8 +76,6 @@ if ($action != '') {
 
             foreach ($mail as $row) {
                 $id1 = zen_create_coupon_code($row['customers_email_address']);
-                echo '$row[customers_email_address]=' . $row['customers_email_address'] . '<br>';
-
                 $insert_query = $db->Execute("insert into " . TABLE_COUPONS . "
                                     (coupon_code, coupon_type, coupon_amount, date_created)
                                     values ('" . zen_db_input($id1) . "', 'G', '" . zen_db_input($_POST['amount']) . "', now())");
@@ -94,7 +92,7 @@ if ($action != '') {
                 $html_msg['EMAIL_FIRST_NAME'] = $row['customers_firstname'];
                 $html_msg['EMAIL_LAST_NAME'] = $row['customers_lastname'];
 
-                $message .= zen_db_prepare_input($_POST['message']);//steve
+                $message .= zen_db_prepare_input($_POST['message']);
                 $html_msg['EMAIL_MESSAGE_HTML'] = zen_db_prepare_input($_POST['message_html']);
 
                 $gv_value = $currencies->format($_POST['amount']);
@@ -373,9 +371,11 @@ if (!empty($_GET['mail_sent_to']) && $_GET['mail_sent_to']) {
     ?>
     <!-- body_text_eof //-->
 </div>
-<!-- body_eof //--> <!-- footer //-->
+<!-- body_eof //-->
+
+<!-- footer //-->
 <?php require(DIR_WS_INCLUDES . 'footer.php'); ?>
-<!-- footer_eof //--> <br/>
+<!-- footer_eof //-->
 
 </body>
 </html>
