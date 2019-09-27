@@ -209,7 +209,7 @@ $group = array('pages_title', 'page_params', 'music_genre_name', 'artists_name',
                'group_name', 'geo_zone_name', 'geo_zone_description',
                'tax_class_description', 'tax_class_title', 'tax_description', 'entry_company', 'customers_firstname',
                'customers_lastname', 'entry_street_address', 'entry_suburb', 'entry_city', 'entry_state', 'customers_referral',
-               'symbol_left', 'symbol_right', 'products_model', 'alt_url', 'email_to', 'email_to_name');
+               'symbol_left', 'symbol_right', 'products_model', 'alt_url', 'email_to_name');
 $sanitizer->addSimpleSanitization('WORDS_AND_SYMBOLS_REGEX', $group);
 
 $group = array('metatags_title', 'metatags_keywords', 'metatags_description');
@@ -218,7 +218,7 @@ $sanitizer->addSimpleSanitization('META_TAGS', $group);
 $group = array('customers_email_address' => array('sanitizerType' => 'SANITIZE_EMAIL_AUDIENCE', 'method' => 'post', 'pages' => array('coupon_admin', 'gv_mail', 'mail')));
 $sanitizer->addComplexSanitization($group);
 
-$group = array('customers_email_address');
+$group = array('customers_email_address', 'email_to');
 $sanitizer->addSimpleSanitization('SANITIZE_EMAIL', $group);
 
 $group = array('products_description', 'coupon_desc', 'file_contents', 'categories_description', 'message_html', 'banners_html_text', 'pages_html_text', 'comments', 'products_options_comment');
