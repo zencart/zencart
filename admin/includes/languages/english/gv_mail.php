@@ -8,7 +8,7 @@
 
 require 'gv_name.php';
 define('TITLE', 'Send ' . TEXT_GV_NAME);
-define('HEADING_TITLE', 'Send ' . TEXT_GV_NAME . ' To Customers');
+define('HEADING_TITLE', 'Send a ' . TEXT_GV_NAME . ' To Customers');
 
 define('TEXT_FROM', 'From:');
 define('TEXT_TO', 'Email To:');
