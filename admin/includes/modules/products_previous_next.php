@@ -30,7 +30,10 @@ if (!isset($prev_next_list) || $prev_next_list == '') {
   // sort order
   switch (PRODUCT_INFO_PREVIOUS_NEXT_SORT) {
     case (0):
-      $prev_next_order = ' ORDER BY LPAD(p.products_id,11,"0")';
+      $prev_next_order = ' ORDER BY p.products_id';
+      break;
+    case (1):
+      $prev_next_order = " ORDER BY pd.products_name";
       break;
     case (2):
       $prev_next_order = " ORDER BY p.products_model";
@@ -47,7 +50,6 @@ if (!isset($prev_next_list) || $prev_next_list == '') {
     case (6):
       $prev_next_order = " ORDER BY p.products_sort_order";
       break;
-   case (1):
     default:
       $prev_next_order = " ORDER BY pd.products_name";
       break;
@@ -60,7 +62,7 @@ if (!isset($prev_next_list) || $prev_next_list == '') {
   if (empty($current_category_id)) {
     $sql = "SELECT categories_id
             FROM   " . TABLE_PRODUCTS_TO_CATEGORIES . "
-            WHERE  products_id = " . (int)$products_filter;
+            WHERE products_id = " . (int)$products_filter;
 
     $cPath_row = $db->Execute($sql);
 
