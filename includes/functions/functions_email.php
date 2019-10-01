@@ -582,9 +582,9 @@ use PHPMailer\PHPMailer\SMTP;
     }
 
     $block['GV_BLOCK'] = '';
-    if (isset($block['GV_WORTH']) && $block['GV_WORTH'] != '' && isset($block['GV_REDEEM']) && $block['GV_REDEEM'] != '' && isset($block['GV_CODE_URL']) && $block['GV_CODE_URL'] != '') {
-      $block['GV_BLOCK'] = '<div class="gv-block">' . $block['GV_WORTH'] . '<br />' . $block['GV_REDEEM'] . $block['GV_CODE_URL'] . '<br />' . $block['GV_LINK_OTHER'] . '</div>';
-    }
+      if ( (isset($block['GV_ANNOUNCE']) && $block['GV_ANNOUNCE'] != '') && (isset($block['GV_REDEEM']) && $block['GV_REDEEM'] != '') ) {
+          $block['GV_BLOCK'] = '<div class="gv-block">' . $block['GV_ANNOUNCE'] . '<br />' . $block['GV_REDEEM'] . '</div>';
+      }
 
     //prepare the "unsubscribe" link:
     if (IS_ADMIN_FLAG === true) { // is this admin version, or catalog?
