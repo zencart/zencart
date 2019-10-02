@@ -249,7 +249,8 @@
   function zen_draw_products_pull_down($name, $parameters = '', $exclude = '', $show_id = false, $set_selected = false, $show_model = false, $show_current_category = false) {
     global $currencies, $db, $current_category_id, $prev_next_order;
 
-    $order_by = $db->prepare_input(!empty($prev_next_order) ? $prev_next_order : ' ORDER BY products_name'); // $prev_next_order set by products_previous_next.php, if category navigation in use
+    // $prev_next_order set by products_previous_next.php, if category navigation in use
+    $order_by = $db->prepare_input(!empty($prev_next_order) ? $prev_next_order : ' ORDER BY products_name');
 
     if ($exclude == '') {
       $exclude = array();
