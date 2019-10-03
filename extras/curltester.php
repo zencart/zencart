@@ -73,6 +73,10 @@ doCurlTest('https://wwwcie.ups.com/ups.app/xml/Rate');
 echo 'Connecting to FedEx (port 80)...<br>';
 dofsockTest('fedex.com', 80);
 
+echo 'Connecting to Canada Post SellOnline HTTP/S ...<br>';
+doCurlTest('https://qa-sellonline.canadapost.ca/sellonline/Rating');
+// doCurlTest('https://sellonline.canadapost.ca/sellonline/Rating');
+
 echo 'Connecting to Canada Post REST API (SSL) ...<br>';
 doCurlTest('https://ct.soa-gw.canadapost.ca/rs/ship/price');
 
