@@ -600,7 +600,7 @@ function translate_type_to_name($opt_type) {
             </tr>
             <?php
             $next_id = 1;
-            $options_values = $db->Execute($optionsLimit);
+            $options_values = $db->Execute($options_query_raw);
             foreach ($options_values as $options_value) {
               ?>
               <tr>
