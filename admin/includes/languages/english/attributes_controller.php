@@ -164,6 +164,8 @@ define('TABLE_TEXT_MAX_COUNT_SHORT', 'Max:');
   define('SUCCESS_ATTRIBUTES_DELETED_OPTION_NAME_VALUES', 'Successful deletion of all Option Values for Option Name: ');
 
   define('BUTTON_ADDITIONAL_ACTIONS', 'Additional Actions');
+  define('TEXT_EDIT_OPTION_VALUE', 'Edit Option Value');
+  define('TEXT_DELETE_OPTION_VALUE', 'Delete Option Value');
   define('TEXT_UPDATE_DEFAULT_SORT_ORDER', 'Update Sort Order to default');
   define('TEXT_DELETE_ALL_OPTIONS_FROM_PRODUCT', 'Delete all options from product');
   define('TEXT_COPY_ALL_OPTIONS_TO_PRODUCT', 'Copy options to another product');
