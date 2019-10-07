@@ -203,7 +203,7 @@ class ot_coupon {
 
       $coupon_result=$db->Execute($sql);
 
-      if (!$coupon_result->EOF && $coupon_result->fields['coupon_type'] != 'G') {
+      if (!$coupon_result->EOF) {
 
         if ($coupon_result->RecordCount() < 1 ) {
           $messageStack->add_session('redemptions', TEXT_INVALID_REDEEM_COUPON . ' ' . $dc_check,'caution');
