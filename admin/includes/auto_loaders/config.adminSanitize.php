@@ -1,0 +1,3 @@
+<?php
+
+/////// NOTE: THIS FILE NO LONGER RELEVANT in v1.5.7 and higher.  PLEASE DELETE FROM YOUR SERVER.
