@@ -2537,9 +2537,9 @@ function zen_copy_products_attributes($products_id_from, $products_id_to) {
   function zen_get_configuration_key_value($lookup) {
     global $db;
     $configuration_query= $db->Execute("select configuration_value from " . TABLE_CONFIGURATION . " where configuration_key='" . zen_db_input($lookup) . "'");
-    $lookup_value= $configuration_query->fields['configuration_value'];
-    if ( $configuration_query->RecordCount() == 0 ) {
-      $lookup_value='<span class="lookupAttention">' . $lookup . '</span>';
+    $lookup_value = '<span class="lookupAttention">' . $lookup . '</span>';
+    if ( $configuration_query->RecordCount() > 0 ) {
+      $lookup_value = $configuration_query->fields['configuration_value'];
     }
     return $lookup_value;
   }
