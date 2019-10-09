@@ -153,6 +153,7 @@ $psr4Autoloader = new \Aura\Autoload\Loader;
 $psr4Autoloader->register();
 require('includes/psr4Autoload.php');
 
+require 'includes/classes/AdminRequestSanitizer.php';
 require 'includes/init_includes/init_file_db_names.php';
 require 'includes/init_includes/init_database.php';
 
