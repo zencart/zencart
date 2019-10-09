@@ -12,6 +12,12 @@
 function zen_href_link($page = '', $parameters = '', $connection = 'SSL', $add_session_id = true) {
     global $zco_notifier, $session_started;
 
+    if ($page == '') {
+      trigger_error("zen_href_link($page, $parameters, $connection), unable to determine the page link.",
+            E_USER_ERROR);
+      die('</td></tr></table></td></tr></table><br><br><font color="#ff0000"><b>Error!</b></font><br><br><b>Unable to determine the page link!<br><br>Function used:<br><br>zen_href_link(\'' . $page . '\', \'' . $parameters . '\', \'' . $connection . '\')</b>');
+    }
+
     // Notify any observers listening for href_link calls
     $zco_notifier->notify(
         'NOTIFY_HANDLE_ADMIN_HREF_LINK',
