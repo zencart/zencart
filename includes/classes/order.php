@@ -309,16 +309,16 @@ class order extends base {
           $tax_address_query = '';
           switch (STORE_PRODUCT_TAX_BASIS) {
               case 'Shipping':
-                  $address_book_id = ($this->content_type == 'virtual' ? (int)$_SESSION['billto'] : (int)$_SESSION['sendto']);
+                  $address_book_id = ($this->content_type == 'virtual' ? $billto : $sendto);
                   break;
               case 'Billing':
-                  $address_book_id = (int)$_SESSION['billto'];
+                  $address_book_id = $billto;
                   break;
               case 'Store':
                   if ($billing_address->fields['entry_zone_id'] == STORE_ZONE) {
-                      $address_book_id = (int)$_SESSION['billto'];
+                      $address_book_id = $billto;
                   } else {
-                      $address_book_id = ($this->content_type == 'virtual' ? (int)$_SESSION['billto'] : (int)$_SESSION['sendto']);
+                      $address_book_id = ($this->content_type == 'virtual' ? $billto : $sendto);
                   }
           }
           $tax_address_query = "SELECT ab.entry_country_id, ab.entry_zone_id
