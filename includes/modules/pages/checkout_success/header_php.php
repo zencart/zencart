@@ -22,7 +22,7 @@ if (!isset($_GET['action']) || (isset($_GET['action']) && $_GET['action'] != 'co
 $notify_string='';
 if (isset($_GET['action']) && ($_GET['action'] == 'update')) {
   $notify_string = 'action=notify&';
-  $notify = $_POST['notify'];
+  $notify = isset($_POST['notify']) ? $_POST['notify'] : null;
 
   if (is_array($notify)) {
     for ($i=0, $n=sizeof($notify); $i<$n; $i++) {
@@ -63,6 +63,7 @@ if (isset($_SESSION['payment_method_messages']) && $_SESSION['payment_method_mes
   unset($_SESSION['payment_method_messages']);
 }
 
+$statusArray = array();
 $statuses_query = "SELECT os.orders_status_name, osh.date_added, osh.comments
                    FROM   " . TABLE_ORDERS_STATUS . " os, " . TABLE_ORDERS_STATUS_HISTORY . " osh
                    WHERE      osh.orders_id = :ordersID
@@ -84,6 +85,7 @@ $order = new order($orders_id);
 
 
 // prepare list of product-notifications for this customer
+$notificationsArray = array();
 $global_query = "SELECT global_product_notifications
                  FROM " . TABLE_CUSTOMERS_INFO . "
                  WHERE customers_info_id = :customersID";
