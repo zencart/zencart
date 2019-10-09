@@ -842,7 +842,7 @@ function zen_get_admin_menu_for_user()
                 $retVal[$result->fields['menu_key']][$result->fields['page_key']] = array(
                     'name' => constant($result->fields['pageName']),
                     'file' => constant($result->fields['main_page']),
-                    'params' => $result->fields['page_params']
+                    'params' => $result->fields['page_params'],
                 );
             }
             $result->MoveNext();
