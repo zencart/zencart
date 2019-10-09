@@ -24,7 +24,7 @@ use Zencart\FileSystem\FileSystem;
 
 $autoLoadConfig = array();
 if (isset($loaderPrefix)) {
- $loaderPrefix = preg_replace('/[^a-z_]/', '', $loaderPrefix);
+  $loaderPrefix = preg_replace('/[^a-z_]/', '', $loaderPrefix);
 } else {
   $loaderPrefix = 'config';
 }
