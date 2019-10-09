@@ -355,16 +355,13 @@ class order extends base {
     //
     // If that's not the case, issue a PHP Notice and reset the shipping to its unselected state.
     //
-    if (empty($_SESSION['shipping']['id'])) {
-        $shipping_module_code = '';
+    $shipping_module_code = '';
+
+    if (!empty($_SESSION['shipping']['id']) && strpos((string)$_SESSION['shipping']['id'], '_')) {
+        $shipping_module_code = $_SESSION['shipping']['id'];
     } else {
-        if (!strpos((string)$_SESSION['shipping']['id'], '_')) {
-            trigger_error('Malformed value for session-based shipping module; customer will need to re-select: ' . json_encode($_SESSION['shipping']), E_USER_NOTICE);
-            unset($_SESSION['shipping']);
-            $shipping_module_code = '';
-        } else {
-            $shipping_module_code = $_SESSION['shipping']['id'];
-        }
+        trigger_error('Malformed value for session-based shipping module; customer will need to re-select: ' . json_encode($_SESSION['shipping']), E_USER_NOTICE);
+        unset($_SESSION['shipping']);
     }
     $this->info = array('order_status' => DEFAULT_ORDERS_STATUS_ID,
                         'currency' => $_SESSION['currency'],
