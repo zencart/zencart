@@ -128,7 +128,7 @@ class category_tree extends base {
             $last_id = $rows->fields['categories_id'];
             $rows->MoveNext();
           }
-          if (!empty($value)) {
+          if (!empty($value) && !empty($this->tree[$value]) /* Needed to thwart notice */) {
             $this->tree[$last_id]['next_id'] = $this->tree[$value]['next_id'];
           }
           $this->tree[$value]['next_id'] = $first_id;
