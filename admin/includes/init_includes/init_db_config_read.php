@@ -12,7 +12,7 @@ if (!defined('IS_ADMIN_FLAG')) {
 
   $sql = "SELECT configuration_value FROM " . TABLE_CONFIGURATION . " WHERE configuration_key = 'GLOBAL_AUTH_KEY'";
   $authkey = $db->Execute($sql);
-  if ($authkey->fields['configuration_value'] == '') {
+  if (!$authkey->EOF && $authkey->fields['configuration_value'] == '') {
       $hashable = hash('sha256', openssl_random_pseudo_bytes(64));
       $sql = "UPDATE " . TABLE_CONFIGURATION . " SET configuration_value = :hash: WHERE configuration_key = 'GLOBAL_AUTH_KEY'";
       $sql = $db->bindVars($sql, ':hash:', $hashable, 'string');
