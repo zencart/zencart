@@ -42,6 +42,9 @@ function methodSelect(theMethod) {
             if($('#pmt-'+paymentValue).is(':checked')) {
                 return true;
             }
+            if ($("[name='payment']").length == 1) {
+              return true;
+            }
         }
         return false;
     }
