@@ -31,12 +31,15 @@ if (!defined('IS_ADMIN_FLAG')) {
     }
 
     $_SESSION['language'] = (zen_not_null($lng->language['directory']) ? $lng->language['directory'] : 'english');
-    $_SESSION['languages_id'] = (zen_not_null($lng->language['id']) ? $lng->language['id'] : 1);
+    $_SESSION['languages_id'] = (zen_not_null($lng->language['id']) ? (int)$lng->language['id'] : 1);
     $_SESSION['languages_code'] = (zen_not_null($lng->language['code']) ? $lng->language['code'] : 'en');
   }
 
 // temporary patch for lang override chicken/egg quirk
-  $template_query = $db->Execute("select template_dir from " . TABLE_TEMPLATE_SELECT . " where template_language in (" . (int)$_SESSION['languages_id'] . ', 0' . ") order by template_language DESC");
+  $template_query = $db->Execute("SELECT template_dir
+                                  FROM " . TABLE_TEMPLATE_SELECT . "
+                                  WHERE template_language in (" . (int)$_SESSION['languages_id'] . ', 0' . ")
+                                  ORDER BY template_language DESC");
   $template_dir = $template_query->fields['template_dir'];
 
 // include the language translations
