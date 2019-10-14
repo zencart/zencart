@@ -116,7 +116,7 @@ for ($i=0, $n=sizeof($products); $i<$n; $i++) {
     $qtyAvailable = zen_get_products_stock($products[$i]['id']);
     // compare against product inventory, and against mixed=YES
     if ($qtyAvailable - $products[$i]['quantity'] < 0 || $qtyAvailable - $_SESSION['cart']->in_cart_mixed($products[$i]['id']) < 0) {
-        $flagStockCheck = '<span class="markProductOutOfStock">' . STOCK_MARK_PRODUCT_OUT_OF_STOCK . '</span>';
+      $flagStockCheck = '<span class="markProductOutOfStock">' . STOCK_MARK_PRODUCT_OUT_OF_STOCK . '</span>';
       $flagAnyOutOfStock = true;
     }
   }
