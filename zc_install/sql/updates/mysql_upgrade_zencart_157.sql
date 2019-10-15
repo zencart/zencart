@@ -35,6 +35,9 @@
 TRUNCATE TABLE whos_online;
 TRUNCATE TABLE db_cache;
 
+# Repair ez-pages table field that was too short in v156
+ALTER TABLE ezpages_content MODIFY pages_html_text mediumtext NOT NULL;
+
 # Enable Products to Categories as a menu option
 UPDATE admin_pages SET display_on_menu = 'Y' WHERE page_key = 'productsToCategories';
 
