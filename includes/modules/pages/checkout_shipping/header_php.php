@@ -47,8 +47,8 @@
           zen_redirect(zen_href_link(FILENAME_SHOPPING_CART));
           break;
         }
-      }
     }
+  }
 
 // if no shipping destination address was selected, use the customers own address as default
   if (empty($_SESSION['sendto'])) {
