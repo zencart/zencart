@@ -36,8 +36,8 @@
 </div>
 
 <div class="floatingBox important forward"><?php echo TEXT_SELECTED_BILLING_DESTINATION; ?></div>
-<br class="clearBoth" />
-<br />
+<br class="clearBoth">
+<br>
 <?php // ** BEGIN PAYPAL EXPRESS CHECKOUT **
       }
       // ** END PAYPAL EXPRESS CHECKOUT ** ?>
