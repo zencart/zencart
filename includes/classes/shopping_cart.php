@@ -1780,7 +1780,7 @@ class shoppingCart extends base {
         //   product dependencies and reduction of product to allow a larger increase
         //   at each product's modification.
         //   This will maximize the maximum product quantities available.
-        if ($chk_mixed == true && !array_key_exists(zen_get_prid($_POST['products_id'][$i]), $change_state)) {
+        if ($chk_mixed === true && !array_key_exists(zen_get_prid($_POST['products_id'][$i]), $change_state)) {
           $change_check = $this->in_cart_product_mixed_changed($_POST['products_id'][$i], 'decrease'); // Returns full data on products.
           $change_state[zen_get_prid($_POST['products_id'][$i])] = $change_check;
           if (is_array($change_check) && count($change_state[zen_get_prid($_POST['products_id'][$i])]['decrease']) > 0) {
