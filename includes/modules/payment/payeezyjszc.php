@@ -902,7 +902,8 @@ class payeezyjszc extends base
             'CURL communication info: ' . print_r($this->commInfo, true) . "\n";
 
         if (strstr(MODULE_PAYMENT_PAYEEZYJSZC_LOGGING, 'Log Always') || ($response['transaction_status'] != 'approved' && strstr(MODULE_PAYMENT_PAYEEZYJSZC_LOGGING, 'Log on Failures'))) {
-            $key  = $response['transaction_id'] . '_' . preg_replace('/[^a-z]/i', '', $response['transaction_status']) . '_' . time() . '_' . zen_create_random_value(4);
+            $key = (isset($response['transaction_id'])) ? ($response['transaction_id'] . '_') : '';
+            $key .= preg_replace('/[^a-z]/i', '', $response['transaction_status']) . '_' . time() . '_' . zen_create_random_value(4);
             $file = $this->_logDir . '/' . 'Payeezy_' . $key . '.log';
             if ($fp = @fopen($file, 'a')) {
                 fwrite($fp, $logMessage);
