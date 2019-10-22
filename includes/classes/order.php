@@ -348,21 +348,22 @@ class order extends base {
 
     }
 
-    // -----
+    $shipping_module_code = '';
     // A shipping-module's 'code', if present in the session, **must** contain a '_' character, separating
     // the shipping module's name from the selected method, e.g. 'module_method'.  That '_' cannot be the first
     // character of the 'code' value.
     //
     // If that's not the case, issue a PHP Notice and reset the shipping to its unselected state.
     //
-    $shipping_module_code = '';
-
-    if (!empty($_SESSION['shipping']['id']) && strpos((string)$_SESSION['shipping']['id'], '_')) {
-        $shipping_module_code = $_SESSION['shipping']['id'];
-    } else {
-        trigger_error('Malformed value for session-based shipping module; customer will need to re-select: ' . json_encode($_SESSION['shipping']), E_USER_NOTICE);
-        unset($_SESSION['shipping']);
+    if (isset($_SESSION['shipping'])) {
+        if (!empty($_SESSION['shipping']['id']) && strpos((string)$_SESSION['shipping']['id'], '_')) {
+            $shipping_module_code = $_SESSION['shipping']['id'];
+        } else {
+            trigger_error('Malformed value for session-based shipping module; customer will need to re-select: ' . json_encode($_SESSION['shipping']), E_USER_NOTICE);
+            unset($_SESSION['shipping']);
+        }
     }
+
     $this->info = array('order_status' => DEFAULT_ORDERS_STATUS_ID,
                         'currency' => $_SESSION['currency'],
                         'currency_value' => $currencies->currencies[$_SESSION['currency']]['value'],
