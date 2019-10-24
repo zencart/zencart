@@ -94,7 +94,7 @@ require($template->get_template_dir('tpl_account_history_info_default.php',DIR_W
 <br />
 <?php } ?>
 <div class="buttonRow forward"><?php echo zen_image_submit(BUTTON_IMAGE_UPDATE, BUTTON_UPDATE_ALT); ?></div>
-</form>
+<?php echo '</form>'; ?>
 </fieldset>
 <?php
     }
