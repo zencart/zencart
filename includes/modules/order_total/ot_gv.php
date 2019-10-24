@@ -112,12 +112,12 @@ class ot_gv {
     if ($_SESSION['cot_gv'] > 0) {
       // if cot_gv value contains any nonvalid characters, throw error
       if (preg_match('/[^0-9\,.]/', trim($_SESSION['cot_gv']))) {
-        $messageStack->add_session('checkout_payment', TEXT_INVALID_REDEEM_AMOUNT, error);
+        $messageStack->add_session('checkout_payment', TEXT_INVALID_REDEEM_AMOUNT, 'error');
         zen_redirect(zen_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'));
       }
       // if requested redemption amount is greater than value of credits on account, throw error
       if ($_SESSION['cot_gv'] > $currencies->value($this->user_has_gv_account($_SESSION['customer_id']))) {
-        $messageStack->add_session('checkout_payment', TEXT_INVALID_REDEEM_AMOUNT, error);
+        $messageStack->add_session('checkout_payment', TEXT_INVALID_REDEEM_AMOUNT, 'error');
         zen_redirect(zen_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'));
       }
       $od_amount = $this->calculate_deductions($order_total);
@@ -206,7 +206,7 @@ class ot_gv {
    * Verify that the customer has entered a valid redemption amount, and return the amount that can be applied to this order
    */
   function apply_credit() {
-    global $db, $order, $messageStack;
+    global $db, $order;
     $gv_payment_amount = 0;
     // check for valid redemption amount vs available credit for current customer
     if (!empty($_SESSION['cot_gv'])) {
@@ -231,7 +231,7 @@ class ot_gv {
     // if we have no GV amount selected, set it to 0
     // if requested redemption amount is greater than value of credits on account, throw error
     if ($_SESSION['cot_gv'] > $currencies->value($this->user_has_gv_account($_SESSION['customer_id']))) {
-      $messageStack->add_session('checkout_payment', TEXT_INVALID_REDEEM_AMOUNT . ' - ' . number_format($_SESSION['cot_gv'], 2), error);
+      $messageStack->add_session('checkout_payment', TEXT_INVALID_REDEEM_AMOUNT . ' - ' . number_format($_SESSION['cot_gv'], 2), 'error');
       $_SESSION['cot_gv'] = 0.00;
       zen_redirect(zen_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'));
     }
@@ -246,12 +246,12 @@ class ot_gv {
         $redeem_query = $db->Execute("select * from " . TABLE_COUPON_REDEEM_TRACK . " where coupon_id = '" . (int)$gv_result->fields['coupon_id'] . "'");
         // if already redeemed, throw error
         if ( ($redeem_query->RecordCount() > 0) && ($gv_result->fields['coupon_type'] == 'G')  ) {
-          $messageStack->add_session('checkout_payment', ERROR_NO_INVALID_REDEEM_GV, error);
+          $messageStack->add_session('checkout_payment', ERROR_NO_INVALID_REDEEM_GV, 'error');
           zen_redirect(zen_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'));
         }
       } else {
         // if not valid redemption code, throw error
-        $messageStack->add_session('checkout_payment', ERROR_NO_INVALID_REDEEM_GV, error);
+        $messageStack->add_session('checkout_payment', ERROR_NO_INVALID_REDEEM_GV, 'error');
         zen_redirect(zen_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'));
       }
       // if valid, add redeemed amount to customer's GV balance and mark as redeemed
@@ -279,7 +279,7 @@ class ot_gv {
           // no gv_amount so insert
           $db->Execute("insert into " . TABLE_COUPON_GV_CUSTOMER . " (customer_id, amount) values ('" . (int)$_SESSION['customer_id'] . "', '" . $total_gv_amount . "')");
         }
-        $messageStack->add_session('redemptions',ERROR_REDEEMED_AMOUNT. $currencies->format($gv_amount), 'success' );
+        $messageStack->add_session('redemptions',ERROR_REDEEMED_AMOUNT. $currencies->format($gv_amount), 'success');
         zen_redirect(zen_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL',true, false));
       }
     }
@@ -300,8 +300,9 @@ class ot_gv {
     }
     return zen_round($gv_payment_amount,2);
   }
+
   function calculate_deductions($order_total) {
-    global $db, $order, $messageStack;
+    global $db, $order;
     $od_amount = array();
     $deduction = $this->calculate_credit($this->get_order_total());
     $od_amount['total'] = $deduction;
