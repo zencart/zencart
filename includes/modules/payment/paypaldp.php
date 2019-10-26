@@ -1159,7 +1159,7 @@ class paypaldp extends base {
    */
   function paypal_init() {
     $nvp = (MODULE_PAYMENT_PAYPALWPP_APIPASSWORD != '' && MODULE_PAYMENT_PAYPALWPP_APISIGNATURE != '') ? true : false;
-    $ec = ($nvp && $_GET['type'] == 'ec') ? true : false;
+    $ec = ($nvp && isset($_GET['type']) && $_GET['type'] == 'ec') ? true : false;
     if (MODULE_PAYMENT_PAYPALDP_MERCHANT_COUNTRY == 'UK' && !$ec) {
       $doPayPal = new paypal_curl(array('mode' => 'payflow',
                                         'user' =>   trim(MODULE_PAYMENT_PAYPALWPP_PFUSER),
@@ -1839,12 +1839,16 @@ class paypaldp extends base {
     global $messageStack, $doPayPal;
     $gateway_mode = (isset($response['PNREF']) && $response['PNREF'] != '');
     $basicError = (!$response || (isset($response['RESULT']) && $response['RESULT'] != 0) || (isset($response['ACK']) && !strstr($response['ACK'], 'Success')) || (!isset($response['RESULT']) && !isset($response['ACK'])));
+    if (isset($response['L_ERRORCODE0'])) {
     $ignoreList = explode(',', str_replace(' ', '', $ignore_codes));
     foreach($ignoreList as $key=>$value) {
-      if ($value != '' && $response['L_ERRORCODE0'] == $value) $basicError = false;
+            if ($value != '' && $response['L_ERRORCODE0'] == $value) {
+                $basicError = false;
+            }
+        }
     }
     /** Handle FMF Scenarios **/
-    if (in_array($operation, array('DoExpressCheckoutPayment', 'DoDirectPayment')) && $response['PAYMENTSTATUS'] == 'Pending' && $response['L_ERRORCODE0'] == 11610) {
+    if (in_array($operation, array('DoExpressCheckoutPayment', 'DoDirectPayment')) && $response['PAYMENTSTATUS'] == 'Pending' && isset($response['L_ERRORCODE0']) && $response['L_ERRORCODE0'] == 11610) {
       $this->fmfResponse = urldecode($response['L_SHORTMESSAGE0']);
       $this->fmfErrors = array();
       if ($response['ACK'] == 'SuccessWithWarning' && isset($response['L_FMFPENDINGID0'])) {
@@ -1856,7 +1860,11 @@ class paypaldp extends base {
     }
     //echo '<br />basicError='.$basicError.'<br />' . urldecode(print_r($response,true)); die('halted');
     if (!isset($response['L_SHORTMESSAGE0']) && isset($response['RESPMSG']) && $response['RESPMSG'] != '') $response['L_SHORTMESSAGE0'] = $response['RESPMSG'];
+    if (IS_ADMIN_FLAG === false) {
     $errorInfo = 'Problem occurred while customer ' . zen_output_string_protected($_SESSION['customer_id'] . ' ' . $_SESSION['customer_first_name'] . ' ' . $_SESSION['customer_last_name']) . ' was attempting checkout with PayPal Website Payments Pro.';
+    } else {
+        $errorInfo = 'Problem occurred during admin updates using PayPal Website Payments Pro.';
+    }
 
     switch($operation) {
       case 'DoDirectPayment':

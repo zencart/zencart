@@ -168,6 +168,20 @@ if (!empty($response['RESPMSG'])) {
         $outputPayPal .= '</td></tr>'."\n";
     }
 
+    $optional_fields = array(
+        'SHIPTONAME',
+        'SHIPTOSTREET',
+        'SHIPTOCITY',
+        'SHIPTOSTATE',
+        'SHIPTOZIP',
+        'SHIPTOCOUNTRYNAME',
+        'FEEAMT',               //- Not present when the last PayPal action was a refund/void
+    );
+    foreach ($optional_fields as $optional) {
+        if (!isset($response[$optional])) {
+            $response[$optional] = 'n/a';
+        }
+    }
     $outputPayPal .= '<tr><td class="main">'."\n";
     $outputPayPal .= MODULE_PAYMENT_PAYPAL_ENTRY_ADDRESS_NAME."\n";
     $outputPayPal .= '</td><td class="main">'."\n";
