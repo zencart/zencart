@@ -46,7 +46,7 @@ function characterCount(field, count, maxchars) {
     $outputEndBlock .='</table></td>'."\n";
 
 
-  if ($response['RESPMSG'] != '') {
+if (!empty($response['RESPMSG'])) {
     // these would be payflow transactions
 
     $outputPFmain .= '<td valign="top"><table>'."\n";
@@ -100,7 +100,7 @@ function characterCount(field, count, maxchars) {
     $outputPFmain .= $response['TRANSSTATE'] ."\n";
     $outputPFmain .= '</td></tr>'."\n";
 
-    if ($response['DAYS_TO_SETTLE'] != '' ) {
+    if (!empty($response['DAYS_TO_SETTLE'])) {
       $outputPFmain .= '<tr><td class="main">'."\n";
       $outputPFmain .= MODULE_PAYMENT_PAYPAL_ENTRY_DAYSTOSETTLE."\n";
       $outputPFmain .= '</td><td class="main">'."\n";
@@ -161,21 +161,38 @@ function characterCount(field, count, maxchars) {
     $outputPayPal .= urldecode($response['LASTNAME']) ."\n";
     $outputPayPal .= '</td></tr>'."\n";
 
+    if (!empty($response['BUSINESS'])) {
     $outputPayPal .= '<tr><td class="main">'."\n";
     $outputPayPal .= MODULE_PAYMENT_PAYPAL_ENTRY_BUSINESS_NAME."\n";
     $outputPayPal .= '</td><td class="main">'."\n";
     $outputPayPal .= urldecode($response['BUSINESS']) ."\n";
     $outputPayPal .= '</td></tr>'."\n";
+    }
+
+    $optional_fields = array(
+        'SHIPTONAME',
+        'SHIPTOSTREET',
+        'SHIPTOCITY',
+        'SHIPTOSTATE',
+        'SHIPTOZIP',
+        'SHIPTOCOUNTRYNAME',
+        'FEEAMT',               //- Not present when the last PayPal action was a refund/void
+    );
+    foreach ($optional_fields as $optional) {
+        if (!isset($response[$optional])) {
+            $response[$optional] = 'n/a';
+        }
+    }
 
     $outputPayPal .= '<tr><td class="main">'."\n";
     $outputPayPal .= MODULE_PAYMENT_PAYPAL_ENTRY_ADDRESS_NAME."\n";
     $outputPayPal .= '</td><td class="main">'."\n";
-    $outputPayPal .= urldecode($response['NAME']) ."\n";
+    $outputPayPal .= urldecode($response['SHIPTONAME']) ."\n";
     $outputPayPal .= '</td></tr>'."\n";
     $outputPayPal .= '<tr><td class="main">'."\n";
     $outputPayPal .= MODULE_PAYMENT_PAYPAL_ENTRY_ADDRESS_STREET."\n";
     $outputPayPal .= '</td><td class="main">'."\n";
-    $outputPayPal .= urldecode($response['SHIPTOSTREET']) . ' ' . urldecode($response['SHIPTOSTREET2']) ."\n";
+    $outputPayPal .= urldecode($response['SHIPTOSTREET']) . ' ' . (!empty($response['SHIPTOSTREET2']) ? urldecode($response['SHIPTOSTREET2']) : '') ."\n";
     $outputPayPal .= '</td></tr>'."\n";
     $outputPayPal .= '<tr><td class="main">'."\n";
     $outputPayPal .= MODULE_PAYMENT_PAYPAL_ENTRY_ADDRESS_CITY."\n";
@@ -190,7 +207,7 @@ function characterCount(field, count, maxchars) {
     $outputPayPal .= '<tr><td class="main">'."\n";
     $outputPayPal .= MODULE_PAYMENT_PAYPAL_ENTRY_ADDRESS_COUNTRY."\n";
     $outputPayPal .= '</td><td class="main">'."\n";
-    $outputPayPal .= urldecode($response['SHIPTOCOUNTRY']) ."\n";
+    $outputPayPal .= urldecode($response['SHIPTOCOUNTRYNAME']) ."\n";
     $outputPayPal .= '</td></tr>'."\n";
 
     $outputPayPal .= '</table></td>'."\n";
@@ -206,7 +223,7 @@ function characterCount(field, count, maxchars) {
     $outputPayPal .= '<tr><td class="main">'."\n";
     $outputPayPal .= MODULE_PAYMENT_PAYPAL_ENTRY_EBAY_ID."\n";
     $outputPayPal .= '</td><td class="main">'."\n";
-    $outputPayPal .= urldecode($response['BUYERID']) ."\n";
+    $outputPayPal .= (!empty($response['BUYERID']) ? urldecode($response['BUYERID']) : '') ."\n";
     $outputPayPal .= '</td></tr>'."\n";
 
     $outputPayPal .= '<tr><td class="main">'."\n";
@@ -236,9 +253,9 @@ function characterCount(field, count, maxchars) {
     $outputPayPal .= '<tr><td class="main">'."\n";
     $outputPayPal .= MODULE_PAYMENT_PAYPAL_ENTRY_PARENT_TXN_ID."\n";
     $outputPayPal .= '</td><td class="main">'."\n";
-    $outputPayPal .= urldecode($response['PARENTTRANSACTIONID']) ."\n";
+    $outputPayPal .= (!empty($response['PARENTTRANSACTIONID']) ? urldecode($response['PARENTTRANSACTIONID']) : '') ."\n";
     $outputPayPal .= '</td></tr>'."\n";
-  if (defined('MODULE_PAYMENT_PAYPALWPP_ENTRY_PROTECTIONELIG') && isset($response['PROTECTIONELIGIBILITY']) && $response['PROTECTIONELIGIBILITY'] != '') {
+    if (defined('MODULE_PAYMENT_PAYPALWPP_ENTRY_PROTECTIONELIG') && !empty($response['PROTECTIONELIGIBILITY'])) {
     $outputPayPal .= '<tr><td class="main">'."\n";
     $outputPayPal .= MODULE_PAYMENT_PAYPALWPP_ENTRY_PROTECTIONELIG."\n";
     $outputPayPal .= '</td><td class="main">'."\n";
@@ -300,7 +317,7 @@ function characterCount(field, count, maxchars) {
     $outputPayPal .= '<tr><td class="main">'."\n";
     $outputPayPal .= MODULE_PAYMENT_PAYPAL_ENTRY_CURRENCY."\n";
     $outputPayPal .= '</td><td class="main">'."\n";
-    $outputPayPal .= $ipn->fields['mc_currency'] . ' ' . urldecode($response['CURRENCY']) ."\n";
+    $outputPayPal .= $ipn->fields['mc_currency'] . ' ' . urldecode($response['CURRENCYCODE']) ."\n";
     $outputPayPal .= '</td></tr>'."\n";
 
     $outputPayPal .= '<tr><td class="main">'."\n";
@@ -318,7 +335,7 @@ function characterCount(field, count, maxchars) {
     $outputPayPal .= '<tr><td class="main">'."\n";
     $outputPayPal .= MODULE_PAYMENT_PAYPAL_ENTRY_EXCHANGE_RATE."\n";
     $outputPayPal .= '</td><td class="main">'."\n";
-    $outputPayPal .= urldecode($response['EXCHANGERATE']) ."\n";
+    $outputPayPal .= (!empty($response['EXCHANGERATE']) ? urldecode($response['EXCHANGERATE']) : '') ."\n";
     $outputPayPal .= '</td></tr>'."\n";
 
     $outputPayPal .= '<tr><td class="main">'."\n";
@@ -410,14 +427,19 @@ function characterCount(field, count, maxchars) {
   $output = '<!-- BOF: pp admin transaction processing tools -->';
   $output .= $outputStartBlock;
 
-//debug
-//$output .= '<pre>' . print_r($response, true) . '</pre>';
+  $authcapt_on = (isset($_GET['authcapt']) && $_GET['authcapt'] == 'on');
 
   if (isset($response['RESPMSG']) /*|| defined('MODULE_PAYMENT_PAYFLOW_STATUS')*/) { // payflow
     $output .= $outputPFmain;
-    if (method_exists($this, '_doVoid') && (MODULE_PAYMENT_PAYPALDP_TRANSACTION_MODE == 'Auth Only' || MODULE_PAYMENT_PAYFLOW_TRANSACTION_MODE == 'Auth Only' || (isset($_GET['authcapt']) && $_GET['authcapt']=='on'))) $output .= $outputVoid;
-    if (method_exists($this, '_doCapt') && (MODULE_PAYMENT_PAYPALDP_TRANSACTION_MODE == 'Auth Only' || MODULE_PAYMENT_PAYFLOW_TRANSACTION_MODE == 'Auth Only' || (isset($_GET['authcapt']) && $_GET['authcapt']=='on'))) $output .= $outputCapt;
-    if (method_exists($this, '_doRefund')) $output .= $outputRefund;
+    if (method_exists($this, '_doVoid') && (MODULE_PAYMENT_PAYPALDP_TRANSACTION_MODE == 'Auth Only' || MODULE_PAYMENT_PAYFLOW_TRANSACTION_MODE == 'Auth Only' || $authcapt_on)) {
+        $output .= $outputVoid;
+    }
+    if (method_exists($this, '_doCapt') && (MODULE_PAYMENT_PAYPALDP_TRANSACTION_MODE == 'Auth Only' || MODULE_PAYMENT_PAYFLOW_TRANSACTION_MODE == 'Auth Only' || $authcapt_on)) {
+        $output .= $outputCapt;
+    }
+    if (method_exists($this, '_doRefund')) {
+        $output .= $outputRefund;
+    }
   } else {  // PayPal
     $output .= $outputPayPal;
 
@@ -426,14 +448,30 @@ function characterCount(field, count, maxchars) {
       $output .= '</tr><tr>' . "\n";
       $output .= $outputStartBlock;
       $output .= $outputStartBlock;
-      if ($response['TRANSACTION_TYPE'] == 'Authorization' || (in_array($response['TRANSACTIONTYPE'], array('cart','expresscheckout','webaccept') ) && $response['PAYMENTTYPE'] == 'instant' && $response['PENDINGREASON'] == 'authorization') || (isset($_GET['authcapt']) && $_GET['authcapt']=='on')) {
-        if (method_exists($this, '_doRefund') && ($response['PAYMENTTYPE'] != 'instant' || $module == 'paypaldp')) $output .= $outputRefund;
-        if (method_exists($this, '_doAuth') && (MODULE_PAYMENT_PAYPALWPP_TRANSACTION_MODE == 'Auth Only' || MODULE_PAYMENT_PAYPALDP_TRANSACTION_MODE == 'Auth Only')) $output .= $outputAuth;
-        if (method_exists($this, '_doCapt') && (MODULE_PAYMENT_PAYPALWPP_TRANSACTION_MODE == 'Auth Only' || MODULE_PAYMENT_PAYPALDP_TRANSACTION_MODE == 'Auth Only')) $output .= $outputCapt;
-        if (method_exists($this, '_doVoid')) $output .= $outputVoid;
+      $transaction_type_authorization = (isset($response['TRANSACTION_TYPE']) && $response['TRANSACTION_TYPE'] == 'Authorization');
+      $transactiontype_payment = in_array($response['TRANSACTIONTYPE'], array('cart', 'expresscheckout', 'webaccept'));
+      if ($transaction_type_authorization || ($transactiontype_payment && $response['PAYMENTTYPE'] == 'instant' && $response['PENDINGREASON'] == 'authorization') || $authcapt_on) {
+        if (method_exists($this, '_doRefund') && ($response['PAYMENTTYPE'] != 'instant' || $module == 'paypaldp')) {
+          $output .= $outputRefund;
+        }
+        if (MODULE_PAYMENT_PAYPALWPP_TRANSACTION_MODE == 'Auth Only' || MODULE_PAYMENT_PAYPALDP_TRANSACTION_MODE == 'Auth Only') {
+          if (method_exists($this, '_doAuth')) {
+            $output .= $outputAuth;
+          }
+          if (method_exists($this, '_doCapt')) {
+            $output .= $outputCapt;
+          }
+        }
+        if (method_exists($this, '_doVoid')) {
+          $output .= $outputVoid;
+        }
       } else {
-        if (method_exists($this, '_doRefund') /* && ($response['PAYMENTTYPE'] != 'instant' || $module == 'paypaldp') */) $output .= $outputRefund;
-        if (method_exists($this, '_doVoid') && $response['PAYMENTTYPE'] == 'instant' && $response['PAYMENTSTATUS'] != 'Voided' && $module != 'paypaldp') $output .= $outputVoid;
+        if (method_exists($this, '_doRefund') /* && ($response['PAYMENTTYPE'] != 'instant' || $module == 'paypaldp') */) {
+          $output .= $outputRefund;
+        }
+        if (method_exists($this, '_doVoid') && $response['PAYMENTTYPE'] == 'instant' && $response['PAYMENTSTATUS'] != 'Voided' && $module != 'paypaldp') {
+          $output .= $outputVoid;
+        }
       }
     }
   }
