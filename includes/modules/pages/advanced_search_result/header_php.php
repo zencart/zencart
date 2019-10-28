@@ -25,7 +25,11 @@ require(zen_get_index_filters_directory($typefilter . '_filter.php'));
 $error = false;
 $missing_one_input = false;
 
-$_GET['keyword'] = trim($_GET['keyword']);
+if (empty($_GET['keyword'])) {
+    zen_redirect(zen_href_link(FILENAME_ADVANCED_SEARCH));
+} else {
+    trim($_GET['keyword']);
+}
 
 // -----
 // Give an observer the chance to indicate that there's another element to the search
