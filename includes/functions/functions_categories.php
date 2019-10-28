@@ -129,7 +129,7 @@ function zen_get_categories($categories_array = array(), $parent_id = '0', $inde
   $categories_query = "SELECT c.categories_id, cd.categories_name, c.categories_status, c.sort_order
                          FROM " . TABLE_CATEGORIES . " c, " . TABLE_CATEGORIES_DESCRIPTION . " cd
                          WHERE " . $zc_status . "
-                         parent_id = '" . (int)$parent_id . "'
+                         parent_id = " . (int)$parent_id . "
                          AND c.categories_id = cd.categories_id
                          AND cd.language_id = " . (int)$_SESSION['languages_id'] . "
                          ORDER BY c.sort_order, cd.categories_name";
