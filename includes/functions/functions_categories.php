@@ -112,40 +112,40 @@
   }
 
 ////
-  function zen_get_categories($categories_array = array(), $parent_id = '0', $indent = '', $status_setting = '') {
-    global $db;
+function zen_get_categories($categories_array = array(), $parent_id = '0', $indent = '', $status_setting = '')
+{
+  global $db;
 
-    if (!is_array($categories_array)) $categories_array = array();
-
-    // show based on status
-    if ($status_setting != '') {
-      $zc_status = " c.categories_status='" . (int)$status_setting . "' and ";
-    } else {
-      $zc_status = '';
-    }
-
-    $categories_query = "select c.categories_id, cd.categories_name, c.categories_status
-                         from " . TABLE_CATEGORIES . " c, " . TABLE_CATEGORIES_DESCRIPTION . " cd
-                         where " . $zc_status . "
-                         parent_id = '" . (int)$parent_id . "'
-                         and c.categories_id = cd.categories_id
-                         and cd.language_id = '" . (int)$_SESSION['languages_id'] . "'
-                         order by sort_order, cd.categories_name";
-
-    $categories = $db->Execute($categories_query);
-
-    while (!$categories->EOF) {
-      $categories_array[] = array('id' => $categories->fields['categories_id'],
-                                  'text' => $indent . $categories->fields['categories_name']);
-
-      if ($categories->fields['categories_id'] != $parent_id) {
-        $categories_array = zen_get_categories($categories_array, $categories->fields['categories_id'], $indent . '&nbsp;&nbsp;', '1');
-      }
-      $categories->MoveNext();
-    }
-
-    return $categories_array;
+  if (!is_array($categories_array)) {
+    $categories_array = array();
   }
+
+  // show based on status
+  if ($status_setting != '') {
+    $zc_status = " c.categories_status=" . (int)$status_setting . " AND ";
+  } else {
+    $zc_status = '';
+  }
+  $categories_query = "SELECT c.categories_id, cd.categories_name, c.categories_status, c.sort_order
+                         FROM " . TABLE_CATEGORIES . " c, " . TABLE_CATEGORIES_DESCRIPTION . " cd
+                         WHERE " . $zc_status . "
+                         parent_id = '" . (int)$parent_id . "'
+                         AND c.categories_id = cd.categories_id
+                         AND cd.language_id = " . (int)$_SESSION['languages_id'] . "
+                         ORDER BY c.sort_order, cd.categories_name";
+  $results = $db->Execute($categories_query);
+
+  foreach ($results as $result) {
+    $categories_array[] = [
+        'id' => $result['categories_id'],
+        'text' => $indent . $result['categories_name'],
+    ];
+    if ($result['categories_id'] != $parent_id) {
+      $categories_array = zen_get_categories($categories_array, $result['categories_id'], $indent . '&nbsp;&nbsp;', '1');
+    }
+  }
+  return $categories_array;
+}
 
 ////
 // Return all subcategory IDs
