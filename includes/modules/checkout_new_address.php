@@ -38,7 +38,7 @@ if (isset($_POST['action']) && ($_POST['action'] == 'submit')) {
     $postcode = zen_db_prepare_input($_POST['postcode']);
     $city = zen_db_prepare_input($_POST['city']);
     if (ACCOUNT_STATE == 'true') {
-      $state = zen_db_prepare_input($_POST['state']);
+      $state = (isset($_POST['state'])) ? zen_db_prepare_input($_POST['state']) : '';
       if (isset($_POST['zone_id'])) {
         $zone_id = zen_db_prepare_input($_POST['zone_id']);
       } else {
