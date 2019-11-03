@@ -28,6 +28,14 @@ if (!defined('IS_ADMIN_FLAG')) {
   if (SEND_EMAILS != 'true') {
     $messageStack->add(WARNING_EMAIL_SYSTEM_DISABLED, 'error');
   }
+// check if email sending has been disabled by developer switch
+  if (defined('DEVELOPER_OVERRIDE_EMAIL_STATUS') && DEVELOPER_OVERRIDE_EMAIL_STATUS == 'false') {
+      $messageStack->add(WARNING_EMAIL_SYSTEM_DEVELOPER_OVERRIDE, 'info');
+  }
+// check if email destinations have been diverted by developer switch
+  if (defined('DEVELOPER_OVERRIDE_EMAIL_ADDRESS') && DEVELOPER_OVERRIDE_EMAIL_ADDRESS != '') {
+      $messageStack->add(sprintf(WARNING_EMAIL_SYSTEM_DEVELOPER_EMAIL, DEVELOPER_OVERRIDE_EMAIL_ADDRESS), 'info');
+  }
 
   // this will let the admin know that the website is DOWN FOR MAINTENANCE to the public
   if (DOWN_FOR_MAINTENANCE == 'true') {
