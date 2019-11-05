@@ -33,7 +33,7 @@ if (!defined('IS_ADMIN_FLAG')) {
       $messageStack->add(WARNING_EMAIL_SYSTEM_DEVELOPER_OVERRIDE, 'info');
 // check if email destinations have been diverted by developer switch
   } elseif (defined('DEVELOPER_OVERRIDE_EMAIL_ADDRESS') && DEVELOPER_OVERRIDE_EMAIL_ADDRESS != '') {
-      $messageStack->add(sprintf(WARNING_EMAIL_SYSTEM_DEVELOPER_EMAIL, DEVELOPER_OVERRIDE_EMAIL_ADDRESS), 'info');
+      $messageStack->add(sprintf(zen_output_string_protected(WARNING_EMAIL_SYSTEM_DEVELOPER_EMAIL), DEVELOPER_OVERRIDE_EMAIL_ADDRESS), 'info');
   }
 
   // this will let the admin know that the website is DOWN FOR MAINTENANCE to the public
