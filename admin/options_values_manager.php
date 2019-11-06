@@ -86,6 +86,7 @@ if (zen_not_null($action)) {
 
 // alert if possible duplicate
       $duplicate_option_values = '';
+      $check_dups = '';
       for ($i = 0, $n = sizeof($languages); $i < $n; $i ++) {
         $value_name = zen_db_prepare_input($value_name_array[$languages[$i]['id']]);
 
