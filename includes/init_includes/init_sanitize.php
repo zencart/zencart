@@ -40,21 +40,6 @@
       }
     }
   }
-
-  $saniGroup2 = array();
-  if (isset($_GET['amp;typefilter']) && !isset($_GET['typefilter'])) $saniGroup2[] = 'typefilter';
-  if (isset($_GET['amp;products_id']) && !isset($_GET['products_id'])) $saniGroup2[] = 'products_id';
-  if (isset($_GET['amp;manufacturers_id']) && !isset($_GET['manufacturers_id'])) $saniGroup2[] = 'manufacturers_id';
-  if (isset($_GET['amp;categories_id']) && !isset($_GET['categories_id'])) $saniGroup2[] = 'categories_id';
-  if (isset($_GET['amp;cPath']) && !isset($_GET['cPath'])) $saniGroup2[] = 'cPath';
-  if (isset($_GET['amp;main_page']) && !isset($_GET['main_page'])) $saniGroup2[] = 'main_page';
-  if (isset($_GET['amp;sort']) && !isset($_GET['sort'])) $saniGroup2[] = 'sort';
-
-  foreach ($saniGroup2 as $key) {
-    $_GET[$key] = $_GET['amp;' . $key];
-    unset($_GET['amp;' . $key]);
-  }
-
   if (isset($_GET['typefilter'])) $_GET['typefilter'] = preg_replace('/[^0-9a-zA-Z_-]/', '', $_GET['typefilter']);
   if (isset($_GET['products_id'])) $_GET['products_id'] = preg_replace('/[^0-9a-f:]/', '', $_GET['products_id']);
   if (isset($_GET['manufacturers_id'])) $_GET['manufacturers_id'] = preg_replace('/[^0-9]/', '', $_GET['manufacturers_id']);
@@ -65,10 +50,6 @@
   $saniGroup1 = array('action', 'addr', 'alpha_filter_id', 'alpha_filter', 'authcapt', 'chapter', 'cID', 'currency', 'debug', 'delete', 'dfrom', 'disp_order', 'dto', 'edit', 'faq_item', 'filter_id', 'goback', 'goto', 'gv_no', 'id', 'inc_subcat', 'language', 'markflow', 'music_genre_id', 'nocache', 'notify', 'number_of_uploads', 'order_id', 'order', 'override', 'page', 'pfrom', 'pid', 'pID', 'pos', 'product_id', 'products_image_large_additional', 'products_tax_class_id', 'pto', 'record_company_id', 'referer', 'reviews_id', 'search_in_description', 'set_session_login', 'token', 'tx', 'type', 'zenid');
   foreach ($saniGroup1 as $key)
   {
-    if (isset($_GET['amp;' . $key]) && !isset($_GET[$key])) {
-      $_GET[$key] = $_GET['amp;' . $key];
-      unset($_GET['amp;' . $key]);
-    }
     if (isset($_GET[$key]))
     {
       $_GET[$key] = preg_replace('/[^\/0-9a-zA-Z_:@.-]/', '', $_GET[$key]);
