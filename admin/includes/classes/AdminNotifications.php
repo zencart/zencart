@@ -31,6 +31,10 @@ class AdminNotifications
         }
 
         $notificationList = $this->getNotificationInfo();
+        if (empty($notificationList)) {
+            return [];
+        }
+
         $this->pruneSavedState($notificationList);
         $savedState = $this->getSavedState($adminId);
         $result = [];
