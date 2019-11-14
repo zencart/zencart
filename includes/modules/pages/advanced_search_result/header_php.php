@@ -29,7 +29,7 @@ $_GET['keyword'] = isset($_GET['keyword']) ? trim($_GET['keyword']) : '';
 
 // -----
 // Give an observer the chance to indicate that there's another element to the search
-// that **is** provided, enabling the the search to continue.
+// that **is** provided, enabling the search to continue.
 //
 $search_additional_clause = false;
 $zco_notifier->notify('NOTIFY_ADVANCED_SEARCH_RESULTS_ADDL_CLAUSE', array(), $search_additional_clause);
