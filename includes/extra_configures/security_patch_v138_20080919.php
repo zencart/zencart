@@ -3,17 +3,18 @@
  * Security Patch v1.3.8 20080919
  * 
  * @package initSystem
- * @copyright Copyright 2003-2010 Zen Cart Development Team
+ * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: security_patch_v138_20080919.php 15882 2010-04-11 16:37:54Z wilt $
+ * @version $Id: security_patch_v138_20080919.php 15882 2019-07-07 16:37:54Z wilt $
  */
 /**
  * Security Patch
  * 
  * Multiple Vulnerabilities
  * 
- * SQL Injection - $_POST['products_id'] 
+ * SQL Injection - $_POST['products_id']
  * SQL Injection - $_POST['id']
+ * SQL Injection - $_POST['notify']
  * 
  * Please Note : This file should be placed in includes/extra_configures and will automatically load.
  *  
