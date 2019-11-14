@@ -17,6 +17,9 @@ define('TEXT_INFORMATION', '<a name="Top"></a>
   <a href="'.zen_href_link(FILENAME_GV_FAQ,'faq_item=4','NONSSL').'">Redeeming ' . TEXT_GV_NAMES . '</a><br />
   <a href="'.zen_href_link(FILENAME_GV_FAQ,'faq_item=5','NONSSL').'">When problems occur</a><br />
 ');
+if (empty($_GET['faq_item'])) {
+  $_GET['faq_item'] == '0';
+}
 switch ($_GET['faq_item']) {
   case '1':
 define('SUB_HEADING_TITLE','Purchasing ' . TEXT_GV_NAMES);
