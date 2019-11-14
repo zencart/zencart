@@ -15,7 +15,7 @@
 
 <?php
 // only show when there is a GV balance
-  if ($customer_has_gv_balance ) {
+  if (!empty($customer_has_gv_balance) ) {
 ?>
 <div id="sendSpendWrapper">
 <?php require($template->get_template_dir('tpl_modules_send_or_spend.php',DIR_WS_TEMPLATE, $current_page_base,'templates'). '/tpl_modules_send_or_spend.php'); ?>
@@ -41,7 +41,7 @@
 <fieldset>
 <legend><?php echo TEXT_GV_REDEEM_INFO; ?></legend>
 <label class="inputLabel" for="lookup-gv-redeem"><?php echo TEXT_GV_REDEEM_ID; ?></label>
-<?php echo zen_draw_input_field('gv_no', $_GET['gv_no'], 'size="18" id="lookup-gv-redeem"');?>
+<?php echo zen_draw_input_field('gv_no', isset($_GET['gv_no']) ? $_GET['gv_no'] : '0', 'size="18" id="lookup-gv-redeem"');?>
 </fieldset>
 <div class="buttonRow forward"><?php echo zen_image_submit(BUTTON_IMAGE_REDEEM, BUTTON_REDEEM_ALT); ?></div>
 </form>

@@ -14,7 +14,10 @@ $zco_notifier->notify('NOTIFY_HEADER_START_GV_FAQ');
 
 require(DIR_WS_MODULES . zen_get_module_directory('require_languages.php'));
 
-if ($_SESSION['customer_id']) {
+$customer_has_gv_balance = false;
+$customer_gv_balance = 0;
+
+if (zen_is_logged_in() && !zen_in_guest_checkout()) {
 
   $gv_query = "SELECT amount
                FROM " . TABLE_COUPON_GV_CUSTOMER . "
@@ -32,4 +35,3 @@ $breadcrumb->add(NAVBAR_TITLE);
 
 // This should be last line of the script:
 $zco_notifier->notify('NOTIFY_HEADER_END_GV_FAQ');
-?>
