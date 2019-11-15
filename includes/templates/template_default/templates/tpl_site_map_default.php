@@ -121,7 +121,7 @@
         }
 
         // if altURL is specified, use it; otherwise, use EZPage ID to create link
-        $page_query_list[$rows]['link'] = ($page_query_list_sidebox[$rows]['altURL'] =='') ?
+        $page_query_list[$rows]['link'] = empty($page_query_list[$rows]['altURL']) ?
         zen_href_link(FILENAME_EZPAGES, 'id=' . $page_query['pages_id'] . ($page_query['toc_chapter'] > 0 ? '&chapter=' . $page_query['toc_chapter'] : ''), ($page_query['page_is_ssl']=='0' ? 'NONSSL' : 'SSL')) :
         $page_query_list[$rows]['altURL'];
         $page_query_list[$rows]['link'] .= ($page_query['page_open_new_window'] == '1' ? '" rel="noreferrer noopener" target="_blank' : '');
