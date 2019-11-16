@@ -83,7 +83,7 @@ if ($_SESSION['cart']->count_contents() > 0) {
         // user not logged in !
         require DIR_WS_CLASSES . 'order.php';
         $order = new order;
-        if (isset($_POST['zone_country_id'])) {
+        if (!empty($_POST['zone_country_id'])) {
             // country is selected
             $_SESSION['country_info'] = zen_get_countries($_POST['zone_country_id'],true);
             $country_info = $_SESSION['country_info'];
