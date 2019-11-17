@@ -1289,6 +1289,7 @@ if (zen_not_null($action) && $order_exists == true) {
 
                     if ($orders_history_query->RecordCount() > 0) {
                       $contents[] = array('text' => '<br>' . TABLE_HEADING_COMMENTS);
+                      $contents[] = array('text' => nl2br(zen_output_string_protected($orders_history_query->fields['comments'])));
                     }
 
                     $contents[] = array('text' => '<br>' . zen_image(DIR_WS_IMAGES . 'pixel_black.gif', '', '', '3', 'style="width:100%"'));
