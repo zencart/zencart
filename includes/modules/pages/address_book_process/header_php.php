@@ -320,6 +320,7 @@ if (isset($_GET['edit']) && is_numeric($_GET['edit'])) {
 /*
  * Set flags for template use:
  */
+if (!isset($_GET['delete'])) {
   if ($process == false) {
     $selected_country = $entry->fields['entry_country_id'];
   } else {
@@ -329,7 +330,7 @@ if (isset($_GET['edit']) && is_numeric($_GET['edit'])) {
   $flag_show_pulldown_states = ((($process == true || $entry_state_has_zones == true) && $zone_name == '') || ACCOUNT_STATE_DRAW_INITIAL_DROPDOWN == 'true' || $error_state_input) ? true : false;
   $state = ($flag_show_pulldown_states && $state != FALSE) ? $state : $zone_name;
   $state_field_label = ($flag_show_pulldown_states) ? '' : ENTRY_STATE;
-
+}
 
 
 if (!isset($_GET['delete']) && !isset($_GET['edit'])) {
