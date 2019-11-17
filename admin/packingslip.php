@@ -154,7 +154,7 @@ if ($order->billing['street_address'] != $order->delivery['street_address']) {
         </tbody>
       </table>
       <?php if (ORDER_COMMENTS_PACKING_SLIP > 0) { ?>
-        <table class="table table-condensed" style="width:25%;">
+        <table class="table table-condensed">
           <thead>
             <tr>
               <th class="text-center"><strong><?php echo TABLE_HEADING_DATE_ADDED; ?></strong></th>
