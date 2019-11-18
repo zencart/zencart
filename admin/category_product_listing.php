@@ -52,16 +52,6 @@ if (zen_not_null($action)) {
 
         $categories = zen_get_category_tree($categories_id, '', '0', '', true);
 
-        for ($i = 0, $n = sizeof($categories); $i < $n; $i++) {
-          $product_ids = $db->Execute("SELECT products_id
-                                       FROM " . TABLE_PRODUCTS_TO_CATEGORIES . "
-                                       WHERE categories_id = " . (int)$categories[$i]['id']);
-
-          foreach ($product_ids as $product_id) {
-            $products[$product_id['products_id']]['categories'][] = $categories[$i]['id'];
-          }
-        }
-
         // change the status of categories and products
         zen_set_time_limit(600);
           if ($_POST['categories_status'] == '1') {//form is coming from an Enabled category which is to be changed to Disabled
