@@ -403,7 +403,7 @@ function zen_validate_user_login($admin_name, $admin_pass)
     }
   } // END LOGIN SLAM PREVENTION
   // deal with expireds for SSL change
-  if ($error == FALSE && $result['pwd_last_change_date']  == '1990-01-01 14:02:22')
+  if (PADSS_PWD_EXPIRY_ENFORCED == 1 && $error == FALSE && $result['pwd_last_change_date']  == '1990-01-01 14:02:22')
   {
     $expired = true;
     $error = true;
