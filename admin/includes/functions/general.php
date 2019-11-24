@@ -2729,7 +2729,7 @@ function zen_get_categories($categories_array = array(), $parent_id = '0', $inde
             'text' => $indent . $result['categories_name'],
         ];
         if ($result['categories_id'] != $parent_id) {
-            $categories_array = zen_get_categories($categories_array, $result['categories_id'], $indent . '&nbsp;&nbsp;', '1');
+            $categories_array = zen_get_categories($categories_array, $result['categories_id'], $indent . '&nbsp;&nbsp;', $status_setting);
         }
     }
     return $categories_array;
