@@ -252,6 +252,9 @@ class order extends base {
 
   function cart() {
     global $db, $currencies;
+
+    $this->notify('NOTIFY_ORDER_CART_BEGINS');
+
     $billto = (!empty($_SESSION['billto']) ? (int)$_SESSION['billto'] : 0);
     $sendto = (!empty($_SESSION['sendto']) ? (int)$_SESSION['sendto'] : 0);
 
