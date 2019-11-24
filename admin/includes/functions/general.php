@@ -1870,21 +1870,21 @@ while (!$chk_sale_categories_all->EOF) {
     $date_selector = '<select name="'. $prefix .'_day">';
     for ($i=1;$i<32;$i++){
       $date_selector .= '<option value="' . $i . '"';
-      if ($i==$day) $date_selector .= 'selected';
+      if ($i==$day) $date_selector .= ' selected';
       $date_selector .= '>' . $i . '</option>';
     }
     $date_selector .= '</select>';
     $date_selector .= '<select name="'. $prefix .'_month">';
     for ($i=1;$i<13;$i++){
       $date_selector .= '<option value="' . $i . '"';
-      if ($i==$month) $date_selector .= 'selected';
+      if ($i==$month) $date_selector .= ' selected';
       $date_selector .= '>' . $month_array[$i] . '</option>';
     }
     $date_selector .= '</select>';
     $date_selector .= '<select name="'. $prefix .'_year">';
     for ($i = date('Y') - 5, $j = date('Y') + 11; $i < $j; $i++) {
       $date_selector .= '<option value="' . $i . '"';
-      if ($i==$year) $date_selector .= 'selected';
+      if ($i==$year) $date_selector .= ' selected';
       $date_selector .= '>' . $i . '</option>';
     }
     $date_selector .= '</select>';
