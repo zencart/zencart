@@ -1366,8 +1366,6 @@ function zen_js_option_values_list($selectedName, $fieldName)
                         $attributes_value_price_prefix = ($attributes_value['price_prefix'] == '+' ? 1 : ($attributes_value['price_prefix'] == '-' ? 2 : 0));
                         $products_attributes_weight_prefix = ($attributes_value['products_attributes_weight_prefix'] == '+' ? 1 : ($attributes_value['price_prefix'] == '-' ? 2 : 0));
                         ?>
-                        <?php zc_dump($attributes_value['products_attributes_weight_prefix']); ?>
-                        <?php zc_dump($products_attributes_weight_prefix); ?>
                         <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
                           <?php echo zen_draw_label(TABLE_HEADING_OPT_PRICE, 'value_price', 'class="control-label"'); ?>
                           <div class="input-group">
@@ -1472,19 +1470,12 @@ function zen_js_option_values_list($selectedName, $fieldName)
                         <table class="table" style="width: auto">
                           <thead>
                             <tr>
-                              <th class="read-only-attr">
-                                <strong><?php echo TEXT_ATTRIBUTES_DISPLAY_ONLY; ?></strong></th>
-                              <th class="is-free-attr">
-                                <strong><?php echo TEXT_ATTRIBUTES_IS_FREE; ?></strong></th>
-                              <th class="default-attr">
-                                <strong><?php echo TEXT_ATTRIBUTES_DEFAULT; ?></strong></th>
-                              <th class="is-discounted-attr">
-                                <strong><?php echo TEXT_ATTRIBUTE_IS_DISCOUNTED; ?></strong></th>
-                              <th class="base-included-attr">
-                                <strong><?php echo TEXT_ATTRIBUTE_PRICE_BASE_INCLUDED; ?></strong></th>
-                              <th class="required-attr">
-                                <strong><?php echo TEXT_ATTRIBUTES_REQUIRED; ?></strong>
-                              </th>
+                              <th class="read-only-attr"><?php echo TEXT_ATTRIBUTES_DISPLAY_ONLY; ?></th>
+                              <th class="is-free-attr"><?php echo TEXT_ATTRIBUTES_IS_FREE; ?></th>
+                              <th class="default-attr"><?php echo TEXT_ATTRIBUTES_DEFAULT; ?></th>
+                              <th class="is-discounted-attr"><?php echo TEXT_ATTRIBUTE_IS_DISCOUNTED; ?></th>
+                              <th class="base-included-attr"><?php echo TEXT_ATTRIBUTE_PRICE_BASE_INCLUDED; ?></th>
+                              <th class="required-attr"><?php echo TEXT_ATTRIBUTES_REQUIRED; ?></th>
                             </tr>
                           </thead>
                           <tbody>
@@ -2028,19 +2019,12 @@ function zen_js_option_values_list($selectedName, $fieldName)
                       <table class="table" style="width: auto">
                         <thead>
                           <tr>
-                            <th class="read-only-attr">
-                              <strong><?php echo TEXT_ATTRIBUTES_DISPLAY_ONLY; ?></strong></th>
-                            <th class="is-free-attr">
-                              <strong><?php echo TEXT_ATTRIBUTES_IS_FREE; ?></strong></th>
-                            <th class="default-attr">
-                              <strong><?php echo TEXT_ATTRIBUTES_DEFAULT; ?></strong></th>
-                            <th class="is-discounted-attr">
-                              <strong><?php echo TEXT_ATTRIBUTE_IS_DISCOUNTED; ?></strong></th>
-                            <th class="base-included-attr">
-                              <strong><?php echo TEXT_ATTRIBUTE_PRICE_BASE_INCLUDED; ?></strong></th>
-                            <th class="required-attr">
-                              <strong><?php echo TEXT_ATTRIBUTES_REQUIRED; ?></strong>
-                            </th>
+                            <th class="read-only-attr"><?php echo TEXT_ATTRIBUTES_DISPLAY_ONLY; ?></th>
+                            <th class="is-free-attr"><?php echo TEXT_ATTRIBUTES_IS_FREE; ?></th>
+                            <th class="default-attr"><?php echo TEXT_ATTRIBUTES_DEFAULT; ?></th>
+                            <th class="is-discounted-attr"><?php echo TEXT_ATTRIBUTE_IS_DISCOUNTED; ?></th>
+                            <th class="base-included-attr"><?php echo TEXT_ATTRIBUTE_PRICE_BASE_INCLUDED; ?></th>
+                            <th class="required-attr"><?php echo TEXT_ATTRIBUTES_REQUIRED; ?></th>
                           </tr>
                         </thead>
                         <tbody>
