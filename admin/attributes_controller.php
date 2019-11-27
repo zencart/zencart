@@ -325,20 +325,20 @@ if (zen_not_null($action)) {
           $attributes_image_name = zen_limit_image_filename($attributes_image_name, TABLE_PRODUCTS_ATTRIBUTES, 'attributes_image');
 
           $db->Execute("INSERT INTO " . TABLE_PRODUCTS_ATTRIBUTES . " (products_id, options_id, options_values_id, options_values_price, price_prefix, products_options_sort_order, product_attribute_is_free, products_attributes_weight, products_attributes_weight_prefix, attributes_display_only, attributes_default, attributes_discounted, attributes_image, attributes_price_base_included, attributes_price_onetime, attributes_price_factor, attributes_price_factor_offset, attributes_price_factor_onetime, attributes_price_factor_onetime_offset, attributes_qty_prices, attributes_qty_prices_onetime, attributes_price_words, attributes_price_words_free, attributes_price_letters, attributes_price_letters_free, attributes_required)
-                        VALUES (" . $products_id . ",
-                                " . $options_id . ",
-                                " . $values_id . ",
+                        VALUES (" . (int)$products_id . ",
+                                " . (int)$options_id . ",
+                                " . (int)$values_id . ",
                                 '" . (float)zen_db_input($value_price) . "',
                                 '" . zen_db_input($price_prefix) . "',
-                                " . $products_options_sort_order . ",
-                                " . $product_attribute_is_free . ",
+                                " . (int)$products_options_sort_order . ",
+                                " . (int)$product_attribute_is_free . ",
                                 '" . (float)zen_db_input($products_attributes_weight) . "',
                                 '" . zen_db_input($products_attributes_weight_prefix) . "',
-                                " . $attributes_display_only . ",
-                                " . $attributes_default . ",
-                                " . $attributes_discounted . ",
+                                " . (int)$attributes_display_only . ",
+                                " . (int)$attributes_default . ",
+                                " . (int)$attributes_discounted . ",
                                 '" . zen_db_input($attributes_image_name) . "',
-                                " . $attributes_price_base_included . ",
+                                " . (int)$attributes_price_base_included . ",
                                 '" . (float)zen_db_input($attributes_price_onetime) . "',
                                 '" . (float)zen_db_input($attributes_price_factor) . "',
                                 '" . (float)zen_db_input($attributes_price_factor_offset) . "',
@@ -347,10 +347,10 @@ if (zen_not_null($action)) {
                                 '" . zen_db_input($attributes_qty_prices) . "',
                                 '" . zen_db_input($attributes_qty_prices_onetime) . "',
                                 '" . (float)zen_db_input($attributes_price_words) . "',
-                                " . $attributes_price_words_free . ",
+                                " . (int)$attributes_price_words_free . ",
                                 '" . (float)zen_db_input($attributes_price_letters) . "',
-                                " . $attributes_price_letters_free . ",
-                                " . $attributes_required . ")");
+                                " . (int)$attributes_price_letters_free . ",
+                                " . (int)$attributes_required . ")");
 
           $products_attributes_id = $db->Insert_ID();
 
@@ -480,19 +480,19 @@ if (zen_not_null($action)) {
                         WHERE products_attributes_id = " . $attribute_id);
 
           $db->Execute("UPDATE " . TABLE_PRODUCTS_ATTRIBUTES . "
-                        SET products_id = " . $products_id . ",
-                            options_id = " . $options_id . ",
-                            options_values_id = " . $values_id . ",
+                        SET products_id = " . (int)$products_id . ",
+                            options_id = " . (int)$options_id . ",
+                            options_values_id = " . (int)$values_id . ",
                             options_values_price = '" . zen_db_input($value_price) . "',
                             price_prefix = '" . zen_db_input($price_prefix) . "',
-                            products_options_sort_order = " . $products_options_sort_order . ",
-                            product_attribute_is_free = " . $product_attribute_is_free . ",
+                            products_options_sort_order = " . (int)$products_options_sort_order . ",
+                            product_attribute_is_free = " . (int)$product_attribute_is_free . ",
                             products_attributes_weight = '" . zen_db_input($products_attributes_weight) . "',
                             products_attributes_weight_prefix = '" . zen_db_input($products_attributes_weight_prefix) . "',
-                            attributes_display_only = " . $attributes_display_only . ",
-                            attributes_default = " . $attributes_default . ",
-                            attributes_discounted = " . $attributes_discounted . ",
-                            attributes_price_base_included = " . $attributes_price_base_included . ",
+                            attributes_display_only = " . (int)$attributes_display_only . ",
+                            attributes_default = " . (int)$attributes_default . ",
+                            attributes_discounted = " . (int)$attributes_discounted . ",
+                            attributes_price_base_included = " . (int)$attributes_price_base_included . ",
                             attributes_price_onetime = '" . zen_db_input($attributes_price_onetime) . "',
                             attributes_price_factor = '" . zen_db_input($attributes_price_factor) . "',
                             attributes_price_factor_offset = '" . zen_db_input($attributes_price_factor_offset) . "',
@@ -501,11 +501,11 @@ if (zen_not_null($action)) {
                             attributes_qty_prices = '" . zen_db_input($attributes_qty_prices) . "',
                             attributes_qty_prices_onetime = '" . zen_db_input($attributes_qty_prices_onetime) . "',
                             attributes_price_words = '" . zen_db_input($attributes_price_words) . "',
-                            attributes_price_words_free = " . $attributes_price_words_free . ",
+                            attributes_price_words_free = " . (int)$attributes_price_words_free . ",
                             attributes_price_letters = '" . zen_db_input($attributes_price_letters) . "',
-                            attributes_price_letters_free = " . $attributes_price_letters_free . ",
-                            attributes_required = " . $attributes_required . "
-                        WHERE products_attributes_id = " . $attribute_id);
+                            attributes_price_letters_free = " . (int)$attributes_price_letters_free . ",
+                            attributes_required = " . (int)$attributes_required . "
+                        WHERE products_attributes_id = " . (int)$attribute_id);
 
           if (DOWNLOAD_ENABLED == 'true') {
             $products_attributes_filename = zen_limit_image_filename($_POST['products_attributes_filename'], TABLE_PRODUCTS_ATTRIBUTES_DOWNLOAD, 'products_attributes_filename');
