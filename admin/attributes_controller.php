@@ -150,7 +150,10 @@ if (zen_not_null($action)) {
                       SET attributes_display_only = " . ($_GET['flag'] == '0' ? '1' : '0') . "
                       WHERE products_id = " . (int)$_GET['products_filter'] . "
                       AND products_attributes_id = " . (int)$_GET['attributes_id']);
-      }
+
+        $exclude_array = ['action'];
+        zen_redirect(zen_href_link(FILENAME_ATTRIBUTES_CONTROLLER, zen_get_all_get_params($exclude_array)));
+        }
       break;
 
     case 'set_flag_product_attribute_is_free':
@@ -160,6 +163,9 @@ if (zen_not_null($action)) {
                       SET product_attribute_is_free = " . ($_GET['flag'] == '0' ? '1' : '0') . "
                       WHERE products_id = " . (int)$_GET['products_filter'] . "
                       AND products_attributes_id = " . (int)$_GET['attributes_id']);
+
+        $exclude_array = ['action'];
+        zen_redirect(zen_href_link(FILENAME_ATTRIBUTES_CONTROLLER, zen_get_all_get_params($exclude_array)));
       }
       break;
 
@@ -170,6 +176,9 @@ if (zen_not_null($action)) {
                       SET attributes_default = " . ($_GET['flag'] == '0' ? '1' : '0') . "
                       WHERE products_id = " . (int)$_GET['products_filter'] . "
                       AND products_attributes_id = " . (int)$_GET['attributes_id']);
+
+        $exclude_array = ['action'];
+        zen_redirect(zen_href_link(FILENAME_ATTRIBUTES_CONTROLLER, zen_get_all_get_params($exclude_array)));
       }
       break;
 
@@ -182,6 +191,9 @@ if (zen_not_null($action)) {
                       AND products_attributes_id = " . (int)$_GET['attributes_id']);
         // reset products_price_sorter for searches etc.
         zen_update_products_price_sorter($_GET['products_filter']);
+
+        $exclude_array = ['action'];
+        zen_redirect(zen_href_link(FILENAME_ATTRIBUTES_CONTROLLER, zen_get_all_get_params($exclude_array)));
       }
       break;
 
@@ -194,6 +206,9 @@ if (zen_not_null($action)) {
                       AND products_attributes_id = " . (int)$_GET['attributes_id']);
         // reset products_price_sorter for searches etc.
         zen_update_products_price_sorter($_GET['products_filter']);
+
+        $exclude_array = ['action'];
+        zen_redirect(zen_href_link(FILENAME_ATTRIBUTES_CONTROLLER, zen_get_all_get_params($exclude_array)));
       }
       break;
 
@@ -204,6 +219,9 @@ if (zen_not_null($action)) {
                       SET attributes_required = " . ($_GET['flag'] == '0' ? '1' : '0') . "
                       WHERE products_id = " . (int)$_GET['products_filter'] . "
                       AND products_attributes_id = " . (int)$_GET['attributes_id']);
+
+        $exclude_array = ['action'];
+        zen_redirect(zen_href_link(FILENAME_ATTRIBUTES_CONTROLLER, zen_get_all_get_params($exclude_array)));
       }
       break;
 
