@@ -251,33 +251,31 @@ if (zen_not_null($action)) {
       $current_image_name = '';
       for ($i = 0; $i < sizeof($_POST['values_id']); $i++) {
         if (isset($_POST['values_id'][$i])) {
-          $_POST['values_id'][$i] = (int)$_POST['values_id'][$i];
+          $value_id = (int)$_POST['values_id'][$i];
         }
         if (isset($_POST['options_id'])) {
-          $_POST['options_id'] = (int)$_POST['options_id'];
+          $options_id = (int)$_POST['options_id'];
         }
         if (isset($_POST['products_id'])) {
-          $_POST['products_id'] = (int)$_POST['products_id'];
+          $products_id = (int)$_POST['products_id'];
         }
 // check for duplicate and block them
         $check_duplicate = $db->Execute("SELECT products_id, options_id, options_values_id
                                          FROM " . TABLE_PRODUCTS_ATTRIBUTES . "
-                                         WHERE products_id = " . (int)$_POST['products_id'] . "
-                                         AND options_id = " . (int)$_POST['options_id'] . "
-                                         AND options_values_id = " . (int)$_POST['values_id'][$i]);
+                                         WHERE products_id = " . (int)$products_id . "
+                                         AND options_id = " . (int)$options_id . "
+                                         AND options_values_id = " . (int)$value_id);
         if ($check_duplicate->RecordCount() > 0) {
           // do not add duplicates -- give a warning
-          $messageStack->add_session(ATTRIBUTE_WARNING_DUPLICATE . ' - ' . zen_options_name($_POST['options_id']) . ' : ' . zen_values_name($_POST['values_id'][$i]), 'error');
+          $messageStack->add_session(ATTRIBUTE_WARNING_DUPLICATE . ' - ' . zen_options_name($options_id) . ' : ' . zen_values_name($value_id), 'error');
         } else {
 // For TEXT and FILE option types, ignore option value entered by administrator and use PRODUCTS_OPTIONS_VALUES_TEXT instead.
           $products_options_array = $db->Execute("SELECT products_options_type
                                                   FROM " . TABLE_PRODUCTS_OPTIONS . "
-                                                  WHERE products_options_id = " . (int)$_POST['options_id']);
-          $values_id = (int)(($products_options_array->fields['products_options_type'] == PRODUCTS_OPTIONS_TYPE_TEXT) || ( $products_options_array->fields['products_options_type'] == PRODUCTS_OPTIONS_TYPE_FILE)) ? PRODUCTS_OPTIONS_VALUES_TEXT_ID : $_POST['values_id'][$i];
+                                                  WHERE products_options_id = " . (int)$options_id);
+          $values_id = (int)(($products_options_array->fields['products_options_type'] == PRODUCTS_OPTIONS_TYPE_TEXT) || ( $products_options_array->fields['products_options_type'] == PRODUCTS_OPTIONS_TYPE_FILE)) ? PRODUCTS_OPTIONS_VALUES_TEXT_ID : $value_id;
 
-          $products_id = (int)$_POST['products_id'];
-          $options_id = (int)$_POST['options_id'];
-          $value_price = zen_db_prepare_input($_POST['value_price']);
+          $value_price = (float)$_POST['value_price'];
           $price_prefix = (int)$_POST['price_prefix'];
           $price_prefix = ($price_prefix == 1 ? '+' : ($price_prefix == 2 ? '-' : ''));
 
@@ -289,7 +287,7 @@ if (zen_not_null($action)) {
           } else {
             $sort_order_query = $db->Execute("SELECT products_options_values_sort_order
                                               FROM " . TABLE_PRODUCTS_OPTIONS_VALUES . "
-                                              WHERE products_options_values_id = " . (int)$_POST['values_id'][$i]);
+                                              WHERE products_options_values_id = " . (int)$value_id);
             $products_options_sort_order = (int)$sort_order_query->fields['products_options_values_sort_order'];
           } // end if (zen_not_null($_POST['products_options_sort_order'])
 // end modification for sort order
