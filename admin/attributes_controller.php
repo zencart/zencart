@@ -153,7 +153,7 @@ if (zen_not_null($action)) {
 
         $exclude_array = ['action'];
         zen_redirect(zen_href_link(FILENAME_ATTRIBUTES_CONTROLLER, zen_get_all_get_params($exclude_array)));
-        }
+      }
       break;
 
     case 'set_flag_product_attribute_is_free':
@@ -229,10 +229,9 @@ if (zen_not_null($action)) {
 /////////////////////////////////////////
 
     case 'set_products_filter':
-      $_GET['products_filter'] = (int)$_POST['products_filter'];
-      $_GET['current_category_id'] = (int)$_POST['current_category_id'];
-      $action = '';
-      zen_redirect(zen_href_link(FILENAME_ATTRIBUTES_CONTROLLER, $_SESSION['page_info'] . '&products_filter=' . $_GET['products_filter'] . '&current_category_id=' . $_GET['current_category_id']));
+
+      $exclude_array = ['action'];
+      zen_redirect(zen_href_link(FILENAME_ATTRIBUTES_CONTROLLER, zen_get_all_get_params($exclude_array) . $_SESSION['page_info'] . '&products_filter=' . (int)$_POST['products_filter'] . '&current_category_id=' . (int)$_POST['current_category_id']));
       break;
 // update by product
     case 'update_attribute_sort':
