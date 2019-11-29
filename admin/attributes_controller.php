@@ -1146,79 +1146,22 @@ function zen_js_option_values_list($selectedName, $fieldName)
         <div class="row">
           <div class="col-sm-12">
             <?php echo zen_draw_form('attributes', FILENAME_ATTRIBUTES_CONTROLLER, 'action=' . $form_action . (isset($_GET['option_page']) ? '&option_page=' . $_GET['option_page'] . '&' : '') . (isset($_GET['value_page']) ? '&value_page=' . $_GET['value_page'] . '&' : '') . (isset($_GET['attribute_page']) ? '&attribute_page=' . $_GET['attribute_page'] : '') . '&products_filter=' . $products_filter, 'post', 'enctype="multipart/form-data" class="form-horizontal"'); ?>
-
             <?php
-            $per_page = (defined('MAX_ROW_LISTS_ATTRIBUTES_CONTROLLER') && (int)MAX_ROW_LISTS_ATTRIBUTES_CONTROLLER > 3) ? (int)MAX_ROW_LISTS_ATTRIBUTES_CONTROLLER : 40;
-            $attributes = "SELECT pa.*
-                           FROM (" . TABLE_PRODUCTS_ATTRIBUTES . " pa
-                           LEFT JOIN " . TABLE_PRODUCTS_OPTIONS . " po ON pa.options_id = po.products_options_id
-                             AND po.language_id = " . (int)$_SESSION['languages_id'] . ")
-                           WHERE pa.products_id = " . (int)$products_filter . "
-                           ORDER BY LPAD(po.products_options_sort_order,11,'0'),
-                                    LPAD(pa.options_id,11,'0'),
-                                    LPAD(pa.products_options_sort_order,11,'0')";
-            $attribute_query = $db->Execute($attributes);
-
-            $attribute_page_start = ($per_page * $_GET['attribute_page']) - $per_page;
-            $num_rows = $attribute_query->RecordCount();
-
-            if ($num_rows <= $per_page) {
-              $num_pages = 1;
-            } else if (($num_rows % $per_page) == 0) {
-              $num_pages = ($num_rows / $per_page);
-            } else {
-              $num_pages = ($num_rows / $per_page) + 1;
-            }
-            $num_pages = (int)$num_pages;
-
-// fix limit error on some versions
-            if ($attribute_page_start < 0) {
-              $attribute_page_start = 0;
-            }
-
-            $attributes = $attributes . " LIMIT $attribute_page_start, $per_page";
+            $attributes_query_raw = "SELECT pa.*
+                                     FROM (" . TABLE_PRODUCTS_ATTRIBUTES . " pa
+                                     LEFT JOIN " . TABLE_PRODUCTS_OPTIONS . " po ON pa.options_id = po.products_options_id
+                                       AND po.language_id = " . (int)$_SESSION['languages_id'] . ")
+                                     WHERE pa.products_id = " . (int)$products_filter . "
+                                     ORDER BY LPAD(po.products_options_sort_order,11,'0'),
+                                              LPAD(pa.options_id,11,'0'),
+                                              LPAD(pa.products_options_sort_order,11,'0')";
+            $attributes_split = new splitPageResults($_GET['page'], MAX_ROW_LISTS_OPTIONS, $attributes_query_raw, $attributes_query_numrows);
             ?>
-            <?php if ($num_pages > 1) { ?>
-              <div class="row">
-                <nav aria-label="Page navigation">
-                  <ul class="pagination pagination-sm">
-                    <?php
-                    // First
-                    if ($_GET['attribute_page'] != '1') {
-                      echo '<li><a href="' . zen_href_link(FILENAME_ATTRIBUTES_CONTROLLER, 'attribute_page=1' . '&products_filter=' . $products_filter) . '" aria-label="First"  title="' . PREVNEXT_TITLE_FIRST_PAGE . '"><i class="fa fa-angle-double-left" aria-hidden="true""></i></a></li>';
-                    } else {
-                      echo '<li class="disabled"><a href="#" aria-label="First"><i class="fa fa-angle-double-left" aria-hidden="true""></i></a></li>';
-                    }
-                    // Previous
-                    if ($prev_attribute_page) {
-                      echo '<li><a href="' . zen_href_link(FILENAME_ATTRIBUTES_CONTROLLER, 'attribute_page=' . $prev_attribute_page . '&products_filter=' . $products_filter) . '" aria-label="Previous" title="' . PREVNEXT_TITLE_PREVIOUS_PAGE . '"><i class="fa fa-angle-left" aria-hidden="true""></i></a></li>';
-                    } else {
-                      echo '<li class="disabled"><a href="#" aria-label="Previous"><i class="fa fa-angle-left" aria-hidden="true""></i></a></li>';
-                    }
-
-                    for ($i = 1; $i <= $num_pages; $i++) {
-                      if ($i != $_GET['attribute_page']) {
-                        echo '<li><a href="' . zen_href_link(FILENAME_ATTRIBUTES_CONTROLLER, 'attribute_page=' . $i . '&products_filter=' . $products_filter) . '">' . $i . '</a></li>';
-                      } else {
-                        echo '<li class="active"><a href="#">' . $i . '</a></li>';
-                      }
-                    }
-
-                    // Next and Last
-                    if ($_GET['attribute_page'] != $num_pages) {
-                      echo '<li><a href="' . zen_href_link(FILENAME_ATTRIBUTES_CONTROLLER, 'attribute_page=' . $next_attribute_page . '&products_filter=' . $products_filter) . '" aria-label="Next" title="' . PREVNEXT_TITLE_NEXT_PAGE . '"><i class="fa fa-angle-right" aria-hidden="true""></i></a></li>';
-                      echo '<li><a href="' . zen_href_link(FILENAME_ATTRIBUTES_CONTROLLER, 'attribute_page=' . $num_pages . '&products_filter=' . $products_filter) . '" aria-label="Last" title="' . PREVNEXT_TITLE_LAST_PAGE . '"><i class="fa fa-angle-double-right" aria-hidden="true""></i></a></li>';
-                    } else {
-                      echo '<li class="disabled"><a href="#" aria-label="Next"><i class="fa fa-angle-right" aria-hidden="true""></i></a></li>';
-                      echo '<li class="disabled"><a href="#" aria-label="Last"><i class="fa fa-angle-double-right" aria-hidden="true""></i></a></li>';
-                    }
-                    ?>
-                  </ul>
-                </nav>
-              </div>
-              <?php
-            }
-            ?>
+            <div class="row">
+              <?php echo zen_draw_separator('pixel_trans.gif') ?>
+              <div class="col-sm-6"><?php echo $attributes_split->display_count($attributes_query_numrows, MAX_ROW_LISTS_ATTRIBUTES_CONTROLLER, $_GET['page'], TEXT_DISPLAY_NUMBER_OF_ATTRIBÜTES); ?></div>
+              <div class="col-sm-6 text-right"><?php echo $attributes_split->display_links($attributes_query_numrows, MAX_ROW_LISTS_ATTRIBUTES_CONTROLLER, MAX_DISPLAY_PAGE_LINKS, $_GET['page']); ?></div>
+            </div>
             <table class="table table-striped table-condensed">
               <tr class="dataTableHeadingRow">
                 <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_ID; ?></td>
@@ -1235,7 +1178,7 @@ function zen_js_option_values_list($selectedName, $fieldName)
 
               <?php
               $next_id = 1;
-              $attributes_values = $db->Execute($attributes);
+              $attributes_values = $db->Execute($attributes_query_raw);
 
               if ($attributes_values->RecordCount() == 0) {
                 ?>
