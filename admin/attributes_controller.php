@@ -293,7 +293,7 @@ if (zen_not_null($action)) {
 // end modification for sort order
 
           $product_attribute_is_free = (int)$_POST['product_attribute_is_free'];
-          $products_attributes_weight = zen_db_prepare_input($_POST['products_attributes_weight']);
+          $products_attributes_weight = (float)$_POST['products_attributes_weight'];
           $products_attributes_weight_prefix = (int)$_POST['products_attributes_weight_prefix'];
           $products_attributes_weight_prefix = ($products_attributes_weight_prefix == 1 ? '+' : ($products_attributes_weight_prefix == 2 ? '-' : ''));
           $attributes_display_only = (int)$_POST['attributes_display_only'];
@@ -301,17 +301,17 @@ if (zen_not_null($action)) {
           $attributes_discounted = (int)$_POST['attributes_discounted'];
           $attributes_price_base_included = (int)$_POST['attributes_price_base_included'];
 
-          $attributes_price_onetime = zen_db_prepare_input($_POST['attributes_price_onetime']);
-          $attributes_price_factor = zen_db_prepare_input($_POST['attributes_price_factor']);
-          $attributes_price_factor_offset = zen_db_prepare_input($_POST['attributes_price_factor_offset']);
-          $attributes_price_factor_onetime = zen_db_prepare_input($_POST['attributes_price_factor_onetime']);
-          $attributes_price_factor_onetime_offset = zen_db_prepare_input($_POST['attributes_price_factor_onetime_offset']);
+          $attributes_price_onetime = (float)$_POST['attributes_price_onetime'];
+          $attributes_price_factor = (float)$_POST['attributes_price_factor'];
+          $attributes_price_factor_offset = (float)$_POST['attributes_price_factor_offset'];
+          $attributes_price_factor_onetime = (float)$_POST['attributes_price_factor_onetime'];
+          $attributes_price_factor_onetime_offset = (float)$_POST['attributes_price_factor_onetime_offset'];
           $attributes_qty_prices = zen_db_prepare_input($_POST['attributes_qty_prices']);
           $attributes_qty_prices_onetime = zen_db_prepare_input($_POST['attributes_qty_prices_onetime']);
 
-          $attributes_price_words = zen_db_prepare_input($_POST['attributes_price_words']);
+          $attributes_price_words = (float)$_POST['attributes_price_words'];
           $attributes_price_words_free = (int)$_POST['attributes_price_words_free'];
-          $attributes_price_letters = zen_db_prepare_input($_POST['attributes_price_letters']);
+          $attributes_price_letters = (float)$_POST['attributes_price_letters'];
           $attributes_price_letters_free = (int)$_POST['attributes_price_letters_free'];
           $attributes_required = (int)$_POST['attributes_required'];
 
@@ -344,27 +344,27 @@ if (zen_not_null($action)) {
                         VALUES (" . (int)$products_id . ",
                                 " . (int)$options_id . ",
                                 " . (int)$values_id . ",
-                                '" . (float)zen_db_input($value_price) . "',
+                                " . (float)$value_price . ",
                                 '" . zen_db_input($price_prefix) . "',
                                 " . (int)$products_options_sort_order . ",
                                 " . (int)$product_attribute_is_free . ",
-                                '" . (float)zen_db_input($products_attributes_weight) . "',
+                                " . (float)$products_attributes_weight . ",
                                 '" . zen_db_input($products_attributes_weight_prefix) . "',
                                 " . (int)$attributes_display_only . ",
                                 " . (int)$attributes_default . ",
                                 " . (int)$attributes_discounted . ",
                                 '" . zen_db_input($attributes_image_name) . "',
                                 " . (int)$attributes_price_base_included . ",
-                                '" . (float)zen_db_input($attributes_price_onetime) . "',
-                                '" . (float)zen_db_input($attributes_price_factor) . "',
-                                '" . (float)zen_db_input($attributes_price_factor_offset) . "',
-                                '" . (float)zen_db_input($attributes_price_factor_onetime) . "',
-                                '" . (float)zen_db_input($attributes_price_factor_onetime_offset) . "',
+                                " . (float)$attributes_price_onetime . ",
+                                " . (float)$attributes_price_factor . ",
+                                " . (float)$attributes_price_factor_offset . ",
+                                " . (float)$attributes_price_factor_onetime . ",
+                                " . (float)$attributes_price_factor_onetime_offset . ",
                                 '" . zen_db_input($attributes_qty_prices) . "',
                                 '" . zen_db_input($attributes_qty_prices_onetime) . "',
-                                '" . (float)zen_db_input($attributes_price_words) . "',
+                                " . (float)$attributes_price_words . ",
                                 " . (int)$attributes_price_words_free . ",
-                                '" . (float)zen_db_input($attributes_price_letters) . "',
+                                " . (float)$attributes_price_letters . ",
                                 " . (int)$attributes_price_letters_free . ",
                                 " . (int)$attributes_required . ")");
 
@@ -434,13 +434,13 @@ if (zen_not_null($action)) {
 
           $products_id = (int)$_POST['products_id'];
           $options_id = (int)$_POST['options_id'];
-          $value_price = zen_db_prepare_input($_POST['value_price']);
+          $value_price = (float)$_POST['value_price'];
           $price_prefix = (int)$_POST['price_prefix'];
           $price_prefix = ($price_prefix == 1 ? '+' : ($price_prefix == 2 ? '-' : ''));
 
           $products_options_sort_order = (int)$_POST['products_options_sort_order'];
           $product_attribute_is_free = (int)$_POST['product_attribute_is_free'];
-          $products_attributes_weight = zen_db_prepare_input($_POST['products_attributes_weight']);
+          $products_attributes_weight = (float)$_POST['products_attributes_weight'];
           $products_attributes_weight_prefix = (int)$_POST['products_attributes_weight_prefix'];
           $products_attributes_weight_prefix = ($products_attributes_weight_prefix == 1 ? '+' : ($products_attributes_weight_prefix == 2 ? '-' : ''));
           $attributes_display_only = (int)$_POST['attributes_display_only'];
@@ -448,17 +448,17 @@ if (zen_not_null($action)) {
           $attributes_discounted = (int)$_POST['attributes_discounted'];
           $attributes_price_base_included = (int)$_POST['attributes_price_base_included'];
 
-          $attributes_price_onetime = zen_db_prepare_input($_POST['attributes_price_onetime']);
-          $attributes_price_factor = zen_db_prepare_input($_POST['attributes_price_factor']);
-          $attributes_price_factor_offset = zen_db_prepare_input($_POST['attributes_price_factor_offset']);
-          $attributes_price_factor_onetime = zen_db_prepare_input($_POST['attributes_price_factor_onetime']);
-          $attributes_price_factor_onetime_offset = zen_db_prepare_input($_POST['attributes_price_factor_onetime_offset']);
+          $attributes_price_onetime = (float)$_POST['attributes_price_onetime'];
+          $attributes_price_factor = (float)$_POST['attributes_price_factor'];
+          $attributes_price_factor_offset = (float)$_POST['attributes_price_factor_offset'];
+          $attributes_price_factor_onetime = (float)$_POST['attributes_price_factor_onetime'];
+          $attributes_price_factor_onetime_offset = (float)$_POST['attributes_price_factor_onetime_offset'];
           $attributes_qty_prices = zen_db_prepare_input($_POST['attributes_qty_prices']);
           $attributes_qty_prices_onetime = zen_db_prepare_input($_POST['attributes_qty_prices_onetime']);
 
-          $attributes_price_words = zen_db_prepare_input($_POST['attributes_price_words']);
+          $attributes_price_words = (float)$_POST['attributes_price_words'];
           $attributes_price_words_free = (int)$_POST['attributes_price_words_free'];
-          $attributes_price_letters = zen_db_prepare_input($_POST['attributes_price_letters']);
+          $attributes_price_letters = (float)$_POST['attributes_price_letters'];
           $attributes_price_letters_free = (int)$_POST['attributes_price_letters_free'];
           $attributes_required = (int)$_POST['attributes_required'];
 
@@ -499,26 +499,26 @@ if (zen_not_null($action)) {
                         SET products_id = " . (int)$products_id . ",
                             options_id = " . (int)$options_id . ",
                             options_values_id = " . (int)$values_id . ",
-                            options_values_price = '" . zen_db_input($value_price) . "',
+                            options_values_price = " . (float)$value_price . ",
                             price_prefix = '" . zen_db_input($price_prefix) . "',
                             products_options_sort_order = " . (int)$products_options_sort_order . ",
                             product_attribute_is_free = " . (int)$product_attribute_is_free . ",
-                            products_attributes_weight = '" . zen_db_input($products_attributes_weight) . "',
+                            products_attributes_weight = " . (float)$products_attributes_weight . ",
                             products_attributes_weight_prefix = '" . zen_db_input($products_attributes_weight_prefix) . "',
                             attributes_display_only = " . (int)$attributes_display_only . ",
                             attributes_default = " . (int)$attributes_default . ",
                             attributes_discounted = " . (int)$attributes_discounted . ",
                             attributes_price_base_included = " . (int)$attributes_price_base_included . ",
-                            attributes_price_onetime = '" . zen_db_input($attributes_price_onetime) . "',
-                            attributes_price_factor = '" . zen_db_input($attributes_price_factor) . "',
-                            attributes_price_factor_offset = '" . zen_db_input($attributes_price_factor_offset) . "',
-                            attributes_price_factor_onetime = '" . zen_db_input($attributes_price_factor_onetime) . "',
-                            attributes_price_factor_onetime_offset = '" . zen_db_input($attributes_price_factor_onetime_offset) . "',
+                            attributes_price_onetime = " . (float)$attributes_price_onetime . ",
+                            attributes_price_factor = " . (float)$attributes_price_factor . ",
+                            attributes_price_factor_offset = " . (float)$attributes_price_factor_offset . ",
+                            attributes_price_factor_onetime = " . (float)$attributes_price_factor_onetime . ",
+                            attributes_price_factor_onetime_offset = " . (float)$attributes_price_factor_onetime_offset . ",
                             attributes_qty_prices = '" . zen_db_input($attributes_qty_prices) . "',
                             attributes_qty_prices_onetime = '" . zen_db_input($attributes_qty_prices_onetime) . "',
-                            attributes_price_words = '" . zen_db_input($attributes_price_words) . "',
+                            attributes_price_words = " . (float)$attributes_price_words . ",
                             attributes_price_words_free = " . (int)$attributes_price_words_free . ",
-                            attributes_price_letters = '" . zen_db_input($attributes_price_letters) . "',
+                            attributes_price_letters = " . (float)$attributes_price_letters . ",
                             attributes_price_letters_free = " . (int)$attributes_price_letters_free . ",
                             attributes_required = " . (int)$attributes_required . "
                         WHERE products_attributes_id = " . (int)$attribute_id);
