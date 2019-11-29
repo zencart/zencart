@@ -750,6 +750,12 @@ function zen_js_option_values_list($selectedName, $fieldName)
         text-decoration: none;
         background-color: #f5f5f5;
       }
+      .row-eq-height { 
+        display: -webkit-box; 
+        display: -webkit-flex; 
+        display: -ms-flexbox; 
+        display: flex; 
+      } 
       .read-only-attr {background-color: #ff0;}
       .is-free-attr {background-color: #2c54f5;}
       .default-attr {background-color: #ffa346;}
