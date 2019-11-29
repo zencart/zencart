@@ -768,11 +768,6 @@ function zen_js_option_values_list($selectedName, $fieldName)
     <script src="includes/menu.js"></script>
     <script src="includes/general.js"></script>
     <script>
-      function go_option() {
-        if (document.option_order_by.selected.options[document.option_order_by.selected.selectedIndex].value != "none") {
-          location = "<?php echo zen_href_link(FILENAME_ATTRIBUTES_CONTROLLER, 'option_page=' . (isset($_GET['option_page']) && $_GET['option_page'] ? $_GET['option_page'] : 1)); ?>&option_order_by=" + document.option_order_by.selected.options[document.option_order_by.selected.selectedIndex].value;
-        }
-      }
       function popupWindow(url) {
         window.open(url, 'popupWindow', 'toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=no,resizable=yes,copyhistory=no,width=600,height=460,screenX=150,screenY=150,top=150,left=150')
       }
