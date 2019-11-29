@@ -921,12 +921,8 @@ function zen_js_option_values_list($selectedName, $fieldName)
           </div>
           <?php echo '</form>'; ?>
         </div>
-        <?php
-      }
-      ?>
-      <?php
-      if ($action == 'attribute_features_copy_to_category') {
-        ?>
+      <?php } ?>
+      <?php if ($action == 'attribute_features_copy_to_category') { ?>
         <div class="row">
           <?php echo zen_draw_form('product_copy_to_category', FILENAME_ATTRIBUTES_CONTROLLER, 'action=update_attributes_copy_to_category', 'post', 'class="form-horizontal"'); ?>
           <?php echo zen_draw_hidden_field('products_filter', $_GET['products_filter']); ?>
@@ -960,13 +956,9 @@ function zen_js_option_values_list($selectedName, $fieldName)
           <?php echo '</form>'; ?>
         </div>
 
-        <?php
-      }
-      ?>
+      <?php } ?>
       <div class="row text-center"><?php echo zen_draw_separator('pixel_black.gif', '90%', '2'); ?></div>
-      <?php
-      if ($action == '') {
-        ?>
+      <?php if ($action == '') { ?>
         <div class="row">
           <div class="col-sm-12">
             <table class="table">
@@ -1135,9 +1127,6 @@ function zen_js_option_values_list($selectedName, $fieldName)
             </div>
           </div>
         <?php } ?>
-        <?php
-// fix here border width
-        ?>
         <div class="row">
           <div class="col-sm-12">
             <?php echo zen_draw_form('attributes', FILENAME_ATTRIBUTES_CONTROLLER, 'action=' . $form_action . (isset($_GET['option_page']) ? '&option_page=' . $_GET['option_page'] . '&' : '') . (isset($_GET['value_page']) ? '&value_page=' . $_GET['value_page'] . '&' : '') . (isset($_GET['attribute_page']) ? '&attribute_page=' . $_GET['attribute_page'] : '') . '&products_filter=' . $products_filter, 'post', 'enctype="multipart/form-data" class="form-horizontal"'); ?>
@@ -1225,13 +1214,9 @@ function zen_js_option_values_list($selectedName, $fieldName)
                   ?>
                   <tr>
                     <td>
-                      <?php
-                      if ($action == '') {
-                        ?>
+                      <?php if ($action == '') { ?>
                         <a href="<?php echo zen_href_link(FILENAME_ATTRIBUTES_CONTROLLER, 'action=delete_option_name_values_confirm&products_options_id_all=' . $current_attributes_options_id . (isset($_GET['option_page']) ? '&option_page=' . $_GET['option_page'] . '&' : '') . (isset($_GET['value_page']) ? '&value_page=' . $_GET['value_page'] . '&' : '') . (isset($_GET['attribute_page']) ? '&attribute_page=' . $_GET['attribute_page'] : '') . '&products_filter=' . $products_filter . '&current_category_id=' . $current_category_id); ?>" class="btn btn-danger" role="button"><i class="fa fa-trash" aria-hidden="true" title="<?php echo TEXT_DELETE_ALL_OPTIONS_FROM_PRODUCT; ?>"></i></a>
-                        <?php
-                      }
-                      ?>
+                      <?php } ?>
                     </td>
                     <td class="pageHeading" colspan="9"><?php echo $current_options_name; ?></td>
                   </tr>
