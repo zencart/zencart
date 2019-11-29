@@ -145,7 +145,6 @@ if (zen_not_null($action)) {
 //// BOF OF FLAGS
     case 'set_flag_attributes_display_only':
       if (isset($_POST['divertClickProto'])) {
-        $action = '';
         $db->Execute("UPDATE " . TABLE_PRODUCTS_ATTRIBUTES . "
                       SET attributes_display_only = " . ($_GET['flag'] == '0' ? '1' : '0') . "
                       WHERE products_id = " . (int)$_GET['products_filter'] . "
@@ -158,7 +157,6 @@ if (zen_not_null($action)) {
 
     case 'set_flag_product_attribute_is_free':
       if (isset($_POST['divertClickProto'])) {
-        $action = '';
         $db->Execute("UPDATE " . TABLE_PRODUCTS_ATTRIBUTES . "
                       SET product_attribute_is_free = " . ($_GET['flag'] == '0' ? '1' : '0') . "
                       WHERE products_id = " . (int)$_GET['products_filter'] . "
@@ -171,7 +169,6 @@ if (zen_not_null($action)) {
 
     case 'set_flag_attributes_default':
       if (isset($_POST['divertClickProto'])) {
-        $action = '';
         $db->Execute("UPDATE " . TABLE_PRODUCTS_ATTRIBUTES . "
                       SET attributes_default = " . ($_GET['flag'] == '0' ? '1' : '0') . "
                       WHERE products_id = " . (int)$_GET['products_filter'] . "
@@ -184,7 +181,6 @@ if (zen_not_null($action)) {
 
     case 'set_flag_attributes_discounted':
       if (isset($_POST['divertClickProto'])) {
-        $action = '';
         $db->Execute("UPDATE " . TABLE_PRODUCTS_ATTRIBUTES . "
                       SET attributes_discounted = " . ($_GET['flag'] == '0' ? '1' : '0') . "
                       WHERE products_id = " . (int)$_GET['products_filter'] . "
@@ -199,7 +195,6 @@ if (zen_not_null($action)) {
 
     case 'set_flag_attributes_price_base_included':
       if (isset($_POST['divertClickProto'])) {
-        $action = '';
         $db->Execute("UPDATE " . TABLE_PRODUCTS_ATTRIBUTES . "
                       SET attributes_price_base_included = " . ($_GET['flag'] == '0' ? '1' : '0') . "
                       WHERE products_id = " . (int)$_GET['products_filter'] . "
@@ -214,7 +209,6 @@ if (zen_not_null($action)) {
 
     case 'set_flag_attributes_required':
       if (isset($_POST['divertClickProto'])) {
-        $action = '';
         $db->Execute("UPDATE " . TABLE_PRODUCTS_ATTRIBUTES . "
                       SET attributes_required = " . ($_GET['flag'] == '0' ? '1' : '0') . "
                       WHERE products_id = " . (int)$_GET['products_filter'] . "
