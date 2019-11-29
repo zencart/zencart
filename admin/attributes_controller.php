@@ -235,7 +235,7 @@ if (zen_not_null($action)) {
       zen_redirect(zen_href_link(FILENAME_ATTRIBUTES_CONTROLLER, $_SESSION['page_info'] . '&products_filter=' . $_GET['products_filter'] . '&current_category_id=' . $_GET['current_category_id']));
       break;
 // update by product
-    case ('update_attribute_sort'):
+    case 'update_attribute_sort':
       if (isset($_POST['confirm']) && $_POST['confirm'] == 'y') {
         if (!zen_has_product_attributes($products_filter, 'false')) {
           $messageStack->add_session(SUCCESS_PRODUCT_UPDATE_SORT_NONE . $products_filter . ' ' . zen_get_products_name($products_filter, $_SESSION['languages_id']), 'error');
