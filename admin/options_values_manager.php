@@ -689,13 +689,13 @@ if (zen_not_null($action)) {
                                AND pov2po.products_options_values_id != " . PRODUCTS_OPTIONS_VALUES_TEXT_ID . "
                                " . (isset($filter) && $filter != '' ? " AND po.products_options_id = " . (int)$filter : "") . "
                                ORDER BY po.products_options_name, LPAD(pov.products_options_values_sort_order,11,'0'), pov.products_options_values_name";
-          $values_split = new splitPageResults($_GET['page'], MAX_ROW_LISTS_OPTIONS, $values_query_raw, $values_query_numrows);
+          $values_split = new splitPageResults($_GET['page'], MAX_DISPLAY_SEARCH_RESULTS, $values_query_raw, $values_query_numrows);
           ?>
           <div class="row">
             <?php echo zen_draw_separator('pixel_trans.gif') ?>
-            <div class="col-sm-6"><?php echo $values_split->display_count($values_query_numrows, MAX_ROW_LISTS_OPTIONS, $_GET['page'], TEXT_DISPLAY_NUMBER_OF_OPTIONS); ?></div>
+            <div class="col-sm-6"><?php echo $values_split->display_count($values_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, $_GET['page'], TEXT_DISPLAY_NUMBER_OF_OPTION_VALUES); ?></div>
             <?php $exclude_array = ['page']; ?>
-            <div class="col-sm-6 text-right"><?php echo $values_split->display_links($values_query_numrows, MAX_ROW_LISTS_OPTIONS, MAX_DISPLAY_PAGE_LINKS, $_GET['page'], zen_get_all_get_params($exclude_array)); ?></div>
+            <div class="col-sm-6 text-right"><?php echo $values_split->display_links($values_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, MAX_DISPLAY_PAGE_LINKS, $_GET['page'], zen_get_all_get_params($exclude_array)); ?></div>
           </div>
           <div class="table-responsive">
             <table class="table table-striped">
