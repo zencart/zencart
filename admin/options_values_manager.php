@@ -632,33 +632,70 @@ if (zen_not_null($action)) {
                   <a href="<?php echo zen_href_link(FILENAME_OPTIONS_VALUES_MANAGER, (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . (isset($_GET['value_page']) ? 'value_page=' . $_GET['value_page'] . '&' : '') . (isset($_GET['attribute_page']) ? 'attribute_page=' . $_GET['attribute_page'] : '')); ?>" class="btn btn-default" role="button"><?php echo TEXT_CANCEL; ?></a>
                 </td>
               </tr>
-              <?php
-            }
-            ?>
+            <?php } ?>
           </table>
         </div>
-        <?php
-      } else {
-        ?>
-
+      <?php } else { ?>
         <div class="row">
-            <?php
-//    $values = "select pov.products_options_values_id, pov.products_options_values_name, pov2po.products_options_id, pov.products_options_values_sort_order from " . TABLE_PRODUCTS_OPTIONS_VALUES . " pov left join " . TABLE_PRODUCTS_OPTIONS_VALUES_TO_PRODUCTS_OPTIONS . " pov2po on pov.products_options_values_id = pov2po.products_options_values_id where pov.language_id = '" . (int)$_SESSION['languages_id'] . "' and pov2po.products_options_values_id !='" . PRODUCTS_OPTIONS_VALUES_TEXT_ID . "' order by LPAD(pov2po.products_options_id,11,'0'), LPAD(pov.products_options_values_sort_order,11,'0'), pov.products_options_values_name";
-        $values_query_raw = "SELECT pov.products_options_values_id, pov.products_options_values_name, pov2po.products_options_id, pov.products_options_values_sort_order
-                             FROM " . TABLE_PRODUCTS_OPTIONS_VALUES . " pov
-                             LEFT JOIN " . TABLE_PRODUCTS_OPTIONS_VALUES_TO_PRODUCTS_OPTIONS . " pov2po ON pov.products_options_values_id = pov2po.products_options_values_id
-                             LEFT JOIN " . TABLE_PRODUCTS_OPTIONS . " po ON pov2po.products_options_id = po.products_options_id
-                               AND po.language_id = " . (int)$_SESSION['languages_id'] . "
-                             WHERE pov.language_id = " . (int)$_SESSION['languages_id'] . "
-                             AND pov2po.products_options_values_id != " . PRODUCTS_OPTIONS_VALUES_TEXT_ID . "
-                             ORDER BY po.products_options_name, LPAD(pov.products_options_values_sort_order,11,'0'), pov.products_options_values_name";
-        $values_split = new splitPageResults($_GET['page'], MAX_ROW_LISTS_OPTIONS, $values_query_raw, $values_query_numrows);
-        ?>
-        <div class="row">
-          <?php echo zen_draw_separator('pixel_trans.gif') ?>
-          <div class="col-sm-6"><?php echo $values_split->display_count($values_query_numrows, MAX_ROW_LISTS_OPTIONS, $_GET['page'], TEXT_DISPLAY_NUMBER_OF_OPTIONS); ?></div>
-          <div class="col-sm-6 text-right"><?php echo $values_split->display_links($values_query_numrows, MAX_ROW_LISTS_OPTIONS, MAX_DISPLAY_PAGE_LINKS, $_GET['page']); ?></div>
+          <?php echo zen_draw_separator('pixel_trans.gif', '100%'); ?>
         </div>
+        <div class="row">
+          <?php
+          echo zen_draw_form('set_filter', FILENAME_OPTIONS_VALUES_MANAGER, '', 'get', 'class="form-horizontal"');
+          echo zen_draw_label(LABEL_FILTER, 'set_filter', 'class="col-sm-3 control-label"');
+          ?>
+          <div class="col-sm-6">
+            <?php
+            $filter_values_array[] = [
+              'id' => '',
+              'text' => PLEASE_SELECT
+            ];
+            $filter_values_query = "SELECT products_options_id, products_options_name
+                                    FROM " . TABLE_PRODUCTS_OPTIONS . "
+                                    WHERE language_id = " . $_SESSION['languages_id'] . "
+                                    ORDER BY products_options_name";
+            $filter_values = $db->Execute($filter_values_query);
+            foreach ($filter_values as $filter_value) {
+              $filter_values_array[] = [
+                'id' => $filter_value['products_options_id'],
+                'text' => $filter_value['products_options_name']
+              ];
+            }
+            ?>
+            <?php echo zen_draw_pull_down_menu('set_filter', $filter_values_array, $_GET['set_filter'], 'onchange="this.form.submit();" class="form-control"'); ?>
+          </div>
+          <div class="col-sm-3">
+            <?php
+            if (isset($_GET['set_filter']) && $_GET['set_filter'] != '') {
+              $exclude_array = ['set_filter', 'page'];
+              ?>
+              <a href="<?php echo zen_href_link(FILENAME_OPTIONS_VALUES_MANAGER, zen_get_all_get_params($exclude_array)); ?>" class="btn btn-default"><?php echo IMAGE_RESET; ?></a>
+            <?php } ?>
+          </div>
+          <?php
+          echo zen_hide_session_id();
+          echo '</form>';
+          $filter = (isset($_GET['set_filter']) && set_filter != '' ? $_GET['set_filter'] : '');
+          ?>
+        </div>
+        <div class="row">
+          <?php
+          $values_query_raw = "SELECT pov.products_options_values_id, pov.products_options_values_name, pov2po.products_options_id, pov.products_options_values_sort_order
+                               FROM " . TABLE_PRODUCTS_OPTIONS_VALUES . " pov
+                               LEFT JOIN " . TABLE_PRODUCTS_OPTIONS_VALUES_TO_PRODUCTS_OPTIONS . " pov2po ON pov2po.products_options_values_id = pov.products_options_values_id
+                               LEFT JOIN " . TABLE_PRODUCTS_OPTIONS . " po ON po.products_options_id = pov2po.products_options_id
+                                 AND po.language_id = " . (int)$_SESSION['languages_id'] . "
+                               WHERE pov.language_id = " . (int)$_SESSION['languages_id'] . "
+                               AND pov2po.products_options_values_id != " . PRODUCTS_OPTIONS_VALUES_TEXT_ID . "
+                               " . (isset($filter) && $filter != '' ? " AND po.products_options_id = " . (int)$filter : "") . "
+                               ORDER BY po.products_options_name, LPAD(pov.products_options_values_sort_order,11,'0'), pov.products_options_values_name";
+          $values_split = new splitPageResults($_GET['page'], MAX_ROW_LISTS_OPTIONS, $values_query_raw, $values_query_numrows);
+          ?>
+          <div class="row">
+            <?php echo zen_draw_separator('pixel_trans.gif') ?>
+            <div class="col-sm-6"><?php echo $values_split->display_count($values_query_numrows, MAX_ROW_LISTS_OPTIONS, $_GET['page'], TEXT_DISPLAY_NUMBER_OF_OPTIONS); ?></div>
+            <?php $exclude_array = ['page']; ?>
+            <div class="col-sm-6 text-right"><?php echo $values_split->display_links($values_query_numrows, MAX_ROW_LISTS_OPTIONS, MAX_DISPLAY_PAGE_LINKS, $_GET['page'], zen_get_all_get_params($exclude_array)); ?></div>
           </div>
           <div class="table-responsive">
             <table class="table table-striped">
