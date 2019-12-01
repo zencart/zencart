@@ -27,7 +27,7 @@ $chk_option_values = $db->Execute("SELECT *
 foreach ($chk_option_values as $item) {
   $ary[] = $item['language_id'];
 }
-for ($i = 0, $n = sizeof($languages); $i < $n; $i ++) {
+for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
   if ((int)$languages[$i]['id'] > 0 && !in_array((int)$languages[$i]['id'], $ary)) {
     $db->Execute("INSERT INTO " . TABLE_PRODUCTS_OPTIONS_VALUES . " (products_options_values_id, language_id, products_options_values_name)
                   VALUES (" . (int)PRODUCTS_OPTIONS_VALUES_TEXT_ID . ", " . (int)$languages[$i]['id'] . ", 'TEXT')");
@@ -86,8 +86,7 @@ if (zen_not_null($action)) {
 
 // alert if possible duplicate
       $duplicate_option_values = '';
-      $check_dups = '';
-      for ($i = 0, $n = sizeof($languages); $i < $n; $i ++) {
+      for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
         $value_name = zen_db_prepare_input($value_name_array[$languages[$i]['id']]);
 
         if (!empty($value_name)) {
@@ -117,7 +116,7 @@ if (zen_not_null($action)) {
       $option_id = zen_db_prepare_input($_POST['option_id']);
       $products_options_values_sort_order = zen_db_prepare_input($_POST['products_options_values_sort_order']);
 
-      for ($i = 0, $n = sizeof($languages); $i < $n; $i ++) {
+      for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
         $value_name = zen_db_prepare_input($value_name_array[$languages[$i]['id']]);
 
         $db->Execute("UPDATE " . TABLE_PRODUCTS_OPTIONS_VALUES . "
@@ -134,7 +133,7 @@ if (zen_not_null($action)) {
 
 // alert if possible duplicate
       $duplicate_option_values = '';
-      for ($i = 0, $n = sizeof($languages); $i < $n; $i ++) {
+      for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
         $value_name = zen_db_prepare_input($value_name_array[$languages[$i]['id']]);
 
         if (!empty($value_name)) {
@@ -521,11 +520,11 @@ if (zen_not_null($action)) {
     <script src="includes/menu.js"></script>
     <script>
       function init() {
-          cssjsmenu('navbar');
-          if (document.getElementById) {
-              var kill = document.getElementById('hoverJS');
-              kill.disabled = true;
-          }
+        cssjsmenu('navbar');
+        if (document.getElementById) {
+          var kill = document.getElementById('hoverJS');
+          kill.disabled = true;
+        }
       }
     </script>
   </head>
@@ -540,18 +539,18 @@ if (zen_not_null($action)) {
           <a href="<?php echo zen_href_link(FILENAME_OPTIONS_NAME_MANAGER) ?>" class="btn btn-default" role="button"><?php echo IMAGE_OPTION_NAMES; ?></a>
         </div>
         <div class="col-sm-4">
-            <?php
+          <?php
 // toggle switch for show copier features
-            $option_names_values_copier_array = array(
-              array('id' => '0', 'text' => TEXT_SHOW_OPTION_NAMES_VALUES_COPIER_OFF),
-              array('id' => '1', 'text' => TEXT_SHOW_OPTION_NAMES_VALUES_COPIER_ON),
-            );
-            echo zen_draw_form('set_option_names_values_copier_form', FILENAME_OPTIONS_VALUES_MANAGER, '', 'get', 'class="form-horizontal"');
-            echo zen_draw_pull_down_menu('reset_option_names_values_copier', $option_names_values_copier_array, $reset_option_names_values_copier, 'onChange="this.form.submit();" class="form-control"');
-            echo zen_hide_session_id();
-            echo zen_draw_hidden_field('action', 'set_option_names_values_copier');
-            echo '</form>';
-            ?>
+          $option_names_values_copier_array = array(
+            array('id' => '0', 'text' => TEXT_SHOW_OPTION_NAMES_VALUES_COPIER_OFF),
+            array('id' => '1', 'text' => TEXT_SHOW_OPTION_NAMES_VALUES_COPIER_ON),
+          );
+          echo zen_draw_form('set_option_names_values_copier_form', FILENAME_OPTIONS_VALUES_MANAGER, '', 'get', 'class="form-horizontal"');
+          echo zen_draw_pull_down_menu('reset_option_names_values_copier', $option_names_values_copier_array, $reset_option_names_values_copier, 'onChange="this.form.submit();" class="form-control"');
+          echo zen_hide_session_id();
+          echo zen_draw_hidden_field('action', 'set_option_names_values_copier');
+          echo '</form>';
+          ?>
         </div>
         <div class="col-sm-4 text-right"><?php echo TEXT_PRODUCT_OPTIONS_INFO; ?></div>
       </div>
@@ -672,45 +671,46 @@ if (zen_not_null($action)) {
           <div class="col-sm-6"><?php echo $values_split->display_count($values_query_numrows, MAX_ROW_LISTS_OPTIONS, $_GET['page'], TEXT_DISPLAY_NUMBER_OF_OPTIONS); ?></div>
           <div class="col-sm-6 text-right"><?php echo $values_split->display_links($values_query_numrows, MAX_ROW_LISTS_OPTIONS, MAX_DISPLAY_PAGE_LINKS, $_GET['page']); ?></div>
         </div>
-        <div class="table-responsive">
-          <table class="table table-striped">
-            <tr>
-              <td colspan="5"><?php echo zen_black_line(); ?></td>
-            </tr>
-            <tr class="dataTableHeadingRow">
-              <th class="dataTableHeadingContent"><?php echo TABLE_HEADING_ID; ?></th>
-              <th class="dataTableHeadingContent"><?php echo TABLE_HEADING_OPT_NAME; ?></th>
-              <th class="dataTableHeadingContent"><?php echo TABLE_HEADING_OPT_VALUE; ?></th>
-              <th class="dataTableHeadingContent"><?php echo TABLE_HEADING_OPTION_VALUE_SORT_ORDER; ?></th>
-              <th class="dataTableHeadingContent"><?php echo TABLE_HEADING_ACTION; ?></th>
-            </tr>
-            <tr>
-              <td colspan="5"><?php echo zen_black_line(); ?></td>
-            </tr>
-            <?php
-            $next_id = 1;
-            $rows = 0;
-            $values_values = $db->Execute($values_query_raw);
-            foreach ($values_values as $values_value) {
-              $options_name = zen_options_name($values_value['products_options_id']);
+          </div>
+          <div class="table-responsive">
+            <table class="table table-striped">
+              <tr>
+                <td colspan="5"><?php echo zen_black_line(); ?></td>
+              </tr>
+              <tr class="dataTableHeadingRow">
+                <th class="dataTableHeadingContent"><?php echo TABLE_HEADING_ID; ?></th>
+                <th class="dataTableHeadingContent"><?php echo TABLE_HEADING_OPT_NAME; ?></th>
+                <th class="dataTableHeadingContent"><?php echo TABLE_HEADING_OPT_VALUE; ?></th>
+                <th class="dataTableHeadingContent"><?php echo TABLE_HEADING_OPTION_VALUE_SORT_ORDER; ?></th>
+                <th class="dataTableHeadingContent"><?php echo TABLE_HEADING_ACTION; ?></th>
+              </tr>
+              <tr>
+                <td colspan="5"><?php echo zen_black_line(); ?></td>
+              </tr>
+              <?php
+              $next_id = 1;
+              $rows = 0;
+              $values_values = $db->Execute($values_query_raw);
+              foreach ($values_values as $values_value) {
+                $options_name = zen_options_name($values_value['products_options_id']);
 // iii 030813 added: Option Type Feature and File Uploading
 // fetch products_options_id for use if the option value is deleted
 // with TEXT and FILE Options, there are multiple options for the single TEXT
 // value and only the single reference should be deleted
-              $option_id = $values_value['products_options_id'];
+                $option_id = $values_value['products_options_id'];
 
-              $values_name = $values_value['products_options_values_name'];
-              $products_options_values_sort_order = $values_value['products_options_values_sort_order'];
-              $rows++;
-              ?>
-              <tr>
+                $values_name = $values_value['products_options_values_name'];
+                $products_options_values_sort_order = $values_value['products_options_values_sort_order'];
+                $rows++;
+                ?>
+                <tr>
                   <?php
 // edit option values
                   if (($action == 'update_option_value') && ($_GET['value_id'] == $values_value['products_options_values_id'])) {
                     echo zen_draw_form('values', FILENAME_OPTIONS_VALUES_MANAGER, 'action=update_value' . (isset($_GET['page']) ? '&page=' . $_GET['page'] . '&' : '') . (isset($_GET['value_page']) ? '&value_page=' . $_GET['value_page'] . '&' : '') . (isset($_GET['attribute_page']) ? '&attribute_page=' . $_GET['attribute_page'] : ''), 'post', 'class="form-horizontal"');
                     $inputs = '';
                     $inputs2 = '';
-                    for ($i = 0, $n = sizeof($languages); $i < $n; $i ++) {
+                    for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
                       $value_name = $db->Execute("SELECT products_options_values_name
                                                   FROM " . TABLE_PRODUCTS_OPTIONS_VALUES . "
                                                   WHERE products_options_values_id = " . (int)$values_value['products_options_values_id'] . "
@@ -724,11 +724,11 @@ if (zen_not_null($action)) {
                                                                         WHERE products_options_values_id = " . (int)$values_value['products_options_values_id']);
                     $inputs2 .= zen_draw_input_field('products_options_values_sort_order', $products_options_values_sort_order->fields['products_options_values_sort_order'], 'size="4" class="form-control"');
                     ?>
-                  <td class="attributeBoxContent text-center">
+                    <td class="attributeBoxContent text-center">
                       <?php echo $values_value['products_options_values_id']; ?>
                       <?php echo zen_draw_hidden_field('value_id', $values_value['products_options_values_id']); ?>
-                  </td>
-                  <td class="attributeBoxContent text-center">
+                    </td>
+                    <td class="attributeBoxContent text-center">
                       <?php
                       $options_values = $db->Execute("SELECT products_options_id, products_options_name, products_options_type
                                                       FROM " . TABLE_PRODUCTS_OPTIONS . "
@@ -745,60 +745,52 @@ if (zen_not_null($action)) {
                       }
                       ?>
                       <?php echo zen_draw_pull_down_menu('option_id', $optionsValueArray, $values_value['products_options_id'], 'class="form-control"'); ?>
-                  </td>
-                  <td class="attributeBoxContent"><?php echo $inputs; ?></td>
-                  <td class="attributeBoxContent text-right"><?php echo $inputs2; ?></td>
-                  <td class="attributeBoxContent text-center">
-                    <button type="submit" class="btn btn-primary"><?php echo IMAGE_UPDATE; ?></button>
+                    </td>
+                    <td class="attributeBoxContent"><?php echo $inputs; ?></td>
+                    <td class="attributeBoxContent text-right"><?php echo $inputs2; ?></td>
+                    <td class="attributeBoxContent text-center">
+                      <button type="submit" class="btn btn-primary"><?php echo IMAGE_UPDATE; ?></button>
                     <a href="<?php echo zen_href_link(FILENAME_OPTIONS_VALUES_MANAGER, (isset($_GET['page']) ? '&page=' . $_GET['page'] . '&' : '') . (isset($_GET['value_page']) ? '&value_page=' . $_GET['value_page'] . '&' : '') . (isset($_GET['attribute_page']) ? '&attribute_page=' . $_GET['attribute_page'] : '')); ?>" class="btn btn-default" role="button"><?php echo IMAGE_CANCEL ?></a>
-                  </td>
-                  <?php
-                  echo '</form>';
-                } else {
+                    </td>
+                    <?php
+                    echo '</form>';
+                  } else {
 // iii 030813 added:  option ID to parameter list of delete button's href
 // allows delete to specify just that option/value pair when deleting from
 // the TABLE_PRODUCTS_OPTIONS_VALUES_TO_PRODUCTS_OPTIONS table
-                  ?>
-                  <td class="text-center"><?php echo $values_value["products_options_values_id"]; ?></td>
-                  <td><?php echo $options_name; ?></td>
-                  <td><?php echo $values_name; ?></td>
-                  <td><?php echo $values_value['products_options_values_sort_order']; ?></td>
-                  <?php
-// hide buttons when editing
-                  if ($action == 'update_option_value') {
                     ?>
-                    <td>&nbsp;</td>
+                    <td class="text-center"><?php echo $values_value["products_options_values_id"]; ?></td>
+                    <td><?php echo $options_name; ?></td>
+                    <td><?php echo $values_name; ?></td>
+                    <td><?php echo $values_value['products_options_values_sort_order']; ?></td>
                     <?php
-                  } else {
-                    ?>
-                    <td>
+// hide buttons when editing
+                    if ($action == 'update_option_value') {
+                      ?>
+                      <td>&nbsp;</td>
+                    <?php } else { ?>
+                      <td>
                       <a href="<?php echo zen_href_link(FILENAME_OPTIONS_VALUES_MANAGER, 'action=update_option_value&value_id=' . $values_value['products_options_values_id'] . (isset($_GET['page']) ? '&page=' . $_GET['page'] . '&' : '') . (isset($_GET['value_page']) ? '&value_page=' . $_GET['value_page'] . '&' : '') . (isset($_GET['attribute_page']) ? '&attribute_page=' . $_GET['attribute_page'] : '')); ?>" class="btn btn-primary" role="button"><?php echo IMAGE_UPDATE; ?></a>
                       <a href="<?php echo zen_href_link(FILENAME_OPTIONS_VALUES_MANAGER, 'action=delete_option_value&value_id=' . $values_value['products_options_values_id'] . (isset($_GET['page']) ? '&page=' . $_GET['page'] . '&' : '') . (isset($_GET['value_page']) ? '&value_page=' . $_GET['value_page'] . '&' : '') . (isset($_GET['attribute_page']) ? '&attribute_page=' . $_GET['attribute_page'] : '')); ?>" class="btn btn-default" role="button"><?php echo IMAGE_DELETE; ?></a>
-                    </td>
+                      </td>
+                    <?php } ?>
                     <?php
                   }
-                  ?>
-                  <?php
-                }
-                $max_values_id_values = $db->Execute("SELECT MAX(products_options_values_id) + 1 AS next_id
-                                                      FROM " . TABLE_PRODUCTS_OPTIONS_VALUES);
+                  $max_values_id_values = $db->Execute("SELECT MAX(products_options_values_id) + 1 AS next_id
+                                                        FROM " . TABLE_PRODUCTS_OPTIONS_VALUES);
 
-                $next_id = $max_values_id_values->fields['next_id'];
-              }
-              ?>
-            </tr>
-            <tr>
-              <td colspan="5"><?php echo zen_black_line(); ?></td>
-            </tr>
-            <?php
-            if ($action != 'update_option_value') {
-              ?>
+                  $next_id = $max_values_id_values->fields['next_id'];
+                }
+                ?>
+              </tr>
               <tr>
-                  <?php
-                  echo zen_draw_form('values', FILENAME_OPTIONS_VALUES_MANAGER, 'action=add_product_option_values' . (isset($_GET['page']) ? '&page=' . $_GET['page'] . '&' : '') . (isset($_GET['value_page']) ? '&value_page=' . $_GET['value_page'] . '&' : '') . (isset($_GET['attribute_page']) ? '&attribute_page=' . $_GET['attribute_page'] : ''), 'post', 'class="form-horizontal"');
-                  ?>
-                <td class="text-center"><?php echo $next_id; ?></td>
-                <td class="text-center">
+                <td colspan="5"><?php echo zen_black_line(); ?></td>
+              </tr>
+              <?php if ($action != 'update_option_value') { ?>
+                <tr>
+                  <?php echo zen_draw_form('values', FILENAME_OPTIONS_VALUES_MANAGER, 'action=add_product_option_values' . (isset($_GET['page']) ? '&page=' . $_GET['page'] . '&' : '') . (isset($_GET['value_page']) ? '&value_page=' . $_GET['value_page'] . '&' : '') . (isset($_GET['attribute_page']) ? '&attribute_page=' . $_GET['attribute_page'] . '&' : '') . (isset($_GET['set_filter']) ? '&set_filter=' . $_GET['set_filter'] : ''), 'post', 'class="form-horizontal"'); ?>
+                  <td class="text-center"><?php echo $next_id; ?></td>
+                  <td class="text-center">
                     <?php
                     $options_values = $db->Execute("SELECT products_options_id, products_options_name, products_options_type
                                                     FROM " . TABLE_PRODUCTS_OPTIONS . "
@@ -815,224 +807,224 @@ if (zen_not_null($action)) {
                     }
                     ?>
                     <?php echo zen_draw_pull_down_menu('option_id', $optionsValueArray, '', 'class="form-control"'); ?>
-                </td>
-                <?php
-                $inputs = '';
-                $inputs2 = '';
-                for ($i = 0, $n = sizeof($languages); $i < $n; $i ++) {
-                  $inputs .= zen_draw_label($languages[$i]['code'], 'value_name[' . $languages[$i]['id'] . ']', 'class="control-label"');
-                  $inputs .= zen_draw_input_field('value_name[' . $languages[$i]['id'] . ']', '', zen_set_field_length(TABLE_PRODUCTS_OPTIONS_VALUES, 'products_options_values_name', 50) . 'class="form-control"');
-                  ($i + 1 < $n ? $inputs .= '<br>' : '');
-                }
-                $inputs2 .= zen_draw_label(TEXT_SORT, 'products_options_values_sort_order');
-                $inputs2 .= zen_draw_input_field('products_options_values_sort_order', '', 'size="4" . class="form-control"');
-                ?>
-                <td>
+                  </td>
+                  <?php
+                  $inputs = '';
+                  $inputs2 = '';
+                  for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
+                    $inputs .= zen_draw_label($languages[$i]['code'], 'value_name[' . $languages[$i]['id'] . ']', 'class="control-label"');
+                    $inputs .= zen_draw_input_field('value_name[' . $languages[$i]['id'] . ']', '', zen_set_field_length(TABLE_PRODUCTS_OPTIONS_VALUES, 'products_options_values_name', 50) . 'class="form-control"');
+                    ($i + 1 < $n ? $inputs .= '<br>' : '');
+                  }
+                  $inputs2 .= zen_draw_label(TEXT_SORT, 'products_options_values_sort_order');
+                  $inputs2 .= zen_draw_input_field('products_options_values_sort_order', '', 'size="4" . class="form-control"');
+                  ?>
+                  <td>
                     <?php echo $inputs; ?>
-                </td>
-                <td>
+                  </td>
+                  <td>
                     <?php echo $inputs2; ?>
-                </td>
-                <td>
+                  </td>
+                  <td>
                     <?php
                     echo zen_draw_hidden_field('value_id', $next_id);
                     ?>
-                  <button type="submit" class="btn btn-primary"><?php echo IMAGE_INSERT; ?></button>
-                </td>
+                    <button type="submit" class="btn btn-primary"><?php echo IMAGE_INSERT; ?></button>
+                  </td>
+                  <?php
+                  echo '</form>';
+                  ?>
+                </tr>
+                <tr>
+                  <td colspan="5"><?php echo zen_black_line(); ?></td>
+                </tr>
                 <?php
-                echo '</form>';
-                ?>
+              }
+            }
+            ?>
+          </table>
+        </div>
+
+
+        <?php if ($_SESSION['option_names_values_copier'] == '0') { ?>
+          <div class="row">
+            <h2 class="text-center"><?php echo TEXT_INFO_OPTION_NAMES_VALUES_COPIER_STATUS; ?></h2>
+          </div>
+        <?php } else { ?>
+
+          <?php
+          // bof: build dropdowns for delete and add
+
+          /*
+            this builds the resulting values for use in the case statements above
+            $options_id_from = $_POST['options_id_from'];
+            $options_values_values_id_from = $_POST['options_values_values_id_from'];
+
+            $options_id_to = $_POST['options_id_to'];
+            $options_values_values_id_to = $_POST['options_values_values_id_to'];
+           */
+
+          // build dropdown for option_name from
+          $options_values_from = $db->Execute("SELECT *
+                                               FROM " . TABLE_PRODUCTS_OPTIONS . "
+                                               WHERE language_id = " . (int)$_SESSION['languages_id'] . "
+                                               AND products_options_name != ''
+                                               AND products_options_type != " . (int)PRODUCTS_OPTIONS_TYPE_TEXT . "
+                                               AND products_options_type != " . (int)PRODUCTS_OPTIONS_TYPE_FILE . "
+                                               ORDER BY products_options_name");
+          $option_from_dropdown = [];
+          foreach ($options_values_from as $item) {
+            $option_from_dropdown[] = array(
+              'id' => $options_values_from->fields['products_options_id'],
+              'text' => $options_values_from->fields['products_options_name']);
+          }
+
+          $option_to_dropdown = $option_from_dropdown;
+
+          // build dropdown for option_values from
+          $options_values_values_from = $db->Execute("SELECT *
+                                                      FROM " . TABLE_PRODUCTS_OPTIONS_VALUES . "
+                                                      WHERE language_id = " . (int)$_SESSION['languages_id'] . "
+                                                      AND products_options_values_id != 0
+                                                      ORDER BY products_options_values_name");
+
+          $option_values_from_dropdown = [];
+          foreach ($options_values_values_from as $item) {
+            $show_option_name = '&nbsp;&nbsp;&nbsp;[' . strtoupper(zen_get_products_options_name_from_value($item['products_options_values_id'])) . ']';
+
+            $option_values_from_dropdown[] = array(
+              'id' => $item['products_options_values_id'],
+              'text' => $item['products_options_values_name'] . $show_option_name);
+          }
+
+          $option_values_to_dropdown = $option_values_from_dropdown;
+
+          $to_categories_id = zen_draw_label(TEXT_SELECT_OPTION_VALUES_TO_CATEGORIES_ID, 'copy_to_categories_id', 'class="control-label"') . zen_draw_input_field('copy_to_categories_id', '', 'size="4" class="form-control"');
+
+          $options_id_from_products_id = zen_draw_label(TEXT_SELECT_OPTION_FROM_PRODUCTS_ID, 'copy_from_products_id', 'class="control-label"') . zen_draw_input_field('copy_from_products_id', '', 'size="4" class="form-control"');
+
+          // eof: build dropdowns for delete and add
+          ?>
+
+          <!--
+          bof: copy Option Name and Value From to Option Name and Value to - all products
+          example: Copy Color Red to products with Size Small
+          -->
+          <div class="table-responsive" style="border: 2px solid #999;">
+            <table class="table">
+              <tr>
+                <td colspan="4"><?php echo TEXT_OPTION_VALUE_COPY_ALL; ?></td>
               </tr>
               <tr>
-                <td colspan="5"><?php echo zen_black_line(); ?></td>
+                <td colspan="4"><?php echo TEXT_INFO_OPTION_VALUE_COPY_ALL; ?></td>
               </tr>
-              <?php
-            }
-          }
-          ?>
-        </table>
-      </div>
-
-
-      <?php if ($_SESSION['option_names_values_copier'] == '0') { ?>
-        <div class="row">
-          <h2 class="text-center"><?php echo TEXT_INFO_OPTION_NAMES_VALUES_COPIER_STATUS; ?></h2>
-        </div>
-      <?php } else { ?>
-
-        <?php
-        // bof: build dropdowns for delete and add
-
-        /*
-          this builds the resulting values for use in the case statements above
-          $options_id_from = $_POST['options_id_from'];
-          $options_values_values_id_from = $_POST['options_values_values_id_from'];
-
-          $options_id_to = $_POST['options_id_to'];
-          $options_values_values_id_to = $_POST['options_values_values_id_to'];
-         */
-
-        // build dropdown for option_name from
-        $options_values_from = $db->Execute("SELECT *
-                                             FROM " . TABLE_PRODUCTS_OPTIONS . "
-                                             WHERE language_id = " . (int)$_SESSION['languages_id'] . "
-                                             AND products_options_name != ''
-                                             AND products_options_type != " . (int)PRODUCTS_OPTIONS_TYPE_TEXT . "
-                                             AND products_options_type != " . (int)PRODUCTS_OPTIONS_TYPE_FILE . "
-                                             ORDER BY products_options_name");
-        $option_from_dropdown = [];
-        foreach ($options_values_from as $item) {
-          $option_from_dropdown[] = array(
-            'id' => $options_values_from->fields['products_options_id'],
-            'text' => $options_values_from->fields['products_options_name']);
-        }
-
-        $option_to_dropdown = $option_from_dropdown;
-
-        // build dropdown for option_values from
-        $options_values_values_from = $db->Execute("SELECT *
-                                                    FROM " . TABLE_PRODUCTS_OPTIONS_VALUES . "
-                                                    WHERE language_id = " . (int)$_SESSION['languages_id'] . "
-                                                    AND products_options_values_id != 0
-                                                    ORDER BY products_options_values_name");
-
-        $option_values_from_dropdown = [];
-        foreach ($options_values_values_from as $item) {
-          $show_option_name = '&nbsp;&nbsp;&nbsp;[' . strtoupper(zen_get_products_options_name_from_value($item['products_options_values_id'])) . ']';
-
-          $option_values_from_dropdown[] = array(
-            'id' => $item['products_options_values_id'],
-            'text' => $item['products_options_values_name'] . $show_option_name);
-        }
-
-        $option_values_to_dropdown = $option_values_from_dropdown;
-
-        $to_categories_id = zen_draw_label(TEXT_SELECT_OPTION_VALUES_TO_CATEGORIES_ID, 'copy_to_categories_id', 'class="control-label"') . zen_draw_input_field('copy_to_categories_id', '', 'size="4" class="form-control"');
-
-        $options_id_from_products_id = zen_draw_label(TEXT_SELECT_OPTION_FROM_PRODUCTS_ID, 'copy_from_products_id', 'class="control-label"') . zen_draw_input_field('copy_from_products_id', '', 'size="4" class="form-control"');
-
-        // eof: build dropdowns for delete and add
-        ?>
-
-        <!--
-        bof: copy Option Name and Value From to Option Name and Value to - all products
-        example: Copy Color Red to products with Size Small
-        -->
-        <div class="table-responsive" style="border: 2px solid #999;">
-          <table class="table">
-            <tr>
-              <td colspan="4"><?php echo TEXT_OPTION_VALUE_COPY_ALL; ?></td>
-            </tr>
-            <tr>
-              <td colspan="4"><?php echo TEXT_INFO_OPTION_VALUE_COPY_ALL; ?></td>
-            </tr>
-            <tr class="dataTableHeadingRow">
+              <tr class="dataTableHeadingRow">
                 <?php echo zen_draw_form('quick_jump', FILENAME_OPTIONS_VALUES_MANAGER, 'action=copy_options_values_one_to_another', '', 'post', 'class="form-horizontal"'); ?>
-              <td class="dataTableHeadingContent">
-                <?php echo zen_draw_label(TEXT_SELECT_OPTION_FROM, 'options_id_from', 'class="control-label"') . zen_draw_pull_down_menu('options_id_from', $option_from_dropdown, '', 'class="form-control"'); ?><br />
-                <?php echo zen_draw_label(TEXT_SELECT_OPTION_VALUES_FROM, 'options_values_values_id_from', 'class="control-label"') . zen_draw_pull_down_menu('options_values_values_id_from', $option_values_from_dropdown, '', 'class="form-control"'); ?>
-              </td>
-              <td class="dataTableHeadingContent">
-                <?php echo zen_draw_label(TEXT_SELECT_OPTION_TO, 'options_id_to', 'class="control-label"') . zen_draw_pull_down_menu('options_id_to', $option_to_dropdown, '', 'class="form-control"'); ?><br />
-                <?php echo zen_draw_label(TEXT_SELECT_OPTION_VALUES_TO, 'options_values_values_id_to', 'class="control-label"') . zen_draw_pull_down_menu('options_values_values_id_to', $option_values_to_dropdown, '', 'class="form-control"'); ?>
-              </td>
-              <td class="dataTableHeadingContent"><?php echo $to_categories_id; ?></td>
-              <td class="dataTableHeadingContent text-center">
-                <button type="submit" class="btn btn-warning"><?php echo IMAGE_INSERT; ?></button>
-              </td>
-              <?php echo '</form>'; ?>
-            </tr>
-          </table>
-        </div>
-        <!-- eof: copy all option values to another Option Name -->
-        <div class="row">
+                <td class="dataTableHeadingContent">
+                  <?php echo zen_draw_label(TEXT_SELECT_OPTION_FROM, 'options_id_from', 'class="control-label"') . zen_draw_pull_down_menu('options_id_from', $option_from_dropdown, '', 'class="form-control"'); ?><br />
+                  <?php echo zen_draw_label(TEXT_SELECT_OPTION_VALUES_FROM, 'options_values_values_id_from', 'class="control-label"') . zen_draw_pull_down_menu('options_values_values_id_from', $option_values_from_dropdown, '', 'class="form-control"'); ?>
+                </td>
+                <td class="dataTableHeadingContent">
+                  <?php echo zen_draw_label(TEXT_SELECT_OPTION_TO, 'options_id_to', 'class="control-label"') . zen_draw_pull_down_menu('options_id_to', $option_to_dropdown, '', 'class="form-control"'); ?><br />
+                  <?php echo zen_draw_label(TEXT_SELECT_OPTION_VALUES_TO, 'options_values_values_id_to', 'class="control-label"') . zen_draw_pull_down_menu('options_values_values_id_to', $option_values_to_dropdown, '', 'class="form-control"'); ?>
+                </td>
+                <td class="dataTableHeadingContent"><?php echo $to_categories_id; ?></td>
+                <td class="dataTableHeadingContent text-center">
+                  <button type="submit" class="btn btn-warning"><?php echo IMAGE_INSERT; ?></button>
+                </td>
+                <?php echo '</form>'; ?>
+              </tr>
+            </table>
+          </div>
+          <!-- eof: copy all option values to another Option Name -->
+          <div class="row">
             <?php echo zen_draw_separator('pixel_trans.gif', '100%', '5'); ?>
-        </div>
+          </div>
 
-        <!--
-        bof: delete all Option Name for an Value
-        example: Delete Color Red
-        -->
-        <div class="table-responsive" style="border: 2px solid #999;">
-          <table class="table">
-            <tr>
-              <td colspan="3"><?php echo TEXT_OPTION_VALUE_DELETE_ALL; ?></td>
-            </tr>
-            <tr>
-              <td colspan="3"><?php echo TEXT_INFO_OPTION_VALUE_DELETE_ALL; ?></td>
-            </tr>
-            <tr class="dataTableHeadingRow">
+          <!--
+          bof: delete all Option Name for an Value
+          example: Delete Color Red
+          -->
+          <div class="table-responsive" style="border: 2px solid #999;">
+            <table class="table">
+              <tr>
+                <td colspan="3"><?php echo TEXT_OPTION_VALUE_DELETE_ALL; ?></td>
+              </tr>
+              <tr>
+                <td colspan="3"><?php echo TEXT_INFO_OPTION_VALUE_DELETE_ALL; ?></td>
+              </tr>
+              <tr class="dataTableHeadingRow">
                 <?php echo zen_draw_form('quick_jump', FILENAME_OPTIONS_VALUES_MANAGER, 'action=delete_options_values_of_option_name', '', 'post', 'class="form-horizontal"'); ?>
-              <td class="dataTableHeadingContent">
-                <?php echo zen_draw_label(TEXT_SELECT_DELETE_OPTION_FROM, 'options_id_from', 'class="control-label"') . zen_draw_pull_down_menu('options_id_from', $option_from_dropdown, '', 'class="form-control"'); ?><br />
-                <?php echo zen_draw_label(TEXT_SELECT_DELETE_OPTION_VALUES_FROM, 'options_values_values_id_from', 'class="control-label"') . zen_draw_pull_down_menu('options_values_values_id_from', $option_values_from_dropdown, '', 'class="form-control"'); ?>
-              </td>
-              <td class="dataTableHeadingContent"><?php echo $to_categories_id; ?></td>
-              <td class="dataTableHeadingContent text-center">
-                <button type="submit" class="btn btn-danger"><i class="fa fa-trash"></i> <?php echo IMAGE_DELETE; ?></button>
-              </td>
-              <?php echo '</form>'; ?>
-            </tr>
+                <td class="dataTableHeadingContent">
+                  <?php echo zen_draw_label(TEXT_SELECT_DELETE_OPTION_FROM, 'options_id_from', 'class="control-label"') . zen_draw_pull_down_menu('options_id_from', $option_from_dropdown, '', 'class="form-control"'); ?><br />
+                  <?php echo zen_draw_label(TEXT_SELECT_DELETE_OPTION_VALUES_FROM, 'options_values_values_id_from', 'class="control-label"') . zen_draw_pull_down_menu('options_values_values_id_from', $option_values_from_dropdown, '', 'class="form-control"'); ?>
+                </td>
+                <td class="dataTableHeadingContent"><?php echo $to_categories_id; ?></td>
+                <td class="dataTableHeadingContent text-center">
+                  <button type="submit" class="btn btn-danger"><i class="fa fa-trash"></i> <?php echo IMAGE_DELETE; ?></button>
+                </td>
+                <?php echo '</form>'; ?>
+              </tr>
+            </table>
+          </div>
+          <!-- eof: delete all matching option name for option values -->
+          <div class="row">
+            <?php echo zen_draw_separator('pixel_trans.gif', '100%', '5'); ?>
+          </div>
+
+          <!--
+          bof: copy Option Name and Value From to Option Name and Value to - all products
+          example: Copy Color Red to products with Size Small
+          -->
+          <div class="table-responsive" style="border: 2px solid #999;">
+            <table class="table">
+              <tr>
+                <td colspan="4"><?php echo TEXT_OPTION_VALUE_COPY_OPTIONS_TO; ?></td>
+              </tr>
+              <tr>
+                <td colspan="4"><?php echo TEXT_INFO_OPTION_VALUE_COPY_OPTIONS_TO; ?></td>
+              </tr>
+              <tr class="dataTableHeadingRow">
+                <?php echo zen_draw_form('quick_jump', FILENAME_OPTIONS_VALUES_MANAGER, 'action=copy_options_values_one_to_another_options_id', '', 'post', 'class="form-horizontal"'); ?>
+                <td class="dataTableHeadingContent">
+                  <?php echo zen_draw_label(TEXT_SELECT_OPTION_FROM_ADD, 'options_id_from', 'class="control-label"') . zen_draw_pull_down_menu('options_id_from', $option_from_dropdown, '', 'class="form-control"'); ?><br />
+                  <?php echo zen_draw_label(TEXT_SELECT_OPTION_VALUES_FROM_ADD, 'options_values_values_id_from', 'class="control-label"') . zen_draw_pull_down_menu('options_values_values_id_from', $option_values_from_dropdown, '', 'class="form-control"'); ?><br />
+                  <?php echo $options_id_from_products_id; ?>
+                </td>
+                <td class="dataTableHeadingContent">
+                  <?php echo zen_draw_label(TEXT_SELECT_OPTION_TO_ADD_TO, 'options_id_to', 'class="control-label"') . zen_draw_pull_down_menu('options_id_to', $option_to_dropdown, '', 'class="form-control"'); ?>
+                </td>
+                <td class="dataTableHeadingContent">
+                  <?php echo $to_categories_id; ?><br />
+                  <?php echo TEXT_COPY_ATTRIBUTES_CONDITIONS; ?><br />
+                  <div class="radio">
+                    <label>
+                      <?php echo zen_draw_radio_field('copy_attributes', 'copy_attributes_update') . TEXT_COPY_ATTRIBUTES_UPDATE; ?>
+                    </label>
+                  </div>
+                  <div class="radio">
+                    <label>
+                      <?php echo zen_draw_radio_field('copy_attributes', 'copy_attributes_ignore', true) . TEXT_COPY_ATTRIBUTES_IGNORE; ?>
+                    </label>
+                  </div>
+                </td>
+                <td class="dataTableHeadingContent text-center">
+                  <button type="submit" class="btn btn-primary"><?php echo IMAGE_INSERT; ?></button>
+                </td>
+                <?php echo '</form>'; ?>
+              </tr>
+              <!-- eof: copy all option values to another Option Name -->
+            <?php } // show copier features      ?>
+
           </table>
         </div>
-        <!-- eof: delete all matching option name for option values -->
-        <div class="row">
-            <?php echo zen_draw_separator('pixel_trans.gif', '100%', '5'); ?>
-        </div>
 
-        <!--
-        bof: copy Option Name and Value From to Option Name and Value to - all products
-        example: Copy Color Red to products with Size Small
-        -->
-        <div class="table-responsive" style="border: 2px solid #999;">
-          <table class="table">
-            <tr>
-              <td colspan="4"><?php echo TEXT_OPTION_VALUE_COPY_OPTIONS_TO; ?></td>
-            </tr>
-            <tr>
-              <td colspan="4"><?php echo TEXT_INFO_OPTION_VALUE_COPY_OPTIONS_TO; ?></td>
-            </tr>
-            <tr class="dataTableHeadingRow">
-                <?php echo zen_draw_form('quick_jump', FILENAME_OPTIONS_VALUES_MANAGER, 'action=copy_options_values_one_to_another_options_id', '', 'post', 'class="form-horizontal"'); ?>
-              <td class="dataTableHeadingContent">
-                <?php echo zen_draw_label(TEXT_SELECT_OPTION_FROM_ADD, 'options_id_from', 'class="control-label"') . zen_draw_pull_down_menu('options_id_from', $option_from_dropdown, '', 'class="form-control"'); ?><br />
-                <?php echo zen_draw_label(TEXT_SELECT_OPTION_VALUES_FROM_ADD, 'options_values_values_id_from', 'class="control-label"') . zen_draw_pull_down_menu('options_values_values_id_from', $option_values_from_dropdown, '', 'class="form-control"'); ?><br />
-                <?php echo $options_id_from_products_id; ?>
-              </td>
-              <td class="dataTableHeadingContent">
-                  <?php echo zen_draw_label(TEXT_SELECT_OPTION_TO_ADD_TO, 'options_id_to', 'class="control-label"') . zen_draw_pull_down_menu('options_id_to', $option_to_dropdown, '', 'class="form-control"'); ?>
-              </td>
-              <td class="dataTableHeadingContent">
-                <?php echo $to_categories_id; ?><br />
-                <?php echo TEXT_COPY_ATTRIBUTES_CONDITIONS; ?><br />
-                <div class="radio">
-                  <label>
-                      <?php echo zen_draw_radio_field('copy_attributes', 'copy_attributes_update') . TEXT_COPY_ATTRIBUTES_UPDATE; ?>
-                  </label>
-                </div>
-                <div class="radio">
-                  <label>
-                      <?php echo zen_draw_radio_field('copy_attributes', 'copy_attributes_ignore', true) . TEXT_COPY_ATTRIBUTES_IGNORE; ?>
-                  </label>
-                </div>
-              </td>
-              <td class="dataTableHeadingContent text-center">
-                <button type="submit" class="btn btn-primary"><?php echo IMAGE_INSERT; ?></button>
-              </td>
-              <?php echo '</form>'; ?>
-            </tr>
-            <!-- eof: copy all option values to another Option Name -->
-          <?php } // show copier features     ?>
-
-        </table>
+        <!-- option value eof //-->
       </div>
-
-      <!-- option value eof //-->
-    </div>
-    <!-- body_text_eof //-->
-    <!-- footer //-->
-    <?php require(DIR_WS_INCLUDES . 'footer.php'); ?>
-    <!-- footer_eof //-->
+      <!-- body_text_eof //-->
+      <!-- footer //-->
+      <?php require(DIR_WS_INCLUDES . 'footer.php'); ?>
+      <!-- footer_eof //-->
   </body>
 </html>
 <?php require(DIR_WS_INCLUDES . 'application_bottom.php'); ?>
