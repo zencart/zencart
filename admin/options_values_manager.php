@@ -423,9 +423,6 @@ if (zen_not_null($action)) {
       break;
 ////////////////////////////////////
 
-
-
-
     case ('delete_options_values_of_option_name'):
 
       $options_id_from = (int)$_POST['options_id_from'];
@@ -583,10 +580,7 @@ if (zen_not_null($action)) {
 
             if ($products_values->RecordCount() > 0) {
               ?>
-              <?php
-// extra cancel button
-              if ($products_values->RecordCount() > 10) {
-                ?>
+              <?php if ($products_values->RecordCount() > 10) { ?>
                 <tr>
                   <td colspan="4"><?php echo zen_black_line(); ?></td>
                 </tr>
@@ -610,18 +604,14 @@ if (zen_not_null($action)) {
                 <td colspan="4"><?php echo zen_black_line(); ?></td>
               </tr>
 
-              <?php
-              foreach ($products_values as $products_value) {
-                ?>
+              <?php foreach ($products_values as $products_value) { ?>
                 <tr>
                   <td class="text-center"><?php echo $products_value['products_id']; ?></td>
                   <td><?php echo $products_value['products_name']; ?></td>
                   <td class="text-right"><?php echo $options_value["products_options_sort_order"]; ?></td>
                   <td ><?php echo $products_value['products_options_name']; ?></td>
                 </tr>
-                <?php
-              }
-              ?>
+              <?php } ?>
               <tr>
                 <td colspan="4"><?php echo zen_black_line(); ?></td>
               </tr>
@@ -632,9 +622,7 @@ if (zen_not_null($action)) {
                   <a href="<?php echo zen_href_link(FILENAME_OPTIONS_VALUES_MANAGER, (isset($_GET['page']) ? '&page=' . $_GET['page'] . '&' : '') . (isset($_GET['value_page']) ? '&value_page=' . $_GET['value_page'] . '&' : '') . (isset($_GET['attribute_page']) ? '&attribute_page=' . $_GET['attribute_page'] : '')); ?>" class="btn btn-default" role="button"><?php echo TEXT_CANCEL; ?></a>
                 </td>
               </tr>
-              <?php
-            } else {
-              ?>
+            <?php } else { ?>
               <tr>
                 <td colspan="4"><?php echo TEXT_OK_TO_DELETE; ?></td>
               </tr>
@@ -755,18 +743,12 @@ if (zen_not_null($action)) {
                     <?php
                     echo '</form>';
                   } else {
-// iii 030813 added:  option ID to parameter list of delete button's href
-// allows delete to specify just that option/value pair when deleting from
-// the TABLE_PRODUCTS_OPTIONS_VALUES_TO_PRODUCTS_OPTIONS table
                     ?>
                     <td class="text-center"><?php echo $values_value["products_options_values_id"]; ?></td>
                     <td><?php echo $options_name; ?></td>
                     <td><?php echo $values_name; ?></td>
                     <td><?php echo $values_value['products_options_values_sort_order']; ?></td>
-                    <?php
-// hide buttons when editing
-                    if ($action == 'update_option_value') {
-                      ?>
+                    <?php if ($action == 'update_option_value') { ?>
                       <td>&nbsp;</td>
                     <?php } else { ?>
                       <td>
