@@ -224,7 +224,7 @@ if (zen_not_null($action)) {
         // cannot copy to self
         $messageStack->add(ERROR_OPTION_VALUES_COPIED . TEXT_INFO_FROM . zen_options_name($options_id_from) . ' ' . zen_values_name($options_values_values_id_from) . TEXT_INFO_TO . zen_options_name($options_id_to) . ' ' . zen_values_name($options_values_values_id_to), 'warning');
       } else {
-        if (!zen_validate_options_to_options_value($options_id_from, $options_values_values_id_from) or ! zen_validate_options_to_options_value($options_id_to, $options_values_values_id_to)) {
+        if (!zen_validate_options_to_options_value($options_id_from, $options_values_values_id_from) || !zen_validate_options_to_options_value($options_id_to, $options_values_values_id_to)) {
           $messageStack->add(ERROR_OPTION_VALUES_COPIED_MISMATCH . TEXT_INFO_FROM . zen_options_name($options_id_from) . ' ' . zen_values_name($options_values_values_id_from) . TEXT_INFO_TO . zen_options_name($options_id_to) . ' ' . zen_values_name($options_values_values_id_to), 'warning');
         } else {
           // check for existing combination
