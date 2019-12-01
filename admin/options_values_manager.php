@@ -67,22 +67,22 @@ if (zen_not_null($action)) {
       break;
     case 'add_product_option_values':
       $value_name_array = $_POST['value_name'];
-      $value_id = zen_db_prepare_input($_POST['value_id']);
-      $option_id = zen_db_prepare_input($_POST['option_id']);
-      $products_options_values_sort_order = zen_db_prepare_input($_POST['products_options_values_sort_order']);
+      $value_id = (int)$_POST['value_id'];
+      $option_id = (int)$_POST['option_id'];
+      $products_options_values_sort_order = (int)$_POST['products_options_values_sort_order'];
 
-      for ($i = 0, $n = sizeof($languages); $i < $n; $i ++) {
+      for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
         $value_name = zen_db_prepare_input($value_name_array[$languages[$i]['id']]);
 
         $db->Execute("INSERT INTO " . TABLE_PRODUCTS_OPTIONS_VALUES . " (products_options_values_id, language_id, products_options_values_name, products_options_values_sort_order)
-                      VALUES ('" . (int)$value_id . "',
-                              '" . (int)$languages[$i]['id'] . "',
+                      VALUES (" . (int)$value_id . ",
+                              " . (int)$languages[$i]['id'] . ",
                               '" . zen_db_input($value_name) . "',
-                              '" . (int)$products_options_values_sort_order . "')");
+                              " . (int)$products_options_values_sort_order . ")");
       }
 
       $db->Execute("INSERT INTO " . TABLE_PRODUCTS_OPTIONS_VALUES_TO_PRODUCTS_OPTIONS . " (products_options_id, products_options_values_id)
-                    VALUES ('" . (int)$option_id . "', '" . (int)$value_id . "')");
+                    VALUES (" . (int)$option_id . ", " . (int)$value_id . ")");
 
 // alert if possible duplicate
       $duplicate_option_values = '';
@@ -112,9 +112,9 @@ if (zen_not_null($action)) {
       break;
     case 'update_value':
       $value_name_array = $_POST['value_name'];
-      $value_id = zen_db_prepare_input($_POST['value_id']);
-      $option_id = zen_db_prepare_input($_POST['option_id']);
-      $products_options_values_sort_order = zen_db_prepare_input($_POST['products_options_values_sort_order']);
+      $value_id = (int)$_POST['value_id'];
+      $option_id = (int)$_POST['option_id'];
+      $products_options_values_sort_order = (int)$_POST['products_options_values_sort_order'];
 
       for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
         $value_name = zen_db_prepare_input($value_name_array[$languages[$i]['id']]);
@@ -122,7 +122,7 @@ if (zen_not_null($action)) {
         $db->Execute("UPDATE " . TABLE_PRODUCTS_OPTIONS_VALUES . "
                       SET products_options_values_name = '" . zen_db_input($value_name) . "',
                           products_options_values_sort_order = " . (int)$products_options_values_sort_order . "
-                      WHERE products_options_values_id = " . zen_db_input($value_id) . "
+                      WHERE products_options_values_id = " . (int)$value_id . "
                       AND language_id = " . (int)$languages[$i]['id']);
       }
 
@@ -231,14 +231,14 @@ if (zen_not_null($action)) {
           if ($products_only->RecordCount() > 0) {
             // check existing matching products and add new attributes
             foreach ($products_only as $product) {
-              $current_products_id = $product['products_id'];
+              $current_products_id = (int)$product['products_id'];
               $sql = "INSERT INTO " . TABLE_PRODUCTS_ATTRIBUTES . " (products_id, options_id, options_values_id)
-                      VALUES('" . $current_products_id . "', '" . $options_id_to . "', '" . $options_values_values_id_to . "')";
+                      VALUES(" . (int)$current_products_id . ", " . (int)$options_id_to . ", " . (int)$options_values_values_id_to . ")";
               $check_previous = $db->Execute("SELECT COUNT(*) AS count
                                               FROM " . TABLE_PRODUCTS_ATTRIBUTES . "
-                                              WHERE products_id = " . $current_products_id . "
-                                              AND options_id = " . $options_id_to . "
-                                              AND options_values_id = " . $options_values_values_id_to . "
+                                              WHERE products_id = " . (int)$current_products_id . "
+                                              AND options_id = " . (int)$options_id_to . "
+                                              AND options_values_id = " . (int)$options_values_values_id_to . "
                                               LIMIT 1");
               // do not add duplicate attributes
               if ($check_previous->RecordCount() < 1) {
@@ -281,48 +281,48 @@ if (zen_not_null($action)) {
                                        FROM " . TABLE_PRODUCTS_TO_CATEGORIES . " ptc
                                        LEFT JOIN " . TABLE_PRODUCTS_ATTRIBUTES . " pa ON pa.products_id = ptc.products_id
                                        WHERE ptc.categories_id = " . (int)$_POST['copy_to_categories_id'] . "
-                                       AND (pa.options_id = " . $options_id_to . ")");
+                                       AND (pa.options_id = " . (int)$options_id_to . ")");
       } else {
         $products_only = $db->Execute("SELECT DISTINCT pa.products_id
                                        FROM " . TABLE_PRODUCTS_ATTRIBUTES . " pa
-                                       WHERE pa.options_id = " . $options_id_to);
+                                       WHERE pa.options_id = " . (int)$options_id_to);
       }
 
       $products_attributes_defaults = $db->Execute("SELECT pa.*
                                                     FROM " . TABLE_PRODUCTS_ATTRIBUTES . " pa
-                                                    WHERE pa.products_id = " . $copy_from_products_id . "
-                                                    AND options_id = " . $options_id_from . "
-                                                    AND pa.options_values_id = " . $options_values_values_id_from);
+                                                    WHERE pa.products_id = " . (int)$copy_from_products_id . "
+                                                    AND options_id = " . (int)$options_id_from . "
+                                                    AND pa.options_values_id = " . (int)$options_values_values_id_from);
 
-      $options_id = zen_db_prepare_input($options_id_from);
-      $values_id = zen_db_prepare_input($options_values_values_id_from);
+      $options_id = (int)$options_id_from;
+      $values_id = (int)$options_values_values_id_from;
 
       if (!$products_attributes_defaults->EOF) {
-        $options_values_price = zen_db_prepare_input($products_attributes_defaults->fields['options_values_price']);
+        $options_values_price = (float)$products_attributes_defaults->fields['options_values_price'];
         $price_prefix = zen_db_prepare_input($products_attributes_defaults->fields['price_prefix']);
 
-        $products_options_sort_order = zen_db_prepare_input($products_attributes_defaults->fields['products_options_sort_order']);
-        $product_attribute_is_free = zen_db_prepare_input($products_attributes_defaults->fields['product_attribute_is_free']);
-        $products_attributes_weight = zen_db_prepare_input($products_attributes_defaults->fields['products_attributes_weight']);
+        $products_options_sort_order = (int)$products_attributes_defaults->fields['products_options_sort_order'];
+        $product_attribute_is_free = (int)$products_attributes_defaults->fields['product_attribute_is_free'];
+        $products_attributes_weight = (float)$products_attributes_defaults->fields['products_attributes_weight'];
         $products_attributes_weight_prefix = zen_db_prepare_input($products_attributes_defaults->fields['products_attributes_weight_prefix']);
-        $attributes_display_only = zen_db_prepare_input($products_attributes_defaults->fields['attributes_display_only']);
-        $attributes_default = zen_db_prepare_input($products_attributes_defaults->fields['attributes_default']);
-        $attributes_discounted = zen_db_prepare_input($products_attributes_defaults->fields['attributes_discounted']);
-        $attributes_price_base_included = zen_db_prepare_input($products_attributes_defaults->fields['attributes_price_base_included']);
+        $attributes_display_only = (int)$products_attributes_defaults->fields['attributes_display_only'];
+        $attributes_default = (int)$products_attributes_defaults->fields['attributes_default'];
+        $attributes_discounted = (int)$products_attributes_defaults->fields['attributes_discounted'];
+        $attributes_price_base_included = (int)$products_attributes_defaults->fields['attributes_price_base_included'];
 
-        $attributes_price_onetime = zen_db_prepare_input($products_attributes_defaults->fields['attributes_price_onetime']);
-        $attributes_price_factor = zen_db_prepare_input($products_attributes_defaults->fields['attributes_price_factor']);
-        $attributes_price_factor_offset = zen_db_prepare_input($products_attributes_defaults->fields['attributes_price_factor_offset']);
-        $attributes_price_factor_onetime = zen_db_prepare_input($products_attributes_defaults->fields['attributes_price_factor_onetime']);
-        $attributes_price_factor_onetime_offset = zen_db_prepare_input($products_attributes_defaults->fields['attributes_price_factor_onetime_offset']);
+        $attributes_price_onetime = (float)$products_attributes_defaults->fields['attributes_price_onetime'];
+        $attributes_price_factor = (float)$products_attributes_defaults->fields['attributes_price_factor'];
+        $attributes_price_factor_offset = (float)$products_attributes_defaults->fields['attributes_price_factor_offset'];
+        $attributes_price_factor_onetime = (float)$products_attributes_defaults->fields['attributes_price_factor_onetime'];
+        $attributes_price_factor_onetime_offset = (float)$products_attributes_defaults->fields['attributes_price_factor_onetime_offset'];
         $attributes_qty_prices = zen_db_prepare_input($products_attributes_defaults->fields['attributes_qty_prices']);
         $attributes_qty_prices_onetime = zen_db_prepare_input($products_attributes_defaults->fields['attributes_qty_prices_onetime']);
 
-        $attributes_price_words = zen_db_prepare_input($products_attributes_defaults->fields['attributes_price_words']);
-        $attributes_price_words_free = zen_db_prepare_input($products_attributes_defaults->fields['attributes_price_words_free']);
-        $attributes_price_letters = zen_db_prepare_input($products_attributes_defaults->fields['attributes_price_letters']);
-        $attributes_price_letters_free = zen_db_prepare_input($products_attributes_defaults->fields['attributes_price_letters_free']);
-        $attributes_required = zen_db_prepare_input($products_attributes_defaults->fields['attributes_required']);
+        $attributes_price_words = (float)$products_attributes_defaults->fields['attributes_price_words'];
+        $attributes_price_words_free = (int)$products_attributes_defaults->fields['attributes_price_words_free'];
+        $attributes_price_letters = (float)$products_attributes_defaults->fields['attributes_price_letters'];
+        $attributes_price_letters_free = (int)$products_attributes_defaults->fields['attributes_price_letters_free'];
+        $attributes_required = (int)$products_attributes_defaults->fields['attributes_required'];
       }
 
       if ($_POST['copy_to_categories_id'] == '') {
@@ -351,38 +351,38 @@ if (zen_not_null($action)) {
 
 //              $sql = "insert into " . TABLE_PRODUCTS_ATTRIBUTES . "(products_id, options_id, options_values_id) values('" . $current_products_id . "', '" . $options_id_from . "', '" . $options_values_values_id_from . "')";
             $sql = "INSERT INTO " . TABLE_PRODUCTS_ATTRIBUTES . " (products_id, options_id, options_values_id, options_values_price, price_prefix, products_options_sort_order, product_attribute_is_free, products_attributes_weight, products_attributes_weight_prefix, attributes_display_only, attributes_default, attributes_discounted, attributes_image, attributes_price_base_included, attributes_price_onetime, attributes_price_factor, attributes_price_factor_offset, attributes_price_factor_onetime, attributes_price_factor_onetime_offset, attributes_qty_prices, attributes_qty_prices_onetime, attributes_price_words, attributes_price_words_free, attributes_price_letters, attributes_price_letters_free, attributes_required)
-                    VALUES ('" . (int)$current_products_id . "',
-                            '" . (int)$options_id . "',
-                            '" . (int)$values_id . "',
-                            '" . zen_db_input($options_values_price) . "',
+                    VALUES (" . (int)$current_products_id . ",
+                            " . (int)$options_id . ",
+                            " . (int)$values_id . ",
+                            " . (float)$options_values_price . ",
                             '" . zen_db_input($price_prefix) . "',
-                            '" . (int)zen_db_input($products_options_sort_order) . "',
-                            '" . (int)zen_db_input($product_attribute_is_free) . "',
-                            '" . (float)zen_db_input($products_attributes_weight) . "',
+                            " . (int)$products_options_sort_order . ",
+                            " . (int)$product_attribute_is_free . ",
+                            " . (float)$products_attributes_weight . ",
                             '" . zen_db_input($products_attributes_weight_prefix) . "',
-                            '" . (int)zen_db_input($attributes_display_only) . "',
-                            '" . (int)zen_db_input($attributes_default) . "',
-                            '" . (int)zen_db_input($attributes_discounted) . "',
-                            '" . zen_db_input($attributes_image_name) . "',
-                            '" . (int)zen_db_input($attributes_price_base_included) . "',
-                            '" . (float)zen_db_input($attributes_price_onetime) . "',
-                            '" . (float)zen_db_input($attributes_price_factor) . "',
-                            '" . (float)zen_db_input($attributes_price_factor_offset) . "',
-                            '" . (float)zen_db_input($attributes_price_factor_onetime) . "',
-                            '" . (float)zen_db_input($attributes_price_factor_onetime_offset) . "',
+                            " . (int)$attributes_display_only . ",
+                            " . (int)$attributes_default . ",
+                            " . (int)$attributes_discounted . ",
+                            '" . zen_db_input($attributes_image_name) . ",
+                            " . (int)$attributes_price_base_included . ",
+                            " . (float)$attributes_price_onetime . ",
+                            " . (float)$attributes_price_factor . ",
+                            " . (float)$attributes_price_factor_offset . ",
+                            " . (float)$attributes_price_factor_onetime . ",
+                            " . (float)$attributes_price_factor_onetime_offset . ",
                             '" . zen_db_input($attributes_qty_prices) . "',
                             '" . zen_db_input($attributes_qty_prices_onetime) . "',
-                            '" . (float)zen_db_input($attributes_price_words) . "',
-                            '" . (int)zen_db_input($attributes_price_words_free) . "',
-                            '" . (float)zen_db_input($attributes_price_letters) . "',
-                            '" . (int)zen_db_input($attributes_price_letters_free) . "',
-                            '" . (int)zen_db_input($attributes_required) . "')";
+                            " . (float)$attributes_price_words . ",
+                            " . (int)$attributes_price_words_free . ",
+                            " . (float)$attributes_price_letters . ",
+                            " . (int)$attributes_price_letters_free . ",
+                            " . (int)$attributes_required . ")";
 
             $check_previous = $db->Execute("SELECT COUNT(*) AS count
                                             FROM " . TABLE_PRODUCTS_ATTRIBUTES . "
-                                            WHERE products_id = " . $current_products_id . "
-                                            AND options_id = " . $options_id_from . "
-                                            AND options_values_id = " . $options_values_values_id_from . "
+                                            WHERE products_id = " . (int)$current_products_id . "
+                                            AND options_id = " . (int)$options_id_from . "
+                                            AND options_values_id = " . (int)$options_values_values_id_from . "
                                             LIMIT 1");
             // do not add duplicate attributes
             if ($check_previous->RecordCount() < 1) {
@@ -398,9 +398,9 @@ if (zen_not_null($action)) {
                 // delete old and add new
                 //echo 'delete old and add new: ' . $current_products_id . '<br>';
                 $db->Execute("DELETE FROM " . TABLE_PRODUCTS_ATTRIBUTES . "
-                              WHERE products_id = " . $current_products_id . "
-                              AND options_id = " . $options_id_from . "
-                              AND options_values_id = " . $options_values_values_id_from);
+                              WHERE products_id = " . (int)$current_products_id . "
+                              AND options_id = " . (int)$options_id_from . "
+                              AND options_values_id = " . (int)$options_values_values_id_from);
                 $db->Execute($sql);
                 $new_attribute++;
               }
@@ -437,13 +437,13 @@ if (zen_not_null($action)) {
                                        FROM " . TABLE_PRODUCTS_TO_CATEGORIES . " ptc
                                        LEFT JOIN " . TABLE_PRODUCTS_ATTRIBUTES . " pa ON pa.products_id = ptc.products_id
                                        WHERE ptc.categories_id = " . (int)$_POST['copy_to_categories_id'] . "
-                                       AND (pa.options_id = " . $options_id_from . "
-                                       AND pa.options_values_id = " . $options_values_values_id_from . ")");
+                                       AND (pa.options_id = " . (int)$options_id_from . "
+                                       AND pa.options_values_id = " . (int)$options_values_values_id_from . ")");
       } else {
         $products_only = $db->Execute("SELECT pa.products_id
                                        FROM " . TABLE_PRODUCTS_ATTRIBUTES . " pa
-                                       WHERE pa.options_id = " . $options_id_from . "
-                                       AND pa.options_values_id = " . $options_values_values_id_from);
+                                       WHERE pa.options_id = " . (int)$options_id_from . "
+                                       AND pa.options_values_id = " . (int)$options_values_values_id_from);
       }
 
       if ($_POST['copy_to_categories_id'] == '') {
@@ -466,9 +466,9 @@ if (zen_not_null($action)) {
             // check for associated downloads
             $downloads_remove_query = "SELECT products_attributes_id
                                        FROM " . TABLE_PRODUCTS_ATTRIBUTES . "
-                                       WHERE products_id = " . $current_products_id . "
-                                       AND options_id = " . $options_id_from . "
-                                       AND options_values_id = " . $options_values_values_id_from;
+                                       WHERE products_id = " . (int)$current_products_id . "
+                                       AND options_id = " . (int)$options_id_from . "
+                                       AND options_values_id = " . (int)$options_values_values_id_from;
             $downloads_remove = $db->Execute($downloads_remove_query);
 
             $remove_downloads_ids = array();
@@ -478,9 +478,9 @@ if (zen_not_null($action)) {
             $zco_notifier->notify('OPTIONS_VALUES_MANAGER_DELETE_VALUES_OF_OPTIONNAME', array('current_products_id' => $current_products_id, 'remove_ids' => $remove_downloads_ids, 'options_id' => $options_id_from, 'options_values_id' => $options_values_values_id_from));
 
             $sql = "DELETE FROM " . TABLE_PRODUCTS_ATTRIBUTES . "
-                    WHERE products_id = " . $current_products_id . "
-                    AND options_id = " . $options_id_from . "
-                    AND options_values_id = " . $options_values_values_id_from;
+                    WHERE products_id = " . (int)$current_products_id . "
+                    AND options_id = " . (int)$options_id_from . "
+                    AND options_values_id = " . (int)$options_values_values_id_from;
             $delete_selected = $db->Execute($sql);
 
             // delete associated downloads
