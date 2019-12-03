@@ -710,9 +710,10 @@ function zen_js_option_values_list($selectedName, $fieldName)
 <html <?php echo HTML_PARAMS; ?>>
   <head>
     <meta charset="<?php echo CHARSET; ?>">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title><?php echo TITLE; ?></title>
     <link rel="stylesheet" href="includes/stylesheet.css">
-    <link rel="stylesheet" href="includes/cssjsmenuhover.css" media="all" id="hoverJS">
     <style>
       .menuItemButton {
         background: none;
@@ -753,25 +754,14 @@ function zen_js_option_values_list($selectedName, $fieldName)
       .red-txt {color: #f00;}
       .black-txt {color: #000;}
     </style>
-    <script src="includes/menu.js"></script>
-    <script src="includes/general.js"></script>
     <script>
       function popupWindow(url) {
         window.open(url, 'popupWindow', 'toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=no,resizable=yes,copyhistory=no,width=600,height=460,screenX=150,screenY=150,top=150,left=150')
       }
     </script>
-    <script>
-      function init() {
-        cssjsmenu('navbar');
-        if (document.getElementById) {
-          var kill = document.getElementById('hoverJS');
-          kill.disabled = true;
-        }
-      }
-    </script>
   </head>
   <!-- <body onload="init()"> -->
-  <body onload="init()">
+  <body>
     <!-- header //-->
     <?php require(DIR_WS_INCLUDES . 'header.php'); ?>
     <!-- header_eof //-->
