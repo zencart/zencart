@@ -1127,12 +1127,12 @@ function zen_js_option_values_list($selectedName, $fieldName)
                                      ORDER BY LPAD(po.products_options_sort_order,11,'0'),
                                               LPAD(pa.options_id,11,'0'),
                                               LPAD(pa.products_options_sort_order,11,'0')";
-            $attributes_split = new splitPageResults($_GET['page'], MAX_ROW_LISTS_OPTIONS, $attributes_query_raw, $attributes_query_numrows);
+            $attributes_split = new splitPageResults($_GET['page'], MAX_DISPLAY_SEARCH_RESULTS, $attributes_query_raw, $attributes_query_numrows);
             ?>
             <div class="row">
               <?php echo zen_draw_separator('pixel_trans.gif') ?>
-              <div class="col-sm-6"><?php echo $attributes_split->display_count($attributes_query_numrows, MAX_ROW_LISTS_ATTRIBUTES_CONTROLLER, $_GET['page'], TEXT_DISPLAY_NUMBER_OF_ATTRIBÜTES); ?></div>
-              <div class="col-sm-6 text-right"><?php echo $attributes_split->display_links($attributes_query_numrows, MAX_ROW_LISTS_ATTRIBUTES_CONTROLLER, MAX_DISPLAY_PAGE_LINKS, $_GET['page']); ?></div>
+              <div class="col-sm-6"><?php echo $attributes_split->display_count($attributes_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, $_GET['page'], TEXT_DISPLAY_NUMBER_OF_ATTRIBUTES); ?></div>
+              <div class="col-sm-6 text-right"><?php echo $attributes_split->display_links($attributes_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, MAX_DISPLAY_PAGE_LINKS, $_GET['page']); ?></div>
             </div>
             <table class="table table-striped table-condensed">
               <tr class="dataTableHeadingRow">

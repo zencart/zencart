@@ -171,3 +171,4 @@ define('TABLE_TEXT_MAX_COUNT_SHORT', 'Max:');
   define('TEXT_COPY_ALL_OPTIONS_TO_PRODUCT', 'Copy options to another product');
   define('TEXT_COPY_ALL_OPTIONS_TO_CATEGORY', 'Copy options to a whole category');
   define('TEXT_SAVE_PRODUCT_FIRST', 'Please save the new product first. You need a product_id before you can add attributes');
+  define('TEXT_DISPLAY_NUMBER_OF_ATTRIBUTES', 'Displaying <b>%d</b> to <b>%d</b> (of <b>%d</b> attributes)');
