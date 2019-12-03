@@ -144,79 +144,67 @@ if (zen_not_null($action)) {
 /////////////////////////////////////////
 //// BOF OF FLAGS
     case 'set_flag_attributes_display_only':
-      if (isset($_POST['divertClickProto'])) {
-        $db->Execute("UPDATE " . TABLE_PRODUCTS_ATTRIBUTES . "
-                      SET attributes_display_only = " . ($_GET['flag'] == '0' ? '1' : '0') . "
-                      WHERE products_id = " . (int)$_GET['products_filter'] . "
-                      AND products_attributes_id = " . (int)$_GET['attributes_id']);
+      $db->Execute("UPDATE " . TABLE_PRODUCTS_ATTRIBUTES . "
+                    SET attributes_display_only = " . ($_GET['flag'] == '0' ? '1' : '0') . "
+                    WHERE products_id = " . (int)$_GET['products_filter'] . "
+                    AND products_attributes_id = " . (int)$_GET['attributes_id']);
 
-        $exclude_array = ['action'];
-        zen_redirect(zen_href_link(FILENAME_ATTRIBUTES_CONTROLLER, zen_get_all_get_params($exclude_array)));
-      }
+      $exclude_array = ['action'];
+      zen_redirect(zen_href_link(FILENAME_ATTRIBUTES_CONTROLLER, zen_get_all_get_params($exclude_array)));
       break;
 
     case 'set_flag_product_attribute_is_free':
-      if (isset($_POST['divertClickProto'])) {
-        $db->Execute("UPDATE " . TABLE_PRODUCTS_ATTRIBUTES . "
-                      SET product_attribute_is_free = " . ($_GET['flag'] == '0' ? '1' : '0') . "
-                      WHERE products_id = " . (int)$_GET['products_filter'] . "
-                      AND products_attributes_id = " . (int)$_GET['attributes_id']);
+      $db->Execute("UPDATE " . TABLE_PRODUCTS_ATTRIBUTES . "
+                    SET product_attribute_is_free = " . ($_GET['flag'] == '0' ? '1' : '0') . "
+                    WHERE products_id = " . (int)$_GET['products_filter'] . "
+                    AND products_attributes_id = " . (int)$_GET['attributes_id']);
 
-        $exclude_array = ['action'];
-        zen_redirect(zen_href_link(FILENAME_ATTRIBUTES_CONTROLLER, zen_get_all_get_params($exclude_array)));
-      }
+      $exclude_array = ['action'];
+      zen_redirect(zen_href_link(FILENAME_ATTRIBUTES_CONTROLLER, zen_get_all_get_params($exclude_array)));
       break;
 
     case 'set_flag_attributes_default':
-      if (isset($_POST['divertClickProto'])) {
-        $db->Execute("UPDATE " . TABLE_PRODUCTS_ATTRIBUTES . "
-                      SET attributes_default = " . ($_GET['flag'] == '0' ? '1' : '0') . "
-                      WHERE products_id = " . (int)$_GET['products_filter'] . "
-                      AND products_attributes_id = " . (int)$_GET['attributes_id']);
+      $db->Execute("UPDATE " . TABLE_PRODUCTS_ATTRIBUTES . "
+                    SET attributes_default = " . ($_GET['flag'] == '0' ? '1' : '0') . "
+                    WHERE products_id = " . (int)$_GET['products_filter'] . "
+                    AND products_attributes_id = " . (int)$_GET['attributes_id']);
 
-        $exclude_array = ['action'];
-        zen_redirect(zen_href_link(FILENAME_ATTRIBUTES_CONTROLLER, zen_get_all_get_params($exclude_array)));
-      }
+      $exclude_array = ['action'];
+      zen_redirect(zen_href_link(FILENAME_ATTRIBUTES_CONTROLLER, zen_get_all_get_params($exclude_array)));
       break;
 
     case 'set_flag_attributes_discounted':
-      if (isset($_POST['divertClickProto'])) {
-        $db->Execute("UPDATE " . TABLE_PRODUCTS_ATTRIBUTES . "
-                      SET attributes_discounted = " . ($_GET['flag'] == '0' ? '1' : '0') . "
-                      WHERE products_id = " . (int)$_GET['products_filter'] . "
-                      AND products_attributes_id = " . (int)$_GET['attributes_id']);
-        // reset products_price_sorter for searches etc.
-        zen_update_products_price_sorter($_GET['products_filter']);
+      $db->Execute("UPDATE " . TABLE_PRODUCTS_ATTRIBUTES . "
+                    SET attributes_discounted = " . ($_GET['flag'] == '0' ? '1' : '0') . "
+                    WHERE products_id = " . (int)$_GET['products_filter'] . "
+                    AND products_attributes_id = " . (int)$_GET['attributes_id']);
+      // reset products_price_sorter for searches etc.
+      zen_update_products_price_sorter($_GET['products_filter']);
 
-        $exclude_array = ['action'];
-        zen_redirect(zen_href_link(FILENAME_ATTRIBUTES_CONTROLLER, zen_get_all_get_params($exclude_array)));
-      }
+      $exclude_array = ['action'];
+      zen_redirect(zen_href_link(FILENAME_ATTRIBUTES_CONTROLLER, zen_get_all_get_params($exclude_array)));
       break;
 
     case 'set_flag_attributes_price_base_included':
-      if (isset($_POST['divertClickProto'])) {
-        $db->Execute("UPDATE " . TABLE_PRODUCTS_ATTRIBUTES . "
-                      SET attributes_price_base_included = " . ($_GET['flag'] == '0' ? '1' : '0') . "
-                      WHERE products_id = " . (int)$_GET['products_filter'] . "
-                      AND products_attributes_id = " . (int)$_GET['attributes_id']);
-        // reset products_price_sorter for searches etc.
-        zen_update_products_price_sorter($_GET['products_filter']);
+      $db->Execute("UPDATE " . TABLE_PRODUCTS_ATTRIBUTES . "
+                    SET attributes_price_base_included = " . ($_GET['flag'] == '0' ? '1' : '0') . "
+                    WHERE products_id = " . (int)$_GET['products_filter'] . "
+                    AND products_attributes_id = " . (int)$_GET['attributes_id']);
+      // reset products_price_sorter for searches etc.
+      zen_update_products_price_sorter($_GET['products_filter']);
 
-        $exclude_array = ['action'];
-        zen_redirect(zen_href_link(FILENAME_ATTRIBUTES_CONTROLLER, zen_get_all_get_params($exclude_array)));
-      }
+      $exclude_array = ['action'];
+      zen_redirect(zen_href_link(FILENAME_ATTRIBUTES_CONTROLLER, zen_get_all_get_params($exclude_array)));
       break;
 
     case 'set_flag_attributes_required':
-      if (isset($_POST['divertClickProto'])) {
-        $db->Execute("UPDATE " . TABLE_PRODUCTS_ATTRIBUTES . "
-                      SET attributes_required = " . ($_GET['flag'] == '0' ? '1' : '0') . "
-                      WHERE products_id = " . (int)$_GET['products_filter'] . "
-                      AND products_attributes_id = " . (int)$_GET['attributes_id']);
+      $db->Execute("UPDATE " . TABLE_PRODUCTS_ATTRIBUTES . "
+                    SET attributes_required = " . ($_GET['flag'] == '0' ? '1' : '0') . "
+                    WHERE products_id = " . (int)$_GET['products_filter'] . "
+                    AND products_attributes_id = " . (int)$_GET['attributes_id']);
 
-        $exclude_array = ['action'];
-        zen_redirect(zen_href_link(FILENAME_ATTRIBUTES_CONTROLLER, zen_get_all_get_params($exclude_array)));
-      }
+      $exclude_array = ['action'];
+      zen_redirect(zen_href_link(FILENAME_ATTRIBUTES_CONTROLLER, zen_get_all_get_params($exclude_array)));
       break;
 
 //// EOF OF FLAGS
@@ -2097,19 +2085,6 @@ function zen_js_option_values_list($selectedName, $fieldName)
     <!-- footer //-->
     <?php require(DIR_WS_INCLUDES . 'footer.php'); ?>
     <!-- footer_eof //-->
-    <form id="divertClickProto" action="#" method="post">
-      <input type="hidden" name="divertClickProto" value="" />
-      <input type="hidden" name="securityToken" value="<?php echo $_SESSION['securityToken']; ?>" />
-    </form>
-    <script>
-      function divertClick(href)
-      {
-        document.getElementById('divertClickProto').action = href;
-        document.getElementById('divertClickProto').submit();
-        return false;
-      }
-
-    </script>
     <script>
       function update_option(theForm) {
         // if nothing to do, abort
