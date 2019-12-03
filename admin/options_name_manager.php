@@ -82,22 +82,22 @@ if (zen_not_null($action)) {
         $option_name = zen_db_prepare_input($option_name_array[$languages[$i]['id']]);
 
         $db->Execute("INSERT INTO " . TABLE_PRODUCTS_OPTIONS . " (products_options_id, products_options_name, language_id, products_options_sort_order, products_options_type, products_options_images_per_row, products_options_images_style, products_options_rows)
-                      VALUES ('" . (int)$products_options_id . "',
+                      VALUES (" . (int)$products_options_id . ",
                               '" . zen_db_input($option_name) . "',
-                              '" . (int)$languages[$i]['id'] . "',
-                              '" . (int)$products_options_sort_order[$languages[$i]['id']] . "',
-                              '" . (int)zen_db_input($option_type) . "',
-                              '" . (int)zen_db_input($products_options_images_per_row) . "',
-                              '" . (int)zen_db_input($products_options_images_style) . "',
-                              '" . (int)(($products_options_rows <= 1 and $option_type == PRODUCTS_OPTIONS_TYPE_TEXT) ? 1 : zen_db_input($products_options_rows)) . "')");
+                              " . (int)$languages[$i]['id'] . ",
+                              " . (int)$products_options_sort_order[$languages[$i]['id']] . ",
+                              " . (int)$option_type . ",
+                              " . (int)$products_options_images_per_row . ",
+                              " . (int)$products_options_images_style . ",
+                              " . (int)(($products_options_rows <= 1 and $option_type == PRODUCTS_OPTIONS_TYPE_TEXT) ? 1 : zen_db_input($products_options_rows)) . ")");
       }
 
       switch ($option_type) {
         case PRODUCTS_OPTIONS_TYPE_TEXT:
         case PRODUCTS_OPTIONS_TYPE_FILE:
           $db->Execute("INSERT INTO " . TABLE_PRODUCTS_OPTIONS_VALUES_TO_PRODUCTS_OPTIONS . " (products_options_values_id, products_options_id)
-                        VALUES ('" . (int)PRODUCTS_OPTIONS_VALUES_TEXT_ID . "',
-                                '" . (int)$products_options_id . "')");
+                        VALUES (" . (int)PRODUCTS_OPTIONS_VALUES_TEXT_ID . ",
+                                " . (int)$products_options_id . ")");
           break;
       }
 
@@ -138,16 +138,16 @@ if (zen_not_null($action)) {
 
       for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
         $option_name = zen_db_prepare_input($option_name_array[$languages[$i]['id']]);
-        $products_options_sort_order = (int)zen_db_prepare_input($products_options_sort_order_array[$languages[$i]['id']]);
+        $products_options_sort_order = (int)$products_options_sort_order_array[$languages[$i]['id']];
 
 
         $products_options_length = zen_db_prepare_input($products_options_length_array[$languages[$i]['id']]);
         $products_options_comment = zen_db_prepare_input($products_options_comment_array[$languages[$i]['id']]);
         $products_options_size = zen_db_prepare_input($products_options_size_array[$languages[$i]['id']]);
 
-        $products_options_images_per_row = (int)zen_db_prepare_input($products_options_images_per_row_array[$languages[$i]['id']]);
-        $products_options_images_style = (int)zen_db_prepare_input($products_options_images_style_array[$languages[$i]['id']]);
-        $products_options_rows = (int)zen_db_prepare_input($products_options_rows_array[$languages[$i]['id']]);
+        $products_options_images_per_row = (int)$products_options_images_per_row_array[$languages[$i]['id']];
+        $products_options_images_style = (int)$products_options_images_style_array[$languages[$i]['id']];
+        $products_options_rows = (int)$products_options_rows_array[$languages[$i]['id']];
 
         $db->Execute("UPDATE " . TABLE_PRODUCTS_OPTIONS . "
                       SET products_options_name = '" . zen_db_input($option_name) . "',
@@ -155,10 +155,10 @@ if (zen_not_null($action)) {
                           products_options_length = '" . zen_db_input($products_options_length) . "',
                           products_options_comment = '" . zen_db_input($products_options_comment) . "',
                           products_options_size = '" . zen_db_input($products_options_size) . "',
-                          products_options_sort_order = '" . zen_db_input($products_options_sort_order) . "',
-                          products_options_images_per_row = '" . zen_db_input($products_options_images_per_row) . "',
-                          products_options_images_style = '" . zen_db_input($products_options_images_style) . "',
-                          products_options_rows = '" . zen_db_input($products_options_rows) . "'
+                          products_options_sort_order = " . $products_options_sort_order . ",
+                          products_options_images_per_row = " . $products_options_images_per_row . ",
+                          products_options_images_style = " . $products_options_images_style . ",
+                          products_options_rows = " . $products_options_rows . "
                       WHERE products_options_id = " . (int)$option_id . "
                       AND language_id = " . (int)$languages[$i]['id']);
       }
@@ -175,7 +175,7 @@ if (zen_not_null($action)) {
                                       AND products_options_values_id = 0");
           if ($check_type->fields['count'] == 0) {
             $db->Execute("INSERT INTO " . TABLE_PRODUCTS_OPTIONS_VALUES_TO_PRODUCTS_OPTIONS . " (products_options_values_to_products_options_id, products_options_id, products_options_values_id)
-                          VALUES (NULL, '" . (int)$_POST['option_id'] . "', '" . (int)PRODUCTS_OPTIONS_VALUES_TEXT_ID . "')");
+                          VALUES (NULL, " . (int)$_POST['option_id'] . ", " . (int)PRODUCTS_OPTIONS_VALUES_TEXT_ID . ")");
           }
           break;
         default:
@@ -279,14 +279,14 @@ if (zen_not_null($action)) {
             foreach ($all_options_values as $all_options_value) {
               $check_all_options_values = $db->Execute("SELECT products_attributes_id
                                                         FROM " . TABLE_PRODUCTS_ATTRIBUTES . "
-                                                        WHERE products_id = " . $all_update_product['products_id'] . "
+                                                        WHERE products_id = " . (int)$all_update_product['products_id'] . "
                                                         AND options_id = " . (int)$all_options_value['products_options_id'] . "
                                                         AND options_values_id = " . (int)$all_options_value['products_options_values_id']);
               if ($check_all_options_values->RecordCount() < 1) {
                 // add missing options_value_id
                 $updated = 'true';
                 $db->Execute("INSERT INTO " . TABLE_PRODUCTS_ATTRIBUTES . " (products_id, options_id, options_values_id)
-                              VALUES ('" . (int)$all_update_product['products_id'] . "', '" . (int)$all_options_value['products_options_id'] . "', '" . (int)$all_options_value['products_options_values_id'] . "')");
+                              VALUES (" . (int)$all_update_product['products_id'] . ", " . (int)$all_options_value['products_options_id'] . ", " . (int)$all_options_value['products_options_values_id'] . ")");
               } else {
                 // skip it the attribute is there
               }
@@ -357,12 +357,12 @@ if (zen_not_null($action)) {
           while (!$copy_from_values->EOF) {
             $current_id = $copy_from_values->fields['products_options_values_id'];
             $sql = "INSERT INTO " . TABLE_PRODUCTS_OPTIONS_VALUES . " (products_options_values_id, language_id, products_options_values_name, products_options_values_sort_order)
-                    VALUES ('" . (int)$next_id . "', '" . (int)$copy_from_values->fields['language_id'] . "', '" . $copy_from_values->fields['products_options_values_name'] . "', '" . (int)$copy_from_values->fields['products_options_values_sort_order'] . "')";
+                    VALUES (" . (int)$next_id . ", " . (int)$copy_from_values->fields['language_id'] . ", '" . $copy_from_values->fields['products_options_values_name'] . "', " . (int)$copy_from_values->fields['products_options_values_sort_order'] . ")";
             $db->Execute($sql);
             $copy_from_values->MoveNext();
             if ($copy_from_values->fields['products_options_values_id'] != $current_id || $copy_from_values->EOF) {
               $sql = "INSERT INTO " . TABLE_PRODUCTS_OPTIONS_VALUES_TO_PRODUCTS_OPTIONS . " (products_options_id, products_options_values_id)
-                      VALUES ('" . (int)$options_id_to . "', '" . (int)$next_id . "')";
+                      VALUES (" . (int)$options_id_to . ", " . (int)$next_id . ")";
               $db->Execute($sql);
               $next_id++;
             }
