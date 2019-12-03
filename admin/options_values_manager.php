@@ -749,11 +749,11 @@ if (zen_not_null($action)) {
                                                                         WHERE products_options_values_id = " . (int)$values_value['products_options_values_id']);
                     $inputs2 .= zen_draw_input_field('products_options_values_sort_order', $products_options_values_sort_order->fields['products_options_values_sort_order'], 'size="4" class="form-control"');
                     ?>
-                    <td class="attributeBoxContent text-center">
+                    <td class="attributeBoxContent text-right">
                       <?php echo $values_value['products_options_values_id']; ?>
                       <?php echo zen_draw_hidden_field('value_id', $values_value['products_options_values_id']); ?>
                     </td>
-                    <td class="attributeBoxContent text-center">
+                    <td class="attributeBoxContent">
                       <?php
                       $options_values = $db->Execute("SELECT products_options_id, products_options_name, products_options_type
                                                       FROM " . TABLE_PRODUCTS_OPTIONS . "
@@ -773,7 +773,7 @@ if (zen_not_null($action)) {
                     </td>
                     <td class="attributeBoxContent"><?php echo $inputs; ?></td>
                     <td class="attributeBoxContent text-right"><?php echo $inputs2; ?></td>
-                    <td class="attributeBoxContent text-center">
+                    <td class="attributeBoxContent text-right">
                       <button type="submit" class="btn btn-primary"><?php echo IMAGE_UPDATE; ?></button>
                       <a href="<?php echo zen_href_link(FILENAME_OPTIONS_VALUES_MANAGER, (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . (isset($_GET['value_page']) ? 'value_page=' . $_GET['value_page'] . '&' : '') . (isset($_GET['attribute_page']) ? 'attribute_page=' . $_GET['attribute_page'] . '&' : '') . (isset($_GET['set_filter']) ? 'set_filter=' . $_GET['set_filter'] : '')); ?>" class="btn btn-default" role="button"><?php echo IMAGE_CANCEL ?></a>
                     </td>
@@ -781,7 +781,7 @@ if (zen_not_null($action)) {
                     echo '</form>';
                   } else {
                     ?>
-                    <td class="text-center"><?php echo $values_value["products_options_values_id"]; ?></td>
+                    <td class="text-right"><?php echo $values_value["products_options_values_id"]; ?></td>
                     <td><?php echo $options_name; ?></td>
                     <td><?php echo $values_name; ?></td>
                     <td><?php echo $values_value['products_options_values_sort_order']; ?></td>
@@ -808,7 +808,7 @@ if (zen_not_null($action)) {
               <?php if ($action != 'update_option_value') { ?>
                 <tr>
                   <?php echo zen_draw_form('values', FILENAME_OPTIONS_VALUES_MANAGER, 'action=add_product_option_values' . '&' . (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . (isset($_GET['value_page']) ? 'value_page=' . $_GET['value_page'] . '&' : '') . (isset($_GET['attribute_page']) ? 'attribute_page=' . $_GET['attribute_page'] . '&' : '') . (isset($_GET['set_filter']) ? 'set_filter=' . $_GET['set_filter'] : ''), 'post', 'class="form-horizontal"'); ?>
-                  <td class="text-center"><?php echo $next_id; ?></td>
+                  <td class="text-right"><?php echo $next_id; ?></td>
                   <td class="text-center">
                     <?php
                     $options_values = $db->Execute("SELECT products_options_id, products_options_name, products_options_type
