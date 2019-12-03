@@ -405,8 +405,8 @@ function translate_type_to_name($opt_type)
   <head>
     <meta charset="<?php echo CHARSET; ?>">
     <title><?php echo TITLE; ?></title>
-    <link rel="stylesheet" type="text/css" href="includes/stylesheet.css">
-    <link rel="stylesheet" type="text/css" href="includes/cssjsmenuhover.css" media="all" id="hoverJS">
+    <link rel="stylesheet" href="includes/stylesheet.css">
+    <link rel="stylesheet" href="includes/cssjsmenuhover.css" media="all" id="hoverJS">
     <script src="includes/menu.js"></script>
     <script>
       function go_option() {
