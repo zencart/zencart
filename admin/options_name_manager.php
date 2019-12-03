@@ -20,7 +20,7 @@ $chk_option_values = $db->Execute("SELECT *
 foreach ($chk_option_values as $item) {
   $ary[] = $item['language_id'];
 }
-for ($i = 0, $n = sizeof($languages); $i < $n; $i ++) {
+for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
   if ((int)$languages[$i]['id'] > 0 && !in_array((int)$languages[$i]['id'], $ary)) {
     $db->Execute("INSERT INTO " . TABLE_PRODUCTS_OPTIONS_VALUES . " (products_options_values_id, language_id, products_options_values_name)
                   VALUES (" . (int)PRODUCTS_OPTIONS_VALUES_TEXT_ID . ", " . (int)$languages[$i]['id'] . ", 'TEXT')");
@@ -78,7 +78,7 @@ if (zen_not_null($action)) {
       $products_options_images_style = $_POST['products_options_images_style'];
       $products_options_rows = $_POST['products_options_rows'];
 
-      for ($i = 0, $n = sizeof($languages); $i < $n; $i ++) {
+      for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
         $option_name = zen_db_prepare_input($option_name_array[$languages[$i]['id']]);
 
         $db->Execute("INSERT INTO " . TABLE_PRODUCTS_OPTIONS . " (products_options_id, products_options_name, language_id, products_options_sort_order, products_options_type, products_options_images_per_row, products_options_images_style, products_options_rows)
@@ -103,7 +103,7 @@ if (zen_not_null($action)) {
 
 // alert if possible duplicate
       $duplicate_option = '';
-      for ($i = 0, $n = sizeof($languages); $i < $n; $i ++) {
+      for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
         $option_name = zen_db_prepare_input($option_name_array[$languages[$i]['id']]);
 
         if (!empty($option_name)) {
@@ -136,7 +136,7 @@ if (zen_not_null($action)) {
       $products_options_images_style_array = $_POST['products_options_images_style'];
       $products_options_rows_array = $_POST['products_options_rows'];
 
-      for ($i = 0, $n = sizeof($languages); $i < $n; $i ++) {
+      for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
         $option_name = zen_db_prepare_input($option_name_array[$languages[$i]['id']]);
         $products_options_sort_order = (int)zen_db_prepare_input($products_options_sort_order_array[$languages[$i]['id']]);
 
@@ -188,7 +188,7 @@ if (zen_not_null($action)) {
 
 // alert if possible duplicate
       $duplicate_option = '';
-      for ($i = 0, $n = sizeof($languages); $i < $n; $i ++) {
+      for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
         $option_name = zen_db_prepare_input($option_name_array[$languages[$i]['id']]);
 
         $check = $db->Execute("SELECT products_options_name
@@ -394,7 +394,8 @@ foreach ($products_options_types_list as $id => $text) {
   );
 }
 
-function translate_type_to_name($opt_type) {
+function translate_type_to_name($opt_type)
+{
   global $products_options_types_list;
   return $products_options_types_list[$opt_type];
 }
@@ -706,22 +707,15 @@ function translate_type_to_name($opt_type) {
                   <td class="text-right"><?php echo $options_value["products_options_sort_order"]; ?></td>
                   <td class="text-right"><?php echo $options_value["products_options_size"]; ?></td>
                   <td class="text-right"><?php echo $options_value["products_options_length"]; ?></td>
-                  <?php
-// hide buttons when editing
-                  if ($action == 'update_option') {
-                    ?>
+                  <?php if ($action == 'update_option') { // hide buttons when editing                     ?>
                     <td>&nbsp;</td>
-                    <?php
-                  } else {
-                    ?>
+      <?php } else { ?>
                     <td>
                       <a href="<?php echo zen_href_link(FILENAME_OPTIONS_NAME_MANAGER, 'action=update_option&option_id=' . $options_value['products_options_id'] . '&option_order_by=' . $option_order_by . '&page=' . $_GET['page'] . (isset($_GET['value_page']) ? '&value_page=' . $_GET['value_page'] . '&' : '') . (isset($_GET['attribute_page']) ? '&attribute_page=' . $_GET['attribute_page'] : '')); ?>" class="btn btn-primary" role="button"><?php echo IMAGE_UPDATE; ?>
                       </a>&nbsp;&nbsp;
                       <a href="<?php echo zen_href_link(FILENAME_OPTIONS_NAME_MANAGER, 'action=delete_product_option&option_id=' . $options_value['products_options_id'] . (isset($_GET['page']) ? '&page=' . $_GET['page'] . '&' : '') . '&option_order_by=' . $option_order_by, 'NONSSL'); ?>" class="btn btn-default" role="button"><?php echo IMAGE_DELETE; ?></a>
                     </td>
-                    <?php
-                  }
-                  ?>
+                <?php } ?>
                 </tr>
                 <?php
               }
@@ -763,21 +757,17 @@ function translate_type_to_name($opt_type) {
                 <td>
                   <button type="submit" class="btn btn-primary"><?php echo IMAGE_INSERT; ?></button>
                 </td>
-                <?php
-                echo '</form>';
-                ?>
+    <?php echo '</form>'; ?>
               </tr>
               <tr>
                 <td colspan="7"><?php echo zen_black_line(); ?></td>
               </tr>
-              <?php
-            }
-          }
-          ?>
+        <?php } ?>
         </table>
-        <!-- options eof //-->
-        <?php
-        $options_values = $db->Execute("SELECT products_options_id, products_options_name
+      <?php } ?>
+      <!-- options eof //-->
+      <?php
+      $options_values = $db->Execute("SELECT products_options_id, products_options_name
                                         FROM " . TABLE_PRODUCTS_OPTIONS . "
                                         WHERE language_id = " . (int)$_SESSION['languages_id'] . "
                                         AND products_options_name != ''
