@@ -973,12 +973,8 @@ function zen_js_option_values_list($selectedName, $fieldName)
               <?php echo '</form>'; ?>
             </div>
           </div>
-          <?php
-        } // product dropdown
-        ?>
-        <?php
-      } // $action == ''
-      ?>
+        <?php } // product dropdown ?>
+      <?php } // $action == '' ?>
       <?php
 // start of attributes display
       if ($_GET['products_filter'] == '') {
