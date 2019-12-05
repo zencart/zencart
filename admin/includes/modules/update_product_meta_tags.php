@@ -17,7 +17,7 @@ if (isset($_POST['edit']) && $_POST['edit'] == 'edit') {
   if (isset($_GET['pID'])) {
     $products_id = zen_db_prepare_input($_GET['pID']);
   }
-  $products_date_available = zen_db_prepare_input($_POST['products_date_available']);
+  $products_date_available = !empty($_POST['products_date_available']) ? zen_db_prepare_input($_POST['products_date_available']) : '';
   $products_date_available = (date('Y-m-d') < $products_date_available) ? $products_date_available : 'null';
 
   $sql_data_array = array(
