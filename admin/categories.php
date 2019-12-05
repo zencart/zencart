@@ -506,7 +506,7 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
           </div>
         </div>
         <div class="form-group">
-            <?php echo zen_draw_label(TEXT_EDIT_CATEGORIES_META_TAGS_KEYWORDS, 'metatags_keywords[' . $languages[$i]['id'] . ']', 'class="col-sm-3 control-label"'); ?>
+            <?php echo zen_draw_label(TEXT_EDIT_CATEGORIES_META_TAGS_KEYWORDS, '', 'class="col-sm-3 control-label"'); ?>
           <div class="col-sm-9 col-md-6">
               <?php
               for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
