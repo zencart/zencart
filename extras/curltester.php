@@ -126,12 +126,6 @@ doCurlTest('https://test.authorize.net/gateway/transact.dll');
 echo 'Connecting to First Data GGe4 server (SSL)...<br>';
 doCurlTest('https://checkout.globalgatewaye4.firstdata.com/payment');
 
-echo 'Connecting to Payeezy Processing Server...<br>';
-doCurlTest('https://api.payeezy.com/v1/transactions');
-
-echo 'Connecting to Payeezy Sandbox Server...<br>';
-doCurlTest('https://api-cert.payeezy.com/v1/transactions');
-
 echo 'Connecting to Elavon Server...<br>';
 doCurlTest('https://www.myvirtualmerchant.com/VirtualMerchant/process.do');
 
