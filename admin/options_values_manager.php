@@ -172,7 +172,7 @@ if (zen_not_null($action)) {
       zen_redirect(zen_href_link(FILENAME_OPTIONS_VALUES_MANAGER, $_SESSION['page_info']));
       break;
     case 'delete_value':
-      $value_id = zen_db_prepare_input($_GET['value_id']);
+      $value_id = (int)$_GET['value_id'];
 
       $zco_notifier->notify('OPTIONS_VALUES_MANAGER_DELETE_VALUE', array('value_id' => $value_id));
 
