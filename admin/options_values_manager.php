@@ -35,8 +35,11 @@ for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
 }
 
 $action = (isset($_GET['action']) ? $_GET['action'] : '');
-$filter = (isset($_GET['set_filter']) && $_GET['set_filter'] != '' ? $_GET['set_filter'] : '');
-$max_search_results = (isset($_GET['max_search_results']) && $_GET['max_search_results'] != '' ? $_GET['max_search_results'] : MAX_DISPLAY_SEARCH_RESULTS);
+$page = (isset($_GET['page']) && $_GET['page'] != '' ? (int)$_GET['page'] : 0);
+$value_page = (isset($_GET['value_page']) && $_GET['value_page'] != '' ? (int)$_GET['value_page'] : 0);
+$attribute_page = (isset($_GET['attribute_page']) && $_GET['attribute_page'] != '' ? (int)$_GET['attribute_page'] : 0);
+$filter = (isset($_GET['set_filter']) && $_GET['set_filter'] != '' ? (int)$_GET['set_filter'] : 0);
+$max_search_results = (isset($_GET['max_search_results']) && $_GET['max_search_results'] != '' ? (int)$_GET['max_search_results'] : (int)MAX_DISPLAY_SEARCH_RESULTS);
 
 // display or hide copier features
 if (!isset($_SESSION['option_names_values_copier'])) {
@@ -48,14 +51,14 @@ if (!isset($_GET['reset_option_names_values_copier'])) {
 
 if (zen_not_null($action)) {
   $_SESSION['page_info'] = '';
-  if (isset($_GET['page'])) {
-    $_SESSION['page_info'] .= 'page=' . $_GET['page'] . '&';
+  if ($page !== 0) {
+    $_SESSION['page_info'] .= 'page=' . $page . '&';
   }
-  if (isset($_GET['value_page'])) {
-    $_SESSION['page_info'] .= 'value_page=' . $_GET['value_page'] . '&';
+  if ($value_page !== 0) {
+    $_SESSION['page_info'] .= 'value_page=' . $value_page . '&';
   }
-  if (isset($_GET['attribute_page'])) {
-    $_SESSION['page_info'] .= 'attribute_page=' . $_GET['attribute_page'] . '&';
+  if ($attribute_page !== 0) {
+    $_SESSION['page_info'] .= 'attribute_page=' . $attribute_page . '&';
   }
   if (zen_not_null($_SESSION['page_info'])) {
     $_SESSION['page_info'] = substr($_SESSION['page_info'], 0, -1);
@@ -588,8 +591,8 @@ if (zen_not_null($action)) {
                 <tr>
                   <td colspan="3"><?php echo TEXT_WARNING_OF_DELETE; ?></td>
                   <td class="text-right">
-                    <a href="<?php echo zen_href_link(FILENAME_OPTIONS_VALUES_MANAGER, 'action=delete_value&value_id=' . $_GET['value_id'] . '&' . (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . (isset($_GET['value_page']) ? 'value_page=' . $_GET['value_page'] . '&' : '') . (isset($_GET['attribute_page']) ? 'attribute_page=' . $_GET['attribute_page'] : '')); ?>" class="btn btn-danger" role="button"><?php echo IMAGE_DELETE; ?></a>
-                    <a href="<?php echo zen_href_link(FILENAME_OPTIONS_VALUES_MANAGER, (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . (isset($_GET['value_page']) ? 'value_page=' . $_GET['value_page'] . '&' : '') . (isset($_GET['attribute_page']) ? 'attribute_page=' . $_GET['attribute_page'] : '')); ?>" class="btn btn-default" role="button"><?php echo TEXT_CANCEL; ?></a>
+                    <a href="<?php echo zen_href_link(FILENAME_OPTIONS_VALUES_MANAGER, 'action=delete_value&value_id=' . $_GET['value_id'] . '&' . ($page !== 0 ? 'page=' . $page . '&' : '') . ($value_page !== 0 ? 'value_page=' . $value_page . '&' : '') . ($attribute_page !== 0 ? 'attribute_page=' . $attribute_page : '')); ?>" class="btn btn-danger" role="button"><?php echo IMAGE_DELETE; ?></a>
+                    <a href="<?php echo zen_href_link(FILENAME_OPTIONS_VALUES_MANAGER, ($page !== 0 ? 'page=' . $page . '&' : '') . ($value_page !== 0 ? 'value_page=' . $value_page . '&' : '') . ($attribute_page !== 0 ? 'attribute_page=' . $attribute_page : '')); ?>" class="btn btn-default" role="button"><?php echo TEXT_CANCEL; ?></a>
                   </td>
                 </tr>
                 <?php
@@ -619,8 +622,8 @@ if (zen_not_null($action)) {
               <tr>
                 <td colspan="3"><?php echo TEXT_WARNING_OF_DELETE; ?></td>
                 <td class="text-right">
-                  <a href="<?php echo zen_href_link(FILENAME_OPTIONS_VALUES_MANAGER, 'action=delete_value&value_id=' . '&' . $_GET['value_id'] . (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . (isset($_GET['value_page']) ? 'value_page=' . $_GET['value_page'] . '&' : '') . (isset($_GET['attribute_page']) ? 'attribute_page=' . $_GET['attribute_page'] : '')); ?>" class="btn btn-danger" role="button"><?php echo IMAGE_DELETE; ?></a>
-                  <a href="<?php echo zen_href_link(FILENAME_OPTIONS_VALUES_MANAGER, (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . (isset($_GET['value_page']) ? 'value_page=' . $_GET['value_page'] . '&' : '') . (isset($_GET['attribute_page']) ? 'attribute_page=' . $_GET['attribute_page'] : '')); ?>" class="btn btn-default" role="button"><?php echo TEXT_CANCEL; ?></a>
+                  <a href="<?php echo zen_href_link(FILENAME_OPTIONS_VALUES_MANAGER, 'action=delete_value&value_id=' . $_GET['value_id'] . '&' . ($page !== 0 ? 'page=' . $page . '&' : '') . ($value_page !== 0 ? 'value_page=' . $value_page . '&' : '') . ($attribute_page !== 0 ? 'attribute_page=' . $attribute_page : '')); ?>" class="btn btn-danger" role="button"><?php echo IMAGE_DELETE; ?></a>
+                  <a href="<?php echo zen_href_link(FILENAME_OPTIONS_VALUES_MANAGER, ($page !== 0 ? 'page=' . $page . '&' : '') . ($value_page !== 0 ? 'value_page=' . $value_page . '&' : '') . ($attribute_page !== 0 ? 'attribute_page=' . $attribute_page : '')); ?>" class="btn btn-default" role="button"><?php echo TEXT_CANCEL; ?></a>
                 </td>
               </tr>
             <?php } else { ?>
@@ -629,8 +632,8 @@ if (zen_not_null($action)) {
               </tr>
               <tr>
                 <td class="text-right" colspan="4">
-                  <a href="<?php echo zen_href_link(FILENAME_OPTIONS_VALUES_MANAGER, 'action=delete_value&value_id=' . '&' . $_GET['value_id'] . (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . (isset($_GET['value_page']) ? 'value_page=' . $_GET['value_page'] . '&' : '') . (isset($_GET['attribute_page']) ? 'attribute_page=' . $_GET['attribute_page'] : '')); ?>" class="btn btn-danger" role="button"><?php echo IMAGE_DELETE; ?></a>
-                  <a href="<?php echo zen_href_link(FILENAME_OPTIONS_VALUES_MANAGER, (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . (isset($_GET['value_page']) ? 'value_page=' . $_GET['value_page'] . '&' : '') . (isset($_GET['attribute_page']) ? 'attribute_page=' . $_GET['attribute_page'] : '')); ?>" class="btn btn-default" role="button"><?php echo TEXT_CANCEL; ?></a>
+                  <a href="<?php echo zen_href_link(FILENAME_OPTIONS_VALUES_MANAGER, 'action=delete_value&value_id=' . $_GET['value_id'] . '&' . ($page !== 0 ? 'page=' . $page . '&' : '') . ($value_page !== 0 ? 'value_page=' . $value_page . '&' : '') . ($attribute_page !== 0 ? 'attribute_page=' . $attribute_page : '')); ?>" class="btn btn-danger" role="button"><?php echo IMAGE_DELETE; ?></a>
+                  <a href="<?php echo zen_href_link(FILENAME_OPTIONS_VALUES_MANAGER, ($page !== 0 ? 'page=' . $page . '&' : '') . ($value_page !== 0 ? 'value_page=' . $value_page . '&' : '') . ($attribute_page !== 0 ? 'attribute_page=' . $attribute_page : '')); ?>" class="btn btn-default" role="button"><?php echo TEXT_CANCEL; ?></a>
                 </td>
               </tr>
             <?php } ?>
@@ -664,11 +667,11 @@ if (zen_not_null($action)) {
               ];
             }
             ?>
-            <?php echo zen_draw_pull_down_menu('set_filter', $filter_values_array, $_GET['set_filter'], 'onchange="this.form.submit();" class="form-control"'); ?>
+            <?php echo zen_draw_pull_down_menu('set_filter', $filter_values_array, $filter, 'onchange="this.form.submit();" class="form-control"'); ?>
           </div>
           <div class="col-sm-3">
             <?php
-            if (isset($_GET['set_filter']) && $_GET['set_filter'] != '') {
+            if ($filter !== 0) {
               $exclude_array = ['set_filter', 'page'];
               ?>
               <a href="<?php echo zen_href_link(FILENAME_OPTIONS_VALUES_MANAGER, zen_get_all_get_params($exclude_array)); ?>" class="btn btn-default"><?php echo IMAGE_RESET; ?></a>
@@ -764,7 +767,7 @@ if (zen_not_null($action)) {
                 <?php
 // edit option values
                 if (($action == 'update_option_value') && ($_GET['value_id'] == $values_value['products_options_values_id'])) {
-                  echo zen_draw_form('values', FILENAME_OPTIONS_VALUES_MANAGER, 'action=update_value' . '&' . (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . (isset($_GET['value_page']) ? 'value_page=' . $_GET['value_page'] . '&' : '') . (isset($_GET['attribute_page']) ? 'attribute_page=' . $_GET['attribute_page'] . '&' : '') . (isset($_GET['set_filter']) ? 'set_filter=' . $_GET['set_filter'] : ''), 'post', 'class="form-horizontal"');
+                  echo zen_draw_form('values', FILENAME_OPTIONS_VALUES_MANAGER, 'action=update_value' . '&' . ($page !== 0 ? 'page=' . $page . '&' : '') . ($value_page !== 0 ? 'value_page=' . $value_page . '&' : '') . ($attribute_page !== 0 ? 'attribute_page=' . $attribute_page . '&' : '') . ($filter !== 0 ? 'set_filter=' . $filter : ''), 'post', 'class="form-horizontal"');
                   $inputs = '';
                   for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
                     $value_name = $db->Execute("SELECT products_options_values_name
@@ -805,7 +808,7 @@ if (zen_not_null($action)) {
                   <td class="attributeBoxContent text-right"><?php echo zen_draw_input_field('products_options_values_sort_order', $products_options_values_sort_order->fields['products_options_values_sort_order'], 'size="4" class="form-control"'); ?></td>
                   <td class="attributeBoxContent text-right">
                     <button type="submit" class="btn btn-primary"><?php echo IMAGE_UPDATE; ?></button>
-                    <a href="<?php echo zen_href_link(FILENAME_OPTIONS_VALUES_MANAGER, (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . (isset($_GET['value_page']) ? 'value_page=' . $_GET['value_page'] . '&' : '') . (isset($_GET['attribute_page']) ? 'attribute_page=' . $_GET['attribute_page'] . '&' : '') . (isset($_GET['set_filter']) ? 'set_filter=' . $_GET['set_filter'] : '')); ?>" class="btn btn-default" role="button"><?php echo IMAGE_CANCEL ?></a>
+                    <a href="<?php echo zen_href_link(FILENAME_OPTIONS_VALUES_MANAGER, ($page !== 0 ? 'page=' . $page . '&' : '') . ($value_page !== 0 ? 'value_page=' . $value_page . '&' : '') . ($attribute_page !== 0 ? 'attribute_page=' . $attribute_page . '&' : '') . ($filter !==0 ? 'set_filter=' . $filter : '')); ?>" class="btn btn-default" role="button"><?php echo IMAGE_CANCEL ?></a>
                   </td>
                   <?php
                   echo '</form>';
@@ -819,8 +822,8 @@ if (zen_not_null($action)) {
                     <td>&nbsp;</td>
                   <?php } else { ?>
                     <td>
-                      <a href="<?php echo zen_href_link(FILENAME_OPTIONS_VALUES_MANAGER, 'action=update_option_value&value_id=' . $values_value['products_options_values_id'] . '&' . (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . (isset($_GET['value_page']) ? 'value_page=' . $_GET['value_page'] . '&' : '') . (isset($_GET['attribute_page']) ? 'attribute_page=' . $_GET['attribute_page'] . '&' : '') . (isset($_GET['set_filter']) ? 'set_filter=' . $_GET['set_filter'] : '')); ?>" class="btn btn-primary" role="button"><?php echo IMAGE_UPDATE; ?></a>
-                      <a href="<?php echo zen_href_link(FILENAME_OPTIONS_VALUES_MANAGER, 'action=delete_option_value&value_id=' . $values_value['products_options_values_id'] . '&' . (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . (isset($_GET['value_page']) ? 'value_page=' . $_GET['value_page'] . '&' : '') . (isset($_GET['attribute_page']) ? 'attribute_page=' . $_GET['attribute_page'] . '&' : '') . (isset($_GET['set_filter']) ? 'set_filter=' . $_GET['set_filter'] : '')); ?>" class="btn btn-default" role="button"><?php echo IMAGE_DELETE; ?></a>
+                      <a href="<?php echo zen_href_link(FILENAME_OPTIONS_VALUES_MANAGER, 'action=update_option_value&value_id=' . $values_value['products_options_values_id'] . '&' . ($page !== 0 ? 'page=' . $page . '&' : '') . ($value_page !== 0 ? 'value_page=' . $value_page . '&' : '') . ($attribute_page !== 0 ? 'attribute_page=' . $attribute_page . '&' : '') . ($filter !== 0 ? 'set_filter=' . $filter : '')); ?>" class="btn btn-primary" role="button"><?php echo IMAGE_UPDATE; ?></a>
+                      <a href="<?php echo zen_href_link(FILENAME_OPTIONS_VALUES_MANAGER, 'action=delete_option_value&value_id=' . $values_value['products_options_values_id'] . '&' . ($page !== 0 ? 'page=' . $page . '&' : '') . ($value_page !== 0 ? 'value_page=' . $value_page . '&' : '') . ($attribute_page !== 0 ? 'attribute_page=' . $attribute_page . '&' : '') . ($filter !== 0 ? 'set_filter=' . $filter : '')); ?>" class="btn btn-default" role="button"><?php echo IMAGE_DELETE; ?></a>
                     </td>
                   <?php } ?>
                   <?php
@@ -837,7 +840,7 @@ if (zen_not_null($action)) {
             </tr>
             <?php if ($action != 'update_option_value') { ?>
               <tr>
-                <?php echo zen_draw_form('values', FILENAME_OPTIONS_VALUES_MANAGER, 'action=add_product_option_values' . '&' . (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . (isset($_GET['value_page']) ? 'value_page=' . $_GET['value_page'] . '&' : '') . (isset($_GET['attribute_page']) ? 'attribute_page=' . $_GET['attribute_page'] . '&' : '') . (isset($_GET['set_filter']) ? 'set_filter=' . $_GET['set_filter'] : ''), 'post', 'class="form-horizontal"'); ?>
+                <?php echo zen_draw_form('values', FILENAME_OPTIONS_VALUES_MANAGER, 'action=add_product_option_values' . '&' . ($page !== 0 ? 'page=' . $page . '&' : '') . ($value_page !== 0 ? 'value_page=' . $value_page . '&' : '') . ($attribute_page !== 0 ? 'attribute_page=' . $attribute_page . '&' : '') . ($filter !== 0 ? 'set_filter=' . $filter : ''), 'post', 'class="form-horizontal"'); ?>
                 <td class="text-right"><?php echo $next_id; ?></td>
                 <td colspan="3">
                   <?php
