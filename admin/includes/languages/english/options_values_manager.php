@@ -117,4 +117,4 @@ define('TABLE_TEXT_MAX_COUNT_SHORT', 'Max:');
 
   define('SUCCESS_OPTION_VALUES_DELETE', 'Successful: Deletion of: ');
   define('LABEL_FILTER', 'Select Option Vaulue to filter');
-  define('TEXT_DISPLAY_NUMBER_OF_OPTION_VALUES', 'Displaying <b>%d</b> to <b>%d</b> (of <b>%d</b> OptionValues)');
+  define('TEXT_DISPLAY_NUMBER_OF_OPTION_VALUES', 'Displaying <b>%d</b> to <b>%d</b> (of <b>%d</b> Option Values)');
