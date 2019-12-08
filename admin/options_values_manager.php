@@ -586,26 +586,18 @@ if (zen_not_null($action)) {
               ?>
               <?php if ($products_values->RecordCount() > 10) { ?>
                 <tr>
-                  <td colspan="4"><?php echo zen_black_line(); ?></td>
-                </tr>
-                <tr>
                   <td colspan="3"><?php echo TEXT_WARNING_OF_DELETE; ?></td>
                   <td class="text-right">
                     <a href="<?php echo zen_href_link(FILENAME_OPTIONS_VALUES_MANAGER, 'action=delete_value&value_id=' . $_GET['value_id'] . '&' . ($page !== 0 ? 'page=' . $page . '&' : '') . ($value_page !== 0 ? 'value_page=' . $value_page . '&' : '') . ($attribute_page !== 0 ? 'attribute_page=' . $attribute_page : '')); ?>" class="btn btn-danger" role="button"><?php echo IMAGE_DELETE; ?></a>
                     <a href="<?php echo zen_href_link(FILENAME_OPTIONS_VALUES_MANAGER, ($page !== 0 ? 'page=' . $page . '&' : '') . ($value_page !== 0 ? 'value_page=' . $value_page . '&' : '') . ($attribute_page !== 0 ? 'attribute_page=' . $attribute_page : '')); ?>" class="btn btn-default" role="button"><?php echo TEXT_CANCEL; ?></a>
                   </td>
                 </tr>
-                <?php
-              } // extra cancel
-              ?>
+              <?php } ?>
               <tr class="dataTableHeadingRow">
                 <th class="dataTableHeadingContent text-center"><?php echo TABLE_HEADING_ID; ?></th>
                 <th class="dataTableHeadingContent"><?php echo TABLE_HEADING_PRODUCT; ?></th>
                 <th class="dataTableHeadingContent"><?php echo TABLE_HEADING_OPTION_SORT_ORDER; ?></th>
                 <th><?php echo TABLE_HEADING_OPT_NAME; ?></th>
-              </tr>
-              <tr>
-                <td colspan="4"><?php echo zen_black_line(); ?></td>
               </tr>
 
               <?php foreach ($products_values as $products_value) { ?>
