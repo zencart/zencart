@@ -404,10 +404,10 @@ function translate_type_to_name($opt_type)
 <html <?php echo HTML_PARAMS; ?>>
   <head>
     <meta charset="<?php echo CHARSET; ?>">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title><?php echo TITLE; ?></title>
     <link rel="stylesheet" href="includes/stylesheet.css">
-    <link rel="stylesheet" href="includes/cssjsmenuhover.css" media="all" id="hoverJS">
-    <script src="includes/menu.js"></script>
     <script>
       function go_option() {
         if ($('#sortOrder').val() != 'none') {
@@ -415,21 +415,12 @@ function translate_type_to_name($opt_type)
         }
       }
     </script>
-    <script>
-      function init() {
-        cssjsmenu('navbar');
-        if (document.getElementById) {
-          var kill = document.getElementById('hoverJS');
-          kill.disabled = true;
-        }
-      }
-    </script>
   </head>
-  <body onLoad="init()">
-    <!-- header //-->
-    <?php require(DIR_WS_INCLUDES . 'header.php'); ?>
-    <!-- header_eof //-->
+  <body>
     <div class="container-fluid">
+      <!-- header //-->
+      <?php require(DIR_WS_INCLUDES . 'header.php'); ?>
+      <!-- header_eof //-->
       <!-- body //-->
       <!-- body_text //-->
       <h1><?php echo HEADING_TITLE_OPT; ?></h1>
@@ -952,13 +943,13 @@ function translate_type_to_name($opt_type)
               <!-- eof: copy all option values to another Option Name -->
             </table>
           </div>
-        <?php } // show copier features   ?>
+        <?php } // show copier features ?>
       </div>
+      <!-- body_text_eof //-->
+      <!-- footer //-->
+      <?php require(DIR_WS_INCLUDES . 'footer.php'); ?>
+      <!-- footer_eof //-->
     </div>
-    <!-- body_text_eof //-->
-    <!-- footer //-->
-    <?php require(DIR_WS_INCLUDES . 'footer.php'); ?>
-    <!-- footer_eof //-->
   </body>
 </html>
 <?php require(DIR_WS_INCLUDES . 'application_bottom.php'); ?>
