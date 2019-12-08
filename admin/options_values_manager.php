@@ -376,7 +376,7 @@ if (zen_not_null($action)) {
                             " . (int)$attributes_display_only . ",
                             " . (int)$attributes_default . ",
                             " . (int)$attributes_discounted . ",
-                            '" . zen_db_input($attributes_image_name) . ",
+                            '" . zen_db_input($attributes_image_name) . "',
                             " . (int)$attributes_price_base_included . ",
                             " . (float)$attributes_price_onetime . ",
                             " . (float)$attributes_price_factor . ",
