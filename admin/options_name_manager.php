@@ -729,19 +729,22 @@ function translate_type_to_name($opt_type)
                   $inputs = '';
                   $inputs2 = '';
                   for ($i = 0, $n = count($languages); $i < $n; $i++) {
-                    $inputs .= zen_draw_label($languages[$i]['code'], 'option_name[' . $languages[$i]['id'] . ']', 'class="control-label"');
+                    $inputs .= '<div class="form-group">';
+                    $inputs .= '<div class="input-group">';
+                    $inputs .= '<span class="input-group-addon">' . zen_image(DIR_WS_CATALOG_LANGUAGES . $languages[$i]['directory'] . '/images/' . $languages[$i]['image'], $languages[$i]['name']) . '</span>';
                     $inputs .= zen_draw_input_field('option_name[' . $languages[$i]['id'] . ']', '', zen_set_field_length(TABLE_PRODUCTS_OPTIONS, 'products_options_name', 40) . 'class="form-control"');
-                    ($i + 1 < $n ? $inputs .= '<br>' : '');
+                    $inputs .= '</div>';
+                    $inputs .= '</div>';
                     $inputs2 .= zen_draw_label(TEXT_SORT, 'products_options_sort_order[' . $languages[$i]['id'] . ']');
                     $inputs2 .= zen_draw_input_field('products_options_sort_order[' . $languages[$i]['id'] . ']', '', 'size="3" class="form-control"');
                     ($i + 1 < $n ? $inputs2 .= '<br>' : '');
                   }
                   ?>
-                  <td class="text-center"><?php echo $next_id; ?></td>
-                  <td><?php echo $inputs; ?></td>
-                  <td><?php echo $inputs2; ?></td>
-                  <td><?php echo zen_draw_pull_down_menu('option_type', $optionTypeValuesArray, '', 'class="form-control"'); ?></td>
-                  <td colspan="2">&nbsp;</td>
+                  <td colspan="6">
+                    <div class="col-sm-4"><?php echo $inputs; ?></div>
+                    <div class="col-sm-4"><?php echo $inputs2; ?></div>
+                    <div class="col-sm-4"><?php echo zen_draw_pull_down_menu('option_type', $optionTypeValuesArray, '', 'class="form-control"'); ?></div>
+                  </td>
                   <td>
                     <button type="submit" class="btn btn-primary"><?php echo IMAGE_INSERT; ?></button>
                   </td>
