@@ -123,18 +123,18 @@ function zen_href_link($page = '', $parameters = '', $connection = 'SSL', $add_s
 ////
 // The HTML form submit button wrapper function
 // Outputs a button in the selected language
-  function zen_image_submit($image, $alt = '', $parameters = '') {
-
-    $image_submit = '<input type="image" src="' . zen_output_string(DIR_WS_LANGUAGES . $_SESSION['language'] . '/images/buttons/' . $image) . '" border="0" alt="' . zen_output_string($alt) . '"';
-
-    if (zen_not_null($alt)) $image_submit .= ' title=" ' . zen_output_string($alt) . ' "';
-
-    if (zen_not_null($parameters)) $image_submit .= ' ' . $parameters;
-
+function zen_image_submit($image, $alt = '', $parameters = '')
+{
+    $image_submit = '<input type="image" src="' . zen_output_string(DIR_WS_LANGUAGES . $_SESSION['language'] . '/images/buttons/' . $image) . '" alt="' . zen_output_string($alt) . '"';
+    if (zen_not_null($alt)) {
+        $image_submit .= ' title=" ' . zen_output_string($alt) . ' "';
+    }
+    if (zen_not_null($parameters)) {
+        $image_submit .= ' ' . $parameters;
+    }
     $image_submit .= '>';
-
     return $image_submit;
-  }
+}
 
 ////
 // Draw a 1 pixel black line
