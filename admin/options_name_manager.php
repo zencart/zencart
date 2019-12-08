@@ -20,7 +20,7 @@ $chk_option_values = $db->Execute("SELECT *
 foreach ($chk_option_values as $item) {
   $ary[] = $item['language_id'];
 }
-for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
+for ($i = 0, $n = count($languages); $i < $n; $i++) {
   if ((int)$languages[$i]['id'] > 0 && !in_array((int)$languages[$i]['id'], $ary)) {
     $db->Execute("INSERT INTO " . TABLE_PRODUCTS_OPTIONS_VALUES . " (products_options_values_id, language_id, products_options_values_name)
                   VALUES (" . (int)PRODUCTS_OPTIONS_VALUES_TEXT_ID . ", " . (int)$languages[$i]['id'] . ", 'TEXT')");
@@ -78,7 +78,7 @@ if (zen_not_null($action)) {
       $products_options_images_style = $_POST['products_options_images_style'];
       $products_options_rows = $_POST['products_options_rows'];
 
-      for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
+      for ($i = 0, $n = count($languages); $i < $n; $i++) {
         $option_name = zen_db_prepare_input($option_name_array[$languages[$i]['id']]);
 
         $db->Execute("INSERT INTO " . TABLE_PRODUCTS_OPTIONS . " (products_options_id, products_options_name, language_id, products_options_sort_order, products_options_type, products_options_images_per_row, products_options_images_style, products_options_rows)
@@ -103,7 +103,7 @@ if (zen_not_null($action)) {
 
 // alert if possible duplicate
       $duplicate_option = '';
-      for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
+      for ($i = 0, $n = count($languages); $i < $n; $i++) {
         $option_name = zen_db_prepare_input($option_name_array[$languages[$i]['id']]);
 
         if (!empty($option_name)) {
@@ -136,7 +136,7 @@ if (zen_not_null($action)) {
       $products_options_images_style_array = $_POST['products_options_images_style'];
       $products_options_rows_array = $_POST['products_options_rows'];
 
-      for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
+      for ($i = 0, $n = count($languages); $i < $n; $i++) {
         $option_name = zen_db_prepare_input($option_name_array[$languages[$i]['id']]);
         $products_options_sort_order = (int)$products_options_sort_order_array[$languages[$i]['id']];
 
@@ -188,7 +188,7 @@ if (zen_not_null($action)) {
 
 // alert if possible duplicate
       $duplicate_option = '';
-      for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
+      for ($i = 0, $n = count($languages); $i < $n; $i++) {
         $option_name = zen_db_prepare_input($option_name_array[$languages[$i]['id']]);
 
         $check = $db->Execute("SELECT products_options_name
@@ -615,7 +615,7 @@ function translate_type_to_name($opt_type)
                     $option_name_input = '';
                     $sort_order_input = '';
                     $inputs2 = '';
-                    for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
+                  for ($i = 0, $n = count($languages); $i < $n; $i++) {
                       $option_name = $db->Execute("SELECT products_options_name, products_options_sort_order, products_options_size, products_options_length, products_options_comment, products_options_images_per_row, products_options_images_style, products_options_rows
                                                    FROM " . TABLE_PRODUCTS_OPTIONS . "
                                                    WHERE products_options_id = " . (int)$options_value['products_options_id'] . "
@@ -743,7 +743,7 @@ function translate_type_to_name($opt_type)
                   echo zen_draw_hidden_field('products_options_id', $next_id);
                   $inputs = '';
                   $inputs2 = '';
-                  for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
+                  for ($i = 0, $n = count($languages); $i < $n; $i++) {
                     $inputs .= zen_draw_label($languages[$i]['code'], 'option_name[' . $languages[$i]['id'] . ']', 'class="control-label"');
                     $inputs .= zen_draw_input_field('option_name[' . $languages[$i]['id'] . ']', '', zen_set_field_length(TABLE_PRODUCTS_OPTIONS, 'products_options_name', 40) . 'class="form-control"');
                     ($i + 1 < $n ? $inputs .= '<br>' : '');
