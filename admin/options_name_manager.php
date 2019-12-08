@@ -598,55 +598,55 @@ function translate_type_to_name($opt_type)
               $options_values = $db->Execute($options_query_raw);
               foreach ($options_values as $options_value) {
                 ?>
-                <tr>
-                  <?php
+                <?php
 // edit option name
-                  if (($action == 'update_option') && ($_GET['option_id'] == $options_value['products_options_id'])) {
-                    echo zen_draw_form('option', FILENAME_OPTIONS_NAME_MANAGER, 'action=update_option_name' . (isset($_GET['page']) ? '&page=' . $_GET['page'] . '&' : '') . (isset($_GET['value_page']) ? '&value_page=' . $_GET['value_page'] . '&' : '') . (isset($_GET['attribute_page']) ? '&attribute_page=' . $_GET['attribute_page'] : '') . '&option_order_by=' . $option_order_by, 'post', 'class="form-horizontal"');
-                    $option_name_input = '';
-                    $sort_order_input = '';
-                    $inputs2 = '';
+                if (($action == 'update_option') && ($_GET['option_id'] == $options_value['products_options_id'])) {
+                  echo zen_draw_form('option', FILENAME_OPTIONS_NAME_MANAGER, 'action=update_option_name' . (isset($_GET['page']) ? '&page=' . $_GET['page'] . '&' : '') . (isset($_GET['value_page']) ? '&value_page=' . $_GET['value_page'] . '&' : '') . (isset($_GET['attribute_page']) ? '&attribute_page=' . $_GET['attribute_page'] : '') . '&option_order_by=' . $option_order_by, 'post', 'class="form-horizontal"');
+                  $option_name_input = '';
+                  $sort_order_input = '';
+                  $inputs2 = '';
                   for ($i = 0, $n = count($languages); $i < $n; $i++) {
-                      $option_name = $db->Execute("SELECT products_options_name, products_options_sort_order, products_options_size, products_options_length, products_options_comment, products_options_images_per_row, products_options_images_style, products_options_rows
+                    $option_name = $db->Execute("SELECT products_options_name, products_options_sort_order, products_options_size, products_options_length, products_options_comment, products_options_images_per_row, products_options_images_style, products_options_rows
                                                    FROM " . TABLE_PRODUCTS_OPTIONS . "
                                                    WHERE products_options_id = " . (int)$options_value['products_options_id'] . "
                                                    AND language_id = " . (int)$languages[$i]['id']);
 
-                      $option_name_input .= zen_draw_label($languages[$i]['code'], 'option_name[' . (int)$languages[$i]['id'] . ']', 'class="control-label"') . ': ';
-                      $option_name_input .= zen_draw_input_field('option_name[' . (int)$languages[$i]['id'] . ']', zen_output_string($option_name->fields['products_options_name']), zen_set_field_length(TABLE_PRODUCTS_OPTIONS, 'products_options_name', 40) . 'class="form-control"');
-                      ($i + 1 < $n ? $option_name_input .= '<br>' : '');
+                    $option_name_input .= zen_draw_label($languages[$i]['code'], 'option_name[' . (int)$languages[$i]['id'] . ']', 'class="control-label"') . ': ';
+                    $option_name_input .= zen_draw_input_field('option_name[' . (int)$languages[$i]['id'] . ']', zen_output_string($option_name->fields['products_options_name']), zen_set_field_length(TABLE_PRODUCTS_OPTIONS, 'products_options_name', 40) . 'class="form-control"');
+                    ($i + 1 < $n ? $option_name_input .= '<br>' : '');
 
-                      $sort_order_input .= zen_draw_label(TEXT_SORT, 'products_options_sort_order[' . (int)$languages[$i]['id'] . ']', 'class="control-label"');
-                      $sort_order_input .= zen_draw_input_field('products_options_sort_order[' . (int)$languages[$i]['id'] . ']', $option_name->fields['products_options_sort_order'], 'size="3" class="form-control"');
-                      ($i + 1 < $n ? $sort_order_input .= '<br>' : '');
+                    $sort_order_input .= zen_draw_label(TEXT_SORT, 'products_options_sort_order[' . (int)$languages[$i]['id'] . ']', 'class="control-label"');
+                    $sort_order_input .= zen_draw_input_field('products_options_sort_order[' . (int)$languages[$i]['id'] . ']', $option_name->fields['products_options_sort_order'], 'size="3" class="form-control"');
+                    ($i + 1 < $n ? $sort_order_input .= '<br>' : '');
 
-                      $inputs2 .= '<h4>' . $languages[$i]['code'] . ':</h4>';
-                      $inputs2 .= '<div class="row">';
-                      $inputs2 .= '<div class="col-sm-12">';
-                      $inputs2 .= zen_draw_label(TEXT_OPTION_VALUE_COMMENTS, 'products_options_comment[' . (int)$languages[$i]['id'] . ']', 'class="control-label"') . zen_draw_input_field('products_options_comment[' . (int)$languages[$i]['id'] . ']', $option_name->fields['products_options_comment'], 'size="50" class="form-control"');
-                      $inputs2 .= '</div>';
-                      $inputs2 .= '</div>';
-                      $inputs2 .= '<div class="row">';
-                      $inputs2 .= '<div class="col-sm-4">';
-                      $inputs2 .= zen_draw_label(TEXT_OPTION_VALUE_ROWS, 'products_options_rows[' . (int)$languages[$i]['id'] . ']', 'class="control-label"') . zen_draw_input_field('products_options_rows[' . $languages[$i]['id'] . ']', $option_name->fields['products_options_rows'], 'size="3" class="form-control"');
-                      $inputs2 .= '</div>';
-                      $inputs2 .= '<div class="col-sm-4">';
-                      $inputs2 .= zen_draw_label(TEXT_OPTION_VALUE_SIZE, 'products_options_size[' . (int)$languages[$i]['id'] . ']', 'class="control-label"') . zen_draw_input_field('products_options_size[' . $languages[$i]['id'] . ']', $option_name->fields['products_options_size'], 'size="3" class="form-control"');
-                      $inputs2 .= '</div>';
-                      $inputs2 .= '<div class="col-sm-4">';
-                      $inputs2 .= zen_draw_label(TEXT_OPTION_VALUE_MAX, 'products_options_length[' . (int)$languages[$i]['id'] . ']', 'class="control-label"') . zen_draw_input_field('products_options_length[' . $languages[$i]['id'] . ']', $option_name->fields['products_options_length'], 'size="3" class="form-control"');
-                      $inputs2 .= '</div>';
-                      $inputs2 .= '</div>';
-                      $inputs2 .= '<div class="row">';
-                      $inputs2 .= '<div class="col-sm-4">';
-                      $inputs2 .= zen_draw_label(TEXT_OPTION_ATTRIBUTE_IMAGES_PER_ROW, 'products_options_images_per_row[' . (int)$languages[$i]['id'] . ']', 'class="control-label"') . zen_draw_input_field('products_options_images_per_row[' . $languages[$i]['id'] . ']', $option_name->fields['products_options_images_per_row'], 'size="3" class="form-control"');
-                      $inputs2 .= '</div>';
-                      $inputs2 .= '<div class="col-sm-4">';
-                      $inputs2 .= zen_draw_label(TEXT_OPTION_ATTRIBUTE_IMAGES_STYLE, 'products_options_images_style[' . (int)$languages[$i]['id'] . ']', 'class="control-label"') . zen_draw_input_field('products_options_images_style[' . $languages[$i]['id'] . ']', $option_name->fields['products_options_images_style'], 'size="3" class="form-control"');
-                      $inputs2 .= '</div>';
-                      $inputs2 .= '</div>';
-                    }
-                    ?>
+                    $inputs2 .= '<h4>' . $languages[$i]['code'] . ':</h4>';
+                    $inputs2 .= '<div class="row">';
+                    $inputs2 .= '<div class="col-sm-12">';
+                    $inputs2 .= zen_draw_label(TEXT_OPTION_VALUE_COMMENTS, 'products_options_comment[' . (int)$languages[$i]['id'] . ']', 'class="control-label"') . zen_draw_input_field('products_options_comment[' . (int)$languages[$i]['id'] . ']', $option_name->fields['products_options_comment'], 'size="50" class="form-control"');
+                    $inputs2 .= '</div>';
+                    $inputs2 .= '</div>';
+                    $inputs2 .= '<div class="row">';
+                    $inputs2 .= '<div class="col-sm-4">';
+                    $inputs2 .= zen_draw_label(TEXT_OPTION_VALUE_ROWS, 'products_options_rows[' . (int)$languages[$i]['id'] . ']', 'class="control-label"') . zen_draw_input_field('products_options_rows[' . $languages[$i]['id'] . ']', $option_name->fields['products_options_rows'], 'size="3" class="form-control"');
+                    $inputs2 .= '</div>';
+                    $inputs2 .= '<div class="col-sm-4">';
+                    $inputs2 .= zen_draw_label(TEXT_OPTION_VALUE_SIZE, 'products_options_size[' . (int)$languages[$i]['id'] . ']', 'class="control-label"') . zen_draw_input_field('products_options_size[' . $languages[$i]['id'] . ']', $option_name->fields['products_options_size'], 'size="3" class="form-control"');
+                    $inputs2 .= '</div>';
+                    $inputs2 .= '<div class="col-sm-4">';
+                    $inputs2 .= zen_draw_label(TEXT_OPTION_VALUE_MAX, 'products_options_length[' . (int)$languages[$i]['id'] . ']', 'class="control-label"') . zen_draw_input_field('products_options_length[' . $languages[$i]['id'] . ']', $option_name->fields['products_options_length'], 'size="3" class="form-control"');
+                    $inputs2 .= '</div>';
+                    $inputs2 .= '</div>';
+                    $inputs2 .= '<div class="row">';
+                    $inputs2 .= '<div class="col-sm-4">';
+                    $inputs2 .= zen_draw_label(TEXT_OPTION_ATTRIBUTE_IMAGES_PER_ROW, 'products_options_images_per_row[' . (int)$languages[$i]['id'] . ']', 'class="control-label"') . zen_draw_input_field('products_options_images_per_row[' . $languages[$i]['id'] . ']', $option_name->fields['products_options_images_per_row'], 'size="3" class="form-control"');
+                    $inputs2 .= '</div>';
+                    $inputs2 .= '<div class="col-sm-4">';
+                    $inputs2 .= zen_draw_label(TEXT_OPTION_ATTRIBUTE_IMAGES_STYLE, 'products_options_images_style[' . (int)$languages[$i]['id'] . ']', 'class="control-label"') . zen_draw_input_field('products_options_images_style[' . $languages[$i]['id'] . ']', $option_name->fields['products_options_images_style'], 'size="3" class="form-control"');
+                    $inputs2 .= '</div>';
+                    $inputs2 .= '</div>';
+                  }
+                  ?>
+                  <tr>
                     <td class="text-center">
                       <?php echo $options_value['products_options_id']; ?>
                       <?php echo zen_draw_hidden_field('option_id', $options_value['products_options_id']); ?>
