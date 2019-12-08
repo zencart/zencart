@@ -705,23 +705,12 @@ function translate_type_to_name($opt_type)
                       </td>
                     <?php } ?>
                   </tr>
-                  <?php
-                }
-                ?>
-                <?php
-                $max_options_id_values = $db->Execute("SELECT MAX(products_options_id) + 1 AS next_id
-                                                     FROM " . TABLE_PRODUCTS_OPTIONS);
-
-                $next_id = $max_options_id_values->fields['next_id'];
-              }
-              ?>
+                <?php } ?>
+              <?php } ?>
               <tr>
                 <td colspan="7"><?php echo zen_black_line(); ?></td>
               </tr>
-              <?php
-// add option name
-              if ($action != 'update_option') {
-                ?>
+              <?php if ($action != 'update_option') { ?>
                 <tr>
                   <?php
                   echo zen_draw_form('options', FILENAME_OPTIONS_NAME_MANAGER, 'action=add_product_options' . (isset($_GET['page']) ? '&page=' . $_GET['page'] . '&' : '') . (isset($_GET['value_page']) ? '&value_page=' . $_GET['value_page'] . '&' : '') . (isset($_GET['attribute_page']) ? '&attribute_page=' . $_GET['attribute_page'] : '') . '&option_order_by=' . $option_order_by, 'post', 'class="form-horizontal"');
