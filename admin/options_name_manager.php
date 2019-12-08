@@ -408,13 +408,6 @@ function translate_type_to_name($opt_type)
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title><?php echo TITLE; ?></title>
     <link rel="stylesheet" href="includes/stylesheet.css">
-    <script>
-      function go_option() {
-        if ($('#sortOrder').val() != 'none') {
-          location = '<?php echo zen_href_link(FILENAME_OPTIONS_NAME_MANAGER, 'page=' . (!empty($_GET['page']) ? $_GET['page'] : 1)); ?>&option_order_by=' + $('#sortOrder').val();
-        }
-      }
-    </script>
   </head>
   <body>
     <div class="container-fluid">
@@ -554,8 +547,8 @@ function translate_type_to_name($opt_type)
           </div>
           <div class="row text-center">
             <div class="col-sm-offset-5 col-sm-2">
-              <?php echo zen_draw_form('option_order_by', FILENAME_OPTIONS_NAME_MANAGER, 'option_order_by=' . $option_order_by, 'post', 'class="form-horizontal"'); ?>
-              <select name="selected" onchange="go_option()" class="form-control" id="sortOrder">
+              <?php echo zen_draw_form('option_order_by_form', FILENAME_OPTIONS_NAME_MANAGER, 'option_order_by=' . $option_order_by, 'get', 'class="form-horizontal"'); ?>
+              <select name="option_order_by" onchange="this.form.submit();" class="form-control" id="sortOrder">
                 <option value="products_options_id"<?php echo ($option_order_by == 'products_options_id' ? ' selected' : ''); ?>><?php echo TEXT_OPTION_ID; ?></option>
                 <option value="products_options_name"<?php echo ($option_order_by == 'products_options_name' ? ' selected' : ''); ?>><?php echo TEXT_OPTION_NAME; ?></option>
               </select>
