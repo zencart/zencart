@@ -569,12 +569,12 @@ function translate_type_to_name($opt_type)
           <table class="table table-striped">
             <thead>
               <tr class="dataTableHeadingRow">
-                <th class="dataTableHeadingContent"><?php echo TABLE_HEADING_ID; ?></th>
+                <th class="dataTableHeadingContent text-right"><?php echo TABLE_HEADING_ID; ?></th>
                 <th class="dataTableHeadingContent"><?php echo TABLE_HEADING_OPT_NAME; ?></th>
                 <th class="dataTableHeadingContent"><?php echo TABLE_HEADING_OPT_TYPE; ?></th>
                 <th class="dataTableHeadingContent text-right"><?php echo TABLE_HEADING_OPTION_SORT_ORDER; ?></th>
-                <th class="dataTableHeadingContent text-center"><?php echo TABLE_HEADING_OPTION_VALUE_SIZE; ?></th>
-                <th class="dataTableHeadingContent text-center"><?php echo TABLE_HEADING_OPTION_VALUE_MAX; ?></th>
+                <th class="dataTableHeadingContent text-right"><?php echo TABLE_HEADING_OPTION_VALUE_SIZE; ?></th>
+                <th class="dataTableHeadingContent text-right"><?php echo TABLE_HEADING_OPTION_VALUE_MAX; ?></th>
                 <th class="dataTableHeadingContent"><?php echo TABLE_HEADING_ACTION; ?></th>
               </tr>
             </thead>
@@ -681,7 +681,7 @@ function translate_type_to_name($opt_type)
                 } else {
                   ?>
                   <tr>
-                    <td class="text-center"><?php echo $options_value["products_options_id"]; ?></td>
+                    <td class="text-right"><?php echo $options_value["products_options_id"]; ?></td>
                     <td><?php echo $options_value["products_options_name"]; ?></td>
                     <td><?php echo translate_type_to_name($options_value["products_options_type"]); ?></td>
                     <td class="text-right"><?php echo $options_value["products_options_sort_order"]; ?></td>
