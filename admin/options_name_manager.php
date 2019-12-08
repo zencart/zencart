@@ -576,9 +576,6 @@ function translate_type_to_name($opt_type)
           </div>
           <table class="table table-striped">
             <thead>
-              <tr>
-                <th colspan="7"><?php echo zen_black_line(); ?></th>
-              </tr>
               <tr class="dataTableHeadingRow">
                 <th class="dataTableHeadingContent"><?php echo TABLE_HEADING_ID; ?></th>
                 <th class="dataTableHeadingContent"><?php echo TABLE_HEADING_OPT_NAME; ?></th>
@@ -587,9 +584,6 @@ function translate_type_to_name($opt_type)
                 <th class="dataTableHeadingContent text-center"><?php echo TABLE_HEADING_OPTION_VALUE_SIZE; ?></th>
                 <th class="dataTableHeadingContent text-center"><?php echo TABLE_HEADING_OPTION_VALUE_MAX; ?></th>
                 <th class="dataTableHeadingContent"><?php echo TABLE_HEADING_ACTION; ?></th>
-              </tr>
-              <tr>
-                <th colspan="7"><?php echo zen_black_line(); ?></th>
               </tr>
             </thead>
             <tbody>
@@ -753,11 +747,7 @@ function translate_type_to_name($opt_type)
                   </td>
                   <?php echo '</form>'; ?>
                 </tr>
-                <tr>
-                  <td colspan="7"><?php echo zen_black_line(); ?></td>
-                </tr>
               <?php } ?>
-            </tbody>
           </table>
         <?php } ?>
         <!-- options eof //-->
