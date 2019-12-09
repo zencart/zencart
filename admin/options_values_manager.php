@@ -565,26 +565,53 @@ if (zen_not_null($action)) {
         ?>
         <div class="table-responsive">
           <table class="table table-striped">
-            <tr>
-              <td colspan="4" class="pageHeading"><?php echo $values_values->fields['products_options_values_name']; ?></td>
-            </tr>
-            <?php
-            $products_values = $db->Execute("SELECT p.products_id, pd.products_name, po.products_options_name, pa.options_id
-                                             FROM " . TABLE_PRODUCTS . " p,
-                                                  " . TABLE_PRODUCTS_ATTRIBUTES . " pa,
-                                                  " . TABLE_PRODUCTS_OPTIONS . " po,
-                                                  " . TABLE_PRODUCTS_DESCRIPTION . " pd
-                                             WHERE pd.products_id = p.products_id
-                                             AND pd.language_id = " . (int)$_SESSION['languages_id'] . "
-                                             AND po.language_id = " . (int)$_SESSION['languages_id'] . "
-                                             AND pa.products_id = p.products_id
-                                             AND pa.options_values_id = " . (int)$_GET['value_id'] . "
-                                             AND po.products_options_id = pa.options_id
-                                             ORDER BY pd.products_name");
-
-            if ($products_values->RecordCount() > 0) {
-              ?>
-              <?php if ($products_values->RecordCount() > 10) { ?>
+            <thead>
+              <tr>
+                <td colspan="4" class="pageHeading"><?php echo $values_values->fields['products_options_values_name']; ?></td>
+              </tr>
+              <?php
+              $products_values = $db->Execute("SELECT p.products_id, pd.products_name, po.products_options_name, pa.options_id
+                                               FROM " . TABLE_PRODUCTS . " p,
+                                                    " . TABLE_PRODUCTS_ATTRIBUTES . " pa,
+                                                    " . TABLE_PRODUCTS_OPTIONS . " po,
+                                                    " . TABLE_PRODUCTS_DESCRIPTION . " pd
+                                               WHERE pd.products_id = p.products_id
+                                               AND pd.language_id = " . (int)$_SESSION['languages_id'] . "
+                                               AND po.language_id = " . (int)$_SESSION['languages_id'] . "
+                                               AND pa.products_id = p.products_id
+                                               AND pa.options_values_id = " . (int)$_GET['value_id'] . "
+                                               AND po.products_options_id = pa.options_id
+                                               ORDER BY pd.products_name");
+              if ($products_values->RecordCount() > 0) {
+                ?>
+                <?php if ($products_values->RecordCount() > 10) { ?>
+                  <tr>
+                    <td colspan="3"><?php echo TEXT_WARNING_OF_DELETE; ?></td>
+                    <td class="text-right">
+                      <a href="<?php echo zen_href_link(FILENAME_OPTIONS_VALUES_MANAGER, 'action=delete_value&value_id=' . $_GET['value_id'] . '&' . ($currentPage !== 0 ? 'page=' . $currentPage . '&' : '') . ($value_page !== 0 ? 'value_page=' . $value_page . '&' : '') . ($attribute_page !== 0 ? 'attribute_page=' . $attribute_page : '')); ?>" class="btn btn-danger" role="button"><?php echo IMAGE_DELETE; ?></a>
+                      <a href="<?php echo zen_href_link(FILENAME_OPTIONS_VALUES_MANAGER, ($currentPage !== 0 ? 'page=' . $currentPage . '&' : '') . ($value_page !== 0 ? 'value_page=' . $value_page . '&' : '') . ($attribute_page !== 0 ? 'attribute_page=' . $attribute_page : '')); ?>" class="btn btn-default" role="button"><?php echo TEXT_CANCEL; ?></a>
+                    </td>
+                  </tr>
+                <?php } ?>
+                <tr class="dataTableHeadingRow">
+                  <th class="dataTableHeadingContent text-right"><?php echo TABLE_HEADING_ID; ?></th>
+                  <th class="dataTableHeadingContent"><?php echo TABLE_HEADING_PRODUCT; ?></th>
+                  <th class="dataTableHeadingContent text-right"><?php echo TABLE_HEADING_OPTION_SORT_ORDER; ?></th>
+                  <th><?php echo TABLE_HEADING_OPT_NAME; ?></th>
+                </tr>
+              </thead>
+              <tbody>
+                <?php foreach ($products_values as $products_value) { ?>
+                  <tr>
+                    <td class="text-right"><?php echo $products_value['products_id']; ?></td>
+                    <td><?php echo $products_value['products_name']; ?></td>
+                    <td class="text-right"><?php echo $options_value["products_options_sort_order"]; ?></td>
+                    <td ><?php echo $products_value['products_options_name']; ?></td>
+                  </tr>
+                <?php } ?>
+                <tr>
+                  <td colspan="4"><?php echo zen_black_line(); ?></td>
+                </tr>
                 <tr>
                   <td colspan="3"><?php echo TEXT_WARNING_OF_DELETE; ?></td>
                   <td class="text-right">
@@ -592,43 +619,18 @@ if (zen_not_null($action)) {
                     <a href="<?php echo zen_href_link(FILENAME_OPTIONS_VALUES_MANAGER, ($currentPage !== 0 ? 'page=' . $currentPage . '&' : '') . ($value_page !== 0 ? 'value_page=' . $value_page . '&' : '') . ($attribute_page !== 0 ? 'attribute_page=' . $attribute_page : '')); ?>" class="btn btn-default" role="button"><?php echo TEXT_CANCEL; ?></a>
                   </td>
                 </tr>
-              <?php } ?>
-              <tr class="dataTableHeadingRow">
-                <th class="dataTableHeadingContent text-center"><?php echo TABLE_HEADING_ID; ?></th>
-                <th class="dataTableHeadingContent"><?php echo TABLE_HEADING_PRODUCT; ?></th>
-                <th class="dataTableHeadingContent"><?php echo TABLE_HEADING_OPTION_SORT_ORDER; ?></th>
-                <th><?php echo TABLE_HEADING_OPT_NAME; ?></th>
-              </tr>
-
-              <?php foreach ($products_values as $products_value) { ?>
+              <?php } else { ?>
                 <tr>
-                  <td class="text-center"><?php echo $products_value['products_id']; ?></td>
-                  <td><?php echo $products_value['products_name']; ?></td>
-                  <td class="text-right"><?php echo $options_value["products_options_sort_order"]; ?></td>
-                  <td ><?php echo $products_value['products_options_name']; ?></td>
+                  <td colspan="4"><?php echo TEXT_OK_TO_DELETE; ?></td>
+                </tr>
+                <tr>
+                  <td class="text-right" colspan="4">
+                    <a href="<?php echo zen_href_link(FILENAME_OPTIONS_VALUES_MANAGER, 'action=delete_value&value_id=' . $_GET['value_id'] . '&' . ($currentPage !== 0 ? 'page=' . $currentPage . '&' : '') . ($value_page !== 0 ? 'value_page=' . $value_page . '&' : '') . ($attribute_page !== 0 ? 'attribute_page=' . $attribute_page : '')); ?>" class="btn btn-danger" role="button"><?php echo IMAGE_DELETE; ?></a>
+                    <a href="<?php echo zen_href_link(FILENAME_OPTIONS_VALUES_MANAGER, ($currentPage !== 0 ? 'page=' . $currentPage . '&' : '') . ($value_page !== 0 ? 'value_page=' . $value_page . '&' : '') . ($attribute_page !== 0 ? 'attribute_page=' . $attribute_page : '')); ?>" class="btn btn-default" role="button"><?php echo TEXT_CANCEL; ?></a>
+                  </td>
                 </tr>
               <?php } ?>
-              <tr>
-                <td colspan="4"><?php echo zen_black_line(); ?></td>
-              </tr>
-              <tr>
-                <td colspan="3"><?php echo TEXT_WARNING_OF_DELETE; ?></td>
-                <td class="text-right">
-                  <a href="<?php echo zen_href_link(FILENAME_OPTIONS_VALUES_MANAGER, 'action=delete_value&value_id=' . $_GET['value_id'] . '&' . ($currentPage !== 0 ? 'page=' . $currentPage . '&' : '') . ($value_page !== 0 ? 'value_page=' . $value_page . '&' : '') . ($attribute_page !== 0 ? 'attribute_page=' . $attribute_page : '')); ?>" class="btn btn-danger" role="button"><?php echo IMAGE_DELETE; ?></a>
-                  <a href="<?php echo zen_href_link(FILENAME_OPTIONS_VALUES_MANAGER, ($currentPage !== 0 ? 'page=' . $currentPage . '&' : '') . ($value_page !== 0 ? 'value_page=' . $value_page . '&' : '') . ($attribute_page !== 0 ? 'attribute_page=' . $attribute_page : '')); ?>" class="btn btn-default" role="button"><?php echo TEXT_CANCEL; ?></a>
-                </td>
-              </tr>
-            <?php } else { ?>
-              <tr>
-                <td colspan="4"><?php echo TEXT_OK_TO_DELETE; ?></td>
-              </tr>
-              <tr>
-                <td class="text-right" colspan="4">
-                  <a href="<?php echo zen_href_link(FILENAME_OPTIONS_VALUES_MANAGER, 'action=delete_value&value_id=' . $_GET['value_id'] . '&' . ($currentPage !== 0 ? 'page=' . $currentPage . '&' : '') . ($value_page !== 0 ? 'value_page=' . $value_page . '&' : '') . ($attribute_page !== 0 ? 'attribute_page=' . $attribute_page : '')); ?>" class="btn btn-danger" role="button"><?php echo IMAGE_DELETE; ?></a>
-                  <a href="<?php echo zen_href_link(FILENAME_OPTIONS_VALUES_MANAGER, ($currentPage !== 0 ? 'page=' . $currentPage . '&' : '') . ($value_page !== 0 ? 'value_page=' . $value_page . '&' : '') . ($attribute_page !== 0 ? 'attribute_page=' . $attribute_page : '')); ?>" class="btn btn-default" role="button"><?php echo TEXT_CANCEL; ?></a>
-                </td>
-              </tr>
-            <?php } ?>
+            </tbody>
           </table>
         </div>
       <?php } else { ?>
