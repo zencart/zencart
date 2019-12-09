@@ -691,6 +691,8 @@ if (zen_not_null($action)) {
           <?php echo zen_draw_separator('pixel_trans.gif') ?>
           <?php
           $max_search_results_array = [
+            ['id' => $values_query_numrows,
+              'text' => TEXT_SHOW_ALL],
             ['id' => '5',
               'text' => '5'],
             ['id' => '10',
