@@ -716,11 +716,11 @@ if (zen_not_null($action)) {
           <table class="table table-striped">
             <thead>
               <tr class="dataTableHeadingRow">
-                <th class="dataTableHeadingContent"><?php echo TABLE_HEADING_ID; ?></th>
+                <th class="dataTableHeadingContent text-right"><?php echo TABLE_HEADING_ID; ?></th>
                 <th class="dataTableHeadingContent"><?php echo TABLE_HEADING_OPT_NAME; ?></th>
                 <th class="dataTableHeadingContent"><?php echo TABLE_HEADING_OPT_VALUE; ?></th>
-                <th class="dataTableHeadingContent"><?php echo TABLE_HEADING_OPTION_VALUE_SORT_ORDER; ?></th>
-                <th class="dataTableHeadingContent"><?php echo TABLE_HEADING_ACTION; ?></th>
+                <th class="dataTableHeadingContent text-right"><?php echo TABLE_HEADING_OPTION_VALUE_SORT_ORDER; ?></th>
+                <th class="dataTableHeadingContent text-right"><?php echo TABLE_HEADING_ACTION; ?></th>
               </tr>
             </thead>
             <tbody>
@@ -794,11 +794,11 @@ if (zen_not_null($action)) {
                     <td class="text-right"><?php echo $values_value["products_options_values_id"]; ?></td>
                     <td><?php echo $options_name; ?></td>
                     <td><?php echo $values_name; ?></td>
-                    <td><?php echo $values_value['products_options_values_sort_order']; ?></td>
+                    <td class="text-right"><?php echo $values_value['products_options_values_sort_order']; ?></td>
                     <?php if ($action == 'update_option_value') { ?>
                       <td>&nbsp;</td>
                     <?php } else { ?>
-                      <td>
+                      <td class="text-right">
                         <a href="<?php echo zen_href_link(FILENAME_OPTIONS_VALUES_MANAGER, 'action=update_option_value&value_id=' . $values_value['products_options_values_id'] . '&' . ($currentPage !== 0 ? 'page=' . $currentPage . '&' : '') . ($filter !== 0 ? 'set_filter=' . $filter . '&' : '') . ($max_search_results != 0 ? 'max_search_results=' . $max_search_results : '')); ?>" class="btn btn-primary" role="button"><?php echo IMAGE_UPDATE; ?></a>
                         <a href="<?php echo zen_href_link(FILENAME_OPTIONS_VALUES_MANAGER, 'action=delete_option_value&value_id=' . $values_value['products_options_values_id'] . '&' . ($currentPage !== 0 ? 'page=' . $currentPage . '&' : '') . ($filter !== 0 ? 'set_filter=' . $filter . '&' : '') . ($max_search_results != 0 ? 'max_search_results=' . $max_search_results : '')); ?>" class="btn btn-default" role="button"><?php echo IMAGE_DELETE; ?></a>
                       </td>
@@ -854,7 +854,7 @@ if (zen_not_null($action)) {
                       </div>
                     </div>
                   </td>
-                  <td>
+                  <td class="text-right">
                     <?php echo zen_draw_hidden_field('value_id', $next_id); ?>
                     <button type="submit" class="btn btn-primary"><?php echo IMAGE_INSERT; ?></button>
                   </td>
