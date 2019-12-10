@@ -547,7 +547,7 @@ function translate_type_to_name($opt_type)
           <div class="row">
             <?php echo zen_draw_separator('pixel_trans.gif') ?>
             <div class="col-sm-6"><?php echo $options_split->display_count($options_query_numrows, MAX_ROW_LISTS_OPTIONS, $currentPage, TEXT_DISPLAY_NUMBER_OF_OPTIONS); ?></div>
-          <?php $exclude_array = ['page']; ?>
+            <?php $exclude_array = ['page']; ?>
             <div class="col-sm-6 text-right"><?php echo $options_split->display_links($options_query_numrows, MAX_ROW_LISTS_OPTIONS, MAX_DISPLAY_PAGE_LINKS, $currentPage, zen_get_all_get_params($exclude_array)); ?></div>
           </div>
           <table class="table table-striped">
@@ -559,7 +559,7 @@ function translate_type_to_name($opt_type)
                 <th class="dataTableHeadingContent text-right"><?php echo TABLE_HEADING_OPTION_SORT_ORDER; ?></th>
                 <th class="dataTableHeadingContent text-right"><?php echo TABLE_HEADING_OPTION_VALUE_SIZE; ?></th>
                 <th class="dataTableHeadingContent text-right"><?php echo TABLE_HEADING_OPTION_VALUE_MAX; ?></th>
-                <th class="dataTableHeadingContent"><?php echo TABLE_HEADING_ACTION; ?></th>
+                <th class="dataTableHeadingContent text-right"><?php echo TABLE_HEADING_ACTION; ?></th>
               </tr>
             </thead>
             <tbody>
@@ -625,7 +625,7 @@ function translate_type_to_name($opt_type)
                     <td><?php echo $sort_order_input; ?></td>
                     <td><?php echo zen_draw_pull_down_menu('option_type', $optionTypeValuesArray, $options_value['products_options_type'], 'class="form-control"'); ?></td>
                     <td colspan="2">&nbsp;</td>
-                    <td class="text-center">
+                    <td class="text-right">
                       <button type="submit" class="btn btn-primary"><?php echo IMAGE_UPDATE; ?></button>
                       <a href="<?php echo zen_href_link(FILENAME_OPTIONS_NAME_MANAGER, ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . 'option_order_by=' . $option_order_by); ?>" class="btn btn-default" role="button"><?php echo TEXT_CANCEL; ?></a>
                     </td>
@@ -674,7 +674,7 @@ function translate_type_to_name($opt_type)
                     <?php if ($action == 'update_option') { ?>
                       <td>&nbsp;</td>
                     <?php } else { ?>
-                      <td>
+                      <td class="text-right">
                         <a href="<?php echo zen_href_link(FILENAME_OPTIONS_NAME_MANAGER, 'action=update_option&option_id=' . $options_value['products_options_id'] . '&option_order_by=' . $option_order_by . '&' . ($currentPage != 0 ? 'page=' . $currentPage : '')); ?>" class="btn btn-primary" role="button"><?php echo IMAGE_UPDATE; ?>
                         </a>&nbsp;&nbsp;
                         <a href="<?php echo zen_href_link(FILENAME_OPTIONS_NAME_MANAGER, 'action=delete_product_option&option_id=' . $options_value['products_options_id'] . '&' . ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . 'option_order_by=' . $option_order_by, 'NONSSL'); ?>" class="btn btn-default" role="button"><?php echo IMAGE_DELETE; ?></a>
@@ -710,7 +710,7 @@ function translate_type_to_name($opt_type)
                     <div class="col-sm-4"><?php echo $inputs2; ?></div>
                     <div class="col-sm-4"><?php echo zen_draw_pull_down_menu('option_type', $optionTypeValuesArray, '', 'class="form-control"'); ?></div>
                   </td>
-                  <td>
+                  <td class="text-right">
                     <button type="submit" class="btn btn-primary"><?php echo IMAGE_INSERT; ?></button>
                   </td>
                   <?php echo '</form>'; ?>
