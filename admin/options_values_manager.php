@@ -751,9 +751,14 @@ if (zen_not_null($action)) {
                                                   FROM " . TABLE_PRODUCTS_OPTIONS_VALUES . "
                                                   WHERE products_options_values_id = " . (int)$values_value['products_options_values_id'] . "
                                                   AND language_id = " . (int)$languages[$i]['id']);
-                      $inputs .= zen_draw_label($languages[$i]['code'], 'value_name[' . $languages[$i]['id'] . ']', 'class="control-label"') . ': ';
+                      $inputs .= '<div class="form-group">';
+                      $inputs .= '<div class="input-group">';
+                      $inputs .= '<span class="input-group-addon">';
+                      $inputs .= zen_image(DIR_WS_CATALOG_LANGUAGES . $languages[$i]['directory'] . '/images/' . $languages[$i]['image'], $languages[$i]['name']);
+                      $inputs .= '</span>';
                       $inputs .= zen_draw_input_field('value_name[' . $languages[$i]['id'] . ']', zen_output_string($value_name->fields['products_options_values_name']), zen_set_field_length(TABLE_PRODUCTS_OPTIONS_VALUES, 'products_options_values_name', 50) . 'class="form-control"');
-                      $inputs .= '<br />';
+                      $inputs .= '</div>';
+                      $inputs .= '</div>';
                     }
                     $products_options_values_sort_order = $db->Execute("SELECT distinct products_options_values_sort_order
                                                                         FROM " . TABLE_PRODUCTS_OPTIONS_VALUES . "
