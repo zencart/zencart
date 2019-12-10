@@ -810,18 +810,13 @@ if (zen_not_null($action)) {
                     <?php } ?>
                     <?php
                   }
-                  $max_values_id_values = $db->Execute("SELECT MAX(products_options_values_id) + 1 AS next_id
-                                                        FROM " . TABLE_PRODUCTS_OPTIONS_VALUES);
-
-                  $next_id = $max_values_id_values->fields['next_id'];
                 }
                 ?>
               </tr>
               <?php if ($action != 'update_option_value') { ?>
                 <tr>
                   <?php echo zen_draw_form('values', FILENAME_OPTIONS_VALUES_MANAGER, 'action=add_product_option_values' . '&' . ($currentPage !== 0 ? 'page=' . $currentPage . '&' : '') . ($filter !== 0 ? 'set_filter=' . $filter . '&' : '') . ($max_search_results != 0 ? 'max_search_results=' . $max_search_results : ''), 'post', 'class="form-horizontal"'); ?>
-                  <td class="text-right"><?php echo $next_id; ?></td>
-                  <td colspan="3">
+                  <td colspan="4">
                     <?php
                     $options_values = $db->Execute("SELECT products_options_id, products_options_name, products_options_type
                                                     FROM " . TABLE_PRODUCTS_OPTIONS . "
@@ -1047,11 +1042,9 @@ if (zen_not_null($action)) {
               <?php echo '</form>'; ?>
             </tr>
             <!-- eof: copy all option values to another Option Name -->
-          <?php } // show copier features      ?>
-
+          <?php } ?>
         </table>
       </div>
-
       <!-- option value eof //-->
       <!-- body_text_eof //-->
       <!-- footer //-->
