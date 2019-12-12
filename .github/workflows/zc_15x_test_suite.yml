@@ -1,0 +1,49 @@
+name: Zen Cart Tests
+
+on: [push]
+
+jobs:
+  phpunit:
+    runs-on: ubuntu-latest
+    services:
+      mysql:
+        image: mysql:5.7
+        env:
+          MYSQL_ALLOW_EMPTY_PASSWORD: false
+          MYSQL_ROOT_PASSWORD: password
+          MYSQL_DATABASE: zencart
+        ports:
+          - 3306
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+    steps:
+      - uses: actions/checkout@master
+        with:
+          fetch-depth: 1
+      - name: Show PHP version
+        run: php --version
+
+      - name: Get composer cache directory
+        id: composer-cache
+        run: echo "::set-output name=dir::$(composer config cache-files-dir)"
+      - name: Cache composer dependencies
+        uses: actions/cache@v1
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: ${{ runner.os }}-composer-
+
+      - name: Install Composer dependencies
+        run: composer install --no-progress --no-interaction --no-suggest --ignore-platform-reqs --prefer-dist --optimize-autoloader --no-ansi --no-scripts
+
+      - name: Prepare the application
+        run: |
+          touch includes/configure.php
+
+      - name: Run phpunit suite
+        run: php vendor/bin/phpunit --verbose -c not_for_release/testFramework/unittests/phpunit.xml --debug
+        env:
+          DB_PORT: ${{ job.services.mysql.ports['3306'] }}
+
+      - name: Trigger deploy webhook if DEPLOY_WEBHOOK_URL is configured in the Github Secrets settings for this repo
+        run: if [ -n "${{ secrets.DEPLOY_WEBHOOK_URL }}" ]; then wget -O - ${{ secrets.DEPLOY_WEBHOOK_URL }} ; fi
+
