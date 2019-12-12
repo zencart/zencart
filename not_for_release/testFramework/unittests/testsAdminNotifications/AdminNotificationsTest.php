@@ -110,7 +110,7 @@ class testAdminNotifications extends zcTestCase
         $this->an->method('getStoreCountryIso3')->willReturn('USA');
         $this->an->method('getCurrentDate')->willReturn(new DateTime("now"));
         $r = $this->an->getNotifications('payment', 1);
-        $this->assertTrue(count($r) == 4);
+        $this->assertTrue(count($r) == 5);
     }
 
     public function testWithComplexLocationWithCountry()
@@ -129,7 +129,7 @@ class testAdminNotifications extends zcTestCase
         $this->an->method('getStoreCountryIso3')->willReturn('USA');
         $this->an->method('getCurrentDate')->willReturn($datetime);
         $r = $this->an->getNotifications('payment', 1);
-        $this->assertTrue(count($r) == 5);
+        $this->assertTrue(count($r) == 6);
     }
 
     public function testWithDateTomorrow()

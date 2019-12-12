@@ -15,9 +15,9 @@ class testPasswordHash extends zcTestCase
     public function setUp()
     {
         parent::setUp();
-        require_once DIR_FS_CATALOG . 'includes/functions/functions_general.php';
-        require_once(DIR_FS_CATALOG . DIR_WS_CLASSES . 'class.zcPassword.php');
-        require_once(DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'password_funcs.php');
+        require_once DIR_FS_CATALOG . 'includes/functions/functions_general_shared.php';
+        require_once DIR_FS_CATALOG . DIR_WS_CLASSES . 'class.zcPassword.php';
+        require_once DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'password_funcs.php';
 
         $pass = zcPassword::getInstance(PHP_VERSION);
     }
