@@ -15,16 +15,26 @@
     },
     "require-dev": {
         "mikey179/vfsstream": ">1.6",
+        "laravel/dusk": ">4.0.1",
         "phpunit/phpunit": "~5.7 || ~4.8"
     },
     "autoload": {
         "classmap": ["includes/classes", "includes/modules"]
     },
     "include-path": ["includes/"],
+    "autoload-dev": {
+        "classmap": ["not_for_release/testFramework"],
+        "psr-4": {
+            "Tests\\": "not_for_release/testFramework/"
+        }
+    },
     "config": {
-        "bin-dir": "vendor/bin"
+        "bin-dir": "vendor/bin",
+        "sort-packages": true,
+        "optimize-autoloader": true
     },
     "scripts": {
-        "tests": "phpunit --verbose -c not_for_release/testFramework/unittests/phpunit.xml"
+        "tests": "phpunit --verbose --testsuite UnitTests --debug",
+        "dusk": "phpunit --verbose --testsuite Browser --debug"
     }
 }
