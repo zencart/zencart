@@ -9,7 +9,7 @@
             "homepage": "https://github.com/zencart/zencart/graphs/contributors"
         }
     ],
-    "_comment": "compatible with PHP 5.5-7.3",
+    "_comment": "compatible with PHP 5.5-7.4",
     "require": {
         "php": ">=5.5"
     },
