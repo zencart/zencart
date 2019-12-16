@@ -380,12 +380,10 @@ class square extends base
      */
     public function after_process()
     {
-        global $insert_id, $db, $order, $currencies;
-        $sql = "insert into " . TABLE_ORDERS_STATUS_HISTORY . " (comments, orders_id, orders_status_id, customer_notified, date_added) values (:orderComments, :orderID, :orderStatus, -1, now() )";
-        $sql = $db->bindVars($sql, ':orderComments', 'Credit Card payment.  TransID: ' . $this->transaction_id . "\nTender ID: " . $this->auth_code . "\n" . $this->transaction_date . $this->currency_comment, 'string');
-        $sql = $db->bindVars($sql, ':orderID', $insert_id, 'integer');
-        $sql = $db->bindVars($sql, ':orderStatus', $this->order_status, 'integer');
-        $db->Execute($sql);
+        global $insert_id, $order, $currencies;
+        
+        $comments = 'Credit Card payment.  TransID: ' . $this->transaction_id . "\nTender ID: " . $this->auth_code . "\n" . $this->transaction_date . $this->currency_comment;
+        zen_update_orders_history($insert_id, $comments, null, $this->order_status, -1);
 
         $sql_data_array = array(
             'order_id'       => $insert_id,
@@ -949,19 +947,11 @@ class square extends base
 
         $currency_code = $transaction->getAmountMoney()->getCurrency();
         $amount        = $currencies->format($transaction->getAmountMoney()->getAmount() / (pow(10, $currencies->get_decimal_places($currency_code))), false, $currency_code);
-
+        
         // Success, so save the results
-        $sql_data_array = array(
-            'orders_id'         => $oID,
-            'orders_status_id'  => (int)$new_order_status,
-            'date_added'        => 'now()',
-            'comments'          => 'REFUNDED: ' . $amount . "\n" . $refundNote,
-            'customer_notified' => 0,
-        );
-        zen_db_perform(TABLE_ORDERS_STATUS_HISTORY, $sql_data_array);
-        $db->Execute("update " . TABLE_ORDERS . "
-                      set orders_status = " . (int)$new_order_status . "
-                      where orders_id = " . (int)$oID);
+        $comments      = 'REFUNDED: ' . $amount . "\n" . $refundNote;
+        zen_update_orders_history($oID, $comments, null, $new_order_status, 0);
+
         $messageStack->add_session(sprintf(MODULE_PAYMENT_SQUARE_TEXT_REFUND_INITIATED . $amount), 'success');
 
         return true;
@@ -972,7 +962,7 @@ class square extends base
      */
     public function _doCapt($oID, $type = 'Complete', $amount = null, $currency = null)
     {
-        global $db, $messageStack;
+        global $messageStack;
 
         $new_order_status = $this->getNewOrderStatus($oID, 'capture', (int)MODULE_PAYMENT_SQUARE_ORDER_STATUS_ID);
         if ($new_order_status == 0) $new_order_status = 1;
@@ -1012,17 +1002,9 @@ class square extends base
         }
 
         // Success, so save the results
-        $sql_data_array = array(
-            'orders_id'         => (int)$oID,
-            'orders_status_id'  => (int)$new_order_status,
-            'date_added'        => 'now()',
-            'comments'          => 'FUNDS COLLECTED. Trans ID: ' . $transaction_id . "\n" . 'Time: ' . date('Y-m-D h:i:s') . "\n" . $captureNote,
-            'customer_notified' => 0,
-        );
-        zen_db_perform(TABLE_ORDERS_STATUS_HISTORY, $sql_data_array);
-        $db->Execute("update " . TABLE_ORDERS . "
-                      set orders_status = " . (int)$new_order_status . "
-                      where orders_id = " . (int)$oID);
+        $comments = 'FUNDS COLLECTED. Trans ID: ' . $transaction_id . "\n" . 'Time: ' . date('Y-m-D h:i:s') . "\n" . $captureNote;
+        zen_update_orders_history($oID, $comments, null, $new_order_status, 0);
+
         $messageStack->add_session(sprintf(MODULE_PAYMENT_SQUARE_TEXT_CAPT_INITIATED, $transaction_id), 'success');
 
         return true;
@@ -1033,7 +1015,7 @@ class square extends base
      */
     public function _doVoid($oID, $note = '')
     {
-        global $db, $messageStack;
+        global $messageStack;
 
         $new_order_status = $this->getNewOrderStatus($oID, 'void', (int)MODULE_PAYMENT_SQUARE_REFUNDED_ORDER_STATUS_ID);
         if ($new_order_status == 0) $new_order_status = 1;
@@ -1073,17 +1055,9 @@ class square extends base
             return false;
         }
         // Success, so save the results
-        $sql_data_array = array(
-            'orders_id'         => (int)$oID,
-            'orders_status_id'  => (int)$new_order_status,
-            'date_added'        => 'now()',
-            'comments'          => 'VOIDED. Trans ID: ' . $transaction_id . "\n" . $voidNote,
-            'customer_notified' => 0,
-        );
-        zen_db_perform(TABLE_ORDERS_STATUS_HISTORY, $sql_data_array);
-        $db->Execute("update " . TABLE_ORDERS . "
-                      set orders_status = '" . (int)$new_order_status . "'
-                      where orders_id = '" . (int)$oID . "'");
+        $comments = 'VOIDED. Trans ID: ' . $transaction_id . "\n" . $voidNote;
+        zen_update_orders_history($oID, $comments, null, $new_order_status, 0);
+
         $messageStack->add_session(sprintf(MODULE_PAYMENT_SQUARE_TEXT_VOID_INITIATED, $transaction_id), 'success');
 
         return true;

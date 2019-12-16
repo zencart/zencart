@@ -18,6 +18,12 @@ if (!defined('IS_ADMIN_FLAG')) {
  *
  * @package classes
  */
+ //
+// This is the old UPLOAD_FILENAME_EXTENSIONS which was in the database
+if (!defined('UPLOAD_FILENAME_EXTENSIONS_LIST')) {
+   define('UPLOAD_FILENAME_EXTENSIONS_LIST', 'jpg,jpeg,gif,png,eps,cdr,ai,pdf,tif,tiff,bmp,zip');
+}
+
 class upload extends base
 {
     var $file, $filename, $destination, $permissions, $extensions, $tmp_filename, $message_location;
@@ -29,10 +35,7 @@ class upload extends base
         $this->set_permissions($permissions);
 
         if (!zen_not_null($extensions)) {
-            if (!defined('UPLOAD_FILENAME_EXTENSIONS')) {
-                define('UPLOAD_FILENAME_EXTENSIONS', 'jpg,jpeg,gif,png,eps,cdr,ai,pdf,tif,tiff,bmp,zip');
-            }
-            $extensions = explode(" ", preg_replace('/[.,;\s]+/', ' ', UPLOAD_FILENAME_EXTENSIONS));
+            $extensions = explode(" ", preg_replace('/[.,;\s]+/', ' ', UPLOAD_FILENAME_EXTENSIONS_LIST));
         }
         $this->set_extensions($extensions);
 
