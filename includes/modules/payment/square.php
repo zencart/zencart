@@ -10,7 +10,7 @@
  * @package square
  * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2019 Mar 15 Modified in v1.5.6b $
+ * @version $Id: Author: Chris Brown <drbyte@zen-cart.com> Modified 2019-12-16 $
  */
 
 if (!defined('TABLE_SQUARE_PAYMENTS')) define('TABLE_SQUARE_PAYMENTS', DB_PREFIX . 'square_payments');
@@ -32,7 +32,7 @@ class square extends base
     /**
      * $moduleVersion is the plugin version number
      */
-    public $moduleVersion = '0.97';
+    public $moduleVersion = '0.98';
     protected $SquareApiVersion = '2018-12-05';
     /**
      * $title is the displayed name for this payment method
@@ -670,8 +670,8 @@ class square extends base
             $first_location     = $locations[0];
             $location->id       = $first_location->getId();
             $location->name     = $first_location->getName();
-            if (method_exists($first_location, 'getCurrencyCode')) {
-                $location->currency = $first_location->getCurrencyCode();
+            if (method_exists($first_location, 'getCurrency')) {
+                $location->currency = $first_location->getCurrency();
             } else {
                 $location->currency = DEFAULT_CURRENCY;
             }
@@ -686,18 +686,8 @@ class square extends base
         $this->getAccessToken();
         $api_instance = new SquareConnect\Api\LocationsApi();
         try {
-            $result    = $api_instance->listLocations();
-            $locations = $result->getLocations();
-
-
-            // Square hasn't yet put currency_code into their v2 API, so we have to look it up using the old v1 API and match things up
-            $first_location = $locations[0];
-            if (!method_exists($first_location, 'getCurrencyCode') && MODULE_PAYMENT_SQUARE_TESTING_MODE == 'Live') {
-                $api_instance = new SquareConnect\Api\V1LocationsApi;
-                $locations    = $api_instance->listLocations();
-            }
-
-            return $locations;
+            $result = $api_instance->listLocations();
+            return $result->getLocations();
 
         } catch (Exception $e) {
             trigger_error('Exception when calling LocationsApi->listLocations: ' . $e->getMessage(), E_USER_NOTICE);
@@ -713,7 +703,7 @@ class square extends base
         $locations_pulldown = array();
         foreach ($locations as $key => $value) {
             // This causes us to store this as: LocationName:[LocationID]:CurrencyCode
-            $locations_pulldown[] = array('id' => $value->getName() . ':[' . $value->getId() . ']:' . (method_exists($value, 'getCurrencyCode') ? $value->getCurrencyCode() : 'USD'), 'text' => $value->getName());
+            $locations_pulldown[] = array('id' => $value->getName() . ':[' . $value->getId() . ']:' . (method_exists($value, 'getCurrency') ? $value->getCurrency() : 'USD'), 'text' => $value->getName());
         }
 
         return $locations_pulldown;
