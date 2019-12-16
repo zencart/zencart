@@ -9,7 +9,7 @@
  * @version $Id: Author: DrByte  Fri Jan 8 15:00:45 2016 -0500 Modified in v1.5.5 $
  */
 
-  if (isset($_SESSION['customer_id']) && (int)$_SESSION['customer_id'] != 0) {
+  if (zen_is_logged_in() && !zen_in_guest_checkout()) {
 // retrieve the last x products purchased
   $orders_history_query = "select distinct op.products_id, o.date_purchased
                    from " . TABLE_ORDERS . " o, " . TABLE_ORDERS_PRODUCTS . " op, " . TABLE_PRODUCTS . " p

@@ -1602,7 +1602,7 @@ if (false) { // disabled until clarification is received about coupons in PayPal
      * ie: don't ask for any shipping info if cart content is strictly virtual and customer is already logged-in
      * (if not logged in, we need address information only to build the customer record)
      */
-    if ($_SESSION['cart']->get_content_type() == 'virtual' && isset($_SESSION['customer_id']) && $_SESSION['customer_id'] > 0) {
+    if ($_SESSION['cart']->get_content_type() == 'virtual' && zen_is_logged_in()) {
       $this->zcLog('ec-step1-addr_check', "cart contents is virtual and customer is logged in ... therefore options['NOSHIPPING']=1");
       $options['NOSHIPPING'] = 1;
     } else {
@@ -2026,7 +2026,7 @@ if (false) { // disabled until clarification is received about coupons in PayPal
     }
 
     // see if the user is logged in
-    if (!empty($_SESSION['customer_first_name']) && !empty($_SESSION['customer_id']) && $_SESSION['customer_id'] > 0) {
+    if (!empty($_SESSION['customer_first_name']) && zen_is_logged_in()) {
       // They're logged in, so forward them straight to checkout stages, depending on address needs etc
       $order->customer['id'] = $_SESSION['customer_id'];
 
@@ -2312,7 +2312,7 @@ if (false) { // disabled until clarification is received about coupons in PayPal
     global $db;
 
     // Only proceed IF *in* markflow mode AND logged-in (have to be logged in to get to markflow mode anyway)
-    if (!empty($_GET['markflow']) && isset($_SESSION['customer_id']) && $_SESSION['customer_id']) {
+    if (!empty($_GET['markflow']) && zen_is_logged_in()) {
       // From now on for this user we will edit addresses in Zen Cart, not by going to PayPal.
       $_SESSION['paypal_ec_markflow'] = 1;
 

@@ -155,7 +155,7 @@ while (!$products_options_names->EOF) {
 
         // DEAL WITH PRICE AND WEIGHT DISPLAY
         if (
-            ((CUSTOMERS_APPROVAL == '2' && empty($_SESSION['customer_id'])) || STORE_STATUS == '1')
+            ((CUSTOMERS_APPROVAL == '2' && !zen_is_logged_in()) || STORE_STATUS == '1')
             || ((CUSTOMERS_APPROVAL_AUTHORIZATION == '1' || CUSTOMERS_APPROVAL_AUTHORIZATION == '2') && $_SESSION['customers_authorization'] == '')
             || (CUSTOMERS_APPROVAL == '2' && $_SESSION['customers_authorization'] == '2')
             || (CUSTOMERS_APPROVAL_AUTHORIZATION == '2' && $_SESSION['customers_authorization'] != 0)

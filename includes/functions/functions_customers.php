@@ -160,7 +160,7 @@ function zen_address_format($address_format_id = 1, $incoming = array(), $html =
 // Return a customer greeting
   function zen_customer_greeting() {
 
-    if (isset($_SESSION['customer_id']) && $_SESSION['customer_first_name']) {
+    if (zen_is_logged_in() && !zen_in_guest_checkout() && !empty($_SESSION['customer_first_name'])) {
       $greeting_string = sprintf(TEXT_GREETING_PERSONAL, zen_output_string_protected($_SESSION['customer_first_name']), zen_href_link(FILENAME_PRODUCTS_NEW));
     } else {
       $greeting_string = sprintf(TEXT_GREETING_GUEST, zen_href_link(FILENAME_LOGIN, '', 'SSL'), zen_href_link(FILENAME_CREATE_ACCOUNT, '', 'SSL'));
@@ -172,8 +172,16 @@ function zen_address_format($address_format_id = 1, $incoming = array(), $html =
   function zen_count_customer_orders($id = '', $check_session = true) {
     global $db;
 
+    // -----
+    // Quick return if no customer is logged in or if the current customer is in a
+    // guest-checkout.
+    //
+    if (!zen_is_logged_in() || zen_in_guest_checkout()) {
+        return 0;
+    }
+    
     if (is_numeric($id) == false) {
-      if ($_SESSION['customer_id']) {
+      if (!empty($_SESSION['customer_id'])) {
         $id = $_SESSION['customer_id'];
       } else {
         return 0;
@@ -181,7 +189,7 @@ function zen_address_format($address_format_id = 1, $incoming = array(), $html =
     }
 
     if ($check_session == true) {
-      if ( ($_SESSION['customer_id'] == false) || ($id != $_SESSION['customer_id']) ) {
+      if (empty($_SESSION['customer_id']) || $id != $_SESSION['customer_id']) {
         return 0;
       }
     }
@@ -198,8 +206,15 @@ function zen_address_format($address_format_id = 1, $incoming = array(), $html =
   function zen_count_customer_address_book_entries($id = '', $check_session = true) {
     global $db;
 
+    // -----
+    // Quick return if no customer is logged in or if the customer is in a guest checkout.
+    //
+    if (!zen_is_logged_in() || zen_in_guest_checkout()) {
+        return 0;
+    }
+    
     if (is_numeric($id) == false) {
-      if ($_SESSION['customer_id']) {
+      if (!empty($_SESSION['customer_id'])) {
         $id = $_SESSION['customer_id'];
       } else {
         return 0;
@@ -207,7 +222,7 @@ function zen_address_format($address_format_id = 1, $incoming = array(), $html =
     }
 
     if ($check_session == true) {
-      if ( ($_SESSION['customer_id'] == false) || ($id != $_SESSION['customer_id']) ) {
+      if (empty($_SESSION['customer_id']) || $id != $_SESSION['customer_id']) {
         return 0;
       }
     }
@@ -226,13 +241,14 @@ function zen_address_format($address_format_id = 1, $incoming = array(), $html =
   function zen_get_customer_validate_session($customer_id) {
     global $db, $messageStack;
     $zc_check_customer = $db->Execute("SELECT customers_id, customers_authorization from " . TABLE_CUSTOMERS . " WHERE customers_id=" . (int)$customer_id);
-    $bannedStatus = $zc_check_customer->fields['customers_authorization'] == 4; // BANNED STATUS is 4
-    if ($zc_check_customer->RecordCount() <= 0 || $bannedStatus) {
+    if ($zc_check_customer->EOF || $zc_check_customer->fields['customers_authorization'] == 4) {    // Banned status is 4
       $db->Execute("DELETE from " . TABLE_CUSTOMERS_BASKET . " WHERE customers_id= " . $customer_id);
       $db->Execute("DELETE from " . TABLE_CUSTOMERS_BASKET_ATTRIBUTES . " WHERE customers_id= " . $customer_id);
       $_SESSION['cart']->reset(TRUE);
       unset($_SESSION['customer_id']);
-      if (!$bannedStatus) $messageStack->add_session('header', ERROR_CUSTOMERS_ID_INVALID, 'error');
+      if ($zc_check_customer->fields['customers_authorization'] != 4) {
+          $messageStack->add_session('header', ERROR_CUSTOMERS_ID_INVALID, 'error');
+      }
       return false;
     }
     return true;
