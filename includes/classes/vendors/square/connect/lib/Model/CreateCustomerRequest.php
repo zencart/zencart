@@ -92,57 +92,57 @@ class CreateCustomerRequest implements ArrayAccess
     );
   
     /**
-      * $idempotency_key The idempotency key for the request. See the [Idempotency](/basics/api101/idempotency) guide for more information.
+      * $idempotency_key The idempotency key for the request. See the [Idempotency](https://developer.squareup.com/docs/working-with-apis/idempotency) guide for more information.
       * @var string
       */
     protected $idempotency_key;
     /**
-      * $given_name The customer's given (i.e., first) name.
+      * $given_name The given (i.e., first) name associated with the customer profile.
       * @var string
       */
     protected $given_name;
     /**
-      * $family_name The customer's family (i.e., last) name.
+      * $family_name The family (i.e., last) name associated with the customer profile.
       * @var string
       */
     protected $family_name;
     /**
-      * $company_name The name of the customer's company.
+      * $company_name A business name associated with the customer profile.
       * @var string
       */
     protected $company_name;
     /**
-      * $nickname A nickname for the customer.
+      * $nickname A nickname for the customer profile.
       * @var string
       */
     protected $nickname;
     /**
-      * $email_address The customer's email address.
+      * $email_address The email address associated with the customer profile.
       * @var string
       */
     protected $email_address;
     /**
-      * $address The customer's physical address.
+      * $address The physical address associated with the customer profile.
       * @var \SquareConnect\Model\Address
       */
     protected $address;
     /**
-      * $phone_number The customer's phone number.
+      * $phone_number The 11-digit phone number associated with the customer profile.
       * @var string
       */
     protected $phone_number;
     /**
-      * $reference_id An optional second ID you can set to associate the customer with an entity in another system.
+      * $reference_id An optional, second ID used to associate the customer profile with an entity in another system.
       * @var string
       */
     protected $reference_id;
     /**
-      * $note An optional note to associate with the customer.
+      * $note A custom note associated with the customer profile.
       * @var string
       */
     protected $note;
     /**
-      * $birthday The customer birthday in RFC-3339 format. Year is optional, timezone and times are not allowed. Example: `0000-09-01T00:00:00-00:00` for a birthday on September 1st. `1998-09-01T00:00:00-00:00` for a birthday on September 1st 1998.
+      * $birthday The birthday associated with the customer profile, in RFC-3339 format. Year is optional, timezone and times are not allowed. For example: `0000-09-01T00:00:00-00:00` indicates a birthday on September 1st. `1998-09-01T00:00:00-00:00` indications a birthday on September 1st __1998__.
       * @var string
       */
     protected $birthday;
@@ -222,7 +222,7 @@ class CreateCustomerRequest implements ArrayAccess
   
     /**
      * Sets idempotency_key
-     * @param string $idempotency_key The idempotency key for the request. See the [Idempotency](/basics/api101/idempotency) guide for more information.
+     * @param string $idempotency_key The idempotency key for the request. See the [Idempotency](https://developer.squareup.com/docs/working-with-apis/idempotency) guide for more information.
      * @return $this
      */
     public function setIdempotencyKey($idempotency_key)
@@ -241,7 +241,7 @@ class CreateCustomerRequest implements ArrayAccess
   
     /**
      * Sets given_name
-     * @param string $given_name The customer's given (i.e., first) name.
+     * @param string $given_name The given (i.e., first) name associated with the customer profile.
      * @return $this
      */
     public function setGivenName($given_name)
@@ -260,7 +260,7 @@ class CreateCustomerRequest implements ArrayAccess
   
     /**
      * Sets family_name
-     * @param string $family_name The customer's family (i.e., last) name.
+     * @param string $family_name The family (i.e., last) name associated with the customer profile.
      * @return $this
      */
     public function setFamilyName($family_name)
@@ -279,7 +279,7 @@ class CreateCustomerRequest implements ArrayAccess
   
     /**
      * Sets company_name
-     * @param string $company_name The name of the customer's company.
+     * @param string $company_name A business name associated with the customer profile.
      * @return $this
      */
     public function setCompanyName($company_name)
@@ -298,7 +298,7 @@ class CreateCustomerRequest implements ArrayAccess
   
     /**
      * Sets nickname
-     * @param string $nickname A nickname for the customer.
+     * @param string $nickname A nickname for the customer profile.
      * @return $this
      */
     public function setNickname($nickname)
@@ -317,7 +317,7 @@ class CreateCustomerRequest implements ArrayAccess
   
     /**
      * Sets email_address
-     * @param string $email_address The customer's email address.
+     * @param string $email_address The email address associated with the customer profile.
      * @return $this
      */
     public function setEmailAddress($email_address)
@@ -336,7 +336,7 @@ class CreateCustomerRequest implements ArrayAccess
   
     /**
      * Sets address
-     * @param \SquareConnect\Model\Address $address The customer's physical address.
+     * @param \SquareConnect\Model\Address $address The physical address associated with the customer profile.
      * @return $this
      */
     public function setAddress($address)
@@ -355,7 +355,7 @@ class CreateCustomerRequest implements ArrayAccess
   
     /**
      * Sets phone_number
-     * @param string $phone_number The customer's phone number.
+     * @param string $phone_number The 11-digit phone number associated with the customer profile.
      * @return $this
      */
     public function setPhoneNumber($phone_number)
@@ -374,7 +374,7 @@ class CreateCustomerRequest implements ArrayAccess
   
     /**
      * Sets reference_id
-     * @param string $reference_id An optional second ID you can set to associate the customer with an entity in another system.
+     * @param string $reference_id An optional, second ID used to associate the customer profile with an entity in another system.
      * @return $this
      */
     public function setReferenceId($reference_id)
@@ -393,7 +393,7 @@ class CreateCustomerRequest implements ArrayAccess
   
     /**
      * Sets note
-     * @param string $note An optional note to associate with the customer.
+     * @param string $note A custom note associated with the customer profile.
      * @return $this
      */
     public function setNote($note)
@@ -412,7 +412,7 @@ class CreateCustomerRequest implements ArrayAccess
   
     /**
      * Sets birthday
-     * @param string $birthday The customer birthday in RFC-3339 format. Year is optional, timezone and times are not allowed. Example: `0000-09-01T00:00:00-00:00` for a birthday on September 1st. `1998-09-01T00:00:00-00:00` for a birthday on September 1st 1998.
+     * @param string $birthday The birthday associated with the customer profile, in RFC-3339 format. Year is optional, timezone and times are not allowed. For example: `0000-09-01T00:00:00-00:00` indicates a birthday on September 1st. `1998-09-01T00:00:00-00:00` indications a birthday on September 1st __1998__.
      * @return $this
      */
     public function setBirthday($birthday)

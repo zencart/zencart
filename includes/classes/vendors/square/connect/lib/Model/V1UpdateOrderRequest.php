@@ -68,7 +68,7 @@ class V1UpdateOrderRequest implements ArrayAccess
     );
   
     /**
-      * $action The action to perform on the order (COMPLETE, CANCEL, or REFUND).
+      * $action The action to perform on the order (COMPLETE, CANCEL, or REFUND). See [V1UpdateOrderRequestAction](#type-v1updateorderrequestaction) for possible values
       * @var string
       */
     protected $action;
@@ -138,7 +138,7 @@ class V1UpdateOrderRequest implements ArrayAccess
   
     /**
      * Sets action
-     * @param string $action The action to perform on the order (COMPLETE, CANCEL, or REFUND).
+     * @param string $action The action to perform on the order (COMPLETE, CANCEL, or REFUND). See [V1UpdateOrderRequestAction](#type-v1updateorderrequestaction) for possible values
      * @return $this
      */
     public function setAction($action)

@@ -60,17 +60,17 @@ class UpsertCatalogObjectResponse implements ArrayAccess
     );
   
     /**
-      * $errors The set of [Error](#type-error)s encountered.
+      * $errors Information on any errors encountered.
       * @var \SquareConnect\Model\Error[]
       */
     protected $errors;
     /**
-      * $catalog_object The created [CatalogObject](#type-catalogobject).
+      * $catalog_object The successfully created or updated CatalogObject.
       * @var \SquareConnect\Model\CatalogObject
       */
     protected $catalog_object;
     /**
-      * $id_mappings The mapping between client and server IDs for this Upsert.
+      * $id_mappings The mapping between client and server IDs for this upsert.
       * @var \SquareConnect\Model\CatalogIdMapping[]
       */
     protected $id_mappings;
@@ -110,7 +110,7 @@ class UpsertCatalogObjectResponse implements ArrayAccess
   
     /**
      * Sets errors
-     * @param \SquareConnect\Model\Error[] $errors The set of [Error](#type-error)s encountered.
+     * @param \SquareConnect\Model\Error[] $errors Information on any errors encountered.
      * @return $this
      */
     public function setErrors($errors)
@@ -129,7 +129,7 @@ class UpsertCatalogObjectResponse implements ArrayAccess
   
     /**
      * Sets catalog_object
-     * @param \SquareConnect\Model\CatalogObject $catalog_object The created [CatalogObject](#type-catalogobject).
+     * @param \SquareConnect\Model\CatalogObject $catalog_object The successfully created or updated CatalogObject.
      * @return $this
      */
     public function setCatalogObject($catalog_object)
@@ -148,7 +148,7 @@ class UpsertCatalogObjectResponse implements ArrayAccess
   
     /**
      * Sets id_mappings
-     * @param \SquareConnect\Model\CatalogIdMapping[] $id_mappings The mapping between client and server IDs for this Upsert.
+     * @param \SquareConnect\Model\CatalogIdMapping[] $id_mappings The mapping between client and server IDs for this upsert.
      * @return $this
      */
     public function setIdMappings($id_mappings)

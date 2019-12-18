@@ -108,7 +108,7 @@ class CustomersApi
             $headerParams['Accept'] = $_header_accept;
         }
         $headerParams['Content-Type'] = ApiClient::selectHeaderContentType(array('application/json'));
-        $headerParams['Square-Version'] = "2018-12-05";
+        $headerParams['Square-Version'] = "2020-02-26";
 
         
         
@@ -162,7 +162,7 @@ class CustomersApi
      *
      * CreateCustomerCard
      *
-     * @param string $customer_id The ID of the customer to link the card on file to. (required)
+     * @param string $customer_id The Square ID of the customer profile the card is linked to. (required)
      * @param \SquareConnect\Model\CreateCustomerCardRequest $body An object containing the fields to POST for the request.  See the corresponding object definition for field details. (required)
      * @return \SquareConnect\Model\CreateCustomerCardResponse
      * @throws \SquareConnect\ApiException on non-2xx response
@@ -179,7 +179,7 @@ class CustomersApi
      *
      * CreateCustomerCard
      *
-     * @param string $customer_id The ID of the customer to link the card on file to. (required)
+     * @param string $customer_id The Square ID of the customer profile the card is linked to. (required)
      * @param \SquareConnect\Model\CreateCustomerCardRequest $body An object containing the fields to POST for the request.  See the corresponding object definition for field details. (required)
      * @return Array of \SquareConnect\Model\CreateCustomerCardResponse, HTTP status code, HTTP response headers (array of strings)
      * @throws \SquareConnect\ApiException on non-2xx response
@@ -207,7 +207,7 @@ class CustomersApi
             $headerParams['Accept'] = $_header_accept;
         }
         $headerParams['Content-Type'] = ApiClient::selectHeaderContentType(array('application/json'));
-        $headerParams['Square-Version'] = "2018-12-05";
+        $headerParams['Square-Version'] = "2020-02-26";
 
         
         
@@ -307,7 +307,7 @@ class CustomersApi
             $headerParams['Accept'] = $_header_accept;
         }
         $headerParams['Content-Type'] = ApiClient::selectHeaderContentType(array('application/json'));
-        $headerParams['Square-Version'] = "2018-12-05";
+        $headerParams['Square-Version'] = "2020-02-26";
 
         
         
@@ -409,7 +409,7 @@ class CustomersApi
             $headerParams['Accept'] = $_header_accept;
         }
         $headerParams['Content-Type'] = ApiClient::selectHeaderContentType(array('application/json'));
-        $headerParams['Square-Version'] = "2018-12-05";
+        $headerParams['Square-Version'] = "2020-02-26";
 
         
         
@@ -473,9 +473,9 @@ class CustomersApi
      *
      * ListCustomers
      *
-     * @param string $cursor A pagination cursor returned by a previous call to this endpoint. Provide this to retrieve the next set of results for your original query.  See [Paginating results](#paginatingresults) for more information. (optional)
-     * @param string $sort_field Indicates how Customers should be sorted. Default: &#x60;DEFAULT&#x60;. See [CustomerSortField](#type-customersortfield) for possible values. (optional)
-     * @param string $sort_order Indicates whether Customers should be sorted in ascending (&#x60;ASC&#x60;) or descending (&#x60;DESC&#x60;) order. Default: &#x60;ASC&#x60;. See [SortOrder](#type-sortorder) for possible values. (optional)
+     * @param string $cursor A pagination cursor returned by a previous call to this endpoint. Provide this to retrieve the next set of results for your original query.  See the [Pagination guide](https://developer.squareup.com/docs/working-with-apis/pagination) for more information. (optional)
+     * @param string $sort_field Indicates how Customers should be sorted.  Default: &#x60;DEFAULT&#x60;. (optional)
+     * @param string $sort_order Indicates whether Customers should be sorted in ascending (&#x60;ASC&#x60;) or descending (&#x60;DESC&#x60;) order.  Default: &#x60;ASC&#x60;. (optional)
      * @return \SquareConnect\Model\ListCustomersResponse
      * @throws \SquareConnect\ApiException on non-2xx response
      */
@@ -491,9 +491,9 @@ class CustomersApi
      *
      * ListCustomers
      *
-     * @param string $cursor A pagination cursor returned by a previous call to this endpoint. Provide this to retrieve the next set of results for your original query.  See [Paginating results](#paginatingresults) for more information. (optional)
-     * @param string $sort_field Indicates how Customers should be sorted. Default: &#x60;DEFAULT&#x60;. See [CustomerSortField](#type-customersortfield) for possible values. (optional)
-     * @param string $sort_order Indicates whether Customers should be sorted in ascending (&#x60;ASC&#x60;) or descending (&#x60;DESC&#x60;) order. Default: &#x60;ASC&#x60;. See [SortOrder](#type-sortorder) for possible values. (optional)
+     * @param string $cursor A pagination cursor returned by a previous call to this endpoint. Provide this to retrieve the next set of results for your original query.  See the [Pagination guide](https://developer.squareup.com/docs/working-with-apis/pagination) for more information. (optional)
+     * @param string $sort_field Indicates how Customers should be sorted.  Default: &#x60;DEFAULT&#x60;. (optional)
+     * @param string $sort_order Indicates whether Customers should be sorted in ascending (&#x60;ASC&#x60;) or descending (&#x60;DESC&#x60;) order.  Default: &#x60;ASC&#x60;. (optional)
      * @return Array of \SquareConnect\Model\ListCustomersResponse, HTTP status code, HTTP response headers (array of strings)
      * @throws \SquareConnect\ApiException on non-2xx response
      */
@@ -512,7 +512,7 @@ class CustomersApi
             $headerParams['Accept'] = $_header_accept;
         }
         $headerParams['Content-Type'] = ApiClient::selectHeaderContentType(array('application/json'));
-        $headerParams['Square-Version'] = "2018-12-05";
+        $headerParams['Square-Version'] = "2020-02-26";
 
         // query params
         if ($cursor !== null) {
@@ -610,7 +610,7 @@ class CustomersApi
             $headerParams['Accept'] = $_header_accept;
         }
         $headerParams['Content-Type'] = ApiClient::selectHeaderContentType(array('application/json'));
-        $headerParams['Square-Version'] = "2018-12-05";
+        $headerParams['Square-Version'] = "2020-02-26";
 
         
         
@@ -706,7 +706,7 @@ class CustomersApi
             $headerParams['Accept'] = $_header_accept;
         }
         $headerParams['Content-Type'] = ApiClient::selectHeaderContentType(array('application/json'));
-        $headerParams['Square-Version'] = "2018-12-05";
+        $headerParams['Square-Version'] = "2020-02-26";
 
         
         
@@ -805,7 +805,7 @@ class CustomersApi
             $headerParams['Accept'] = $_header_accept;
         }
         $headerParams['Content-Type'] = ApiClient::selectHeaderContentType(array('application/json'));
-        $headerParams['Square-Version'] = "2018-12-05";
+        $headerParams['Square-Version'] = "2020-02-26";
 
         
         

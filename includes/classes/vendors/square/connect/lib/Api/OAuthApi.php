@@ -108,7 +108,7 @@ class OAuthApi
             $headerParams['Accept'] = $_header_accept;
         }
         $headerParams['Content-Type'] = ApiClient::selectHeaderContentType(array('application/json'));
-        $headerParams['Square-Version'] = "2018-12-05";
+        $headerParams['Square-Version'] = "2020-02-26";
 
         
         
@@ -153,17 +153,19 @@ class OAuthApi
         }
     }
     /**
+     * @deprecated
      * renewToken
      *
      * RenewToken
      *
-     * @param string $client_id Your application&#39;s ID, available from the [application dashboard](https://connect.squareup.com/apps). (required)
+     * @param string $client_id Your application ID, available from the [application dashboard](https://connect.squareup.com/apps). (required)
      * @param \SquareConnect\Model\RenewTokenRequest $body An object containing the fields to POST for the request.  See the corresponding object definition for field details. (required)
      * @return \SquareConnect\Model\RenewTokenResponse
      * @throws \SquareConnect\ApiException on non-2xx response
      */
     public function renewToken($client_id, $body)
     {
+        trigger_error("\x1B[33mCalling deprecated API: OAuthApi.renewToken\x1B[0m", E_USER_DEPRECATED);
         list($response, $statusCode, $httpHeader) = $this->renewTokenWithHttpInfo ($client_id, $body);
         return $response; 
     }
@@ -174,7 +176,7 @@ class OAuthApi
      *
      * RenewToken
      *
-     * @param string $client_id Your application&#39;s ID, available from the [application dashboard](https://connect.squareup.com/apps). (required)
+     * @param string $client_id Your application ID, available from the [application dashboard](https://connect.squareup.com/apps). (required)
      * @param \SquareConnect\Model\RenewTokenRequest $body An object containing the fields to POST for the request.  See the corresponding object definition for field details. (required)
      * @return Array of \SquareConnect\Model\RenewTokenResponse, HTTP status code, HTTP response headers (array of strings)
      * @throws \SquareConnect\ApiException on non-2xx response
@@ -202,7 +204,7 @@ class OAuthApi
             $headerParams['Accept'] = $_header_accept;
         }
         $headerParams['Content-Type'] = ApiClient::selectHeaderContentType(array('application/json'));
-        $headerParams['Square-Version'] = "2018-12-05";
+        $headerParams['Square-Version'] = "2020-02-26";
 
         
         
@@ -304,7 +306,7 @@ class OAuthApi
             $headerParams['Accept'] = $_header_accept;
         }
         $headerParams['Content-Type'] = ApiClient::selectHeaderContentType(array('application/json'));
-        $headerParams['Square-Version'] = "2018-12-05";
+        $headerParams['Square-Version'] = "2020-02-26";
 
         
         

@@ -52,7 +52,7 @@ class CatalogQueryItemsForModifierList implements ArrayAccess
     );
   
     /**
-      * $modifier_list_ids A set of [CatalogModifierList](#type-catalogmodifierlist) IDs to be used to find associated [CatalogItem](#type-catalogitem)s.
+      * $modifier_list_ids A set of `CatalogModifierList` IDs to be used to find associated `CatalogItem`s.
       * @var string[]
       */
     protected $modifier_list_ids;
@@ -82,7 +82,7 @@ class CatalogQueryItemsForModifierList implements ArrayAccess
   
     /**
      * Sets modifier_list_ids
-     * @param string[] $modifier_list_ids A set of [CatalogModifierList](#type-catalogmodifierlist) IDs to be used to find associated [CatalogItem](#type-catalogitem)s.
+     * @param string[] $modifier_list_ids A set of `CatalogModifierList` IDs to be used to find associated `CatalogItem`s.
      * @return $this
      */
     public function setModifierListIds($modifier_list_ids)

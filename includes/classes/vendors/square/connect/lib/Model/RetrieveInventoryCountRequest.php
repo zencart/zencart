@@ -56,12 +56,12 @@ class RetrieveInventoryCountRequest implements ArrayAccess
     );
   
     /**
-      * $location_ids The [Location](#type-location) IDs to look up as a comma-separated list. An empty list queries all locations.
+      * $location_ids The `Location` IDs to look up as a comma-separated list. An empty list queries all locations.
       * @var string
       */
     protected $location_ids;
     /**
-      * $cursor A pagination cursor returned by a previous call to this endpoint. Provide this to retrieve the next set of results for the original query.  See [Paginating results](#paginatingresults) for more information.
+      * $cursor A pagination cursor returned by a previous call to this endpoint. Provide this to retrieve the next set of results for the original query.  See the [Pagination](https://developer.squareup.com/docs/docs/working-with-apis/pagination) guide for more information.
       * @var string
       */
     protected $cursor;
@@ -96,7 +96,7 @@ class RetrieveInventoryCountRequest implements ArrayAccess
   
     /**
      * Sets location_ids
-     * @param string $location_ids The [Location](#type-location) IDs to look up as a comma-separated list. An empty list queries all locations.
+     * @param string $location_ids The `Location` IDs to look up as a comma-separated list. An empty list queries all locations.
      * @return $this
      */
     public function setLocationIds($location_ids)
@@ -115,7 +115,7 @@ class RetrieveInventoryCountRequest implements ArrayAccess
   
     /**
      * Sets cursor
-     * @param string $cursor A pagination cursor returned by a previous call to this endpoint. Provide this to retrieve the next set of results for the original query.  See [Paginating results](#paginatingresults) for more information.
+     * @param string $cursor A pagination cursor returned by a previous call to this endpoint. Provide this to retrieve the next set of results for the original query.  See the [Pagination](https://developer.squareup.com/docs/docs/working-with-apis/pagination) guide for more information.
      * @return $this
      */
     public function setCursor($cursor)

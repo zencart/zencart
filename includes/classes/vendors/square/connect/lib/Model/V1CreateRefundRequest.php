@@ -68,12 +68,12 @@ class V1CreateRefundRequest implements ArrayAccess
     );
   
     /**
-      * $payment_id The ID of the payment to refund. If you're creating a PARTIAL refund for a split tender payment, instead provide the id of the particular tender you want to refund. See Split Tender Payments for details.
+      * $payment_id The ID of the payment to refund. If you are creating a `PARTIAL` refund for a split tender payment, instead provide the id of the particular tender you want to refund.
       * @var string
       */
     protected $payment_id;
     /**
-      * $type TThe type of refund (FULL or PARTIAL).
+      * $type TThe type of refund (FULL or PARTIAL). See [V1CreateRefundRequestType](#type-v1createrefundrequesttype) for possible values
       * @var string
       */
     protected $type;
@@ -138,7 +138,7 @@ class V1CreateRefundRequest implements ArrayAccess
   
     /**
      * Sets payment_id
-     * @param string $payment_id The ID of the payment to refund. If you're creating a PARTIAL refund for a split tender payment, instead provide the id of the particular tender you want to refund. See Split Tender Payments for details.
+     * @param string $payment_id The ID of the payment to refund. If you are creating a `PARTIAL` refund for a split tender payment, instead provide the id of the particular tender you want to refund.
      * @return $this
      */
     public function setPaymentId($payment_id)
@@ -157,7 +157,7 @@ class V1CreateRefundRequest implements ArrayAccess
   
     /**
      * Sets type
-     * @param string $type TThe type of refund (FULL or PARTIAL).
+     * @param string $type TThe type of refund (FULL or PARTIAL). See [V1CreateRefundRequestType](#type-v1createrefundrequesttype) for possible values
      * @return $this
      */
     public function setType($type)

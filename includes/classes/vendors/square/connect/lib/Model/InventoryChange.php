@@ -64,7 +64,7 @@ class InventoryChange implements ArrayAccess
     );
   
     /**
-      * $type Indicates how the inventory change was applied. See [InventoryChangeType](#type-inventorychangetype) for all possible values.
+      * $type Indicates how the inventory change was applied. See `InventoryChangeType` for all possible values. See [InventoryChangeType](#type-inventorychangetype) for possible values
       * @var string
       */
     protected $type;
@@ -124,7 +124,7 @@ class InventoryChange implements ArrayAccess
   
     /**
      * Sets type
-     * @param string $type Indicates how the inventory change was applied. See [InventoryChangeType](#type-inventorychangetype) for all possible values.
+     * @param string $type Indicates how the inventory change was applied. See `InventoryChangeType` for all possible values. See [InventoryChangeType](#type-inventorychangetype) for possible values
      * @return $this
      */
     public function setType($type)

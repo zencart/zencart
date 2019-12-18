@@ -64,12 +64,12 @@ class Error implements ArrayAccess
     );
   
     /**
-      * $category The error's high-level category. See [ErrorCategory](#type-errorcategory) for possible values.
+      * $category The high-level category for the error. See `ErrorCategory` for possible values. See [ErrorCategory](#type-errorcategory) for possible values
       * @var string
       */
     protected $category;
     /**
-      * $code The error's specific code. See [ErrorCode](#type-errorcode) for possible values
+      * $code The specific code of the error. See `ErrorCode` for possible values See [ErrorCode](#type-errorcode) for possible values
       * @var string
       */
     protected $code;
@@ -79,7 +79,7 @@ class Error implements ArrayAccess
       */
     protected $detail;
     /**
-      * $field The name of the field provided in the original request that the error pertains to, if any.
+      * $field The name of the field provided in the original request (if any) that the error pertains to.
       * @var string
       */
     protected $field;
@@ -124,7 +124,7 @@ class Error implements ArrayAccess
   
     /**
      * Sets category
-     * @param string $category The error's high-level category. See [ErrorCategory](#type-errorcategory) for possible values.
+     * @param string $category The high-level category for the error. See `ErrorCategory` for possible values. See [ErrorCategory](#type-errorcategory) for possible values
      * @return $this
      */
     public function setCategory($category)
@@ -143,7 +143,7 @@ class Error implements ArrayAccess
   
     /**
      * Sets code
-     * @param string $code The error's specific code. See [ErrorCode](#type-errorcode) for possible values
+     * @param string $code The specific code of the error. See `ErrorCode` for possible values See [ErrorCode](#type-errorcode) for possible values
      * @return $this
      */
     public function setCode($code)
@@ -181,7 +181,7 @@ class Error implements ArrayAccess
   
     /**
      * Sets field
-     * @param string $field The name of the field provided in the original request that the error pertains to, if any.
+     * @param string $field The name of the field provided in the original request (if any) that the error pertains to.
      * @return $this
      */
     public function setField($field)

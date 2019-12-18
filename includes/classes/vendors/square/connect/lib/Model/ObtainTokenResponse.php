@@ -30,7 +30,8 @@ class ObtainTokenResponse implements ArrayAccess
         'merchant_id' => 'string',
         'subscription_id' => 'string',
         'plan_id' => 'string',
-        'id_token' => 'string'
+        'id_token' => 'string',
+        'refresh_token' => 'string'
     );
   
     /** 
@@ -44,7 +45,8 @@ class ObtainTokenResponse implements ArrayAccess
         'merchant_id' => 'merchant_id',
         'subscription_id' => 'subscription_id',
         'plan_id' => 'plan_id',
-        'id_token' => 'id_token'
+        'id_token' => 'id_token',
+        'refresh_token' => 'refresh_token'
     );
   
     /**
@@ -58,7 +60,8 @@ class ObtainTokenResponse implements ArrayAccess
         'merchant_id' => 'setMerchantId',
         'subscription_id' => 'setSubscriptionId',
         'plan_id' => 'setPlanId',
-        'id_token' => 'setIdToken'
+        'id_token' => 'setIdToken',
+        'refresh_token' => 'setRefreshToken'
     );
   
     /**
@@ -72,11 +75,12 @@ class ObtainTokenResponse implements ArrayAccess
         'merchant_id' => 'getMerchantId',
         'subscription_id' => 'getSubscriptionId',
         'plan_id' => 'getPlanId',
-        'id_token' => 'getIdToken'
+        'id_token' => 'getIdToken',
+        'refresh_token' => 'getRefreshToken'
     );
   
     /**
-      * $access_token Your application's access token. You provide this token in a header with every request to Connect API endpoints. See [Request and response headers](https://docs.connect.squareup.com/api/connect/v2/#requestandresponseheaders) for the format of this header.
+      * $access_token A valid OAuth access token. OAuth access tokens are 64 bytes long. Provide the access token in a header with every request to Connect API endpoints. See the [Build with OAuth](https://developer.squareup.com/docs/authz/oauth/build-with-the-api) guide for more information.
       * @var string
       */
     protected $access_token;
@@ -96,12 +100,12 @@ class ObtainTokenResponse implements ArrayAccess
       */
     protected $merchant_id;
     /**
-      * $subscription_id The ID of the merchant [subscription](https://docs.connect.squareup.com/api/connect/v1/#navsection-subscriptionmanagement) associated with the authorization. Only present if the merchant signed up for a subscription during authorization.
+      * $subscription_id __LEGACY FIELD__. The ID of a subscription plan the merchant signed up for. Only present if the merchant signed up for a subscription during authorization.
       * @var string
       */
     protected $subscription_id;
     /**
-      * $plan_id The ID of the [subscription](https://docs.connect.squareup.com/api/connect/v1/#navsection-subscriptionmanagement) plan the merchant signed up for. Only present if the merchant signed up for a subscription during authorization.
+      * $plan_id T__LEGACY FIELD__. The ID of the subscription plan the merchant signed up for. Only present if the merchant signed up for a subscription during authorization.
       * @var string
       */
     protected $plan_id;
@@ -110,6 +114,11 @@ class ObtainTokenResponse implements ArrayAccess
       * @var string
       */
     protected $id_token;
+    /**
+      * $refresh_token A refresh token. For more information, see [OAuth access token management](https://developer.squareup.com/docs/authz/oauth/how-it-works#oauth-access-token-management).
+      * @var string
+      */
+    protected $refresh_token;
 
     /**
      * Constructor
@@ -153,6 +162,11 @@ class ObtainTokenResponse implements ArrayAccess
             } else {
               $this->id_token = null;
             }
+            if (isset($data["refresh_token"])) {
+              $this->refresh_token = $data["refresh_token"];
+            } else {
+              $this->refresh_token = null;
+            }
         }
     }
     /**
@@ -166,7 +180,7 @@ class ObtainTokenResponse implements ArrayAccess
   
     /**
      * Sets access_token
-     * @param string $access_token Your application's access token. You provide this token in a header with every request to Connect API endpoints. See [Request and response headers](https://docs.connect.squareup.com/api/connect/v2/#requestandresponseheaders) for the format of this header.
+     * @param string $access_token A valid OAuth access token. OAuth access tokens are 64 bytes long. Provide the access token in a header with every request to Connect API endpoints. See the [Build with OAuth](https://developer.squareup.com/docs/authz/oauth/build-with-the-api) guide for more information.
      * @return $this
      */
     public function setAccessToken($access_token)
@@ -242,7 +256,7 @@ class ObtainTokenResponse implements ArrayAccess
   
     /**
      * Sets subscription_id
-     * @param string $subscription_id The ID of the merchant [subscription](https://docs.connect.squareup.com/api/connect/v1/#navsection-subscriptionmanagement) associated with the authorization. Only present if the merchant signed up for a subscription during authorization.
+     * @param string $subscription_id __LEGACY FIELD__. The ID of a subscription plan the merchant signed up for. Only present if the merchant signed up for a subscription during authorization.
      * @return $this
      */
     public function setSubscriptionId($subscription_id)
@@ -261,7 +275,7 @@ class ObtainTokenResponse implements ArrayAccess
   
     /**
      * Sets plan_id
-     * @param string $plan_id The ID of the [subscription](https://docs.connect.squareup.com/api/connect/v1/#navsection-subscriptionmanagement) plan the merchant signed up for. Only present if the merchant signed up for a subscription during authorization.
+     * @param string $plan_id T__LEGACY FIELD__. The ID of the subscription plan the merchant signed up for. Only present if the merchant signed up for a subscription during authorization.
      * @return $this
      */
     public function setPlanId($plan_id)
@@ -286,6 +300,25 @@ class ObtainTokenResponse implements ArrayAccess
     public function setIdToken($id_token)
     {
         $this->id_token = $id_token;
+        return $this;
+    }
+    /**
+     * Gets refresh_token
+     * @return string
+     */
+    public function getRefreshToken()
+    {
+        return $this->refresh_token;
+    }
+  
+    /**
+     * Sets refresh_token
+     * @param string $refresh_token A refresh token. For more information, see [OAuth access token management](https://developer.squareup.com/docs/authz/oauth/how-it-works#oauth-access-token-management).
+     * @return $this
+     */
+    public function setRefreshToken($refresh_token)
+    {
+        $this->refresh_token = $refresh_token;
         return $this;
     }
     /**

@@ -60,17 +60,17 @@ class UpdateItemModifierListsRequest implements ArrayAccess
     );
   
     /**
-      * $item_ids The [CatalogItem](#type-catalogitem)s whose [CatalogModifierList](#type-catalogmodifierlist)s are being updated.
+      * $item_ids The IDs of the catalog items associated with the CatalogModifierList objects being updated.
       * @var string[]
       */
     protected $item_ids;
     /**
-      * $modifier_lists_to_enable The set of [CatalogModifierList](#type-catalogmodifierlist)s (referenced by ID) to enable for the [CatalogItem](#type-catalogitem).
+      * $modifier_lists_to_enable The IDs of the CatalogModifierList objects to enable for the CatalogItem.
       * @var string[]
       */
     protected $modifier_lists_to_enable;
     /**
-      * $modifier_lists_to_disable The set of [CatalogModifierList](#type-catalogmodifierlist)s (referenced by ID) to disable for the [CatalogItem](#type-catalogitem).
+      * $modifier_lists_to_disable The IDs of the CatalogModifierList objects to disable for the CatalogItem.
       * @var string[]
       */
     protected $modifier_lists_to_disable;
@@ -110,7 +110,7 @@ class UpdateItemModifierListsRequest implements ArrayAccess
   
     /**
      * Sets item_ids
-     * @param string[] $item_ids The [CatalogItem](#type-catalogitem)s whose [CatalogModifierList](#type-catalogmodifierlist)s are being updated.
+     * @param string[] $item_ids The IDs of the catalog items associated with the CatalogModifierList objects being updated.
      * @return $this
      */
     public function setItemIds($item_ids)
@@ -129,7 +129,7 @@ class UpdateItemModifierListsRequest implements ArrayAccess
   
     /**
      * Sets modifier_lists_to_enable
-     * @param string[] $modifier_lists_to_enable The set of [CatalogModifierList](#type-catalogmodifierlist)s (referenced by ID) to enable for the [CatalogItem](#type-catalogitem).
+     * @param string[] $modifier_lists_to_enable The IDs of the CatalogModifierList objects to enable for the CatalogItem.
      * @return $this
      */
     public function setModifierListsToEnable($modifier_lists_to_enable)
@@ -148,7 +148,7 @@ class UpdateItemModifierListsRequest implements ArrayAccess
   
     /**
      * Sets modifier_lists_to_disable
-     * @param string[] $modifier_lists_to_disable The set of [CatalogModifierList](#type-catalogmodifierlist)s (referenced by ID) to disable for the [CatalogItem](#type-catalogitem).
+     * @param string[] $modifier_lists_to_disable The IDs of the CatalogModifierList objects to disable for the CatalogItem.
      * @return $this
      */
     public function setModifierListsToDisable($modifier_lists_to_disable)

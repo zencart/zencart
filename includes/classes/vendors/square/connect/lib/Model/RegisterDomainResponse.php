@@ -61,7 +61,7 @@ class RegisterDomainResponse implements ArrayAccess
       */
     protected $errors;
     /**
-      * $status Status of the domain registration.  See [RegisterDomainResponseStatus](#type-registerdomainresponsestatus) for possible values.
+      * $status Status of the domain registration.  See `RegisterDomainResponseStatus` for possible values. See [RegisterDomainResponseStatus](#type-registerdomainresponsestatus) for possible values
       * @var string
       */
     protected $status;
@@ -115,7 +115,7 @@ class RegisterDomainResponse implements ArrayAccess
   
     /**
      * Sets status
-     * @param string $status Status of the domain registration.  See [RegisterDomainResponseStatus](#type-registerdomainresponsestatus) for possible values.
+     * @param string $status Status of the domain registration.  See `RegisterDomainResponseStatus` for possible values. See [RegisterDomainResponseStatus](#type-registerdomainresponsestatus) for possible values
      * @return $this
      */
     public function setStatus($status)

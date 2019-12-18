@@ -56,12 +56,12 @@ class Money implements ArrayAccess
     );
   
     /**
-      * $amount The amount of money, in the smallest denomination of the currency indicated by `currency`. For example, when `currency` is `USD`, `amount` is in cents.
+      * $amount The amount of money, in the smallest denomination of the currency indicated by `currency`. For example, when `currency` is `USD`, `amount` is in cents. Monetary amounts can be positive or negative. See the specific field description to determine the meaning of the sign in a particular case.
       * @var int
       */
     protected $amount;
     /**
-      * $currency The type of currency, in __ISO 4217 format__. For example, the currency code for US dollars is `USD`.  See [Currency](#type-currency) for possible values.
+      * $currency The type of currency, in __ISO 4217 format__. For example, the currency code for US dollars is `USD`.  See `Currency` for possible values. See [Currency](#type-currency) for possible values
       * @var string
       */
     protected $currency;
@@ -96,7 +96,7 @@ class Money implements ArrayAccess
   
     /**
      * Sets amount
-     * @param int $amount The amount of money, in the smallest denomination of the currency indicated by `currency`. For example, when `currency` is `USD`, `amount` is in cents.
+     * @param int $amount The amount of money, in the smallest denomination of the currency indicated by `currency`. For example, when `currency` is `USD`, `amount` is in cents. Monetary amounts can be positive or negative. See the specific field description to determine the meaning of the sign in a particular case.
      * @return $this
      */
     public function setAmount($amount)
@@ -115,7 +115,7 @@ class Money implements ArrayAccess
   
     /**
      * Sets currency
-     * @param string $currency The type of currency, in __ISO 4217 format__. For example, the currency code for US dollars is `USD`.  See [Currency](#type-currency) for possible values.
+     * @param string $currency The type of currency, in __ISO 4217 format__. For example, the currency code for US dollars is `USD`.  See `Currency` for possible values. See [Currency](#type-currency) for possible values
      * @return $this
      */
     public function setCurrency($currency)

@@ -72,27 +72,27 @@ class InventoryCount implements ArrayAccess
     );
   
     /**
-      * $catalog_object_id The Square generated ID of the [CatalogObject](#type-catalogobject) being tracked.
+      * $catalog_object_id The Square generated ID of the `CatalogObject` being tracked.
       * @var string
       */
     protected $catalog_object_id;
     /**
-      * $catalog_object_type The [CatalogObjectType](#type-catalogobjecttype) of the [CatalogObject](#type-catalogobject) being tracked. Tracking is only supported for the `ITEM_VARIATION` type.
+      * $catalog_object_type The `CatalogObjectType` of the `CatalogObject` being tracked. Tracking is only supported for the `ITEM_VARIATION` type.
       * @var string
       */
     protected $catalog_object_type;
     /**
-      * $state The current [InventoryState](#type-inventorystate) for the related quantity of items.
+      * $state The current `InventoryState` for the related quantity of items. See [InventoryState](#type-inventorystate) for possible values
       * @var string
       */
     protected $state;
     /**
-      * $location_id The Square ID of the [Location](#type-location) where the related quantity of items are being tracked.
+      * $location_id The Square ID of the `Location` where the related quantity of items are being tracked.
       * @var string
       */
     protected $location_id;
     /**
-      * $quantity The number of items in the count as a decimal string. Fractional quantities are not supported.
+      * $quantity The number of items affected by the estimated count as a decimal string. Can support up to 5 digits after the decimal point.  _Important_: The Point of Sale app and Dashboard do not currently support decimal quantities. If a Point of Sale app or Dashboard attempts to read a decimal quantity on inventory counts or adjustments, the quantity will be rounded down to the nearest integer. For example, `2.5` will become `2`, and `-2.5` will become `-3`. Read [Decimal Quantities (BETA)](https://developer.squareup.com/docs/docs/inventory-api/what-it-does#decimal-quantities-beta) for more information.
       * @var string
       */
     protected $quantity;
@@ -152,7 +152,7 @@ class InventoryCount implements ArrayAccess
   
     /**
      * Sets catalog_object_id
-     * @param string $catalog_object_id The Square generated ID of the [CatalogObject](#type-catalogobject) being tracked.
+     * @param string $catalog_object_id The Square generated ID of the `CatalogObject` being tracked.
      * @return $this
      */
     public function setCatalogObjectId($catalog_object_id)
@@ -171,7 +171,7 @@ class InventoryCount implements ArrayAccess
   
     /**
      * Sets catalog_object_type
-     * @param string $catalog_object_type The [CatalogObjectType](#type-catalogobjecttype) of the [CatalogObject](#type-catalogobject) being tracked. Tracking is only supported for the `ITEM_VARIATION` type.
+     * @param string $catalog_object_type The `CatalogObjectType` of the `CatalogObject` being tracked. Tracking is only supported for the `ITEM_VARIATION` type.
      * @return $this
      */
     public function setCatalogObjectType($catalog_object_type)
@@ -190,7 +190,7 @@ class InventoryCount implements ArrayAccess
   
     /**
      * Sets state
-     * @param string $state The current [InventoryState](#type-inventorystate) for the related quantity of items.
+     * @param string $state The current `InventoryState` for the related quantity of items. See [InventoryState](#type-inventorystate) for possible values
      * @return $this
      */
     public function setState($state)
@@ -209,7 +209,7 @@ class InventoryCount implements ArrayAccess
   
     /**
      * Sets location_id
-     * @param string $location_id The Square ID of the [Location](#type-location) where the related quantity of items are being tracked.
+     * @param string $location_id The Square ID of the `Location` where the related quantity of items are being tracked.
      * @return $this
      */
     public function setLocationId($location_id)
@@ -228,7 +228,7 @@ class InventoryCount implements ArrayAccess
   
     /**
      * Sets quantity
-     * @param string $quantity The number of items in the count as a decimal string. Fractional quantities are not supported.
+     * @param string $quantity The number of items affected by the estimated count as a decimal string. Can support up to 5 digits after the decimal point.  _Important_: The Point of Sale app and Dashboard do not currently support decimal quantities. If a Point of Sale app or Dashboard attempts to read a decimal quantity on inventory counts or adjustments, the quantity will be rounded down to the nearest integer. For example, `2.5` will become `2`, and `-2.5` will become `-3`. Read [Decimal Quantities (BETA)](https://developer.squareup.com/docs/docs/inventory-api/what-it-does#decimal-quantities-beta) for more information.
      * @return $this
      */
     public function setQuantity($quantity)

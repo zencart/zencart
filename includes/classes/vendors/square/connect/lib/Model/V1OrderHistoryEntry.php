@@ -56,7 +56,7 @@ class V1OrderHistoryEntry implements ArrayAccess
     );
   
     /**
-      * $action The type of action performed on the order.
+      * $action The type of action performed on the order. See [V1OrderHistoryEntryAction](#type-v1orderhistoryentryaction) for possible values
       * @var string
       */
     protected $action;
@@ -96,7 +96,7 @@ class V1OrderHistoryEntry implements ArrayAccess
   
     /**
      * Sets action
-     * @param string $action The type of action performed on the order.
+     * @param string $action The type of action performed on the order. See [V1OrderHistoryEntryAction](#type-v1orderhistoryentryaction) for possible values
      * @return $this
      */
     public function setAction($action)

@@ -60,17 +60,17 @@ class BatchRetrieveCatalogObjectsResponse implements ArrayAccess
     );
   
     /**
-      * $errors The set of [Error](#type-error)s encountered.
+      * $errors The set of `Error`s encountered.
       * @var \SquareConnect\Model\Error[]
       */
     protected $errors;
     /**
-      * $objects A list of [CatalogObject](#type-catalogobject)s returned.
+      * $objects A list of `CatalogObject`s returned.
       * @var \SquareConnect\Model\CatalogObject[]
       */
     protected $objects;
     /**
-      * $related_objects A list of [CatalogObject](#type-catalogobject)s referenced by the object in the `objects` field.
+      * $related_objects A list of `CatalogObject`s referenced by the object in the `objects` field.
       * @var \SquareConnect\Model\CatalogObject[]
       */
     protected $related_objects;
@@ -110,7 +110,7 @@ class BatchRetrieveCatalogObjectsResponse implements ArrayAccess
   
     /**
      * Sets errors
-     * @param \SquareConnect\Model\Error[] $errors The set of [Error](#type-error)s encountered.
+     * @param \SquareConnect\Model\Error[] $errors The set of `Error`s encountered.
      * @return $this
      */
     public function setErrors($errors)
@@ -129,7 +129,7 @@ class BatchRetrieveCatalogObjectsResponse implements ArrayAccess
   
     /**
      * Sets objects
-     * @param \SquareConnect\Model\CatalogObject[] $objects A list of [CatalogObject](#type-catalogobject)s returned.
+     * @param \SquareConnect\Model\CatalogObject[] $objects A list of `CatalogObject`s returned.
      * @return $this
      */
     public function setObjects($objects)
@@ -148,7 +148,7 @@ class BatchRetrieveCatalogObjectsResponse implements ArrayAccess
   
     /**
      * Sets related_objects
-     * @param \SquareConnect\Model\CatalogObject[] $related_objects A list of [CatalogObject](#type-catalogobject)s referenced by the object in the `objects` field.
+     * @param \SquareConnect\Model\CatalogObject[] $related_objects A list of `CatalogObject`s referenced by the object in the `objects` field.
      * @return $this
      */
     public function setRelatedObjects($related_objects)

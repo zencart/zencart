@@ -52,7 +52,7 @@ class CatalogObjectBatch implements ArrayAccess
     );
   
     /**
-      * $objects A list of [CatalogObject](#type-catalogobject)s belonging to this batch.
+      * $objects A list of CatalogObjects belonging to this batch.
       * @var \SquareConnect\Model\CatalogObject[]
       */
     protected $objects;
@@ -82,7 +82,7 @@ class CatalogObjectBatch implements ArrayAccess
   
     /**
      * Sets objects
-     * @param \SquareConnect\Model\CatalogObject[] $objects A list of [CatalogObject](#type-catalogobject)s belonging to this batch.
+     * @param \SquareConnect\Model\CatalogObject[] $objects A list of CatalogObjects belonging to this batch.
      * @return $this
      */
     public function setObjects($objects)

@@ -27,7 +27,8 @@ class SearchCatalogObjectsResponse implements ArrayAccess
         'errors' => '\SquareConnect\Model\Error[]',
         'cursor' => 'string',
         'objects' => '\SquareConnect\Model\CatalogObject[]',
-        'related_objects' => '\SquareConnect\Model\CatalogObject[]'
+        'related_objects' => '\SquareConnect\Model\CatalogObject[]',
+        'latest_time' => 'string'
     );
   
     /** 
@@ -38,7 +39,8 @@ class SearchCatalogObjectsResponse implements ArrayAccess
         'errors' => 'errors',
         'cursor' => 'cursor',
         'objects' => 'objects',
-        'related_objects' => 'related_objects'
+        'related_objects' => 'related_objects',
+        'latest_time' => 'latest_time'
     );
   
     /**
@@ -49,7 +51,8 @@ class SearchCatalogObjectsResponse implements ArrayAccess
         'errors' => 'setErrors',
         'cursor' => 'setCursor',
         'objects' => 'setObjects',
-        'related_objects' => 'setRelatedObjects'
+        'related_objects' => 'setRelatedObjects',
+        'latest_time' => 'setLatestTime'
     );
   
     /**
@@ -60,29 +63,35 @@ class SearchCatalogObjectsResponse implements ArrayAccess
         'errors' => 'getErrors',
         'cursor' => 'getCursor',
         'objects' => 'getObjects',
-        'related_objects' => 'getRelatedObjects'
+        'related_objects' => 'getRelatedObjects',
+        'latest_time' => 'getLatestTime'
     );
   
     /**
-      * $errors The set of [Error](#type-error)s encountered.
+      * $errors Information on any errors encountered.
       * @var \SquareConnect\Model\Error[]
       */
     protected $errors;
     /**
-      * $cursor The pagination cursor to be used in a subsequent request. If unset, this is the final response. See [Paginating results](#paginatingresults) for more information.
+      * $cursor The pagination cursor to be used in a subsequent request. If unset, this is the final response. See [Pagination](https://developer.squareup.com/docs/basics/api101/pagination) for more information.
       * @var string
       */
     protected $cursor;
     /**
-      * $objects The [CatalogObject](#type-catalogobject)s returned.
+      * $objects The CatalogObjects returned.
       * @var \SquareConnect\Model\CatalogObject[]
       */
     protected $objects;
     /**
-      * $related_objects A list of [CatalogObject](#type-catalogobject)s referenced by the objects in the `objects` field.
+      * $related_objects A list of CatalogObjects referenced by the objects in the `objects` field.
       * @var \SquareConnect\Model\CatalogObject[]
       */
     protected $related_objects;
+    /**
+      * $latest_time When the associated product catalog was last updated. Will match the value for `end_time` or `cursor` if either field is included in the `SearchCatalog` request.
+      * @var string
+      */
+    protected $latest_time;
 
     /**
      * Constructor
@@ -111,6 +120,11 @@ class SearchCatalogObjectsResponse implements ArrayAccess
             } else {
               $this->related_objects = null;
             }
+            if (isset($data["latest_time"])) {
+              $this->latest_time = $data["latest_time"];
+            } else {
+              $this->latest_time = null;
+            }
         }
     }
     /**
@@ -124,7 +138,7 @@ class SearchCatalogObjectsResponse implements ArrayAccess
   
     /**
      * Sets errors
-     * @param \SquareConnect\Model\Error[] $errors The set of [Error](#type-error)s encountered.
+     * @param \SquareConnect\Model\Error[] $errors Information on any errors encountered.
      * @return $this
      */
     public function setErrors($errors)
@@ -143,7 +157,7 @@ class SearchCatalogObjectsResponse implements ArrayAccess
   
     /**
      * Sets cursor
-     * @param string $cursor The pagination cursor to be used in a subsequent request. If unset, this is the final response. See [Paginating results](#paginatingresults) for more information.
+     * @param string $cursor The pagination cursor to be used in a subsequent request. If unset, this is the final response. See [Pagination](https://developer.squareup.com/docs/basics/api101/pagination) for more information.
      * @return $this
      */
     public function setCursor($cursor)
@@ -162,7 +176,7 @@ class SearchCatalogObjectsResponse implements ArrayAccess
   
     /**
      * Sets objects
-     * @param \SquareConnect\Model\CatalogObject[] $objects The [CatalogObject](#type-catalogobject)s returned.
+     * @param \SquareConnect\Model\CatalogObject[] $objects The CatalogObjects returned.
      * @return $this
      */
     public function setObjects($objects)
@@ -181,12 +195,31 @@ class SearchCatalogObjectsResponse implements ArrayAccess
   
     /**
      * Sets related_objects
-     * @param \SquareConnect\Model\CatalogObject[] $related_objects A list of [CatalogObject](#type-catalogobject)s referenced by the objects in the `objects` field.
+     * @param \SquareConnect\Model\CatalogObject[] $related_objects A list of CatalogObjects referenced by the objects in the `objects` field.
      * @return $this
      */
     public function setRelatedObjects($related_objects)
     {
         $this->related_objects = $related_objects;
+        return $this;
+    }
+    /**
+     * Gets latest_time
+     * @return string
+     */
+    public function getLatestTime()
+    {
+        return $this->latest_time;
+    }
+  
+    /**
+     * Sets latest_time
+     * @param string $latest_time When the associated product catalog was last updated. Will match the value for `end_time` or `cursor` if either field is included in the `SearchCatalog` request.
+     * @return $this
+     */
+    public function setLatestTime($latest_time)
+    {
+        $this->latest_time = $latest_time;
         return $this;
     }
     /**

@@ -68,27 +68,27 @@ class CatalogItemModifierListInfo implements ArrayAccess
     );
   
     /**
-      * $modifier_list_id The ID of the [CatalogModifierList](#type-catalogmodifierlist) controlled by this [CatalogModifierListInfo](#type-catalogmodifierlistinfo).
+      * $modifier_list_id The ID of the `CatalogModifierList` controlled by this `CatalogModifierListInfo`.
       * @var string
       */
     protected $modifier_list_id;
     /**
-      * $modifier_overrides A set of [CatalogModifierOverride](#type-catalogmodifieroverride) objects that override whether a given [CatalogModifier](#type-catalogmodifier) is enabled by default.
+      * $modifier_overrides A set of `CatalogModifierOverride` objects that override whether a given `CatalogModifier` is enabled by default.
       * @var \SquareConnect\Model\CatalogModifierOverride[]
       */
     protected $modifier_overrides;
     /**
-      * $min_selected_modifiers If zero or larger, the smallest number of [CatalogModifier](#type-catalogmodifier)s that must be selected from this [CatalogModifierList](#type-catalogmodifierlist).
+      * $min_selected_modifiers If 0 or larger, the smallest number of `CatalogModifier`s that must be selected from this `CatalogModifierList`.
       * @var int
       */
     protected $min_selected_modifiers;
     /**
-      * $max_selected_modifiers If zero or larger, the largest number of [CatalogModifier](#type-catalogmodifier)s that can be selected from this [CatalogModifierList](#type-catalogmodifierlist).
+      * $max_selected_modifiers If 0 or larger, the largest number of `CatalogModifier`s that can be selected from this `CatalogModifierList`.
       * @var int
       */
     protected $max_selected_modifiers;
     /**
-      * $enabled If `true`, enable this [CatalogModifierList](#type-catalogmodifierlist).
+      * $enabled If `true`, enable this `CatalogModifierList`. The default value is `true`.
       * @var bool
       */
     protected $enabled;
@@ -138,7 +138,7 @@ class CatalogItemModifierListInfo implements ArrayAccess
   
     /**
      * Sets modifier_list_id
-     * @param string $modifier_list_id The ID of the [CatalogModifierList](#type-catalogmodifierlist) controlled by this [CatalogModifierListInfo](#type-catalogmodifierlistinfo).
+     * @param string $modifier_list_id The ID of the `CatalogModifierList` controlled by this `CatalogModifierListInfo`.
      * @return $this
      */
     public function setModifierListId($modifier_list_id)
@@ -157,7 +157,7 @@ class CatalogItemModifierListInfo implements ArrayAccess
   
     /**
      * Sets modifier_overrides
-     * @param \SquareConnect\Model\CatalogModifierOverride[] $modifier_overrides A set of [CatalogModifierOverride](#type-catalogmodifieroverride) objects that override whether a given [CatalogModifier](#type-catalogmodifier) is enabled by default.
+     * @param \SquareConnect\Model\CatalogModifierOverride[] $modifier_overrides A set of `CatalogModifierOverride` objects that override whether a given `CatalogModifier` is enabled by default.
      * @return $this
      */
     public function setModifierOverrides($modifier_overrides)
@@ -176,7 +176,7 @@ class CatalogItemModifierListInfo implements ArrayAccess
   
     /**
      * Sets min_selected_modifiers
-     * @param int $min_selected_modifiers If zero or larger, the smallest number of [CatalogModifier](#type-catalogmodifier)s that must be selected from this [CatalogModifierList](#type-catalogmodifierlist).
+     * @param int $min_selected_modifiers If 0 or larger, the smallest number of `CatalogModifier`s that must be selected from this `CatalogModifierList`.
      * @return $this
      */
     public function setMinSelectedModifiers($min_selected_modifiers)
@@ -195,7 +195,7 @@ class CatalogItemModifierListInfo implements ArrayAccess
   
     /**
      * Sets max_selected_modifiers
-     * @param int $max_selected_modifiers If zero or larger, the largest number of [CatalogModifier](#type-catalogmodifier)s that can be selected from this [CatalogModifierList](#type-catalogmodifierlist).
+     * @param int $max_selected_modifiers If 0 or larger, the largest number of `CatalogModifier`s that can be selected from this `CatalogModifierList`.
      * @return $this
      */
     public function setMaxSelectedModifiers($max_selected_modifiers)
@@ -214,7 +214,7 @@ class CatalogItemModifierListInfo implements ArrayAccess
   
     /**
      * Sets enabled
-     * @param bool $enabled If `true`, enable this [CatalogModifierList](#type-catalogmodifierlist).
+     * @param bool $enabled If `true`, enable this `CatalogModifierList`. The default value is `true`.
      * @return $this
      */
     public function setEnabled($enabled)

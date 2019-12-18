@@ -311,12 +311,12 @@ class ApiClient
     *
     * @param string $raw_headers A string of raw HTTP response headers
     *
-    * @return string[] Array of HTTP response heaers
+    * @return \SquareConnect\Util\CaseInsensitiveArray(string[]) CaseInsensitiveArray of HTTP response headers
     */
     protected function http_parse_headers($raw_headers)
     {
         // ref/credit: http://php.net/manual/en/function.http-parse-headers.php#112986
-        $headers = array();
+        $headers = new \SquareConnect\Util\CaseInsensitiveArray();
         $key = ''; // [+]
 
         foreach(explode("\n", $raw_headers) as $i => $h)

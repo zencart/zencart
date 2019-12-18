@@ -261,7 +261,7 @@ class V1Payment implements ArrayAccess
       */
     protected $additive_tax;
     /**
-      * $tender All of the additive taxes associated with the payment.
+      * $tender All of the tenders associated with the payment.
       * @var \SquareConnect\Model\V1Tender[]
       */
     protected $tender;
@@ -845,7 +845,7 @@ class V1Payment implements ArrayAccess
   
     /**
      * Sets tender
-     * @param \SquareConnect\Model\V1Tender[] $tender All of the additive taxes associated with the payment.
+     * @param \SquareConnect\Model\V1Tender[] $tender All of the tenders associated with the payment.
      * @return $this
      */
     public function setTender($tender)

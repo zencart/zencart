@@ -9,6 +9,7 @@ namespace SquareConnect\Model;
 
 use \ArrayAccess;
 /**
+ * @deprecated
  * V1ModifierOption Class Doc Comment
  *
  * @category Class
@@ -29,7 +30,8 @@ class V1ModifierOption implements ArrayAccess
         'price_money' => '\SquareConnect\Model\V1Money',
         'on_by_default' => 'bool',
         'ordinal' => 'int',
-        'modifier_list_id' => 'string'
+        'modifier_list_id' => 'string',
+        'v2_id' => 'string'
     );
   
     /** 
@@ -42,7 +44,8 @@ class V1ModifierOption implements ArrayAccess
         'price_money' => 'price_money',
         'on_by_default' => 'on_by_default',
         'ordinal' => 'ordinal',
-        'modifier_list_id' => 'modifier_list_id'
+        'modifier_list_id' => 'modifier_list_id',
+        'v2_id' => 'v2_id'
     );
   
     /**
@@ -55,7 +58,8 @@ class V1ModifierOption implements ArrayAccess
         'price_money' => 'setPriceMoney',
         'on_by_default' => 'setOnByDefault',
         'ordinal' => 'setOrdinal',
-        'modifier_list_id' => 'setModifierListId'
+        'modifier_list_id' => 'setModifierListId',
+        'v2_id' => 'setV2Id'
     );
   
     /**
@@ -68,7 +72,8 @@ class V1ModifierOption implements ArrayAccess
         'price_money' => 'getPriceMoney',
         'on_by_default' => 'getOnByDefault',
         'ordinal' => 'getOrdinal',
-        'modifier_list_id' => 'getModifierListId'
+        'modifier_list_id' => 'getModifierListId',
+        'v2_id' => 'getV2Id'
     );
   
     /**
@@ -92,7 +97,7 @@ class V1ModifierOption implements ArrayAccess
       */
     protected $on_by_default;
     /**
-      * $ordinal Indicates the modifier option's list position when displayed in Square Register and the merchant dashboard. If more than one modifier option in the same modifier list has the same ordinal value, those options are displayed in alphabetical order.
+      * $ordinal Indicates the modifier option's list position when displayed in Square Point of Sale and the merchant dashboard. If more than one modifier option in the same modifier list has the same ordinal value, those options are displayed in alphabetical order.
       * @var int
       */
     protected $ordinal;
@@ -101,6 +106,11 @@ class V1ModifierOption implements ArrayAccess
       * @var string
       */
     protected $modifier_list_id;
+    /**
+      * $v2_id The ID of the CatalogObject in the Connect v2 API. Objects that are shared across multiple locations share the same v2 ID.
+      * @var string
+      */
+    protected $v2_id;
 
     /**
      * Constructor
@@ -138,6 +148,11 @@ class V1ModifierOption implements ArrayAccess
               $this->modifier_list_id = $data["modifier_list_id"];
             } else {
               $this->modifier_list_id = null;
+            }
+            if (isset($data["v2_id"])) {
+              $this->v2_id = $data["v2_id"];
+            } else {
+              $this->v2_id = null;
             }
         }
     }
@@ -228,7 +243,7 @@ class V1ModifierOption implements ArrayAccess
   
     /**
      * Sets ordinal
-     * @param int $ordinal Indicates the modifier option's list position when displayed in Square Register and the merchant dashboard. If more than one modifier option in the same modifier list has the same ordinal value, those options are displayed in alphabetical order.
+     * @param int $ordinal Indicates the modifier option's list position when displayed in Square Point of Sale and the merchant dashboard. If more than one modifier option in the same modifier list has the same ordinal value, those options are displayed in alphabetical order.
      * @return $this
      */
     public function setOrdinal($ordinal)
@@ -253,6 +268,25 @@ class V1ModifierOption implements ArrayAccess
     public function setModifierListId($modifier_list_id)
     {
         $this->modifier_list_id = $modifier_list_id;
+        return $this;
+    }
+    /**
+     * Gets v2_id
+     * @return string
+     */
+    public function getV2Id()
+    {
+        return $this->v2_id;
+    }
+  
+    /**
+     * Sets v2_id
+     * @param string $v2_id The ID of the CatalogObject in the Connect v2 API. Objects that are shared across multiple locations share the same v2 ID.
+     * @return $this
+     */
+    public function setV2Id($v2_id)
+    {
+        $this->v2_id = $v2_id;
         return $this;
     }
     /**

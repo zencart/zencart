@@ -9,6 +9,7 @@ namespace SquareConnect\Model;
 
 use \ArrayAccess;
 /**
+ * @deprecated
  * ListRefundsRequest Class Doc Comment
  *
  * @category Class
@@ -74,7 +75,7 @@ class ListRefundsRequest implements ArrayAccess
       */
     protected $end_time;
     /**
-      * $sort_order The order in which results are listed in the response (`ASC` for oldest first, `DESC` for newest first).  Default value: `DESC`
+      * $sort_order The order in which results are listed in the response (`ASC` for oldest first, `DESC` for newest first).  Default value: `DESC` See [SortOrder](#type-sortorder) for possible values
       * @var string
       */
     protected $sort_order;
@@ -162,7 +163,7 @@ class ListRefundsRequest implements ArrayAccess
   
     /**
      * Sets sort_order
-     * @param string $sort_order The order in which results are listed in the response (`ASC` for oldest first, `DESC` for newest first).  Default value: `DESC`
+     * @param string $sort_order The order in which results are listed in the response (`ASC` for oldest first, `DESC` for newest first).  Default value: `DESC` See [SortOrder](#type-sortorder) for possible values
      * @return $this
      */
     public function setSortOrder($sort_order)

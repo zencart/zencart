@@ -61,7 +61,7 @@ class RetrieveInventoryAdjustmentResponse implements ArrayAccess
       */
     protected $errors;
     /**
-      * $adjustment The requested [InventoryAdjustment](#type-inventoryadjustment).
+      * $adjustment The requested `InventoryAdjustment`.
       * @var \SquareConnect\Model\InventoryAdjustment
       */
     protected $adjustment;
@@ -115,7 +115,7 @@ class RetrieveInventoryAdjustmentResponse implements ArrayAccess
   
     /**
      * Sets adjustment
-     * @param \SquareConnect\Model\InventoryAdjustment $adjustment The requested [InventoryAdjustment](#type-inventoryadjustment).
+     * @param \SquareConnect\Model\InventoryAdjustment $adjustment The requested `InventoryAdjustment`.
      * @return $this
      */
     public function setAdjustment($adjustment)

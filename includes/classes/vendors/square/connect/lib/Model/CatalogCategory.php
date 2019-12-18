@@ -52,7 +52,7 @@ class CatalogCategory implements ArrayAccess
     );
   
     /**
-      * $name The category's name. Searchable.
+      * $name The category name. Searchable. This field has max length of 255 Unicode code points.
       * @var string
       */
     protected $name;
@@ -82,7 +82,7 @@ class CatalogCategory implements ArrayAccess
   
     /**
      * Sets name
-     * @param string $name The category's name. Searchable.
+     * @param string $name The category name. Searchable. This field has max length of 255 Unicode code points.
      * @return $this
      */
     public function setName($name)

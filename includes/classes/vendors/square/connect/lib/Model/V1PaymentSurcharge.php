@@ -100,7 +100,7 @@ class V1PaymentSurcharge implements ArrayAccess
       */
     protected $amount_money;
     /**
-      * $type Indicates the source of the surcharge. For example, if it was applied as an automatic gratuity for a large group.
+      * $type Indicates the source of the surcharge. For example, if it was applied as an automatic gratuity for a large group. See [V1PaymentSurchargeType](#type-v1paymentsurchargetype) for possible values
       * @var string
       */
     protected $type;
@@ -256,7 +256,7 @@ class V1PaymentSurcharge implements ArrayAccess
   
     /**
      * Sets type
-     * @param string $type Indicates the source of the surcharge. For example, if it was applied as an automatic gratuity for a large group.
+     * @param string $type Indicates the source of the surcharge. For example, if it was applied as an automatic gratuity for a large group. See [V1PaymentSurchargeType](#type-v1paymentsurchargetype) for possible values
      * @return $this
      */
     public function setType($type)
