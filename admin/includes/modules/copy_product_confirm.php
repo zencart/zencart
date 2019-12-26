@@ -127,6 +127,7 @@ if (isset($_POST['products_id']) && isset($_POST['categories_id'])) {
             }
 
             zen_copy_products_attributes($products_id, $dup_products_id);
+            $messageStack->add_session(sprintf(TEXT_COPY_AS_DUPLICATE_ATTRIBUTES, $products_id, $dup_products_id), 'success');
         }
 
 // copy meta tags to Duplicate
