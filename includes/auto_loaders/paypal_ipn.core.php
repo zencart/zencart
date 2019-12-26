@@ -14,8 +14,6 @@ if (!defined('IS_ADMIN_FLAG')) {
   $autoLoadConfig[0][] = array('autoType'=>'include',
                                'loadFile'=> DIR_WS_INCLUDES . 'version.php');
   $autoLoadConfig[0][] = array('autoType'=>'class',
-                               'loadFile'=>'class.base.php');
-  $autoLoadConfig[0][] = array('autoType'=>'class',
                                'loadFile'=>'class.notifier.php');
   $autoLoadConfig[0][] = array('autoType'=>'classInstantiate',
                                'className'=>'notifier',
@@ -26,8 +24,6 @@ if (!defined('IS_ADMIN_FLAG')) {
                                 'loadFile'=>'template_func.php');
   $autoLoadConfig[0][] = array('autoType'=>'class',
                                 'loadFile'=>'language.php');
-  $autoLoadConfig[0][] = array('autoType'=>'class',
-                                'loadFile'=>'cache.php');
   $autoLoadConfig[0][] = array('autoType'=>'class',
                                 'loadFile'=>'sniffer.php');
   $autoLoadConfig[0][] = array('autoType'=>'class',
@@ -40,17 +36,6 @@ if (!defined('IS_ADMIN_FLAG')) {
                                 'loadFile'=>'message_stack.php');
   $autoLoadConfig[0][] = array('autoType'=>'class',
                                 'loadFile'=>'breadcrumb.php');
-/**
- * Breakpoint 10.
- *
- * require('includes/init_includes/init_file_db_names.php');
- * require('includes/init_includes/init_database.php');
- *
- */
-  $autoLoadConfig[10][] = array('autoType'=>'init_script',
-                                'loadFile'=> 'init_file_db_names.php');
-  $autoLoadConfig[10][] = array('autoType'=>'init_script',
-                                'loadFile'=>'init_database.php');
 /**
  * Breakpoint 30.
  *
