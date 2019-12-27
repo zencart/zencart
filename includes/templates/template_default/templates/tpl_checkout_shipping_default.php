@@ -30,7 +30,7 @@
 </div>
 <div class="floatingBox important forward"><?php echo TEXT_CHOOSE_SHIPPING_DESTINATION; ?></div>
 <br class="clearBoth" />
- 
+<br /> 
 <?php
   if (zen_count_shipping_modules() > 0) {
 ?>
