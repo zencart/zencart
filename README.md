@@ -52,14 +52,14 @@ __The [Implementation Guide](https://www.zen-cart.com/docs/implementation-guide-
 
 Documentation
 -------------
-Use your browser to open the [/docs/index.html](https://www.zen-cart.com/docs/index.html) page for links to documentation and the [Implementation Guide](https://www.zen-cart.com/docs/implementation-guide-v156.pdf).
-
+Use your browser to open the [/docs/index.html](https://www.zen-cart.com/docs/index.html) page for links to release documentation and the [Implementation Guide](https://www.zen-cart.com/docs/implementation-guide-v156.pdf).  A storeowner documentation repository also exists at [docs.zen-cart.com/user/](https://docs.zen-cart.com/user/). 
 
 Developer Documentation
 -----------------------
-Developers wishing to contribute to the Zen Cart&reg; core code may fork the [zencart/zencart](https://github.com/zencart/zencart) repository on github and issue Pull Requests from their own feature branches. For detailed help on using github, forking, branching, and contributing see [Contributing to Zen Cart code](http://docs.zen-cart.com/Contributing/).
+Developers wishing to contribute to the Zen Cart&reg; core code may fork the [zencart/zencart](https://github.com/zencart/zencart) repository on github and issue Pull Requests from their own feature branches. For detailed help on using github, forking, branching, and contributing, see [Contributing to Zen Cart code](https://docs.zen-cart.com/dev/contributing/).
 
-Visit [docs.zen-cart.com](https://docs.zen-cart.com/Developer_Documentation/) for guidance on issues relevant to developers. This documentation site is very new, but content will be added over time.  
+Visit [docs.zen-cart.com/dev/](https://docs.zen-cart.com/dev/) for guidance on issues relevant to developers. This documentation site is very new, but content will be added over time.  
+
 Developers wishing to contribute documentation should fork [zencart/documentation](https://github.com/zencart/documentation) and contribute PRs. 
 
 
