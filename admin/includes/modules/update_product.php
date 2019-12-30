@@ -68,7 +68,7 @@ if (isset($_POST['edit']) && $_POST['edit'] == 'edit') {
     zen_update_products_price_sorter($products_id);
 
     $db->Execute("INSERT INTO " . TABLE_PRODUCTS_TO_CATEGORIES . " (products_id, categories_id)
-                  VALUES ('" . (int)$products_id . "', '" . (int)$current_category_id . "')");
+                  VALUES (" . (int)$products_id . ", " . (int)$current_category_id . ")");
 
     zen_record_admin_activity('New product ' . (int)$products_id . ' added via admin console.', 'info');
 
