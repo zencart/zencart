@@ -51,7 +51,7 @@ if (isset($_POST['submit'])) {
         $resetToken = (time() + ADMIN_PWD_TOKEN_DURATION) . '}' . zen_encrypt_password($new_password);
         $sql = "update " . TABLE_ADMIN . " set reset_token = :token: where admin_id = :admID: ";
         $sql = $db->bindVars($sql, ':token:', $resetToken, 'string');
-        $sql = $db->bindVars($sql, ':admID:', $result->fields['admin_id'], 'string');
+        $sql = $db->bindVars($sql, ':admID:', $result->fields['admin_id'], 'integer');
         $db->Execute($sql);
         $html_msg['EMAIL_CUSTOMERS_NAME'] = $result->fields['admin_name'];
         $html_msg['EMAIL_MESSAGE_HTML'] = sprintf(TEXT_EMAIL_MESSAGE_PWD_RESET, $_SERVER['REMOTE_ADDR'], $new_password);
