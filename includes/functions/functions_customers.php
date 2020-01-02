@@ -35,6 +35,7 @@ function zen_address_format($address_format_id = 1, $incoming = array(), $html =
     $address['hr'] = $html ? '<hr>' : '----------------------------------------';
     $address['cr'] = $html ? ($boln == '' && $eoln == "\n" ? '<br>' : $eoln . $boln) : $eoln;
 
+    if (ACCOUNT_SUBURB !== 'true') $incoming['suburb'] = ''; 
     $address['company'] = !empty($incoming['company']) ? zen_output_string_protected($incoming['company']) : '';
     $address['firstname'] = !empty($incoming['firstname']) ? zen_output_string_protected($incoming['firstname']) : (!empty($incoming['name']) ? zen_output_string_protected($incoming['name']) : '');
     $address['lastname'] = !empty($incoming['lastname']) ? zen_output_string_protected($incoming['lastname']) : '';
@@ -89,6 +90,7 @@ function zen_address_format($address_format_id = 1, $incoming = array(), $html =
     if (ACCOUNT_COMPANY == 'true' && !empty($address['$company']) && false === strpos($fmt, '$company')) {
         $address_out = $address['$company'] . $address['$cr'] . $address_out;
     }
+    if (ACCOUNT_SUBURB !== 'true') $address['suburb'] = ''; 
 
     // -----
     // "Package up" the various elements of an address and issue a notification that will enable
