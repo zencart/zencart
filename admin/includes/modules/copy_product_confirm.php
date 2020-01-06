@@ -111,6 +111,12 @@ if (isset($_POST['products_id']) && isset($_POST['categories_id'])) {
 
         $db->Execute("INSERT INTO " . TABLE_PRODUCTS_TO_CATEGORIES . " (products_id, categories_id)
                       VALUES (" . $dup_products_id . ", " . $categories_id . ")");
+                      
+        // -----
+        // Notify that a copy of a "base" product has just been created, enabling an observer to duplicate
+        // additional product-related fields.
+        //
+        $zco_notifier->notify('NOTIFY_MODULES_COPY_TO_CONFIRM_DUPLICATE', array('products_id' => $products_id, 'dup_products_id' => $dup_products_id));
 
 // FIX HERE
 /////////////////////////////////////////////////////////////////////////////////////////////
