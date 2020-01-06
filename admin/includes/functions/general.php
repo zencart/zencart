@@ -2062,6 +2062,10 @@ function zen_copy_products_attributes($products_id_from, $products_id_to) {
     }
 
 // FIX HERE - remove once working
+    // -----
+    // Notify that the attribute-copying has started for the product.
+    //
+    $GLOBALS['zco_notifier']->notify('ZEN_COPY_PRODUCTS_ATTRIBUTES_START', array('from' => (int)$products_id_from, 'to' => (int)$products_id_to));
 
     // check if product already has attributes
     $already_has_attributes = zen_has_product_attributes($products_id_to, 'false');
@@ -2070,6 +2074,11 @@ function zen_copy_products_attributes($products_id_from, $products_id_to) {
       // delete all attributes first from products_id_to
       zen_products_attributes_download_delete($products_id_to);
       $db->Execute("delete from " . TABLE_PRODUCTS_ATTRIBUTES . " where products_id = '" . (int)$products_id_to . "'");
+      
+      // -----
+      // Notify that attributes have been deleted for the product.
+      //
+      $GLOBALS['zco_notifier']->notify('ZEN_COPY_PRODUCTS_ATTRIBUTES_DELETE', (int)$products_id_to);
     }
 
     // get attributes to copy from
@@ -2147,6 +2156,11 @@ function zen_copy_products_attributes($products_id_from, $products_id_to) {
               '" . $products_copy_from->fields['attributes_required'] . "')"
           );
           $messageStack->add_session(sprintf(TEXT_ATTRIBUTE_COPY_INSERTING, (int)$products_copy_from->fields['products_attributes_id'], (int)$products_id_from, (int)$products_id_to), 'success');
+          
+          // -----
+          // Notify that an attribute has been added for the product.
+          //
+          $GLOBALS['zco_notifier']->notify('ZEN_COPY_PRODUCTS_ATTRIBUTES_ADD', array('pID' => (int)$products_id_to, 'fields' => $products_copy_from->fields));
       }
 
       // Update attribute - Just attribute settings not ids
@@ -2182,10 +2196,20 @@ function zen_copy_products_attributes($products_id_from, $products_id_to) {
 // and attributes_price_base_included=" . $products_copy_from->fields['attributes_price_base_included']
           );
           $messageStack->add_session(sprintf(TEXT_ATTRIBUTE_COPY_UPDATING, (int)$products_copy_from->fields['products_attributes_id'], (int)$products_id_to), 'success');
+          
+          // -----
+          // Notify that an attribute has been updated for the product.
+          //
+          $GLOBALS['zco_notifier']->notify('ZEN_COPY_PRODUCTS_ATTRIBUTES_UPDATE', array('pID' => (int)$products_id_to, 'fields' => $products_copy_from->fields));
       }
 
       $products_copy_from->MoveNext();
     } // end of products attributes while loop
+    
+    // -----
+    // Notify that the attribute-copying has been completed for the product.
+    //
+    $GLOBALS['zco_notifier']->notify('ZEN_COPY_PRODUCTS_ATTRIBUTES_COMPLETE', array('from' => (int)$products_id_from, 'to' => (int)$products_id_to));
 
      // reset products_price_sorter for searches etc.
      zen_update_products_price_sorter($products_id_to);
