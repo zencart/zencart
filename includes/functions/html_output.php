@@ -204,6 +204,8 @@ function zen_catalog_href_link($page = '', $parameters = '', $connection = 'NONS
       $zco_notifier->notify('NOTIFY_HANDLE_IMAGE', array($newimg));
     }
 
+    $zco_notifier->notify('NOTIFY_OPTIMIZE_IMAGE', $template_dir, $src, $alt, $width, $height, $parameters);
+
     // Convert width/height to int for proper validation.
     // intval() used to support compatibility with plugins like image-handler
     $width = empty($width) ? $width : intval($width);
