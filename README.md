@@ -1,4 +1,4 @@
-[![Download Zen Cart E-Commerce Shopping Cart ](https://img.shields.io/sourceforge/dt/zencart.svg)](https://sourceforge.net/projects/zencart/files/latest/download) ![](https://github.com/zencart/zencart/workflows/Zen%20Cart%20Tests/badge.svg?branch=v157)
+[![Download Zen Cart E-Commerce Shopping Cart ](https://img.shields.io/sourceforge/dm/zencart.svg)](https://sourceforge.net/projects/zencart/files/latest/download) ![](https://github.com/zencart/zencart/workflows/Zen%20Cart%20Tests/badge.svg?branch=v157)
 
 
 Zen Cart&reg; - The Art of E-Commerce
