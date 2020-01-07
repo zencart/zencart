@@ -1087,7 +1087,7 @@ if (zen_not_null($action)) {
             <table class="table table-hover">
               <thead>
                 <tr class="dataTableHeadingRow">
-                  <th class="dataTableHeadingContent text-center">
+                  <th class="dataTableHeadingContent text-right">
                       <?php echo TABLE_HEADING_ID; ?>
                   </th>
                   <th class="dataTableHeadingContent">
