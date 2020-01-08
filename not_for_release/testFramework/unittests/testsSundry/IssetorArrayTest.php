@@ -12,7 +12,7 @@ require_once(__DIR__ . '/../support/zcTestCase.php');
  */
 class testIssetorArray extends zcTestCase
 {
-    public function setup()
+    public function setup(): void
     {
         parent::setup();
         require_once DIR_FS_CATALOG . 'includes/functions/functions_general.php';

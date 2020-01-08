@@ -8,9 +8,8 @@ use Facebook\WebDriver\Remote\RemoteWebDriver;
 use Laravel\Dusk\Browser;
 use Laravel\Dusk\Chrome\ChromeProcess;
 use Laravel\Dusk\Concerns\ProvidesBrowser;
-use PHPUnit_Framework_TestCase;
 
-abstract class DuskTestCase extends PHPUnit_Framework_TestCase
+abstract class DuskTestCase extends \PHPUnit\Framework\TestCase
 {
     use ProvidesBrowser;
 
@@ -33,22 +32,23 @@ abstract class DuskTestCase extends PHPUnit_Framework_TestCase
      *
      * @return void
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
         if (!defined('DIR_FS_ROOT')) {
             define('DIR_FS_ROOT', \getcwd());
 
-            if (file_exists($configFile = 'not_for_release/testFramework/configure.dusk.php')) {
-                require $configFile;
-            } elseif (file_exists($configFile = 'includes/local/configure.dusk.php')) {
+            if (file_exists($configFile = 'includes/local/configure.dusk.php')) {
                 require $configFile;
             } elseif (file_exists($configFile = 'includes/local/configure.php')) {
+                require $configFile;
+            } elseif (file_exists($configFile = 'not_for_release/testFramework/configure.dusk.php')) {
                 require $configFile;
             } elseif (file_exists($configFile = 'includes/configure.php')) {
                 require $configFile;
             }
+//            echo 'Using config file: ' . $configFile;
         }
 
         Browser::$baseUrl = $this->baseUrl();
