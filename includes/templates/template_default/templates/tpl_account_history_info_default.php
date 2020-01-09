@@ -6,10 +6,10 @@
  * Displays information related to a single specific order
  *
  * @package templateSystem
- * @copyright Copyright 2003-2019 Zen Cart Development Team
+ * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: lat9 2019 Mar 10 Modified in v1.5.6b $
+ * @version $Id: DrByte 09-Jan-2020  Modified in v1.5.7 $
  */
 ?>
 <div class="centerColumn" id="accountHistInfo">
