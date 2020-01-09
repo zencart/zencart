@@ -15,6 +15,10 @@
  * @version $Id: DrByte 09-Jan-2020  Modified in v1.5.7 $
  */
 
+if (!defined('IS_ADMIN_FLAG')) {
+    die('Illegal Access');
+}
+
   $zco_notifier->notify('NOTIFY_MAIN_TEMPLATE_VARS_START', $template_dir);
 
 /**
