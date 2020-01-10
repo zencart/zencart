@@ -811,7 +811,7 @@ class shoppingCart extends base {
             $chk_price = zen_get_products_base_price($products_id);
             $chk_special = zen_get_products_special_price($products_id, false);
             // products_options_value_text
-            if (zen_get_attributes_type($attribute_price->fields['products_attributes_id']) == PRODUCTS_OPTIONS_TYPE_TEXT) {
+            if (ATTRIBUTES_ENABLED_TEXT_PRICES == 'true' && zen_get_attributes_type($attribute_price->fields['products_attributes_id']) == PRODUCTS_OPTIONS_TYPE_TEXT) {
               $text_words = zen_get_word_count_price($this->contents[$products_id]['attributes_values'][$attribute_price->fields['options_id']], $attribute_price->fields['attributes_price_words_free'], $attribute_price->fields['attributes_price_words']);
               $text_letters = zen_get_letters_count_price($this->contents[$products_id]['attributes_values'][$attribute_price->fields['options_id']], $attribute_price->fields['attributes_price_letters_free'], $attribute_price->fields['attributes_price_letters']);
 
@@ -964,8 +964,7 @@ class shoppingCart extends base {
    * Method to calculate price of attributes for a given item
    *
    * @param mixed the product ID of the item to check
-   * @return decimal the pice of the items attributes
-   * @global object access to the db object
+   * @return decimal the price of the item's attributes
    */
   function attributes_price($products_id) {
     global $db, $currencies;
@@ -1028,7 +1027,7 @@ class shoppingCart extends base {
           //////////////////////////////////////////////////
           // calculate additional charges
           // products_options_value_text
-          if (zen_get_attributes_type($attribute_price->fields['products_attributes_id']) == PRODUCTS_OPTIONS_TYPE_TEXT) {
+          if (ATTRIBUTES_ENABLED_TEXT_PRICES == 'true' && zen_get_attributes_type($attribute_price->fields['products_attributes_id']) == PRODUCTS_OPTIONS_TYPE_TEXT) {
             $text_words = zen_get_word_count_price($this->contents[$products_id]['attributes_values'][$attribute_price->fields['options_id']], $attribute_price->fields['attributes_price_words_free'], $attribute_price->fields['attributes_price_words']);
             $text_letters = zen_get_letters_count_price($this->contents[$products_id]['attributes_values'][$attribute_price->fields['options_id']], $attribute_price->fields['attributes_price_letters_free'], $attribute_price->fields['attributes_price_letters']);
             $attributes_price += $text_letters;
@@ -1076,7 +1075,7 @@ class shoppingCart extends base {
    *
    * @param mixed the product ID of the item to check
    * @param decimal item quantity
-   * @return decimal the pice of the items attributes
+   * @return decimal the price of the items attributes
    * @global object access to the db object
    */
   function attributes_price_onetime_charges($products_id, $qty) {
