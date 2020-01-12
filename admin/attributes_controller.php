@@ -1657,7 +1657,10 @@ function zen_js_option_values_list($selectedName, $fieldName) {
                     <td><?php echo $attributes_value['products_attributes_id']; ?></td>
                     <td>&nbsp;</td>
                     <td>&nbsp;</td>
-                    <td><?php echo ($attributes_value['attributes_image'] != '' ? zen_image(DIR_WS_IMAGES . 'icon_status_yellow.gif') . '&nbsp;' : '&nbsp;&nbsp;') . $values_name; ?></td>
+                    <td>
+                      <?php echo ($attributes_value['attributes_image'] != '' ? zen_image(DIR_WS_IMAGES . 'icon_status_yellow.gif') . '&nbsp;' : '&nbsp;&nbsp;'); ?>
+                      <?php echo $values_name; ?>
+                    </td>
                     <td class="text-right"><?php echo $attributes_value['price_prefix']; ?>&nbsp;<?php echo $attributes_value['options_values_price']; ?></td>
                     <td class="text-right"><?php echo $attributes_value['products_attributes_weight_prefix']; ?>&nbsp;<?php echo $attributes_value['products_attributes_weight']; ?></td>
                     <td class="text-right"><?php echo $attributes_value['products_options_sort_order']; ?></td>
