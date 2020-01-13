@@ -59,33 +59,34 @@ class order extends base {
     $this->notify('NOTIFY_ORDER_BEFORE_QUERY', array(), $order_id);
     if ($this->queryReturnFlag === TRUE) return false;
 
-    $order_query = "select *
-                        from " . TABLE_ORDERS . "
-                        where orders_id = '" . (int)$order_id . "'";
-
+    $order_query = "SELECT * from " . TABLE_ORDERS . " where orders_id = " . (int)$order_id;
     $order = $db->Execute($order_query);
     if ($order->EOF) return false;
 
-    $totals_query = "select title, text, class, value
-                         from " . TABLE_ORDERS_TOTAL . "
-                         where orders_id = '" . (int)$order_id . "'
-                         order by sort_order";
+    $totals_query = "SELECT title, text, class, value
+                     FROM " . TABLE_ORDERS_TOTAL . "
+                     WHERE orders_id = " . (int)$order_id . "
+                     ORDER BY sort_order";
 
     $totals = $db->Execute($totals_query);
 
     while (!$totals->EOF) {
       if ($totals->fields['class'] == 'ot_coupon') {
         $coupon_link_query = "SELECT coupon_id
-                from " . TABLE_COUPONS . "
-                where coupon_code ='" . $order->fields['coupon_code'] . "'";
+                FROM " . TABLE_COUPONS . "
+                WHERE coupon_code ='" . zen_db_input($order->fields['coupon_code']) . "'";
         $coupon_link = $db->Execute($coupon_link_query);
-        $zc_coupon_link = $coupon_link->fields['coupon_id'];
-        if (IS_ADMIN_FLAG === true) {
-          $zc_coupon_link = '<a href="javascript:couponpopupWindow(\'' . zen_catalog_href_link(FILENAME_POPUP_COUPON_HELP, 'cID=' . $coupon_link->fields['coupon_id']) . '\')">';
-        } else { 
-          $zc_coupon_link = '<a href="javascript:couponpopupWindow(\'' . zen_href_link(FILENAME_POPUP_COUPON_HELP, 'cID=' . $coupon_link->fields['coupon_id']) . '\')">';
+
+        $zc_coupon_link = '';
+
+        if (!$coupon_link->EOF) {
+          if (IS_ADMIN_FLAG === true) {
+              $zc_coupon_link = '<a href="javascript:couponpopupWindow(\'' . zen_catalog_href_link(FILENAME_POPUP_COUPON_HELP, 'cID=' . $coupon_link->fields['coupon_id']) . '\')">';
+          } else { 
+              $zc_coupon_link = '<a href="javascript:couponpopupWindow(\'' . zen_href_link(FILENAME_POPUP_COUPON_HELP, 'cID=' . $coupon_link->fields['coupon_id']) . '\')">';
+          }
+          $this->notify('NOTIFY_ORDER_COUPON_LINK', $coupon_link->fields, $zc_coupon_link);
         }
-        $this->notify('NOTIFY_ORDER_COUPON_LINK', $coupon_link->fields, $zc_coupon_link);
       }
       $this->totals[] = array('title' => ($totals->fields['class'] == 'ot_coupon' ? $zc_coupon_link . $totals->fields['title'] . '</a>' : $totals->fields['title']),
                               'text' => $totals->fields['text'],
