@@ -77,9 +77,9 @@ if (!empty($oID) && !empty($action)) {
 
 if (zen_not_null($action) && $order_exists == true) {
   switch ($action) {
-    case 'download': 
- 
-      $fileName = basename($_GET['filename']); 
+    case 'download':
+
+      $fileName = basename($_GET['filename']);
       $file_extension = strtolower(substr(strrchr($fileName, '.'), 1));
       switch ($file_extension) {
         case 'csv':
@@ -105,7 +105,7 @@ if (zen_not_null($action) && $order_exists == true) {
           break;
         case 'cdr':
           $content = 'application/cdr';
-          break;  
+          break;
         case 'ai':
           $content = 'application/postscript';
           break;
@@ -131,10 +131,10 @@ if (zen_not_null($action) && $order_exists == true) {
           $messageStack->add_session(sprintf(TEXT_EXTENSION_NOT_UNDERSTOOD, $file_extension), 'error');
           zen_redirect(zen_href_link(FILENAME_ORDERS, zen_get_all_get_params(array('download', 'action'),'action=edit'), 'NONSSL'));
       }
-      $fs_path = DIR_FS_CATALOG_IMAGES . 'uploads/' . $fileName; 
+      $fs_path = DIR_FS_CATALOG_IMAGES . 'uploads/' . $fileName;
       if (!file_exists($fs_path)) {
         $messageStack->add_session(TEXT_FILE_NOT_FOUND, 'error');
-        zen_redirect(zen_href_link(FILENAME_ORDERS, zen_get_all_get_params(array('download', 'action'),'action=edit'))); 
+        zen_redirect(zen_href_link(FILENAME_ORDERS, zen_get_all_get_params(array('download', 'action'),'action=edit')));
       }
       header('Content-type: ' . $content);
       header('Content-Disposition: attachment; filename="' . $fileName . '"');
@@ -142,7 +142,7 @@ if (zen_not_null($action) && $order_exists == true) {
       header('Cache-Control: no-cache, must-revalidate');
       header("Expires: Mon, 22 Jan 2002 00:00:00 GMT");
       readfile($fs_path);
-      exit(); 
+      exit();
 
     case 'edit':
       // reset single download to on
@@ -693,13 +693,14 @@ if (zen_not_null($action) && $order_exists == true) {
                   <?php echo $order->products[$i]['qty']; ?>&nbsp;x
                 </td>
                 <td class="dataTableContent">
-                    <?php
+                <?php
                     echo $order->products[$i]['name'];
                     if (isset($order->products[$i]['attributes']) && (sizeof($order->products[$i]['attributes']) > 0)) {
                       for ($j = 0, $k = sizeof($order->products[$i]['attributes']); $j < $k; $j++) {
-                        echo '<br><span style="white-space:nowrap;"><small>&nbsp;<i> - ' . $order->products[$i]['attributes'][$j]['option'] . ': ' . nl2br(zen_output_string_protected($order->products[$i]['attributes'][$j]['value']));
-                        if (zen_is_option_file($order->products[$i]['attributes'][$j]['option_id'])) { 
-                          $upload_name = zen_get_uploaded_file($order->products[$i]['attributes'][$j]['value']); 
+                        echo '<br><span style="white-space:nowrap;"><small>&nbsp;<i> - ';
+                        echo $order->products[$i]['attributes'][$j]['option'] . ': ' . nl2br(zen_output_string_protected($order->products[$i]['attributes'][$j]['value']));
+                        if (zen_is_option_file($order->products[$i]['attributes'][$j]['option_id'])) {
+                          $upload_name = zen_get_uploaded_file($order->products[$i]['attributes'][$j]['value']);
                           echo ' ' . '<a href="' . zen_href_link(FILENAME_ORDERS, 'action=download&oID=' . $oID . '&filename=' .  $upload_name) . '">' . TEXT_DOWNLOAD . '</a>' . ' ';
                         }
                         if ($order->products[$i]['attributes'][$j]['price'] != '0') {
@@ -711,7 +712,7 @@ if (zen_not_null($action) && $order_exists == true) {
                         echo '</i></small></span>';
                       }
                     }
-                    ?>
+                ?>
                 </td>
                 <td class="dataTableContent">
                   <?php echo $order->products[$i]['model']; ?>
@@ -731,7 +732,8 @@ if (zen_not_null($action) && $order_exists == true) {
                 <td class="dataTableContent text-right">
                   <strong><?php echo $priceIncTax; ?>
                     <?php if ($order->products[$i]['onetime_charges'] != 0) {
-                      echo '<br>' . $currencies->format(zen_add_tax($order->products[$i]['onetime_charges'], $order->products[$i]['tax']), true, $order->info['currency'], $order->info['currency_value']);
+                          echo '<br>' . $currencies->format(zen_add_tax($order->products[$i]['onetime_charges'], $order->products[$i]['tax']), true, $order->info['currency'], $order->info['currency_value']);
+                      }
                     ?>
                   </strong>
                 </td>
@@ -924,7 +926,7 @@ if (zen_not_null($action) && $order_exists == true) {
 <?php
             }
         }
-        
+
         // -----
         // Determine which of the 'Notify Customer' radio buttons should be selected initially,
         // based on configuration setting in 'My Store'.  Set a default, just in case that configuration
@@ -1103,9 +1105,9 @@ if (zen_not_null($action) && $order_exists == true) {
 // create search filter
                       $keywords = zen_db_input(zen_db_prepare_input($_GET['search']));
                       $search = " and (o.customers_city like '%" . $keywords . "%' or o.customers_postcode like '%" . $keywords . "%' or o.date_purchased like '%" . $keywords . "%' or o.billing_name like '%" . $keywords . "%' or o.billing_company like '%" . $keywords . "%' or o.billing_street_address like '%" . $keywords . "%' or o.delivery_city like '%" . $keywords . "%' or o.delivery_postcode like '%" . $keywords . "%' or o.delivery_name like '%" . $keywords . "%' or o.delivery_company like '%" . $keywords . "%' or o.delivery_street_address like '%" . $keywords . "%' or o.billing_city like '%" . $keywords . "%' or o.billing_postcode like '%" . $keywords . "%' or o.customers_email_address like '%" . $keywords . "%' or o.customers_name like '%" . $keywords . "%' or o.customers_company like '%" . $keywords . "%' or o.customers_street_address  like '%" . $keywords . "%' or o.customers_telephone like '%" . $keywords . "%' or o.ip_address  like '%" . $keywords . "%')";
-                  } 
+                  }
                   $new_fields .= ", o.customers_company, o.customers_email_address, o.customers_street_address, o.delivery_company, o.delivery_name, o.delivery_street_address, o.billing_company, o.billing_name, o.billing_street_address, o.payment_module_code, o.shipping_module_code, o.ip_address ";
-                  
+
                   $order_by = " ORDER BY o.orders_id DESC";
                   $zco_notifier->notify('NOTIFY_ADMIN_ORDERS_SEARCH_PARMS', $keywords, $search, $search_distinct, $new_fields, $new_table, $order_by);
 

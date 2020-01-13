@@ -131,21 +131,25 @@ if ($order->billing['street_address'] != $order->delivery['street_address']) {
               </td>
               <td class="dataTableContent">
                 <?php echo $order->products[$i]['name']; ?>
-                  <?php
+                <?php
                   if (isset($order->products[$i]['attributes']) && (sizeof($order->products[$i]['attributes']) > 0)) {
-                    ?>
+                ?>
                   <ul>
-                      <?php
-                      for ($j = 0, $k = sizeof($order->products[$i]['attributes']); $j < $k; $j++) {
-                        ?>
-                      <li>
-                        <small><i><?php echo $order->products[$i]['attributes'][$j]['option'] . ': ' . nl2br(zen_output_string_protected($order->products[$i]['attributes'][$j]['value'])); ?></i></small>
-                      </li>
-                      <?php
-                    }
-                    ?>
-                  </ul>
                   <?php
+                      for ($j = 0, $k = sizeof($order->products[$i]['attributes']); $j < $k; $j++) {
+                  ?>
+                      <li>
+                        <small>
+                            <i>
+                            <?php echo $order->products[$i]['attributes'][$j]['option'] . ': ' . nl2br(zen_output_string_protected($order->products[$i]['attributes'][$j]['value'])); ?>
+                            </i>
+                        </small>
+                      </li>
+                  <?php
+                    }
+                  ?>
+                  </ul>
+                <?php
                 }
                 ?>
               </td>
