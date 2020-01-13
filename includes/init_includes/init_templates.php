@@ -28,6 +28,22 @@ $sql = "SELECT template_dir, template_language, template_language=" . (int)$_SES
 $result = $db->Execute($sql);
 $template_dir = $result->fields['template_dir'];
 
+/**
+ * Allow admins to switch templates using &t= URL parameter
+ */
+if (false !== strpos(EXCLUDE_ADMIN_IP_FOR_MAINTENANCE, $_SERVER['REMOTE_ADDR'])) {
+    $templates = array();
+    foreach($result as $row) {
+        $templates[] = $row['template_dir'];
+    }
+    // check if a template override was requested and that it matches an available choice and it exists on the filesystem
+    if (isset($_GET['t']) && in_array($_GET['t'], $templates, true) && file_exists(DIR_WS_TEMPLATES . $_GET['t'])) {
+        $_SESSION['tpl_override'] = $_GET['t'];
+    }
+    if (isset($_SESSION['tpl_override'])) $template_dir = $_SESSION['tpl_override'];
+    unset($templates, $row);
+}
+
 
 /**
  * Now that we've established which template to use, initialize all its components
