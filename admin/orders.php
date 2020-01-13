@@ -1,10 +1,10 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2019 Zen Cart Development Team
+ * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2019 May 26 Modified in v1.5.6b $
+ * @version $Id: DrByte 2019 May 26 Modified in v1.5.7 $
  */
 require('includes/application_top.php');
 
@@ -689,7 +689,9 @@ if (zen_not_null($action) && $order_exists == true) {
               }
               ?>
               <tr class="dataTableRow">
-                <td class="dataTableContent text-right"><?php echo $order->products[$i]['qty']; ?>&nbsp;x</td>
+                <td class="dataTableContent text-right">
+                  <?php echo $order->products[$i]['qty']; ?>&nbsp;x
+                </td>
                 <td class="dataTableContent">
                     <?php
                     echo $order->products[$i]['name'];
@@ -711,8 +713,12 @@ if (zen_not_null($action) && $order_exists == true) {
                     }
                     ?>
                 </td>
-                <td class="dataTableContent"><?php echo $order->products[$i]['model']; ?></td>
-                <td class="dataTableContent text-right"><?php echo zen_display_tax_value($order->products[$i]['tax']); ?>%</td>
+                <td class="dataTableContent">
+                  <?php echo $order->products[$i]['model']; ?>
+                </td>
+                <td class="dataTableContent text-right">
+                  <?php echo zen_display_tax_value($order->products[$i]['tax']); ?>%
+                </td>
                 <td class="dataTableContent text-right">
                   <strong><?php echo $currencies->format($order->products[$i]['final_price'], true, $order->info['currency'], $order->info['currency_value']) . ($order->products[$i]['onetime_charges'] != 0 ? '<br>' . $currencies->format($order->products[$i]['onetime_charges'], true, $order->info['currency'], $order->info['currency_value']) : ''); ?></strong>
                 </td>
@@ -723,7 +729,11 @@ if (zen_not_null($action) && $order_exists == true) {
                   <strong><?php echo $currencies->format(zen_round($order->products[$i]['final_price'], $currencies->get_decimal_places($order->info['currency'])) * $order->products[$i]['qty'], true, $order->info['currency'], $order->info['currency_value']) . ($order->products[$i]['onetime_charges'] != 0 ? '<br>' . $currencies->format($order->products[$i]['onetime_charges'], true, $order->info['currency'], $order->info['currency_value']) : ''); ?></strong>
                 </td>
                 <td class="dataTableContent text-right">
-                  <strong><?php echo $priceIncTax . ($order->products[$i]['onetime_charges'] != 0 ? '<br>' . $currencies->format(zen_add_tax($order->products[$i]['onetime_charges'], $order->products[$i]['tax']), true, $order->info['currency'], $order->info['currency_value']) : ''); ?></strong>
+                  <strong><?php echo $priceIncTax; ?>
+                    <?php if ($order->products[$i]['onetime_charges'] != 0) {
+                      echo '<br>' . $currencies->format(zen_add_tax($order->products[$i]['onetime_charges'], $order->products[$i]['tax']), true, $order->info['currency'], $order->info['currency_value']);
+                    ?>
+                  </strong>
                 </td>
               </tr>
               <?php
