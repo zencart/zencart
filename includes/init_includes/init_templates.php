@@ -8,32 +8,30 @@
  * ie: includes/languages/classic/english.php followed by includes/languages/english.php
  *
  * @package initSystem
- * @copyright Copyright 2003-2019 Zen Cart Development Team
+ * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Scott C Wilson 2019 Apr 23 Modified in v1.5.6b $
+ * @version $Id:  Modified in v1.5.7 $
  */
-  if (!defined('IS_ADMIN_FLAG')) {
-   die('Illegal Access');
-  }
+if (!defined('IS_ADMIN_FLAG')) {
+    die('Illegal Access');
+}
 
 /*
- * Determine the active template name
+ * Lookup the template for the current language
+ * The 'choice' aliases help with weighting for fallback to default selection
  */
-  $template_dir = "";
-  $sql = "select template_dir
-            from " . TABLE_TEMPLATE_SELECT . "
-            where template_language = 0";
-  $template_query = $db->Execute($sql);
-  $template_dir = $template_query->fields['template_dir'];
+$template_dir = 'template_default';
+$sql = "SELECT template_dir, template_language, template_language=" . (int)$_SESSION['languages_id'] . " as choice1, template_language=0 as choice2
+        FROM " . TABLE_TEMPLATE_SELECT . "
+        ORDER BY choice1 DESC, choice2 DESC, template_language";
+$result = $db->Execute($sql);
+$template_dir = $result->fields['template_dir'];
 
-  $sql = "select template_dir
-            from " . TABLE_TEMPLATE_SELECT . "
-            where template_language = '" . $_SESSION['languages_id'] . "'";
-  $template_query = $db->Execute($sql);
-  if ($template_query->RecordCount() > 0) {
-    $template_dir = $template_query->fields['template_dir'];
-  }
+
+/**
+ * Now that we've established which template to use, initialize all its components
+ */
 
 /**
  * The actual template directory to use
