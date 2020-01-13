@@ -22,7 +22,7 @@ foreach ($availableNotifications as $nKey => $aNotification) {
                 var rd = Math.floor(Math.random() * 99999999999);
                 document.write("<scr" + "ipt src='" + loc);
                 document.write('?rd=' + rd);
-                document.write("'></scr" + "ipt>");
+                document.write("'><\/scr" + "ipt>");
                 //]]>--></script>
         </div>
 <?php
