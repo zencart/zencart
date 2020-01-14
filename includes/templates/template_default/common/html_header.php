@@ -11,6 +11,10 @@
  * @version $Id: DrByte 09-Jan-2020  Modified in v1.5.7 $
  */
 
+if (!defined('IS_ADMIN_FLAG')) {
+    die('Illegal Access');
+}
+
 $zco_notifier->notify('NOTIFY_HTML_HEAD_START', $current_page_base, $template_dir);
 
 // Prevent clickjacking risks by setting X-Frame-Options:SAMEORIGIN

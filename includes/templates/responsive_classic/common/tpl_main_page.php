@@ -38,6 +38,10 @@
  * @version $Id: DrByte 09-Jan-2020  Modified in v1.5.7 $
  */
 
+if (!defined('IS_ADMIN_FLAG')) {
+    die('Illegal Access');
+}
+
 /** bof DESIGNER TESTING ONLY: */
 // $messageStack->add('header', 'this is a sample error message', 'error');
 // $messageStack->add('header', 'this is a sample caution message', 'caution');
