@@ -642,18 +642,12 @@
  */
   function ipn_update_orders_status_and_history($ordersID, $new_status = 1, $txn_type) {
     global $db;
+    
     ipn_debug_email('IPN NOTICE :: Updating order #' . (int)$ordersID . ' to status: ' . (int)$new_status . ' (txn_type: ' . $txn_type . ')');
-    $db->Execute("update " . TABLE_ORDERS  . "
-                  set orders_status = '" . (int)$new_status . "', last_modified = now()
-                  where orders_id = '" . (int)$ordersID . "'");
+    
+    $comments = 'PayPal status: ' . $_POST['payment_status'] . ' ' . ' @ ' . $_POST['payment_date'] . (($_POST['parent_txn_id'] !='') ? "\n" . ' Parent Trans ID:' . $_POST['parent_txn_id'] : '') . "\n" . ' Trans ID:' . $_POST['txn_id'] . "\n" . ' Amount: ' . $_POST['mc_gross'] . ' ' . $_POST['mc_currency'];
+    zen_update_orders_history($ordersID, $comments, null, $new_status, 0);
 
-    $sql_data_array = array('orders_id' => (int)$ordersID,
-                            'orders_status_id' => (int)$new_status,
-                            'date_added' => 'now()',
-                            'comments' => 'PayPal status: ' . $_POST['payment_status'] . ' ' . ' @ ' . $_POST['payment_date'] . (($_POST['parent_txn_id'] !='') ? "\n" . ' Parent Trans ID:' . $_POST['parent_txn_id'] : '') . "\n" . ' Trans ID:' . $_POST['txn_id'] . "\n" . ' Amount: ' . $_POST['mc_gross'] . ' ' . $_POST['mc_currency'],
-                            'customer_notified' => (int)false,
-                           );
-    zen_db_perform(TABLE_ORDERS_STATUS_HISTORY, $sql_data_array);
     ipn_debug_email('IPN NOTICE :: Update complete.');
 
 /**

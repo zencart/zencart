@@ -111,6 +111,12 @@ if (isset($_POST['products_id']) && isset($_POST['categories_id'])) {
 
         $db->Execute("INSERT INTO " . TABLE_PRODUCTS_TO_CATEGORIES . " (products_id, categories_id)
                       VALUES (" . $dup_products_id . ", " . $categories_id . ")");
+                      
+        // -----
+        // Notify that a copy of a "base" product has just been created, enabling an observer to duplicate
+        // additional product-related fields.
+        //
+        $zco_notifier->notify('NOTIFY_MODULES_COPY_TO_CONFIRM_DUPLICATE', array('products_id' => $products_id, 'dup_products_id' => $dup_products_id));
 
 // FIX HERE
 /////////////////////////////////////////////////////////////////////////////////////////////
@@ -126,7 +132,10 @@ if (isset($_POST['products_id']) && isset($_POST['categories_id'])) {
                 $copy_attributes_include_filename = '0';
             }
 
-            zen_copy_products_attributes($products_id, $dup_products_id);
+            $copy_result = zen_copy_products_attributes($products_id, $dup_products_id);
+            if ($copy_result === true) {
+                $messageStack->add_session(sprintf(TEXT_COPY_AS_DUPLICATE_ATTRIBUTES, $products_id, $dup_products_id), 'success');
+            }
         }
 
 // copy meta tags to Duplicate
@@ -184,7 +193,7 @@ if (isset($_POST['products_id']) && isset($_POST['categories_id'])) {
         }
 
         zen_record_admin_activity('Product ' . $products_id . ' duplicated as product ' . $dup_products_id . ' via admin console.', 'info');
-        
+
         $zco_notifier->notify('NOTIFY_MODULES_COPY_TO_CONFIRM_DUPLICATE', array('products_id' => $products_id, 'dup_products_id' => $dup_products_id));
 
         $products_id = $dup_products_id;//reset for further use in price update and final redirect to new linked product or new duplicated product

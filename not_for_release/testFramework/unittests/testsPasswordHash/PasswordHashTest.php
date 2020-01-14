@@ -1,9 +1,8 @@
 <?php
 /**
  * @package tests
- * @copyright Copyright 2003-2018 Zen Cart Development Team
+ * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Zcwilt Sat Oct 20 21:10:01 2018 +0100 New in v1.5.6 $
  */
 require_once(__DIR__ . '/../support/zcTestCase.php');
 
@@ -12,12 +11,12 @@ require_once(__DIR__ . '/../support/zcTestCase.php');
  */
 class testPasswordHash extends zcTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
-        require_once DIR_FS_CATALOG . 'includes/functions/functions_general.php';
-        require_once(DIR_FS_CATALOG . DIR_WS_CLASSES . 'class.zcPassword.php');
-        require_once(DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'password_funcs.php');
+        require_once DIR_FS_CATALOG . 'includes/functions/functions_general_shared.php';
+        require_once DIR_FS_CATALOG . DIR_WS_CLASSES . 'class.zcPassword.php';
+        require_once DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'password_funcs.php';
 
         $pass = zcPassword::getInstance(PHP_VERSION);
     }
@@ -118,6 +117,7 @@ class testPasswordHash extends zcTestCase
             }
             $passwordList [$password] = $password;
         }
+        // @TODO - add an assertion here, instead of just watching for a failure.
     }
 
 

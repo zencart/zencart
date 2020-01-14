@@ -413,7 +413,7 @@ class paypal extends base {
    * @return boolean
     */
   function after_process() {
-    global $insert_id, $db, $order;
+    global $insert_id, $order;
     if ($_SESSION['paypal_transaction_PDT_passed'] != true) {
       $_SESSION['order_created'] = '';
       unset($_SESSION['paypal_transaction_PDT_passed']);
@@ -421,13 +421,11 @@ class paypal extends base {
     } else {
     // PDT found order to be approved, so add a new OSH record for this order's PP details
       unset($_SESSION['paypal_transaction_PDT_passed']);
-      $sql_data_array= array(array('fieldName'=>'orders_id', 'value'=>$insert_id, 'type'=>'integer'),
-                             array('fieldName'=>'orders_status_id', 'value'=>$this->order_status, 'type'=>'integer'),
-                             array('fieldName'=>'date_added', 'value'=>'now()', 'type'=>'noquotestring'),
-                             array('fieldName'=>'customer_notified', 'value'=>0, 'type'=>'integer'),
-                             array('fieldName'=>'comments', 'value'=>'PayPal status: ' . $this->pdtData['payment_status'] . ' ' . ' @ ' . $this->pdtData['payment_date'] . "\n" . ' Trans ID:' . $this->pdtData['txn_id'] . "\n" . ' Amount: ' . $this->pdtData['mc_gross'] . ' ' . $this->pdtData['mc_currency'] . '.', 'type'=>'string'));
-      $db->perform(TABLE_ORDERS_STATUS_HISTORY, $sql_data_array);
-      ipn_debug_email('PDT NOTICE :: Order added: ' . $insert_id . "\n" . 'PayPal status: ' . $this->pdtData['payment_status'] . ' ' . ' @ ' . $this->pdtData['payment_date'] . "\n" . ' Trans ID:' . $this->pdtData['txn_id'] . "\n" . ' Amount: ' . $this->pdtData['mc_gross'] . ' ' . $this->pdtData['mc_currency']);
+      
+      $comments = 'PayPal status: ' . $this->pdtData['payment_status'] . ' ' . ' @ ' . $this->pdtData['payment_date'] . "\n" . ' Trans ID:' . $this->pdtData['txn_id'] . "\n" . ' Amount: ' . $this->pdtData['mc_gross'] . ' ' . $this->pdtData['mc_currency'] . '.';
+      zen_update_orders_history($insert_id, $comments, null, $this->order_status, 0);
+
+      ipn_debug_email('PDT NOTICE :: Order added: ' . $insert_id . "\n" . $comments);
 
       // store the PayPal order meta data -- used for later matching and back-end processing activities
       $sql_data_array = array('order_id' => $insert_id,

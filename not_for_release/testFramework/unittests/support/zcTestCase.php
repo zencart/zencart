@@ -1,26 +1,25 @@
 <?php
 /**
  * @package tests
- * @copyright Copyright 2003-2018 Zen Cart Development Team
+ * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Zcwilt Sat Oct 20 21:10:01 2018 +0100 New in v1.5.6 $
  */
 
 /**
  * Class zcTestCase
  */
-abstract class zcTestCase extends PHPUnit_Framework_TestCase
+abstract class zcTestCase extends PHPUnit\Framework\TestCase
 {
     // This allows us to run in full isolation mode including
     // classes, functions, and defined statements
-    public function run(PHPUnit_Framework_TestResult $result = null)
+    public function run(PHPUnit\Framework\TestResult $result = null): PHPUnit\Framework\TestResult
     {
         $this->setPreserveGlobalState(false);
 
         return parent::run($result);
     }
 
-    public function setUp()
+    public function setUp(): void
     {
         if (!defined('IS_ADMIN_FLAG')) {
             define('IS_ADMIN_FLAG', false);
@@ -114,7 +113,7 @@ abstract class zcTestCase extends PHPUnit_Framework_TestCase
     }
 
 
-    public function mockIterator(PHPUnit_Framework_MockObject_MockObject $iteratorMock, array $items)
+    public function mockIterator(PHPUnit\Framework\MockObject\MockObject $iteratorMock, array $items)
     {
         $iteratorData = new \stdClass();
         $iteratorData->array = $items;

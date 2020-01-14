@@ -40,7 +40,7 @@
       }
 
       if (PRODUCT_FEATURED_LIST_MODEL != '0' and zen_get_show_product_switch($featured_products->fields['products_id'], 'model')) {
-        $display_products_model = '<b>' . TEXT_PRODUCTS_MODEL . '</b>' . $featured_products->fields['products_model'] . str_repeat('<br  />', substr(PRODUCT_FEATURED_LIST_MODEL, 3, 1));
+        $display_products_model = '<b>' . TEXT_PRODUCT_MODEL . '</b>' . $featured_products->fields['products_model'] . str_repeat('<br  />', substr(PRODUCT_FEATURED_LIST_MODEL, 3, 1));
       } else {
         $display_products_model = '';
       }

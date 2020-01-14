@@ -9,22 +9,32 @@
             "homepage": "https://github.com/zencart/zencart/graphs/contributors"
         }
     ],
-    "_comment": "compatible with PHP 5.5-7.3",
+    "_comment": "compatible with PHP 5.5-7.4",
     "require": {
         "php": ">=5.5"
     },
     "require-dev": {
+        "laravel/dusk": ">5.8",
         "mikey179/vfsstream": ">1.6",
-        "phpunit/phpunit": "~5.7 || ~4.8"
+        "phpunit/phpunit": "^7.5.19 || ^8.5.1"
     },
     "autoload": {
         "classmap": ["includes/classes", "includes/modules"]
     },
     "include-path": ["includes/"],
+    "autoload-dev": {
+        "classmap": ["not_for_release/testFramework"],
+        "psr-4": {
+            "Tests\\": "not_for_release/testFramework/"
+        }
+    },
     "config": {
-        "bin-dir": "vendor/bin"
+        "bin-dir": "vendor/bin",
+        "sort-packages": true,
+        "optimize-autoloader": true
     },
     "scripts": {
-        "tests": "phpunit --verbose -c not_for_release/testFramework/unittests/phpunit.xml"
+        "tests": "phpunit --verbose --testsuite UnitTests --debug",
+        "dusk": "phpunit --verbose --testsuite Browser --debug"
     }
 }

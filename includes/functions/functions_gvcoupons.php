@@ -45,7 +45,7 @@
 
     function zen_user_has_gv_account($c_id) {
       global $db;
-      if ($_SESSION['customer_id']) {
+      if (zen_is_logged_in() && !zen_in_guest_checkout()) {
         $gv_result = $db->Execute("select amount from " . TABLE_COUPON_GV_CUSTOMER . " where customer_id = '" . (int)$c_id . "'");
         if ($gv_result->RecordCount() > 0) {
           if ($gv_result->fields['amount'] > 0) {

@@ -1,10 +1,10 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2018 Zen Cart Development Team
+ * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license https://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Zen4All Tue Oct 2 19:29:10 2018 +0200 Modified in v1.5.6 $
+ * @version $Id: Zen4All Tue Oct 2 19:29:10 2018 +0200 Modified in v1.5.7 $
  */
 require('includes/application_top.php');
 
@@ -126,27 +126,36 @@ if ($order->billing['street_address'] != $order->delivery['street_address']) {
             for ($i = 0, $n = sizeof($order->products); $i < $n; $i++) {
               ?>
             <tr class="dataTableRow">
-              <td class="dataTableContent text-right"><?php echo $order->products[$i]['qty']; ?>&nbsp;x</td>
-              <td class="dataTableContent"><?php echo $order->products[$i]['name']; ?>
-                  <?php
+              <td class="dataTableContent text-right">
+                <?php echo $order->products[$i]['qty']; ?>&nbsp;x
+              </td>
+              <td class="dataTableContent">
+                <?php echo $order->products[$i]['name']; ?>
+                <?php
                   if (isset($order->products[$i]['attributes']) && (sizeof($order->products[$i]['attributes']) > 0)) {
-                    ?>
+                ?>
                   <ul>
-                      <?php
-                      for ($j = 0, $k = sizeof($order->products[$i]['attributes']); $j < $k; $j++) {
-                        ?>
-                      <li>
-                        <small><i><?php echo $order->products[$i]['attributes'][$j]['option'] . ': ' . nl2br(zen_output_string_protected($order->products[$i]['attributes'][$j]['value'])); ?></i></small>
-                      </li>
-                      <?php
-                    }
-                    ?>
-                  </ul>
                   <?php
+                      for ($j = 0, $k = sizeof($order->products[$i]['attributes']); $j < $k; $j++) {
+                  ?>
+                      <li>
+                        <small>
+                            <i>
+                            <?php echo $order->products[$i]['attributes'][$j]['option'] . ': ' . nl2br(zen_output_string_protected($order->products[$i]['attributes'][$j]['value'])); ?>
+                            </i>
+                        </small>
+                      </li>
+                  <?php
+                    }
+                  ?>
+                  </ul>
+                <?php
                 }
                 ?>
               </td>
-              <td class="dataTableContent"><?php echo $order->products[$i]['model']; ?></td>
+              <td class="dataTableContent">
+                <?php echo $order->products[$i]['model']; ?>
+              </td>
             </tr>
             <?php
           }

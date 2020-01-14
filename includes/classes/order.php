@@ -3,9 +3,9 @@
  * File contains the order-processing class ("order")
  *
  * @package classes
- * @copyright Copyright 2003-2019 Zen Cart Development Team
+ * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2019 May 23 Modified in v1.5.6b $
+ * @version $Id: DrByte 2019 May 23 Modified in v1.5.7 $
  */
 /**
  * order class
@@ -59,32 +59,33 @@ class order extends base {
     $this->notify('NOTIFY_ORDER_BEFORE_QUERY', array(), $order_id);
     if ($this->queryReturnFlag === TRUE) return false;
 
-    $order_query = "select *
-                        from " . TABLE_ORDERS . "
-                        where orders_id = '" . (int)$order_id . "'";
-
+    $order_query = "SELECT * from " . TABLE_ORDERS . " where orders_id = " . (int)$order_id;
     $order = $db->Execute($order_query);
     if ($order->EOF) return false;
 
-    $totals_query = "select title, text, class, value
-                         from " . TABLE_ORDERS_TOTAL . "
-                         where orders_id = '" . (int)$order_id . "'
-                         order by sort_order";
+    $totals_query = "SELECT title, text, class, value
+                     FROM " . TABLE_ORDERS_TOTAL . "
+                     WHERE orders_id = " . (int)$order_id . "
+                     ORDER BY sort_order";
 
     $totals = $db->Execute($totals_query);
 
     while (!$totals->EOF) {
-
-
       if ($totals->fields['class'] == 'ot_coupon') {
         $coupon_link_query = "SELECT coupon_id
-                from " . TABLE_COUPONS . "
-                where coupon_code ='" . $order->fields['coupon_code'] . "'";
+                FROM " . TABLE_COUPONS . "
+                WHERE coupon_code ='" . zen_db_input($order->fields['coupon_code']) . "'";
         $coupon_link = $db->Execute($coupon_link_query);
-        if (IS_ADMIN_FLAG === true) {
-          $zc_coupon_link = '<a href="javascript:couponpopupWindow(\'' . zen_catalog_href_link(FILENAME_POPUP_COUPON_HELP, 'cID=' . $coupon_link->fields['coupon_id']) . '\')">';
-        } else { 
-          $zc_coupon_link = '<a href="javascript:couponpopupWindow(\'' . zen_href_link(FILENAME_POPUP_COUPON_HELP, 'cID=' . $coupon_link->fields['coupon_id']) . '\')">';
+
+        $zc_coupon_link = '';
+
+        if (!$coupon_link->EOF) {
+          if (IS_ADMIN_FLAG === true) {
+              $zc_coupon_link = '<a href="javascript:couponpopupWindow(\'' . zen_catalog_href_link(FILENAME_POPUP_COUPON_HELP, 'cID=' . $coupon_link->fields['coupon_id']) . '\')">';
+          } else { 
+              $zc_coupon_link = '<a href="javascript:couponpopupWindow(\'' . zen_href_link(FILENAME_POPUP_COUPON_HELP, 'cID=' . $coupon_link->fields['coupon_id']) . '\')">';
+          }
+          $this->notify('NOTIFY_ORDER_COUPON_LINK', $coupon_link->fields, $zc_coupon_link);
         }
       }
       $this->totals[] = array('title' => ($totals->fields['class'] == 'ot_coupon' ? $zc_coupon_link . $totals->fields['title'] . '</a>' : $totals->fields['title']),
@@ -306,8 +307,9 @@ class order extends base {
     // set default tax calculation for not-logged-in visitors
       $taxCountryId = $taxZoneId = 0;
 
-      // get tax zone info for logged-in visitors
-      if (isset($_SESSION['customer_id']) && (int)$_SESSION['customer_id'] > 0) {
+      // get tax zone info for logged-in visitors (including guests).  Note that a guest-checkout observer
+      // can use 'NOTIFY_ORDER_CART_AFTER_ADDRESSES_SET' to modify the $taxCountryId and/or $taxZoneId.
+      if (zen_is_logged_in()) {
           $taxCountryId = $taxZoneId = -1;
           $tax_address_query = '';
           switch (STORE_PRODUCT_TAX_BASIS) {

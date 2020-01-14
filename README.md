@@ -1,4 +1,5 @@
-[![Download Zen Cart E-Commerce Shopping Cart ](https://img.shields.io/sourceforge/dt/zencart.svg)](https://sourceforge.net/projects/zencart/files/latest/download)
+[![Download Zen Cart E-Commerce Shopping Cart ](https://img.shields.io/sourceforge/dm/zencart.svg)](https://sourceforge.net/projects/zencart/files/latest/download) ![](https://github.com/zencart/zencart/workflows/Zen%20Cart%20Tests/badge.svg?branch=v157)
+
 
 Zen Cart&reg; - The Art of E-Commerce
 ===============
@@ -78,5 +79,5 @@ Subscribe to [Critical News Updates And Release Announcements](https://www.zen-c
 
 &nbsp;  
 
-*&copy;Copyright 2003-2019, Zen Cart&reg;. All rights reserved.*
+*&copy;Copyright 2003-2020, Zen Cart&reg;. All rights reserved.*
 

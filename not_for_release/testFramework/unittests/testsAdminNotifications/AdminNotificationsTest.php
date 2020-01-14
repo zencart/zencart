@@ -1,15 +1,14 @@
 <?php
 /**
  * @package tests
- * @copyright Copyright 2003-2018 Zen Cart Development Team
+ * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Zcwilt Thu Nov 1 17:28:42 2018 +0000 New in v1.5.6 $
  */
 require_once(__DIR__ . '/../support/zcTestCase.php');
 
 class testAdminNotifications extends zcTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         require_once(DIR_FS_CATALOG . '/admin/includes/classes/AdminNotifications.php');
@@ -110,7 +109,7 @@ class testAdminNotifications extends zcTestCase
         $this->an->method('getStoreCountryIso3')->willReturn('USA');
         $this->an->method('getCurrentDate')->willReturn(new DateTime("now"));
         $r = $this->an->getNotifications('payment', 1);
-        $this->assertTrue(count($r) == 4);
+        $this->assertTrue(count($r) == 5);
     }
 
     public function testWithComplexLocationWithCountry()
@@ -129,7 +128,7 @@ class testAdminNotifications extends zcTestCase
         $this->an->method('getStoreCountryIso3')->willReturn('USA');
         $this->an->method('getCurrentDate')->willReturn($datetime);
         $r = $this->an->getNotifications('payment', 1);
-        $this->assertTrue(count($r) == 5);
+        $this->assertTrue(count($r) == 6);
     }
 
     public function testWithDateTomorrow()

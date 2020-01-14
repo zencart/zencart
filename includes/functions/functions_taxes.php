@@ -32,7 +32,7 @@
     }
 
     if ( ($country_id == -1) && ($zone_id == -1) ) {
-      if (isset($_SESSION['customer_id'])) {
+      if (zen_is_logged_in()) {
         $country_id = $_SESSION['customer_country_id'];
         $zone_id = $_SESSION['customer_zone_id'];
       } else {
@@ -96,7 +96,7 @@
     }
     
     if ( ($country_id == -1) && ($zone_id == -1) ) {
-      if (isset($_SESSION['customer_id'])) {
+      if (zen_is_logged_in()) {
         $country_id = $_SESSION['customer_country_id'];
         $zone_id = $_SESSION['customer_zone_id'];
       } else {
@@ -158,7 +158,7 @@
     $rates_array = array();
     
     if ( ($country_id == -1) && ($zone_id == -1) ) {
-      if (isset($_SESSION['customer_id'])) {
+      if (zen_is_logged_in()) {
         $country_id = $_SESSION['customer_country_id'];
         $zone_id = $_SESSION['customer_zone_id'];
       } else {
@@ -359,7 +359,7 @@
     }
     
     if ( ($country_id == -1) && ($zone_id == -1) ) {
-      if (isset($_SESSION['customer_id'])) {
+      if (zen_is_logged_in()) {
         $country_id = $_SESSION['customer_country_id'];
         $zone_id = $_SESSION['customer_zone_id'];
       } else {

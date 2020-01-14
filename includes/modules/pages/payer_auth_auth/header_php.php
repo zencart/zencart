@@ -8,11 +8,11 @@
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: header_php.php 15898 2010-04-12 15:12:09Z drbyte $
  */
-  if (!isset($_SESSION['customer_id']) || (int)$_SESSION['customer_id'] < 1) {
+  if (!zen_is_logged_in()) {
     die(WARNING_SESSION_TIMEOUT);
   }
 // load all enabled modules
-  if (!isset($_SESSION['payment']) || $_SESSION['payment'] == '') zen_redirect(zen_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL', true, false));
+  if (empty($_SESSION['payment'])) zen_redirect(zen_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL', true, false));
   require(DIR_WS_CLASSES . 'payment.php');
   $payment_modules = new payment($_SESSION['payment']);
   $payment_module = $_SESSION['payment'];

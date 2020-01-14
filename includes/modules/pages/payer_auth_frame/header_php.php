@@ -15,7 +15,7 @@
  * not left the online store.
  */
 
-if (!isset($_SESSION['customer_id']) || (int)$_SESSION['customer_id'] < 1 || !isset($_SESSION['payment']) || $_SESSION['payment'] == '' || !isset($_SESSION['3Dsecure_acsURL']) || $_SESSION['3Dsecure_acsURL'] == '') {
+if (!zen_is_logged_in() || empty($_SESSION['payment']) || empty($_SESSION['3Dsecure_acsURL'])) {
   die(WARNING_SESSION_TIMEOUT);
 }
 

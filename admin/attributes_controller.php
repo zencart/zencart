@@ -1,10 +1,10 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2019 Zen Cart Development Team
+ * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: mc12345678 2019 Jan 29 Modified in v1.5.6b $
+ * @version $Id: mc12345678 2019 Jan 29 Modified in v1.5.7 $
  */
 require('includes/application_top.php');
 
@@ -337,13 +337,13 @@ if (zen_not_null($action)) {
             $products_attributes_maxdays = (int)$_POST['products_attributes_maxdays'];
             $products_attributes_maxcount = (int)$_POST['products_attributes_maxcount'];
 
-            // check to see if it's a file missing a name 
+            // check to see if it's a file missing a name
             if ($options_id === 1) {
-              if (!zen_not_null($products_attributes_filename)) {
+              if (empty($products_attributes_filename)) {
                 $products_attributes_filename = 'missing_file';
               }
             }
-            if (zen_not_null($products_attributes_filename)) {
+            if (!empty($products_attributes_filename)) {
               $db->Execute("INSERT INTO " . TABLE_PRODUCTS_ATTRIBUTES_DOWNLOAD . " (products_attributes_id, products_attributes_filename, products_attributes_maxdays, products_attributes_maxcount)
                             VALUES (" . (int)$products_attributes_id . ",
                                     '" . zen_db_input($products_attributes_filename) . "',

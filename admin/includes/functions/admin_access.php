@@ -1,7 +1,7 @@
 <?php
 /**
  * @package Admin Access Management
- * @copyright Copyright 2003-2018 Zen Cart Development Team
+ * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: lat9 Tue Nov 13 08:12:48 2018 -0500 Modified in v1.5.6 $
@@ -347,9 +347,6 @@ function zen_validate_user_login($admin_name, $admin_pass)
         }
       }
     }
-    if (password_needs_rehash($token, PASSWORD_DEFAULT)) {
-      $token = zcPassword::getInstance(PHP_VERSION)->updateNotLoggedInAdminPassword($admin_pass, $admin_name);
-    }
     // BEGIN 2-factor authentication
     if ($error == FALSE && defined('ZC_ADMIN_TWO_FACTOR_AUTHENTICATION_SERVICE') && ZC_ADMIN_TWO_FACTOR_AUTHENTICATION_SERVICE != '')
     {
@@ -417,6 +414,9 @@ function zen_validate_user_login($admin_name, $admin_pass)
   }
   if ($error == false)
   {
+    if (password_needs_rehash($token, PASSWORD_DEFAULT)) {
+      $token = zcPassword::getInstance(PHP_VERSION)->updateNotLoggedInAdminPassword($admin_pass, $admin_name);
+    }
     unset($_SESSION['login_attempt']);
     $sql = "UPDATE " . TABLE_ADMIN . " SET failed_logins = 0, lockout_expires = 0, last_login_date = now(), last_login_ip = :ip: WHERE admin_name = :adminname: ";
     $sql = $db->bindVars($sql, ':adminname:', $admin_name, 'string');
