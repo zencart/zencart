@@ -812,12 +812,12 @@
 // 2 = Can browse but no prices
     // verify display of prices
       switch (true) {
-        case (CUSTOMERS_APPROVAL == '1' and $_SESSION['customer_id'] == ''):
+        case (CUSTOMERS_APPROVAL == '1' && !zen_is_logged_in()):
         // customer must be logged in to browse
         $login_for_price = '<a href="' . zen_href_link(FILENAME_LOGIN, '', 'SSL') . '">' .  TEXT_LOGIN_FOR_PRICE_BUTTON_REPLACE . '</a>';
         return $login_for_price;
         break;
-        case (CUSTOMERS_APPROVAL == '2' and $_SESSION['customer_id'] == ''):
+        case (CUSTOMERS_APPROVAL == '2' && !zen_is_logged_in()):
         if (TEXT_LOGIN_FOR_PRICE_PRICE == '') {
           // show room only
           return TEXT_LOGIN_FOR_PRICE_BUTTON_REPLACE;
@@ -832,17 +832,17 @@
           $login_for_price = TEXT_LOGIN_FOR_PRICE_BUTTON_REPLACE_SHOWROOM;
           return $login_for_price;
         break;
-        case ((CUSTOMERS_APPROVAL_AUTHORIZATION != '0' and CUSTOMERS_APPROVAL_AUTHORIZATION != '3') and $_SESSION['customer_id'] == ''):
+        case (CUSTOMERS_APPROVAL_AUTHORIZATION != '0' && CUSTOMERS_APPROVAL_AUTHORIZATION != '3' && !zen_is_logged_in()):
         // customer must be logged in to browse
         $login_for_price = TEXT_AUTHORIZATION_PENDING_BUTTON_REPLACE;
         return $login_for_price;
         break;
-        case ((CUSTOMERS_APPROVAL_AUTHORIZATION == '3') and $_SESSION['customer_id'] == ''):
+        case (CUSTOMERS_APPROVAL_AUTHORIZATION == '3' && !zen_is_logged_in()):
         // customer must be logged in and approved to add to cart
         $login_for_price = '<a href="' . zen_href_link(FILENAME_LOGIN, '', 'SSL') . '">' .  TEXT_LOGIN_TO_SHOP_BUTTON_REPLACE . '</a>';
         return $login_for_price;
         break;
-        case (CUSTOMERS_APPROVAL_AUTHORIZATION != '0' and $_SESSION['customers_authorization'] > '0'):
+        case (CUSTOMERS_APPROVAL_AUTHORIZATION != '0' && isset($_SESSION['customers_authorization']) && (int)$_SESSION['customers_authorization'] > 0):
         // customer must be logged in to browse
         $login_for_price = TEXT_AUTHORIZATION_PENDING_BUTTON_REPLACE;
         return $login_for_price;

@@ -18,12 +18,12 @@ require(DIR_WS_MODULES . zen_get_module_directory('require_languages.php'));
 $zc_hidden_discounts_on = false;
 $zc_hidden_discounts_text = '';
 switch (true) {
-  case (CUSTOMERS_APPROVAL == '1' and $_SESSION['customer_id'] == ''):
+  case (CUSTOMERS_APPROVAL == '1' and !zen_is_logged_in()):
   // customer must be logged in to browse
   $zc_hidden_discounts_on = true;
   $zc_hidden_discounts_text = 'MUST LOGIN';
   break;
-  case (STORE_STATUS == 1 || CUSTOMERS_APPROVAL == '2' and $_SESSION['customer_id'] == ''):
+  case (STORE_STATUS == 1 || CUSTOMERS_APPROVAL == '2' and !zen_is_logged_in()):
   // customer may browse but no prices
   $zc_hidden_discounts_on = true;
   $zc_hidden_discounts_text = TEXT_LOGIN_FOR_PRICE_PRICE;
@@ -33,7 +33,7 @@ switch (true) {
   $zc_hidden_discounts_on = true;
   $zc_hidden_discounts_text = TEXT_LOGIN_FOR_PRICE_PRICE_SHOWROOM;
   break;
-  case (CUSTOMERS_APPROVAL_AUTHORIZATION != '0' and $_SESSION['customer_id'] == ''):
+  case (CUSTOMERS_APPROVAL_AUTHORIZATION != '0' and !zen_is_logged_in()):
   // customer must be logged in to browse
   $zc_hidden_discounts_on = true;
   $zc_hidden_discounts_text = TEXT_AUTHORIZATION_PENDING_PRICE;

@@ -48,7 +48,7 @@
     $content .= '<br class="clearBoth" />';
   }
 
-  if (isset($_SESSION['customer_id'])) {
+  if (zen_is_logged_in() && !zen_in_guest_checkout()) {
     $gv_query = "select amount
                  from " . TABLE_COUPON_GV_CUSTOMER . "
                  where customer_id = '" . $_SESSION['customer_id'] . "'";
@@ -60,4 +60,3 @@
     }
   }
   $content .= '</div>';
-?>

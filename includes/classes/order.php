@@ -307,8 +307,9 @@ class order extends base {
     // set default tax calculation for not-logged-in visitors
       $taxCountryId = $taxZoneId = 0;
 
-      // get tax zone info for logged-in visitors
-      if (isset($_SESSION['customer_id']) && (int)$_SESSION['customer_id'] > 0) {
+      // get tax zone info for logged-in visitors (including guests).  Note that a guest-checkout observer
+      // can use 'NOTIFY_ORDER_CART_AFTER_ADDRESSES_SET' to modify the $taxCountryId and/or $taxZoneId.
+      if (zen_is_logged_in()) {
           $taxCountryId = $taxZoneId = -1;
           $tax_address_query = '';
           switch (STORE_PRODUCT_TAX_BASIS) {
