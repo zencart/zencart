@@ -460,6 +460,10 @@ tr.attributeBoxContent {
     padding: 5px;
 }
 
+.infoBoxHeading h4 {
+    color: #fff;
+}
+
 .main a img {
     margin-bottom: 16px;
 }
