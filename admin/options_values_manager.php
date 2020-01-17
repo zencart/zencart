@@ -6,7 +6,7 @@
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: Scott C Wilson 2019 Feb 28 Modified in v1.5.6b $
  */
-require('includes/application_top.php');
+require 'includes/application_top.php';
 $languages = zen_get_languages();
 
 // verify option names and values
@@ -515,7 +515,7 @@ if (zen_not_null($action)) {
   </head>
   <body>
     <!-- header //-->
-    <?php require(DIR_WS_INCLUDES . 'header.php'); ?>
+    <?php require DIR_WS_INCLUDES . 'header.php'; ?>
     <div class="container-fluid">
       <h1><?php echo HEADING_TITLE_VAL; ?></h1>
       <div class="row">
@@ -1052,8 +1052,8 @@ if (zen_not_null($action)) {
       <!-- option value eof //-->
       <!-- body_text_eof //-->
       <!-- footer //-->
-      <?php require(DIR_WS_INCLUDES . 'footer.php'); ?>
+      <?php require DIR_WS_INCLUDES . 'footer.php'; ?>
       <!-- footer_eof //-->
   </body>
 </html>
-<?php require(DIR_WS_INCLUDES . 'application_bottom.php'); ?>
+<?php require DIR_WS_INCLUDES . 'application_bottom.php'; ?>
