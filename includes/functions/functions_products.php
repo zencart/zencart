@@ -123,10 +123,7 @@ function zen_enable_disabled_upcoming() {
 
     $disabled_upcoming = $GLOBALS['db']->Execute($disabled_upcoming_query);
 
-    if ($disabled_upcoming->RecordCount() > 0) {
-        while (!$disabled_upcoming->EOF) {
-            zen_set_disabled_upcoming_status($disabled_upcoming->fields['products_id'], 1);
-            $disabled_upcoming->MoveNext();
-        }
+    foreach ($disabled_upcoming as $disabled_upcoming_fields) {
+        zen_set_disabled_upcoming_status($disabled_upcoming_fields['products_id'], 1);
     }
 }
