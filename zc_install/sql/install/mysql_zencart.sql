@@ -136,7 +136,7 @@ CREATE TABLE admin_activity_log (
   page_parameters text,
   ip_address varchar(45) NOT NULL default '',
   flagged tinyint NOT NULL default '0',
-  attention varchar(255) NOT NULL default '',
+  attention MEDIUMTEXT,
   gzpost mediumblob,
   logmessage mediumtext NOT NULL,
   severity varchar(9) NOT NULL default 'info',
