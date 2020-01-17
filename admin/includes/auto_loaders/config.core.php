@@ -111,6 +111,15 @@ if (!defined('USE_PCONNECT')) define('USE_PCONNECT', 'false');
                                 'className'=>'sniffer',
                                 'objectName'=>'sniffer');
 /**
+ * Breakpoint 32.
+ *
+ * $messageStack = new messageStack();
+ *
+ */
+  $autoLoadConfig[32][] = array('autoType'=>'classInstantiate',
+                                 'className'=>'messageStack',
+                                 'objectName'=>'messageStack');
+/**
  * Breakpoint 35.
  *
  * require(DIR_WS_FUNCTIONS . 'admin_access.php');
@@ -186,12 +195,12 @@ if (!defined('USE_PCONNECT')) define('USE_PCONNECT', 'false');
 /**
  * Breakpoint 100.
  *
- * $messageStack = new messageStack();
+ * $messageStack->add_from_session();
  *
  */
-  $autoLoadConfig[100][] = array('autoType'=>'classInstantiate',
-                                 'className'=>'messageStack',
-                                 'objectName'=>'messageStack');
+  $autoLoadConfig[100][] = array('autoType'=>'objectMethod',
+                                 'object'=>'messageStack',
+                                 'method'=>'add_from_session');
 /**
  * Breakpoint 120.
  *
