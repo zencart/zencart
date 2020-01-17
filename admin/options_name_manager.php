@@ -6,10 +6,10 @@
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: mc12345678 Tue Aug 21 23:25:22 2018 -0400 Modified in v1.5.6 $
  */
-require('includes/application_top.php');
+require 'includes/application_top.php';
 $languages = zen_get_languages();
 
-require(DIR_WS_CLASSES . 'currencies.php');
+require DIR_WS_CLASSES . 'currencies.php';
 $currencies = new currencies();
 
 // check for damaged database, caused by users indiscriminately deleting table data
@@ -394,7 +394,7 @@ function translate_type_to_name($opt_type)
   <body>
     <div class="container-fluid">
       <!-- header //-->
-      <?php require(DIR_WS_INCLUDES . 'header.php'); ?>
+      <?php require DIR_WS_INCLUDES . 'header.php'; ?>
       <!-- header_eof //-->
       <!-- body //-->
       <!-- body_text //-->
@@ -911,9 +911,9 @@ function translate_type_to_name($opt_type)
       </div>
       <!-- body_text_eof //-->
       <!-- footer //-->
-      <?php require(DIR_WS_INCLUDES . 'footer.php'); ?>
+      <?php require DIR_WS_INCLUDES . 'footer.php'; ?>
       <!-- footer_eof //-->
     </div>
   </body>
 </html>
-<?php require(DIR_WS_INCLUDES . 'application_bottom.php'); ?>
+<?php require DIR_WS_INCLUDES . 'application_bottom.php'; ?>
