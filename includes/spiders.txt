@@ -1,11 +1,9 @@
 $Id: spiders.txt 2019-10-31 Shrimp-Gumbo $
 bot
-browse
 collect
 crawl
 fetch
 grab
-index
 libwww
 link
 robo
@@ -65,6 +63,7 @@ boitho
 bonecho
 booch
 bordermanager
+browsershots
 cassandra
 ccubee
 cf-uc
@@ -146,6 +145,7 @@ iconsurf
 iltrovatore-setaccio
 imagelock
 incywincy
+indexer
 informant
 ingrid
 inktomi slurp
@@ -155,7 +155,7 @@ iron33
 istarthere
 ivia
 jakarta
-javabee
+java
 jeeves
 jobo
 jumpstation
@@ -177,6 +177,7 @@ mantraagent
 mapoftheinternet
 mediafox
 mediapartners
+mega
 mercator
 merzscope
 metacarta
