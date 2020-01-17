@@ -105,7 +105,8 @@ if (zen_not_null($action)) {
         $messageStack->add_session(ATTRIBUTE_POSSIBLE_OPTIONS_VALUE_WARNING_DUPLICATE . ' ' . $duplicate_option_values, 'caution');
       }
 
-      zen_redirect(zen_href_link(FILENAME_OPTIONS_VALUES_MANAGER, ($currentPage != 0 ? 'page=' . $currentPage : '')));
+      $exclude_array = ['action'];
+      zen_redirect(zen_href_link(FILENAME_OPTIONS_VALUES_MANAGER, zen_get_all_get_params($exclude_array)));
       break;
     case 'update_value':
       $value_name_array = $_POST['value_name'];
@@ -153,7 +154,8 @@ if (zen_not_null($action)) {
         $messageStack->add_session(ATTRIBUTE_POSSIBLE_OPTIONS_VALUE_WARNING_DUPLICATE . ' ' . $duplicate_option_values, 'caution');
       }
 
-      zen_redirect(zen_href_link(FILENAME_OPTIONS_VALUES_MANAGER, ($currentPage != 0 ? 'page=' . $currentPage : '')));
+      $exclude_array = ['action'];
+      zen_redirect(zen_href_link(FILENAME_OPTIONS_VALUES_MANAGER, zen_get_all_get_params($exclude_array)));
       break;
     case 'delete_value':
       $value_id = (int)$_GET['value_id'];
@@ -181,7 +183,8 @@ if (zen_not_null($action)) {
       $db->Execute("DELETE FROM " . TABLE_PRODUCTS_OPTIONS_VALUES_TO_PRODUCTS_OPTIONS . "
                     WHERE products_options_values_id = " . (int)$value_id);
 
-      zen_redirect(zen_href_link(FILENAME_OPTIONS_VALUES_MANAGER, ($currentPage != 0 ? 'page=' . $currentPage : '')));
+      $exclude_array = ['action'];
+      zen_redirect(zen_href_link(FILENAME_OPTIONS_VALUES_MANAGER, zen_get_all_get_params($exclude_array)));
       break;
 
 ////////////////////////////////////////////////////
@@ -542,6 +545,7 @@ if (zen_not_null($action)) {
       <!-- value //-->
       <?php
       if ($action == 'delete_option_value') { // delete product option value
+        $exclude_array = ['action'];
         $values_values = $db->Execute("SELECT products_options_values_id, products_options_values_name
                                        FROM " . TABLE_PRODUCTS_OPTIONS_VALUES . "
                                        WHERE products_options_values_id = " . (int)$_GET['value_id'] . "
@@ -572,8 +576,8 @@ if (zen_not_null($action)) {
                   <tr>
                     <td colspan="3"><?php echo TEXT_WARNING_OF_DELETE; ?></td>
                     <td class="text-right">
-                      <a href="<?php echo zen_href_link(FILENAME_OPTIONS_VALUES_MANAGER, 'action=delete_value&value_id=' . $_GET['value_id'] . '&' . ($currentPage !== 0 ? 'page=' . $currentPage : '')); ?>" class="btn btn-danger" role="button"><?php echo IMAGE_DELETE; ?></a>
-                      <a href="<?php echo zen_href_link(FILENAME_OPTIONS_VALUES_MANAGER, ($currentPage !== 0 ? 'page=' . $currentPage : '')); ?>" class="btn btn-default" role="button"><?php echo TEXT_CANCEL; ?></a>
+                      <a href="<?php echo zen_href_link(FILENAME_OPTIONS_VALUES_MANAGER, zen_get_all_get_params($exclude_array) . 'action=delete_value'); ?>" class="btn btn-danger" role="button"><?php echo IMAGE_DELETE; ?></a>
+                      <a href="<?php echo zen_href_link(FILENAME_OPTIONS_VALUES_MANAGER, zen_get_all_get_params($exclude_array)); ?>" class="btn btn-default" role="button"><?php echo TEXT_CANCEL; ?></a>
                     </td>
                   </tr>
                 <?php } ?>
@@ -599,8 +603,8 @@ if (zen_not_null($action)) {
                 <tr>
                   <td colspan="3"><?php echo TEXT_WARNING_OF_DELETE; ?></td>
                   <td class="text-right">
-                    <a href="<?php echo zen_href_link(FILENAME_OPTIONS_VALUES_MANAGER, 'action=delete_value&value_id=' . $_GET['value_id'] . '&' . ($currentPage !== 0 ? 'page=' . $currentPage : '')); ?>" class="btn btn-danger" role="button"><?php echo IMAGE_DELETE; ?></a>
-                    <a href="<?php echo zen_href_link(FILENAME_OPTIONS_VALUES_MANAGER, ($currentPage !== 0 ? 'page=' . $currentPage : '')); ?>" class="btn btn-default" role="button"><?php echo TEXT_CANCEL; ?></a>
+                    <a href="<?php echo zen_href_link(FILENAME_OPTIONS_VALUES_MANAGER, zen_get_all_get_params($exclude_array) . 'action=delete_value'); ?>" class="btn btn-danger" role="button"><?php echo IMAGE_DELETE; ?></a>
+                    <a href="<?php echo zen_href_link(FILENAME_OPTIONS_VALUES_MANAGER, zen_get_all_get_params($exclude_array)); ?>" class="btn btn-default" role="button"><?php echo TEXT_CANCEL; ?></a>
                   </td>
                 </tr>
               <?php } else { ?>
@@ -609,8 +613,8 @@ if (zen_not_null($action)) {
                 </tr>
                 <tr>
                   <td class="text-right" colspan="4">
-                    <a href="<?php echo zen_href_link(FILENAME_OPTIONS_VALUES_MANAGER, 'action=delete_value&value_id=' . $_GET['value_id'] . '&' . ($currentPage !== 0 ? 'page=' . $currentPage : '')); ?>" class="btn btn-danger" role="button"><?php echo IMAGE_DELETE; ?></a>
-                    <a href="<?php echo zen_href_link(FILENAME_OPTIONS_VALUES_MANAGER, ($currentPage !== 0 ? 'page=' . $currentPage : '')); ?>" class="btn btn-default" role="button"><?php echo TEXT_CANCEL; ?></a>
+                    <a href="<?php echo zen_href_link(FILENAME_OPTIONS_VALUES_MANAGER, zen_get_all_get_params($exclude_array) . 'action=delete_value'); ?>" class="btn btn-danger" role="button"><?php echo IMAGE_DELETE; ?></a>
+                    <a href="<?php echo zen_href_link(FILENAME_OPTIONS_VALUES_MANAGER, zen_get_all_get_params($exclude_array)); ?>" class="btn btn-default" role="button"><?php echo TEXT_CANCEL; ?></a>
                   </td>
                 </tr>
               <?php } ?>
