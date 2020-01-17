@@ -24,6 +24,10 @@ require(DIR_WS_FUNCTIONS . 'banner.php');
 zen_activate_banners();
 zen_expire_banners();
 /**
+ * require product functions one time such that if previously loaded will not cause an error here.
+ */
+require_once(DIR_WS_FUNCTIONS . 'functions_products.php';
+/**
  * only process once per session do not include banners as banners expire per click as well as per date
  * require the banner functions, auto-activate and auto-expire.
  *
@@ -38,6 +42,11 @@ zen_expire_banners();
     $_SESSION['updateExpirations'] = false;
   }
 if (!isset($_SESSION['updateExpirations']) || $_SESSION['updateExpirations'] !== true) {
+  /**
+   * enable disabled product that have a historical products_available_date to become active
+   *   in advance of other product handlers to prepare the product for use in those handlers.
+   */
+  zen_enable_disabled_upcoming();
   /**
    * require the specials products functions, auto-activate and auto-expire
    */
