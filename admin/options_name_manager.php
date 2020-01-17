@@ -14,7 +14,7 @@ $currencies = new currencies();
 
 // check for damaged database, caused by users indiscriminately deleting table data
 $ary = array();
-$chk_option_values = $db->Execute("SELECT *
+$chk_option_values = $db->Execute("SELECT language_id
                                    FROM " . TABLE_PRODUCTS_OPTIONS_VALUES . "
                                    WHERE products_options_values_id = " . (int)PRODUCTS_OPTIONS_VALUES_TEXT_ID);
 foreach ($chk_option_values as $item) {
