@@ -814,10 +814,10 @@ if (zen_not_null($action)) {
                     <?php } ?>
                     <?php
                   }
-                $max_values_id_values = $db->Execute("SELECT MAX(products_options_values_id) + 1 AS next_id
-                                                      FROM " . TABLE_PRODUCTS_OPTIONS_VALUES);
+                  $max_values_id_values = $db->Execute("SELECT MAX(products_options_values_id) + 1 AS next_id
+                                                        FROM " . TABLE_PRODUCTS_OPTIONS_VALUES);
 
-                $next_id = $max_values_id_values->fields['next_id'];
+                  $next_id = $max_values_id_values->fields['next_id'];
                 }
                 ?>
               </tr>
