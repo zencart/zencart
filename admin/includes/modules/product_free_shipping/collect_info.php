@@ -97,72 +97,11 @@ foreach ($manufacturers as $manufacturer) {
   );
 }
 
-$tax_class_array = array(array(
-    'id' => '0',
-    'text' => TEXT_NONE));
-$tax_class = $db->Execute("SELECT tax_class_id, tax_class_title
-                           FROM " . TABLE_TAX_CLASS . "
-                           ORDER BY tax_class_title");
-foreach ($tax_class as $item) {
-  $tax_class_array[] = array(
-    'id' => $item['tax_class_id'],
-    'text' => $item['tax_class_title']);
-}
-
-$languages = zen_get_languages();
-
 // set to out of stock if categories_status is off and new product or existing products_status is off
 if (zen_get_categories_status($current_category_id) == 0 && $pInfo->products_status != 1) {
   $pInfo->products_status = 0;
 }
 ?>
-<script>
-  var tax_rates = new Array();
-<?php
-for ($i = 0, $n = sizeof($tax_class_array); $i < $n; $i++) {
-  if ($tax_class_array[$i]['id'] > 0) {
-    echo 'tax_rates["' . $tax_class_array[$i]['id'] . '"] = ' . zen_get_tax_rate_value($tax_class_array[$i]['id']) . ';' . "\n";
-  }
-}
-?>
-
-  function doRound(x, places) {
-      return Math.round(x * Math.pow(10, places)) / Math.pow(10, places);
-  }
-
-  function getTaxRate() {
-      var selected_value = document.forms["new_product"].products_tax_class_id.selectedIndex;
-      var parameterVal = document.forms["new_product"].products_tax_class_id[selected_value].value;
-
-      if ((parameterVal > 0) && (tax_rates[parameterVal] > 0)) {
-          return tax_rates[parameterVal];
-      } else {
-          return 0;
-      }
-  }
-
-  function updateGross() {
-      var taxRate = getTaxRate();
-      var grossValue = document.forms["new_product"].products_price.value;
-
-      if (taxRate > 0) {
-          grossValue = grossValue * ((taxRate / 100) + 1);
-      }
-
-      document.forms["new_product"].products_price_gross.value = doRound(grossValue, 4);
-  }
-
-  function updateNet() {
-      var taxRate = getTaxRate();
-      var netValue = document.forms["new_product"].products_price_gross.value;
-
-      if (taxRate > 0) {
-          netValue = netValue / ((taxRate / 100) + 1);
-      }
-
-      document.forms["new_product"].products_price.value = doRound(netValue, 4);
-  }
-</script>
 <div class="container-fluid">
     <?php
     echo zen_draw_form('new_product', FILENAME_PRODUCT, 'cPath=' . $current_category_id . (isset($_GET['pID']) ? '&pID=' . $_GET['pID'] : '') . '&action=new_product_preview' . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '') . ( (isset($_GET['search']) && !empty($_GET['search'])) ? '&search=' . $_GET['search'] : '') . ( (isset($_POST['search']) && !empty($_POST['search']) && empty($_GET['search'])) ? '&search=' . $_POST['search'] : ''), 'post', 'enctype="multipart/form-data" class="form-horizontal"');

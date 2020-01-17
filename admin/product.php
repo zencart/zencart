@@ -52,6 +52,19 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
 } else {
   $messageStack->add(ERROR_CATALOG_IMAGE_DIRECTORY_DOES_NOT_EXIST, 'error');
 }
+$tax_class_array = array(array(
+    'id' => '0',
+    'text' => TEXT_NONE));
+$tax_class = $db->Execute("SELECT tax_class_id, tax_class_title
+                           FROM " . TABLE_TAX_CLASS . "
+                           ORDER BY tax_class_title");
+foreach ($tax_class as $item) {
+  $tax_class_array[] = array(
+    'id' => $item['tax_class_id'],
+    'text' => $item['tax_class_title']);
+}
+
+$languages = zen_get_languages();
 ?>
 <!doctype html>
 <html <?php echo HTML_PARAMS; ?>>
@@ -59,16 +72,50 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
     <meta charset="<?php echo CHARSET; ?>">
     <title><?php echo TITLE; ?></title>
     <link rel="stylesheet" href="includes/stylesheet.css">
-    <link rel="stylesheet" href="includes/cssjsmenuhover.css" media="all" id="hoverJS">
-    <script src="includes/menu.js"></script>
     <script src="includes/general.js"></script>
     <script>
-      function init() {
-          cssjsmenu('navbar');
-          if (document.getElementById) {
-              var kill = document.getElementById('hoverJS');
-              kill.disabled = true;
-          }
+      let tax_rates = [];
+<?php
+for ($i = 0, $n = sizeof($tax_class_array); $i < $n; $i++) {
+  if ($tax_class_array[$i]['id'] > 0) {
+    echo 'tax_rates["' . $tax_class_array[$i]['id'] . '"] = ' . zen_get_tax_rate_value($tax_class_array[$i]['id']) . ';' . "\n";
+  }
+}
+?>
+
+      function doRound(x, places) {
+        return Math.round(x * Math.pow(10, places)) / Math.pow(10, places);
+      }
+
+      function getTaxRate() {
+        const parameterVal = $('select[name="products_tax_class_id"]').val();
+        if ((parameterVal > 0) && (tax_rates[parameterVal] > 0)) {
+          return tax_rates[parameterVal];
+        } else {
+          return 0;
+        }
+      }
+
+      function updateGross() {
+        const taxRate = getTaxRate();
+        let grossValue = $('input[name="products_price"]').val();
+
+        if (taxRate > 0) {
+          grossValue = grossValue * ((taxRate / 100) + 1);
+        }
+
+        $('input[name="products_price_gross"]').val(doRound(grossValue, 4));
+      }
+
+      function updateNet() {
+        const taxRate = getTaxRate();
+        let netValue = $('input[name="products_price_gross"]').val();
+
+        if (taxRate > 0) {
+          netValue = netValue / ((taxRate / 100) + 1);
+        }
+
+        $('input[name="products_price"]').val(doRound(netValue, 4));
       }
     </script>
     <?php
@@ -99,7 +146,7 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
     <!-- body_eof //-->
     <!-- script for datepicker -->
     <script>
-      $(function(){
+      $(function () {
         $('input[name="products_date_available"]').datepicker();
       })
     </script>
