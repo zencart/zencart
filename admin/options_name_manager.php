@@ -681,8 +681,14 @@ function translate_type_to_name($opt_type)
                       </td>
                     <?php } ?>
                   </tr>
-                <?php } ?>
-              <?php } ?>
+                  <?php
+                }
+                $max_options_id_values = $db->Execute("SELECT MAX(products_options_id) + 1 AS next_id
+                                                       FROM " . TABLE_PRODUCTS_OPTIONS);
+
+                $next_id = $max_options_id_values->fields['next_id'];
+              }
+              ?>
               <tr>
                 <td colspan="7"><?php echo zen_black_line(); ?></td>
               </tr>
