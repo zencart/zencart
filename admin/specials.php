@@ -571,7 +571,7 @@ if (zen_not_null($action)) {
               if (empty($action)) {
                 ?>
                 <tr>
-                  <td colspan="2" align="right">
+                  <td colspan="2" class="text-right">
                     <a href="<?php echo zen_href_link(FILENAME_SPECIALS, ((isset($_GET['page']) && $_GET['page'] > 0) ? 'page=' . $_GET['page'] . '&' : '') . 'action=new'); ?>" class="btn btn-primary" role="button"><?php echo IMAGE_NEW_PRODUCT; ?></a>
                   </td>
                 </tr>
