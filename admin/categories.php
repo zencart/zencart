@@ -161,33 +161,28 @@ if (zen_not_null($action)) {
       }
 
       if ($_POST['categories_image_manual'] != '') {
-        // add image manually
-        $categories_image_name = zen_db_input($_POST['img_dir'] . $_POST['categories_image_manual']);
-        $db->Execute("update " . TABLE_CATEGORIES . "
+          // add image manually
+          $categories_image_name = zen_db_input($_POST['img_dir'] . $_POST['categories_image_manual']);
+          $db->Execute("update " . TABLE_CATEGORIES . "
                       set categories_image = '" . $categories_image_name . "'
                       where categories_id = '" . (int)$categories_id . "'");
-      } else {
-        if ($categories_image = new upload('categories_image')) {
+      } elseif ($categories_image = new upload('categories_image')) {
           $categories_image->set_extensions(['jpg', 'jpeg', 'gif', 'png', 'webp', 'flv', 'webm', 'ogg']);
           $categories_image->set_destination(DIR_FS_CATALOG_IMAGES . $_POST['img_dir']);
           if ($categories_image->parse() && $categories_image->save()) {
-            $categories_image_name = zen_db_input($_POST['img_dir'] . $categories_image->filename);
+              $categories_image_name = zen_db_input($_POST['img_dir'] . $categories_image->filename);
           }
           if ($categories_image->filename != 'none' && $categories_image->filename != '' && $_POST['image_delete'] != 1) {
-            // save filename when not set to none and not blank
-            $db_filename = zen_limit_image_filename($categories_image_name, TABLE_CATEGORIES, 'categories_image');
-            $db->Execute("update " . TABLE_CATEGORIES . "
+              // save filename when not set to none and not blank
+              $db_filename = zen_limit_image_filename($categories_image_name, TABLE_CATEGORIES, 'categories_image');
+              $db->Execute("update " . TABLE_CATEGORIES . "
                           set categories_image = '" . $db_filename . "'
                           where categories_id = '" . (int)$categories_id . "'");
-          } else {
-            // remove filename when set to none and not blank
-            if ($categories_image->filename != '' || $_POST['image_delete'] == 1) {
+          } elseif ($categories_image->filename != '' || $_POST['image_delete'] == 1) {
               $db->Execute("update " . TABLE_CATEGORIES . "
                             set categories_image = ''
                             where categories_id = '" . (int)$categories_id . "'");
-            }
           }
-        }
       }
 
       zen_redirect(zen_href_link(FILENAME_CATEGORY_PRODUCT_LISTING, 'cPath=' . $cPath . '&cID=' . $categories_id . ((isset($_GET['search']) && !empty($_GET['search'])) ? '&search=' . $_GET['search'] : '')));
