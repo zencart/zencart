@@ -8,12 +8,12 @@
  */
 require('includes/application_top.php');
 $languages = zen_get_languages();
-$parameters = array(
+$parameters = [
   'categories_name' => '',
   'categories_description' => '',
   'categories_image' => '',
   'sort_order' => ''
-);
+];
 $cInfo = new objectInfo($parameters);
 $categoryId = (isset($_GET['cID']) ? $_GET['cID'] : '');
 if ($categoryId != '') {
@@ -67,9 +67,10 @@ if (zen_not_null($action)) {
         if ($type_to_cat->RecordCount() < 1) {
           //@@TODO find all sub-categories and restrict them as well.
 
-          $insert_sql_data = array(
+          $insert_sql_data = [
             'category_id' => zen_db_prepare_input($_POST['categories_id']),
-            'product_type_id' => zen_db_prepare_input($_POST['restrict_type']));
+            'product_type_id' => zen_db_prepare_input($_POST['restrict_type'])
+          ];
 
           zen_db_perform(TABLE_PRODUCT_TYPES_TO_CATEGORY, $insert_sql_data);
           /*
@@ -91,12 +92,13 @@ if (zen_not_null($action)) {
       }
       $sort_order = zen_db_prepare_input($_POST['sort_order']);
 
-      $sql_data_array = array('sort_order' => (int)$sort_order);
+      $sql_data_array = ['sort_order' => (int)$sort_order];
 
       if ($action == 'insert_category') {
-        $insert_sql_data = array(
+        $insert_sql_data = [
           'parent_id' => (int)$current_category_id,
-          'date_added' => 'now()');
+          'date_added' => 'now()'
+        ];
 
         $sql_data_array = array_merge($sql_data_array, $insert_sql_data);
 
@@ -116,16 +118,17 @@ if (zen_not_null($action)) {
           $has_type = $db->Execute($sql);
           if ($has_type->RecordCount() > 0) {
             while (!$has_type->EOF) {
-              $insert_sql_data = array(
+              $insert_sql_data = [
                 'category_id' => (int)$categories_id,
-                'product_type_id' => (int)$has_type->fields['product_type_id']);
+                'product_type_id' => (int)$has_type->fields['product_type_id']
+              ];
               zen_db_perform(TABLE_PRODUCT_TYPES_TO_CATEGORY, $insert_sql_data);
               $has_type->moveNext();
             }
           }
         }
       } elseif ($action == 'update_category') {
-        $update_sql_data = array('last_modified' => 'now()');
+        $update_sql_data = ['last_modified' => 'now()'];
 
         $sql_data_array = array_merge($sql_data_array, $update_sql_data);
 
@@ -138,14 +141,16 @@ if (zen_not_null($action)) {
         $language_id = $languages[$i]['id'];
 
         // clean $categories_description when blank or just <p /> left behind
-        $sql_data_array = array(
+        $sql_data_array = [
           'categories_name' => zen_db_prepare_input($categories_name_array[$language_id]),
-          'categories_description' => ($categories_description_array[$language_id] == '<p />' ? '' : zen_db_prepare_input($categories_description_array[$language_id])));
+          'categories_description' => ($categories_description_array[$language_id] == '<p />' ? '' : zen_db_prepare_input($categories_description_array[$language_id]))
+        ];
 
         if ($action == 'insert_category') {
-          $insert_sql_data = array(
+          $insert_sql_data = [
             'categories_id' => (int)$categories_id,
-            'language_id' => (int)$languages[$i]['id']);
+            'language_id' => (int)$languages[$i]['id']
+          ];
 
           $sql_data_array = array_merge($sql_data_array, $insert_sql_data);
 
@@ -163,7 +168,7 @@ if (zen_not_null($action)) {
                       where categories_id = '" . (int)$categories_id . "'");
       } else {
         if ($categories_image = new upload('categories_image')) {
-          $categories_image->set_extensions(array('jpg', 'jpeg', 'gif', 'png', 'webp', 'flv', 'webm', 'ogg'));
+          $categories_image->set_extensions(['jpg', 'jpeg', 'gif', 'png', 'webp', 'flv', 'webm', 'ogg']);
           $categories_image->set_destination(DIR_FS_CATALOG_IMAGES . $_POST['img_dir']);
           if ($categories_image->parse() && $categories_image->save()) {
             $categories_image_name = zen_db_input($_POST['img_dir'] . $categories_image->filename);
@@ -207,15 +212,17 @@ if (zen_not_null($action)) {
           $action = 'delete_category_meta_tags';
         }
 
-        $sql_data_array = array(
+        $sql_data_array = [
           'metatags_title' => zen_db_prepare_input($_POST['metatags_title'][$language_id]),
           'metatags_keywords' => zen_db_prepare_input($_POST['metatags_keywords'][$language_id]),
-          'metatags_description' => zen_db_prepare_input($_POST['metatags_description'][$language_id]));
+          'metatags_description' => zen_db_prepare_input($_POST['metatags_description'][$language_id])
+        ];
 
         if ($action == 'insert_categories_meta_tags') {
-          $insert_sql_data = array(
+          $insert_sql_data = [
             'categories_id' => (int)$categories_id,
-            'language_id' => (int)$language_id);
+            'language_id' => (int)$language_id
+          ];
           $sql_data_array = array_merge($sql_data_array, $insert_sql_data);
 
           zen_db_perform(TABLE_METATAGS_CATEGORIES_DESCRIPTION, $sql_data_array);
@@ -285,10 +292,10 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
     $sql = "select type_id, type_name from " . TABLE_PRODUCT_TYPES;
     $product_types = $db->Execute($sql);
     while (!$product_types->EOF) {
-      $type_array[] = array(
+      $type_array[] = [
         'id' => $product_types->fields['type_id'],
         'text' => $product_types->fields['type_name']
-      );
+      ];
       $product_types->MoveNext();
     }
 
@@ -351,7 +358,7 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
     //    'input' => 'The HTML to be inserted' (required)
     // )
     //
-    $extra_category_inputs = array();
+    $extra_category_inputs = [];
     $zco_notifier->notify('NOTIFY_ADMIN_CATEGORIES_EXTRA_INPUTS', $cInfo, $extra_category_inputs);
     if (!empty($extra_category_inputs)) {
         foreach ($extra_category_inputs as $extra_input) {
