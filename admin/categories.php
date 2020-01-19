@@ -94,7 +94,7 @@ if (zen_not_null($action)) {
 
       $sql_data_array = ['sort_order' => (int)$sort_order];
 
-      if ($action == 'insert_category') {
+      if ($action === 'insert_category') {
         $insert_sql_data = [
           'parent_id' => $current_category_id,
           'date_added' => 'now()'
@@ -105,7 +105,7 @@ if (zen_not_null($action)) {
         zen_db_perform(TABLE_CATEGORIES, $sql_data_array);
 
         $categories_id = zen_db_insert_id();
-        // check if [arent is restricted
+        // check if parent is restricted
         $sql = "select parent_id
                 from " . TABLE_CATEGORIES . "
                 where categories_id = '" . (int)$categories_id . "'";
@@ -127,7 +127,7 @@ if (zen_not_null($action)) {
             }
           }
         }
-      } elseif ($action == 'update_category') {
+      } elseif ($action === 'update_category') {
         $update_sql_data = ['last_modified' => 'now()'];
 
         $sql_data_array = array_merge($sql_data_array, $update_sql_data);
@@ -143,10 +143,10 @@ if (zen_not_null($action)) {
         // clean $categories_description when blank or just <p /> left behind
         $sql_data_array = [
           'categories_name' => zen_db_prepare_input($categories_name_array[$language_id]),
-          'categories_description' => ($categories_description_array[$language_id] == '<p />' ? '' : zen_db_prepare_input($categories_description_array[$language_id]))
+          'categories_description' => ($categories_description_array[$language_id] === '<p />' ? '' : zen_db_prepare_input($categories_description_array[$language_id]))
         ];
 
-        if ($action == 'insert_category') {
+        if ($action === 'insert_category') {
           $insert_sql_data = [
             'categories_id' => (int)$categories_id,
             'language_id' => (int)$languages[$i]['id']
@@ -155,7 +155,7 @@ if (zen_not_null($action)) {
           $sql_data_array = array_merge($sql_data_array, $insert_sql_data);
 
           zen_db_perform(TABLE_CATEGORIES_DESCRIPTION, $sql_data_array);
-        } elseif ($action == 'update_category') {
+        } elseif ($action === 'update_category') {
           zen_db_perform(TABLE_CATEGORIES_DESCRIPTION, $sql_data_array, 'update', "categories_id = '" . (int)$categories_id . "' and language_id = '" . (int)$languages[$i]['id'] . "'");
         }
       }
@@ -178,7 +178,7 @@ if (zen_not_null($action)) {
               $db->Execute("update " . TABLE_CATEGORIES . "
                           set categories_image = '" . $db_filename . "'
                           where categories_id = '" . (int)$categories_id . "'");
-          } elseif ($categories_image->filename != '' || $_POST['image_delete'] == 1) {
+          } elseif ($categories_image->filename != '' || $_POST['image_delete'] === 1) {
               $db->Execute("update " . TABLE_CATEGORIES . "
                             set categories_image = ''
                             where categories_id = '" . (int)$categories_id . "'");
@@ -213,7 +213,7 @@ if (zen_not_null($action)) {
           'metatags_description' => zen_db_prepare_input($_POST['metatags_description'][$language_id])
         ];
 
-        if ($action == 'insert_categories_meta_tags') {
+        if ($action === 'insert_categories_meta_tags') {
           $insert_sql_data = [
             'categories_id' => (int)$categories_id,
             'language_id' => (int)$language_id
@@ -221,9 +221,9 @@ if (zen_not_null($action)) {
           $sql_data_array = array_merge($sql_data_array, $insert_sql_data);
 
           zen_db_perform(TABLE_METATAGS_CATEGORIES_DESCRIPTION, $sql_data_array);
-        } elseif ($action == 'update_category_meta_tags') {
+        } elseif ($action === 'update_category_meta_tags') {
           zen_db_perform(TABLE_METATAGS_CATEGORIES_DESCRIPTION, $sql_data_array, 'update', "categories_id = " . (int)$categories_id . " and language_id = " . (int)$language_id);
-        } elseif ($action == 'delete_category_meta_tags') {
+        } elseif ($action === 'delete_category_meta_tags') {
           $remove_categories_metatag = "DELETE FROM " . TABLE_METATAGS_CATEGORIES_DESCRIPTION . " WHERE categories_id = " . (int)$categories_id . " AND language_id = " . (int)$language_id;
           $db->Execute($remove_categories_metatag);
         }
@@ -310,14 +310,14 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
     <div class="container-fluid">
         <!-- body_text //-->
         <?php
-        if ($action == 'new_category' || $action == 'edit_category') {
+        if ($action === 'new_category' || $action === 'edit_category') {
           ?>
         <h1><?php echo HEADING_TITLE; ?></h1>
         <?php
         echo zen_draw_form('categories', FILENAME_CATEGORIES, 'action=' . $formAction . '&cPath=' . $cPath . ((isset($_GET['search']) && !empty($_GET['search'])) ? '&search=' . $_GET['search'] : ''), 'post', 'enctype="multipart/form-data" class="form-horizontal"');
         echo zen_draw_hidden_field('categories_id', $cInfo->categories_id);
         ?>
-        <?php if ($formAction == 'update_category') { ?>
+        <?php if ($formAction === 'update_category') { ?>
           <div class="form-group">
             <div class="col-sm-12"><?php echo TEXT_EDIT_INTRO; ?></div>
           </div>
@@ -435,7 +435,7 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
           <button type="submit" class="btn btn-primary"><?php echo IMAGE_SAVE; ?></button> <a href="<?php echo zen_href_link(FILENAME_CATEGORY_PRODUCT_LISTING, 'cPath=' . $cPath . '&cID=' . $cInfo->categories_id . ((isset($_GET['search']) && !empty($_GET['search'])) ? '&search=' . $_GET['search'] : '')); ?>" class="btn btn-default" role="button"><?php echo IMAGE_CANCEL; ?></a>
         </div>
         <?php
-        if ($action == 'edit_category') {
+        if ($action === 'edit_category') {
           ?>
           <div class="form-group">
               <div class="col-sm-2 text-center"><?php echo zen_draw_label(TEXT_RESTRICT_PRODUCT_TYPE, 'restrict_type', 'class="control-label"'); ?></div>
@@ -481,7 +481,7 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
           </div>
           <?php
         }
-      } elseif ($action == 'edit_category_meta_tags') {
+      } elseif ($action === 'edit_category_meta_tags') {
         ?>
             <h1><?php echo TEXT_INFO_HEADING_EDIT_CATEGORY_META_TAGS; ?></h1>
             <div><h2><?php echo sprintf(TEXT_EDIT_CATEGORIES_META_TAGS_INTRO, $cInfo->categories_id, $cInfo->categories_name); ?></h2></div>
