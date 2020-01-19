@@ -96,7 +96,7 @@ if (zen_not_null($action)) {
 
       if ($action == 'insert_category') {
         $insert_sql_data = [
-          'parent_id' => (int)$current_category_id,
+          'parent_id' => $current_category_id,
           'date_added' => 'now()'
         ];
 
