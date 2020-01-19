@@ -459,13 +459,13 @@ if (zen_not_null($action)) {
 
                       $sale_price = zen_get_products_special_price($special['products_id'], false);
                       ?>
-                  <td  class="dataTableContent text-right"><?php echo $special['products_id']; ?>&nbsp;</td>
-                  <td  class="dataTableContent"><?php echo $special['products_name']; ?></td>
-                  <td  class="dataTableContent"><?php echo $special['products_model']; ?>&nbsp;</td>
+                  <td class="dataTableContent text-right"><?php echo $special['products_id']; ?>&nbsp;</td>
+                  <td class="dataTableContent"><?php echo $special['products_name']; ?></td>
+                  <td class="dataTableContent"><?php echo $special['products_model']; ?>&nbsp;</td>
                   <td colspan="2" class="dataTableContent text-right"><?php echo zen_get_products_display_price($special['products_id']); ?></td>
-                  <td  class="dataTableContent text-center"><?php echo (($special['specials_date_available'] != '0001-01-01' && $special['specials_date_available'] != '') ? zen_date_short($special['specials_date_available']) : TEXT_NONE); ?></td>
-                  <td  class="dataTableContent text-center"><?php echo (($special['expires_date'] != '0001-01-01' && $special['expires_date'] != '') ? zen_date_short($special['expires_date']) : TEXT_NONE); ?></td>
-                  <td  class="dataTableContent text-center">
+                  <td class="dataTableContent text-center"><?php echo (($special['specials_date_available'] != '0001-01-01' && $special['specials_date_available'] != '') ? zen_date_short($special['specials_date_available']) : TEXT_NONE); ?></td>
+                  <td class="dataTableContent text-center"><?php echo (($special['expires_date'] != '0001-01-01' && $special['expires_date'] != '') ? zen_date_short($special['expires_date']) : TEXT_NONE); ?></td>
+                  <td class="dataTableContent text-center">
                       <?php
                       if ($special['status'] == '1') {
                         echo zen_draw_form('setflag_products', FILENAME_SPECIALS, 'action=setflag&id=' . $special['specials_id'] . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '') . (isset($_GET['search']) ? '&search=' . $_GET['search'] : ''));
