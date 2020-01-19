@@ -123,7 +123,7 @@ if (zen_not_null($action)) {
                 'product_type_id' => (int)$has_type->fields['product_type_id']
               ];
               zen_db_perform(TABLE_PRODUCT_TYPES_TO_CATEGORY, $insert_sql_data);
-              $has_type->moveNext();
+              $has_type->MoveNext();
             }
           }
         }
