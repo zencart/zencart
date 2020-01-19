@@ -489,13 +489,13 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
             echo zen_draw_form('categories', FILENAME_CATEGORIES, 'action=update_category_meta_tags&cPath=' . $cPath, 'post', 'enctype="multipart/form-data" class="form-horizontal"');
             echo zen_draw_hidden_field('categories_id', $cInfo->categories_id); ?>
         <div class="form-group">
-            <div class="col-sm-2 text-center"><h4><?php echo TEXT_EDIT_CATEGORIES_META_TAGS_TITLE; ?></h4></div>
+            <div class="col-sm-2 text-center"><strong><?php echo TEXT_EDIT_CATEGORIES_META_TAGS_TITLE; ?></strong></div>
           <div class="col-sm-10">
               <?php
               for ($i = 0, $n = count($languages); $i < $n; $i++) {
                 ?>
               <div class="input-group">
-                <span class="input-group-addon" style="vertical-align: top;">
+                <span class="input-group-addon">
                     <?php echo zen_draw_label(zen_image(DIR_WS_CATALOG_LANGUAGES . $languages[$i]['directory'] . '/images/' . $languages[$i]['image'], $languages[$i]['name']), 'metatags_title[' . $languages[$i]['id'] . ']'); ?>
                 </span>
                 <?php echo zen_draw_input_field('metatags_title[' . $languages[$i]['id'] . ']', htmlspecialchars(zen_get_category_metatags_title($cInfo->categories_id, $languages[$i]['id']), ENT_COMPAT, CHARSET, TRUE), zen_set_field_length(TABLE_METATAGS_CATEGORIES_DESCRIPTION, 'metatags_title') . ' class="form-control" id="metatags_title[' . $languages[$i]['id'] . ']"');
@@ -507,7 +507,7 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
           </div>
         </div>
         <div class="form-group">
-            <div class="col-sm-2 text-center"><h4><?php echo TEXT_EDIT_CATEGORIES_META_TAGS_KEYWORDS; ?></h4></div>
+            <div class="col-sm-2 text-center"><strong><?php echo TEXT_EDIT_CATEGORIES_META_TAGS_KEYWORDS; ?></strong></div>
           <div class="col-sm-10">
               <?php
               for ($i = 0, $n = count($languages); $i < $n; $i++) {
@@ -526,13 +526,13 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
           </div>
         </div>
         <div class="form-group">
-            <div class="col-sm-2 text-center"><h4><?php echo TEXT_EDIT_CATEGORIES_META_TAGS_DESCRIPTION; ?></h4></div>
+            <div class="col-sm-2 text-center"><strong><?php echo TEXT_EDIT_CATEGORIES_META_TAGS_DESCRIPTION; ?></strong></div>
           <div class="col-sm-10">
               <?php
               for ($i = 0, $n = count($languages); $i < $n; $i++) {
                 ?>
               <div class="input-group">
-                <span class="input-group-addon" style="vertical-align: top;">
+                <span class="input-group-addon" style="vertical-align: top">
                   <?php echo zen_draw_label(zen_image(DIR_WS_CATALOG_LANGUAGES . $languages[$i]['directory'] . '/images/' . $languages[$i]['image'], $languages[$i]['name']), 'metatags_description[' . $languages[$i]['id'] . ']'); ?>
                 </span>
                 <?php echo zen_draw_textarea_field('metatags_description[' . $languages[$i]['id'] . ']', 'soft', '100', '7', htmlspecialchars(zen_get_category_metatags_description($cInfo->categories_id, $languages[$i]['id']), ENT_COMPAT, CHARSET, TRUE), 'class="form-control noEditor" id="metatags_description[' . $languages[$i]['id'] . ']"');
