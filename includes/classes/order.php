@@ -672,7 +672,7 @@ class order extends base {
                             'delivery_postcode' => $this->delivery['postcode'],
                             'delivery_state' => $this->delivery['state'],
                             'delivery_country' => $this->delivery['country']['title'],
-                            'delivery_address_format_id' => $this->delivery['format_id'],
+                            'delivery_address_format_id' => (int)$this->delivery['format_id'],
                             'billing_name' => $this->billing['firstname'] . ' ' . $this->billing['lastname'],
                             'billing_company' => $this->billing['company'],
                             'billing_street_address' => $this->billing['street_address'],
