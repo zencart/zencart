@@ -438,9 +438,9 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
         if ($action == 'edit_category') {
           ?>
           <div class="form-group">
-              <?php echo zen_draw_label(TEXT_RESTRICT_PRODUCT_TYPE, 'restrict_type', 'class="col-sm-3 control-label"'); ?>
-            <div class="col-sm-9 col-md-6">
-                <?php echo zen_draw_pull_down_menu('restrict_type', $type_array, '', 'class="form-control"'); ?>
+              <div class="col-sm-2 text-center"><?php echo zen_draw_label(TEXT_RESTRICT_PRODUCT_TYPE, 'restrict_type', 'class="control-label"'); ?></div>
+            <div class="col-sm-10">
+                <?php echo zen_draw_pull_down_menu('restrict_type', $type_array, '', 'class="form-control" id="restrict_type"'); ?>
               <br>
               <input type="submit" name="add_type_all" class="btn btn-info" value="<?php echo BUTTON_ADD_PRODUCT_TYPES_SUBCATEGORIES_ON; ?>"> <input type="submit" name="add_type" class="btn btn-info" value="<?php echo BUTTON_ADD_PRODUCT_TYPES_SUBCATEGORIES_OFF; ?>">
             </div>
