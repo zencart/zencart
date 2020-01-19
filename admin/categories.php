@@ -135,7 +135,7 @@ if (zen_not_null($action)) {
         zen_db_perform(TABLE_CATEGORIES, $sql_data_array, 'update', "categories_id = '" . (int)$categories_id . "'");
       }
 
-      for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
+      for ($i = 0, $n = count($languages); $i < $n; $i++) {
         $categories_name_array = $_POST['categories_name'];
         $categories_description_array = $_POST['categories_description'];
         $language_id = $languages[$i]['id'];
@@ -197,7 +197,7 @@ if (zen_not_null($action)) {
     case 'update_category_meta_tags':
       // add or update meta tags
       $categories_id = $_POST['categories_id'];
-      for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
+      for ($i = 0, $n = count($languages); $i < $n; $i++) {
         $language_id = $languages[$i]['id'];
         $check = $db->Execute("SELECT *
                                FROM " . TABLE_METATAGS_CATEGORIES_DESCRIPTION . "
@@ -251,7 +251,7 @@ if (zen_not_null($action)) {
 
 // check if the catalog image directory exists
 if (is_dir(DIR_FS_CATALOG_IMAGES)) {
-  if (!is_writeable(DIR_FS_CATALOG_IMAGES)) {
+  if (!is_writable(DIR_FS_CATALOG_IMAGES)) {
     $messageStack->add(ERROR_CATALOG_IMAGE_DIRECTORY_NOT_WRITEABLE, 'error');
   }
 } else {
@@ -329,7 +329,7 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
             <?php echo zen_draw_label(TEXT_EDIT_CATEGORIES_NAME, '', 'class="col-sm-3 control-label"'); ?>
           <div class="col-sm-9 col-md-6">
               <?php
-              for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
+              for ($i = 0, $n = count($languages); $i < $n; $i++) {
                 ?>
               <div class="input-group">
                 <span class="input-group-addon">
@@ -377,7 +377,7 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
             <?php echo zen_draw_label(TEXT_CATEGORIES_DESCRIPTION, 'categories_description', 'class="col-sm-3 control-label"'); ?>
           <div class="col-sm-9 col-md-6">
               <?php
-              for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
+              for ($i = 0, $n = count($languages); $i < $n; $i++) {
                 ?>
               <div class="input-group">
                 <span class="input-group-addon">
@@ -497,7 +497,7 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
             <h3><?php echo TEXT_EDIT_CATEGORIES_META_TAGS_TITLE; ?></h3>
           <div class="col-sm-9 col-md-6">
               <?php
-              for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
+              for ($i = 0, $n = count($languages); $i < $n; $i++) {
                 ?>
               <div class="input-group">
                 <span class="input-group-addon">
@@ -516,7 +516,7 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
             <h3><?php echo TEXT_EDIT_CATEGORIES_META_TAGS_KEYWORDS; ?></h3>
           <div class="col-sm-9 col-md-6">
               <?php
-              for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
+              for ($i = 0, $n = count($languages); $i < $n; $i++) {
                 ?>
               <div class="input-group">
                 <span class="input-group-addon" style="vertical-align: top">
@@ -535,7 +535,7 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
             <h3><?php echo TEXT_EDIT_CATEGORIES_META_TAGS_DESCRIPTION; ?></h3>
           <div class="col-sm-9 col-md-6">
               <?php
-              for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
+              for ($i = 0, $n = count($languages); $i < $n; $i++) {
                 ?>
               <div class="input-group">
                 <span class="input-group-addon">
