@@ -323,16 +323,16 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
           </div>
         <?php } ?>
         <div class="form-group">
-            <?php echo zen_draw_label(TEXT_EDIT_CATEGORIES_NAME, '', 'class="col-sm-3 control-label"'); ?>
-          <div class="col-sm-9 col-md-6">
+            <div class="col-sm-2 text-center"><strong><?php echo TEXT_EDIT_CATEGORIES_NAME; ?></strong></div>
+          <div class="col-sm-9">
               <?php
               for ($i = 0, $n = count($languages); $i < $n; $i++) {
                 ?>
               <div class="input-group">
                 <span class="input-group-addon">
-                    <?php echo zen_image(DIR_WS_CATALOG_LANGUAGES . $languages[$i]['directory'] . '/images/' . $languages[$i]['image'], $languages[$i]['name']); ?>
+                    <?php echo zen_draw_label(zen_image(DIR_WS_CATALOG_LANGUAGES . $languages[$i]['directory'] . '/images/' . $languages[$i]['image'], $languages[$i]['name']), 'categories_name[' . $languages[$i]['id'] . ']'); ?>
                 </span>
-                <?php echo zen_draw_input_field('categories_name[' . $languages[$i]['id'] . ']', htmlspecialchars(zen_get_category_name($cInfo->categories_id, $languages[$i]['id']), ENT_COMPAT, CHARSET, TRUE), zen_set_field_length(TABLE_CATEGORIES_DESCRIPTION, 'categories_name') . ' class="form-control"'); ?>
+                <?php echo zen_draw_input_field('categories_name[' . $languages[$i]['id'] . ']', htmlspecialchars(zen_get_category_name($cInfo->categories_id, $languages[$i]['id']), ENT_COMPAT, CHARSET, TRUE), zen_set_field_length(TABLE_CATEGORIES_DESCRIPTION, 'categories_name') . ' class="form-control" id=categories_name[' . $languages[$i]['id'] . ']'); ?>
               </div>
               <br>
               <?php
@@ -342,8 +342,8 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
         </div>
 <?php
     // -----
-    // Give an observer the chance to supply some additional category-related inputs.  Each
-    // entry in the $extra_category_inputs returned contains:
+    // Give an observer the chance to supply some additional category-related inputs.
+    // Each entry in the $extra_category_inputs returned contains:
     //
     // array(
     //    'label' => array(
@@ -371,16 +371,16 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
     }
 ?>
         <div class="form-group">
-            <?php echo zen_draw_label(TEXT_CATEGORIES_DESCRIPTION, 'categories_description', 'class="col-sm-3 control-label"'); ?>
-          <div class="col-sm-9 col-md-6">
+            <div class="col-sm-2 text-center"><strong><?php echo TEXT_CATEGORIES_DESCRIPTION; ?></strong></div>
+          <div class="col-sm-10">
               <?php
               for ($i = 0, $n = count($languages); $i < $n; $i++) {
                 ?>
               <div class="input-group">
-                <span class="input-group-addon">
-                    <?php echo zen_image(DIR_WS_CATALOG_LANGUAGES . $languages[$i]['directory'] . '/images/' . $languages[$i]['image'], $languages[$i]['name']); ?>
+                <span class="input-group-addon" style="vertical-align: top">
+                    <?php echo zen_draw_label(zen_image(DIR_WS_CATALOG_LANGUAGES . $languages[$i]['directory'] . '/images/' . $languages[$i]['image'], $languages[$i]['name']), 'categories_description[' . $languages[$i]['id'] . ']'); ?>
                 </span>
-                <?php echo zen_draw_textarea_field('categories_description[' . $languages[$i]['id'] . ']', 'soft', '100', '20', htmlspecialchars(zen_get_category_description($cInfo->categories_id, $languages[$i]['id']), ENT_COMPAT, CHARSET, TRUE), 'class="editorHook form-control"'); ?>
+                <?php echo zen_draw_textarea_field('categories_description[' . $languages[$i]['id'] . ']', 'soft', '100', '5', htmlspecialchars(zen_get_category_description($cInfo->categories_id, $languages[$i]['id']), ENT_COMPAT, CHARSET, TRUE), 'class="editorHook form-control" id=categories_description[' . $languages[$i]['id'] . ']'); ?>
               </div>
               <br>
               <?php
@@ -389,8 +389,8 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
           </div>
         </div>
         <div class="form-group">
-            <?php echo zen_draw_label(TEXT_EDIT_CATEGORIES_IMAGE, 'categories_image', 'class="col-sm-3 control-label"'); ?>
-          <div class="col-sm-9 col-md-6">
+            <div class="col-sm-2 text-center"><strong><?php echo TEXT_EDIT_CATEGORIES_IMAGE; ?></strong></div>
+          <div class="col-sm-10">
               <?php echo zen_draw_file_field('categories_image', '', 'class="form-control"'); ?>
           </div>
         </div>
@@ -399,36 +399,36 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
         $default_directory = substr($cInfo->categories_image, 0, strpos($cInfo->categories_image, '/') + 1);
         ?>
         <div class="form-group">
-            <?php echo zen_draw_label(TEXT_CATEGORIES_IMAGE_DIR, 'img_dir', 'class="col-sm-3 control-label"'); ?>
-          <div class="col-sm-9 col-md-6">
-              <?php echo zen_draw_pull_down_menu('img_dir', $dir_info, $default_directory, 'class="form-control"'); ?>
+            <div class="col-sm-2 text-center"><?php echo zen_draw_label(TEXT_CATEGORIES_IMAGE_DIR, 'img_dir', 'class="control-label"'); ?></div>
+          <div class="col-sm-10">
+              <?php echo zen_draw_pull_down_menu('img_dir', $dir_info, $default_directory, 'class="form-control" id="img_dir"'); ?>
           </div>
         </div>
         <div class="form-group">
-            <?php echo zen_draw_label(TEXT_CATEGORIES_IMAGE_MANUAL, 'categories_image_manual', 'class="col-sm-3 control-label"'); ?>
-          <div class="col-sm-9 col-md-6">
-              <?php echo zen_draw_input_field('categories_image_manual', '', 'class="form-control"'); ?>
+            <div class="col-sm-2 text-center"><?php echo zen_draw_label(TEXT_CATEGORIES_IMAGE_MANUAL, 'categories_image_manual', 'class="control-label"'); ?></div>
+          <div class="col-sm-10">
+              <?php echo zen_draw_input_field('categories_image_manual', '', 'class="form-control" id="categories_image_manual"'); ?>
           </div>
         </div>
         <div class="form-group">
-          <div class="col-sm-3">
-          </div>
-          <div class="col-sm-9 col-md-6">
+          <div class="col-sm-2">&nbsp;</div>
+          <div class="col-sm-10">
               <?php echo zen_info_image($cInfo->categories_image, $cInfo->categories_name); ?>
-              <?php echo '<br />' . $cInfo->categories_image; ?>
+              <br>
+              <?php echo $cInfo->categories_image; ?>
           </div>
         </div>
         <div class="form-group">
-            <?php echo zen_draw_label(TEXT_IMAGES_DELETE, 'image_delete', 'class="col-sm-3 control-label"'); ?>
-          <div class="col-sm-9 col-md-6">
+            <div class="col-sm-2 text-center"><?php echo TEXT_IMAGES_DELETE; ?></div>
+          <div class="col-sm-10">
             <label class="radio-inline"><?php echo zen_draw_radio_field('image_delete', '0', true) . TABLE_HEADING_NO; ?></label>
             <label class="radio-inline"><?php echo zen_draw_radio_field('image_delete', '1', false) . TABLE_HEADING_YES; ?></label>
           </div>
         </div>
         <div class="form-group">
-            <?php echo zen_draw_label(TEXT_EDIT_SORT_ORDER, 'sort_order', 'class="col-sm-3 control-label"'); ?>
-          <div class="col-sm-9 col-md-6">
-              <?php echo zen_draw_input_field('sort_order', $cInfo->sort_order, 'size="6" class="form-control"'); ?>
+            <div class="col-sm-2 text-center"><?php echo zen_draw_label(TEXT_EDIT_SORT_ORDER, 'sort_order', 'class="control-label"'); ?></div>
+          <div class="col-sm-10">
+              <?php echo zen_draw_input_field('sort_order', $cInfo->sort_order, 'size="6" class="form-control" id="sort_order"'); ?>
           </div>
         </div>
         <div class="floatButton">
