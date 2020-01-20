@@ -88,7 +88,7 @@ if ($action == 'add_discount_qty_id') {
                                 WHERE products_id = " . (int)$products_filter . "
                                 ORDER BY discount_id DESC LIMIT 1");
   $add_cnt = 1;
-  $add_id = $add_id_query->fields['discount_id'];
+  $add_id = ($add_id_query->EOF) ? 0 : $add_id_query->fields['discount_id'];
   while ($add_cnt <= DISCOUNT_QTY_ADD) {
     $db->Execute("INSERT INTO " . TABLE_PRODUCTS_DISCOUNT_QUANTITY . " (discount_id, products_id)
                   VALUES (" . ($add_id + $add_cnt) . ", " . (int)$products_filter . ")");
