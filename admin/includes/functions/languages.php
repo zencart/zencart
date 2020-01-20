@@ -23,15 +23,15 @@
 
 function zen_get_languages_directory($code)
 {
-  global $db;
-  $language = $db->Execute("SELECT languages_id, directory
-                            FROM " . TABLE_LANGUAGES . " 
-                            WHERE code = '" . zen_db_input($code) . "'");
+    global $db;
+    $language = $db->Execute("SELECT languages_id, directory
+                              FROM " . TABLE_LANGUAGES . " 
+                              WHERE code = '" . zen_db_input($code) . "'");
 
-  if ($language->RecordCount() > 0) {
-    $_SESSION['languages_id'] = (int)$language->fields['languages_id'];
-    return $language->fields['directory'];
-  } else {
-    return false;
-  }
+    if ($language->RecordCount() > 0) {
+        $_SESSION['languages_id'] = (int)$language->fields['languages_id'];
+        return $language->fields['directory'];
+    } else {
+        return false;
+    }
 }
