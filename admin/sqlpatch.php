@@ -287,6 +287,7 @@ function executeSql($lines, $database, $table_prefix = '') {
         if ($debug == true) {
           echo ((!$ignore_line) ? '<br>About to execute.' : 'Ignoring statement. This command WILL NOT be executed.') . '<br>Debug info:<br>$ line=' . $line . '<br>$ complete_line=' . $complete_line . '<br>$ keep_together=' . $keep_together . '<br>SQL=' . $newline . '<br><br>';
         }
+        $output = array();
         if (trim(str_replace(';', '', $newline)) != '' && !$ignore_line) {
           $output = $db->Execute($newline);
         }
