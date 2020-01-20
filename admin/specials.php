@@ -446,11 +446,11 @@ if (zen_not_null($action)) {
                         $sInfo = new objectInfo($sInfo_array);
                       }
 
-                      if (isset($sInfo) && is_object($sInfo) && ($special['specials_id'] == $sInfo->specials_id)) {
-                        echo '                  <tr id="defaultSelected" class="dataTableRowSelected" onclick="document.location.href=\'' . zen_href_link(FILENAME_SPECIALS, 'page=' . $_GET['page'] . '&sID=' . $sInfo->specials_id . '&action=edit' . (isset($_GET['search']) ? '&search=' . $_GET['search'] : '')) . '\'" role="button">' . "\n";
-                      } else {
-                        echo '                  <tr class="dataTableRow" onclick="document.location.href=\'' . zen_href_link(FILENAME_SPECIALS, 'page=' . $_GET['page'] . '&sID=' . $special['specials_id'] . '&action=edit' . (isset($_GET['search']) ? '&search=' . $_GET['search'] : '')) . '\'" role="button">' . "\n";
-                      }
+                        if (isset($sInfo) && is_object($sInfo) && ($special['specials_id'] == $sInfo->specials_id)) { ?>
+                        <tr id="defaultSelected" class="dataTableRowSelected" onclick="document.location.href='<?php echo zen_href_link(FILENAME_SPECIALS, 'page=' . $_GET['page'] . '&sID=' . $sInfo->specials_id . '&action=edit' . (isset($_GET['search']) ? '&search=' . $_GET['search'] : '')); ?>'">
+                      <?php } else { ?>
+                        <tr class="dataTableRow" onclick="document.location.href='<?php echo zen_href_link(FILENAME_SPECIALS, 'page=' . $_GET['page'] . '&sID=' . $special['specials_id'] . '&action=edit' . (isset($_GET['search']) ? '&search=' . $_GET['search'] : '')); ?>'">
+                      <?php }
 
                       if ($special['products_priced_by_attribute'] == '1') {
                         $specials_current_price = zen_get_products_base_price($special['products_id']);
