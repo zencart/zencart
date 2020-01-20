@@ -38,48 +38,42 @@
   }
 
 
+/**
+ * Generate a cPath string from current category conditions
+ */
   function zen_get_path($current_category_id = '') {
     global $cPath_array, $db;
-// set to 0 if Top Level
-    if ($current_category_id == '') {
-      if (empty($cPath_array)) {
-        $cPath_new= '';
-      } else {
-        $cPath_new = implode('_', $cPath_array);
-      }
-    } else {
-      if (empty($cPath_array)) {
-        $cPath_new = $current_category_id;
-      } else {
-        $cPath_new = '';
-        $last_category = $db->Execute("select parent_id
-                                       from " . TABLE_CATEGORIES . "
-                                       where categories_id = '" . (int)$cPath_array[(sizeof($cPath_array)-1)] . "'");
 
-        $current_category = $db->Execute("select parent_id
-                                          from " . TABLE_CATEGORIES . "
-                                           where categories_id = '" . (int)$current_category_id . "'");
-
-        if ((isset($last_category->fields['parent_id']) && isset($current_category->fields['parent_id']) && $last_category->fields['parent_id'] == $current_category->fields['parent_id']) || (!isset($last_category->fields['parent_id']) && !isset($current_category->fields['parent_id']))) {
-          for ($i = 0, $n = sizeof($cPath_array) - 1; $i < $n; $i++) {
-            $cPath_new .= '_' . $cPath_array[$i];
-          }
-        } else {
-          for ($i = 0, $n = sizeof($cPath_array); $i < $n; $i++) {
-            $cPath_new .= '_' . $cPath_array[$i];
-          }
-        }
-
-        $cPath_new .= '_' . $current_category_id;
-
-        if (substr($cPath_new, 0, 1) == '_') {
-          $cPath_new = substr($cPath_new, 1);
-        }
-      }
+    if ($current_category_id === '' || empty($cPath_array)) {
+        return 'cPath=' . (!empty($cPath_array) ? implode('_', $cPath_array) : $current_category_id);
     }
 
-    return 'cPath=' . $cPath_new;
+    // make copy so we can manipulate it later
+    $cPath_categories = $cPath_array;
+
+    $last_category_query = "SELECT parent_id
+                            FROM " . TABLE_CATEGORIES . "
+                            WHERE categories_id = " . (int)$cPath_categories[count($cPath_categories)-1];
+    $last_category = $db->Execute($last_category_query);
+
+    $current_category_query = "SELECT parent_id
+                               FROM " . TABLE_CATEGORIES . "
+                               WHERE categories_id = " . (int)$current_category_id;
+    $current_category = $db->Execute($current_category_query);
+
+    // Eject last category from array if not found or same as current
+    if (!isset($last_category->fields['parent_id'], $current_category->fields['parent_id'])) {
+        array_pop($cPath_categories);
+    } elseif ($last_category->fields['parent_id'] == $current_category->fields['parent_id']) {
+        array_pop($cPath_categories);
+    }
+
+    $cPath_new = implode('_', $cPath_categories) . '_' . $current_category_id;
+
+    unset($cPath_categories);
+    return 'cPath=' . trim($cPath_new, '_');
   }
+
 
   function zen_get_all_get_params($exclude_array = array()) {
     if (!is_array($exclude_array)) $exclude_array = array();
