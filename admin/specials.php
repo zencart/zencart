@@ -322,7 +322,7 @@ if (zen_not_null($action)) {
                     echo zen_draw_label(TEXT_SPECIALS_PRODUCT, 'products_id', 'class="col-sm-3 control-label"'); ?>
                     <div class="col-sm-9 col-md-6">
                         <?php
-                        echo zen_draw_products_pull_down('products_id', 'size="15" class="form-control"', $specials_array, true, (!empty($_GET['add_products_id']) ? $_GET['add_products_id'] : ''), true);
+                        echo zen_draw_products_pull_down('products_id', 'size="15" class="form-control" id="products_id"', $specials_array, true, (!empty($_GET['add_products_id']) ? $_GET['add_products_id'] : ''), true);
                         echo zen_draw_hidden_field('products_price', (isset($sInfo->products_price) ? $sInfo->products_price : ''));
                         ?>
                     </div>
@@ -332,7 +332,7 @@ if (zen_not_null($action)) {
               <?php echo zen_draw_label(TEXT_SPECIALS_SPECIAL_PRICE, 'specials_price', 'class="col-sm-3 control-label"'); ?>
             <div class="col-sm-9 col-md-6">
                 <?php
-                echo zen_draw_input_field('specials_price', (isset($sInfo->specials_new_products_price) ? $sInfo->specials_new_products_price : ''), 'class="form-control"');
+                echo zen_draw_input_field('specials_price', (isset($sInfo->specials_new_products_price) ? $sInfo->specials_new_products_price : ''), 'class="form-control" id="specials_price"');
                 echo zen_draw_hidden_field('products_priced_by_attribute', $sInfo->products_priced_by_attribute);
                 echo zen_draw_hidden_field('update_products_id', $sInfo->products_id);
                 ?>
