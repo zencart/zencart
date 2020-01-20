@@ -29,6 +29,7 @@ define('TABLE_HEADING_AVAILABLE_DATE', 'Available');
 define('TABLE_HEADING_EXPIRES_DATE','Expires');
 define('TABLE_HEADING_STATUS', 'Status');
 define('TABLE_HEADING_ACTION', 'Action');
+define('TEXT_ADD_SPECIAL', 'Add Special Discount');
 
 define('TEXT_SPECIALS_PRODUCT', 'Product:');
 define('TEXT_SPECIALS_SPECIAL_PRICE', 'Special Price:');
@@ -57,4 +58,4 @@ define('TEXT_INFO_HEADING_PRE_ADD_SPECIALS', 'Manually add new Special by Produc
 define('TEXT_INFO_PRE_ADD_INTRO', 'On large databases, you may Manually Add a Special by the Product ID<br /><br />This is best used when the page takes too long to render and trying to select a Product from the dropdown becomes difficult due to too many Products from which to choose.');
 define('TEXT_PRE_ADD_PRODUCTS_ID', 'Please enter the Product ID to be Pre-Added: ');
 define('TEXT_INFO_MANUAL', 'Product ID to be Manually Added as a Special');
-?>
+
