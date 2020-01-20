@@ -233,7 +233,6 @@ if (zen_not_null($action)) {
           ?>
           <?php echo '</form>'; ?>
       </div>
-      <div class="row"><?php echo TEXT_STATUS_WARNING; ?></div>
       <?php
       if (empty($action)) {
         ?>
@@ -349,7 +348,7 @@ if (zen_not_null($action)) {
           </div>
           <table class="table">
             <tr>
-              <td><?php echo TEXT_SPECIALS_PRICE_TIP; ?></td>
+              <td><?php echo TEXT_SPECIALS_PRICE_NOTES; ?></td>
                 <td class="text-right">
                     <button type="submit" class="btn btn-primary"><?php echo(($form_action == 'insert') ? IMAGE_INSERT : IMAGE_UPDATE); ?></button>
                     <?php
@@ -541,7 +540,7 @@ if (zen_not_null($action)) {
                       $contents[] = array('align' => 'text-center', 'text' => '<br>' . zen_info_image($sInfo->products_image, $sInfo->products_name, SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT));
                       $contents[] = array('text' => '<br>' . TEXT_INFO_ORIGINAL_PRICE . ' ' . $currencies->format($specials_current_price));
                       $contents[] = array('text' => TEXT_INFO_NEW_PRICE . ' ' . $currencies->format($sInfo->specials_new_products_price));
-                      $contents[] = array('text' => TEXT_INFO_DISPLAY_PRICE . ' ' . zen_get_products_display_price($sInfo->products_id));
+                      $contents[] = array('text' => TEXT_INFO_DISPLAY_PRICE . '<br>' . zen_get_products_display_price($sInfo->products_id));
 
                       $contents[] = array('text' => '<br>' . TEXT_INFO_AVAILABLE_DATE . ' <b>' . (($sInfo->specials_date_available != '0001-01-01' and $sInfo->specials_date_available != '') ? zen_date_short($sInfo->specials_date_available) : TEXT_NONE) . '</b>');
                       $contents[] = array('text' => '<br>' . TEXT_INFO_EXPIRES_DATE . ' <b>' . (($sInfo->expires_date != '0001-01-01' and $sInfo->expires_date != '') ? zen_date_short($sInfo->expires_date) : TEXT_NONE) . '</b>');

@@ -33,17 +33,22 @@ define('TEXT_ADD_SPECIAL', 'Add Special Discount');
 
 define('TEXT_SPECIALS_PRODUCT', 'Product:');
 define('TEXT_SPECIALS_SPECIAL_PRICE', 'Special Price:');
-define('TEXT_SPECIALS_EXPIRES_DATE', 'Expiry Date:');
-define('TEXT_SPECIALS_AVAILABLE_DATE', 'Available Date:');
-define('TEXT_SPECIALS_PRICE_TIP', '<b>Specials Notes:</b><ul><li>You can enter a percentage to deduct in the Specials Price field, for example: <b>20%</b></li><li>If you enter a new price, the decimal separator must be a \'.\' (decimal-point), example: <b>49.99</b></li><li>Leave the expiry date empty for no expiration</li></ul>');
+define('TEXT_SPECIALS_EXPIRES_DATE', 'Date Special Expires:');
+define('TEXT_SPECIALS_AVAILABLE_DATE', 'Date Special Available:');
+define('TEXT_SPECIALS_PRICE_NOTES', '<b>Notes:</b><ul>
+<li>Special Price may be a new price (ex-vat). The decimal separator must be a '.' (decimal-point), eg: <b>49.99</b>.</li>
+<li>Special Price may be a percentage discount, eg: <b>20%</b>.</li>
+<li>Dates are not obligatory. Leave the expiry date empty for no expiration.</li>
+<li>When dates are set, the status of the Special price is automatically enabled/disabled accordingly.</li>
+</ul>');
 
 define('TEXT_INFO_DATE_ADDED', 'Date Added:');
 define('TEXT_INFO_LAST_MODIFIED', 'Last Modified:');
 define('TEXT_INFO_NEW_PRICE', 'New Price:');
 define('TEXT_INFO_ORIGINAL_PRICE', 'Original Price:');
-define('TEXT_INFO_DISPLAY_PRICE', 'Display Price:<br />');
-define('TEXT_INFO_AVAILABLE_DATE', 'Available On:');
-define('TEXT_INFO_EXPIRES_DATE', 'Expires At:');
+define('TEXT_INFO_DISPLAY_PRICE', 'Display Price:');
+define('TEXT_INFO_AVAILABLE_DATE', 'Available From:');
+define('TEXT_INFO_EXPIRES_DATE', 'Expires:');
 define('TEXT_INFO_STATUS_CHANGE', 'Status Change:');
 define('TEXT_IMAGE_NONEXISTENT', 'No Image Exists');
 
@@ -55,7 +60,6 @@ define('WARNING_SPECIALS_PRE_ADD_EMPTY', 'Warning: No Product ID specified ... n
 define('WARNING_SPECIALS_PRE_ADD_DUPLICATE', 'Warning: Product ID already on Special ... nothing was added ...');
 define('WARNING_SPECIALS_PRE_ADD_BAD_PRODUCTS_ID', 'Warning: Product ID is invalid ... nothing was added ...');
 define('TEXT_INFO_HEADING_PRE_ADD_SPECIALS', 'Manually add new Special by Product ID');
-define('TEXT_INFO_PRE_ADD_INTRO', 'On large databases, you may Manually Add a Special by the Product ID<br /><br />This is best used when the page takes too long to render and trying to select a Product from the dropdown becomes difficult due to too many Products from which to choose.');
+define('TEXT_INFO_PRE_ADD_INTRO', 'You may manually Add a Special by Product ID.<br><br>This method may be appropriate for shops with many products if the page takes too long to render or selecting a product from the dropdown becomes unwieldy.');
 define('TEXT_PRE_ADD_PRODUCTS_ID', 'Please enter the Product ID to be Pre-Added: ');
 define('TEXT_INFO_MANUAL', 'Product ID to be Manually Added as a Special');
-
