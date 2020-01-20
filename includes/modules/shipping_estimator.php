@@ -93,12 +93,12 @@ if ($_SESSION['cart']->count_contents() > 0) {
                     'id' => $_POST['zone_country_id'], 
                     'title' => $country_info['countries_name'],
                     'iso_code_2' => $country_info['countries_iso_code_2'], 
-                    'iso_code_3' =>  $country_info['countries_iso_code_3']
+                    'iso_code_3' =>  $country_info['countries_iso_code_3'],
                 ),
                 'country_id' => $_POST['zone_country_id'],
                 //add state zone_id
                 'zone_id' => $state_zone_id,
-                'format_id' => zen_get_address_format_id($_POST['zone_country_id'])
+                'format_id' => zen_get_address_format_id($_POST['zone_country_id']),
             );
             $_SESSION['cart_country_id'] = $_POST['zone_country_id'];
             //add state zone_id
@@ -115,11 +115,11 @@ if ($_SESSION['cart']->count_contents() > 0) {
                     'id' => $_SESSION['cart_country_id'], 
                     'title' => $country_info['countries_name'], 
                     'iso_code_2' => $country_info['countries_iso_code_2'], 
-                    'iso_code_3' =>  $country_info['countries_iso_code_3']
+                    'iso_code_3' =>  $country_info['countries_iso_code_3'],
                 ),
                 'country_id' => $_SESSION['cart_country_id'],
                 'zone_id' => $state_zone_id,
-                'format_id' => zen_get_address_format_id($_SESSION['cart_country_id'])
+                'format_id' => zen_get_address_format_id($_SESSION['cart_country_id']),
             );
         } else {
             // first timer
@@ -132,11 +132,11 @@ if ($_SESSION['cart']->count_contents() > 0) {
                     'id' => STORE_COUNTRY, 
                     'title' => $country_info['countries_name'], 
                     'iso_code_2' => $country_info['countries_iso_code_2'], 
-                    'iso_code_3' =>  $country_info['countries_iso_code_3']
+                    'iso_code_3' =>  $country_info['countries_iso_code_3'],
                 ),
                 'country_id' => STORE_COUNTRY,
                 'zone_id' => $state_zone_id,
-                'format_id' => zen_get_address_format_id(isset($_POST['zone_country_id']) ? $_POST['zone_country_id'] : 0)
+                'format_id' => zen_get_address_format_id(isset($_POST['zone_country_id']) ? $_POST['zone_country_id'] : 0),
             );
         }
         // set the cost to be able to calculate free shipping
