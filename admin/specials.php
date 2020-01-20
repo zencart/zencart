@@ -70,7 +70,7 @@ if (zen_not_null($action)) {
         // reset products_price_sorter for searches etc.
         zen_update_products_price_sorter((int)$products_id);
       } // nothing selected
-      if ($_GET['go_back'] == 'ON') {
+      if (isset($_GET['go_back']) && $_GET['go_back'] === 'ON') {
         zen_redirect(zen_href_link(FILENAME_PRODUCTS_PRICE_MANAGER, 'products_filter=' . $products_id . '&current_category_id=' . $_GET['current_category_id']));
       } else {
         zen_redirect(zen_href_link(FILENAME_SPECIALS, (isset($_GET['page']) && $_GET['page'] > 0 ? 'page=' . $_GET['page'] . '&' : '') . 'sID=' . $new_special->fields['specials_id'] . (isset($_GET['search']) ? '&search=' . $_GET['search'] : '')));
