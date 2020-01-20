@@ -106,7 +106,7 @@
  * plugins that span the admin and storefront to create a storefront (a.k.a catalog)
  * link.
  */
-function zen_catalog_href_link($page = '', $parameters = '', $connection = 'NONSSL') 
+function zen_catalog_href_link($page = '', $parameters = '', $connection = 'NONSSL')
 {
     return zen_href_link($page, $parameters, $connection, false);
 }
@@ -353,14 +353,14 @@ function zen_catalog_href_link($page = '', $parameters = '', $connection = 'NONS
           $parameters = str_replace($matches[1], '', $parameters);
         }
       }
-      
+
       // -----
       // Give an observer the chance to provide alternate formatting for the button (it's set to an empty
       // string above).  If the value is still empty after the notification, create the standard-format
       // of the button.
       //
       $GLOBALS['zco_notifier']->notify(
-            'NOTIFY_ZEN_CSS_BUTTON_SUBMIT', 
+            'NOTIFY_ZEN_CSS_BUTTON_SUBMIT',
             array(
                 'button_name' => $button_name,
                 'text' => $text,
@@ -382,7 +382,7 @@ function zen_catalog_href_link($page = '', $parameters = '', $connection = 'NONS
       // of the button.
       //
       $GLOBALS['zco_notifier']->notify(
-            'NOTIFY_ZEN_CSS_BUTTON_BUTTON', 
+            'NOTIFY_ZEN_CSS_BUTTON_BUTTON',
             array(
                 'button_name' => $button_name,
                 'text' => $text,
@@ -451,7 +451,7 @@ function zen_catalog_href_link($page = '', $parameters = '', $connection = 'NONS
     if ($field !== false) {
         return $field;
     }
-    
+
     $field = '<input type="' . zen_output_string($type) . '" name="' . zen_sanitize_string(zen_output_string($name)) . '"';
     if ( (isset($GLOBALS[$name]) && is_string($GLOBALS[$name])) && ($reinsert_value == true) ) {
       $field .= ' value="' . zen_output_string(stripslashes($GLOBALS[$name])) . '"';
@@ -462,7 +462,7 @@ function zen_catalog_href_link($page = '', $parameters = '', $connection = 'NONS
     if (zen_not_null($parameters)) $field .= ' ' . $parameters;
 
     $field .= ' />';
-    
+
     // -----
     // Give an observer the opportunity to modify the just-rendered field.
     //
@@ -515,7 +515,7 @@ function zen_catalog_href_link($page = '', $parameters = '', $connection = 'NONS
     if ($selection !== false) {
         return $selection;
     }
-    
+
     $selection = '<input type="' . zen_output_string($type) . '" name="' . zen_output_string($name) . '"';
 
     if (zen_not_null($value)) $selection .= ' value="' . zen_output_string($value) . '"';
@@ -527,7 +527,7 @@ function zen_catalog_href_link($page = '', $parameters = '', $connection = 'NONS
     if (zen_not_null($parameters)) $selection .= ' ' . $parameters;
 
     $selection .= ' />';
-    
+
     // -----
     // Give an observer the opportunity to modify the just-rendered field.
     //
@@ -582,7 +582,7 @@ function zen_catalog_href_link($page = '', $parameters = '', $connection = 'NONS
     if ($field !== false) {
         return $field;
     }
-    
+
     $field = '<textarea name="' . zen_output_string($name) . '" cols="' . zen_output_string($width) . '" rows="' . zen_output_string($height) . '"';
 
     if (zen_not_null($parameters)) $field .= ' ' . $parameters;
@@ -596,7 +596,7 @@ function zen_catalog_href_link($page = '', $parameters = '', $connection = 'NONS
     }
 
     $field .= '</textarea>';
-    
+
     // -----
     // Give an observer the opportunity to modify the just-rendered field.
     //
@@ -637,7 +637,7 @@ function zen_catalog_href_link($page = '', $parameters = '', $connection = 'NONS
 /*
  * Output a form file-field
  * @param string $name name
- * @param boolean $required required 
+ * @param boolean $required required
  * @return string
  */
   function zen_draw_file_field($name, $required = false) {
@@ -666,7 +666,7 @@ function zen_catalog_href_link($page = '', $parameters = '', $connection = 'NONS
  * @param array $values values
  * @param string $default default value
  * @param string $parameters parameters
- * @param boolean $required required 
+ * @param boolean $required required
  * @return string
  */
 function zen_draw_pull_down_menu($name, $values, $default = '', $parameters = '', $required = false)
