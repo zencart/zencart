@@ -77,17 +77,17 @@ if (zen_not_null($action)) {
         for ($i = 0, $n = sizeof($categories); $i < $n; $i++) {
 
           //set categories_status
-            if ($categories[$i]['id'] == $categories_id) {//always update THIS category
-                $sql = "UPDATE " . TABLE_CATEGORIES . "
+          if ($categories[$i]['id'] == $categories_id) {//always update THIS category
+            $sql = "UPDATE " . TABLE_CATEGORIES . "
                     SET categories_status = " . (int)$category_status . "
                     WHERE categories_id = " . (int)$categories[$i]['id'];
-                $db->Execute($sql);
+            $db->Execute($sql);
 
           } elseif ($subcategories_status != '') {//optionally update subcategories if a change was selected
-                $sql = "UPDATE " . TABLE_CATEGORIES . "
+            $sql = "UPDATE " . TABLE_CATEGORIES . "
                     SET categories_status = " . (int)$subcategories_status . "
                     WHERE categories_id = " . (int)$categories[$i]['id'];
-                $db->Execute($sql);
+            $db->Execute($sql);
           }
 
             //set products_status
