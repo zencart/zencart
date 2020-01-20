@@ -155,9 +155,9 @@
     $minute = (int)substr($raw_date, 14, 2);
     $second = (int)substr($raw_date, 17, 2);
 
-   $retVal = strftime(DATE_FORMAT_LONG, mktime($hour, $minute, $second, $month, $day, $year));
-  if (stristr(PHP_OS, 'win')) return utf8_encode($retVal);
-  return $retVal;
+    $retVal = strftime(DATE_FORMAT_LONG, mktime($hour, $minute, $second, $month, $day, $year));
+    if (stristr(PHP_OS, 'win')) return utf8_encode($retVal);
+    return $retVal;
   }
 
 
