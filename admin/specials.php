@@ -381,7 +381,7 @@ if (zen_not_null($action)) {
                     <th class="dataTableHeadingContent text-right"><?php echo 'ID#'; ?></th>
                     <th class="dataTableHeadingContent"><?php echo TABLE_HEADING_PRODUCTS; ?></th>
                     <th class="dataTableHeadingContent"><?php echo TABLE_HEADING_PRODUCTS_MODEL; ?></th>
-                    <th colspan="2" class="dataTableHeadingContent text-right"><?php echo TABLE_HEADING_PRODUCTS_PRICE; ?></th>
+                    <th class="dataTableHeadingContent text-right"><?php echo TABLE_HEADING_PRODUCTS_PRICE; ?></th>
                     <th class="dataTableHeadingContent text-center"><?php echo TABLE_HEADING_AVAILABLE_DATE; ?></th>
                     <th class="dataTableHeadingContent text-center"><?php echo TABLE_HEADING_EXPIRES_DATE; ?></th>
                     <th class="dataTableHeadingContent text-center"><?php echo TABLE_HEADING_STATUS; ?></th>
@@ -463,7 +463,7 @@ if (zen_not_null($action)) {
                   <td class="dataTableContent text-right"><?php echo $special['products_id']; ?>&nbsp;</td>
                   <td class="dataTableContent"><?php echo $special['products_name']; ?></td>
                   <td class="dataTableContent"><?php echo $special['products_model']; ?>&nbsp;</td>
-                  <td colspan="2" class="dataTableContent text-right"><?php echo zen_get_products_display_price($special['products_id']); ?></td>
+                  <td class="dataTableContent text-right"><?php echo zen_get_products_display_price($special['products_id']); ?></td>
                   <td class="dataTableContent text-center"><?php echo (($special['specials_date_available'] != '0001-01-01' && $special['specials_date_available'] != '') ? zen_date_short($special['specials_date_available']) : TEXT_NONE); ?></td>
                   <td class="dataTableContent text-center"><?php echo (($special['expires_date'] != '0001-01-01' && $special['expires_date'] != '') ? zen_date_short($special['expires_date']) : TEXT_NONE); ?></td>
                   <td class="dataTableContent text-center">
@@ -572,7 +572,7 @@ if (zen_not_null($action)) {
               if (empty($action)) {
                 ?>
                 <tr>
-                  <td colspan="2" align="right">
+                  <td colspan="2" class="text-right">
                     <a href="<?php echo zen_href_link(FILENAME_SPECIALS, ((isset($_GET['page']) && $_GET['page'] > 0) ? 'page=' . $_GET['page'] . '&' : '') . 'action=new'); ?>" class="btn btn-primary" role="button"><?php echo IMAGE_NEW_PRODUCT; ?></a>
                   </td>
                 </tr>
