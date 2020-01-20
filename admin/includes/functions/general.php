@@ -60,7 +60,7 @@
                                           from " . TABLE_CATEGORIES . "
                                            where categories_id = '" . (int)$current_category_id . "'");
 
-        if ($last_category->fields['parent_id'] == $current_category->fields['parent_id']) {
+        if ((isset($last_category->fields['parent_id']) && isset($current_category->fields['parent_id']) && $last_category->fields['parent_id'] == $current_category->fields['parent_id']) || (!isset($last_category->fields['parent_id']) && !isset($current_category->fields['parent_id']))) {
           for ($i = 0, $n = sizeof($cPath_array) - 1; $i < $n; $i++) {
             $cPath_new .= '_' . $cPath_array[$i];
           }
