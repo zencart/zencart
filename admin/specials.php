@@ -369,6 +369,7 @@ if (zen_not_null($action)) {
             </tr>
           </table>
           <?php echo '</form>'; ?>
+        </div>
           <?php
         } else {
           ?>
@@ -583,11 +584,9 @@ if (zen_not_null($action)) {
           <?php
         }
         ?>
-      </div>
       <!-- body_text_eof //-->
-    </div>
     <!-- body_eof //-->
-
+    </div>
     <!-- footer //-->
     <?php require(DIR_WS_INCLUDES . 'footer.php'); ?>
     <!-- footer_eof //-->
