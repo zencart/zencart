@@ -248,7 +248,7 @@ if (zen_not_null($action)) {
         if (($action == 'edit') && isset($_GET['sID'])) {
           $form_action = 'update';
 
-          $product = $db->Execute("SELECT p.products_id, pd.products_name, p.products_price, p.products_priced_by_attribute,
+          $product = $db->Execute("SELECT p.products_id, p.products_model, pd.products_name, p.products_price, p.products_priced_by_attribute,
                                           s.specials_new_products_price, s.expires_date, s.specials_date_available
                                    FROM " . TABLE_PRODUCTS . " p,
                                         " . TABLE_PRODUCTS_DESCRIPTION . " pd,
@@ -308,21 +308,26 @@ if (zen_not_null($action)) {
         </script>
         <div class="row"><?php echo zen_draw_separator('pixel_trans.gif', '100%', '5'); ?></div>
         <div class="row">
-            <?php echo zen_draw_form('new_special', FILENAME_SPECIALS, zen_get_all_get_params(array('action', 'info', 'sID')) . 'action=' . $form_action . (!empty($_GET['go_back']) ? '&go_back=' . $_GET['go_back'] : ''), 'post', 'onsubmit="return check_dates(start,StartDate.required, end, EndDate.required);" class="form-horizontal"'); ?>
+            <?php echo zen_draw_form('new_special', FILENAME_SPECIALS, zen_get_all_get_params(array('action', 'info', 'sID')) . 'action=' . $form_action . (!empty($_GET['go_back']) ? '&go_back=' . $_GET['go_back'] : ''), 'post', 'onsubmit="return check_dates(start, StartDate.required, end, EndDate.required);" class="form-horizontal"'); ?>
             <?php
             if ($form_action == 'update') {
               echo zen_draw_hidden_field('specials_id', $_GET['sID']);
             }
             ?>
-          <div class="form-group">
-              <?php echo zen_draw_label(TEXT_SPECIALS_PRODUCT, 'products_id', 'class="col-sm-3 control-label"'); ?>
-            <div class="col-sm-9 col-md-6">
-                <?php
-                echo (isset($sInfo->products_name)) ? $sInfo->products_name . ' (' . $currencies->format($sInfo->products_price) . ')' : zen_draw_products_pull_down('products_id', 'size="15" class="form-control"', $specials_array, true, (!empty($_GET['add_products_id']) ? $_GET['add_products_id'] : ''), true);
-                echo zen_draw_hidden_field('products_price', (isset($sInfo->products_price) ? $sInfo->products_price : ''));
-                ?>
+            <div class="form-group">
+                <?php if (isset($sInfo->products_name)) { ?>
+                    <p class="col-sm-3 control-label"><strong><?php echo TEXT_SPECIALS_PRODUCT; ?></strong></p>
+                    <div class="col-sm-9 col-md-6"><?php echo $sInfo->products_model . ' - "' . $sInfo->products_name . '" (' . $currencies->format($sInfo->products_price) . ')'; ?></div>
+                <?php } else {
+                    echo zen_draw_label(TEXT_SPECIALS_PRODUCT, 'products_id', 'class="col-sm-3 control-label"'); ?>
+                    <div class="col-sm-9 col-md-6">
+                        <?php
+                        echo zen_draw_products_pull_down('products_id', 'size="15" class="form-control"', $specials_array, true, (!empty($_GET['add_products_id']) ? $_GET['add_products_id'] : ''), true);
+                        echo zen_draw_hidden_field('products_price', (isset($sInfo->products_price) ? $sInfo->products_price : ''));
+                        ?>
+                    </div>
+                <?php } ?>
             </div>
-          </div>
           <div class="form-group">
               <?php echo zen_draw_label(TEXT_SPECIALS_SPECIAL_PRICE, 'specials_price', 'class="col-sm-3 control-label"'); ?>
             <div class="col-sm-9 col-md-6">
