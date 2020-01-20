@@ -690,9 +690,9 @@ function zen_draw_pull_down_menu($name, $values, $default = '', $parameters = ''
     return $field;
   }
 
-  $field = '<select';
+  $field = '<select rel="dropdown"';
 
-  if (!strstr($parameters, 'id=')) {
+  if (strpos($parameters, 'id=') === false) {
     $field .= ' id="select-' . zen_output_string($name) . '"';
   }
 
