@@ -469,14 +469,14 @@ if (zen_not_null($action)) {
                   <td class="dataTableContent text-center">
                       <?php
                       if ($special['status'] == '1') {
-                        echo zen_draw_form('setflag_products', FILENAME_SPECIALS, 'action=setflag&id=' . $special['specials_id'] . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '') . (isset($_GET['search']) ? '&search=' . $_GET['search'] : ''));
+                        echo zen_draw_form('setflag_products_' . $special['products_id'] , FILENAME_SPECIALS, 'action=setflag&id=' . $special['specials_id'] . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '') . (isset($_GET['search']) ? '&search=' . $_GET['search'] : ''));
                         ?>
                       <input type="image" src="<?php echo DIR_WS_IMAGES ?>icon_green_on.gif" title="<?php echo IMAGE_ICON_STATUS_ON; ?>" alt="<?php echo IMAGE_ICON_STATUS_ON; ?>" />
                       <input type="hidden" name="flag" value="0" />
                       <?php echo '</form>'; ?>
                       <?php
                     } else {
-                      echo zen_draw_form('setflag_products', FILENAME_SPECIALS, 'action=setflag&id=' . $special['specials_id'] . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '') . (isset($_GET['search']) ? '&search=' . $_GET['search'] : ''));
+                      echo zen_draw_form('setflag_products_' . $special['products_id'], FILENAME_SPECIALS, 'action=setflag&id=' . $special['specials_id'] . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '') . (isset($_GET['search']) ? '&search=' . $_GET['search'] : ''));
                       ?>
                       <input type="image" src="<?php echo DIR_WS_IMAGES ?>icon_red_on.gif" title="<?php echo IMAGE_ICON_STATUS_OFF; ?>" alt="<?php echo IMAGE_ICON_STATUS_OFF; ?>" />
                       <input type="hidden" name="flag" value="1" />
