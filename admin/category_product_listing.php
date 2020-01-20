@@ -67,33 +67,34 @@ if (zen_not_null($action)) {
         for ($i = 0, $n = sizeof($categories); $i < $n; $i++) {
 
           //set categories_status
-            if ($categories[$i]['id'] == $categories_id) {//always update THIS category
-                $sql = "UPDATE " . TABLE_CATEGORIES . "
+          if ($categories[$i]['id'] == $categories_id) {//always update THIS category
+            $sql = "UPDATE " . TABLE_CATEGORIES . "
                     SET categories_status = " . (int)$category_status . "
                     WHERE categories_id = " . (int)$categories[$i]['id'];
-                $db->Execute($sql);
+            $db->Execute($sql);
 
           } elseif ($subcategories_status != '') {//optionally update subcategories if a change was selected
-                $sql = "UPDATE " . TABLE_CATEGORIES . "
+            $sql = "UPDATE " . TABLE_CATEGORIES . "
                     SET categories_status = " . (int)$subcategories_status . "
                     WHERE categories_id = " . (int)$categories[$i]['id'];
-                $db->Execute($sql);
+            $db->Execute($sql);
           }
 
-            //set products_status
-            if ($products_status != '') {//only execute if a change was selected
-                $sql = "SELECT products_id
-                    FROM " . TABLE_PRODUCTS_TO_CATEGORIES . "
-                    WHERE categories_id = " . (int)$categories[$i]['id'];
-                $category_products = $db->Execute($sql);
+          //set products_status
+          if ($products_status == '') continue;
+            
+          //only execute if a change was selected
+          $sql = "SELECT products_id
+                  FROM " . TABLE_PRODUCTS_TO_CATEGORIES . "
+                  WHERE categories_id = " . (int)$categories[$i]['id'];
+          $category_products = $db->Execute($sql);
 
-                foreach ($category_products as $category_product) {
-                    $sql = "UPDATE " . TABLE_PRODUCTS . "
-                      SET products_status = " . (int)$products_status . "
-                      WHERE products_id = " . (int)$category_product['products_id'];
-                    $db->Execute($sql);
-                }
-            }
+          foreach ($category_products as $category_product) {
+            $sql = "UPDATE " . TABLE_PRODUCTS . "
+                    SET products_status = " . (int)$products_status . "
+                    WHERE products_id = " . (int)$category_product['products_id'];
+            $db->Execute($sql);
+          }
         }
       }
       zen_redirect(zen_href_link(FILENAME_CATEGORY_PRODUCT_LISTING, 'cPath=' . $_GET['cPath'] . '&cID=' . $_GET['cID'] . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '') . ($search_result ? '&search=' . $_GET['search'] : '')));
