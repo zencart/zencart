@@ -46,10 +46,10 @@ define('TEXT_INFO_DISPLAY_PRICE', 'Currently Displayed Price:');
 define('TEXT_INFO_AVAILABLE_DATE', 'Available From:');
 define('TEXT_INFO_EXPIRES_DATE', 'Expires:');
 define('TEXT_INFO_STATUS_CHANGED', 'Status Changed:');
-define('TEXT_IMAGE_NONEXISTENT', 'No Image Exists');
+define('TEXT_IMAGE_NONEXISTENT', '(no image defined)');
 
 define('TEXT_INFO_HEADING_DELETE_SPECIALS', 'Delete Special');
-define('TEXT_INFO_DELETE_INTRO', 'Are you sure you want to delete the special products price?');
+define('TEXT_INFO_DELETE_INTRO', 'Are you sure you want to delete the Special Price for this product?');
 
 define('SUCCESS_SPECIALS_PRE_ADD', 'Successful: Pre-Add of Special ... please update the price and dates ...');
 define('WARNING_SPECIALS_PRE_ADD_EMPTY', 'Warning: No Product ID specified ... nothing was added ...');

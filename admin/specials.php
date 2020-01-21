@@ -354,19 +354,16 @@ if (zen_not_null($action)) {
           </div>
           <hr />
           <div class="row">
-            <div style ="margin-bottom: 5px">
+              <div style="margin-bottom: 5px">
                   <?php echo zen_draw_form('search', FILENAME_SPECIALS, '', 'get');
+                  $keywords = (isset($_GET['search']) && zen_not_null($_GET['search'])) ? zen_db_input(zen_db_prepare_input($_GET['search'])) : '';
+                  echo TEXT_SEARCH_SPECIALS . ' ' . zen_draw_input_field('search', $keywords) . zen_hide_session_id();
                   // show reset search
-                  if (isset($_GET['search']) && zen_not_null($_GET['search'])) {
-                      echo '<a href="' . zen_href_link(FILENAME_SPECIALS) . '">' . zen_image_button('button_reset.gif', IMAGE_RESET) . '</a>&nbsp;&nbsp;';
-                  }
-                  echo TEXT_SEARCH_SPECIALS . ' ' . zen_draw_input_field('search') . zen_hide_session_id();
-                  if (isset($_GET['search']) && zen_not_null($_GET['search'])) {
-                      $keywords = zen_db_input(zen_db_prepare_input($_GET['search']));
-                      echo '<br>' . TEXT_INFO_SEARCH_DETAIL_FILTER . $keywords;
-                  }
+                  if (isset($_GET['search']) && zen_not_null($_GET['search'])) { ?>
+                      <a href="<?php echo zen_href_link(FILENAME_SPECIALS); ?>" class="btn btn-default" role="button"><?php echo IMAGE_RESET; ?></a>
+                  <?php }
                   echo '</form>'; ?>
-            </div>
+              </div>
             <div><?php echo TEXT_STATUS_WARNING; ?></div>
             <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9 configurationColumnLeft">
               <table class="table table-hover">
@@ -508,7 +505,7 @@ if (zen_not_null($action)) {
 
                     $contents = array('form' => zen_draw_form('specials', FILENAME_SPECIALS, 'page=' . $_GET['page'] . '&action=deleteconfirm' . (isset($_GET['search']) ? '&search=' . $_GET['search'] : '')) . zen_draw_hidden_field('sID', $sInfo->specials_id));
                     $contents[] = array('text' => TEXT_INFO_DELETE_INTRO);
-                    $contents[] = array('text' => '<br><b>' . $sInfo->products_name . '</b>');
+                    $contents[] = array('text' => '<b>' . $sInfo->products_model . ' - ' . $sInfo->products_name . '</b>');
                     $contents[] = array('align' => 'text-center', 'text' => '<br><button type="submit" class="btn btn-danger">' . IMAGE_DELETE . '</button> <a href="' . zen_href_link(FILENAME_SPECIALS, 'page=' . $_GET['page'] . '&sID=' . $sInfo->specials_id . (isset($_GET['search']) ? '&search=' . $_GET['search'] : '')) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>');
                     break;
                   case 'pre_add':
