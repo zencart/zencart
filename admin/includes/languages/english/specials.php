@@ -22,8 +22,8 @@
 
 define('HEADING_TITLE', 'Specials');
 
-define('TABLE_HEADING_PRODUCTS', 'Products');
-define('TABLE_HEADING_PRODUCTS_PRICE', 'Products Price/Special/Sale');
+define('TABLE_HEADING_PRODUCTS', 'Product');
+define('TABLE_HEADING_PRODUCTS_PRICE', 'Price/Special/Sale');
 define('TABLE_HEADING_PRODUCTS_PERCENTAGE','Percentage');
 define('TABLE_HEADING_AVAILABLE_DATE', 'Available');
 define('TABLE_HEADING_EXPIRES_DATE','Expires');
@@ -52,9 +52,10 @@ define('TEXT_INFO_HEADING_DELETE_SPECIALS', 'Delete Special');
 define('TEXT_INFO_DELETE_INTRO', 'Are you sure you want to delete the Special Price for this product?');
 
 define('SUCCESS_SPECIALS_PRE_ADD', 'Successful: Pre-Add of Special ... please update the price and dates ...');
-define('WARNING_SPECIALS_PRE_ADD_EMPTY', 'Warning: No Product ID specified ... nothing was added ...');
-define('WARNING_SPECIALS_PRE_ADD_DUPLICATE', 'Warning: Product ID already on Special ... nothing was added ...');
-define('WARNING_SPECIALS_PRE_ADD_BAD_PRODUCTS_ID', 'Warning: Product ID is invalid ... nothing was added ...');
+define('WARNING_SPECIALS_PRE_ADD_PID_EMPTY', 'Warning: No Product ID was specified.');
+define('WARNING_SPECIALS_PRE_ADD_PID_DUPLICATE', 'Warning: Product ID#%u already on Special.');
+define('WARNING_SPECIALS_PRE_ADD_PID_NO_EXIST', 'Warning: Product ID#%u does not exist.');
+define('WARNING_SPECIALS_PRE_ADD_PID_GIFT', 'Warning: Product ID3%u is a ' . TEXT_GV_NAME . '.');
 define('TEXT_INFO_HEADING_PRE_ADD_SPECIALS', 'Add Special Price by Product ID');
 define('TEXT_INFO_PRE_ADD_INTRO', 'You may add a Special Price by Product ID. This method may be appropriate for shops with many products, if the selection page takes too long to render / selecting a product from the dropdown becomes unwieldy.');
 define('TEXT_PRE_ADD_PRODUCTS_ID', 'Enter the Product ID: ');

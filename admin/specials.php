@@ -127,40 +127,40 @@ if (zen_not_null($action)) {
       zen_redirect(zen_href_link(FILENAME_SPECIALS, 'page=' . $_GET['page'] . (isset($_GET['search']) ? '&search=' . $_GET['search'] : '')));
       break;
     case 'pre_add_confirmation':
-      // check for blank or existing special
       $skip_special = false;
+      // check for no PID entered
       if (empty($_POST['pre_add_products_id'])) {
         $skip_special = true;
-        $messageStack->add_session(WARNING_SPECIALS_PRE_ADD_EMPTY, 'caution');
-      }
-
-      if ($skip_special == false) {
+        $messageStack->add_session(WARNING_SPECIALS_PRE_ADD_PID_EMPTY, 'caution');
+      } else {
         $sql = "SELECT products_id, products_model
                 FROM " . TABLE_PRODUCTS . "
                 WHERE products_id = " . (int)$_POST['pre_add_products_id'];
-        $check_special = $db->Execute($sql);
-        if ((!defined('MODULE_ORDER_TOTAL_GV_SPECIAL') || MODULE_ORDER_TOTAL_GV_SPECIAL == 'false') && ($check_special->RecordCount() < 1 || substr($check_special->fields['products_model'], 0, 4) == 'GIFT')) {
+        $check_product = $db->Execute($sql);
+          if ($check_product->RecordCount() < 1) {// check for PID valid
+              $skip_special = true;
+              $messageStack->add_session(sprintf(WARNING_SPECIALS_PRE_ADD_PID_NO_EXIST, (int)$_POST['pre_add_products_id']), 'caution');
+          } elseif ((!defined('MODULE_ORDER_TOTAL_GV_SPECIAL') || MODULE_ORDER_TOTAL_GV_SPECIAL == 'false') && (substr($check_product->fields['products_model'], 0, 4) == 'GIFT')) { // check for PID as a gift voucher
           $skip_special = true;
-          $messageStack->add_session(WARNING_SPECIALS_PRE_ADD_BAD_PRODUCTS_ID, 'caution');
+          $messageStack->add_session(sprintf(WARNING_SPECIALS_PRE_ADD_PID_GIFT, (int)$_POST['pre_add_products_id']), 'caution');
         }
       }
-
-      if ($skip_special == false) {
+      // check if Special already exists
+      if ($skip_special === false) {
         $sql = "SELECT specials_id
                 FROM " . TABLE_SPECIALS . "
                 WHERE products_id = " . (int)$_POST['pre_add_products_id'];
         $check_special = $db->Execute($sql);
         if ($check_special->RecordCount() > 0) {
           $skip_special = true;
-          $messageStack->add_session(WARNING_SPECIALS_PRE_ADD_DUPLICATE, 'caution');
+          $messageStack->add_session(sprintf(WARNING_SPECIALS_PRE_ADD_PID_DUPLICATE, (int)$_POST['pre_add_products_id']), 'caution');
         }
       }
-
-      if ($skip_special == true) {
-        zen_redirect(zen_href_link(FILENAME_SPECIALS, (isset($_GET['page']) && $_GET['page'] > 0 ? 'page=' . $_GET['page'] . '&' : '') . ($check_special->fields['specials_id'] > 0 ? 'sID=' . $check_special->fields['specials_id'] : '') . (isset($_GET['search']) ? '&search=' . $_GET['search'] : '')));
+      if ($skip_special === true) {
+        zen_redirect(zen_href_link(FILENAME_SPECIALS, (!empty($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . (!empty($check_special->fields['specials_id']) ? 'sID=' . $check_special->fields['specials_id'] . '&action=edit' : '') . (!empty($_GET['search']) ? '&search=' . $_GET['search'] : '')));
       }
-      // add empty special
 
+      // add empty special
       $specials_date_available = ((zen_db_prepare_input($_POST['start']) == '') ? '0001-01-01' : zen_date_raw($_POST['start']));
       $expires_date = ((zen_db_prepare_input($_POST['end']) == '') ? '0001-01-01' : zen_date_raw($_POST['end']));
 
