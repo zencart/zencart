@@ -76,7 +76,7 @@ if ($expired && $message == '') {
     <title><?php echo TITLE; ?></title>
     <link rel="stylesheet" href="includes/css/bootstrap.min.css">
     <link rel="stylesheet" href="includes/css/font-awesome.min.css">
-    <link href="includes/alt-stylesheet.css" rel="stylesheet">
+    <link href="includes/css/login.css" rel="stylesheet">
     <meta name="robots" content="noindex, nofollow">
   </head>
   <body id="login">

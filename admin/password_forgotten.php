@@ -75,7 +75,7 @@ if (isset($_POST['action']) && $_POST['action'] == 'update') {
     <title><?php echo TITLE; ?></title>
     <link rel="stylesheet" href="includes/css/bootstrap.min.css">
     <link rel="stylesheet" href="includes/css/font-awesome.min.css">
-    <link href="includes/alt-stylesheet.css" rel="stylesheet">
+    <link href="includes/css/login.css" rel="stylesheet">
     <meta name="robots" content="noindex, nofollow">
     <script src="includes/javascript/jquery-3.4.0.min.js"></script>
   </head>
