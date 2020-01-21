@@ -191,14 +191,6 @@ if (zen_not_null($action)) {
     <link rel="stylesheet" type="text/css" href="includes/cssjsmenuhover.css" media="all" id="hoverJS">
     <script src="includes/menu.js"></script>
     <script src="includes/general.js"></script>
-    <?php
-    if (($action == 'new') || ($action == 'edit')) {
-      ?>
-      <link rel="stylesheet" type="text/css" href="includes/javascript/spiffyCal/spiffyCal_v2_1.css">
-      <script src="includes/javascript/spiffyCal/spiffyCal_v2_1.js"></script>
-      <?php
-    }
-    ?>
     <script>
       function init() {
           cssjsmenu('navbar');
@@ -210,7 +202,6 @@ if (zen_not_null($action)) {
     </script>
   </head>
   <body onload="init()">
-    <div id="spiffycalendar" class="text"></div>
     <!-- header //-->
     <?php require(DIR_WS_INCLUDES . 'header.php'); ?>
     <!-- header_eof //-->
@@ -302,11 +293,6 @@ if (zen_not_null($action)) {
 
         }
         ?>
-        <script>
-          var StartDate = new ctlSpiffyCalendarBox("StartDate", "new_special", "start", "btnDate1", "<?php echo (($sInfo->specials_date_available == '0001-01-01') ? '' : zen_date_short($sInfo->specials_date_available)); ?>", scBTNMODE_CUSTOMBLUE);
-          var EndDate = new ctlSpiffyCalendarBox("EndDate", "new_special", "end", "btnDate2", "<?php echo (($sInfo->expires_date == '0001-01-01') ? '' : zen_date_short($sInfo->expires_date)); ?>", scBTNMODE_CUSTOMBLUE);
-        </script>
-        <div class="row"><?php echo zen_draw_separator('pixel_trans.gif', '100%', '5'); ?></div>
         <div class="row">
             <?php echo zen_draw_form('new_special', FILENAME_SPECIALS, zen_get_all_get_params(array('action', 'info', 'sID')) . 'action=' . $form_action . (!empty($_GET['go_back']) ? '&go_back=' . $_GET['go_back'] : ''), 'post', 'onsubmit="return check_dates(start, StartDate.required, end, EndDate.required);" class="form-horizontal"'); ?>
             <?php
@@ -323,7 +309,7 @@ if (zen_not_null($action)) {
                     <div class="col-sm-9 col-md-6">
                         <?php
                         echo zen_draw_products_pull_down('products_id', 'size="15" class="form-control" id="products_id"', $specials_array, true, (!empty($_GET['add_products_id']) ? $_GET['add_products_id'] : ''), true);
-                        echo zen_draw_hidden_field('products_price', (isset($sInfo->products_price) ? $sInfo->products_price : ''));
+                        echo zen_draw_hidden_field('products_price', (!empty($sInfo->products_price) ? $sInfo->products_price : ''));
                         ?>
                     </div>
                 <?php } ?>
@@ -332,25 +318,35 @@ if (zen_not_null($action)) {
               <?php echo zen_draw_label(TEXT_SPECIALS_SPECIAL_PRICE, 'specials_price', 'class="col-sm-3 control-label"'); ?>
             <div class="col-sm-9 col-md-6">
                 <?php
-                echo zen_draw_input_field('specials_price', (isset($sInfo->specials_new_products_price) ? $sInfo->specials_new_products_price : ''), 'class="form-control" id="specials_price"');
+                echo zen_draw_input_field('specials_price', (!empty($sInfo->specials_new_products_price) ? $sInfo->specials_new_products_price : ''), 'class="form-control" id="specials_price"');
                 echo zen_draw_hidden_field('products_priced_by_attribute', $sInfo->products_priced_by_attribute);
                 echo zen_draw_hidden_field('update_products_id', $sInfo->products_id);
                 ?>
             </div>
           </div>
 
-          <div class="form-group">
-              <?php echo zen_draw_label(TEXT_SPECIALS_AVAILABLE_DATE, 'start', 'class="col-sm-3 control-label"'); ?>
-            <div class="col-sm-9 col-md-6">
-              <script>StartDate.writeControl(); StartDate.dateFormat = "<?php echo DATE_FORMAT_SPIFFYCAL; ?>";</script>
+            <div class="form-group">
+                <?php echo zen_draw_label(TEXT_SPECIALS_AVAILABLE_DATE, 'start', 'class="col-sm-3 control-label"'); ?>
+                <div class="col-sm-9 col-md-6">
+                    <div class="date input-group">
+                        <span class="input-group-addon datepicker_icon"> <i class="fa fa-calendar fa-lg">&nbsp;</i></span>
+                        <?php echo zen_draw_input_field('start', (!empty($sInfo->specials_date_available) ? $sInfo->specials_date_available : ''), 'class="form-control" id="start"'); ?>
+                    </div>
+                    <span class="help-block errorText">(<?php echo (strtoupper(DATE_FORMAT_DATE_PICKER)); ?>)</span>
+                </div>
             </div>
-          </div>
-          <div class="form-group">
-              <?php echo zen_draw_label(TEXT_SPECIALS_EXPIRES_DATE, 'end', 'class="col-sm-3 control-label"'); ?>
-            <div class="col-sm-9 col-md-6">
-              <script>EndDate.writeControl(); EndDate.dateFormat = "<?php echo DATE_FORMAT_SPIFFYCAL; ?>";</script>
+
+            <div class="form-group">
+                <?php echo zen_draw_label(TEXT_SPECIALS_EXPIRES_DATE, 'end', 'class="col-sm-3 control-label"'); ?>
+                <div class="col-sm-9 col-md-6">
+                    <div class="date input-group">
+                        <span class="input-group-addon datepicker_icon"><i class="fa fa-calendar fa-lg">&nbsp;</i></span>
+                        <?php echo zen_draw_input_field('end', (!empty($sInfo->expires_date) ? $sInfo->expires_date : ''), 'class="form-control" id="end"'); ?>
+                    </div>
+                    <span class="help-block errorText">(<?php echo (strtoupper(DATE_FORMAT_DATE_PICKER)); ?>)</span>
+                </div>
             </div>
-          </div>
+
           <table class="table">
             <tr>
               <td><?php echo TEXT_SPECIALS_PRICE_NOTES; ?></td>
@@ -591,6 +587,19 @@ if (zen_not_null($action)) {
       <!-- body_text_eof //-->
     <!-- body_eof //-->
     </div>
+    <?php
+    if (($action == 'new') || ($action == 'edit')) {
+        ?>
+        <!-- script for datepicker -->
+        <script>
+            $(function () {
+                $('input[name="start"]').datepicker();
+                $('input[name="end"]').datepicker();
+            })
+        </script>
+        <?php
+    }
+    ?>
     <!-- footer //-->
     <?php require(DIR_WS_INCLUDES . 'footer.php'); ?>
     <!-- footer_eof //-->
