@@ -350,28 +350,24 @@ if (zen_not_null($action)) {
                 </div>
             </div>
 
-          <table class="table">
-            <tr>
-              <td><?php echo TEXT_SPECIALS_PRICE_NOTES; ?></td>
-                <td class="text-right">
-                    <button type="submit" class="btn btn-primary"><?php echo(($form_action == 'insert') ? IMAGE_INSERT : IMAGE_UPDATE); ?></button>
-                    <?php
-                    if (empty($_GET['manual']) || (int)$_GET['manual'] == 0) {
-                        if (isset($_GET['go_back']) && $_GET['go_back'] == 'ON') {
-                            $cancel_link = zen_href_link(FILENAME_PRODUCTS_PRICE_MANAGER, 'products_filter=' . $_GET['add_products_id'] . '&current_category_id=' . $_GET['current_category_id']);
-                        } else {
-                            $cancel_link = zen_href_link(FILENAME_SPECIALS,
-                                (!empty($_GET['page']) ? 'page=' . $_GET['page'] : '') .
-                                (!empty($_GET['sID']) ? '&sID=' . $_GET['sID'] : '') .
-                                (!empty($_GET['search']) ? '&search=' . $_GET['search'] : '')
-                            );
-                        } ?>
-                        <a class="btn btn-default" role="button" href="<?php echo $cancel_link; ?>"><?php echo IMAGE_CANCEL; ?></a>
-                    <?php } ?>
-                </td>
-            </tr>
-          </table>
-          <?php echo '</form>'; ?>
+            <div class="text-right"><button type="submit" class="btn btn-primary"><?php echo(($form_action == 'insert') ? IMAGE_INSERT : IMAGE_UPDATE); ?></button>
+            <?php
+            if (empty($_GET['manual']) || (int)$_GET['manual'] == 0) {
+                if (isset($_GET['go_back']) && $_GET['go_back'] == 'ON') {
+                    $cancel_link = zen_href_link(FILENAME_PRODUCTS_PRICE_MANAGER, 'products_filter=' . $_GET['add_products_id'] . '&current_category_id=' . $_GET['current_category_id']);
+                } else {
+                    $cancel_link = zen_href_link(FILENAME_SPECIALS,
+                        (!empty($_GET['page']) ? 'page=' . $_GET['page'] : '') .
+                        (!empty($_GET['sID']) ? '&sID=' . $_GET['sID'] : '') .
+                        (!empty($_GET['search']) ? '&search=' . $_GET['search'] : '')
+                    );
+                } ?>
+                <a class="btn btn-default" role="button" href="<?php echo $cancel_link; ?>"><?php echo IMAGE_CANCEL; ?></a>
+            <?php } ?>
+            </div>
+            <?php echo '</form>'; ?>
+            <hr />
+            <?php echo TEXT_SPECIALS_PRICE_NOTES; ?>
         </div>
           <?php
         } else {
