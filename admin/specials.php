@@ -349,7 +349,8 @@ if (zen_not_null($action)) {
         } else {
           ?>
           <div class="row">
-              <a href="<?php echo zen_href_link(FILENAME_SPECIALS, ((isset($_GET['page']) && $_GET['page'] > 0) ? 'page=' . $_GET['page'] . '&' : '') . 'action=new'); ?>" class="btn btn-primary" role="button"><?php echo TEXT_ADD_SPECIAL; ?></a>
+              <a href="<?php echo zen_href_link(FILENAME_SPECIALS, ((isset($_GET['page']) && $_GET['page'] > 0) ? 'page=' . $_GET['page'] . '&' : '') . 'action=new'); ?>" class="btn btn-primary" role="button"><?php echo TEXT_ADD_SPECIAL_SELECT; ?></a>
+              <a href="<?php echo zen_href_link(FILENAME_SPECIALS, 'action=pre_add' . ((isset($_GET['page']) && $_GET['page'] > 0) ? '&page=' . $_GET['page'] : '') . (isset($_GET['search']) ? '&search=' . $_GET['search'] : '')); ?>" class="btn btn-primary" role="button"><?php echo TEXT_ADD_SPECIAL_PID; ?></a>
           </div>
           <hr />
           <div class="row">
@@ -540,8 +541,6 @@ if (zen_not_null($action)) {
                       $contents[] = array('text' => '<br>' . TEXT_INFO_EXPIRES_DATE . ' <b>' . (($sInfo->expires_date != '0001-01-01' and $sInfo->expires_date != '') ? zen_date_short($sInfo->expires_date) : TEXT_NONE) . '</b>');
                       $contents[] = array('text' => TEXT_INFO_STATUS_CHANGE . ' ' . zen_date_short($sInfo->date_status_change));
                       $contents[] = array('align' => 'text-center', 'text' => '<a href="' . zen_href_link(FILENAME_PRODUCT, '&action=new_product' . '&cPath=' . zen_get_product_path($sInfo->products_id, 'override') . '&pID=' . $sInfo->products_id . '&product_type=' . zen_get_products_type($sInfo->products_id)) . '" class="btn btn-primary" role="button">' . IMAGE_EDIT_PRODUCT . '</a>');
-
-                      $contents[] = array('align' => 'text-center', 'text' => '<a href="' . zen_href_link(FILENAME_SPECIALS, 'action=pre_add' . ((isset($_GET['page']) && $_GET['page'] > 0) ? '&page=' . $_GET['page'] : '') . (isset($_GET['search']) ? '&search=' . $_GET['search'] : '')) . '" class="btn btn-primary" role="button">' . IMAGE_SELECT . '</a><br>' . TEXT_INFO_MANUAL);
                     } else {
                       $heading[] = array('text' => '<h4>' . TEXT_NONE . '</h4>');
                       $contents[] = array('align' => 'text-center', 'text' => '<a href="' . zen_href_link(FILENAME_SPECIALS, 'action=pre_add' . ((isset($_GET['page']) && $_GET['page'] > 0) ? '&page=' . $_GET['page'] : '') . (isset($_GET['search']) ? '&search=' . $_GET['search'] : '')) . '" class="btn btn-primary" role="button">' . IMAGE_SELECT . '</a><br>' . TEXT_INFO_MANUAL);
