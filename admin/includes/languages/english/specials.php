@@ -27,12 +27,13 @@ define('TABLE_HEADING_PRODUCTS_PRICE', 'Price/Special/Sale');
 define('TABLE_HEADING_PRODUCTS_PERCENTAGE','Percentage');
 define('TABLE_HEADING_AVAILABLE_DATE', 'Available');
 define('TABLE_HEADING_EXPIRES_DATE','Expires');
-define('TABLE_HEADING_STATUS', 'Status');
+define('TABLE_HEADING_STATUS', 'Special Status');
 define('TABLE_HEADING_ACTION', 'Action');
 define('TEXT_ADD_SPECIAL_SELECT', 'Add Special by Selection');
 define('TEXT_ADD_SPECIAL_PID', 'Add Special by Product ID');
 define('TEXT_SEARCH_SPECIALS', 'Search current Specials');
-
+define('TEXT_SPECIAL_ACTIVE', 'Special Price Active');
+define('TEXT_SPECIAL_INACTIVE', 'Special Price Inactive');
 define('TEXT_SPECIALS_PRODUCT', 'Product:');
 define('TEXT_SPECIALS_SPECIAL_PRICE', 'Special Price:');
 define('TEXT_SPECIALS_EXPIRES_DATE', 'Date Special Expires:');
@@ -60,8 +61,7 @@ if (!defined('TEXT_GV_NAME')) {
 }
 define('WARNING_SPECIALS_PRE_ADD_PID_GIFT', 'Warning: Product ID#%u is a ' . TEXT_GV_NAME . '.');
 define('TEXT_INFO_HEADING_PRE_ADD_SPECIALS', 'Add Special Price by Product ID');
-define('TEXT_INFO_PRE_ADD_INTRO', 'You may add a Special Price by Product ID. This method may be appropriate for shops with many products, if the selection page takes too long to render / selecting a product from the dropdown becomes unwieldy.');
+define('TEXT_INFO_PRE_ADD_INTRO', 'You may add a Special Price by Product ID. This method may be appropriate for shops with many products if the selection page takes too long to render or selecting a product from the dropdown becomes unwieldy.');
 define('TEXT_PRE_ADD_PRODUCTS_ID', 'Enter the Product ID: ');
-define('TEXT_INFO_MANUAL', 'Product ID to be Manually Added as a Special');
 
 define('TEXT_SPECIALS_PRICE_NOTES', '<b>Notes:</b><ul><li>Special Price may be a new price (ex-tax). The decimal separator must be a "." (decimal-point), eg: <b>49.99</b>.</li><li>Special Price may be a percentage discount, eg: <b>20%</b>.</li><li>Dates are not obligatory. Leave the expiry date empty for no expiration.</li><li>When dates are set, the status of the Special Price is automatically enabled/disabled accordingly.</li><li>' . TEXT_INFO_PRE_ADD_INTRO . '</li></ul>');

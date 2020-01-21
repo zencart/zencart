@@ -174,6 +174,14 @@ if (zen_not_null($action)) {
     <link rel="stylesheet" type="text/css" href="includes/cssjsmenuhover.css" media="all" id="hoverJS">
     <script src="includes/menu.js"></script>
     <script src="includes/general.js"></script>
+    <?php
+    if (($action == 'new') || ($action == 'edit')) {
+      ?>
+      <link rel="stylesheet" type="text/css" href="includes/javascript/spiffyCal/spiffyCal_v2_1.css">
+      <script src="includes/javascript/spiffyCal/spiffyCal_v2_1.js"></script>
+      <?php
+    }
+    ?>
     <script>
       function init() {
           cssjsmenu('navbar');
@@ -185,6 +193,7 @@ if (zen_not_null($action)) {
     </script>
   </head>
   <body onload="init()">
+    <div id="spiffycalendar" class="text"></div>
     <!-- header //-->
     <?php require(DIR_WS_INCLUDES . 'header.php'); ?>
     <!-- header_eof //-->
@@ -213,7 +222,7 @@ if (zen_not_null($action)) {
           if ($sInfo->products_priced_by_attribute == '1') {
             $sInfo->products_price = zen_get_products_base_price($product->fields['products_id']);
           }
-        } elseif (empty($_GET['preID'])) { // not a manual product ID: use the product select dropdown
+        } elseif (empty($_GET['preID'])) { // insert by product select dropdown
           $sInfo = new objectInfo(array());
 
 // create an array of products on special, which will be excluded from the pull down menu of products
@@ -252,6 +261,10 @@ if (zen_not_null($action)) {
 
         }
         ?>
+        <script>
+          var StartDate = new ctlSpiffyCalendarBox("StartDate", "new_special", "start", "btnDate1", "<?php echo (($sInfo->specials_date_available == '0001-01-01') ? '' : zen_date_short($sInfo->specials_date_available)); ?>", scBTNMODE_CUSTOMBLUE);
+          var EndDate = new ctlSpiffyCalendarBox("EndDate", "new_special", "end", "btnDate2", "<?php echo (($sInfo->expires_date == '0001-01-01') ? '' : zen_date_short($sInfo->expires_date)); ?>", scBTNMODE_CUSTOMBLUE);
+        </script>
         <div class="row">
             <?php echo zen_draw_form('new_special', FILENAME_SPECIALS, zen_get_all_get_params(array('action', 'info', 'sID')) . 'action=' . $form_action . (!empty($_GET['go_back']) ? '&go_back=' . $_GET['go_back'] : ''), 'post', 'onsubmit="return check_dates(start, StartDate.required, end, EndDate.required);" class="form-horizontal"'); ?>
             <?php
@@ -262,15 +275,15 @@ if (zen_not_null($action)) {
             <div class="form-group">
                 <?php if (isset($sInfo->products_name)) { // Special is already defined/this is an update ?>
                     <p class="col-sm-3 control-label"><strong><?php echo TEXT_SPECIALS_PRODUCT; ?></strong></p>
-                    <div class="col-sm-9 col-md-6"><span class="form-control"
-                                                         style="border:none; -webkit-box-shadow: none"><?php echo 'ID#' . $sInfo->products_id . ': ' . $sInfo->products_model . ' - "' . zen_clean_html($sInfo->products_name) . '" (' . $currencies->format($sInfo->products_price) . ')'; ?></span></div>
-                <?php } elseif (!empty($_GET['preID'])) { // new Special direct from a product ID
+                    <div class="col-sm-9 col-md-6"><span class="form-control" style="border:none; -webkit-box-shadow: none">
+                            <?php echo 'ID#' . $sInfo->products_id . ': ' . $sInfo->products_model . ' - "' . zen_clean_html($sInfo->products_name) . '" (' . $currencies->format($sInfo->products_price) . ')'; ?></span></div>
+                <?php } elseif (!empty($_GET['preID'])) { // new Special: insert by product ID
                     $preID = (int)$_GET['preID']; ?>
                     <p class="col-sm-3 control-label"><strong><?php echo TEXT_SPECIALS_PRODUCT; ?></strong></p>
-                    <div class="col-sm-9 col-md-6"><span class="form-control" style="border:none; -webkit-box-shadow: none"><?php echo 'ID#' . $preID . ': ' . zen_get_products_model($preID) . ' - "' . zen_clean_html(zen_get_products_name($preID)) . '" (' . $currencies->format($sInfo->products_price) . ')'; ?></span>
+                    <div class="col-sm-9 col-md-6"><span class="form-control" style="border:none; -webkit-box-shadow: none"><?php echo 'ID#' . $preID . ': ' . zen_get_products_model($preID) . ' - "' . zen_clean_html(zen_get_products_name($preID)) . '" (' . $currencies->format(zen_get_products_base_price($preID)) . ')'; ?></span>
                     </div>
                     <?php echo zen_draw_hidden_field('products_id', $preID); ?>
-                <?php } else {
+                <?php } else { // new Special: insert by dropdown
                     echo zen_draw_label(TEXT_SPECIALS_PRODUCT, 'products_id', 'class="col-sm-3 control-label"'); ?>
                     <div class="col-sm-9 col-md-6">
                         <?php
@@ -294,32 +307,22 @@ if (zen_not_null($action)) {
             </div>
           </div>
 
-            <div class="form-group">
-                <?php echo zen_draw_label(TEXT_SPECIALS_AVAILABLE_DATE, 'start', 'class="col-sm-3 control-label"'); ?>
-                <div class="col-sm-9 col-md-6">
-                    <div class="date input-group">
-                        <span class="input-group-addon datepicker_icon"> <i class="fa fa-calendar fa-lg">&nbsp;</i></span>
-                        <?php echo zen_draw_input_field('start', (!empty($sInfo->specials_date_available) ? $sInfo->specials_date_available : ''), 'class="form-control" id="start"'); ?>
-                    </div>
-                    <span class="help-block errorText">(<?php echo (strtoupper(DATE_FORMAT_DATE_PICKER)); ?>)</span>
-                </div>
+          <div class="form-group">
+              <?php echo zen_draw_label(TEXT_SPECIALS_AVAILABLE_DATE, 'start', 'class="col-sm-3 control-label"'); ?>
+            <div class="col-sm-9 col-md-6">
+              <script>StartDate.writeControl(); StartDate.dateFormat = "<?php echo DATE_FORMAT_SPIFFYCAL; ?>";</script>
             </div>
-
-            <div class="form-group">
-                <?php echo zen_draw_label(TEXT_SPECIALS_EXPIRES_DATE, 'end', 'class="col-sm-3 control-label"'); ?>
-                <div class="col-sm-9 col-md-6">
-                    <div class="date input-group">
-                        <span class="input-group-addon datepicker_icon"><i class="fa fa-calendar fa-lg">&nbsp;</i></span>
-                        <?php echo zen_draw_input_field('end', (!empty($sInfo->expires_date) ? $sInfo->expires_date : ''), 'class="form-control" id="end"'); ?>
-                    </div>
-                    <span class="help-block errorText">(<?php echo (strtoupper(DATE_FORMAT_DATE_PICKER)); ?>)</span>
-                </div>
+          </div>
+          <div class="form-group">
+              <?php echo zen_draw_label(TEXT_SPECIALS_EXPIRES_DATE, 'end', 'class="col-sm-3 control-label"'); ?>
+            <div class="col-sm-9 col-md-6">
+              <script>EndDate.writeControl(); EndDate.dateFormat = "<?php echo DATE_FORMAT_SPIFFYCAL; ?>";</script>
             </div>
+          </div>
 
             <div class="text-right"><button type="submit" class="btn btn-primary"><?php echo(($form_action == 'insert') ? IMAGE_INSERT : IMAGE_UPDATE); ?></button>
             <?php
-            if (empty($_GET['manual']) || (int)$_GET['manual'] == 0) {
-                if (isset($_GET['go_back']) && $_GET['go_back'] == 'ON') {
+                if (isset($_GET['go_back']) && $_GET['go_back'] == 'ON') { // 'go_back' set in Products Price Manager
                     $cancel_link = zen_href_link(FILENAME_PRODUCTS_PRICE_MANAGER, 'products_filter=' . $_GET['add_products_id'] . '&current_category_id=' . $_GET['current_category_id']);
                 } else {
                     $cancel_link = zen_href_link(FILENAME_SPECIALS,
@@ -329,7 +332,6 @@ if (zen_not_null($action)) {
                     );
                 } ?>
                 <a class="btn btn-default" role="button" href="<?php echo $cancel_link; ?>"><?php echo IMAGE_CANCEL; ?></a>
-            <?php } ?>
             </div>
             <?php echo '</form>'; ?>
             <hr />
@@ -359,9 +361,9 @@ if (zen_not_null($action)) {
               <table class="table table-hover">
                 <thead>
                   <tr class="dataTableHeadingRow">
-                    <th class="dataTableHeadingContent text-right"><?php echo 'ID#'; ?></th>
-                    <th class="dataTableHeadingContent"><?php echo TABLE_HEADING_PRODUCTS; ?></th>
+                    <th class="dataTableHeadingContent text-center"><?php echo 'ID#'; ?></th>
                     <th class="dataTableHeadingContent"><?php echo TABLE_HEADING_PRODUCTS_MODEL; ?></th>
+                    <th class="dataTableHeadingContent"><?php echo TABLE_HEADING_PRODUCTS; ?></th>
                     <th class="dataTableHeadingContent text-right"><?php echo TABLE_HEADING_PRODUCTS_PRICE; ?></th>
                     <th class="dataTableHeadingContent text-center"><?php echo TABLE_HEADING_AVAILABLE_DATE; ?></th>
                     <th class="dataTableHeadingContent text-center"><?php echo TABLE_HEADING_EXPIRES_DATE; ?></th>
@@ -404,11 +406,8 @@ if (zen_not_null($action)) {
                           }
                           $check_count++;
                         }
-                        $_GET['page'] = round((($check_count / MAX_DISPLAY_SEARCH_RESULTS) + (fmod_round($check_count, MAX_DISPLAY_SEARCH_RESULTS) != 0 ? .5 : 0)), 0);
+                        $_GET['page'] = round((($check_count / MAX_DISPLAY_SEARCH_RESULTS) + (fmod_round($check_count, MAX_DISPLAY_SEARCH_RESULTS) != 0 ? .5 : 0)));
                         $page = $_GET['page'];
-                        if ($old_page != $_GET['page']) {
-// do nothing
-                        }
                       } else {
                         $_GET['page'] = 1;
                       }
@@ -441,9 +440,9 @@ if (zen_not_null($action)) {
 
                       $sale_price = zen_get_products_special_price($special['products_id'], false);
                       ?>
-                  <td class="dataTableContent text-right"><?php echo $special['products_id']; ?>&nbsp;</td>
+                  <td class="dataTableContent text-center"><?php echo $special['products_id']; ?></td>
+                  <td class="dataTableContent"><?php echo $special['products_model']; ?></td>
                   <td class="dataTableContent"><?php echo zen_clean_html($special['products_name']); ?></td>
-                  <td class="dataTableContent"><?php echo $special['products_model']; ?>&nbsp;</td>
                   <td class="dataTableContent text-right"><?php echo zen_get_products_display_price($special['products_id']); ?></td>
                   <td class="dataTableContent text-center"><?php echo (($special['specials_date_available'] != '0001-01-01' && $special['specials_date_available'] != '') ? zen_date_short($special['specials_date_available']) : TEXT_NONE); ?></td>
                   <td class="dataTableContent text-center"><?php echo (($special['expires_date'] != '0001-01-01' && $special['expires_date'] != '') ? zen_date_short($special['expires_date']) : TEXT_NONE); ?></td>
@@ -452,14 +451,14 @@ if (zen_not_null($action)) {
                       if ($special['status'] == '1') {
                         echo zen_draw_form('setflag_products_' . $special['products_id'] , FILENAME_SPECIALS, 'action=setflag&id=' . $special['specials_id'] . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '') . (isset($_GET['search']) ? '&search=' . $_GET['search'] : ''));
                         ?>
-                      <input type="image" src="<?php echo DIR_WS_IMAGES ?>icon_green_on.gif" title="<?php echo IMAGE_ICON_STATUS_ON; ?>" alt="<?php echo IMAGE_ICON_STATUS_ON; ?>" />
+                      <input type="image" src="<?php echo DIR_WS_IMAGES ?>icon_green_on.gif" title="<?php echo TEXT_SPECIAL_ACTIVE; ?>" alt="<?php echo TEXT_SPECIAL_ACTIVE; ?>" />
                       <input type="hidden" name="flag" value="0" />
                       <?php echo '</form>'; ?>
                       <?php
                     } else {
                       echo zen_draw_form('setflag_products_' . $special['products_id'], FILENAME_SPECIALS, 'action=setflag&id=' . $special['specials_id'] . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '') . (isset($_GET['search']) ? '&search=' . $_GET['search'] : ''));
                       ?>
-                      <input type="image" src="<?php echo DIR_WS_IMAGES ?>icon_red_on.gif" title="<?php echo IMAGE_ICON_STATUS_OFF; ?>" alt="<?php echo IMAGE_ICON_STATUS_OFF; ?>" />
+                      <input type="image" src="<?php echo DIR_WS_IMAGES ?>icon_red_on.gif" title="<?php echo TEXT_SPECIAL_INACTIVE; ?>" alt="<?php echo TEXT_SPECIAL_INACTIVE; ?>" />
                       <input type="hidden" name="flag" value="1" />
                       <?php echo '</form>'; ?>
                       <?php
@@ -494,14 +493,14 @@ if (zen_not_null($action)) {
                     $heading[] = array('text' => '<h4>' . TEXT_INFO_HEADING_DELETE_SPECIALS . '</h4>');
                     $contents = array('form' => zen_draw_form('specials', FILENAME_SPECIALS, 'page=' . $_GET['page'] . '&action=deleteconfirm' . (isset($_GET['search']) ? '&search=' . $_GET['search'] : '')) . zen_draw_hidden_field('sID', $sInfo->specials_id));
                     $contents[] = array('text' => TEXT_INFO_DELETE_INTRO);
-                    $contents[] = array('text' => '<b>' . $sInfo->products_model . ' - ' . zen_clean_html($sInfo->products_name) . '</b>');
+                    $contents[] = array('text' => '<b>' . $sInfo->products_model . ' - "' . zen_clean_html($sInfo->products_name) . '"</b>');
                     $contents[] = array('align' => 'text-center', 'text' => '<br><button type="submit" class="btn btn-danger">' . IMAGE_DELETE . '</button> <a href="' . zen_href_link(FILENAME_SPECIALS, 'page=' . $_GET['page'] . '&sID=' . $sInfo->specials_id . (isset($_GET['search']) ? '&search=' . $_GET['search'] : '')) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>');
                     break;
                   case 'pre_add':
                     $heading[] = array('text' => '<h4>' . TEXT_INFO_HEADING_PRE_ADD_SPECIALS . '</h4>');
                     $contents = array('form' => zen_draw_form('specials', FILENAME_SPECIALS, 'action=pre_add_confirmation' . ((isset($_GET['page']) && $_GET['page'] > 0) ? '&page=' . $_GET['page'] : '') . (isset($_GET['search']) ? '&search=' . $_GET['search'] : ''), 'post', 'class="form-horizontal"'));
                     $contents[] = array('text' => TEXT_INFO_PRE_ADD_INTRO);
-                    $result = $db->Execute("select max(products_id) as lastproductid from " . TABLE_PRODUCTS);
+                    $result = $db->Execute("SELECT MAX(products_id) AS lastproductid FROM " . TABLE_PRODUCTS);
                     $max_product_id = $result->fields['lastproductid'];
                     $contents[] = array('text' => zen_draw_label(TEXT_PRE_ADD_PRODUCTS_ID, 'pre_add_products_id', 'class="control-label"') . zen_draw_input_field('pre_add_products_id', '', zen_set_field_length(TABLE_SPECIALS, 'products_id') . ' class="form-control" id="pre_add_products_id" required max="' . $max_product_id . '"', '', 'number'));
                     $contents[] = array('align' => 'text-center', 'text' => '<button type="submit" class="btn btn-primary">' . IMAGE_CONFIRM . '</button> <a href="' . zen_href_link(FILENAME_SPECIALS, 'page=' . $_GET['page'] . '&sID=' . $sInfo->specials_id . (isset($_GET['search']) ? '&search=' . $_GET['search'] : '')) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>');
@@ -525,9 +524,9 @@ if (zen_not_null($action)) {
                           $contents[] = array('text' => TEXT_INFO_ORIGINAL_PRICE . ' ' . $currencies->format($specials_current_price));
                           $contents[] = array('text' => TEXT_INFO_NEW_PRICE . ' ' . $currencies->format($sInfo->specials_new_products_price));
                           $contents[] = array('text' => '<b>' . TEXT_INFO_DISPLAY_PRICE . '<br>' . zen_get_products_display_price($sInfo->products_id) . '</b>');
-                          $contents[] = array('text' => TEXT_INFO_AVAILABLE_DATE . ' ' . (($sInfo->specials_date_available != '0001-01-01' and $sInfo->specials_date_available != '') ? zen_date_short($sInfo->specials_date_available) : TEXT_NONE));
-                          $contents[] = array('text' => TEXT_INFO_EXPIRES_DATE . ' ' . (($sInfo->expires_date != '0001-01-01' and $sInfo->expires_date != '') ? zen_date_short($sInfo->expires_date) : TEXT_NONE));
-                          if ($sInfo->date_status_change !== null && $sInfo->date_status_change !== '0001-01-01 00:00:00') {
+                          $contents[] = array('text' => TEXT_INFO_AVAILABLE_DATE . ' ' . (($sInfo->specials_date_available != '0001-01-01' && $sInfo->specials_date_available != '') ? zen_date_short($sInfo->specials_date_available) : TEXT_NONE));
+                          $contents[] = array('text' => TEXT_INFO_EXPIRES_DATE . ' ' . (($sInfo->expires_date != '0001-01-01' && $sInfo->expires_date != '') ? zen_date_short($sInfo->expires_date) : TEXT_NONE));
+                          if ($sInfo->date_status_change !== null && $sInfo->date_status_change !== '0001-01-01') {
                           $contents[] = array('text' => TEXT_INFO_STATUS_CHANGED . ' ' . zen_date_short($sInfo->date_status_change));
                           }
                           $contents[] = array('text' => '' . TEXT_INFO_LAST_MODIFIED . ' ' . zen_date_short($sInfo->specials_last_modified));
@@ -571,20 +570,6 @@ if (zen_not_null($action)) {
         ?>
       <!-- body_text_eof //-->
     <!-- body_eof //-->
-    </div>
-    <?php
-    if (($action == 'new') || ($action == 'edit')) {
-        ?>
-        <!-- script for datepicker -->
-        <script>
-            $(function () {
-                $('input[name="start"]').datepicker();
-                $('input[name="end"]').datepicker();
-            })
-        </script>
-        <?php
-    }
-    ?>
     <!-- footer //-->
     <?php require(DIR_WS_INCLUDES . 'footer.php'); ?>
     <!-- footer_eof //-->
