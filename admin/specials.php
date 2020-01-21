@@ -303,7 +303,7 @@ if (zen_not_null($action)) {
             <div class="form-group">
                 <?php if (isset($sInfo->products_name)) { ?>
                     <p class="col-sm-3 control-label"><strong><?php echo TEXT_SPECIALS_PRODUCT; ?></strong></p>
-                    <div class="col-sm-9 col-md-6"><?php echo $sInfo->products_model . ' - "' . $sInfo->products_name . '" (' . $currencies->format($sInfo->products_price) . ')'; ?></div>
+                    <div class="col-sm-9 col-md-6"><span class="form-control" style="border:none; -webkit-box-shadow: none"><?php echo $sInfo->products_model . ' - "' . $sInfo->products_name . '" (' . $currencies->format($sInfo->products_price) . ')'; ?></span></div>
                 <?php } else {
                     echo zen_draw_label(TEXT_SPECIALS_PRODUCT, 'products_id', 'class="col-sm-3 control-label"'); ?>
                     <div class="col-sm-9 col-md-6">
