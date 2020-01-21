@@ -287,6 +287,9 @@ if (zen_not_null($action)) {
                     echo zen_draw_label(TEXT_SPECIALS_PRODUCT, 'products_id', 'class="col-sm-3 control-label"'); ?>
                     <div class="col-sm-9 col-md-6">
                         <?php
+                        if (empty($prev_next_order)) {
+                            $prev_next_order = ' ORDER BY products_model'; // set sort order of dropdown
+                        }
                         echo zen_draw_products_pull_down('products_id', 'required size="15" class="form-control" id="products_id"', $specials_array, true, (!empty($_GET['add_products_id']) ? $_GET['add_products_id'] : ''), true);
                         ?>
                     </div>
@@ -364,6 +367,7 @@ if (zen_not_null($action)) {
                     <th class="dataTableHeadingContent text-center"><?php echo 'ID#'; ?></th>
                     <th class="dataTableHeadingContent"><?php echo TABLE_HEADING_PRODUCTS_MODEL; ?></th>
                     <th class="dataTableHeadingContent"><?php echo TABLE_HEADING_PRODUCTS; ?></th>
+                    <th class="dataTableHeadingContent"><?php echo TABLE_HEADING_STOCK; ?></th>
                     <th class="dataTableHeadingContent text-right"><?php echo TABLE_HEADING_PRODUCTS_PRICE; ?></th>
                     <th class="dataTableHeadingContent text-center"><?php echo TABLE_HEADING_AVAILABLE_DATE; ?></th>
                     <th class="dataTableHeadingContent text-center"><?php echo TABLE_HEADING_EXPIRES_DATE; ?></th>
@@ -383,8 +387,8 @@ if (zen_not_null($action)) {
                     }
 
 // order of display
-                    $order_by = " order by pd.products_name ";
-                    $specials_query_raw = "select p.products_id, pd.products_name, p.products_model, p.products_price, p.products_priced_by_attribute,
+                    $order_by = " order by p.products_model"; //set sort order of table listing
+                    $specials_query_raw = "select p.products_id, p.products_quantity, pd.products_name, p.products_model, p.products_price, p.products_priced_by_attribute,
                                                   s.specials_id, s.specials_new_products_price, s.specials_date_added, s.specials_last_modified, s.expires_date, s.date_status_change, s.status, s.specials_date_available
                                            from " . TABLE_PRODUCTS . " p,
                                                 " . TABLE_SPECIALS . " s,
@@ -443,6 +447,9 @@ if (zen_not_null($action)) {
                   <td class="dataTableContent text-center"><?php echo $special['products_id']; ?></td>
                   <td class="dataTableContent"><?php echo $special['products_model']; ?></td>
                   <td class="dataTableContent"><?php echo zen_clean_html($special['products_name']); ?></td>
+                  <td class="dataTableContent text-center"><?php
+                      $oos_style = $specials->fields['products_quantity'] <= 0 ? ' style="color:red;font-weight:bold"' : ''; ?>
+                      <span<?php echo $oos_style; ?>><?php echo $special['products_quantity']; ?></span></td>
                   <td class="dataTableContent text-right"><?php echo zen_get_products_display_price($special['products_id']); ?></td>
                   <td class="dataTableContent text-center"><?php echo (($special['specials_date_available'] != '0001-01-01' && $special['specials_date_available'] != '') ? zen_date_short($special['specials_date_available']) : TEXT_NONE); ?></td>
                   <td class="dataTableContent text-center"><?php echo (($special['expires_date'] != '0001-01-01' && $special['expires_date'] != '') ? zen_date_short($special['expires_date']) : TEXT_NONE); ?></td>
@@ -524,17 +531,16 @@ if (zen_not_null($action)) {
                           $contents[] = array('text' => TEXT_INFO_ORIGINAL_PRICE . ' ' . $currencies->format($specials_current_price));
                           $contents[] = array('text' => TEXT_INFO_NEW_PRICE . ' ' . $currencies->format($sInfo->specials_new_products_price));
                           $contents[] = array('text' => '<b>' . TEXT_INFO_DISPLAY_PRICE . '<br>' . zen_get_products_display_price($sInfo->products_id) . '</b>');
-                          $contents[] = array('text' => TEXT_INFO_AVAILABLE_DATE . ' ' . (($sInfo->specials_date_available != '0001-01-01' && $sInfo->specials_date_available != '') ? zen_date_short($sInfo->specials_date_available) : TEXT_NONE));
-                          $contents[] = array('text' => TEXT_INFO_EXPIRES_DATE . ' ' . (($sInfo->expires_date != '0001-01-01' && $sInfo->expires_date != '') ? zen_date_short($sInfo->expires_date) : TEXT_NONE));
-                          if ($sInfo->date_status_change !== null && $sInfo->date_status_change !== '0001-01-01') {
+                          $contents[] = array('text' => TEXT_SPECIALS_AVAILABLE_DATE . ' ' . (($sInfo->specials_date_available != '0001-01-01' && $sInfo->specials_date_available != '') ? zen_date_short($sInfo->specials_date_available) : TEXT_NONE));
+                          $contents[] = array('text' => TEXT_SPECIALS_EXPIRES_DATE . ' ' . (($sInfo->expires_date != '0001-01-01' && $sInfo->expires_date != '') ? zen_date_short($sInfo->expires_date) : TEXT_NONE));
+                          if ($sInfo->date_status_change != null && $sInfo->date_status_change !== '0001-01-01 00:00:00') {
                           $contents[] = array('text' => TEXT_INFO_STATUS_CHANGED . ' ' . zen_date_short($sInfo->date_status_change));
                           }
-                          $contents[] = array('text' => '' . TEXT_INFO_LAST_MODIFIED . ' ' . zen_date_short($sInfo->specials_last_modified));
+                          $contents[] = array('text' => TEXT_INFO_LAST_MODIFIED . ' ' . zen_date_short($sInfo->specials_last_modified));
                           $contents[] = array('text' => TEXT_INFO_DATE_ADDED . ' ' . zen_date_short($sInfo->specials_date_added));
                           $contents[] = array('align' => 'text-center', 'text' => zen_info_image($sInfo->products_image, htmlspecialchars($sInfo->products_name), SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT));
                           $contents[] = array('align' => 'text-center', 'text' =>
-                              '<a href="' . zen_href_link(FILENAME_PRODUCT, '&action=new_product' . '&cPath=' . zen_get_product_path($sInfo->products_id, 'override') . '&pID=' . $sInfo->products_id . '&product_type=' . zen_get_products_type($sInfo->products_id)) .
-                              '" class="btn btn-primary" role="button">' . IMAGE_EDIT_PRODUCT . '</a>'
+                              '<a href="' . zen_href_link(FILENAME_PRODUCT, '&action=new_product' . '&cPath=' . zen_get_product_path($sInfo->products_id, 'override') . '&pID=' . $sInfo->products_id . '&product_type=' . zen_get_products_type($sInfo->products_id)) . '" class="btn btn-primary" role="button">' . IMAGE_EDIT_PRODUCT . '</a>'
                           );
                       }
                       break;

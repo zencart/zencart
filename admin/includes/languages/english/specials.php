@@ -23,36 +23,34 @@
 define('HEADING_TITLE', 'Specials');
 
 define('TABLE_HEADING_PRODUCTS', 'Product');
+define('TABLE_HEADING_STOCK', 'Stock');
 define('TABLE_HEADING_PRODUCTS_PRICE', 'Price/Special/Sale');
-define('TABLE_HEADING_PRODUCTS_PERCENTAGE','Percentage');
-define('TABLE_HEADING_AVAILABLE_DATE', 'Available');
-define('TABLE_HEADING_EXPIRES_DATE','Expires');
+define('TABLE_HEADING_AVAILABLE_DATE', 'Active From');
+define('TABLE_HEADING_EXPIRES_DATE','Expires On');
 define('TABLE_HEADING_STATUS', 'Special Status');
-define('TABLE_HEADING_ACTION', 'Action');
+define('TABLE_HEADING_ACTION', 'Actions');
 define('TEXT_ADD_SPECIAL_SELECT', 'Add Special by Selection');
 define('TEXT_ADD_SPECIAL_PID', 'Add Special by Product ID');
 define('TEXT_SEARCH_SPECIALS', 'Search current Specials');
 define('TEXT_SPECIAL_ACTIVE', 'Special Price Active');
 define('TEXT_SPECIAL_INACTIVE', 'Special Price Inactive');
+
 define('TEXT_SPECIALS_PRODUCT', 'Product:');
 define('TEXT_SPECIALS_SPECIAL_PRICE', 'Special Price:');
+define('TEXT_SPECIALS_AVAILABLE_DATE', 'Date Special Active:');
 define('TEXT_SPECIALS_EXPIRES_DATE', 'Date Special Expires:');
-define('TEXT_SPECIALS_AVAILABLE_DATE', 'Date Special Available:');
 
 define('TEXT_INFO_DATE_ADDED', 'Date Added:');
 define('TEXT_INFO_LAST_MODIFIED', 'Last Modified:');
 define('TEXT_INFO_NEW_PRICE', 'Special Price:');
 define('TEXT_INFO_ORIGINAL_PRICE', 'Original Price:');
 define('TEXT_INFO_DISPLAY_PRICE', 'Currently Displayed Price:');
-define('TEXT_INFO_AVAILABLE_DATE', 'Available From:');
-define('TEXT_INFO_EXPIRES_DATE', 'Expires:');
 define('TEXT_INFO_STATUS_CHANGED', 'Status Changed:');
 define('TEXT_IMAGE_NONEXISTENT', '(no image defined)');
 
 define('TEXT_INFO_HEADING_DELETE_SPECIALS', 'Delete Special');
 define('TEXT_INFO_DELETE_INTRO', 'Are you sure you want to delete the Special Price for this product?');
 
-define('SUCCESS_SPECIALS_PRE_ADD', 'Successful: Pre-Add of Special ... please update the price and dates ...');
 define('WARNING_SPECIALS_PRE_ADD_PID_EMPTY', 'Warning: No Product ID was specified.');
 define('WARNING_SPECIALS_PRE_ADD_PID_DUPLICATE', 'Warning: Product ID#%u already on Special.');
 define('WARNING_SPECIALS_PRE_ADD_PID_NO_EXIST', 'Warning: Product ID#%u does not exist.');
