@@ -703,7 +703,6 @@ class queryFactoryResult implements Countable, Iterator {
       $this->EOF = false;
     } else {
       $this->EOF = true;
-      $this->set_error(mysqli_errno($this->link), mysqli_error($this->link), $this->dieOnErrors);
     }
   }
 }
