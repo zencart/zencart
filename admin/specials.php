@@ -209,30 +209,6 @@ if (zen_not_null($action)) {
       <!-- body //-->
       <h1><?php echo HEADING_TITLE; ?></h1>
       <!-- body_text //-->
-      <div class="row text-right">
-          <?php echo zen_draw_form('search', FILENAME_SPECIALS, '', 'get'); ?>
-          <?php
-// show reset search
-          if (isset($_GET['search']) && zen_not_null($_GET['search'])) {
-            echo '<a href="' . zen_href_link(FILENAME_SPECIALS) . '">' . zen_image_button('button_reset.gif', IMAGE_RESET) . '</a>&nbsp;&nbsp;';
-          }
-          echo HEADING_TITLE_SEARCH_DETAIL . ' ' . zen_draw_input_field('search') . zen_hide_session_id();
-          if (isset($_GET['search']) && zen_not_null($_GET['search'])) {
-            $keywords = zen_db_input(zen_db_prepare_input($_GET['search']));
-            echo '<br>' . TEXT_INFO_SEARCH_DETAIL_FILTER . $keywords;
-          }
-          ?>
-          <?php echo '</form>'; ?>
-      </div>
-      <?php
-      if (empty($action)) {
-        ?>
-        <div class="row text-center">
-          <a href="<?php echo zen_href_link(FILENAME_SPECIALS, ((isset($_GET['page']) && $_GET['page'] > 0) ? 'page=' . $_GET['page'] . '&' : '') . 'action=new'); ?>" class="btn btn-primary" role="button"><?php echo TEXT_ADD_SPECIAL; ?></a>
-        </div>
-        <?php
-      }
-      ?>
       <?php
       if (($action == 'new') || ($action == 'edit')) {
         $form_action = 'insert';
@@ -373,6 +349,24 @@ if (zen_not_null($action)) {
         } else {
           ?>
           <div class="row">
+              <a href="<?php echo zen_href_link(FILENAME_SPECIALS, ((isset($_GET['page']) && $_GET['page'] > 0) ? 'page=' . $_GET['page'] . '&' : '') . 'action=new'); ?>" class="btn btn-primary" role="button"><?php echo TEXT_ADD_SPECIAL; ?></a>
+          </div>
+          <hr />
+          <div class="row">
+            <div style ="margin-bottom: 5px">
+                  <?php echo zen_draw_form('search', FILENAME_SPECIALS, '', 'get');
+                  // show reset search
+                  if (isset($_GET['search']) && zen_not_null($_GET['search'])) {
+                      echo '<a href="' . zen_href_link(FILENAME_SPECIALS) . '">' . zen_image_button('button_reset.gif', IMAGE_RESET) . '</a>&nbsp;&nbsp;';
+                  }
+                  echo TEXT_SEARCH_SPECIALS . ' ' . zen_draw_input_field('search') . zen_hide_session_id();
+                  if (isset($_GET['search']) && zen_not_null($_GET['search'])) {
+                      $keywords = zen_db_input(zen_db_prepare_input($_GET['search']));
+                      echo '<br>' . TEXT_INFO_SEARCH_DETAIL_FILTER . $keywords;
+                  }
+                  echo '</form>'; ?>
+            </div>
+            <div><?php echo TEXT_STATUS_WARNING; ?></div>
             <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9 configurationColumnLeft">
               <table class="table table-hover">
                 <thead>
