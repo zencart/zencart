@@ -443,7 +443,7 @@ if (zen_not_null($action)) {
                         if (isset($sInfo) && is_object($sInfo) && ($special['specials_id'] == $sInfo->specials_id)) { ?>
                         <tr id="defaultSelected" class="dataTableRowSelected" onclick="document.location.href='<?php echo zen_href_link(FILENAME_SPECIALS, 'page=' . $_GET['page'] . '&sID=' . $sInfo->specials_id . '&action=edit' . (isset($_GET['search']) ? '&search=' . $_GET['search'] : '')); ?>'">
                       <?php } else { ?>
-                        <tr class="dataTableRow" onclick="document.location.href='<?php echo zen_href_link(FILENAME_SPECIALS, 'page=' . $_GET['page'] . '&sID=' . $special['specials_id'] . '&action=edit' . (isset($_GET['search']) ? '&search=' . $_GET['search'] : '')); ?>'">
+                        <tr class="dataTableRow" onclick="document.location.href='<?php echo zen_href_link(FILENAME_SPECIALS, 'page=' . $_GET['page'] . '&sID=' . $special['specials_id'] . (isset($_GET['search']) ? '&search=' . $_GET['search'] : '')); ?>'">
                       <?php }
 
                       if ($special['products_priced_by_attribute'] == '1') {
