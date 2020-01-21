@@ -39,8 +39,6 @@ a:hover {
   background: #ffc107;
   border: 1px solid #ccc;
   color: #333;
-  padding: 2rem;
-  margin: 0 0 1rem 0;
 }
 
 @media screen and (max-width: 63.999rem) {

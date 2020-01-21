@@ -111,7 +111,7 @@ if (isset($_POST['action']) && $_POST['action'] == 'update') {
             <?php } ?>
             <br class="clearBoth">
             <?php if ($email_message) { ?>
-              <p class="login-alert-warning"><?php echo $email_message; ?></p>
+              <p class="login-alert-warning alert alert-warning"><?php echo $email_message; ?></p>
             <?php } ?>
             <?php echo '</form>' . PHP_EOL; ?>
           </div>
