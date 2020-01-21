@@ -515,40 +515,45 @@ if (zen_not_null($action)) {
                     $heading[] = array('text' => '<h4>' . TEXT_INFO_HEADING_PRE_ADD_SPECIALS . '</h4>');
                     $contents = array('form' => zen_draw_form('specials', FILENAME_SPECIALS, 'action=pre_add_confirmation' . ((isset($_GET['page']) && $_GET['page'] > 0) ? '&page=' . $_GET['page'] : '') . (isset($_GET['search']) ? '&search=' . $_GET['search'] : ''), 'post', 'class="form-horizontal"'));
                     $contents[] = array('text' => TEXT_INFO_PRE_ADD_INTRO);
-                    $contents[] = array('text' => '<br>' . zen_draw_label(TEXT_PRE_ADD_PRODUCTS_ID, 'pre_add_products_id', 'class="control-label"') . zen_draw_input_field('pre_add_products_id', '', zen_set_field_length(TABLE_SPECIALS, 'products_id') . 'class="form-control"'));
-                    $contents[] = array('align' => 'text-center', 'text' => '<br><button type="submit" class="btn btn-primary">' . IMAGE_CONFIRM . '</button> <a href="' . zen_href_link(FILENAME_SPECIALS, 'page=' . $_GET['page'] . '&sID=' . $sInfo->specials_id . (isset($_GET['search']) ? '&search=' . $_GET['search'] : '')) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>');
+                    $contents[] = array('text' => zen_draw_label(TEXT_PRE_ADD_PRODUCTS_ID, 'pre_add_products_id', 'class="control-label"') . zen_draw_input_field('pre_add_products_id', '', zen_set_field_length(TABLE_SPECIALS, 'products_id') . ' class="form-control" id="pre_add_products_id"'));
+                    $contents[] = array('align' => 'text-center', 'text' => '<button type="submit" class="btn btn-primary">' . IMAGE_CONFIRM . '</button> <a href="' . zen_href_link(FILENAME_SPECIALS, 'page=' . $_GET['page'] . '&sID=' . $sInfo->specials_id . (isset($_GET['search']) ? '&search=' . $_GET['search'] : '')) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>');
                     break;
                   default:
-                    if (isset($sInfo) && is_object($sInfo)) {
-                      $heading[] = array('text' => '<h4>' . $sInfo->products_name . '</h4>');
+                      if (isset($sInfo) && is_object($sInfo)) {
+                          $heading[] = array('text' => '<h4>' . $sInfo->products_name . '</h4>');
 
-                      if ($sInfo->products_priced_by_attribute == '1') {
-                        $specials_current_price = zen_get_products_base_price($sInfo->products_id);
-                      } else {
-                        $specials_current_price = $sInfo->products_price;
+                          if ($sInfo->products_priced_by_attribute == '1') {
+                              $specials_current_price = zen_get_products_base_price($sInfo->products_id);
+                          } else {
+                              $specials_current_price = $sInfo->products_price;
+                          }
+
+                          $contents[] = array('align' => 'text-center',
+                              'text' => '<a href="' . zen_href_link(FILENAME_SPECIALS,
+                                      'page=' . $_GET['page'] . '&sID=' . $sInfo->specials_id . '&action=edit' . (isset($_GET['search']) ? '&search=' . $_GET['search'] : '')) . '" class="btn btn-primary" role="button">' . IMAGE_EDIT . '</a> <a href="' . zen_href_link(FILENAME_SPECIALS,
+                                      'page=' . $_GET['page'] . '&sID=' . $sInfo->specials_id . '&action=delete' . (isset($_GET['search']) ? '&search=' . $_GET['search'] : '')) . '" class="btn btn-warning" role="button">' . TEXT_INFO_HEADING_DELETE_SPECIALS . '</a>'
+                          );
+                          $contents[] = array('align' => 'text-center', 'text' => '<a href="' . zen_href_link(FILENAME_PRODUCTS_PRICE_MANAGER, 'action=edit&products_filter=' . $sInfo->products_id) . '" class="btn btn-primary" role="button">' . IMAGE_PRODUCTS_PRICE_MANAGER . '</a>');
+                          $contents[] = array('text' => TEXT_INFO_ORIGINAL_PRICE . ' ' . $currencies->format($specials_current_price));
+                          $contents[] = array('text' => TEXT_INFO_NEW_PRICE . ' ' . $currencies->format($sInfo->specials_new_products_price));
+                          $contents[] = array('text' => TEXT_INFO_DISPLAY_PRICE . ' ' . zen_get_products_display_price($sInfo->products_id));
+                          $contents[] = array('text' => TEXT_INFO_AVAILABLE_DATE . ' ' . (($sInfo->specials_date_available != '0001-01-01' and $sInfo->specials_date_available != '') ? zen_date_short($sInfo->specials_date_available) : TEXT_NONE));
+                          $contents[] = array('text' => TEXT_INFO_EXPIRES_DATE . ' ' . (($sInfo->expires_date != '0001-01-01' and $sInfo->expires_date != '') ? zen_date_short($sInfo->expires_date) : TEXT_NONE));
+                          if ($sInfo->date_status_change !== null && $sInfo->date_status_change !== '0001-01-01 00:00:00') {
+                          $contents[] = array('text' => TEXT_INFO_STATUS_CHANGED . ' ' . zen_date_short($sInfo->date_status_change));
+                          }
+                          $contents[] = array('text' => '' . TEXT_INFO_LAST_MODIFIED . ' ' . zen_date_short($sInfo->specials_last_modified));
+                          $contents[] = array('text' => TEXT_INFO_DATE_ADDED . ' ' . zen_date_short($sInfo->specials_date_added));
+                          $contents[] = array('align' => 'text-center', 'text' => zen_info_image($sInfo->products_image, $sInfo->products_name, SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT));
+                          $contents[] = array('align' => 'text-center', 'text' =>
+                              '<a href="' . zen_href_link(FILENAME_PRODUCT, '&action=new_product' . '&cPath=' . zen_get_product_path($sInfo->products_id, 'override') . '&pID=' . $sInfo->products_id . '&product_type=' . zen_get_products_type($sInfo->products_id)) .
+                              '" class="btn btn-primary" role="button">' . IMAGE_EDIT_PRODUCT . '</a>'
+                          );
                       }
-
-                      $contents[] = array('align' => 'text-center', 'text' => '<a href="' . zen_href_link(FILENAME_SPECIALS, 'page=' . $_GET['page'] . '&sID=' . $sInfo->specials_id . '&action=edit' . (isset($_GET['search']) ? '&search=' . $_GET['search'] : '')) . '" class="btn btn-primary" role="button">' . IMAGE_EDIT . '</a> <a href="' . zen_href_link(FILENAME_SPECIALS, 'page=' . $_GET['page'] . '&sID=' . $sInfo->specials_id . '&action=delete' . (isset($_GET['search']) ? '&search=' . $_GET['search'] : '')) . '" class="btn btn-warning" role="button">' . IMAGE_DELETE . '</a>');
-                      $contents[] = array('align' => 'text-center', 'text' => '<a href="' . zen_href_link(FILENAME_PRODUCTS_PRICE_MANAGER, 'action=edit&products_filter=' . $sInfo->products_id) . '" class="btn btn-primary" role="button">' . IMAGE_PRODUCTS_PRICE_MANAGER . '</a>');
-                      $contents[] = array('text' => '<br>' . TEXT_INFO_DATE_ADDED . ' ' . zen_date_short($sInfo->specials_date_added));
-                      $contents[] = array('text' => '' . TEXT_INFO_LAST_MODIFIED . ' ' . zen_date_short($sInfo->specials_last_modified));
-                      $contents[] = array('align' => 'text-center', 'text' => '<br>' . zen_info_image($sInfo->products_image, $sInfo->products_name, SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT));
-                      $contents[] = array('text' => '<br>' . TEXT_INFO_ORIGINAL_PRICE . ' ' . $currencies->format($specials_current_price));
-                      $contents[] = array('text' => TEXT_INFO_NEW_PRICE . ' ' . $currencies->format($sInfo->specials_new_products_price));
-                      $contents[] = array('text' => TEXT_INFO_DISPLAY_PRICE . '<br>' . zen_get_products_display_price($sInfo->products_id));
-
-                      $contents[] = array('text' => '<br>' . TEXT_INFO_AVAILABLE_DATE . ' <b>' . (($sInfo->specials_date_available != '0001-01-01' and $sInfo->specials_date_available != '') ? zen_date_short($sInfo->specials_date_available) : TEXT_NONE) . '</b>');
-                      $contents[] = array('text' => '<br>' . TEXT_INFO_EXPIRES_DATE . ' <b>' . (($sInfo->expires_date != '0001-01-01' and $sInfo->expires_date != '') ? zen_date_short($sInfo->expires_date) : TEXT_NONE) . '</b>');
-                      $contents[] = array('text' => TEXT_INFO_STATUS_CHANGE . ' ' . zen_date_short($sInfo->date_status_change));
-                      $contents[] = array('align' => 'text-center', 'text' => '<a href="' . zen_href_link(FILENAME_PRODUCT, '&action=new_product' . '&cPath=' . zen_get_product_path($sInfo->products_id, 'override') . '&pID=' . $sInfo->products_id . '&product_type=' . zen_get_products_type($sInfo->products_id)) . '" class="btn btn-primary" role="button">' . IMAGE_EDIT_PRODUCT . '</a>');
-                    } else {
-                      $heading[] = array('text' => '<h4>' . TEXT_NONE . '</h4>');
-                      $contents[] = array('align' => 'text-center', 'text' => '<a href="' . zen_href_link(FILENAME_SPECIALS, 'action=pre_add' . ((isset($_GET['page']) && $_GET['page'] > 0) ? '&page=' . $_GET['page'] : '') . (isset($_GET['search']) ? '&search=' . $_GET['search'] : '')) . '" class="btn btn-primary" role="button">' . IMAGE_SELECT . '</a><br>' . TEXT_INFO_MANUAL);
-                    }
-                    break;
+                      break;
                 }
                 if ((zen_not_null($heading)) && (zen_not_null($contents))) {
-                  $box = new box;
+                  $box = new box();
                   echo $box->infoBox($heading, $contents);
                 }
                 ?>

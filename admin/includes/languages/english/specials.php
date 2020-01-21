@@ -45,7 +45,7 @@ define('TEXT_INFO_ORIGINAL_PRICE', 'Original Price:');
 define('TEXT_INFO_DISPLAY_PRICE', 'Currently Displayed Price:');
 define('TEXT_INFO_AVAILABLE_DATE', 'Available From:');
 define('TEXT_INFO_EXPIRES_DATE', 'Expires:');
-define('TEXT_INFO_STATUS_CHANGE', 'Status Change:');
+define('TEXT_INFO_STATUS_CHANGED', 'Status Changed:');
 define('TEXT_IMAGE_NONEXISTENT', 'No Image Exists');
 
 define('TEXT_INFO_HEADING_DELETE_SPECIALS', 'Delete Special');
@@ -56,7 +56,7 @@ define('WARNING_SPECIALS_PRE_ADD_EMPTY', 'Warning: No Product ID specified ... n
 define('WARNING_SPECIALS_PRE_ADD_DUPLICATE', 'Warning: Product ID already on Special ... nothing was added ...');
 define('WARNING_SPECIALS_PRE_ADD_BAD_PRODUCTS_ID', 'Warning: Product ID is invalid ... nothing was added ...');
 define('TEXT_INFO_HEADING_PRE_ADD_SPECIALS', 'Add Special Price by Product ID');
-define('TEXT_INFO_PRE_ADD_INTRO', 'You may manually add a Special Price by Product ID. This method may be appropriate for shops with many products, if the selection page takes too long to render / selecting a product from the dropdown becomes unwieldy.');
+define('TEXT_INFO_PRE_ADD_INTRO', 'You may add a Special Price by Product ID. This method may be appropriate for shops with many products, if the selection page takes too long to render / selecting a product from the dropdown becomes unwieldy.');
 define('TEXT_PRE_ADD_PRODUCTS_ID', 'Enter the Product ID: ');
 define('TEXT_INFO_MANUAL', 'Product ID to be Manually Added as a Special');
 
