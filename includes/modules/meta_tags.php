@@ -165,14 +165,20 @@ switch ($metatag_page_name) {
   // eof: categories meta tags
 
   case 'popup_image':
-  $meta_products_name = str_replace('"','',zen_clean_html($products_values->fields['products_name']));
+  $meta_products_name = '';
+  if (isset($products_values->fields['products_name'])) {
+    $meta_products_name = str_replace('"','',zen_clean_html($products_values->fields['products_name']));
+  }
   define('META_TAG_TITLE', $meta_products_name . PRIMARY_SECTION . TITLE . TAGLINE);
   define('META_TAG_DESCRIPTION', TITLE . PRIMARY_SECTION . $meta_products_name . SECONDARY_SECTION . KEYWORDS);
   define('META_TAG_KEYWORDS', KEYWORDS . METATAGS_DIVIDER . $meta_products_name);
   break;
 
   case 'popup_image_additional':
-  $meta_products_name = str_replace('"','',zen_clean_html($products_values->fields['products_name']));
+  $meta_products_name = '';
+  if (isset($products_values->fields['products_name'])) {
+    $meta_products_name = str_replace('"','',zen_clean_html($products_values->fields['products_name']));
+  }
   define('META_TAG_TITLE', $meta_products_name . PRIMARY_SECTION . TITLE . TAGLINE);
   define('META_TAG_DESCRIPTION', TITLE . PRIMARY_SECTION . $meta_products_name . SECONDARY_SECTION . KEYWORDS);
   define('META_TAG_KEYWORDS', KEYWORDS . METATAGS_DIVIDER . $meta_products_name);
