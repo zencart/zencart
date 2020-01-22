@@ -212,7 +212,7 @@ class ot_coupon {
           $this->clear_posts();
           zen_redirect(zen_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL',true, false));
         }
-	
+
         $GLOBALS['zco_notifier']->notify(
             'NOTIFY_OT_COUPON_COUPON_INFO', 
             array(
@@ -220,7 +220,7 @@ class ot_coupon {
                 'code' => $dc_check
             )
         );
-	
+
         //$order_total = $this->get_order_total($coupon_result->fields['coupon_id']);
 
         // display all error messages at once
@@ -606,7 +606,7 @@ class ot_coupon {
         'NOTIFY_OT_COUPON_CALCS_FINISHED', 
         array(
             'coupon' => $coupon, 
-            'order_totals' => $orderTotalDetails.
+            'order_totals' => $orderTotalDetails.,
             'od_amount' => $od_amount,
         )
       );
