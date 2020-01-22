@@ -606,7 +606,7 @@ class ot_coupon {
         'NOTIFY_OT_COUPON_CALCS_FINISHED', 
         array(
             'coupon' => $coupon, 
-            'order_totals' => $orderTotalDetails.,
+            'order_totals' => $orderTotalDetails,
             'od_amount' => $od_amount,
         )
       );
