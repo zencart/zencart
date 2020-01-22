@@ -100,9 +100,8 @@ class InitSystem
         $objectName = $entry['objectName'];
         $className = $entry['className'];
         $this->debugList[] = 'processing class instantiate - class = ' . $className . ' object name = ' . $objectName;
-        $classSession = (isset($entry['classSession']) && $entry['classSession'] === true) ? true : false;
-        $checkInstantiated = (isset($entry['checkInstantiated']) && $entry['checkInstantiated'] === true) ? true :
-            false;
+        $classSession = (isset($entry['classSession']) && $entry['classSession'] === true);
+        $checkInstantiated = (isset($entry['checkInstantiated']) && $entry['checkInstantiated'] === true);
         if (!$classSession) {
             $this->debugList[] = 'instantiating normal class - ' . $className . ' as ' . $objectName;
             $this->actionList[] = ['type' => 'class', 'object' => $objectName, 'class' => $className];
