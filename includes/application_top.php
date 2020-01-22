@@ -66,6 +66,16 @@ define('PAGE_PARSE_START_TIME', microtime());
 @ini_set("arg_separator.output","&");
 @ini_set("html_errors","0");
 /**
+ * Ensure minimum PHP version.
+ * This is intended to run before any dependencies like short-array-syntax are loaded, in order to avoid unfriendly fatal errors caused by such incompatibility.
+ * This version of Zen Cart actually requires newer than PHP 5.4, but we are only enforcing 5.4 here at this stage for the sake of this syntax matter.
+ * See https://www.zen-cart.com/requirements or run zc_install to see actual requirements!
+ */
+if (!defined('PHP_VERSION_ID') || PHP_VERSION_ID < 50400) {
+    require 'includes/templates/template_default/templates/tpl_zc_phpupgrade_default.php';
+    exit(0);
+}
+/**
  * Set the local configuration parameters - mainly for developers
  */
 if (file_exists('includes/local/configure.php')) {
