@@ -14,7 +14,7 @@ class InitSystem
 
     protected $context;
     protected $loaderPrefix;
-    protected $fileSytem;
+    protected $fileSystem;
     protected $pluginManager;
 
     public function __construct($context, $loaderPrefix, $fileSystem, $pluginManager, $installedPlugins)
