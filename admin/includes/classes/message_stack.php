@@ -21,11 +21,7 @@ if (!defined('IS_ADMIN_FLAG')) {
 
   class messageStack extends boxTableBlock {
     var $size = 0;
-
-    function __construct() {
-
-      $this->errors = array();
-    }
+    var $errors = array();
 
     function add($message, $type = 'error') {
       if ($type == 'error') {
