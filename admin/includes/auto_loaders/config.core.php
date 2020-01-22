@@ -199,8 +199,8 @@ if (!defined('USE_PCONNECT')) define('USE_PCONNECT', 'false');
  *
  */
   $autoLoadConfig[100][] = array('autoType'=>'objectMethod',
-                                 'object'=>'messageStack',
-                                 'method'=>'add_from_session');
+                                 'objectName'=>'messageStack',
+                                 'methodName'=>'add_from_session');
 /**
  * Breakpoint 120.
  *

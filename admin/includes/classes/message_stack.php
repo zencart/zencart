@@ -25,8 +25,6 @@ if (!defined('IS_ADMIN_FLAG')) {
     function __construct() {
 
       $this->errors = array();
-
-      $this->add_from_session();
     }
 
     function add($message, $type = 'error') {
@@ -56,7 +54,7 @@ if (!defined('IS_ADMIN_FLAG')) {
 
       $_SESSION['messageToStack'][] = array('text' => $message, 'type' => $type);
     }
-    
+
     function add_from_session() {
       if (isset($_SESSION['messageToStack']) && is_array($_SESSION['messageToStack'])) {
         for ($i = 0, $n = sizeof($_SESSION['messageToStack']); $i < $n; $i++) {

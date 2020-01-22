@@ -113,7 +113,7 @@ class InitSystem
         return;
     }
 
-    protected function processObjectMethod($entry)
+    protected function processAutoTypeObjectMethod($entry)
     {
         $objectName = $entry['objectName'];
         $methodName = $entry['methodName'];
