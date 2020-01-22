@@ -226,7 +226,7 @@ class InitSystem
         foreach ($fileList as $file) {
             require($file);
         }
-        return $fileList;
+        return $autoLoadConfig;
     }
 
     protected function processLoaderListForType($type, $loaderList, $plugin = [])
