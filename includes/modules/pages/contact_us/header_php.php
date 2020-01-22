@@ -17,6 +17,7 @@ require DIR_WS_MODULES . zen_get_module_directory('require_languages.php');
 $error = false;
 $enquiry = '';
 $antiSpamFieldName = isset($_SESSION['antispam_fieldname']) ? $_SESSION['antispam_fieldname'] : 'should_be_empty';
+$telephone = '';
 
 if (isset($_GET['action']) && ($_GET['action'] == 'send')) {
     $name = zen_db_prepare_input($_POST['contactname']);
