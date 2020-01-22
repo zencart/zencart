@@ -596,6 +596,20 @@ class ot_coupon {
           }
         }
       }
+
+      // -----
+      // Let an observer know that the coupon-related calculations have finished, providing read-only
+      // copies of (a) the base coupon information, (b) the results from 'get_order_total' and this
+      // method's return values.
+      //
+      $GLOBALS['zco_notifier']->notify(
+        'NOTIFY_OT_COUPON_CALCS_FINISHED', 
+        array(
+            'coupon' => $coupon, 
+            'order_totals' => $orderTotalDetails.
+            'od_amount' => $od_amount,
+        )
+      );
     }
 //    print_r($order->info);
 //    print_r($orderTotalDetails);echo "<br><br>";
