@@ -22,7 +22,9 @@ function zen_debug_error_handler($errno, $errstr, $errfile, $errline)
         return;
     }
 
-//-bof-report_all_errors-lat9  *** 1 of 1 ***
+    if (!isset($last_log_suffix)) {
+        static $last_log_suffix = '.log';
+    }
     $ignore_dups = false;
     if (IS_ADMIN_FLAG === true) {
         $ignore_dups = (defined('REPORT_ALL_ERRORS_ADMIN') && REPORT_ALL_ERRORS_ADMIN == 'IgnoreDups');
@@ -37,28 +39,37 @@ function zen_debug_error_handler($errno, $errstr, $errfile, $errline)
     if (($errno == E_NOTICE || $errno == E_USER_NOTICE) && defined('REPORT_ALL_ERRORS_NOTICE_BACKTRACE') && REPORT_ALL_ERRORS_NOTICE_BACKTRACE == 'No') {
         return false;
     }
-//-eof-report_all_errors-lat9  *** 1 of 1 ***
 
     switch ($errno) {
         case E_NOTICE:
         case E_USER_NOTICE:
             $error_type = 'Notice';
+            $this_log_suffix = '.log';
             break;
         case E_DEPRECATED:
         case E_USER_DEPRECATED:
             $error_type = 'Deprecated';
+            $this_log_suffix = '-deprecated.log';
             break;
         case E_WARNING:
         case E_USER_WARNING:
             $error_type = 'Warning';
+            $this_log_suffix = '-warning.log';
             break;
         case E_ERROR:
         case E_USER_ERROR:
             $error_type = 'Fatal error';
+            $this_log_suffix = '-error.log';
             break;
         default:
             return false;      //-Unknown error type, let PHP's built-in handler do its thing.
             break;
+    }
+
+    if ($last_log_suffix != $this_log_suffix) {
+        $GLOBALS['debug_logfile_path'] = str_replace($last_log_suffix, $this_log_suffix, $GLOBALS['debug_logfile_path']);
+        @ini_set('error_log', $GLOBALS['debug_logfile_path']);  // the filename to log errors into
+        $last_log_suffix = $this_log_suffix;
     }
 
     ob_start();
@@ -110,8 +121,8 @@ $pages_to_debug[] = '*';
 
 /**
  * The path where the debug log file will be located
- * Default value is: DIR_FS_LOGS . '/myDEBUG-yyyymmdd-hhiiss-xxxxx.log'
- * ... which puts it in the /logs/ folder:   /logs/myDEBUG-yyyymmdd-hhiiss-xxxxx.log
+ * Default value is: DIR_FS_LOGS . '/myDEBUG-yyyymmdd-hhiiss-xxxxx.log' (storefront) or DIR_FS_LOGS . '/myDEBUG-adm-yyyymmdd-hhiiss-xxxxx.log' (admin)
+ * ... which puts it in the /logs/ folder:   /logs/myDEBUG-yyyymmdd-hhiiss-xxxxx.log or /logs/myDEBUG-yyyymmdd-hhiiss-xxxxx.log, respectively.
  *     where:
  *      - yyyy .... is the 4-digit year
  *      - mm ...... is the 2-digit month
@@ -122,6 +133,14 @@ $pages_to_debug[] = '*';
  *      - xxxxx ... is the time in milliseconds
  *
  *    (or if you don't have a /logs/ folder, it will use the /cache/ folder instead)
+ *
+ * The error-handler now groups the logs by severity, based on the log-file's suffix, examples given for the storefront, by
+ * the zen_debug_error_handler function (above). For the admin, the '-adm' addition described above is included in the files' name(s).
+ *
+ * PHP notices:      /logs/myDEBUG-yyyymmdd-hhiiss-xxxxx.log
+ * PHP deprecations: /logs/myDEBUG-yyyymmdd-hhiiss-xxxxx-deprecated.log
+ * PHP warnings:     /logs/myDEBUG-yyyymmdd-hhiiss-xxxxx-warning.log
+ * PHP errors:       /logs/myDEBUG-yyyymmdd-hhiiss-xxxxx-error.log
  */
 $log_prefix = (IS_ADMIN_FLAG) ? '/myDEBUG-adm-' : '/myDEBUG-';
 $log_date = new DateTime();
