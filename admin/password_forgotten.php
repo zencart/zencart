@@ -77,7 +77,6 @@ if (isset($_POST['action']) && $_POST['action'] == 'update') {
     <link rel="stylesheet" href="includes/css/font-awesome.min.css">
     <link href="includes/css/login.css" rel="stylesheet">
     <meta name="robots" content="noindex, nofollow">
-    <script src="includes/javascript/jquery-3.4.0.min.js"></script>
   </head>
   <body id="login">
     <div class="container-fluid">
