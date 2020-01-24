@@ -60,7 +60,12 @@ if (!defined('IS_ADMIN_FLAG')) {
     function add_from_session() {
       if (isset($_SESSION['messageToStack']) && is_array($_SESSION['messageToStack'])) {
         for ($i = 0, $n = sizeof($_SESSION['messageToStack']); $i < $n; $i++) {
+          // Check for and use the language defined value of the text version of the constant pushed to the session.
+          if (defined($_SESSION['messageToStack'][$i]['text'])) {
+            $_SESSION['messageToStack'][$i]['text'] = constant($_SESSION['messageToStack'][$i]['text']);
+          } 
           $this->add($_SESSION['messageToStack'][$i]['text'], $_SESSION['messageToStack'][$i]['type']);
+          
         }
         $_SESSION['messageToStack'] = '';
       }
