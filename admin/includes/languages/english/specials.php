@@ -1,24 +1,12 @@
 <?php
-//
-// +----------------------------------------------------------------------+
-// |zen-cart Open Source E-commerce                                       |
-// +----------------------------------------------------------------------+
-// | Copyright (c) 2003 The zen-cart developers                           |
-// |                                                                      |
-// | http://www.zen-cart.com/index.php                                    |
-// |                                                                      |
-// | Portions Copyright (c) 2003 osCommerce                               |
-// +----------------------------------------------------------------------+
-// | This source file is subject to version 2.0 of the GPL license,       |
-// | that is bundled with this package in the file LICENSE, and is        |
-// | available through the world-wide-web at the following url:           |
-// | http://www.zen-cart.com/license/2_0.txt.                             |
-// | If you did not receive a copy of the zen-cart license and are unable |
-// | to obtain it through the world-wide-web, please send a note to       |
-// | license@zen-cart.com so we can mail you a copy immediately.          |
-// +----------------------------------------------------------------------+
-//  $Id: specials.php 4533 2006-09-17 17:21:10Z ajeh $
-//
+/**
+ * @package admin
+ * @copyright Copyright 2003-2018 Zen Cart Development Team
+ * @copyright Portions Copyright 2003 osCommerce
+ * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
+ * @version $Id: torvista 2020 Jan 26 Modified in v1.5.7 $
+ */
+
 
 define('HEADING_TITLE', 'Specials');
 
@@ -34,6 +22,7 @@ define('TEXT_ADD_SPECIAL_PID', 'Add Special by Product ID');
 define('TEXT_SEARCH_SPECIALS', 'Search current Specials');
 define('TEXT_SPECIAL_ACTIVE', 'Special Price Active');
 define('TEXT_SPECIAL_INACTIVE', 'Special Price Inactive');
+define('TEXT_SPECIAL_STATUS_BY_DATE', 'Status set by dates');
 
 define('TEXT_SPECIALS_PRODUCT', 'Product:');
 define('TEXT_SPECIALS_SPECIAL_PRICE', 'Special Price:');
@@ -62,4 +51,4 @@ define('TEXT_INFO_HEADING_PRE_ADD_SPECIALS', 'Add Special Price by Product ID');
 define('TEXT_INFO_PRE_ADD_INTRO', 'You may add a Special Price by Product ID. This method may be appropriate for shops with many products if the selection page takes too long to render or selecting a product from the dropdown becomes unwieldy.');
 define('TEXT_PRE_ADD_PRODUCTS_ID', 'Enter the Product ID: ');
 
-define('TEXT_SPECIALS_PRICE_NOTES', '<b>Notes:</b><ul><li>Special Price may be a new price (ex-tax). The decimal separator must be a "." (decimal-point), eg: <b>49.99</b>.</li><li>Special Price may be a percentage discount, eg: <b>20%</b>.</li><li>Dates are not obligatory. Leave the expiry date empty for no expiration.</li><li>When dates are set, the status of the Special Price is automatically enabled/disabled accordingly.</li><li>' . TEXT_INFO_PRE_ADD_INTRO . '</li></ul>');
+define('TEXT_SPECIALS_PRICE_NOTES', '<b>Notes:</b><ul><li>Special Price may be a price (ex-tax). The decimal separator must be a "." (decimal-point), eg: <b>49.99</b>. The calculated percentage discount is shown next to the product\'s new price in the catalog.</li><li>Special Price may be a percentage discount, eg: <b>20%</b>.</li><li>Start/End dates are not obligatory. You may leave the expiry date empty for no expiration.</li><li>When dates are set, the status of the Special Price is automatically enabled/disabled accordingly.</li><li>' . TEXT_INFO_PRE_ADD_INTRO . '</li></ul>');

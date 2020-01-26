@@ -4,7 +4,7 @@
  * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Zen4All 2019 Feb 14 Modified in v1.5.6b $
+ * @version $Id: torvista 2020 Jan 26 Modified in v1.5.7 $
  */
 require('includes/application_top.php');
 
@@ -455,22 +455,26 @@ if (zen_not_null($action)) {
                   <td class="dataTableContent text-center"><?php echo (($special['expires_date'] != '0001-01-01' && $special['expires_date'] != '') ? zen_date_short($special['expires_date']) : TEXT_NONE); ?></td>
                   <td class="dataTableContent text-center">
                       <?php
-                      if ($special['status'] == '1') {
-                        echo zen_draw_form('setflag_products_' . $special['products_id'] , FILENAME_SPECIALS, 'action=setflag&id=' . $special['specials_id'] . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '') . (isset($_GET['search']) ? '&search=' . $_GET['search'] : ''));
-                        ?>
-                      <input type="image" src="<?php echo DIR_WS_IMAGES ?>icon_green_on.gif" title="<?php echo TEXT_SPECIAL_ACTIVE; ?>" alt="<?php echo TEXT_SPECIAL_ACTIVE; ?>" />
-                      <input type="hidden" name="flag" value="0" />
-                      <?php echo '</form>'; ?>
-                      <?php
-                    } else {
-                      echo zen_draw_form('setflag_products_' . $special['products_id'], FILENAME_SPECIALS, 'action=setflag&id=' . $special['specials_id'] . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '') . (isset($_GET['search']) ? '&search=' . $_GET['search'] : ''));
+                      if (($special['specials_date_available'] != '0001-01-01' && $special['specials_date_available'] != '') || ($special['expires_date'] != '0001-01-01' && $special['expires_date'] != '')) {
+                          echo $special['status'] === '1' ? '<img src="' . DIR_WS_IMAGES . 'icon_green_on.gif" title="' . TEXT_SPECIAL_ACTIVE . ': ' . TEXT_SPECIAL_STATUS_BY_DATE . '" alt="' . TEXT_SPECIAL_ACTIVE  . ': ' . TEXT_SPECIAL_STATUS_BY_DATE. '">' : '<img src="' . DIR_WS_IMAGES . 'icon_red_on.gif" title="' . TEXT_SPECIAL_INACTIVE . ': ' . TEXT_SPECIAL_STATUS_BY_DATE . '" alt="' . TEXT_SPECIAL_INACTIVE . ': ' . TEXT_SPECIAL_STATUS_BY_DATE . '">';
+                      } else {
+                          if ($special['status'] == '1') {
+                              echo zen_draw_form('setflag_products_' . $special['products_id'], FILENAME_SPECIALS, 'action=setflag&id=' . $special['specials_id'] . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '') . (isset($_GET['search']) ? '&search=' . $_GET['search'] : ''));
+                              ?>
+                              <input type="image" src="<?php echo DIR_WS_IMAGES ?>icon_green_on.gif" title="<?php echo TEXT_SPECIAL_ACTIVE; ?>" alt="<?php echo TEXT_SPECIAL_ACTIVE; ?>"/>
+                              <input type="hidden" name="flag" value="0"/>
+                              <?php echo '</form>'; ?>
+                              <?php
+                          } else {
+                              echo zen_draw_form('setflag_products_' . $special['products_id'], FILENAME_SPECIALS, 'action=setflag&id=' . $special['specials_id'] . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '') . (isset($_GET['search']) ? '&search=' . $_GET['search'] : ''));
+                              ?>
+                              <input type="image" src="<?php echo DIR_WS_IMAGES ?>icon_red_on.gif" title="<?php echo TEXT_SPECIAL_INACTIVE; ?>" alt="<?php echo TEXT_SPECIAL_INACTIVE; ?>"/>
+                              <input type="hidden" name="flag" value="1"/>
+                              <?php echo '</form>'; ?>
+                              <?php
+                          }
+                      }
                       ?>
-                      <input type="image" src="<?php echo DIR_WS_IMAGES ?>icon_red_on.gif" title="<?php echo TEXT_SPECIAL_INACTIVE; ?>" alt="<?php echo TEXT_SPECIAL_INACTIVE; ?>" />
-                      <input type="hidden" name="flag" value="1" />
-                      <?php echo '</form>'; ?>
-                      <?php
-                    }
-                    ?>
                   </td>
                   <td class="dataTableContent text-right">
                       <?php echo '<a href="' . zen_href_link(FILENAME_SPECIALS, 'page=' . $_GET['page'] . '&sID=' . $special['specials_id'] . '&action=edit' . (isset($_GET['search']) ? '&search=' . $_GET['search'] : '')) . '">' . zen_image(DIR_WS_IMAGES . 'icon_edit.gif', ICON_EDIT) . '</a>'; ?>
@@ -576,6 +580,7 @@ if (zen_not_null($action)) {
         ?>
       <!-- body_text_eof //-->
     <!-- body_eof //-->
+    </div>
     <!-- footer //-->
     <?php require(DIR_WS_INCLUDES . 'footer.php'); ?>
     <!-- footer_eof //-->
