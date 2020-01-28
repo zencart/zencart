@@ -117,15 +117,7 @@ class InitSystem
         $objectName = $entry['objectName'];
         $methodName = $entry['methodName'];
         $this->debugList[] = 'processing object method - ' . $objectName . ' => ' . $methodName;
-        if (is_object($_SESSION[$objectName])) {
-            $this->actionList[] = ['type' => 'sessionObjectMethod', 'object' => $objectName, 'method' => $methodName];
-            $this->debugList[] = 'run session object method - ' . $objectName . ' => ' . $methodName;
-        }
-        if (is_object($_SESSION[$objectName])) {
-            $this->actionList[] = ['type' => 'objectMethod', 'object' => $objectName, 'method' => $methodName];
-            $this->debugList[] = 'run class object method - ' . $objectName . ' => ' . $methodName;
-        }
-
+        $this->actionList[] = ['type' => 'objectMethod', 'object' => $objectName, 'method' => $methodName];
     }
 
     protected function processAutoTypeRequire($entry)
