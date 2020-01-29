@@ -138,7 +138,7 @@
 
 // clean out old DEBUG logfiles
     case 'clean_debug_files':
-      foreach(array(DIR_FS_LOGS, DIR_FS_SQL_CACHE, DIR_FS_CATALOG . '/includes/modules/payment/paypal/logs') as $purgeFolder) {
+      foreach(array(DIR_FS_LOGS, DIR_FS_SQL_CACHE, DIR_FS_CATALOG . 'includes/modules/payment/paypal/logs') as $purgeFolder) {
         $purgeFolder = rtrim($purgeFolder, '/');
         $dir = dir($purgeFolder);
         while ($file = $dir->read()) {
