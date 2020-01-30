@@ -126,7 +126,7 @@ for ($i = 0, $n = sizeof($tax_class_array); $i < $n; $i++) {
     }
     ?>
   </head>
-  <body onload="init();">
+  <body>
     <!-- header //-->
     <?php require(DIR_WS_INCLUDES . 'header.php'); ?>
     <!-- header_eof //-->
