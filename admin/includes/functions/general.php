@@ -2959,29 +2959,31 @@ function zen_get_categories($categories_array = array(), $parent_id = '0', $inde
 
 /**
  * master category selection
+ * @param int $product_id
+ * @param bool $fullpath
+ * @return array
  */
-  function zen_get_master_categories_pulldown($product_id) {
+function zen_get_master_categories_pulldown(int $product_id, $fullpath = false)
+{
     global $db;
-
-    $master_category_array = array();
-
+    $master_category_array = [];
     $master_categories_query = $db->Execute("SELECT ptc.products_id, cd.categories_name, cd.categories_id
                                              FROM " . TABLE_PRODUCTS_TO_CATEGORIES . " ptc
                                              LEFT JOIN " . TABLE_CATEGORIES_DESCRIPTION . " cd ON cd.categories_id = ptc.categories_id
-                                             WHERE ptc.products_id = " . (int)$product_id . "
+                                             WHERE ptc.products_id = " . $product_id . "
                                              AND cd.language_id = " . (int)$_SESSION['languages_id']);
-
-    $master_category_array[] = array(
-      'id' => '0',
-      'text' => TEXT_INFO_SET_MASTER_CATEGORIES_ID);
+    $master_category_array[] = [
+        'id' => '0',
+        'text' => TEXT_INFO_SET_MASTER_CATEGORIES_ID
+    ];
     foreach ($master_categories_query as $item) {
-      $master_category_array[] = array(
-        'id' => $item['categories_id'],
-        'text' => $item['categories_name'] . ' - ' . TEXT_INFO_ID . $item['categories_id']);
+        $master_category_array[] = [
+            'id' => $item['categories_id'],
+            'text' => ($fullpath ? zen_output_generated_category_path($item['categories_id']) : $item['categories_name']) . ' (' . TEXT_INFO_ID . $item['categories_id'] . ')'
+        ];
     }
-
     return $master_category_array;
-  }
+}
 
 /**
  * get products_type for specified $product_id
