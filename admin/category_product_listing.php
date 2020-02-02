@@ -80,8 +80,9 @@ if (zen_not_null($action)) {
           }
 
           //set products_status
-          if ($products_status == '')
+          if ($products_status == '') {
             continue;
+          }
 
           //only execute if a change was selected
           $sql = "SELECT products_id
