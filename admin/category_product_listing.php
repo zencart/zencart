@@ -844,10 +844,9 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
                           <i class="fa fa-dollar fa-lg" aria-hidden="true"></i>
                         </a>
                       <?php } else { ?>
-                        <div class="fa-stack fa-lg pricemanager-off">
-                          <i class="fa fa-circle fa-stack-2x base"></i>
-                          <i class="fa fa-stack-1x fa-dollar overlay" aria-hidden="true"></i>
-                        </div>
+                        <a class="btn btn-sm btn-default btn-pricemanager-off" role="button" disabled>
+                          <i class="fa fa-dollar fa-lg" aria-hidden="true"></i>
+                        </a>
                         <?php
                       }
 // meta tags
