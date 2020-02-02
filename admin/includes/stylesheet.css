@@ -689,65 +689,83 @@ img[src*="button_cancel"], img[src*="button_reset"] {
 }
 */
 
-.edit i.base {
-    color: #008000;
+a.btn-edit {
+  background-color: #008000;
+  color: #eee;
 }
 
-.delete i.base {
-    color: #f00;
+a.btn-delete {
+    background-color: #f00;
+  color: #eee;
 }
 
-.move i.base {
-    color: #800080;
+a.btn-move {
+  background-color: #800080;
+  color: #eee;
 }
 
-.copy i.base {
-    color: #00f;
+a.btn-copy {
+  background-color: #00f;
+  color: #eee;
 }
 
-.imagehandler i.base {
-    color: #fa8072;
-}
-
-.attributes-on i.base {
-    color: #87cefa;
-}
-
-.attributes-off i.base, .metatags-on i.base, .metatags-off i.base {
+a.btn-imagehandler {
+    background-color: #fa8072;
     color: #000;
 }
 
-.pricemanager-on i.base {
-    color: #32cd32;
-}
-
-.pricemanager-off i.base {
-    color: #d3d3d3;
-}
-
-.edit i.overlay, .delete i.overlay, .move i.overlay, .copy i.overlay, .attributes-off i.overlay, .pricemanager-on i.overlay, .metatags-off i.overlay {
-    color: #fff;
-}
-
-.imagehandler i.overlay, .attributes-on i.overlay {
+a.btn-attributes-on {
+    background-color: #87cefa;
     color: #000;
 }
 
-.pricemanager-off i.overlay {
-    color: #a9a9a9;
+a.btn-attributes-off, a.btn-metatags-off {
+    background-color: #000;
+    color: #eee;
 }
 
-.metatags-on i.overlay {
-    color: #ffa500;
+a.btn-pricemanager-on {
+    background-color: #32cd32;
+    color: #eee;
 }
 
-.edit i.overlay:hover, .delete i.overlay:hover, .move i.overlay:hover, .copy i.overlay:hover, .imagehandler i.overlay:hover, .attributes-on i.overlay:hover, .attributes-off i.overlay:hover, .pricemanager-on i.overlay:hover, .metatags-on i.overlay:hover, .metatags-off i.overlay:hover {
-    color: #ccc;
-    text-shadow: 0 0 4px rgba(0, 0, 0, 0.5)
+a.btn-pricemanager-off {
+    background-color: #d3d3d3;
+    color: #eee;
 }
 
+a.btn-metatags-on {
+  background-color: #000;
+  color: #ffa500;
+}
+
+.fa-folder, .fa-folder-open {color: #deb887;}
+.folder, .folder:hover {
+  text-decoration: none;
+  color: #000;
+}
+.folder:hover .fa-folder:before {
+  content: "\f07c";
+}
+.txt-status-off{
+  color: #d9534f;
+}
+.txt-status-on{
+  color: #398439;
+}
+.txt-linked{
+  color: #f0ad4e;
+}
 .tt {
     font-family: "Lucida Console", "Menlo", "Monaco", "Courier", monospace;
+}
+
+/* Date Picker */
+.ui-widget {
+  font-size: 16px;
+}
+.ui-widget a{
+  font-size: inherit;
 }
 
 /* bof Footer */
