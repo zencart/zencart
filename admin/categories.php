@@ -93,9 +93,8 @@ if (zen_not_null($action)) {
       if (isset($_POST['categories_id'])) {
         $categories_id = (int)$_POST['categories_id'];
       }
-      $sort_order = (int)$_POST['sort_order'];
 
-      $sql_data_array = ['sort_order' => (int)$sort_order];
+      $sql_data_array = ['sort_order' => (int)$_POST['sort_order']];
 
       if ($action === 'insert_category') {
         $insert_sql_data = [
