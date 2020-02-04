@@ -38,7 +38,7 @@ if (zen_not_null($action)) {
     case 'set_categories_products_sort_order':
       $_SESSION['categories_products_sort_order'] = $_GET['reset_categories_products_sort_order'];
       $action = '';
-      zen_redirect(zen_href_link(FILENAME_CATEGORY_PRODUCT_LISTING, 'cPath=' . $_GET['cPath'] . ((isset($_GET['pID']) && !empty($_GET['pID'])) ? '&pID=' . $_GET['pID'] : '') . ((isset($_GET['page']) && !empty($_GET['page'])) ? '&page=' . $_GET['page'] : '')));
+      zen_redirect(zen_href_link(FILENAME_CATEGORY_PRODUCT_LISTING, 'cPath=' . $_GET['cPath'] . ((isset($_GET['pID']) && !empty($_GET['pID'])) ? '&pID=' . $_GET['pID'] : '') .  ((isset($_GET['search']) && !empty($_GET['search'])) ? '&search=' . $_GET['search'] : '') . ((isset($_GET['page']) && !empty($_GET['page'])) ? '&page=' . $_GET['page'] : '')));
       break;
     case 'set_editor':
       // Reset will be done by init_html_editor.php. Now we simply redirect to refresh page properly.
@@ -440,6 +440,10 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
               $zc_skip_categories = true;
             }
 
+            if (isset($_GET['search']) && !empty($_GET['search']) && $action != 'edit_category') {
+              	$zc_skip_products = false;
+            }
+
             if ($zc_skip_products == true) {
               // toggle switch for display sort order
               $categories_products_sort_order_array = array(array('id' => '0', 'text' => TEXT_SORT_CATEGORIES_SORT_ORDER_PRODUCTS_NAME),
@@ -470,6 +474,7 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
               echo zen_draw_hidden_field('cPath', $cPath);
               echo (isset($_GET['pID']) ? zen_draw_hidden_field('pID', $_GET['pID']) : '');
               echo (isset($_GET['page']) ? zen_draw_hidden_field('page', $_GET['page']) : '');
+              echo (isset($_GET['search']) ? zen_draw_hidden_field('search', $_GET['search']) : '');
               echo zen_draw_hidden_field('action', 'set_categories_products_sort_order');
               ?>
             </div>

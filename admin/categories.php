@@ -1,13 +1,15 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2019 Zen Cart Development Team
+ * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Scott C Wilson 2019 Feb 28 Modified in v1.5.6b $
+ * @version $Id: Modified in v1.5.7 $
  */
 require('includes/application_top.php');
+
 $languages = zen_get_languages();
+
 $parameters = [
   'categories_name' => '',
   'categories_description' => '',
@@ -15,7 +17,8 @@ $parameters = [
   'sort_order' => ''
 ];
 $cInfo = new objectInfo($parameters);
-$categoryId = (isset($_GET['cID']) ? $_GET['cID'] : '');
+
+$categoryId = (isset($_GET['cID']) ? (int)$_GET['cID'] : '');
 if ($categoryId != '') {
   $category = $db->Execute("SELECT c.categories_id, cd.categories_name, cd.categories_description, c.categories_image,
                                    c.sort_order, c.date_added, c.last_modified
@@ -45,13 +48,13 @@ if (zen_not_null($action)) {
     case 'remove_type':
       if (isset($_POST['type_id'])) {
         $sql = "DELETE FROM " . TABLE_PRODUCT_TYPES_TO_CATEGORY . "
-                WHERE category_id = " . (int)zen_db_prepare_input($_GET['cID']) . "
-                AND product_type_id = " . (int)zen_db_prepare_input($_POST['type_id']);
+                WHERE category_id = " . (int)$_GET['cID'] . "
+                AND product_type_id = " . (int)$_POST['type_id'];
 
         $db->Execute($sql);
         zen_remove_restrict_sub_categories($_GET['cID'], (int)$_POST['type_id']);
         $action = "edit";
-        zen_redirect(zen_href_link(FILENAME_CATEGORIES, 'action=edit_category&cPath=' . $_GET['cPath'] . '&cID=' . zen_db_prepare_input($_GET['cID'])));
+        zen_redirect(zen_href_link(FILENAME_CATEGORIES, 'action=edit_category&cPath=' . $_GET['cPath'] . '&cID=' . (int)$_GET['cID']));
       }
       break;
     case 'insert_category':
@@ -60,16 +63,16 @@ if (zen_not_null($action)) {
         // check if it is already restricted
         $sql = "select *
                 from " . TABLE_PRODUCT_TYPES_TO_CATEGORY . "
-                where category_id = '" . (int)zen_db_prepare_input($_POST['categories_id']) . "'
-                and product_type_id = '" . (int)zen_db_prepare_input($_POST['restrict_type']) . "'";
+                where category_id = '" . (int)$_POST['categories_id'] . "'
+                and product_type_id = '" . (int)$_POST['restrict_type'] . "'";
 
         $type_to_cat = $db->Execute($sql);
         if ($type_to_cat->RecordCount() < 1) {
           //@@TODO find all sub-categories and restrict them as well.
 
           $insert_sql_data = [
-            'category_id' => zen_db_prepare_input($_POST['categories_id']),
-            'product_type_id' => zen_db_prepare_input($_POST['restrict_type'])
+            'category_id' => (int)$_POST['categories_id'],
+            'product_type_id' => (int)$_POST['restrict_type'],
           ];
 
           zen_db_perform(TABLE_PRODUCT_TYPES_TO_CATEGORY, $insert_sql_data);
@@ -85,18 +88,17 @@ if (zen_not_null($action)) {
           zen_restrict_sub_categories($_POST['categories_id'], $_POST['restrict_type']);
         }
         $action = "edit";
-        zen_redirect(zen_href_link(FILENAME_CATEGORIES, 'action=edit_category&cPath=' . $cPath . '&cID=' . zen_db_prepare_input($_POST['categories_id'])));
+        zen_redirect(zen_href_link(FILENAME_CATEGORIES, 'action=edit_category&cPath=' . $cPath . '&cID=' . (int)$_POST['categories_id']));
       }
       if (isset($_POST['categories_id'])) {
-        $categories_id = zen_db_prepare_input($_POST['categories_id']);
+        $categories_id = (int)$_POST['categories_id'];
       }
-      $sort_order = zen_db_prepare_input($_POST['sort_order']);
 
-      $sql_data_array = ['sort_order' => (int)$sort_order];
+      $sql_data_array = ['sort_order' => (int)$_POST['sort_order']];
 
       if ($action === 'insert_category') {
         $insert_sql_data = [
-          'parent_id' => $current_category_id,
+          'parent_id' => (int)$current_category_id,
           'date_added' => 'now()'
         ];
 
@@ -149,7 +151,7 @@ if (zen_not_null($action)) {
         if ($action === 'insert_category') {
           $insert_sql_data = [
             'categories_id' => (int)$categories_id,
-            'language_id' => (int)$languages[$i]['id']
+            'language_id' => (int)$languages[$i]['id'],
           ];
 
           $sql_data_array = array_merge($sql_data_array, $insert_sql_data);
@@ -208,15 +210,15 @@ if (zen_not_null($action)) {
         }
 
         $sql_data_array = [
-          'metatags_title' => zen_db_prepare_input($_POST['metatags_title'][$language_id]),
-          'metatags_keywords' => zen_db_prepare_input($_POST['metatags_keywords'][$language_id]),
-          'metatags_description' => zen_db_prepare_input($_POST['metatags_description'][$language_id])
+          'metatags_title' => zen_db_input($_POST['metatags_title'][$language_id]),
+          'metatags_keywords' => zen_db_input($_POST['metatags_keywords'][$language_id]),
+          'metatags_description' => zen_db_input($_POST['metatags_description'][$language_id])
         ];
 
         if ($action === 'insert_categories_meta_tags') {
           $insert_sql_data = [
             'categories_id' => (int)$categories_id,
-            'language_id' => (int)$language_id
+            'language_id' => (int)$language_id,
           ];
           $sql_data_array = array_merge($sql_data_array, $insert_sql_data);
 
@@ -290,7 +292,7 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
     while (!$product_types->EOF) {
       $type_array[] = [
         'id' => $product_types->fields['type_id'],
-        'text' => $product_types->fields['type_name']
+        'text' => $product_types->fields['type_name'],
       ];
       $product_types->MoveNext();
     }

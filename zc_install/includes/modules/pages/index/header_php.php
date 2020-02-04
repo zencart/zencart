@@ -1,9 +1,9 @@
 <?php
 /**
  * @package Installer
- * @copyright Copyright 2003-2019 Zen Cart Development Team
+ * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2019 Jan 04 Modified in v1.5.6a $
+ * @version $Id: DrByte 2020 Feb 04 Modified in v1.5.7 $
  */
 
 $otherConfigErrors = FALSE;
@@ -30,7 +30,7 @@ $systemChecker = new systemChecker($selectedAdminDir);
 if (isset($_POST['updateConfigure'])) {
     require_once (DIR_FS_INSTALL . 'includes/classes/class.zcConfigureFileReader.php');
     require_once (DIR_FS_INSTALL . 'includes/classes/class.zcConfigureFileWriter.php');
-    if ($_POST['btnsubmit'] != TEXT_REFRESH) {
+    if (!isset($_POST['btnsubmit']) || $_POST['btnsubmit'] != TEXT_REFRESH) {
         $configFile = DIR_FS_ROOT . 'includes/configure.php';
         $configFileLocal = DIR_FS_ROOT . 'includes/local/configure.php';
         if (file_exists($configFileLocal)) $configFile = $configFileLocal;
