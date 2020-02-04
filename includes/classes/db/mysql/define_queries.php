@@ -31,5 +31,5 @@ DEFINE('SQL_ALSO_PURCHASED', "SELECT p.products_id, p.products_image, max(o.date
                      AND p.products_status = 1
                      GROUP BY p.products_id, p.products_image
                      ORDER BY date_purchased desc, p.products_id
-                     LIMIT 50");
+                     LIMIT %u");
 DEFINE('SQL_SHOW_SHOPPING_CART_EMPTY',"select configuration_key, configuration_value from " . TABLE_CONFIGURATION . " where configuration_key RLIKE 'SHOW_SHOPPING_CART_EMPTY' and configuration_value > 0 order by configuration_value");
