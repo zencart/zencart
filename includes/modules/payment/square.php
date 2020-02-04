@@ -352,7 +352,7 @@ class square extends base
         }
 
         // analyze for errors
-        if (count($errors_object)) {
+        if (!empty($errors_object)) {
             $error = $this->parse_error_response($errors_object);
             $messageStack->add_session('checkout_payment', MODULE_PAYMENT_SQUARE_TEXT_ERROR . ' [' . $error['detail'] . ']', 'error');
             zen_redirect(zen_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL', true, false));
