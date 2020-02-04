@@ -40,17 +40,16 @@ foreach ($initSystemList as $entry) {
                 $_SESSION[$objectName] = new $className();
             }
             break;
-        case 'sessionObjectMethod':
-            //echo 'sessionObjectMethod ' . $entry['class'] . "\n";
-            $objectName = $entry['object'];
-            $methodName = $entry['method'];
-            $_SESSION[$objectName]->$methodName();
-            break;
         case 'objectMethod':
             //echo 'objectMethod ' . $entry['class'] . "\n";
             $objectName = $entry['object'];
             $methodName = $entry['method'];
-            ${$objectName}->$methodName();
+            if (is_object($_SESSION[$objectName])) {
+                $_SESSION[$objectName]->$methodName();
+            }
+            if (!is_object($_SESSION[$objectName])) {
+                ${$objectName}->$methodName();
+            }
             break;
 
     }
