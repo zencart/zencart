@@ -111,7 +111,7 @@ if (isset($_POST['products_id'], $_POST['categories_id'])) {
 
         $db->Execute("INSERT INTO " . TABLE_PRODUCTS_TO_CATEGORIES . " (products_id, categories_id)
                       VALUES (" . $dup_products_id . ", " . $categories_id . ")");
-                      
+
         // -----
         // Notify that a copy of a "base" product has just been created, enabling an observer to duplicate
         // additional product-related fields.
@@ -145,11 +145,11 @@ if (isset($_POST['products_id'], $_POST['categories_id'])) {
                                              WHERE products_id = '" . $products_id . "'");
 
             $db->Execute("UPDATE " . TABLE_PRODUCTS . " SET
-                metatags_title_status = '" . zen_db_input($metatags_status->fields['metatags_title_status']). "',
-                metatags_products_name_status = '" . zen_db_input($metatags_status->fields['metatags_products_name_status']). "',
-                metatags_model_status = '" . zen_db_input($metatags_status->fields['metatags_model_status']). "',
-                metatags_price_status= '" . zen_db_input($metatags_status->fields['metatags_price_status']). "',
-                metatags_title_tagline_status = '" . zen_db_input($metatags_status->fields['metatags_title_tagline_status']). "'
+                metatags_title_status = '" . zen_db_input($metatags_status->fields['metatags_title_status']) . "',
+                metatags_products_name_status = '" . zen_db_input($metatags_status->fields['metatags_products_name_status']) . "',
+                metatags_model_status = '" . zen_db_input($metatags_status->fields['metatags_model_status']) . "',
+                metatags_price_status= '" . zen_db_input($metatags_status->fields['metatags_price_status']) . "',
+                metatags_title_tagline_status = '" . zen_db_input($metatags_status->fields['metatags_title_tagline_status']) . "'
                 WHERE products_id = " . $dup_products_id);
 
             $metatags_descriptions = $db->Execute("SELECT language_id, metatags_title, metatags_keywords, metatags_description
@@ -163,7 +163,7 @@ if (isset($_POST['products_id'], $_POST['categories_id'])) {
                         '" . (int)$metatags_descriptions->fields['language_id'] . "',
                         '" . zen_db_input($metatags_descriptions->fields['metatags_title']) . "',
                         '" . zen_db_input($metatags_descriptions->fields['metatags_keywords']) . "',
-                        '" . zen_db_input($metatags_descriptions->fields['metatags_description']). "')");
+                        '" . zen_db_input($metatags_descriptions->fields['metatags_description']) . "')");
 
                 $messageStack->add_session(sprintf(TEXT_COPY_AS_DUPLICATE_METATAGS, (int)$metatags_descriptions->fields['language_id'], $products_id, $dup_products_id), 'success');
 
