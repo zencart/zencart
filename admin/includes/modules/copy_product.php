@@ -76,7 +76,7 @@ if (zen_has_product_discounts($pInfo->products_id) == 'true') {
       '<div class="radio"><label>' . zen_draw_radio_field('copy_discounts', 'copy_discounts_yes', true) . TEXT_YES . '</label></div>' .
       '<div class="radio"><label>' . zen_draw_radio_field('copy_discounts', 'copy_discounts_no') . TEXT_NO . '</label></div>');
 }
-
+$contents[] = array('text' => '<label>' . zen_draw_checkbox_field('edit_duplicate', '1', true) . TEXT_COPY_EDIT_DUPLICATE . '</label>');
 $contents[] = array('text' => zen_image(DIR_WS_IMAGES . 'pixel_black.gif', '', '', '3', 'style="width:100%"'));
 $contents[] = array('align' => 'center', 'text' => '<button type="submit" class="btn btn-primary">' . IMAGE_COPY . '</button> <a href="' . zen_href_link(FILENAME_CATEGORY_PRODUCT_LISTING, 'cPath=' . $cPath . '&pID=' . $pInfo->products_id . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '')) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>');
 
