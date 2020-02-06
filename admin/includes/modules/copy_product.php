@@ -20,10 +20,10 @@ $copy_attributes_include_filename = '1';
 $heading = array();
 $heading[] = array('text' => '<h4>' . TEXT_INFO_HEADING_COPY_TO . '</h4>');
 if (empty($pInfo->products_id)) {
-  if (!is_object($pInfo)) {
-    $pInfo = new objectInfo(array('products_id' => $pID)); 
-  } else {
+  if (is_object($pInfo)) {
     $pInfo->products_id = $pID;
+  } else {
+    $pInfo = new objectInfo(array('products_id' => $pID));
   }
 }
 
