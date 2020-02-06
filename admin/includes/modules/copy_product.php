@@ -47,7 +47,7 @@ if (zen_has_product_attributes($pInfo->products_id, 'false')) {
 }
 //are any metatags defined
 $metatags_defined = false;
-for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
+for ($i = 0, $n = count($languages); $i < $n; $i++) {
     if (zen_get_metatags_description($pInfo->products_id,
             $languages[$i]['id']) . zen_get_metatags_keywords($pInfo->products_id,
             $languages[$i]['id']) . zen_get_metatags_title($pInfo->products_id, $languages[$i]['id']) != '') {
