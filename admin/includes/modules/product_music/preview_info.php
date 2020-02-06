@@ -78,6 +78,8 @@ $form_action = (isset($_GET['pID'])) ? 'update_product' : 'insert_product';
           <?php echo ($pInfo->product_is_free == 1 ? '<div class="errorText">' . '<br>' . TEXT_PRODUCTS_IS_FREE_PREVIEW . '</div>' : ''); ?>
           <?php echo ($pInfo->product_is_call == 1 ? '<div class="errorText">' . '<br>' . TEXT_PRODUCTS_IS_CALL_PREVIEW . '</div>' : '') ?>
           <?php echo ($pInfo->products_qty_box_status == 0 ? '<div class="errorText">' . '<br>' . TEXT_PRODUCTS_QTY_BOX_STATUS_PREVIEW . '</div>' : ''); ?>
+          <?php echo ($pInfo->products_quantity_order_min < $pInfo->products_quantity_order_units ? '<div class="errorText">' . '<br>' . TEXT_PRODUCTS_QTY_MIN_UNITS_PREVIEW . '</div>' : ''); ?>
+          <?php echo ($pInfo->products_quantity_order_min > $pInfo->products_quantity_order_units && fmod_round($pInfo->products_quantity_order_min, $pInfo->products_quantity_order_units) != 0) ? '<div class="errorText">' . '<br>' . TEXT_PRODUCTS_QTY_MIN_UNITS_MISMATCH_PREVIEW . '</div>' : ''); ?>
           <?php echo (isset($_GET['pID']) && $pInfo->products_priced_by_attribute == 1 ? '<br>' . zen_get_products_display_price($_GET['pID']) : ''); ?>
       </div>
     </div>

@@ -560,7 +560,10 @@
     switch (true) {
       case ($_SESSION['cart']->in_cart_mixed($product_id) == 0 ):
         if ($check_min >= $check_units) {
-          $buy_now_qty = $check_min;
+          // Set the buy now quantity (associated product is not yet in the cart) to the first value satisfying both the minimum and the units.
+          $buy_now_qty = $check_units * ceil($check_min/$check_units);
+          // Uncomment below to set the buy now quantity to the value of the minimum required regardless if it is a multiple of the units.
+          //$buy_now_qty = $check_min;
         } else {
           $buy_now_qty = $check_units;
         }
