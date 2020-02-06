@@ -10,7 +10,7 @@
 if (!defined('IS_ADMIN_FLAG')) {
     die('Illegal Access');
 }
-if (isset($_POST['products_id']) && isset($_POST['categories_id'])) {
+if (isset($_POST['products_id'], $_POST['categories_id'])) {
     $products_id = (int)$_POST['products_id'];
     $categories_id = (int)$_POST['categories_id'];
 
