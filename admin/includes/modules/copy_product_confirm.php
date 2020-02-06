@@ -94,7 +94,7 @@ if (isset($_POST['products_id'], $_POST['categories_id'])) {
                           '" . zen_db_input($product->fields['products_price_sorter']) . "',
                           '" . zen_db_input($categories_id) . "')");
 
-        $dup_products_id = (int)$db->Insert_ID();
+        $dup_products_id = (int)$db->insert_ID();
 
         $descriptions = $db->Execute("SELECT language_id, products_name, products_description, products_url
                                       FROM " . TABLE_PRODUCTS_DESCRIPTION . "
