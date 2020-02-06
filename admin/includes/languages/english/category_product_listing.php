@@ -41,6 +41,7 @@ define('TEXT_COPY_AS_LINK','Link this product into another category as selected 
 define('TEXT_COPY_AS_DUPLICATE','Create a Duplicate product in the category selected above');
 define('TEXT_COPY_METATAGS','Copy Metatags to Duplicate?');
 define('TEXT_COPY_LINKED_CATEGORIES','Copy Linked Categories to Duplicate?');
+define('TEXT_COPY_EDIT_DUPLICATE', 'Open Duplicate Product for editing');
 
 //these four constants used in copy_product_confirm
 define('TEXT_COPY_AS_DUPLICATE_ATTRIBUTES', 'Attributes copied from Product ID#%u to duplicate Product ID#%u');
