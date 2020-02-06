@@ -116,7 +116,7 @@ if (isset($_POST['products_id'], $_POST['categories_id'])) {
         // Notify that a copy of a "base" product has just been created, enabling an observer to duplicate
         // additional product-related fields.
         //
-        $zco_notifier->notify('NOTIFY_MODULES_COPY_TO_CONFIRM_DUPLICATE', array('products_id' => $products_id, 'dup_products_id' => $dup_products_id));
+        $zco_notifier->notify('NOTIFY_MODULES_COPY_TO_CONFIRM_DUPLICATE', compact('products_id', 'dup_products_id'));
 
 // FIX HERE
 /////////////////////////////////////////////////////////////////////////////////////////////
@@ -194,7 +194,7 @@ if (isset($_POST['products_id'], $_POST['categories_id'])) {
 
         zen_record_admin_activity('Product ' . $products_id . ' duplicated as product ' . $dup_products_id . ' via admin console.', 'info');
 
-        $zco_notifier->notify('NOTIFY_MODULES_COPY_TO_CONFIRM_DUPLICATE', array('products_id' => $products_id, 'dup_products_id' => $dup_products_id));
+        $zco_notifier->notify('NOTIFY_MODULES_COPY_TO_CONFIRM_DUPLICATE', compact('products_id', 'dup_products_id'));
 
         $products_id = $dup_products_id;//reset for further use in price update and final redirect to new linked product or new duplicated product
     }// EOF duplication
