@@ -202,4 +202,9 @@ if (isset($_POST['products_id']) && isset($_POST['categories_id'])) {
     // reset products_price_sorter for searches etc.
     zen_update_products_price_sorter($products_id);
 }
-zen_redirect(zen_href_link(FILENAME_CATEGORY_PRODUCT_LISTING, 'cPath=' . $categories_id . '&pID=' . $products_id . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '')));
+if ($_POST['copy_as'] === 'duplicate' && !empty($_POST['edit_duplicate'])) {
+    zen_redirect(zen_href_link(FILENAME_PRODUCT, 'action=new_product&cPath=' . $categories_id . '&pID=' . $dup_products_id . '&products_type=' . (int)$product->fields['products_type']));
+} else {
+    zen_redirect(zen_href_link(FILENAME_CATEGORY_PRODUCT_LISTING, 'cPath=' . $categories_id . '&pID=' . $products_id . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '')));
+}
+
