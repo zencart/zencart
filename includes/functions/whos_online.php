@@ -31,6 +31,9 @@ function zen_update_whos_online() {
 
   $wo_session_id = zen_session_id();
   $wo_ip_address = (isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : 'Unknown');
+  if (strlen($wo_ip_address) > zen_field_length(TABLE_WHOS_ONLINE, 'ip_address') ) {
+     $wo_ip_address = "Too Long"; 
+  }
   $wo_user_agent = substr(zen_db_prepare_input(isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : ''), 0, 254);
 
 	$_SERVER['QUERY_STRING'] = (isset($_SERVER['QUERY_STRING']) && $_SERVER['QUERY_STRING'] != '') ? $_SERVER['QUERY_STRING'] : zen_get_all_get_params();
