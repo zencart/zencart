@@ -1088,7 +1088,7 @@ if (zen_not_null($action)) {
               </div>
             </div>
           <?php } else { ?>
-            <?php if (sizeof($discount_name) == 0) { ?> 
+            <?php if (empty($discount_name)) { ?> 
             <div class="col-sm-12"><?php echo TEXT_INFO_NO_DISCOUNTS; ?></div>
             <?php } ?> 
           <?php } ?>
