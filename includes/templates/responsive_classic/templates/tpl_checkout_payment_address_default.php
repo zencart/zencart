@@ -14,8 +14,6 @@
 ?>
 <div class="centerColumn" id="checkoutPayAddressDefault">
 
-<?php echo zen_draw_form('checkout_address', zen_href_link(FILENAME_CHECKOUT_PAYMENT_ADDRESS, '', 'SSL'), 'post', 'class="group"'); ?>
-
 <h1 id="checkoutPayAddressDefaultHeading"><?php echo HEADING_TITLE; ?></h1>
 
 <?php if ($messageStack->size('checkout_address') > 0) echo $messageStack->output('checkout_address'); ?>
@@ -29,8 +27,7 @@
 
 <?php
      if ($addresses_count < MAX_ADDRESS_BOOK_ENTRIES) {
-?>
-<?php
+       echo zen_draw_form('checkout_address', zen_href_link(FILENAME_CHECKOUT_PAYMENT_ADDRESS, '', 'SSL'), 'post', 'class="group"'); 
 /**
  * require template to collect address details
  */
