@@ -10,7 +10,7 @@
 if (!defined('IS_ADMIN_FLAG')) {
     die('Illegal Access');
 }
-if (isset($_POST['products_id']) && isset($_POST['categories_id'])) {
+if (isset($_POST['products_id'], $_POST['categories_id'])) {
     $products_id = (int)$_POST['products_id'];
     $categories_id = (int)$_POST['categories_id'];
 
@@ -94,7 +94,7 @@ if (isset($_POST['products_id']) && isset($_POST['categories_id'])) {
                           '" . zen_db_input($product->fields['products_price_sorter']) . "',
                           '" . zen_db_input($categories_id) . "')");
 
-        $dup_products_id = (int)$db->Insert_ID();
+        $dup_products_id = (int)$db->insert_ID();
 
         $descriptions = $db->Execute("SELECT language_id, products_name, products_description, products_url
                                       FROM " . TABLE_PRODUCTS_DESCRIPTION . "
@@ -111,12 +111,12 @@ if (isset($_POST['products_id']) && isset($_POST['categories_id'])) {
 
         $db->Execute("INSERT INTO " . TABLE_PRODUCTS_TO_CATEGORIES . " (products_id, categories_id)
                       VALUES (" . $dup_products_id . ", " . $categories_id . ")");
-                      
+
         // -----
         // Notify that a copy of a "base" product has just been created, enabling an observer to duplicate
         // additional product-related fields.
         //
-        $zco_notifier->notify('NOTIFY_MODULES_COPY_TO_CONFIRM_DUPLICATE', array('products_id' => $products_id, 'dup_products_id' => $dup_products_id));
+        $zco_notifier->notify('NOTIFY_MODULES_COPY_TO_CONFIRM_DUPLICATE', compact('products_id', 'dup_products_id'));
 
 // FIX HERE
 /////////////////////////////////////////////////////////////////////////////////////////////
@@ -145,11 +145,11 @@ if (isset($_POST['products_id']) && isset($_POST['categories_id'])) {
                                              WHERE products_id = '" . $products_id . "'");
 
             $db->Execute("UPDATE " . TABLE_PRODUCTS . " SET
-                metatags_title_status = '" . zen_db_input($metatags_status->fields['metatags_title_status']). "',
-                metatags_products_name_status = '" . zen_db_input($metatags_status->fields['metatags_products_name_status']). "',
-                metatags_model_status = '" . zen_db_input($metatags_status->fields['metatags_model_status']). "',
-                metatags_price_status= '" . zen_db_input($metatags_status->fields['metatags_price_status']). "',
-                metatags_title_tagline_status = '" . zen_db_input($metatags_status->fields['metatags_title_tagline_status']). "'
+                metatags_title_status = '" . zen_db_input($metatags_status->fields['metatags_title_status']) . "',
+                metatags_products_name_status = '" . zen_db_input($metatags_status->fields['metatags_products_name_status']) . "',
+                metatags_model_status = '" . zen_db_input($metatags_status->fields['metatags_model_status']) . "',
+                metatags_price_status= '" . zen_db_input($metatags_status->fields['metatags_price_status']) . "',
+                metatags_title_tagline_status = '" . zen_db_input($metatags_status->fields['metatags_title_tagline_status']) . "'
                 WHERE products_id = " . $dup_products_id);
 
             $metatags_descriptions = $db->Execute("SELECT language_id, metatags_title, metatags_keywords, metatags_description
@@ -163,7 +163,7 @@ if (isset($_POST['products_id']) && isset($_POST['categories_id'])) {
                         '" . (int)$metatags_descriptions->fields['language_id'] . "',
                         '" . zen_db_input($metatags_descriptions->fields['metatags_title']) . "',
                         '" . zen_db_input($metatags_descriptions->fields['metatags_keywords']) . "',
-                        '" . zen_db_input($metatags_descriptions->fields['metatags_description']). "')");
+                        '" . zen_db_input($metatags_descriptions->fields['metatags_description']) . "')");
 
                 $messageStack->add_session(sprintf(TEXT_COPY_AS_DUPLICATE_METATAGS, (int)$metatags_descriptions->fields['language_id'], $products_id, $dup_products_id), 'success');
 
@@ -194,7 +194,7 @@ if (isset($_POST['products_id']) && isset($_POST['categories_id'])) {
 
         zen_record_admin_activity('Product ' . $products_id . ' duplicated as product ' . $dup_products_id . ' via admin console.', 'info');
 
-        $zco_notifier->notify('NOTIFY_MODULES_COPY_TO_CONFIRM_DUPLICATE', array('products_id' => $products_id, 'dup_products_id' => $dup_products_id));
+        $zco_notifier->notify('NOTIFY_MODULES_COPY_TO_CONFIRM_DUPLICATE', compact('products_id', 'dup_products_id'));
 
         $products_id = $dup_products_id;//reset for further use in price update and final redirect to new linked product or new duplicated product
     }// EOF duplication
@@ -202,4 +202,9 @@ if (isset($_POST['products_id']) && isset($_POST['categories_id'])) {
     // reset products_price_sorter for searches etc.
     zen_update_products_price_sorter($products_id);
 }
-zen_redirect(zen_href_link(FILENAME_CATEGORY_PRODUCT_LISTING, 'cPath=' . $categories_id . '&pID=' . $products_id . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '')));
+if ($_POST['copy_as'] === 'duplicate' && !empty($_POST['edit_duplicate'])) {
+    zen_redirect(zen_href_link(FILENAME_PRODUCT, 'action=new_product&cPath=' . $categories_id . '&pID=' . $dup_products_id . '&products_type=' . (int)$product->fields['products_type']));
+} else {
+    zen_redirect(zen_href_link(FILENAME_CATEGORY_PRODUCT_LISTING, 'cPath=' . $categories_id . '&pID=' . $products_id . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '')));
+}
+
