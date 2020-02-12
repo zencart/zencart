@@ -89,7 +89,7 @@ if (zen_not_null($action)) {
       $specials_price = (!zen_not_null($tmp_value) || $tmp_value == '' || $tmp_value == 0) ? 0 : $tmp_value;
 
       if (substr($specials_price, -1) == '%') {
-        $specials_price = ($products_price - (($specials_price / 100) * $products_price));
+          $specials_price = ((float)$products_price - (((float)$specials_price / 100) * (float)$products_price));
       }
 
       $specials_date_available = ((zen_db_prepare_input($_POST['start']) == '') ? '0001-01-01' : zen_date_raw($_POST['start']));
