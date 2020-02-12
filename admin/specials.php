@@ -16,7 +16,7 @@ $action = (isset($_GET['action']) ? $_GET['action'] : '');
 if (zen_not_null($action)) {
   switch ($action) {
     case 'setflag':
-      if (isset($_POST['flag']) && ($_POST['flag'] === 1 || $_POST['flag'] === 0)) {
+      if (isset($_POST['flag']) && ($_POST['flag'] === '1' || $_POST['flag'] === '0')) {
         zen_set_specials_status($_GET['id'], $_POST['flag']);
         // reset products_price_sorter for searches etc.
         $update_price = $db->Execute("SELECT products_id
