@@ -408,12 +408,12 @@ if (zen_not_null($action)) {
                       if ($check_page->RecordCount() > MAX_DISPLAY_SEARCH_RESULTS) {
                         $check_count = 1;
                         foreach ($check_page as $item) {
-                          if ($item['specials_id'] == $_GET['sID']) {
+                          if ((int)$item['specials_id'] === (int)$_GET['sID']) {
                             break;
                           }
                           $check_count++;
                         }
-                        $_GET['page'] = round((($check_count / MAX_DISPLAY_SEARCH_RESULTS) + (fmod_round($check_count, MAX_DISPLAY_SEARCH_RESULTS) != 0 ? .5 : 0)));
+                        $_GET['page'] = round((($check_count / MAX_DISPLAY_SEARCH_RESULTS) + (fmod_round($check_count, MAX_DISPLAY_SEARCH_RESULTS) !== 0 ? .5 : 0)));
                         $page = $_GET['page'];
                       } else {
                         $_GET['page'] = 1;
@@ -424,7 +424,7 @@ if (zen_not_null($action)) {
                     $specials_split = new splitPageResults($_GET['page'], MAX_DISPLAY_SEARCH_RESULTS, $specials_query_raw, $specials_query_numrows);
                     $specials = $db->Execute($specials_query_raw);
                     foreach ($specials as $special) {
-                      if ((!isset($_GET['sID']) || (isset($_GET['sID']) && ($_GET['sID'] == $special['specials_id']))) && !isset($sInfo)) {
+                      if ((!isset($_GET['sID']) || (isset($_GET['sID']) && ((int)$_GET['sID'] === (int)$special['specials_id']))) && !isset($sInfo)) {
                         $products = $db->Execute("SELECT products_image
                                                   FROM " . TABLE_PRODUCTS . "
                                                   WHERE products_id = " . (int)$special['products_id']);
@@ -433,7 +433,7 @@ if (zen_not_null($action)) {
                         $sInfo = new objectInfo($sInfo_array);
                       }
 
-                        if (isset($sInfo) && is_object($sInfo) && ($special['specials_id'] == $sInfo->specials_id)) { ?>
+                        if (isset($sInfo) && is_object($sInfo) && ((int)$special['specials_id'] === (int)$sInfo->specials_id)) { ?>
                         <tr id="defaultSelected" class="dataTableRowSelected" onclick="document.location.href='<?php echo zen_href_link(FILENAME_SPECIALS, 'page=' . $_GET['page'] . '&sID=' . $sInfo->specials_id . '&action=edit' . (isset($_GET['search']) ? '&search=' . $_GET['search'] : '')); ?>'">
                       <?php } else { ?>
                         <tr class="dataTableRow" onclick="document.location.href='<?php echo zen_href_link(FILENAME_SPECIALS, 'page=' . $_GET['page'] . '&sID=' . $special['specials_id'] . (isset($_GET['search']) ? '&search=' . $_GET['search'] : '')); ?>'">
@@ -454,11 +454,11 @@ if (zen_not_null($action)) {
 		  <?php $oos_style = $specials->fields['products_quantity'] <= 0 ? ' style="color:red;font-weight:bold"' : ''; ?>
                       <span<?php echo $oos_style; ?>><?php echo $special['products_quantity']; ?></span></td>
                   <td class="dataTableContent text-right"><?php echo zen_get_products_display_price($special['products_id']); ?></td>
-                  <td class="dataTableContent text-center"><?php echo (($special['specials_date_available'] != '0001-01-01' && $special['specials_date_available'] != '') ? zen_date_short($special['specials_date_available']) : TEXT_NONE); ?></td>
-                  <td class="dataTableContent text-center"><?php echo (($special['expires_date'] != '0001-01-01' && $special['expires_date'] != '') ? zen_date_short($special['expires_date']) : TEXT_NONE); ?></td>
+                  <td class="dataTableContent text-center"><?php echo (($special['specials_date_available'] !== '0001-01-01' && $special['specials_date_available'] !== '') ? zen_date_short($special['specials_date_available']) : TEXT_NONE); ?></td>
+                  <td class="dataTableContent text-center"><?php echo (($special['expires_date'] !== '0001-01-01' && $special['expires_date'] !== '') ? zen_date_short($special['expires_date']) : TEXT_NONE); ?></td>
                   <td class="dataTableContent text-center">
                       <?php
-                      if (($special['specials_date_available'] != '0001-01-01' && $special['specials_date_available'] != '') || ($special['expires_date'] != '0001-01-01' && $special['expires_date'] != '')) {
+                      if (($special['specials_date_available'] !== '0001-01-01' && $special['specials_date_available'] !== '') || ($special['expires_date'] !== '0001-01-01' && $special['expires_date'] !== '')) {
                           echo $special['status'] === '1' ? '<img src="' . DIR_WS_IMAGES . 'icon_green_on.gif" title="' . TEXT_SPECIAL_ACTIVE . ': ' . TEXT_SPECIAL_STATUS_BY_DATE . '" alt="' . TEXT_SPECIAL_ACTIVE  . ': ' . TEXT_SPECIAL_STATUS_BY_DATE. '">' : '<img src="' . DIR_WS_IMAGES . 'icon_red_on.gif" title="' . TEXT_SPECIAL_INACTIVE . ': ' . TEXT_SPECIAL_STATUS_BY_DATE . '" alt="' . TEXT_SPECIAL_INACTIVE . ': ' . TEXT_SPECIAL_STATUS_BY_DATE . '">';
                       } else {
                           if ($special['status'] === '1') {
@@ -548,9 +548,9 @@ if (zen_not_null($action)) {
                             $contents[] = ['text' => TEXT_INFO_ORIGINAL_PRICE . ' ' . $currencies->format($specials_current_price)];
                             $contents[] = ['text' => TEXT_INFO_NEW_PRICE . ' ' . $currencies->format($sInfo->specials_new_products_price)];
                             $contents[] = ['text' => '<b>' . TEXT_INFO_DISPLAY_PRICE . '<br>' . zen_get_products_display_price($sInfo->products_id) . '</b>'];
-                            $contents[] = ['text' => TEXT_SPECIALS_AVAILABLE_DATE . ' ' . (($sInfo->specials_date_available != '0001-01-01' && $sInfo->specials_date_available != '') ? zen_date_short($sInfo->specials_date_available) : TEXT_NONE)];
-                            $contents[] = ['text' => TEXT_SPECIALS_EXPIRES_DATE . ' ' . (($sInfo->expires_date != '0001-01-01' && $sInfo->expires_date != '') ? zen_date_short($sInfo->expires_date) : TEXT_NONE)];
-                            if ($sInfo->date_status_change != null && $sInfo->date_status_change !== '0001-01-01 00:00:00') {
+                            $contents[] = ['text' => TEXT_SPECIALS_AVAILABLE_DATE . ' ' . (($sInfo->specials_date_available !== '0001-01-01' && $sInfo->specials_date_available !== '') ? zen_date_short($sInfo->specials_date_available) : TEXT_NONE)];
+                            $contents[] = ['text' => TEXT_SPECIALS_EXPIRES_DATE . ' ' . (($sInfo->expires_date !== '0001-01-01' && $sInfo->expires_date !== '') ? zen_date_short($sInfo->expires_date) : TEXT_NONE)];
+                            if ($sInfo->date_status_change !== null && $sInfo->date_status_change !== '0001-01-01 00:00:00') {
                                 $contents[] = ['text' => TEXT_INFO_STATUS_CHANGED . ' ' . zen_date_short($sInfo->date_status_change)];
                             }
                             $contents[] = ['text' => TEXT_INFO_LAST_MODIFIED . ' ' . zen_date_short($sInfo->specials_last_modified)];
