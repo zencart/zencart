@@ -460,22 +460,20 @@ if (zen_not_null($action)) {
                       <?php
                       if (($special['specials_date_available'] !== '0001-01-01' && $special['specials_date_available'] !== '') || ($special['expires_date'] !== '0001-01-01' && $special['expires_date'] !== '')) {
                           echo $special['status'] === '1' ? '<img src="' . DIR_WS_IMAGES . 'icon_green_on.gif" title="' . TEXT_SPECIAL_ACTIVE . ': ' . TEXT_SPECIAL_STATUS_BY_DATE . '" alt="' . TEXT_SPECIAL_ACTIVE  . ': ' . TEXT_SPECIAL_STATUS_BY_DATE. '">' : '<img src="' . DIR_WS_IMAGES . 'icon_red_on.gif" title="' . TEXT_SPECIAL_INACTIVE . ': ' . TEXT_SPECIAL_STATUS_BY_DATE . '" alt="' . TEXT_SPECIAL_INACTIVE . ': ' . TEXT_SPECIAL_STATUS_BY_DATE . '">';
+                      } elseif ($special['status'] === '1') {
+                          echo zen_draw_form('setflag_products_' . $special['products_id'], FILENAME_SPECIALS, 'action=setflag&id=' . $special['specials_id'] . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '') . (isset($_GET['search']) ? '&search=' . $_GET['search'] : ''));
+                          ?>
+                          <input type="image" src="<?php echo DIR_WS_IMAGES ?>icon_green_on.gif" title="<?php echo TEXT_SPECIAL_ACTIVE; ?>" alt="<?php echo TEXT_SPECIAL_ACTIVE; ?>"/>
+                          <input type="hidden" name="flag" value="0"/>
+                          <?php echo '</form>'; ?>
+                          <?php
                       } else {
-                          if ($special['status'] === '1') {
-                              echo zen_draw_form('setflag_products_' . $special['products_id'], FILENAME_SPECIALS, 'action=setflag&id=' . $special['specials_id'] . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '') . (isset($_GET['search']) ? '&search=' . $_GET['search'] : ''));
-                              ?>
-                              <input type="image" src="<?php echo DIR_WS_IMAGES ?>icon_green_on.gif" title="<?php echo TEXT_SPECIAL_ACTIVE; ?>" alt="<?php echo TEXT_SPECIAL_ACTIVE; ?>"/>
-                              <input type="hidden" name="flag" value="0"/>
-                              <?php echo '</form>'; ?>
-                              <?php
-                          } else {
-                              echo zen_draw_form('setflag_products_' . $special['products_id'], FILENAME_SPECIALS, 'action=setflag&id=' . $special['specials_id'] . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '') . (isset($_GET['search']) ? '&search=' . $_GET['search'] : ''));
-                              ?>
-                              <input type="image" src="<?php echo DIR_WS_IMAGES ?>icon_red_on.gif" title="<?php echo TEXT_SPECIAL_INACTIVE; ?>" alt="<?php echo TEXT_SPECIAL_INACTIVE; ?>"/>
-                              <input type="hidden" name="flag" value="1"/>
-                              <?php echo '</form>'; ?>
-                              <?php
-                          }
+                          echo zen_draw_form('setflag_products_' . $special['products_id'], FILENAME_SPECIALS, 'action=setflag&id=' . $special['specials_id'] . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '') . (isset($_GET['search']) ? '&search=' . $_GET['search'] : ''));
+                          ?>
+                          <input type="image" src="<?php echo DIR_WS_IMAGES ?>icon_red_on.gif" title="<?php echo TEXT_SPECIAL_INACTIVE; ?>" alt="<?php echo TEXT_SPECIAL_INACTIVE; ?>"/>
+                          <input type="hidden" name="flag" value="1"/>
+                          <?php echo '</form>'; ?>
+                          <?php
                       }
                       ?>
                   </td>
