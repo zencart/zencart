@@ -504,7 +504,7 @@ if (zen_not_null($action)) {
       // reset products_price_sorter for searches etc.
       zen_update_products_price_sorter($_POST['products_id']);
 
-      zen_redirect(zen_href_link(FILENAME_ATTRIBUTES_CONTROLLER, ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . 'current_category_id=' . $_POST['current_category_id']));
+      zen_redirect(zen_href_link(FILENAME_ATTRIBUTES_CONTROLLER, ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . 'current_category_id=' . $_POST['current_category_id'] . '&products_filter=' . $products_id));
       break;
     case 'delete_attribute':
       if (isset($_POST['delete_attribute_id'])) {
@@ -522,7 +522,7 @@ if (zen_not_null($action)) {
         // reset products_price_sorter for searches etc.
         zen_update_products_price_sorter($products_filter);
 
-        zen_redirect(zen_href_link(FILENAME_ATTRIBUTES_CONTROLLER, ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . 'current_category_id=' . $_POST['current_category_id']));
+        zen_redirect(zen_href_link(FILENAME_ATTRIBUTES_CONTROLLER, ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . 'current_category_id=' . $_POST['current_category_id'] . '&products_filter=' . $products_filter));
       }
       break;
 // delete all attributes
