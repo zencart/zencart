@@ -80,15 +80,15 @@ $form_action = (isset($_GET['pID'])) ? 'update_product' : 'insert_product';
                 </div>
                 <div class="col-sm-6 text-right">
                     <?php echo $currencies->format($pInfo->products_price); ?>
-                    <?php echo($pInfo->products_virtual === 1 ? '<div class="errorText">' . '<br>' . TEXT_VIRTUAL_PREVIEW . '</div>' : ''); ?>
-                    <?php echo($pInfo->product_is_always_free_shipping === 1 ? '<div class="errorText">' . '<br>' . TEXT_FREE_SHIPPING_PREVIEW . '</div>' : ''); ?>
-                    <?php echo($pInfo->products_priced_by_attribute === 1 ? '<div class="errorText">' . '<br>' . TEXT_PRODUCTS_PRICED_BY_ATTRIBUTES_PREVIEW . '</div>' : ''); ?>
-                    <?php echo($pInfo->product_is_free === 1 ? '<div class="errorText">' . '<br>' . TEXT_PRODUCTS_IS_FREE_PREVIEW . '</div>' : ''); ?>
-                    <?php echo($pInfo->product_is_call === 1 ? '<div class="errorText">' . '<br>' . TEXT_PRODUCTS_IS_CALL_PREVIEW . '</div>' : '') ?>
-                    <?php echo($pInfo->products_qty_box_status === 0 ? '<div class="errorText">' . '<br>' . TEXT_PRODUCTS_QTY_BOX_STATUS_PREVIEW . '</div>' : ''); ?>
-                    <?php echo($pInfo->products_quantity_order_min < $pInfo->products_quantity_order_units ? '<div class="errorText">' . '<br>' . TEXT_PRODUCTS_QTY_MIN_UNITS_PREVIEW . '</div>' : ''); ?>
-                    <?php echo($pInfo->products_quantity_order_min > $pInfo->products_quantity_order_units && fmod_round($pInfo->products_quantity_order_min, $pInfo->products_quantity_order_units) !== 0 ? '<div class="errorText">' . '<br>' . TEXT_PRODUCTS_QTY_MIN_UNITS_MISMATCH_PREVIEW . '</div>' : ''); ?>
-                    <?php echo(isset($_GET['pID']) && $pInfo->products_priced_by_attribute === 1 ? '<br>' . zen_get_products_display_price($_GET['pID']) : ''); ?>
+                    <?php echo ($pInfo->products_virtual === '1' ? '<div class="errorText">' . '<br>' . TEXT_VIRTUAL_PREVIEW . '</div>' : ''); ?>
+                    <?php echo ($pInfo->product_is_always_free_shipping === '1' ? '<div class="errorText">' . '<br>' . TEXT_FREE_SHIPPING_PREVIEW . '</div>' : ''); ?>
+                    <?php echo ($pInfo->products_priced_by_attribute === '1' ? '<div class="errorText">' . '<br>' . TEXT_PRODUCTS_PRICED_BY_ATTRIBUTES_PREVIEW . '</div>' : ''); ?>
+                    <?php echo ($pInfo->product_is_free === '1' ? '<div class="errorText">' . '<br>' . TEXT_PRODUCTS_IS_FREE_PREVIEW . '</div>' : ''); ?>
+                    <?php echo ($pInfo->product_is_call === '1' ? '<div class="errorText">' . '<br>' . TEXT_PRODUCTS_IS_CALL_PREVIEW . '</div>' : ''); ?>
+                    <?php echo ($pInfo->products_qty_box_status === '0' ? '<div class="errorText">' . '<br>' . TEXT_PRODUCTS_QTY_BOX_STATUS_PREVIEW . '</div>' : ''); ?>
+                    <?php echo ($pInfo->products_quantity_order_min < $pInfo->products_quantity_order_units ? '<div class="errorText">' . '<br>' . TEXT_PRODUCTS_QTY_MIN_UNITS_PREVIEW . '</div>' : ''); ?>
+                    <?php echo ($pInfo->products_quantity_order_min > $pInfo->products_quantity_order_units && fmod_round($pInfo->products_quantity_order_min, $pInfo->products_quantity_order_units) !== 0 ? '<div class="errorText">' . '<br>' . TEXT_PRODUCTS_QTY_MIN_UNITS_MISMATCH_PREVIEW . '</div>' : ''); ?>
+                    <?php echo (isset($_GET['pID']) && $pInfo->products_priced_by_attribute === '1' ? '<br>' . zen_get_products_display_price($_GET['pID']) : ''); ?>
                 </div>
             </div>
             <div class="row"><?php echo zen_draw_separator('pixel_trans.gif', '1', '10'); ?></div>
