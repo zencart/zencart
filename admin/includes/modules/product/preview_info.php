@@ -10,9 +10,15 @@ if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
 }
 $languages = zen_get_languages();
-if (empty($products_description)) $products_description = [];
-if (empty($products_name)) $products_name = [];
-if (empty($products_url)) $products_url = [];
+if (empty($products_description)) {
+    $products_description = [];
+}
+if (empty($products_name)) {
+    $products_name = [];
+}
+if (empty($products_url)) {
+    $products_url = [];
+}
 
 if (zen_not_null($_POST)) {
   $pInfo = new objectInfo($_POST);
@@ -52,7 +58,7 @@ $form_action = (isset($_GET['pID'])) ? 'update_product' : 'insert_product';
       echo zen_draw_form($form_action, FILENAME_PRODUCT, 'cPath=' . $cPath . (isset($_GET['pID']) ? '&pID=' . $_GET['pID'] : '') . '&action=' . $form_action . (isset($_GET['page']) ? '&page=' . $_GET['page'] : ''), 'post', 'enctype="multipart/form-data"');
     }
 
-    for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
+    for ($i = 0, $n = count($languages); $i < $n; $i++) {
       if (isset($_GET['read']) && ($_GET['read'] == 'only')) {
         $pInfo->products_name = zen_get_products_name($pInfo->products_id, $languages[$i]['id']);
         $pInfo->products_description = zen_get_products_description($pInfo->products_id, $languages[$i]['id']);
@@ -153,7 +159,7 @@ $form_action = (isset($_GET['pID'])) ? 'update_product' : 'insert_product';
           }
         }
 
-        for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
+        for ($i = 0, $n = count($languages); $i < $n; $i++) {
           echo zen_draw_hidden_field('products_name[' . $languages[$i]['id'] . ']', htmlspecialchars(stripslashes($products_name[$languages[$i]['id']]), ENT_COMPAT, CHARSET, TRUE));
           echo zen_draw_hidden_field('products_description[' . $languages[$i]['id'] . ']', htmlspecialchars(stripslashes($products_description[$languages[$i]['id']]), ENT_COMPAT, CHARSET, TRUE));
           echo zen_draw_hidden_field('products_url[' . $languages[$i]['id'] . ']', htmlspecialchars(stripslashes($products_url[$languages[$i]['id']]), ENT_COMPAT, CHARSET, TRUE));
