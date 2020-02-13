@@ -22,6 +22,11 @@ class AdminNotifications
         if (defined('DISABLE_ADMIN_NOTIFICATIONS_CHECKING') && DISABLE_ADMIN_NOTIFICATIONS_CHECKING === true) {
             $this->enabled = false;
         }
+
+        global $sniffer;  
+        if (!$sniffer->table_exists(TABLE_ADMIN_NOTIFICATIONS)) { 
+            $this->enabled = false;
+        }
     }
 
     public function getNotifications($target, $adminId)
