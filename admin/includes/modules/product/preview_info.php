@@ -7,7 +7,7 @@
  * @version $Id: DrByte 2019 May 25 Modified in v1.5.6b $
  */
 if (!defined('IS_ADMIN_FLAG')) {
-  die('Illegal Access');
+    die('Illegal Access');
 }
 $languages = zen_get_languages();
 if (empty($products_description)) {
@@ -21,12 +21,12 @@ if (empty($products_url)) {
 }
 
 if (zen_not_null($_POST)) {
-  $pInfo = new objectInfo($_POST);
-  $products_name = $_POST['products_name'];
-  $products_description = $_POST['products_description'];
-  $products_url = $_POST['products_url'];
+    $pInfo = new objectInfo($_POST);
+    $products_name = $_POST['products_name'];
+    $products_description = $_POST['products_description'];
+    $products_url = $_POST['products_url'];
 } else {
-  $product = $db->Execute("SELECT p.products_id, pd.language_id, pd.products_name,
+    $product = $db->Execute("SELECT p.products_id, pd.language_id, pd.products_name,
                                   pd.products_description, pd.products_url, p.products_quantity,
                                   p.products_model, p.products_image, p.products_price, p.products_virtual,
                                   p.products_weight, p.products_date_added, p.products_last_modified,
@@ -40,14 +40,14 @@ if (zen_not_null($_POST)) {
                            WHERE p.products_id = pd.products_id
                            AND p.products_id = " . (int)$_GET['pID']);
 
-  $pInfo = new objectInfo($product->fields);
-  $products_image_name = $pInfo->products_image;
+    $pInfo = new objectInfo($product->fields);
+    $products_image_name = $pInfo->products_image;
 
-  foreach($product as $prod) {
-    $products_name[$prod['language_id']] = $prod['products_name'];
-    $products_description[$prod['language_id']] = $prod['products_description'];
-    $products_url[$prod['language_id']] = $prod['products_url'];
-  }
+    foreach ($product as $prod) {
+        $products_name[$prod['language_id']] = $prod['products_name'];
+        $products_description[$prod['language_id']] = $prod['products_description'];
+        $products_url[$prod['language_id']] = $prod['products_url'];
+    }
 }
 
 $form_action = (isset($_GET['pID'])) ? 'update_product' : 'insert_product';
@@ -55,7 +55,7 @@ $form_action = (isset($_GET['pID'])) ? 'update_product' : 'insert_product';
 <div class="container-fluid">
     <?php
     if (!isset($_GET['read']) || ($_GET['read'] !== 'only')) {
-      echo zen_draw_form($form_action, FILENAME_PRODUCT, 'cPath=' . $cPath . (isset($_GET['pID']) ? '&pID=' . $_GET['pID'] : '') . '&action=' . $form_action . (isset($_GET['page']) ? '&page=' . $_GET['page'] : ''), 'post', 'enctype="multipart/form-data"');
+        echo zen_draw_form($form_action, FILENAME_PRODUCT, 'cPath=' . $cPath . (isset($_GET['pID']) ? '&pID=' . $_GET['pID'] : '') . '&action=' . $form_action . (isset($_GET['page']) ? '&page=' . $_GET['page'] : ''), 'post', 'enctype="multipart/form-data"');
     }
 
     for ($i = 0, $n = count($languages); $i < $n; $i++) {
@@ -80,15 +80,15 @@ $form_action = (isset($_GET['pID'])) ? 'update_product' : 'insert_product';
                 </div>
                 <div class="col-sm-6 text-right">
                     <?php echo $currencies->format($pInfo->products_price); ?>
-                    <?php echo ($pInfo->products_virtual === '1' ? '<div class="errorText">' . '<br>' . TEXT_VIRTUAL_PREVIEW . '</div>' : ''); ?>
-                    <?php echo ($pInfo->product_is_always_free_shipping === '1' ? '<div class="errorText">' . '<br>' . TEXT_FREE_SHIPPING_PREVIEW . '</div>' : ''); ?>
-                    <?php echo ($pInfo->products_priced_by_attribute === '1' ? '<div class="errorText">' . '<br>' . TEXT_PRODUCTS_PRICED_BY_ATTRIBUTES_PREVIEW . '</div>' : ''); ?>
-                    <?php echo ($pInfo->product_is_free === '1' ? '<div class="errorText">' . '<br>' . TEXT_PRODUCTS_IS_FREE_PREVIEW . '</div>' : ''); ?>
-                    <?php echo ($pInfo->product_is_call === '1' ? '<div class="errorText">' . '<br>' . TEXT_PRODUCTS_IS_CALL_PREVIEW . '</div>' : ''); ?>
-                    <?php echo ($pInfo->products_qty_box_status === '0' ? '<div class="errorText">' . '<br>' . TEXT_PRODUCTS_QTY_BOX_STATUS_PREVIEW . '</div>' : ''); ?>
-                    <?php echo ($pInfo->products_quantity_order_min < $pInfo->products_quantity_order_units ? '<div class="errorText">' . '<br>' . TEXT_PRODUCTS_QTY_MIN_UNITS_PREVIEW . '</div>' : ''); ?>
-                    <?php echo ($pInfo->products_quantity_order_min > $pInfo->products_quantity_order_units && fmod_round($pInfo->products_quantity_order_min, $pInfo->products_quantity_order_units) !== 0 ? '<div class="errorText">' . '<br>' . TEXT_PRODUCTS_QTY_MIN_UNITS_MISMATCH_PREVIEW . '</div>' : ''); ?>
-                    <?php echo (isset($_GET['pID']) && $pInfo->products_priced_by_attribute === '1' ? '<br>' . zen_get_products_display_price($_GET['pID']) : ''); ?>
+                    <?php echo($pInfo->products_virtual === '1' ? '<div class="errorText">' . '<br>' . TEXT_VIRTUAL_PREVIEW . '</div>' : ''); ?>
+                    <?php echo($pInfo->product_is_always_free_shipping === '1' ? '<div class="errorText">' . '<br>' . TEXT_FREE_SHIPPING_PREVIEW . '</div>' : ''); ?>
+                    <?php echo($pInfo->products_priced_by_attribute === '1' ? '<div class="errorText">' . '<br>' . TEXT_PRODUCTS_PRICED_BY_ATTRIBUTES_PREVIEW . '</div>' : ''); ?>
+                    <?php echo($pInfo->product_is_free === '1' ? '<div class="errorText">' . '<br>' . TEXT_PRODUCTS_IS_FREE_PREVIEW . '</div>' : ''); ?>
+                    <?php echo($pInfo->product_is_call === '1' ? '<div class="errorText">' . '<br>' . TEXT_PRODUCTS_IS_CALL_PREVIEW . '</div>' : ''); ?>
+                    <?php echo($pInfo->products_qty_box_status === '0' ? '<div class="errorText">' . '<br>' . TEXT_PRODUCTS_QTY_BOX_STATUS_PREVIEW . '</div>' : ''); ?>
+                    <?php echo($pInfo->products_quantity_order_min < $pInfo->products_quantity_order_units ? '<div class="errorText">' . '<br>' . TEXT_PRODUCTS_QTY_MIN_UNITS_PREVIEW . '</div>' : ''); ?>
+                    <?php echo($pInfo->products_quantity_order_min > $pInfo->products_quantity_order_units && fmod_round($pInfo->products_quantity_order_min, $pInfo->products_quantity_order_units) !== 0 ? '<div class="errorText">' . '<br>' . TEXT_PRODUCTS_QTY_MIN_UNITS_MISMATCH_PREVIEW . '</div>' : ''); ?>
+                    <?php echo(isset($_GET['pID']) && $pInfo->products_priced_by_attribute === '1' ? '<br>' . zen_get_products_display_price($_GET['pID']) : ''); ?>
                 </div>
             </div>
             <div class="row"><?php echo zen_draw_separator('pixel_trans.gif', '1', '10'); ?></div>
@@ -132,62 +132,62 @@ $form_action = (isset($_GET['pID'])) ? 'update_product' : 'insert_product';
         <?php
     }
 
-  if (isset($_GET['read']) && ($_GET['read'] === 'only')) {
-    if (isset($_GET['origin'])) {
-      $pos_params = strpos($_GET['origin'], '?', 0);
-      if ($pos_params !== false) {
-        $back_url = substr($_GET['origin'], 0, $pos_params);
-        $back_url_params = substr($_GET['origin'], $pos_params + 1);
-      } else {
-        $back_url = $_GET['origin'];
-        $back_url_params = '';
-      }
+    if (isset($_GET['read']) && ($_GET['read'] === 'only')) {
+        if (isset($_GET['origin'])) {
+            $pos_params = strpos($_GET['origin'], '?', 0);
+            if ($pos_params !== false) {
+                $back_url = substr($_GET['origin'], 0, $pos_params);
+                $back_url_params = substr($_GET['origin'], $pos_params + 1);
+            } else {
+                $back_url = $_GET['origin'];
+                $back_url_params = '';
+            }
+        } else {
+            $back_url = FILENAME_CATEGORY_PRODUCT_LISTING;
+            $back_url_params = 'cPath=' . $cPath . '&pID=' . $pInfo->products_id;
+        }
+        ?>
+        <div class="row text-right">
+            <a href="<?php echo zen_href_link($back_url, $back_url_params . (isset($_POST['search']) ? '&search=' . $_POST['search'] : '')); ?>" class="btn btn-default" role="button"><?php echo IMAGE_BACK; ?></a>
+        </div>
+        <?php
     } else {
-      $back_url = FILENAME_CATEGORY_PRODUCT_LISTING;
-      $back_url_params = 'cPath=' . $cPath . '&pID=' . $pInfo->products_id;
+        ?>
+        <div class="row text-right">
+            <?php
+            /* Re-Post all POST'ed variables */
+            foreach ($_POST as $key => $value) {
+                if (!is_array($_POST[$key])) {
+                    echo zen_draw_hidden_field($key, htmlspecialchars(stripslashes($value), ENT_COMPAT, CHARSET, true));
+                }
+            }
+
+            for ($i = 0, $n = count($languages); $i < $n; $i++) {
+                echo zen_draw_hidden_field('products_name[' . $languages[$i]['id'] . ']', htmlspecialchars(stripslashes($products_name[$languages[$i]['id']]), ENT_COMPAT, CHARSET, true));
+                echo zen_draw_hidden_field('products_description[' . $languages[$i]['id'] . ']', htmlspecialchars(stripslashes($products_description[$languages[$i]['id']]), ENT_COMPAT, CHARSET, true));
+                echo zen_draw_hidden_field('products_url[' . $languages[$i]['id'] . ']', htmlspecialchars(stripslashes($products_url[$languages[$i]['id']]), ENT_COMPAT, CHARSET, true));
+            }
+            echo zen_draw_hidden_field('products_image', stripslashes($products_image_name));
+            echo ((isset($_GET['search']) && !empty($_GET['search'])) ? zen_draw_hidden_field('search', $_GET['search']) : '') . ((isset($_POST['search']) && !empty($_POST['search']) && empty($_GET['search'])) ? zen_draw_hidden_field('search', $_POST['search']) : '');
+            ?>
+            <button type="submit" name="edit" value="edit" class="btn btn-default"><?php echo IMAGE_BACK; ?></button>
+            <?php
+            if (isset($_GET['pID'])) {
+                ?>
+                <button type="submit" class="btn btn-primary"><?php echo IMAGE_UPDATE; ?></button>
+                <?php
+            } else {
+                ?>
+                <button type="submit" class="btn btn-primary"><?php echo IMAGE_INSERT; ?></button>
+                <?php
+            }
+            ?>
+            <a href="<?php echo zen_href_link(FILENAME_CATEGORY_PRODUCT_LISTING, 'cPath=' . $cPath . (isset($_GET['pID']) ? '&pID=' . $_GET['pID'] : '') . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '') . (isset($_GET['search']) ? '&search=' . $_GET['search'] : '')); ?>" class="btn btn-default" role="button"><?php echo IMAGE_CANCEL; ?></a>
+        </div>
+        <?php
+    }
+    if (!(isset($_GET['read']) && ($_GET['read'] === 'only'))) {
+        echo '</form>';
     }
     ?>
-    <div class="row text-right">
-      <a href="<?php echo zen_href_link($back_url, $back_url_params . (isset($_POST['search']) ? '&search=' . $_POST['search'] : '')); ?>" class="btn btn-default" role="button"><?php echo IMAGE_BACK; ?></a>
-    </div>
-    <?php
-  } else {
-    ?>
-    <div class="row text-right">
-        <?php
-        /* Re-Post all POST'ed variables */
-        foreach ($_POST as $key => $value) {
-          if (!is_array($_POST[$key])) {
-            echo zen_draw_hidden_field($key, htmlspecialchars(stripslashes($value), ENT_COMPAT, CHARSET, TRUE));
-          }
-        }
-
-        for ($i = 0, $n = count($languages); $i < $n; $i++) {
-          echo zen_draw_hidden_field('products_name[' . $languages[$i]['id'] . ']', htmlspecialchars(stripslashes($products_name[$languages[$i]['id']]), ENT_COMPAT, CHARSET, TRUE));
-          echo zen_draw_hidden_field('products_description[' . $languages[$i]['id'] . ']', htmlspecialchars(stripslashes($products_description[$languages[$i]['id']]), ENT_COMPAT, CHARSET, TRUE));
-          echo zen_draw_hidden_field('products_url[' . $languages[$i]['id'] . ']', htmlspecialchars(stripslashes($products_url[$languages[$i]['id']]), ENT_COMPAT, CHARSET, TRUE));
-        }
-        echo zen_draw_hidden_field('products_image', stripslashes($products_image_name));
-        echo ( (isset($_GET['search']) && !empty($_GET['search'])) ? zen_draw_hidden_field('search', $_GET['search']) : '') . ( (isset($_POST['search']) && !empty($_POST['search']) && empty($_GET['search'])) ? zen_draw_hidden_field('search', $_POST['search']) : '');
-      ?>
-        <button type="submit" name="edit" value="edit" class="btn btn-default"><?php echo IMAGE_BACK; ?></button>
-      <?php
-        if (isset($_GET['pID'])) {
-          ?>
-        <button type="submit" class="btn btn-primary"><?php echo IMAGE_UPDATE; ?></button>
-        <?php
-      } else {
-        ?>
-        <button type="submit" class="btn btn-primary"><?php echo IMAGE_INSERT; ?></button>
-        <?php
-      }
-      ?>
-      <a href="<?php echo zen_href_link(FILENAME_CATEGORY_PRODUCT_LISTING, 'cPath=' . $cPath . (isset($_GET['pID']) ? '&pID=' . $_GET['pID'] : '') . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '') . (isset($_GET['search']) ? '&search=' . $_GET['search'] : '')); ?>" class="btn btn-default" role="button"><?php echo IMAGE_CANCEL; ?></a>
-    </div>
-      <?php 
-  }
-      if (!(isset($_GET['read']) && ($_GET['read'] === 'only'))) {
-        echo '</form>'; 
-  }
-  ?>
 </div>
