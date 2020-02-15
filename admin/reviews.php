@@ -71,7 +71,9 @@ if (zen_not_null($action)) {
           }
       }
     </script>
-    <?php if ($editor_handler != '') include ($editor_handler); ?>
+    <?php if ($editor_handler != '') {
+        include($editor_handler);
+    } ?>
   </head>
   <body onLoad="init()">
     <!-- header //-->
@@ -144,8 +146,10 @@ if (zen_not_null($action)) {
         <div class="row"><?php echo zen_draw_separator('pixel_trans.gif', '1', '10'); ?></div>
         <div class="row">
           <strong><?php echo ENTRY_RATING; ?></strong>&nbsp;<?php echo TEXT_BAD; ?>&nbsp;<?php
-          for ($i = 1; $i <= 5; $i++)
-            echo zen_draw_radio_field('reviews_rating', $i, '', $rInfo->reviews_rating) . '&nbsp;'; echo TEXT_GOOD;
+          for ($i = 1; $i <= 5; $i++) {
+              echo zen_draw_radio_field('reviews_rating', $i, '', $rInfo->reviews_rating) . '&nbsp;';
+          }
+            echo TEXT_GOOD;
           ?>
         </div>
         <div class="row"><?php echo zen_draw_separator('pixel_trans.gif', '1', '10'); ?></div>
@@ -204,8 +208,9 @@ if (zen_not_null($action)) {
           <?php
           if (zen_not_null($_POST)) {
             /* Re-Post all POST'ed variables */
-            foreach($_POST as $key => $value)
-              echo zen_draw_hidden_field($key, $value);
+            foreach($_POST as $key => $value) {
+                echo zen_draw_hidden_field($key, $value);
+            }
             ?>
               <div class="smallText text-right"><?php echo '<a href="' . zen_href_link(FILENAME_REVIEWS, (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . (isset($_GET['status']) ? 'status=' . $_GET['status'] . '&' : '') . 'rID=' . $rInfo->reviews_id . '&action=edit') . '">' . zen_image_button('button_back.gif', IMAGE_BACK) . '</a> ' . zen_image_submit('button_update.gif', IMAGE_UPDATE) . ' <a href="' . zen_href_link(FILENAME_REVIEWS, (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . (isset($_GET['status']) ? 'status=' . $_GET['status'] . '&' : '') . 'rID=' . $rInfo->reviews_id) . '">' . zen_image_button('button_cancel.gif', IMAGE_CANCEL) . '</a>'; ?></div>
               <?php echo '</form>';
@@ -392,8 +397,9 @@ if (zen_not_null($action)) {
                         '<a href="' . zen_href_link(FILENAME_PRODUCT, 'cPath=' . zen_get_products_category_id($rInfo->products_id) . '&pID=' . $rInfo->products_id . '&action=new_product') . '" class="btn btn-default" role="button">' . TEXT_EDIT_PRODUCT . '</a>');
 
                     $contents[] = array('text' => '<br>' . TEXT_INFO_DATE_ADDED . ' ' . zen_date_short($rInfo->date_added));
-                    if (zen_not_null($rInfo->last_modified))
-                      $contents[] = array('text' => TEXT_INFO_LAST_MODIFIED . ' ' . zen_date_short($rInfo->last_modified));
+                    if (zen_not_null($rInfo->last_modified)) {
+                        $contents[] = array('text' => TEXT_INFO_LAST_MODIFIED . ' ' . zen_date_short($rInfo->last_modified));
+                    }
                     $contents[] = array('text' => '<br>' . zen_info_image($rInfo->products_image, $rInfo->products_name, SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT));
                     $contents[] = array('text' => '<br>' . ENTRY_REVIEW . '<br>' . $rInfo->reviews_text);
                     $contents[] = array('text' => '<br>' . TEXT_INFO_REVIEW_AUTHOR . ' ' . $rInfo->customers_name);
