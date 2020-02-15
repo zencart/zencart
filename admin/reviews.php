@@ -355,7 +355,7 @@ if (zen_not_null($action)) {
                   ?>
                 </td>
                 <td class="dataTableContent text-right"><?php
-                    if ((is_object($rInfo)) && ($review['reviews_id'] == $rInfo->reviews_id)) {
+                    if ((isset($rinfo) && is_object($rInfo)) && $review['reviews_id'] == $rInfo->reviews_id) {
                       echo zen_image(DIR_WS_IMAGES . 'icon_arrow_right.gif');
                     } else {
                       echo '<a href="' . zen_href_link(FILENAME_REVIEWS, (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . (isset($_GET['status']) ? 'status=' . $_GET['status'] . '&' : '') . 'rID=' . $review['reviews_id']) . '">' . zen_image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>';
