@@ -406,7 +406,7 @@ if (zen_not_null($action)) {
               }
 
               if ((zen_not_null($heading)) && (zen_not_null($contents))) {
-                $box = new box;
+                $box = new box();
                 echo $box->infoBox($heading, $contents);
               }
               ?>
