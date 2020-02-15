@@ -142,7 +142,7 @@ if (zen_not_null($action)) {
               <?php echo zen_draw_textarea_field('reviews_text', 'soft', '70', '15', htmlspecialchars(stripslashes($rInfo->reviews_text), ENT_COMPAT, CHARSET, TRUE), 'class="noEditor form-control" id="reviews_text"'); ?>
           </div>
           <div class="row"><?php echo ENTRY_REVIEW_TEXT; ?></div>
-          <div class="row"><?php echo zen_draw_separator('pixel_trans.gif', '1', '10'); ?></div>
+        <div class="row"><?php echo zen_draw_separator('pixel_trans.gif', '1', '10'); ?></div>
         <div class="row">
           <strong><?php echo ENTRY_RATING; ?></strong>&nbsp;<?php echo TEXT_BAD; ?>&nbsp;<?php
           for ($i = 1; $i <= 5; $i++) {
