@@ -44,11 +44,13 @@ foreach ($initSystemList as $entry) {
             //echo 'objectMethod ' . $entry['class'] . "\n";
             $objectName = $entry['object'];
             $methodName = $entry['method'];
-            if (is_object($_SESSION[$objectName])) {
-                $_SESSION[$objectName]->$methodName();
-            }
-            if (!is_object($_SESSION[$objectName])) {
-                ${$objectName}->$methodName();
+            if (isset($_SESSION[$objectName])) {
+              if (is_object($_SESSION[$objectName])) {
+                  $_SESSION[$objectName]->$methodName();
+              }
+              if (!is_object($_SESSION[$objectName])) {
+                  ${$objectName}->$methodName();
+              }
             }
             break;
 
