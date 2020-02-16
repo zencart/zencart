@@ -73,7 +73,7 @@ if (zen_not_null($action)) {
       if (isset($_GET['go_back']) && $_GET['go_back'] === 'ON') {
         zen_redirect(zen_href_link(FILENAME_PRODUCTS_PRICE_MANAGER, 'products_filter=' . $products_id . '&current_category_id=' . $_GET['current_category_id']));
       } else {
-        zen_redirect(zen_href_link(FILENAME_SPECIALS, (isset($_GET['page']) && $_GET['page'] > 0 ? 'page=' . $_GET['page'] . '&' : '') . 'sID=' . $new_special->fields['specials_id'] . (isset($_GET['search']) ? '&search=' . $_GET['search'] : '')));
+        zen_redirect(zen_href_link(FILENAME_SPECIALS, (isset($_GET['page']) && $_GET['page'] > 0 ? 'page=' . $_GET['page'] . '&' : '') . (isset($new_special) ? 'sID=' . $new_special->fields['specials_id'] : '') . (isset($_GET['search']) ? '&search=' . $_GET['search'] : '')));
       }
       break;
     case 'update':
@@ -222,6 +222,21 @@ if (zen_not_null($action)) {
           if ($sInfo->products_priced_by_attribute == '1') {
             $sInfo->products_price = zen_get_products_base_price($product->fields['products_id']);
           }
+        } else if (($action == 'new') && isset($_GET['preID'])) { //update existing Special
+          $form_action = 'insert';
+
+          $product = $db->Execute("SELECT p.products_id, p.products_model, pd.products_name, p.products_price, p.products_priced_by_attribute 
+                                   FROM " . TABLE_PRODUCTS . " p,
+                                        " . TABLE_PRODUCTS_DESCRIPTION . " pd 
+                                   WHERE p.products_id = pd.products_id
+                                   AND pd.language_id = " . (int)$_SESSION['languages_id'] . "
+                                   AND p.products_id = " . (int)$_GET['preID']);
+
+          $sInfo = new objectInfo($product->fields);
+
+          if ($sInfo->products_priced_by_attribute == '1') {
+            $sInfo->products_price = zen_get_products_base_price($product->fields['products_id']);
+          }
         } elseif (empty($_GET['preID'])) { // insert by product select dropdown
           $sInfo = new objectInfo(array());
 
@@ -271,6 +286,9 @@ if (zen_not_null($action)) {
             if ($form_action == 'update') {
               echo zen_draw_hidden_field('specials_id', $_GET['sID']);
             }
+            if (!empty($_GET['preID'])) { // new Special: insert by product ID
+              echo zen_draw_hidden_field('products_id', $_GET['preID']);
+            }
             ?>
             <div class="form-group">
                 <?php if (isset($sInfo->products_name)) { // Special is already defined/this is an update ?>
@@ -284,8 +302,6 @@ if (zen_not_null($action)) {
                     <div class="col-sm-9 col-md-6">
                         <span class="form-control" style="border:none; -webkit-box-shadow: none"><?php echo 'ID#' . $preID . ': ' . zen_get_products_model($preID) . ' - "' . zen_clean_html(zen_get_products_name($preID)) . '" (' . $currencies->format(zen_get_products_base_price($preID)) . ')'; ?></span>
                     </div>
-                    <?php echo zen_draw_hidden_field('products_id', $preID); ?>
-
                 <?php } else { // new Special: insert by dropdown
                     echo zen_draw_label(TEXT_SPECIALS_PRODUCT, 'products_id', 'class="col-sm-3 control-label"'); ?>
                     <div class="col-sm-9 col-md-6">
