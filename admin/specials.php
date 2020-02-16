@@ -1,11 +1,4 @@
-<?php //steve for PR ZC157, and includes SWGuy fix
-//temporary debugging code
-/**steve for phpStorm inspections
- * @var messageStack $messageStack
- * @var zcObserverLogEventListener $zco_notifier
- * @var products $zc_products
- */
-
+<?php
 /**
  * @package admin
  * @copyright Copyright 2003-2019 Zen Cart Development Team
