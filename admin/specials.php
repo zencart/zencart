@@ -1,4 +1,11 @@
-<?php
+<?php //steve for PR ZC157, and includes SWGuy fix
+//temporary debugging code
+/**steve for phpStorm inspections
+ * @var messageStack $messageStack
+ * @var zcObserverLogEventListener $zco_notifier
+ * @var products $zc_products
+ */
+
 /**
  * @package admin
  * @copyright Copyright 2003-2019 Zen Cart Development Team
@@ -222,6 +229,21 @@ if (zen_not_null($action)) {
           if ($sInfo->products_priced_by_attribute === '1') {
             $sInfo->products_price = zen_get_products_base_price($product->fields['products_id']);
           }
+            } else if (($action == 'new') && isset($_GET['preID'])) { //update existing Special
+                $form_action = 'insert';
+
+                $product = $db->Execute("SELECT p.products_id, p.products_model, pd.products_name, p.products_price, p.products_priced_by_attribute 
+                                   FROM " . TABLE_PRODUCTS . " p,
+                                        " . TABLE_PRODUCTS_DESCRIPTION . " pd 
+                                   WHERE p.products_id = pd.products_id
+                                   AND pd.language_id = " . (int)$_SESSION['languages_id'] . "
+                                   AND p.products_id = " . (int)$_GET['preID']);
+
+                $sInfo = new objectInfo($product->fields);
+
+                if ($sInfo->products_priced_by_attribute == '1') {
+                    $sInfo->products_price = zen_get_products_base_price($product->fields['products_id']);
+                }
         } elseif (empty($_GET['preID'])) { // insert by product select dropdown
           $sInfo = new objectInfo([]);
 
@@ -270,6 +292,9 @@ if (zen_not_null($action)) {
             <?php
             if ($form_action === 'update') {
               echo zen_draw_hidden_field('specials_id', $_GET['sID']);
+                }
+                if (!empty($_GET['preID'])) { // new Special: insert by product ID
+                    echo zen_draw_hidden_field('products_id', $_GET['preID']);
             }
             ?>
             <div class="form-group">
@@ -284,7 +309,6 @@ if (zen_not_null($action)) {
                     <div class="col-sm-9 col-md-6">
                         <span class="form-control" style="border:none; -webkit-box-shadow: none"><?php echo 'ID#' . $preID . ': ' . zen_get_products_model($preID) . ' - "' . zen_clean_html(zen_get_products_name($preID)) . '" (' . $currencies->format(zen_get_products_base_price($preID)) . ')'; ?></span>
                     </div>
-                    <?php echo zen_draw_hidden_field('products_id', $preID); ?>
 
                 <?php } else { // new Special: insert by dropdown
                     echo zen_draw_label(TEXT_SPECIALS_PRODUCT, 'products_id', 'class="col-sm-3 control-label"'); ?>
