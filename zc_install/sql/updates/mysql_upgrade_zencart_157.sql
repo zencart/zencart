@@ -3,7 +3,7 @@
 # *
 # * @package Installer
 # * @access private
-# * @copyright Copyright 2003-2019 Zen Cart Development Team
+# * @copyright Copyright 2003-2020 Zen Cart Development Team
 # * @copyright Portions Copyright 2003 osCommerce
 # * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
 # * @version $Id: DrByte  New in v1.5.7 $
@@ -73,6 +73,9 @@ UPDATE countries set address_format_id = 5 where countries_iso_code_3 in ('ITA')
 
 # Add sort_order
 ALTER TABLE orders_status ADD sort_order int(11) NOT NULL default 0;
+
+# Improve speed of admin orders page listing
+ALTER TABLE orders_total ADD INDEX idx_oid_class_zen (orders_id, class);
 
 # Add customer secret
 ALTER TABLE customers ADD customers_secret varchar(64) NOT NULL default '';
