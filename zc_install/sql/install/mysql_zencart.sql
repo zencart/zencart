@@ -2,10 +2,10 @@
 # * Main Zen Cart SQL Load for MySQL databases
 # * @package Installer
 # * @access private
-# * @copyright Copyright 2003-2019 Zen Cart Development Team
+# * @copyright Copyright 2003-2020 Zen Cart Development Team
 # * @copyright Portions Copyright 2003 osCommerce
 # * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
-# * @version $Id: DrByte 2019 June 19 Modified in v1.5.6c by mc12345678 $
+# * @version $Id: DrByte  Modified in v1.5.7 $
 #
 
 ############ IMPORTANT INSTRUCTIONS ###############
@@ -1234,7 +1234,8 @@ CREATE TABLE orders_total (
   sort_order int(11) NOT NULL default '0',
   PRIMARY KEY  (orders_total_id),
   KEY idx_ot_orders_id_zen (orders_id),
-  KEY idx_ot_class_zen (class)
+  KEY idx_ot_class_zen (class),
+  KEY idx_oid_class_zen (orders_id, class)
 ) ENGINE=MyISAM;
 
 # --------------------------------------------------------
