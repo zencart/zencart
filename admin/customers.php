@@ -1180,9 +1180,9 @@ if (zen_not_null($action)) {
                   if (isset($_GET['search']) && zen_not_null($_GET['search'])) {
                     $keywords = zen_db_input(zen_db_prepare_input($_GET['search']));
                     $parts = explode(" ", trim($keywords));
-	                $search = 'where ';
-	                foreach ($parts as $k => $v) {
-	                    $sql_add = " (c.customers_lastname like '%:part%'
+                    $search = 'where ';
+                    foreach ($parts as $k => $v) {
+                      $sql_add = " (c.customers_lastname like '%:part%'
                          or c.customers_firstname like '%:part%'
                          or c.customers_email_address like '%:part%'
                          or c.customers_telephone rlike ':keywords:'
@@ -1190,13 +1190,13 @@ if (zen_not_null($action)) {
                          or a.entry_street_address rlike ':keywords:'
                          or a.entry_city rlike ':keywords:'
                          or a.entry_postcode rlike ':keywords:')";
-		                  if ($k != 0) {
-			                  $sql_add = ' and ' . $sql_add;
-		                  }
-		                  $sql_add = $db->bindVars($sql_add, ':part', $v, 'noquotestring');
-		                  $sql_add = $db->bindVars($sql_add, ':keywords:', $v, 'regexp');
-		                  $search .= $sql_add;
-	                  }
+                      if ($k != 0) {
+                        $sql_add = ' and ' . $sql_add;
+                      }
+                      $sql_add = $db->bindVars($sql_add, ':part', $v, 'noquotestring');
+                      $sql_add = $db->bindVars($sql_add, ':keywords:', $v, 'regexp');
+                      $search .= $sql_add;
+                    }
                   }
                   $new_fields = '';
 
