@@ -55,6 +55,9 @@ foreach ($visits as $data) {
     $counterData = "," . $counterData;
   }
   $date = strftime('%a %d', mktime(0, 0, 0, substr($data['startdate'], 4, 2), substr($data['startdate'], -2)));
+if (stripos(strtoupper(PHP_OS), 'WIN') === 0) { // Windows: for correct display of multibyte chars on visitors chart axis
+    $date = iconv('ISO-8859-1', 'UTF-8', $date);
+}
   $counterData = "['$date'," . $data['session_counter'] . "," . $data['counter'] . "]" . $counterData;
   $i++;
 }
