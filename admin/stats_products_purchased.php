@@ -96,7 +96,6 @@ $products_filter_name_model = (isset($_GET['products_filter_name_model']) ? $_GE
         $chk_orders_products_query_numrows = '';
         $chk_orders_products_split = new splitPageResults($_GET['page'], MAX_DISPLAY_SEARCH_RESULTS_REPORTS, $chk_orders_products_query, $chk_orders_products_query_numrows);
 
-        $rows = 0;
         $chk_orders_products = $db->Execute($chk_orders_products_query);
         ?>
         <table class="table table-hover">
@@ -119,11 +118,6 @@ $products_filter_name_model = (isset($_GET['products_filter_name_model']) ? $_GE
             <?php } ?>
             <?php
             foreach ($chk_orders_products as $orders_products) {
-              $rows++;
-
-              if (strlen($rows) < 2) {
-                $rows = '0' . $rows;
-              }
               if ($products_filter != '') {
                 // products_id
                 $cPath = zen_get_product_path($products_filter);
@@ -165,9 +159,6 @@ $products_filter_name_model = (isset($_GET['products_filter_name_model']) ? $_GE
             <th class="dataTableHeadingContent text-center"><?php echo TABLE_HEADING_PURCHASED; ?>&nbsp;</th>
           </tr>
           <?php
-          if (isset($_GET['page']) && ($_GET['page'] > 1)) {
-            $rows = $_GET['page'] * MAX_DISPLAY_SEARCH_RESULTS_REPORTS - MAX_DISPLAY_SEARCH_RESULTS_REPORTS;
-          }
 // The following OLD query only considers the "products_ordered" value from the products table.
 // Thus this older query is somewhat deprecated
           $products_query_raw1 = "SELECT p.products_id, SUM(p.products_ordered) AS products_ordered, pd.products_name
@@ -188,15 +179,8 @@ $products_filter_name_model = (isset($_GET['products_filter_name_model']) ? $_GE
 
           $products_query_numrows = '';
           $products_split = new splitPageResults($_GET['page'], MAX_DISPLAY_SEARCH_RESULTS_REPORTS, $products_query_raw, $products_query_numrows);
-
-          $rows = 0;
           $products = $db->Execute($products_query_raw);
           foreach ($products as $product) {
-            $rows++;
-
-            if (strlen($rows) < 2) {
-              $rows = '0' . $rows;
-            }
             $cPath = zen_get_product_path($product['products_id']);
             $product_type = zen_get_products_type($product['products_id']);
             $type_handler = $zc_products->get_admin_handler($product_type);

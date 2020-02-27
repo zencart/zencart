@@ -214,11 +214,9 @@ if (zen_not_null($action)) {
                       $_GET['spage'] = 1;
                     }
                   }
-                  $rows = 0;
                   $zones_split = new splitPageResults($_GET['spage'], MAX_DISPLAY_SEARCH_RESULTS, $zones_query_raw, $zones_query_numrows);
                   $zones = $db->Execute($zones_query_raw);
                   foreach ($zones as $zone) {
-                    $rows++;
                     if ((!isset($_GET['sID']) || (isset($_GET['sID']) && ($_GET['sID'] == $zone['association_id']))) && !isset($sInfo) && (substr($action, 0, 3) != 'new')) {
                       $sInfo = new objectInfo($zone);
                     }
