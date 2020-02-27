@@ -730,7 +730,6 @@ if (zen_not_null($action)) {
             <tbody>
               <?php
               $next_id = 1;
-              $rows = 0;
               $values_values = $db->Execute($values_query_raw);
               foreach ($values_values as $values_value) {
                 $options_name = zen_options_name($values_value['products_options_id']);
@@ -742,7 +741,6 @@ if (zen_not_null($action)) {
 
                 $values_name = $values_value['products_options_values_name'];
                 $products_options_values_sort_order = $values_value['products_options_values_sort_order'];
-                $rows++;
                 ?>
                 <tr>
                   <?php

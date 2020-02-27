@@ -555,7 +555,6 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
           }
 
           $categories_count = 0;
-          $rows = 0;
           if (isset($_GET['search'])) {
             $search = zen_db_prepare_input($_GET['search']);
 
@@ -603,8 +602,6 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
             <?php
             foreach ($categories as $category) {
               $categories_count++;
-              $rows++;
-
 // Get parent_id for subcategories if search
               if (isset($_GET['search'])) {
                 $cPath = $category['parent_id'];
@@ -780,8 +777,6 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
 
             foreach ($products as $product) {
               $products_count++;
-              $rows++;
-
 // Get categories_id for product if search
               if (isset($_GET['search'])) {
                 $cPath = $product['categories_id'];
