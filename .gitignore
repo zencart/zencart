@@ -1,6 +1,7 @@
 configure.php
 local/configure*.php
 /vendor
+composer.lock
 
 *.php1
 *.bak
