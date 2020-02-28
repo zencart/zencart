@@ -135,24 +135,36 @@ class ot_coupon {
    *
    * @return unknown
    */
-  function credit_selection() {
-    global $discount_coupon, $request_type;
+    function credit_selection()
+    {
+        global $discount_coupon, $request_type;
 
-    $coupon_code = '';
-    if (isset($discount_coupon->fields['coupon_code'])) {
-      $coupon_code = $discount_coupon->fields['coupon_code'];
+        $coupon_code = '';
+        if (isset($discount_coupon->fields['coupon_code'])) {
+            $coupon_code = $discount_coupon->fields['coupon_code'];
+            $couponLink = '<a href="javascript:couponpopupWindow(\'' . zen_href_link(FILENAME_POPUP_COUPON_HELP,
+                    'cID=' . $_SESSION['cc_id'], $request_type) . '\')">' . $coupon_code . '</a>';
+        }
+
+        // Note the placement of the redeem code can be moved within the array on the instructions or the title.
+        $selection = array(
+            'id' => $this->code,
+            'module' => $this->title,
+            'redeem_instructions' => MODULE_ORDER_TOTAL_COUPON_REDEEM_INSTRUCTIONS . ($coupon_code != '' ?
+                    MODULE_ORDER_TOTAL_COUPON_REMOVE_INSTRUCTIONS .
+                    '<p>' . MODULE_ORDER_TOTAL_COUPON_TEXT_CURRENT_CODE . $couponLink . '</p><br />' : ''),
+            'fields' => array(
+                array(
+                    'title' => MODULE_ORDER_TOTAL_COUPON_TEXT_ENTER_CODE,
+                    'field' => zen_draw_input_field('dc_redeem_code', '',
+                        'id="disc-' . $this->code . '" onkeyup="submitFunction(0,0)"'),
+                    'tag' => 'disc-' . $this->code
+                )
+            )
+        );
+
+        return $selection;
     }
-    $couponLink = '<a href="javascript:couponpopupWindow(\'' . zen_href_link(FILENAME_POPUP_COUPON_HELP, 'cID=' . $_SESSION['cc_id'], $request_type) . '\')">' . $coupon_code . '</a>';
-    // note the placement of the redeem code can be moved within the array on the instructions or the title
-    $selection = array('id' => $this->code,
-                       'module' => $this->title,
-                       'redeem_instructions' => MODULE_ORDER_TOTAL_COUPON_REDEEM_INSTRUCTIONS . ($coupon_code != '' ? MODULE_ORDER_TOTAL_COUPON_REMOVE_INSTRUCTIONS : '') . ($coupon_code != '' ? '<p>' . MODULE_ORDER_TOTAL_COUPON_TEXT_CURRENT_CODE . $couponLink . '</p><br />' : ''),
-                       'fields' => array(array('title' => MODULE_ORDER_TOTAL_COUPON_TEXT_ENTER_CODE,
-                                               'field' => zen_draw_input_field('dc_redeem_code', '', 'id="disc-' . $this->code . '" onkeyup="submitFunction(0,0)"'),
-                                               'tag' => 'disc-'.$this->code
-                       )));
-    return $selection;
-  }
   /**
    * Enter description here...
    *

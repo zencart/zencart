@@ -16,7 +16,7 @@
     "require-dev": {
         "laravel/dusk": ">5.8",
         "mikey179/vfsstream": ">1.6",
-        "phpunit/phpunit": "^7.5.19 || ^8.5.1"
+        "phpunit/phpunit": "^7.5 || ^8.5"
     },
     "autoload": {
         "classmap": ["includes/classes", "includes/modules"]
