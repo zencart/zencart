@@ -43,7 +43,7 @@
     </div>
     <?php
     if ($reviews_split->number_of_rows > 0) {
-        if ((PREV_NEXT_BAR_LOCATION == '1') || (PREV_NEXT_BAR_LOCATION == '3')) {
+        if ((PREV_NEXT_BAR_LOCATION === '1') || (PREV_NEXT_BAR_LOCATION === '3')) {
             ?>
             <div class="prod-list-wrap group">
                 <div id="productReviewsDefaultListingTopNumber" class="navSplitPagesResult"><?php echo $reviews_split->display_count(TEXT_DISPLAY_NUMBER_OF_REVIEWS); ?></div>
@@ -65,10 +65,10 @@
         }
     } else {
         ?>
-        <div id="productReviewsDefaultNoReviews" class="content group"><?php echo TEXT_NO_REVIEWS . (REVIEWS_APPROVAL == '1' ? '<br />' . TEXT_APPROVAL_REQUIRED : ''); ?></div>
+        <div id="productReviewsDefaultNoReviews" class="content group"><?php echo TEXT_NO_REVIEWS . (REVIEWS_APPROVAL === '1' ? '<br />' . TEXT_APPROVAL_REQUIRED : ''); ?></div>
         <?php
     }
-    if (($reviews_split->number_of_rows > 0) && ((PREV_NEXT_BAR_LOCATION == '2') || (PREV_NEXT_BAR_LOCATION == '3'))) {
+    if (($reviews_split->number_of_rows > 0) && ((PREV_NEXT_BAR_LOCATION === '2') || (PREV_NEXT_BAR_LOCATION === '3'))) {
         ?>
         <div class="prod-list-wrap group prod-list-bottom">
             <div id="productReviewsDefaultListingBottomNumber" class="navSplitPagesResult"><?php echo $reviews_split->display_count(TEXT_DISPLAY_NUMBER_OF_REVIEWS); ?></div>
