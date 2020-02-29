@@ -142,8 +142,9 @@ class ot_coupon {
         $couponLink = '';
         if (isset($discount_coupon->fields['coupon_code']) && isset($_SESSION['cc_id'])) {
             $coupon_code = $discount_coupon->fields['coupon_code'];
-            $couponLink = '<a href="javascript:couponpopupWindow(\'' . zen_href_link(FILENAME_POPUP_COUPON_HELP,
-                    'cID=' . $_SESSION['cc_id'], $request_type) . '\')">' . $coupon_code . '</a>';
+            $couponLink = '<a href="javascript:couponpopupWindow(\'' . 
+              zen_href_link(FILENAME_POPUP_COUPON_HELP, 'cID=' . $_SESSION['cc_id'], $request_type) .
+              '\')">' . $coupon_code . '</a>';
         }
         // note the placement of the redeem code can be moved within the array on the instructions or the title
         $selection = array(
@@ -155,8 +156,7 @@ class ot_coupon {
             'fields' => array(
                 array(
                     'title' => MODULE_ORDER_TOTAL_COUPON_TEXT_ENTER_CODE,
-                    'field' => zen_draw_input_field('dc_redeem_code', '',
-                        'id="disc-' . $this->code . '" onkeyup="submitFunction(0,0)"'),
+                    'field' => zen_draw_input_field('dc_redeem_code', '', 'id="disc-' . $this->code . '" onkeyup="submitFunction(0,0)"'),
                     'tag' => 'disc-' . $this->code
                 )
             )
