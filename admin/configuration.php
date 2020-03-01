@@ -161,7 +161,7 @@ if ($gID == 7) {
                    $setting = htmlspecialchars($cfgValue, ENT_COMPAT, CHARSET, TRUE); 
                    if (strlen($setting) > 40) { 
 
-                      echo htmlspecialchars(substr($cfgValue,0,35), ENT_COMPAT, CHARSET, TRUE); 
+                      echo htmlspecialchars(substr($cfgValue,0,35), ENT_COMPAT, CHARSET, TRUE) . "..."; 
                    } else { 
                       echo $setting; 
                    }
