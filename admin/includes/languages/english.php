@@ -780,6 +780,8 @@ define('TEXT_INFO_CURRENCY_UPDATED', 'The exchange rate for %s (%s) was updated 
 define('ERROR_CURRENCY_INVALID', 'Error: The exchange rate for %s (%s) was not updated via %s. Is it a valid currency code?');
 define('WARNING_PRIMARY_SERVER_FAILED', 'Warning: The primary exchange rate server (%s) failed for %s (%s) - trying the secondary exchange rate server.');
 
+// Set to empty string if alpha sorting not desired
+define('NAME_SORTED_MENUS','reports,tools'); 
 
 ///////////////////////////////////////////////////////////
 // include additional files:

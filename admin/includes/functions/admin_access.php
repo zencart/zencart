@@ -677,6 +677,16 @@ function zen_get_admin_pages($menu_only)
     }
     $result->MoveNext();
   }
+  if ($menu_only) {
+    if (defined('NAME_SORTED_MENUS') && !empty(NAME_SORTED_MENUS)) {
+       $sorted_menus = explode(",", NAME_SORTED_MENUS); 
+       foreach (array_keys($retVal) as $key) {
+         if (in_array($key, $sorted_menus)) {
+           usort($retVal[$key], 'menu_name_sort'); 
+         }
+       }
+    }
+  }
   if (!$menu_only)
   {
     foreach ($productTypes as $pageName => $productType)
@@ -960,4 +970,12 @@ function zen_admin_authorized_to_place_order()
         }
     }
     return ($_SESSION['admin_id'] == (int)EMP_LOGIN_ADMIN_ID || $admin_in_profile);
+}
+
+function menu_name_sort($a, $b) {
+   if ($a['name'] == $b['name'])
+      return 0;
+   if ($a['name'] < $b['name'])
+      return -1;
+   return 1;
 }
