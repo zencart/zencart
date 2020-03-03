@@ -678,8 +678,8 @@ function zen_get_admin_pages($menu_only)
     $result->MoveNext();
   }
   if ($menu_only) {
-    if (defined('NAME_SORTED_MENUS') && !empty(NAME_SORTED_MENUS)) {
-       $sorted_menus = explode(",", NAME_SORTED_MENUS); 
+    if (defined('MENU_CATEGORIES_TO_SORT_BY_NAME') && !empty(MENU_CATEGORIES_TO_SORT_BY_NAME)) {
+       $sorted_menus = explode(",", MENU_CATEGORIES_TO_SORT_BY_NAME); 
        foreach (array_keys($retVal) as $key) {
          if (in_array($key, $sorted_menus)) {
            usort($retVal[$key], 'menu_name_sort'); 

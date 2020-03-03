@@ -781,7 +781,7 @@ define('ERROR_CURRENCY_INVALID', 'Error: The exchange rate for %s (%s) was not u
 define('WARNING_PRIMARY_SERVER_FAILED', 'Warning: The primary exchange rate server (%s) failed for %s (%s) - trying the secondary exchange rate server.');
 
 // Set to empty string if alpha sorting not desired
-define('NAME_SORTED_MENUS','reports,tools'); 
+define('MENU_CATEGORIES_TO_SORT_BY_NAME','reports,tools'); 
 
 ///////////////////////////////////////////////////////////
 // include additional files:
