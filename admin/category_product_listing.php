@@ -531,8 +531,8 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
                   <strong><?php echo HEADING_TITLE_GOTO; ?></strong>
                 </div>
               <?php } ?>
-              <?php echo '</form>'; ?>
             </div>
+            <?php echo '</form>'; ?>
           </div>
         </div>
       <?php } ?>
