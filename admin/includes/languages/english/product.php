@@ -73,15 +73,15 @@ define('TEXT_PRODUCT_DATE_ADDED', 'This product was added to our catalog on %s.'
 define('TEXT_PRODUCT_DATE_AVAILABLE', 'This product will be in stock on %s.');
 
 // meta tags
-define('TEXT_META_TAG_TITLE_INCLUDES', '<strong>Mark What the Product\'s Meta Tag Title Should Include:</strong><br><span class="alert">NOTE: These switches have NO effect if no Keywords or Description text are entered below.</span>');
+define('TEXT_META_TAG_TITLE_INCLUDES', '<strong>Select items to show in the page &lt;title&gt; tag (shown in this order):</strong><br><span class="alert">NOTE: If the Keywords and Description meta tag fields are both empty, all items (apart from the Title Additional Text) will be set to "yes". However, in this case the display of the Product Model and Product Price may be overriden (disabled) in Admin page Configuration->Product Info.</span>');
 define('TEXT_PRODUCTS_METATAGS_PRODUCTS_NAME_STATUS', '<strong>Product Name:</strong>');
-define('TEXT_PRODUCTS_METATAGS_TITLE_STATUS', '<strong>Title:</strong>');
-define('TEXT_PRODUCTS_METATAGS_MODEL_STATUS', '<strong>Model:</strong>');
-define('TEXT_PRODUCTS_METATAGS_PRICE_STATUS', '<strong>Price:</strong>');
-define('TEXT_PRODUCTS_METATAGS_TITLE_TAGLINE_STATUS', '<strong>Title/Tagline:</strong>');
-define('TEXT_META_TAGS_TITLE', '<strong>Meta Tag Title:</strong><br><span class="alert">NOTE: Metatags-Title has NO effect if no Keywords or Description text are entered below.</span>');
-define('TEXT_META_TAGS_KEYWORDS', '<strong>Meta Tag Keywords:</strong>');
-define('TEXT_META_TAGS_DESCRIPTION', '<strong>Meta Tag Description:</strong>');
+define('TEXT_PRODUCTS_METATAGS_TITLE_STATUS', '<strong>Title Additional Text:</strong><br>(defined below)');
+define('TEXT_PRODUCTS_METATAGS_MODEL_STATUS', '<strong>Product Model:</strong>');
+define('TEXT_PRODUCTS_METATAGS_PRICE_STATUS', '<strong>Product Price:</strong>');
+define('TEXT_PRODUCTS_METATAGS_TITLE_TAGLINE_STATUS', '<strong>defined constant "SITE_TAGLINE":</strong>');
+define('TEXT_META_TAGS_TITLE', '<strong>Title Additional Text:</strong><br><span class="alert">NOTE: Title Additional Text is not used if both Keywords and Description meta tag fields are empty.</span>');
+define('TEXT_META_TAGS_KEYWORDS', '<strong>Keywords meta tag:</strong>');
+define('TEXT_META_TAGS_DESCRIPTION', '<strong>Description meta tag:</strong>');
 define('TEXT_META_EXCLUDED', '<span class="alert">EXCLUDED</span>');
 define('TEXT_TITLE_PLUS_TAGLINE', 'Store Title+Tagline'); // this refers to whatever rules the storeowner has built into customizing their catalog /includes/modules/meta_tags.php and its lang file.
 
