@@ -67,7 +67,7 @@ $form_action = (isset($_GET['pID'])) ? 'update_product' : 'insert_product';
         $specials_price = zen_get_products_special_price($_GET['pID']);
       }
       ?>
-        <div class="row table-bordered">
+<div class="row table-bordered">
     <div class="row">
       <div class="col-sm-6 pageHeading">
           <?php echo zen_image(DIR_WS_CATALOG_LANGUAGES . $languages[$i]['directory'] . '/images/' . $languages[$i]['image'], $languages[$i]['name']) . '&nbsp;' . zen_output_string_protected($pInfo->products_name); ?>
@@ -121,8 +121,8 @@ $form_action = (isset($_GET['pID'])) ? 'update_product' : 'insert_product';
     }
     ?>
     <div class="row"><?php echo zen_draw_separator('pixel_trans.gif', '1', '10'); ?></div>
-        </div>
-        <div class="row"><?php echo zen_draw_separator('pixel_trans.gif', '5', '10'); ?></div>
+</div>
+<div class="row"><?php echo zen_draw_separator('pixel_trans.gif', '5', '10'); ?></div>
     <?php
   }
 
