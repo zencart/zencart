@@ -3,7 +3,7 @@
 # *
 # * @package Installer
 # * @access private
-# * @copyright Copyright 2003-2019 Zen Cart Development Team
+# * @copyright Copyright 2003-2020 Zen Cart Development Team
 # * @copyright Portions Copyright 2003 osCommerce
 # * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
 # * @version $Id: DrByte  New in v1.5.7 $
@@ -34,6 +34,39 @@
 # Clear out active customer sessions. Truncating helps the database clean up behind itself.
 TRUNCATE TABLE whos_online;
 TRUNCATE TABLE db_cache;
+
+# Improved descriptions for meta tag options
+UPDATE configuration SET configuration_title = 'Product page generated &lt;title&gt; tag - include Product Model?', configuration_description = 'When custom Keywords and Description meta tags are not set, include the Product Model in the generated page &lt;title&gt; tag?<br><br>0=no / 1=yes' WHERE configuration_key = 'META_TAG_INCLUDE_MODEL';
+UPDATE configuration SET configuration_title = 'Product page generated &lt;title&gt; tag - include Product Price?', configuration_description = 'When custom Keywords and Description meta tags are not set, include the Product Price in the generated page &lt;title&gt; tag?<br><br>0=no / 1=yes' WHERE configuration_key = 'META_TAG_INCLUDE_PRICE';
+UPDATE configuration SET configuration_title = 'Product page generated &lt;meta - description&gt; tag - Maximum Length', configuration_description = 'When custom Keywords and Description meta tags are not set, limit the generated &lt;meta - description&gt; tag to this number of words. Default 50.' WHERE configuration_key = 'MAX_META_TAG_DESCRIPTION_LENGTH';
+
+UPDATE product_type_layout SET configuration_title = 'Product page &lt;title&gt; tag - default: use Product Name', configuration_description = 'Default setting for a new product (can be modified per product).<br>Show the Product Name in the page &lt;title&gt; tag.' WHERE configuration_key = 'SHOW_PRODUCT_INFO_METATAGS_PRODUCTS_NAME_STATUS';
+UPDATE product_type_layout SET configuration_title = 'Product page &lt;title&gt; tag - default: use Title Additional Text', configuration_description = 'Default setting for a new product (can be modified per product).<br>Show the Title Additional text in the page &lt;title&gt; tag.' WHERE configuration_key = 'SHOW_PRODUCT_INFO_METATAGS_TITLE_STATUS';
+UPDATE product_type_layout SET configuration_title = 'Product page &lt;title&gt; tag - default: use Product Model', configuration_description = 'Default setting for a new product (can be modified per product).<br>Show the Product Model in the page &lt;title&gt; tag.' WHERE configuration_key = 'SHOW_PRODUCT_INFO_METATAGS_MODEL_STATUS';
+UPDATE product_type_layout SET configuration_title = 'Product page &lt;title&gt; tag - default: use Product Price', configuration_description = 'Default setting for a new product (can be modified per product).<br>Show the Product Price in the page &lt;title&gt; tag.' WHERE configuration_key = 'SHOW_PRODUCT_INFO_METATAGS_PRICE_STATUS';
+UPDATE product_type_layout SET configuration_title = 'Product page &lt;title&gt; tag - default: use SITE_TAGLINE', configuration_description = 'Default setting for a new product (can be modified per product).<br>Show the defined constant "SITE_TAGLINE" in the page &lt;title&gt; tag.' WHERE configuration_key = 'SHOW_PRODUCT_INFO_METATAGS_TITLE_TAGLINE_STATUS';
+
+UPDATE product_type_layout SET configuration_title = 'Product page &lt;title&gt; tag - default: use Product Name', configuration_description = 'Default setting for a new product (can be modified per product).<br>Show the Product Name in the page &lt;title&gt; tag.' WHERE configuration_key = 'SHOW_PRODUCT_MUSIC_INFO_METATAGS_PRODUCTS_NAME_STATUS';
+UPDATE product_type_layout SET configuration_title = 'Product page &lt;title&gt; tag - default: use Title Additional Text', configuration_description = 'Default setting for a new product (can be modified per product).<br>Show the Product Name in the page &lt;title&gt; tag.' WHERE configuration_key = 'SHOW_PRODUCT_MUSIC_INFO_METATAGS_TITLE_STATUS';
+UPDATE product_type_layout SET configuration_title = 'Product page &lt;title&gt; tag - default: use Product Model', configuration_description = 'Default setting for a new product (can be modified per product).<br>Show the Product Name in the page &lt;title&gt; tag.' WHERE configuration_key = 'SHOW_PRODUCT_MUSIC_INFO_METATAGS_MODEL_STATUS';
+UPDATE product_type_layout SET configuration_title = 'Product page &lt;title&gt; tag - default: use Product Price', configuration_description = 'Default setting for a new product (can be modified per product).<br>Show the Product Name in the page &lt;title&gt; tag.' WHERE configuration_key = 'SHOW_PRODUCT_MUSIC_INFO_METATAGS_PRICE_STATUS';
+UPDATE product_type_layout SET configuration_title = 'Product page &lt;title&gt; tag - default: use SITE_TAGLINE', configuration_description = 'Default setting for a new product (can be modified per product).<br>Show the Product Name in the page &lt;title&gt; tag.' WHERE configuration_key = 'SHOW_PRODUCT_MUSIC_INFO_METATAGS_TITLE_TAGLINE_STATUS';
+
+UPDATE product_type_layout SET configuration_title = 'Document page &lt;title&gt; tag - default: use Document Title', configuration_description = 'Default setting for a new product (can be modified per product).<br>Show the Document  Title in the page &lt;title&gt; tag.' WHERE configuration_key = 'SHOW_DOCUMENT_GENERAL_INFO_METATAGS_TITLE_STATUS';
+UPDATE product_type_layout SET configuration_title = 'Document page &lt;title&gt; tag - default: use Document Name', configuration_description = 'Default setting for a new product (can be modified per product).<br>Show the Document  Name in the page &lt;title&gt; tag.' WHERE configuration_key = 'SHOW_DOCUMENT_GENERAL_INFO_METATAGS_PRODUCTS_NAME_STATUS';
+UPDATE product_type_layout SET configuration_title = 'Product page &lt;title&gt; tag - default: use Document Tagline', configuration_description = 'Default setting for a new product (can be modified per product).<br>Show the Document  Tagline in the page &lt;title&gt; tag.' WHERE configuration_key = 'SHOW_DOCUMENT_GENERAL_INFO_METATAGS_TITLE_TAGLINE_STATUS';
+
+UPDATE product_type_layout SET configuration_title = 'Product page &lt;title&gt; tag - default: use Document Title', configuration_description = 'Default setting for a new product (can be modified per product).<br>Show the Document  Title in the page &lt;title&gt; tag.' WHERE configuration_key = 'SHOW_DOCUMENT_PRODUCT_INFO_METATAGS_TITLE_STATUS';
+UPDATE product_type_layout SET configuration_title = 'Product page &lt;title&gt; tag - default: use Document Name', configuration_description = 'Default setting for a new product (can be modified per product).<br>Show the Document  Name in the page &lt;title&gt; tag.' WHERE configuration_key = 'SHOW_DOCUMENT_PRODUCT_INFO_METATAGS_PRODUCTS_NAME_STATUS';
+UPDATE product_type_layout SET configuration_title = 'Product page &lt;title&gt; tag - default: use Document Model', configuration_description = 'Default setting for a new product (can be modified per product).<br>Show the Document  Model in the page &lt;title&gt; tag.' WHERE configuration_key = 'SHOW_DOCUMENT_PRODUCT_INFO_METATAGS_MODEL_STATUS';
+UPDATE product_type_layout SET configuration_title = 'Product page &lt;title&gt; tag - default: use Document Price', configuration_description = 'Default setting for a new product (can be modified per product).<br>Show the Document  Price in the page &lt;title&gt; tag.' WHERE configuration_key = 'SHOW_DOCUMENT_PRODUCT_INFO_METATAGS_PRICE_STATUS';
+UPDATE product_type_layout SET configuration_title = 'Product page &lt;title&gt; tag - default: use Document Tagline', configuration_description = 'Default setting for a new product (can be modified per product).<br>Show the Document  Tagline in the page &lt;title&gt; tag.' WHERE configuration_key = 'SHOW_DOCUMENT_PRODUCT_INFO_METATAGS_TITLE_TAGLINE_STATUS';
+
+UPDATE product_type_layout SET configuration_title = 'Product page &lt;title&gt; tag - default: use Product Name', configuration_description = 'Default setting for a new product (can be modified per product).<br>Show the Product Name in the page &lt;title&gt; tag.' WHERE configuration_key = 'SHOW_PRODUCT_FREE_SHIPPING_INFO_METATAGS_TITLE_STATUS';
+UPDATE product_type_layout SET configuration_title = 'Product page &lt;title&gt; tag - default: use Title Additional Text', configuration_description = 'Default setting for a new product (can be modified per product).<br>Show the Title Additional text in the page &lt;title&gt; tag.' WHERE configuration_key = 'SHOW_PRODUCT_FREE_SHIPPING_INFO_METATAGS_PRODUCTS_NAME_STATUS';
+UPDATE product_type_layout SET configuration_title = 'Product page &lt;title&gt; tag - default: use Product Model', configuration_description = 'Default setting for a new product (can be modified per product).<br>Show the Product Model in the page &lt;title&gt; tag.' WHERE configuration_key = 'SHOW_PRODUCT_FREE_SHIPPING_INFO_METATAGS_MODEL_STATUS';
+UPDATE product_type_layout SET configuration_title = 'Product page &lt;title&gt; tag - default: use Product Price', configuration_description = 'Default setting for a new product (can be modified per product).<br>Show the Product Price in the page &lt;title&gt; tag.' WHERE configuration_key = 'SHOW_PRODUCT_FREE_SHIPPING_INFO_METATAGS_PRICE_STATUS';
+UPDATE product_type_layout SET configuration_title = 'Product page &lt;title&gt; tag - default: use SITE_TAGLINE', configuration_description = 'Default setting for a new product (can be modified per product).<br>Show the defined constant "SITE_TAGLINE" in the page &lt;title&gt; tag.' WHERE configuration_key = 'SHOW_PRODUCT_FREE_SHIPPING_INFO_METATAGS_TITLE_TAGLINE_STATUS';
 
 # Repair ez-pages table field that was too short in v156
 ALTER TABLE ezpages_content MODIFY pages_html_text mediumtext NOT NULL;
@@ -73,6 +106,9 @@ UPDATE countries set address_format_id = 5 where countries_iso_code_3 in ('ITA')
 
 # Add sort_order
 ALTER TABLE orders_status ADD sort_order int(11) NOT NULL default 0;
+
+# Improve speed of admin orders page listing
+ALTER TABLE orders_total ADD INDEX idx_oid_class_zen (orders_id, class);
 
 # Add customer secret
 ALTER TABLE customers ADD customers_secret varchar(64) NOT NULL default '';
