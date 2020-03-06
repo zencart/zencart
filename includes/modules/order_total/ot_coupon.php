@@ -324,7 +324,7 @@ class ot_coupon {
         }
 
         $date_query=$db->Execute("select coupon_expire_date from " . TABLE_COUPONS . "
-                                  where coupon_code='" . zen_db_prepare_input($dc_check) . "'");
+                                  where coupon_code='" . zen_db_prepare_input($dc_check) . "' LIMIT 1");
 
           if (date("Y-m-d H:i:s") >= $date_query->fields['coupon_expire_date']) {
           $messageStack->add_session('redemptions', sprintf(TEXT_INVALID_FINISHDATE_COUPON, ($dc_link_count === 0 ? $dc_link : $dc_check), zen_date_short($date_query->fields['coupon_expire_date'])),'caution');
