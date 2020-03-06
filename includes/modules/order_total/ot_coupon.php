@@ -272,7 +272,7 @@ class ot_coupon {
 
         if ($foundvalid == true) {
           $foundvalid = false;
-          for ($i=0; $i<sizeof($products); $i++) {
+          for ($i=0; $i<count($products); $i++) {
             if (is_product_valid($products[$i]['id'], $coupon_result->fields['coupon_id'])) {
               $foundvalid = true;
               continue;
@@ -282,7 +282,7 @@ class ot_coupon {
         if ($foundvalid == true) {
           // check if products on special or sale are valid
           $foundvalid = false;
-          for ($i=0, $n=sizeof($products); $i<$n; $i++) {
+          for ($i=0, $n=count($products); $i<$n; $i++) {
             if (is_coupon_valid_for_sales($products[$i]['id'], $coupon_result->fields['coupon_id'])) {
               $foundvalid = true;
               continue;
@@ -521,7 +521,7 @@ class ot_coupon {
           if ($coupon->fields['coupon_product_count'] && ($coupon->fields['coupon_type'] == 'F' || $coupon->fields['coupon_type'] == 'O')) {
             $products = $_SESSION['cart']->get_products();
             $coupon_product_count = 0;
-            for ($i=0, $n=sizeof($products); $i<$n; $i++) {
+            for ($i=0, $n=count($products); $i<$n; $i++) {
               if (is_product_valid($products[$i]['id'], $coupon->fields['coupon_id'])) {
                 $coupon_product_count += $_SESSION['cart']->get_quantity($products[$i]['id']);
               }
@@ -634,7 +634,7 @@ class ot_coupon {
     $orderTotalTax = $order->info['tax'];
     $orderTotal = $order->info['total'];
     $products = $_SESSION['cart']->get_products();
-    for ($i=0, $n=sizeof($products); $i<$n; $i++) {
+    for ($i=0, $n=count($products); $i<$n; $i++) {
       $is_product_valid = (is_product_valid($products[$i]['id'], $couponCode) && is_coupon_valid_for_sales($products[$i]['id'], $couponCode));
       $GLOBALS['zco_notifier']->notify(
         'NOTIFY_OT_COUPON_PRODUCT_VALIDITY',
@@ -725,7 +725,7 @@ class ot_coupon {
     global $db;
     $keys = '';
     $keys_array = $this->keys();
-    for ($i=0, $n=sizeof($keys_array); $i<$n; $i++) {
+    for ($i=0, $n=count($keys_array); $i<$n; $i++) {
       $keys .= "'" . $keys_array[$i] . "',";
     }
     $keys = substr($keys, 0, -1);
