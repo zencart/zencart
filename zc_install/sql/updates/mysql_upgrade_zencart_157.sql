@@ -72,7 +72,7 @@ INSERT IGNORE INTO configuration (configuration_title, configuration_key, config
 UPDATE countries set address_format_id = 5 where countries_iso_code_3 in ('ITA');
 
 # Add language_code
-ALTER TABLE orders ADD language_code char(2) NOT NULL default '',
+ALTER TABLE orders ADD language_code char(2) NOT NULL default '';
 
 # Add sort_order
 ALTER TABLE orders_status ADD sort_order int(11) NOT NULL default 0;
