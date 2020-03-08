@@ -37,9 +37,7 @@
   define('TEXT_HEADING_DELETE_RECORD_COMPANY', 'Delete Record Company');
   define('TEXT_DATE_ADDED', 'Date Added');
   define('TEXT_LAST_MODIFIED', 'Date Modified');
-  define('TEXT_IMAGE_NONEXISTENT', 'Image does not exist');
   define('TEXT_PRODUCTS', 'Linked Products');
   define('TEXT_DISPLAY_NUMBER_OF_RECORD_COMPANIES', 'Displaying <strong>%d</strong> to <strong>%d</strong> (of <strong>%d</strong> Record Companies)');
   define('TEXT_DELETE_PRODUCTS', 'Delete this Record Company and all items linked to it?');
   define('TEXT_DELETE_WARNING_PRODUCTS', '<b>WARNING:</b> There are %s items still linked to this Record Company!');
-?>

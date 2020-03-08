@@ -15,7 +15,6 @@ define('TEXT_CATEGORIES_DESCRIPTION', 'Category Description:');
 define('TEXT_EDIT_CATEGORIES_IMAGE', 'Category Image:');
 define('TEXT_CATEGORIES_IMAGE_DIR', 'Upload to directory:');
 define('TEXT_CATEGORIES_IMAGE_MANUAL', 'Or, select an existing image file from the server, filename:');
-define('TEXT_IMAGE_NONEXISTENT', 'IMAGE DOES NOT EXIST');
 define('TEXT_EDIT_SORT_ORDER', 'Sort Order:');
 define('TEXT_RESTRICT_PRODUCT_TYPE', 'Restrict to Product Type');
 define('TEXT_CATEGORY_HAS_RESTRICTIONS', 'This Category has been restricted to these Product Types');

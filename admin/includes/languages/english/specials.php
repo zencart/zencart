@@ -35,7 +35,6 @@ define('TEXT_INFO_NEW_PRICE', 'Special Price:');
 define('TEXT_INFO_ORIGINAL_PRICE', 'Original Price:');
 define('TEXT_INFO_DISPLAY_PRICE', 'Currently Displayed Price:');
 define('TEXT_INFO_STATUS_CHANGED', 'Status Changed:');
-define('TEXT_IMAGE_NONEXISTENT', '(no image defined)');
 
 define('TEXT_INFO_HEADING_DELETE_SPECIALS', 'Delete Special');
 define('TEXT_INFO_DELETE_INTRO', 'Are you sure you want to delete the Special Price for this product?');
