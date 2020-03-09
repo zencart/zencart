@@ -1,7 +1,7 @@
 <?php
 /**
  * @package Installer
- * @copyright Copyright 2003-2018 Zen Cart Development Team
+ * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: Drbyte Tue Sep 11 15:53:41 2018 -0400 Modified in v1.5.6 $
@@ -145,7 +145,8 @@ require (DIR_FS_ROOT . 'includes/classes/class.base.php');
 require (DIR_FS_ROOT . 'includes/classes/class.notifier.php');
 require (DIR_FS_INSTALL . 'includes/functions/general.php');
 require (DIR_FS_INSTALL . 'includes/functions/password_funcs.php');
-require(DIR_FS_INSTALL . 'includes/languages/languages.php');
+require(DIR_FS_INSTALL . 'includes/classes/LanguageManager.php');
+$languageManager = new LanguageManager();
 zen_sanitize_request();
 /**
  * set the type of request (secure or not)
@@ -182,32 +183,10 @@ $current_page = preg_replace('/[^a-z0-9_]/', '', $_GET['main_page']);
 if ($current_page == '' || !file_exists('includes/modules/pages/' . $current_page)) $_GET['main_page'] = $current_page = 'index';
 $page_directory = 'includes/modules/pages/' . $current_page;
 
-/*
- * language determination
- */
-$language = null;
-if (isset($_POST['lng']))
-{
-  $lng = preg_replace('/[^a-zA-Z_]/', '', $_POST['lng']);
-  if ($lng == '')
-  {
-    $lng = 'en_us';
-  }
-  if (!file_exists(DIR_FS_INSTALL . 'includes/languages/' . $languagesInstalled[$lng]['fileName'] . '.php'))
-  {
-    $lng = 'en_us';
-  }
-} else
-{
-  $lng = (isset($_GET['lng']) && $_GET['lng'] != '') ? preg_replace('/[^a-zA-Z_]/', '', $_GET['lng']) : 'en_us';
-  if ($lng == '')
-  {
-    $lng = 'en_us';
-  }
-  if (!file_exists(DIR_FS_INSTALL . 'includes/languages/' . $languagesInstalled[$lng]['fileName'] . '.php'))
-  {
-    $lng = 'en_us';
-  }
-}
+$languagesInstalled = $languageManager->getLanguagesInstalled();
+$lng = 'en_us';
+if (isset($_POST['lng'])) $lng = $_POST['lng'];
+if (isset($_GET['lng'])) $lng = $_GET['lng'];
+
+$languageManager->loadLanguageDefines($lng, $current_page, 'en_us');
 $lng_short = substr($lng, 0, strpos($lng, '_'));
-require(DIR_FS_INSTALL . 'includes/languages/' . $languagesInstalled[$lng]['fileName'] . '.php');
