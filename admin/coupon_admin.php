@@ -94,8 +94,8 @@
 
 //Send the emails
       zen_mail($mail->fields['customers_firstname'] . ' ' . $mail->fields['customers_lastname'], $mail->fields['customers_email_address'], $subject , $message, '',$from, $html_msg, 'coupon');
-      zen_record_admin_activity('Coupon code ' . $coupon_result->fields['coupon-code'] . ' emailed to customer ' . $mail->fields['customers_email_address'], 'info');
-      $zco_notifier->notify('ADMIN_COUPON_CODE_EMAILED_TO_CUSTOMER', $coupon_result->fields['coupon-code'], $mail->fields['customers_email_address']);
+      zen_record_admin_activity('Coupon code ' . $coupon_result->fields['coupon_code'] . ' emailed to customer ' . $mail->fields['customers_email_address'], 'info');
+      $zco_notifier->notify('ADMIN_COUPON_CODE_EMAILED_TO_CUSTOMER', $coupon_result->fields['coupon_code'], $mail->fields['customers_email_address']);
       $recip_count++;
       // send copy to Admin if enabled
       if (SEND_EXTRA_DISCOUNT_COUPON_ADMIN_EMAILS_TO_STATUS== '1' and SEND_EXTRA_DISCOUNT_COUPON_ADMIN_EMAILS_TO != '') {
@@ -204,7 +204,7 @@
                                     'coupon_active' => 'Y'
                                     );
             zen_db_perform(TABLE_COUPONS, $sql_data_array);
-            $insert_id = $db->Insert_ID();
+            $insert_id = $db->insert_ID();
             $cid = $insert_id;
 
           // make new description
@@ -285,7 +285,7 @@
                                 );
 
           zen_db_perform(TABLE_COUPONS, $sql_data_array);
-          $insert_id = $db->Insert_ID();
+          $insert_id = $db->insert_ID();
           $cid = $insert_id;
 //          $_GET['cid'] = $cid;
 
@@ -326,7 +326,7 @@
       // get all HTTP_POST_VARS and validate
       $_POST['coupon_code'] = trim($_POST['coupon_code']);
         $languages = zen_get_languages();
-        for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
+        for ($i = 0, $n = count($languages); $i < $n; $i++) {
           $language_id = $languages[$i]['id'];
           $_POST['coupon_name'][$language_id] = trim($_POST['coupon_name'][$language_id]);
           if (!$_POST['coupon_name'][$language_id]) {
@@ -415,7 +415,7 @@
                                 );
 
         $languages = zen_get_languages();
-        for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
+        for ($i = 0, $n = count($languages); $i < $n; $i++) {
           $language_id = $languages[$i]['id'];
           $sql_data_marray[$i] = array('coupon_name' => zen_db_prepare_input($_POST['coupon_name'][$language_id]),
                                        'coupon_description' => zen_db_prepare_input($_POST['coupon_desc'][$language_id])
@@ -423,7 +423,7 @@
         }
         if ($_GET['oldaction']=='voucheredit') {
           zen_db_perform(TABLE_COUPONS, $sql_data_array, 'update', "coupon_id='" . $_GET['cid']."'");
-          for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
+          for ($i = 0, $n = count($languages); $i < $n; $i++) {
             $language_id = $languages[$i]['id'];
             $sql_data_desc_array = array('coupon_name' => zen_db_prepare_input($_POST['coupon_name'][$language_id]),
                                          'coupon_description' => zen_db_prepare_input($_POST['coupon_desc'][$language_id])
@@ -432,11 +432,11 @@
           }
         } else {
           zen_db_perform(TABLE_COUPONS, $sql_data_array);
-          $insert_id = $db->Insert_ID();
+          $insert_id = $db->insert_ID();
           $cid = $insert_id;
           $_GET['cid'] = $cid;
 
-          for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
+          for ($i = 0, $n = count($languages); $i < $n; $i++) {
             $language_id = $languages[$i]['id'];
             $sql_data_marray[$i]['coupon_id'] = (int)$insert_id;
             $sql_data_marray[$i]['language_id'] = (int)$language_id;
@@ -726,7 +726,7 @@ function check_form(form_name) {
 ?>
     <td width="25%" valign="top">
 <?php
-      $box = new box;
+      $box = new box();
       echo $box->infoBox($heading, $contents);
       echo '            </td>' . "\n";
 ?>
@@ -787,9 +787,11 @@ function check_form(form_name) {
               <tr>
                 <td><?php echo zen_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
               </tr>
+<?php if (EMAIL_USE_HTML == 'true') { ?>
               <tr>
                 <td><hr /><b><?php echo TEXT_RICH_TEXT_MESSAGE; ?></b><br /><?php echo stripslashes($_POST['message_html']); ?></td>
               </tr>
+<?php } ?>
               <tr>
                 <td ><hr /><b><?php echo TEXT_MESSAGE; ?></b><br /><tt><?php echo nl2br(htmlspecialchars(stripslashes($_POST['message']), ENT_COMPAT, CHARSET, TRUE)); ?></tt><hr /></td>
               </tr>
@@ -884,7 +886,7 @@ function check_form(form_name) {
               <tr>
                 <td colspan="2"><?php echo zen_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
               </tr>
-<?php   if (EMAIL_USE_HTML == 'true') { ?>
+<?php if (EMAIL_USE_HTML == 'true') { ?>
               <tr>
                 <td valign="top" class="main"><?php echo TEXT_RICH_TEXT_MESSAGE; ?></td>
                 <td><?php echo zen_draw_textarea_field('message_html', 'soft', '100%', '25', htmlspecialchars(($_POST['message_html']=='') ? TEXT_COUPON_ANNOUNCE : stripslashes($_POST['message_html']), ENT_COMPAT, CHARSET, TRUE), 'id="message_html" class="editorHook"'); ?></td>
@@ -931,7 +933,7 @@ function check_form(form_name) {
 
 <?php
         $languages = zen_get_languages();
-        for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
+        for ($i = 0, $n = count($languages); $i < $n; $i++) {
             $language_id = $languages[$i]['id'];
 ?>
       <tr>
@@ -943,7 +945,7 @@ function check_form(form_name) {
 ?>
 <?php
         $languages = zen_get_languages();
-        for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
+        for ($i = 0, $n = count($languages); $i < $n; $i++) {
             $language_id = $languages[$i]['id'];
 ?>
       <tr>
@@ -1036,7 +1038,7 @@ function check_form(form_name) {
       </tr>
 <?php
         $languages = zen_get_languages();
-        for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
+        for ($i = 0, $n = count($languages); $i < $n; $i++) {
           $language_id = $languages[$i]['id'];
           echo zen_draw_hidden_field('coupon_name[' . $languages[$i]['id'] . ']', stripslashes($_POST['coupon_name'][$language_id]));
           echo zen_draw_hidden_field('coupon_desc[' . $languages[$i]['id'] . ']', stripslashes($_POST['coupon_desc'][$language_id]));
@@ -1072,7 +1074,7 @@ function check_form(form_name) {
     break;
   case 'voucheredit':
     $languages = zen_get_languages();
-    for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
+    for ($i = 0, $n = count($languages); $i < $n; $i++) {
       $language_id = $languages[$i]['id'];
       $coupon = $db->Execute("select coupon_name,coupon_description
                               from " . TABLE_COUPONS_DESCRIPTION . "
@@ -1134,7 +1136,7 @@ function check_form(form_name) {
       <table border="0" width="100%" cellspacing="0" cellpadding="6">
 <?php
         $languages = zen_get_languages();
-        for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
+        for ($i = 0, $n = count($languages); $i < $n; $i++) {
         $language_id = $languages[$i]['id'];
 ?>
       <tr>
@@ -1147,7 +1149,7 @@ function check_form(form_name) {
 ?>
 <?php
         $languages = zen_get_languages();
-        for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
+        for ($i = 0, $n = count($languages); $i < $n; $i++) {
         $language_id = $languages[$i]['id'];
 ?>
 
@@ -1246,7 +1248,7 @@ function check_form(form_name) {
         <td align="left">&nbsp;&nbsp;<a href="<?php echo zen_href_link(FILENAME_COUPON_ADMIN, 'cid=' . $_GET['cid'] . (isset($_GET['status']) ? '&status=' . $_GET['status'] : '') . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '')); ?>"><?php echo zen_image_button('button_cancel.gif', IMAGE_CANCEL); ?></a>
       </td>
       </tr>
-      </td></table></form></td>
+      </td></table><?php echo '</form>'; ?></td>
       </tr>
 
       </table></td>
@@ -1274,7 +1276,7 @@ function check_form(form_name) {
     $status = $status[0];
     echo HEADING_TITLE_STATUS . ' ' . zen_draw_pull_down_menu('status', $status_array, $status, 'onChange="this.form.submit();"');
 ?>
-              </form>
+  <?php echo '</form>'; ?>
            </td>
             <td class="main">
 <?php
