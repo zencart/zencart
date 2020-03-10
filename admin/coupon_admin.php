@@ -575,7 +575,7 @@ function check_form(form_name) {
         $cInfo = new objectInfo($cc_list->fields);
       }
       if ( (isset($cInfo)) && ($cc_list->fields['unique_id'] == $cInfo->unique_id) ) {
-        echo '          <tr class="dataTableRowSelected" onmouseover="this.style.cursor=\'hand\'" onclick="document.location.href=\'' . zen_href_link(FILENAME_COUPON_ADMIN, zen_get_all_get_params(array('cid', 'action', 'uid')) . 'cid=' . $cInfo->coupon_id . '&action=voucherreport&uid=' . $cInfo->unique_id) . '\'">' . "\n";
+        echo '          <tr class="dataTableRowSelected" onmouseover="this.style.cursor=\'hand\'" onclick="document.location.href=\'' . zen_href_link(FILENAME_COUPON_ADMIN, zen_get_all_get_params(array('cid', 'action', 'uid')) . 'cid=' . $cInfo->coupon_id . '&action=voucherreport&uid=' . $cinfo->unique_id) . '\'">' . "\n";
       } else {
         echo '          <tr class="dataTableRow" onmouseover="this.className=\'dataTableRowOver\';this.style.cursor=\'hand\'" onmouseout="this.className=\'dataTableRow\'" onclick="document.location.href=\'' . zen_href_link(FILENAME_COUPON_ADMIN, zen_get_all_get_params(array('cid', 'action', 'uid')) . 'cid=' . $cc_list->fields['coupon_id'] . '&action=voucherreport&uid=' . $cc_list->fields['unique_id']) . '\'">' . "\n";
       }
@@ -671,12 +671,10 @@ function check_form(form_name) {
       if (((!$_GET['uid']) || (@$_GET['uid'] == $cc_list->fields['unique_id'])) && (!$cInfo)) {
         $cInfo = new objectInfo($cc_list->fields);
       }
-      if ( (isset($cInfo)) && ($cc_list->fields['unique_id'] == $cInfo->unique_id) ) { ?>
-          <tr>
-        <?php
-          echo ' class="dataTableRowSelected" onmouseover="this.style.cursor=\'hand\'" onclick="document.location.href=\'' . zen_href_link(FILENAME_COUPON_ADMIN, zen_get_all_get_params(array('cid', 'action', 'uid')) . 'cid=' . $cInfo->coupon_id . '&action=voucherreport&uid=' . $cInfo->unique_id) . '\'">' . "\n";
+      if ( (isset($cInfo)) && ($cc_list->fields['unique_id'] == $cInfo->unique_id) ) {
+        echo '          <tr class="dataTableRowSelected" onmouseover="this.style.cursor=\'hand\'" onclick="document.location.href=\'' . zen_href_link(FILENAME_COUPON_ADMIN, zen_get_all_get_params(array('cid', 'action', 'uid')) . 'cid=' . $cInfo->coupon_id . '&action=voucherreport&uid=' . $cinfo->unique_id) . '\'">' . "\n";
       } else {
-        echo ' class="dataTableRow" onmouseover="this.className=\'dataTableRowOver\';this.style.cursor=\'hand\'" onmouseout="this.className=\'dataTableRow\'" onclick="document.location.href=\'' . zen_href_link(FILENAME_COUPON_ADMIN, zen_get_all_get_params(array('cid', 'action', 'uid')) . 'cid=' . $cc_list->fields['coupon_id'] . '&action=voucherreport&uid=' . $cc_list->fields['unique_id']) . '\'">' . "\n";
+        echo '          <tr class="dataTableRow" onmouseover="this.className=\'dataTableRowOver\';this.style.cursor=\'hand\'" onmouseout="this.className=\'dataTableRow\'" onclick="document.location.href=\'' . zen_href_link(FILENAME_COUPON_ADMIN, zen_get_all_get_params(array('cid', 'action', 'uid')) . 'cid=' . $cc_list->fields['coupon_id'] . '&action=voucherreport&uid=' . $cc_list->fields['unique_id']) . '\'">' . "\n";
       }
       $customer = $db->Execute("select customers_firstname, customers_lastname
                                 from " . TABLE_CUSTOMERS . "
@@ -1248,8 +1246,7 @@ function check_form(form_name) {
         <td align="left">&nbsp;&nbsp;<a href="<?php echo zen_href_link(FILENAME_COUPON_ADMIN, 'cid=' . $_GET['cid'] . (isset($_GET['status']) ? '&status=' . $_GET['status'] : '') . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '')); ?>"><?php echo zen_image_button('button_cancel.gif', IMAGE_CANCEL); ?></a>
       </td>
       </tr>
-      </td></table>
-<?php echo '</form>'; ?></td>
+      </td></table><?php echo '</form>'; ?></td>
       </tr>
 
       </table></td>
@@ -1277,7 +1274,7 @@ function check_form(form_name) {
     $status = $status[0];
     echo HEADING_TITLE_STATUS . ' ' . zen_draw_pull_down_menu('status', $status_array, $status, 'onChange="this.form.submit();"');
 ?>
-              <?php echo '</form>'; ?>
+  <?php echo '</form>'; ?>
            </td>
             <td class="main">
 <?php
@@ -1330,11 +1327,10 @@ function check_form(form_name) {
       if ((empty($_GET['cid']) || ($_GET['cid'] == $cc_list->fields['coupon_id'])) && empty($cInfo)) {
         $cInfo = new objectInfo($cc_list->fields);
       }
-      if ( (isset($cInfo)) && ($cc_list->fields['coupon_id'] == $cInfo->coupon_id) ) { ?>
-        <tr>
-          <?php echo ' class="dataTableRowSelected" onmouseover="this.style.cursor=\'hand\'" onclick="document.location.href=\'' . zen_href_link(FILENAME_COUPON_ADMIN, zen_get_all_get_params(array('cid', 'action')) . 'cid=' . $cInfo->coupon_id . '&action=voucheredit') . '\'">' . "\n";
+      if ( (isset($cInfo)) && ($cc_list->fields['coupon_id'] == $cInfo->coupon_id) ) {
+        echo '          <tr class="dataTableRowSelected" onmouseover="this.style.cursor=\'hand\'" onclick="document.location.href=\'' . zen_href_link(FILENAME_COUPON_ADMIN, zen_get_all_get_params(array('cid', 'action')) . 'cid=' . $cInfo->coupon_id . '&action=voucheredit') . '\'">' . "\n";
       } else {
-        echo ' class="dataTableRow" onmouseover="this.className=\'dataTableRowOver\';this.style.cursor=\'hand\'" onmouseout="this.className=\'dataTableRow\'" onclick="document.location.href=\'' . zen_href_link(FILENAME_COUPON_ADMIN, zen_get_all_get_params(array('cid', 'action')) . 'cid=' . $cc_list->fields['coupon_id']) . '\'">' . "\n";
+        echo '          <tr class="dataTableRow" onmouseover="this.className=\'dataTableRowOver\';this.style.cursor=\'hand\'" onmouseout="this.className=\'dataTableRow\'" onclick="document.location.href=\'' . zen_href_link(FILENAME_COUPON_ADMIN, zen_get_all_get_params(array('cid', 'action')) . 'cid=' . $cc_list->fields['coupon_id']) . '\'">' . "\n";
       }
       $coupon_desc = $db->Execute("select coupon_name
                                    from " . TABLE_COUPONS_DESCRIPTION . "
