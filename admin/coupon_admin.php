@@ -326,7 +326,7 @@
       // get all HTTP_POST_VARS and validate
       $_POST['coupon_code'] = trim($_POST['coupon_code']);
         $languages = zen_get_languages();
-        for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
+        for ($i = 0, $n = count($languages); $i < $n; $i++) {
           $language_id = $languages[$i]['id'];
           $_POST['coupon_name'][$language_id] = trim($_POST['coupon_name'][$language_id]);
           if (!$_POST['coupon_name'][$language_id]) {
@@ -415,7 +415,7 @@
                                 );
 
         $languages = zen_get_languages();
-        for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
+        for ($i = 0, $n = count($languages); $i < $n; $i++) {
           $language_id = $languages[$i]['id'];
           $sql_data_marray[$i] = array('coupon_name' => zen_db_prepare_input($_POST['coupon_name'][$language_id]),
                                        'coupon_description' => zen_db_prepare_input($_POST['coupon_desc'][$language_id])
@@ -423,7 +423,7 @@
         }
         if ($_GET['oldaction']=='voucheredit') {
           zen_db_perform(TABLE_COUPONS, $sql_data_array, 'update', "coupon_id='" . $_GET['cid']."'");
-          for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
+          for ($i = 0, $n = count($languages); $i < $n; $i++) {
             $language_id = $languages[$i]['id'];
             $sql_data_desc_array = array('coupon_name' => zen_db_prepare_input($_POST['coupon_name'][$language_id]),
                                          'coupon_description' => zen_db_prepare_input($_POST['coupon_desc'][$language_id])
@@ -436,7 +436,7 @@
           $cid = $insert_id;
           $_GET['cid'] = $cid;
 
-          for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
+          for ($i = 0, $n = count($languages); $i < $n; $i++) {
             $language_id = $languages[$i]['id'];
             $sql_data_marray[$i]['coupon_id'] = (int)$insert_id;
             $sql_data_marray[$i]['language_id'] = (int)$language_id;
@@ -931,7 +931,7 @@ function check_form(form_name) {
 
 <?php
         $languages = zen_get_languages();
-        for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
+        for ($i = 0, $n = count($languages); $i < $n; $i++) {
             $language_id = $languages[$i]['id'];
 ?>
       <tr>
@@ -943,7 +943,7 @@ function check_form(form_name) {
 ?>
 <?php
         $languages = zen_get_languages();
-        for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
+        for ($i = 0, $n = count($languages); $i < $n; $i++) {
             $language_id = $languages[$i]['id'];
 ?>
       <tr>
@@ -1036,7 +1036,7 @@ function check_form(form_name) {
       </tr>
 <?php
         $languages = zen_get_languages();
-        for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
+        for ($i = 0, $n = count($languages); $i < $n; $i++) {
           $language_id = $languages[$i]['id'];
           echo zen_draw_hidden_field('coupon_name[' . $languages[$i]['id'] . ']', stripslashes($_POST['coupon_name'][$language_id]));
           echo zen_draw_hidden_field('coupon_desc[' . $languages[$i]['id'] . ']', stripslashes($_POST['coupon_desc'][$language_id]));
@@ -1072,7 +1072,7 @@ function check_form(form_name) {
     break;
   case 'voucheredit':
     $languages = zen_get_languages();
-    for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
+    for ($i = 0, $n = count($languages); $i < $n; $i++) {
       $language_id = $languages[$i]['id'];
       $coupon = $db->Execute("select coupon_name,coupon_description
                               from " . TABLE_COUPONS_DESCRIPTION . "
@@ -1134,7 +1134,7 @@ function check_form(form_name) {
       <table border="0" width="100%" cellspacing="0" cellpadding="6">
 <?php
         $languages = zen_get_languages();
-        for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
+        for ($i = 0, $n = count($languages); $i < $n; $i++) {
         $language_id = $languages[$i]['id'];
 ?>
       <tr>
@@ -1147,7 +1147,7 @@ function check_form(form_name) {
 ?>
 <?php
         $languages = zen_get_languages();
-        for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
+        for ($i = 0, $n = count($languages); $i < $n; $i++) {
         $language_id = $languages[$i]['id'];
 ?>
 
