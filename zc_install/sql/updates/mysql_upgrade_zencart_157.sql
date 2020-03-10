@@ -69,7 +69,10 @@ INSERT INTO configuration (configuration_title, configuration_key, configuration
 # Missed in 1.5.6 upgrade.  May already be there so use INSERT IGNORE
 INSERT IGNORE INTO configuration (configuration_title, configuration_key, configuration_value, val_function, configuration_description, configuration_group_id, sort_order, date_added) VALUES ('Admin Usernames', 'ADMIN_NAME_MINIMUM_LENGTH', '4', '{"error":"TEXT_MIN_ADMIN_USER_LENGTH","id":"FILTER_VALIDATE_INT","options":{"options":{"min_range":4}}}', 'Minimum length of admin usernames (must be 4 or more)', '2', '18', now());
 # Country data 
-UPDATE countries set address_format_id = 5 where countries_iso_code_3 in ('ITA'); 
+UPDATE countries set address_format_id = 5 where countries_iso_code_3 in ('ITA');
+
+# Add language_code
+ALTER TABLE orders ADD language_code char(2) NOT NULL default '';
 
 # Add sort_order
 ALTER TABLE orders_status ADD sort_order int(11) NOT NULL default 0;

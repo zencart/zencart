@@ -1080,6 +1080,7 @@ CREATE TABLE orders (
   paypal_ipn_id int(11) NOT NULL default 0,
   ip_address varchar(96) NOT NULL default '',
   order_weight float default NULL,
+  language_code char(2) NOT NULL default '',
   PRIMARY KEY  (orders_id),
   KEY idx_status_orders_cust_zen (orders_status,orders_id,customers_id),
   KEY idx_date_purchased_zen (date_purchased),
