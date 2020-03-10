@@ -204,7 +204,7 @@
                                     'coupon_active' => 'Y'
                                     );
             zen_db_perform(TABLE_COUPONS, $sql_data_array);
-            $insert_id = $db->Insert_ID();
+            $insert_id = $db->insert_ID();
             $cid = $insert_id;
 
           // make new description
@@ -285,7 +285,7 @@
                                 );
 
           zen_db_perform(TABLE_COUPONS, $sql_data_array);
-          $insert_id = $db->Insert_ID();
+          $insert_id = $db->insert_ID();
           $cid = $insert_id;
 //          $_GET['cid'] = $cid;
 
@@ -432,7 +432,7 @@
           }
         } else {
           zen_db_perform(TABLE_COUPONS, $sql_data_array);
-          $insert_id = $db->Insert_ID();
+          $insert_id = $db->insert_ID();
           $cid = $insert_id;
           $_GET['cid'] = $cid;
 
