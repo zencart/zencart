@@ -1248,7 +1248,8 @@ function check_form(form_name) {
         <td align="left">&nbsp;&nbsp;<a href="<?php echo zen_href_link(FILENAME_COUPON_ADMIN, 'cid=' . $_GET['cid'] . (isset($_GET['status']) ? '&status=' . $_GET['status'] : '') . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '')); ?>"><?php echo zen_image_button('button_cancel.gif', IMAGE_CANCEL); ?></a>
       </td>
       </tr>
-      </td></table></form></td>
+      </td></table>
+<?php echo '</form>'; ?></td>
       </tr>
 
       </table></td>
@@ -1276,7 +1277,7 @@ function check_form(form_name) {
     $status = $status[0];
     echo HEADING_TITLE_STATUS . ' ' . zen_draw_pull_down_menu('status', $status_array, $status, 'onChange="this.form.submit();"');
 ?>
-              </form>
+              <?php echo '</form>'; ?>
            </td>
             <td class="main">
 <?php
