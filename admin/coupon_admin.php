@@ -728,7 +728,7 @@ function check_form(form_name) {
 ?>
     <td width="25%" valign="top">
 <?php
-      $box = new box;
+      $box = new box();
       echo $box->infoBox($heading, $contents);
       echo '            </td>' . "\n";
 ?>
