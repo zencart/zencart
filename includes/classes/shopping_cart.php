@@ -71,11 +71,9 @@ class shoppingCart extends base {
   var $display_debug_messages = FALSE;
   var $flag_duplicate_msgs_set = FALSE;
   var $flag_duplicate_quantity_msgs_set = array();
+
   /**
-   * constructor method
-   *
-   * Simply resets the users cart.
-   * @return void
+   * Instantiate a new shopping cart object
    */
   function __construct() {
     $this->notify('NOTIFIER_CART_INSTANTIATE_START');
@@ -88,7 +86,7 @@ class shoppingCart extends base {
    * For customers who login, cart contents are also stored in the database.
    * {TABLE_CUSTOMER_BASKET et al}. This allows the system to remember the
    * contents of their cart over multiple sessions.
-   * This method simply retrieve the content of the database store cart
+   * This method simply retrieves the content of the database stored cart
    * for a given customer. Note also that if the customer already has
    * some items in their cart before they login, these are merged with
    * the stored contents.
@@ -165,12 +163,8 @@ class shoppingCart extends base {
 
     while (!$products->EOF) {
       $this->contents[$products->fields['products_id']] = array('qty' => $products->fields['customers_basket_quantity']);
-      // attributes
+
       // set contents in sort order
-
-      //CLR 020606 update query to pull attribute value_text. This is needed for text attributes.
-      //        $attributes_query = zen_db_query("select products_options_id, products_options_value_id, products_options_value_text from " . TABLE_CUSTOMERS_BASKET_ATTRIBUTES . " where customers_id = '" . (int)$customer_id . "' and products_id = '" . zen_db_input($products['products_id']) . "'");
-
       $order_by = ' order by LPAD(products_options_sort_order,11,"0")';
 
       $attributes = $db->Execute("select products_options_id, products_options_value_id, products_options_value_text
@@ -219,14 +213,9 @@ class shoppingCart extends base {
     $this->free_shipping_weight = 0;
 
     if (zen_is_logged_in() && $reset_database == true) {
-      $sql = "delete from " . TABLE_CUSTOMERS_BASKET . "
-                where customers_id = '" . (int)$_SESSION['customer_id'] . "'";
-
+      $sql = "delete from " . TABLE_CUSTOMERS_BASKET . " where customers_id = " . (int)$_SESSION['customer_id'];
       $db->Execute($sql);
-
-      $sql = "delete from " . TABLE_CUSTOMERS_BASKET_ATTRIBUTES . "
-                where customers_id = '" . (int)$_SESSION['customer_id'] . "'";
-
+      $sql = "delete from " . TABLE_CUSTOMERS_BASKET_ATTRIBUTES . " where customers_id = " . (int)$_SESSION['customer_id'];
       $db->Execute($sql);
     }
 
