@@ -692,7 +692,7 @@ define('EMAIL_SALUTATION', 'Dear');
   define('TEXT_IMAGE_OVERWRITE_WARNING','WARNING: FILENAME was updated but not overwritten ');
   define('TEXT_IMAGES_DELETE', '<strong>Remove Image?</strong> Note: Removes image from product (image is NOT deleted/removed from server):');
   define('TEXT_IMAGE_CURRENT', 'Image Name: ');
-  define('TEXT_IMAGE_NONEXISTENT', 'ASSIGNED IMAGE IS MISSING');
+  define('TEXT_IMAGE_NONEXISTENT', 'IMAGE FILE IS MISSING');
 
   define('ERROR_DEFINE_OPTION_NAMES', 'Warning: No Option Names have been defined');
   define('ERROR_DEFINE_OPTION_VALUES', 'Warning: No Option Values have been defined');
