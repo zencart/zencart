@@ -136,7 +136,7 @@ function zen_catalog_href_link($page = '', $parameters = '', $connection = 'NONS
     $image = '<img src="' . zen_output_string($src) . '" alt="' . zen_output_string($alt) . '"';
 
     if (zen_not_null($alt)) {
-      $image .= ' title=" ' . zen_output_string($alt) . ' "';
+      $image .= ' title="' . zen_output_string($alt) . '"';
     }
 
     if (CONFIG_CALCULATE_IMAGE_SIZE == 'true' && (empty($width) || empty($height)) ) {
@@ -285,7 +285,7 @@ function zen_catalog_href_link($page = '', $parameters = '', $connection = 'NONS
 
     $image_submit = '<input type="image" src="' . zen_output_string($template->get_template_dir($image, DIR_WS_TEMPLATE, $current_page_base, 'buttons/' . $_SESSION['language'] . '/') . $image) . '" alt="' . zen_output_string($alt) . '"';
 
-    if (zen_not_null($alt)) $image_submit .= ' title=" ' . zen_output_string($alt) . ' "';
+    if (zen_not_null($alt)) $image_submit .= ' title="' . zen_output_string($alt) . '"';
 
     if (zen_not_null($parameters)) $image_submit .= ' ' . $parameters;
 
