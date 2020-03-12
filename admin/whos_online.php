@@ -334,6 +334,7 @@ $listingURL = FILENAME_WHOS_ONLINE . '.php?' . zen_get_all_get_params(['q', 't',
                   <?php
                   $ip_array = [];
                   $d = 0; // duplicates counter
+                  $info ='';
                   foreach ($whos_online as $item) {
                     $time_online = (time() - $item['time_entry']);
 
