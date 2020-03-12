@@ -24,8 +24,6 @@
  * $_SESSION['payment']
  * $_SESSION['sendto']
  * $_SESSION['shipping']
- *
- * @package classes
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
@@ -54,7 +52,7 @@ class order extends base {
   function query($order_id) {
     global $db;
 
-    $order_id = zen_db_prepare_input($order_id);
+    $order_id = (int)$order_id;
     $this->queryReturnFlag = NULL;
     $this->notify('NOTIFY_ORDER_BEFORE_QUERY', array(), $order_id);
     if ($this->queryReturnFlag === TRUE) return false;
@@ -106,7 +104,7 @@ class order extends base {
                         'cc_type' => $order->fields['cc_type'],
                         'cc_owner' => $order->fields['cc_owner'],
                         'cc_number' => $order->fields['cc_number'],
-                          'cc_cvv' => $order->fields['cc_cvv'],
+                        'cc_cvv' => $order->fields['cc_cvv'],
                         'cc_expires' => $order->fields['cc_expires'],
                         'date_purchased' => $order->fields['date_purchased'],
                         'orders_status' => $order->fields['orders_status'],
@@ -156,9 +154,9 @@ class order extends base {
 
     $index = 0;
     $orders_products_query = "select *
-                                  from " . TABLE_ORDERS_PRODUCTS . "
-                                  where orders_id = '" . (int)$order_id . "'
-                                  order by orders_products_id";
+                              from " . TABLE_ORDERS_PRODUCTS . "
+                              where orders_id = " . (int)$order_id . "
+                              order by orders_products_id";
 
     $orders_products = $db->Execute($orders_products_query);
 
@@ -209,23 +207,24 @@ class order extends base {
 
       $subindex = 0;
       $attributes_query = "select products_options_id, products_options_values_id, products_options, products_options_values,
-                              options_values_price, price_prefix, product_attribute_is_free 
-                              from " . TABLE_ORDERS_PRODUCTS_ATTRIBUTES . "
-                               where orders_id = " . (int)$order_id . "
-                               and orders_products_id = " . (int)$orders_products->fields['orders_products_id'] . "
-                          ORDER BY orders_products_attributes_id ASC";
+                           options_values_price, price_prefix, product_attribute_is_free 
+                           FROM " . TABLE_ORDERS_PRODUCTS_ATTRIBUTES . "
+                           WHERE orders_id = " . (int)$order_id . "
+                           AND orders_products_id = " . (int)$orders_products->fields['orders_products_id'] . "
+                           ORDER BY orders_products_attributes_id ASC";
 
       $attributes = $db->Execute($attributes_query);
       if ($attributes->RecordCount()) {
         while (!$attributes->EOF) {
-          $this->products[$index]['attributes'][$subindex] = array('option' => $attributes->fields['products_options'],
-                                                                   'value' => $attributes->fields['products_options_values'],
-                                                                   'option_id' => $attributes->fields['products_options_id'],
-                                                                   'value_id' => $attributes->fields['products_options_values_id'],
-                                                                   'prefix' => $attributes->fields['price_prefix'],
-                                                                   'price' => $attributes->fields['options_values_price'],
-                                                                   'product_attribute_is_free' => (int)$attributes->fields['product_attribute_is_free'],
-);
+          $this->products[$index]['attributes'][$subindex] = array(
+              'option' => $attributes->fields['products_options'],
+               'value' => $attributes->fields['products_options_values'],
+               'option_id' => $attributes->fields['products_options_id'],
+               'value_id' => $attributes->fields['products_options_values_id'],
+               'prefix' => $attributes->fields['price_prefix'],
+               'price' => $attributes->fields['options_values_price'],
+               'product_attribute_is_free' => (int)$attributes->fields['product_attribute_is_free'],
+          );
 
           $subindex++;
           $attributes->MoveNext();
@@ -345,12 +344,9 @@ class order extends base {
 
     if (isset($_SESSION['cc_id'])) {
       $coupon_code_query = "select coupon_code
-                              from " . TABLE_COUPONS . "
-                              where coupon_id = '" . (int)$_SESSION['cc_id'] . "'";
-
+                            from " . TABLE_COUPONS . "
+                            where coupon_id = '" . (int)$_SESSION['cc_id'] . "'";
       $coupon_code = $db->Execute($coupon_code_query);
-
-
     }
 
     $shipping_module_code = '';
@@ -541,19 +537,21 @@ class order extends base {
 
           $attributes = $db->Execute($attributes_query);
 
-          //clr 030714 Determine if attribute is a text attribute and change products array if it is.
-          if ($value == PRODUCTS_OPTIONS_VALUES_TEXT_ID){
+          //clr 030714 Account for text attributes
+          if ($value == PRODUCTS_OPTIONS_VALUES_TEXT_ID) {
             $attr_value = $products[$i]['attributes_values'][$option];
           } else {
             $attr_value = $attributes->fields['products_options_values_name'];
           }
 
-          $this->products[$index]['attributes'][$subindex] = array('option' => $attributes->fields['products_options_name'],
-                                                                   'value' => $attr_value,
-                                                                   'option_id' => $option,
-                                                                   'value_id' => $value,
-                                                                   'prefix' => $attributes->fields['price_prefix'],
-                                                                   'price' => $attributes->fields['options_values_price']);
+          $this->products[$index]['attributes'][$subindex] = array(
+                'option' => $attributes->fields['products_options_name'],
+                'value' => $attr_value,
+                'option_id' => $option,
+                'value_id' => $value,
+                'prefix' => $attributes->fields['price_prefix'],
+                'price' => $attributes->fields['options_values_price'],
+          );
 
           $this->notify('NOTIFY_ORDER_CART_ADD_ATTRIBUTE_LIST', array('index'=>$index, 'subindex'=>$subindex, 'products'=>$products[$i], 'attributes'=>$attributes));
           $subindex++;
@@ -574,9 +572,10 @@ class order extends base {
          * Calculate taxes for this product
          *********************************************/
         $shown_price = (zen_add_tax($this->products[$index]['final_price'] * $this->products[$index]['qty'], $this->products[$index]['tax']))
-        + zen_add_tax($this->products[$index]['onetime_charges'], $this->products[$index]['tax']);
+                 + zen_add_tax($this->products[$index]['onetime_charges'], $this->products[$index]['tax']);
         $this->info['subtotal'] += $shown_price;
         $this->notify('NOTIFIY_ORDER_CART_SUBTOTAL_CALCULATE', array('shown_price'=>$shown_price));
+
         // find product's tax rate and description
         $products_tax = $this->products[$index]['tax'];
         $products_tax_description = $this->products[$index]['tax_description'];
@@ -617,7 +616,7 @@ class order extends base {
     }
 
     if (isset($GLOBALS[$class]) && is_object($GLOBALS[$class])) {
-      if ( isset($GLOBALS[$class]->order_status) && is_numeric($GLOBALS[$class]->order_status) && ($GLOBALS[$class]->order_status > 0) ) {
+      if (isset($GLOBALS[$class]->order_status) && is_numeric($GLOBALS[$class]->order_status) && $GLOBALS[$class]->order_status > 0) {
         $this->info['order_status'] = $GLOBALS[$class]->order_status;
       }
     }
@@ -697,7 +696,7 @@ class order extends base {
                             'order_tax' => $this->info['tax'],
                             'currency' => $this->info['currency'],
                             'currency_value' => $this->info['currency_value'],
-                            'ip_address' => $_SESSION['customers_ip_address'] . ' - ' . $_SERVER['REMOTE_ADDR']
+                            'ip_address' => $_SESSION['customers_ip_address'] . ' - ' . $_SERVER['REMOTE_ADDR'],
                             );
 
     zen_db_perform(TABLE_ORDERS, $sql_data_array);
@@ -710,7 +709,8 @@ class order extends base {
                               'text' => $zf_ot_modules[$i]['text'],
                               'value' => (is_numeric($zf_ot_modules[$i]['value'])) ? $zf_ot_modules[$i]['value'] : '0',
                               'class' => $zf_ot_modules[$i]['code'],
-                              'sort_order' => $zf_ot_modules[$i]['sort_order']);
+                              'sort_order' => $zf_ot_modules[$i]['sort_order'],
+                             );
 
       zen_db_perform(TABLE_ORDERS_TOTAL, $sql_data_array);
       $ot_insert_id = $db->insert_ID();
@@ -722,11 +722,13 @@ class order extends base {
                             'orders_status_id' => $this->info['order_status'],
                             'date_added' => 'now()',
                             'customer_notified' => $customer_notification,
-                            'comments' => $this->info['comments']);
+                            'comments' => $this->info['comments'],
+                           );
                             
     // -----
-    // If an admin has just placed an order on a customer's behalf, note that admin's
-    // name/id in the order's 'updated_by' field.
+    // emp_admin mod support:
+    // If an admin has just placed an order on a customer's behalf, 
+    // note that admin's name/id in the order's 'updated_by' field.
     //
     if (isset($_SESSION['emp_admin_id'])) {
         $admin_id_sql = "SELECT admin_name FROM " . TABLE_ADMIN . " WHERE admin_id = :adminid: LIMIT 1";
