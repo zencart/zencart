@@ -34,7 +34,6 @@ define('TEXT_DATE_ADDED', 'Date Added:');
 define('TEXT_LAST_MODIFIED', 'Last Modified:');
 define('TEXT_PRODUCTS', 'Products:');
 define('TEXT_PRODUCTS_IMAGE_DIR', 'Upload to directory:');
-define('TEXT_IMAGE_NONEXISTENT', 'IMAGE DOES NOT EXIST');
 define('TEXT_MANUFACTURERS_IMAGE_MANUAL', '<strong>Or, select an existing image file from server, filename:</strong>');
 
 define('TEXT_NEW_INTRO', 'Please fill out the following information for the new manufacturer');
