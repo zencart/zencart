@@ -8,5 +8,4 @@
 
 return [
     'en_us' => ['displayName' => 'US English'],
-    'de_de' => ['displayName' => 'German/Deutsch'],
 ];
