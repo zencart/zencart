@@ -650,19 +650,19 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
                   <td class="text-right hidden-sm hidden-xs"><?php echo $category['sort_order']; ?></td>
                   <td class="text-right">
                     <div class="btn-group">
-                      <a href="<?php echo zen_href_link(FILENAME_CATEGORIES, 'cPath=' . $cPath . '&cID=' . $category['categories_id'] . '&action=edit_category' . ($search_result ? '&search=' . $_GET['search'] : '')); ?>" class="btn btn-sm btn-default btn-edit" role="button">
+                      <a href="<?php echo zen_href_link(FILENAME_CATEGORIES, 'cPath=' . $cPath . '&cID=' . $category['categories_id'] . '&action=edit_category' . ($search_result ? '&search=' . $_GET['search'] : '')); ?>" class="btn btn-sm btn-default btn-edit" role="button" title="<?php echo ICON_EDIT; ?>">
                         <i class="fa fa-pencil fa-lg" aria-hidden="true"></i>
                       </a>
-                      <a href="<?php echo zen_href_link(FILENAME_CATEGORY_PRODUCT_LISTING, 'cPath=' . $cPath . '&cID=' . $category['categories_id'] . '&action=delete_category' . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '')); ?>" class="btn btn-sm btn-default btn-delete" role="button">
+                      <a href="<?php echo zen_href_link(FILENAME_CATEGORY_PRODUCT_LISTING, 'cPath=' . $cPath . '&cID=' . $category['categories_id'] . '&action=delete_category' . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '')); ?>" class="btn btn-sm btn-default btn-delete" role="button"  title="<?php echo ICON_DELETE; ?>">
                         <i class="fa fa-trash-o fa-lg" aria-hidden="true"></i>
                       </a>
-                      <a href="<?php echo zen_href_link(FILENAME_CATEGORY_PRODUCT_LISTING, 'cPath=' . $cPath . '&cID=' . $category['categories_id'] . '&action=move_category' . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '')); ?>" class="btn btn-sm btn-default btn-move" role="button"><strong>M</strong></a>
+                      <a href="<?php echo zen_href_link(FILENAME_CATEGORY_PRODUCT_LISTING, 'cPath=' . $cPath . '&cID=' . $category['categories_id'] . '&action=move_category' . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '')); ?>" class="btn btn-sm btn-default btn-move" role="button" title="<?php echo ICON_MOVE; ?>"><strong>M</strong></a>
                       <?php if (zen_get_category_metatags_keywords($category['categories_id'], (int)$_SESSION['languages_id']) || zen_get_category_metatags_description($category['categories_id'], (int)$_SESSION['languages_id'])) { ?>
-                        <a href="<?php echo zen_href_link(FILENAME_CATEGORIES, 'cPath=' . $cPath . '&cID=' . $category['categories_id'] . '&action=edit_category_meta_tags'); ?>" class="btn btn-sm btn-default btn-metatags-on" role="button">
+                        <a href="<?php echo zen_href_link(FILENAME_CATEGORIES, 'cPath=' . $cPath . '&cID=' . $category['categories_id'] . '&action=edit_category_meta_tags'); ?>" class="btn btn-sm btn-default btn-metatags-on" role="button" title="<?php echo ICON_EDIT_METATAGS; ?>">
                           <i class="fa fa-asterisk fa-lg" aria-hidden="true"></i>
                         </a>
                       <?php } else { ?>
-                        <a href="<?php echo zen_href_link(FILENAME_CATEGORIES, 'cPath=' . $cPath . '&cID=' . $category['categories_id'] . '&action=edit_category_meta_tags'); ?>" class="btn btn-sm btn-default btn-metatags-off" role="button">
+                        <a href="<?php echo zen_href_link(FILENAME_CATEGORIES, 'cPath=' . $cPath . '&cID=' . $category['categories_id'] . '&action=edit_category_meta_tags'); ?>" class="btn btn-sm btn-default btn-metatags-off" role="button" title="<?php echo ICON_EDIT_METATAGS; ?>">
                           <i class="fa fa-asterisk fa-lg" aria-hidden="true"></i>
                         </a>
                       <?php } ?>
@@ -821,31 +821,31 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
                   <td class="text-right hidden-sm hidden-xs"><?php echo $product['products_sort_order']; ?></td>
                   <td class="text-right">
                     <div class="btn-group">
-                      <a href="<?php echo zen_href_link(FILENAME_PRODUCT, 'cPath=' . $cPath . '&product_type=' . $product['products_type'] . '&pID=' . $product['products_id'] . '&action=new_product' . (isset($_GET['search']) ? '&search=' . $_GET['search'] : '')); ?>" class="btn btn-sm btn-default btn-edit" role="button">
+                      <a href="<?php echo zen_href_link(FILENAME_PRODUCT, 'cPath=' . $cPath . '&product_type=' . $product['products_type'] . '&pID=' . $product['products_id'] . '&action=new_product' . (isset($_GET['search']) ? '&search=' . $_GET['search'] : '')); ?>" class="btn btn-sm btn-default btn-edit" role="button" title="<?php echo IMAGE_EDIT_PRODUCT; ?>">
                         <i class="fa fa-pencil fa-lg" aria-hidden="true"></i>
                       </a>
-                      <a href="<?php echo zen_href_link(FILENAME_CATEGORY_PRODUCT_LISTING, 'cPath=' . $cPath . '&product_type=' . $product['products_type'] . '&pID=' . $product['products_id'] . '&action=delete_product' . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '')); ?>" class="btn btn-sm btn-default btn-delete" role="button">
+                      <a href="<?php echo zen_href_link(FILENAME_CATEGORY_PRODUCT_LISTING, 'cPath=' . $cPath . '&product_type=' . $product['products_type'] . '&pID=' . $product['products_id'] . '&action=delete_product' . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '')); ?>" class="btn btn-sm btn-default btn-delete" role="button" title="<?php echo ICON_DELETE; ?>">
                         <i class="fa fa-trash-o fa-lg" aria-hidden="true"></i>
                       </a>
-                      <a href="<?php echo zen_href_link(FILENAME_CATEGORY_PRODUCT_LISTING, 'cPath=' . $cPath . '&product_type=' . $product['products_type'] . '&pID=' . $product['products_id'] . '&action=move_product' . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '')); ?>" class="btn btn-sm btn-default btn-move" role="button"><strong>M</strong></a>
-                      <a href="<?php echo zen_href_link(FILENAME_CATEGORY_PRODUCT_LISTING, 'cPath=' . $cPath . '&product_type=' . $product['products_type'] . '&pID=' . $product['products_id'] . '&action=copy_product' . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '')); ?>" class="btn btn-sm btn-default btn-copy" role="button"><strong>C</strong></a>
+                      <a href="<?php echo zen_href_link(FILENAME_CATEGORY_PRODUCT_LISTING, 'cPath=' . $cPath . '&product_type=' . $product['products_type'] . '&pID=' . $product['products_id'] . '&action=move_product' . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '')); ?>" class="btn btn-sm btn-default btn-move" role="button" title="<?php echo ICON_MOVE; ?>"><strong>M</strong></a>
+                      <a href="<?php echo zen_href_link(FILENAME_CATEGORY_PRODUCT_LISTING, 'cPath=' . $cPath . '&product_type=' . $product['products_type'] . '&pID=' . $product['products_id'] . '&action=copy_product' . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '')); ?>" class="btn btn-sm btn-default btn-copy" role="button" title="<?php echo ICON_COPY_TO; ?>"><strong>C</strong></a>
 
                       <?php if (defined('FILENAME_IMAGE_HANDLER') && file_exists(DIR_FS_ADMIN . FILENAME_IMAGE_HANDLER . '.php')) { ?>
-                        <a href="<?php echo zen_href_link(FILENAME_IMAGE_HANDLER, 'products_filter=' . $product['products_id'] . '&current_category_id=' . $current_category_id); ?>" class="btn btn-sm btn-default btn-imagehandler" role="button">
+                        <a href="<?php echo zen_href_link(FILENAME_IMAGE_HANDLER, 'products_filter=' . $product['products_id'] . '&current_category_id=' . $current_category_id); ?>" class="btn btn-sm btn-default btn-imagehandler" role="button"  title="Image Handler">
                           <i class="fa fa-image fa-lg" aria-hidden="true"></i>
                         </a>
                       <?php } ?>
                       <?php if (zen_has_product_attributes($product['products_id'], 'false')) { ?>
-                        <a href="<?php echo zen_href_link(FILENAME_CATEGORY_PRODUCT_LISTING, 'cPath=' . $cPath . '&pID=' . $product['products_id'] . '&action=attribute_features' . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '')); ?>" class="btn btn-sm btn-default btn-attributes-on" role="button"><strong>A</strong></a>
+                        <a href="<?php echo zen_href_link(FILENAME_CATEGORY_PRODUCT_LISTING, 'cPath=' . $cPath . '&pID=' . $product['products_id'] . '&action=attribute_features' . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '')); ?>" class="btn btn-sm btn-default btn-attributes-on" role="button" title="<?php echo BOX_CATALOG_CATEGORIES_ATTRIBUTES_CONTROLLER; ?>"><strong>A</strong></a>
                       <?php } else { ?>
-                        <a href="<?php echo zen_href_link(FILENAME_ATTRIBUTES_CONTROLLER, 'products_filter=' . $product['products_id'] . '&current_category_id=' . $current_category_id); ?>" class="btn btn-sm btn-default btn-attributes-off" role="button"><strong>A</strong></a>
+                        <a href="<?php echo zen_href_link(FILENAME_ATTRIBUTES_CONTROLLER, 'products_filter=' . $product['products_id'] . '&current_category_id=' . $current_category_id); ?>" class="btn btn-sm btn-default btn-attributes-off" role="button" title="<?php echo BOX_CATALOG_CATEGORIES_ATTRIBUTES_CONTROLLER; ?>"><strong>A</strong></a>
                       <?php } ?>
                       <?php if ($zc_products->get_allow_add_to_cart($product['products_id']) == "Y") { ?>
-                        <a href="<?php echo zen_href_link(FILENAME_PRODUCTS_PRICE_MANAGER, 'products_filter=' . $product['products_id'] . '&current_category_id=' . $current_category_id); ?>" class="btn btn-sm btn-default btn-pricemanager-on" role="button">
+                        <a href="<?php echo zen_href_link(FILENAME_PRODUCTS_PRICE_MANAGER, 'products_filter=' . $product['products_id'] . '&current_category_id=' . $current_category_id); ?>" class="btn btn-sm btn-default btn-pricemanager-on" role="button" title="<?php echo BOX_CATALOG_PRODUCTS_PRICE_MANAGER; ?>">
                           <i class="fa fa-dollar fa-lg" aria-hidden="true"></i>
                         </a>
                       <?php } else { ?>
-                        <a class="btn btn-sm btn-default btn-pricemanager-off" role="button" disabled>
+                        <a class="btn btn-sm btn-default btn-pricemanager-off" role="button" disabled title="<?php echo BOX_CATALOG_PRODUCTS_PRICE_MANAGER; ?>">
                           <i class="fa fa-dollar fa-lg" aria-hidden="true"></i>
                         </a>
                         <?php
@@ -853,11 +853,11 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
 // meta tags
                       if (zen_get_metatags_keywords($product['products_id'], (int)$_SESSION['languages_id']) or zen_get_metatags_description($product['products_id'], (int)$_SESSION['languages_id'])) {
                         ?>
-                        <a href="<?php echo zen_href_link(FILENAME_PRODUCT, 'page=' . $_GET['page'] . '&product_type=' . $product['products_type'] . '&cPath=' . $cPath . '&pID=' . $product['products_id'] . '&action=new_product_meta_tags'); ?>" class="btn btn-sm btn-default btn-metatags-on" role="button">
+                        <a href="<?php echo zen_href_link(FILENAME_PRODUCT, 'page=' . $_GET['page'] . '&product_type=' . $product['products_type'] . '&cPath=' . $cPath . '&pID=' . $product['products_id'] . '&action=new_product_meta_tags'); ?>" class="btn btn-sm btn-default btn-metatags-on" role="button" title="<?php echo ICON_EDIT_METATAGS; ?>">
                           <i class="fa fa-asterisk fa-lg" aria-hidden="true"></i>
                         </a>
                       <?php } else { ?>
-                        <a href="<?php echo zen_href_link(FILENAME_PRODUCT, 'page=' . $_GET['page'] . '&product_type=' . $product['products_type'] . '&cPath=' . $cPath . '&pID=' . $product['products_id'] . '&action=new_product_meta_tags'); ?>" class="btn btn-sm btn-default btn-metatags-off" role="button">
+                        <a href="<?php echo zen_href_link(FILENAME_PRODUCT, 'page=' . $_GET['page'] . '&product_type=' . $product['products_type'] . '&cPath=' . $cPath . '&pID=' . $product['products_id'] . '&action=new_product_meta_tags'); ?>" class="btn btn-sm btn-default btn-metatags-off" role="button" title="<?php echo ICON_EDIT_METATAGS; ?>">
                           <i class="fa fa-asterisk fa-lg" aria-hidden="true"></i>
                         </a>
                       <?php } ?>
