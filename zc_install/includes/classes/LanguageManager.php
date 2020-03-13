@@ -20,23 +20,23 @@ class LanguageManager
 
     public function loadLanguageDefines($lng, $currentPage, $fallback = 'en_us')
     {
-        $dff = [];
+        $defineListFallback = [];
         if ($lng != $fallback) {
-            $dff = $this->loadDefineFile($fallback, 'main');
+            $defineListFallback = $this->loadDefineFile($fallback, 'main');
         }
-        $dfl = $this->loadDefineFile($lng, 'main');
-        $df = array_merge($dff, $dfl);
-        $this->makeConstants($df);
+        $defineListMain = $this->loadDefineFile($lng, 'main');
+        $defineList = array_merge($defineListFallback, $defineListMain);
+        $this->makeConstants($defineList);
     }
 
     public function loadDefineFile($lng, $file)
     {
-        $df = [];
+        $defineList = [];
         $fp = DIR_FS_INSTALL . $this->langPath . $lng . '/' . $file . '.php';
         if (file_exists($fp)) {
-            $df = require($fp);
+            $defineList = require($fp);
         }
-        return $df;
+        return $defineList;
     }
 
     public function makeConstants($defines)
