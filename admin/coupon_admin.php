@@ -35,7 +35,7 @@
   if (isset($_GET['reports_page'])) $_GET['reports_page'] = (int)$_GET['reports_page'];
   if (isset($_GET['status'])) $_GET['status'] = preg_replace('/[^YNA]/','',$_GET['status']);
   if (isset($_GET['codebase'])) $_GET['codebase'] = preg_replace('/[^A-Za-z0-9\-\][\^!@#$%&*)(+=}{]/', '', $_GET['codebase']);
-  if (($_GET['action'] == 'send_email_to_user') && ($_POST['customers_email_address']) && (!$_POST['back_x'])) {
+  if ($_GET['action'] == 'send_email_to_user' && !empty($_POST['customers_email_address']) && !$_POST['back_x']) {
     $audience_select = get_audience_sql_query($_POST['customers_email_address'], 'email');
     $mail = $db->Execute($audience_select['query_string']);
     $mail_sent_to = $audience_select['query_name'];
