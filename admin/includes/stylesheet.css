@@ -442,6 +442,7 @@ tr.attributeBoxContent {
     background-color: #e7e6e0;
     color: #333;
     padding: 5px;
+    word-break: break-word; 
 }
 
 .infoBoxContent a img, .infoBoxContent input[type="image"] {
