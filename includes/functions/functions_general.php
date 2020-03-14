@@ -136,6 +136,7 @@
 ////
 // Returns the clients browser
   function zen_browser_detect($component) {
+    if (!isset($_SERVER['HTTP_USER_AGENT'])) return '';
     return stristr($_SERVER['HTTP_USER_AGENT'], $component);
   }
 
