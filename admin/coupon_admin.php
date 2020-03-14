@@ -37,13 +37,10 @@ if (isset($_GET['search']) && zen_not_null($_GET['search'])) {
     }
 }
 
-if ($_GET['action'] == 'send_email_to_user' && !empty($_POST['customers_email_address']) && !$_POST['back_x']) {
+if ($_GET['action'] == 'send_email_to_user' && !empty($_POST['customers_email_address'])) {
     $audience_select = get_audience_sql_query($_POST['customers_email_address'], 'email');
     $mail = $db->Execute($audience_select['query_string']);
-    $mail_sent_to = $audience_select['query_name'];
-    if (!empty($_POST['email_to'])) {
-        $mail_sent_to = $_POST['email_to'];
-    }
+    $mail_sent_to = (!empty($_POST['email_to'])) ? $_POST['email_to'] : $audience_select['query_name'];
 
     $coupon_result = $db->Execute("select coupon_code, coupon_start_date, coupon_expire_date, coupon_calc_base, coupon_is_valid_for_sales, coupon_product_count
                                    from " . TABLE_COUPONS . "
@@ -381,65 +378,61 @@ switch ($_GET['action']) {
         break;
 
     case 'update_confirm':
-        if ((!empty($_POST['back_x'])) || (!empty($_POST['back_y']))) {
-            $_GET['action'] = 'new';
-        } else {
-            $coupon_type = 'F'; // amount off
-            if ($_POST['coupon_free_ship']) $coupon_type = 'S'; // free shipping
-            if (substr($_POST['coupon_amount'], -1) == '%') $coupon_type = 'P'; // percentage off
-            if ($_POST['coupon_amount'] > 0 && $_POST['coupon_free_ship']) $coupon_type = 'O';  // amount off and free shipping
-            if (substr($_POST['coupon_amount'], -1) == '%' && $_POST['coupon_free_ship']) $coupon_type = 'E'; // percentage off and free shipping
-            $_POST['coupon_amount'] = preg_replace('/[^0-9.]/', '', $_POST['coupon_amount']);
-            $sql_data_array = array(
-                'coupon_code' => zen_db_prepare_input($_POST['coupon_code']),
-                'coupon_amount' => zen_db_prepare_input($_POST['coupon_amount']),
-                'coupon_product_count' => zen_db_prepare_input((int)$_POST['coupon_product_count']),
-                'coupon_type' => zen_db_prepare_input($coupon_type),
-                'uses_per_coupon' => zen_db_prepare_input((int)$_POST['coupon_uses_coupon']),
-                'uses_per_user' => zen_db_prepare_input((int)$_POST['coupon_uses_user']),
-                'coupon_minimum_order' => zen_db_prepare_input((float)$_POST['coupon_min_order']),
-                'restrict_to_products' => zen_db_prepare_input($_POST['coupon_products']),
-                'restrict_to_categories' => zen_db_prepare_input($_POST['coupon_categories']),
-                'coupon_start_date' => $_POST['coupon_startdate'],
-                'coupon_expire_date' => $_POST['coupon_finishdate'],
-                'date_created' => 'now()',
-                'date_modified' => 'now()',
-                'coupon_zone_restriction' => $_POST['coupon_zone_restriction'],
-                'coupon_calc_base' => (int)$_POST['coupon_calc_base'],
-                'coupon_order_limit' => zen_db_prepare_input((int)$_POST['coupon_order_limit']),
-                'coupon_is_valid_for_sales' => (int)$_POST['coupon_is_valid_for_sales'],
-                'coupon_active' => 'Y',
-            );
+        $coupon_type = 'F'; // amount off
+        if ($_POST['coupon_free_ship']) $coupon_type = 'S'; // free shipping
+        if (substr($_POST['coupon_amount'], -1) == '%') $coupon_type = 'P'; // percentage off
+        if ($_POST['coupon_amount'] > 0 && $_POST['coupon_free_ship']) $coupon_type = 'O';  // amount off and free shipping
+        if (substr($_POST['coupon_amount'], -1) == '%' && $_POST['coupon_free_ship']) $coupon_type = 'E'; // percentage off and free shipping
+        $_POST['coupon_amount'] = preg_replace('/[^0-9.]/', '', $_POST['coupon_amount']);
+        $sql_data_array = array(
+            'coupon_code' => zen_db_prepare_input($_POST['coupon_code']),
+            'coupon_amount' => zen_db_prepare_input($_POST['coupon_amount']),
+            'coupon_product_count' => zen_db_prepare_input((int)$_POST['coupon_product_count']),
+            'coupon_type' => zen_db_prepare_input($coupon_type),
+            'uses_per_coupon' => zen_db_prepare_input((int)$_POST['coupon_uses_coupon']),
+            'uses_per_user' => zen_db_prepare_input((int)$_POST['coupon_uses_user']),
+            'coupon_minimum_order' => zen_db_prepare_input((float)$_POST['coupon_min_order']),
+            'restrict_to_products' => zen_db_prepare_input($_POST['coupon_products']),
+            'restrict_to_categories' => zen_db_prepare_input($_POST['coupon_categories']),
+            'coupon_start_date' => $_POST['coupon_startdate'],
+            'coupon_expire_date' => $_POST['coupon_finishdate'],
+            'date_created' => 'now()',
+            'date_modified' => 'now()',
+            'coupon_zone_restriction' => $_POST['coupon_zone_restriction'],
+            'coupon_calc_base' => (int)$_POST['coupon_calc_base'],
+            'coupon_order_limit' => zen_db_prepare_input((int)$_POST['coupon_order_limit']),
+            'coupon_is_valid_for_sales' => (int)$_POST['coupon_is_valid_for_sales'],
+            'coupon_active' => 'Y',
+        );
 
+        for ($i = 0, $n = count($languages); $i < $n; $i++) {
+            $language_id = $languages[$i]['id'];
+            $sql_data_marray[$i] = array(
+                'coupon_name' => zen_db_prepare_input($_POST['coupon_name'][$language_id]),
+                'coupon_description' => zen_db_prepare_input($_POST['coupon_desc'][$language_id])
+            );
+        }
+        if ($_GET['oldaction'] == 'voucheredit') {
+            zen_db_perform(TABLE_COUPONS, $sql_data_array, 'update', "coupon_id='" . $_GET['cid'] . "'");
             for ($i = 0, $n = count($languages); $i < $n; $i++) {
                 $language_id = $languages[$i]['id'];
-                $sql_data_marray[$i] = array(
+                $sql_data_desc_array = array(
                     'coupon_name' => zen_db_prepare_input($_POST['coupon_name'][$language_id]),
                     'coupon_description' => zen_db_prepare_input($_POST['coupon_desc'][$language_id])
                 );
+                zen_db_perform(TABLE_COUPONS_DESCRIPTION, $sql_data_desc_array, 'update', "coupon_id = '" . $_GET['cid'] . "' and language_id = '" . (int)$languages[$i]['id'] . "'");
             }
-            if ($_GET['oldaction'] == 'voucheredit') {
-                zen_db_perform(TABLE_COUPONS, $sql_data_array, 'update', "coupon_id='" . $_GET['cid'] . "'");
-                for ($i = 0, $n = count($languages); $i < $n; $i++) {
-                    $language_id = $languages[$i]['id'];
-                    $sql_data_desc_array = array(
-                        'coupon_name' => zen_db_prepare_input($_POST['coupon_name'][$language_id]),
-                        'coupon_description' => zen_db_prepare_input($_POST['coupon_desc'][$language_id])
-                    );
-                    zen_db_perform(TABLE_COUPONS_DESCRIPTION, $sql_data_desc_array, 'update', "coupon_id = '" . $_GET['cid'] . "' and language_id = '" . (int)$languages[$i]['id'] . "'");
-                }
-            } else {
-                zen_db_perform(TABLE_COUPONS, $sql_data_array);
-                $insert_id = $db->insert_ID();
-                $cid = $insert_id;
-                $_GET['cid'] = $cid;
+        } else {
+            zen_db_perform(TABLE_COUPONS, $sql_data_array);
+            $insert_id = $db->insert_ID();
+            $cid = $insert_id;
+            $_GET['cid'] = $cid;
 
-                for ($i = 0, $n = count($languages); $i < $n; $i++) {
-                    $language_id = $languages[$i]['id'];
-                    $sql_data_marray[$i]['coupon_id'] = (int)$insert_id;
-                    $sql_data_marray[$i]['language_id'] = (int)$language_id;
-                    zen_db_perform(TABLE_COUPONS_DESCRIPTION, $sql_data_marray[$i]);
-                }
+            for ($i = 0, $n = count($languages); $i < $n; $i++) {
+                $language_id = $languages[$i]['id'];
+                $sql_data_marray[$i]['coupon_id'] = (int)$insert_id;
+                $sql_data_marray[$i]['language_id'] = (int)$language_id;
+                zen_db_perform(TABLE_COUPONS_DESCRIPTION, $sql_data_marray[$i]);
             }
         }
         zen_redirect(zen_href_link(FILENAME_COUPON_ADMIN, 'cid=' . $_GET['cid'] . (isset($_GET['status']) ? '&status=' . $_GET['status'] : '') . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '')));
@@ -810,12 +803,16 @@ function check_form(form_name) {
                 <table border="0" width="100%" cellpadding="0" cellspacing="2">
                   <tr>
                     <td><?php ?>&nbsp;</td>
-                    <td align="right"><?php echo '<a href="' . zen_href_link(FILENAME_COUPON_ADMIN,  'cid=' . $_GET['cid'] . (isset($_GET['status']) ? '&status=' . $_GET['status'] : '') . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '')) . '">' . zen_image_button('button_cancel.gif', IMAGE_CANCEL) . '</a> ' . zen_image_submit('button_send_mail.gif', IMAGE_SEND_EMAIL); ?></td>
+                    <td class="text-right">
+                        <a href="<?php echo zen_href_link(FILENAME_COUPON_ADMIN,  'cid=' . $_GET['cid'] . (isset($_GET['status']) ? '&status=' . $_GET['status'] : '') . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '')); ?>" class="btn btn-default" role="button"><?php echo TEXT_CANCEL; ?></a>
+                        <button type="submit" class="btn btn-primary"><?php echo IMAGE_SEND_EMAIL; ?></button>
+                    </td>
                   </tr>
                 </table></td>
               </tr>
             </table></td>
-          </form></tr>
+          <?php echo '</form>'; ?>
+          </tr>
 <?php
     break;
   case 'email':
@@ -899,10 +896,14 @@ function check_form(form_name) {
                 <td colspan="2"><?php echo zen_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
               </tr>
               <tr>
-                <td colspan="2" align="right"><?php echo '<a href="' . zen_href_link(FILENAME_COUPON_ADMIN, 'cid=' . $_GET['cid'] . (isset($_GET['status']) ? '&status=' . $_GET['status'] : '') . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '')) . '">' . zen_image_button('button_cancel.gif', IMAGE_CANCEL) . '</a> ' .  zen_image_submit('button_send_mail.gif', IMAGE_SEND_EMAIL); ?></td>
+                  <td colspan="2" class="text-right">
+                      <a href="<?php echo zen_href_link(FILENAME_COUPON_ADMIN,  'cid=' . $_GET['cid'] . (isset($_GET['status']) ? '&status=' . $_GET['status'] : '') . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '')); ?>" class="btn btn-default" role="button"><?php echo TEXT_CANCEL; ?></a>
+                      <button type="submit" class="btn btn-primary"><?php echo IMAGE_SEND_EMAIL; ?></button>
+                  </td>
               </tr>
             </table></td>
-          </form></tr>
+          <?php echo '</form>'; ?>
+          </tr>
   </table></td>
 <?php
     break;
@@ -1050,8 +1051,10 @@ function check_form(form_name) {
         echo zen_draw_hidden_field('coupon_is_valid_for_sales', (int)$_POST['coupon_is_valid_for_sales']);
 ?>
      <tr>
-        <td align="left"><?php echo zen_image_submit('button_confirm.gif',COUPON_BUTTON_CONFIRM, (isset($_GET['status']) ? '&status=' . $_GET['status'] : '') . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '')); ?></td>
-        <td align="left"><?php echo zen_image_submit('button_cancel.gif',IMAGE_CANCEL, 'name=back'); ?></td>
+         <td class="text-right">
+             <a href="<?php echo zen_href_link(FILENAME_COUPON_ADMIN,  'cid=' . $_GET['cid'] . (isset($_GET['status']) ? '&status=' . $_GET['status'] : '') . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '')); ?>" class="btn btn-default" role="button"><?php echo TEXT_CANCEL; ?></a>
+             <button type="submit" class="btn btn-primary"><?php echo COUPON_BUTTON_CONFIRM; ?></button>
+         </td>
       </tr>
 
       </td></table></form></td>
