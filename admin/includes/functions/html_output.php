@@ -127,7 +127,7 @@ function zen_image_submit($image, $alt = '', $parameters = '')
 {
     $image_submit = '<input type="image" src="' . zen_output_string(DIR_WS_LANGUAGES . $_SESSION['language'] . '/images/buttons/' . $image) . '" alt="' . zen_output_string($alt) . '"';
     if (zen_not_null($alt)) {
-        $image_submit .= ' title=" ' . zen_output_string($alt) . ' "';
+        $image_submit .= ' title="' . zen_output_string($alt) . '"';
     }
     if (zen_not_null($parameters)) {
         $image_submit .= ' ' . $parameters;

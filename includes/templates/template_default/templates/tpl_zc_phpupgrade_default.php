@@ -217,7 +217,7 @@ include 'includes/version.php';
 
   <body>
   <div class="container">
-    <img src="<?php echo $relPath; ?>includes/templates/template_default/images/logo.gif" alt="Zen Cart&reg;" title=" Zen Cart&reg; " width="192" height="68" border="0" class="h-img"/>
+    <img src="<?php echo $relPath; ?>includes/templates/template_default/images/logo.gif" alt="Zen Cart&reg;" title="Zen Cart&reg;" width="192" height="68" border="0" class="h-img"/>
     <h1>Welcome to Zen Cart<sup>&reg;</sup></h1>
     <div>
       <h2>We would love to have you use Zen Cart ... however your server is incompatible.</h2>
