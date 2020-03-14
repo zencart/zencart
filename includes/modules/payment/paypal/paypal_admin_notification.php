@@ -17,7 +17,7 @@
 
 // display all paypal status fields (in admin Orders page):
           $output = '<table>'."\n";
-          $output .= '<tr style="background-color : #cccccc; border-style : dotted;">'."\n";
+          $output .= '<tr style="background-color : #cccccc; border: 1px solid black;">'."\n";
 
           $output .= '<td valign="top"><table>'."\n";
 
