@@ -9,6 +9,7 @@
 require('includes/application_top.php');
 require(DIR_WS_CLASSES . 'currencies.php');
 $currencies = new currencies();
+$languages = zen_get_languages();
 $status_array = array();
 if (!empty($_GET['selected_box'])) {
     $_GET['action'] = '';
@@ -326,7 +327,6 @@ switch ($_GET['action']) {
     case 'update':
         $update_errors = 0;
         $_POST['coupon_code'] = trim($_POST['coupon_code']);
-        $languages = zen_get_languages();
         for ($i = 0, $n = count($languages); $i < $n; $i++) {
             $language_id = $languages[$i]['id'];
             $_POST['coupon_name'][$language_id] = trim($_POST['coupon_name'][$language_id]);
@@ -411,7 +411,6 @@ switch ($_GET['action']) {
                 'coupon_active' => 'Y',
             );
 
-            $languages = zen_get_languages();
             for ($i = 0, $n = count($languages); $i < $n; $i++) {
                 $language_id = $languages[$i]['id'];
                 $sql_data_marray[$i] = array(
@@ -932,7 +931,6 @@ function check_form(form_name) {
         </tr>
 
 <?php
-        $languages = zen_get_languages();
         for ($i = 0, $n = count($languages); $i < $n; $i++) {
             $language_id = $languages[$i]['id'];
 ?>
@@ -944,7 +942,6 @@ function check_form(form_name) {
 }
 ?>
 <?php
-        $languages = zen_get_languages();
         for ($i = 0, $n = count($languages); $i < $n; $i++) {
             $language_id = $languages[$i]['id'];
 ?>
@@ -1037,7 +1034,6 @@ function check_form(form_name) {
         <td align="left"><?php echo $finish_date; ?></td>
       </tr>
 <?php
-        $languages = zen_get_languages();
         for ($i = 0, $n = count($languages); $i < $n; $i++) {
           $language_id = $languages[$i]['id'];
           echo zen_draw_hidden_field('coupon_name[' . $languages[$i]['id'] . ']', stripslashes($_POST['coupon_name'][$language_id]));
@@ -1073,7 +1069,6 @@ function check_form(form_name) {
 
     break;
   case 'voucheredit':
-    $languages = zen_get_languages();
     for ($i = 0, $n = count($languages); $i < $n; $i++) {
       $language_id = $languages[$i]['id'];
       $coupon = $db->Execute("select coupon_name,coupon_description
@@ -1135,7 +1130,6 @@ function check_form(form_name) {
 ?>
       <table border="0" width="100%" cellspacing="0" cellpadding="6">
 <?php
-        $languages = zen_get_languages();
         for ($i = 0, $n = count($languages); $i < $n; $i++) {
         $language_id = $languages[$i]['id'];
 ?>
@@ -1148,7 +1142,6 @@ function check_form(form_name) {
 }
 ?>
 <?php
-        $languages = zen_get_languages();
         for ($i = 0, $n = count($languages); $i < $n; $i++) {
         $language_id = $languages[$i]['id'];
 ?>
