@@ -53,6 +53,6 @@ $db->dieOnErrors = FALSE;
 $result = $db->Execute($sql, FALSE, FALSE);
 if ($result->RecordCount() == 0) {
   if (defined('ERROR_DATABASE_MAINTENANCE_NEEDED')) die(ERROR_DATABASE_MAINTENANCE_NEEDED);
-  die('<a href="http://www.zen-cart.com/content.php?334-ERROR-0071-There-appears-to-be-a-problem-with-the-database-Maintenance-is-required" target="_blank">ERROR 0071: There appears to be a problem with the database. Maintenance is required.</a>');
+    die('<a href="https://docs.zen-cart.com/user/troubleshooting/error_71_maintenance_required/">https://docs.zen-cart.com/user/troubleshooting/error_71_maintenance_required/</a>'); 
 }
 $db->dieOnErrors = TRUE;
