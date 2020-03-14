@@ -998,13 +998,6 @@ function check_form(form_name) {
       </tr>
       <tr>
         <td align="left"><?php echo COUPON_CODE; ?></td>
-<?php
-    if (!empty($_POST['coupon_code'])) {
-      $c_code = $_POST['coupon_code'];
-    } else {
-      $c_code = $coupon_code;
-    }
-?>
         <td align="left"><?php echo $coupon_code; ?></td>
       </tr>
 
@@ -1043,6 +1036,7 @@ function check_form(form_name) {
         echo zen_draw_hidden_field('coupon_product_count', (int)$_POST['coupon_product_count']);
         echo zen_draw_hidden_field('coupon_min_order', $_POST['coupon_min_order']);
         echo zen_draw_hidden_field('coupon_free_ship', (!empty($_POST['coupon_free_ship']) ? $_POST['coupon_free_ship'] : ''));
+        $c_code = !empty($_POST['coupon_code']) ? $_POST['coupon_code'] : $coupon_code;
         echo zen_draw_hidden_field('coupon_code', stripslashes($c_code));
         echo zen_draw_hidden_field('coupon_uses_coupon', $_POST['coupon_uses_coupon']);
         echo zen_draw_hidden_field('coupon_uses_user', $_POST['coupon_uses_user']);
