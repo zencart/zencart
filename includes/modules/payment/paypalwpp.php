@@ -2887,7 +2887,7 @@ if (false) { // disabled until clarification is received about coupons in PayPal
     }
     /** Handle FMF Scenarios **/
     if (in_array($operation, array('DoExpressCheckoutPayment', 'DoDirectPayment')) 
-        && ((isset($response['PAYMENTINFO_0_PAYMENTSTATUS'] == 'Pending' ) && $response['PAYMENTINFO_0_PAYMENTSTATUS'] == 'Pending')
+        && ((isset($response['PAYMENTINFO_0_PAYMENTSTATUS']) && $response['PAYMENTINFO_0_PAYMENTSTATUS'] == 'Pending')
             || (isset($response['PAYMENTSTATUS']) && $response['PAYMENTSTATUS'] == 'Pending')
            ) 
         && $response['L_ERRORCODE0'] == 11610) {
