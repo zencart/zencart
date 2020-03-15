@@ -30,7 +30,7 @@
     }));
   });
 </script>
-<?php if (file_exists('includes/javascript/' . $_GET['cmd'] . '.js')) { ?>
+<?php if (isset($_GET['cmd']) && $_GET['cmd'] != '' && file_exists('includes/javascript/' . $_GET['cmd'] . '.js')) { ?>
   <script src="includes/javascript/<?php echo $_GET['cmd']; ?>.js"></script>
 <?php } ?>
 <?php

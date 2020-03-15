@@ -17,7 +17,7 @@
 <link rel="stylesheet" href="includes/css/jAlert.css">
 <link rel="stylesheet" href="includes/css/menu.css">
 <link rel="stylesheet" href="includes/css/stylesheet.css">
-<?php if (file_exists('includes/css/' . $_GET['cmd'] . '.css')) { ?>
+<?php if (isset($_GET['cmd']) && $_GET['cmd'] != '' && file_exists('includes/css/' . $_GET['cmd'] . '.css')) { ?>
   <link rel="stylesheet" href="includes/css/<?php echo $_GET['cmd']; ?>.css">
 <?php } ?>
 <?php
