@@ -19,17 +19,22 @@
 <script src="includes/javascript/jquery-ui-i18n.min.js"></script>
 <script>
 // init datepicker defaults with localization
-$(function(){
-  $.datepicker.setDefaults($.extend({}, $.datepicker.regional["<?php echo $_SESSION['languages_code'] == 'en' ? '' : $_SESSION['languages_code']; ?>"], {
+  $(function () {
+    $.datepicker.setDefaults($.extend({}, $.datepicker.regional["<?php echo $_SESSION['languages_code'] == 'en' ? '' : $_SESSION['languages_code']; ?>"], {
       dateFormat: '<?php echo DATE_FORMAT_DATE_PICKER; ?>',
       changeMonth: true,
       changeYear: true,
       showOtherMonths: true,
       selectOtherMonths: true,
       showButtonPanel: true
-  }) );
-});
+    }));
+  });
 </script>
-<?php if (file_exists(DIR_WS_INCLUDES . 'keepalive_module.php')) require(DIR_WS_INCLUDES . 'keepalive_module.php'); ?>
-
-<?php require DIR_FS_CATALOG . 'includes/templates/template_default/jscript/jscript_framework.php'; ?>
+<?php if (file_exists('includes/javascript/' . $_GET['cmd'] . '.js')) { ?>
+  <script src="includes/javascript/<?php echo $_GET['cmd']; ?>.js"></script>
+<?php } ?>
+<?php
+if (file_exists(DIR_WS_INCLUDES . 'keepalive_module.php')) {
+  require(DIR_WS_INCLUDES . 'keepalive_module.php');
+}
+require DIR_FS_CATALOG . 'includes/templates/template_default/jscript/jscript_framework.php';

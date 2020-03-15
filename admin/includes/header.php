@@ -13,9 +13,11 @@ if (!defined('IS_ADMIN_FLAG')) {
 if (defined('STRICT_ERROR_REPORTING') && STRICT_ERROR_REPORTING == true) {
   $messageStack->add('STRICT ERROR REPORTING IS ON', 'error');
 }
-// pull in any necessary JS for the page
-require(DIR_WS_INCLUDES . 'javascript_loader.php');
-
+/*
+ * pull in any necessary JS for the page
+ * Left here for lagacy pages that do not use the new admin_html_head.php file
+ */
+require_once DIR_WS_INCLUDES . 'javascript_loader.php';
 
 $version_check_requested = (isset($_GET['vcheck']) && $_GET['vcheck'] != '') ? true : false;
 
