@@ -475,11 +475,7 @@ class order extends base {
     $index = 0;
     $products = $_SESSION['cart']->get_products();
     for ($i=0, $n=sizeof($products); $i<$n; $i++) {
-      if (($i/2) == floor($i/2)) {
-        $rowClass="rowEven";
-      } else {
-        $rowClass="rowOdd";
-      }
+      $rowClass = ($i / 2) == floor($i / 2) ? "rowEven" : "rowOdd";
       $taxRates = zen_get_multiple_tax_rates($products[$i]['tax_class_id'], $taxCountryId, $taxZoneId);
       $this->products[$index] = array('qty' => $products[$i]['quantity'],
                                       'name' => $products[$i]['name'],
