@@ -345,12 +345,7 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
 <!doctype html>
 <html <?php echo HTML_PARAMS; ?>>
   <head>
-    <meta charset="<?php echo CHARSET; ?>">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title><?php echo TEXT_ADMIN_TAB_PREFIX . ': ' . zen_output_generated_category_path($current_category_id); ?></title>
-    <link rel="stylesheet" href="includes/stylesheet.css">
-    <script src="includes/general.js"></script>
+    <?php require DIR_WS_INCLUDES . 'admin_html_head.php'; ?>
   </head>
   <body>
     <!-- header //-->
