@@ -35,7 +35,9 @@ $contents[] = ['text' => zen_draw_label(sprintf(TEXT_MOVE_PRODUCT, $pInfo->produ
 $contents[] = ['align' => 'center', 'text' => '<button type="submit" class="btn btn-primary">' . IMAGE_MOVE . '</button> <a href="' . zen_href_link(FILENAME_CATEGORY_PRODUCT_LISTING, 'cPath=' . $cPath . '&pID=' . $pInfo->products_id . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '')) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>'];
 $contents[] = ['text' => TEXT_INFO_CURRENT_CATEGORIES];
 $contents[] = ['text' => '<span class="text-danger"><strong>' . TEXT_MASTER_CATEGORIES_ID . ' <br>ID#' . zen_get_parent_category_id($pInfo->products_id) . ' ' . $product_master_category_string . '</strong></span>'];
-$contents[] = ['text' => '<strong>' . zen_output_generated_category_path($pInfo->products_id, 'product') . '</strong>'];
-$contents[] = ['text' => zen_draw_separator('pixel_black.gif', '100%', '1')];
+if (count($product_categories) > 1) {
+   $contents[] = ['text' => '<strong>' . zen_output_generated_category_path($pInfo->products_id, 'product') . '</strong>'];
+}
+$contents[] = ['text' => '<hr>'];
 $contents[] = ['align' => 'center', 'text' => '<a href="' . zen_href_link(FILENAME_PRODUCTS_TO_CATEGORIES, 'products_filter=' . $pInfo->products_id . '&current_category_id=' . $current_category_id) . '" class="btn btn-info" role="button">' . BUTTON_PRODUCTS_TO_CATEGORIES . '</a>'];
 
