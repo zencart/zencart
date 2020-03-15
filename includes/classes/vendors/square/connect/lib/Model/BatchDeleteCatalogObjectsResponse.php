@@ -60,17 +60,17 @@ class BatchDeleteCatalogObjectsResponse implements ArrayAccess
     );
   
     /**
-      * $errors The set of [Error](#type-error)s encountered.
+      * $errors The set of Errors encountered.
       * @var \SquareConnect\Model\Error[]
       */
     protected $errors;
     /**
-      * $deleted_object_ids The IDs of all [CatalogObject](#type-catalogobject)s deleted by this request.
+      * $deleted_object_ids The IDs of all CatalogObjects deleted by this request.
       * @var string[]
       */
     protected $deleted_object_ids;
     /**
-      * $deleted_at The database [timestamp](#workingwithdates) of this deletion in RFC 3339 format, e.g., \"2016-09-04T23:59:33.123Z\".
+      * $deleted_at The database [timestamp](https://developer.squareup.com/docs/build-basics/working-with-dates) of this deletion in RFC 3339 format, e.g., \"2016-09-04T23:59:33.123Z\".
       * @var string
       */
     protected $deleted_at;
@@ -110,7 +110,7 @@ class BatchDeleteCatalogObjectsResponse implements ArrayAccess
   
     /**
      * Sets errors
-     * @param \SquareConnect\Model\Error[] $errors The set of [Error](#type-error)s encountered.
+     * @param \SquareConnect\Model\Error[] $errors The set of Errors encountered.
      * @return $this
      */
     public function setErrors($errors)
@@ -129,7 +129,7 @@ class BatchDeleteCatalogObjectsResponse implements ArrayAccess
   
     /**
      * Sets deleted_object_ids
-     * @param string[] $deleted_object_ids The IDs of all [CatalogObject](#type-catalogobject)s deleted by this request.
+     * @param string[] $deleted_object_ids The IDs of all CatalogObjects deleted by this request.
      * @return $this
      */
     public function setDeletedObjectIds($deleted_object_ids)
@@ -148,7 +148,7 @@ class BatchDeleteCatalogObjectsResponse implements ArrayAccess
   
     /**
      * Sets deleted_at
-     * @param string $deleted_at The database [timestamp](#workingwithdates) of this deletion in RFC 3339 format, e.g., \"2016-09-04T23:59:33.123Z\".
+     * @param string $deleted_at The database [timestamp](https://developer.squareup.com/docs/build-basics/working-with-dates) of this deletion in RFC 3339 format, e.g., \"2016-09-04T23:59:33.123Z\".
      * @return $this
      */
     public function setDeletedAt($deleted_at)

@@ -30,7 +30,9 @@ class CatalogQuery implements ArrayAccess
         'range_query' => '\SquareConnect\Model\CatalogQueryRange',
         'text_query' => '\SquareConnect\Model\CatalogQueryText',
         'items_for_tax_query' => '\SquareConnect\Model\CatalogQueryItemsForTax',
-        'items_for_modifier_list_query' => '\SquareConnect\Model\CatalogQueryItemsForModifierList'
+        'items_for_modifier_list_query' => '\SquareConnect\Model\CatalogQueryItemsForModifierList',
+        'items_for_item_options_query' => '\SquareConnect\Model\CatalogQueryItemsForItemOptions',
+        'item_variations_for_item_option_values_query' => '\SquareConnect\Model\CatalogQueryItemVariationsForItemOptionValues'
     );
   
     /** 
@@ -44,7 +46,9 @@ class CatalogQuery implements ArrayAccess
         'range_query' => 'range_query',
         'text_query' => 'text_query',
         'items_for_tax_query' => 'items_for_tax_query',
-        'items_for_modifier_list_query' => 'items_for_modifier_list_query'
+        'items_for_modifier_list_query' => 'items_for_modifier_list_query',
+        'items_for_item_options_query' => 'items_for_item_options_query',
+        'item_variations_for_item_option_values_query' => 'item_variations_for_item_option_values_query'
     );
   
     /**
@@ -58,7 +62,9 @@ class CatalogQuery implements ArrayAccess
         'range_query' => 'setRangeQuery',
         'text_query' => 'setTextQuery',
         'items_for_tax_query' => 'setItemsForTaxQuery',
-        'items_for_modifier_list_query' => 'setItemsForModifierListQuery'
+        'items_for_modifier_list_query' => 'setItemsForModifierListQuery',
+        'items_for_item_options_query' => 'setItemsForItemOptionsQuery',
+        'item_variations_for_item_option_values_query' => 'setItemVariationsForItemOptionValuesQuery'
     );
   
     /**
@@ -72,7 +78,9 @@ class CatalogQuery implements ArrayAccess
         'range_query' => 'getRangeQuery',
         'text_query' => 'getTextQuery',
         'items_for_tax_query' => 'getItemsForTaxQuery',
-        'items_for_modifier_list_query' => 'getItemsForModifierListQuery'
+        'items_for_modifier_list_query' => 'getItemsForModifierListQuery',
+        'items_for_item_options_query' => 'getItemsForItemOptionsQuery',
+        'item_variations_for_item_option_values_query' => 'getItemVariationsForItemOptionValuesQuery'
     );
   
     /**
@@ -96,20 +104,30 @@ class CatalogQuery implements ArrayAccess
       */
     protected $range_query;
     /**
-      * $text_query A query that returns only objects whose searchable attributes contain all of the given keywords as prefixes. For example, if a [CatalogItem](#type-catalogitem) contains attributes `{\"name\": \"t-shirt\"}` and `{\"description\": \"Small, Purple\"}`, it will be matched by the query `{\"keywords\": [\"shirt\", \"sma\", \"purp\"]}`.
+      * $text_query A query that returns only objects whose searchable attributes contain all of the given keywords as prefixes. For example, if a `CatalogItem` contains attributes `{\"name\": \"t-shirt\"}` and `{\"description\": \"Small, Purple\"}`, it will be matched by the query `{\"keywords\": [\"shirt\", \"sma\", \"purp\"]}`.
       * @var \SquareConnect\Model\CatalogQueryText
       */
     protected $text_query;
     /**
-      * $items_for_tax_query A query that returns all [CatalogItem](#type-catalogitem)s that have any of the given [CatalogTax](#type-catalogtax)es enabled.
+      * $items_for_tax_query A query that returns all `CatalogItem`s that have any of the given `CatalogTax`es enabled.
       * @var \SquareConnect\Model\CatalogQueryItemsForTax
       */
     protected $items_for_tax_query;
     /**
-      * $items_for_modifier_list_query A query that returns all [CatalogItem](#type-catalogitem)s that have any of the given [CatalogModifierList](#type-catalogmodifierlist)s enabled.
+      * $items_for_modifier_list_query A query that returns all `CatalogItem`s that have any of the given `CatalogModifierList`s enabled.
       * @var \SquareConnect\Model\CatalogQueryItemsForModifierList
       */
     protected $items_for_modifier_list_query;
+    /**
+      * $items_for_item_options_query A query that returns all `CatalogItem`s that have all of the given `CatalogItemOption`s.
+      * @var \SquareConnect\Model\CatalogQueryItemsForItemOptions
+      */
+    protected $items_for_item_options_query;
+    /**
+      * $item_variations_for_item_option_values_query A query that returns all `CatalogItemVariation`s that have all of the given `CatalogItemOption` values.
+      * @var \SquareConnect\Model\CatalogQueryItemVariationsForItemOptionValues
+      */
+    protected $item_variations_for_item_option_values_query;
 
     /**
      * Constructor
@@ -152,6 +170,16 @@ class CatalogQuery implements ArrayAccess
               $this->items_for_modifier_list_query = $data["items_for_modifier_list_query"];
             } else {
               $this->items_for_modifier_list_query = null;
+            }
+            if (isset($data["items_for_item_options_query"])) {
+              $this->items_for_item_options_query = $data["items_for_item_options_query"];
+            } else {
+              $this->items_for_item_options_query = null;
+            }
+            if (isset($data["item_variations_for_item_option_values_query"])) {
+              $this->item_variations_for_item_option_values_query = $data["item_variations_for_item_option_values_query"];
+            } else {
+              $this->item_variations_for_item_option_values_query = null;
             }
         }
     }
@@ -242,7 +270,7 @@ class CatalogQuery implements ArrayAccess
   
     /**
      * Sets text_query
-     * @param \SquareConnect\Model\CatalogQueryText $text_query A query that returns only objects whose searchable attributes contain all of the given keywords as prefixes. For example, if a [CatalogItem](#type-catalogitem) contains attributes `{\"name\": \"t-shirt\"}` and `{\"description\": \"Small, Purple\"}`, it will be matched by the query `{\"keywords\": [\"shirt\", \"sma\", \"purp\"]}`.
+     * @param \SquareConnect\Model\CatalogQueryText $text_query A query that returns only objects whose searchable attributes contain all of the given keywords as prefixes. For example, if a `CatalogItem` contains attributes `{\"name\": \"t-shirt\"}` and `{\"description\": \"Small, Purple\"}`, it will be matched by the query `{\"keywords\": [\"shirt\", \"sma\", \"purp\"]}`.
      * @return $this
      */
     public function setTextQuery($text_query)
@@ -261,7 +289,7 @@ class CatalogQuery implements ArrayAccess
   
     /**
      * Sets items_for_tax_query
-     * @param \SquareConnect\Model\CatalogQueryItemsForTax $items_for_tax_query A query that returns all [CatalogItem](#type-catalogitem)s that have any of the given [CatalogTax](#type-catalogtax)es enabled.
+     * @param \SquareConnect\Model\CatalogQueryItemsForTax $items_for_tax_query A query that returns all `CatalogItem`s that have any of the given `CatalogTax`es enabled.
      * @return $this
      */
     public function setItemsForTaxQuery($items_for_tax_query)
@@ -280,12 +308,50 @@ class CatalogQuery implements ArrayAccess
   
     /**
      * Sets items_for_modifier_list_query
-     * @param \SquareConnect\Model\CatalogQueryItemsForModifierList $items_for_modifier_list_query A query that returns all [CatalogItem](#type-catalogitem)s that have any of the given [CatalogModifierList](#type-catalogmodifierlist)s enabled.
+     * @param \SquareConnect\Model\CatalogQueryItemsForModifierList $items_for_modifier_list_query A query that returns all `CatalogItem`s that have any of the given `CatalogModifierList`s enabled.
      * @return $this
      */
     public function setItemsForModifierListQuery($items_for_modifier_list_query)
     {
         $this->items_for_modifier_list_query = $items_for_modifier_list_query;
+        return $this;
+    }
+    /**
+     * Gets items_for_item_options_query
+     * @return \SquareConnect\Model\CatalogQueryItemsForItemOptions
+     */
+    public function getItemsForItemOptionsQuery()
+    {
+        return $this->items_for_item_options_query;
+    }
+  
+    /**
+     * Sets items_for_item_options_query
+     * @param \SquareConnect\Model\CatalogQueryItemsForItemOptions $items_for_item_options_query A query that returns all `CatalogItem`s that have all of the given `CatalogItemOption`s.
+     * @return $this
+     */
+    public function setItemsForItemOptionsQuery($items_for_item_options_query)
+    {
+        $this->items_for_item_options_query = $items_for_item_options_query;
+        return $this;
+    }
+    /**
+     * Gets item_variations_for_item_option_values_query
+     * @return \SquareConnect\Model\CatalogQueryItemVariationsForItemOptionValues
+     */
+    public function getItemVariationsForItemOptionValuesQuery()
+    {
+        return $this->item_variations_for_item_option_values_query;
+    }
+  
+    /**
+     * Sets item_variations_for_item_option_values_query
+     * @param \SquareConnect\Model\CatalogQueryItemVariationsForItemOptionValues $item_variations_for_item_option_values_query A query that returns all `CatalogItemVariation`s that have all of the given `CatalogItemOption` values.
+     * @return $this
+     */
+    public function setItemVariationsForItemOptionValuesQuery($item_variations_for_item_option_values_query)
+    {
+        $this->item_variations_for_item_option_values_query = $item_variations_for_item_option_values_query;
         return $this;
     }
     /**

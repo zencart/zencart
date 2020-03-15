@@ -76,12 +76,12 @@ class SearchCatalogObjectsRequest implements ArrayAccess
     );
   
     /**
-      * $cursor The pagination cursor returned in the previous response. Leave unset for an initial request. See [Paginating results](#paginatingresults) for more information.
+      * $cursor The pagination cursor returned in the previous response. Leave unset for an initial request. See [Pagination](https://developer.squareup.com/docs/basics/api101/pagination) for more information.
       * @var string
       */
     protected $cursor;
     /**
-      * $object_types The desired set of object types to appear in the search results. The legal values are taken from the [CatalogObjectType](#type-catalogobjecttype) enumeration, namely `\"ITEM\"`, `\"ITEM_VARIATION\"`, `\"CATEGORY\"`, `\"DISCOUNT\"`, `\"TAX\"`, `\"MODIFIER\"`, or `\"MODIFIER_LIST\"`.
+      * $object_types The desired set of object types to appear in the search results. The legal values are taken from the CatalogObjectType enum: `\"ITEM\"`, `\"ITEM_VARIATION\"`, `\"CATEGORY\"`, `\"DISCOUNT\"`, `\"TAX\"`, `\"MODIFIER\"`, or `\"MODIFIER_LIST\"`. See [CatalogObjectType](#type-catalogobjecttype) for possible values
       * @var string[]
       */
     protected $object_types;
@@ -91,12 +91,12 @@ class SearchCatalogObjectsRequest implements ArrayAccess
       */
     protected $include_deleted_objects;
     /**
-      * $include_related_objects If `true`, the response will include additional objects that are related to the requested object, as follows:  If a [CatalogItem](#type-catalogitem) is returned in the object field of the response, its associated [CatalogCategory](#type-catalogcategory), [CatalogTax](#type-catalogtax)es, and [CatalogModifierList](#type-catalogmodifierlist)s will be included in the `related_objects` field of the response.  If a [CatalogItemVariation](#type-catalogitemvariation) is returned in the object field of the response, its parent [CatalogItem](#type-catalogitem) will be included in the `related_objects` field of the response.
+      * $include_related_objects If `true`, the response will include additional objects that are related to the requested object, as follows:  If a CatalogItem is returned in the object field of the response, its associated CatalogCategory, CatalogTax objects, CatalogImage objects and CatalogModifierList objects will be included in the `related_objects` field of the response.  If a CatalogItemVariation is returned in the object field of the response, its parent CatalogItem will be included in the `related_objects` field of the response.
       * @var bool
       */
     protected $include_related_objects;
     /**
-      * $begin_time Return objects modified after this [timestamp](#workingwithdates), in RFC 3339 format, e.g., \"2016-09-04T23:59:33.123Z\". The timestamp is exclusive - objects with a timestamp equal to `begin_time` will not be included in the response.
+      * $begin_time Return objects modified after this [timestamp](https://developer.squareup.com/docs/build-basics/working-with-dates), in RFC 3339 format, e.g., `2016-09-04T23:59:33.123Z`. The timestamp is exclusive - objects with a timestamp equal to `begin_time` will not be included in the response.
       * @var string
       */
     protected $begin_time;
@@ -166,7 +166,7 @@ class SearchCatalogObjectsRequest implements ArrayAccess
   
     /**
      * Sets cursor
-     * @param string $cursor The pagination cursor returned in the previous response. Leave unset for an initial request. See [Paginating results](#paginatingresults) for more information.
+     * @param string $cursor The pagination cursor returned in the previous response. Leave unset for an initial request. See [Pagination](https://developer.squareup.com/docs/basics/api101/pagination) for more information.
      * @return $this
      */
     public function setCursor($cursor)
@@ -185,7 +185,7 @@ class SearchCatalogObjectsRequest implements ArrayAccess
   
     /**
      * Sets object_types
-     * @param string[] $object_types The desired set of object types to appear in the search results. The legal values are taken from the [CatalogObjectType](#type-catalogobjecttype) enumeration, namely `\"ITEM\"`, `\"ITEM_VARIATION\"`, `\"CATEGORY\"`, `\"DISCOUNT\"`, `\"TAX\"`, `\"MODIFIER\"`, or `\"MODIFIER_LIST\"`.
+     * @param string[] $object_types The desired set of object types to appear in the search results. The legal values are taken from the CatalogObjectType enum: `\"ITEM\"`, `\"ITEM_VARIATION\"`, `\"CATEGORY\"`, `\"DISCOUNT\"`, `\"TAX\"`, `\"MODIFIER\"`, or `\"MODIFIER_LIST\"`. See [CatalogObjectType](#type-catalogobjecttype) for possible values
      * @return $this
      */
     public function setObjectTypes($object_types)
@@ -223,7 +223,7 @@ class SearchCatalogObjectsRequest implements ArrayAccess
   
     /**
      * Sets include_related_objects
-     * @param bool $include_related_objects If `true`, the response will include additional objects that are related to the requested object, as follows:  If a [CatalogItem](#type-catalogitem) is returned in the object field of the response, its associated [CatalogCategory](#type-catalogcategory), [CatalogTax](#type-catalogtax)es, and [CatalogModifierList](#type-catalogmodifierlist)s will be included in the `related_objects` field of the response.  If a [CatalogItemVariation](#type-catalogitemvariation) is returned in the object field of the response, its parent [CatalogItem](#type-catalogitem) will be included in the `related_objects` field of the response.
+     * @param bool $include_related_objects If `true`, the response will include additional objects that are related to the requested object, as follows:  If a CatalogItem is returned in the object field of the response, its associated CatalogCategory, CatalogTax objects, CatalogImage objects and CatalogModifierList objects will be included in the `related_objects` field of the response.  If a CatalogItemVariation is returned in the object field of the response, its parent CatalogItem will be included in the `related_objects` field of the response.
      * @return $this
      */
     public function setIncludeRelatedObjects($include_related_objects)
@@ -242,7 +242,7 @@ class SearchCatalogObjectsRequest implements ArrayAccess
   
     /**
      * Sets begin_time
-     * @param string $begin_time Return objects modified after this [timestamp](#workingwithdates), in RFC 3339 format, e.g., \"2016-09-04T23:59:33.123Z\". The timestamp is exclusive - objects with a timestamp equal to `begin_time` will not be included in the response.
+     * @param string $begin_time Return objects modified after this [timestamp](https://developer.squareup.com/docs/build-basics/working-with-dates), in RFC 3339 format, e.g., `2016-09-04T23:59:33.123Z`. The timestamp is exclusive - objects with a timestamp equal to `begin_time` will not be included in the response.
      * @return $this
      */
     public function setBeginTime($begin_time)

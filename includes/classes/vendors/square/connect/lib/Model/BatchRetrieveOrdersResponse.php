@@ -56,7 +56,7 @@ class BatchRetrieveOrdersResponse implements ArrayAccess
     );
   
     /**
-      * $orders The requested orders. This will omit any requested orders that do not exist or are not charged.
+      * $orders The requested orders. This will omit any requested orders that do not exist.
       * @var \SquareConnect\Model\Order[]
       */
     protected $orders;
@@ -96,7 +96,7 @@ class BatchRetrieveOrdersResponse implements ArrayAccess
   
     /**
      * Sets orders
-     * @param \SquareConnect\Model\Order[] $orders The requested orders. This will omit any requested orders that do not exist or are not charged.
+     * @param \SquareConnect\Model\Order[] $orders The requested orders. This will omit any requested orders that do not exist.
      * @return $this
      */
     public function setOrders($orders)

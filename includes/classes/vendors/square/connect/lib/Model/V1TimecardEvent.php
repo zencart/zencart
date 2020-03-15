@@ -9,6 +9,7 @@ namespace SquareConnect\Model;
 
 use \ArrayAccess;
 /**
+ * @deprecated
  * V1TimecardEvent Class Doc Comment
  *
  * @category Class
@@ -73,7 +74,7 @@ class V1TimecardEvent implements ArrayAccess
       */
     protected $id;
     /**
-      * $event_type The ID of the timecard to list events for.
+      * $event_type The ID of the timecard to list events for. See [V1TimecardEventEventType](#type-v1timecardeventeventtype) for possible values
       * @var string
       */
     protected $event_type;
@@ -157,7 +158,7 @@ class V1TimecardEvent implements ArrayAccess
   
     /**
      * Sets event_type
-     * @param string $event_type The ID of the timecard to list events for.
+     * @param string $event_type The ID of the timecard to list events for. See [V1TimecardEventEventType](#type-v1timecardeventeventtype) for possible values
      * @return $this
      */
     public function setEventType($event_type)

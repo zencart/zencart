@@ -64,12 +64,12 @@ class BatchRetrieveInventoryCountsRequest implements ArrayAccess
     );
   
     /**
-      * $catalog_object_ids Filters results by [CatalogObject](#type-catalogobject) ID. Only applied when set. Default: unset.
+      * $catalog_object_ids Filters results by `CatalogObject` ID. Only applied when set. Default: unset.
       * @var string[]
       */
     protected $catalog_object_ids;
     /**
-      * $location_ids Filters results by [Location](#type-location) ID. Only applied when set. Default: unset.
+      * $location_ids Filters results by `Location` ID. Only applied when set. Default: unset.
       * @var string[]
       */
     protected $location_ids;
@@ -79,7 +79,7 @@ class BatchRetrieveInventoryCountsRequest implements ArrayAccess
       */
     protected $updated_after;
     /**
-      * $cursor A pagination cursor returned by a previous call to this endpoint. Provide this to retrieve the next set of results for the original query.  See [Paginating results](#paginatingresults) for more information.
+      * $cursor A pagination cursor returned by a previous call to this endpoint. Provide this to retrieve the next set of results for the original query.  See the [Pagination](https://developer.squareup.com/docs/working-with-apis/pagination) guide for more information.
       * @var string
       */
     protected $cursor;
@@ -124,7 +124,7 @@ class BatchRetrieveInventoryCountsRequest implements ArrayAccess
   
     /**
      * Sets catalog_object_ids
-     * @param string[] $catalog_object_ids Filters results by [CatalogObject](#type-catalogobject) ID. Only applied when set. Default: unset.
+     * @param string[] $catalog_object_ids Filters results by `CatalogObject` ID. Only applied when set. Default: unset.
      * @return $this
      */
     public function setCatalogObjectIds($catalog_object_ids)
@@ -143,7 +143,7 @@ class BatchRetrieveInventoryCountsRequest implements ArrayAccess
   
     /**
      * Sets location_ids
-     * @param string[] $location_ids Filters results by [Location](#type-location) ID. Only applied when set. Default: unset.
+     * @param string[] $location_ids Filters results by `Location` ID. Only applied when set. Default: unset.
      * @return $this
      */
     public function setLocationIds($location_ids)
@@ -181,7 +181,7 @@ class BatchRetrieveInventoryCountsRequest implements ArrayAccess
   
     /**
      * Sets cursor
-     * @param string $cursor A pagination cursor returned by a previous call to this endpoint. Provide this to retrieve the next set of results for the original query.  See [Paginating results](#paginatingresults) for more information.
+     * @param string $cursor A pagination cursor returned by a previous call to this endpoint. Provide this to retrieve the next set of results for the original query.  See the [Pagination](https://developer.squareup.com/docs/working-with-apis/pagination) guide for more information.
      * @return $this
      */
     public function setCursor($cursor)

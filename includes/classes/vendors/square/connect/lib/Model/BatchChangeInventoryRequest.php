@@ -60,7 +60,7 @@ class BatchChangeInventoryRequest implements ArrayAccess
     );
   
     /**
-      * $idempotency_key A client-supplied, universally unique identifier (UUID) for the request.  See [Idempotency](/basics/api101/idempotency) in the [API Development 101](/basics/api101/overview) section for more information.
+      * $idempotency_key A client-supplied, universally unique identifier (UUID) for the request.  See [Idempotency](https://developer.squareup.com/docs/basics/api101/idempotency) in the [API Development 101](https://developer.squareup.com/docs/basics/api101/overview) section for more information.
       * @var string
       */
     protected $idempotency_key;
@@ -110,7 +110,7 @@ class BatchChangeInventoryRequest implements ArrayAccess
   
     /**
      * Sets idempotency_key
-     * @param string $idempotency_key A client-supplied, universally unique identifier (UUID) for the request.  See [Idempotency](/basics/api101/idempotency) in the [API Development 101](/basics/api101/overview) section for more information.
+     * @param string $idempotency_key A client-supplied, universally unique identifier (UUID) for the request.  See [Idempotency](https://developer.squareup.com/docs/basics/api101/idempotency) in the [API Development 101](https://developer.squareup.com/docs/basics/api101/overview) section for more information.
      * @return $this
      */
     public function setIdempotencyKey($idempotency_key)

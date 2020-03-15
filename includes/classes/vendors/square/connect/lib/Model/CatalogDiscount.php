@@ -29,7 +29,8 @@ class CatalogDiscount implements ArrayAccess
         'percentage' => 'string',
         'amount_money' => '\SquareConnect\Model\Money',
         'pin_required' => 'bool',
-        'label_color' => 'string'
+        'label_color' => 'string',
+        'modify_tax_basis' => 'string'
     );
   
     /** 
@@ -42,7 +43,8 @@ class CatalogDiscount implements ArrayAccess
         'percentage' => 'percentage',
         'amount_money' => 'amount_money',
         'pin_required' => 'pin_required',
-        'label_color' => 'label_color'
+        'label_color' => 'label_color',
+        'modify_tax_basis' => 'modify_tax_basis'
     );
   
     /**
@@ -55,7 +57,8 @@ class CatalogDiscount implements ArrayAccess
         'percentage' => 'setPercentage',
         'amount_money' => 'setAmountMoney',
         'pin_required' => 'setPinRequired',
-        'label_color' => 'setLabelColor'
+        'label_color' => 'setLabelColor',
+        'modify_tax_basis' => 'setModifyTaxBasis'
     );
   
     /**
@@ -68,16 +71,17 @@ class CatalogDiscount implements ArrayAccess
         'percentage' => 'getPercentage',
         'amount_money' => 'getAmountMoney',
         'pin_required' => 'getPinRequired',
-        'label_color' => 'getLabelColor'
+        'label_color' => 'getLabelColor',
+        'modify_tax_basis' => 'getModifyTaxBasis'
     );
   
     /**
-      * $name The discount's name. Searchable.
+      * $name The discount name. Searchable. This field has max length of 255 Unicode code points.
       * @var string
       */
     protected $name;
     /**
-      * $discount_type Indicates whether the discount is a fixed amount or percentage, or entered at the time of sale. See [CatalogDiscountType](#type-catalogdiscounttype) for all possible values.
+      * $discount_type Indicates whether the discount is a fixed amount or percentage, or entered at the time of sale. See [CatalogDiscountType](#type-catalogdiscounttype) for possible values
       * @var string
       */
     protected $discount_type;
@@ -97,10 +101,15 @@ class CatalogDiscount implements ArrayAccess
       */
     protected $pin_required;
     /**
-      * $label_color The color of the discount's display label in the Square Point of Sale app.
+      * $label_color The color of the discount display label in the Square Point of Sale app. This must be a valid hex color code.
       * @var string
       */
     protected $label_color;
+    /**
+      * $modify_tax_basis Indicates whether this discount should reduce the price used to calculate tax.  Most discounts should use `MODIFY_TAX_BASIS`. However, in some circumstances taxes must be calculated based on an item's price, ignoring a particular discount. For example, in many US jurisdictions, a manufacturer coupon or instant rebate reduces the price a customer pays but does not reduce the sale price used to calculate how much sales tax is due. In this case, the discount representing that manufacturer coupon should have `DO_NOT_MODIFY_TAX_BASIS` for this field.  If you are unsure whether you need to use this field, consult your tax professional. See [CatalogDiscountModifyTaxBasis](#type-catalogdiscountmodifytaxbasis) for possible values
+      * @var string
+      */
+    protected $modify_tax_basis;
 
     /**
      * Constructor
@@ -139,6 +148,11 @@ class CatalogDiscount implements ArrayAccess
             } else {
               $this->label_color = null;
             }
+            if (isset($data["modify_tax_basis"])) {
+              $this->modify_tax_basis = $data["modify_tax_basis"];
+            } else {
+              $this->modify_tax_basis = null;
+            }
         }
     }
     /**
@@ -152,7 +166,7 @@ class CatalogDiscount implements ArrayAccess
   
     /**
      * Sets name
-     * @param string $name The discount's name. Searchable.
+     * @param string $name The discount name. Searchable. This field has max length of 255 Unicode code points.
      * @return $this
      */
     public function setName($name)
@@ -171,7 +185,7 @@ class CatalogDiscount implements ArrayAccess
   
     /**
      * Sets discount_type
-     * @param string $discount_type Indicates whether the discount is a fixed amount or percentage, or entered at the time of sale. See [CatalogDiscountType](#type-catalogdiscounttype) for all possible values.
+     * @param string $discount_type Indicates whether the discount is a fixed amount or percentage, or entered at the time of sale. See [CatalogDiscountType](#type-catalogdiscounttype) for possible values
      * @return $this
      */
     public function setDiscountType($discount_type)
@@ -247,12 +261,31 @@ class CatalogDiscount implements ArrayAccess
   
     /**
      * Sets label_color
-     * @param string $label_color The color of the discount's display label in the Square Point of Sale app.
+     * @param string $label_color The color of the discount display label in the Square Point of Sale app. This must be a valid hex color code.
      * @return $this
      */
     public function setLabelColor($label_color)
     {
         $this->label_color = $label_color;
+        return $this;
+    }
+    /**
+     * Gets modify_tax_basis
+     * @return string
+     */
+    public function getModifyTaxBasis()
+    {
+        return $this->modify_tax_basis;
+    }
+  
+    /**
+     * Sets modify_tax_basis
+     * @param string $modify_tax_basis Indicates whether this discount should reduce the price used to calculate tax.  Most discounts should use `MODIFY_TAX_BASIS`. However, in some circumstances taxes must be calculated based on an item's price, ignoring a particular discount. For example, in many US jurisdictions, a manufacturer coupon or instant rebate reduces the price a customer pays but does not reduce the sale price used to calculate how much sales tax is due. In this case, the discount representing that manufacturer coupon should have `DO_NOT_MODIFY_TAX_BASIS` for this field.  If you are unsure whether you need to use this field, consult your tax professional. See [CatalogDiscountModifyTaxBasis](#type-catalogdiscountmodifytaxbasis) for possible values
+     * @return $this
+     */
+    public function setModifyTaxBasis($modify_tax_basis)
+    {
+        $this->modify_tax_basis = $modify_tax_basis;
         return $this;
     }
     /**

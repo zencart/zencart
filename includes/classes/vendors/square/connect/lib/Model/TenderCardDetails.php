@@ -60,7 +60,7 @@ class TenderCardDetails implements ArrayAccess
     );
   
     /**
-      * $status The credit card payment's current state (such as `AUTHORIZED` or `CAPTURED`). See [TenderCardDetailsStatus](#type-tendercarddetailsstatus) for possible values.
+      * $status The credit card payment's current state (such as `AUTHORIZED` or `CAPTURED`). See `TenderCardDetailsStatus` for possible values. See [TenderCardDetailsStatus](#type-tendercarddetailsstatus) for possible values
       * @var string
       */
     protected $status;
@@ -70,7 +70,7 @@ class TenderCardDetails implements ArrayAccess
       */
     protected $card;
     /**
-      * $entry_method The method used to enter the card's details for the transaction.
+      * $entry_method The method used to enter the card's details for the transaction. See [TenderCardDetailsEntryMethod](#type-tendercarddetailsentrymethod) for possible values
       * @var string
       */
     protected $entry_method;
@@ -110,7 +110,7 @@ class TenderCardDetails implements ArrayAccess
   
     /**
      * Sets status
-     * @param string $status The credit card payment's current state (such as `AUTHORIZED` or `CAPTURED`). See [TenderCardDetailsStatus](#type-tendercarddetailsstatus) for possible values.
+     * @param string $status The credit card payment's current state (such as `AUTHORIZED` or `CAPTURED`). See `TenderCardDetailsStatus` for possible values. See [TenderCardDetailsStatus](#type-tendercarddetailsstatus) for possible values
      * @return $this
      */
     public function setStatus($status)
@@ -148,7 +148,7 @@ class TenderCardDetails implements ArrayAccess
   
     /**
      * Sets entry_method
-     * @param string $entry_method The method used to enter the card's details for the transaction.
+     * @param string $entry_method The method used to enter the card's details for the transaction. See [TenderCardDetailsEntryMethod](#type-tendercarddetailsentrymethod) for possible values
      * @return $this
      */
     public function setEntryMethod($entry_method)

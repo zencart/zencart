@@ -173,7 +173,7 @@ class V1Order implements ArrayAccess
       */
     protected $recipient_phone_number;
     /**
-      * $state Whether the tax is an ADDITIVE tax or an INCLUSIVE tax.
+      * $state Whether the tax is an ADDITIVE tax or an INCLUSIVE tax. See [V1OrderState](#type-v1orderstate) for possible values
       * @var string
       */
     protected $state;
@@ -513,7 +513,7 @@ class V1Order implements ArrayAccess
   
     /**
      * Sets state
-     * @param string $state Whether the tax is an ADDITIVE tax or an INCLUSIVE tax.
+     * @param string $state Whether the tax is an ADDITIVE tax or an INCLUSIVE tax. See [V1OrderState](#type-v1orderstate) for possible values
      * @return $this
      */
     public function setState($state)

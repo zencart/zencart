@@ -9,6 +9,7 @@ namespace SquareConnect\Model;
 
 use \ArrayAccess;
 /**
+ * @deprecated
  * V1BankAccount Class Doc Comment
  *
  * @category Class
@@ -115,7 +116,7 @@ class V1BankAccount implements ArrayAccess
       */
     protected $currency_code;
     /**
-      * $type The bank account's type (for example, savings or checking).
+      * $type The bank account's type (for example, savings or checking). See [V1BankAccountType](#type-v1bankaccounttype) for possible values
       * @var string
       */
     protected $type;
@@ -313,7 +314,7 @@ class V1BankAccount implements ArrayAccess
   
     /**
      * Sets type
-     * @param string $type The bank account's type (for example, savings or checking).
+     * @param string $type The bank account's type (for example, savings or checking). See [V1BankAccountType](#type-v1bankaccounttype) for possible values
      * @return $this
      */
     public function setType($type)

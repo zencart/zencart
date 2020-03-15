@@ -56,12 +56,12 @@ class CustomerCreationSourceFilter implements ArrayAccess
     );
   
     /**
-      * $values The list of creation sources used as filtering criteria. See [CustomerCreationSource](#type-customercreationsource) for possible values.
+      * $values The list of creation sources used as filtering criteria. See [CustomerCreationSource](#type-customercreationsource) for possible values
       * @var string[]
       */
     protected $values;
     /**
-      * $rule Indicates whether a customer profile matching the filter criteria should be included in the result or excluded from the result. Default: `INCLUDE`. See [CustomerInclusionExclusion](#type-customerinclusionexclusion) for possible values.
+      * $rule Indicates whether a customer profile matching the filter criteria should be included in the result or excluded from the result.  Default: `INCLUDE`. See [CustomerInclusionExclusion](#type-customerinclusionexclusion) for possible values
       * @var string
       */
     protected $rule;
@@ -96,7 +96,7 @@ class CustomerCreationSourceFilter implements ArrayAccess
   
     /**
      * Sets values
-     * @param string[] $values The list of creation sources used as filtering criteria. See [CustomerCreationSource](#type-customercreationsource) for possible values.
+     * @param string[] $values The list of creation sources used as filtering criteria. See [CustomerCreationSource](#type-customercreationsource) for possible values
      * @return $this
      */
     public function setValues($values)
@@ -115,7 +115,7 @@ class CustomerCreationSourceFilter implements ArrayAccess
   
     /**
      * Sets rule
-     * @param string $rule Indicates whether a customer profile matching the filter criteria should be included in the result or excluded from the result. Default: `INCLUDE`. See [CustomerInclusionExclusion](#type-customerinclusionexclusion) for possible values.
+     * @param string $rule Indicates whether a customer profile matching the filter criteria should be included in the result or excluded from the result.  Default: `INCLUDE`. See [CustomerInclusionExclusion](#type-customerinclusionexclusion) for possible values
      * @return $this
      */
     public function setRule($rule)

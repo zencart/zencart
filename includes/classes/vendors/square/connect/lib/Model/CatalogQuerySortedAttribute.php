@@ -70,7 +70,7 @@ class CatalogQuerySortedAttribute implements ArrayAccess
       */
     protected $initial_attribute_value;
     /**
-      * $sort_order The desired [SortOrder](#type-sortorder), `\"ASC\"` (ascending) or `\"DESC\"` (descending).
+      * $sort_order The desired sort order, `\"ASC\"` (ascending) or `\"DESC\"` (descending). See [SortOrder](#type-sortorder) for possible values
       * @var string
       */
     protected $sort_order;
@@ -148,7 +148,7 @@ class CatalogQuerySortedAttribute implements ArrayAccess
   
     /**
      * Sets sort_order
-     * @param string $sort_order The desired [SortOrder](#type-sortorder), `\"ASC\"` (ascending) or `\"DESC\"` (descending).
+     * @param string $sort_order The desired sort order, `\"ASC\"` (ascending) or `\"DESC\"` (descending). See [SortOrder](#type-sortorder) for possible values
      * @return $this
      */
     public function setSortOrder($sort_order)

@@ -56,12 +56,12 @@ class CatalogIdMapping implements ArrayAccess
     );
   
     /**
-      * $client_object_id The client-supplied, temporary `#`-prefixed ID for a new [CatalogObject](#type-catalogobject).
+      * $client_object_id The client-supplied, temporary `#`-prefixed ID for a new `CatalogObject`.
       * @var string
       */
     protected $client_object_id;
     /**
-      * $object_id The permanent ID for the [CatalogObject](#type-catalogobject) created by the server.
+      * $object_id The permanent ID for the CatalogObject created by the server.
       * @var string
       */
     protected $object_id;
@@ -96,7 +96,7 @@ class CatalogIdMapping implements ArrayAccess
   
     /**
      * Sets client_object_id
-     * @param string $client_object_id The client-supplied, temporary `#`-prefixed ID for a new [CatalogObject](#type-catalogobject).
+     * @param string $client_object_id The client-supplied, temporary `#`-prefixed ID for a new `CatalogObject`.
      * @return $this
      */
     public function setClientObjectId($client_object_id)
@@ -115,7 +115,7 @@ class CatalogIdMapping implements ArrayAccess
   
     /**
      * Sets object_id
-     * @param string $object_id The permanent ID for the [CatalogObject](#type-catalogobject) created by the server.
+     * @param string $object_id The permanent ID for the CatalogObject created by the server.
      * @return $this
      */
     public function setObjectId($object_id)

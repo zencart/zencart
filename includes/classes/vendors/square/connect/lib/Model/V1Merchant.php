@@ -9,6 +9,7 @@ namespace SquareConnect\Model;
 
 use \ArrayAccess;
 /**
+ * @deprecated
  * V1Merchant Class Doc Comment
  *
  * @category Class
@@ -36,7 +37,7 @@ class V1Merchant implements ArrayAccess
         'business_address' => '\SquareConnect\Model\Address',
         'business_phone' => '\SquareConnect\Model\V1PhoneNumber',
         'business_type' => 'string',
-        'shipping_address_' => '\SquareConnect\Model\Address',
+        'shipping_address' => '\SquareConnect\Model\Address',
         'location_details' => '\SquareConnect\Model\V1MerchantLocationDetails',
         'market_url' => 'string'
     );
@@ -58,7 +59,7 @@ class V1Merchant implements ArrayAccess
         'business_address' => 'business_address',
         'business_phone' => 'business_phone',
         'business_type' => 'business_type',
-        'shipping_address_' => 'shipping_address ',
+        'shipping_address' => 'shipping_address',
         'location_details' => 'location_details',
         'market_url' => 'market_url'
     );
@@ -80,7 +81,7 @@ class V1Merchant implements ArrayAccess
         'business_address' => 'setBusinessAddress',
         'business_phone' => 'setBusinessPhone',
         'business_type' => 'setBusinessType',
-        'shipping_address_' => 'setShippingAddress_',
+        'shipping_address' => 'setShippingAddress',
         'location_details' => 'setLocationDetails',
         'market_url' => 'setMarketUrl'
     );
@@ -102,7 +103,7 @@ class V1Merchant implements ArrayAccess
         'business_address' => 'getBusinessAddress',
         'business_phone' => 'getBusinessPhone',
         'business_type' => 'getBusinessType',
-        'shipping_address_' => 'getShippingAddress_',
+        'shipping_address' => 'getShippingAddress',
         'location_details' => 'getLocationDetails',
         'market_url' => 'getMarketUrl'
     );
@@ -123,7 +124,7 @@ class V1Merchant implements ArrayAccess
       */
     protected $email;
     /**
-      * $account_type Indicates whether the merchant account corresponds to a single-location account (LOCATION) or a business account (BUSINESS). This value is almost always LOCATION.
+      * $account_type Indicates whether the merchant account corresponds to a single-location account (LOCATION) or a business account (BUSINESS). This value is almost always LOCATION. See [V1MerchantAccountType](#type-v1merchantaccounttype) for possible values
       * @var string
       */
     protected $account_type;
@@ -163,17 +164,17 @@ class V1Merchant implements ArrayAccess
       */
     protected $business_phone;
     /**
-      * $business_type The type of business operated by the merchant.
+      * $business_type The type of business operated by the merchant. See [V1MerchantBusinessType](#type-v1merchantbusinesstype) for possible values
       * @var string
       */
     protected $business_type;
     /**
-      * $shipping_address_ The merchant's shipping address.
+      * $shipping_address The merchant's shipping address.
       * @var \SquareConnect\Model\Address
       */
-    protected $shipping_address_;
+    protected $shipping_address;
     /**
-      * $location_details 
+      * $location_details Additional information for a single-location account specified by its associated business account, if it has one.
       * @var \SquareConnect\Model\V1MerchantLocationDetails
       */
     protected $location_details;
@@ -250,10 +251,10 @@ class V1Merchant implements ArrayAccess
             } else {
               $this->business_type = null;
             }
-            if (isset($data["shipping_address_"])) {
-              $this->shipping_address_ = $data["shipping_address_"];
+            if (isset($data["shipping_address"])) {
+              $this->shipping_address = $data["shipping_address"];
             } else {
-              $this->shipping_address_ = null;
+              $this->shipping_address = null;
             }
             if (isset($data["location_details"])) {
               $this->location_details = $data["location_details"];
@@ -335,7 +336,7 @@ class V1Merchant implements ArrayAccess
   
     /**
      * Sets account_type
-     * @param string $account_type Indicates whether the merchant account corresponds to a single-location account (LOCATION) or a business account (BUSINESS). This value is almost always LOCATION.
+     * @param string $account_type Indicates whether the merchant account corresponds to a single-location account (LOCATION) or a business account (BUSINESS). This value is almost always LOCATION. See [V1MerchantAccountType](#type-v1merchantaccounttype) for possible values
      * @return $this
      */
     public function setAccountType($account_type)
@@ -487,7 +488,7 @@ class V1Merchant implements ArrayAccess
   
     /**
      * Sets business_type
-     * @param string $business_type The type of business operated by the merchant.
+     * @param string $business_type The type of business operated by the merchant. See [V1MerchantBusinessType](#type-v1merchantbusinesstype) for possible values
      * @return $this
      */
     public function setBusinessType($business_type)
@@ -496,22 +497,22 @@ class V1Merchant implements ArrayAccess
         return $this;
     }
     /**
-     * Gets shipping_address_
+     * Gets shipping_address
      * @return \SquareConnect\Model\Address
      */
-    public function getShippingAddress_()
+    public function getShippingAddress()
     {
-        return $this->shipping_address_;
+        return $this->shipping_address;
     }
   
     /**
-     * Sets shipping_address_
-     * @param \SquareConnect\Model\Address $shipping_address_ The merchant's shipping address.
+     * Sets shipping_address
+     * @param \SquareConnect\Model\Address $shipping_address The merchant's shipping address.
      * @return $this
      */
-    public function setShippingAddress_($shipping_address_)
+    public function setShippingAddress($shipping_address)
     {
-        $this->shipping_address_ = $shipping_address_;
+        $this->shipping_address = $shipping_address;
         return $this;
     }
     /**
@@ -525,7 +526,7 @@ class V1Merchant implements ArrayAccess
   
     /**
      * Sets location_details
-     * @param \SquareConnect\Model\V1MerchantLocationDetails $location_details 
+     * @param \SquareConnect\Model\V1MerchantLocationDetails $location_details Additional information for a single-location account specified by its associated business account, if it has one.
      * @return $this
      */
     public function setLocationDetails($location_details)

@@ -9,6 +9,7 @@ namespace SquareConnect\Model;
 
 use \ArrayAccess;
 /**
+ * @deprecated
  * V1PhoneNumber Class Doc Comment
  *
  * @category Class

@@ -60,17 +60,17 @@ class RetrieveCatalogObjectResponse implements ArrayAccess
     );
   
     /**
-      * $errors The set of [Error](#type-error)s encountered.
+      * $errors Information on any errors encountered.
       * @var \SquareConnect\Model\Error[]
       */
     protected $errors;
     /**
-      * $object The [CatalogObject](#type-catalogobject)s returned.
+      * $object The CatalogObjects returned.
       * @var \SquareConnect\Model\CatalogObject
       */
     protected $object;
     /**
-      * $related_objects A list of [CatalogObject](#type-catalogobject)s referenced by the object in the `object` field.
+      * $related_objects A list of CatalogObjects referenced by the object in the `object` field.
       * @var \SquareConnect\Model\CatalogObject[]
       */
     protected $related_objects;
@@ -110,7 +110,7 @@ class RetrieveCatalogObjectResponse implements ArrayAccess
   
     /**
      * Sets errors
-     * @param \SquareConnect\Model\Error[] $errors The set of [Error](#type-error)s encountered.
+     * @param \SquareConnect\Model\Error[] $errors Information on any errors encountered.
      * @return $this
      */
     public function setErrors($errors)
@@ -129,7 +129,7 @@ class RetrieveCatalogObjectResponse implements ArrayAccess
   
     /**
      * Sets object
-     * @param \SquareConnect\Model\CatalogObject $object The [CatalogObject](#type-catalogobject)s returned.
+     * @param \SquareConnect\Model\CatalogObject $object The CatalogObjects returned.
      * @return $this
      */
     public function setObject($object)
@@ -148,7 +148,7 @@ class RetrieveCatalogObjectResponse implements ArrayAccess
   
     /**
      * Sets related_objects
-     * @param \SquareConnect\Model\CatalogObject[] $related_objects A list of [CatalogObject](#type-catalogobject)s referenced by the object in the `object` field.
+     * @param \SquareConnect\Model\CatalogObject[] $related_objects A list of CatalogObjects referenced by the object in the `object` field.
      * @return $this
      */
     public function setRelatedObjects($related_objects)
