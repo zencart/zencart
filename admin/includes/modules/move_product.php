@@ -12,16 +12,16 @@ if (!defined('IS_ADMIN_FLAG')) {
 }
 $product_categories = zen_generate_category_path($pInfo->products_id, 'product');
 if (!isset($category_path)) $category_path = '';
-  for ($i = 0, $n = sizeof($product_categories); $i < $n; $i++) {
+  for ($i = 0, $n = count($product_categories); $i < $n; $i++) { //make a text path category > subcategory...for each category in which the product resides
     $category_path = '';
-    for ($j = 0, $k = sizeof($product_categories[$i]); $j < $k; $j++) {
+    for ($j = 0, $k = count($product_categories[$i]); $j < $k; $j++) {
         $category_path .= $product_categories[$i][$j]['text'];
         if ($j+1 < $k)  $category_path .= '&nbsp;&gt;&nbsp;';
     }
-    if (sizeof($product_categories) > 0 && zen_get_parent_category_id($pInfo->products_id) == $product_categories[$i][sizeof($product_categories[$i]) - 1]['id']) {
+    if (count($product_categories) > 0 && zen_get_parent_category_id($pInfo->products_id) == $product_categories[$i][count($product_categories[$i]) - 1]['id']) {
         $product_master_category_string = $category_path;
     }
-    if (sizeof($product_categories) > 0 && $current_category_id == $product_categories[$i][sizeof($product_categories[$i]) - 1]['id']) {
+    if (count($product_categories) > 0  && $current_category_id == $product_categories[$i][count($product_categories[$i]) - 1]['id']) {
         $product_current_category_string = $category_path;
     }
 }
