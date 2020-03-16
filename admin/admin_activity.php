@@ -128,6 +128,7 @@ if ($action != '') {
         $messageStack->add_session(TEXT_NO_RECORDS_FOUND, 'error');
       } else { //process records
         $i = 0;
+        $exporter_output = '';
         // make a <table> tag if HTML output
         if ($format == "HTML") {
           $exporter_output .= '<table border="1">' . $NL;
