@@ -131,7 +131,7 @@ if ($action != '') {
         $exporter_output = '';
         // make a <table> tag if HTML output
         if ($format == "HTML") {
-          $exporter_output .= '<table border="1">' . $NL;
+          $exporter_output .= '<table class="table table-bordered">' . $NL;
         }
         // add column headers if CSV or HTML format
         if ($format == "CSV" || $format == "HTML") {
