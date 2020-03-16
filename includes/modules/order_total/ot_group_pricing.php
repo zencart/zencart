@@ -53,6 +53,7 @@ class ot_group_pricing {
 
     }
   }
+
   function get_order_total() {
     global  $order;
     $order_total_tax = $order->info['tax'];
@@ -78,6 +79,7 @@ class ot_group_pricing {
     $order_total = array('totalFull'=>$orderTotalFull, 'total'=>$order_total, 'tax'=>$order_total_tax, 'taxGroups'=>$taxGroups);
     return $order_total;
   }
+
   function calculate_deductions($order_total) {
     global $db, $order;
     $od_amount = array();
@@ -91,7 +93,6 @@ class ot_group_pricing {
                                       where group_id = '" . (int)$group_query->fields['customers_group_pricing'] . "'");
       $gift_vouchers = $_SESSION['cart']->gv_only();
       $discount = ($orderTotal['total'] - $gift_vouchers) * $group_discount->fields['group_percentage'] / 100;
-//      echo "discout = $discount<br>";
       $od_amount['total'] = round($discount, 2);
       $ratio = $od_amount['total']/$order_total;
       /**
@@ -129,6 +130,7 @@ class ot_group_pricing {
     }
     return $od_amount;
   }
+
   function pre_confirmation_check($order_total) {
     global $order;
     $od_amount = $this->calculate_deductions($order_total);
@@ -149,12 +151,10 @@ class ot_group_pricing {
 
   function apply_credit() {
   }
-  /**
-   * Enter description here...
-   *
-   */
+
   function clear_posts() {
   }
+
   function check() {
     global $db;
     if (!isset($this->_check)) {
