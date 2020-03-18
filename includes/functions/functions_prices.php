@@ -574,7 +574,6 @@
       case ($_SESSION['cart']->in_cart_mixed($product_id) > $check_min):
       // set to units or difference in units to balance cart
         $new_units = $check_units - fmod_round($_SESSION['cart']->in_cart_mixed($product_id), $check_units);
-//echo 'Cart: ' . $_SESSION['cart']->in_cart_mixed($product_id) . ' Min: ' . $check_min . ' Units: ' . $check_units . ' fmod: ' . fmod($_SESSION['cart']->in_cart_mixed($product_id), $check_units) . '<br />';
         $buy_now_qty = ($new_units > 0 ? $new_units : $check_units);
         break;
       default:
@@ -633,7 +632,6 @@
         // discount quantities exist and this is not an attribute
         // $this->contents[$products_id]['qty']
         $check_discount_qty_price = zen_get_products_discount_price_qty($product_id, $qty, $attributes_amount);
-//echo 'How much 1 ' . $qty . ' : ' . $attributes_amount . ' vs ' . $check_discount_qty_price . '<br />';
         return $check_discount_qty_price;
         break;
 
@@ -641,7 +639,6 @@
         // discount quantities exist and this is priced by attribute
         // $this->contents[$products_id]['qty']
         $check_discount_qty_price = zen_get_products_discount_price_qty($product_id, $qty, $attributes_amount);
-//echo 'How much 2 ' . $qty . ' : ' . $attributes_amount . ' vs ' . $check_discount_qty_price . '<br />';
 
         return $check_discount_qty_price;
         break;
@@ -674,7 +671,6 @@
             $sale_maker_discount = $sale_maker_discount;
           }
         }
-//echo 'How much 3 - ' . $qty . ' : ' . $product_id . ' : ' . $qty . ' x ' .  $attributes_amount . ' vs ' . $check_discount_qty_price . ' - ' . $sale_maker_discount . '<br />';
         break;
       case ($discount_type_id == 59):
         // No Sale and has a Special OR there is Sale and a special but the price is the special
@@ -849,7 +845,6 @@
           if ($attributes_amount != 0) {
             $calc = ($attributes_amount * $sale_price_discount);
             $sale_maker_discount = $calc;
-//echo '<br />attr ' . $attributes_amount . ' spec ' . $special_price_discount . ' Calc ' . $calc . 'Calc2 ' . $calc2 . '<br />';
           } else {
             $sale_maker_discount = $sale_maker_discount;
           }
@@ -864,7 +859,6 @@
           // compute attribute amount
           if ($attributes_amount != 0) {
             $calc = ($attributes_amount * $special_price_discount);
-//echo '<br />attr ' . $attributes_amount . ' spec ' . $special_price_discount . ' Calc ' . $calc . 'Calc2 ' . $calc2 . '<br />';
             $sale_maker_discount = $calc;
           } else {
             $sale_maker_discount = $sale_maker_discount;
@@ -883,7 +877,6 @@
           if ($attributes_amount != 0) {
             $calc = ($attributes_amount * $sale_price_discount);
             $sale_maker_discount = $calc;
-//echo '<br />attr ' . $attributes_amount . ' spec ' . $special_price_discount . ' Calc ' . $calc . 'Calc2 ' . $calc2 . '<br />';
           } else {
             $sale_maker_discount = $sale_maker_discount;
           }
@@ -898,7 +891,6 @@
           // compute attribute amount
           if ($attributes_amount != 0) {
             $calc = ($attributes_amount * $special_price_discount);
-//echo '<br />attr ' . $attributes_amount . ' spec ' . $special_price_discount . ' Calc ' . $calc . 'Calc2 ' . $calc2 . '<br />';
             $sale_maker_discount = $calc;
           } else {
             $sale_maker_discount = $sale_maker_discount;
@@ -1474,7 +1466,6 @@ If a special exist * 10
               TABLE_PRODUCTS . " p
              where pqd.products_id='" . (int)$product_id . "' and pqd.discount_qty != 0
              and p.products_id = pqd.products_id");
-//echo 'zen_get_discount_qty: ' . $product_id . ' - ' . $check_qty . '<br />';
     if ($discounts_qty_query->RecordCount() > 0 and $check_qty > 0 && $discounts_qty_query->fields['products_discount_type'] !=0) {
       return true;
     } else {
