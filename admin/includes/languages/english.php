@@ -694,8 +694,3 @@ define('WARNING_PRIMARY_SERVER_FAILED', 'Warning: The primary exchange rate serv
 
 // Set to empty string if alpha sorting not desired
 define('MENU_CATEGORIES_TO_SORT_BY_NAME','reports,tools'); 
-
-///////////////////////////////////////////////////////////
-// include additional files:
-  require(DIR_WS_LANGUAGES . $_SESSION['language'] . "/" . FILENAME_EMAIL_EXTRAS);
-  include(zen_get_file_directory(DIR_FS_CATALOG_LANGUAGES . $_SESSION['language'] . '/', FILENAME_OTHER_IMAGES_NAMES));

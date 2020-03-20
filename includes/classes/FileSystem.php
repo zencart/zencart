@@ -15,7 +15,7 @@ class FileSystem
 {
     use Singleton;
 
-    public function loadFilesFromDirectory($rootDir, $fileRegx)
+    public function loadFilesFromDirectory($rootDir, $fileRegx = '~^[^\._].*\.php$~i')
     {
         if (!$dir = @dir($rootDir)) return;
         while ($file = $dir->read()) {
@@ -26,7 +26,7 @@ class FileSystem
         $dir->close();
     }
 
-    public function listFilesFromDirectory($rootDir, $fileRegx)
+    public function listFilesFromDirectory($rootDir, $fileRegx = '~^[^\._].*\.php$~i')
     {
         if (!$dir = @dir($rootDir)) return [];
         $fileList = [];
@@ -113,4 +113,5 @@ class FileSystem
         }
         return $found;
     }
+
 }

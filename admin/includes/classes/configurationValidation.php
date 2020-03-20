@@ -18,8 +18,9 @@ if (!defined('IS_ADMIN_FLAG')) {
 class configurationValidation extends base
 {
     public function __construct() {
+        global $languageLoader;
         if (!empty($_SESSION['language'])) {
-            require_once zen_get_file_directory(DIR_WS_LANGUAGES . $_SESSION['language'] . '/', 'configuration_validation.php', 'false');
+            $languageLoader->loadDefinesFromFile(DIR_WS_LANGUAGES, $_SESSION['language'], configuration_validation.php);
         }
     }
 

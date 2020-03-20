@@ -21,7 +21,6 @@
 //
 require("includes/application_top.php");
 
-require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/' . FILENAME_SALEMAKER_INFO . '.php');
 ?>
 <!doctype html>
 <html <?php echo HTML_PARAMS; ?>>
