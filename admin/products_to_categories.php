@@ -2,7 +2,7 @@
 
 /**
  * @package admin
- * @copyright Copyright 2003-2019 Zen Cart Development Team
+ * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: torvista 2020 February 13 Modified in v1.5.7 $
@@ -25,35 +25,35 @@ if (!defined('P2C_TARGET_CATEGORY_DEFAULT')){
  * @param bool $reset_master_category
  * @return bool
  */
-function zen_validate_categories(int $ref_category_id, int $target_category_id = 0, $reset_master_category = false)
+function zen_validate_categories($ref_category_id, $target_category_id = 0, $reset_master_category = false)
 {
     global $db, $messageStack;
 
     $categories_valid = true;
     if ($ref_category_id === '' || zen_get_categories_status($ref_category_id) === '') {//REF does not exist
         $categories_valid = false;
-        $messageStack->add_session(sprintf(WARNING_CATEGORY_SOURCE_NOT_EXIST, $ref_category_id), 'warning');
+        $messageStack->add_session(sprintf(WARNING_CATEGORY_SOURCE_NOT_EXIST, (int)$ref_category_id), 'warning');
     }
     if (!$reset_master_category && ($target_category_id === '' || zen_get_categories_status($target_category_id) === '')) {//TARGET does not exist
         $categories_valid = false;
-        $messageStack->add_session(sprintf(WARNING_CATEGORY_TARGET_NOT_EXIST, $target_category_id), 'warning');
+        $messageStack->add_session(sprintf(WARNING_CATEGORY_TARGET_NOT_EXIST, (int)$target_category_id), 'warning');
     }
     if (!$reset_master_category && ($categories_valid && $ref_category_id === $target_category_id)) {//category IDs are the same
         $categories_valid = false;
-        $messageStack->add_session(sprintf(WARNING_CATEGORY_IDS_DUPLICATED, $ref_category_id), 'warning');
+        $messageStack->add_session(sprintf(WARNING_CATEGORY_IDS_DUPLICATED, (int)$ref_category_id), 'warning');
     }
 
     if ($categories_valid) {
-        $check_category_from = $db->Execute("SELECT products_id FROM " . TABLE_PRODUCTS_TO_CATEGORIES . " WHERE categories_id = " . $ref_category_id . " LIMIT 1");
+        $check_category_from = $db->Execute("SELECT products_id FROM " . TABLE_PRODUCTS_TO_CATEGORIES . " WHERE categories_id = " . (int)$ref_category_id . " LIMIT 1");
         // check if REF has any products
         if ($check_category_from->RecordCount() < 1) {//there are no products in the FROM category: invalid
             $categories_valid = false;
-            $messageStack->add_session(sprintf(WARNING_CATEGORY_NO_PRODUCTS, $ref_category_id), 'warning');
+            $messageStack->add_session(sprintf(WARNING_CATEGORY_NO_PRODUCTS, (int)$ref_category_id), 'warning');
         }
         // check that TARGET has no subcategories
         if (!$reset_master_category && zen_childs_in_category_count($target_category_id) > 0) {//subcategories exist in the TO category: invalid
             $categories_valid = false;
-            $messageStack->add_session(sprintf(WARNING_CATEGORY_SUBCATEGORIES, $target_category_id), 'warning');
+            $messageStack->add_session(sprintf(WARNING_CATEGORY_SUBCATEGORIES, (int)$target_category_id), 'warning');
         }
     }
     return $categories_valid;
@@ -70,14 +70,14 @@ function zen_validate_categories(int $ref_category_id, int $target_category_id =
  * @param string $category_path_string The full path of the names of all the parent categories being included in the path for the (sub)categories info being generated.
  * @return void
  */
-function zen_get_categories_info(int $parent_id, $category_path_string = '')
+function zen_get_categories_info($parent_id = 0, $category_path_string = '')
 {
     global $db, $categories_info;
 
     $categories_sql = "SELECT cd.categories_id, cd.categories_name 
                         FROM " . TABLE_CATEGORIES . " c
                         LEFT JOIN " . TABLE_CATEGORIES_DESCRIPTION . " cd ON c.categories_id = cd.categories_id
-                        WHERE c.parent_id = " . $parent_id . " 
+                        WHERE c.parent_id = " . (int)$parent_id . " 
                         AND cd.language_id = " . (int)$_SESSION['languages_id'] . "
                         ORDER BY cd.categories_name";
     $categories_result = $db->Execute($categories_sql);
@@ -108,14 +108,14 @@ function zen_get_categories_info(int $parent_id, $category_path_string = '')
  * @param string $type category or product: to determine the array structure
  * @return array
  */
-function zen_get_target_categories_products(int $parent_id = 0, $spacing = '', $category_product_tree_array = [], $type = 'category')
+function zen_get_target_categories_products($parent_id = 0, $spacing = '', $category_product_tree_array = [], $type = 'category')
 {
     global $db, $products_filter;
     $categories = $db->Execute("SELECT cd.categories_id, cd.categories_name, c.parent_id
                                         FROM " . TABLE_CATEGORIES . " c, " . TABLE_CATEGORIES_DESCRIPTION . " cd
                                         WHERE c.categories_id = cd.categories_id
                                         AND cd.language_id = " . (int)$_SESSION['languages_id'] . "
-                                        AND c.parent_id = " . $parent_id . "
+                                        AND c.parent_id = " . (int)$parent_id . "
                                         ORDER BY cd.categories_name");
     foreach ($categories as $category) {
         // Get all subcategories for the current category
