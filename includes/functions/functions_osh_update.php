@@ -49,7 +49,7 @@ function zen_update_orders_history($orders_id, $message = '', $updated_by = null
     $email_subject = (string)$email_subject;
     $send_extra_emails_to = (string)$send_extra_emails_to;
     
-    $osh_info = $GLOBALS['db']->Execute(
+    $osh_info = $GLOBALS['db']->ExecuteNoCache(
         "SELECT customers_name, customers_email_address, orders_status, date_purchased 
            FROM " . TABLE_ORDERS . " 
           WHERE orders_id = $orders_id
