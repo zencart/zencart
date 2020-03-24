@@ -109,6 +109,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'process') {
         $check_country = $db->Execute($check_country_query);
 
         $_SESSION['customer_id'] = $check_customer->fields['customers_id'];
+        $_SESSION['customers_email_address'] = $check_customer->fields['customers_email_address'];
         $_SESSION['customer_default_address_id'] = $check_customer->fields['customers_default_address_id'];
         $_SESSION['customers_authorization'] = $check_customer->fields['customers_authorization'];
         $_SESSION['customer_first_name'] = $check_customer->fields['customers_firstname'];
