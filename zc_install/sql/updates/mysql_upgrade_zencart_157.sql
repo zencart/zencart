@@ -42,7 +42,6 @@ UPDATE configuration SET configuration_title = 'Product page generated &lt;meta 
 # Other name/description improvements  
 UPDATE configuration SET configuration_title= 'Recent Purchases Box', configuration_description= 'Number of products to display in the order history box' WHERE configuration_key = 'MAX_DISPLAY_PRODUCTS_IN_ORDER_HISTORY_BOX';
 UPDATE configuration SET configuration_description = 'Number of products to display in the \'Also Purchased\' box' WHERE configuration_key = 'MAX_DISPLAY_ALSO_PURCHASED'; 
-UPDATE configuration SET configuration_description = 'Number of products to display in the \'Also Purchased\' box' WHERE configuration_key = 'MAX_DISPLAY_ALSO_PURCHASED'; 
 UPDATE configuration SET configuration_description = 'Minimum number of products to display in the \'Also Purchased\' box' WHERE configuration_key = 'MIN_DISPLAY_ALSO_PURCHASED'; 
 #
 UPDATE product_type_layout SET configuration_title = 'Product page &lt;title&gt; tag - default: use Product Name', configuration_description = 'Default setting for a new product (can be modified per product).<br>Show the Product Name in the page &lt;title&gt; tag.' WHERE configuration_key = 'SHOW_PRODUCT_INFO_METATAGS_PRODUCTS_NAME_STATUS';
