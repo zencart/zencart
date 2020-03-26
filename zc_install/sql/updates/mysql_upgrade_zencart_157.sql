@@ -277,6 +277,13 @@ CREATE TABLE plugin_groups_description (
   PRIMARY KEY  (plugin_group_unique_key,language_id)
 ) ENGINE=MyISAM;
 
+
+
+######
+# Carry forward from v1.5.6 for early-adopters
+UPDATE configuration SET date_added='0001-01-01' where date_added < '0001-01-01';
+
+
 #############
 
 #### VERSION UPDATE STATEMENTS
