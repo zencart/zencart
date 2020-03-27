@@ -29,7 +29,7 @@ if (zen_not_null($action)) {
       if ((WARN_BEFORE_DOWN_FOR_MAINTENANCE == 'true') && (DOWN_FOR_MAINTENANCE == 'true')) {
         $db->Execute("UPDATE " . TABLE_CONFIGURATION . "
                       SET configuration_value = 'false',
-                          last_modified = '" . NOW . "'
+                          last_modified = now()
                       WHERE configuration_key = 'WARN_BEFORE_DOWN_FOR_MAINTENANCE'");
       }
 
