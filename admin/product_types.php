@@ -25,17 +25,6 @@ if (zen_not_null($action)) {
       $configuration_query = "SELECT configuration_key AS cfgkey, configuration_value AS cfgvalue
                               FROM " . TABLE_PRODUCT_TYPE_LAYOUT;
 
-      // set the WARN_BEFORE_DOWN_FOR_MAINTENANCE to false if DOWN_FOR_MAINTENANCE = true
-      if ((WARN_BEFORE_DOWN_FOR_MAINTENANCE == 'true') && (DOWN_FOR_MAINTENANCE == 'true')) {
-        $db->Execute("UPDATE " . TABLE_CONFIGURATION . "
-                      SET configuration_value = 'false',
-                          last_modified = now()
-                      WHERE configuration_key = 'WARN_BEFORE_DOWN_FOR_MAINTENANCE'");
-      }
-
-      $configuration_query = "SELECT configuration_key AS cfgkey, configuration_value AS cfgvalue
-                              FROM " . TABLE_CONFIGURATION;
-
       zen_redirect(zen_href_link(FILENAME_PRODUCT_TYPES, 'gID=' . $_GET['gID'] . '&cID=' . $cID . '&ptID=' . $_GET['ptID'] . '&action=layout'));
       break;
     case 'insert':
@@ -43,8 +32,7 @@ if (zen_not_null($action)) {
       if (!isset($_POST['type_name'])) {
         break;
       }
-      if (isset($_GET['ptID']))
-        $type_id = zen_db_prepare_input($_GET['ptID']);
+      if (isset($_GET['ptID'])) $type_id = zen_db_prepare_input($_GET['ptID']);
       $type_name = zen_db_prepare_input($_POST['type_name']);
       $handler = zen_db_prepare_input($_POST['handler']);
       $allow_add_to_cart = zen_db_prepare_input(($_POST['catalog_add_to_cart'] ? 'Y' : 'N'));
