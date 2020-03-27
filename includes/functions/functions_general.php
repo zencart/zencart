@@ -803,7 +803,7 @@
   function zen_get_buy_now_button($product_id, $link, $additional_link = false) {
     global $db;
 
-// show case only superceeds all other settings
+// show case only supercedes all other settings
     if (STORE_STATUS != '0') {
       return '<a href="' . zen_href_link(FILENAME_CONTACT_US, '', 'SSL') . '">' .  TEXT_SHOWCASE_ONLY . '</a>';
     }
