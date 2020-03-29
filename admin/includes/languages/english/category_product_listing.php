@@ -48,7 +48,7 @@ define('TEXT_COPY_AS_DUPLICATE_ATTRIBUTES', 'Attributes copied from Product ID#%
 define('TEXT_COPY_AS_DUPLICATE_METATAGS', 'Metatags for Language ID#%u copied from Product ID#%u to duplicate Product ID#%u');
 define('TEXT_COPY_AS_DUPLICATE_CATEGORIES', 'Linked Category ID#%u copied from Product ID#%u to duplicate Product ID#%u');
 define('TEXT_COPY_AS_DUPLICATE_DISCOUNTS', 'Discounts copied from Product ID#%u to duplicate Product ID#%u');
-define('TEXT_DUPLICATE_IDENTIFIER', '[COPY]');
+define('TEXT_DUPLICATE_IDENTIFIER', '[DUPLICATE]');
 
 define('TEXT_INFO_HEADING_ATTRIBUTE_FEATURES', 'Attributes Changes for Products ID# ');
 define('TEXT_PRODUCTS_ATTRIBUTES_INFO', 'Attribute Features For:');
