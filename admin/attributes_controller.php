@@ -943,10 +943,10 @@ function zen_js_option_values_list($selectedName, $fieldName)
                   <button type="submit" class="btn btn-primary"><?php echo IMAGE_DISPLAY; ?></button>
                 </div>
               </div>
-              <?php echo '</form>'; ?>
-            </div>
+            <?php } // product dropdown ?>
+            <?php echo '</form>'; ?>
           </div>
-        <?php } // product dropdown ?>
+        </div>
       <?php } // $action == '' ?>
       <?php
 // start of attributes display
@@ -1421,31 +1421,35 @@ function zen_js_option_values_list($selectedName, $fieldName)
                         }
                         ?>
                         <h4><?php echo TEXT_ATTRIBUTES_IMAGE; ?></h4>
-                        <div class="form-group">
-                          <div class="col-sm-2">
-                            <?php echo ($attributes_value['attributes_image'] != '' ? zen_image(DIR_WS_CATALOG_IMAGES . $attributes_value['attributes_image']) . '<br>' . $attributes_value['attributes_image'] : ''); ?>
-                          </div>
-                          <div class="col-sm-6 col-lg-4">
-                            <?php echo zen_draw_file_field('attributes_image', '', 'class="form-control"'); ?>
-                            <?php echo zen_draw_hidden_field('attributes_previous_image', $attributes_value['attributes_image']); ?>
+                        <div class="row">
+                          <div class="form-group">
+                            <div class="col-sm-2">
+                              <?php echo ($attributes_value['attributes_image'] != '' ? zen_image(DIR_WS_CATALOG_IMAGES . $attributes_value['attributes_image']) . '<br>' . $attributes_value['attributes_image'] : ''); ?>
+                            </div>
+                            <div class="col-sm-6 col-lg-4">
+                              <?php echo zen_draw_file_field('attributes_image', '', 'class="form-control"'); ?>
+                              <?php echo zen_draw_hidden_field('attributes_previous_image', $attributes_value['attributes_image']); ?>
+                            </div>
                           </div>
                         </div>
-                        <div class="form-group">
-                          <div class="col-sm-4"><?php echo zen_draw_label(TEXT_ATTRIBUTES_IMAGE_DIR, 'img_dir', 'class="control-label"') . zen_draw_pull_down_menu('img_dir', $dir_info, $default_directory, 'class="form-control"'); ?></div>
-                          <div class="col-sm-4"><?php echo zen_draw_label(TEXT_IMAGES_OVERWRITE, 'overwrite'); ?>
-                            <div class="radio">
-                              <label><?php echo zen_draw_radio_field('overwrite', '0', false) . TABLE_HEADING_NO; ?></label>
+                        <div class="row">
+                          <div class="form-group">
+                            <div class="col-sm-4"><?php echo zen_draw_label(TEXT_ATTRIBUTES_IMAGE_DIR, 'img_dir', 'class="control-label"') . zen_draw_pull_down_menu('img_dir', $dir_info, $default_directory, 'class="form-control"'); ?></div>
+                            <div class="col-sm-4"><?php echo zen_draw_label(TEXT_IMAGES_OVERWRITE, 'overwrite'); ?>
+                              <div class="radio">
+                                <label><?php echo zen_draw_radio_field('overwrite', '0', false) . TABLE_HEADING_NO; ?></label>
+                              </div>
+                              <div class="radio">
+                                <label><?php echo zen_draw_radio_field('overwrite', '1', true) . TABLE_HEADING_YES; ?></label>
+                              </div>
                             </div>
-                            <div class="radio">
-                              <label><?php echo zen_draw_radio_field('overwrite', '1', true) . TABLE_HEADING_YES; ?></label>
-                            </div>
-                          </div>
-                          <div class="col-sm-4"><?php echo zen_draw_label(TEXT_IMAGES_DELETE, 'image_delete'); ?>
-                            <div class="radio">
-                              <label><?php echo zen_draw_radio_field('image_delete', '0', false) . TABLE_HEADING_NO; ?></label>
-                            </div>
-                            <div class="radio">
-                              <label><?php echo zen_draw_radio_field('image_delete', '1', true) . '&nbsp;' . TABLE_HEADING_YES; ?></label>
+                            <div class="col-sm-4"><?php echo zen_draw_label(TEXT_IMAGES_DELETE, 'image_delete'); ?>
+                              <div class="radio">
+                                <label><?php echo zen_draw_radio_field('image_delete', '0', false) . TABLE_HEADING_NO; ?></label>
+                              </div>
+                              <div class="radio">
+                                <label><?php echo zen_draw_radio_field('image_delete', '1', true) . '&nbsp;' . TABLE_HEADING_YES; ?></label>
+                              </div>
                             </div>
                           </div>
                         </div>
@@ -1966,19 +1970,23 @@ function zen_js_option_values_list($selectedName, $fieldName)
                       $default_directory = 'attributes/';
                       ?>
                       <h4><?php echo TEXT_ATTRIBUTES_IMAGE; ?></h4>
-                      <div class="form-group">
-                        <div class="col-sm-offset-2 col-sm-6 col-lg-4">
-                          <?php echo zen_draw_file_field('attributes_image', '', 'class="form-control"'); ?>
+                      <div class="row">
+                        <div class="form-group">
+                          <div class="col-sm-offset-2 col-sm-6 col-lg-4">
+                            <?php echo zen_draw_file_field('attributes_image', '', 'class="form-control"'); ?>
+                          </div>
                         </div>
                       </div>
-                      <div class="form-group">
-                        <div class="col-sm-4"><?php echo zen_draw_label(TEXT_ATTRIBUTES_IMAGE_DIR, 'img_dir', 'class="control-label"') . zen_draw_pull_down_menu('img_dir', $dir_info, $default_directory, 'class="form-control"'); ?></div>
-                        <div class="col-sm-4"><?php echo zen_draw_label(TEXT_IMAGES_OVERWRITE, 'overwrite'); ?>
-                          <div class="radio">
-                            <label><?php echo zen_draw_radio_field('overwrite', '0', false) . TABLE_HEADING_NO; ?></label>
-                          </div>
-                          <div class="radio">
-                            <label><?php echo zen_draw_radio_field('overwrite', '1', true) . TABLE_HEADING_YES; ?></label>
+                      <div class="row">
+                        <div class="form-group">
+                          <div class="col-sm-4"><?php echo zen_draw_label(TEXT_ATTRIBUTES_IMAGE_DIR, 'img_dir', 'class="control-label"') . zen_draw_pull_down_menu('img_dir', $dir_info, $default_directory, 'class="form-control"'); ?></div>
+                          <div class="col-sm-4"><?php echo zen_draw_label(TEXT_IMAGES_OVERWRITE, 'overwrite'); ?>
+                            <div class="radio">
+                              <label><?php echo zen_draw_radio_field('overwrite', '0', false) . TABLE_HEADING_NO; ?></label>
+                            </div>
+                            <div class="radio">
+                              <label><?php echo zen_draw_radio_field('overwrite', '1', true) . TABLE_HEADING_YES; ?></label>
+                            </div>
                           </div>
                         </div>
                       </div>
