@@ -43,11 +43,12 @@ define('TEXT_COPY_METATAGS','Copy Metatags to Duplicate?');
 define('TEXT_COPY_LINKED_CATEGORIES','Copy Linked Categories to Duplicate?');
 define('TEXT_COPY_EDIT_DUPLICATE', 'Open Duplicate Product for editing');
 
-//these four constants used in copy_product_confirm
+//used in copy_product_confirm
 define('TEXT_COPY_AS_DUPLICATE_ATTRIBUTES', 'Attributes copied from Product ID#%u to duplicate Product ID#%u');
 define('TEXT_COPY_AS_DUPLICATE_METATAGS', 'Metatags for Language ID#%u copied from Product ID#%u to duplicate Product ID#%u');
 define('TEXT_COPY_AS_DUPLICATE_CATEGORIES', 'Linked Category ID#%u copied from Product ID#%u to duplicate Product ID#%u');
 define('TEXT_COPY_AS_DUPLICATE_DISCOUNTS', 'Discounts copied from Product ID#%u to duplicate Product ID#%u');
+define('TEXT_DUPLICATE_IDENTIFIER', '[COPY]');
 
 define('TEXT_INFO_HEADING_ATTRIBUTE_FEATURES', 'Attributes Changes for Products ID# ');
 define('TEXT_PRODUCTS_ATTRIBUTES_INFO', 'Attribute Features For:');

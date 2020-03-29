@@ -72,7 +72,7 @@ if (isset($_POST['products_id'], $_POST['categories_id'])) {
                                                       products_sort_order, products_price_sorter, master_categories_id)
                   VALUES ('" . zen_db_input($product->fields['products_type']) . "',
                           '" . $products_quantity . "',
-                          '" . zen_db_input($product->fields['products_model']) . " DUPLICATE',
+                          '" . zen_db_input($product->fields['products_model']) . "',
                           '" . zen_db_input($product->fields['products_image']) . "',
                           '" . $products_price . "',
                           '" . zen_db_input($product->fields['products_virtual']) . "',
@@ -103,7 +103,7 @@ if (isset($_POST['products_id'], $_POST['categories_id'])) {
             $db->Execute("INSERT INTO " . TABLE_PRODUCTS_DESCRIPTION . " (products_id, language_id, products_name, products_description, products_url, products_viewed)
                     VALUES ('" . $dup_products_id . "',
                             '" . (int)$description['language_id'] . "',
-                            '" . zen_db_input($description['products_name']) . "',
+                            '" . zen_db_input($description['products_name']) . " " . TEXT_DUPLICATE_IDENTIFIER . "',
                             '" . zen_db_input($description['products_description']) . "',
                             '" . zen_db_input($description['products_url']) . "',
                             0)");
