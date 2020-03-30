@@ -356,12 +356,8 @@ if (zen_get_categories_status($current_category_id) == 0 && $pInfo->products_sta
         <?php echo zen_draw_input_field('products_model', htmlspecialchars(stripslashes($pInfo->products_model), ENT_COMPAT, CHARSET, TRUE), zen_set_field_length(TABLE_PRODUCTS, 'products_model') . ' class="form-control" id="products_model"'); ?>
     </div>
   </div>
-  <?php
-  $dir_info = zen_build_subdirectories_array(DIR_FS_CATALOG_IMAGES);
-  $default_directory = substr($pInfo->products_image, 0, strpos($pInfo->products_image, '/') + 1);
-  ?>
-  <hr>
-  <h2><?php echo TEXT_PRODUCTS_IMAGE; ?></h2>
+    <hr>
+    <h2><?php echo TEXT_PRODUCTS_IMAGE; ?></h2>
     <?php
     if (!empty($pInfo->products_image)) { ?>
         <div class="form-group">
@@ -380,34 +376,37 @@ if (zen_get_categories_status($current_category_id) == 0 && $pInfo->products_sta
         </div>
     <?php }
     ?>
-  <div class="form-group">
-      <?php echo zen_draw_label(TEXT_EDIT_PRODUCTS_IMAGE, 'products_image', 'class="col-sm-3 control-label"'); ?>
-    <div class="col-sm-9 col-md-9 col-lg-6">
-      <div class="col-md-6">
-        <div class="row">
+    <div class="form-group">
+        <?php echo zen_draw_label(TEXT_EDIT_PRODUCTS_IMAGE, 'products_image', 'class="col-sm-3 control-label"'); ?>
+        <div class="col-sm-9 col-md-9 col-lg-6">
             <?php echo zen_draw_file_field('products_image', '', 'class="form-control" id="products_image"'); ?>
-        </div>
-        <div class="row">
-            <?php echo zen_draw_label(TEXT_IMAGE_CURRENT, 'products_previous_image', 'class="control-label"') . '&nbsp;' . ($pInfo->products_image != '' ? $pInfo->products_image : NONE); ?>
             <?php echo zen_draw_hidden_field('products_previous_image', $pInfo->products_image); ?>
         </div>
-      </div>
-      <div class="col-md-6">
-        <div class="row">
-          <?php echo zen_draw_label(TEXT_PRODUCTS_IMAGE_DIR, 'img_dir', 'class="control-label"'); ?>&nbsp;<?php echo zen_draw_pull_down_menu('img_dir', $dir_info, $default_directory, 'class="form-control" id="img_dir"'); ?>
-        </div>
-        <div class="row">
-            <?php echo zen_draw_label(TEXT_IMAGES_OVERWRITE, 'overwrite', 'class="control-label"'); ?>
-          <label class="radio-inline"><?php echo zen_draw_radio_field('overwrite', '0', false) . TABLE_HEADING_NO; ?></label>
-          <label class="radio-inline"><?php echo zen_draw_radio_field('overwrite', '1', true) . TABLE_HEADING_YES; ?></label>
-        </div>
-        <div class="row">
-            <?php echo zen_draw_label(TEXT_PRODUCTS_IMAGE_MANUAL, 'products_image_manual', 'class="control-label"') . zen_draw_input_field('products_image_manual', '', 'class="form-control" id="products_image_manual"'); ?>
-        </div>
-      </div>
     </div>
-  </div>
-  <hr>
+    <?php
+    $dir_info = zen_build_subdirectories_array(DIR_FS_CATALOG_IMAGES);
+    $default_directory = substr($pInfo->products_image, 0, strpos($pInfo->products_image, '/') + 1);
+    ?>
+    <div class="form-group">
+        <?php echo zen_draw_label(TEXT_PRODUCTS_IMAGE_DIR, 'img_dir', 'class="col-sm-3 control-label"'); ?>
+        <div class="col-sm-9 col-md-9 col-lg-6">
+            <?php echo zen_draw_pull_down_menu('img_dir', $dir_info, $default_directory, 'class="form-control" id="img_dir"'); ?>
+        </div>
+    </div>
+    <div class="form-group">
+        <p class="col-sm-3 control-label"><?php echo TEXT_IMAGES_OVERWRITE; ?></p>
+        <div class="col-sm-9 col-md-9 col-lg-6">
+            <label class="radio-inline"><?php echo zen_draw_radio_field('overwrite', '0', false) . TABLE_HEADING_NO; ?></label>
+            <label class="radio-inline"><?php echo zen_draw_radio_field('overwrite', '1', true) . TABLE_HEADING_YES; ?></label>
+        </div>
+    </div>
+    <div class="form-group">
+        <?php echo zen_draw_label(TEXT_PRODUCTS_IMAGE_MANUAL, 'products_image_manual', 'class="col-sm-3 control-label"'); ?>
+        <div class="col-sm-9 col-md-9 col-lg-6">
+            <?php echo zen_draw_input_field('products_image_manual', '', 'class="form-control" id="products_image_manual"'); ?>
+        </div>
+    </div>
+    <hr>
   <div class="form-group">
     <p class="col-sm-3 control-label"><?php echo TEXT_PRODUCTS_URL; ?><span class="help-block"><?php echo TEXT_PRODUCTS_URL_WITHOUT_HTTP; ?></span></p>
     <div class="col-sm-9 col-md-6">
