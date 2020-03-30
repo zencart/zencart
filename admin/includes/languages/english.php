@@ -688,7 +688,7 @@ define('EMAIL_SALUTATION', 'Dear');
 
   define('TABLE_HEADING_YES','Yes');
   define('TABLE_HEADING_NO','No');
-  define('TEXT_PRODUCTS_IMAGE_MANUAL', '<br /><strong>Or, select an existing image file from server, filename:</strong>');
+  define('TEXT_PRODUCTS_IMAGE_MANUAL', '<br /><strong>Or, use an existing image file from server, filename:</strong>');
   define('TEXT_IMAGES_OVERWRITE', '<br /><strong>Overwrite Existing Image on Server?</strong>');
   define('TEXT_IMAGE_OVERWRITE_WARNING','WARNING: FILENAME was updated but not overwritten ');
   define('TEXT_IMAGES_DELETE', '<strong>Remove Image?</strong> Note: Removes image from product (image is NOT deleted/removed from server):');
