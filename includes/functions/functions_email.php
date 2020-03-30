@@ -273,7 +273,7 @@ use PHPMailer\PHPMailer\SMTP;
         }
       }
       global $newAttachmentsList;
-      $zco_notifier->notify('NOTIFY_EMAIL_BEFORE_PROCESS_ATTACHMENTS', array('attachments'=>$attachments_list, 'module'=>$module), $mail);
+      $zco_notifier->notify('NOTIFY_EMAIL_BEFORE_PROCESS_ATTACHMENTS', array('attachments'=>$attachments_list, 'module'=>$module), $mail, $attachments_list);
       if (isset($newAttachmentsList) && is_array($newAttachmentsList)) $attachments_list = $newAttachmentsList;
       if (defined('EMAIL_ATTACHMENTS_ENABLED') && EMAIL_ATTACHMENTS_ENABLED && is_array($attachments_list) && sizeof($attachments_list) > 0) {
         foreach($attachments_list as $key => $val) {
