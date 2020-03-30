@@ -420,7 +420,7 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
           </div>
         </div>
         <div class="form-group">
-          <p class="col-sm-3 control-label"><strong><?php echo TEXT_IMAGES_DELETE; ?></strong></p>
+          <p class="col-sm-3 control-label"><?php echo TEXT_IMAGES_DELETE; ?></p>
           <div class="col-sm-9 col-md-6">
             <label class="radio-inline"><?php echo zen_draw_radio_field('image_delete', '0', true) . TABLE_HEADING_NO; ?></label>
             <label class="radio-inline"><?php echo zen_draw_radio_field('image_delete', '1', false) . TABLE_HEADING_YES; ?></label>
