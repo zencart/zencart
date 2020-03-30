@@ -142,10 +142,10 @@ if (zen_not_null($action)) {
         $categories_description_array = $_POST['categories_description'];
         $language_id = $languages[$i]['id'];
 
-        // clean $categories_description when blank or just <p /> left behind
+        // clean $categories_description of empty tags
         $sql_data_array = [
           'categories_name' => zen_db_prepare_input($categories_name_array[$language_id]),
-          'categories_description' => ($categories_description_array[$language_id] === '<p />' ? '' : zen_db_prepare_input($categories_description_array[$language_id]))
+          'categories_description' => empty(trim(strip_tags($categories_description_array[$language_id]))) ? '' : zen_db_prepare_input($categories_description_array[$language_id])
         ];
 
         if ($action === 'insert_category') {
