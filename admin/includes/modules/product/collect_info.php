@@ -183,7 +183,7 @@ if (zen_get_categories_status($current_category_id) == 0 && $pInfo->products_sta
       <?php echo zen_draw_label(TEXT_PRODUCTS_NAME, 'products_name', 'class="col-sm-3 control-label"'); ?>
     <div class="col-sm-9 col-md-6">
         <?php
-        for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
+        for ($i = 0, $n = count($languages); $i < $n; $i++) {
           ?>
         <div class="input-group">
           <span class="input-group-addon">
@@ -330,7 +330,7 @@ if (zen_get_categories_status($current_category_id) == 0 && $pInfo->products_sta
       <?php echo zen_draw_label(TEXT_PRODUCTS_DESCRIPTION, 'products_description', 'class="col-sm-3 control-label"'); ?>
     <div class="col-sm-9 col-md-6">
         <?php
-        for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
+        for ($i = 0, $n = count($languages); $i < $n; $i++) {
           ?>
         <div class="input-group">
           <span class="input-group-addon">
@@ -410,7 +410,7 @@ if (zen_get_categories_status($current_category_id) == 0 && $pInfo->products_sta
     </div>
     <div class="col-sm-9 col-md-6">
         <?php
-        for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
+        for ($i = 0, $n = count($languages); $i < $n; $i++) {
           ?>
         <div class="input-group">
           <span class="input-group-addon">
