@@ -9,7 +9,7 @@
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
 }
-$parameters = array(
+$parameters = [
   'products_name' => '',
   'products_description' => '',
   'products_url' => '',
@@ -40,7 +40,7 @@ $parameters = array(
   'products_discount_type_from' => '0',
   'products_price_sorter' => '0',
   'master_categories_id' => ''
-);
+];
 
 $pInfo = new objectInfo($parameters);
 
@@ -81,20 +81,23 @@ $category_lookup = $db->Execute("SELECT *
 if (!$category_lookup->EOF) {
   $cInfo = new objectInfo($category_lookup->fields);
 } else {
-  $cInfo = new objectInfo(array());
+  $cInfo = new objectInfo([]);
 }
 
-$manufacturers_array = array(array(
+$manufacturers_array = [
+    [
     'id' => '',
-    'text' => TEXT_NONE));
+    'text' => TEXT_NONE
+    ]
+];
 $manufacturers = $db->Execute("SELECT manufacturers_id, manufacturers_name
                                FROM " . TABLE_MANUFACTURERS . "
                                ORDER BY manufacturers_name");
 foreach ($manufacturers as $manufacturer) {
-  $manufacturers_array[] = array(
+  $manufacturers_array[] = [
     'id' => $manufacturer['manufacturers_id'],
     'text' => $manufacturer['manufacturers_name']
-  );
+  ];
 }
 
 // set to out of stock if categories_status is off and new product or existing products_status is off
@@ -214,7 +217,7 @@ if (zen_get_categories_status($current_category_id) == 0 && $pInfo->products_sta
     //
     // Note: The product's type can be found in the 'product_type' element of the passed $pInfo object.
     //
-    $extra_product_inputs = array();
+    $extra_product_inputs = [];
     $zco_notifier->notify('NOTIFY_ADMIN_PRODUCT_COLLECT_INFO_EXTRA_INPUTS', $pInfo, $extra_product_inputs);
     if (!empty($extra_product_inputs)) {
         foreach ($extra_product_inputs as $extra_input) {
