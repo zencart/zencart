@@ -69,7 +69,7 @@ if (!defined('WARN_DOWNLOAD_DIRECTORY_NOT_READABLE')) define('WARN_DOWNLOAD_DIRE
  */
 if (!defined('WARN_DATABASE_VERSION_PROBLEM')) define('WARN_DATABASE_VERSION_PROBLEM','true');
 // check if the installer directory exists, and warn of its existence
-if (WARN_INSTALL_EXISTENCE == 'true') {
+if (WARN_INSTALL_EXISTENCE == 'true' && ADMIN_BLOCK_WARNING_OVERRIDE !== 'true') {
   $check_path = realpath(DIR_FS_CATALOG . '/zc_install');
   if (is_dir($check_path)) {
     $messageStack->add(sprintf(WARNING_INSTALL_DIRECTORY_EXISTS, ($check_path == '' ? '..../zc_install' : $check_path)), 'warning');

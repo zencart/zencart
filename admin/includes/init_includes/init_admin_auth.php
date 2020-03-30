@@ -29,6 +29,7 @@ if (basename($PHP_SELF) == FILENAME_AJAX . '.php') {
 // admin folder rename required
 if (!defined('ADMIN_BLOCK_WARNING_OVERRIDE') || ADMIN_BLOCK_WARNING_OVERRIDE == '')
 {
+  define('ADMIN_BLOCK_WARNING_OVERRIDE', false);
   if (basename($PHP_SELF) != FILENAME_ALERT_PAGE . '.php')
   {
     if (substr(DIR_WS_ADMIN, -7) == '/admin/' || substr(DIR_WS_HTTPS_ADMIN, -7) == '/admin/')
