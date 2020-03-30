@@ -174,13 +174,13 @@ if (zen_not_null($action)) {
           if ($categories_image->parse() && $categories_image->save()) {
               $categories_image_name = zen_db_input($_POST['img_dir'] . $categories_image->filename);
           }
-          if ($categories_image->filename != 'none' && $categories_image->filename != '' && $_POST['image_delete'] != 1) {
+          if ($categories_image->filename != 'none' && $categories_image->filename != '' && $_POST['image_delete'] != '1') {
               // save filename when not set to none and not blank
               $db_filename = zen_limit_image_filename($categories_image_name, TABLE_CATEGORIES, 'categories_image');
               $db->Execute("update " . TABLE_CATEGORIES . "
                           set categories_image = '" . $db_filename . "'
                           where categories_id = '" . (int)$categories_id . "'");
-          } elseif ($categories_image->filename != '' || $_POST['image_delete'] === 1) {
+          } elseif ($categories_image->filename != '' || $_POST['image_delete'] === '1') {
               $db->Execute("update " . TABLE_CATEGORIES . "
                             set categories_image = ''
                             where categories_id = '" . (int)$categories_id . "'");
