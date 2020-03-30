@@ -37,9 +37,7 @@
   define('TEXT_HEADING_DELETE_RECORD_ARTIST', 'Delete Recording Artist');
   define('TEXT_DATE_ADDED', 'Date Added');
   define('TEXT_LAST_MODIFIED', 'Date Modified');
-  define('TEXT_IMAGE_NONEXISTENT', 'Image does not exist');
   define('TEXT_PRODUCTS', 'Linked Products');
   define('TEXT_DISPLAY_NUMBER_OF_ARTISTS', 'Displaying <strong>%d</strong> to <strong>%d</strong> (of <strong>%d</strong> Recording Artists)');
   define('TEXT_DELETE_PRODUCTS', 'Delete this Recording Artist and all items linked to it?');
   define('TEXT_DELETE_WARNING_PRODUCTS', '<b>WARNING:</b> There are %s items still linked to this Recording Artist!');
-?>

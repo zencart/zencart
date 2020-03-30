@@ -9,6 +9,7 @@ namespace SquareConnect\Model;
 
 use \ArrayAccess;
 /**
+ * @deprecated
  * V1Variation Class Doc Comment
  *
  * @category Class
@@ -34,7 +35,8 @@ class V1Variation implements ArrayAccess
         'track_inventory' => 'bool',
         'inventory_alert_type' => 'string',
         'inventory_alert_threshold' => 'int',
-        'user_data' => 'string'
+        'user_data' => 'string',
+        'v2_id' => 'string'
     );
   
     /** 
@@ -52,7 +54,8 @@ class V1Variation implements ArrayAccess
         'track_inventory' => 'track_inventory',
         'inventory_alert_type' => 'inventory_alert_type',
         'inventory_alert_threshold' => 'inventory_alert_threshold',
-        'user_data' => 'user_data'
+        'user_data' => 'user_data',
+        'v2_id' => 'v2_id'
     );
   
     /**
@@ -70,7 +73,8 @@ class V1Variation implements ArrayAccess
         'track_inventory' => 'setTrackInventory',
         'inventory_alert_type' => 'setInventoryAlertType',
         'inventory_alert_threshold' => 'setInventoryAlertThreshold',
-        'user_data' => 'setUserData'
+        'user_data' => 'setUserData',
+        'v2_id' => 'setV2Id'
     );
   
     /**
@@ -88,7 +92,8 @@ class V1Variation implements ArrayAccess
         'track_inventory' => 'getTrackInventory',
         'inventory_alert_type' => 'getInventoryAlertType',
         'inventory_alert_threshold' => 'getInventoryAlertThreshold',
-        'user_data' => 'getUserData'
+        'user_data' => 'getUserData',
+        'v2_id' => 'getV2Id'
     );
   
     /**
@@ -107,12 +112,12 @@ class V1Variation implements ArrayAccess
       */
     protected $item_id;
     /**
-      * $ordinal Indicates the variation's list position when displayed in Square Register and the merchant dashboard. If more than one variation for the same item has the same ordinal value, those variations are displayed in alphabetical order
+      * $ordinal Indicates the variation's list position when displayed in Square Point of Sale and the merchant dashboard. If more than one variation for the same item has the same ordinal value, those variations are displayed in alphabetical order
       * @var int
       */
     protected $ordinal;
     /**
-      * $pricing_type Indicates whether the item variation's price is fixed or determined at the time of sale.
+      * $pricing_type Indicates whether the item variation's price is fixed or determined at the time of sale. See [V1VariationPricingType](#type-v1variationpricingtype) for possible values
       * @var string
       */
     protected $pricing_type;
@@ -132,7 +137,7 @@ class V1Variation implements ArrayAccess
       */
     protected $track_inventory;
     /**
-      * $inventory_alert_type Indicates whether the item variation displays an alert when its inventory quantity is less than or equal to its inventory_alert_threshold.
+      * $inventory_alert_type Indicates whether the item variation displays an alert when its inventory quantity is less than or equal to its inventory_alert_threshold. See [V1VariationInventoryAlertType](#type-v1variationinventoryalerttype) for possible values
       * @var string
       */
     protected $inventory_alert_type;
@@ -146,6 +151,11 @@ class V1Variation implements ArrayAccess
       * @var string
       */
     protected $user_data;
+    /**
+      * $v2_id The ID of the CatalogObject in the Connect v2 API. Objects that are shared across multiple locations share the same v2 ID.
+      * @var string
+      */
+    protected $v2_id;
 
     /**
      * Constructor
@@ -208,6 +218,11 @@ class V1Variation implements ArrayAccess
               $this->user_data = $data["user_data"];
             } else {
               $this->user_data = null;
+            }
+            if (isset($data["v2_id"])) {
+              $this->v2_id = $data["v2_id"];
+            } else {
+              $this->v2_id = null;
             }
         }
     }
@@ -279,7 +294,7 @@ class V1Variation implements ArrayAccess
   
     /**
      * Sets ordinal
-     * @param int $ordinal Indicates the variation's list position when displayed in Square Register and the merchant dashboard. If more than one variation for the same item has the same ordinal value, those variations are displayed in alphabetical order
+     * @param int $ordinal Indicates the variation's list position when displayed in Square Point of Sale and the merchant dashboard. If more than one variation for the same item has the same ordinal value, those variations are displayed in alphabetical order
      * @return $this
      */
     public function setOrdinal($ordinal)
@@ -298,7 +313,7 @@ class V1Variation implements ArrayAccess
   
     /**
      * Sets pricing_type
-     * @param string $pricing_type Indicates whether the item variation's price is fixed or determined at the time of sale.
+     * @param string $pricing_type Indicates whether the item variation's price is fixed or determined at the time of sale. See [V1VariationPricingType](#type-v1variationpricingtype) for possible values
      * @return $this
      */
     public function setPricingType($pricing_type)
@@ -374,7 +389,7 @@ class V1Variation implements ArrayAccess
   
     /**
      * Sets inventory_alert_type
-     * @param string $inventory_alert_type Indicates whether the item variation displays an alert when its inventory quantity is less than or equal to its inventory_alert_threshold.
+     * @param string $inventory_alert_type Indicates whether the item variation displays an alert when its inventory quantity is less than or equal to its inventory_alert_threshold. See [V1VariationInventoryAlertType](#type-v1variationinventoryalerttype) for possible values
      * @return $this
      */
     public function setInventoryAlertType($inventory_alert_type)
@@ -418,6 +433,25 @@ class V1Variation implements ArrayAccess
     public function setUserData($user_data)
     {
         $this->user_data = $user_data;
+        return $this;
+    }
+    /**
+     * Gets v2_id
+     * @return string
+     */
+    public function getV2Id()
+    {
+        return $this->v2_id;
+    }
+  
+    /**
+     * Sets v2_id
+     * @param string $v2_id The ID of the CatalogObject in the Connect v2 API. Objects that are shared across multiple locations share the same v2 ID.
+     * @return $this
+     */
+    public function setV2Id($v2_id)
+    {
+        $this->v2_id = $v2_id;
         return $this;
     }
     /**

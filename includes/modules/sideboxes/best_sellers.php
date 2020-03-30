@@ -13,7 +13,7 @@
   $show_best_sellers= false;
 
   if (isset($_GET['products_id'])) {
-    if (isset($_SESSION['customer_id'])) {
+    if (zen_is_logged_in()) {
       $check_query = "select count(*) as count
                       from " . TABLE_CUSTOMERS_INFO . "
                       where customers_info_id = '" . (int)$_SESSION['customer_id'] . "'

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="./vendor/phpunit/phpunit/phpunit.xsd"
+         backupGlobals="false"
+         backupStaticAttributes="false"
+         bootstrap="vendor/autoload.php"
+         colors="true"
+         convertErrorsToExceptions="true"
+         convertNoticesToExceptions="true"
+         convertWarningsToExceptions="true"
+         processIsolation="true"
+         stopOnFailure="false">
+    <testsuites>
+        <testsuite name="UnitTests">
+          <directory suffix="Test.php">./not_for_release/testFramework/unittests/testsAdminNotifications</directory>
+          <directory suffix="Test.php">./not_for_release/testFramework/unittests/testsDiscountCoupon</directory>
+          <directory suffix="Test.php">./not_for_release/testFramework/unittests/testsPasswordHash</directory>
+          <directory suffix="Test.php">./not_for_release/testFramework/unittests/testsAdminSanitization</directory>
+          <directory suffix="Test.php">./not_for_release/testFramework/unittests/testsSundry</directory>
+        </testsuite>
+        <testsuite name="Browser">
+            <directory suffix="Test.php">./not_for_release/testFramework/Browser/</directory>
+        </testsuite>
+    </testsuites>
+    <php>
+        <server name="APP_ENV" value="testing"/>
+        <server name="BCRYPT_ROUNDS" value="4"/>
+        <server name="CACHE_DRIVER" value="array"/>
+        <server name="MAIL_DRIVER" value="array"/>
+        <server name="QUEUE_CONNECTION" value="sync"/>
+        <server name="SESSION_DRIVER" value="array"/>
+        <server name="DB_CONNECTION" value="sqlite"/>
+        <server name="DB_DATABASE" value=":memory:"/>
+        <server name="DATABASE_NAME" value=":memory:"/>
+        <ini name="memory_limit" value="512M" />
+    </php>
+</phpunit>

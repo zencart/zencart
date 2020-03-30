@@ -120,7 +120,7 @@ class V1Refund implements ArrayAccess
     );
   
     /**
-      * $type The type of refund
+      * $type The type of refund See [V1RefundType](#type-v1refundtype) for possible values
       * @var string
       */
     protected $type;
@@ -320,7 +320,7 @@ class V1Refund implements ArrayAccess
   
     /**
      * Sets type
-     * @param string $type The type of refund
+     * @param string $type The type of refund See [V1RefundType](#type-v1refundtype) for possible values
      * @return $this
      */
     public function setType($type)

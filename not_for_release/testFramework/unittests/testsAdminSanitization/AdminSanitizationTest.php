@@ -4,9 +4,8 @@
  * File contains tests for Admin Sanitization
  *
  * @package tests
- * @copyright Copyright 2003-2018 Zen Cart Development Team
+ * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: zcwilt Wed May 11 16:59:30 2016 +0000 New in v1.5.5 $
  */
 require_once(__DIR__ . '/../support/zcTestCase.php');
 
@@ -15,7 +14,7 @@ require_once(__DIR__ . '/../support/zcTestCase.php');
  */
 class AdminSanitizationTest extends zcTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         require_once(DIR_FS_CATALOG . '/admin/includes/classes/AdminRequestSanitizer.php');

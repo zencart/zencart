@@ -456,17 +456,15 @@ class authorizenet extends base {
    * @return boolean
    */
   function after_process() {
-    global $insert_id, $db, $order, $currencies;
+    global $insert_id, $order, $currencies;
     $this->notify('NOTIFY_PAYMENT_AUTHNETSIM_POSTPROCESS_HOOK');
-    $sql = "insert into " . TABLE_ORDERS_STATUS_HISTORY . " (comments, orders_id, orders_status_id, customer_notified, date_added) values (:orderComments, :orderID, :orderStatus, -1, now() )";
-    $currency_comment = '';
+    
+    $comments = 'Credit Card payment.  AUTH: ' . $this->auth_code . ' TransID: ' . $this->transaction_id;
     if ($order->info['currency'] != $this->gateway_currency) {
-      $currency_comment = ' (' . number_format($order->info['total'] * $currencies->get_value($this->gateway_currency), 2) . ' ' . $this->gateway_currency . ')';
+      $comments .= ' (' . number_format($order->info['total'] * $currencies->get_value($this->gateway_currency), 2) . ' ' . $this->gateway_currency . ')';
     }
-    $sql = $db->bindVars($sql, ':orderComments', 'Credit Card payment.  AUTH: ' . $this->auth_code . ' TransID: ' . $this->transaction_id . ' ' . $currency_comment, 'string');
-    $sql = $db->bindVars($sql, ':orderID', $insert_id, 'integer');
-    $sql = $db->bindVars($sql, ':orderStatus', $this->order_status, 'integer');
-    $db->Execute($sql);
+    zen_update_orders_history($insert_id, $comments, null, $this->order_status, -1);
+
     return false;
   }
   /**

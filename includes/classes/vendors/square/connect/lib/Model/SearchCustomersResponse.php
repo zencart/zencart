@@ -70,7 +70,7 @@ class SearchCustomersResponse implements ArrayAccess
       */
     protected $customers;
     /**
-      * $cursor A pagination cursor that can be used during subsequent calls to SearchCustomers to retrieve the next set of results associated with the original query. Pagination cursors are only present when a request succeeds and additional results are available.  See [Paginating results](#paginatingresults) for more information.
+      * $cursor A pagination cursor that can be used during subsequent calls to SearchCustomers to retrieve the next set of results associated with the original query. Pagination cursors are only present when a request succeeds and additional results are available.  See the [Pagination guide](https://developer.squareup.com/docs/working-with-apis/pagination) for more information.
       * @var string
       */
     protected $cursor;
@@ -148,7 +148,7 @@ class SearchCustomersResponse implements ArrayAccess
   
     /**
      * Sets cursor
-     * @param string $cursor A pagination cursor that can be used during subsequent calls to SearchCustomers to retrieve the next set of results associated with the original query. Pagination cursors are only present when a request succeeds and additional results are available.  See [Paginating results](#paginatingresults) for more information.
+     * @param string $cursor A pagination cursor that can be used during subsequent calls to SearchCustomers to retrieve the next set of results associated with the original query. Pagination cursors are only present when a request succeeds and additional results are available.  See the [Pagination guide](https://developer.squareup.com/docs/working-with-apis/pagination) for more information.
      * @return $this
      */
     public function setCursor($cursor)

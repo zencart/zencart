@@ -9,6 +9,7 @@ namespace SquareConnect\Model;
 
 use \ArrayAccess;
 /**
+ * @deprecated
  * V1PageCell Class Doc Comment
  *
  * @category Class
@@ -87,7 +88,7 @@ class V1PageCell implements ArrayAccess
       */
     protected $column;
     /**
-      * $object_type The type of entity represented in the cell (ITEM, DISCOUNT, CATEGORY, or PLACEHOLDER).
+      * $object_type The type of entity represented in the cell (ITEM, DISCOUNT, CATEGORY, or PLACEHOLDER). See [V1PageCellObjectType](#type-v1pagecellobjecttype) for possible values
       * @var string
       */
     protected $object_type;
@@ -97,7 +98,7 @@ class V1PageCell implements ArrayAccess
       */
     protected $object_id;
     /**
-      * $placeholder_type For a cell with an object_type of PLACEHOLDER, this value indicates the cell's special behavior.
+      * $placeholder_type For a cell with an object_type of PLACEHOLDER, this value indicates the cell's special behavior. See [V1PageCellPlaceholderType](#type-v1pagecellplaceholdertype) for possible values
       * @var string
       */
     protected $placeholder_type;
@@ -209,7 +210,7 @@ class V1PageCell implements ArrayAccess
   
     /**
      * Sets object_type
-     * @param string $object_type The type of entity represented in the cell (ITEM, DISCOUNT, CATEGORY, or PLACEHOLDER).
+     * @param string $object_type The type of entity represented in the cell (ITEM, DISCOUNT, CATEGORY, or PLACEHOLDER). See [V1PageCellObjectType](#type-v1pagecellobjecttype) for possible values
      * @return $this
      */
     public function setObjectType($object_type)
@@ -247,7 +248,7 @@ class V1PageCell implements ArrayAccess
   
     /**
      * Sets placeholder_type
-     * @param string $placeholder_type For a cell with an object_type of PLACEHOLDER, this value indicates the cell's special behavior.
+     * @param string $placeholder_type For a cell with an object_type of PLACEHOLDER, this value indicates the cell's special behavior. See [V1PageCellPlaceholderType](#type-v1pagecellplaceholdertype) for possible values
      * @return $this
      */
     public function setPlaceholderType($placeholder_type)

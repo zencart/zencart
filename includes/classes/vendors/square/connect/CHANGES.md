@@ -1,5 +1,245 @@
 # Change Log
 
+## Version 3.20200226.0 (2020-02-26)
+## API releases
+* **GA release**: All SDKs have been updated to support the new Bank Accounts and CashDrawerShifts APIs.
+
+* **Beta release**: All SDKs have been updated to support the new Disputes API.
+
+
+## Existing API updates
+
+All SDKs have been updated to support the following changes:
+
+* **Catalog API**    
+  * Batch upsert catalog objects endpoint &mdash; The `batches` field is now required and the array must have at least one element.   
+  * CatalogModifier &mdash; Two fields added:
+     * `ordinal` to support custom ordering in a modifier list   
+     * `modifier_list_id` to reference the parent modifier list
+  * CatalogModifierList &mdash; New field added: `ordinal` to support custom ordering in a list of **CatalogModifierList** objects.
+
+* **Customers API changes**
+  * SearchCustomers endpoint &mdash; `limit` size reduced from 1000 to 100 to improve the endpoint performance. 
+
+* **Orders API changes**
+  * CreateOrderRequest &mdash; Previously these request fields were deprecated: `line_items`, `taxes`, `discounts`. These fields are no longer available. Instead you now use the `Order` object in the request. For example, `Order.line_items`, `Order.taxes`, and `Order.discounts`.
+  * OrderLineItem type &mdash; There are two changes:
+    * The `taxes` field that was previously deprecated is no longer available. Instead, you now use the `OrderLineItem.applied_taxes` field. This also now requires that you set the `OrderLineItemTax.scope` field. 
+    * The `discounts` field that was previously deprecated is no longer available. Instead, you now use the `OrderLineItem.applied_discounts` field. This also now requires that you set the `OrderLineItemDiscount.scope` field. 
+
+* **Shared object updates**
+  * **Card object** &mdash; New fields added: `card_type`, `prepaid_type`. Currently, only the Payments API responses populate these fields. 
+
+## Version 2.20200122.1 (2020-02-12)
+**Documentation Changes**
+
+* Minor updates for Payments API descriptions
+* Deprecation & retirement dates added for Transactions API endpoints
+
+
+## Version 2.20200122.1 (2020-02-04)
+* Addresses bug that doesn't allow `getV1BatchTokenFromHeaders` to retrieve batch_token
+
+## Version 2.20200122.0 (2020-01-22)
+* New field:  The **Employee** object now has an `is_owner` field.
+* New field:  The **Card** enumeration has a new `SQUARE_CAPITAL_CARD` enum value to support a Square one-time Installments payment.
+
+* New request body field constraint: The **Refund Payment** request now required a non-empty string when the `payment_id` is supplied. 
+
+
+## Version 2.3.0.20191217 (2019-12-17)
+!!!important
+Square is excited to announce the public release of customized SDKs for [Java](https://github.com/square/square-java-sdk) and [.NET](https://github.com/square/square-dotnet-sdk). For more information, see [Square SDKs](/sdks).
+!!!
+
+* __GA release:__ SDKs updated to support new `receipt_url` and `receipt_number` fields added to the  [Payment](${SQUARE_TECH_REF}/objects/Payment) type.  
+
+* __Beta release:__ SDKs updated to support the new [CashDrawerShifts](cashdrawershift-api/reporting) API.
+
+* Square now follows the semantic versioning scheme that uses three numbers to delineate MAJOR, MINOR, and PATCH versions of our SDK. In addition, the SDK version also includes the API version so you know what Square API version the SDK is related to. For more information, see [Versioning and SDKs](build-basics/versioning-overview#versioning-and-sdks).
+
+
+## Version 2.20191120.0 (2019-11-20)
+!!!important
+Square has begun the retirement process for Connect v1 APIs. See the [Connect v1 Retirement](/migrate-from-v1) information page for details.
+!!!
+
+* __GA releases:__ SDKs now support the new `modify_tax_basis` field to Discounts and v2 Sandbox
+* __BETA releases:__ SDKs now support the Shifts API webhooks for Labor shift created, updated, deleted, CreateLocation endpoint, and the ability to customize statement description in Payments API.
+* **Deprecated**: Support for v1Items API and v1Locations API is fully deprecated.
+
+
+
+
+## Version 2.20191023.0 (2019-10-23)
+* **GA release**: Merchants.ListMerchant is GA for all SDKs.
+* **Beta release**: All SDKs support new Locations API endpoint, CreateLocation.
+* **Beta release**: All SDKs support exclusion strategies for pricing rules.
+
+
+## Version 2.20190925.0 (2019-09-25)
+
+* **GA release**: All SDKs have been updated to support the new Merchants API.
+
+* **Beta release**: All SDKs have been updated to support the new endpoints (RetrieveLocation, UpdateLocation) added to the Locations API.
+
+* **Beta release**: All SDKs have been updated to support the new field (`mcc`) added to the `Location` type. 
+
+* **GA release**:  All SDKs have been updated to support the new field (`bin`) added to the `Card` type. 
+
+* **GA release**: All SDKs have been updated to support the new `CardPaymentDetails` fields  (`verification_results`, `statement_description`, and `verification_method`). 
+
+* **GA release**: All SDKs have been updated to support the new `Payment` field, (`employee_id`).
+
+
+## Version 2.20190814.2 (2019-08-23)
+
+* **Bug fix**: Fixed path parameters for `UpdateOrder`
+
+## Version 2.20190814.1 (2018-08-16)
+
+* **Bug fix**: Removed a currentlyunsupported API object type
+## Version 2.20190814.0 (2019-08-15)
+
+* **New functionality**: All SDKs have been updated to support the Sandbox v2 BETA release
+* **Deprecated functionality**: All Transactions API functionality is deprecated in favor of Payments API and Refunds API functionality.
+* **New functionality**: All SDKs have been updated to support the Payments API GA.
+* **New functionality**: All SDKs have been updated to support the Refunds API GA.
+* **New functionality**: All SDKs have been updated to support Orders API updates:
+  * Pickup Fulfillments, SearchOrders, and ServiceCharges move from BETA to GA.
+  * New BETA endpoint: Orders.UpdateOrder &mdash; use the UpdateOrder endpoint to update existing orders.
+  * New BETA functionality: Create shipment-type fulfillments. 
+* **New functionality**: Locations.RetrieveLocation &mdash; use the RetrieveLocation endpoint to load details for a specific Location.
+
+## Version 2.20190724.0 (2019-07-24)
+
+* **BETA releases**:
+  * Catalog API: supports item options with datatypes and enums for item options and item option values.
+
+## Version 2.20190710.0 (2019-07-10)
+
+* **Retired functionality** &mdash; The `CatalogItem.image_url` field (deprecated under `Square-Version` YYYYMMDD) is retired and no longer included in Connect SDKs.
+
+## Version 2.20190612.1 (2019-06-26)
+
+* **Bug fix**: `Transaction.Charge` and `Customers.CreateCustomerCard` request objects &mdash; now include the `verification_token` required for [Strong Customer Authentication](https://developer.squareup.com/docs/sca-overview).
+
+## Version 2.20190612.0 (2019-06-12)
+
+* **BETA releases**:
+  * Orders API: supports service charges with a new field and datatype.
+  * Catalog API: supports measurement unites for item variation quantities with a new field and datatype.
+* **New functionality**: `Order` entities &mdash; now include a `source` field that contains details on where the order originated.
+* **Improved functionality**: ListLocations &mdash; Expanded business information available through the Locations API, including business hours, contact email, social media handles, and longitude/latitude for physical locations.
+
+## Version 2.20190508.0 (2019-05-08)
+
+## Details
+
+* **Beta functionality**: Orders API &mdash; support for fractional quantities,
+  expanded metadata, and embedded information on payments, refunds, and returns.
+* **Beta functionality**: Inventory API &mdash; support for fractional quantities.
+* **New functionality**: `Locations.business_hours` &mdash; read-only field with
+  information about the business hours at a particular location.
+
+## Version 2.20190410.1 (2019-04-24)
+
+## Details
+
+* **New functionality**: Employees API (Connect v2) &mdash; New fields to
+  capture contact information for employee profiles.
+* **New functionality**: `V1Tender.CardBrand` &mdash; New V1 enum to represent
+  brand information for credit cars.
+
+## Version 2.20190410.0 (2019-04-10)
+
+## New features: Orders API beta
+
+* The Connect v2 Orders object now includes an OrderSource field (`source`)
+  that encapsulates the origination details of an order.
+
+## Improvement: Connect v2 Catalog IDs in Connect v1 objects
+
+* The following Connect v1 data types now include a `v2_id` field that makes it
+  easier to link information from Connect v1 endpoints to related Connect v2
+  Catalog objects:
+  * V1Discount
+  * V1Fee
+  * V1Item
+  * V1ModifierList
+  * V1ModifierOption
+  * V1Variation
+
+## Version 2.20190327.1 (2019-03-29)
+
+## Bug Fix: Catalog API
+* Add `image_id` to `CatalogObject`
+
+## Version 2.20190327.0 (2019-03-27)
+
+## New features: Catalog API
+* Deprecated `image_url` field in `CatalogItem` in favor of a richer
+  `CatalogImage` data type.
+* Image information is now set, and returned, at the `CatalogObject` level.
+
+## Version 2.20190313.1 (2019-03-21)
+
+### Bug Fix: Connect v1
+
+* Change `timecard_id` as path parameter for `ListTimecardEvents` endpoint
+* Change `ended_at` to string type for `V1CashDrawerShift` type
+
+## Version 2.20190313.0 (2019-03-13)
+
+## New API: Labor API
+
+The Labor API now includes functionality
+that gives a Square account the ability to track and retrieve employee labor hours
+including multiple hourly wage rates per employee, work shift break tracking, and
+standardized break templates.
+
+See the Connect v2 Technical Reference.
+
+## New API: Employees API
+
+The Employees API includes the ability to list employees for a Square
+account and retrieve a single employee by ID.
+
+See the Connect v2 Technical Reference.
+
+## Improvement: Simplified OAuth access token renewal
+
+The RenewToken endpoint is now deprecated and replaced with new functionality in ObtainToken.
+ObtainToken now returns a refresh token along with an access token. Refresh
+tokens are used to renew expired OAuth access tokens.
+
+## Version 2.20190213.0 (2019-02-13)
+
+## New feature: Order fulfillment BETA
+
+The Orders API now includes beta
+functionality that supports in-person fulfillment through Square Point of Sale
+for orders placed online.
+
+## Improvement: New CreateOrder request structure
+
+The `CreateOrderRequest` datatype now groups order details under a single
+object.
+
+
+## Improvement: CreateOrder requests preserve order-level price adjustment objects
+
+The `CreateOrderResponse` datatype now retains structure of order-level
+price adjustments in addition to converting them to scoped, line-item price
+adjustments. Previously, `CreateOrderResponse` did not preserve the original
+order-level price-adjustment objects.
+
+## Version 2.20181212.0 (2018-12-12)
+
+## Improvement: ListCustomers return set expanded
+
+Requests to the ListCustomers endpoint now returns all available customer profiles. Previously, ListCustomers only returned customer profiles explicitly created through the Customers API or Square Point of Sale.
+
 ## Version 2.20181205.0 (2018-12-05)
 
 ## New feature: Idempotent customer profile creation in Connect v2

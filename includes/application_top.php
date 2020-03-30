@@ -12,6 +12,10 @@
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: DrByte 2019 May 15 Modified in v1.5.6b $
  */
+use Zencart\FileSystem\FileSystem;
+use Zencart\PluginManager\PluginManager;
+use Zencart\InitSystem\InitSystem;
+use Zencart\LanguageLoader\CatalogLanguageLoader;
 /**
  * inoculate against hack attempts which waste CPU cycles
  */
@@ -59,9 +63,18 @@ define('IS_ADMIN_FLAG', false);
  * integer saves the time at which the script started.
  */
 define('PAGE_PARSE_START_TIME', microtime());
-//  define('DISPLAY_PAGE_PARSE_TIME', 'true');
 @ini_set("arg_separator.output","&");
 @ini_set("html_errors","0");
+/**
+ * Ensure minimum PHP version.
+ * This is intended to run before any dependencies like short-array-syntax are loaded, in order to avoid unfriendly fatal errors caused by such incompatibility.
+ * This version of Zen Cart actually requires newer than PHP 5.4, but we are only enforcing 5.4 here at this stage for the sake of this syntax matter.
+ * See https://www.zen-cart.com/requirements or run zc_install to see actual requirements!
+ */
+if (!defined('PHP_VERSION_ID') || PHP_VERSION_ID < 50400) {
+    require 'includes/templates/template_default/templates/tpl_zc_phpupgrade_default.php';
+    exit(0);
+}
 /**
  * Set the local configuration parameters - mainly for developers
  */
@@ -157,9 +170,51 @@ if (( (!file_exists('includes/configure.php') && !file_exists('includes/local/co
   exit;
 }
 /**
- * load the autoloader interpreter code.
-*/
-require('includes/autoload_func.php');
+ * psr-4 autoloading
+ */
+require DIR_FS_CATALOG . DIR_WS_CLASSES . 'class.base.php';
+require DIR_FS_CATALOG . DIR_WS_CLASSES . 'vendors/AuraAutoload/src/Loader.php';
+$psr4Autoloader = new \Aura\Autoload\Loader;
+$psr4Autoloader->register();
+require('includes/psr4Autoload.php');
+
+require DIR_FS_CATALOG . DIR_WS_CLASSES . 'query_cache.php';
+$queryCache = new QueryCache();
+require DIR_FS_CATALOG . DIR_WS_CLASSES . 'cache.php';
+$zc_cache = new cache();
+
+require 'includes/init_includes/init_file_db_names.php';
+require 'includes/init_includes/init_database.php';
+
+$pluginManager = new PluginManager($db);
+$installedPlugins = $pluginManager->getInstalledPlugins();
+
+$fs = FileSystem::getInstance();
+$fs->loadFilesFromPluginsDirectory($installedPlugins, 'catalog/includes/extra_datafiles', '~^[^\._].*\.php$~i');
+
+foreach ($installedPlugins as $plugin) {
+    $namespaceAdmin = 'Zencart\\Plugins\\Admin\\' . ucfirst($plugin['unique_key']);
+    $namespaceCatalog = 'Zencart\\Plugins\\Catalog\\' . ucfirst($plugin['unique_key']);
+    $filePath = DIR_FS_CATALOG . 'zc_plugins/' . $plugin['unique_key'] . '/' . $plugin['version'] . '/';
+    $filePathAdmin = $filePath . 'classes/admin';
+    $filePathCatalog = $filePath . 'classes/';
+    $psr4Autoloader->addPrefix($namespaceAdmin, $filePathAdmin);
+    $psr4Autoloader->addPrefix($namespaceCatalog, $filePathCatalog);
+}
+
+$autoLoadConfig = array();
+if (isset($loaderPrefix)) {
+    $loaderPrefix = preg_replace('/[^a-z_]/', '', $loaderPrefix);
+} else {
+    $loaderPrefix = 'config';
+}
+$loader_file = $loaderPrefix . '.core.php';
+$initSystem = new InitSystem('admin', $loaderPrefix, FileSystem::getInstance(), $pluginManager, $installedPlugins);
+$loaderList = $initSystem->loadAutoLoaders();
+
+$initSystemList = $initSystem->processLoaderList($loaderList);
+
+require(DIR_FS_CATALOG . 'includes/autoload_func.php');
 /**
  * load the counter code
 **/

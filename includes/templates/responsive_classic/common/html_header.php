@@ -5,11 +5,15 @@
  * outputs the html header. i,e, everything that comes before the \</head\> tag <br />
  *
  * @package templateSystem
- * @copyright Copyright 2003-2019 Zen Cart Development Team
+ * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Zen4All 2019 Apr 25 Modified in v1.5.6b $
+ * @version $Id: DrByte 09-Jan-2020  Modified in v1.5.7 $
  */
+
+if (!defined('IS_ADMIN_FLAG')) {
+    die('Illegal Access');
+}
 
 $zco_notifier->notify('NOTIFY_HTML_HEAD_START', $current_page_base, $template_dir);
 
@@ -47,7 +51,7 @@ if (!class_exists('Mobile_Detect')) {
   <meta name="keywords" content="<?php echo META_TAG_KEYWORDS; ?>" />
   <meta name="description" content="<?php echo META_TAG_DESCRIPTION; ?>" />
   <meta name="author" content="<?php echo STORE_NAME ?>" />
-  <meta name="generator" content="shopping cart program by Zen Cart&reg;, http://www.zen-cart.com eCommerce" />
+  <meta name="generator" content="shopping cart program by Zen Cart&reg;, https://www.zen-cart.com eCommerce" />
 <?php if (defined('ROBOTS_PAGES_TO_SKIP') && in_array($current_page_base,explode(",",constant('ROBOTS_PAGES_TO_SKIP'))) || $current_page_base=='down_for_maintenance' || $robotsNoIndex === true) { ?>
   <meta name="robots" content="noindex, nofollow" />
 <?php } ?>
@@ -133,7 +137,7 @@ if (count($lng->catalog_languages) > 1) {
 /** CDN for jQuery core **/
 ?>
 
-<script type="text/javascript">window.jQuery || document.write(unescape('%3Cscript type="text/javascript" src="https://code.jquery.com/jquery-3.4.0.min.js" integrity="sha256-BJeo0qm959uMBGb65z40ejJYGSgR7REI4+CW1fNKwOg=" crossorigin="anonymous"%3E%3C/script%3E'));</script>
+<script type="text/javascript">window.jQuery || document.write(unescape('%3Cscript type="text/javascript" src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"%3E%3C/script%3E'));</script>
 <?php if (file_exists(DIR_WS_TEMPLATE . "jscript/jquery.min.js")) { ?>
 <script type="text/javascript">window.jQuery || document.write(unescape('%3Cscript type="text/javascript" src="<?php echo $template->get_template_dir('.js',DIR_WS_TEMPLATE, $current_page_base,'jscript'); ?>/jquery.min.js"%3E%3C/script%3E'));</script>
 <?php } ?>

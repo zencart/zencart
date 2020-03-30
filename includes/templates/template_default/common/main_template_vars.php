@@ -10,10 +10,14 @@
  * allows you to override this page and choose the template that loads.<br />
  *
  * @package templateSystem
- * @copyright Copyright 2003-2016 Zen Cart Development Team
+ * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: DrByte  Sat Jan 9 13:13:41 2016 -0500 Modified in v1.5.5 $
+ * @version $Id: DrByte 09-Jan-2020  Modified in v1.5.7 $
  */
+
+if (!defined('IS_ADMIN_FLAG')) {
+    die('Illegal Access');
+}
 
   $zco_notifier->notify('NOTIFY_MAIN_TEMPLATE_VARS_START', $template_dir);
 

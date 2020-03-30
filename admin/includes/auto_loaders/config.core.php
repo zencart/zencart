@@ -18,7 +18,6 @@ if (!defined('USE_PCONNECT')) define('USE_PCONNECT', 'false');
  * require(DIR_FS_CATALOG . DIR_WS_CLASSES . 'class.notifier.php');
  * $zco_notifier = new notifier();
  * require(DIR_FS_CATALOG . DIR_WS_CLASSES . 'sniffer.php');
- * require(DIR_WS_CLASSES . 'logger.php');
  * require(DIR_FS_CATALOG . DIR_WS_CLASSES . 'shopping_cart.php');
  * require(DIR_FS_CATALOG . DIR_WS_CLASSES . 'products.php');
  * require(DIR_WS_CLASSES . 'table_block.php');
@@ -34,8 +33,8 @@ if (!defined('USE_PCONNECT')) define('USE_PCONNECT', 'false');
  */
   $autoLoadConfig[0][] = array('autoType'=>'require',
                                'loadFile'=> DIR_FS_CATALOG . DIR_WS_INCLUDES .  'version.php');
-  $autoLoadConfig[0][] = array('autoType'=>'class',
-                               'loadFile'=>'class.base.php');
+//  $autoLoadConfig[0][] = array('autoType'=>'class',
+//                               'loadFile'=>'class.base.php');
   $autoLoadConfig[0][] = array('autoType'=>'class',
                                'loadFile'=>'class.notifier.php');
   $autoLoadConfig[0][] = array('autoType'=>'classInstantiate',
@@ -43,9 +42,6 @@ if (!defined('USE_PCONNECT')) define('USE_PCONNECT', 'false');
                                'objectName'=>'zco_notifier');
   $autoLoadConfig[0][] = array('autoType'=>'class',
                                'loadFile'=>'sniffer.php');
-  $autoLoadConfig[0][] = array('autoType'=>'class',
-                               'loadFile'=>'logger.php',
-                               'classPath'=>DIR_WS_CLASSES);
   $autoLoadConfig[0][] = array('autoType'=>'class',
                                'loadFile'=>'shopping_cart.php',
                                );
@@ -90,10 +86,10 @@ if (!defined('USE_PCONNECT')) define('USE_PCONNECT', 'false');
  * require('includes/init_includes/init_database.php');
  *
  */
-  $autoLoadConfig[10][] = array('autoType'=>'init_script',
-                                'loadFile'=> 'init_file_db_names.php');
-  $autoLoadConfig[10][] = array('autoType'=>'init_script',
-                                'loadFile'=>'init_database.php');
+//  $autoLoadConfig[10][] = array('autoType'=>'init_script',
+//                                'loadFile'=> 'init_file_db_names.php');
+//  $autoLoadConfig[10][] = array('autoType'=>'init_script',
+//                                'loadFile'=>'init_database.php');
 /**
  * Breakpoint 20.
  *
@@ -114,6 +110,15 @@ if (!defined('USE_PCONNECT')) define('USE_PCONNECT', 'false');
   $autoLoadConfig[30][] = array('autoType'=>'classInstantiate',
                                 'className'=>'sniffer',
                                 'objectName'=>'sniffer');
+/**
+ * Breakpoint 32.
+ *
+ * $messageStack = new messageStack();
+ *
+ */
+  $autoLoadConfig[32][] = array('autoType'=>'classInstantiate',
+                                 'className'=>'messageStack',
+                                 'objectName'=>'messageStack');
 /**
  * Breakpoint 35.
  *
@@ -190,12 +195,12 @@ if (!defined('USE_PCONNECT')) define('USE_PCONNECT', 'false');
 /**
  * Breakpoint 100.
  *
- * $messageStack = new messageStack();
+ * $messageStack->add_from_session();
  *
  */
-  $autoLoadConfig[100][] = array('autoType'=>'classInstantiate',
-                                 'className'=>'messageStack',
-                                 'objectName'=>'messageStack');
+  $autoLoadConfig[100][] = array('autoType'=>'objectMethod',
+                                 'objectName'=>'messageStack',
+                                 'methodName'=>'add_from_session');
 /**
  * Breakpoint 120.
  *

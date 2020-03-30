@@ -1,5 +1,5 @@
 configure.php
-local/configure.php
+local/configure*.php
 /vendor
 
 *.php1
@@ -9,9 +9,8 @@ devtools.php
 Thumbs.db
 clover.xml
 .DS_Store
+.phpunit.result.cache
 
-docs/phpdocs*
-phpdoc.xml
 dev-*.*
 
 # IDE-specific things...
@@ -21,6 +20,7 @@ dev-*.*
 .buildpath
 # Ignore phpStorm stuff 
 .idea
+
 # dbv
 /data/meta/revision
 localconfig_*.php

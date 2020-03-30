@@ -116,7 +116,7 @@ for ($i=0, $n=sizeof($products); $i<$n; $i++) {
     $qtyAvailable = zen_get_products_stock($products[$i]['id']);
     // compare against product inventory, and against mixed=YES
     if ($qtyAvailable - $products[$i]['quantity'] < 0 || $qtyAvailable - $_SESSION['cart']->in_cart_mixed($products[$i]['id']) < 0) {
-        $flagStockCheck = '<span class="markProductOutOfStock">' . STOCK_MARK_PRODUCT_OUT_OF_STOCK . '</span>';
+      $flagStockCheck = '<span class="markProductOutOfStock">' . STOCK_MARK_PRODUCT_OUT_OF_STOCK . '</span>';
       $flagAnyOutOfStock = true;
     }
   }
@@ -156,7 +156,7 @@ for ($i=0, $n=sizeof($products); $i<$n; $i++) {
                             'attributes'=>$attrArray);
 } // end FOR loop
 
+$define_page = zen_get_file_directory(DIR_WS_LANGUAGES . $_SESSION['language'] . '/html_includes/', FILENAME_DEFINE_SHOPPING_CART, 'false');
 
 // This should be last line of the script:
 $zco_notifier->notify('NOTIFY_HEADER_END_SHOPPING_CART');
-?>

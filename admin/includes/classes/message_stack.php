@@ -21,18 +21,7 @@ if (!defined('IS_ADMIN_FLAG')) {
 
   class messageStack extends boxTableBlock {
     var $size = 0;
-
-    function __construct() {
-
-      $this->errors = array();
-
-      if (isset($_SESSION['messageToStack']) && is_array($_SESSION['messageToStack'])) {
-        for ($i = 0, $n = sizeof($_SESSION['messageToStack']); $i < $n; $i++) {
-          $this->add($_SESSION['messageToStack'][$i]['text'], $_SESSION['messageToStack'][$i]['type']);
-        }
-        $_SESSION['messageToStack'] = '';
-      }
-    }
+    var $errors = array();
 
     function add($message, $type = 'error') {
       if ($type == 'error') {
@@ -60,6 +49,15 @@ if (!defined('IS_ADMIN_FLAG')) {
       }
 
       $_SESSION['messageToStack'][] = array('text' => $message, 'type' => $type);
+    }
+
+    function add_from_session() {
+      if (isset($_SESSION['messageToStack']) && is_array($_SESSION['messageToStack'])) {
+        for ($i = 0, $n = sizeof($_SESSION['messageToStack']); $i < $n; $i++) {
+          $this->add($_SESSION['messageToStack'][$i]['text'], $_SESSION['messageToStack'][$i]['type']);
+        }
+        $_SESSION['messageToStack'] = '';
+      }
     }
 
     function reset() {

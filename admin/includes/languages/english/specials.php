@@ -1,60 +1,53 @@
 <?php
-//
-// +----------------------------------------------------------------------+
-// |zen-cart Open Source E-commerce                                       |
-// +----------------------------------------------------------------------+
-// | Copyright (c) 2003 The zen-cart developers                           |
-// |                                                                      |
-// | http://www.zen-cart.com/index.php                                    |
-// |                                                                      |
-// | Portions Copyright (c) 2003 osCommerce                               |
-// +----------------------------------------------------------------------+
-// | This source file is subject to version 2.0 of the GPL license,       |
-// | that is bundled with this package in the file LICENSE, and is        |
-// | available through the world-wide-web at the following url:           |
-// | http://www.zen-cart.com/license/2_0.txt.                             |
-// | If you did not receive a copy of the zen-cart license and are unable |
-// | to obtain it through the world-wide-web, please send a note to       |
-// | license@zen-cart.com so we can mail you a copy immediately.          |
-// +----------------------------------------------------------------------+
-//  $Id: specials.php 4533 2006-09-17 17:21:10Z ajeh $
-//
+/**
+ * @package admin
+ * @copyright Copyright 2003-2018 Zen Cart Development Team
+ * @copyright Portions Copyright 2003 osCommerce
+ * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
+ * @version $Id: torvista 2020 Jan 26 Modified in v1.5.7 $
+ */
+
 
 define('HEADING_TITLE', 'Specials');
 
-define('TABLE_HEADING_PRODUCTS', 'Products');
-define('TABLE_HEADING_PRODUCTS_PRICE', 'Products Price/Special/Sale');
-define('TABLE_HEADING_PRODUCTS_PERCENTAGE','Percentage');
-define('TABLE_HEADING_AVAILABLE_DATE', 'Available');
-define('TABLE_HEADING_EXPIRES_DATE','Expires');
-define('TABLE_HEADING_STATUS', 'Status');
-define('TABLE_HEADING_ACTION', 'Action');
+define('TABLE_HEADING_PRODUCTS', 'Product');
+define('TABLE_HEADING_STOCK', 'Stock');
+define('TABLE_HEADING_PRODUCTS_PRICE', 'Price/Special/Sale');
+define('TABLE_HEADING_AVAILABLE_DATE', 'Active From');
+define('TABLE_HEADING_EXPIRES_DATE','Expires On');
+define('TABLE_HEADING_STATUS', 'Special Status');
+define('TABLE_HEADING_ACTION', 'Actions');
+define('TEXT_ADD_SPECIAL_SELECT', 'Add Special by Selection');
+define('TEXT_ADD_SPECIAL_PID', 'Add Special by Product ID');
+define('TEXT_SEARCH_SPECIALS', 'Search current Specials');
+define('TEXT_SPECIAL_ACTIVE', 'Special Price Active');
+define('TEXT_SPECIAL_INACTIVE', 'Special Price Inactive');
+define('TEXT_SPECIAL_STATUS_BY_DATE', 'Status set by dates');
 
 define('TEXT_SPECIALS_PRODUCT', 'Product:');
 define('TEXT_SPECIALS_SPECIAL_PRICE', 'Special Price:');
-define('TEXT_SPECIALS_EXPIRES_DATE', 'Expiry Date:');
-define('TEXT_SPECIALS_AVAILABLE_DATE', 'Available Date:');
-define('TEXT_SPECIALS_PRICE_TIP', '<b>Specials Notes:</b><ul><li>You can enter a percentage to deduct in the Specials Price field, for example: <b>20%</b></li><li>If you enter a new price, the decimal separator must be a \'.\' (decimal-point), example: <b>49.99</b></li><li>Leave the expiry date empty for no expiration</li></ul>');
+define('TEXT_SPECIALS_AVAILABLE_DATE', 'Date Special Active:');
+define('TEXT_SPECIALS_EXPIRES_DATE', 'Date Special Expires:');
 
 define('TEXT_INFO_DATE_ADDED', 'Date Added:');
 define('TEXT_INFO_LAST_MODIFIED', 'Last Modified:');
-define('TEXT_INFO_NEW_PRICE', 'New Price:');
+define('TEXT_INFO_NEW_PRICE', 'Special Price:');
 define('TEXT_INFO_ORIGINAL_PRICE', 'Original Price:');
-define('TEXT_INFO_DISPLAY_PRICE', 'Display Price:<br />');
-define('TEXT_INFO_AVAILABLE_DATE', 'Available On:');
-define('TEXT_INFO_EXPIRES_DATE', 'Expires At:');
-define('TEXT_INFO_STATUS_CHANGE', 'Status Change:');
-define('TEXT_IMAGE_NONEXISTENT', 'No Image Exists');
+define('TEXT_INFO_DISPLAY_PRICE', 'Currently Displayed Price:');
+define('TEXT_INFO_STATUS_CHANGED', 'Status Changed:');
 
 define('TEXT_INFO_HEADING_DELETE_SPECIALS', 'Delete Special');
-define('TEXT_INFO_DELETE_INTRO', 'Are you sure you want to delete the special products price?');
+define('TEXT_INFO_DELETE_INTRO', 'Are you sure you want to delete the Special Price for this product?');
 
-define('SUCCESS_SPECIALS_PRE_ADD', 'Successful: Pre-Add of Special ... please update the price and dates ...');
-define('WARNING_SPECIALS_PRE_ADD_EMPTY', 'Warning: No Product ID specified ... nothing was added ...');
-define('WARNING_SPECIALS_PRE_ADD_DUPLICATE', 'Warning: Product ID already on Special ... nothing was added ...');
-define('WARNING_SPECIALS_PRE_ADD_BAD_PRODUCTS_ID', 'Warning: Product ID is invalid ... nothing was added ...');
-define('TEXT_INFO_HEADING_PRE_ADD_SPECIALS', 'Manually add new Special by Product ID');
-define('TEXT_INFO_PRE_ADD_INTRO', 'On large databases, you may Manually Add a Special by the Product ID<br /><br />This is best used when the page takes too long to render and trying to select a Product from the dropdown becomes difficult due to too many Products from which to choose.');
-define('TEXT_PRE_ADD_PRODUCTS_ID', 'Please enter the Product ID to be Pre-Added: ');
-define('TEXT_INFO_MANUAL', 'Product ID to be Manually Added as a Special');
-?>
+define('WARNING_SPECIALS_PRE_ADD_PID_EMPTY', 'Warning: No Product ID was specified.');
+define('WARNING_SPECIALS_PRE_ADD_PID_DUPLICATE', 'Warning: Product ID#%u already on Special.');
+define('WARNING_SPECIALS_PRE_ADD_PID_NO_EXIST', 'Warning: Product ID#%u does not exist.');
+if (!defined('TEXT_GV_NAME')) {
+    require DIR_WS_LANGUAGES . $_SESSION['language'] . '/' . 'gv_name.php';
+}
+define('WARNING_SPECIALS_PRE_ADD_PID_GIFT', 'Warning: Product ID#%u is a ' . TEXT_GV_NAME . '.');
+define('TEXT_INFO_HEADING_PRE_ADD_SPECIALS', 'Add Special Price by Product ID');
+define('TEXT_INFO_PRE_ADD_INTRO', 'You may add a Special Price by Product ID. This method may be appropriate for shops with many products if the selection page takes too long to render or selecting a product from the dropdown becomes unwieldy.');
+define('TEXT_PRE_ADD_PRODUCTS_ID', 'Enter the Product ID: ');
+
+define('TEXT_SPECIALS_PRICE_NOTES', '<b>Notes:</b><ul><li>Special Price may be a price (ex-tax). The decimal separator must be a "." (decimal-point), eg: <b>49.99</b>. The calculated percentage discount is shown next to the product\'s new price in the catalog.</li><li>Special Price may be a percentage discount, eg: <b>20%</b>.</li><li>Start/End dates are not obligatory. You may leave the expiry date empty for no expiration.</li><li>When dates are set, the status of the Special Price is automatically enabled/disabled accordingly.</li><li>' . TEXT_INFO_PRE_ADD_INTRO . '</li></ul>');

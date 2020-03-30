@@ -52,7 +52,7 @@ $form_action = (isset($_GET['pID'])) ? 'update_product' : 'insert_product';
       echo zen_draw_form($form_action, FILENAME_PRODUCT, 'cPath=' . $cPath . (isset($_GET['pID']) ? '&pID=' . $_GET['pID'] : '') . '&action=' . $form_action . (isset($_GET['page']) ? '&page=' . $_GET['page'] : ''), 'post', 'enctype="multipart/form-data"');
     }
 
-    for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
+    for ($i = 0, $n = count($languages); $i < $n; $i++) {
       if (isset($_GET['read']) && ($_GET['read'] == 'only')) {
         $pInfo->products_name = zen_get_products_name($pInfo->products_id, $languages[$i]['id']);
         $pInfo->products_description = zen_get_products_description($pInfo->products_id, $languages[$i]['id']);
@@ -67,18 +67,19 @@ $form_action = (isset($_GET['pID'])) ? 'update_product' : 'insert_product';
         $specials_price = zen_get_products_special_price($_GET['pID']);
       }
       ?>
+<div class="row table-bordered">
     <div class="row"><?php echo zen_draw_separator('pixel_trans.gif', '1', '10'); ?></div>
-    <div class="row">
+    <div class="row img">
         <?php
 //auto replace with defined missing image
         if (isset($_POST['products_image_manual']) && $_POST['products_image_manual'] != '') {
           $products_image_name = $_POST['img_dir'] . $_POST['products_image_manual'];
           $pInfo->products_name = $products_image_name;
         }
-        if (isset($_POST['image_delete']) && $_POST['image_delete'] == 1 || $products_image_name == '' && PRODUCTS_IMAGE_NO_IMAGE_STATUS == '1') {
-          echo zen_image(DIR_WS_CATALOG_IMAGES . PRODUCTS_IMAGE_NO_IMAGE, $pInfo->products_name, SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT, 'align="right" hspace="5" vspace="5"') . $pInfo->products_description;
+        if ((isset($_POST['image_delete']) && $_POST['image_delete'] == '1') || ($products_image_name == '' && PRODUCTS_IMAGE_NO_IMAGE_STATUS == '1')) {
+          echo zen_image(DIR_WS_CATALOG_IMAGES . PRODUCTS_IMAGE_NO_IMAGE, $pInfo->products_name, SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT, 'class="img-thumbnail" style="float:right;"') . $pInfo->products_description;
         } else {
-          echo zen_image(DIR_WS_CATALOG_IMAGES . $products_image_name, $pInfo->products_name, SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT, 'align="right" hspace="5" vspace="5"') . $pInfo->products_description;
+          echo zen_image(DIR_WS_CATALOG_IMAGES . $products_image_name, $pInfo->products_name, SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT, 'class="img-thumbnail" style="float:right;"') . $pInfo->products_description;
         }
         ?>
     </div>
@@ -103,6 +104,8 @@ $form_action = (isset($_GET['pID'])) ? 'update_product' : 'insert_product';
     }
     ?>
     <div class="row"><?php echo zen_draw_separator('pixel_trans.gif', '1', '10'); ?></div>
+</div>
+<div class="row"><?php echo zen_draw_separator('pixel_trans.gif', '5', '10'); ?></div>
     <?php
   }
 
@@ -136,7 +139,7 @@ $form_action = (isset($_GET['pID'])) ? 'update_product' : 'insert_product';
           }
         }
 
-        for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
+        for ($i = 0, $n = count($languages); $i < $n; $i++) {
           echo zen_draw_hidden_field('products_name[' . $languages[$i]['id'] . ']', htmlspecialchars(stripslashes($products_name[$languages[$i]['id']]), ENT_COMPAT, CHARSET, TRUE));
           echo zen_draw_hidden_field('products_description[' . $languages[$i]['id'] . ']', htmlspecialchars(stripslashes($products_description[$languages[$i]['id']]), ENT_COMPAT, CHARSET, TRUE));
           echo zen_draw_hidden_field('products_url[' . $languages[$i]['id'] . ']', htmlspecialchars(stripslashes($products_url[$languages[$i]['id']]), ENT_COMPAT, CHARSET, TRUE));
@@ -158,10 +161,10 @@ $form_action = (isset($_GET['pID'])) ? 'update_product' : 'insert_product';
       ?>
       <a href="<?php echo zen_href_link(FILENAME_CATEGORY_PRODUCT_LISTING, 'cPath=' . $cPath . (isset($_GET['pID']) ? '&pID=' . $_GET['pID'] : '') . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '') . (isset($_GET['search']) ? '&search=' . $_GET['search'] : '')); ?>" class="btn btn-default" role="button"><?php echo IMAGE_CANCEL; ?></a>
     </div>
-    <?php
+      <?php 
   }
-  if (!(isset($_GET['read']) && ($_GET['read'] === 'only'))) {
-    echo '</form>'; 
+      if (!(isset($_GET['read']) && ($_GET['read'] === 'only'))) {
+        echo '</form>'; 
   }
   ?>
 </div>

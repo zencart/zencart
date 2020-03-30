@@ -25,7 +25,8 @@ class CatalogInfoResponse implements ArrayAccess
       */
     static $swaggerTypes = array(
         'errors' => '\SquareConnect\Model\Error[]',
-        'limits' => '\SquareConnect\Model\CatalogInfoResponseLimits'
+        'limits' => '\SquareConnect\Model\CatalogInfoResponseLimits',
+        'standard_unit_description_group' => '\SquareConnect\Model\StandardUnitDescriptionGroup'
     );
   
     /** 
@@ -34,7 +35,8 @@ class CatalogInfoResponse implements ArrayAccess
       */
     static $attributeMap = array(
         'errors' => 'errors',
-        'limits' => 'limits'
+        'limits' => 'limits',
+        'standard_unit_description_group' => 'standard_unit_description_group'
     );
   
     /**
@@ -43,7 +45,8 @@ class CatalogInfoResponse implements ArrayAccess
       */
     static $setters = array(
         'errors' => 'setErrors',
-        'limits' => 'setLimits'
+        'limits' => 'setLimits',
+        'standard_unit_description_group' => 'setStandardUnitDescriptionGroup'
     );
   
     /**
@@ -52,11 +55,12 @@ class CatalogInfoResponse implements ArrayAccess
       */
     static $getters = array(
         'errors' => 'getErrors',
-        'limits' => 'getLimits'
+        'limits' => 'getLimits',
+        'standard_unit_description_group' => 'getStandardUnitDescriptionGroup'
     );
   
     /**
-      * $errors The set of [Error](#type-error)s encountered.
+      * $errors The set of errors encountered.
       * @var \SquareConnect\Model\Error[]
       */
     protected $errors;
@@ -65,6 +69,11 @@ class CatalogInfoResponse implements ArrayAccess
       * @var \SquareConnect\Model\CatalogInfoResponseLimits
       */
     protected $limits;
+    /**
+      * $standard_unit_description_group Names and abbreviations for standard units.
+      * @var \SquareConnect\Model\StandardUnitDescriptionGroup
+      */
+    protected $standard_unit_description_group;
 
     /**
      * Constructor
@@ -83,6 +92,11 @@ class CatalogInfoResponse implements ArrayAccess
             } else {
               $this->limits = null;
             }
+            if (isset($data["standard_unit_description_group"])) {
+              $this->standard_unit_description_group = $data["standard_unit_description_group"];
+            } else {
+              $this->standard_unit_description_group = null;
+            }
         }
     }
     /**
@@ -96,7 +110,7 @@ class CatalogInfoResponse implements ArrayAccess
   
     /**
      * Sets errors
-     * @param \SquareConnect\Model\Error[] $errors The set of [Error](#type-error)s encountered.
+     * @param \SquareConnect\Model\Error[] $errors The set of errors encountered.
      * @return $this
      */
     public function setErrors($errors)
@@ -121,6 +135,25 @@ class CatalogInfoResponse implements ArrayAccess
     public function setLimits($limits)
     {
         $this->limits = $limits;
+        return $this;
+    }
+    /**
+     * Gets standard_unit_description_group
+     * @return \SquareConnect\Model\StandardUnitDescriptionGroup
+     */
+    public function getStandardUnitDescriptionGroup()
+    {
+        return $this->standard_unit_description_group;
+    }
+  
+    /**
+     * Sets standard_unit_description_group
+     * @param \SquareConnect\Model\StandardUnitDescriptionGroup $standard_unit_description_group Names and abbreviations for standard units.
+     * @return $this
+     */
+    public function setStandardUnitDescriptionGroup($standard_unit_description_group)
+    {
+        $this->standard_unit_description_group = $standard_unit_description_group;
         return $this;
     }
     /**

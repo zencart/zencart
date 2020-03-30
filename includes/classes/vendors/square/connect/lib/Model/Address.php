@@ -163,7 +163,7 @@ class Address implements ArrayAccess
       */
     protected $postal_code;
     /**
-      * $country The address's country, in ISO 3166-1-alpha-2 format.
+      * $country The address's country, in ISO 3166-1-alpha-2 format. See [Country](#type-country) for possible values
       * @var string
       */
     protected $country;
@@ -487,7 +487,7 @@ class Address implements ArrayAccess
   
     /**
      * Sets country
-     * @param string $country The address's country, in ISO 3166-1-alpha-2 format.
+     * @param string $country The address's country, in ISO 3166-1-alpha-2 format. See [Country](#type-country) for possible values
      * @return $this
      */
     public function setCountry($country)

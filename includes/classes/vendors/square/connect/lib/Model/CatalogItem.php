@@ -34,10 +34,10 @@ class CatalogItem implements ArrayAccess
         'category_id' => 'string',
         'tax_ids' => 'string[]',
         'modifier_list_info' => '\SquareConnect\Model\CatalogItemModifierListInfo[]',
-        'image_url' => 'string',
         'variations' => '\SquareConnect\Model\CatalogObject[]',
         'product_type' => 'string',
-        'skip_modifier_screen' => 'bool'
+        'skip_modifier_screen' => 'bool',
+        'item_options' => '\SquareConnect\Model\CatalogItemOptionForItem[]'
     );
   
     /** 
@@ -55,10 +55,10 @@ class CatalogItem implements ArrayAccess
         'category_id' => 'category_id',
         'tax_ids' => 'tax_ids',
         'modifier_list_info' => 'modifier_list_info',
-        'image_url' => 'image_url',
         'variations' => 'variations',
         'product_type' => 'product_type',
-        'skip_modifier_screen' => 'skip_modifier_screen'
+        'skip_modifier_screen' => 'skip_modifier_screen',
+        'item_options' => 'item_options'
     );
   
     /**
@@ -76,10 +76,10 @@ class CatalogItem implements ArrayAccess
         'category_id' => 'setCategoryId',
         'tax_ids' => 'setTaxIds',
         'modifier_list_info' => 'setModifierListInfo',
-        'image_url' => 'setImageUrl',
         'variations' => 'setVariations',
         'product_type' => 'setProductType',
-        'skip_modifier_screen' => 'setSkipModifierScreen'
+        'skip_modifier_screen' => 'setSkipModifierScreen',
+        'item_options' => 'setItemOptions'
     );
   
     /**
@@ -97,29 +97,29 @@ class CatalogItem implements ArrayAccess
         'category_id' => 'getCategoryId',
         'tax_ids' => 'getTaxIds',
         'modifier_list_info' => 'getModifierListInfo',
-        'image_url' => 'getImageUrl',
         'variations' => 'getVariations',
         'product_type' => 'getProductType',
-        'skip_modifier_screen' => 'getSkipModifierScreen'
+        'skip_modifier_screen' => 'getSkipModifierScreen',
+        'item_options' => 'getItemOptions'
     );
   
     /**
-      * $name The item's name. Searchable.
+      * $name The item's name. Searchable. This field must not be empty. This field has max length of 512 Unicode code points.
       * @var string
       */
     protected $name;
     /**
-      * $description The item's description. Searchable.
+      * $description The item's description. Searchable. This field has max length of 4096 Unicode code points.
       * @var string
       */
     protected $description;
     /**
-      * $abbreviation The text of the item's display label in the Square Point of Sale app. Only up to the first five characters of the string are used.  Searchable.
+      * $abbreviation The text of the item's display label in the Square Point of Sale app. Only up to the first five characters of the string are used. Searchable. This field has max length of 24 Unicode code points.
       * @var string
       */
     protected $abbreviation;
     /**
-      * $label_color The color of the item's display label in the Square Point of Sale app.
+      * $label_color The color of the item's display label in the Square Point of Sale app. This must be a valid hex color code.
       * @var string
       */
     protected $label_color;
@@ -144,35 +144,35 @@ class CatalogItem implements ArrayAccess
       */
     protected $category_id;
     /**
-      * $tax_ids A set of IDs indicating the [CatalogTax](#type-catalogtax)es that are enabled for this item. When updating an item, any taxes listed here will be added to the item. [CatalogTax](#type-catalogtax)es may also be added to or deleted from an item using `UpdateItemTaxes`.
+      * $tax_ids A set of IDs indicating the taxes enabled for this item. When updating an item, any taxes listed here will be added to the item. Taxes may also be added to or deleted from an item using `UpdateItemTaxes`.
       * @var string[]
       */
     protected $tax_ids;
     /**
-      * $modifier_list_info A set of [CatalogItemModifierListInfo](#type-catalogitemmodifierlistinfo) objects representing the modifier lists that apply to this item, along with the overrides and min and max limits that are specific to this item. [CatalogModifierList](#type-catalogmodifierlist)s may also be added to or deleted from an item using `UpdateItemModifierLists`.
+      * $modifier_list_info A set of `CatalogItemModifierListInfo` objects representing the modifier lists that apply to this item, along with the overrides and min and max limits that are specific to this item. Modifier lists may also be added to or deleted from an item using `UpdateItemModifierLists`.
       * @var \SquareConnect\Model\CatalogItemModifierListInfo[]
       */
     protected $modifier_list_info;
     /**
-      * $image_url The URL of an image representing this item.
-      * @var string
-      */
-    protected $image_url;
-    /**
-      * $variations A list of [CatalogObject](#type-catalogobject)s containing the [CatalogItemVariation](#type-catalogitemvariation)s for this item.
+      * $variations A list of CatalogObjects containing the `CatalogItemVariation`s for this item.
       * @var \SquareConnect\Model\CatalogObject[]
       */
     protected $variations;
     /**
-      * $product_type The product type of the item. May not be changed once an item has been created.  Only items of product type `REGULAR` may be created by this API; items with other product types are read-only. See [CatalogItemProductType](#type-catalogitemproducttype) for all possible values.
+      * $product_type The product type of the item. May not be changed once an item has been created.  Only items of product type `REGULAR` or `APPOINTMENTS_SERVICE` may be created by this API; items with other product types are read-only. See [CatalogItemProductType](#type-catalogitemproducttype) for possible values
       * @var string
       */
     protected $product_type;
     /**
-      * $skip_modifier_screen If `false`, the Square Point of Sale app will present the [CatalogItem](#type-catalogitem)'s details screen immediately, allowing the merchant to choose [CatalogModifier](#type-catalogmodifier)s before adding the item to the cart.  This is the default behavior.  If `true`, the Square Point of Sale app will immediately add the item to the cart with the pre-selected modifiers, and merchants can edit modifiers by drilling down onto the item's details.  Third-party clients are encouraged to implement similar behaviors.
+      * $skip_modifier_screen If `false`, the Square Point of Sale app will present the `CatalogItem`'s details screen immediately, allowing the merchant to choose `CatalogModifier`s before adding the item to the cart.  This is the default behavior.  If `true`, the Square Point of Sale app will immediately add the item to the cart with the pre-selected modifiers, and merchants can edit modifiers by drilling down onto the item's details.  Third-party clients are encouraged to implement similar behaviors.
       * @var bool
       */
     protected $skip_modifier_screen;
+    /**
+      * $item_options List of item options IDs for this item. Used to manage and group item variations in a specified order.  Maximum: 6 item options.
+      * @var \SquareConnect\Model\CatalogItemOptionForItem[]
+      */
+    protected $item_options;
 
     /**
      * Constructor
@@ -231,11 +231,6 @@ class CatalogItem implements ArrayAccess
             } else {
               $this->modifier_list_info = null;
             }
-            if (isset($data["image_url"])) {
-              $this->image_url = $data["image_url"];
-            } else {
-              $this->image_url = null;
-            }
             if (isset($data["variations"])) {
               $this->variations = $data["variations"];
             } else {
@@ -251,6 +246,11 @@ class CatalogItem implements ArrayAccess
             } else {
               $this->skip_modifier_screen = null;
             }
+            if (isset($data["item_options"])) {
+              $this->item_options = $data["item_options"];
+            } else {
+              $this->item_options = null;
+            }
         }
     }
     /**
@@ -264,7 +264,7 @@ class CatalogItem implements ArrayAccess
   
     /**
      * Sets name
-     * @param string $name The item's name. Searchable.
+     * @param string $name The item's name. Searchable. This field must not be empty. This field has max length of 512 Unicode code points.
      * @return $this
      */
     public function setName($name)
@@ -283,7 +283,7 @@ class CatalogItem implements ArrayAccess
   
     /**
      * Sets description
-     * @param string $description The item's description. Searchable.
+     * @param string $description The item's description. Searchable. This field has max length of 4096 Unicode code points.
      * @return $this
      */
     public function setDescription($description)
@@ -302,7 +302,7 @@ class CatalogItem implements ArrayAccess
   
     /**
      * Sets abbreviation
-     * @param string $abbreviation The text of the item's display label in the Square Point of Sale app. Only up to the first five characters of the string are used.  Searchable.
+     * @param string $abbreviation The text of the item's display label in the Square Point of Sale app. Only up to the first five characters of the string are used. Searchable. This field has max length of 24 Unicode code points.
      * @return $this
      */
     public function setAbbreviation($abbreviation)
@@ -321,7 +321,7 @@ class CatalogItem implements ArrayAccess
   
     /**
      * Sets label_color
-     * @param string $label_color The color of the item's display label in the Square Point of Sale app.
+     * @param string $label_color The color of the item's display label in the Square Point of Sale app. This must be a valid hex color code.
      * @return $this
      */
     public function setLabelColor($label_color)
@@ -416,7 +416,7 @@ class CatalogItem implements ArrayAccess
   
     /**
      * Sets tax_ids
-     * @param string[] $tax_ids A set of IDs indicating the [CatalogTax](#type-catalogtax)es that are enabled for this item. When updating an item, any taxes listed here will be added to the item. [CatalogTax](#type-catalogtax)es may also be added to or deleted from an item using `UpdateItemTaxes`.
+     * @param string[] $tax_ids A set of IDs indicating the taxes enabled for this item. When updating an item, any taxes listed here will be added to the item. Taxes may also be added to or deleted from an item using `UpdateItemTaxes`.
      * @return $this
      */
     public function setTaxIds($tax_ids)
@@ -435,31 +435,12 @@ class CatalogItem implements ArrayAccess
   
     /**
      * Sets modifier_list_info
-     * @param \SquareConnect\Model\CatalogItemModifierListInfo[] $modifier_list_info A set of [CatalogItemModifierListInfo](#type-catalogitemmodifierlistinfo) objects representing the modifier lists that apply to this item, along with the overrides and min and max limits that are specific to this item. [CatalogModifierList](#type-catalogmodifierlist)s may also be added to or deleted from an item using `UpdateItemModifierLists`.
+     * @param \SquareConnect\Model\CatalogItemModifierListInfo[] $modifier_list_info A set of `CatalogItemModifierListInfo` objects representing the modifier lists that apply to this item, along with the overrides and min and max limits that are specific to this item. Modifier lists may also be added to or deleted from an item using `UpdateItemModifierLists`.
      * @return $this
      */
     public function setModifierListInfo($modifier_list_info)
     {
         $this->modifier_list_info = $modifier_list_info;
-        return $this;
-    }
-    /**
-     * Gets image_url
-     * @return string
-     */
-    public function getImageUrl()
-    {
-        return $this->image_url;
-    }
-  
-    /**
-     * Sets image_url
-     * @param string $image_url The URL of an image representing this item.
-     * @return $this
-     */
-    public function setImageUrl($image_url)
-    {
-        $this->image_url = $image_url;
         return $this;
     }
     /**
@@ -473,7 +454,7 @@ class CatalogItem implements ArrayAccess
   
     /**
      * Sets variations
-     * @param \SquareConnect\Model\CatalogObject[] $variations A list of [CatalogObject](#type-catalogobject)s containing the [CatalogItemVariation](#type-catalogitemvariation)s for this item.
+     * @param \SquareConnect\Model\CatalogObject[] $variations A list of CatalogObjects containing the `CatalogItemVariation`s for this item.
      * @return $this
      */
     public function setVariations($variations)
@@ -492,7 +473,7 @@ class CatalogItem implements ArrayAccess
   
     /**
      * Sets product_type
-     * @param string $product_type The product type of the item. May not be changed once an item has been created.  Only items of product type `REGULAR` may be created by this API; items with other product types are read-only. See [CatalogItemProductType](#type-catalogitemproducttype) for all possible values.
+     * @param string $product_type The product type of the item. May not be changed once an item has been created.  Only items of product type `REGULAR` or `APPOINTMENTS_SERVICE` may be created by this API; items with other product types are read-only. See [CatalogItemProductType](#type-catalogitemproducttype) for possible values
      * @return $this
      */
     public function setProductType($product_type)
@@ -511,12 +492,31 @@ class CatalogItem implements ArrayAccess
   
     /**
      * Sets skip_modifier_screen
-     * @param bool $skip_modifier_screen If `false`, the Square Point of Sale app will present the [CatalogItem](#type-catalogitem)'s details screen immediately, allowing the merchant to choose [CatalogModifier](#type-catalogmodifier)s before adding the item to the cart.  This is the default behavior.  If `true`, the Square Point of Sale app will immediately add the item to the cart with the pre-selected modifiers, and merchants can edit modifiers by drilling down onto the item's details.  Third-party clients are encouraged to implement similar behaviors.
+     * @param bool $skip_modifier_screen If `false`, the Square Point of Sale app will present the `CatalogItem`'s details screen immediately, allowing the merchant to choose `CatalogModifier`s before adding the item to the cart.  This is the default behavior.  If `true`, the Square Point of Sale app will immediately add the item to the cart with the pre-selected modifiers, and merchants can edit modifiers by drilling down onto the item's details.  Third-party clients are encouraged to implement similar behaviors.
      * @return $this
      */
     public function setSkipModifierScreen($skip_modifier_screen)
     {
         $this->skip_modifier_screen = $skip_modifier_screen;
+        return $this;
+    }
+    /**
+     * Gets item_options
+     * @return \SquareConnect\Model\CatalogItemOptionForItem[]
+     */
+    public function getItemOptions()
+    {
+        return $this->item_options;
+    }
+  
+    /**
+     * Sets item_options
+     * @param \SquareConnect\Model\CatalogItemOptionForItem[] $item_options List of item options IDs for this item. Used to manage and group item variations in a specified order.  Maximum: 6 item options.
+     * @return $this
+     */
+    public function setItemOptions($item_options)
+    {
+        $this->item_options = $item_options;
         return $this;
     }
     /**

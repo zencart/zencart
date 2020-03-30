@@ -69,3 +69,6 @@ define('PRIMARY_ADDRESS', '(primary address)');
 define('TEXT_MAXIMUM_ENTRIES', '<span class="coming"><strong>NOTE:</strong></span> A maximum of %s address book entries allowed.');
 define('TEXT_INFO_ADDRESS_BOOK_COUNT', ' | <a href="%s">%s Entries</a>');
 define('TEXT_INFO_ADDRESS_BOOK_COUNT_SINGLE', '');
+
+define('EMP_BUTTON_PLACEORDER_ALT', 'Place an order for this customer');
+define('EMP_BUTTON_PLACEORDER', 'Place Order');

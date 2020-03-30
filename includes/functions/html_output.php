@@ -62,13 +62,12 @@
 
     $separator = '&';
 
-    while ( (substr($link, -1) == '&') || (substr($link, -1) == '?') ) $link = substr($link, 0, -1);
+    while (substr($link, -1) == '&' || substr($link, -1) == '?') $link = substr($link, 0, -1);
 // Add the session ID when moving from different HTTP and HTTPS servers, or when SID is defined
-    if ( ($add_session_id == true) && ($session_started == true) && (SESSION_FORCE_COOKIE_USE == 'False') ) {
+    if ($add_session_id == true && $session_started == true && SESSION_FORCE_COOKIE_USE == 'False') {
       if (defined('SID') && zen_not_null(constant('SID'))) {
         $sid = constant('SID');
-//      } elseif ( ( ($request_type == 'NONSSL') && ($connection == 'SSL') && (ENABLE_SSL_ADMIN == 'true') ) || ( ($request_type == 'SSL') && ($connection == 'NONSSL') ) ) {
-      } elseif ( ( ($request_type == 'NONSSL') && ($connection == 'SSL') && (ENABLE_SSL == 'true') ) || ( ($request_type == 'SSL') && ($connection == 'NONSSL') ) ) {
+      } elseif ( ($request_type == 'NONSSL' && $connection == 'SSL' && ENABLE_SSL == 'true') || ($request_type == 'SSL' && $connection == 'NONSSL') ) {
         if ($http_domain != $https_domain) {
           $sid = zen_session_name() . '=' . zen_session_id();
         }
@@ -79,7 +78,7 @@
     while (strstr($link, '&&')) $link = str_replace('&&', '&', $link);
     while (strstr($link, '&amp;&amp;')) $link = str_replace('&amp;&amp;', '&amp;', $link);
 
-    if ( (SEARCH_ENGINE_FRIENDLY_URLS == 'true') && ($search_engine_safe == true) ) {
+    if (SEARCH_ENGINE_FRIENDLY_URLS == 'true' && $search_engine_safe == true) {
       while (strstr($link, '&&')) $link = str_replace('&&', '&', $link);
 
       $link = str_replace('&amp;', '/', $link);
@@ -106,7 +105,7 @@
  * plugins that span the admin and storefront to create a storefront (a.k.a catalog)
  * link.
  */
-function zen_catalog_href_link($page = '', $parameters = '', $connection = 'NONSSL') 
+function zen_catalog_href_link($page = '', $parameters = '', $connection = 'NONSSL')
 {
     return zen_href_link($page, $parameters, $connection, false);
 }
@@ -123,7 +122,7 @@ function zen_catalog_href_link($page = '', $parameters = '', $connection = 'NONS
       $src = DIR_WS_IMAGES . PRODUCTS_IMAGE_NO_IMAGE;
     }
 
-    if ( (empty($src) || ($src == DIR_WS_IMAGES)) && (IMAGE_REQUIRED == 'false') ) {
+    if ( (empty($src) || $src == DIR_WS_IMAGES) && (IMAGE_REQUIRED == 'false') ) {
       return false;
     }
 
@@ -137,10 +136,10 @@ function zen_catalog_href_link($page = '', $parameters = '', $connection = 'NONS
     $image = '<img src="' . zen_output_string($src) . '" alt="' . zen_output_string($alt) . '"';
 
     if (zen_not_null($alt)) {
-      $image .= ' title=" ' . zen_output_string($alt) . ' "';
+      $image .= ' title="' . zen_output_string($alt) . '"';
     }
 
-    if ( (CONFIG_CALCULATE_IMAGE_SIZE == 'true') && (empty($width) || empty($height)) ) {
+    if (CONFIG_CALCULATE_IMAGE_SIZE == 'true' && (empty($width) || empty($height)) ) {
       if ($image_size = @getimagesize($src)) {
         if (empty($width) && zen_not_null($height)) {
           $ratio = $height / $image_size[1];
@@ -179,7 +178,7 @@ function zen_catalog_href_link($page = '', $parameters = '', $connection = 'NONS
     $alt = zen_clean_html($alt);
 
     // use old method on template images
-    if (strstr($src, 'includes/templates') or strstr($src, 'includes/languages') or PROPORTIONAL_IMAGES_STATUS == '0') {
+    if (strstr($src, 'includes/templates') || strstr($src, 'includes/languages') || PROPORTIONAL_IMAGES_STATUS == '0') {
       return zen_image_OLD($src, $alt, $width, $height, $parameters);
     }
 
@@ -188,7 +187,7 @@ function zen_catalog_href_link($page = '', $parameters = '', $connection = 'NONS
       $src = DIR_WS_IMAGES . PRODUCTS_IMAGE_NO_IMAGE;
     }
 
-    if ( (empty($src) || ($src == DIR_WS_IMAGES)) && (IMAGE_REQUIRED == 'false') ) {
+    if ( (empty($src) || ($src == DIR_WS_IMAGES)) && IMAGE_REQUIRED == 'false') {
       return false;
     }
 
@@ -204,20 +203,22 @@ function zen_catalog_href_link($page = '', $parameters = '', $connection = 'NONS
       $zco_notifier->notify('NOTIFY_HANDLE_IMAGE', array($newimg));
     }
 
+    $zco_notifier->notify('NOTIFY_OPTIMIZE_IMAGE', $template_dir, $src, $alt, $width, $height, $parameters);
+
     // Convert width/height to int for proper validation.
     // intval() used to support compatibility with plugins like image-handler
-    $width = empty($width) ? $width : intval($width);
-    $height = empty($height) ? $height : intval($height);
+    $width = empty($width) ? $width : (int)$width;
+    $height = empty($height) ? $height : (int)$height;
 
 // alt is added to the img tag even if it is null to prevent browsers from outputting
 // the image filename as default
     $image = '<img src="' . zen_output_string($src) . '" alt="' . zen_output_string($alt) . '"';
 
     if (zen_not_null($alt)) {
-      $image .= ' title=" ' . zen_output_string($alt) . ' "';
+      $image .= ' title="' . zen_output_string($alt) . '"';
     }
 
-    if ( ((CONFIG_CALCULATE_IMAGE_SIZE == 'true') && (empty($width) || empty($height))) ) {
+    if (CONFIG_CALCULATE_IMAGE_SIZE == 'true' && (empty($width) || empty($height))) {
       if ($image_size = @getimagesize($src)) {
         if (empty($width) && zen_not_null($height)) {
           $ratio = $height / $image_size[1];
@@ -235,8 +236,7 @@ function zen_catalog_href_link($page = '', $parameters = '', $connection = 'NONS
     }
 
 
-    if (zen_not_null($width) && zen_not_null($height) and file_exists($src)) {
-//      $image .= ' width="' . zen_output_string($width) . '" height="' . zen_output_string($height) . '"';
+    if (zen_not_null($width) && zen_not_null($height) && file_exists($src)) {
 // proportional images
       $image_size = @getimagesize($src);
       // fix division by zero error
@@ -249,7 +249,7 @@ function zen_catalog_href_link($page = '', $parameters = '', $connection = 'NONS
       }
 // only use proportional image when image is larger than proportional size
       if ($image_size[0] < $width and $image_size[1] < $height) {
-        $image .= ' width="' . $image_size[0] . '" height="' . intval($image_size[1]) . '"';
+        $image .= ' width="' . $image_size[0] . '" height="' . (int)$image_size[1] . '"';
       } else {
         $image .= ' width="' . round($width) . '" height="' . round($height) . '"';
       }
@@ -258,7 +258,7 @@ function zen_catalog_href_link($page = '', $parameters = '', $connection = 'NONS
       if (IMAGE_REQUIRED == 'false') {
         return false;
       } else if (substr($src, 0, 4) != 'http') {
-        $image .= ' width="' . intval(SMALL_IMAGE_WIDTH) . '" height="' . intval(SMALL_IMAGE_HEIGHT) . '"';
+        $image .= ' width="' . (int)SMALL_IMAGE_WIDTH . '" height="' . (int)SMALL_IMAGE_HEIGHT . '"';
       }
     }
 
@@ -285,7 +285,7 @@ function zen_catalog_href_link($page = '', $parameters = '', $connection = 'NONS
 
     $image_submit = '<input type="image" src="' . zen_output_string($template->get_template_dir($image, DIR_WS_TEMPLATE, $current_page_base, 'buttons/' . $_SESSION['language'] . '/') . $image) . '" alt="' . zen_output_string($alt) . '"';
 
-    if (zen_not_null($alt)) $image_submit .= ' title=" ' . zen_output_string($alt) . ' "';
+    if (zen_not_null($alt)) $image_submit .= ' title="' . zen_output_string($alt) . '"';
 
     if (zen_not_null($parameters)) $image_submit .= ' ' . $parameters;
 
@@ -351,14 +351,14 @@ function zen_catalog_href_link($page = '', $parameters = '', $connection = 'NONS
           $parameters = str_replace($matches[1], '', $parameters);
         }
       }
-      
+
       // -----
       // Give an observer the chance to provide alternate formatting for the button (it's set to an empty
       // string above).  If the value is still empty after the notification, create the standard-format
       // of the button.
       //
       $GLOBALS['zco_notifier']->notify(
-            'NOTIFY_ZEN_CSS_BUTTON_SUBMIT', 
+            'NOTIFY_ZEN_CSS_BUTTON_SUBMIT',
             array(
                 'button_name' => $button_name,
                 'text' => $text,
@@ -372,7 +372,7 @@ function zen_catalog_href_link($page = '', $parameters = '', $connection = 'NONS
       }
     }
 
-    if ($type=='button'){
+    if ($type=='button') {
       // link button
       // -----
       // Give an observer the chance to provide alternate formatting for the button (it's set to an empty string
@@ -380,7 +380,7 @@ function zen_catalog_href_link($page = '', $parameters = '', $connection = 'NONS
       // of the button.
       //
       $GLOBALS['zco_notifier']->notify(
-            'NOTIFY_ZEN_CSS_BUTTON_BUTTON', 
+            'NOTIFY_ZEN_CSS_BUTTON_BUTTON',
             array(
                 'button_name' => $button_name,
                 'text' => $text,
@@ -449,9 +449,9 @@ function zen_catalog_href_link($page = '', $parameters = '', $connection = 'NONS
     if ($field !== false) {
         return $field;
     }
-    
+
     $field = '<input type="' . zen_output_string($type) . '" name="' . zen_sanitize_string(zen_output_string($name)) . '"';
-    if ( (isset($GLOBALS[$name]) && is_string($GLOBALS[$name])) && ($reinsert_value == true) ) {
+    if (isset($GLOBALS[$name]) && is_string($GLOBALS[$name]) && $reinsert_value == true) {
       $field .= ' value="' . zen_output_string(stripslashes($GLOBALS[$name])) . '"';
     } elseif (zen_not_null($value)) {
       $field .= ' value="' . zen_output_string($value) . '"';
@@ -460,7 +460,7 @@ function zen_catalog_href_link($page = '', $parameters = '', $connection = 'NONS
     if (zen_not_null($parameters)) $field .= ' ' . $parameters;
 
     $field .= ' />';
-    
+
     // -----
     // Give an observer the opportunity to modify the just-rendered field.
     //
@@ -513,19 +513,24 @@ function zen_catalog_href_link($page = '', $parameters = '', $connection = 'NONS
     if ($selection !== false) {
         return $selection;
     }
-    
+
     $selection = '<input type="' . zen_output_string($type) . '" name="' . zen_output_string($name) . '"';
 
     if (zen_not_null($value)) $selection .= ' value="' . zen_output_string($value) . '"';
 
-    if ( ($checked == true) || ( isset($GLOBALS[$name]) && is_string($GLOBALS[$name]) && ( ($GLOBALS[$name] == 'on') || (isset($value) && (stripslashes($GLOBALS[$name]) == $value)) ) ) ) {
+    if (
+        ($checked == true) ||
+        (isset($GLOBALS[$name]) && is_string($GLOBALS[$name]) &&
+            ($GLOBALS[$name] == 'on' || (isset($value) && stripslashes($GLOBALS[$name]) == $value))
+        )
+    ) {
       $selection .= ' checked="checked"';
     }
 
     if (zen_not_null($parameters)) $selection .= ' ' . $parameters;
 
     $selection .= ' />';
-    
+
     // -----
     // Give an observer the opportunity to modify the just-rendered field.
     //
@@ -580,7 +585,7 @@ function zen_catalog_href_link($page = '', $parameters = '', $connection = 'NONS
     if ($field !== false) {
         return $field;
     }
-    
+
     $field = '<textarea name="' . zen_output_string($name) . '" cols="' . zen_output_string($width) . '" rows="' . zen_output_string($height) . '"';
 
     if (zen_not_null($parameters)) $field .= ' ' . $parameters;
@@ -594,7 +599,7 @@ function zen_catalog_href_link($page = '', $parameters = '', $connection = 'NONS
     }
 
     $field .= '</textarea>';
-    
+
     // -----
     // Give an observer the opportunity to modify the just-rendered field.
     //
@@ -635,7 +640,7 @@ function zen_catalog_href_link($page = '', $parameters = '', $connection = 'NONS
 /*
  * Output a form file-field
  * @param string $name name
- * @param boolean $required required 
+ * @param boolean $required required
  * @return string
  */
   function zen_draw_file_field($name, $required = false) {
@@ -652,7 +657,7 @@ function zen_catalog_href_link($page = '', $parameters = '', $connection = 'NONS
   function zen_hide_session_id() {
     global $session_started;
 
-    if ( ($session_started == true) && defined('SID') && zen_not_null(SID) ) {
+    if ($session_started == true && defined('SID') && zen_not_null(SID) ) {
       return zen_draw_hidden_field(zen_session_name(), zen_session_id());
     }
   }
@@ -664,7 +669,7 @@ function zen_catalog_href_link($page = '', $parameters = '', $connection = 'NONS
  * @param array $values values
  * @param string $default default value
  * @param string $parameters parameters
- * @param boolean $required required 
+ * @param boolean $required required
  * @return string
  */
 function zen_draw_pull_down_menu($name, $values, $default = '', $parameters = '', $required = false)
@@ -688,9 +693,9 @@ function zen_draw_pull_down_menu($name, $values, $default = '', $parameters = ''
     return $field;
   }
 
-  $field = '<select';
+  $field = '<select rel="dropdown"';
 
-  if (!strstr($parameters, 'id=')) {
+  if (strpos($parameters, 'id=') === false) {
     $field .= ' id="select-' . zen_output_string($name) . '"';
   }
 
@@ -757,7 +762,7 @@ function zen_draw_pull_down_menu($name, $values, $default = '', $parameters = ''
       $countries_array[] = array('id' => $val, 'text' => zen_get_country_name($val));
     }
     // now add anything not in the defaults list:
-    for ($i=0, $n=sizeof($countries); $i<$n; $i++) {
+    for ($i=0, $n=count($countries); $i<$n; $i++) {
       $alreadyInList = FALSE;
       foreach($countriesAtTopOfList as $key=>$val) {
         if ($countries[$i]['countries_id'] == $val)

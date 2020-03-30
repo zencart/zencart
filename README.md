@@ -1,4 +1,5 @@
-[![Download Zen Cart E-Commerce Shopping Cart ](https://img.shields.io/sourceforge/dt/zencart.svg)](https://sourceforge.net/projects/zencart/files/latest/download)
+[![Download Zen Cart E-Commerce Shopping Cart ](https://img.shields.io/sourceforge/dm/zencart.svg)](https://sourceforge.net/projects/zencart/files/latest/download) ![](https://github.com/zencart/zencart/workflows/Zen%20Cart%20Tests/badge.svg?branch=v157)
+
 
 Zen Cart&reg; - The Art of E-Commerce
 ===============
@@ -18,9 +19,9 @@ Zen Cart&reg; v1.5.7-dev
 Compatibility
 -------------
 Zen Cart v1.5.7 is designed for:
- * PHP 5.6 to PHP 7.3 (it "can" work on PHP 5.5, but should use a newer version)
+ * PHP 5.6 to PHP 7.4
  * Apache 2.2 and 2.4
- * MySQL 5.1 to 5.7 (including MariaDB 10.0 to 10.3)
+ * MySQL 5.1 to 5.7 (including MariaDB 10.0 to 10.4)
 
 
 Installation
@@ -52,14 +53,14 @@ __The [Implementation Guide](https://www.zen-cart.com/docs/implementation-guide-
 
 Documentation
 -------------
-Use your browser to open the [/docs/index.html](https://www.zen-cart.com/docs/index.html) page for links to documentation and the [Implementation Guide](https://www.zen-cart.com/docs/implementation-guide-v156.pdf).
-
+Use your browser to open the [/docs/index.html](https://www.zen-cart.com/docs/index.html) page for links to release documentation and the [Implementation Guide](https://www.zen-cart.com/docs/implementation-guide-v156.pdf).  A storeowner documentation repository also exists at [docs.zen-cart.com/user/](https://docs.zen-cart.com/user/). 
 
 Developer Documentation
 -----------------------
-Developers wishing to contribute to the Zen Cart&reg; core code may fork the [zencart/zencart](https://github.com/zencart/zencart) repository on github and issue Pull Requests from their own feature branches. For detailed help on using github, forking, branching, and contributing see [Contributing to Zen Cart code](http://docs.zen-cart.com/Contributing/).
+Developers wishing to contribute to the Zen Cart&reg; core code may fork the [zencart/zencart](https://github.com/zencart/zencart) repository on github and issue Pull Requests from their own feature branches. For detailed help on using github, forking, branching, and contributing, see [Contributing to Zen Cart code](https://docs.zen-cart.com/dev/contributing/).
 
-Visit [docs.zen-cart.com](https://docs.zen-cart.com/Developer_Documentation/) for guidance on issues relevant to developers. This documentation site is very new, but content will be added over time.  
+Visit [docs.zen-cart.com/dev/](https://docs.zen-cart.com/dev/) for guidance on issues relevant to developers. This documentation site is very new, but content will be added over time.  
+
 Developers wishing to contribute documentation should fork [zencart/documentation](https://github.com/zencart/documentation) and contribute PRs. 
 
 
@@ -78,5 +79,5 @@ Subscribe to [Critical News Updates And Release Announcements](https://www.zen-c
 
 &nbsp;  
 
-*&copy;Copyright 2003-2019, Zen Cart&reg;. All rights reserved.*
+*&copy;Copyright 2003-2020, Zen Cart&reg;. All rights reserved.*
 

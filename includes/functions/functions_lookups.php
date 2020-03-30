@@ -279,7 +279,7 @@
  *  @return integer
  */
   function zen_requires_attribute_selection($products_id) {
-    global $db;
+    global $db, $zco_notifier;
 
     $noDoubles = array();
     $noDoubles[] = PRODUCTS_OPTIONS_TYPE_RADIO;
@@ -299,6 +299,9 @@
               where pa.products_id = " . (int)$products_id . "
               and po.language_id = " . (int)$_SESSION['languages_id'] . "
               group by products_options_id, options_type";
+
+    $zco_notifier->notify('NOTIFY_FUNCTIONS_LOOKUPS_REQUIRES_ATTRIBUTES_SELECTION', '', $query, $noSingles, $noDoubles);
+
     $result = $db->Execute($query);
 
     // if no attributes found, return false
@@ -860,11 +863,11 @@ function zen_get_configuration_key_value($lookup)
       // showcase no prices
         $zc_run = false;
         break;
-      case (CUSTOMERS_APPROVAL == '1' and $_SESSION['customer_id'] == ''):
+      case (CUSTOMERS_APPROVAL == '1' && !zen_is_logged_in()):
       // customer must be logged in to browse
         $zc_run = false;
         break;
-      case (CUSTOMERS_APPROVAL == '2' and $_SESSION['customer_id'] == ''):
+      case (CUSTOMERS_APPROVAL == '2' && !zen_is_logged_in()):
       // show room only
       // customer may browse but no prices
         $zc_run = false;
@@ -873,11 +876,11 @@ function zen_get_configuration_key_value($lookup)
       // show room only
         $zc_run = false;
         break;
-      case (CUSTOMERS_APPROVAL_AUTHORIZATION != '0' and $_SESSION['customer_id'] == ''):
+      case (CUSTOMERS_APPROVAL_AUTHORIZATION != '0' && !zen_is_logged_in()):
       // customer must be logged in to browse
         $zc_run = false;
         break;
-      case (CUSTOMERS_APPROVAL_AUTHORIZATION != '0' and $_SESSION['customers_authorization'] > '0'):
+      case (CUSTOMERS_APPROVAL_AUTHORIZATION != '0' && isset($_SESSION['customers_authorization']) && (int)$_SESSION['customers_authorization'] > 0):
       // customer must be logged in to browse
         $zc_run = false;
         break;
@@ -892,13 +895,14 @@ function zen_get_configuration_key_value($lookup)
 /*
  *  Look up whether to show prices, based on customer-authorization levels
  */
-  function zen_check_show_prices() {
-    if (!(CUSTOMERS_APPROVAL == '2' and $_SESSION['customer_id'] == '') and !((CUSTOMERS_APPROVAL_AUTHORIZATION > 0 and CUSTOMERS_APPROVAL_AUTHORIZATION < 3) and ($_SESSION['customers_authorization'] > '0' or $_SESSION['customer_id'] == '')) and STORE_STATUS != 1) {
+function zen_check_show_prices() 
+{
+    if (!(CUSTOMERS_APPROVAL == '2' and !zen_is_logged_in()) and !((CUSTOMERS_APPROVAL_AUTHORIZATION > 0 and CUSTOMERS_APPROVAL_AUTHORIZATION < 3) and ($_SESSION['customers_authorization'] > '0' or !zen_is_logged_in())) and STORE_STATUS != 1) {
       return true;
     } else {
       return false;
     }
-  }
+}
 
 /*
  * Return any field from products or products_description table

@@ -52,7 +52,7 @@ class CatalogQueryItemsForTax implements ArrayAccess
     );
   
     /**
-      * $tax_ids A set of [CatalogTax](#type-catalogtax) IDs to be used to find associated [CatalogItem](#type-catalogitem)s.
+      * $tax_ids A set of `CatalogTax` IDs to be used to find associated `CatalogItem`s.
       * @var string[]
       */
     protected $tax_ids;
@@ -82,7 +82,7 @@ class CatalogQueryItemsForTax implements ArrayAccess
   
     /**
      * Sets tax_ids
-     * @param string[] $tax_ids A set of [CatalogTax](#type-catalogtax) IDs to be used to find associated [CatalogItem](#type-catalogitem)s.
+     * @param string[] $tax_ids A set of `CatalogTax` IDs to be used to find associated `CatalogItem`s.
      * @return $this
      */
     public function setTaxIds($tax_ids)

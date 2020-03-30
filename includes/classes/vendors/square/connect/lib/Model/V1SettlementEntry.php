@@ -69,7 +69,7 @@ class V1SettlementEntry implements ArrayAccess
       */
     protected $payment_id;
     /**
-      * $type The settlement's current status.
+      * $type The settlement's current status. See [V1SettlementEntryType](#type-v1settlemententrytype) for possible values
       * @var string
       */
     protected $type;
@@ -143,7 +143,7 @@ class V1SettlementEntry implements ArrayAccess
   
     /**
      * Sets type
-     * @param string $type The settlement's current status.
+     * @param string $type The settlement's current status. See [V1SettlementEntryType](#type-v1settlemententrytype) for possible values
      * @return $this
      */
     public function setType($type)

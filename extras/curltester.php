@@ -73,6 +73,10 @@ doCurlTest('https://wwwcie.ups.com/ups.app/xml/Rate');
 echo 'Connecting to FedEx (port 80)...<br>';
 dofsockTest('fedex.com', 80);
 
+echo 'Connecting to Canada Post SellOnline HTTP/S ...<br>';
+doCurlTest('https://qa-sellonline.canadapost.ca/sellonline/Rating');
+// doCurlTest('https://sellonline.canadapost.ca/sellonline/Rating');
+
 echo 'Connecting to Canada Post REST API (SSL) ...<br>';
 doCurlTest('https://ct.soa-gw.canadapost.ca/rs/ship/price');
 
@@ -121,12 +125,6 @@ doCurlTest('https://test.authorize.net/gateway/transact.dll');
 
 echo 'Connecting to First Data GGe4 server (SSL)...<br>';
 doCurlTest('https://checkout.globalgatewaye4.firstdata.com/payment');
-
-echo 'Connecting to Payeezy Processing Server...<br>';
-doCurlTest('https://api.payeezy.com/v1/transactions');
-
-echo 'Connecting to Payeezy Sandbox Server...<br>';
-doCurlTest('https://api-cert.payeezy.com/v1/transactions');
 
 echo 'Connecting to Elavon Server...<br>';
 doCurlTest('https://www.myvirtualmerchant.com/VirtualMerchant/process.do');

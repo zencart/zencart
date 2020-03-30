@@ -57,9 +57,6 @@ require('includes/application_top.php');
         </thead>
         <tbody>
             <?php
-            if (isset($_GET['page']) && ($_GET['page'] > 1))
-              $rows = $_GET['page'] * MAX_DISPLAY_SEARCH_RESULTS_REPORTS - MAX_DISPLAY_SEARCH_RESULTS_REPORTS;
-            $rows = 0;
             $products_query_raw = "SELECT p.products_id, pd.products_name, p.products_quantity, p.products_type
                                    FROM " . TABLE_PRODUCTS . " p,
                                         " . TABLE_PRODUCTS_DESCRIPTION . " pd
@@ -69,13 +66,8 @@ require('includes/application_top.php');
             $products_split = new splitPageResults($_GET['page'], MAX_DISPLAY_SEARCH_RESULTS_REPORTS, $products_query_raw, $products_query_numrows);
             $products = $db->Execute($products_query_raw);
             foreach ($products as $product) {
-
 // only show low stock on products that can be added to the cart
               if ($zc_products->get_allow_add_to_cart($product['products_id']) == 'Y') {
-                $rows++;
-                if (strlen($rows) < 2) {
-                  $rows = '0' . $rows;
-                }
                 $type_handler = $zc_products->get_admin_handler($product['products_type']);
                 $cPath = zen_get_product_path($product['products_id']);
                 ?>

@@ -3,7 +3,7 @@
 # *
 # * @package Installer
 # * @access private
-# * @copyright Copyright 2003-2019 Zen Cart Development Team
+# * @copyright Copyright 2003-2020 Zen Cart Development Team
 # * @copyright Portions Copyright 2003 osCommerce
 # * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
 # * @version $Id: DrByte  New in v1.5.7 $
@@ -26,7 +26,7 @@
 # *    various Zen Cart versions, with the recommended upgrades already pre-selected.
 # * e. Verify the checkboxes, then scroll down and enter your Zen Cart Admin username
 # *    and password, and then click on the Upgrade button.
-# * f. If any errors occur, you will be notified.  Some warnings can be ignored.
+# * f. If any errors occur, you will be notified. Some warnings can be ignored.
 # * g. When done, you will be taken to the Finished page.
 #
 #####################################################
@@ -34,6 +34,50 @@
 # Clear out active customer sessions. Truncating helps the database clean up behind itself.
 TRUNCATE TABLE whos_online;
 TRUNCATE TABLE db_cache;
+
+# Improved descriptions for meta tag options
+UPDATE configuration SET configuration_title = 'Product page generated &lt;title&gt; tag - include Product Model?', configuration_description = 'When custom Keywords and Description meta tags are not set, include the Product Model in the generated page &lt;title&gt; tag?<br><br>0=no / 1=yes' WHERE configuration_key = 'META_TAG_INCLUDE_MODEL';
+UPDATE configuration SET configuration_title = 'Product page generated &lt;title&gt; tag - include Product Price?', configuration_description = 'When custom Keywords and Description meta tags are not set, include the Product Price in the generated page &lt;title&gt; tag?<br><br>0=no / 1=yes' WHERE configuration_key = 'META_TAG_INCLUDE_PRICE';
+UPDATE configuration SET configuration_title = 'Product page generated &lt;meta - description&gt; tag - Maximum Length', configuration_description = 'When custom Keywords and Description meta tags are not set, limit the generated &lt;meta - description&gt; tag to this number of words. Default 50.' WHERE configuration_key = 'MAX_META_TAG_DESCRIPTION_LENGTH';
+# Other name/description improvements
+UPDATE configuration SET configuration_title= 'Recent Purchases Box', configuration_description= 'Number of products to display in the order history box' WHERE configuration_key = 'MAX_DISPLAY_PRODUCTS_IN_ORDER_HISTORY_BOX';
+UPDATE configuration SET configuration_description = 'Number of products to display in the \'Also Purchased\' box' WHERE configuration_key = 'MAX_DISPLAY_ALSO_PURCHASED'; 
+UPDATE configuration SET configuration_description = 'Minimum number of products to display in the \'Also Purchased\' box' WHERE configuration_key = 'MIN_DISPLAY_ALSO_PURCHASED'; 
+UPDATE configuration SET configuration_description = 'Maximum number of PayPal IPN Listings in Admin<br />Default is 20' WHERE configuration_key = 'MAX_DISPLAY_SEARCH_RESULTS_PAYPAL_IPN';
+UPDATE configuration SET configuration_description = 'On what basis is Shipping Tax calculated. Options are<br />Shipping - Based on customers Shipping Address<br />Billing Based on customers Billing address<br />Store - Based on Store address if Billing/Shipping Zone equals Store zone - Can be overridden by correctly written Shipping Module' WHERE configuration_key = 'STORE_SHIPPING_TAX_BASIS';
+UPDATE configuration SET configuration_description = 'Check to see if sufficient stock is available' WHERE configuration_key = 'STOCK_CHECK';
+UPDATE configuration SET configuration_description = 'Give a WARNING some time before you put your website Down for Maintenance<br />(true=on false=off)<br />If you set the \'Down For Maintenance: ON/OFF\' to true this will automatically be updated to false' WHERE configuration_key = 'WARN_BEFORE_DOWN_FOR_MAINTENANCE';
+#
+UPDATE product_type_layout SET configuration_title = 'Product page &lt;title&gt; tag - default: use Product Name', configuration_description = 'Default setting for a new product (can be modified per product).<br>Show the Product Name in the page &lt;title&gt; tag.' WHERE configuration_key = 'SHOW_PRODUCT_INFO_METATAGS_PRODUCTS_NAME_STATUS';
+UPDATE product_type_layout SET configuration_title = 'Product page &lt;title&gt; tag - default: use Title Additional Text', configuration_description = 'Default setting for a new product (can be modified per product).<br>Show the Title Additional text in the page &lt;title&gt; tag.' WHERE configuration_key = 'SHOW_PRODUCT_INFO_METATAGS_TITLE_STATUS';
+UPDATE product_type_layout SET configuration_title = 'Product page &lt;title&gt; tag - default: use Product Model', configuration_description = 'Default setting for a new product (can be modified per product).<br>Show the Product Model in the page &lt;title&gt; tag.' WHERE configuration_key = 'SHOW_PRODUCT_INFO_METATAGS_MODEL_STATUS';
+UPDATE product_type_layout SET configuration_title = 'Product page &lt;title&gt; tag - default: use Product Price', configuration_description = 'Default setting for a new product (can be modified per product).<br>Show the Product Price in the page &lt;title&gt; tag.' WHERE configuration_key = 'SHOW_PRODUCT_INFO_METATAGS_PRICE_STATUS';
+UPDATE product_type_layout SET configuration_title = 'Product page &lt;title&gt; tag - default: use SITE_TAGLINE', configuration_description = 'Default setting for a new product (can be modified per product).<br>Show the defined constant "SITE_TAGLINE" in the page &lt;title&gt; tag.' WHERE configuration_key = 'SHOW_PRODUCT_INFO_METATAGS_TITLE_TAGLINE_STATUS';
+
+UPDATE product_type_layout SET configuration_title = 'Product page &lt;title&gt; tag - default: use Product Name', configuration_description = 'Default setting for a new product (can be modified per product).<br>Show the Product Name in the page &lt;title&gt; tag.' WHERE configuration_key = 'SHOW_PRODUCT_MUSIC_INFO_METATAGS_PRODUCTS_NAME_STATUS';
+UPDATE product_type_layout SET configuration_title = 'Product page &lt;title&gt; tag - default: use Title Additional Text', configuration_description = 'Default setting for a new product (can be modified per product).<br>Show the Product Name in the page &lt;title&gt; tag.' WHERE configuration_key = 'SHOW_PRODUCT_MUSIC_INFO_METATAGS_TITLE_STATUS';
+UPDATE product_type_layout SET configuration_title = 'Product page &lt;title&gt; tag - default: use Product Model', configuration_description = 'Default setting for a new product (can be modified per product).<br>Show the Product Name in the page &lt;title&gt; tag.' WHERE configuration_key = 'SHOW_PRODUCT_MUSIC_INFO_METATAGS_MODEL_STATUS';
+UPDATE product_type_layout SET configuration_title = 'Product page &lt;title&gt; tag - default: use Product Price', configuration_description = 'Default setting for a new product (can be modified per product).<br>Show the Product Name in the page &lt;title&gt; tag.' WHERE configuration_key = 'SHOW_PRODUCT_MUSIC_INFO_METATAGS_PRICE_STATUS';
+UPDATE product_type_layout SET configuration_title = 'Product page &lt;title&gt; tag - default: use SITE_TAGLINE', configuration_description = 'Default setting for a new product (can be modified per product).<br>Show the Product Name in the page &lt;title&gt; tag.' WHERE configuration_key = 'SHOW_PRODUCT_MUSIC_INFO_METATAGS_TITLE_TAGLINE_STATUS';
+
+UPDATE product_type_layout SET configuration_title = 'Document page &lt;title&gt; tag - default: use Document Title', configuration_description = 'Default setting for a new product (can be modified per product).<br>Show the Document Title in the page &lt;title&gt; tag.' WHERE configuration_key = 'SHOW_DOCUMENT_GENERAL_INFO_METATAGS_TITLE_STATUS';
+UPDATE product_type_layout SET configuration_title = 'Document page &lt;title&gt; tag - default: use Document Name', configuration_description = 'Default setting for a new product (can be modified per product).<br>Show the Document Name in the page &lt;title&gt; tag.' WHERE configuration_key = 'SHOW_DOCUMENT_GENERAL_INFO_METATAGS_PRODUCTS_NAME_STATUS';
+UPDATE product_type_layout SET configuration_title = 'Product page &lt;title&gt; tag - default: use Document Tagline', configuration_description = 'Default setting for a new product (can be modified per product).<br>Show the Document Tagline in the page &lt;title&gt; tag.' WHERE configuration_key = 'SHOW_DOCUMENT_GENERAL_INFO_METATAGS_TITLE_TAGLINE_STATUS';
+
+UPDATE product_type_layout SET configuration_title = 'Product page &lt;title&gt; tag - default: use Document Title', configuration_description = 'Default setting for a new product (can be modified per product).<br>Show the Document Title in the page &lt;title&gt; tag.' WHERE configuration_key = 'SHOW_DOCUMENT_PRODUCT_INFO_METATAGS_TITLE_STATUS';
+UPDATE product_type_layout SET configuration_title = 'Product page &lt;title&gt; tag - default: use Document Name', configuration_description = 'Default setting for a new product (can be modified per product).<br>Show the Document Name in the page &lt;title&gt; tag.' WHERE configuration_key = 'SHOW_DOCUMENT_PRODUCT_INFO_METATAGS_PRODUCTS_NAME_STATUS';
+UPDATE product_type_layout SET configuration_title = 'Product page &lt;title&gt; tag - default: use Document Model', configuration_description = 'Default setting for a new product (can be modified per product).<br>Show the Document Model in the page &lt;title&gt; tag.' WHERE configuration_key = 'SHOW_DOCUMENT_PRODUCT_INFO_METATAGS_MODEL_STATUS';
+UPDATE product_type_layout SET configuration_title = 'Product page &lt;title&gt; tag - default: use Document Price', configuration_description = 'Default setting for a new product (can be modified per product).<br>Show the Document Price in the page &lt;title&gt; tag.' WHERE configuration_key = 'SHOW_DOCUMENT_PRODUCT_INFO_METATAGS_PRICE_STATUS';
+UPDATE product_type_layout SET configuration_title = 'Product page &lt;title&gt; tag - default: use Document Tagline', configuration_description = 'Default setting for a new product (can be modified per product).<br>Show the Document Tagline in the page &lt;title&gt; tag.' WHERE configuration_key = 'SHOW_DOCUMENT_PRODUCT_INFO_METATAGS_TITLE_TAGLINE_STATUS';
+
+UPDATE product_type_layout SET configuration_title = 'Product page &lt;title&gt; tag - default: use Product Name', configuration_description = 'Default setting for a new product (can be modified per product).<br>Show the Product Name in the page &lt;title&gt; tag.' WHERE configuration_key = 'SHOW_PRODUCT_FREE_SHIPPING_INFO_METATAGS_TITLE_STATUS';
+UPDATE product_type_layout SET configuration_title = 'Product page &lt;title&gt; tag - default: use Title Additional Text', configuration_description = 'Default setting for a new product (can be modified per product).<br>Show the Title Additional text in the page &lt;title&gt; tag.' WHERE configuration_key = 'SHOW_PRODUCT_FREE_SHIPPING_INFO_METATAGS_PRODUCTS_NAME_STATUS';
+UPDATE product_type_layout SET configuration_title = 'Product page &lt;title&gt; tag - default: use Product Model', configuration_description = 'Default setting for a new product (can be modified per product).<br>Show the Product Model in the page &lt;title&gt; tag.' WHERE configuration_key = 'SHOW_PRODUCT_FREE_SHIPPING_INFO_METATAGS_MODEL_STATUS';
+UPDATE product_type_layout SET configuration_title = 'Product page &lt;title&gt; tag - default: use Product Price', configuration_description = 'Default setting for a new product (can be modified per product).<br>Show the Product Price in the page &lt;title&gt; tag.' WHERE configuration_key = 'SHOW_PRODUCT_FREE_SHIPPING_INFO_METATAGS_PRICE_STATUS';
+UPDATE product_type_layout SET configuration_title = 'Product page &lt;title&gt; tag - default: use SITE_TAGLINE', configuration_description = 'Default setting for a new product (can be modified per product).<br>Show the defined constant "SITE_TAGLINE" in the page &lt;title&gt; tag.' WHERE configuration_key = 'SHOW_PRODUCT_FREE_SHIPPING_INFO_METATAGS_TITLE_TAGLINE_STATUS';
+
+# Repair ez-pages table field that was too short in v156
+ALTER TABLE ezpages_content MODIFY pages_html_text mediumtext NOT NULL;
 
 # Enable Products to Categories as a menu option
 UPDATE admin_pages SET display_on_menu = 'Y' WHERE page_key = 'productsToCategories';
@@ -47,13 +91,38 @@ INSERT INTO configuration (configuration_title, configuration_key, configuration
 # Minmax values 
 INSERT INTO configuration (configuration_title, configuration_key, configuration_value, val_function, configuration_description, configuration_group_id, sort_order, date_added) VALUES ('Maximum Preview', 'MAX_PREVIEW', '100', '{"error":"TEXT_MAX_PREVIEW","id":"FILTER_VALIDATE_INT","options":{"options":{"min_range":0}}}', 'Maximum Preview length<br />100 = Default', 3, 80, now());
 
-# Missed in 1.5.6 upgrade.  May already be there so use INSERT IGNORE
+# Encrypted Master Password configuration. Using INSERT IGNORE followed by an UPDATE in consideration of shops with EMP already installed.
+INSERT IGNORE INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) VALUES ('Customer <em>Place Order</em>: Single Admin ID', 'EMP_LOGIN_ADMIN_ID', '1', 'Identify the ID of an admin that is permitted to use the <em>Place Order</em> feature on the customers\' listing, regardless of their assigned admin-profile. Set the value to 0 to disable the <em>Single Admin ID</em> feature.<br /><br /><b>Default: 1</b><br />', 1, 300, now());
+UPDATE configuration SET configuration_title = 'Customer <em>Place Order</em>: Single Admin ID', configuration_description = 'Identify the ID of an admin that is permitted to use the <em>Place Order</em> feature on the customers\' listing, regardless of their assigned admin-profile. Set the value to 0 to disable the <em>Single Admin ID</em> feature.<br /><br /><b>Default: 1</b><br />' WHERE configuration_key = 'EMP_LOGIN_ADMIN_ID' LIMIT 1;
+
+INSERT IGNORE INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) VALUES ('Customer <em>Place Order</em>: Admin Profiles', 'EMP_LOGIN_ADMIN_PROFILE_ID', '1', 'Identify the admin <em>User Profile IDs</em> that are permitted to use the <em>Place Order</em> feature on the customers\' listing &mdash; all admins that are in these profiles are permitted. Enter the value as a comma-separated list (intervening blanks are OK) of Admin Profile IDs, e.g. <b>1, 2, 3</b>. Set the value to 0 to disable the <em>Admin Profiles</em> feature.<br /><br /><b>Default: 1 (All Superusers)</b><br />', 1, 301, now());
+UPDATE configuration SET configuration_title = 'Customer <em>Place Order</em>: Admin Profiles', configuration_description = 'Identify the admin <em>User Profile IDs</em> that are permitted to use the <em>Place Order</em> feature on the customers\' listing &mdash; all admins that are in these profiles are permitted. Enter the value as a comma-separated list (intervening blanks are OK) of Admin Profile IDs, e.g. <b>1, 2, 3</b>. Set the value to 0 to disable the <em>Admin Profiles</em> feature.<br /><br /><b>Default: 1 (All Superusers)</b><br />' WHERE configuration_key = 'EMP_LOGIN_ADMIN_PROFILE_ID' LIMIT 1;
+
+INSERT IGNORE INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added, set_function) VALUES ('Customer <em>Place Order</em>: Passwordless Login', 'EMP_LOGIN_AUTOMATIC', 'true', 'Login directly to store without entering credentials', 1, 302, now(), 'zen_cfg_select_option(array(\'true\', \'false\'),');
+UPDATE configuration SET configuration_title = 'Customer <em>Place Order</em>: Passwordless Login', configuration_description = 'Login directly to store without entering credentials' WHERE configuration_key = 'EMP_LOGIN_AUTOMATIC' LIMIT 1;
+
+#global auth key
+INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES ('global auth key', 'GLOBAL_AUTH_KEY', '', '', 6, 30, now(), now(), NULL, NULL);
+
+# New setting, enabling product meta-tags to be conditionally included in search result.
+INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added, set_function) VALUES ('Include meta-tags in product search?', 'ADVANCED_SEARCH_INCLUDE_METATAGS', 'true', 'Should a product\'s meta-tag keywords and meta-tag descriptions be considered in any <code>advanced_search_results</code> displayed?', 1, 18, now(), 'zen_cfg_select_option(array(\'true\', \'false\'),');
+
+# Missed in 1.5.6 upgrade. May already be there so use INSERT IGNORE
 INSERT IGNORE INTO configuration (configuration_title, configuration_key, configuration_value, val_function, configuration_description, configuration_group_id, sort_order, date_added) VALUES ('Admin Usernames', 'ADMIN_NAME_MINIMUM_LENGTH', '4', '{"error":"TEXT_MIN_ADMIN_USER_LENGTH","id":"FILTER_VALIDATE_INT","options":{"options":{"min_range":4}}}', 'Minimum length of admin usernames (must be 4 or more)', '2', '18', now());
 # Country data 
-UPDATE countries set address_format_id = 5 where countries_iso_code_3 in ('ITA'); 
+UPDATE countries set address_format_id = 5 where countries_iso_code_3 in ('ITA');
+
+# Add language_code
+ALTER TABLE orders ADD language_code char(2) NOT NULL default '';
 
 # Add sort_order
 ALTER TABLE orders_status ADD sort_order int(11) NOT NULL default 0;
+
+# Improve speed of admin orders page listing
+ALTER TABLE orders_total ADD INDEX idx_oid_class_zen (orders_id, class);
+
+# Add customer secret
+ALTER TABLE customers ADD customers_secret varchar(64) NOT NULL default '';
 
 # Add control to enable/disable the display of the 'Ask a Question' block for each product type
 INSERT INTO product_type_layout (configuration_title, configuration_key, configuration_value, configuration_description, product_type_id, sort_order, set_function, date_added) VALUES ('Show \"Ask a Question\" button?', 'SHOW_PRODUCT_INFO_ASK_A_QUESTION', '1', 'Display the \"Ask a Question\" button on product Info pages? (0 = False, 1 = True)', 1, 14, 'zen_cfg_select_drop_down(array(array(\'id\'=>\'1\', \'text\'=>\'True\'), array(\'id\'=>\'0\', \'text\'=>\'False\')), ', now());
@@ -63,6 +132,7 @@ INSERT INTO product_type_layout (configuration_title, configuration_key, configu
 INSERT INTO product_type_layout (configuration_title, configuration_key, configuration_value, configuration_description, product_type_id, sort_order, set_function, date_added) VALUES ('Show \"Ask a Question\" button?', 'SHOW_PRODUCT_FREE_SHIPPING_INFO_ASK_A_QUESTION', '1', 'Display the \"Ask a Question\" button on product Info pages? (0 = False, 1 = True)', 5, 14, 'zen_cfg_select_drop_down(array(array(\'id\'=>\'1\', \'text\'=>\'True\'), array(\'id\'=>\'0\', \'text\'=>\'False\')), ', now());
 
 DELETE FROM configuration WHERE configuration_key = 'ADMIN_DEMO';
+DELETE FROM configuration WHERE configuration_key = 'UPLOAD_FILENAME_EXTENSIONS';
 
 #val_function update for MIN values
 UPDATE configuration SET val_function = '{"error":"TEXT_MIN_ADMIN_FIRST_NAME_LENGTH","id":"FILTER_VALIDATE_INT","options":{"options":{"min_range":0}}}' WHERE configuration_key ='ENTRY_FIRST_NAME_MIN_LENGTH';
@@ -145,6 +215,79 @@ UPDATE configuration SET val_function = '{"error":"TEXT_EMAIL_ADDRESS_VALIDATE",
 UPDATE configuration SET val_function = '{"error":"TEXT_EMAIL_ADDRESS_VALIDATE","id":"FILTER_CALLBACK","options":{"options":["configurationValidation","sanitizeEmail"]}}' WHERE configuration_key ='CONTACT_US_LIST';
 UPDATE configuration SET val_function = '{"error":"TEXT_EMAIL_ADDRESS_VALIDATE","id":"FILTER_CALLBACK","options":{"options":["configurationValidation","sanitizeEmail"]}}' WHERE configuration_key ='SEND_EXTRA_LOW_STOCK_EMAILS_TO';
 
+
+ALTER TABLE admin_activity_log MODIFY attention MEDIUMTEXT;
+
+# New Plugin tables
+
+# --------------------------------------------------------
+
+#
+# Table structure for table 'plugin_control'
+#
+
+DROP TABLE IF EXISTS plugin_control;
+CREATE TABLE plugin_control (
+  unique_key varchar(20) NOT NULL,
+  name varchar(64) NOT NULL default '',
+  description text,
+  type varchar(11) NOT NULL default 'free',
+  managed tinyint(1) NOT NULL default 0,
+  status tinyint(1) NOT NULL default 0,
+  author varchar(40) NOT NULL,
+  version varchar(10),
+  zc_versions text NOT NULL,
+  PRIMARY KEY  (unique_key)
+) ENGINE=MyISAM;
+
+# --------------------------------------------------------
+
+#
+# Table structure for table 'plugin_control_versions'
+#
+
+DROP TABLE IF EXISTS plugin_control_versions;
+CREATE TABLE plugin_control_versions (
+  unique_key varchar(20) NOT NULL,
+  version varchar(10),
+  author varchar(40) NOT NULL,
+  zc_versions text NOT NULL,
+  PRIMARY KEY  (unique_key, version)
+) ENGINE=MyISAM;
+
+# --------------------------------------------------------
+
+#
+# Table structure for table 'plugin_groups'
+#
+
+DROP TABLE IF EXISTS plugin_groups;
+CREATE TABLE plugin_groups (
+  unique_key varchar(20) NOT NULL,
+  PRIMARY KEY  (unique_key)
+) ENGINE=MyISAM;
+
+# --------------------------------------------------------
+
+#
+# Table structure for table 'plugin_groups_description'
+#
+
+DROP TABLE IF EXISTS plugin_groups_description;
+CREATE TABLE plugin_groups_description (
+  plugin_group_unique_key varchar(20) NOT NULL,
+  language_id int(11) NOT NULL default 1,
+  name varchar(64) NOT NULL default '',
+  PRIMARY KEY  (plugin_group_unique_key,language_id)
+) ENGINE=MyISAM;
+
+
+
+######
+# Carry forward from v1.5.6 for early-adopters
+UPDATE configuration SET date_added='0001-01-01' where date_added < '0001-01-01';
+
+
 #############
 
 #### VERSION UPDATE STATEMENTS
@@ -159,4 +302,4 @@ FROM project_version;
 UPDATE project_version SET project_version_major='1', project_version_minor='5.7-alpha', project_version_patch1='', project_version_patch1_source='', project_version_patch2='', project_version_patch2_source='', project_version_comment='Version Update 1.5.6->1.5.7-alpha', project_version_date_applied=now() WHERE project_version_key = 'Zen-Cart Main';
 UPDATE project_version SET project_version_major='1', project_version_minor='5.7-alpha', project_version_patch1='', project_version_patch1_source='', project_version_patch2='', project_version_patch2_source='', project_version_comment='Version Update 1.5.6->1.5.7-alpha', project_version_date_applied=now() WHERE project_version_key = 'Zen-Cart Database';
 
-#####  END OF UPGRADE SCRIPT
+##### END OF UPGRADE SCRIPT

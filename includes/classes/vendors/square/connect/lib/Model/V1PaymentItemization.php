@@ -114,7 +114,7 @@ class V1PaymentItemization implements ArrayAccess
       */
     protected $quantity;
     /**
-      * $itemization_type The type of purchase that the itemization represents, such as an ITEM or CUSTOM_AMOUNT
+      * $itemization_type The type of purchase that the itemization represents, such as an ITEM or CUSTOM_AMOUNT See [V1PaymentItemizationItemizationType](#type-v1paymentitemizationitemizationtype) for possible values
       * @var string
       */
     protected $itemization_type;
@@ -302,7 +302,7 @@ class V1PaymentItemization implements ArrayAccess
   
     /**
      * Sets itemization_type
-     * @param string $itemization_type The type of purchase that the itemization represents, such as an ITEM or CUSTOM_AMOUNT
+     * @param string $itemization_type The type of purchase that the itemization represents, such as an ITEM or CUSTOM_AMOUNT See [V1PaymentItemizationItemizationType](#type-v1paymentitemizationitemizationtype) for possible values
      * @return $this
      */
     public function setItemizationType($itemization_type)

@@ -14,7 +14,6 @@
 ?>
 <div class="centerColumn" id="checkoutShipAddressDefault">
 
-<?php echo zen_draw_form('checkout_address', zen_href_link(FILENAME_CHECKOUT_SHIPPING_ADDRESS, '', 'SSL'), 'post', 'class="group"'); ?>
 <h1 id="checkoutShipAddressDefaultHeading"><?php echo HEADING_TITLE; ?></h1>
 
 <?php if ($messageStack->size('checkout_address') > 0) echo $messageStack->output('checkout_address'); ?>
@@ -31,8 +30,7 @@
 
 <?php
      if ($addresses_count < MAX_ADDRESS_BOOK_ENTRIES) {
-?>
-<?php
+       echo zen_draw_form('checkout_address', zen_href_link(FILENAME_CHECKOUT_SHIPPING_ADDRESS, '', 'SSL'), 'post', 'class="group"'); 
 /**
  * require template to display new address form
  */
@@ -54,6 +52,7 @@
 ?>
 </fieldset>
 <div class="buttonRow forward"><?php echo zen_draw_hidden_field('action', 'submit') . zen_image_submit(BUTTON_IMAGE_CONTINUE, BUTTON_CONTINUE_ALT); ?></div>
+</form>
 <?php
      }
   }
@@ -62,6 +61,5 @@
 
 <div class="buttonRow back"><?php echo TITLE_CONTINUE_CHECKOUT_PROCEDURE . '<br />' . TEXT_CONTINUE_CHECKOUT_PROCEDURE; ?></div>
 
-</form>
 <div class="buttonRow back clearBoth"><?php echo zen_back_link() . zen_image_button(BUTTON_IMAGE_BACK, BUTTON_BACK_ALT) . '</a>'; ?></div>
 </div>

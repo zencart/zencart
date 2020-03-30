@@ -35,6 +35,7 @@ function zen_address_format($address_format_id = 1, $incoming = array(), $html =
     $address['hr'] = $html ? '<hr>' : '----------------------------------------';
     $address['cr'] = $html ? ($boln == '' && $eoln == "\n" ? '<br>' : $eoln . $boln) : $eoln;
 
+    if (ACCOUNT_SUBURB !== 'true') $incoming['suburb'] = ''; 
     $address['company'] = !empty($incoming['company']) ? zen_output_string_protected($incoming['company']) : '';
     $address['firstname'] = !empty($incoming['firstname']) ? zen_output_string_protected($incoming['firstname']) : (!empty($incoming['name']) ? zen_output_string_protected($incoming['name']) : '');
     $address['lastname'] = !empty($incoming['lastname']) ? zen_output_string_protected($incoming['lastname']) : '';
@@ -89,6 +90,7 @@ function zen_address_format($address_format_id = 1, $incoming = array(), $html =
     if (ACCOUNT_COMPANY == 'true' && !empty($address['$company']) && false === strpos($fmt, '$company')) {
         $address_out = $address['$company'] . $address['$cr'] . $address_out;
     }
+    if (ACCOUNT_SUBURB !== 'true') $address['suburb'] = ''; 
 
     // -----
     // "Package up" the various elements of an address and issue a notification that will enable
@@ -160,7 +162,7 @@ function zen_address_format($address_format_id = 1, $incoming = array(), $html =
 // Return a customer greeting
   function zen_customer_greeting() {
 
-    if (isset($_SESSION['customer_id']) && $_SESSION['customer_first_name']) {
+    if (zen_is_logged_in() && !zen_in_guest_checkout() && !empty($_SESSION['customer_first_name'])) {
       $greeting_string = sprintf(TEXT_GREETING_PERSONAL, zen_output_string_protected($_SESSION['customer_first_name']), zen_href_link(FILENAME_PRODUCTS_NEW));
     } else {
       $greeting_string = sprintf(TEXT_GREETING_GUEST, zen_href_link(FILENAME_LOGIN, '', 'SSL'), zen_href_link(FILENAME_CREATE_ACCOUNT, '', 'SSL'));
@@ -172,8 +174,16 @@ function zen_address_format($address_format_id = 1, $incoming = array(), $html =
   function zen_count_customer_orders($id = '', $check_session = true) {
     global $db;
 
+    // -----
+    // Quick return if no customer is logged in or if the current customer is in a
+    // guest-checkout.
+    //
+    if (!zen_is_logged_in() || zen_in_guest_checkout()) {
+        return 0;
+    }
+    
     if (is_numeric($id) == false) {
-      if ($_SESSION['customer_id']) {
+      if (!empty($_SESSION['customer_id'])) {
         $id = $_SESSION['customer_id'];
       } else {
         return 0;
@@ -181,7 +191,7 @@ function zen_address_format($address_format_id = 1, $incoming = array(), $html =
     }
 
     if ($check_session == true) {
-      if ( ($_SESSION['customer_id'] == false) || ($id != $_SESSION['customer_id']) ) {
+      if (empty($_SESSION['customer_id']) || $id != $_SESSION['customer_id']) {
         return 0;
       }
     }
@@ -198,8 +208,15 @@ function zen_address_format($address_format_id = 1, $incoming = array(), $html =
   function zen_count_customer_address_book_entries($id = '', $check_session = true) {
     global $db;
 
+    // -----
+    // Quick return if no customer is logged in or if the customer is in a guest checkout.
+    //
+    if (!zen_is_logged_in() || zen_in_guest_checkout()) {
+        return 0;
+    }
+    
     if (is_numeric($id) == false) {
-      if ($_SESSION['customer_id']) {
+      if (!empty($_SESSION['customer_id'])) {
         $id = $_SESSION['customer_id'];
       } else {
         return 0;
@@ -207,7 +224,7 @@ function zen_address_format($address_format_id = 1, $incoming = array(), $html =
     }
 
     if ($check_session == true) {
-      if ( ($_SESSION['customer_id'] == false) || ($id != $_SESSION['customer_id']) ) {
+      if (empty($_SESSION['customer_id']) || $id != $_SESSION['customer_id']) {
         return 0;
       }
     }
@@ -226,13 +243,14 @@ function zen_address_format($address_format_id = 1, $incoming = array(), $html =
   function zen_get_customer_validate_session($customer_id) {
     global $db, $messageStack;
     $zc_check_customer = $db->Execute("SELECT customers_id, customers_authorization from " . TABLE_CUSTOMERS . " WHERE customers_id=" . (int)$customer_id);
-    $bannedStatus = $zc_check_customer->fields['customers_authorization'] == 4; // BANNED STATUS is 4
-    if ($zc_check_customer->RecordCount() <= 0 || $bannedStatus) {
+    if ($zc_check_customer->EOF || $zc_check_customer->fields['customers_authorization'] == 4) {    // Banned status is 4
       $db->Execute("DELETE from " . TABLE_CUSTOMERS_BASKET . " WHERE customers_id= " . $customer_id);
       $db->Execute("DELETE from " . TABLE_CUSTOMERS_BASKET_ATTRIBUTES . " WHERE customers_id= " . $customer_id);
       $_SESSION['cart']->reset(TRUE);
       unset($_SESSION['customer_id']);
-      if (!$bannedStatus) $messageStack->add_session('header', ERROR_CUSTOMERS_ID_INVALID, 'error');
+      if ($zc_check_customer->fields['customers_authorization'] != 4) {
+          $messageStack->add_session('header', ERROR_CUSTOMERS_ID_INVALID, 'error');
+      }
       return false;
     }
     return true;
@@ -258,3 +276,212 @@ function zen_is_logged_in()
     $GLOBALS['zco_notifier']->notify('NOTIFY_ZEN_IS_LOGGED_IN', '', $is_logged_in);
     return (bool)$is_logged_in;
 }
+
+/**
+ * This function determines if the login-password supplied is associated with a permitted
+ * admin's admin-password, returning (bool)true if so.  Normally called during the login-page's
+ * header_php.php processing.
+ */
+function zen_validate_storefront_admin_login($password, $email_address)
+{
+    global $db;
+    $admin_authorized = false;
+    
+    // -----
+    // Admin passwords might be 'sanitized', e.g. this&that becomes this&amp;that, so we'll check
+    // either the as-entered or 'sanitized' versions.
+    //
+    $pwd2 = htmlspecialchars($password, ENT_COMPAT, CHARSET);
+    $check = $db->Execute(
+        "SELECT admin_id, admin_pass 
+           FROM " . TABLE_ADMIN . " 
+          WHERE admin_id = " . (int)EMP_LOGIN_ADMIN_ID . "
+          LIMIT 1"
+    );
+    if (!$check->EOF && (zen_validate_password($password, $check->fields['admin_pass']) || zen_validate_password($pwd2, $check->fields['admin_pass']))) {
+        $admin_authorized = true;
+        $_SESSION['emp_admin_login'] = true;
+        $_SESSION['emp_admin_id'] = EMP_LOGIN_ADMIN_ID;
+        
+    } else {
+        $profile_array = explode(',', str_replace(' ', '', EMP_LOGIN_ADMIN_PROFILE_ID));
+        foreach ($profile_array as $index => $current_id) {
+            if (!(int)$current_id == 0) {
+                unset($profile_array[$index]);
+            }
+        }
+        if (count($profile_array) != 0) {
+            $profile_list = implode(', ', $profile_array);
+            $admin_profiles = $db->Execute(
+                "SELECT admin_id, admin_pass 
+                   FROM " . TABLE_ADMIN . " 
+                  WHERE admin_profile IN ($profile_list)"
+            );
+            while (!$admin_profiles->EOF && !$admin_authorized) {
+                $admin_authorized = (zen_validate_password($p2, $admin_profiles->fields['admin_pass']) || zen_validate_password($pwd2, $admin_profiles->fields['admin_pass']));
+                if ($admin_authorized) {
+                    $_SESSION['emp_admin_login'] = true;
+                    $_SESSION['emp_admin_id'] = $admin_profiles->fields['admin_id'];
+                }
+                $admin_profiles->MoveNext();
+            }
+        }
+    }
+
+    if ($admin_authorized) {
+        $_SESSION['emp_customer_email_address'] = $email_address;
+        $sql_data_array = array( 
+            'access_date' => 'now()',
+            'admin_id' => $_SESSION['emp_admin_id'],
+            'page_accessed' => 'login.php',
+            'page_parameters' => '',
+            'ip_address' => substr($_SERVER['REMOTE_ADDR'],0,45),
+            'gzpost' => gzdeflate(json_encode(array('action' => 'emp_admin_login', 'customer_email_address' => $email_address)), 7),
+            'flagged' => 0,
+            'attention' => '',
+            'severity' => 'info',
+            'logmessage' => 'EMP admin login',
+        );
+        zen_db_perform(TABLE_ADMIN_ACTIVITY_LOG, $sql_data_array);
+    }
+    return $admin_authorized;
+}
+
+function zen_update_customers_secret($customerId)
+{
+    global $db;
+
+    $hashable = openssl_random_pseudo_bytes(64);
+    $secret = hash('sha256', $hashable);
+    $sql = "UPDATE " . TABLE_CUSTOMERS . " SET customers_secret = :secret: WHERE customers_id = :id:";
+    $sql = $db->bindVars($sql, ':secret:', $secret, 'string');
+    $sql = $db->bindVars($sql, ':id:', $customerId, 'integer');
+    $db->execute($sql);
+    return $secret;
+}
+
+function zen_create_hmac_uri($data, $secret)
+{
+    $secret = hash('sha256', $secret . GLOBAL_AUTH_KEY);
+    foreach ($data as $k => $val) {
+        $k = str_replace('%', '%25', $k);
+        $k = str_replace('&', '%26', $k);
+        $k = str_replace('=', '%3D', $k);
+        $val = str_replace('%', '%25', $val);
+        $val = str_replace('&', '%26', $val);
+        $params[$k] = $val;
+    }
+    ksort($params);
+    $hmacData = implode('&', $params);
+    foreach ($data as $k => $val) {
+        unset($params[$k]);
+    }
+    $hmac = hash_hmac('sha256', $hmacData, $secret);
+    $params['hmac'] = $hmac;
+    $uri = http_build_query($params);
+    return $uri;
+}
+
+function zen_is_hmac_login()
+{
+    if (!isset($_GET['main_page']) || $_GET['main_page'] != FILENAME_LOGIN) {
+        return false;
+    }
+    if (!isset($_GET['hmac'])) return false;
+    if (!isset($_POST['timestamp'])) return false;
+    return true;
+}
+
+function zen_validate_hmac_login()
+{
+    global $db;
+    $postCheck = ['cid', 'aid', 'email_address'];
+    foreach ($postCheck as $entry) {
+        if (!isset($_POST[$entry])) return false;
+    }
+    $data = $_REQUEST;
+    $unsetArray = ['action', 'main_page', 'securityToken', 'zenid', 'zenInstallerId'];
+    foreach ($unsetArray as $entry) {
+        unset($data[$entry]);
+    }
+    foreach ($data as $k => $val) {
+        $k = str_replace('%', '%25', $k);
+        $k = str_replace('&', '%26', $k);
+        $k = str_replace('=', '%3D', $k);
+        $val = str_replace('%', '%25', $val);
+        $val = str_replace('&', '%26', $val);
+        $params[$k] = $val;
+    }
+    $sql = "SELECT customers_secret FROM " . TABLE_CUSTOMERS . " WHERE customers_id = :id: LIMIT 1";
+    $sql = $db->bindVars($sql, ':id:', $params['cid'], 'integer');
+    $result = $db->execute($sql);
+    $secret = $result->fields['customers_secret'];
+    $secret = hash('sha256', $secret . GLOBAL_AUTH_KEY);
+    $hmacOriginal = $data['hmac'];
+    unset($params['hmac']);
+    ksort($params);
+    $hmacData = implode('&', $params);
+    $hmac = hash_hmac('sha256', $hmacData, $secret);
+    return true;
+}
+
+function zen_validate_hmac_timestamp()
+{
+    $currentTime = time();
+    $hmacTime = (isset($_POST['timestamp'])) ? $_POST['timestamp'] : 0;
+    if (($currentTime - $hmacTime) > 20) return false;
+    return true;
+}
+
+
+function zen_validate_hmac_admin_id($adminId)
+{
+    global $db;
+    $check = $db->Execute(
+        "SELECT admin_id, admin_pass 
+           FROM " . TABLE_ADMIN . " 
+          WHERE admin_id = " . (int)EMP_LOGIN_ADMIN_ID . "
+          LIMIT 1"
+    );
+    if ($check->RecordCount() > 0 && (int)EMP_LOGIN_ADMIN_ID == (int)$adminId) {
+        return (int)$adminId;
+    }
+
+    $profile_array = explode(',', str_replace(' ', '', EMP_LOGIN_ADMIN_PROFILE_ID));
+    foreach ($profile_array as $index => $current_id) {
+        if (!(int)$current_id == 0) {
+            unset($profile_array[$index]);
+        }
+    }
+    if (count($profile_array) == 0) return false;
+    $profile_list = implode(', ', $profile_array);
+    $admin_profiles = $db->Execute(
+        "SELECT admin_id, admin_pass 
+                   FROM " . TABLE_ADMIN . " 
+                  WHERE admin_profile IN ($profile_list)"
+    );
+    if ($admin_profiles->RecordCount() > 0) {
+        return (int)$adminId;
+    }
+    return false;
+}
+
+function zen_log_hmac_login($params)
+{
+    $sql_data_array = array(
+        'access_date' => 'now()',
+        'admin_id' => $_SESSION['emp_admin_id'],
+        'page_accessed' => 'login.php',
+        'page_parameters' => '',
+        'ip_address' => substr($_SERVER['REMOTE_ADDR'],0,45),
+        'gzpost' => gzdeflate(json_encode(array('action' => $params['action'], 'customer_email_address' =>
+            $params['emailAddress'])), 7),
+        'flagged' => 0,
+        'attention' => '',
+        'severity' => 'info',
+        'logmessage' => $params['message'],
+    );
+    zen_db_perform(TABLE_ADMIN_ACTIVITY_LOG, $sql_data_array);
+}
+
+

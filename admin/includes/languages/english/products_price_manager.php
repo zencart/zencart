@@ -38,7 +38,7 @@ define('TEXT_PRODUCT_INFO_NONE', 'Please select a Product from above ...');
   define('TEXT_PRODUCT_NOT_PRICED_BY_ATTRIBUTE','No');
   define('TEXT_PRODUCTS_PRICED_BY_ATTRIBUTES_EDIT','<br />*Display price will include lowest group attributes prices plus price');
   define('TEXT_PRODUCTS_MIXED','Qty Min/Unit Mix:');
-  define('TEXT_PRODUCTS_MIXED_DISCOUNT_QUANTITY', 'Discount Qty Applies to Mixed Attributes');
+  define('TEXT_PRODUCTS_MIXED_DISCOUNT_QUANTITY', 'Discount Qty Applies<br />to Mixed Attributes');
 
   define('TEXT_PRODUCTS_QUANTITY_MIN_RETAIL','Qty Min:');
   define('TEXT_PRODUCTS_QUANTITY_UNITS_RETAIL','Qty Units:');
@@ -78,7 +78,6 @@ define('TEXT_INFO_PERCENTAGE', 'Percentage:');
 define('TEXT_INFO_AVAILABLE_DATE', 'Available On:');
 define('TEXT_INFO_EXPIRES_DATE', 'Expires At:');
 define('TEXT_INFO_STATUS_CHANGE', 'Status Change:');
-define('TEXT_IMAGE_NONEXISTENT', 'No Image Exists');
 
 define('TEXT_INFO_HEADING_DELETE_FEATURED', 'Delete Featured');
 define('TEXT_INFO_DELETE_INTRO', 'Are you sure you want to delete the featured product?');
@@ -107,7 +106,7 @@ define('TEXT_PRODUCTS_DISCOUNT_PRICE_EXTENDED_TAX','Extended<br />Price: &nbsp; 
 define('TEXT_EACH','ea.');
 define('TEXT_EXTENDED','total');
 
-define('TEXT_DISCOUNT_TYPE_INFO', 'Product Discount Info');
+define('TEXT_DISCOUNT_TYPE_INFO', 'Product Discount Info:');
 define('TEXT_DISCOUNT_TYPE','Discount Type:');
 define('TEXT_DISCOUNT_TYPE_FROM', 'Discount Priced from:');
 

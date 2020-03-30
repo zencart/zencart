@@ -70,7 +70,7 @@
 <div class="reviews-right">
 <div class="rating"><?php echo zen_image(DIR_WS_TEMPLATE_IMAGES . 'stars_' . $reviews['reviewsRating'] . '.png', sprintf(TEXT_OF_5_STARS, $reviews['reviewsRating'])), sprintf(TEXT_OF_5_STARS, $reviews['reviewsRating']); ?></div>
 
-<div class="productReviewsDefaultProductMainContent content"><?php echo zen_trunc_string(zen_output_string_protected(stripslashes($reviews['reviewsText'])), MAX_PREVIEW); ?>
+<div class="productReviewsDefaultProductMainContent content"><?php echo zen_trunc_string(zen_output_string_protected(stripslashes($reviews['reviewsText'])), MAX_PREVIEW); ?></div>
 
 <div class="productReviewsDefaultReviewer"><?php echo sprintf(TEXT_REVIEW_DATE_ADDED, zen_date_short($reviews['dateAdded'])); ?>&nbsp;<?php echo sprintf(TEXT_REVIEW_BY, zen_output_string_protected($reviews['customersName'])); ?></div>
 </div>

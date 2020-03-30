@@ -15,7 +15,7 @@ if (!defined('IS_ADMIN_FLAG')) {
 /**
  * Check if customer's session contains a valid customer_id. If not, then it could be that the administrator has deleted the customer (managing spam etc) so we'll log them out.
  */
-if (isset($_SESSION['customer_id'])) {
+if (zen_is_logged_in()) {
   $sql = "select customers_id from " . TABLE_CUSTOMERS . " where customers_id = " . (int)$_SESSION['customer_id'];
   $result = $db->Execute($sql);
   if ($result->RecordCount() == 0) {
@@ -47,7 +47,7 @@ if (DOWN_FOR_MAINTENANCE == 'true') {
 /**
  * recheck customer status for authorization
  */
-if (isset($_SESSION['customer_id']) && (int)$_SESSION['customer_id'] > 0) {
+if (zen_is_logged_in()) {
   $check_customer_query = "select customers_id, customers_authorization
                              from " . TABLE_CUSTOMERS . "
                              where customers_id = " . (int)$_SESSION['customer_id'];
@@ -110,7 +110,7 @@ switch (true) {
 /**
  * if not down for maintenance check login status
  */
-  case (CUSTOMERS_APPROVAL == '1' and (int)$_SESSION['customer_id'] == 0):
+  case (CUSTOMERS_APPROVAL == '1' && !zen_is_logged_in()):
   /**
    * customer must be logged in to browse
    */
@@ -122,7 +122,7 @@ switch (true) {
     zen_redirect(zen_href_link(FILENAME_LOGIN, '', 'SSL'));
   }
   break;
-  case (CUSTOMERS_APPROVAL == '2' and (int)$_SESSION['customer_id'] == 0):
+  case (CUSTOMERS_APPROVAL == '2' && !zen_is_logged_in()):
   /**
    * customer may browse but no prices
    */
@@ -148,7 +148,7 @@ switch (true) {
   case (STORE_STATUS != 0):
     break;
 
-  case (CUSTOMERS_APPROVAL_AUTHORIZATION == '1' and (int)$_SESSION['customer_id'] == 0):
+  case (CUSTOMERS_APPROVAL_AUTHORIZATION == '1' && !zen_is_logged_in()):
   /**
    * customer must be logged in to browse
    */
@@ -160,7 +160,7 @@ switch (true) {
     zen_redirect(zen_href_link(FILENAME_LOGIN, '', 'SSL'));
   }
   break;
-  case (CUSTOMERS_APPROVAL_AUTHORIZATION == '2' and (int)$_SESSION['customer_id'] == 0):
+  case (CUSTOMERS_APPROVAL_AUTHORIZATION == '2' && !zen_is_logged_in()):
   /**
    * customer may browse but no prices unless Authorized
    */
@@ -196,4 +196,16 @@ switch (true) {
    * proceed normally
    */
   break;
+}
+
+// -----
+// If an admin is currently logged into the customer's account, let that admin know who s/he is shopping for.
+//
+if (isset($_SESSION['emp_admin_id'])) {
+    $shopping_for_name = $_SESSION['customer_first_name'] . ' ' . $_SESSION['customer_last_name'];
+    $severity = EMP_SHOPPING_FOR_MESSAGE_SEVERITY;
+    if (!in_array($severity, array('success', 'caution', 'warning', 'error'))) {
+        $severity = 'success';
+    }
+    $messageStack->add('header', sprintf(EMP_SHOPPING_FOR_MESSAGE, $shopping_for_name, $_SESSION['emp_customer_email_address']), $severity);
 }

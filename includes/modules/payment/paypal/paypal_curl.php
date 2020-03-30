@@ -3,9 +3,9 @@
  * paypal_curl.php communications class for PayPal Express Checkout / Website Payments Pro / Payflow Pro payment methods
  *
  * @package paymentMethod
- * @copyright Copyright 2003-2019 Zen Cart Development Team
+ * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Scott C Wilson 2019 Mar 31 Modified in v1.5.6b $
+ * @version $Id: Modified in v1.5.7 $
  */
 
 /**
@@ -661,7 +661,7 @@ class paypal_curl extends base {
     if ($tokenHash == '') $tokenHash = '_' . zen_create_random_value(4);
     $this->outputDestination = 'File';
     $this->notify('PAYPAL_CURL_LOG', $token, $tokenHash);
-    if ($token == '') $token = $_SESSION['paypal_ec_token'];
+    if ($token == '' && !empty($_SESSION['paypal_ec_token'])) $token = $_SESSION['paypal_ec_token'];
     if ($token == '') $token = time();
     $token .= $tokenHash;
     if ($this->outputDestination == 'File') {

@@ -27,8 +27,11 @@
   $products_values = $db->Execute($products_values_query);
 
 
-  $products_image = $products_values->fields['products_image'];
-
+  $products_image = '';
+  
+  if (!$products_values->EOF) {
+    $products_image = $products_values->fields['products_image'];
+  }
   $products_image_extension = substr($products_image, strrpos($products_image, '.'));
   $products_image_base = preg_replace('|'.$products_image_extension.'$|', '', $products_image);
   $products_image_medium = $products_image_base . IMAGE_SUFFIX_MEDIUM . $products_image_extension;

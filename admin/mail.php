@@ -54,6 +54,7 @@ if (($action == 'send_email_to_user') && isset($_POST['customers_email_address']
   //echo'EOF-attachments_list='.$attachment_file.'->'.$attachment_filetype;
   $recip_count = 0;
   foreach ($mail as $item) {
+    $html_msg['EMAIL_SALUTATION'] = EMAIL_SALUTATION;
     $html_msg['EMAIL_FIRST_NAME'] = $item['customers_firstname'];
     $html_msg['EMAIL_LAST_NAME'] = $item['customers_lastname'];
     $rc = zen_mail($item['customers_firstname'] . ' ' . $item['customers_lastname'], $item['customers_email_address'], $subject, $message, STORE_NAME, $from, $html_msg, 'direct_email', array('file' => $attachment_file, 'name' => basename($attachment_file), 'mime_type' => $attachment_filetype));

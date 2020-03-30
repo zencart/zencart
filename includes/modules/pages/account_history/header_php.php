@@ -30,7 +30,9 @@ if ($orders_total > 0) {
                         WHERE      o.customers_id = :customersID
                         AND        o.orders_id = ot.orders_id
                         AND        ot.class = 'ot_total'
-                        AND        o.orders_status = s.orders_status_id
+                        AND    s.orders_status_id = 
+                          (SELECT orders_status_id FROM " . TABLE_ORDERS_STATUS_HISTORY . " osh 
+                           WHERE osh.orders_id = o.orders_id AND osh.customer_notified >= 0 ORDER BY osh.date_added DESC LIMIT 1)
                         AND        s.language_id = :languagesID
                         ORDER BY   orders_id DESC";
 

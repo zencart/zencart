@@ -19,15 +19,14 @@ $EMAIL_COMMON_CSS
     $EXTRA_HEADER_INFO
   </div>
 
-
   <!-- Content Section -->
   <div class="content">
-    <div><!-- Dear --> $EMAIL_FIRST_NAME $EMAIL_LAST_NAME</div>
+    <div>$EMAIL_SALUTATION $EMAIL_FIRST_NAME $EMAIL_LAST_NAME,</div>
+    <br />
     <div>$EMAIL_MESSAGE_HTML</div>
-    <div>$GV_WORTH $GV_AMOUNT </div>
-    <div>$GV_REDEEM<br />$GV_CODE_URL</div>
+    <!-- GV_BLOCK html includes a containing div as optionally used also in email_template_welcome) -->
+    $GV_BLOCK
   </div>
-
 
   <!-- Footer Section -->
   <div class="footer">

@@ -3,9 +3,9 @@
  * Javascript to prep functionality for Square payment module
  *
  * @package square
- * @copyright Copyright 2003-2018 Zen Cart Development Team
+ * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Drbyte Tue Dec 4 13:24:33 2018 -0500 Modified in v1.5.6 $
+ * @version $Id: Author: Chris Brown <drbyte@zen-cart.com> Modified in v1.5.7 $
  */
 if (!defined('MODULE_PAYMENT_SQUARE_STATUS') || MODULE_PAYMENT_SQUARE_STATUS != 'True' || (!defined('MODULE_PAYMENT_SQUARE_APPLICATION_ID') || MODULE_PAYMENT_SQUARE_ACCESS_TOKEN == '')) {
     return false;
@@ -13,8 +13,14 @@ if (!defined('MODULE_PAYMENT_SQUARE_STATUS') || MODULE_PAYMENT_SQUARE_STATUS != 
 if ($payment_modules->in_special_checkout() || empty($square) || !$square->enabled) {
     return false;
 }
+
+$jsurl = 'https://js.squareup.com/v2/paymentform';
+if (MODULE_PAYMENT_SQUARE_TESTING_MODE === 'Sandbox') {
+    $jsurl = 'https://js.squareupsandbox.com/v2/paymentform';
+}
+
 ?>
-<script type="text/javascript" src="https://js.squareup.com/v2/paymentform" title="square js"></script>
+<script type="text/javascript" src="<?php echo $jsurl; ?>" title="square js"></script>
 
 
 <script type="text/javascript" title="square">

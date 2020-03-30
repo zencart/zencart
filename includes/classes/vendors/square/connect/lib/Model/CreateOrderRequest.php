@@ -24,11 +24,8 @@ class CreateOrderRequest implements ArrayAccess
       * @var string[]
       */
     static $swaggerTypes = array(
-        'idempotency_key' => 'string',
-        'reference_id' => 'string',
-        'line_items' => '\SquareConnect\Model\CreateOrderRequestLineItem[]',
-        'taxes' => '\SquareConnect\Model\CreateOrderRequestTax[]',
-        'discounts' => '\SquareConnect\Model\CreateOrderRequestDiscount[]'
+        'order' => '\SquareConnect\Model\Order',
+        'idempotency_key' => 'string'
     );
   
     /** 
@@ -36,11 +33,8 @@ class CreateOrderRequest implements ArrayAccess
       * @var string[] 
       */
     static $attributeMap = array(
-        'idempotency_key' => 'idempotency_key',
-        'reference_id' => 'reference_id',
-        'line_items' => 'line_items',
-        'taxes' => 'taxes',
-        'discounts' => 'discounts'
+        'order' => 'order',
+        'idempotency_key' => 'idempotency_key'
     );
   
     /**
@@ -48,11 +42,8 @@ class CreateOrderRequest implements ArrayAccess
       * @var string[]
       */
     static $setters = array(
-        'idempotency_key' => 'setIdempotencyKey',
-        'reference_id' => 'setReferenceId',
-        'line_items' => 'setLineItems',
-        'taxes' => 'setTaxes',
-        'discounts' => 'setDiscounts'
+        'order' => 'setOrder',
+        'idempotency_key' => 'setIdempotencyKey'
     );
   
     /**
@@ -60,38 +51,20 @@ class CreateOrderRequest implements ArrayAccess
       * @var string[]
       */
     static $getters = array(
-        'idempotency_key' => 'getIdempotencyKey',
-        'reference_id' => 'getReferenceId',
-        'line_items' => 'getLineItems',
-        'taxes' => 'getTaxes',
-        'discounts' => 'getDiscounts'
+        'order' => 'getOrder',
+        'idempotency_key' => 'getIdempotencyKey'
     );
   
     /**
-      * $idempotency_key A value you specify that uniquely identifies this order among orders you've created.  If you're unsure whether a particular order was created successfully, you can reattempt it with the same idempotency key without worrying about creating duplicate orders.  See [Idempotency keys](#idempotencykeys) for more information.
+      * $order The order to create. If this field is set, then the only other top-level field that can be set is the idempotency_key.
+      * @var \SquareConnect\Model\Order
+      */
+    protected $order;
+    /**
+      * $idempotency_key A value you specify that uniquely identifies this order among orders you've created.  If you're unsure whether a particular order was created successfully, you can reattempt it with the same idempotency key without worrying about creating duplicate orders.  See [Idempotency](https://developer.squareup.com/docs/basics/api101/idempotency) for more information.
       * @var string
       */
     protected $idempotency_key;
-    /**
-      * $reference_id An optional ID you can associate with the order for your own purposes (such as to associate the order with an entity ID in your own database).  This value cannot exceed 40 characters.
-      * @var string
-      */
-    protected $reference_id;
-    /**
-      * $line_items The line items to associate with this order.  Each line item represents a different product to include in a purchase.
-      * @var \SquareConnect\Model\CreateOrderRequestLineItem[]
-      */
-    protected $line_items;
-    /**
-      * $taxes The taxes to include on the order.
-      * @var \SquareConnect\Model\CreateOrderRequestTax[]
-      */
-    protected $taxes;
-    /**
-      * $discounts The discounts to include on the order.
-      * @var \SquareConnect\Model\CreateOrderRequestDiscount[]
-      */
-    protected $discounts;
 
     /**
      * Constructor
@@ -100,32 +73,36 @@ class CreateOrderRequest implements ArrayAccess
     public function __construct(array $data = null)
     {
         if ($data != null) {
+            if (isset($data["order"])) {
+              $this->order = $data["order"];
+            } else {
+              $this->order = null;
+            }
             if (isset($data["idempotency_key"])) {
               $this->idempotency_key = $data["idempotency_key"];
             } else {
               $this->idempotency_key = null;
             }
-            if (isset($data["reference_id"])) {
-              $this->reference_id = $data["reference_id"];
-            } else {
-              $this->reference_id = null;
-            }
-            if (isset($data["line_items"])) {
-              $this->line_items = $data["line_items"];
-            } else {
-              $this->line_items = null;
-            }
-            if (isset($data["taxes"])) {
-              $this->taxes = $data["taxes"];
-            } else {
-              $this->taxes = null;
-            }
-            if (isset($data["discounts"])) {
-              $this->discounts = $data["discounts"];
-            } else {
-              $this->discounts = null;
-            }
         }
+    }
+    /**
+     * Gets order
+     * @return \SquareConnect\Model\Order
+     */
+    public function getOrder()
+    {
+        return $this->order;
+    }
+  
+    /**
+     * Sets order
+     * @param \SquareConnect\Model\Order $order The order to create. If this field is set, then the only other top-level field that can be set is the idempotency_key.
+     * @return $this
+     */
+    public function setOrder($order)
+    {
+        $this->order = $order;
+        return $this;
     }
     /**
      * Gets idempotency_key
@@ -138,88 +115,12 @@ class CreateOrderRequest implements ArrayAccess
   
     /**
      * Sets idempotency_key
-     * @param string $idempotency_key A value you specify that uniquely identifies this order among orders you've created.  If you're unsure whether a particular order was created successfully, you can reattempt it with the same idempotency key without worrying about creating duplicate orders.  See [Idempotency keys](#idempotencykeys) for more information.
+     * @param string $idempotency_key A value you specify that uniquely identifies this order among orders you've created.  If you're unsure whether a particular order was created successfully, you can reattempt it with the same idempotency key without worrying about creating duplicate orders.  See [Idempotency](https://developer.squareup.com/docs/basics/api101/idempotency) for more information.
      * @return $this
      */
     public function setIdempotencyKey($idempotency_key)
     {
         $this->idempotency_key = $idempotency_key;
-        return $this;
-    }
-    /**
-     * Gets reference_id
-     * @return string
-     */
-    public function getReferenceId()
-    {
-        return $this->reference_id;
-    }
-  
-    /**
-     * Sets reference_id
-     * @param string $reference_id An optional ID you can associate with the order for your own purposes (such as to associate the order with an entity ID in your own database).  This value cannot exceed 40 characters.
-     * @return $this
-     */
-    public function setReferenceId($reference_id)
-    {
-        $this->reference_id = $reference_id;
-        return $this;
-    }
-    /**
-     * Gets line_items
-     * @return \SquareConnect\Model\CreateOrderRequestLineItem[]
-     */
-    public function getLineItems()
-    {
-        return $this->line_items;
-    }
-  
-    /**
-     * Sets line_items
-     * @param \SquareConnect\Model\CreateOrderRequestLineItem[] $line_items The line items to associate with this order.  Each line item represents a different product to include in a purchase.
-     * @return $this
-     */
-    public function setLineItems($line_items)
-    {
-        $this->line_items = $line_items;
-        return $this;
-    }
-    /**
-     * Gets taxes
-     * @return \SquareConnect\Model\CreateOrderRequestTax[]
-     */
-    public function getTaxes()
-    {
-        return $this->taxes;
-    }
-  
-    /**
-     * Sets taxes
-     * @param \SquareConnect\Model\CreateOrderRequestTax[] $taxes The taxes to include on the order.
-     * @return $this
-     */
-    public function setTaxes($taxes)
-    {
-        $this->taxes = $taxes;
-        return $this;
-    }
-    /**
-     * Gets discounts
-     * @return \SquareConnect\Model\CreateOrderRequestDiscount[]
-     */
-    public function getDiscounts()
-    {
-        return $this->discounts;
-    }
-  
-    /**
-     * Sets discounts
-     * @param \SquareConnect\Model\CreateOrderRequestDiscount[] $discounts The discounts to include on the order.
-     * @return $this
-     */
-    public function setDiscounts($discounts)
-    {
-        $this->discounts = $discounts;
         return $this;
     }
     /**

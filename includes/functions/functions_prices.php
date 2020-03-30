@@ -180,11 +180,11 @@
 // 2 = Can browse but no prices
     // verify display of prices
       switch (true) {
-        case (CUSTOMERS_APPROVAL == '1' and $_SESSION['customer_id'] == ''):
+        case (CUSTOMERS_APPROVAL == '1' && !zen_is_logged_in()):
         // customer must be logged in to browse
         return '';
         break;
-        case (CUSTOMERS_APPROVAL == '2' and $_SESSION['customer_id'] == ''):
+        case (CUSTOMERS_APPROVAL == '2' && !zen_is_logged_in()):
         // customer may browse but no prices
         return TEXT_LOGIN_FOR_PRICE_PRICE;
         break;
@@ -192,11 +192,11 @@
         // customer may browse but no prices
         return TEXT_LOGIN_FOR_PRICE_PRICE_SHOWROOM;
         break;
-        case ((CUSTOMERS_APPROVAL_AUTHORIZATION != '0' and CUSTOMERS_APPROVAL_AUTHORIZATION != '3') and $_SESSION['customer_id'] == ''):
+        case (CUSTOMERS_APPROVAL_AUTHORIZATION != '0' && CUSTOMERS_APPROVAL_AUTHORIZATION != '3' && !zen_is_logged_in()):
         // customer must be logged in to browse
         return TEXT_AUTHORIZATION_PENDING_PRICE;
         break;
-        case ((CUSTOMERS_APPROVAL_AUTHORIZATION != '0' and CUSTOMERS_APPROVAL_AUTHORIZATION != '3') and $_SESSION['customers_authorization'] > '0'):
+        case (CUSTOMERS_APPROVAL_AUTHORIZATION != '0' && CUSTOMERS_APPROVAL_AUTHORIZATION != '3' && (int)$_SESSION['customers_authorization'] > 0):
         // customer must be logged in to browse
         return TEXT_AUTHORIZATION_PENDING_PRICE;
         break;
@@ -560,7 +560,10 @@
     switch (true) {
       case ($_SESSION['cart']->in_cart_mixed($product_id) == 0 ):
         if ($check_min >= $check_units) {
-          $buy_now_qty = $check_min;
+          // Set the buy now quantity (associated product is not yet in the cart) to the first value satisfying both the minimum and the units.
+          $buy_now_qty = $check_units * ceil($check_min/$check_units);
+          // Uncomment below to set the buy now quantity to the value of the minimum required regardless if it is a multiple of the units.
+          //$buy_now_qty = $check_min;
         } else {
           $buy_now_qty = $check_units;
         }

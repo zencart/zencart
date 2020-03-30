@@ -14,7 +14,7 @@ if ($ecs_off) $paypalec_enabled = FALSE;
 
 if ($paypalec_enabled) {
   // check if logged-in customer's address is in an acceptable zone
-  if ((int)MODULE_PAYMENT_PAYPALWPP_ZONE > 0 && isset($_SESSION['customer_id']) && (int)$_SESSION['customer_id'] > 0) {
+  if ((int)MODULE_PAYMENT_PAYPALWPP_ZONE > 0 && zen_is_logged_in()) {
     $custCountryCheck = (isset($order)) ? $order->billing['country']['id'] : $_SESSION['customer_country_id'];
     $custZoneCheck = (isset($order)) ? $order->billing['zone_id'] : $_SESSION['customer_zone_id'];
     $check_flag = false;

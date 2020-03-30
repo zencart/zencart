@@ -49,5 +49,3 @@ define('TEXT_ALL_STATUS','--Any--');
 define('TEXT_PENDING_APPROVAL','Pending Approval');
 define('TEXT_APPROVED','Approved');
 define('HEADING_TITLE_STATUS','Status');
-
-define('TEXT_IMAGE_NONEXISTENT', 'IMAGE DOES NOT EXIST');

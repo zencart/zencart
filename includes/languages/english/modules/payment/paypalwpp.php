@@ -49,6 +49,7 @@
   define('MODULE_PAYMENT_PAYPALWPP_TEXT_INSUFFICIENT_FUNDS_ERROR', 'PayPal was unable to successfully fund this transaction. Please choose another payment option or review funding options in your PayPal account before proceeding.');
   define('MODULE_PAYMENT_PAYPALWPP_TEXT_PAYPAL_DECLINED', 'Sorry. PayPal has declined the transaction and advised us to tell you to contact PayPal Customer Service for more information. To complete your purchase, please select an alternate payment method.');
   define('MODULE_PAYMENT_PAYPALWPP_TEXT_ERROR', 'An error occurred when we tried to process your credit card. Please try again, select an alternate payment method, or contact the store owner for assistance.');
+  define('MODULE_PAYMENT_PAYPALWPP_FUNDING_ERROR','Funding source problem; please go to Paypal.com and make payment directly to ' . STORE_OWNER_EMAIL_ADDRESS); 
   define('MODULE_PAYMENT_PAYPALWPP_TEXT_BAD_CARD', 'We apologize for the inconvenience, but the credit card you entered is not one that we accept. Please use a different credit card.');
   define('MODULE_PAYMENT_PAYPALWPP_TEXT_BAD_LOGIN', 'There was a problem validating your account. Please try again.');
   define('MODULE_PAYMENT_PAYPALWPP_TEXT_JS_CC_OWNER', '* The cardholder\'s name must be at least ' . CC_OWNER_MIN_LENGTH . ' characters.\n');

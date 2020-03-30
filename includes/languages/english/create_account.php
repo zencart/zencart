@@ -20,7 +20,7 @@ define('ERROR_CREATE_ACCOUNT_SPAM_DETECTED', 'Thank you, your account request ha
 define('EMAIL_SUBJECT', 'Welcome to ' . STORE_NAME);
 define('EMAIL_GREET_MR', 'Dear Mr. %s,' . "\n\n");
 define('EMAIL_GREET_MS', 'Dear Ms. %s,' . "\n\n");
-define('EMAIL_GREET_NONE', 'Dear %s' . "\n\n");
+define('EMAIL_GREET_NONE', 'Dear %s,' . "\n\n");
 
 // First line of the greeting
 define('EMAIL_WELCOME', 'We wish to welcome you to <strong>' . STORE_NAME . '</strong>.');
@@ -38,8 +38,8 @@ define('EMAIL_GV_LINK', ' Or, you may redeem it now by following this link: ' . 
 define('EMAIL_GV_LINK_OTHER','Once you have added the ' . TEXT_GV_NAME . ' to your account, you may use the ' . TEXT_GV_NAME . ' for yourself, or send it to a friend!' . "\n\n");
 
 define('EMAIL_TEXT', 'You now have an account with '. STORE_NAME . ' providing:' . "\n\n<ul>" . '<li><strong>Order History</strong> - View order details.</li>' . "\n\n" . '<li><strong>Permanent Cart</strong> - Products you add to your cart will remain there until removed or purchased.</li>' . "\n\n" . '<li><strong>Address Book</strong> - Define additional addresses (for example to send a gift).</li>' . "\n\n" . '<li><strong>Product Reviews</strong> - Share your opinion on our products with other customers.</li>' . "\n\n</ul>");
-define('EMAIL_CONTACT', 'For help with any of our online services, please email the store-owner: <a href="mailto:' . STORE_OWNER_EMAIL_ADDRESS . '">'. STORE_OWNER_EMAIL_ADDRESS ." </a>\n\n");
-define('EMAIL_GV_CLOSURE', "\n" . 'Sincerely,' . "\n\n" . STORE_OWNER . "\nStore Owner\n\n". '<a href="' . HTTP_SERVER . DIR_WS_CATALOG . '">'.HTTP_SERVER . DIR_WS_CATALOG ."</a>\n\n");
+define('EMAIL_CONTACT', 'For help with any of our online services, please email the store-owner: <a href="mailto:' . STORE_OWNER_EMAIL_ADDRESS . '">' . STORE_OWNER_EMAIL_ADDRESS ."</a>\n\n");
+define('EMAIL_GV_CLOSURE', "\n" . 'Sincerely,' . "\n\n" . STORE_OWNER . "\nStore Owner\n\n". '<a href="' . HTTP_SERVER . DIR_WS_CATALOG . '">' . HTTP_SERVER . DIR_WS_CATALOG ."</a>\n\n");
 
 // email disclaimer - this disclaimer is separate from all other email disclaimers
 define('EMAIL_DISCLAIMER_NEW_CUSTOMER', 'This email address was given to us by you or by one of our customers. If you did not signup for an account, or feel that you have received this email in error, please send an email to %s ');

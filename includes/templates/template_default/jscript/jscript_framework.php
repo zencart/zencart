@@ -6,10 +6,10 @@
  * @version $Id: Author: zcwilt  lat9 Modified in v1.5.6 $
  */
 ?>
-<script type="text/javascript">
+<script>
 if (typeof zcJS == "undefined" || !zcJS) {
   window.zcJS = { name: 'zcJS', version: '0.1.0.0' };
-};
+}
 
 zcJS.ajax = function (options) {
   options.url = options.url.replace("&amp;", unescape("&amp;"));

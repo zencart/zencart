@@ -10,7 +10,7 @@
 define('TOP_BAR_TITLE', 'Statistics');
 define('HEADING_TITLE', 'Discount Coupons');
 define('HEADING_TITLE_STATUS', 'Status : ');
-define('TEXT_CUSTOMER', 'Customer:');
+
 define('TEXT_COUPON', 'Coupon Name:');
 define('TEXT_COUPON_ALL', 'All Coupons');
 define('TEXT_COUPON_ACTIVE', 'Active Coupons');

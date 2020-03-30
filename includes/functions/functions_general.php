@@ -4,14 +4,14 @@
  * General functions used throughout Zen Cart
  *
  * @package functions
- * @copyright Copyright 2003-2018 Zen Cart Development Team
+ * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Drbyte Mon Nov 12 15:55:25 2018 -0500 Modified in v1.5.6 $
+ * @version $Id:  Modified in v1.5.7 $
  */
 /**
- * Stop from parsing any further PHP code
-*/
+ * Stop execution completely
+ */
   function zen_exit() {
    session_write_close();
    exit();
@@ -136,6 +136,7 @@
 ////
 // Returns the clients browser
   function zen_browser_detect($component) {
+    if (!isset($_SERVER['HTTP_USER_AGENT'])) return '';
     return stristr($_SERVER['HTTP_USER_AGENT'], $component);
   }
 
@@ -802,7 +803,7 @@
   function zen_get_buy_now_button($product_id, $link, $additional_link = false) {
     global $db;
 
-// show case only superceeds all other settings
+// show case only supercedes all other settings
     if (STORE_STATUS != '0') {
       return '<a href="' . zen_href_link(FILENAME_CONTACT_US, '', 'SSL') . '">' .  TEXT_SHOWCASE_ONLY . '</a>';
     }
@@ -812,12 +813,12 @@
 // 2 = Can browse but no prices
     // verify display of prices
       switch (true) {
-        case (CUSTOMERS_APPROVAL == '1' and $_SESSION['customer_id'] == ''):
+        case (CUSTOMERS_APPROVAL == '1' && !zen_is_logged_in()):
         // customer must be logged in to browse
         $login_for_price = '<a href="' . zen_href_link(FILENAME_LOGIN, '', 'SSL') . '">' .  TEXT_LOGIN_FOR_PRICE_BUTTON_REPLACE . '</a>';
         return $login_for_price;
         break;
-        case (CUSTOMERS_APPROVAL == '2' and $_SESSION['customer_id'] == ''):
+        case (CUSTOMERS_APPROVAL == '2' && !zen_is_logged_in()):
         if (TEXT_LOGIN_FOR_PRICE_PRICE == '') {
           // show room only
           return TEXT_LOGIN_FOR_PRICE_BUTTON_REPLACE;
@@ -832,17 +833,17 @@
           $login_for_price = TEXT_LOGIN_FOR_PRICE_BUTTON_REPLACE_SHOWROOM;
           return $login_for_price;
         break;
-        case ((CUSTOMERS_APPROVAL_AUTHORIZATION != '0' and CUSTOMERS_APPROVAL_AUTHORIZATION != '3') and $_SESSION['customer_id'] == ''):
+        case (CUSTOMERS_APPROVAL_AUTHORIZATION != '0' && CUSTOMERS_APPROVAL_AUTHORIZATION != '3' && !zen_is_logged_in()):
         // customer must be logged in to browse
         $login_for_price = TEXT_AUTHORIZATION_PENDING_BUTTON_REPLACE;
         return $login_for_price;
         break;
-        case ((CUSTOMERS_APPROVAL_AUTHORIZATION == '3') and $_SESSION['customer_id'] == ''):
+        case (CUSTOMERS_APPROVAL_AUTHORIZATION == '3' && !zen_is_logged_in()):
         // customer must be logged in and approved to add to cart
         $login_for_price = '<a href="' . zen_href_link(FILENAME_LOGIN, '', 'SSL') . '">' .  TEXT_LOGIN_TO_SHOP_BUTTON_REPLACE . '</a>';
         return $login_for_price;
         break;
-        case (CUSTOMERS_APPROVAL_AUTHORIZATION != '0' and $_SESSION['customers_authorization'] > '0'):
+        case (CUSTOMERS_APPROVAL_AUTHORIZATION != '0' && isset($_SESSION['customers_authorization']) && (int)$_SESSION['customers_authorization'] > 0):
         // customer must be logged in to browse
         $login_for_price = TEXT_AUTHORIZATION_PENDING_BUTTON_REPLACE;
         return $login_for_price;
@@ -1158,7 +1159,7 @@
                               order by zone_name");
       $num_state = 1;
       while (!$states->EOF) {
-        if ($num_state == '1') $output_string .= '    ' . $form . '.' . $field . '.options[0] = new Option("' . PLEASE_SELECT . '", "");' . "\n";
+        if ($num_state == 1) $output_string .= '    ' . $form . '.' . $field . '.options[0] = new Option("' . PLEASE_SELECT . '", "");' . "\n";
         $output_string .= '    ' . $form . '.' . $field . '.options[' . $num_state . '] = new Option("' . $states->fields['zone_name'] . '", "' . $states->fields['zone_id'] . '");' . "\n";
         $num_state++;
         $states->MoveNext();

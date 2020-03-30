@@ -866,7 +866,7 @@ class paypaldp extends base {
    * When the order returns from the processor, this stores the results in order-status-history and logs data for subsequent use
    */
   function after_process() {
-    global $insert_id, $db, $order;
+    global $insert_id, $order;
     // FMF
     if ($this->fmfResponse != '') {
       $detailedMessage = $insert_id . "\n" . $this->fmfResponse . "\n" . MODULES_PAYMENT_PAYPALDP_TEXT_EMAIL_FMF_INTRO . "\n" . print_r($this->fmfErrors, TRUE);
@@ -874,40 +874,24 @@ class paypaldp extends base {
     }
 
     // add a new OSH record for this order's PP details
-    $commentString = "Transaction ID: :transID: " .
-                     (isset($this->responsedata['PPREF']) ? "\nPPRef: " . $this->responsedata['PPREF'] : "") .
-                     (isset($this->responsedata['AUTHCODE'])? "\nAuthCode: " . $this->responsedata['AUTHCODE'] : "") .
-                                 "\nPayment Type: :pmtType: " .
-                     ($this->payment_time != '' ? "\nTimestamp: :pmtTime: " : "") .
-                                 "\nPayment Status: :pmtStatus: " .
-                     (isset($this->responsedata['auth_exp']) ? "\nAuth-Exp: " . $this->responsedata['auth_exp'] : "") .
+    $commentString = "Transaction ID: " . $this->transaction_id .
+                     (isset($this->responsedata['PPREF']) ? "\nPPRef: " . $this->responsedata['PPREF'] : '') .
+                     (isset($this->responsedata['AUTHCODE'])? "\nAuthCode: " . $this->responsedata['AUTHCODE'] : '') .
+                                 "\nPayment Type: " . $this->payment_type .
+                     ($this->payment_time != '' ? ("\nTimestamp: " . $this->payment_time . ' ') : '') .
+                                 "\nPayment Status: " . $this->payment_status .
+                     (isset($this->responsedata['auth_exp']) ? "\nAuth-Exp: " . $this->responsedata['auth_exp'] : '') .
                      ($this->avs != 'N/A' ? "\nAVS Code: ".$this->avs."\nCVV2 Code: ".$this->cvv2 : '') .
-                     (trim($this->amt) != '' ? "\nAmount: :orderAmt: " : "");
-    $commentString = $db->bindVars($commentString, ':transID:', $this->transaction_id, 'noquotestring');
-    $commentString = $db->bindVars($commentString, ':pmtType:', $this->payment_type, 'noquotestring');
-    $commentString = $db->bindVars($commentString, ':pmtTime:', $this->payment_time, 'noquotestring');
-    $commentString = $db->bindVars($commentString, ':pmtStatus:', $this->payment_status, 'noquotestring');
-    $commentString = $db->bindVars($commentString, ':orderAmt:', $this->amt, 'noquotestring');
-
-    $sql_data_array= array(array('fieldName'=>'orders_id', 'value'=>$insert_id, 'type'=>'integer'),
-                           array('fieldName'=>'orders_status_id', 'value'=>$order->info['order_status'], 'type'=>'integer'),
-                           array('fieldName'=>'date_added', 'value'=>'now()', 'type'=>'noquotestring'),
-                           array('fieldName'=>'customer_notified', 'value'=>0, 'type'=>'integer'),
-                           array('fieldName'=>'comments', 'value'=>$commentString, 'type'=>'string'));
-    $db->perform(TABLE_ORDERS_STATUS_HISTORY, $sql_data_array);
-
+                     (trim($this->amt) != '' ? ("\nAmount: " . $this->amt) : '');
+    zen_update_orders_history($insert_id, $commentString, null, $order->info['order_status'], 0);
+    
     // 3D-Secure
     if ($this->requiresLookup($order->info['cc_type']) == true) {
       // CardinalCommerce Liability Protection Status
       // Inserts 'PROTECTED' or 'NOT PROTECTED' status, ECI, CAVV values in the order status history comments
       $auth_proc_status = $this->determine3DSecureProtection($order->info['cc_type'], $_SESSION['3Dsecure_auth_eci']);
       $commentString = "3D-Secure: " . $auth_proc_status . "\n" . 'ECI Value = ' . $_SESSION['3Dsecure_auth_eci'] . "\n" . 'CAVV Value = ' . $_SESSION['3Dsecure_auth_cavv'];
-      $sql_data_array= array(array('fieldName'=>'orders_id', 'value'=> $insert_id, 'type'=>'integer'),
-                             array('fieldName'=>'orders_status_id', 'value'=> $order->info['order_status'], 'type'=>'integer'),
-                             array('fieldName'=>'date_added', 'value'=>'now()', 'type'=>'noquotestring'),
-                             array('fieldName'=>'customer_notified', 'value'=> -1, 'type'=>'integer'),
-                             array('fieldName'=>'comments', 'value'=> $commentString, 'type'=>'string'));
-      $db->perform(TABLE_ORDERS_STATUS_HISTORY, $sql_data_array);
+      zen_update_orders_history($insert_id, $commentString, null, $order->info['order_status'], -1);
     }
 
     // store the PayPal order meta data -- used for later matching and back-end processing activities
@@ -1159,7 +1143,7 @@ class paypaldp extends base {
    */
   function paypal_init() {
     $nvp = (MODULE_PAYMENT_PAYPALWPP_APIPASSWORD != '' && MODULE_PAYMENT_PAYPALWPP_APISIGNATURE != '') ? true : false;
-    $ec = ($nvp && $_GET['type'] == 'ec') ? true : false;
+    $ec = ($nvp && isset($_GET['type']) && $_GET['type'] == 'ec') ? true : false;
     if (MODULE_PAYMENT_PAYPALDP_MERCHANT_COUNTRY == 'UK' && !$ec) {
       $doPayPal = new paypal_curl(array('mode' => 'payflow',
                                         'user' =>   trim(MODULE_PAYMENT_PAYPALWPP_PFUSER),
@@ -1258,16 +1242,9 @@ class paypaldp extends base {
       if (!$error) {
         if (!isset($response['GROSSREFUNDAMT'])) $response['GROSSREFUNDAMT'] = $refundAmt;
         // Success, so save the results
-        $sql_data_array = array('orders_id' => $oID,
-                                'orders_status_id' => (int)$new_order_status,
-                                'date_added' => 'now()',
-                                'comments' => 'REFUND INITIATED. Trans ID:' . $response['REFUNDTRANSACTIONID'] . $response['PNREF']. "\n" . /*' Net Refund Amt:' . urldecode($response['NETREFUNDAMT']) . "\n" . ' Fee Refund Amt: ' . urldecode($response['FEEREFUNDAMT']) . "\n" . */' Gross Refund Amt: ' . urldecode($response['GROSSREFUNDAMT']) . (isset($response['PPREF']) ? "\nPPRef: " . $response['PPREF'] : '') . "\n" . $refundNote,
-                                'customer_notified' => 0
-                             );
-        zen_db_perform(TABLE_ORDERS_STATUS_HISTORY, $sql_data_array);
-        $db->Execute("update " . TABLE_ORDERS  . "
-                      set orders_status = '" . (int)$new_order_status . "'
-                      where orders_id = '" . (int)$oID . "'");
+        $comments = 'REFUND INITIATED. Trans ID:' . $response['REFUNDTRANSACTIONID'] . $response['PNREF']. "\nGross Refund Amt: " . urldecode($response['GROSSREFUNDAMT']) . (isset($response['PPREF']) ? "\nPPRef: " . $response['PPREF'] : '') . "\n" . $refundNote;
+        zen_update_orders_history($oID, $comments, null, $new_order_status, 0);
+
         $messageStack->add_session(sprintf(MODULE_PAYMENT_PAYPALDP_TEXT_REFUND_INITIATED, urldecode($response['GROSSREFUNDAMT']), urldecode($response['REFUNDTRANSACTIONID']). $response['PNREF']), 'success');
         return true;
       }
@@ -1324,16 +1301,9 @@ class paypaldp extends base {
           if (!isset($response['ORDERTIME'])) $response['ORDERTIME'] = date("M-d-Y h:i:s");
         }
         // Success, so save the results
-        $sql_data_array = array('orders_id' => (int)$oID,
-                                'orders_status_id' => (int)$new_order_status,
-                                'date_added' => 'now()',
-                                'comments' => 'FUNDS CAPTURED. Trans ID: ' . urldecode($response['TRANSACTIONID']) . $response['PNREF']. "\n" . ' Amount: ' . urldecode($response['AMT']) . ' ' . $currency . "\n" . 'Time: ' . urldecode($response['ORDERTIME']) . "\n" . 'Auth Code: ' . $response['AUTHCODE'] . (isset($response['PPREF']) ? "\nPPRef: " . $response['PPREF'] : '') . "\n" . $captureNote,
-                                'customer_notified' => 0
-                             );
-        zen_db_perform(TABLE_ORDERS_STATUS_HISTORY, $sql_data_array);
-        $db->Execute("update " . TABLE_ORDERS  . "
-                      set orders_status = '" . (int)$new_order_status . "'
-                      where orders_id = '" . (int)$oID . "'");
+        $comments = 'FUNDS CAPTURED. Trans ID: ' . urldecode($response['TRANSACTIONID']) . $response['PNREF']. "\n" . ' Amount: ' . urldecode($response['AMT']) . ' ' . $currency . "\n" . 'Time: ' . urldecode($response['ORDERTIME']) . "\n" . 'Auth Code: ' . $response['AUTHCODE'] . (isset($response['PPREF']) ? "\nPPRef: " . $response['PPREF'] : '') . "\n" . $captureNote;
+        zen_update_orders_history($oID, $comments, null, $new_order_status, 0);
+
         $messageStack->add_session(sprintf(MODULE_PAYMENT_PAYPALDP_TEXT_CAPT_INITIATED, urldecode($response['AMT']), urldecode($response['AUTHCODE']). $response['PNREF']), 'success');
         return true;
       }
@@ -1371,16 +1341,9 @@ class paypaldp extends base {
       $new_order_status = ($new_order_status > 0 ? $new_order_status : 1);
       if (!$error) {
         // Success, so save the results
-        $sql_data_array = array('orders_id' => (int)$oID,
-                                'orders_status_id' => (int)$new_order_status,
-                                'date_added' => 'now()',
-                                'comments' => 'VOIDED. Trans ID: ' . urldecode($response['AUTHORIZATIONID']). $response['PNREF'] . (isset($response['PPREF']) ? "\nPPRef: " . $response['PPREF'] : '') . "\n" . $voidNote,
-                                'customer_notified' => 0
-                             );
-        zen_db_perform(TABLE_ORDERS_STATUS_HISTORY, $sql_data_array);
-        $db->Execute("update " . TABLE_ORDERS  . "
-                      set orders_status = '" . (int)$new_order_status . "'
-                      where orders_id = '" . (int)$oID . "'");
+        $comments = 'VOIDED. Trans ID: ' . urldecode($response['AUTHORIZATIONID']). $response['PNREF'] . (isset($response['PPREF']) ? "\nPPRef: " . $response['PPREF'] : '') . "\n" . $voidNote;
+        zen_update_orders_history($oID, $comments, null, $new_order_status, 0);
+
         $messageStack->add_session(sprintf(MODULE_PAYMENT_PAYPALDP_TEXT_VOID_INITIATED, urldecode($response['AUTHORIZATIONID']) . $response['PNREF']), 'success');
         return true;
       }
@@ -1839,12 +1802,16 @@ class paypaldp extends base {
     global $messageStack, $doPayPal;
     $gateway_mode = (isset($response['PNREF']) && $response['PNREF'] != '');
     $basicError = (!$response || (isset($response['RESULT']) && $response['RESULT'] != 0) || (isset($response['ACK']) && !strstr($response['ACK'], 'Success')) || (!isset($response['RESULT']) && !isset($response['ACK'])));
+    if (isset($response['L_ERRORCODE0'])) {
     $ignoreList = explode(',', str_replace(' ', '', $ignore_codes));
     foreach($ignoreList as $key=>$value) {
-      if ($value != '' && $response['L_ERRORCODE0'] == $value) $basicError = false;
+            if ($value != '' && $response['L_ERRORCODE0'] == $value) {
+                $basicError = false;
+            }
+        }
     }
     /** Handle FMF Scenarios **/
-    if (in_array($operation, array('DoExpressCheckoutPayment', 'DoDirectPayment')) && $response['PAYMENTSTATUS'] == 'Pending' && $response['L_ERRORCODE0'] == 11610) {
+    if (in_array($operation, array('DoExpressCheckoutPayment', 'DoDirectPayment')) && $response['PAYMENTSTATUS'] == 'Pending' && isset($response['L_ERRORCODE0']) && $response['L_ERRORCODE0'] == 11610) {
       $this->fmfResponse = urldecode($response['L_SHORTMESSAGE0']);
       $this->fmfErrors = array();
       if ($response['ACK'] == 'SuccessWithWarning' && isset($response['L_FMFPENDINGID0'])) {
@@ -1856,7 +1823,11 @@ class paypaldp extends base {
     }
     //echo '<br />basicError='.$basicError.'<br />' . urldecode(print_r($response,true)); die('halted');
     if (!isset($response['L_SHORTMESSAGE0']) && isset($response['RESPMSG']) && $response['RESPMSG'] != '') $response['L_SHORTMESSAGE0'] = $response['RESPMSG'];
+    if (IS_ADMIN_FLAG === false) {
     $errorInfo = 'Problem occurred while customer ' . zen_output_string_protected($_SESSION['customer_id'] . ' ' . $_SESSION['customer_first_name'] . ' ' . $_SESSION['customer_last_name']) . ' was attempting checkout with PayPal Website Payments Pro.';
+    } else {
+        $errorInfo = 'Problem occurred during admin updates using PayPal Website Payments Pro.';
+    }
 
     switch($operation) {
       case 'DoDirectPayment':

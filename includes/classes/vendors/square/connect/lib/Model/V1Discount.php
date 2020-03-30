@@ -9,6 +9,7 @@ namespace SquareConnect\Model;
 
 use \ArrayAccess;
 /**
+ * @deprecated
  * V1Discount Class Doc Comment
  *
  * @category Class
@@ -30,7 +31,8 @@ class V1Discount implements ArrayAccess
         'amount_money' => '\SquareConnect\Model\V1Money',
         'discount_type' => 'string',
         'pin_required' => 'bool',
-        'color' => 'string'
+        'color' => 'string',
+        'v2_id' => 'string'
     );
   
     /** 
@@ -44,7 +46,8 @@ class V1Discount implements ArrayAccess
         'amount_money' => 'amount_money',
         'discount_type' => 'discount_type',
         'pin_required' => 'pin_required',
-        'color' => 'color'
+        'color' => 'color',
+        'v2_id' => 'v2_id'
     );
   
     /**
@@ -58,7 +61,8 @@ class V1Discount implements ArrayAccess
         'amount_money' => 'setAmountMoney',
         'discount_type' => 'setDiscountType',
         'pin_required' => 'setPinRequired',
-        'color' => 'setColor'
+        'color' => 'setColor',
+        'v2_id' => 'setV2Id'
     );
   
     /**
@@ -72,7 +76,8 @@ class V1Discount implements ArrayAccess
         'amount_money' => 'getAmountMoney',
         'discount_type' => 'getDiscountType',
         'pin_required' => 'getPinRequired',
-        'color' => 'getColor'
+        'color' => 'getColor',
+        'v2_id' => 'getV2Id'
     );
   
     /**
@@ -96,7 +101,7 @@ class V1Discount implements ArrayAccess
       */
     protected $amount_money;
     /**
-      * $discount_type Indicates whether the discount is a FIXED value or entered at the time of sale.
+      * $discount_type Indicates whether the discount is a FIXED value or entered at the time of sale. See [V1DiscountDiscountType](#type-v1discountdiscounttype) for possible values
       * @var string
       */
     protected $discount_type;
@@ -106,10 +111,15 @@ class V1Discount implements ArrayAccess
       */
     protected $pin_required;
     /**
-      * $color The color of the discount's display label in Square Register, if not the default color. The default color is 9da2a6.
+      * $color The color of the discount's display label in Square Point of Sale, if not the default color. The default color is 9da2a6. See [V1DiscountColor](#type-v1discountcolor) for possible values
       * @var string
       */
     protected $color;
+    /**
+      * $v2_id The ID of the CatalogObject in the Connect v2 API. Objects that are shared across multiple locations share the same v2 ID.
+      * @var string
+      */
+    protected $v2_id;
 
     /**
      * Constructor
@@ -152,6 +162,11 @@ class V1Discount implements ArrayAccess
               $this->color = $data["color"];
             } else {
               $this->color = null;
+            }
+            if (isset($data["v2_id"])) {
+              $this->v2_id = $data["v2_id"];
+            } else {
+              $this->v2_id = null;
             }
         }
     }
@@ -242,7 +257,7 @@ class V1Discount implements ArrayAccess
   
     /**
      * Sets discount_type
-     * @param string $discount_type Indicates whether the discount is a FIXED value or entered at the time of sale.
+     * @param string $discount_type Indicates whether the discount is a FIXED value or entered at the time of sale. See [V1DiscountDiscountType](#type-v1discountdiscounttype) for possible values
      * @return $this
      */
     public function setDiscountType($discount_type)
@@ -280,12 +295,31 @@ class V1Discount implements ArrayAccess
   
     /**
      * Sets color
-     * @param string $color The color of the discount's display label in Square Register, if not the default color. The default color is 9da2a6.
+     * @param string $color The color of the discount's display label in Square Point of Sale, if not the default color. The default color is 9da2a6. See [V1DiscountColor](#type-v1discountcolor) for possible values
      * @return $this
      */
     public function setColor($color)
     {
         $this->color = $color;
+        return $this;
+    }
+    /**
+     * Gets v2_id
+     * @return string
+     */
+    public function getV2Id()
+    {
+        return $this->v2_id;
+    }
+  
+    /**
+     * Sets v2_id
+     * @param string $v2_id The ID of the CatalogObject in the Connect v2 API. Objects that are shared across multiple locations share the same v2 ID.
+     * @return $this
+     */
+    public function setV2Id($v2_id)
+    {
+        $this->v2_id = $v2_id;
         return $this;
     }
     /**

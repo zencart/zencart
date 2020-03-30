@@ -50,7 +50,7 @@
     $stored_session = $db->Execute($sql);
     if ($stored_session->recordCount() < 1) {
       global $isECtransaction, $isDPtransaction;
-      if ($_POST['payment_type'] == 'instant' && $isDPtransaction && ((isset($_POST['auth_status']) && $_POST['auth_status'] == 'Completed') || $_POST['payment_status'] == 'Completed')) {
+      if (isset($_POST['payment_type']) && $_POST['payment_type'] == 'instant' && $isDPtransaction && ((isset($_POST['auth_status']) && $_POST['auth_status'] == 'Completed') || $_POST['payment_status'] == 'Completed')) {
         $session_stuff[1] = '(EC/DP transaction)';
       }
       ipn_debug_email('IPN ERROR :: Could not find stored session {' . $session_stuff[1] . '} in DB; thus cannot validate or re-create session as a transaction awaiting PayPal Website Payments Standard confirmation initiated by this store. Might be an Express Checkout or eBay transaction or some other action that triggers PayPal IPN notifications.');
@@ -73,9 +73,9 @@
                 FROM " . TABLE_PAYPAL . "
                 WHERE txn_id = :transactionID: OR invoice = :transactionID:
                 ORDER BY order_id DESC LIMIT 1 ";
-    $sqlParent = $db->bindVars($sql, ':transactionID:', $postArray['parent_txn_id'], 'string');
-    $sqlTxn = $db->bindVars($sql, ':transactionID:', $postArray['txn_id'], 'string');
+
     if (isset($postArray['parent_txn_id']) && trim($postArray['parent_txn_id']) != '') {
+      $sqlParent = $db->bindVars($sql, ':transactionID:', $postArray['parent_txn_id'], 'string');
       $ipn_id = $db->Execute($sqlParent);
       if($ipn_id->RecordCount() > 0) {
         ipn_debug_email('IPN NOTICE :: This transaction HAS a parent record. Thus this is an update of some sort.');
@@ -84,6 +84,7 @@
         $paypalipnID = $ipn_id->fields['paypal_ipn_id'];
       }
     } else {
+      $sqlTxn = $db->bindVars($sql, ':transactionID:', $postArray['txn_id'], 'string');
       $ipn_id = $db->Execute($sqlTxn);
       if ($ipn_id->RecordCount() <= 0) {
         ipn_debug_email('IPN NOTICE :: Could not find matched txn_id record in DB. Therefore is new to us. ');
@@ -641,18 +642,12 @@
  */
   function ipn_update_orders_status_and_history($ordersID, $new_status = 1, $txn_type) {
     global $db;
+    
     ipn_debug_email('IPN NOTICE :: Updating order #' . (int)$ordersID . ' to status: ' . (int)$new_status . ' (txn_type: ' . $txn_type . ')');
-    $db->Execute("update " . TABLE_ORDERS  . "
-                  set orders_status = '" . (int)$new_status . "', last_modified = now()
-                  where orders_id = '" . (int)$ordersID . "'");
+    
+    $comments = 'PayPal status: ' . $_POST['payment_status'] . ' ' . ' @ ' . $_POST['payment_date'] . (($_POST['parent_txn_id'] !='') ? "\n" . ' Parent Trans ID:' . $_POST['parent_txn_id'] : '') . "\n" . ' Trans ID:' . $_POST['txn_id'] . "\n" . ' Amount: ' . $_POST['mc_gross'] . ' ' . $_POST['mc_currency'];
+    zen_update_orders_history($ordersID, $comments, null, $new_status, 0);
 
-    $sql_data_array = array('orders_id' => (int)$ordersID,
-                            'orders_status_id' => (int)$new_status,
-                            'date_added' => 'now()',
-                            'comments' => 'PayPal status: ' . $_POST['payment_status'] . ' ' . ' @ ' . $_POST['payment_date'] . (($_POST['parent_txn_id'] !='') ? "\n" . ' Parent Trans ID:' . $_POST['parent_txn_id'] : '') . "\n" . ' Trans ID:' . $_POST['txn_id'] . "\n" . ' Amount: ' . $_POST['mc_gross'] . ' ' . $_POST['mc_currency'],
-                            'customer_notified' => (int)false,
-                           );
-    zen_db_perform(TABLE_ORDERS_STATUS_HISTORY, $sql_data_array);
     ipn_debug_email('IPN NOTICE :: Update complete.');
 
 /**

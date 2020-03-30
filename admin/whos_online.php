@@ -28,7 +28,7 @@ function zen_check_quantity($which) {
                              WHERE session_id='" . $which . "'");
 
   // longer than 2 minutes light color
-  $xx_mins_ago_long = (time() - WHOIS_TIMER_INACTIVE);
+  $xx_mins_ago_long = (time() - (int)WHOIS_TIMER_INACTIVE);
 
   $chk_cart_status = base64_decode($which_query->fields['value']);
   switch (true) {
@@ -69,10 +69,10 @@ require DIR_WS_CLASSES . 'currencies.php';
 $currencies = new currencies();
 
 // same time_entry as time_last_click for 600 seconds = 10 minutes assumed to have left immediately
-$xx_mins_ago_dead = (time() - WHOIS_TIMER_DEAD);
+$xx_mins_ago_dead = (time() - (int)WHOIS_TIMER_DEAD);
 
 // remove after how many seconds? default= 1200 = 20 minutes
-$xx_mins_ago = (time() - WHOIS_TIMER_REMOVE);
+$xx_mins_ago = (time() - (int)WHOIS_TIMER_REMOVE);
 
 // remove entries that have expired
 $db->Execute("DELETE FROM " . TABLE_WHOS_ONLINE . "
@@ -81,14 +81,14 @@ $db->Execute("DELETE FROM " . TABLE_WHOS_ONLINE . "
                 AND time_last_click < '" . $xx_mins_ago_dead . "')");
 
 if (!isset($_SESSION['wo_exclude_admins'])) {
-  $_SESSION['wo_exclude_admins'] = TRUE;
+  $_SESSION['wo_exclude_admins'] = true;
 }
 if (isset($_GET['na'])) {
   $_SESSION['wo_exclude_admins'] = $_GET['na'] != 0;
 }
 
 if (!isset($_SESSION['wo_exclude_spiders'])) {
-  $_SESSION['wo_exclude_spiders'] = TRUE;
+  $_SESSION['wo_exclude_spiders'] = true;
 }
 if (isset($_GET['ns'])) {
   $_SESSION['wo_exclude_spiders'] = $_GET['ns'] != 0;
@@ -261,8 +261,8 @@ $listingURL = FILENAME_WHOS_ONLINE . '.php?' . zen_get_all_get_params(['q', 't',
             zen_image(DIR_WS_IMAGES . 'icon_status_yellow.gif') . '&nbsp;' . WHOS_ONLINE_INACTIVE_TEXT . '&nbsp;&nbsp;' .
             zen_image(DIR_WS_IMAGES . 'icon_status_red.gif') . '&nbsp;' . WHOS_ONLINE_ACTIVE_NO_CART_TEXT . '&nbsp;&nbsp;' .
             zen_image(DIR_WS_IMAGES . 'icon_status_red_light.gif') . '&nbsp;' . WHOS_ONLINE_INACTIVE_NO_CART_TEXT . '<br />' .
-            WHOS_ONLINE_INACTIVE_LAST_CLICK_TEXT . '&nbsp;' . WHOIS_TIMER_INACTIVE . 's' . '&nbsp;||&nbsp;' . WHOS_ONLINE_INACTIVE_ARRIVAL_TEXT . '&nbsp;' .
-            WHOIS_TIMER_DEAD . 's&nbsp;' . WHOS_ONLINE_REMOVED_TEXT;
+            WHOS_ONLINE_INACTIVE_LAST_CLICK_TEXT . '&nbsp;' . (int)WHOIS_TIMER_INACTIVE . 's' . '&nbsp;||&nbsp;' . WHOS_ONLINE_INACTIVE_ARRIVAL_TEXT . '&nbsp;' .
+            (int)WHOIS_TIMER_DEAD . 's&nbsp;' . WHOS_ONLINE_REMOVED_TEXT;
             ?>
         </div>
 
@@ -334,6 +334,7 @@ $listingURL = FILENAME_WHOS_ONLINE . '.php?' . zen_get_all_get_params(['q', 't',
                   <?php
                   $ip_array = [];
                   $d = 0; // duplicates counter
+                  $info ='';
                   foreach ($whos_online as $item) {
                     $time_online = (time() - $item['time_entry']);
 
@@ -453,8 +454,8 @@ $listingURL = FILENAME_WHOS_ONLINE . '.php?' . zen_get_all_get_params(['q', 't',
                             . zen_image(DIR_WS_IMAGES . 'icon_status_yellow.gif') . " Inactive cart &nbsp;&nbsp;"
                             . zen_image(DIR_WS_IMAGES . 'icon_status_red.gif') . " Active no cart &nbsp;&nbsp;"
                             . zen_image(DIR_WS_IMAGES . 'icon_status_red_light.gif') . " Inactive no cart "
-                            . "<br />Inactive is Last Click >= " . WHOIS_TIMER_INACTIVE . "s"
-                            . " &nbsp; || Inactive since arrival > " . WHOIS_TIMER_DEAD . "s will be removed";
+                            . "<br />Inactive is Last Click >= " . (int)WHOIS_TIMER_INACTIVE . "s"
+                            . " &nbsp; || Inactive since arrival > " . (int)WHOIS_TIMER_DEAD . "s will be removed";
                         ?>
                     </td>
                   </tr>

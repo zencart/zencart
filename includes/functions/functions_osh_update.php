@@ -49,7 +49,7 @@ function zen_update_orders_history($orders_id, $message = '', $updated_by = null
     $email_subject = (string)$email_subject;
     $send_extra_emails_to = (string)$send_extra_emails_to;
     
-    $osh_info = $GLOBALS['db']->Execute(
+    $osh_info = $GLOBALS['db']->ExecuteNoCache(
         "SELECT customers_name, customers_email_address, orders_status, date_purchased 
            FROM " . TABLE_ORDERS . " 
           WHERE orders_id = $orders_id
@@ -115,6 +115,7 @@ function zen_update_orders_history($orders_id, $message = '', $updated_by = null
                 
                 //send emails
                 $email_text =
+                    EMAIL_SALUTATION . ' ' . $osh_info->fields['customers_name'] . ', ' . "\n\n" .
                     STORE_NAME . ' ' . OSH_EMAIL_TEXT_ORDER_NUMBER . ' ' . $orders_id . "\n\n" .
                     OSH_EMAIL_TEXT_INVOICE_URL . ' ' . zen_catalog_href_link(FILENAME_CATALOG_ACCOUNT_HISTORY_INFO, "order_id=$orders_id", 'SSL') . "\n\n" .
                     OSH_EMAIL_TEXT_DATE_ORDERED . ' ' . zen_date_long($osh_info->fields['date_purchased']) . "\n\n" .
@@ -122,6 +123,7 @@ function zen_update_orders_history($orders_id, $message = '', $updated_by = null
                     $status_text . $status_value_text .
                     OSH_EMAIL_TEXT_STATUS_PLEASE_REPLY;
            
+                $html_msg['EMAIL_SALUTATION'] = EMAIL_SALUTATION;
                 $html_msg['EMAIL_CUSTOMERS_NAME']    = $osh_info->fields['customers_name'];
                 $html_msg['EMAIL_TEXT_ORDER_NUMBER'] = OSH_EMAIL_TEXT_ORDER_NUMBER . ' ' . $orders_id;
                 $html_msg['EMAIL_TEXT_INVOICE_URL']  = '<a href="' . zen_catalog_href_link(FILENAME_CATALOG_ACCOUNT_HISTORY_INFO, "order_id=$orders_id", 'SSL') .'">' . str_replace(':', '', OSH_EMAIL_TEXT_INVOICE_URL) . '</a>';

@@ -100,11 +100,13 @@ use PHPMailer\PHPMailer\SMTP;
       }
 
       //define some additional html message blocks available to templates, then build the html portion.
-      if (!isset($block['EMAIL_TO_NAME']) || $block['EMAIL_TO_NAME'] == '')       $block['EMAIL_TO_NAME'] = $to_name;
-      if (!isset($block['EMAIL_TO_ADDRESS']) || $block['EMAIL_TO_ADDRESS'] == '') $block['EMAIL_TO_ADDRESS'] = $to_email_address;
-      if (!isset($block['EMAIL_SUBJECT']) || $block['EMAIL_SUBJECT'] == '')       $block['EMAIL_SUBJECT'] = $email_subject;
-      if (!isset($block['EMAIL_FROM_NAME']) || $block['EMAIL_FROM_NAME'] == '')   $block['EMAIL_FROM_NAME'] = $from_email_name;
-      if (!isset($block['EMAIL_FROM_ADDRESS']) || $block['EMAIL_FROM_ADDRESS'] == '') $block['EMAIL_FROM_ADDRESS'] = $from_email_address;
+      if (is_array($block)) {
+        if (!isset($block['EMAIL_TO_NAME']) || $block['EMAIL_TO_NAME'] == '')       $block['EMAIL_TO_NAME'] = $to_name;
+        if (!isset($block['EMAIL_TO_ADDRESS']) || $block['EMAIL_TO_ADDRESS'] == '') $block['EMAIL_TO_ADDRESS'] = $to_email_address;
+        if (!isset($block['EMAIL_SUBJECT']) || $block['EMAIL_SUBJECT'] == '')       $block['EMAIL_SUBJECT'] = $email_subject;
+        if (!isset($block['EMAIL_FROM_NAME']) || $block['EMAIL_FROM_NAME'] == '')   $block['EMAIL_FROM_NAME'] = $from_email_name;
+        if (!isset($block['EMAIL_FROM_ADDRESS']) || $block['EMAIL_FROM_ADDRESS'] == '') $block['EMAIL_FROM_ADDRESS'] = $from_email_address;
+      }
       $email_html = (!is_array($block) && substr($block, 0, 6) == '<html>') ? $block : zen_build_html_email_from_template($module, $block);
       if (!is_array($block) && ($block == '' || $block == 'none')) $email_html = '';
 
@@ -182,7 +184,7 @@ use PHPMailer\PHPMailer\SMTP;
       //notifier intercept option
       $zco_notifier->notify('NOTIFY_EMAIL_AFTER_EMAIL_FORMAT_DETERMINED');
 
-      // now lets build the mail object with the phpmailer class
+      // Create a new mail object with the phpmailer class
       $mail = new PHPMailer();
       $mail->XMailer = 'PHPMailer for Zen Cart';
       $lang_code = strtolower(($_SESSION['languages_code'] == '' ? 'en' : $_SESSION['languages_code'] ));
@@ -196,7 +198,7 @@ use PHPMailer\PHPMailer\SMTP;
         case ('Gmail'):
           $mail->isSMTP();
           $mail->SMTPAuth = true;
-          $mail->SMTPSecure = 'tls';
+          $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
           $mail->Port = 587;
           $mail->Host = 'smtp.gmail.com';
           $mail->Username = (zen_not_null(trim(EMAIL_SMTPAUTH_MAILBOX))) ? trim(EMAIL_SMTPAUTH_MAILBOX) : EMAIL_FROM;
@@ -211,8 +213,8 @@ use PHPMailer\PHPMailer\SMTP;
           if ((int)EMAIL_SMTPAUTH_MAIL_SERVER_PORT != 25 && (int)EMAIL_SMTPAUTH_MAIL_SERVER_PORT != 0) $mail->Port = (int)EMAIL_SMTPAUTH_MAIL_SERVER_PORT;
           if ((int)$mail->Port < 30 && $mail->Host == 'smtp.gmail.com') $mail->Port = 587;
           //set encryption protocol to allow support for secured email protocols
-          if ($mail->Port == '465') $mail->SMTPSecure = 'ssl';
-          if ($mail->Port == '587') $mail->SMTPSecure = 'tls';
+          if ($mail->Port == '465') $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
+          if ($mail->Port == '587') $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
           if (defined('SMTPAUTH_EMAIL_PROTOCOL') && SMTPAUTH_EMAIL_PROTOCOL != 'none') {
             $mail->SMTPSecure = SMTPAUTH_EMAIL_PROTOCOL;
           }
@@ -582,9 +584,9 @@ use PHPMailer\PHPMailer\SMTP;
     }
 
     $block['GV_BLOCK'] = '';
-    if (isset($block['GV_WORTH']) && $block['GV_WORTH'] != '' && isset($block['GV_REDEEM']) && $block['GV_REDEEM'] != '' && isset($block['GV_CODE_URL']) && $block['GV_CODE_URL'] != '') {
-      $block['GV_BLOCK'] = '<div class="gv-block">' . $block['GV_WORTH'] . '<br />' . $block['GV_REDEEM'] . $block['GV_CODE_URL'] . '<br />' . $block['GV_LINK_OTHER'] . '</div>';
-    }
+      if ( (isset($block['GV_ANNOUNCE']) && $block['GV_ANNOUNCE'] != '') && (isset($block['GV_REDEEM']) && $block['GV_REDEEM'] != '') ) {
+          $block['GV_BLOCK'] = '<div class="gv-block">' . $block['GV_ANNOUNCE'] . '<br />' . $block['GV_REDEEM'] . '</div>';
+      }
 
     //prepare the "unsubscribe" link:
     if (IS_ADMIN_FLAG === true) { // is this admin version, or catalog?

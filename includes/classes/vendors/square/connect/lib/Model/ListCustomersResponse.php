@@ -65,12 +65,12 @@ class ListCustomersResponse implements ArrayAccess
       */
     protected $errors;
     /**
-      * $customers An array of `Customer` objects that match your query.
+      * $customers An array of `Customer` objects that match the provided query.
       * @var \SquareConnect\Model\Customer[]
       */
     protected $customers;
     /**
-      * $cursor A pagination cursor to retrieve the next set of results for your original query to the endpoint. This value is present only if the request succeeded and additional results are available.  See [Paginating results](#paginatingresults) for more information.
+      * $cursor A pagination cursor to retrieve the next set of results for the original query. Only present if the request succeeded and additional results are available.  See the [Pagination guide](https://developer.squareup.com/docs/working-with-apis/pagination) for more information.
       * @var string
       */
     protected $cursor;
@@ -129,7 +129,7 @@ class ListCustomersResponse implements ArrayAccess
   
     /**
      * Sets customers
-     * @param \SquareConnect\Model\Customer[] $customers An array of `Customer` objects that match your query.
+     * @param \SquareConnect\Model\Customer[] $customers An array of `Customer` objects that match the provided query.
      * @return $this
      */
     public function setCustomers($customers)
@@ -148,7 +148,7 @@ class ListCustomersResponse implements ArrayAccess
   
     /**
      * Sets cursor
-     * @param string $cursor A pagination cursor to retrieve the next set of results for your original query to the endpoint. This value is present only if the request succeeded and additional results are available.  See [Paginating results](#paginatingresults) for more information.
+     * @param string $cursor A pagination cursor to retrieve the next set of results for the original query. Only present if the request succeeded and additional results are available.  See the [Pagination guide](https://developer.squareup.com/docs/working-with-apis/pagination) for more information.
      * @return $this
      */
     public function setCursor($cursor)

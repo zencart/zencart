@@ -40,7 +40,7 @@
       }
 
       if (PRODUCT_NEW_LIST_MODEL != '0' and zen_get_show_product_switch($products_new->fields['products_id'], 'model')) {
-        $display_products_model = TEXT_PRODUCTS_MODEL . $products_new->fields['products_model'] . str_repeat('<br class="clearBoth" />', substr(PRODUCT_NEW_LIST_MODEL, 3, 1));
+        $display_products_model = TEXT_PRODUCT_MODEL . $products_new->fields['products_model'] . str_repeat('<br class="clearBoth" />', substr(PRODUCT_NEW_LIST_MODEL, 3, 1));
       } else {
         $display_products_model = '';
       }

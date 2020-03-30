@@ -1,9 +1,9 @@
-/** //steve edits
+/**
  * @package admin
  * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Zen4All 2019 Mar 31 Modified in v1.5.6b $
+ * @version $Id: torvista 2019 Dec 17 Modified in v1.5.7 $
  */
 
 @import url("css/bootstrap.min.css");
@@ -15,22 +15,66 @@
 /* @import url("https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"); */
 
 @import url("https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css");
-a {
-    color: #0000ff;
-    text-decoration: none;
+
+body {
+    padding: 0 4px;
 }
 
 a, body, html, table {
     font: normal normal 11px Verdana, sans-serif;
 }
 
-body {padding: 0 4px;}
-
-td,th {padding: 1px;}
-.main table td {
-  padding: 5px;
+.pageHeading, h1, .h1, h2, .h2, h3, .h3, h4, .h4, h5, .h5, h6, .h6 {
+    color: #333;
+    font-weight: bold;
 }
-td.main {padding: 5px 2px;}
+
+.pageHeading, h1, .h1 {
+    font-size: 18px;
+    font-variant: small-caps;
+}
+
+h2, .h2 {
+    font-size: 17px;
+}
+
+h3, .h3 {
+    font-size: 15px;
+}
+
+h4, .h4 {
+    font-size: 14px;
+}
+
+h5, .h5 {
+    font-size: 13px;
+}
+
+h6, .h6 {
+    font-size: 12px;
+}
+
+a {
+    color: #0000ff;
+    text-decoration: none;
+}
+
+.table th.shrink, td.shrink { /*shrink column to minimum width*/
+    white-space: nowrap;
+    width: 1%;
+}
+
+td, th {
+    padding: 1px;
+}
+
+.main table td {
+    padding: 5px;
+}
+
+td.main {
+    padding: 5px 2px;
+}
 
 a:hover {
     color: #0000ff;
@@ -184,8 +228,14 @@ body#login legend {
 input, select, textarea {
     font-size: 11px;
 }
-.infoBoxContent input {margin: 1px 2px;}
-input.cfgInput { width: 99%;}
+
+.infoBoxContent input {
+    margin: 1px 2px;
+}
+
+input.cfgInput {
+    width: 99%;
+}
 
 textarea {
     width: 80%;
@@ -392,16 +442,27 @@ tr.attributeBoxContent {
     background-color: #e7e6e0;
     color: #333;
     padding: 5px;
+    word-break: break-word; 
 }
 
 .infoBoxContent a img, .infoBoxContent input[type="image"] {
     margin: 4px;
 }
 
+.infoBoxContent fieldset legend {
+    font-weight: bold;
+    font-size: larger;
+    margin-bottom: 0;
+}
+
 .infoBoxHeading {
     background-color: #333;
     color: #fff;
     padding: 5px;
+}
+
+.infoBoxHeading h4 {
+    color: #fff;
 }
 
 .main a img {
@@ -435,22 +496,7 @@ tr.attributeBoxContent {
 .oldPrice {
     text-decoration: line-through;
 }
-h1, .h1, h2, .h2, h3, .h3 {
-    font-weight: bold;
-}
-h1, .h1, .pageHeading {
-    color: #333;
-    font-size: 18px;
-    font-variant: small-caps;
-    font-weight: bold;
-}
-h2, .h2 {
-    font-size:16px;
 
-}
-h3, .h3 {
-    font-size:14px;
-}
 .SaleMakerDisabled {
     background-color: #f0f1f1;
 }
@@ -472,11 +518,12 @@ div.copyrightrow {
     padding: 25px;
     text-align: center;
 }
+
 div.reportBox a {
     color: #1e90ff;
 }
 
-div.header{
+div.header {
     background-color: #333 !important;
     color: #f5f5f5 !important;
     font-weight: bold;
@@ -493,7 +540,7 @@ div.warrantyrow {
     font-size: 9px;
 }
 
-.smallText a img{
+.smallText a img {
     margin-bottom: 16px;
 }
 
@@ -589,43 +636,52 @@ label.error {
     color: red;
     text-align: right;
 }
-.configurationColumnLeft, .configurationColumnRight{
+
+.configurationColumnLeft, .configurationColumnRight {
     padding: 1px;
 }
-#loginFormDiv div.messageStackError{
+
+#loginFormDiv div.messageStackError {
     margin: 5px;
     padding: 5px;
 }
+
 img[alt="Cancel"], img[alt="Reset"],
-img[src*="button_cancel"], img[src*="button_reset"]{
-  vertical-align: top;
+img[src*="button_cancel"], img[src*="button_reset"] {
+    vertical-align: top;
 }
-.versionCurrent{
-  color:green;
+
+.versionCurrent {
+    color: green;
 }
-.alertVersionNew{
-  color:#ff0000;
-  font-size:14px;
-  font-weight:bold;
+
+.alertVersionNew {
+    color: #ff0000;
+    font-size: 14px;
+    font-weight: bold;
 }
-.adminHeaderAlerts{
+
+.adminHeaderAlerts {
     padding: 10px;
 }
-#adminHeaderLogo{
+
+#adminHeaderLogo {
     padding: 5px;
 }
+
 .right {
-  text-align: right;
+    text-align: right;
 }
+
 .center {
-  text-align: center;
+    text-align: center;
 }
 
 .floatButton {
-  position: fixed;
-  bottom: 100px;
-  right: 10px;
-  z-index: 100;
+    position: fixed;
+    bottom: 100px;
+    right: 10px;
+    z-index: 100;
 }
 
 /*
@@ -634,61 +690,83 @@ img[src*="button_cancel"], img[src*="button_reset"]{
 }
 */
 
-.edit i.base {
-  color: #008000;
+a.btn-edit {
+  background-color: #008000;
+  color: #eee;
 }
 
-.delete i.base {
-  color: #f00;
+a.btn-delete {
+    background-color: #f00;
+  color: #eee;
 }
 
-.move i.base {
-  color: #800080;
+a.btn-move {
+  background-color: #800080;
+  color: #eee;
 }
 
-.copy i.base {
-  color: #00f;
+a.btn-copy {
+  background-color: #00f;
+  color: #eee;
 }
 
-.imagehandler i.base {
-  color: #fa8072;
+a.btn-imagehandler {
+    background-color: #fa8072;
+    color: #000;
 }
 
-.attributes-on i.base {
-  color: #87cefa;
+a.btn-attributes-on {
+    background-color: #87cefa;
+    color: #000;
 }
 
-.attributes-off i.base, .metatags-on i.base, .metatags-off i.base {
-  color: #000;
+a.btn-attributes-off, a.btn-metatags-off {
+    background-color: #000;
+    color: #eee;
 }
 
-.pricemanager-on i.base {
-  color: #32cd32;
+a.btn-pricemanager-on {
+    background-color: #32cd32;
+    color: #eee;
 }
 
-.pricemanager-off i.base {
-  color: #d3d3d3;
+a.btn-pricemanager-off {
+    background-color: #d3d3d3;
+    color: #eee;
 }
 
-.edit i.overlay, .delete i.overlay, .move i.overlay, .copy i.overlay, .attributes-off i.overlay, .pricemanager-on i.overlay, .metatags-off i.overlay {
-  color: #fff;
-}
-
-.imagehandler i.overlay, .attributes-on i.overlay {
-  color: #000;
-}
-
-.pricemanager-off i.overlay {
-  color: #a9a9a9;
-}
-
-.metatags-on i.overlay {
+a.btn-metatags-on {
+  background-color: #000;
   color: #ffa500;
 }
 
-.edit i.overlay:hover, .delete i.overlay:hover, .move i.overlay:hover, .copy i.overlay:hover, .imagehandler i.overlay:hover, .attributes-on i.overlay:hover, .attributes-off i.overlay:hover, .pricemanager-on i.overlay:hover, .metatags-on i.overlay:hover, .metatags-off i.overlay:hover {
-  color: #ccc;
-  text-shadow: 0 0 4px rgba(0,0,0,0.5)
+.fa-folder, .fa-folder-open {color: #deb887;}
+.folder, .folder:hover {
+  text-decoration: none;
+  color: #000;
+}
+.folder:hover .fa-folder:before {
+  content: "\f07c";
+}
+.txt-status-off{
+  color: #d9534f;
+}
+.txt-status-on{
+  color: #398439;
+}
+.txt-linked{
+  color: #f0ad4e;
+}
+.tt {
+    font-family: "Lucida Console", "Menlo", "Monaco", "Courier", monospace;
+}
+
+/* Date Picker */
+.ui-widget {
+  font-size: 16px;
+}
+.ui-widget a{
+  font-size: inherit;
 }
 
 /* bof Footer */
@@ -698,14 +776,17 @@ footer, #footer {
     padding-top: 1em;
     padding-bottom: 1em;
 }
+
 footer, #footer, footer a, #footer a {
     font-size: 0.9em;
 }
+
 /*
 footer.homeFooter, .bottom footer {
     position: fixed;
     bottom: 0;
 }
+
 @media screen {
     body.indexDashboard {
         height: 111%;
@@ -716,55 +797,65 @@ footer.homeFooter, .bottom footer {
 
 /* This imageless css button is based on the button that was generated initially by CSSButtonGenerator.com */
 .buttonRow a {
-  text-decoration: none;
+    text-decoration: none;
 }
+
 .button, input.button {
-  -moz-border-radius:5px;
-  -webkit-border-radius:5px;
-  border-radius:5px;
-  display:inline-block;
-  font-family:Verdana,sans-serif;
-  font-size:13px;
-  font-weight:bold;
-  margin: 0;
-  padding:3px 8px;
-  text-decoration:none;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
+    display: inline-block;
+    font-family: Verdana, sans-serif;
+    font-size: 13px;
+    font-weight: bold;
+    margin: 0;
+    padding: 3px 8px;
+    text-decoration: none;
 }
+
 input.button a, a input.button {
     color: #404040;
 }
+
 input.submit {
-  background-color:#fee8b9;  /* Submit button background color */
-  border: 1px solid #638263;  /* Submit button border color */
+    background-color: #fee8b9; /* Submit button background color */
+    border: 1px solid #638263; /* Submit button border color */
 }
+
 input.submit:hover {
-  background-color:#ffdc9c;  /* Hover color for the submit buttons */
-  border: 1px solid #638263;  /* Submit button border color */
-  cursor: pointer;
+    background-color: #ffdc9c; /* Hover color for the submit buttons */
+    border: 1px solid #638263; /* Submit button border color */
+    cursor: pointer;
 }
+
 input.faint {
     font-weight: normal;
     font-size: 0.9em;
 }
-/* End of css buttons */
 
+/* End of css buttons */
 
 /* Print-specific styles */
 @media print {
     .header-area, .footer-area, .noprint,
-    .report-button { display: none;}
+    .report-button {
+        display: none;
+    }
+
     a[href]:after {
         content: none
     }
+
     footer, #footer {
         /*position: fixed;*/
         /*bottom: 0;*/
     }
 }
+
 /* end of print-specific styles */
 
-/* Forms - put this last */ 
+/* Forms - put this last */
 .form-control {
-  width: 90%;
-  display: inline-block;
+    width: 90%;
+    display: inline-block;
 }

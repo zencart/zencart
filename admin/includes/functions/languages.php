@@ -1,12 +1,13 @@
 <?php
+
 //
 // +----------------------------------------------------------------------+
 // |zen-cart Open Source E-commerce                                       |
 // +----------------------------------------------------------------------+
 // | Copyright (c) 2003 The zen-cart developers                           |
-// |                                                                      |   
-// | http://www.zen-cart.com/index.php                                    |   
-// |                                                                      |   
+// |                                                                      |
+// | http://www.zen-cart.com/index.php                                    |
+// |                                                                      |
 // | Portions Copyright (c) 2003 osCommerce                               |
 // +----------------------------------------------------------------------+
 // | This source file is subject to version 2.0 of the GPL license,       |
@@ -20,17 +21,17 @@
 //  $Id: languages.php 1969 2005-09-13 06:57:21Z drbyte $
 //
 
-  function zen_get_languages_directory($code) {
+function zen_get_languages_directory($code)
+{
     global $db;
-    $language = $db->Execute("select languages_id, directory 
-                              from " . TABLE_LANGUAGES . " 
-                              where code = '" . zen_db_input($code) . "'");
+    $language = $db->Execute("SELECT languages_id, directory
+                              FROM " . TABLE_LANGUAGES . " 
+                              WHERE code = '" . zen_db_input($code) . "'");
 
     if ($language->RecordCount() > 0) {
-      $_SESSION['languages_id'] = $language->fields['languages_id'];
-      return $language->fields['directory'];
+        $_SESSION['languages_id'] = (int)$language->fields['languages_id'];
+        return $language->fields['directory'];
     } else {
-      return false;
+        return false;
     }
-  }
-?>
+}

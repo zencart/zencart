@@ -1,0 +1,105 @@
+name: Zen Cart Tests
+
+on: [push, pull_request]
+
+jobs:
+  unit-tests:
+    name: Unit Tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+        with:
+          fetch-depth: 1
+      - name: Show PHP version
+        run: php --version
+
+      - name: Get composer cache directory
+        id: composer-cache
+        run: echo "::set-output name=dir::$(composer config cache-files-dir)"
+      - name: Cache composer dependencies
+        uses: actions/cache@v1
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: ${{ runner.os }}-composer-
+
+      - name: Install Composer dependencies
+        run: composer install --no-progress --no-interaction --no-suggest --ignore-platform-reqs --prefer-dist --optimize-autoloader --no-ansi --no-scripts
+
+      - name: Prepare the application
+        run: |
+          touch includes/configure.php
+
+      - name: Run UnitTests suite
+        run: php vendor/bin/phpunit --verbose --testsuite=UnitTests --debug
+
+
+  browser-tests:
+    name: Browser Tests
+    runs-on: ubuntu-latest
+    services:
+      mysql:
+        image: mysql:5.7
+        env:
+          MYSQL_ALLOW_EMPTY_PASSWORD: false
+          MYSQL_ROOT_PASSWORD: password
+          MYSQL_DATABASE: zencart
+        ports:
+          - 3306
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+    steps:
+      - uses: actions/checkout@master
+        with:
+          fetch-depth: 1
+      - name: Show PHP version
+        run: php --version
+
+      - name: Get composer cache directory
+        id: composer-cache
+        run: echo "::set-output name=dir::$(composer config cache-files-dir)"
+      - name: Cache composer dependencies
+        uses: actions/cache@v1
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: ${{ runner.os }}-composer-
+
+      - name: Install Composer dependencies
+        run: composer install --no-progress --no-interaction --no-suggest --ignore-platform-reqs --prefer-dist --optimize-autoloader --no-ansi --no-scripts
+
+      - name: Prepare the application
+        run: |
+          touch includes/configure.php
+          mkdir -p not_for_release/testFramework/logs/screenshots
+          mkdir -p not_for_release/testFramework/logs/console
+
+      - name: Install ChromeDriver
+        run: |
+          CHROME_VERSION=$(google-chrome --version | cut -f 3 -d ' ' | cut -d '.' -f 1) \
+            && CHROMEDRIVER_RELEASE=$(curl --location --fail --retry 3 http://chromedriver.storage.googleapis.com/LATEST_RELEASE_${CHROME_VERSION}) \
+            && curl --silent --show-error --location --fail --retry 3 --output /tmp/chromedriver_linux64.zip "http://chromedriver.storage.googleapis.com/$CHROMEDRIVER_RELEASE/chromedriver_linux64.zip" \
+            && cd /tmp \
+            && unzip chromedriver_linux64.zip \
+            && rm -rf chromedriver_linux64.zip \
+            && sudo mv chromedriver /usr/local/bin/chromedriver \
+            && sudo chmod +x /usr/local/bin/chromedriver \
+            && chromedriver --version
+
+      - name: Start ChromeDriver
+        run: chromedriver > /dev/null 2>&1 &
+      - name: Start PHP Server
+        run: php -S 127.0.0.1:8080 > /dev/null 2>&1 &
+        env:
+          DB_PORT: ${{ job.services.mysql.ports['3306'] }}
+
+      - name: Run Browser Tests
+        run: php vendor/bin/phpunit --verbose --testsuite=Browser --debug
+        env:
+          DB_PORT: ${{ job.services.mysql.ports['3306'] }}
+      - name: Preserve Artifacts
+        uses: actions/upload-artifact@v1
+        if: failure()
+        with:
+          name: Screenshots
+          path: not_for_release/testFramework/logs
+

@@ -60,7 +60,7 @@ class RevokeTokenRequest implements ArrayAccess
     );
   
     /**
-      * $client_id Your application's ID, available from the [application dashboard](https://connect.squareup.com/apps).
+      * $client_id The Square issued ID for your application, available from the [application dashboard](https://connect.squareup.com/apps).
       * @var string
       */
     protected $client_id;
@@ -110,7 +110,7 @@ class RevokeTokenRequest implements ArrayAccess
   
     /**
      * Sets client_id
-     * @param string $client_id Your application's ID, available from the [application dashboard](https://connect.squareup.com/apps).
+     * @param string $client_id The Square issued ID for your application, available from the [application dashboard](https://connect.squareup.com/apps).
      * @return $this
      */
     public function setClientId($client_id)

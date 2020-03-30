@@ -28,4 +28,3 @@ define('NOTICE_EMAIL_FAILED_SEND', 'Notice: FAILED to send Email to all recipien
 define('ERROR_NO_CUSTOMER_SELECTED', 'Error: No customer has been selected.');
 define('ERROR_NO_SUBJECT', 'Error: No subject has been entered.');
 define('ERROR_ATTACHMENTS', 'Error: You cannot select to both UPLOAD and ADD separate attachments. Please choose one only.');
-?>

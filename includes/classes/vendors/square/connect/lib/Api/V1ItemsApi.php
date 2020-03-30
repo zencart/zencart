@@ -65,9 +65,10 @@ class V1ItemsApi
     }
   
     /**
+     * @deprecated
      * adjustInventory
      *
-     * Adjusts an item variation's current available inventory.
+     * AdjustInventory
      *
      * @param string $location_id The ID of the item&#39;s associated location. (required)
      * @param string $variation_id The ID of the variation to adjust inventory information for. (required)
@@ -77,6 +78,7 @@ class V1ItemsApi
      */
     public function adjustInventory($location_id, $variation_id, $body)
     {
+        trigger_error("\x1B[33mCalling deprecated API: V1ItemsApi.adjustInventory\x1B[0m", E_USER_DEPRECATED);
         list($response, $statusCode, $httpHeader) = $this->adjustInventoryWithHttpInfo ($location_id, $variation_id, $body);
         return $response; 
     }
@@ -85,7 +87,7 @@ class V1ItemsApi
     /**
      * adjustInventoryWithHttpInfo
      *
-     * Adjusts an item variation's current available inventory.
+     * AdjustInventory
      *
      * @param string $location_id The ID of the item&#39;s associated location. (required)
      * @param string $variation_id The ID of the variation to adjust inventory information for. (required)
@@ -120,6 +122,7 @@ class V1ItemsApi
             $headerParams['Accept'] = $_header_accept;
         }
         $headerParams['Content-Type'] = ApiClient::selectHeaderContentType(array('application/json'));
+        $headerParams['Square-Version'] = "2020-02-26";
 
         
         
@@ -183,9 +186,10 @@ class V1ItemsApi
         }
     }
     /**
+     * @deprecated
      * applyFee
      *
-     * Associates a fee with an item, meaning the fee is automatically applied to the item in Square Register.
+     * ApplyFee
      *
      * @param string $location_id The ID of the fee&#39;s associated location. (required)
      * @param string $item_id The ID of the item to add the fee to. (required)
@@ -195,6 +199,7 @@ class V1ItemsApi
      */
     public function applyFee($location_id, $item_id, $fee_id)
     {
+        trigger_error("\x1B[33mCalling deprecated API: V1ItemsApi.applyFee\x1B[0m", E_USER_DEPRECATED);
         list($response, $statusCode, $httpHeader) = $this->applyFeeWithHttpInfo ($location_id, $item_id, $fee_id);
         return $response; 
     }
@@ -203,7 +208,7 @@ class V1ItemsApi
     /**
      * applyFeeWithHttpInfo
      *
-     * Associates a fee with an item, meaning the fee is automatically applied to the item in Square Register.
+     * ApplyFee
      *
      * @param string $location_id The ID of the fee&#39;s associated location. (required)
      * @param string $item_id The ID of the item to add the fee to. (required)
@@ -238,6 +243,7 @@ class V1ItemsApi
             $headerParams['Accept'] = $_header_accept;
         }
         $headerParams['Content-Type'] = ApiClient::selectHeaderContentType(array('application/json'));
+        $headerParams['Square-Version'] = "2020-02-26";
 
         
         
@@ -304,9 +310,10 @@ class V1ItemsApi
         }
     }
     /**
+     * @deprecated
      * applyModifierList
      *
-     * Associates a modifier list with an item, meaning modifier options from the list can be applied to the item.
+     * ApplyModifierList
      *
      * @param string $location_id The ID of the item&#39;s associated location. (required)
      * @param string $modifier_list_id The ID of the modifier list to apply. (required)
@@ -316,6 +323,7 @@ class V1ItemsApi
      */
     public function applyModifierList($location_id, $modifier_list_id, $item_id)
     {
+        trigger_error("\x1B[33mCalling deprecated API: V1ItemsApi.applyModifierList\x1B[0m", E_USER_DEPRECATED);
         list($response, $statusCode, $httpHeader) = $this->applyModifierListWithHttpInfo ($location_id, $modifier_list_id, $item_id);
         return $response; 
     }
@@ -324,7 +332,7 @@ class V1ItemsApi
     /**
      * applyModifierListWithHttpInfo
      *
-     * Associates a modifier list with an item, meaning modifier options from the list can be applied to the item.
+     * ApplyModifierList
      *
      * @param string $location_id The ID of the item&#39;s associated location. (required)
      * @param string $modifier_list_id The ID of the modifier list to apply. (required)
@@ -359,6 +367,7 @@ class V1ItemsApi
             $headerParams['Accept'] = $_header_accept;
         }
         $headerParams['Content-Type'] = ApiClient::selectHeaderContentType(array('application/json'));
+        $headerParams['Square-Version'] = "2020-02-26";
 
         
         
@@ -425,9 +434,10 @@ class V1ItemsApi
         }
     }
     /**
+     * @deprecated
      * createCategory
      *
-     * Creates an item category.
+     * CreateCategory
      *
      * @param string $location_id The ID of the location to create an item for. (required)
      * @param \SquareConnect\Model\V1Category $body An object containing the fields to POST for the request.  See the corresponding object definition for field details. (required)
@@ -436,6 +446,7 @@ class V1ItemsApi
      */
     public function createCategory($location_id, $body)
     {
+        trigger_error("\x1B[33mCalling deprecated API: V1ItemsApi.createCategory\x1B[0m", E_USER_DEPRECATED);
         list($response, $statusCode, $httpHeader) = $this->createCategoryWithHttpInfo ($location_id, $body);
         return $response; 
     }
@@ -444,7 +455,7 @@ class V1ItemsApi
     /**
      * createCategoryWithHttpInfo
      *
-     * Creates an item category.
+     * CreateCategory
      *
      * @param string $location_id The ID of the location to create an item for. (required)
      * @param \SquareConnect\Model\V1Category $body An object containing the fields to POST for the request.  See the corresponding object definition for field details. (required)
@@ -474,6 +485,7 @@ class V1ItemsApi
             $headerParams['Accept'] = $_header_accept;
         }
         $headerParams['Content-Type'] = ApiClient::selectHeaderContentType(array('application/json'));
+        $headerParams['Square-Version'] = "2020-02-26";
 
         
         
@@ -530,9 +542,10 @@ class V1ItemsApi
         }
     }
     /**
+     * @deprecated
      * createDiscount
      *
-     * Creates a discount.
+     * CreateDiscount
      *
      * @param string $location_id The ID of the location to create an item for. (required)
      * @param \SquareConnect\Model\V1Discount $body An object containing the fields to POST for the request.  See the corresponding object definition for field details. (required)
@@ -541,6 +554,7 @@ class V1ItemsApi
      */
     public function createDiscount($location_id, $body)
     {
+        trigger_error("\x1B[33mCalling deprecated API: V1ItemsApi.createDiscount\x1B[0m", E_USER_DEPRECATED);
         list($response, $statusCode, $httpHeader) = $this->createDiscountWithHttpInfo ($location_id, $body);
         return $response; 
     }
@@ -549,7 +563,7 @@ class V1ItemsApi
     /**
      * createDiscountWithHttpInfo
      *
-     * Creates a discount.
+     * CreateDiscount
      *
      * @param string $location_id The ID of the location to create an item for. (required)
      * @param \SquareConnect\Model\V1Discount $body An object containing the fields to POST for the request.  See the corresponding object definition for field details. (required)
@@ -579,6 +593,7 @@ class V1ItemsApi
             $headerParams['Accept'] = $_header_accept;
         }
         $headerParams['Content-Type'] = ApiClient::selectHeaderContentType(array('application/json'));
+        $headerParams['Square-Version'] = "2020-02-26";
 
         
         
@@ -635,9 +650,10 @@ class V1ItemsApi
         }
     }
     /**
+     * @deprecated
      * createFee
      *
-     * Creates a fee (tax).
+     * CreateFee
      *
      * @param string $location_id The ID of the location to create a fee for. (required)
      * @param \SquareConnect\Model\V1Fee $body An object containing the fields to POST for the request.  See the corresponding object definition for field details. (required)
@@ -646,6 +662,7 @@ class V1ItemsApi
      */
     public function createFee($location_id, $body)
     {
+        trigger_error("\x1B[33mCalling deprecated API: V1ItemsApi.createFee\x1B[0m", E_USER_DEPRECATED);
         list($response, $statusCode, $httpHeader) = $this->createFeeWithHttpInfo ($location_id, $body);
         return $response; 
     }
@@ -654,7 +671,7 @@ class V1ItemsApi
     /**
      * createFeeWithHttpInfo
      *
-     * Creates a fee (tax).
+     * CreateFee
      *
      * @param string $location_id The ID of the location to create a fee for. (required)
      * @param \SquareConnect\Model\V1Fee $body An object containing the fields to POST for the request.  See the corresponding object definition for field details. (required)
@@ -684,6 +701,7 @@ class V1ItemsApi
             $headerParams['Accept'] = $_header_accept;
         }
         $headerParams['Content-Type'] = ApiClient::selectHeaderContentType(array('application/json'));
+        $headerParams['Square-Version'] = "2020-02-26";
 
         
         
@@ -740,9 +758,10 @@ class V1ItemsApi
         }
     }
     /**
+     * @deprecated
      * createItem
      *
-     * Creates an item and at least one variation for it.
+     * CreateItem
      *
      * @param string $location_id The ID of the location to create an item for. (required)
      * @param \SquareConnect\Model\V1Item $body An object containing the fields to POST for the request.  See the corresponding object definition for field details. (required)
@@ -751,6 +770,7 @@ class V1ItemsApi
      */
     public function createItem($location_id, $body)
     {
+        trigger_error("\x1B[33mCalling deprecated API: V1ItemsApi.createItem\x1B[0m", E_USER_DEPRECATED);
         list($response, $statusCode, $httpHeader) = $this->createItemWithHttpInfo ($location_id, $body);
         return $response; 
     }
@@ -759,7 +779,7 @@ class V1ItemsApi
     /**
      * createItemWithHttpInfo
      *
-     * Creates an item and at least one variation for it.
+     * CreateItem
      *
      * @param string $location_id The ID of the location to create an item for. (required)
      * @param \SquareConnect\Model\V1Item $body An object containing the fields to POST for the request.  See the corresponding object definition for field details. (required)
@@ -789,6 +809,7 @@ class V1ItemsApi
             $headerParams['Accept'] = $_header_accept;
         }
         $headerParams['Content-Type'] = ApiClient::selectHeaderContentType(array('application/json'));
+        $headerParams['Square-Version'] = "2020-02-26";
 
         
         
@@ -845,9 +866,10 @@ class V1ItemsApi
         }
     }
     /**
+     * @deprecated
      * createModifierList
      *
-     * Creates an item modifier list and at least one modifier option for it.
+     * CreateModifierList
      *
      * @param string $location_id The ID of the location to create a modifier list for. (required)
      * @param \SquareConnect\Model\V1ModifierList $body An object containing the fields to POST for the request.  See the corresponding object definition for field details. (required)
@@ -856,6 +878,7 @@ class V1ItemsApi
      */
     public function createModifierList($location_id, $body)
     {
+        trigger_error("\x1B[33mCalling deprecated API: V1ItemsApi.createModifierList\x1B[0m", E_USER_DEPRECATED);
         list($response, $statusCode, $httpHeader) = $this->createModifierListWithHttpInfo ($location_id, $body);
         return $response; 
     }
@@ -864,7 +887,7 @@ class V1ItemsApi
     /**
      * createModifierListWithHttpInfo
      *
-     * Creates an item modifier list and at least one modifier option for it.
+     * CreateModifierList
      *
      * @param string $location_id The ID of the location to create a modifier list for. (required)
      * @param \SquareConnect\Model\V1ModifierList $body An object containing the fields to POST for the request.  See the corresponding object definition for field details. (required)
@@ -894,6 +917,7 @@ class V1ItemsApi
             $headerParams['Accept'] = $_header_accept;
         }
         $headerParams['Content-Type'] = ApiClient::selectHeaderContentType(array('application/json'));
+        $headerParams['Square-Version'] = "2020-02-26";
 
         
         
@@ -950,9 +974,10 @@ class V1ItemsApi
         }
     }
     /**
+     * @deprecated
      * createModifierOption
      *
-     * Creates an item modifier option and adds it to a modifier list.
+     * CreateModifierOption
      *
      * @param string $location_id The ID of the item&#39;s associated location. (required)
      * @param string $modifier_list_id The ID of the modifier list to edit. (required)
@@ -962,6 +987,7 @@ class V1ItemsApi
      */
     public function createModifierOption($location_id, $modifier_list_id, $body)
     {
+        trigger_error("\x1B[33mCalling deprecated API: V1ItemsApi.createModifierOption\x1B[0m", E_USER_DEPRECATED);
         list($response, $statusCode, $httpHeader) = $this->createModifierOptionWithHttpInfo ($location_id, $modifier_list_id, $body);
         return $response; 
     }
@@ -970,7 +996,7 @@ class V1ItemsApi
     /**
      * createModifierOptionWithHttpInfo
      *
-     * Creates an item modifier option and adds it to a modifier list.
+     * CreateModifierOption
      *
      * @param string $location_id The ID of the item&#39;s associated location. (required)
      * @param string $modifier_list_id The ID of the modifier list to edit. (required)
@@ -1005,6 +1031,7 @@ class V1ItemsApi
             $headerParams['Accept'] = $_header_accept;
         }
         $headerParams['Content-Type'] = ApiClient::selectHeaderContentType(array('application/json'));
+        $headerParams['Square-Version'] = "2020-02-26";
 
         
         
@@ -1068,9 +1095,10 @@ class V1ItemsApi
         }
     }
     /**
+     * @deprecated
      * createPage
      *
-     * Creates a Favorites page in Square Register.
+     * CreatePage
      *
      * @param string $location_id The ID of the location to create an item for. (required)
      * @param \SquareConnect\Model\V1Page $body An object containing the fields to POST for the request.  See the corresponding object definition for field details. (required)
@@ -1079,6 +1107,7 @@ class V1ItemsApi
      */
     public function createPage($location_id, $body)
     {
+        trigger_error("\x1B[33mCalling deprecated API: V1ItemsApi.createPage\x1B[0m", E_USER_DEPRECATED);
         list($response, $statusCode, $httpHeader) = $this->createPageWithHttpInfo ($location_id, $body);
         return $response; 
     }
@@ -1087,7 +1116,7 @@ class V1ItemsApi
     /**
      * createPageWithHttpInfo
      *
-     * Creates a Favorites page in Square Register.
+     * CreatePage
      *
      * @param string $location_id The ID of the location to create an item for. (required)
      * @param \SquareConnect\Model\V1Page $body An object containing the fields to POST for the request.  See the corresponding object definition for field details. (required)
@@ -1117,6 +1146,7 @@ class V1ItemsApi
             $headerParams['Accept'] = $_header_accept;
         }
         $headerParams['Content-Type'] = ApiClient::selectHeaderContentType(array('application/json'));
+        $headerParams['Square-Version'] = "2020-02-26";
 
         
         
@@ -1173,9 +1203,10 @@ class V1ItemsApi
         }
     }
     /**
+     * @deprecated
      * createVariation
      *
-     * Creates an item variation for an existing item.
+     * CreateVariation
      *
      * @param string $location_id The ID of the item&#39;s associated location. (required)
      * @param string $item_id The item&#39;s ID. (required)
@@ -1185,6 +1216,7 @@ class V1ItemsApi
      */
     public function createVariation($location_id, $item_id, $body)
     {
+        trigger_error("\x1B[33mCalling deprecated API: V1ItemsApi.createVariation\x1B[0m", E_USER_DEPRECATED);
         list($response, $statusCode, $httpHeader) = $this->createVariationWithHttpInfo ($location_id, $item_id, $body);
         return $response; 
     }
@@ -1193,7 +1225,7 @@ class V1ItemsApi
     /**
      * createVariationWithHttpInfo
      *
-     * Creates an item variation for an existing item.
+     * CreateVariation
      *
      * @param string $location_id The ID of the item&#39;s associated location. (required)
      * @param string $item_id The item&#39;s ID. (required)
@@ -1228,6 +1260,7 @@ class V1ItemsApi
             $headerParams['Accept'] = $_header_accept;
         }
         $headerParams['Content-Type'] = ApiClient::selectHeaderContentType(array('application/json'));
+        $headerParams['Square-Version'] = "2020-02-26";
 
         
         
@@ -1291,9 +1324,10 @@ class V1ItemsApi
         }
     }
     /**
+     * @deprecated
      * deleteCategory
      *
-     * Deletes an existing item category.
+     * DeleteCategory
      *
      * @param string $location_id The ID of the item&#39;s associated location. (required)
      * @param string $category_id The ID of the category to delete. (required)
@@ -1302,6 +1336,7 @@ class V1ItemsApi
      */
     public function deleteCategory($location_id, $category_id)
     {
+        trigger_error("\x1B[33mCalling deprecated API: V1ItemsApi.deleteCategory\x1B[0m", E_USER_DEPRECATED);
         list($response, $statusCode, $httpHeader) = $this->deleteCategoryWithHttpInfo ($location_id, $category_id);
         return $response; 
     }
@@ -1310,7 +1345,7 @@ class V1ItemsApi
     /**
      * deleteCategoryWithHttpInfo
      *
-     * Deletes an existing item category.
+     * DeleteCategory
      *
      * @param string $location_id The ID of the item&#39;s associated location. (required)
      * @param string $category_id The ID of the category to delete. (required)
@@ -1340,6 +1375,7 @@ class V1ItemsApi
             $headerParams['Accept'] = $_header_accept;
         }
         $headerParams['Content-Type'] = ApiClient::selectHeaderContentType(array('application/json'));
+        $headerParams['Square-Version'] = "2020-02-26";
 
         
         
@@ -1399,9 +1435,10 @@ class V1ItemsApi
         }
     }
     /**
+     * @deprecated
      * deleteDiscount
      *
-     * Deletes an existing discount.
+     * DeleteDiscount
      *
      * @param string $location_id The ID of the item&#39;s associated location. (required)
      * @param string $discount_id The ID of the discount to delete. (required)
@@ -1410,6 +1447,7 @@ class V1ItemsApi
      */
     public function deleteDiscount($location_id, $discount_id)
     {
+        trigger_error("\x1B[33mCalling deprecated API: V1ItemsApi.deleteDiscount\x1B[0m", E_USER_DEPRECATED);
         list($response, $statusCode, $httpHeader) = $this->deleteDiscountWithHttpInfo ($location_id, $discount_id);
         return $response; 
     }
@@ -1418,7 +1456,7 @@ class V1ItemsApi
     /**
      * deleteDiscountWithHttpInfo
      *
-     * Deletes an existing discount.
+     * DeleteDiscount
      *
      * @param string $location_id The ID of the item&#39;s associated location. (required)
      * @param string $discount_id The ID of the discount to delete. (required)
@@ -1448,6 +1486,7 @@ class V1ItemsApi
             $headerParams['Accept'] = $_header_accept;
         }
         $headerParams['Content-Type'] = ApiClient::selectHeaderContentType(array('application/json'));
+        $headerParams['Square-Version'] = "2020-02-26";
 
         
         
@@ -1507,9 +1546,10 @@ class V1ItemsApi
         }
     }
     /**
+     * @deprecated
      * deleteFee
      *
-     * Deletes an existing fee (tax).
+     * DeleteFee
      *
      * @param string $location_id The ID of the fee&#39;s associated location. (required)
      * @param string $fee_id The ID of the fee to delete. (required)
@@ -1518,6 +1558,7 @@ class V1ItemsApi
      */
     public function deleteFee($location_id, $fee_id)
     {
+        trigger_error("\x1B[33mCalling deprecated API: V1ItemsApi.deleteFee\x1B[0m", E_USER_DEPRECATED);
         list($response, $statusCode, $httpHeader) = $this->deleteFeeWithHttpInfo ($location_id, $fee_id);
         return $response; 
     }
@@ -1526,7 +1567,7 @@ class V1ItemsApi
     /**
      * deleteFeeWithHttpInfo
      *
-     * Deletes an existing fee (tax).
+     * DeleteFee
      *
      * @param string $location_id The ID of the fee&#39;s associated location. (required)
      * @param string $fee_id The ID of the fee to delete. (required)
@@ -1556,6 +1597,7 @@ class V1ItemsApi
             $headerParams['Accept'] = $_header_accept;
         }
         $headerParams['Content-Type'] = ApiClient::selectHeaderContentType(array('application/json'));
+        $headerParams['Square-Version'] = "2020-02-26";
 
         
         
@@ -1615,9 +1657,10 @@ class V1ItemsApi
         }
     }
     /**
+     * @deprecated
      * deleteItem
      *
-     * Deletes an existing item and all item variations associated with it.
+     * DeleteItem
      *
      * @param string $location_id The ID of the item&#39;s associated location. (required)
      * @param string $item_id The ID of the item to modify. (required)
@@ -1626,6 +1669,7 @@ class V1ItemsApi
      */
     public function deleteItem($location_id, $item_id)
     {
+        trigger_error("\x1B[33mCalling deprecated API: V1ItemsApi.deleteItem\x1B[0m", E_USER_DEPRECATED);
         list($response, $statusCode, $httpHeader) = $this->deleteItemWithHttpInfo ($location_id, $item_id);
         return $response; 
     }
@@ -1634,7 +1678,7 @@ class V1ItemsApi
     /**
      * deleteItemWithHttpInfo
      *
-     * Deletes an existing item and all item variations associated with it.
+     * DeleteItem
      *
      * @param string $location_id The ID of the item&#39;s associated location. (required)
      * @param string $item_id The ID of the item to modify. (required)
@@ -1664,6 +1708,7 @@ class V1ItemsApi
             $headerParams['Accept'] = $_header_accept;
         }
         $headerParams['Content-Type'] = ApiClient::selectHeaderContentType(array('application/json'));
+        $headerParams['Square-Version'] = "2020-02-26";
 
         
         
@@ -1723,9 +1768,10 @@ class V1ItemsApi
         }
     }
     /**
+     * @deprecated
      * deleteModifierList
      *
-     * Deletes an existing item modifier list and all modifier options associated with it.
+     * DeleteModifierList
      *
      * @param string $location_id The ID of the item&#39;s associated location. (required)
      * @param string $modifier_list_id The ID of the modifier list to delete. (required)
@@ -1734,6 +1780,7 @@ class V1ItemsApi
      */
     public function deleteModifierList($location_id, $modifier_list_id)
     {
+        trigger_error("\x1B[33mCalling deprecated API: V1ItemsApi.deleteModifierList\x1B[0m", E_USER_DEPRECATED);
         list($response, $statusCode, $httpHeader) = $this->deleteModifierListWithHttpInfo ($location_id, $modifier_list_id);
         return $response; 
     }
@@ -1742,7 +1789,7 @@ class V1ItemsApi
     /**
      * deleteModifierListWithHttpInfo
      *
-     * Deletes an existing item modifier list and all modifier options associated with it.
+     * DeleteModifierList
      *
      * @param string $location_id The ID of the item&#39;s associated location. (required)
      * @param string $modifier_list_id The ID of the modifier list to delete. (required)
@@ -1772,6 +1819,7 @@ class V1ItemsApi
             $headerParams['Accept'] = $_header_accept;
         }
         $headerParams['Content-Type'] = ApiClient::selectHeaderContentType(array('application/json'));
+        $headerParams['Square-Version'] = "2020-02-26";
 
         
         
@@ -1831,9 +1879,10 @@ class V1ItemsApi
         }
     }
     /**
+     * @deprecated
      * deleteModifierOption
      *
-     * Deletes an existing item modifier option from a modifier list.
+     * DeleteModifierOption
      *
      * @param string $location_id The ID of the item&#39;s associated location. (required)
      * @param string $modifier_list_id The ID of the modifier list to delete. (required)
@@ -1843,6 +1892,7 @@ class V1ItemsApi
      */
     public function deleteModifierOption($location_id, $modifier_list_id, $modifier_option_id)
     {
+        trigger_error("\x1B[33mCalling deprecated API: V1ItemsApi.deleteModifierOption\x1B[0m", E_USER_DEPRECATED);
         list($response, $statusCode, $httpHeader) = $this->deleteModifierOptionWithHttpInfo ($location_id, $modifier_list_id, $modifier_option_id);
         return $response; 
     }
@@ -1851,7 +1901,7 @@ class V1ItemsApi
     /**
      * deleteModifierOptionWithHttpInfo
      *
-     * Deletes an existing item modifier option from a modifier list.
+     * DeleteModifierOption
      *
      * @param string $location_id The ID of the item&#39;s associated location. (required)
      * @param string $modifier_list_id The ID of the modifier list to delete. (required)
@@ -1886,6 +1936,7 @@ class V1ItemsApi
             $headerParams['Accept'] = $_header_accept;
         }
         $headerParams['Content-Type'] = ApiClient::selectHeaderContentType(array('application/json'));
+        $headerParams['Square-Version'] = "2020-02-26";
 
         
         
@@ -1952,9 +2003,10 @@ class V1ItemsApi
         }
     }
     /**
+     * @deprecated
      * deletePage
      *
-     * Deletes an existing Favorites page and all of its cells.
+     * DeletePage
      *
      * @param string $location_id The ID of the Favorites page&#39;s associated location. (required)
      * @param string $page_id The ID of the page to delete. (required)
@@ -1963,6 +2015,7 @@ class V1ItemsApi
      */
     public function deletePage($location_id, $page_id)
     {
+        trigger_error("\x1B[33mCalling deprecated API: V1ItemsApi.deletePage\x1B[0m", E_USER_DEPRECATED);
         list($response, $statusCode, $httpHeader) = $this->deletePageWithHttpInfo ($location_id, $page_id);
         return $response; 
     }
@@ -1971,7 +2024,7 @@ class V1ItemsApi
     /**
      * deletePageWithHttpInfo
      *
-     * Deletes an existing Favorites page and all of its cells.
+     * DeletePage
      *
      * @param string $location_id The ID of the Favorites page&#39;s associated location. (required)
      * @param string $page_id The ID of the page to delete. (required)
@@ -2001,6 +2054,7 @@ class V1ItemsApi
             $headerParams['Accept'] = $_header_accept;
         }
         $headerParams['Content-Type'] = ApiClient::selectHeaderContentType(array('application/json'));
+        $headerParams['Square-Version'] = "2020-02-26";
 
         
         
@@ -2060,9 +2114,10 @@ class V1ItemsApi
         }
     }
     /**
+     * @deprecated
      * deletePageCell
      *
-     * Deletes a cell from a Favorites page in Square Register.
+     * DeletePageCell
      *
      * @param string $location_id The ID of the Favorites page&#39;s associated location. (required)
      * @param string $page_id The ID of the page to delete. (required)
@@ -2073,6 +2128,7 @@ class V1ItemsApi
      */
     public function deletePageCell($location_id, $page_id, $row = null, $column = null)
     {
+        trigger_error("\x1B[33mCalling deprecated API: V1ItemsApi.deletePageCell\x1B[0m", E_USER_DEPRECATED);
         list($response, $statusCode, $httpHeader) = $this->deletePageCellWithHttpInfo ($location_id, $page_id, $row, $column);
         return $response; 
     }
@@ -2081,7 +2137,7 @@ class V1ItemsApi
     /**
      * deletePageCellWithHttpInfo
      *
-     * Deletes a cell from a Favorites page in Square Register.
+     * DeletePageCell
      *
      * @param string $location_id The ID of the Favorites page&#39;s associated location. (required)
      * @param string $page_id The ID of the page to delete. (required)
@@ -2113,6 +2169,7 @@ class V1ItemsApi
             $headerParams['Accept'] = $_header_accept;
         }
         $headerParams['Content-Type'] = ApiClient::selectHeaderContentType(array('application/json'));
+        $headerParams['Square-Version'] = "2020-02-26";
 
         // query params
         if ($row !== null) {
@@ -2178,9 +2235,10 @@ class V1ItemsApi
         }
     }
     /**
+     * @deprecated
      * deleteVariation
      *
-     * Deletes an existing item variation from an item.
+     * DeleteVariation
      *
      * @param string $location_id The ID of the item&#39;s associated location. (required)
      * @param string $item_id The ID of the item to delete. (required)
@@ -2190,6 +2248,7 @@ class V1ItemsApi
      */
     public function deleteVariation($location_id, $item_id, $variation_id)
     {
+        trigger_error("\x1B[33mCalling deprecated API: V1ItemsApi.deleteVariation\x1B[0m", E_USER_DEPRECATED);
         list($response, $statusCode, $httpHeader) = $this->deleteVariationWithHttpInfo ($location_id, $item_id, $variation_id);
         return $response; 
     }
@@ -2198,7 +2257,7 @@ class V1ItemsApi
     /**
      * deleteVariationWithHttpInfo
      *
-     * Deletes an existing item variation from an item.
+     * DeleteVariation
      *
      * @param string $location_id The ID of the item&#39;s associated location. (required)
      * @param string $item_id The ID of the item to delete. (required)
@@ -2233,6 +2292,7 @@ class V1ItemsApi
             $headerParams['Accept'] = $_header_accept;
         }
         $headerParams['Content-Type'] = ApiClient::selectHeaderContentType(array('application/json'));
+        $headerParams['Square-Version'] = "2020-02-26";
 
         
         
@@ -2299,9 +2359,10 @@ class V1ItemsApi
         }
     }
     /**
+     * @deprecated
      * listCategories
      *
-     * Lists all of a location's item categories.
+     * ListCategories
      *
      * @param string $location_id The ID of the location to list categories for. (required)
      * @return \SquareConnect\Model\V1Category[]
@@ -2309,6 +2370,7 @@ class V1ItemsApi
      */
     public function listCategories($location_id)
     {
+        trigger_error("\x1B[33mCalling deprecated API: V1ItemsApi.listCategories\x1B[0m", E_USER_DEPRECATED);
         list($response, $statusCode, $httpHeader) = $this->listCategoriesWithHttpInfo ($location_id);
         return $response; 
     }
@@ -2317,7 +2379,7 @@ class V1ItemsApi
     /**
      * listCategoriesWithHttpInfo
      *
-     * Lists all of a location's item categories.
+     * ListCategories
      *
      * @param string $location_id The ID of the location to list categories for. (required)
      * @return Array of \SquareConnect\Model\V1Category[], HTTP status code, HTTP response headers (array of strings)
@@ -2342,6 +2404,7 @@ class V1ItemsApi
             $headerParams['Accept'] = $_header_accept;
         }
         $headerParams['Content-Type'] = ApiClient::selectHeaderContentType(array('application/json'));
+        $headerParams['Square-Version'] = "2020-02-26";
 
         
         
@@ -2394,9 +2457,10 @@ class V1ItemsApi
         }
     }
     /**
+     * @deprecated
      * listDiscounts
      *
-     * Lists all of a location's discounts.
+     * ListDiscounts
      *
      * @param string $location_id The ID of the location to list categories for. (required)
      * @return \SquareConnect\Model\V1Discount[]
@@ -2404,6 +2468,7 @@ class V1ItemsApi
      */
     public function listDiscounts($location_id)
     {
+        trigger_error("\x1B[33mCalling deprecated API: V1ItemsApi.listDiscounts\x1B[0m", E_USER_DEPRECATED);
         list($response, $statusCode, $httpHeader) = $this->listDiscountsWithHttpInfo ($location_id);
         return $response; 
     }
@@ -2412,7 +2477,7 @@ class V1ItemsApi
     /**
      * listDiscountsWithHttpInfo
      *
-     * Lists all of a location's discounts.
+     * ListDiscounts
      *
      * @param string $location_id The ID of the location to list categories for. (required)
      * @return Array of \SquareConnect\Model\V1Discount[], HTTP status code, HTTP response headers (array of strings)
@@ -2437,6 +2502,7 @@ class V1ItemsApi
             $headerParams['Accept'] = $_header_accept;
         }
         $headerParams['Content-Type'] = ApiClient::selectHeaderContentType(array('application/json'));
+        $headerParams['Square-Version'] = "2020-02-26";
 
         
         
@@ -2489,9 +2555,10 @@ class V1ItemsApi
         }
     }
     /**
+     * @deprecated
      * listFees
      *
-     * Lists all of a location's fees (taxes).
+     * ListFees
      *
      * @param string $location_id The ID of the location to list fees for. (required)
      * @return \SquareConnect\Model\V1Fee[]
@@ -2499,6 +2566,7 @@ class V1ItemsApi
      */
     public function listFees($location_id)
     {
+        trigger_error("\x1B[33mCalling deprecated API: V1ItemsApi.listFees\x1B[0m", E_USER_DEPRECATED);
         list($response, $statusCode, $httpHeader) = $this->listFeesWithHttpInfo ($location_id);
         return $response; 
     }
@@ -2507,7 +2575,7 @@ class V1ItemsApi
     /**
      * listFeesWithHttpInfo
      *
-     * Lists all of a location's fees (taxes).
+     * ListFees
      *
      * @param string $location_id The ID of the location to list fees for. (required)
      * @return Array of \SquareConnect\Model\V1Fee[], HTTP status code, HTTP response headers (array of strings)
@@ -2532,6 +2600,7 @@ class V1ItemsApi
             $headerParams['Accept'] = $_header_accept;
         }
         $headerParams['Content-Type'] = ApiClient::selectHeaderContentType(array('application/json'));
+        $headerParams['Square-Version'] = "2020-02-26";
 
         
         
@@ -2584,9 +2653,10 @@ class V1ItemsApi
         }
     }
     /**
+     * @deprecated
      * listInventory
      *
-     * Provides inventory information for all of a merchant's inventory-enabled item variations.
+     * ListInventory
      *
      * @param string $location_id The ID of the item&#39;s associated location. (required)
      * @param int $limit The maximum number of inventory entries to return in a single response. This value cannot exceed 1000. (optional)
@@ -2596,6 +2666,7 @@ class V1ItemsApi
      */
     public function listInventory($location_id, $limit = null, $batch_token = null)
     {
+        trigger_error("\x1B[33mCalling deprecated API: V1ItemsApi.listInventory\x1B[0m", E_USER_DEPRECATED);
         list($response, $statusCode, $httpHeader) = $this->listInventoryWithHttpInfo ($location_id, $limit, $batch_token);
         return $response; 
     }
@@ -2604,7 +2675,7 @@ class V1ItemsApi
     /**
      * listInventoryWithHttpInfo
      *
-     * Provides inventory information for all of a merchant's inventory-enabled item variations.
+     * ListInventory
      *
      * @param string $location_id The ID of the item&#39;s associated location. (required)
      * @param int $limit The maximum number of inventory entries to return in a single response. This value cannot exceed 1000. (optional)
@@ -2631,6 +2702,7 @@ class V1ItemsApi
             $headerParams['Accept'] = $_header_accept;
         }
         $headerParams['Content-Type'] = ApiClient::selectHeaderContentType(array('application/json'));
+        $headerParams['Square-Version'] = "2020-02-26";
 
         // query params
         if ($limit !== null) {
@@ -2689,9 +2761,10 @@ class V1ItemsApi
         }
     }
     /**
+     * @deprecated
      * listItems
      *
-     * Provides summary information for all of a location's items.
+     * ListItems
      *
      * @param string $location_id The ID of the location to list items for. (required)
      * @param string $batch_token A pagination cursor to retrieve the next set of results for your original query to the endpoint. (optional)
@@ -2700,6 +2773,7 @@ class V1ItemsApi
      */
     public function listItems($location_id, $batch_token = null)
     {
+        trigger_error("\x1B[33mCalling deprecated API: V1ItemsApi.listItems\x1B[0m", E_USER_DEPRECATED);
         list($response, $statusCode, $httpHeader) = $this->listItemsWithHttpInfo ($location_id, $batch_token);
         return $response; 
     }
@@ -2708,7 +2782,7 @@ class V1ItemsApi
     /**
      * listItemsWithHttpInfo
      *
-     * Provides summary information for all of a location's items.
+     * ListItems
      *
      * @param string $location_id The ID of the location to list items for. (required)
      * @param string $batch_token A pagination cursor to retrieve the next set of results for your original query to the endpoint. (optional)
@@ -2734,6 +2808,7 @@ class V1ItemsApi
             $headerParams['Accept'] = $_header_accept;
         }
         $headerParams['Content-Type'] = ApiClient::selectHeaderContentType(array('application/json'));
+        $headerParams['Square-Version'] = "2020-02-26";
 
         // query params
         if ($batch_token !== null) {
@@ -2789,9 +2864,10 @@ class V1ItemsApi
         }
     }
     /**
+     * @deprecated
      * listModifierLists
      *
-     * Lists all of a location's modifier lists.
+     * ListModifierLists
      *
      * @param string $location_id The ID of the location to list modifier lists for. (required)
      * @return \SquareConnect\Model\V1ModifierList[]
@@ -2799,6 +2875,7 @@ class V1ItemsApi
      */
     public function listModifierLists($location_id)
     {
+        trigger_error("\x1B[33mCalling deprecated API: V1ItemsApi.listModifierLists\x1B[0m", E_USER_DEPRECATED);
         list($response, $statusCode, $httpHeader) = $this->listModifierListsWithHttpInfo ($location_id);
         return $response; 
     }
@@ -2807,7 +2884,7 @@ class V1ItemsApi
     /**
      * listModifierListsWithHttpInfo
      *
-     * Lists all of a location's modifier lists.
+     * ListModifierLists
      *
      * @param string $location_id The ID of the location to list modifier lists for. (required)
      * @return Array of \SquareConnect\Model\V1ModifierList[], HTTP status code, HTTP response headers (array of strings)
@@ -2832,6 +2909,7 @@ class V1ItemsApi
             $headerParams['Accept'] = $_header_accept;
         }
         $headerParams['Content-Type'] = ApiClient::selectHeaderContentType(array('application/json'));
+        $headerParams['Square-Version'] = "2020-02-26";
 
         
         
@@ -2884,9 +2962,10 @@ class V1ItemsApi
         }
     }
     /**
+     * @deprecated
      * listPages
      *
-     * Lists all of a location's Favorites pages in Square Register.
+     * ListPages
      *
      * @param string $location_id The ID of the location to list Favorites pages for. (required)
      * @return \SquareConnect\Model\V1Page[]
@@ -2894,6 +2973,7 @@ class V1ItemsApi
      */
     public function listPages($location_id)
     {
+        trigger_error("\x1B[33mCalling deprecated API: V1ItemsApi.listPages\x1B[0m", E_USER_DEPRECATED);
         list($response, $statusCode, $httpHeader) = $this->listPagesWithHttpInfo ($location_id);
         return $response; 
     }
@@ -2902,7 +2982,7 @@ class V1ItemsApi
     /**
      * listPagesWithHttpInfo
      *
-     * Lists all of a location's Favorites pages in Square Register.
+     * ListPages
      *
      * @param string $location_id The ID of the location to list Favorites pages for. (required)
      * @return Array of \SquareConnect\Model\V1Page[], HTTP status code, HTTP response headers (array of strings)
@@ -2927,6 +3007,7 @@ class V1ItemsApi
             $headerParams['Accept'] = $_header_accept;
         }
         $headerParams['Content-Type'] = ApiClient::selectHeaderContentType(array('application/json'));
+        $headerParams['Square-Version'] = "2020-02-26";
 
         
         
@@ -2979,9 +3060,10 @@ class V1ItemsApi
         }
     }
     /**
+     * @deprecated
      * removeFee
      *
-     * Removes a fee assocation from an item, meaning the fee is no longer automatically applied to the item in Square Register.
+     * RemoveFee
      *
      * @param string $location_id The ID of the fee&#39;s associated location. (required)
      * @param string $item_id The ID of the item to add the fee to. (required)
@@ -2991,6 +3073,7 @@ class V1ItemsApi
      */
     public function removeFee($location_id, $item_id, $fee_id)
     {
+        trigger_error("\x1B[33mCalling deprecated API: V1ItemsApi.removeFee\x1B[0m", E_USER_DEPRECATED);
         list($response, $statusCode, $httpHeader) = $this->removeFeeWithHttpInfo ($location_id, $item_id, $fee_id);
         return $response; 
     }
@@ -2999,7 +3082,7 @@ class V1ItemsApi
     /**
      * removeFeeWithHttpInfo
      *
-     * Removes a fee assocation from an item, meaning the fee is no longer automatically applied to the item in Square Register.
+     * RemoveFee
      *
      * @param string $location_id The ID of the fee&#39;s associated location. (required)
      * @param string $item_id The ID of the item to add the fee to. (required)
@@ -3034,6 +3117,7 @@ class V1ItemsApi
             $headerParams['Accept'] = $_header_accept;
         }
         $headerParams['Content-Type'] = ApiClient::selectHeaderContentType(array('application/json'));
+        $headerParams['Square-Version'] = "2020-02-26";
 
         
         
@@ -3100,9 +3184,10 @@ class V1ItemsApi
         }
     }
     /**
+     * @deprecated
      * removeModifierList
      *
-     * Removes a modifier list association from an item, meaning modifier options from the list can no longer be applied to the item.
+     * RemoveModifierList
      *
      * @param string $location_id The ID of the item&#39;s associated location. (required)
      * @param string $modifier_list_id The ID of the modifier list to remove. (required)
@@ -3112,6 +3197,7 @@ class V1ItemsApi
      */
     public function removeModifierList($location_id, $modifier_list_id, $item_id)
     {
+        trigger_error("\x1B[33mCalling deprecated API: V1ItemsApi.removeModifierList\x1B[0m", E_USER_DEPRECATED);
         list($response, $statusCode, $httpHeader) = $this->removeModifierListWithHttpInfo ($location_id, $modifier_list_id, $item_id);
         return $response; 
     }
@@ -3120,7 +3206,7 @@ class V1ItemsApi
     /**
      * removeModifierListWithHttpInfo
      *
-     * Removes a modifier list association from an item, meaning modifier options from the list can no longer be applied to the item.
+     * RemoveModifierList
      *
      * @param string $location_id The ID of the item&#39;s associated location. (required)
      * @param string $modifier_list_id The ID of the modifier list to remove. (required)
@@ -3155,6 +3241,7 @@ class V1ItemsApi
             $headerParams['Accept'] = $_header_accept;
         }
         $headerParams['Content-Type'] = ApiClient::selectHeaderContentType(array('application/json'));
+        $headerParams['Square-Version'] = "2020-02-26";
 
         
         
@@ -3221,9 +3308,10 @@ class V1ItemsApi
         }
     }
     /**
+     * @deprecated
      * retrieveItem
      *
-     * Provides the details for a single item, including associated modifier lists and fees.
+     * RetrieveItem
      *
      * @param string $location_id The ID of the item&#39;s associated location. (required)
      * @param string $item_id The item&#39;s ID. (required)
@@ -3232,6 +3320,7 @@ class V1ItemsApi
      */
     public function retrieveItem($location_id, $item_id)
     {
+        trigger_error("\x1B[33mCalling deprecated API: V1ItemsApi.retrieveItem\x1B[0m", E_USER_DEPRECATED);
         list($response, $statusCode, $httpHeader) = $this->retrieveItemWithHttpInfo ($location_id, $item_id);
         return $response; 
     }
@@ -3240,7 +3329,7 @@ class V1ItemsApi
     /**
      * retrieveItemWithHttpInfo
      *
-     * Provides the details for a single item, including associated modifier lists and fees.
+     * RetrieveItem
      *
      * @param string $location_id The ID of the item&#39;s associated location. (required)
      * @param string $item_id The item&#39;s ID. (required)
@@ -3270,6 +3359,7 @@ class V1ItemsApi
             $headerParams['Accept'] = $_header_accept;
         }
         $headerParams['Content-Type'] = ApiClient::selectHeaderContentType(array('application/json'));
+        $headerParams['Square-Version'] = "2020-02-26";
 
         
         
@@ -3329,9 +3419,10 @@ class V1ItemsApi
         }
     }
     /**
+     * @deprecated
      * retrieveModifierList
      *
-     * Provides the details for a single modifier list.
+     * RetrieveModifierList
      *
      * @param string $location_id The ID of the item&#39;s associated location. (required)
      * @param string $modifier_list_id The modifier list&#39;s ID. (required)
@@ -3340,6 +3431,7 @@ class V1ItemsApi
      */
     public function retrieveModifierList($location_id, $modifier_list_id)
     {
+        trigger_error("\x1B[33mCalling deprecated API: V1ItemsApi.retrieveModifierList\x1B[0m", E_USER_DEPRECATED);
         list($response, $statusCode, $httpHeader) = $this->retrieveModifierListWithHttpInfo ($location_id, $modifier_list_id);
         return $response; 
     }
@@ -3348,7 +3440,7 @@ class V1ItemsApi
     /**
      * retrieveModifierListWithHttpInfo
      *
-     * Provides the details for a single modifier list.
+     * RetrieveModifierList
      *
      * @param string $location_id The ID of the item&#39;s associated location. (required)
      * @param string $modifier_list_id The modifier list&#39;s ID. (required)
@@ -3378,6 +3470,7 @@ class V1ItemsApi
             $headerParams['Accept'] = $_header_accept;
         }
         $headerParams['Content-Type'] = ApiClient::selectHeaderContentType(array('application/json'));
+        $headerParams['Square-Version'] = "2020-02-26";
 
         
         
@@ -3437,9 +3530,10 @@ class V1ItemsApi
         }
     }
     /**
+     * @deprecated
      * updateCategory
      *
-     * Modifies the details of an existing item category.
+     * UpdateCategory
      *
      * @param string $location_id The ID of the category&#39;s associated location. (required)
      * @param string $category_id The ID of the category to edit. (required)
@@ -3449,6 +3543,7 @@ class V1ItemsApi
      */
     public function updateCategory($location_id, $category_id, $body)
     {
+        trigger_error("\x1B[33mCalling deprecated API: V1ItemsApi.updateCategory\x1B[0m", E_USER_DEPRECATED);
         list($response, $statusCode, $httpHeader) = $this->updateCategoryWithHttpInfo ($location_id, $category_id, $body);
         return $response; 
     }
@@ -3457,7 +3552,7 @@ class V1ItemsApi
     /**
      * updateCategoryWithHttpInfo
      *
-     * Modifies the details of an existing item category.
+     * UpdateCategory
      *
      * @param string $location_id The ID of the category&#39;s associated location. (required)
      * @param string $category_id The ID of the category to edit. (required)
@@ -3492,6 +3587,7 @@ class V1ItemsApi
             $headerParams['Accept'] = $_header_accept;
         }
         $headerParams['Content-Type'] = ApiClient::selectHeaderContentType(array('application/json'));
+        $headerParams['Square-Version'] = "2020-02-26";
 
         
         
@@ -3555,9 +3651,10 @@ class V1ItemsApi
         }
     }
     /**
+     * @deprecated
      * updateDiscount
      *
-     * Modifies the details of an existing discount.
+     * UpdateDiscount
      *
      * @param string $location_id The ID of the category&#39;s associated location. (required)
      * @param string $discount_id The ID of the discount to edit. (required)
@@ -3567,6 +3664,7 @@ class V1ItemsApi
      */
     public function updateDiscount($location_id, $discount_id, $body)
     {
+        trigger_error("\x1B[33mCalling deprecated API: V1ItemsApi.updateDiscount\x1B[0m", E_USER_DEPRECATED);
         list($response, $statusCode, $httpHeader) = $this->updateDiscountWithHttpInfo ($location_id, $discount_id, $body);
         return $response; 
     }
@@ -3575,7 +3673,7 @@ class V1ItemsApi
     /**
      * updateDiscountWithHttpInfo
      *
-     * Modifies the details of an existing discount.
+     * UpdateDiscount
      *
      * @param string $location_id The ID of the category&#39;s associated location. (required)
      * @param string $discount_id The ID of the discount to edit. (required)
@@ -3610,6 +3708,7 @@ class V1ItemsApi
             $headerParams['Accept'] = $_header_accept;
         }
         $headerParams['Content-Type'] = ApiClient::selectHeaderContentType(array('application/json'));
+        $headerParams['Square-Version'] = "2020-02-26";
 
         
         
@@ -3673,9 +3772,10 @@ class V1ItemsApi
         }
     }
     /**
+     * @deprecated
      * updateFee
      *
-     * Modifies the details of an existing fee (tax).
+     * UpdateFee
      *
      * @param string $location_id The ID of the fee&#39;s associated location. (required)
      * @param string $fee_id The ID of the fee to edit. (required)
@@ -3685,6 +3785,7 @@ class V1ItemsApi
      */
     public function updateFee($location_id, $fee_id, $body)
     {
+        trigger_error("\x1B[33mCalling deprecated API: V1ItemsApi.updateFee\x1B[0m", E_USER_DEPRECATED);
         list($response, $statusCode, $httpHeader) = $this->updateFeeWithHttpInfo ($location_id, $fee_id, $body);
         return $response; 
     }
@@ -3693,7 +3794,7 @@ class V1ItemsApi
     /**
      * updateFeeWithHttpInfo
      *
-     * Modifies the details of an existing fee (tax).
+     * UpdateFee
      *
      * @param string $location_id The ID of the fee&#39;s associated location. (required)
      * @param string $fee_id The ID of the fee to edit. (required)
@@ -3728,6 +3829,7 @@ class V1ItemsApi
             $headerParams['Accept'] = $_header_accept;
         }
         $headerParams['Content-Type'] = ApiClient::selectHeaderContentType(array('application/json'));
+        $headerParams['Square-Version'] = "2020-02-26";
 
         
         
@@ -3791,9 +3893,10 @@ class V1ItemsApi
         }
     }
     /**
+     * @deprecated
      * updateItem
      *
-     * Modifies the core details of an existing item.
+     * UpdateItem
      *
      * @param string $location_id The ID of the item&#39;s associated location. (required)
      * @param string $item_id The ID of the item to modify. (required)
@@ -3803,6 +3906,7 @@ class V1ItemsApi
      */
     public function updateItem($location_id, $item_id, $body)
     {
+        trigger_error("\x1B[33mCalling deprecated API: V1ItemsApi.updateItem\x1B[0m", E_USER_DEPRECATED);
         list($response, $statusCode, $httpHeader) = $this->updateItemWithHttpInfo ($location_id, $item_id, $body);
         return $response; 
     }
@@ -3811,7 +3915,7 @@ class V1ItemsApi
     /**
      * updateItemWithHttpInfo
      *
-     * Modifies the core details of an existing item.
+     * UpdateItem
      *
      * @param string $location_id The ID of the item&#39;s associated location. (required)
      * @param string $item_id The ID of the item to modify. (required)
@@ -3846,6 +3950,7 @@ class V1ItemsApi
             $headerParams['Accept'] = $_header_accept;
         }
         $headerParams['Content-Type'] = ApiClient::selectHeaderContentType(array('application/json'));
+        $headerParams['Square-Version'] = "2020-02-26";
 
         
         
@@ -3909,9 +4014,10 @@ class V1ItemsApi
         }
     }
     /**
+     * @deprecated
      * updateModifierList
      *
-     * Modifies the details of an existing item modifier list.
+     * UpdateModifierList
      *
      * @param string $location_id The ID of the item&#39;s associated location. (required)
      * @param string $modifier_list_id The ID of the modifier list to edit. (required)
@@ -3921,6 +4027,7 @@ class V1ItemsApi
      */
     public function updateModifierList($location_id, $modifier_list_id, $body)
     {
+        trigger_error("\x1B[33mCalling deprecated API: V1ItemsApi.updateModifierList\x1B[0m", E_USER_DEPRECATED);
         list($response, $statusCode, $httpHeader) = $this->updateModifierListWithHttpInfo ($location_id, $modifier_list_id, $body);
         return $response; 
     }
@@ -3929,7 +4036,7 @@ class V1ItemsApi
     /**
      * updateModifierListWithHttpInfo
      *
-     * Modifies the details of an existing item modifier list.
+     * UpdateModifierList
      *
      * @param string $location_id The ID of the item&#39;s associated location. (required)
      * @param string $modifier_list_id The ID of the modifier list to edit. (required)
@@ -3964,6 +4071,7 @@ class V1ItemsApi
             $headerParams['Accept'] = $_header_accept;
         }
         $headerParams['Content-Type'] = ApiClient::selectHeaderContentType(array('application/json'));
+        $headerParams['Square-Version'] = "2020-02-26";
 
         
         
@@ -4027,9 +4135,10 @@ class V1ItemsApi
         }
     }
     /**
+     * @deprecated
      * updateModifierOption
      *
-     * Modifies the details of an existing item modifier option.
+     * UpdateModifierOption
      *
      * @param string $location_id The ID of the item&#39;s associated location. (required)
      * @param string $modifier_list_id The ID of the modifier list to edit. (required)
@@ -4040,6 +4149,7 @@ class V1ItemsApi
      */
     public function updateModifierOption($location_id, $modifier_list_id, $modifier_option_id, $body)
     {
+        trigger_error("\x1B[33mCalling deprecated API: V1ItemsApi.updateModifierOption\x1B[0m", E_USER_DEPRECATED);
         list($response, $statusCode, $httpHeader) = $this->updateModifierOptionWithHttpInfo ($location_id, $modifier_list_id, $modifier_option_id, $body);
         return $response; 
     }
@@ -4048,7 +4158,7 @@ class V1ItemsApi
     /**
      * updateModifierOptionWithHttpInfo
      *
-     * Modifies the details of an existing item modifier option.
+     * UpdateModifierOption
      *
      * @param string $location_id The ID of the item&#39;s associated location. (required)
      * @param string $modifier_list_id The ID of the modifier list to edit. (required)
@@ -4088,6 +4198,7 @@ class V1ItemsApi
             $headerParams['Accept'] = $_header_accept;
         }
         $headerParams['Content-Type'] = ApiClient::selectHeaderContentType(array('application/json'));
+        $headerParams['Square-Version'] = "2020-02-26";
 
         
         
@@ -4158,9 +4269,10 @@ class V1ItemsApi
         }
     }
     /**
+     * @deprecated
      * updatePage
      *
-     * Modifies the details of a Favorites page in Square Register.
+     * UpdatePage
      *
      * @param string $location_id The ID of the Favorites page&#39;s associated location (required)
      * @param string $page_id The ID of the page to modify. (required)
@@ -4170,6 +4282,7 @@ class V1ItemsApi
      */
     public function updatePage($location_id, $page_id, $body)
     {
+        trigger_error("\x1B[33mCalling deprecated API: V1ItemsApi.updatePage\x1B[0m", E_USER_DEPRECATED);
         list($response, $statusCode, $httpHeader) = $this->updatePageWithHttpInfo ($location_id, $page_id, $body);
         return $response; 
     }
@@ -4178,7 +4291,7 @@ class V1ItemsApi
     /**
      * updatePageWithHttpInfo
      *
-     * Modifies the details of a Favorites page in Square Register.
+     * UpdatePage
      *
      * @param string $location_id The ID of the Favorites page&#39;s associated location (required)
      * @param string $page_id The ID of the page to modify. (required)
@@ -4213,6 +4326,7 @@ class V1ItemsApi
             $headerParams['Accept'] = $_header_accept;
         }
         $headerParams['Content-Type'] = ApiClient::selectHeaderContentType(array('application/json'));
+        $headerParams['Square-Version'] = "2020-02-26";
 
         
         
@@ -4276,9 +4390,10 @@ class V1ItemsApi
         }
     }
     /**
+     * @deprecated
      * updatePageCell
      *
-     * Modifies a cell of a Favorites page in Square Register.
+     * UpdatePageCell
      *
      * @param string $location_id The ID of the Favorites page&#39;s associated location. (required)
      * @param string $page_id The ID of the page the cell belongs to. (required)
@@ -4288,6 +4403,7 @@ class V1ItemsApi
      */
     public function updatePageCell($location_id, $page_id, $body)
     {
+        trigger_error("\x1B[33mCalling deprecated API: V1ItemsApi.updatePageCell\x1B[0m", E_USER_DEPRECATED);
         list($response, $statusCode, $httpHeader) = $this->updatePageCellWithHttpInfo ($location_id, $page_id, $body);
         return $response; 
     }
@@ -4296,7 +4412,7 @@ class V1ItemsApi
     /**
      * updatePageCellWithHttpInfo
      *
-     * Modifies a cell of a Favorites page in Square Register.
+     * UpdatePageCell
      *
      * @param string $location_id The ID of the Favorites page&#39;s associated location. (required)
      * @param string $page_id The ID of the page the cell belongs to. (required)
@@ -4331,6 +4447,7 @@ class V1ItemsApi
             $headerParams['Accept'] = $_header_accept;
         }
         $headerParams['Content-Type'] = ApiClient::selectHeaderContentType(array('application/json'));
+        $headerParams['Square-Version'] = "2020-02-26";
 
         
         
@@ -4394,9 +4511,10 @@ class V1ItemsApi
         }
     }
     /**
+     * @deprecated
      * updateVariation
      *
-     * Modifies the details of an existing item variation.
+     * UpdateVariation
      *
      * @param string $location_id The ID of the item&#39;s associated location. (required)
      * @param string $item_id The ID of the item to modify. (required)
@@ -4407,6 +4525,7 @@ class V1ItemsApi
      */
     public function updateVariation($location_id, $item_id, $variation_id, $body)
     {
+        trigger_error("\x1B[33mCalling deprecated API: V1ItemsApi.updateVariation\x1B[0m", E_USER_DEPRECATED);
         list($response, $statusCode, $httpHeader) = $this->updateVariationWithHttpInfo ($location_id, $item_id, $variation_id, $body);
         return $response; 
     }
@@ -4415,7 +4534,7 @@ class V1ItemsApi
     /**
      * updateVariationWithHttpInfo
      *
-     * Modifies the details of an existing item variation.
+     * UpdateVariation
      *
      * @param string $location_id The ID of the item&#39;s associated location. (required)
      * @param string $item_id The ID of the item to modify. (required)
@@ -4455,6 +4574,7 @@ class V1ItemsApi
             $headerParams['Accept'] = $_header_accept;
         }
         $headerParams['Content-Type'] = ApiClient::selectHeaderContentType(array('application/json'));
+        $headerParams['Square-Version'] = "2020-02-26";
 
         
         

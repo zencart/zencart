@@ -23,13 +23,13 @@ DEFINE('SQL_BANNER_UPDATE_CLICK_COUNT', "update " . TABLE_BANNERS_HISTORY . " se
 DEFINE('SQL_ALSO_PURCHASED', "SELECT p.products_id, p.products_image, max(o.date_purchased) as date_purchased
                      FROM " . TABLE_ORDERS_PRODUCTS . " opa, " . TABLE_ORDERS_PRODUCTS . " opb, "
                             . TABLE_ORDERS . " o, " . TABLE_PRODUCTS . " p
-                     WHERE opa.products_id = '%s'
+                     WHERE opa.products_id = %u
                      AND opa.orders_id = opb.orders_id
-                     AND opb.products_id != '%s'
+                     AND opb.products_id != %u
                      AND opb.products_id = p.products_id
                      AND opb.orders_id = o.orders_id
                      AND p.products_status = 1
                      GROUP BY p.products_id, p.products_image
                      ORDER BY date_purchased desc, p.products_id
-                     LIMIT 50");
+                     LIMIT %u");
 DEFINE('SQL_SHOW_SHOPPING_CART_EMPTY',"select configuration_key, configuration_value from " . TABLE_CONFIGURATION . " where configuration_key RLIKE 'SHOW_SHOPPING_CART_EMPTY' and configuration_value > 0 order by configuration_value");

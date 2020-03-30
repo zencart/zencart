@@ -17,6 +17,7 @@ require DIR_WS_MODULES . zen_get_module_directory('require_languages.php');
 $error = false;
 $enquiry = '';
 $antiSpamFieldName = isset($_SESSION['antispam_fieldname']) ? $_SESSION['antispam_fieldname'] : 'should_be_empty';
+$telephone = '';
 
 if (isset($_GET['action']) && ($_GET['action'] == 'send')) {
     $name = zen_db_prepare_input($_POST['contactname']);
@@ -37,7 +38,7 @@ if (isset($_GET['action']) && ($_GET['action'] == 'send')) {
         } elseif ($antiSpam == '') {
 
             // auto complete when logged in
-            if ($_SESSION['customer_id']) {
+            if (zen_is_logged_in() && !zen_in_guest_checkout()) {
                 $sql = "SELECT customers_id, customers_firstname, customers_lastname, customers_password, customers_email_address, customers_default_address_id, customers_telephone 
                       FROM " . TABLE_CUSTOMERS . "
                       WHERE customers_id = :customersID";

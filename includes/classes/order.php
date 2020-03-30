@@ -3,9 +3,9 @@
  * File contains the order-processing class ("order")
  *
  * @package classes
- * @copyright Copyright 2003-2019 Zen Cart Development Team
+ * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2019 May 23 Modified in v1.5.6b $
+ * @version $Id: DrByte 2019 May 23 Modified in v1.5.7 $
  */
 /**
  * order class
@@ -24,8 +24,6 @@
  * $_SESSION['payment']
  * $_SESSION['sendto']
  * $_SESSION['shipping']
- *
- * @package classes
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
@@ -54,37 +52,38 @@ class order extends base {
   function query($order_id) {
     global $db;
 
-    $order_id = zen_db_prepare_input($order_id);
+    $order_id = (int)$order_id;
     $this->queryReturnFlag = NULL;
     $this->notify('NOTIFY_ORDER_BEFORE_QUERY', array(), $order_id);
     if ($this->queryReturnFlag === TRUE) return false;
 
-    $order_query = "select *
-                        from " . TABLE_ORDERS . "
-                        where orders_id = '" . (int)$order_id . "'";
-
+    $order_query = "SELECT * from " . TABLE_ORDERS . " where orders_id = " . (int)$order_id;
     $order = $db->Execute($order_query);
     if ($order->EOF) return false;
 
-    $totals_query = "select title, text, class, value
-                         from " . TABLE_ORDERS_TOTAL . "
-                         where orders_id = '" . (int)$order_id . "'
-                         order by sort_order";
+    $totals_query = "SELECT title, text, class, value
+                     FROM " . TABLE_ORDERS_TOTAL . "
+                     WHERE orders_id = " . (int)$order_id . "
+                     ORDER BY sort_order";
 
     $totals = $db->Execute($totals_query);
 
     while (!$totals->EOF) {
-
-
       if ($totals->fields['class'] == 'ot_coupon') {
         $coupon_link_query = "SELECT coupon_id
-                from " . TABLE_COUPONS . "
-                where coupon_code ='" . $order->fields['coupon_code'] . "'";
+                FROM " . TABLE_COUPONS . "
+                WHERE coupon_code ='" . zen_db_input($order->fields['coupon_code']) . "'";
         $coupon_link = $db->Execute($coupon_link_query);
-        if (IS_ADMIN_FLAG === true) {
-          $zc_coupon_link = '<a href="javascript:couponpopupWindow(\'' . zen_catalog_href_link(FILENAME_POPUP_COUPON_HELP, 'cID=' . $coupon_link->fields['coupon_id']) . '\')">';
-        } else { 
-          $zc_coupon_link = '<a href="javascript:couponpopupWindow(\'' . zen_href_link(FILENAME_POPUP_COUPON_HELP, 'cID=' . $coupon_link->fields['coupon_id']) . '\')">';
+
+        $zc_coupon_link = '';
+
+        if (!$coupon_link->EOF) {
+          if (IS_ADMIN_FLAG === true) {
+              $zc_coupon_link = '<a href="javascript:couponpopupWindow(\'' . zen_catalog_href_link(FILENAME_POPUP_COUPON_HELP, 'cID=' . $coupon_link->fields['coupon_id']) . '\')">';
+          } else { 
+              $zc_coupon_link = '<a href="javascript:couponpopupWindow(\'' . zen_href_link(FILENAME_POPUP_COUPON_HELP, 'cID=' . $coupon_link->fields['coupon_id']) . '\')">';
+          }
+          $this->notify('NOTIFY_ORDER_COUPON_LINK', $coupon_link->fields, $zc_coupon_link);
         }
       }
       $this->totals[] = array('title' => ($totals->fields['class'] == 'ot_coupon' ? $zc_coupon_link . $totals->fields['title'] . '</a>' : $totals->fields['title']),
@@ -94,30 +93,6 @@ class order extends base {
 			     );
       $totals->MoveNext();
     }
-
-    $order_total_query = "select text, value
-                             from " . TABLE_ORDERS_TOTAL . "
-                             where orders_id = '" . (int)$order_id . "'
-                             and class = 'ot_total'";
-
-
-    $order_total = $db->Execute($order_total_query);
-
-
-    $shipping_method_query = "select title, value
-                                from " . TABLE_ORDERS_TOTAL . "
-                                where orders_id = '" . (int)$order_id . "'
-                                and class = 'ot_shipping'";
-
-
-    $shipping_method = $db->Execute($shipping_method_query);
-
-    $order_status_query = "select orders_status_name
-                             from " . TABLE_ORDERS_STATUS . "
-                             where orders_status_id = '" . $order->fields['orders_status'] . "'
-                             and language_id = '" . (int)$_SESSION['languages_id'] . "'";
-
-    $order_status = $db->Execute($order_status_query);
 
     $this->info = array('currency' => $order->fields['currency'],
                         'currency_value' => $order->fields['currency_value'],
@@ -129,7 +104,7 @@ class order extends base {
                         'cc_type' => $order->fields['cc_type'],
                         'cc_owner' => $order->fields['cc_owner'],
                         'cc_number' => $order->fields['cc_number'],
-                          'cc_cvv' => $order->fields['cc_cvv'],
+                        'cc_cvv' => $order->fields['cc_cvv'],
                         'cc_expires' => $order->fields['cc_expires'],
                         'date_purchased' => $order->fields['date_purchased'],
                         'orders_status' => $order->fields['orders_status'],
@@ -179,9 +154,9 @@ class order extends base {
 
     $index = 0;
     $orders_products_query = "select *
-                                  from " . TABLE_ORDERS_PRODUCTS . "
-                                  where orders_id = '" . (int)$order_id . "'
-                                  order by orders_products_id";
+                              from " . TABLE_ORDERS_PRODUCTS . "
+                              where orders_id = " . (int)$order_id . "
+                              order by orders_products_id";
 
     $orders_products = $db->Execute($orders_products_query);
 
@@ -232,23 +207,24 @@ class order extends base {
 
       $subindex = 0;
       $attributes_query = "select products_options_id, products_options_values_id, products_options, products_options_values,
-                              options_values_price, price_prefix, product_attribute_is_free 
-                              from " . TABLE_ORDERS_PRODUCTS_ATTRIBUTES . "
-                               where orders_id = " . (int)$order_id . "
-                               and orders_products_id = " . (int)$orders_products->fields['orders_products_id'] . "
-                          ORDER BY orders_products_attributes_id ASC";
+                           options_values_price, price_prefix, product_attribute_is_free 
+                           FROM " . TABLE_ORDERS_PRODUCTS_ATTRIBUTES . "
+                           WHERE orders_id = " . (int)$order_id . "
+                           AND orders_products_id = " . (int)$orders_products->fields['orders_products_id'] . "
+                           ORDER BY orders_products_attributes_id ASC";
 
       $attributes = $db->Execute($attributes_query);
       if ($attributes->RecordCount()) {
         while (!$attributes->EOF) {
-          $this->products[$index]['attributes'][$subindex] = array('option' => $attributes->fields['products_options'],
-                                                                   'value' => $attributes->fields['products_options_values'],
-                                                                   'option_id' => $attributes->fields['products_options_id'],
-                                                                   'value_id' => $attributes->fields['products_options_values_id'],
-                                                                   'prefix' => $attributes->fields['price_prefix'],
-                                                                   'price' => $attributes->fields['options_values_price'],
-                                                                   'product_attribute_is_free' => (int)$attributes->fields['product_attribute_is_free'],
-);
+          $this->products[$index]['attributes'][$subindex] = array(
+              'option' => $attributes->fields['products_options'],
+               'value' => $attributes->fields['products_options_values'],
+               'option_id' => $attributes->fields['products_options_id'],
+               'value_id' => $attributes->fields['products_options_values_id'],
+               'prefix' => $attributes->fields['price_prefix'],
+               'price' => $attributes->fields['options_values_price'],
+               'product_attribute_is_free' => (int)$attributes->fields['product_attribute_is_free'],
+          );
 
           $subindex++;
           $attributes->MoveNext();
@@ -276,6 +252,9 @@ class order extends base {
 
   function cart() {
     global $db, $currencies;
+
+    $this->notify('NOTIFY_ORDER_CART_BEGINS');
+
     $billto = (!empty($_SESSION['billto']) ? (int)$_SESSION['billto'] : 0);
     $sendto = (!empty($_SESSION['sendto']) ? (int)$_SESSION['sendto'] : 0);
 
@@ -327,41 +306,31 @@ class order extends base {
     // set default tax calculation for not-logged-in visitors
       $taxCountryId = $taxZoneId = 0;
 
-      // get tax zone info for logged-in visitors
-      if (isset($_SESSION['customer_id']) && (int)$_SESSION['customer_id'] > 0) {
+      // get tax zone info for logged-in visitors (including guests).  Note that a guest-checkout observer
+      // can use 'NOTIFY_ORDER_CART_AFTER_ADDRESSES_SET' to modify the $taxCountryId and/or $taxZoneId.
+      if (zen_is_logged_in()) {
           $taxCountryId = $taxZoneId = -1;
           $tax_address_query = '';
           switch (STORE_PRODUCT_TAX_BASIS) {
               case 'Shipping':
-                  $tax_address_query = "select ab.entry_country_id, ab.entry_zone_id
-                                from " . TABLE_ADDRESS_BOOK . " ab
-                                left join " . TABLE_ZONES . " z on (ab.entry_zone_id = z.zone_id)
-                                where ab.customers_id = " . (int)$_SESSION['customer_id'] . "
-                                and ab.address_book_id = " . ($this->content_type == 'virtual' ? $billto : $sendto);
+                  $address_book_id = ($this->content_type == 'virtual' ? $billto : $sendto);
                   break;
               case 'Billing':
-                  $tax_address_query = "select ab.entry_country_id, ab.entry_zone_id
-                                from " . TABLE_ADDRESS_BOOK . " ab
-                                left join " . TABLE_ZONES . " z on (ab.entry_zone_id = z.zone_id)
-                                where ab.customers_id = " . (int)$_SESSION['customer_id'] . "
-                                and ab.address_book_id = " . (int)$_SESSION['billto'];
+                  $address_book_id = $billto;
                   break;
               case 'Store':
                   if ($billing_address->fields['entry_zone_id'] == STORE_ZONE) {
-
-                      $tax_address_query = "select ab.entry_country_id, ab.entry_zone_id
-                                  from " . TABLE_ADDRESS_BOOK . " ab
-                                  left join " . TABLE_ZONES . " z on (ab.entry_zone_id = z.zone_id)
-                                  where ab.customers_id = " . (int)$_SESSION['customer_id'] . "
-                                  and ab.address_book_id = " . (int)$_SESSION['billto'];
+                      $address_book_id = $billto;
                   } else {
-                      $tax_address_query = "select ab.entry_country_id, ab.entry_zone_id
-                                  from " . TABLE_ADDRESS_BOOK . " ab
-                                  left join " . TABLE_ZONES . " z on (ab.entry_zone_id = z.zone_id)
-                                  where ab.customers_id = " . (int)$_SESSION['customer_id'] . "
-                                  and ab.address_book_id = " . ($this->content_type == 'virtual' ? $billto : $sendto); 
+                      $address_book_id = ($this->content_type == 'virtual' ? $billto : $sendto);
                   }
           }
+          $tax_address_query = "SELECT ab.entry_country_id, ab.entry_zone_id
+                                FROM " . TABLE_ADDRESS_BOOK . " ab
+                                LEFT JOIN " . TABLE_ZONES . " z on (ab.entry_zone_id = z.zone_id)
+                                WHERE ab.customers_id = " . (int)$_SESSION['customer_id'] . "
+                                AND ab.address_book_id = ". $address_book_id;
+
           if ($tax_address_query != '') {
               $tax_address = $db->Execute($tax_address_query);
               if ($tax_address->RecordCount() > 0) {
@@ -375,32 +344,27 @@ class order extends base {
 
     if (isset($_SESSION['cc_id'])) {
       $coupon_code_query = "select coupon_code
-                              from " . TABLE_COUPONS . "
-                              where coupon_id = '" . (int)$_SESSION['cc_id'] . "'";
-
+                            from " . TABLE_COUPONS . "
+                            where coupon_id = '" . (int)$_SESSION['cc_id'] . "'";
       $coupon_code = $db->Execute($coupon_code_query);
-
-
     }
 
-    // -----
+    $shipping_module_code = '';
     // A shipping-module's 'code', if present in the session, **must** contain a '_' character, separating
     // the shipping module's name from the selected method, e.g. 'module_method'.  That '_' cannot be the first
     // character of the 'code' value.
     //
     // If that's not the case, issue a PHP Notice and reset the shipping to its unselected state.
     //
-    if (empty($_SESSION['shipping']['id'])) {
-        $shipping_module_code = '';
-    } else {
-        if (!strpos((string)$_SESSION['shipping']['id'], '_')) {
+    if (isset($_SESSION['shipping'])) {
+        if (!empty($_SESSION['shipping']['id']) && strpos((string)$_SESSION['shipping']['id'], '_')) {
+            $shipping_module_code = $_SESSION['shipping']['id'];
+        } else {
             trigger_error('Malformed value for session-based shipping module; customer will need to re-select: ' . json_encode($_SESSION['shipping']), E_USER_NOTICE);
             unset($_SESSION['shipping']);
-            $shipping_module_code = '';
-        } else {
-            $shipping_module_code = $_SESSION['shipping']['id'];
         }
     }
+
     $this->info = array('order_status' => DEFAULT_ORDERS_STATUS_ID,
                         'currency' => $_SESSION['currency'],
                         'currency_value' => $currencies->currencies[$_SESSION['currency']]['value'],
@@ -511,11 +475,7 @@ class order extends base {
     $index = 0;
     $products = $_SESSION['cart']->get_products();
     for ($i=0, $n=sizeof($products); $i<$n; $i++) {
-      if (($i/2) == floor($i/2)) {
-        $rowClass="rowEven";
-      } else {
-        $rowClass="rowOdd";
-      }
+      $rowClass = ($i / 2) == floor($i / 2) ? "rowEven" : "rowOdd";
       $taxRates = zen_get_multiple_tax_rates($products[$i]['tax_class_id'], $taxCountryId, $taxZoneId);
       $this->products[$index] = array('qty' => $products[$i]['quantity'],
                                       'name' => $products[$i]['name'],
@@ -540,7 +500,6 @@ class order extends base {
                                       'products_quantity_order_max' => (float)$products[$i]['products_quantity_order_max'],
                                       'products_quantity_mixed' => (int)$products[$i]['products_quantity_mixed'],
                                       'products_mixed_discount_quantity' => (int)$products[$i]['products_mixed_discount_quantity'],
-                                      'tax' => zen_get_tax_rate($products[$i]['tax_class_id'], $taxCountryId, $taxZoneId),
                                       );
 
 
@@ -574,19 +533,21 @@ class order extends base {
 
           $attributes = $db->Execute($attributes_query);
 
-          //clr 030714 Determine if attribute is a text attribute and change products array if it is.
-          if ($value == PRODUCTS_OPTIONS_VALUES_TEXT_ID){
+          //clr 030714 Account for text attributes
+          if ($value == PRODUCTS_OPTIONS_VALUES_TEXT_ID) {
             $attr_value = $products[$i]['attributes_values'][$option];
           } else {
             $attr_value = $attributes->fields['products_options_values_name'];
           }
 
-          $this->products[$index]['attributes'][$subindex] = array('option' => $attributes->fields['products_options_name'],
-                                                                   'value' => $attr_value,
-                                                                   'option_id' => $option,
-                                                                   'value_id' => $value,
-                                                                   'prefix' => $attributes->fields['price_prefix'],
-                                                                   'price' => $attributes->fields['options_values_price']);
+          $this->products[$index]['attributes'][$subindex] = array(
+                'option' => $attributes->fields['products_options_name'],
+                'value' => $attr_value,
+                'option_id' => $option,
+                'value_id' => $value,
+                'prefix' => $attributes->fields['price_prefix'],
+                'price' => $attributes->fields['options_values_price'],
+          );
 
           $this->notify('NOTIFY_ORDER_CART_ADD_ATTRIBUTE_LIST', array('index'=>$index, 'subindex'=>$subindex, 'products'=>$products[$i], 'attributes'=>$attributes));
           $subindex++;
@@ -607,9 +568,10 @@ class order extends base {
          * Calculate taxes for this product
          *********************************************/
         $shown_price = (zen_add_tax($this->products[$index]['final_price'] * $this->products[$index]['qty'], $this->products[$index]['tax']))
-        + zen_add_tax($this->products[$index]['onetime_charges'], $this->products[$index]['tax']);
+                 + zen_add_tax($this->products[$index]['onetime_charges'], $this->products[$index]['tax']);
         $this->info['subtotal'] += $shown_price;
         $this->notify('NOTIFIY_ORDER_CART_SUBTOTAL_CALCULATE', array('shown_price'=>$shown_price));
+
         // find product's tax rate and description
         $products_tax = $this->products[$index]['tax'];
         $products_tax_description = $this->products[$index]['tax_description'];
@@ -650,7 +612,7 @@ class order extends base {
     }
 
     if (isset($GLOBALS[$class]) && is_object($GLOBALS[$class])) {
-      if ( isset($GLOBALS[$class]->order_status) && is_numeric($GLOBALS[$class]->order_status) && ($GLOBALS[$class]->order_status > 0) ) {
+      if (isset($GLOBALS[$class]->order_status) && is_numeric($GLOBALS[$class]->order_status) && $GLOBALS[$class]->order_status > 0) {
         $this->info['order_status'] = $GLOBALS[$class]->order_status;
       }
     }
@@ -705,7 +667,7 @@ class order extends base {
                             'delivery_postcode' => $this->delivery['postcode'],
                             'delivery_state' => $this->delivery['state'],
                             'delivery_country' => $this->delivery['country']['title'],
-                            'delivery_address_format_id' => $this->delivery['format_id'],
+                            'delivery_address_format_id' => (int)$this->delivery['format_id'],
                             'billing_name' => $this->billing['firstname'] . ' ' . $this->billing['lastname'],
                             'billing_company' => $this->billing['company'],
                             'billing_street_address' => $this->billing['street_address'],
@@ -730,7 +692,7 @@ class order extends base {
                             'order_tax' => $this->info['tax'],
                             'currency' => $this->info['currency'],
                             'currency_value' => $this->info['currency_value'],
-                            'ip_address' => $_SESSION['customers_ip_address'] . ' - ' . $_SERVER['REMOTE_ADDR']
+                            'ip_address' => $_SESSION['customers_ip_address'] . ' - ' . $_SERVER['REMOTE_ADDR'],
                             );
 
     zen_db_perform(TABLE_ORDERS, $sql_data_array);
@@ -743,7 +705,8 @@ class order extends base {
                               'text' => $zf_ot_modules[$i]['text'],
                               'value' => (is_numeric($zf_ot_modules[$i]['value'])) ? $zf_ot_modules[$i]['value'] : '0',
                               'class' => $zf_ot_modules[$i]['code'],
-                              'sort_order' => $zf_ot_modules[$i]['sort_order']);
+                              'sort_order' => $zf_ot_modules[$i]['sort_order'],
+                             );
 
       zen_db_perform(TABLE_ORDERS_TOTAL, $sql_data_array);
       $ot_insert_id = $db->insert_ID();
@@ -755,7 +718,22 @@ class order extends base {
                             'orders_status_id' => $this->info['order_status'],
                             'date_added' => 'now()',
                             'customer_notified' => $customer_notification,
-                            'comments' => $this->info['comments']);
+                            'comments' => $this->info['comments'],
+                           );
+                            
+    // -----
+    // emp_admin mod support:
+    // If an admin has just placed an order on a customer's behalf, 
+    // note that admin's name/id in the order's 'updated_by' field.
+    //
+    if (isset($_SESSION['emp_admin_id'])) {
+        $admin_id_sql = "SELECT admin_name FROM " . TABLE_ADMIN . " WHERE admin_id = :adminid: LIMIT 1";
+        $admin_id_sql = $db->bindVars($admin_id_sql, ':adminid:', $_SESSION['emp_admin_id'], 'integer');
+        $admin_info = $db->Execute($admin_id_sql);
+        
+        $admin_name = (($admin_info->EOF) ? '???' : $admin_info->fields['admin_name']) . ' [' . $_SESSION['emp_admin_id'] . ']';
+        $sql_data_array['updated_by'] = $admin_name;
+    }
 
     zen_db_perform(TABLE_ORDERS_STATUS_HISTORY, $sql_data_array);
     $osh_insert_id = $db->insert_ID();
@@ -944,7 +922,7 @@ class order extends base {
                                   'attributes_price_letters_free' => $attributes_values->fields['attributes_price_letters_free'],
                                   'products_options_id' => (int)$this->products[$i]['attributes'][$j]['option_id'],
                                   'products_options_values_id' => (int)$this->products[$i]['attributes'][$j]['value_id'],
-                                  'products_prid' => $this->products[$i]['id']
+                                  'products_prid' => $this->products[$i]['id'],
                                   );
 
           zen_db_perform(TABLE_ORDERS_PRODUCTS_ATTRIBUTES, $sql_data_array);
@@ -1067,9 +1045,9 @@ class order extends base {
     $html_msg['EMAIL_ORDER_DATE']      = date(ORDER_EMAIL_DATE_FORMAT);
     $html_msg['EMAIL_TEXT_TELEPHONE']  = EMAIL_TEXT_TELEPHONE;
 
-    $invoiceInfo=EMAIL_TEXT_INVOICE_URL . ' ' . zen_href_link(FILENAME_ACCOUNT_HISTORY_INFO, 'order_id=' . $zf_insert_id, 'SSL', false) . "\n\n";
-    $htmlInvoiceURL=EMAIL_TEXT_INVOICE_URL_CLICK;
-    $htmlInvoiceValue=zen_href_link(FILENAME_ACCOUNT_HISTORY_INFO, 'order_id=' . $zf_insert_id, 'SSL', false);
+    $invoiceInfo = EMAIL_TEXT_INVOICE_URL . ' ' . zen_href_link(FILENAME_ACCOUNT_HISTORY_INFO, 'order_id=' . $zf_insert_id, 'SSL', false) . "\n\n";
+    $htmlInvoiceURL = EMAIL_TEXT_INVOICE_URL_CLICK;
+    $htmlInvoiceValue = zen_href_link(FILENAME_ACCOUNT_HISTORY_INFO, 'order_id=' . $zf_insert_id, 'SSL', false);
 
     //comments area
     $html_msg['ORDER_COMMENTS'] = '';
@@ -1112,14 +1090,14 @@ class order extends base {
     if ($this->content_type != 'virtual' && !$storepickup) {
       $email_order .= "\n" . EMAIL_TEXT_DELIVERY_ADDRESS . "\n" .
       EMAIL_SEPARATOR . "\n" .
-      zen_address_label($_SESSION['customer_id'], $_SESSION['sendto'], 0, '', "\n") . "\n";
+      zen_address_label($_SESSION['customer_id'], $_SESSION['sendto'], false, '', "\n") . "\n";
     }
     $email_order .= EMAIL_TEXT_TELEPHONE . $this->customer['telephone'] . "\n\n";
 
     //addresses area: Billing
     $email_order .= "\n" . EMAIL_TEXT_BILLING_ADDRESS . "\n" .
     EMAIL_SEPARATOR . "\n" .
-    zen_address_label($_SESSION['customer_id'], $_SESSION['billto'], 0, '', "\n") . "\n\n";
+    zen_address_label($_SESSION['customer_id'], $_SESSION['billto'], false, '', "\n") . "\n\n";
     $html_msg['ADDRESS_BILLING_TITLE']   = EMAIL_TEXT_BILLING_ADDRESS;
     $html_msg['ADDRESS_BILLING_DETAIL']  = zen_address_label($_SESSION['customer_id'], $_SESSION['billto'], true, '', "<br />");
 

@@ -4,7 +4,7 @@
  * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Scott C Wilson 2019 Jan 21 Modified in v1.5.6b $
+ * @version $Id: torvista 2019 Aug 08 Modified in v1.5.7 $
  */
 if (!defined('IS_ADMIN_FLAG'))
 {
@@ -15,8 +15,8 @@ define('CONNECTION_TYPE_UNKNOWN', '\'%s\' is not a valid connection type for gen
 
 // added defines for header alt and text
 define('HEADER_ALT_TEXT', 'Admin Powered by Zen Cart :: The Art of E-Commerce');
-define('HEADER_LOGO_WIDTH', '200px');
-define('HEADER_LOGO_HEIGHT', '70px');
+define('HEADER_LOGO_WIDTH', '192');
+define('HEADER_LOGO_HEIGHT', '68');
 define('HEADER_LOGO_IMAGE', 'logo.gif');
 
 // look in your $PATH_LOCALE/locale directory for available locales..
@@ -82,9 +82,6 @@ if (!defined('TEXT_GV_NAME')) {
   require DIR_WS_LANGUAGES . $_SESSION['language'] . '/' . 'gv_name.php';
 }
   define('TEXT_DISCOUNT_COUPON', 'Discount Coupon');
-
-// used for redeem code, redemption code, or redemption id
-  define('TEXT_GV_REDEEM','Redemption Code');
 
 // text for gender
 define('MALE', 'Male');
@@ -212,7 +209,7 @@ define('BOX_LOCALIZATION_ORDERS_STATUS', 'Orders Status');
 // gift vouchers box text
 define('BOX_HEADING_GV_ADMIN', 'Discounts');
 define('BOX_GV_ADMIN_QUEUE',  TEXT_GV_NAMES . ' Queue');
-define('BOX_GV_ADMIN_MAIL', 'Mail ' . TEXT_GV_NAME);
+define('BOX_GV_ADMIN_MAIL', 'Send a ' . TEXT_GV_NAME);
 define('BOX_GV_ADMIN_SENT', TEXT_GV_NAMES . ' sent');
 define('BOX_COUPON_ADMIN','Coupon Admin');
 define('BOX_COUPON_RESTRICT','Coupon Restrictions');
@@ -379,6 +376,7 @@ define('IMAGE_PRODUCTS_TO_CATEGORIES', 'Multiple Categories Link Manager');
 define('IMAGE_ICON_STATUS_ON', 'Status - Enabled');
 define('IMAGE_ICON_STATUS_OFF', 'Status - Disabled');
 define('IMAGE_ICON_LINKED', 'Product is Linked');
+define('IMAGE_ICON_LINKED_CATEGORY', 'Category contains Linked Products');
 
 define('IMAGE_REMOVE_SPECIAL','Remove Special Price Info');
 define('IMAGE_REMOVE_FEATURED','Remove Featured Product Info');
@@ -394,6 +392,7 @@ define('ICON_CROSS', 'False');
 define('ICON_CURRENT_FOLDER', 'Current Folder');
 define('ICON_DELETE', 'Delete');
 define('ICON_EDIT', 'Edit');
+define('ICON_EDIT_METATAGS', 'Edit Meta Tags');
 define('ICON_ERROR', 'Error');
 define('ICON_FILE', 'File');
 define('ICON_FILE_DOWNLOAD', 'Download');
@@ -422,6 +421,7 @@ define('TEXT_DISPLAY_NUMBER_OF_FEATURED', 'Displaying <b>%d</b> to <b>%d</b> (of
 define('TEXT_DISPLAY_NUMBER_OF_LANGUAGES', 'Displaying <b>%d</b> to <b>%d</b> (of <b>%d</b> languages)');
 define('TEXT_DISPLAY_NUMBER_OF_MANUFACTURERS', 'Displaying <b>%d</b> to <b>%d</b> (of <b>%d</b> manufacturers)');
 define('TEXT_DISPLAY_NUMBER_OF_NEWSLETTERS', 'Displaying <b>%d</b> to <b>%d</b> (of <b>%d</b> newsletters)');
+define('TEXT_DISPLAY_NUMBER_OF_OPTIONS', 'Displaying <b>%d</b> to <b>%d</b> (of <b>%d</b> options)');
 define('TEXT_DISPLAY_NUMBER_OF_ORDERS', 'Displaying <b>%d</b> to <b>%d</b> (of <b>%d</b> orders)');
 define('TEXT_DISPLAY_NUMBER_OF_ORDERS_STATUS', 'Displaying <b>%d</b> to <b>%d</b> (of <b>%d</b> orders status)');
 define('TEXT_DISPLAY_NUMBER_OF_PRICING_GROUPS', 'Displaying <b>%d</b> to <b>%d</b> (of <b>%d</b> pricing groups)');
@@ -458,6 +458,7 @@ define('ERROR_NO_DEFAULT_CURRENCY_DEFINED', 'Error: There is currently no defaul
 define('TEXT_NONE', '--none--');
 define('TEXT_TOP', 'Top');
 define('PLEASE_SELECT', 'Please select ...');
+define('TEXT_CUSTOMER','Customer');
 
 define('ERROR_DESTINATION_DOES_NOT_EXIST', 'Error: Destination does not exist %s');
 define('ERROR_DESTINATION_NOT_WRITEABLE', 'Error: Destination not writeable %s');
@@ -666,7 +667,8 @@ define('ENTRY_EMAIL_TEXT_DISPLAY','TEXT-Only');
 define('ENTRY_EMAIL_NONE_DISPLAY','Never');
 define('ENTRY_EMAIL_OPTOUT_DISPLAY','Opted Out of Newsletters');
 define('ENTRY_NOTHING_TO_SEND','You haven\'t entered any content for your message');
- define('EMAIL_SEND_FAILED','ERROR: Failed sending email to: "%s" <%s> with subject: "%s"');
+define('EMAIL_SEND_FAILED','ERROR: Failed sending email to: "%s" <%s> with subject: "%s"');
+define('EMAIL_SALUTATION', 'Dear');
 
   define('EDITOR_NONE', 'Plain Text');
   define('TEXT_EDITOR_INFO', 'Text Editor');
@@ -689,8 +691,9 @@ define('ENTRY_NOTHING_TO_SEND','You haven\'t entered any content for your messag
   define('TEXT_PRODUCTS_IMAGE_MANUAL', '<br /><strong>Or, select an existing image file from server, filename:</strong>');
   define('TEXT_IMAGES_OVERWRITE', '<br /><strong>Overwrite Existing Image on Server?</strong>');
   define('TEXT_IMAGE_OVERWRITE_WARNING','WARNING: FILENAME was updated but not overwritten ');
-  define('TEXT_IMAGES_DELETE', '<strong>Delete Image?</strong> NOTE: Removes Image from Product, Image is NOT removed from server:');
+  define('TEXT_IMAGES_DELETE', '<strong>Remove Image?</strong> Note: Removes image from product (image is NOT deleted/removed from server):');
   define('TEXT_IMAGE_CURRENT', 'Image Name: ');
+  define('TEXT_IMAGE_NONEXISTENT', 'IMAGE FILE IS MISSING');
 
   define('ERROR_DEFINE_OPTION_NAMES', 'Warning: No Option Names have been defined');
   define('ERROR_DEFINE_OPTION_VALUES', 'Warning: No Option Values have been defined');
@@ -755,8 +758,10 @@ define('ENTRY_NOTHING_TO_SEND','You haven\'t entered any content for your messag
 
   define('WARNING_WELCOME_DISCOUNT_COUPON_EXPIRES_IN', 'WARNING! Welcome Email Discount Coupon expires in %s days');
 
-define('WARNING_ADMIN_FOLDERNAME_VULNERABLE', 'CAUTION: <a href="http://tutorials.zen-cart.com/index.php?article=33" target="_blank">Your /admin/ foldername should be renamed to something less common</a>, to prevent unauthorized access.');
-define('WARNING_EMAIL_SYSTEM_DISABLED', 'WARNING: The email subsystem is turned off. No emails will be sent until it is re-enabled in Admin->Configuration->Email Options.');
+define('WARNING_ADMIN_FOLDERNAME_VULNERABLE', 'CAUTION: <a href="https://tutorials.zen-cart.com/index.php?article=33" target="_blank">Your /admin/ foldername should be renamed to something less common</a>, to prevent unauthorized access.');
+define('WARNING_EMAIL_SYSTEM_DISABLED', 'WARNING: The email subsystem is disabled. No emails will be sent until it is re-enabled in Admin->Configuration->Email Options.');
+define('WARNING_EMAIL_SYSTEM_DEVELOPER_OVERRIDE', 'WARNING: The sending of emails has been disabled as developer switch "DEVELOPER_OVERRIDE_EMAIL_STATUS" is set to "false".');
+define('WARNING_EMAIL_SYSTEM_DEVELOPER_EMAIL', 'WARNING: ALL emails will be sent to %s (as defined in "DEVELOPER_OVERRIDE_EMAIL_ADDRESS").');
 define('TEXT_CURRENT_VER_IS', 'You are presently using: ');
 define('ERROR_NO_DATA_TO_SAVE', 'ERROR: The data you submitted was found to be empty. YOUR CHANGES HAVE *NOT* BEEN SAVED. You may have a problem with your browser or your internet connection.');
 define('TEXT_HIDDEN', 'Hidden');
@@ -767,13 +772,15 @@ define('TEXT_NOEMAIL', 'No Email');
 
 define('BOX_HEADING_PRODUCT_TYPES', 'Product Types');
 
-define('ERROR_DATABASE_MAINTENANCE_NEEDED', '<a href="http://www.zen-cart.com/content.php?334-ERROR-0071-There-appears-to-be-a-problem-with-the-database-Maintenance-is-required" target="_blank">ERROR 0071: There appears to be a problem with the database. Maintenance is required.</a>');
+define('ERROR_DATABASE_MAINTENANCE_NEEDED', '<a href="https://docs.zen-cart.com/user/troubleshooting/error_71_maintenance_required/" target="_blank">ERROR 0071 There appears to be a problem with the database. Maintenance is required.</a>');
 
 // moved from currencies file:
 define('TEXT_INFO_CURRENCY_UPDATED', 'The exchange rate for %s (%s) was updated successfully to %s via %s.');
 define('ERROR_CURRENCY_INVALID', 'Error: The exchange rate for %s (%s) was not updated via %s. Is it a valid currency code?');
 define('WARNING_PRIMARY_SERVER_FAILED', 'Warning: The primary exchange rate server (%s) failed for %s (%s) - trying the secondary exchange rate server.');
 
+// Set to empty string if alpha sorting not desired
+define('MENU_CATEGORIES_TO_SORT_BY_NAME','reports,tools'); 
 
 ///////////////////////////////////////////////////////////
 // include additional files:

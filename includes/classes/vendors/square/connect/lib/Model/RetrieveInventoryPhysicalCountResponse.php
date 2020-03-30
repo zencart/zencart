@@ -61,7 +61,7 @@ class RetrieveInventoryPhysicalCountResponse implements ArrayAccess
       */
     protected $errors;
     /**
-      * $count The requested [InventoryPhysicalCount](#type-inventoryphysicalcount).
+      * $count The requested `InventoryPhysicalCount`.
       * @var \SquareConnect\Model\InventoryPhysicalCount
       */
     protected $count;
@@ -115,7 +115,7 @@ class RetrieveInventoryPhysicalCountResponse implements ArrayAccess
   
     /**
      * Sets count
-     * @param \SquareConnect\Model\InventoryPhysicalCount $count The requested [InventoryPhysicalCount](#type-inventoryphysicalcount).
+     * @param \SquareConnect\Model\InventoryPhysicalCount $count The requested `InventoryPhysicalCount`.
      * @return $this
      */
     public function setCount($count)

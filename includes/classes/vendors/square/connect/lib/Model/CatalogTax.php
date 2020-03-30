@@ -72,17 +72,17 @@ class CatalogTax implements ArrayAccess
     );
   
     /**
-      * $name The tax's name. Searchable.
+      * $name The tax's name. Searchable. This field has max length of 255 Unicode code points.
       * @var string
       */
     protected $name;
     /**
-      * $calculation_phase Whether the tax is calculated based on a payment's subtotal or total. See [TaxCalculationPhase](#type-taxcalculationphase) for all possible values.
+      * $calculation_phase Whether the tax is calculated based on a payment's subtotal or total. See [TaxCalculationPhase](#type-taxcalculationphase) for possible values
       * @var string
       */
     protected $calculation_phase;
     /**
-      * $inclusion_type Whether the tax is `ADDITIVE` or `INCLUSIVE`. See [TaxInclusionType](#type-taxinclusiontype) for all possible values.
+      * $inclusion_type Whether the tax is `ADDITIVE` or `INCLUSIVE`. See [TaxInclusionType](#type-taxinclusiontype) for possible values
       * @var string
       */
     protected $inclusion_type;
@@ -92,7 +92,7 @@ class CatalogTax implements ArrayAccess
       */
     protected $percentage;
     /**
-      * $applies_to_custom_amounts If `true`, the fee applies to custom amounts entered into the Square Point of Sale app that are not associated with a particular [CatalogItem](#type-catalogitem).
+      * $applies_to_custom_amounts If `true`, the fee applies to custom amounts entered into the Square Point of Sale app that are not associated with a particular `CatalogItem`.
       * @var bool
       */
     protected $applies_to_custom_amounts;
@@ -152,7 +152,7 @@ class CatalogTax implements ArrayAccess
   
     /**
      * Sets name
-     * @param string $name The tax's name. Searchable.
+     * @param string $name The tax's name. Searchable. This field has max length of 255 Unicode code points.
      * @return $this
      */
     public function setName($name)
@@ -171,7 +171,7 @@ class CatalogTax implements ArrayAccess
   
     /**
      * Sets calculation_phase
-     * @param string $calculation_phase Whether the tax is calculated based on a payment's subtotal or total. See [TaxCalculationPhase](#type-taxcalculationphase) for all possible values.
+     * @param string $calculation_phase Whether the tax is calculated based on a payment's subtotal or total. See [TaxCalculationPhase](#type-taxcalculationphase) for possible values
      * @return $this
      */
     public function setCalculationPhase($calculation_phase)
@@ -190,7 +190,7 @@ class CatalogTax implements ArrayAccess
   
     /**
      * Sets inclusion_type
-     * @param string $inclusion_type Whether the tax is `ADDITIVE` or `INCLUSIVE`. See [TaxInclusionType](#type-taxinclusiontype) for all possible values.
+     * @param string $inclusion_type Whether the tax is `ADDITIVE` or `INCLUSIVE`. See [TaxInclusionType](#type-taxinclusiontype) for possible values
      * @return $this
      */
     public function setInclusionType($inclusion_type)
@@ -228,7 +228,7 @@ class CatalogTax implements ArrayAccess
   
     /**
      * Sets applies_to_custom_amounts
-     * @param bool $applies_to_custom_amounts If `true`, the fee applies to custom amounts entered into the Square Point of Sale app that are not associated with a particular [CatalogItem](#type-catalogitem).
+     * @param bool $applies_to_custom_amounts If `true`, the fee applies to custom amounts entered into the Square Point of Sale app that are not associated with a particular `CatalogItem`.
      * @return $this
      */
     public function setAppliesToCustomAmounts($applies_to_custom_amounts)

@@ -40,7 +40,6 @@ define('TEXT_DATE_ADDED', 'Date Added:');
 define('TEXT_LAST_MODIFIED', 'Last Modified:');
 define('TEXT_PRODUCTS', 'Products:');
 define('TEXT_PRODUCTS_IMAGE_DIR', 'Upload to directory:');
-define('TEXT_IMAGE_NONEXISTENT', 'IMAGE DOES NOT EXIST');
 define('TEXT_MASTER_TYPE', 'This product type should be considered a sub-type of ');
 
 define('TEXT_NEW_INTRO', 'Please fill out the following information for the new manufacturer');
@@ -59,4 +58,3 @@ define('ERROR_DIRECTORY_NOT_WRITEABLE', 'Error: I can not write to this director
 define('ERROR_DIRECTORY_DOES_NOT_EXIST', 'Error: Directory does not exist: %s');
 
 define('IMAGE_LAYOUT', 'Layout Settings');
-?>

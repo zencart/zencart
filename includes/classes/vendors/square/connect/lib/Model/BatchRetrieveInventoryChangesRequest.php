@@ -76,22 +76,22 @@ class BatchRetrieveInventoryChangesRequest implements ArrayAccess
     );
   
     /**
-      * $catalog_object_ids Filters results by [CatalogObject](#type-catalogobject) ID. Only applied when set. Default: unset.
+      * $catalog_object_ids Filters results by `CatalogObject` ID. Only applied when set. Default: unset.
       * @var string[]
       */
     protected $catalog_object_ids;
     /**
-      * $location_ids Filters results by [Location](#type-location) ID. Only applied when set. Default: unset.
+      * $location_ids Filters results by `Location` ID. Only applied when set. Default: unset.
       * @var string[]
       */
     protected $location_ids;
     /**
-      * $types Filters results by [InventoryChangeType](#type-inventorychangetype). Default: [`PHYSICAL_COUNT`, `ADJUSTMENT`]. `TRANSFER` is not supported as a filter.
+      * $types Filters results by `InventoryChangeType`. Default: [`PHYSICAL_COUNT`, `ADJUSTMENT`]. `TRANSFER` is not supported as a filter. See [InventoryChangeType](#type-inventorychangetype) for possible values
       * @var string[]
       */
     protected $types;
     /**
-      * $states Filters `ADJUSTMENT` query results by [InventoryState](#type-inventorystate). Only applied when set. Default: unset.
+      * $states Filters `ADJUSTMENT` query results by `InventoryState`. Only applied when set. Default: unset. See [InventoryState](#type-inventorystate) for possible values
       * @var string[]
       */
     protected $states;
@@ -106,7 +106,7 @@ class BatchRetrieveInventoryChangesRequest implements ArrayAccess
       */
     protected $updated_before;
     /**
-      * $cursor A pagination cursor returned by a previous call to this endpoint. Provide this to retrieve the next set of results for the original query.  See [Paginating results](#paginatingresults) for more information.
+      * $cursor A pagination cursor returned by a previous call to this endpoint. Provide this to retrieve the next set of results for the original query.  See the [Pagination](https://developer.squareup.com/docs/working-with-apis/pagination) guide for more information.
       * @var string
       */
     protected $cursor;
@@ -166,7 +166,7 @@ class BatchRetrieveInventoryChangesRequest implements ArrayAccess
   
     /**
      * Sets catalog_object_ids
-     * @param string[] $catalog_object_ids Filters results by [CatalogObject](#type-catalogobject) ID. Only applied when set. Default: unset.
+     * @param string[] $catalog_object_ids Filters results by `CatalogObject` ID. Only applied when set. Default: unset.
      * @return $this
      */
     public function setCatalogObjectIds($catalog_object_ids)
@@ -185,7 +185,7 @@ class BatchRetrieveInventoryChangesRequest implements ArrayAccess
   
     /**
      * Sets location_ids
-     * @param string[] $location_ids Filters results by [Location](#type-location) ID. Only applied when set. Default: unset.
+     * @param string[] $location_ids Filters results by `Location` ID. Only applied when set. Default: unset.
      * @return $this
      */
     public function setLocationIds($location_ids)
@@ -204,7 +204,7 @@ class BatchRetrieveInventoryChangesRequest implements ArrayAccess
   
     /**
      * Sets types
-     * @param string[] $types Filters results by [InventoryChangeType](#type-inventorychangetype). Default: [`PHYSICAL_COUNT`, `ADJUSTMENT`]. `TRANSFER` is not supported as a filter.
+     * @param string[] $types Filters results by `InventoryChangeType`. Default: [`PHYSICAL_COUNT`, `ADJUSTMENT`]. `TRANSFER` is not supported as a filter. See [InventoryChangeType](#type-inventorychangetype) for possible values
      * @return $this
      */
     public function setTypes($types)
@@ -223,7 +223,7 @@ class BatchRetrieveInventoryChangesRequest implements ArrayAccess
   
     /**
      * Sets states
-     * @param string[] $states Filters `ADJUSTMENT` query results by [InventoryState](#type-inventorystate). Only applied when set. Default: unset.
+     * @param string[] $states Filters `ADJUSTMENT` query results by `InventoryState`. Only applied when set. Default: unset. See [InventoryState](#type-inventorystate) for possible values
      * @return $this
      */
     public function setStates($states)
@@ -280,7 +280,7 @@ class BatchRetrieveInventoryChangesRequest implements ArrayAccess
   
     /**
      * Sets cursor
-     * @param string $cursor A pagination cursor returned by a previous call to this endpoint. Provide this to retrieve the next set of results for the original query.  See [Paginating results](#paginatingresults) for more information.
+     * @param string $cursor A pagination cursor returned by a previous call to this endpoint. Provide this to retrieve the next set of results for the original query.  See the [Pagination](https://developer.squareup.com/docs/working-with-apis/pagination) guide for more information.
      * @return $this
      */
     public function setCursor($cursor)

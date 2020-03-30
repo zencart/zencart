@@ -67,7 +67,7 @@ class V1EmployeesApi
     /**
      * createEmployee
      *
-     * Creates an employee for a business.
+     * CreateEmployee
      *
      * @param \SquareConnect\Model\V1Employee $body An object containing the fields to POST for the request.  See the corresponding object definition for field details. (required)
      * @return \SquareConnect\Model\V1Employee
@@ -83,7 +83,7 @@ class V1EmployeesApi
     /**
      * createEmployeeWithHttpInfo
      *
-     * Creates an employee for a business.
+     * CreateEmployee
      *
      * @param \SquareConnect\Model\V1Employee $body An object containing the fields to POST for the request.  See the corresponding object definition for field details. (required)
      * @return Array of \SquareConnect\Model\V1Employee, HTTP status code, HTTP response headers (array of strings)
@@ -108,6 +108,7 @@ class V1EmployeesApi
             $headerParams['Accept'] = $_header_accept;
         }
         $headerParams['Content-Type'] = ApiClient::selectHeaderContentType(array('application/json'));
+        $headerParams['Square-Version'] = "2020-02-26";
 
         
         
@@ -159,7 +160,7 @@ class V1EmployeesApi
     /**
      * createEmployeeRole
      *
-     * Creates an employee role you can then assign to employees.
+     * CreateEmployeeRole
      *
      * @param \SquareConnect\Model\V1EmployeeRole $employee_role An EmployeeRole object with a name and permissions, and an optional owner flag. (required)
      * @return \SquareConnect\Model\V1EmployeeRole
@@ -175,7 +176,7 @@ class V1EmployeesApi
     /**
      * createEmployeeRoleWithHttpInfo
      *
-     * Creates an employee role you can then assign to employees.
+     * CreateEmployeeRole
      *
      * @param \SquareConnect\Model\V1EmployeeRole $employee_role An EmployeeRole object with a name and permissions, and an optional owner flag. (required)
      * @return Array of \SquareConnect\Model\V1EmployeeRole, HTTP status code, HTTP response headers (array of strings)
@@ -200,6 +201,7 @@ class V1EmployeesApi
             $headerParams['Accept'] = $_header_accept;
         }
         $headerParams['Content-Type'] = ApiClient::selectHeaderContentType(array('application/json'));
+        $headerParams['Square-Version'] = "2020-02-26";
 
         
         
@@ -249,9 +251,10 @@ class V1EmployeesApi
         }
     }
     /**
+     * @deprecated
      * createTimecard
      *
-     * Creates a timecard for an employee. Each timecard corresponds to a single shift.
+     * CreateTimecard
      *
      * @param \SquareConnect\Model\V1Timecard $body An object containing the fields to POST for the request.  See the corresponding object definition for field details. (required)
      * @return \SquareConnect\Model\V1Timecard
@@ -259,6 +262,7 @@ class V1EmployeesApi
      */
     public function createTimecard($body)
     {
+        trigger_error("\x1B[33mCalling deprecated API: V1EmployeesApi.createTimecard\x1B[0m", E_USER_DEPRECATED);
         list($response, $statusCode, $httpHeader) = $this->createTimecardWithHttpInfo ($body);
         return $response; 
     }
@@ -267,7 +271,7 @@ class V1EmployeesApi
     /**
      * createTimecardWithHttpInfo
      *
-     * Creates a timecard for an employee. Each timecard corresponds to a single shift.
+     * CreateTimecard
      *
      * @param \SquareConnect\Model\V1Timecard $body An object containing the fields to POST for the request.  See the corresponding object definition for field details. (required)
      * @return Array of \SquareConnect\Model\V1Timecard, HTTP status code, HTTP response headers (array of strings)
@@ -292,6 +296,7 @@ class V1EmployeesApi
             $headerParams['Accept'] = $_header_accept;
         }
         $headerParams['Content-Type'] = ApiClient::selectHeaderContentType(array('application/json'));
+        $headerParams['Square-Version'] = "2020-02-26";
 
         
         
@@ -341,9 +346,10 @@ class V1EmployeesApi
         }
     }
     /**
+     * @deprecated
      * deleteTimecard
      *
-     * Deletes a timecard. Deleted timecards are still accessible from Connect API endpoints, but the value of their deleted field is set to true. See Handling deleted timecards for more information.
+     * DeleteTimecard
      *
      * @param string $timecard_id The ID of the timecard to delete. (required)
      * @return object
@@ -351,6 +357,7 @@ class V1EmployeesApi
      */
     public function deleteTimecard($timecard_id)
     {
+        trigger_error("\x1B[33mCalling deprecated API: V1EmployeesApi.deleteTimecard\x1B[0m", E_USER_DEPRECATED);
         list($response, $statusCode, $httpHeader) = $this->deleteTimecardWithHttpInfo ($timecard_id);
         return $response; 
     }
@@ -359,7 +366,7 @@ class V1EmployeesApi
     /**
      * deleteTimecardWithHttpInfo
      *
-     * Deletes a timecard. Deleted timecards are still accessible from Connect API endpoints, but the value of their deleted field is set to true. See Handling deleted timecards for more information.
+     * DeleteTimecard
      *
      * @param string $timecard_id The ID of the timecard to delete. (required)
      * @return Array of object, HTTP status code, HTTP response headers (array of strings)
@@ -384,6 +391,7 @@ class V1EmployeesApi
             $headerParams['Accept'] = $_header_accept;
         }
         $headerParams['Content-Type'] = ApiClient::selectHeaderContentType(array('application/json'));
+        $headerParams['Square-Version'] = "2020-02-26";
 
         
         
@@ -436,9 +444,10 @@ class V1EmployeesApi
         }
     }
     /**
+     * @deprecated
      * listCashDrawerShifts
      *
-     * Provides the details for all of a location's cash drawer shifts during a date range. The date range you specify cannot exceed 90 days.
+     * ListCashDrawerShifts
      *
      * @param string $location_id The ID of the location to list cash drawer shifts for. (required)
      * @param string $order The order in which cash drawer shifts are listed in the response, based on their created_at field. Default value: ASC (optional)
@@ -449,6 +458,7 @@ class V1EmployeesApi
      */
     public function listCashDrawerShifts($location_id, $order = null, $begin_time = null, $end_time = null)
     {
+        trigger_error("\x1B[33mCalling deprecated API: V1EmployeesApi.listCashDrawerShifts\x1B[0m", E_USER_DEPRECATED);
         list($response, $statusCode, $httpHeader) = $this->listCashDrawerShiftsWithHttpInfo ($location_id, $order, $begin_time, $end_time);
         return $response; 
     }
@@ -457,7 +467,7 @@ class V1EmployeesApi
     /**
      * listCashDrawerShiftsWithHttpInfo
      *
-     * Provides the details for all of a location's cash drawer shifts during a date range. The date range you specify cannot exceed 90 days.
+     * ListCashDrawerShifts
      *
      * @param string $location_id The ID of the location to list cash drawer shifts for. (required)
      * @param string $order The order in which cash drawer shifts are listed in the response, based on their created_at field. Default value: ASC (optional)
@@ -485,6 +495,7 @@ class V1EmployeesApi
             $headerParams['Accept'] = $_header_accept;
         }
         $headerParams['Content-Type'] = ApiClient::selectHeaderContentType(array('application/json'));
+        $headerParams['Square-Version'] = "2020-02-26";
 
         // query params
         if ($order !== null) {
@@ -548,7 +559,7 @@ class V1EmployeesApi
     /**
      * listEmployeeRoles
      *
-     * Provides summary information for all of a business's employee roles.
+     * ListEmployeeRoles
      *
      * @param string $order The order in which employees are listed in the response, based on their created_at field.Default value: ASC (optional)
      * @param int $limit The maximum integer number of employee entities to return in a single response. Default 100, maximum 200. (optional)
@@ -566,7 +577,7 @@ class V1EmployeesApi
     /**
      * listEmployeeRolesWithHttpInfo
      *
-     * Provides summary information for all of a business's employee roles.
+     * ListEmployeeRoles
      *
      * @param string $order The order in which employees are listed in the response, based on their created_at field.Default value: ASC (optional)
      * @param int $limit The maximum integer number of employee entities to return in a single response. Default 100, maximum 200. (optional)
@@ -589,6 +600,7 @@ class V1EmployeesApi
             $headerParams['Accept'] = $_header_accept;
         }
         $headerParams['Content-Type'] = ApiClient::selectHeaderContentType(array('application/json'));
+        $headerParams['Square-Version'] = "2020-02-26";
 
         // query params
         if ($order !== null) {
@@ -645,7 +657,7 @@ class V1EmployeesApi
     /**
      * listEmployees
      *
-     * Provides summary information for all of a business's employees.
+     * ListEmployees
      *
      * @param string $order The order in which employees are listed in the response, based on their created_at field.      Default value: ASC (optional)
      * @param string $begin_updated_at If filtering results by their updated_at field, the beginning of the requested reporting period, in ISO 8601 format (optional)
@@ -669,7 +681,7 @@ class V1EmployeesApi
     /**
      * listEmployeesWithHttpInfo
      *
-     * Provides summary information for all of a business's employees.
+     * ListEmployees
      *
      * @param string $order The order in which employees are listed in the response, based on their created_at field.      Default value: ASC (optional)
      * @param string $begin_updated_at If filtering results by their updated_at field, the beginning of the requested reporting period, in ISO 8601 format (optional)
@@ -698,6 +710,7 @@ class V1EmployeesApi
             $headerParams['Accept'] = $_header_accept;
         }
         $headerParams['Content-Type'] = ApiClient::selectHeaderContentType(array('application/json'));
+        $headerParams['Square-Version'] = "2020-02-26";
 
         // query params
         if ($order !== null) {
@@ -770,9 +783,10 @@ class V1EmployeesApi
         }
     }
     /**
+     * @deprecated
      * listTimecardEvents
      *
-     * Provides summary information for all events associated with a particular timecard.
+     * ListTimecardEvents
      *
      * @param string $timecard_id The ID of the timecard to list events for. (required)
      * @return \SquareConnect\Model\V1TimecardEvent[]
@@ -780,6 +794,7 @@ class V1EmployeesApi
      */
     public function listTimecardEvents($timecard_id)
     {
+        trigger_error("\x1B[33mCalling deprecated API: V1EmployeesApi.listTimecardEvents\x1B[0m", E_USER_DEPRECATED);
         list($response, $statusCode, $httpHeader) = $this->listTimecardEventsWithHttpInfo ($timecard_id);
         return $response; 
     }
@@ -788,7 +803,7 @@ class V1EmployeesApi
     /**
      * listTimecardEventsWithHttpInfo
      *
-     * Provides summary information for all events associated with a particular timecard.
+     * ListTimecardEvents
      *
      * @param string $timecard_id The ID of the timecard to list events for. (required)
      * @return Array of \SquareConnect\Model\V1TimecardEvent[], HTTP status code, HTTP response headers (array of strings)
@@ -813,6 +828,7 @@ class V1EmployeesApi
             $headerParams['Accept'] = $_header_accept;
         }
         $headerParams['Content-Type'] = ApiClient::selectHeaderContentType(array('application/json'));
+        $headerParams['Square-Version'] = "2020-02-26";
 
         
         
@@ -865,9 +881,10 @@ class V1EmployeesApi
         }
     }
     /**
+     * @deprecated
      * listTimecards
      *
-     * Provides summary information for all of a business's employee timecards.
+     * ListTimecards
      *
      * @param string $order The order in which timecards are listed in the response, based on their created_at field. (optional)
      * @param string $employee_id If provided, the endpoint returns only timecards for the employee with the specified ID. (optional)
@@ -885,6 +902,7 @@ class V1EmployeesApi
      */
     public function listTimecards($order = null, $employee_id = null, $begin_clockin_time = null, $end_clockin_time = null, $begin_clockout_time = null, $end_clockout_time = null, $begin_updated_at = null, $end_updated_at = null, $deleted = null, $limit = null, $batch_token = null)
     {
+        trigger_error("\x1B[33mCalling deprecated API: V1EmployeesApi.listTimecards\x1B[0m", E_USER_DEPRECATED);
         list($response, $statusCode, $httpHeader) = $this->listTimecardsWithHttpInfo ($order, $employee_id, $begin_clockin_time, $end_clockin_time, $begin_clockout_time, $end_clockout_time, $begin_updated_at, $end_updated_at, $deleted, $limit, $batch_token);
         return $response; 
     }
@@ -893,7 +911,7 @@ class V1EmployeesApi
     /**
      * listTimecardsWithHttpInfo
      *
-     * Provides summary information for all of a business's employee timecards.
+     * ListTimecards
      *
      * @param string $order The order in which timecards are listed in the response, based on their created_at field. (optional)
      * @param string $employee_id If provided, the endpoint returns only timecards for the employee with the specified ID. (optional)
@@ -924,6 +942,7 @@ class V1EmployeesApi
             $headerParams['Accept'] = $_header_accept;
         }
         $headerParams['Content-Type'] = ApiClient::selectHeaderContentType(array('application/json'));
+        $headerParams['Square-Version'] = "2020-02-26";
 
         // query params
         if ($order !== null) {
@@ -1002,9 +1021,10 @@ class V1EmployeesApi
         }
     }
     /**
+     * @deprecated
      * retrieveCashDrawerShift
      *
-     * Provides the details for a single cash drawer shift, including all events that occurred during the shift.
+     * RetrieveCashDrawerShift
      *
      * @param string $location_id The ID of the location to list cash drawer shifts for. (required)
      * @param string $shift_id The shift&#39;s ID. (required)
@@ -1013,6 +1033,7 @@ class V1EmployeesApi
      */
     public function retrieveCashDrawerShift($location_id, $shift_id)
     {
+        trigger_error("\x1B[33mCalling deprecated API: V1EmployeesApi.retrieveCashDrawerShift\x1B[0m", E_USER_DEPRECATED);
         list($response, $statusCode, $httpHeader) = $this->retrieveCashDrawerShiftWithHttpInfo ($location_id, $shift_id);
         return $response; 
     }
@@ -1021,7 +1042,7 @@ class V1EmployeesApi
     /**
      * retrieveCashDrawerShiftWithHttpInfo
      *
-     * Provides the details for a single cash drawer shift, including all events that occurred during the shift.
+     * RetrieveCashDrawerShift
      *
      * @param string $location_id The ID of the location to list cash drawer shifts for. (required)
      * @param string $shift_id The shift&#39;s ID. (required)
@@ -1051,6 +1072,7 @@ class V1EmployeesApi
             $headerParams['Accept'] = $_header_accept;
         }
         $headerParams['Content-Type'] = ApiClient::selectHeaderContentType(array('application/json'));
+        $headerParams['Square-Version'] = "2020-02-26";
 
         
         
@@ -1112,7 +1134,7 @@ class V1EmployeesApi
     /**
      * retrieveEmployee
      *
-     * Provides the details for a single employee.
+     * RetrieveEmployee
      *
      * @param string $employee_id The employee&#39;s ID. (required)
      * @return \SquareConnect\Model\V1Employee
@@ -1128,7 +1150,7 @@ class V1EmployeesApi
     /**
      * retrieveEmployeeWithHttpInfo
      *
-     * Provides the details for a single employee.
+     * RetrieveEmployee
      *
      * @param string $employee_id The employee&#39;s ID. (required)
      * @return Array of \SquareConnect\Model\V1Employee, HTTP status code, HTTP response headers (array of strings)
@@ -1153,6 +1175,7 @@ class V1EmployeesApi
             $headerParams['Accept'] = $_header_accept;
         }
         $headerParams['Content-Type'] = ApiClient::selectHeaderContentType(array('application/json'));
+        $headerParams['Square-Version'] = "2020-02-26";
 
         
         
@@ -1207,7 +1230,7 @@ class V1EmployeesApi
     /**
      * retrieveEmployeeRole
      *
-     * Provides the details for a single employee role.
+     * RetrieveEmployeeRole
      *
      * @param string $role_id The role&#39;s ID. (required)
      * @return \SquareConnect\Model\V1EmployeeRole
@@ -1223,7 +1246,7 @@ class V1EmployeesApi
     /**
      * retrieveEmployeeRoleWithHttpInfo
      *
-     * Provides the details for a single employee role.
+     * RetrieveEmployeeRole
      *
      * @param string $role_id The role&#39;s ID. (required)
      * @return Array of \SquareConnect\Model\V1EmployeeRole, HTTP status code, HTTP response headers (array of strings)
@@ -1248,6 +1271,7 @@ class V1EmployeesApi
             $headerParams['Accept'] = $_header_accept;
         }
         $headerParams['Content-Type'] = ApiClient::selectHeaderContentType(array('application/json'));
+        $headerParams['Square-Version'] = "2020-02-26";
 
         
         
@@ -1300,9 +1324,10 @@ class V1EmployeesApi
         }
     }
     /**
+     * @deprecated
      * retrieveTimecard
      *
-     * Provides the details for a single timecard.
+     * RetrieveTimecard
      *
      * @param string $timecard_id The timecard&#39;s ID. (required)
      * @return \SquareConnect\Model\V1Timecard
@@ -1310,6 +1335,7 @@ class V1EmployeesApi
      */
     public function retrieveTimecard($timecard_id)
     {
+        trigger_error("\x1B[33mCalling deprecated API: V1EmployeesApi.retrieveTimecard\x1B[0m", E_USER_DEPRECATED);
         list($response, $statusCode, $httpHeader) = $this->retrieveTimecardWithHttpInfo ($timecard_id);
         return $response; 
     }
@@ -1318,7 +1344,7 @@ class V1EmployeesApi
     /**
      * retrieveTimecardWithHttpInfo
      *
-     * Provides the details for a single timecard.
+     * RetrieveTimecard
      *
      * @param string $timecard_id The timecard&#39;s ID. (required)
      * @return Array of \SquareConnect\Model\V1Timecard, HTTP status code, HTTP response headers (array of strings)
@@ -1343,6 +1369,7 @@ class V1EmployeesApi
             $headerParams['Accept'] = $_header_accept;
         }
         $headerParams['Content-Type'] = ApiClient::selectHeaderContentType(array('application/json'));
+        $headerParams['Square-Version'] = "2020-02-26";
 
         
         
@@ -1397,7 +1424,7 @@ class V1EmployeesApi
     /**
      * updateEmployee
      *
-     * V1 UpdateEmployee
+     * UpdateEmployee
      *
      * @param string $employee_id The ID of the role to modify. (required)
      * @param \SquareConnect\Model\V1Employee $body An object containing the fields to POST for the request.  See the corresponding object definition for field details. (required)
@@ -1414,7 +1441,7 @@ class V1EmployeesApi
     /**
      * updateEmployeeWithHttpInfo
      *
-     * V1 UpdateEmployee
+     * UpdateEmployee
      *
      * @param string $employee_id The ID of the role to modify. (required)
      * @param \SquareConnect\Model\V1Employee $body An object containing the fields to POST for the request.  See the corresponding object definition for field details. (required)
@@ -1444,6 +1471,7 @@ class V1EmployeesApi
             $headerParams['Accept'] = $_header_accept;
         }
         $headerParams['Content-Type'] = ApiClient::selectHeaderContentType(array('application/json'));
+        $headerParams['Square-Version'] = "2020-02-26";
 
         
         
@@ -1502,7 +1530,7 @@ class V1EmployeesApi
     /**
      * updateEmployeeRole
      *
-     * Modifies the details of an employee role.
+     * UpdateEmployeeRole
      *
      * @param string $role_id The ID of the role to modify. (required)
      * @param \SquareConnect\Model\V1EmployeeRole $body An object containing the fields to POST for the request.  See the corresponding object definition for field details. (required)
@@ -1519,7 +1547,7 @@ class V1EmployeesApi
     /**
      * updateEmployeeRoleWithHttpInfo
      *
-     * Modifies the details of an employee role.
+     * UpdateEmployeeRole
      *
      * @param string $role_id The ID of the role to modify. (required)
      * @param \SquareConnect\Model\V1EmployeeRole $body An object containing the fields to POST for the request.  See the corresponding object definition for field details. (required)
@@ -1549,6 +1577,7 @@ class V1EmployeesApi
             $headerParams['Accept'] = $_header_accept;
         }
         $headerParams['Content-Type'] = ApiClient::selectHeaderContentType(array('application/json'));
+        $headerParams['Square-Version'] = "2020-02-26";
 
         
         
@@ -1605,17 +1634,19 @@ class V1EmployeesApi
         }
     }
     /**
+     * @deprecated
      * updateTimecard
      *
-     * Modifies a timecard's details. This creates an API_EDIT event for the timecard. You can view a timecard's event history with the List Timecard Events endpoint.
+     * UpdateTimecard
      *
      * @param string $timecard_id TThe ID of the timecard to modify. (required)
-     * @param \SquareConnect\Model\V1Timecard $body An object containing the fields to POST for the request.  See the corresponding object definition for field details. (required)
+     * @param \SquareConnect\Model\V1Timecard $body An object containing the fields to POST for the request. See the corresponding object definition for field details. (required)
      * @return \SquareConnect\Model\V1Timecard
      * @throws \SquareConnect\ApiException on non-2xx response
      */
     public function updateTimecard($timecard_id, $body)
     {
+        trigger_error("\x1B[33mCalling deprecated API: V1EmployeesApi.updateTimecard\x1B[0m", E_USER_DEPRECATED);
         list($response, $statusCode, $httpHeader) = $this->updateTimecardWithHttpInfo ($timecard_id, $body);
         return $response; 
     }
@@ -1624,10 +1655,10 @@ class V1EmployeesApi
     /**
      * updateTimecardWithHttpInfo
      *
-     * Modifies a timecard's details. This creates an API_EDIT event for the timecard. You can view a timecard's event history with the List Timecard Events endpoint.
+     * UpdateTimecard
      *
      * @param string $timecard_id TThe ID of the timecard to modify. (required)
-     * @param \SquareConnect\Model\V1Timecard $body An object containing the fields to POST for the request.  See the corresponding object definition for field details. (required)
+     * @param \SquareConnect\Model\V1Timecard $body An object containing the fields to POST for the request. See the corresponding object definition for field details. (required)
      * @return Array of \SquareConnect\Model\V1Timecard, HTTP status code, HTTP response headers (array of strings)
      * @throws \SquareConnect\ApiException on non-2xx response
      */
@@ -1654,6 +1685,7 @@ class V1EmployeesApi
             $headerParams['Accept'] = $_header_accept;
         }
         $headerParams['Content-Type'] = ApiClient::selectHeaderContentType(array('application/json'));
+        $headerParams['Square-Version'] = "2020-02-26";
 
         
         

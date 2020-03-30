@@ -14,7 +14,7 @@
 function zen_update_whos_online() {
   global $db;
 
-  if (isset($_SESSION['customer_id']) && $_SESSION['customer_id']) {
+  if (zen_is_logged_in() && !zen_in_guest_checkout()) {
     $wo_customer_id = $_SESSION['customer_id'];
 
     $customer_query = "select customers_firstname, customers_lastname

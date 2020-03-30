@@ -164,8 +164,11 @@ define('TABLE_TEXT_MAX_COUNT_SHORT', 'Max:');
   define('SUCCESS_ATTRIBUTES_DELETED_OPTION_NAME_VALUES', 'Successful deletion of all Option Values for Option Name: ');
 
   define('BUTTON_ADDITIONAL_ACTIONS', 'Additional Actions');
+  define('TEXT_EDIT_OPTION_VALUE', 'Edit Option Value');
+  define('TEXT_DELETE_OPTION_VALUE', 'Delete Option Value');
   define('TEXT_UPDATE_DEFAULT_SORT_ORDER', 'Update Sort Order to default');
   define('TEXT_DELETE_ALL_OPTIONS_FROM_PRODUCT', 'Delete all options from product');
   define('TEXT_COPY_ALL_OPTIONS_TO_PRODUCT', 'Copy options to another product');
   define('TEXT_COPY_ALL_OPTIONS_TO_CATEGORY', 'Copy options to a whole category');
   define('TEXT_SAVE_PRODUCT_FIRST', 'Please save the new product first. You need a product_id before you can add attributes');
+  define('TEXT_DISPLAY_NUMBER_OF_ATTRIBUTES', 'Displaying <b>%d</b> to <b>%d</b> (of <b>%d</b> attributes)');

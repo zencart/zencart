@@ -338,21 +338,24 @@
 
   define('TABLE_HEADING_CREDIT_PAYMENT', 'Credits Available');
 
-  define('TEXT_INVALID_REDEEM_COUPON', 'Invalid Coupon Code');
-  define('TEXT_INVALID_REDEEM_COUPON_MINIMUM', 'You must spend at least %s to redeem this coupon');
-  define('TEXT_INVALID_STARTDATE_COUPON', 'This coupon is not available yet');
-  define('TEXT_INVALID_FINISHDATE_COUPON', 'This coupon has expired');
-  define('TEXT_INVALID_USES_COUPON', 'This coupon could only be used ');
-  define('TIMES', ' times.');
-  define('TIME', ' time.');
-  define('TEXT_INVALID_USES_USER_COUPON', 'You have used coupon code: %s the maximum number of times allowed per customer. ');
+//coupon redeem error messages (checkout payment)
+  define('TEXT_COUPON_LINK_TITLE', 'see the Coupon conditions');
+  define('TEXT_INVALID_REDEEM_COUPON', 'Coupon code "%s" is not a valid code.');
+  define('TEXT_INVALID_REDEEM_COUPON_MINIMUM', 'You must spend at least %2$s to redeem Coupon "%1$s".');
+  define('TEXT_INVALID_COUPON_PRODUCT', 'The Coupon "%1$s" is not valid for any product in your shopping cart.');
+  define('TEXT_INVALID_COUPON_ORDER_LIMIT', 'You have exceeded the total number of orders permitted (%2$u), to use the Coupon "%1$s".');
+  define('TEXT_INVALID_STARTDATE_COUPON', 'The Coupon "%1$s" is not valid for use until %2$s.');
+  define('TEXT_INVALID_FINISHDATE_COUPON', 'The Coupon "%1$s" is now not valid (expired %2$s).');
+  define('TEXT_INVALID_USES_COUPON', 'Coupon "%1$s" has already been used the maximum permitted times (%2$u).');
+  define('TEXT_INVALID_USES_USER_COUPON', 'You have used Coupon "%1$s" the maximum number of times allowed per customer (%2$u).');
+  define('TEXT_REMOVE_REDEEM_COUPON_ZONE', 'The Coupon "%s" is not valid for the address you have selected.');
   define('REDEEMED_COUPON', 'a coupon worth ');
   define('REDEEMED_MIN_ORDER', 'on orders over ');
   define('REDEEMED_RESTRICTIONS', ' [Product-Category restrictions apply]');
   define('TEXT_ERROR', 'An error has occurred');
-  define('TEXT_INVALID_COUPON_PRODUCT', 'This coupon code is not valid for any product currently in your cart.');
+
   define('TEXT_VALID_COUPON', 'Congratulations you have redeemed the Discount Coupon');
-  define('TEXT_REMOVE_REDEEM_COUPON_ZONE', 'The coupon code you entered is not valid for the address you have selected.');
+
 
 // more info in place of buy now
   define('MORE_INFO_TEXT','... more info');
@@ -618,7 +621,7 @@
   define('EMAIL_SEND_FAILED','ERROR: Failed sending email to: "%s" <%s> with subject: "%s"');
 
   define('DB_ERROR_NOT_CONNECTED', 'Error - Could not connect to Database');
-  define('ERROR_DATABASE_MAINTENANCE_NEEDED', '<a href="http://www.zen-cart.com/content.php?334-ERROR-0071-There-appears-to-be-a-problem-with-the-database-Maintenance-is-required" target="_blank">ERROR 0071: There appears to be a problem with the database. Maintenance is required.</a>');
+  define('ERROR_DATABASE_MAINTENANCE_NEEDED', '<a href="https://docs.zen-cart.com/user/troubleshooting/error_71_maintenance_required/" target="_blank">ERROR 0071 There appears to be a problem with the database. Maintenance is required.</a>');
 
   // EZ-PAGES Alerts
   define('TEXT_EZPAGES_STATUS_HEADER_ADMIN', 'WARNING: EZ-PAGES HEADER - On for Admin IP Only');
@@ -629,6 +632,24 @@
   define('TEXT_PRODUCTS_LISTING_ALPHA_SORTER', '');
   define('TEXT_PRODUCTS_LISTING_ALPHA_SORTER_NAMES', 'Items starting with ...');
   define('TEXT_PRODUCTS_LISTING_ALPHA_SORTER_NAMES_RESET', '-- Reset --');
+  
+// The following message, with the associated severity, is displayed in the storefront header when an admin has logged into
+// a customer's account.
+
+// -----
+// init_customer_auth.php substitutes the customer's name (%$1s) and customer's email address (%$2s)
+// into this message.
+//
+define('EMP_SHOPPING_FOR_MESSAGE', 'Currently shopping for %1$s (%2$s).');
+
+// -----
+// Identify the messageStack "severity" to be applied to the above message, one of 'success',
+// 'warning', 'caution', 'error' (defaults to 'success').
+//
+define('EMP_SHOPPING_FOR_MESSAGE_SEVERITY', 'success');
+
+// Constants shared between multiple pages
+define('TEXT_OPTION_DIVIDER', '&nbsp;-&nbsp;');
 
 ///////////////////////////////////////////////////////////
 

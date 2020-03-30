@@ -6,10 +6,10 @@
  * Displays information related to a single specific order
  *
  * @package templateSystem
- * @copyright Copyright 2003-2019 Zen Cart Development Team
+ * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: lat9 2019 Mar 10 Modified in v1.5.6b $
+ * @version $Id: DrByte 09-Jan-2020  Modified in v1.5.7 $
  */
 ?>
 <div class="centerColumn" id="accountHistInfo">
@@ -18,7 +18,7 @@
 <br class="clearBoth" />
 
 <?php if ($current_page != FILENAME_CHECKOUT_SUCCESS) { ?>
-<h2 id="orderHistoryDetailedOrder"><?php echo HEADING_TITLE . ORDER_HEADING_DIVIDER . sprintf(HEADING_ORDER_NUMBER, $_GET['order_id']); ?></h2>
+<h2 id="orderHistoryDetailedOrder"><?php echo HEADING_TITLE . ORDER_HEADING_DIVIDER . sprintf(HEADING_ORDER_NUMBER, zen_output_string_protected($_GET['order_id'])); ?></h2>
 <?php } ?>
 
 <table id="orderHistoryHeading">
@@ -106,12 +106,24 @@ if (sizeof($statusArray)) {
         <th scope="col" id="myAccountStatusComments"><?php echo TABLE_HEADING_STATUS_COMMENTS; ?></th>
        </tr>
 <?php
+  $first = true; 
   foreach ($statusArray as $statuses) {
 ?>
     <tr>
         <td><?php echo zen_date_short($statuses['date_added']); ?></td>
         <td><?php echo $statuses['orders_status_name']; ?></td>
-        <td><?php echo (empty($statuses['comments']) ? '&nbsp;' : nl2br(zen_output_string_protected($statuses['comments']))); ?></td>
+        <td>
+<?php 
+    if (!empty($statuses['comments'])) {
+      if ($first) { 
+         echo nl2br(zen_output_string_protected($statuses['comments']));
+         $first = false; 
+      } else {
+         echo nl2br(zen_output_string($statuses['comments']));
+      }
+    }
+?>
+       </td> 
      </tr>
 <?php
   }

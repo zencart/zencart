@@ -9,40 +9,62 @@
 
 ////
 // The HTML href link wrapper function
-  function zen_href_link($page = '', $parameters = '', $connection = 'SSL', $add_session_id = true) {
-    global $session_started;
-    if ($page == '') {
-      trigger_error("zen_href_link($page, $parameters, $connection), unable to determine the page link.",
-            E_USER_ERROR);
-      die('</td></tr></table></td></tr></table><br><br><font color="#ff0000"><b>Error!</b></font><br><br><b>Unable to determine the page link!<br><br>Function used:<br><br>zen_href_link(\'' . $page . '\', \'' . $parameters . '\', \'' . $connection . '\')</b>');
-    }
+function zen_href_link($page = '', $parameters = '', $connection = 'SSL', $add_session_id = true) {
+    global $zco_notifier, $session_started;
+
+    // Notify any observers listening for href_link calls
+    $zco_notifier->notify(
+        'NOTIFY_HANDLE_ADMIN_HREF_LINK',
+        array(
+            'page' => $page,
+            'parameters' => $parameters,
+            'add_session_id' => false,
+        ),
+        $page,
+        $parameters
+    );
+    $page = str_replace('.php', '', $page);
 
     $link = HTTP_SERVER . DIR_WS_ADMIN;
 
-    if (!strstr($page, '.php')) $page .= '.php';
-    if ($parameters == '') {
-      $link = $link . $page;
-      $separator = '?';
-    } else {
-      $link = $link . $page . '?' . $parameters;
-      $separator = '&';
+    // Handle parameters passed as an array (using RFC 3986)
+    if(is_array($parameters)) {
+        $parameters = http_build_query($parameters, '', '&', PHP_QUERY_RFC3986);
+    }
+    else {
+        // Clean up parameters (should not start or end with these characters)
+        $parameters = trim($parameters, '&?');
     }
 
-    while ( (substr($link, -1) == '&') || (substr($link, -1) == '?') ) $link = substr($link, 0, -1);
+    // Keep track of the separator
+    $separator = '&';
 
-// Add the session ID when moving from different HTTP and HTTPS servers, or when SID is defined
+    if (!zen_not_null($page) || ($page == FILENAME_DEFAULT && !zen_not_null($parameters))) {
+        // If the request was for the homepage, do nothing
+        $separator = '?';
+    }
+    else if (zen_not_null($parameters)) {
+        $link .= 'index.php?cmd='. $page . '&' . zen_output_string($parameters);
+    }
+    else {
+        $link .= 'index.php?cmd=' . $page;
+    }
+
+    // Replace duplicates of '&' and instances of '&amp;'  with a single '&'
+    $link = preg_replace('/(&amp;|&){2,}|&amp;/', '&', $link);
+
+    // Add the session ID when moving from different HTTP and HTTPS servers, or when SID is defined
     if ( ($add_session_id == true) && ($session_started == true) ) {
-      if (defined('SID') && zen_not_null(constant('SID'))) {
-        $sid = constant('SID');
-      }
+        if (defined('SID') && constant('SID') != '') {
+            $link .= $separator . zen_output_string(constant('SID'));
+        }
     }
+    $link = preg_replace('/(&{2,}|(&amp;)+)/', '&', $link);
 
-    if (isset($sid)) {
-      $link .= $separator . $sid;
-    }
-
+    // Convert any remaining '&' into '&amp;' (valid URL for href)
+    $link = str_replace('&', '&amp;', $link);
     return $link;
-  }
+}
 
   function zen_catalog_href_link($page = '', $parameters = '', $connection = 'NONSSL') {
     global $zco_notifier;
@@ -69,6 +91,10 @@
     }
 
     while ( (substr($link, -1) == '&') || (substr($link, -1) == '?') ) $link = substr($link, 0, -1);
+      $link = preg_replace('/(&{2,}|(&amp;)+)/', '&', $link);
+
+      // Convert any remaining '&' into '&amp;' (valid URL for href)
+      $link = str_replace('&', '&amp;', $link);
 
     return $link;
   }
@@ -78,7 +104,7 @@
   function zen_image($src, $alt = '', $width = '', $height = '', $params = '') {
       $image = '<img src="' . $src . '" alt="' . $alt . '"';
     if ($alt) {
-      $image .= ' title=" ' . $alt . ' "';
+      $image .= ' title="' . $alt . '"';
     }
     if ($width) {
       $image .= ' width="' . $width . '"';
@@ -97,18 +123,18 @@
 ////
 // The HTML form submit button wrapper function
 // Outputs a button in the selected language
-  function zen_image_submit($image, $alt = '', $parameters = '') {
-
-    $image_submit = '<input type="image" src="' . zen_output_string(DIR_WS_LANGUAGES . $_SESSION['language'] . '/images/buttons/' . $image) . '" border="0" alt="' . zen_output_string($alt) . '"';
-
-    if (zen_not_null($alt)) $image_submit .= ' title=" ' . zen_output_string($alt) . ' "';
-
-    if (zen_not_null($parameters)) $image_submit .= ' ' . $parameters;
-
+function zen_image_submit($image, $alt = '', $parameters = '')
+{
+    $image_submit = '<input type="image" src="' . zen_output_string(DIR_WS_LANGUAGES . $_SESSION['language'] . '/images/buttons/' . $image) . '" alt="' . zen_output_string($alt) . '"';
+    if (zen_not_null($alt)) {
+        $image_submit .= ' title="' . zen_output_string($alt) . '"';
+    }
+    if (zen_not_null($parameters)) {
+        $image_submit .= ' ' . $parameters;
+    }
     $image_submit .= '>';
-
     return $image_submit;
-  }
+}
 
 ////
 // Draw a 1 pixel black line
@@ -156,7 +182,7 @@
 
       $num_state = 1;
       while (!$states->EOF) {
-        if ($num_state == '1') $output_string .= '    ' . $form . '.' . $field . '.options[0] = new Option("' . PLEASE_SELECT . '", "");' . "\n";
+        if ($num_state == 1) $output_string .= '    ' . $form . '.' . $field . '.options[0] = new Option("' . PLEASE_SELECT . '", "");' . "\n";
         $output_string .= '    ' . $form . '.' . $field . '.options[' . $num_state . '] = new Option("' . $states->fields['zone_name'] . '", "' . $states->fields['zone_id'] . '");' . "\n";
         $num_state++;
         $states->MoveNext();
@@ -188,6 +214,9 @@
     }
     $form .= '>';
     if (strtolower($method) == 'post') $form .= '<input type="hidden" name="securityToken" value="' . $_SESSION['securityToken'] . '" />';
+    if (strtolower($method) == 'get') {
+      $form .= '<input type="hidden" name="cmd" value="' . (isset($_GET['cmd']) ? $_GET['cmd'] : 'home') . '">';
+    }
     return $form;
   }
 

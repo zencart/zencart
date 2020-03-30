@@ -60,12 +60,12 @@ class SourceApplication implements ArrayAccess
     );
   
     /**
-      * $product Read-only [Product](#type-product) type for the application.
+      * $product Read-only `Product` type for the application. See [Product](#type-product) for possible values
       * @var string
       */
     protected $product;
     /**
-      * $application_id Read-only Square ID assigned to the application. Only used for [Product](#type-product) type `EXTERNAL_API`.
+      * $application_id Read-only Square ID assigned to the application. Only used for `Product` type `EXTERNAL_API`.
       * @var string
       */
     protected $application_id;
@@ -110,7 +110,7 @@ class SourceApplication implements ArrayAccess
   
     /**
      * Sets product
-     * @param string $product Read-only [Product](#type-product) type for the application.
+     * @param string $product Read-only `Product` type for the application. See [Product](#type-product) for possible values
      * @return $this
      */
     public function setProduct($product)
@@ -129,7 +129,7 @@ class SourceApplication implements ArrayAccess
   
     /**
      * Sets application_id
-     * @param string $application_id Read-only Square ID assigned to the application. Only used for [Product](#type-product) type `EXTERNAL_API`.
+     * @param string $application_id Read-only Square ID assigned to the application. Only used for `Product` type `EXTERNAL_API`.
      * @return $this
      */
     public function setApplicationId($application_id)

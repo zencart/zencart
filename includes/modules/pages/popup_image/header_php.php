@@ -30,6 +30,13 @@
   $products_values_query = $db->bindVars($products_values_query, ':languagesID', $_SESSION['languages_id'], 'integer');
 
   $products_values = $db->Execute($products_values_query);
+
+  // Ensure data/variable is available for use downstream.
+  if ($products_values->EOF) {
+    $products_values->fields['products_image'] = '';
+    $products_values->fields['products_name'] = '';
+  }
+
   $products_image = $products_values->fields['products_image'];
 
   //auto replace with defined missing image

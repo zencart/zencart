@@ -1,7 +1,7 @@
 <?php
 /**
  * @package Admin Access Management
- * @copyright Copyright 2003-2018 Zen Cart Development Team
+ * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: lat9 Tue Nov 13 08:12:48 2018 -0500 Modified in v1.5.6 $
@@ -219,7 +219,7 @@ function zen_update_user($name, $email, $id, $profile)
             SET admin_email = :email:, ";
     if (isset($name) && $name !== FALSE && $name != $oldData['admin_name']) $sql .= "admin_name = :name:, ";
     if (isset($profile) && $profile > 0 && $profile != $oldData['admin_profile']) $sql .= "admin_profile = :profile:, ";
-    $sql .= "last_modified = NOW()
+    $sql .= "last_modified = now()
              WHERE admin_id=" . $id;
     $sql = $db->bindVars($sql, ':name:', $name, 'string');
     $sql = $db->bindVars($sql, ':email:', $email, 'string');
@@ -347,9 +347,6 @@ function zen_validate_user_login($admin_name, $admin_pass)
         }
       }
     }
-    if (password_needs_rehash($token, PASSWORD_DEFAULT)) {
-      $token = zcPassword::getInstance(PHP_VERSION)->updateNotLoggedInAdminPassword($admin_pass, $admin_name);
-    }
     // BEGIN 2-factor authentication
     if ($error == FALSE && defined('ZC_ADMIN_TWO_FACTOR_AUTHENTICATION_SERVICE') && ZC_ADMIN_TWO_FACTOR_AUTHENTICATION_SERVICE != '')
     {
@@ -403,7 +400,7 @@ function zen_validate_user_login($admin_name, $admin_pass)
     }
   } // END LOGIN SLAM PREVENTION
   // deal with expireds for SSL change
-  if ($error == FALSE && $result['pwd_last_change_date']  == '1990-01-01 14:02:22')
+  if (PADSS_PWD_EXPIRY_ENFORCED == 1 && $error == FALSE && $result['pwd_last_change_date']  == '1990-01-01 14:02:22')
   {
     $expired = true;
     $error = true;
@@ -417,6 +414,9 @@ function zen_validate_user_login($admin_name, $admin_pass)
   }
   if ($error == false)
   {
+    if (password_needs_rehash($token, PASSWORD_DEFAULT)) {
+      $token = zcPassword::getInstance(PHP_VERSION)->updateNotLoggedInAdminPassword($admin_pass, $admin_name);
+    }
     unset($_SESSION['login_attempt']);
     $sql = "UPDATE " . TABLE_ADMIN . " SET failed_logins = 0, lockout_expires = 0, last_login_date = now(), last_login_ip = :ip: WHERE admin_name = :adminname: ";
     $sql = $db->bindVars($sql, ':adminname:', $admin_name, 'string');
@@ -677,6 +677,16 @@ function zen_get_admin_pages($menu_only)
     }
     $result->MoveNext();
   }
+  if ($menu_only) {
+    if (defined('MENU_CATEGORIES_TO_SORT_BY_NAME') && !empty(MENU_CATEGORIES_TO_SORT_BY_NAME)) {
+       $sorted_menus = explode(",", MENU_CATEGORIES_TO_SORT_BY_NAME); 
+       foreach (array_keys($retVal) as $key) {
+         if (in_array($key, $sorted_menus)) {
+           usort($retVal[$key], 'menu_name_sort'); 
+         }
+       }
+    }
+  }
   if (!$menu_only)
   {
     foreach ($productTypes as $pageName => $productType)
@@ -820,34 +830,35 @@ function zen_insert_pages_into_profile($id, $pages)
 
 function zen_get_admin_menu_for_user()
 {
-  global $db;
-  if (zen_is_superuser())
-  {
-    // get all registered admin pages that should appear in the menu
-    $retVal = zen_get_admin_pages(TRUE);
-  } else
-  {
-    // get only those registered pages allowed by the current user's profile
-    $retVal = array();
-    $sql = "SELECT ap.menu_key, ap.page_key, ap.main_page, ap.page_params, ap.language_key as pageName
-            FROM " . TABLE_ADMIN . " a
-            LEFT JOIN " . TABLE_ADMIN_PAGES_TO_PROFILES . " ap2p ON ap2p.profile_id = a.admin_profile
-            LEFT JOIN " . TABLE_ADMIN_PAGES . " ap ON ap.page_key = ap2p.page_key
-            LEFT JOIN " . TABLE_ADMIN_MENUS . " am ON am.menu_key = ap.menu_key
-            WHERE a.admin_id = :user:
-            AND   ap.display_on_menu = 'Y'
-            ORDER BY am.sort_order, ap.sort_order";
-    $sql = $db->bindVars($sql, ':user:', $_SESSION['admin_id'], 'integer');
-    $result = $db->Execute($sql);
-    while (!$result->EOF)
-    {
-      $retVal[$result->fields['menu_key']][$result->fields['page_key']] = array('name' => constant($result->fields['pageName']),
-                                                                                'file' => constant($result->fields['main_page']),
-                                                                                'params' => $result->fields['page_params']);
-      $result->MoveNext();
+    global $db;
+    if (zen_is_superuser()) {
+        // get all registered admin pages that should appear in the menu
+        $retVal = zen_get_admin_pages(true);
+    } else {
+        // get only those registered pages allowed by the current user's profile
+        $retVal = array();
+        $sql = "SELECT ap.menu_key, ap.page_key, ap.main_page, ap.page_params, ap.language_key as pageName
+                FROM " . TABLE_ADMIN . " a
+                LEFT JOIN " . TABLE_ADMIN_PAGES_TO_PROFILES . " ap2p ON ap2p.profile_id = a.admin_profile
+                LEFT JOIN " . TABLE_ADMIN_PAGES . " ap ON ap.page_key = ap2p.page_key
+                LEFT JOIN " . TABLE_ADMIN_MENUS . " am ON am.menu_key = ap.menu_key
+                WHERE a.admin_id = :user:
+                AND   ap.display_on_menu = 'Y'
+                ORDER BY am.sort_order, ap.sort_order";
+        $sql = $db->bindVars($sql, ':user:', $_SESSION['admin_id'], 'integer');
+        $result = $db->Execute($sql);
+        while (!$result->EOF) {
+            if (defined($result->fields['pageName']) && defined($result->fields['main_page'])) {
+                $retVal[$result->fields['menu_key']][$result->fields['page_key']] = array(
+                    'name' => constant($result->fields['pageName']),
+                    'file' => constant($result->fields['main_page']),
+                    'params' => $result->fields['page_params'],
+                );
+            }
+            $result->MoveNext();
+        }
     }
-  }
-  return $retVal;
+    return $retVal;
 }
 
 function zen_get_menu_titles()
@@ -932,4 +943,39 @@ function zen_updated_by_admin($admin_id = '')
         $admin_id = $_SESSION['admin_id'];
     }
     return zen_get_admin_name($admin_id) . " [$admin_id]";
+}
+
+function zen_admin_authorized_to_place_order()
+{
+    global $db;
+    $admin_in_profile = false;
+    if (!empty(EMP_LOGIN_ADMIN_PROFILE_ID)) {
+        $admin_profiles = explode(',', str_replace(' ', '', EMP_LOGIN_ADMIN_PROFILE_ID));
+        $profile_list = array();
+        foreach ($admin_profiles as $current_profile) {
+            if (((int)$current_profile) != 0) {
+                $profile_list[] = (int)$current_profile;
+            }
+        }
+        if (count($profile_list) != 0) {
+            $profile_clause = ' AND admin_profile IN (' . implode(',', $profile_list) . ')';
+            $emp_sql = 
+                "SELECT admin_profile, admin_pass 
+                   FROM " . TABLE_ADMIN . " 
+                  WHERE admin_id = :adminId:$profile_clause
+                  LIMIT 1";
+            $emp_sql = $db->bindVars($emp_sql, ':adminId:', $_SESSION['admin_id'], 'integer');
+            $emp_result = $db->Execute($emp_sql);
+            $admin_in_profile = !$emp_result->EOF;
+        }
+    }
+    return ($_SESSION['admin_id'] == (int)EMP_LOGIN_ADMIN_ID || $admin_in_profile);
+}
+
+function menu_name_sort($a, $b) {
+   if ($a['name'] == $b['name'])
+      return 0;
+   if ($a['name'] < $b['name'])
+      return -1;
+   return 1;
 }

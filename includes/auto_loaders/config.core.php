@@ -35,8 +35,8 @@ if (!defined('USE_PCONNECT')) define('USE_PCONNECT', 'false');
  */
   $autoLoadConfig[0][] = array('autoType'=>'include',
                                'loadFile'=> DIR_WS_INCLUDES . 'version.php');
-  $autoLoadConfig[0][] = array('autoType'=>'class',
-                                'loadFile'=>'class.base.php');
+//  $autoLoadConfig[0][] = array('autoType'=>'class',
+//                                'loadFile'=>'class.base.php');
   $autoLoadConfig[0][] = array('autoType'=>'class',
                                 'loadFile'=>'class.notifier.php');
   $autoLoadConfig[0][] = array('autoType'=>'classInstantiate',
@@ -55,8 +55,6 @@ if (!defined('USE_PCONNECT')) define('USE_PCONNECT', 'false');
   $autoLoadConfig[0][] = array('autoType'=>'class',
                                 'loadFile'=>'language.php');
   $autoLoadConfig[0][] = array('autoType'=>'class',
-                                'loadFile'=>'cache.php');
-  $autoLoadConfig[0][] = array('autoType'=>'class',
                                 'loadFile'=>'sniffer.php');
   $autoLoadConfig[0][] = array('autoType'=>'class',
                                 'loadFile'=>'shopping_cart.php');
@@ -69,12 +67,6 @@ if (!defined('USE_PCONNECT')) define('USE_PCONNECT', 'false');
   $autoLoadConfig[0][] = array('autoType'=>'class',
                                 'loadFile'=>'breadcrumb.php');
   $autoLoadConfig[0][] = array('autoType'=>'class',
-                               'loadFile'=>'query_cache.php');
-  $autoLoadConfig[0][] = array('autoType'=>'classInstantiate',
-                               'className'=>'QueryCache',
-                               'objectName'=>'queryCache',
-                               'checkInstantiated'=>true);
-  $autoLoadConfig[0][] = array('autoType'=>'class',
                                'loadFile'=>'class.zcPassword.php');
   $autoLoadConfig[0][] = array('autoType'=>'classInstantiate',
                                'className'=>'zcPassword',
@@ -82,17 +74,6 @@ if (!defined('USE_PCONNECT')) define('USE_PCONNECT', 'false');
 
 
 
-/**
- * Breakpoint 10.
- *
- * require('includes/init_includes/init_file_db_names.php');
- * require('includes/init_includes/init_database.php');
- *
- */
-  $autoLoadConfig[10][] = array('autoType'=>'init_script',
-                                'loadFile'=> 'init_file_db_names.php');
-  $autoLoadConfig[10][] = array('autoType'=>'init_script',
-                                'loadFile'=>'init_database.php');
 /**
  * Breakpoint 30.
  *

@@ -9,6 +9,7 @@ namespace SquareConnect\Model;
 
 use \ArrayAccess;
 /**
+ * @deprecated
  * V1Item Class Doc Comment
  *
  * @category Class
@@ -35,11 +36,12 @@ class V1Item implements ArrayAccess
         'master_image' => '\SquareConnect\Model\V1ItemImage',
         'category' => '\SquareConnect\Model\V1Category',
         'variations' => '\SquareConnect\Model\V1Variation[]',
-        'modifier_lists' => '\SquareConnect\Model\V1Variation[]',
+        'modifier_lists' => '\SquareConnect\Model\V1ModifierList[]',
         'fees' => '\SquareConnect\Model\V1Fee[]',
         'taxable' => 'bool',
         'category_id' => 'string',
-        'available_for_pickup' => 'bool'
+        'available_for_pickup' => 'bool',
+        'v2_id' => 'string'
     );
   
     /** 
@@ -62,7 +64,8 @@ class V1Item implements ArrayAccess
         'fees' => 'fees',
         'taxable' => 'taxable',
         'category_id' => 'category_id',
-        'available_for_pickup' => 'available_for_pickup'
+        'available_for_pickup' => 'available_for_pickup',
+        'v2_id' => 'v2_id'
     );
   
     /**
@@ -85,7 +88,8 @@ class V1Item implements ArrayAccess
         'fees' => 'setFees',
         'taxable' => 'setTaxable',
         'category_id' => 'setCategoryId',
-        'available_for_pickup' => 'setAvailableForPickup'
+        'available_for_pickup' => 'setAvailableForPickup',
+        'v2_id' => 'setV2Id'
     );
   
     /**
@@ -108,7 +112,8 @@ class V1Item implements ArrayAccess
         'fees' => 'getFees',
         'taxable' => 'getTaxable',
         'category_id' => 'getCategoryId',
-        'available_for_pickup' => 'getAvailableForPickup'
+        'available_for_pickup' => 'getAvailableForPickup',
+        'v2_id' => 'getV2Id'
     );
   
     /**
@@ -127,22 +132,22 @@ class V1Item implements ArrayAccess
       */
     protected $description;
     /**
-      * $type The item's type. This value is NORMAL for almost all items.
+      * $type The item's type. This value is NORMAL for almost all items. See [V1ItemType](#type-v1itemtype) for possible values
       * @var string
       */
     protected $type;
     /**
-      * $color The color of the discount's display label in Square Register, if not the default color. The default color is 9da2a6.
+      * $color The color of the discount's display label in Square Point of Sale, if not the default color. The default color is 9da2a6. See [V1ItemColor](#type-v1itemcolor) for possible values
       * @var string
       */
     protected $color;
     /**
-      * $abbreviation The text of the item's display label in Square Register. Only up to the first five characters of the string are used.
+      * $abbreviation The text of the item's display label in Square Point of Sale. Only up to the first five characters of the string are used.
       * @var string
       */
     protected $abbreviation;
     /**
-      * $visibility Indicates whether the item is viewable from the merchant's online store (PUBLIC) or PRIVATE.
+      * $visibility Indicates whether the item is viewable from the merchant's online store (PUBLIC) or PRIVATE. See [V1ItemVisibility](#type-v1itemvisibility) for possible values
       * @var string
       */
     protected $visibility;
@@ -168,7 +173,7 @@ class V1Item implements ArrayAccess
     protected $variations;
     /**
       * $modifier_lists The modifier lists that apply to the item, if any.
-      * @var \SquareConnect\Model\V1Variation[]
+      * @var \SquareConnect\Model\V1ModifierList[]
       */
     protected $modifier_lists;
     /**
@@ -191,6 +196,11 @@ class V1Item implements ArrayAccess
       * @var bool
       */
     protected $available_for_pickup;
+    /**
+      * $v2_id The ID of the CatalogObject in the Connect v2 API. Objects that are shared across multiple locations share the same v2 ID.
+      * @var string
+      */
+    protected $v2_id;
 
     /**
      * Constructor
@@ -279,6 +289,11 @@ class V1Item implements ArrayAccess
             } else {
               $this->available_for_pickup = null;
             }
+            if (isset($data["v2_id"])) {
+              $this->v2_id = $data["v2_id"];
+            } else {
+              $this->v2_id = null;
+            }
         }
     }
     /**
@@ -349,7 +364,7 @@ class V1Item implements ArrayAccess
   
     /**
      * Sets type
-     * @param string $type The item's type. This value is NORMAL for almost all items.
+     * @param string $type The item's type. This value is NORMAL for almost all items. See [V1ItemType](#type-v1itemtype) for possible values
      * @return $this
      */
     public function setType($type)
@@ -368,7 +383,7 @@ class V1Item implements ArrayAccess
   
     /**
      * Sets color
-     * @param string $color The color of the discount's display label in Square Register, if not the default color. The default color is 9da2a6.
+     * @param string $color The color of the discount's display label in Square Point of Sale, if not the default color. The default color is 9da2a6. See [V1ItemColor](#type-v1itemcolor) for possible values
      * @return $this
      */
     public function setColor($color)
@@ -387,7 +402,7 @@ class V1Item implements ArrayAccess
   
     /**
      * Sets abbreviation
-     * @param string $abbreviation The text of the item's display label in Square Register. Only up to the first five characters of the string are used.
+     * @param string $abbreviation The text of the item's display label in Square Point of Sale. Only up to the first five characters of the string are used.
      * @return $this
      */
     public function setAbbreviation($abbreviation)
@@ -406,7 +421,7 @@ class V1Item implements ArrayAccess
   
     /**
      * Sets visibility
-     * @param string $visibility Indicates whether the item is viewable from the merchant's online store (PUBLIC) or PRIVATE.
+     * @param string $visibility Indicates whether the item is viewable from the merchant's online store (PUBLIC) or PRIVATE. See [V1ItemVisibility](#type-v1itemvisibility) for possible values
      * @return $this
      */
     public function setVisibility($visibility)
@@ -492,7 +507,7 @@ class V1Item implements ArrayAccess
     }
     /**
      * Gets modifier_lists
-     * @return \SquareConnect\Model\V1Variation[]
+     * @return \SquareConnect\Model\V1ModifierList[]
      */
     public function getModifierLists()
     {
@@ -501,7 +516,7 @@ class V1Item implements ArrayAccess
   
     /**
      * Sets modifier_lists
-     * @param \SquareConnect\Model\V1Variation[] $modifier_lists The modifier lists that apply to the item, if any.
+     * @param \SquareConnect\Model\V1ModifierList[] $modifier_lists The modifier lists that apply to the item, if any.
      * @return $this
      */
     public function setModifierLists($modifier_lists)
@@ -583,6 +598,25 @@ class V1Item implements ArrayAccess
     public function setAvailableForPickup($available_for_pickup)
     {
         $this->available_for_pickup = $available_for_pickup;
+        return $this;
+    }
+    /**
+     * Gets v2_id
+     * @return string
+     */
+    public function getV2Id()
+    {
+        return $this->v2_id;
+    }
+  
+    /**
+     * Sets v2_id
+     * @param string $v2_id The ID of the CatalogObject in the Connect v2 API. Objects that are shared across multiple locations share the same v2 ID.
+     * @return $this
+     */
+    public function setV2Id($v2_id)
+    {
+        $this->v2_id = $v2_id;
         return $this;
     }
     /**

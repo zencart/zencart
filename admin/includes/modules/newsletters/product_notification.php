@@ -254,6 +254,7 @@ function selectAll(FormName, SelectBox) {
     $i = 0;
     foreach ($audience as $key => $value) {
       $i++;
+      $html_msg['EMAIL_SALUTATION'] = EMAIL_SALUTATION;
       $html_msg['EMAIL_FIRST_NAME'] = $value['firstname'];
       $html_msg['EMAIL_LAST_NAME'] = $value['lastname'];
       $html_msg['EMAIL_MESSAGE_HTML'] = $this->content_html;

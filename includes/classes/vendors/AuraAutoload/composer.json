@@ -1,0 +1,33 @@
+{
+    "name": "aura/autoload",
+    "type": "library",
+    "description": "Provides a PSR-4 compliant autoloader implementation.",
+    "keywords": [
+        "PSR-4",
+        "autoload",
+        "autoloader",
+        "SPL autoloader",
+        "class loader"
+    ],
+    "homepage": "https://github.com/auraphp/Aura.Autoload",
+    "license": "BSD-2-Clause",
+    "authors": [
+        {
+            "name": "Aura.Autoload Contributors",
+            "homepage": "https://github.com/auraphp/Aura.Autoload/contributors"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Aura\\Autoload\\": "src/"
+        }
+    },
+    "extra": {
+        "aura": {
+            "type": "library"
+        }
+    }
+}

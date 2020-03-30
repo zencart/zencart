@@ -64,6 +64,7 @@
       $message .= TEXT_REDEEM_GV_MESSAGE_FOOTER;
       $message .= "\n-----\n" . sprintf(EMAIL_DISCLAIMER, STORE_OWNER_EMAIL_ADDRESS) . "\n\n";
 
+      $html_msg['EMAIL_SALUTATION'] = EMAIL_SALUTATION;
       $html_msg['EMAIL_FIRST_NAME'] = $mail->fields['customers_firstname'];
       $html_msg['EMAIL_LAST_NAME']  = $mail->fields['customers_lastname'];
       $html_msg['GV_NOTICE_HEADER']  = TEXT_REDEEM_GV_MESSAGE_HEADER;

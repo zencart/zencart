@@ -123,7 +123,7 @@ class Refund implements ArrayAccess
       */
     protected $amount_money;
     /**
-      * $status The current status of the refund (`PENDING`, `APPROVED`, `REJECTED`, or `FAILED`).
+      * $status The current status of the refund (`PENDING`, `APPROVED`, `REJECTED`, or `FAILED`). See [RefundStatus](#type-refundstatus) for possible values
       * @var string
       */
     protected $status;
@@ -341,7 +341,7 @@ class Refund implements ArrayAccess
   
     /**
      * Sets status
-     * @param string $status The current status of the refund (`PENDING`, `APPROVED`, `REJECTED`, or `FAILED`).
+     * @param string $status The current status of the refund (`PENDING`, `APPROVED`, `REJECTED`, or `FAILED`). See [RefundStatus](#type-refundstatus) for possible values
      * @return $this
      */
     public function setStatus($status)

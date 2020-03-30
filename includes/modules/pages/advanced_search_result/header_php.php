@@ -3,7 +3,7 @@
  * Header code file for the Advanced Search Results page
  *
  * @package page
- * @copyright Copyright 2003-2019 Zen Cart Development Team
+ * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: mc12345678 2019 Apr 30 Modified in v1.5.6b $
@@ -13,6 +13,7 @@
 $zco_notifier->notify('NOTIFY_HEADER_START_ADVANCED_SEARCH_RESULTS');
 
 if (!defined('KEYWORD_FORMAT_STRING')) define('KEYWORD_FORMAT_STRING','keywords');
+if (!defined('ADVANCED_SEARCH_INCLUDE_METATAGS')) define('ADVANCED_SEARCH_INCLUDE_METATAGS', 'true');
 
 require(DIR_WS_MODULES . zen_get_module_directory('require_languages.php'));
 // set the product filters according to selected product type
@@ -24,9 +25,17 @@ require(zen_get_index_filters_directory($typefilter . '_filter.php'));
 $error = false;
 $missing_one_input = false;
 
-$_GET['keyword'] = trim($_GET['keyword']);
+$_GET['keyword'] = isset($_GET['keyword']) ? trim($_GET['keyword']) : '';
 
-if ( (isset($_GET['keyword']) && (empty($_GET['keyword']) || $_GET['keyword']==HEADER_SEARCH_DEFAULT_TEXT || $_GET['keyword'] == KEYWORD_FORMAT_STRING ) ) &&
+// -----
+// Give an observer the chance to indicate that there's another element to the search
+// that **is** provided, enabling the search to continue.
+//
+$search_additional_clause = false;
+$zco_notifier->notify('NOTIFY_ADVANCED_SEARCH_RESULTS_ADDL_CLAUSE', array(), $search_additional_clause);
+
+if ($search_additional_clause === false && 
+(empty($_GET['keyword']) || $_GET['keyword'] == HEADER_SEARCH_DEFAULT_TEXT || $_GET['keyword'] == KEYWORD_FORMAT_STRING) &&
 (isset($_GET['dfrom']) && (empty($_GET['dfrom']) || ($_GET['dfrom'] == DOB_FORMAT_STRING))) &&
 (isset($_GET['dto']) && (empty($_GET['dto']) || ($_GET['dto'] == DOB_FORMAT_STRING))) &&
 (isset($_GET['pfrom']) && !is_numeric($_GET['pfrom'])) &&
@@ -210,7 +219,9 @@ $zco_notifier->notify('NOTIFY_SEARCH_COLUMNLIST_STRING');
 
 //  $select_str = "select distinct " . $select_column_list . " m.manufacturers_id, p.products_id, pd.products_name, p.products_price, p.products_tax_class_id, IF(s.status = 1, s.specials_new_products_price, NULL) as specials_new_products_price, IF(s.status = 1, s.specials_new_products_price, p.products_price) as final_price ";
 $select_str = "SELECT DISTINCT " . $select_column_list .
-              " p.products_sort_order, m.manufacturers_id, p.products_id, pd.products_name, p.products_price, p.products_tax_class_id, p.products_price_sorter, p.products_qty_box_status, p.master_categories_id, p.product_is_call ";
+              " p.products_sort_order, m.manufacturers_id, p.products_id, pd.products_name, 
+                p.products_price, p.products_tax_class_id, p.products_price_sorter, 
+                p.products_qty_box_status, p.master_categories_id, p.product_is_call ";
 
 if ((DISPLAY_PRICE_WITH_TAX == 'true') && ((isset($_GET['pfrom']) && zen_not_null($_GET['pfrom'])) || (isset($_GET['pto']) && zen_not_null($_GET['pto'])))) {
   $select_str .= ", SUM(tr.tax_rate) AS tax_rate ";
@@ -223,12 +234,15 @@ $zco_notifier->notify('NOTIFY_SEARCH_SELECT_STRING');
 //  $from_str = "from " . TABLE_PRODUCTS . " p left join " . TABLE_MANUFACTURERS . " m using(manufacturers_id), " . TABLE_PRODUCTS_DESCRIPTION . " pd left join " . TABLE_SPECIALS . " s on p.products_id = s.products_id, " . TABLE_CATEGORIES . " c, " . TABLE_PRODUCTS_TO_CATEGORIES . " p2c";
 $from_str = "FROM (" . TABLE_PRODUCTS . " p
              LEFT JOIN " . TABLE_MANUFACTURERS . " m
-             USING(manufacturers_id), " . TABLE_PRODUCTS_DESCRIPTION . " pd, " . TABLE_CATEGORIES . " c, " . TABLE_PRODUCTS_TO_CATEGORIES . " p2c )
-             LEFT JOIN " . TABLE_META_TAGS_PRODUCTS_DESCRIPTION . " mtpd
+             USING(manufacturers_id), " . TABLE_PRODUCTS_DESCRIPTION . " pd, " . TABLE_CATEGORIES . " c, " . TABLE_PRODUCTS_TO_CATEGORIES . " p2c )";
+             
+if (ADVANCED_SEARCH_INCLUDE_METATAGS == 'true') {
+    $from_str .= 
+        " LEFT JOIN " . TABLE_META_TAGS_PRODUCTS_DESCRIPTION . " mtpd
              ON mtpd.products_id= p2c.products_id
-             AND mtpd.language_id = :languagesID";
-
-$from_str = $db->bindVars($from_str, ':languagesID', $_SESSION['languages_id'], 'integer');
+            AND mtpd.language_id = :languagesID";
+    $from_str = $db->bindVars($from_str, ':languagesID', $_SESSION['languages_id'], 'integer');
+}
 
 if ((DISPLAY_PRICE_WITH_TAX == 'true') && ((isset($_GET['pfrom']) && zen_not_null($_GET['pfrom'])) || (isset($_GET['pto']) && zen_not_null($_GET['pto'])))) {
   if (empty($_SESSION['customer_country_id'])) {
@@ -321,18 +335,13 @@ if (isset($keywords) && zen_not_null($keywords)) {
                                          LIKE '%:keywords%'";
 
         $where_str = $db->bindVars($where_str, ':keywords', $search_keywords[$i], 'noquotestring');
-        // search meta tags
-        $where_str .= " OR (mtpd.metatags_keywords
-                        LIKE '%:keywords%'
-                        AND mtpd.metatags_keywords !='')";
-
-        $where_str = $db->bindVars($where_str, ':keywords', $search_keywords[$i], 'noquotestring');
-
-        $where_str .= " OR (mtpd.metatags_description
-                        LIKE '%:keywords%'
-                        AND mtpd.metatags_description !='')";
-
-        $where_str = $db->bindVars($where_str, ':keywords', $search_keywords[$i], 'noquotestring');
+        
+        // conditionally include meta tags in search
+        if (ADVANCED_SEARCH_INCLUDE_METATAGS == 'true') {
+            $where_str .= " OR (mtpd.metatags_keywords != '' AND mtpd.metatags_keywords LIKE '%:keywords%')";
+            $where_str .= " OR (mtpd.metatags_description != '' AND mtpd.metatags_description LIKE '%:keywords%')";
+            $where_str = $db->bindVars($where_str, ':keywords', $search_keywords[$i], 'noquotestring');
+        }
 
         if (isset($_GET['search_in_description']) && ($_GET['search_in_description'] == '1')) {
           $where_str .= " OR pd.products_description
@@ -477,6 +486,11 @@ $result = new splitPageResults($listing_sql, MAX_DISPLAY_PRODUCTS_LISTING, 'p.pr
 if ($result->number_of_rows == 0) {
   $messageStack->add_session('search', TEXT_NO_PRODUCTS, 'caution');
   zen_redirect(zen_href_link(FILENAME_ADVANCED_SEARCH, zen_get_all_get_params('action')));
+}
+// if only one product found in search results, go directly to the product page, instead of displaying a link to just one item:
+if ($result->number_of_rows == 1 && SKIP_SINGLE_PRODUCT_CATEGORIES == 'True') {
+  $result = $db->Execute($listing_sql);
+  zen_redirect(zen_href_link(zen_get_info_page($result->fields['products_id']), 'cPath=' . zen_get_product_path($result->fields['products_id']) . '&products_id=' . $result->fields['products_id']));
 }
 // This should be last line of the script:
 $zco_notifier->notify('NOTIFY_HEADER_END_ADVANCED_SEARCH_RESULTS', $keywords);

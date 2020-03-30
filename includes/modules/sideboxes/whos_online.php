@@ -14,6 +14,7 @@
   $show_whos_online= true;
   $n_guests = 0;
   $n_members = 0;
+  $whos_online = array();
 
 // Set expiration time, default is 1200 secs (20 mins)
   $xx_mins_ago = (time() - 1200);
@@ -73,4 +74,3 @@
     $title_link = false;
     require($template->get_template_dir($column_box_default, DIR_WS_TEMPLATE, $current_page_base,'common') . '/' . $column_box_default);
   }
-?>

@@ -98,6 +98,7 @@ class newsletter {
 
     foreach ($audience as $item) {
       $i++;
+      $html_msg['EMAIL_SALUTATION'] = EMAIL_SALUTATION;
       $html_msg['EMAIL_FIRST_NAME'] = $item['customers_firstname'];
       $html_msg['EMAIL_LAST_NAME'] = $item['customers_lastname'];
       $html_msg['EMAIL_MESSAGE_HTML'] = $this->content_html;
