@@ -128,7 +128,7 @@ if (zen_get_categories_status($current_category_id) == 0 && $pInfo->products_sta
               ?>
           </span>
           <?php
-          echo zen_draw_pull_down_menu('master_category', zen_get_master_categories_pulldown($_GET['pID']), $pInfo->master_categories_id, 'class="form-control"');
+          echo zen_draw_pull_down_menu('master_category', zen_get_master_categories_pulldown($_GET['pID']), $pInfo->master_categories_id, 'class="form-control" id="master_category"');
           ?>
         </div>
       </div>
@@ -168,7 +168,7 @@ if (zen_get_categories_status($current_category_id) == 0 && $pInfo->products_sta
         <span class="input-group-addon datepicker_icon">
           <i class="fa fa-calendar fa-lg">&nbsp;</i>
         </span>
-        <?php echo zen_draw_input_field('products_date_available', $pInfo->products_date_available, 'class="form-control"'); ?>
+        <?php echo zen_draw_input_field('products_date_available', $pInfo->products_date_available, 'class="form-control" id="products_date_available"'); ?>
       </div>
       <span class="help-block errorText">(YYYY-MM-DD)</span>
     </div>
@@ -176,7 +176,7 @@ if (zen_get_categories_status($current_category_id) == 0 && $pInfo->products_sta
   <div class="form-group">
       <?php echo zen_draw_label(TEXT_PRODUCTS_MANUFACTURER, 'manufacturers_id', 'class="col-sm-3 control-label"'); ?>
     <div class="col-sm-9 col-md-6">
-        <?php echo zen_draw_pull_down_menu('manufacturers_id', $manufacturers_array, $pInfo->manufacturers_id, 'class="form-control"'); ?>
+        <?php echo zen_draw_pull_down_menu('manufacturers_id', $manufacturers_array, $pInfo->manufacturers_id, 'class="form-control" id="manufacturers_id"'); ?>
     </div>
   </div>
   <div class="form-group">
@@ -263,13 +263,13 @@ if (zen_get_categories_status($current_category_id) == 0 && $pInfo->products_sta
     <div class="form-group">
         <?php echo zen_draw_label(TEXT_PRODUCTS_PRICE_NET, 'products_price', 'class="col-sm-3 control-label"'); ?>
       <div class="col-sm-9 col-md-6">
-          <?php echo zen_draw_input_field('products_price', $pInfo->products_price, 'onkeyup="updateGross()" class="form-control"'); ?>
+          <?php echo zen_draw_input_field('products_price', $pInfo->products_price, 'onkeyup="updateGross()" class="form-control" id="products_price"'); ?>
       </div>
     </div>
     <div class="form-group">
         <?php echo zen_draw_label(TEXT_PRODUCTS_PRICE_GROSS, 'products_price_gross', 'class="col-sm-3 control-label"'); ?>
       <div class="col-sm-9 col-md-6">
-          <?php echo zen_draw_input_field('products_price_gross', $pInfo->products_price, 'onkeyup="updateNet()" class="form-control"'); ?>
+          <?php echo zen_draw_input_field('products_price_gross', $pInfo->products_price, 'onkeyup="updateNet()" class="form-control" id="products_price_gross"'); ?>
       </div>
     </div>
   </div>
@@ -304,19 +304,19 @@ if (zen_get_categories_status($current_category_id) == 0 && $pInfo->products_sta
   <div class="form-group">
       <?php echo zen_draw_label(TEXT_PRODUCTS_QUANTITY_MIN_RETAIL, 'products_quantity_order_min', 'class="col-sm-3 control-label"'); ?>
     <div class="col-sm-9 col-md-6">
-        <?php echo zen_draw_input_field('products_quantity_order_min', ($pInfo->products_quantity_order_min == 0 ? 1 : $pInfo->products_quantity_order_min), 'class="form-control"'); ?>
+        <?php echo zen_draw_input_field('products_quantity_order_min', ($pInfo->products_quantity_order_min == 0 ? 1 : $pInfo->products_quantity_order_min), 'class="form-control" id="products_quantity_order_min"'); ?>
     </div>
   </div>
   <div class="form-group">
       <?php echo zen_draw_label(TEXT_PRODUCTS_QUANTITY_MAX_RETAIL, 'products_quantity_order_max', 'class="col-sm-3 control-label"'); ?>
     <div class="col-sm-9 col-md-6">
-      <?php echo zen_draw_input_field('products_quantity_order_max', $pInfo->products_quantity_order_max, 'class="form-control"'); ?>&nbsp;&nbsp;<?php echo TEXT_PRODUCTS_QUANTITY_MAX_RETAIL_EDIT; ?>
+      <?php echo zen_draw_input_field('products_quantity_order_max', $pInfo->products_quantity_order_max, 'class="form-control" id="products_quantity_order_max"'); ?>&nbsp;&nbsp;<?php echo TEXT_PRODUCTS_QUANTITY_MAX_RETAIL_EDIT; ?>
     </div>
   </div>
   <div class="form-group">
       <?php echo zen_draw_label(TEXT_PRODUCTS_QUANTITY_UNITS_RETAIL, 'products_quantity_order_units', 'class="col-sm-3 control-label"'); ?>
     <div class="col-sm-9 col-md-6">
-        <?php echo zen_draw_input_field('products_quantity_order_units', ($pInfo->products_quantity_order_units == 0 ? 1 : $pInfo->products_quantity_order_units), 'class="form-control"'); ?>
+        <?php echo zen_draw_input_field('products_quantity_order_units', ($pInfo->products_quantity_order_units == 0 ? 1 : $pInfo->products_quantity_order_units), 'class="form-control" id="products_quantity_order_units"'); ?>
     </div>
   </div>
   <div class="form-group">
@@ -347,13 +347,13 @@ if (zen_get_categories_status($current_category_id) == 0 && $pInfo->products_sta
   <div class="form-group">
       <?php echo zen_draw_label(TEXT_PRODUCTS_QUANTITY, 'products_quantity', 'class="col-sm-3 control-label"'); ?>
     <div class="col-sm-9 col-md-6">
-        <?php echo zen_draw_input_field('products_quantity', $pInfo->products_quantity, 'class="form-control"'); ?>
+        <?php echo zen_draw_input_field('products_quantity', $pInfo->products_quantity, 'class="form-control" id="products_quantity"'); ?>
     </div>
   </div>
   <div class="form-group">
       <?php echo zen_draw_label(TEXT_PRODUCTS_MODEL, 'products_model', 'class="col-sm-3 control-label"'); ?>
     <div class="col-sm-9 col-md-6">
-        <?php echo zen_draw_input_field('products_model', htmlspecialchars(stripslashes($pInfo->products_model), ENT_COMPAT, CHARSET, TRUE), zen_set_field_length(TABLE_PRODUCTS, 'products_model') . ' class="form-control"'); ?>
+        <?php echo zen_draw_input_field('products_model', htmlspecialchars(stripslashes($pInfo->products_model), ENT_COMPAT, CHARSET, TRUE), zen_set_field_length(TABLE_PRODUCTS, 'products_model') . ' class="form-control" id="products_model"'); ?>
     </div>
   </div>
   <?php
@@ -369,7 +369,7 @@ if (zen_get_categories_status($current_category_id) == 0 && $pInfo->products_sta
     <div class="col-sm-9 col-md-9 col-lg-6">
       <div class="col-md-6">
         <div class="row">
-            <?php echo zen_draw_file_field('products_image', '', 'class="form-control"'); ?>
+            <?php echo zen_draw_file_field('products_image', '', 'class="form-control" id="products_image"'); ?>
         </div>
         <div class="row">&nbsp;</div>
         <div class="row">
@@ -380,7 +380,7 @@ if (zen_get_categories_status($current_category_id) == 0 && $pInfo->products_sta
       </div>
       <div class="col-md-6">
         <div class="row">
-          <?php echo zen_draw_label(TEXT_PRODUCTS_IMAGE_DIR, 'img_dir', 'class="control-label"'); ?>&nbsp;<?php echo zen_draw_pull_down_menu('img_dir', $dir_info, $default_directory, 'class="form-control"'); ?>
+          <?php echo zen_draw_label(TEXT_PRODUCTS_IMAGE_DIR, 'img_dir', 'class="control-label"'); ?>&nbsp;<?php echo zen_draw_pull_down_menu('img_dir', $dir_info, $default_directory, 'class="form-control" id="img_dir"'); ?>
         </div>
         <div class="row">&nbsp;</div>
         <div class="row">
@@ -396,7 +396,7 @@ if (zen_get_categories_status($current_category_id) == 0 && $pInfo->products_sta
         </div>
         <div class="row">&nbsp;</div>
         <div class="row">
-            <?php echo zen_draw_label(TEXT_PRODUCTS_IMAGE_MANUAL, 'products_image_manual', 'class="control-label"') . zen_draw_input_field('products_image_manual', '', 'class="form-control"'); ?>
+            <?php echo zen_draw_label(TEXT_PRODUCTS_IMAGE_MANUAL, 'products_image_manual', 'class="control-label"') . zen_draw_input_field('products_image_manual', '', 'class="form-control" id="products_image_manual"'); ?>
         </div>
       </div>
     </div>
@@ -427,13 +427,13 @@ if (zen_get_categories_status($current_category_id) == 0 && $pInfo->products_sta
   <div class="form-group">
       <?php echo zen_draw_label(TEXT_PRODUCTS_WEIGHT, 'products_weight', 'class="col-sm-3 control-label"'); ?>
     <div class="col-sm-9 col-md-6">
-        <?php echo zen_draw_input_field('products_weight', $pInfo->products_weight, 'class="form-control"'); ?>
+        <?php echo zen_draw_input_field('products_weight', $pInfo->products_weight, 'class="form-control" id="products_weight"'); ?>
     </div>
   </div>
   <div class="form-group">
       <?php echo zen_draw_label(TEXT_PRODUCTS_SORT_ORDER, 'products_sort_order', 'class="col-sm-3 control-label"'); ?>
     <div class="col-sm-9 col-md-6">
-      <?php echo zen_draw_input_field('products_sort_order', $pInfo->products_sort_order, 'class="form-control"'); ?>
+      <?php echo zen_draw_input_field('products_sort_order', $pInfo->products_sort_order, 'class="form-control" id="products_sort_order"'); ?>
     </div>
     <?php
     echo zen_draw_hidden_field('products_date_added', (zen_not_null($pInfo->products_date_added) ? $pInfo->products_date_added : date('Y-m-d')));
