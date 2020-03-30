@@ -174,13 +174,13 @@ if (zen_not_null($action)) {
           if ($categories_image->parse() && $categories_image->save()) {
               $categories_image_name = zen_db_input($_POST['img_dir'] . $categories_image->filename);
           }
-          if ($categories_image->filename != 'none' && $categories_image->filename != '' && $_POST['image_delete'] != 1) {
+          if ($categories_image->filename != 'none' && $categories_image->filename != '' && $_POST['image_delete'] != '1') {
               // save filename when not set to none and not blank
               $db_filename = zen_limit_image_filename($categories_image_name, TABLE_CATEGORIES, 'categories_image');
               $db->Execute("update " . TABLE_CATEGORIES . "
                           set categories_image = '" . $db_filename . "'
                           where categories_id = '" . (int)$categories_id . "'");
-          } elseif ($categories_image->filename != '' || $_POST['image_delete'] === 1) {
+          } elseif ($categories_image->filename != '' || $_POST['image_delete'] === '1') {
               $db->Execute("update " . TABLE_CATEGORIES . "
                             set categories_image = ''
                             where categories_id = '" . (int)$categories_id . "'");
@@ -390,6 +390,26 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
             ?>
           </div>
         </div>
+        <hr>
+            <h2><?php echo TEXT_CATEGORIES_IMAGE; ?></h2>
+            <?php
+            if (!empty($cInfo->categories_image)) { ?>
+                <div class="form-group">
+                    <div class="col-sm-offset-3 col-sm-9 col-md-6">
+                        <?php echo zen_info_image($cInfo->categories_image, $cInfo->categories_name); ?>
+                        <br>
+                        <?php echo $cInfo->categories_image; ?>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <p class="col-sm-3 control-label"><?php echo TEXT_IMAGES_DELETE; ?></p>
+                    <div class="col-sm-9 col-md-6">
+                        <label class="radio-inline"><?php echo zen_draw_radio_field('image_delete', '0', true) . TABLE_HEADING_NO; ?></label>
+                        <label class="radio-inline"><?php echo zen_draw_radio_field('image_delete', '1', false) . TABLE_HEADING_YES; ?></label>
+                    </div>
+                </div>
+            <?php }
+            ?>
         <div class="form-group">
             <p class="col-sm-3 control-label"><strong><?php echo TEXT_EDIT_CATEGORIES_IMAGE; ?></strong></p>
           <div class="col-sm-9 col-md-6">
@@ -412,20 +432,7 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
               <?php echo zen_draw_input_field('categories_image_manual', '', 'class="form-control" id="categories_image_manual"'); ?>
           </div>
         </div>
-        <div class="form-group">
-          <div class="col-sm-offset-3 col-sm-9 col-md-6">
-              <?php echo zen_info_image($cInfo->categories_image, $cInfo->categories_name); ?>
-              <br>
-              <?php echo $cInfo->categories_image; ?>
-          </div>
-        </div>
-        <div class="form-group">
-          <p class="col-sm-3 control-label"><strong><?php echo TEXT_IMAGES_DELETE; ?></strong></p>
-          <div class="col-sm-9 col-md-6">
-            <label class="radio-inline"><?php echo zen_draw_radio_field('image_delete', '0', true) . TABLE_HEADING_NO; ?></label>
-            <label class="radio-inline"><?php echo zen_draw_radio_field('image_delete', '1', false) . TABLE_HEADING_YES; ?></label>
-          </div>
-        </div>
+        <hr>
         <div class="form-group">
             <?php echo zen_draw_label(TEXT_EDIT_SORT_ORDER, 'sort_order', 'class="col-sm-3 control-label"'); ?>
           <div class="col-sm-9 col-md-6">
