@@ -14,7 +14,7 @@ define('TEXT_EDIT_CATEGORIES_NAME', 'Category Name:');
 define('TEXT_CATEGORIES_DESCRIPTION', 'Category Description:');
 define('TEXT_CATEGORIES_IMAGE', 'Category Image:');
 define('TEXT_EDIT_CATEGORIES_IMAGE', 'Edit Category Image:');
-define('TEXT_CATEGORIES_IMAGE_DIR', 'Upload to directory:');
+define('TEXT_CATEGORIES_IMAGE_DIR', 'Upload to:<br>/images/<em>(subdirectory)</em>');
 define('TEXT_CATEGORIES_IMAGE_MANUAL', 'Or, select an existing image file from the server, filename:');
 define('TEXT_EDIT_SORT_ORDER', 'Sort Order:');
 define('TEXT_RESTRICT_PRODUCT_TYPE', 'Restrict to Product Type');
