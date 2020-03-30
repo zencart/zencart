@@ -253,7 +253,7 @@ if (zen_get_categories_status($current_category_id) == 0 && $pInfo->products_sta
       <?php echo ($pInfo->products_priced_by_attribute == 1 ? '<span class="help-block errorText">' . TEXT_PRODUCTS_PRICED_BY_ATTRIBUTES_EDIT . '</span>' : ''); ?>
     </div>
   </div>
-  <div class="well" style="color: #31708f;background-color: #d9edf7;border-color: #bce8f1;;padding: 10px 10px 0 0;">
+  <div class="well" style="color: #31708f;background-color: #d9edf7;border-color: #bce8f1;padding: 10px 10px 0 0;">
     <div class="form-group">
         <?php echo zen_draw_label(TEXT_PRODUCTS_TAX_CLASS, 'products_tax_class_id', 'class="col-sm-3 control-label"'); ?>
       <div class="col-sm-9 col-md-6">
