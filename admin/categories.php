@@ -403,7 +403,7 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
             if (!empty($cInfo->categories_image)) { ?>
                 <div class="form-group">
                     <div class="col-sm-offset-3 col-sm-9 col-md-6">
-                        <?php echo zen_info_image($cInfo->categories_image, $cInfo->categories_name); ?>
+                        <div><?php echo zen_info_image($cInfo->categories_image, $cInfo->categories_name, '', '', 'class="table-bordered img-responsive"'); ?></div>
                         <br>
                         <?php echo $cInfo->categories_image; ?>
                     </div>
