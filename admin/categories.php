@@ -405,7 +405,11 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
                     <div class="col-sm-offset-3 col-sm-9 col-md-6">
                         <div><?php echo zen_info_image($cInfo->categories_image, $cInfo->categories_name, '', '', 'class="table-bordered img-responsive"'); ?></div>
                         <br>
-                        <?php echo $cInfo->categories_image; ?>
+                        <?php
+                        [$width, $height] = getimagesize(DIR_FS_CATALOG_IMAGES . $cInfo->categories_image);
+                        $kb = filesize(DIR_FS_CATALOG_IMAGES . $cInfo->categories_image)/1000;
+                        echo sprintf(TEXT_FILENAME,   '/images/' . $cInfo->categories_image, $width, $height, $kb);
+                        ?>
                     </div>
                 </div>
                 <div class="form-group">
