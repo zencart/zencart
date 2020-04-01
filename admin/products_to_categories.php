@@ -10,13 +10,6 @@
 
 require('includes/application_top.php');
 
-///////////////////////////////////////////////////////////////////////////////////////////////
-//todo move to zc_install. Set the target category drop-down to a set category on page first load/when no target category yet selected.
-if (!defined('P2C_TARGET_CATEGORY_DEFAULT')){
-    $db->Execute("INSERT INTO `configuration` (`configuration_title`, `configuration_key`, `configuration_value`, `configuration_description`, `configuration_group_id`, `sort_order`) VALUES ('Default Target Category (Products to Multiple Categories Manager)', 'P2C_TARGET_CATEGORY_DEFAULT', '', 'Default Target Category for Products to Multiple Categories Manager (can also be set on page)', '3', '70')");
-}
-///////////////////////////////////////////////////////////////////////////////////////////////
-
 //functions: located here as only used here. Future merging/expansion with existing functions to be reviewed when possible.
 /**
  * validate the user-entered categories from the Global Tools
@@ -908,7 +901,7 @@ if ($target_subcategory_count > $max_input_vars) { //warning when in excess of P
                     ?>
                     <noscript><input type="submit" value="<?php echo IMAGE_DISPLAY; ?>"></noscript>
                     <?php echo '</form>'; ?>
-                    <?php if ($target_category_id !== 0) { // show a Set Default button when a target category has been selected
+                    <?php if ($target_category_id !== (int)P2C_TARGET_CATEGORY_DEFAULT) { // show a Set Default button if the selected target category is different to he saved default
                         echo zen_draw_form('set_default_target_category_form', FILENAME_PRODUCTS_TO_CATEGORIES, 'action=set_default_target_category' . '&products_filter=' . $products_filter . '&current_category_id=' . $current_category_id, 'post'); ?>
                         <button type="submit" class="btn btn-info" title="<?php echo BUTTON_SET_DEFAULT_TARGET_CATEGORY_TITLE; ?>"><?php echo BUTTON_SET_DEFAULT_TARGET_CATEGORY; ?></span></button>
                         <?php
@@ -960,7 +953,6 @@ if ($target_subcategory_count > $max_input_vars) { //warning when in excess of P
 
                         // Create an object and populate it with the properties expected by the script (an array with
                         // the category's ID and name stored in a "fields" property)
-                        //$categories_list = new CeonCategoriesInfo();
                         $categories_list = new stdClass();
                         $categories_list->fields = $categories_info[$cat_i];
                         $cnt_columns++;
