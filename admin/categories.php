@@ -185,7 +185,7 @@ if (zen_not_null($action)) {
           if ($categories_image->parse() && $categories_image->save()) {
               $categories_image_name = zen_db_input($_POST['img_dir'] . $categories_image->filename);
           }
-          if ($categories_image->filename !== 'none' && $categories_image->filename !== '') {
+          if ($categories_image->filename !== 'none' && $categories_image->filename != '') {
               // save filename when not set to none and not blank
               $db_filename = zen_limit_image_filename($categories_image_name, TABLE_CATEGORIES, 'categories_image');
               $db->Execute("UPDATE " . TABLE_CATEGORIES . "
