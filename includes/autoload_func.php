@@ -19,21 +19,21 @@ if (!defined('IS_ADMIN_FLAG')) {
 foreach ($initSystemList as $entry) {
     switch ($entry['type']) {
         case 'include':
-            //echo 'include ' . $entry['filePath'] . "\n";
+            //echo 'case "include": ' . $entry['filePath'] . "<br>\n";
             include $entry['filePath'];
             break;
         case 'require':
-            //echo 'require ' . $entry['filePath'] . "\n";
+            //echo 'case "require": ' . $entry['filePath'] . "<br>\n";
             require $entry['filePath'];
             break;
         case 'class':
-            //echo 'class ' . $entry['class'] . "\n";
+            //echo 'case "class": ' . $entry['class'] . "<br>\n";
             $objectName = $entry['object'];
             $className = $entry['class'];
             $$objectName = new $className();
             break;
         case 'sessionClass':
-            //echo 'sessionClass ' . $entry['class'] . "\n";
+            //echo 'case "sessionClass": ' . $entry['class'] . "<br>\n";
             $objectName = $entry['object'];
             $className = $entry['class'];
             if (!$entry['checkInstantiated'] || !isset($_SESSION[$objectName])) {
@@ -41,7 +41,7 @@ foreach ($initSystemList as $entry) {
             }
             break;
         case 'objectMethod':
-            //echo 'objectMethod ' . $entry['class'] . "\n";
+            //echo 'case "objectMethod": ' . '$entry[\'method\']=' . $entry['method'] . ', $entry[\'object\']=' . $entry['object'] . "<br>\n";
             $objectName = $entry['object'];
             $methodName = $entry['method'];
               if (isset($_SESSION[$objectName]) && is_object($_SESSION[$objectName])) {
