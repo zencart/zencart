@@ -52,7 +52,7 @@ if (isset($_POST['edit']) && $_POST['edit'] == 'edit') {
 
   // when set to none remove from database
   // is out dated for browsers use radio only
-  if ($_POST['image_delete'] == 1) {
+  if (isset($_POST['image_delete']) && $_POST['image_delete'] == '1') {
     $sql_data_array['products_image'] = '';
     $new_image = 'false';
   }
