@@ -859,3 +859,6 @@ input.faint {
     width: 90%;
     display: inline-block;
 }
+.control-label {/*for multiple inputs*/
+    font-weight: 700;
+}
