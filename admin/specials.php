@@ -432,7 +432,7 @@ if (zen_not_null($action)) {
                                 }
                                 $check_count++;
                             }
-                            $_GET['page'] = round((($check_count / MAX_DISPLAY_SEARCH_RESULTS) + (fmod_round($check_count, MAX_DISPLAY_SEARCH_RESULTS) !== 0 ? .5 : 0)));
+                            $_GET['page'] = round((($check_count / MAX_DISPLAY_SEARCH_RESULTS) + (fmod_round($check_count, MAX_DISPLAY_SEARCH_RESULTS) !== 0 ? .5 : 0)), 0);
                             $page = $_GET['page'];
                         } else {
                             $_GET['page'] = 1;
