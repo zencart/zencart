@@ -13,12 +13,12 @@
 $valid_product = false;
 $zco_notifier->notify('NOTIFY_HEADER_START_ASK_A_QUESTION');
 if (isset($_GET['products_id'])) {
-    $product_info_query = "select pd.products_name, p.products_image, p.products_model
-                           from " . TABLE_PRODUCTS . " p, " . TABLE_PRODUCTS_DESCRIPTION . " pd
-                           where p.products_status = '1'
-                           and p.products_id = " . (int)$_GET['products_id'] . "
-                           and p.products_id = pd.products_id
-                           and pd.language_id = " . (int)$_SESSION['languages_id'];
+    $product_info_query = "SELECT pd.products_name, p.products_image, p.products_model
+                           FROM " . TABLE_PRODUCTS . " p, " . TABLE_PRODUCTS_DESCRIPTION . " pd
+                           WHERE p.products_status = '1'
+                           AND p.products_id = " . (int)$_GET['products_id'] . "
+                           AND p.products_id = pd.products_id
+                           AND pd.language_id = " . (int)$_SESSION['languages_id'];
 
     $product_info = $db->Execute($product_info_query);
 
