@@ -23,13 +23,6 @@ class messageStack extends base
     function __construct() 
     {
         $this->messages = array();
-
-        if (isset($_SESSION['messageToStack']) && $_SESSION['messageToStack']) {
-            $messageToStack = $_SESSION['messageToStack'];
-            for ($i = 0, $n = count($messageToStack); $i < $n; $i++) {
-                $this->add($messageToStack[$i]['class'], $messageToStack[$i]['text'], $messageToStack[$i]['type']);
-            }
-        }
     }
 
     function add($class, $message, $type = 'error') 
@@ -70,9 +63,10 @@ class messageStack extends base
                 );
             }
 
-            for ($i = 0, $n = count($this->messages); $i < $n; $i++) {
-                if ($theAlert['text'] == $this->messages[$i]['text'] && $theAlert['class'] == $this->messages[$i]['class']) {
+            foreach ($this->messages as $next_message) {
+                if ($theAlert['text'] == $next_message['text'] && $theAlert['class'] == $next_message['class']) {
                     $duplicate = true;
+                    break;
                 }
             }
             if (!$duplicate) {
@@ -107,11 +101,17 @@ class messageStack extends base
     {
         global $template, $current_page_base;
 
-        $_SESSION['messageToStack'] = '';
+        if (!empty($_SESSION['messageToStack'])) {
+            foreach ($_SESSION['messageToStack'] as $next_message) {
+                $this->add($next_message['class'], $next_message['text'], $next_message['type']);
+            }
+        }
+
+        $_SESSION['messageToStack'] = array();
 
         $output = array();
-        for ($i = 0, $n = count($this->messages); $i < $n; $i++) {
-            if ($this->messages[$i]['class'] == $class) {
+        foreach ($this->messages as $next_message) {
+            if ($next_message['class'] == $class) {
                 $output[] = $this->messages[$i];
             }
         }
@@ -126,8 +126,8 @@ class messageStack extends base
     {
         $count = 0;
 
-        for ($i = 0, $n = count($this->messages); $i < $n; $i++) {
-            if ($this->messages[$i]['class'] == $class) {
+        foreach ($this->messages as $next_message) {
+            if ($next_message['class'] == $class) {
                 $count++;
             }
         }
