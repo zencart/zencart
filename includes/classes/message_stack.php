@@ -101,14 +101,6 @@ class messageStack extends base
     {
         global $template, $current_page_base;
 
-        if (!empty($_SESSION['messageToStack'])) {
-            foreach ($_SESSION['messageToStack'] as $next_message) {
-                $this->add($next_message['class'], $next_message['text'], $next_message['type']);
-            }
-        }
-
-        $_SESSION['messageToStack'] = array();
-
         $output = array();
         foreach ($this->messages as $next_message) {
             if ($next_message['class'] == $class) {
@@ -124,6 +116,14 @@ class messageStack extends base
 
     function size($class) 
     {
+        if (!empty($_SESSION['messageToStack'])) {
+            foreach ($_SESSION['messageToStack'] as $next_message) {
+                $this->add($next_message['class'], $next_message['text'], $next_message['type']);
+            }
+        }
+
+        $_SESSION['messageToStack'] = array();
+
         $count = 0;
 
         foreach ($this->messages as $next_message) {
