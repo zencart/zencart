@@ -104,7 +104,7 @@ class messageStack extends base
         $output = array();
         foreach ($this->messages as $next_message) {
             if ($next_message['class'] == $class) {
-                $output[] = $this->messages[$i];
+                $output[] = $next_message;
             }
         }
 
