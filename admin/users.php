@@ -28,7 +28,7 @@ if (isset($_POST['action']) && in_array($_POST['action'], array('insert', 'updat
 // if needed, check that a valid user id has been passed
 if (($action == 'update' || $action == 'reset') && isset($_POST['user'])) {
   $user = $_POST['user'];
-} elseif (($action == 'edit' || $action == 'password' || $action == 'delete' || $action == 'delete_confirm') && $_GET['user']) {
+} elseif (($action == 'edit' || $action == 'password') && isset($_GET['user'])) {
   $user = $_GET['user'];
 } elseif (($action == 'delete' || $action == 'delete_confirm') && isset($_POST['user'])) {
   $user = $_POST['user'];
