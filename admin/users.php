@@ -154,11 +154,11 @@ $userList = zen_get_users();
             <?php if ($action == 'add') { ?>
             <tr>
               <td class="id">&nbsp;</td>
-              <td class="name"><?php echo zen_draw_input_field('name', isset($_POST['name']) ? $_POST['name'] : '', 'class="form-control field"', true, 'text', true) ?></td>
-              <td class="email"><?php echo zen_draw_input_field('email', isset($_POST['email']) ? $_POST['email'] : '', 'class="form-control field"', true, 'email', true) ?></td>
-              <td class="profile"><?php echo zen_draw_pull_down_menu('profile', $profilesList, isset($_POST['profile']) ? $_POST['profile'] : 0, 'class="form-control"') ?></td>
-              <td class="password"><?php echo zen_draw_input_field('password', isset($_POST['password']) ? $_POST['password'] : '', ' class="form-control field"', true, 'password'); ?></td>
-              <td class="confirm"><?php echo zen_draw_input_field('confirm', isset($_POST['confirm']) ? $_POST['confirm'] : '', ' class="form-control field"', false, 'password'); ?></td>
+              <td class="name"><?php echo zen_draw_input_field('name', isset($_POST['name']) ? $_POST['name'] : '', 'class="form-control" required', true, 'text', true) ?></td>
+              <td class="email"><?php echo zen_draw_input_field('email', isset($_POST['email']) ? $_POST['email'] : '', 'class="form-control" required', true, 'email', true) ?></td>
+              <td class="profile"><?php echo zen_draw_pull_down_menu('profile', $profilesList, isset($_POST['profile']) ? $_POST['profile'] : 0, 'class="form-control"', true) ?></td>
+              <td class="password"><?php echo zen_draw_input_field('password', isset($_POST['password']) ? $_POST['password'] : '', ' class="form-control" required', true, 'password'); ?></td>
+              <td class="confirm"><?php echo zen_draw_input_field('confirm', isset($_POST['confirm']) ? $_POST['confirm'] : '', ' class="form-control" required', true, 'password'); ?></td>
               <td class="actions"><button type="submit" class="btn btn-primary"><?php echo IMAGE_INSERT; ?></button> <a href="<?php echo zen_href_link(FILENAME_USERS) ?>" class="btn btn-default" role="button"><?php echo IMAGE_CANCEL; ?></a></td>
             </tr>
           <?php } ?>
@@ -171,20 +171,20 @@ $userList = zen_get_users();
                   <td class="id"><?php echo $userDetails['id'] ?></td>
                 <?php } ?>
                 <?php if ($action == 'edit' && $user == $userDetails['id']) { ?>
-                  <td class="name"><?php echo zen_draw_input_field('name', $userDetails['name'], 'class="form-control field"') ?></td>
-                  <td class="email"><?php echo zen_draw_input_field('email', $userDetails['email'], 'class="form-control field"', false, 'email') ?></td>
+                  <td class="name"><?php echo zen_draw_input_field('name', $userDetails['name'], 'class="form-control"') ?></td>
+                  <td class="email"><?php echo zen_draw_input_field('email', $userDetails['email'], 'class="form-control"', false, 'email') ?></td>
                 <?php } else { ?>
                   <td class="name"><?php echo $userDetails['name'] ?></td>
                   <td class="email"><?php echo $userDetails['email'] ?></td>
                 <?php } ?>
-                <?php if ($action == 'edit' && $user == $userDetails['id'] && $user != $currentUser) { ?>
+                <?php if ($action == 'edit' && $user == $userDetails['id'] && $user != $currentUser) { // do not allow current user to change profile ?>
                   <td class="profile"><?php echo zen_draw_pull_down_menu('profile', $profilesList, $userDetails['profile'], 'class="form-control"') ?></td>
                 <?php } else { ?>
                   <td class="profile"><?php echo $userDetails['profileName'] ?></td>
                 <?php } ?>
                 <?php if ($action == 'password' && $user == $userDetails['id']) { ?>
-                  <td class="password"><?php echo zen_draw_input_field('password', '', 'class="form-control field"', false, 'password', true) ?></td>
-                  <td class="confirm"><?php echo zen_draw_input_field('confirm', '', 'class="form-control field"', false, 'password', true) ?></td>
+                  <td class="password"><?php echo zen_draw_input_field('password', '', 'class="form-control" required', false, 'password', true) ?></td>
+                  <td class="confirm"><?php echo zen_draw_input_field('confirm', '', 'class="form-control" required', false, 'password', true) ?></td>
                 <?php } elseif ($action == 'add' || $action == 'password') { ?>
                   <td class="password">&nbsp;</td>
                   <td class="confirm">&nbsp;</td>
