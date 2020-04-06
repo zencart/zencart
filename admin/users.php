@@ -180,7 +180,7 @@ $userList = zen_get_users();
                 <?php if ($action == 'edit' && $user == $userDetails['id'] && $user != $currentUser) { ?>
                   <td class="profile"><?php echo zen_draw_pull_down_menu('profile', $profilesList, $userDetails['profile'], 'class="form-control"') ?></td>
                 <?php } else { ?>
-                  <td class="profile"><?php echo $userDetails['profileName'] . zen_draw_hidden_field('profile', $userDetails['profile']) ?></td>
+                  <td class="profile"><?php echo $userDetails['profileName'] ?></td>
                 <?php } ?>
                 <?php if ($action == 'password' && $user == $userDetails['id']) { ?>
                   <td class="password"><?php echo zen_draw_input_field('password', '', 'class="form-control field"', false, 'password', true) ?></td>
