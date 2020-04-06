@@ -190,7 +190,7 @@ $userList = zen_get_users();
                   <td class="confirm">&nbsp;</td>
                 <?php } ?>
                 <?php if ($action == 'add' || $action == 'edit' || $action == 'password') { ?>
-                  <?php if ($user == $userDetails['id'] && $action != 'add') { ?>
+                  <?php if ($action != 'add' && $user == $userDetails['id']) { ?>
                     <td class="actions">
                       <button type="submit" class="btn btn-primary"><?php echo IMAGE_UPDATE; ?></button> <a href="<?php echo zen_href_link(FILENAME_USERS) ?>" class="btn btn-default" role="button"><?php echo IMAGE_CANCEL; ?></a>
                     </td>
