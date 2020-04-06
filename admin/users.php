@@ -131,11 +131,15 @@ $userList = zen_get_users();
     <div class="container-fluid" id="pageWrapper">
 
       <h1><?php echo HEADING_TITLE ?></h1>
-      <?php if (($action != '') && $action != 'delete') { // Hide this form when delete in use ?>
-        <?php echo zen_draw_form('users', FILENAME_USERS); ?>
-        <?php if (isset($formAction)) echo zen_draw_hidden_field('action', $formAction) ?>
-      <?php } ?>
-      <?php if ($action == 'edit' || $action == 'password') echo zen_draw_hidden_field('user', $user) ?>
+        <?php if (($action != '') && $action != 'delete') { // Hide this form when delete selected
+            echo zen_draw_form('users', FILENAME_USERS);
+            if (isset($formAction)) {
+                echo zen_draw_hidden_field('action', $formAction);
+            }
+        }
+        if ($action == 'edit' || $action == 'password') {
+            echo zen_draw_hidden_field('user', $user);
+        } ?>
       <table class="table table-striped">
         <thead>
           <tr class="headingRow">
@@ -192,7 +196,8 @@ $userList = zen_get_users();
                 <?php if ($action == 'add' || $action == 'edit' || $action == 'password') { ?>
                   <?php if ($action != 'add' && $user == $userDetails['id']) { ?>
                     <td class="actions">
-                      <button type="submit" class="btn btn-primary"><?php echo IMAGE_UPDATE; ?></button> <a href="<?php echo zen_href_link(FILENAME_USERS) ?>" class="btn btn-default" role="button"><?php echo IMAGE_CANCEL; ?></a>
+                      <button type="submit" class="btn btn-primary"><?php echo IMAGE_UPDATE; ?></button>
+                        <a href="<?php echo zen_href_link(FILENAME_USERS) ?>" class="btn btn-default" role="button"><?php echo IMAGE_CANCEL; ?></a>
                     </td>
                   <?php } else { ?>
                     <td class="actions">&nbsp;</td>
@@ -204,11 +209,10 @@ $userList = zen_get_users();
                     <?php } ?>
                     <?php
                     if ($userDetails['id'] != $currentUser) {
-
                       $btn_class = '';
                       if ($action == 'delete' && $userDetails['id'] == $user) {
                         $btn_class = 'btn btn-danger';
-                      } else if ($action != 'delete') {
+                      } elseif ($action != 'delete') {
                         $btn_class = 'btn btn-warning';
                       }
                       ?>
