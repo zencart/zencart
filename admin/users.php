@@ -66,7 +66,7 @@ switch ($action) {
       $profilesList = array_merge([['id' => 0, 'text' => TEXT_CHOOSE_PROFILE]], zen_get_profiles());
     } else {
       $action = '';
-      $messageStack->add(SUCCESS_NEW_USER_ADDED, 'success');
+      $messageStack->add(sprintf(SUCCESS_NEW_USER_ADDED, zen_db_prepare_input($_POST['name'])), 'success');
     }
     break;
   case 'update': // update existing user's details in database. Post data is prep'd for db in the first function call
