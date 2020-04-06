@@ -13,41 +13,41 @@ if (!isset($_SESSION['admin_id'])) {
   zen_redirect(zen_href_link(FILENAME_LOGIN, '', 'SSL'));
 }
 
-// make a note of the current user - they can't delete themselves (by accident) or change their own status
+// note the current user so they cannot change their own profile nor delete themselves
 $currentUser = $_SESSION['admin_id'];
 
 // determine whether an action has been requested
-if (isset($_POST['action']) && in_array($_POST['action'], array('insert', 'update', 'reset'))) {
+if (isset($_POST['action']) && in_array($_POST['action'], ['insert', 'update', 'reset'])) {
   $action = $_POST['action'];
-} elseif (isset($_GET['action']) && in_array($_GET['action'], array('add', 'edit', 'password', 'delete', 'delete_confirm'))) {
+} elseif (isset($_GET['action']) && in_array($_GET['action'], ['add', 'edit', 'password', 'delete', 'delete_confirm'])) {
   $action = $_GET['action'];
 } else {
   $action = '';
 }
 
-// if needed, check that a valid user id has been passed
+// check for a valid user id (not for add)
 if (($action == 'update' || $action == 'reset') && isset($_POST['user'])) {
   $user = $_POST['user'];
 } elseif (($action == 'edit' || $action == 'password') && isset($_GET['user'])) {
   $user = $_GET['user'];
 } elseif (($action == 'delete' || $action == 'delete_confirm') && isset($_POST['user'])) {
   $user = $_POST['user'];
-} elseif (in_array($action, array('edit', 'password', 'delete', 'delete_confirm', 'update', 'reset'))) {
+} elseif (in_array($action, ['edit', 'password', 'delete', 'delete_confirm', 'update', 'reset'])) {
   $messageStack->add_session(ERROR_NO_USER_DEFINED, 'error');
   zen_redirect(zen_href_link(FILENAME_USERS));
 }
 
-// act upon any specific action specified
+//set form action based on button selection
 switch ($action) {
   case 'add': // display unpopulated form for adding a new user
     $formAction = 'insert';
-    $profilesList = array_merge(array(array('id' => 0, 'text' => TEXT_CHOOSE_PROFILE)), zen_get_profiles());
+    $profilesList = array_merge([['id' => 0, 'text' => TEXT_CHOOSE_PROFILE]], zen_get_profiles());
     break;
-  case 'edit': // display populated form for editing existing user
+  case 'edit': // display populated form for editing existing user Name/Email/Profile
     $formAction = 'update';
-    $profilesList = array_merge(array(array('id' => 0, 'text' => TEXT_CHOOSE_PROFILE)), zen_get_profiles());
+    $profilesList = array_merge([['id' => 0, 'text' => TEXT_CHOOSE_PROFILE]], zen_get_profiles());
     break;
-  case 'password': // display unpopulated form for resetting existing user's password
+  case 'password': // display form input fields for resetting existing user's Password
     $formAction = 'reset';
     break;
   case 'delete_confirm': // remove existing user from database
@@ -57,13 +57,13 @@ switch ($action) {
     break;
   case 'insert': // insert new user into database. Post data is prep'd for db in the first function call
     $errors = zen_insert_user($_POST['name'], $_POST['email'], $_POST['password'], $_POST['confirm'], $_POST['profile']);
-    if (sizeof($errors) > 0) {
+    if (count($errors) > 0) {
       foreach ($errors as $error) {
         $messageStack->add($error, 'error');
       }
       $action = 'add';
       $formAction = 'insert';
-      $profilesList = array_merge(array(array('id' => 0, 'text' => TEXT_CHOOSE_PROFILE)), zen_get_profiles());
+      $profilesList = array_merge([['id' => 0, 'text' => TEXT_CHOOSE_PROFILE]], zen_get_profiles());
     } else {
       $action = '';
       $messageStack->add(SUCCESS_NEW_USER_ADDED, 'success');
@@ -71,13 +71,13 @@ switch ($action) {
     break;
   case 'update': // update existing user's details in database. Post data is prep'd for db in the first function call
     $errors = zen_update_user($_POST['name'], $_POST['email'], $_POST['id'], $_POST['profile']);
-    if (sizeof($errors) > 0) {
+    if (count($errors) > 0) {
       foreach ($errors as $error) {
         $messageStack->add($error, 'error');
       }
       $action = 'edit';
       $formAction = 'update';
-      $profilesList = array_merge(array(array('id' => 0, 'text' => TEXT_CHOOSE_PROFILE)), zen_get_profiles());
+      $profilesList = array_merge([['id' => 0, 'text' => TEXT_CHOOSE_PROFILE]], zen_get_profiles());
     } else {
       $action = '';
       $messageStack->add(SUCCESS_USER_DETAILS_UPDATED, 'success');
@@ -85,7 +85,7 @@ switch ($action) {
     break;
   case 'reset': // reset existing user's password in database. Post data is prep'd for db in the first function call
     $errors = zen_reset_password($_POST['user'], $_POST['password'], $_POST['confirm']);
-    if (sizeof($errors) > 0) {
+    if (count($errors) > 0) {
       foreach ($errors as $error) {
         $messageStack->add($error, 'error');
       }
@@ -99,7 +99,7 @@ switch ($action) {
   default: // no action, simply drop through and display existing users
 }
 
-// we'll always display a list of the available users
+// list of users
 $userList = zen_get_users();
 ?>
 <!doctype html>
@@ -162,7 +162,7 @@ $userList = zen_get_users();
               <td class="actions"><button type="submit" class="btn btn-primary"><?php echo IMAGE_INSERT; ?></button> <a href="<?php echo zen_href_link(FILENAME_USERS) ?>" class="btn btn-default" role="button"><?php echo IMAGE_CANCEL; ?></a></td>
             </tr>
           <?php } ?>
-          <?php if (sizeof($userList) > 0) { ?>
+          <?php if (count($userList) > 0) { ?>
             <?php foreach ($userList as $userDetails) { ?>
               <tr>
                   <?php if (($action == 'edit' || $action == 'password') && $user == $userDetails['id']) { ?>
