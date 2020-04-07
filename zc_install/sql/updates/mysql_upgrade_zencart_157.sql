@@ -81,6 +81,7 @@ ALTER TABLE ezpages_content MODIFY pages_html_text mediumtext NOT NULL;
 
 # Enable Products to Categories as a menu option
 UPDATE admin_pages SET display_on_menu = 'Y' WHERE page_key = 'productsToCategories';
+INSERT IGNORE INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order) VALUES ('Default Target Category (Products to Multiple Categories Manager)', 'P2C_TARGET_CATEGORY_DEFAULT', '', 'Default Target Category for Products to Multiple Categories Manager (set on page)', 6, 100);
 
 # Rename 'Email Options' to just 'Email'
 UPDATE configuration_group set configuration_group_title = 'Email', configuration_group_description = 'Email-related settings' where configuration_group_title = 'E-Mail Options';
