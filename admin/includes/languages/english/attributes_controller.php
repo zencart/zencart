@@ -41,8 +41,6 @@ define('TABLE_HEADING_DOWNLOAD', 'Downloadable products:');
 define('TABLE_TEXT_FILENAME', 'Filename:');
 define('TABLE_TEXT_MAX_DAYS', 'Expiry days: (0 = unlimited)');
 define('TABLE_TEXT_MAX_COUNT', 'Maximum download count:');
-define('TABLE_HEADING_OPT_DISCOUNTED','Discount');
-define('TABLE_HEADING_PRICE_BASE_INCLUDED','Base');
 define('TABLE_HEADING_PRICE_TOTAL','Total|Disc: Onetime:');
 define('TEXT_WARNING_OF_DELETE', 'This option has products and values linked to it - it is not safe to delete it.');
 define('TEXT_OK_TO_DELETE', 'This option has no products and values linked to it - it is safe to delete it.');
@@ -71,13 +69,10 @@ define('TABLE_TEXT_MAX_COUNT_SHORT', 'Max:');
   define('TABLE_HEADING_OPT_WEIGHT_PREFIX','Prefix');
   define('TABLE_HEADING_OPT_WEIGHT','Weight');
   define('TABLE_HEADING_OPT_SORT_ORDER','Order');
-  define('TABLE_HEADING_OPT_DEFAULT','Default');
 
   define('TABLE_HEADING_OPT_TYPE', 'Option Type'); //CLR 031203 add option type column
   define('TABLE_HEADING_OPTION_VALUE_SIZE','Size');
   define('TABLE_HEADING_OPTION_VALUE_MAX','Max');
-  define('TABLE_HEADING_OPTION_VALUE_ROWS','Rows');
-  define('TABLE_HEADING_OPTION_VALUE_COMMENTS','Comments');
 
   define('TEXT_OPTION_VALUE_COMMENTS','Comments: ');
   define('TEXT_OPTION_VALUE_SIZE','Display Size: ');
@@ -105,25 +100,19 @@ define('TABLE_TEXT_MAX_COUNT_SHORT', 'Max:');
   define('LEGEND_ATTRIBUTES_IMAGES','Images');
   define('LEGEND_ATTRIBUTES_DOWNLOAD','Valid/Invalid<br />filename');
 
-  define('TEXT_ATTRIBUTES_UPDATE_SORT_ORDER','TO DEFAULT ORDER');
   define('TEXT_PRODUCTS_LISTING','Products Listing for: ');
   define('TEXT_NO_PRODUCTS_SELECTED','No Product Selected');
   define('TEXT_NO_ATTRIBUTES_DEFINED','No Attributes Defined for Product ID#');
 
   define('TEXT_PRODUCTS_ID','Products ID#');
-  define('TEXT_ATTRIBUTES_DELETE','DELETE ALL');
-  define('TEXT_ATTRIBUTES_COPY_PRODUCTS','Copy to Product');
-  define('TEXT_ATTRIBUTES_COPY_CATEGORY','Copy to Category');
 
   define('TEXT_INFO_HEADING_ATTRIBUTE_FEATURES','Attributes Changes for Products ID# ');
   define('TEXT_INFO_ATTRIBUTES_FEATURES_DELETE','Delete <strong>ALL</strong> Product Attributes for:<br />');
   define('TEXT_INFO_ATTRIBUTES_FEATURES_COPY_TO','Copy Attributes to another Product or to an entire Category from:<br />');
 
-  define('TEXT_ATTRIBUTES_COPY_TO_PRODUCTS','PRODUCT');
   define('TEXT_INFO_ATTRIBUTES_FEATURES_COPY_TO_PRODUCT','Copy Attributes to another <strong>Product</strong> from ID#');
   define('TEXT_INFO_ATTRIBUTES_FEATURE_COPY_TO','Select the Product to copy all attributes to:');
 
-  define('TEXT_ATTRIBUTES_COPY_TO_CATEGORY','CATEGORY');
   define('TEXT_INFO_ATTRIBUTES_FEATURE_CATEGORIES_COPY_TO','Select the Category to copy all attributes to:');
   define('TEXT_INFO_ATTRIBUTES_FEATURES_COPY_TO_CATEGORY','Copy Attributes to all Products in <strong>Category</strong> from Product ID#');
 
@@ -138,24 +127,17 @@ define('TABLE_TEXT_MAX_COUNT_SHORT', 'Max:');
   define('SUCCESS_ATTRIBUTES_UPDATE','Attributes successfully updated');
 
   define('WARNING_PRODUCT_COPY_TO_CATEGORY_NONE','No Category selected for copy');
-  define('TEXT_PRODUCT_IN_CATEGORY_NAME',' - in Category: ');
 
   define('TEXT_DELETE_ALL_ATTRIBUTES','Are you sure you want to delete all attributes for ID# ');
 
 // preview
-  define('TEXT_ATTRIBUTES_PREVIEW','PREVIEW ATTRIBUTES');
-  define('TEXT_ATTRIBUTES_PREVIEW_DISPLAY','PREVIEW ATTRIBUTES DISPLAY FOR ID#');
   define('TEXT_PRODUCT_OPTIONS', '<strong>Please Choose:</strong>');
 
   define('TEXT_ATTRIBUTES_INSERT_INFO', '<strong>Define the Attribute Settings then press Insert to apply</strong>');
   define('TEXT_PRODUCTS_PRICE', 'Products Price: ');
-  define('TEXT_SPECIAL_PRICE', 'Special Price: ');
-  define('TEXT_SALE_PRICE', 'Sale Price: ');
   define('TEXT_FREE', 'FREE');
   define('TEXT_CALL_FOR_PRICE', 'Call for Price');
   define('TEXT_SAVE_CHANGES','UPDATE AND SAVE CHANGES:');
-
-  define('TEXT_INFO_ALLOW_ADD_TO_CART_NO', 'No adding to cart');
 
   define('TEXT_DELETE_ATTRIBUTES_OPTION_NAME_VALUES', 'Confirm deletion of ALL of the Product Option Values for Option Name ...');
   define('TEXT_INFO_PRODUCT_NAME', '<strong>Product Name: </strong>');
@@ -170,5 +152,4 @@ define('TABLE_TEXT_MAX_COUNT_SHORT', 'Max:');
   define('TEXT_DELETE_ALL_OPTIONS_FROM_PRODUCT', 'Delete all options from product');
   define('TEXT_COPY_ALL_OPTIONS_TO_PRODUCT', 'Copy options to another product');
   define('TEXT_COPY_ALL_OPTIONS_TO_CATEGORY', 'Copy options to a whole category');
-  define('TEXT_SAVE_PRODUCT_FIRST', 'Please save the new product first. You need a product_id before you can add attributes');
   define('TEXT_DISPLAY_NUMBER_OF_ATTRIBUTES', 'Displaying <b>%d</b> to <b>%d</b> (of <b>%d</b> attributes)');

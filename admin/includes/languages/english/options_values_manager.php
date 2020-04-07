@@ -27,7 +27,6 @@ define('TEXT_WARNING_OF_DELETE', '<span class="alert">This option has products a
 define('TEXT_OK_TO_DELETE', 'This option has no products and values linked to it - it is safe to delete it.');
 define('TEXT_OPTION_ID', 'Option ID');
 define('TEXT_OPTION_NAME', 'Option Name');
-define('TABLE_HEADING_OPT_DISCOUNTED','Discounted');
 
 define('ATTRIBUTE_WARNING_DUPLICATE','Duplicate Attribute - Attribute was not added'); // attributes duplicate warning
 define('ATTRIBUTE_WARNING_DUPLICATE_UPDATE','Duplicate Attribute Exists - Attribute was not changed'); // attributes duplicate warning
@@ -51,13 +50,10 @@ define('TABLE_TEXT_MAX_COUNT_SHORT', 'Max:');
   define('TABLE_HEADING_OPT_WEIGHT_PREFIX','Prefix');
   define('TABLE_HEADING_OPT_WEIGHT','Weight');
   define('TABLE_HEADING_OPT_SORT_ORDER','Sort Order');
-  define('TABLE_HEADING_OPT_DEFAULT','Default');
 
   define('TABLE_HEADING_OPT_TYPE', 'Option Type'); //CLR 031203 add option type column
   define('TABLE_HEADING_OPTION_VALUE_SIZE','Size');
   define('TABLE_HEADING_OPTION_VALUE_MAX','Max');
-  define('TABLE_HEADING_OPTION_VALUE_ROWS','Rows');
-  define('TABLE_HEADING_OPTION_VALUE_COMMENTS','Comments');
 
   define('TEXT_OPTION_VALUE_COMMENTS','Comments: ');
   define('TEXT_OPTION_VALUE_SIZE','Display Size: ');

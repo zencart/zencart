@@ -84,8 +84,6 @@ define('TEXT_INFO_DELETE_INTRO', 'Are you sure you want to delete the featured p
 
   define('TEXT_ATTRIBUTES_INSERT_INFO', '<strong>Define the Attribute Settings then press Insert to apply</strong>');
   define('TEXT_PRODUCTS_PRICE', 'Products Price: ');
-  define('TEXT_SPECIAL_PRICE', 'Special Price: ');
-  define('TEXT_SALE_PRICE', 'Sale Price: ');
   define('TEXT_FREE', 'FREE');
   define('TEXT_CALL_FOR_PRICE', 'Call for Price');
 
