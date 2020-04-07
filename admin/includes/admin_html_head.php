@@ -6,6 +6,9 @@
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: admin_html_head.php  New in v1.5.7 $
  */
+if (!defined('IS_ADMIN_FLAG')) {
+  die('Illegal Access');
+}
 ?>
 <meta charset="<?php echo CHARSET; ?>">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
