@@ -901,7 +901,7 @@ if ($target_subcategory_count > $max_input_vars) { //warning when in excess of P
                     ?>
                     <noscript><input type="submit" value="<?php echo IMAGE_DISPLAY; ?>"></noscript>
                     <?php echo '</form>'; ?>
-                    <?php if ($target_category_id !== (int)P2C_TARGET_CATEGORY_DEFAULT) { // show a Set Default button if the selected target category is different to he saved default
+                    <?php if ($target_category_id !== (int)P2C_TARGET_CATEGORY_DEFAULT) { // show a Set Default button if the selected target category is different from the saved default
                         echo zen_draw_form('set_default_target_category_form', FILENAME_PRODUCTS_TO_CATEGORIES, 'action=set_default_target_category' . '&products_filter=' . $products_filter . '&current_category_id=' . $current_category_id, 'post'); ?>
                         <button type="submit" class="btn btn-info" title="<?php echo BUTTON_SET_DEFAULT_TARGET_CATEGORY_TITLE; ?>"><?php echo BUTTON_SET_DEFAULT_TARGET_CATEGORY; ?></span></button>
                         <?php
