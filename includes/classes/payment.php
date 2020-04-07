@@ -12,7 +12,7 @@ if (!defined('IS_ADMIN_FLAG')) {
 }
 /**
  * Payment Class.
- * This class interfaces with various payment modules
+ * This class interfaces with payment modules
  *
  * @package classes
  */
@@ -20,11 +20,15 @@ class payment extends base {
   var $modules, $selected_module, $doesCollectsCardDataOnsite;
 
   function __construct($module = '') {
-    global $PHP_SELF, $language, $credit_covers, $messageStack;
-    $this->doesCollectsCardDataOnsite = false;
+      global $PHP_SELF, $language, $credit_covers, $messageStack;
+      $this->doesCollectsCardDataOnsite = false;
 
-    if (defined('MODULE_PAYMENT_INSTALLED') && zen_not_null(MODULE_PAYMENT_INSTALLED)) {
-      $this->modules = explode(';', MODULE_PAYMENT_INSTALLED);
+      if (defined('MODULE_PAYMENT_INSTALLED') && !empty(MODULE_PAYMENT_INSTALLED)) {
+        $this->modules = explode(';', MODULE_PAYMENT_INSTALLED);
+      }
+      $this->notify('NOTIFY_PAYMENT_CLASS_GET_INSTALLED_MODULES', $module);
+
+      if (empty($this->modules)) return;
 
       $include_modules = array();
 
@@ -95,7 +99,6 @@ class payment extends base {
       if (zen_not_null($module) && in_array($module, $this->modules) && isset($GLOBALS[$module]->form_action_url)) {
         $this->form_action_url = $GLOBALS[$module]->form_action_url;
       }
-    }
   }
 
   /**
