@@ -8,6 +8,9 @@
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: Zen4All 2019 Apr 25 Modified in v1.5.6b $
  */
+if(!isset($cmd) {
+  $cmd = str_replace('.php', '', basename($PHP_SELF));
+}
 ?>
 <script>window.jQuery || document.write('<script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"><\/script>');</script>
 <script>window.jQuery || document.write('<script src="includes/javascript/jquery-3.4.1.min.js"><\/script>');</script>
@@ -30,8 +33,8 @@
     }));
   });
 </script>
-<?php if (isset($_GET['cmd']) && $_GET['cmd'] != '' && file_exists('includes/javascript/' . $_GET['cmd'] . '.js')) { ?>
-  <script src="includes/javascript/<?php echo $_GET['cmd']; ?>.js"></script>
+<?php if (file_exists('includes/javascript/' . $cmd . '.js')) { ?>
+  <script src="includes/javascript/<?php echo $cmd; ?>.js"></script>
 <?php } ?>
 <?php
 if (file_exists(DIR_WS_INCLUDES . 'keepalive_module.php')) {
