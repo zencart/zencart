@@ -4,7 +4,7 @@
  * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce<br />
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Zen4All Thu Nov 15 22:35:14 2018 +0100 Modified in v1.5.6 $
+ * @version $Id: torvista April 08 2020 Modified in v1.5.7 $
  */
 require('includes/application_top.php');
 
@@ -66,7 +66,7 @@ switch ($action) {
       $profilesList = array_merge([['id' => 0, 'text' => TEXT_CHOOSE_PROFILE]], zen_get_profiles());
     } else {
       $action = '';
-      $messageStack->add(sprintf(SUCCESS_NEW_USER_ADDED, zen_db_prepare_input($_POST['name'])), 'success');
+      $messageStack->add(sprintf(SUCCESS_NEW_USER_ADDED, zen_output_string_protected($_POST['name'])), 'success');
     }
     break;
   case 'update': // update existing user's details in database. Post data is prep'd for db in the first function call
