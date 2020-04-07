@@ -25,7 +25,6 @@ $locales = array('en_US', 'en_US.utf8', 'en', 'English_United States.1252');
 define('DATE_FORMAT_SHORT', '%m/%d/%Y');  // this is used for strftime()
 define('DATE_FORMAT_LONG', '%A %d %B, %Y'); // this is used for strftime()
 define('DATE_FORMAT', 'm/d/Y'); // this is used for date()
-define('PHP_DATE_TIME_FORMAT', 'm/d/Y H:i:s'); // this is used for date()
 define('DATE_TIME_FORMAT', DATE_FORMAT_SHORT . ' %H:%M:%S');
 // for now both defines are needed until Spiffy is completely removed.
 define('DATE_FORMAT_SPIFFYCAL', 'MM/dd/yyyy');  //Use only 'dd', 'MM' and 'yyyy' here in any order
@@ -57,8 +56,6 @@ define('TEXT_ADMIN_TAB_PREFIX', 'Admin');
 //define('TEXT_ADMIN_TAB_PREFIX', 'Admin ' . STORE_NAME);
 
 // meta tags
-define('ICON_METATAGS_ON', 'Meta Tags Defined');
-define('ICON_METATAGS_OFF', 'Meta Tags Undefined');
 define('TEXT_LEGEND_META_TAGS', 'Meta Tags Defined:');
 define('TEXT_INFO_META_TAGS_USAGE', '<strong>NOTE:</strong> The Site/Tagline is your defined definition for your site in the meta_tags.php file.');
 
@@ -226,19 +223,6 @@ define('IMAGE_RELEASE', 'Redeem ' . TEXT_GV_NAME);
 // javascript messages
 define('JS_ERROR', 'Errors have occurred during the processing of your form!\nPlease make the following corrections:\n\n');
 
-define('JS_OPTIONS_VALUE_PRICE', '* The new product attribute needs a price value\n');
-define('JS_OPTIONS_VALUE_PRICE_PREFIX', '* The new product attribute needs a price prefix\n');
-
-define('JS_PRODUCTS_NAME', '* The new product needs a name\n');
-define('JS_PRODUCTS_DESCRIPTION', '* The new product needs a description\n');
-define('JS_PRODUCTS_PRICE', '* The new product needs a price value\n');
-define('JS_PRODUCTS_WEIGHT', '* The new product needs a weight value\n');
-define('JS_PRODUCTS_QUANTITY', '* The new product needs a quantity value\n');
-define('JS_PRODUCTS_MODEL', '* The new product needs a model value\n');
-define('JS_PRODUCTS_IMAGE', '* The new product needs an image value\n');
-
-define('JS_SPECIALS_PRODUCTS_PRICE', '* A new price for this product needs to be set\n');
-
 define('JS_GENDER', '* The Gender value must be chosen.\n');
 define('JS_FIRST_NAME', '* The First Name entry must have at least ' . ENTRY_FIRST_NAME_MIN_LENGTH . ' characters.\n');
 define('JS_LAST_NAME', '* The Last Name entry must have at least ' . ENTRY_LAST_NAME_MIN_LENGTH . ' characters.\n');
@@ -249,13 +233,11 @@ define('JS_POST_CODE', '* The Post Code entry must have at least ' . ENTRY_POSTC
 define('JS_CITY', '* The City entry must have at least ' . ENTRY_CITY_MIN_LENGTH . ' characters.\n');
 define('JS_STATE', '* The State entry must be selected.\n');
 define('JS_STATE_SELECT', '-- Select Above --');
-define('JS_ZONE', '* The State entry must be selected from the list for this country.');
 define('JS_COUNTRY', '* The Country value must be chosen.\n');
 define('JS_TELEPHONE', '* The Telephone Number entry must have at least ' . ENTRY_TELEPHONE_MIN_LENGTH . ' characters.\n');
 
 define('JS_ERROR_SUBMITTED', 'This form has already been submitted. Please press OK and wait for this process to be completed.');
 
-define('JS_ORDER_DOES_NOT_EXIST', 'Order Number %s does not exist!');
 define('TEXT_NO_ORDER_HISTORY', 'No Order History Available');
 
 define('CATEGORY_PERSONAL', 'Personal');
@@ -308,7 +290,6 @@ define('ERROR_TOKEN_EXPIRED_PLEASE_RESUBMIT', 'ERROR: Sorry, there was an error 
 // images
 //define('IMAGE_ANI_SEND_EMAIL', 'Sending E-Mail');
 define('IMAGE_BACK', 'Back');
-define('IMAGE_BACKUP', 'Backup');
 define('IMAGE_CANCEL', 'Cancel');
 define('IMAGE_CONFIRM', 'Confirm');
 define('IMAGE_COPY', 'Copy');
@@ -318,16 +299,12 @@ define('IMAGE_DELETE', 'Delete');
 define('IMAGE_EDIT', 'Edit');
 define('IMAGE_EMAIL', 'Email');
 define('IMAGE_GO', 'Go');
-define('IMAGE_FILE_MANAGER', 'File Manager');
 define('IMAGE_ICON_STATUS_GREEN', 'Active');
-define('IMAGE_ICON_STATUS_GREEN_LIGHT', 'Set Active');
 define('IMAGE_ICON_STATUS_RED', 'Inactive');
 define('IMAGE_ICON_STATUS_RED_LIGHT', 'Set Inactive');
 define('IMAGE_ICON_STATUS_RED_EZPAGES', 'Error -- too many URL/content types entered');
-define('IMAGE_ICON_STATUS_RED_ERROR', 'Error');
 define('IMAGE_ICON_INFO', 'Info');
 define('IMAGE_INSERT', 'Insert');
-define('IMAGE_LOCK', 'Lock');
 define('IMAGE_MODULE_INSTALL', 'Install Module');
 define('IMAGE_MODULE_REMOVE', 'Remove Module');
 define('IMAGE_MOVE', 'Move');
@@ -335,24 +312,19 @@ define('IMAGE_NEW_BANNER', 'New Banner');
 define('IMAGE_NEW_CATEGORY', 'New Category');
 define('IMAGE_NEW_COUNTRY', 'New Country');
 define('IMAGE_NEW_CURRENCY', 'New Currency');
-define('IMAGE_NEW_FILE', 'New File');
-define('IMAGE_NEW_FOLDER', 'New Folder');
 define('IMAGE_NEW_LANGUAGE', 'New Language');
 define('IMAGE_NEW_NEWSLETTER', 'New Newsletter');
 define('IMAGE_NEW_PRODUCT', 'New Product');
 define('IMAGE_NEW_SALE', 'New Sale');
 define('IMAGE_NEW_TAX_CLASS', 'New Tax Class');
 define('IMAGE_NEW_TAX_RATE', 'New Tax Rate');
-define('IMAGE_NEW_TAX_ZONE', 'New Tax Zone');
 define('IMAGE_NEW_ZONE', 'New Zone');
 define('IMAGE_OPTION_NAMES', 'Option Names Manager');
 define('IMAGE_OPTION_VALUES', 'Option Values Manager');
 define('IMAGE_ORDERS', 'Orders');
 define('IMAGE_ORDERS_INVOICE', 'Invoice');
 define('IMAGE_ORDERS_PACKINGSLIP', 'Packing Slip');
-define('IMAGE_PERMISSIONS', 'Edit Permissions');
 define('IMAGE_PREVIEW', 'Preview');
-define('IMAGE_RESTORE', 'Restore');
 define('IMAGE_RESET', 'Reset');
 define('IMAGE_RESET_PWD', 'Reset Password');
 define('IMAGE_SAVE', 'Save');
@@ -361,7 +333,6 @@ define('IMAGE_SELECT', 'Select');
 define('IMAGE_SEND', 'Send');
 define('IMAGE_SEND_EMAIL', 'Send Email');
 define('IMAGE_SUBMIT', 'Submit');
-define('IMAGE_UNLOCK', 'Unlock');
 define('IMAGE_UPDATE', 'Update');
 define('IMAGE_UPDATE_CURRENCIES', 'Update Exchange Rate');
 define('IMAGE_UPLOAD', 'Upload');
@@ -370,13 +341,11 @@ define('IMAGE_DEFINE_ZONES','Define Zones');
 define('IMAGE_PRODUCTS_PRICE_MANAGER', 'Products Price Manager');
 define('IMAGE_UPDATE_PRICE_CHANGES', 'Update Price Changes');
 define('IMAGE_ADD_BLANK_DISCOUNTS','Add ' . DISCOUNT_QTY_ADD . ' Blank Discount Qty');
-define('IMAGE_CHECK_VERSION', 'Check for Updates to Zen Cart');
 define('IMAGE_PRODUCTS_TO_CATEGORIES', 'Multiple Categories Link Manager');
 
 define('IMAGE_ICON_STATUS_ON', 'Status - Enabled');
 define('IMAGE_ICON_STATUS_OFF', 'Status - Disabled');
 define('IMAGE_ICON_LINKED', 'Product is Linked');
-define('IMAGE_ICON_LINKED_CATEGORY', 'Category contains Linked Products');
 
 define('IMAGE_REMOVE_SPECIAL','Remove Special Price Info');
 define('IMAGE_REMOVE_FEATURED','Remove Featured Product Info');
@@ -386,23 +355,15 @@ define('IMAGE_INSTALL_FEATURED', 'Add Featured Product Info');
 define('TEXT_VERSION_CHECK_BUTTON', 'Check for New Version');
 define('TEXT_BUTTON_RESET_ACTIVITY_LOG', 'View Activity Log');
 
-define('ICON_PRODUCTS_PRICE_MANAGER','Products Price Manager');
 define('ICON_COPY_TO', 'Copy to');
 define('ICON_CROSS', 'False');
-define('ICON_CURRENT_FOLDER', 'Current Folder');
 define('ICON_DELETE', 'Delete');
 define('ICON_EDIT', 'Edit');
 define('ICON_EDIT_METATAGS', 'Edit Meta Tags');
 define('ICON_ERROR', 'Error');
-define('ICON_FILE', 'File');
-define('ICON_FILE_DOWNLOAD', 'Download');
 define('ICON_FOLDER', 'Folder');
-//define('ICON_LOCKED', 'Locked');
 define('ICON_MOVE', 'Move');
-define('ICON_PERMISSIONS', 'Permissions');
-define('ICON_PREVIOUS_LEVEL', 'Previous Level');
 define('ICON_PREVIEW', 'Preview');
-define('ICON_RESET', 'Reset');
 define('ICON_STATISTICS', 'Statistics');
 define('ICON_SUCCESS', 'Success');
 define('ICON_TICK', 'True');
@@ -411,7 +372,6 @@ define('ICON_WARNING', 'Warning');
 
 // constants for use in zen_prev_next_display function
 define('TEXT_RESULT_PAGE', 'Page %s of %d');
-define('TEXT_DISPLAY_NUMBER_OF_ADMINS', 'Displaying <b>%d</b> to <b>%d</b> (of <b>%d</b> admins)');
 define('TEXT_DISPLAY_NUMBER_OF_BANNERS', 'Displaying <b>%d</b> to <b>%d</b> (of <b>%d</b> banners)');
 define('TEXT_DISPLAY_NUMBER_OF_CATEGORIES', 'Displaying <b>%d</b> to <b>%d</b> (of <b>%d</b> categories)');
 define('TEXT_DISPLAY_NUMBER_OF_COUNTRIES', 'Displaying <b>%d</b> to <b>%d</b> (of <b>%d</b> countries)');
@@ -472,7 +432,6 @@ define('ERROR_ADMIN_SECURITY_WARNING', 'Warning: Your Admin login is not secure 
 define('WARNING_DATABASE_VERSION_OUT_OF_DATE','Your database appears to need patching to a higher level. See Tools->' . BOX_TOOLS_SERVER_INFO . ' to review patch levels.');
 define('WARN_DATABASE_VERSION_PROBLEM','true'); //set to false to turn off warnings about database version mismatches
 define('WARNING_ADMIN_DOWN_FOR_MAINTENANCE', '<strong>WARNING:</strong> Site is currently set to Down for Maintenance ...<br />NOTE: You cannot test most Payment and Shipping Modules in Maintenance mode');
-define('WARNING_BACKUP_CFG_FILES_TO_DELETE', 'WARNING: These files should be deleted to prevent security vulnerability: ');
 define('WARNING_INSTALL_DIRECTORY_EXISTS', 'SECURITY WARNING: Installation directory exists at: %s. Please remove this directory for security reasons.');
 define('WARNING_CONFIG_FILE_WRITEABLE', 'Warning: Your configuration file: %s is writeable. This is a potential security risk - please set the right user permissions on this file (read-only, CHMOD 644 or 444 are typical). You may need to use your webhost control panel/file-manager to change the permissions effectively. Contact your webhost for assistance. <a href="http://tutorials.zen-cart.com/index.php?article=90" target="_blank">See this FAQ</a>');
 define('WARNING_COULD_NOT_LOCATE_LANG_FILE', 'WARNING: Could not locate language file: ');
@@ -503,14 +462,7 @@ define('_DECEMBER', 'December');
 define('TEXT_DISPLAY_NUMBER_OF_GIFT_VOUCHERS', 'Displaying <b>%d</b> to <b>%d</b> (of <b>%d</b> gift vouchers)');
 define('TEXT_DISPLAY_NUMBER_OF_COUPONS', 'Displaying <b>%d</b> to <b>%d</b> (of <b>%d</b> coupons)');
 
-define('TEXT_VALID_PRODUCTS_LIST', 'Products List');
-define('TEXT_VALID_PRODUCTS_ID', 'Products ID');
-define('TEXT_VALID_PRODUCTS_NAME', 'Products Name');
-define('TEXT_VALID_PRODUCTS_MODEL', 'Products Model');
-
-define('TEXT_VALID_CATEGORIES_LIST', 'Categories List');
 define('TEXT_VALID_CATEGORIES_ID', 'Category ID');
-define('TEXT_VALID_CATEGORIES_NAME', 'Category Name');
 
 define('DEFINE_LANGUAGE','Choose Language:');
 
@@ -547,15 +499,9 @@ define('NOT_INSTALLED_TEXT','Not Installed');
   define('IMAGE_ORDER','Order');
 
   define('IMAGE_DISPLAY','Display');
-  define('IMAGE_UPDATE_SORT','Update Sort Order');
   define('IMAGE_EDIT_PRODUCT','Edit Product');
   define('IMAGE_EDIT_ATTRIBUTES','Edit Attributes');
   define('TEXT_NEW_PRODUCT', 'Product in Category: %s');
-  define('IMAGE_OPTIONS_VALUES','Option Names and Option Values');
-  define('TEXT_PRODUCTS_PRICE_MANAGER','PRODUCTS PRICE MANAGER');
-  define('TEXT_PRODUCT_EDIT','EDIT PRODUCT');
-  define('TEXT_ATTRIBUTE_EDIT','EDIT ATTRIBUTES');
-  define('TEXT_PRODUCT_DETAILS','VIEW DETAILS');
 
 // sale maker
   define('DEDUCTION_TYPE_DROPDOWN_0', 'Deduct amount');
@@ -636,7 +582,6 @@ define('TEXT_PRODUCT_TO_VIEW', 'Select a Product to View and Press Display ...')
 
 define('TEXT_INFO_SET_MASTER_CATEGORIES_ID', 'Invalid Master Category ID');
 define('TEXT_INFO_ID', ' ID# ');
-define('TEXT_INFO_SET_MASTER_CATEGORIES_ID_WARNING', '<strong>WARNING:</strong> This product is linked to multiple categories but no master category has been set!');
 
 define('PRODUCTS_PRICE_IS_CALL_FOR_PRICE_TEXT', 'Product is Call for Price');
 define('PRODUCTS_PRICE_IS_FREE_TEXT','Product is Free');
@@ -656,16 +601,10 @@ define('PRODUCTS_QUANTITY_MAX_TEXT_LISTING', 'Max:');
 define('TEXT_PRICED_BY_ATTRIBUTES', 'Priced by Attributes');
 
 // Rich Text / HTML resources
-define('TEXT_HTML_EDITOR_NOT_DEFINED','If you have no HTML editor defined or JavaScript disabled, you may enter raw HTML text here manually.');
 define('TEXT_WARNING_HTML_DISABLED','<span class = "main">Note: You are using TEXT only email. If you would like to send HTML you need to enable "Enable HTML Emails" under Email Options</span>');
-define('TEXT_WARNING_CANT_DISPLAY_HTML','<span class = "main">Note: You are using TEXT only email. If you would like to send HTML you need to enable "Enable HTML Emails" under Email Options</span>');
-define('TEXT_EMAIL_CLIENT_CANT_DISPLAY_HTML',"You're seeing this text because we sent you an email in HTML format but your email client cannot display HTML messages.");
 define('ENTRY_EMAIL_PREFERENCE','Email Format Pref:');
-define('ENTRY_EMAIL_FORMAT_COMMENTS','Choosing "none" or "optout" disables ALL mail, including order details');
 define('ENTRY_EMAIL_HTML_DISPLAY','HTML');
 define('ENTRY_EMAIL_TEXT_DISPLAY','TEXT-Only');
-define('ENTRY_EMAIL_NONE_DISPLAY','Never');
-define('ENTRY_EMAIL_OPTOUT_DISPLAY','Opted Out of Newsletters');
 define('ENTRY_NOTHING_TO_SEND','You haven\'t entered any content for your message');
 define('EMAIL_SEND_FAILED','ERROR: Failed sending email to: "%s" <%s> with subject: "%s"');
 define('EMAIL_SALUTATION', 'Dear');
@@ -683,8 +622,6 @@ define('EMAIL_SALUTATION', 'Dear');
   define('TEXT_SORT_PRODUCTS_PRICE_DESC', 'Products Price-, Products Name');
   define('TEXT_SORT_CATEGORIES_SORT_ORDER_PRODUCTS_NAME', 'Categories Sort Order, Categories Name');
   define('TEXT_SORT_CATEGORIES_NAME', 'Categories Name');
-
-  define('TEXT_SELECT_MAIN_DIRECTORY', 'Main Image Directory');
 
   define('TABLE_HEADING_YES','Yes');
   define('TABLE_HEADING_NO','No');
@@ -707,7 +644,6 @@ define('EMAIL_SALUTATION', 'Dear');
   define('BUTTON_NEXT_ALT','Next Product');
 
   define('BUTTON_PRODUCTS_TO_CATEGORIES', 'Multiple Categories Link Manager');
-  define('BUTTON_PRODUCTS_TO_CATEGORIES_ALT', 'Copy Product to Multiple Categories');
 
   define('TEXT_INFO_OPTION_NAMES_VALUES_COPIER_STATUS', 'All Global Copy, Add and Delete Features Status is currently OFF');
   define('TEXT_SHOW_OPTION_NAMES_VALUES_COPIER_ON', 'Display Global Features - ON');
@@ -758,7 +694,6 @@ define('EMAIL_SALUTATION', 'Dear');
 
   define('WARNING_WELCOME_DISCOUNT_COUPON_EXPIRES_IN', 'WARNING! Welcome Email Discount Coupon expires in %s days');
 
-define('WARNING_ADMIN_FOLDERNAME_VULNERABLE', 'CAUTION: <a href="https://tutorials.zen-cart.com/index.php?article=33" target="_blank">Your /admin/ foldername should be renamed to something less common</a>, to prevent unauthorized access.');
 define('WARNING_EMAIL_SYSTEM_DISABLED', 'WARNING: The email subsystem is disabled. No emails will be sent until it is re-enabled in Admin->Configuration->Email Options.');
 define('WARNING_EMAIL_SYSTEM_DEVELOPER_OVERRIDE', 'WARNING: The sending of emails has been disabled as developer switch "DEVELOPER_OVERRIDE_EMAIL_STATUS" is set to "false".');
 define('WARNING_EMAIL_SYSTEM_DEVELOPER_EMAIL', 'WARNING: ALL emails will be sent to %s (as defined in "DEVELOPER_OVERRIDE_EMAIL_ADDRESS").');
