@@ -39,25 +39,15 @@ $parameters = [
   'products_discount_type' => '0',
   'products_discount_type_from' => '0',
   'products_price_sorter' => '0',
-  'master_categories_id' => ''
+  'master_categories_id' => '',
 ];
 
 $pInfo = new objectInfo($parameters);
 
 if (isset($_GET['pID']) && empty($_POST)) {
   $product = $db->Execute("SELECT pd.products_name, pd.products_description, pd.products_url,
-                                  p.products_id, p.products_quantity, p.products_model,
-                                  p.products_image, p.products_price, p.products_virtual, p.products_weight,
-                                  p.products_date_added, p.products_last_modified,
-                                  date_format(p.products_date_available, '%Y-%m-%d') as
-                                  products_date_available, p.products_status, p.products_tax_class_id,
-                                  p.manufacturers_id,
-                                  p.products_quantity_order_min, p.products_quantity_order_units, p.products_priced_by_attribute,
-                                  p.product_is_free, p.product_is_call, p.products_quantity_mixed,
-                                  p.product_is_always_free_shipping, p.products_qty_box_status, p.products_quantity_order_max,
-                                  p.products_sort_order,
-                                  p.products_discount_type, p.products_discount_type_from,
-                                  p.products_price_sorter, p.master_categories_id
+                                  p.*, 
+                                  date_format(p.products_date_available, '%Y-%m-%d') as products_date_available
                            FROM " . TABLE_PRODUCTS . " p,
                                 " . TABLE_PRODUCTS_DESCRIPTION . " pd
                            WHERE p.products_id = " . (int)$_GET['pID'] . "
