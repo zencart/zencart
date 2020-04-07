@@ -20,9 +20,14 @@ class shipping extends base {
   var $modules;
 
   function __construct($module = null) {
-    global $PHP_SELF, $messageStack;
-    if (defined('MODULE_SHIPPING_INSTALLED') && zen_not_null(MODULE_SHIPPING_INSTALLED)) {
-      $this->modules = explode(';', MODULE_SHIPPING_INSTALLED);
+      global $PHP_SELF, $messageStack;
+
+      if (defined('MODULE_SHIPPING_INSTALLED') && !empty(MODULE_SHIPPING_INSTALLED)) {
+        $this->modules = explode(';', MODULE_SHIPPING_INSTALLED);
+      }
+      $this->notify('NOTIFY_SHIPPING_CLASS_GET_INSTALLED_MODULES', $module);
+
+      if (empty($this->modules)) return;
 
       $include_modules = array();
 
@@ -67,7 +72,6 @@ class shipping extends base {
           if ($enabled == FALSE ) unset($GLOBALS[$include_modules[$i]['class']]);
         }
       }
-    }
   }
 
   function check_enabled($class)
