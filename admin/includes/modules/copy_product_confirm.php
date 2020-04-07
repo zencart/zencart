@@ -70,6 +70,12 @@ if (isset($_POST['products_id'], $_POST['categories_id'])) {
           'product_is_call' =>  'int', 
           'products_quantity_mixed' =>  'int', 
         ); 
+        
+        // -----
+        // Give an observer the chance to add any customized fields to the two arrays above.
+        //
+        $zco_notifier->notify('NOTIFY_MODULES_COPY_PRODUCT_CONFIRM_DUPLICATE_FIELDS', $products_id, $separately_updated_fields, $casted_fields);
+        
         foreach ($product->fields as $key => $value) {
           $value = zen_db_input($value); 
           if (in_array($key, $separately_updated_fields)) {
