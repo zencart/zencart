@@ -161,29 +161,36 @@ if (zen_not_null($action)) {
           zen_db_perform(TABLE_CATEGORIES_DESCRIPTION, $sql_data_array, 'update', "categories_id = '" . (int)$categories_id . "' and language_id = '" . (int)$languages[$i]['id'] . "'");
         }
       }
-
-      if ($_POST['categories_image_manual'] != '') {
-          // add image manually
+      // remove the existing image
+      if (!empty($_POST['image_delete'])) {
+          $db->Execute("UPDATE " . TABLE_CATEGORIES . "
+                            SET categories_image = ''
+                            WHERE categories_id = " . (int)$categories_id);
+          $messageStack->add_session(sprintf(MESSAGE_IMAGE_REMOVED_CATEGORY, (int)$categories_id, zen_get_category_name($categories_id, $_SESSION['languages_id'])), 'success');
+          // or assign a manually-typed/existing image
+      } elseif ($_POST['categories_image_manual'] !== '') {
           $categories_image_name = zen_db_input($_POST['img_dir'] . $_POST['categories_image_manual']);
-          $db->Execute("update " . TABLE_CATEGORIES . "
-                      set categories_image = '" . $categories_image_name . "'
-                      where categories_id = '" . (int)$categories_id . "'");
+          if (file_exists(DIR_FS_CATALOG_IMAGES . $categories_image_name)) {
+              $db->Execute("UPDATE " . TABLE_CATEGORIES . "
+                      SET categories_image = '" . $categories_image_name . "'
+                      WHERE categories_id = " . (int)$categories_id);
+              $messageStack->add_session(sprintf(MESSAGE_IMAGE_ADDED_MANUAL, (int)$categories_id, zen_get_category_name($categories_id, $_SESSION['languages_id']), $categories_image_name), 'success');
+          } else {
+              $messageStack->add_session(sprintf(ERROR_IMAGE_MANUAL_NOT_FOUND, $categories_image_name));
+          }
+          // or upload a new image
       } elseif ($categories_image = new upload('categories_image')) {
           $categories_image->set_extensions(['jpg', 'jpeg', 'gif', 'png', 'webp', 'flv', 'webm', 'ogg']);
           $categories_image->set_destination(DIR_FS_CATALOG_IMAGES . $_POST['img_dir']);
           if ($categories_image->parse() && $categories_image->save()) {
               $categories_image_name = zen_db_input($_POST['img_dir'] . $categories_image->filename);
           }
-          if ($categories_image->filename != 'none' && $categories_image->filename != '' && $_POST['image_delete'] != '1') {
+          if ($categories_image->filename !== 'none' && $categories_image->filename != '') {
               // save filename when not set to none and not blank
               $db_filename = zen_limit_image_filename($categories_image_name, TABLE_CATEGORIES, 'categories_image');
-              $db->Execute("update " . TABLE_CATEGORIES . "
-                          set categories_image = '" . $db_filename . "'
-                          where categories_id = '" . (int)$categories_id . "'");
-          } elseif ($categories_image->filename != '' || $_POST['image_delete'] === '1') {
-              $db->Execute("update " . TABLE_CATEGORIES . "
-                            set categories_image = ''
-                            where categories_id = '" . (int)$categories_id . "'");
+              $db->Execute("UPDATE " . TABLE_CATEGORIES . "
+                          SET categories_image = '" . $db_filename . "'
+                          WHERE categories_id = " . (int)$categories_id);
           }
       }
 
@@ -396,9 +403,13 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
             if (!empty($cInfo->categories_image)) { ?>
                 <div class="form-group">
                     <div class="col-sm-offset-3 col-sm-9 col-md-6">
-                        <?php echo zen_info_image($cInfo->categories_image, $cInfo->categories_name); ?>
+                        <div><?php echo zen_info_image($cInfo->categories_image, $cInfo->categories_name, '', '', 'class="table-bordered img-responsive"'); ?></div>
                         <br>
-                        <?php echo $cInfo->categories_image; ?>
+                        <?php
+                        [$width, $height] = getimagesize(DIR_FS_CATALOG_IMAGES . $cInfo->categories_image);
+                        $kb = filesize(DIR_FS_CATALOG_IMAGES . $cInfo->categories_image)/1000;
+                        echo sprintf(TEXT_FILENAME,   '/images/' . $cInfo->categories_image, $width, $height, $kb);
+                        ?>
                     </div>
                 </div>
                 <div class="form-group">

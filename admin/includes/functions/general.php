@@ -318,9 +318,9 @@
   }
 
 
-  function zen_info_image($image, $alt, $width = '', $height = '') {
+  function zen_info_image($image, $alt, $width = '', $height = '', $params = '') {
     if (zen_not_null($image) && (file_exists(DIR_FS_CATALOG_IMAGES . $image)) ) {
-      $image = zen_image(DIR_WS_CATALOG_IMAGES . $image, $alt, $width, $height);
+      $image = zen_image(DIR_WS_CATALOG_IMAGES . $image, $alt, $width, $height, $params);
     } else {
       $image = TEXT_IMAGE_NONEXISTENT;
     }
