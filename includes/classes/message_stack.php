@@ -101,6 +101,10 @@ class messageStack extends base
     {
         global $template, $current_page_base;
 
+        if ($this->size($class) === 0) {
+            return;
+        }
+        
         $output = array();
         foreach ($this->messages as $next_message) {
             if ($next_message['class'] == $class) {
