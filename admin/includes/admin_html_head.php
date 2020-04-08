@@ -9,7 +9,6 @@
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
 }
-$cmd = str_replace('.php', '', basename($PHP_SELF));
 ?>
 <meta charset="<?php echo CHARSET; ?>">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -21,8 +20,8 @@ $cmd = str_replace('.php', '', basename($PHP_SELF));
 <link rel="stylesheet" href="includes/css/jAlert.css">
 <link rel="stylesheet" href="includes/css/menu.css">
 <link rel="stylesheet" href="includes/css/stylesheet.css">
-<?php if (file_exists('includes/css/' . $cmd . '.css')) { ?>
-  <link rel="stylesheet" href="includes/css/<?php echo $cmd; ?>.css">
+<?php if (file_exists($file = 'includes/css/' . basename($PHP_SELF, '.php') . '.css')) { ?>
+  <link rel="stylesheet" href="<?php echo $file; ?>">
 <?php } ?>
 <?php
 // pull in any necessary JS for the page
