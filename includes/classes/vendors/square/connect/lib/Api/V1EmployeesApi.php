@@ -108,7 +108,7 @@ class V1EmployeesApi
             $headerParams['Accept'] = $_header_accept;
         }
         $headerParams['Content-Type'] = ApiClient::selectHeaderContentType(array('application/json'));
-        $headerParams['Square-Version'] = "2020-02-26";
+        $headerParams['Square-Version'] = "2020-03-25";
 
         
         
@@ -201,7 +201,7 @@ class V1EmployeesApi
             $headerParams['Accept'] = $_header_accept;
         }
         $headerParams['Content-Type'] = ApiClient::selectHeaderContentType(array('application/json'));
-        $headerParams['Square-Version'] = "2020-02-26";
+        $headerParams['Square-Version'] = "2020-03-25";
 
         
         
@@ -296,7 +296,7 @@ class V1EmployeesApi
             $headerParams['Accept'] = $_header_accept;
         }
         $headerParams['Content-Type'] = ApiClient::selectHeaderContentType(array('application/json'));
-        $headerParams['Square-Version'] = "2020-02-26";
+        $headerParams['Square-Version'] = "2020-03-25";
 
         
         
@@ -391,7 +391,7 @@ class V1EmployeesApi
             $headerParams['Accept'] = $_header_accept;
         }
         $headerParams['Content-Type'] = ApiClient::selectHeaderContentType(array('application/json'));
-        $headerParams['Square-Version'] = "2020-02-26";
+        $headerParams['Square-Version'] = "2020-03-25";
 
         
         
@@ -495,7 +495,7 @@ class V1EmployeesApi
             $headerParams['Accept'] = $_header_accept;
         }
         $headerParams['Content-Type'] = ApiClient::selectHeaderContentType(array('application/json'));
-        $headerParams['Square-Version'] = "2020-02-26";
+        $headerParams['Square-Version'] = "2020-03-25";
 
         // query params
         if ($order !== null) {
@@ -600,7 +600,7 @@ class V1EmployeesApi
             $headerParams['Accept'] = $_header_accept;
         }
         $headerParams['Content-Type'] = ApiClient::selectHeaderContentType(array('application/json'));
-        $headerParams['Square-Version'] = "2020-02-26";
+        $headerParams['Square-Version'] = "2020-03-25";
 
         // query params
         if ($order !== null) {
@@ -710,7 +710,7 @@ class V1EmployeesApi
             $headerParams['Accept'] = $_header_accept;
         }
         $headerParams['Content-Type'] = ApiClient::selectHeaderContentType(array('application/json'));
-        $headerParams['Square-Version'] = "2020-02-26";
+        $headerParams['Square-Version'] = "2020-03-25";
 
         // query params
         if ($order !== null) {
@@ -828,7 +828,7 @@ class V1EmployeesApi
             $headerParams['Accept'] = $_header_accept;
         }
         $headerParams['Content-Type'] = ApiClient::selectHeaderContentType(array('application/json'));
-        $headerParams['Square-Version'] = "2020-02-26";
+        $headerParams['Square-Version'] = "2020-03-25";
 
         
         
@@ -942,7 +942,7 @@ class V1EmployeesApi
             $headerParams['Accept'] = $_header_accept;
         }
         $headerParams['Content-Type'] = ApiClient::selectHeaderContentType(array('application/json'));
-        $headerParams['Square-Version'] = "2020-02-26";
+        $headerParams['Square-Version'] = "2020-03-25";
 
         // query params
         if ($order !== null) {
@@ -1072,7 +1072,7 @@ class V1EmployeesApi
             $headerParams['Accept'] = $_header_accept;
         }
         $headerParams['Content-Type'] = ApiClient::selectHeaderContentType(array('application/json'));
-        $headerParams['Square-Version'] = "2020-02-26";
+        $headerParams['Square-Version'] = "2020-03-25";
 
         
         
@@ -1175,7 +1175,7 @@ class V1EmployeesApi
             $headerParams['Accept'] = $_header_accept;
         }
         $headerParams['Content-Type'] = ApiClient::selectHeaderContentType(array('application/json'));
-        $headerParams['Square-Version'] = "2020-02-26";
+        $headerParams['Square-Version'] = "2020-03-25";
 
         
         
@@ -1271,7 +1271,7 @@ class V1EmployeesApi
             $headerParams['Accept'] = $_header_accept;
         }
         $headerParams['Content-Type'] = ApiClient::selectHeaderContentType(array('application/json'));
-        $headerParams['Square-Version'] = "2020-02-26";
+        $headerParams['Square-Version'] = "2020-03-25";
 
         
         
@@ -1369,7 +1369,7 @@ class V1EmployeesApi
             $headerParams['Accept'] = $_header_accept;
         }
         $headerParams['Content-Type'] = ApiClient::selectHeaderContentType(array('application/json'));
-        $headerParams['Square-Version'] = "2020-02-26";
+        $headerParams['Square-Version'] = "2020-03-25";
 
         
         
@@ -1471,7 +1471,7 @@ class V1EmployeesApi
             $headerParams['Accept'] = $_header_accept;
         }
         $headerParams['Content-Type'] = ApiClient::selectHeaderContentType(array('application/json'));
-        $headerParams['Square-Version'] = "2020-02-26";
+        $headerParams['Square-Version'] = "2020-03-25";
 
         
         
@@ -1577,7 +1577,7 @@ class V1EmployeesApi
             $headerParams['Accept'] = $_header_accept;
         }
         $headerParams['Content-Type'] = ApiClient::selectHeaderContentType(array('application/json'));
-        $headerParams['Square-Version'] = "2020-02-26";
+        $headerParams['Square-Version'] = "2020-03-25";
 
         
         
@@ -1685,7 +1685,7 @@ class V1EmployeesApi
             $headerParams['Accept'] = $_header_accept;
         }
         $headerParams['Content-Type'] = ApiClient::selectHeaderContentType(array('application/json'));
-        $headerParams['Square-Version'] = "2020-02-26";
+        $headerParams['Square-Version'] = "2020-03-25";
 
         
         
