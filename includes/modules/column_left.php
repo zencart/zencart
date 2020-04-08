@@ -13,7 +13,7 @@ if (!defined('IS_ADMIN_FLAG')) {
 }
 $column_box_default='tpl_box_default_left.php';
 // Check if there are boxes for the column
-$column_left_display= $db->Execute("select layout_box_name from " . TABLE_LAYOUT_BOXES . " where layout_box_location = 0 and layout_box_status= '1' and layout_template ='" . $template_dir . "'" . ' order by layout_box_sort_order');
+$column_left_display= $db->Execute("SELECT layout_box_name FROM " . TABLE_LAYOUT_BOXES . " WHERE layout_box_location = 0 AND layout_box_status= '1' AND layout_template ='" . $template_dir . "'" . ' ORDER BY layout_box_sort_order');
 // safety row stop
 $box_cnt=0;
 $column_width = (int)BOX_WIDTH_LEFT;
@@ -27,4 +27,3 @@ while (!$column_left_display->EOF and $box_cnt < 100) {
   $column_left_display->MoveNext();
 } // while column_left
 $box_id = ''; 
-?>
