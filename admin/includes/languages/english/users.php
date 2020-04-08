@@ -17,11 +17,11 @@ define('TEXT_PROFILE', 'Profile');
 define('TEXT_CHOOSE_PROFILE', 'Choose Profile');
 define('TEXT_PASSWORD', 'Password');
 define('TEXT_CONFIRM_PASSWORD', 'Confirm Password');
-define('TEXT_NO_USERS_FOUND', 'No admin users found');
+define('TEXT_NO_USERS_FOUND', 'No Admin Users found');
 define('TEXT_CONFIRM_DELETE', 'Delete requested. Please confirm: ');
 
-define('ERROR_NO_USER_DEFINED', 'The option that you requested cannot be undertaken without specifying a user');
-define('ERROR_USER_MUST_HAVE_PROFILE', 'Users must be assigned a profile');
+define('ERROR_NO_USER_DEFINED', 'The option that you requested cannot be undertaken without specifying a user.');
+define('ERROR_USER_MUST_HAVE_PROFILE', 'User must be assigned a profile.');
 define('ERROR_DUPLICATE_USER', 'Sorry, an admin user of that name already exists. Please select another name.');
 define('ERROR_ADMIN_NAME_TOO_SHORT', 'Admin user names must have at least %s characters');
 define('SUCCESS_NEW_USER_ADDED', 'New user added');
