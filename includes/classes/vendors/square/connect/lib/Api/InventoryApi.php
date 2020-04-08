@@ -108,7 +108,7 @@ class InventoryApi
             $headerParams['Accept'] = $_header_accept;
         }
         $headerParams['Content-Type'] = ApiClient::selectHeaderContentType(array('application/json'));
-        $headerParams['Square-Version'] = "2018-12-05";
+        $headerParams['Square-Version'] = "2020-02-26";
 
         
         
@@ -201,7 +201,7 @@ class InventoryApi
             $headerParams['Accept'] = $_header_accept;
         }
         $headerParams['Content-Type'] = ApiClient::selectHeaderContentType(array('application/json'));
-        $headerParams['Square-Version'] = "2018-12-05";
+        $headerParams['Square-Version'] = "2020-02-26";
 
         
         
@@ -294,7 +294,7 @@ class InventoryApi
             $headerParams['Accept'] = $_header_accept;
         }
         $headerParams['Content-Type'] = ApiClient::selectHeaderContentType(array('application/json'));
-        $headerParams['Square-Version'] = "2018-12-05";
+        $headerParams['Square-Version'] = "2020-02-26";
 
         
         
@@ -348,7 +348,7 @@ class InventoryApi
      *
      * RetrieveInventoryAdjustment
      *
-     * @param string $adjustment_id ID of the [InventoryAdjustment](#type-inventoryadjustment) to retrieve. (required)
+     * @param string $adjustment_id ID of the &#x60;InventoryAdjustment&#x60; to retrieve. (required)
      * @return \SquareConnect\Model\RetrieveInventoryAdjustmentResponse
      * @throws \SquareConnect\ApiException on non-2xx response
      */
@@ -364,7 +364,7 @@ class InventoryApi
      *
      * RetrieveInventoryAdjustment
      *
-     * @param string $adjustment_id ID of the [InventoryAdjustment](#type-inventoryadjustment) to retrieve. (required)
+     * @param string $adjustment_id ID of the &#x60;InventoryAdjustment&#x60; to retrieve. (required)
      * @return Array of \SquareConnect\Model\RetrieveInventoryAdjustmentResponse, HTTP status code, HTTP response headers (array of strings)
      * @throws \SquareConnect\ApiException on non-2xx response
      */
@@ -387,7 +387,7 @@ class InventoryApi
             $headerParams['Accept'] = $_header_accept;
         }
         $headerParams['Content-Type'] = ApiClient::selectHeaderContentType(array('application/json'));
-        $headerParams['Square-Version'] = "2018-12-05";
+        $headerParams['Square-Version'] = "2020-02-26";
 
         
         
@@ -444,9 +444,9 @@ class InventoryApi
      *
      * RetrieveInventoryChanges
      *
-     * @param string $catalog_object_id ID of the [CatalogObject](#type-catalogobject) to retrieve. (required)
-     * @param string $location_ids The [Location](#type-location) IDs to look up as a comma-separated list. An empty list queries all locations. (optional)
-     * @param string $cursor A pagination cursor returned by a previous call to this endpoint. Provide this to retrieve the next set of results for the original query.  See [Paginating results](#paginatingresults) for more information. (optional)
+     * @param string $catalog_object_id ID of the &#x60;CatalogObject&#x60; to retrieve. (required)
+     * @param string $location_ids The &#x60;Location&#x60; IDs to look up as a comma-separated list. An empty list queries all locations. (optional)
+     * @param string $cursor A pagination cursor returned by a previous call to this endpoint. Provide this to retrieve the next set of results for the original query.  See the [Pagination](https://developer.squareup.com/docs/docs/working-with-apis/pagination) guide for more information. (optional)
      * @return \SquareConnect\Model\RetrieveInventoryChangesResponse
      * @throws \SquareConnect\ApiException on non-2xx response
      */
@@ -462,9 +462,9 @@ class InventoryApi
      *
      * RetrieveInventoryChanges
      *
-     * @param string $catalog_object_id ID of the [CatalogObject](#type-catalogobject) to retrieve. (required)
-     * @param string $location_ids The [Location](#type-location) IDs to look up as a comma-separated list. An empty list queries all locations. (optional)
-     * @param string $cursor A pagination cursor returned by a previous call to this endpoint. Provide this to retrieve the next set of results for the original query.  See [Paginating results](#paginatingresults) for more information. (optional)
+     * @param string $catalog_object_id ID of the &#x60;CatalogObject&#x60; to retrieve. (required)
+     * @param string $location_ids The &#x60;Location&#x60; IDs to look up as a comma-separated list. An empty list queries all locations. (optional)
+     * @param string $cursor A pagination cursor returned by a previous call to this endpoint. Provide this to retrieve the next set of results for the original query.  See the [Pagination](https://developer.squareup.com/docs/docs/working-with-apis/pagination) guide for more information. (optional)
      * @return Array of \SquareConnect\Model\RetrieveInventoryChangesResponse, HTTP status code, HTTP response headers (array of strings)
      * @throws \SquareConnect\ApiException on non-2xx response
      */
@@ -487,7 +487,7 @@ class InventoryApi
             $headerParams['Accept'] = $_header_accept;
         }
         $headerParams['Content-Type'] = ApiClient::selectHeaderContentType(array('application/json'));
-        $headerParams['Square-Version'] = "2018-12-05";
+        $headerParams['Square-Version'] = "2020-02-26";
 
         // query params
         if ($location_ids !== null) {
@@ -550,9 +550,9 @@ class InventoryApi
      *
      * RetrieveInventoryCount
      *
-     * @param string $catalog_object_id ID of the [CatalogObject](#type-catalogobject) to retrieve. (required)
-     * @param string $location_ids The [Location](#type-location) IDs to look up as a comma-separated list. An empty list queries all locations. (optional)
-     * @param string $cursor A pagination cursor returned by a previous call to this endpoint. Provide this to retrieve the next set of results for the original query.  See [Paginating results](#paginatingresults) for more information. (optional)
+     * @param string $catalog_object_id ID of the &#x60;CatalogObject&#x60; to retrieve. (required)
+     * @param string $location_ids The &#x60;Location&#x60; IDs to look up as a comma-separated list. An empty list queries all locations. (optional)
+     * @param string $cursor A pagination cursor returned by a previous call to this endpoint. Provide this to retrieve the next set of results for the original query.  See the [Pagination](https://developer.squareup.com/docs/docs/working-with-apis/pagination) guide for more information. (optional)
      * @return \SquareConnect\Model\RetrieveInventoryCountResponse
      * @throws \SquareConnect\ApiException on non-2xx response
      */
@@ -568,9 +568,9 @@ class InventoryApi
      *
      * RetrieveInventoryCount
      *
-     * @param string $catalog_object_id ID of the [CatalogObject](#type-catalogobject) to retrieve. (required)
-     * @param string $location_ids The [Location](#type-location) IDs to look up as a comma-separated list. An empty list queries all locations. (optional)
-     * @param string $cursor A pagination cursor returned by a previous call to this endpoint. Provide this to retrieve the next set of results for the original query.  See [Paginating results](#paginatingresults) for more information. (optional)
+     * @param string $catalog_object_id ID of the &#x60;CatalogObject&#x60; to retrieve. (required)
+     * @param string $location_ids The &#x60;Location&#x60; IDs to look up as a comma-separated list. An empty list queries all locations. (optional)
+     * @param string $cursor A pagination cursor returned by a previous call to this endpoint. Provide this to retrieve the next set of results for the original query.  See the [Pagination](https://developer.squareup.com/docs/docs/working-with-apis/pagination) guide for more information. (optional)
      * @return Array of \SquareConnect\Model\RetrieveInventoryCountResponse, HTTP status code, HTTP response headers (array of strings)
      * @throws \SquareConnect\ApiException on non-2xx response
      */
@@ -593,7 +593,7 @@ class InventoryApi
             $headerParams['Accept'] = $_header_accept;
         }
         $headerParams['Content-Type'] = ApiClient::selectHeaderContentType(array('application/json'));
-        $headerParams['Square-Version'] = "2018-12-05";
+        $headerParams['Square-Version'] = "2020-02-26";
 
         // query params
         if ($location_ids !== null) {
@@ -656,7 +656,7 @@ class InventoryApi
      *
      * RetrieveInventoryPhysicalCount
      *
-     * @param string $physical_count_id ID of the [InventoryPhysicalCount](#type-inventoryphysicalcount) to retrieve. (required)
+     * @param string $physical_count_id ID of the &#x60;InventoryPhysicalCount&#x60; to retrieve. (required)
      * @return \SquareConnect\Model\RetrieveInventoryPhysicalCountResponse
      * @throws \SquareConnect\ApiException on non-2xx response
      */
@@ -672,7 +672,7 @@ class InventoryApi
      *
      * RetrieveInventoryPhysicalCount
      *
-     * @param string $physical_count_id ID of the [InventoryPhysicalCount](#type-inventoryphysicalcount) to retrieve. (required)
+     * @param string $physical_count_id ID of the &#x60;InventoryPhysicalCount&#x60; to retrieve. (required)
      * @return Array of \SquareConnect\Model\RetrieveInventoryPhysicalCountResponse, HTTP status code, HTTP response headers (array of strings)
      * @throws \SquareConnect\ApiException on non-2xx response
      */
@@ -695,7 +695,7 @@ class InventoryApi
             $headerParams['Accept'] = $_header_accept;
         }
         $headerParams['Content-Type'] = ApiClient::selectHeaderContentType(array('application/json'));
-        $headerParams['Square-Version'] = "2018-12-05";
+        $headerParams['Square-Version'] = "2020-02-26";
 
         
         

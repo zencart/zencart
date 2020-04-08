@@ -475,11 +475,7 @@ class order extends base {
     $index = 0;
     $products = $_SESSION['cart']->get_products();
     for ($i=0, $n=sizeof($products); $i<$n; $i++) {
-      if (($i/2) == floor($i/2)) {
-        $rowClass="rowEven";
-      } else {
-        $rowClass="rowOdd";
-      }
+      $rowClass = ($i / 2) == floor($i / 2) ? "rowEven" : "rowOdd";
       $taxRates = zen_get_multiple_tax_rates($products[$i]['tax_class_id'], $taxCountryId, $taxZoneId);
       $this->products[$index] = array('qty' => $products[$i]['quantity'],
                                       'name' => $products[$i]['name'],
@@ -926,7 +922,7 @@ class order extends base {
                                   'attributes_price_letters_free' => $attributes_values->fields['attributes_price_letters_free'],
                                   'products_options_id' => (int)$this->products[$i]['attributes'][$j]['option_id'],
                                   'products_options_values_id' => (int)$this->products[$i]['attributes'][$j]['value_id'],
-                                  'products_prid' => $this->products[$i]['id']
+                                  'products_prid' => $this->products[$i]['id'],
                                   );
 
           zen_db_perform(TABLE_ORDERS_PRODUCTS_ATTRIBUTES, $sql_data_array);
@@ -1049,9 +1045,9 @@ class order extends base {
     $html_msg['EMAIL_ORDER_DATE']      = date(ORDER_EMAIL_DATE_FORMAT);
     $html_msg['EMAIL_TEXT_TELEPHONE']  = EMAIL_TEXT_TELEPHONE;
 
-    $invoiceInfo=EMAIL_TEXT_INVOICE_URL . ' ' . zen_href_link(FILENAME_ACCOUNT_HISTORY_INFO, 'order_id=' . $zf_insert_id, 'SSL', false) . "\n\n";
-    $htmlInvoiceURL=EMAIL_TEXT_INVOICE_URL_CLICK;
-    $htmlInvoiceValue=zen_href_link(FILENAME_ACCOUNT_HISTORY_INFO, 'order_id=' . $zf_insert_id, 'SSL', false);
+    $invoiceInfo = EMAIL_TEXT_INVOICE_URL . ' ' . zen_href_link(FILENAME_ACCOUNT_HISTORY_INFO, 'order_id=' . $zf_insert_id, 'SSL', false) . "\n\n";
+    $htmlInvoiceURL = EMAIL_TEXT_INVOICE_URL_CLICK;
+    $htmlInvoiceValue = zen_href_link(FILENAME_ACCOUNT_HISTORY_INFO, 'order_id=' . $zf_insert_id, 'SSL', false);
 
     //comments area
     $html_msg['ORDER_COMMENTS'] = '';

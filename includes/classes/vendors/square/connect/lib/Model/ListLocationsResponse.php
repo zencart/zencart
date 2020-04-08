@@ -61,7 +61,7 @@ class ListLocationsResponse implements ArrayAccess
       */
     protected $errors;
     /**
-      * $locations The business's locations.
+      * $locations The business locations.
       * @var \SquareConnect\Model\Location[]
       */
     protected $locations;
@@ -115,7 +115,7 @@ class ListLocationsResponse implements ArrayAccess
   
     /**
      * Sets locations
-     * @param \SquareConnect\Model\Location[] $locations The business's locations.
+     * @param \SquareConnect\Model\Location[] $locations The business locations.
      * @return $this
      */
     public function setLocations($locations)

@@ -82,7 +82,7 @@ class V1EmployeeRole implements ArrayAccess
       */
     protected $name;
     /**
-      * $permissions The role's permissions.
+      * $permissions The role's permissions. See [V1EmployeeRolePermissions](#type-v1employeerolepermissions) for possible values
       * @var string[]
       */
     protected $permissions;
@@ -190,7 +190,7 @@ class V1EmployeeRole implements ArrayAccess
   
     /**
      * Sets permissions
-     * @param string[] $permissions The role's permissions.
+     * @param string[] $permissions The role's permissions. See [V1EmployeeRolePermissions](#type-v1employeerolepermissions) for possible values
      * @return $this
      */
     public function setPermissions($permissions)

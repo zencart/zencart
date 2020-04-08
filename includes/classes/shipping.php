@@ -2,11 +2,10 @@
 /**
  * shipping class
  *
- * @package classes
- * @copyright Copyright 2003-2019 Zen Cart Development Team
+ * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: mc12345678 2019 Jan 22 Modified in v1.5.6b $
+ * @version $Id:  Modified in v1.5.7 $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
@@ -20,11 +19,15 @@ if (!defined('IS_ADMIN_FLAG')) {
 class shipping extends base {
   var $modules;
 
-  // class constructor
   function __construct($module = null) {
-    global $PHP_SELF, $messageStack;
-    if (defined('MODULE_SHIPPING_INSTALLED') && zen_not_null(MODULE_SHIPPING_INSTALLED)) {
-      $this->modules = explode(';', MODULE_SHIPPING_INSTALLED);
+      global $PHP_SELF, $messageStack;
+
+      if (defined('MODULE_SHIPPING_INSTALLED') && !empty(MODULE_SHIPPING_INSTALLED)) {
+        $this->modules = explode(';', MODULE_SHIPPING_INSTALLED);
+      }
+      $this->notify('NOTIFY_SHIPPING_CLASS_GET_INSTALLED_MODULES', $module);
+
+      if (empty($this->modules)) return;
 
       $include_modules = array();
 
@@ -49,11 +52,14 @@ class shipping extends base {
         if (@file_exists($lang_file)) {
           include_once($lang_file);
         } else {
-          if (IS_ADMIN_FLAG === false && is_object($messageStack)) {
-            $messageStack->add('checkout_shipping', WARNING_COULD_NOT_LOCATE_LANG_FILE . $lang_file, 'caution');
-          } else {
-            $messageStack->add_session(WARNING_COULD_NOT_LOCATE_LANG_FILE . $lang_file, 'caution');
+          if (is_object($messageStack)) {
+            if (IS_ADMIN_FLAG === false) {
+              $messageStack->add('checkout_shipping', WARNING_COULD_NOT_LOCATE_LANG_FILE . $lang_file, 'caution');
+            } else {
+              $messageStack->add_session(WARNING_COULD_NOT_LOCATE_LANG_FILE . $lang_file, 'caution');
+            }
           }
+          continue;
         }
         $this->enabled = TRUE;
         $this->notify('NOTIFY_SHIPPING_MODULE_ENABLE', $include_modules[$i]['class'], $include_modules[$i]['class']);
@@ -66,8 +72,8 @@ class shipping extends base {
           if ($enabled == FALSE ) unset($GLOBALS[$include_modules[$i]['class']]);
         }
       }
-    }
   }
+
   function check_enabled($class)
   {
     $enabled = $class->enabled;
@@ -83,6 +89,7 @@ class shipping extends base {
     $this->notify('NOTIFY_SHIPPING_CHECK_ENABLED', array(), $class, $enabled);
     return $enabled;
   }
+
   function calculate_boxes_weight_and_tare() {
     global $total_weight, $shipping_weight, $shipping_quoted, $shipping_num_boxes;
 
@@ -166,7 +173,7 @@ class shipping extends base {
         if (FALSE == $GLOBALS[$include_quotes[$i]]->enabled) continue;
         $save_shipping_weight = $shipping_weight;
         $quotes = $GLOBALS[$include_quotes[$i]]->quote($method);
-        if (!isset($quotes['tax'])) $quotes['tax'] = 0; 
+        if (!isset($quotes['tax'])) $quotes['tax'] = 0;
         $shipping_weight = $save_shipping_weight;
         if (is_array($quotes)) $quotes_array[] = $quotes;
       }
@@ -176,7 +183,7 @@ class shipping extends base {
   }
 
   function cheapest() {
-    if (is_array($this->modules)) {
+    if (!is_array($this->modules)) return false;
       $rates = array();
 
       foreach($this->modules as $value) {
@@ -215,6 +222,5 @@ class shipping extends base {
       }
       $this->notify('NOTIFY_SHIPPING_MODULE_CALCULATE_CHEAPEST', $cheapest, $cheapest, $rates);
       return $cheapest;
-    }
   }
 }

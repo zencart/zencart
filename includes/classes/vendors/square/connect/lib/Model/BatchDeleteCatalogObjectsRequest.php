@@ -52,7 +52,7 @@ class BatchDeleteCatalogObjectsRequest implements ArrayAccess
     );
   
     /**
-      * $object_ids The IDs of the [CatalogObject](#type-catalogobject)s to be deleted. When an object is deleted, other objects in the graph that depend on that object will be deleted as well (for example, deleting a [CatalogItem](#type-catalogitem) will delete its [CatalogItemVariation](#type-catalogitemvariation)s).
+      * $object_ids The IDs of the CatalogObjects to be deleted. When an object is deleted, other objects in the graph that depend on that object will be deleted as well (for example, deleting a CatalogItem will delete its CatalogItemVariation.
       * @var string[]
       */
     protected $object_ids;
@@ -82,7 +82,7 @@ class BatchDeleteCatalogObjectsRequest implements ArrayAccess
   
     /**
      * Sets object_ids
-     * @param string[] $object_ids The IDs of the [CatalogObject](#type-catalogobject)s to be deleted. When an object is deleted, other objects in the graph that depend on that object will be deleted as well (for example, deleting a [CatalogItem](#type-catalogitem) will delete its [CatalogItemVariation](#type-catalogitemvariation)s).
+     * @param string[] $object_ids The IDs of the CatalogObjects to be deleted. When an object is deleted, other objects in the graph that depend on that object will be deleted as well (for example, deleting a CatalogItem will delete its CatalogItemVariation.
      * @return $this
      */
     public function setObjectIds($object_ids)

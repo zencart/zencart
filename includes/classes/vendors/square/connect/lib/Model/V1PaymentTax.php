@@ -92,7 +92,7 @@ class V1PaymentTax implements ArrayAccess
       */
     protected $rate;
     /**
-      * $inclusion_type Whether the tax is an ADDITIVE tax or an INCLUSIVE tax.
+      * $inclusion_type Whether the tax is an ADDITIVE tax or an INCLUSIVE tax. See [V1PaymentTaxInclusionType](#type-v1paymenttaxinclusiontype) for possible values
       * @var string
       */
     protected $inclusion_type;
@@ -228,7 +228,7 @@ class V1PaymentTax implements ArrayAccess
   
     /**
      * Sets inclusion_type
-     * @param string $inclusion_type Whether the tax is an ADDITIVE tax or an INCLUSIVE tax.
+     * @param string $inclusion_type Whether the tax is an ADDITIVE tax or an INCLUSIVE tax. See [V1PaymentTaxInclusionType](#type-v1paymenttaxinclusiontype) for possible values
      * @return $this
      */
     public function setInclusionType($inclusion_type)

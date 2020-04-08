@@ -60,17 +60,17 @@ class DeleteCatalogObjectResponse implements ArrayAccess
     );
   
     /**
-      * $errors The set of [Error](#type-error)s encountered.
+      * $errors Information on any errors encountered.
       * @var \SquareConnect\Model\Error[]
       */
     protected $errors;
     /**
-      * $deleted_object_ids The IDs of all [CatalogObject](#type-catalogobject)s deleted by this request. Multiple IDs may be returned when associated objects are also deleted, for example a [CatalogItemVariation](#type-catalogitemvariation) will be deleted (and its ID included in this field) when its parent [CatalogItem](#type-catalogitem) is deleted.
+      * $deleted_object_ids The IDs of all catalog objects deleted by this request. Multiple IDs may be returned when associated objects are also deleted, for example a catalog item variation will be deleted (and its ID included in this field) when its parent catalog item is deleted.
       * @var string[]
       */
     protected $deleted_object_ids;
     /**
-      * $deleted_at The database [timestamp](#workingwithdates) of this deletion in RFC 3339 format, e.g., \"2016-09-04T23:59:33.123Z\".
+      * $deleted_at The database [timestamp](https://developer.squareup.com/docs/build-basics/working-with-dates) of this deletion in RFC 3339 format, e.g., `2016-09-04T23:59:33.123Z`.
       * @var string
       */
     protected $deleted_at;
@@ -110,7 +110,7 @@ class DeleteCatalogObjectResponse implements ArrayAccess
   
     /**
      * Sets errors
-     * @param \SquareConnect\Model\Error[] $errors The set of [Error](#type-error)s encountered.
+     * @param \SquareConnect\Model\Error[] $errors Information on any errors encountered.
      * @return $this
      */
     public function setErrors($errors)
@@ -129,7 +129,7 @@ class DeleteCatalogObjectResponse implements ArrayAccess
   
     /**
      * Sets deleted_object_ids
-     * @param string[] $deleted_object_ids The IDs of all [CatalogObject](#type-catalogobject)s deleted by this request. Multiple IDs may be returned when associated objects are also deleted, for example a [CatalogItemVariation](#type-catalogitemvariation) will be deleted (and its ID included in this field) when its parent [CatalogItem](#type-catalogitem) is deleted.
+     * @param string[] $deleted_object_ids The IDs of all catalog objects deleted by this request. Multiple IDs may be returned when associated objects are also deleted, for example a catalog item variation will be deleted (and its ID included in this field) when its parent catalog item is deleted.
      * @return $this
      */
     public function setDeletedObjectIds($deleted_object_ids)
@@ -148,7 +148,7 @@ class DeleteCatalogObjectResponse implements ArrayAccess
   
     /**
      * Sets deleted_at
-     * @param string $deleted_at The database [timestamp](#workingwithdates) of this deletion in RFC 3339 format, e.g., \"2016-09-04T23:59:33.123Z\".
+     * @param string $deleted_at The database [timestamp](https://developer.squareup.com/docs/build-basics/working-with-dates) of this deletion in RFC 3339 format, e.g., `2016-09-04T23:59:33.123Z`.
      * @return $this
      */
     public function setDeletedAt($deleted_at)

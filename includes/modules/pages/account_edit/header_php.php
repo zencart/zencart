@@ -162,9 +162,7 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
   }
 }
 
-$account_query = "SELECT customers_gender, customers_firstname, customers_lastname,
-                         customers_dob, customers_email_address, customers_telephone, customers_nick,
-                         customers_fax, customers_email_format, customers_referral
+$account_query = "SELECT * 
                   FROM   " . TABLE_CUSTOMERS . "
                   WHERE  customers_id = :customersID";
 

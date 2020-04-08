@@ -6,9 +6,9 @@
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: Zen4All 2019 Mar 31 Modified in v1.5.6b $
  */
-$number_of_customers = 15;
-$number_of_orders = 25;
-$number_of_visitors_history = 15;
+if (!defined('NUMBER_OF_CUSTOMERS')) define('NUMBER_OF_CUSTOMERS', '15');
+if (!defined('NUMBER_OF_ORDERS')) define('NUMBER_OF_ORDERS','25'); 
+if (!defined('NUMBER_OF_VISTORS_HISTORY')) define('NUMBER_OF_VISTORS_HISTORY','15'); 
 
 $notifications = new AdminNotifications();
 $availableNotifications = $notifications->getNotifications('index', $_SESSION['admin_id']);
@@ -43,7 +43,7 @@ $i = 0;
 $visit_history = array();
 //  Get the visitor history data
 $visits_query = "SELECT startdate, counter, session_counter FROM " . TABLE_COUNTER_HISTORY . " ORDER BY startdate DESC";
-$visits = $db->Execute($visits_query, $number_of_visitors_history, true, 1800);
+$visits = $db->Execute($visits_query, (int)NUMBER_OF_VISTORS_HISTORY, true, 1800);
 $counterData = '';
 foreach ($visits as $data) {
   // table
@@ -327,7 +327,7 @@ foreach ($whos_online as $session) {
                                    FROM " . TABLE_CUSTOMERS . " c
                                    LEFT JOIN " . TABLE_CUSTOMERS_INFO . " a ON c.customers_id = a.customers_info_id
                                    ORDER BY a.customers_info_date_account_created DESC",
-                $number_of_customers, true, 1800);
+                (int)NUMBER_OF_CUSTOMERS, true, 1800);
 
             foreach ($customers as $customer) {
               $customer['customers_firstname'] = zen_output_string_protected($customer['customers_firstname']);
@@ -457,7 +457,7 @@ foreach ($whos_online as $session) {
 
       <!--// Counters graph = populated by javascript  //-->
       <div class="panel panel-default reportBox">
-        <div class="panel-heading header"><?php echo sprintf(TEXT_COUNTER_HISTORY_TITLE, $number_of_visitors_history); ?></div>
+        <div class="panel-heading header"><?php echo sprintf(TEXT_COUNTER_HISTORY_TITLE, (int)NUMBER_OF_VISTORS_HISTORY); ?></div>
         <?php if (count($visit_history)) { ?>
           <div class="panel-body">
             <div id="graph"></div>
@@ -497,7 +497,7 @@ foreach ($whos_online as $session) {
                                     LEFT JOIN " . TABLE_ORDERS_TOTAL . " ot ON (o.orders_id = ot.orders_id
                                       AND class = 'ot_total')
                                     ORDER BY orders_id DESC",
-                $number_of_orders, true, 1800);
+                (int)NUMBER_OF_ORDERS, true, 1800);
 
             $ds = $dsc = $ys = $ysc = $msc = 0;
 

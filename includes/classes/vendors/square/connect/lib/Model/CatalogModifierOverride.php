@@ -56,12 +56,12 @@ class CatalogModifierOverride implements ArrayAccess
     );
   
     /**
-      * $modifier_id The ID of the [CatalogModifier](#type-catalogmodifier) whose default behavior is being overridden.
+      * $modifier_id The ID of the `CatalogModifier` whose default behavior is being overridden.
       * @var string
       */
     protected $modifier_id;
     /**
-      * $on_by_default If `true`, this [CatalogModifier](#type-catalogmodifier) should be selected by default for this [CatalogItem](#type-catalogitem).
+      * $on_by_default If `true`, this `CatalogModifier` should be selected by default for this `CatalogItem`.
       * @var bool
       */
     protected $on_by_default;
@@ -96,7 +96,7 @@ class CatalogModifierOverride implements ArrayAccess
   
     /**
      * Sets modifier_id
-     * @param string $modifier_id The ID of the [CatalogModifier](#type-catalogmodifier) whose default behavior is being overridden.
+     * @param string $modifier_id The ID of the `CatalogModifier` whose default behavior is being overridden.
      * @return $this
      */
     public function setModifierId($modifier_id)
@@ -115,7 +115,7 @@ class CatalogModifierOverride implements ArrayAccess
   
     /**
      * Sets on_by_default
-     * @param bool $on_by_default If `true`, this [CatalogModifier](#type-catalogmodifier) should be selected by default for this [CatalogItem](#type-catalogitem).
+     * @param bool $on_by_default If `true`, this `CatalogModifier` should be selected by default for this `CatalogItem`.
      * @return $this
      */
     public function setOnByDefault($on_by_default)

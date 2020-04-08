@@ -118,7 +118,7 @@ class V1Employee implements ArrayAccess
       */
     protected $email;
     /**
-      * $status CWhether the employee is ACTIVE or INACTIVE. Inactive employees cannot sign in to Square Register.Merchants update this field from the Square Dashboard.
+      * $status CWhether the employee is ACTIVE or INACTIVE. Inactive employees cannot sign in to Square Register.Merchants update this field from the Square Dashboard. See [V1EmployeeStatus](#type-v1employeestatus) for possible values
       * @var string
       */
     protected $status;
@@ -322,7 +322,7 @@ class V1Employee implements ArrayAccess
   
     /**
      * Sets status
-     * @param string $status CWhether the employee is ACTIVE or INACTIVE. Inactive employees cannot sign in to Square Register.Merchants update this field from the Square Dashboard.
+     * @param string $status CWhether the employee is ACTIVE or INACTIVE. Inactive employees cannot sign in to Square Register.Merchants update this field from the Square Dashboard. See [V1EmployeeStatus](#type-v1employeestatus) for possible values
      * @return $this
      */
     public function setStatus($status)

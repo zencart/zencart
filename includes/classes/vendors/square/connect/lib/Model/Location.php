@@ -38,7 +38,17 @@ class Location implements ArrayAccess
         'phone_number' => 'string',
         'business_name' => 'string',
         'type' => 'string',
-        'website_url' => 'string'
+        'website_url' => 'string',
+        'business_hours' => '\SquareConnect\Model\BusinessHours',
+        'business_email' => 'string',
+        'description' => 'string',
+        'twitter_username' => 'string',
+        'instagram_username' => 'string',
+        'facebook_url' => 'string',
+        'coordinates' => '\SquareConnect\Model\Coordinates',
+        'logo_url' => 'string',
+        'pos_background_url' => 'string',
+        'mcc' => 'string'
     );
   
     /** 
@@ -60,7 +70,17 @@ class Location implements ArrayAccess
         'phone_number' => 'phone_number',
         'business_name' => 'business_name',
         'type' => 'type',
-        'website_url' => 'website_url'
+        'website_url' => 'website_url',
+        'business_hours' => 'business_hours',
+        'business_email' => 'business_email',
+        'description' => 'description',
+        'twitter_username' => 'twitter_username',
+        'instagram_username' => 'instagram_username',
+        'facebook_url' => 'facebook_url',
+        'coordinates' => 'coordinates',
+        'logo_url' => 'logo_url',
+        'pos_background_url' => 'pos_background_url',
+        'mcc' => 'mcc'
     );
   
     /**
@@ -82,7 +102,17 @@ class Location implements ArrayAccess
         'phone_number' => 'setPhoneNumber',
         'business_name' => 'setBusinessName',
         'type' => 'setType',
-        'website_url' => 'setWebsiteUrl'
+        'website_url' => 'setWebsiteUrl',
+        'business_hours' => 'setBusinessHours',
+        'business_email' => 'setBusinessEmail',
+        'description' => 'setDescription',
+        'twitter_username' => 'setTwitterUsername',
+        'instagram_username' => 'setInstagramUsername',
+        'facebook_url' => 'setFacebookUrl',
+        'coordinates' => 'setCoordinates',
+        'logo_url' => 'setLogoUrl',
+        'pos_background_url' => 'setPosBackgroundUrl',
+        'mcc' => 'setMcc'
     );
   
     /**
@@ -104,36 +134,46 @@ class Location implements ArrayAccess
         'phone_number' => 'getPhoneNumber',
         'business_name' => 'getBusinessName',
         'type' => 'getType',
-        'website_url' => 'getWebsiteUrl'
+        'website_url' => 'getWebsiteUrl',
+        'business_hours' => 'getBusinessHours',
+        'business_email' => 'getBusinessEmail',
+        'description' => 'getDescription',
+        'twitter_username' => 'getTwitterUsername',
+        'instagram_username' => 'getInstagramUsername',
+        'facebook_url' => 'getFacebookUrl',
+        'coordinates' => 'getCoordinates',
+        'logo_url' => 'getLogoUrl',
+        'pos_background_url' => 'getPosBackgroundUrl',
+        'mcc' => 'getMcc'
     );
   
     /**
-      * $id The location's unique ID.
+      * $id The Square-issued ID of the location.
       * @var string
       */
     protected $id;
     /**
-      * $name The location's name. Location names are set by the account owner and displayed in the dashboard as the location's nickname
+      * $name The name of the location. This information appears in the dashboard as the nickname.
       * @var string
       */
     protected $name;
     /**
-      * $address The location's physical address.
+      * $address The physical address of the location.
       * @var \SquareConnect\Model\Address
       */
     protected $address;
     /**
-      * $timezone The [IANA Timezone Database](https://www.iana.org/time-zones) identifier for the location's timezone.
+      * $timezone The [IANA Timezone](https://www.iana.org/time-zones) identifier for the timezone of the location.
       * @var string
       */
     protected $timezone;
     /**
-      * $capabilities Indicates which Square features are enabled for the location.  See [LocationCapability](#type-locationcapability) for possible values.
+      * $capabilities The Square features that are enabled for the location. See `LocationCapability` for possible values. See [LocationCapability](#type-locationcapability) for possible values
       * @var string[]
       */
     protected $capabilities;
     /**
-      * $status The location's status  See [LocationStatus](#type-locationstatus) for possible values.
+      * $status The status of the location, either active or inactive. See [LocationStatus](#type-locationstatus) for possible values
       * @var string
       */
     protected $status;
@@ -143,45 +183,95 @@ class Location implements ArrayAccess
       */
     protected $created_at;
     /**
-      * $merchant_id The identifier of the merchant that owns the location.
+      * $merchant_id The ID of the merchant that owns the location.
       * @var string
       */
     protected $merchant_id;
     /**
-      * $country The location's country, in ISO 3166-1-alpha-2 format.  See [Country](#type-country) for possible values.
+      * $country The country of the location, in ISO 3166-1-alpha-2 format.  See `Country` for possible values. See [Country](#type-country) for possible values
       * @var string
       */
     protected $country;
     /**
-      * $language_code The language associated with the location in [BCP 47 format](https://tools.ietf.org/html/bcp47#appendix-A).
+      * $language_code The language associated with the location, in [BCP 47 format](https://tools.ietf.org/html/bcp47#appendix-A).
       * @var string
       */
     protected $language_code;
     /**
-      * $currency The currency used for all transactions at this location, specified in __ISO 4217 format__. For example, the currency for a location processing transactions in the United States is 'USD'.  See [Currency](#type-currency) for possible values.
+      * $currency The currency used for all transactions at this location, in ISO 4217 format. See `Currency` for possible values. See [Currency](#type-currency) for possible values
       * @var string
       */
     protected $currency;
     /**
-      * $phone_number The location's phone_number.
+      * $phone_number The phone number of the location in human readable format.
       * @var string
       */
     protected $phone_number;
     /**
-      * $business_name The location's business_name which is shown to its customers. For example, this is the name printed on its customer's receipts.
+      * $business_name The business name of the location This is the name visible to the customers of the location. For example, this name appears on customer receipts.
       * @var string
       */
     protected $business_name;
     /**
-      * $type The location's type, as set by the account owner in the Square dashboard. Typically used to indicate whether or not the location object represents a physical space like a building or mall space.  See [LocationType](#type-locationtype) for possible values.
+      * $type The type of the location, either physical or mobile. See [LocationType](#type-locationtype) for possible values
       * @var string
       */
     protected $type;
     /**
-      * $website_url The location's website, as set by the account owner in the Square dashboard.  Default: none; only exists if explicitly set.
+      * $website_url The website URL of the location.
       * @var string
       */
     protected $website_url;
+    /**
+      * $business_hours Represents the hours of operation for the location.
+      * @var \SquareConnect\Model\BusinessHours
+      */
+    protected $business_hours;
+    /**
+      * $business_email The email of the location. This email is visible to the customers of the location. For example, the email appears on customer receipts.
+      * @var string
+      */
+    protected $business_email;
+    /**
+      * $description The description of the location.
+      * @var string
+      */
+    protected $description;
+    /**
+      * $twitter_username The Twitter username of the location without the '&#64;' symbol.
+      * @var string
+      */
+    protected $twitter_username;
+    /**
+      * $instagram_username The Instagram username of the location without the '&#64;' symbol.
+      * @var string
+      */
+    protected $instagram_username;
+    /**
+      * $facebook_url The Facebook profile URL of the location. The URL should begin with 'facebook.com/'.
+      * @var string
+      */
+    protected $facebook_url;
+    /**
+      * $coordinates The physical coordinates (latitude and longitude) of the location.
+      * @var \SquareConnect\Model\Coordinates
+      */
+    protected $coordinates;
+    /**
+      * $logo_url The URL of the logo image for the location.
+      * @var string
+      */
+    protected $logo_url;
+    /**
+      * $pos_background_url The URL of the Point of Sale background image for the location.
+      * @var string
+      */
+    protected $pos_background_url;
+    /**
+      * $mcc The merchant category code (MCC) of the location, as standardized by ISO 18245. The MCC describes the kind of goods or services sold at the location.
+      * @var string
+      */
+    protected $mcc;
 
     /**
      * Constructor
@@ -265,6 +355,56 @@ class Location implements ArrayAccess
             } else {
               $this->website_url = null;
             }
+            if (isset($data["business_hours"])) {
+              $this->business_hours = $data["business_hours"];
+            } else {
+              $this->business_hours = null;
+            }
+            if (isset($data["business_email"])) {
+              $this->business_email = $data["business_email"];
+            } else {
+              $this->business_email = null;
+            }
+            if (isset($data["description"])) {
+              $this->description = $data["description"];
+            } else {
+              $this->description = null;
+            }
+            if (isset($data["twitter_username"])) {
+              $this->twitter_username = $data["twitter_username"];
+            } else {
+              $this->twitter_username = null;
+            }
+            if (isset($data["instagram_username"])) {
+              $this->instagram_username = $data["instagram_username"];
+            } else {
+              $this->instagram_username = null;
+            }
+            if (isset($data["facebook_url"])) {
+              $this->facebook_url = $data["facebook_url"];
+            } else {
+              $this->facebook_url = null;
+            }
+            if (isset($data["coordinates"])) {
+              $this->coordinates = $data["coordinates"];
+            } else {
+              $this->coordinates = null;
+            }
+            if (isset($data["logo_url"])) {
+              $this->logo_url = $data["logo_url"];
+            } else {
+              $this->logo_url = null;
+            }
+            if (isset($data["pos_background_url"])) {
+              $this->pos_background_url = $data["pos_background_url"];
+            } else {
+              $this->pos_background_url = null;
+            }
+            if (isset($data["mcc"])) {
+              $this->mcc = $data["mcc"];
+            } else {
+              $this->mcc = null;
+            }
         }
     }
     /**
@@ -278,7 +418,7 @@ class Location implements ArrayAccess
   
     /**
      * Sets id
-     * @param string $id The location's unique ID.
+     * @param string $id The Square-issued ID of the location.
      * @return $this
      */
     public function setId($id)
@@ -297,7 +437,7 @@ class Location implements ArrayAccess
   
     /**
      * Sets name
-     * @param string $name The location's name. Location names are set by the account owner and displayed in the dashboard as the location's nickname
+     * @param string $name The name of the location. This information appears in the dashboard as the nickname.
      * @return $this
      */
     public function setName($name)
@@ -316,7 +456,7 @@ class Location implements ArrayAccess
   
     /**
      * Sets address
-     * @param \SquareConnect\Model\Address $address The location's physical address.
+     * @param \SquareConnect\Model\Address $address The physical address of the location.
      * @return $this
      */
     public function setAddress($address)
@@ -335,7 +475,7 @@ class Location implements ArrayAccess
   
     /**
      * Sets timezone
-     * @param string $timezone The [IANA Timezone Database](https://www.iana.org/time-zones) identifier for the location's timezone.
+     * @param string $timezone The [IANA Timezone](https://www.iana.org/time-zones) identifier for the timezone of the location.
      * @return $this
      */
     public function setTimezone($timezone)
@@ -354,7 +494,7 @@ class Location implements ArrayAccess
   
     /**
      * Sets capabilities
-     * @param string[] $capabilities Indicates which Square features are enabled for the location.  See [LocationCapability](#type-locationcapability) for possible values.
+     * @param string[] $capabilities The Square features that are enabled for the location. See `LocationCapability` for possible values. See [LocationCapability](#type-locationcapability) for possible values
      * @return $this
      */
     public function setCapabilities($capabilities)
@@ -373,7 +513,7 @@ class Location implements ArrayAccess
   
     /**
      * Sets status
-     * @param string $status The location's status  See [LocationStatus](#type-locationstatus) for possible values.
+     * @param string $status The status of the location, either active or inactive. See [LocationStatus](#type-locationstatus) for possible values
      * @return $this
      */
     public function setStatus($status)
@@ -411,7 +551,7 @@ class Location implements ArrayAccess
   
     /**
      * Sets merchant_id
-     * @param string $merchant_id The identifier of the merchant that owns the location.
+     * @param string $merchant_id The ID of the merchant that owns the location.
      * @return $this
      */
     public function setMerchantId($merchant_id)
@@ -430,7 +570,7 @@ class Location implements ArrayAccess
   
     /**
      * Sets country
-     * @param string $country The location's country, in ISO 3166-1-alpha-2 format.  See [Country](#type-country) for possible values.
+     * @param string $country The country of the location, in ISO 3166-1-alpha-2 format.  See `Country` for possible values. See [Country](#type-country) for possible values
      * @return $this
      */
     public function setCountry($country)
@@ -449,7 +589,7 @@ class Location implements ArrayAccess
   
     /**
      * Sets language_code
-     * @param string $language_code The language associated with the location in [BCP 47 format](https://tools.ietf.org/html/bcp47#appendix-A).
+     * @param string $language_code The language associated with the location, in [BCP 47 format](https://tools.ietf.org/html/bcp47#appendix-A).
      * @return $this
      */
     public function setLanguageCode($language_code)
@@ -468,7 +608,7 @@ class Location implements ArrayAccess
   
     /**
      * Sets currency
-     * @param string $currency The currency used for all transactions at this location, specified in __ISO 4217 format__. For example, the currency for a location processing transactions in the United States is 'USD'.  See [Currency](#type-currency) for possible values.
+     * @param string $currency The currency used for all transactions at this location, in ISO 4217 format. See `Currency` for possible values. See [Currency](#type-currency) for possible values
      * @return $this
      */
     public function setCurrency($currency)
@@ -487,7 +627,7 @@ class Location implements ArrayAccess
   
     /**
      * Sets phone_number
-     * @param string $phone_number The location's phone_number.
+     * @param string $phone_number The phone number of the location in human readable format.
      * @return $this
      */
     public function setPhoneNumber($phone_number)
@@ -506,7 +646,7 @@ class Location implements ArrayAccess
   
     /**
      * Sets business_name
-     * @param string $business_name The location's business_name which is shown to its customers. For example, this is the name printed on its customer's receipts.
+     * @param string $business_name The business name of the location This is the name visible to the customers of the location. For example, this name appears on customer receipts.
      * @return $this
      */
     public function setBusinessName($business_name)
@@ -525,7 +665,7 @@ class Location implements ArrayAccess
   
     /**
      * Sets type
-     * @param string $type The location's type, as set by the account owner in the Square dashboard. Typically used to indicate whether or not the location object represents a physical space like a building or mall space.  See [LocationType](#type-locationtype) for possible values.
+     * @param string $type The type of the location, either physical or mobile. See [LocationType](#type-locationtype) for possible values
      * @return $this
      */
     public function setType($type)
@@ -544,12 +684,202 @@ class Location implements ArrayAccess
   
     /**
      * Sets website_url
-     * @param string $website_url The location's website, as set by the account owner in the Square dashboard.  Default: none; only exists if explicitly set.
+     * @param string $website_url The website URL of the location.
      * @return $this
      */
     public function setWebsiteUrl($website_url)
     {
         $this->website_url = $website_url;
+        return $this;
+    }
+    /**
+     * Gets business_hours
+     * @return \SquareConnect\Model\BusinessHours
+     */
+    public function getBusinessHours()
+    {
+        return $this->business_hours;
+    }
+  
+    /**
+     * Sets business_hours
+     * @param \SquareConnect\Model\BusinessHours $business_hours Represents the hours of operation for the location.
+     * @return $this
+     */
+    public function setBusinessHours($business_hours)
+    {
+        $this->business_hours = $business_hours;
+        return $this;
+    }
+    /**
+     * Gets business_email
+     * @return string
+     */
+    public function getBusinessEmail()
+    {
+        return $this->business_email;
+    }
+  
+    /**
+     * Sets business_email
+     * @param string $business_email The email of the location. This email is visible to the customers of the location. For example, the email appears on customer receipts.
+     * @return $this
+     */
+    public function setBusinessEmail($business_email)
+    {
+        $this->business_email = $business_email;
+        return $this;
+    }
+    /**
+     * Gets description
+     * @return string
+     */
+    public function getDescription()
+    {
+        return $this->description;
+    }
+  
+    /**
+     * Sets description
+     * @param string $description The description of the location.
+     * @return $this
+     */
+    public function setDescription($description)
+    {
+        $this->description = $description;
+        return $this;
+    }
+    /**
+     * Gets twitter_username
+     * @return string
+     */
+    public function getTwitterUsername()
+    {
+        return $this->twitter_username;
+    }
+  
+    /**
+     * Sets twitter_username
+     * @param string $twitter_username The Twitter username of the location without the '&#64;' symbol.
+     * @return $this
+     */
+    public function setTwitterUsername($twitter_username)
+    {
+        $this->twitter_username = $twitter_username;
+        return $this;
+    }
+    /**
+     * Gets instagram_username
+     * @return string
+     */
+    public function getInstagramUsername()
+    {
+        return $this->instagram_username;
+    }
+  
+    /**
+     * Sets instagram_username
+     * @param string $instagram_username The Instagram username of the location without the '&#64;' symbol.
+     * @return $this
+     */
+    public function setInstagramUsername($instagram_username)
+    {
+        $this->instagram_username = $instagram_username;
+        return $this;
+    }
+    /**
+     * Gets facebook_url
+     * @return string
+     */
+    public function getFacebookUrl()
+    {
+        return $this->facebook_url;
+    }
+  
+    /**
+     * Sets facebook_url
+     * @param string $facebook_url The Facebook profile URL of the location. The URL should begin with 'facebook.com/'.
+     * @return $this
+     */
+    public function setFacebookUrl($facebook_url)
+    {
+        $this->facebook_url = $facebook_url;
+        return $this;
+    }
+    /**
+     * Gets coordinates
+     * @return \SquareConnect\Model\Coordinates
+     */
+    public function getCoordinates()
+    {
+        return $this->coordinates;
+    }
+  
+    /**
+     * Sets coordinates
+     * @param \SquareConnect\Model\Coordinates $coordinates The physical coordinates (latitude and longitude) of the location.
+     * @return $this
+     */
+    public function setCoordinates($coordinates)
+    {
+        $this->coordinates = $coordinates;
+        return $this;
+    }
+    /**
+     * Gets logo_url
+     * @return string
+     */
+    public function getLogoUrl()
+    {
+        return $this->logo_url;
+    }
+  
+    /**
+     * Sets logo_url
+     * @param string $logo_url The URL of the logo image for the location.
+     * @return $this
+     */
+    public function setLogoUrl($logo_url)
+    {
+        $this->logo_url = $logo_url;
+        return $this;
+    }
+    /**
+     * Gets pos_background_url
+     * @return string
+     */
+    public function getPosBackgroundUrl()
+    {
+        return $this->pos_background_url;
+    }
+  
+    /**
+     * Sets pos_background_url
+     * @param string $pos_background_url The URL of the Point of Sale background image for the location.
+     * @return $this
+     */
+    public function setPosBackgroundUrl($pos_background_url)
+    {
+        $this->pos_background_url = $pos_background_url;
+        return $this;
+    }
+    /**
+     * Gets mcc
+     * @return string
+     */
+    public function getMcc()
+    {
+        return $this->mcc;
+    }
+  
+    /**
+     * Sets mcc
+     * @param string $mcc The merchant category code (MCC) of the location, as standardized by ISO 18245. The MCC describes the kind of goods or services sold at the location.
+     * @return $this
+     */
+    public function setMcc($mcc)
+    {
+        $this->mcc = $mcc;
         return $this;
     }
     /**

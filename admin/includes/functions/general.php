@@ -318,9 +318,9 @@
   }
 
 
-  function zen_info_image($image, $alt, $width = '', $height = '') {
+  function zen_info_image($image, $alt, $width = '', $height = '', $params = '') {
     if (zen_not_null($image) && (file_exists(DIR_FS_CATALOG_IMAGES . $image)) ) {
-      $image = zen_image(DIR_WS_CATALOG_IMAGES . $image, $alt, $width, $height);
+      $image = zen_image(DIR_WS_CATALOG_IMAGES . $image, $alt, $width, $height, $params);
     } else {
       $image = TEXT_IMAGE_NONEXISTENT;
     }
@@ -862,25 +862,21 @@
     return str_repeat('*', ($length > 16 ? 16 : $length));
   }
 
-////
-// Sets the status of a product
-  function zen_set_product_status($products_id, $status) {
-    global $db;
-    if ($status == '1') {
-      return $db->Execute("update " . TABLE_PRODUCTS . "
-                           set products_status = 1, products_last_modified = now()
-                           where products_id = '" . (int)$products_id . "'");
-
-    } elseif ($status == '0') {
-      return $db->Execute("update " . TABLE_PRODUCTS . "
-                           set products_status = 0, products_last_modified = now()
-                           where products_id = '" . (int)$products_id . "'");
-
-    } else {
-      return -1;
-    }
-  }
-
+/**
+ * Sets the status of a product
+ * @global object $db
+ * @param int $products_id
+ * @param int $status
+ */
+function zen_set_product_status($products_id, $status)
+{
+  global $db;
+  $db->Execute("UPDATE " . TABLE_PRODUCTS . "
+                SET products_status = " . (int)$status . ",
+                    products_last_modified = now()
+                WHERE products_id = " . (int)$products_id);
+  return;
+}
 
 ////
 // Sets timeout for the current script.

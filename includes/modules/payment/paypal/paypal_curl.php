@@ -661,7 +661,7 @@ class paypal_curl extends base {
     if ($tokenHash == '') $tokenHash = '_' . zen_create_random_value(4);
     $this->outputDestination = 'File';
     $this->notify('PAYPAL_CURL_LOG', $token, $tokenHash);
-    if ($token == '' && !empty($_SESSION['paypal_ec_token']) $token = $_SESSION['paypal_ec_token'];
+    if ($token == '' && !empty($_SESSION['paypal_ec_token'])) $token = $_SESSION['paypal_ec_token'];
     if ($token == '') $token = time();
     $token .= $tokenHash;
     if ($this->outputDestination == 'File') {

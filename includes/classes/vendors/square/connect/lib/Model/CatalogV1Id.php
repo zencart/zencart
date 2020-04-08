@@ -61,7 +61,7 @@ class CatalogV1Id implements ArrayAccess
       */
     protected $catalog_v1_id;
     /**
-      * $location_id The ID of the [location](#type-location) this Connect V1 ID is associated with.
+      * $location_id The ID of the `Location` this Connect V1 ID is associated with.
       * @var string
       */
     protected $location_id;
@@ -115,7 +115,7 @@ class CatalogV1Id implements ArrayAccess
   
     /**
      * Sets location_id
-     * @param string $location_id The ID of the [location](#type-location) this Connect V1 ID is associated with.
+     * @param string $location_id The ID of the `Location` this Connect V1 ID is associated with.
      * @return $this
      */
     public function setLocationId($location_id)

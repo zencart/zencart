@@ -27,7 +27,10 @@ class ObtainTokenRequest implements ArrayAccess
         'client_id' => 'string',
         'client_secret' => 'string',
         'code' => 'string',
-        'redirect_uri' => 'string'
+        'redirect_uri' => 'string',
+        'grant_type' => 'string',
+        'refresh_token' => 'string',
+        'migration_token' => 'string'
     );
   
     /** 
@@ -38,7 +41,10 @@ class ObtainTokenRequest implements ArrayAccess
         'client_id' => 'client_id',
         'client_secret' => 'client_secret',
         'code' => 'code',
-        'redirect_uri' => 'redirect_uri'
+        'redirect_uri' => 'redirect_uri',
+        'grant_type' => 'grant_type',
+        'refresh_token' => 'refresh_token',
+        'migration_token' => 'migration_token'
     );
   
     /**
@@ -49,7 +55,10 @@ class ObtainTokenRequest implements ArrayAccess
         'client_id' => 'setClientId',
         'client_secret' => 'setClientSecret',
         'code' => 'setCode',
-        'redirect_uri' => 'setRedirectUri'
+        'redirect_uri' => 'setRedirectUri',
+        'grant_type' => 'setGrantType',
+        'refresh_token' => 'setRefreshToken',
+        'migration_token' => 'setMigrationToken'
     );
   
     /**
@@ -60,21 +69,24 @@ class ObtainTokenRequest implements ArrayAccess
         'client_id' => 'getClientId',
         'client_secret' => 'getClientSecret',
         'code' => 'getCode',
-        'redirect_uri' => 'getRedirectUri'
+        'redirect_uri' => 'getRedirectUri',
+        'grant_type' => 'getGrantType',
+        'refresh_token' => 'getRefreshToken',
+        'migration_token' => 'getMigrationToken'
     );
   
     /**
-      * $client_id Your application's ID, available from the [application dashboard](https://connect.squareup.com/apps).
+      * $client_id The Square-issued ID of your application, available from the [application dashboard](https://connect.squareup.com/apps).
       * @var string
       */
     protected $client_id;
     /**
-      * $client_secret Your application's secret, available from the [application dashboard](https://connect.squareup.com/apps).
+      * $client_secret The Square-issued application secret for your application, available from the [application dashboard](https://connect.squareup.com/apps).
       * @var string
       */
     protected $client_secret;
     /**
-      * $code The authorization code to exchange.
+      * $code The authorization code to exchange. This is required if `grant_type` is set to `authorization_code`, to indicate that the application wants to exchange an authorization code for an OAuth access token.
       * @var string
       */
     protected $code;
@@ -83,6 +95,21 @@ class ObtainTokenRequest implements ArrayAccess
       * @var string
       */
     protected $redirect_uri;
+    /**
+      * $grant_type Specifies the method to request an OAuth access token. Valid values are: `authorization_code`, `refresh_token`, and `migration_token`
+      * @var string
+      */
+    protected $grant_type;
+    /**
+      * $refresh_token A valid refresh token for generating a new OAuth access token. A valid refresh token is required if `grant_type` is set to `refresh_token` , to indicate the application wants a replacement for an expired OAuth access token.
+      * @var string
+      */
+    protected $refresh_token;
+    /**
+      * $migration_token Legacy OAuth access token obtained using a Connect API version prior to 2019-03-13. This parameter is required if `grant_type` is set to `migration_token` to indicate that the application wants to get a replacement OAuth access token. The response also returns a refresh token. For more information, see [Migrate to Using Refresh Tokens](https://developer.squareup.com/docs/authz/oauth/migration).
+      * @var string
+      */
+    protected $migration_token;
 
     /**
      * Constructor
@@ -111,6 +138,21 @@ class ObtainTokenRequest implements ArrayAccess
             } else {
               $this->redirect_uri = null;
             }
+            if (isset($data["grant_type"])) {
+              $this->grant_type = $data["grant_type"];
+            } else {
+              $this->grant_type = null;
+            }
+            if (isset($data["refresh_token"])) {
+              $this->refresh_token = $data["refresh_token"];
+            } else {
+              $this->refresh_token = null;
+            }
+            if (isset($data["migration_token"])) {
+              $this->migration_token = $data["migration_token"];
+            } else {
+              $this->migration_token = null;
+            }
         }
     }
     /**
@@ -124,7 +166,7 @@ class ObtainTokenRequest implements ArrayAccess
   
     /**
      * Sets client_id
-     * @param string $client_id Your application's ID, available from the [application dashboard](https://connect.squareup.com/apps).
+     * @param string $client_id The Square-issued ID of your application, available from the [application dashboard](https://connect.squareup.com/apps).
      * @return $this
      */
     public function setClientId($client_id)
@@ -143,7 +185,7 @@ class ObtainTokenRequest implements ArrayAccess
   
     /**
      * Sets client_secret
-     * @param string $client_secret Your application's secret, available from the [application dashboard](https://connect.squareup.com/apps).
+     * @param string $client_secret The Square-issued application secret for your application, available from the [application dashboard](https://connect.squareup.com/apps).
      * @return $this
      */
     public function setClientSecret($client_secret)
@@ -162,7 +204,7 @@ class ObtainTokenRequest implements ArrayAccess
   
     /**
      * Sets code
-     * @param string $code The authorization code to exchange.
+     * @param string $code The authorization code to exchange. This is required if `grant_type` is set to `authorization_code`, to indicate that the application wants to exchange an authorization code for an OAuth access token.
      * @return $this
      */
     public function setCode($code)
@@ -187,6 +229,63 @@ class ObtainTokenRequest implements ArrayAccess
     public function setRedirectUri($redirect_uri)
     {
         $this->redirect_uri = $redirect_uri;
+        return $this;
+    }
+    /**
+     * Gets grant_type
+     * @return string
+     */
+    public function getGrantType()
+    {
+        return $this->grant_type;
+    }
+  
+    /**
+     * Sets grant_type
+     * @param string $grant_type Specifies the method to request an OAuth access token. Valid values are: `authorization_code`, `refresh_token`, and `migration_token`
+     * @return $this
+     */
+    public function setGrantType($grant_type)
+    {
+        $this->grant_type = $grant_type;
+        return $this;
+    }
+    /**
+     * Gets refresh_token
+     * @return string
+     */
+    public function getRefreshToken()
+    {
+        return $this->refresh_token;
+    }
+  
+    /**
+     * Sets refresh_token
+     * @param string $refresh_token A valid refresh token for generating a new OAuth access token. A valid refresh token is required if `grant_type` is set to `refresh_token` , to indicate the application wants a replacement for an expired OAuth access token.
+     * @return $this
+     */
+    public function setRefreshToken($refresh_token)
+    {
+        $this->refresh_token = $refresh_token;
+        return $this;
+    }
+    /**
+     * Gets migration_token
+     * @return string
+     */
+    public function getMigrationToken()
+    {
+        return $this->migration_token;
+    }
+  
+    /**
+     * Sets migration_token
+     * @param string $migration_token Legacy OAuth access token obtained using a Connect API version prior to 2019-03-13. This parameter is required if `grant_type` is set to `migration_token` to indicate that the application wants to get a replacement OAuth access token. The response also returns a refresh token. For more information, see [Migrate to Using Refresh Tokens](https://developer.squareup.com/docs/authz/oauth/migration).
+     * @return $this
+     */
+    public function setMigrationToken($migration_token)
+    {
+        $this->migration_token = $migration_token;
         return $this;
     }
     /**

@@ -70,7 +70,7 @@ class BatchRetrieveInventoryCountsResponse implements ArrayAccess
       */
     protected $counts;
     /**
-      * $cursor The pagination cursor to be used in a subsequent request. If unset, this is the final response.  See [Paginating results](#paginatingresults) for more information.
+      * $cursor The pagination cursor to be used in a subsequent request. If unset, this is the final response.  See the [Pagination](https://developer.squareup.com/docs/working-with-apis/pagination) guide for more information.
       * @var string
       */
     protected $cursor;
@@ -148,7 +148,7 @@ class BatchRetrieveInventoryCountsResponse implements ArrayAccess
   
     /**
      * Sets cursor
-     * @param string $cursor The pagination cursor to be used in a subsequent request. If unset, this is the final response.  See [Paginating results](#paginatingresults) for more information.
+     * @param string $cursor The pagination cursor to be used in a subsequent request. If unset, this is the final response.  See the [Pagination](https://developer.squareup.com/docs/working-with-apis/pagination) guide for more information.
      * @return $this
      */
     public function setCursor($cursor)

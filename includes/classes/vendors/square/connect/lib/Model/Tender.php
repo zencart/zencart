@@ -36,7 +36,8 @@ class Tender implements ArrayAccess
         'type' => 'string',
         'card_details' => '\SquareConnect\Model\TenderCardDetails',
         'cash_details' => '\SquareConnect\Model\TenderCashDetails',
-        'additional_recipients' => '\SquareConnect\Model\AdditionalRecipient[]'
+        'additional_recipients' => '\SquareConnect\Model\AdditionalRecipient[]',
+        'payment_id' => 'string'
     );
   
     /** 
@@ -56,7 +57,8 @@ class Tender implements ArrayAccess
         'type' => 'type',
         'card_details' => 'card_details',
         'cash_details' => 'cash_details',
-        'additional_recipients' => 'additional_recipients'
+        'additional_recipients' => 'additional_recipients',
+        'payment_id' => 'payment_id'
     );
   
     /**
@@ -76,7 +78,8 @@ class Tender implements ArrayAccess
         'type' => 'setType',
         'card_details' => 'setCardDetails',
         'cash_details' => 'setCashDetails',
-        'additional_recipients' => 'setAdditionalRecipients'
+        'additional_recipients' => 'setAdditionalRecipients',
+        'payment_id' => 'setPaymentId'
     );
   
     /**
@@ -96,7 +99,8 @@ class Tender implements ArrayAccess
         'type' => 'getType',
         'card_details' => 'getCardDetails',
         'cash_details' => 'getCashDetails',
-        'additional_recipients' => 'getAdditionalRecipients'
+        'additional_recipients' => 'getAdditionalRecipients',
+        'payment_id' => 'getPaymentId'
     );
   
     /**
@@ -125,7 +129,7 @@ class Tender implements ArrayAccess
       */
     protected $note;
     /**
-      * $amount_money The amount of the tender.
+      * $amount_money The total amount of the tender, including `tip_money`. If the tender has a `payment_id`, the `total_money` of the corresponding `Payment` will be equal to the `amount_money` of the tender.
       * @var \SquareConnect\Model\Money
       */
     protected $amount_money;
@@ -145,7 +149,7 @@ class Tender implements ArrayAccess
       */
     protected $customer_id;
     /**
-      * $type The type of tender, such as `CARD` or `CASH`.
+      * $type The type of tender, such as `CARD` or `CASH`. See [TenderType](#type-tendertype) for possible values
       * @var string
       */
     protected $type;
@@ -164,6 +168,11 @@ class Tender implements ArrayAccess
       * @var \SquareConnect\Model\AdditionalRecipient[]
       */
     protected $additional_recipients;
+    /**
+      * $payment_id The ID of the `Payment` that corresponds to this tender. This value is only present for payments created with the v2 Payments API.
+      * @var string
+      */
+    protected $payment_id;
 
     /**
      * Constructor
@@ -236,6 +245,11 @@ class Tender implements ArrayAccess
               $this->additional_recipients = $data["additional_recipients"];
             } else {
               $this->additional_recipients = null;
+            }
+            if (isset($data["payment_id"])) {
+              $this->payment_id = $data["payment_id"];
+            } else {
+              $this->payment_id = null;
             }
         }
     }
@@ -345,7 +359,7 @@ class Tender implements ArrayAccess
   
     /**
      * Sets amount_money
-     * @param \SquareConnect\Model\Money $amount_money The amount of the tender.
+     * @param \SquareConnect\Model\Money $amount_money The total amount of the tender, including `tip_money`. If the tender has a `payment_id`, the `total_money` of the corresponding `Payment` will be equal to the `amount_money` of the tender.
      * @return $this
      */
     public function setAmountMoney($amount_money)
@@ -421,7 +435,7 @@ class Tender implements ArrayAccess
   
     /**
      * Sets type
-     * @param string $type The type of tender, such as `CARD` or `CASH`.
+     * @param string $type The type of tender, such as `CARD` or `CASH`. See [TenderType](#type-tendertype) for possible values
      * @return $this
      */
     public function setType($type)
@@ -484,6 +498,25 @@ class Tender implements ArrayAccess
     public function setAdditionalRecipients($additional_recipients)
     {
         $this->additional_recipients = $additional_recipients;
+        return $this;
+    }
+    /**
+     * Gets payment_id
+     * @return string
+     */
+    public function getPaymentId()
+    {
+        return $this->payment_id;
+    }
+  
+    /**
+     * Sets payment_id
+     * @param string $payment_id The ID of the `Payment` that corresponds to this tender. This value is only present for payments created with the v2 Payments API.
+     * @return $this
+     */
+    public function setPaymentId($payment_id)
+    {
+        $this->payment_id = $payment_id;
         return $this;
     }
     /**

@@ -52,7 +52,7 @@ class CatalogQueryText implements ArrayAccess
     );
   
     /**
-      * $keywords A list of one, two, or three search keywords. Keywords with fewer than three characters are ignored.
+      * $keywords A list of 1, 2, or 3 search keywords. Keywords with fewer than 3 characters are ignored.
       * @var string[]
       */
     protected $keywords;
@@ -82,7 +82,7 @@ class CatalogQueryText implements ArrayAccess
   
     /**
      * Sets keywords
-     * @param string[] $keywords A list of one, two, or three search keywords. Keywords with fewer than three characters are ignored.
+     * @param string[] $keywords A list of 1, 2, or 3 search keywords. Keywords with fewer than 3 characters are ignored.
      * @return $this
      */
     public function setKeywords($keywords)

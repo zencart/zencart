@@ -2,20 +2,13 @@
 
 /**
  * @package admin
- * @copyright Copyright 2003-2019 Zen Cart Development Team
+ * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: torvista 2020 February 13 Modified in v1.5.7 $
  */
 
 require('includes/application_top.php');
-
-///////////////////////////////////////////////////////////////////////////////////////////////
-//todo move to zc_install. Set the target category drop-down to a set category on page first load/when no target category yet selected.
-if (!defined('P2C_TARGET_CATEGORY_DEFAULT')){
-    $db->Execute("INSERT INTO `configuration` (`configuration_title`, `configuration_key`, `configuration_value`, `configuration_description`, `configuration_group_id`, `sort_order`) VALUES ('Default Target Category (Products to Multiple Categories Manager)', 'P2C_TARGET_CATEGORY_DEFAULT', '', 'Default Target Category for Products to Multiple Categories Manager (can also be set on page)', '3', '70')");
-}
-///////////////////////////////////////////////////////////////////////////////////////////////
 
 //functions: located here as only used here. Future merging/expansion with existing functions to be reviewed when possible.
 /**
@@ -25,35 +18,35 @@ if (!defined('P2C_TARGET_CATEGORY_DEFAULT')){
  * @param bool $reset_master_category
  * @return bool
  */
-function zen_validate_categories(int $ref_category_id, int $target_category_id = 0, $reset_master_category = false)
+function zen_validate_categories($ref_category_id, $target_category_id = 0, $reset_master_category = false)
 {
     global $db, $messageStack;
 
     $categories_valid = true;
     if ($ref_category_id === '' || zen_get_categories_status($ref_category_id) === '') {//REF does not exist
         $categories_valid = false;
-        $messageStack->add_session(sprintf(WARNING_CATEGORY_SOURCE_NOT_EXIST, $ref_category_id), 'warning');
+        $messageStack->add_session(sprintf(WARNING_CATEGORY_SOURCE_NOT_EXIST, (int)$ref_category_id), 'warning');
     }
     if (!$reset_master_category && ($target_category_id === '' || zen_get_categories_status($target_category_id) === '')) {//TARGET does not exist
         $categories_valid = false;
-        $messageStack->add_session(sprintf(WARNING_CATEGORY_TARGET_NOT_EXIST, $target_category_id), 'warning');
+        $messageStack->add_session(sprintf(WARNING_CATEGORY_TARGET_NOT_EXIST, (int)$target_category_id), 'warning');
     }
     if (!$reset_master_category && ($categories_valid && $ref_category_id === $target_category_id)) {//category IDs are the same
         $categories_valid = false;
-        $messageStack->add_session(sprintf(WARNING_CATEGORY_IDS_DUPLICATED, $ref_category_id), 'warning');
+        $messageStack->add_session(sprintf(WARNING_CATEGORY_IDS_DUPLICATED, (int)$ref_category_id), 'warning');
     }
 
     if ($categories_valid) {
-        $check_category_from = $db->Execute("SELECT products_id FROM " . TABLE_PRODUCTS_TO_CATEGORIES . " WHERE categories_id = " . $ref_category_id . " LIMIT 1");
+        $check_category_from = $db->Execute("SELECT products_id FROM " . TABLE_PRODUCTS_TO_CATEGORIES . " WHERE categories_id = " . (int)$ref_category_id . " LIMIT 1");
         // check if REF has any products
         if ($check_category_from->RecordCount() < 1) {//there are no products in the FROM category: invalid
             $categories_valid = false;
-            $messageStack->add_session(sprintf(WARNING_CATEGORY_NO_PRODUCTS, $ref_category_id), 'warning');
+            $messageStack->add_session(sprintf(WARNING_CATEGORY_NO_PRODUCTS, (int)$ref_category_id), 'warning');
         }
         // check that TARGET has no subcategories
         if (!$reset_master_category && zen_childs_in_category_count($target_category_id) > 0) {//subcategories exist in the TO category: invalid
             $categories_valid = false;
-            $messageStack->add_session(sprintf(WARNING_CATEGORY_SUBCATEGORIES, $target_category_id), 'warning');
+            $messageStack->add_session(sprintf(WARNING_CATEGORY_SUBCATEGORIES, (int)$target_category_id), 'warning');
         }
     }
     return $categories_valid;
@@ -70,14 +63,14 @@ function zen_validate_categories(int $ref_category_id, int $target_category_id =
  * @param string $category_path_string The full path of the names of all the parent categories being included in the path for the (sub)categories info being generated.
  * @return void
  */
-function zen_get_categories_info(int $parent_id, $category_path_string = '')
+function zen_get_categories_info($parent_id = 0, $category_path_string = '')
 {
     global $db, $categories_info;
 
     $categories_sql = "SELECT cd.categories_id, cd.categories_name 
                         FROM " . TABLE_CATEGORIES . " c
                         LEFT JOIN " . TABLE_CATEGORIES_DESCRIPTION . " cd ON c.categories_id = cd.categories_id
-                        WHERE c.parent_id = " . $parent_id . " 
+                        WHERE c.parent_id = " . (int)$parent_id . " 
                         AND cd.language_id = " . (int)$_SESSION['languages_id'] . "
                         ORDER BY cd.categories_name";
     $categories_result = $db->Execute($categories_sql);
@@ -108,14 +101,14 @@ function zen_get_categories_info(int $parent_id, $category_path_string = '')
  * @param string $type category or product: to determine the array structure
  * @return array
  */
-function zen_get_target_categories_products(int $parent_id = 0, $spacing = '', $category_product_tree_array = [], $type = 'category')
+function zen_get_target_categories_products($parent_id = 0, $spacing = '', $category_product_tree_array = [], $type = 'category')
 {
     global $db, $products_filter;
     $categories = $db->Execute("SELECT cd.categories_id, cd.categories_name, c.parent_id
                                         FROM " . TABLE_CATEGORIES . " c, " . TABLE_CATEGORIES_DESCRIPTION . " cd
                                         WHERE c.categories_id = cd.categories_id
                                         AND cd.language_id = " . (int)$_SESSION['languages_id'] . "
-                                        AND c.parent_id = " . $parent_id . "
+                                        AND c.parent_id = " . (int)$parent_id . "
                                         ORDER BY cd.categories_name");
     foreach ($categories as $category) {
         // Get all subcategories for the current category
@@ -908,7 +901,7 @@ if ($target_subcategory_count > $max_input_vars) { //warning when in excess of P
                     ?>
                     <noscript><input type="submit" value="<?php echo IMAGE_DISPLAY; ?>"></noscript>
                     <?php echo '</form>'; ?>
-                    <?php if ($target_category_id !== 0) { // show a Set Default button when a target category has been selected
+                    <?php if ($target_category_id !== (int)P2C_TARGET_CATEGORY_DEFAULT) { // show a Set Default button if the selected target category is different from the saved default
                         echo zen_draw_form('set_default_target_category_form', FILENAME_PRODUCTS_TO_CATEGORIES, 'action=set_default_target_category' . '&products_filter=' . $products_filter . '&current_category_id=' . $current_category_id, 'post'); ?>
                         <button type="submit" class="btn btn-info" title="<?php echo BUTTON_SET_DEFAULT_TARGET_CATEGORY_TITLE; ?>"><?php echo BUTTON_SET_DEFAULT_TARGET_CATEGORY; ?></span></button>
                         <?php
@@ -960,7 +953,6 @@ if ($target_subcategory_count > $max_input_vars) { //warning when in excess of P
 
                         // Create an object and populate it with the properties expected by the script (an array with
                         // the category's ID and name stored in a "fields" property)
-                        //$categories_list = new CeonCategoriesInfo();
                         $categories_list = new stdClass();
                         $categories_list->fields = $categories_info[$cat_i];
                         $cnt_columns++;

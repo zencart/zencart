@@ -77,7 +77,7 @@ class V1Settlement implements ArrayAccess
       */
     protected $id;
     /**
-      * $status The settlement's current status.
+      * $status The settlement's current status. See [V1SettlementStatus](#type-v1settlementstatus) for possible values
       * @var string
       */
     protected $status;
@@ -171,7 +171,7 @@ class V1Settlement implements ArrayAccess
   
     /**
      * Sets status
-     * @param string $status The settlement's current status.
+     * @param string $status The settlement's current status. See [V1SettlementStatus](#type-v1settlementstatus) for possible values
      * @return $this
      */
     public function setStatus($status)

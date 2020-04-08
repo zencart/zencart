@@ -9,6 +9,7 @@ namespace SquareConnect\Model;
 
 use \ArrayAccess;
 /**
+ * @deprecated
  * V1CashDrawerEvent Class Doc Comment
  *
  * @category Class
@@ -82,7 +83,7 @@ class V1CashDrawerEvent implements ArrayAccess
       */
     protected $employee_id;
     /**
-      * $event_type The type of event that occurred.
+      * $event_type The type of event that occurred. See [V1CashDrawerEventEventType](#type-v1cashdrawereventeventtype) for possible values
       * @var string
       */
     protected $event_type;
@@ -190,7 +191,7 @@ class V1CashDrawerEvent implements ArrayAccess
   
     /**
      * Sets event_type
-     * @param string $event_type The type of event that occurred.
+     * @param string $event_type The type of event that occurred. See [V1CashDrawerEventEventType](#type-v1cashdrawereventeventtype) for possible values
      * @return $this
      */
     public function setEventType($event_type)
