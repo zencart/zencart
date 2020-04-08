@@ -3,14 +3,14 @@
  * Square payments module
  * www.squareup.com
  *
- * Integrated using SquareConnect PHP SDK 3.20200226.0
+ * Integrated using SquareConnect PHP SDK 3.20200325.0
  *
  * REQUIRES PHP 5.4 or newer
  *
  * @package square
  * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: Chris Brown <drbyte@zen-cart.com> Modified 2020-02-26 $
+ * @version $Id: Author: Chris Brown <drbyte@zen-cart.com> Modified 2020-04-08 $
  */
 
 if (!defined('TABLE_SQUARE_PAYMENTS')) define('TABLE_SQUARE_PAYMENTS', DB_PREFIX . 'square_payments');
@@ -29,7 +29,7 @@ class square extends base
     /**
      * $moduleVersion is the plugin version number
      */
-    public $moduleVersion = '1.0';
+    public $moduleVersion = '1.1';
     /**
      * $title is the displayed name for this payment method
      *
@@ -673,8 +673,8 @@ class square extends base
             $GLOBALS['messageStack']->add('FATAL ERROR: No refresh token found. Please re-authorize your Square account via the Admin console.');
         }
 
-        $this->setSquareConfig();
-        $oauthApi = new SquareConnect\Api\OAuthApi($this->_sqConfig);
+        $this->setApiClient();
+        $oauthApi = new SquareConnect\Api\OAuthApi($this->_apiConnection);
 
         $body = new \SquareConnect\Model\ObtainTokenRequest(
             array(

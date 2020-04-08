@@ -114,7 +114,7 @@ class CheckoutApi
             $headerParams['Accept'] = $_header_accept;
         }
         $headerParams['Content-Type'] = ApiClient::selectHeaderContentType(array('application/json'));
-        $headerParams['Square-Version'] = "2020-02-26";
+        $headerParams['Square-Version'] = "2020-03-25";
 
         
         
