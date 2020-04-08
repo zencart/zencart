@@ -93,8 +93,8 @@ function zen_debug_error_handler($errno, $errstr, $errfile, $errline)
 function zen_fatal_error_handler()
 {
     $last_error = error_get_last();
-    
-    if ($last_error['type'] == E_ERROR || $last_error['type'] == E_USER_ERROR || $last_error['type'] == E_PARSE) {
+
+    if (isset($last_error) && ($last_error['type'] == E_ERROR || $last_error['type'] == E_USER_ERROR || $last_error['type'] == E_PARSE)) {
         $message = date('[d-M-Y H:i:s e]') . ' Request URI: ' . $_SERVER['REQUEST_URI'] . ', IP address: ' . (isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : 'not set') . PHP_EOL;
         $message_type = ($last_error['type'] == E_PARSE) ? 'Parse' : (($last_error['type'] == E_RECOVERABLE_ERROR) ? 'Catchable Fatal' : 'Fatal');
         $message .= "--> PHP $message_type error: {$last_error['message']} in {$last_error['file']} on line {$last_error['line']}.";
