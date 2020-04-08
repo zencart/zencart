@@ -19,7 +19,6 @@ define('TEXT_CATEGORIES_IMAGE_MANUAL', 'Or, select an existing image file from t
 define('TEXT_EDIT_SORT_ORDER', 'Sort Order:');
 define('TEXT_RESTRICT_PRODUCT_TYPE', 'Restrict to Product Type');
 define('TEXT_CATEGORY_HAS_RESTRICTIONS', 'This Category has been restricted to these Product Types');
-define('ERROR_CANNOT_ADD_PRODUCT_TYPE', 'The specified Product Type cannot be added to this category. Check your category restrictions.');
 
 // Metatags
 define('TEXT_INFO_HEADING_EDIT_CATEGORY_META_TAGS', 'Categories Meta Tags Definitions');

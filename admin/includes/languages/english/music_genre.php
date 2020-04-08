@@ -27,8 +27,6 @@
   define('TEXT_DELETE_INTRO', 'Are you sure you want to delete this Music Genre.');
   define('TEXT_DELETE_IMAGE', 'Delete Image?.');
   define('TEXT_MUSIC_GENRE_NAME', 'Music Genre Name');
-  define('TEXT_MUSIC_GENRE_IMAGE', 'Music Genre Image');
-  define('TEXT_MUSIC_GENRE_IMAGE_DIR', 'Image Directory&nbsp;');
 
   define('TEXT_HEADING_NEW_MUSIC_GENRE', 'New Music Genre');
   define('TEXT_HEADING_EDIT_MUSIC_GENRE', 'Edit Music Genre');

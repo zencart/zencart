@@ -24,7 +24,6 @@ define('ERROR_NO_USER_DEFINED', 'The option that you requested cannot be underta
 define('ERROR_USER_MUST_HAVE_PROFILE', 'Users must be assigned a profile');
 define('ERROR_DUPLICATE_USER', 'Sorry, an admin user of that name already exists. Please select another name.');
 define('ERROR_ADMIN_NAME_TOO_SHORT', 'Admin user names must have at least %s characters');
-define('ERROR_PASSWORD_TOO_SHORT', 'Passwords must contain at least %s characters');
 define('SUCCESS_NEW_USER_ADDED', 'New user added');
 define('SUCCESS_USER_DETAILS_UPDATED', 'User details updated');
 define('SUCCESS_PASSWORD_UPDATED', 'Password updated');

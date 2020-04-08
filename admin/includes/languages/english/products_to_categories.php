@@ -69,7 +69,6 @@ define('WARNING_CATEGORY_TARGET_NOT_EXIST','<strong>Target</strong> Category ID#
 define('WARNING_CATEGORY_IDS_DUPLICATED', 'Warning: same Category IDs (#%u)');
 define('WARNING_CATEGORY_NO_PRODUCTS', '<strong>Source</strong> Category ID#%u invalid (contains no products)');
 define('WARNING_CATEGORY_SUBCATEGORIES', '<strong>Target</strong> Category ID#%u invalid (contains subcategories)');
-define('WARNING_NO_CATEGORIES_ID', 'Warning: no categories were selected ... no changes were made');
 define('SUCCESS_PRODUCT_COPIED', 'product: %1$s was linked to category ID#%2$u<br>');
 define('SUCCESS_COPY_LINKED', '%1$u product(s) linked from Source Category ID#%2$u to Target Category ID#%3$u');
 define('WARNING_COPY_FROM_IN_TO_LINKED', 'WARNING: No products copied (all products in Category ID#%1$u are already linked into Category ID#%2$u)');

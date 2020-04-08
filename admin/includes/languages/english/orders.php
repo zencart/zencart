@@ -15,7 +15,6 @@ define('HEADING_TITLE_SEARCH_DETAIL_ORDERS_PRODUCTS', 'Product Name or ID:XX or 
 define('HEADING_TITLE_SEARCH_ALL','Search: ');
 define('HEADING_TITLE_SEARCH_PRODUCTS','Product search: ');
 define('TEXT_RESET_FILTER', 'Remove search filter');
-define('TEXT_INFO_SEARCH_DETAIL_FILTER_ORDERS_PRODUCTS', 'Search Filter: ');
 define('TABLE_HEADING_PAYMENT_METHOD', 'Payment<br />Shipping');
 define('TABLE_HEADING_ORDERS_ID','ID');
 
@@ -44,7 +43,6 @@ define('TABLE_HEADING_DATE_ADDED', 'Date Added');
 define('ENTRY_CUSTOMER', 'Customer:');
 define('ENTRY_CUSTOMER_ADDRESS', 'Customer Address:<br><i class="fa fa-2x fa-user"></i>');
 define('ENTRY_SOLD_TO', 'SOLD TO:');
-define('ENTRY_DELIVERY_TO', 'Delivery To:');
 define('ENTRY_SHIP_TO', 'SHIP TO:');
 define('ENTRY_SHIPPING_ADDRESS', 'Shipping Address:<br><i class="fa fa-2x fa-truck"></i>');
 define('ENTRY_BILLING_ADDRESS', 'Billing Address:<br><i class="fa fa-2x fa-credit-card"></i>');
@@ -54,16 +52,11 @@ define('ENTRY_CREDIT_CARD_OWNER', 'Credit Card Owner:');
 define('ENTRY_CREDIT_CARD_NUMBER', 'Credit Card Number:');
 define('ENTRY_CREDIT_CARD_CVV', 'Credit Card CVV Number:');
 define('ENTRY_CREDIT_CARD_EXPIRES', 'Credit Card Expires:');
-define('ENTRY_SUB_TOTAL', 'Sub-Total:');
-define('ENTRY_TAX', 'Tax:');
 define('ENTRY_SHIPPING', 'Shipping:');
-define('ENTRY_TOTAL', 'Total:');
 define('ENTRY_DATE_PURCHASED', 'Date Purchased:');
 define('ENTRY_STATUS', 'Status:');
-define('ENTRY_DATE_LAST_UPDATED', 'Date Last Updated:');
 define('ENTRY_NOTIFY_CUSTOMER', 'Notify Customer:');
 define('ENTRY_NOTIFY_COMMENTS', 'Append Comments:');
-define('ENTRY_PRINTABLE', 'Print Invoice');
 
 define('TEXT_INFO_HEADING_DELETE_ORDER', 'Delete Order');
 define('TEXT_INFO_DELETE_INTRO', 'Are you sure you want to delete this order?');
@@ -71,20 +64,8 @@ define('TEXT_INFO_RESTOCK_PRODUCT_QUANTITY', 'Restock product quantity');
 define('TEXT_DATE_ORDER_CREATED', 'Date Created:');
 define('TEXT_DATE_ORDER_LAST_MODIFIED', 'Last Modified:');
 define('TEXT_INFO_PAYMENT_METHOD', 'Payment Method:');
-define('TEXT_PAID', 'Paid');
-define('TEXT_UNPAID', 'Un-paid');
 
 define('TEXT_ALL_ORDERS', 'All Orders');
-
-define('EMAIL_SEPARATOR', '------------------------------------------------------');
-define('EMAIL_TEXT_SUBJECT', 'Order Update');
-define('EMAIL_TEXT_ORDER_NUMBER', 'Order Number:');
-define('EMAIL_TEXT_INVOICE_URL', 'Detailed Invoice:');
-define('EMAIL_TEXT_DATE_ORDERED', 'Date Ordered:');
-define('EMAIL_TEXT_COMMENTS_UPDATE', '<em>The comments for your order are: </em>');
-define('EMAIL_TEXT_STATUS_UPDATED', 'Your order has been updated to the following status:' . "\n");
-define('EMAIL_TEXT_STATUS_LABEL', '<strong>New status:</strong> %s' . "\n\n");
-define('EMAIL_TEXT_STATUS_PLEASE_REPLY', 'Please reply to this email if you have any questions.' . "\n");
 
 define('ERROR_ORDER_DOES_NOT_EXIST', 'Error: Order does not exist.');
 define('SUCCESS_ORDER_UPDATED', 'Success: Order has been successfully updated.');
@@ -124,7 +105,6 @@ define('TEXT_INFO_EXPIRED_COUNT', 'Expired Count:<br />');
 
 define('TABLE_HEADING_CUSTOMER_COMMENTS', 'Customer<br />Comments');
 define('TEXT_COMMENTS_YES', 'Customer Comments - YES');
-define('TEXT_COMMENTS_NO', 'Customer Comments - NO');
 
 define('TEXT_CUSTOMER_LOOKUP', '<i class="fa fa-search"></i> Lookup Customer');
 
