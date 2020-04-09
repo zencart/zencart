@@ -206,12 +206,12 @@ class ot_coupon {
 
 
 
-      $sql = "select coupon_id, coupon_amount, coupon_type, coupon_minimum_order, uses_per_coupon, uses_per_user,
+      $sql = "SELECT coupon_id, coupon_amount, coupon_type, coupon_minimum_order, uses_per_coupon, uses_per_user,
               restrict_to_products, restrict_to_categories, coupon_zone_restriction, coupon_calc_base, coupon_order_limit
-              from " . TABLE_COUPONS . "
-              where coupon_code= :couponCodeEntered
-              and coupon_active='Y'
-              and coupon_type !='G'";
+              FROM " . TABLE_COUPONS . "
+              WHERE coupon_code= :couponCodeEntered
+              AND coupon_active='Y'
+              AND coupon_type !='G'";
 
       $sql = $db->bindVars($sql, ':couponCodeEntered', $dc_check, 'string');
 
@@ -312,8 +312,8 @@ class ot_coupon {
 
         // JTD - end of handling coupon product restrictions
 
-        $date_query=$db->Execute("select coupon_start_date from " . TABLE_COUPONS . "
-                                  where coupon_code='" . zen_db_prepare_input($dc_check) . "' LIMIT 1");
+        $date_query=$db->Execute("SELECT coupon_start_date FROM " . TABLE_COUPONS . "
+                                  WHERE coupon_code='" . zen_db_prepare_input($dc_check) . "' LIMIT 1");
 
         if (date("Y-m-d H:i:s") < $date_query->fields['coupon_start_date']) {
           $messageStack->add_session('redemptions', sprintf(TEXT_INVALID_STARTDATE_COUPON, ($dc_link_count === 0 ? $dc_link : $dc_check), zen_date_short($date_query->fields['coupon_start_date'])),'caution');
@@ -323,8 +323,8 @@ class ot_coupon {
 //          zen_redirect(zen_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL', true, false));
         }
 
-        $date_query=$db->Execute("select coupon_expire_date from " . TABLE_COUPONS . "
-                                  where coupon_code='" . zen_db_prepare_input($dc_check) . "' LIMIT 1");
+        $date_query=$db->Execute("SELECT coupon_expire_date FROM " . TABLE_COUPONS . "
+                                  WHERE coupon_code='" . zen_db_prepare_input($dc_check) . "' LIMIT 1");
 
           if (date("Y-m-d H:i:s") >= $date_query->fields['coupon_expire_date']) {
           $messageStack->add_session('redemptions', sprintf(TEXT_INVALID_FINISHDATE_COUPON, ($dc_link_count === 0 ? $dc_link : $dc_check), zen_date_short($date_query->fields['coupon_expire_date'])),'caution');
@@ -334,11 +334,11 @@ class ot_coupon {
 //          zen_redirect(zen_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL', true, false));
         }
 
-        $coupon_count = $db->Execute("select coupon_id from " . TABLE_COUPON_REDEEM_TRACK . "
-                                      where coupon_id = '" . (int)$coupon_result->fields['coupon_id']."'");
+        $coupon_count = $db->Execute("SELECT coupon_id FROM " . TABLE_COUPON_REDEEM_TRACK . "
+                                      WHERE coupon_id = '" . (int)$coupon_result->fields['coupon_id']."'");
 
-        $coupon_count_customer = $db->Execute("select coupon_id from " . TABLE_COUPON_REDEEM_TRACK . "
-                                               where coupon_id = '" . $coupon_result->fields['coupon_id']."' and
+        $coupon_count_customer = $db->Execute("SELECT coupon_id FROM " . TABLE_COUPON_REDEEM_TRACK . "
+                                               WHERE coupon_id = '" . $coupon_result->fields['coupon_id']."' AND
                                                customer_id = '" . (int)$_SESSION['customer_id'] . "'");
 
         $coupon_uses_per_user_exceeded = ($coupon_count_customer->RecordCount() >= $coupon_result->fields['uses_per_user'] && $coupon_result->fields['uses_per_user'] > 0);
@@ -361,11 +361,11 @@ class ot_coupon {
 
         $_SESSION['cc_id'] = $coupon_result->fields['coupon_id'];
         if ($_SESSION['cc_id'] > 0) {
-          $sql = "select coupon_id, coupon_amount, coupon_type, coupon_minimum_order, uses_per_coupon, uses_per_user,
+          $sql = "SELECT coupon_id, coupon_amount, coupon_type, coupon_minimum_order, uses_per_coupon, uses_per_user,
                   restrict_to_products, restrict_to_categories, coupon_zone_restriction, coupon_code
-                  from " . TABLE_COUPONS . "
-                  where coupon_id= :couponIDEntered
-                  and coupon_active='Y'";
+                  FROM " . TABLE_COUPONS . "
+                  WHERE coupon_id= :couponIDEntered
+                  AND coupon_active='Y'";
           $sql = $db->bindVars($sql, ':couponIDEntered', $_SESSION['cc_id'], 'string');
 
           $coupon_result=$db->Execute($sql);
@@ -402,7 +402,7 @@ class ot_coupon {
               break;
           }
 
-          $sql = "select zone_id, zone_country_id from " . TABLE_ZONES_TO_GEO_ZONES . " where geo_zone_id = '" . $coupon_result->fields['coupon_zone_restriction'] . "' and zone_country_id = '" . (int)$check_zone_country_id . "' order by zone_id";
+          $sql = "SELECT zone_id, zone_country_id FROM " . TABLE_ZONES_TO_GEO_ZONES . " WHERE geo_zone_id = '" . $coupon_result->fields['coupon_zone_restriction'] . "' AND zone_country_id = '" . (int)$check_zone_country_id . "' ORDER BY zone_id";
           $check = $db->Execute($sql);
 
           // base restrictions zone restrictions for Delivery or Billing address
@@ -488,9 +488,9 @@ class ot_coupon {
     global $db, $insert_id;
     $cc_id = empty($_SESSION['cc_id']) ? 0 : $_SESSION['cc_id'];
     if ($this->deduction !=0) {
-      $db->Execute("insert into " . TABLE_COUPON_REDEEM_TRACK . "
+      $db->Execute("INSERT INTO " . TABLE_COUPON_REDEEM_TRACK . "
                     (coupon_id, redeem_date, redeem_ip, customer_id, order_id)
-                    values ('" . (int)$cc_id . "', now(), '" . $_SERVER['REMOTE_ADDR'] . "', '" . (int)$_SESSION['customer_id'] . "', '" . (int)$insert_id . "')");
+                    VALUES ('" . (int)$cc_id . "', now(), '" . $_SERVER['REMOTE_ADDR'] . "', '" . (int)$_SESSION['customer_id'] . "', '" . (int)$insert_id . "')");
     }
     $_SESSION['cc_id'] = "";
   }
@@ -500,7 +500,7 @@ class ot_coupon {
     $od_amount = array('tax'=>0, 'total'=>0);
     if (!empty($_SESSION['cc_id']))
     {
-      $coupon = $db->Execute("select * from " . TABLE_COUPONS . " where coupon_id = '" . (int)$_SESSION['cc_id'] . "'");
+      $coupon = $db->Execute("SELECT * FROM " . TABLE_COUPONS . " WHERE coupon_id = '" . (int)$_SESSION['cc_id'] . "'");
       $this->coupon_code = $coupon->fields['coupon_code'];
       $orderTotalDetails = $this->get_order_total($_SESSION['cc_id']);
 // left for total order amount ($orderTotalDetails['totalFull']) vs qualified order amount ($order_total['orderTotal']) just switch the commented lines 2 of 3
@@ -690,7 +690,7 @@ class ot_coupon {
   function check() {
     global $db;
     if (!isset($this->check)) {
-      $check_query = $db->Execute("select configuration_value from " . TABLE_CONFIGURATION . " where configuration_key = 'MODULE_ORDER_TOTAL_COUPON_STATUS'");
+      $check_query = $db->Execute("SELECT configuration_value FROM " . TABLE_CONFIGURATION . " WHERE configuration_key = 'MODULE_ORDER_TOTAL_COUPON_STATUS'");
       $this->check = $check_query->RecordCount();
     }
 
@@ -710,12 +710,12 @@ class ot_coupon {
    */
   function install() {
     global $db;
-    $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('This module is installed', 'MODULE_ORDER_TOTAL_COUPON_STATUS', 'true', '', '6', '1','zen_cfg_select_option(array(\'true\'), ', now())");
-    $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Sort Order', 'MODULE_ORDER_TOTAL_COUPON_SORT_ORDER', '280', 'Sort order of display.', '6', '2', now())");
-    $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function ,date_added) values ('Include Shipping', 'MODULE_ORDER_TOTAL_COUPON_INC_SHIPPING', 'true', 'Include Shipping in calculation', '6', '5', 'zen_cfg_select_option(array(\'true\', \'false\'), ', now())");
-    $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function ,date_added) values ('Include Tax', 'MODULE_ORDER_TOTAL_COUPON_INC_TAX', 'false', 'Include Tax in calculation.', '6', '6','zen_cfg_select_option(array(\'true\', \'false\'), ', now())");
-    $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function ,date_added) values ('Re-calculate Tax', 'MODULE_ORDER_TOTAL_COUPON_CALC_TAX', 'Standard', 'Re-Calculate Tax', '6', '7','zen_cfg_select_option(array(\'None\', \'Standard\', \'Credit Note\'), ', now())");
-    $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, use_function, set_function, date_added) values ('Tax Class', 'MODULE_ORDER_TOTAL_COUPON_TAX_CLASS', '0', 'Use the following tax class when treating Discount Coupon as Credit Note.', '6', '0', 'zen_get_tax_class_title', 'zen_cfg_pull_down_tax_classes(', now())");
+    $db->Execute("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) VALUES ('This module is installed', 'MODULE_ORDER_TOTAL_COUPON_STATUS', 'true', '', '6', '1','zen_cfg_select_option(array(\'true\'), ', now())");
+    $db->Execute("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) VALUES ('Sort Order', 'MODULE_ORDER_TOTAL_COUPON_SORT_ORDER', '280', 'Sort order of display.', '6', '2', now())");
+    $db->Execute("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function ,date_added) VALUES ('Include Shipping', 'MODULE_ORDER_TOTAL_COUPON_INC_SHIPPING', 'true', 'Include Shipping in calculation', '6', '5', 'zen_cfg_select_option(array(\'true\', \'false\'), ', now())");
+    $db->Execute("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function ,date_added) VALUES ('Include Tax', 'MODULE_ORDER_TOTAL_COUPON_INC_TAX', 'false', 'Include Tax in calculation.', '6', '6','zen_cfg_select_option(array(\'true\', \'false\'), ', now())");
+    $db->Execute("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function ,date_added) VALUES ('Re-calculate Tax', 'MODULE_ORDER_TOTAL_COUPON_CALC_TAX', 'Standard', 'Re-Calculate Tax', '6', '7','zen_cfg_select_option(array(\'None\', \'Standard\', \'Credit Note\'), ', now())");
+    $db->Execute("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, use_function, set_function, date_added) VALUES ('Tax Class', 'MODULE_ORDER_TOTAL_COUPON_TAX_CLASS', '0', 'Use the following tax class when treating Discount Coupon as Credit Note.', '6', '0', 'zen_get_tax_class_title', 'zen_cfg_pull_down_tax_classes(', now())");
   }
   /**
    * Enter description here...
@@ -730,6 +730,6 @@ class ot_coupon {
     }
     $keys = substr($keys, 0, -1);
 
-    $db->Execute("delete from " . TABLE_CONFIGURATION . " where configuration_key in (" . $keys . ")");
+    $db->Execute("DELETE FROM " . TABLE_CONFIGURATION . " where configuration_key IN (" . $keys . ")");
   }
 }
