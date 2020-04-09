@@ -1,24 +1,10 @@
 <?php
-//
-// +----------------------------------------------------------------------+
-// |zen-cart Open Source E-commerce                                       |
-// +----------------------------------------------------------------------+
-// | Copyright (c) 2003 The zen-cart developers                           |
-// |                                                                      |
-// | http://www.zen-cart.com/index.php                                    |
-// |                                                                      |
-// | Portions Copyright (c) 2003 osCommerce                               |
-// +----------------------------------------------------------------------+
-// | This source file is subject to version 2.0 of the GPL license,       |
-// | that is bundled with this package in the file LICENSE, and is        |
-// | available through the world-wide-web at the following url:           |
-// | http://www.zen-cart.com/license/2_0.txt.                             |
-// | If you did not receive a copy of the zen-cart license and are unable |
-// | to obtain it through the world-wide-web, please send a note to       |
-// | license@zen-cart.com so we can mail you a copy immediately.          |
-// +----------------------------------------------------------------------+
-// $Id: define_pages_editor.php 1969 2005-09-13 06:57:21Z drbyte $
-//
+/**
+ * @package admin
+ * @copyright Copyright 2003-2020 Zen Cart Development Team
+ * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
+ * @version $Id:  Modified in v1.5.7 $
+ **/
 
 define('HEADING_TITLE', 'Define Pages Editor for: ');
 define('NAVBAR_TITLE', 'Define Pages Editor');
@@ -44,5 +30,4 @@ define('ERROR_FILE_NOT_WRITEABLE', 'Error: I can not write to this file. Please 
 define('TEXT_INFO_SELECT_FILE', 'Select a file to edit ...');
 define('TEXT_INFO_EDITING', 'Editing file:');
 
-define('TEXT_INFO_CAUTION','Note: you should always edit the files located in your current template override directory, Example: /languages/' . $_SESSION['language'] . '/html_includes/' . $template_dir . '<br />Be sure to make backups after changing your files.');
-?>
+define('TEXT_INFO_CAUTION','Note: you should always edit the files located in your current template override directory, Example: /languages/' . $_SESSION['language'] . '/html_includes/YOUR_TEMPLATE_DIRECTORY<br>Be sure to make backups after changing your files.');

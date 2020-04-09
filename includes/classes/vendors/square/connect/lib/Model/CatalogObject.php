@@ -29,6 +29,7 @@ class CatalogObject implements ArrayAccess
         'updated_at' => 'string',
         'version' => 'int',
         'is_deleted' => 'bool',
+        'custom_attribute_values' => 'map[string,\SquareConnect\Model\CatalogCustomAttributeValue]',
         'catalog_v1_ids' => '\SquareConnect\Model\CatalogV1Id[]',
         'present_at_all_locations' => 'bool',
         'present_at_location_ids' => 'string[]',
@@ -47,7 +48,8 @@ class CatalogObject implements ArrayAccess
         'image_data' => '\SquareConnect\Model\CatalogImage',
         'measurement_unit_data' => '\SquareConnect\Model\CatalogMeasurementUnit',
         'item_option_data' => '\SquareConnect\Model\CatalogItemOption',
-        'item_option_value_data' => '\SquareConnect\Model\CatalogItemOptionValue'
+        'item_option_value_data' => '\SquareConnect\Model\CatalogItemOptionValue',
+        'custom_attribute_definition_data' => '\SquareConnect\Model\CatalogCustomAttributeDefinition'
     );
   
     /** 
@@ -60,6 +62,7 @@ class CatalogObject implements ArrayAccess
         'updated_at' => 'updated_at',
         'version' => 'version',
         'is_deleted' => 'is_deleted',
+        'custom_attribute_values' => 'custom_attribute_values',
         'catalog_v1_ids' => 'catalog_v1_ids',
         'present_at_all_locations' => 'present_at_all_locations',
         'present_at_location_ids' => 'present_at_location_ids',
@@ -78,7 +81,8 @@ class CatalogObject implements ArrayAccess
         'image_data' => 'image_data',
         'measurement_unit_data' => 'measurement_unit_data',
         'item_option_data' => 'item_option_data',
-        'item_option_value_data' => 'item_option_value_data'
+        'item_option_value_data' => 'item_option_value_data',
+        'custom_attribute_definition_data' => 'custom_attribute_definition_data'
     );
   
     /**
@@ -91,6 +95,7 @@ class CatalogObject implements ArrayAccess
         'updated_at' => 'setUpdatedAt',
         'version' => 'setVersion',
         'is_deleted' => 'setIsDeleted',
+        'custom_attribute_values' => 'setCustomAttributeValues',
         'catalog_v1_ids' => 'setCatalogV1Ids',
         'present_at_all_locations' => 'setPresentAtAllLocations',
         'present_at_location_ids' => 'setPresentAtLocationIds',
@@ -109,7 +114,8 @@ class CatalogObject implements ArrayAccess
         'image_data' => 'setImageData',
         'measurement_unit_data' => 'setMeasurementUnitData',
         'item_option_data' => 'setItemOptionData',
-        'item_option_value_data' => 'setItemOptionValueData'
+        'item_option_value_data' => 'setItemOptionValueData',
+        'custom_attribute_definition_data' => 'setCustomAttributeDefinitionData'
     );
   
     /**
@@ -122,6 +128,7 @@ class CatalogObject implements ArrayAccess
         'updated_at' => 'getUpdatedAt',
         'version' => 'getVersion',
         'is_deleted' => 'getIsDeleted',
+        'custom_attribute_values' => 'getCustomAttributeValues',
         'catalog_v1_ids' => 'getCatalogV1Ids',
         'present_at_all_locations' => 'getPresentAtAllLocations',
         'present_at_location_ids' => 'getPresentAtLocationIds',
@@ -140,7 +147,8 @@ class CatalogObject implements ArrayAccess
         'image_data' => 'getImageData',
         'measurement_unit_data' => 'getMeasurementUnitData',
         'item_option_data' => 'getItemOptionData',
-        'item_option_value_data' => 'getItemOptionValueData'
+        'item_option_value_data' => 'getItemOptionValueData',
+        'custom_attribute_definition_data' => 'getCustomAttributeDefinitionData'
     );
   
     /**
@@ -168,6 +176,11 @@ class CatalogObject implements ArrayAccess
       * @var bool
       */
     protected $is_deleted;
+    /**
+      * $custom_attribute_values Application-defined key/value attributes that are set at a global (location-independent) level. Values from the `*_data` fields may not be duplicated. Custom Attribute fields are intended to store additional information about a Catalog Object or associations with an entity in another system. Do not use custom attributes to store any sensitive information (personally identifiable information, card details, etc.).  For CustomAttributesDefinitions defined by the app making the request, the map key is the key defined in CustomAttributeDefinition (eg. “reference_id”). For CustomAttributesDefinitions by other apps, the map key is the key defined in CustomAttributeDefinition prefixed with the application ID and a colon (eg. “abcd1234:reference_id”).
+      * @var map[string,\SquareConnect\Model\CatalogCustomAttributeValue]
+      */
+    protected $custom_attribute_values;
     /**
       * $catalog_v1_ids The Connect v1 IDs for this object at each location where it is present, where they differ from the object's Connect V2 ID. The field will only be present for objects that have been created or modified by legacy APIs.
       * @var \SquareConnect\Model\CatalogV1Id[]
@@ -263,6 +276,11 @@ class CatalogObject implements ArrayAccess
       * @var \SquareConnect\Model\CatalogItemOptionValue
       */
     protected $item_option_value_data;
+    /**
+      * $custom_attribute_definition_data Structured data for a `CatalogCustomAttributeDefinition`, set for CatalogObjects of type `CUSTOM_ATTRIBUTE_DEFINITION`.
+      * @var \SquareConnect\Model\CatalogCustomAttributeDefinition
+      */
+    protected $custom_attribute_definition_data;
 
     /**
      * Constructor
@@ -295,6 +313,11 @@ class CatalogObject implements ArrayAccess
               $this->is_deleted = $data["is_deleted"];
             } else {
               $this->is_deleted = null;
+            }
+            if (isset($data["custom_attribute_values"])) {
+              $this->custom_attribute_values = $data["custom_attribute_values"];
+            } else {
+              $this->custom_attribute_values = null;
             }
             if (isset($data["catalog_v1_ids"])) {
               $this->catalog_v1_ids = $data["catalog_v1_ids"];
@@ -391,6 +414,11 @@ class CatalogObject implements ArrayAccess
             } else {
               $this->item_option_value_data = null;
             }
+            if (isset($data["custom_attribute_definition_data"])) {
+              $this->custom_attribute_definition_data = $data["custom_attribute_definition_data"];
+            } else {
+              $this->custom_attribute_definition_data = null;
+            }
         }
     }
     /**
@@ -486,6 +514,25 @@ class CatalogObject implements ArrayAccess
     public function setIsDeleted($is_deleted)
     {
         $this->is_deleted = $is_deleted;
+        return $this;
+    }
+    /**
+     * Gets custom_attribute_values
+     * @return map[string,\SquareConnect\Model\CatalogCustomAttributeValue]
+     */
+    public function getCustomAttributeValues()
+    {
+        return $this->custom_attribute_values;
+    }
+  
+    /**
+     * Sets custom_attribute_values
+     * @param map[string,\SquareConnect\Model\CatalogCustomAttributeValue] $custom_attribute_values Application-defined key/value attributes that are set at a global (location-independent) level. Values from the `*_data` fields may not be duplicated. Custom Attribute fields are intended to store additional information about a Catalog Object or associations with an entity in another system. Do not use custom attributes to store any sensitive information (personally identifiable information, card details, etc.).  For CustomAttributesDefinitions defined by the app making the request, the map key is the key defined in CustomAttributeDefinition (eg. “reference_id”). For CustomAttributesDefinitions by other apps, the map key is the key defined in CustomAttributeDefinition prefixed with the application ID and a colon (eg. “abcd1234:reference_id”).
+     * @return $this
+     */
+    public function setCustomAttributeValues($custom_attribute_values)
+    {
+        $this->custom_attribute_values = $custom_attribute_values;
         return $this;
     }
     /**
@@ -847,6 +894,25 @@ class CatalogObject implements ArrayAccess
     public function setItemOptionValueData($item_option_value_data)
     {
         $this->item_option_value_data = $item_option_value_data;
+        return $this;
+    }
+    /**
+     * Gets custom_attribute_definition_data
+     * @return \SquareConnect\Model\CatalogCustomAttributeDefinition
+     */
+    public function getCustomAttributeDefinitionData()
+    {
+        return $this->custom_attribute_definition_data;
+    }
+  
+    /**
+     * Sets custom_attribute_definition_data
+     * @param \SquareConnect\Model\CatalogCustomAttributeDefinition $custom_attribute_definition_data Structured data for a `CatalogCustomAttributeDefinition`, set for CatalogObjects of type `CUSTOM_ATTRIBUTE_DEFINITION`.
+     * @return $this
+     */
+    public function setCustomAttributeDefinitionData($custom_attribute_definition_data)
+    {
+        $this->custom_attribute_definition_data = $custom_attribute_definition_data;
         return $this;
     }
     /**

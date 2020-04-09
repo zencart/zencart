@@ -9,22 +9,23 @@ namespace SquareConnect\Model;
 
 use \ArrayAccess;
 /**
- * CashDrawerEventType Class Doc Comment
+ * CatalogCustomAttributeDefinitionStringConfig Class Doc Comment
  *
  * @category Class
  * @package  SquareConnect
  * @author   Square Inc.
  * @license  http://www.apache.org/licenses/LICENSE-2.0 Apache License v2
  * @link     https://squareup.com/developers
+ * Note: This endpoint is in beta.
  */
-class CashDrawerEventType implements ArrayAccess
+class CatalogCustomAttributeDefinitionStringConfig implements ArrayAccess
 {
     /**
       * Array of property to type mappings. Used for (de)serialization 
       * @var string[]
       */
     static $swaggerTypes = array(
-        
+        'enforce_uniqueness' => 'bool'
     );
   
     /** 
@@ -32,7 +33,7 @@ class CashDrawerEventType implements ArrayAccess
       * @var string[] 
       */
     static $attributeMap = array(
-        
+        'enforce_uniqueness' => 'enforce_uniqueness'
     );
   
     /**
@@ -40,7 +41,7 @@ class CashDrawerEventType implements ArrayAccess
       * @var string[]
       */
     static $setters = array(
-        
+        'enforce_uniqueness' => 'setEnforceUniqueness'
     );
   
     /**
@@ -48,9 +49,14 @@ class CashDrawerEventType implements ArrayAccess
       * @var string[]
       */
     static $getters = array(
-        
+        'enforce_uniqueness' => 'getEnforceUniqueness'
     );
   
+    /**
+      * $enforce_uniqueness If true, each Custom Attribute instance associated with this Custom Attribute Definition must have a unique value within the seller's catalog. For example, this may be used for a value like a SKU that should not be duplicated within a seller's catalog. May not be modified after the definition has been created.
+      * @var bool
+      */
+    protected $enforce_uniqueness;
 
     /**
      * Constructor
@@ -59,7 +65,31 @@ class CashDrawerEventType implements ArrayAccess
     public function __construct(array $data = null)
     {
         if ($data != null) {
+            if (isset($data["enforce_uniqueness"])) {
+              $this->enforce_uniqueness = $data["enforce_uniqueness"];
+            } else {
+              $this->enforce_uniqueness = null;
+            }
         }
+    }
+    /**
+     * Gets enforce_uniqueness
+     * @return bool
+     */
+    public function getEnforceUniqueness()
+    {
+        return $this->enforce_uniqueness;
+    }
+  
+    /**
+     * Sets enforce_uniqueness
+     * @param bool $enforce_uniqueness If true, each Custom Attribute instance associated with this Custom Attribute Definition must have a unique value within the seller's catalog. For example, this may be used for a value like a SKU that should not be duplicated within a seller's catalog. May not be modified after the definition has been created.
+     * @return $this
+     */
+    public function setEnforceUniqueness($enforce_uniqueness)
+    {
+        $this->enforce_uniqueness = $enforce_uniqueness;
+        return $this;
     }
     /**
      * Returns true if offset exists. False otherwise.

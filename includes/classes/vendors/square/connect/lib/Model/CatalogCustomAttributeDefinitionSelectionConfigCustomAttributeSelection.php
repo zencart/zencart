@@ -9,22 +9,24 @@ namespace SquareConnect\Model;
 
 use \ArrayAccess;
 /**
- * CashDrawerEventType Class Doc Comment
+ * CatalogCustomAttributeDefinitionSelectionConfigCustomAttributeSelection Class Doc Comment
  *
  * @category Class
  * @package  SquareConnect
  * @author   Square Inc.
  * @license  http://www.apache.org/licenses/LICENSE-2.0 Apache License v2
  * @link     https://squareup.com/developers
+ * Note: This endpoint is in beta.
  */
-class CashDrawerEventType implements ArrayAccess
+class CatalogCustomAttributeDefinitionSelectionConfigCustomAttributeSelection implements ArrayAccess
 {
     /**
       * Array of property to type mappings. Used for (de)serialization 
       * @var string[]
       */
     static $swaggerTypes = array(
-        
+        'uid' => 'string',
+        'name' => 'string'
     );
   
     /** 
@@ -32,7 +34,8 @@ class CashDrawerEventType implements ArrayAccess
       * @var string[] 
       */
     static $attributeMap = array(
-        
+        'uid' => 'uid',
+        'name' => 'name'
     );
   
     /**
@@ -40,7 +43,8 @@ class CashDrawerEventType implements ArrayAccess
       * @var string[]
       */
     static $setters = array(
-        
+        'uid' => 'setUid',
+        'name' => 'setName'
     );
   
     /**
@@ -48,9 +52,20 @@ class CashDrawerEventType implements ArrayAccess
       * @var string[]
       */
     static $getters = array(
-        
+        'uid' => 'getUid',
+        'name' => 'getName'
     );
   
+    /**
+      * $uid Unique ID set by Square.
+      * @var string
+      */
+    protected $uid;
+    /**
+      * $name Selection name, unique within `allowed_selections`. Required. Min length of 1, max length of 255.
+      * @var string
+      */
+    protected $name;
 
     /**
      * Constructor
@@ -59,7 +74,55 @@ class CashDrawerEventType implements ArrayAccess
     public function __construct(array $data = null)
     {
         if ($data != null) {
+            if (isset($data["uid"])) {
+              $this->uid = $data["uid"];
+            } else {
+              $this->uid = null;
+            }
+            if (isset($data["name"])) {
+              $this->name = $data["name"];
+            } else {
+              $this->name = null;
+            }
         }
+    }
+    /**
+     * Gets uid
+     * @return string
+     */
+    public function getUid()
+    {
+        return $this->uid;
+    }
+  
+    /**
+     * Sets uid
+     * @param string $uid Unique ID set by Square.
+     * @return $this
+     */
+    public function setUid($uid)
+    {
+        $this->uid = $uid;
+        return $this;
+    }
+    /**
+     * Gets name
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+  
+    /**
+     * Sets name
+     * @param string $name Selection name, unique within `allowed_selections`. Required. Min length of 1, max length of 255.
+     * @return $this
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
+        return $this;
     }
     /**
      * Returns true if offset exists. False otherwise.

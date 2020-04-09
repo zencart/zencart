@@ -53,11 +53,11 @@
 // if review must be approved or disabled do not show review
     $review_status = " and r.status = '1'";
 
-    $reviews_query = "select count(*) as count from " . TABLE_REVIEWS . " r, "
+    $reviews_query = "SELECT count(*) AS count FROM " . TABLE_REVIEWS . " r, "
                                                        . TABLE_REVIEWS_DESCRIPTION . " rd
-                       where r.products_id = '" . (int)$_GET['products_id'] . "'
-                       and r.reviews_id = rd.reviews_id
-                       and rd.languages_id = '" . (int)$_SESSION['languages_id'] . "'" .
+                       WHERE r.products_id = '" . (int)$_GET['products_id'] . "'
+                       AND r.reviews_id = rd.reviews_id
+                       AND rd.languages_id = '" . (int)$_SESSION['languages_id'] . "'" .
                        $review_status;
 
     $reviews = $db->Execute($reviews_query);

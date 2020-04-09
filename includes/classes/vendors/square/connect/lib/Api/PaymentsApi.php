@@ -108,7 +108,7 @@ class PaymentsApi
             $headerParams['Accept'] = $_header_accept;
         }
         $headerParams['Content-Type'] = ApiClient::selectHeaderContentType(array('application/json'));
-        $headerParams['Square-Version'] = "2020-02-26";
+        $headerParams['Square-Version'] = "2020-03-25";
 
         
         
@@ -204,7 +204,7 @@ class PaymentsApi
             $headerParams['Accept'] = $_header_accept;
         }
         $headerParams['Content-Type'] = ApiClient::selectHeaderContentType(array('application/json'));
-        $headerParams['Square-Version'] = "2020-02-26";
+        $headerParams['Square-Version'] = "2020-03-25";
 
         
         
@@ -259,12 +259,13 @@ class PaymentsApi
      * CompletePayment
      *
      * @param string $payment_id Unique ID identifying the payment to be completed. (required)
+     * @param \SquareConnect\Model\CompletePaymentRequest $body An object containing the fields to POST for the request.  See the corresponding object definition for field details. (required)
      * @return \SquareConnect\Model\CompletePaymentResponse
      * @throws \SquareConnect\ApiException on non-2xx response
      */
-    public function completePayment($payment_id)
+    public function completePayment($payment_id, $body)
     {
-        list($response, $statusCode, $httpHeader) = $this->completePaymentWithHttpInfo ($payment_id);
+        list($response, $statusCode, $httpHeader) = $this->completePaymentWithHttpInfo ($payment_id, $body);
         return $response; 
     }
 
@@ -275,15 +276,20 @@ class PaymentsApi
      * CompletePayment
      *
      * @param string $payment_id Unique ID identifying the payment to be completed. (required)
+     * @param \SquareConnect\Model\CompletePaymentRequest $body An object containing the fields to POST for the request.  See the corresponding object definition for field details. (required)
      * @return Array of \SquareConnect\Model\CompletePaymentResponse, HTTP status code, HTTP response headers (array of strings)
      * @throws \SquareConnect\ApiException on non-2xx response
      */
-    public function completePaymentWithHttpInfo($payment_id)
+    public function completePaymentWithHttpInfo($payment_id, $body)
     {
         
         // verify the required parameter 'payment_id' is set
         if ($payment_id === null) {
             throw new \InvalidArgumentException('Missing the required parameter $payment_id when calling completePayment');
+        }
+        // verify the required parameter 'body' is set
+        if ($body === null) {
+            throw new \InvalidArgumentException('Missing the required parameter $body when calling completePayment');
         }
   
         // parse inputs
@@ -297,7 +303,7 @@ class PaymentsApi
             $headerParams['Accept'] = $_header_accept;
         }
         $headerParams['Content-Type'] = ApiClient::selectHeaderContentType(array('application/json'));
-        $headerParams['Square-Version'] = "2020-02-26";
+        $headerParams['Square-Version'] = "2020-03-25";
 
         
         
@@ -313,7 +319,11 @@ class PaymentsApi
         $resourcePath = str_replace("{format}", "json", $resourcePath);
 
         
-        
+        // body params
+        $_tempBody = null;
+        if (isset($body)) {
+            $_tempBody = $body;
+        }
   
         // for model (json/xml)
         if (isset($_tempBody)) {
@@ -393,7 +403,7 @@ class PaymentsApi
             $headerParams['Accept'] = $_header_accept;
         }
         $headerParams['Content-Type'] = ApiClient::selectHeaderContentType(array('application/json'));
-        $headerParams['Square-Version'] = "2020-02-26";
+        $headerParams['Square-Version'] = "2020-03-25";
 
         
         
@@ -486,7 +496,7 @@ class PaymentsApi
             $headerParams['Accept'] = $_header_accept;
         }
         $headerParams['Content-Type'] = ApiClient::selectHeaderContentType(array('application/json'));
-        $headerParams['Square-Version'] = "2020-02-26";
+        $headerParams['Square-Version'] = "2020-03-25";
 
         
         
@@ -592,7 +602,7 @@ class PaymentsApi
             $headerParams['Accept'] = $_header_accept;
         }
         $headerParams['Content-Type'] = ApiClient::selectHeaderContentType(array('application/json'));
-        $headerParams['Square-Version'] = "2020-02-26";
+        $headerParams['Square-Version'] = "2020-03-25";
 
         // query params
         if ($begin_time !== null) {

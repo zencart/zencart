@@ -495,7 +495,7 @@ if (false) { // disabled until clarification is received about coupons in PayPal
                      (isset($this->responsedata['AUTHCODE'])? "\nAuthCode: " . $this->responsedata['AUTHCODE'] : '') .
                                  "\nPayment Type: " . $this->payment_type .
                      ($this->payment_time != '' ? ("\nTimestamp: " . $this->payment_time) : '') .
-                                 "\nPayment Status: " . $this->payment_status
+                                 "\nPayment Status: " . $this->payment_status .
                      (isset($this->responsedata['auth_exp']) ? "\nAuth-Exp: " . $this->responsedata['auth_exp'] : '') .
                      ($this->avs != 'N/A' ? "\nAVS Code: ".$this->avs."\nCVV2 Code: ".$this->cvv2 : '') .
                      (trim($this->amt) != '' ? ("\nAmount: " . $this->amt) : '');

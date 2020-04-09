@@ -94,7 +94,6 @@ for ($i=0, $n=sizeof($products); $i<$n; $i++) {
       $attributes = $db->bindVars($attributes, ':optionsValuesID', $value, 'integer');
       $attributes = $db->bindVars($attributes, ':languageID', $_SESSION['languages_id'], 'integer');
       $attributes_values = $db->Execute($attributes);
-      //clr 030714 determine if attribute is a text attribute and assign to $attr_value temporarily
       if ($value == PRODUCTS_OPTIONS_VALUES_TEXT_ID) {
         $attributeHiddenField .= zen_draw_hidden_field('id[' . $products[$i]['id'] . '][' . TEXT_PREFIX . $option . ']',  $products[$i]['attributes_values'][$option]);
         $attr_value = htmlspecialchars($products[$i]['attributes_values'][$option], ENT_COMPAT, CHARSET, TRUE);
@@ -153,7 +152,8 @@ for ($i=0, $n=sizeof($products); $i<$n; $i++) {
                             'buttonDelete'=>$buttonDelete,
                             'checkBoxDelete'=>$checkBoxDelete,
                             'id'=>$products[$i]['id'],
-                            'attributes'=>$attrArray);
+                            'attributes'=>$attrArray,
+                          );
 } // end FOR loop
 
 $define_page = zen_get_file_directory(DIR_WS_LANGUAGES . $_SESSION['language'] . '/html_includes/', FILENAME_DEFINE_SHOPPING_CART, 'false');

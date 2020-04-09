@@ -5,10 +5,10 @@
  * Hooks into phpMailer class for actual email encoding and sending
  *
  * @package functions
- * @copyright Copyright 2003-2019 Zen Cart Development Team
+ * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2019 May 25 Modified in v1.5.6b $
+ * @version $Id:  Modified in v1.5.7 $
  */
 
 use PHPMailer\PHPMailer\PHPMailer;
@@ -159,7 +159,7 @@ use PHPMailer\PHPMailer\SMTP;
       // eof: body of the email clean-up
 
       //determine customer's email preference type: HTML or TEXT-ONLY  (HTML assumed if not specified)
-      $sql = "select customers_email_format from " . TABLE_CUSTOMERS . " where customers_email_address= :custEmailAddress:";
+      $sql = "SELECT customers_email_format FROM " . TABLE_CUSTOMERS . " WHERE customers_email_address= :custEmailAddress:";
       $sql = $db->bindVars($sql, ':custEmailAddress:', $to_email_address, 'string');
       $result = $db->Execute($sql);
       $customers_email_format = ($result->RecordCount() > 0) ? $result->fields['customers_email_format'] : '';
@@ -273,7 +273,7 @@ use PHPMailer\PHPMailer\SMTP;
         }
       }
       global $newAttachmentsList;
-      $zco_notifier->notify('NOTIFY_EMAIL_BEFORE_PROCESS_ATTACHMENTS', array('attachments'=>$attachments_list, 'module'=>$module));
+      $zco_notifier->notify('NOTIFY_EMAIL_BEFORE_PROCESS_ATTACHMENTS', array('attachments'=>$attachments_list, 'module'=>$module), $mail, $attachments_list);
       if (isset($newAttachmentsList) && is_array($newAttachmentsList)) $attachments_list = $newAttachmentsList;
       if (defined('EMAIL_ATTACHMENTS_ENABLED') && EMAIL_ATTACHMENTS_ENABLED && is_array($attachments_list) && sizeof($attachments_list) > 0) {
         foreach($attachments_list as $key => $val) {
@@ -412,9 +412,9 @@ use PHPMailer\PHPMailer\SMTP;
     $module = zen_db_prepare_input($module);
     $error_msgs = zen_db_prepare_input($error_msgs);
 
-    $db->Execute("insert into " . TABLE_EMAIL_ARCHIVE . "
+    $db->Execute("INSERT INTO " . TABLE_EMAIL_ARCHIVE . "
                   (email_to_name, email_to_address, email_from_name, email_from_address, email_subject, email_html, email_text, date_sent, module)
-                  values ('" . zen_db_input($to_name) . "',
+                  VALUES ('" . zen_db_input($to_name) . "',
                           '" . zen_db_input($to_email_address) . "',
                           '" . zen_db_input($from_email_name) . "',
                           '" . zen_db_input($from_email_address) . "',
@@ -800,9 +800,9 @@ use PHPMailer\PHPMailer\SMTP;
    */
   function zen_get_email_from_customers_id($customers_id) {
     global $db;
-    $customers_values = $db->Execute("select customers_email_address
-                               from " . TABLE_CUSTOMERS . "
-                               where customers_id = '" . (int)$customers_id . "'");
+    $customers_values = $db->Execute("SELECT customers_email_address
+                               FROM " . TABLE_CUSTOMERS . "
+                               WHERE customers_id = '" . (int)$customers_id . "'");
     if ($customers_values->EOF) return '';
     return $customers_values->fields['customers_email_address'];
   }

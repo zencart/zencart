@@ -19,6 +19,10 @@ if (zen_not_null($_POST)) {
   $products_name = $_POST['products_name'];
   $products_description = $_POST['products_description'];
   $products_url = $_POST['products_url'];
+  foreach ($products_url as &$url){ // remove protocol
+      $url = str_replace(array('http://', 'https://'), '', $url);
+  }
+  unset ($url);
 } else {
   $product = $db->Execute("SELECT p.products_id, pd.language_id, pd.products_name,
                                   pd.products_description, pd.products_url, p.products_quantity,
