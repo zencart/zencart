@@ -50,11 +50,12 @@ switch (true) {
 // create products discount output table
 
 // find out the minimum quantity for this product
-$products_min_query = $db->Execute("select products_quantity_order_min from " . TABLE_PRODUCTS . " where products_id='" . (int)$products_id_current . "'");
+$products_min_query = $db->Execute("SELECT products_quantity_order_min FROM " . TABLE_PRODUCTS . " WHERE products_id='" . (int)$products_id_current . "'");
+
 $products_quantity_order_min = isset($products_min_query->fields['products_quantity_order_min']) ? $products_min_query->fields['products_quantity_order_min'] : 0;
 
 // retrieve the list of discount levels for this product
-$products_discounts_query = $db->Execute("select * from " . TABLE_PRODUCTS_DISCOUNT_QUANTITY . " where products_id='" . (int)$products_id_current . "' and discount_qty !=0 " . " order by discount_qty");
+$products_discounts_query = $db->Execute("SELECT * FROM " . TABLE_PRODUCTS_DISCOUNT_QUANTITY . " WHERE products_id='" . (int)$products_id_current . "' AND discount_qty !=0 " . " ORDER BY discount_qty");
 
 
 $discount_col_cnt = DISCOUNT_QUANTITY_PRICES_COLUMN;
@@ -143,4 +144,3 @@ while (!$products_discounts_query->EOF) {
   $disc_cnt=0;
   $columnCount++;
 }
-?>
