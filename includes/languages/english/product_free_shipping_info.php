@@ -22,10 +22,6 @@ define('TEXT_PRODUCT_QUANTITY', ' Units in Stock');
 
 // previous next product
 define('PREV_NEXT_PRODUCT', 'Product ');
-define('PREV_NEXT_FROM', ' from ');
-define('IMAGE_BUTTON_PREVIOUS','Previous Item');
-define('IMAGE_BUTTON_NEXT','Next Item');
-define('IMAGE_BUTTON_RETURN_TO_PRODUCT_LIST','Back to Product List');
 
 // missing products
 //define('TABLE_HEADING_NEW_PRODUCTS', 'New Products For %s');
