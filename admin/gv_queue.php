@@ -18,13 +18,13 @@
 
 // bof: find gv for a particular order and set page
   if (!empty($_GET['order'])) {
-    $gv_check = $db->Execute("select order_id, unique_id
-                                  from " . TABLE_COUPON_GV_QUEUE . "
-                                  where order_id = '" . $_GET['order'] . "' and release_flag= 'N' limit 1");
+    $gv_check = $db->Execute("SELECT order_id, unique_id
+                                  FROM " . TABLE_COUPON_GV_QUEUE . "
+                                  WHERE order_id = '" . $_GET['order'] . "' AND release_flag= 'N' LIMIT 1");
 
     $_GET['gid'] = $gv_check->fields['unique_id'];
 
-    $gv_page = $db->Execute("select c.customers_firstname, c.customers_lastname, gv.unique_id, gv.date_created, gv.amount, gv.order_id from " . TABLE_CUSTOMERS . " c, " . TABLE_COUPON_GV_QUEUE . " gv where (gv.customer_id = c.customers_id and gv.release_flag = 'N')" . " order by gv.order_id, gv.unique_id");
+    $gv_page = $db->Execute("SELECT c.customers_firstname, c.customers_lastname, gv.unique_id, gv.date_created, gv.amount, gv.order_id FROM " . TABLE_CUSTOMERS . " c, " . TABLE_COUPON_GV_QUEUE . " gv WHERE (gv.customer_id = c.customers_id AND gv.release_flag = 'N')" . " ORDER BY gv.order_id, gv.unique_id");
     $page_cnt=1;
     while (!$gv_page->EOF) {
       if ($gv_page->fields['order_id'] == $_GET['order']) {
@@ -39,23 +39,23 @@
 // eof: find gv for a particular order and set page
 
   if ($_GET['action'] == 'confirmrelease' && isset($_POST['gid'])) {
-    $gv_result = $db->Execute("select release_flag
-                               from " . TABLE_COUPON_GV_QUEUE . "
-                               where unique_id='" . (int)$_POST['gid'] . "'");
+    $gv_result = $db->Execute("SELECT release_flag
+                               FROM " . TABLE_COUPON_GV_QUEUE . "
+                               WHERE unique_id='" . (int)$_POST['gid'] . "'");
 
     if ($gv_result->fields['release_flag'] == 'N') {
-      $gv_resulta = $db->Execute("select customer_id, amount, order_id
-                                  from " . TABLE_COUPON_GV_QUEUE . "
-                                  where unique_id='" . (int)$_POST['gid'] . "'");
+      $gv_resulta = $db->Execute("SELECT customer_id, amount, order_id
+                                  FROM " . TABLE_COUPON_GV_QUEUE . "
+                                  WHERE unique_id='" . (int)$_POST['gid'] . "'");
 
       if ($gv_resulta->RecordCount() > 0) {
       $gv_amount = $gv_resulta->fields['amount'];
 
   // Begin composing email content
 //      //Let's build a message object using the email class
-      $mail = $db->Execute("select customers_firstname, customers_lastname, customers_email_address
-                           from " . TABLE_CUSTOMERS . "
-                           where customers_id = '" . $gv_resulta->fields['customer_id'] . "'");
+      $mail = $db->Execute("SELECT customers_firstname, customers_lastname, customers_email_address
+                           FROM " . TABLE_CUSTOMERS . "
+                           WHERE customers_id = '" . $gv_resulta->fields['customer_id'] . "'");
 
       $message  = TEXT_REDEEM_GV_MESSAGE_HEADER . "\n" . HTTP_CATALOG_SERVER . DIR_WS_CATALOG . "\n\n" . TEXT_REDEEM_GV_MESSAGE_RELEASED;
       $message .= sprintf(TEXT_REDEEM_GV_MESSAGE_AMOUNT, $currencies->format($gv_amount)) . "\n\n";
@@ -81,9 +81,9 @@
       zen_record_admin_activity('GV Queue entry released in the amount of ' . $gv_amount . ' for ' . $mail->fields['customers_email_address'], 'info');
 
       $gv_amount=$gv_resulta->fields['amount'];
-      $gv_result=$db->Execute("select amount
-                               from " . TABLE_COUPON_GV_CUSTOMER . "
-                               where customer_id='" . $gv_resulta->fields['customer_id'] . "'");
+      $gv_result=$db->Execute("SELECT amount
+                               FROM " . TABLE_COUPON_GV_CUSTOMER . "
+                               WHERE customer_id='" . $gv_resulta->fields['customer_id'] . "'");
 
       $customer_gv=false;
       $total_gv_amount=0;
@@ -93,17 +93,17 @@
       }
       $total_gv_amount=$total_gv_amount+$gv_amount;
       if ($customer_gv) {
-        $db->Execute("update " . TABLE_COUPON_GV_CUSTOMER . "
-                      set amount='" . $total_gv_amount . "'
-                      where customer_id='" . $gv_resulta->fields['customer_id'] . "'");
+        $db->Execute("UPDATE " . TABLE_COUPON_GV_CUSTOMER . "
+                      SET amount='" . $total_gv_amount . "'
+                      WHERE customer_id='" . $gv_resulta->fields['customer_id'] . "'");
       } else {
-        $db->Execute("insert into " . TABLE_COUPON_GV_CUSTOMER . "
+        $db->Execute("INSERT INTO " . TABLE_COUPON_GV_CUSTOMER . "
                     (customer_id, amount)
-                    values ('" . $gv_resulta->fields['customer_id']. "', '" . $total_gv_amount . "')");
+                    VALUES ('" . $gv_resulta->fields['customer_id']. "', '" . $total_gv_amount . "')");
       }
-        $db->Execute("update " . TABLE_COUPON_GV_QUEUE . "
-                      set release_flag= 'Y'
-                      where unique_id='" . (int)$_POST['gid'] . "'");
+        $db->Execute("UPDATE " . TABLE_COUPON_GV_QUEUE . "
+                      SET release_flag= 'Y'
+                      WHERE unique_id='" . (int)$_POST['gid'] . "'");
       }
     }
     // return back to same page after release
@@ -160,7 +160,7 @@
                 <td class="dataTableHeadingContent" align="right"><?php echo TABLE_HEADING_ACTION; ?>&nbsp;</td>
               </tr>
 <?php
-  $gv_query_raw = "select c.customers_firstname, c.customers_lastname, gv.unique_id, gv.date_created, gv.amount, gv.order_id from " . TABLE_CUSTOMERS . " c, " . TABLE_COUPON_GV_QUEUE . " gv where (gv.customer_id = c.customers_id and gv.release_flag = 'N')" . " order by gv.order_id, gv.unique_id";
+  $gv_query_raw = "SELECT c.customers_firstname, c.customers_lastname, gv.unique_id, gv.date_created, gv.amount, gv.order_id FROM " . TABLE_CUSTOMERS . " c, " . TABLE_COUPON_GV_QUEUE . " gv WHERE (gv.customer_id = c.customers_id AND gv.release_flag = 'N')" . " ORDER BY gv.order_id, gv.unique_id";
   $gv_split = new splitPageResults($_GET['page'], MAX_DISPLAY_SEARCH_RESULTS, $gv_query_raw, $gv_query_numrows);
   $gv_list = $db->Execute($gv_query_raw);
   while (!$gv_list->EOF) {
