@@ -37,7 +37,6 @@ define('TEXT_SALEMAKER_DATE_START', 'Start Date:');
 define('TEXT_SALEMAKER_DATE_END', 'End Date:');
 define('TEXT_SALEMAKER_CATEGORIES', '<b>Or</b> check the categories to which this sale applies:');
 define('TEXT_SALEMAKER_POPUP', '<a href="javascript:session_win();"><span class="errorText"><b>Click here for Salemaker Usage Tips.</b></span></a>');
-define('TEXT_SALEMAKER_POPUP1', '<a href="javascript:session_win1();"><span class="errorText"><b>(More Info)</b></span></a>');
 define('TEXT_SALEMAKER_IMMEDIATELY', 'Immediately');
 define('TEXT_SALEMAKER_NEVER', 'Never');
 define('TEXT_SALEMAKER_ENTIRE_CATALOG', 'Check this box if you want the sale to be applied to <b>all products</b>:');
@@ -67,4 +66,3 @@ define('TEXT_INFO_DELETE_INTRO', 'Are you sure you want to permanently delete th
 define('TEXT_MORE_INFO', '(More Info)');
 
 define('TEXT_WARNING_SALEMAKER_PREVIOUS_CATEGORIES','&nbsp;Warning : %s sales already include this category');
-?>

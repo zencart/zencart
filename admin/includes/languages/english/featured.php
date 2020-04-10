@@ -24,7 +24,6 @@ define('TEXT_FEATURED_INACTIVE', 'Featured Product Inactive');
 define('TEXT_FEATURED_STATUS_BY_DATE', 'Status set by dates');
 
 define('TEXT_FEATURED_PRODUCT', 'Product:');
-define('TEXT_FEATURED_FEATURED_PRICE', 'Featured Price:');
 define('TEXT_FEATURED_AVAILABLE_DATE', 'Date Featured Active:');
 define('TEXT_FEATURED_EXPIRES_DATE', 'Date Featured Expires:');
 

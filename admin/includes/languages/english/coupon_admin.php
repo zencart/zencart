@@ -7,7 +7,6 @@
  * @version $Id: Scott C Wilson 2019 Apr 17 Modified in v1.5.6b $
  */
 
-define('TOP_BAR_TITLE', 'Statistics');
 define('HEADING_TITLE', 'Discount Coupons');
 define('HEADING_TITLE_STATUS', 'Status : ');
 
@@ -21,20 +20,15 @@ define('TEXT_FROM', 'From:');
 define('TEXT_FREE_SHIPPING', 'Free Shipping');
 define('TEXT_MESSAGE', 'Message:');
 define('TEXT_RICH_TEXT_MESSAGE','Rich-Text Message:');
-define('TEXT_SELECT_CUSTOMER', 'Select Customer');
-define('TEXT_ALL_CUSTOMERS', 'All Customers');
-define('TEXT_NEWSLETTER_CUSTOMERS', 'To All Newsletter Subscribers');
 define('TEXT_CONFIRM_DELETE', 'Are you sure you want to delete this Coupon?');
 define('TEXT_SEE_RESTRICT', 'Restrictions Apply');
 
 define('TEXT_COUPON_ANNOUNCE','We\'re pleased to offer you a Store Coupon');
 
 define('TEXT_TO_REDEEM', 'You can redeem this coupon during checkout. Just enter the code in the box provided, and click on the redeem button.');
-define('TEXT_IN_CASE', ' in case you have any problems. ');
 define('TEXT_VOUCHER_IS', 'The coupon code is ');
 define('TEXT_REMEMBER', 'Don\'t lose the coupon code, make sure to keep the code safe so you can benefit from this special offer.');
 define('TEXT_VISIT', 'Visit us at %s');
-define('TEXT_ENTER_CODE', ' and enter the code ');
 define('TEXT_COUPON_HELP_DATE', '<p>The coupon is valid between %s and %s</p>');
 define('HTML_COUPON_HELP_DATE', '<p>The coupon is valid between %s and %s</p>');
 
@@ -78,7 +72,6 @@ define('COUPON_USES_COUPON', 'Uses per Coupon');
 define('COUPON_USES_USER', 'Uses per Customer');
 define('COUPON_PRODUCTS', 'Valid Product List');
 define('COUPON_CATEGORIES', 'Valid Categories List');
-define('VOUCHER_NUMBER_USED', 'Number Used');
 define('DATE_CREATED', 'Date Created');
 define('DATE_MODIFIED', 'Date Modified');
 define('TEXT_HEADING_NEW_COUPON', 'Create New Coupon');
@@ -112,11 +105,8 @@ define('COUPON_TOTAL_HELP', 'If you specify a Coupon Minimum Order for this Disc
 define('COUPON_SALE_HELP', 'If you choose <i>NOT allowed</i>, products on sale or special will not be discounted or counted towards the coupon minimum order.');
 define('COUPON_USES_COUPON_HELP', 'The maximum number of times the coupon can be used, leave blank if you want no limit.');
 define('COUPON_USES_USER_HELP', 'Number of times a user can use the coupon, leave blank for no limit.');
-define('COUPON_PRODUCTS_HELP', 'A comma separated list of product_ids that this coupon can be used with. Leave blank for no restrictions.');
-define('COUPON_CATEGORIES_HELP', 'A comma separated list of cpaths that this coupon can be used with, leave blank for no restrictions.');
 define('COUPON_BUTTON_PREVIEW', 'Preview');
 define('COUPON_BUTTON_CONFIRM', 'Confirm');
-define('COUPON_BUTTON_BACK', 'Back');
 
 define('COUPON_ACTIVE', 'Status');
 define('COUPON_START_DATE', 'Starts');

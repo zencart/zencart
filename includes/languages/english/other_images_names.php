@@ -36,7 +36,6 @@ define('OTHER_BOX_NOTIFY_YES_ALT', 'Notify me of updates to this product.');
 define('OTHER_BOX_WRITE_REVIEW_ALT', 'Write a review on this product.');
 define('OTHER_CALL_FOR_PRICE_ALT', 'Please Call for the Current Price.');
 define('OTHER_DOWN_FOR_MAINTENANCE_ALT', 'The site is currently down for maintenance. Please come back later.');
-define('OTHER_TRANPARENT_ALT', '');
 define('OTHER_IMAGE_CUSTOMERS_AUTHORIZATION_ALT', 'CUSTOMER APPROVAL IS PENDING ...');
 define('OTHER_REVIEWS_RATING_STARS_FIVE_ALT', 'Five Stars');
 define('OTHER_REVIEWS_RATING_STARS_FOUR_ALT', 'Four Stars');
@@ -45,4 +44,3 @@ define('OTHER_REVIEWS_RATING_STARS_TWO_ALT', 'Two Stars');
 define('OTHER_REVIEWS_RATING_STARS_ONE_ALT', 'One Star');
 //define('OTHER_xxx_ALT', '');
 
-?>

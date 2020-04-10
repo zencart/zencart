@@ -100,7 +100,6 @@ define('TABLE_TEXT_MAX_COUNT_SHORT', 'Max:');
   define('LEGEND_ATTRIBUTES_IMAGES','Images');
   define('LEGEND_ATTRIBUTES_DOWNLOAD','Valid/Invalid<br />filename');
 
-  define('TEXT_PRODUCTS_LISTING','Products Listing for: ');
   define('TEXT_NO_PRODUCTS_SELECTED','No Product Selected');
   define('TEXT_NO_ATTRIBUTES_DEFINED','No Attributes Defined for Product ID#');
 

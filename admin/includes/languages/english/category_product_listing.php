@@ -34,7 +34,6 @@ define('TEXT_INFO_HEADING_MOVE_PRODUCT', 'Move Product');
 define('TEXT_MOVE_PRODUCTS_INTRO', 'Move this product from this category to the selected category.<br />If this current category is also the product\'s Master Category, that will also be updated to the selected category.<br />');
 define('TEXT_INFO_CURRENT_CATEGORIES', 'Current Categories: ');
 define('TEXT_INFO_HEADING_COPY_TO', 'Copy To');
-define('TEXT_INFO_COPY_TO_INTRO', 'Please choose a new category you wish to copy this product to');
 define('TEXT_INFO_CURRENT_PRODUCT', 'Current Product: ');
 define('TEXT_HOW_TO_COPY', 'Copy Method:');
 define('TEXT_COPY_AS_LINK','Link this product into another category as selected above');
@@ -60,19 +59,13 @@ define('TEXT_COPY_ATTRIBUTES_CONDITIONS', '<strong>How should existing product a
 define('TEXT_COPY_ATTRIBUTES_DELETE', '<strong>Delete</strong> first, then copy new attributes');
 define('TEXT_COPY_ATTRIBUTES_UPDATE', '<strong>Update</strong> with new settings/prices, then add new ones');
 define('TEXT_COPY_ATTRIBUTES_IGNORE', '<strong>Ignore</strong> and add only new attributes');
-define('ICON_ATTRIBUTES', 'Attribute Features');
 
 // Products and Attribute Copy Options
-define('TEXT_COPY_ATTRIBUTES_ONLY', 'Only used for Duplicate Products ...');
 define('TEXT_COPY_ATTRIBUTES', 'Copy Product Attributes to Duplicate?');
-define('TEXT_COPY_ATTRIBUTES_YES', 'Yes');
-define('TEXT_COPY_ATTRIBUTES_NO', 'No');
 
 // Products and Discount Copy Options
 define('TEXT_COPY_DISCOUNTS_ONLY', 'Only used for Duplicate Products with Quantity Discounts ...');
 define('TEXT_COPY_DISCOUNTS', 'Copy Product Quantity Discounts to Duplicate?');
-define('TEXT_COPY_DISCOUNTS_YES', 'Yes');
-define('TEXT_COPY_DISCOUNTS_NO', 'No');
 
 // From categories.php in 1.5.5
 // categories status
