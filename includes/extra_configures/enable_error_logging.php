@@ -7,10 +7,9 @@
  * Using this method, the debug details are stored at: /logs/myDEBUG-yyyymmdd-hhiiss-xxxxx.log (see below for details).
  * Credits to @lat9 for adding backtrace functionality
  *
- * @package debug
- * @copyright Copyright 2003-2019 Zen Cart Development Team
+ * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2019 Jan 04 Modified in v1.5.6a $
+ * @version $Id: Modified in v1.5.7 $
  */
 if (!defined('IS_ADMIN_FLAG')) {
     exit('Invalid Access');
