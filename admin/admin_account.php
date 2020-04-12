@@ -143,16 +143,16 @@ $userDetails = $userList[0];
 <?php if ($action == 'edit' || $action == 'password') { ?>
 <?php if ($user == $userDetails['id']) { ?>
       <td class="actions">
-        <?php echo zen_image_submit('button_update.gif', IMAGE_UPDATE) ?>
-        <a href="<?php echo zen_href_link(FILENAME_ADMIN_ACCOUNT) ?>"><?php echo zen_image_button('button_cancel.gif', IMAGE_CANCEL) ?></a>
+                            <button type="submit" class="btn btn-primary"><?php echo IMAGE_UPDATE; ?></button>
+                            <a href="<?php echo zen_href_link(FILENAME_ADMIN_ACCOUNT) ?>" class="btn btn-default" role="button"><?php echo IMAGE_CANCEL; ?></a>
       </td>
 <?php } else { ?>
       <td class="actions">&nbsp;</td>
 <?php } ?>
 <?php } else { ?>
       <td class="actions">
-        <a href="<?php echo zen_href_link(FILENAME_ADMIN_ACCOUNT, 'action=edit') ?>"><?php echo zen_image_button('button_edit.gif', IMAGE_EDIT) ?></a>
-        <a href="<?php echo zen_href_link(FILENAME_ADMIN_ACCOUNT, 'action=password') ?>"><?php echo zen_image_button('button_reset_pwd.gif', IMAGE_RESET_PWD) ?></a>
+                <a href="<?php echo zen_href_link(FILENAME_ADMIN_ACCOUNT, 'action=edit'); ?>" class="btn btn-primary" role="button"><?php echo IMAGE_EDIT; ?></a> 
+		<a href="<?php echo zen_href_link(FILENAME_ADMIN_ACCOUNT, 'action=password') ?>" class="btn btn-primary"><?php echo IMAGE_RESET_PWD; ?></a>
       </td>
     </tr>
 <?php } ?>
