@@ -43,3 +43,12 @@ $menuTitles = zen_get_menu_titles();
     </ul>
   </div><!-- /.navbar-collapse -->
 </nav>
+<?php if ($url = page_has_help($help_page)) { ?>
+<div align="right">
+  <div class="btn-group">
+    <a href="<?php echo $url; ?>" target="_blank" class="btn btn-sm btn-default btn-help" role="button" title="Help">
+      <i class="fa fa-question fa-lg" aria-hidden="true"></i>
+    </a>
+   </div>
+</div>
+<?php } ?>
