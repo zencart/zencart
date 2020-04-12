@@ -142,10 +142,10 @@ if (zen_not_null($action)) {
             </thead>
             <tbody>
                 <?php
-                $orders_status_query_raw = "select *
-                                            from " . TABLE_ORDERS_STATUS . "
-                                            where language_id = " . (int)$_SESSION['languages_id'] . "
-                                            order by sort_order ASC, orders_status_id ASC";
+                $orders_status_query_raw = "SELECT *
+                                            FROM " . TABLE_ORDERS_STATUS . "
+                                            WHERE language_id = " . (int)$_SESSION['languages_id'] . "
+                                            ORDER BY sort_order ASC, orders_status_id ASC";
                 $orders_status_split = new splitPageResults($_GET['page'], MAX_DISPLAY_SEARCH_RESULTS, $orders_status_query_raw, $orders_status_query_numrows);
                 $orders_status = $db->Execute($orders_status_query_raw);
                 foreach ($orders_status as $status) {
