@@ -144,9 +144,9 @@ $userList = zen_get_users();
         <thead>
         <tr class="headingRow">
             <th class="id"><?php echo TEXT_ID ?></th>
-            <th class="name"><?php echo TEXT_NAME ?></th>
+            <th class="name"><?php echo TEXT_ADMIN_NAME ?></th>
             <th class="email"><?php echo TEXT_EMAIL ?></th>
-            <th class="profile"><?php echo TEXT_PROFILE ?></th>
+            <th class="profile"><?php echo TEXT_ADMIN_PROFILE ?></th>
             <?php if ($action == 'add' || $action == 'password') { ?>
                 <th class="password"><?php echo TEXT_PASSWORD ?></th>
                 <th class="password"><?php echo TEXT_CONFIRM_PASSWORD ?></th>
