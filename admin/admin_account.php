@@ -107,9 +107,15 @@ $userDetails = $userList[0];
 <div id="pageWrapper">
 
   <h1><?php echo HEADING_TITLE ?></h1>
+    <?php
+        echo zen_draw_form('users', FILENAME_ADMIN_ACCOUNT);
+        if (isset($formAction)) {
+            echo zen_draw_hidden_field('action', $formAction);
+        }
 
-<form action="<?php echo zen_href_link(FILENAME_ADMIN_ACCOUNT) ?>" method="post">
-<?php if (isset($formAction)) echo zen_draw_hidden_field('action',$formAction) . zen_draw_hidden_field('securityToken', $_SESSION['securityToken']); ?>
+    if ($action == 'edit' || $action == 'password') {
+        echo zen_draw_hidden_field('user', $user);
+    } ?>
   <table cellspacing="0">
     <tr class="headingRow">
       <th class="name"><?php echo TEXT_ADMIN_NAME ?></th>
