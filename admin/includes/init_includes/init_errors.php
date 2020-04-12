@@ -123,7 +123,7 @@ if (WARN_DATABASE_VERSION_PROBLEM != 'false') {
 // include the password crypto functions
   require_once(DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'password_funcs.php');
   $admin_security = false;
-  $demo_check = $db->Execute("select * from " . TABLE_ADMIN . " where admin_name='demo' or admin_name='Admin'");
+  $demo_check = $db->Execute("SELECT * FROM " . TABLE_ADMIN . " WHERE admin_name='demo' OR admin_name='Admin'");
   if (!$demo_check->EOF) {
 
     $cnt_admin= 0;
@@ -156,7 +156,7 @@ if (WARN_DATABASE_VERSION_PROBLEM != 'false') {
 
 // if welcome email coupon is set and <= 21 days warn shop owner
     if (NEW_SIGNUP_DISCOUNT_COUPON > 0) {
-      $zc_welcome_check = $db->Execute("SELECT coupon_expire_date from " . TABLE_COUPONS . " WHERE coupon_id=" . (int)NEW_SIGNUP_DISCOUNT_COUPON);
+      $zc_welcome_check = $db->Execute("SELECT coupon_expire_date FROM " . TABLE_COUPONS . " WHERE coupon_id=" . (int)NEW_SIGNUP_DISCOUNT_COUPON);
       $zc_current_date = date('Y-m-d');
       $zc_days_to_expire = zen_date_diff($zc_current_date, $zc_welcome_check->fields['coupon_expire_date']);
       if ($zc_days_to_expire <= 21) {
@@ -185,7 +185,7 @@ if (WARN_DATABASE_VERSION_PROBLEM != 'false') {
   if (basename($PHP_SELF) == FILENAME_DEFAULT . '.php') {
     $show_admin_activity_log_link = false;
 
-    $chk_admin_log = $db->Execute("select count(log_id) as counter from " . TABLE_ADMIN_ACTIVITY_LOG);
+    $chk_admin_log = $db->Execute("SELECT count(log_id) AS counter FROM " . TABLE_ADMIN_ACTIVITY_LOG);
     if ($chk_admin_log->fields['counter'] > 0) {
       if ($chk_admin_log->fields['counter'] > 50000) {
         $show_admin_activity_log_link = true;
@@ -193,7 +193,7 @@ if (WARN_DATABASE_VERSION_PROBLEM != 'false') {
         $messageStack->add(WARNING_ADMIN_ACTIVITY_LOG_RECORDS . $chk_admin_log->fields['counter'], 'caution');
       }
 
-      $chk_admin_log = $db->Execute("select min(access_date) as access_date from " . TABLE_ADMIN_ACTIVITY_LOG . " where access_date < DATE_SUB(CURDATE(),INTERVAL 60 DAY)");
+      $chk_admin_log = $db->Execute("SELECT MIN(access_date) AS access_date FROM " . TABLE_ADMIN_ACTIVITY_LOG . " WHERE access_date < DATE_SUB(CURDATE(),INTERVAL 60 DAY)");
       if (!empty($chk_admin_log->fields['access_date'])) {
         $show_admin_activity_log_link = true;
         $_SESSION['reset_admin_activity_log'] = true;

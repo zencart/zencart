@@ -111,8 +111,8 @@ if (zen_not_null($action)) {
             </thead>
             <tbody>
                 <?php
-                $template_query_raw = "select *
-                                       from " . TABLE_TEMPLATE_SELECT;
+                $template_query_raw = "SELECT *
+                                       FROM " . TABLE_TEMPLATE_SELECT;
                 $template_split = new splitPageResults($_GET['page'], MAX_DISPLAY_SEARCH_RESULTS, $template_query_raw, $template_query_numrows);
                 $templates = $db->Execute($template_query_raw);
                 foreach ($templates as $template) {
