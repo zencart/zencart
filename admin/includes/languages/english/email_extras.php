@@ -25,8 +25,6 @@
   define('OFFICE_FROM','From:');
   define('OFFICE_EMAIL','E-mail:');
 
-  define('OFFICE_SENT_TO','Sent To:');
-  define('OFFICE_EMAIL_TO','E-mail:');
   define('OFFICE_USE','Office Use Only:');
   define('OFFICE_LOGIN_NAME','Login Name:');
   define('OFFICE_LOGIN_EMAIL','Login e-mail:');

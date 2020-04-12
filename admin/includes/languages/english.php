@@ -124,7 +124,6 @@ define('BOX_HEADING_MODULES', 'Modules');
 define('BOX_MODULES_PAYMENT', 'Payment');
 define('BOX_MODULES_SHIPPING', 'Shipping');
 define('BOX_MODULES_ORDER_TOTAL', 'Order Total');
-define('BOX_MODULES_PRODUCT_TYPES', 'Product Types');
 
 // categories box text
 define('BOX_HEADING_CATALOG', 'Catalog');
@@ -381,10 +380,8 @@ define('TEXT_DISPLAY_NUMBER_OF_TAX_ZONES', 'Displaying <b>%d</b> to <b>%d</b> (o
 define('TEXT_DISPLAY_NUMBER_OF_TAX_RATES', 'Displaying <b>%d</b> to <b>%d</b> (of <b>%d</b> tax rates)');
 define('TEXT_DISPLAY_NUMBER_OF_ZONES', 'Displaying <b>%d</b> to <b>%d</b> (of <b>%d</b> zones)');
 
-define('PREVNEXT_TITLE_FIRST_PAGE', 'First Page');
 define('PREVNEXT_TITLE_PREVIOUS_PAGE', 'Previous Page');
 define('PREVNEXT_TITLE_NEXT_PAGE', 'Next Page');
-define('PREVNEXT_TITLE_LAST_PAGE', 'Last Page');
 define('PREVNEXT_TITLE_PAGE_NO', 'Page %d');
 define('PREVNEXT_TITLE_PREV_SET_OF_NO_PAGE', 'Previous Set of %d Pages');
 define('PREVNEXT_TITLE_NEXT_SET_OF_NO_PAGE', 'Next Set of %d Pages');
