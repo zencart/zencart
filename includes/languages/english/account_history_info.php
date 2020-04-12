@@ -16,7 +16,6 @@ define('HEADING_TITLE', 'Order Information');
 
 define('HEADING_ORDER_NUMBER', 'Order #%s');
 define('HEADING_ORDER_DATE', 'Order Date:');
-define('HEADING_ORDER_TOTAL', 'Order Total:');
 
 define('HEADING_DELIVERY_ADDRESS', 'Delivery Address');
 define('HEADING_SHIPPING_METHOD', 'Shipping Method');
@@ -30,7 +29,6 @@ define('HEADING_BILLING_ADDRESS', 'Billing Address');
 define('HEADING_PAYMENT_METHOD', 'Payment Method');
 
 define('HEADING_ORDER_HISTORY', 'Status History &amp; Comments');
-define('TEXT_NO_COMMENTS_AVAILABLE', 'No comments available.');
 define('TABLE_HEADING_STATUS_DATE', 'Date');
 define('TABLE_HEADING_STATUS_ORDER_STATUS', 'Order Status');
 define('TABLE_HEADING_STATUS_COMMENTS', 'Comments');

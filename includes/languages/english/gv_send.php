@@ -35,9 +35,6 @@ define('EMAIL_GV_MESSAGE', 'with a message saying: ');
 define('EMAIL_GV_SEND_TO', 'Hi, %s');
 define('EMAIL_GV_REDEEM', 'To redeem this ' . TEXT_GV_NAME . ', please click on the link below. Please also write down the ' . TEXT_GV_REDEEM . ': %s  just in case you have problems.');
 define('EMAIL_GV_LINK', 'To redeem please click here');
-define('EMAIL_GV_VISIT', ' or visit ');
-define('EMAIL_GV_ENTER', ' and enter the ' . TEXT_GV_REDEEM . ' ');
 define('EMAIL_GV_FIXED_FOOTER', 'If you have problems redeeming the ' . TEXT_GV_NAME . ' using the automated link above, ' . "\n" .
                                 'you can also enter the ' . TEXT_GV_NAME . ' ' . TEXT_GV_REDEEM . ' during the checkout process at our store.');
 define('EMAIL_GV_SHOP_FOOTER', '');
-?>
