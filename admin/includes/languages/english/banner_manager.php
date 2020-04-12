@@ -66,8 +66,6 @@ define('SUCCESS_BANNER_STATUS_UPDATED', 'Success: The status of the banner has b
 
 define('ERROR_BANNER_TITLE_REQUIRED', 'Error: Banner title required.');
 define('ERROR_BANNER_GROUP_REQUIRED', 'Error: Banner group required.');
-define('ERROR_IMAGE_DIRECTORY_DOES_NOT_EXIST', 'Error: Target directory does not exist: %s');
-define('ERROR_IMAGE_DIRECTORY_NOT_WRITEABLE', 'Error: Target directory is not writeable: %s');
 define('ERROR_IMAGE_DOES_NOT_EXIST', 'Error: Image does not exist.');
 define('ERROR_IMAGE_IS_NOT_WRITEABLE', 'Error: Image can not be removed.');
 define('ERROR_UNKNOWN_STATUS_FLAG', 'Error: Unknown status flag.');

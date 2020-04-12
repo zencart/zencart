@@ -22,9 +22,6 @@ define ('EMAIL_EXTRA_HEADER_INFO', '');
 define('OFFICE_FROM','<strong>From:</strong>');
 define('OFFICE_EMAIL','<strong>Email:</strong>');
 
-define('OFFICE_SENT_TO','<strong>Sent To:</strong>');
-define('OFFICE_EMAIL_TO','<strong>To Email:</strong>');
-
 define('OFFICE_USE','<strong>Office Use Only:</strong>');
 define('OFFICE_LOGIN_NAME','<strong>Login Name:</strong>');
 define('OFFICE_LOGIN_EMAIL','<strong>Login Email:</strong>');
@@ -56,7 +53,6 @@ define('EMAIL_ADVISORY_INCLUDED_WARNING', '<strong>This message is included with
 define('SEND_EXTRA_CREATE_ACCOUNT_EMAILS_TO_SUBJECT','[CREATE ACCOUNT]');
 define('SEND_EXTRA_GV_CUSTOMER_EMAILS_TO_SUBJECT','[GV CUSTOMER SENT]');
 define('SEND_EXTRA_NEW_ORDERS_EMAILS_TO_SUBJECT','[NEW ORDER]');
-define('SEND_EXTRA_CC_EMAILS_TO_SUBJECT','[EXTRA CC ORDER info] #');
 
 // Low Stock Emails
 define('EMAIL_TEXT_SUBJECT_LOWSTOCK','Warning: Low Stock');

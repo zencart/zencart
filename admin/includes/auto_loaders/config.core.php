@@ -127,6 +127,16 @@ if (!defined('USE_PCONNECT')) define('USE_PCONNECT', 'false');
  */
   $autoLoadConfig[35][] = array('autoType'=>'require',
                                 'loadFile'=> DIR_WS_FUNCTIONS . 'admin_access.php');
+
+/**
+ * Breakpoint 38.
+ *
+ * require(DIR_WS_FUNCTIONS . 'functions_help.php');
+ *
+ */
+  $autoLoadConfig[38][] = array('autoType'=>'require',
+                                'loadFile'=> DIR_WS_FUNCTIONS . 'functions_help.php');
+
 /**
  * Breakpoint 40.
  *

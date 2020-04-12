@@ -22,7 +22,7 @@ if (!defined('IS_ADMIN_FLAG')) {
  * The 'choice' aliases help with weighting for fallback to default selection
  */
 $template_dir = 'template_default';
-$sql = "SELECT template_dir, template_language, template_language=" . (int)$_SESSION['languages_id'] . " as choice1, template_language=0 as choice2
+$sql = "SELECT template_dir, template_language, template_language=" . (int)$_SESSION['languages_id'] . " AS choice1, template_language=0 AS choice2
         FROM " . TABLE_TEMPLATE_SELECT . "
         ORDER BY choice1 DESC, choice2 DESC, template_language";
 $result = $db->Execute($sql);

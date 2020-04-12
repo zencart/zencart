@@ -67,11 +67,11 @@ if (PRODUCT_INFO_PREVIOUS_NEXT != 0) {
   }
 
 
-  $sql = "select p.products_id, p.products_model, p.products_price_sorter, pd.products_name, p.products_sort_order
-          from   " . TABLE_PRODUCTS . " p, "
+  $sql = "SELECT p.products_id, p.products_model, p.products_price_sorter, pd.products_name, p.products_sort_order
+          FROM   " . TABLE_PRODUCTS . " p, "
   . TABLE_PRODUCTS_DESCRIPTION . " pd, "
   . TABLE_PRODUCTS_TO_CATEGORIES . " ptc
-          where  p.products_status = '1' and p.products_id = pd.products_id and pd.language_id= '" . (int)$_SESSION['languages_id'] . "' and p.products_id = ptc.products_id and ptc.categories_id = '" . (int)$current_category_id . "'" .
+          WHERE  p.products_status = '1' AND p.products_id = pd.products_id AND pd.language_id= '" . (int)$_SESSION['languages_id'] . "' AND p.products_id = ptc.products_id AND ptc.categories_id = '" . (int)$current_category_id . "'" .
   $prev_next_order;
 
   $products_ids = $db->Execute($sql);
@@ -103,9 +103,9 @@ if (PRODUCT_INFO_PREVIOUS_NEXT != 0) {
 
     if ($previous == -1) $previous = $last;
 
-    $sql = "select categories_name
-            from   " . TABLE_CATEGORIES_DESCRIPTION . "
-            where  categories_id = " . (int)$current_category_id . " AND language_id = '" . (int)$_SESSION['languages_id'] . "'";
+    $sql = "SELECT categories_name
+            FROM   " . TABLE_CATEGORIES_DESCRIPTION . "
+            WHERE  categories_id = " . (int)$current_category_id . " AND language_id = '" . (int)$_SESSION['languages_id'] . "'";
 
     $category_name_row = $db->Execute($sql);
   } // if is_array

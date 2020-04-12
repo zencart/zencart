@@ -20,10 +20,6 @@ define('TEXT_CATEGORIES_IMAGE_MANUAL', 'Use an existing image file in the above 
 define('TEXT_EDIT_SORT_ORDER', 'Sort Order:');
 define('TEXT_RESTRICT_PRODUCT_TYPE', 'Restrict to Product Type');
 define('TEXT_CATEGORY_HAS_RESTRICTIONS', 'This Category has been restricted to these Product Types');
-define('ERROR_CANNOT_ADD_PRODUCT_TYPE', 'The specified Product Type cannot be added to this category. Check your category restrictions.');
-define('ERROR_IMAGE_MANUAL_NOT_FOUND', 'The image "/images/%s" was not found.');
-define('MESSAGE_IMAGE_REMOVED_CATEGORY', 'The image was removed from category ID#%1$u: "%2$s"');
-define('MESSAGE_IMAGE_ADDED_MANUAL', 'The image "/images/%3$s" was assigned to category ID#%1$u: "%2$s"');
 
 // Metatags
 define('TEXT_INFO_HEADING_EDIT_CATEGORY_META_TAGS', 'Categories Meta Tags Definitions');

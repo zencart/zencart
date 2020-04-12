@@ -19,9 +19,9 @@
 // Set expiration time, default is 1200 secs (20 mins)
   $xx_mins_ago = (time() - 1200);
 
-  $db->Execute("delete from " . TABLE_WHOS_ONLINE . " where time_last_click < '" . $xx_mins_ago . "'");
+  $db->Execute("DELETE FROM " . TABLE_WHOS_ONLINE . " WHERE time_last_click < '" . $xx_mins_ago . "'");
 
-  $whos_online_query = $db->Execute("select customer_id from " . TABLE_WHOS_ONLINE);
+  $whos_online_query = $db->Execute("SELECT customer_id FROM " . TABLE_WHOS_ONLINE);
   while (!$whos_online_query->EOF) {
     if (!$whos_online_query->fields['customer_id'] == 0) $n_members++;
     if ($whos_online_query->fields['customer_id'] == 0) $n_guests++;

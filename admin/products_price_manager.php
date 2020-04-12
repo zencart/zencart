@@ -9,7 +9,7 @@
 require('includes/application_top.php');
 
 // verify products exist
-$chk_products = $db->Execute("select * from " . TABLE_PRODUCTS . " limit 1");
+$chk_products = $db->Execute("SELECT * FROM " . TABLE_PRODUCTS . " LIMIT 1");
 if ($chk_products->RecordCount() < 1) {
   $messageStack->add_session(ERROR_DEFINE_PRODUCTS, 'caution');
   zen_redirect(zen_href_link(FILENAME_CATEGORY_PRODUCT_LISTING));

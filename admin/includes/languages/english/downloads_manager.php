@@ -24,7 +24,6 @@ define('TABLE_HEADING_OPT_PRICE_PREFIX', 'Prefix');
 define('TEXT_PRODUCTS_NAME', 'Product: ');
 
 define('TEXT_INFO_HEADING_EDIT_PRODUCTS_DOWNLOAD', 'EDITING DOWNLOAD INFORMATION');
-define('TEXT_INFO_HEADING_DELETE_PRODUCTS_DOWNLOAD', 'CONFIRM DELETION OF DOWNLOAD');
 define('TEXT_INFO_EDIT_INTRO', 'Edit the Download information:');
 define('TEXT_DELETE_INTRO', 'The following filename will be removed from the database. This will not delete the file from the server:');
 
