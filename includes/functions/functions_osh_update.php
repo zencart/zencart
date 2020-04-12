@@ -122,7 +122,15 @@ function zen_update_orders_history($orders_id, $message = '', $updated_by = null
                     strip_tags($email_message) .
                     $status_text . $status_value_text .
                     OSH_EMAIL_TEXT_STATUS_PLEASE_REPLY;
-           
+
+                // Add in store specific order message
+                $email_order_message = defined('EMAIL_ORDER_UPDATE_MESSAGE') ? constant('EMAIL_ORDER_UPDATE_MESSAGE') : '';
+                $GLOBALS['zco_notifier']->notify('ZEN_UPDATE_ORDERS_HISTORY_SET_ORDER_UPDATE_MESSAGE'); 
+                if (!empty($email_order_message)) {
+                 $email_text .= "\n\n" . $email_order_message . "\n\n";
+                }
+                $html_msg['EMAIL_ORDER_UPDATE_MESSAGE'] = $email_order_message;
+
                 $html_msg['EMAIL_SALUTATION'] = EMAIL_SALUTATION;
                 $html_msg['EMAIL_CUSTOMERS_NAME']    = $osh_info->fields['customers_name'];
                 $html_msg['EMAIL_TEXT_ORDER_NUMBER'] = OSH_EMAIL_TEXT_ORDER_NUMBER . ' ' . $orders_id;

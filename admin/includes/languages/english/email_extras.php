@@ -18,6 +18,9 @@
   //
   define ('EMAIL_EXTRA_HEADER_INFO', '');
 
+  // Define a message you'd like to add to an order update email
+  define('EMAIL_ORDER_UPDATE_MESSAGE',''); 
+
 // office use only
   define('OFFICE_FROM','From:');
   define('OFFICE_EMAIL','E-mail:');
