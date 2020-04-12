@@ -8,9 +8,7 @@
  */
 
 require('includes/application_top.php');
-if (file_exists(DIR_WS_LANGUAGES . $_SESSION['language'] . '/' . 'users.php')) {
-  include(DIR_WS_LANGUAGES . $_SESSION['language'] . '/' . 'users.php');
-}
+
 // Check if session has timed out
 if (!isset($_SESSION['admin_id'])) zen_redirect(zen_href_link(FILENAME_LOGIN, '', 'SSL'));
 $user = $_SESSION['admin_id'];
