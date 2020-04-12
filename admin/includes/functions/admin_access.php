@@ -104,7 +104,7 @@ function zen_get_users($limit = '')
 function zen_delete_user($id)
 {
   global $db, $messageStack;
-  $result = $db->Execute("select count(admin_id) as count from " . TABLE_ADMIN . " where admin_id != '" . (int)$id . "'");
+  $result = $db->Execute("SELECT COUNT(admin_id) AS count FROM " . TABLE_ADMIN . " WHERE admin_id != '" . (int)$id . "'");
   if ($result->fields['count'] < 1) {
     $messageStack->add(ERROR_CANNOT_DELETE_LAST_ADMIN, 'error');
   } elseif ($id == $_SESSION['admin_id']) {
@@ -255,7 +255,7 @@ function zen_update_user($name, $email, $id, $profile)
 function zen_read_user($name)
 {
   global $db;
-  $sql = "select admin_id, admin_name, admin_email, admin_pass, pwd_last_change_date, reset_token, failed_logins, lockout_expires, admin_profile from " . TABLE_ADMIN . " where admin_name = :adminname:  LIMIT 1";
+  $sql = "SELECT admin_id, admin_name, admin_email, admin_pass, pwd_last_change_date, reset_token, failed_logins, lockout_expires, admin_profile FROM " . TABLE_ADMIN . " WHERE admin_name = :adminname:  LIMIT 1";
   $sql = $db->bindVars($sql, ':adminname:', $name, 'string');
   $result = $db->Execute($sql);
   if ($result->EOF || $result->RecordCount() < 1) return FALSE;
@@ -269,7 +269,7 @@ function zen_get_admin_name($id = '')
 {
   global $db;
   if ($id == '') $id = $_SESSION['admin_id'];
-  $sql = "select admin_name from " . TABLE_ADMIN . " where admin_id = :adminid:  LIMIT 1";
+  $sql = "SELECT admin_name FROM " . TABLE_ADMIN . " WHERE admin_id = :adminid:  LIMIT 1";
   $sql = $db->bindVars($sql, ':adminid:', $id, 'integer');
   $result = $db->Execute($sql);
   return $result->fields['admin_name'];
@@ -309,7 +309,7 @@ function zen_validate_user_login($admin_name, $admin_pass)
         if ($expired_token <= time() && $result['admin_pass'] != '')
         {
           // reset the reset_token field to blank, since token has expired
-          $sql = "update " . TABLE_ADMIN . " set reset_token = '' where admin_name = :adminname: ";
+          $sql = "UPDATE " . TABLE_ADMIN . " SET reset_token = '' WHERE admin_name = :adminname: ";
           $sql = $db->bindVars($sql, ':adminname:', $admin_name, 'string');
           $db->Execute($sql);
           $expired = false;
@@ -552,7 +552,7 @@ function zen_validate_pwd_reset_request($admin_name, $adm_old_pwd, $adm_new_pwd,
         if ($expired_token <= time())
         {
           // reset the reset_token field to blank, since token has expired
-          $sql = "update " . TABLE_ADMIN . " set reset_token = '' where admin_name = :adminname: ";
+          $sql = "UPDATE " . TABLE_ADMIN . " SET reset_token = '' WHERE admin_name = :adminname: ";
           $sql = $db->bindVars($sql, ':adminname:', $admin_name, 'string');
           $db->Execute($sql);
         } else
@@ -567,7 +567,7 @@ function zen_validate_pwd_reset_request($admin_name, $adm_old_pwd, $adm_new_pwd,
               $errors = array_merge($errors, $moreErrors);
             } else {
               // password change was accepted, so reset token
-              $sql = "update " . TABLE_ADMIN . " set reset_token = '', failed_logins = 0 where admin_name = :adminname: ";
+              $sql = "UPDATE " . TABLE_ADMIN . " SET reset_token = '', failed_logins = 0 WHERE admin_name = :adminname: ";
               $sql = $db->bindVars($sql, ':adminname:', $admin_name, 'string');
               $db->Execute($sql);
             }
@@ -585,7 +585,7 @@ function zen_validate_pwd_reset_request($admin_name, $adm_old_pwd, $adm_new_pwd,
       $errors = array_merge($errors, $moreErrors);
     } else
     {
-      $sql = "update " . TABLE_ADMIN . " set reset_token = '' where admin_name = :adminname: ";
+      $sql = "UPDATE " . TABLE_ADMIN . " SET reset_token = '' WHERE admin_name = :adminname: ";
       $sql = $db->bindVars($sql, ':adminname:', $admin_name, 'string');
       $db->Execute($sql);
     }
