@@ -19,7 +19,7 @@ if (!defined('IS_ADMIN_FLAG')) {
       $db->Execute($sql);
   }
 // Determine the DATABASE patch level
-  $project_db_info= $db->Execute("select * from " . TABLE_PROJECT_VERSION . " WHERE project_version_key = 'Zen-Cart Database' ");
+  $project_db_info= $db->Execute("SELECT * FROM " . TABLE_PROJECT_VERSION . " WHERE project_version_key = 'Zen-Cart Database' ");
   define('PROJECT_DB_VERSION_MAJOR',$project_db_info->fields['project_version_major']);
   define('PROJECT_DB_VERSION_MINOR',$project_db_info->fields['project_version_minor']);
   define('PROJECT_DB_VERSION_PATCH1',$project_db_info->fields['project_version_patch1']);
@@ -28,16 +28,16 @@ if (!defined('IS_ADMIN_FLAG')) {
   define('PROJECT_DB_VERSION_PATCH2_SOURCE',$project_db_info->fields['project_version_patch2_source']);
 
 // set application wide parameters
-  $configuration = $db->Execute('select configuration_key as cfgKey, configuration_value as cfgValue
-                                 from ' . TABLE_CONFIGURATION);
+  $configuration = $db->Execute('SELECT configuration_key AS cfgKey, configuration_value AS cfgValue
+                                 FROM ' . TABLE_CONFIGURATION);
   while (!$configuration->EOF) {
     define(strtoupper($configuration->fields['cfgKey']), $configuration->fields['cfgValue']);
     $configuration->MoveNext();
   }
 
 // set product type layout paramaters
-  $configuration = $db->Execute('select configuration_key as cfgKey, configuration_value as cfgValue
-                          from ' . TABLE_PRODUCT_TYPE_LAYOUT);
+  $configuration = $db->Execute('SELECT configuration_key AS cfgKey, configuration_value AS cfgValue
+                          FROM ' . TABLE_PRODUCT_TYPE_LAYOUT);
 
   while (!$configuration->EOF) {
     define(strtoupper($configuration->fields['cfgKey']), $configuration->fields['cfgValue']);
