@@ -125,7 +125,7 @@ function zen_update_orders_history($orders_id, $message = '', $updated_by = null
 
                 // Add in store specific order message
                 $email_order_message = defined('EMAIL_ORDER_UPDATE_MESSAGE') ? constant('EMAIL_ORDER_UPDATE_MESSAGE') : '';
-                $GLOBALS['zco_notifier']->notify('ZEN_UPDATE_ORDERS_HISTORY_SET_ORDER_UPDATE_MESSAGE'); 
+                $GLOBALS['zco_notifier']->notify('ZEN_UPDATE_ORDERS_HISTORY_SET_ORDER_UPDATE_MESSAGE', $orders_id, $email_order_message); 
                 if (!empty($email_order_message)) {
                  $email_text .= "\n\n" . $email_order_message . "\n\n";
                 }
