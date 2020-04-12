@@ -31,7 +31,6 @@ if ($action != '' && isset($_POST['action']) && $_POST['action'] != '' && $_POST
 switch ($action) {
   case 'edit': // display populated form for editing existing user
     $formAction = 'update';
-    $profilesList = array_merge(array(array('id'=>0,'text'=>'Choose Profile')), zen_get_profiles());
     break;
   case 'password': // display unpopulated form for resetting existing user's password
     $formAction = 'reset';
@@ -46,7 +45,6 @@ switch ($action) {
       }
       $action = 'edit';
       $formAction = 'update';
-      $profilesList = array_merge(array(array('id'=>0,'text'=>'Choose Profile')), zen_get_profiles());
     } else
     {
       $action = '';
