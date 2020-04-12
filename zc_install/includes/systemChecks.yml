@@ -303,10 +303,10 @@ systemChecks:
             fieldCheck: Type
             expectedResult: 'VARCHAR(255)'
           - checkType: fieldSchema
-            tableName: orders
-            fieldName: shipping_method
+            tableName: coupons_description
+            fieldName: coupon_name
             fieldCheck: Type
-            expectedResult: 'VARCHAR(255)'
+            expectedResult: 'VARCHAR(64)'
           - checkType: configValue
             fieldName: CURRENCY_SERVER_PRIMARY
             expectedResult: 'Currency Exchange Rate: Primary Source'
