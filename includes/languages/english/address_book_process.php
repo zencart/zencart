@@ -21,8 +21,6 @@ define('HEADING_TITLE', 'Address Details');
 
 define('DELETE_ADDRESS_DESCRIPTION', 'Are you sure you would like to delete the selected address from your address book?');
 
-define('NEW_ADDRESS_TITLE', 'New Address Book Entry');
-
 define('SET_AS_PRIMARY', 'Set as primary address.');
 
 define('SUCCESS_ADDRESS_BOOK_ENTRY_DELETED', 'The selected address has been successfully removed from your address book.');

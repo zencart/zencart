@@ -154,7 +154,6 @@
 
   define('CATEGORY_COMPANY', 'Company Details');
   define('CATEGORY_PERSONAL', 'Your Personal Details');
-  define('CATEGORY_ADDRESS', 'Your Address');
   define('PULL_DOWN_DEFAULT', 'Please Choose Your Country');
   define('PLEASE_SELECT', 'Please select ...');
   define('TYPE_BELOW', 'Type a choice below ...');
@@ -221,7 +220,6 @@
   define('ENTRY_PASSWORD_NEW_TEXT', '*');
   define('ENTRY_PASSWORD_NEW_ERROR', 'Your new Password must contain a minimum of ' . ENTRY_PASSWORD_MIN_LENGTH . ' characters.');
   define('ENTRY_PASSWORD_NEW_ERROR_NOT_MATCHING', 'The Password Confirmation must match your new Password.');
-  define('PASSWORD_HIDDEN', '--HIDDEN--');
 
   define('FORM_REQUIRED_INFORMATION', '* Required information');
   define('ENTRY_REQUIRED_SYMBOL', '*');
