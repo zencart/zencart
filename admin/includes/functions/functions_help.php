@@ -6,14 +6,13 @@
  * @version $Id: DrByte 2019 May 26 Modified in v1.5.6b $
  */
 
- function page_has_help($help_page) {
+ function page_has_help() {
    global $PHP_SELF;
 
    $page = basename($PHP_SELF, ".php");
-   // This list will be built out in the final version
 
    $pagelist = array(
-
+     FILENAME_DEFAULT => "https://docs.zen-cart.com/user/admin_pages/admin_dashboard/",
      FILENAME_CONFIGURATION => "https://docs.zen-cart.com/user/admin_pages/configuration/",
      FILENAME_CATEGORIES => "https://docs.zen-cart.com/user/admin_pages/catalog/categories/", 
      FILENAME_CATEGORY_PRODUCT_LISTING => "https://docs.zen-cart.com/user/admin_pages/catalog/categories_products/", 
