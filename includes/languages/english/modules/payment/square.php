@@ -37,7 +37,6 @@ if (IS_ADMIN_FLAG === true) {
 
 
 define('MODULE_PAYMENT_SQUARE_ENTRY_TRANSACTION_SUMMARY', '<strong>Transaction Summary</strong>');
-define('MODULE_PAYMENT_SQUARE_ENTRY_TRANSACTION_ACTIONS', '<strong>Actions</strong>');
 define('MODULE_PAYMENT_SQUARE_TEXT_UPDATE_FAILED', 'Sorry, the attempted transaction update failed unexpectedly. See logs for details.');
 
 define('MODULE_PAYMENT_SQUARE_ENTRY_REFUND_TITLE', '<strong>Refund Transaction</strong>');
@@ -60,7 +59,6 @@ define('MODULE_PAYMENT_SQUARE_ENTRY_CAPTURE_DEFAULT_MESSAGE', '');
 define('MODULE_PAYMENT_SQUARE_ENTRY_CAPTURE_SUFFIX', 'Captures must be performed within 6 days of the original authorization. You may only capture an order ONCE.');
 define('MODULE_PAYMENT_SQUARE_TEXT_CAPTURE_CONFIRM_ERROR', 'Error: You requested to do a capture but did not check the Confirmation box.');
 define('MODULE_PAYMENT_SQUARE_ENTRY_CAPTURE_BUTTON_TEXT', 'Do Capture');
-define('MODULE_PAYMENT_SQUARE_TEXT_TRANS_ID_REQUIRED_ERROR', 'Error: You need to specify a Transaction ID.');
 define('MODULE_PAYMENT_SQUARE_TEXT_CAPT_INITIATED', 'Funds Capture initiated. Transaction ID: %s');
 
 define('MODULE_PAYMENT_SQUARE_ENTRY_VOID_TITLE', '<strong>Voiding Transaction</strong>');
