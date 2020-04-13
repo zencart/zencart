@@ -12,7 +12,6 @@
    $page = basename($PHP_SELF, ".php");
 
    $pagelist = array(
-     FILENAME_DEFAULT => "https://docs.zen-cart.com/user/admin_pages/admin_dashboard/",
      FILENAME_CONFIGURATION => "https://docs.zen-cart.com/user/admin_pages/configuration/",
      FILENAME_CATEGORIES => "https://docs.zen-cart.com/user/admin_pages/catalog/categories/", 
      FILENAME_CATEGORY_PRODUCT_LISTING => "https://docs.zen-cart.com/user/admin_pages/catalog/categories_products/", 
