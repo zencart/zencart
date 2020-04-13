@@ -255,26 +255,26 @@ if (zen_not_null($action)) {
                   $search = '';
                   if (isset($_GET['search']) && zen_not_null($_GET['search'])) {
                     $keywords = zen_db_input(zen_db_prepare_input($_GET['search']));
-                    $search = " and r.customers_name like '%" . $keywords . "%'
-                                or rd.reviews_text like '%" . $keywords . "%'
-                                or pd.products_name like '%" . $keywords . "%'
-                                or pd.products_description like '%" . $keywords . "%'
-                                or p.products_model like '%" . $keywords . "%'";
+                    $search = " AND (r.customers_name LIKE '%" . $keywords . "%'
+                                OR rd.reviews_text LIKE '%" . $keywords . "%'
+                                OR pd.products_name LIKE '%" . $keywords . "%'
+                                OR pd.products_description LIKE '%" . $keywords . "%'
+                                OR p.products_model LIKE '%" . $keywords . "%') ";
                   }
 
                   if ($status_filter != '' && $status_filter > 0) {
-                    $search .= " and r.status=" . ((int)$status_filter - 1);
+                    $search .= " AND r.status=" . ((int)$status_filter - 1);
                   }
 
-	              $order_by = " order by r.status, r.date_added DESC";
+	              $order_by = " ORDER BY r.status, r.date_added DESC";
 
-                  $reviews_query_raw = "select r.*, rd.*, pd.*, p.*
-                                         from (" . TABLE_REVIEWS . " r
-                                           left join " . TABLE_REVIEWS_DESCRIPTION . " rd on r.reviews_id = rd.reviews_id
-                                           left join " . TABLE_PRODUCTS_DESCRIPTION . " pd on r.products_id = pd.products_id
-                                             and pd.language_id ='" . (int)$_SESSION['languages_id'] . "'
-                                           left join " . TABLE_PRODUCTS . " p on p.products_id= r.products_id)
-                                         where r.products_id = p.products_id" . $search . $order_by;
+                  $reviews_query_raw = "SELECT r.*, rd.*, pd.*, p.*
+                                         FROM (" . TABLE_REVIEWS . " r
+                                           LEFT JOIN " . TABLE_REVIEWS_DESCRIPTION . " rd ON r.reviews_id = rd.reviews_id
+                                           LEFT JOIN " . TABLE_PRODUCTS_DESCRIPTION . " pd ON r.products_id = pd.products_id
+                                             AND pd.language_id ='" . (int)$_SESSION['languages_id'] . "'
+                                           LEFT JOIN " . TABLE_PRODUCTS . " p ON p.products_id= r.products_id)
+                                         WHERE r.products_id = p.products_id" . $search . $order_by;
 
 // reset page when page is unknown
                   if ((empty($_GET['page']) || $_GET['page'] == '1') && !empty($_GET['rID'])) {

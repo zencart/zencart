@@ -191,3 +191,26 @@ function quote_boc_currency($currencyCode = '', $base = DEFAULT_CURRENCY)
     }
     return $error;
   }
+
+  function zen_datepicker_format_full() {
+    // converts mm-dd-yy to MM-DD-YYYY
+    return str_replace("YY","YYYY", strtoupper(DATE_FORMAT_DATE_PICKER));
+  }
+
+  function zen_datepicker_format_fordate() {
+    // converts mm-dd-yy to m-d-Y
+    $date = DATE_FORMAT_DATE_PICKER; 
+    $date = str_replace('mm','m', $date); 
+    $date = str_replace('dd','d', $date); 
+    $date = str_replace('yy','Y', $date); 
+    return $date; 
+  }
+
+  function zen_datepicker_format_forsql() {
+    // converts mm-dd-yy to %m-%d-%Y
+    $date = DATE_FORMAT_DATE_PICKER; 
+    $date = str_replace('mm','%m', $date); 
+    $date = str_replace('dd','%d', $date); 
+    $date = str_replace('yy','%Y', $date); 
+    return $date; 
+  }

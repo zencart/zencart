@@ -17,6 +17,11 @@ if (isset($_POST['edit']) && $_POST['edit'] == 'edit') {
   $action = 'new_product';
 } elseif ((isset($_POST['products_model']) ? $_POST['products_model'] : '') . (isset($_POST['products_url']) ? implode('', $_POST['products_url']) : '') . (isset($_POST['products_name']) ? implode('', $_POST['products_name']) : '') . (isset($_POST['products_description']) ? implode('', $_POST['products_description']) : '') != '') {
   $products_date_available = zen_db_prepare_input($_POST['products_date_available']);
+  if (DATE_FORMAT_DATE_PICKER != 'yy-mm-dd') {
+    $local_fmt = zen_datepicker_format_fordate(); 
+    $dt = DateTime::createFromFormat($local_fmt, $products_date_available); 
+    $products_date_available = $dt->format('Y-m-d'); 
+  }
   $products_date_available = (date('Y-m-d') < $products_date_available) ? $products_date_available : 'null';
 
   // Data-cleaning to prevent data-type mismatch errors:

@@ -54,7 +54,7 @@
   require(DIR_FS_CATALOG_MODULES . 'payment/paypal.php');
 
   $payment_statuses = array();
-  $payment_status_trans = $db->Execute("select payment_status_name as payment_status from " . TABLE_PAYPAL_PAYMENT_STATUS );
+  $payment_status_trans = $db->Execute("SELECT payment_status_name AS payment_status FROM " . TABLE_PAYPAL_PAYMENT_STATUS );
   while (!$payment_status_trans->EOF) {
     $payment_statuses[] = array('id' => $payment_status_trans->fields['payment_status'],
                                 'text' => $payment_status_trans->fields['payment_status']);
@@ -126,17 +126,17 @@
               </tr>
 <?php
   if (zen_not_null($selected_status)) {
-    $ipn_search = "and p.payment_status = :selectedStatus: ";
+    $ipn_search = "AND p.payment_status = :selectedStatus: ";
     $ipn_search = $db->bindVars($ipn_search, ':selectedStatus:', $selected_status, 'string');
     switch ($selected_status) {
       case 'Pending':
       case 'Completed':
       default:
-        $ipn_query_raw = "select p.order_id, p.paypal_ipn_id, p.txn_type, p.payment_type, p.payment_status, p.pending_reason, p.mc_currency, p.payer_status, p.mc_currency, p.date_added, p.mc_gross, p.first_name, p.last_name, p.payer_business_name, p.parent_txn_id, p.txn_id from " . TABLE_PAYPAL . " as p, " .TABLE_ORDERS . " as o  where o.orders_id = p.order_id " . $ipn_search . $order_by;
+        $ipn_query_raw = "SELECT p.order_id, p.paypal_ipn_id, p.txn_type, p.payment_type, p.payment_status, p.pending_reason, p.mc_currency, p.payer_status, p.mc_currency, p.date_added, p.mc_gross, p.first_name, p.last_name, p.payer_business_name, p.parent_txn_id, p.txn_id FROM " . TABLE_PAYPAL . " AS p, " .TABLE_ORDERS . " AS o  WHERE o.orders_id = p.order_id " . $ipn_search . $order_by;
         break;
     }
   } else {
-        $ipn_query_raw = "select p.order_id, p.paypal_ipn_id, p.txn_type, p.payment_type, p.payment_status, p.pending_reason, p.mc_currency, p.payer_status, p.mc_currency, p.date_added, p.mc_gross, p.first_name, p.last_name, p.payer_business_name, p.parent_txn_id, p.txn_id from " . TABLE_PAYPAL . " as p left join " .TABLE_ORDERS . " as o on o.orders_id = p.order_id" . $order_by;
+        $ipn_query_raw = "SELECT p.order_id, p.paypal_ipn_id, p.txn_type, p.payment_type, p.payment_status, p.pending_reason, p.mc_currency, p.payer_status, p.mc_currency, p.date_added, p.mc_gross, p.first_name, p.last_name, p.payer_business_name, p.parent_txn_id, p.txn_id FROM " . TABLE_PAYPAL . " AS p LEFT JOIN " .TABLE_ORDERS . " AS o ON o.orders_id = p.order_id" . $order_by;
   }
   $ipn_split = new splitPageResults($_GET['page'], MAX_DISPLAY_SEARCH_RESULTS_PAYPAL_IPN, $ipn_query_raw, $ipn_query_numrows);
   $ipn_trans = $db->Execute($ipn_query_raw);
@@ -185,7 +185,7 @@
     default:
       if (isset($ipnInfo) && is_object($ipnInfo)) {
         $heading[] = array('text' => '<strong>' . TEXT_INFO_PAYPAL_IPN_HEADING.' #' . $ipnInfo->paypal_ipn_id . '</strong>');
-        $ipn = $db->Execute("select * from " . TABLE_PAYPAL_PAYMENT_STATUS_HISTORY . " where paypal_ipn_id = '" . $ipnInfo->paypal_ipn_id . "'");
+        $ipn = $db->Execute("SELECT * FROM " . TABLE_PAYPAL_PAYMENT_STATUS_HISTORY . " WHERE paypal_ipn_id = '" . $ipnInfo->paypal_ipn_id . "'");
         $ipn_count = $ipn->RecordCount();
 
         $contents[] = array('align' => 'center', 'text' => '<a href="' . zen_href_link(FILENAME_ORDERS, zen_get_all_get_params(array('ipnID', 'action')) . 'oID=' . $ipnInfo->order_id .'&' . 'ipnID=' . $ipnInfo->paypal_ipn_id .'&action=edit' . '&referer=ipn') . '">' . zen_image_button('button_orders.gif', IMAGE_ORDERS) . '</a>');

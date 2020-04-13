@@ -61,10 +61,10 @@ if (zen_not_null($action)) {
     case 'update_category':
       if (isset($_POST['add_type']) || isset($_POST['add_type_all'])) {
         // check if it is already restricted
-        $sql = "select *
-                from " . TABLE_PRODUCT_TYPES_TO_CATEGORY . "
-                where category_id = '" . (int)$_POST['categories_id'] . "'
-                and product_type_id = '" . (int)$_POST['restrict_type'] . "'";
+        $sql = "SELECT *
+                FROM " . TABLE_PRODUCT_TYPES_TO_CATEGORY . "
+                WHERE category_id = '" . (int)$_POST['categories_id'] . "'
+                AND product_type_id = '" . (int)$_POST['restrict_type'] . "'";
 
         $type_to_cat = $db->Execute($sql);
         if ($type_to_cat->RecordCount() < 1) {
@@ -108,9 +108,9 @@ if (zen_not_null($action)) {
 
         $categories_id = zen_db_insert_id();
         // check if parent is restricted
-        $sql = "select parent_id
-                from " . TABLE_CATEGORIES . "
-                where categories_id = '" . (int)$categories_id . "'";
+        $sql = "SELECT parent_id
+                FROM " . TABLE_CATEGORIES . "
+                WHERE categories_id = '" . (int)$categories_id . "'";
 
         $parent_cat = $db->Execute($sql);
         if ($parent_cat->fields['parent_id'] != '0') {
@@ -294,7 +294,7 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
     <!-- body //-->
     <?php
     // Make an array of product types
-    $sql = "select type_id, type_name from " . TABLE_PRODUCT_TYPES;
+    $sql = "SELECT type_id, type_name FROM " . TABLE_PRODUCT_TYPES;
     $product_types = $db->Execute($sql);
     while (!$product_types->EOF) {
       $type_array[] = [
