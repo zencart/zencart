@@ -161,7 +161,7 @@ if (zen_get_categories_status($current_category_id) == 0 && $pInfo->products_sta
         <span class="input-group-addon datepicker_icon">
           <i class="fa fa-calendar fa-lg">&nbsp;</i>
         </span>
-        <?php echo zen_draw_input_field('products_date_available', $pInfo->products_date_available, 'class="form-control" id="products_date_available"'); ?>
+        <?php echo zen_draw_input_field('products_date_available', $pInfo->products_date_available, 'class="form-control" id="products_date_available" autocomplete="off"'); ?>
       </div>
       <span class="help-block errorText">(YYYY-MM-DD)</span>
     </div>
