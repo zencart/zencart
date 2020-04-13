@@ -104,9 +104,9 @@ if (zen_not_null($action)) {
             </thead>
             <tbody>
                 <?php
-                $classes_query_raw = "select tax_class_id, tax_class_title, tax_class_description, last_modified, date_added
-                                      from " . TABLE_TAX_CLASS . "
-                                      order by tax_class_title";
+                $classes_query_raw = "SELECT tax_class_id, tax_class_title, tax_class_description, last_modified, date_added
+                                      FROM " . TABLE_TAX_CLASS . "
+                                      ORDER BY tax_class_title";
                 $classes_split = new splitPageResults($_GET['page'], MAX_DISPLAY_SEARCH_RESULTS, $classes_query_raw, $classes_query_numrows);
                 $classes = $db->Execute($classes_query_raw);
                 foreach ($classes as $class) {
