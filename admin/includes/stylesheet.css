@@ -835,6 +835,17 @@ input.faint {
 
 /* End of css buttons */
 
+/* Additions for help */
+.navbar {
+  margin-bottom: 8px;
+}
+.btn-help {
+  margin-right: 4px;
+  margin-bottom: 8px;
+  background-color: #337ab7; 
+  color: white; 
+}
+
 /* Print-specific styles */
 @media print {
     .header-area, .footer-area, .noprint,
