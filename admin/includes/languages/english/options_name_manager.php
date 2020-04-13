@@ -1,139 +1,113 @@
 <?php
-//
-// +----------------------------------------------------------------------+
-// |zen-cart Open Source E-commerce                                       |
-// +----------------------------------------------------------------------+
-// | Copyright (c) 2003 The zen-cart developers                           |
-// |                                                                      |
-// | http://www.zen-cart.com/index.php                                    |
-// |                                                                      |
-// | Portions Copyright (c) 2003 osCommerce                               |
-// +----------------------------------------------------------------------+
-// | This source file is subject to version 2.0 of the GPL license,       |
-// | that is bundled with this package in the file LICENSE, and is        |
-// | available through the world-wide-web at the following url:           |
-// | http://www.zen-cart.com/license/2_0.txt.                             |
-// | If you did not receive a copy of the zen-cart license and are unable |
-// | to obtain it through the world-wide-web, please send a note to       |
-// | license@zen-cart.com so we can mail you a copy immediately.          |
-// +----------------------------------------------------------------------+
-//  $Id: options_name_manager.php 2181 2005-10-20 18:37:16Z ajeh $
-//
+/**
+ * @package admin
+ * @copyright Copyright 2003-2019 Zen Cart Development Team
+ * @copyright Portions Copyright 2003 osCommerce
+ * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
+ * @version $Id: torvista 2019 Nov 20 Modified in v1.5.7 $
+ */
+define('HEADING_TITLE', 'Option Name Manager');
+define('TEXT_ATTRIBUTES_CONTROLLER', 'Attributes Controller');
 
-define('HEADING_TITLE_OPT', 'Product Options');
-define('HEADING_TITLE_VAL', 'Option Values');
-define('HEADING_TITLE_ATRIB', 'Products Attributes');
-
-define('TABLE_HEADING_ID', 'ID');
 define('TABLE_HEADING_PRODUCT', 'Product Name');
 define('TABLE_HEADING_OPT_NAME', 'Option Name');
 define('TABLE_HEADING_OPT_VALUE', 'Option Value');
-define('TABLE_HEADING_OPT_PRICE', 'Price');
-define('TABLE_HEADING_OPT_PRICE_PREFIX', 'Prefix');
 define('TABLE_HEADING_ACTION', 'Action');
-define('TABLE_HEADING_DOWNLOAD', 'Downloadable products:');
-define('TABLE_TEXT_FILENAME', 'Filename:');
-define('TABLE_TEXT_MAX_DAYS', 'Expiry days:');
-define('TABLE_TEXT_MAX_COUNT', 'Maximum download count:');
 
-define('TEXT_WARNING_OF_DELETE', 'This option has products and values linked to it - it is not safe to delete it.');
-define('TEXT_OK_TO_DELETE', 'This option has no products linked to it - it is safe to delete it.<br />Caution: All Option Values will be deleted for this Option Name.');
+define('TEXT_PRODUCT_OPTIONS_INFO','<strong>Note: Edit the Option Name for additional settings</strong>');
+
+define('TEXT_WARNING_OF_DELETE', 'This Option Name is used by the product(s) listed below: it cannot be deleted until all the Option Values (attributes) associated with this Option Name have been removed from these products.');
+define('TEXT_OK_TO_DELETE', 'This Option Name is not used by any product - it is safe to delete it.<br><strong>Warning:</strong> this will delete both the Option Name AND all the Option Values associated with that Option Name.');
+
 define('TEXT_OPTION_ID', 'Option ID');
 define('TEXT_OPTION_NAME', 'Option Name');
 
-define('ATTRIBUTE_WARNING_DUPLICATE','Duplicate Attribute - Attribute was not added'); // attributes duplicate warning
-define('ATTRIBUTE_WARNING_DUPLICATE_UPDATE','Duplicate Attribute Exists - Attribute was not changed'); // attributes duplicate warning
-define('ATTRIBUTE_WARNING_INVALID_MATCH','Attribute Option and Option Value Do NOT Match - Attribute was not added'); // miss matched option and options value
-define('ATTRIBUTE_WARNING_INVALID_MATCH_UPDATE','Attribute Option and Option Value Do NOT Match - Attribute was not changed'); // miss matched option and options value
-define('ATTRIBUTE_POSSIBLE_OPTIONS_NAME_WARNING_DUPLICATE','Possible Duplicate Options Name Added'); // Options Name Duplicate warning
-define('ATTRIBUTE_POSSIBLE_OPTIONS_VALUE_WARNING_DUPLICATE','Possible Duplicate Options Value Added'); // Options Value Duplicate warning
+define('TEXT_WARNING_DUPLICATE_OPTION_NAME','Option ID#%1$u: Duplicate Option Name Added: "%2$s" (%3$s)');
 
-define('PRODUCTS_ATTRIBUTES_EDITING','EDITING'); // title
-define('PRODUCTS_ATTRIBUTES_DELETE','DELETING'); // title
-define('PRODUCTS_ATTRIBUTES_ADDING','ADDING NEW ATTRIBUTES'); // title
-define('TEXT_DOWNLOADS_DISABLED','NOTE: Downloads are disabled');
+define('TEXT_ORDER_BY','Order by');
+define('TEXT_SORT_ORDER','Sort Order');
 
-define('TABLE_TEXT_MAX_DAYS_SHORT', 'Days:');
-define('TABLE_TEXT_MAX_COUNT_SHORT', 'Max:');
+define('TABLE_HEADING_OPT_WEIGHT_PREFIX','Prefix');
+define('TABLE_HEADING_OPT_WEIGHT','Weight');
+define('TABLE_HEADING_OPT_SORT_ORDER','Sort Order');
+define('TABLE_HEADING_OPT_DEFAULT','Default');
 
-  define('TABLE_HEADING_OPTION_SORT_ORDER','Sort Order');
-  define('TABLE_HEADING_OPTION_VALUE_SORT_ORDER','Default Order');
-  define('TEXT_SORT',' Order: ');
+define('TABLE_HEADING_OPT_TYPE', 'Option Type'); //CLR 031203 add option type column
+define('TABLE_HEADING_OPTION_VALUE_SIZE','Size');
+define('TABLE_HEADING_OPTION_VALUE_MAX','Max');
+define('TABLE_HEADING_OPTION_VALUE_ROWS','Rows');
 
-  define('TABLE_HEADING_OPT_WEIGHT_PREFIX','Prefix');
-  define('TABLE_HEADING_OPT_WEIGHT','Weight');
-  define('TABLE_HEADING_OPT_SORT_ORDER','Sort Order');
+define('TEXT_OPTION_VALUE_COMMENTS','Comment (displayed next to Option Name)');
+define('TEXT_OPTION_VALUE_ROWS', 'Rows');
+define('TEXT_OPTION_VALUE_SIZE','Display Size');
+define('TEXT_OPTION_VALUE_MAX','Maximum Length');
 
-  define('TABLE_HEADING_OPT_TYPE', 'Option Type'); //CLR 031203 add option type column
-  define('TABLE_HEADING_OPTION_VALUE_SIZE','Size');
-  define('TABLE_HEADING_OPTION_VALUE_MAX','Max');
+define('TEXT_OPTION_ATTRIBUTE_IMAGES_PER_ROW', 'Attribute Images per Row');
+define('TEXT_OPTION_ATTRIBUTE_IMAGES_STYLE', 'Attribute Image Layout Style (Checkbox/Radio Buttons only)');
+define('TEXT_OPTION_ATTRIBUTE_LAYOUTS_EXAMPLE', 'View Examples');
+define('TEXT_OPTION_ATTRIBUTE_MAX_LENGTH', '<strong>Note: ' . TEXT_OPTION_VALUE_ROWS . ', ' . TEXT_OPTION_VALUE_SIZE . ' and ' . TEXT_OPTION_VALUE_MAX . ' are for Text Attributes Only.</strong><br>');
+define('TEXT_OPTION_ATTRIBUTE_IMAGES_STYLE_0', '0 - All Images below Option Values (attributes as list)');
+define('TEXT_OPTION_ATTRIBUTE_IMAGES_STYLE_1', '1 - Element, Image, Option Value (attributes as list)');
+define('TEXT_OPTION_ATTRIBUTE_IMAGES_STYLE_2', '2 - Element, Option Value, Image below (attributes as list)');
+define('TEXT_OPTION_ATTRIBUTE_IMAGES_STYLE_3', '3 - Element, Image, Option Value below (attributes inline)');
+define('TEXT_OPTION_ATTRIBUTE_IMAGES_STYLE_4', '4 - Image, Option Value below, Element below (attributes inline)');
+define('TEXT_OPTION_ATTRIBUTE_IMAGES_STYLE_5', '5 - Element, Image below, Option Value Below (attributes inline)');
 
-  define('TEXT_OPTION_VALUE_COMMENTS','Comments: ');
-  define('TEXT_OPTION_VALUE_ROWS', 'Rows: ');
-  define('TEXT_OPTION_VALUE_SIZE','Display Size: ');
-  define('TEXT_OPTION_VALUE_MAX','Maximum length: ');
+define('TEXT_INSERT_NEW_OPTION_NAME', 'Add a new Option Name');
 
-  define('TEXT_ATTRIBUTES_IMAGE','Attributes Image Swatch:');
-  define('TEXT_ATTRIBUTES_IMAGE_DIR','Attributes Image Directory:');
-
-  define('TEXT_ATTRIBUTES_FLAGS','Attribute<br />Flags:');
-  define('TEXT_ATTRIBUTES_DISPLAY_ONLY', 'Used For<br />Display Purposes Only:');
-  define('TEXT_ATTRIBUTES_IS_FREE', 'Attribute is Free<br />When Product is Free:');
-  define('TEXT_ATTRIBUTES_DEFAULT', 'Default Attribute<br />to be Marked Selected:');
-  define('TEXT_ATTRIBUTE_IS_DISCOUNTED', 'Apply Same Discounts<br />Used by Product:');
-  define('TEXT_ATTRIBUTE_PRICE_BASE_INCLUDED','Include in Base Price<br />When Priced by Attributes');
-
-  define('TEXT_PRODUCT_OPTIONS_INFO','<strong>NOTE: Edit Product Options Name for additional settings</strong>');
-
-// updates
-define('ERROR_PRODUCTS_OPTIONS_VALUES', 'WARNING: No Products found ... Nothing was updated');
-
-define('TEXT_SELECT_PRODUCT', ' Select a Product');
-define('TEXT_SELECT_CATEGORY', ' Select a Category');
+// Global Tools
+define('TEXT_GLOBAL_TOOLS', 'Global Tools');
+define('TEXT_CLICK_TO_SHOW_HIDE', 'click to show/hide');
+define('TEXT_WARNING_BACKUP', 'Important: Always make a verified backup of your database before making global changes/using Global Tools');
+define('TEXT_SELECT_OPTION_TYPES_ALLOWED', 'Note that Global Tools cannot be used with option name types "Text" or "File".');
+define('TEXT_SELECT_PRODUCT', 'Select a Product');
+define('TEXT_SELECT_CATEGORY', 'Select a Category');
 define('TEXT_SELECT_OPTION', 'Select an Option Name');
+define('TEXT_NAME', 'Name');
 
-// add
-define('TEXT_OPTION_VALUE_ADD_ALL', '<br /><strong>Add ALL Option Values to ALL products for Option Name</strong>');
-define('TEXT_INFO_OPTION_VALUE_ADD_ALL', 'Update ALL existing products that have at least ONE Option Value and Add ALL Option Values in an Option Name');
-define('SUCCESS_PRODUCTS_OPTIONS_VALUES', 'Successful Update of Options ');
+// Add
+define('TEXT_INFO_OPTION_VALUES_ADD', '<strong>Note:</strong> for products that get updated (receive additional Option Values) using the <b>Add</b> tools, the sort order for the Option Values (attributes) will be reset to the <strong>default</strong> sort order for that Option name.');
 
-define('TEXT_OPTION_VALUE_ADD_PRODUCT', '<br /><strong>Add ALL Option Values to ONE products for Option Name</strong>');
-define('TEXT_INFO_OPTION_VALUE_ADD_PRODUCT', 'Update ONE product that has at least ONE Option Value and Add ALL Option Values in an Option Name');
+define('TEXT_OPTION_VALUE_ADD_ALL', 'Update (add) all remaining Option Values to ALL products that use this Option Name');
+define('TEXT_INFO_OPTION_VALUE_ADD_ALL', 'For ALL products that are using the selected Option Name (and so have at least one Option Value assigned), add ALL the other Option Values associated with the Option Name.');
 
-define('TEXT_OPTION_VALUE_ADD_CATEGORY', '<br /><strong>Add ALL Option Values to ONE Category of products for Option Name</strong>');
-define('TEXT_INFO_OPTION_VALUE_ADD_CATEGORY', 'Update ONE Category of products, when the product has at least ONE Option Value and Add ALL Option Values in an Option Name');
+define('TEXT_OPTION_VALUE_ADD_PRODUCT', 'Update (add) all remaining Option Values to ONE product that is using this Option Name');
+define('TEXT_INFO_OPTION_VALUE_ADD_PRODUCT', 'For a product that is using the selected Option Name (and so has at least one Option Value assigned), add ALL the other Option Values associated with the Option Name.');
 
-define('TEXT_COMMENT_OPTION_VALUE_ADD_ALL', '<strong>NOTE:</strong> Sort order will be set to the default Option Value Sort Order for these products');
+define('TEXT_OPTION_VALUE_ADD_CATEGORY', 'Update (add) all remaining Option Values to ALL products in a Category that are using this Option Name');
+define('TEXT_INFO_OPTION_VALUE_ADD_CATEGORY', 'For products in ONE category only that are using the selected Option Name, add ALL the other Option Values associated with the Option Name.');
+define('TEXT_SHOW_CATEGORY_PATH', 'Show category path');
+define('TEXT_SHOW_CATEGORY_NAME', 'Show only category name');
 
-// delete
-define('TEXT_OPTION_VALUE_DELETE_ALL', '<br /><strong>Delete ALL Option Values to ALL products for Option Name</strong>');
-define('TEXT_INFO_OPTION_VALUE_DELETE_ALL', 'Update ALL existing products that have at least ONE Option Value and Delete ALL Option Values in an Option Name');
+// messageStack
+define('SUCCESS_PRODUCT_OPTION_VALUE', 'Option Name "%1$s": Option Value "%2$s" added to product "%3$s".');
+define('SUCCESS_PRODUCT_OPTIONS_VALUES_SORT_ORDER', 'Option Name "%1$s": product "%2$s" Option Values updated to the default sort order for Option Name "%1$s".');
+define('SUCCESS_PRODUCTS_OPTIONS_VALUES', 'Option Name "%1$s": %2$u product(s) updated with additional Option Values.');
 
-define('TEXT_OPTION_VALUE_DELETE_PRODUCT', '<br /><strong>Delete ALL Option Values to ONE products for Option Name</strong>');
-define('TEXT_INFO_OPTION_VALUE_DELETE_PRODUCT', 'Update ONE product that has at least ONE Option Value and Delete ALL Option Values in an Option Name');
+define('ERROR_PRODUCTS_OPTIONS_PRODUCTS', 'Warning: No matching product(s) found using Option Name "%s" (nothing was updated).');
+define('ERROR_PRODUCTS_OPTIONS_VALUES', 'Warning: All matching product(s) already have all Option Values for Option Name "%s" (nothing was updated).');
 
-define('TEXT_OPTION_VALUE_DELETE_CATEGORY', '<br /><strong>Delete ALL Option Values to ONE Category of products for Option Name</strong>');
-define('TEXT_INFO_OPTION_VALUE_DELETE_CATEGORY', 'Update ONE Category of products, when the product has at least ONE Option Value and Delete ALL Option Values in an Option Name');
+// Delete
+define('TEXT_COMMENT_OPTION_VALUE_DELETE_ALL', '<strong>NOTE:</strong> All Option Values will be deleted from matching/selected product(s). This will not delete the defined Option Values from that Option Name.');
+define('TEXT_OPTION_VALUE_DELETE_ALL', 'Delete all Option Values from ALL products using this Option Name');
+define('TEXT_INFO_OPTION_VALUE_DELETE_ALL', 'For ALL products that are using the selected Option Name, remove all the Option Values/the Option Name.');
 
-define('TEXT_COMMENT_OPTION_VALUE_DELETE_ALL', '<strong>NOTE:</strong> All Option Name Option Values will be deleted for selected product(s). This will not delete the Option Value settings.');
+define('TEXT_OPTION_VALUE_DELETE_PRODUCT', 'Delete all Option Values from ONE product using this Option Name');
+define('TEXT_INFO_OPTION_VALUE_DELETE_PRODUCT', 'For a product that is using the selected Option Name, remove ALL the Option Values/the Option Name.');
 
-define('TEXT_OPTION_VALUE_COPY_ALL', '<strong>Copy ALL Option Values to another Option Name</strong>');
+define('TEXT_OPTION_VALUE_DELETE_CATEGORY', 'Delete all Option Values from ONE Category of products for this Option Name');
+define('TEXT_INFO_OPTION_VALUE_DELETE_CATEGORY', 'For products in ONE category only that are using the selected Option Name, remove all the Option Values/the Option Name.');
+
+// messageStack
+define('SUCCESS_PRODUCT_OPTION_VALUES_DELETED', 'Option Name "%1$s": all Option Values deleted from product "%2$s".');
+define('SUCCESS_PRODUCTS_OPTIONS_VALUES_DELETED', 'Option Name "%1$s": all Option Values removed from %2$u product(s).');
+
+// Copy
+define('TEXT_OPTION_VALUE_COPY_ALL', 'Copy all Option Values to another Option Name');
 define('TEXT_INFO_OPTION_VALUE_COPY_ALL', 'All Option Values will be copied from one Option Name to another Option Name');
 define('TEXT_SELECT_OPTION_FROM', 'Copy from Option Name: ');
-define('TEXT_SELECT_OPTION_TO', 'Copy All Option Values to Option Name: ');
-define('SUCCESS_OPTION_VALUES_COPIED', 'Successful copy! ');
-define('ERROR_OPTION_VALUES_COPIED', 'Error - Cannot copy Option Values to the same Option Name! ');
-define('ERROR_OPTION_VALUES_NONE', 'Error - Copy from Option Name has 0 Values Defined. Nothing was copied! ');
-define('TEXT_WARNING_BACKUP', 'Warning: Always make proper backups of your database before making global changes');
+define('TEXT_SELECT_OPTION_TO', 'Copy to Option Name: ');
 
-define('TEXT_OPTION_ATTRIBUTE_IMAGES_PER_ROW', 'Attribute Images per Row: ');
-define('TEXT_OPTION_ATTRIBUTE_IMAGES_STYLE', 'Attribute Style for Radio Buttons/Checkbox: ');
-define('TEXT_OPTION_ATTIBUTE_MAX_LENGTH', '<strong>NOTE: Rows, Display Size and Max Length are for Text Attributes Only:</strong><br />');
-define('TEXT_OPTION_IMAGE_STYLE', '<strong>Image Styles:</strong>');
-define('TEXT_OPTION_ATTRIBUTE_IMAGES_STYLE_0', '0= Images Below Option Names');
-define('TEXT_OPTION_ATTRIBUTE_IMAGES_STYLE_1', '1= Element, Image and Option Value');
-define('TEXT_OPTION_ATTRIBUTE_IMAGES_STYLE_2', '2= Element, Image and Option Name Below');
-define('TEXT_OPTION_ATTRIBUTE_IMAGES_STYLE_3', '3= Option Name Below Element and Image');
-define('TEXT_OPTION_ATTRIBUTE_IMAGES_STYLE_4', '4= Element Below Image and Option Name');
-define('TEXT_OPTION_ATTRIBUTE_IMAGES_STYLE_5', '5= Element Above Image and Option Name');
-define('TEXT_DISPLAY_NUMBER_OF_OPTIONS', 'Displaying <b>%d</b> to <b>%d</b> (of <b>%d</b> Options)');
+define('SUCCESS_OPTION_VALUES_COPIED', 'Option Values copied from Option Name "%1$s" to Option name "%2$s".');
+define('ERROR_OPTION_VALUES_COPIED', 'Error: Cannot copy Option Values to the same Option Name ("%1$s" to "%2$s")!');
+define('ERROR_OPTION_VALUES_NONE', 'Error: Option Name "%s" has no Option Values defined (nothing was copied).');
