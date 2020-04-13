@@ -1182,16 +1182,16 @@ if (zen_not_null($action)) {
                     $parts = explode(" ", trim($keywords));
                     $search = 'where ';
                     foreach ($parts as $k => $v) {
-                      $sql_add = " (c.customers_lastname like '%:part%'
-                         or c.customers_firstname like '%:part%'
-                         or c.customers_email_address like '%:part%'
-                         or c.customers_telephone rlike ':keywords:'
-                         or a.entry_company rlike ':keywords:'
-                         or a.entry_street_address rlike ':keywords:'
-                         or a.entry_city rlike ':keywords:'
-                         or a.entry_postcode rlike ':keywords:')";
+                      $sql_add = " (c.customers_lastname LIKE '%:part%'
+                         OR c.customers_firstname LIKE '%:part%'
+                         OR c.customers_email_address LIKE '%:part%'
+                         OR c.customers_telephone RLIKE ':keywords:'
+                         OR a.entry_company RLIKE ':keywords:'
+                         OR a.entry_street_address RLIKE ':keywords:'
+                         OR a.entry_city RLIKE ':keywords:'
+                         OR a.entry_postcode RLIKE ':keywords:')";
                       if ($k != 0) {
-                        $sql_add = ' and ' . $sql_add;
+                        $sql_add = ' AND ' . $sql_add;
                       }
                       $sql_add = $db->bindVars($sql_add, ':part', $v, 'noquotestring');
                       $sql_add = $db->bindVars($sql_add, ':keywords:', $v, 'regexp');
@@ -1202,17 +1202,17 @@ if (zen_not_null($action)) {
 
                   $zco_notifier->notify('NOTIFY_ADMIN_CUSTOMERS_LISTING_NEW_FIELDS', array(), $new_fields, $disp_order);
 
-                  $customers_query_raw = "select c.customers_id, c.customers_lastname, c.customers_firstname, c.customers_email_address, c.customers_group_pricing, c.customers_telephone, c.customers_authorization, c.customers_referral, c.customers_secret,
+                  $customers_query_raw = "SELECT c.customers_id, c.customers_lastname, c.customers_firstname, c.customers_email_address, c.customers_group_pricing, c.customers_telephone, c.customers_authorization, c.customers_referral, c.customers_secret,
                                            a.entry_country_id, a.entry_company, a.entry_company, a.entry_street_address, a.entry_city, a.entry_postcode,
                                            ci.customers_info_date_of_last_logon, ci.customers_info_date_account_created
                                            " . $new_fields . ",
                                            cgc.amount
-                                    from " . TABLE_CUSTOMERS . " c
-                                    left join " . TABLE_CUSTOMERS_INFO . " ci on c.customers_id= ci.customers_info_id
-                                    left join " . TABLE_ADDRESS_BOOK . " a on c.customers_id = a.customers_id and c.customers_default_address_id = a.address_book_id " . "
-                                    left join " . TABLE_COUPON_GV_CUSTOMER . " cgc on c.customers_id = cgc.customer_id
+                                    FROM " . TABLE_CUSTOMERS . " c
+                                    LEFT JOIN " . TABLE_CUSTOMERS_INFO . " ci ON c.customers_id= ci.customers_info_id
+                                    LEFT JOIN " . TABLE_ADDRESS_BOOK . " a ON c.customers_id = a.customers_id AND c.customers_default_address_id = a.address_book_id " . "
+                                    LEFT JOIN " . TABLE_COUPON_GV_CUSTOMER . " cgc ON c.customers_id = cgc.customer_id
                                     " . $search . "
-                                    order by " . $disp_order;
+                                    ORDER BY " . $disp_order;
 
 // Split Page
 // reset page when page is unknown
