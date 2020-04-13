@@ -865,6 +865,10 @@ input.faint {
 
 /* end of print-specific styles */
 
+.orderProductsPopover {
+    color: #333;
+}
+
 /* Forms - put this last */
 .form-control {
     width: 90%;
