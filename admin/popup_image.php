@@ -27,9 +27,9 @@
       case 'banner':
         $banners_id = zen_db_prepare_input($_GET['banner']);
 
-        $banner = $db->Execute("select banners_title, banners_image, banners_html_text
-                                from " . TABLE_BANNERS . "
-                                where banners_id = '" . (int)$banners_id . "'");
+        $banner = $db->Execute("SELECT banners_title, banners_image, banners_html_text
+                                FROM " . TABLE_BANNERS . "
+                                WHERE banners_id = '" . (int)$banners_id . "'");
 
         $page_title = $banner->fields['banners_title'];
 
