@@ -7,8 +7,8 @@
  * @version $Id: Zen4All 2019 Mar 31 Modified in v1.5.6b $
  */
 if (!defined('NUMBER_OF_CUSTOMERS')) define('NUMBER_OF_CUSTOMERS', '15');
-if (!defined('NUMBER_OF_ORDERS')) define('NUMBER_OF_ORDERS','25'); 
-if (!defined('NUMBER_OF_VISTORS_HISTORY')) define('NUMBER_OF_VISTORS_HISTORY','15'); 
+if (!defined('NUMBER_OF_ORDERS')) define('NUMBER_OF_ORDERS','25');
+if (!defined('NUMBER_OF_VISTORS_HISTORY')) define('NUMBER_OF_VISTORS_HISTORY','15');
 
 $notifications = new AdminNotifications();
 $availableNotifications = $notifications->getNotifications('index', $_SESSION['admin_id']);
