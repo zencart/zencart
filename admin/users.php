@@ -1,10 +1,10 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2018 Zen Cart Development Team
+ * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce<br />
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: torvista April 08 2020 Modified in v1.5.7 $
+ * @version $Id: torvista April 12 2020 Modified in v1.5.7 $
  */
 require('includes/application_top.php');
 
@@ -144,9 +144,9 @@ $userList = zen_get_users();
         <thead>
         <tr class="headingRow">
             <th class="id"><?php echo TEXT_ID ?></th>
-            <th class="name"><?php echo TEXT_NAME ?></th>
+            <th class="name"><?php echo TEXT_ADMIN_NAME ?></th>
             <th class="email"><?php echo TEXT_EMAIL ?></th>
-            <th class="profile"><?php echo TEXT_PROFILE ?></th>
+            <th class="profile"><?php echo TEXT_ADMIN_PROFILE ?></th>
             <?php if ($action == 'add' || $action == 'password') { ?>
                 <th class="password"><?php echo TEXT_PASSWORD ?></th>
                 <th class="password"><?php echo TEXT_CONFIRM_PASSWORD ?></th>
@@ -161,8 +161,8 @@ $userList = zen_get_users();
                 <td class="name"><?php echo zen_draw_input_field('name', isset($_POST['name']) ? $_POST['name'] : '', 'class="form-control" required', true, 'text', true) ?></td>
                 <td class="email"><?php echo zen_draw_input_field('email', isset($_POST['email']) ? $_POST['email'] : '', 'class="form-control" required', true, 'email', true) ?></td>
                 <td class="profile"><?php echo zen_draw_pull_down_menu('profile', $profilesList, isset($_POST['profile']) ? $_POST['profile'] : 0, 'class="form-control"', true) ?></td>
-                <td class="password"><?php echo zen_draw_input_field('password', isset($_POST['password']) ? $_POST['password'] : '', ' class="form-control" required', true, 'password'); ?></td>
-                <td class="confirm"><?php echo zen_draw_input_field('confirm', isset($_POST['confirm']) ? $_POST['confirm'] : '', ' class="form-control" required', true, 'password'); ?></td>
+                <td class="password"><?php echo zen_draw_input_field('password', isset($_POST['password']) ? $_POST['password'] : '', 'class="form-control" required', true, 'password'); ?></td>
+                <td class="confirm"><?php echo zen_draw_input_field('confirm', isset($_POST['confirm']) ? $_POST['confirm'] : '', 'class="form-control" required', true, 'password'); ?></td>
                 <td class="actions">
                     <button type="submit" class="btn btn-primary"><?php echo IMAGE_INSERT; ?></button>
                     <a href="<?php echo zen_href_link(FILENAME_USERS) ?>" class="btn btn-default" role="button"><?php echo IMAGE_CANCEL; ?></a></td>
@@ -207,7 +207,8 @@ $userList = zen_get_users();
                 <?php } elseif ($action != 'add') { ?>
                     <td class="actions">
                         <?php if ($action != 'delete') { ?>
-                            <a href="<?php echo zen_href_link(FILENAME_USERS, 'action=edit&user=' . $userDetails['id']) ?>" class="btn btn-primary" role="button"><?php echo IMAGE_EDIT; ?></a> <a href="<?php echo zen_href_link(FILENAME_USERS, 'action=password&user=' . $userDetails['id']) ?>" class="btn btn-primary"><?php echo IMAGE_RESET_PWD; ?></a>
+                            <a href="<?php echo zen_href_link(FILENAME_USERS, 'action=edit&user=' . $userDetails['id']) ?>" class="btn btn-primary" role="button"><?php echo IMAGE_EDIT; ?></a> 
+			    <a href="<?php echo zen_href_link(FILENAME_USERS, 'action=password&user=' . $userDetails['id']) ?>" class="btn btn-primary"><?php echo IMAGE_RESET_PWD; ?></a>
                         <?php } ?>
                         <?php
                         if ($userDetails['id'] != $currentUser) {
