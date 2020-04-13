@@ -7,7 +7,10 @@
  * @version $Id: Author: DrByte  Mon Dec 14 12:44:09 2015 -0500 Modified in v1.5.5 $
  */
 
-define('HEADING_TITLE', 'Admin Users');
+// This file is shared between users.php and admin_account.php 
+if (!defined('HEADING_TITLE')) { 
+  define('HEADING_TITLE', 'Admin Users');
+}
 
 define('IMAGE_ADD_USER', 'Add User');
 
