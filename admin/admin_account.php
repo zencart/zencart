@@ -104,7 +104,8 @@ $userDetails = $userList[0];
         echo zen_draw_form('users', FILENAME_ADMIN_ACCOUNT);
         if (isset($formAction)) {
             echo zen_draw_hidden_field('action', $formAction);
-    } ?>
+        }
+    ?>
     <table class="table">
         <thead>
         <tr class="headingRow">
