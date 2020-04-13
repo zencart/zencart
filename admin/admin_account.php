@@ -119,7 +119,6 @@ $userDetails = $userList[0];
         </tr>
         </thead>
         <tbody>
-
             <tr>
             <td class="name"><?php echo $userDetails['name'] ?><?php echo zen_draw_hidden_field('admin_name', $userDetails['name']); ?></td>
                 <?php if ($action == 'edit' && $user == $userDetails['id']) { ?>
@@ -145,10 +144,10 @@ $userDetails = $userList[0];
                     <?php } ?>
                 <?php } else { ?>
                     <td class="actions">
-                <a href="<?php echo zen_href_link(FILENAME_ADMIN_ACCOUNT, 'action=edit'); ?>" class="btn btn-primary" role="button"><?php echo IMAGE_EDIT; ?></a> 
-		<a href="<?php echo zen_href_link(FILENAME_ADMIN_ACCOUNT, 'action=password') ?>" class="btn btn-primary"><?php echo IMAGE_RESET_PWD; ?></a>
+                        <a href="<?php echo zen_href_link(FILENAME_ADMIN_ACCOUNT, 'action=edit'); ?>" class="btn btn-primary" role="button"><?php echo IMAGE_EDIT; ?></a> 
+                        <a href="<?php echo zen_href_link(FILENAME_ADMIN_ACCOUNT, 'action=password') ?>" class="btn btn-primary"><?php echo IMAGE_RESET_PWD; ?></a>
                     </td>
-                    </tr>
+                </tr>
         <?php } ?>
         </tbody>
     </table>
