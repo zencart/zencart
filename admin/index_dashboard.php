@@ -320,14 +320,14 @@ foreach ($whos_online as $session) {
       <div class="panel panel-default reportBox">
         <div class="panel-heading header"><?php echo BOX_ENTRY_NEW_CUSTOMERS; ?> </div>
         <table class="table table-striped table-condensed">
-            <?php
-            $customers = $db->Execute("SELECT c.customers_id as customers_id, c.customers_firstname as customers_firstname,
-                                          c.customers_lastname as customers_lastname, c.customers_email_address as customers_email_address,
-                                          a.customers_info_date_account_created as customers_info_date_account_created, a.customers_info_id
-                                   FROM " . TABLE_CUSTOMERS . " c
-                                   LEFT JOIN " . TABLE_CUSTOMERS_INFO . " a ON c.customers_id = a.customers_info_id
-                                   ORDER BY a.customers_info_date_account_created DESC",
-                (int)NUMBER_OF_CUSTOMERS, true, 1800);
+        <?php
+            $sql = "SELECT c.customers_id as customers_id, c.customers_firstname as customers_firstname,
+                           c.customers_lastname as customers_lastname, c.customers_email_address as customers_email_address,
+                           a.customers_info_date_account_created as customers_info_date_account_created, a.customers_info_id
+                    FROM " . TABLE_CUSTOMERS . " c
+                    LEFT JOIN " . TABLE_CUSTOMERS_INFO . " a ON c.customers_id = a.customers_info_id
+                    ORDER BY a.customers_info_date_account_created DESC";
+            $customers = $db->Execute($sql, (int)NUMBER_OF_CUSTOMERS, true, 1800);
 
             foreach ($customers as $customer) {
               $customer['customers_firstname'] = zen_output_string_protected($customer['customers_firstname']);
@@ -339,9 +339,9 @@ foreach ($whos_online as $session) {
               </td>
               <td class="text-right"><?php echo zen_date_short($customer['customers_info_date_account_created']); ?></td>
             </tr>
-            <?php
+        <?php
           }
-          ?>
+        ?>
         </table>
       </div>
 
@@ -491,13 +491,13 @@ foreach ($whos_online as $session) {
         <div class="panel-heading header"><?php echo BOX_ENTRY_NEW_ORDERS; ?> </div>
         <table class="table table-striped table-condensed">
             <?php
-            $orders = $db->Execute("SELECT o.orders_id as orders_id, o.customers_name as customers_name, o.customers_id,
-                                           o.date_purchased as date_purchased, o.currency, o.currency_value, ot.class, ot.text as order_total, ot.value as order_value
-                                    FROM " . TABLE_ORDERS . " o
-                                    LEFT JOIN " . TABLE_ORDERS_TOTAL . " ot ON (o.orders_id = ot.orders_id
-                                      AND class = 'ot_total')
-                                    ORDER BY orders_id DESC",
-                (int)NUMBER_OF_ORDERS, true, 1800);
+            $sql = "SELECT o.orders_id as orders_id, o.customers_name as customers_name, o.customers_id,
+                           o.date_purchased as date_purchased, o.currency, o.currency_value, 
+                           ot.class, ot.text as order_total, ot.value as order_value
+                    FROM " . TABLE_ORDERS . " o
+                    LEFT JOIN " . TABLE_ORDERS_TOTAL . " ot ON (o.orders_id = ot.orders_id AND class = 'ot_total')
+                    ORDER BY orders_id DESC";
+            $orders = $db->Execute($sql, (int)NUMBER_OF_ORDERS, true, 1800);
 
             $ds = $dsc = $ys = $ysc = $msc = 0;
 
@@ -515,11 +515,11 @@ foreach ($whos_online as $session) {
                 $ysc++;
               }
 
-              $order['customers_name'] = str_replace("N/A", "", $order['customers_name']);
+              $order['customers_name'] = str_replace('N/A', '', $order['customers_name']);
 
               $amt = $currencies->format($order['order_value'], false);
               if ($order['currency'] != DEFAULT_CURRENCY) {
-                $amt .= " (" . $order['order_total'] . ")";
+                $amt .= ' (' . $order['order_total'] . ')';
               }
               ?>
             <tr>
