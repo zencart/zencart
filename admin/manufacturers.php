@@ -161,9 +161,9 @@ if (zen_not_null($action)) {
             </thead>
             <tbody>
                 <?php
-                $manufacturers_query_raw = "select manufacturers_id, manufacturers_name, manufacturers_image, date_added, last_modified
-                                            from " . TABLE_MANUFACTURERS . "
-                                            order by manufacturers_name";
+                $manufacturers_query_raw = "SELECT manufacturers_id, manufacturers_name, manufacturers_image, date_added, last_modified
+                                            FROM " . TABLE_MANUFACTURERS . "
+                                            ORDER BY manufacturers_name";
 
 // reset page when page is unknown
                 if ((empty($_GET['page']) || $_GET['page'] == '1') && !empty($_GET['mID'])) {
