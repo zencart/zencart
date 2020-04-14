@@ -856,7 +856,7 @@ if (zen_not_null($action)) {
                     <div class="col-md-2">
                       <div class="form-group">
                         <?php echo zen_draw_label(TEXT_SORT, 'products_options_values_sort_order', 'class="control-label"'); ?>
-                        <?php echo zen_draw_input_field('products_options_values_sort_order', '', 'size="4" . class="form-control"'); ?>
+                        <?php echo zen_draw_input_field('products_options_values_sort_order', '', 'size="4" class="form-control"'); ?>
                       </div>
                     </div>
                   </td>
