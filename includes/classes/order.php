@@ -57,7 +57,7 @@ class order extends base {
     $this->notify('NOTIFY_ORDER_BEFORE_QUERY', array(), $order_id);
     if ($this->queryReturnFlag === TRUE) return false;
 
-    $order_query = "SELECT * from " . TABLE_ORDERS . " where orders_id = " . (int)$order_id;
+    $order_query = "SELECT * FROM " . TABLE_ORDERS . " where orders_id = " . (int)$order_id;
     $order = $db->Execute($order_query);
     if ($order->EOF) return false;
 
@@ -153,10 +153,10 @@ class order extends base {
                            'format_id' => $order->fields['billing_address_format_id']);
 
     $index = 0;
-    $orders_products_query = "select *
-                              from " . TABLE_ORDERS_PRODUCTS . "
-                              where orders_id = " . (int)$order_id . "
-                              order by orders_products_id";
+    $orders_products_query = "SELECT *
+                              FROM " . TABLE_ORDERS_PRODUCTS . "
+                              WHERE orders_id = " . (int)$order_id . "
+                              ORDER BY orders_products_id";
 
     $orders_products = $db->Execute($orders_products_query);
 
@@ -206,7 +206,7 @@ class order extends base {
                                       );
 
       $subindex = 0;
-      $attributes_query = "select products_options_id, products_options_values_id, products_options, products_options_values,
+      $attributes_query = "SELECT products_options_id, products_options_values_id, products_options, products_options_values,
                            options_values_price, price_prefix, product_attribute_is_free 
                            FROM " . TABLE_ORDERS_PRODUCTS_ATTRIBUTES . "
                            WHERE orders_id = " . (int)$order_id . "
@@ -277,29 +277,29 @@ class order extends base {
 
     $customer_address = $db->Execute($customer_address_query);
 
-    $shipping_address_query = "select ab.entry_firstname, ab.entry_lastname, ab.entry_company,
+    $shipping_address_query = "SELECT ab.entry_firstname, ab.entry_lastname, ab.entry_company,
                                     ab.entry_street_address, ab.entry_suburb, ab.entry_postcode,
                                     ab.entry_city, ab.entry_zone_id, z.zone_name, ab.entry_country_id,
                                     c.countries_id, c.countries_name, c.countries_iso_code_2,
                                     c.countries_iso_code_3, c.address_format_id, ab.entry_state
-                                   from " . TABLE_ADDRESS_BOOK . " ab
-                                   left join " . TABLE_ZONES . " z on (ab.entry_zone_id = z.zone_id)
-                                   left join " . TABLE_COUNTRIES . " c on (ab.entry_country_id = c.countries_id)
-                                   where ab.customers_id = " . (!empty($_SESSION['customer_id']) ? (int)$_SESSION['customer_id'] : 0) . "
-                                   and ab.address_book_id = " . $sendto; 
+                                   FROM " . TABLE_ADDRESS_BOOK . " ab
+                                   LEFT JOIN " . TABLE_ZONES . " z ON (ab.entry_zone_id = z.zone_id)
+                                   LEFT JOIN " . TABLE_COUNTRIES . " c ON (ab.entry_country_id = c.countries_id)
+                                   WHERE ab.customers_id = " . (!empty($_SESSION['customer_id']) ? (int)$_SESSION['customer_id'] : 0) . "
+                                   AND ab.address_book_id = " . $sendto; 
 
     $shipping_address = $db->Execute($shipping_address_query);
 
-    $billing_address_query = "select ab.entry_firstname, ab.entry_lastname, ab.entry_company,
+    $billing_address_query = "SELECT ab.entry_firstname, ab.entry_lastname, ab.entry_company,
                                    ab.entry_street_address, ab.entry_suburb, ab.entry_postcode,
                                    ab.entry_city, ab.entry_zone_id, z.zone_name, ab.entry_country_id,
                                    c.countries_id, c.countries_name, c.countries_iso_code_2,
                                    c.countries_iso_code_3, c.address_format_id, ab.entry_state
-                                  from " . TABLE_ADDRESS_BOOK . " ab
-                                  left join " . TABLE_ZONES . " z on (ab.entry_zone_id = z.zone_id)
-                                  left join " . TABLE_COUNTRIES . " c on (ab.entry_country_id = c.countries_id)
-                                  where ab.customers_id = " . (!empty($_SESSION['customer_id']) ? (int)$_SESSION['customer_id'] : 0) . "
-                                  and ab.address_book_id = " . $billto; 
+                                  FROM " . TABLE_ADDRESS_BOOK . " ab
+                                  LEFT JOIN " . TABLE_ZONES . " z ON (ab.entry_zone_id = z.zone_id)
+                                  LEFT JOIN " . TABLE_COUNTRIES . " c ON (ab.entry_country_id = c.countries_id)
+                                  WHERE ab.customers_id = " . (!empty($_SESSION['customer_id']) ? (int)$_SESSION['customer_id'] : 0) . "
+                                  AND ab.address_book_id = " . $billto; 
 
     $billing_address = $db->Execute($billing_address_query);
 
@@ -327,7 +327,7 @@ class order extends base {
           }
           $tax_address_query = "SELECT ab.entry_country_id, ab.entry_zone_id
                                 FROM " . TABLE_ADDRESS_BOOK . " ab
-                                LEFT JOIN " . TABLE_ZONES . " z on (ab.entry_zone_id = z.zone_id)
+                                LEFT JOIN " . TABLE_ZONES . " z ON (ab.entry_zone_id = z.zone_id)
                                 WHERE ab.customers_id = " . (int)$_SESSION['customer_id'] . "
                                 AND ab.address_book_id = ". $address_book_id;
 
@@ -343,9 +343,9 @@ class order extends base {
     $class =& $_SESSION['payment'];
 
     if (isset($_SESSION['cc_id'])) {
-      $coupon_code_query = "select coupon_code
-                            from " . TABLE_COUPONS . "
-                            where coupon_id = '" . (int)$_SESSION['cc_id'] . "'";
+      $coupon_code_query = "SELECT coupon_code
+                            FROM " . TABLE_COUPONS . "
+                            WHERE coupon_id = '" . (int)$_SESSION['cc_id'] . "'";
       $coupon_code = $db->Execute($coupon_code_query);
     }
 
@@ -518,18 +518,18 @@ class order extends base {
         $subindex = 0;
         foreach ($products[$i]['attributes'] as $option => $value) {
 
-          $attributes_query = "select popt.products_options_name, poval.products_options_values_name,
+          $attributes_query = "SELECT popt.products_options_name, poval.products_options_values_name,
                                           pa.options_values_price, pa.price_prefix
-                                   from " . TABLE_PRODUCTS_OPTIONS . " popt,
+                                   FROM " . TABLE_PRODUCTS_OPTIONS . " popt,
                                         " . TABLE_PRODUCTS_OPTIONS_VALUES . " poval,
                                         " . TABLE_PRODUCTS_ATTRIBUTES . " pa
-                                   where pa.products_id = '" . (int)$products[$i]['id'] . "'
-                                   and pa.options_id = '" . (int)$option . "'
-                                   and pa.options_id = popt.products_options_id
-                                   and pa.options_values_id = '" . (int)$value . "'
-                                   and pa.options_values_id = poval.products_options_values_id
-                                   and popt.language_id = '" . (int)$_SESSION['languages_id'] . "'
-                                   and poval.language_id = '" . (int)$_SESSION['languages_id'] . "'";
+                                   WHERE pa.products_id = '" . (int)$products[$i]['id'] . "'
+                                   AND pa.options_id = '" . (int)$option . "'
+                                   AND pa.options_id = popt.products_options_id
+                                   AND pa.options_values_id = '" . (int)$value . "'
+                                   AND pa.options_values_id = poval.products_options_values_id
+                                   AND popt.language_id = '" . (int)$_SESSION['languages_id'] . "'
+                                   AND poval.language_id = '" . (int)$_SESSION['languages_id'] . "'";
 
           $attributes = $db->Execute($attributes_query);
 
@@ -764,12 +764,12 @@ class order extends base {
       // Stock Update - Joao Correia
       if ($this->doStockDecrement) {
         if (DOWNLOAD_ENABLED == 'true') {
-          $stock_query_raw = "select p.*, pad.products_attributes_filename
-                              from " . TABLE_PRODUCTS . " p
-                              left join " . TABLE_PRODUCTS_ATTRIBUTES . " pa
-                               on p.products_id=pa.products_id
-                              left join " . TABLE_PRODUCTS_ATTRIBUTES_DOWNLOAD . " pad
-                               on pa.products_attributes_id=pad.products_attributes_id
+          $stock_query_raw = "SELECT p.*, pad.products_attributes_filename
+                              FROM " . TABLE_PRODUCTS . " p
+                              LEFT JOIN " . TABLE_PRODUCTS_ATTRIBUTES . " pa
+                               ON p.products_id=pa.products_id
+                              LEFT JOIN " . TABLE_PRODUCTS_ATTRIBUTES_DOWNLOAD . " pad
+                               ON pa.products_attributes_id=pad.products_attributes_id
                               WHERE p.products_id = " . zen_get_prid($this->products[$i]['id']);
 
           // Will work with only one option for downloadable products
@@ -780,7 +780,7 @@ class order extends base {
           }
           $stock_values = $db->ExecuteNoCache($stock_query_raw . ' LIMIT 1');
         } else {
-          $stock_values = $db->ExecuteNoCache("select * from " . TABLE_PRODUCTS . " where products_id = " . zen_get_prid($this->products[$i]['id']) . " LIMIT 1");
+          $stock_values = $db->ExecuteNoCache("SELECT * FROM " . TABLE_PRODUCTS . " WHERE products_id = " . zen_get_prid($this->products[$i]['id']) . " LIMIT 1");
         }
 
         $this->notify('NOTIFY_ORDER_PROCESSING_STOCK_DECREMENT_BEGIN', $i, $stock_values);
@@ -812,7 +812,7 @@ class order extends base {
       $this->bestSellersUpdate = TRUE;
       $this->notify('NOTIFY_ORDER_PROCESSING_BESTSELLERS_UPDATE', array(), $this->products[$i], $i);
       if ($this->bestSellersUpdate) {
-        $db->Execute("update " . TABLE_PRODUCTS . " set products_ordered = products_ordered + " . sprintf('%f', $this->products[$i]['qty']) . " where products_id = '" . zen_get_prid($this->products[$i]['id']) . "'");
+        $db->Execute("UPDATE " . TABLE_PRODUCTS . " SET products_ordered = products_ordered + " . sprintf('%f', $this->products[$i]['qty']) . " WHERE products_id = '" . zen_get_prid($this->products[$i]['id']) . "'");
       }
 
       $this->notify('NOTIFY_ORDER_PROCESSING_STOCK_DECREMENT_END', $i);
@@ -858,7 +858,7 @@ class order extends base {
         $attributes_exist = '1';
         for ($j=0, $n2=sizeof($this->products[$i]['attributes']); $j<$n2; $j++) {
           if (DOWNLOAD_ENABLED == 'true') {
-            $attributes_query = "select popt.products_options_name, poval.products_options_values_name,
+            $attributes_query = "SELECT popt.products_options_name, poval.products_options_values_name,
                                  pa.options_values_price, pa.price_prefix,
                                  pa.product_attribute_is_free, pa.products_attributes_weight, pa.products_attributes_weight_prefix,
                                  pa.attributes_discounted, pa.attributes_price_base_included, pa.attributes_price_onetime,
@@ -868,21 +868,21 @@ class order extends base {
                                  pa.attributes_price_words, pa.attributes_price_words_free,
                                  pa.attributes_price_letters, pa.attributes_price_letters_free,
                                  pad.products_attributes_maxdays, pad.products_attributes_maxcount, pad.products_attributes_filename
-                                 from " . TABLE_PRODUCTS_OPTIONS . " popt, " . TABLE_PRODUCTS_OPTIONS_VALUES . " poval, " .
+                                 FROM " . TABLE_PRODUCTS_OPTIONS . " popt, " . TABLE_PRODUCTS_OPTIONS_VALUES . " poval, " .
             TABLE_PRODUCTS_ATTRIBUTES . " pa
-                                  left join " . TABLE_PRODUCTS_ATTRIBUTES_DOWNLOAD . " pad
-                                  on pa.products_attributes_id=pad.products_attributes_id
-                                 where pa.products_id = '" . zen_db_input($this->products[$i]['id']) . "'
-                                  and pa.options_id = '" . $this->products[$i]['attributes'][$j]['option_id'] . "'
-                                  and pa.options_id = popt.products_options_id
-                                  and pa.options_values_id = '" . $this->products[$i]['attributes'][$j]['value_id'] . "'
-                                  and pa.options_values_id = poval.products_options_values_id
-                                  and popt.language_id = '" . $_SESSION['languages_id'] . "'
-                                  and poval.language_id = '" . $_SESSION['languages_id'] . "'";
+                                  LEFT JOIN " . TABLE_PRODUCTS_ATTRIBUTES_DOWNLOAD . " pad
+                                  ON pa.products_attributes_id=pad.products_attributes_id
+                                 WHERE pa.products_id = '" . zen_db_input($this->products[$i]['id']) . "'
+                                  AND pa.options_id = '" . $this->products[$i]['attributes'][$j]['option_id'] . "'
+                                  AND pa.options_id = popt.products_options_id
+                                  AND pa.options_values_id = '" . $this->products[$i]['attributes'][$j]['value_id'] . "'
+                                  AND pa.options_values_id = poval.products_options_values_id
+                                  AND popt.language_id = '" . $_SESSION['languages_id'] . "'
+                                  AND poval.language_id = '" . $_SESSION['languages_id'] . "'";
 
             $attributes_values = $db->Execute($attributes_query);
           } else {
-            $attributes_values = $db->Execute("select popt.products_options_name, poval.products_options_values_name,
+            $attributes_values = $db->Execute("SELECT popt.products_options_name, poval.products_options_values_name,
                                  pa.options_values_price, pa.price_prefix,
                                  pa.product_attribute_is_free, pa.products_attributes_weight, pa.products_attributes_weight_prefix,
                                  pa.attributes_discounted, pa.attributes_price_base_included, pa.attributes_price_onetime,
@@ -891,8 +891,8 @@ class order extends base {
                                  pa.attributes_qty_prices, pa.attributes_qty_prices_onetime,
                                  pa.attributes_price_words, pa.attributes_price_words_free,
                                  pa.attributes_price_letters, pa.attributes_price_letters_free
-                                 from " . TABLE_PRODUCTS_OPTIONS . " popt, " . TABLE_PRODUCTS_OPTIONS_VALUES . " poval, " . TABLE_PRODUCTS_ATTRIBUTES . " pa
-                                 where pa.products_id = '" . $this->products[$i]['id'] . "' and pa.options_id = '" . (int)$this->products[$i]['attributes'][$j]['option_id'] . "' and pa.options_id = popt.products_options_id and pa.options_values_id = '" . (int)$this->products[$i]['attributes'][$j]['value_id'] . "' and pa.options_values_id = poval.products_options_values_id and popt.language_id = '" . $_SESSION['languages_id'] . "' and poval.language_id = '" . $_SESSION['languages_id'] . "'");
+                                 FROM " . TABLE_PRODUCTS_OPTIONS . " popt, " . TABLE_PRODUCTS_OPTIONS_VALUES . " poval, " . TABLE_PRODUCTS_ATTRIBUTES . " pa
+                                 WHERE pa.products_id = '" . $this->products[$i]['id'] . "' AND pa.options_id = '" . (int)$this->products[$i]['attributes'][$j]['option_id'] . "' AND pa.options_id = popt.products_options_id AND pa.options_values_id = '" . (int)$this->products[$i]['attributes'][$j]['value_id'] . "' AND pa.options_values_id = poval.products_options_values_id AND popt.language_id = '" . $_SESSION['languages_id'] . "' AND poval.language_id = '" . $_SESSION['languages_id'] . "'");
           }
 
           //clr 030714 update insert query.  changing to use values form $order->products for products_options_values.

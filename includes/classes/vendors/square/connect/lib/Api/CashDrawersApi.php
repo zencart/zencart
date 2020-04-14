@@ -68,7 +68,6 @@ class CashDrawersApi
      * listCashDrawerShiftEvents
      *
      * ListCashDrawerShiftEvents
-     * Note: This endpoint is in beta.
      *
      * @param string $location_id The ID of the location to list cash drawer shifts for. (required)
      * @param string $shift_id The shift ID. (required)
@@ -119,7 +118,7 @@ class CashDrawersApi
             $headerParams['Accept'] = $_header_accept;
         }
         $headerParams['Content-Type'] = ApiClient::selectHeaderContentType(array('application/json'));
-        $headerParams['Square-Version'] = "2020-02-26";
+        $headerParams['Square-Version'] = "2020-03-25";
 
         // query params
         if ($location_id !== null) {
@@ -184,7 +183,6 @@ class CashDrawersApi
      * listCashDrawerShifts
      *
      * ListCashDrawerShifts
-     * Note: This endpoint is in beta.
      *
      * @param string $location_id The ID of the location to query for a list of cash drawer shifts. (required)
      * @param string $sort_order The order in which cash drawer shifts are listed in the response, based on their opened_at field. Default value: ASC (optional)
@@ -235,7 +233,7 @@ class CashDrawersApi
             $headerParams['Accept'] = $_header_accept;
         }
         $headerParams['Content-Type'] = ApiClient::selectHeaderContentType(array('application/json'));
-        $headerParams['Square-Version'] = "2020-02-26";
+        $headerParams['Square-Version'] = "2020-03-25";
 
         // query params
         if ($location_id !== null) {
@@ -302,7 +300,6 @@ class CashDrawersApi
      * retrieveCashDrawerShift
      *
      * RetrieveCashDrawerShift
-     * Note: This endpoint is in beta.
      *
      * @param string $location_id The ID of the location to retrieve cash drawer shifts from. (required)
      * @param string $shift_id The shift ID. (required)
@@ -349,7 +346,7 @@ class CashDrawersApi
             $headerParams['Accept'] = $_header_accept;
         }
         $headerParams['Content-Type'] = ApiClient::selectHeaderContentType(array('application/json'));
-        $headerParams['Square-Version'] = "2020-02-26";
+        $headerParams['Square-Version'] = "2020-03-25";
 
         // query params
         if ($location_id !== null) {

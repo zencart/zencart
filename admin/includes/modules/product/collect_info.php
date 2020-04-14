@@ -47,7 +47,7 @@ $pInfo = new objectInfo($parameters);
 if (isset($_GET['pID']) && empty($_POST)) {
   $product = $db->Execute("SELECT pd.products_name, pd.products_description, pd.products_url,
                                   p.*, 
-                                  date_format(p.products_date_available, '%Y-%m-%d') as products_date_available
+                                  date_format(p.products_date_available, '" .  zen_datepicker_format_forsql() . "') as products_date_available
                            FROM " . TABLE_PRODUCTS . " p,
                                 " . TABLE_PRODUCTS_DESCRIPTION . " pd
                            WHERE p.products_id = " . (int)$_GET['pID'] . "
@@ -161,9 +161,9 @@ if (zen_get_categories_status($current_category_id) == 0 && $pInfo->products_sta
         <span class="input-group-addon datepicker_icon">
           <i class="fa fa-calendar fa-lg">&nbsp;</i>
         </span>
-        <?php echo zen_draw_input_field('products_date_available', $pInfo->products_date_available, 'class="form-control" id="products_date_available"'); ?>
+        <?php echo zen_draw_input_field('products_date_available', $pInfo->products_date_available, 'class="form-control" id="products_date_available" autocomplete="off"'); ?>
       </div>
-      <span class="help-block errorText">(YYYY-MM-DD)</span>
+        <span class="help-block errorText">(<?php echo zen_datepicker_format_full();?>)</span>
     </div>
   </div>
   <div class="form-group">

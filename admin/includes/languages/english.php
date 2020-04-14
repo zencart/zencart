@@ -1,10 +1,10 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2019 Zen Cart Development Team
+ * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: torvista 2019 Aug 08 Modified in v1.5.7 $
+ * @version $Id:  Modified in v1.5.7 $
  */
 if (!defined('IS_ADMIN_FLAG'))
 {
@@ -26,6 +26,8 @@ define('DATE_FORMAT_SHORT', '%m/%d/%Y');  // this is used for strftime()
 define('DATE_FORMAT_LONG', '%A %d %B, %Y'); // this is used for strftime()
 define('DATE_FORMAT', 'm/d/Y'); // this is used for date()
 define('DATE_TIME_FORMAT', DATE_FORMAT_SHORT . ' %H:%M:%S');
+define('PHP_DATE_TIME_FORMAT', 'm/d/Y H:i:s'); // this is used for date() calls in some plugins
+
 // for now both defines are needed until Spiffy is completely removed.
 define('DATE_FORMAT_SPIFFYCAL', 'MM/dd/yyyy');  //Use only 'dd', 'MM' and 'yyyy' here in any order
 define('DATE_FORMAT_DATE_PICKER', 'yy-mm-dd');  //Use only 'dd', 'mm' and 'yy' here in any order
@@ -41,7 +43,6 @@ function zen_date_raw($date, $reverse = false) {
     return substr($date, 6, 4) . substr($date, 0, 2) . substr($date, 3, 2);
   }
 }
-
 // // include template specific meta tags defines
 //   if (file_exists(DIR_FS_CATALOG_LANGUAGES . $_SESSION['language'] . '/' . $template_dir . '/meta_tags.php')) {
 //     $template_dir_select = $template_dir . '/';
@@ -123,7 +124,6 @@ define('BOX_HEADING_MODULES', 'Modules');
 define('BOX_MODULES_PAYMENT', 'Payment');
 define('BOX_MODULES_SHIPPING', 'Shipping');
 define('BOX_MODULES_ORDER_TOTAL', 'Order Total');
-define('BOX_MODULES_PRODUCT_TYPES', 'Product Types');
 
 // categories box text
 define('BOX_HEADING_CATALOG', 'Catalog');
@@ -169,13 +169,10 @@ define('BOX_REPORTS_CUSTOMERS_REFERRALS', 'Customers Referral');
 // tools text
 define('BOX_HEADING_TOOLS', 'Tools');
 define('BOX_TOOLS_TEMPLATE_SELECT', 'Template Selection');
-define('BOX_TOOLS_BACKUP', 'Database Backup');
 define('BOX_TOOLS_BANNER_MANAGER', 'Banner Manager');
-define('BOX_TOOLS_CACHE', 'Cache Control');
-define('BOX_TOOLS_DEFINE_LANGUAGE', 'Define Languages');
-define('BOX_TOOLS_FILE_MANAGER', 'File Manager');
 define('BOX_TOOLS_MAIL', 'Send Email');
 define('BOX_TOOLS_NEWSLETTER_MANAGER', 'Newsletter and Product Notifications Manager');
+define('BOX_TOOLS_DEFINE_PAGES_EDITOR','Define Pages Editor');
 define('BOX_TOOLS_SERVER_INFO', 'Server/Version Info');
 define('BOX_TOOLS_WHOS_ONLINE', 'Who\'s Online');
 define('BOX_TOOLS_STORE_MANAGER', 'Store Manager');
@@ -185,17 +182,7 @@ define('BOX_TOOLS_EZPAGES','EZ-Pages');
 
 define('BOX_HEADING_EXTRAS', 'Extras');
 
-// define pages editor files
-define('BOX_TOOLS_DEFINE_PAGES_EDITOR','Define Pages Editor');
-define('BOX_TOOLS_DEFINE_MAIN_PAGE', 'Main Page');
-define('BOX_TOOLS_DEFINE_CONTACT_US','Contact Us');
-define('BOX_TOOLS_DEFINE_PRIVACY','Privacy');
-define('BOX_TOOLS_DEFINE_SHIPPINGINFO','Shipping & Returns');
 define('BOX_TOOLS_DEFINE_CONDITIONS','Conditions of Use');
-define('BOX_TOOLS_DEFINE_CHECKOUT_SUCCESS','Checkout Success');
-define('BOX_TOOLS_DEFINE_PAGE_2','Page 2');
-define('BOX_TOOLS_DEFINE_PAGE_3','Page 3');
-define('BOX_TOOLS_DEFINE_PAGE_4','Page 4');
 
 // localization box text
 define('BOX_HEADING_LOCALIZATION', 'Localization');
@@ -276,11 +263,9 @@ define('ENTRY_COUNTRY_ERROR', '');
 define('ENTRY_TELEPHONE_NUMBER', 'Telephone Number:');
 define('ENTRY_TELEPHONE_NUMBER_ERROR', '&nbsp;<span class="errorText">min ' . ENTRY_TELEPHONE_MIN_LENGTH . ' chars</span>');
 define('ENTRY_FAX_NUMBER', 'Fax Number:');
-define('ENTRY_FAX_NUMBER_ERROR', '');
 define('ENTRY_NEWSLETTER', 'Newsletter:');
 define('ENTRY_NEWSLETTER_YES', 'Subscribed');
 define('ENTRY_NEWSLETTER_NO', 'Unsubscribed');
-define('ENTRY_NEWSLETTER_ERROR', '');
 
 define('ERROR_PASSWORDS_NOT_MATCHING', 'Password and confirmation must match');
 define('ENTRY_PASSWORD_CHANGE_ERROR', '<strong>Sorry, your new password was rejected.</strong><br />');
@@ -328,7 +313,6 @@ define('IMAGE_PREVIEW', 'Preview');
 define('IMAGE_RESET', 'Reset');
 define('IMAGE_RESET_PWD', 'Reset Password');
 define('IMAGE_SAVE', 'Save');
-define('IMAGE_SEARCH', 'Search');
 define('IMAGE_SELECT', 'Select');
 define('IMAGE_SEND', 'Send');
 define('IMAGE_SEND_EMAIL', 'Send Email');
@@ -397,17 +381,13 @@ define('TEXT_DISPLAY_NUMBER_OF_TAX_ZONES', 'Displaying <b>%d</b> to <b>%d</b> (o
 define('TEXT_DISPLAY_NUMBER_OF_TAX_RATES', 'Displaying <b>%d</b> to <b>%d</b> (of <b>%d</b> tax rates)');
 define('TEXT_DISPLAY_NUMBER_OF_ZONES', 'Displaying <b>%d</b> to <b>%d</b> (of <b>%d</b> zones)');
 
-define('PREVNEXT_TITLE_FIRST_PAGE', 'First Page');
 define('PREVNEXT_TITLE_PREVIOUS_PAGE', 'Previous Page');
 define('PREVNEXT_TITLE_NEXT_PAGE', 'Next Page');
-define('PREVNEXT_TITLE_LAST_PAGE', 'Last Page');
 define('PREVNEXT_TITLE_PAGE_NO', 'Page %d');
 define('PREVNEXT_TITLE_PREV_SET_OF_NO_PAGE', 'Previous Set of %d Pages');
 define('PREVNEXT_TITLE_NEXT_SET_OF_NO_PAGE', 'Next Set of %d Pages');
-define('PREVNEXT_BUTTON_FIRST', '&laquo;FIRST');
 define('PREVNEXT_BUTTON_PREV', '[&laquo;&nbsp;Prev]');
 define('PREVNEXT_BUTTON_NEXT', '[Next&nbsp;&raquo;]');
-define('PREVNEXT_BUTTON_LAST', 'LAST&raquo;');
 
 define('TEXT_DEFAULT', 'default');
 define('TEXT_SET_DEFAULT', 'Set as default');
@@ -511,8 +491,6 @@ define('NOT_INSTALLED_TEXT','Not Installed');
 // Min and Units
   define('PRODUCTS_QUANTITY_MIN_TEXT_LISTING','Min:');
   define('PRODUCTS_QUANTITY_UNIT_TEXT_LISTING','Units:');
-  define('PRODUCTS_QUANTITY_IN_CART_LISTING','In cart:');
-  define('PRODUCTS_QUANTITY_ADD_ADDITIONAL_LISTING','Add Additional:');
 
   define('TEXT_PRODUCTS_MIX_OFF','*No Mixed Options');
   define('TEXT_PRODUCTS_MIX_ON','*Yes Mixed Options');
@@ -571,12 +549,8 @@ define('TEXT_WORDS_FREE',' Word(s) free ');
 define('TEXT_CHARGES_LETTERS','Calculated Charge:');
 define('TEXT_PER_LETTER','<br />Price per letter: ');
 define('TEXT_LETTERS_FREE',' Letter(s) free ');
-define('TEXT_ONETIME_CHARGES','*onetime charges = ');
-define('TEXT_ONETIME_CHARGES_EMAIL',"\t" . '*onetime charges = ');
-define('TEXT_ATTRIBUTES_QTY_PRICES_HELP', 'Option Quantity Discounts');
 define('TABLE_ATTRIBUTES_QTY_PRICE_QTY','QTY');
 define('TABLE_ATTRIBUTES_QTY_PRICE_PRICE','PRICE');
-define('TEXT_ATTRIBUTES_QTY_PRICES_ONETIME_HELP', 'Option Quantity Discounts Onetime Charges');
 define('TEXT_CATEGORIES_PRODUCTS', 'Select a Category with products (indicated by an asterisk) / move between the products');
 define('TEXT_PRODUCT_TO_VIEW', 'Select a Product to View and Press Display ...');
 

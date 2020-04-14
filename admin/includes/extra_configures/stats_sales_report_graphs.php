@@ -9,3 +9,4 @@
 
 // adjust and uncomment if a different value is desired
 //define('SALES_REPORT_GRAPHS_FILTER_DEFAULT', '00000000110000000000');
+

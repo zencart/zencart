@@ -422,7 +422,7 @@ if (zen_not_null($action)) {
 
                     // Split Page
                     // reset page when page is unknown
-                    if ((empty($_GET['page']) || $_GET['page'] === '1') && !empty($_GET['sID'])) {
+                    if ((isset($_GET['page']) && ($_GET['page'] == '1' || $_GET['page'] == '')) && isset($_GET['sID']) && $_GET['sID'] != '') {
                         $old_page = $_GET['page'];
                         $check_page = $db->Execute($specials_query_raw);
                         if ($check_page->RecordCount() > MAX_DISPLAY_SEARCH_RESULTS) {

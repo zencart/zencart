@@ -9,23 +9,23 @@ namespace SquareConnect\Model;
 
 use \ArrayAccess;
 /**
- * CashPaymentDetails Class Doc Comment
+ * CatalogCustomAttributeDefinitionSellerVisibility Class Doc Comment
  *
  * @category Class
  * @package  SquareConnect
  * @author   Square Inc.
  * @license  http://www.apache.org/licenses/LICENSE-2.0 Apache License v2
  * @link     https://squareup.com/developers
+ * Note: This endpoint is in beta.
  */
-class CashPaymentDetails implements ArrayAccess
+class CatalogCustomAttributeDefinitionSellerVisibility implements ArrayAccess
 {
     /**
       * Array of property to type mappings. Used for (de)serialization 
       * @var string[]
       */
     static $swaggerTypes = array(
-        'buyer_supplied_money' => '\SquareConnect\Model\Money',
-        'change_back_money' => '\SquareConnect\Model\Money'
+        
     );
   
     /** 
@@ -33,8 +33,7 @@ class CashPaymentDetails implements ArrayAccess
       * @var string[] 
       */
     static $attributeMap = array(
-        'buyer_supplied_money' => 'buyer_supplied_money',
-        'change_back_money' => 'change_back_money'
+        
     );
   
     /**
@@ -42,8 +41,7 @@ class CashPaymentDetails implements ArrayAccess
       * @var string[]
       */
     static $setters = array(
-        'buyer_supplied_money' => 'setBuyerSuppliedMoney',
-        'change_back_money' => 'setChangeBackMoney'
+        
     );
   
     /**
@@ -51,20 +49,9 @@ class CashPaymentDetails implements ArrayAccess
       * @var string[]
       */
     static $getters = array(
-        'buyer_supplied_money' => 'getBuyerSuppliedMoney',
-        'change_back_money' => 'getChangeBackMoney'
+        
     );
   
-    /**
-      * $buyer_supplied_money The amount and currency of the money supplied by the buyer.
-      * @var \SquareConnect\Model\Money
-      */
-    protected $buyer_supplied_money;
-    /**
-      * $change_back_money The amount of change due back to the buyer. Read Only field calculated from the amount_money and buyer_supplied_money fields.
-      * @var \SquareConnect\Model\Money
-      */
-    protected $change_back_money;
 
     /**
      * Constructor
@@ -73,55 +60,7 @@ class CashPaymentDetails implements ArrayAccess
     public function __construct(array $data = null)
     {
         if ($data != null) {
-            if (isset($data["buyer_supplied_money"])) {
-              $this->buyer_supplied_money = $data["buyer_supplied_money"];
-            } else {
-              $this->buyer_supplied_money = null;
-            }
-            if (isset($data["change_back_money"])) {
-              $this->change_back_money = $data["change_back_money"];
-            } else {
-              $this->change_back_money = null;
-            }
         }
-    }
-    /**
-     * Gets buyer_supplied_money
-     * @return \SquareConnect\Model\Money
-     */
-    public function getBuyerSuppliedMoney()
-    {
-        return $this->buyer_supplied_money;
-    }
-  
-    /**
-     * Sets buyer_supplied_money
-     * @param \SquareConnect\Model\Money $buyer_supplied_money The amount and currency of the money supplied by the buyer.
-     * @return $this
-     */
-    public function setBuyerSuppliedMoney($buyer_supplied_money)
-    {
-        $this->buyer_supplied_money = $buyer_supplied_money;
-        return $this;
-    }
-    /**
-     * Gets change_back_money
-     * @return \SquareConnect\Model\Money
-     */
-    public function getChangeBackMoney()
-    {
-        return $this->change_back_money;
-    }
-  
-    /**
-     * Sets change_back_money
-     * @param \SquareConnect\Model\Money $change_back_money The amount of change due back to the buyer. Read Only field calculated from the amount_money and buyer_supplied_money fields.
-     * @return $this
-     */
-    public function setChangeBackMoney($change_back_money)
-    {
-        $this->change_back_money = $change_back_money;
-        return $this;
     }
     /**
      * Returns true if offset exists. False otherwise.

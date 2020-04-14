@@ -161,9 +161,9 @@ function zen_image_submit($image, $alt = '', $parameters = '')
 // TABLES: zones
   function zen_js_zone_list($country, $form, $field, $showTextField = true) {
     global $db;
-    $countries = $db->Execute("select distinct zone_country_id
-                               from " . TABLE_ZONES . "
-                               order by zone_country_id");
+    $countries = $db->Execute("SELECT DISTINCT zone_country_id
+                               FROM " . TABLE_ZONES . "
+                               ORDER BY zone_country_id");
 
     $num_country = 1;
     $output_string = '';
@@ -174,10 +174,10 @@ function zen_image_submit($image, $alt = '', $parameters = '')
         $output_string .= '  } else if (' . $country . ' == "' . $countries->fields['zone_country_id'] . '") {' . "\n";
       }
 
-      $states = $db->Execute("select zone_name, zone_id
-                              from " . TABLE_ZONES . "
-                              where zone_country_id = '" . $countries->fields['zone_country_id'] . "'
-                              order by zone_name");
+      $states = $db->Execute("SELECT zone_name, zone_id
+                              FROM " . TABLE_ZONES . "
+                              WHERE zone_country_id = '" . $countries->fields['zone_country_id'] . "'
+                              ORDER BY zone_name");
 
 
       $num_state = 1;

@@ -18,7 +18,7 @@ function zen_update_currencies($cli_Output = FALSE)
 {
   global $db, $messageStack, $zco_notifier;
   zen_set_time_limit(600);
-  $currency = $db->Execute("select currencies_id, code, title, decimal_places from " . TABLE_CURRENCIES);
+  $currency = $db->Execute("SELECT currencies_id, code, title, decimal_places FROM " . TABLE_CURRENCIES);
   while (!$currency->EOF) {
     $server_used = CURRENCY_SERVER_PRIMARY;
     $rate = '';
@@ -52,9 +52,9 @@ function zen_update_currencies($cli_Output = FALSE)
 
       if (zen_not_null($rate) && $rate > 0) {
         $zco_notifier->notify('ADMIN_CURRENCY_EXCHANGE_RATE_SINGLE', $currency->fields['code'], $rate);
-        $db->Execute("update " . TABLE_CURRENCIES . "
-                      set value = '" . round((float)$rate, 8) . "', last_updated = now()
-                      where currencies_id = '" . (int)$currency->fields['currencies_id'] . "'");
+        $db->Execute("UPDATE " . TABLE_CURRENCIES . "
+                      SET value = '" . round((float)$rate, 8) . "', last_updated = now()
+                      WHERE currencies_id = '" . (int)$currency->fields['currencies_id'] . "'");
         $msg = sprintf(TEXT_INFO_CURRENCY_UPDATED, $currency->fields['title'], $currency->fields['code'], round((float)$rate, 8), $server_used);
         if (is_object($messageStack)) {
           $messageStack->add_session($msg, 'success');
@@ -190,4 +190,27 @@ function quote_boc_currency($currencyCode = '', $base = DEFAULT_CURRENCY)
       return $data;
     }
     return $error;
+  }
+
+  function zen_datepicker_format_full() {
+    // converts mm-dd-yy to MM-DD-YYYY
+    return str_replace("YY","YYYY", strtoupper(DATE_FORMAT_DATE_PICKER));
+  }
+
+  function zen_datepicker_format_fordate() {
+    // converts mm-dd-yy to m-d-Y
+    $date = DATE_FORMAT_DATE_PICKER; 
+    $date = str_replace('mm','m', $date); 
+    $date = str_replace('dd','d', $date); 
+    $date = str_replace('yy','Y', $date); 
+    return $date; 
+  }
+
+  function zen_datepicker_format_forsql() {
+    // converts mm-dd-yy to %m-%d-%Y
+    $date = DATE_FORMAT_DATE_PICKER; 
+    $date = str_replace('mm','%m', $date); 
+    $date = str_replace('dd','%d', $date); 
+    $date = str_replace('yy','%Y', $date); 
+    return $date; 
   }

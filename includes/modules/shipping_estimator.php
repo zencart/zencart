@@ -253,7 +253,7 @@ if ($_SESSION['cart']->count_contents() > 0) {
         $show_in = FILENAME_SHOPPING_CART;
     }
     if (zen_is_logged_in() && !zen_in_guest_checkout()) {
-        $addresses = $db->execute("select address_book_id, entry_city as city, entry_postcode as postcode, entry_state as state, entry_zone_id as zone_id, entry_country_id as country_id from " . TABLE_ADDRESS_BOOK . " where customers_id = '" . (int)$_SESSION['customer_id'] . "'");
+        $addresses = $db->execute("SELECT address_book_id, entry_city AS city, entry_postcode AS postcode, entry_state AS state, entry_zone_id AS zone_id, entry_country_id AS country_id FROM " . TABLE_ADDRESS_BOOK . " WHERE customers_id = '" . (int)$_SESSION['customer_id'] . "'");
         // only display addresses if more than 1
         if ($addresses->RecordCount() > 1) {
             while (!$addresses->EOF) {
@@ -265,7 +265,7 @@ if ($_SESSION['cart']->count_contents() > 0) {
         if ($_SESSION['cart']->get_content_type() != 'virtual') {
             $state_array = array();
             $state_array[] = array('id' => '', 'text' => PULL_DOWN_SHIPPING_ESTIMATOR_SELECT);
-            $state_values = $db->Execute("select zone_name, zone_id from " . TABLE_ZONES . " where zone_country_id = '" . (int)$selected_country . "' order by zone_country_id DESC, zone_name");
+            $state_values = $db->Execute("SELECT zone_name, zone_id FROM " . TABLE_ZONES . " WHERE zone_country_id = '" . (int)$selected_country . "' ORDER BY zone_country_id DESC, zone_name");
             while (!$state_values->EOF) {
                 $state_array[] = array(
                     'id' => $state_values->fields['zone_id'],

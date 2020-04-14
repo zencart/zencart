@@ -76,12 +76,12 @@ if ($action != '')
         $sort = ' ASC ';
       }
 
-      $sql = "select c.coupon_id, coupon_code, coupon_amount, coupon_type, coupon_minimum_order, coupon_start_date, coupon_expire_date,
+      $sql = "SELECT c.coupon_id, coupon_code, coupon_amount, coupon_type, coupon_minimum_order, coupon_start_date, coupon_expire_date,
                  uses_per_coupon, uses_per_user, coupon_zone_restriction, coupon_active, coupon_calc_base, coupon_order_limit,
                  coupon_is_valid_for_sales, coupon_product_count
                  , coupon_name, coupon_description
               FROM " . TABLE_COUPONS . " c 
-              LEFT JOIN " . TABLE_COUPONS_DESCRIPTION . " cd on (c.coupon_id = cd.coupon_id AND cd.language_id = :language)
+              LEFT JOIN " . TABLE_COUPONS_DESCRIPTION . " cd ON (c.coupon_id = cd.coupon_id AND cd.language_id = :language)
               WHERE c.coupon_code LIKE :search ORDER BY c.coupon_active, c.coupon_id " . $sort;
       $sql = $db->bindVars($sql, ':search', $_GET['codebase'] . '%', 'string');
       $sql = $db->bindVars($sql, ':language', $_SESSION['languages_id'], 'integer');

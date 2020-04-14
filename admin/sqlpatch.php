@@ -660,7 +660,7 @@ function zen_check_config_key($line) {
   //[4]=blah blah
   $title = $values[1];
   $key = $values[3];
-  $sql = "select configuration_title from " . DB_PREFIX . "configuration where configuration_key='" . zen_db_input($key) . "'";
+  $sql = "SELECT configuration_title FROM " . DB_PREFIX . "configuration WHERE configuration_key='" . zen_db_input($key) . "'";
   $result = $db->Execute($sql);
   if ($result->RecordCount() > 0) {
     return sprintf(REASON_CONFIG_KEY_ALREADY_EXISTS, $key);
@@ -673,7 +673,7 @@ function zen_check_product_type_layout_key($line) {
   $values = explode("'", $line);
   $title = $values[1];
   $key = $values[3];
-  $sql = "select configuration_title from " . DB_PREFIX . "product_type_layout where configuration_key='" . zen_db_input($key) . "'";
+  $sql = "SELECT configuration_title FROM " . DB_PREFIX . "product_type_layout WHERE configuration_key='" . zen_db_input($key) . "'";
   $result = $db->Execute($sql);
   if ($result->RecordCount() > 0) {
     return sprintf(REASON_PRODUCT_TYPE_LAYOUT_KEY_ALREADY_EXISTS, $key);

@@ -15,7 +15,6 @@ define('HEADING_TITLE', 'Thank You! We Appreciate your Business!');
 define('TEXT_SUCCESS', '');
 define('TEXT_NOTIFY_PRODUCTS', 'Please notify me of updates to these products');
 // Still used by some older templates
-define('TEXT_SEE_ORDERS', 'You can view your order history by going to the <a href="' . zen_href_link(FILENAME_ACCOUNT, '', 'SSL') . '" name="linkMyAccount">My Account</a> page and by clicking on "View All Orders".');
 define('TEXT_CONTACT_STORE_OWNER', 'Please direct any questions to customer service.');
 define('TEXT_THANKS_FOR_SHOPPING', 'Thanks for shopping with us online!');
 
@@ -31,7 +30,6 @@ define('TEXT_CHECKOUT_LOGOFF_CUSTOMER', 'Thank you for shopping. Please click th
 
 define('HEADING_ORDER_NUMBER', 'Order #%s');
 define('HEADING_ORDER_DATE', 'Order Date:');
-define('HEADING_ORDER_TOTAL', 'Order Total:');
 
 define('HEADING_DELIVERY_ADDRESS', 'Delivery Address');
 define('HEADING_SHIPPING_METHOD', 'Shipping Method');
@@ -45,7 +43,6 @@ define('HEADING_BILLING_ADDRESS', 'Billing Address');
 define('HEADING_PAYMENT_METHOD', 'Payment Method');
 
 define('HEADING_ORDER_HISTORY', 'Status History &amp; Comments');
-define('TEXT_NO_COMMENTS_AVAILABLE', 'No comments available.');
 define('TABLE_HEADING_STATUS_DATE', 'Date');
 define('TABLE_HEADING_STATUS_ORDER_STATUS', 'Order Status');
 define('TABLE_HEADING_STATUS_COMMENTS', 'Comments');

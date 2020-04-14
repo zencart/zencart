@@ -29,6 +29,7 @@ class CreatePaymentRequest implements ArrayAccess
         'amount_money' => '\SquareConnect\Model\Money',
         'tip_money' => '\SquareConnect\Model\Money',
         'app_fee_money' => '\SquareConnect\Model\Money',
+        'delay_duration' => 'string',
         'autocomplete' => 'bool',
         'order_id' => 'string',
         'customer_id' => 'string',
@@ -53,6 +54,7 @@ class CreatePaymentRequest implements ArrayAccess
         'amount_money' => 'amount_money',
         'tip_money' => 'tip_money',
         'app_fee_money' => 'app_fee_money',
+        'delay_duration' => 'delay_duration',
         'autocomplete' => 'autocomplete',
         'order_id' => 'order_id',
         'customer_id' => 'customer_id',
@@ -77,6 +79,7 @@ class CreatePaymentRequest implements ArrayAccess
         'amount_money' => 'setAmountMoney',
         'tip_money' => 'setTipMoney',
         'app_fee_money' => 'setAppFeeMoney',
+        'delay_duration' => 'setDelayDuration',
         'autocomplete' => 'setAutocomplete',
         'order_id' => 'setOrderId',
         'customer_id' => 'setCustomerId',
@@ -101,6 +104,7 @@ class CreatePaymentRequest implements ArrayAccess
         'amount_money' => 'getAmountMoney',
         'tip_money' => 'getTipMoney',
         'app_fee_money' => 'getAppFeeMoney',
+        'delay_duration' => 'getDelayDuration',
         'autocomplete' => 'getAutocomplete',
         'order_id' => 'getOrderId',
         'customer_id' => 'getCustomerId',
@@ -140,6 +144,11 @@ class CreatePaymentRequest implements ArrayAccess
       * @var \SquareConnect\Model\Money
       */
     protected $app_fee_money;
+    /**
+      * $delay_duration The duration of time after the payment's creation when Square automatically cancels the payment. This automatic cancellation applies only to payments that don't reach a terminal state (COMPLETED, CANCELED, or FAILED) before the `delay_duration` time period.  This parameter should be specified as a time duration, in RFC 3339 format, with a minimum value of 1 minute.  Notes: This feature is only supported for card payments. This parameter can only be set for a delayed capture payment (`autocomplete=false`).  Default:  - Card Present payments: \"PT36H\" (36 hours) from the creation time. - Card Not Present payments: \"P7D\" (7 days) from the creation time.
+      * @var string
+      */
+    protected $delay_duration;
     /**
       * $autocomplete If set to `true`, this payment will be completed when possible. If set to `false`, this payment will be held in an approved state until either explicitly completed (captured) or canceled (voided). For more information, see [Delayed Payments](https://developer.squareup.com/docs/payments-api/take-payments#delayed-payments).  Default: true
       * @var bool
@@ -232,6 +241,11 @@ class CreatePaymentRequest implements ArrayAccess
               $this->app_fee_money = $data["app_fee_money"];
             } else {
               $this->app_fee_money = null;
+            }
+            if (isset($data["delay_duration"])) {
+              $this->delay_duration = $data["delay_duration"];
+            } else {
+              $this->delay_duration = null;
             }
             if (isset($data["autocomplete"])) {
               $this->autocomplete = $data["autocomplete"];
@@ -388,6 +402,25 @@ class CreatePaymentRequest implements ArrayAccess
     public function setAppFeeMoney($app_fee_money)
     {
         $this->app_fee_money = $app_fee_money;
+        return $this;
+    }
+    /**
+     * Gets delay_duration
+     * @return string
+     */
+    public function getDelayDuration()
+    {
+        return $this->delay_duration;
+    }
+  
+    /**
+     * Sets delay_duration
+     * @param string $delay_duration The duration of time after the payment's creation when Square automatically cancels the payment. This automatic cancellation applies only to payments that don't reach a terminal state (COMPLETED, CANCELED, or FAILED) before the `delay_duration` time period.  This parameter should be specified as a time duration, in RFC 3339 format, with a minimum value of 1 minute.  Notes: This feature is only supported for card payments. This parameter can only be set for a delayed capture payment (`autocomplete=false`).  Default:  - Card Present payments: \"PT36H\" (36 hours) from the creation time. - Card Not Present payments: \"P7D\" (7 days) from the creation time.
+     * @return $this
+     */
+    public function setDelayDuration($delay_duration)
+    {
+        $this->delay_duration = $delay_duration;
         return $this;
     }
     /**

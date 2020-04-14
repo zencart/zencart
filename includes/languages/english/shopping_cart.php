@@ -11,12 +11,10 @@ define('TEXT_INFORMATION', 'You may proceed with your purchase by clicking the C
 
 define('NAVBAR_TITLE', 'The Shopping Cart');
 define('HEADING_TITLE', 'Your Shopping Cart Contents');
-define('HEADING_TITLE_EMPTY', 'Your Shopping Cart');
 define('TABLE_HEADING_REMOVE', 'Remove');
 define('TABLE_HEADING_PRICE','Unit');
 define('TEXT_CART_EMPTY', 'Your Shopping Cart is empty.');
 define('SUB_TITLE_SUB_TOTAL', 'Sub-Total:');
-define('SUB_TITLE_TOTAL', 'Total:');
 
 define('TEXT_TOTAL_ITEMS', 'Total Items: ');
 define('TEXT_TOTAL_WEIGHT', '&nbsp;&nbsp;Weight: ');

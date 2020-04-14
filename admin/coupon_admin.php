@@ -42,14 +42,14 @@ if ($_GET['action'] == 'send_email_to_user' && !empty($_POST['customers_email_ad
     $mail = $db->Execute($audience_select['query_string']);
     $mail_sent_to = (!empty($_POST['email_to'])) ? $_POST['email_to'] : $audience_select['query_name'];
 
-    $coupon_result = $db->Execute("select coupon_code, coupon_start_date, coupon_expire_date, coupon_calc_base, coupon_is_valid_for_sales, coupon_product_count
-                                   from " . TABLE_COUPONS . "
-                                   where coupon_id = '" . $_GET['cid'] . "'");
+    $coupon_result = $db->Execute("SELECT coupon_code, coupon_start_date, coupon_expire_date, coupon_calc_base, coupon_is_valid_for_sales, coupon_product_count
+                                   FROM " . TABLE_COUPONS . "
+                                   WHERE coupon_id = '" . $_GET['cid'] . "'");
 
-    $coupon_name = $db->Execute("select coupon_name, coupon_description
-                                 from " . TABLE_COUPONS_DESCRIPTION . "
-                                 where coupon_id = '" . $_GET['cid'] . "'
-                                 and language_id = '" . (int)$_SESSION['languages_id'] . "'");
+    $coupon_name = $db->Execute("SELECT coupon_name, coupon_description
+                                 FROM " . TABLE_COUPONS_DESCRIPTION . "
+                                 WHERE coupon_id = '" . $_GET['cid'] . "'
+                                 AND language_id = '" . (int)$_SESSION['languages_id'] . "'");
 
     $from = zen_db_prepare_input($_POST['from']);
     $subject = zen_db_prepare_input($_POST['subject']);
@@ -129,13 +129,13 @@ switch ($_GET['action']) {
             zen_redirect(zen_href_link(FILENAME_COUPON_ADMIN, 'cid=' . $_GET['cid'] . (isset($_GET['status']) ? '&status=' . $_GET['status'] : '') . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '')));
         }
 
-        $db->Execute("update " . TABLE_COUPONS . " set coupon_active = 'N' where coupon_id='" . $_GET['cid'] . "'");
+        $db->Execute("UPDATE " . TABLE_COUPONS . " SET coupon_active = 'N' WHERE coupon_id='" . $_GET['cid'] . "'");
         $messageStack->add_session(SUCCESS_COUPON_DISABLED, 'success');
         zen_redirect(zen_href_link(FILENAME_COUPON_ADMIN));
         break;
 
     case 'confirmreactivate':
-        $db->Execute("update " . TABLE_COUPONS . " set coupon_active = 'Y' where coupon_id='" . $_GET['cid'] . "'");
+        $db->Execute("UPDATE " . TABLE_COUPONS . " SET coupon_active = 'Y' WHERE coupon_id='" . $_GET['cid'] . "'");
         $messageStack->add_session(SUCCESS_COUPON_REACTIVATE, 'success');
         zen_redirect(zen_href_link(FILENAME_COUPON_ADMIN, 'cid=' . $_GET['cid']));
         break;
@@ -143,15 +143,15 @@ switch ($_GET['action']) {
     case 'confirmdeleteduplicate':
 // base code - confirm base code for duplicate codes
 // do not allow change if matches welcome coupon
-        $delete_duplicate_coupons_check = $db->Execute("SELECT * from " . TABLE_COUPONS . " WHERE coupon_code LIKE '" . $_POST['coupon_delete_duplicate_code'] . "%' and coupon_id = '" . NEW_SIGNUP_DISCOUNT_COUPON . "'");
+        $delete_duplicate_coupons_check = $db->Execute("SELECT * FROM " . TABLE_COUPONS . " WHERE coupon_code LIKE '" . $_POST['coupon_delete_duplicate_code'] . "%' AND coupon_id = '" . NEW_SIGNUP_DISCOUNT_COUPON . "'");
         if (!$delete_duplicate_coupons_check->EOF) {
             $messageStack->add_session(ERROR_DISCOUNT_COUPON_WELCOME, 'caution');
         }
-        $delete_duplicate_coupons = $db->Execute("SELECT * from " . TABLE_COUPONS . " WHERE coupon_code LIKE '" . $_POST['coupon_delete_duplicate_code'] . "%' and coupon_active = 'Y' and coupon_id !='" . NEW_SIGNUP_DISCOUNT_COUPON . "' and coupon_type != 'G'");
+        $delete_duplicate_coupons = $db->Execute("SELECT * FROM " . TABLE_COUPONS . " WHERE coupon_code LIKE '" . $_POST['coupon_delete_duplicate_code'] . "%' AND coupon_active = 'Y' AND coupon_id !='" . NEW_SIGNUP_DISCOUNT_COUPON . "' AND coupon_type != 'G'");
         while (!$delete_duplicate_coupons->EOF) {
 //        echo 'Delete: ' . $delete_duplicate_coupons->fields['coupon_code'] . '<br>';
             $messageStack->add_session('Delete: ' . $delete_duplicate_coupons->fields['coupon_code'], 'caution');
-            $db->Execute("UPDATE " . TABLE_COUPONS . " SET coupon_active = 'N' WHERE coupon_code = '" . $delete_duplicate_coupons->fields['coupon_code'] . "' and coupon_type != 'G'");
+            $db->Execute("UPDATE " . TABLE_COUPONS . " SET coupon_active = 'N' WHERE coupon_code = '" . $delete_duplicate_coupons->fields['coupon_code'] . "' AND coupon_type != 'G'");
             $delete_duplicate_coupons->MoveNext();
         }
         zen_redirect(zen_href_link(FILENAME_COUPON_ADMIN));
@@ -169,7 +169,7 @@ switch ($_GET['action']) {
         if ($zc_discount_coupons_create < 1) {
             $messageStack->add_session(WARNING_COUPON_DUPLICATE . $_POST['coupon_copy_to_dup_name'] . ' - ' . $_POST['coupon_copy_to_count'], 'caution');
         } else {
-            $check_new_coupon = $db->Execute("SELECT * from " . TABLE_COUPONS . " WHERE coupon_id = '" . $_GET['cid'] . "'");
+            $check_new_coupon = $db->Execute("SELECT * FROM " . TABLE_COUPONS . " WHERE coupon_id = '" . $_GET['cid'] . "'");
             for ($i = 1; $i <= $zc_discount_coupons_create; $i++) {
                 $old_code_length = strlen($_POST['coupon_copy_to_dup_name']);
                 $minimum_extra_chars = 7;
@@ -203,7 +203,7 @@ switch ($_GET['action']) {
                     $cid = $insert_id;
 
                     // make new description
-                    $sql = "SELECT * from " . TABLE_COUPONS_DESCRIPTION . " where coupon_id='" . $_GET['cid'] . "'";
+                    $sql = "SELECT * FROM " . TABLE_COUPONS_DESCRIPTION . " WHERE coupon_id='" . $_GET['cid'] . "'";
                     $new_coupon_descriptions = $db->Execute($sql);
 
                     while (!$new_coupon_descriptions->EOF) {
@@ -218,7 +218,7 @@ switch ($_GET['action']) {
                     }
 
                     // add restrictions
-                    $sql = "SELECT * from " . TABLE_COUPON_RESTRICT . " where coupon_id='" . $_GET['cid'] . "'";
+                    $sql = "SELECT * FROM " . TABLE_COUPON_RESTRICT . " WHERE coupon_id='" . $_GET['cid'] . "'";
                     $copy_coupon_restrictions = $db->Execute($sql);
 
                     while (!$copy_coupon_restrictions->EOF) {
@@ -250,7 +250,7 @@ switch ($_GET['action']) {
         $coupon_copy_to = trim($_POST['coupon_copy_to']);
 
         // check if new coupon code exists
-        $sql = "SELECT * from " . TABLE_COUPONS . " where coupon_code = :coupon_copy:";
+        $sql = "SELECT * FROM " . TABLE_COUPONS . " WHERE coupon_code = :coupon_copy:";
         $sql = $db->bindVars($sql, ':coupon_copy:', $coupon_copy_to, 'string');
         $check_new_coupon = $db->Execute($sql);
         if ($check_new_coupon->RecordCount() > 0) {
@@ -258,7 +258,7 @@ switch ($_GET['action']) {
             zen_redirect(zen_href_link(FILENAME_COUPON_ADMIN, 'cid=' . $_GET['cid'] . (isset($_GET['status']) ? '&status=' . $_GET['status'] : '') . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '')));
         }
 
-        $sql = "SELECT * from " . TABLE_COUPONS . " where coupon_id='" . $_GET['cid'] . "'";
+        $sql = "SELECT * FROM " . TABLE_COUPONS . " WHERE coupon_id='" . $_GET['cid'] . "'";
         $check_new_coupon = $db->Execute($sql);
 
         // create duplicate coupon
@@ -288,7 +288,7 @@ switch ($_GET['action']) {
         $cid = $insert_id;
 
         // create duplicate coupon description
-        $sql = "SELECT * from " . TABLE_COUPONS_DESCRIPTION . " where coupon_id='" . $_GET['cid'] . "'";
+        $sql = "SELECT * FROM " . TABLE_COUPONS_DESCRIPTION . " WHERE coupon_id='" . $_GET['cid'] . "'";
         $new_coupon_descriptions = $db->Execute($sql);
 
         while (!$new_coupon_descriptions->EOF) {
@@ -303,7 +303,7 @@ switch ($_GET['action']) {
         }
 
         // copy restrictions
-        $sql = "SELECT * from " . TABLE_COUPON_RESTRICT . " where coupon_id='" . $_GET['cid'] . "'";
+        $sql = "SELECT * FROM " . TABLE_COUPON_RESTRICT . " WHERE coupon_id='" . $_GET['cid'] . "'";
         $copy_coupon_restrictions = $db->Execute($sql);
 
         while (!$copy_coupon_restrictions->EOF) {
@@ -354,7 +354,7 @@ switch ($_GET['action']) {
             $coupon_code = zen_create_coupon_code();
         }
         if ($_POST['coupon_code']) $coupon_code = $_POST['coupon_code'];
-        $sql = "select coupon_id, coupon_code from " . TABLE_COUPONS . " where coupon_code = :couponCode:";
+        $sql = "SELECT coupon_id, coupon_code FROM " . TABLE_COUPONS . " WHERE coupon_code = :couponCode:";
         $sql = $db->bindVars($sql, ':couponCode:', $coupon_code, 'string');
         $query1 = $db->Execute($sql);
         if ($query1->RecordCount() > 0 && $_POST['coupon_code'] && $_GET['oldaction'] != 'voucheredit') {
@@ -555,7 +555,7 @@ function check_form(form_name) {
                 <td class="dataTableHeadingContent" align="right"><?php echo TABLE_HEADING_ACTION; ?>&nbsp;</td>
               </tr>
 <?php
-    $cc_query_raw = "select * from " . TABLE_COUPON_REDEEM_TRACK . " where coupon_id = '" . $_GET['cid'] . "'";
+    $cc_query_raw = "SELECT * FROM " . TABLE_COUPON_REDEEM_TRACK . " WHERE coupon_id = '" . $_GET['cid'] . "'";
     $cc_split = new splitPageResults($_GET['reports_page'], MAX_DISPLAY_SEARCH_RESULTS_DISCOUNT_COUPONS_REPORTS, $cc_query_raw, $cc_query_numrows);
     $cc_list = $db->Execute($cc_query_raw);
     if ($cc_list->EOF && empty($cInfo)) {
@@ -570,7 +570,7 @@ function check_form(form_name) {
       } else {
         echo '          <tr class="dataTableRow" onmouseover="this.className=\'dataTableRowOver\';this.style.cursor=\'hand\'" onmouseout="this.className=\'dataTableRow\'" onclick="document.location.href=\'' . zen_href_link(FILENAME_COUPON_ADMIN, zen_get_all_get_params(array('cid', 'action', 'uid')) . 'cid=' . $cc_list->fields['coupon_id'] . '&action=voucherreport&uid=' . $cc_list->fields['unique_id']) . '\'">' . "\n";
       }
-      $customer = $db->Execute("select customers_firstname, customers_lastname from " . TABLE_CUSTOMERS . " where customers_id = " . (int)$cc_list->fields['customer_id']);
+      $customer = $db->Execute("SELECT customers_firstname, customers_lastname FROM " . TABLE_CUSTOMERS . " WHERE customers_id = " . (int)$cc_list->fields['customer_id']);
 ?>
                 <td class="dataTableContent"><?php echo $cc_list->fields['customer_id']; ?></td>
                 <td class="dataTableContent" align="center"><?php echo $customer->fields['customers_firstname'] . ' ' . $customer->fields['customers_lastname']; ?></td>
@@ -601,13 +601,13 @@ function check_form(form_name) {
 <?php
       $heading = array();
       $contents = array();
-      $coupon_desc = $db->Execute("select coupon_name
-                                   from " . TABLE_COUPONS_DESCRIPTION . "
-                                   where coupon_id = '" . $_GET['cid'] . "'
-                                   and language_id = '" . (int)$_SESSION['languages_id'] . "'");
-      $count_customers = $db->Execute("select * from " . TABLE_COUPON_REDEEM_TRACK . "
-                                       where coupon_id = '" . $_GET['cid'] . "'
-                                       and customer_id = '" . (int)$cInfo->customer_id . "'");
+      $coupon_desc = $db->Execute("SELECT coupon_name
+                                   FROM " . TABLE_COUPONS_DESCRIPTION . "
+                                   WHERE coupon_id = '" . $_GET['cid'] . "'
+                                   AND language_id = '" . (int)$_SESSION['languages_id'] . "'");
+      $count_customers = $db->Execute("SELECT * FROM " . TABLE_COUPON_REDEEM_TRACK . "
+                                       WHERE coupon_id = '" . $_GET['cid'] . "'
+                                       AND customer_id = '" . (int)$cInfo->customer_id . "'");
 
       $heading[] = array('text' => '<b>[' . $_GET['cid'] . ']' . COUPON_NAME . ' ' . $coupon_desc->fields['coupon_name'] . '</b>');
       $contents[] = array('text' => '<b>' . TEXT_REDEMPTIONS . '</b>');
@@ -653,7 +653,7 @@ function check_form(form_name) {
               </tr>
 <?php
     $cc_previous_cid = $_GET['cid'];
-    $cc_query_raw = "select crt.*, c.coupon_code from " . TABLE_COUPON_REDEEM_TRACK . " crt, " . TABLE_COUPONS . " c where crt.coupon_id IN (select coupon_id from " . TABLE_COUPONS . " WHERE coupon_code LIKE '" . $_GET['codebase'] . "%'" . ") and crt.coupon_id = c.coupon_id";
+    $cc_query_raw = "SELECT crt.*, c.coupon_code FROM " . TABLE_COUPON_REDEEM_TRACK . " crt, " . TABLE_COUPONS . " c WHERE crt.coupon_id IN (SELECT coupon_id FROM " . TABLE_COUPONS . " WHERE coupon_code LIKE '" . $_GET['codebase'] . "%'" . ") AND crt.coupon_id = c.coupon_id";
     $cc_split = new splitPageResults($_GET['reports_page'], MAX_DISPLAY_SEARCH_RESULTS_DISCOUNT_COUPONS_REPORTS, $cc_query_raw, $cc_query_numrows);
     $cc_list = $db->Execute($cc_query_raw);
 
@@ -666,9 +666,9 @@ function check_form(form_name) {
       } else {
         echo '          <tr class="dataTableRow" onmouseover="this.className=\'dataTableRowOver\';this.style.cursor=\'hand\'" onmouseout="this.className=\'dataTableRow\'" onclick="document.location.href=\'' . zen_href_link(FILENAME_COUPON_ADMIN, zen_get_all_get_params(array('cid', 'action', 'uid')) . 'cid=' . $cc_list->fields['coupon_id'] . '&action=voucherreport&uid=' . $cc_list->fields['unique_id']) . '\'">' . "\n";
       }
-      $customer = $db->Execute("select customers_firstname, customers_lastname
-                                from " . TABLE_CUSTOMERS . "
-                                where customers_id = '" . $cc_list->fields['customer_id'] . "'");
+      $customer = $db->Execute("SELECT customers_firstname, customers_lastname
+                                FROM " . TABLE_CUSTOMERS . "
+                                WHERE customers_id = '" . $cc_list->fields['customer_id'] . "'");
 
 ?>
                 <td class="dataTableContent"><?php echo $cc_list->fields['customer_id']; ?></td>
@@ -701,13 +701,13 @@ function check_form(form_name) {
 <?php
       $heading = array();
       $contents = array();
-      $coupon_desc = $db->Execute("select coupon_name
-                                   from " . TABLE_COUPONS_DESCRIPTION . "
-                                   where coupon_id = '" . $_GET['cid'] . "'
-                                   and language_id = '" . (int)$_SESSION['languages_id'] . "'");
-      $count_customers = $db->Execute("select * from " . TABLE_COUPON_REDEEM_TRACK . "
-                                       where coupon_id = '" . $_GET['cid'] . "'
-                                       and customer_id = '" . (int)$cInfo->customer_id . "'");
+      $coupon_desc = $db->Execute("SELECT coupon_name
+                                   FROM " . TABLE_COUPONS_DESCRIPTION . "
+                                   WHERE coupon_id = '" . $_GET['cid'] . "'
+                                   AND language_id = '" . (int)$_SESSION['languages_id'] . "'");
+      $count_customers = $db->Execute("SELECT * FROM " . TABLE_COUPON_REDEEM_TRACK . "
+                                       WHERE coupon_id = '" . $_GET['cid'] . "'
+                                       AND customer_id = '" . (int)$cInfo->customer_id . "'");
 
       $heading[] = array('text' => '<b>[' . $_GET['cid'] . ']' . COUPON_NAME . ' ' . $coupon_desc->fields['coupon_name'] . '</b>');
       $contents[] = array('text' => '<b>' . TEXT_REDEMPTIONS . '</b>');
@@ -726,14 +726,14 @@ function check_form(form_name) {
     break;
 
   case 'preview_email':
-    $coupon_result = $db->Execute("select coupon_code
-                                   from " .TABLE_COUPONS . "
-                                   where coupon_id = '" . $_GET['cid'] . "'");
+    $coupon_result = $db->Execute("SELECT coupon_code
+                                   FROM " .TABLE_COUPONS . "
+                                   WHERE coupon_id = '" . $_GET['cid'] . "'");
 
-    $coupon_name = $db->Execute("select coupon_name
-                                 from " . TABLE_COUPONS_DESCRIPTION . "
-                                 where coupon_id = '" . $_GET['cid'] . "'
-                                 and language_id = '" . (int)$_SESSION['languages_id'] . "'");
+    $coupon_name = $db->Execute("SELECT coupon_name
+                                 FROM " . TABLE_COUPONS_DESCRIPTION . "
+                                 WHERE coupon_id = '" . $_GET['cid'] . "'
+                                 AND language_id = '" . (int)$_SESSION['languages_id'] . "'");
 
     $audience_select = get_audience_sql_query($_POST['customers_email_address']);
     $mail_sent_to = $audience_select['query_name'];
@@ -816,13 +816,13 @@ function check_form(form_name) {
 <?php
     break;
   case 'email':
-    $coupon_result = $db->Execute("select coupon_code
-                                   from " . TABLE_COUPONS . "
-                                   where coupon_id = '" . $_GET['cid'] . "'");
-    $coupon_name = $db->Execute("select coupon_name
-                                 from " . TABLE_COUPONS_DESCRIPTION . "
-                                 where coupon_id = '" . $_GET['cid'] . "'
-                                 and language_id = '" . (int)$_SESSION['languages_id'] . "'");
+    $coupon_result = $db->Execute("SELECT coupon_code
+                                   FROM " . TABLE_COUPONS . "
+                                   WHERE coupon_id = '" . $_GET['cid'] . "'");
+    $coupon_name = $db->Execute("SELECT coupon_name
+                                 FROM " . TABLE_COUPONS_DESCRIPTION . "
+                                 WHERE coupon_id = '" . $_GET['cid'] . "'
+                                 AND language_id = '" . (int)$_SESSION['languages_id'] . "'");
 ?>
       <td width="100%" valign="top"><table border="0" width="100%" cellspacing="0" cellpadding="2">
       <tr>
@@ -1068,21 +1068,21 @@ function check_form(form_name) {
   case 'voucheredit':
     for ($i = 0, $n = count($languages); $i < $n; $i++) {
       $language_id = $languages[$i]['id'];
-      $coupon = $db->Execute("select coupon_name,coupon_description
-                              from " . TABLE_COUPONS_DESCRIPTION . "
-                              where coupon_id = '" .  $_GET['cid'] . "'
-                              and language_id = '" . (int)$language_id . "'");
+      $coupon = $db->Execute("SELECT coupon_name,coupon_description
+                              FROM " . TABLE_COUPONS_DESCRIPTION . "
+                              WHERE coupon_id = '" .  $_GET['cid'] . "'
+                              AND language_id = '" . (int)$language_id . "'");
 
       $_POST['coupon_name'][$language_id] = $coupon->fields['coupon_name'];
       $_POST['coupon_desc'][$language_id] = $coupon->fields['coupon_description'];
     }
 
-    $coupon = $db->Execute("select coupon_code, coupon_amount, coupon_type, coupon_minimum_order,
+    $coupon = $db->Execute("SELECT coupon_code, coupon_amount, coupon_type, coupon_minimum_order,
                                    coupon_start_date, coupon_expire_date, uses_per_coupon,
                                    uses_per_user, restrict_to_products, restrict_to_categories, coupon_zone_restriction, 
                                    coupon_calc_base, coupon_order_limit, coupon_is_valid_for_sales, coupon_product_count
-                            from " . TABLE_COUPONS . "
-                            where coupon_id = '" . $_GET['cid'] . "'");
+                            FROM " . TABLE_COUPONS . "
+                            WHERE coupon_id = '" . $_GET['cid'] . "'");
 
     $_POST['coupon_amount'] = $coupon->fields['coupon_amount'];
     if ($coupon->fields['coupon_type'] == 'P' || $coupon->fields['coupon_type'] == 'E') {
@@ -1304,9 +1304,9 @@ function check_form(form_name) {
               </tr>
 <?php
     if ($status != 'A') {
-      $cc_query_raw = "select * from " . TABLE_COUPONS ." where coupon_active='" . zen_db_input($status) . "' and coupon_type != 'G'";
+      $cc_query_raw = "SELECT * FROM " . TABLE_COUPONS ." WHERE coupon_active='" . zen_db_input($status) . "' AND coupon_type != 'G'";
     } else {
-      $cc_query_raw = "select * from " . TABLE_COUPONS . " where coupon_type != 'G'";
+      $cc_query_raw = "SELECT * FROM " . TABLE_COUPONS . " WHERE coupon_type != 'G'";
     }
     $maxDisplaySearchResults = (defined('MAX_DISPLAY_SEARCH_RESULTS_DISCOUNT_COUPONS') && (int)MAX_DISPLAY_SEARCH_RESULTS_DISCOUNT_COUPONS > 0) ? (int)MAX_DISPLAY_SEARCH_RESULTS_DISCOUNT_COUPONS : 20;
 
@@ -1324,12 +1324,12 @@ function check_form(form_name) {
       } else {
         echo '          <tr class="dataTableRow" onmouseover="this.className=\'dataTableRowOver\';this.style.cursor=\'hand\'" onmouseout="this.className=\'dataTableRow\'" onclick="document.location.href=\'' . zen_href_link(FILENAME_COUPON_ADMIN, zen_get_all_get_params(array('cid', 'action')) . 'cid=' . $cc_list->fields['coupon_id']) . '\'">' . "\n";
       }
-      $coupon_desc = $db->Execute("select coupon_name
-                                   from " . TABLE_COUPONS_DESCRIPTION . "
-                                   where coupon_id = '" . (int)$cc_list->fields['coupon_id'] . "'
-                                   and language_id = '" . (int)$_SESSION['languages_id'] . "'");
+      $coupon_desc = $db->Execute("SELECT coupon_name
+                                   FROM " . TABLE_COUPONS_DESCRIPTION . "
+                                   WHERE coupon_id = '" . (int)$cc_list->fields['coupon_id'] . "'
+                                   AND language_id = '" . (int)$_SESSION['languages_id'] . "'");
 
-      $coupon_restrictions = $db->Execute("select * from " . TABLE_COUPON_RESTRICT . " where coupon_id = '" . (int)$cc_list->fields['coupon_id'] . "' limit 1");
+      $coupon_restrictions = $db->Execute("SELECT * FROM " . TABLE_COUPON_RESTRICT . " WHERE coupon_id = '" . (int)$cc_list->fields['coupon_id'] . "' limit 1");
 
 ?>
                 <td class="dataTableContent"><?php echo $coupon_desc->fields['coupon_name']; ?></td>
@@ -1475,11 +1475,11 @@ function check_form(form_name) {
       } else {
         $prod_details = TEXT_NONE;
 //bof 12-6ke
-$product_query = $db->Execute("select * from " . TABLE_COUPON_RESTRICT . " where coupon_id = '" . $cInfo->coupon_id . "' and product_id != '0'");        if ($product_query->RecordCount() > 0) $prod_details = TEXT_SEE_RESTRICT;
+$product_query = $db->Execute("SELECT * FROM " . TABLE_COUPON_RESTRICT . " WHERE coupon_id = '" . $cInfo->coupon_id . "' AND product_id != '0'");        if ($product_query->RecordCount() > 0) $prod_details = TEXT_SEE_RESTRICT;
 //eof 12-6ke
         $cat_details = TEXT_NONE;
 //bof 12-6ke
-$category_query = $db->Execute("select * from " . TABLE_COUPON_RESTRICT . " where coupon_id = '" . $cInfo->coupon_id . "' and category_id != '0'");        if ($category_query->RecordCount() > 0) $cat_details = TEXT_SEE_RESTRICT;
+$category_query = $db->Execute("SELECT * FROM " . TABLE_COUPON_RESTRICT . " WHERE coupon_id = '" . $cInfo->coupon_id . "' AND category_id != '0'");        if ($category_query->RecordCount() > 0) $cat_details = TEXT_SEE_RESTRICT;
 //eof 12-6ke
         $coupon_name = $db->Execute("SELECT cd.coupon_name, c.coupon_type
                                      FROM " . TABLE_COUPONS_DESCRIPTION . " cd

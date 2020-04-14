@@ -22,12 +22,10 @@ define('TEXT_INFO_LAYOUT_BOX_NAME', 'Box Name:');
 define('TEXT_INFO_LAYOUT_BOX_LOCATION','Location: (Single Column ignores this setting)');
 define('TEXT_INFO_LAYOUT_BOX_STATUS', 'Left/Right Column Status: ');
 define('TEXT_INFO_LAYOUT_BOX_STATUS_SINGLE', 'Single Column Status: ');
-define('TEXT_INFO_LAYOUT_BOX_STATUS_INFO','ON= 1 OFF=0');
 define('TEXT_INFO_LAYOUT_BOX_SORT_ORDER', 'Left/Right Column Sort Order:');
 define('TEXT_INFO_LAYOUT_BOX_SORT_ORDER_SINGLE', 'Single Column Sort Order:');
 define('TEXT_INFO_INSERT_INTRO', 'Please enter the new box with its related data');
 define('TEXT_INFO_DELETE_INTRO', 'Are you sure you want to delete this box?');
-define('TEXT_INFO_HEADING_NEW_BOX', 'New Box');
 define('TEXT_INFO_HEADING_EDIT_BOX', 'Edit Box');
 define('TEXT_INFO_HEADING_DELETE_BOX', 'Delete Box');
 define('TEXT_INFO_DELETE_MISSING_LAYOUT_BOX','Delete missing box from Template listing: ');
@@ -38,8 +36,6 @@ define('TEXT_INFO_BOX_DETAILS','Box Details: ');
 
 ////////////////
 
-define('HEADING_TITLE_LAYOUT_TEMPLATE', 'Site Template Layout');
-
 define('TABLE_HEADING_LAYOUT_TITLE', 'Title');
 define('TABLE_HEADING_LAYOUT_VALUE', 'Value');
 
@@ -49,10 +45,6 @@ define('TEXT_WARNING_NEW_BOXES_FOUND', 'WARNING: New boxes found: ');
 define('TEXT_MODULE_DIRECTORY', 'Site Layout Directory:');
 define('TEXT_INFO_DATE_ADDED', 'Date Added:');
 define('TEXT_INFO_LAST_MODIFIED', 'Last Modified:');
-
-// layout box text in includes/boxes/layout.php
-define('BOX_HEADING_LAYOUT', 'Layout');
-define('BOX_LAYOUT_COLUMNS', 'Column Controller');
 
 // file exists
 define('TEXT_GOOD_BOX',' ');

@@ -17,9 +17,9 @@ function zen_update_whos_online() {
   if (zen_is_logged_in() && !zen_in_guest_checkout()) {
     $wo_customer_id = $_SESSION['customer_id'];
 
-    $customer_query = "select customers_firstname, customers_lastname
-                         from " . TABLE_CUSTOMERS . "
-                         where customers_id = '" . (int)$_SESSION['customer_id'] . "'";
+    $customer_query = "SELECT customers_firstname, customers_lastname
+                         FROM " . TABLE_CUSTOMERS . "
+                         WHERE customers_id = '" . (int)$_SESSION['customer_id'] . "'";
 
     $customer = $db->Execute($customer_query);
 
@@ -55,9 +55,9 @@ function zen_update_whos_online() {
 
   $db->Execute($sql);
 
-  $stored_customer_query = "select count(*) as count
-                              from " . TABLE_WHOS_ONLINE . "
-                              where session_id = '" . zen_db_input($wo_session_id) . "' and ip_address='" . zen_db_input($wo_ip_address) . "'";
+  $stored_customer_query = "SELECT count(*) as count
+                              FROM " . TABLE_WHOS_ONLINE . "
+                              WHERE session_id = '" . zen_db_input($wo_session_id) . "' AND ip_address='" . zen_db_input($wo_ip_address) . "'";
 
   $stored_customer = $db->Execute($stored_customer_query);
 
@@ -66,23 +66,23 @@ function zen_update_whos_online() {
   }
 
   if ($stored_customer->fields['count'] > 0) {
-    $sql = "update " . TABLE_WHOS_ONLINE . "
-              set customer_id = '" . (int)$wo_customer_id . "',
+    $sql = "UPDATE " . TABLE_WHOS_ONLINE . "
+              SET customer_id = '" . (int)$wo_customer_id . "',
                   full_name = '" . zen_db_input($wo_full_name) . "',
                   ip_address = '" . zen_db_input($wo_ip_address) . "',
                   time_last_click = '" . zen_db_input($current_time) . "',
                   last_page_url = '" . zen_db_input($wo_last_page_url) . "',
                   host_address = '" . zen_db_input($_SESSION['customers_host_address']) . "',
                   user_agent = '" . zen_db_input($wo_user_agent) . "'
-              where session_id = '" . zen_db_input($wo_session_id) . "' and ip_address='" . zen_db_input($wo_ip_address) . "'";
+              WHERE session_id = '" . zen_db_input($wo_session_id) . "' AND ip_address='" . zen_db_input($wo_ip_address) . "'";
 
     $db->Execute($sql);
 
   } else {
-    $sql = "insert into " . TABLE_WHOS_ONLINE . "
+    $sql = "INSERT INTO " . TABLE_WHOS_ONLINE . "
                 (customer_id, full_name, session_id, ip_address, time_entry,
                  time_last_click, last_page_url, host_address, user_agent)
-              values ('" . (int)$wo_customer_id . "', '" . zen_db_input($wo_full_name) . "', '"
+              VALUES ('" . (int)$wo_customer_id . "', '" . zen_db_input($wo_full_name) . "', '"
                          . zen_db_input($wo_session_id) . "', '" . zen_db_input($wo_ip_address)
                          . "', '" . zen_db_input($current_time) . "', '" . zen_db_input($current_time)
                          . "', '" . zen_db_input($wo_last_page_url)

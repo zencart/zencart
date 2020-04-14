@@ -849,7 +849,7 @@ if (zen_not_null($action) && $order_exists == true) {
           $extra_data = false;
           $zco_notifier->notify('NOTIFY_ADMIN_ORDERS_STATUS_HISTORY_EXTRA_COLUMN_DATA', $orders_history->fields, $extra_data);
           if (is_array($extra_data)) {
-              $first = true; 
+              $first = true;
               foreach ($extra_data as $data_info) {
                   $align = (isset($data_info['align'])) ? (' text-' . $data_info['align']) : '';
         ?>
@@ -859,12 +859,12 @@ if (zen_not_null($action) && $order_exists == true) {
           }
 ?>
                     <td>
-<?php 
-                        if ($first) { 
-                           echo nl2br(zen_db_output($item['comments'])); 
-                           $first = false; 
+<?php
+                        if ($first) {
+                           echo nl2br(zen_db_output($item['comments']));
+                           $first = false;
                         } else {
-                           echo nl2br($item['comments']); 
+                           echo nl2br($item['comments']);
                         }
 ?>
                     </td>
@@ -1123,12 +1123,12 @@ if (zen_not_null($action) && $order_exists == true) {
                   $order_by = " ORDER BY o.orders_id DESC";
                   $zco_notifier->notify('NOTIFY_ADMIN_ORDERS_SEARCH_PARMS', $keywords, $search, $search_distinct, $new_fields, $new_table, $order_by);
 
-                  $orders_query_raw = "select " . $search_distinct . " o.orders_id, o.customers_id, o.customers_name, o.payment_method, o.shipping_method, o.date_purchased, o.last_modified, o.currency, o.currency_value, s.orders_status_name, ot.text as order_total" .
+                  $orders_query_raw = "SELECT " . $search_distinct . " o.orders_id, o.customers_id, o.customers_name, o.payment_method, o.shipping_method, o.date_purchased, o.last_modified, o.currency, o.currency_value, s.orders_status_name, ot.text as order_total" .
                       $new_fields . "
-                          from (" . TABLE_ORDERS . " o " .
+                          FROM (" . TABLE_ORDERS . " o " .
                       $new_table . ")
-                          left join " . TABLE_ORDERS_STATUS . " s on (o.orders_status = s.orders_status_id and s.language_id = " . (int)$_SESSION['languages_id'] . ")
-                          left join " . TABLE_ORDERS_TOTAL . " ot on (o.orders_id = ot.orders_id and ot.class = 'ot_total') ";
+                          LEFT JOIN " . TABLE_ORDERS_STATUS . " s ON (o.orders_status = s.orders_status_id AND s.language_id = " . (int)$_SESSION['languages_id'] . ")
+                          LEFT JOIN " . TABLE_ORDERS_TOTAL . " ot ON (o.orders_id = ot.orders_id AND ot.class = 'ot_total') ";
 
 
                   if (!empty($_GET['cID'])) {
@@ -1171,9 +1171,9 @@ if (zen_not_null($action) && $order_exists == true) {
                     }
 
                     if (isset($oInfo) && is_object($oInfo) && ($orders->fields['orders_id'] == $oInfo->orders_id)) {
-                      echo '<tr id="defaultSelected" class="dataTableRowSelected" onclick="document.location.href=\'' . zen_href_link(FILENAME_ORDERS, zen_get_all_get_params(array('oID', 'action')) . 'oID=' . $oInfo->orders_id . '&action=edit', 'NONSSL') . '\'">' . "\n";
+                      echo '<tr id="defaultSelected" class="dataTableRowSelected">' . "\n";
                     } else {
-                      echo '<tr class="dataTableRow" onclick="document.location.href=\'' . zen_href_link(FILENAME_ORDERS, zen_get_all_get_params(array('oID')) . 'oID=' . $orders->fields['orders_id'], 'NONSSL') . '\'">' . "\n";
+                      echo '<tr class="dataTableRow">' . "\n";
                     }
 
                     $show_difference = '';

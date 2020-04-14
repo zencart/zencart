@@ -62,13 +62,13 @@
                 <td class="dataTableHeadingContent" align="right"><?php echo TABLE_HEADING_ACTION; ?>&nbsp;</td>
               </tr>
 <?php
-  $gv_query_raw = "select c.coupon_amount, c.coupon_code, c.coupon_id, et.sent_firstname, et.sent_lastname, et.customer_id_sent, et.emailed_to, et.date_sent, crt.redeem_date, c.coupon_id
-                  from " . TABLE_COUPONS . " c
-                  left join " . TABLE_COUPON_REDEEM_TRACK . " crt
-                  on c.coupon_id= crt.coupon_id, " . TABLE_COUPON_EMAIL_TRACK . " et
-                  where c.coupon_id = et.coupon_id " . "
-                  and c.coupon_type = 'G'
-                  order by date_sent desc";
+  $gv_query_raw = "SELECT c.coupon_amount, c.coupon_code, c.coupon_id, et.sent_firstname, et.sent_lastname, et.customer_id_sent, et.emailed_to, et.date_sent, crt.redeem_date, c.coupon_id
+                  FROM " . TABLE_COUPONS . " c
+                  LEFT JOIN " . TABLE_COUPON_REDEEM_TRACK . " crt
+                  ON c.coupon_id= crt.coupon_id, " . TABLE_COUPON_EMAIL_TRACK . " et
+                  WHERE c.coupon_id = et.coupon_id " . "
+                  AND c.coupon_type = 'G'
+                  ORDER BY date_sent desc";
   $gv_split = new splitPageResults($_GET['page'], MAX_DISPLAY_SEARCH_RESULTS, $gv_query_raw, $gv_query_numrows);
   $gv_list = $db->Execute($gv_query_raw);
   while (!$gv_list->EOF) {
@@ -107,8 +107,8 @@
 
   if (isset($gInfo)) {
     $heading[] = array('text' => '[' . $gInfo->coupon_id . '] ' . ' ' . $currencies->format($gInfo->coupon_amount));
-    $redeem = $db->Execute("select * from " . TABLE_COUPON_REDEEM_TRACK . "
-                            where coupon_id = '" . $gInfo->coupon_id . "'");
+    $redeem = $db->Execute("SELECT * FROM " . TABLE_COUPON_REDEEM_TRACK . "
+                            WHERE coupon_id = '" . $gInfo->coupon_id . "'");
     $redeemed = 'No';
     if ($redeem->RecordCount() > 0) $redeemed = 'Yes';
     $contents[] = array('text' => TEXT_INFO_SENDERS_ID . ' ' . $gInfo->customer_id_sent);

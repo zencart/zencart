@@ -74,9 +74,6 @@ define('TEXT_INFO_DATE_ADDED', 'Date Added:');
 define('TEXT_INFO_LAST_MODIFIED', 'Last Modified:');
 define('TEXT_INFO_NEW_PRICE', 'New Price:');
 define('TEXT_INFO_ORIGINAL_PRICE', 'Original Price:');
-define('TEXT_INFO_PERCENTAGE', 'Percentage:');
-define('TEXT_INFO_AVAILABLE_DATE', 'Available On:');
-define('TEXT_INFO_EXPIRES_DATE', 'Expires At:');
 define('TEXT_INFO_STATUS_CHANGE', 'Status Change:');
 
 define('TEXT_INFO_HEADING_DELETE_FEATURED', 'Delete Featured');
@@ -94,15 +91,11 @@ define('TEXT_PRODUCTS_DISCOUNT_QTY_TITLE', 'Discount Levels');
 define('TEXT_PRODUCTS_DISCOUNT','Discount');
 define('TEXT_PRODUCTS_DISCOUNT_QTY','Minimum Qty');
 define('TEXT_PRODUCTS_DISCOUNT_PRICE','Discount Value');
-define('TEXT_PRODUCTS_DISCOUNT_TYPE','Type');
 
 define('TEXT_PRODUCTS_DISCOUNT_PRICE_EACH','Calculate Price:');
 define('TEXT_PRODUCTS_DISCOUNT_PRICE_EXTENDED','Extended Price:');
 define('TEXT_PRODUCTS_DISCOUNT_PRICE_EACH_TAX','Calculate<br />Price: &nbsp; Taxed:');
 define('TEXT_PRODUCTS_DISCOUNT_PRICE_EXTENDED_TAX','Extended<br />Price: &nbsp; Taxed:');
-
-define('TEXT_EACH','ea.');
-define('TEXT_EXTENDED','total');
 
 define('TEXT_DISCOUNT_TYPE_INFO', 'Product Discount Info:');
 define('TEXT_DISCOUNT_TYPE','Discount Type:');
@@ -121,7 +114,6 @@ define('TEXT_UPDATE_COMMIT','Update and Commit all changes from current screen d
 define('TEXT_PRODUCTS_TAX_CLASS', 'Tax Class:');
 
 define('TEXT_INFO_MASTER_CATEGORIES_ID_WARNING', '<strong>Warning:</strong> The Product Master Category ID# %s does not match Current Category ID# %s and Product is Not Linked!');
-define('TEXT_INFO_MASTER_CATEGORIES_CURRENT', ' Current Category ID# %s matches the Master Category ID# %s');
 define('TEXT_INFO_MASTER_CATEGORIES_ID_UPDATE_TO_CURRENT', 'Update Master Categories ID# %s to match Current Category ID# %s');
 
 define('PRODUCT_WARNING_UPDATE', 'Please make any changes then press Update to save');

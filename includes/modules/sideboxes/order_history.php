@@ -11,15 +11,15 @@
 
   if (zen_is_logged_in() && !zen_in_guest_checkout()) {
 // retrieve the last x products purchased
-  $orders_history_query = "select distinct op.products_id, o.date_purchased
-                   from " . TABLE_ORDERS . " o, " . TABLE_ORDERS_PRODUCTS . " op, " . TABLE_PRODUCTS . " p
-                   where o.customers_id = '" . (int)$_SESSION['customer_id'] . "'
-                   and o.orders_id = op.orders_id
-                   and op.products_id = p.products_id
-                   and p.products_status = 1
-                   group by products_id, date_purchased
-                   order by o.date_purchased desc, products_id
-                   limit " . MAX_DISPLAY_PRODUCTS_IN_ORDER_HISTORY_BOX;
+  $orders_history_query = "SELECT distinct op.products_id, o.date_purchased
+                   FROM " . TABLE_ORDERS . " o, " . TABLE_ORDERS_PRODUCTS . " op, " . TABLE_PRODUCTS . " p
+                   WHERE o.customers_id = '" . (int)$_SESSION['customer_id'] . "'
+                   AND o.orders_id = op.orders_id
+                   AND op.products_id = p.products_id
+                   AND p.products_status = 1
+                   GROUP BY products_id, date_purchased
+                   ORDER BY o.date_purchased desc, products_id
+                   LIMIT " . MAX_DISPLAY_PRODUCTS_IN_ORDER_HISTORY_BOX;
 
     $orders_history = $db->Execute($orders_history_query);
 
@@ -32,11 +32,11 @@
       $product_ids = substr($product_ids, 0, -1);
       $rows=0;
 
-      $products_history_query = "select products_id, products_name
-                         from " . TABLE_PRODUCTS_DESCRIPTION . "
-                         where products_id in (" . $product_ids . ")
-                         and language_id = '" . (int)$_SESSION['languages_id'] . "'
-                         order by products_name";
+      $products_history_query = "SELECT products_id, products_name
+                         FROM " . TABLE_PRODUCTS_DESCRIPTION . "
+                         WHERE products_id in (" . $product_ids . ")
+                         AND language_id = '" . (int)$_SESSION['languages_id'] . "'
+                         ORDER BY products_name";
 
       $products_history = $db->Execute($products_history_query);
 

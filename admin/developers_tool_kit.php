@@ -718,9 +718,9 @@ if ($found == false) {
           </tr>
           <?php
           if ($show_products_type_layout == true) {
-            $check_configure_group = $db->Execute("select * from " . TABLE_PRODUCT_TYPES . " where type_id='" . (int)$check_configure->fields['product_type_id'] . "'");
+            $check_configure_group = $db->Execute("SELECT * FROM " . TABLE_PRODUCT_TYPES . " WHERE type_id='" . (int)$check_configure->fields['product_type_id'] . "'");
           } else {
-            $check_configure_group = $db->Execute("select * from " . TABLE_CONFIGURATION_GROUP . " where configuration_group_id='" . (int)$check_configure->fields['configuration_group_id'] . "'");
+            $check_configure_group = $db->Execute("SELECT * FROM " . TABLE_CONFIGURATION_GROUP . " WHERE configuration_group_id='" . (int)$check_configure->fields['configuration_group_id'] . "'");
           }
           ?>
 
