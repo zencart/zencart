@@ -344,7 +344,14 @@ class systemChecker
   public function checkHtaccessSupport($parameters)
   {
     $testPath = $_SERVER['HTTP_HOST'] . $_SERVER['SCRIPT_NAME'];
-    $testPath = 'http://' . substr($testPath, 0, strpos($testPath, '/zc_install')) . '/includes/filenames.php';
+    $proto = 'http://'; 
+
+    if (isset($_SERVER['REQUEST_SCHEME']) && $_SERVER['REQUEST_SCHEME'] == 'https') { 
+      $proto = "https://"; 
+    } else if (isset($_SERVER['SCRIPT_URI']) && strncmp($_SERVER['SCRIPT_URI'], 'https', 5) == 0) { 
+      $proto = "https://";
+    }
+    $testPath = $proto . substr($testPath, 0, strpos($testPath, '/zc_install')) . '/includes/filenames.php';
     if (function_exists('curl_init'))
     {
       $resultCurl = self::curlGetUrl($testPath);
