@@ -521,12 +521,41 @@ foreach ($whos_online as $session) {
               if ($order['currency'] != DEFAULT_CURRENCY) {
                 $amt .= ' (' . $order['order_total'] . ')';
               }
-              ?>
+
+              $sql = "SELECT op.products_quantity AS qty, op.products_name AS name, op.products_model AS model, opa.products_options AS option, opa.products_options_values AS value 
+                      FROM " . TABLE_ORDERS_PRODUCTS . " op 
+                      LEFT OUTER JOIN " . TABLE_ORDERS_PRODUCTS_ATTRIBUTES . " opa ON op.orders_products_id=opa.orders_products_id
+                      WHERE op.orders_id = " . (int)$order['orders_id'];
+              $orderProducts = $db->Execute($sql, false, true, 1800);
+              $product_details = '';
+              foreach($orderProducts as $product) {
+                  $product_details .= $product['qty'] . ' x ' . $product['name'] . ' (' . $product['model'] . ')' . "\n";
+                  if (!empty($product['option'])) {
+                      $product_details .= '&nbsp;&nbsp;- ' . $product['option'] . ': ' . zen_output_string_protected($product['value']) . "\n";
+                  }
+                  $product_details .= '<hr>'; // add HR
+              }
+              $product_details = rtrim($product_details);
+              $product_details = preg_replace('~<hr>$~', '', $product_details); // remove last HR
+              $product_details = nl2br($product_details);
+            ?>
             <tr>
               <td>
-                <a href="<?php echo zen_href_link(FILENAME_ORDERS, 'oID=' . $order['orders_id'] . '&origin=' . FILENAME_DEFAULT); ?>" class="contentlink"><?php echo substr($order['customers_name'], 0, 20); ?></a>
+                <a href="<?php echo zen_href_link(FILENAME_ORDERS, 'oID=' . $order['orders_id'] . '&origin=' . FILENAME_DEFAULT); ?>" class="contentlink">
+                    <?php echo $order['orders_id'] . ' - ' . substr($order['customers_name'], 0, 20); ?>
+                </a>
               </td>
-              <td class="text-center"><?php echo $amt; ?></td>
+              <td class="text-left">
+                  <a tabindex="0" class="btn btn-xs btn-link orderProductsPopover" role="button" data-toggle="popover"
+                     data-trigger="focus"
+                     data-placement="left"
+                     title="<?php echo TEXT_PRODUCT_POPUP_TITLE; ?>"
+                     data-content="<?php echo zen_output_string($product_details, array('"' => '&quot;', "'" => '&#39;', '<br />' => '<br>')); ?>"
+                  >
+                      <?php echo TEXT_PRODUCT_POPUP_BUTTON; ?>
+                  </a>
+              </td>
+              <td class="text-right"><?php echo $amt; ?></td>
               <td class="text-right"><?php echo zen_date_short($order['date_purchased']); ?></td>
             </tr>
           <?php } ?>
@@ -547,3 +576,10 @@ foreach ($whos_online as $session) {
         </table>
       </div>
     </div>
+
+<!--  enable popovers-->
+<script>
+    jQuery(function () {
+        jQuery('[data-toggle="popover"]').popover({html:true,sanitize: true})
+    })
+</script>
