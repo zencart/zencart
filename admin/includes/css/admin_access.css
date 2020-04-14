@@ -1,0 +1,33 @@
+/*
+ * @package Admin Access
+ * @copyright Copyright 2003-2011 Zen Cart Development Team
+ * @copyright Portions Copyright 2003 osCommerce
+ * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
+ * @version $Id: admin_access.css 19326 2011-08-02 22:11:40Z kuroi $
+ */
+
+#pageWrapper {padding:20px}
+#pageWrapper thead {background-color: #D7D6CC}
+#pageWrapper th {padding:4px; text-align:left}
+#pageWrapper tbody td {padding:4px; border-bottom:1px solid #ccc}
+
+form {width:100%}
+dl {clear:both}
+dt {clear:both; background:#ededed; line-height:2em; padding:0; float:left; width:100%}
+dt strong {float:left; padding-left:5px}
+dd {margin:0}
+
+label {width:15em; float:left}
+#button {margin-left:15em; margin-top:.5em}
+
+.formButtons{width: 100%; padding:5px 0 5px 0; float:left; clear:both}
+.checkLabel {float:left}
+.checkButton{float:right}
+
+.id {width:5em}
+.name {width:20em}
+.users {width:6em}
+.email {width:25em}
+.profile {width:20em}
+
+#profile-update input {float:left; margin-right:8px}

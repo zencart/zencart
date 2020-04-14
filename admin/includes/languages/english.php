@@ -172,6 +172,7 @@ define('BOX_TOOLS_TEMPLATE_SELECT', 'Template Selection');
 define('BOX_TOOLS_BANNER_MANAGER', 'Banner Manager');
 define('BOX_TOOLS_MAIL', 'Send Email');
 define('BOX_TOOLS_NEWSLETTER_MANAGER', 'Newsletter and Product Notifications Manager');
+define('BOX_TOOLS_DEFINE_PAGES_EDITOR','Define Pages Editor');
 define('BOX_TOOLS_SERVER_INFO', 'Server/Version Info');
 define('BOX_TOOLS_WHOS_ONLINE', 'Who\'s Online');
 define('BOX_TOOLS_STORE_MANAGER', 'Store Manager');

@@ -20,7 +20,6 @@ if ((int)$timeoutAfter < 30) $timeoutAfter = 1440;
 $camefrom = basename($PHP_SELF) . (empty($params = zen_get_all_get_params()) ? '' : '?' . trim($params, '&'));
 ?>
 
-<link rel="stylesheet" type="text/css" href="includes/css/jAlert.css">
 <script src="includes/javascript/jAlert.min.js"></script>
 <script src="includes/javascript/jTimeout.min.js"></script>
 <script title="jTimeout-Init">
