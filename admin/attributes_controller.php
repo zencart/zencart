@@ -1030,7 +1030,7 @@ function zen_js_option_values_list($selectedName, $fieldName)
                   <td class="text-center">
                     <span class="fa-stack">
                       <i class="fa fa-square fa-stack-2x base-included-attr-txt opacity-25" aria-hidden="true"></i>
-                      <i class="fa fa-times fa-stack-1x red-txt" aria-hidden="true""></i>
+                      <i class="fa fa-times fa-stack-1x red-txt" aria-hidden="true"></i>
                     </span>
                     <span class="fa-stack">
                       <i class="fa fa-square fa-stack-2x base-included-attr-txt" aria-hidden="true"></i>
