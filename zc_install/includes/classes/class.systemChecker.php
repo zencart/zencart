@@ -278,9 +278,9 @@ class systemChecker
     }
     return $retVal;
   }
-  public function checkFileExists($filepath)
+  public function checkFileExists($parameters)
   {
-    return file_exists($filepath);
+    return file_exists($parameters['fileDir']);
   }
   public function checkWriteableDir($parameters)
   {
