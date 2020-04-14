@@ -144,13 +144,6 @@ systemChecks:
       checkWriteableDir:
         parameters:
           fileDir: <?php echo DIR_FS_DOWNLOAD_PUBLIC . PHP_EOL; ?>
-  htaccessSupport:
-    runLevel: always
-    errorLevel: WARN
-    mainErrorText:  <?php echo TEXT_ERROR_HTACCESS_SUPPORT .PHP_EOL; ?>
-    mainErrorTextHelpId: helpIdHtaccessSupport
-    methods:
-      checkHtaccessSupport:
   initialSessionCheck:
     runLevel: always
     errorLevel: FAIL

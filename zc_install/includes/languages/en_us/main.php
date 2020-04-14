@@ -154,7 +154,6 @@ Check the <a href="https://www.zen-cart.com">www.zen-cart.com</a> website for th
 'TEXT_ERROR_MEDIA_FOLDER' => '/media/ folder is not writeable',
 'TEXT_ERROR_PUB_FOLDER' => DIR_FS_DOWNLOAD_PUBLIC . ' folder is not writeable',
 'TEXT_ERROR_CONFIGURE_REQUIRES_UPDATE' => 'Your configure.php file is an old version and requires updating before we can continue.',
-'TEXT_ERROR_HTACCESS_SUPPORT' => 'Support for ".htaccess" files is not enabled or is not operating correctly.<br>[ <i><b>NOTE:</b> If you are using Nginx, continue to the <u>END</u> of this Installation Wizard for information on resolving this issue.<i> ]',
 'TEXT_ERROR_SESSION_SUPPORT' => 'Problems with session support',
 'TEXT_ERROR_SESSION_SUPPORT_USE_TRANS_SID' => 'ini setting session.use_trans_sid is enabled',
 'TEXT_ERROR_SESSION_SUPPORT_AUTO_START' => 'ini setting session.auto_start is enabled',
@@ -183,56 +182,6 @@ Check the <a href="https://www.zen-cart.com">www.zen-cart.com</a> website for th
 'TEXT_FORM_VALIDATION_CATALOG_HTTPS_URL' => 'A URL is required here, even if you have temporarily opted not to enable SSL yet. Try using your normal domain name.',
 'TEXT_NAVBAR_INSTALLATION_INSTRUCTIONS' => 'Installation Instructions',
 'TEXT_NAVBAR_FORUM_LINK' => 'Forum',
-'TEXT_NAVBAR_WIKI_LINK' => 'Wiki',
-'TEXT_HELP_TITLE_HTACCESSSUPPORT' => '.htaccess support',
-'TEXT_HELP_CONTENT_HTACCESSSUPPORT' => 'There appears to be a problem with support for ".htaccess" files.<br>Sensitive files and folders on your site, that should normally be blocked by security rules in the built-in ".htaccess" files that come with Zen Cart, are currently accessible.
-	<br><br>
-
-	Possible causes: 
-
-	<ul style="list-style-type:square">
-
-		<li>
-
-			You may not be using Apache as your Web Server (".htaccess" files are unique to the Apache Web Server), or,
-
-		</li>
-
-		<li>
-
-			Support for ".htaccess" is disabled or misconfigured, or,
-
-		</li>
-
-		<li>
-
-			The ".htaccess" files that come with Zen Cart have not been uploaded to your site.
-
-			<br>
-
-			<strong>
-
-				<i>Files starting with ".", such as ".htaccess" files, are usually treated as "hidden" files and your FTP program may have failed to upload these if you have turned off the display and/or transfer of such hidden files in its settings.</i>
-
-			</strong>
-
-		</li>
-
-	</ul>
-
-	<br>
-
-	You may proceed with installing despite this situation, but please be advised that your site will be less secure than it ought to be (If using the Apache Web Server).
-
-	<br><br>
-
-	If you are using the Nginx Web Server, please proceed with installing and secure your installation using the equivalent Nginx directives provided under "<strong>Important Security Information for Nginx</strong>" in the "Setup Finished" section of this installation wizard.
-
-	<br><br>
-
-	If you do not know which Web Server is in use, please proceed on the assumption that it is the Apache Web Server and request assistance with enabling ".htaccess" support from your web hosting provider.
-
-	<br><br>',
 'TEXT_HELP_TITLE_FOLDERPERMS' => 'Folder Permissions',
 'TEXT_HELP_CONTENT_FOLDERPERMS' => 'The permissions for this folder are not set correctly. This folder needs to be writeable. You can find out more about folder permissions at <a href="https://docs.zen-cart.com/user/installing/permissions/" target="_blank">https://docs.zen-cart.com/user/installing/permissions/</a>',
 'TEXT_HELP_TITLE_CONNECTIONDATABASECHECK' => 'Initial Database Connection',

@@ -341,42 +341,6 @@ class systemChecker
     return $result;
   }
 
-  public function checkHtaccessSupport($parameters)
-  {
-    $testPath = $_SERVER['HTTP_HOST'] . $_SERVER['SCRIPT_NAME'];
-    $proto = 'http://'; 
-
-    if (isset($_SERVER['REQUEST_SCHEME']) && $_SERVER['REQUEST_SCHEME'] == 'https') { 
-      $proto = "https://"; 
-    } else if (isset($_SERVER['SCRIPT_URI']) && strncmp($_SERVER['SCRIPT_URI'], 'https', 5) == 0) { 
-      $proto = "https://";
-    }
-    $testPath = $proto . substr($testPath, 0, strpos($testPath, '/zc_install')) . '/includes/filenames.php';
-    if (function_exists('curl_init'))
-    {
-      $resultCurl = self::curlGetUrl($testPath);
-      if (isset($resultCurl['http_code']) && $resultCurl['http_code'] == '403')
-      {
-        $result = TRUE;
-      } else
-      { // test again with redirects enabled
-	      $resultCurl = self::curlGetUrl($testPath, true);
-	      if (isset($resultCurl['http_code']) && $resultCurl['http_code'] == '403')
-	      {
-	        $result = TRUE;
-	      } else
-	      {
-	        $result = FALSE;
-	      }
-      }
-
-    } else
-    {
-      $result = TRUE;
-    }
-    return $result;
-  }
-
   public function checkInitialSession($parameters)
   {
     session_name($parameters['sessionName']);
