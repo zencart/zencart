@@ -855,8 +855,15 @@ input.faint {
 
 /* end of print-specific styles */
 
+.orderProductsPopover {
+    color: #333;
+}
+
 /* Forms - put this last */
 .form-control {
     width: 90%;
     display: inline-block;
+}
+.control-label {/*for multiple inputs*/
+    font-weight: 700;
 }
