@@ -19,8 +19,8 @@ foreach ($var as $key)
 ?>
 <script>window.jQuery || document.write('<script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"><\/script>');</script>
 <script>window.jQuery || document.write('<script src="includes/javascript/jquery-3.4.1.min.js"><\/script>');</script>
-<script type="text/javascript" src="../<?php echo DIR_WS_EDITORS; ?>ckeditor/ckeditor.js"></script>
-<script type="text/javascript">
+<script src="../<?php echo DIR_WS_EDITORS; ?>ckeditor/ckeditor.js"></script>
+<script>
 $(document).ready(function() {
   <?php echo $jsLanguageLookupArray ?>
   $('textarea').each(function() {
