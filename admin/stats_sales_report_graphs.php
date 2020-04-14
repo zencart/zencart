@@ -126,7 +126,7 @@ for ($i = 0; $i < $report->size; $i++) {
     echo substr($report->info[$i]['text'], 0, 1);
   } elseif ($sales_report_view == statsSalesReportGraph::MONTHLY_VIEW) {
     echo substr($report->info[$i]['text'], 0, 3);
-  } elseif ($sales_report_view == statsSalesReportGraph::WEEKY_VIEW) {
+  } elseif ($sales_report_view == statsSalesReportGraph::WEEKLY_VIEW) {
     echo substr($report->info[$i]['text'], 0, 5);
   } elseif ($sales_report_view == statsSalesReportGraph::HOURLY_VIEW) {
     echo ltrim(substr($report->info[$i]['text'], 0, 2), '0');
