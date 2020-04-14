@@ -849,7 +849,7 @@ if (zen_not_null($action) && $order_exists == true) {
           $extra_data = false;
           $zco_notifier->notify('NOTIFY_ADMIN_ORDERS_STATUS_HISTORY_EXTRA_COLUMN_DATA', $orders_history->fields, $extra_data);
           if (is_array($extra_data)) {
-              $first = true; 
+              $first = true;
               foreach ($extra_data as $data_info) {
                   $align = (isset($data_info['align'])) ? (' text-' . $data_info['align']) : '';
         ?>
@@ -859,12 +859,12 @@ if (zen_not_null($action) && $order_exists == true) {
           }
 ?>
                     <td>
-<?php 
-                        if ($first) { 
-                           echo nl2br(zen_db_output($item['comments'])); 
-                           $first = false; 
+<?php
+                        if ($first) {
+                           echo nl2br(zen_db_output($item['comments']));
+                           $first = false;
                         } else {
-                           echo nl2br($item['comments']); 
+                           echo nl2br($item['comments']);
                         }
 ?>
                     </td>
@@ -1171,9 +1171,9 @@ if (zen_not_null($action) && $order_exists == true) {
                     }
 
                     if (isset($oInfo) && is_object($oInfo) && ($orders->fields['orders_id'] == $oInfo->orders_id)) {
-                      echo '<tr id="defaultSelected" class="dataTableRowSelected" onclick="document.location.href=\'' . zen_href_link(FILENAME_ORDERS, zen_get_all_get_params(array('oID', 'action')) . 'oID=' . $oInfo->orders_id . '&action=edit', 'NONSSL') . '\'">' . "\n";
+                      echo '<tr id="defaultSelected" class="dataTableRowSelected">' . "\n";
                     } else {
-                      echo '<tr class="dataTableRow" onclick="document.location.href=\'' . zen_href_link(FILENAME_ORDERS, zen_get_all_get_params(array('oID')) . 'oID=' . $orders->fields['orders_id'], 'NONSSL') . '\'">' . "\n";
+                      echo '<tr class="dataTableRow">' . "\n";
                     }
 
                     $show_difference = '';
