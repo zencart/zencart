@@ -110,7 +110,7 @@ $adjustWarnIssues = false;
 <?php } ?>
 <?php if (!$hasFatalErrors && !$hasWarnErrors && $hasUpdatedConfigFile) { ?>
     <div class="alert-box success">
-    <?php  echo TEXT_ERROR_SUCCESS_NO_ERRORS; ?>
+    <?php echo TEXT_ERROR_SUCCESS_NO_ERRORS; ?>
     </div>
 <?php } ?>
 <?php if (!$hasFatalErrors && !$hasSaneConfigFile) { ?>
