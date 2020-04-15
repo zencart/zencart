@@ -1196,7 +1196,7 @@ if (zen_not_null($action) && $order_exists == true) {
                 <td class="dataTableContent text-right"><?php echo strip_tags($orders->fields['order_total']); ?></td>
                 <td class="dataTableContent text-right">
                     <?php
-                    $sql = "SELECT op.products_quantity AS qty, op.products_name AS name, op.products_model AS model, opa.products_options AS option, opa.products_options_values AS value 
+                    $sql = "SELECT op.products_quantity AS qty, op.products_name AS name, op.products_model AS model, opa.products_options AS product_option, opa.products_options_values AS product_value 
                             FROM " . TABLE_ORDERS_PRODUCTS . " op 
                             LEFT OUTER JOIN " . TABLE_ORDERS_PRODUCTS_ATTRIBUTES . " opa ON op.orders_products_id=opa.orders_products_id
                             WHERE op.orders_id = " . (int)$orders->fields['orders_id'];
@@ -1204,14 +1204,14 @@ if (zen_not_null($action) && $order_exists == true) {
                     $product_details = '';
                     foreach($orderProducts as $product) {
                         $product_details .= $product['qty'] . ' x ' . $product['name'] . ' (' . $product['model'] . ')' . "\n";
-                        if (!empty($product['option'])) {
-                            $product_details .= '&nbsp;&nbsp;- ' . $product['option'] . ': ' . zen_output_string_protected($product['value']) . "\n";
+                        if (!empty($product['product_option'])) {
+                            $product_details .= '&nbsp;&nbsp;- ' . $product['product_option'] . ': ' . zen_output_string_protected($product['product_value']) . "\n";
                         }
                         $product_details .= '<hr>'; // add HR
-                      }
-                      $product_details = rtrim($product_details);
-                      $product_details = preg_replace('~<hr>$~', '', $product_details); // remove last HR
-                      $product_details = nl2br($product_details);
+                    }
+                    $product_details = rtrim($product_details);
+                    $product_details = preg_replace('~<hr>$~', '', $product_details); // remove last HR
+                    $product_details = nl2br($product_details);
                     ?>
                     <a tabindex="0" class="btn btn-xs btn-link orderProductsPopover" role="button" data-toggle="popover"
                        data-trigger="focus"
