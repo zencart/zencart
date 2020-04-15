@@ -726,7 +726,7 @@ CREATE TABLE ezpages_content (
   pages_id int(11) NOT NULL DEFAULT '0',
   languages_id int(11) NOT NULL DEFAULT '1',
   pages_title varchar(64) NOT NULL DEFAULT '',
-  pages_html_text text,
+  pages_html_text mediumtext,
   UNIQUE KEY idx_ezpages_content (pages_id,languages_id),
   KEY idx_lang_id_zen (languages_id)
 ) ENGINE=MyISAM;
