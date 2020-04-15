@@ -18,7 +18,7 @@ return [
 'TEXT_HEADER_MAIN' => 'TIP: The field titles are clickable help links which explain what each field means.',
 'TEXT_INDEX_HEADER_MAIN' => 'TIP: More information may be available by clicking on the <strong>titles</strong> of some errors and warnings.',
 'TEXT_INSTALLER_CHOOSE_LANGUAGE' => 'Installer Language',
-'TEXT_HELP_CONTENT_CHOOSE_LANG' => 'This language selection refers to the installation process only.<br>The Zen Cart&reg; installation files include only the US English language pack.<br>However, Zen Cart&reg; is fully multi-lingual, supporting <em>any</em> language (subject to a language pack having been developed by the community).',
+'TEXT_HELP_CONTENT_CHOOSE_LANG' => 'This language selection refers to the installation process only.<br>The Zen Cart&reg; installation files include only the US English language pack.<br>However, Zen Cart&reg; is fully multi-lingual, supporting <em>any</em> language (subject to a language pack bieing available/having been developed by the community).',
 'TEXT_PAGE_HEADING_SYSTEM_SETUP' => 'System Setup',
 'TEXT_SYSTEM_SETUP_ADMIN_SETTINGS' => 'Admin Settings',
 'TEXT_SYSTEM_SETUP_CATALOG_SETTINGS' => 'Catalog (Storefront) Settings',
