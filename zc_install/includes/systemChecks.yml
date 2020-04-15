@@ -22,14 +22,6 @@ systemChecks:
           fileDir: <?php echo DIR_FS_ROOT . 'includes/configure.php' . PHP_EOL; ?>
           changePerms: '0664'
           createFile: TRUE
-  checkLocalStoreConfigureFile:
-    runLevel: localdev
-    errorLevel: ALERT
-    mainErrorText: <?php echo TEXT_FOUND_LOCAL_STORE_CONFIGURE . PHP_EOL; ?>
-    methods:
-      checkFileExists:
-        parameters:
-          fileDir: <?php echo DIR_FS_ROOT . 'includes/local/configure.php' . PHP_EOL; ?>
   checkAdminConfigureFile:
     runLevel: always
     errorLevel: FAIL
@@ -40,14 +32,6 @@ systemChecks:
           fileDir: <?php echo 'includes/configure.php' . PHP_EOL; ?>
           changePerms: '0664'
           createFile: TRUE
-  checkLocalAdminConfigureFile:
-    runLevel: localdev
-    errorLevel: ALERT
-    mainErrorText: <?php echo TEXT_FOUND_LOCAL_ADMIN_CONFIGURE . PHP_EOL; ?>
-    methods:
-      checkFileExists:
-        parameters:
-          fileDir: <?php echo 'includes/local/configure.php' . PHP_EOL; ?>
   checkPhpVersion:
     runLevel: always
     errorLevel: FAIL
