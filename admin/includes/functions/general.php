@@ -656,13 +656,15 @@
       $countries_array[] = array('id' => '',
                                  'text' => $default);
     }
-    $countries = $db->Execute("SELECT countries_id, countries_name
+    $countries = $db->Execute("SELECT countries_id, countries_name, status 
                                FROM " . TABLE_COUNTRIES . "
                                ORDER BY countries_name");
 
     while (!$countries->EOF) {
       $countries_array[] = array('id' => $countries->fields['countries_id'],
-                                 'text' => $countries->fields['countries_name']);
+        'text' => $countries->fields['countries_name'],
+        'status' => $countries->fields['status'],
+      );
       $countries->MoveNext();
     }
 

@@ -219,6 +219,12 @@ UPDATE configuration SET val_function = '{"error":"TEXT_EMAIL_ADDRESS_VALIDATE",
 
 ALTER TABLE admin_activity_log MODIFY attention MEDIUMTEXT;
 
+# ZC 156 changed these fields in the install but not in the upgrade 
+ALTER TABLE upgrade_exceptions MODIFY sql_file varchar(128) default NULL; 
+ALTER TABLE upgrade_exceptions MODIFY reason TEXT;
+ALTER TABLE upgrade_exceptions MODIFY errordate datetime default NULL; 
+
+
 # New Plugin tables
 
 # --------------------------------------------------------

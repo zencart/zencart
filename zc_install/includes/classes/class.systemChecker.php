@@ -45,7 +45,7 @@ class systemChecker
         {
           $this->localErrors = NULL;
           if (isset($methodDetail['method'])) $methodName = $methodDetail['method'];
-          $result = $this -> {$methodName}($methodDetail['parameters']);
+          $result = $this -> {$methodName}(isset($methodDetail['parameters']) ? $methodDetail['parameters'] : null);
           $resultCombined &= $result;
           if ($result == false && (isset($this->systemChecks[$systemCheckName]['criticalError'])))
           {
@@ -656,7 +656,9 @@ class systemChecker
     }
     if (!in_array(VERBOSE_SYSTEMCHECKER, array('silent', 'none', 'off', 'OFF', 'NONE', 'SILENT')))
     {
-      logDetails((($result == 1) ? 'PASSED' : 'FAILED') . substr(print_r($methodDetail['parameters'], TRUE), 5), $methodName);
+      logDetails((($result == 1) ? 'PASSED' : 'FAILED') .
+          (isset($methodDetail['parameters']) ? substr(print_r($methodDetail['parameters'], TRUE), 5) : ''),
+          $methodName);
     }
   }
   function checkIsZCVersionCurrent()

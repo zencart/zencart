@@ -110,20 +110,20 @@ $adjustWarnIssues = false;
 <?php } ?>
 <?php if (!$hasFatalErrors && !$hasWarnErrors && $hasUpdatedConfigFile) { ?>
     <div class="alert-box success">
-    <?php  echo TEXT_ERROR_SUCCESS_NO_ERRORS; ?>
+    <?php echo TEXT_ERROR_SUCCESS_NO_ERRORS; ?>
     </div>
 <?php } ?>
 <?php if (!$hasFatalErrors && !$hasSaneConfigFile) { ?>
   <input type="submit" class="zc-full radius button" id="btnsubmit" name="btnsubmit" value="<?php echo TEXT_CONTINUE; ?>" <?php echo ($hasMultipleAdmins) ? '' : 'autofocus="autofocus"'; ?> tabindex="1">
 <?php } ?>
 <?php if (!$hasFatalErrors && $hasSaneConfigFile && !$hasUpgradeErrors && !$isCurrentDb && $hasUpdatedConfigFile && $hasTables) { ?>
-  <input type="submit" class="zc-upg radius button" id="btnsubmit" name="btnsubmit" value="<?php echo TEXT_UPGRADE; ?>" tabindex="2">
+  <input type="submit" class="zc-upg radius button" id="btnsubmit" name="btnsubmit" value="<?php echo TEXT_UPGRADE; ?>" tabindex="2" title="<?php echo TEXT_UPGRADE_INFO; ?>">
 <?php } ?>
 <?php if (!$hasFatalErrors && $hasSaneConfigFile && !$hasUpgradeErrors && $hasUpdatedConfigFile) { ?>
-  <input type="submit" class="zc-full radius button" id="btnsubmit1" name="btnsubmit" value="<?php echo TEXT_CLEAN_INSTALL; ?>" tabindex="3">
+  <input type="submit" class="zc-full radius button" id="btnsubmit1" name="btnsubmit" value="<?php echo TEXT_CLEAN_INSTALL; ?>" tabindex="3" title="<?php echo TEXT_CLEAN_INSTALL_INFO; ?>">
 <?php } ?>
 <?php if ($hasUpgradeErrors && $hasSaneConfigFile && $hasUpdatedConfigFile) { ?>
-  <input type="submit" class="zc-full radius button" id="btnsubmit2" name="btnsubmit" value="<?php echo TEXT_CLEAN_INSTALL; ?>" tabindex="4">
+  <input type="submit" class="zc-full radius button" id="btnsubmit2" name="btnsubmit" value="<?php echo TEXT_CLEAN_INSTALL; ?>" tabindex="4" title="<?php echo TEXT_CLEAN_INSTALL_INFO; ?>">
 <?php } ?>
 <?php } ?>
 <?php if (!$hasUpdatedConfigFile && $hasSaneConfigFile) { ?>

@@ -27,7 +27,7 @@
           <fieldset>
            <div class="row">
              <div class="small-3 columns">
-               <label class="inline" for="choose_lang"><a href="#" class="hasHelpText" id="choose_lang"><?php echo TEXT_INSTALLER_CHOOSE_LANGUAGE; ?></a></label>
+               <label class="inline" for="lng"><a href="#" class="hasHelpText" id="choose_lang"><?php echo TEXT_INSTALLER_CHOOSE_LANGUAGE; ?></a></label>
              </div>
              <div class="small-9 columns">
                <select name="lng" id="lng" class="medium"><?php echo zen_get_install_languages_list($lng); ?></select>
