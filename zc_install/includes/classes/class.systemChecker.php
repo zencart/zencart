@@ -2,9 +2,9 @@
 /**
  * file contains systemChecker Class
  * @package Installer
- * @copyright Copyright 2003-2018 Zen Cart Development Team
+ * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Drbyte Tue Oct 9 18:48:15 2018 -0400 Modified in v1.5.6 $
+ * @version $Id:  Modified in v1.5.7 $
  */
 /**
  * systemChecker Class
@@ -278,9 +278,9 @@ class systemChecker
     }
     return $retVal;
   }
-  public function checkFileExists($filepath)
+  public function checkFileExists($parameters)
   {
-    return file_exists($filepath);
+    return file_exists($parameters['fileDir']);
   }
   public function checkWriteableDir($parameters)
   {
@@ -343,31 +343,32 @@ class systemChecker
 
   public function checkHtaccessSupport($parameters)
   {
-    $testPath = $_SERVER['HTTP_HOST'] . $_SERVER['SCRIPT_NAME'];
-    $testPath = 'http://' . substr($testPath, 0, strpos($testPath, '/zc_install')) . '/includes/filenames.php';
-    if (function_exists('curl_init'))
-    {
-      $resultCurl = self::curlGetUrl($testPath);
-      if (isset($resultCurl['http_code']) && $resultCurl['http_code'] == '403')
-      {
-        $result = TRUE;
-      } else
-      { // test again with redirects enabled
-	      $resultCurl = self::curlGetUrl($testPath, true);
-	      if (isset($resultCurl['http_code']) && $resultCurl['http_code'] == '403')
-	      {
-	        $result = TRUE;
-	      } else
-	      {
-	        $result = FALSE;
-	      }
+      if (!function_exists('curl_init')) {
+          return true;
       }
 
-    } else
-    {
-      $result = TRUE;
-    }
-    return $result;
+      global $request_type;
+      $tests = [];
+
+      $testPath = preg_replace('~/zc_install.*$~', '/includes/filenames.php', $_SERVER['HTTP_HOST'] . $_SERVER['SCRIPT_NAME']);
+      // first element added to the $tests array is based on $request_type
+      $tests[] = ($request_type == 'SSL' ? 'https://' : 'http://') . $testPath;
+      // add inverse test as fallback
+      $tests[] = ($request_type == 'SSL' ? 'http://' : 'https://') . $testPath;
+
+      foreach($tests as $test) {
+          $resultCurl = self::curlGetUrl($test, false);
+          if (isset($resultCurl['http_code']) && $resultCurl['http_code'] == '403') {
+              return true;
+          }
+          // test again with redirects enabled
+          $resultCurl = self::curlGetUrl($test, true);
+          if (isset($resultCurl['http_code']) && $resultCurl['http_code'] == '403') {
+              return true;
+          }
+      }
+
+      return false;
   }
 
   public function checkInitialSession($parameters)

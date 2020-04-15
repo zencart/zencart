@@ -204,12 +204,14 @@ $group = array(
 );
 $sanitizer->addSimpleSanitization('ALPHANUM_DASH_UNDERSCORE', $group);
 
-$group = array('pages_title', 'page_params', 'music_genre_name', 'artists_name', 'record_company_name', 'countries_name', 'name', 'type_name', 'manufacturers_name',
-               'title', 'coupon_name', 'coupon_copy_to_dup_name', 'banners_title', 'coupon_code', 'coupon_delete_duplicate_code', 'coupon_type',
-               'group_name', 'geo_zone_name', 'geo_zone_description',
-               'tax_class_description', 'tax_class_title', 'tax_description', 'entry_company', 'customers_firstname',
-               'customers_lastname', 'entry_street_address', 'entry_suburb', 'entry_city', 'entry_state', 'customers_referral',
-               'symbol_left', 'symbol_right', 'products_model', 'alt_url', 'email_to_name');
+$group = array(
+    'pages_title', 'page_params', 'music_genre_name', 'artists_name', 'record_company_name', 'countries_name', 'name', 'type_name', 'manufacturers_name',
+    'title', 'coupon_name', 'coupon_copy_to_dup_name', 'banners_title', 'coupon_code', 'coupon_delete_duplicate_code', 'coupon_type',
+    'group_name', 'geo_zone_name', 'geo_zone_description',
+    'tax_class_description', 'tax_class_title', 'tax_description', 'entry_company', 'customers_firstname',
+    'customers_lastname', 'entry_street_address', 'entry_suburb', 'entry_city', 'entry_state', 'customers_referral',
+    'symbol_left', 'symbol_right', 'products_model', 'alt_url', 'email_to_name',
+);
 $sanitizer->addSimpleSanitization('WORDS_AND_SYMBOLS_REGEX', $group);
 
 $group = array('metatags_title', 'metatags_keywords', 'metatags_description');
@@ -237,26 +239,45 @@ $group = array('categories_name', 'products_name', 'orders_status_name', 'config
 $sanitizer->addSimpleSanitization('PRODUCT_NAME_DEEP_REGEX', $group);
 
 $group = array('configuration_key', 'search', 'query_string');
-
-$checks = new queryFactoryResult($db->link);
-// if current page is configuration, the configuration option does not have a val_function and saving the setting, then sanitize configuration_value to array.
-if (defined('FILENAME_CONFIGURATION')
-      && $_SERVER['SCRIPT_NAME'] == DIR_WS_ADMIN . (!strstr(FILENAME_CONFIGURATION, '.php') ? FILENAME_CONFIGURATION . '.php' : FILENAME_CONFIGURATION)
-      && !empty($_GET['action'])
-      && $_GET['action'] == 'save'
-    ) {
-    $cID = zen_db_prepare_input($_GET['cID']);
-
-    $configuration_value = zen_db_prepare_input($_POST['configuration_value']);
-    // See if there are any configuration checks
-    $checks = $db->Execute("SELECT val_function FROM " . TABLE_CONFIGURATION . " WHERE configuration_id = " . (int)$cID);
-}
-
-if (!(!$checks->EOF && $checks->fields['val_function'] != NULL)) {
-    $group = array_merge($group, array('configuration_value'));
-}
-
 $sanitizer->addSimpleSanitization('STRICT_SANITIZE_VALUES', $group);
+$group = array('configuration_key' => array('sanitizerType' => 'NULL_ACTION', 'method' => 'post', 'pages' => array('developers_tool_kit')));
+$sanitizer->addComplexSanitization($group);
+
+// Determine correct treatment of configuration_value settings
+if (!empty($_GET['cID'])) {
+    $cID = (int)$_GET['cID'];
+
+    $configs_with_special_characters = array(
+        'BREAD_CRUMBS_SEPARATOR',
+        'BEST_SELLERS_FILLER',
+        'CATEGORIES_SEPARATOR',
+        'CATEGORIES_SEPARATOR_SUBS',
+        'CATEGORIES_COUNT_PREFIX',
+        'CATEGORIES_SUBCATEGORIES_INDENT',
+        'EZPAGES_SEPARATOR_HEADER',
+        'EZPAGES_SEPARATOR_FOOTER',
+        'CURRENCIES_TRANSLATIONS',
+        'STOCK_MARK_PRODUCT_OUT_OF_STOCK',
+        'EMAIL_SMTPAUTH_PASSWORD',
+        'CATEGORIES_COUNT_SUFFIX',
+        'STORE_NAME_ADDRESS',
+        'PRODUCT_LIST_SORT_ORDER_ASCENDING',
+        'PRODUCT_LIST_SORT_ORDER_DESCENDING',
+    );
+
+    $checks = $db->Execute("SELECT configuration_key, val_function FROM " . TABLE_CONFIGURATION . " WHERE configuration_id = " . (int)$cID);
+    if (!$checks->EOF) {
+        if (!empty($checks->fields['val_function'])) {
+            $group = array('configuration_value' => array('sanitizerType' => 'NULL_ACTION', 'method' => 'post'));
+        } else if (in_array($checks->fields['configuration_key'], $configs_with_special_characters)) {
+            $group = array('configuration_value' => array('sanitizerType' => 'WORDS_AND_SYMBOLS_REGEX', 'method' => 'post'));
+        }
+        $sanitizer->addComplexSanitization($group);
+    } else {
+        $group = array('configuration_value');
+        $sanitizer->addSimpleSanitization('STRICT_SANITIZE_VALUES', $group);
+    }
+}
 
 $group = array('report', 'startDate', 'endDate', 'filter');
 $sanitizer->addSimpleSanitization('FLOAT_VALUE_REGEX', $group);
@@ -265,22 +286,6 @@ $group = array('products_name' => array('sanitizerType' => 'WORDS_AND_SYMBOLS_RE
 $sanitizer->addComplexSanitization($group);
 
 $group = array('query_string' => array('sanitizerType' => 'NULL_ACTION', 'method' => 'post', 'pages' => array('sqlpatch')));
-$sanitizer->addComplexSanitization($group);
-
-//  if current page is configuration, the values have a val_function and saving the value, then skip sanitization of configuration_value.
-if (defined('FILENAME_CONFIGURATION')
-      && $_SERVER['SCRIPT_NAME'] == DIR_WS_ADMIN . (!strstr(FILENAME_CONFIGURATION, '.php') ? FILENAME_CONFIGURATION . '.php' : FILENAME_CONFIGURATION)
-      && !empty($_GET['action'])
-      && $_GET['action'] == 'save'
-      && !$checks->EOF
-      && $checks->fields['val_function'] != NULL
-    ) {
-
-    $group = array('configuration_value' => array('sanitizerType' => 'NULL_ACTION', 'method' => 'post'));
-    $sanitizer->addComplexSanitization($group);
-}
-
-$group = array('configuration_key' => array('sanitizerType' => 'NULL_ACTION', 'method' => 'post', 'pages' => array('developers_tool_kit')));
 $sanitizer->addComplexSanitization($group);
 
 $sanitizer->runSanitizers();

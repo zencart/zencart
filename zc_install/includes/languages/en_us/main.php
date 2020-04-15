@@ -128,8 +128,6 @@ return [
 'TEXT_NAVBAR_COMPLETION' => 'Finished',
 'TEXT_NAVBAR_PAYMENT_PROVIDERS' => 'Payment Providers',
 'TEXT_INDEX_ALERTS' => 'Alerts',
-'TEXT_FOUND_LOCAL_STORE_CONFIGURE' => 'NOTE: /includes/LOCAL/configure.php found, and will be used',
-'TEXT_FOUND_LOCAL_ADMIN_CONFIGURE' => 'NOTE: /admin/includes/LOCAL/configure.php found, and will be used',
 'TEXT_ERROR_PROBLEMS_WRITING_CONFIGUREPHP_FILES' => 'There were problems preparing and storing the configure.php files. YOUR INSTALL DID NOT COMPLETE PROPERLY.<br>Additional technical details may be found in your /logs/ folder.',
 'TEXT_ERROR_COULD_NOT_READ_CFGFILE_TEMPLATE' => 'Could not read the master config file layout: %s. Please ensure the file exists and is readable.',
 'TEXT_ERROR_COULD_NOT_WRITE_CONFIGFILE' => 'Could not write the generated config file: %s. Please ensure the file exists and is writable.',
