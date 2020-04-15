@@ -29,7 +29,7 @@
         <label class="inline" for="db_host"><a href="#" class="hasHelpText" id="DBHOST"><?php echo TEXT_DATABASE_SETUP_DB_HOST; ?></a></label>
       </div>
       <div class="small-9 columns">
-        <input type="text" name="db_host" id="db_host" value="<?php echo $db_host; ?>" tabindex="1" autofocus="autofocus" placeholder="<?php echo TEXT_EXAMPLE_DB_HOST; ?>" required>
+        <input type="text" name="db_host" id="db_host" value="<?php echo $db_host; ?>" tabindex="1" autofocus="autofocus" placeholder="<?php echo htmlentities(TEXT_EXAMPLE_DB_HOST, ENT_QUOTES); ?>" required>
         <small class="error"><?php echo TEXT_HELP_CONTENT_DBHOST; ?></small>
       </div>
     </div>
