@@ -34,7 +34,9 @@ $heading[] = array('text' => '<h4>' . TEXT_INFO_HEADING_DELETE_PRODUCT . '</h4>'
 $contents = array('form' => zen_draw_form('delete_products', FILENAME_CATEGORY_PRODUCT_LISTING, 'action=delete_product_confirm&product_type=' . $product_type . '&cPath=' . $cPath . (isset($_GET['page']) ? '&page=' . $_GET['page'] : ''), 'post', 'class="form-horizontal"') . zen_draw_hidden_field('products_id', $pInfo->products_id));
 $contents[] = array('text' => '<h3>ID#' . $pInfo->products_id . ': ' . $pInfo->products_name . '</h3>');
 $contents[] = array('text' => '<span class="text-danger"><strong>' . TEXT_MASTER_CATEGORIES_ID . ' ID#' . zen_get_parent_category_id($pInfo->products_id) . ' ' . $product_master_category_string . '</strong></span>');
-$contents[] = array('text' => sprintf(TEXT_DELETE_PRODUCT_INTRO, $pInfo->products_id, $pInfo->products_name, zen_get_parent_category_id($pInfo->products_id), $product_master_category_string));
+if (sizeof($product_categories) > 1) { 
+  $contents[] = array('text' => sprintf(TEXT_DELETE_PRODUCT_INTRO, $pInfo->products_id, $pInfo->products_name, zen_get_parent_category_id($pInfo->products_id), $product_master_category_string));
+}
 $contents[] = array('text' => $product_categories_string);
 $contents[] = array('align' => 'center', 'text' => '<button type="submit" class="btn btn-danger">' . IMAGE_DELETE . '</button> <a href="' . zen_href_link(FILENAME_CATEGORY_PRODUCT_LISTING, 'cPath=' . $cPath . '&pID=' . $pInfo->products_id . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '')) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>');
 $contents[] = array('text' => zen_draw_separator('pixel_black.gif', '100%', '1'));
