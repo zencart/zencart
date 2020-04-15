@@ -112,6 +112,9 @@ $adjustWarnIssues = false;
     <div class="alert-box success">
     <?php echo TEXT_ERROR_SUCCESS_NO_ERRORS; ?>
     </div>
+    <div class="alert-box">
+        <?php echo TEXT_UPGRADE_INSTALL_INFO; ?>
+    </div>
 <?php } ?>
 <?php if (!$hasFatalErrors && !$hasSaneConfigFile) { ?>
   <input type="submit" class="zc-full radius button" id="btnsubmit" name="btnsubmit" value="<?php echo TEXT_CONTINUE; ?>" <?php echo ($hasMultipleAdmins) ? '' : 'autofocus="autofocus"'; ?> tabindex="1">
