@@ -17,7 +17,7 @@ foreach ($var as $key)
   $jsLanguageLookupArray .= "  lang[" . $key['id'] . "] = '" . $key['code'] . "';\n";
 }
 ?>
-<script>window.jQuery || document.write('<script src="https://code.jquery.com/jquery-3.5.0.min.js" integrity="sha256-xNzN2a4ltkB44Mc/Jz3pT4iU1cmeR0FkXs4pru/JxaQ=" crossorigin="anonymous"><\/script>');</script>
+<script>window.jQuery || document.write('<script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"><\/script>');</script>
 <script>window.jQuery || document.write('<script src="includes/javascript/jquery.min.js"><\/script>');</script>
 <script src="../<?php echo DIR_WS_EDITORS; ?>ckeditor/ckeditor.js"></script>
 <script>

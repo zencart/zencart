@@ -9,7 +9,7 @@
  * @version $Id: Zen4All 2019 Apr 25 Modified in v1.5.6b $
  */
 ?>
-<script>window.jQuery || document.write('<script src="https://code.jquery.com/jquery-3.5.0.min.js" integrity="sha256-xNzN2a4ltkB44Mc/Jz3pT4iU1cmeR0FkXs4pru/JxaQ=" crossorigin="anonymous"><\/script>');</script>
+<script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
 <script>window.jQuery || document.write('<script src="includes/javascript/jquery.min.js"><\/script>');</script>
 
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
