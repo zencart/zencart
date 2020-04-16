@@ -13,7 +13,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'update') {
             SET configuration_value = :configValue:
             WHERE configuration_key = 'STORE_NAME'";
     $sql = $db->bindVars($sql, ':configValue:', $_POST['store_name'], 'string');
-    $db->execute($sql);
+    $db->Execute($sql);
     $store_name = zen_output_string_protected($_POST['store_name']);
   }
   if (isset($_POST['store_owner']) && $_POST['store_owner'] != '') {
@@ -21,7 +21,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'update') {
             SET configuration_value = :configValue:
             WHERE configuration_key = 'STORE_OWNER'";
     $sql = $db->bindVars($sql, ':configValue:', $_POST['store_owner'], 'string');
-    $db->execute($sql);
+    $db->Execute($sql);
     $store_owner = zen_output_string_protected($_POST['store_owner']);
   }
   if (isset($_POST['store_owner_email']) && $_POST['store_owner_email'] != '') {
@@ -34,7 +34,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'update') {
                                         'SEND_EXTRA_ORDERS_STATUS_ADMIN_EMAILS_TO',
                                         'SEND_EXTRA_REVIEW_NOTIFICATION_EMAILS_TO', 'MODULE_PAYMENT_CC_EMAIL')";
     $sql = $db->bindVars($sql, ':configValue:', $_POST['store_owner_email'], 'string');
-    $db->execute($sql);
+    $db->Execute($sql);
     $store_owner_email = zen_output_string_protected($_POST['store_owner_email']);
   }
   if (isset($_POST['zone_country_id']) && $_POST['zone_country_id'] != '') {
@@ -42,7 +42,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'update') {
                 SET configuration_value = :configValue:
                 WHERE configuration_key in ('STORE_COUNTRY', 'SHIPPING_ORIGIN_COUNTRY')";
     $sql = $db->bindVars($sql, ':configValue:', $_POST['zone_country_id'], 'integer');
-    $db->execute($sql);
+    $db->Execute($sql);
     $store_country = (int)($_POST['zone_country_id']);
   }
   $store_zone = '';
@@ -53,14 +53,14 @@ if (isset($_GET['action']) && $_GET['action'] == 'update') {
           SET configuration_value = :configValue:
           WHERE configuration_key = 'STORE_ZONE'";
   $sql = $db->bindVars($sql, ':configValue:', $store_zone, 'integer');
-  $db->execute($sql);
+  $db->Execute($sql);
 
   if (isset($_POST['store_address']) && $_POST['store_address'] != '') {
     $sql = "UPDATE " . TABLE_CONFIGURATION . "
             SET configuration_value = :configValue:
             WHERE configuration_key = 'STORE_NAME_ADDRESS'";
     $sql = $db->bindVars($sql, ':configValue:', $_POST['store_address'], 'string');
-    $db->execute($sql);
+    $db->Execute($sql);
     $store_address = zen_output_string_protected($_POST['store_address']);
   }
   zen_redirect(zen_href_link(FILENAME_DEFAULT));
