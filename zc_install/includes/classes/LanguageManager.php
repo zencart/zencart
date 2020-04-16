@@ -42,11 +42,11 @@ class LanguageManager
     public function makeConstants($defines)
     {
         foreach ($defines as $defineKey => $defineValue) {
-            preg_match('/([A-Z]{4,}|[_]{1,})+/', $defineValue, $matches);
-            if (count($matches)) {
-                foreach ($matches as $match) {
+            preg_match_all('/%{2}([^%]+)%{2}/', $defineValue, $matches, PREG_PATTERN_ORDER);
+            if (count($matches[1])) {
+                foreach ($matches[1] as $index => $match) {
                     if (isset($defines[$match])) {
-                        $defineValue = str_replace($match, $defines[$match], $defineValue);
+                        $defineValue = str_replace($matches[0][$index], $defines[$match], $defineValue);
                     }
                 }
             }
