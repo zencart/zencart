@@ -2961,14 +2961,14 @@ function zen_get_categories($categories_array = array(), $parent_id = '0', $inde
  * @param bool $fullpath
  * @return array
  */
-function zen_get_master_categories_pulldown(int $product_id, $fullpath = false)
+function zen_get_master_categories_pulldown($product_id, $fullpath = false)
 {
     global $db;
     $master_category_array = [];
     $master_categories_query = $db->Execute("SELECT ptc.products_id, cd.categories_name, cd.categories_id
                                              FROM " . TABLE_PRODUCTS_TO_CATEGORIES . " ptc
                                              LEFT JOIN " . TABLE_CATEGORIES_DESCRIPTION . " cd ON cd.categories_id = ptc.categories_id
-                                             WHERE ptc.products_id = " . $product_id . "
+                                             WHERE ptc.products_id = " . (int)$product_id . "
                                              AND cd.language_id = " . (int)$_SESSION['languages_id']);
     $master_category_array[] = [
         'id' => '0',
