@@ -8,8 +8,8 @@
  */
 
   define('HEADING_TITLE','SQL Query Executor');
-  define('HEADING_WARNING','BE SURE TO DO A FULL DATABASE BACKUP BEFORE RUNNING SCRIPTS HERE');
-  define('HEADING_WARNING2','If you are installing 3rd-party contributions, note that you do so at your own risk.<br />Zen Cart&reg; makes no warranty as to the safety of scripts supplied by 3rd-party contributors. Test before using on your live database!');
+  define('HEADING_WARNING','BE SURE TO BACKUP YOUR DATABASE AND VERIFY THAT BACKUP, BEFORE RUNNING SCRIPTS HERE');
+  define('HEADING_WARNING2','If you are installing 3rd-party contributions, note that you do so at your own risk.<br />Zen Cart&reg; makes no warranty as to the safety of scripts supplied by 3rd-party contributors. Test on a development server before using on your live database!');
   define('HEADING_WARNING_INSTALLSCRIPTS', 'NOTE: Zen Cart database-upgrade scripts should NOT be run from this page.<br />Please upload the new <strong>zc_install</strong> folder and run the upgrade from there instead for better reliability.');
   define('TEXT_QUERY_RESULTS','Query Results:');
   define('TEXT_ENTER_QUERY_STRING','Enter the query <br />to be executed:&nbsp;&nbsp;<br /><br />Be sure to<br />end with ;');
@@ -24,10 +24,10 @@
                               'The commands entered or uploaded may only begin with the following statements, and MUST be in UPPERCASE:'.
                               '<br /><ul><li>DROP TABLE IF EXISTS</li><li>CREATE TABLE</li><li>INSERT INTO</li><li>INSERT IGNORE INTO</li><li>ALTER TABLE</li>' .
                               '<li>UPDATE (just a single table)</li><li>UPDATE IGNORE (just a single table)</li><li>DELETE FROM</li><li>DROP INDEX</li><li>CREATE INDEX</li>' .
-                              '<br /><li>SELECT </li></ul>' .
+                              '<li>SELECT </li></ul>' .
 '<h2>Advanced Methods</h2>The following methods can be used to issue more complex statements as necessary:<br />
 To run some blocks of code together so that they are treated as one command by MySQL, you need the "<code>#NEXT_X_ROWS_AS_ONE_COMMAND:xxx</code>" value set.  The parser will then treat X number of commands as one.<br />
-If you are running this file thru phpMyAdmin or equivalent, the "#NEXT..." comment is ignored, and the script will process fine.<br />
+If you are running this file via phpMyAdmin or an equivalent, the "#NEXT..." comment is ignored, and the script will process fine.<br />
 <br /><strong>NOTE: </strong>SELECT.... FROM... and LEFT JOIN statements need the "FROM" or "LEFT JOIN" to be on a line by itself in order for the parse script to add the table prefix.<br /><br />
 <em><strong>Examples:</strong></em>
 <ul><li><code>#NEXT_X_ROWS_AS_ONE_COMMAND:4<br />
