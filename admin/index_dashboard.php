@@ -522,16 +522,17 @@ foreach ($whos_online as $session) {
                 $amt .= ' (' . $order['order_total'] . ')';
               }
 
-              $sql = "SELECT op.products_quantity AS qty, op.products_name AS name, op.products_model AS model, opa.products_options AS option, opa.products_options_values AS value 
+              $sql = "SELECT op.products_quantity AS qty, op.products_name AS name, op.products_model AS model, opa.products_options AS product_option, opa.products_options_values AS product_value 
                       FROM " . TABLE_ORDERS_PRODUCTS . " op 
                       LEFT OUTER JOIN " . TABLE_ORDERS_PRODUCTS_ATTRIBUTES . " opa ON op.orders_products_id=opa.orders_products_id
                       WHERE op.orders_id = " . (int)$order['orders_id'];
+// die($sql); 
               $orderProducts = $db->Execute($sql, false, true, 1800);
               $product_details = '';
               foreach($orderProducts as $product) {
                   $product_details .= $product['qty'] . ' x ' . $product['name'] . ' (' . $product['model'] . ')' . "\n";
-                  if (!empty($product['option'])) {
-                      $product_details .= '&nbsp;&nbsp;- ' . $product['option'] . ': ' . zen_output_string_protected($product['value']) . "\n";
+                  if (!empty($product['product_option'])) {
+                      $product_details .= '&nbsp;&nbsp;- ' . $product['product_option'] . ': ' . zen_output_string_protected($product['product_value']) . "\n";
                   }
                   $product_details .= '<hr>'; // add HR
               }
