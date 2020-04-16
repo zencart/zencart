@@ -846,7 +846,7 @@ if (zen_not_null($action)) {
         <?php echo zen_draw_form('getquery', FILENAME_SQLPATCH, 'action=execute' . (($debug == true) ? '&debug=ON' : '') . (($skip_stripslashes == true) ? '&keepslashes=1' : ''), 'post', 'class="form-horizontal"'); ?>
         <div class="form-group">
             <?php echo zen_draw_label(TEXT_ENTER_QUERY_STRING, 'query_string', 'class="control-label col-sm-3"'); ?>
-          <div class="col-sm-9 col-md-6"><?php echo zen_draw_textarea_field('query_string', 'soft', '80%', '10', '', 'id="sqlpatchKeyedQuery" class="form-control noEditor"', false); ?></div>
+          <div class="col-sm-9 col-md-6"><?php echo zen_draw_textarea_field('query_string', 'soft', '80', '10', '', 'id="query_string" class="form-control noEditor"', false); ?></div>
         </div>
         <div class="form-group">
           <div class="col-sm-12 text-right"><button type="submit" class="btn btn-primary"><?php echo IMAGE_SEND; ?></button></div>
@@ -865,7 +865,7 @@ if (zen_not_null($action)) {
         ?>
         <div class="form-group">
   <?php echo zen_draw_label(TEXT_QUERY_FILENAME, 'sql_file', 'class="control-label col-sm-3"'); ?>
-          <div class="col-sm-9 col-md-6"><?php echo zen_draw_file_field('sql_file', '', 'class="form-control"'); ?></div>
+          <div class="col-sm-9 col-md-6"><?php echo zen_draw_file_field('sql_file', '', 'class="form-control" id="sql_file"'); ?></div>
         </div>
         <div class="form-group">
           <div class="col-sm-12 text-right"><button type="submit" class="btn btn-primary"><?php echo IMAGE_UPLOAD; ?></button></div>
