@@ -36,23 +36,23 @@ SELECT (@t1:=configuration_value) as t1 <br />
 FROM configuration <br />
 WHERE configuration_key = \'KEY_NAME_HERE\';<br />
 UPDATE product_type_layout SET configuration_value = @t1 WHERE configuration_key = \'KEY_NAME_TO_CHECK_HERE\';<br />
-DELETE FROM configuration WHERE configuration_key = \'KEY_NAME_HERE\';<br />&nbsp;</li>
+DELETE FROM configuration WHERE configuration_key = \'KEY_NAME_HERE\';</code><br>&nbsp;</li>
 
-<li>#NEXT_X_ROWS_AS_ONE_COMMAND:1<br />
+<li><code>#NEXT_X_ROWS_AS_ONE_COMMAND:1<br />
 INSERT INTO tablename <br />
 (col1, col2, col3, col4)<br />
 SELECT col_a, col_b, col_3, col_4<br />
-FROM table2;<br />&nbsp;</li>
+FROM table2;</code><br>&nbsp;</li>
 
-<li>#NEXT_X_ROWS_AS_ONE_COMMAND:1<br />
+<li><code>#NEXT_X_ROWS_AS_ONE_COMMAND:1<br />
 INSERT INTO table1 <br />
 (col1, col2, col3, col4 )<br />
 SELECT p.othercol_a, p.othercol_b, po.othercol_c, pm.othercol_d<br />
 FROM table2 p, table3 pm<br />
 LEFT JOIN othercol_f po<br />
 ON p.othercol_f = po.othercol_f<br />
-WHERE p.othercol_f = pm.othercol_f;</li>
-</ul></code>' );
+WHERE p.othercol_f = pm.othercol_f;</code><br>&nbsp;</li>
+</ul>' );
   define('REASON_TABLE_ALREADY_EXISTS','Cannot create table %s because it already exists');
   define('REASON_TABLE_DOESNT_EXIST','Cannot drop table %s because it does not exist.');
   define('REASON_TABLE_NOT_FOUND','Cannot execute because table %s does not exist.');
