@@ -130,7 +130,7 @@ $zone_string = zen_draw_pull_down_menu('zone_id', zen_get_country_zones($store_c
       <h1><?php echo HEADING_TITLE_WIZARD; ?></h1>
       <p><?php echo TEXT_STORE_DETAILS; ?></p>
       <div class="row">
-          <?php echo zen_draw_form('setup_wizard', FILENAME_DEFAULT, 'action=update', 'post', 'id="setupWizardForm" class="form-horizontal"'); ?>
+          <?php echo zen_draw_form('setupWizardForm', FILENAME_DEFAULT, 'action=update', 'post', 'id="setupWizardForm" class="form-horizontal"'); ?>
         <div class="form-group">
             <?php echo zen_draw_label(TEXT_STORE_NAME, 'store_name', 'class="control-label col-sm-3"'); ?>
           <div class="col-sm-9 col-md-6">
