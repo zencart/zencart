@@ -66,4 +66,5 @@ WHERE p.othercol_f = pm.othercol_f;</code><br>&nbsp;</li>
   define('REASON_INDEX_ALREADY_EXISTS','Cannot add index %s to table %s because it already exists.');
   define('REASON_PRIMARY_KEY_ALREADY_EXISTS','Cannot add primary key to table %s because a primary key already exists.');
   define('REASON_NO_PRIVILEGES','User '.DB_SERVER_USERNAME.'@'.DB_SERVER.' does not have %s privileges to database '.DB_DATABASE.'.');
+define('ERROR_LINE_INCOMPLETE', 'Query incomplete: missing closing semicolon.');
 

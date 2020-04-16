@@ -282,6 +282,9 @@ function executeSql($lines, $database, $table_prefix = '') {
           $complete_line = false;
         }
       } //endif found ';'
+        else {
+            $messageStack->add(ERROR_LINE_INCOMPLETE, 'error');
+        }
 
       if ($complete_line) {
         if ($debug == true) {
