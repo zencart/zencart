@@ -325,11 +325,8 @@ function zen_catalog_href_link($page = '', $parameters = '', $connection = 'NONS
     if (empty($sec_class)) $sec_class = $button_name;
     if(!empty($sec_class)) $sec_class = ' ' . $sec_class;
     if(!empty($parameters))$parameters = ' ' . $parameters;
-    $mouse_out_class  = 'cssButton ' . (($type == 'submit') ? 'submit_button button ' : 'normal_button button ') . $sec_class;
-    $mouse_over_class = 'cssButtonHover ' . (($type == 'button') ? 'normal_button button ' : '') . $sec_class . $sec_class . 'Hover';
-    // javascript to set different classes on mouseover and mouseout: enables hover effect on the buttons
-    // (pure css hovers on non link elements do work work in every browser)
-    $css_button_js =  'onmouseover="this.className=\''. $mouse_over_class . '\'" onmouseout="this.className=\'' . $mouse_out_class . '\'"';
+    $button_class  = 'cssButton ' . (($type == 'submit') ? 'submit_button' : 'normal_button') . $sec_class;
+    
 
     if (defined('CSS_BUTTON_POPUPS_IS_ARRAY') && CSS_BUTTON_POPUPS_IS_ARRAY == 'true') {
       $popuptext = (!empty($css_button_text[$button_name])) ? $css_button_text[$button_name] : ($button_name . CSSBUTTONS_CATALOG_POPUPS_SHOW_BUTTON_NAMES_TEXT);
@@ -368,7 +365,7 @@ function zen_catalog_href_link($page = '', $parameters = '', $connection = 'NONS
             $css_button
       );
       if ($css_button == '') {
-        $css_button = '<input class="' . $mouse_out_class . '" ' . $css_button_js . ' type="submit" value="' . $text . '"' . $tooltip . $parameters . ' />';
+        $css_button = '<input class="' . $button_class . '" '. ' type="submit" value="' . $text . '"' . $tooltip . $parameters . ' />';
       }
     }
 
@@ -390,7 +387,7 @@ function zen_catalog_href_link($page = '', $parameters = '', $connection = 'NONS
             $css_button
       );
       if ($css_button == '') {
-        $css_button = '<span class="' . $mouse_out_class . '" ' . $css_button_js . $tooltip . $parameters . '>&nbsp;' . $text . '&nbsp;</span>';
+        $css_button = '<span class="' . $button_class . '" '. $tooltip . $parameters . '>&nbsp;' . $text . '&nbsp;</span>';
       }
     }
     return $css_button;
