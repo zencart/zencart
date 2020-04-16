@@ -164,7 +164,7 @@ $zone_string = zen_draw_pull_down_menu('zone_id', zen_get_country_zones($store_c
         <div class="form-group">
             <?php echo zen_draw_label(TEXT_STORE_ADDRESS, 'store_address', 'class="control-label col-sm-3"'); ?>
           <div class="col-sm-9 col-md-6">
-            <?php echo zen_draw_textarea_field('store_address', '', '50', '5', $store_address, 'id="store_address" class="form-control"'); ?>
+            <?php echo zen_draw_textarea_field('store_address', 'soft', '50', '5', $store_address, 'id="store_address" class="form-control"'); ?>
           </div>
         </div>
         <div class="form-group">
