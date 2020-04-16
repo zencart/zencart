@@ -337,8 +337,8 @@ class zcDatabaseInstaller
                 // Do nothing (no checks at this time)
                 break;
               default:
-                // No known item added, MySQL defaults to column definition
-                $exists = $this->tableColumnExists($this->lineSplit[2], $this->lineSplit[4]);
+                // No known item added, MySQL defaults to column definition unless the action is to drop the item, then it is the reverse.
+                $exists = (strtoupper($this->lineSplit[3]) != 'DROP') == $this->tableColumnExists($this->lineSplit[2], $this->lineSplit[4]);
             }
             // Ignore this line if the column / index already exists
             if($exists) $this->ignoreLine = true;
