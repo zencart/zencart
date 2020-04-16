@@ -339,6 +339,7 @@ class zcDatabaseInstaller
               default:
                 // No known item added, MySQL defaults to column definition
                 $exists = $this->tableColumnExists($this->lineSplit[2], $this->lineSplit[4]);
+                $exists = (strtoupper($this->lineSplit[3]) == 'DROP') ? !$exists : $exists);
             }
             // Ignore this line if the column / index already exists
             if($exists) $this->ignoreLine = true;
