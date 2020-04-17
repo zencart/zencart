@@ -131,7 +131,7 @@ return [
 'TEXT_ERROR_PROBLEMS_WRITING_CONFIGUREPHP_FILES' => 'There were problems preparing and storing the configure.php files. YOUR INSTALL DID NOT COMPLETE!<br>Additional technical details may be found in your /logs/ folder.',
 'TEXT_ERROR_COULD_NOT_READ_CFGFILE_TEMPLATE' => 'Could not read the master config file layout: %s. Please ensure the file exists and is readable.',
 'TEXT_ERROR_COULD_NOT_WRITE_CONFIGFILE' => 'Could not write the generated config file: %s. Please ensure the file exists and is writable.',
-'TEXT_ERROR_STORE_CONFIGURE' => 'Main /includes/configure.php file either does not exist, is not readable or is not writeable',
+'TEXT_ERROR_STORE_CONFIGURE' => 'Catalog /includes/configure.php file either does not exist, is not readable or is not writeable',
 'TEXT_ERROR_ADMIN_CONFIGURE' => 'Admin /admin/includes/configure.php file either does not exist, is not readable or is not writeable',
 'TEXT_ERROR_PHP_VERSION' => str_replace(array("\n", "\r"), '', 'Incorrect PHP Version.
 <p>The PHP version you are using (' . PHP_VERSION . ') is not suitable.</p>
@@ -159,7 +159,7 @@ Check the <a href="https://www.zen-cart.com">www.zen-cart.com</a> website for th
 'TEXT_ERROR_DB_CONNECTION' => 'Problems with Database Connection',
 'TEXT_ERROR_DB_CONNECTION_DEFAULT' => 'Possible problems with database connection',
 'TEXT_ERROR_DB_CONNECTION_UPGRADE' => 'Problems with database connection based on the entries in your current configure.php',
-'TEXT_ERROR_SET_TIME_LIMIT' => 'max_execution_time setting disabled ',
+'TEXT_ERROR_SET_TIME_LIMIT' => 'max_execution_time setting disabled',
 'TEXT_ERROR_GD' => 'GD Extension not enabled',
 'TEXT_ERROR_ZLIB' => 'Zlib Extension not enabled',
 'TEXT_ERROR_OPENSSL' => 'Openssl Extension not enabled',
