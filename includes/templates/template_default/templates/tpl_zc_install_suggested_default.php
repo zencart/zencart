@@ -309,7 +309,13 @@ $docsPath = (file_exists('docs/index.html')) ? 'docs/index.html' : (file_exists(
           and is redistributable under Version 2 of the GNU General Public License.
         <p>
         <p>
-          <img src="./docs/osi-certified-120x100.png" alt="O S I Certified">
+<?php
+$osi_image = "./docs/osi-certified-120x100.png"; 
+if (!file_exists($osi_image)) {
+  $osi_image = "./zc_install/includes/template/images/osi-certified-120x100.png";
+}
+?>
+  <img src="<?php echo $osi_image; ?>" alt="O S I Certified">
           <br>
           This software is OSI Certified Open Source Software.
           <br>
