@@ -7,6 +7,9 @@
  * @version $Id: mc12345678 2019 Apr 30 Modified in v1.5.6b $
  */
 require('includes/application_top.php');
+define('MODULE_SHIPPING','MODULE_SHIPPING');
+define('MODULE_PAYMENT','MODULE_PAYMENT');
+define('MODULE_ORDER_TOTAL','MODULE_ORDER_TOTAL');
 
 $action = (isset($_GET['action']) ? $_GET['action'] : '');
 
@@ -109,10 +112,15 @@ if ($gID == 7) {
             </thead>
             <tbody>
                 <?php
-                $configuration = $db->Execute("SELECT configuration_id, configuration_title, configuration_value, configuration_key, use_function
+                $configuration_query = "SELECT configuration_id, configuration_title, configuration_value, configuration_key, use_function
                                                FROM " . TABLE_CONFIGURATION . "
-                                               WHERE configuration_group_id = " . (int)$gID . "
-                                               ORDER BY sort_order");
+                                               WHERE configuration_group_id = " . (int)$gID; 
+                if ($gID != 6) {
+                  $configuration_query .= " ORDER BY sort_order";
+                } else {
+                  $configuration_query .= " ORDER BY configuration_key DESC, sort_order";
+                }
+                $configuration = $db->Execute($configuration_query); 
                 foreach ($configuration as $item) {
                   if (zen_not_null($item['use_function'])) {
                     $use_function = $item['use_function'];
@@ -154,6 +162,17 @@ if ($gID == 7) {
                   }
                   if (defined('CFGDESC_' . $item['configuration_key'])) {
                     $item['configuration_description'] = constant('CFGDESC_' . $item['configuration_key']);
+                  }
+                  if ($gID == 6) {
+                    if (strncmp($item['configuration_key'], MODULE_SHIPPING, strlen(MODULE_SHIPPING)) == 0) {
+                        $item['configuration_title']  = get_module_name($item['configuration_key'], MODULE_SHIPPING) . $item['configuration_title']; 
+                    }
+                    if (strncmp($item['configuration_key'], MODULE_PAYMENT, strlen(MODULE_PAYMENT)) == 0) { 
+                        $item['configuration_title']  = get_module_name($item['configuration_key'], MODULE_PAYMENT) . $item['configuration_title']; 
+                    }
+                    if (strncmp($item['configuration_key'], MODULE_ORDER_TOTAL, strlen(MODULE_ORDER_TOTAL)) == 0) {
+                        $item['configuration_title']  = get_module_name($item['configuration_key'], MODULE_ORDER_TOTAL) . $item['configuration_title']; 
+                     }
                   }
                   ?>
               <td class="dataTableContent"><?php echo $item['configuration_title']; ?></td>
@@ -245,3 +264,18 @@ if ($gID == 7) {
   </body>
 </html>
 <?php require(DIR_WS_INCLUDES . 'application_bottom.php'); ?>
+<?php 
+function get_module_name($key, $area) {
+  $name = str_replace($area . "_", '', $key); 
+  $nameparts = explode("_", $name); 
+  $name = $nameparts[0]; 
+  if ($area == MODULE_SHIPPING) { 
+     return $name . " " . BOX_MODULES_SHIPPING . " ";
+  } 
+  if ($area == MODULE_PAYMENT) { 
+     return $name . " " . BOX_MODULES_PAYMENT . " ";
+  } 
+  if ($area == MODULE_ORDER_TOTAL) { 
+     return $name . " " . BOX_MODULES_ORDER_TOTAL . " ";
+  } 
+}
