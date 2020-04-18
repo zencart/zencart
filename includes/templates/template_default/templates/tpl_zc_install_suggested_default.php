@@ -259,7 +259,7 @@ $docsPath = (file_exists('docs/index.html')) ? 'docs/index.html' : (file_exists(
               <br>
             </li>
             <li>
-              See the <a href="http://tutorials.zen-cart.com" target="_blank">Online FAQ and Tutorials</a> area on the Zen Cart<sup>&reg;</sup> website for assistance.
+              See the <a href="https://docs.zen-cart.com" target="_blank">Online Documentation</a> area on the Zen Cart<sup>&reg;</sup> website for assistance.
             </li>
           </ul>
         </li>
@@ -280,7 +280,7 @@ $docsPath = (file_exists('docs/index.html')) ? 'docs/index.html' : (file_exists(
           </li>
         <?php } else { ?>
           <li>
-            Installation documentation is normally found in the /docs folder of the Zen Cart&reg; distribution files/zip. You can also find documentation in the <a href="http://tutorials.zen-cart.com" target="_blank">Online FAQs</a>.
+            Installation documentation is normally found in the /docs folder of the Zen Cart&reg; distribution files/zip. You can also find documentation in the <a href="https://docs.zen-cart.com" target="_blank">Online Help</a>.
           </li>
         <?php } ?>
         <?php if ($instPath) { ?>
@@ -293,7 +293,7 @@ $docsPath = (file_exists('docs/index.html')) ? 'docs/index.html' : (file_exists(
           </li>
         <?php } ?>
         <li>
-          Please refer to the <a href="http://tutorials.zen-cart.com" target="_blank">Online FAQ and Tutorials</a> area on the Zen Cart<sup>&reg;</sup> website if you run into difficulties.
+          Please refer to the <a href="https://docs.zen-cart.com" target="_blank">Online Help</a> area on the Zen Cart<sup>&reg;</sup> website if you run into difficulties.
         </li>
       </ol>
     </div>
@@ -316,7 +316,7 @@ $docsPath = (file_exists('docs/index.html')) ? 'docs/index.html' : (file_exists(
           OSI Certified is a certification mark of the Open Source Initiative.
         <p>
         <p class="zenData">
-          Copyright 2003 - 2018 Zen Ventures, LLC
+          Copyright 2003 - <?php echo date('Y'); ?> Zen Ventures, LLC
           <br><br>
           Zen Cart&reg; 
           <br>

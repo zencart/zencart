@@ -34,12 +34,13 @@ if (!$adminDirectoryExists && !$installDirectoryExists) {
             <li><?php echo ALERT_REMOVE_ZCINSTALL; ?><br><br></li>
         <?php } ?>
         <?php if ($adminDirectoryExists) { ?>
-            <li><?php echo ALERT_RENAME_ADMIN; ?><br><a href="http://tutorials.zen-cart.com/index.php?article=33" target="_blank"><?php echo ADMIN_RENAME_FAQ_NOTE; ?></a></li>
+            <li><?php echo ALERT_RENAME_ADMIN; ?><br><a href="https://docs.zen-cart.com/user/running/rename_admin/" target="_blank"><?php echo ADMIN_RENAME_FAQ_NOTE; ?></a></li>
         <?php } ?>
     </ul>
     <?php if ($adminDirectoryExists) { ?>
         <br><p><?php echo ALERT_PART2; ?></p>
     <?php } ?>
 </div>
+
 </body>
 </html>
