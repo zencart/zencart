@@ -816,6 +816,7 @@ if (zen_not_null($action) && $order_exists == true) {
                                               ORDER BY date_added");
 
                 if ($orders_history->RecordCount() > 0) {
+                  $first = true;
                   foreach ($orders_history as $item) {
                     ?>
                   <tr>
@@ -833,30 +834,29 @@ if (zen_not_null($action) && $order_exists == true) {
                     </td>
                     <td><?php echo $orders_status_array[$item['orders_status_id']]; ?></td>
 <?php
-          // -----
-          // A watching observer can provide an associative array in the form:
-          //
-          // $extra_data = array(
-          //     array(
-          //       'align' => $alignment,    // One of 'center', 'right', or 'left' (optional)
-          //       'text' => $value
-          //     ),
-          // );
-          //
-          // Observer note:  Be sure to check that the $p2/$extra_data value is specifically (bool)false before initializing, since
-          // multiple observers might be injecting content!
-          //
-          $extra_data = false;
-          $zco_notifier->notify('NOTIFY_ADMIN_ORDERS_STATUS_HISTORY_EXTRA_COLUMN_DATA', $orders_history->fields, $extra_data);
-          if (is_array($extra_data)) {
-              $first = true;
-              foreach ($extra_data as $data_info) {
-                  $align = (isset($data_info['align'])) ? (' text-' . $data_info['align']) : '';
-        ?>
-                        <td class="smallText<?php echo $align; ?>"><?php echo $data_info['text']; ?></td>
-        <?php
-              }
-          }
+                    // -----
+                    // A watching observer can provide an associative array in the form:
+                    //
+                    // $extra_data = array(
+                    //     array(
+                    //       'align' => $alignment,    // One of 'center', 'right', or 'left' (optional)
+                    //       'text' => $value
+                    //     ),
+                    // );
+                    //
+                    // Observer note:  Be sure to check that the $p2/$extra_data value is specifically (bool)false before initializing, since
+                    // multiple observers might be injecting content!
+                    //
+                    $extra_data = false;
+                    $zco_notifier->notify('NOTIFY_ADMIN_ORDERS_STATUS_HISTORY_EXTRA_COLUMN_DATA', $orders_history->fields, $extra_data);
+                    if (is_array($extra_data)) {
+                        foreach ($extra_data as $data_info) {
+                            $align = (isset($data_info['align'])) ? (' text-' . $data_info['align']) : '';
+                  ?>
+                                  <td class="smallText<?php echo $align; ?>"><?php echo $data_info['text']; ?></td>
+                  <?php
+                        }
+                    }
 ?>
                     <td>
 <?php
