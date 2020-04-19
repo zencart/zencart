@@ -2443,7 +2443,7 @@ function zen_draw_products_pull_down_categories_attributes($name, $parameters = 
     $select_string .= '>';
 
     switch (true) {
-        case ($filter_by_option_name === -1): // no selection made: do not list any categories
+        case ($filter_by_option_name === ''): // no selection made: do not list any categories
             // no selection made yet
             break;
         case ($filter_by_option_name > 0) : // an Option Name was selected: show only categories with products using attributes with this Option Name
