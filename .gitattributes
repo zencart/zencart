@@ -1,4 +1,3 @@
-/docs             export-ignore
 /testFramework    export-ignore
 *not_for_release* export-ignore
 /.gitattributes    export-ignore
