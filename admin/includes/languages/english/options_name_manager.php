@@ -4,11 +4,12 @@
  * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: torvista 2019 Nov 20 Modified in v1.5.7 $
+ * @version $Id: torvista 2020 April 14 Modified in v1.5.7 $
  */
 define('HEADING_TITLE', 'Option Name Manager');
 define('TEXT_ATTRIBUTES_CONTROLLER', 'Attributes Controller');
 
+define('TEXT_WARNING_TEXT_OPTION_NAME_RESTORED', 'Warning: The Option Value TEXT ID#0 was found to be missing from the database table "' . TABLE_PRODUCTS_OPTIONS_VALUES . '". This may have been due to an incorrectly coded plugin.<br>The value has been restored correctly.');
 define('TABLE_HEADING_PRODUCT', 'Product Name');
 define('TABLE_HEADING_OPT_NAME', 'Option Name');
 define('TABLE_HEADING_OPT_VALUE', 'Option Value');
@@ -16,7 +17,7 @@ define('TABLE_HEADING_ACTION', 'Action');
 
 define('TEXT_PRODUCT_OPTIONS_INFO','<strong>Note: Edit the Option Name for additional settings</strong>');
 
-define('TEXT_WARNING_OF_DELETE', 'This Option Name is used by the product(s) listed below: it cannot be deleted until all the Option Values (attributes) associated with this Option Name have been removed from these products.');
+define('TEXT_WARNING_OF_DELETE', 'This Option Name is used by the product(s) listed below: it cannot be deleted until all the Option Values (attributes) associated with this Option Name have been removed from these products (this may be done using the Global Tools below)');
 define('TEXT_OK_TO_DELETE', 'This Option Name is not used by any product - it is safe to delete it.<br><strong>Warning:</strong> this will delete both the Option Name AND all the Option Values associated with that Option Name.');
 
 define('TEXT_OPTION_ID', 'Option ID');
@@ -33,26 +34,24 @@ define('TABLE_HEADING_OPT_SORT_ORDER','Sort Order');
 define('TABLE_HEADING_OPT_DEFAULT','Default');
 
 define('TABLE_HEADING_OPT_TYPE', 'Option Type'); //CLR 031203 add option type column
-define('TABLE_HEADING_OPTION_VALUE_SIZE','Size');
-define('TABLE_HEADING_OPTION_VALUE_MAX','Max');
-define('TABLE_HEADING_OPTION_VALUE_ROWS','Rows');
+define('TABLE_HEADING_OPTION_NAME_SIZE','Size');
+define('TABLE_HEADING_OPTION_NAME_MAX','Max');
 
-define('TEXT_OPTION_VALUE_COMMENTS','Comment (displayed next to Option Name)');
-define('TEXT_OPTION_VALUE_ROWS', 'Rows');
-define('TEXT_OPTION_VALUE_SIZE','Display Size');
-define('TEXT_OPTION_VALUE_MAX','Maximum Length');
-
+define('TEXT_OPTION_NAME_COMMENTS','Comment (displayed next to Option Name)');
 define('TEXT_OPTION_ATTRIBUTE_IMAGES_PER_ROW', 'Attribute Images per Row');
-define('TEXT_OPTION_ATTRIBUTE_IMAGES_STYLE', 'Attribute Image Layout Style (Checkbox/Radio Buttons only)');
+define('TEXT_OPTION_ATTRIBUTE_IMAGES_STYLE', 'Attribute Image Layout Style (for Checkbox/Radio Buttons only)');
 define('TEXT_OPTION_ATTRIBUTE_LAYOUTS_EXAMPLE', 'View Examples');
-define('TEXT_OPTION_ATTRIBUTE_MAX_LENGTH', '<strong>Note: ' . TEXT_OPTION_VALUE_ROWS . ', ' . TEXT_OPTION_VALUE_SIZE . ' and ' . TEXT_OPTION_VALUE_MAX . ' are for Text Attributes Only.</strong><br>');
-define('TEXT_OPTION_ATTRIBUTE_IMAGES_STYLE_0', '0 - All Images below Option Values (attributes as list)');
-define('TEXT_OPTION_ATTRIBUTE_IMAGES_STYLE_1', '1 - Element, Image, Option Value (attributes as list)');
-define('TEXT_OPTION_ATTRIBUTE_IMAGES_STYLE_2', '2 - Element, Option Value, Image below (attributes as list)');
-define('TEXT_OPTION_ATTRIBUTE_IMAGES_STYLE_3', '3 - Element, Image, Option Value below (attributes inline)');
-define('TEXT_OPTION_ATTRIBUTE_IMAGES_STYLE_4', '4 - Image, Option Value below, Element below (attributes inline)');
-define('TEXT_OPTION_ATTRIBUTE_IMAGES_STYLE_5', '5 - Element, Image below, Option Value Below (attributes inline)');
-
+define('TEXT_OPTION_ATTRIBUTE_IMAGES_STYLE_0', '0 - Selection + text, Images below Options');
+define('TEXT_OPTION_ATTRIBUTE_IMAGES_STYLE_1', '1 - Select + Image + Option inline');
+define('TEXT_OPTION_ATTRIBUTE_IMAGES_STYLE_2', '2 - Select + Option + Image wrapped');
+define('TEXT_OPTION_ATTRIBUTE_IMAGES_STYLE_3', '3 - Select + Image + Option wrapped');
+define('TEXT_OPTION_ATTRIBUTE_IMAGES_STYLE_4', '4 - Image + Option + Select as column');
+define('TEXT_OPTION_ATTRIBUTE_IMAGES_STYLE_5', '5 - Select + Image + Option as column');
+//text attributes only
+define('TEXT_OPTION_NAME_ROWS', 'Rows');
+define('TEXT_OPTION_NAME_SIZE','Display Size');
+define('TEXT_OPTION_NAME_MAX','Maximum Length');
+define('TEXT_OPTION_TYPE_TEXT_ATTRIBUTE_INFO', 'Note: ' . TEXT_OPTION_NAME_ROWS . ', ' . TEXT_OPTION_NAME_SIZE . ' and ' . TEXT_OPTION_NAME_MAX . ' are for Option Name Type "Text" only.');
 define('TEXT_INSERT_NEW_OPTION_NAME', 'Add a new Option Name');
 
 // Global Tools
@@ -88,7 +87,7 @@ define('ERROR_PRODUCTS_OPTIONS_PRODUCTS', 'Warning: No matching product(s) found
 define('ERROR_PRODUCTS_OPTIONS_VALUES', 'Warning: All matching product(s) already have all Option Values for Option Name "%s" (nothing was updated).');
 
 // Delete
-define('TEXT_COMMENT_OPTION_VALUE_DELETE_ALL', '<strong>NOTE:</strong> All Option Values will be deleted from matching/selected product(s). This will not delete the defined Option Values from that Option Name.');
+define('TEXT_COMMENT_OPTION_VALUE_DELETE_ALL', '<strong>NOTE:</strong> All Option Values will be deleted from matching/the selected product(s). This will not delete the Option Values defined for that Option Name.');
 define('TEXT_OPTION_VALUE_DELETE_ALL', 'Delete all Option Values from ALL products using this Option Name');
 define('TEXT_INFO_OPTION_VALUE_DELETE_ALL', 'For ALL products that are using the selected Option Name, remove all the Option Values/the Option Name.');
 
@@ -104,10 +103,11 @@ define('SUCCESS_PRODUCTS_OPTIONS_VALUES_DELETED', 'Option Name "%1$s": all Optio
 
 // Copy
 define('TEXT_OPTION_VALUE_COPY_ALL', 'Copy all Option Values to another Option Name');
-define('TEXT_INFO_OPTION_VALUE_COPY_ALL', 'All Option Values will be copied from one Option Name to another Option Name');
+define('TEXT_INFO_OPTION_VALUE_COPY_ALL', 'All Option Values from the selected Option Name will be copied (added) to another Option Name.');
 define('TEXT_SELECT_OPTION_FROM', 'Copy from Option Name: ');
 define('TEXT_SELECT_OPTION_TO', 'Copy to Option Name: ');
 
-define('SUCCESS_OPTION_VALUES_COPIED', 'Option Values copied from Option Name "%1$s" to Option name "%2$s".');
-define('ERROR_OPTION_VALUES_COPIED', 'Error: Cannot copy Option Values to the same Option Name ("%1$s" to "%2$s")!');
-define('ERROR_OPTION_VALUES_NONE', 'Error: Option Name "%s" has no Option Values defined (nothing was copied).');
+define('SUCCESS_OPTION_VALUE_COPIED', 'Option Value "%6$s" ID#%5$u copied from Option Name "%2$s" ID#%1$u to Option Name "%4$s" ID#%3$u.');
+define('SUCCESS_OPTION_VALUES_COPIED', '%5$u Option Value(s) copied from Option Name "%2$s" ID#%1$u to Option Name "%4$s" ID#%3$u.');
+define('ERROR_OPTION_VALUES_COPIED', 'Error: Cannot copy Option Values to the same Option Name ("%2$s" ID#%1$u to "%4$s" ID#%3$u)!');
+define('ERROR_OPTION_VALUES_NONE', 'Error: Option Name "%2$s" ID#%1$u has no Option Values defined (nothing to copy)!');

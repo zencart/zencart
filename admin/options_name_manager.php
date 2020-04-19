@@ -1,14 +1,10 @@
 <?php
-/**steve for phpStorm inspections
- * @var messageStack $messageStack
- * @var zcObserverLogEventListener $zco_notifier
- */
 /**
  * @package admin
  * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: torvista 2020 April 15 Modified in v1.5.7 $
+ * @version $Id: torvista 2020 April 19 Modified in v1.5.7 $
  */
 require 'includes/application_top.php';
 $languages = zen_get_languages();
@@ -29,6 +25,7 @@ for ($i = 0, $n = count($languages); $i < $n; $i++) {
     if ((int)$languages[$i]['id'] > 0 && !in_array((int)$languages[$i]['id'], $ary, true)) {
         $db->Execute("INSERT INTO " . TABLE_PRODUCTS_OPTIONS_VALUES . " (products_options_values_id, language_id, products_options_values_name)
                   VALUES (" . (int)PRODUCTS_OPTIONS_VALUES_TEXT_ID . ", " . (int)$languages[$i]['id'] . ", 'TEXT')");
+        $messageStack->add(TEXT_WARNING_TEXT_OPTION_NAME_RESTORED, 'info');
     }
 }
 
@@ -88,7 +85,7 @@ if (zen_not_null($action)) {
                                  WHERE language_id = " . (int)$languages[$i]['id'] . "
                                  AND products_options_name = '" . zen_db_input($option_name) . "' LIMIT 2");
                     if ($check->RecordCount() > 1) {
-                        $messageStack->add_session(sprintf(TEXT_WARNING_DUPLICATE_OPTION_NAME, $new_products_options_id, $option_name, zen_get_language_name($languages[$i]['id'])), 'caution');
+                        $messageStack->add_session(sprintf(TEXT_WARNING_DUPLICATE_OPTION_NAME, $next_id, $option_name, zen_get_language_name($languages[$i]['id'])), 'caution');
                     }
                 }
             }
@@ -332,7 +329,7 @@ if (zen_not_null($action)) {
 
             if ($options_id_from === $options_id_to) {
                 // cannot copy to self
-                $messageStack->add_session(sprintf(ERROR_OPTION_VALUES_COPIED, zen_options_name($options_id_from), zen_options_name($options_id_to), 'error'));
+                $messageStack->add_session(sprintf(ERROR_OPTION_VALUES_COPIED, $options_id_from, zen_options_name($options_id_from), $options_id_to, zen_options_name($options_id_to)), 'caution');
             } else {
                 $max_options_id_values = $db->Execute("SELECT MAX(products_options_values_id) + 1 AS next_id
                                                        FROM " . TABLE_PRODUCTS_OPTIONS_VALUES);
@@ -358,11 +355,12 @@ if (zen_not_null($action)) {
                             $db->Execute($sql);
                             $next_id++;
                         }
+                        $messageStack->add_session(sprintf(SUCCESS_OPTION_VALUE_COPIED, $options_id_from, zen_options_name($options_id_from), $options_id_to, zen_options_name($options_id_to), $copy_from_value['products_options_values_id'], $copy_from_value['products_options_values_name']), 'success');
                     }
-                    $messageStack->add(sprintf(SUCCESS_OPTION_VALUES_COPIED, zen_options_name($options_id_from), zen_options_name($options_id_to)), 'success');
+                    $messageStack->add_session(sprintf(SUCCESS_OPTION_VALUES_COPIED, $options_id_from, zen_options_name($options_id_from), $options_id_to, zen_options_name($options_id_to), $copy_from_values->RecordCount()), 'success');
                 } else {
                     // warning nothing to copy
-                    $messageStack->add(sprintf(ERROR_OPTION_VALUES_NONE, zen_options_name($options_id_from), 'error'));
+                    $messageStack->add_session(sprintf(ERROR_OPTION_VALUES_NONE, $options_id_from, zen_options_name($options_id_from)), 'caution');
                 }
             }
             zen_redirect(zen_href_link(FILENAME_OPTIONS_NAME_MANAGER, zen_get_all_get_params(['action', 'update_action', 'update_to'])));
