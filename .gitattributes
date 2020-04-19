@@ -1,10 +1,6 @@
+/.gitattributes   export-ignore
 /testFramework    export-ignore
 *not_for_release* export-ignore
-/.gitattributes    export-ignore
-/README.md         export-ignore
-/CONTRIBUTING.md   export-ignore
-phpdoc.xml        export-ignore
-phpdoc.dist.xml   export-ignore
 
 # Auto detect text files and perform LF normalization
 * text=auto
