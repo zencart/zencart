@@ -105,7 +105,7 @@ define('TEXT_SELECT_OPTION_TO', 'Copy to Option Name: ');
 define('SUCCESS_OPTION_VALUE_COPIED', 'Option Value "%6$s" ID#%5$u copied from Option Name "%2$s" ID#%1$u to Option Name "%4$s" ID#%3$u.');
 define('SUCCESS_OPTION_VALUES_COPIED', '%5$u Option Value(s) copied from Option Name "%2$s" ID#%1$u to Option Name "%4$s" ID#%3$u.');
 define('TEXT_WARNING_BACKUP', 'Warning: Always make proper backups of your database before making global changes');
-
+define('ERROR_OPTION_VALUES_COPIED', 'Error: Cannot copy Option Values to the same Option Name ("%2$s" ID#%1$u to "%4$s" ID#%3$u)!');
 define('TEXT_OPTION_ATTRIBUTE_IMAGES_PER_ROW', 'Attribute Images per Row: ');
 define('TEXT_OPTION_ATTRIBUTE_IMAGES_STYLE', 'Attribute Style for Radio Buttons/Checkbox: ');
 define('TEXT_OPTION_ATTIBUTE_MAX_LENGTH', '<strong>NOTE: Rows, Display Size and Max Length are for Text Attributes Only:</strong><br />');
