@@ -15,6 +15,7 @@ $product_categories_string = '';
 $product_categories = zen_generate_category_path($pInfo->products_id, 'product');
 if (!isset($category_path)) $category_path = '';
 
+$preselect_master_category = true; // set to false to prevent accidental deletion
 for ($i = 0, $n = sizeof($product_categories); $i < $n; $i++) {
     $category_path = '';
     for ($j = 0, $k = sizeof($product_categories[$i]); $j < $k; $j++) {
@@ -22,7 +23,7 @@ for ($i = 0, $n = sizeof($product_categories); $i < $n; $i++) {
         if ($j+1 < $k)  $category_path .= '&nbsp;&gt;&nbsp;';
     }
     if (sizeof($product_categories) >= 1 && zen_get_parent_category_id($pInfo->products_id) == $product_categories[$i][sizeof($product_categories[$i]) - 1]['id']) {
-        $product_categories_string .= '<div class="checkbox text-danger"><label><strong>' . zen_draw_checkbox_field('product_categories[]', $product_categories[$i][sizeof($product_categories[$i]) - 1]['id'], false) . $category_path . '</strong></label></div>';
+        $product_categories_string .= '<div class="checkbox text-danger"><label><strong>' . zen_draw_checkbox_field('product_categories[]', $product_categories[$i][count($product_categories[$i]) - 1]['id'], $preselect_master_category) . $category_path . '</strong></label></div>';
         $product_master_category_string = $category_path;
     } else {
         $product_categories_string .= '<div class="checkbox"><label>' . zen_draw_checkbox_field('product_categories[]', $product_categories[$i][sizeof($product_categories[$i]) - 1]['id'], true) . $category_path . '</label></div>';
