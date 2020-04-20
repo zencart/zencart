@@ -82,33 +82,27 @@ define('ERROR_PRODUCTS_OPTIONS_PRODUCTS', 'Warning: No matching product(s) found
 define('ERROR_PRODUCTS_OPTIONS_VALUES', 'Warning: All matching product(s) already have all Option Values for Option Name "%s" (nothing was updated).');
 
 // Delete
-define('TEXT_OPTION_VALUE_DELETE_ALL', '<br /><strong>Delete ALL Option Values to ALL products for Option Name</strong>');
-define('TEXT_INFO_OPTION_VALUE_DELETE_ALL', 'Update ALL existing products that have at least ONE Option Value and Delete ALL Option Values in an Option Name');
+define('TEXT_COMMENT_OPTION_VALUE_DELETE_ALL', '<strong>NOTE:</strong> All Option Values will be deleted from matching/the selected product(s). This will not delete the Option Values defined for that Option Name.');
+define('TEXT_OPTION_VALUE_DELETE_ALL', 'Delete all Option Values from ALL products using this Option Name');
+define('TEXT_INFO_OPTION_VALUE_DELETE_ALL', 'For ALL products that are using the selected Option Name, remove all the Option Values/the Option Name.');
 
-define('TEXT_OPTION_VALUE_DELETE_PRODUCT', '<br /><strong>Delete ALL Option Values to ONE products for Option Name</strong>');
-define('TEXT_INFO_OPTION_VALUE_DELETE_PRODUCT', 'Update ONE product that has at least ONE Option Value and Delete ALL Option Values in an Option Name');
+define('TEXT_OPTION_VALUE_DELETE_PRODUCT', 'Delete all Option Values from ONE product using this Option Name');
+define('TEXT_INFO_OPTION_VALUE_DELETE_PRODUCT', 'For a product that is using the selected Option Name, remove ALL the Option Values/the Option Name.');
 
-define('TEXT_OPTION_VALUE_DELETE_CATEGORY', '<br /><strong>Delete ALL Option Values to ONE Category of products for Option Name</strong>');
-define('TEXT_INFO_OPTION_VALUE_DELETE_CATEGORY', 'Update ONE Category of products, when the product has at least ONE Option Value and Delete ALL Option Values in an Option Name');
+define('TEXT_OPTION_VALUE_DELETE_CATEGORY', 'Delete all Option Values from ONE Category of products for this Option Name');
+define('TEXT_INFO_OPTION_VALUE_DELETE_CATEGORY', 'For products in ONE category only that are using the selected Option Name, remove all the Option Values/the Option Name.');
 
-define('TEXT_COMMENT_OPTION_VALUE_DELETE_ALL', '<strong>NOTE:</strong> All Option Name Option Values will be deleted for selected product(s). This will not delete the Option Value settings.');
+// messageStack
+define('SUCCESS_PRODUCT_OPTION_VALUES_DELETED', 'Option Name "%1$s": all Option Values deleted from product "%2$s".');
+define('SUCCESS_PRODUCTS_OPTIONS_VALUES_DELETED', 'Option Name "%1$s": all Option Values removed from %2$u product(s).');
 
-define('TEXT_OPTION_VALUE_COPY_ALL', '<strong>Copy ALL Option Values to another Option Name</strong>');
-define('TEXT_INFO_OPTION_VALUE_COPY_ALL', 'All Option Values will be copied from one Option Name to another Option Name');
+// Copy
+define('TEXT_OPTION_VALUE_COPY_ALL', 'Copy all Option Values to another Option Name');
+define('TEXT_INFO_OPTION_VALUE_COPY_ALL', 'All Option Values from the selected Option Name will be copied (added) to another Option Name.');
 define('TEXT_SELECT_OPTION_FROM', 'Copy from Option Name: ');
-define('TEXT_SELECT_OPTION_TO', 'Copy All Option Values to Option Name: ');
-define('SUCCESS_OPTION_VALUES_COPIED', 'Successful copy! ');
-define('ERROR_OPTION_VALUES_COPIED', 'Error - Cannot copy Option Values to the same Option Name! ');
-define('ERROR_OPTION_VALUES_NONE', 'Error - Copy from Option Name has 0 Values Defined. Nothing was copied! ');
-define('TEXT_WARNING_BACKUP', 'Warning: Always make proper backups of your database before making global changes');
+define('TEXT_SELECT_OPTION_TO', 'Copy to Option Name: ');
 
-define('TEXT_OPTION_ATTRIBUTE_IMAGES_PER_ROW', 'Attribute Images per Row: ');
-define('TEXT_OPTION_ATTRIBUTE_IMAGES_STYLE', 'Attribute Style for Radio Buttons/Checkbox: ');
-define('TEXT_OPTION_ATTIBUTE_MAX_LENGTH', '<strong>NOTE: Rows, Display Size and Max Length are for Text Attributes Only:</strong><br />');
-define('TEXT_OPTION_IMAGE_STYLE', '<strong>Image Styles:</strong>');
-define('TEXT_OPTION_ATTRIBUTE_IMAGES_STYLE_0', '0= Images Below Option Names');
-define('TEXT_OPTION_ATTRIBUTE_IMAGES_STYLE_1', '1= Element, Image and Option Value');
-define('TEXT_OPTION_ATTRIBUTE_IMAGES_STYLE_2', '2= Element, Image and Option Name Below');
-define('TEXT_OPTION_ATTRIBUTE_IMAGES_STYLE_3', '3= Option Name Below Element and Image');
-define('TEXT_OPTION_ATTRIBUTE_IMAGES_STYLE_4', '4= Element Below Image and Option Name');
-define('TEXT_OPTION_ATTRIBUTE_IMAGES_STYLE_5', '5= Element Above Image and Option Name');
+define('SUCCESS_OPTION_VALUE_COPIED', 'Option Value "%6$s" ID#%5$u copied from Option Name "%2$s" ID#%1$u to Option Name "%4$s" ID#%3$u.');
+define('SUCCESS_OPTION_VALUES_COPIED', '%5$u Option Value(s) copied from Option Name "%2$s" ID#%1$u to Option Name "%4$s" ID#%3$u.');
+define('ERROR_OPTION_VALUES_COPIED', 'Error: Cannot copy Option Values to the same Option Name ("%2$s" ID#%1$u to "%4$s" ID#%3$u)!');
+define('ERROR_OPTION_VALUES_NONE', 'Error: Option Name "%2$s" ID#%1$u has no Option Values defined (nothing to copy)!');
