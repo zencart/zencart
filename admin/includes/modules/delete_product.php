@@ -8,19 +8,22 @@
  * @version $Id: Scott C Wilson 2019 Jan 22 Modified in v1.5.6b $
  */
 if (!defined('IS_ADMIN_FLAG')) {
-  die('Illegal Access');
+    die('Illegal Access');
 }
 
 $product_categories_string = '';
 $product_categories = zen_generate_category_path($pInfo->products_id, 'product');
-if (!isset($category_path)) $category_path = '';
-
+if (!isset($category_path)) {
+    $category_path = '';
+}
 $preselect_master_category = true; // set to false to prevent accidental deletion
 for ($i = 0, $n = count($product_categories); $i < $n; $i++) {
     $category_path = '';
     for ($j = 0, $k = count($product_categories[$i]); $j < $k; $j++) {
         $category_path .= $product_categories[$i][$j]['text'];
-        if ($j+1 < $k)  $category_path .= '&nbsp;&gt;&nbsp;';
+        if ($j + 1 < $k) {
+            $category_path .= '&nbsp;&gt;&nbsp;';
+        }
     }
     if (count($product_categories) >= 1 && (int)zen_get_parent_category_id($pInfo->products_id) === (int)$product_categories[$i][count($product_categories[$i]) - 1]['id']) {
         $product_categories_string .= '<div class="checkbox text-danger"><label><strong>' . zen_draw_checkbox_field('product_categories[]', $product_categories[$i][count($product_categories[$i]) - 1]['id'], $preselect_master_category) . $category_path . '</strong></label></div>';
