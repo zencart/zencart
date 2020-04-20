@@ -106,6 +106,5 @@ define('SUCCESS_OPTION_VALUE_COPIED', 'Option Value "%6$s" ID#%5$u copied from O
 define('SUCCESS_OPTION_VALUES_COPIED', '%5$u Option Value(s) copied from Option Name "%2$s" ID#%1$u to Option Name "%4$s" ID#%3$u.');
 define('ERROR_OPTION_VALUES_COPIED', 'Error: Cannot copy Option Values to the same Option Name ("%2$s" ID#%1$u to "%4$s" ID#%3$u)!');
 define('ERROR_OPTION_VALUES_NONE', 'Error: Option Name "%2$s" ID#%1$u has no Option Values defined (nothing to copy)!');
-define('TEXT_OPTION_ATTRIBUTE_IMAGES_STYLE_3', '3= Option Name Below Element and Image');
 define('TEXT_OPTION_ATTRIBUTE_IMAGES_STYLE_4', '4= Element Below Image and Option Name');
 define('TEXT_OPTION_ATTRIBUTE_IMAGES_STYLE_5', '5= Element Above Image and Option Name');
