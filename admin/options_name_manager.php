@@ -437,7 +437,7 @@ function translate_type_to_name($opt_type)
                 <tr class="dataTableHeadingRow">
                     <th class="dataTableHeadingContent text-center"><?php echo TEXT_OPTION_ID; ?></th>
                     <th class="dataTableHeadingContent"><?php echo TABLE_HEADING_PRODUCT; ?></th>
-                    <th class="dataTableHeadingContent"><?php echo TABLE_HEADING_OPT_VALUE; ?></th>
+                    <th class="dataTableHeadingContent"><?php echo TABLE_HEADING_OPTION_VALUE; ?></th>
                     <th class="dataTableHeadingContent">&nbsp;</th>
                 </tr>
                 <?php
@@ -492,8 +492,8 @@ function translate_type_to_name($opt_type)
             <thead>
             <tr class="dataTableHeadingRow">
                 <th class="dataTableHeadingContent text-center"><?php echo TEXT_OPTION_ID; ?></th>
-                <th class="dataTableHeadingContent"><?php echo TABLE_HEADING_OPT_NAME; ?></th>
-                <th class="dataTableHeadingContent"><?php echo TABLE_HEADING_OPT_TYPE; ?></th>
+                <th class="dataTableHeadingContent"><?php echo TABLE_HEADING_OPTION_NAME; ?></th>
+                <th class="dataTableHeadingContent"><?php echo TABLE_HEADING_OPTION_TYPE; ?></th>
                 <th class="dataTableHeadingContent text-center"><?php echo TEXT_SORT_ORDER; ?></th>
                 <th class="dataTableHeadingContent text-center"><?php echo TABLE_HEADING_OPTION_NAME_SIZE; ?></th>
                 <th class="dataTableHeadingContent text-center"><?php echo TABLE_HEADING_OPTION_NAME_MAX; ?></th>
@@ -531,7 +531,7 @@ function translate_type_to_name($opt_type)
                                                    WHERE products_options_id = " . (int)$options_name['products_options_id'] . "
                                                    AND language_id = " . (int)$languages[$i]['id']);
 
-                                $option_name_input .= zen_draw_label(($n > 1 ? zen_get_language_icon($languages[$i]['id']) . ' ' : ' ') . TABLE_HEADING_OPT_NAME . ':', 'option_name[' . $languages[$i]['id'] . ']', 'class="control-label"');
+                                $option_name_input .= zen_draw_label(($n > 1 ? zen_get_language_icon($languages[$i]['id']) . ' ' : ' ') . TABLE_HEADING_OPTION_NAME . ':', 'option_name[' . $languages[$i]['id'] . ']', 'class="control-label"');
                                 $option_name_input .= zen_draw_input_field('option_name[' . $languages[$i]['id'] . ']', zen_output_string($option_name->fields['products_options_name']), zen_set_field_length(TABLE_PRODUCTS_OPTIONS, 'products_options_name', 40) . ' class="form-control" id="option_name[' . $languages[$i]['id'] . ']" required');
                                 ($i + 1 < $n ? $option_name_input .= '<br>' : '');
 
@@ -582,7 +582,7 @@ function translate_type_to_name($opt_type)
                                     </td>
                                     <td><?php echo $option_name_input; ?></td>
                                     <td><?php echo $sort_order_input; ?></td>
-                                    <td><?php echo zen_draw_label(TABLE_HEADING_OPT_TYPE . ':', 'edit_options_type', 'class="control-label"') . zen_draw_pull_down_menu('option_type', $optionTypeValuesArray, $options_name['products_options_type'], 'class="form-control" id="edit_options_type"'); ?></td>
+                                    <td><?php echo zen_draw_label(TABLE_HEADING_OPTION_TYPE . ':', 'edit_options_type', 'class="control-label"') . zen_draw_pull_down_menu('option_type', $optionTypeValuesArray, $options_name['products_options_type'], 'class="form-control" id="edit_options_type"'); ?></td>
                                     <td class="text-center" style="vertical-align: bottom">
                                         <button type="submit" class="btn btn-primary"><?php echo IMAGE_UPDATE; ?></button>
                                         <a href="<?php echo zen_href_link(FILENAME_OPTIONS_NAME_MANAGER, ($currentPage !== 0 ? 'page=' . $currentPage . '&' : '') . 'option_order_by=' . $option_order_by); ?>" class="btn btn-default" role="button"><?php echo TEXT_CANCEL; ?></a>
@@ -638,7 +638,7 @@ function translate_type_to_name($opt_type)
                             $inputs = '';
                             $inputs2 = '';
                             for ($i = 0, $n = count($languages); $i < $n; $i++) {
-                                $inputs .= zen_draw_label(($n > 1 ? zen_get_language_icon($languages[$i]['id']) . ' ' : ' ') . TABLE_HEADING_OPT_NAME . ':', 'option_name[' . $languages[$i]['id'] . ']', 'class="control-label"');
+                                $inputs .= zen_draw_label(($n > 1 ? zen_get_language_icon($languages[$i]['id']) . ' ' : ' ') . TABLE_HEADING_OPTION_NAME . ':', 'option_name[' . $languages[$i]['id'] . ']', 'class="control-label"');
                                 $inputs .= zen_draw_input_field('option_name[' . $languages[$i]['id'] . ']', '', zen_set_field_length(TABLE_PRODUCTS_OPTIONS, 'products_options_name', 20) . ' class="form-control" id="option_name[' . $languages[$i]['id'] . ']"  required' . ($n > 1 ? '" placeholder="' . $languages[$i]['directory'] . '"' : ''));
                                ($i + 1 < $n ? $inputs .= '<br>' : '');
                                 $inputs2 .= zen_draw_label(TEXT_SORT_ORDER . ':', 'products_options_sort_order[' . $languages[$i]['id'] . ']');
@@ -651,7 +651,7 @@ function translate_type_to_name($opt_type)
                                 <tr>
                                     <td><?php echo $inputs; ?></td>
                                     <td><?php echo $inputs2; ?></td>
-                                    <td><?php echo zen_draw_label(TABLE_HEADING_OPT_TYPE . ':', 'option_type', 'class="control-label"') . zen_draw_pull_down_menu('option_type', $optionTypeValuesArray, 0, 'class="form-control" id="option_type"'); ?></td>
+                                    <td><?php echo zen_draw_label(TABLE_HEADING_OPTION_TYPE . ':', 'option_type', 'class="control-label"') . zen_draw_pull_down_menu('option_type', $optionTypeValuesArray, 0, 'class="form-control" id="option_type"'); ?></td>
                                     <td class="text-center" style="vertical-align: bottom">
                                         <button type="submit" class="btn btn-primary"><?php echo IMAGE_INSERT; ?></button>
                                     </td>

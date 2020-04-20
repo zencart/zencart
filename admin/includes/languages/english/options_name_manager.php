@@ -11,8 +11,8 @@ define('TEXT_ATTRIBUTES_CONTROLLER', 'Attributes Controller');
 
 define('TEXT_WARNING_TEXT_OPTION_NAME_RESTORED', 'Warning: The Option Value TEXT ID#0 was found to be missing from the database table "' . TABLE_PRODUCTS_OPTIONS_VALUES . '". This may have been due to an incorrectly coded plugin.<br>The value has been restored correctly.');
 define('TABLE_HEADING_PRODUCT', 'Product Name');
-define('TABLE_HEADING_OPT_NAME', 'Option Name');
-define('TABLE_HEADING_OPT_VALUE', 'Option Value');
+define('TABLE_HEADING_OPTION_NAME', 'Option Name');
+define('TABLE_HEADING_OPTION_VALUE', 'Option Value');
 define('TABLE_HEADING_ACTION', 'Action');
 
 define('TEXT_PRODUCT_OPTIONS_INFO','<strong>Note: Edit the Option Name for additional settings</strong>');
