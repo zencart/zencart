@@ -33,25 +33,15 @@ define('TABLE_HEADING_OPTION_NAME_SIZE','Size');
 define('TABLE_HEADING_OPTION_NAME_MAX','Max');
 
 define('TEXT_OPTION_NAME_COMMENTS','Comment (displayed next to Option Name)');
-define('TEXT_OPTION_ATTRIBUTE_IMAGES_PER_ROW', 'Attribute Images per Row: ');
-define('TEXT_OPTION_ATTRIBUTE_IMAGES_STYLE', 'Attribute Style for Radio Buttons/Checkbox: ');
+define('TEXT_OPTION_ATTRIBUTE_IMAGES_PER_ROW', 'Attribute Images per Row');
+define('TEXT_OPTION_ATTRIBUTE_IMAGES_STYLE', 'Attribute Image Layout Style (for Checkbox/Radio Buttons only)');
 define('TEXT_OPTION_ATTRIBUTE_LAYOUTS_EXAMPLE', 'View Examples');
-
-define('TEXT_SELECT_OPTION_TO', 'Copy All Option Values to Option Name: ');
-define('SUCCESS_OPTION_VALUES_COPIED', 'Successful copy! ');
-define('ERROR_OPTION_VALUES_COPIED', 'Error - Cannot copy Option Values to the same Option Name! ');
-define('ERROR_OPTION_VALUES_NONE', 'Error - Copy from Option Name has 0 Values Defined. Nothing was copied! ');
-define('TEXT_WARNING_BACKUP', 'Warning: Always make proper backups of your database before making global changes');
-
-define('TEXT_OPTION_ATTRIBUTE_MAX_LENGTH', '<strong>NOTE: Rows, Display Size and Max Length are for Text Attributes Only:</strong><br />');
-define('TEXT_OPTION_IMAGE_STYLE', '<strong>Image Styles:</strong>');
-define('TEXT_OPTION_ATTRIBUTE_IMAGES_STYLE_0', '0= Images Below Option Names');
-define('TEXT_OPTION_ATTRIBUTE_IMAGES_STYLE_1', '1= Element, Image and Option Value');
-define('TEXT_OPTION_ATTRIBUTE_IMAGES_STYLE_2', '2= Element, Image and Option Name Below');
-define('TEXT_OPTION_ATTRIBUTE_IMAGES_STYLE_3', '3= Option Name Below Element and Image');
-define('TEXT_OPTION_ATTRIBUTE_IMAGES_STYLE_4', '4= Element Below Image and Option Name');
-define('TEXT_OPTION_ATTRIBUTE_IMAGES_STYLE_5', '5= Element Above Image and Option Name');
-
+define('TEXT_OPTION_ATTRIBUTE_IMAGES_STYLE_0', '0 - Selection + text, Images below Options');
+define('TEXT_OPTION_ATTRIBUTE_IMAGES_STYLE_1', '1 - Select + Image + Option inline');
+define('TEXT_OPTION_ATTRIBUTE_IMAGES_STYLE_2', '2 - Select + Option + Image wrapped');
+define('TEXT_OPTION_ATTRIBUTE_IMAGES_STYLE_3', '3 - Select + Image + Option wrapped');
+define('TEXT_OPTION_ATTRIBUTE_IMAGES_STYLE_4', '4 - Image + Option + Select as column');
+define('TEXT_OPTION_ATTRIBUTE_IMAGES_STYLE_5', '5 - Select + Image + Option as column');
 //text attributes only
 define('TEXT_OPTION_NAME_ROWS', 'Rows');
 define('TEXT_OPTION_NAME_SIZE','Display Size');
