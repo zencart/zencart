@@ -1,17 +1,12 @@
 <?php
 /**
- * file contains zcDatabaseInstaller Class
  * @package Installer
- * @copyright Copyright 2003-2019 Zen Cart Development Team
+ * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2019 Jan 17 Modified in v1.5.6b $
+ * @version $Id: Modified in v1.5.7 $
  *
  */
-/**
- *
- * zcDatabaseInstaller Class
- *
- */
+
 class zcDatabaseInstaller
 {
     public $ignoreLine;
@@ -35,7 +30,7 @@ class zcDatabaseInstaller
     $this->dbPassword = $options['db_password'];
     $this->dbName = $options['db_name'];
     $this->dbPrefix = $options['db_prefix'];
-    $this->dbCharset = trim($options['db_charset']) == '' ? 'utf8mb4' : $options['db_charset'];
+    $this->dbCharset = isset($options['db_charset']) && trim($options['db_charset']) != '' ? $options['db_charset'] : 'utf8mb4';
     $this->dbType = in_array($options['db_type'], $dbtypes) ? $options['db_type'] : 'mysql';
     $this->dieOnErrors = isset($options['dieOnErrors']) ? (bool)$options['dieOnErrors'] : FALSE;
     $this->errors = array();
@@ -342,8 +337,8 @@ class zcDatabaseInstaller
                 // Do nothing (no checks at this time)
                 break;
               default:
-                // No known item added, MySQL defaults to column definition
-                $exists = $this->tableColumnExists($this->lineSplit[2], $this->lineSplit[4]);
+                // No known item added, MySQL defaults to column definition unless the action is to drop the item, then it is the reverse.
+                $exists = (strtoupper($this->lineSplit[3]) != 'DROP') == $this->tableColumnExists($this->lineSplit[2], $this->lineSplit[4]);
             }
             // Ignore this line if the column / index already exists
             if($exists) $this->ignoreLine = true;

@@ -337,12 +337,6 @@ if (zen_not_null($action)) {
             $products_attributes_maxdays = (int)$_POST['products_attributes_maxdays'];
             $products_attributes_maxcount = (int)$_POST['products_attributes_maxcount'];
 
-            // check to see if it's a file missing a name
-            if ($options_id === 1) {
-              if (empty($products_attributes_filename)) {
-                $products_attributes_filename = 'missing_file';
-              }
-            }
             if (!empty($products_attributes_filename)) {
               $db->Execute("INSERT INTO " . TABLE_PRODUCTS_ATTRIBUTES_DOWNLOAD . " (products_attributes_id, products_attributes_filename, products_attributes_maxdays, products_attributes_maxcount)
                             VALUES (" . (int)$products_attributes_id . ",
@@ -1030,7 +1024,7 @@ function zen_js_option_values_list($selectedName, $fieldName)
                   <td class="text-center">
                     <span class="fa-stack">
                       <i class="fa fa-square fa-stack-2x base-included-attr-txt opacity-25" aria-hidden="true"></i>
-                      <i class="fa fa-times fa-stack-1x red-txt" aria-hidden="true""></i>
+                      <i class="fa fa-times fa-stack-1x red-txt" aria-hidden="true"></i>
                     </span>
                     <span class="fa-stack">
                       <i class="fa fa-square fa-stack-2x base-included-attr-txt" aria-hidden="true"></i>

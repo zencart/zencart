@@ -61,10 +61,10 @@ if (zen_not_null($action)) {
     case 'update_category':
       if (isset($_POST['add_type']) || isset($_POST['add_type_all'])) {
         // check if it is already restricted
-        $sql = "select *
-                from " . TABLE_PRODUCT_TYPES_TO_CATEGORY . "
-                where category_id = '" . (int)$_POST['categories_id'] . "'
-                and product_type_id = '" . (int)$_POST['restrict_type'] . "'";
+        $sql = "SELECT *
+                FROM " . TABLE_PRODUCT_TYPES_TO_CATEGORY . "
+                WHERE category_id = '" . (int)$_POST['categories_id'] . "'
+                AND product_type_id = '" . (int)$_POST['restrict_type'] . "'";
 
         $type_to_cat = $db->Execute($sql);
         if ($type_to_cat->RecordCount() < 1) {
@@ -108,9 +108,9 @@ if (zen_not_null($action)) {
 
         $categories_id = zen_db_insert_id();
         // check if parent is restricted
-        $sql = "select parent_id
-                from " . TABLE_CATEGORIES . "
-                where categories_id = '" . (int)$categories_id . "'";
+        $sql = "SELECT parent_id
+                FROM " . TABLE_CATEGORIES . "
+                WHERE categories_id = '" . (int)$categories_id . "'";
 
         $parent_cat = $db->Execute($sql);
         if ($parent_cat->fields['parent_id'] != '0') {
@@ -265,28 +265,14 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
 <!doctype html>
 <html <?php echo HTML_PARAMS; ?>>
   <head>
-    <meta charset="<?php echo CHARSET; ?>">
-    <title><?php echo TITLE; ?></title>
-    <link rel="stylesheet" href="includes/stylesheet.css">
-    <link rel="stylesheet" href="includes/cssjsmenuhover.css" media="all" id="hoverJS">
-    <script src="includes/menu.js"></script>
-    <script src="includes/general.js"></script>
-    <script>
-      function init() {
-          cssjsmenu('navbar');
-          if (document.getElementById) {
-              var kill = document.getElementById('hoverJS');
-              kill.disabled = true;
-          }
-      }
-    </script>
+    <?php require DIR_WS_INCLUDES . 'admin_html_head.php'; ?>
     <?php if ($action != 'edit_category_meta_tags') { // bof: disable editor for meta tags ?>
       <?php if ($editor_handler != '') {
             include($editor_handler);
         } ?>
     <?php } // eof: disable editor for meta tags  ?>
   </head>
-  <body onload="init();">
+  <body>
     <!-- header //-->
     <?php require(DIR_WS_INCLUDES . 'header.php'); ?>
     <!-- header_eof //-->
@@ -294,7 +280,7 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
     <!-- body //-->
     <?php
     // Make an array of product types
-    $sql = "select type_id, type_name from " . TABLE_PRODUCT_TYPES;
+    $sql = "SELECT type_id, type_name FROM " . TABLE_PRODUCT_TYPES;
     $product_types = $db->Execute($sql);
     while (!$product_types->EOF) {
       $type_array[] = [
@@ -406,8 +392,8 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
                         <div><?php echo zen_info_image($cInfo->categories_image, $cInfo->categories_name, '', '', 'class="table-bordered img-responsive"'); ?></div>
                         <br>
                         <?php
-                        [$width, $height] = getimagesize(DIR_FS_CATALOG_IMAGES . $cInfo->categories_image);
-                        $kb = filesize(DIR_FS_CATALOG_IMAGES . $cInfo->categories_image)/1000;
+                        list($width, $height) = getimagesize(DIR_FS_CATALOG_IMAGES . $cInfo->categories_image);
+                        $kb = filesize(DIR_FS_CATALOG_IMAGES . $cInfo->categories_image)/1024;
                         echo sprintf(TEXT_FILENAME,   '/images/' . $cInfo->categories_image, $width, $height, $kb);
                         ?>
                     </div>

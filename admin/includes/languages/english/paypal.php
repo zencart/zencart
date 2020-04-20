@@ -34,7 +34,6 @@
 
 
   define('TEXT_INFO_PAYPAL_IPN_HEADING', 'PayPal IPN');
-  define('TEXT_DISPLAY_NUMBER_OF_TRANSACTIONS', 'Displaying <strong>%d</strong> to <strong>%d</strong> (of <strong>%d</strong> IPN\'s)');
 
   // Other constants are in includes/languages/english/modules/payment/paypal.php
   //end ADMIN text

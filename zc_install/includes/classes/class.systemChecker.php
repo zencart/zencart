@@ -2,9 +2,9 @@
 /**
  * file contains systemChecker Class
  * @package Installer
- * @copyright Copyright 2003-2018 Zen Cart Development Team
+ * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Drbyte Tue Oct 9 18:48:15 2018 -0400 Modified in v1.5.6 $
+ * @version $Id:  Modified in v1.5.7 $
  */
 /**
  * systemChecker Class
@@ -45,7 +45,7 @@ class systemChecker
         {
           $this->localErrors = NULL;
           if (isset($methodDetail['method'])) $methodName = $methodDetail['method'];
-          $result = $this -> {$methodName}($methodDetail['parameters']);
+          $result = $this -> {$methodName}(isset($methodDetail['parameters']) ? $methodDetail['parameters'] : null);
           $resultCombined &= $result;
           if ($result == false && (isset($this->systemChecks[$systemCheckName]['criticalError'])))
           {
@@ -91,11 +91,11 @@ class systemChecker
   public function hasTables()
   {
     $result = FALSE;
-    if ($this->hasSaneConfigFile()) { 
+    if ($this->hasSaneConfigFile()) {
       $parameters = array(array('checkType'=>'fieldSchema', 'tableName'=>'admin', 'fieldName'=>'admin_id', 'fieldCheck'=>'Type', 'expectedResult'=>'INT(11)'));
       $result = $this->dbVersionChecker($parameters);
     }
-    return $result; 
+    return $result;
   }
 
   public function hasSaneConfigFile()
@@ -171,7 +171,7 @@ class systemChecker
       if ($systemCheck['runLevel'] == 'dbVersion')
       {
         $resultCombined = TRUE;
-        if (!isset($systemCheck['methods'])) $systemCheck['methods'] = array(); 
+        if (!isset($systemCheck['methods'])) $systemCheck['methods'] = array();
         foreach ($systemCheck['methods'] as $methodName => $methodDetail)
         {
           if (isset($methodDetail['method'])) $methodName = $methodDetail['method'];
@@ -278,9 +278,9 @@ class systemChecker
     }
     return $retVal;
   }
-  public function checkFileExists($filepath)
+  public function checkFileExists($parameters)
   {
-    return file_exists($filepath);
+    return file_exists($parameters['fileDir']);
   }
   public function checkWriteableDir($parameters)
   {
@@ -343,31 +343,32 @@ class systemChecker
 
   public function checkHtaccessSupport($parameters)
   {
-    $testPath = $_SERVER['HTTP_HOST'] . $_SERVER['SCRIPT_NAME'];
-    $testPath = 'http://' . substr($testPath, 0, strpos($testPath, '/zc_install')) . '/includes/filenames.php';
-    if (function_exists('curl_init'))
-    {
-      $resultCurl = self::curlGetUrl($testPath);
-      if (isset($resultCurl['http_code']) && $resultCurl['http_code'] == '403')
-      {
-        $result = TRUE;
-      } else
-      { // test again with redirects enabled
-	      $resultCurl = self::curlGetUrl($testPath, true);
-	      if (isset($resultCurl['http_code']) && $resultCurl['http_code'] == '403')
-	      {
-	        $result = TRUE;
-	      } else
-	      {
-	        $result = FALSE;
-	      }
+      if (!function_exists('curl_init')) {
+          return true;
       }
 
-    } else
-    {
-      $result = TRUE;
-    }
-    return $result;
+      global $request_type;
+      $tests = [];
+
+      $testPath = preg_replace('~/zc_install.*$~', '/includes/filenames.php', $_SERVER['HTTP_HOST'] . $_SERVER['SCRIPT_NAME']);
+      // first element added to the $tests array is based on $request_type
+      $tests[] = ($request_type == 'SSL' ? 'https://' : 'http://') . $testPath;
+      // add inverse test as fallback
+      $tests[] = ($request_type == 'SSL' ? 'http://' : 'https://') . $testPath;
+
+      foreach($tests as $test) {
+          $resultCurl = self::curlGetUrl($test, false);
+          if (isset($resultCurl['http_code']) && $resultCurl['http_code'] == '403') {
+              return true;
+          }
+          // test again with redirects enabled
+          $resultCurl = self::curlGetUrl($test, true);
+          if (isset($resultCurl['http_code']) && $resultCurl['http_code'] == '403') {
+              return true;
+          }
+      }
+
+      return false;
   }
 
   public function checkInitialSession($parameters)
@@ -439,7 +440,7 @@ class systemChecker
       $this->localErrors = $db -> error_number . ':' . $db -> error_text;
     } else
     {
-      $result = $db -> selectdb(zcRegistry::getValue('db_name')); 
+      $result = $db -> selectdb(zcRegistry::getValue('db_name'));
       if (!$result)
       {
         $sql = "CREATE DATABASE " . zcRegistry::getValue('db_name') . " CHARACTER SET " . zcRegistry::getValue('db_charset');
@@ -535,7 +536,7 @@ class systemChecker
       $systemCheck['extraErrors'][] = $db -> error_number . ':' . $db -> error_text;
     } else
     {
-      $result = $db -> selectdb($dbNameVal); 
+      $result = $db -> selectdb($dbNameVal);
     }
     if (!$result)
     {
@@ -655,13 +656,17 @@ class systemChecker
     }
     if (!in_array(VERBOSE_SYSTEMCHECKER, array('silent', 'none', 'off', 'OFF', 'NONE', 'SILENT')))
     {
-      logDetails((($result == 1) ? 'PASSED' : 'FAILED') . substr(print_r($methodDetail['parameters'], TRUE), 5), $methodName);
+      logDetails((($result == 1) ? 'PASSED' : 'FAILED') .
+          (isset($methodDetail['parameters']) ? substr(print_r($methodDetail['parameters'], TRUE), 5) : ''),
+          $methodName);
     }
   }
   function checkIsZCVersionCurrent()
   {
     $new_version = TEXT_VERSION_CHECK_CURRENT; //set to "current" by default
     $lines = @file(NEW_VERSION_CHECKUP_URL . '?v='.PROJECT_VERSION_MAJOR.'.'.PROJECT_VERSION_MINOR.'&p='.PHP_VERSION.'&a='.$_SERVER['SERVER_SOFTWARE'].'&r='.urlencode($_SERVER['HTTP_HOST']).'&m=zc_install');
+    if (empty($lines)) return true;
+
     //check for major/minor version info
     if ((trim($lines[0]) > PROJECT_VERSION_MAJOR) || (trim($lines[0]) == PROJECT_VERSION_MAJOR && trim($lines[1]) > PROJECT_VERSION_MINOR)) {
       $new_version = TEXT_VERSION_CHECK_NEW_VER . trim($lines[0]) . '.' . trim($lines[1]) . ' :: ' . $lines[2];

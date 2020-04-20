@@ -36,11 +36,6 @@
   define('TEXT_CONFIGURATION_KEY', 'Key or Name:');
   define('TEXT_INFO_CONFIGURATION_UPDATE', '<strong>NOTE:</strong> CONSTANTS are written in uppercase.<br />Language file lookups may be an alternative search when nothing has been found in the database tables.');
 
-
-  define('TEXT_CONFIGURATION_CONSTANT_FILES', '<strong>Look-up in Language File defines</strong>');
-  define('TEXT_CONFIGURATION_KEY_FILES', 'Look up text:');
-  define('TEXT_INFO_CONFIGURATION_UPDATE_FILES', '<strong>NOTE:</strong> Language file lookups maybe upper or lower case');
-
   define('TABLE_TITLE_KEY', '<strong>Key:</strong>');
   define('TABLE_TITLE_TITLE', '<strong>Title:</strong>');
   define('TABLE_TITLE_DESCRIPTION', '<strong>Description:</strong>');
@@ -48,7 +43,6 @@
   define('TABLE_TITLE_VALUE', '<strong>Value:</strong>');
 
   define('TEXT_LANGUAGE_LOOKUPS', 'Language File Look-ups:');
-  define('TEXT_LANGUAGE_LOOKUP_NONE', 'None');
   define('TEXT_LANGUAGE_LOOKUP_CURRENT_LANGUAGE', 'All Language Files for ' . strtoupper($_SESSION['language']) . ' - Catalog/Admin');
   define('TEXT_LANGUAGE_LOOKUP_CURRENT_CATALOG', 'All Main Language files - Catalog (' . DIR_WS_CATALOG . DIR_WS_LANGUAGES . 'english.php /espanol.php etc.)');
   define('TEXT_LANGUAGE_LOOKUP_CURRENT_CATALOG_TEMPLATE', 'All Current Selected Language Files - ' . DIR_WS_CATALOG . DIR_WS_LANGUAGES . $_SESSION['language'] . '/*.php');

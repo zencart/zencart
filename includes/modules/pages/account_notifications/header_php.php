@@ -45,7 +45,7 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
     $sql = $db->bindVars($sql, ':customersID',$_SESSION['customer_id'], 'integer');
     $db->Execute($sql);
 
-  } elseif (sizeof($products) > 0) {
+  } elseif (!empty($products)) {
     $products_parsed = array();
 
     foreach ($products as $parse_entry) {

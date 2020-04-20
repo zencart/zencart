@@ -1171,7 +1171,8 @@ class shoppingCart extends base {
                            AND pd.products_id = p.products_id
                            AND pd.language_id = " . (int)$_SESSION['languages_id'] . " LIMIT 1";
 
-      if ($products = $db->Execute($products_query)) {
+      $products = $db->Execute($products_query);
+      if (!$products->EOF) {
         $this->notify('NOTIFY_CART_GET_PRODUCTS_NEXT', $products_id, $products->fields);
 
         $prid = $products->fields['products_id'];

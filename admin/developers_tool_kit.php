@@ -685,26 +685,9 @@ if ($found == false) {
 <!doctype html>
 <html <?php echo HTML_PARAMS; ?>>
   <head>
-    <meta charset="<?php echo CHARSET; ?>">
-    <title><?php echo TITLE; ?></title>
-    <link rel="stylesheet" href="includes/stylesheet.css">
-    <link rel="stylesheet" href="includes/developers_tool_kit.css" />
-    <link rel="stylesheet" href="includes/cssjsmenuhover.css" media="all" id="hoverJS">
-    <script src="includes/menu.js"></script>
-    <script src="includes/general.js"></script>
-
-    <script>
-      function init() {
-          cssjsmenu('navbar');
-          if (document.getElementById) {
-              var kill = document.getElementById('hoverJS');
-              kill.disabled = true;
-          }
-      }
-    </script>
-    <style>.dataTableGroupChange {border-top: 2px solid #000 !important;}</style>
+  <?php require DIR_WS_INCLUDES . 'admin_html_head.php'; ?>
   </head>
-  <body onLoad="init()">
+  <body>
     <!-- header //-->
     <?php require(DIR_WS_INCLUDES . 'header.php'); ?>
     <!-- header_eof //-->
@@ -735,9 +718,9 @@ if ($found == false) {
           </tr>
           <?php
           if ($show_products_type_layout == true) {
-            $check_configure_group = $db->Execute("select * from " . TABLE_PRODUCT_TYPES . " where type_id='" . (int)$check_configure->fields['product_type_id'] . "'");
+            $check_configure_group = $db->Execute("SELECT * FROM " . TABLE_PRODUCT_TYPES . " WHERE type_id='" . (int)$check_configure->fields['product_type_id'] . "'");
           } else {
-            $check_configure_group = $db->Execute("select * from " . TABLE_CONFIGURATION_GROUP . " where configuration_group_id='" . (int)$check_configure->fields['configuration_group_id'] . "'");
+            $check_configure_group = $db->Execute("SELECT * FROM " . TABLE_CONFIGURATION_GROUP . " WHERE configuration_group_id='" . (int)$check_configure->fields['configuration_group_id'] . "'");
           }
           ?>
 

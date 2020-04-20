@@ -25,10 +25,7 @@ define('ENTRY_CUSTOMER', 'CUSTOMER:');
 define('ENTRY_SOLD_TO', 'SOLD TO:');
 define('ENTRY_SHIP_TO', 'SHIP TO:');
 define('ENTRY_PAYMENT_METHOD', 'Payment Method:');
-define('ENTRY_SUB_TOTAL', 'Sub-Total:');
-define('ENTRY_TAX', 'Tax:');
 define('ENTRY_SHIPPING', 'Shipping:');
-define('ENTRY_TOTAL', 'Total:');
 define('ENTRY_DATE_PURCHASED', 'Date Ordered:');
 
 define('ENTRY_ORDER_ID','Invoice No. ');

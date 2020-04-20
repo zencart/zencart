@@ -54,7 +54,7 @@ class configurationValidation extends base
                 }
                 
                 // Collect the individual name/email as part of an array.
-                $results[$key]['send_to_name'] = filter_var($send_to_name, FILTER_SANITIZE_EMAIL, $options);
+                $results[$key]['send_to_name'] = filter_var($send_to_name, FILTER_SANITIZE_STRING, $options);
                 $results[$key]['send_to_email'] = filter_var($send_to_email, FILTER_VALIDATE_EMAIL, $options);
                 
                 // Restore the inner email address back to its state for capture.

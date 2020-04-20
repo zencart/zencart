@@ -7,8 +7,8 @@
  * @version $Id: Zen4All 2019 Mar 31 Modified in v1.5.6b $
  */
 if (!defined('NUMBER_OF_CUSTOMERS')) define('NUMBER_OF_CUSTOMERS', '15');
-if (!defined('NUMBER_OF_ORDERS')) define('NUMBER_OF_ORDERS','25'); 
-if (!defined('NUMBER_OF_VISTORS_HISTORY')) define('NUMBER_OF_VISTORS_HISTORY','15'); 
+if (!defined('NUMBER_OF_ORDERS')) define('NUMBER_OF_ORDERS','25');
+if (!defined('NUMBER_OF_VISTORS_HISTORY')) define('NUMBER_OF_VISTORS_HISTORY','15');
 
 $notifications = new AdminNotifications();
 $availableNotifications = $notifications->getNotifications('index', $_SESSION['admin_id']);
@@ -320,14 +320,14 @@ foreach ($whos_online as $session) {
       <div class="panel panel-default reportBox">
         <div class="panel-heading header"><?php echo BOX_ENTRY_NEW_CUSTOMERS; ?> </div>
         <table class="table table-striped table-condensed">
-            <?php
-            $customers = $db->Execute("SELECT c.customers_id as customers_id, c.customers_firstname as customers_firstname,
-                                          c.customers_lastname as customers_lastname, c.customers_email_address as customers_email_address,
-                                          a.customers_info_date_account_created as customers_info_date_account_created, a.customers_info_id
-                                   FROM " . TABLE_CUSTOMERS . " c
-                                   LEFT JOIN " . TABLE_CUSTOMERS_INFO . " a ON c.customers_id = a.customers_info_id
-                                   ORDER BY a.customers_info_date_account_created DESC",
-                (int)NUMBER_OF_CUSTOMERS, true, 1800);
+        <?php
+            $sql = "SELECT c.customers_id as customers_id, c.customers_firstname as customers_firstname,
+                           c.customers_lastname as customers_lastname, c.customers_email_address as customers_email_address,
+                           a.customers_info_date_account_created as customers_info_date_account_created, a.customers_info_id
+                    FROM " . TABLE_CUSTOMERS . " c
+                    LEFT JOIN " . TABLE_CUSTOMERS_INFO . " a ON c.customers_id = a.customers_info_id
+                    ORDER BY a.customers_info_date_account_created DESC";
+            $customers = $db->Execute($sql, (int)NUMBER_OF_CUSTOMERS, true, 1800);
 
             foreach ($customers as $customer) {
               $customer['customers_firstname'] = zen_output_string_protected($customer['customers_firstname']);
@@ -339,9 +339,9 @@ foreach ($whos_online as $session) {
               </td>
               <td class="text-right"><?php echo zen_date_short($customer['customers_info_date_account_created']); ?></td>
             </tr>
-            <?php
+        <?php
           }
-          ?>
+        ?>
         </table>
       </div>
 
@@ -491,13 +491,13 @@ foreach ($whos_online as $session) {
         <div class="panel-heading header"><?php echo BOX_ENTRY_NEW_ORDERS; ?> </div>
         <table class="table table-striped table-condensed">
             <?php
-            $orders = $db->Execute("SELECT o.orders_id as orders_id, o.customers_name as customers_name, o.customers_id,
-                                           o.date_purchased as date_purchased, o.currency, o.currency_value, ot.class, ot.text as order_total, ot.value as order_value
-                                    FROM " . TABLE_ORDERS . " o
-                                    LEFT JOIN " . TABLE_ORDERS_TOTAL . " ot ON (o.orders_id = ot.orders_id
-                                      AND class = 'ot_total')
-                                    ORDER BY orders_id DESC",
-                (int)NUMBER_OF_ORDERS, true, 1800);
+            $sql = "SELECT o.orders_id as orders_id, o.customers_name as customers_name, o.customers_id,
+                           o.date_purchased as date_purchased, o.currency, o.currency_value, 
+                           ot.class, ot.text as order_total, ot.value as order_value
+                    FROM " . TABLE_ORDERS . " o
+                    LEFT JOIN " . TABLE_ORDERS_TOTAL . " ot ON (o.orders_id = ot.orders_id AND class = 'ot_total')
+                    ORDER BY orders_id DESC";
+            $orders = $db->Execute($sql, (int)NUMBER_OF_ORDERS, true, 1800);
 
             $ds = $dsc = $ys = $ysc = $msc = 0;
 
@@ -515,18 +515,48 @@ foreach ($whos_online as $session) {
                 $ysc++;
               }
 
-              $order['customers_name'] = str_replace("N/A", "", $order['customers_name']);
+              $order['customers_name'] = str_replace('N/A', '', $order['customers_name']);
 
               $amt = $currencies->format($order['order_value'], false);
               if ($order['currency'] != DEFAULT_CURRENCY) {
-                $amt .= " (" . $order['order_total'] . ")";
+                $amt .= ' (' . $order['order_total'] . ')';
               }
-              ?>
+
+              $sql = "SELECT op.products_quantity AS qty, op.products_name AS name, op.products_model AS model, opa.products_options AS product_option, opa.products_options_values AS product_value 
+                      FROM " . TABLE_ORDERS_PRODUCTS . " op 
+                      LEFT OUTER JOIN " . TABLE_ORDERS_PRODUCTS_ATTRIBUTES . " opa ON op.orders_products_id=opa.orders_products_id
+                      WHERE op.orders_id = " . (int)$order['orders_id'];
+// die($sql); 
+              $orderProducts = $db->Execute($sql, false, true, 1800);
+              $product_details = '';
+              foreach($orderProducts as $product) {
+                  $product_details .= $product['qty'] . ' x ' . $product['name'] . ' (' . $product['model'] . ')' . "\n";
+                  if (!empty($product['product_option'])) {
+                      $product_details .= '&nbsp;&nbsp;- ' . $product['product_option'] . ': ' . zen_output_string_protected($product['product_value']) . "\n";
+                  }
+                  $product_details .= '<hr>'; // add HR
+              }
+              $product_details = rtrim($product_details);
+              $product_details = preg_replace('~<hr>$~', '', $product_details); // remove last HR
+              $product_details = nl2br($product_details);
+            ?>
             <tr>
               <td>
-                <a href="<?php echo zen_href_link(FILENAME_ORDERS, 'oID=' . $order['orders_id'] . '&origin=' . FILENAME_DEFAULT); ?>" class="contentlink"><?php echo substr($order['customers_name'], 0, 20); ?></a>
+                <a href="<?php echo zen_href_link(FILENAME_ORDERS, 'oID=' . $order['orders_id'] . '&origin=' . FILENAME_DEFAULT); ?>" class="contentlink">
+                    <?php echo $order['orders_id'] . ' - ' . substr($order['customers_name'], 0, 20); ?>
+                </a>
               </td>
-              <td class="text-center"><?php echo $amt; ?></td>
+              <td class="text-left">
+                  <a tabindex="0" class="btn btn-xs btn-link orderProductsPopover" role="button" data-toggle="popover"
+                     data-trigger="focus"
+                     data-placement="left"
+                     title="<?php echo TEXT_PRODUCT_POPUP_TITLE; ?>"
+                     data-content="<?php echo zen_output_string($product_details, array('"' => '&quot;', "'" => '&#39;', '<br />' => '<br>')); ?>"
+                  >
+                      <?php echo TEXT_PRODUCT_POPUP_BUTTON; ?>
+                  </a>
+              </td>
+              <td class="text-right"><?php echo $amt; ?></td>
               <td class="text-right"><?php echo zen_date_short($order['date_purchased']); ?></td>
             </tr>
           <?php } ?>
@@ -547,3 +577,10 @@ foreach ($whos_online as $session) {
         </table>
       </div>
     </div>
+
+<!--  enable popovers-->
+<script>
+    jQuery(function () {
+        jQuery('[data-toggle="popover"]').popover({html:true,sanitize: true})
+    })
+</script>

@@ -30,10 +30,10 @@
     case ('update_all_products_attributes_sort_order'):
       if (isset($_POST['confirm']) && $_POST['confirm'] == 'yes')
       {
-        $all_products_attributes= $db->Execute("select p.products_id, pa.products_attributes_id from " .
+        $all_products_attributes= $db->Execute("SELECT p.products_id, pa.products_attributes_id FROM " .
         TABLE_PRODUCTS . " p, " .
         TABLE_PRODUCTS_ATTRIBUTES . " pa " . "
-        where p.products_id= pa.products_id"
+        WHERE p.products_id= pa.products_id"
         );
         while (!$all_products_attributes->EOF)
         {
@@ -53,7 +53,7 @@
       if (isset($_POST['confirm']) && $_POST['confirm'] == 'yes')
       {
       // reset products_price_sorter for searches etc.
-        $sql = "select products_id from " . TABLE_PRODUCTS;
+        $sql = "SELECT products_id FROM " . TABLE_PRODUCTS;
         $update_prices = $db->Execute($sql);
 
         while (!$update_prices->EOF)
@@ -72,7 +72,7 @@
     // reset products_viewed to 0
       if (isset($_POST['confirm']) && $_POST['confirm'] == 'yes')
       {
-        $sql = "update " . TABLE_PRODUCTS_DESCRIPTION . " set products_viewed= '0'";
+        $sql = "UPDATE " . TABLE_PRODUCTS_DESCRIPTION . " SET products_viewed= '0'";
         $update_viewed = $db->Execute($sql);
 
         $messageStack->add_session(SUCCESS_PRODUCT_UPDATE_PRODUCTS_VIEWED, 'success');
@@ -86,7 +86,7 @@
       if (isset($_POST['confirm']) && $_POST['confirm'] == 'yes')
       {
       // reset products_ordered to 0
-        $sql = "update " . TABLE_PRODUCTS . " set products_ordered= '0'";
+        $sql = "UPDATE " . TABLE_PRODUCTS . " SET products_ordered= '0'";
         $update_viewed = $db->Execute($sql);
 
         $messageStack->add_session(SUCCESS_PRODUCT_UPDATE_PRODUCTS_ORDERED, 'success');
@@ -98,7 +98,7 @@
 
     case ('update_counter'):
     if ($_POST['new_counter'] == '' || strval($_POST['new_counter']) != strval((int)$_POST['new_counter'])) break;
-    $sql = "update " . TABLE_COUNTER . " set counter= '" . (int)$_POST['new_counter'] . "'";
+    $sql = "UPDATE " . TABLE_COUNTER . " SET counter= '" . (int)$_POST['new_counter'] . "'";
     $update_counter = $db->Execute($sql);
 
     $messageStack->add_session(SUCCESS_UPDATE_COUNTER . (int)$_POST['new_counter'], 'success');
@@ -163,14 +163,14 @@
       if (isset($_POST['confirm']) && $_POST['confirm'] == 'yes')
       {
 
-        $sql = "select products_id from " . TABLE_PRODUCTS;
+        $sql = "SELECT products_id FROM " . TABLE_PRODUCTS;
         $check_products = $db->Execute($sql);
         while (!$check_products->EOF) {
           // Note: "USE INDEX ()" is intentional, to retrieve results in original insert order
-          $sql = "select products_id, categories_id from " . TABLE_PRODUCTS_TO_CATEGORIES . " USE INDEX () where products_id='" . $check_products->fields['products_id'] . "'";
+          $sql = "SELECT products_id, categories_id FROM " . TABLE_PRODUCTS_TO_CATEGORIES . " USE INDEX () WHERE products_id='" . $check_products->fields['products_id'] . "'";
           $check_category = $db->Execute($sql);
 
-          $sql = "update " . TABLE_PRODUCTS . " set master_categories_id='" . $check_category->fields['categories_id'] . "' where products_id='" . $check_products->fields['products_id'] . "'";
+          $sql = "UPDATE " . TABLE_PRODUCTS . " SET master_categories_id='" . $check_category->fields['categories_id'] . "' WHERE products_id='" . $check_products->fields['products_id'] . "'";
           $update_viewed = $db->Execute($sql);
 
           $check_products->MoveNext();
@@ -186,9 +186,9 @@
     case ('update_orders_id'):
       global $db;
       $new_orders_id = zen_db_prepare_input((int)$_POST['new_orders_id']);
-      $result = $db->Execute("select max(orders_id) as maxorder from " . TABLE_ORDERS);
+      $result = $db->Execute("SELECT MAX(orders_id) AS maxorder FROM " . TABLE_ORDERS);
       $max_order1 = $result->fields['maxorder'];
-      $result = $db->Execute("select max(orders_id) as maxorder from " . TABLE_ORDERS_PRODUCTS);
+      $result = $db->Execute("SELECT MAX(orders_id) AS maxorder FROM " . TABLE_ORDERS_PRODUCTS);
       $max_order2 = $result->fields['maxorder'];
       if ($new_orders_id <= $max_order1 || $new_orders_id <= $max_order2)
       {

@@ -11,42 +11,41 @@ require 'includes/application_top.php';
 //if (!defined('SALES_REPORT_GRAPHS_FILTER_DEFAULT')) define('SALES_REPORT_GRAPHS_FILTER_DEFAULT', '00000000110000000000');
 
 require(DIR_WS_CLASSES . 'currencies.php');
+require DIR_WS_CLASSES . 'stats_sales_report_graph.php';
 $currencies = new currencies();
 
 if (!empty($_GET['report'])) {
   $sales_report_view = (int)$_GET['report'];
 }
 // default is 4
-if (!isset($sales_report_view) || $sales_report_view < 1 || $sales_report_view > 5) {
-  $sales_report_view = 4;
+if (!isset($sales_report_view) || $sales_report_view < statsSalesReportGraph::HOURLY_VIEW || $sales_report_view > statsSalesReportGraph::YEARLY_VIEW) {
+  $sales_report_view = statsSalesReportGraph::MONTHLY_VIEW;
 }
 
-// report views (1:hourly, 2:daily, 3:weekly, 4:monthly, 5:yearly)
-
 switch ($sales_report_view) {
-  case('1'):
+  case(statsSalesReportGraph::HOURLY_VIEW):
     $summary1 = CHART_TEXT_AVERAGE . ' ' . REPORT_TEXT_HOURLY;
     $summary2 = TODAY_TO_DATE;
     $report_desc = REPORT_TEXT_HOURLY;
     break;
-  case('2'):
+  case(statsSalesReportGraph::DAILY_VIEW):
     $summary1 = CHART_TEXT_AVERAGE . ' ' . REPORT_TEXT_DAILY;
     $summary2 = WEEK_TO_DATE;
     $report_desc = REPORT_TEXT_DAILY;
     break;
-  case('3'):
+  case(statsSalesReportGraph::WEEKLY_VIEW):
     $summary1 = CHART_TEXT_AVERAGE . ' ' . REPORT_TEXT_WEEKLY;
     $summary2 = WEEK_TO_DATE;
     $report_desc = REPORT_TEXT_WEEKLY;
     break;
 
-  case('4'):
+  case(statsSalesReportGraph::MONTHLY_VIEW):
     $summary1 = CHART_TEXT_AVERAGE . ' ' . REPORT_TEXT_MONTHLY;
     $summary2 = MONTH_TO_DATE;
     $report_desc = REPORT_TEXT_MONTHLY;
     break;
 
-  case('5'):
+  case(statsSalesReportGraph::YEARLY_VIEW):
     $summary1 = CHART_TEXT_AVERAGE . ' ' . REPORT_TEXT_YEARLY;
     $summary2 = YEARLY_TOTAL;
     $report_desc = REPORT_TEXT_YEARLY;
@@ -72,7 +71,6 @@ if (isset($_GET['filter']) && $_GET['filter'] && zen_not_null($_GET['filter'])) 
   $sales_report_filter_link = "&filter=$sales_report_filter";
 }
 
-require DIR_WS_CLASSES . 'stats_sales_report_graph.php';
 $report = new statsSalesReportGraph($sales_report_view, $startDate, $endDate, $sales_report_filter);
 
 if (strlen($sales_report_filter) == 0) {
@@ -113,7 +111,7 @@ if (strlen($sales_report_filter) == 0) {
           var data = new google.visualization.DataTable();
           data.addColumn('string', 'label');
           data.addColumn('number', '<?php echo CHART_TOTAL_SALES; ?>');
-<?php if ($sales_report_view < 5) { ?>
+<?php if ($sales_report_view < statsSalesReportGraph::YEARLY_VIEW) { ?>
             data.addColumn('number', '<?php echo CHART_AVERAGE_SALE_AMOUNT; ?>');
 <?php } ?>
 
@@ -124,13 +122,13 @@ for ($i = 0; $i < $report->size; $i++) {
   // column name
   echo "           ['";
 
-  if ($sales_report_view == 5 && $report->size > 5) {
+  if ($sales_report_view == statsSalesReportGraph::YEARLY_VIEW && $report->size > 5) {
     echo substr($report->info[$i]['text'], 0, 1);
-  } elseif ($sales_report_view == 4) {
+  } elseif ($sales_report_view == statsSalesReportGraph::MONTHLY_VIEW) {
     echo substr($report->info[$i]['text'], 0, 3);
-  } elseif ($sales_report_view == 3) {
+  } elseif ($sales_report_view == statsSalesReportGraph::WEEKLY_VIEW) {
     echo substr($report->info[$i]['text'], 0, 5);
-  } elseif ($sales_report_view == 1) {
+  } elseif ($sales_report_view == statsSalesReportGraph::HOURLY_VIEW) {
     echo ltrim(substr($report->info[$i]['text'], 0, 2), '0');
   } elseif ($report->size > 5) {
     echo substr($report->info[$i]['text'], 3, 2);
@@ -144,7 +142,7 @@ for ($i = 0; $i < $report->size; $i++) {
   echo round($report->info[$i]['sum'], 2);
 
   // second value
-  if ($sales_report_view < 5) {
+  if ($sales_report_view < statsSalesReportGraph::YEARLY_VIEW) {
     echo ',';
     echo round($report->info[$i]['avg'], 2);
   }

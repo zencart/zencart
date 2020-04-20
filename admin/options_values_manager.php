@@ -758,7 +758,7 @@ if (zen_not_null($action)) {
                       $inputs .= '<span class="input-group-addon">';
                       $inputs .= zen_image(DIR_WS_CATALOG_LANGUAGES . $languages[$i]['directory'] . '/images/' . $languages[$i]['image'], $languages[$i]['name']);
                       $inputs .= '</span>';
-                      $inputs .= zen_draw_input_field('value_name[' . $languages[$i]['id'] . ']', zen_output_string($value_name->fields['products_options_values_name']), zen_set_field_length(TABLE_PRODUCTS_OPTIONS_VALUES, 'products_options_values_name', 50) . 'class="form-control"');
+                      $inputs .= zen_draw_input_field('value_name[' . $languages[$i]['id'] . ']', zen_output_string($value_name->fields['products_options_values_name']), zen_set_field_length(TABLE_PRODUCTS_OPTIONS_VALUES, 'products_options_values_name', 50) . ' class="form-control"');
                       $inputs .= '</div>';
                       $inputs .= '</div>';
                     }
@@ -812,11 +812,11 @@ if (zen_not_null($action)) {
                     <?php } ?>
                     <?php
                   }
-                  $max_values_id_values = $db->Execute("SELECT MAX(products_options_values_id) + 1 AS next_id
-                                                        FROM " . TABLE_PRODUCTS_OPTIONS_VALUES);
-
-                  $next_id = $max_values_id_values->fields['next_id'];
                 }
+                $max_values_id_values = $db->Execute("SELECT MAX(products_options_values_id) + 1 AS next_id
+                                                      FROM " . TABLE_PRODUCTS_OPTIONS_VALUES);
+
+                $next_id = $max_values_id_values->fields['next_id'];
                 ?>
               </tr>
               <?php if ($action != 'update_option_value') { ?>
@@ -848,7 +848,7 @@ if (zen_not_null($action)) {
                         <div class="form-group">
                           <div class="input-group">
                             <span class="input-group-addon"><?php echo zen_image(DIR_WS_CATALOG_LANGUAGES . $languages[$i]['directory'] . '/images/' . $languages[$i]['image'], $languages[$i]['name']); ?></span>
-                            <?php echo zen_draw_input_field('value_name[' . $languages[$i]['id'] . ']', '', zen_set_field_length(TABLE_PRODUCTS_OPTIONS_VALUES, 'products_options_values_name', 50) . 'class="form-control"'); ?>
+                            <?php echo zen_draw_input_field('value_name[' . $languages[$i]['id'] . ']', '', zen_set_field_length(TABLE_PRODUCTS_OPTIONS_VALUES, 'products_options_values_name', 50) . ' class="form-control"'); ?>
                           </div>
                         </div>
                       <?php } ?>
@@ -856,7 +856,7 @@ if (zen_not_null($action)) {
                     <div class="col-md-2">
                       <div class="form-group">
                         <?php echo zen_draw_label(TEXT_SORT, 'products_options_values_sort_order', 'class="control-label"'); ?>
-                        <?php echo zen_draw_input_field('products_options_values_sort_order', '', 'size="4" . class="form-control"'); ?>
+                        <?php echo zen_draw_input_field('products_options_values_sort_order', '', 'size="4" class="form-control"'); ?>
                       </div>
                     </div>
                   </td>

@@ -7,7 +7,6 @@
  * @version $Id: DrByte 2019 May 25 Modified in v1.5.6b $
  */
 
-define('HEADING_COUPON_HELP', 'Discount Coupon Help');
 define('TEXT_CLOSE_WINDOW', 'Close Window [x]');
 define('TEXT_COUPON_HELP_HEADER', '<strong>The Discount Coupon Redemption Code you have entered is for</strong> ');
 define('TEXT_COUPON_HELP_NAME', '<br /><br />Coupon Name : %s');
@@ -19,8 +18,6 @@ define('TEXT_COUPON_HELP_DATE', '<br /><br />The coupon is valid between %s and 
 define('TEXT_COUPON_HELP_RESTRICT', '<br /><br />Product/Category Restrictions');
 define('TEXT_COUPON_HELP_CATEGORIES', 'Category');
 define('TEXT_COUPON_HELP_PRODUCTS', 'Product');
-define('TEXT_ALLOW', 'Allow');
-define('TEXT_DENY', 'Deny');
 
 define('TEXT_ALLOWED', ' (Allowed)');
 define('TEXT_DENIED', ' (Denied)');

@@ -43,7 +43,6 @@ function zen_date_raw($date, $reverse = false) {
     return substr($date, 6, 4) . substr($date, 0, 2) . substr($date, 3, 2);
   }
 }
-
 // // include template specific meta tags defines
 //   if (file_exists(DIR_FS_CATALOG_LANGUAGES . $_SESSION['language'] . '/' . $template_dir . '/meta_tags.php')) {
 //     $template_dir_select = $template_dir . '/';
@@ -125,7 +124,6 @@ define('BOX_HEADING_MODULES', 'Modules');
 define('BOX_MODULES_PAYMENT', 'Payment');
 define('BOX_MODULES_SHIPPING', 'Shipping');
 define('BOX_MODULES_ORDER_TOTAL', 'Order Total');
-define('BOX_MODULES_PRODUCT_TYPES', 'Product Types');
 
 // categories box text
 define('BOX_HEADING_CATALOG', 'Catalog');
@@ -171,13 +169,10 @@ define('BOX_REPORTS_CUSTOMERS_REFERRALS', 'Customers Referral');
 // tools text
 define('BOX_HEADING_TOOLS', 'Tools');
 define('BOX_TOOLS_TEMPLATE_SELECT', 'Template Selection');
-define('BOX_TOOLS_BACKUP', 'Database Backup');
 define('BOX_TOOLS_BANNER_MANAGER', 'Banner Manager');
-define('BOX_TOOLS_CACHE', 'Cache Control');
-define('BOX_TOOLS_DEFINE_LANGUAGE', 'Define Languages');
-define('BOX_TOOLS_FILE_MANAGER', 'File Manager');
 define('BOX_TOOLS_MAIL', 'Send Email');
 define('BOX_TOOLS_NEWSLETTER_MANAGER', 'Newsletter and Product Notifications Manager');
+define('BOX_TOOLS_DEFINE_PAGES_EDITOR','Define Pages Editor');
 define('BOX_TOOLS_SERVER_INFO', 'Server/Version Info');
 define('BOX_TOOLS_WHOS_ONLINE', 'Who\'s Online');
 define('BOX_TOOLS_STORE_MANAGER', 'Store Manager');
@@ -187,17 +182,7 @@ define('BOX_TOOLS_EZPAGES','EZ-Pages');
 
 define('BOX_HEADING_EXTRAS', 'Extras');
 
-// define pages editor files
-define('BOX_TOOLS_DEFINE_PAGES_EDITOR','Define Pages Editor');
-define('BOX_TOOLS_DEFINE_MAIN_PAGE', 'Main Page');
-define('BOX_TOOLS_DEFINE_CONTACT_US','Contact Us');
-define('BOX_TOOLS_DEFINE_PRIVACY','Privacy');
-define('BOX_TOOLS_DEFINE_SHIPPINGINFO','Shipping & Returns');
 define('BOX_TOOLS_DEFINE_CONDITIONS','Conditions of Use');
-define('BOX_TOOLS_DEFINE_CHECKOUT_SUCCESS','Checkout Success');
-define('BOX_TOOLS_DEFINE_PAGE_2','Page 2');
-define('BOX_TOOLS_DEFINE_PAGE_3','Page 3');
-define('BOX_TOOLS_DEFINE_PAGE_4','Page 4');
 
 // localization box text
 define('BOX_HEADING_LOCALIZATION', 'Localization');
@@ -278,11 +263,9 @@ define('ENTRY_COUNTRY_ERROR', '');
 define('ENTRY_TELEPHONE_NUMBER', 'Telephone Number:');
 define('ENTRY_TELEPHONE_NUMBER_ERROR', '&nbsp;<span class="errorText">min ' . ENTRY_TELEPHONE_MIN_LENGTH . ' chars</span>');
 define('ENTRY_FAX_NUMBER', 'Fax Number:');
-define('ENTRY_FAX_NUMBER_ERROR', '');
 define('ENTRY_NEWSLETTER', 'Newsletter:');
 define('ENTRY_NEWSLETTER_YES', 'Subscribed');
 define('ENTRY_NEWSLETTER_NO', 'Unsubscribed');
-define('ENTRY_NEWSLETTER_ERROR', '');
 
 define('ERROR_PASSWORDS_NOT_MATCHING', 'Password and confirmation must match');
 define('ENTRY_PASSWORD_CHANGE_ERROR', '<strong>Sorry, your new password was rejected.</strong><br />');
@@ -330,7 +313,6 @@ define('IMAGE_PREVIEW', 'Preview');
 define('IMAGE_RESET', 'Reset');
 define('IMAGE_RESET_PWD', 'Reset Password');
 define('IMAGE_SAVE', 'Save');
-define('IMAGE_SEARCH', 'Search');
 define('IMAGE_SELECT', 'Select');
 define('IMAGE_SEND', 'Send');
 define('IMAGE_SEND_EMAIL', 'Send Email');
@@ -399,17 +381,13 @@ define('TEXT_DISPLAY_NUMBER_OF_TAX_ZONES', 'Displaying <b>%d</b> to <b>%d</b> (o
 define('TEXT_DISPLAY_NUMBER_OF_TAX_RATES', 'Displaying <b>%d</b> to <b>%d</b> (of <b>%d</b> tax rates)');
 define('TEXT_DISPLAY_NUMBER_OF_ZONES', 'Displaying <b>%d</b> to <b>%d</b> (of <b>%d</b> zones)');
 
-define('PREVNEXT_TITLE_FIRST_PAGE', 'First Page');
 define('PREVNEXT_TITLE_PREVIOUS_PAGE', 'Previous Page');
 define('PREVNEXT_TITLE_NEXT_PAGE', 'Next Page');
-define('PREVNEXT_TITLE_LAST_PAGE', 'Last Page');
 define('PREVNEXT_TITLE_PAGE_NO', 'Page %d');
 define('PREVNEXT_TITLE_PREV_SET_OF_NO_PAGE', 'Previous Set of %d Pages');
 define('PREVNEXT_TITLE_NEXT_SET_OF_NO_PAGE', 'Next Set of %d Pages');
-define('PREVNEXT_BUTTON_FIRST', '&laquo;FIRST');
 define('PREVNEXT_BUTTON_PREV', '[&laquo;&nbsp;Prev]');
 define('PREVNEXT_BUTTON_NEXT', '[Next&nbsp;&raquo;]');
-define('PREVNEXT_BUTTON_LAST', 'LAST&raquo;');
 
 define('TEXT_DEFAULT', 'default');
 define('TEXT_SET_DEFAULT', 'Set as default');
@@ -435,7 +413,7 @@ define('WARNING_DATABASE_VERSION_OUT_OF_DATE','Your database appears to need pat
 define('WARN_DATABASE_VERSION_PROBLEM','true'); //set to false to turn off warnings about database version mismatches
 define('WARNING_ADMIN_DOWN_FOR_MAINTENANCE', '<strong>WARNING:</strong> Site is currently set to Down for Maintenance ...<br />NOTE: You cannot test most Payment and Shipping Modules in Maintenance mode');
 define('WARNING_INSTALL_DIRECTORY_EXISTS', 'SECURITY WARNING: Installation directory exists at: %s. Please remove this directory for security reasons.');
-define('WARNING_CONFIG_FILE_WRITEABLE', 'Warning: Your configuration file: %s is writeable. This is a potential security risk - please set the right user permissions on this file (read-only, CHMOD 644 or 444 are typical). You may need to use your webhost control panel/file-manager to change the permissions effectively. Contact your webhost for assistance. <a href="http://tutorials.zen-cart.com/index.php?article=90" target="_blank">See this FAQ</a>');
+define('WARNING_CONFIG_FILE_WRITEABLE', 'Warning: Your configuration file: %s is writeable. This is a potential security risk - please set the right user permissions on this file (read-only, CHMOD 644 or 444 are typical). You may need to use your webhost control panel/file-manager to change the permissions effectively. Contact your webhost for assistance. <a href="https://docs.zen-cart.com/user/miscellaneous/configure/" target="_blank">See this FAQ</a>');
 define('WARNING_COULD_NOT_LOCATE_LANG_FILE', 'WARNING: Could not locate language file: ');
 define('ERROR_MODULE_REMOVAL_PROHIBITED', 'ERROR: Module removal prohibited: ');
 define('WARNING_REVIEW_ROGUE_ACTIVITY', 'ALERT: Please review for possible XSS activity:');
@@ -513,8 +491,6 @@ define('NOT_INSTALLED_TEXT','Not Installed');
 // Min and Units
   define('PRODUCTS_QUANTITY_MIN_TEXT_LISTING','Min:');
   define('PRODUCTS_QUANTITY_UNIT_TEXT_LISTING','Units:');
-  define('PRODUCTS_QUANTITY_IN_CART_LISTING','In cart:');
-  define('PRODUCTS_QUANTITY_ADD_ADDITIONAL_LISTING','Add Additional:');
 
   define('TEXT_PRODUCTS_MIX_OFF','*No Mixed Options');
   define('TEXT_PRODUCTS_MIX_ON','*Yes Mixed Options');
@@ -573,12 +549,8 @@ define('TEXT_WORDS_FREE',' Word(s) free ');
 define('TEXT_CHARGES_LETTERS','Calculated Charge:');
 define('TEXT_PER_LETTER','<br />Price per letter: ');
 define('TEXT_LETTERS_FREE',' Letter(s) free ');
-define('TEXT_ONETIME_CHARGES','*onetime charges = ');
-define('TEXT_ONETIME_CHARGES_EMAIL',"\t" . '*onetime charges = ');
-define('TEXT_ATTRIBUTES_QTY_PRICES_HELP', 'Option Quantity Discounts');
 define('TABLE_ATTRIBUTES_QTY_PRICE_QTY','QTY');
 define('TABLE_ATTRIBUTES_QTY_PRICE_PRICE','PRICE');
-define('TEXT_ATTRIBUTES_QTY_PRICES_ONETIME_HELP', 'Option Quantity Discounts Onetime Charges');
 define('TEXT_CATEGORIES_PRODUCTS', 'Select a Category with products (indicated by an asterisk) / move between the products');
 define('TEXT_PRODUCT_TO_VIEW', 'Select a Product to View and Press Display ...');
 
@@ -614,6 +586,10 @@ define('EMAIL_SALUTATION', 'Dear');
   define('EDITOR_NONE', 'Plain Text');
   define('TEXT_EDITOR_INFO', 'Text Editor');
   define('ERROR_EDITORS_FOLDER_NOT_FOUND', 'You have an HTML editor selected in \'My Store\' but the \'/editors/\' folder cannot be located. Please disable your selection or move your editor files into the \''.DIR_WS_CATALOG.'editors/\' folder');
+
+define('TEXT_PRODUCT_POPUP_BUTTON', '<i class="fa fa-commenting"></i>');
+define('TEXT_PRODUCT_POPUP_TITLE', 'Products Ordered');
+
   define('TEXT_CATEGORIES_PRODUCTS_SORT_ORDER_INFO', 'Categories/Product Display Order: ');
   define('TEXT_SORT_PRODUCTS_SORT_ORDER_PRODUCTS_NAME', 'Products Sort Order, Products Name');
   define('TEXT_SORT_PRODUCTS_NAME', 'Products Name');

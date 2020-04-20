@@ -8,8 +8,8 @@
 ?>
 <?php require(DIR_FS_INSTALL . DIR_WS_INSTALL_TEMPLATE . 'partials/partial_modal_help.php'); ?>
 
-	<div align="center" class="alert-box success">
-		<div align="center" class="showModal button warning radius" id="NGINXCONF">
+	<div class="alert-box success text-center">
+		<div class="showModal button warning radius text-center" id="NGINXCONF">
 			<h6><?php echo TEXT_COMPLETION_NGINX_TEXT; ?></h6>
 		</div>
 
@@ -30,7 +30,7 @@
 		<br>
 <?php } ?>
 
-		<h5><font color="white">
+		<h5 style="color:white">
 		
 <?php if ($isUpgrade) { ?>
 		<?php echo TEXT_COMPLETION_UPGRADE_COMPLETE; ?>
@@ -41,10 +41,10 @@
 	<?php if ($catalogLink != '#') echo TEXT_COMPLETION_INSTALL_LINKS_BELOW; ?>
 <?php } ?>
 
-		</font></h5>
+		</h5>
 <?php if (!$isUpgrade && $catalogLink != '#') { ?>
 
-		<div align="center">
+		<div class="text-center">
 			<a class="radius button" href="<?php echo $adminLink; ?>" target="_blank" tabindex="1">
 				<?php echo TEXT_COMPLETION_ADMIN_LINK_TEXT; ?>:
 				

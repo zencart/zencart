@@ -816,6 +816,7 @@ if (zen_not_null($action) && $order_exists == true) {
                                               ORDER BY date_added");
 
                 if ($orders_history->RecordCount() > 0) {
+                  $first = true;
                   foreach ($orders_history as $item) {
                     ?>
                   <tr>
@@ -833,38 +834,37 @@ if (zen_not_null($action) && $order_exists == true) {
                     </td>
                     <td><?php echo $orders_status_array[$item['orders_status_id']]; ?></td>
 <?php
-          // -----
-          // A watching observer can provide an associative array in the form:
-          //
-          // $extra_data = array(
-          //     array(
-          //       'align' => $alignment,    // One of 'center', 'right', or 'left' (optional)
-          //       'text' => $value
-          //     ),
-          // );
-          //
-          // Observer note:  Be sure to check that the $p2/$extra_data value is specifically (bool)false before initializing, since
-          // multiple observers might be injecting content!
-          //
-          $extra_data = false;
-          $zco_notifier->notify('NOTIFY_ADMIN_ORDERS_STATUS_HISTORY_EXTRA_COLUMN_DATA', $orders_history->fields, $extra_data);
-          if (is_array($extra_data)) {
-              $first = true; 
-              foreach ($extra_data as $data_info) {
-                  $align = (isset($data_info['align'])) ? (' text-' . $data_info['align']) : '';
-        ?>
-                        <td class="smallText<?php echo $align; ?>"><?php echo $data_info['text']; ?></td>
-        <?php
-              }
-          }
+                    // -----
+                    // A watching observer can provide an associative array in the form:
+                    //
+                    // $extra_data = array(
+                    //     array(
+                    //       'align' => $alignment,    // One of 'center', 'right', or 'left' (optional)
+                    //       'text' => $value
+                    //     ),
+                    // );
+                    //
+                    // Observer note:  Be sure to check that the $p2/$extra_data value is specifically (bool)false before initializing, since
+                    // multiple observers might be injecting content!
+                    //
+                    $extra_data = false;
+                    $zco_notifier->notify('NOTIFY_ADMIN_ORDERS_STATUS_HISTORY_EXTRA_COLUMN_DATA', $orders_history->fields, $extra_data);
+                    if (is_array($extra_data)) {
+                        foreach ($extra_data as $data_info) {
+                            $align = (isset($data_info['align'])) ? (' text-' . $data_info['align']) : '';
+                  ?>
+                                  <td class="smallText<?php echo $align; ?>"><?php echo $data_info['text']; ?></td>
+                  <?php
+                        }
+                    }
 ?>
                     <td>
-<?php 
-                        if ($first) { 
-                           echo nl2br(zen_db_output($item['comments'])); 
-                           $first = false; 
+<?php
+                        if ($first) {
+                           echo nl2br(zen_db_output($item['comments']));
+                           $first = false;
                         } else {
-                           echo nl2br($item['comments']); 
+                           echo nl2br($item['comments']);
                         }
 ?>
                     </td>
@@ -1064,6 +1064,7 @@ if (zen_not_null($action) && $order_exists == true) {
                   <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_PAYMENT_METHOD; ?></td>
                   <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_CUSTOMERS; ?></td>
                   <td class="dataTableHeadingContent text-right"><?php echo TABLE_HEADING_ORDER_TOTAL; ?></td>
+                  <td></td>
                   <td class="dataTableHeadingContent text-center"><?php echo TABLE_HEADING_DATE_PURCHASED; ?></td>
                   <td class="dataTableHeadingContent text-right"><?php echo TABLE_HEADING_STATUS; ?></td>
                   <td class="dataTableHeadingContent text-center"><?php echo TABLE_HEADING_CUSTOMER_COMMENTS; ?></td>
@@ -1123,12 +1124,12 @@ if (zen_not_null($action) && $order_exists == true) {
                   $order_by = " ORDER BY o.orders_id DESC";
                   $zco_notifier->notify('NOTIFY_ADMIN_ORDERS_SEARCH_PARMS', $keywords, $search, $search_distinct, $new_fields, $new_table, $order_by);
 
-                  $orders_query_raw = "select " . $search_distinct . " o.orders_id, o.customers_id, o.customers_name, o.payment_method, o.shipping_method, o.date_purchased, o.last_modified, o.currency, o.currency_value, s.orders_status_name, ot.text as order_total" .
+                  $orders_query_raw = "SELECT " . $search_distinct . " o.orders_id, o.customers_id, o.customers_name, o.payment_method, o.shipping_method, o.date_purchased, o.last_modified, o.currency, o.currency_value, s.orders_status_name, ot.text as order_total" .
                       $new_fields . "
-                          from (" . TABLE_ORDERS . " o " .
+                          FROM (" . TABLE_ORDERS . " o " .
                       $new_table . ")
-                          left join " . TABLE_ORDERS_STATUS . " s on (o.orders_status = s.orders_status_id and s.language_id = " . (int)$_SESSION['languages_id'] . ")
-                          left join " . TABLE_ORDERS_TOTAL . " ot on (o.orders_id = ot.orders_id and ot.class = 'ot_total') ";
+                          LEFT JOIN " . TABLE_ORDERS_STATUS . " s ON (o.orders_status = s.orders_status_id AND s.language_id = " . (int)$_SESSION['languages_id'] . ")
+                          LEFT JOIN " . TABLE_ORDERS_TOTAL . " ot ON (o.orders_id = ot.orders_id AND ot.class = 'ot_total') ";
 
 
                   if (!empty($_GET['cID'])) {
@@ -1171,9 +1172,9 @@ if (zen_not_null($action) && $order_exists == true) {
                     }
 
                     if (isset($oInfo) && is_object($oInfo) && ($orders->fields['orders_id'] == $oInfo->orders_id)) {
-                      echo '<tr id="defaultSelected" class="dataTableRowSelected" onclick="document.location.href=\'' . zen_href_link(FILENAME_ORDERS, zen_get_all_get_params(array('oID', 'action')) . 'oID=' . $oInfo->orders_id . '&action=edit', 'NONSSL') . '\'">' . "\n";
+                      echo '<tr id="defaultSelected" class="dataTableRowSelected">' . "\n";
                     } else {
-                      echo '<tr class="dataTableRow" onclick="document.location.href=\'' . zen_href_link(FILENAME_ORDERS, zen_get_all_get_params(array('oID')) . 'oID=' . $orders->fields['orders_id'], 'NONSSL') . '\'">' . "\n";
+                      echo '<tr class="dataTableRow">' . "\n";
                     }
 
                     $show_difference = '';
@@ -1193,6 +1194,34 @@ if (zen_not_null($action) && $order_exists == true) {
                 <td class="dataTableContent"><?php echo $show_payment_type; ?></td>
                 <td class="dataTableContent"><?php echo '<a href="' . zen_href_link(FILENAME_CUSTOMERS, 'cID=' . $orders->fields['customers_id'], 'NONSSL') . '">' . zen_image(DIR_WS_ICONS . 'preview.gif', ICON_PREVIEW . ' ' . TABLE_HEADING_CUSTOMERS) . '</a>&nbsp;' . $orders->fields['customers_name'] . ($orders->fields['customers_company'] != '' ? '<br>' . $orders->fields['customers_company'] : ''); ?></td>
                 <td class="dataTableContent text-right"><?php echo strip_tags($orders->fields['order_total']); ?></td>
+                <td class="dataTableContent text-right">
+                    <?php
+                    $sql = "SELECT op.products_quantity AS qty, op.products_name AS name, op.products_model AS model, opa.products_options AS product_option, opa.products_options_values AS product_value 
+                            FROM " . TABLE_ORDERS_PRODUCTS . " op 
+                            LEFT OUTER JOIN " . TABLE_ORDERS_PRODUCTS_ATTRIBUTES . " opa ON op.orders_products_id=opa.orders_products_id
+                            WHERE op.orders_id = " . (int)$orders->fields['orders_id'];
+                    $orderProducts = $db->Execute($sql, false, true, 1800);
+                    $product_details = '';
+                    foreach($orderProducts as $product) {
+                        $product_details .= $product['qty'] . ' x ' . $product['name'] . ' (' . $product['model'] . ')' . "\n";
+                        if (!empty($product['product_option'])) {
+                            $product_details .= '&nbsp;&nbsp;- ' . $product['product_option'] . ': ' . zen_output_string_protected($product['product_value']) . "\n";
+                        }
+                        $product_details .= '<hr>'; // add HR
+                    }
+                    $product_details = rtrim($product_details);
+                    $product_details = preg_replace('~<hr>$~', '', $product_details); // remove last HR
+                    $product_details = nl2br($product_details);
+                    ?>
+                    <a tabindex="0" class="btn btn-xs btn-link orderProductsPopover" role="button" data-toggle="popover"
+                       data-trigger="focus"
+                       data-placement="left"
+                       title="<?php echo TEXT_PRODUCT_POPUP_TITLE; ?>"
+                       data-content="<?php echo zen_output_string($product_details, array('"' => '&quot;', "'" => '&#39;', '<br />' => '<br>')); ?>"
+                    >
+                        <?php echo TEXT_PRODUCT_POPUP_BUTTON; ?>
+                    </a>
+                </td>
                 <td class="dataTableContent text-center"><?php echo zen_datetime_short($orders->fields['date_purchased']); ?></td>
                 <td class="dataTableContent text-right"><?php echo ($orders->fields['orders_status_name'] != '' ? $orders->fields['orders_status_name'] : TEXT_INVALID_ORDER_STATUS); ?></td>
                 <td class="dataTableContent text-center"><?php echo (zen_get_orders_comments($orders->fields['orders_id']) == '' ? '' : zen_image(DIR_WS_IMAGES . 'icon_yellow_on.gif', TEXT_COMMENTS_YES, 16, 16)); ?></td>
@@ -1355,6 +1384,14 @@ if (zen_not_null($action) && $order_exists == true) {
 
     </div>
     <!-- body_eof //-->
+
+    <!--  enable popovers-->
+    <script>
+        jQuery(function () {
+            jQuery('[data-toggle="popover"]').popover({html:true,sanitize: true})
+        })
+    </script>
+
 
     <!-- footer //-->
     <div class="footer-area">

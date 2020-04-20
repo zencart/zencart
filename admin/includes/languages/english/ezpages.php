@@ -53,8 +53,6 @@ define('TABLE_HEADING_PAGE_IS_VISIBLE_EXPLANATION', ' Page shown even if not in 
 
 define('TEXT_DISPLAY_NUMBER_OF_PAGES', 'Displaying <b>%d</b> to <b>%d</b> (of <b>%d</b> pages)');
 define('IMAGE_NEW_PAGE', 'New Page');
-define('TEXT_INFO_PAGE_IMAGE', 'Image');
-define('TEXT_INFO_CURRENT_IMAGE', 'Current Image:');
 define('TEXT_INFO_PAGES_ID', 'ID: ');
 define('TEXT_INFO_PAGES_ID_SELECT', 'Select a page ...');
 
@@ -87,4 +85,3 @@ define('TEXT_SORT_PAGE_ID_TITLE', 'Page ID, Title');
 
 define('TEXT_PAGE_TITLE', 'Title:');
 define('TEXT_WARNING_MULTIPLE_SETTINGS', '<strong>WARNING: Multiple Link Definition</strong>');
-?>
