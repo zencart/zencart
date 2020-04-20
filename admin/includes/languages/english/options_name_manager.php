@@ -23,39 +23,31 @@ define('TEXT_OK_TO_DELETE', 'This Option Name is not used by any product - it is
 define('TEXT_OPTION_ID', 'Option ID');
 define('TEXT_OPTION_NAME', 'Option Name');
 
-define('ATTRIBUTE_WARNING_DUPLICATE','Duplicate Attribute - Attribute was not added'); // attributes duplicate warning
-define('ATTRIBUTE_WARNING_DUPLICATE_UPDATE','Duplicate Attribute Exists - Attribute was not changed'); // attributes duplicate warning
-define('ATTRIBUTE_WARNING_INVALID_MATCH','Attribute Option and Option Value Do NOT Match - Attribute was not added'); // miss matched option and options value
-define('ATTRIBUTE_WARNING_INVALID_MATCH_UPDATE','Attribute Option and Option Value Do NOT Match - Attribute was not changed'); // miss matched option and options value
-define('ATTRIBUTE_POSSIBLE_OPTIONS_NAME_WARNING_DUPLICATE','Possible Duplicate Options Name Added'); // Options Name Duplicate warning
-define('ATTRIBUTE_POSSIBLE_OPTIONS_VALUE_WARNING_DUPLICATE','Possible Duplicate Options Value Added'); // Options Value Duplicate warning
+define('TEXT_WARNING_DUPLICATE_OPTION_NAME','Option ID#%1$u: Duplicate Option Name Added: "%2$s" (%3$s)');
 
-define('PRODUCTS_ATTRIBUTES_EDITING','EDITING'); // title
-define('PRODUCTS_ATTRIBUTES_DELETE','DELETING'); // title
-define('PRODUCTS_ATTRIBUTES_ADDING','ADDING NEW ATTRIBUTES'); // title
-define('TEXT_DOWNLOADS_DISABLED','NOTE: Downloads are disabled');
+define('TEXT_ORDER_BY','Order by');
+define('TEXT_SORT_ORDER','Sort Order');
 
-define('TABLE_TEXT_MAX_DAYS_SHORT', 'Days:');
-define('TABLE_TEXT_MAX_COUNT_SHORT', 'Max:');
+define('TABLE_HEADING_OPTION_TYPE', 'Option Type');
+define('TABLE_HEADING_OPTION_NAME_SIZE','Size');
+define('TABLE_HEADING_OPTION_NAME_MAX','Max');
 
-  define('TABLE_HEADING_OPTION_SORT_ORDER','Sort Order');
-  define('TABLE_HEADING_OPTION_VALUE_SORT_ORDER','Default Order');
-  define('TEXT_SORT',' Order: ');
-
-  define('TABLE_HEADING_OPT_WEIGHT_PREFIX','Prefix');
-  define('TABLE_HEADING_OPT_WEIGHT','Weight');
-  define('TABLE_HEADING_OPT_SORT_ORDER','Sort Order');
-
-  define('TABLE_HEADING_OPT_TYPE', 'Option Type'); //CLR 031203 add option type column
-  define('TABLE_HEADING_OPTION_VALUE_SIZE','Size');
-  define('TABLE_HEADING_OPTION_VALUE_MAX','Max');
-
-  define('TEXT_OPTION_VALUE_COMMENTS','Comments: ');
-  define('TEXT_OPTION_VALUE_ROWS', 'Rows: ');
-  define('TEXT_OPTION_VALUE_SIZE','Display Size: ');
-  define('TEXT_OPTION_VALUE_MAX','Maximum length: ');
-
-  define('TEXT_ATTRIBUTES_IMAGE','Attributes Image Swatch:');
+define('TEXT_OPTION_NAME_COMMENTS','Comment (displayed next to Option Name)');
+define('TEXT_OPTION_ATTRIBUTE_IMAGES_PER_ROW', 'Attribute Images per Row');
+define('TEXT_OPTION_ATTRIBUTE_IMAGES_STYLE', 'Attribute Image Layout Style (for Checkbox/Radio Buttons only)');
+define('TEXT_OPTION_ATTRIBUTE_LAYOUTS_EXAMPLE', 'View Examples');
+define('TEXT_OPTION_ATTRIBUTE_IMAGES_STYLE_0', '0 - Selection + text, Images below Options');
+define('TEXT_OPTION_ATTRIBUTE_IMAGES_STYLE_1', '1 - Select + Image + Option inline');
+define('TEXT_OPTION_ATTRIBUTE_IMAGES_STYLE_2', '2 - Select + Option + Image wrapped');
+define('TEXT_OPTION_ATTRIBUTE_IMAGES_STYLE_3', '3 - Select + Image + Option wrapped');
+define('TEXT_OPTION_ATTRIBUTE_IMAGES_STYLE_4', '4 - Image + Option + Select as column');
+define('TEXT_OPTION_ATTRIBUTE_IMAGES_STYLE_5', '5 - Select + Image + Option as column');
+//text attributes only
+define('TEXT_OPTION_NAME_ROWS', 'Rows');
+define('TEXT_OPTION_NAME_SIZE','Display Size');
+define('TEXT_OPTION_NAME_MAX','Maximum Length');
+define('TEXT_OPTION_TYPE_TEXT_ATTRIBUTE_INFO', 'Note: ' . TEXT_OPTION_NAME_ROWS . ', ' . TEXT_OPTION_NAME_SIZE . ' and ' . TEXT_OPTION_NAME_MAX . ' are for Option Name Type "Text" only.');
+define('TEXT_INSERT_NEW_OPTION_NAME', 'Add a new Option Name');
   define('TEXT_ATTRIBUTES_IMAGE_DIR','Attributes Image Directory:');
 
   define('TEXT_ATTRIBUTES_FLAGS','Attribute<br />Flags:');
