@@ -103,6 +103,7 @@ if ($flag_global_notifications != '1') {
   $products_query = $db->bindVars($products_query, ':ordersID', $orders_id, 'integer');
   $products = $db->Execute($products_query);
 
+  $notificationsArray = [];
   foreach ($products as $product) {
     $notificationsArray[] = array('counter'=>$counter,
                                   'products_id'=>$product['products_id'],
