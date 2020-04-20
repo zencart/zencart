@@ -100,7 +100,7 @@ define('SUCCESS_PRODUCTS_OPTIONS_VALUES_DELETED', 'Option Name "%1$s": all Optio
 define('TEXT_OPTION_VALUE_COPY_ALL', 'Copy all Option Values to another Option Name');
 define('TEXT_INFO_OPTION_VALUE_COPY_ALL', 'All Option Values from the selected Option Name will be copied (added) to another Option Name.');
 define('TEXT_SELECT_OPTION_FROM', 'Copy from Option Name: ');
-define('TEXT_SELECT_OPTION_TO', 'Copy All Option Values to Option Name: ');
+define('TEXT_SELECT_OPTION_TO', 'Copy to Option Name: ');
 define('SUCCESS_OPTION_VALUES_COPIED', 'Successful copy! ');
 define('ERROR_OPTION_VALUES_COPIED', 'Error - Cannot copy Option Values to the same Option Name! ');
 define('ERROR_OPTION_VALUES_NONE', 'Error - Copy from Option Name has 0 Values Defined. Nothing was copied! ');
