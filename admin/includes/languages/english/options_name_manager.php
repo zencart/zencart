@@ -101,8 +101,8 @@ define('TEXT_OPTION_VALUE_COPY_ALL', 'Copy all Option Values to another Option N
 define('TEXT_INFO_OPTION_VALUE_COPY_ALL', 'All Option Values from the selected Option Name will be copied (added) to another Option Name.');
 define('TEXT_SELECT_OPTION_FROM', 'Copy from Option Name: ');
 define('TEXT_SELECT_OPTION_TO', 'Copy to Option Name: ');
-define('SUCCESS_OPTION_VALUES_COPIED', 'Successful copy! ');
-define('ERROR_OPTION_VALUES_COPIED', 'Error - Cannot copy Option Values to the same Option Name! ');
+
+define('SUCCESS_OPTION_VALUE_COPIED', 'Option Value "%6$s" ID#%5$u copied from Option Name "%2$s" ID#%1$u to Option Name "%4$s" ID#%3$u.');
 define('ERROR_OPTION_VALUES_NONE', 'Error - Copy from Option Name has 0 Values Defined. Nothing was copied! ');
 define('TEXT_WARNING_BACKUP', 'Warning: Always make proper backups of your database before making global changes');
 
