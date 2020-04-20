@@ -48,38 +48,40 @@ define('TEXT_OPTION_NAME_SIZE','Display Size');
 define('TEXT_OPTION_NAME_MAX','Maximum Length');
 define('TEXT_OPTION_TYPE_TEXT_ATTRIBUTE_INFO', 'Note: ' . TEXT_OPTION_NAME_ROWS . ', ' . TEXT_OPTION_NAME_SIZE . ' and ' . TEXT_OPTION_NAME_MAX . ' are for Option Name Type "Text" only.');
 define('TEXT_INSERT_NEW_OPTION_NAME', 'Add a new Option Name');
-  define('TEXT_ATTRIBUTES_IMAGE_DIR','Attributes Image Directory:');
 
-  define('TEXT_ATTRIBUTES_FLAGS','Attribute<br />Flags:');
-  define('TEXT_ATTRIBUTES_DISPLAY_ONLY', 'Used For<br />Display Purposes Only:');
-  define('TEXT_ATTRIBUTES_IS_FREE', 'Attribute is Free<br />When Product is Free:');
-  define('TEXT_ATTRIBUTES_DEFAULT', 'Default Attribute<br />to be Marked Selected:');
-  define('TEXT_ATTRIBUTE_IS_DISCOUNTED', 'Apply Same Discounts<br />Used by Product:');
-  define('TEXT_ATTRIBUTE_PRICE_BASE_INCLUDED','Include in Base Price<br />When Priced by Attributes');
-
-  define('TEXT_PRODUCT_OPTIONS_INFO','<strong>NOTE: Edit Product Options Name for additional settings</strong>');
-
-// updates
-define('ERROR_PRODUCTS_OPTIONS_VALUES', 'WARNING: No Products found ... Nothing was updated');
-
-define('TEXT_SELECT_PRODUCT', ' Select a Product');
-define('TEXT_SELECT_CATEGORY', ' Select a Category');
+// Global Tools
+define('TEXT_GLOBAL_TOOLS', 'Global Tools');
+define('TEXT_CLICK_TO_SHOW_HIDE', 'click to show/hide');
+define('TEXT_WARNING_BACKUP', 'Important: Always make a verified backup of your database before making global changes/using Global Tools');
+define('TEXT_SELECT_OPTION_TYPES_ALLOWED', 'Note that Global Tools cannot be used with option name types "Text" or "File".');
+define('TEXT_SELECT_PRODUCT', 'Select a Product');
+define('TEXT_SELECT_CATEGORY', 'Select a Category');
 define('TEXT_SELECT_OPTION', 'Select an Option Name');
+define('TEXT_NAME', 'Name');
 
-// add
-define('TEXT_OPTION_VALUE_ADD_ALL', '<br /><strong>Add ALL Option Values to ALL products for Option Name</strong>');
-define('TEXT_INFO_OPTION_VALUE_ADD_ALL', 'Update ALL existing products that have at least ONE Option Value and Add ALL Option Values in an Option Name');
-define('SUCCESS_PRODUCTS_OPTIONS_VALUES', 'Successful Update of Options ');
+// Add
+define('TEXT_INFO_OPTION_VALUES_ADD', '<strong>Note:</strong> for products that get updated (receive additional Option Values) using the <b>Add</b> tools, the sort order for the Option Values (attributes) will be reset to the <strong>default</strong> sort order for that Option name.');
 
-define('TEXT_OPTION_VALUE_ADD_PRODUCT', '<br /><strong>Add ALL Option Values to ONE products for Option Name</strong>');
-define('TEXT_INFO_OPTION_VALUE_ADD_PRODUCT', 'Update ONE product that has at least ONE Option Value and Add ALL Option Values in an Option Name');
+define('TEXT_OPTION_VALUE_ADD_ALL', 'Update (add) all remaining Option Values to ALL products that use this Option Name');
+define('TEXT_INFO_OPTION_VALUE_ADD_ALL', 'For ALL products that are using the selected Option Name (and so have at least one Option Value assigned), add ALL the other Option Values associated with the Option Name.');
 
-define('TEXT_OPTION_VALUE_ADD_CATEGORY', '<br /><strong>Add ALL Option Values to ONE Category of products for Option Name</strong>');
-define('TEXT_INFO_OPTION_VALUE_ADD_CATEGORY', 'Update ONE Category of products, when the product has at least ONE Option Value and Add ALL Option Values in an Option Name');
+define('TEXT_OPTION_VALUE_ADD_PRODUCT', 'Update (add) all remaining Option Values to ONE product that is using this Option Name');
+define('TEXT_INFO_OPTION_VALUE_ADD_PRODUCT', 'For a product that is using the selected Option Name (and so has at least one Option Value assigned), add ALL the other Option Values associated with the Option Name.');
 
-define('TEXT_COMMENT_OPTION_VALUE_ADD_ALL', '<strong>NOTE:</strong> Sort order will be set to the default Option Value Sort Order for these products');
+define('TEXT_OPTION_VALUE_ADD_CATEGORY', 'Update (add) all remaining Option Values to ALL products in a Category that are using this Option Name');
+define('TEXT_INFO_OPTION_VALUE_ADD_CATEGORY', 'For products in ONE category only that are using the selected Option Name, add ALL the other Option Values associated with the Option Name.');
+define('TEXT_SHOW_CATEGORY_PATH', 'Show category path');
+define('TEXT_SHOW_CATEGORY_NAME', 'Show only category name');
 
-// delete
+// messageStack
+define('SUCCESS_PRODUCT_OPTION_VALUE', 'Option Name "%1$s": Option Value "%2$s" added to product "%3$s".');
+define('SUCCESS_PRODUCT_OPTIONS_VALUES_SORT_ORDER', 'Option Name "%1$s": product "%2$s" Option Values updated to the default sort order for Option Name "%1$s".');
+define('SUCCESS_PRODUCTS_OPTIONS_VALUES', 'Option Name "%1$s": %2$u product(s) updated with additional Option Values.');
+
+define('ERROR_PRODUCTS_OPTIONS_PRODUCTS', 'Warning: No matching product(s) found using Option Name "%s" (nothing was updated).');
+define('ERROR_PRODUCTS_OPTIONS_VALUES', 'Warning: All matching product(s) already have all Option Values for Option Name "%s" (nothing was updated).');
+
+// Delete
 define('TEXT_OPTION_VALUE_DELETE_ALL', '<br /><strong>Delete ALL Option Values to ALL products for Option Name</strong>');
 define('TEXT_INFO_OPTION_VALUE_DELETE_ALL', 'Update ALL existing products that have at least ONE Option Value and Delete ALL Option Values in an Option Name');
 
