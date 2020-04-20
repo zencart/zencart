@@ -656,13 +656,15 @@
       $countries_array[] = array('id' => '',
                                  'text' => $default);
     }
-    $countries = $db->Execute("SELECT countries_id, countries_name
+    $countries = $db->Execute("SELECT countries_id, countries_name, status 
                                FROM " . TABLE_COUNTRIES . "
                                ORDER BY countries_name");
 
     while (!$countries->EOF) {
       $countries_array[] = array('id' => $countries->fields['countries_id'],
-                                 'text' => $countries->fields['countries_name']);
+        'text' => $countries->fields['countries_name'],
+        'status' => $countries->fields['status'],
+      );
       $countries->MoveNext();
     }
 
@@ -3028,14 +3030,14 @@ function zen_get_categories($categories_array = array(), $parent_id = '0', $inde
  * @param bool $fullpath
  * @return array
  */
-function zen_get_master_categories_pulldown(int $product_id, $fullpath = false)
+function zen_get_master_categories_pulldown($product_id, $fullpath = false)
 {
     global $db;
     $master_category_array = [];
     $master_categories_query = $db->Execute("SELECT ptc.products_id, cd.categories_name, cd.categories_id
                                              FROM " . TABLE_PRODUCTS_TO_CATEGORIES . " ptc
                                              LEFT JOIN " . TABLE_CATEGORIES_DESCRIPTION . " cd ON cd.categories_id = ptc.categories_id
-                                             WHERE ptc.products_id = " . $product_id . "
+                                             WHERE ptc.products_id = " . (int)$product_id . "
                                              AND cd.language_id = " . (int)$_SESSION['languages_id']);
     $master_category_array[] = [
         'id' => '0',
