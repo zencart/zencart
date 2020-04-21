@@ -675,9 +675,9 @@ function translate_type_to_name($opt_type)
                       <td>&nbsp;</td>
                     <?php } else { ?>
                       <td class="text-right">
-                        <a href="<?php echo zen_href_link(FILENAME_OPTIONS_NAME_MANAGER, 'action=update_option&option_id=' . $options_value['products_options_id'] . '&option_order_by=' . $option_order_by . '&' . ($currentPage != 0 ? 'page=' . $currentPage : '')); ?>" class="btn btn-primary" role="button"><?php echo IMAGE_UPDATE; ?>
+                        <a href="<?php echo zen_href_link(FILENAME_OPTIONS_NAME_MANAGER, 'action=update_option&option_id=' . $options_value['products_options_id'] . '&option_order_by=' . $option_order_by . ($currentPage != 0 ? '&page=' . $currentPage : '')); ?>" class="btn btn-primary" role="button"><?php echo IMAGE_UPDATE; ?>
                         </a>&nbsp;&nbsp;
-                        <a href="<?php echo zen_href_link(FILENAME_OPTIONS_NAME_MANAGER, 'action=delete_product_option&option_id=' . $options_value['products_options_id'] . '&' . ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . 'option_order_by=' . $option_order_by, 'NONSSL'); ?>" class="btn btn-default" role="button"><?php echo IMAGE_DELETE; ?></a>
+                        <a href="<?php echo zen_href_link(FILENAME_OPTIONS_NAME_MANAGER, 'action=delete_product_option&option_id=' . $options_value['products_options_id'] . ($currentPage != 0 ? '&page=' . $currentPage : '') . '&option_order_by=' . $option_order_by, 'NONSSL'); ?>" class="btn btn-default" role="button"><?php echo IMAGE_DELETE; ?></a>
                       </td>
                     <?php } ?>
                   </tr>
@@ -695,7 +695,7 @@ function translate_type_to_name($opt_type)
               <?php if ($action != 'update_option') { ?>
                 <tr>
                   <?php
-                  echo zen_draw_form('options', FILENAME_OPTIONS_NAME_MANAGER, 'action=add_product_options' . '&' . ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . 'option_order_by=' . $option_order_by, 'post', 'class="form-horizontal"');
+                  echo zen_draw_form('options', FILENAME_OPTIONS_NAME_MANAGER, 'action=add_product_options' . ($currentPage != 0 ? '&page=' . $currentPage : '') . '&option_order_by=' . $option_order_by, 'post', 'class="form-horizontal"');
                   echo zen_draw_hidden_field('products_options_id', $next_id);
                   $inputs = '';
                   $inputs2 = '';
