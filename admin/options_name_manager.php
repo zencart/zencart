@@ -909,11 +909,11 @@ function translate_type_to_name($opt_type)
           </div>
         <?php } // show copier features ?>
       </div>
-      <!-- body_text_eof //-->
-      <!-- footer //-->
-      <?php require DIR_WS_INCLUDES . 'footer.php'; ?>
-      <!-- footer_eof //-->
     </div>
+    <!-- body_text_eof //-->
+    <!-- footer //-->
+    <?php require(DIR_WS_INCLUDES . 'footer.php'); ?>
+    <!-- footer_eof //-->
   </body>
 </html>
 <?php require DIR_WS_INCLUDES . 'application_bottom.php'; ?>
