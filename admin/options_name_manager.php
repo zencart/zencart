@@ -648,12 +648,12 @@ function translate_type_to_name($opt_type)
                     <td colspan="6">
                       <?php echo TEXT_OPTION_IMAGE_STYLE; ?>
                       <ul style="list-style-type: none">
-                        <li> <?php echo TEXT_OPTION_ATTRIBUTE_IMAGES_STYLE_0; ?></li>
-                        <li> <?php echo TEXT_OPTION_ATTRIBUTE_IMAGES_STYLE_1; ?></li>
-                        <li> <?php echo TEXT_OPTION_ATTRIBUTE_IMAGES_STYLE_2; ?></li>
-                        <li> <?php echo TEXT_OPTION_ATTRIBUTE_IMAGES_STYLE_3; ?></li>
-                        <li> <?php echo TEXT_OPTION_ATTRIBUTE_IMAGES_STYLE_4; ?></li>
-                        <li> <?php echo TEXT_OPTION_ATTRIBUTE_IMAGES_STYLE_5; ?></li>
+                        <li><?php echo TEXT_OPTION_ATTRIBUTE_IMAGES_STYLE_0; ?></li>
+                        <li><?php echo TEXT_OPTION_ATTRIBUTE_IMAGES_STYLE_1; ?></li>
+                        <li><?php echo TEXT_OPTION_ATTRIBUTE_IMAGES_STYLE_2; ?></li>
+                        <li><?php echo TEXT_OPTION_ATTRIBUTE_IMAGES_STYLE_3; ?></li>
+                        <li><?php echo TEXT_OPTION_ATTRIBUTE_IMAGES_STYLE_4; ?></li>
+                        <li><?php echo TEXT_OPTION_ATTRIBUTE_IMAGES_STYLE_5; ?></li>
                       </ul>
                     </td>
                   </tr>
