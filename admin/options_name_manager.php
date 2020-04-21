@@ -702,7 +702,7 @@ function translate_type_to_name($opt_type)
                   for ($i = 0, $n = count($languages); $i < $n; $i++) {
                     $inputs .= '<div class="form-group">';
                     $inputs .= '<div class="input-group">';
-                    $inputs .= '<span class="input-group-addon">' . zen_image(DIR_WS_CATALOG_LANGUAGES . $languages[$i]['directory'] . '/images/' . $languages[$i]['image'], $languages[$i]['name']) . '</span>';
+                    $inputs .= '<span class="input-group-addon">' . zen_get_language_icon($languages[$i]['id']) . '</span>';
                     $inputs .= zen_draw_input_field('option_name[' . $languages[$i]['id'] . ']', '', zen_set_field_length(TABLE_PRODUCTS_OPTIONS, 'products_options_name', 40) . 'class="form-control"');
                     $inputs .= '</div>';
                     $inputs .= '</div>';
