@@ -1062,10 +1062,7 @@ function zen_js_option_values_list($selectedName, $fieldName)
             </div>
           </div>
         <?php } ?>
-        <div class="row">
-          <div class="col-sm-12">
-            <?php echo zen_draw_form('attributes', FILENAME_ATTRIBUTES_CONTROLLER, 'action=' . $form_action . '&' . ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . 'products_filter=' . $products_filter, 'post', 'enctype="multipart/form-data" class="form-horizontal"'); ?>
-            <?php
+        <?php
             $attributes_query_raw = "SELECT pa.*
                                      FROM (" . TABLE_PRODUCTS_ATTRIBUTES . " pa
                                      LEFT JOIN " . TABLE_PRODUCTS_OPTIONS . " po ON pa.options_id = po.products_options_id
@@ -1076,12 +1073,15 @@ function zen_js_option_values_list($selectedName, $fieldName)
                                               LPAD(pa.products_options_sort_order,11,'0')";
             $attributes_split = new splitPageResults($_GET['page'], MAX_DISPLAY_SEARCH_RESULTS, $attributes_query_raw, $attributes_query_numrows);
             ?>
-            <div class="row">
-              <?php echo zen_draw_separator('pixel_trans.gif') ?>
-              <div class="col-sm-6"><?php echo $attributes_split->display_count($attributes_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, $_GET['page'], TEXT_DISPLAY_NUMBER_OF_ATTRIBUTES); ?></div>
-              <?php $exclude_array = ['page', 'attributes_id']; ?>
-              <div class="col-sm-6 text-right"><?php echo $attributes_split->display_links($attributes_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, MAX_DISPLAY_PAGE_LINKS, $_GET['page'], zen_get_all_get_params($exclude_array)); ?></div>
-            </div>
+        <div class="row">
+          <?php echo zen_draw_separator('pixel_trans.gif') ?>
+          <div class="col-sm-6"><?php echo $attributes_split->display_count($attributes_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, $_GET['page'], TEXT_DISPLAY_NUMBER_OF_ATTRIBUTES); ?></div>
+          <?php $exclude_array = ['page', 'attributes_id']; ?>
+          <div class="col-sm-6 text-right"><?php echo $attributes_split->display_links($attributes_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, MAX_DISPLAY_PAGE_LINKS, $_GET['page'], zen_get_all_get_params($exclude_array)); ?></div>
+        </div>
+        <div class="row">
+          <div class="col-sm-12">
+            <?php echo zen_draw_form('attributes', FILENAME_ATTRIBUTES_CONTROLLER, 'action=' . $form_action . '&' . ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . 'products_filter=' . $products_filter, 'post', 'enctype="multipart/form-data" class="form-horizontal"'); ?>
             <table class="table table-striped table-condensed">
               <tr class="dataTableHeadingRow">
                 <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_ID; ?></td>
