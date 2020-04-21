@@ -2203,8 +2203,8 @@ function zen_copy_products_attributes($products_id_from, $products_id_to) {
     //
     $GLOBALS['zco_notifier']->notify('ZEN_COPY_PRODUCTS_ATTRIBUTES_COMPLETE', array('from' => (int)$products_id_from, 'to' => (int)$products_id_to));
 
-     // reset products_price_sorter for searches etc.
-     zen_update_products_price_sorter($products_id_to);
+    // reset products_price_sorter for searches etc.
+    zen_update_products_price_sorter($products_id_to);
 
     return true;
 } // eof: zen_copy_products_attributes
