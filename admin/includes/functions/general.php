@@ -2972,12 +2972,12 @@ function zen_get_master_categories_pulldown($product_id, $fullpath = false)
                                              AND cd.language_id = " . (int)$_SESSION['languages_id']);
     $master_category_array[] = [
         'id' => '0',
-        'text' => TEXT_INFO_SET_MASTER_CATEGORIES_ID
+        'text' => TEXT_INFO_SET_MASTER_CATEGORIES_ID,
     ];
     foreach ($master_categories_query as $item) {
         $master_category_array[] = [
             'id' => $item['categories_id'],
-            'text' => ($fullpath ? zen_output_generated_category_path($item['categories_id']) : $item['categories_name']) . ' (' . TEXT_INFO_ID . $item['categories_id'] . ')'
+            'text' => ($fullpath ? zen_output_generated_category_path($item['categories_id']) : $item['categories_name']) . ' (' . TEXT_INFO_ID . $item['categories_id'] . ')',
         ];
     }
     return $master_category_array;
