@@ -858,7 +858,7 @@
         break;
       }
 
-    $button_check = $db->Execute("SELECT product_is_call, products_quantity FROM " . TABLE_PRODUCTS . " WHERE products_id = '" . (int)$product_id . "'");
+    $button_check = $db->Execute("SELECT product_is_call, products_quantity FROM " . TABLE_PRODUCTS . " WHERE products_id = " . (int)$product_id);
     switch (true) {
 // cannot be added to the cart
     case (zen_get_products_allow_add_to_cart($product_id) == 'N'):
