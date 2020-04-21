@@ -597,21 +597,21 @@ function translate_type_to_name($opt_type)
                     $inputs2 .= '</div>';
                     $inputs2 .= '<div class="row">';
                     $inputs2 .= '<div class="col-sm-4">';
-                    $inputs2 .= zen_draw_label(TEXT_OPTION_VALUE_ROWS, 'products_options_rows[' . (int)$languages[$i]['id'] . ']', 'class="control-label"') . zen_draw_input_field('products_options_rows[' . $languages[$i]['id'] . ']', $option_name->fields['products_options_rows'], 'size="3" class="form-control"');
+                    $inputs2 .= zen_draw_label(TEXT_OPTION_VALUE_ROWS, 'products_options_rows[' . (int)$languages[$i]['id'] . ']', 'class="control-label"') . zen_draw_input_field('products_options_rows[' . (int)$languages[$i]['id'] . ']', $option_name->fields['products_options_rows'], 'size="3" class="form-control"');
                     $inputs2 .= '</div>';
                     $inputs2 .= '<div class="col-sm-4">';
-                    $inputs2 .= zen_draw_label(TEXT_OPTION_VALUE_SIZE, 'products_options_size[' . (int)$languages[$i]['id'] . ']', 'class="control-label"') . zen_draw_input_field('products_options_size[' . $languages[$i]['id'] . ']', $option_name->fields['products_options_size'], 'size="3" class="form-control"');
+                    $inputs2 .= zen_draw_label(TEXT_OPTION_VALUE_SIZE, 'products_options_size[' . (int)$languages[$i]['id'] . ']', 'class="control-label"') . zen_draw_input_field('products_options_size[' . (int)$languages[$i]['id'] . ']', $option_name->fields['products_options_size'], 'size="3" class="form-control"');
                     $inputs2 .= '</div>';
                     $inputs2 .= '<div class="col-sm-4">';
-                    $inputs2 .= zen_draw_label(TEXT_OPTION_VALUE_MAX, 'products_options_length[' . (int)$languages[$i]['id'] . ']', 'class="control-label"') . zen_draw_input_field('products_options_length[' . $languages[$i]['id'] . ']', $option_name->fields['products_options_length'], 'size="3" class="form-control"');
+                    $inputs2 .= zen_draw_label(TEXT_OPTION_VALUE_MAX, 'products_options_length[' . (int)$languages[$i]['id'] . ']', 'class="control-label"') . zen_draw_input_field('products_options_length[' . (int)$languages[$i]['id'] . ']', $option_name->fields['products_options_length'], 'size="3" class="form-control"');
                     $inputs2 .= '</div>';
                     $inputs2 .= '</div>';
                     $inputs2 .= '<div class="row">';
                     $inputs2 .= '<div class="col-sm-4">';
-                    $inputs2 .= zen_draw_label(TEXT_OPTION_ATTRIBUTE_IMAGES_PER_ROW, 'products_options_images_per_row[' . (int)$languages[$i]['id'] . ']', 'class="control-label"') . zen_draw_input_field('products_options_images_per_row[' . $languages[$i]['id'] . ']', $option_name->fields['products_options_images_per_row'], 'size="3" class="form-control"');
+                    $inputs2 .= zen_draw_label(TEXT_OPTION_ATTRIBUTE_IMAGES_PER_ROW, 'products_options_images_per_row[' . (int)$languages[$i]['id'] . ']', 'class="control-label"') . zen_draw_input_field('products_options_images_per_row[' . (int)$languages[$i]['id'] . ']', $option_name->fields['products_options_images_per_row'], 'size="3" class="form-control"');
                     $inputs2 .= '</div>';
                     $inputs2 .= '<div class="col-sm-4">';
-                    $inputs2 .= zen_draw_label(TEXT_OPTION_ATTRIBUTE_IMAGES_STYLE, 'products_options_images_style[' . (int)$languages[$i]['id'] . ']', 'class="control-label"') . zen_draw_input_field('products_options_images_style[' . $languages[$i]['id'] . ']', $option_name->fields['products_options_images_style'], 'size="3" class="form-control"');
+                    $inputs2 .= zen_draw_label(TEXT_OPTION_ATTRIBUTE_IMAGES_STYLE, 'products_options_images_style[' . (int)$languages[$i]['id'] . ']', 'class="control-label"') . zen_draw_input_field('products_options_images_style[' . (int)$languages[$i]['id'] . ']', $option_name->fields['products_options_images_style'], 'size="3" class="form-control"');
                     $inputs2 .= '</div>';
                     $inputs2 .= '</div>';
                   }
