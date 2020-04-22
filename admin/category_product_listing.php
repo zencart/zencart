@@ -267,6 +267,10 @@ if (zen_not_null($action)) {
       }
       break;
     case 'copy_product_confirm':
+      if (zen_has_category_subcategories((int)$_POST['categories_id'])) {
+        $messageStack->add_session(TEXT_ERROR_NO_MOVE_IF_SUBCATS);
+        zen_redirect(zen_href_link(FILENAME_CATEGORY_PRODUCT_LISTING, 'cPath=' . (int)$_POST['categories_id'] . '&pID=' . (int)$_POST['products_id'] . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '')));
+      }
       if (file_exists(DIR_WS_MODULES . $zc_products->get_handler($product_type) . '/copy_product_confirm.php')) {
         require DIR_WS_MODULES . $zc_products->get_handler($product_type) . '/copy_product_confirm.php';
       } else {
