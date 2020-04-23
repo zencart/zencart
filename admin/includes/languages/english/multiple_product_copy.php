@@ -131,9 +131,6 @@ define('TEXT_COPY_AS_DUPLICATE_ATTRIBUTES', 'Attributes copied from Product ID#%
 define('TEXT_COPY_AS_DUPLICATE_METATAGS', 'Metatags for Language ID#%1$u copied from Product ID#%2$u to duplicate Product ID#%3$u');
 define('TEXT_COPY_AS_DUPLICATE_CATEGORIES', 'Linked Category ID#%1$u copied from Product ID#%2$u to duplicate Product ID#%3$u');
 define('TEXT_COPY_AS_DUPLICATE_DISCOUNTS', 'Discounts copied from Product ID#%1$u to duplicate Product ID#%2$u');
-//these two constants used in move_product_confirm
-define('TEXT_PRODUCT_MOVED', 'Product ID#%1$u moved to Category ID#%2$u');
-define('TEXT_PRODUCT_MASTER_CATEGORY_RESET', 'Product ID#%1$u Master Category ID changed to Category ID#%2$u');
 
 define('TEXT_COPY_AS_DUPLICATE_SPECIALS', 'Special price copied from Product ID#%1$u to duplicate Product ID#%2$u');
 define('TEXT_COPY_AS_DUPLICATE_FEATURED', 'Featured settings copied from Product ID#%1$u to duplicate Product ID#%2$u');

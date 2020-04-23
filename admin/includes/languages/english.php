@@ -645,6 +645,8 @@ define('TEXT_PRODUCT_POPUP_TITLE', 'Products Ordered');
   define('TEXT_ATTRIBUTE_COPY_INSERTING','Attribute ID#%u copied from Product ID#%u to Product ID#%u');
   define('TEXT_ATTRIBUTE_COPY_UPDATING', 'Attribute ID#%u updated for Product ID#%u');
   define('TEXT_DUPLICATE_IDENTIFIER', '[DUPLICATE]');
+  define('TEXT_PRODUCT_MOVED', 'Product "%2$s" ID#%1$u moved to Category "%4$s" ID#%3$u');
+  define('TEXT_PRODUCT_MASTER_CATEGORY_RESET', 'Product "%2$s" ID#%1$u Master Category ID changed to Category "%4$s" ID#%3$u');
 
 // EZ-PAGES Alerts
   define('TEXT_EZPAGES_STATUS_HEADER_ADMIN', 'WARNING: EZ-PAGES HEADER - On for Admin IP Only');

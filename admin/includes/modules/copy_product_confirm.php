@@ -5,7 +5,7 @@
  * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Drbyte Mon Nov 12 20:38:09 2018 -0500 New in v1.5.6 $
+ * @version $Id: torvista Apr 21 2020 Modified in v1.5.7 $
  */
 if (!defined('IS_ADMIN_FLAG')) {
     die('Illegal Access');
@@ -209,9 +209,11 @@ if (isset($_POST['products_id'], $_POST['categories_id'])) {
     // reset products_price_sorter for searches etc.
     zen_update_products_price_sorter($products_id);
 }
+if (!isset($action) || $action !== 'multiple_product_copy_return') {
 if ($_POST['copy_as'] === 'duplicate' && !empty($_POST['edit_duplicate'])) {
     zen_redirect(zen_href_link(FILENAME_PRODUCT, 'action=new_product&cPath=' . $categories_id . '&pID=' . $dup_products_id . '&products_type=' . (int)$product->fields['products_type']));
 } else {
     zen_redirect(zen_href_link(FILENAME_CATEGORY_PRODUCT_LISTING, 'cPath=' . $categories_id . '&pID=' . $products_id . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '')));
+    }
 }
 
