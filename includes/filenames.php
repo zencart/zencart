@@ -144,6 +144,7 @@ define('FILENAME_PRODUCTS_OPTIONS_NAME','option_name');
 define('FILENAME_PRODUCTS_OPTIONS_VALUES','option_values');
 define('FILENAME_PRODUCTS_QUANTITY_DISCOUNTS', 'products_quantity_discounts');
 define('FILENAME_PRODUCTS_TO_CATEGORIES', 'products_to_categories');
+define('FILENAME_MULTIPLE_PRODUCT_COPY', 'multiple_product_copy');
 define('FILENAME_PROFILES', 'profiles');
 define('FILENAME_REDIRECT', 'redirect');
 define('FILENAME_REVIEWS', 'reviews');
