@@ -922,7 +922,6 @@ require(DIR_WS_INCLUDES . 'header.php');
                     <h2><?php echo TEXT_MOVE_TO; ?></h2>
                     <h3><?php echo sprintf(TEXT_SEARCH_RESULT_TARGET, $target_category_id, zen_output_generated_category_path($target_category_id)); ?></h3>
                     <?php echo $search_criteria;
-                    echo($search_category_id > 0 ? TEXT_MOVE_PRODUCTS_INFO_SEARCH_CATEGORY : TEXT_MOVE_PRODUCTS_INFO_SEARCH_GLOBAL);
                     if ($action === 'confirm' || $action === 'multiple_product_copy_return') { ?>
                         <h4><?php echo sprintf(TEXT_PRODUCTS_COPIED_TO, count($products_modified), $target_category_id, zen_output_generated_category_path($target_category_id)); ?></h4>
                     <?php }
