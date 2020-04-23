@@ -139,6 +139,7 @@ define('BOX_CATALOG_SALEMAKER', 'SaleMaker');
 define('BOX_CATALOG_PRODUCTS_PRICE_MANAGER', 'Products Price Manager');
 define('BOX_CATALOG_PRODUCT', 'Product');
 define('BOX_CATALOG_PRODUCTS_TO_CATEGORIES', 'Products to Categories');
+define('BOX_CATALOG_MULTIPLE_PRODUCT_COPY', 'Multiple Product Copy/Delete');
 define('BOX_CATALOG_CATEGORY', 'Category');
 
 // customers box text
@@ -643,6 +644,7 @@ define('TEXT_PRODUCT_POPUP_TITLE', 'Products Ordered');
   define('TEXT_ATTRIBUTE_COPY_SKIPPING','Skipping Attribute ID#%u for Product ID#%u');
   define('TEXT_ATTRIBUTE_COPY_INSERTING','Attribute ID#%u copied from Product ID#%u to Product ID#%u');
   define('TEXT_ATTRIBUTE_COPY_UPDATING', 'Attribute ID#%u updated for Product ID#%u');
+  define('TEXT_DUPLICATE_IDENTIFIER', '[DUPLICATE]');
 
 // EZ-PAGES Alerts
   define('TEXT_EZPAGES_STATUS_HEADER_ADMIN', 'WARNING: EZ-PAGES HEADER - On for Admin IP Only');
