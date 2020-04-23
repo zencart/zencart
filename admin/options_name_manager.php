@@ -4,7 +4,7 @@
  * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: torvista 2020 April 19 Modified in v1.5.7 $
+ * @version $Id: torvista 2020 April Modified in v1.5.7 $
  */
 require 'includes/application_top.php';
 $languages = zen_get_languages();
@@ -633,30 +633,31 @@ function translate_type_to_name($opt_type)
                 <tr>
                     <td colspan="7">
                         <button class="btn btn-primary toggleDisplay" title="<?php echo TEXT_CLICK_TO_SHOW_HIDE; ?>"><?php echo TEXT_INSERT_NEW_OPTION_NAME; ?></button>
-                        <div id="insertOption" style="display: block">
+                        <div id="insertOption" style="display: block; margin-top:8px;">
                             <?php
                             $inputs = '';
                             $inputs2 = '';
                             for ($i = 0, $n = count($languages); $i < $n; $i++) {
-                                $inputs .= zen_draw_label(($n > 1 ? zen_get_language_icon($languages[$i]['id']) . ' ' : ' ') . TABLE_HEADING_OPTION_NAME . ':', 'option_name[' . $languages[$i]['id'] . ']', 'class="control-label"');
-                                $inputs .= zen_draw_input_field('option_name[' . $languages[$i]['id'] . ']', '', zen_set_field_length(TABLE_PRODUCTS_OPTIONS, 'products_options_name', 20) . ' class="form-control" id="option_name[' . $languages[$i]['id'] . ']"  required' . ($n > 1 ? '" placeholder="' . $languages[$i]['directory'] . '"' : ''));
-                               ($i + 1 < $n ? $inputs .= '<br>' : '');
+                                $inputs .= '<div>';
+                                $inputs .= zen_draw_label(TABLE_HEADING_OPTION_NAME . ':', 'option_name[' . $languages[$i]['id'] . ']', 'class="control-label"');
+                                $inputs .= '<div class="input-group">';
+                                $inputs .= '<span class="input-group-addon">' . zen_image(DIR_WS_CATALOG_LANGUAGES . $languages[$i]['directory'] . '/images/' . $languages[$i]['image'], $languages[$i]['name']) . '</span>';
+                                $inputs .= zen_draw_input_field('option_name[' . $languages[$i]['id'] . ']', '', zen_set_field_length(TABLE_PRODUCTS_OPTIONS, 'products_options_name', 40) . ' class="form-control" id="option_name[' . $languages[$i]['id'] . ']" placeholder="' . $languages[$i]['directory'] . '" required');
+                                $inputs .= '</div>';
+                                $inputs .= '</div>';
                                 $inputs2 .= zen_draw_label(TEXT_SORT_ORDER . ':', 'products_options_sort_order[' . $languages[$i]['id'] . ']');
                                 $inputs2 .= zen_draw_input_field('products_options_sort_order[' . $languages[$i]['id'] . ']', '0', 'size="3" class="form-control" id="products_options_sort_order[' . $languages[$i]['id'] . ']"');
                                 ($i + 1 < $n ? $inputs2 .= '<br>' : '');
                             }
                             echo zen_draw_form('options', FILENAME_OPTIONS_NAME_MANAGER, 'action=add_product_options' . ($currentPage !== 0 ? '&page=' . $currentPage . '&' : '') . 'option_order_by=' . $option_order_by, 'post', 'class="form-horizontal"');
                             ?>
-                            <table class="table">
-                                <tr>
-                                    <td><?php echo $inputs; ?></td>
-                                    <td><?php echo $inputs2; ?></td>
-                                    <td><?php echo zen_draw_label(TABLE_HEADING_OPTION_TYPE . ':', 'option_type', 'class="control-label"') . zen_draw_pull_down_menu('option_type', $optionTypeValuesArray, 0, 'class="form-control" id="option_type"'); ?></td>
-                                    <td class="text-center" style="vertical-align: bottom">
-                                        <button type="submit" class="btn btn-primary"><?php echo IMAGE_INSERT; ?></button>
-                                    </td>
-                                </tr>
-                            </table>
+
+                            <div class="col-sm-6"><?php echo $inputs; ?></div>
+                            <div class="col-sm-2"><?php echo $inputs2; ?></div>
+                            <div class="col-sm-3"><?php echo zen_draw_label(TABLE_HEADING_OPTION_TYPE . ':', 'option_type', 'class="control-label"') . zen_draw_pull_down_menu('option_type', $optionTypeValuesArray, 0, 'class="form-control" id="option_type"'); ?></div>
+                            <div class="col-sm-1">
+                                <button type="submit" class="btn btn-primary"><?php echo IMAGE_INSERT; ?></button>
+                            </div>
                             <?php echo '</form>'; ?>
                         </div>
                     </td>
