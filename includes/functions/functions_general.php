@@ -1046,7 +1046,10 @@
     $query_result = $db->Execute($sql);
     $retVal = false;
     foreach ($query_result as $row) {
-      if (isset($_GET[$row['get_term_name']]) && zen_not_null($_GET[$row['get_term_name']])) $retVal = true;
+      if (isset($_GET[$row['get_term_name']]) && zen_not_null($_GET[$row['get_term_name']])) {
+        $retVal = true;
+        break;
+      }
     }
     return $retVal;
   }
