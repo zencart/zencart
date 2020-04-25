@@ -1551,10 +1551,10 @@ while (!$chk_sale_categories_all->EOF) {
 /**
  * Add tax to a products price
  */
-  function zen_add_tax($price, $tax) {
+  function zen_add_tax($price, $tax, $force = false) {
     global $currencies;
 
-    if (DISPLAY_PRICE_WITH_TAX_ADMIN == 'true') {
+    if (DISPLAY_PRICE_WITH_TAX_ADMIN == 'true' || $force) {
       return zen_round($price, $currencies->currencies[DEFAULT_CURRENCY]['decimal_places']) + zen_calculate_tax($price, $tax);
     } else {
       return zen_round($price, $currencies->currencies[DEFAULT_CURRENCY]['decimal_places']);
