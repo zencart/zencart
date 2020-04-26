@@ -74,16 +74,7 @@
 <body>
 <?php require DIR_WS_INCLUDES . 'header.php'; ?>
 <div class="container-fluid">
-<table border="0" width="100%" cellspacing="2" cellpadding="2">
-  <tr>
-<!-- body_text //-->
-    <td width="100%" valign="top"><table border="0" width="100%" cellspacing="0" cellpadding="2">
-      <tr>
-        <td><table border="0" width="100%" cellspacing="0" cellpadding="0">
-          <tr>
-            <td class="pageHeading"><?php echo HEADING_ADMIN_TITLE; ?></td>
-            <td class="pageHeading" align="right"><?php echo zen_draw_separator('pixel_trans.gif', HEADING_IMAGE_WIDTH, HEADING_IMAGE_HEIGHT); ?></td>
-            <td class="smallText" align="right">
+<?php echo HEADING_ADMIN_TITLE; ?>
 <?php
   $hidden_field = (isset($_GET['paypal_ipn_sort_order'])) ? zen_draw_hidden_field('paypal_ipn_sort_order', $_GET['paypal_ipn_sort_order']) : '';
   echo zen_draw_form('payment_status', FILENAME_PAYPAL, '', 'get') . HEADING_PAYMENT_STATUS . ' ' . zen_draw_pull_down_menu('payment_status', array_merge(array(array('id' => '', 'text' => TEXT_ALL_IPNS)), $payment_statuses), $selected_status, 'onchange="this.form.submit();"') . zen_hide_session_id() . $hidden_field . '</form>';
@@ -92,13 +83,7 @@
   $hidden_field = (isset($_GET['paypal_ipn_sort_order'])) ? zen_draw_hidden_field('payment_status', $_GET['payment_status']) : '';
   echo '&nbsp;&nbsp;&nbsp;' . TEXT_PAYPAL_IPN_SORT_ORDER_INFO . zen_draw_form('paypal_ipn_sort_order', FILENAME_PAYPAL, '', 'get') . '&nbsp;&nbsp;' . zen_draw_pull_down_menu('paypal_ipn_sort_order', $paypal_ipn_sort_order_array, $paypal_ipn_sort_order, 'onchange="this.form.submit();"') . zen_hide_session_id() . $hidden_field . '</form>';
 ?>
-            </td>
-            <td class="pageHeading" align="right"><?php echo zen_draw_separator('pixel_trans.gif', HEADING_IMAGE_WIDTH, HEADING_IMAGE_HEIGHT); ?></td>
-          </tr>
-        </table></td>
-      </tr>
-      <tr>
-        <td><table border="0" width="100%" cellspacing="0" cellpadding="0">
+<table border="0" width="100%" cellspacing="0" cellpadding="0">
           <tr>
             <td valign="top"><table border="0" width="100%" cellspacing="0" cellpadding="2">
               <tr class="dataTableHeadingRow">
@@ -197,12 +182,7 @@
   }
 ?>
           </tr>
-        </table></td>
-      </tr>
-    </table></td>
-<!-- body_text_eof //-->
-  </tr>
-</table>
+        </table>
 </div>
 <?php require DIR_WS_INCLUDES . 'footer.php'; ?>
 </body>
