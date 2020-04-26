@@ -186,7 +186,7 @@ use PHPMailer\PHPMailer\SMTP;
 
       // Create a new mail object with the phpmailer class
       $mail = new PHPMailer();
-      $mail->XMailer = 'PHPMailer for Zen Cart';
+      $mail->XMailer = 'Self-Hosted Zen Cart merchant';
       $lang_code = strtolower(($_SESSION['languages_code'] == '' ? 'en' : $_SESSION['languages_code'] ));
       $mail->SetLanguage($lang_code);
       $mail->CharSet =  (defined('CHARSET')) ? CHARSET : "iso-8859-1";
