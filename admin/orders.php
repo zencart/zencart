@@ -662,7 +662,7 @@ if (zen_not_null($action) && $order_exists == true) {
           <?php $zco_notifier->notify('NOTIFY_ADMIN_ORDERS_PAYMENTDATA_COLUMN2', $oID, $order); ?>
         </div>
         <?php
-        if (is_object($module) && method_exists($module, 'admin_notification')) {
+        if (isset($module) && (is_object($module) && method_exists($module, 'admin_notification'))) {
           ?>
           <div class="row"><?php echo zen_draw_separator('pixel_trans.gif', '1', '10'); ?></div>
           <div class="row"><?php echo $module->admin_notification($oID); ?></div>
