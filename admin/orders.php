@@ -465,7 +465,7 @@ if (zen_not_null($action) && $order_exists == true) {
                 <?php
                 echo zen_draw_form('orders', FILENAME_ORDERS, '', 'get', '', true);
                 echo zen_draw_label(HEADING_TITLE_SEARCH, 'oID', 'class="sr-only"');
-                echo zen_draw_input_field('oID', '', 'size="11" id="oID" class="form-control" placeholder="' . HEADING_TITLE_SEARCH . '"', '', 'number');
+                echo zen_draw_input_field('oID', '', 'id="oID" class="form-control" placeholder="' . HEADING_TITLE_SEARCH . '"', '', 'number');
                 echo zen_draw_hidden_field('action', 'edit');
                 echo '</form>';
                 ?>
@@ -536,7 +536,7 @@ if (zen_not_null($action) && $order_exists == true) {
               </span>
               <?php
               echo zen_draw_form('input_oid', FILENAME_ORDERS, '', 'get', '', true);
-              echo zen_draw_input_field('oID', '', 'size="11" class="form-control" placeholder="' . SELECT_ORDER_LIST . '"', '', 'number');
+              echo zen_draw_input_field('oID', '', 'class="form-control" placeholder="' . SELECT_ORDER_LIST . '"', '', 'number');
               echo zen_draw_hidden_field('action', 'edit');
               echo '</form>';
               ?>
