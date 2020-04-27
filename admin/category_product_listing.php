@@ -578,8 +578,9 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
                 <th class="text-right shrink"><?php echo TABLE_HEADING_ID; ?></th>
                 <th><?php echo TABLE_HEADING_CATEGORIES_PRODUCTS; ?></th>
                 <?php if ($show_prod_labels) { ?>
-                  <th class="hidden-sm hidden-xs"><?php echo TABLE_HEADING_MODEL; ?></th><?php }; ?>
+                  <th class="hidden-sm hidden-xs"><?php echo TABLE_HEADING_MODEL; ?></th>
                 <th class="text-right hidden-sm hidden-xs"><?php echo TABLE_HEADING_PRICE; ?></th>
+                <?php }; ?>
                 <?php if ($show_prod_labels || SHOW_COUNTS_ADMIN == 'true') { ?>
                   <th class="text-right hidden-sm hidden-xs"><?php echo TABLE_HEADING_QUANTITY; ?></th>
                 <?php }; ?>
@@ -615,8 +616,9 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
                   <a href="<?php echo zen_href_link(FILENAME_CATEGORY_PRODUCT_LISTING, zen_get_path($category['categories_id'])); ?>" class="folder"><i class="fa fa-lg fa-folder"></i>&nbsp;<strong><?php echo $category['categories_name']; ?></strong></a>
                 </td>
                 <?php if ($show_prod_labels) { ?>
-                  <td class="hidden-sm hidden-xs">&nbsp;</td><?php }; ?>
+                  <td class="hidden-sm hidden-xs">&nbsp;</td>
                 <td class="text-right hidden-sm hidden-xs"><?php echo zen_get_products_sale_discount('', $category['categories_id'], true); ?></td>
+                <?php }; ?>
                 <?php if ($search_result || SHOW_COUNTS_ADMIN == 'true') { ?>
                   <td class="text-right hidden-sm hidden-xs">
                     <?php

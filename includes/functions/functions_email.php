@@ -163,8 +163,16 @@ use PHPMailer\PHPMailer\SMTP;
       $sql = $db->bindVars($sql, ':custEmailAddress:', $to_email_address, 'string');
       $result = $db->Execute($sql);
       $customers_email_format = ($result->RecordCount() > 0) ? $result->fields['customers_email_format'] : '';
+      
+      /**
+       * Valid formats: 
+       * HTML - if HTML content has been provided/prepared, it will be used. EMAIL_USE_HTML must be set to true in configs
+       * TEXT - a text-only version of the email will be sent, and the HTML version ignored
+       * NONE or OUT - implies opt-out, ie: send no emails, so aborts sending
+       */
+      $zco_notifier->notify('NOTIFY_EMAIL_DETERMINING_EMAIL_FORMAT', $to_email_address, $customers_email_format, $module);
+
       if ($customers_email_format == 'NONE' || $customers_email_format == 'OUT') return false; //if requested no mail, then don't send.
-//      if ($customers_email_format == 'HTML') $customers_email_format = 'HTML'; // if they opted-in to HTML messages, then send HTML format
 
       // handling admin/"extra"/copy emails:
       if (ADMIN_EXTRA_EMAIL_FORMAT == 'TEXT' && substr($module,-6)=='_extra') {
@@ -186,7 +194,7 @@ use PHPMailer\PHPMailer\SMTP;
 
       // Create a new mail object with the phpmailer class
       $mail = new PHPMailer();
-      $mail->XMailer = 'PHPMailer for Zen Cart';
+      $mail->XMailer = 'Self-Hosted Zen Cart merchant';
       $lang_code = strtolower(($_SESSION['languages_code'] == '' ? 'en' : $_SESSION['languages_code'] ));
       $mail->SetLanguage($lang_code);
       $mail->CharSet =  (defined('CHARSET')) ? CHARSET : "iso-8859-1";

@@ -1551,10 +1551,10 @@ while (!$chk_sale_categories_all->EOF) {
 /**
  * Add tax to a products price
  */
-  function zen_add_tax($price, $tax) {
+  function zen_add_tax($price, $tax, $force = false) {
     global $currencies;
 
-    if (DISPLAY_PRICE_WITH_TAX_ADMIN == 'true') {
+    if (DISPLAY_PRICE_WITH_TAX_ADMIN == 'true' || $force) {
       return zen_round($price, $currencies->currencies[DEFAULT_CURRENCY]['decimal_places']) + zen_calculate_tax($price, $tax);
     } else {
       return zen_round($price, $currencies->currencies[DEFAULT_CURRENCY]['decimal_places']);
@@ -2203,8 +2203,8 @@ function zen_copy_products_attributes($products_id_from, $products_id_to) {
     //
     $GLOBALS['zco_notifier']->notify('ZEN_COPY_PRODUCTS_ATTRIBUTES_COMPLETE', array('from' => (int)$products_id_from, 'to' => (int)$products_id_to));
 
-     // reset products_price_sorter for searches etc.
-     zen_update_products_price_sorter($products_id_to);
+    // reset products_price_sorter for searches etc.
+    zen_update_products_price_sorter($products_id_to);
 
     return true;
 } // eof: zen_copy_products_attributes
@@ -2972,12 +2972,12 @@ function zen_get_master_categories_pulldown($product_id, $fullpath = false)
                                              AND cd.language_id = " . (int)$_SESSION['languages_id']);
     $master_category_array[] = [
         'id' => '0',
-        'text' => TEXT_INFO_SET_MASTER_CATEGORIES_ID
+        'text' => TEXT_INFO_SET_MASTER_CATEGORIES_ID,
     ];
     foreach ($master_categories_query as $item) {
         $master_category_array[] = [
             'id' => $item['categories_id'],
-            'text' => ($fullpath ? zen_output_generated_category_path($item['categories_id']) : $item['categories_name']) . ' (' . TEXT_INFO_ID . $item['categories_id'] . ')'
+            'text' => ($fullpath ? zen_output_generated_category_path($item['categories_id']) : $item['categories_name']) . ' (' . TEXT_INFO_ID . $item['categories_id'] . ')',
         ];
     }
     return $master_category_array;
