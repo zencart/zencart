@@ -103,7 +103,7 @@ function zen_product_set_header_response($product_id, $product_info = null)
 
 function zen_set_disabled_upcoming_status($products_id, $status) {
     $sql = "UPDATE " . TABLE_PRODUCTS . "
-              SET products_status = " . (int)$status . ", products_date_available = '0001-01-01 00:00:00' WHERE products_id = " . (int)$products_id;
+              SET products_status = " . (int)$status . ", products_date_available = NULL WHERE products_id = " . (int)$products_id;
 
     return $GLOBALS['db']->Execute($sql);
 }
@@ -119,6 +119,7 @@ function zen_enable_disabled_upcoming() {
                                             WHERE products_status = 0
                                             AND products_date_available <= " . $zc_disabled_upcoming_date . "
                                             AND products_date_available != '0001-01-01'
+                                            AND products_date_available IS NOT NULL
                                             ";
 
     $disabled_upcoming = $GLOBALS['db']->Execute($disabled_upcoming_query);
