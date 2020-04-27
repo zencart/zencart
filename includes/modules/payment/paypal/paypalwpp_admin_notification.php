@@ -18,33 +18,11 @@ $outputAuth = '';
 $outputCapt = '';
 $outputVoid = '';
 $outputRefund = '';
-$outputEndBlock = '';
-$output = '';
-
-$outputStartBlock .= '
-<script>
-function characterCount(field, count, maxchars) {
-  var realchars = field.value.replace(/\t|\r|\n|\r\n/g,\'\');
-  var excesschars = realchars.length - maxchars;
-  if (excesschars > 0) {
-    field.value = field.value.substring(0, maxchars);
-    alert("Error:\n\n- You are only allowed to enter up to"+maxchars+" characters.");
-  } else {
-    count.value = maxchars - realchars.length;
-  }
-}
-</script>';
 
 // strip slashes in case they were added to handle apostrophes:
 foreach ($ipn->fields as $key => $value) {
     $ipn->fields[$key] = stripslashes($value);
 }
-
-$outputStartBlock .= '<td><table class="noprint">'."\n";
-$outputStartBlock .= '<tr style="background-color : #cccccc; border-style : dotted;">'."\n";
-$outputEndBlock .= '</tr>'."\n";
-$outputEndBlock .='</table></td>'."\n";
-
 
 if (!empty($response['RESPMSG'])) {
     // these would be payflow transactions
@@ -423,8 +401,24 @@ if (method_exists($this, '_doVoid')) {
     $outputVoid .='</td></tr></table></td>'."\n";
 }
 
+//reused components
+$outputStartBlock = '<table class="noprint">' . "\n" . '<tr style="background-color: #cccccc;border: solid thin black;">' . "\n";
+$outputEndBlock   = '</tr>' . "\n" . '</table>' . "\n\n";
+
 // prepare output based on suitable content components
-$output = '<!-- BOF: pp admin transaction processing tools -->';
+$output = '<!-- BOF: paypalwpp_admin_notification -->' . "\n" .
+$output.= '<script title="paypalwpp_admin_notification">
+function characterCount(field, count, maxchars) {
+  var realchars = field.value.replace(/\t|\r|\n|\r\n/g,\'\');
+  var excesschars = realchars.length - maxchars;
+  if (excesschars > 0) {
+    field.value = field.value.substring(0, maxchars);
+    alert("Error!\n\nYou are only allowed to enter up to " + maxchars + " characters.");
+  } else {
+    count.value = maxchars - realchars.length;
+  }
+}
+</script>' . "\n";
 $output .= $outputStartBlock;
 
 $authcapt_on = (isset($_GET['authcapt']) && $_GET['authcapt'] == 'on');
@@ -441,10 +435,11 @@ if (isset($response['RESPMSG']) /*|| defined('MODULE_PAYMENT_PAYFLOW_STATUS')*/)
         $output .= $outputRefund;
     }
 } else {  // PayPal
-    $output .= $outputPayPal;
+    $output .= $outputPayPal; // one table row, four cells, one table in each
+    $output .= $outputEndBlock; // close first table
 
     if (defined('MODULE_PAYMENT_PAYPALWPP_STATUS') || defined('MODULE_PAYMENT_PAYPALDP_STATUS')) {
-        $output .= $outputEndBlock;
+        $output .= $outputStartBlock; //start second table
         $output .= '</tr><tr>' . "\n";
         $output .= $outputStartBlock;
         $output .= $outputStartBlock;
@@ -475,6 +470,5 @@ if (isset($response['RESPMSG']) /*|| defined('MODULE_PAYMENT_PAYFLOW_STATUS')*/)
         }
     }
 }
-$output .= $outputEndBlock;
-$output .= $outputEndBlock;
-$output .= '<!-- EOF: pp admin transaction processing tools -->';
+$output .= $outputEndBlock; //close second table
+$output .= '<!-- EOF: paypalwpp_admin_notification -->';
