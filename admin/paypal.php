@@ -27,25 +27,25 @@ $paypal_ipn_sort_order_array = [
 
   switch ($paypal_ipn_sort_order) {
     case (0):
-      $order_by = " order by p.paypal_ipn_id DESC";
+      $order_by = " ORDER BY p.paypal_ipn_id DESC";
       break;
     case (1):
-      $order_by = " order by p.paypal_ipn_id";
+      $order_by = " ORDER BY p.paypal_ipn_id";
       break;
     case (2):
-      $order_by = " order by p.order_id DESC, p.paypal_ipn_id";
+      $order_by = " ORDER BY p.order_id DESC, p.paypal_ipn_id";
       break;
     case (3):
-      $order_by = " order by p.order_id, p.paypal_ipn_id";
+      $order_by = " ORDER BY p.order_id, p.paypal_ipn_id";
       break;
     case (4):
-      $order_by = " order by p.mc_gross DESC";
+      $order_by = " ORDER BY p.mc_gross DESC";
       break;
     case (5):
-      $order_by = " order by p.mc_gross";
+      $order_by = " ORDER BY p.mc_gross";
       break;
     default:
-      $order_by = " order by p.paypal_ipn_id DESC";
+      $order_by = " ORDER BY p.paypal_ipn_id DESC";
       break;
     }
 
