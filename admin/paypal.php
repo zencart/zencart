@@ -80,7 +80,7 @@
   echo zen_draw_form('payment_status', FILENAME_PAYPAL, '', 'get') . HEADING_PAYMENT_STATUS . ' ' . zen_draw_pull_down_menu('payment_status', array_merge(array(array('id' => '', 'text' => TEXT_ALL_IPNS)), $payment_statuses), $selected_status, 'onchange="this.form.submit();"') . zen_hide_session_id() . $hidden_field . '</form>';
 ?>
 <?php
-  $hidden_field = (isset($_GET['paypal_ipn_sort_order'])) ? zen_draw_hidden_field('payment_status', $_GET['payment_status']) : '';
+  $hidden_field = (isset($_GET['payment_status'])) ? zen_draw_hidden_field('payment_status', $_GET['payment_status']) : '';
   echo '&nbsp;&nbsp;&nbsp;' . TEXT_PAYPAL_IPN_SORT_ORDER_INFO . zen_draw_form('paypal_ipn_sort_order', FILENAME_PAYPAL, '', 'get') . '&nbsp;&nbsp;' . zen_draw_pull_down_menu('paypal_ipn_sort_order', $paypal_ipn_sort_order_array, $paypal_ipn_sort_order, 'onchange="this.form.submit();"') . zen_hide_session_id() . $hidden_field . '</form>';
 ?>
 <table border="0" width="100%" cellspacing="0" cellpadding="0">
