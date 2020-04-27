@@ -46,7 +46,7 @@ if (!isset($_SESSION['updateExpirations']) || $_SESSION['updateExpirations'] !==
      * enable disabled product that have a historical products_available_date to become active
      *   in advance of other product handlers to prepare the product for use in those handlers.
      */
-    if (defined('ENABLE_DISABLED_UPCOMING_PRODUCT') && ENABLE_DISABLED_UPCOMING_PRODUCT == '1') {
+    if (defined('ENABLE_DISABLED_UPCOMING_PRODUCT') && ENABLE_DISABLED_UPCOMING_PRODUCT == 'Automatic') {
         zen_enable_disabled_upcoming();
     }
     /**
