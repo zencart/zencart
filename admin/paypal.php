@@ -10,13 +10,13 @@
 
   require('includes/application_top.php');
   
-  $paypal_ipn_sort_order_array = array(array('id' => '0', 'text' => TEXT_SORT_PAYPAL_ID_DESC),
-                             array('id' => '1', 'text' => TEXT_SORT_PAYPAL_ID),
-                             array('id' => '2', 'text' => TEXT_SORT_ZEN_ORDER_ID_DESC),
-                             array('id' => '3', 'text'=> TEXT_SORT_ZEN_ORDER_ID),
-                             array('id' => '4', 'text'=> TEXT_PAYMENT_AMOUNT_DESC),
-                             array('id' => '5', 'text'=> TEXT_PAYMENT_AMOUNT)
-                             );
+  $paypal_ipn_sort_order_array = [['id' => '0', 'text' => TEXT_SORT_PAYPAL_ID_DESC],
+                             ['id' => '1', 'text' => TEXT_SORT_PAYPAL_ID],
+                             ['id' => '2', 'text' => TEXT_SORT_ZEN_ORDER_ID_DESC],
+                             ['id' => '3', 'text'=> TEXT_SORT_ZEN_ORDER_ID],
+                             ['id' => '4', 'text'=> TEXT_PAYMENT_AMOUNT_DESC],
+                             ['id' => '5', 'text'=> TEXT_PAYMENT_AMOUNT]
+  ];
 
   $paypal_ipn_sort_order = 0;
   if (isset($_GET['paypal_ipn_sort_order'])) {
@@ -53,11 +53,11 @@
 
   require(DIR_FS_CATALOG_MODULES . 'payment/paypal.php');
 
-  $payment_statuses = array();
+  $payment_statuses = [];
   $payment_status_trans = $db->Execute("SELECT payment_status_name AS payment_status FROM " . TABLE_PAYPAL_PAYMENT_STATUS );
   while (!$payment_status_trans->EOF) {
-    $payment_statuses[] = array('id' => $payment_status_trans->fields['payment_status'],
-                                'text' => $payment_status_trans->fields['payment_status']);
+    $payment_statuses[] = ['id' => $payment_status_trans->fields['payment_status'],
+                                'text' => $payment_status_trans->fields['payment_status']];
     $payment_status_trans->MoveNext();
   }
 
@@ -81,7 +81,7 @@
     <div class="row">
     <?php
   $hidden_field = (isset($_GET['paypal_ipn_sort_order'])) ? zen_draw_hidden_field('paypal_ipn_sort_order', $_GET['paypal_ipn_sort_order']) : '';
-  echo zen_draw_form('payment_status', FILENAME_PAYPAL, '', 'get') . HEADING_PAYMENT_STATUS . ' ' . zen_draw_pull_down_menu('payment_status', array_merge(array(array('id' => '', 'text' => TEXT_ALL_IPNS)), $payment_statuses), $selected_status, 'onchange="this.form.submit();"') . zen_hide_session_id() . $hidden_field . '</form>';
+  echo zen_draw_form('payment_status', FILENAME_PAYPAL, '', 'get') . HEADING_PAYMENT_STATUS . ' ' . zen_draw_pull_down_menu('payment_status', array_merge([['id' => '', 'text' => TEXT_ALL_IPNS]], $payment_statuses), $selected_status, 'onchange="this.form.submit();"') . zen_hide_session_id() . $hidden_field . '</form>';
 
   $hidden_field = (isset($_GET['payment_status'])) ? zen_draw_hidden_field('payment_status', $_GET['payment_status']) : '';
   echo '&nbsp;&nbsp;&nbsp;' . TEXT_PAYPAL_IPN_SORT_ORDER_INFO . zen_draw_form('paypal_ipn_sort_order', FILENAME_PAYPAL, '', 'get') . '&nbsp;&nbsp;' . zen_draw_pull_down_menu('paypal_ipn_sort_order', $paypal_ipn_sort_order_array, $paypal_ipn_sort_order, 'onchange="this.form.submit();"') . zen_hide_session_id() . $hidden_field . '</form>';
@@ -140,12 +140,12 @@
 ?>
               <tr>
                     <td colspan="3" class="smallText"><?php echo $ipn_split->display_count($ipn_query_numrows, MAX_DISPLAY_SEARCH_RESULTS_PAYPAL_IPN, $_GET['page'], "Displaying <strong>%d</strong> to <strong>%d</strong> (of <strong>%d</strong> IPN's)"); ?></td>
-                    <td colspan="3" class="smallText text-right"><?php echo $ipn_split->display_links($ipn_query_numrows, MAX_DISPLAY_SEARCH_RESULTS_PAYPAL_IPN, MAX_DISPLAY_PAGE_LINKS, isset($_GET['page']) ? (int)$_GET['page'] : 1, zen_get_all_get_params(array('page'))); ?></td>
+                    <td colspan="3" class="smallText text-right"><?php echo $ipn_split->display_links($ipn_query_numrows, MAX_DISPLAY_SEARCH_RESULTS_PAYPAL_IPN, MAX_DISPLAY_PAGE_LINKS, isset($_GET['page']) ? (int)$_GET['page'] : 1, zen_get_all_get_params(['page'])); ?></td>
               </tr>
             </table></td>
 <?php
-  $heading = array();
-  $contents = array();
+  $heading = [];
+  $contents = [];
 
   switch ($action) {
     case 'new':
@@ -156,19 +156,19 @@
       break;
     default:
       if (isset($ipnInfo) && is_object($ipnInfo)) {
-        $heading[] = array('text' => '<strong>' . TEXT_INFO_PAYPAL_IPN_HEADING.' #' . $ipnInfo->paypal_ipn_id . '</strong>');
+        $heading[] = ['text' => '<strong>' . TEXT_INFO_PAYPAL_IPN_HEADING.' #' . $ipnInfo->paypal_ipn_id . '</strong>'];
         $ipn = $db->Execute("SELECT * FROM " . TABLE_PAYPAL_PAYMENT_STATUS_HISTORY . " WHERE paypal_ipn_id = '" . $ipnInfo->paypal_ipn_id . "'");
         $ipn_count = $ipn->RecordCount();
 
-        $contents[] = array('align' => 'center', 'text' => '<a href="' . zen_href_link(FILENAME_ORDERS, zen_get_all_get_params(array('ipnID', 'action')) . 'oID=' . $ipnInfo->order_id .'&' . 'ipnID=' . $ipnInfo->paypal_ipn_id .'&action=edit' . '&referer=ipn') . '">' . zen_image_button('button_orders.gif', IMAGE_ORDERS) . '</a>');
-        $contents[] = array('text' => '<br>' . TABLE_HEADING_NUM_HISTORY_ENTRIES . ': '. $ipn_count);
+        $contents[] = ['align' => 'center', 'text' => '<a href="' . zen_href_link(FILENAME_ORDERS, zen_get_all_get_params(['ipnID', 'action']) . 'oID=' . $ipnInfo->order_id .'&' . 'ipnID=' . $ipnInfo->paypal_ipn_id .'&action=edit' . '&referer=ipn') . '">' . zen_image_button('button_orders.gif', IMAGE_ORDERS) . '</a>'];
+        $contents[] = ['text' => '<br>' . TABLE_HEADING_NUM_HISTORY_ENTRIES . ': '. $ipn_count];
         $count = 1;
         while (!$ipn->EOF) {
-          $contents[] = array('text' => '<br>' . TABLE_HEADING_ENTRY_NUM . ': '. $count);
-          $contents[] = array('text' =>  TABLE_HEADING_DATE_ADDED . ': '. zen_datetime_short($ipn->fields['date_added']));
-          $contents[] = array('text' =>  TABLE_HEADING_TRANS_ID . ': '.$ipn->fields['txn_id']);
-          $contents[] = array('text' =>  TABLE_HEADING_PAYMENT_STATUS . ': '.$ipn->fields['payment_status']);
-          $contents[] = array('text' =>  TABLE_HEADING_PENDING_REASON . ': '.$ipn->fields['pending_reason']);
+          $contents[] = ['text' => '<br>' . TABLE_HEADING_ENTRY_NUM . ': '. $count];
+          $contents[] = ['text' =>  TABLE_HEADING_DATE_ADDED . ': '. zen_datetime_short($ipn->fields['date_added'])];
+          $contents[] = ['text' =>  TABLE_HEADING_TRANS_ID . ': '.$ipn->fields['txn_id']];
+          $contents[] = ['text' =>  TABLE_HEADING_PAYMENT_STATUS . ': '.$ipn->fields['payment_status']];
+          $contents[] = ['text' =>  TABLE_HEADING_PENDING_REASON . ': '.$ipn->fields['pending_reason']];
           $count++;
           $ipn->MoveNext();
         }
@@ -178,7 +178,7 @@
 
   if ( (zen_not_null($heading)) && (zen_not_null($contents)) ) {
     echo '            <td>' . "\n";
-    $box = new box;
+    $box = new box();
     echo $box->infoBox($heading, $contents);
     echo '            </td>' . "\n";
   }
