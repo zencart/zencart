@@ -9,14 +9,15 @@
  */
 
   require('includes/application_top.php');
-  
-  $paypal_ipn_sort_order_array = [['id' => '0', 'text' => TEXT_SORT_PAYPAL_ID_DESC],
-                             ['id' => '1', 'text' => TEXT_SORT_PAYPAL_ID],
-                             ['id' => '2', 'text' => TEXT_SORT_ZEN_ORDER_ID_DESC],
-                             ['id' => '3', 'text'=> TEXT_SORT_ZEN_ORDER_ID],
-                             ['id' => '4', 'text'=> TEXT_PAYMENT_AMOUNT_DESC],
-                             ['id' => '5', 'text'=> TEXT_PAYMENT_AMOUNT]
-  ];
+
+$paypal_ipn_sort_order_array = [
+    ['id' => '0', 'text' => TEXT_SORT_PAYPAL_ID_DESC],
+    ['id' => '1', 'text' => TEXT_SORT_PAYPAL_ID],
+    ['id' => '2', 'text' => TEXT_SORT_ZEN_ORDER_ID_DESC],
+    ['id' => '3', 'text' => TEXT_SORT_ZEN_ORDER_ID],
+    ['id' => '4', 'text' => TEXT_PAYMENT_AMOUNT_DESC],
+    ['id' => '5', 'text' => TEXT_PAYMENT_AMOUNT]
+];
 
   $paypal_ipn_sort_order = 0;
   if (isset($_GET['paypal_ipn_sort_order'])) {
