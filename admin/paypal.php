@@ -56,10 +56,9 @@ $paypal_ipn_sort_order_array = [
 
   $payment_statuses = [];
   $payment_status_trans = $db->Execute("SELECT payment_status_name AS payment_status FROM " . TABLE_PAYPAL_PAYMENT_STATUS );
-  while (!$payment_status_trans->EOF) {
-    $payment_statuses[] = ['id' => $payment_status_trans->fields['payment_status'],
-                                'text' => $payment_status_trans->fields['payment_status']];
-    $payment_status_trans->MoveNext();
+  foreach ($payment_status_trans as $payment_status_tran) {
+    $payment_statuses[] = ['id' => $payment_status_tran['payment_status'],
+                         'text' => $payment_status_tran['payment_status']];
   }
 
 ?>
