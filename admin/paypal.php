@@ -138,7 +138,7 @@ $paypal_ipn_sort_order_array = [
   }
 ?>
               <tr>
-                    <td colspan="3" class="smallText"><?php echo $ipn_split->display_count($ipn_query_numrows, MAX_DISPLAY_SEARCH_RESULTS_PAYPAL_IPN, $_GET['page'], "Displaying <strong>%d</strong> to <strong>%d</strong> (of <strong>%d</strong> IPN's)"); ?></td>
+                    <td colspan="3" class="smallText"><?php echo $ipn_split->display_count($ipn_query_numrows, MAX_DISPLAY_SEARCH_RESULTS_PAYPAL_IPN, $_GET['page'], TEXT_DISPLAY_PAYPAL_IPN_NUMBER_OF_TX); ?></td>
                     <td colspan="3" class="smallText text-right"><?php echo $ipn_split->display_links($ipn_query_numrows, MAX_DISPLAY_SEARCH_RESULTS_PAYPAL_IPN, MAX_DISPLAY_PAGE_LINKS, isset($_GET['page']) ? (int)$_GET['page'] : 1, zen_get_all_get_params(['page'])); ?></td>
               </tr>
             </table></td>
