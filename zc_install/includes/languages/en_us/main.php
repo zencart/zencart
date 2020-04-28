@@ -234,7 +234,7 @@ You may proceed with installing despite this situation, but please be advised th
 'TEXT_VERSION_CHECK_PATCH' => 'patch',
 'TEXT_VERSION_CHECK_DOWNLOAD' => 'Download Here',
 'TEXT_VERSION_CHECK_CURRENT' => 'Your version of Zen Cart&reg; appears to be current.',
-'TEXT_ERROR_NEW_VERSION_AVAILABLE' => '<a href="http://www.zen-cart.com/getit">There is a NEWER version of Zen Cart&reg; available, which you can download from </a><a href="http://www.zen-cart.com" style="text-decoration:underline" target="_blank">www.zen-cart.com</a>',
+'TEXT_ERROR_NEW_VERSION_AVAILABLE' => '<a href="https://www.zen-cart.com/files">There is a NEWER version of Zen Cart&reg; available, which you can download from </a><a href="https://www.zen-cart.com/files" style="text-decoration:underline" target="_blank">www.zen-cart.com/files</a>',
 'TEXT_DB_VERSION_NOT_FOUND' => 'A Zen Cart database for %s was not found!',
 'REASON_TABLE_ALREADY_EXISTS' => 'Cannot create table %s because it already exists',
 'REASON_TABLE_DOESNT_EXIST' => 'Cannot drop table %s because it does not exist.',
