@@ -1044,11 +1044,13 @@
     global $db;
     $sql = "SELECT * FROM " . TABLE_GET_TERMS_TO_FILTER;
     $query_result = $db->Execute($sql);
-    $retVal = false;
+
     foreach ($query_result as $row) {
-      if (isset($_GET[$row['get_term_name']]) && zen_not_null($_GET[$row['get_term_name']])) $retVal = true;
+      if (isset($_GET[$row['get_term_name']]) && zen_not_null($_GET[$row['get_term_name']])) {
+        return true;
+      }
     }
-    return $retVal;
+    return false;
   }
 
 
