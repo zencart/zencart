@@ -104,7 +104,7 @@ function zen_get_users($limit = '')
 function zen_delete_user($id)
 {
   global $db, $messageStack;
-  $result = $db->Execute("SELECT COUNT(admin_id) AS count FROM " . TABLE_ADMIN . " WHERE admin_id != '" . (int)$id . "'");
+  $result = $db->Execute("SELECT COUNT(admin_id) AS count FROM " . TABLE_ADMIN . " WHERE admin_id != " . (int)$id);
   if ($result->fields['count'] < 1) {
     $messageStack->add(ERROR_CANNOT_DELETE_LAST_ADMIN, 'error');
   } elseif ($id == $_SESSION['admin_id']) {
@@ -219,7 +219,7 @@ function zen_update_user($name, $email, $id, $profile)
             SET admin_email = :email:, ";
     if (isset($name) && $name !== FALSE && $name != $oldData['admin_name']) $sql .= "admin_name = :name:, ";
     if (isset($profile) && $profile > 0 && $profile != $oldData['admin_profile']) $sql .= "admin_profile = :profile:, ";
-    $sql .= "last_modified = now()
+    $sql .= "last_modified = NOW()
              WHERE admin_id=" . $id;
     $sql = $db->bindVars($sql, ':name:', $name, 'string');
     $sql = $db->bindVars($sql, ':email:', $email, 'string');
