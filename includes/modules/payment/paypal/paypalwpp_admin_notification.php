@@ -407,7 +407,7 @@ $outputStartBlock = '<table class="noprint">' . "\n" . '<tr style="background-co
 $outputEndBlock   = '</tr>' . "\n" . '</table>' . "\n\n";
 
 // prepare output based on suitable content components
-$output = '<!-- BOF: paypalwpp_admin_notification -->' . "\n" .
+$output = '<!-- BOF: paypalwpp_admin_notification -->' . "\n";
 $output.= '<script title="paypalwpp_admin_notification">
 function characterCount(field, count, maxchars) {
   var realchars = field.value.replace(/\t|\r|\n|\r\n/g,\'\');
