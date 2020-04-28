@@ -5,7 +5,6 @@
  * @version $Id: $
  */
 
-
 return [
     'en_us' => ['displayName' => 'US English'],
 ];
