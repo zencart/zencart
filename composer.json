@@ -28,7 +28,9 @@
         "fzaninotto/faker": "^1.9",
         "laravel/dusk": ">5.8",
         "mikey179/vfsstream": ">1.6",
-        "phpunit/phpunit": "^7.5.20 || ^8.5.8 || ^9.0"
+        "phpunit/phpunit": "^7.5.20 || ^8.5.8 || ^9.0",
+        "illuminate/database": "~6.0",
+        "illuminate/events": "~6.0"
     },
     "autoload": {
         "classmap": ["includes/classes", "includes/modules"]
@@ -37,7 +39,10 @@
     "autoload-dev": {
         "classmap": ["not_for_release/testFramework"],
         "psr-4": {
-            "Tests\\": "not_for_release/testFramework/"
+            "Tests\\": "not_for_release/testFramework/",
+            "Zencart\\Go\\": "zcgo/",
+            "Zencart\\FileSystem\\": "includes/classes/",
+            "Zencart\\Traits\\": "includes/classes/traits/"
         }
     },
     "extra": {
