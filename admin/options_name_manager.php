@@ -671,7 +671,9 @@ function translate_type_to_name($opt_type)
                     <td class="text-right"><?php echo $options_value["products_options_sort_order"]; ?></td>
                     <td class="text-right"><?php echo $options_value["products_options_size"]; ?></td>
                     <td class="text-right"><?php echo $options_value["products_options_length"]; ?></td>
-                    <?php if ($action == 'update_option') { ?>
+                    <?php 
+// hide buttons when editing
+                    if ($action == 'update_option') { ?>
                       <td>&nbsp;</td>
                     <?php } else { ?>
                       <td class="text-right">
@@ -692,7 +694,9 @@ function translate_type_to_name($opt_type)
               <tr>
                 <td colspan="7"><?php echo zen_black_line(); ?></td>
               </tr>
-              <?php if ($action != 'update_option') { ?>
+              <?php
+// add option name
+              if ($action != 'update_option') { ?>
                 <tr>
                   <?php
                   echo zen_draw_form('options', FILENAME_OPTIONS_NAME_MANAGER, 'action=add_product_options' . '&' . ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . 'option_order_by=' . $option_order_by, 'post', 'class="form-horizontal"');
