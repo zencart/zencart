@@ -20,7 +20,7 @@ define('HEADER_LOGO_HEIGHT', '68');
 define('HEADER_LOGO_IMAGE', 'logo.gif');
 
 // look in your $PATH_LOCALE/locale directory for available locales..
-$locales = array('en_US', 'en_US.utf8', 'en', 'English_United States.1252');
+$locales = ['en_US', 'en_US.utf8', 'en', 'English_United States.1252'];
 @setlocale(LC_TIME, $locales);
 define('DATE_FORMAT_SHORT', '%m/%d/%Y');  // this is used for strftime()
 define('DATE_FORMAT_LONG', '%A %d %B, %Y'); // this is used for strftime()
