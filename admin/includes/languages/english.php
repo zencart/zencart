@@ -268,7 +268,7 @@ define('ENTRY_NEWSLETTER_YES', 'Subscribed');
 define('ENTRY_NEWSLETTER_NO', 'Unsubscribed');
 
 define('ERROR_PASSWORDS_NOT_MATCHING', 'Password and confirmation must match');
-define('ENTRY_PASSWORD_CHANGE_ERROR', '<strong>Sorry, your new password was rejected.</strong><br />');
+define('ENTRY_PASSWORD_CHANGE_ERROR', '<strong>Sorry, your new password was rejected.</strong><br>');
 define('ERROR_PASSWORD_RULES', 'Passwords must contain both letters and numbers, must be at least %s characters long, and must not be the same as the last 4 passwords used. Passwords expire every 90 days, after which you will be prompted to choose a new password.');
 define('ERROR_TOKEN_EXPIRED_PLEASE_RESUBMIT', 'ERROR: Sorry, there was an error processing your data. Please re-submit the information again.');
 
@@ -408,10 +408,10 @@ define('ERROR_FILE_TOO_BIG', 'Warning: File is larger than allowed sizes. See &q
 define('SUCCESS_FILE_SAVED_SUCCESSFULLY', 'Success: File upload saved successfully %s');
 define('WARNING_NO_FILE_UPLOADED', 'Warning: No file uploaded.');
 define('WARNING_FILE_UPLOADS_DISABLED', 'Warning: File uploads are disabled in the php.ini configuration file.');
-define('ERROR_ADMIN_SECURITY_WARNING', 'Warning: Your Admin login is not secure ... either you still have default login settings for: Admin admin or have not removed or changed: demo demoonly<br />The login(s) should be changed as soon as possible for the Security of your shop.');
+define('ERROR_ADMIN_SECURITY_WARNING', 'Warning: Your Admin login is not secure ... either you still have default login settings for: Admin admin or have not removed or changed: demo demoonly<br>The login(s) should be changed as soon as possible for the Security of your shop.');
 define('WARNING_DATABASE_VERSION_OUT_OF_DATE','Your database appears to need patching to a higher level. See Tools->' . BOX_TOOLS_SERVER_INFO . ' to review patch levels.');
 define('WARN_DATABASE_VERSION_PROBLEM','true'); //set to false to turn off warnings about database version mismatches
-define('WARNING_ADMIN_DOWN_FOR_MAINTENANCE', '<strong>WARNING:</strong> Site is currently set to Down for Maintenance ...<br />NOTE: You cannot test most Payment and Shipping Modules in Maintenance mode');
+define('WARNING_ADMIN_DOWN_FOR_MAINTENANCE', '<strong>WARNING:</strong> Site is currently set to Down for Maintenance ...<br>NOTE: You cannot test most Payment and Shipping Modules in Maintenance mode');
 define('WARNING_INSTALL_DIRECTORY_EXISTS', 'SECURITY WARNING: Installation directory exists at: %s. Please remove this directory for security reasons.');
 define('WARNING_CONFIG_FILE_WRITEABLE', 'Warning: Your configuration file: %s is writeable. This is a potential security risk - please set the right user permissions on this file (read-only, CHMOD 644 or 444 are typical). You may need to use your webhost control panel/file-manager to change the permissions effectively. Contact your webhost for assistance. <a href="https://docs.zen-cart.com/user/miscellaneous/configure/" target="_blank">See this FAQ</a>');
 define('WARNING_COULD_NOT_LOCATE_LANG_FILE', 'WARNING: Could not locate language file: ');
@@ -456,7 +456,7 @@ define('NOT_INSTALLED_TEXT','Not Installed');
   define('BOX_CATALOG_PRODUCT_OPTIONS_VALUES','Option Value Sorter ');
 
   define('TEXT_UPDATE_SORT_ORDERS_OPTIONS','<strong>Update Attribute Sort Order from Option Value Defaults</strong> ');
-  define('TEXT_INFO_ATTRIBUTES_FEATURES_UPDATES','<strong>Update All Products\' Attribute Sort Orders</strong><br />to match Option Value Default Sort Orders:<br />');
+  define('TEXT_INFO_ATTRIBUTES_FEATURES_UPDATES','<strong>Update All Products\' Attribute Sort Orders</strong><br>to match Option Value Default Sort Orders:<br>');
 
 // Product Options Name Sort Order - option_values.php
   define('BOX_CATALOG_PRODUCT_OPTIONS_NAME','Option Name Sorter');
@@ -537,17 +537,17 @@ define('TEXT_CANCEL', 'Cancel');
 define('ERROR_SHIPPING_CONFIGURATION', '<strong>Shipping Configuration errors!</strong>');
 define('ERROR_SHIPPING_ORIGIN_ZIP', '<strong>Warning:</strong> Store Zip Code is not defined. See Configuration | Shipping/Packaging to set it.');
 define('ERROR_ORDER_WEIGHT_ZERO_STATUS', '<strong>Warning:</strong> 0 weight is configured for Free Shipping and Free Shipping Module is not enabled');
-define('ERROR_USPS_STATUS', '<strong>Warning:</strong> USPS shipping module is either missing the username, or it is set to TEST rather than PRODUCTION and will not work.<br />If you cannot retrieve USPS Shipping Quotes, contact USPS to activate your Web Tools account on their production server. 1-800-344-7779 or icustomercare@usps.com');
+define('ERROR_USPS_STATUS', '<strong>Warning:</strong> USPS shipping module is either missing the username, or it is set to TEST rather than PRODUCTION and will not work.<br>If you cannot retrieve USPS Shipping Quotes, contact USPS to activate your Web Tools account on their production server. 1-800-344-7779 or icustomercare@usps.com');
 
 define('ERROR_SHIPPING_MODULES_NOT_DEFINED', 'NOTE: You have no shipping modules activated. Please go to Modules->Shipping to configure.');
 define('ERROR_PAYMENT_MODULES_NOT_DEFINED', 'NOTE: You have no payment modules activated. Please go to Modules->Payment to configure.');
 
 // text pricing
 define('TEXT_CHARGES_WORD','Calculated Charge:');
-define('TEXT_PER_WORD','<br />Price per word: ');
+define('TEXT_PER_WORD','<br>Price per word: ');
 define('TEXT_WORDS_FREE',' Word(s) free ');
 define('TEXT_CHARGES_LETTERS','Calculated Charge:');
-define('TEXT_PER_LETTER','<br />Price per letter: ');
+define('TEXT_PER_LETTER','<br>Price per letter: ');
 define('TEXT_LETTERS_FREE',' Letter(s) free ');
 define('TABLE_ATTRIBUTES_QTY_PRICE_QTY','QTY');
 define('TABLE_ATTRIBUTES_QTY_PRICE_PRICE','PRICE');
@@ -603,8 +603,8 @@ define('TEXT_PRODUCT_POPUP_TITLE', 'Products Ordered');
 
   define('TABLE_HEADING_YES','Yes');
   define('TABLE_HEADING_NO','No');
-  define('TEXT_PRODUCTS_IMAGE_MANUAL', '<br /><strong>Or, use an existing image file from server, filename:</strong>');
-  define('TEXT_IMAGES_OVERWRITE', '<br /><strong>Overwrite Existing Image on Server?</strong>');
+  define('TEXT_PRODUCTS_IMAGE_MANUAL', '<br><strong>Or, use an existing image file from server, filename:</strong>');
+  define('TEXT_IMAGES_OVERWRITE', '<br><strong>Overwrite Existing Image on Server?</strong>');
   define('TEXT_IMAGE_OVERWRITE_WARNING','WARNING: FILENAME was updated but not overwritten ');
   define('TEXT_IMAGES_DELETE', '<strong>Remove Image?</strong> Note: Removes image from product (image is NOT deleted/removed from server):');
   define('TEXT_IMAGE_CURRENT', 'Image Name: ');
@@ -632,7 +632,7 @@ define('TEXT_PRODUCT_POPUP_TITLE', 'Products Ordered');
   define('ERROR_CATALOG_IMAGE_DIRECTORY_DOES_NOT_EXIST', 'Error: Catalog images directory does not exist: ' . DIR_FS_CATALOG_IMAGES);
   define('ERROR_CANNOT_MOVE_CATEGORY_TO_PARENT', 'Error: Category cannot be moved into a child category.');
   define('ERROR_CANNOT_MOVE_PRODUCT_TO_CATEGORY_SELF', 'Error: Cannot move product to the same category or into a category where it already exists.');
-  define('ERROR_CATEGORY_HAS_PRODUCTS', 'Error: Category has Products!<br /><br />While this can be done temporarily to build your Categories ... Categories hold either Products or Categories but never both!');
+  define('ERROR_CATEGORY_HAS_PRODUCTS', 'Error: Category has Products!<br><br>While this can be done temporarily to build your Categories ... Categories hold either Products or Categories but never both!');
   define('SUCCESS_CATEGORY_MOVED', 'Success! Category has successfully been moved ...');
   define('ERROR_CANNOT_MOVE_CATEGORY_TO_CATEGORY_SELF', 'Error: Cannot move Category to the same Category! ID#');
 
@@ -651,10 +651,10 @@ define('TEXT_PRODUCT_POPUP_TITLE', 'Products Ordered');
 
 // moved from product types
 // warnings on Virtual and Always Free Shipping
-  define('TEXT_VIRTUAL_PREVIEW','Warning: This product is marked - Free Shipping and Skips Shipping Address<br />No shipping will be requested when all products in the order are Virtual Products');
-  define('TEXT_VIRTUAL_EDIT','Warning: This product is marked - Free Shipping and Skips Shipping Address<br />No shipping will be requested when all products in the order are Virtual Products');
-  define('TEXT_FREE_SHIPPING_PREVIEW','Warning: This product is marked - Free Shipping, Shipping Address Required<br />Free Shipping Module is required when all products in the order are Always Free Shipping Products');
-  define('TEXT_FREE_SHIPPING_EDIT','Warning: Yes makes the product - Free Shipping, Shipping Address Required<br />Free Shipping Module is required when all products in the order are Always Free Shipping Products');
+  define('TEXT_VIRTUAL_PREVIEW','Warning: This product is marked - Free Shipping and Skips Shipping Address<br>No shipping will be requested when all products in the order are Virtual Products');
+  define('TEXT_VIRTUAL_EDIT','Warning: This product is marked - Free Shipping and Skips Shipping Address<br>No shipping will be requested when all products in the order are Virtual Products');
+  define('TEXT_FREE_SHIPPING_PREVIEW','Warning: This product is marked - Free Shipping, Shipping Address Required<br>Free Shipping Module is required when all products in the order are Always Free Shipping Products');
+  define('TEXT_FREE_SHIPPING_EDIT','Warning: Yes makes the product - Free Shipping, Shipping Address Required<br>Free Shipping Module is required when all products in the order are Always Free Shipping Products');
 
 // admin activity log warnings
   define('WARNING_ADMIN_ACTIVITY_LOG_DATE', 'WARNING: The Admin Activity Log table has records over 2 months old and should be archived to conserve space ... ');
@@ -668,7 +668,7 @@ define('TEXT_PRODUCT_POPUP_TITLE', 'Products Ordered');
   define('TEXT_ERROR_INCORRECT_PASSWORD_DURING_RESET_FOR_USER', 'Incorrect password while attempting a password reset for: ');
 
 
-  define('CATEGORY_HAS_SUBCATEGORIES', 'NOTE: Category has SubCategories<br />Products cannot be added');
+  define('CATEGORY_HAS_SUBCATEGORIES', 'NOTE: Category has SubCategories<br>Products cannot be added');
 
   define('WARNING_WELCOME_DISCOUNT_COUPON_EXPIRES_IN', 'WARNING! Welcome Email Discount Coupon expires in %s days');
 
