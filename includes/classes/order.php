@@ -112,6 +112,7 @@ class order extends base {
                         'tax' => $order->fields['order_tax'],
                         'last_modified' => $order->fields['last_modified'],
                         'ip_address' => $order->fields['ip_address'],
+                        'language_code' => $order->fields['language_code'],
                         );
 
     $this->customer = array('id' => $order->fields['customers_id'],
@@ -693,6 +694,7 @@ class order extends base {
                             'currency' => $this->info['currency'],
                             'currency_value' => $this->info['currency_value'],
                             'ip_address' => $_SESSION['customers_ip_address'] . ' - ' . $_SERVER['REMOTE_ADDR'],
+                            'language_code' => $_SESSION['languages_code'],
                             );
 
     zen_db_perform(TABLE_ORDERS, $sql_data_array);
