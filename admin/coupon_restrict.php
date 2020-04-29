@@ -284,7 +284,7 @@ if (!empty($action)) {
     <meta charset="<?php echo CHARSET; ?>">
     <title><?php echo TITLE; ?></title>
     <link rel="stylesheet" type="text/css" href="includes/stylesheet.css">
-    <link rel="stylesheet" type="text/css" media="print" href="includes/stylesheet_print.css">
+    <link rel="stylesheet" type="text/css" media="print" href="includes/css/stylesheet_print.css">
     <link rel="stylesheet" type="text/css" href="includes/cssjsmenuhover.css" media="all" id="hoverJS">
     <script src="includes/menu.js"></script>
     <script src ="includes/general.js"></script>
