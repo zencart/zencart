@@ -84,7 +84,7 @@ if (strlen($sales_report_filter) == 0) {
     <meta charset="<?php echo CHARSET; ?>">
     <title><?php echo TITLE; ?></title>
     <link rel="stylesheet" href="includes/stylesheet.css">
-    <link rel="stylesheet" media="print" href="includes/stylesheet_print.css">
+    <link rel="stylesheet" media="print" href="includes/css/stylesheet_print.css">
     <link rel="stylesheet" href="includes/cssjsmenuhover.css" media="all" id="hoverJS">
     <script src="includes/menu.js"></script>
     <script src="includes/general.js"></script>
