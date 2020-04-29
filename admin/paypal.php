@@ -9,14 +9,15 @@
  */
 
   require('includes/application_top.php');
-  
-  $paypal_ipn_sort_order_array = array(array('id' => '0', 'text' => TEXT_SORT_PAYPAL_ID_DESC),
-                             array('id' => '1', 'text' => TEXT_SORT_PAYPAL_ID),
-                             array('id' => '2', 'text' => TEXT_SORT_ZEN_ORDER_ID_DESC),
-                             array('id' => '3', 'text'=> TEXT_SORT_ZEN_ORDER_ID),
-                             array('id' => '4', 'text'=> TEXT_PAYMENT_AMOUNT_DESC),
-                             array('id' => '5', 'text'=> TEXT_PAYMENT_AMOUNT)
-                             );
+
+$paypal_ipn_sort_order_array = [
+    ['id' => '0', 'text' => TEXT_SORT_PAYPAL_ID_DESC],
+    ['id' => '1', 'text' => TEXT_SORT_PAYPAL_ID],
+    ['id' => '2', 'text' => TEXT_SORT_ZEN_ORDER_ID_DESC],
+    ['id' => '3', 'text' => TEXT_SORT_ZEN_ORDER_ID],
+    ['id' => '4', 'text' => TEXT_PAYMENT_AMOUNT_DESC],
+    ['id' => '5', 'text' => TEXT_PAYMENT_AMOUNT]
+];
 
   $paypal_ipn_sort_order = 0;
   if (isset($_GET['paypal_ipn_sort_order'])) {
@@ -26,25 +27,25 @@
 
   switch ($paypal_ipn_sort_order) {
     case (0):
-      $order_by = " order by p.paypal_ipn_id DESC";
+      $order_by = " ORDER BY p.paypal_ipn_id DESC";
       break;
     case (1):
-      $order_by = " order by p.paypal_ipn_id";
+      $order_by = " ORDER BY p.paypal_ipn_id";
       break;
     case (2):
-      $order_by = " order by p.order_id DESC, p.paypal_ipn_id";
+      $order_by = " ORDER BY p.order_id DESC, p.paypal_ipn_id";
       break;
     case (3):
-      $order_by = " order by p.order_id, p.paypal_ipn_id";
+      $order_by = " ORDER BY p.order_id, p.paypal_ipn_id";
       break;
     case (4):
-      $order_by = " order by p.mc_gross DESC";
+      $order_by = " ORDER BY p.mc_gross DESC";
       break;
     case (5):
-      $order_by = " order by p.mc_gross";
+      $order_by = " ORDER BY p.mc_gross";
       break;
     default:
-      $order_by = " order by p.paypal_ipn_id DESC";
+      $order_by = " ORDER BY p.paypal_ipn_id DESC";
       break;
     }
 
@@ -53,76 +54,51 @@
 
   require(DIR_FS_CATALOG_MODULES . 'payment/paypal.php');
 
-  $payment_statuses = array();
+  $payment_statuses = [];
   $payment_status_trans = $db->Execute("SELECT payment_status_name AS payment_status FROM " . TABLE_PAYPAL_PAYMENT_STATUS );
-  while (!$payment_status_trans->EOF) {
-    $payment_statuses[] = array('id' => $payment_status_trans->fields['payment_status'],
-                                'text' => $payment_status_trans->fields['payment_status']);
-    $payment_status_trans->MoveNext();
+  foreach ($payment_status_trans as $payment_status_tran) {
+    $payment_statuses[] = ['id' => $payment_status_tran['payment_status'],
+                         'text' => $payment_status_tran['payment_status']];
   }
 
 ?>
-<!doctype html public "-//W3C//DTD HTML 4.01 Transitional//EN">
+<!doctype html>
 <html <?php echo HTML_PARAMS; ?>>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=<?php echo CHARSET; ?>">
-<title><?php echo TITLE; ?></title>
-<link rel="stylesheet" type="text/css" href="includes/stylesheet.css">
-<link rel="stylesheet" type="text/css" href="includes/cssjsmenuhover.css" media="all" id="hoverJS">
-<script src="includes/menu.js"></script>
-<script src="includes/general.js"></script>
-<script type="text/javascript">
-  function init()
-  {
-    cssjsmenu('navbar');
-    if (document.getElementById)
-    {
-      var kill = document.getElementById('hoverJS');
-      kill.disabled = true;
-    }
-  }
-</script>
+    <meta charset="<?php echo CHARSET; ?>">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title><?php echo TITLE; ?></title>
+    <link rel="stylesheet" href="includes/stylesheet.css">
+    <link rel="stylesheet" type="text/css" href="includes/cssjsmenuhover.css" media="all" id="hoverJS">
+    <script src="includes/menu.js"></script>
+    <script src ="includes/general.js"></script>
 </head>
-<body marginwidth="0" marginheight="0" topmargin="0" bottommargin="0" leftmargin="0" rightmargin="0" bgcolor="#FFFFFF" onLoad="SetFocus(), init();">
-<!-- header //-->
-<?php require(DIR_WS_INCLUDES . 'header.php'); ?>
-<!-- header_eof //-->
-
-<!-- body //-->
-<table border="0" width="100%" cellspacing="2" cellpadding="2">
-  <tr>
-<!-- body_text //-->
-    <td width="100%" valign="top"><table border="0" width="100%" cellspacing="0" cellpadding="2">
-      <tr>
-        <td><table border="0" width="100%" cellspacing="0" cellpadding="0">
-          <tr>
-            <td class="pageHeading"><?php echo HEADING_ADMIN_TITLE; ?></td>
-            <td class="pageHeading" align="right"><?php echo zen_draw_separator('pixel_trans.gif', HEADING_IMAGE_WIDTH, HEADING_IMAGE_HEIGHT); ?></td>
-            <td class="smallText" align="right">
-<?php
+<body>
+<?php require DIR_WS_INCLUDES . 'header.php'; ?>
+   <div class="container-fluid">
+    <h1><?php echo HEADING_ADMIN_TITLE; ?></h1>
+    <div class="row">
+    <?php
   $hidden_field = (isset($_GET['paypal_ipn_sort_order'])) ? zen_draw_hidden_field('paypal_ipn_sort_order', $_GET['paypal_ipn_sort_order']) : '';
-  echo zen_draw_form('payment_status', FILENAME_PAYPAL, '', 'get') . HEADING_PAYMENT_STATUS . ' ' . zen_draw_pull_down_menu('payment_status', array_merge(array(array('id' => '', 'text' => TEXT_ALL_IPNS)), $payment_statuses), $selected_status, 'onchange="this.form.submit();"') . zen_hide_session_id() . $hidden_field . '</form>';
-?>
-<?php
-  $hidden_field = (isset($_GET['paypal_ipn_sort_order'])) ? zen_draw_hidden_field('payment_status', $_GET['payment_status']) : '';
+  echo zen_draw_form('payment_status', FILENAME_PAYPAL, '', 'get') . HEADING_PAYMENT_STATUS . ' ' . zen_draw_pull_down_menu('payment_status', array_merge([['id' => '', 'text' => TEXT_ALL_IPNS]], $payment_statuses), $selected_status, 'onchange="this.form.submit();"') . zen_hide_session_id() . $hidden_field . '</form>';
+
+  $hidden_field = (isset($_GET['payment_status'])) ? zen_draw_hidden_field('payment_status', $_GET['payment_status']) : '';
   echo '&nbsp;&nbsp;&nbsp;' . TEXT_PAYPAL_IPN_SORT_ORDER_INFO . zen_draw_form('paypal_ipn_sort_order', FILENAME_PAYPAL, '', 'get') . '&nbsp;&nbsp;' . zen_draw_pull_down_menu('paypal_ipn_sort_order', $paypal_ipn_sort_order_array, $paypal_ipn_sort_order, 'onchange="this.form.submit();"') . zen_hide_session_id() . $hidden_field . '</form>';
 ?>
-            </td>
-            <td class="pageHeading" align="right"><?php echo zen_draw_separator('pixel_trans.gif', HEADING_IMAGE_WIDTH, HEADING_IMAGE_HEIGHT); ?></td>
-          </tr>
-        </table></td>
-      </tr>
-      <tr>
-        <td><table border="0" width="100%" cellspacing="0" cellpadding="0">
+   </div>
+
+<table class="table">
           <tr>
-            <td valign="top"><table border="0" width="100%" cellspacing="0" cellpadding="2">
+            <td>
+              <table class="table">
               <tr class="dataTableHeadingRow">
                 <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_ORDER_NUMBER; ?></td>
                 <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_PAYPAL_ID; ?></td>
                 <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_TXN_TYPE; ?></td>
                 <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_PAYMENT_STATUS; ?></td>
-                <td class="dataTableHeadingContent" align="right"><?php echo TABLE_HEADING_PAYMENT_AMOUNT; ?></td>
-                <td class="dataTableHeadingContent" align="right"><?php echo TABLE_HEADING_ACTION; ?>&nbsp;</td>
+                <td class="dataTableHeadingContent text-right"><?php echo TABLE_HEADING_PAYMENT_AMOUNT; ?></td>
+                <td class="dataTableHeadingContent text-right"><?php echo TABLE_HEADING_ACTION; ?>&nbsp;</td>
               </tr>
 <?php
   if (zen_not_null($selected_status)) {
@@ -140,40 +116,36 @@
   }
   $ipn_split = new splitPageResults($_GET['page'], MAX_DISPLAY_SEARCH_RESULTS_PAYPAL_IPN, $ipn_query_raw, $ipn_query_numrows);
   $ipn_trans = $db->Execute($ipn_query_raw);
-  while (!$ipn_trans->EOF) {
-    if ((!isset($_GET['ipnID']) || (isset($_GET['ipnID']) && ($_GET['ipnID'] == $ipn_trans->fields['paypal_ipn_id']))) && !isset($ipnInfo) ) {
-      $ipnInfo = new objectInfo($ipn_trans->fields);
+  foreach ($ipn_trans as $ipn_tran) {
+    if ((!isset($_GET['ipnID']) || (isset($_GET['ipnID']) && ($_GET['ipnID'] == $ipn_tran['paypal_ipn_id']))) && !isset($ipnInfo)) {
+      $ipnInfo = new objectInfo($ipn_tran);
     }
 
-    if (isset($ipnInfo) && is_object($ipnInfo) && ($ipn_trans->fields['paypal_ipn_id'] == $ipnInfo->paypal_ipn_id) ) {
+    if (isset($ipnInfo) && is_object($ipnInfo) && ($ipn_tran['paypal_ipn_id'] == $ipnInfo->paypal_ipn_id) ) {
       echo '              <tr id="defaultSelected" class="dataTableRowSelected" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="document.location.href=\'' . zen_href_link(FILENAME_ORDERS, 'page=' . $_GET['page'] . '&ipnID=' . $ipnInfo->paypal_ipn_id . '&oID=' . $ipnInfo->order_id . '&action=edit' . '&referer=ipn' . (zen_not_null($selected_status) ? '&payment_status=' . $selected_status : '') . (zen_not_null($paypal_ipn_sort_order) ? '&paypal_ipn_sort_order=' . $paypal_ipn_sort_order : '') ) . '\'">' . "\n";
     } else {
-      echo '              <tr class="dataTableRow" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="document.location.href=\'' . zen_href_link(FILENAME_PAYPAL, 'page=' . $_GET['page'] . '&ipnID=' . $ipn_trans->fields['paypal_ipn_id'] . (zen_not_null($selected_status) ? '&payment_status=' . $selected_status : '') . (zen_not_null($paypal_ipn_sort_order) ? '&paypal_ipn_sort_order=' . $paypal_ipn_sort_order : '') ) . '\'">' . "\n";
+      echo '              <tr class="dataTableRow" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="document.location.href=\'' . zen_href_link(FILENAME_PAYPAL, 'page=' . $_GET['page'] . '&ipnID=' . $ipn_tran['paypal_ipn_id'] . (zen_not_null($selected_status) ? '&payment_status=' . $selected_status : '') . (zen_not_null($paypal_ipn_sort_order) ? '&paypal_ipn_sort_order=' . $paypal_ipn_sort_order : '') ) . '\'">' . "\n";
     }
 ?>
-                <td class="dataTableContent"> <?php echo $ipn_trans->fields['order_id']; ?> </td>
-                <td class="dataTableContent"> <?php echo $ipn_trans->fields['paypal_ipn_id']; ?> </td>
-                <td class="dataTableContent"> <?php echo $ipn_trans->fields['txn_type'] . '<br />' . $ipn_trans->fields['first_name'] . ' ' . $ipn_trans->fields['last_name'] . ($ipn_trans->fields['payer_business_name'] != '' ? '<br />' . $ipn_trans->fields['payer_business_name'] : ''); ?>
-                <td class="dataTableContent"><?php echo $ipn_trans->fields['payment_status'] . '<br />Parent Trans ID:' . $ipn_trans->fields['parent_txn_id'] . '<br />Trans ID:' . $ipn_trans->fields['txn_id']; ?></td>
-                <td class="dataTableContent" align="right"><?php echo $ipn_trans->fields['mc_currency'] . ' '.number_format($ipn_trans->fields['mc_gross'], 2); ?></td>
-                <td class="dataTableContent" align="right"><?php if (isset($ipnInfo) && is_object($ipnInfo) && ($ipn_trans->fields['paypal_ipn_id'] == $ipnInfo->paypal_ipn_id) ) { echo zen_image(DIR_WS_IMAGES . 'icon_arrow_right.gif'); } else { echo '<a href="' . zen_href_link(FILENAME_PAYPAL, 'page=' . $_GET['page'] . '&ipnID=' . $ipn_trans->fields['paypal_ipn_id']) . (zen_not_null($selected_status) ? '&payment_status=' . $selected_status : '') . (zen_not_null($paypal_ipn_sort_order) ? '&paypal_ipn_sort_order=' . $paypal_ipn_sort_order : '') . '">' . zen_image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
+                <td class="dataTableContent"><?php echo $ipn_tran['order_id']; ?></td>
+                <td class="dataTableContent"><?php echo $ipn_tran['paypal_ipn_id']; ?></td>
+                <td class="dataTableContent"><?php echo $ipn_tran['txn_type'] . '<br>' . $ipn_tran['first_name'] . ' ' . $ipn_tran['last_name'] . ($ipn_tran['payer_business_name'] != '' ? '<br>' . $ipn_tran['payer_business_name'] : ''); ?>
+                <td class="dataTableContent"><?php echo $ipn_tran['payment_status'] . '<br>Parent Trans ID:' . $ipn_tran['parent_txn_id'] . '<br>Trans ID:' . $ipn_tran['txn_id']; ?></td>
+                <td class="dataTableContent text-right"><?php echo $ipn_tran['mc_currency'] . ' '.number_format($ipn_tran['mc_gross'], 2); ?></td>
+                <td class="dataTableContent text-right">
+                    <?php if (isset($ipnInfo) && is_object($ipnInfo) && ($ipn_tran['paypal_ipn_id'] == $ipnInfo->paypal_ipn_id) ) { echo zen_image(DIR_WS_IMAGES . 'icon_arrow_right.gif'); } else { echo '<a href="' . zen_href_link(FILENAME_PAYPAL, 'page=' . $_GET['page'] . '&ipnID=' . $ipn_tran['paypal_ipn_id']) . (zen_not_null($selected_status) ? '&payment_status=' . $selected_status : '') . (zen_not_null($paypal_ipn_sort_order) ? '&paypal_ipn_sort_order=' . $paypal_ipn_sort_order : '') . '">' . zen_image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>'; } ?></td>
               </tr>
 <?php
-    $ipn_trans->MoveNext();
   }
 ?>
               <tr>
-                <td colspan="5"><table border="0" width="100%" cellspacing="0" cellpadding="2">
-                  <tr>
-                    <td class="smallText" valign="top"><?php echo $ipn_split->display_count($ipn_query_numrows, MAX_DISPLAY_SEARCH_RESULTS_PAYPAL_IPN, $_GET['page'], "Displaying <strong>%d</strong> to <strong>%d</strong> (of <strong>%d</strong> IPN's)"); ?></td>
-                    <td class="smallText" align="right"><?php echo $ipn_split->display_links($ipn_query_numrows, MAX_DISPLAY_SEARCH_RESULTS_PAYPAL_IPN, MAX_DISPLAY_PAGE_LINKS, isset($_GET['page']) ? (int)$_GET['page'] : 1, zen_get_all_get_params(array('page'))); ?></td>
-                  </tr>
-                </table></td>
+                    <td colspan="3" class="smallText"><?php echo $ipn_split->display_count($ipn_query_numrows, MAX_DISPLAY_SEARCH_RESULTS_PAYPAL_IPN, $_GET['page'], TEXT_DISPLAY_PAYPAL_IPN_NUMBER_OF_TX); ?></td>
+                    <td colspan="3" class="smallText text-right"><?php echo $ipn_split->display_links($ipn_query_numrows, MAX_DISPLAY_SEARCH_RESULTS_PAYPAL_IPN, MAX_DISPLAY_PAGE_LINKS, isset($_GET['page']) ? (int)$_GET['page'] : 1, zen_get_all_get_params(['page'])); ?></td>
               </tr>
             </table></td>
 <?php
-  $heading = array();
-  $contents = array();
+  $heading = [];
+  $contents = [];
 
   switch ($action) {
     case 'new':
@@ -184,46 +156,36 @@
       break;
     default:
       if (isset($ipnInfo) && is_object($ipnInfo)) {
-        $heading[] = array('text' => '<strong>' . TEXT_INFO_PAYPAL_IPN_HEADING.' #' . $ipnInfo->paypal_ipn_id . '</strong>');
+        $heading[] = ['text' => '<strong>' . TEXT_INFO_PAYPAL_IPN_HEADING.' #' . $ipnInfo->paypal_ipn_id . '</strong>'];
         $ipn = $db->Execute("SELECT * FROM " . TABLE_PAYPAL_PAYMENT_STATUS_HISTORY . " WHERE paypal_ipn_id = '" . $ipnInfo->paypal_ipn_id . "'");
         $ipn_count = $ipn->RecordCount();
 
-        $contents[] = array('align' => 'center', 'text' => '<a href="' . zen_href_link(FILENAME_ORDERS, zen_get_all_get_params(array('ipnID', 'action')) . 'oID=' . $ipnInfo->order_id .'&' . 'ipnID=' . $ipnInfo->paypal_ipn_id .'&action=edit' . '&referer=ipn') . '">' . zen_image_button('button_orders.gif', IMAGE_ORDERS) . '</a>');
-        $contents[] = array('text' => '<br>' . TABLE_HEADING_NUM_HISTORY_ENTRIES . ': '. $ipn_count);
+        $contents[] = ['align' => 'center', 'text' => '<a href="' . zen_href_link(FILENAME_ORDERS, zen_get_all_get_params(['ipnID', 'action']) . 'oID=' . $ipnInfo->order_id .'&' . 'ipnID=' . $ipnInfo->paypal_ipn_id .'&action=edit' . '&referer=ipn') . '">' . zen_image_button('button_orders.gif', IMAGE_ORDERS) . '</a>'];
+        $contents[] = ['text' => '<br>' . TABLE_HEADING_NUM_HISTORY_ENTRIES . ': '. $ipn_count];
         $count = 1;
-        while (!$ipn->EOF) {
-          $contents[] = array('text' => '<br>' . TABLE_HEADING_ENTRY_NUM . ': '. $count);
-          $contents[] = array('text' =>  TABLE_HEADING_DATE_ADDED . ': '. zen_datetime_short($ipn->fields['date_added']));
-          $contents[] = array('text' =>  TABLE_HEADING_TRANS_ID . ': '.$ipn->fields['txn_id']);
-          $contents[] = array('text' =>  TABLE_HEADING_PAYMENT_STATUS . ': '.$ipn->fields['payment_status']);
-          $contents[] = array('text' =>  TABLE_HEADING_PENDING_REASON . ': '.$ipn->fields['pending_reason']);
+        foreach ($ipn as $ipn_status_history) {
+          $contents[] = ['text' => '<br>' . TABLE_HEADING_ENTRY_NUM . ': ' . $count];
+          $contents[] = ['text' =>  TABLE_HEADING_DATE_ADDED . ': ' . zen_datetime_short($ipn_status_history['date_added'])];
+          $contents[] = ['text' =>  TABLE_HEADING_TRANS_ID . ': ' . $ipn_status_history['txn_id']];
+          $contents[] = ['text' =>  TABLE_HEADING_PAYMENT_STATUS . ': ' . $ipn_status_history['payment_status']];
+          $contents[] = ['text' =>  TABLE_HEADING_PENDING_REASON . ': ' . $ipn_status_history['pending_reason']];
           $count++;
-          $ipn->MoveNext();
         }
       }
       break;
   }
 
   if ( (zen_not_null($heading)) && (zen_not_null($contents)) ) {
-    echo '            <td width="25%" valign="top">' . "\n";
-    $box = new box;
+    echo '            <td>' . "\n";
+    $box = new box();
     echo $box->infoBox($heading, $contents);
     echo '            </td>' . "\n";
   }
 ?>
           </tr>
-        </table></td>
-      </tr>
-    </table></td>
-<!-- body_text_eof //-->
-  </tr>
-</table>
-<!-- body_eof //-->
-
-<!-- footer //-->
-<?php require(DIR_WS_INCLUDES . 'footer.php'); ?>
-<!-- footer_eof //-->
-<br>
+        </table>
+</div>
+<?php require DIR_WS_INCLUDES . 'footer.php'; ?>
 </body>
 </html>
-<?php require(DIR_WS_INCLUDES . 'application_bottom.php'); ?>
+<?php require DIR_WS_INCLUDES . 'application_bottom.php'; ?>
