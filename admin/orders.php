@@ -30,7 +30,7 @@ if (!isset($_GET['list_order'])) $_GET['list_order'] = '';
 if (!isset($_GET['page'])) $_GET['page'] = '';
 
 include DIR_FS_CATALOG . DIR_WS_CLASSES . 'order.php';
-
+$show_including_tax = (DISPLAY_PRICE_WITH_TAX == 'true'); 
 // prepare order-status look-up list
 $orders_status_array = array();
 $orders_status = $db->Execute("SELECT orders_status_id, orders_status_name
@@ -677,10 +677,14 @@ if (zen_not_null($action) && $order_exists == true) {
               <th class="dataTableHeadingContent" colspan="2"><?php echo TABLE_HEADING_PRODUCTS; ?></th>
               <th class="dataTableHeadingContent"><?php echo TABLE_HEADING_PRODUCTS_MODEL; ?></th>
               <th class="dataTableHeadingContent text-right"><?php echo TABLE_HEADING_TAX; ?></th>
-              <th class="dataTableHeadingContent text-right"><?php echo TABLE_HEADING_PRICE_EXCLUDING_TAX; ?></th>
+              <th class="dataTableHeadingContent text-right"><?php echo ($show_including_tax) ? TABLE_HEADING_PRICE_EXCLUDING_TAX : TABLE_HEADING_PRICE; ?></th>
+<?php if ($show_including_tax)  { ?>
               <th class="dataTableHeadingContent text-right"><?php echo TABLE_HEADING_PRICE_INCLUDING_TAX; ?></th>
-              <th class="dataTableHeadingContent text-right"><?php echo TABLE_HEADING_TOTAL_EXCLUDING_TAX; ?></th>
+<?php } ?>
+              <th class="dataTableHeadingContent text-right"><?php echo ($show_including_tax) ? TABLE_HEADING_TOTAL_EXCLUDING_TAX : TABLE_HEADING_TOTAL; ?></th>
+<?php if ($show_including_tax)  { ?>
               <th class="dataTableHeadingContent text-right"><?php echo TABLE_HEADING_TOTAL_INCLUDING_TAX; ?></th>
+<?php } ?>
             </tr>
             <?php
             for ($i = 0, $n = sizeof($order->products); $i < $n; $i++) {
@@ -725,12 +729,15 @@ if (zen_not_null($action) && $order_exists == true) {
                 <td class="dataTableContent text-right">
                   <strong><?php echo $currencies->format($order->products[$i]['final_price'], true, $order->info['currency'], $order->info['currency_value']) . ($order->products[$i]['onetime_charges'] != 0 ? '<br>' . $currencies->format($order->products[$i]['onetime_charges'], true, $order->info['currency'], $order->info['currency_value']) : ''); ?></strong>
                 </td>
+<?php if ($show_including_tax)  { ?>
                 <td class="dataTableContent text-right">
                   <strong><?php echo $currencies->format(zen_add_tax($order->products[$i]['final_price'], $order->products[$i]['tax']), true, $order->info['currency'], $order->info['currency_value']) . ($order->products[$i]['onetime_charges'] != 0 ? '<br>' . $currencies->format(zen_add_tax($order->products[$i]['onetime_charges'], $order->products[$i]['tax']), true, $order->info['currency'], $order->info['currency_value']) : ''); ?></strong>
                 </td>
+<?php } ?>
                 <td class="dataTableContent text-right">
                   <strong><?php echo $currencies->format(zen_round($order->products[$i]['final_price'], $currencies->get_decimal_places($order->info['currency'])) * $order->products[$i]['qty'], true, $order->info['currency'], $order->info['currency_value']) . ($order->products[$i]['onetime_charges'] != 0 ? '<br>' . $currencies->format($order->products[$i]['onetime_charges'], true, $order->info['currency'], $order->info['currency_value']) : ''); ?></strong>
                 </td>
+<?php if ($show_including_tax)  { ?>
                 <td class="dataTableContent text-right">
                   <strong><?php echo $priceIncTax; ?>
                     <?php if ($order->products[$i]['onetime_charges'] != 0) {
@@ -739,12 +746,18 @@ if (zen_not_null($action) && $order_exists == true) {
                     ?>
                   </strong>
                 </td>
+<?php } ?>
               </tr>
               <?php
             }
             ?>
             <tr>
+
+<?php if ($show_including_tax)  { ?>
               <td colspan="8">
+<?php } else { ?>
+              <td colspan="6">
+<?php } ?>
                 <table style="margin-right: 0; margin-left: auto;">
                     <?php
                     for ($i = 0, $n = sizeof($order->totals); $i < $n; $i++) {
