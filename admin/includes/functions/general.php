@@ -2302,44 +2302,80 @@ function zen_copy_products_attributes($products_id_from, $products_id_to) {
   }
 
 /**
- * product pulldown with attributes
+ * products with attributes pulldown
+ * @param $name
+ * @param string $parameters
+ * @param string $exclude
+ * @param string $order_by
+ * @param string $filter_by_option_name
+ * @return string
  */
-  function zen_draw_products_pull_down_attributes($name, $parameters = '', $exclude = '') {
+function zen_draw_products_pull_down_attributes($name, $parameters = '', $exclude = '', $order_by = 'name', $filter_by_option_name = '')
+{
     global $db, $currencies;
 
     if ($exclude == '') {
-      $exclude = array();
+        $exclude = [];
     }
 
     $select_string = '<select name="' . $name . '"';
-
     if ($parameters) {
-      $select_string .= ' ' . $parameters;
+        $select_string .= ' ' . $parameters;
     }
-
     $select_string .= '>';
 
-    $new_fields=', p.products_model';
+    $new_fields = ', p.products_model';
 
-    $products = $db->Execute("select distinct p.products_id, pd.products_name, p.products_price" . $new_fields .
-        " from " . TABLE_PRODUCTS . " p, " .
-        TABLE_PRODUCTS_DESCRIPTION . " pd, " .
-        TABLE_PRODUCTS_ATTRIBUTES . " pa " .
-        " where p.products_id= pa.products_id and p.products_id = pd.products_id and pd.language_id = " . (int)$_SESSION['languages_id'] . " order by products_name");
-
-    while (!$products->EOF) {
-      if (!in_array($products->fields['products_id'], $exclude)) {
-        $display_price = zen_get_products_base_price($products->fields['products_id']);
-        $select_string .= '<option value="' . $products->fields['products_id'] . '">' . $products->fields['products_name'] . ' (' . TEXT_MODEL . ' ' . $products->fields['products_model'] . ') (' . $currencies->format($display_price) . ')</option>';
-      }
-      $products->MoveNext();
+    switch ($order_by) {
+        case ('model'):
+            $order_by = 'p.products_model';
+            $output_string = '<option value="%1$u"> %3$s - %2$s (%4$s)</option>'; // format string with model first
+            break;
+        default:
+            $order_by = 'pd.products_name';
+            $output_string = '<option value="%1$u">%2$s (%3$s) (%4$s)</option>';// format string with name first
+            break;
     }
 
+    switch (true) {
+        case ($filter_by_option_name === -1): // no selection made: do not list any products
+            // no selection made yet
+            break;
+        case ((int)$filter_by_option_name > 0) : // an Option Name was selected: show only products using attributes with this Option Name
+            $products = $db->Execute("SELECT distinct p.products_id, pd.products_name, p.products_price, pa.options_id" . $new_fields .
+                " FROM " . TABLE_PRODUCTS . " p, " .
+                TABLE_PRODUCTS_DESCRIPTION . " pd, " .
+                TABLE_PRODUCTS_ATTRIBUTES . " pa " . " 
+        WHERE p.products_id= pa.products_id 
+        AND p.products_id = pd.products_id 
+        AND pd.language_id = " . (int)$_SESSION['languages_id'] . " 
+        AND pa.options_id = " . (int)$filter_by_option_name . " 
+        ORDER BY " . $order_by);
+            break;
+        default: //legacy: show all products with attributes
+            $products = $db->Execute("SELECT distinct p.products_id, pd.products_name, p.products_price" . $new_fields .
+                " FROM " . TABLE_PRODUCTS . " p, " .
+                TABLE_PRODUCTS_DESCRIPTION . " pd, " .
+                TABLE_PRODUCTS_ATTRIBUTES . " pa " . " 
+        WHERE p.products_id = pa.products_id 
+        AND p.products_id = pd.products_id 
+        AND pd.language_id = " . (int)$_SESSION['languages_id'] . "    
+        ORDER BY " . $order_by);
+            break;
+    }
+
+    if (isset($products) && is_object($products)) {
+        foreach ($products as $product) {
+            if (!in_array($product['products_id'], $exclude, false)) {
+                $display_price = zen_get_products_base_price($product['products_id']);
+                $select_string .= sprintf($output_string, $product['products_id'], $product['products_name'], $product['products_model'], $currencies->format($display_price));
+            }
+        }
+    }
     $select_string .= '</select>';
 
     return $select_string;
-  }
-
+}
 
 /**
  * categories pulldown with products
@@ -2386,40 +2422,73 @@ function zen_copy_products_attributes($products_id_from, $products_id_to) {
   }
 
 /**
- * categories pulldown with products with attributes
+ * categories pulldown for products with attributes
+ * @param $name
+ * @param string $parameters
+ * @param string $exclude
+ * @param bool $show_full_path
+ * @param string $filter_by_option_name
+ * @return string
  */
-  function zen_draw_products_pull_down_categories_attributes($name, $parameters = '', $exclude = '') {
+function zen_draw_products_pull_down_categories_attributes($name, $parameters = '', $exclude = '', $show_full_path = false, $filter_by_option_name = '')
+{
     global $db, $currencies;
 
     if ($exclude == '') {
-      $exclude = array();
+        $exclude = [];
     }
 
     $select_string = '<select name="' . $name . '"';
-
     if ($parameters) {
-      $select_string .= ' ' . $parameters;
+        $select_string .= ' ' . $parameters;
     }
-
     $select_string .= '>';
 
-    $categories = $db->Execute("select distinct c.categories_id, cd.categories_name " .
-        " from " . TABLE_CATEGORIES . " c, " .
-        TABLE_CATEGORIES_DESCRIPTION . " cd, " .
-        TABLE_PRODUCTS_TO_CATEGORIES . " ptoc, " .
-        TABLE_PRODUCTS_ATTRIBUTES . " pa " .
-        " where pa.products_id= ptoc.products_id and ptoc.categories_id= c.categories_id and c.categories_id = cd.categories_id and cd.language_id = " . (int)$_SESSION['languages_id'] . " order by categories_name");
-    while (!$categories->EOF) {
-      if (!in_array($categories->fields['categories_id'], $exclude)) {
-        $select_string .= '<option value="' . $categories->fields['categories_id'] . '">' . $categories->fields['categories_name'] . '</option>';
-      }
-      $categories->MoveNext();
+    switch (true) {
+        case ($filter_by_option_name === ''): // no selection made: do not list any categories
+            // no selection made yet
+            break;
+        case ($filter_by_option_name > 0) : // an Option Name was selected: show only categories with products using attributes with this Option Name
+            $categories = $db->Execute("SELECT DISTINCT c.categories_id, cd.categories_name " .
+                " FROM " . TABLE_CATEGORIES . " c, " .
+                TABLE_CATEGORIES_DESCRIPTION . " cd, " .
+                TABLE_PRODUCTS_TO_CATEGORIES . " ptoc, " .
+                TABLE_PRODUCTS_ATTRIBUTES . " pa " . " 
+                WHERE pa.products_id= ptoc.products_id 
+                AND ptoc.categories_id= c.categories_id 
+                AND c.categories_id = cd.categories_id 
+                AND cd.language_id = " . (int)$_SESSION['languages_id'] . " 
+                AND pa.options_id =" . (int)$filter_by_option_name . " 
+                ORDER BY categories_name");
+            break;
+        default: //legacy: show all categories with products with attributes
+            $categories = $db->Execute("SELECT DISTINCT c.categories_id, cd.categories_name " .
+                " FROM " . TABLE_CATEGORIES . " c, " .
+                TABLE_CATEGORIES_DESCRIPTION . " cd, " .
+                TABLE_PRODUCTS_TO_CATEGORIES . " ptoc, " .
+                TABLE_PRODUCTS_ATTRIBUTES . " pa " . " 
+                WHERE pa.products_id= ptoc.products_id 
+                AND ptoc.categories_id= c.categories_id 
+                AND c.categories_id = cd.categories_id 
+                AND cd.language_id = " . (int)$_SESSION['languages_id'] . " 
+                ORDER BY categories_name");
+            break;
     }
-
+    if (isset($categories) && is_object($categories)) {
+        foreach ($categories as $category) {
+            if (!in_array($category['categories_id'], $exclude, false)) {
+                if ($show_full_path) {
+                    $select_string .= '<option value="' . $category['categories_id'] . '">' . zen_output_generated_category_path($category['categories_id']) . '</option>';
+                } else {
+                    $select_string .= '<option value="' . $category['categories_id'] . '">' . $category['categories_name'] . '</option>';
+                }
+            }
+        }
+    }
     $select_string .= '</select>';
 
     return $select_string;
-  }
+}
 
   function zen_has_product_attributes_downloads($products_id, $check_valid=false) {
     global $db;
