@@ -278,4 +278,6 @@ fieldset p{width:90%;margin:0 auto;}
 .gvBal{float:none;}
 #sendSpendWrapper{width:auto;}
 #checkoutSuccess fieldset .buttonRow.forward{margin:0 !important;}
+
+#checkoutConfirmDefault .forward, #checkoutPayment .forward, #checkoutShipping .forward{float:right;width:auto !important;}
 }
