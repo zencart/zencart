@@ -19,6 +19,7 @@ define('TABLE_HEADING_PAYMENT_METHOD', 'Payment<br />Shipping');
 define('TABLE_HEADING_ORDERS_ID','ID');
 
 define('TEXT_BILLING_SHIPPING_MISMATCH','Billing and Shipping does not match ');
+define('TEXT_CUSTOMER_COMMENTS_EXIST','Order has customer comments');
 
 define('TABLE_HEADING_COMMENTS', 'Comments');
 define('TABLE_HEADING_CUSTOMERS', 'Customers');
@@ -113,7 +114,6 @@ define('TEXT_MASK_CC_NUMBER','Mask this number');
 define('TEXT_INFO_EXPIRED_DATE', 'Expired Date:<br />');
 define('TEXT_INFO_EXPIRED_COUNT', 'Expired Count:<br />');
 
-define('TABLE_HEADING_CUSTOMER_COMMENTS', 'Customer<br />Comments');
 define('TEXT_COMMENTS_YES', 'Customer Comments - YES');
 define('TEXT_COMMENTS_NO', 'Customer Comments - NO');
 

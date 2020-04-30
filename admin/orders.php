@@ -390,6 +390,12 @@ if (zen_not_null($action) && $order_exists == true) {
     <link rel="stylesheet" type="text/css" href="includes/stylesheet.css">
     <link rel="stylesheet" type="text/css" media="print" href="includes/css/stylesheet_print.css">
     <link rel="stylesheet" type="text/css" href="includes/cssjsmenuhover.css" media="all" id="hoverJS">
+    <style>
+      .order_list_oID {
+         display: inline-block;
+         min-width: 80px; 
+       }
+    </style>
     <script src="includes/menu.js"></script>
     <script src ="includes/general.js"></script>
     <script>
@@ -1026,7 +1032,10 @@ if (zen_not_null($action) && $order_exists == true) {
         $extra_legends = '';
         $zco_notifier->notify('NOTIFY_ADMIN_ORDERS_MENU_LEGEND', array(), $extra_legends);
 ?>
-        <div class="row"><?php echo TEXT_LEGEND . ' ' . zen_image(DIR_WS_IMAGES . 'icon_status_red.gif', TEXT_BILLING_SHIPPING_MISMATCH, 10, 10) . ' ' . TEXT_BILLING_SHIPPING_MISMATCH . $extra_legends; ?></div>
+        <div class="row"><?php echo TEXT_LEGEND . ' ' . zen_image(DIR_WS_IMAGES . 'icon_status_red.gif', TEXT_BILLING_SHIPPING_MISMATCH, 10, 10) . ' ' . TEXT_BILLING_SHIPPING_MISMATCH . $extra_legends; ?>
+        &nbsp;&nbsp; 
+        <?php echo zen_image(DIR_WS_IMAGES . 'icon_yellow_on.gif', TEXT_COMMENTS_YES, 16, 16) . '&nbsp;' . TEXT_CUSTOMER_COMMENTS_EXIST; ?>
+        </div>
         <div class="row">
           <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9 configurationColumnLeft">
             <table class="table table-hover">
@@ -1067,7 +1076,7 @@ if (zen_not_null($action) && $order_exists == true) {
                   <td></td>
                   <td class="dataTableHeadingContent text-center"><?php echo TABLE_HEADING_DATE_PURCHASED; ?></td>
                   <td class="dataTableHeadingContent text-right"><?php echo TABLE_HEADING_STATUS; ?></td>
-                  <td class="dataTableHeadingContent text-center"><?php echo TABLE_HEADING_CUSTOMER_COMMENTS; ?></td>
+                  <td class="dataTableHeadingContent text-center">&nbsp;</td>
 <?php
   // -----
   // A watching observer can provide an associative array in the form:
@@ -1190,8 +1199,10 @@ if (zen_not_null($action) && $order_exists == true) {
 
                     $show_payment_type = $orders->fields['payment_module_code'] . '<br>' . $orders->fields['shipping_module_code'];
                     ?>
-                <td class="dataTableContent text-center"><?php echo $show_difference . $orders->fields['orders_id']; ?></td>
-                <td class="dataTableContent"><?php echo $show_payment_type; ?></td>
+                <td class="dataTableContent text-center">
+                     <a href="<?php echo zen_href_link(FILENAME_ORDERS, zen_get_all_get_params(array('oID', 'action')) . 'oID=' . $orders->fields['orders_id'] . '&action=edit', 'NONSSL') . '" class="btn btn-info" role="button">' . '<span class="order_list_oID">' . $orders->fields['orders_id'] . '</span>'; ?></a></td>
+                <td class="dataTableContent"><?php echo $show_payment_type; ?><br />
+                <?php echo $show_difference; ?></td>
                 <td class="dataTableContent"><?php echo '<a href="' . zen_href_link(FILENAME_CUSTOMERS, 'cID=' . $orders->fields['customers_id'], 'NONSSL') . '">' . zen_image(DIR_WS_ICONS . 'preview.gif', ICON_PREVIEW . ' ' . TABLE_HEADING_CUSTOMERS) . '</a>&nbsp;' . $orders->fields['customers_name'] . ($orders->fields['customers_company'] != '' ? '<br>' . $orders->fields['customers_company'] : ''); ?></td>
                 <td class="dataTableContent text-right"><?php echo strip_tags($orders->fields['order_total']); ?></td>
                 <td class="dataTableContent text-right">
