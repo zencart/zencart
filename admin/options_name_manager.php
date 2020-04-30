@@ -638,7 +638,7 @@ function translate_type_to_name($opt_type)
                     <td>&nbsp;</td>
                     <td colspan="6">
                       <div class="row">
-                        <div class="col-sm-12"><?php echo TEXT_OPTION_ATTIBUTE_MAX_LENGTH; ?></div>
+                        <div class="col-sm-12"><?php echo TEXT_OPTION_ATTRIBUTE_MAX_LENGTH; ?></div>
                       </div>
                       <?php echo $inputs2; ?>
                     </td>
