@@ -1172,9 +1172,11 @@ if (zen_not_null($action) && $order_exists == true) {
                     }
 
                     if (isset($oInfo) && is_object($oInfo) && ($orders->fields['orders_id'] == $oInfo->orders_id)) {
-                      echo '<tr id="defaultSelected" class="dataTableRowSelected">' . "\n";
+                      $link = zen_href_link(FILENAME_ORDERS, zen_get_all_get_params(array('oID', 'action')) . 'oID=' . $orders->fields['orders_id'] . '&action=edit', 'NONSSL'); 
+                      echo '<tr class="dataTableRow" onclick="window.location=\'' . $link . '\';" >' . "\n"; 
                     } else {
-                      echo '<tr class="dataTableRow">' . "\n";
+                      $link = zen_href_link(FILENAME_ORDERS, zen_get_all_get_params(array('oID', 'action')) . 'oID=' . $orders->fields['orders_id'], 'NONSSL'); 
+                      echo '<tr class="dataTableRow" onclick="window.location=\'' . $link . '\';" >' . "\n"; 
                     }
 
                     $show_difference = '';
