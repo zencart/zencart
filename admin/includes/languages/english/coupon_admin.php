@@ -149,3 +149,4 @@ define('TEXT_CONFIRM_REACTIVATE', 'Are you sure you want to restore this Coupon?
 define('SUCCESS_COUPON_FOUND', 'Discount Coupon found!');
 define('ERROR_COUPON_NOT_FOUND', 'Discount Coupon not found!');
 define('ERROR_NO_COUPON_CODE', 'Discount Coupon coupon code not entered!');
+define('ERROR_NO_COUPONS', 'No coupons'); 
