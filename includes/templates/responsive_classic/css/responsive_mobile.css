@@ -282,7 +282,7 @@ span.cssButton.normal_button.button.button_continue_shopping, .button_continue_s
 .cartRemoveItemDisplay input[type=checkbox]{display:none;}
 
 /*bof checkout*/
-#checkoutPayment .forward, #checkoutShipping .forward{float:none;width:95%;}
+#checkoutConfirmDefault .forward, #checkoutPayment .forward, #checkoutShipping .forward{float:right;width:auto !important;}
 #checkoutConfirmDefault input.submit_button, #checkoutPayment input.submit_button, #checkoutShipping input.submit_button, #checkoutShipping input.submit_button:hover{display:block !important;width:100% !important;}
 #checkoutConfirmDefault input.cssButtonHover, #checkoutPayment input.cssButtonHover, #checkoutShipping input.cssButtonHover{display:block !important;width:100% !important;}
 #checkoutConfirmDefaultHeadingComments{text-align:center;}
