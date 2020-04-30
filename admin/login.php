@@ -94,7 +94,7 @@ if ($expired && $message == '') {
                   <span class="input-group-addon">
                     <i class="fa fa-lg fa-user"></i>
                   </span>
-                  <?php echo zen_draw_input_field('admin_name', zen_output_string($admin_name), 'class="form-control input-lg" id="admin_name-' . $_SESSION['securityToken'] . '" autocapitalize="none" spellcheck="false" autocomplete="off" autofocus placeholder="' . TEXT_ADMIN_NAME . '"') . PHP_EOL; ?>
+                  <?php echo zen_draw_input_field('admin_name', zen_output_string($admin_name), 'class="form-control input-lg" id="admin_name-' . $_SESSION['securityToken'] . '" autocapitalize="none" spellcheck="false" autocomplete="username" autofocus placeholder="' . TEXT_ADMIN_NAME . '"') . PHP_EOL; ?>
                 </div>
               </div>
               <div class="form-group">
@@ -102,7 +102,7 @@ if ($expired && $message == '') {
                   <span class="input-group-addon">
                     <i class="fa fa-lg fa-lock"></i>
                   </span>
-                  <?php echo zen_draw_password_field('admin_pass', '', false, 'class="form-control input-lg" id="admin_pass" placeholder="' . TEXT_ADMIN_PASS . '"', false) . PHP_EOL; ?>
+                  <?php echo zen_draw_password_field('admin_pass', '', false, 'class="form-control input-lg" id="admin_pass" autocomplete="current-password" placeholder="' . TEXT_ADMIN_PASS . '"') . PHP_EOL; ?>
                 </div>
               </div>
               <div class="form-group">
@@ -127,16 +127,16 @@ if ($expired && $message == '') {
                 <p class="login-alert-warning alert alert-warning"><?php echo $message; ?></p>
               <?php } ?>
               <div class="form-group">
-                <?php echo zen_draw_input_field('admin_name-' . $_SESSION['securityToken'], zen_output_string($admin_name), 'class="form-control input-lg" id="admin_name" autocapitalize="none" spellcheck="false" autocomplete="off" placeholder="' . TEXT_ADMIN_NAME . '"'); ?>
+                <?php echo zen_draw_input_field('admin_name-' . $_SESSION['securityToken'], zen_output_string($admin_name), 'class="form-control input-lg" id="admin_name" autocapitalize="none" spellcheck="false" autocomplete="username" placeholder="' . TEXT_ADMIN_NAME . '"'); ?>
               </div>
               <div class="form-group">
-                <?php echo zen_draw_password_field('oldpwd-' . $_SESSION['securityToken'], '', false, 'class="form-control input-lg" id="old_pwd" placeholder="' . TEXT_ADMIN_OLD_PASSWORD . '"', false); ?>
+                <?php echo zen_draw_password_field('oldpwd-' . $_SESSION['securityToken'], '', false, 'class="form-control input-lg" id="old_pwd" placeholder="' . TEXT_ADMIN_OLD_PASSWORD . '" autocomplete="current-password"'); ?>
               </div>
               <div class="form-group">
-                <?php echo zen_draw_password_field('newpwd-' . $_SESSION['securityToken'], '', false, 'class="form-control input-lg" id="admin_pass" placeholder="' . TEXT_ADMIN_NEW_PASSWORD . '"', false); ?>
+                <?php echo zen_draw_password_field('newpwd-' . $_SESSION['securityToken'], '', false, 'class="form-control input-lg" id="admin_pass" placeholder="' . TEXT_ADMIN_NEW_PASSWORD . '" autocomplete="new-password"'); ?>
               </div>
               <div class="form-group">
-                <?php echo zen_draw_password_field('confpwd-' . $_SESSION['securityToken'], '', false, 'class="form-control input-lg" id="admin_pass2" placeholder="' . TEXT_ADMIN_CONFIRM_PASSWORD . '"', false); ?>
+                <?php echo zen_draw_password_field('confpwd-' . $_SESSION['securityToken'], '', false, 'class="form-control input-lg" id="admin_pass2" placeholder="' . TEXT_ADMIN_CONFIRM_PASSWORD . '" autocomplete="new-password"'); ?>
               </div>
               <div class="form-group">
                 <button type="submit" class="btn btn-primary btn-lg"><?php echo TEXT_SUBMIT; ?></button>

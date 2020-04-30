@@ -347,6 +347,10 @@ class systemChecker
           return true;
       }
 
+      if (preg_match('/nginx/i', $_SERVER['SERVER_SOFTWARE'])) {
+          return true;
+      }
+
       global $request_type;
       $tests = [];
 

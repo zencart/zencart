@@ -14,8 +14,12 @@ class LanguageManager
 
     public function getLanguagesInstalled()
     {
-        $this->languagesInstalled = require(DIR_FS_INSTALL . $this->langPath . 'languages_installed.php');
-        return $this->languagesInstalled;
+        $infoFiles = $this->listFilesFromDirectory(DIR_FS_INSTALL . $this->langPath, '~^lng_info.*\.php$~i');
+        $this->languagesInstalled = [];
+        foreach ($infoFiles as $infoFile) {
+            $infoData = require(DIR_FS_INSTALL . $this->langPath . $infoFile);
+            $this->languagesInstalled = array_merge($this->languagesInstalled, $infoData);
+        }
     }
 
     public function loadLanguageDefines($lng, $currentPage, $fallback = 'en_us')
@@ -52,5 +56,17 @@ class LanguageManager
             }
             define($defineKey, $defineValue);
         }
+    }
+    protected function listFilesFromDirectory($rootDir, $fileRegx)
+    {
+        if (!$dir = @dir($rootDir)) return [];
+        $fileList = [];
+        while ($file = $dir->read()) {
+            if (preg_match($fileRegx, $file) > 0) {
+                $fileList[] = basename($rootDir . '/' . $file);
+            }
+        }
+        $dir->close();
+        return $fileList;
     }
 }

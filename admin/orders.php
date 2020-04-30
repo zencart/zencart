@@ -388,7 +388,7 @@ if (zen_not_null($action) && $order_exists == true) {
     <meta charset="<?php echo CHARSET; ?>">
     <title><?php echo TITLE; ?></title>
     <link rel="stylesheet" type="text/css" href="includes/stylesheet.css">
-    <link rel="stylesheet" type="text/css" media="print" href="includes/stylesheet_print.css">
+    <link rel="stylesheet" type="text/css" media="print" href="includes/css/stylesheet_print.css">
     <link rel="stylesheet" type="text/css" href="includes/cssjsmenuhover.css" media="all" id="hoverJS">
     <script src="includes/menu.js"></script>
     <script src ="includes/general.js"></script>
@@ -465,7 +465,7 @@ if (zen_not_null($action) && $order_exists == true) {
                 <?php
                 echo zen_draw_form('orders', FILENAME_ORDERS, '', 'get', '', true);
                 echo zen_draw_label(HEADING_TITLE_SEARCH, 'oID', 'class="sr-only"');
-                echo zen_draw_input_field('oID', '', 'size="11" id="oID" class="form-control" placeholder="' . HEADING_TITLE_SEARCH . '"', '', 'number');
+                echo zen_draw_input_field('oID', '', 'id="oID" class="form-control" placeholder="' . HEADING_TITLE_SEARCH . '"', '', 'number');
                 echo zen_draw_hidden_field('action', 'edit');
                 echo '</form>';
                 ?>
@@ -536,7 +536,7 @@ if (zen_not_null($action) && $order_exists == true) {
               </span>
               <?php
               echo zen_draw_form('input_oid', FILENAME_ORDERS, '', 'get', '', true);
-              echo zen_draw_input_field('oID', '', 'size="11" class="form-control" placeholder="' . SELECT_ORDER_LIST . '"', '', 'number');
+              echo zen_draw_input_field('oID', '', 'class="form-control" placeholder="' . SELECT_ORDER_LIST . '"', '', 'number');
               echo zen_draw_hidden_field('action', 'edit');
               echo '</form>';
               ?>
@@ -662,7 +662,7 @@ if (zen_not_null($action) && $order_exists == true) {
           <?php $zco_notifier->notify('NOTIFY_ADMIN_ORDERS_PAYMENTDATA_COLUMN2', $oID, $order); ?>
         </div>
         <?php
-        if (is_object($module) && method_exists($module, 'admin_notification')) {
+        if (isset($module) && (is_object($module) && method_exists($module, 'admin_notification'))) {
           ?>
           <div class="row"><?php echo zen_draw_separator('pixel_trans.gif', '1', '10'); ?></div>
           <div class="row"><?php echo $module->admin_notification($oID); ?></div>

@@ -858,7 +858,7 @@
         break;
       }
 
-    $button_check = $db->Execute("SELECT product_is_call, products_quantity FROM " . TABLE_PRODUCTS . " WHERE products_id = '" . (int)$product_id . "'");
+    $button_check = $db->Execute("SELECT product_is_call, products_quantity FROM " . TABLE_PRODUCTS . " WHERE products_id = " . (int)$product_id);
     switch (true) {
 // cannot be added to the cart
     case (zen_get_products_allow_add_to_cart($product_id) == 'N'):
@@ -1044,11 +1044,13 @@
     global $db;
     $sql = "SELECT * FROM " . TABLE_GET_TERMS_TO_FILTER;
     $query_result = $db->Execute($sql);
-    $retVal = false;
+
     foreach ($query_result as $row) {
-      if (isset($_GET[$row['get_term_name']]) && zen_not_null($_GET[$row['get_term_name']])) $retVal = true;
+      if (isset($_GET[$row['get_term_name']]) && zen_not_null($_GET[$row['get_term_name']])) {
+        return true;
+      }
     }
-    return $retVal;
+    return false;
   }
 
 
