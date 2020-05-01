@@ -20,6 +20,7 @@ class LanguageManager
             $infoData = require(DIR_FS_INSTALL . $this->langPath . $infoFile);
             $this->languagesInstalled = array_merge($this->languagesInstalled, $infoData);
         }
+	return $this->languagesInstalled;
     }
 
     public function loadLanguageDefines($lng, $currentPage, $fallback = 'en_us')
