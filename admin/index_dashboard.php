@@ -77,17 +77,16 @@ for ($i = 0, $salesData = ''; $i < $report->size; $i++) {
 }
 
 // Build the whos-online graph
-$whos_online = $db->Execute("SELECT customer_id, full_name, ip_address, time_entry, time_last_click, last_page_url, session_id, host_address, user_agent FROM " . TABLE_WHOS_ONLINE);
+$whos_online = $db->ExecuteNoCache("SELECT customer_id, full_name, ip_address, time_entry, time_last_click, last_page_url, session_id, host_address, user_agent FROM " . TABLE_WHOS_ONLINE);
 // Initialize array variables for display.
 $user_array = $guest_array = $spider_array = [0 => 0, 1 => 0, 2 => 0, 3 => 0];
 $status = 0;
 
 foreach ($whos_online as $session) {
-  $which_query = $db->Execute("SELECT sesskey, value FROM " . TABLE_SESSIONS . " WHERE sesskey = '" . $session['session_id'] . "'");
-  $who_query = $db->Execute("SELECT session_id, time_entry, time_last_click, host_address, user_agent FROM " . TABLE_WHOS_ONLINE . " WHERE session_id = '" . $session['session_id'] . "'");
+  $which_query = $db->ExecuteNoCache("SELECT sesskey, value FROM " . TABLE_SESSIONS . " WHERE sesskey = '" . $session['session_id'] . "'");
+  $who_query = $db->ExecuteNoCache("SELECT session_id, time_entry, time_last_click, host_address, user_agent FROM " . TABLE_WHOS_ONLINE . " WHERE session_id = '" . $session['session_id'] . "'");
 
-// longer than 3 minutes light color
-  $xx_mins_ago_long = (time() - 180);
+  $xx_mins_ago_long = (time() - (int)WHOIS_TIMER_INACTIVE);
 
   switch (true) {
     case ($which_query->RecordCount() == 0):

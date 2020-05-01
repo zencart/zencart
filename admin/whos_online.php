@@ -19,38 +19,37 @@ function zen_check_bot($value) {
 
 function zen_check_quantity($which) {
   global $db;
-  $which_query = $db->Execute("SELECT sesskey, value
+  $which_query = $db->ExecuteNoCache("SELECT sesskey, value
                                FROM " . TABLE_SESSIONS . "
                                WHERE sesskey= '" . $which . "'");
 
-  $who_query = $db->Execute("SELECT session_id, time_entry, time_last_click, host_address, user_agent
+  $who_query = $db->ExecuteNoCache("SELECT session_id, time_entry, time_last_click, host_address, user_agent
                              FROM " . TABLE_WHOS_ONLINE . "
                              WHERE session_id='" . $which . "'");
 
-  // longer than 2 minutes light color
   $xx_mins_ago_long = (time() - (int)WHOIS_TIMER_INACTIVE);
 
   $chk_cart_status = base64_decode($which_query->fields['value']);
   switch (true) {
     case ($which_query->RecordCount() == 0):
       if ($who_query->fields['time_last_click'] < $xx_mins_ago_long) {
-        return zen_image(DIR_WS_IMAGES . 'icon_status_red_light.gif');
+        return zen_image(DIR_WS_IMAGES . 'icon_status_red_light.gif'); // 3 
       } else {
-        return zen_image(DIR_WS_IMAGES . 'icon_status_red.gif');
+        return zen_image(DIR_WS_IMAGES . 'icon_status_red.gif'); // 2
       }
       break;
     case (strstr($chk_cart_status, '"contents";a:0:')):
       if ($who_query->fields['time_last_click'] < $xx_mins_ago_long) {
-        return zen_image(DIR_WS_IMAGES . 'icon_status_red_light.gif');
+        return zen_image(DIR_WS_IMAGES . 'icon_status_red_light.gif'); // 3
       } else {
-        return zen_image(DIR_WS_IMAGES . 'icon_status_red.gif');
+        return zen_image(DIR_WS_IMAGES . 'icon_status_red.gif'); // 2 
       }
       break;
     case (!strstr($chk_cart_status, '"contents";a:0:')):
       if ($who_query->fields['time_last_click'] < $xx_mins_ago_long) {
-        return zen_image(DIR_WS_IMAGES . 'icon_status_yellow.gif');
+        return zen_image(DIR_WS_IMAGES . 'icon_status_yellow.gif'); // 1
       } else {
-        return zen_image(DIR_WS_IMAGES . 'icon_status_green.gif');
+        return zen_image(DIR_WS_IMAGES . 'icon_status_green.gif'); // 0 
       }
       break;
   }
