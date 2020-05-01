@@ -573,7 +573,7 @@ function go_option() {
                 <td colspan="3" class="pageHeading">&nbsp;<?php echo $values_values->fields['products_options_values_name']; ?>&nbsp;</td>
               </tr>
               <tr>
-                <td colspan="4"><?php echo zen_black_line(); ?></td>
+                <td colspan="4"><hr></td>
               </tr>
 <?php
     $products_values = $db->Execute("select p.products_id, pd.products_name, po.products_options_name, pa.options_id
@@ -607,7 +607,7 @@ function go_option() {
                     <td class="dataTableHeadingContent">&nbsp;<?php echo TABLE_HEADING_OPT_NAME; ?>&nbsp;</td>
                   </tr>
                   <tr>
-                    <td colspan="4"><?php echo zen_black_line(); ?></td>
+                    <td colspan="4"><hr></td>
                   </tr>
 
 <?php
@@ -625,7 +625,7 @@ function go_option() {
       }
 ?>
                   <tr>
-                    <td colspan="4"><?php echo zen_black_line(); ?></td>
+                    <td colspan="4"><hr></td>
                   </tr>
                   <tr>
                     <td class="main" colspan="3"><br /><?php echo TEXT_WARNING_OF_DELETE; ?></td>
@@ -703,7 +703,7 @@ function go_option() {
                 </td>
               </tr>
               <tr>
-                <td colspan="6"><?php echo zen_black_line(); ?></td>
+                <td colspan="6"><hr></td>
               </tr>
               <tr class="dataTableHeadingRow">
                 <td class="dataTableHeadingContent">&nbsp;<?php echo TABLE_HEADING_ID; ?>&nbsp;</td>
@@ -713,7 +713,7 @@ function go_option() {
                 <td class="dataTableHeadingContent" align="center">&nbsp;<?php echo TABLE_HEADING_ACTION; ?>&nbsp;</td>
               </tr>
               <tr>
-                <td colspan="6"><?php echo zen_black_line(); ?></td>
+                <td colspan="6"><hr></td>
               </tr>
 <?php
     $next_id = 1;
@@ -806,7 +806,7 @@ function go_option() {
 ?>
               </tr>
               <tr>
-                <td colspan="5"><?php echo zen_black_line(); ?></td>
+                <td colspan="5"><hr></td>
               </tr>
 <?php
     if ($action != 'update_option_value') {
@@ -844,7 +844,7 @@ function go_option() {
 ?>
               </tr>
               <tr>
-                <td colspan="5"><?php echo zen_black_line(); ?></td>
+                <td colspan="5"><hr></td>
               </tr>
 <?php
     }

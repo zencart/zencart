@@ -463,7 +463,7 @@ function go_option() {
       if ($products->RecordCount()> 10) {
 ?>
                   <tr>
-                    <td colspan="3"><?php echo zen_black_line(); ?></td>
+                    <td colspan="3"><hr></td>
                   </tr>
                   <tr>
                     <td colspan="2" class="main"><br /><?php echo '<strong>' . TEXT_OPTION_NAME . ':</strong> ' . zen_options_name((int)$_GET['option_id']) . '<br />' . TEXT_WARNING_OF_DELETE; ?></td>
@@ -478,7 +478,7 @@ function go_option() {
                     <td class="dataTableHeadingContent">&nbsp;<?php echo TABLE_HEADING_OPT_VALUE; ?>&nbsp;</td>
                   </tr>
                   <tr>
-                    <td colspan="3"><?php echo zen_black_line(); ?></td>
+                    <td colspan="3"><hr></td>
                   </tr>
 <?php
       $rows = 0;
@@ -495,14 +495,14 @@ function go_option() {
       }
 ?>
                   <tr>
-                    <td colspan="3"><?php echo zen_black_line(); ?></td>
+                    <td colspan="3"><hr></td>
                   </tr>
                   <tr>
                     <td colspan="2" class="main"><br /><?php echo TEXT_WARNING_OF_DELETE; ?></td>
                     <td align="right" colspan="3" class="main"><br /><?php echo '<a href="' . zen_admin_href_link(FILENAME_OPTIONS_NAME_MANAGER, (isset($_GET['option_page']) ? '&option_page=' . $_GET['option_page'] . '&' : '') . (isset($_GET['value_page']) ? '&value_page=' . $_GET['value_page'] . '&' : '') . (isset($_GET['attribute_page']) ? '&attribute_page=' . $_GET['attribute_page'] : '') . '&option_order_by=' . $option_order_by ) . '">'; ?><?php echo zen_image_button('button_cancel.gif', ' cancel '); ?></a>&nbsp;</td>
                   </tr>
                   <tr>
-                    <td colspan="3"><?php echo zen_black_line(); ?></td>
+                    <td colspan="3"><hr></td>
                   </tr>
 <?php
     } else {
@@ -584,7 +584,7 @@ function go_option() {
                 </td>
               </tr>
               <tr>
-                <td colspan="7"><?php echo zen_black_line(); ?></td>
+                <td colspan="7"><hr></td>
               </tr>
               <tr class="dataTableHeadingRow">
                 <td class="dataTableHeadingContent">&nbsp;<?php echo TABLE_HEADING_ID; ?>&nbsp;</td>
@@ -596,7 +596,7 @@ function go_option() {
                 <td class="dataTableHeadingContent" align="center">&nbsp;<?php echo TABLE_HEADING_ACTION; ?>&nbsp;</td>
               </tr>
               <tr>
-                <td colspan="7"><?php echo zen_black_line(); ?></td>
+                <td colspan="7"><hr></td>
               </tr>
 <?php
     $next_id = 1;
@@ -698,7 +698,7 @@ function go_option() {
     }
 ?>
               <tr>
-                <td colspan="7"><?php echo zen_black_line(); ?></td>
+                <td colspan="7"><hr></td>
               </tr>
 <?php
 // add option name
@@ -723,7 +723,7 @@ function go_option() {
 ?>
               </tr>
               <tr>
-                <td colspan="7"><?php echo zen_black_line(); ?></td>
+                <td colspan="7"><hr></td>
               </tr>
 <?php
     }

@@ -1057,7 +1057,7 @@ if ($action == '') {
             </td>
           </tr>
           <tr>
-            <td colspan="10"><?php echo zen_black_line(); ?></td>
+            <td colspan="10"><hr></td>
           </tr>
           <tr class="dataTableHeadingRow">
             <td class="dataTableHeadingContent">&nbsp;<?php echo TABLE_HEADING_ID; ?>&nbsp;</td>
@@ -1072,7 +1072,7 @@ if ($action == '') {
             <td class="dataTableHeadingContent" align="center">&nbsp;<?php echo TABLE_HEADING_ACTION; ?>&nbsp;</td>
           </tr>
           <tr>
-            <td colspan="10"><?php echo zen_black_line(); ?></td>
+            <td colspan="10"><hr></td>
           </tr>
 
 <?php
@@ -1146,7 +1146,7 @@ if ($action == '') {
             <td colspan="10"><?php echo zen_draw_separator('pixel_trans.gif', '100%', '10'); ?></td>
           </tr>
           <tr>
-            <td colspan="10"><?php echo zen_black_line(); ?></td>
+            <td colspan="10"><hr></td>
           </tr>
 
 <tr><td colspan="10" class="attributeBoxContent"><table border="0" width="100%">
@@ -1430,7 +1430,7 @@ if ($action == '') {
 </table></td></tr>
 
           <tr>
-            <td colspan="10"><?php echo zen_black_line(); ?></td>
+            <td colspan="10"><hr></td>
           </tr>
           <tr>
             <td colspan="10"><?php echo zen_draw_separator('pixel_trans.gif', '100%', '10'); ?></td>
@@ -1443,7 +1443,7 @@ if ($action == '') {
         echo zen_draw_hidden_field('delete_attribute_id', $_GET['attribute_id']);
         ?>
           <tr>
-            <td colspan="10"><?php echo zen_black_line(); ?></td>
+            <td colspan="10"><hr></td>
           </tr>
           <tr class="attributeBoxContent">
             <td align="left" colspan="6" class="pageHeading"><?php echo PRODUCTS_ATTRIBUTES_DELETE; ?></td><td colspan="3" align="center" class="pageHeading"><?php echo PRODUCTS_ATTRIBUTES_DELETE; ?></td>
@@ -1463,7 +1463,7 @@ if ($action == '') {
             <td colspan="10" class="attributeBoxContent">&nbsp;</td>
           </tr>
           <tr>
-            <td colspan="10"><?php echo zen_black_line(); ?></td>
+            <td colspan="10"><hr></td>
           </tr>
           <tr>
 <?php
@@ -1607,7 +1607,7 @@ if ($action == '') {
   if (($action != 'update_attribute' and $action != 'delete_product_attribute')) {
 ?>
           <tr>
-            <td colspan="10"><?php echo zen_black_line(); ?></td>
+            <td colspan="10"><hr></td>
           </tr>
 
 <!-- bof_adding -->
