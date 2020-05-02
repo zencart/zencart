@@ -130,3 +130,5 @@ define('TEXT_MAP_CUSTOMER_ADDRESS', 'Map Customer Address');
 define('TEXT_MAP_SHIPPING_ADDRESS', 'Map Shipping Address');
 define('TEXT_MAP_BILLING_ADDRESS', 'Map Billing Address');
 
+define('TEXT_EMAIL_LANGUAGE', 'order language: %s');
+define('SUCCESS_EMAIL_SENT', 'Email %s sent to customer');
