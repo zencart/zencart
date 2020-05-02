@@ -215,7 +215,7 @@ if (zen_not_null($action) && $order_exists == true) {
       }
 
       $email_include_message = (isset($_POST['notify_comments']) && $_POST['notify_comments'] == 'on');
-      $customer_notified = (int)(isset($_POST['notify']) ? $_POST['notify'] : '0');
+      $customer_notified = isset($_POST['notify']) ? (int)$_POST['notify'] : 0;
 
       // -----
       // Give an observer the opportunity to add to the to-be-recorded comments and/or
