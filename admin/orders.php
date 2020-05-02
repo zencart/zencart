@@ -675,15 +675,15 @@ if (zen_not_null($action) && $order_exists == true) {
           <table class="table">
             <tr class="dataTableHeadingRow">
               <th class="dataTableHeadingContent" colspan="2"><?php echo TABLE_HEADING_PRODUCTS; ?></th>
-              <th class="dataTableHeadingContent"><?php echo TABLE_HEADING_PRODUCTS_MODEL; ?></th>
-              <th class="dataTableHeadingContent text-right"><?php echo TABLE_HEADING_TAX; ?></th>
+              <th class="dataTableHeadingContent hidden-xs"><?php echo TABLE_HEADING_PRODUCTS_MODEL; ?></th>
+              <th class="dataTableHeadingContent text-right hidden-xs"><?php echo TABLE_HEADING_TAX; ?></th>
               <th class="dataTableHeadingContent text-right"><?php echo ($show_including_tax) ? TABLE_HEADING_PRICE_EXCLUDING_TAX : TABLE_HEADING_PRICE; ?></th>
 <?php if ($show_including_tax)  { ?>
-              <th class="dataTableHeadingContent text-right"><?php echo TABLE_HEADING_PRICE_INCLUDING_TAX; ?></th>
+              <th class="dataTableHeadingContent text-right hidden-xs"><?php echo TABLE_HEADING_PRICE_INCLUDING_TAX; ?></th>
 <?php } ?>
               <th class="dataTableHeadingContent text-right"><?php echo ($show_including_tax) ? TABLE_HEADING_TOTAL_EXCLUDING_TAX : TABLE_HEADING_TOTAL; ?></th>
 <?php if ($show_including_tax)  { ?>
-              <th class="dataTableHeadingContent text-right"><?php echo TABLE_HEADING_TOTAL_INCLUDING_TAX; ?></th>
+              <th class="dataTableHeadingContent text-right hidden-xs"><?php echo TABLE_HEADING_TOTAL_INCLUDING_TAX; ?></th>
 <?php } ?>
             </tr>
             <?php
@@ -718,19 +718,23 @@ if (zen_not_null($action) && $order_exists == true) {
                         echo '</i></small></span>';
                       }
                     }
+                    // Mobile phones only
+                    echo '<span class="hidden-sm-up">'; 
+                    echo ' (' . $order->products[$i]['model'] .')'; 
+                    echo '</span>'; 
                 ?>
                 </td>
-                <td class="dataTableContent">
+                <td class="dataTableContent hidden-xs">
                   <?php echo $order->products[$i]['model']; ?>
                 </td>
-                <td class="dataTableContent text-right">
+                <td class="dataTableContent text-right hidden-xs">
                   <?php echo zen_display_tax_value($order->products[$i]['tax']); ?>%
                 </td>
                 <td class="dataTableContent text-right">
                   <strong><?php echo $currencies->format($order->products[$i]['final_price'], true, $order->info['currency'], $order->info['currency_value']) . ($order->products[$i]['onetime_charges'] != 0 ? '<br>' . $currencies->format($order->products[$i]['onetime_charges'], true, $order->info['currency'], $order->info['currency_value']) : ''); ?></strong>
                 </td>
 <?php if ($show_including_tax)  { ?>
-                <td class="dataTableContent text-right">
+                <td class="dataTableContent text-right hidden-xs">
                   <strong><?php echo $currencies->format(zen_add_tax($order->products[$i]['final_price'], $order->products[$i]['tax']), true, $order->info['currency'], $order->info['currency_value']) . ($order->products[$i]['onetime_charges'] != 0 ? '<br>' . $currencies->format(zen_add_tax($order->products[$i]['onetime_charges'], $order->products[$i]['tax']), true, $order->info['currency'], $order->info['currency_value']) : ''); ?></strong>
                 </td>
 <?php } ?>
@@ -738,7 +742,7 @@ if (zen_not_null($action) && $order_exists == true) {
                   <strong><?php echo $currencies->format(zen_round($order->products[$i]['final_price'], $currencies->get_decimal_places($order->info['currency'])) * $order->products[$i]['qty'], true, $order->info['currency'], $order->info['currency_value']) . ($order->products[$i]['onetime_charges'] != 0 ? '<br>' . $currencies->format($order->products[$i]['onetime_charges'], true, $order->info['currency'], $order->info['currency_value']) : ''); ?></strong>
                 </td>
 <?php if ($show_including_tax)  { ?>
-                <td class="dataTableContent text-right">
+                <td class="dataTableContent text-right hidden-xs">
                   <strong><?php echo $priceIncTax; ?>
                     <?php if ($order->products[$i]['onetime_charges'] != 0) {
                           echo '<br>' . $currencies->format(zen_add_tax($order->products[$i]['onetime_charges'], $order->products[$i]['tax']), true, $order->info['currency'], $order->info['currency_value']);
@@ -790,7 +794,7 @@ if (zen_not_null($action) && $order_exists == true) {
             <thead>
               <tr>
                 <th class="text-center"><?php echo TABLE_HEADING_DATE_ADDED; ?></th>
-                <th class="text-center"><?php echo TABLE_HEADING_CUSTOMER_NOTIFIED; ?></th>
+                <th class="text-center hidden-xs"><?php echo TABLE_HEADING_CUSTOMER_NOTIFIED; ?></th>
                 <th class="text-center"><?php echo TABLE_HEADING_STATUS; ?></th>
 <?php
   // -----
@@ -818,7 +822,7 @@ if (zen_not_null($action) && $order_exists == true) {
   }
 ?>
                 <th class="text-center"><?php echo TABLE_HEADING_COMMENTS; ?></th>
-                <th class="text-center"><?php echo TABLE_HEADING_UPDATED_BY; ?></th>
+                <th class="text-center hidden-xs"><?php echo TABLE_HEADING_UPDATED_BY; ?></th>
               </tr>
             </thead>
             <tbody>
@@ -834,7 +838,7 @@ if (zen_not_null($action) && $order_exists == true) {
                     ?>
                   <tr>
                     <td class="text-center"><?php echo zen_datetime_short($item['date_added']); ?></td>
-                    <td class="text-center">
+                    <td class="text-center hidden-xs">
                         <?php
                         if ($item['customer_notified'] == '1') {
                           echo zen_image(DIR_WS_ICONS . 'tick.gif', TEXT_YES);
@@ -881,7 +885,7 @@ if (zen_not_null($action) && $order_exists == true) {
                         }
 ?>
                     </td>
-                    <td class="text-center"><?php echo (!empty($item['updated_by'])) ? $item['updated_by'] : '&nbsp;'; ?></td>
+                    <td class="text-center hidden-xs"><?php echo (!empty($item['updated_by'])) ? $item['updated_by'] : '&nbsp;'; ?></td>
                   </tr>
                   <?php
                 }
