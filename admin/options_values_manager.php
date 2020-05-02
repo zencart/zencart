@@ -806,7 +806,7 @@ if (zen_not_null($action)) {
                       <td>&nbsp;</td>
                     <?php } else { ?>
                       <td class="text-right">
-                        <a href="<?php echo zen_href_link(FILENAME_OPTIONS_VALUES_MANAGER, 'action=update_option_value&value_id=' . $values_value['products_options_values_id'] . '&' . ($currentPage !== 0 ? 'page=' . $currentPage . '&' : '') . ($filter !== 0 ? 'set_filter=' . $filter . '&' : '') . ($max_search_results != 0 ? 'max_search_results=' . $max_search_results : '')); ?>" class="btn btn-primary" role="button"><?php echo IMAGE_UPDATE; ?></a>
+                        <a href="<?php echo zen_href_link(FILENAME_OPTIONS_VALUES_MANAGER, 'action=update_option_value&value_id=' . $values_value['products_options_values_id'] . '&' . ($currentPage !== 0 ? 'page=' . $currentPage . '&' : '') . ($filter !== 0 ? 'set_filter=' . $filter . '&' : '') . ($max_search_results != 0 ? 'max_search_results=' . $max_search_results : '')); ?>" class="btn btn-primary" role="button"><?php echo IMAGE_EDIT; ?></a>
                         <a href="<?php echo zen_href_link(FILENAME_OPTIONS_VALUES_MANAGER, 'action=delete_option_value&value_id=' . $values_value['products_options_values_id'] . '&' . ($currentPage !== 0 ? 'page=' . $currentPage . '&' : '') . ($filter !== 0 ? 'set_filter=' . $filter . '&' : '') . ($max_search_results != 0 ? 'max_search_results=' . $max_search_results : '')); ?>" class="btn btn-default" role="button"><?php echo IMAGE_DELETE; ?></a>
                       </td>
                     <?php } ?>
