@@ -1133,7 +1133,7 @@ while (!$chk_sale_categories_selected->EOF) {
 //echo 'A: I should delete this record sale_id: ' . $chk_sale_categories_selected->fields['sale_id'] . '<br><br>';
     $skip_cats = true;
     $skip_sale_id = $chk_sale_categories_selected->fields['sale_id'];
-    $salemakerdelete = "DELETE from " . TABLE_SALEMAKER_SALES . " WHERE sale_id='"  . (int)$skip_sale_id;
+    $salemakerdelete = "DELETE from " . TABLE_SALEMAKER_SALES . " WHERE sale_id="  . (int)$skip_sale_id;
   }
 
   // if in the front - remove 9,
