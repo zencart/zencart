@@ -25,3 +25,7 @@ define('TEXT_EMAIL_MESSAGE_ADMIN_MODULE_REMOVED', 'This is an automated email fr
 define('TEXT_DELETE_INTRO', 'Are you sure you want to remove this module?');
 define('TEXT_WARNING_SSL_EDIT', 'ALERT: <a href="https://docs.zen-cart.com/user/installing/enable_ssl/" target="_blank">For security reasons, Editing of this module is disabled until your Admin is configured for SSL</a>.');
 define('TEXT_WARNING_SSL_INSTALL', 'ALERT: <a href="https://docs.zen-cart.com/user/installing/enable_ssl/" target="_blank">For security reasons, Installation of this module is disabled until your Admin is configured for SSL</a>.');
+
+// Generic validation messages for modules
+define('TEXT_POSITIVE_INT','%s must be an integer greater than or equal to 0');
+define('TEXT_POSITIVE_FLOAT','%s must be a decimal greater than or equal to 0'); 

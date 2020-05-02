@@ -20,7 +20,9 @@ if (zen_not_null($action)) {
         $checks = $db->Execute("SELECT val_function FROM " . TABLE_CONFIGURATION . " WHERE configuration_id = " . (int)$cID);
         if (!$checks->EOF && $checks->fields['val_function'] != NULL) {
            require_once('includes/functions/configuration_checks.php');
-           zen_validate_configuration_entry($configuration_value, $checks->fields['val_function']);
+           if (!zen_validate_configuration_entry($configuration_value, $checks->fields['val_function'])) {
+              zen_redirect(zen_href_link(FILENAME_CONFIGURATION, 'gID=' . $_GET['gID'] . '&cID=' . (int)$_GET['cID'] . '&action=edit'));
+           }
         }
 
       $db->Execute("UPDATE " . TABLE_CONFIGURATION . "
