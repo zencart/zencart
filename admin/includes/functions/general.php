@@ -2083,7 +2083,7 @@ function zen_copy_products_attributes($products_id_from, $products_id_to) {
       $check_duplicate = $db->Execute("select * from " . TABLE_PRODUCTS_ATTRIBUTES . " 
           where products_id=" . (int)$products_id_to . "
           and options_id= " . (int)$products_copy_from->fields['options_id'] . "
-          and options_values_id=" . (int)$products_copy_from->fields['options_values_id'] .  "'"
+          and options_values_id=" . (int)$products_copy_from->fields['options_values_id']
       );
 
       if ($already_has_attributes == true) {
