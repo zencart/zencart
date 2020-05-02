@@ -2231,15 +2231,24 @@ function zen_copy_products_attributes($products_id_from, $products_id_to) {
 
 
 /**
- * Lookup Languages Icon
+ * Lookup Languages Icon by id or code
+ * @param $lookup
+ * @param bool $code
+ * @return bool|string
  */
-  function zen_get_language_icon($lookup) {
+function zen_get_language_icon($lookup, $code = false)
+{
     global $db;
-    $languages_icon = $db->Execute("select directory, image from " . TABLE_LANGUAGES . " where languages_id = " . (int)$lookup);
-    if ($languages_icon->EOF) return '';
-    $icon= zen_image(DIR_WS_CATALOG_LANGUAGES . $languages_icon->fields['directory'] . '/images/' . $languages_icon->fields['image'], $languages_icon->fields['directory']);
-    return $icon;
-  }
+    if ($code) { // 157: use code
+        $languages_icon = $db->Execute("SELECT directory, image from " . TABLE_LANGUAGES . " WHERE code = '" . zen_db_input($lookup) . "' LIMIT 1");
+    } else { // legacy: use id
+        $languages_icon = $db->Execute("SELECT directory, image from " . TABLE_LANGUAGES . " where languages_id = " . (int)$lookup . " LIMIT 1");
+    }
+    if ($languages_icon->EOF) {
+        return '';
+    }
+    return zen_image(DIR_WS_CATALOG_LANGUAGES . $languages_icon->fields['directory'] . '/images/' . $languages_icon->fields['image'], $languages_icon->fields['directory']);
+}
 
 /**
  * Get the Option Name for a particular language
@@ -2262,12 +2271,21 @@ function zen_copy_products_attributes($products_id_from, $products_id_to) {
   }
 
 /**
- * lookup language dir from id
+ * lookup language directory name by id or code
+ * @param $lookup
+ * @param bool $code
+ * @return mixed|string
  */
-  function zen_get_language_name($lookup) {
+  function zen_get_language_name($lookup, $code = false) {
     global $db;
-    $check_language= $db->Execute("select directory from " . TABLE_LANGUAGES . " where languages_id = " . (int)$lookup);
-    if ($check_language->EOF) return '';
+    if ($code){ // 157: by code
+        $check_language= $db->Execute("SELECT directory FROM " . TABLE_LANGUAGES . " WHERE code = '" . zen_db_input($lookup) . "' LIMIT 1");
+    } else { // legacy: by id
+        $check_language= $db->Execute("SELECT directory FROM " . TABLE_LANGUAGES . " WHERE languages_id = " . (int)$lookup . " LIMIT 1");
+    }
+    if ($check_language->EOF) {
+        return '';
+    }
     return $check_language->fields['directory'];
   }
 
