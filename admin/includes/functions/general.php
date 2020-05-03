@@ -2233,17 +2233,17 @@ function zen_copy_products_attributes($products_id_from, $products_id_to) {
 /**
  * Lookup Languages Icon by id or code
  * @param $lookup
- * @param bool $code
  * @return bool|string
  */
-function zen_get_language_icon($lookup, $code = false)
+function zen_get_language_icon($lookup)
 {
     global $db;
-    if ($code) { // 157: use code
-        $languages_icon = $db->Execute("SELECT directory, image from " . TABLE_LANGUAGES . " WHERE code = '" . zen_db_input($lookup) . "' LIMIT 1");
-    } else { // legacy: use id
-        $languages_icon = $db->Execute("SELECT directory, image from " . TABLE_LANGUAGES . " where languages_id = " . (int)$lookup . " LIMIT 1");
-    }
+    $languages_icon = $db->Execute("SELECT directory, image FROM " . TABLE_LANGUAGES . " 
+        WHERE 
+        languages_id = " . (int)$lookup . " 
+        OR
+        code = '" . zen_db_input($lookup) . "' 
+        LIMIT 1");
     if ($languages_icon->EOF) {
         return '';
     }
@@ -2273,22 +2273,23 @@ function zen_get_language_icon($lookup, $code = false)
 /**
  * lookup language directory name by id or code
  * @param $lookup
- * @param bool $code
  * @return mixed|string
  */
-  function zen_get_language_name($lookup, $code = false) {
+function zen_get_language_name($lookup)
+{
     global $db;
-    if ($code){ // 157: by code
-        $check_language= $db->Execute("SELECT directory FROM " . TABLE_LANGUAGES . " WHERE code = '" . zen_db_input($lookup) . "' LIMIT 1");
-    } else { // legacy: by id
-        $check_language= $db->Execute("SELECT directory FROM " . TABLE_LANGUAGES . " WHERE languages_id = " . (int)$lookup . " LIMIT 1");
-    }
+    $check_language = $db->Execute("SELECT directory FROM " . TABLE_LANGUAGES . " 
+        WHERE 
+        languages_id = " . (int)$lookup . " 
+        OR
+        code = '" . zen_db_input($lookup) . "' 
+        LIMIT 1");
+
     if ($check_language->EOF) {
         return '';
     }
     return $check_language->fields['directory'];
-  }
-
+}
 
 /**
  * Delete all product attributes
