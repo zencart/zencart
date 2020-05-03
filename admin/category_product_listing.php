@@ -572,7 +572,7 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
 
           $show_prod_labels = ($search_result || $categories->EOF) ? true : false;
           ?>
-          <table class="table table-striped">
+          <table id="categories-products-table" class="table table-striped">
             <thead>
               <tr>
                 <th class="text-right shrink"><?php echo TABLE_HEADING_ID; ?></th>
@@ -610,7 +610,7 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
                 $cInfo = new objectInfo($category);
               }
               ?>
-              <tr>
+              <tr class="category-listing-row" data-cid="<?php echo $category['categories_id']; ?>">
                 <td class="text-right"><?php echo $category['categories_id']; ?></td>
                 <td>
                   <a href="<?php echo zen_href_link(FILENAME_CATEGORY_PRODUCT_LISTING, zen_get_path($category['categories_id'])); ?>" class="folder"><i class="fa fa-lg fa-folder"></i>&nbsp;<strong><?php echo $category['categories_name']; ?></strong></a>
@@ -631,7 +631,7 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
                     ?>
                   </td>
                 <?php } ?>
-                <td class="text-right hidden-sm hidden-xs">
+                <td class="text-right hidden-sm hidden-xs dataTableButtonCell">
                   <?php if (SHOW_CATEGORY_PRODUCTS_LINKED_STATUS == 'true' && zen_get_products_to_categories($category['categories_id'], true, 'products_active') == 'true') { ?>
                     <i class="fa fa-square fa-lg txt-linked" aria-hidden="true" title="<?php echo IMAGE_ICON_LINKED; ?>"></i>
                   <?php } ?>
@@ -645,7 +645,7 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
                 if ($action == '') {
                   ?>
                   <td class="text-right hidden-sm hidden-xs"><?php echo $category['sort_order']; ?></td>
-                  <td class="text-right">
+                  <td class="text-right dataTableButtonCell">
                     <div class="btn-group">
                       <a href="<?php echo zen_href_link(FILENAME_CATEGORIES, 'cPath=' . $cPath . '&cID=' . $category['categories_id'] . '&action=edit_category' . ($search_result ? '&search=' . $_GET['search'] : '')); ?>" class="btn btn-sm btn-default btn-edit" role="button" title="<?php echo ICON_EDIT; ?>">
                         <i class="fa fa-pencil fa-lg" aria-hidden="true"></i>
@@ -785,13 +785,13 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
 
               $type_handler = $zc_products->get_handler($product['products_type']);
               ?>
-              <tr>
+              <tr class="product-listing-row" data-pid="<?php echo $product['products_id']; ?>">
                 <td class="text-right"><?php echo $product['products_id']; ?></td>
                 <td><a href="<?php echo zen_catalog_href_link($type_handler . '_info', 'cPath=' . $cPath . '&products_id=' . $product['products_id'] . '&language=' . $_SESSION['languages_code'] . '&product_type=' . $product['products_type']); ?>" target="_blank"><?php echo zen_image(DIR_WS_ICONS . 'preview.gif', ICON_PREVIEW); ?></a>&nbsp;<a href="<?php echo zen_href_link(FILENAME_PRODUCT, 'cPath=' . $cPath . '&product_type=' . $product['products_type'] . '&pID=' . $product['products_id'] . '&action=new_product' . (isset($_GET['search']) ? '&search=' . $_GET['search'] : '')); ?>" title="<?php echo IMAGE_EDIT; ?>" style="text-decoration: none"><?php echo $product['products_name']; ?></a></td>
                 <td class="hidden-sm hidden-xs"><?php echo $product['products_model']; ?></td>
                 <td class="text-right hidden-sm hidden-xs"><?php echo zen_get_products_display_price($product['products_id']); ?></td>
                 <td class="text-right hidden-sm hidden-xs"><?php echo $product['products_quantity']; ?></td>
-                <td class="text-right hidden-sm hidden-xs text-nowrap">
+                <td class="text-right hidden-sm hidden-xs text-nowrap dataTableButtonCell">
                   <?php
                   $additional_icons = '';
                   $zco_notifier->notify('NOTIFY_ADMIN_PROD_LISTING_ADD_ICON', $product, $additional_icons);
@@ -816,7 +816,7 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
                 </td>
                 <?php if ($action == '') { ?>
                   <td class="text-right hidden-sm hidden-xs"><?php echo $product['products_sort_order']; ?></td>
-                  <td class="text-right">
+                  <td class="text-right dataTableButtonCell">
                     <div class="btn-group">
                       <a href="<?php echo zen_href_link(FILENAME_PRODUCT, 'cPath=' . $cPath . '&product_type=' . $product['products_type'] . '&pID=' . $product['products_id'] . '&action=new_product' . (isset($_GET['search']) ? '&search=' . $_GET['search'] : '')); ?>" class="btn btn-sm btn-default btn-edit" role="button" title="<?php echo IMAGE_EDIT_PRODUCT; ?>">
                         <i class="fa fa-pencil fa-lg" aria-hidden="true"></i>
@@ -1110,6 +1110,23 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
         </div>
       <?php } ?>
     </div>
+    <!--  enable on-page script tools -->
+    <script>
+        <?php
+        $categorySelectLink = str_replace('&amp;', '&', zen_href_link(FILENAME_CATEGORY_PRODUCT_LISTING, zen_get_all_get_params(array('cPath', 'action')) . "cPath=[*]"));
+        $productEditLink = str_replace('&amp;', '&', zen_href_link(FILENAME_PRODUCT, zen_get_all_get_params(array('pID', 'action')) . "pID=[*]&action=new_product"));
+        ?>
+        jQuery(function () {
+            const categorySelectlink = '<?php echo $categorySelectLink; ?>';
+            const productEditLink = '<?php echo $productEditLink; ?>';
+            jQuery("tr.category-listing-row td").not('.dataTableButtonCell').on('click', (function() {
+                window.location.href = categorySelectlink.replace('[*]', jQuery(this).parent().attr('data-cid'));
+            }));
+            jQuery("tr.product-listing-row td").not('.dataTableButtonCell').on('click', (function() {
+                window.location.href = productEditLink.replace('[*]', jQuery(this).parent().attr('data-pid'));
+            }));
+        })
+    </script>
     <!-- footer //-->
     <?php require DIR_WS_INCLUDES . 'footer.php'; ?>
     <!-- footer_eof //-->
