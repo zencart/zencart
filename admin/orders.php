@@ -30,7 +30,7 @@ if (!isset($_GET['list_order'])) $_GET['list_order'] = '';
 if (!isset($_GET['page'])) $_GET['page'] = '';
 
 include DIR_FS_CATALOG . DIR_WS_CLASSES . 'order.php';
-$show_including_tax = (DISPLAY_PRICE_WITH_TAX == 'true'); 
+$show_including_tax = (DISPLAY_PRICE_WITH_TAX == 'true');
 // prepare order-status look-up list
 $orders_status_array = array();
 $orders_status = $db->Execute("SELECT orders_status_id, orders_status_name
@@ -1042,7 +1042,7 @@ if (zen_not_null($action) && $order_exists == true) {
         <div class="row"><?php echo TEXT_LEGEND . ' ' . zen_image(DIR_WS_IMAGES . 'icon_status_red.gif', TEXT_BILLING_SHIPPING_MISMATCH, 10, 10) . ' ' . TEXT_BILLING_SHIPPING_MISMATCH . $extra_legends; ?></div>
         <div class="row">
           <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9 configurationColumnLeft">
-            <table class="table table-hover">
+            <table id="orders-table" class="table table-hover">
               <thead>
                 <tr class="dataTableHeadingRow">
                     <?php
@@ -1185,9 +1185,9 @@ if (zen_not_null($action) && $order_exists == true) {
                     }
 
                     if (isset($oInfo) && is_object($oInfo) && ($orders->fields['orders_id'] == $oInfo->orders_id)) {
-                      echo '<tr id="defaultSelected" class="dataTableRowSelected">' . "\n";
+                      echo '<tr id="defaultSelected" class="dataTableRowSelected order-listing-row" data-oid="' . $orders->fields['orders_id'] . '">' . "\n";
                     } else {
-                      echo '<tr class="dataTableRow">' . "\n";
+                      echo '<tr class="dataTableRow order-listing-row" data-oid="' . $orders->fields['orders_id'] . '">' . "\n";
                     }
 
                     $show_difference = '';
@@ -1207,7 +1207,7 @@ if (zen_not_null($action) && $order_exists == true) {
                 <td class="dataTableContent"><?php echo $show_payment_type; ?></td>
                 <td class="dataTableContent"><?php echo '<a href="' . zen_href_link(FILENAME_CUSTOMERS, 'cID=' . $orders->fields['customers_id'], 'NONSSL') . '">' . zen_image(DIR_WS_ICONS . 'preview.gif', ICON_PREVIEW . ' ' . TABLE_HEADING_CUSTOMERS) . '</a>&nbsp;' . $orders->fields['customers_name'] . ($orders->fields['customers_company'] != '' ? '<br>' . $orders->fields['customers_company'] : ''); ?></td>
                 <td class="dataTableContent text-right"><?php echo strip_tags($orders->fields['order_total']); ?></td>
-                <td class="dataTableContent text-right">
+                <td class="dataTableContent text-right dataTableButtonCell">
                     <?php
                     $sql = "SELECT op.products_quantity AS qty, op.products_name AS name, op.products_model AS model, opa.products_options AS product_option, opa.products_options_values AS product_value 
                             FROM " . TABLE_ORDERS_PRODUCTS . " op 
@@ -1264,7 +1264,12 @@ if (zen_not_null($action) && $order_exists == true) {
   }
 ?>
 
-                <td class="dataTableContent noprint text-right"><?php echo '<a href="' . zen_href_link(FILENAME_ORDERS, zen_get_all_get_params(array('oID', 'action')) . 'oID=' . $orders->fields['orders_id'] . '&action=edit', 'NONSSL') . '">' . zen_image(DIR_WS_IMAGES . 'icon_edit.gif', ICON_EDIT) . '</a>' . $extra_action_icons; ?>&nbsp;<?php
+                <td class="dataTableContent noprint text-right dataTableButtonCell">
+                    <?php
+                    echo '<a href="' . zen_href_link(FILENAME_ORDERS, zen_get_all_get_params(array('oID', 'action')) . 'oID=' . $orders->fields['orders_id'] . '&action=edit', 'NONSSL') . '">' . zen_image(DIR_WS_IMAGES . 'icon_edit.gif', ICON_EDIT) . '</a>' . $extra_action_icons;
+                    ?>
+                    &nbsp;
+                    <?php
                     if (isset($oInfo) && is_object($oInfo) && ($orders->fields['orders_id'] == $oInfo->orders_id)) {
                       echo zen_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', '');
                     } else {
@@ -1398,10 +1403,17 @@ if (zen_not_null($action) && $order_exists == true) {
     </div>
     <!-- body_eof //-->
 
-    <!--  enable popovers-->
+    <!--  enable on-page script tools -->
     <script>
+        <?php
+        $order_link = str_replace('&amp;', '&', zen_href_link(FILENAME_ORDERS, zen_get_all_get_params(array('oID', 'action')) . "oID=[*]"));
+        ?>
         jQuery(function () {
-            jQuery('[data-toggle="popover"]').popover({html:true,sanitize: true})
+            const orderLink = '<?php echo $order_link; ?>';
+            jQuery("tr.order-listing-row td").not('.dataTableButtonCell').on('click', (function() {
+                window.location.href = orderLink.replace('[*]', jQuery(this).parent().attr('data-oid'));
+            }));
+            jQuery('[data-toggle="popover"]').popover({html:true,sanitize: true});
         })
     </script>
 
