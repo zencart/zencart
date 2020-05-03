@@ -1345,9 +1345,9 @@ if (zen_not_null($action) && $order_exists == true) {
                         '<fieldset style="border:solid thin slategray;padding:5px"><legend style="width:inherit;">&nbsp;' . IMAGE_UPDATE . '&nbsp;</legend>' .
                         zen_draw_hidden_field('listing', '1') . // identify that this form was submitted from the infoBox/listing page and not the Order Details page (to redirect to this same page)
                         ($oInfo->language_code !== $_SESSION['languages_code'] ? zen_draw_hidden_field('admin_language', $_SESSION['languages_code']) : '') . // if the order language is different to the current admin language, record the admin language, to restore it in the redirect after the status update email has been sent
-                        '<label class="control-label" for="notify">' . BOX_TOOLS_MAIL . '</label> ' .
+                        '<label class="control-label" for="notify">' . IMAGE_SEND_EMAIL . '</label> ' .
                         zen_draw_checkbox_field('notify', '1', $notify_email, '', 'class="checkbox-inline" id="notify"') . "<br>\n" .
-                        '<label class="control-label" for="status">' . HEADING_TITLE_STATUS . '</label>' . zen_draw_order_status_dropdown('status', $oInfo->orders_status, '', 'onChange="this.form.submit();" id="status" class="form-control"') . "\n" .
+                        '<label class="control-label" for="status">' . ENTRY_STATUS . '</label>' . zen_draw_order_status_dropdown('status', $oInfo->orders_status, '', 'onChange="this.form.submit();" id="status" class="form-control"') . "\n" .
                         '</fieldset></form>' . "\n"];
 
                     $contents[] = array('text' => '<br>' . TEXT_DATE_ORDER_CREATED . ' ' . zen_date_short($oInfo->date_purchased));
