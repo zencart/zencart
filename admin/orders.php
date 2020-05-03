@@ -75,6 +75,30 @@ if (!empty($oID) && !empty($action)) {
   $zco_notifier->notify('NOTIFY_ADMIN_ORDER_PREDISPLAY_HOOK', $oID, $action);
 }
 
+        // -----
+        // Determine which of the 'Notify Customer' radio buttons should be selected initially,
+        // based on configuration setting in 'My Store'.  Set a default, just in case that configuration
+        // setting isn't set!
+        //
+        if (!defined('NOTIFY_CUSTOMER_DEFAULT')) define('NOTIFY_CUSTOMER_DEFAULT', '1');
+        switch (NOTIFY_CUSTOMER_DEFAULT) {
+            case '0':
+                $notify_email = false;
+                $notify_no_email = true;
+                $notify_hidden = false;
+                break;
+            case '-1':
+                $notify_email = false;
+                $notify_no_email = false;
+                $notify_hidden = true;
+                break;
+            default:
+                $notify_email = true;
+                $notify_no_email = false;
+                $notify_hidden = false;
+                break;
+        }
+
 if (zen_not_null($action) && $order_exists == true) {
   switch ($action) {
     case 'download':
@@ -287,15 +311,15 @@ if (zen_not_null($action) && $order_exists == true) {
             $db->Execute($update_downloads_query);
           }
         }
-          $messageStack->add_session(SUCCESS_ORDER_UPDATED, 'success');
+        $messageStack->add_session(SUCCESS_ORDER_UPDATED, 'success');
           if ($customer_notified === 1) {
               $messageStack->add_session(sprintf(SUCCESS_EMAIL_SENT, ($admin_language !== $_SESSION['languages_code'] ? '(' . strtoupper($_SESSION['languages_code']) . ') ' : '')), 'success'); // show an email sent confirmation message, with a language indicator if the order/email language was different to the admin user language
           }
-          zen_record_admin_activity('Order ' . $oID . ' updated.', 'info');
+        zen_record_admin_activity('Order ' . $oID . ' updated.', 'info');
       } else {
-          $messageStack->add_session(WARNING_ORDER_NOT_UPDATED, 'warning');
+        $messageStack->add_session(WARNING_ORDER_NOT_UPDATED, 'warning');
       }
-        if (isset($_POST['qsu'])) { // return to the order LISTING page
+        if (isset($_POST['listing'])) { // return to the order LISTING page
             zen_redirect(zen_href_link(FILENAME_ORDERS, zen_get_all_get_params(['action', 'language']) . 'language=' . $admin_language, 'NONSSL'));//remove action, nothing more to do, reset admin language
         } else {  // return to the order DETAILS page
             zen_redirect(zen_href_link(FILENAME_ORDERS, zen_get_all_get_params(['action', 'language']) . 'action=edit&language=' . $admin_language, 'NONSSL'));
@@ -1315,7 +1339,19 @@ if (zen_not_null($action) && $order_exists == true) {
                     $contents[] = array('align' => 'text-center', 'text' => '<a href="' . zen_href_link(FILENAME_ORDERS_INVOICE, 'oID=' . $oInfo->orders_id) . '" target="_blank" class="btn btn-info" role="button">' . IMAGE_ORDERS_INVOICE . '</a> <a href="' . zen_href_link(FILENAME_ORDERS_PACKINGSLIP, 'oID=' . $oInfo->orders_id) . '" target="_blank" class="btn btn-info" role="button">' . IMAGE_ORDERS_PACKINGSLIP . '</a>');
                     $zco_notifier->notify('NOTIFY_ADMIN_ORDERS_MENU_BUTTONS', $oInfo, $contents);
 
+                    // each contents array is drawn in a div, so this form block must be a single array element.
+                    $contents[] = ['text' =>
+                        zen_draw_form('statusUpdate', FILENAME_ORDERS, zen_get_all_get_params(['action','language']) . 'action=update_order' . (!isset($_GET['oID']) ? '&oID=' . $oInfo->orders_id : '') . '&language=' . $oInfo->language_code, 'post', '', true) . // form action uses the order language to change the session language on the update. On initial page load (from another page), $_GET['oID'] is not set, hence clause in form action
+                        zen_draw_hidden_field('listing', '1') . // identify that this form was submitted from infoBox/listing page and not the order details page (for the redirect to this same page)
+                        ($oInfo->language_code !== $_SESSION['languages_code'] ? zen_draw_hidden_field('admin_language', $_SESSION['languages_code']) : '') . // if the order language is different to the current admin language, record the admin language, to restore it in the redirect after the status update email has been sent
+                        '<label class="form-group" style="margin:8px 0">' . BOX_TOOLS_MAIL . zen_draw_checkbox_field('notify', '1', $notify_email, '', 'style="vertical-align: middle;"') . '</label>' . "<br>\n" .
+                        '<label class="form-group" for="status">' . HEADING_TITLE_STATUS . '</label>' . zen_draw_order_status_dropdown('status', $oInfo->orders_status, '', 'onChange="this.form.submit();" id="status"') . "\n" .
+                        '</form>' . "\n"];
+
                     $contents[] = array('text' => '<br>' . TEXT_DATE_ORDER_CREATED . ' ' . zen_date_short($oInfo->date_purchased));
+                    if ($_SESSION['languages_code'] !== $oInfo->language_code) {
+                        $contents[] = array('text' => zen_get_language_icon($oInfo->language_code, true) . ' ' . sprintf(TEXT_EMAIL_LANGUAGE, zen_get_language_name($oInfo->language_code, true)));
+}
                     $contents[] = array('text' => '<br>' . $oInfo->customers_email_address);
                     $contents[] = array('text' => TEXT_INFO_IP_ADDRESS . ' ' . $oInfo->ip_address);
                     if (zen_not_null($oInfo->last_modified)) {
