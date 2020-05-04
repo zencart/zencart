@@ -1351,9 +1351,6 @@ if (zen_not_null($action) && $order_exists == true) {
                         '</fieldset></form>' . "\n"];
 
                     $contents[] = array('text' => '<br>' . TEXT_DATE_ORDER_CREATED . ' ' . zen_date_short($oInfo->date_purchased));
-                    if ($_SESSION['languages_code'] !== $oInfo->language_code) {
-                        $contents[] = array('text' => zen_get_language_icon($oInfo->language_code, true) . ' ' . sprintf(TEXT_EMAIL_LANGUAGE, zen_get_language_name($oInfo->language_code, true)));
-}
                     $contents[] = array('text' => '<br>' . $oInfo->customers_email_address);
                     $contents[] = array('text' => TEXT_INFO_IP_ADDRESS . ' ' . $oInfo->ip_address);
                     if (zen_not_null($oInfo->last_modified)) {
