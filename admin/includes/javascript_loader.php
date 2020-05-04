@@ -19,8 +19,8 @@
 <script src="includes/javascript/jquery-ui-i18n.min.js"></script>
 <script>
 // init datepicker defaults with localization
-  $(function () {
-    $.datepicker.setDefaults($.extend({}, $.datepicker.regional["<?php echo $_SESSION['languages_code'] == 'en' ? '' : $_SESSION['languages_code']; ?>"], {
+  jQuery(function () {
+    jQuery.datepicker.setDefaults(jQuery.extend({}, jQuery.datepicker.regional["<?php echo $_SESSION['languages_code'] == 'en' ? '' : $_SESSION['languages_code']; ?>"], {
       dateFormat: '<?php echo DATE_FORMAT_DATE_PICKER; ?>',
       changeMonth: true,
       changeYear: true,

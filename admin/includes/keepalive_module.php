@@ -1,4 +1,4 @@
-<?php 
+<?php
 // ADMIN KEEPALIVE_MODULE v2.0
 // Admin session timeout warning alerter
 // Prompts to extend login session after 2/3 of the allowed session time has expired without mouse activity or form submission.
@@ -23,8 +23,8 @@ $camefrom = basename($PHP_SELF) . (empty($params = zen_get_all_get_params()) ? '
 <script src="includes/javascript/jAlert.min.js"></script>
 <script src="includes/javascript/jTimeout.min.js"></script>
 <script title="jTimeout-Init">
-$(function(){
-   $.jTimeout(
+jQuery(function(){
+   jQuery.jTimeout(
     {
     'flashTitle': true, //whether or not to flash the tab/title bar when about to timeout, or after timing out
     'flashTitleSpeed': 500, //how quickly to switch between the original title, and the warning text
@@ -37,7 +37,7 @@ $(function(){
     'loginUrl': '<?php echo $camefrom; ?>', //URL to send a customer to when they want to log back in
     'secondsPrior': <?php echo (int)$timeoutAfter/3; ?>, //how many seconds before timing out to run the next callback (onPriorCallback)
     'onPriorCallback': function(timeout, seconds){
-        $.jAlert({
+        jQuery.jAlert({
             'id': 'jTimeoutAlert',
             'title': '<?php echo addslashes(TEXT_TIMEOUT_ARE_YOU_STILL_THERE); ?>',
             'content': '<b><?php echo addslashes(TEXT_TIMEOUT_WILL_LOGOUT_SOON); ?> <?php echo addslashes(TEXT_TIMEOUT_TIME_REMAINING); ?> <span class="jTimeout_Countdown">' + seconds + '</span> <?php echo addslashes(TEXT_TIMEOUT_SECONDS); ?></b>',
@@ -71,7 +71,7 @@ $(function(){
     },
     'onTimeout': function(timeout){
         /* Alert User */
-        $.jAlert({
+        jQuery.jAlert({
             'id': 'jTimedoutAlert',
             'title': '<?php echo addslashes(TEXT_TIMEOUT_TIMED_OUT_TITLE); ?>',
             'content': '<b><?php echo addslashes(TEXT_TIMEOUT_TIMED_OUT_MESSAGE); ?></b>',
@@ -87,12 +87,12 @@ $(function(){
             'closeOnEsc': false
         });
         /* Force logout */
-        $.get(timeout.options.logoutUrl);
-        $.jTimeout().destroy();
+        jQuery.get(timeout.options.logoutUrl);
+        jQuery.jTimeout().destroy();
     }
   }
 );
-   
-//   $.jTimeout.reset(); //will reset the timer to timeoutAfter above
+
+//   jQuery.jTimeout.reset(); //will reset the timer to timeoutAfter above
 });
 </script>
