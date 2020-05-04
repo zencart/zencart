@@ -208,7 +208,7 @@ if (zen_not_null($action) && $order_exists == true) {
       break;
     case 'update_order':
       $oID = zen_db_prepare_input($_GET['oID']);
-      $comments = zen_db_prepare_input($_POST['comments']);
+      $comments = !empty($_POST['comments']) ? zen_db_prepare_input($_POST['comments']) : '';
       $status = (int)$_POST['status'];
       if ($status < 1) {
          break;
