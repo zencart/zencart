@@ -41,8 +41,8 @@ UPDATE configuration SET configuration_title = 'Product page generated &lt;title
 UPDATE configuration SET configuration_title = 'Product page generated &lt;meta - description&gt; tag - Maximum Length', configuration_description = 'When custom Keywords and Description meta tags are not set, limit the generated &lt;meta - description&gt; tag to this number of words. Default 50.' WHERE configuration_key = 'MAX_META_TAG_DESCRIPTION_LENGTH';
 # Other name/description improvements
 UPDATE configuration SET configuration_title= 'Order History Box', configuration_description= 'Number of products to display in the order history box' WHERE configuration_key = 'MAX_DISPLAY_PRODUCTS_IN_ORDER_HISTORY_BOX';
-UPDATE configuration SET configuration_description = 'Number of products to display in the \'Also Purchased\' box' WHERE configuration_key = 'MAX_DISPLAY_ALSO_PURCHASED'; 
-UPDATE configuration SET configuration_description = 'Minimum number of products to display in the \'Also Purchased\' box' WHERE configuration_key = 'MIN_DISPLAY_ALSO_PURCHASED'; 
+UPDATE configuration SET configuration_description = 'Number of products to display in the \'Also Purchased\' box' WHERE configuration_key = 'MAX_DISPLAY_ALSO_PURCHASED';
+UPDATE configuration SET configuration_description = 'Minimum number of products to display in the \'Also Purchased\' box' WHERE configuration_key = 'MIN_DISPLAY_ALSO_PURCHASED';
 UPDATE configuration SET configuration_description = 'Maximum number of PayPal IPN Listings in Admin<br />Default is 20' WHERE configuration_key = 'MAX_DISPLAY_SEARCH_RESULTS_PAYPAL_IPN';
 UPDATE configuration SET configuration_description = 'On what basis is Shipping Tax calculated. Options are<br />Shipping - Based on customers Shipping Address<br />Billing Based on customers Billing address<br />Store - Based on Store address if Billing/Shipping Zone equals Store zone - Can be overridden by correctly written Shipping Module' WHERE configuration_key = 'STORE_SHIPPING_TAX_BASIS';
 UPDATE configuration SET configuration_description = 'Check to see if sufficient stock is available' WHERE configuration_key = 'STOCK_CHECK';
@@ -89,7 +89,7 @@ UPDATE configuration_group set configuration_group_title = 'Email', configuratio
 # Add NOTIFY_CUSTOMER_DEFAULT
 INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES ('Default for Notify Customer on Order Status Update?', 'NOTIFY_CUSTOMER_DEFAULT', '1', 'Set the default email behavior on status update to Send Email, Do Not Send Email, or Hide Update.', 1, 120, now(), now(), NULL, 'zen_cfg_select_drop_down(array( array(\'id\'=>\'1\', \'text\'=>\'Email\'), array(\'id\'=>\'0\', \'text\'=>\'No Email\'), array(\'id\'=>\'-1\', \'text\'=>\'Hide\')),');
 
-# Minmax values 
+# Minmax values
 INSERT INTO configuration (configuration_title, configuration_key, configuration_value, val_function, configuration_description, configuration_group_id, sort_order, date_added) VALUES ('Maximum Preview', 'MAX_PREVIEW', '100', '{"error":"TEXT_MAX_PREVIEW","id":"FILTER_VALIDATE_INT","options":{"options":{"min_range":0}}}', 'Maximum Preview length<br />100 = Default', 3, 80, now());
 
 # Encrypted Master Password configuration. Using INSERT IGNORE followed by an UPDATE in consideration of shops with EMP already installed.
@@ -110,7 +110,7 @@ INSERT INTO configuration (configuration_title, configuration_key, configuration
 
 # Missed in 1.5.6 upgrade. May already be there so use INSERT IGNORE
 INSERT IGNORE INTO configuration (configuration_title, configuration_key, configuration_value, val_function, configuration_description, configuration_group_id, sort_order, date_added) VALUES ('Admin Usernames', 'ADMIN_NAME_MINIMUM_LENGTH', '4', '{"error":"TEXT_MIN_ADMIN_USER_LENGTH","id":"FILTER_VALIDATE_INT","options":{"options":{"min_range":4}}}', 'Minimum length of admin usernames (must be 4 or more)', '2', '18', now());
-# Country data 
+# Country data
 UPDATE countries set address_format_id = 5 where countries_iso_code_3 in ('ITA');
 
 # Add language_code
@@ -219,10 +219,10 @@ UPDATE configuration SET val_function = '{"error":"TEXT_EMAIL_ADDRESS_VALIDATE",
 
 ALTER TABLE admin_activity_log MODIFY attention MEDIUMTEXT;
 
-# ZC 156 changed these fields in the install but not in the upgrade 
-ALTER TABLE upgrade_exceptions MODIFY sql_file varchar(128) default NULL; 
+# ZC 156 changed these fields in the install but not in the upgrade
+ALTER TABLE upgrade_exceptions MODIFY sql_file varchar(128) default NULL;
 ALTER TABLE upgrade_exceptions MODIFY reason TEXT;
-ALTER TABLE upgrade_exceptions MODIFY errordate datetime default NULL; 
+ALTER TABLE upgrade_exceptions MODIFY errordate datetime default NULL;
 
 
 # New Plugin tables
