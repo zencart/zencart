@@ -439,6 +439,11 @@ if (zen_not_null($action) && $order_exists == true) {
           window.open(url, 'popupWindow', 'toolbar=no,location=no,directories=no,status=no,menu bar=no,scrollbars=yes,resizable=yes,copyhistory=no,width=450,height=280,screenX=150,screenY=150,top=150,left=150')
       }
     </script>
+      <?php
+      if ($action === 'edit' && $editor_handler !== '') {
+          include ($editor_handler);
+      }
+      ?>
   </head>
   <body onLoad = "init()">
     <!-- header //-->
@@ -946,7 +951,7 @@ if (zen_not_null($action) && $order_exists == true) {
               <div class="form-group">
                   <?php echo zen_draw_label(TABLE_HEADING_COMMENTS, 'comments', 'class="col-sm-3 control-label"'); ?>
                   <div class="col-sm-9">
-                      <?php echo zen_draw_textarea_field('comments', 'soft', '60', '5', '', 'id="comments" class="form-control editorHook"');
+                      <?php echo zen_draw_textarea_field('comments', 'soft', '60', '5', '', 'id="comments" class="editorHook form-control"');
                       // remind admin user of the order/customer language in case of writing a comment.
                       if (count(zen_get_languages()) > 1) {
                           echo '<br>' . zen_get_language_icon($order->info['language_code']) . ' <strong>' . sprintf(TEXT_EMAIL_LANGUAGE, zen_get_language_name($order->info['language_code'])) . '</strong>';
