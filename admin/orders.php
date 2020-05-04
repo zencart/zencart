@@ -1363,6 +1363,7 @@ if (zen_not_null($action) && $order_exists == true) {
                         '</fieldset></form>' . "\n"];
 
                     $contents[] = ['text' => TEXT_DATE_ORDER_CREATED . ' ' . zen_date_short($oInfo->date_purchased)];
+                    $contents[] = array('text' => $oInfo->customers_name);
                     $contents[] = ['text' => $oInfo->customers_email_address];
                     $contents[] = ['text' => TEXT_INFO_IP_ADDRESS . ' ' . $oInfo->ip_address];
                     if (zen_not_null($oInfo->last_modified)) {
