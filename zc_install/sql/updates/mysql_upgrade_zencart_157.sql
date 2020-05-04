@@ -121,6 +121,7 @@ ALTER TABLE orders_status ADD sort_order int(11) NOT NULL default 0;
 
 # Improve speed of admin orders page listing
 ALTER TABLE orders_total ADD INDEX idx_oid_class_zen (orders_id, class);
+ALTER TABLE orders ADD INDEX idx_status_date_id_zen (orders_status, date_purchased, orders_id);
 
 # Add customer secret
 ALTER TABLE customers ADD customers_secret varchar(64) NOT NULL default '';

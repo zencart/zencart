@@ -1084,7 +1084,8 @@ CREATE TABLE orders (
   PRIMARY KEY  (orders_id),
   KEY idx_status_orders_cust_zen (orders_status,orders_id,customers_id),
   KEY idx_date_purchased_zen (date_purchased),
-  KEY idx_cust_id_orders_id_zen (customers_id,orders_id)
+  KEY idx_cust_id_orders_id_zen (customers_id,orders_id),
+  KEY idx_status_date_id_zen (orders_status,date_purchased,orders_id)
 ) ENGINE=MyISAM;
 
 
