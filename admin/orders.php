@@ -320,10 +320,11 @@ if (zen_not_null($action) && $order_exists == true) {
         $messageStack->add_session(WARNING_ORDER_NOT_UPDATED, 'warning');
       }
 
+        $redirect = zen_href_link(FILENAME_ORDERS, zen_get_all_get_params(['action', 'language']) . ($admin_language !== $_SESSION['languages_code'] ? '&language=' . $admin_language : ''), 'NONSSL');
         if (isset($_POST['camefrom']) && $_POST['camefrom'] === 'orderEdit') {
-            zen_redirect(zen_href_link(FILENAME_ORDERS, zen_get_all_get_params(['action', 'language']) . 'action=edit' . ($admin_language !== $_SESSION['languages_code'] ? '&language=' . $admin_language : ''), 'NONSSL'));
+            $redirect .= '&action=edit';
         }
-        zen_redirect(zen_href_link(FILENAME_ORDERS, zen_get_all_get_params(['action', 'language']) . ($admin_language !== $_SESSION['languages_code'] ? 'language=' . $admin_language : ''), 'NONSSL'));
+        zen_redirect($redirect);
       break;
 
     case 'deleteconfirm':
