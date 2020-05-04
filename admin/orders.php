@@ -1339,14 +1339,13 @@ if (zen_not_null($action) && $order_exists == true) {
                   $heading[] = ['text' => '<h4>' . TEXT_INFO_HEADING_DELETE_ORDER . '</h4>'];
 
                   $contents = ['form' => zen_draw_form('orders', FILENAME_ORDERS, zen_get_all_get_params(['oID', 'action']) . '&action=deleteconfirm', 'post', 'class="form-horizontal"', true) . zen_draw_hidden_field('oID', $oInfo->orders_id)];
-//      $contents[] = array('text' => TEXT_INFO_DELETE_INTRO . '<br><br><strong>' . $cInfo->customers_firstname . ' ' . $cInfo->customers_lastname . '</strong>');
                   $contents[] = ['text' => TEXT_INFO_DELETE_INTRO . '<br><br><strong>' . ENTRY_ORDER_ID . $oInfo->orders_id . '<br>' . $oInfo->order_total . '<br>' . $oInfo->customers_name . ($oInfo->customers_company != '' ? '<br>' . $oInfo->customers_company : '') . '</strong>'];
                   $contents[] = ['text' => '<br><label>' . zen_draw_checkbox_field('restock') . ' ' . TEXT_INFO_RESTOCK_PRODUCT_QUANTITY . '</label>'];
                   $contents[] = ['align' => 'text-center', 'text' => '<br><button type="submit" class="btn btn-danger">' . IMAGE_DELETE . '</button> <a href="' . zen_href_link(FILENAME_ORDERS, zen_get_all_get_params(['oID', 'action']) . 'oID=' . $oInfo->orders_id, 'NONSSL') . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>'];
                   break;
                 default:
                   if (isset($oInfo) && is_object($oInfo)) {
-                    $heading[] = ['text' => '<h4>[' . $oInfo->orders_id . ']&nbsp;&nbsp;' . zen_datetime_short($oInfo->date_purchased) . '</h4>'];
+                    $heading[] = ['text' => '<h4>' . $oInfo->orders_id . '&nbsp;&nbsp;' . zen_datetime_short($oInfo->date_purchased) . '</h4>'];
 
                     $contents[] = ['align' => 'text-center', 'text' => '<a href="' . zen_href_link(FILENAME_ORDERS, zen_get_all_get_params(['oID', 'action']) . 'oID=' . $oInfo->orders_id . '&action=edit', 'NONSSL') . '" class="btn btn-primary" role="button">' . IMAGE_DETAILS . '</a> <a href="' . zen_href_link(FILENAME_ORDERS, zen_get_all_get_params(['oID', 'action']) . 'oID=' . $oInfo->orders_id . '&action=delete', 'NONSSL') . '" class="btn btn-warning" role="button">' . IMAGE_DELETE . '</a>'];
                     $contents[] = ['align' => 'text-center', 'text' => '<a href="' . zen_href_link(FILENAME_ORDERS_INVOICE, 'oID=' . $oInfo->orders_id) . '" target="_blank" class="btn btn-info" role="button">' . IMAGE_ORDERS_INVOICE . '</a> <a href="' . zen_href_link(FILENAME_ORDERS_PACKINGSLIP, 'oID=' . $oInfo->orders_id) . '" target="_blank" class="btn btn-info" role="button">' . IMAGE_ORDERS_PACKINGSLIP . '</a>'];
@@ -1363,7 +1362,7 @@ if (zen_not_null($action) && $order_exists == true) {
                         '</fieldset></form>' . "\n"];
 
                     $contents[] = ['text' => TEXT_DATE_ORDER_CREATED . ' ' . zen_date_short($oInfo->date_purchased)];
-                    $contents[] = array('text' => $oInfo->customers_name);
+                    $contents[] = ['text' => '<strong>' . $oInfo->customers_name . '</strong>'];
                     $contents[] = ['text' => $oInfo->customers_email_address];
                     $contents[] = ['text' => TEXT_INFO_IP_ADDRESS . ' ' . $oInfo->ip_address];
                     if (zen_not_null($oInfo->last_modified)) {
@@ -1395,7 +1394,7 @@ if (zen_not_null($action) && $order_exists == true) {
                       $contents[] = ['text' => nl2br(zen_output_string_protected($orders_history_query->fields['comments']))];
                     }
 
-                    $contents[] = ['text' => zen_image(DIR_WS_IMAGES . 'pixel_black.gif', '', '', '3', 'style="width:100%"')];
+                    $contents[] = ['text' => zen_image(DIR_WS_IMAGES . 'pixel_black.gif', '', '', '1', 'style="width:100%"')];
                     $order = new order($oInfo->orders_id);
                     $contents[] = ['text' => TABLE_HEADING_PRODUCTS . ': ' . count($order->products)];
                     for ($i = 0, $n=count($order->products); $i <$n; $i++) {
@@ -1421,7 +1420,7 @@ if (zen_not_null($action) && $order_exists == true) {
               $zco_notifier->notify('NOTIFY_ADMIN_ORDERS_MENU_BUTTONS_END', (isset($oInfo) ? $oInfo : []), $contents);
 
               if ((zen_not_null($heading)) && (zen_not_null($contents))) {
-                $box = new box;
+                $box = new box();
                 echo $box->infoBox($heading, $contents);
               }
               ?>
