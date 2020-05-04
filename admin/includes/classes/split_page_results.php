@@ -77,7 +77,7 @@ class splitPageResults
         if ($current_page_number > 1) {
           $display_links .= '<a href="' . zen_href_link(basename($PHP_SELF), $parameters . $page_name . '=' . ($current_page_number - 1), 'NONSSL') . '" class="splitPageLink">' . PREVNEXT_BUTTON_PREV . '</a>&nbsp;&nbsp;';
         } else {
-          $display_links .= PREVNEXT_BUTTON_PREV . '&nbsp;&nbsp;';
+          $display_links .= '<span style="visibility:hidden;">'. PREVNEXT_BUTTON_PREV . '&nbsp;&nbsp;</span>';
         }
 
         $display_links .= sprintf(TEXT_RESULT_PAGE, zen_draw_pull_down_menu($page_name, $pages_array, $current_page_number, 'onChange="this.form.submit();"'), $num_pages);
@@ -85,7 +85,7 @@ class splitPageResults
         if (($current_page_number < $num_pages) && ($num_pages != 1)) {
           $display_links .= '&nbsp;&nbsp;<a href="' . zen_href_link(basename($PHP_SELF), $parameters . $page_name . '=' . ($current_page_number + 1), 'NONSSL') . '" class="splitPageLink">' . PREVNEXT_BUTTON_NEXT . '</a>';
         } else {
-          $display_links .= '&nbsp;&nbsp;' . PREVNEXT_BUTTON_NEXT;
+          $display_links .= '<span style="visibility:hidden;">&nbsp;&nbsp;' . PREVNEXT_BUTTON_NEXT . '</span>';
         }
 
         if ($parameters != '') {
