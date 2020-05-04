@@ -947,7 +947,7 @@ if (zen_not_null($action) && $order_exists == true) {
                   <?php echo zen_draw_textarea_field('comments', 'soft', '60', '5', '', 'id="comments" class="form-control"');
                   // remind admin user of the order/customer language in case of writing a comment.
                   if (count(zen_get_languages()) > 1) {
-                      echo '<br>' . zen_get_language_icon($order->info['language_code'], true) . ' <strong>' . sprintf(TEXT_EMAIL_LANGUAGE, zen_get_language_name($order->info['language_code'], true)) . '</strong>';
+                      echo '<br>' . zen_get_language_icon($order->info['language_code']) . ' <strong>' . sprintf(TEXT_EMAIL_LANGUAGE, zen_get_language_name($order->info['language_code'])) . '</strong>';
                      echo zen_draw_hidden_field('admin_language', $_SESSION['languages_code']);
                   } ?>
               </div>
