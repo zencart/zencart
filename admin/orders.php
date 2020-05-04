@@ -1362,14 +1362,14 @@ if (zen_not_null($action) && $order_exists == true) {
                         '<label class="control-label" for="status">' . ENTRY_STATUS . '</label>' . zen_draw_order_status_dropdown('status', $oInfo->orders_status, '', 'onChange="this.form.submit();" id="status" class="form-control"') . "\n" .
                         '</fieldset></form>' . "\n"];
 
-                    $contents[] = ['text' => '<br>' . TEXT_DATE_ORDER_CREATED . ' ' . zen_date_short($oInfo->date_purchased)];
-                    $contents[] = ['text' => '<br>' . $oInfo->customers_email_address];
+                    $contents[] = ['text' => TEXT_DATE_ORDER_CREATED . ' ' . zen_date_short($oInfo->date_purchased)];
+                    $contents[] = ['text' => $oInfo->customers_email_address];
                     $contents[] = ['text' => TEXT_INFO_IP_ADDRESS . ' ' . $oInfo->ip_address];
                     if (zen_not_null($oInfo->last_modified)) {
                       $contents[] = ['text' => TEXT_DATE_ORDER_LAST_MODIFIED . ' ' . zen_date_short($oInfo->last_modified)];
                     }
-                    $contents[] = ['text' => '<br>' . TEXT_INFO_PAYMENT_METHOD . ' ' . $oInfo->payment_method];
-                    $contents[] = ['text' => '<br>' . ENTRY_SHIPPING . ' ' . $oInfo->shipping_method];
+                    $contents[] = ['text' => TEXT_INFO_PAYMENT_METHOD . ' ' . $oInfo->payment_method];
+                    $contents[] = ['text' => ENTRY_SHIPPING . ' ' . $oInfo->shipping_method];
 
 // check if order has open gv
                     $gv_check = $db->Execute("SELECT order_id, unique_id
@@ -1379,7 +1379,7 @@ if (zen_not_null($action) && $order_exists == true) {
                                               LIMIT 1");
                     if ($gv_check->RecordCount() > 0) {
                       $goto_gv = '<a href="' . zen_href_link(FILENAME_GV_QUEUE, 'order=' . $oInfo->orders_id) . '" class="btn btn-primary" role="button">' . IMAGE_GIFT_QUEUE . '</a>';
-                      $contents[] = ['text' => '<br>' . zen_image(DIR_WS_IMAGES . 'pixel_black.gif', '', '', '3', 'style="width:100%"')];
+                      $contents[] = ['text' => zen_image(DIR_WS_IMAGES . 'pixel_black.gif', '', '', '3', 'style="width:100%"')];
                       $contents[] = ['align' => 'text-center', 'text' => $goto_gv];
                     }
 
@@ -1390,11 +1390,11 @@ if (zen_not_null($action) && $order_exists == true) {
                                                           AND comments != ''");
 
                     if ($orders_history_query->RecordCount() > 0) {
-                      $contents[] = ['text' => '<br>' . TABLE_HEADING_COMMENTS];
+                      $contents[] = ['text' => TABLE_HEADING_COMMENTS];
                       $contents[] = ['text' => nl2br(zen_output_string_protected($orders_history_query->fields['comments']))];
                     }
 
-                    $contents[] = ['text' => '<br>' . zen_image(DIR_WS_IMAGES . 'pixel_black.gif', '', '', '3', 'style="width:100%"')];
+                    $contents[] = ['text' => zen_image(DIR_WS_IMAGES . 'pixel_black.gif', '', '', '3', 'style="width:100%"')];
                     $order = new order($oInfo->orders_id);
                     $contents[] = ['text' => TABLE_HEADING_PRODUCTS . ': ' . count($order->products)];
                     for ($i = 0, $n=count($order->products); $i <$n; $i++) {
