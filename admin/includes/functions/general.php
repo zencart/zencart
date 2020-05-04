@@ -2231,15 +2231,24 @@ function zen_copy_products_attributes($products_id_from, $products_id_to) {
 
 
 /**
- * Lookup Languages Icon
+ * Lookup Languages Icon by id or code
+ * @param $lookup
+ * @return bool|string
  */
-  function zen_get_language_icon($lookup) {
+function zen_get_language_icon($lookup)
+{
     global $db;
-    $languages_icon = $db->Execute("select directory, image from " . TABLE_LANGUAGES . " where languages_id = " . (int)$lookup);
-    if ($languages_icon->EOF) return '';
-    $icon= zen_image(DIR_WS_CATALOG_LANGUAGES . $languages_icon->fields['directory'] . '/images/' . $languages_icon->fields['image'], $languages_icon->fields['directory']);
-    return $icon;
-  }
+    $languages_icon = $db->Execute("SELECT directory, image FROM " . TABLE_LANGUAGES . " 
+        WHERE 
+        languages_id = " . (int)$lookup . " 
+        OR
+        code = '" . zen_db_input($lookup) . "' 
+        LIMIT 1");
+    if ($languages_icon->EOF) {
+        return '';
+    }
+    return zen_image(DIR_WS_CATALOG_LANGUAGES . $languages_icon->fields['directory'] . '/images/' . $languages_icon->fields['image'], $languages_icon->fields['directory']);
+}
 
 /**
  * Get the Option Name for a particular language
@@ -2262,15 +2271,25 @@ function zen_copy_products_attributes($products_id_from, $products_id_to) {
   }
 
 /**
- * lookup language dir from id
+ * lookup language directory name by id or code
+ * @param $lookup
+ * @return mixed|string
  */
-  function zen_get_language_name($lookup) {
+function zen_get_language_name($lookup)
+{
     global $db;
-    $check_language= $db->Execute("select directory from " . TABLE_LANGUAGES . " where languages_id = " . (int)$lookup);
-    if ($check_language->EOF) return '';
-    return $check_language->fields['directory'];
-  }
+    $check_language = $db->Execute("SELECT directory FROM " . TABLE_LANGUAGES . " 
+        WHERE 
+        languages_id = " . (int)$lookup . " 
+        OR
+        code = '" . zen_db_input($lookup) . "' 
+        LIMIT 1");
 
+    if ($check_language->EOF) {
+        return '';
+    }
+    return $check_language->fields['directory'];
+}
 
 /**
  * Delete all product attributes
