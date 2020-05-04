@@ -33,7 +33,7 @@ foreach ($var as $key)
                 if (index == null) index = <?php echo $_SESSION['languages_id'] ?>;
                 CKEDITOR.replace(jQuery(this).attr('name'),
                     {
-                        customConfig: '/<?php echo DIR_WS_EDITORS . 'ckeditor/config.js'; ?>',
+                        customConfig: '<?php echo (function_exists('zen_catalog_base_link') ? zen_catalog_base_link() : '/') . DIR_WS_EDITORS . 'ckeditor/config.js'; ?>',
                         language: lang[index]
                     });
             }
@@ -41,7 +41,7 @@ foreach ($var as $key)
     });
 </script>
 
-<php
+<?php
 // Other options:
 // - Edit your /editors/ckeditor/config.js file to control the toolbar buttons, add additional plugins, control the UI color, etc
 //
