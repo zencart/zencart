@@ -472,7 +472,7 @@ if (zen_not_null($action) && $order_exists == true) {
               <div class="input-group">
                   <?php
                   echo zen_draw_input_field('search', '', 'id="searchAll" class="form-control" placeholder="' . $placeholder . '"');
-                  if (isset($_GET['search']) && zen_not_null($_GET['search']) || !empty($_GET['cID'])) {
+                  if ((isset($_GET['search']) && zen_not_null($_GET['search'])) || !empty($_GET['cID'])) {
                     ?>
                   <a class="btn btn-info input-group-addon" role="button" aria-label="<?php echo TEXT_RESET_FILTER; ?>" href="<?php echo zen_href_link(FILENAME_ORDERS); ?>">
                     <i class="fa fa-times" aria-hidden="true">&nbsp;</i>
@@ -490,7 +490,7 @@ if (zen_not_null($action) && $order_exists == true) {
               <div class="input-group">
                   <?php
                   echo zen_draw_input_field('search_orders_products', '', 'id="searchProduct" class="form-control" aria-describedby="helpBlock3" placeholder="' . $placeholder . '"');
-                  if (isset($_GET['search_orders_products']) && zen_not_null($_GET['search_orders_products']) || !empty($_GET['cID'])) {
+                  if ((isset($_GET['search_orders_products']) && zen_not_null($_GET['search_orders_products'])) || !empty($_GET['cID'])) {
                     ?>
                   <a class="btn btn-info input-group-addon" role="button" aria-label="<?php echo TEXT_RESET_FILTER; ?>" href="<?php echo zen_href_link(FILENAME_ORDERS); ?>">
                     <i class="fa fa-times" aria-hidden="true">&nbsp;</i>
@@ -550,7 +550,7 @@ if (zen_not_null($action) && $order_exists == true) {
         $result = $db->Execute("SELECT orders_id
                                   FROM " . TABLE_ORDERS . "
                                   WHERE orders_id > " . (int)$oID . "
-                                  ORDER BY orders_id ASC
+                                  ORDER BY orders_id
                                   LIMIT 1");
         if ($result->RecordCount()) {
           $next_button = '<a role="button" class="btn btn-default" href="' . zen_href_link(FILENAME_ORDERS, 'oID=' . $result->fields['orders_id'] . '&action=edit') . '">' . $result->fields['orders_id'] . ' &raquo;</a>';
@@ -1145,7 +1145,7 @@ if (zen_not_null($action) && $order_exists == true) {
                     $keywords = zen_db_input(zen_db_prepare_input($_GET['search_orders_products']));
                     $search = " and (op.products_model like '%" . $keywords . "%' or op.products_name like '%" . $keywords . "%')";
                     if (substr(strtoupper($_GET['search_orders_products']), 0, 3) == 'ID:') {
-                      $keywords = TRIM(substr($_GET['search_orders_products'], 3));
+                      $keywords = trim(substr($_GET['search_orders_products'], 3));
                       $search = " and op.products_id ='" . (int)$keywords . "'";
                     }
                   } elseif (!empty($_GET['search'])) {
@@ -1405,7 +1405,7 @@ if (zen_not_null($action) && $order_exists == true) {
                           $contents[] = ['text' => '&nbsp;<i> - ' . $order->products[$i]['attributes'][$j]['option'] . ': ' . nl2br(zen_output_string_protected($order->products[$i]['attributes'][$j]['value'])) . '</i>'];
                         }
                       }
-                      if ($i > MAX_DISPLAY_RESULTS_ORDERS_DETAILS_LISTING and MAX_DISPLAY_RESULTS_ORDERS_DETAILS_LISTING != 0) {
+                      if ($i > (int)MAX_DISPLAY_RESULTS_ORDERS_DETAILS_LISTING && (int)MAX_DISPLAY_RESULTS_ORDERS_DETAILS_LISTING != 0) {
                         $contents[] = ['text' => TEXT_MORE];
                         break;
                       }
