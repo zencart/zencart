@@ -319,12 +319,13 @@ if (zen_not_null($action) && $order_exists == true) {
       } else {
         $messageStack->add_session(WARNING_ORDER_NOT_UPDATED, 'warning');
       }
-        if (isset($_POST['listing'])) { // return to the order LISTING page
-            zen_redirect(zen_href_link(FILENAME_ORDERS, zen_get_all_get_params(['action', 'language']) . 'language=' . $admin_language, 'NONSSL'));//remove action, nothing more to do, reset admin language
-        } else {  // return to the order DETAILS page
-            zen_redirect(zen_href_link(FILENAME_ORDERS, zen_get_all_get_params(['action', 'language']) . 'action=edit&language=' . $admin_language, 'NONSSL'));
+
+        if (isset($_POST['camefrom']) && $_POST['camefrom'] === 'orderEdit') {
+            zen_redirect(zen_href_link(FILENAME_ORDERS, zen_get_all_get_params(['action', 'language']) . 'action=edit' . ($admin_language !== $_SESSION['languages_code'] ? '&language=' . $admin_language : ''), 'NONSSL'));
         }
+        zen_redirect(zen_href_link(FILENAME_ORDERS, zen_get_all_get_params(['action', 'language']) . ($admin_language !== $_SESSION['languages_code'] ? 'language=' . $admin_language : ''), 'NONSSL'));
       break;
+
     case 'deleteconfirm':
       $oID = zen_db_prepare_input($_POST['oID']);
 
@@ -940,18 +941,19 @@ if (zen_not_null($action) && $order_exists == true) {
         <div class="row noprint"><?php echo zen_draw_separator('pixel_trans.gif', '1', '5'); ?></div>
         <div class="row noprint">
           <div class="formArea">
-              <?php echo zen_draw_form('statusUpdate', FILENAME_ORDERS, zen_get_all_get_params(array('action','language')) . 'action=update_order&language=' . $order->info['language_code'], 'post', 'class="form-horizontal"', true); ?>
-            <div class="form-group">
-                <?php echo zen_draw_label(TABLE_HEADING_COMMENTS, 'comments', 'class="col-sm-3 control-label"'); ?>
-              <div class="col-sm-9">
-                  <?php echo zen_draw_textarea_field('comments', 'soft', '60', '5', '', 'id="comments" class="form-control"');
-                  // remind admin user of the order/customer language in case of writing a comment.
-                  if (count(zen_get_languages()) > 1) {
-                      echo '<br>' . zen_get_language_icon($order->info['language_code']) . ' <strong>' . sprintf(TEXT_EMAIL_LANGUAGE, zen_get_language_name($order->info['language_code'])) . '</strong>';
-                     echo zen_draw_hidden_field('admin_language', $_SESSION['languages_code']);
-                  } ?>
+              <?php echo zen_draw_form('statusUpdate', FILENAME_ORDERS, zen_get_all_get_params(array('action', 'language')) . 'action=update_order&language=' . $order->info['language_code'], 'post', 'class="form-horizontal"', true);
+               echo zen_draw_hidden_field('camefrom', 'orderEdit'); // identify from where the form was submitted (infoBox/listing or details), to redirect back to this same page ?>
+              <div class="form-group">
+                  <?php echo zen_draw_label(TABLE_HEADING_COMMENTS, 'comments', 'class="col-sm-3 control-label"'); ?>
+                  <div class="col-sm-9">
+                      <?php echo zen_draw_textarea_field('comments', 'soft', '60', '5', '', 'id="comments" class="form-control editorHook"');
+                      // remind admin user of the order/customer language in case of writing a comment.
+                      if (count(zen_get_languages()) > 1) {
+                          echo '<br>' . zen_get_language_icon($order->info['language_code']) . ' <strong>' . sprintf(TEXT_EMAIL_LANGUAGE, zen_get_language_name($order->info['language_code'])) . '</strong>';
+                          echo zen_draw_hidden_field('admin_language', $_SESSION['languages_code']);
+                      } ?>
+                  </div>
               </div>
-            </div>
 <?php
     $zco_notifier->notify('NOTIFY_ADMIN_ORDERS_ADDL_HISTORY_INPUTS', array());
 ?>
@@ -1343,7 +1345,6 @@ if (zen_not_null($action) && $order_exists == true) {
                     $contents[] = ['text' =>
                         zen_draw_form('statusUpdate', FILENAME_ORDERS, zen_get_all_get_params(['action','language']) . 'action=update_order' . (!isset($_GET['oID']) ? '&oID=' . $oInfo->orders_id : '') . '&language=' . $oInfo->language_code, 'post', '', true) . // form action uses the order language to change the session language on the update. On initial page load (from another page), $_GET['oID'] is not set, hence clause in form action
                         '<fieldset style="border:solid thin slategray;padding:5px"><legend style="width:inherit;">&nbsp;' . IMAGE_UPDATE . '&nbsp;</legend>' .
-                        zen_draw_hidden_field('listing', '1') . // identify that this form was submitted from the infoBox/listing page and not the Order Details page (to redirect to this same page)
                         ($oInfo->language_code !== $_SESSION['languages_code'] ? zen_draw_hidden_field('admin_language', $_SESSION['languages_code']) : '') . // if the order language is different to the current admin language, record the admin language, to restore it in the redirect after the status update email has been sent
                         '<label class="control-label" for="notify">' . IMAGE_SEND_EMAIL . '</label> ' .
                         zen_draw_checkbox_field('notify', '1', $notify_email, '', 'class="checkbox-inline" id="notify"') . "<br>\n" .
