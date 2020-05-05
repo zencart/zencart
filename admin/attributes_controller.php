@@ -49,7 +49,7 @@ foreach ($chk_option_values as $option_value) {
   $ary[] = $option_value['language_id'];
 }
 $languages = zen_get_languages();
-for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
+for ($i = 0, $n = count($languages); $i < $n; $i++) {
   if ((int)$languages[$i]['id'] > 0 && !in_array((int)$languages[$i]['id'], $ary)) {
     $db->Execute("INSERT INTO " . TABLE_PRODUCTS_OPTIONS_VALUES . " (products_options_values_id, language_id, products_options_values_name)
                   VALUES (" . (int)PRODUCTS_OPTIONS_VALUES_TEXT_ID . ", " . (int)$languages[$i]['id'] . ", 'TEXT')");
@@ -210,7 +210,7 @@ if (zen_not_null($action)) {
       break;
     case 'add_product_attributes':
       $current_image_name = '';
-      for ($i = 0; $i < sizeof($_POST['values_id']); $i++) {
+      for ($i = 0; $i < count($_POST['values_id']); $i++) {
         if (isset($_POST['values_id'][$i])) {
           $value_id = (int)$_POST['values_id'][$i];
         }
