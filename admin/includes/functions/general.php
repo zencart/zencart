@@ -2209,26 +2209,29 @@ function zen_copy_products_attributes($products_id_from, $products_id_to) {
     return true;
 } // eof: zen_copy_products_attributes
 
-
-
 /**
  * return the size and maxlength settings in the form size="blah" maxlength="blah" based on maximum size being 50
  * uses $tbl = table name, $fld = field name
  * example: zen_set_field_length(TABLE_CATEGORIES_DESCRIPTION, 'categories_name')
+ * @param string $tbl
+ * @param string $fld
+ * @param int $max
+ * @param bool $override
+ * @return string
  */
-  function zen_set_field_length($tbl, $fld, $max=50, $override=false) {
-    $field_length= zen_field_length($tbl, $fld);
+function zen_set_field_length($tbl, $fld, $max = 50, $override = false)
+{
+    $field_length = zen_field_length($tbl, $fld);
     switch (true) {
-      case (($override == false and $field_length > $max)):
-        $length= 'size = "' . ($max+1) . '" maxlength= "' . $field_length . '"';
-        break;
-      default:
-        $length= 'size = "' . ($field_length+1) . '" maxlength = "' . $field_length . '"';
-        break;
+        case (($override == false and $field_length > $max)):
+            $length = 'size="' . ($max + 1) . '" maxlength="' . $field_length . '"';
+            break;
+        default:
+            $length = 'size="' . ($field_length + 1) . '" maxlength="' . $field_length . '"';
+            break;
     }
     return $length;
-  }
-
+}
 
 /**
  * Lookup Languages Icon by id or code
