@@ -41,7 +41,7 @@ if ($chk_products->RecordCount() < 1) {
   zen_redirect(zen_href_link(FILENAME_CATEGORY_PRODUCT_LISTING));
 }
 // check for damaged database, caused by users indiscriminately deleting table data
-$ary = array();
+$ary = [];
 $chk_option_values = $db->Execute("SELECT DISTINCT language_id
                                    FROM " . TABLE_PRODUCTS_OPTIONS_VALUES . "
                                    WHERE products_options_values_id = " . (int)PRODUCTS_OPTIONS_VALUES_TEXT_ID);
@@ -288,7 +288,7 @@ if (zen_not_null($action)) {
             }
 
             $attributes_image = new upload('attributes_image');
-            $attributes_image->set_extensions(array('jpg', 'jpeg', 'gif', 'png', 'webp', 'flv', 'webm', 'ogg'));
+            $attributes_image->set_extensions(['jpg', 'jpeg', 'gif', 'png', 'webp', 'flv', 'webm', 'ogg']);
             $attributes_image->set_destination(DIR_FS_CATALOG_IMAGES . $_POST['img_dir']);
             if ($attributes_image->parse() && $attributes_image->save($_POST['overwrite'])) {
               $attributes_image_name = $_POST['img_dir'] . $attributes_image->filename;
@@ -430,7 +430,7 @@ if (zen_not_null($action)) {
           }
 
           $attributes_image = new upload('attributes_image');
-          $attributes_image->set_extensions(array('jpg', 'jpeg', 'gif', 'png', 'webp', 'flv', 'webm', 'ogg'));
+          $attributes_image->set_extensions(['jpg', 'jpeg', 'gif', 'png', 'webp', 'flv', 'webm', 'ogg']);
           $attributes_image->set_destination(DIR_FS_CATALOG_IMAGES . (isset($_POST['img_dir']) ? $_POST['img_dir'] : ''));
           if ($attributes_image->parse() && $attributes_image->save($_POST['overwrite'])) {
             $attributes_image_name = ($attributes_image->filename != 'none' ? ($_POST['img_dir'] . $attributes_image->filename) : '');
@@ -504,7 +504,7 @@ if (zen_not_null($action)) {
       if (isset($_POST['delete_attribute_id'])) {
         $attribute_id = (int)$_POST['delete_attribute_id'];
 
-        $zco_notifier->notify('NOTIFY_ATTRIBUTE_CONTROLLER_DELETE_ATTRIBUTE', array('attribute_id' => $attribute_id), $attribute_id);
+        $zco_notifier->notify('NOTIFY_ATTRIBUTE_CONTROLLER_DELETE_ATTRIBUTE', ['attribute_id' => $attribute_id], $attribute_id);
 
         $db->Execute("DELETE FROM " . TABLE_PRODUCTS_ATTRIBUTES . "
                       WHERE products_attributes_id = " . $attribute_id);
@@ -521,7 +521,7 @@ if (zen_not_null($action)) {
       break;
 // delete all attributes
     case 'delete_all_attributes':
-      $zco_notifier->notify('NOTIFY_ATTRIBUTE_CONTROLLER_DELETE_ALL', array('pID' => $_POST['products_filter']));
+      $zco_notifier->notify('NOTIFY_ATTRIBUTE_CONTROLLER_DELETE_ALL', ['pID' => $_POST['products_filter']]);
 
       $action = '';
       $products_filter = (int)$_POST['products_filter'];
@@ -535,7 +535,7 @@ if (zen_not_null($action)) {
       break;
 
     case 'delete_option_name_values':
-      $zco_notifier->notify('NOTIFY_ATTRIBUTE_CONTROLLER_DELETE_OPTION_NAME_VALUES', array('pID' => $_POST['products_filter'], 'options_id' => $_POST['products_options_id_all']));
+      $zco_notifier->notify('NOTIFY_ATTRIBUTE_CONTROLLER_DELETE_OPTION_NAME_VALUES', ['pID' => $_POST['products_filter'], 'options_id' => $_POST['products_options_id_all']]);
 
       $delete_attributes_options_id = $db->Execute("SELECT products_attributes_id
                                                     FROM " . TABLE_PRODUCTS_ATTRIBUTES . "
@@ -596,7 +596,7 @@ if (zen_not_null($action)) {
 }
 
 //iii 031103 added to get results from database option type query
-$products_options_types_list = array();
+$products_options_types_list = [];
 $products_options_type_array = $db->Execute("SELECT products_options_types_id, products_options_types_name
                                              FROM " . TABLE_PRODUCTS_OPTIONS_TYPES . "
                                              ORDER BY products_options_types_id");
@@ -610,11 +610,11 @@ foreach ($products_options_type_array as $products_options_type) {
 function draw_optiontype_pulldown($name, $default = '')
 {
   global $products_options_types_list;
-  $values = array();
+  $values = [];
   foreach ($products_options_types_list as $id => $text) {
-    $values[] = array(
+    $values[] = [
       'id' => $id,
-      'text' => $text);
+      'text' => $text];
   }
   return zen_draw_pull_down_menu($name, $values, $default);
 }
@@ -832,7 +832,7 @@ function zen_js_option_values_list($selectedName, $fieldName)
       if ($action == 'attribute_features_copy_to_product') {
         $_GET['products_update_id'] = '';
         // excluded current product from the pull down menu of products
-        $products_exclude_array = array();
+        $products_exclude_array = [];
         $products_exclude_array[] = $products_filter;
         ?>
         <div class="row">
@@ -1186,7 +1186,7 @@ function zen_js_option_values_list($selectedName, $fieldName)
                                                          WHERE pov.language_id = " . (int)$_SESSION['languages_id'] . "
                                                          AND povtpo.products_options_id = " . (int)$attributes_value['options_id'] . "
                                                          ORDER BY pov.products_options_values_name");
-                          $optionValuesArray = array();
+                          $optionValuesArray = [];
                           foreach ($values_values as $value) {
 
                             if ($show_value_numbers == false) {
@@ -1194,10 +1194,10 @@ function zen_js_option_values_list($selectedName, $fieldName)
                             } else {
                               $show_option_name = ' [ #' . $value['products_options_values_id'] . ' ] ' . '&nbsp;&nbsp;&nbsp;[' . strtoupper(zen_get_products_options_name_from_value($value['products_options_values_id'])) . ' ]';
                             }
-                            $optionValuesArray[] = array(
+                            $optionValuesArray[] = [
                               'id' => $value['products_options_values_id'],
                               'text' => $value['products_options_values_name'] . $show_option_name
-                            );
+                            ];
                           }
                           ?>
                           <?php echo zen_draw_pull_down_menu('values_id', $optionValuesArray, $attributes_value['options_values_id'], 'class="form-control"'); ?>
