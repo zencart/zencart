@@ -1750,9 +1750,9 @@ function zen_js_option_values_list($selectedName, $fieldName)
                         <?php echo zen_draw_pull_down_menu('options_id', $optionsDropDownArray, '', 'id="OptionName" size="' . ($action != 'delete_attribute' ? "15" : "1") . '" onchange="update_option(this.form)" class="form-control"'); ?>
                       </div>
                       <div class="col-xs-12 col-sm-6 col-md-6 col-lg-5">
-                        <?php echo zen_draw_label(TABLE_HEADING_OPT_VALUE, 'OptionValue', 'class="control-label"'); ?>
+                        <?php echo zen_draw_label(TABLE_HEADING_OPT_VALUE, 'OptionValue', 'class="control-label"') . "\n"; ?>
                         <select name="values_id[]" id="OptionValue" class="form-control" multiple="multiple" <?php echo 'size="' . ($action != 'delete_attribute' ? "15" : "1") . '"'; ?>>
-                          <option selected>&lt;-- Please select an Option Name from the list ... </option>
+                          <option selected>&lt;-- <?php echo PLEASE_SELECT; ?></option>
                         </select>
                       </div>
                     </div>
