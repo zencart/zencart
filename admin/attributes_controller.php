@@ -906,9 +906,7 @@ function zen_js_option_values_list($selectedName, $fieldName)
       <?php if ($action == '') { ?>
         <div class="row">
           <div class="col-sm-12">
-            <table class="table">
               <?php require(DIR_WS_MODULES . FILENAME_PREV_NEXT_DISPLAY); ?>
-            </table>
           </div>
         </div>
 
