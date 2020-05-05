@@ -1079,7 +1079,7 @@ function zen_js_option_values_list($selectedName, $fieldName)
         </div>
         <div class="row">
           <div class="col-sm-12">
-            <?php echo zen_draw_form('attributes', FILENAME_ATTRIBUTES_CONTROLLER, 'action=' . $form_action . '&' . ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . 'products_filter=' . $products_filter, 'post', 'enctype="multipart/form-data" class="form-horizontal"'); ?>
+            <?php echo zen_draw_form('attributes', FILENAME_ATTRIBUTES_CONTROLLER, 'action=' . $form_action . '&' . ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . 'products_filter=' . $products_filter, 'post', 'enctype="multipart/form-data" class="form-horizontal"') . "\n"; ?>
             <table class="table table-striped table-condensed">
               <tr class="dataTableHeadingRow">
                 <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_ID; ?></td>
@@ -2026,7 +2026,10 @@ function zen_js_option_values_list($selectedName, $fieldName)
                 </tr>
               <?php } ?>
             </table>
-          <?php } ?>
+          <?php echo'</form>'; ?>
+          </div>
+        </div>
+      <?php } ?>
 
       <!-- eof_adding -->
 
