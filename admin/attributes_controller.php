@@ -1746,8 +1746,8 @@ function zen_js_option_values_list($selectedName, $fieldName)
                       }
                       ?>
                       <div class="col-xs-12 col-sm-5 col-md-5 col-lg-5">
-                        <?php echo zen_draw_label(TABLE_HEADING_OPT_NAME, 'options_id'); ?>
-                        <?php echo zen_draw_pull_down_menu('options_id', $optionsDropDownArray, '', 'id="OptionName" size="' . ($action != 'delete_attribute' ? "15" : "1") . '" onchange="update_option(this.form)" class="form-control"'); ?>
+                        <?php echo zen_draw_label(TABLE_HEADING_OPT_NAME, 'optionName') . "\n"; ?>
+                        <?php echo zen_draw_pull_down_menu('options_id', $optionsDropDownArray, '', 'id="optionName" size="' . ($action != 'delete_attribute' ? "15" : "1") . '" onchange="update_option(this.form)" class="form-control"'); ?>
                       </div>
                       <div class="col-xs-12 col-sm-6 col-md-6 col-lg-5">
                         <?php echo zen_draw_label(TABLE_HEADING_OPT_VALUE, 'values_id', 'class="control-label"'); ?>
