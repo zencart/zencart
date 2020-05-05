@@ -773,7 +773,7 @@ function zen_js_option_values_list($selectedName, $fieldName)
         </div>
         <div class="col-sm-4 text-right">
           <?php
-          echo zen_draw_form('search', FILENAME_CATEGORY_PRODUCT_LISTING, '', 'get');
+          echo zen_draw_form('searchForm', FILENAME_CATEGORY_PRODUCT_LISTING, '', 'get');
 // show reset search
           if (isset($_GET['search']) && zen_not_null($_GET['search'])) {
             echo '<a href="' . zen_href_link(FILENAME_CATEGORY_PRODUCT_LISTING) . '">' . zen_image_button('button_reset.gif', IMAGE_RESET) . '</a>&nbsp;&nbsp;';
