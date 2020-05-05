@@ -1336,17 +1336,20 @@ if (zen_not_null($action) && $order_exists == true) {
 
               switch ($action) {
                 case 'delete':
-                  $heading[] = ['text' => '<h4>' . TEXT_INFO_HEADING_DELETE_ORDER . '</h4>'];
-
-                  $contents = ['form' => zen_draw_form('orders', FILENAME_ORDERS, zen_get_all_get_params(['oID', 'action']) . '&action=deleteconfirm', 'post', 'class="form-horizontal"', true) . zen_draw_hidden_field('oID', $oInfo->orders_id)];
-                  $contents[] = ['text' => TEXT_INFO_DELETE_INTRO . '<br><br><strong>' . ENTRY_ORDER_ID . $oInfo->orders_id . '<br>' . $oInfo->order_total . '<br>' . $oInfo->customers_name . ($oInfo->customers_company != '' ? '<br>' . $oInfo->customers_company : '') . '</strong>'];
-                  $contents[] = ['text' => '<br><label>' . zen_draw_checkbox_field('restock') . ' ' . TEXT_INFO_RESTOCK_PRODUCT_QUANTITY . '</label>'];
-                  $contents[] = ['align' => 'text-center', 'text' => '<br><button type="submit" class="btn btn-danger">' . IMAGE_DELETE . '</button> <a href="' . zen_href_link(FILENAME_ORDERS, zen_get_all_get_params(['oID', 'action']) . 'oID=' . $oInfo->orders_id, 'NONSSL') . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>'];
+                    $heading[] = ['text' => '<h4>' . TEXT_INFO_HEADING_DELETE_ORDER . ': ' . $oInfo->orders_id . '</h4>'];
+                    $contents = ['form' => zen_draw_form('orders', FILENAME_ORDERS, zen_get_all_get_params(['oID', 'action']) . '&action=deleteconfirm', 'post', 'class="form-horizontal"', true) . zen_draw_hidden_field('oID', $oInfo->orders_id)];
+                    $contents[] = ['text' => '<h3>' . TEXT_INFO_DELETE_INTRO . '</h3>'];
+                    $contents[] = ['text' => IMAGE_ORDER . ': ' . $oInfo->orders_id];
+                    $contents[] = ['text' => TABLE_HEADING_DATE_PURCHASED . ': ' . zen_date_short($oInfo->date_purchased)];
+                    $contents[] = ['text' => TABLE_HEADING_TOTAL . ': ' . $oInfo->order_total];
+                    $contents[] = ['text' => ENTRY_CUSTOMER . ' ' . $oInfo->customers_name . ($oInfo->customers_company != '' ? ' - ' . $oInfo->customers_company : '')];
+                    $contents[] = ['text' => TEXT_EMAIL . ': ' . $oInfo->customers_email_address];
+                    $contents[] = ['text' => '<h5><label>' . zen_draw_checkbox_field('restock') . TEXT_INFO_RESTOCK_PRODUCT_QUANTITY . '</label></h5>'];
+                    $contents[] = ['align' => 'text-center', 'text' => '<a href="' . zen_href_link(FILENAME_ORDERS, zen_get_all_get_params(['oID', 'action']) . 'oID=' . $oInfo->orders_id, 'NONSSL') . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>' . '&nbsp;&nbsp;' . '<button type="submit" class="btn btn-danger">' . IMAGE_DELETE . '</button>'];
                   break;
                 default:
                   if (isset($oInfo) && is_object($oInfo)) {
-                    $heading[] = ['text' => '<h4>' . $oInfo->orders_id . '&nbsp;&nbsp;' . zen_datetime_short($oInfo->date_purchased) . '</h4>'];
-
+                    $heading[] = ['text' => '<h4>' . IMAGE_ORDER . ': ' . $oInfo->orders_id . '</h4>'];
                     $contents[] = ['align' => 'text-center', 'text' => '<a href="' . zen_href_link(FILENAME_ORDERS, zen_get_all_get_params(['oID', 'action']) . 'oID=' . $oInfo->orders_id . '&action=edit', 'NONSSL') . '" class="btn btn-primary" role="button">' . IMAGE_DETAILS . '</a> <a href="' . zen_href_link(FILENAME_ORDERS, zen_get_all_get_params(['oID', 'action']) . 'oID=' . $oInfo->orders_id . '&action=delete', 'NONSSL') . '" class="btn btn-warning" role="button">' . IMAGE_DELETE . '</a>'];
                     $contents[] = ['align' => 'text-center', 'text' => '<a href="' . zen_href_link(FILENAME_ORDERS_INVOICE, 'oID=' . $oInfo->orders_id) . '" target="_blank" class="btn btn-info" role="button">' . IMAGE_ORDERS_INVOICE . '</a> <a href="' . zen_href_link(FILENAME_ORDERS_PACKINGSLIP, 'oID=' . $oInfo->orders_id) . '" target="_blank" class="btn btn-info" role="button">' . IMAGE_ORDERS_PACKINGSLIP . '</a>'];
                     $zco_notifier->notify('NOTIFY_ADMIN_ORDERS_MENU_BUTTONS', $oInfo, $contents);
@@ -1361,9 +1364,11 @@ if (zen_not_null($action) && $order_exists == true) {
                         '<label class="control-label" for="status">' . ENTRY_STATUS . '</label>' . zen_draw_order_status_dropdown('status', $oInfo->orders_status, '', 'onChange="this.form.submit();" id="status" class="form-control"') . "\n" .
                         '</fieldset></form>' . "\n"];
 
-                    $contents[] = ['text' => TEXT_DATE_ORDER_CREATED . ' ' . zen_date_short($oInfo->date_purchased)];
-                    $contents[] = ['text' => '<strong>' . $oInfo->customers_name . '</strong>'];
-                    $contents[] = ['text' => $oInfo->customers_email_address];
+                    $contents[] = ['text' => IMAGE_ORDER . ': ' . $oInfo->orders_id];
+                    $contents[] = ['text' => TABLE_HEADING_DATE_PURCHASED . ': ' . zen_date_short($oInfo->date_purchased)];
+                    $contents[] = ['text' => TABLE_HEADING_TOTAL . ': ' . $oInfo->order_total];
+                    $contents[] = ['text' => ENTRY_CUSTOMER . ' ' . $oInfo->customers_name . ($oInfo->customers_company != '' ? ' - ' . $oInfo->customers_company : '')];
+                    $contents[] = ['text' => TEXT_EMAIL . ': ' . $oInfo->customers_email_address];
                     $contents[] = ['text' => TEXT_INFO_IP_ADDRESS . ' ' . $oInfo->ip_address];
                     if (zen_not_null($oInfo->last_modified)) {
                       $contents[] = ['text' => TEXT_DATE_ORDER_LAST_MODIFIED . ' ' . zen_date_short($oInfo->last_modified)];

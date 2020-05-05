@@ -62,7 +62,7 @@ define('ENTRY_NOTIFY_COMMENTS', 'Append Comments:');
 
 define('TEXT_INFO_HEADING_DELETE_ORDER', 'Delete Order');
 define('TEXT_INFO_DELETE_INTRO', 'Are you sure you want to delete this order?');
-define('TEXT_INFO_RESTOCK_PRODUCT_QUANTITY', 'Restock product quantity');
+define('TEXT_INFO_RESTOCK_PRODUCT_QUANTITY', 'Restock product quantity?');
 define('TEXT_DATE_ORDER_CREATED', 'Date Created:');
 define('TEXT_DATE_ORDER_LAST_MODIFIED', 'Last Modified:');
 define('TEXT_INFO_PAYMENT_METHOD', 'Payment Method:');
