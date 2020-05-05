@@ -69,6 +69,10 @@ if ($gID == 7) {
   if ($shipping_errors != '') {
     $messageStack->add(ERROR_SHIPPING_CONFIGURATION . $shipping_errors, 'caution');
   }
+} else if ($gID == 6) {
+  if (!zen_is_superuser()) {
+     zen_redirect(zen_href_link(FILENAME_DENIED, '', 'SSL'));
+  }
 }
 ?>
 <!doctype html>
