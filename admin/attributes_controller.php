@@ -2027,9 +2027,7 @@ function zen_js_option_values_list($selectedName, $fieldName)
               <?php } ?>
             </table>
           <?php } ?>
-          <?php echo'</form>'; ?>
-        </div>
-      </div>
+
       <!-- eof_adding -->
 
       <!-- products_attributes_eof //-->
