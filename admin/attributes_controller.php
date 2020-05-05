@@ -778,7 +778,7 @@ function zen_js_option_values_list($selectedName, $fieldName)
           if (isset($_GET['search']) && zen_not_null($_GET['search'])) {
             echo '<a href="' . zen_href_link(FILENAME_CATEGORY_PRODUCT_LISTING) . '">' . zen_image_button('button_reset.gif', IMAGE_RESET) . '</a>&nbsp;&nbsp;';
           }
-          echo zen_draw_label(HEADING_TITLE_SEARCH_DETAIL, 'search') . ' ' . zen_draw_input_field('search') . zen_hide_session_id();
+          echo zen_draw_label(HEADING_TITLE_SEARCH_DETAIL, 'search') . ' ' . zen_draw_input_field('search', '', 'id="search"') . zen_hide_session_id();
           if (isset($_GET['search']) && zen_not_null($_GET['search'])) {
             $keywords = zen_db_input(zen_db_prepare_input($_GET['search']));
             echo '<br/ >' . TEXT_INFO_SEARCH_DETAIL_FILTER . $keywords;
