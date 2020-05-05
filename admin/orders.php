@@ -1345,7 +1345,7 @@ if (zen_not_null($action) && $order_exists == true) {
                     $contents[] = ['text' => ENTRY_CUSTOMER . ' ' . $oInfo->customers_name . ($oInfo->customers_company != '' ? ' - ' . $oInfo->customers_company : '')];
                     $contents[] = ['text' => TEXT_EMAIL . ': ' . $oInfo->customers_email_address];
                     $contents[] = ['text' => '<h5><label>' . zen_draw_checkbox_field('restock') . TEXT_INFO_RESTOCK_PRODUCT_QUANTITY . '</label></h5>'];
-                    $contents[] = ['align' => 'text-center', 'text' => '<a href="' . zen_href_link(FILENAME_ORDERS, zen_get_all_get_params(['oID', 'action']) . 'oID=' . $oInfo->orders_id, 'NONSSL') . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>' . '&nbsp;&nbsp;' . '<button type="submit" class="btn btn-danger">' . IMAGE_DELETE . '</button>'];
+                    $contents[] = ['align' => 'text-center', 'text' => '<button type="submit" class="btn btn-danger">' . IMAGE_DELETE . '</button>' . '&nbsp;&nbsp;' . '<a href="' . zen_href_link(FILENAME_ORDERS, zen_get_all_get_params(['oID', 'action']) . 'oID=' . $oInfo->orders_id, 'NONSSL') . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>'];
                   break;
                 default:
                   if (isset($oInfo) && is_object($oInfo)) {
