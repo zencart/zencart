@@ -161,10 +161,10 @@ $paypal_ipn_sort_order_array = [
         $ipn_count = $ipn->RecordCount();
 
         $contents[] = ['align' => 'center', 'text' => '<a href="' . zen_href_link(FILENAME_ORDERS, zen_get_all_get_params(['ipnID', 'action']) . 'oID=' . $ipnInfo->order_id .'&' . 'ipnID=' . $ipnInfo->paypal_ipn_id .'&action=edit' . '&referer=ipn') . '">' . zen_image_button('button_orders.gif', IMAGE_ORDERS) . '</a>'];
-        $contents[] = ['text' => '<br>' . TABLE_HEADING_NUM_HISTORY_ENTRIES . ': '. $ipn_count];
+        $contents[] = ['text' => TABLE_HEADING_NUM_HISTORY_ENTRIES . ': '. $ipn_count];
         $count = 1;
         foreach ($ipn as $ipn_status_history) {
-          $contents[] = ['text' => '<br>' . TABLE_HEADING_ENTRY_NUM . ': ' . $count];
+          $contents[] = ['text' =>  TABLE_HEADING_ENTRY_NUM . ': ' . $count];
           $contents[] = ['text' =>  TABLE_HEADING_DATE_ADDED . ': ' . zen_datetime_short($ipn_status_history['date_added'])];
           $contents[] = ['text' =>  TABLE_HEADING_TRANS_ID . ': ' . $ipn_status_history['txn_id']];
           $contents[] = ['text' =>  TABLE_HEADING_PAYMENT_STATUS . ': ' . $ipn_status_history['payment_status']];
