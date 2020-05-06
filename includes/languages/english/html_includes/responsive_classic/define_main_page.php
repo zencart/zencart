@@ -5,19 +5,19 @@ if (!isset($_SESSION['layoutType'])) {
 
 if ( $detect->isMobile() && !$detect->isTablet() || $_SESSION['layoutType'] == 'mobile' ) { ?>
 
-<a href="http://www.zen-cart.com/book"><img src="includes/templates/responsive_classic/images/zencart-book-mobile.png" alt="get your manual today" title="Have you got yours yet? Join the 1000's of Zen Cart users that have bought the only comprehensive owners manual !" class="home-image" /></a>
+<img src="includes/templates/responsive_classic/images/scr_responsive_classic_mobile.jpg" alt="Respond to Responsive with Zen Cart" class="home-image" />
   
 <?php  } else if ( $detect->isTablet() || $_SESSION['layoutType'] == 'tablet' ){ ?>
 
-<a href="http://www.zen-cart.com/book"><img src="includes/templates/responsive_classic/images/zencart-book.png" alt="get your manual today" title="Have you got yours yet? Join the 1000's of Zen Cart users that have bought the only comprehensive owners manual !" class="home-image" /></a>
+<img src="includes/templates/responsive_classic/images/scr_responsive_classic.jpg" alt="Respond to Responsive with Zen Cart" class="home-image" />
 
 <?php  } else if ( $_SESSION['layoutType'] == 'full' ) { ?>
 
-<a href="http://www.zen-cart.com/book"><img src="includes/templates/responsive_classic/images/zencart-book.png" alt="get your manual today" title="Have you got yours yet? Join the 1000's of Zen Cart users that have bought the only comprehensive owners manual !" class="home-image" /></a>
+<img src="includes/templates/responsive_classic/images/scr_responsive_classic.jpg" alt="Respond to Responsive with Zen Cart" class="home-image" />
 
 <?php  } else { ?>
 
-<a href="http://www.zen-cart.com/book"><img src="includes/templates/responsive_classic/images/zencart-book.png" alt="get your manual today" title="Have you got yours yet? Join the 1000's of Zen Cart users that have bought the only comprehensive owners manual !" class="home-image" /></a>
+<img src="includes/templates/responsive_classic/images/scr_responsive_classic.jpg" alt="Respond to Responsive with Zen Cart" class="home-image" />
 
 <?php  } ?>
 <p class="biggerText">The template package uses PHP Mobile Detect to serve up the optimized layout based on device.  
