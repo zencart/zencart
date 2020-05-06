@@ -76,53 +76,11 @@ for ($i = 0, $salesData = ''; $i < $report->size; $i++) {
   }
 }
 
-// Build the whos-online graph
-$whos_online = $db->Execute("SELECT customer_id, full_name, ip_address, time_entry, time_last_click, last_page_url, session_id, host_address, user_agent FROM " . TABLE_WHOS_ONLINE);
-// Initialize array variables for display.
-$user_array = $guest_array = $spider_array = [0 => 0, 1 => 0, 2 => 0, 3 => 0];
-$status = 0;
-
-foreach ($whos_online as $session) {
-  $which_query = $db->Execute("SELECT sesskey, value FROM " . TABLE_SESSIONS . " WHERE sesskey = '" . $session['session_id'] . "'");
-  $who_query = $db->Execute("SELECT session_id, time_entry, time_last_click, host_address, user_agent FROM " . TABLE_WHOS_ONLINE . " WHERE session_id = '" . $session['session_id'] . "'");
-
-// longer than 3 minutes light color
-  $xx_mins_ago_long = (time() - 180);
-
-  switch (true) {
-    case ($which_query->RecordCount() == 0):
-      if ($who_query->fields['time_last_click'] < $xx_mins_ago_long) {
-        $status = 3;
-      } else {
-        $status = 2;
-      }
-      break;
-    case (strstr($which_query->fields['value'], '"contents";a:0:')):
-      if ($who_query->fields['time_last_click'] < $xx_mins_ago_long) {
-        $status = 3;
-      } else {
-        $status = 2;
-      }
-      break;
-    case (!strstr($which_query->fields['value'], '"contents";a:0:')):
-      if ($who_query->fields['time_last_click'] < $xx_mins_ago_long) {
-        $status = 1;
-      } else {
-        $status = 0;
-      }
-      break;
-  }
-
-  if (empty($session['session_id'])) {
-    $spider_array[$status] += 1;
-  } else {
-    if ($session['full_name'] == "&yen;Guest") {
-      $guest_array[$status] += 1;
-    } else {
-      $user_array[$status] += 1;
-    }
-  }
-}
+$whos_online = new WhosOnline();
+$whos_online_stats = $whos_online->getStats();
+$user_array = $whos_online_stats['user_array'];
+$guest_array = $whos_online_stats['guest_array'];
+$spider_array = $whos_online_stats['spider_array'];
 ?>
 <!doctype html>
 <html <?php echo HTML_PARAMS; ?>>
@@ -430,7 +388,7 @@ foreach ($whos_online as $session) {
           </tr>
           <tr>
             <td colspan="4"><?php echo WO_GRAPH_TOTAL; ?></td>
-            <td class="text-right"><?php echo $whos_online->RecordCount(); ?></td>
+            <td class="text-right"><?php echo $whos_online->getTotalSessions(); ?></td>
           </tr>
           <tr class="smallText">
             <td colspan="5">
@@ -526,7 +484,7 @@ foreach ($whos_online as $session) {
                       FROM " . TABLE_ORDERS_PRODUCTS . " op 
                       LEFT OUTER JOIN " . TABLE_ORDERS_PRODUCTS_ATTRIBUTES . " opa ON op.orders_products_id=opa.orders_products_id
                       WHERE op.orders_id = " . (int)$order['orders_id'];
-// die($sql); 
+
               $orderProducts = $db->Execute($sql, false, true, 1800);
               $product_details = '';
               foreach($orderProducts as $product) {
