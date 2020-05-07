@@ -411,7 +411,14 @@ function zen_image_submit($image, $alt = '', $parameters = '')
   }
 ////
 // output label for input fields
-  function zen_draw_label($text, $for, $parameters = ''){
-    $label = '<label for="' . $for . '" ' . $parameters . '>' . $text . '</label>';
+/**
+ * @param string $text
+ * @param string $for
+ * @param string $parameters
+ * @return string
+ */
+function zen_draw_label($text, $for, $parameters = '')
+{
+    $label = '<label for="' . $for . '"' . (!empty($parameters) ? ' ' . $parameters : '') . '>' . $text . '</label>';
     return $label;
-  }
+}
