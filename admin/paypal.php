@@ -134,8 +134,7 @@ $paypal_ipn_sort_order_array = [
                 <td class="dataTableContent text-right"><?php echo $ipn_tran['mc_currency'] . ' '.number_format($ipn_tran['mc_gross'], 2); ?></td>
                 <td class="dataTableContent text-right">
                     <?php if (isset($ipnInfo) && is_object($ipnInfo) && ($ipn_tran['paypal_ipn_id'] == $ipnInfo->paypal_ipn_id) ) { echo zen_image(DIR_WS_IMAGES . 'icon_arrow_right.gif'); } else { echo '<a href="' . zen_href_link(FILENAME_PAYPAL, 'page=' . $_GET['page'] . '&ipnID=' . $ipn_tran['paypal_ipn_id']) . (zen_not_null($selected_status) ? '&payment_status=' . $selected_status : '') . (zen_not_null($paypal_ipn_sort_order) ? '&paypal_ipn_sort_order=' . $paypal_ipn_sort_order : '') . '">' . zen_image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>'; } ?></td>
-              </tr>
-<?php
+              <?php echo '</tr>';
   }
 ?>
               <tr>
@@ -161,10 +160,10 @@ $paypal_ipn_sort_order_array = [
         $ipn_count = $ipn->RecordCount();
 
         $contents[] = ['align' => 'center', 'text' => '<a href="' . zen_href_link(FILENAME_ORDERS, zen_get_all_get_params(['ipnID', 'action']) . 'oID=' . $ipnInfo->order_id .'&' . 'ipnID=' . $ipnInfo->paypal_ipn_id .'&action=edit' . '&referer=ipn') . '">' . zen_image_button('button_orders.gif', IMAGE_ORDERS) . '</a>'];
-        $contents[] = ['text' => '<br>' . TABLE_HEADING_NUM_HISTORY_ENTRIES . ': '. $ipn_count];
+        $contents[] = ['text' => TABLE_HEADING_NUM_HISTORY_ENTRIES . ': '. $ipn_count];
         $count = 1;
         foreach ($ipn as $ipn_status_history) {
-          $contents[] = ['text' => '<br>' . TABLE_HEADING_ENTRY_NUM . ': ' . $count];
+          $contents[] = ['text' =>  TABLE_HEADING_ENTRY_NUM . ': ' . $count];
           $contents[] = ['text' =>  TABLE_HEADING_DATE_ADDED . ': ' . zen_datetime_short($ipn_status_history['date_added'])];
           $contents[] = ['text' =>  TABLE_HEADING_TRANS_ID . ': ' . $ipn_status_history['txn_id']];
           $contents[] = ['text' =>  TABLE_HEADING_PAYMENT_STATUS . ': ' . $ipn_status_history['payment_status']];
