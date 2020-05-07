@@ -47,6 +47,12 @@ require('includes/application_top.php');
     <div class="container-fluid">
       <!-- body //-->
       <h1 class="pageHeading"><?php echo HEADING_TITLE; ?></h1>
+<?php
+require DIR_FS_CATALOG. 'includes/extra_datafiles/products_viewed_counter.php'; 
+if (defined('LEGACY_PRODUCTS_VIEWED_COUNTER') && LEGACY_PRODUCTS_VIEWED_COUNTER == 'off') {
+  echo TEXT_VIEWING_DISABLED; 
+} else { 
+?>
       <table class="table table-hover">
         <thead>
           <tr class="dataTableHeadingRow">
@@ -89,6 +95,9 @@ require('includes/application_top.php');
           <td class="text-right"><?php echo $products_split->display_links($products_query_numrows, MAX_DISPLAY_SEARCH_RESULTS_REPORTS, MAX_DISPLAY_PAGE_LINKS, $_GET['page']); ?></td>
         </tr>
       </table>
+<?php 
+} 
+?>
       <!-- body_text_eof //-->
       <!-- body_eof //-->
     </div>

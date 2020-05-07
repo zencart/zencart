@@ -25,4 +25,4 @@ define('HEADING_TITLE', 'Best Viewed Products');
 define('TABLE_HEADING_NUMBER', 'ID#');
 define('TABLE_HEADING_PRODUCTS', 'Products');
 define('TABLE_HEADING_VIEWED', 'Viewed');
-?>
+define('TEXT_VIEWING_DISABLED', 'This feature has been disabled for performance reasons in includes/extra_datafiles/products_viewed_counter.php.'); 
