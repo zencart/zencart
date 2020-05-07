@@ -169,8 +169,8 @@ return [
 'TEXT_ERROR_MULTIPLE_ADMINS_NONE_SELECTED' => 'Multiple Admin directories seem to exist. Either remove the duplicate admin directories and click Refresh or select the correct admin directory below and click Refresh.',
 'TEXT_ERROR_MULTIPLE_ADMINS_SELECTED' => 'Multiple Admin directories seem to exist. If the selected directory below is incorrect, please choose another and click Refresh.',
 'TEXT_ERROR_SUCCESS_NO_ERRORS' => 'No errors were detected on your system. You may continue with the installation.',
-'TEXT_UPGRADE_INFO' => 'An Upgrade will inspect your database and subsequently offer the steps required to upgrade to the current version (adding new fields/modifying existing fields). This is intended to be a non-destructive process, but as with all modifications you must ensure you have a verified backup of your database available before proceeding.',
-'TEXT_CLEAN_INSTALL_INFO' => 'A Clean Install will revert the database to a new state, deleting all data. Optionally, the demonstration data may be loaded as part of this process.',
+'TEXT_UPGRADE_INFO' => '%%TEXT_UPGRADE%%: will inspect your database and subsequently offer the steps required to upgrade to the current version (adding new fields/modifying existing fields). This is intended to be a non-destructive process, but as with all modifications you must ensure you have a verified backup of your database available before proceeding.',
+'TEXT_CLEAN_INSTALL_INFO' => '%%TEXT_CLEAN_INSTALL%%: will revert the database to a new state, deleting all data. Optionally, the demonstration data may be loaded as part of this process.',
 'TEXT_FORM_VALIDATION_REQUIRED' => 'Required',
 'TEXT_FORM_VALIDATION_AGREE_LICENSE' => 'You must agree to the license terms',
 'TEXT_FORM_VALIDATION_CATALOG_HTTPS_URL' => 'A URL is required here, even if you have temporarily opted not to enable SSL yet. Try using your normal domain name.',
@@ -206,7 +206,7 @@ You may proceed with installing despite this situation, but please be advised th
 'TEXT_HELP_TITLE_DBUSER' => 'Database User',
 'TEXT_HELP_CONTENT_DBUSER' => 'What is the MySQL username used to connect to the database?<br>An example username is "myusername_store".<br>For PCI reasons you should NEVER use "root" here when running on a server connected to the internet.<br><br>This MySQL user needs the following permissions granted to it: ALTER, CREATE, DELETE, DROP, INDEX, INSERT, LOCK TABLES, SELECT, UPDATE (or just "Grant All").',
 'TEXT_HELP_TITLE_DBPASSWORD' => 'Database Password',
-'TEXT_HELP_CONTENT_DBPASSWORD' => 'What is the password assigned to the MySQL username you created for this database.',
+'TEXT_HELP_CONTENT_DBPASSWORD' => 'What is the password assigned to the MySQL username you created for this database?',
 'TEXT_HELP_TITLE_DBNAME' => 'Database Name',
 'TEXT_HELP_CONTENT_DBNAME' => 'What is the name of the database used to hold the data?<br>An example database name is "zencart" or "myaccount_zencart".<br>NOTE: <strong>You</strong> must create this database BEFORE you can proceed with the Zen Cart&reg; installation.<br>You can create your MySQL database using your hosting company\'s control panel.',
 'TEXT_HELP_TITLE_DEMODATA' => 'TEXT_DATABASE_SETUP_LOAD_DEMO',
@@ -253,7 +253,7 @@ You may proceed with installing despite this situation, but please be advised th
 'TEXT_COMPLETION_NGINX_TEXT' => '<u>Important Security Information for Nginx</u>',
 'TEXT_HELP_TITLE_NGINXCONF' => 'Securing Zen Cart on Nginx Web Servers',
 'TEXT_HELP_CONTENT_NGINXCONF' => '<p>Your Zen Cart installation comes with security measures in a format native to the Apache Webserver. <br>
-  See below to implement a similar set of measures for the Nginx Webserver.</p>
+See below to implement a similar set of measures for the Nginx Webserver.</p>
 <hr>
 <ul style="list-style-type:square">
 <li>Go to your <strong>"zc_install/includes/nginx_conf"</strong> folder and open the following files using a text editor such as notepad or textedit:
@@ -278,7 +278,7 @@ You may proceed with installing despite this situation, but please be advised th
   </ul>
 </li>
 <li>It is especially critical that these directives appear before any generic php handling location blocks such as ... <br>
-  <pre> <code>location ~ \.php { <strong>Nginx PHP Handling Directives;</strong> }</code></pre>
+  <pre><code>location ~ \.php { <strong>Nginx PHP Handling Directives;</strong> }</code></pre>
   ... or any other location blocks that might be processed before these are.</li>
 <li>Instead, edit the <strong>"zencart_php_handler"</strong> location block to match your Nginx PHP Handling Directives.
   <ul style="list-style-type:circle">
