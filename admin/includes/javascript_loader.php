@@ -30,8 +30,8 @@
     }));
   });
 </script>
-<?php if (file_exists('includes/javascript/' . basename($PHP_SELF, '.php') . '.js')) { ?>
-  <script src="includes/javascript/<?php echo $file; ?>.js"></script>
+<?php if (file_exists($jsFile = 'includes/javascript/' . basename($PHP_SELF, '.php') . '.js')) { ?>
+  <script src="<?php echo $jsFile; ?>"></script>
 <?php } ?>
 <?php
 if (file_exists(DIR_WS_INCLUDES . 'keepalive_module.php')) {
