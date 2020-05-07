@@ -732,23 +732,28 @@
     }
   }
 
-////
-// return the size and maxlength settings in the form size="blah" maxlength="blah" based on maximum size being 70
-// uses $tbl = table name, $fld = field name
-// example: zen_set_field_length(TABLE_CATEGORIES_DESCRIPTION, 'categories_name')
-  function zen_set_field_length($tbl, $fld, $max=70) {
-    $field_length= zen_field_length($tbl, $fld);
+/**
+ * return the size and maxlength settings in the form size="blah" maxlength="blah" based on maximum size being 70
+ * uses $tbl = table name, $fld = field name
+ * example: zen_set_field_length(TABLE_CATEGORIES_DESCRIPTION, 'categories_name')
+ * @param string $tbl
+ * @param string $fld
+ * @param int $max
+ * @return string
+ */
+function zen_set_field_length($tbl, $fld, $max = 70)
+{
+    $field_length = zen_field_length($tbl, $fld);
     switch (true) {
-      case ($field_length > $max):
-        $length= 'size = "' . ($max+1) . '" maxlength= "' . $field_length . '"';
-        break;
-      default:
-        $length= 'size = "' . ($field_length+1) . '" maxlength = "' . $field_length . '"';
-        break;
+        case ($field_length > $max):
+            $length = 'size="' . ($max + 1) . '" maxlength="' . $field_length . '"';
+            break;
+        default:
+            $length = 'size="' . ($field_length + 1) . '"maxlength="' . $field_length . '"';
+            break;
     }
     return $length;
-  }
-
+}
 
 ////
 // Set back button
