@@ -175,10 +175,8 @@ $paypal_ipn_sort_order_array = [
   }
 
   if ( (zen_not_null($heading)) && (zen_not_null($contents)) ) {
-    echo '            <td>' . "\n";
     $box = new box();
     echo $box->infoBox($heading, $contents);
-    echo '            </td>' . "\n";
   }
 ?>
           </tr>
