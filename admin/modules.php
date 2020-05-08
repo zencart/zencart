@@ -313,9 +313,9 @@ if (zen_not_null($action)) {
               $contents = array('form' => zen_draw_form('module_delete', FILENAME_MODULES, '&action=removeconfirm' . (isset($_GET['set']) ? '&set=' . $_GET['set'] : '')));
               $contents[] = array('text' => zen_draw_hidden_field('set', (isset($_GET['set']) ? $_GET['set'] : '')));
               $contents[] = array('text' => zen_draw_hidden_field('module', (isset($_GET['module']) ? $_GET['module'] : '')));
-              $contents[] = array('text' => TEXT_DELETE_INTRO);
+              $contents[] = array('text' => '<h5>' . TEXT_DELETE_INTRO . '</h5>');
 
-              $contents[] = array('align' => 'text-center', 'text' => '<br><button type="submit" class="btn btn-danger" id="removeButton">' . IMAGE_DELETE . '</button>&nbsp;<a href="' . zen_href_link(FILENAME_MODULES, 'set=' . $set . ($_GET['module'] != '' ? '&module=' . $_GET['module'] : ''), 'SSL') . '" class="btn btn-default" role="button" name="cancelButton">' . IMAGE_CANCEL . '</a>');
+              $contents[] = array('align' => 'text-center', 'text' => '<button type="submit" class="btn btn-danger" id="removeButton">' . IMAGE_MODULE_REMOVE . '</button>&nbsp;<a href="' . zen_href_link(FILENAME_MODULES, 'set=' . $set . ($_GET['module'] != '' ? '&module=' . $_GET['module'] : ''), 'SSL') . '" class="btn btn-default" role="button" id="cancelButton">' . IMAGE_CANCEL . '</a>');
               break;
             case 'edit':
               if (!$is_ssl_protected && in_array($_GET['module'], array('paypaldp', 'authorizenet_aim', 'authorizenet_echeck'))) {
