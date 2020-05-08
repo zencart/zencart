@@ -274,8 +274,7 @@ if (zen_not_null($action)) {
                         echo '<a href="' . zen_href_link(FILENAME_MODULES, 'set=' . $set . '&module=' . $class, 'SSL') . '">' . zen_image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>';
                       }
                       ?>&nbsp;</td>
-                  </tr>
-                  <?php
+                  <?php echo '</tr>';
                 }
               } else {
                 echo ERROR_MODULE_FILE_NOT_FOUND . DIR_FS_CATALOG_LANGUAGES . $_SESSION['language'] . '/modules/' . $module_type . '/' . $file . '<br>';
