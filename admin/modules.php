@@ -194,7 +194,7 @@ if (zen_not_null($action)) {
                 }
 
                 $installed_modules = $temp_for_sort = [];
-                for ($i = 0, $n = sizeof($directory_array); $i < $n; $i++) {
+                for ($i = 0, $n = count($directory_array); $i < $n; $i++) {
                   $file = $directory_array[$i];
                   if (file_exists(DIR_FS_CATALOG_LANGUAGES . $_SESSION['language'] . '/modules/' . $module_type . '/' . $file)) {
                     include(DIR_FS_CATALOG_LANGUAGES . $_SESSION['language'] . '/modules/' . $module_type . '/' . $file);
@@ -217,7 +217,7 @@ if (zen_not_null($action)) {
                           'status' => $module->check()];
                         $module_keys = $module->keys();
                         $keys_extra = [];
-                        for ($j = 0, $k = sizeof($module_keys); $j < $k; $j++) {
+                        for ($j = 0, $k = count($module_keys); $j < $k; $j++) {
                           $key_value = $db->Execute("SELECT configuration_title, configuration_value, configuration_key, configuration_description, use_function, set_function
                                                      FROM " . TABLE_CONFIGURATION . "
                                                      WHERE configuration_key = '" . zen_db_input($module_keys[$j]) . "'");
