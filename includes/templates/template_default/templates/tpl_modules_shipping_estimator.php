@@ -11,7 +11,9 @@
 ?>
 <div id="shippingEstimatorContent">
 <?php echo zen_draw_form('estimator', zen_href_link($show_in . '#view', '', $request_type), 'post'); ?>
-<?php echo zen_draw_hidden_field('scid', $selected_shipping['id']); ?>
+<?php if (is_array($selected_shipping)) {
+    zen_draw_hidden_field('scid', $selected_shipping['id']);
+} ?>
 <?php echo zen_draw_hidden_field('action', 'submit'); ?>
 <?php
   if($_SESSION['cart']->count_contents()) {
