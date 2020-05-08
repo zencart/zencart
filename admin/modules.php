@@ -239,7 +239,7 @@ if (zen_not_null($action)) {
                           echo '              <tr id="defaultSelected" class="dataTableRowSelected" role="button">' . "\n";
                         }
                       } else {
-                        echo '              <tr class="dataTableRow" onclick="document.location.href=\'' . zen_href_link(FILENAME_MODULES, 'set=' . $set . '&module=' . $class, 'SSL') . '\'" role="button">' . "\n";
+                        echo '              <tr class="dataTableRow" onclick="document.location.href=\'' . zen_href_link(FILENAME_MODULES, 'set=' . $set . '&module=' . $class, 'SSL') . '\'">' . "\n";
                       }
                       ?>
                   <td class="dataTableContent"><?php echo $module->title; ?></td>
