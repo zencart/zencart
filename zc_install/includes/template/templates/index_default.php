@@ -93,7 +93,7 @@ $adjustWarnIssues = false;
     <?php } ?>
     <?php foreach ($listWarnErrors as $error) { ?>
     	<?php if (strpos($error['mainErrorText'], 'PRO TIP:') !== false) { ?>
-    <div class="alert-box">
+    <div class="alert-box alert">
       <?php echo($error['mainErrorText']); ?>
       	<?php } else { ?>
     <div class="alert-box secondary">
