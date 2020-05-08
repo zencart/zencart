@@ -232,15 +232,19 @@ if (zen_not_null($action)) {
                         $module_info['keys'] = $keys_extra;
                         $mInfo = new objectInfo($module_info);
                       }
-                      if (isset($mInfo) && is_object($mInfo) && ($class == $mInfo->code)) {
-                        if ($module->check() > 0) {
-                          echo '              <tr id="defaultSelected" class="dataTableRowSelected" onclick="document.location.href=\'' . zen_href_link(FILENAME_MODULES, 'set=' . $set . '&module=' . $class . '&action=edit', 'SSL') . '\'" role="button">' . "\n";
-                        } else {
-                          echo '              <tr id="defaultSelected" class="dataTableRowSelected" role="button">' . "\n";
+                        if (isset($mInfo) && is_object($mInfo) && ($class == $mInfo->code)) { // a module row is selected
+                            if ($module->check() > 0) { // a module row is selected, module is installed, infoBox is showing module parameters
+                                if (isset($_GET['action']) && $_GET['action'] === 'edit') { // a module row is selected, module is installed, infoBox is showing module Edit parameters
+                                    echo '              <tr id="defaultSelected" class="dataTableRowSelected">' . "\n";
+                                } else { // a module row is selected, module is installed, infoBox is only showing module parameters
+                                    echo '              <tr id="defaultSelected" class="dataTableRowSelected" style="cursor:pointer" onclick="document.location.href=\'' . zen_href_link(FILENAME_MODULES, 'set=' . $set . '&module=' . $class . '&action=edit', 'SSL') . '\'">' . "\n";
+                                }
+                            } else { // a module row is selected, module is NOT installed
+                                echo '              <tr id="defaultSelected" class="dataTableRowSelected">' . "\n";
+                            }
+                        } else { // module row is not selected: click to show install option or module parameters
+                            echo '              <tr class="dataTableRow" style="cursor:pointer" onclick="document.location.href=\'' . zen_href_link(FILENAME_MODULES, 'set=' . $set . '&module=' . $class, 'SSL') . '\'">' . "\n";
                         }
-                      } else {
-                        echo '              <tr class="dataTableRow" onclick="document.location.href=\'' . zen_href_link(FILENAME_MODULES, 'set=' . $set . '&module=' . $class, 'SSL') . '\'">' . "\n";
-                      }
                       ?>
                   <td class="dataTableContent"><?php echo $module->title; ?></td>
                   <td class="dataTableContent"><?php echo(strstr($module->code, 'paypal') ? 'PayPal' : $module->code); ?></td>
