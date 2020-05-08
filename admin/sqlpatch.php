@@ -741,7 +741,7 @@ if (zen_not_null($action)) {
         }
         if (zen_not_null($query_results['errors'])) {
           foreach ($query_results['errors'] as $value) {
-            $messageStack->add(ICON_ERROR . ': ' . $value, 'error');
+            $messageStack->add('ERROR: ' . $value, 'error');
           }
         }
         if ($query_results['ignored'] != 0) {
@@ -750,7 +750,7 @@ if (zen_not_null($action)) {
         if (zen_not_null($query_results['output'])) {
           foreach ($query_results['output'] as $value) {
             if (zen_not_null($value)) {
-              $messageStack->add(IMAGE_ICON_INFO . ': ' . $value, 'caution');
+              $messageStack->add('INFO: ' . $value, 'caution');
             }
           }
         }
