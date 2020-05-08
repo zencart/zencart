@@ -63,6 +63,7 @@
   </fieldset>
   <fieldset>
     <legend><?php echo TEXT_DATABASE_SETUP_DEMO_SETTINGS; ?></legend>
+    <input type="hidden" name="db_charset" value="utf8mb4">
     <div class="row">
       <div class="small-3 columns">
         <label class="inline" for="demoData"><a href="#" class="hasHelpText" id="DEMODATA"><?php echo TEXT_DATABASE_SETUP_LOAD_DEMO; ?></a></label>
