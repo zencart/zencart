@@ -315,7 +315,7 @@ if (zen_not_null($action)) {
               $contents[] = array('text' => zen_draw_hidden_field('module', (isset($_GET['module']) ? $_GET['module'] : '')));
               $contents[] = array('text' => TEXT_DELETE_INTRO);
 
-              $contents[] = array('align' => 'text-center', 'text' => '<br><button type="submit" class="btn btn-danger" name="removeButton">' . IMAGE_DELETE . '</button>&nbsp;<a href="' . zen_href_link(FILENAME_MODULES, 'set=' . $set . ($_GET['module'] != '' ? '&module=' . $_GET['module'] : ''), 'SSL') . '" class="btn btn-default" role="button" name="cancelButton">' . IMAGE_CANCEL . '</a>');
+              $contents[] = array('align' => 'text-center', 'text' => '<br><button type="submit" class="btn btn-danger" id="removeButton">' . IMAGE_DELETE . '</button>&nbsp;<a href="' . zen_href_link(FILENAME_MODULES, 'set=' . $set . ($_GET['module'] != '' ? '&module=' . $_GET['module'] : ''), 'SSL') . '" class="btn btn-default" role="button" name="cancelButton">' . IMAGE_CANCEL . '</a>');
               break;
             case 'edit':
               if (!$is_ssl_protected && in_array($_GET['module'], array('paypaldp', 'authorizenet_aim', 'authorizenet_echeck'))) {
@@ -338,7 +338,7 @@ if (zen_not_null($action)) {
                 $contents[] = array('text' => '<strong>Key: ' . $mInfo->code . '</strong><br>');
               }
               $contents[] = array('text' => $keys);
-              $contents[] = array('align' => 'text-center', 'text' => '<br><button type="submit" class="btn btn-danger" name="saveButton">' . IMAGE_UPDATE . '</button>&nbsp;<a href="' . zen_href_link(FILENAME_MODULES, 'set=' . $set . ($_GET['module'] != '' ? '&module=' . $_GET['module'] : ''), 'SSL') . '" class="btn btn-default" role="button" name="cancelButton">' . IMAGE_CANCEL . '</a>');
+              $contents[] = array('align' => 'text-center', 'text' => '<button type="submit" class="btn btn-danger" id="saveButton">' . IMAGE_UPDATE . '</button>&nbsp;<a href="' . zen_href_link(FILENAME_MODULES, 'set=' . $set . ($_GET['module'] != '' ? '&module=' . $_GET['module'] : ''), 'SSL') . '" class="btn btn-default" role="button" id="cancelButton">' . IMAGE_CANCEL . '</a>');
               break;
             default:
               $heading[] = array('text' => '<h4>' . $mInfo->title . '</h4>');
@@ -372,16 +372,16 @@ if (zen_not_null($action)) {
                 }
                 $keys = substr($keys, 0, strrpos($keys, '<br><br>'));
                 if (!(!$is_ssl_protected && in_array($mInfo->code, array('paypaldp', 'authorizenet_aim', 'authorizenet_echeck')))) {
-                  $contents[] = array('align' => 'text-center', 'text' => '<a href="' . zen_href_link(FILENAME_MODULES, 'set=' . $set . (isset($_GET['module']) ? '&module=' . $_GET['module'] : '') . '&action=edit', 'SSL') . '" class="btn btn-primary" role="button" name="editButton">' . IMAGE_EDIT . '</a>');
+                  $contents[] = array('align' => 'text-center', 'text' => '<a href="' . zen_href_link(FILENAME_MODULES, 'set=' . $set . (isset($_GET['module']) ? '&module=' . $_GET['module'] : '') . '&action=edit', 'SSL') . '" class="btn btn-primary" role="button" id="editButton">' . IMAGE_EDIT . '</a>');
                 } else {
                   $contents[] = array('align' => 'text-center', 'text' => TEXT_WARNING_SSL_EDIT);
                 }
-                $contents[] = array('align' => 'text-center', 'text' => '<a href="' . zen_href_link(FILENAME_MODULES, 'set=' . $set . '&module=' . $mInfo->code . '&action=remove', 'SSL') . '" class="btn btn-warning" role="button" name="removeButton"><i class="fa fa-minus"></i> ' . IMAGE_MODULE_REMOVE . '</a>');
+                $contents[] = array('align' => 'text-center', 'text' => '<a href="' . zen_href_link(FILENAME_MODULES, 'set=' . $set . '&module=' . $mInfo->code . '&action=remove', 'SSL') . '" class="btn btn-warning" role="button" id="removeButton"><i class="fa fa-minus"></i> ' . IMAGE_MODULE_REMOVE . '</a>');
                 $contents[] = array('text' => '<br>' . $mInfo->description);
                 $contents[] = array('text' => '<br>' . $keys);
               } else {
                 if (!(!$is_ssl_protected && in_array($mInfo->code, array('paypaldp', 'authorizenet_aim', 'authorizenet_echeck')))) {
-                  $contents[] = array('align' => 'text-center', 'text' => zen_draw_form('install_module', FILENAME_MODULES, 'set=' . $set . '&action=install') . zen_draw_hidden_field('module', $mInfo->code) . '<button type="submit" name="installButton" class="btn btn-primary"><i class="fa fa-plus"></i> ' . IMAGE_MODULE_INSTALL . '</button></form>');
+                  $contents[] = array('align' => 'text-center', 'text' => zen_draw_form('install_module', FILENAME_MODULES, 'set=' . $set . '&action=install') . zen_draw_hidden_field('module', $mInfo->code) . '<button type="submit" id="installButton" class="btn btn-primary"><i class="fa fa-plus"></i> ' . IMAGE_MODULE_INSTALL . '</button></form>');
                 } else {
                   $contents[] = array('align' => 'text-center', 'text' => TEXT_WARNING_SSL_INSTALL);
                 }
