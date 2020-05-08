@@ -23,13 +23,13 @@ if (zen_not_null($set)) {
       $module_key = 'MODULE_SHIPPING_INSTALLED';
       define('HEADING_TITLE', HEADING_TITLE_MODULES_SHIPPING);
       $shipping_errors = '';
-      if (zen_get_configuration_key_value('SHIPPING_ORIGIN_ZIP') == 'NONE' or zen_get_configuration_key_value('SHIPPING_ORIGIN_ZIP') == '') {
+      if (zen_get_configuration_key_value('SHIPPING_ORIGIN_ZIP') == 'NONE' || zen_get_configuration_key_value('SHIPPING_ORIGIN_ZIP') == '') {
         $shipping_errors .= '<br>' . ERROR_SHIPPING_ORIGIN_ZIP;
       }
       if (zen_get_configuration_key_value('ORDER_WEIGHT_ZERO_STATUS') == '1' && (!defined('MODULE_SHIPPING_FREESHIPPER_STATUS') || MODULE_SHIPPING_FREESHIPPER_STATUS != 'True')) {
         $shipping_errors .= '<br>' . ERROR_ORDER_WEIGHT_ZERO_STATUS;
       }
-      if (defined('MODULE_SHIPPING_USPS_STATUS') and ( MODULE_SHIPPING_USPS_USERID == 'NONE' or MODULE_SHIPPING_USPS_SERVER == 'test')) {
+      if (defined('MODULE_SHIPPING_USPS_STATUS') && ( MODULE_SHIPPING_USPS_USERID == 'NONE' || MODULE_SHIPPING_USPS_SERVER == 'test')) {
         $shipping_errors .= '<br>' . ERROR_USPS_STATUS;
       }
       if ($shipping_errors != '') {
@@ -103,7 +103,7 @@ if (zen_not_null($action)) {
           if (file_exists(DIR_FS_CATALOG_LANGUAGES . $_SESSION['language'] . '/modules/' . $module_type . '/' . $class . $file_extension)) {
             include DIR_FS_CATALOG_LANGUAGES . $_SESSION['language'] . '/modules/' . $module_type . '/' . $class . $file_extension;
             include $module_directory . $class . $file_extension;
-            $module = new $class;
+            $module = new $class();
             $msg = sprintf(TEXT_EMAIL_MESSAGE_ADMIN_MODULE_INSTALLED, preg_replace('/[^\w]/', '*', $_POST['module']), $admname);
             zen_record_admin_activity($msg, 'warning');
             zen_mail(STORE_NAME, STORE_OWNER_EMAIL_ADDRESS, TEXT_EMAIL_SUBJECT_ADMIN_SETTINGS_CHANGED, $msg, STORE_NAME, EMAIL_FROM, ['EMAIL_MESSAGE_HTML' => $msg], 'admin_settings_changed');
@@ -121,7 +121,7 @@ if (zen_not_null($action)) {
           if (file_exists(DIR_FS_CATALOG_LANGUAGES . $_SESSION['language'] . '/modules/' . $module_type . '/' . $class . $file_extension)) {
               include DIR_FS_CATALOG_LANGUAGES . $_SESSION['language'] . '/modules/' . $module_type . '/' . $class . $file_extension;
               include $module_directory . $class . $file_extension;
-              $module = new $class;
+              $module = new $class();
               $msg    = sprintf(TEXT_EMAIL_MESSAGE_ADMIN_MODULE_REMOVED, preg_replace('/[^\w]/', '*', $_POST['module']), $admname);
               zen_record_admin_activity($msg, 'warning');
               zen_mail(STORE_NAME, STORE_OWNER_EMAIL_ADDRESS, TEXT_EMAIL_SUBJECT_ADMIN_SETTINGS_CHANGED, $msg, STORE_NAME, EMAIL_FROM, ['EMAIL_MESSAGE_HTML'=>$msg], 'admin_settings_changed');
@@ -201,7 +201,7 @@ if (zen_not_null($action)) {
                     include($module_directory . $file);
                     $class = substr($file, 0, strrpos($file, '.'));
                     if (class_exists($class)) {
-                      $module = new $class;
+                      $module = new $class();
                       // check if module passes the "check()" test (ie: enabled and valid, determined by each module individually)
                       if ($module->check() > 0) {
                         // determine sort orders (using up to 6 digits, then filename) and add to list of installed modules
@@ -392,7 +392,7 @@ if (zen_not_null($action)) {
           ?>
           <?php
           if ((zen_not_null($heading)) && (zen_not_null($contents))) {
-            $box = new box;
+            $box = new box();
             echo $box->infoBox($heading, $contents);
           }
           ?>
