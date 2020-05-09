@@ -578,11 +578,6 @@
     }
   }
 
-////
-  function zen_setcookie($name, $value = '', $expire = 0, $path = '/', $domain = '', $secure = 0) {
-    setcookie($name, $value, $expire, $path, $domain, $secure);
-  }
-
   /**
    * Determine visitor's IP address, resolving any proxies where possible.
    *
