@@ -139,7 +139,7 @@
  * validate products_id for search engines and bookmarks, etc.
  */
   if (isset($_GET['products_id']) && (!isset($_SESSION['check_valid']) || $_SESSION['check_valid'] != 'false')) {
-    $check_valid = zen_products_id_valid($_GET['products_id']);
+    $check_valid = zen_products_id_valid($_GET['products_id']) && isset($_GET['main_page']) && zen_not_null($_GET['main_page']);
     if (!$check_valid) {
       $_GET['main_page'] = zen_get_info_page($_GET['products_id']);
       /**
