@@ -116,8 +116,8 @@ function zen_delete_user($id)
     $db->Execute($sql);
     $admname = '{' . preg_replace('/[^\d\w._-]/', '*', zen_get_admin_name()) . ' [id: ' . (int)$_SESSION['admin_id'] . ']}';
     zen_record_admin_activity(sprintf(TEXT_EMAIL_MESSAGE_ADMIN_USER_DELETED, $delname, $admname), 'warning');
-    $email_text = sprintf(TEXT_EMAIL_MESSAGE_ADMIN_USER_DELETED, $delname, $admname); 
-    $block = array('EMAIL_MESSAGE_HTML' => $email_text); 
+    $email_text = sprintf(TEXT_EMAIL_MESSAGE_ADMIN_USER_DELETED, $delname, $admname);
+    $block = array('EMAIL_MESSAGE_HTML' => $email_text);
     zen_mail(STORE_NAME, STORE_OWNER_EMAIL_ADDRESS, TEXT_EMAIL_SUBJECT_ADMIN_USER_DELETED, $email_text, STORE_NAME, EMAIL_FROM, $block, 'admin_settings_changed');
   }
 }
@@ -183,8 +183,8 @@ function zen_insert_user($name, $email, $password, $confirm, $profile)
     $newname = preg_replace('/[^\d\w._-]/', '*', $name);
     $admname = '{' . preg_replace('/[^\d\w._-]/', '*', zen_get_admin_name()) . ' [id: ' . (int)$_SESSION['admin_id'] . ']}';
     zen_record_admin_activity(sprintf(TEXT_EMAIL_MESSAGE_ADMIN_USER_ADDED, $newname, $admname), 'warning');
-    $email_text = sprintf(TEXT_EMAIL_MESSAGE_ADMIN_USER_ADDED, $newname, $admname); 
-    $block = array('EMAIL_MESSAGE_HTML' => $email_text); 
+    $email_text = sprintf(TEXT_EMAIL_MESSAGE_ADMIN_USER_ADDED, $newname, $admname);
+    $block = array('EMAIL_MESSAGE_HTML' => $email_text);
     zen_mail(STORE_NAME, STORE_OWNER_EMAIL_ADDRESS, TEXT_EMAIL_SUBJECT_ADMIN_USER_ADDED, $email_text, STORE_NAME, EMAIL_FROM, $block, 'admin_settings_changed');
   }
   return $errors;
@@ -408,7 +408,7 @@ function zen_validate_user_login($admin_name, $admin_pass)
   {
     $expired = true;
     $error = true;
-    $message = ($message == '' ? '' : $message . '<br /><br />') . EXPIRED_DUE_TO_SSL;
+    $message = ($message == '' ? '' : $message . '<br><br>') . EXPIRED_DUE_TO_SSL;
   }
   // deal with expireds for PA-DSS
   if ($error == FALSE && PADSS_PWD_EXPIRY_ENFORCED == 1 && $result['pwd_last_change_date'] < date('Y-m-d H:i:s', ADMIN_PASSWORD_EXPIRES_INTERVAL))
@@ -684,10 +684,10 @@ function zen_get_admin_pages($menu_only)
   }
   if ($menu_only) {
     if (defined('MENU_CATEGORIES_TO_SORT_BY_NAME') && !empty(MENU_CATEGORIES_TO_SORT_BY_NAME)) {
-       $sorted_menus = explode(",", MENU_CATEGORIES_TO_SORT_BY_NAME); 
+       $sorted_menus = explode(",", MENU_CATEGORIES_TO_SORT_BY_NAME);
        foreach (array_keys($retVal) as $key) {
          if (in_array($key, $sorted_menus)) {
-           usort($retVal[$key], 'menu_name_sort'); 
+           usort($retVal[$key], 'menu_name_sort');
          }
        }
     }
@@ -942,7 +942,7 @@ function zen_deregister_admin_pages($pages)
   }
 }
 
-function zen_updated_by_admin($admin_id = '') 
+function zen_updated_by_admin($admin_id = '')
 {
     if ($admin_id === '') {
         $admin_id = $_SESSION['admin_id'];
@@ -964,7 +964,7 @@ function zen_admin_authorized_to_place_order()
         }
         if (count($profile_list) != 0) {
             $profile_clause = ' AND admin_profile IN (' . implode(',', $profile_list) . ')';
-            $emp_sql = 
+            $emp_sql =
                 "SELECT admin_profile, admin_pass 
                    FROM " . TABLE_ADMIN . " 
                   WHERE admin_id = :adminId:$profile_clause
