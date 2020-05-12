@@ -8,4 +8,4 @@
  */
 
 define('HEADING_TITLE', 'Admin Account');
-include ('users.php');
+require DIR_WS_LANGUAGES . $_SESSION['language'] . '/' . 'users.php'; 
