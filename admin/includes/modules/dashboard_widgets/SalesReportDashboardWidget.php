@@ -6,7 +6,9 @@
  * @version $Id:  New in v1.5.7 $
  */
 
-// to disable this module, uncomment the following "return" statement so the rest of this file is ignored
+if (!zen_is_superuser() && !check_page(FILENAME_STATS_SALES_REPORT_GRAPHS, '')) return;
+
+// to disable this module for everyone, uncomment the following "return" statement so the rest of this file is ignored
 // return;
 
 //  Build the sales stats

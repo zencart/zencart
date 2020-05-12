@@ -6,7 +6,7 @@
  * @version $Id:  New in v1.5.7 $
  */
 
-// to disable this module, uncomment the following "return" statement so the rest of this file is ignored
+// to disable this module for everyone, uncomment the following "return" statement so the rest of this file is ignored
 // return;
 
 $result = $db->Execute("SELECT count(*) as count FROM " . TABLE_CUSTOMERS, false, true, 1800);
@@ -49,10 +49,13 @@ if ($result->RecordCount()) {
           <td><?php echo BOX_ENTRY_COUNTER; ?></td>
           <td class="text-right"><?php echo $counter; ?></td>
         </tr>
+<?php if (zen_is_superuser() || check_page(FILENAME_CUSTOMERS, '')) { ?>
       <tr>
         <td><?php echo BOX_ENTRY_CUSTOMERS; ?></td>
         <td class="text-right"><?php echo $customers; ?></td>
       </tr>
+<?php } ?>
+<?php if (zen_is_superuser() || check_page(FILENAME_PRODUCTS, '')) { ?>
       <tr>
         <td><?php echo BOX_ENTRY_PRODUCTS; ?></td>
         <td class="text-right"><?php echo $products; ?></td>
@@ -61,6 +64,7 @@ if ($result->RecordCount()) {
         <td><?php echo BOX_ENTRY_PRODUCTS_OFF; ?></td>
         <td class="text-right"><?php echo $products_off; ?></td>
       </tr>
+<?php } ?>
       <tr>
         <td><?php echo BOX_ENTRY_REVIEWS; ?></td>
         <td class="text-right"><?php echo $reviews; ?></td>

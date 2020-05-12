@@ -6,7 +6,7 @@
  * @version $Id:  New in v1.5.7 $
  */
 
-// to disable this module, uncomment the following "return" statement so the rest of this file is ignored
+// to disable this module for everyone, uncomment the following "return" statement so the rest of this file is ignored
 // return;
 
 $maxRows = 15;
