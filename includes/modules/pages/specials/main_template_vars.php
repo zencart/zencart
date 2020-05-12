@@ -22,9 +22,10 @@ if (MAX_DISPLAY_SPECIAL_PRODUCTS > 0 ) {
 
   $specials_query_raw = $db->bindVars($specials_query_raw, ':languagesID', $_SESSION['languages_id'], 'integer');
   
-  $zco_notifier->notify('NOTIFY_SPECIALS_MAIN_TEMPLATE_VARS_SQL_STRING', array(), $specials_query_raw);
+  $count_key = '*';
+  $zco_notifier->notify('NOTIFY_SPECIALS_MAIN_TEMPLATE_VARS_SQL_STRING', array(), $specials_query_raw, $count_key);
   
-  $specials_split = new splitPageResults($specials_query_raw, MAX_DISPLAY_SPECIAL_PRODUCTS);
+  $specials_split = new splitPageResults($specials_query_raw, MAX_DISPLAY_SPECIAL_PRODUCTS, $count_key);
   $specials = $db->Execute($specials_split->sql_query);
   $row = 0;
   $col = 0;
