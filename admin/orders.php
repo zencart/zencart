@@ -580,7 +580,8 @@ if (zen_not_null($action) && $order_exists == true) {
               echo '</form>';
               ?>
               <div class="input-group-btn">
-                  <?php echo ($next_button == '') ? $order_list_button : $next_button; ?>
+                <?php echo $next_button; ?>
+                <?php echo $order_list_button; ?>
                 <button type="button" class="btn btn-default" onclick="history.back()"><i class="fa fa-undo" aria-hidden="true">&nbsp;</i> <?php echo IMAGE_BACK; ?></button>
               </div>
             </div>
