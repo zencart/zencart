@@ -14,12 +14,21 @@ if (!defined('TEXT_TIMEOUT_TIMED_OUT_TITLE')) define('TEXT_TIMEOUT_TIMED_OUT_TIT
 if (!defined('TEXT_TIMEOUT_LOGIN_AGAIN')) define('TEXT_TIMEOUT_LOGIN_AGAIN', 'Login Again');
 if (!defined('TEXT_TIMEOUT_TIMED_OUT_MESSAGE')) define('TEXT_TIMEOUT_TIMED_OUT_MESSAGE', 'Your session has timed out. You were inactive, so we logged you out automatically.');
 
+$camefrom = basename($PHP_SELF) . (empty($params = zen_get_all_get_params()) ? '' : '?' . trim($params, '&'));
+$mouseDebounce = 120;
+
 // Read default timeout value from the site's configuration:
 $timeoutAfter = ini_get('session.gc_maxlifetime');
 if ((int)$timeoutAfter < 30) $timeoutAfter = 1440;
-$camefrom = basename($PHP_SELF) . (empty($params = zen_get_all_get_params()) ? '' : '?' . trim($params, '&'));
-?>
 
+// dev testing only:
+//$timeoutAfter = 15;
+//$mouseDebounce = 10;
+?>
+<style>
+.jAlert {font-size: 1.5rem;}
+.ja_btn {font-size: 1.5rem; padding: 15px !important;}
+</style>
 <script src="includes/javascript/jAlert.min.js"></script>
 <script src="includes/javascript/jTimeout.min.js"></script>
 <script title="jTimeout-Init">
@@ -29,12 +38,12 @@ jQuery(function(){
     'flashTitle': true, //whether or not to flash the tab/title bar when about to timeout, or after timing out
     'flashTitleSpeed': 500, //how quickly to switch between the original title, and the warning text
     'flashingTitleText': '<?php echo addslashes(TEXT_TIMEOUT_WARNING); ?>', //what to show in the tab/title bar when about to timeout, or after timing out
-    'timeoutAfter': <?php echo (int)$timeoutAfter; ?>, //passed from server side. 1440 is generally the default timeout in PHP
+    'timeoutAfter': <?php echo (int)$timeoutAfter; ?>, //passed from server side so it matches. 1440 is the usual default timeout in PHP
     'extendOnMouseMove': true, //Whether or not to extend the session when the mouse is moved
-    'mouseDebounce': 120, //How many seconds between extending the session when the mouse is moved (instead of extending a billion times within 5 seconds)
-    'extendUrl': 'keepalive.php', //URL to request in order to extend the session.
-    'logoutUrl': 'logoff.php', //URL to request in order to force a logout after the timeout.
-    'loginUrl': '<?php echo $camefrom; ?>', //URL to send a customer to when they want to log back in
+    'mouseDebounce': <?php echo (int)$mouseDebounce; ?>, //How many seconds between extending the session when the mouse is moved (instead of extending a billion times within 5 seconds)
+    'extendUrl': 'keepalive.php', // admin URL to request in order to extend the session.
+    'logoutUrl': 'logoff.php', // admin URL to request in order to force a logout after the timeout.
+    'loginUrl': '<?php echo $camefrom; ?>', // admin URL to send the user to when they want to log back in
     'secondsPrior': <?php echo (int)$timeoutAfter/3; ?>, //how many seconds before timing out to run the next callback (onPriorCallback)
     'onPriorCallback': function(timeout, seconds){
         jQuery.jAlert({
@@ -70,7 +79,7 @@ jQuery(function(){
         });
     },
     'onTimeout': function(timeout){
-        /* Alert User */
+        /* First: Alert User */
         jQuery.jAlert({
             'id': 'jTimedoutAlert',
             'title': '<?php echo addslashes(TEXT_TIMEOUT_TIMED_OUT_TITLE); ?>',
@@ -86,7 +95,7 @@ jQuery(function(){
             'closeBtn': false,
             'closeOnEsc': false
         });
-        /* Force logout */
+        /* Second: Force logout */
         jQuery.get(timeout.options.logoutUrl);
         jQuery.jTimeout().destroy();
     }
