@@ -20,11 +20,11 @@ foreach ($initSystemList as $entry) {
     switch ($entry['type']) {
         case 'include':
             //echo 'case "include": ' . $entry['filePath'] . "<br>\n";
-            include $entry['filePath'];
+            include_once $entry['filePath'];
             break;
         case 'require':
             //echo 'case "require": ' . $entry['filePath'] . "<br>\n";
-            require $entry['filePath'];
+            require_once $entry['filePath'];
             break;
         case 'class':
             //echo 'case "class": ' . $entry['class'] . "<br>\n";
