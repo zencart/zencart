@@ -553,21 +553,20 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
           if (isset($_GET['search'])) {
             $search = zen_db_prepare_input($_GET['search']);
 
-            $categories = $db->Execute("SELECT c.categories_id, cd.categories_name, cd.categories_description, c.categories_image,
-                                               c.parent_id, c.sort_order, c.date_added, c.last_modified, c.categories_status
-                                        FROM " . TABLE_CATEGORIES . " c, " . TABLE_CATEGORIES_DESCRIPTION . " cd
-                                        WHERE c.categories_id = cd.categories_id
-                                        AND cd.language_id = " . (int)$_SESSION['languages_id'] . "
-                                        AND cd.categories_name like '%" . zen_db_input($search) . "%'" .
-                    $order_by);
+            $categories = $db->Execute("SELECT c.categories_id, cd.categories_name, c.parent_id, c.sort_order, c.categories_status
+                                        FROM " . TABLE_CATEGORIES . " c
+                                        LEFT JOIN " . TABLE_CATEGORIES_DESCRIPTION . " cd ON c.categories_id = cd.categories_id
+                                          AND cd.language_id = " . (int)$_SESSION['languages_id'] . "
+                                        WHERE cd.categories_name like '%" . zen_db_input($search) . "%'
+                                        " . $order_by);
           } else {
-            $categories = $db->Execute("SELECT c.categories_id, cd.categories_name, cd.categories_description, c.categories_image,
-                                               c.parent_id, c.sort_order, c.date_added, c.last_modified, c.categories_status
-                                        FROM " . TABLE_CATEGORIES . " c, " . TABLE_CATEGORIES_DESCRIPTION . " cd
+            $categories = $db->Execute("SELECT c.categories_id, cd.categories_name,
+                                               c.parent_id, c.sort_order, c.categories_status
+                                        FROM " . TABLE_CATEGORIES . " c
+                                        LEFT JOIN " . TABLE_CATEGORIES_DESCRIPTION . " cd ON c.categories_id = cd.categories_id
+                                          AND cd.language_id = " . (int)$_SESSION['languages_id'] . "
                                         WHERE c.parent_id = " . (int)$current_category_id . "
-                                        AND c.categories_id = cd.categories_id
-                                        AND cd.language_id = " . (int)$_SESSION['languages_id'] .
-                    $order_by);
+                                        " . $order_by);
           }
 
           $show_prod_labels = ($search_result || $categories->EOF) ? true : false;
@@ -698,53 +697,29 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
 
             $products_count = 0;
             if ($search_result && $action != 'edit_category') {
-// fix duplicates and force search to use master_categories_id
-              /*
-                $products_query_raw = ("select p.products_type, p.products_id, pd.products_name, p.products_quantity,
-                p.products_image, p.products_price, p.products_date_added,
-                p.products_last_modified, p.products_date_available,
-                p.products_status, p2c.categories_id,
-                p.products_model,
-                p.products_quantity_order_min, p.products_quantity_order_units, p.products_priced_by_attribute,
-                p.product_is_free, p.product_is_call, p.products_quantity_mixed, p.product_is_always_free_shipping,
-                p.products_quantity_order_max, p.products_sort_order
-                from " . TABLE_PRODUCTS . " p, " . TABLE_PRODUCTS_DESCRIPTION . " pd, "
-                . TABLE_PRODUCTS_TO_CATEGORIES . " p2c
-                where p.products_id = pd.products_id
-                and pd.language_id = '" . (int)$_SESSION['languages_id'] . "'
-                and p.products_id = p2c.products_id
-                and (
-                pd.products_name like '%" . zen_db_input($_GET['search']) . "%'
-                or pd.products_description like '%" . zen_db_input($_GET['search']) . "%'
-                or p.products_model like '%" . zen_db_input($_GET['search']) . "%')" .
-                $order_by);
-               */
-              $products_query_raw = ("SELECT p.products_type, p.products_id, pd.products_name, p.products_quantity, p.products_image, p.products_price,
-                                             p.products_date_added, p.products_last_modified, p.products_date_available, p.products_status, p2c.categories_id,
-                                             p.products_model, p.products_quantity_order_min, p.products_quantity_order_units, p.products_priced_by_attribute,
-                                             p.product_is_free, p.product_is_call, p.products_quantity_mixed, p.product_is_always_free_shipping,
-                                             p.products_quantity_order_max, p.products_sort_order, p.master_categories_id
+              $products_query_raw = ("SELECT p.products_type, p.products_id, pd.products_name, p.products_quantity,
+                                             p.products_price, p.products_status, p2c.categories_id, p.products_model,
+                                             p.products_sort_order, p.master_categories_id
                                       FROM " . TABLE_PRODUCTS . " p
-                                      LEFT JOIN " . TABLE_PRODUCTS_DESCRIPTION . " pd ON pd.products_id = p.products_id AND pd.language_id = " . (int)$_SESSION['languages_id'] . "
+                                      LEFT JOIN " . TABLE_PRODUCTS_DESCRIPTION . " pd ON pd.products_id = p.products_id
+                                        AND pd.language_id = " . (int)$_SESSION['languages_id'] . "
                                       LEFT JOIN " . TABLE_PRODUCTS_TO_CATEGORIES . " p2c ON p2c.products_id = p.products_id
                                       WHERE p2c.categories_id = p.master_categories_id
                                       AND (pd.products_name LIKE '%" . zen_db_input($_GET['search']) . "%'
                                         OR pd.products_description LIKE '%" . zen_db_input($_GET['search']) . "%'
                                         OR p.products_id = '" . zen_db_input($_GET['search']) . "'
-                                        OR p.products_model like '%" . zen_db_input($_GET['search']) . "%'
+                                        OR p.products_model LIKE '%" . zen_db_input($_GET['search']) . "%'
                                         )
                                       " . $order_by);
             } else {
-              $products_query_raw = ("SELECT p.products_type, p.products_id, pd.products_name, p.products_quantity, p.products_image, p.products_price,
-                                             p.products_date_added, p.products_last_modified, p.products_date_available, p.products_status, p.products_model,
-                                             p.products_quantity_order_min, p.products_quantity_order_units, p.products_priced_by_attribute, p.product_is_free,
-                                             p.product_is_call, p.products_quantity_mixed, p.product_is_always_free_shipping, p.products_quantity_order_max,
-                                             p.products_sort_order
+              $products_query_raw = ("SELECT p.products_type, p.products_id, pd.products_name, p.products_quantity,
+                                             p.products_price, p.products_status, p.products_model, p.products_sort_order
                                       FROM " . TABLE_PRODUCTS . " p
-                                      LEFT JOIN " . TABLE_PRODUCTS_DESCRIPTION . " pd ON pd.products_id = p.products_id AND pd.language_id = " . (int)$_SESSION['languages_id'] . "
+                                      LEFT JOIN " . TABLE_PRODUCTS_DESCRIPTION . " pd ON pd.products_id = p.products_id
+                                        AND pd.language_id = " . (int)$_SESSION['languages_id'] . "
                                       LEFT JOIN " . TABLE_PRODUCTS_TO_CATEGORIES . " p2c ON p2c.products_id = p.products_id
-                                      WHERE p2c.categories_id = " . (int)$current_category_id .
-                      $order_by);
+                                      WHERE p2c.categories_id = " . (int)$current_category_id . "
+                                      " . $order_by);
             }
 // Split Page
 // reset page when page is unknown
