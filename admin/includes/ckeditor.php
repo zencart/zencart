@@ -23,11 +23,11 @@ foreach ($var as $key)
 
 <script title="ckEditor-Initialize">
     jQuery(document).ready(function() {
-        <?php echo $jsLanguageLookupArray ?>
+        <?php echo $jsLanguageLookupArray; ?>
         // Activate editor on every on-page textarea field that has the editorHook class and does not have the noEditor class
         // We do this in a loop because we're also detecting multi-language variants of fields
         jQuery('textarea.editorHook').each(function() {
-            if (! jQuery(this).hasClass('noEditor'))
+            if (!jQuery(this).hasClass('noEditor'))
             {
                 index = jQuery(this).attr('name').match(/\d+/);
                 if (index == null) index = <?php echo $_SESSION['languages_id'] ?>;
