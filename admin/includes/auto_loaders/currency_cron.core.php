@@ -12,8 +12,6 @@ if (!defined('USE_PCONNECT')) define('USE_PCONNECT', 'false');
   $autoLoadConfig[0][] = array('autoType'=>'require',
                                'loadFile'=> DIR_FS_CATALOG . DIR_WS_INCLUDES .  'version.php');
   $autoLoadConfig[0][] = array('autoType'=>'class',
-                               'loadFile'=>'class.base.php');
-  $autoLoadConfig[0][] = array('autoType'=>'class',
                                'loadFile'=>'class.notifier.php');
   $autoLoadConfig[0][] = array('autoType'=>'classInstantiate',
                                'className'=>'notifier',
@@ -23,10 +21,6 @@ if (!defined('USE_PCONNECT')) define('USE_PCONNECT', 'false');
   $autoLoadConfig[0][] = array('autoType'=>'class',
                                'loadFile'=>'object_info.php',
                                'classPath'=>DIR_WS_CLASSES);
-  $autoLoadConfig[10][] = array('autoType'=>'init_script',
-                                'loadFile'=> 'init_file_db_names.php');
-  $autoLoadConfig[10][] = array('autoType'=>'init_script',
-                                'loadFile'=>'init_database.php');
   $autoLoadConfig[20][] = array('autoType'=>'init_script',
                                 'loadFile'=> 'init_db_config_read.php');
   $autoLoadConfig[30][] = array('autoType'=>'classInstantiate',
