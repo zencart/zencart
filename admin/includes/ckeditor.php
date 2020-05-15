@@ -24,13 +24,14 @@ foreach ($var as $key)
 <script title="ckEditor-Initialize">
     jQuery(document).ready(function() {
         <?php echo $jsLanguageLookupArray; ?>
-        // Activate editor on every on-page textarea field that has the editorHook class and does not have the noEditor class
-        // We do this in a loop because we're also detecting multi-language variants of fields
+        // Activate on every textarea field that has the editorHook class and does not have the noEditor class
         jQuery('textarea.editorHook').each(function() {
             if (!jQuery(this).hasClass('noEditor'))
             {
+                // handle multi-language variants of fields
                 index = jQuery(this).attr('name').match(/\d+/);
                 if (index == null) index = <?php echo $_SESSION['languages_id'] ?>;
+
                 CKEDITOR.replace(jQuery(this).attr('name'),
                     {
                         customConfig: '<?php echo (function_exists('zen_catalog_base_link') ? zen_catalog_base_link() : '/') . DIR_WS_EDITORS . 'ckeditor/config.js'; ?>',
