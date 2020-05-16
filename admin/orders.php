@@ -602,6 +602,13 @@ if (zen_not_null($action) && $order_exists == true) {
                 <td>&nbsp;</td>
                 <td class="noprint"><a href="https://maps.google.com/maps/search/?api=1&amp;query=<?php echo urlencode($order->customer['street_address'] . ',' . $order->customer['city'] . ',' .  $order->customer['state'] . ',' . $order->customer['postcode']); ?>" rel="noreferrer" target="map"><i class="fa fa-map">&nbsp;</i> <u><?php echo TEXT_MAP_CUSTOMER_ADDRESS; ?></u></a></td>
               </tr>
+<?php 
+  $address_footer_suffix = '';
+  $zco_notifier->notify('NOTIFY_ADMIN_ORDERS_ADDRESS_FOOTERS', 'customer', $address_footer_suffix, $order->customer);
+  if (!empty($address_footer_suffix)) {
+  ?>
+                <tr><td>&nbsp;</td><td><?php echo $address_footer_suffix; ?></td></tr>
+<?php } ?>
               <tr>
                 <td colspan="2"><?php echo zen_draw_separator('pixel_trans.gif', '1', '5'); ?></td>
               </tr>
@@ -640,6 +647,13 @@ if (zen_not_null($action) && $order_exists == true) {
                 <td>&nbsp;</td>
                 <td class="noprint"><a href="https://maps.google.com/maps/search/?api=1&amp;query=<?php echo urlencode($order->delivery['street_address'] . ',' . $order->delivery['city'] . ',' . $order->delivery['state'] . ',' . $order->delivery['postcode']); ?>" rel="noreferrer" target="map"><i class="fa fa-map">&nbsp;</i> <u><?php echo TEXT_MAP_SHIPPING_ADDRESS; ?></u></a></td>
               </tr>
+<?php 
+  $address_footer_suffix = '';
+  $zco_notifier->notify('NOTIFY_ADMIN_ORDERS_ADDRESS_FOOTERS', 'delivery', $address_footer_suffix, $order->delivery);
+  if (!empty($address_footer_suffix)) {
+  ?>
+                <tr><td>&nbsp;</td><td><?php echo $address_footer_suffix; ?></td></tr>
+<?php } ?>
             </table>
           </div>
           <div class="col-sm-4">
@@ -652,6 +666,13 @@ if (zen_not_null($action) && $order_exists == true) {
                 <td>&nbsp;</td>
                 <td class="noprint"><a href="https://maps.google.com/maps/search/?api=1&amp;query=<?php echo urlencode($order->billing['street_address'] . ',' . $order->billing['city'] . ',' . $order->billing['state'] . ',' . $order->billing['postcode']); ?>" rel="noreferrer" target="map"><i class="fa fa-map">&nbsp;</i> <u><?php echo TEXT_MAP_BILLING_ADDRESS; ?></u></a></td>
               </tr>
+<?php 
+  $address_footer_suffix = '';
+  $zco_notifier->notify('NOTIFY_ADMIN_ORDERS_ADDRESS_FOOTERS', 'billing', $address_footer_suffix, $order->billing);
+  if (!empty($address_footer_suffix)) {
+  ?>
+                <tr><td>&nbsp;</td><td><?php echo $address_footer_suffix; ?></td></tr>
+<?php } ?>
             </table>
           </div>
         </div>
