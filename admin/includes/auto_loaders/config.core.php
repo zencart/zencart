@@ -259,11 +259,14 @@ if (!defined('USE_PCONNECT')) define('USE_PCONNECT', 'false');
  * Breakpoint 175.
  *
  * require(DIR_WS_CLASSES . 'configurationValidation');
+ * require('includes/init_includes/init_observers.php');
  *
  */
   $autoLoadConfig[175][] = array('autoType'=>'classInstantiate',
                                  'className'=>'configurationValidation',
                                  'objectName'=>'configurationValidation');
+  $autoLoadConfig[175][] = array('autoType'=>'init_script',
+                                 'loadFile'=> 'init_observers.php');
 /**
  * Breakpoint 180.
  *
@@ -281,3 +284,7 @@ if (!defined('USE_PCONNECT')) define('USE_PCONNECT', 'false');
  */
   $autoLoadConfig[181][] = array('autoType'=>'init_script',
                                  'loadFile'=> 'init_errors.php');
+
+/**
+ * NOTE: Most plugins should be added from point 200 onward.
+ */
