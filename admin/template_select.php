@@ -212,7 +212,7 @@ if (zen_not_null($action)) {
                   $contents[] = array('text' => '<br>' . TEXT_INFO_TEMPLATE_DESCRIPTION . '<br />' . $template_info[$tInfo->template_dir]['description']);
                   $contents[] = array('text' => '<br>' . TEXT_INFO_TEMPLATE_INSTALLED . '<br />');
                   foreach($template_info as $key => $value) {
-                    $contents[] = array('text' => '<a href="' . DIR_WS_CATALOG_TEMPLATE . $key . '/images/' . $value['screenshot'] . '" target = "_blank" class="btn btn-info" role="button">' . IMAGE_PREVIEW . '</a>&nbsp;&nbsp;' . $value['name']);
+                    $contents[] = array('text' => '<a href="' . DIR_WS_CATALOG_TEMPLATE . $key . '/images/' . $value['screenshot'] . '" rel="noreferrer noopener" target = "_blank" class="btn btn-info" role="button">' . IMAGE_PREVIEW . '</a>&nbsp;&nbsp;' . $value['name']);
                   }
                 }
                 break;
