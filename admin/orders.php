@@ -600,7 +600,7 @@ if (zen_not_null($action) && $order_exists == true) {
               </tr>
               <tr>
                 <td>&nbsp;</td>
-                <td class="noprint"><a href="https://maps.google.com/maps/search/?api=1&amp;query=<?php echo urlencode($order->customer['street_address'] . ',' . $order->customer['city'] . ',' .  $order->customer['state'] . ',' . $order->customer['postcode']); ?>" target="map"><i class="fa fa-map">&nbsp;</i> <u><?php echo TEXT_MAP_CUSTOMER_ADDRESS; ?></u></a></td>
+                <td class="noprint"><a href="https://maps.google.com/maps/search/?api=1&amp;query=<?php echo urlencode($order->customer['street_address'] . ',' . $order->customer['city'] . ',' .  $order->customer['state'] . ',' . $order->customer['postcode']); ?>" rel="noreferrer" target="map"><i class="fa fa-map">&nbsp;</i> <u><?php echo TEXT_MAP_CUSTOMER_ADDRESS; ?></u></a></td>
               </tr>
               <tr>
                 <td colspan="2"><?php echo zen_draw_separator('pixel_trans.gif', '1', '5'); ?></td>
@@ -619,7 +619,7 @@ if (zen_not_null($action) && $order_exists == true) {
                 if ($order->info['ip_address'] != '') {
                   $lookup_ip = substr($order->info['ip_address'], 0, strpos($order->info['ip_address'], ' '));
                   ?>
-                  <td><a href="https://tools.dnsstuff.com/#whois|type=ipv4&&value=<?php echo $lookup_ip; ?>" target="_blank"><?php echo $order->info['ip_address']; ?></a></td>
+                  <td class="noprint"><a href="https://tools.dnsstuff.com/#whois|type=ipv4&&value=<?php echo $lookup_ip; ?>" rel="noreferrer" target="_blank"><?php echo $order->info['ip_address']; ?></a></td>
                 <?php } else { ?>
                   <td><?php echo TEXT_UNKNOWN; ?></td>
                 <?php } ?>
@@ -638,7 +638,7 @@ if (zen_not_null($action) && $order_exists == true) {
               </tr>
               <tr>
                 <td>&nbsp;</td>
-                <td class="noprint"><a href="https://maps.google.com/maps/search/?api=1&amp;query=<?php echo urlencode($order->delivery['street_address'] . ',' . $order->delivery['city'] . ',' . $order->delivery['state'] . ',' . $order->delivery['postcode']); ?>" target="map"><i class="fa fa-map">&nbsp;</i> <u><?php echo TEXT_MAP_SHIPPING_ADDRESS; ?></u></a></td>
+                <td class="noprint"><a href="https://maps.google.com/maps/search/?api=1&amp;query=<?php echo urlencode($order->delivery['street_address'] . ',' . $order->delivery['city'] . ',' . $order->delivery['state'] . ',' . $order->delivery['postcode']); ?>" rel="noreferrer" target="map"><i class="fa fa-map">&nbsp;</i> <u><?php echo TEXT_MAP_SHIPPING_ADDRESS; ?></u></a></td>
               </tr>
             </table>
           </div>
@@ -650,7 +650,7 @@ if (zen_not_null($action) && $order_exists == true) {
               </tr>
               <tr>
                 <td>&nbsp;</td>
-                <td class="noprint"><a href="https://maps.google.com/maps/search/?api=1&amp;query=<?php echo urlencode($order->billing['street_address'] . ',' . $order->billing['city'] . ',' . $order->billing['state'] . ',' . $order->billing['postcode']); ?>" target="map"><i class="fa fa-map">&nbsp;</i> <u><?php echo TEXT_MAP_BILLING_ADDRESS; ?></u></a></td>
+                <td class="noprint"><a href="https://maps.google.com/maps/search/?api=1&amp;query=<?php echo urlencode($order->billing['street_address'] . ',' . $order->billing['city'] . ',' . $order->billing['state'] . ',' . $order->billing['postcode']); ?>" rel="noreferrer" target="map"><i class="fa fa-map">&nbsp;</i> <u><?php echo TEXT_MAP_BILLING_ADDRESS; ?></u></a></td>
               </tr>
             </table>
           </div>
