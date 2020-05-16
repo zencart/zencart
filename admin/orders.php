@@ -704,8 +704,8 @@ if (zen_not_null($action) && $order_exists == true) {
         <?php
         if (isset($module) && (is_object($module) && method_exists($module, 'admin_notification'))) {
           ?>
-          <div class="row"><?php echo zen_draw_separator('pixel_trans.gif', '1', '10'); ?></div>
-          <div class="row"><?php echo $module->admin_notification($oID); ?></div>
+          <div class="row"><?php echo zen_draw_separator('pixel_trans.gif', '1', '10'); ?><br><a href="#" id="payinfo" class="noprint">Click for Additional Payment Handling Options</a></div>
+          <div class="row" id="payment-details-section" style="display: none;"><?php echo $module->admin_notification($oID); ?></div>
           <div class="row"><?php echo zen_draw_separator('pixel_trans.gif', '1', '10'); ?></div>
           <?php
         }
@@ -1436,6 +1436,11 @@ if (zen_not_null($action) && $order_exists == true) {
 
     <!--  enable on-page script tools -->
     <script>
+        jQuery(document).ready(function() {
+            jQuery("#payinfo").click(function () {
+                jQuery("#payment-details-section").toggle()
+            });
+        });
         <?php
         $order_link = str_replace('&amp;', '&', zen_href_link(FILENAME_ORDERS, zen_get_all_get_params(array('oID', 'action')) . "oID=[*]"));
         ?>
