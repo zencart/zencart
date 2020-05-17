@@ -80,7 +80,7 @@ class order extends base {
         if (!$coupon_link->EOF) {
           if (IS_ADMIN_FLAG === true) {
               $zc_coupon_link = '<a href="javascript:couponpopupWindow(\'' . zen_catalog_href_link(FILENAME_POPUP_COUPON_HELP, 'cID=' . $coupon_link->fields['coupon_id']) . '\')">';
-          } else { 
+          } else {
               $zc_coupon_link = '<a href="javascript:couponpopupWindow(\'' . zen_href_link(FILENAME_POPUP_COUPON_HELP, 'cID=' . $coupon_link->fields['coupon_id']) . '\')">';
           }
           $this->notify('NOTIFY_ORDER_COUPON_LINK', $coupon_link->fields, $zc_coupon_link);
@@ -138,7 +138,7 @@ class order extends base {
                             'country' => $order->fields['delivery_country'],
                             'format_id' => $order->fields['delivery_address_format_id']);
 
-    if (($order->fields['shipping_module_code'] == 'storepickup') || 
+    if (($order->fields['shipping_module_code'] == 'storepickup') ||
         (empty($this->delivery['name']) && empty($this->delivery['street_address']))) {
       $this->delivery = false;
     }
@@ -185,7 +185,7 @@ class order extends base {
 
       $this->products[$index] = array('qty' => $new_qty,
                                       'id' => $orders_products->fields['products_id'],
-                                      'orders_products_id' => $orders_products->fields['orders_products_id'], 
+                                      'orders_products_id' => $orders_products->fields['orders_products_id'],
                                       'name' => $orders_products->fields['products_name'],
                                       'model' => $orders_products->fields['products_model'],
                                       'tax' => $orders_products->fields['products_tax'],
@@ -287,7 +287,7 @@ class order extends base {
                                    LEFT JOIN " . TABLE_ZONES . " z ON (ab.entry_zone_id = z.zone_id)
                                    LEFT JOIN " . TABLE_COUNTRIES . " c ON (ab.entry_country_id = c.countries_id)
                                    WHERE ab.customers_id = " . (!empty($_SESSION['customer_id']) ? (int)$_SESSION['customer_id'] : 0) . "
-                                   AND ab.address_book_id = " . $sendto; 
+                                   AND ab.address_book_id = " . $sendto;
 
     $shipping_address = $db->Execute($shipping_address_query);
 
@@ -300,7 +300,7 @@ class order extends base {
                                   LEFT JOIN " . TABLE_ZONES . " z ON (ab.entry_zone_id = z.zone_id)
                                   LEFT JOIN " . TABLE_COUNTRIES . " c ON (ab.entry_country_id = c.countries_id)
                                   WHERE ab.customers_id = " . (!empty($_SESSION['customer_id']) ? (int)$_SESSION['customer_id'] : 0) . "
-                                  AND ab.address_book_id = " . $billto; 
+                                  AND ab.address_book_id = " . $billto;
 
     $billing_address = $db->Execute($billing_address_query);
 
@@ -428,9 +428,9 @@ class order extends base {
         'state' => '',
         'zone_id' => 0,
         'country' => array(
-            'id' => 0, 
-            'title' => '', 
-            'iso_code_2' => '', 
+            'id' => 0,
+            'title' => '',
+            'iso_code_2' => '',
             'iso_code_3' => ''
         ),
         'country_id' => 0,
@@ -601,7 +601,7 @@ class order extends base {
         /*********************************************
          * END: Calculate taxes for this product
          *********************************************/
-    }
+      }
       $index++;
     }
 
@@ -722,17 +722,17 @@ class order extends base {
                             'customer_notified' => $customer_notification,
                             'comments' => $this->info['comments'],
                            );
-                            
+
     // -----
     // emp_admin mod support:
-    // If an admin has just placed an order on a customer's behalf, 
+    // If an admin has just placed an order on a customer's behalf,
     // note that admin's name/id in the order's 'updated_by' field.
     //
     if (isset($_SESSION['emp_admin_id'])) {
         $admin_id_sql = "SELECT admin_name FROM " . TABLE_ADMIN . " WHERE admin_id = :adminid: LIMIT 1";
         $admin_id_sql = $db->bindVars($admin_id_sql, ':adminid:', $_SESSION['emp_admin_id'], 'integer');
         $admin_info = $db->Execute($admin_id_sql);
-        
+
         $admin_name = (($admin_info->EOF) ? '???' : $admin_info->fields['admin_name']) . ' [' . $_SESSION['emp_admin_id'] . ']';
         $sql_data_array['updated_by'] = $admin_name;
     }
@@ -776,7 +776,7 @@ class order extends base {
 
           // Will work with only one option for downloadable products
           // otherwise, we have to build the query dynamically with a loop
-          // NOTE: Need the (int) cast on the option_id, since checkbox-type attributes' are formatted like '46_chk887'. 
+          // NOTE: Need the (int) cast on the option_id, since checkbox-type attributes' are formatted like '46_chk887'.
           if (!empty($this->products[$i]['attributes']) && is_array($this->products[$i]['attributes'])) {
             $products_attributes = $this->products[$i]['attributes'];
             $stock_query_raw .= " AND pa.options_id = " . (int)$products_attributes[0]['option_id'] . " AND pa.options_values_id = " . $products_attributes[0]['value_id'];
@@ -800,7 +800,7 @@ class order extends base {
           $products_status_update = ($stock_left <= 0 && SHOW_PRODUCTS_SOLD_OUT == '0') ? ', products_status = 0' : '';
 
           $db->Execute("UPDATE " . TABLE_PRODUCTS . " SET products_quantity = " . $stock_left .
-                        $products_status_update . 
+                        $products_status_update .
                        " WHERE products_id = " . zen_get_prid($this->products[$i]['id']) . " LIMIT 1");
 
           // for low stock email
@@ -1081,11 +1081,11 @@ class order extends base {
     $html_msg['HEADING_ADDRESS_INFORMATION']= HEADING_ADDRESS_INFORMATION;
     $html_msg['ADDRESS_DELIVERY_TITLE']     = EMAIL_TEXT_DELIVERY_ADDRESS;
 
-    $storepickup = (strpos($this->info['shipping_module_code'], "storepickup") !== false); 
+    $storepickup = (strpos($this->info['shipping_module_code'], "storepickup") !== false);
     if ($this->content_type != 'virtual' && !$storepickup) {
       $html_msg['ADDRESS_DELIVERY_DETAIL']    = zen_address_label($_SESSION['customer_id'], $_SESSION['sendto'], true, '', "<br />");
     } else {
-       $html_msg['ADDRESS_DELIVERY_DETAIL']    = 'n/a'; 
+       $html_msg['ADDRESS_DELIVERY_DETAIL']    = 'n/a';
     }
     $html_msg['SHIPPING_METHOD_TITLE']      = HEADING_SHIPPING_METHOD;
     $html_msg['SHIPPING_METHOD_DETAIL']     = (zen_not_null($this->info['shipping_method'])) ? $this->info['shipping_method'] : 'n/a';
@@ -1141,7 +1141,7 @@ class order extends base {
     //  $html_msg['EMAIL_TEXT_HEADER'] = EMAIL_TEXT_HEADER;
 
     $html_msg['EXTRA_INFO'] = '';
-    
+
     // -----
     // Send customer confirmation email unless observer overrides it.
     $send_customer_email = true;
