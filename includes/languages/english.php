@@ -314,6 +314,9 @@
 // cart contents
   define('PRODUCTS_ORDER_QTY_TEXT_IN_CART','Quantity in Cart: ');
   define('PRODUCTS_ORDER_QTY_TEXT','Add to Cart: ');
+  define('ARIA_QTY_ADD_TO_CART','Enter quantity to add to cart');
+  define('ARIA_EDIT_QTY_IN_CART','Edit quantity in cart');
+  define('ARIA_DELETE_ITEM_FROM_CART', 'Delete this item from the cart');
 
 // success messages for added to cart when display cart is off
 // set to blank for no messages

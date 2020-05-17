@@ -30,8 +30,9 @@ if (!defined('IS_ADMIN_FLAG')) {
     $zco_notifier->notify('NOTIFY_PRODUCT_LISTING_ALPHA_SORTER_SELECTLIST', isset($prefix) ? $prefix : '', $letters_list);
 
     if (TEXT_PRODUCTS_LISTING_ALPHA_SORTER != '') {
-      echo '<label class="inputLabel">' . TEXT_PRODUCTS_LISTING_ALPHA_SORTER . '</label>' . zen_draw_pull_down_menu('alpha_filter_id', $letters_list, (isset($_GET['alpha_filter_id']) ? $_GET['alpha_filter_id'] : ''), 'onchange="this.form.submit()"');
+        echo '<label class="inputLabel" for="select-alpha_filter_id">' . TEXT_PRODUCTS_LISTING_ALPHA_SORTER . '</label>';
     } else {
-      echo zen_draw_pull_down_menu('alpha_filter_id', $letters_list, (isset($_GET['alpha_filter_id']) ? $_GET['alpha_filter_id'] : ''), 'onchange="this.form.submit()"');
+        echo '<label class="inputLabel sr-only" for="select-alpha_filter_id">' . TEXT_PRODUCTS_LISTING_ALPHA_SORTER_NAMES . '</label>';
     }
+    echo zen_draw_pull_down_menu('alpha_filter_id', $letters_list, (isset($_GET['alpha_filter_id']) ? $_GET['alpha_filter_id'] : ''), 'onchange="this.form.submit()"');
   }
