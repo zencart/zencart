@@ -266,7 +266,7 @@ class order extends base {
     $customer_address_query = "select c.customers_firstname, c.customers_lastname, c.customers_telephone,
                                     c.customers_email_address, ab.entry_company, ab.entry_street_address,
                                     ab.entry_suburb, ab.entry_postcode, ab.entry_city, ab.entry_zone_id,
-                                    z.zone_name, co.countries_id, co.countries_name,
+                                    z.zone_code, z.zone_name, co.countries_id, co.countries_name,
                                     co.countries_iso_code_2, co.countries_iso_code_3,
                                     co.address_format_id, ab.entry_state
                                    from (" . TABLE_CUSTOMERS . " c, " . TABLE_ADDRESS_BOOK . " ab )
@@ -280,7 +280,7 @@ class order extends base {
 
     $shipping_address_query = "SELECT ab.entry_firstname, ab.entry_lastname, ab.entry_company,
                                     ab.entry_street_address, ab.entry_suburb, ab.entry_postcode,
-                                    ab.entry_city, ab.entry_zone_id, z.zone_name, ab.entry_country_id,
+                                    ab.entry_city, ab.entry_zone_id, z.zone_code, z.zone_name, ab.entry_country_id,
                                     c.countries_id, c.countries_name, c.countries_iso_code_2,
                                     c.countries_iso_code_3, c.address_format_id, ab.entry_state
                                    FROM " . TABLE_ADDRESS_BOOK . " ab
@@ -293,7 +293,7 @@ class order extends base {
 
     $billing_address_query = "SELECT ab.entry_firstname, ab.entry_lastname, ab.entry_company,
                                    ab.entry_street_address, ab.entry_suburb, ab.entry_postcode,
-                                   ab.entry_city, ab.entry_zone_id, z.zone_name, ab.entry_country_id,
+                                   ab.entry_city, ab.entry_zone_id, z.zone_code, z.zone_name, ab.entry_country_id,
                                    c.countries_id, c.countries_name, c.countries_iso_code_2,
                                    c.countries_iso_code_3, c.address_format_id, ab.entry_state
                                   FROM " . TABLE_ADDRESS_BOOK . " ab
@@ -372,6 +372,7 @@ class order extends base {
                               'city' => $customer_address->fields['entry_city'],
                               'postcode' => $customer_address->fields['entry_postcode'],
                               'state' => ((zen_not_null($customer_address->fields['entry_state'])) ? $customer_address->fields['entry_state'] : $customer_address->fields['zone_name']),
+                              'state_code' => ((zen_not_null($customer_address->fields['zone_code'])) ? $customer_address->fields['zone_code'] : $customer_address->fields['zone_name']),
                               'zone_id' => $customer_address->fields['entry_zone_id'],
                               'country' => array('id' => $customer_address->fields['countries_id'], 'title' => $customer_address->fields['countries_name'], 'iso_code_2' => $customer_address->fields['countries_iso_code_2'], 'iso_code_3' => $customer_address->fields['countries_iso_code_3']),
                               'format_id' => (int)$customer_address->fields['address_format_id'],
@@ -408,6 +409,7 @@ class order extends base {
                               'city' => $shipping_address->fields['entry_city'],
                               'postcode' => $shipping_address->fields['entry_postcode'],
                               'state' => ((zen_not_null($shipping_address->fields['entry_state'])) ? $shipping_address->fields['entry_state'] : $shipping_address->fields['zone_name']),
+                              'state_code' => ((zen_not_null($shipping_address->fields['zone_code'])) ? $shipping_address->fields['zone_code'] : $shipping_address->fields['zone_name']),
                               'zone_id' => $shipping_address->fields['entry_zone_id'],
                               'country' => array('id' => $shipping_address->fields['countries_id'], 'title' => $shipping_address->fields['countries_name'], 'iso_code_2' => $shipping_address->fields['countries_iso_code_2'], 'iso_code_3' => $shipping_address->fields['countries_iso_code_3']),
                               'country_id' => $shipping_address->fields['entry_country_id'],
@@ -423,6 +425,7 @@ class order extends base {
                              'city' => $billing_address->fields['entry_city'],
                              'postcode' => $billing_address->fields['entry_postcode'],
                              'state' => ((zen_not_null($billing_address->fields['entry_state'])) ? $billing_address->fields['entry_state'] : $billing_address->fields['zone_name']),
+                             'state_code' => ((zen_not_null($billing_address->fields['zone_code'])) ? $billing_address->fields['zone_code'] : $billing_address->fields['zone_name']),
                              'zone_id' => $billing_address->fields['entry_zone_id'],
                              'country' => array('id' => $billing_address->fields['countries_id'], 'title' => $billing_address->fields['countries_name'], 'iso_code_2' => $billing_address->fields['countries_iso_code_2'], 'iso_code_3' => $billing_address->fields['countries_iso_code_3']),
                              'country_id' => $billing_address->fields['entry_country_id'],
