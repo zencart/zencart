@@ -142,7 +142,7 @@
 <?php
   }
   if ($product['checkBoxDelete'] ) {
-    echo zen_draw_checkbox_field('cart_delete[]', $product['id']);
+    echo zen_draw_checkbox_field('cart_delete[]', $product['id'], false, 'aria-label="' . ARIA_DELETE_ITEM_FROM_CART . '"');
   }
 ?>
       </td>

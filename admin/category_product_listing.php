@@ -354,7 +354,7 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
     <!-- body //-->
     <div class="container-fluid">
       <h1>
-        <a href="<?php echo zen_catalog_href_link('index', zen_get_path("$current_category_id"), 'NONSSL'); ?>" target="_blank" title="<?php echo BOX_HEADING_CATALOG; ?>"><?php echo zen_image(DIR_WS_IMAGES . 'icon_popup.gif', BOX_HEADING_CATALOG); ?></a>
+        <a href="<?php echo zen_catalog_href_link('index', zen_get_path("$current_category_id"), 'NONSSL'); ?>" rel="noopener" target="_blank" title="<?php echo BOX_HEADING_CATALOG; ?>"><?php echo zen_image(DIR_WS_IMAGES . 'icon_popup.gif', BOX_HEADING_CATALOG); ?></a>
         <?php echo HEADING_TITLE; ?>&nbsp;-&nbsp;<?php echo zen_output_generated_category_path($current_category_id); ?>
       </h1>
       <?php if ($action == '') { ?>
@@ -713,7 +713,7 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
                             ) ";
                 $where = $db->bindVars($where, ':search', $_GET['search'], 'noquotestring');
             }
-            
+
             $products_query_raw .= $where . $order_by;
 
 // Split Page
@@ -757,7 +757,7 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
               ?>
               <tr class="product-listing-row" data-pid="<?php echo $product['products_id']; ?>">
                 <td class="text-right"><?php echo $product['products_id']; ?></td>
-                <td><a href="<?php echo zen_catalog_href_link($type_handler . '_info', 'cPath=' . $cPath . '&products_id=' . $product['products_id'] . '&language=' . $_SESSION['languages_code'] . '&product_type=' . $product['products_type']); ?>" target="_blank"><?php echo zen_image(DIR_WS_ICONS . 'preview.gif', ICON_PREVIEW); ?></a>&nbsp;<a href="<?php echo zen_href_link(FILENAME_PRODUCT, 'cPath=' . $cPath . '&product_type=' . $product['products_type'] . '&pID=' . $product['products_id'] . '&action=new_product' . (isset($_GET['search']) ? '&search=' . $_GET['search'] : '')); ?>" title="<?php echo IMAGE_EDIT; ?>" style="text-decoration: none"><?php echo $product['products_name']; ?></a></td>
+                <td><a href="<?php echo zen_catalog_href_link($type_handler . '_info', 'cPath=' . $cPath . '&products_id=' . $product['products_id'] . '&language=' . $_SESSION['languages_code'] . '&product_type=' . $product['products_type']); ?>" rel="noopener" target="_blank"><?php echo zen_image(DIR_WS_ICONS . 'preview.gif', ICON_PREVIEW); ?></a>&nbsp;<a href="<?php echo zen_href_link(FILENAME_PRODUCT, 'cPath=' . $cPath . '&product_type=' . $product['products_type'] . '&pID=' . $product['products_id'] . '&action=new_product' . (isset($_GET['search']) ? '&search=' . $_GET['search'] : '')); ?>" title="<?php echo IMAGE_EDIT; ?>" style="text-decoration: none"><?php echo $product['products_name']; ?></a></td>
                 <td class="hidden-sm hidden-xs"><?php echo $product['products_model']; ?></td>
                 <td class="text-right hidden-sm hidden-xs"><?php echo zen_get_products_display_price($product['products_id']); ?></td>
                 <td class="text-right hidden-sm hidden-xs"><?php echo $product['products_quantity']; ?></td>

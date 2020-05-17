@@ -226,7 +226,7 @@ $listingURL = FILENAME_WHOS_ONLINE . '.php?' . zen_get_all_get_params(['q', 't',
                     }
                     ?>
                 </td>
-                <td class="dataTableContentWhois dataTableButtonCell" align="left" valign="top"><a href="http://whois.domaintools.com/<?php echo $item['ip_address']; ?>" target="_blank"><?php echo '<u>' . $item['ip_address'] . '</u>'; ?></a></td>
+                <td class="dataTableContentWhois dataTableButtonCell" align="left" valign="top"><a href="http://whois.domaintools.com/<?php echo $item['ip_address']; ?>" rel="noreferrer noopener" target="_blank"><?php echo '<u>' . $item['ip_address'] . '</u>'; ?></a></td>
                 <td>&nbsp;</td>
                 <td class="dataTableContentWhois" align="center" valign="top"><?php echo date('H:i:s', $item['time_entry']); ?></td>
                 <td class="dataTableContentWhois" align="center" valign="top"><?php echo date('H:i:s', $item['time_last_click']); ?></td>
@@ -248,7 +248,7 @@ $listingURL = FILENAME_WHOS_ONLINE . '.php?' . zen_get_all_get_params(['q', 't',
                       TEXT_HOST . zen_output_string_protected($item['host_address']) . '<br>' .
                       TEXT_USER_AGENT . zen_output_string_protected($item['user_agent']) . '<br>';
 
-                      $lastURLlink = '<a href="' . zen_output_string_protected($item['last_page_url']) . '" target="_blank">' . '<u>' . zen_output_string_protected($item['last_page_url']) . '</u>' . '</a>';
+                      $lastURLlink = '<a href="' . zen_output_string_protected($item['last_page_url']) . '" rel="noopener" target="_blank">' . '<u>' . zen_output_string_protected($item['last_page_url']) . '</u>' . '</a>';
                       if (preg_match('/^(.*)' . zen_session_name() . '=[a-f,0-9]+[&]*(.*)/i', $item['last_page_url'], $array)) {
                         $lastURLlink = zen_output_string_protected($array[1] . $array[2]);
                       }
