@@ -447,7 +447,7 @@
 // meta tags special defines
   define('META_TAG_PRODUCTS_PRICE_IS_FREE_TEXT','It\'s Free!');
 
-  define('ASK_A_QUESTION', 'Ask a question about this product');
+  define('ASK_A_QUESTION', 'Ask a question about this item');
 
 // customer login
   define('TEXT_SHOWCASE_ONLY','Contact Us');
