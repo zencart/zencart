@@ -304,43 +304,6 @@ class order extends base {
 
     $billing_address = $db->Execute($billing_address_query);
 
-    // set default tax calculation for not-logged-in visitors
-      $taxCountryId = $taxZoneId = 0;
-
-      // get tax zone info for logged-in visitors (including guests).  Note that a guest-checkout observer
-      // can use 'NOTIFY_ORDER_CART_AFTER_ADDRESSES_SET' to modify the $taxCountryId and/or $taxZoneId.
-      if (zen_is_logged_in()) {
-          $taxCountryId = $taxZoneId = -1;
-          $tax_address_query = '';
-          switch (STORE_PRODUCT_TAX_BASIS) {
-              case 'Shipping':
-                  $address_book_id = ($this->content_type == 'virtual' ? $billto : $sendto);
-                  break;
-              case 'Billing':
-                  $address_book_id = $billto;
-                  break;
-              case 'Store':
-                  if ($billing_address->fields['entry_zone_id'] == STORE_ZONE) {
-                      $address_book_id = $billto;
-                  } else {
-                      $address_book_id = ($this->content_type == 'virtual' ? $billto : $sendto);
-                  }
-          }
-          $tax_address_query = "SELECT ab.entry_country_id, ab.entry_zone_id
-                                FROM " . TABLE_ADDRESS_BOOK . " ab
-                                LEFT JOIN " . TABLE_ZONES . " z ON (ab.entry_zone_id = z.zone_id)
-                                WHERE ab.customers_id = " . (int)$_SESSION['customer_id'] . "
-                                AND ab.address_book_id = ". $address_book_id;
-
-          if ($tax_address_query != '') {
-              $tax_address = $db->Execute($tax_address_query);
-              if ($tax_address->RecordCount() > 0) {
-                  $taxCountryId = $tax_address->fields['entry_country_id'];
-                  $taxZoneId = $tax_address->fields['entry_zone_id'];
-              }
-          }
-      }
-
     $class =& $_SESSION['payment'];
 
     if (isset($_SESSION['cc_id'])) {
@@ -466,11 +429,10 @@ class order extends base {
                              'format_id' => (int)$billing_address->fields['address_format_id']);
     }
 
+    list($taxCountryId, $taxZoneId) = $this->determineTaxAddressZones($billto, $sendto);
     // -----
-    // Issue a notification, allowing an observer to potentially make changes to any of the
-    // order-related addresses and/or the country/zone information used to determine the
-    // order's products' tax rate.
-    //
+    // Allow an observer to potentially make changes to any of the order-related addresses
+    // and/or the country/zone information used to determine the order's products' tax rate.
     $this->notify('NOTIFY_ORDER_CART_AFTER_ADDRESSES_SET', '', $taxCountryId, $taxZoneId);
 
     $index = 0;
@@ -571,6 +533,51 @@ class order extends base {
       }
     }
     $this->notify('NOTIFY_ORDER_CART_FINISHED');
+  }
+
+
+  function determineTaxAddressZones($billToAddressId, $shipToAddressId)
+  {
+      global $db;
+
+      // set default tax calculation for not-logged-in visitors
+      $taxCountryId = $taxZoneId = 0;
+
+      // get tax zone info for logged-in visitors (including guests).  Note that a guest-checkout observer
+      // can use 'NOTIFY_ORDER_CART_AFTER_ADDRESSES_SET' to modify the $taxCountryId and/or $taxZoneId.
+      if (zen_is_logged_in()) {
+          $taxCountryId = $taxZoneId = -1;
+          $tax_address_query = '';
+          switch (STORE_PRODUCT_TAX_BASIS) {
+              case 'Shipping':
+                  $address_book_id = ($this->content_type === 'virtual' ? $billToAddressId : $shipToAddressId);
+                  break;
+              case 'Billing':
+                  $address_book_id = $billToAddressId;
+                  break;
+              case 'Store':
+                  if (isset($this->billing['zone_id']) && $this->billing['zone_id'] == STORE_ZONE) {
+                      $address_book_id = $billToAddressId;
+                  } else {
+                      $address_book_id = ($this->content_type === 'virtual' ? $billToAddressId : $shipToAddressId);
+                  }
+          }
+          $tax_address_query = "SELECT ab.entry_country_id, ab.entry_zone_id
+                                FROM " . TABLE_ADDRESS_BOOK . " ab
+                                LEFT JOIN " . TABLE_ZONES . " z ON (ab.entry_zone_id = z.zone_id)
+                                WHERE ab.customers_id = " . (int)$_SESSION['customer_id'] . "
+                                AND ab.address_book_id = ". $address_book_id;
+
+          if ($tax_address_query != '') {
+              $tax_address = $db->Execute($tax_address_query);
+              if ($tax_address->RecordCount() > 0) {
+                  $taxCountryId = $tax_address->fields['entry_country_id'];
+                  $taxZoneId = $tax_address->fields['entry_zone_id'];
+              }
+          }
+      }
+
+      return array($taxCountryId, $taxZoneId);
   }
 
     /**
