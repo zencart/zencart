@@ -477,12 +477,9 @@ class order extends base {
     $products = $_SESSION['cart']->get_products();
     for ($i=0, $n=sizeof($products); $i<$n; $i++) {
       $rowClass = ($i / 2) == floor($i / 2) ? "rowEven" : "rowOdd";
-      $taxRates = zen_get_multiple_tax_rates($products[$i]['tax_class_id'], $taxCountryId, $taxZoneId);
       $this->products[$index] = array('qty' => $products[$i]['quantity'],
                                       'name' => $products[$i]['name'],
                                       'model' => $products[$i]['model'],
-                                      'tax_groups'=>$taxRates,
-                                      'tax_description' => zen_get_tax_description($products[$i]['tax_class_id'], $taxCountryId, $taxZoneId),
                                       'price' => $products[$i]['price'],
                                       'final_price' => zen_round($products[$i]['price'] + $_SESSION['cart']->attributes_price($products[$i]['id']), $decimals),
                                       'onetime_charges' => $_SESSION['cart']->attributes_price_onetime_charges($products[$i]['id'], $products[$i]['quantity']),
@@ -503,16 +500,17 @@ class order extends base {
                                       'products_mixed_discount_quantity' => (int)$products[$i]['products_mixed_discount_quantity'],
                                       );
 
-
-      if (STORE_PRODUCT_TAX_BASIS == 'Shipping' && isset($_SESSION['shipping']['id']) && stristr($_SESSION['shipping']['id'], 'storepickup') == TRUE)
-      {
-        $taxRates = zen_get_multiple_tax_rates($products[$i]['tax_class_id'], STORE_COUNTRY, STORE_ZONE);
-        $this->products[$index]['tax'] = zen_get_tax_rate($products[$i]['tax_class_id'], STORE_COUNTRY, STORE_ZONE);
-      } else
-      {
+      // Determine tax RATES based on Tax Basis configuration (amounts are calculated later)
+      if (STORE_PRODUCT_TAX_BASIS == 'Shipping' && isset($_SESSION['shipping']['id']) && stristr($_SESSION['shipping']['id'], 'storepickup') == TRUE) {
+          $taxRates = zen_get_multiple_tax_rates($products[$i]['tax_class_id'], STORE_COUNTRY, STORE_ZONE);
+          $this->products[$index]['tax'] = zen_get_tax_rate($products[$i]['tax_class_id'], STORE_COUNTRY, STORE_ZONE);
+          $this->products[$index]['tax_description'] = zen_get_tax_description($products[$i]['tax_class_id'], STORE_COUNTRY, STORE_ZONE);
+      } else {
           $taxRates = zen_get_multiple_tax_rates($products[$i]['tax_class_id'], $taxCountryId, $taxZoneId);
           $this->products[$index]['tax'] = zen_get_tax_rate($products[$i]['tax_class_id'], $taxCountryId, $taxZoneId);
+          $this->products[$index]['tax_description'] = zen_get_tax_description($products[$i]['tax_class_id'], $taxCountryId, $taxZoneId);
       }
+      $this->products[$index]['tax_groups'] = $taxRates;
 
       $this->notify('NOTIFY_ORDER_CART_ADD_PRODUCT_LIST', array('index'=>$index, 'products'=>$products[$i]));
       if ($products[$i]['attributes']) {
@@ -612,6 +610,7 @@ class order extends base {
       $this->info['total'] = $this->info['subtotal'] + $this->info['tax'] + $this->info['shipping_cost'];
     }
 
+    // set order's status according to payment module configuration
     if (isset($GLOBALS[$class]) && is_object($GLOBALS[$class])) {
       if (isset($GLOBALS[$class]->order_status) && is_numeric($GLOBALS[$class]->order_status) && $GLOBALS[$class]->order_status > 0) {
         $this->info['order_status'] = $GLOBALS[$class]->order_status;
