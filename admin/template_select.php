@@ -16,12 +16,12 @@ while ($file = $dir->read()) {
   if (is_dir(DIR_FS_CATALOG_TEMPLATES . $file) && $file != 'template_default') {
     if (file_exists(DIR_FS_CATALOG_TEMPLATES . $file . '/template_info.php')) {
       require(DIR_FS_CATALOG_TEMPLATES . $file . '/template_info.php');
-      $template_info[$file] = array(
+      $template_info[$file] = [
         'name' => $template_name,
         'version' => $template_version,
         'author' => $template_author,
         'description' => $template_description,
-        'screenshot' => $template_screenshot);
+        'screenshot' => $template_screenshot];
     }
   }
 }
@@ -44,7 +44,7 @@ if (zen_not_null($action)) {
         $sql = $db->bindVars($sql, ':tpl:', $_POST['ln'], 'string');
         $sql = $db->bindVars($sql, ':lang:', $_POST['lang'], 'string');
         $db->Execute($sql);
-        $_GET['tID'] = $db->Insert_ID();
+        $_GET['tID'] = $db->insert_ID();
       }
       $action = '';
       break;
@@ -55,7 +55,7 @@ if (zen_not_null($action)) {
       $sql = $db->bindVars($sql, ':tpl:', $_POST['ln'], 'string');
       $sql = $db->bindVars($sql, ':id:', $_GET['tID'], 'integer');
       $db->Execute($sql);
-      zen_redirect(zen_href_link(FILENAME_TEMPLATE_SELECT, zen_get_all_get_params(array('action'))));
+      zen_redirect(zen_href_link(FILENAME_TEMPLATE_SELECT, zen_get_all_get_params(['action'])));
       break;
     case 'deleteconfirm':
       $check_query = $db->Execute("SELECT template_language
@@ -159,71 +159,71 @@ if (zen_not_null($action)) {
         </div>
         <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3 configurationColumnRight">
             <?php
-            $heading = array();
-            $contents = array();
+            $heading = [];
+            $contents = [];
 
             switch ($action) {
               case 'new':
-                $heading[] = array('text' => '<h4>' . TEXT_INFO_HEADING_NEW_TEMPLATE . '</h4>');
+                $heading[] = ['text' => '<h4>' . TEXT_INFO_HEADING_NEW_TEMPLATE . '</h4>'];
 
-                $contents = array('form' => zen_draw_form('zones', FILENAME_TEMPLATE_SELECT, 'page=' . $_GET['page'] . '&action=insert', 'post', 'class="form-horizontal"'));
-                $contents[] = array('text' => TEXT_INFO_INSERT_INTRO);
+                $contents = ['form' => zen_draw_form('zones', FILENAME_TEMPLATE_SELECT, 'page=' . $_GET['page'] . '&action=insert', 'post', 'class="form-horizontal"')];
+                $contents[] = ['text' => TEXT_INFO_INSERT_INTRO];
                 foreach($template_info as $key => $value) {
-                  $template_array[] = array(
+                  $template_array[] = [
                     'id' => $key,
-                    'text' => $value['name']);
+                    'text' => $value['name']];
                 }
                 $lns = $db->Execute("SELECT name, languages_id
                                      FROM " . TABLE_LANGUAGES);
                 foreach ($lns as $ln) {
-                  $language_array[] = array(
+                  $language_array[] = [
                     'text' => $ln['name'],
-                    'id' => $ln['languages_id']);
+                    'id' => $ln['languages_id']];
                 }
-                $contents[] = array('text' => '<br>' . zen_draw_label(TEXT_INFO_TEMPLATE_NAME, 'ln', 'class="control-label"') . zen_draw_pull_down_menu('ln', $template_array, '', 'class="form-control"'));
-                $contents[] = array('text' => '<br>' . zen_draw_label(TEXT_INFO_LANGUAGE_NAME, 'lang', 'class="control-label"') . zen_draw_pull_down_menu('lang', $language_array, '', 'class="form-control"'));
-                $contents[] = array('align' => 'text-center', 'text' => '<br><button type="submit" class="btn btn-primary">' . IMAGE_INSERT . '</button> <a href="' . zen_href_link(FILENAME_TEMPLATE_SELECT, 'page=' . $_GET['page']) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>');
+                $contents[] = ['text' => '<br>' . zen_draw_label(TEXT_INFO_TEMPLATE_NAME, 'ln', 'class="control-label"') . zen_draw_pull_down_menu('ln', $template_array, '', 'class="form-control"')];
+                $contents[] = ['text' => '<br>' . zen_draw_label(TEXT_INFO_LANGUAGE_NAME, 'lang', 'class="control-label"') . zen_draw_pull_down_menu('lang', $language_array, '', 'class="form-control"')];
+                $contents[] = ['align' => 'text-center', 'text' => '<br><button type="submit" class="btn btn-primary">' . IMAGE_INSERT . '</button> <a href="' . zen_href_link(FILENAME_TEMPLATE_SELECT, 'page=' . $_GET['page']) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>'];
                 break;
               case 'edit':
-                $heading[] = array('text' => '<h4>' . TEXT_INFO_HEADING_EDIT_TEMPLATE . '</h4>');
+                $heading[] = ['text' => '<h4>' . TEXT_INFO_HEADING_EDIT_TEMPLATE . '</h4>'];
 
-                $contents = array('form' => zen_draw_form('templateselect', FILENAME_TEMPLATE_SELECT, 'page=' . $_GET['page'] . '&tID=' . $tInfo->template_id . '&action=save', 'post', 'class="form-horizontal"'));
-                $contents[] = array('text' => TEXT_INFO_EDIT_INTRO);
+                $contents = ['form' => zen_draw_form('templateselect', FILENAME_TEMPLATE_SELECT, 'page=' . $_GET['page'] . '&tID=' . $tInfo->template_id . '&action=save', 'post', 'class="form-horizontal"')];
+                $contents[] = ['text' => TEXT_INFO_EDIT_INTRO];
                 foreach($template_info as $key => $value) {
-                  $template_array[] = array('id' => $key, 'text' => $value['name']);
+                  $template_array[] = ['id' => $key, 'text' => $value['name']];
                 }
-                $contents[] = array('text' => '<br>' . zen_draw_label(TEXT_INFO_TEMPLATE_NAME, 'ln', 'class="control-label"') . zen_draw_pull_down_menu('ln', $template_array, $templates->fields['template_dir'], 'class="form-control"'));
-                $contents[] = array('align' => 'text-center', 'text' => '<br><button type="submit" class="btn btn-primary">' . IMAGE_UPDATE . '</button> <a href="' . zen_href_link(FILENAME_TEMPLATE_SELECT, 'page=' . $_GET['page'] . '&tID=' . $tInfo->template_id) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>');
+                $contents[] = ['text' => '<br>' . zen_draw_label(TEXT_INFO_TEMPLATE_NAME, 'ln', 'class="control-label"') . zen_draw_pull_down_menu('ln', $template_array, $templates->fields['template_dir'], 'class="form-control"')];
+                $contents[] = ['align' => 'text-center', 'text' => '<br><button type="submit" class="btn btn-primary">' . IMAGE_UPDATE . '</button> <a href="' . zen_href_link(FILENAME_TEMPLATE_SELECT, 'page=' . $_GET['page'] . '&tID=' . $tInfo->template_id) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>'];
                 break;
               case 'delete':
-                $heading[] = array('text' => '<h4>' . TEXT_INFO_HEADING_DELETE_TEMPLATE . '</h4>');
+                $heading[] = ['text' => '<h4>' . TEXT_INFO_HEADING_DELETE_TEMPLATE . '</h4>'];
 
-                $contents = array('form' => zen_draw_form('zones', FILENAME_TEMPLATE_SELECT, 'page=' . $_GET['page'] . '&action=deleteconfirm') . zen_draw_hidden_field('tID', $tInfo->template_id));
-                $contents[] = array('text' => TEXT_INFO_DELETE_INTRO);
-                $contents[] = array('text' => '<br><b>' . $template_info[$tInfo->template_dir]['name'] . '</b>');
-                $contents[] = array('align' => 'text-center', 'text' => '<br><button type="submit" class="btn btn-danger">' . IMAGE_DELETE . '</button> <a href="' . zen_href_link(FILENAME_TEMPLATE_SELECT, 'page=' . $_GET['page'] . '&tID=' . $tInfo->template_id) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>');
+                $contents = ['form' => zen_draw_form('zones', FILENAME_TEMPLATE_SELECT, 'page=' . $_GET['page'] . '&action=deleteconfirm') . zen_draw_hidden_field('tID', $tInfo->template_id)];
+                $contents[] = ['text' => TEXT_INFO_DELETE_INTRO];
+                $contents[] = ['text' => '<br><b>' . $template_info[$tInfo->template_dir]['name'] . '</b>'];
+                $contents[] = ['align' => 'text-center', 'text' => '<br><button type="submit" class="btn btn-danger">' . IMAGE_DELETE . '</button> <a href="' . zen_href_link(FILENAME_TEMPLATE_SELECT, 'page=' . $_GET['page'] . '&tID=' . $tInfo->template_id) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>'];
                 break;
               default:
                 if (isset($tInfo) && is_object($tInfo)) {
-                  $heading[] = array('text' => '<h4>' . $template_info[$tInfo->template_dir]['name'] . '</h4>');
+                  $heading[] = ['text' => '<h4>' . $template_info[$tInfo->template_dir]['name'] . '</h4>'];
                   if ($tInfo->template_language == 0) {
-                    $contents[] = array('align' => 'text-center', 'text' => '<a href="' . zen_href_link(FILENAME_TEMPLATE_SELECT, 'page=' . $_GET['page'] . '&tID=' . $tInfo->template_id . '&action=edit') . '" class="btn btn-primary" role="button">' . IMAGE_EDIT . '</a>');
+                    $contents[] = ['align' => 'text-center', 'text' => '<a href="' . zen_href_link(FILENAME_TEMPLATE_SELECT, 'page=' . $_GET['page'] . '&tID=' . $tInfo->template_id . '&action=edit') . '" class="btn btn-primary" role="button">' . IMAGE_EDIT . '</a>'];
                   } else {
-                    $contents[] = array('align' => 'text-center', 'text' => '<a href="' . zen_href_link(FILENAME_TEMPLATE_SELECT, 'page=' . $_GET['page'] . '&tID=' . $tInfo->template_id . '&action=edit') . '" class="btn btn-primary" role="button">' . IMAGE_EDIT . '</a> <a href="' . zen_href_link(FILENAME_TEMPLATE_SELECT, 'page=' . $_GET['page'] . '&tID=' . $tInfo->template_id . '&action=delete') . '" class="btn btn-warning" role="button">' . IMAGE_DELETE . '</a>');
+                    $contents[] = ['align' => 'text-center', 'text' => '<a href="' . zen_href_link(FILENAME_TEMPLATE_SELECT, 'page=' . $_GET['page'] . '&tID=' . $tInfo->template_id . '&action=edit') . '" class="btn btn-primary" role="button">' . IMAGE_EDIT . '</a> <a href="' . zen_href_link(FILENAME_TEMPLATE_SELECT, 'page=' . $_GET['page'] . '&tID=' . $tInfo->template_id . '&action=delete') . '" class="btn btn-warning" role="button">' . IMAGE_DELETE . '</a>'];
                   }
-                  $contents[] = array('text' => '<br>' . TEXT_INFO_TEMPLATE_AUTHOR . $template_info[$tInfo->template_dir]['author']);
-                  $contents[] = array('text' => '<br>' . TEXT_INFO_TEMPLATE_VERSION . $template_info[$tInfo->template_dir]['version']);
-                  $contents[] = array('text' => '<br>' . TEXT_INFO_TEMPLATE_DESCRIPTION . '<br />' . $template_info[$tInfo->template_dir]['description']);
-                  $contents[] = array('text' => '<br>' . TEXT_INFO_TEMPLATE_INSTALLED . '<br />');
+                  $contents[] = ['text' => '<br>' . TEXT_INFO_TEMPLATE_AUTHOR . $template_info[$tInfo->template_dir]['author']];
+                  $contents[] = ['text' => '<br>' . TEXT_INFO_TEMPLATE_VERSION . $template_info[$tInfo->template_dir]['version']];
+                  $contents[] = ['text' => '<br>' . TEXT_INFO_TEMPLATE_DESCRIPTION . '<br />' . $template_info[$tInfo->template_dir]['description']];
+                  $contents[] = ['text' => '<br>' . TEXT_INFO_TEMPLATE_INSTALLED . '<br />'];
                   foreach($template_info as $key => $value) {
-                    $contents[] = array('text' => '<a href="' . DIR_WS_CATALOG_TEMPLATE . $key . '/images/' . $value['screenshot'] . '" target = "_blank" class="btn btn-info" role="button">' . IMAGE_PREVIEW . '</a>&nbsp;&nbsp;' . $value['name']);
+                    $contents[] = ['text' => '<a href="' . DIR_WS_CATALOG_TEMPLATE . $key . '/images/' . $value['screenshot'] . '" target = "_blank" class="btn btn-info" role="button">' . IMAGE_PREVIEW . '</a>&nbsp;&nbsp;' . $value['name']];
                   }
                 }
                 break;
             }
 
             if ((zen_not_null($heading)) && (zen_not_null($contents))) {
-              $box = new box;
+              $box = new box();
               echo $box->infoBox($heading, $contents);
             }
             ?>
