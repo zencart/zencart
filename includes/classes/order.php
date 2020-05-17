@@ -304,7 +304,7 @@ class order extends base {
 
     $billing_address = $db->Execute($billing_address_query);
 
-    $class =& $_SESSION['payment'];
+    $paymentModule = $_SESSION['payment'];
 
     if (isset($_SESSION['cc_id'])) {
       $coupon_code_query = "SELECT coupon_code
@@ -332,8 +332,8 @@ class order extends base {
     $this->info = array('order_status' => DEFAULT_ORDERS_STATUS_ID,
                         'currency' => $_SESSION['currency'],
                         'currency_value' => $currencies->currencies[$_SESSION['currency']]['value'],
-                        'payment_method' => (isset($GLOBALS[$class]) && is_object($GLOBALS[$class])) ? $GLOBALS[$class]->title : '',
-                        'payment_module_code' => (isset($GLOBALS[$class]) && is_object($GLOBALS[$class])) ? $GLOBALS[$class]->code : '',
+                        'payment_method' => (isset($GLOBALS[$paymentModule]) && is_object($GLOBALS[$paymentModule])) ? $GLOBALS[$paymentModule]->title : '',
+                        'payment_module_code' => (isset($GLOBALS[$paymentModule]) && is_object($GLOBALS[$paymentModule])) ? $GLOBALS[$paymentModule]->code : '',
                         'coupon_code' => isset($coupon_code) && is_object($coupon_code) ? $coupon_code->fields['coupon_code'] : '',
     //                          'cc_type' => (isset($GLOBALS['cc_type']) ? $GLOBALS['cc_type'] : ''),
     //                          'cc_owner' => (isset($GLOBALS['cc_owner']) ? $GLOBALS['cc_owner'] : ''),
@@ -352,16 +352,6 @@ class order extends base {
                         'ip_address' => $_SESSION['customers_ip_address'] . ' - ' . $_SERVER['REMOTE_ADDR']
                         );
 
-    //print_r($GLOBALS[$class]);
-    //echo $class;
-    //print_r($GLOBALS);
-    //echo $_SESSION['payment'];
-    /*
-    // this is set above to the module filename it should be set to the module title like Checks/Money Order rather than moneyorder
-    if (isset(${$_SESSION['payment']}) && is_object(${$_SESSION['payment']})) {
-    $this->info['payment_method'] = ${$_SESSION['payment']}->title;
-    }
-    */
 
     if ($customer_address->RecordCount() > 0) {
       $this->customer = array('firstname' => $customer_address->fields['customers_firstname'],
@@ -530,9 +520,9 @@ class order extends base {
     }
 
     // set order's status according to payment module configuration
-    if (isset($GLOBALS[$class]) && is_object($GLOBALS[$class])) {
-      if (isset($GLOBALS[$class]->order_status) && is_numeric($GLOBALS[$class]->order_status) && $GLOBALS[$class]->order_status > 0) {
-        $this->info['order_status'] = $GLOBALS[$class]->order_status;
+    if (isset($GLOBALS[$paymentModule]) && is_object($GLOBALS[$paymentModule])) {
+      if (isset($GLOBALS[$paymentModule]->order_status) && is_numeric($GLOBALS[$paymentModule]->order_status) && $GLOBALS[$paymentModule]->order_status > 0) {
+        $this->info['order_status'] = $GLOBALS[$paymentModule]->order_status;
       }
     }
     $this->notify('NOTIFY_ORDER_CART_FINISHED');
