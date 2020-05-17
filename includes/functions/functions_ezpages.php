@@ -52,7 +52,7 @@
       $ez_link = ($ez_pages_linkto =='') ?
         zen_href_link(FILENAME_EZPAGES, 'id=' . $ez_pages_id . ((int)$ez_pages_chapter != 0 ? '&chapter=' . $ez_pages_chapter : ''), ($ez_pages_is_ssl=='0' ? 'NONSSL' : 'SSL')) :
         $ez_pages_linkto;
-      $ez_link .= ($ez_pages_open_new_window == '1' ? '" target="_blank' : '');
+      $ez_link .= ($ez_pages_open_new_window == '1' ? '" rel="noopener" target="_blank' : '');
     }
 
     if ($ez_pages_return_full_url == false) {
