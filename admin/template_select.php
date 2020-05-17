@@ -120,11 +120,15 @@ if (zen_not_null($action)) {
                     $tInfo = new objectInfo($template);
                   }
 
-                  if (isset($tInfo) && is_object($tInfo) && ($template['template_id'] == $tInfo->template_id)) {
-                    echo '              <tr id="defaultSelected" class="dataTableRowSelected" onclick="document.location.href=\'' . zen_href_link(FILENAME_TEMPLATE_SELECT, 'page=' . $_GET['page'] . '&tID=' . $tInfo->template_id . '&action=edit') . '\'" role="button">' . "\n";
-                  } else {
-                    echo '              <tr class="dataTableRow" onclick="document.location.href=\'' . zen_href_link(FILENAME_TEMPLATE_SELECT, 'page=' . $_GET['page'] . '&tID=' . $template['template_id']) . '\'" role="button">' . "\n";
-                  }
+                    if (isset($tInfo) && is_object($tInfo) && ($template['template_id'] == $tInfo->template_id)) {
+                        if ($action === 'edit') { ?>
+                            <tr id="defaultSelected" class="dataTableRowSelected">
+                        <?php } else { ?>
+                            <tr id="defaultSelected" class="dataTableRowSelected" style="cursor:pointer" onclick="document.location.href='<?php echo zen_href_link(FILENAME_TEMPLATE_SELECT, 'page=' . $_GET['page'] . '&tID=' . $tInfo->template_id . '&action=edit'); ?>'">
+                        <?php }
+                    } else { ?>
+                        <tr class="dataTableRow" style="cursor:pointer" onclick="document.location.href='<?php echo zen_href_link(FILENAME_TEMPLATE_SELECT, 'page=' . $_GET['page'] . '&tID=' . $template['template_id']); ?>'">
+                    <?php }
                   if ($template['template_language'] == 0) {
                     $template_language = "Default(All)";
                   } else {
