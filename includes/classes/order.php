@@ -481,6 +481,8 @@ class order extends base {
                                       'name' => $products[$i]['name'],
                                       'model' => $products[$i]['model'],
                                       'price' => $products[$i]['price'],
+                                      'tax' => null, // calculated later
+                                      'tax_groups' => null, // calculated later
                                       'final_price' => zen_round($products[$i]['price'] + $_SESSION['cart']->attributes_price($products[$i]['id']), $decimals),
                                       'onetime_charges' => $_SESSION['cart']->attributes_price_onetime_charges($products[$i]['id'], $products[$i]['quantity']),
                                       'weight' => $products[$i]['weight'],
@@ -500,19 +502,8 @@ class order extends base {
                                       'products_mixed_discount_quantity' => (int)$products[$i]['products_mixed_discount_quantity'],
                                       );
 
-      // Determine tax RATES based on Tax Basis configuration (amounts are calculated later)
-      if (STORE_PRODUCT_TAX_BASIS == 'Shipping' && isset($_SESSION['shipping']['id']) && stristr($_SESSION['shipping']['id'], 'storepickup') == TRUE) {
-          $taxRates = zen_get_multiple_tax_rates($products[$i]['tax_class_id'], STORE_COUNTRY, STORE_ZONE);
-          $this->products[$index]['tax'] = zen_get_tax_rate($products[$i]['tax_class_id'], STORE_COUNTRY, STORE_ZONE);
-          $this->products[$index]['tax_description'] = zen_get_tax_description($products[$i]['tax_class_id'], STORE_COUNTRY, STORE_ZONE);
-      } else {
-          $taxRates = zen_get_multiple_tax_rates($products[$i]['tax_class_id'], $taxCountryId, $taxZoneId);
-          $this->products[$index]['tax'] = zen_get_tax_rate($products[$i]['tax_class_id'], $taxCountryId, $taxZoneId);
-          $this->products[$index]['tax_description'] = zen_get_tax_description($products[$i]['tax_class_id'], $taxCountryId, $taxZoneId);
-      }
-      $this->products[$index]['tax_groups'] = $taxRates;
-
       $this->notify('NOTIFY_ORDER_CART_ADD_PRODUCT_LIST', array('index'=>$index, 'products'=>$products[$i]));
+
       if ($products[$i]['attributes']) {
         $subindex = 0;
         foreach ($products[$i]['attributes'] as $option => $value) {
@@ -556,50 +547,13 @@ class order extends base {
       // add onetime charges here
       //$_SESSION['cart']->attributes_price_onetime_charges($products[$i]['id'], $products[$i]['quantity'])
 
-      /**************************************
-       * Check for external tax handling code
-       **************************************/
-      $this->use_external_tax_handler_only = FALSE;
-      $this->notify('NOTIFY_ORDER_CART_EXTERNAL_TAX_HANDLING', array(), $index, $taxCountryId, $taxZoneId);
+      // Set Product tax RATES based on Tax Basis configuration
+      $taxRates = $this->setTaxRatesForProduct($products, $i, $index, $taxCountryId, $taxZoneId);
+      $this->products[$index]['tax_groups'] = $taxRates;
 
-      if ($this->use_external_tax_handler_only == FALSE) {
-        /*********************************************
-         * Calculate taxes for this product
-         *********************************************/
-        $shown_price = (zen_add_tax($this->products[$index]['final_price'] * $this->products[$index]['qty'], $this->products[$index]['tax']))
-                 + zen_add_tax($this->products[$index]['onetime_charges'], $this->products[$index]['tax']);
-        $this->info['subtotal'] += $shown_price;
-        $this->notify('NOTIFIY_ORDER_CART_SUBTOTAL_CALCULATE', array('shown_price'=>$shown_price));
+      // Calculate actual tax amounts
+      $this->calculateTaxForProduct($index, $taxRates, $taxCountryId, $taxZoneId);
 
-        // find product's tax rate and description
-        $products_tax = $this->products[$index]['tax'];
-        $products_tax_description = $this->products[$index]['tax_description'];
-
-        if (DISPLAY_PRICE_WITH_TAX == 'true') {
-          // calculate the amount of tax "inc"luded in price (used if tax-in pricing is enabled)
-          $tax_add = $shown_price - ($shown_price / (($products_tax < 10) ? "1.0" . str_replace('.', '', $products_tax) : "1." . str_replace('.', '', $products_tax)));
-        } else {
-          // calculate the amount of tax for this product (assuming tax is NOT included in the price)
-  //        $tax_add = zen_round(($products_tax / 100) * $shown_price, $currencies->currencies[$this->info['currency']]['decimal_places']);
-          $tax_add = ($products_tax/100) * $shown_price;
-        }
-        $this->info['tax'] += $tax_add;
-        foreach ($taxRates as $taxDescription=>$taxRate)
-        {
-          $taxAdd = zen_calculate_tax($this->products[$index]['final_price']*$this->products[$index]['qty'], $taxRate)
-                  +  zen_calculate_tax($this->products[$index]['onetime_charges'], $taxRate);
-          if (isset($this->info['tax_groups'][$taxDescription]))
-          {
-            $this->info['tax_groups'][$taxDescription] += $taxAdd;
-          } else
-          {
-            $this->info['tax_groups'][$taxDescription] = $taxAdd;
-          }
-        }
-        /*********************************************
-         * END: Calculate taxes for this product
-         *********************************************/
-      }
       $index++;
     }
 
@@ -617,6 +571,74 @@ class order extends base {
       }
     }
     $this->notify('NOTIFY_ORDER_CART_FINISHED');
+  }
+
+    /**
+     * Determine tax RATES for product
+     */
+  function setTaxRatesForProduct($products, $loop, $index, $taxCountryId, $taxZoneId)
+  {
+      $taxRates = null;
+      $this->notify('NOTIFY_ORDER_CART_EXTERNAL_TAX_RATE_LOOKUP', STORE_PRODUCT_TAX_BASIS, $products, $loop, $index, $taxCountryId, $taxZoneId, $taxRates);
+      if ($taxRates !== null) {
+          return $taxRates;
+      }
+
+      // Handle store-pickup scenario
+      if (STORE_PRODUCT_TAX_BASIS == 'Shipping' && isset($_SESSION['shipping']['id']) && stristr($_SESSION['shipping']['id'], 'storepickup') == TRUE) {
+          $taxRates = zen_get_multiple_tax_rates($products[$loop]['tax_class_id'], STORE_COUNTRY, STORE_ZONE);
+          $this->products[$index]['tax'] = zen_get_tax_rate($products[$loop]['tax_class_id'], STORE_COUNTRY, STORE_ZONE);
+          $this->products[$index]['tax_description'] = zen_get_tax_description($products[$loop]['tax_class_id'], STORE_COUNTRY, STORE_ZONE);
+          $this->products[$index]['tax_groups'] = $taxRates;
+          return $taxRates;
+      }
+      $taxRates = zen_get_multiple_tax_rates($products[$loop]['tax_class_id'], $taxCountryId, $taxZoneId);
+      $this->products[$index]['tax'] = zen_get_tax_rate($products[$loop]['tax_class_id'], $taxCountryId, $taxZoneId);
+      $this->products[$index]['tax_description'] = zen_get_tax_description($products[$loop]['tax_class_id'], $taxCountryId, $taxZoneId);
+      $this->products[$index]['tax_groups'] = $taxRates;
+
+      return $taxRates;
+  }
+
+  /**
+   * Calculate taxes for a specific product and add them to the order
+   */
+  function calculateTaxForProduct($index, $taxRates, $taxCountryId, $taxZoneId)
+  {
+      $this->use_external_tax_handler_only = FALSE;
+      $this->notify('NOTIFY_ORDER_CART_EXTERNAL_TAX_HANDLING', array(), $index, $taxCountryId, $taxZoneId);
+      if ($this->use_external_tax_handler_only == true) {
+          return;
+      }
+
+      $product_tax_rate = $this->products[$index]['tax'];
+
+      $shown_price = (zen_add_tax($this->products[$index]['final_price'] * $this->products[$index]['qty'], $product_tax_rate))
+          + zen_add_tax($this->products[$index]['onetime_charges'], $product_tax_rate);
+      $this->info['subtotal'] += $shown_price;
+      $this->notify('NOTIFIY_ORDER_CART_SUBTOTAL_CALCULATE', array('shown_price' => $shown_price));
+
+      if (DISPLAY_PRICE_WITH_TAX == 'true') {
+          // calculate the amount of tax "inc"luded in price (used if tax-in pricing is enabled)
+          $tax_add = $shown_price - ($shown_price / (($product_tax_rate < 10) ? "1.0" . str_replace('.', '', $product_tax_rate) : "1." . str_replace('.', '', $product_tax_rate)));
+      } else {
+          // calculate the amount of tax for this product (assuming tax is NOT included in the price)
+//        $tax_add = zen_round(($product_tax_rate / 100) * $shown_price, $currencies->currencies[$this->info['currency']]['decimal_places']);
+          $tax_add = ($product_tax_rate/100) * $shown_price;
+      }
+      $this->info['tax'] += $tax_add;
+
+      foreach ($taxRates as $taxDescription => $taxRate)
+      {
+          $taxAdd = zen_calculate_tax($this->products[$index]['final_price']*$this->products[$index]['qty'], $taxRate)
+              +  zen_calculate_tax($this->products[$index]['onetime_charges'], $taxRate);
+
+          if (isset($this->info['tax_groups'][$taxDescription])) {
+              $this->info['tax_groups'][$taxDescription] += $taxAdd;
+          } else {
+              $this->info['tax_groups'][$taxDescription] = $taxAdd;
+          }
+      }
   }
 
   function create($zf_ot_modules, $zf_mode = 2) {
