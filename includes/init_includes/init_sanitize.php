@@ -8,7 +8,6 @@
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: Drbyte Mon Nov 12 17:13:17 2018 -0500 Modified in v1.5.6 $
- * @todo move the array process to security class
  */
 
   if (!defined('IS_ADMIN_FLAG')) {
@@ -87,50 +86,6 @@
           $_GET[$key] = preg_replace('/'.$strictReplace.'/', '', $value);
           if (isset($_REQUEST[$key])) $_REQUEST[$key] = preg_replace('/'.$strictReplace.'/', '', $value);
         }
-      }
-      unset($GLOBALS[$key]);
-    }
-  }
-/**
- * process all $_POST terms
- * @todo move the array process to security class
- */
-  if (isset($_POST) && count($_POST) > 0) {
-    foreach($_POST as $key=>$value){
-      if(is_array($value)){
-        foreach($value as $key2 => $val2){
-          unset($GLOBALS[$key]);
-        }
-      } else {
-        unset($GLOBALS[$key]);
-      }
-    }
-  }
-/**
- * process all $_COOKIE terms
- */
-  if (isset($_COOKIE) && count($_COOKIE) > 0) {
-    foreach($_COOKIE as $key=>$value){
-      if(is_array($value)){
-        foreach($value as $key2 => $val2){
-          unset($GLOBALS[$key]);
-        }
-      } else {
-        unset($GLOBALS[$key]);
-      }
-    }
-  }
-/**
- * process all $_SESSION terms
- */
-  if (isset($_SESSION) && count($_SESSION) > 0) {
-    foreach($_SESSION as $key=>$value){
-      if(is_array($value)){
-        foreach($value as $key2 => $val2){
-          unset($GLOBALS[$key]);
-        }
-      } else {
-        unset($GLOBALS[$key]);
       }
     }
   }

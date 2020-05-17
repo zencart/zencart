@@ -114,22 +114,6 @@ function zen_get_select_options($optionList, $setDefault)
 
   function zen_sanitize_request()
   {
-    if (isset($_POST) && count($_POST) > 0)
-    {
-      foreach($_POST as $key=>$value)
-      {
-        if(is_array($value))
-        {
-          foreach($value as $key2 => $val2)
-          {
-            unset($GLOBALS[$key]);
-          }
-        } else {
-          unset($GLOBALS[$key]);
-        }
-      }
-    }
-    $ignoreArray = array();
     foreach ($_POST as $key => $value)
     {
       $_POST[htmlspecialchars($key, ENT_COMPAT, 'UTF-8', FALSE)] = addslashes($value);
