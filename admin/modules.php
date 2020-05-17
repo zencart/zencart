@@ -97,8 +97,9 @@ if (zen_not_null($action)) {
       $result = 'failed';
       $file_extension = substr($PHP_SELF, strrpos($PHP_SELF, '.'));
       $class = basename($_POST['module']);
-      if (!$is_ssl_protected && in_array($class, ['paypaldp', 'authorizenet_aim', 'authorizenet_echeck']))
-        break;
+      if (!$is_ssl_protected && in_array($class, ['paypaldp', 'authorizenet_aim', 'authorizenet_echeck'])) {
+          break;
+      }
       if (file_exists($module_directory . $class . $file_extension)) {
           if (file_exists(DIR_FS_CATALOG_LANGUAGES . $_SESSION['language'] . '/modules/' . $module_type . '/' . $class . $file_extension)) {
             include DIR_FS_CATALOG_LANGUAGES . $_SESSION['language'] . '/modules/' . $module_type . '/' . $class . $file_extension;
@@ -234,22 +235,23 @@ if (zen_not_null($action)) {
                       }
                         if (isset($mInfo) && is_object($mInfo) && ($class == $mInfo->code)) { // a module row is selected
                             if ($module->check() > 0) { // a module row is selected, module is installed, infoBox is showing module parameters
-                                if (isset($_GET['action']) && $_GET['action'] === 'edit') { // a module row is selected, module is installed, infoBox is showing module Edit parameters
-                                    echo '              <tr id="defaultSelected" class="dataTableRowSelected">' . "\n";
-                                } else { // a module row is selected, module is installed, infoBox is only showing module parameters
-                                    echo '              <tr id="defaultSelected" class="dataTableRowSelected" style="cursor:pointer" onclick="document.location.href=\'' . zen_href_link(FILENAME_MODULES, 'set=' . $set . '&module=' . $class . '&action=edit', 'SSL') . '\'">' . "\n";
-                                }
-                            } else { // a module row is selected, module is NOT installed
-                                echo '              <tr id="defaultSelected" class="dataTableRowSelected">' . "\n";
-                            }
-                        } else { // module row is not selected: click to show install option or module parameters
-                            echo '              <tr class="dataTableRow" style="cursor:pointer" onclick="document.location.href=\'' . zen_href_link(FILENAME_MODULES, 'set=' . $set . '&module=' . $class, 'SSL') . '\'">' . "\n";
-                        }
-                      ?>
+                                if (isset($_GET['action']) && $_GET['action'] === 'edit') { // a module row is selected, module is installed, infoBox is showing module Edit parameters ?>
+                                    <tr id="defaultSelected" class="dataTableRowSelected">
+                                <?php } else { // a module row is selected, module is installed, infoBox is only showing module parameters ?>
+                                    <tr id="defaultSelected" class="dataTableRowSelected" style="cursor:pointer" onclick="document.location.href='<?php echo zen_href_link(FILENAME_MODULES, 'set=' . $set . '&module=' . $class . '&action=edit', 'SSL'); ?>'">
+                                <?php }
+                            } else { // a module row is selected, module is NOT installed ?>
+                                <tr id="defaultSelected" class="dataTableRowSelected">
+                            <?php }
+                        } else { // module row is not selected: click to show install option or module parameters ?>
+                            <tr class="dataTableRow" style="cursor:pointer" onclick="document.location.href='<?php echo zen_href_link(FILENAME_MODULES, 'set=' . $set . '&module=' . $class, 'SSL'); ?>'">
+                        <?php } ?>
                   <td class="dataTableContent"><?php echo $module->title; ?></td>
                   <td class="dataTableContent"><?php echo(strstr($module->code, 'paypal') ? 'PayPal' : $module->code); ?></td>
                   <td class="dataTableContent text-right">
-                      <?php if (is_numeric($module->sort_order)) echo $module->sort_order; ?>
+                      <?php if (is_numeric($module->sort_order)) {
+                          echo $module->sort_order;
+                      } ?>
                       <?php
                       // show current status
                       if ($set == 'payment' || $set == 'shipping') {
@@ -261,7 +263,9 @@ if (zen_not_null($action)) {
                   </td>
                   <?php
                   if ($set == 'payment') {
-                    if (!isset($module->order_status)) $module->order_status = 0;
+                    if (!isset($module->order_status)) {
+                        $module->order_status = 0;
+                    }
                     
                     $orders_status_name = $db->Execute("SELECT orders_status_id, orders_status_name
                                                         FROM " . TABLE_ORDERS_STATUS . "
@@ -278,8 +282,8 @@ if (zen_not_null($action)) {
                         echo '<a href="' . zen_href_link(FILENAME_MODULES, 'set=' . $set . '&module=' . $class, 'SSL') . '">' . zen_image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>';
                       }
                       ?>&nbsp;</td>
-                  <?php echo '</tr>';
-                }
+                  </tr>
+                <?php }
               } else {
                 echo ERROR_MODULE_FILE_NOT_FOUND . DIR_FS_CATALOG_LANGUAGES . $_SESSION['language'] . '/modules/' . $module_type . '/' . $file . '<br>';
               }
