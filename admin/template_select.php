@@ -48,6 +48,7 @@ if (zen_not_null($action)) {
       }
       $action = '';
       break;
+
     case 'save':
       $sql = "UPDATE " . TABLE_TEMPLATE_SELECT . "
               SET template_dir = :tpl:
@@ -57,11 +58,12 @@ if (zen_not_null($action)) {
       $db->Execute($sql);
       zen_redirect(zen_href_link(FILENAME_TEMPLATE_SELECT, zen_get_all_get_params(['action'])));
       break;
+
     case 'deleteconfirm':
       $check_query = $db->Execute("SELECT template_language
                                    FROM " . TABLE_TEMPLATE_SELECT . "
                                    WHERE template_id = " . (int)$_POST['tID']);
-      if ($check_query->fields['template_language'] != 0) {
+      if ($check_query->fields['template_language'] != '0') {
         $db->Execute("DELETE FROM " . TABLE_TEMPLATE_SELECT . "
                       WHERE template_id = " . (int)$_POST['tID']);
         zen_redirect(zen_href_link(FILENAME_TEMPLATE_SELECT, 'page=' . $_GET['page']));
@@ -115,7 +117,7 @@ if (zen_not_null($action)) {
                     } else { ?>
                         <tr class="dataTableRow" style="cursor:pointer" onclick="document.location.href='<?php echo zen_href_link(FILENAME_TEMPLATE_SELECT, 'page=' . $_GET['page'] . '&tID=' . $template['template_id']); ?>'">
                     <?php }
-                  if ($template['template_language'] == 0) {
+                  if ($template['template_language'] == '0') {
                     $template_language = "Default(All)";
                   } else {
                     $ln = $db->Execute("SELECT name
@@ -170,6 +172,7 @@ if (zen_not_null($action)) {
                 $contents[] = ['text' => '<br>' . zen_draw_label(TEXT_INFO_LANGUAGE_NAME, 'lang', 'class="control-label"') . zen_draw_pull_down_menu('lang', $language_array, '', 'class="form-control"')];
                 $contents[] = ['align' => 'text-center', 'text' => '<br><button type="submit" class="btn btn-primary">' . IMAGE_INSERT . '</button> <a href="' . zen_href_link(FILENAME_TEMPLATE_SELECT, 'page=' . $_GET['page']) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>'];
                 break;
+
               case 'edit':
                 $heading[] = ['text' => '<h4>' . TEXT_INFO_HEADING_EDIT_TEMPLATE . '</h4>'];
 
@@ -181,6 +184,7 @@ if (zen_not_null($action)) {
                 $contents[] = ['text' => '<br>' . zen_draw_label(TEXT_INFO_TEMPLATE_NAME, 'ln', 'class="control-label"') . zen_draw_pull_down_menu('ln', $template_array, $templates->fields['template_dir'], 'class="form-control"')];
                 $contents[] = ['align' => 'text-center', 'text' => '<br><button type="submit" class="btn btn-primary">' . IMAGE_UPDATE . '</button> <a href="' . zen_href_link(FILENAME_TEMPLATE_SELECT, 'page=' . $_GET['page'] . '&tID=' . $tInfo->template_id) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>'];
                 break;
+
               case 'delete':
                 $heading[] = ['text' => '<h4>' . TEXT_INFO_HEADING_DELETE_TEMPLATE . '</h4>'];
 
@@ -189,9 +193,11 @@ if (zen_not_null($action)) {
                 $contents[] = ['text' => '<br><b>' . $template_info[$tInfo->template_dir]['name'] . '</b>'];
                 $contents[] = ['align' => 'text-center', 'text' => '<br><button type="submit" class="btn btn-danger">' . IMAGE_DELETE . '</button> <a href="' . zen_href_link(FILENAME_TEMPLATE_SELECT, 'page=' . $_GET['page'] . '&tID=' . $tInfo->template_id) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>'];
                 break;
+
               default:
                 if (isset($tInfo) && is_object($tInfo)) {
                   $heading[] = ['text' => '<h4>' . $template_info[$tInfo->template_dir]['name'] . '</h4>'];
+
                   if ($tInfo->template_language == 0) {
                     $contents[] = ['align' => 'text-center', 'text' => '<a href="' . zen_href_link(FILENAME_TEMPLATE_SELECT, 'page=' . $_GET['page'] . '&tID=' . $tInfo->template_id . '&action=edit') . '" class="btn btn-primary" role="button">' . IMAGE_EDIT . '</a>'];
                   } else {
