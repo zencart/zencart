@@ -174,8 +174,7 @@ if (zen_not_null($action)) {
                     'id' => $key,
                     'text' => $value['name']];
                 }
-                $lns = $db->Execute("SELECT name, languages_id
-                                     FROM " . TABLE_LANGUAGES);
+                $lns = $db->Execute("SELECT lng.name, lng.languages_id FROM " . TABLE_LANGUAGES . " lng WHERE lng.languages_id NOT IN (SELECT tms.template_language FROM " . TABLE_TEMPLATE_SELECT . " tms)");
                 foreach ($lns as $ln) {
                   $language_array[] = [
                     'text' => $ln['name'],
