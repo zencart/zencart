@@ -85,6 +85,7 @@ if (zen_not_null($action)) {
     <!-- body //-->
     <div class="container-fluid">
       <h1><?php echo HEADING_TITLE; ?></h1>
+      <div class="row"><?php echo TEXT_TEMPLATE_SELECT_INFO;?></div>
       <div class="row">
         <!-- body_text //-->
         <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9 configurationColumnLeft">
@@ -147,6 +148,14 @@ if (zen_not_null($action)) {
         </div>
         <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3 configurationColumnRight">
             <?php
+            if (isset($tInfo) && is_object($tInfo)) {
+                if ($tInfo->template_language == '0') {
+                    $template_language = TEXT_INFO_DEFAULT_LANGUAGE;
+                } else {
+                    $ln = $db->Execute("SELECT name FROM " . TABLE_LANGUAGES . " WHERE languages_id = " . (int)$tInfo->template_language);
+                    $template_language = $ln->fields['name'];
+                }
+            }
             $heading = [];
             $contents = [];
 
@@ -174,7 +183,7 @@ if (zen_not_null($action)) {
                 break;
 
               case 'edit':
-                $heading[] = ['text' => '<h4>' . TEXT_INFO_HEADING_EDIT_TEMPLATE . '</h4>'];
+                $heading[] = ['text' => '<h4>' . TABLE_HEADING_LANGUAGE . ': '  . $template_language . '</h4>'];
 
                 $contents = ['form' => zen_draw_form('templateselect', FILENAME_TEMPLATE_SELECT, 'page=' . $_GET['page'] . '&tID=' . $tInfo->template_id . '&action=save', 'post', 'class="form-horizontal"')];
                 $contents[] = ['text' => TEXT_INFO_EDIT_INTRO];
@@ -186,7 +195,7 @@ if (zen_not_null($action)) {
                 break;
 
               case 'delete':
-                $heading[] = ['text' => '<h4>' . TEXT_INFO_HEADING_DELETE_TEMPLATE . '</h4>'];
+                $heading[] = ['text' => '<h4>' . TABLE_HEADING_LANGUAGE . ': '  . $template_language . '</h4>'];
 
                 $contents = ['form' => zen_draw_form('zones', FILENAME_TEMPLATE_SELECT, 'page=' . $_GET['page'] . '&action=deleteconfirm') . zen_draw_hidden_field('tID', $tInfo->template_id)];
                 $contents[] = ['text' => TEXT_INFO_DELETE_INTRO];
@@ -196,7 +205,7 @@ if (zen_not_null($action)) {
 
               default:
                 if (isset($tInfo) && is_object($tInfo)) {
-                  $heading[] = ['text' => '<h4>' . $template_info[$tInfo->template_dir]['name'] . '</h4>'];
+                 $heading[] = ['text' => '<h4>' . TABLE_HEADING_LANGUAGE . ': '  . $template_language . '</h4>'];
 
                   if ($tInfo->template_language == 0) {
                     $contents[] = ['align' => 'text-center', 'text' => '<a href="' . zen_href_link(FILENAME_TEMPLATE_SELECT, 'page=' . $_GET['page'] . '&tID=' . $tInfo->template_id . '&action=edit') . '" class="btn btn-primary" role="button">' . IMAGE_EDIT . '</a>'];
