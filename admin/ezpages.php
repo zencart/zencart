@@ -294,7 +294,7 @@ if (zen_not_null($action)) {
           'status_sidebox' => '1',
           'status_footer' => '1',
           'status_toc' => '1',
-          'page_open_new_window' => '1',
+          'page_open_new_window' => '0',
           'page_is_ssl' => '1'
         );
 
