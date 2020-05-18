@@ -236,14 +236,18 @@ if (zen_not_null($action)) {
         </div>
           <?php
           if (empty($action)) {
-            ?>
-            <tr>
-              <td colspan="2" class="text-right"><a href="<?php echo zen_href_link(FILENAME_TEMPLATE_SELECT, 'page=' . $_GET['page'] . '&action=new'); ?>" class="btn btn-primary" role="button"><?php echo IMAGE_NEW_TEMPLATE; ?></a></td>
-            </tr>
-            <?php
+              $template_languages = [];
+              foreach ($templates as $template) {
+                  $template_languages[] = $template['template_language'];
+              }
+              foreach ($languages as $language) {
+                  if (!in_array($language['id'], $template_languages)) { ?>
+                      <div class="row text-right"><a href="<?php echo zen_href_link(FILENAME_TEMPLATE_SELECT, 'page=' . $_GET['page'] . '&action=new'); ?>" class="btn btn-primary" role="button"><?php echo IMAGE_NEW_TEMPLATE; ?></a></div>
+                      <?php break;
+                  }
+              }
           }
           ?>
-        </table>
       </div>
       <!-- body_text_eof //-->
     </div>
