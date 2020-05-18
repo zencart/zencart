@@ -68,19 +68,21 @@
       }
     break;
 
-    case ('update_all_products_viewed'):
-    // reset products_viewed to 0
-      if (isset($_POST['confirm']) && $_POST['confirm'] == 'yes')
-      {
-        $sql = "UPDATE " . TABLE_PRODUCTS_DESCRIPTION . " SET products_viewed= '0'";
-        $update_viewed = $db->Execute($sql);
-
-        $messageStack->add_session(SUCCESS_PRODUCT_UPDATE_PRODUCTS_VIEWED, 'success');
-        zen_record_admin_activity('Store Manager executed [update all products viewed]', 'info');
-        $action='';
-        zen_redirect(zen_href_link(FILENAME_STORE_MANAGER));
-      }
-    break;
+//    case ('update_all_products_viewed'):
+//    // reset products_viewed to 0
+//      if (isset($_POST['confirm']) && $_POST['confirm'] == 'yes')
+//      {
+////        $sql = "UPDATE " . TABLE_PRODUCTS_DESCRIPTION . " SET products_viewed = 0";
+////        $db->Execute($sql);
+//        $sql = "TRUNCATE TABLE " . TABLE_COUNT_PRODUCT_VIEWS;
+//        $db->Execute($sql);
+//
+//        $messageStack->add_session(SUCCESS_PRODUCT_UPDATE_PRODUCTS_VIEWED, 'success');
+//        zen_record_admin_activity('Store Manager executed [update all products viewed]', 'info');
+//        $action='';
+//        zen_redirect(zen_href_link(FILENAME_STORE_MANAGER));
+//      }
+//    break;
 
     case ('update_all_products_ordered'):
       if (isset($_POST['confirm']) && $_POST['confirm'] == 'yes')
@@ -289,6 +291,7 @@ if ($processing_message != '') {
       </tr>
 <!-- eof: reset all counter to 0 -->
 
+<?php /*
 <!-- bof: reset all products_viewed to 0 -->
       <tr>
         <td colspan="2"><br /><table border="0" cellspacing="0" cellpadding="2">
@@ -299,6 +302,8 @@ if ($processing_message != '') {
         </table></td>
       </tr>
 <!-- eof: reset all products_viewed to 0 -->
+*/
+?>
 
 <!-- bof: reset all products_ordered to 0 -->
       <tr>

@@ -220,6 +220,21 @@ UPDATE configuration SET val_function = '{"error":"TEXT_EMAIL_ADDRESS_VALIDATE",
 UPDATE configuration SET val_function = '{"error":"TEXT_EMAIL_ADDRESS_VALIDATE","id":"FILTER_CALLBACK","options":{"options":["configurationValidation","sanitizeEmail"]}}' WHERE configuration_key ='SEND_EXTRA_LOW_STOCK_EMAILS_TO';
 
 
+#
+# Table structure for table 'count_product_views'
+#
+CREATE TABLE IF NOT EXISTS count_product_views (
+  product_id int(11) NOT NULL default 0,
+  language_id int(11) NOT NULL default 1,
+  date_viewed date default NULL,
+  views int(11) default NULL,
+  PRIMARY KEY (product_id, language_id, date_viewed),
+  KEY idx_pid_lang_date_zen (language_id, product_id, date_viewed),
+  KEY idx_date_pid_lang_zen (date_viewed, product_id, language_id)
+) ENGINE=MyISAM;
+
+
+
 ALTER TABLE admin_activity_log MODIFY attention MEDIUMTEXT;
 
 # ZC 156 changed these fields in the install but not in the upgrade

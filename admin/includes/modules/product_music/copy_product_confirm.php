@@ -132,13 +132,13 @@ if (isset($_POST['products_id'], $_POST['categories_id'])) {
                                       FROM " . TABLE_PRODUCTS_DESCRIPTION . "
                                       WHERE products_id = " . $products_id);
         foreach ($descriptions as $description) {
-            $db->Execute("INSERT INTO " . TABLE_PRODUCTS_DESCRIPTION . " (products_id, language_id, products_name, products_description, products_url, products_viewed)
+            $db->Execute("INSERT INTO " . TABLE_PRODUCTS_DESCRIPTION . " (products_id, language_id, products_name, products_description, products_url)
                     VALUES ('" . $dup_products_id . "',
                             '" . (int)$description['language_id'] . "',
                             '" . zen_db_input($description['products_name']) . " " . TEXT_DUPLICATE_IDENTIFIER . "',
                             '" . zen_db_input($description['products_description']) . "',
-                            '" . zen_db_input($description['products_url']) . "',
-                            0)");
+                            '" . zen_db_input($description['products_url']) . "'
+                            )");
         }
 
         $db->Execute("INSERT INTO " . TABLE_PRODUCTS_TO_CATEGORIES . " (products_id, categories_id)
