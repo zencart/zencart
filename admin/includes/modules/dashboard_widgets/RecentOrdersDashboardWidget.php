@@ -67,7 +67,11 @@ $currencies = new currencies();
                 <?php echo $order['orders_id'] . ' - ' . substr($order['customers_name'], 0, 20); ?>
             </a>
           </td>
-          <td class="text-left">
+          <td class="text-right" title="<?php echo zen_output_string($product_details, array('"' => '&quot;', "'" => '&#39;', '<br />' => '', '<hr>' => "----\n")); ?>">
+            <?php echo $amt; ?>
+          </td>
+          <td class="text-right"><?php echo zen_date_short($order['date_purchased']); ?></td>
+          <td class="text-center">
               <a tabindex="0" class="btn btn-xs btn-link orderProductsPopover" role="button" data-toggle="popover"
                  data-trigger="focus"
                  data-placement="left"
@@ -77,8 +81,6 @@ $currencies = new currencies();
                   <?php echo TEXT_PRODUCT_POPUP_BUTTON; ?>
               </a>
           </td>
-          <td class="text-right"><?php echo $amt; ?></td>
-          <td class="text-right"><?php echo zen_date_short($order['date_purchased']); ?></td>
         </tr>
       <?php } ?>
     </table>
