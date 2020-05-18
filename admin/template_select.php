@@ -218,7 +218,8 @@ if (zen_not_null($action)) {
                  $contents[] = ['text' => TEXT_INFO_TEMPLATE_VERSION . $template_info[$tInfo->template_dir]['version']];
                  $contents[] = ['text' => TEXT_INFO_TEMPLATE_DESCRIPTION . '<br>' . $template_info[$tInfo->template_dir]['description']];
                  $contents[] = ['align' => 'text-center',
-                    'text' => '<a href="' . zen_href_link(FILENAME_TEMPLATE_SELECT, 'page=' . $_GET['page'] . '&tID=' . $tInfo->template_id . '&action=edit') . '" class="btn btn-primary" role="button">' . TEXT_INFO_EDIT_INTRO . '</a>' . ($tInfo->template_language != '0' ? ' <a href="' . zen_href_link(FILENAME_TEMPLATE_SELECT, 'page=' . $_GET['page'] . '&tID=' . $tInfo->template_id . '&action=delete') . '" class="btn btn-warning" role="button">' . IMAGE_DELETE . '</a>' : '')];
+                    'text' => '<a href="' . zen_href_link(FILENAME_TEMPLATE_SELECT, 'page=' . $_GET['page'] . '&tID=' . $tInfo->template_id . '&action=edit') . '" class="btn btn-primary" role="button">' . TEXT_INFO_EDIT_INTRO . '</a>' .
+                        ($tInfo->template_language != '0' ? ' <a href="' . zen_href_link(FILENAME_TEMPLATE_SELECT, 'page=' . $_GET['page'] . '&tID=' . $tInfo->template_id . '&action=delete') . '" class="btn btn-warning" role="button">' . IMAGE_DELETE . '</a>' : '')];
                   $contents[] = ['text' => '<hr>'];
                   $contents[] = ['text' => TEXT_INFO_TEMPLATE_INSTALLED];
                   foreach($template_info as $key => $value) {
