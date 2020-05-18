@@ -780,7 +780,7 @@ if (zen_not_null($action) && $order_exists == true) {
                       }
                     }
                     // Mobile phones only
-                    echo '<span class="visible-xs-inline">'; 
+                    echo '<span class="visible-xs">'; 
                     echo ' (' . $order->products[$i]['model'] .')'; 
                     echo '</span>'; 
                 ?>
