@@ -40,6 +40,9 @@ if (false !== strpos(EXCLUDE_ADMIN_IP_FOR_MAINTENANCE, $_SERVER['REMOTE_ADDR']))
     if (isset($_GET['t']) && in_array($_GET['t'], $templates, true) && file_exists(DIR_WS_TEMPLATES . $_GET['t'])) {
         $_SESSION['tpl_override'] = $_GET['t'];
     }
+    if (isset($_GET['t']) && $_GET['t'] === 'off') {
+        unset($_SESSION['tpl_override']);
+    }
     if (isset($_SESSION['tpl_override'])) $template_dir = $_SESSION['tpl_override'];
     unset($templates, $row);
 }
