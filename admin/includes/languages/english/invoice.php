@@ -19,7 +19,8 @@ define('TABLE_HEADING_PRICE_EXCLUDING_TAX', 'Price (ex)');
 define('TABLE_HEADING_PRICE_INCLUDING_TAX', 'Price (inc)');
 define('TABLE_HEADING_TOTAL_EXCLUDING_TAX', 'Total (ex)');
 define('TABLE_HEADING_TOTAL_INCLUDING_TAX', 'Total (inc)');
-
+define('TABLE_HEADING_PRICE', 'Price');
+define('TABLE_HEADING_TOTAL', 'Total');
 define('ENTRY_CUSTOMER', 'CUSTOMER:');
 
 define('ENTRY_SOLD_TO', 'SOLD TO:');

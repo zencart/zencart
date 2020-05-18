@@ -41,8 +41,8 @@ UPDATE configuration SET configuration_title = 'Product page generated &lt;title
 UPDATE configuration SET configuration_title = 'Product page generated &lt;meta - description&gt; tag - Maximum Length', configuration_description = 'When custom Keywords and Description meta tags are not set, limit the generated &lt;meta - description&gt; tag to this number of words. Default 50.' WHERE configuration_key = 'MAX_META_TAG_DESCRIPTION_LENGTH';
 # Other name/description improvements
 UPDATE configuration SET configuration_title= 'Order History Box', configuration_description= 'Number of products to display in the order history box' WHERE configuration_key = 'MAX_DISPLAY_PRODUCTS_IN_ORDER_HISTORY_BOX';
-UPDATE configuration SET configuration_description = 'Number of products to display in the \'Also Purchased\' box' WHERE configuration_key = 'MAX_DISPLAY_ALSO_PURCHASED'; 
-UPDATE configuration SET configuration_description = 'Minimum number of products to display in the \'Also Purchased\' box' WHERE configuration_key = 'MIN_DISPLAY_ALSO_PURCHASED'; 
+UPDATE configuration SET configuration_description = 'Number of products to display in the \'Also Purchased\' box' WHERE configuration_key = 'MAX_DISPLAY_ALSO_PURCHASED';
+UPDATE configuration SET configuration_description = 'Minimum number of products to display in the \'Also Purchased\' box' WHERE configuration_key = 'MIN_DISPLAY_ALSO_PURCHASED';
 UPDATE configuration SET configuration_description = 'Maximum number of PayPal IPN Listings in Admin<br />Default is 20' WHERE configuration_key = 'MAX_DISPLAY_SEARCH_RESULTS_PAYPAL_IPN';
 UPDATE configuration SET configuration_description = 'On what basis is Shipping Tax calculated. Options are<br />Shipping - Based on customers Shipping Address<br />Billing Based on customers Billing address<br />Store - Based on Store address if Billing/Shipping Zone equals Store zone - Can be overridden by correctly written Shipping Module' WHERE configuration_key = 'STORE_SHIPPING_TAX_BASIS';
 UPDATE configuration SET configuration_description = 'Check to see if sufficient stock is available' WHERE configuration_key = 'STOCK_CHECK';
@@ -77,7 +77,7 @@ UPDATE product_type_layout SET configuration_title = 'Product page &lt;title&gt;
 UPDATE product_type_layout SET configuration_title = 'Product page &lt;title&gt; tag - default: use SITE_TAGLINE', configuration_description = 'Default setting for a new product (can be modified per product).<br>Show the defined constant "SITE_TAGLINE" in the page &lt;title&gt; tag.' WHERE configuration_key = 'SHOW_PRODUCT_FREE_SHIPPING_INFO_METATAGS_TITLE_TAGLINE_STATUS';
 
 # Repair ez-pages table field that was too short in v156
-ALTER TABLE ezpages_content MODIFY pages_html_text mediumtext NOT NULL;
+ALTER TABLE ezpages_content MODIFY pages_html_text mediumtext; 
 
 # Enable Products to Categories as a menu option
 UPDATE admin_pages SET display_on_menu = 'Y' WHERE page_key = 'productsToCategories';
@@ -89,7 +89,7 @@ UPDATE configuration_group set configuration_group_title = 'Email', configuratio
 # Add NOTIFY_CUSTOMER_DEFAULT
 INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES ('Default for Notify Customer on Order Status Update?', 'NOTIFY_CUSTOMER_DEFAULT', '1', 'Set the default email behavior on status update to Send Email, Do Not Send Email, or Hide Update.', 1, 120, now(), now(), NULL, 'zen_cfg_select_drop_down(array( array(\'id\'=>\'1\', \'text\'=>\'Email\'), array(\'id\'=>\'0\', \'text\'=>\'No Email\'), array(\'id\'=>\'-1\', \'text\'=>\'Hide\')),');
 
-# Minmax values 
+# Minmax values
 INSERT INTO configuration (configuration_title, configuration_key, configuration_value, val_function, configuration_description, configuration_group_id, sort_order, date_added) VALUES ('Maximum Preview', 'MAX_PREVIEW', '100', '{"error":"TEXT_MAX_PREVIEW","id":"FILTER_VALIDATE_INT","options":{"options":{"min_range":0}}}', 'Maximum Preview length<br />100 = Default', 3, 80, now());
 
 # Encrypted Master Password configuration. Using INSERT IGNORE followed by an UPDATE in consideration of shops with EMP already installed.
@@ -110,7 +110,7 @@ INSERT INTO configuration (configuration_title, configuration_key, configuration
 
 # Missed in 1.5.6 upgrade. May already be there so use INSERT IGNORE
 INSERT IGNORE INTO configuration (configuration_title, configuration_key, configuration_value, val_function, configuration_description, configuration_group_id, sort_order, date_added) VALUES ('Admin Usernames', 'ADMIN_NAME_MINIMUM_LENGTH', '4', '{"error":"TEXT_MIN_ADMIN_USER_LENGTH","id":"FILTER_VALIDATE_INT","options":{"options":{"min_range":4}}}', 'Minimum length of admin usernames (must be 4 or more)', '2', '18', now());
-# Country data 
+# Country data
 UPDATE countries set address_format_id = 5 where countries_iso_code_3 in ('ITA');
 
 # Add language_code
@@ -121,6 +121,7 @@ ALTER TABLE orders_status ADD sort_order int(11) NOT NULL default 0;
 
 # Improve speed of admin orders page listing
 ALTER TABLE orders_total ADD INDEX idx_oid_class_zen (orders_id, class);
+ALTER TABLE orders ADD INDEX idx_status_date_id_zen (orders_status, date_purchased, orders_id);
 
 # Add customer secret
 ALTER TABLE customers ADD customers_secret varchar(64) NOT NULL default '';
@@ -131,6 +132,9 @@ INSERT INTO product_type_layout (configuration_title, configuration_key, configu
 INSERT INTO product_type_layout (configuration_title, configuration_key, configuration_value, configuration_description, product_type_id, sort_order, set_function, date_added) VALUES ('Show \"Ask a Question\" button?', 'SHOW_DOCUMENT_GENERAL_INFO_ASK_A_QUESTION', '1', 'Display the \"Ask a Question\" button on product Info pages? (0 = False, 1 = True)', 3, 14, 'zen_cfg_select_drop_down(array(array(\'id\'=>\'1\', \'text\'=>\'True\'), array(\'id\'=>\'0\', \'text\'=>\'False\')), ', now());
 INSERT INTO product_type_layout (configuration_title, configuration_key, configuration_value, configuration_description, product_type_id, sort_order, set_function, date_added) VALUES ('Show \"Ask a Question\" button?', 'SHOW_DOCUMENT_PRODUCT_INFO_ASK_A_QUESTION', '1', 'Display the \"Ask a Question\" button on product Info pages? (0 = False, 1 = True)', 4, 14, 'zen_cfg_select_drop_down(array(array(\'id\'=>\'1\', \'text\'=>\'True\'), array(\'id\'=>\'0\', \'text\'=>\'False\')), ', now());
 INSERT INTO product_type_layout (configuration_title, configuration_key, configuration_value, configuration_description, product_type_id, sort_order, set_function, date_added) VALUES ('Show \"Ask a Question\" button?', 'SHOW_PRODUCT_FREE_SHIPPING_INFO_ASK_A_QUESTION', '1', 'Display the \"Ask a Question\" button on product Info pages? (0 = False, 1 = True)', 5, 14, 'zen_cfg_select_drop_down(array(array(\'id\'=>\'1\', \'text\'=>\'True\'), array(\'id\'=>\'0\', \'text\'=>\'False\')), ', now());
+
+# Add control for enabling product that were disabled and have a products_available_date that has passed in time and is not set to the Zen Cart equivalent of an ignored/empty date.
+INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) VALUES ('Enable disabled product by available date', 'ENABLE_DISABLED_UPCOMING_PRODUCT', 'Manual', 'How should hidden (disabled) product with a future available date be made visible (active) to customers when the date is reached?<br />', '9', '12', 'zen_cfg_select_option(array(\'Manual\', \'Automatic\'), ', now());
 
 DELETE FROM configuration WHERE configuration_key = 'ADMIN_DEMO';
 DELETE FROM configuration WHERE configuration_key = 'UPLOAD_FILENAME_EXTENSIONS';
@@ -206,7 +210,6 @@ UPDATE configuration SET val_function = '{"error":"TEXT_MAX_ADMIN_DISPLAY_SEARCH
 UPDATE configuration SET val_function = '{"error":"TEXT_EMAIL_ADDRESS_VALIDATE","id":"FILTER_CALLBACK","options":{"options":["configurationValidation","sanitizeEmail"]}}' WHERE configuration_key ='STORE_OWNER_EMAIL_ADDRESS';
 UPDATE configuration SET val_function = '{"error":"TEXT_EMAIL_ADDRESS_VALIDATE","id":"FILTER_CALLBACK","options":{"options":["configurationValidation","sanitizeEmail"]}}' WHERE configuration_key ='EMAIL_FROM';
 UPDATE configuration SET val_function = '{"error":"TEXT_EMAIL_ADDRESS_VALIDATE","id":"FILTER_CALLBACK","options":{"options":["configurationValidation","sanitizeEmail"]}}' WHERE configuration_key ='SEND_EXTRA_ORDER_EMAILS_TO';
-UPDATE configuration SET val_function = '{"error":"TEXT_EMAIL_ADDRESS_VALIDATE","id":"FILTER_CALLBACK","options":{"options":["configurationValidation","sanitizeEmail"]}}' WHERE configuration_key ='SEND_EXTRA_CREATE_ACCOUNT_EMAILS_TO_STATUS';
 UPDATE configuration SET val_function = '{"error":"TEXT_EMAIL_ADDRESS_VALIDATE","id":"FILTER_CALLBACK","options":{"options":["configurationValidation","sanitizeEmail"]}}' WHERE configuration_key ='SEND_EXTRA_CREATE_ACCOUNT_EMAILS_TO';
 UPDATE configuration SET val_function = '{"error":"TEXT_EMAIL_ADDRESS_VALIDATE","id":"FILTER_CALLBACK","options":{"options":["configurationValidation","sanitizeEmail"]}}' WHERE configuration_key ='SEND_EXTRA_GV_CUSTOMER_EMAILS_TO';
 UPDATE configuration SET val_function = '{"error":"TEXT_EMAIL_ADDRESS_VALIDATE","id":"FILTER_CALLBACK","options":{"options":["configurationValidation","sanitizeEmail"]}}' WHERE configuration_key ='SEND_EXTRA_GV_ADMIN_EMAILS_TO';
@@ -218,6 +221,23 @@ UPDATE configuration SET val_function = '{"error":"TEXT_EMAIL_ADDRESS_VALIDATE",
 
 
 ALTER TABLE admin_activity_log MODIFY attention MEDIUMTEXT;
+
+# ZC 156 changed these fields in the install but not in the upgrade
+ALTER TABLE upgrade_exceptions MODIFY sql_file varchar(128) default NULL;
+ALTER TABLE upgrade_exceptions MODIFY reason TEXT;
+ALTER TABLE upgrade_exceptions MODIFY errordate datetime default NULL;
+
+# ZC 156 upgrade did these operations, which did not work. 
+# Adding for people who upgraded to 1.5.6, and are now upgrading again
+ALTER TABLE customers_basket DROP final_price;
+ALTER TABLE ezpages DROP languages_id; 
+ALTER TABLE ezpages DROP pages_title; 
+ALTER TABLE ezpages DROP pages_html_text;
+
+# ZC 155 upgrade missed these operations
+ALTER TABLE admin_activity_log ADD logmessage mediumtext NOT NULL;
+ALTER TABLE admin_activity_log ADD severity varchar(9) NOT NULL DEFAULT 'info';
+
 
 # New Plugin tables
 

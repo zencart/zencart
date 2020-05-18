@@ -6,7 +6,8 @@
  * @version $Id: torvista 2019 Aug 08 Modified in v1.5.7 $
  */
 
-require 'gv_name.php';
+
+require DIR_WS_LANGUAGES . $_SESSION['language'] . '/' . 'gv_name.php';
 define('HEADING_TITLE', 'Send a ' . TEXT_GV_NAME . ' To Customers');
 
 define('TEXT_FROM', 'From:');

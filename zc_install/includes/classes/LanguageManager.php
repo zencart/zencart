@@ -14,8 +14,13 @@ class LanguageManager
 
     public function getLanguagesInstalled()
     {
-        $this->languagesInstalled = require(DIR_FS_INSTALL . $this->langPath . 'languages_installed.php');
-        return $this->languagesInstalled;
+        $infoFiles = $this->listFilesFromDirectory(DIR_FS_INSTALL . $this->langPath, '~^lng_info.*\.php$~i');
+        $this->languagesInstalled = [];
+        foreach ($infoFiles as $infoFile) {
+            $infoData = require(DIR_FS_INSTALL . $this->langPath . $infoFile);
+            $this->languagesInstalled = array_merge($this->languagesInstalled, $infoData);
+        }
+	return $this->languagesInstalled;
     }
 
     public function loadLanguageDefines($lng, $currentPage, $fallback = 'en_us')
@@ -42,15 +47,27 @@ class LanguageManager
     public function makeConstants($defines)
     {
         foreach ($defines as $defineKey => $defineValue) {
-            preg_match('/([A-Z]{4,}|[_]{1,})+/', $defineValue, $matches);
-            if (count($matches)) {
-                foreach ($matches as $match) {
+            preg_match_all('/%{2}([^%]+)%{2}/', $defineValue, $matches, PREG_PATTERN_ORDER);
+            if (count($matches[1])) {
+                foreach ($matches[1] as $index => $match) {
                     if (isset($defines[$match])) {
-                        $defineValue = str_replace($match, $defines[$match], $defineValue);
+                        $defineValue = str_replace($matches[0][$index], $defines[$match], $defineValue);
                     }
                 }
             }
             define($defineKey, $defineValue);
         }
+    }
+    protected function listFilesFromDirectory($rootDir, $fileRegx)
+    {
+        if (!$dir = @dir($rootDir)) return [];
+        $fileList = [];
+        while ($file = $dir->read()) {
+            if (preg_match($fileRegx, $file) > 0) {
+                $fileList[] = basename($rootDir . '/' . $file);
+            }
+        }
+        $dir->close();
+        return $fileList;
     }
 }

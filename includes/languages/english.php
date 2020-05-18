@@ -13,10 +13,10 @@
 //define('CUSTOM_KEYWORDS', 'ecommerce, open source, shop, online shopping');
 // END: moved to meta_tags.php
 
-  define('FOOTER_TEXT_BODY', 'Copyright &copy; ' . date('Y') . ' <a href="' . zen_href_link(FILENAME_DEFAULT) . '" target="_blank">' . STORE_NAME . '</a>. Powered by <a href="http://www.zen-cart.com" target="_blank">Zen Cart</a>');
+  define('FOOTER_TEXT_BODY', 'Copyright &copy; ' . date('Y') . ' <a href="' . zen_href_link(FILENAME_DEFAULT) . '" rel="noopener" target="_blank">' . STORE_NAME . '</a>. Powered by <a href="https://www.zen-cart.com" rel="noopener" target="_blank">Zen Cart</a>');
 
 // look in your $PATH_LOCALE/locale directory for available locales..
-  $locales = array('en_US', 'en_US.utf8', 'en', 'English_United States.1252');
+  $locales = ['en_US', 'en_US.utf8', 'en', 'English_United States.1252'];
   @setlocale(LC_TIME, $locales);
   define('DATE_FORMAT_LONG', '%A %d %B, %Y'); // this is used for strftime()
   define('DATE_FORMAT', 'm/d/Y'); // this is used for date()
@@ -227,13 +227,13 @@
 
   // constants for use in zen_prev_next_display function
   define('TEXT_RESULT_PAGE', '');
-  define('TEXT_DISPLAY_NUMBER_OF_PRODUCTS', 'Displaying <strong>%d</strong> to <strong>%d</strong> (of <strong>%d</strong> products)');
-  define('TEXT_DISPLAY_NUMBER_OF_ORDERS', 'Displaying <strong>%d</strong> to <strong>%d</strong> (of <strong>%d</strong> orders)');
-  define('TEXT_DISPLAY_NUMBER_OF_REVIEWS', 'Displaying <strong>%d</strong> to <strong>%d</strong> (of <strong>%d</strong> reviews)');
-  define('TEXT_DISPLAY_NUMBER_OF_PRODUCTS_NEW', 'Displaying <strong>%d</strong> to <strong>%d</strong> (of <strong>%d</strong> new products)');
-  define('TEXT_DISPLAY_NUMBER_OF_SPECIALS', 'Displaying <strong>%d</strong> to <strong>%d</strong> (of <strong>%d</strong> specials)');
-  define('TEXT_DISPLAY_NUMBER_OF_PRODUCTS_FEATURED_PRODUCTS', 'Displaying <strong>%d</strong> to <strong>%d</strong> (of <strong>%d</strong> featured products)');
-  define('TEXT_DISPLAY_NUMBER_OF_PRODUCTS_ALL', 'Displaying <strong>%d</strong> to <strong>%d</strong> (of <strong>%d</strong> products)');
+  define('TEXT_DISPLAY_NUMBER_OF_PRODUCTS', 'Displaying <strong>%d</strong> to <strong>%d</strong> (of <strong>%d</strong> Products)');
+  define('TEXT_DISPLAY_NUMBER_OF_ORDERS', 'Displaying <strong>%d</strong> to <strong>%d</strong> (of <strong>%d</strong> Orders)');
+  define('TEXT_DISPLAY_NUMBER_OF_REVIEWS', 'Displaying <strong>%d</strong> to <strong>%d</strong> (of <strong>%d</strong> Reviews)');
+  define('TEXT_DISPLAY_NUMBER_OF_PRODUCTS_NEW', 'Displaying <strong>%d</strong> to <strong>%d</strong> (of <strong>%d</strong> New Products)');
+  define('TEXT_DISPLAY_NUMBER_OF_SPECIALS', 'Displaying <strong>%d</strong> to <strong>%d</strong> (of <strong>%d</strong> Specials)');
+  define('TEXT_DISPLAY_NUMBER_OF_PRODUCTS_FEATURED_PRODUCTS', 'Displaying <strong>%d</strong> to <strong>%d</strong> (of <strong>%d</strong> Featured Products)');
+  define('TEXT_DISPLAY_NUMBER_OF_PRODUCTS_ALL', 'Displaying <strong>%d</strong> to <strong>%d</strong> (of <strong>%d</strong> Products)');
 
   define('PREVNEXT_TITLE_PREVIOUS_PAGE', 'Previous Page');
   define('PREVNEXT_TITLE_NEXT_PAGE', 'Next Page');
@@ -314,6 +314,9 @@
 // cart contents
   define('PRODUCTS_ORDER_QTY_TEXT_IN_CART','Quantity in Cart: ');
   define('PRODUCTS_ORDER_QTY_TEXT','Add to Cart: ');
+  define('ARIA_QTY_ADD_TO_CART','Enter quantity to add to cart');
+  define('ARIA_EDIT_QTY_IN_CART','Edit quantity in cart');
+  define('ARIA_DELETE_ITEM_FROM_CART', 'Delete this item from the cart');
 
 // success messages for added to cart when display cart is off
 // set to blank for no messages
@@ -372,7 +375,7 @@
   define('ERROR_FILE_NOT_SAVED', 'Error:  File not saved.');
   define('ERROR_DESTINATION_NOT_WRITEABLE', 'Error:  destination not writeable.');
   define('ERROR_DESTINATION_DOES_NOT_EXIST', 'Error: destination does not exist.');
-  define('ERROR_FILE_TOO_BIG', 'Warning: File was too large to upload!<br />Order can be placed but please contact us for help with upload');
+  define('ERROR_FILE_TOO_BIG', 'Warning: File was too large to upload!<br>Order can be placed but please contact us for help with upload');
 // End iii added
 
   define('TEXT_BEFORE_DOWN_FOR_MAINTENANCE', 'NOTICE: This website is scheduled to be down for maintenance on: ');
@@ -384,7 +387,7 @@
 
   define('TEXT_INVALID_SELECTION',' You picked an Invalid Selection: ');
   define('TEXT_ERROR_OPTION_FOR',' On the Option for: ');
-  define('TEXT_INVALID_USER_INPUT', 'User Input Required<br />');
+  define('TEXT_INVALID_USER_INPUT', 'User Input Required<br>');
 
 // product_listing
   define('PRODUCTS_QUANTITY_MIN_TEXT_LISTING','Min: ');
@@ -397,12 +400,12 @@
   define('TEXT_PRODUCTS_MIX_OFF','*Mixed OFF');
   define('TEXT_PRODUCTS_MIX_ON','*Mixed ON');
 
-  define('TEXT_PRODUCTS_MIX_OFF_SHOPPING_CART','<br />*You can not mix the options on this item to meet the minimum quantity requirement.*<br />');
-  define('TEXT_PRODUCTS_MIX_ON_SHOPPING_CART','*Mixed Option Values is ON<br />');
+  define('TEXT_PRODUCTS_MIX_OFF_SHOPPING_CART','<br>*You can not mix the options on this item to meet the minimum quantity requirement.*<br>');
+  define('TEXT_PRODUCTS_MIX_ON_SHOPPING_CART','*Mixed Option Values is ON<br>');
 
-  define('ERROR_MAXIMUM_QTY','The quantity added to your cart has been adjusted because of a restriction on maximum you are allowed. See this item:<br />');
-  define('ERROR_CORRECTIONS_HEADING','Please correct the following: <br />');
-  define('ERROR_QUANTITY_ADJUSTED', 'The quantity added to your cart has been adjusted. The item you wanted is not available in fractional quantities. The quantity of item:<br />');
+  define('ERROR_MAXIMUM_QTY','The quantity added to your cart has been adjusted because of a restriction on maximum you are allowed. See this item:<br>');
+  define('ERROR_CORRECTIONS_HEADING','Please correct the following: <br>');
+  define('ERROR_QUANTITY_ADJUSTED', 'The quantity added to your cart has been adjusted. The item you wanted is not available in fractional quantities. The quantity of item:<br>');
   define('ERROR_QUANTITY_CHANGED_FROM', ', has been changed from: ');
   define('ERROR_QUANTITY_CHANGED_TO', ' to ');
 
@@ -414,14 +417,14 @@
   define('TEXT_FILESIZE_UNKNOWN', 'Unknown');
 
 // shopping cart errors
-  define('ERROR_PRODUCT','<br />The item: ');
-  define('ERROR_PRODUCT_STATUS_SHOPPING_CART','<br />We are sorry but this product has been removed from our inventory at this time.<br />This item has been removed from your shopping cart.');
-  define('ERROR_PRODUCT_ATTRIBUTES','<br />The item: ');
-  define('ERROR_PRODUCT_STATUS_SHOPPING_CART_ATTRIBUTES','<br />We are sorry but selected options have changed for this product and have been removed from our inventory at this time.<br />This item has been removed from your shopping cart.');
+  define('ERROR_PRODUCT','<br>The item: ');
+  define('ERROR_PRODUCT_STATUS_SHOPPING_CART','<br>We are sorry but this product has been removed from our inventory at this time.<br>This item has been removed from your shopping cart.');
+  define('ERROR_PRODUCT_ATTRIBUTES','<br>The item: ');
+  define('ERROR_PRODUCT_STATUS_SHOPPING_CART_ATTRIBUTES','<br>We are sorry but selected options have changed for this product and have been removed from our inventory at this time.<br>This item has been removed from your shopping cart.');
   define('ERROR_PRODUCT_QUANTITY_MIN',',  ... Minimum Quantity errors - ');
   define('ERROR_PRODUCT_QUANTITY_UNITS',' ... Quantity Units errors - ');
-  define('ERROR_PRODUCT_OPTION_SELECTION','<br /> ... Invalid Option Values Selected ');
-  define('ERROR_PRODUCT_QUANTITY_ORDERED','<br /> You ordered a total of: ');
+  define('ERROR_PRODUCT_OPTION_SELECTION','<br> ... Invalid Option Values Selected ');
+  define('ERROR_PRODUCT_QUANTITY_ORDERED','<br> You ordered a total of: ');
   define('ERROR_PRODUCT_QUANTITY_MAX',' ... Maximum Quantity errors - ');
   define('ERROR_PRODUCT_QUANTITY_MIN_SHOPPING_CART',', has a minimum quantity restriction. ');
   define('ERROR_PRODUCT_QUANTITY_UNITS_SHOPPING_CART',' ... Quantity Units errors - ');
@@ -429,11 +432,11 @@
 
   define('WARNING_SHOPPING_CART_COMBINED', 'NOTICE: For your convenience, your current shopping cart has been combined with your shopping cart from your last visit. Please review your shopping cart before checking out.');
   define('WARNING_PRODUCT_QUANTITY_ADJUSTED', 'Quantity has been adjusted to what is in stock. ');
-  define('OUT_OF_STOCK_CANT_CHECKOUT', 'Products marked with ' . STOCK_MARK_PRODUCT_OUT_OF_STOCK . ' are out of stock or there are not enough in stock to fill your order.<br />Please change the quantity of products marked with (' . STOCK_MARK_PRODUCT_OUT_OF_STOCK . '). Thank you');
-  define('OUT_OF_STOCK_CAN_CHECKOUT', 'Products marked with ' . STOCK_MARK_PRODUCT_OUT_OF_STOCK . ' are out of stock.<br />Items not in stock will be placed on backorder.');
+  define('OUT_OF_STOCK_CANT_CHECKOUT', 'Products marked with ' . STOCK_MARK_PRODUCT_OUT_OF_STOCK . ' are out of stock or there are not enough in stock to fill your order.<br>Please change the quantity of products marked with (' . STOCK_MARK_PRODUCT_OUT_OF_STOCK . '). Thank you');
+  define('OUT_OF_STOCK_CAN_CHECKOUT', 'Products marked with ' . STOCK_MARK_PRODUCT_OUT_OF_STOCK . ' are out of stock.<br>Items not in stock will be placed on backorder.');
 
 // error on checkout when $_SESSION['customers_id' does not exist in customers table
-  define('ERROR_CUSTOMERS_ID_INVALID', 'Customer information cannot be validated!<br />Please login or recreate your account ...');
+  define('ERROR_CUSTOMERS_ID_INVALID', 'Customer information cannot be validated!<br>Please login or recreate your account ...');
 
   define('TABLE_HEADING_FEATURED_PRODUCTS','Featured Products');
 
@@ -446,6 +449,8 @@
 
 // meta tags special defines
   define('META_TAG_PRODUCTS_PRICE_IS_FREE_TEXT','It\'s Free!');
+
+  define('ASK_A_QUESTION', 'Ask a question about this item');
 
 // customer login
   define('TEXT_SHOWCASE_ONLY','Contact Us');
@@ -464,10 +469,10 @@
 
 // text pricing
   define('TEXT_CHARGES_WORD','Calculated Charge:');
-  define('TEXT_PER_WORD','<br />Price per word: ');
+  define('TEXT_PER_WORD','<br>Price per word: ');
   define('TEXT_WORDS_FREE',' Word(s) free ');
   define('TEXT_CHARGES_LETTERS','Calculated Charge:');
-  define('TEXT_PER_LETTER','<br />Price per letter: ');
+  define('TEXT_PER_LETTER','<br>Price per letter: ');
   define('TEXT_LETTERS_FREE',' Letter(s) free ');
   define('TEXT_ONETIME_CHARGES','*onetime charges = ');
   define('TEXT_ONETIME_CHARGES_EMAIL',"\t" . '*onetime charges = ');
@@ -553,7 +558,7 @@
   define('EMAIL_SEND_FAILED','ERROR: Failed sending email to: "%s" <%s> with subject: "%s"');
 
   define('DB_ERROR_NOT_CONNECTED', 'Error - Could not connect to Database');
-  define('ERROR_DATABASE_MAINTENANCE_NEEDED', '<a href="https://docs.zen-cart.com/user/troubleshooting/error_71_maintenance_required/" target="_blank">ERROR 0071 There appears to be a problem with the database. Maintenance is required.</a>');
+  define('ERROR_DATABASE_MAINTENANCE_NEEDED', '<a href="https://docs.zen-cart.com/user/troubleshooting/error_71_maintenance_required/" rel="noopener" target="_blank">ERROR 0071 There appears to be a problem with the database. Maintenance is required.</a>');
 
   // EZ-PAGES Alerts
   define('TEXT_EZPAGES_STATUS_HEADER_ADMIN', 'WARNING: EZ-PAGES HEADER - On for Admin IP Only');
@@ -585,7 +590,7 @@ define('TEXT_OPTION_DIVIDER', '&nbsp;-&nbsp;');
 
 ///////////////////////////////////////////////////////////
 
-  $file_list = array(FILENAME_EMAIL_EXTRAS, FILENAME_HEADER, FILENAME_BUTTON_NAMES, FILENAME_ICON_NAMES, FILENAME_OTHER_IMAGES_NAMES, FILENAME_CREDIT_CARDS, FILENAME_WHOS_ONLINE, FILENAME_META_TAGS); 
+  $file_list = [FILENAME_EMAIL_EXTRAS, FILENAME_HEADER, FILENAME_BUTTON_NAMES, FILENAME_ICON_NAMES, FILENAME_OTHER_IMAGES_NAMES, FILENAME_CREDIT_CARDS, FILENAME_WHOS_ONLINE, FILENAME_META_TAGS];
   foreach ($file_list as $file) { 
     $file = str_replace(".php","",$file); 
     require_once(zen_get_file_directory(DIR_FS_CATALOG . DIR_WS_LANGUAGES . $_SESSION['language'] . "/", $file . '.php', 'false'));

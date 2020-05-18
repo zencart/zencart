@@ -114,22 +114,6 @@ function zen_get_select_options($optionList, $setDefault)
 
   function zen_sanitize_request()
   {
-    if (isset($_POST) && count($_POST) > 0)
-    {
-      foreach($_POST as $key=>$value)
-      {
-        if(is_array($value))
-        {
-          foreach($value as $key2 => $val2)
-          {
-            unset($GLOBALS[$key]);
-          }
-        } else {
-          unset($GLOBALS[$key]);
-        }
-      }
-    }
-    $ignoreArray = array();
     foreach ($_POST as $key => $value)
     {
       $_POST[htmlspecialchars($key, ENT_COMPAT, 'UTF-8', FALSE)] = addslashes($value);
@@ -195,8 +179,8 @@ function zen_get_select_options($optionList, $setDefault)
     $httpServer = zen_parse_url($url, 'host', true);
     $adminServer = ($request_type == 'SSL') ? 'https://' : 'http://';
     $adminServer .= $httpServer;
-    $catalogHttpServer = 'http://' . $httpServer;
-    $catalogHttpUrl = 'http://' . $httpServer . '/' . zen_parse_url($url, 'path', true);
+    $catalogHttpServer = ($request_type == 'SSL' ? 'https://' : 'http://') . $httpServer;
+    $catalogHttpUrl = ($request_type == 'SSL' ? 'https://' :'http://') . $httpServer . '/' . zen_parse_url($url, 'path', true);
     $catalogHttpsServer = 'https://' . $httpServer;
     $catalogHttpsUrl = 'https://' . $httpServer . '/' . zen_parse_url($url, 'path', true);
     $dir_ws_http_catalog = str_replace($catalogHttpServer, '', $catalogHttpUrl) .'/';

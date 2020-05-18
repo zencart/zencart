@@ -189,7 +189,7 @@ function executeSql($lines, $database, $table_prefix = '') {
           // RENAME TABLE command cannot be parsed to insert table prefixes, so skip if zen is using prefixes
           if (zen_not_null(DB_PREFIX)) {
             zen_write_to_upgrade_exceptions_table($line, 'RENAME TABLE command not supported by upgrader. Please use phpMyAdmin instead.', $sql_file);
-            $messageStack->add('RENAME TABLE command not supported by upgrader. Please use phpMyAdmin instead.', 'caution');
+            $messageStack->add(ERROR_RENAME_TABLE, 'caution');
 
             $ignore_line = true;
           }
@@ -282,6 +282,9 @@ function executeSql($lines, $database, $table_prefix = '') {
           $complete_line = false;
         }
       } //endif found ';'
+        else {
+            $messageStack->add(ERROR_LINE_INCOMPLETE, 'error');
+        }
 
       if ($complete_line) {
         if ($debug == true) {
@@ -732,9 +735,9 @@ if (zen_not_null($action)) {
         $query_string = explode($linebreak, ($query_string));
         $query_results = executeSql($query_string, DB_DATABASE, DB_PREFIX);
         if ($query_results['queries'] > 0 && $query_results['queries'] != $query_results['ignored']) {
-          $messageStack->add($query_results['queries'] . ' statements processed.', 'success');
+          $messageStack->add(sprintf(TEXT_EXECUTE_SUCCESS, (int)$query_results['queries']), 'success');
         } else {
-          $messageStack->add('Failed: ' . $query_results['queries'], 'error');
+          $messageStack->add(sprintf(ERROR_EXECUTE_FAILED, (int)$query_results['queries']), 'error');
         }
         if (zen_not_null($query_results['errors'])) {
           foreach ($query_results['errors'] as $value) {
@@ -742,7 +745,7 @@ if (zen_not_null($action)) {
           }
         }
         if ($query_results['ignored'] != 0) {
-          $messageStack->add('Note: ' . $query_results['ignored'] . ' statements ignored. See "upgrade_exceptions" table for additional details.', 'caution');
+          $messageStack->add(sprintf(ERROR_EXECUTE_IGNORED, (int)$query_results['ignored']), 'caution');
         }
         if (zen_not_null($query_results['output'])) {
           foreach ($query_results['output'] as $value) {
@@ -764,17 +767,17 @@ if (zen_not_null($action)) {
       if ($query_string != '') {
         $query_results = executeSql($query_string, DB_DATABASE, DB_PREFIX);
         if ($query_results['queries'] > 0 && $query_results['queries'] != $query_results['ignored']) {
-          $messageStack->add($query_results['queries'] . ' statements processed.', 'success');
+          $messageStack->add(sprintf(TEXT_UPLOADQUERY_SUCCESS, (int)$query_results['queries']), 'success');
         } else {
-          $messageStack->add('Failed: ' . $query_results['queries'], 'error');
+          $messageStack->add(sprintf(ERROR_UPLOADQUERY_FAILED, (int)$query_results['queries']), 'error');
         }
         if (zen_not_null($query_results['errors'])) {
           foreach ($query_results['errors'] as $value) {
-            $messageStack->add('ERROR: ' . $value, 'error');
+            $messageStack->add(ICON_ERROR . ': ' . $value, 'error');
           }
         }
         if ($query_results['ignored'] != 0) {
-          $messageStack->add('Note: ' . $query_results['ignored'] . ' statements ignored. See "upgrade_exceptions" table for additional details.', 'caution');
+          $messageStack->add(ERROR_UPLOADQUERY_IGNORED, 'caution');
         }
         if (zen_not_null($query_results['output'])) {
           foreach ($query_results['output'] as $value) {
@@ -846,7 +849,7 @@ if (zen_not_null($action)) {
         <?php echo zen_draw_form('getquery', FILENAME_SQLPATCH, 'action=execute' . (($debug == true) ? '&debug=ON' : '') . (($skip_stripslashes == true) ? '&keepslashes=1' : ''), 'post', 'class="form-horizontal"'); ?>
         <div class="form-group">
             <?php echo zen_draw_label(TEXT_ENTER_QUERY_STRING, 'query_string', 'class="control-label col-sm-3"'); ?>
-          <div class="col-sm-9 col-md-6"><?php echo zen_draw_textarea_field('query_string', 'soft', '80%', '10', '', 'id="sqlpatchKeyedQuery" class="form-control noEditor"', false); ?></div>
+          <div class="col-sm-9 col-md-6"><?php echo zen_draw_textarea_field('query_string', 'soft', '80', '10', '', 'id="query_string" class="form-control noEditor"', false); ?></div>
         </div>
         <div class="form-group">
           <div class="col-sm-12 text-right"><button type="submit" class="btn btn-primary"><?php echo IMAGE_SEND; ?></button></div>
@@ -865,7 +868,7 @@ if (zen_not_null($action)) {
         ?>
         <div class="form-group">
   <?php echo zen_draw_label(TEXT_QUERY_FILENAME, 'sql_file', 'class="control-label col-sm-3"'); ?>
-          <div class="col-sm-9 col-md-6"><?php echo zen_draw_file_field('sql_file', '', 'class="form-control"'); ?></div>
+          <div class="col-sm-9 col-md-6"><?php echo zen_draw_file_field('sql_file', '', 'class="form-control" id="sql_file"'); ?></div>
         </div>
         <div class="form-group">
           <div class="col-sm-12 text-right"><button type="submit" class="btn btn-primary"><?php echo IMAGE_UPLOAD; ?></button></div>

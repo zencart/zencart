@@ -429,7 +429,7 @@ if (false) { // disabled until clarification is received about coupons in PayPal
 
       // in case of funding error, set the redirect URL which is used by the _errorHandler
       $this->ec_redirect_url = $this->getPayPalLoginServer() . "?cmd=_express-checkout&token=" . $_SESSION['paypal_ec_token'] . "&useraction=continue";
-    
+
       $response = $doPayPal->DoExpressCheckoutPayment($_SESSION['paypal_ec_token'],
                                                       $_SESSION['paypal_ec_payer_id'],
                                                       $options);
@@ -721,7 +721,7 @@ if (false) { // disabled until clarification is received about coupons in PayPal
         $db->Execute("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) VALUES ('Use InContext Checkout?', 'MODULE_PAYMENT_PAYPALWPP_CHECKOUTSTYLE', 'InContext', 'PayPal now offers a newer friendlier InContext (in-page) checkout mode (Requires that you enter your MerchantID in the Merchant ID Setting above). Or you can use the older checkout style which offers Pay Without Account by default but with a full-page-redirect.', '6', '25', 'zen_cfg_select_option(array(\'InContext\', \'Old\'), ', now())");
       }
     }
-    $keys_list = array('MODULE_PAYMENT_PAYPALWPP_STATUS', 'MODULE_PAYMENT_PAYPALWPP_SORT_ORDER', 'MODULE_PAYMENT_PAYPALWPP_ZONE', 'MODULE_PAYMENT_PAYPALWPP_ECS_BUTTON', 'MODULE_PAYMENT_PAYPALWPP_ORDER_STATUS_ID', 'MODULE_PAYMENT_PAYPALWPP_ORDER_PENDING_STATUS_ID', 'MODULE_PAYMENT_PAYPALWPP_REFUNDED_STATUS_ID', 'MODULE_PAYMENT_PAYPALWPP_CONFIRMED_ADDRESS', 'MODULE_PAYMENT_PAYPALWPP_AUTOSELECT_CHEAPEST_SHIPPING', 'MODULE_PAYMENT_PAYPALWPP_SKIP_PAYMENT_PAGE', 'MODULE_PAYMENT_PAYPALWPP_NEW_ACCT_NOTIFY', 'MODULE_PAYMENT_PAYPALWPP_TRANSACTION_MODE', 'MODULE_PAYMENT_PAYPALWPP_CURRENCY', 'MODULE_PAYMENT_PAYPALWPP_BRANDNAME', 'MODULE_PAYMENT_PAYPALEC_ALLOWEDPAYMENT', 'MODULE_PAYMENT_PAYPALWPP_PAGE_STYLE', 'MODULE_PAYMENT_PAYPALWPP_APIUSERNAME', 'MODULE_PAYMENT_PAYPALWPP_APIPASSWORD', 'MODULE_PAYMENT_PAYPALWPP_APISIGNATURE', 'MODULE_PAYMENT_PAYPALWPP_MERCHANTID', 'MODULE_PAYMENT_PAYPALWPP_MODULE_MODE', 'MODULE_PAYMENT_PAYPALWPP_CHECKOUTSTYLE', 'MODULE_PAYMENT_PAYPALWPP_SERVER', 'MODULE_PAYMENT_PAYPALWPP_DEBUGGING');
+    $keys_list = array('MODULE_PAYMENT_PAYPALWPP_STATUS', 'MODULE_PAYMENT_PAYPALWPP_SORT_ORDER', 'MODULE_PAYMENT_PAYPALWPP_ZONE', 'MODULE_PAYMENT_PAYPALWPP_ECS_BUTTON', 'MODULE_PAYMENT_PAYPALWPP_ORDER_STATUS_ID', 'MODULE_PAYMENT_PAYPALWPP_ORDER_PENDING_STATUS_ID', 'MODULE_PAYMENT_PAYPALWPP_REFUNDED_STATUS_ID', 'MODULE_PAYMENT_PAYPALWPP_CONFIRMED_ADDRESS', 'MODULE_PAYMENT_PAYPALWPP_AUTOSELECT_CHEAPEST_SHIPPING', 'MODULE_PAYMENT_PAYPALWPP_SKIP_PAYMENT_PAGE', 'MODULE_PAYMENT_PAYPALWPP_NEW_ACCT_NOTIFY', 'MODULE_PAYMENT_PAYPALWPP_TRANSACTION_MODE', 'MODULE_PAYMENT_PAYPALWPP_CURRENCY', 'MODULE_PAYMENT_PAYPALWPP_BRANDNAME', 'MODULE_PAYMENT_PAYPALEC_ALLOWEDPAYMENT', 'MODULE_PAYMENT_PAYPALWPP_EC_RETURN_FMF_DETAILS', 'MODULE_PAYMENT_PAYPALWPP_PAGE_STYLE', 'MODULE_PAYMENT_PAYPALWPP_APIUSERNAME', 'MODULE_PAYMENT_PAYPALWPP_APIPASSWORD', 'MODULE_PAYMENT_PAYPALWPP_APISIGNATURE', 'MODULE_PAYMENT_PAYPALWPP_MERCHANTID', 'MODULE_PAYMENT_PAYPALWPP_MODULE_MODE', 'MODULE_PAYMENT_PAYPALWPP_CHECKOUTSTYLE', 'MODULE_PAYMENT_PAYPALWPP_SERVER', 'MODULE_PAYMENT_PAYPALWPP_DEBUGGING');
     if (defined('PAYPAL_DEV_MODE') && IS_ADMIN_FLAG === true && (PAYPAL_DEV_MODE == 'true' || strstr(MODULE_PAYMENT_PAYPALWPP_MODULE_MODE, 'Payflow'))) {
       $keys_list = array_merge($keys_list, array('MODULE_PAYMENT_PAYPALWPP_PFPARTNER', 'MODULE_PAYMENT_PAYPALWPP_PFVENDOR', 'MODULE_PAYMENT_PAYPALWPP_PFUSER', 'MODULE_PAYMENT_PAYPALWPP_PFPASSWORD'));
     }
@@ -2886,10 +2886,10 @@ if (false) { // disabled until clarification is received about coupons in PayPal
       $messageStack->add_session($errorText, 'error');
     }
     /** Handle FMF Scenarios **/
-    if (in_array($operation, array('DoExpressCheckoutPayment', 'DoDirectPayment')) 
+    if (in_array($operation, array('DoExpressCheckoutPayment', 'DoDirectPayment'))
         && ((isset($response['PAYMENTINFO_0_PAYMENTSTATUS']) && $response['PAYMENTINFO_0_PAYMENTSTATUS'] == 'Pending')
             || (isset($response['PAYMENTSTATUS']) && $response['PAYMENTSTATUS'] == 'Pending')
-           ) 
+           )
         && $response['L_ERRORCODE0'] == 11610) {
       $this->fmfResponse = urldecode($response['L_SHORTMESSAGE0']);
       $this->fmfErrors = array();

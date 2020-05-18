@@ -9,6 +9,17 @@
             "homepage": "https://github.com/zencart/zencart/graphs/contributors"
         }
     ],
+    "funding": [
+        {
+            "type": "other",
+            "url": "https://zen-cart.com/donate"
+        }
+    ],
+    "support": {
+        "forum": "https://zen-cart.com/forum",
+        "source": "https://zen-cart.com/getit",
+        "docs": "https://docs.zen-cart.com"
+    },
     "_comment": "compatible with PHP 5.5-7.4",
     "require": {
         "php": ">=5.5"

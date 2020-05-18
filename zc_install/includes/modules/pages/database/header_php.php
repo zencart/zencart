@@ -1,9 +1,9 @@
 <?php
 /**
  * @package Installer
- * @copyright Copyright 2003-2019 Zen Cart Development Team
+ * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2019 Jan 04 Modified in v1.5.6a $
+ * @version $Id:  Modified in v1.5.7 $
  */
 
 $dbCharset = array(
@@ -12,28 +12,50 @@ $dbCharset = array(
                     array('id' => 'latin1', 'text' => TEXT_DATABASE_SETUP_CHARSET_OPTION_LATIN1),
                 );
 $dbCharsetOptions = zen_get_select_options($dbCharset, isset($db_charset) ? $db_charset : 'utf8mb4');
+
 $sqlCacheType = array(array('id' => 'none', 'text' => TEXT_DATABASE_SETUP_CACHE_TYPE_OPTION_NONE),
                       array('id' => 'file', 'text' => TEXT_DATABASE_SETUP_CACHE_TYPE_OPTION_FILE),
                       array('id' => 'database', 'text' => TEXT_DATABASE_SETUP_CACHE_TYPE_OPTION_DATABASE));
 $sqlCacheTypeOptions = zen_get_select_options($sqlCacheType, isset($sql_cache_method) ? $sql_cache_method : '');
-$db_name_fallback = $configReader->getDefine('DB_DATABASE');
-if (empty($db_name_fallback)) $db_name_fallback = 'zencart';
+
 $db_user_fallback = $configReader->getDefine('DB_SERVER_USERNAME');
-if (empty($db_user_fallback)) $db_user_fallback = 'zencart';
 $db_password_fallback = $configReader->getDefine('DB_SERVER_PASSWORD');
-if (empty($db_password_fallback)) $db_password_fallback = 'zencart';
-$db_host = isset($db_host) ? $db_host : 'localhost';
-$db_name = isset($db_name) ? $db_name : $db_name_fallback;
+$db_name_fallback = $configReader->getDefine('DB_DATABASE');
+$install_demo_data = false;
+
+
 if (defined('DEVELOPER_MODE') && DEVELOPER_MODE === true) {
-  $db_user = (isset($db_user)) ? $db_user : $db_user_fallback;
-  $db_password = (isset($db_password)) ? $db_password : $db_password_fallback;
-} else if ($db_user_fallback != 'zencart') {
+    if (empty($db_user_fallback)) {
+        $db_user_fallback = (defined('DEVELOPER_DBUSER_DEFAULT') ? DEVELOPER_DBUSER_DEFAULT : 'zencart');
+    }
+    $db_user = (isset($db_user)) ? $db_user : $db_user_fallback;
+
+    if (empty($db_password_fallback)) {
+        $db_password_fallback = (defined('DEVELOPER_DBPASSWORD_DEFAULT') ? DEVELOPER_DBPASSWORD_DEFAULT : 'zencart');
+    }
+    $db_password = (isset($db_password)) ? $db_password : $db_password_fallback;
+
+    if (empty($db_name_fallback)) {
+        $db_name_fallback = (defined('DEVELOPER_DBNAME_DEFAULT') ? DEVELOPER_DBNAME_DEFAULT : 'zencart');
+    }
+    $db_name = isset($db_name) ? $db_name : $db_name_fallback;
+
+    if (defined('DEVELOPER_INSTALL_DEMO_DATA')) $install_demo_data = !empty(DEVELOPER_INSTALL_DEMO_DATA);
+
+} else {
+    if (empty($db_user_fallback)) $db_user_fallback = 'zencart';
+    if (!isset($db_password_fallback)) $db_password_fallback = 'zencart';
+    if (empty($db_name_fallback)) $db_name_fallback = 'zencart';
     $db_user = $db_user_fallback;
     $db_password = $db_password_fallback;
+    $db_name = isset($db_name) ? $db_name : $db_name_fallback;
 }
-$db_prefix = isset($db_prefix) ? $db_prefix : '';
+
 $db_user = isset($db_user) ? $db_user : '';
 $db_password = isset($db_password) ? $db_password : '';
+$db_host = isset($db_host) ? $db_host : 'localhost';
+$db_prefix = isset($db_prefix) ? $db_prefix : '';
+
 
 // attempt to intelligently manage user-adjusted subdirectory values if they are different from detected defaults
 if (!isset($_POST['detected_http_server_catalog'])) $_POST['detected_http_server_catalog'] = '';

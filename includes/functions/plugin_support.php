@@ -33,7 +33,7 @@ if (!defined('LOG_PLUGIN_VERSIONCHECK_FAILURES')) define('LOG_PLUGIN_VERSIONCHEC
  *   if (IS_ADMIN_FLAG) {
  *     $new_version_details = plugin_version_check_for_updates(999999999, 'some_string');
  *     if ($new_version_details !== FALSE) {
- *       $message = '<span class="alert">' . ' - NOTE: A NEW VERSION OF THIS PLUGIN IS AVAILABLE. <a href="' . $new_version_details['link'] . '" target="_blank">[Details]</a>' . '</span>';
+ *       $message = '<span class="alert">' . ' - NOTE: A NEW VERSION OF THIS PLUGIN IS AVAILABLE. <a href="' . $new_version_details['link'] . '" rel="noopener" target="_blank">[Details]</a>' . '</span>';
  *     }
  *   }
  */

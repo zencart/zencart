@@ -45,7 +45,7 @@ class systemChecker
         {
           $this->localErrors = NULL;
           if (isset($methodDetail['method'])) $methodName = $methodDetail['method'];
-          $result = $this -> {$methodName}($methodDetail['parameters']);
+          $result = $this -> {$methodName}(isset($methodDetail['parameters']) ? $methodDetail['parameters'] : null);
           $resultCombined &= $result;
           if ($result == false && (isset($this->systemChecks[$systemCheckName]['criticalError'])))
           {
@@ -278,9 +278,9 @@ class systemChecker
     }
     return $retVal;
   }
-  public function checkFileExists($filepath)
+  public function checkFileExists($parameters)
   {
-    return file_exists($filepath);
+    return file_exists($parameters['fileDir']);
   }
   public function checkWriteableDir($parameters)
   {
@@ -344,6 +344,10 @@ class systemChecker
   public function checkHtaccessSupport($parameters)
   {
       if (!function_exists('curl_init')) {
+          return true;
+      }
+
+      if (preg_match('/nginx/i', $_SERVER['SERVER_SOFTWARE'])) {
           return true;
       }
 
@@ -656,13 +660,17 @@ class systemChecker
     }
     if (!in_array(VERBOSE_SYSTEMCHECKER, array('silent', 'none', 'off', 'OFF', 'NONE', 'SILENT')))
     {
-      logDetails((($result == 1) ? 'PASSED' : 'FAILED') . substr(print_r($methodDetail['parameters'], TRUE), 5), $methodName);
+      logDetails((($result == 1) ? 'PASSED' : 'FAILED') .
+          (isset($methodDetail['parameters']) ? substr(print_r($methodDetail['parameters'], TRUE), 5) : ''),
+          $methodName);
     }
   }
   function checkIsZCVersionCurrent()
   {
     $new_version = TEXT_VERSION_CHECK_CURRENT; //set to "current" by default
     $lines = @file(NEW_VERSION_CHECKUP_URL . '?v='.PROJECT_VERSION_MAJOR.'.'.PROJECT_VERSION_MINOR.'&p='.PHP_VERSION.'&a='.$_SERVER['SERVER_SOFTWARE'].'&r='.urlencode($_SERVER['HTTP_HOST']).'&m=zc_install');
+    if (empty($lines)) return true;
+
     //check for major/minor version info
     if ((trim($lines[0]) > PROJECT_VERSION_MAJOR) || (trim($lines[0]) == PROJECT_VERSION_MAJOR && trim($lines[1]) > PROJECT_VERSION_MINOR)) {
       $new_version = TEXT_VERSION_CHECK_NEW_VER . trim($lines[0]) . '.' . trim($lines[1]) . ' :: ' . $lines[2];
@@ -687,7 +695,7 @@ class systemChecker
     }
     // prepare displayable download link
     if ($new_version != '' && $new_version != TEXT_VERSION_CHECK_CURRENT) {
-      $new_version .= '<a href="' . $lines[6] . '" target="_blank">'. TEXT_VERSION_CHECK_DOWNLOAD .'</a>';
+      $new_version .= '<a href="' . $lines[6] . '" rel="noopener" target="_blank">'. TEXT_VERSION_CHECK_DOWNLOAD .'</a>';
       $this->localErrors = $new_version;
       return FALSE;
     }

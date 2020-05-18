@@ -16,7 +16,7 @@
 //
 ?>
 <!--// bof: <?php echo $box_id; ?> //-->
-<div class="singleBoxContainer" id="<?php echo str_replace('_', '-', $box_id ); ?>" style="width: <?php echo $column_width; ?>">
+<div class="singleBoxContainer" id="<?php echo str_replace('_', '-', $box_id ); ?>" style="width: <?php echo $column_width; ?>px">
 <h3 class="singleBoxHeading" id="<?php echo str_replace('_', '-', $box_id) . 'Heading'; ?>"><?php echo $title; ?></h3>
 <?php echo $content; ?>
 </div>

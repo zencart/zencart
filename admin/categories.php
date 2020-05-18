@@ -392,8 +392,8 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
                         <div><?php echo zen_info_image($cInfo->categories_image, $cInfo->categories_name, '', '', 'class="table-bordered img-responsive"'); ?></div>
                         <br>
                         <?php
-                        [$width, $height] = getimagesize(DIR_FS_CATALOG_IMAGES . $cInfo->categories_image);
-                        $kb = filesize(DIR_FS_CATALOG_IMAGES . $cInfo->categories_image)/1000;
+                        list($width, $height) = getimagesize(DIR_FS_CATALOG_IMAGES . $cInfo->categories_image);
+                        $kb = filesize(DIR_FS_CATALOG_IMAGES . $cInfo->categories_image)/1024;
                         echo sprintf(TEXT_FILENAME,   '/images/' . $cInfo->categories_image, $width, $height, $kb);
                         ?>
                     </div>

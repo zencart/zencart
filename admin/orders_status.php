@@ -83,10 +83,10 @@ if (zen_not_null($action)) {
       $remove_status = true;
       if ($oID == DEFAULT_ORDERS_STATUS_ID) {
         $remove_status = false;
-        $messageStack->add(ERROR_REMOVE_DEFAULT_ORDER_STATUS, 'error');
+        $messageStack->add($error_message = ERROR_REMOVE_DEFAULT_ORDER_STATUS, 'error');
       } elseif ($status->fields['count'] > 0) {
         $remove_status = false;
-        $messageStack->add(ERROR_STATUS_USED_IN_ORDERS, 'error');
+        $messageStack->add($error_message = ERROR_STATUS_USED_IN_ORDERS, 'error');
       } else {
         $history = $db->Execute("SELECT COUNT(*) AS count
                                  FROM " . TABLE_ORDERS_STATUS_HISTORY . "
@@ -94,7 +94,7 @@ if (zen_not_null($action)) {
 
         if ($history->fields['count'] > 0) {
           $remove_status = false;
-          $messageStack->add(ERROR_STATUS_USED_IN_HISTORY, 'error');
+          $messageStack->add($error_message = ERROR_STATUS_USED_IN_HISTORY, 'error');
         }
       }
       break;
@@ -229,6 +229,8 @@ if (zen_not_null($action)) {
                 $contents[] = array('text' => '<br><b>' . $oInfo->orders_status_name . '</b>');
                 if ($remove_status) {
                   $contents[] = array('align' => 'text-center', 'text' => '<br><button type="submit" class="btn btn-danger">' . IMAGE_DELETE . '</button> <a href="' . zen_href_link(FILENAME_ORDERS_STATUS, 'page=' . $_GET['page'] . '&oID=' . $oInfo->orders_status_id) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>');
+                } elseif (!empty($error_message)) {
+                    $contents[] = array('text' => '<br><b class="alert-danger">' . $error_message . '</b>');
                 }
                 break;
               default:

@@ -53,6 +53,7 @@ define('BUTTON_IMAGE_READ_REVIEWS', 'button_read_reviews.gif');
 define('BUTTON_IMAGE_GOTO_PROD_DETAILS', 'button_goto_prod_details.gif');
 define('BUTTON_IMAGE_MORE_REVIEWS', 'button_more_reviews.gif');
 define('BUTTON_IMAGE_CONTINUE_CHECKOUT', 'button_continue_checkout.gif');
+define('BUTTON_IMAGE_ASK_A_QUESTION', 'button_ask_a_question.gif');
 //define('PREVNEXT_BUTTON_NEXT', '[Next&nbsp;&gt;&gt;]');
 //define('PREVNEXT_BUTTON_LAST', 'LAST&gt;&gt;');
 
@@ -106,3 +107,4 @@ define('BUTTON_READ_REVIEWS_ALT', 'Read the Review');
 define('BUTTON_GOTO_PROD_DETAILS_ALT', 'Go To This Product\'s Details');
 define('BUTTON_MORE_REVIEWS_ALT', 'Read More Reviews');
 define('BUTTON_VIEW_ALL_ALT', 'View All');
+define('BUTTON_ASK_A_QUESTION_ALT', 'Ask a Question');
