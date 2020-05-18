@@ -246,6 +246,21 @@ systemChecks:
     errorLevel: WARN
     version: '1.5.7-alpha'
     mainErrorText: <?php echo sprintf(TEXT_DB_VERSION_NOT_FOUND, 'v1.5.7-alpha') . PHP_EOL; ?>
+    methods:
+      dbVersionChecker:
+        parameters:
+          - checkType: fieldSchema
+            tableName: orders_status
+            fieldName: sort_order
+            fieldCheck: Type
+            expectedResult: 'INT(11)'
+          - checkType: fieldSchema
+            tableName: orders
+            fieldName: language_code
+            fieldCheck: Exists
+          - checkType: configValue
+            fieldName: ADVANCED_SEARCH_INCLUDE_METATAGS
+            expectedResult: 'Include meta-tags in product search?'
 
   checkDBVersion156:
     runLevel: dbVersion
