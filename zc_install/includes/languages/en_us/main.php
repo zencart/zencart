@@ -103,7 +103,7 @@ return [
 'TEXT_DATABASE_UPGRADE_ADMIN_CREDENTIALS' => 'Admin Credentials (SuperUser)',
 'TEXT_VALIDATION_ADMIN_CREDENTIALS' => 'To authorize the database upgrade, you must enter an admin username and password with SuperUser permissions in your store.',
 'TEXT_HELP_TITLE_UPGRADEADMINNAME' => '%%TEXT_DATABASE_UPGRADE_ADMIN_CREDENTIALS%%',
-'TEXT_HELP_CONTENT_UPGRADEADMINNAME' => 'To authorize the database upgrade, you must enter an admin username and password with SuperUser (ie: unrestricted) permissions in your store.<br>This will be the username and password you use to log in to the Admin area of your store.<br>(It is NOT your FTP password, and is not your hosting control panel password. Nobody knows this password except you or your storeowner. You can not get it from your hosting company.)<br>If you are locked out of your store and do not know any valid admin passwords and cannot log in to your store Admin page, then you can do an aggressive reset of the password by following the instructions in this article: <a href="https://docs.zen-cart.com/user/troubleshooting/reset_admin_password/" target="_blank">https://docs.zen-cart.com/user/troubleshooting/reset_admin_password/</a>.',
+'TEXT_HELP_CONTENT_UPGRADEADMINNAME' => 'To authorize the database upgrade, you must enter an admin username and password with SuperUser (ie: unrestricted) permissions in your store.<br>This will be the username and password you use to log in to the Admin area of your store.<br>(It is NOT your FTP password, and is not your hosting control panel password. Nobody knows this password except you or your storeowner. You can not get it from your hosting company.)<br>If you are locked out of your store and do not know any valid admin passwords and cannot log in to your store Admin page, then you can do an aggressive reset of the password by following the instructions in this article: <a href="https://docs.zen-cart.com/user/troubleshooting/reset_admin_password/" rel="noopener" target="_blank">https://docs.zen-cart.com/user/troubleshooting/reset_admin_password/</a>.',
 'TEXT_DATABASE_UPGRADE_ADMIN_USER' => 'User Name',
 'TEXT_DATABASE_UPGRADE_ADMIN_PASSWORD' => 'Password',
 'TEXT_HELP_TITLE_UPGRADEADMINPWD' => 'Admin Password for Upgrade',
@@ -169,8 +169,8 @@ return [
 'TEXT_ERROR_MULTIPLE_ADMINS_NONE_SELECTED' => 'Multiple Admin directories seem to exist. Either remove the duplicate admin directories and click Refresh or select the correct admin directory below and click Refresh.',
 'TEXT_ERROR_MULTIPLE_ADMINS_SELECTED' => 'Multiple Admin directories seem to exist. If the selected directory below is incorrect, please choose another and click Refresh.',
 'TEXT_ERROR_SUCCESS_NO_ERRORS' => 'No errors were detected on your system. You may continue with the installation.',
-'TEXT_UPGRADE_INFO' => 'An Upgrade will inspect your database and subsequently offer the steps required to upgrade to the current version (adding new fields/modifying existing fields). This is intended to be a non-destructive process, but as with all modifications you must ensure you have a verified backup of your database available before proceeding.',
-'TEXT_CLEAN_INSTALL_INFO' => 'A Clean Install will revert the database to a new state, deleting all data. Optionally, the demonstration data may be loaded as part of this process.',
+'TEXT_UPGRADE_INFO' => '%%TEXT_UPGRADE%%: will inspect your database and subsequently offer the steps required to upgrade to the current version (adding new fields/modifying existing fields). This is intended to be a non-destructive process, but as with all modifications you must ensure you have a verified backup of your database available before proceeding.',
+'TEXT_CLEAN_INSTALL_INFO' => '%%TEXT_CLEAN_INSTALL%%: will revert the database to a new state, deleting all data. Optionally, the demonstration data may be loaded as part of this process.',
 'TEXT_FORM_VALIDATION_REQUIRED' => 'Required',
 'TEXT_FORM_VALIDATION_AGREE_LICENSE' => 'You must agree to the license terms',
 'TEXT_FORM_VALIDATION_CATALOG_HTTPS_URL' => 'A URL is required here, even if you have temporarily opted not to enable SSL yet. Try using your normal domain name.',
@@ -182,7 +182,7 @@ return [
 <ul style="list-style-type:square"><li>You may not be using Apache as your Web Server (".htaccess" files are unique to the Apache Web Server), or,</li><li>Support for ".htaccess" is disabled or misconfigured, or,</li><li>The ".htaccess" files that come with Zen Cart have not been uploaded to your site.<br><strong><i>Files starting with ".", such as ".htaccess" files, are usually treated as "hidden" files and your FTP program may have failed to upload these if you have turned off the display and/or transfer of such hidden files in its settings.</i></strong></li></ul><br>
 You may proceed with installing despite this situation, but please be advised that your site will be less secure than it ought to be (If using the Apache Web Server).<br><br>If you are using the Nginx Web Server, please proceed with installing and secure your installation using the equivalent Nginx directives provided under "<strong>Important Security Information for Nginx</strong>" in the "Setup Finished" section of this installation wizard.<br><br>If you do not know which Web Server is in use, please proceed on the assumption that it is the Apache Web Server and request assistance with enabling ".htaccess" support from your web hosting provider.<br><br>',
 'TEXT_HELP_TITLE_FOLDERPERMS' => 'Folder Permissions',
-'TEXT_HELP_CONTENT_FOLDERPERMS' => 'The permissions for this folder are not set correctly. This folder needs to be writeable. You can find out more about folder permissions at <a href="https://docs.zen-cart.com/user/installing/permissions/" target="_blank">https://docs.zen-cart.com/user/installing/permissions/</a>',
+'TEXT_HELP_CONTENT_FOLDERPERMS' => 'The permissions for this folder are not set correctly. This folder needs to be writeable. You can find out more about folder permissions at <a href="https://docs.zen-cart.com/user/installing/permissions/" rel="noopener" target="_blank">https://docs.zen-cart.com/user/installing/permissions/</a>',
 'TEXT_HELP_TITLE_CONNECTIONDATABASECHECK' => 'Initial Database Connection',
 'TEXT_HELP_CONTENT_CONNECTIONDATABASECHECK' => 'We tried to connect to MySQL using a localhost connection. This failure does not necessarily mean MySQL is not working, as some hosts require an IP address or host name for the MySQL database.<br><br>If you are indeed using localhost for your database server, you should check that MySQL is running correctly.',
 'TEXT_HELP_TITLE_CHECKCURL' => '%%TEXT_ERROR_CURL%%',
@@ -206,7 +206,7 @@ You may proceed with installing despite this situation, but please be advised th
 'TEXT_HELP_TITLE_DBUSER' => 'Database User',
 'TEXT_HELP_CONTENT_DBUSER' => 'What is the MySQL username used to connect to the database?<br>An example username is "myusername_store".<br>For PCI reasons you should NEVER use "root" here when running on a server connected to the internet.<br><br>This MySQL user needs the following permissions granted to it: ALTER, CREATE, DELETE, DROP, INDEX, INSERT, LOCK TABLES, SELECT, UPDATE (or just "Grant All").',
 'TEXT_HELP_TITLE_DBPASSWORD' => 'Database Password',
-'TEXT_HELP_CONTENT_DBPASSWORD' => 'What is the password assigned to the MySQL username you created for this database.',
+'TEXT_HELP_CONTENT_DBPASSWORD' => 'What is the password assigned to the MySQL username you created for this database?',
 'TEXT_HELP_TITLE_DBNAME' => 'Database Name',
 'TEXT_HELP_CONTENT_DBNAME' => 'What is the name of the database used to hold the data?<br>An example database name is "zencart" or "myaccount_zencart".<br>NOTE: <strong>You</strong> must create this database BEFORE you can proceed with the Zen Cart&reg; installation.<br>You can create your MySQL database using your hosting company\'s control panel.',
 'TEXT_HELP_TITLE_DEMODATA' => 'TEXT_DATABASE_SETUP_LOAD_DEMO',
@@ -234,7 +234,7 @@ You may proceed with installing despite this situation, but please be advised th
 'TEXT_VERSION_CHECK_PATCH' => 'patch',
 'TEXT_VERSION_CHECK_DOWNLOAD' => 'Download Here',
 'TEXT_VERSION_CHECK_CURRENT' => 'Your version of Zen Cart&reg; appears to be current.',
-'TEXT_ERROR_NEW_VERSION_AVAILABLE' => '<a href="http://www.zen-cart.com/getit">There is a NEWER version of Zen Cart&reg; available, which you can download from </a><a href="http://www.zen-cart.com" style="text-decoration:underline" target="_blank">www.zen-cart.com</a>',
+'TEXT_ERROR_NEW_VERSION_AVAILABLE' => '<a href="https://www.zen-cart.com/files">There is a NEWER version of Zen Cart&reg; available, which you can download from </a><a href="https://www.zen-cart.com/files" style="text-decoration:underline" rel="noopener" target="_blank">www.zen-cart.com/files</a>',
 'TEXT_DB_VERSION_NOT_FOUND' => 'A Zen Cart database for %s was not found!',
 'REASON_TABLE_ALREADY_EXISTS' => 'Cannot create table %s because it already exists',
 'REASON_TABLE_DOESNT_EXIST' => 'Cannot drop table %s because it does not exist.',
@@ -253,7 +253,7 @@ You may proceed with installing despite this situation, but please be advised th
 'TEXT_COMPLETION_NGINX_TEXT' => '<u>Important Security Information for Nginx</u>',
 'TEXT_HELP_TITLE_NGINXCONF' => 'Securing Zen Cart on Nginx Web Servers',
 'TEXT_HELP_CONTENT_NGINXCONF' => '<p>Your Zen Cart installation comes with security measures in a format native to the Apache Webserver. <br>
-  See below to implement a similar set of measures for the Nginx Webserver.</p>
+See below to implement a similar set of measures for the Nginx Webserver.</p>
 <hr>
 <ul style="list-style-type:square">
 <li>Go to your <strong>"zc_install/includes/nginx_conf"</strong> folder and open the following files using a text editor such as notepad or textedit:
@@ -278,14 +278,14 @@ You may proceed with installing despite this situation, but please be advised th
   </ul>
 </li>
 <li>It is especially critical that these directives appear before any generic php handling location blocks such as ... <br>
-  <pre> <code>location ~ \.php { <strong>Nginx PHP Handling Directives;</strong> }</code></pre>
+  <pre><code>location ~ \.php { <strong>Nginx PHP Handling Directives;</strong> }</code></pre>
   ... or any other location blocks that might be processed before these are.</li>
 <li>Instead, edit the <strong>"zencart_php_handler"</strong> location block to match your Nginx PHP Handling Directives.
   <ul style="list-style-type:circle">
     <li>Simply duplicate the contents of your existing PHP handling location block.
       <ul style="list-style-type:none">
         <li>- That is, copy and paste in the equivalent Nginx PHP Handling Directives.</li>
-        <li>- If you do not have an existing PHP handling location block, please refer to available guides such as from <a href="https://www.nginx.com/resources/wiki/start/topics/examples/phpfcgi/" target="_blank"><u>The Nginx Website</u></a>.</li>
+        <li>- If you do not have an existing PHP handling location block, please refer to available guides such as from <a href="https://www.nginx.com/resources/wiki/start/topics/examples/phpfcgi/" rel="noopener" target="_blank"><u>The Nginx Website</u></a>.</li>
       </ul>
     </li>
   </ul>
@@ -306,7 +306,7 @@ You may proceed with installing despite this situation, but please be advised th
 <div class="alert-box alert"> <strong>IMPORTANT:</strong> These location blocks should be <strong>BEFORE</strong> any other location blocks in your Nginx configuration server block for Zen Cart.</div>
 <hr>',
 'TEXT_HELP_TITLE_AGREETOTERMS' => 'Agree To Terms',
-'TEXT_HELP_CONTENT_AGREETOTERMS' => '<a href="http://www.gnu.org/licenses/old-licenses/gpl-2.0.en.html" target="_blank">Original GPL 2.0 text</a>
+'TEXT_HELP_CONTENT_AGREETOTERMS' => '<a href="http://www.gnu.org/licenses/old-licenses/gpl-2.0.en.html" rel="noopener" target="_blank">Original GPL 2.0 text</a>
 <h2>The GNU General Public License (GPL)</h2>
 <h3>Version 2, June 1991</h3>
 <tt>

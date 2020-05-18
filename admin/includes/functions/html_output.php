@@ -99,6 +99,35 @@ function zen_href_link($page = '', $parameters = '', $connection = 'SSL', $add_s
     return $link;
   }
 
+function zen_catalog_base_link($connection = '')
+{
+    global $zco_notifier, $request_type;
+
+    if (empty($connection)) {
+        $connection = $request_type;
+    }
+
+    $link = null;
+    $zco_notifier->notify('NOTIFY_SEFU_INTERCEPT_ADMCATHOME', array(), $link, $connection);
+    if ($link !== null) return $link;
+
+    switch ($connection) {
+        case 'NONSSL':
+            $link = HTTP_CATALOG_SERVER . DIR_WS_CATALOG;
+            break;
+
+        case 'SSL':
+        default:
+            if (ENABLE_SSL_CATALOG == 'true') {
+                $link = HTTPS_CATALOG_SERVER . DIR_WS_HTTPS_CATALOG;
+            } else {
+                $link = HTTP_CATALOG_SERVER . DIR_WS_CATALOG;
+            }
+    }
+
+    return $link;
+}
+
 ////
 // The HTML image wrapper function
   function zen_image($src, $alt = '', $width = '', $height = '', $params = '') {
@@ -382,7 +411,14 @@ function zen_image_submit($image, $alt = '', $parameters = '')
   }
 ////
 // output label for input fields
-  function zen_draw_label($text, $for, $parameters = ''){
-    $label = '<label for="' . $for . '" ' . $parameters . '>' . $text . '</label>';
+/**
+ * @param string $text
+ * @param string $for
+ * @param string $parameters
+ * @return string
+ */
+function zen_draw_label($text, $for, $parameters = '')
+{
+    $label = '<label for="' . $for . '"' . (!empty($parameters) ? ' ' . $parameters : '') . '>' . $text . '</label>';
     return $label;
-  }
+}

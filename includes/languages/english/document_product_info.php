@@ -9,7 +9,7 @@
 
 define('TEXT_PRODUCT_NOT_FOUND', 'Sorry, the product was not found.');
 define('TEXT_CURRENT_REVIEWS', 'Current Reviews:');
-define('TEXT_MORE_INFORMATION', 'For more information, please visit this product\'s <a href="%s" target="_blank">webpage</a>.');
+define('TEXT_MORE_INFORMATION', 'For more information, please visit this product\'s <a href="%s" rel="noreferrer noopener" target="_blank">webpage</a>.');
 define('TEXT_DATE_ADDED', 'This product was added to our catalog on %s.');
 define('TEXT_DATE_AVAILABLE', 'This product will be in stock on %s.');
 define('TEXT_ALSO_PURCHASED_PRODUCTS', 'Customers who bought this product also purchased...');

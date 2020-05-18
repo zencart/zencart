@@ -8,7 +8,6 @@
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: Drbyte Mon Nov 12 17:13:17 2018 -0500 Modified in v1.5.6 $
- * @todo move the array process to security class
  */
 
   if (!defined('IS_ADMIN_FLAG')) {
@@ -88,73 +87,29 @@
           if (isset($_REQUEST[$key])) $_REQUEST[$key] = preg_replace('/'.$strictReplace.'/', '', $value);
         }
       }
-      unset($GLOBALS[$key]);
-    }
-  }
-/**
- * process all $_POST terms
- * @todo move the array process to security class
- */
-  if (isset($_POST) && count($_POST) > 0) {
-    foreach($_POST as $key=>$value){
-      if(is_array($value)){
-        foreach($value as $key2 => $val2){
-          unset($GLOBALS[$key]);
-        }
-      } else {
-        unset($GLOBALS[$key]);
-      }
-    }
-  }
-/**
- * process all $_COOKIE terms
- */
-  if (isset($_COOKIE) && count($_COOKIE) > 0) {
-    foreach($_COOKIE as $key=>$value){
-      if(is_array($value)){
-        foreach($value as $key2 => $val2){
-          unset($GLOBALS[$key]);
-        }
-      } else {
-        unset($GLOBALS[$key]);
-      }
-    }
-  }
-/**
- * process all $_SESSION terms
- */
-  if (isset($_SESSION) && count($_SESSION) > 0) {
-    foreach($_SESSION as $key=>$value){
-      if(is_array($value)){
-        foreach($value as $key2 => $val2){
-          unset($GLOBALS[$key]);
-        }
-      } else {
-        unset($GLOBALS[$key]);
-      }
     }
   }
 
 /**
  * validate products_id for search engines and bookmarks, etc.
  */
-  if (isset($_GET['products_id']) && (!isset($_SESSION['check_valid']) || $_SESSION['check_valid'] != 'false')) {
-    $check_valid = zen_products_id_valid($_GET['products_id']);
+  if (isset($_GET['products_id']) && (!isset($_SESSION['check_valid_prod']) || $_SESSION['check_valid_prod'] != false)) {
+    $check_valid = zen_products_id_valid($_GET['products_id']) && !empty($_GET['main_page']);
     if (!$check_valid) {
       $_GET['main_page'] = zen_get_info_page($_GET['products_id']);
       /**
        * do not recheck redirect
        */
-      $_SESSION['check_valid'] = 'false';
+      $_SESSION['check_valid_prod'] = false;
       zen_redirect(zen_href_link($_GET['main_page'], 'products_id=' . $_GET['products_id']));
     }
   }
  
-  $_SESSION['check_valid'] = 'true';
+  $_SESSION['check_valid_prod'] = true;
 /**
  * We do some checks here to ensure $_GET['main_page'] has a sane value
  */
-  if (!isset($_GET['main_page']) || !zen_not_null($_GET['main_page'])) $_GET['main_page'] = 'index';
+  if (empty($_GET['main_page'])) $_GET['main_page'] = 'index';
 
   if (!is_dir(DIR_WS_MODULES .  'pages/' . $_GET['main_page'])) {
     if (MISSING_PAGE_CHECK == 'On' || MISSING_PAGE_CHECK == 'true') {

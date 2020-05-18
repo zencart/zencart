@@ -347,6 +347,10 @@ class systemChecker
           return true;
       }
 
+      if (preg_match('/nginx/i', $_SERVER['SERVER_SOFTWARE'])) {
+          return true;
+      }
+
       global $request_type;
       $tests = [];
 
@@ -691,7 +695,7 @@ class systemChecker
     }
     // prepare displayable download link
     if ($new_version != '' && $new_version != TEXT_VERSION_CHECK_CURRENT) {
-      $new_version .= '<a href="' . $lines[6] . '" target="_blank">'. TEXT_VERSION_CHECK_DOWNLOAD .'</a>';
+      $new_version .= '<a href="' . $lines[6] . '" rel="noopener" target="_blank">'. TEXT_VERSION_CHECK_DOWNLOAD .'</a>';
       $this->localErrors = $new_version;
       return FALSE;
     }

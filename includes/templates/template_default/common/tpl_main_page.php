@@ -97,14 +97,14 @@ if (COLUMN_LEFT_STATUS == 0 || (CUSTOMERS_APPROVAL == '1' and !zen_is_logged_in(
 if (!isset($flag_disable_left) || !$flag_disable_left) {
 ?>
 
- <td id="navColumnOne" class="columnLeft" style="width: <?php echo COLUMN_WIDTH_LEFT; ?>">
+ <td id="navColumnOne" class="columnLeft" style="width: <?php echo (int)COLUMN_WIDTH_LEFT; ?>px">
 <?php
  /**
   * prepares and displays left column sideboxes
   *
   */
 ?>
-<div id="navColumnOneWrapper" style="width: <?php echo BOX_WIDTH_LEFT; ?>"><?php require(DIR_WS_MODULES . zen_get_module_directory('column_left.php')); ?></div></td>
+<div id="navColumnOneWrapper" style="width: <?php echo (int)BOX_WIDTH_LEFT; ?>px"><?php require(DIR_WS_MODULES . zen_get_module_directory('column_left.php')); ?></div></td>
 <?php
 }
 ?>
@@ -154,14 +154,14 @@ if (COLUMN_RIGHT_STATUS == 0 || (CUSTOMERS_APPROVAL == '1' and !zen_is_logged_in
 }
 if (!isset($flag_disable_right) || !$flag_disable_right) {
 ?>
-<td id="navColumnTwo" class="columnRight" style="width: <?php echo COLUMN_WIDTH_RIGHT; ?>">
+<td id="navColumnTwo" class="columnRight" style="width: <?php echo (int)COLUMN_WIDTH_RIGHT; ?>"px>
 <?php
  /**
   * prepares and displays right column sideboxes
   *
   */
 ?>
-<div id="navColumnTwoWrapper" style="width: <?php echo BOX_WIDTH_RIGHT; ?>"><?php require(DIR_WS_MODULES . zen_get_module_directory('column_right.php')); ?></div></td>
+<div id="navColumnTwoWrapper" style="width: <?php echo (int)BOX_WIDTH_RIGHT; ?>"px><?php require(DIR_WS_MODULES . zen_get_module_directory('column_right.php')); ?></div></td>
 <?php
 }
 ?>

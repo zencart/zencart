@@ -754,8 +754,10 @@ function zen_draw_pull_down_menu($name, $values, $default = '', $parameters = ''
     $countriesAtTopOfList[] = STORE_COUNTRY;
     // IF YOU WANT TO ADD MORE DEFAULTS TO THE TOP OF THIS LIST, SIMPLY ENTER THEIR NUMBERS HERE.
     // Duplicate more lines as needed
-    // Example: Canada is 108, so use 108 as shown:
-    //$countriesAtTopOfList[] = 108;
+    // Example: Canada is 38, so use 38 as shown:
+    //$countriesAtTopOfList[] = 38;
+    // United Kingdom is 222, so would use 222 as shown:
+    //$countriesAtTopOfList[] = 222;
 
     //process array of top-of-list entries:
     foreach ($countriesAtTopOfList as $key=>$val) {
@@ -792,7 +794,14 @@ function zen_draw_pull_down_menu($name, $values, $default = '', $parameters = ''
   }
 ////
 // output label for input fields
-  function zen_draw_label($text, $for, $parameters = ''){
-    $label = '<label for="' . $for . '" ' . $parameters . '>' . $text . '</label>';
+/**
+ * @param string $text
+ * @param string $for
+ * @param string $parameters
+ * @return string
+ */
+function zen_draw_label($text, $for, $parameters = '')
+{
+    $label = '<label for="' . $for . '"' . (!empty($parameters) ? ' ' . $parameters : '') . '>' . $text . '</label>';
     return $label;
-  }
+}

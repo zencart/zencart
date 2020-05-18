@@ -35,6 +35,8 @@ define('TABLE_HEADING_PRICE_EXCLUDING_TAX', 'Price (excl)');
 define('TABLE_HEADING_PRICE_INCLUDING_TAX', 'Price (incl)');
 define('TABLE_HEADING_TOTAL_EXCLUDING_TAX', 'Total (excl)');
 define('TABLE_HEADING_TOTAL_INCLUDING_TAX', 'Total (incl)');
+define('TABLE_HEADING_PRICE', 'Price');
+define('TABLE_HEADING_TOTAL', 'Total');
 define('TABLE_HEADING_UPDATED_BY', 'Updated By');
 
 define('TABLE_HEADING_CUSTOMER_NOTIFIED', 'Customer Notified');
@@ -128,3 +130,5 @@ define('TEXT_MAP_CUSTOMER_ADDRESS', 'Map Customer Address');
 define('TEXT_MAP_SHIPPING_ADDRESS', 'Map Shipping Address');
 define('TEXT_MAP_BILLING_ADDRESS', 'Map Billing Address');
 
+define('TEXT_EMAIL_LANGUAGE', 'Order Language: %s');
+define('SUCCESS_EMAIL_SENT', 'Email %s sent to customer');

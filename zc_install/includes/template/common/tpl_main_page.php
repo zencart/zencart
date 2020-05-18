@@ -47,7 +47,7 @@
         <?php require($body_code); ?>
         </div>
          <footer class="footer">
-           <p>Copyright &copy; 2003-<?php echo date('Y'); ?> <a href="http://www.zen-cart.com" target="_blank">Zen Cart&reg;</a></p>
+           <p>Copyright &copy; 2003-<?php echo date('Y'); ?> <a href="https://www.zen-cart.com" rel="noopener" target="_blank">Zen Cart&reg;</a></p>
          </footer>
       </div>
       </div>

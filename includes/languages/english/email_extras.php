@@ -39,7 +39,7 @@ define('EMAIL_DISCLAIMER', 'This email address was given to us by you or by one 
 define('EMAIL_SPAM_DISCLAIMER','');
 // Define a message you'd like to add to an order confirmation email
 define('EMAIL_ORDER_MESSAGE','');
-define('EMAIL_FOOTER_COPYRIGHT','Copyright (c) ' . date('Y') . ' <a href="' . zen_href_link(FILENAME_DEFAULT) . '" target="_blank">' . STORE_NAME . '</a>. Powered by <a href="http://www.zen-cart.com" target="_blank">Zen Cart</a>');
+define('EMAIL_FOOTER_COPYRIGHT','Copyright (c) ' . date('Y') . ' <a href="' . zen_href_link(FILENAME_DEFAULT) . '">' . STORE_NAME . '</a>. Powered by <a href="https://www.zen-cart.com">Zen Cart</a>');
 define('TEXT_UNSUBSCRIBE', "\n\nTo unsubscribe from future newsletter and promotional mailings, simply click on the following link: \n");
 
 // email advisory for all emails customer generate - tell-a-friend and GV send

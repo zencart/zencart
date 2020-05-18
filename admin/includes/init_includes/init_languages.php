@@ -1,10 +1,10 @@
 <?php
 /**
  * @package admin
- * @copyright Copyright 2003-2019 Zen Cart Development Team
+ * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2019 May 26 Modified in v1.5.6b $
+ * @version $Id:  Modified in v1.5.7 $
  */
 
 use Zencart\LanguageLoader\LanguageLoader as LanguageLoader;
@@ -15,7 +15,7 @@ if (!defined('IS_ADMIN_FLAG')) {
 // set the language
   if (!isset($_SESSION['language']) || isset($_GET['language'])) {
 
-    include(DIR_WS_CLASSES . 'language.php');
+    include(DIR_FS_CATALOG . DIR_WS_CLASSES . 'language.php');
     $lng = new language();
 
     if (isset($_GET['language']) && zen_not_null($_GET['language'])) {

@@ -19,7 +19,7 @@ $products_filter_name_model = (isset($_GET['products_filter_name_model']) ? $_GE
     <meta charset="<?php echo CHARSET; ?>">
     <title><?php echo TITLE; ?></title>
     <link rel="stylesheet" href="includes/stylesheet.css">
-    <link rel="stylesheet" media="print" href="includes/stylesheet_print.css">
+    <link rel="stylesheet" media="print" href="includes/css/stylesheet_print.css">
     <link rel="stylesheet" href="includes/cssjsmenuhover.css" media="all" id="hoverJS">
     <script src="includes/menu.js"></script>
     <script src="includes/general.js"></script>
@@ -159,19 +159,6 @@ $products_filter_name_model = (isset($_GET['products_filter_name_model']) ? $_GE
             <th class="dataTableHeadingContent text-center"><?php echo TABLE_HEADING_PURCHASED; ?>&nbsp;</th>
           </tr>
           <?php
-// The following OLD query only considers the "products_ordered" value from the products table.
-// Thus this older query is somewhat deprecated
-          $products_query_raw1 = "SELECT p.products_id, SUM(p.products_ordered) AS products_ordered, pd.products_name
-                                  FROM " . TABLE_PRODUCTS . " p,
-                                       " . TABLE_PRODUCTS_DESCRIPTION . " pd
-                                  WHERE pd.products_id = p.products_id
-                                  AND pd.language_id = " . (int)$_SESSION['languages_id'] . "
-                                  AND p.products_ordered > 0
-                                  GROUP BY p.products_id, pd.products_name
-                                  ORDER BY p.products_ordered DESC, pd.products_name";
-
-// The new query uses real order info from the orders_products table, and is theoretically more accurate.
-// To use this newer query, remove the "1" from the following line ($products_query_raw1 becomes $products_query_raw )
           $products_query_raw = "SELECT SUM(products_quantity) AS products_ordered, products_name, products_id
                                  FROM " . TABLE_ORDERS_PRODUCTS . "
                                  GROUP BY products_id, products_name

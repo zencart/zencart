@@ -108,7 +108,7 @@
           $output .= '<tr><td class="main">'."\n";
           $output .= MODULE_PAYMENT_PAYPAL_ENTRY_TXN_ID."\n";
           $output .= '</td><td class="main">'."\n";
-          $output .= '<a href="https://www.paypal.com/us/cgi-bin/webscr?cmd=_view-a-trans&id=' . $ipn->fields['txn_id'] . '" target="_blank">' . $ipn->fields['txn_id'] . '</a>' ."\n";
+          $output .= '<a href="https://www.paypal.com/us/cgi-bin/webscr?cmd=_view-a-trans&id=' . $ipn->fields['txn_id'] . '" rel="noopener" target="_blank">' . $ipn->fields['txn_id'] . '</a>' ."\n";
           $output .= '</td></tr>'."\n";
 
           $output .= '<tr><td class="main">'."\n";

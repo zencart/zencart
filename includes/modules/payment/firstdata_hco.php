@@ -80,7 +80,7 @@ class firstdata_hco extends base {
       if (defined('MODULE_PAYMENT_FIRSTDATA_PAYMENTPAGES_STATUS')) {
         $new_version_details = plugin_version_check_for_updates(2051, $this->moduleVersion);
         if ($new_version_details !== false) {
-          $this->title .= '<span class="alert">' . ' - NOTE: A NEW VERSION OF THIS PLUGIN IS AVAILABLE. <a href="' . $new_version_details['link'] . '" target="_blank">[Details]</a>' . '</span>';
+          $this->title .= '<span class="alert">' . ' - NOTE: A NEW VERSION OF THIS PLUGIN IS AVAILABLE. <a href="' . $new_version_details['link'] . '" rel="noopener" target="_blank">[Details]</a>' . '</span>';
         }
       }
     }
@@ -381,9 +381,9 @@ class firstdata_hco extends base {
   function after_process() {
     global $insert_id, $order, $currencies;
     $this->notify('MODULE_PAYMENT_FIRSTDATA_PAYMENTPAGES_POSTPROCESS_HOOK');
-    
+
     zen_update_orders_history($insert_id, $this->authorize['exact_ctr'], null, $this->order_status, 0);
-    
+
     $comment = 'Credit Card payment.  AUTH: ' . $this->auth_code . ' TransID: ' . $this->transaction_id;
     if ($order->info['currency'] != $this->gateway_currency) {
       $comment .= ' (' . round($order->info['total'] * $currencies->get_value($this->gateway_currency), 2) . ' ' . $this->gateway_currency . ')';

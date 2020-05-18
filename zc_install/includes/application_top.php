@@ -10,13 +10,16 @@
 @ini_set("arg_separator.output", "&");
 @set_time_limit(250);
 
+// define the project version
+require (DIR_FS_INSTALL . 'includes/version.php');
+
 if (file_exists(DIR_FS_INSTALL . 'includes/localConfig.php')) {
   require DIR_FS_INSTALL . 'includes/localConfig.php';
 }
 
 $val = getenv('HABITAT');
 $habitat = ($val == 'zencart' || (isset($_SERVER['USER']) && $_SERVER['USER'] == 'vagrant'));
-if ($habitat) {
+if ($habitat && !defined('DEVELOPER_MODE')) {
   define('DEVELOPER_MODE', true);
 }
 
@@ -124,8 +127,6 @@ if (!isset($_GET['cacheignore'])) {
   }
 }
 
-// define the project version
-require (DIR_FS_INSTALL . 'includes/version.php');
 /**
  * include the list of extra configure files
  */
