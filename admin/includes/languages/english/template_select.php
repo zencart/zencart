@@ -8,16 +8,8 @@
  */
 
 define('HEADING_TITLE', 'Template Selection');
-define('TEXT_TEMPLATE_SELECT_INFO', '<p>A different template may be assigned to each of the installed languages.<br>The default template is used when there is no template assigned to that language.</p>
-<p>It is possible to view a template in a <em>private</em> session, for example when testing a new template:</p>
-<ol>
-<li>Assign the current/active template to <strong>all</strong> of the installed languages.</li>
-<li>Assign the new template as the Default.</li>
-<li>Add your (admin) IP address to <a href="index.php?cmd=configuration&gID=20&cID=458&action=edit">Configuration->Website Maintenance->Down For Maintenance (exclude this IP-Address)</a>.</li>
-<li>When viewing the shop front, to override the template display, add "&amp;t=new_template_directory_name" to the page url. This override will persist for the duration of the session. Use private browsing/incognito tabs to create separate sessions/use different templates.</li>
-<li>Add "&amp;t=off" to the page url to cancel the session override.</li>
-</ol></ul>');
-
+define('TEXT_TEMPLATE_SELECT_INFO', '<p>A different template may be assigned to each of the installed languages.<br>The default template is used when there is no template assigned to that language.</p><p>It is possible to view a template in a <em>private</em> session, for example when testing a new template:</p>
+<ol><li>Assign the current/active template to <strong>all</strong> of the installed languages.</li><li>Assign the new template as the Default.</li><li>Add your (admin) IP address to Configuration->Website Maintenance->Down For Maintenance (exclude this IP-Address).</li><li>When viewing the shop front, to override the template display, add "&amp;t=new_template_directory_name" to the page url. This override will persist for the duration of the session. Use private browsing/incognito tabs to create separate sessions/use different templates.</li> <li>Add "&amp;t=off" to the page url to cancel the session override.</li> </ol></ul>');
 define('TABLE_HEADING_LANGUAGE', 'Template Language');
 define('TABLE_HEADING_NAME', 'Template Name');
 define('TABLE_HEADING_DIRECTORY', 'Template Directory');
