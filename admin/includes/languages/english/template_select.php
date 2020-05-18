@@ -27,6 +27,7 @@ define('TABLE_HEADING_NAME', 'Template Name');
 define('TABLE_HEADING_DIRECTORY', 'Template Directory');
 define('TABLE_HEADING_ACTION', 'Action');
 
+define('TEXT_INFO_DEFAULT_LANGUAGE', 'Default (any)');
 define('TEXT_INFO_HEADING_EDIT_TEMPLATE', 'Edit Template Settings');
 define('TEXT_INFO_HEADING_DELETE_TEMPLATE', 'Delete Template association');
 define('TEXT_INFO_EDIT_INTRO', 'Change the template');

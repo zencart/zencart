@@ -118,7 +118,7 @@ if (zen_not_null($action)) {
                         <tr class="dataTableRow" style="cursor:pointer" onclick="document.location.href='<?php echo zen_href_link(FILENAME_TEMPLATE_SELECT, 'page=' . $_GET['page'] . '&tID=' . $template['template_id']); ?>'">
                     <?php }
                   if ($template['template_language'] == '0') {
-                    $template_language = "Default(All)";
+                    $template_language = TEXT_INFO_DEFAULT_LANGUAGE;
                   } else {
                     $ln = $db->Execute("SELECT name
                                         FROM " . TABLE_LANGUAGES . "
