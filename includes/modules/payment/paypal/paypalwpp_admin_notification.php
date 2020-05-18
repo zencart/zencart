@@ -299,7 +299,11 @@ if (!empty($response['RESPMSG'])) {
     $outputPayPal .= '<tr><td>'."\n";
     $outputPayPal .= MODULE_PAYMENT_PAYPAL_ENTRY_CURRENCY."\n";
     $outputPayPal .= '</td><td>'."\n";
-    $outputPayPal .= $ipn->fields['mc_currency'] . ' ' . urldecode($response['CURRENCYCODE']) ."\n";
+    $outputPayPal .= $ipn->fields['mc_currency']."\n";
+    if ($ipn->fields['mc_currency'] !== urldecode($response['CURRENCYCODE'])) {
+        $outputPayPal .= ' ' . urldecode($response['CURRENCYCODE']);
+    }
+    $outputPayPal .= "\n";
     $outputPayPal .= '</td></tr>'."\n";
 
     $outputPayPal .= '<tr><td>'."\n";
