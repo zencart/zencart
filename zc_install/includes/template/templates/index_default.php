@@ -9,7 +9,7 @@ require(DIR_FS_INSTALL . DIR_WS_INSTALL_TEMPLATE . 'partials/partial_modal_help.
 $adjustWarnIssues = false;
 ?>
 <form id="systemCheck" name="systemCheck" method="post" action="index.php?main_page=<?php echo $formAction; ?>">
-<input type="hidden" name="lng" value="<?php echo $lng; ?>" >
+<input type="hidden" name="lng" value="<?php echo $installer_lng; ?>" >
 <?php if ($hasMultipleAdmins) { ?>
 	<?php $adjustWarnIssues = True ?>
     <div class="alert-box alert">

@@ -188,4 +188,4 @@ if (isset($_POST['lng'])) $installer_lng = $_POST['lng'];
 if (isset($_GET['lng'])) $installer_lng = $_GET['lng'];
 
 $languageManager->loadLanguageDefines($installer_lng, $current_page, 'en_us');
-$lng_short = substr($lng, 0, strpos($installer_lng, '_'));
+$lng_short = substr($installer_lng, 0, strpos($installer_lng, '_'));
