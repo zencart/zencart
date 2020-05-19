@@ -1,5 +1,10 @@
 <?php
 
+function zen_get_zcversion()
+{
+    return PROJECT_VERSION_MAJOR . '.' . PROJECT_VERSION_MINOR;
+}
+
 /**
  * Returns a string with conversions for security.
  * @param string The string to be parsed
