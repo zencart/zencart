@@ -1289,10 +1289,10 @@ If a special exist * 10
 
 ////
 // attributes final price onetime
-  function zen_get_attributes_price_final_onetime($attribute, $qty= 1, $pre_selected_onetime) {
+  function zen_get_attributes_price_final_onetime($attribute, $qty= 1, $pre_selected_onetime = null) {
     global $db;
 
-    if ($pre_selected_onetime == '' or $attribute != $pre_selected_onetime->fields["products_attributes_id"]) {
+    if (empty($pre_selected_onetime) || $attribute != $pre_selected_onetime->fields["products_attributes_id"]) {
       $pre_selected_onetime = $db->Execute("select pa.* from " . TABLE_PRODUCTS_ATTRIBUTES . " pa where pa.products_attributes_id= '" . (int)$attribute . "'");
     } else {
       // use existing select
@@ -1346,7 +1346,7 @@ If a special exist * 10
 
 ////
 // calculate words price
-  function zen_get_word_count_price($string, $free=0, $price) {
+  function zen_get_word_count_price($string, $free = 0, $price = 0) {
     $word_count = zen_get_word_count($string, $free);
     if ($word_count >= 1) {
       return ($word_count * $price);
@@ -1377,7 +1377,7 @@ If a special exist * 10
 
 ////
 // calculate letters price
-  function zen_get_letters_count_price($string, $free=0, $price) {
+  function zen_get_letters_count_price($string, $free = 0, $price = 0) {
 
     $letters_price = zen_get_letters_count($string, $free) * $price;
     if ($letters_price <= 0) {
