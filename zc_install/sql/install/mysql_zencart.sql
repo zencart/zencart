@@ -390,7 +390,7 @@ DROP TABLE IF EXISTS count_product_views;
 CREATE TABLE count_product_views (
   product_id int(11) NOT NULL default 0,
   language_id int(11) NOT NULL default 1,
-  date_viewed date default NULL,
+  date_viewed date default NOT NULL,
   views int(11) default NULL,
   PRIMARY KEY (product_id, language_id, date_viewed),
   KEY idx_pid_lang_date_zen (language_id, product_id, date_viewed),
