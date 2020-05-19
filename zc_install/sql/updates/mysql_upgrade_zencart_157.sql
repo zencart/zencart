@@ -226,7 +226,7 @@ UPDATE configuration SET val_function = '{"error":"TEXT_EMAIL_ADDRESS_VALIDATE",
 CREATE TABLE IF NOT EXISTS count_product_views (
   product_id int(11) NOT NULL default 0,
   language_id int(11) NOT NULL default 1,
-  date_viewed date default NULL,
+  date_viewed date NOT NULL,
   views int(11) default NULL,
   PRIMARY KEY (product_id, language_id, date_viewed),
   KEY idx_pid_lang_date_zen (language_id, product_id, date_viewed),
