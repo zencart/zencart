@@ -623,10 +623,13 @@ if (zen_not_null($action) && $order_exists == true) {
               <tr>
                 <td><strong><?php echo TEXT_INFO_IP_ADDRESS; ?></strong></td>
                 <?php
-                if ($order->info['ip_address'] != '') {
+                if (!empty($order->info['ip_address'])) {
                   $lookup_ip = substr($order->info['ip_address'], 0, strpos($order->info['ip_address'], ' '));
+                  $whois_url = 'https://tools.dnsstuff.com/#whois|type=ipv4&&value=' . $lookup_ip;
+                  //$whois_url = 'https://whois.domaintools.com/' . $lookup_ip;
+                  $zco_notifier->notify('ADMIN_ORDERS_IP_LINKS', $lookup_ip, $whois_url);
                   ?>
-                  <td class="noprint"><a href="https://tools.dnsstuff.com/#whois|type=ipv4&&value=<?php echo $lookup_ip; ?>" rel="noreferrer" target="_blank"><?php echo $order->info['ip_address']; ?></a></td>
+                  <td class="noprint"><a href="<?php echo $whois_url; ?>" rel="noreferrer noopener" target="_blank"><?php echo $order->info['ip_address']; ?></a></td>
                 <?php } else { ?>
                   <td><?php echo TEXT_UNKNOWN; ?></td>
                 <?php } ?>

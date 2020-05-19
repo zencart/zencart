@@ -226,7 +226,17 @@ $listingURL = FILENAME_WHOS_ONLINE . '.php?' . zen_get_all_get_params(['q', 't',
                     }
                     ?>
                 </td>
-                <td class="dataTableContentWhois dataTableButtonCell" align="left" valign="top"><a href="http://whois.domaintools.com/<?php echo $item['ip_address']; ?>" rel="noreferrer noopener" target="_blank"><?php echo '<u>' . $item['ip_address'] . '</u>'; ?></a></td>
+                <td class="dataTableContentWhois dataTableButtonCell" align="left" valign="top">
+                    <?php
+                    $whois_url = 'https://whois.domaintools.com/' . $item['ip_address'];
+                    $additional_ipaddress_links = '';
+                    $zco_notifier->notify('ADMIN_WHOSONLINE_IP_LINKS', $item, $additional_ipaddress_links, $whois_url);
+                    ?>
+                    <a href="<?php echo $whois_url; ?>" rel="noreferrer noopener" target="_blank">
+                        <?php echo '<i class="fa fa-search"></i> <u>' . $item['ip_address'] . '</u>'; ?>
+                    </a>
+                    <?php echo $additional_ipaddress_links; ?>
+                </td>
                 <td>&nbsp;</td>
                 <td class="dataTableContentWhois" align="center" valign="top"><?php echo date('H:i:s', $item['time_entry']); ?></td>
                 <td class="dataTableContentWhois" align="center" valign="top"><?php echo date('H:i:s', $item['time_last_click']); ?></td>
