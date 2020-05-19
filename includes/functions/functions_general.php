@@ -191,8 +191,8 @@
   }
 
 ////
-// Parse search string into indivual objects
-  function zen_parse_search_string($search_str = '', &$objects) {
+// Parse search string into individual objects
+  function zen_parse_search_string($search_str = '', &$objects = array()) {
     $search_str = trim(strtolower($search_str));
 
 // Break up $search_str on whitespace; quoted string will be reconstructed later

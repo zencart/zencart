@@ -640,7 +640,7 @@
 /**
  * Write order-history update to ZC tables denoting the update supplied by the IPN
  */
-  function ipn_update_orders_status_and_history($ordersID, $new_status = 1, $txn_type) {
+  function ipn_update_orders_status_and_history($ordersID, $new_status = 1, $txn_type = '') {
     global $db;
     
     ipn_debug_email('IPN NOTICE :: Updating order #' . (int)$ordersID . ' to status: ' . (int)$new_status . ' (txn_type: ' . $txn_type . ')');
