@@ -53,7 +53,7 @@ class currencies extends base
      */
     function format($number, $calculate_using_exchange_rate = true, $currency_type = '', $currency_value = '')
     {
-        if (IS_ADMIN_FLAG === false && (DOWN_FOR_MAINTENANCE == 'true' && DOWN_FOR_MAINTENANCE_PRICES_OFF == 'true') && (!strstr(EXCLUDE_ADMIN_IP_FOR_MAINTENANCE, $_SERVER['REMOTE_ADDR']))) {
+        if (IS_ADMIN_FLAG === false && (DOWN_FOR_MAINTENANCE == 'true' && DOWN_FOR_MAINTENANCE_PRICES_OFF == 'true') && !zen_is_whitelisted_admin_ip()) {
             return '';
         }
 

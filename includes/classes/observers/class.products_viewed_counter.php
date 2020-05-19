@@ -39,7 +39,7 @@ class products_viewed_counter extends base
         }
 
         // exclude hits from Admin users
-        if ($this->exclude_maintenance_ips && strstr(EXCLUDE_ADMIN_IP_FOR_MAINTENANCE, $_SERVER['REMOTE_ADDR'])) { // admins
+        if ($this->exclude_maintenance_ips && zen_is_whitelisted_admin_ip()) { // admins
             return true;
         }
     }

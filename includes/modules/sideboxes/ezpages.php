@@ -12,7 +12,7 @@
   $zco_notifier->notify('NOTIFY_START_EZPAGES_SIDEBOX');
 
   // test if sidebox should display
-  if (EZPAGES_STATUS_SIDEBOX == '1' or (EZPAGES_STATUS_SIDEBOX== '2' and (strstr(EXCLUDE_ADMIN_IP_FOR_MAINTENANCE, $_SERVER['REMOTE_ADDR'])))) {
+  if (EZPAGES_STATUS_SIDEBOX == '1' or (EZPAGES_STATUS_SIDEBOX== '2' && zen_is_whitelisted_admin_ip())) {
     if (isset($var_linksList)) {
       unset($var_linksList);
     }
