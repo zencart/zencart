@@ -183,9 +183,9 @@ if ($current_page == '' || !file_exists('includes/modules/pages/' . $current_pag
 $page_directory = 'includes/modules/pages/' . $current_page;
 
 $languagesInstalled = $languageManager->getLanguagesInstalled();
-$lng = 'en_us';
-if (isset($_POST['lng'])) $lng = $_POST['lng'];
-if (isset($_GET['lng'])) $lng = $_GET['lng'];
+$installer_lng = 'en_us';
+if (isset($_POST['lng'])) $installer_lng = $_POST['lng'];
+if (isset($_GET['lng'])) $installer_lng = $_GET['lng'];
 
-$languageManager->loadLanguageDefines($lng, $current_page, 'en_us');
-$lng_short = substr($lng, 0, strpos($lng, '_'));
+$languageManager->loadLanguageDefines($installer_lng, $current_page, 'en_us');
+$lng_short = substr($lng, 0, strpos($installer_lng, '_'));
