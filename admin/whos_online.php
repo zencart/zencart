@@ -317,7 +317,7 @@ $listingURL = FILENAME_WHOS_ONLINE . '.php?' . zen_get_all_get_params(['q', 't',
             $cart = isset($whos_online[$selectedSession]['cart']) ? $whos_online[$selectedSession]['cart'] : null;
 
             if ($cart !== null) {
-                $contents[] = ['text' => $whos_online[$selectedSession]['full_name'] . ' - ' . $whos_online[$selectedSession]['ip_address'] . '<br>' . $selectedSession];
+                $contents[] = ['text' => $whos_online[$selectedSession]['full_name'] . ' - ' . $cart['customer_ip'] . ' (' . $cart['language_code']  . ')<br>' . $selectedSession];
 
                 foreach ($cart['products'] as $product) {
                   $contents[] = ['text' => $product['quantity'] . ' x ' . '<a href="' . zen_href_link(FILENAME_PRODUCT, 'cPath=' . zen_get_product_path($product['id']) . '&pID=' . $product['id']) . '">' . $product['name'] . '</a>'];
@@ -325,7 +325,7 @@ $listingURL = FILENAME_WHOS_ONLINE . '.php?' . zen_get_all_get_params(['q', 't',
 
                 if (!empty($cart['products'])) {
                   $contents[] = ['text' => zen_draw_separator('pixel_black.gif', '100%', '1')];
-                  $contents[] = ['align' => 'right', 'text' => TEXT_SHOPPING_CART_SUBTOTAL . ' ' . $cart['total']];
+                  $contents[] = ['align' => 'right', 'text' => TEXT_SHOPPING_CART_SUBTOTAL . ' ' . $cart['total'] . ' ' . $cart['currency_code']];
                 } else {
                   $contents[] = ['text' => TEXT_EMPTY_CART];
                 }

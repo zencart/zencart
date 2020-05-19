@@ -314,6 +314,13 @@ class WhosOnline extends base
         }
 
         $extracted_data = [];
+        $fields_to_extract = [
+            'language' => 'language_name',
+            'languages_id' => 'language_id',
+            'languages_code' => 'language_code',
+            'customers_ip_address' => 'customer_ip',
+            'customers_host_address' => 'customer_hostname',
+        ];
 
         $adminSession = session_encode();
         $backupSessionArray = $_SESSION;
@@ -325,6 +332,15 @@ class WhosOnline extends base
             if (is_object($cart) && isset($currency)) {
                 $extracted_data['products'] = $cart->get_products();
                 $extracted_data['total'] = $GLOBALS['currencies']->format($cart->show_total(), true, $currency);
+                $extracted_data['cartObject'] = $cart;
+                $extracted_data['currency_code'] = $currency;
+                $extracted_data['cartID'] = $_SESSION['cartID'];
+            }
+
+            foreach($fields_to_extract as $key => $val) {
+                if (isset($_SESSION[$key])) {
+                    $extracted_data[$val] = $_SESSION[$key];
+                }
             }
         }
 
