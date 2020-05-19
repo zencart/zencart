@@ -602,7 +602,7 @@ if (zen_not_null($action) && $order_exists == true) {
                 <td>&nbsp;</td>
                 <td class="noprint"><a href="https://maps.google.com/maps/search/?api=1&amp;query=<?php echo urlencode($order->customer['street_address'] . ',' . $order->customer['city'] . ',' .  $order->customer['state'] . ',' . $order->customer['postcode']); ?>" rel="noreferrer" target="map"><i class="fa fa-map">&nbsp;</i> <u><?php echo TEXT_MAP_CUSTOMER_ADDRESS; ?></u></a></td>
               </tr>
-<?php 
+<?php
   $address_footer_suffix = '';
   $zco_notifier->notify('NOTIFY_ADMIN_ORDERS_ADDRESS_FOOTERS', 'customer', $address_footer_suffix, $order->customer);
   if (!empty($address_footer_suffix)) {
@@ -650,7 +650,7 @@ if (zen_not_null($action) && $order_exists == true) {
                 <td>&nbsp;</td>
                 <td class="noprint"><a href="https://maps.google.com/maps/search/?api=1&amp;query=<?php echo urlencode($order->delivery['street_address'] . ',' . $order->delivery['city'] . ',' . $order->delivery['state'] . ',' . $order->delivery['postcode']); ?>" rel="noreferrer" target="map"><i class="fa fa-map">&nbsp;</i> <u><?php echo TEXT_MAP_SHIPPING_ADDRESS; ?></u></a></td>
               </tr>
-<?php 
+<?php
   $address_footer_suffix = '';
   $zco_notifier->notify('NOTIFY_ADMIN_ORDERS_ADDRESS_FOOTERS', 'delivery', $address_footer_suffix, $order->delivery);
   if (!empty($address_footer_suffix)) {
@@ -669,7 +669,7 @@ if (zen_not_null($action) && $order_exists == true) {
                 <td>&nbsp;</td>
                 <td class="noprint"><a href="https://maps.google.com/maps/search/?api=1&amp;query=<?php echo urlencode($order->billing['street_address'] . ',' . $order->billing['city'] . ',' . $order->billing['state'] . ',' . $order->billing['postcode']); ?>" rel="noreferrer" target="map"><i class="fa fa-map">&nbsp;</i> <u><?php echo TEXT_MAP_BILLING_ADDRESS; ?></u></a></td>
               </tr>
-<?php 
+<?php
   $address_footer_suffix = '';
   $zco_notifier->notify('NOTIFY_ADMIN_ORDERS_ADDRESS_FOOTERS', 'billing', $address_footer_suffix, $order->billing);
   if (!empty($address_footer_suffix)) {
@@ -783,9 +783,9 @@ if (zen_not_null($action) && $order_exists == true) {
                       }
                     }
                     // Mobile phones only
-                    echo '<span class="visible-xs">'; 
-                    echo ' (' . $order->products[$i]['model'] .')'; 
-                    echo '</span>'; 
+                    echo '<span class="visible-xs">';
+                    echo ' (' . $order->products[$i]['model'] .')';
+                    echo '</span>';
                 ?>
                 </td>
                 <td class="dataTableContent hidden-xs">
@@ -1063,7 +1063,7 @@ if (zen_not_null($action) && $order_exists == true) {
         $zco_notifier->notify('NOTIFY_ADMIN_ORDERS_EDIT_BUTTONS', $oID, $order, $extra_buttons);
 ?>
         <div class="row text-right noprint">
-          <a href="<?php echo zen_href_link(FILENAME_ORDERS_INVOICE, 'oID=' . $_GET['oID']); ?>" target="_blank" class="btn btn-primary" role="button"><?php echo IMAGE_ORDERS_INVOICE; ?></a> 
+          <a href="<?php echo zen_href_link(FILENAME_ORDERS_INVOICE, 'oID=' . $_GET['oID']); ?>" target="_blank" class="btn btn-primary" role="button"><?php echo IMAGE_ORDERS_INVOICE; ?></a>
           <a href="<?php echo zen_href_link(FILENAME_ORDERS_PACKINGSLIP, 'oID=' . $_GET['oID']); ?>" target="_blank" class="btn btn-primary" role="button"><?php echo IMAGE_ORDERS_PACKINGSLIP; ?></a>
           <?php echo $order_list_button; ?>
           <?php echo $extra_buttons; ?>
@@ -1257,17 +1257,17 @@ if (zen_not_null($action) && $order_exists == true) {
 
                     $sql = "SELECT op.orders_products_id, op.products_quantity AS qty, op.products_name AS name, op.products_model AS model
                             FROM " . TABLE_ORDERS_PRODUCTS . " op 
-                            WHERE op.orders_id = " . (int)$orders->fields['orders_id']; 
+                            WHERE op.orders_id = " . (int)$orders->fields['orders_id'];
                     $orderProducts = $db->Execute($sql, false, true, 1800);
                     $product_details = '';
                     foreach($orderProducts as $product) {
                         $product_details .= $product['qty'] . ' x ' . $product['name'] . ' (' . $product['model'] . ')' . "\n";
                         $sql = "SELECT products_options, products_options_values 
                             FROM " .  TABLE_ORDERS_PRODUCTS_ATTRIBUTES . " 
-                            WHERE orders_products_id = " . (int)$product['orders_products_id'] . " ORDER BY orders_products_attributes_id ASC"; 
-                        $productAttributes = $db->Execute($sql, false, true, 1800); 
-                        foreach ($productAttributes as $attr) { 
-                          if (!empty($attr['products_options'])) { 
+                            WHERE orders_products_id = " . (int)$product['orders_products_id'] . " ORDER BY orders_products_attributes_id ASC";
+                        $productAttributes = $db->Execute($sql, false, true, 1800);
+                        foreach ($productAttributes as $attr) {
+                          if (!empty($attr['products_options'])) {
                              $product_details .= '&nbsp;&nbsp;- ' . $attr['products_options'] . ': ' . zen_output_string_protected($attr['products_options_values']) . "\n";
                           }
                         }
