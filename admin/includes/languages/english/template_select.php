@@ -8,14 +8,14 @@
  */
 
 define('HEADING_TITLE', 'Template Selection');
-define('TEXT_TEMPLATE_SELECT_INFO', '<p>Here you may change the template used to format the Shopfront.</p><p>A different template may be assigned to each of the installed languages. The default template is used when there is no specific template assigned to a language.</p><p>It is possible to view a template in a <em>private</em> session, for example when testing a new template: see the online Help <strong>?</strong>.</p>');
+define('TEXT_INFO_DEFAULT_LANGUAGE', 'Default (all)');
+define('TEXT_TEMPLATE_SELECT_INFO', '<p>Here you may change the template used to format the storefront.</p><p>The "' . TEXT_INFO_DEFAULT_LANGUAGE . '" template is normally used for <strong>all</strong> the installed languages (although a different template may optionally be assigned).</p><p>It is possible to view a template in a <em>private</em> session, for example when testing a new template: see the online Help <strong>?</strong></p>');
 define('TABLE_HEADING_LANGUAGE', 'Template Language');
 define('TABLE_HEADING_NAME', 'Template Name');
 define('TABLE_HEADING_DIRECTORY', 'Template Directory');
 define('TABLE_HEADING_ACTION', 'Action');
 
 define('TEXT_INFO_HEADING_LANGUAGE', 'Language');
-define('TEXT_INFO_DEFAULT_LANGUAGE', 'Default (any)');
 define('TEXT_INFO_DEFAULT_TEMPLATE', 'This template is used by default / when an installed language does not have an assigned template.');
 define('TEXT_INFO_HEADING_EDIT_TEMPLATE', 'Edit Template Settings');
 define('TEXT_INFO_HEADING_DELETE_TEMPLATE', 'Delete Template association');
