@@ -9,7 +9,7 @@
 
 define('HEADING_TITLE', 'Template Selection');
 define('TEXT_INFO_DEFAULT_LANGUAGE', 'Default (all)');
-define('TEXT_TEMPLATE_SELECT_INFO', '<p>Here you may change the template used to format the storefront.</p><p>The "' . TEXT_INFO_DEFAULT_LANGUAGE . '" template is normally used for <strong>all</strong> the installed languages (although a different template may optionally be assigned).</p><p>It is possible to view a template in a <em>private</em> session, for example when testing a new template: see the online Help <strong>?</strong></p>');
+define('TEXT_TEMPLATE_SELECT_INFO', '<p>Here you may change the template used to display the storefront.</p><p>The default template is normally used for <strong>all</strong> languages. Adding template-to-language assignments is typically only useful when supporting RTL languages alongside LTR languages.</p><p>It is possible to view a template in a <em>private</em> session, for example when testing a new template: see the online Help <strong>?</strong></p>');
 define('TABLE_HEADING_LANGUAGE', 'Template Language');
 define('TABLE_HEADING_NAME', 'Template Name');
 define('TABLE_HEADING_DIRECTORY', 'Template Directory');
