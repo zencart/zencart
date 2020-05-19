@@ -209,7 +209,7 @@ You may proceed with installing despite this situation, but please be advised th
 'TEXT_HELP_CONTENT_DBPASSWORD' => 'What is the password assigned to the MySQL username you created for this database?',
 'TEXT_HELP_TITLE_DBNAME' => 'Database Name',
 'TEXT_HELP_CONTENT_DBNAME' => 'What is the name of the database used to hold the data?<br>An example database name is "zencart" or "myaccount_zencart".<br>NOTE: <strong>You</strong> must create this database BEFORE you can proceed with the Zen Cart&reg; installation.<br>You can create your MySQL database using your hosting company\'s control panel.',
-'TEXT_HELP_TITLE_DEMODATA' => 'TEXT_DATABASE_SETUP_LOAD_DEMO',
+'TEXT_HELP_TITLE_DEMODATA' => '%%TEXT_DATABASE_SETUP_LOAD_DEMO%%',
 'TEXT_HELP_CONTENT_DEMODATA' => 'Demo Data sets up some example categories and products, with a range of product attributes (variants), discounts, sales, special offers etc. These are useful for new users to investigate the capabilities of the shop and how these product options are displayed.<br><br>Subsequently you may delete the demo products manually, or you can re-run this Clean Install process without the Demo Data to start afresh with your own products.',
 'TEXT_HELP_TITLE_DBCHARSET' => 'Database Character Set',
 'TEXT_HELP_CONTENT_DBCHARSET' => 'Most stores will use utf8mb4 or utf8.<br>If you don\'t have a reason to use something else, use utf8mb4.',

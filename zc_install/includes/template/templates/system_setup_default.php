@@ -9,7 +9,7 @@ require(DIR_FS_INSTALL . DIR_WS_INSTALL_TEMPLATE . 'partials/partial_modal_help.
 ?>
 <form id="system_setup" name="system_setup" method="post" action="index.php?main_page=database" data-abide="ajax">
   <input type="hidden" name="action" value="process">
-  <input type="hidden" name="lng" value="<?php echo $lng; ?>" >
+  <input type="hidden" name="lng" value="<?php echo $installer_lng; ?>" >
   <input type="hidden" name="dir_ws_http_catalog" value="<?php echo $dir_ws_http_catalog; ?>">
   <input type="hidden" name="dir_ws_https_catalog" value="<?php echo $dir_ws_https_catalog; ?>">
   <input type="hidden" name="detected_detected_http_server_catalog" value="<?php echo $catalogHttpServer; ?>">
@@ -148,9 +148,9 @@ $(function()
         var textId = $(this).attr('id');
         $.ajax({
           type: "POST",
-           timeout: 100000,
+          timeout: 100000,
           dataType: "json",
-          data: 'id='+textId,
+          data: 'id='+textId + '&lng=<?php echo $installer_lng; ?>',
           url: '<?php echo "ajaxGetHelpText.php"; ?>',
            success: function(data) {
              $('#modal-help-title').html(data.title);
