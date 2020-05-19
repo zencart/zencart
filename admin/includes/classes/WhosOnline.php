@@ -313,51 +313,24 @@ class WhosOnline extends base
             return null;
         }
 
-        $products = [];
-        $total = [];
+        $extracted_data = [];
 
-        $start_field = [];
-        $session_data_field = [];
+        $adminSession = session_encode();
+        if (session_decode($session_data) !== false) {
+            $cart = $_SESSION['cart'];
+            $currency = $_SESSION['currency'];
 
-        $session_fields = [
-            'id' => 'customer_id|s',
-            'currency' => 'currency|s',
-            'country' => 'customer_country_id|s',
-            'zone' => 'customer_zone_id|s',
-            'cart' => 'cart|O',
-        ];
-
-        foreach ($session_fields as $key => $value) {
-            $start_field[$key] = strpos($session_data, $value);
-
-            // If the session type is not found then don't try to initiate it.
-            if (false === $start_field[$key]) {
-                continue;
+            if (is_object($cart) && isset($currency)) {
+                $extracted_data['products'] = $cart->get_products();
+                $extracted_data['total'] = $GLOBALS['currencies']->format($cart->show_total(), true, $currency);
             }
 
-            $session_data_field[$key] = substr($session_data, $start_field[$key], (strpos($session_data, ';', $start_field[$key]) - $start_field[$key] + 1));
-
-            if ('cart' === $key) {
-                $end_cart = (int)strpos($session_data, 'check_valid|s');
-                $session_data_field[$key] = substr($session_data, $start_field[$key], ($end_cart - $start_field[$key]));
-
-//                  $end_cart = (int)strpos($session_data, '|', $start_field[$key] + strlen($value));
-//                  $end_cart = (int)strrpos(substr($session_data, 0, $end_cart), ';}');
-//                  $session_data_field[$key] = substr($session_data, $start_field[$key], ($end_cart - $start_field[$key] + 2));
-            }
-
-            $backup = $_SESSION;
-            if (false === session_decode($session_data_field[$key])) {
-                $_SESSION = $backup;
-            }
-            unset($backup);
         }
 
-        if (isset($_SESSION['cart']) && is_object($_SESSION['cart'])) {
-            $products = $_SESSION['cart']->get_products();
-            $total = $GLOBALS['currencies']->format($_SESSION['cart']->show_total(), true, $_SESSION['currency']);
-        }
+        unset($_SESSION);
+        session_decode($adminSession);
+        unset($adminSession);
 
-        return ['total' => $total, 'products' => $products];
+        return $extracted_data;
     }
 }
