@@ -316,6 +316,8 @@ class WhosOnline extends base
         $extracted_data = [];
 
         $adminSession = session_encode();
+        $backupSessionArray = $_SESSION;
+
         if (session_decode($session_data) !== false) {
             $cart = $_SESSION['cart'];
             $currency = $_SESSION['currency'];
@@ -324,12 +326,17 @@ class WhosOnline extends base
                 $extracted_data['products'] = $cart->get_products();
                 $extracted_data['total'] = $GLOBALS['currencies']->format($cart->show_total(), true, $currency);
             }
-
         }
 
-        unset($_SESSION);
+        // protect against tampering
+        $_SESSION = $backupSessionArray;
+        foreach($_SESSION as $key) {
+            if (!isset($backupSessionArray[$key])) {
+                unset($_SESSION[$key]);
+            }
+        }
         session_decode($adminSession);
-        unset($adminSession);
+        unset($adminSession, $backupSessionArray);
 
         return $extracted_data;
     }
