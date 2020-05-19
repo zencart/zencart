@@ -317,7 +317,8 @@ $listingURL = FILENAME_WHOS_ONLINE . '.php?' . zen_get_all_get_params(['q', 't',
             $cart = isset($whos_online[$selectedSession]['cart']) ? $whos_online[$selectedSession]['cart'] : null;
 
             if ($cart !== null) {
-                $contents[] = ['text' => $item['full_name'] . ' - ' . $item['ip_address'] . '<br>' . $selectedSession];
+                $contents[] = ['text' => $whos_online[$selectedSession]['full_name'] . ' - ' . $whos_online[$selectedSession]['ip_address'] . '<br>' . $selectedSession];
+
                 foreach ($cart['products'] as $product) {
                   $contents[] = ['text' => $product['quantity'] . ' x ' . '<a href="' . zen_href_link(FILENAME_PRODUCT, 'cPath=' . zen_get_product_path($product['id']) . '&pID=' . $product['id']) . '">' . $product['name'] . '</a>'];
                 }
