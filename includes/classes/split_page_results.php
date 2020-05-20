@@ -8,6 +8,7 @@
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: Author: DrByte  Sat Jan 9 13:13:41 2016 -0500 Modified in v1.5.5 $
  */
+
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
 }
@@ -91,6 +92,7 @@ class splitPageResults extends base {
     if ($offset <= 0) { $offset = 0; }
 
     $this->sql_query .= " limit " . ($offset > 0 ? $offset . ", " : '') . $this->number_of_rows_per_page;
+
   }
 
   /* class functions */
@@ -100,7 +102,7 @@ class splitPageResults extends base {
     global $request_type;
     if ($max_page_links == '') $max_page_links = 1;
 
-    if ($this->number_of_pages == 1) return;
+    if ($this->number_of_pages <= 1) return;
 
     $display_links_string = $ul_elements = '';
     $counter_actual_page_links = 0;
@@ -204,5 +206,10 @@ class splitPageResults extends base {
     } else {
       return sprintf($text_output, $from_num, $to_num, $this->number_of_rows);
     }
+  }
+
+  public function getSqlQuery()
+  {
+      return $this->sql_query;
   }
 }

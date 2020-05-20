@@ -273,6 +273,7 @@ CREATE TABLE plugin_control (
   author varchar(40) NOT NULL,
   version varchar(10),
   zc_versions text NOT NULL,
+  infs tinyint(1) NOT NULL default 0,
   PRIMARY KEY  (unique_key)
 ) ENGINE=MyISAM;
 
@@ -288,6 +289,7 @@ CREATE TABLE plugin_control_versions (
   version varchar(10),
   author varchar(40) NOT NULL,
   zc_versions text NOT NULL,
+  infs tinyint(1) NOT NULL default 0,
   PRIMARY KEY  (unique_key, version)
 ) ENGINE=MyISAM;
 
@@ -317,6 +319,7 @@ CREATE TABLE plugin_groups_description (
   PRIMARY KEY  (plugin_group_unique_key,language_id)
 ) ENGINE=MyISAM;
 
+INSERT INTO admin_pages (page_key, language_key, main_page, page_params, menu_key, display_on_menu, sort_order) VALUES  ('plugins', 'BOX_MODULES_PLUGINS', 'FILENAME_PLUGIN_MANAGER', '', 'modules', 'Y', 4);
 
 
 ######
