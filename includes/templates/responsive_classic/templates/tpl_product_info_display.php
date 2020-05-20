@@ -109,6 +109,7 @@ if ($flag_show_ask_a_question) {
 </div>
 
 <div id="cart-box" class="grids">
+<!--bof Product Price block -->
 <h2 id="productPrices" class="productGeneral">
 <?php
 // base price
@@ -127,7 +128,7 @@ if ($flag_show_ask_a_question) {
 ?>
 <?php
 /**
- * display the product atributes
+ * display the product attributes
  */
   require($template->get_template_dir('/tpl_modules_attributes.php',DIR_WS_TEMPLATE, $current_page_base,'templates'). '/tpl_modules_attributes.php'); ?>
 <?php
