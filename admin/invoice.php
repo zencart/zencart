@@ -130,7 +130,7 @@ if ($order->billing['street_address'] != $order->delivery['street_address']) {
 <?php if ($show_including_tax)  { ?>
             <th class="dataTableHeadingContent text-right"><?php echo TABLE_HEADING_PRICE_INCLUDING_TAX; ?></th>
 <?php } ?>
-            <th class="dataTableHeadingContent text-right"><?php ($show_including_tax) ? TABLE_HEADING_TOTAL_EXCLUDING_TAX : TABLE_HEADING_TOTAL; ?></th>
+            <th class="dataTableHeadingContent text-right"><?php echo ($show_including_tax) ? TABLE_HEADING_TOTAL_EXCLUDING_TAX : TABLE_HEADING_TOTAL; ?></th>
 <?php if ($show_including_tax)  { ?>
             <th class="dataTableHeadingContent text-right"><?php echo TABLE_HEADING_TOTAL_INCLUDING_TAX; ?></th>
 <?php } ?>
