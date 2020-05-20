@@ -308,8 +308,8 @@ class shoppingCart extends base {
                   $products_options_sort_order= zen_get_attributes_options_sort_order(zen_get_prid($products_id), $option, $opt);
                   $sql = "INSERT INTO " . TABLE_CUSTOMERS_BASKET_ATTRIBUTES . "
                           (customers_id, products_id, products_options_id, products_options_value_id, products_options_sort_order)
-                          VALUES (" . (int)$_SESSION['customer_id'] . ", '" . zen_db_input($products_id) . "', '" .
-                          (int)$option.'_chk'. (int)$val . "', '" . (int)$val . "',  '" . $products_options_sort_order . "')";
+                          VALUES (" . (int)$_SESSION['customer_id'] . ", '" . zen_db_input($products_id) . "', 
+                          '" . (int)$option.'_chk'. (int)$val . "', '" . (int)$val . "',  '" . $products_options_sort_order . "')";
                   $db->Execute($sql);
                 }
               } else {
@@ -319,8 +319,8 @@ class shoppingCart extends base {
                 $products_options_sort_order= zen_get_attributes_options_sort_order(zen_get_prid($products_id), $option, $value);
                 $sql = "INSERT INTO " . TABLE_CUSTOMERS_BASKET_ATTRIBUTES . "
                         (customers_id, products_id, products_options_id, products_options_value_id, products_options_value_text, products_options_sort_order)
-                        VALUES (" . (int)$_SESSION['customer_id'] . ", '" . zen_db_input($products_id) . "', '" .
-                        (int)$option . "', '" . (int)$value . "', '" . $attr_value . "', '" . $products_options_sort_order . "')";
+                        VALUES (" . (int)$_SESSION['customer_id'] . ", '" . zen_db_input($products_id) . "', 
+                        '" . (int)$option . "', '" . (int)$value . "', '" . $attr_value . "', '" . $products_options_sort_order . "')";
                 $db->Execute($sql);
               }
             }
