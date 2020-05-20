@@ -1237,7 +1237,7 @@ if (zen_not_null($action) && $order_exists == true) {
                     }
 
                     if (isset($oInfo) && is_object($oInfo) && ($orders->fields['orders_id'] == $oInfo->orders_id)) {
-                      echo '<tr id="defaultSelected" class="dataTableRowSelected order-listing-row" data-oid="' . $orders->fields['orders_id'] . '">' . "\n";
+                      echo '<tr id="defaultSelected" class="dataTableRowSelected order-listing-row" data-oid="' . $orders->fields['orders_id'] . '" data-current="current">' . "\n";
                     } else {
                       echo '<tr class="dataTableRow order-listing-row" data-oid="' . $orders->fields['orders_id'] . '">' . "\n";
                     }
@@ -1484,7 +1484,7 @@ if (zen_not_null($action) && $order_exists == true) {
         jQuery(function () {
             const orderLink = '<?php echo $order_link; ?>';
             jQuery("tr.order-listing-row td").not('.dataTableButtonCell').on('click', (function() {
-                window.location.href = orderLink.replace('[*]', jQuery(this).parent().attr('data-oid'));
+                window.location.href = orderLink.replace('[*]', jQuery(this).parent().attr('data-oid') + (jQuery(this).parent().attr('data-current') ? '&action=edit' : ''));
             }));
             jQuery('[data-toggle="popover"]').popover({html:true,sanitize: true});
         })
