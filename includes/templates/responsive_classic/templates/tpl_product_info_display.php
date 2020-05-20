@@ -89,12 +89,12 @@ require($template->get_template_dir('/tpl_products_next_previous.php',DIR_WS_TEM
 <?php
 if ($flag_show_ask_a_question) {
 ?>
-<!-- bof Ask a Question --> 
-<br />
-<span id="productQuestions" class="biggerText">
-<b><?php echo '<a href="' . zen_href_link(FILENAME_ASK_A_QUESTION, 'products_id=' . $_GET['products_id'], 'SSL') . '">' . zen_image_button(BUTTON_IMAGE_ASK_A_QUESTION, BUTTON_ASK_A_QUESTION_ALT) . '</a>'; ?></b>
+<!-- bof Ask a Question -->
+<br>
+<span id="productQuestions" class="">
+<?php echo '<a href="' . zen_href_link(FILENAME_ASK_A_QUESTION, 'products_id=' . $_GET['products_id'], 'SSL') . '">' . zen_image_button(BUTTON_IMAGE_ASK_A_QUESTION, BUTTON_ASK_A_QUESTION_ALT) . '</a>'; ?>
 </span>
-<br class="clearBoth" />
+<br class="clearBoth">
 <br>
 <!-- eof Ask a Question -->
 <?php
