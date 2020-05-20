@@ -166,13 +166,13 @@ if (WARN_DATABASE_VERSION_PROBLEM != 'false') {
     }
 
 // Alerts for EZ-Pages
-  if (EZPAGES_STATUS_HEADER == '2' and strstr(EXCLUDE_ADMIN_IP_FOR_MAINTENANCE, $_SERVER['REMOTE_ADDR'])) {
+  if (EZPAGES_STATUS_HEADER == '2' && zen_is_whitelisted_admin_ip()) {
     $messageStack->add(TEXT_EZPAGES_STATUS_HEADER_ADMIN, 'caution');
   }
-  if (EZPAGES_STATUS_FOOTER == '2' and strstr(EXCLUDE_ADMIN_IP_FOR_MAINTENANCE, $_SERVER['REMOTE_ADDR'])) {
+  if (EZPAGES_STATUS_FOOTER == '2' && zen_is_whitelisted_admin_ip()) {
     $messageStack->add(TEXT_EZPAGES_STATUS_FOOTER_ADMIN, 'caution');
   }
-  if (EZPAGES_STATUS_SIDEBOX == '2' and strstr(EXCLUDE_ADMIN_IP_FOR_MAINTENANCE, $_SERVER['REMOTE_ADDR'])) {
+  if (EZPAGES_STATUS_SIDEBOX == '2' && zen_is_whitelisted_admin_ip()) {
     $messageStack->add(TEXT_EZPAGES_STATUS_SIDEBOX_ADMIN, 'caution');
   }
 

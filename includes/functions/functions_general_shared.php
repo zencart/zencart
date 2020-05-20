@@ -6,6 +6,18 @@ function zen_get_zcversion()
 }
 
 /**
+ * @param string $ip
+ * @return boolean
+ */
+function zen_is_whitelisted_admin_ip($ip = null)
+{
+    if (empty($ip)) {
+        $ip = $_SERVER['REMOTE_ADDR'];
+    }
+    return strpos(EXCLUDE_ADMIN_IP_FOR_MAINTENANCE, $ip) !== false;
+}
+
+/**
  * Returns a string with conversions for security.
  * @param string The string to be parsed
  * @param string contains a string to be translated, otherwise just quote is translated

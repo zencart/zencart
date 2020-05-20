@@ -31,7 +31,7 @@ $template_dir = $result->fields['template_dir'];
 /**
  * Allow admins to switch templates using &t= URL parameter
  */
-if (false !== strpos(EXCLUDE_ADMIN_IP_FOR_MAINTENANCE, $_SERVER['REMOTE_ADDR'])) {
+if (zen_is_whitelisted_admin_ip()) {
     $templates = array();
     foreach($result as $row) {
         $templates[] = $row['template_dir'];
