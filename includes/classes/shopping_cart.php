@@ -424,7 +424,7 @@ class shoppingCart extends base {
                           SET products_options_value_id = " . (int)$value . ", products_options_value_text = '" . $attr_value . "'
                           WHERE customers_id = " . (int)$_SESSION['customer_id'] . "
                           AND products_id = '" . zen_db_input($products_id) . "'
-                          AND products_options_id = " . (int)$option;
+                          AND products_options_id = '" . (int)$option . "'"; // intentionally passing a string
                   $db->Execute($sql);
               }
           }
