@@ -329,6 +329,37 @@ $listingURL = FILENAME_WHOS_ONLINE . '.php?' . zen_get_all_get_params(['q', 't',
                 } else {
                   $contents[] = ['text' => TEXT_EMPTY_CART];
                 }
+                /* Other $cart[] entries which may be available depending on customer stage:
+                 * ['total'] => 92.74
+                 * ['total_before_discounts'] => 92.74
+                 * ['weight'] => 10
+                 * ['cartID'] => 123456
+                 * ['content_type'] => physical | virtual
+                 * ['free_shipping_item'] => 0 | 1
+                 * ['free_shipping_weight'] => 0 | 1
+                 * ['free_shipping_price'] => 0 | 1
+                 * ['download_count'] => integer
+                 *
+                 * Other $whos_online[$selectedSession][] entries which may or may not be available:
+                 * ['currency_code'] 'USD'
+                 * ['language_name'] 'english'
+                 * ['language_id'] integer
+                 * ['language_code'] 'en'
+                 * ['customer_ip'] - ip address
+                 * ['customer_hostname'] - hostname of ip address
+                 * ['customers_email_address']
+                 * ['address_default_id'] customer's default address_book ID
+                 * ['address_billing_id'] selected address_book ID for billing
+                 * ['address_delivery_id'] selected address_book ID for shipping
+                 * ['customer_country_id'] countries table country_id of default address_book ID
+                 * ['customer_zone_id'] zones table zone_id of default address_book ID
+                 * ['shipping_weight'] cart weight
+                 * ['shipping'] array of shipping module/code details
+                 * ['payment'] string name of payment module selected
+                 * ['cot_gv'] coupon/gv code being redeemed
+                 * ['cart_errors'] array of error messages in cart
+                 * ['checkout_comments'] order comments entered during checkout pages
+                 */
             }
           }
 

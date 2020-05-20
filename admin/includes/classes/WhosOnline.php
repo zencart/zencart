@@ -320,6 +320,18 @@ class WhosOnline extends base
             'languages_code' => 'language_code',
             'customers_ip_address' => 'customer_ip',
             'customers_host_address' => 'customer_hostname',
+            'customers_email_address' => 'customers_email_address',
+            'customer_default_address_id' => 'address_default_id',
+            'billto' => 'address_billing_id',
+            'sendto' => 'address_delivery_id',
+            'customer_country_id' => 'customer_country_id',
+            'customer_zone_id' => 'customer_zone_id',
+            'shipping_weight' => 'shipping_weight',
+            'shipping' => 'shipping',
+            'payment' => 'payment',
+            'cot_gv' => 'cot_gv',
+            'cart_errors' => 'cart_errors',
+            'comments' => 'checkout_comments',
         ];
 
         $adminSession = session_encode();
@@ -337,9 +349,9 @@ class WhosOnline extends base
                 $extracted_data['cartID'] = $_SESSION['cartID'];
             }
 
-            foreach($fields_to_extract as $key => $val) {
-                if (isset($_SESSION[$key])) {
-                    $extracted_data[$val] = $_SESSION[$key];
+            foreach($fields_to_extract as $field => $as) {
+                if (isset($_SESSION[$field])) {
+                    $extracted_data[$as] = $_SESSION[$field];
                 }
             }
         }
