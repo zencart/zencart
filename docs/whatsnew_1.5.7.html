@@ -92,7 +92,7 @@
                 If you are using Addons/Plugins that use modified versions of those files, you must compare those plugin files to the original Zen Cart files of the version for which those plugins were built, to identify the modifications. Subsequently you must replicate those modifications in the v1.5.7 file.
             </p>
             <h2>
-                To v1.5.7 from v1.5.5 or older
+                From v1.5.5 or older
             </h2>
             <p>
                 If you are upgrading from a version OLDER than v1.5.6, then please do a <a href="https://www.zen-cart.com/upgrades" target="_blank">standard site upgrade</a>. Be sure to review all the links in this article, including tips on staging the upgrade in a separate directory/folder.
@@ -118,7 +118,7 @@
                 Then once the upgraded site is working properly you can consider what changes you might want to make to your own active template. 
             </p>
             <p>
-                (Important notes about <em>template_default</em> are shown below)
+                (Important notes about <em>template_default</em> are shown below.)
             </p>
             <p>
                 AGAIN: The responsive_classic template should NOT be implemented immediately as part of an upgrade; it should be a separate step ... if it is even used at all.
@@ -147,8 +147,8 @@
                 This way the only files you need in your personalized template folder are those that you have altered in some way from template_default.
             </p>
             <p>
-                With that explained, it is important that whenever you upgrade your site, you should also inspect ALL the template_default files to determine which changes in those files need to be replicated in your customized files.<br>
-                Comparison/Merging Tools are essential for this process: See the <a href="https://docs.zen-cart.com/user/first_steps/useful_tools/">Zen Cart Developer Tools</a> documentation.
+                With that explained, it is important that whenever you upgrade your site, you should also inspect ALL the template_default files to determine which changes in those files need to be replicated in your customized files.
+                Comparison/Merging Tools are essential for this process; see the <a href="https://docs.zen-cart.com/user/first_steps/useful_tools/">Zen Cart Developer Tools</a> for recommendations.
             </p>
             <p>
                 The process is simple: compare the template_default directory files from your <em>*old*</em> version to the template_default files in the <em>*new*</em> version, and replicate any differences in the files in your custom/personalized template in your store. If you based your template on responsive_classic, you should also compare and merge any changes from that template.
@@ -172,37 +172,36 @@
             </h2>
             <ul>
                 <li>Core - Many files have been updated for compatibility with PHP 7.2, 7.3 and 7.4. <b>These changes, along with updating your PHP version, will make your cart faster.</b></li>
-                <li>Admin - Added a sort order to the Order Statuses so the admin order update dropdown can mirror your business workflow.</li>
-                <li>Admin - The default notification behavior for an Order Status update (send email/do not send email/hide update) may now set by an admin switch.</li>
-                <li>Admin - Order Status may be updated from the order listing screen.</li>
-                <li>Admin - Order Status emails are now sent in the language of the order.</li>
-                <li>Admin - Admins can now login to a customer account (login as that customer), to place an order on their behalf.</li>
-                <li>Admin - Order Listing - an order-product-details popover column has been added to allow a quick view of the products ordered, without opening the order details.</li>
-                <li>Admin - Validation for integer min and max values and email addresses.</li>
-                <li>Admin - Improved configuration settings descriptions.</li>
-                <li>Admin - Help link to the documentation website added to all pages.</li>
-                <li>Admin – Products to Categories Link Manager - Addition of a global tool to copy linked categories to another product.</li>
-                <li>Admin – Product Copy expanded to include copy of metatags and linked categories.</li>
-                <li>Admin - Improved customer search.</li>
-                <li>Admin - Improved error messaging.</li>
-                <li>Admin - Alphabetical sorting of Reports and Tools menus.</li>
-                <li>Admin - Improved sanitization of data.</li>
-                <li>Admin - Validation of configuration settings.</li>
-                <li>Admin - Improvements in Option Name/Value management.</li>
-                <li>Admin - Correct last order details on customer preview box on right.</li>
-                <li>Admin - GUI improvements and bugfixes for Attributes Controller, Featured, Option Names Manager, Option Values Manager, Products to Multiple Categories, Specials.</li>
-                <li>Admin - Products Viewed report and data restructured for performance.</li>
-                <li>Storefront - products with single-valued attributes (such as downloads) can now be added to the cart from the listing page.</li>
+                <li>Storefront - Products with single-valued attributes (such as downloads) can now be added to the cart from the listing page.</li>
                 <li>Storefront - Product page now includes Ask a Question</li>
                 <li>Storefront - Contact Us page now includes a telephone number</li>
                 <li>Storefront - Improved handling of product restrictions such as units and minimum quantities.</li>
                 <li>Storefront - Define page added to shopping cart page for static content.</li>
+                <li>Storefront - Improvements made to responsive classic template for accessibility.</li>
+                <li>Admin - Admins can now login to a customer account (login as that customer), to place an order on their behalf.</li>
+                <li>Admin - Order Status may be updated from the order listing screen.</li>
+                <li>Admin - Order Status emails are now sent in the language of the order.</li>
+                <li>Admin - Order Status dropdown can now be sorted to match your business workflow.</li>
+                <li>Admin - Order Status notification behavior for an Order Status update (send email/do not send email/hide update) may now be configured by an admin switch.</li>
+                <li>Admin - Order Listing - hover for quick view of the products ordered or to see customer comments, without opening the order details. (Inspired by Info-At-A-Glance plugin).</li>
+                <li>Admin - Improved customer search.</li>
+                <li>Admin – Products to Categories Link Manager - Addition of a global tool to copy linked categories to another product.</li>
+                <li>Admin – Product Copy expanded to include copy of metatags and linked categories.</li>
+                <li>Admin - Validation for integer min and max values and email addresses.</li>
+                <li>Admin - Improved configuration settings descriptions.</li>
+                <li>Admin - Improved error messaging.</li>
+                <li>Admin - Help links to the documentation website added to all pages.</li>
+                <li>Admin - Products Viewed report now excludes bots and admins, and its database storage restructured to improve site performance.</li>
+                <li>Admin - Alphabetical sorting of Reports and Tools menus.</li>
+                <li>Admin - Validation and alerts for updating configuration settings, and other updates to sanitization layer.</li>
+                <li>Admin - Improvements in Option Name/Value management.</li>
+                <li>Admin - UI improvements for Attributes Controller, Featured, Option Names Manager, Option Values Manager, Products to Multiple Categories, Specials.</li>
+                <li>Admin - Fixed last-order details on customer preview box on right.</li>
                 <li>Email - SPAM prevention built in to forms (Credits @davewest for zenNonCAPTCHA).</li>
                 <li>Email - Improvements made to increase email deliverability.</li>
-                <li>Email - templates: remaining hard-coded text removed.
-                <li>Checkout - Updated Square Payment module.  Start taking credit card payments in just 5 minutes! See www.zen-cart.com/partners/square_setup.</li>
-                <li>Checkout - correction of order total layout issues on mobile in responsive_classic template.</li>
-                <li>Checkout - Order language stored for use in order processing in multi-language stores.</li>
+                <li>Email - Untranslatable text removed from email templates.
+                <li>Checkout - Updated Square Payment module.  Start taking credit card payments in just 5 minutes! See <a href="https://www.zen-cart.com/partners/square_setup">Square Setup</a>.</li>
+                <li>Checkout - Correction of order total layout issues on mobile in responsive_classic template.</li>
                 <li>All known v1.5.6 bugfixes and security fixes are included in v1.5.7</li>
                 <li>... and many other incremental improvements to make Zen Cart more efficient, more robust and easier to use.</li>
             </ul>
