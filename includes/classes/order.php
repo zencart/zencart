@@ -304,7 +304,7 @@ class order extends base {
 
     $billing_address = $db->Execute($billing_address_query);
 
-    $paymentModule = $_SESSION['payment'];
+    $paymentModule = !empty($_SESSION['payment']) ? $_SESSION['payment'] : 'NOT SET YET';
 
     if (isset($_SESSION['cc_id'])) {
       $coupon_code_query = "SELECT coupon_code
