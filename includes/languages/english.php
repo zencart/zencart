@@ -13,7 +13,7 @@
 //define('CUSTOM_KEYWORDS', 'ecommerce, open source, shop, online shopping');
 // END: moved to meta_tags.php
 
-  define('FOOTER_TEXT_BODY', 'Copyright &copy; ' . date('Y') . ' <a href="' . zen_href_link(FILENAME_DEFAULT) . '" rel="noopener" target="_blank">' . STORE_NAME . '</a>. Powered by <a href="https://www.zen-cart.com" rel="noopener" target="_blank">Zen Cart</a>');
+  define('FOOTER_TEXT_BODY', 'Copyright &copy; ' . date('Y') . ' ' . STORE_NAME . ' - Powered by <a href="https://www.zen-cart.com" rel="noopener" target="_blank">Zen Cart</a>');
 
 // look in your $PATH_LOCALE/locale directory for available locales..
   $locales = ['en_US', 'en_US.utf8', 'en', 'English_United States.1252'];
