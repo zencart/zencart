@@ -1107,7 +1107,7 @@ class square extends base
             $messageStack->add_session(MODULE_PAYMENT_SQUARE_TEXT_COMM_ERROR, 'error');
         }
 
-        if (count($errors_object)) {
+        if (is_array($errors_object) && count($errors_object)) {
             $error = $this->parse_error_response($errors_object);
             $messageStack->add_session(MODULE_PAYMENT_SQUARE_TEXT_UPDATE_FAILED . ' [' . $error['detail'] . ']', 'error');
 
