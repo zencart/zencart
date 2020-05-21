@@ -438,7 +438,7 @@ if (zen_not_null($action)) {
             $attributes_image_name = ((isset($_POST['attributes_previous_image']) && !(isset($_POST['attributes_image']) && $_POST['attributes_image'] == 'none')) ? $_POST['attributes_previous_image'] : '');
           }
 
-          if (isset($_POST['image_delete']) && $_POST['image_delete'] == 1) {
+          if (isset($_POST['image_delete']) && $_POST['image_delete'] == '1') {
             $attributes_image_name = '';
           }
 
@@ -1437,10 +1437,10 @@ function zen_js_option_values_list($selectedName, $fieldName)
                             </div>
                             <div class="col-sm-4"><?php echo zen_draw_label(TEXT_IMAGES_DELETE, 'image_delete'); ?>
                               <div class="radio">
-                                <label><?php echo zen_draw_radio_field('image_delete', '0', false) . TABLE_HEADING_NO; ?></label>
+                                <label><?php echo zen_draw_radio_field('image_delete', '0', true) . TABLE_HEADING_NO; ?></label>
                               </div>
                               <div class="radio">
-                                <label><?php echo zen_draw_radio_field('image_delete', '1', true) . '&nbsp;' . TABLE_HEADING_YES; ?></label>
+                                <label><?php echo zen_draw_radio_field('image_delete', '1') . '&nbsp;' . TABLE_HEADING_YES; ?></label>
                               </div>
                             </div>
                           </div>
