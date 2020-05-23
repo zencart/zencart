@@ -68,7 +68,7 @@
                     </td>
                     <td class="text-right">
                     <?php echo $tableController->getSplitPage()->display_links(MAX_DISPLAY_SEARCH_RESULTS,
-                                                                               $_GET['page']); ?>
+                                                                               $tableController->getPage()); ?>
                     </td>
                 </tr>
             </table>

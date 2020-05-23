@@ -40,6 +40,7 @@ class BaseController implements TableViewController
     public function processRequest()
     {
         $this->action = $this->getAction();
+        $this->page = (isset($_GET['page'])) ? $_GET['page'] : 1;
         $this->queryParts = $this->buildListQuery();
         $this->queryBuilder->processQuery($this->queryParts);
         $listingSql = $this->queryBuilder->getQuery()['mainSql'];
@@ -76,7 +77,7 @@ class BaseController implements TableViewController
     public function getSelectedRowLink($tableData)
     {
         $fn = $_GET['cmd'];
-        $params = 'page=' . (isset($_GET['page']) ? $_GET['page'] : '1');
+        $params = 'page=' . $this->page;
         $params .= "&" . $this->getColKeyGetParamName() . "=" . $tableData['row'][$this->tableDefinition['colKey']];
         if ($this->getDefaultRowAction() != '') {
             $params .= "&action=" . $this->getDefaultRowAction();
@@ -88,7 +89,7 @@ class BaseController implements TableViewController
     public function getNotSelectedRowLink($tableData)
     {
         $fn = $_GET['cmd'];
-        $params = 'page=' . (isset($_GET['page']) ? $_GET['page'] : '1');
+        $params = 'page=' . $this->page;
         $params .= "&" . $this->getColKeyGetParamName() . "=" . $tableData['row'][$this->tableDefinition['colKey']];
         return zen_href_link($fn, $params);
 
@@ -193,6 +194,11 @@ class BaseController implements TableViewController
         $action = (isset($_GET['action']) ? $_GET['action'] : '');
         $this->notify('ADMIN_VIEW_CONTROLLER_GET_ACTION', $action);
         return $action;
+    }
+
+    public function getPage()
+    {
+        return $this->page;
     }
 
     protected function getSplitPageListingSql($listingSql)
