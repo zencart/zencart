@@ -1,6 +1,6 @@
 <?php
 // -----
-// Part of the "Display Logs" plugin for Zen Cart v1.5.0 or later
+// Part of the "Display Logs" plugin for Zen Cart v1.5.7 or later
 //
 // Copyright (c) 2012-2020, Vinos de Frutas Tropicales (lat9)
 //
@@ -280,7 +280,7 @@ if ($max_log_file_size < 1) {
                                                 foreach ($logFiles as $curHash => $curFile) {
                                                     ?>
                                                     <tr>
-                                                        <td class="dataTableContent" align="left"><?php echo $curFile['name']; ?></td>
+                                                        <td class="dataTableContent" align="left"><?php echo str_replace(DIR_FS_CATALOG, '/', $curFile['name']); ?></td>
                                                         <td class="dataTableContent" align="center"><?php echo date(DATE_FORMAT . ' H:i:s', $curFile['mtime']); ?></td>
                                                         <td class="dataTableContent<?php echo ($curFile['filesize'] > $max_log_file_size) ? ' bigfile' : ''; ?>" align="center"><?php echo $curFile['filesize']; ?></td>
                                                         <td class="dataTableContent" align="center"><?php echo zen_draw_checkbox_field('dList[' . $curHash . ']', false, false, '', 'class="cBox"'); ?></td>
@@ -291,10 +291,12 @@ if ($max_log_file_size < 1) {
                                                         $heading[] = array(
                                                             'text' => '<strong>' . TEXT_HEADING_INFO . '( ' . $curFile['name'] . ')</strong>'
                                                         );
+                                                        $fileContent = str_replace(DIR_FS_CATALOG, '/', nl2br(htmlentities(trim(file_get_contents($curFile['name'], false, NULL, 0, $max_log_file_size)), ENT_COMPAT+ENT_IGNORE, CHARSET, false)));
                                                         $contents[] = array(
                                                             'align' => 'left',
-                                                            'text' => '<div id="fContents">' . nl2br(htmlentities(trim(file_get_contents($curFile['name'], false, NULL, 0, $max_log_file_size)), ENT_COMPAT+ENT_IGNORE, CHARSET, false)) . '</div>'
+                                                            'text' => '<div id="fContents">' . $fileContent . '</div>'
                                                         );
+                                                        unset($fileContent);
                                                     }
                                                 }
                                                 ?>
