@@ -14,6 +14,10 @@ $status_list = array();
 $status_list[] = array('id' => 1, 'text' => TEXT_PENDING_APPROVAL);
 $status_list[] = array('id' => 2, 'text' => TEXT_APPROVED);
 
+if (!isset($languages_array)) {
+    $languages_array = zen_get_languages();
+}
+
 if (zen_not_null($action)) {
   switch ($action) {
     case 'setflag':
