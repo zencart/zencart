@@ -115,6 +115,7 @@ select#country, select#stateZone, #state {margin-left:0;}
 #navMain ul  {margin:0;padding:0.5em 0;width:60%;list-style-type:none;text-align:left;line-height:1.5em;}
 #navMain ul li {display:inline;}
 #navMain ul li a {text-decoration:none;padding:0 0.8em;margin:0;white-space:nowrap;}
+#navMain ul li a.navCartContentsIndicator {padding: 10px;border-radius: 10px;margin-right: 5px;}
 /*top right search*/
 #navMainSearch {width:38%;text-align:right;}
 #navMainSearch input[type=text]{vertical-align:top;display:inline-block;border:0;width:65% !important;height:32px;margin:0;font-size:0.9em;-moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box;}

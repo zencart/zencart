@@ -6,6 +6,7 @@ h3.rightBoxHeading a:hover, h3.leftBoxHeading a:hover {color: #aaa}
 a:active {color:#0000ff;}
 h2, h3, .cartAttribsList, #cart-box {color:#000000;}
 #navMain ul li a:hover, #navSupp ul li a:hover{color:#03a5ce;}
+#navMain ul li a.navCartContentsIndicator:hover {color:#ffffff;}
 .alert {color: #8b0000;}
 legend, .specialsListBoxContents a, .centerBoxContentsAlsoPurch a, .centerBoxContentsFeatured a, .centerBoxContentsSpecials a, .centerBoxContentsNew a, .productPriceDiscount{color:#333;}
 .messageStackWarning, .messageStackError, #navMainWrapper, #navMain ul li a, #navCatTabsWrapper, #navCatTabs li a, #navCatTabs li a:hover, #navCatTabs li:hover, #navEZPagesTop, #navEZPagesTop li a, .pagination li a, #navSuppWrapper, #navSupp li a, #siteinfoIP, #siteinfoLegal, #bannerSix, #siteinfoLegal a:hover, h2.centerBoxHeading, h3.rightBoxHeading, h3.leftBoxHeading, h3.rightBoxHeading a, h3.leftBoxHeading a, .seDisplayedAddressLabel, TR.tableHeading, #shippingEstimatorContent h2, #shippingEstimatorContent th, #checkoutConfirmDefault .cartTableHeading, #filter-wrapper, .navSplitPagesLinks a, .current, .productListing-rowheading a, .productListing-rowheading a, .prod-list-wrap, #productQuantityDiscounts table tr:first-child td, #reviewsWriteHeading, #sendSpendWrapper h2, #accountDefault #sendSpendWrapper h2, #gvFaqDefaultSubHeading, #checkoutPayAddressDefaultAddress, #checkoutShipAddressDefaultAddress, #accountLinksWrapper h2, h2#addressBookDefaultPrimary, #myAccountPaymentInfo h3, #myAccountShipInfo h3, #myAccountPaymentInfo h4, #myAccountShipInfo h4, input.submit_button, input.submit_button:hover, input.cssButtonHover, span.normal_button{color: #ffffff;}
@@ -39,6 +40,7 @@ span.cssButton.normal_button.button.button_logoff, span.cssButton.normal_button.
 #filter-wrapper, span.normal_button:hover, span.cssButton.normal_button.button.button_goto_prod_details, .button_add_selected:hover{background:#000;}
 .button_in_cart:hover{background-color:#000;}
 #docGeneralDisplay #pinfo-right, #popupShippingEstimator, #popupSearchHelp, #popupAdditionalImage, #popupImage, #popupCVVHelp, #popupCouponHelp, #popupAtrribsQuantityPricesHelp, #infoShoppingCart{background:none;}
+#navMain ul li a.navCartContentsIndicator {background: #ff662e;color:#000}
 
 /*bof border colors*/
 HR {border-bottom:1px solid #9a9a9a;}
