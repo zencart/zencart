@@ -319,3 +319,41 @@ function issetorArray(array $array, $key, $default = null)
     return isset($array[$key]) ? $array[$key] : $default;
 }
 
+/**
+ * Recursively apply htmlentities on the passed string
+ * Useful for preparing json output and ajax responses
+ *
+ * @param string|array $mixed_value
+ * @param int $flags
+ * @param string $encoding
+ * @param bool $double_encode
+ * @return array|string
+ */
+function htmlentities_recurse($mixed_value, $flags = ENT_QUOTES, $encoding = 'utf-8', $double_encode = true) {
+    $result = array();
+    if (!is_array ($mixed_value)) {
+        return htmlentities ((string)$mixed_value, $flags, $encoding, $double_encode);
+    }
+    if (is_array($mixed_value)) {
+        $result = array ();
+        foreach ($mixed_value as $key => $value) {
+            $result[$key] = htmlentities_recurse ($value, $flags, $encoding, $double_encode);
+        }
+    }
+    return $result;
+}
+
+function utf8_encode_recurse($mixed_value)
+{
+    if (strtolower(CHARSET) == 'utf-8') {
+        return $mixed_value;
+    } elseif (!is_array($mixed_value)) {
+        return utf8_encode((string)$mixed_value);
+    } else {
+        $result = array();
+        foreach ($mixed_value as $key => $value) {
+            $result[$key] = utf8_encode($value);
+        }
+        return $result;
+    }
+}

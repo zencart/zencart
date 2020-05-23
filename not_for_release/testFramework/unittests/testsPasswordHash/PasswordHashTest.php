@@ -9,7 +9,7 @@ require_once(__DIR__ . '/../support/zcTestCase.php');
 /**
  * Unit Tests for password hashing rules
  */
-class testPasswordHash extends zcTestCase
+class PasswordHashTest extends zcTestCase
 {
     public function setUp(): void
     {

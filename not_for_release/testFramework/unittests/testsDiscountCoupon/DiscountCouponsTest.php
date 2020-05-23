@@ -9,7 +9,7 @@ require_once(__DIR__ . '/../support/zcDiscountCouponTest.php');
 /**
  * Unit Tests for discount coupons
  */
-class testDiscountCoupons extends zcDiscountCouponTest
+class DiscountCouponsTest extends zcDiscountCouponTest
 {
     public function setUp(): void
     {
