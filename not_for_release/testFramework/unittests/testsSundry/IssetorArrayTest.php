@@ -15,7 +15,7 @@ class testIssetorArray extends zcTestCase
     public function setup(): void
     {
         parent::setup();
-        require_once DIR_FS_CATALOG . 'includes/functions/functions_general.php';
+        require_once DIR_FS_CATALOG . 'includes/functions/functions_general_shared.php';
     }
 
     public function testIssetor()

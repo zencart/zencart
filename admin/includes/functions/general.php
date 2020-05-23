@@ -3847,7 +3847,3 @@ function get_logs_data($maxToList = 'count') {
     $filetype = $file_parts[sizeof($file_parts) - 1]; 
     return $filenum . "." . $filetype; 
   }
-function issetorArray(array $array, $key, $default = null)
-{
-    return isset($array[$key]) ? $array[$key] : $default;
-}
