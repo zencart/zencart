@@ -65,17 +65,13 @@ $paypal_ipn_sort_order_array = [
 <!doctype html>
 <html <?php echo HTML_PARAMS; ?>>
 <head>
-    <meta charset="<?php echo CHARSET; ?>">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title><?php echo TITLE; ?></title>
-    <link rel="stylesheet" href="includes/stylesheet.css">
-    <link rel="stylesheet" type="text/css" href="includes/cssjsmenuhover.css" media="all" id="hoverJS">
-    <script src="includes/menu.js"></script>
-    <script src ="includes/general.js"></script>
+    <?php require DIR_WS_INCLUDES . 'admin_html_head.php'; ?>
 </head>
 <body>
-<?php require DIR_WS_INCLUDES . 'header.php'; ?>
+<!-- header //-->
+<?php require(DIR_WS_INCLUDES . 'header.php'); ?>
+<!-- header_eof //-->
+<!-- body //-->
    <div class="container-fluid">
     <h1><?php echo HEADING_ADMIN_TITLE; ?></h1>
     <div class="row">
@@ -87,10 +83,8 @@ $paypal_ipn_sort_order_array = [
   echo '&nbsp;&nbsp;&nbsp;' . TEXT_PAYPAL_IPN_SORT_ORDER_INFO . zen_draw_form('paypal_ipn_sort_order', FILENAME_PAYPAL, '', 'get') . '&nbsp;&nbsp;' . zen_draw_pull_down_menu('paypal_ipn_sort_order', $paypal_ipn_sort_order_array, $paypal_ipn_sort_order, 'onchange="this.form.submit();"') . zen_hide_session_id() . $hidden_field . '</form>';
 ?>
    </div>
-
-<table class="table">
-          <tr>
-            <td>
+       <div class="row">
+           <div class="col-sm-12 col-md-9 configurationColumnLeft">
               <table class="table">
               <tr class="dataTableHeadingRow">
                 <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_ORDER_NUMBER; ?></td>
@@ -141,7 +135,8 @@ $paypal_ipn_sort_order_array = [
                     <td colspan="3" class="smallText"><?php echo $ipn_split->display_count($ipn_query_numrows, MAX_DISPLAY_SEARCH_RESULTS_PAYPAL_IPN, $_GET['page'], TEXT_DISPLAY_PAYPAL_IPN_NUMBER_OF_TX); ?></td>
                     <td colspan="3" class="smallText text-right"><?php echo $ipn_split->display_links($ipn_query_numrows, MAX_DISPLAY_SEARCH_RESULTS_PAYPAL_IPN, MAX_DISPLAY_PAGE_LINKS, isset($_GET['page']) ? (int)$_GET['page'] : 1, zen_get_all_get_params(['page'])); ?></td>
               </tr>
-            </table></td>
+            </table>
+           </div>
 <?php
   $heading = [];
   $contents = [];
@@ -176,11 +171,12 @@ $paypal_ipn_sort_order_array = [
 
   if ( (zen_not_null($heading)) && (zen_not_null($contents)) ) {
     $box = new box();
+      echo '<div class="col-sm-12 col-md-3 configurationColumnRight">';
     echo $box->infoBox($heading, $contents);
+      echo '</div>';
   }
 ?>
-          </tr>
-        </table>
+       </div>
 </div>
 <?php require DIR_WS_INCLUDES . 'footer.php'; ?>
 </body>

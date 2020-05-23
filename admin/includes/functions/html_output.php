@@ -252,7 +252,10 @@ function zen_image_submit($image, $alt = '', $parameters = '')
 ////
 // Output a form input field
   function zen_draw_input_field($name, $value = '~*~*#', $parameters = '', $required = false, $type = 'text', $reinsert_value = true) {
-    $field = '<input type="' . zen_output_string($type) . '" name="' . zen_output_string($name) . '"';
+    $type = zen_output_string($type);
+    if ($type === 'price') $type = 'number" step="0.01';
+
+    $field = '<input type="' . $type . '" name="' . zen_output_string($name) . '"';
 
     if ( $value == '~*~*#' && (isset($GLOBALS[$name]) && is_string($GLOBALS[$name])) && ($reinsert_value == true) ) {
       $field .= ' value="' . zen_output_string(stripslashes($GLOBALS[$name])) . '"';
