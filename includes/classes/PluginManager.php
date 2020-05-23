@@ -220,4 +220,10 @@ class PluginManager
         unset($versions[$version]);
         return $versions;
     }
+
+    public function hasPluginVersionsToClean($uniqueKey, $version)
+    {
+        return count($this->getPluginVersionsToClean($uniqueKey, $version));
+    }
+
 }

@@ -80,13 +80,15 @@ class PluginManagerController extends BaseController
                         'page=' . $this->page . '&colKey=' . $this->tableObjInfo->unique_key . '&action=enable') . '" class="btn btn-primary" role="button">' . TEXT_ENABLE . '</a>'
             );
         }
-        $this->tableDefinition['content'][] = ['text' => '<br>' . TEXT_INFO_CLEANUP];
-        $this->tableDefinition['content'][] = array(
-            'align' => 'text-center', 'text' => '<a href="' . zen_href_link
-                (
-                    FILENAME_PLUGIN_MANAGER,
-                    'page=' . $this->page . '&colKey=' . $this->tableObjInfo->unique_key . '&action=cleanup') . '" class="btn btn-primary" role="button">' . TEXT_CLEANUP . '</a>'
-        );
+        if ($this->pluginManager->hasPluginVersionsToClean($this->tableObjInfo->unique_key, $this->tableObjInfo->version)) {
+            $this->tableDefinition['content'][] = ['text' => '<br>' . TEXT_INFO_CLEANUP];
+            $this->tableDefinition['content'][] = array(
+                'align' => 'text-center', 'text' => '<a href="' . zen_href_link
+                    (
+                        FILENAME_PLUGIN_MANAGER,
+                        'page=' . $this->page . '&colKey=' . $this->tableObjInfo->unique_key . '&action=cleanup') . '" class="btn btn-primary" role="button">' . TEXT_CLEANUP . '</a>'
+            );
+        }
     }
 
     protected function processActionInstall()
