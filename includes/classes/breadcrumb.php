@@ -54,7 +54,7 @@ class breadcrumb extends base
             if ($i == ($n - 1) && DISABLE_BREADCRUMB_LINKS_ON_LAST_ITEM == 'true') {
                 $skip_link = true;
             }
-            if (isset($this->_trail[$i]['link']) && zen_not_null($this->_trail[$i]['link']) && !$skip_link) {
+            if (!empty($this->_trail[$i]['link']) && !$skip_link) {
                 // this line simply sets the "Home" link to be the domain/url, not main_page=index?blahblah:
                 if ($this->_trail[$i]['title'] == HEADER_TITLE_CATALOG) {
                     $trail_string .= '  ' . $prefix . '<a href="' . HTTP_SERVER . DIR_WS_CATALOG . '">' . $this->_trail[$i]['title'] . '</a>' . $suffix;
