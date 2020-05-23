@@ -20,6 +20,13 @@ if (!isset($languages_array)) {
 
 if (zen_not_null($action)) {
   switch ($action) {
+    case 'edit':
+        // same as 'preview'
+    case 'preview':
+      if (empty($_GET['rID'])) {
+          zen_redirect(zen_href_link(FILENAME_REVIEWS, (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . (isset($_GET['status']) ? 'status=' . $_GET['status'] : '')));
+      }
+      break;
     case 'setflag':
       if (isset($_POST['flag']) && ($_POST['flag'] == 1 || $_POST['flag'] == 0)) {
         zen_set_reviews_status($_GET['rID'], $_POST['flag']);
