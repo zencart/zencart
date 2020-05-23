@@ -7,7 +7,7 @@
  * @version $Id:  $
  */
 
-namespace zencart\Traits;
+namespace Zencart\Traits;
 
 trait Singleton
 {
