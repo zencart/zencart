@@ -36,8 +36,8 @@ $tableDefinition = [
     ],
     'defaultRowAction' => '',
     'columns'          => [
-        'unique_key' => ['title' => TABLE_HEADING_KEY],
         'name'       => ['title' => TABLE_HEADING_NAME],
+        'unique_key' => ['title' => TABLE_HEADING_KEY],
         'filespace'  => [
             'title' => TABLE_HEADING_FILE_SPACE, 'derivedItem'
                     => [
