@@ -109,6 +109,7 @@ foreach ($menu_titles as $id => $title) {
     <!-- body //-->
     <div class="container-fluid" id="pageWrapper">
       <h1><?php echo HEADING_TITLE ?></h1>
+        <p><?php echo TEXT_INFO ?></p>
       <?php echo zen_draw_form('admin_page_registration_form', FILENAME_ADMIN_PAGE_REGISTRATION, 'action=insert', 'post', 'class="form-horizontal" id="adminPageRegistrationForm"'); ?>
       <div class="form-group">
           <?php echo zen_draw_label(TEXT_PAGE_KEY, 'page_key', 'class="col-sm-3 control-label"'); ?>
@@ -154,6 +155,7 @@ foreach ($menu_titles as $id => $title) {
           <?php echo zen_draw_label(TEXT_SORT_ORDER, 'sort_order', 'class="col-sm-3 control-label"'); ?>
         <div class="col-sm-9 col-md-6">
             <?php echo zen_draw_input_field('sort_order', $sort_order, 'class="form-control" id="sortOrder"'); ?>
+            <span class="help-block"><?php echo TEXT_EXAMPLE_SORT_ORDER; ?></span>
         </div>
       </div>
       <div class="row">
