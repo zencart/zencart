@@ -15,6 +15,7 @@ if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
 }
 class order extends base {
+  protected $orderId = null;
   var $info, $totals, $products, $customer, $delivery, $billing, $content_type, $email_low_stock, $products_ordered_attributes,
       $products_ordered, $products_ordered_email, $products_ordered_html, $attachArray, $email_order_message, $extra_header_text,
       $doStockDecrement, $send_low_stock_emails, $queryReturnFlag, $bestSellersUpdate, $use_external_tax_handler_only;
@@ -35,10 +36,14 @@ class order extends base {
     }
   }
 
+  public function getOrderId()
+  {
+      return $this->orderId;
+  }
+
   function query($order_id) {
     global $db;
 
-    $order_id = (int)$order_id;
     $this->queryReturnFlag = NULL;
     $this->notify('NOTIFY_ORDER_BEFORE_QUERY', array(), $order_id);
     if ($this->queryReturnFlag === TRUE) return false;
@@ -47,9 +52,11 @@ class order extends base {
     $order = $db->Execute($order_query);
     if ($order->EOF) return false;
 
+    $this->orderId = $order_id = (int)$order_id;
+
     $totals_query = "SELECT title, text, class, value
                      FROM " . TABLE_ORDERS_TOTAL . "
-                     WHERE orders_id = " . (int)$order_id . "
+                     WHERE orders_id = " . (int)$this->orderId . "
                      ORDER BY sort_order";
 
     $totals = $db->Execute($totals_query);
@@ -80,7 +87,8 @@ class order extends base {
       $totals->MoveNext();
     }
 
-    $this->info = array('currency' => $order->fields['currency'],
+    $this->info = array('order_id' => $this->orderId,
+                        'currency' => $order->fields['currency'],
                         'currency_value' => $order->fields['currency_value'],
                         'payment_method' => $order->fields['payment_method'],
                         'payment_module_code' => $order->fields['payment_module_code'],
@@ -142,7 +150,7 @@ class order extends base {
     $index = 0;
     $orders_products_query = "SELECT *
                               FROM " . TABLE_ORDERS_PRODUCTS . "
-                              WHERE orders_id = " . (int)$order_id . "
+                              WHERE orders_id = " . (int)$this->orderId . "
                               ORDER BY orders_products_id";
 
     $orders_products = $db->Execute($orders_products_query);
@@ -196,7 +204,7 @@ class order extends base {
       $attributes_query = "SELECT products_options_id, products_options_values_id, products_options, products_options_values,
                            options_values_price, price_prefix, product_attribute_is_free 
                            FROM " . TABLE_ORDERS_PRODUCTS_ATTRIBUTES . "
-                           WHERE orders_id = " . (int)$order_id . "
+                           WHERE orders_id = " . (int)$this->orderId . "
                            AND orders_products_id = " . (int)$orders_products->fields['orders_products_id'] . "
                            ORDER BY orders_products_attributes_id ASC";
 
@@ -226,13 +234,13 @@ class order extends base {
       $orders_products->MoveNext();
     }
 
-    $this->notify('NOTIFY_ORDER_AFTER_QUERY', IS_ADMIN_FLAG, $order_id);
+    $this->notify('NOTIFY_ORDER_AFTER_QUERY', IS_ADMIN_FLAG, $this->orderId);
 
     /**
      * @deprecated since v1.5.6; use NOTIFY_ORDER_AFTER_QUERY instead
      */
     if (IS_ADMIN_FLAG === true) {
-        $this->notify('ORDER_QUERY_ADMIN_COMPLETE', array('orders_id' => $order_id));
+        $this->notify('ORDER_QUERY_ADMIN_COMPLETE', array('orders_id' => $this->orderId));
     }
 
   }
@@ -335,7 +343,7 @@ class order extends base {
                         'total' => 0,
                         'tax_groups' => array(),
                         'comments' => (isset($_SESSION['comments']) ? $_SESSION['comments'] : ''),
-                        'ip_address' => $_SESSION['customers_ip_address'] . ' - ' . $_SERVER['REMOTE_ADDR']
+                        'ip_address' => $_SESSION['customers_ip_address'] . ' - ' . $_SERVER['REMOTE_ADDR'],
                         );
 
 
@@ -705,11 +713,11 @@ class order extends base {
                             );
 
     zen_db_perform(TABLE_ORDERS, $sql_data_array);
-    $insert_id = $db->insert_ID();
-    $this->notify('NOTIFY_ORDER_DURING_CREATE_ADDED_ORDER_HEADER', array_merge(array('orders_id' => $insert_id, 'shipping_weight' => $_SESSION['cart']->weight), $sql_data_array), $insert_id);
+    $this->orderId = $this->info['order_id'] = $insert_id = $db->insert_ID();
+    $this->notify('NOTIFY_ORDER_DURING_CREATE_ADDED_ORDER_HEADER', array_merge(array('orders_id' => $this->orderId, 'shipping_weight' => $_SESSION['cart']->weight), $sql_data_array), $this->orderId);
 
     for ($i=0, $n=sizeof($zf_ot_modules); $i<$n; $i++) {
-      $sql_data_array = array('orders_id' => $insert_id,
+      $sql_data_array = array('orders_id' => $this->orderId,
                               'title' => $zf_ot_modules[$i]['title'],
                               'text' => $zf_ot_modules[$i]['text'],
                               'value' => (is_numeric($zf_ot_modules[$i]['value'])) ? $zf_ot_modules[$i]['value'] : '0',
@@ -723,7 +731,7 @@ class order extends base {
     }
 
     $customer_notification = (SEND_EMAILS == 'true') ? '1' : '0';
-    $sql_data_array = array('orders_id' => $insert_id,
+    $sql_data_array = array('orders_id' => $this->orderId,
                             'orders_status_id' => $this->info['order_status'],
                             'date_added' => 'now()',
                             'customer_notified' => $customer_notification,
@@ -748,13 +756,15 @@ class order extends base {
     $osh_insert_id = $db->insert_ID();
     $this->notify('NOTIFY_ORDER_DURING_CREATE_ADDED_ORDER_COMMENT', $sql_data_array, $osh_insert_id);
 
-    return $insert_id;
+    return $this->orderId;
 
   }
 
 
-  function create_add_products($zf_insert_id, $zf_mode = false) {
+  function create_add_products($zf_insert_id = null, $zf_mode = false) {
     global $db, $currencies, $order_total_modules, $order_totals;
+
+    if ($zf_insert_id === null) $zf_insert_id = $this->orderId;
 
     // initialized for the email confirmation
     $this->products_ordered = '';
@@ -1015,8 +1025,11 @@ class order extends base {
   }
 
 
-  function send_order_email($zf_insert_id, $zf_mode = FALSE) {
+  function send_order_email($zf_insert_id = null, $zf_mode = FALSE) {
     global $currencies, $order_totals;
+    
+    if ($zf_insert_id === null) $zf_insert_id = $this->orderId;
+
     $this->notify('NOTIFY_ORDER_SEND_EMAIL_INITIALIZE', array(), $zf_insert_id, $order_totals, $zf_mode);
     if (!defined('ORDER_EMAIL_DATE_FORMAT')) define('ORDER_EMAIL_DATE_FORMAT', 'M-d-Y h:iA');
 
