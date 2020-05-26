@@ -68,9 +68,11 @@ if (isset($_POST) && !empty($_POST)) {
     $display_on_menu = 'N';
   }
 
-  if (isset($_POST['sort_order'])) {
-    $sort_order = (int)$_POST['sort_order'];
-  }
+    if (!empty($_POST['sort_order'])) {
+        $sort_order = (int)$_POST['sort_order'];
+    } else {
+        $sort_order = -1;
+    }
 
   if (!$error) {
     // register page
