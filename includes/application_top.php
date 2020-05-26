@@ -209,7 +209,7 @@ if (isset($loaderPrefix)) {
     $loaderPrefix = 'config';
 }
 $loader_file = $loaderPrefix . '.core.php';
-$initSystem = new InitSystem('admin', $loaderPrefix, FileSystem::getInstance(), $pluginManager, $installedPlugins);
+$initSystem = new InitSystem('catalog', $loaderPrefix, FileSystem::getInstance(), $pluginManager, $installedPlugins);
 $loaderList = $initSystem->loadAutoLoaders();
 
 $initSystemList = $initSystem->processLoaderList($loaderList);

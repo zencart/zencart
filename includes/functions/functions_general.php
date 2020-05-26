@@ -1425,7 +1425,6 @@ function zen_set_field_length($tbl, $fld, $max = 70)
     $db->execute($sql);
   }
 
-
   /////////////////////////////////////////////
 ////
 // call additional function files

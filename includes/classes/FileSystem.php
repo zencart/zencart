@@ -64,7 +64,7 @@ class FileSystem
 
     public function isAdminDir($filePath)
     {
-        if (!defined(DIR_FS_ADMIN)) return false;
+        if (!defined('DIR_FS_ADMIN')) return false;
         $test = str_replace(DIR_FS_ADMIN, '', $filePath);
         if ($test != $filePath) return false;
         return true;
@@ -73,7 +73,7 @@ class FileSystem
     public function isCatalogDir($filePath)
     {
         if ($this->isAdminDir($filePath)) return false;
-        if (!defined(DIR_FS_CATALOG)) return false;
+        if (!defined('DIR_FS_CATALOG')) return false;
         $test = str_replace(DIR_FS_CATALOG, '', $filePath);
         if ($test != $filePath) return false;
         return true;

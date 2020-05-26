@@ -14,8 +14,7 @@ class LanguageLoader
 
     public function __construct($pluginList, $currentPage)
     {
-//        $this->pluginList = $pluginList;
-        $this->pluginList = []; // @todo temp
+        $this->pluginList = $pluginList;
         $this->currentPage = $currentPage;
     }
 

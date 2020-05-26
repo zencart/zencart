@@ -124,6 +124,7 @@ define('BOX_HEADING_MODULES', 'Modules');
 define('BOX_MODULES_PAYMENT', 'Payment');
 define('BOX_MODULES_SHIPPING', 'Shipping');
 define('BOX_MODULES_ORDER_TOTAL', 'Order Total');
+define('BOX_MODULES_PLUGINS', 'Plugin Manager');
 
 // categories box text
 define('BOX_HEADING_CATALOG', 'Catalog');
@@ -694,6 +695,23 @@ define('WARNING_PRIMARY_SERVER_FAILED', 'Warning: The primary exchange rate serv
 
 // Set to empty string if alpha sorting not desired
 define('MENU_CATEGORIES_TO_SORT_BY_NAME','reports,tools'); 
+
+// Plugins
+define('PLUGIN_INSTALL_SQL_FAILURE', 'one or more database errors occured');
+
+// ARIA Stuff
+
+define('ARIA_PAGINATION_ROLE_LABEL_GENERAL','Pagination');
+define('ARIA_PAGINATION_ROLE_LABEL_FOR','%s Pagination'); // eg: "Search results Pagination"
+define('ARIA_PAGINATION_PREVIOUS_PAGE','Go to Previous Page');
+define('ARIA_PAGINATION_NEXT_PAGE','Go to Next Page');
+define('ARIA_PAGINATION_CURRENT_PAGE','Current Page');
+define('ARIA_PAGINATION_CURRENTLY_ON',', now on page %s');
+define('ARIA_PAGINATION_GOTO','Go to ');
+define('ARIA_PAGINATION_PAGE_NUM','Page %s');
+define('ARIA_PAGINATION_ELLIPSIS_PREVIOUS','Get previous group of pages');
+define('ARIA_PAGINATION_ELLIPSIS_NEXT','Get next group of pages');
+define('ARIA_PAGINATION_','');
 
 ///////////////////////////////////////////////////////////
 // include additional files:
