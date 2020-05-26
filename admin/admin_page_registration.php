@@ -62,7 +62,7 @@ if (isset($_POST) && !empty($_POST)) {
   }
 
   if (isset($_POST['display_on_menu'])) {
-    $checked = 'checked="true"';
+    $checked = ' checked';
     $display_on_menu = 'Y';
   } else {
     $display_on_menu = 'N';
@@ -145,7 +145,7 @@ foreach ($menu_titles as $id => $title) {
       <div class="form-group">
           <?php echo zen_draw_label(TEXT_DISPLAY_ON_MENU, 'display_on_menu', 'class="col-sm-3 control-label"'); ?>
         <div class="col-sm-9 col-md-6">
-          <input type="checkbox" name="display_on_menu" id="displayOnMenu" <?php echo $checked ?> />
+          <input type="checkbox" name="display_on_menu" id="displayOnMenu"<?php echo $checked; ?> />
         </div>
       </div>
       <div class="form-group">
