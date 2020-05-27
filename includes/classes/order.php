@@ -635,6 +635,11 @@ class order extends base {
       }
   }
 
+    /**
+     * @param array $zf_ot_modules OrderTotalModules array from during checkout_process. Used to lookup OT prices to store into order
+     * @param int $zf_mode Deprecated/unused since 1.5.0
+     * @return int|string
+     */
   function create($zf_ot_modules, $zf_mode = 2) {
     global $db;
 
@@ -760,7 +765,10 @@ class order extends base {
 
   }
 
-
+    /**
+     * @param null $zf_insert_id - OrderNumber - deprecated since 1.5.7
+     * @param bool $zf_mode Deprecated/unused since 1.5.0
+     */
   function create_add_products($zf_insert_id = null, $zf_mode = false) {
     global $db, $currencies, $order_total_modules, $order_totals;
 
@@ -1025,9 +1033,13 @@ class order extends base {
   }
 
 
+    /**
+     * @param int|null $zf_insert_id  OrderNumber for display - deprecated since 1.5.7.
+     * @param bool $zf_mode Deprecated/unused since 1.5.0
+     */
   function send_order_email($zf_insert_id = null, $zf_mode = FALSE) {
     global $currencies, $order_totals;
-    
+
     if ($zf_insert_id === null) $zf_insert_id = $this->orderId;
 
     $this->notify('NOTIFY_ORDER_SEND_EMAIL_INITIALIZE', array(), $zf_insert_id, $order_totals, $zf_mode);
