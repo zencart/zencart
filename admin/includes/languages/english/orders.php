@@ -36,7 +36,6 @@ define('TABLE_HEADING_PRICE_INCLUDING_TAX', 'Price (incl)');
 define('TABLE_HEADING_TOTAL_EXCLUDING_TAX', 'Total (excl)');
 define('TABLE_HEADING_TOTAL_INCLUDING_TAX', 'Total (incl)');
 define('TABLE_HEADING_PRICE', 'Price');
-define('TABLE_HEADING_TOTAL', 'Total');
 define('TABLE_HEADING_UPDATED_BY', 'Updated By');
 
 define('TABLE_HEADING_CUSTOMER_NOTIFIED', 'Customer Notified');
