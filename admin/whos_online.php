@@ -1,10 +1,9 @@
 <?php
 /**
- * @package admin
  * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id:  Modified in v1.5.7 $
+ * @version $Id: DrByte 2020 May 19 Modified in v1.5.7 $
  */
 // Default refresh interval (0=off).  NOTE: Using automated refresh may put you in breach of PCI Compliance
 $defaultRefreshInterval = 0;

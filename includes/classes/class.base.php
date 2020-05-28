@@ -2,17 +2,15 @@
 /**
  * File contains just the base class
  *
- * @package classes
  * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Drbyte Tue Sep 11 15:54:43 2018 -0400 Modified in v1.5.6 $
+ * @version $Id: DrByte 2020 May 23 Modified in v1.5.7 $
  */
 /**
  * abstract class base
  *
  * any class that wants to notify or listen for events must extend this base class
  *
- * @package classes
  */
 class base {
   /**

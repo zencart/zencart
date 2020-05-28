@@ -4,11 +4,10 @@
  *
  * Template used to collect/display details of sending a GV to a friend from own GV balance. <br />
  *
- * @package templateSystem
- * @copyright Copyright 2003-2016 Zen Cart Development Team
+ * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: DrByte  Fri Jan 8 00:33:36 2016 -0500 Modified in v1.5.5 $
+ * @version $Id: Scott C Wilson 2019 Jul 05 Modified in v1.5.7 $
  */
 ?>
 <div class="centerColumn" id="gvSendDefault">

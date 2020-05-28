@@ -2,10 +2,9 @@
 /**
  * plugin_support.php
  *
- * @package functions
- * @copyright Copyright 2003-2018 Zen Cart Development Team
+ * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Drbyte Tue Sep 11 12:44:51 2018 -0400 Modified in v1.5.6 $
+ * @version $Id: DrByte 2020 May 16 Modified in v1.5.7 $
  */
 /**
  * Functions to support plugin usage

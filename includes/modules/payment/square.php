@@ -7,10 +7,9 @@
  *
  * REQUIRES PHP 5.4 or newer
  *
- * @package square
  * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: Chris Brown <drbyte@zen-cart.com> Modified 2020-04-08 $
+ * @version $Id: DrByte 2020 May 21 Modified in v1.5.7 $
  */
 
 if (!defined('TABLE_SQUARE_PAYMENTS')) define('TABLE_SQUARE_PAYMENTS', DB_PREFIX . 'square_payments');

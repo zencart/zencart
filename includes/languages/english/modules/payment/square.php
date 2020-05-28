@@ -2,10 +2,9 @@
 /**
  * Square payment module language defines
  *
- * @package square
- * @copyright Copyright 2003-2017 Zen Cart Development Team
+ * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: Chris Brown <drbyte@zen-cart.com> New in v1.5.5f $
+ * @version $Id: DrByte 2020 May 16 Modified in v1.5.7 $
  */
 
 define('MODULE_PAYMENT_SQUARE_TEXT_DESCRIPTION', 'Accept credit cards in less than 5 minutes.<br>No monthly fees and no setup fees.<br>PCI Compliant. Customer never leaves your store!<br>Standard rates are 2.9% + $0.30 per transaction.<br>Funds are deposited in your bank account in 1-2 business days.<br><br>

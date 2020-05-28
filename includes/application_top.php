@@ -6,11 +6,10 @@
  * the elements to be initialised and the order in which that happens.
  * see {@link  http://www.zen-cart.com/wiki/index.php/Developers_API_Tutorials#InitSystem wikitutorials} for more details.
  *
- * @package initSystem
- * @copyright Copyright 2003-2019 Zen Cart Development Team
+ * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2019 May 15 Modified in v1.5.6b $
+ * @version $Id: Zcwilt 2020 May 23 Modified in v1.5.7 $
  */
 use Zencart\FileSystem\FileSystem;
 use Zencart\PluginManager\PluginManager;

@@ -1,10 +1,9 @@
 <?php
 /**
- * @package admin
- * @copyright Copyright 2003-2018 Zen Cart Development Team
+ * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Drbyte Tue Oct 9 19:14:19 2018 -0400 Modified in v1.5.6 $
+ * @version $Id: Scott C Wilson 2019 Jul 25 Modified in v1.5.7 $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
@@ -12,7 +11,6 @@ if (!defined('IS_ADMIN_FLAG')) {
 /**
  * load the system wide functions
  *
- * @package admin
 **/
 // customization for the design layout
   define('BOX_WIDTH', 125); // how wide the boxes should be in pixels (default: 125)

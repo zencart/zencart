@@ -4,11 +4,10 @@
  *
  * Prepares list of additional product images to be displayed in template
  *
- * @package templateSystem
- * @copyright Copyright 2003-2018 Zen Cart Development Team
+ * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: lat9 Thu May 17 09:25:19 2018 -0400 Modified in v1.5.6 $
+ * @version $Id: torvista 2019 Aug 05 Modified in v1.5.7 $
  */
 if (!defined('IS_ADMIN_FLAG')) {
     die('Illegal Access');

@@ -6,11 +6,10 @@
  * and uses this this to constuct the InitSysytem.
  * see {@link http://www.zen-cart.com/wiki/index.php/Developers_API_Tutorials#InitSystem} for more details.
  *
- * @package initSystem
  * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id:  Modified in v1.5.7 $
+ * @version $Id: DrByte 2020 May 14 Modified in v1.5.7 $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
