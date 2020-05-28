@@ -1,10 +1,9 @@
 <?php
 /**
- * @package languageDefines
- * @copyright Copyright 2003-2006 Zen Cart Development Team
+ * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: index.php 19537 2011-09-20 17:14:44Z drbyte $
+ * @version $Id: Scott C Wilson 2019 Jul 27 Modified in v1.5.7 $
  */
 
 define('TEXT_MAIN','This is the main define statement for the page for english when no template defined file exists. It is located in: <strong>/includes/languages/english/index.php</strong>');

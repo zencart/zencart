@@ -5,11 +5,10 @@
  * Loaded automatically by index.php?main_page=create_account.<br />
  * Displays Create Account form.
  *
- * @package templateSystem
- * @copyright Copyright 2003-2018 Zen Cart Development Team
+ * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: rbarbour zcadditions.com Tue Aug 21 07:00:53 2018 -0400 Modified in v1.5.6 $
+ * @version $Id: rbarbour zcadditions.com 2019 Jul 15 Modified in v1.5.7 $
  */
 ?>
 

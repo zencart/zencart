@@ -2,11 +2,10 @@
 /**
  * ot_coupon order-total module
  *
- * @package orderTotal
- * @copyright Copyright 2003-2019 Zen Cart Development Team
+ * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2019 May 26 Modified in v1.5.6b $
+ * @version $Id: Scott C Wilson 2020 May 18 Modified in v1.5.7 $
  */
 /**
  * Order Total class  to handle discount coupons

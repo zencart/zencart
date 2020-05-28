@@ -1,10 +1,9 @@
 #!/usr/bin/php
 <?php
 /**
- * @package admin
- * @copyright Copyright 2003-2016 Zen Cart Development Team
+ * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: DrByte  Sat Oct 17 20:09:58 2015 -0400 New in v1.5.5 $
+ * @version $Id: Scott C Wilson 2019 Jul 23 Modified in v1.5.7 $
  */
 // uncomment the following line to disable this script execution in the case of an emergency malfunction when you can't access the server cron settings to kill the scheduled cron job:
 // exit(1);

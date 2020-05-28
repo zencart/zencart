@@ -1,10 +1,9 @@
 <?php
 /**
- * @package languageDefines
- * @copyright Copyright 2003-2018 Zen Cart Development Team
+ * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Scott C Wilson Mon Apr 23 08:06:02 2018 -0400 Modified in v1.5.6 $
+ * @version $Id: DrByte 2020 May 16 Modified in v1.5.7 $
  */
 
 define ('EMAIL_LOGO_FILENAME', 'header.jpg');  //-File is present in /email folder

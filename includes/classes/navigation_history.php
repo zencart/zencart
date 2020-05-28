@@ -2,11 +2,10 @@
 /**
  * Navigation_history Class.
  *
- * @package classes
- * @copyright Copyright 2003-2018 Zen Cart Development Team
+ * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Drbyte Sun Jan 7 21:32:45 2018 -0500 Modified in v1.5.6 $
+ * @version $Id: Scott C Wilson 2019 Sep 16 Modified in v1.5.7 $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
@@ -15,7 +14,6 @@ if (!defined('IS_ADMIN_FLAG')) {
  * Navigation_history Class.
  * This class is used to manage navigation snapshots
  *
- * @package classes
  */
 class navigationHistory extends base {
   var $path, $snapshot;

@@ -2,11 +2,10 @@
 /**
  * ipn_main_handler.php callback handler for PayPal IPN notifications
  *
- * @package paymentMethod
- * @copyright Copyright 2003-2019 Zen Cart Development Team
+ * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2019 May 15 Modified in v1.5.6b $
+ * @version $Id: lat9 2019 Dec 15 Modified in v1.5.7 $
  */
 if (!defined('TEXT_RESELECT_SHIPPING')) define('TEXT_RESELECT_SHIPPING', 'You have changed the items in your cart since shipping was last calculated, and costs may have changed. Please verify/re-select your shipping method.');
 

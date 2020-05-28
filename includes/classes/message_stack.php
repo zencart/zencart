@@ -2,11 +2,10 @@
 /**
  * messageStack Class.
  *
- * @package classes
- * @copyright Copyright 2003-2019 Zen Cart Development Team
+ * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: mc12345678 2019 Apr 30 Modified in v1.5.6b $
+ * @version $Id: Zcwilt 2020 Apr 07 Modified in v1.5.7 $
  */
 if (!defined('IS_ADMIN_FLAG')) {
     die('Illegal Access');
@@ -15,7 +14,6 @@ if (!defined('IS_ADMIN_FLAG')) {
  * messageStack Class.
  * This class is used to manage messageStack alerts
  *
- * @package classes
  */
 class messageStack extends base 
 {

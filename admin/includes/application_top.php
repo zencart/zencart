@@ -1,10 +1,9 @@
 <?php
 /**
- * @package admin
- * @copyright Copyright 2003-2019 Zen Cart Development Team
+ * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2019 May 15 Modified in v1.5.6b $
+ * @version $Id: mc12345678 2019 Oct 09 Modified in v1.5.7 $
  */
 /**
  * File contains just application_top code
@@ -12,7 +11,6 @@
  * Initializes common classes & methods. Controlled by an array which describes
  * the elements to be initialised and the order in which that happens.
  *
- * @package admin
  */
 require_once('includes/application_bootstrap.php');
 /**

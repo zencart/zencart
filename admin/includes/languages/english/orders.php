@@ -1,10 +1,9 @@
 <?php
 /**
- * @package admin
- * @copyright Copyright 2003-2018 Zen Cart Development Team
+ * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: lat9 Fri Nov 9 08:33:17 2018 -0500 Modified in v1.5.6 $
+ * @version $Id: DrByte 2020 May 28 Modified in v1.5.7 $
  */
 
 define('HEADING_TITLE', 'Orders');

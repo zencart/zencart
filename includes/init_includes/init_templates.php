@@ -7,11 +7,10 @@
  * Then loads template-specific language file, followed by master/default language file<br />
  * ie: includes/languages/classic/english.php followed by includes/languages/english.php
  *
- * @package initSystem
  * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id:  Modified in v1.5.7 $
+ * @version $Id: DrByte 2020 May 19 Modified in v1.5.7 $
  */
 if (!defined('IS_ADMIN_FLAG')) {
     die('Illegal Access');

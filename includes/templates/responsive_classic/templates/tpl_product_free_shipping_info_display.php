@@ -5,11 +5,10 @@
  * Loaded automatically by index.php?main_page=product_free_shipping_info.<br />
  * Displays details of a "free-shipping" product (provided it is assigned to the product-free-shipping product type)
  *
- * @package templateSystem
- * @copyright Copyright 2003-2018 Zen Cart Development Team
+ * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: picaflor-azul Thu Sep 21 10:37:10 2017 -0400 Modified in v1.5.6 $
+ * @version $Id: DrByte 2020 May 16 Modified in v1.5.7 $
  */
 ?>
 <div class="centerColumn" id="productFreeShipdisplay">
