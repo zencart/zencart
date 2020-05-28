@@ -26,4 +26,4 @@ define('TEXT_INFO_HEADING_NEW_COUNTRY', 'New Country');
 define('TEXT_INFO_HEADING_EDIT_COUNTRY', 'Edit Country');
 define('TEXT_INFO_HEADING_DELETE_COUNTRY', 'Delete Country');
 define('ERROR_COUNTRY_IN_USE', 'ERROR: Cannot delete selected country because it is connected to customer records.');
-define('ISO_COUNTRY_CODES_LINK', '<a href="https://en.wikipedia.org/wiki/ISO_3166-1#Officially_assigned_code_elements" rel="noreferrer noopener"target="_blank">ISO 3166 Country Codes Reference</a>');
+define('ISO_COUNTRY_CODES_LINK', '<a href="https://en.wikipedia.org/wiki/ISO_3166-1#Officially_assigned_code_elements" rel="noreferrer noopener" target="_blank">ISO 3166 Country Codes Reference</a>');

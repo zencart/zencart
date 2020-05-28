@@ -10,7 +10,7 @@
 define('NAVBAR_TITLE', TEXT_GV_NAME . ' FAQ');
 define('HEADING_TITLE', TEXT_GV_NAME . ' FAQ');
 
-define('TEXT_INFORMATION', '<a name="Top"></a>
+define('TEXT_INFORMATION', '<a id="Top"></a>
   <a href="'.zen_href_link(FILENAME_GV_FAQ,'faq_item=1','NONSSL').'">Purchasing ' . TEXT_GV_NAMES . '</a><br />
   <a href="'.zen_href_link(FILENAME_GV_FAQ,'faq_item=2','NONSSL').'">How to send ' . TEXT_GV_NAMES . '</a><br />
   <a href="'.zen_href_link(FILENAME_GV_FAQ,'faq_item=3','NONSSL').'">Buying with ' . TEXT_GV_NAMES . '</a><br />
