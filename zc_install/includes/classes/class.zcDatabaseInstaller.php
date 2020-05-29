@@ -208,7 +208,7 @@ class zcDatabaseInstaller
     {
         if (($this->lineSplit[2] == 'configuration' && ($result = $this->checkConfigKey($this->line))) ||
             ($this->lineSplit[2] == 'product_type_layout' && ($result = $this->checkProductTypeLayoutKey($this->line))) ||
-            ($this->lineSplit == 'configuration_group' && ($result = $this->checkCfggroupKey($line))) ||
+            ($this->lineSplit == 'configuration_group' && ($result = $this->checkCfggroupKey($this->line))) ||
             (!$this->tableExists($this->lineSplit[2]))) {
             if (!isset($result)) $result = sprintf(REASON_TABLE_NOT_FOUND, $this->lineSplit[2]) . ' CHECK PREFIXES!';
             $this->writeUpgradeExceptions($this->line, $result, $this->fileName);
@@ -266,7 +266,7 @@ class zcDatabaseInstaller
     {
         if (($this->lineSplit[2] == 'configuration' && ($result = $this->checkConfigKey($this->line))) ||
             ($this->lineSplit[2] == 'product_type_layout' && ($result = $this->checkProductTypeLayoutKey($this->line))) ||
-            ($this->lineSplit == 'configuration_group' && ($result = $this->checkCfggroupKey($line))) ||
+            ($this->lineSplit == 'configuration_group' && ($result = $this->checkCfggroupKey($this->line))) ||
             (!$this->tableExists($this->lineSplit[2]))) {
             if (!isset($result)) $result = sprintf(REASON_TABLE_NOT_FOUND, $this->lineSplit[2]) . ' CHECK PREFIXES!';
             $this->writeUpgradeExceptions($this->line, $result, $this->fileName);
@@ -279,6 +279,7 @@ class zcDatabaseInstaller
     public function parserUpdate()
     {
         if (!$this->tableExists($this->lineSplit[1])) {
+            if (!isset($result)) $result = sprintf(REASON_TABLE_NOT_FOUND, $this->lineSplit[1]) . ' CHECK PREFIXES!';
             $this->writeUpgradeExceptions($this->line, $result, $this->fileName);
             $this->ignoreLine = true;
         } else {
