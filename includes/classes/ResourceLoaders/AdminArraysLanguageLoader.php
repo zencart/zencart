@@ -12,8 +12,9 @@ use Zencart\FileSystem\FileSystem;
 
 class AdminArraysLanguageLoader extends BaseLanguageLoader
 {
-    public function loadLanguageDefines()
+    public function loadLanguageDefines($mainLoader)
     {
+        $this->mainLoader = $mainLoader;
         $this->loadBaseLanguageFile();
         $this->loadLanguageForView();
         $this->loadLanguageExtraDefinitions();

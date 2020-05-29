@@ -11,21 +11,18 @@ namespace Zencart\LanguageLoader;
 class AdminLanguageLoader
 {
 
-    public function __construct($pluginList, $currentPage, $templateDir, $fallback = 'english')
+    public function __construct($arraysLoader, $filesLoader)
     {
-//        $this->pluginList = $pluginList;
         $this->languageFilesLoaded = ['arrays' => [], 'legacy' => []];
-        $this->arrayLoader = new AdminArraysLanguageLoader(
-            $this, $pluginList, $currentPage, $templateDir, $fallback = 'english');
-        $this->fileLoader = new AdminFilesLanguageLoader(
-            $this, $pluginList, $currentPage, $templateDir, $fallback = 'english');
+        $this->arrayLoader = $arraysLoader;
+        $this->fileLoader = $filesLoader;
         $this->languageFilesLoaded = ['arrays' => [], 'legacy' => []];
     }
 
     public function loadLanguageDefines()
     {
-        $this->arrayLoader->loadLanguageDefines();
-        $this->fileLoader->loadLanguageDefines();
+        $this->arrayLoader->loadLanguageDefines($this);
+        $this->fileLoader->loadLanguageDefines($this);
         $this->arrayLoader->makeConstants($this->arrayLoader->getLanguageDefines());
     }
 

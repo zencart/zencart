@@ -14,9 +14,8 @@ class BaseLanguageLoader
 {
     protected $languageDefines = [];
 
-    public function __construct($mainLoader, $pluginList, $currentPage, $templateDir, $fallback = 'english')
+    public function __construct($pluginList, $currentPage, $templateDir, $fallback = 'english')
     {
-        $this->mainLoader = $mainLoader;
         $this->languageDefines = [];
         $this->pluginList = []; // @todo temp
         $this->currentPage = $currentPage;
