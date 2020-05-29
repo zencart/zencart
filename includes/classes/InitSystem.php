@@ -32,8 +32,7 @@ class InitSystem
     public function loadAutoLoaders()
     {
         $coreLoaderList = $this->loadAutoLoadersFromSystem('core', DIR_WS_INCLUDES . 'auto_loaders');
-//        $pluginLoaderList = $this->loadPluginAutoLoaders('plugin');
-        $pluginLoaderList = []; //@todo temp
+        $pluginLoaderList = $this->loadPluginAutoLoaders('plugin');
         $mainLoaderList = $this->mergeAutoLoaders($coreLoaderList, $pluginLoaderList);
         return $mainLoaderList;
     }

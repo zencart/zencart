@@ -27,7 +27,7 @@
 
 // forum/bb link:
   if (!empty($external_bb_url) && !empty($external_bb_text)) {
-    $information[] = '<a href="' . $external_bb_url . '" target="_blank">' . $external_bb_text . '</a>';
+    $information[] = '<a href="' . $external_bb_url . '" rel="noopener" target="_blank">' . $external_bb_text . '</a>';
   }
 
   if (DEFINE_SITE_MAP_STATUS <= 1) {

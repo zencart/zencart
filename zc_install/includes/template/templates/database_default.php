@@ -16,7 +16,7 @@
 
 <form id="db_setup" name="db_setup" method="post" action="index.php?main_page=admin_setup" data-abide="ajax">
   <input type="hidden" name="action" value="process" >
-  <input type="hidden" name="lng" value="<?php echo $lng; ?>" >
+  <input type="hidden" name="lng" value="<?php echo $installer_lng; ?>" >
   <?php foreach ($_POST as $key=>$value) {  ?>
   <?php if ($key != 'action') { ?>
     <input type="hidden" name="<?php echo $key; ?>" value="<?php echo $value; ?>" >
@@ -74,6 +74,7 @@
   </fieldset>
   <fieldset>
     <legend><?php echo TEXT_DATABASE_SETUP_ADVANCED_SETTINGS; ?></legend>
+    <input type="hidden" name="db_charset" value="utf8mb4">
     <div class="row">
       <div class="small-3 columns">
         <label class="inline" for="db_prefix"><a href="#" class="hasHelpText" id="DBPREFIX"><?php echo TEXT_DATABASE_SETUP_DB_PREFIX; ?></a></label>
@@ -213,9 +214,9 @@ $(function()
         var textId = $(this).attr('id');
         $.ajax({
           type: "POST",
-           timeout: 100000,
+          timeout: 100000,
           dataType: "json",
-          data: 'id='+textId,
+          data: 'id='+textId + '&lng=<?php echo $installer_lng; ?>',
           url: '<?php echo "ajaxGetHelpText.php"; ?>',
            success: function(data) {
              $('#modal-help-title').html(data.title);

@@ -116,8 +116,8 @@ function zen_delete_user($id)
     $db->Execute($sql);
     $admname = '{' . preg_replace('/[^\d\w._-]/', '*', zen_get_admin_name()) . ' [id: ' . (int)$_SESSION['admin_id'] . ']}';
     zen_record_admin_activity(sprintf(TEXT_EMAIL_MESSAGE_ADMIN_USER_DELETED, $delname, $admname), 'warning');
-    $email_text = sprintf(TEXT_EMAIL_MESSAGE_ADMIN_USER_DELETED, $delname, $admname); 
-    $block = array('EMAIL_MESSAGE_HTML' => $email_text); 
+    $email_text = sprintf(TEXT_EMAIL_MESSAGE_ADMIN_USER_DELETED, $delname, $admname);
+    $block = array('EMAIL_MESSAGE_HTML' => $email_text);
     zen_mail(STORE_NAME, STORE_OWNER_EMAIL_ADDRESS, TEXT_EMAIL_SUBJECT_ADMIN_USER_DELETED, $email_text, STORE_NAME, EMAIL_FROM, $block, 'admin_settings_changed');
   }
 }
@@ -183,8 +183,8 @@ function zen_insert_user($name, $email, $password, $confirm, $profile)
     $newname = preg_replace('/[^\d\w._-]/', '*', $name);
     $admname = '{' . preg_replace('/[^\d\w._-]/', '*', zen_get_admin_name()) . ' [id: ' . (int)$_SESSION['admin_id'] . ']}';
     zen_record_admin_activity(sprintf(TEXT_EMAIL_MESSAGE_ADMIN_USER_ADDED, $newname, $admname), 'warning');
-    $email_text = sprintf(TEXT_EMAIL_MESSAGE_ADMIN_USER_ADDED, $newname, $admname); 
-    $block = array('EMAIL_MESSAGE_HTML' => $email_text); 
+    $email_text = sprintf(TEXT_EMAIL_MESSAGE_ADMIN_USER_ADDED, $newname, $admname);
+    $block = array('EMAIL_MESSAGE_HTML' => $email_text);
     zen_mail(STORE_NAME, STORE_OWNER_EMAIL_ADDRESS, TEXT_EMAIL_SUBJECT_ADMIN_USER_ADDED, $email_text, STORE_NAME, EMAIL_FROM, $block, 'admin_settings_changed');
   }
   return $errors;
@@ -213,8 +213,12 @@ function zen_update_user($name, $email, $id, $profile)
   }
   if (sizeof($errors) == 0)
   {
-    $oldData = zen_read_user(zen_get_admin_name($id));
     $id = (int)$id;
+    $oldData = zen_read_user(zen_get_admin_name($id));
+    if ($oldData === false) {
+        $errors[] = TEXT_ERROR_FAILED_ADMIN_LOGIN_FOR_USER;
+        return $errors;
+    }
     $sql = "UPDATE " . TABLE_ADMIN . "
             SET admin_email = :email:, ";
     if (isset($name) && $name !== FALSE && $name != $oldData['admin_name']) $sql .= "admin_name = :name:, ";
@@ -287,7 +291,7 @@ function zen_validate_user_login($admin_name, $admin_pass)
   $message = $redirect = '';
   $expired_token = 0;
   $result = zen_read_user($admin_name);
-  if (!isset($result) || $result == FALSE || $admin_name != $result['admin_name'])
+  if (empty($result) || $admin_name != $result['admin_name'])
   {
     // invalid login
     $error = true;
@@ -331,7 +335,7 @@ function zen_validate_user_login($admin_name, $admin_pass)
         }
       }
     }
-    if ($result['admin_pass'] == '')
+    if (empty($result['admin_pass']))
     {
       $error = true;
       $expired = true;
@@ -374,7 +378,7 @@ function zen_validate_user_login($admin_name, $admin_pass)
     $sql = $db->bindVars($sql, ':adminname:', $admin_name, 'stringIgnoreNull');
     $sql = $db->bindVars($sql, ':ip:', $_SERVER['REMOTE_ADDR'], 'string');
     $db->Execute($sql);
-    if (($_SESSION['login_attempt'] > 3 || $result['failed_logins'] > 3) && isset($result['admin_email']) && $result['admin_email'] != '' && ADMIN_SWITCH_SEND_LOGIN_FAILURE_EMAILS == 'Yes')
+    if (!empty($result) && ($_SESSION['login_attempt'] > 3 || $result['failed_logins'] > 3) && !empty($result['admin_email']) && ADMIN_SWITCH_SEND_LOGIN_FAILURE_EMAILS == 'Yes')
     {
       $html_msg['EMAIL_CUSTOMERS_NAME'] = $result['admin_name'];
       $html_msg['EMAIL_MESSAGE_HTML'] = sprintf(TEXT_EMAIL_MULTIPLE_LOGIN_FAILURES, $_SERVER['REMOTE_ADDR']);
@@ -383,7 +387,7 @@ function zen_validate_user_login($admin_name, $admin_pass)
     }
     if ($expired_token < 10000)
     {
-      if ($_SESSION['login_attempt'] > 6 || $result['failed_logins'] > 6)
+      if ($_SESSION['login_attempt'] > 6 || (!empty($result) && $result['failed_logins'] > 6))
       {
         $sql = "UPDATE " . TABLE_ADMIN . " SET lockout_expires = " . (time() + ADMIN_LOGIN_LOCKOUT_TIMER) . " WHERE admin_name = :adminname: ";
         $sql = $db->bindVars($sql, ':adminname:', $admin_name, 'stringIgnoreNull');
@@ -404,7 +408,7 @@ function zen_validate_user_login($admin_name, $admin_pass)
   {
     $expired = true;
     $error = true;
-    $message = ($message == '' ? '' : $message . '<br /><br />') . EXPIRED_DUE_TO_SSL;
+    $message = ($message == '' ? '' : $message . '<br><br>') . EXPIRED_DUE_TO_SSL;
   }
   // deal with expireds for PA-DSS
   if ($error == FALSE && PADSS_PWD_EXPIRY_ENFORCED == 1 && $result['pwd_last_change_date'] < date('Y-m-d H:i:s', ADMIN_PASSWORD_EXPIRES_INTERVAL))
@@ -533,16 +537,17 @@ function zen_validate_pwd_reset_request($admin_name, $adm_old_pwd, $adm_new_pwd,
   global $db;
   $errors = array();
   $result = zen_read_user($admin_name);
-  if (!isset($result) || $admin_name != $result['admin_name'])
+  if (empty($result) || $admin_name != $result['admin_name'])
   {
     $errors[] = ERROR_WRONG_LOGIN;
+    return $errors;
   }
   if ($result['lockout_expires'] > time())
   {
     $errors[] = ERROR_SECURITY_ERROR;
   }
   // if entered password doesn't match current password, check for reset token
-  if (!isset($result) || !zen_validate_password($adm_old_pwd, $result['admin_pass']))
+  if (!zen_validate_password($adm_old_pwd, $result['admin_pass']))
   {
     if ($result['reset_token'] != '')
     {
@@ -679,10 +684,10 @@ function zen_get_admin_pages($menu_only)
   }
   if ($menu_only) {
     if (defined('MENU_CATEGORIES_TO_SORT_BY_NAME') && !empty(MENU_CATEGORIES_TO_SORT_BY_NAME)) {
-       $sorted_menus = explode(",", MENU_CATEGORIES_TO_SORT_BY_NAME); 
+       $sorted_menus = explode(",", MENU_CATEGORIES_TO_SORT_BY_NAME);
        foreach (array_keys($retVal) as $key) {
          if (in_array($key, $sorted_menus)) {
-           usort($retVal[$key], 'menu_name_sort'); 
+           usort($retVal[$key], 'menu_name_sort');
          }
        }
     }
@@ -937,7 +942,7 @@ function zen_deregister_admin_pages($pages)
   }
 }
 
-function zen_updated_by_admin($admin_id = '') 
+function zen_updated_by_admin($admin_id = '')
 {
     if ($admin_id === '') {
         $admin_id = $_SESSION['admin_id'];
@@ -959,7 +964,7 @@ function zen_admin_authorized_to_place_order()
         }
         if (count($profile_list) != 0) {
             $profile_clause = ' AND admin_profile IN (' . implode(',', $profile_list) . ')';
-            $emp_sql = 
+            $emp_sql =
                 "SELECT admin_profile, admin_pass 
                    FROM " . TABLE_ADMIN . " 
                   WHERE admin_id = :adminId:$profile_clause

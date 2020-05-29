@@ -14,8 +14,19 @@ $status_list = array();
 $status_list[] = array('id' => 1, 'text' => TEXT_PENDING_APPROVAL);
 $status_list[] = array('id' => 2, 'text' => TEXT_APPROVED);
 
+if (!isset($languages_array)) {
+    $languages_array = zen_get_languages();
+}
+
 if (zen_not_null($action)) {
   switch ($action) {
+    case 'edit':
+        // same as 'preview'
+    case 'preview':
+      if (empty($_GET['rID'])) {
+          zen_redirect(zen_href_link(FILENAME_REVIEWS, (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . (isset($_GET['status']) ? 'status=' . $_GET['status'] : '')));
+      }
+      break;
     case 'setflag':
       if (isset($_POST['flag']) && ($_POST['flag'] == 1 || $_POST['flag'] == 0)) {
         zen_set_reviews_status($_GET['rID'], $_POST['flag']);
@@ -47,7 +58,6 @@ if (zen_not_null($action)) {
       $db->Execute("DELETE FROM " . TABLE_REVIEWS_DESCRIPTION . "
                     WHERE reviews_id = " . (int)$reviews_id);
 
-
       zen_redirect(zen_href_link(FILENAME_REVIEWS, (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . (isset($_GET['status']) ? 'status=' . $_GET['status'] : '')));
       break;
   }
@@ -56,21 +66,7 @@ if (zen_not_null($action)) {
 <!doctype html>
 <html <?php echo HTML_PARAMS; ?>>
   <head>
-    <meta charset="<?php echo CHARSET; ?>">
-    <title><?php echo HEADING_TITLE; ?></title>
-    <link rel="stylesheet" type="text/css" href="includes/stylesheet.css">
-    <link rel="stylesheet" type="text/css" href="includes/cssjsmenuhover.css" media="all" id="hoverJS">
-    <script src="includes/menu.js"></script>
-    <script src="includes/general.js"></script>
-    <script>
-      function init() {
-          cssjsmenu('navbar');
-          if (document.getElementById) {
-              var kill = document.getElementById('hoverJS');
-              kill.disabled = true;
-          }
-      }
-    </script>
+      <?php require DIR_WS_INCLUDES . 'admin_html_head.php'; ?>
     <?php if ($editor_handler != '') {
         include($editor_handler);
     } ?>
@@ -390,10 +386,10 @@ if (zen_not_null($action)) {
                   if (isset($rInfo) && is_object($rInfo)) {
                     $heading[] = array('text' => '<h4>' . $rInfo->products_name . '</h4>');
 
-                    $contents[] = array('align' => 'text-center', 'text' => 
+                    $contents[] = array('align' => 'text-center', 'text' =>
                         '<a href="' . zen_href_link(FILENAME_REVIEWS, (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . (isset($_GET['status']) ? 'status=' . $_GET['status'] . '&' : '') . 'rID=' . $rInfo->reviews_id . '&action=edit') . '" class="btn btn-primary" role="button">' . TEXT_EDIT_REVIEW . '</a> ' .
                         '<a href="' . zen_href_link(FILENAME_REVIEWS, (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . (isset($_GET['status']) ? 'status=' . $_GET['status'] . '&' : '') . 'rID=' . $rInfo->reviews_id . '&action=delete') . '" class="btn btn-warning" role="button">' . TEXT_DELETE_REVIEW . '</a> ' .
-                        '<a target="_blank" href="' . zen_catalog_href_link(FILENAME_PRODUCT_REVIEWS_INFO, 'products_id=' . $rInfo->products_id . '&reviews_id=' . $rInfo->reviews_id) . '" class="btn btn-default" role="button">' . TEXT_VIEW_REVIEW . '</a> ' .
+                        '<a rel="noopener" target="_blank" href="' . zen_catalog_href_link(FILENAME_PRODUCT_REVIEWS_INFO, 'products_id=' . $rInfo->products_id . '&reviews_id=' . $rInfo->reviews_id) . '" class="btn btn-default" role="button">' . TEXT_VIEW_REVIEW . '</a> ' .
                         '<a href="' . zen_href_link(FILENAME_PRODUCT, 'cPath=' . zen_get_products_category_id($rInfo->products_id) . '&pID=' . $rInfo->products_id . '&action=new_product') . '" class="btn btn-default" role="button">' . TEXT_EDIT_PRODUCT . '</a>');
 
                     $contents[] = array('text' => '<br>' . TEXT_INFO_DATE_ADDED . ' ' . zen_date_short($rInfo->date_added));

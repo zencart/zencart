@@ -42,7 +42,7 @@ if (isset($_POST['products_id'], $_POST['categories_id'])) {
                     SET products_quantity_order_units = 1
                     WHERE products_id = " . $products_id;
             $results = $db->Execute($sql);
-            $product->fields['products_quantity_order_units'] = 1; 
+            $product->fields['products_quantity_order_units'] = 1;
         }
         // fix Product copy from if Minimum is 0
         if ($product->fields['products_quantity_order_min'] == 0) {
@@ -50,51 +50,51 @@ if (isset($_POST['products_id'], $_POST['categories_id'])) {
                     SET products_quantity_order_min = 1
                     WHERE products_id = " . $products_id;
             $results = $db->Execute($sql);
-            $product->fields['products_quantity_order_min'] = 1; 
+            $product->fields['products_quantity_order_min'] = 1;
         }
 
-        $sql_data_array = array(); 
-        $separately_updated_fields = array( 
+        $sql_data_array = array();
+        $separately_updated_fields = array(
           'products_id',
-          'products_status', 
+          'products_status',
           'products_last_modified',
           'products_date_added',
           'products_date_available',
-        ); 
-        $casted_fields = array( 
-          'products_quantity' =>  'float', 
-          'products_price' =>  'float', 
+        );
+        $casted_fields = array(
+          'products_quantity' =>  'float',
+          'products_price' =>  'float',
           'products_weight' =>  'float',
-          'products_tax_class_id' =>  'int', 
-          'manufacturers_id' =>  'int', 
-          'product_is_free' =>  'int', 
-          'product_is_call' =>  'int', 
-          'products_quantity_mixed' =>  'int', 
-        ); 
-        
+          'products_tax_class_id' =>  'int',
+          'manufacturers_id' =>  'int',
+          'product_is_free' =>  'int',
+          'product_is_call' =>  'int',
+          'products_quantity_mixed' =>  'int',
+        );
+
         // -----
         // Give an observer the chance to add any customized fields to the two arrays above.
         //
         $zco_notifier->notify('NOTIFY_MODULES_COPY_PRODUCT_CONFIRM_DUPLICATE_FIELDS', $product, $separately_updated_fields, $casted_fields);
-        
+
         foreach ($product->fields as $key => $value) {
-          $value = zen_db_input($value); 
+          $value = zen_db_input($value);
           if (in_array($key, $separately_updated_fields)) {
-            continue; 
+            continue;
           }
           if (array_key_exists($key, $casted_fields)) {
-            if ($casted_fields[$key] == 'int') { 
-              $sql_data_array[$key] = (int)$value; 
+            if ($casted_fields[$key] == 'int') {
+              $sql_data_array[$key] = (int)$value;
             } else {
-              $sql_data_array[$key] = (!zen_not_null($value) || $value == '' || $value == 0) ? 0 : $value; 
+              $sql_data_array[$key] = (!zen_not_null($value) || $value == '' || $value == 0) ? 0 : $value;
             }
-          } else { 
-            $sql_data_array[$key] = $value; 
+          } else {
+            $sql_data_array[$key] = $value;
           }
         }
 
         // separately_updated_fields - last_modified and products_id are skipped
-        $sql_data_array['products_status'] = 0; 
+        $sql_data_array['products_status'] = 0;
         $sql_data_array['products_date_added'] = 'now()';
         $sql_data_array['products_date_available'] = (!empty($product->fields['products_date_available']) ? zen_db_input($product->fields['products_date_available']) : 'null');
 
@@ -107,13 +107,13 @@ if (isset($_POST['products_id'], $_POST['categories_id'])) {
                                       FROM " . TABLE_PRODUCTS_DESCRIPTION . "
                                       WHERE products_id = " . $products_id);
         foreach ($descriptions as $description) {
-            $db->Execute("INSERT INTO " . TABLE_PRODUCTS_DESCRIPTION . " (products_id, language_id, products_name, products_description, products_url, products_viewed)
+            $db->Execute("INSERT INTO " . TABLE_PRODUCTS_DESCRIPTION . " (products_id, language_id, products_name, products_description, products_url)
                     VALUES ('" . $dup_products_id . "',
                             '" . (int)$description['language_id'] . "',
                             '" . zen_db_input($description['products_name']) . " " . TEXT_DUPLICATE_IDENTIFIER . "',
                             '" . zen_db_input($description['products_description']) . "',
-                            '" . zen_db_input($description['products_url']) . "',
-                            0)");
+                            '" . zen_db_input($description['products_url']) . "'
+                            )");
         }
 
         $db->Execute("INSERT INTO " . TABLE_PRODUCTS_TO_CATEGORIES . " (products_id, categories_id)

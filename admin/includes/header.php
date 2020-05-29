@@ -124,7 +124,7 @@ if ((SHOW_VERSION_UPDATE_IN_HEADER == 'true' && $version_from_ini != 'off' && ($
     }
 
     // display download link
-    if ($new_version != '' && $new_version != TEXT_VERSION_CHECK_CURRENT) $new_version .= '<br /><a href="' . $newinfo['versionDownloadURI'] . '" target="_blank"><input type="button" class="btn btn-success" value="' . TEXT_VERSION_CHECK_DOWNLOAD . '"/></a>';
+    if ($new_version != '' && $new_version != TEXT_VERSION_CHECK_CURRENT) $new_version .= '<br /><a href="' . $newinfo['versionDownloadURI'] . '" rel="noopener" target="_blank"><input type="button" class="btn btn-success" value="' . TEXT_VERSION_CHECK_DOWNLOAD . '"/></a>';
 }
 
 if (!$doVersionCheck || $versionCheckError) {
@@ -134,7 +134,7 @@ if (!$doVersionCheck || $versionCheckError) {
     }
     // display the "check for updated version" button.  The button link should be the current page and all params
     $url = zen_href_link(basename($PHP_SELF), zen_get_all_get_params(array('vcheck'), 'SSL'));
-    $url .= (strpos($url, '?') > 5 ? '&amp;' : '?') . 'vcheck=yes';
+    $url .= (strpos($url, '?') !== false ? '&amp;' : '?') . 'vcheck=yes';
     if ($zv_db_patch_ok == true || $version_check_sysinfo == true) $new_version .= '<a href="' . $url . '" role="button" class="btn btn-link">' . TEXT_VERSION_CHECK_BUTTON . '</a>';
 }
 /////////////////
@@ -212,8 +212,8 @@ if (defined('MODULE_ORDER_TOTAL_GV_SHOW_QUEUE_IN_ADMIN') && MODULE_ORDER_TOTAL_G
     <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 noprint">
         <ul class="nav nav-pills upperMenu">
             <li><a href="<?php echo zen_href_link(FILENAME_DEFAULT, '', 'NONSSL'); ?>" class="headerLink"><?php echo HEADER_TITLE_TOP; ?></a></li>
-            <li><a href="<?php echo zen_catalog_href_link(FILENAME_DEFAULT); ?>" class="headerLink" target="_blank"><?php echo HEADER_TITLE_ONLINE_CATALOG; ?></a></li>
-            <li><a href="https://www.zen-cart.com/forum" class="headerLink" target="_blank"><?php echo HEADER_TITLE_SUPPORT_SITE; ?></a></li>
+            <li><a href="<?php echo zen_catalog_href_link(FILENAME_DEFAULT); ?>" class="headerLink" rel="noopener" target="_blank"><?php echo HEADER_TITLE_ONLINE_CATALOG; ?></a></li>
+            <li><a href="https://www.zen-cart.com/forum" class="headerLink" rel="noopener" target="_blank"><?php echo HEADER_TITLE_SUPPORT_SITE; ?></a></li>
             <li><a href="<?php echo zen_href_link(FILENAME_SERVER_INFO, '', 'NONSSL'); ?>" class="headerLink"><?php echo HEADER_TITLE_VERSION; ?></a></li>
             <li><a href="<?php echo zen_href_link(FILENAME_ADMIN_ACCOUNT, '', 'NONSSL'); ?>" class="headerLink"><?php echo HEADER_TITLE_ACCOUNT; ?></a></li>
             <li><a href="<?php echo zen_href_link(FILENAME_LOGOFF, '', 'NONSSL'); ?>" class="headerLink"><?php echo HEADER_TITLE_LOGOFF; ?></a></li>

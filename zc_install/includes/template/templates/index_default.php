@@ -9,7 +9,7 @@ require(DIR_FS_INSTALL . DIR_WS_INSTALL_TEMPLATE . 'partials/partial_modal_help.
 $adjustWarnIssues = false;
 ?>
 <form id="systemCheck" name="systemCheck" method="post" action="index.php?main_page=<?php echo $formAction; ?>">
-<input type="hidden" name="lng" value="<?php echo $lng; ?>" >
+<input type="hidden" name="lng" value="<?php echo $installer_lng; ?>" >
 <?php if ($hasMultipleAdmins) { ?>
 	<?php $adjustWarnIssues = True ?>
     <div class="alert-box alert">
@@ -93,7 +93,7 @@ $adjustWarnIssues = false;
     <?php } ?>
     <?php foreach ($listWarnErrors as $error) { ?>
     	<?php if (strpos($error['mainErrorText'], 'PRO TIP:') !== false) { ?>
-    <div class="alert-box">
+    <div class="alert-box alert">
       <?php echo($error['mainErrorText']); ?>
       	<?php } else { ?>
     <div class="alert-box secondary">
@@ -166,9 +166,9 @@ $(function()
     var textId = $(this).attr('id');
     $.ajax({
       type: "POST",
-       timeout: 100000,
+      timeout: 100000,
       dataType: "json",
-      data: 'id='+textId,
+      data: 'id='+textId + '&lng=<?php echo $installer_lng; ?>',
       url: '<?php echo "ajaxGetHelpText.php"; ?>',
        success: function(data) {
          $('#modal-help-title').html(data.title);

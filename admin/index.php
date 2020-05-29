@@ -12,7 +12,8 @@ if (file_exists(basename($cmd . '.php'))) {
     exit();
 }
 
-//$adminPage = FileSystem::getInstance()->findPluginAdminPage($installedPlugins, $cmd);
+//print_r($installedPlugins);
+$adminPage = FileSystem::getInstance()->findPluginAdminPage($installedPlugins, $cmd);
 
 if (!isset($adminPage)) {
     die('could not find plugin page');

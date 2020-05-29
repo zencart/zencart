@@ -12,7 +12,7 @@
 
   $content .= '<div id="' . str_replace('_', '-', $box_id . 'Content') . '" class="sideBoxContent">';
   if ($_SESSION['cart']->count_contents() > 0) {
-  $content .= '<div id="cartBoxListWrapper">' . "\n" . '<ul>' . "\n";
+  $content .= '<div id="cartBoxListWrapper">' . "\n" . '<ul class="list-links">' . "\n";
     $products = $_SESSION['cart']->get_products();
     for ($i=0, $n=sizeof($products); $i<$n; $i++) {
       $content .= '<li>';

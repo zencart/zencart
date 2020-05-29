@@ -1408,7 +1408,11 @@ function check_form(form_name) {
       $contents[] = array('text' => '<br />' . COUPON_USES_COUPON . '<br />' . zen_draw_input_field('voucher_number_of'));
       break;
     default:
-      $heading[] = array('text'=>'['.$cInfo->coupon_id.']  '.$cInfo->coupon_code . ($cInfo->coupon_id == '' ? ' - (' . (!empty($_GET['cid']) ? $_GET['cid'] : 0) . ')' : ''));
+      if ($cc_list->RecordCount() > 0) {
+        $heading[] = array('text'=>'['.$cInfo->coupon_id.']  '.$cInfo->coupon_code . ($cInfo->coupon_id == '' ? ' - (' . (!empty($_GET['cid']) ? $_GET['cid'] : 0) . ')' : ''));
+      } else {
+        $heading[] = array('text'=>ERROR_NO_COUPONS);
+      }
       $amount = $cInfo->coupon_amount;
       if ($cInfo->coupon_type == 'P' || $cInfo->coupon_type == 'E') {
         $amount .= '%';

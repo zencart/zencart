@@ -15,6 +15,7 @@ $oID = zen_db_prepare_input($_GET['oID']);
 
 include DIR_FS_CATALOG . DIR_WS_CLASSES . 'order.php';
 $order = new order($oID);
+$show_including_tax = (DISPLAY_PRICE_WITH_TAX == 'true'); 
 
 // prepare order-status pulldown list
 $orders_statuses = array();
@@ -44,9 +45,7 @@ if ($order->billing['street_address'] != $order->delivery['street_address']) {
     <title><?php echo TITLE; ?></title>
     <link rel="stylesheet" href="includes/stylesheet.css">
     <script>
-      function couponpopupWindow(url) {
-          window.open(url, 'popupWindow', 'toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no,width=450,height=280,screenX=150,screenY=150,top=150,left=150')
-      }
+      function couponpopupWindow(url) { /* just a stub for coupon output that might fire it */ }
     </script>
   </head>
   <body>
@@ -125,10 +124,14 @@ if ($order->billing['street_address'] != $order->delivery['street_address']) {
             <th class="dataTableHeadingContent" colspan="2"><?php echo TABLE_HEADING_PRODUCTS; ?></th>
             <th class="dataTableHeadingContent"><?php echo TABLE_HEADING_PRODUCTS_MODEL; ?></th>
             <th class="dataTableHeadingContent text-right"><?php echo TABLE_HEADING_TAX; ?></th>
-            <th class="dataTableHeadingContent text-right"><?php echo TABLE_HEADING_PRICE_EXCLUDING_TAX; ?></th>
+            <th class="dataTableHeadingContent text-right"><?php echo ($show_including_tax) ? TABLE_HEADING_PRICE_EXCLUDING_TAX : TABLE_HEADING_PRICE; ?></th>
+<?php if ($show_including_tax)  { ?>
             <th class="dataTableHeadingContent text-right"><?php echo TABLE_HEADING_PRICE_INCLUDING_TAX; ?></th>
-            <th class="dataTableHeadingContent text-right"><?php echo TABLE_HEADING_TOTAL_EXCLUDING_TAX; ?></th>
+<?php } ?>
+            <th class="dataTableHeadingContent text-right"><?php echo ($show_including_tax) ? TABLE_HEADING_TOTAL_EXCLUDING_TAX : TABLE_HEADING_TOTAL; ?></th>
+<?php if ($show_including_tax)  { ?>
             <th class="dataTableHeadingContent text-right"><?php echo TABLE_HEADING_TOTAL_INCLUDING_TAX; ?></th>
+<?php } ?>
           </tr>
         </thead>
         <tbody>
@@ -185,12 +188,15 @@ if ($order->billing['street_address'] != $order->delivery['street_address']) {
               <td class="dataTableContent text-right">
                 <strong><?php echo $currencies->format($order->products[$i]['final_price'], true, $order->info['currency'], $order->info['currency_value']) . ($order->products[$i]['onetime_charges'] != 0 ? '<br />' . $currencies->format($order->products[$i]['onetime_charges'], true, $order->info['currency'], $order->info['currency_value']) : ''); ?></strong>
               </td>
+<?php if ($show_including_tax)  { ?>
               <td class="dataTableContent text-right">
                 <strong><?php echo $currencies->format(zen_add_tax($order->products[$i]['final_price'], $order->products[$i]['tax']), true, $order->info['currency'], $order->info['currency_value']) . ($order->products[$i]['onetime_charges'] != 0 ? '<br />' . $currencies->format(zen_add_tax($order->products[$i]['onetime_charges'], $order->products[$i]['tax']), true, $order->info['currency'], $order->info['currency_value']) : ''); ?></strong>
               </td>
+<?php } ?>
               <td class="dataTableContent text-right">
                 <strong><?php echo $currencies->format(zen_round($order->products[$i]['final_price'], $decimals) * $order->products[$i]['qty'], true, $order->info['currency'], $order->info['currency_value']) . ($order->products[$i]['onetime_charges'] != 0 ? '<br />' . $currencies->format($order->products[$i]['onetime_charges'], true, $order->info['currency'], $order->info['currency_value']) : ''); ?></strong>
               </td>
+<?php if ($show_including_tax)  { ?>
               <td class="dataTableContent text-right" valign="top">
                 <strong>
                   <?php echo $priceIncTax; ?>
@@ -200,6 +206,7 @@ if ($order->billing['street_address'] != $order->delivery['street_address']) {
                   ?>
                 </strong>
               </td>
+<?php } ?>
             </tr>
             <?php
           }

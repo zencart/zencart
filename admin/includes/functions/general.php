@@ -1133,7 +1133,7 @@ while (!$chk_sale_categories_selected->EOF) {
 //echo 'A: I should delete this record sale_id: ' . $chk_sale_categories_selected->fields['sale_id'] . '<br><br>';
     $skip_cats = true;
     $skip_sale_id = $chk_sale_categories_selected->fields['sale_id'];
-    $salemakerdelete = "DELETE from " . TABLE_SALEMAKER_SALES . " WHERE sale_id='"  . (int)$skip_sale_id;
+    $salemakerdelete = "DELETE from " . TABLE_SALEMAKER_SALES . " WHERE sale_id="  . (int)$skip_sale_id;
   }
 
   // if in the front - remove 9,
@@ -1346,6 +1346,9 @@ while (!$chk_sale_categories_all->EOF) {
 
     $db->Execute("delete from " . TABLE_PRODUCTS_NOTIFICATIONS . "
                   where products_id = " . (int)$product_id);
+
+    $db->Execute("delete from " . TABLE_COUNT_PRODUCT_VIEWS . "
+                  where product_id = " . (int)$product_id);
 
     zen_record_admin_activity('Deleted product ' . (int)$product_id . ' from database via admin console.', 'warning');
   }
@@ -2083,7 +2086,7 @@ function zen_copy_products_attributes($products_id_from, $products_id_to) {
       $check_duplicate = $db->Execute("select * from " . TABLE_PRODUCTS_ATTRIBUTES . " 
           where products_id=" . (int)$products_id_to . "
           and options_id= " . (int)$products_copy_from->fields['options_id'] . "
-          and options_values_id=" . (int)$products_copy_from->fields['options_values_id'] .  "'"
+          and options_values_id=" . (int)$products_copy_from->fields['options_values_id']
       );
 
       if ($already_has_attributes == true) {
@@ -2209,37 +2212,49 @@ function zen_copy_products_attributes($products_id_from, $products_id_to) {
     return true;
 } // eof: zen_copy_products_attributes
 
-
-
 /**
  * return the size and maxlength settings in the form size="blah" maxlength="blah" based on maximum size being 50
  * uses $tbl = table name, $fld = field name
  * example: zen_set_field_length(TABLE_CATEGORIES_DESCRIPTION, 'categories_name')
+ * @param string $tbl
+ * @param string $fld
+ * @param int $max
+ * @param bool $override
+ * @return string
  */
-  function zen_set_field_length($tbl, $fld, $max=50, $override=false) {
-    $field_length= zen_field_length($tbl, $fld);
+function zen_set_field_length($tbl, $fld, $max = 50, $override = false)
+{
+    $field_length = zen_field_length($tbl, $fld);
     switch (true) {
-      case (($override == false and $field_length > $max)):
-        $length= 'size = "' . ($max+1) . '" maxlength= "' . $field_length . '"';
-        break;
-      default:
-        $length= 'size = "' . ($field_length+1) . '" maxlength = "' . $field_length . '"';
-        break;
+        case (($override == false and $field_length > $max)):
+            $length = 'size="' . ($max + 1) . '" maxlength="' . $field_length . '"';
+            break;
+        default:
+            $length = 'size="' . ($field_length + 1) . '" maxlength="' . $field_length . '"';
+            break;
     }
     return $length;
-  }
-
+}
 
 /**
- * Lookup Languages Icon
+ * Lookup Languages Icon by id or code
+ * @param $lookup
+ * @return bool|string
  */
-  function zen_get_language_icon($lookup) {
+function zen_get_language_icon($lookup)
+{
     global $db;
-    $languages_icon = $db->Execute("select directory, image from " . TABLE_LANGUAGES . " where languages_id = " . (int)$lookup);
-    if ($languages_icon->EOF) return '';
-    $icon= zen_image(DIR_WS_CATALOG_LANGUAGES . $languages_icon->fields['directory'] . '/images/' . $languages_icon->fields['image'], $languages_icon->fields['directory']);
-    return $icon;
-  }
+    $languages_icon = $db->Execute("SELECT directory, image FROM " . TABLE_LANGUAGES . " 
+        WHERE 
+        languages_id = " . (int)$lookup . " 
+        OR
+        code = '" . zen_db_input($lookup) . "' 
+        LIMIT 1");
+    if ($languages_icon->EOF) {
+        return '';
+    }
+    return zen_image(DIR_WS_CATALOG_LANGUAGES . $languages_icon->fields['directory'] . '/images/' . $languages_icon->fields['image'], $languages_icon->fields['directory']);
+}
 
 /**
  * Get the Option Name for a particular language
@@ -2262,15 +2277,25 @@ function zen_copy_products_attributes($products_id_from, $products_id_to) {
   }
 
 /**
- * lookup language dir from id
+ * lookup language directory name by id or code
+ * @param $lookup
+ * @return mixed|string
  */
-  function zen_get_language_name($lookup) {
+function zen_get_language_name($lookup)
+{
     global $db;
-    $check_language= $db->Execute("select directory from " . TABLE_LANGUAGES . " where languages_id = " . (int)$lookup);
-    if ($check_language->EOF) return '';
-    return $check_language->fields['directory'];
-  }
+    $check_language = $db->Execute("SELECT directory FROM " . TABLE_LANGUAGES . " 
+        WHERE 
+        languages_id = " . (int)$lookup . " 
+        OR
+        code = '" . zen_db_input($lookup) . "' 
+        LIMIT 1");
 
+    if ($check_language->EOF) {
+        return '';
+    }
+    return $check_language->fields['directory'];
+}
 
 /**
  * Delete all product attributes
@@ -2302,44 +2327,80 @@ function zen_copy_products_attributes($products_id_from, $products_id_to) {
   }
 
 /**
- * product pulldown with attributes
+ * products with attributes pulldown
+ * @param $name
+ * @param string $parameters
+ * @param string $exclude
+ * @param string $order_by
+ * @param string $filter_by_option_name
+ * @return string
  */
-  function zen_draw_products_pull_down_attributes($name, $parameters = '', $exclude = '') {
+function zen_draw_products_pull_down_attributes($name, $parameters = '', $exclude = '', $order_by = 'name', $filter_by_option_name = '')
+{
     global $db, $currencies;
 
     if ($exclude == '') {
-      $exclude = array();
+        $exclude = [];
     }
 
     $select_string = '<select name="' . $name . '"';
-
     if ($parameters) {
-      $select_string .= ' ' . $parameters;
+        $select_string .= ' ' . $parameters;
     }
-
     $select_string .= '>';
 
-    $new_fields=', p.products_model';
+    $new_fields = ', p.products_model';
 
-    $products = $db->Execute("select distinct p.products_id, pd.products_name, p.products_price" . $new_fields .
-        " from " . TABLE_PRODUCTS . " p, " .
-        TABLE_PRODUCTS_DESCRIPTION . " pd, " .
-        TABLE_PRODUCTS_ATTRIBUTES . " pa " .
-        " where p.products_id= pa.products_id and p.products_id = pd.products_id and pd.language_id = " . (int)$_SESSION['languages_id'] . " order by products_name");
-
-    while (!$products->EOF) {
-      if (!in_array($products->fields['products_id'], $exclude)) {
-        $display_price = zen_get_products_base_price($products->fields['products_id']);
-        $select_string .= '<option value="' . $products->fields['products_id'] . '">' . $products->fields['products_name'] . ' (' . TEXT_MODEL . ' ' . $products->fields['products_model'] . ') (' . $currencies->format($display_price) . ')</option>';
-      }
-      $products->MoveNext();
+    switch ($order_by) {
+        case ('model'):
+            $order_by = 'p.products_model';
+            $output_string = '<option value="%1$u"> %3$s - %2$s (%4$s)</option>'; // format string with model first
+            break;
+        default:
+            $order_by = 'pd.products_name';
+            $output_string = '<option value="%1$u">%2$s (%3$s) (%4$s)</option>';// format string with name first
+            break;
     }
 
+    switch (true) {
+        case ($filter_by_option_name === -1): // no selection made: do not list any products
+            // no selection made yet
+            break;
+        case ((int)$filter_by_option_name > 0) : // an Option Name was selected: show only products using attributes with this Option Name
+            $products = $db->Execute("SELECT distinct p.products_id, pd.products_name, p.products_price, pa.options_id" . $new_fields .
+                " FROM " . TABLE_PRODUCTS . " p, " .
+                TABLE_PRODUCTS_DESCRIPTION . " pd, " .
+                TABLE_PRODUCTS_ATTRIBUTES . " pa " . " 
+        WHERE p.products_id= pa.products_id 
+        AND p.products_id = pd.products_id 
+        AND pd.language_id = " . (int)$_SESSION['languages_id'] . " 
+        AND pa.options_id = " . (int)$filter_by_option_name . " 
+        ORDER BY " . $order_by);
+            break;
+        default: //legacy: show all products with attributes
+            $products = $db->Execute("SELECT distinct p.products_id, pd.products_name, p.products_price" . $new_fields .
+                " FROM " . TABLE_PRODUCTS . " p, " .
+                TABLE_PRODUCTS_DESCRIPTION . " pd, " .
+                TABLE_PRODUCTS_ATTRIBUTES . " pa " . " 
+        WHERE p.products_id = pa.products_id 
+        AND p.products_id = pd.products_id 
+        AND pd.language_id = " . (int)$_SESSION['languages_id'] . "    
+        ORDER BY " . $order_by);
+            break;
+    }
+
+    if (isset($products) && is_object($products)) {
+        foreach ($products as $product) {
+            if (!in_array($product['products_id'], $exclude, false)) {
+                $display_price = zen_get_products_base_price($product['products_id']);
+                $select_string .= sprintf($output_string, $product['products_id'], $product['products_name'], $product['products_model'], $currencies->format($display_price));
+            }
+        }
+    }
     $select_string .= '</select>';
 
     return $select_string;
-  }
-
+}
 
 /**
  * categories pulldown with products
@@ -2386,40 +2447,73 @@ function zen_copy_products_attributes($products_id_from, $products_id_to) {
   }
 
 /**
- * categories pulldown with products with attributes
+ * categories pulldown for products with attributes
+ * @param $name
+ * @param string $parameters
+ * @param string $exclude
+ * @param bool $show_full_path
+ * @param string $filter_by_option_name
+ * @return string
  */
-  function zen_draw_products_pull_down_categories_attributes($name, $parameters = '', $exclude = '') {
+function zen_draw_products_pull_down_categories_attributes($name, $parameters = '', $exclude = '', $show_full_path = false, $filter_by_option_name = '')
+{
     global $db, $currencies;
 
     if ($exclude == '') {
-      $exclude = array();
+        $exclude = [];
     }
 
     $select_string = '<select name="' . $name . '"';
-
     if ($parameters) {
-      $select_string .= ' ' . $parameters;
+        $select_string .= ' ' . $parameters;
     }
-
     $select_string .= '>';
 
-    $categories = $db->Execute("select distinct c.categories_id, cd.categories_name " .
-        " from " . TABLE_CATEGORIES . " c, " .
-        TABLE_CATEGORIES_DESCRIPTION . " cd, " .
-        TABLE_PRODUCTS_TO_CATEGORIES . " ptoc, " .
-        TABLE_PRODUCTS_ATTRIBUTES . " pa " .
-        " where pa.products_id= ptoc.products_id and ptoc.categories_id= c.categories_id and c.categories_id = cd.categories_id and cd.language_id = " . (int)$_SESSION['languages_id'] . " order by categories_name");
-    while (!$categories->EOF) {
-      if (!in_array($categories->fields['categories_id'], $exclude)) {
-        $select_string .= '<option value="' . $categories->fields['categories_id'] . '">' . $categories->fields['categories_name'] . '</option>';
-      }
-      $categories->MoveNext();
+    switch (true) {
+        case ($filter_by_option_name === ''): // no selection made: do not list any categories
+            // no selection made yet
+            break;
+        case ($filter_by_option_name > 0) : // an Option Name was selected: show only categories with products using attributes with this Option Name
+            $categories = $db->Execute("SELECT DISTINCT c.categories_id, cd.categories_name " .
+                " FROM " . TABLE_CATEGORIES . " c, " .
+                TABLE_CATEGORIES_DESCRIPTION . " cd, " .
+                TABLE_PRODUCTS_TO_CATEGORIES . " ptoc, " .
+                TABLE_PRODUCTS_ATTRIBUTES . " pa " . " 
+                WHERE pa.products_id= ptoc.products_id 
+                AND ptoc.categories_id= c.categories_id 
+                AND c.categories_id = cd.categories_id 
+                AND cd.language_id = " . (int)$_SESSION['languages_id'] . " 
+                AND pa.options_id =" . (int)$filter_by_option_name . " 
+                ORDER BY categories_name");
+            break;
+        default: //legacy: show all categories with products with attributes
+            $categories = $db->Execute("SELECT DISTINCT c.categories_id, cd.categories_name " .
+                " FROM " . TABLE_CATEGORIES . " c, " .
+                TABLE_CATEGORIES_DESCRIPTION . " cd, " .
+                TABLE_PRODUCTS_TO_CATEGORIES . " ptoc, " .
+                TABLE_PRODUCTS_ATTRIBUTES . " pa " . " 
+                WHERE pa.products_id= ptoc.products_id 
+                AND ptoc.categories_id= c.categories_id 
+                AND c.categories_id = cd.categories_id 
+                AND cd.language_id = " . (int)$_SESSION['languages_id'] . " 
+                ORDER BY categories_name");
+            break;
     }
-
+    if (isset($categories) && is_object($categories)) {
+        foreach ($categories as $category) {
+            if (!in_array($category['categories_id'], $exclude, false)) {
+                if ($show_full_path) {
+                    $select_string .= '<option value="' . $category['categories_id'] . '">' . zen_output_generated_category_path($category['categories_id']) . '</option>';
+                } else {
+                    $select_string .= '<option value="' . $category['categories_id'] . '">' . $category['categories_name'] . '</option>';
+                }
+            }
+        }
+    }
     $select_string .= '</select>';
 
     return $select_string;
-  }
+}
 
   function zen_has_product_attributes_downloads($products_id, $check_valid=false) {
     global $db;
@@ -2705,7 +2799,7 @@ function zen_copy_products_attributes($products_id_from, $products_id_to) {
  */
   function zen_get_configuration_key_value_layout($lookup, $type=1) {
     global $db;
-    $configuration_query= $db->Execute("select configuration_value from " . TABLE_PRODUCT_TYPE_LAYOUT . " where configuration_key='" . zen_db_input($lookup) . "' and product_type_id='". (int)$type);
+    $configuration_query= $db->Execute("select configuration_value from " . TABLE_PRODUCT_TYPE_LAYOUT . " where configuration_key='" . zen_db_input($lookup) . "' and product_type_id=". (int)$type);
     if ($configuration_query->EOF) return '';
     $lookup_value= $configuration_query->fields['configuration_value'];
     if ( !($lookup_value) ) {

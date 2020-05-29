@@ -11,6 +11,48 @@ function page_has_help()
 
     $page = basename($PHP_SELF, '.php');
 
+    $configuration_pagelist = array(
+      1 => 'https://docs.zen-cart.com/user/admin_pages/configuration/configuration_mystore', 
+      2 => 'https://docs.zen-cart.com/user/admin_pages/configuration/configuration_minimumvalues', 
+      3 => 'https://docs.zen-cart.com/user/admin_pages/configuration/configuration_maximumvalues', 
+      4 => 'https://docs.zen-cart.com/user/admin_pages/configuration/configuration_images', 
+      5 => 'https://docs.zen-cart.com/user/admin_pages/configuration/configuration_customerdetails', 
+      // 6 => 'https://docs.zen-cart.com/user/admin_pages/configuration/configuration_moduleoptions', 
+      7 => 'https://docs.zen-cart.com/user/admin_pages/configuration/configuration_shippingpackaging', 
+      8 => 'https://docs.zen-cart.com/user/admin_pages/configuration/configuration_productlisting', 
+      9 => 'https://docs.zen-cart.com/user/admin_pages/configuration/configuration_stock', 
+      10 => 'https://docs.zen-cart.com/user/admin_pages/configuration/configuration_logging', 
+      11 => 'https://docs.zen-cart.com/user/admin_pages/configuration/configuration_regulations', 
+      12 => 'https://docs.zen-cart.com/user/admin_pages/configuration/configuration_emailoptions', 
+      13 => 'https://docs.zen-cart.com/user/admin_pages/configuration/configuration_attributesettings', 
+      14 => 'https://docs.zen-cart.com/user/admin_pages/configuration/configuration_gzipcompression', 
+      15 => 'https://docs.zen-cart.com/user/admin_pages/configuration/configuration_sessions', 
+      16 => 'https://docs.zen-cart.com/user/admin_pages/configuration/configuration_gvcoupons', 
+      17 => 'https://docs.zen-cart.com/user/admin_pages/configuration/configuration_creditcards', 
+      18 => 'https://docs.zen-cart.com/user/admin_pages/configuration/configuration_productinfo', 
+      19 => 'https://docs.zen-cart.com/user/admin_pages/configuration/configuration_layoutsettings', 
+      20 => 'https://docs.zen-cart.com/user/admin_pages/configuration/configuration_websitemaintenance', 
+      21 => 'https://docs.zen-cart.com/user/admin_pages/configuration/configuration_newlisting', 
+      22 => 'https://docs.zen-cart.com/user/admin_pages/configuration/configuration_featuredlisting', 
+      23 => 'https://docs.zen-cart.com/user/admin_pages/configuration/configuration_alllisting', 
+      24 => 'https://docs.zen-cart.com/user/admin_pages/configuration/configuration_indexlisting', 
+      25 => 'https://docs.zen-cart.com/user/admin_pages/configuration/configuration_definepagestatus', 
+      30 => 'https://docs.zen-cart.com/user/admin_pages/configuration/configuration_ezpagessettings', 
+    ); 
+
+    if ($page == FILENAME_CONFIGURATION) {
+      $fallback = 'https://docs.zen-cart.com/user/admin_pages/configuration/'; 
+
+      if (isset($_GET['gID'])) { 
+         $gID = (int)$_GET['gID']; 
+         if ($gID == 6) return false; // No help for hidden config page
+         if (isset($configuration_pagelist[$gID])) {
+            return $configuration_pagelist[$gID];
+         }
+      }
+      return $fallback; 
+    }
+
     $pagelist = array(
         FILENAME_CONFIGURATION => 'https://docs.zen-cart.com/user/admin_pages/configuration/',
         FILENAME_CATEGORIES => 'https://docs.zen-cart.com/user/admin_pages/catalog/categories/',

@@ -83,6 +83,7 @@ $group = array(
     'go_back',
     'id',
     'info',
+    'inspect',
     'ipnID',
     'keepslashes',
     'layout_box_name',

@@ -308,8 +308,8 @@ class shoppingCart extends base {
                   $products_options_sort_order= zen_get_attributes_options_sort_order(zen_get_prid($products_id), $option, $opt);
                   $sql = "INSERT INTO " . TABLE_CUSTOMERS_BASKET_ATTRIBUTES . "
                           (customers_id, products_id, products_options_id, products_options_value_id, products_options_sort_order)
-                          VALUES (" . (int)$_SESSION['customer_id'] . ", '" . zen_db_input($products_id) . "', '" .
-                          (int)$option.'_chk'. (int)$val . "', '" . (int)$val . "',  '" . $products_options_sort_order . "')";
+                          VALUES (" . (int)$_SESSION['customer_id'] . ", '" . zen_db_input($products_id) . "', 
+                          '" . (int)$option.'_chk'. (int)$val . "', '" . (int)$val . "',  '" . $products_options_sort_order . "')";
                   $db->Execute($sql);
                 }
               } else {
@@ -319,8 +319,8 @@ class shoppingCart extends base {
                 $products_options_sort_order= zen_get_attributes_options_sort_order(zen_get_prid($products_id), $option, $value);
                 $sql = "INSERT INTO " . TABLE_CUSTOMERS_BASKET_ATTRIBUTES . "
                         (customers_id, products_id, products_options_id, products_options_value_id, products_options_value_text, products_options_sort_order)
-                        VALUES (" . (int)$_SESSION['customer_id'] . ", '" . zen_db_input($products_id) . "', '" .
-                        (int)$option . "', '" . (int)$value . "', '" . $attr_value . "', '" . $products_options_sort_order . "')";
+                        VALUES (" . (int)$_SESSION['customer_id'] . ", '" . zen_db_input($products_id) . "', 
+                        '" . (int)$option . "', '" . (int)$value . "', '" . $attr_value . "', '" . $products_options_sort_order . "')";
                 $db->Execute($sql);
               }
             }
@@ -367,7 +367,7 @@ class shoppingCart extends base {
         $messageStack->add_session('shopping_cart', ($this->display_debug_messages ? '$_GET[main_page]: ' . $_GET['main_page'] . ' FUNCTION ' . __FUNCTION__ . ': ' : '') . WARNING_PRODUCT_QUANTITY_ADJUSTED . zen_get_products_name($products_id), 'caution');
       }
     }
-    
+
     $this->contents[$products_id] = array('qty' => (float)$quantity);
 
     if (zen_is_logged_in() && !zen_in_guest_checkout()) {
@@ -424,7 +424,7 @@ class shoppingCart extends base {
                           SET products_options_value_id = " . (int)$value . ", products_options_value_text = '" . $attr_value . "'
                           WHERE customers_id = " . (int)$_SESSION['customer_id'] . "
                           AND products_id = '" . zen_db_input($products_id) . "'
-                          AND products_options_id = " . (int)$option;
+                          AND products_options_id = '" . (int)$option . "'"; // intentionally passing a string
                   $db->Execute($sql);
               }
           }
@@ -612,7 +612,7 @@ class shoppingCart extends base {
 
       if ($product = $db->Execute($product_query)) {
         $prid = $product->fields['products_id'];
-        
+
         $this->notify('NOTIFY_CART_CALCULATE_PRODUCT_PRICE', $products_id, $product->fields);
 
         $products_tax = zen_get_tax_rate($product->fields['products_tax_class_id']);
@@ -856,8 +856,8 @@ class shoppingCart extends base {
             continue;
           }
 
-          $this->notify('NOTIFY_CART_CALCULATE_ATTRIBUTE_WEIGHT', 
-                        array('products_id' => $products_id, 'options_id' => $option), 
+          $this->notify('NOTIFY_CART_CALCULATE_ATTRIBUTE_WEIGHT',
+                        array('products_id' => $products_id, 'options_id' => $option),
                         $attribute_weight->fields);
 
           // adjusted count for free shipping
@@ -922,7 +922,7 @@ class shoppingCart extends base {
 
     $total_attributes_price = 0;
     $qty = $this->contents[$products_id]['qty'];
-    
+
     $this->notify('NOTIFY_CART_ATTRIBUTES_PRICE_START', $products_id);
 
     if (isset($this->contents[$products_id]['attributes'])) {
@@ -941,7 +941,7 @@ class shoppingCart extends base {
         if ($attribute_price->EOF) {
           continue;
         }
-    
+
         $this->notify('NOTIFY_CART_ATTRIBUTES_PRICE_NEXT', $products_id, $attribute_price->fields);
 
         $new_attributes_price = 0;
@@ -1032,7 +1032,7 @@ class shoppingCart extends base {
     global $db;
 
     $attributes_price_onetime = 0;
-    
+
     $this->notify('NOTIFY_CART_ATTRIBUTES_PRICE_ONETIME_CHARGES_START', $products_id);
 
     if (isset($this->contents[$products_id]['attributes'])) {
@@ -1049,7 +1049,7 @@ class shoppingCart extends base {
         if ($attribute_price->EOF) {
           continue;
         }
-   
+
         $this->notify('NOTIFY_CART_ATTRIBUTES_PRICE_ONETIME_CHARGES_NEXT', $products_id, $attribute_price->fields);
 
         $new_attributes_price = 0;
@@ -1110,7 +1110,7 @@ class shoppingCart extends base {
     $attribute_weight = 0;
 
     if (isset($this->contents[$products_id]['attributes'])) {
-    
+
       $this->notify('NOTIFY_CART_ATTRIBUTES_WEIGHT_START', $products_id);
 
       foreach($this->contents[$products_id]['attributes'] as $option => $value) {
@@ -1125,7 +1125,7 @@ class shoppingCart extends base {
         if ($attribute_weight_info->EOF) {
           continue;
         }
-   
+
         $this->notify('NOTIFY_CART_ATTRIBUTES_WEIGHT_NEXT', $products_id, $attribute_weight_info->fields);
 
         // adjusted count for free shipping
@@ -1681,7 +1681,7 @@ class shoppingCart extends base {
   }
 
   /**
-   * Handle updateProduct cart Action 
+   * Handle updateProduct cart Action
    *
    * @param string $goto forward destination
    * @param array|string $parameters URL parameters to ignore
@@ -1785,11 +1785,11 @@ class shoppingCart extends base {
           }
 // eof: notify about adjustment to new quantity to be same as current in stock or maximum to add
 
-          $attributes = ($_POST['id'][$_POST['products_id'][$i]]) ? $_POST['id'][$_POST['products_id'][$i]] : '';
+          $attributes = isset($_POST['id'][$_POST['products_id'][$i]]) ? $_POST['id'][$_POST['products_id'][$i]] : '';
           $this->add_cart($_POST['products_id'][$i], $new_qty, $attributes, false);
         } else {
           // adjust minimum and units
-          $attributes = (isset($_POST['id'][$_POST['products_id'][$i]])) ? $_POST['id'][$_POST['products_id'][$i]] : '';
+          $attributes = isset($_POST['id'][$_POST['products_id'][$i]]) ? $_POST['id'][$_POST['products_id'][$i]] : '';
           $this->add_cart($_POST['products_id'][$i], $new_qty, $attributes, false);
         }
         }
@@ -1811,7 +1811,7 @@ class shoppingCart extends base {
     zen_redirect(zen_href_link($goto, zen_get_all_get_params($parameters)));
   }
   /**
-   * Handle AddProduct cart Action 
+   * Handle AddProduct cart Action
    *
    * @param string $goto forward destination
    * @param array|string $parameters URL parameters to ignore
@@ -1967,7 +1967,7 @@ class shoppingCart extends base {
     }
   }
   /**
-   * Handle BuyNow cart Action 
+   * Handle BuyNow cart Action
    *
    * @param string $goto forward destination
    * @param array|string $parameters URL parameters to ignore
@@ -2019,7 +2019,7 @@ class shoppingCart extends base {
     zen_redirect(zen_href_link($goto, zen_get_all_get_params($parameters)));
   }
   /**
-   * Handle MultipleAddProduct cart Action 
+   * Handle MultipleAddProduct cart Action
    *
    * @param string $goto forward destination
    * @param array|string $parameters URL parameters to ignore
@@ -2092,7 +2092,7 @@ class shoppingCart extends base {
     }
   }
   /**
-   * Handle Notify cart Action 
+   * Handle Notify cart Action
    *
    * @param string $goto forward destination
    * @param array|string $parameters URL parameters to ignore
@@ -2131,7 +2131,7 @@ class shoppingCart extends base {
     }
   }
   /**
-   * Handle NotifyRemove cart Action 
+   * Handle NotifyRemove cart Action
    *
    * @param string $goto forward destination
    * @param array|string $parameters URL parameters to ignore
@@ -2158,7 +2158,7 @@ class shoppingCart extends base {
     }
   }
   /**
-   * Handle CustomerOrder cart Action 
+   * Handle CustomerOrder cart Action
    *
    * @param string $goto forward destination
    * @param array|string $parameters URL parameters to ignore
@@ -2185,7 +2185,7 @@ class shoppingCart extends base {
     zen_redirect(zen_href_link($goto, zen_get_all_get_params($parameters)));
   }
   /**
-   * Handle RemoveProduct cart Action 
+   * Handle RemoveProduct cart Action
    *
    * @param string $goto forward destination
    * @param array|string $parameters URL parameters to ignore

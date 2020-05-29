@@ -235,6 +235,7 @@ if (zen_not_null($action)) {
       }
       zen_record_admin_activity('Language with ID ' . $lID . ' deleted.', 'info');
       $db->Execute("DELETE FROM " . TABLE_CATEGORIES_DESCRIPTION . " WHERE language_id = " . (int)$lID);
+      $db->Execute("DELETE FROM " . TABLE_COUNT_PRODUCT_VIEWS . " WHERE language_id = " . (int)$lID);
       $db->Execute("DELETE FROM " . TABLE_PRODUCTS_DESCRIPTION . " WHERE language_id = " . (int)$lID);
       $db->Execute("DELETE FROM " . TABLE_PRODUCTS_OPTIONS . " WHERE language_id = " . (int)$lID);
       $db->Execute("DELETE FROM " . TABLE_PRODUCTS_OPTIONS_VALUES . " WHERE language_id = " . (int)$lID);

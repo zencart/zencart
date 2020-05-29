@@ -31,12 +31,12 @@
 <?php } ?>
 
 		<h5 style="color:white">
-		
+
 <?php if ($isUpgrade) { ?>
 		<?php echo TEXT_COMPLETION_UPGRADE_COMPLETE; ?>
 <?php } else { ?>
 		<?php echo TEXT_COMPLETION_INSTALL_COMPLETE; ?>
-		
+
 		<br>
 	<?php if ($catalogLink != '#') echo TEXT_COMPLETION_INSTALL_LINKS_BELOW; ?>
 <?php } ?>
@@ -45,15 +45,15 @@
 <?php if (!$isUpgrade && $catalogLink != '#') { ?>
 
 		<div class="text-center">
-			<a class="radius button" href="<?php echo $adminLink; ?>" target="_blank" tabindex="1">
+			<a class="radius button" href="<?php echo $adminLink; ?>" rel="noopener" target="_blank" tabindex="1">
 				<?php echo TEXT_COMPLETION_ADMIN_LINK_TEXT; ?>:
-				
+
 				<br><br>
 				<u><?php echo $adminLink; ?></u>
 			</a>
-			<a class="radius button" href="<?php echo $catalogLink; ?>" target="_blank" tabindex="2">
+			<a class="radius button" href="<?php echo $catalogLink; ?>" rel="noopener" target="_blank" tabindex="2">
 				<?php echo TEXT_COMPLETION_CATALOG_LINK_TEXT; ?>:
-				
+
 				<br><br>
 				<u><?php echo $catalogLink; ?></u>
 			</a>
@@ -71,9 +71,9 @@
 				type: "POST",
 				timeout: 100000,
 				dataType: "json",
-				data: 'id='+textId,
+                data: 'id='+textId + '&lng=<?php echo $installer_lng; ?>',
 				url: '<?php echo "ajaxGetHelpText.php"; ?>',
-				success: function(data) 
+				success: function(data)
 				{
 					$('#modal-help-title').html(data.title);
 					$('#modal-help-content').html(data.text);

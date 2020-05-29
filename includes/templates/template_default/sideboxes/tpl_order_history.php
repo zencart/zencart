@@ -10,7 +10,7 @@
  */
   $content = "";
   $content .= '<div id="' . str_replace('_', '-', $box_id . 'Content') . '" class="sideBoxContent">' . "\n";
-  $content .= '<ul class="orderHistList">' . "\n" ;
+  $content .= '<ul class="list-links orderHistList">' . "\n" ;
 
   for ($i=1, $j=sizeof($customer_orders); $i<=$j; $i++) {
 

@@ -30,7 +30,7 @@
                <label class="inline" for="lng"><a href="#" class="hasHelpText" id="choose_lang"><?php echo TEXT_INSTALLER_CHOOSE_LANGUAGE; ?></a></label>
              </div>
              <div class="small-9 columns">
-               <select name="lng" id="lng" class="medium"><?php echo zen_get_install_languages_list($lng); ?></select>
+               <select name="lng" id="lng" class="medium"><?php echo zen_get_install_languages_list($installer_lng); ?></select>
              </div>
            </div>
            </fieldset>
@@ -47,7 +47,7 @@
         <?php require($body_code); ?>
         </div>
          <footer class="footer">
-           <p>Copyright &copy; 2003-<?php echo date('Y'); ?> <a href="http://www.zen-cart.com" target="_blank">Zen Cart&reg;</a></p>
+           <p>Copyright &copy; 2003-<?php echo date('Y'); ?> <a href="https://www.zen-cart.com" rel="noopener" target="_blank">Zen Cart&reg;</a></p>
          </footer>
       </div>
       </div>

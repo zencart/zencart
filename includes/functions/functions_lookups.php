@@ -851,7 +851,7 @@ function zen_get_configuration_key_value($lookup)
   function zen_run_normal() {
     $zc_run = false;
     switch (true) {
-      case (strstr(EXCLUDE_ADMIN_IP_FOR_MAINTENANCE, $_SERVER['REMOTE_ADDR'])):
+      case (zen_is_whitelisted_admin_ip()):
       // down for maintenance not for ADMIN
         $zc_run = true;
         break;

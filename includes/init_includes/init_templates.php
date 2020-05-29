@@ -31,7 +31,7 @@ $template_dir = $result->fields['template_dir'];
 /**
  * Allow admins to switch templates using &t= URL parameter
  */
-if (false !== strpos(EXCLUDE_ADMIN_IP_FOR_MAINTENANCE, $_SERVER['REMOTE_ADDR'])) {
+if (zen_is_whitelisted_admin_ip()) {
     $templates = array();
     foreach($result as $row) {
         $templates[] = $row['template_dir'];
@@ -39,6 +39,9 @@ if (false !== strpos(EXCLUDE_ADMIN_IP_FOR_MAINTENANCE, $_SERVER['REMOTE_ADDR']))
     // check if a template override was requested and that it matches an available choice and it exists on the filesystem
     if (isset($_GET['t']) && in_array($_GET['t'], $templates, true) && file_exists(DIR_WS_TEMPLATES . $_GET['t'])) {
         $_SESSION['tpl_override'] = $_GET['t'];
+    }
+    if (isset($_GET['t']) && $_GET['t'] === 'off') {
+        unset($_SESSION['tpl_override']);
     }
     if (isset($_SESSION['tpl_override'])) $template_dir = $_SESSION['tpl_override'];
     unset($templates, $row);

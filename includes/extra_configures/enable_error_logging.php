@@ -21,8 +21,9 @@ function zen_debug_error_handler($errno, $errstr, $errfile, $errline)
         return;
     }
 
+    static $last_log_suffix;
     if (!isset($last_log_suffix)) {
-        static $last_log_suffix = '.log';
+        $last_log_suffix = '.log';
     }
     $ignore_dups = false;
     if (IS_ADMIN_FLAG === true) {

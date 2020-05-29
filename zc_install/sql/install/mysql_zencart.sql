@@ -383,6 +383,23 @@ CREATE TABLE counter_history (
 # --------------------------------------------------------
 
 #
+# Table structure for table 'count_product_views'
+#
+
+DROP TABLE IF EXISTS count_product_views;
+CREATE TABLE count_product_views (
+  product_id int(11) NOT NULL default 0,
+  language_id int(11) NOT NULL default 1,
+  date_viewed date NOT NULL,
+  views int(11) default NULL,
+  PRIMARY KEY (product_id, language_id, date_viewed),
+  KEY idx_pid_lang_date_zen (language_id, product_id, date_viewed),
+  KEY idx_date_pid_lang_zen (date_viewed, product_id, language_id)
+) ENGINE=MyISAM;
+
+# --------------------------------------------------------
+
+#
 # Table structure for table 'countries'
 #
 
@@ -1084,7 +1101,8 @@ CREATE TABLE orders (
   PRIMARY KEY  (orders_id),
   KEY idx_status_orders_cust_zen (orders_status,orders_id,customers_id),
   KEY idx_date_purchased_zen (date_purchased),
-  KEY idx_cust_id_orders_id_zen (customers_id,orders_id)
+  KEY idx_cust_id_orders_id_zen (customers_id,orders_id),
+  KEY idx_status_date_id_zen (orders_status,date_purchased,orders_id)
 ) ENGINE=MyISAM;
 
 
@@ -1427,6 +1445,7 @@ CREATE TABLE plugin_control (
   author varchar(40) NOT NULL,
   version varchar(10),
   zc_versions text NOT NULL,
+  infs tinyint(1) NOT NULL default 0,
   PRIMARY KEY  (unique_key)
 ) ENGINE=MyISAM;
 
@@ -1442,6 +1461,7 @@ CREATE TABLE plugin_control_versions (
   version varchar(10),
   author varchar(40) NOT NULL,
   zc_versions text NOT NULL,
+  infs tinyint(1) NOT NULL default 0,
   PRIMARY KEY  (unique_key, version)
 ) ENGINE=MyISAM;
 
@@ -1718,7 +1738,7 @@ CREATE TABLE products_options (
   products_options_sort_order int(11) NOT NULL default '0',
   products_options_type int(5) NOT NULL default '0',
   products_options_length smallint(2) NOT NULL default '32',
-  products_options_comment varchar(255) default NULL,
+  products_options_comment varchar(256) default NULL,
   products_options_size smallint(2) NOT NULL default '32',
   products_options_images_per_row int(2) default '5',
   products_options_images_style int(1) default '0',
@@ -2228,6 +2248,7 @@ VALUES ('configMyStore', 'BOX_CONFIGURATION_MY_STORE', 'FILENAME_CONFIGURATION',
        ('productsToCategories', 'BOX_CATALOG_PRODUCTS_TO_CATEGORIES', 'FILENAME_PRODUCTS_TO_CATEGORIES', '', 'catalog', 'Y', 17),
        ('payment', 'BOX_MODULES_PAYMENT', 'FILENAME_MODULES', 'set=payment', 'modules', 'Y', 1),
        ('shipping', 'BOX_MODULES_SHIPPING', 'FILENAME_MODULES', 'set=shipping', 'modules', 'Y', 2),
+       ('plugins', 'BOX_MODULES_PLUGINS', 'FILENAME_PLUGIN_MANAGER', '', 'modules', 'Y', 4),
        ('orderTotal', 'BOX_MODULES_ORDER_TOTAL', 'FILENAME_MODULES', 'set=ordertotal', 'modules', 'Y', 3),
        ('customers', 'BOX_CUSTOMERS_CUSTOMERS', 'FILENAME_CUSTOMERS', '', 'customers', 'Y', 1),
        ('orders', 'BOX_CUSTOMERS_ORDERS', 'FILENAME_ORDERS', '', 'customers', 'Y', 2),
@@ -2615,6 +2636,7 @@ INSERT INTO configuration (configuration_title, configuration_key, configuration
 INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) VALUES ('Stock Re-order level', 'STOCK_REORDER_LEVEL', '5', 'Define when stock needs to be re-ordered', '9', '5', now());
 INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) VALUES ('Products status in Catalog when out of stock should be set to', 'SHOW_PRODUCTS_SOLD_OUT', '0', 'Show Products when out of stock<br /><br />0= set product status to OFF<br />1= leave product status ON', '9', '10', 'zen_cfg_select_option(array(\'0\', \'1\'), ', now());
 INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) VALUES ('Show Sold Out Image in place of Add to Cart', 'SHOW_PRODUCTS_SOLD_OUT_IMAGE', '1', 'Show Sold Out Image instead of Add to Cart Button<br /><br />0= off<br />1= on', '9', '11', 'zen_cfg_select_option(array(\'0\', \'1\'), ', now());
+INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) VALUES ('Enable disabled product by available date', 'ENABLE_DISABLED_UPCOMING_PRODUCT', 'Automatic', 'How should hidden (disabled) product with a future available date be made visible (active) to customers when the date is reached?<br />', '9', '12', 'zen_cfg_select_option(array(\'Manual\', \'Automatic\'), ', now());
 
 INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) VALUES ('Product Quantity Decimals', 'QUANTITY_DECIMALS', '0', 'Allow how many decimals on Quantity<br /><br />0= off', '9', '15', 'zen_cfg_select_option(array(\'0\', \'1\', \'2\', \'3\'), ', now());
 
@@ -2629,6 +2651,10 @@ INSERT INTO configuration (configuration_title, configuration_key, configuration
 INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) VALUES ('Show Notice of Combining Shopping Cart on Login', 'SHOW_SHOPPING_CART_COMBINED', '1', 'When a customer logs in and has a previously stored shopping cart, the products are combined with the existing shopping cart.<br /><br />Do you wish to display a Notice to the customer?<br /><br />0= OFF, do not display a notice<br />1= Yes show notice and go to shopping cart<br />2= Yes show notice, but do not go to shopping cart', '9', '35', 'zen_cfg_select_option(array(\'0\', \'1\', \'2\'), ', now());
 
 INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) VALUES ('Log Database Queries', 'STORE_DB_TRANSACTIONS', 'false', 'Record the database queries to files in the system /logs/ folder. USE WITH CAUTION. This can seriously degrade your site performance and blow out your disk space storage quotas.<br><strong>Enabling this makes your site NON-COMPLIANT with PCI DSS rules, thus invalidating any certification.</strong>', '10', '5', 'zen_cfg_select_option(array(\'true\', \'false\'), ', now());
+
+INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added, use_function, set_function) VALUES ('Report All Errors (Admin)?', 'REPORT_ALL_ERRORS_ADMIN', 'No', 'Do you want create debug-log files for <b>all</b> PHP errors, even warnings, that occur during your Zen Cart admin\'s processing?  If you want to log all PHP errors <b>except</b> duplicate-language definitions, choose <em>IgnoreDups</em>.', 10, 40, now(), NULL, 'zen_cfg_select_option(array(\'Yes\', \'No\', \'IgnoreDups\'),');
+INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added, use_function, set_function) VALUES ('Report All Errors (Store)?', 'REPORT_ALL_ERRORS_STORE', 'No', 'Do you want create debug-log files for <b>all</b> PHP errors, even warnings, that occur during your Zen Cart store\'s processing?  If you want to log all PHP errors <b>except</b> duplicate-language definitions, choose <em>IgnoreDups</em>.<br /><br /><strong>Note:</strong> Choosing \'Yes\' is not suggested for a <em>live</em> store, since it will reduce performance significantly!', 10, 41, now(), NULL, 'zen_cfg_select_option(array(\'Yes\', \'No\', \'IgnoreDups\'),');
+INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added, use_function, set_function) VALUES ('Report All Errors: Backtrace on Notice Errors?', 'REPORT_ALL_ERRORS_NOTICE_BACKTRACE', 'No', 'Include backtrace information on &quot;Notice&quot; errors?  These are usually isolated to the identified file and the backtrace information just fills the logs. Default (<b>No</b>).', 10, 42, now(), NULL, 'zen_cfg_select_option(array(\'Yes\', \'No\'),');
 
 INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) VALUES ('E-Mail Transport Method', 'EMAIL_TRANSPORT', 'PHP', 'Defines the method for sending mail.<br /><strong>PHP</strong> is the default, and uses built-in PHP wrappers for processing.<br />Servers running on Windows and MacOS should change this setting to <strong>SMTP</strong>.<br /><br /><strong>SMTPAUTH</strong> should only be used if your server requires SMTP authorization to send messages. You must also configure your SMTPAUTH settings in the appropriate fields in this admin section.<br /><br /><strong>sendmail</strong> is for linux/unix hosts using the sendmail program on the server<br /><strong>"sendmail-f"</strong> is only for servers which require the use of the -f parameter to send mail. This is a security setting often used to prevent spoofing. Will cause errors if your host mailserver is not configured to use it.<br /><br /><strong>Qmail</strong> is used for linux/unix hosts running Qmail as sendmail wrapper at /var/qmail/bin/sendmail.', '12', '1', 'zen_cfg_select_option(array(\'PHP\', \'sendmail\', \'sendmail-f\', \'smtp\', \'smtpauth\', \'Qmail\'),', now());
 INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) VALUES ('SMTP Email Account Mailbox', 'EMAIL_SMTPAUTH_MAILBOX', 'YourEmailAccountNameHere', 'Enter the mailbox account name (me@mydomain.com) supplied by your host. This is the account name that your host requires for SMTP authentication.<br />Only required if using SMTP Authentication for email.', '12', '101', now());
@@ -3376,9 +3402,9 @@ INSERT INTO get_terms_to_filter VALUES ('record_company_id', 'TABLE_RECORD_COMPA
 # Dumping data for table project_version
 #
 
-INSERT INTO project_version (project_version_id, project_version_key, project_version_major, project_version_minor, project_version_patch1, project_version_patch1_source, project_version_patch2, project_version_patch2_source, project_version_comment, project_version_date_applied) VALUES (1, 'Zen-Cart Main', '1', '5.7-alpha', '', '', '', '', 'New Installation-v157-alpha', now());
-INSERT INTO project_version (project_version_id, project_version_key, project_version_major, project_version_minor, project_version_patch1, project_version_patch1_source, project_version_patch2, project_version_patch2_source, project_version_comment, project_version_date_applied) VALUES (2, 'Zen-Cart Database', '1', '5.7-alpha', '', '', '', '', 'New Installation-v157-alpha', now());
-INSERT INTO project_version_history (project_version_id, project_version_key, project_version_major, project_version_minor, project_version_patch, project_version_comment, project_version_date_applied) VALUES (1, 'Zen-Cart Main', '1', '5.7-alpha', '', 'New Installation-v157-alpha', now());
-INSERT INTO project_version_history (project_version_id, project_version_key, project_version_major, project_version_minor, project_version_patch, project_version_comment, project_version_date_applied) VALUES (2, 'Zen-Cart Database', '1', '5.7-alpha', '', 'New Installation-v157-alpha', now());
+INSERT INTO project_version (project_version_id, project_version_key, project_version_major, project_version_minor, project_version_patch1, project_version_patch1_source, project_version_patch2, project_version_patch2_source, project_version_comment, project_version_date_applied) VALUES (1, 'Zen-Cart Main', '1', '5.7-beta', '', '', '', '', 'New Installation-v157-beta', now());
+INSERT INTO project_version (project_version_id, project_version_key, project_version_major, project_version_minor, project_version_patch1, project_version_patch1_source, project_version_patch2, project_version_patch2_source, project_version_comment, project_version_date_applied) VALUES (2, 'Zen-Cart Database', '1', '5.7-beta', '', '', '', '', 'New Installation-v157-beta', now());
+INSERT INTO project_version_history (project_version_id, project_version_key, project_version_major, project_version_minor, project_version_patch, project_version_comment, project_version_date_applied) VALUES (1, 'Zen-Cart Main', '1', '5.7-beta', '', 'New Installation-v157-beta', now());
+INSERT INTO project_version_history (project_version_id, project_version_key, project_version_major, project_version_minor, project_version_patch, project_version_comment, project_version_date_applied) VALUES (2, 'Zen-Cart Database', '1', '5.7-beta', '', 'New Installation-v157-beta', now());
 
 ##### End of SQL setup for Zen Cart.

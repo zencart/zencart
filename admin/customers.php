@@ -1403,7 +1403,7 @@ if (zen_not_null($action)) {
                     $place_order_override = false;
                     $zco_notifier->notify('NOTIFY_ADMIN_CUSTOMERS_PLACE_ORDER_BUTTON', $cInfo, $contents, $place_order_override);
                     if ($place_order_override === false && zen_admin_authorized_to_place_order()) {
-                        $login_form_start = '<form target="_blank" name="login" action="' .
+                        $login_form_start = '<form rel="noopener" target="_blank" name="login" action="' .
                             zen_catalog_href_link
                             (FILENAME_LOGIN, '', 'SSL') . '" method="post">';
                         $hiddenFields = zen_draw_hidden_field('email_address', $cInfo->customers_email_address);
@@ -1413,7 +1413,7 @@ if (zen_not_null($action)) {
                             $hmacpostdata = ['cid' => $cInfo->customers_id, 'aid' => $_SESSION['admin_id'],
                                              'email_address' => $cInfo->customers_email_address];
                             $hmacUri = zen_create_hmac_uri($hmacpostdata, $secret);
-                            $login_form_start = '<form id="loginform" target="_blank" name="login" action="' .
+                            $login_form_start = '<form id="loginform" rel="noopener" target="_blank" name="login" action="' .
                                 zen_catalog_href_link(
                                     FILENAME_LOGIN, $hmacUri . '&action=process', 'SSL') . '" method="post">';
                             $hiddenFields .= zen_draw_hidden_field('aid', $_SESSION['admin_id']);

@@ -89,12 +89,13 @@ require($template->get_template_dir('/tpl_products_next_previous.php',DIR_WS_TEM
 <?php
 if ($flag_show_ask_a_question) {
 ?>
-<!-- bof Ask a Question --> 
-<br />
-<span id="productQuestions" class="biggerText">
-<b><?php echo '<a href="' . zen_href_link(FILENAME_ASK_A_QUESTION, 'products_id=' . $_GET['products_id'], 'SSL') . '">' . ASK_A_QUESTION . '</a>'; ?></b>
+<!-- bof Ask a Question -->
+<br>
+<span id="productQuestions" class="">
+<?php echo '<a href="' . zen_href_link(FILENAME_ASK_A_QUESTION, 'products_id=' . $_GET['products_id'], 'SSL') . '">' . zen_image_button(BUTTON_IMAGE_ASK_A_QUESTION, BUTTON_ASK_A_QUESTION_ALT) . '</a>'; ?>
 </span>
-<br class="clearBoth" />
+<br class="clearBoth">
+<br>
 <!-- eof Ask a Question -->
 <?php
 }
@@ -108,6 +109,7 @@ if ($flag_show_ask_a_question) {
 </div>
 
 <div id="cart-box" class="grids">
+<!--bof Product Price block -->
 <h2 id="productPrices" class="productGeneral">
 <?php
 // base price
@@ -126,7 +128,7 @@ if ($flag_show_ask_a_question) {
 ?>
 <?php
 /**
- * display the product atributes
+ * display the product attributes
  */
   require($template->get_template_dir('/tpl_modules_attributes.php',DIR_WS_TEMPLATE, $current_page_base,'templates'). '/tpl_modules_attributes.php'); ?>
 <?php
@@ -160,7 +162,7 @@ if (CUSTOMERS_APPROVAL == 3 and TEXT_LOGIN_FOR_PRICE_BUTTON_REPLACE_SHOWROOM == 
       $the_button = '<input type="hidden" name="cart_quantity" value="1" />' . zen_draw_hidden_field('products_id', (int)$_GET['products_id']) . zen_image_submit(BUTTON_IMAGE_IN_CART, BUTTON_IN_CART_ALT);
     } else {
       // show the quantity box
-      $the_button = '<div class="max-qty">' . zen_get_products_quantity_min_units_display((int)$_GET['products_id']) . '</div><span class="qty-text">' . PRODUCTS_ORDER_QTY_TEXT . '</span><input type="text" name="cart_quantity" value="' . $products_get_buy_now_qty . '" maxlength="6" size="4" />' . zen_draw_hidden_field('products_id', (int)$_GET['products_id']) . zen_image_submit(BUTTON_IMAGE_IN_CART, BUTTON_IN_CART_ALT);
+      $the_button = '<div class="max-qty">' . zen_get_products_quantity_min_units_display((int)$_GET['products_id']) . '</div><span class="qty-text">' . PRODUCTS_ORDER_QTY_TEXT . '</span><input type="text" name="cart_quantity" value="' . $products_get_buy_now_qty . '" maxlength="6" size="4" aria-label="' . ARIA_QTY_ADD_TO_CART . '">' . zen_draw_hidden_field('products_id', (int)$_GET['products_id']) . zen_image_submit(BUTTON_IMAGE_IN_CART, BUTTON_IN_CART_ALT);
     }
     $display_button = zen_get_buy_now_button($_GET['products_id'], $the_button);
 ?>

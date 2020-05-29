@@ -366,7 +366,7 @@ class paypal_curl extends base {
    *
    * Used to read data from PayPal for specified transaction criteria
    */
-  function TransactionSearch($startdate, $txnID = '', $email = '', $options) {
+  function TransactionSearch($startdate, $txnID = '', $email = '', $options = null) {
     if ($this->_mode == 'payflow') {
       $values['CUSTREF'] = $txnID;
       $values['TENDER'] = 'C';

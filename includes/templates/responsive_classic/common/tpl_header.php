@@ -81,8 +81,8 @@ echo '<div class="header Fixed"><a href="#menu" title="Menu"><i class="fa fa-bar
 ?>
 
 <?php if ($_SESSION['cart']->count_contents() != 0) { ?>
-    <li><a href="<?php echo zen_href_link(FILENAME_SHOPPING_CART, '', 'NONSSL'); ?>"><i class="fa fa-shopping-cart" title="Shopping Cart"></i></a></li>
-    <li class="last"><a class="blue" href="<?php echo zen_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL'); ?>"><i class="fa fa-check-square" title="Checkout"></i></a></li>
+    <li><a class="navCartContentsIndicator" href="<?php echo zen_href_link(FILENAME_SHOPPING_CART, '', 'NONSSL'); ?>"><i class="fa fa-shopping-cart" title="Shopping Cart"></i></a></li>
+    <li class="last"><a href="<?php echo zen_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL'); ?>"><i class="fa fa-check-square" title="Checkout"></i></a></li>
 <?php }?>
   </ul>
 <div id="navMainSearch" class="forward">
@@ -122,8 +122,15 @@ echo '<div class="header Fixed"><a href="#menu" title="Menu"><i class="fa fa-bar
 <?php } } ?>
 
 <?php if ($_SESSION['cart']->count_contents() != 0) { ?>
-    <li><a href="<?php echo zen_href_link(FILENAME_SHOPPING_CART, '', 'NONSSL'); ?>"><?php echo HEADER_TITLE_CART_CONTENTS; ?></a></li>
-    <li class="last"><a class="blue" href="<?php echo zen_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL'); ?>"><?php echo HEADER_TITLE_CHECKOUT; ?></a></li>
+    <li><a class="navCartContentsIndicator" href="<?php echo zen_href_link(FILENAME_SHOPPING_CART, '', 'NONSSL'); ?>"><i class="fa fa-shopping-cart" title="Shopping Cart"></i> 
+     <?php 
+        echo HEADER_TITLE_CART_CONTENTS;
+        // Alternatively, if you want to display cart quantity and value, use the following line instead of the one above. Adapt for multiple languages if relevant.
+        // echo $_SESSION['cart']->count_contents().' item(s) '. $currencies->format($_SESSION['cart']->show_total());
+     ?>
+   </a>
+    </li>
+    <li class="last"><a href="<?php echo zen_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL'); ?>"><?php echo HEADER_TITLE_CHECKOUT; ?></a></li>
 <?php }?>
 </ul>
 <div id="navMainSearch" class="forward">
@@ -161,8 +168,16 @@ echo '<div class="header Fixed"><a href="#menu" title="Menu"><i class="fa fa-bar
 ?>
 
 <?php if ($_SESSION['cart']->count_contents() != 0) { ?>
-    <li><a href="<?php echo zen_href_link(FILENAME_SHOPPING_CART, '', 'NONSSL'); ?>"><?php echo HEADER_TITLE_CART_CONTENTS; ?></a></li>
-    <li class="last"><a class="blue" href="<?php echo zen_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL'); ?>"><?php echo HEADER_TITLE_CHECKOUT; ?></a></li>
+    <li>
+      <a class="navCartContentsIndicator" href="<?php echo zen_href_link(FILENAME_SHOPPING_CART, '', 'NONSSL'); ?>"><i class="fa fa-shopping-cart" title="Shopping Cart"></i>
+     <?php 
+        echo HEADER_TITLE_CART_CONTENTS;
+        // Alternatively, if you want to display cart quantity and value, use the following line instead of the one above. Adapt for multiple languages if relevant.
+        // echo $_SESSION['cart']->count_contents().' item(s) '. $currencies->format($_SESSION['cart']->show_total());
+     ?>
+   </a>
+   </li>
+    <li class="last"><a href="<?php echo zen_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL'); ?>"><?php echo HEADER_TITLE_CHECKOUT; ?></a></li>
 <?php }?>
   </ul>
 <div id="navMainSearch" class="forward">
@@ -222,7 +237,7 @@ echo '<div class="header Fixed"><a href="#menu" title="Menu"><i class="fa fa-bar
 <!--eof optional categories tabs navigation display-->
 
 <!--bof header ezpage links-->
-<?php if (EZPAGES_STATUS_HEADER == '1' or (EZPAGES_STATUS_HEADER == '2' and (strstr(EXCLUDE_ADMIN_IP_FOR_MAINTENANCE, $_SERVER['REMOTE_ADDR'])))) { ?>
+<?php if (EZPAGES_STATUS_HEADER == '1' or (EZPAGES_STATUS_HEADER == '2' && zen_is_whitelisted_admin_ip())) { ?>
 <?php   require($template->get_template_dir('tpl_ezpages_bar_header.php',DIR_WS_TEMPLATE, $current_page_base,'templates'). '/tpl_ezpages_bar_header.php'); ?>
 <?php } ?>
 <!--eof header ezpage links-->

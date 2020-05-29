@@ -53,7 +53,10 @@ if (!defined('IS_ADMIN_FLAG')) {
 
 
 
-// the following IF statement can be duplicated/modified as needed to set additional flags
+// the following statements can be modified as needed to set additional flags
+if (in_array($current_page_base,explode(",",'list_pages_to_skip_all_left_sideboxes_on_here,separated_by_commas,and_no_spaces')) ) {
+  $flag_disable_left = true;
+}
 if (in_array($current_page_base,explode(",",'list_pages_to_skip_all_right_sideboxes_on_here,separated_by_commas,and_no_spaces')) ) {
   $flag_disable_right = true;
 }

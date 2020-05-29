@@ -28,7 +28,6 @@
 #menu-search input[type=submit]{-moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box;display:inline-block;margin:0;height:32px;}
 /*top navigation*/
 #navMain, #navMain ul{text-align:right !important;}
-#navMain{width:70%;float:right;position:fixed;right:0;top:-3px;z-index:2;}
 #navMain ul{float:right;width:100%;}
 #navMain i{font-size:150%;padding-top:7px;}
 #navMain ul li{border:none;}
@@ -282,7 +281,7 @@ span.cssButton.normal_button.button.button_continue_shopping, .button_continue_s
 .cartRemoveItemDisplay input[type=checkbox]{display:none;}
 
 /*bof checkout*/
-#checkoutPayment .forward, #checkoutShipping .forward{float:none;width:95%;}
+#checkoutConfirmDefault .forward, #checkoutPayment .forward, #checkoutShipping .forward{float:right;width:auto !important;}
 #checkoutConfirmDefault input.submit_button, #checkoutPayment input.submit_button, #checkoutShipping input.submit_button, #checkoutShipping input.submit_button:hover{display:block !important;width:100% !important;}
 #checkoutConfirmDefault input.cssButtonHover, #checkoutPayment input.cssButtonHover, #checkoutShipping input.cssButtonHover{display:block !important;width:100% !important;}
 #checkoutConfirmDefaultHeadingComments{text-align:center;}
@@ -442,3 +441,5 @@ fieldset p{width:90%;margin:0 auto;}
 #checkoutSuccess fieldset .buttonRow.forward{margin:0 !important;}
 #advSearchDefault input.cssButton.submit_button.button.button_search, #advSearchDefault .button_search:hover{width:100%;margin-left:0;margin-bottom:10px;height:45px;}
 }
+#navMain{width:70%;float:right;position:fixed;right:0;top:-5px;z-index:2;}
+#navMain ul li a.navCartContentsIndicator {padding:8px;}

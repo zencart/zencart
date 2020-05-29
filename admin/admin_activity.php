@@ -41,7 +41,7 @@ $filter_options[1] = array('id' => '1', 'text' => TEXT_EXPORTFILTER1, 'filter' =
 $filter_options[2] = array('id' => '2', 'text' => TEXT_EXPORTFILTER2, 'filter' => 'notice');
 $filter_options[3] = array('id' => '3', 'text' => TEXT_EXPORTFILTER3, 'filter' => 'warning');
 $filter_options[4] = array('id' => '4', 'text' => TEXT_EXPORTFILTER4, 'filter' => 'notice+warning');
-$post_filter = (isset($_POST['filter']) && (int)$_POST['filter'] >= 0 && (int)$_POST['filter'] < 5) ? (int)$_POST['filter'] : 4;
+$post_filter = (isset($_POST['filter']) && (int)$_POST['filter'] >= 0 && (int)$_POST['filter'] < 5) ? (int)$_POST['filter'] : ($post_format == 1 ? 0 : 4);
 $selected_filter = $filter_options[$post_filter]['filter'];
 
 zen_set_time_limit(600);
@@ -345,7 +345,7 @@ if ($action != '') {
             </div>
             <div class="form-group"><?php echo zen_draw_label(TEXT_ACTIVITY_EXPORT_FORMAT, 'format', 'class="col-sm-3 control-label"'); ?>
               <div class="col-sm-9 col-md-6">
-                  <?php echo zen_draw_pull_down_menu('format', $available_export_formats, $format, 'class="form-control" id="format"'); ?>
+                  <?php echo zen_draw_pull_down_menu('format', $available_export_formats, $post_format, 'class="form-control" id="format"'); ?>
               </div>
             </div>
             <div class="form-group">

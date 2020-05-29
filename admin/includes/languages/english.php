@@ -124,6 +124,7 @@ define('BOX_HEADING_MODULES', 'Modules');
 define('BOX_MODULES_PAYMENT', 'Payment');
 define('BOX_MODULES_SHIPPING', 'Shipping');
 define('BOX_MODULES_ORDER_TOTAL', 'Order Total');
+define('BOX_MODULES_PLUGINS', 'Plugin Manager');
 
 // categories box text
 define('BOX_HEADING_CATALOG', 'Catalog');
@@ -413,7 +414,7 @@ define('WARNING_DATABASE_VERSION_OUT_OF_DATE','Your database appears to need pat
 define('WARN_DATABASE_VERSION_PROBLEM','true'); //set to false to turn off warnings about database version mismatches
 define('WARNING_ADMIN_DOWN_FOR_MAINTENANCE', '<strong>WARNING:</strong> Site is currently set to Down for Maintenance ...<br>NOTE: You cannot test most Payment and Shipping Modules in Maintenance mode');
 define('WARNING_INSTALL_DIRECTORY_EXISTS', 'SECURITY WARNING: Installation directory exists at: %s. Please remove this directory for security reasons.');
-define('WARNING_CONFIG_FILE_WRITEABLE', 'Warning: Your configuration file: %s is writeable. This is a potential security risk - please set the right user permissions on this file (read-only, CHMOD 644 or 444 are typical). You may need to use your webhost control panel/file-manager to change the permissions effectively. Contact your webhost for assistance. <a href="https://docs.zen-cart.com/user/miscellaneous/configure/" target="_blank">See this FAQ</a>');
+define('WARNING_CONFIG_FILE_WRITEABLE', 'Warning: Your configuration file: %s is writeable. This is a potential security risk - please set the right user permissions on this file (read-only, CHMOD 644 or 444 are typical). You may need to use your webhost control panel/file-manager to change the permissions effectively. Contact your webhost for assistance. <a href="https://docs.zen-cart.com/user/miscellaneous/configure/" rel="noopener" target="_blank">See this FAQ</a>');
 define('WARNING_COULD_NOT_LOCATE_LANG_FILE', 'WARNING: Could not locate language file: ');
 define('ERROR_MODULE_REMOVAL_PROHIBITED', 'ERROR: Module removal prohibited: ');
 define('WARNING_REVIEW_ROGUE_ACTIVITY', 'ALERT: Please review for possible XSS activity:');
@@ -685,7 +686,7 @@ define('TEXT_NOEMAIL', 'No Email');
 
 define('BOX_HEADING_PRODUCT_TYPES', 'Product Types');
 
-define('ERROR_DATABASE_MAINTENANCE_NEEDED', '<a href="https://docs.zen-cart.com/user/troubleshooting/error_71_maintenance_required/" target="_blank">ERROR 0071 There appears to be a problem with the database. Maintenance is required.</a>');
+define('ERROR_DATABASE_MAINTENANCE_NEEDED', '<a href="https://docs.zen-cart.com/user/troubleshooting/error_71_maintenance_required/" rel="noopener" target="_blank">ERROR 0071 There appears to be a problem with the database. Maintenance is required.</a>');
 
 // moved from currencies file:
 define('TEXT_INFO_CURRENCY_UPDATED', 'The exchange rate for %s (%s) was updated successfully to %s via %s.');
@@ -694,3 +695,25 @@ define('WARNING_PRIMARY_SERVER_FAILED', 'Warning: The primary exchange rate serv
 
 // Set to empty string if alpha sorting not desired
 define('MENU_CATEGORIES_TO_SORT_BY_NAME','reports,tools'); 
+
+// Plugins
+define('PLUGIN_INSTALL_SQL_FAILURE', 'one or more database errors occured');
+
+// ARIA Stuff
+
+define('ARIA_PAGINATION_ROLE_LABEL_GENERAL','Pagination');
+define('ARIA_PAGINATION_ROLE_LABEL_FOR','%s Pagination'); // eg: "Search results Pagination"
+define('ARIA_PAGINATION_PREVIOUS_PAGE','Go to Previous Page');
+define('ARIA_PAGINATION_NEXT_PAGE','Go to Next Page');
+define('ARIA_PAGINATION_CURRENT_PAGE','Current Page');
+define('ARIA_PAGINATION_CURRENTLY_ON',', now on page %s');
+define('ARIA_PAGINATION_GOTO','Go to ');
+define('ARIA_PAGINATION_PAGE_NUM','Page %s');
+define('ARIA_PAGINATION_ELLIPSIS_PREVIOUS','Get previous group of pages');
+define('ARIA_PAGINATION_ELLIPSIS_NEXT','Get next group of pages');
+define('ARIA_PAGINATION_','');
+
+///////////////////////////////////////////////////////////
+// include additional files:
+  require(DIR_WS_LANGUAGES . $_SESSION['language'] . "/" . FILENAME_EMAIL_EXTRAS);
+  include(zen_get_file_directory(DIR_FS_CATALOG_LANGUAGES . $_SESSION['language'] . '/', FILENAME_OTHER_IMAGES_NAMES));

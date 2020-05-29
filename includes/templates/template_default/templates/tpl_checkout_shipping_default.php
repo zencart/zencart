@@ -54,7 +54,7 @@
 <?php
     if ($free_shipping == true) {
 ?>
-<div id="freeShip" class="important" ><?php echo FREE_SHIPPING_TITLE; ?>&nbsp;<?php echo $quotes[$i]['icon']; ?></div>
+<div id="freeShip" class="important" ><?php echo FREE_SHIPPING_TITLE . (isset($quotes[$i]['icon']) ? '&nbsp;' . $quotes[$i]['icon'] : ''); ?></div>
 <div id="defaultSelected"><?php echo sprintf(FREE_SHIPPING_DESCRIPTION, $currencies->format(MODULE_ORDER_TOTAL_SHIPPING_FREE_SHIPPING_OVER)) . zen_draw_hidden_field('shipping', 'free_free'); ?></div>
  
 <?php
@@ -127,7 +127,7 @@
 ?>
 <fieldset class="shipping" id="comments">
 <legend><?php echo TABLE_HEADING_COMMENTS; ?></legend>
-<?php echo zen_draw_textarea_field('comments', '45', '3'); ?>
+<?php echo zen_draw_textarea_field('comments', '45', '3', (isset($comments) ? $comments : ''), 'aria-label="' . TABLE_HEADING_COMMENTS . '"'); ?>
 </fieldset>
  
 <div class="buttonRow forward"><?php echo zen_image_submit(BUTTON_IMAGE_CONTINUE_CHECKOUT, BUTTON_CONTINUE_ALT); ?></div>

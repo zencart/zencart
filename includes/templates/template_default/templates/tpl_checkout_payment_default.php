@@ -126,7 +126,7 @@
     if (sizeof($selection) > 1) {
         if (empty($selection[$i]['noradio'])) {
  ?>
-<?php echo zen_draw_radio_field('payment', $selection[$i]['id'], ($selection[$i]['id'] == $_SESSION['payment'] ? true : false), 'id="pmt-'.$selection[$i]['id'].'"'); ?>
+<?php echo zen_draw_radio_field('payment', $selection[$i]['id'], ($selection[$i]['id'] == ($_SESSION['payment'] ?: '')), 'id="pmt-'.$selection[$i]['id'].'"'); ?>
 <?php   } ?>
 <?php
     } else {
@@ -188,7 +188,7 @@
       // ** END PAYPAL EXPRESS CHECKOUT ** ?>
 <fieldset>
 <legend><?php echo TABLE_HEADING_COMMENTS; ?></legend>
-<?php echo zen_draw_textarea_field('comments', '45', '3'); ?>
+<?php echo zen_draw_textarea_field('comments', '45', '3', (isset($comments) ? $comments : ''), 'aria-label="' . TABLE_HEADING_COMMENTS . '"'); ?>
 </fieldset>
 
 <?php

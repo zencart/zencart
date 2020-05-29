@@ -11,7 +11,7 @@
 define('OSH_EMAIL_SEPARATOR', '------------------------------------------------------');
 define('OSH_EMAIL_TEXT_SUBJECT', 'Order Update');
 define('OSH_EMAIL_TEXT_ORDER_NUMBER', 'Order Number:');
-define('OSH_EMAIL_TEXT_INVOICE_URL', 'Detailed Invoice:');
+define('OSH_EMAIL_TEXT_INVOICE_URL', 'Order Details:');
 define('OSH_EMAIL_TEXT_DATE_ORDERED', 'Date Ordered:');
 define('OSH_EMAIL_TEXT_COMMENTS_UPDATE', '<em>The comments for your order are: </em>');
 define('OSH_EMAIL_TEXT_STATUS_UPDATED', 'Your order\'s status has been updated:' . "\n");

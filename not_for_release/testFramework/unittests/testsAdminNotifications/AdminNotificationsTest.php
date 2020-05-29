@@ -6,7 +6,7 @@
  */
 require_once(__DIR__ . '/../support/zcTestCase.php');
 
-class testAdminNotifications extends zcTestCase
+class AdminNotificationsTest extends zcTestCase
 {
     public function setUp(): void
     {

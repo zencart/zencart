@@ -12,11 +12,7 @@
          stopOnFailure="false">
     <testsuites>
         <testsuite name="UnitTests">
-          <directory suffix="Test.php">./not_for_release/testFramework/unittests/testsAdminNotifications</directory>
-          <directory suffix="Test.php">./not_for_release/testFramework/unittests/testsDiscountCoupon</directory>
-          <directory suffix="Test.php">./not_for_release/testFramework/unittests/testsPasswordHash</directory>
-          <directory suffix="Test.php">./not_for_release/testFramework/unittests/testsAdminSanitization</directory>
-          <directory suffix="Test.php">./not_for_release/testFramework/unittests/testsSundry</directory>
+          <directory suffix="Test.php">./not_for_release/testFramework/unittests/</directory>
         </testsuite>
         <testsuite name="Browser">
             <directory suffix="Test.php">./not_for_release/testFramework/Browser/</directory>
