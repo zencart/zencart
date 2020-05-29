@@ -234,6 +234,8 @@ CREATE TABLE IF NOT EXISTS count_product_views (
 ) ENGINE=MyISAM;
 
 
+ALTER TABLE admin_profiles MODIFY profile_name varchar(191) NOT NULL default '';
+ALTER TABLE admin_profiles ADD UNIQUE idx_profile_name_zen (profile_name);
 
 ALTER TABLE admin_activity_log MODIFY attention MEDIUMTEXT;
 

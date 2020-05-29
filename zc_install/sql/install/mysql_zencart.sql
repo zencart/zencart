@@ -188,8 +188,9 @@ CREATE TABLE admin_pages (
 DROP TABLE IF EXISTS admin_profiles;
 CREATE TABLE admin_profiles (
   profile_id int(11) NOT NULL AUTO_INCREMENT,
-  profile_name varchar(255) NOT NULL default '',
-  PRIMARY KEY (profile_id)
+  profile_name varchar(191) NOT NULL default '',
+  PRIMARY KEY (profile_id),
+  UNIQUE KEY idx_profile_name_zen (profile_name)
 ) ENGINE=MyISAM;
 
 # --------------------------------------------------------
