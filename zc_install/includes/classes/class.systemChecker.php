@@ -33,9 +33,9 @@ class systemChecker
     {
         $runLevels = array_merge(array($runLevel), $this->extraRunLevels);
         $this->errorList = array();
-//    print_r($this->systemChecks);
+//echo print_r($this->systemChecks);
         foreach ($this->systemChecks as $systemCheckName => $systemCheck) {
-//      print_r($systemCheck);
+//echo print_r($systemCheck);
             if (in_array($systemCheck['runLevel'], $runLevels)) {
                 $resultCombined = TRUE;
                 $criticalError = false;
@@ -178,7 +178,7 @@ class systemChecker
                 if (isset($version)) break;
             }
         }
-//    print_r($this->errorList);
+//echo print_r($this->errorList);
         return $version;
     }
 
@@ -207,10 +207,10 @@ class systemChecker
             foreach ($parameters as $parameter) {
                 $method = 'dbVersionCheck' . ucfirst($parameter['checkType']);
                 $result = $this->$method($db, $dbPrefixVal, $parameter);
-//      echo $parameter['checkType'] . ': ' . var_export($result, true) . '<br>';
+//echo ($parameter['tableName'] ? $parameter['tableName'] . '-' : '') . $parameter['checkType'] . ': ' . var_export($result, true) . '<br>' . "\n";
                 $valid = $valid && $result;
             }
-//    echo 'Valid: ' . var_export($valid, true) . '<br>';
+//echo 'Valid: ' . var_export($valid, true) . '<br>' . "\n";
         } else {
             $valid = false;
         }
@@ -676,8 +676,8 @@ class systemChecker
             $dbPrefixVal = $this->getServerConfig()->getDefine('DB_PREFIX');
             require_once(DIR_FS_ROOT . 'includes/classes/db/mysql/query_factory.php');
             $db = new queryFactory();
-            $result = $db->simpleConnect($dbServerVal, $dbUserVal, $dbPasswordVal, $dbNameVal);
-            $result = $db->selectdb($dbNameVal);
+            $db->simpleConnect($dbServerVal, $dbUserVal, $dbPasswordVal, $dbNameVal);
+            $db->selectdb($dbNameVal);
 
             $sql = "select configuration_value from " . $dbPrefixVal . "configuration where configuration_key = 'EXCLUDE_ADMIN_IP_FOR_MAINTENANCE'";
             $result = $db->Execute($sql);
