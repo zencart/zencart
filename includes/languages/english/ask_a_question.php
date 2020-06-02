@@ -16,7 +16,7 @@ define('ENTRY_NAME', 'Full Name:');
 define('ENTRY_EMAIL', 'Email Address:');
 define('ENTRY_TELEPHONE', 'Telephone Number:');
 define('ENTRY_ENQUIRY', 'Message:');
-define('PROD_NAME', 'Product Name: ');
+define('TEXT_PRODUCT_NAME', 'Product Name: ');
 
 define('SEND_TO_TEXT','Send Email To:');
 define('ENTRY_EMAIL_NAME_CHECK_ERROR','Sorry, is your name correct? Our system requires a minimum of ' . ENTRY_FIRST_NAME_MIN_LENGTH . ' characters. Please try again.');
