@@ -253,8 +253,8 @@ use PHPMailer\PHPMailer\SMTP;
 
       // set the reply-to address.  If none set yet, then use Store's default email name/address.
       // If sending from checkout or contact-us, use the supplied info
-      $email_reply_to_address = (isset($email_reply_to_address) && $email_reply_to_address != '') ? $email_reply_to_address : (in_array($module, array('contact_us', 'checkout_extra')) ? $from_email_address : EMAIL_FROM);
-      $email_reply_to_name = (isset($email_reply_to_name) && $email_reply_to_name != '') ? $email_reply_to_name : (in_array($module, array('contact_us', 'checkout_extra')) ? $from_email_name : STORE_NAME);
+      $email_reply_to_address = (isset($email_reply_to_address) && $email_reply_to_address != '') ? $email_reply_to_address : (in_array($module, array('contact_us', 'ask_a_question', 'checkout_extra')) ? $from_email_address : EMAIL_FROM);
+      $email_reply_to_name = (isset($email_reply_to_name) && $email_reply_to_name != '') ? $email_reply_to_name : (in_array($module, array('contact_us', 'ask_a_question', 'checkout_extra')) ? $from_email_name : STORE_NAME);
       $mail->addReplyTo($email_reply_to_address, $email_reply_to_name);
 
       $mail->setFrom($from_email_address, $from_email_name);
@@ -456,6 +456,7 @@ use PHPMailer\PHPMailer\SMTP;
   $emodules_array[] = array('id' => 'product_notification', 'text' => 'Product Notifications');
   $emodules_array[] = array('id' => 'direct_email', 'text' => 'One-Time Email');
   $emodules_array[] = array('id' => 'contact_us', 'text' => 'Contact Us');
+  $emodules_array[] = array('id' => 'ask_a_question', 'text' => 'Ask A Question');
   $emodules_array[] = array('id' => 'coupon', 'text' => 'Send Coupon');
   $emodules_array[] = array('id' => 'coupon_extra', 'text' => 'Send Coupon');
   $emodules_array[] = array('id' => 'gv_queue', 'text' => 'Send-GV-Queue');
@@ -583,7 +584,7 @@ use PHPMailer\PHPMailer\SMTP;
     //  if (!isset($block['EMAIL_STYLESHEET']) || $block['EMAIL_STYLESHEET'] == '')      $block['EMAIL_STYLESHEET']       = str_replace(array("\r\n", "\n", "\r"), "",@file_get_contents(DIR_FS_EMAIL_TEMPLATES.'stylesheet.css'));
 
     if (!isset($block['EXTRA_INFO']))  $block['EXTRA_INFO']  = '';
-    if (substr($module,-6) != '_extra' && $module != 'contact_us')  $block['EXTRA_INFO']  = '';
+    if (substr($module,-6) != '_extra' && $module != 'contact_us' && $module != 'ask_a_question')  $block['EXTRA_INFO']  = '';
 
     $block['COUPON_BLOCK'] = '';
     if (isset($block['COUPON_TEXT_VOUCHER_IS']) && $block['COUPON_TEXT_VOUCHER_IS'] != '' && isset($block['COUPON_TEXT_TO_REDEEM']) && $block['COUPON_TEXT_TO_REDEEM'] != '') {
