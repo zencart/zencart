@@ -2,11 +2,10 @@
 /**
  * currencies class
  *
- * @package classes
- * @copyright Copyright 2003-2018 Zen Cart Development Team
+ * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Drbyte Tue Nov 20 12:59:17 2018 -0500 Modified in v1.5.6 $
+ * @version $Id: DrByte 2020 May 19 Modified in v1.5.7 $
  */
 if (!defined('IS_ADMIN_FLAG')) {
     die('Illegal Access');
@@ -15,7 +14,6 @@ if (!defined('IS_ADMIN_FLAG')) {
 /**
  * currencies class
  *
- * @package classes
  */
 class currencies extends base
 {

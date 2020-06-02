@@ -2,11 +2,10 @@
 /**
  *  product_prev_next.php
  *
- * @package productTypes
- * @copyright Copyright 2003-2018 Zen Cart Development Team
+ * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Drbyte Tue Sep 11 11:33:40 2018 -0400 Modified in v1.5.6 $
+ * @version $Id: Scott C Wilson 2020 Apr 09 Modified in v1.5.7 $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');

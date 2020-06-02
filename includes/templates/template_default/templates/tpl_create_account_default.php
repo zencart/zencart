@@ -5,11 +5,10 @@
  * Loaded automatically by index.php?main_page=create_account.<br />
  * Displays Create Account form.
  *
- * @package templateSystem
- * @copyright Copyright 2003-2007 Zen Cart Development Team
+ * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: tpl_create_account_default.php 5523 2007-01-03 09:37:48Z drbyte $
+ * @version $Id: Steve 2020 Jan 14 Modified in v1.5.7 $
  */
 ?>
 <div class="centerColumn" id="createAcctDefault">

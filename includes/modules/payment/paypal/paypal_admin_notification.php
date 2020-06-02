@@ -2,12 +2,11 @@
 /**
  * admin subtemplate for Paypal Website Payments Standard payment method
  *
- * @package paymentMethod
  * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @copyright Portions Copyright 2004 DevosC.com
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id:  Modified in v1.5.7 $
+ * @version $Id: DrByte 2020 May 16 Modified in v1.5.7 $
  */
 
 // strip slashes in case they were added to handle apostrophes:

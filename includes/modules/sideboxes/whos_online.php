@@ -2,11 +2,10 @@
 /**
  * whos_online sidebox - displays how many guests/members are online currently
  *
- * @package templateSystem
- * @copyright Copyright 2003-2005 Zen Cart Development Team
+ * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: whos_online.php 2718 2005-12-28 06:42:39Z drbyte $
+ * @version $Id: Scott C Wilson 2020 Apr 09 Modified in v1.5.7 $
  */
 
 // test if box should display

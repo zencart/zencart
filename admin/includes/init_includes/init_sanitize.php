@@ -2,10 +2,9 @@
 /**
  * init_sanitize
  *
- * @package initSystem
- * @copyright Copyright 2003-2019 Zen Cart Development Team
+ * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: lat9 2019 May 15 Modified in v1.5.6b $
+ * @version $Id: DrByte 2020 May 06 Modified in v1.5.7 $
  */
 
 if (!defined('DO_STRICT_SANITIZATION')) {

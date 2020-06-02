@@ -1,9 +1,8 @@
 <?php
 /**
- * @package admin
- * @copyright Copyright 2003-2018 Zen Cart Development Team
+ * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: lat9 Tue Oct 2 13:32:43 2018 -0400 Modified in v1.5.6 $
+ * @version $Id: Zcwilt 2019 Sep 08 Modified in v1.5.7 $
  */
 
 if (!defined('IS_ADMIN_FLAG')) die('Illegal Access');

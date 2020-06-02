@@ -1,9 +1,8 @@
 <?php
 /**
- * @package Installer
- * @copyright Copyright 2003-2016 Zen Cart Development Team
+ * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Merge: 7837e74 7d692ea Author: Chris Brown <drbyte@zen-cart.com> New in v1.5.5 $
+ * @version $Id: Zcwilt 2020 May 19 Modified in v1.5.7 $
  */
 ?>
 

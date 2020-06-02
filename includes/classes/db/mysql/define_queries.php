@@ -4,10 +4,9 @@
  * defines queries used in various codeblocks
  * can be used to assist with special requirements for other database-abstraction configurations
  *
- * @package classes
- * @copyright Copyright 2003-2016 Zen Cart Development Team
+ * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: DrByte  Fri Jan 1 01:37:09 2016 -0500 Modified in v1.5.5 $
+ * @version $Id: Steve 2020 Feb 15 Modified in v1.5.7 $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');

@@ -1,11 +1,10 @@
 <?php
 /**
- * @package admin
- * @copyright Copyright 2003-2019 Zen Cart Development Team
+ * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @copyright Portions Copyright (c) 2004 DevosC.com    
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: paypal.php 18799 2011-05-25 12:29:41Z wilt $
+ * @version $Id: Steve 2020 May 22 Modified in v1.5.7 $
  */
 
   require('includes/application_top.php');

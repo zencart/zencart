@@ -2,11 +2,10 @@
 /**
  * module to process a completed checkout
  *
- * @package procedureCheckout
- * @copyright Copyright 2003-2019 Zen Cart Development Team
+ * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: mc12345678 2019 Apr 07 Modified in v1.5.6b $
+ * @version $Id: lat9 2019 Dec 16 Modified in v1.5.7 $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');

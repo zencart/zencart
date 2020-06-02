@@ -2,11 +2,10 @@
 /**
  * more_information sidebox - displays list of links to additional pages on the site.  Must separately build those pages' content.
  *
- * @package templateSystem
- * @copyright Copyright 2003-2006 Zen Cart Development Team
+ * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: more_information.php 3464 2006-04-19 00:07:26Z ajeh $
+ * @version $Id: DrByte 2019 Jul 24 Modified in v1.5.7 $
  */
 
 // initialize

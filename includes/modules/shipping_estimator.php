@@ -6,12 +6,11 @@
  * - Handles Free Shipping for orders over $total as defined in the Admin
  * - Shows Free Shipping on Virtual products
  *
- * @package modules
- * @copyright Copyright 2003-2019 Zen Cart Development Team
+ * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * portions Copyright (c) 2003 Edwin Bekaert (edwin@ednique.com)
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2019 Apr 23 Modified in v1.5.6b $
+ * @version $Id: Scott C Wilson 2020 Apr 09 Modified in v1.5.7 $
  */
 if (!defined('IS_ADMIN_FLAG')) {
     die('Illegal Access');
