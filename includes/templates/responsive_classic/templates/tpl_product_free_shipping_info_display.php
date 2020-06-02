@@ -88,7 +88,7 @@ if ($flag_show_ask_a_question) {
 <!-- bof Ask a Question --> 
 <br />
 <span id="productQuestions" class="biggerText">
-<b><?php echo '<a href="' . zen_href_link(FILENAME_ASK_A_QUESTION, 'products_id=' . $_GET['products_id'], 'SSL') . '">' . ASK_A_QUESTION . '</a>'; ?></b>
+<b><?php echo '<a href="' . zen_href_link(FILENAME_ASK_A_QUESTION, 'pid=' . $_GET['products_id'], 'SSL') . '">' . ASK_A_QUESTION . '</a>'; ?></b>
 </span>
 <br class="clearBoth" />
 <!-- eof Ask a Question -->
