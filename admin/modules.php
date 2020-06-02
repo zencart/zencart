@@ -100,8 +100,8 @@ if (zen_not_null($action)) {
           break;
       }
       if (file_exists($module_directory . $class . $file_extension)) {
-          if (file_exists(DIR_FS_CATALOG_LANGUAGES . $_SESSION['language'] . '/modules/' . $module_type . '/' . $class . $file_extension)) {
-            include DIR_FS_CATALOG_LANGUAGES . $_SESSION['language'] . '/modules/' . $module_type . '/' . $class . $file_extension;
+          if ($languageLoader->tryloadLDefinesFromFile( '/modules/' . $module_type . '/', $_SESSION['language'],  $class . $file_extension)) {
+              //include DIR_FS_CATALOG_LANGUAGES . $_SESSION['language'] . '/modules/' . $module_type . '/' . $class . $file_extension;
             include $module_directory . $class . $file_extension;
             $module = new $class();
             $msg = sprintf(TEXT_EMAIL_MESSAGE_ADMIN_MODULE_INSTALLED, preg_replace('/[^\w]/', '*', $_POST['module']), $admname);
@@ -192,12 +192,11 @@ if (zen_not_null($action)) {
                   sort($directory_array);
                   $dir->close();
                 }
-
                 $installed_modules = $temp_for_sort = [];
                 for ($i = 0, $n = count($directory_array); $i < $n; $i++) {
                   $file = $directory_array[$i];
-                  if (file_exists(DIR_FS_CATALOG_LANGUAGES . $_SESSION['language'] . '/modules/' . $module_type . '/' . $file)) {
-                    include(DIR_FS_CATALOG_LANGUAGES . $_SESSION['language'] . '/modules/' . $module_type . '/' . $file);
+                  if ($languageLoader->hasLanguageFile( DIR_FS_CATALOG . DIR_WS_LANGUAGES, $_SESSION['language'],  $file, '/modules/' . $module_type)) {
+                      $languageLoader->loadExtraLanguageFiles(DIR_FS_CATALOG . DIR_WS_LANGUAGES, $_SESSION['language'],  $file, '/modules/' . $module_type);
                     include($module_directory . $file);
                     $class = substr($file, 0, strrpos($file, '.'));
                     if (class_exists($class)) {
@@ -265,7 +264,7 @@ if (zen_not_null($action)) {
                     if (!isset($module->order_status)) {
                         $module->order_status = 0;
                     }
-                    
+
                     $orders_status_name = $db->Execute("SELECT orders_status_id, orders_status_name
                                                         FROM " . TABLE_ORDERS_STATUS . "
                                                         WHERE orders_status_id = " . (int)$module->order_status . "

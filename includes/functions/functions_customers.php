@@ -161,10 +161,11 @@ function zen_get_customers_address_primary($customer_id) {
 // Return a customer greeting
 function zen_customer_greeting() {
 
+    $greeting_string = sprintf(TEXT_GREETING_GUEST, zen_href_link(FILENAME_LOGIN, '', 'SSL'), zen_href_link(FILENAME_CREATE_ACCOUNT, '', 'SSL'));
     if (zen_is_logged_in() && !zen_in_guest_checkout() && !empty($_SESSION['customer_first_name'])) {
         $greeting_string = sprintf(TEXT_GREETING_PERSONAL, zen_output_string_protected($_SESSION['customer_first_name']), zen_href_link(FILENAME_PRODUCTS_NEW));
-    } else {
-        $greeting_string = sprintf(TEXT_GREETING_GUEST, zen_href_link(FILENAME_LOGIN, '', 'SSL'), zen_href_link(FILENAME_CREATE_ACCOUNT, '', 'SSL'));
+    } elseif (STORE_STATUS != '0') {
+        $greeting_string = TEXT_GREETING_GUEST_SHOWCASE;
     }
 
     return $greeting_string;
@@ -316,8 +317,8 @@ function zen_validate_storefront_admin_login($password, $email_address)
     if (count($profile_array)) {
         $profile_list = implode(',', $profile_array);
         $admin_profiles = $db->Execute(
-            "SELECT admin_id, admin_pass 
-               FROM " . TABLE_ADMIN . " 
+            "SELECT admin_id, admin_pass
+               FROM " . TABLE_ADMIN . "
               WHERE admin_profile IN (" . $profile_list . ")"
         );
         foreach ($admin_profiles as $profile) {
@@ -432,8 +433,8 @@ function zen_validate_hmac_admin_id($adminId)
 
     if (!empty(EMP_LOGIN_ADMIN_ID)) {
         $check = $db->Execute(
-            "SELECT admin_id 
-           FROM " . TABLE_ADMIN . " 
+            "SELECT admin_id
+           FROM " . TABLE_ADMIN . "
           WHERE admin_id = " . (int)EMP_LOGIN_ADMIN_ID . "
           LIMIT 1"
         );
@@ -451,8 +452,8 @@ function zen_validate_hmac_admin_id($adminId)
     if (empty($profile_array)) return false;
     $profile_list = implode(',', $profile_array);
     $admin_profiles = $db->Execute(
-        "SELECT admin_id 
-                   FROM " . TABLE_ADMIN . " 
+        "SELECT admin_id
+                   FROM " . TABLE_ADMIN . "
                   WHERE admin_id = " . (int)$adminId . " AND admin_profile IN (" . $profile_list . ")"
     );
     if ($admin_profiles->RecordCount() > 0) {

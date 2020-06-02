@@ -1,7 +1,7 @@
 <?php
 /**
- * GV FAQ 
- * 
+ * GV FAQ
+ *
  * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
@@ -30,6 +30,16 @@ if (zen_is_logged_in() && !zen_in_guest_checkout()) {
     $customer_gv_balance = $currencies->format($gv_result->fields['amount']);
   }
 }
+
+$gv_faq_item =  (empty($_GET['faq_item'])) ? 0 : (int)$_GET['faq_item'];
+
+$subHeadingText = 'SUB_HEADING_TEXT_' . $gv_faq_item;
+$subHeadingTitle = 'SUB_HEADING_TITLE_' . $gv_faq_item;
+if (!defined($subHeadingText)) $subHeadingText = 'SUB_HEADING_TEXT_0';
+if (!defined($subHeadingTitle)) $subHeadingTitle = 'SUB_HEADING_TITLE_0';
+$subHeadingText = constant($subHeadingText);
+$subHeadingTitle = constant($subHeadingTitle);
+
 $breadcrumb->add(NAVBAR_TITLE);
 
 // This should be last line of the script:

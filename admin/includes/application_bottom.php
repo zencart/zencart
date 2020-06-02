@@ -8,5 +8,6 @@
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
 }
+print_r($languageLoader->getLanguageFilesLoaded());
 // close session (store variables)
   session_write_close();

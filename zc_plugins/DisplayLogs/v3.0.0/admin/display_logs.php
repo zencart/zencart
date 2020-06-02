@@ -243,7 +243,7 @@ if ($max_log_file_size < 1) {
                                 </tr>
 
                                 <tr>
-                                    <td class="main"><?php echo ((substr(HTTP_SERVER, 0, 5) != 'https') ? WARNING_NOT_SECURE : '') . sprintf(TEXT_INSTRUCTIONS, $max_log_file_size, $sort_description, (($numLogFiles > $max_logs_to_display) ? $max_logs_to_display : $numLogFiles), $numLogFiles, $files_to_match, $files_to_exclude); ?></td>
+                                    <td class="main"><?php echo ((substr(HTTP_SERVER, 0, 5) != 'https') ? WARNING_NOT_SECURE : '') . sprintf(TEXT_INSTRUCTIONS, $max_log_file_size, $sort_description, (($numLogFiles > $max_logs_to_display) ? $max_logs_to_display : $numLogFiles), $numLogFiles, $files_to_match, $files_to_exclude, zen_image (DIR_WS_IMAGES . 'icon_info.gif', ICON_INFO_VIEW)); ?></td>
                                     <td class="main" align="right"><?php echo zen_draw_separator('pixel_trans.gif', HEADING_IMAGE_WIDTH, HEADING_IMAGE_HEIGHT); ?></td>
                                 </tr>
 
