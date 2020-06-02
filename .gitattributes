@@ -1,6 +1,7 @@
 /.gitattributes   export-ignore
 /testFramework    export-ignore
 *not_for_release* export-ignore
+/.github          export-ignore
 
 # Auto detect text files and perform LF normalization
 * text=auto
