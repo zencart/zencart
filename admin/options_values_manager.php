@@ -241,7 +241,7 @@ if (zen_not_null($action)) {
                                               AND options_values_id = " . (int)$options_values_values_id_to . "
                                               LIMIT 1");
               // do not add duplicate attributes
-              if ($check_previous->RecordCount() < 1) {
+              if ($check_previous->fields['count'] < 1) {
                 $db->Execute($sql);
                 $new_attribute++;
               }
@@ -385,7 +385,7 @@ if (zen_not_null($action)) {
                                             AND options_values_id = " . (int)$options_values_values_id_from . "
                                             LIMIT 1");
             // do not add duplicate attributes
-            if ($check_previous->RecordCount() < 1) {
+            if ($check_previous->fields['count'] < 1) {
               // add new attribute
               $db->Execute($sql);
               //echo $sql . '<br>';
@@ -953,7 +953,7 @@ if (zen_not_null($action)) {
               <td colspan="4"><?php echo TEXT_INFO_OPTION_VALUE_COPY_ALL; ?></td>
             </tr>
             <tr class="dataTableHeadingRow">
-              <?php echo zen_draw_form('quick_jump', FILENAME_OPTIONS_VALUES_MANAGER, 'action=copy_options_values_one_to_another', '', 'post', 'class="form-horizontal"'); ?>
+              <?php echo zen_draw_form('quick_jump', FILENAME_OPTIONS_VALUES_MANAGER, 'action=copy_options_values_one_to_another', 'post', 'class="form-horizontal"'); ?>
               <td class="dataTableHeadingContent">
                 <?php echo zen_draw_label(TEXT_SELECT_OPTION_FROM, 'options_id_from', 'class="control-label"') . zen_draw_pull_down_menu('options_id_from', $option_from_dropdown, '', 'class="form-control"'); ?><br />
                 <?php echo zen_draw_label(TEXT_SELECT_OPTION_VALUES_FROM, 'options_values_values_id_from', 'class="control-label"') . zen_draw_pull_down_menu('options_values_values_id_from', $option_values_from_dropdown, '', 'class="form-control"'); ?>
@@ -988,7 +988,7 @@ if (zen_not_null($action)) {
               <td colspan="3"><?php echo TEXT_INFO_OPTION_VALUE_DELETE_ALL; ?></td>
             </tr>
             <tr class="dataTableHeadingRow">
-              <?php echo zen_draw_form('quick_jump', FILENAME_OPTIONS_VALUES_MANAGER, 'action=delete_options_values_of_option_name', '', 'post', 'class="form-horizontal"'); ?>
+              <?php echo zen_draw_form('quick_jump', FILENAME_OPTIONS_VALUES_MANAGER, 'action=delete_options_values_of_option_name', 'post', 'class="form-horizontal"'); ?>
               <td class="dataTableHeadingContent">
                 <?php echo zen_draw_label(TEXT_SELECT_DELETE_OPTION_FROM, 'options_id_from', 'class="control-label"') . zen_draw_pull_down_menu('options_id_from', $option_from_dropdown, '', 'class="form-control"'); ?><br />
                 <?php echo zen_draw_label(TEXT_SELECT_DELETE_OPTION_VALUES_FROM, 'options_values_values_id_from', 'class="control-label"') . zen_draw_pull_down_menu('options_values_values_id_from', $option_values_from_dropdown, '', 'class="form-control"'); ?>
@@ -1019,7 +1019,7 @@ if (zen_not_null($action)) {
               <td colspan="4"><?php echo TEXT_INFO_OPTION_VALUE_COPY_OPTIONS_TO; ?></td>
             </tr>
             <tr class="dataTableHeadingRow">
-              <?php echo zen_draw_form('quick_jump', FILENAME_OPTIONS_VALUES_MANAGER, 'action=copy_options_values_one_to_another_options_id', '', 'post', 'class="form-horizontal"'); ?>
+              <?php echo zen_draw_form('quick_jump', FILENAME_OPTIONS_VALUES_MANAGER, 'action=copy_options_values_one_to_another_options_id', 'post', 'class="form-horizontal"'); ?>
               <td class="dataTableHeadingContent">
                 <?php echo zen_draw_label(TEXT_SELECT_OPTION_FROM_ADD, 'options_id_from', 'class="control-label"') . zen_draw_pull_down_menu('options_id_from', $option_from_dropdown, '', 'class="form-control"'); ?><br />
                 <?php echo zen_draw_label(TEXT_SELECT_OPTION_VALUES_FROM_ADD, 'options_values_values_id_from', 'class="control-label"') . zen_draw_pull_down_menu('options_values_values_id_from', $option_values_from_dropdown, '', 'class="form-control"'); ?><br />
