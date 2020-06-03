@@ -7,7 +7,6 @@
 
 class WhosOnline extends base
 {
-
     /* @var int seconds when considered inactive - 180 default = 3 minutes */
     protected $timer_inactive_threshold = 180;
 
