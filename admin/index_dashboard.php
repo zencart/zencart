@@ -5,6 +5,12 @@
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: DrByte 2020 May 08 Modified in v1.5.7 $
  */
+
+if (empty($currencies)) {
+    require_once DIR_WS_CLASSES . 'currencies.php';
+    $currencies = new currencies();
+}
+
 ?>
 <!doctype html>
 <html <?php echo HTML_PARAMS; ?>>
