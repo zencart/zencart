@@ -108,7 +108,7 @@ $userList = zen_get_users();
     <title><?php echo TITLE; ?></title>
     <link rel="stylesheet" href="includes/stylesheet.css">
     <link rel="stylesheet" href="includes/cssjsmenuhover.css" media="all" id="hoverJS">
-    <link rel="stylesheet" href="includes/admin_access.css">
+    <link rel="stylesheet" href="includes/css/admin_access.css">
     <script src="includes/menu.js"></script>
     <script src="includes/general.js"></script>
     <script>
