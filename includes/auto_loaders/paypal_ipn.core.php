@@ -71,6 +71,8 @@ if (!defined('IS_ADMIN_FLAG')) {
  * require('includes/init_includes/init_tlds.php');
  *
  */
+  $autoLoadConfig[60][] = array('autoType' => 'require',
+                                'loadFile' => DIR_WS_FUNCTIONS . 'functions_osh_update.php');
   $autoLoadConfig[60][] = array('autoType'=>'init_script',
                                 'loadFile'=> 'init_general_funcs.php');
   $autoLoadConfig[60][] = array('autoType'=>'init_script',
