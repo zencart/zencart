@@ -31,6 +31,24 @@
 </script>
 <?php if (file_exists($jsFile = 'includes/javascript/' . basename($PHP_SELF, '.php') . '.js')) { ?>
   <script src="<?php echo $jsFile; ?>"></script>
+  <?php
+}
+if (file_exists($jsFile = 'includes/javascript/' . basename($PHP_SELF, '.php') . '.php')) {
+  require 'includes/javascript/' . basename($PHP_SELF, '.php') . '.php';
+}
+$template = new template_func();
+$directory_array = $template->get_template_part('includes/javascript/', '/^' . basename($PHP_SELF, '.php') . '_/', '.js');
+foreach ($directory_array as $key => $value) {
+  echo '<script src="includes/javascript/' . $value . '"></script>' . "\n";
+}
+$directory_array = $template->get_template_part('includes/javascript/', '/^' . basename($PHP_SELF, '.php') . '_/', '.php');
+foreach ($directory_array as $key => $value) {
+  require 'includes/javascript/' . $value;
+  echo "\n";
+}
+?>
+<?php if (file_exists($jsFile = 'includes/javascript/' . basename($PHP_SELF, '.php') . '.js')) { ?>
+  <!--  <script src="<?php echo $jsFile; ?>"></script> -->
 <?php } ?>
 <?php
 if (file_exists(DIR_WS_INCLUDES . 'keepalive_module.php')) {
