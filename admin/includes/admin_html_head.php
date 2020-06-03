@@ -36,7 +36,6 @@ if (!defined('IS_ADMIN_FLAG')) {
 <?php
 }
 
-$template = new template_func();
 $directory_array = $template->get_template_part('includes/css/', '/^' . basename($PHP_SELF, '.php') . '_/', '.css');
 foreach ($directory_array as $key => $value) {
   echo '<link rel="stylesheet" href="includes/css/' . $value . '">' . "\n";
