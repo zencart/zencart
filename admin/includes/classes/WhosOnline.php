@@ -358,7 +358,7 @@ class WhosOnline extends base
 
         // protect against tampering
         $_SESSION = $backupSessionArray;
-        foreach($_SESSION as $key) {
+        foreach($_SESSION as $key => $value) {
             if (!isset($backupSessionArray[$key])) {
                 unset($_SESSION[$key]);
             }
