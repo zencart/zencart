@@ -29,27 +29,31 @@
     }));
   });
 </script>
+
 <?php if (file_exists($jsFile = 'includes/javascript/' . basename($PHP_SELF, '.php') . '.js')) { ?>
-  <script src="<?php echo $jsFile; ?>"></script>
-  <?php
+<script src="<?php echo $jsFile; ?>"></script>
+<?php
 }
 if (file_exists($jsFile = 'includes/javascript/' . basename($PHP_SELF, '.php') . '.php')) {
-  require 'includes/javascript/' . basename($PHP_SELF, '.php') . '.php';
+    echo "\n";
+    require 'includes/javascript/' . basename($PHP_SELF, '.php') . '.php';
 }
 $directory_array = $template->get_template_part('includes/javascript/', '/^' . basename($PHP_SELF, '.php') . '_/', '.js');
 foreach ($directory_array as $key => $value) {
-  ?>
-  <script src="includes/javascript/<?php echo $value; ?>"></script>
-  <?php
+    echo "\n";
+?>
+<script src="includes/javascript/<?php echo $value; ?>"></script>
+<?php
 }
 $directory_array = $template->get_template_part('includes/javascript/', '/^' . basename($PHP_SELF, '.php') . '_/', '.php');
 foreach ($directory_array as $key => $value) {
-  require 'includes/javascript/' . $value;
-  echo "\n";
+    echo "\n";
+    require 'includes/javascript/' . $value;
 }
-?>
-<?php
+
 if (file_exists(DIR_WS_INCLUDES . 'keepalive_module.php')) {
-  require(DIR_WS_INCLUDES . 'keepalive_module.php');
+    echo "\n";
+    require(DIR_WS_INCLUDES . 'keepalive_module.php');
 }
+echo "\n";
 require DIR_FS_CATALOG . 'includes/templates/template_default/jscript/jscript_framework.php';
