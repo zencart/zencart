@@ -38,7 +38,9 @@ if (file_exists($jsFile = 'includes/javascript/' . basename($PHP_SELF, '.php') .
 }
 $directory_array = $template->get_template_part('includes/javascript/', '/^' . basename($PHP_SELF, '.php') . '_/', '.js');
 foreach ($directory_array as $key => $value) {
-  echo '<script src="includes/javascript/' . $value . '"></script>' . "\n";
+  ?>
+  <script src="includes/javascript/<?php echo $value; ?>"></script>
+  <?php
 }
 $directory_array = $template->get_template_part('includes/javascript/', '/^' . basename($PHP_SELF, '.php') . '_/', '.php');
 foreach ($directory_array as $key => $value) {
