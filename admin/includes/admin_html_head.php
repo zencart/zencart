@@ -34,7 +34,7 @@ if (!defined('IS_ADMIN_FLAG')) {
 <?php if (file_exists($file = 'includes/css/' . basename($PHP_SELF, '.php') . '.css')) { ?>
     <link rel="stylesheet" href="<?php echo $file; ?>">
 <?php
-  }
+}
 $directory_array = $template->get_template_part('includes/css/', '/^' . basename($PHP_SELF, '.php') . '_/', '.css');
 foreach ($directory_array as $key => $value) {
 ?>
