@@ -33,13 +33,13 @@ if (!defined('IS_ADMIN_FLAG')) {
     <link rel="stylesheet" href="includes/css/stylesheet.css">
 <?php if (file_exists($file = 'includes/css/' . basename($PHP_SELF, '.php') . '.css')) { ?>
     <link rel="stylesheet" href="<?php echo $file; ?>">
-  <?php
-}
+<?php
+  }
 $directory_array = $template->get_template_part('includes/css/', '/^' . basename($PHP_SELF, '.php') . '_/', '.css');
 foreach ($directory_array as $key => $value) {
-  ?>
+?>
     <link rel="stylesheet" href="includes/css/<?php echo $value; ?>">
-  <?php
+<?php
 }
 
 // pull in any necessary JS for the page
