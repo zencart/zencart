@@ -161,6 +161,7 @@ $pluginManager = new PluginManager($db);
 $installedPlugins = $pluginManager->getInstalledPlugins();
 
 $fs = FileSystem::getInstance();
+$fs->setInstalledPlugins($installedPlugins);
 $fs->loadFilesFromPluginsDirectory($installedPlugins, 'admin/includes/extra_datafiles', '~^[^\._].*\.php$~i');
 
 foreach ($installedPlugins as $plugin) {
