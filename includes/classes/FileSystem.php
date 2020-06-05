@@ -6,13 +6,15 @@
  * @version $Id: Zcwilt 2020 May 23 New in v1.5.7 $
  */
 
-namespace  Zencart\FileSystem;
+namespace Zencart\FileSystem;
 
 use Zencart\Traits\Singleton;
 
 class FileSystem
 {
     use Singleton;
+
+    protected $installedPlugins;
 
     public function loadFilesFromDirectory($rootDir, $fileRegx)
     {
@@ -89,18 +91,18 @@ class FileSystem
     public function getDirectorySize($path, $decimals = 2, $addSuffix = true)
     {
         $bytes = 0;
-        foreach(new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($path)) as $file)
-        {
+        foreach (new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($path)) as $file) {
             $bytes += $file->getSize();
         }
-        $size = array('B','kB','MB','GB','TB','PB','EB','ZB','YB');
+        $size = array('B', 'kB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB');
         $factor = floor((strlen($bytes) - 1) / 3);
         return sprintf("%.{$decimals}f", $bytes / pow(1024, $factor)) . @$size[$factor];
     }
 
-    public function fileExistsInDirectory($fileDir, $filePattern) {
+    public function fileExistsInDirectory($fileDir, $filePattern)
+    {
         $found = false;
-        $filePattern = '/'.str_replace("/", "\/", $filePattern).'$/';
+        $filePattern = '/' . str_replace("/", "\/", $filePattern) . '$/';
         if ($mydir = @dir($fileDir)) {
             while ($file = $mydir->read()) {
                 if (preg_match($filePattern, $file)) {
@@ -113,13 +115,18 @@ class FileSystem
         return $found;
     }
 
-    public function getPluginRelativeDirectory($pluginKey, $installedPlugins)
+    public function getPluginRelativeDirectory($pluginKey)
     {
-        if (!isset($installedPlugins[$pluginKey])) {
+        if (!isset($this->installedPlugins[$pluginKey])) {
             return null;
         }
-        $version = $installedPlugins[$pluginKey]['version'];
+        $version = $this->installedPlugins[$pluginKey]['version'];
         $relativePath = '/zc_plugins/' . $pluginKey . '/' . $version . '/';
         return $relativePath;
+    }
+
+    public function setInstalledPlugins($installedPlugins)
+    {
+        $this->installedPlugins = $installedPlugins;
     }
 }
