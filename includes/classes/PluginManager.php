@@ -62,6 +62,7 @@ class PluginManager
         }
         return $versionList;
     }
+
     protected function getPluginVersions($uniqueKey)
     {
         $sql = "SELECT version FROM " . TABLE_PLUGIN_CONTROL_VERSIONS . " WHERE unique_key = :uniqueKey:";
@@ -129,18 +130,19 @@ class PluginManager
         $sql = "UPDATE " . TABLE_PLUGIN_CONTROL . " SET infs = 0";
         $this->dbConn->execute($sql);
         $sql = "INSERT INTO " . TABLE_PLUGIN_CONTROL . " 
-        (unique_key, name, description, type, status, author, version, zc_versions, infs) 
+        (unique_key, name, description, type, status, author, version, zc_versions, infs, zc_contrib_id) 
         VALUES ";
 
         foreach ($pluginsFromFilesystem as $uniqueKey => $plugin) {
             $pluginVersion = $plugin['versions'][0];
-            $sqlPartial = "(:unique_key:, :name:, :description:, '', 0, :author:, '', '', 1),";
+            $sqlPartial = "(:unique_key:, :name:, :description:, '', 0, :author:, '', '', 1, :pluginId:),";
             $sqlPartial = $this->dbConn->bindVars($sqlPartial, ':unique_key:', $uniqueKey, 'string');
             $sqlPartial = $this->dbConn->bindVars($sqlPartial, ':name:', $plugin[$pluginVersion]['pluginName'],
                                                   'string');
             $sqlPartial = $this->dbConn->bindVars($sqlPartial, ':description:', $plugin[$pluginVersion]['pluginDescription'],
                                                   'string');
             $sqlPartial = $this->dbConn->bindVars($sqlPartial, ':author:', $plugin[$pluginVersion]['pluginAuthor'], 'string');
+            $sqlPartial = $this->dbConn->bindVars($sqlPartial, ':pluginId:', $plugin[$pluginVersion]['pluginId'], 'string');
             $sql .= $sqlPartial;
         }
         $sql = rtrim($sql, ',');

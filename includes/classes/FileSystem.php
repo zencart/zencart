@@ -112,4 +112,14 @@ class FileSystem
         }
         return $found;
     }
+
+    public function getPluginRelativeDirectory($pluginKey, $installedPlugins)
+    {
+        if (!isset($installedPlugins[$pluginKey])) {
+            return null;
+        }
+        $version = $installedPlugins[$pluginKey]['version'];
+        $relativePath = '/zc_plugins/' . $pluginKey . '/' . $version . '/';
+        return $relativePath;
+    }
 }

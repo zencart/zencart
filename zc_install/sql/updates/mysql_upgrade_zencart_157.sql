@@ -265,15 +265,16 @@ ALTER TABLE admin_activity_log ADD severity varchar(9) NOT NULL DEFAULT 'info';
 
 DROP TABLE IF EXISTS plugin_control;
 CREATE TABLE plugin_control (
-  unique_key varchar(20) NOT NULL,
+  unique_key varchar(40) NOT NULL,
   name varchar(64) NOT NULL default '',
   description text,
   type varchar(11) NOT NULL default 'free',
   managed tinyint(1) NOT NULL default 0,
   status tinyint(1) NOT NULL default 0,
-  author varchar(40) NOT NULL,
+  author varchar(64) NOT NULL,
   version varchar(10),
   zc_versions text NOT NULL,
+  zc_contrib_id int(11),
   infs tinyint(1) NOT NULL default 0,
   PRIMARY KEY  (unique_key)
 ) ENGINE=MyISAM;
@@ -286,9 +287,9 @@ CREATE TABLE plugin_control (
 
 DROP TABLE IF EXISTS plugin_control_versions;
 CREATE TABLE plugin_control_versions (
-  unique_key varchar(20) NOT NULL,
+  unique_key varchar(40) NOT NULL,
   version varchar(10),
-  author varchar(40) NOT NULL,
+  author varchar(64) NOT NULL,
   zc_versions text NOT NULL,
   infs tinyint(1) NOT NULL default 0,
   PRIMARY KEY  (unique_key, version)
