@@ -28,6 +28,7 @@ class Paginator extends \base {
   /* class constructor */
   function __construct($query, $max_rows, $count_key = '*', $page_holder = 'page', $debug = false, $countQuery = "") {
     global $db;
+    $this->cmd = isset($_GET['cmd']) ? $_GET['cmd'] : 'home';
     $max_rows = ($max_rows == '' || $max_rows == 0) ? 20 : $max_rows;
 
     $this->sql_query = preg_replace("/\n\r|\r\n|\n|\r/", " ", $query);
@@ -114,7 +115,7 @@ class Paginator extends \base {
     if (zen_not_null($parameters) && (substr($parameters, -1) != '&')) $parameters .= '&';
 
     // previous button - not displayed on first page
-    $link = '<a href="' . zen_href_link($_GET['main_page'], $parameters . $this->page_name . '=' . ($this->current_page_number - 1), $request_type) . '" title="' . PREVNEXT_TITLE_PREVIOUS_PAGE . '">' . PREVNEXT_BUTTON_PREV . '</a>';
+    $link = '<a href="' . zen_href_link($this->cmd, $parameters . $this->page_name . '=' . ($this->current_page_number - 1), $request_type) . '" title="' . PREVNEXT_TITLE_PREVIOUS_PAGE . '">' . PREVNEXT_BUTTON_PREV . '</a>';
     if ($this->current_page_number > 1) {
       $display_links_string .= $link . '&nbsp;&nbsp;';
       $ul_elements .= '  <li class="pagination-previous" aria-label="' . ARIA_PAGINATION_PREVIOUS_PAGE . '">' . $link . '</li>' . "\n";
@@ -131,7 +132,7 @@ class Paginator extends \base {
     if ($this->number_of_pages % $max_page_links) $max_window_num++;
 
     // previous group of pages
-    $link = '<a href="' . zen_href_link($_GET['main_page'], $parameters . $this->page_name . '=' . (($cur_window_num - 1) * $max_page_links), $request_type) . '" title="' . sprintf(PREVNEXT_TITLE_PREV_SET_OF_NO_PAGE, $max_page_links) . '" aria-label="' . ARIA_PAGINATION_ELLIPSIS_PREVIOUS . '">...</a>';
+    $link = '<a href="' . zen_href_link($this->cmd, $parameters . $this->page_name . '=' . (($cur_window_num - 1) * $max_page_links), $request_type) . '" title="' . sprintf(PREVNEXT_TITLE_PREV_SET_OF_NO_PAGE, $max_page_links) . '" aria-label="' . ARIA_PAGINATION_ELLIPSIS_PREVIOUS . '">...</a>';
     if ($cur_window_num > 1) {
       $display_links_string .= $link;
       $ul_elements .= '  <li class="ellipsis">' . $link . '</li>' . "\n";
@@ -146,7 +147,7 @@ class Paginator extends \base {
         $ul_elements .= '  <li class="current active">' . $jump_to_page . '</li>' . "\n";
         $counter_actual_page_links++;
       } else {
-        $link = '<a href="' . zen_href_link($_GET['main_page'], $parameters . $this->page_name . '=' . $jump_to_page, $request_type) . '" title="' . sprintf(PREVNEXT_TITLE_PAGE_NO, $jump_to_page) . '" aria-label="' . ARIA_PAGINATION_GOTO . sprintf(ARIA_PAGINATION_PAGE_NUM, $jump_to_page) . '">' . $jump_to_page . '</a>';
+        $link = '<a href="' . zen_href_link($this->cmd, $parameters . $this->page_name . '=' . $jump_to_page, $request_type) . '" title="' . sprintf(PREVNEXT_TITLE_PAGE_NO, $jump_to_page) . '" aria-label="' . ARIA_PAGINATION_GOTO . sprintf(ARIA_PAGINATION_PAGE_NUM, $jump_to_page) . '">' . $jump_to_page . '</a>';
         $display_links_string .= '&nbsp;' . $link . '&nbsp;';
         $ul_elements .= '  <li>' . $link . '</li>' . "\n";
         $counter_actual_page_links++;
@@ -155,7 +156,7 @@ class Paginator extends \base {
 
     // next group of pages
     if ($cur_window_num < $max_window_num) {
-      $link = '<a href="' . zen_href_link($_GET['main_page'], $parameters . $this->page_name . '=' . (($cur_window_num) * $max_page_links + 1), $request_type) . '" title="' . sprintf(PREVNEXT_TITLE_NEXT_SET_OF_NO_PAGE, $max_page_links) . '" aria-label="' . ARIA_PAGINATION_ELLIPSIS_NEXT . '">...</a>';
+      $link = '<a href="' . zen_href_link($this->cmd, $parameters . $this->page_name . '=' . (($cur_window_num) * $max_page_links + 1), $request_type) . '" title="' . sprintf(PREVNEXT_TITLE_NEXT_SET_OF_NO_PAGE, $max_page_links) . '" aria-label="' . ARIA_PAGINATION_ELLIPSIS_NEXT . '">...</a>';
       $display_links_string .= $link . '&nbsp;';
       $ul_elements .= '  <li class="ellipsis">' . $link . '</li>' . "\n";
     } else {
@@ -164,7 +165,7 @@ class Paginator extends \base {
 
     // next button
     if (($this->current_page_number < $this->number_of_pages) && ($this->number_of_pages != 1)) {
-      $link = '<a href="' . zen_href_link($_GET['main_page'], $parameters . 'page=' . ($this->current_page_number + 1), $request_type) . '" title="' . PREVNEXT_TITLE_NEXT_PAGE . '" aria-label="' . ARIA_PAGINATION_NEXT_PAGE . '">' . PREVNEXT_BUTTON_NEXT . '</a>';
+      $link = '<a href="' . zen_href_link($this->cmd, $parameters . 'page=' . ($this->current_page_number + 1), $request_type) . '" title="' . PREVNEXT_TITLE_NEXT_PAGE . '" aria-label="' . ARIA_PAGINATION_NEXT_PAGE . '">' . PREVNEXT_BUTTON_NEXT . '</a>';
       $display_links_string .= '&nbsp;' . $link . '&nbsp;';
       $ul_elements .= '  <li class="pagination-next">' . $link . '</li>' . "\n";
     } else {
