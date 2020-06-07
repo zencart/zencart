@@ -179,8 +179,8 @@ function zen_insert_user($name, $email, $password, $confirm, $profile)
     $sql = $db->bindVars($sql, ':profile:', $profile, 'integer');
     $db->Execute($sql);
 
-    $newname = preg_replace('/[^\d\w._-]/', '*', $name);
-    $admname = '{' . preg_replace('/[^\d\w._-]/', '*', zen_get_admin_name()) . ' [id: ' . (int)$_SESSION['admin_id'] . ']}';
+    $newname = preg_replace('/[^\w._-]/', '*', $name);
+    $admname = '{' . preg_replace('/[^\w._-]/', '*', zen_get_admin_name()) . ' [id: ' . (int)$_SESSION['admin_id'] . ']}';
     zen_record_admin_activity(sprintf(TEXT_EMAIL_MESSAGE_ADMIN_USER_ADDED, $newname, $admname), 'warning');
     $email_text = sprintf(TEXT_EMAIL_MESSAGE_ADMIN_USER_ADDED, $newname, $admname);
     $block = array('EMAIL_MESSAGE_HTML' => $email_text);
