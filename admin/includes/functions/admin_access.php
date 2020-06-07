@@ -152,7 +152,7 @@ function zen_insert_user($name, $email, $password, $confirm, $profile)
   }
   $password = zen_db_prepare_input($password);
   $confirm = zen_db_prepare_input($confirm);
-  $profile = zen_db_prepare_input($profile);
+  $profile = (int)$profile;
   if ($password != $confirm)
   {
     $errors[] = ERROR_PASSWORDS_NOT_MATCHING;
@@ -160,11 +160,11 @@ function zen_insert_user($name, $email, $password, $confirm, $profile)
   if (zen_check_for_password_problems($password, 0)) {
     $errors[] = ENTRY_PASSWORD_CHANGE_ERROR . ' ' . sprintf(ERROR_PASSWORD_RULES, ((int)ADMIN_PASSWORD_MIN_LENGTH < 7 ? 7 : (int)ADMIN_PASSWORD_MIN_LENGTH));
   }
-  if ($profile == 0)
+  if (empty($profile))
   {
     $errors[] = ERROR_USER_MUST_HAVE_PROFILE;
   }
-  if (sizeof($errors) == 0)
+  if (empty($errors))
   {
     $sql = "INSERT INTO " . TABLE_ADMIN . "
             SET admin_name = :name:,
