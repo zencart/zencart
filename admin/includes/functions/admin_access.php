@@ -306,10 +306,10 @@ function zen_validate_user_login($admin_name, $admin_pass)
     }
     if ($result['reset_token'] != '')
     {
-      list ($expired_token, $token) = explode('}', $result['reset_token']);
-      if ($expired_token > 0)
+      list ($token_expires_at, $token) = explode('}', $result['reset_token']);
+      if ($token_expires_at > 0)
       {
-        if ($expired_token <= time() && $result['admin_pass'] != '')
+        if ($token_expires_at <= time() && $result['admin_pass'] != '')
         {
           // reset the reset_token field to blank, since token has expired
           $sql = "UPDATE " . TABLE_ADMIN . " SET reset_token = '' WHERE admin_name = :adminname: ";
