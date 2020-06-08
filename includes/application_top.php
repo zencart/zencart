@@ -209,6 +209,9 @@ if (isset($loaderPrefix)) {
 }
 $loader_file = $loaderPrefix . '.core.php';
 $initSystem = new InitSystem('catalog', $loaderPrefix, FileSystem::getInstance(), $pluginManager, $installedPlugins);
+
+if (defined('DEBUG_AUTOLOAD') && DEBUG_AUTOLOAD == true) $initSystem->setDebug(true);
+
 $loaderList = $initSystem->loadAutoLoaders();
 
 $initSystemList = $initSystem->processLoaderList($loaderList);
