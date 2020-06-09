@@ -1,5 +1,5 @@
 <?php
-// ADMIN KEEPALIVE_MODULE v2.0
+// ADMIN KEEPALIVE_MODULE v2.1 for Zen Cart v1.5.7+
 // Admin session timeout warning alerter
 // Prompts to extend login session after 2/3 of the allowed session time has expired without mouse activity or form submission.
 
