@@ -74,6 +74,7 @@ class InitSystem
     protected function processAutoTypeClass($entry)
     {
         $filePath = DIR_FS_CATALOG . DIR_WS_CLASSES;
+        if (!isset($entry['forceLoad'])) $entry['forceLoad'] = false;
         if (isset($entry['classPath'])) {
             $filePath = $entry['classPath'];
         }
@@ -84,7 +85,7 @@ class InitSystem
         $result = 'FAILED';
         if (file_exists($filePath . $entry['loadFile'])) {
             $result = 'SUCCESS';
-            $this->actionList[] = ['type' => 'include', 'filePath' => $filePath . $entry['loadFile']];
+            $this->actionList[] = ['type' => 'include', 'filePath' => $filePath . $entry['loadFile'], 'forceLoad' => $entry['forceLoad']];
         }
         $this->debugList[] = 'loading class - ' . $filePath . $entry['loadFile'] . ' - ' . $result;
     }
