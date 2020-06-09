@@ -58,6 +58,7 @@ class InitSystem
     protected function processActionPointEntries($entries)
     {
         foreach ($entries as $entry) {
+            if (!isset($entry['forceLoad'])) $entry['forceLoad'] = false;
             $this->processActionPointEntry($entry);
             $this->debugList[] = '=================================================================';
         }
@@ -74,7 +75,6 @@ class InitSystem
     protected function processAutoTypeClass($entry)
     {
         $filePath = DIR_FS_CATALOG . DIR_WS_CLASSES;
-        if (!isset($entry['forceLoad'])) $entry['forceLoad'] = false;
         if (isset($entry['classPath'])) {
             $filePath = $entry['classPath'];
         }
@@ -129,7 +129,7 @@ class InitSystem
         $result = 'FAILED';
         if (file_exists($filePath)) {
             $result = 'SUCCESS';
-            $this->actionList[] = ['type' => 'require', 'filePath' => $filePath];
+            $this->actionList[] = ['type' => 'require', 'filePath' => $filePath, 'forceLoad' => $entry['forceLoad']];
         }
         $this->debugList[] = 'loading require - ' . $filePath . ' - ' . $result;
 
@@ -145,7 +145,7 @@ class InitSystem
         $result = 'FAILED';
         if (file_exists($filePath)) {
             $result = 'SUCCESS';
-            $this->actionList[] = ['type' => 'include', 'filePath' => $filePath];
+            $this->actionList[] = ['type' => 'include', 'filePath' => $filePath, 'forceLoad' => $entry['forceLoad']];
         }
         $this->debugList[] = 'loading include - ' . $filePath . ' - ' . $result;
     }
@@ -159,7 +159,7 @@ class InitSystem
         if (file_exists($actualDir . 'overrides/' . $entry['loadFile'])) {
             $actualDir = $actualDir . 'overrides/';
         }
-        $this->actionList[] = ['type' => 'require', 'filePath' => $actualDir . $entry['loadFile']];
+        $this->actionList[] = ['type' => 'require', 'filePath' => $actualDir . $entry['loadFile'], 'forceLoad' => $entry['forceLoad']];
         $this->debugList[] = 'loading init_script - ' . $actualDir . $entry['loadFile'];
 
     }
