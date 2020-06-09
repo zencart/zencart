@@ -12,12 +12,12 @@ if (file_exists(basename($cmd . '.php'))) {
     exit();
 }
 
-//print_r($installedPlugins);
 $adminPage = FileSystem::getInstance()->findPluginAdminPage($installedPlugins, $cmd);
 
 if (!isset($adminPage)) {
-    die('could not find plugin page');
-    exit(1);
+    require 'includes/application_top.php';
+    zen_redirect(zen_href_link(FILENAME_DEFAULT));
+    exit(0);
 }
 
 require($adminPage);
