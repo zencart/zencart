@@ -21,7 +21,6 @@ class PluginManager
         $pluginsFromFilesystem = $this->getPluginsFromFileSystem();
 
         $this->updateDbPlugins($pluginsFromFilesystem);
-
     }
 
     public function getInstalledPlugins()
@@ -223,5 +222,4 @@ class PluginManager
     {
         return count($this->getPluginVersionsToClean($uniqueKey, $version));
     }
-
 }
