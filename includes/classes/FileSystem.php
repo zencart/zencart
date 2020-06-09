@@ -125,6 +125,17 @@ class FileSystem
         return $relativePath;
     }
 
+
+    public function getPluginAbsoluteDirectory($pluginKey)
+    {
+        if (!isset($this->installedPlugins[$pluginKey])) {
+            return null;
+        }
+        $version = $this->installedPlugins[$pluginKey]['version'];
+        $absolutePath = DIR_FS_CATALOG . 'zc_plugins/' . $pluginKey . '/' . $version . '/';
+        return $absolutePath;
+    }
+
     public function setInstalledPlugins($installedPlugins)
     {
         $this->installedPlugins = $installedPlugins;

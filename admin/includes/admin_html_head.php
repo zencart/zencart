@@ -35,12 +35,20 @@ if (!defined('IS_ADMIN_FLAG')) {
     <link rel="stylesheet" href="<?php echo $file; ?>">
 <?php
 }
+foreach ($installedPlugins as $plugin) {
+    $relativeDir = $fs->getPluginRelativeDirectory($plugin['unique_key']);
+    $absoluteDir = $fs->getPluginAbsoluteDirectory($plugin['unique_key']);
+    if (file_exists($absoluteDir . 'admin/includes/css/' . basename($PHP_SELF, '.php') . '.css')) {
+?>
+        <link rel="stylesheet" href="<?php echo $relativeDir . 'admin/includes/css/' . basename($PHP_SELF, '.php') . '.css'; ?>">
+<?php
+    }
+}
 $directory_array = $template->get_template_part('includes/css/', '/^' . basename($PHP_SELF, '.php') . '_/', '.css');
 foreach ($directory_array as $key => $value) {
 ?>
     <link rel="stylesheet" href="includes/css/<?php echo $value; ?>">
 <?php
 }
-
 // pull in any necessary JS for the page
 require(DIR_WS_INCLUDES . 'javascript_loader.php');

@@ -51,6 +51,20 @@ foreach ($directory_array as $key => $value) {
     require 'includes/javascript/' . $value;
 }
 
+foreach ($installedPlugins as $plugin) {
+    $relativeDir = $fs->getPluginRelativeDirectory($plugin['unique_key']);
+    $absoluteDir = $fs->getPluginAbsoluteDirectory($plugin['unique_key']);
+    if (file_exists($absoluteDir . 'admin/includes/javascript/' . basename($PHP_SELF, '.php') . '.php')) {
+        echo "\n";
+        require $absoluteDir . 'admin/includes/javascript/' . basename($PHP_SELF, '.php') . '.php';
+    }
+    if (file_exists($absoluteDir . 'admin/includes/javascript/' . basename($PHP_SELF, '.php') . '.js')) {
+        echo "\n";
+?>
+        <script src="<?php echo $relativeDir ?>admin/includes/javascript/<?php echo basename($PHP_SELF, '.php') . '.js'; ?>"></script>
+<?php 
+    }
+}
 if (file_exists(DIR_WS_INCLUDES . 'keepalive_module.php')) {
     echo "\n";
     require(DIR_WS_INCLUDES . 'keepalive_module.php');
