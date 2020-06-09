@@ -29,8 +29,13 @@ foreach ($initSystemList as $entry) {
             }
             break;
         case 'require':
-            if ($debugAutoload) echo 'case "require_once": ' . $entry['filePath'] . "<br>\n";
-            require_once $entry['filePath'];
+            if ($entry['forceLoad']) {
+                if ($debugAutoload) echo 'case "require": ' . $entry['filePath'] . "<br>\n";
+                require $entry['filePath'];
+            } else {
+                if ($debugAutoload) echo 'case "require_once": ' . $entry['filePath'] . "<br>\n";
+                require_once $entry['filePath'];
+            }
             break;
         case 'class':
             if ($debugAutoload) echo 'case "class": ' . $entry['class'] . "<br>\n";
@@ -56,6 +61,5 @@ foreach ($initSystemList as $entry) {
                   ${$objectName}->$methodName();
               }
             break;
-
     }
 }
