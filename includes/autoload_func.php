@@ -20,11 +20,16 @@ if ($debugAutoload) print_r($initSystemList);
 foreach ($initSystemList as $entry) {
     switch ($entry['type']) {
         case 'include':
-            if ($debugAutoload) echo 'case "include": ' . $entry['filePath'] . "<br>\n";
-            include_once $entry['filePath'];
+            if ($entry['forceLoad']) {
+                if ($debugAutoload) echo 'case "include": ' . $entry['filePath'] . "<br>\n";
+                include $entry['filePath'];
+            } else {
+                if ($debugAutoload) echo 'case "include_once": ' . $entry['filePath'] . "<br>\n";
+                include_once $entry['filePath'];
+            }
             break;
         case 'require':
-            if ($debugAutoload) echo 'case "require": ' . $entry['filePath'] . "<br>\n";
+            if ($debugAutoload) echo 'case "require_once": ' . $entry['filePath'] . "<br>\n";
             require_once $entry['filePath'];
             break;
         case 'class':
