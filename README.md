@@ -31,7 +31,7 @@ Installation is simple:
 
 1. [![Download Zen Cart](https://a.fsdn.com/con/app/sf-download-button)](https://sourceforge.net/projects/zencart/files/latest/download)
 2. Ensure you check that the md5/sha1 hash of the Zip matches those publicly posted.
-  * The md5/sha1 values for verifying the zip files hosted at Sourceforge are displayed on the [Zen Cart&reg; website](https://www.zen-cart.com/) along with [instructions on how to verify the file using the hash values](https://www.zen-cart.com/content.php?305).
+  * The md5/sha1 values for verifying the zip files hosted at Sourceforge are displayed on the [Zen Cart&reg; website](https://www.zen-cart.com/) along with [instructions on how to verify the file using the hash values](https://docs.zen-cart.com/user/installing/installing_misc/#how-to-validate-the-integrity-of-a-downloaded-file-md5-or-sha1-checksums).
 3. Unzip the downloaded zip file 
 4. Everything inside the folder you unzipped needs to be uploaded to your webserver … for example, into your `public_html` or `www` or `html` folder (the folder will already exist on your webserver)
 5. In your browser, enter the address to your site, such as: `www.example.com` (or if you uploaded it into another subdirectory such as `foldername` use `www.example.com/foldername`)
@@ -43,7 +43,7 @@ If some of the terms used in these brief instructions are things you don't under
 
 Upgrading
 ---------
-Recommended reading related to upgrading: https://www.zen-cart.com/entry.php?3
+Recommended reading related to upgrading: https://docs.zen-cart.com/user/upgrading/
 
 
 Guidance for Secure Installations
