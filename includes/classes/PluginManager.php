@@ -142,7 +142,7 @@ class PluginManager
             $sqlPartial = $this->dbConn->bindVars($sqlPartial, ':description:', $plugin[$pluginVersion]['pluginDescription'],
                                                   'string');
             $sqlPartial = $this->dbConn->bindVars($sqlPartial, ':author:', $plugin[$pluginVersion]['pluginAuthor'], 'string');
-            $sqlPartial = $this->dbConn->bindVars($sqlPartial, ':pluginId:', $plugin[$pluginVersion]['pluginId'], 'string');
+            $sqlPartial = $this->dbConn->bindVars($sqlPartial, ':pluginId:', $plugin[$pluginVersion]['pluginId'], 'integer');
             $sql .= $sqlPartial;
         }
         $sql = rtrim($sql, ',');
