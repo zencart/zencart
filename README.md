@@ -19,7 +19,7 @@ Zen Cart&reg; v1.5.7-dev
 Compatibility
 -------------
 Zen Cart v1.5.7 is designed for:
- * PHP 5.6 to PHP 7.4  (future Zen Cart releases will require PHP 7+)
+ * PHP 5.6 to PHP 7.4  (future Zen Cart releases will require PHP 7.1+)
  * Apache 2.2 and 2.4
  * MySQL 5.1 to 8.0 or MariaDB 10.0 to 10.4  (future Zen Cart releases will require MySQL 5.7.8+ or MariaDB 10.2.7+)
 
