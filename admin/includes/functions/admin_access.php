@@ -348,6 +348,8 @@ function zen_validate_user_login($admin_name, $admin_pass)
           $message = ERROR_WRONG_LOGIN;
           zen_record_admin_activity(sprintf(TEXT_ERROR_FAILED_ADMIN_LOGIN_FOR_USER) . ' ' . $admin_name, 'warning');
         }
+      } else {
+        $error = false;
       }
     }
     // BEGIN 2-factor authentication
