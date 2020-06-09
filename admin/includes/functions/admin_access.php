@@ -152,7 +152,7 @@ function zen_insert_user($name, $email, $password, $confirm, $profile)
   }
   $password = zen_db_prepare_input($password);
   $confirm = zen_db_prepare_input($confirm);
-  $profile = zen_db_prepare_input($profile);
+  $profile = (int)$profile;
   if ($password != $confirm)
   {
     $errors[] = ERROR_PASSWORDS_NOT_MATCHING;
@@ -160,11 +160,11 @@ function zen_insert_user($name, $email, $password, $confirm, $profile)
   if (zen_check_for_password_problems($password, 0)) {
     $errors[] = ENTRY_PASSWORD_CHANGE_ERROR . ' ' . sprintf(ERROR_PASSWORD_RULES, ((int)ADMIN_PASSWORD_MIN_LENGTH < 7 ? 7 : (int)ADMIN_PASSWORD_MIN_LENGTH));
   }
-  if ($profile == 0)
+  if (empty($profile))
   {
     $errors[] = ERROR_USER_MUST_HAVE_PROFILE;
   }
-  if (sizeof($errors) == 0)
+  if (empty($errors))
   {
     $sql = "INSERT INTO " . TABLE_ADMIN . "
             SET admin_name = :name:,
@@ -179,8 +179,8 @@ function zen_insert_user($name, $email, $password, $confirm, $profile)
     $sql = $db->bindVars($sql, ':profile:', $profile, 'integer');
     $db->Execute($sql);
 
-    $newname = preg_replace('/[^\d\w._-]/', '*', $name);
-    $admname = '{' . preg_replace('/[^\d\w._-]/', '*', zen_get_admin_name()) . ' [id: ' . (int)$_SESSION['admin_id'] . ']}';
+    $newname = preg_replace('/[^\w._-]/', '*', $name);
+    $admname = '{' . preg_replace('/[^\w._-]/', '*', zen_get_admin_name()) . ' [id: ' . (int)$_SESSION['admin_id'] . ']}';
     zen_record_admin_activity(sprintf(TEXT_EMAIL_MESSAGE_ADMIN_USER_ADDED, $newname, $admname), 'warning');
     $email_text = sprintf(TEXT_EMAIL_MESSAGE_ADMIN_USER_ADDED, $newname, $admname);
     $block = array('EMAIL_MESSAGE_HTML' => $email_text);
@@ -306,10 +306,10 @@ function zen_validate_user_login($admin_name, $admin_pass)
     }
     if ($result['reset_token'] != '')
     {
-      list ($expired_token, $token) = explode('}', $result['reset_token']);
-      if ($expired_token > 0)
+      list ($token_expires_at, $token) = explode('}', $result['reset_token']);
+      if ($token_expires_at > 0)
       {
-        if ($expired_token <= time() && $result['admin_pass'] != '')
+        if ($token_expires_at <= time() && $result['admin_pass'] != '')
         {
           // reset the reset_token field to blank, since token has expired
           $sql = "UPDATE " . TABLE_ADMIN . " SET reset_token = '' WHERE admin_name = :adminname: ";

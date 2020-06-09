@@ -26,5 +26,5 @@ define('ERROR_PASSWORD_TOO_SHORT', 'Passwords must contain at least %s character
 define('SUCCESS_NEW_USER_ADDED', 'New Admin User "%s" created.');
 define('SUCCESS_USER_DETAILS_UPDATED', 'User details updated.');
 define('SUCCESS_PASSWORD_UPDATED', 'Password updated.');
-define('ERROR_ADMIN_INVALID_EMAIL_ADDRESS', 'The email address you specified contains invalid characters.');
+define('ERROR_ADMIN_INVALID_EMAIL_ADDRESS', 'The email address you provided seems to be invalid.');
 define('ERROR_ADMIN_INVALID_CHARS_IN_USERNAME', 'The admin username you entered contains invalid characters.');

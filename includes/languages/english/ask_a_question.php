@@ -10,7 +10,7 @@ define('HEADING_TITLE', 'Ask a Question About ');
 define('FORM_TITLE', 'What is Your Question?');
 
 define('TEXT_SUCCESS', 'Your message has been successfully sent.');
-define('EMAIL_SUBJECT', 'Message from ' . STORE_NAME);
+define('EMAIL_SUBJECT', 'Product Inquiry at ' . STORE_NAME);
 
 define('ENTRY_NAME', 'Full Name:');
 define('ENTRY_EMAIL', 'Email Address:');
