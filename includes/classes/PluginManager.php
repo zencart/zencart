@@ -137,12 +137,10 @@ class PluginManager
             $pluginVersion = $plugin['versions'][0];
             $sqlPartial = "(:unique_key:, :name:, :description:, '', 0, :author:, '', '', 1, :pluginId:),";
             $sqlPartial = $this->dbConn->bindVars($sqlPartial, ':unique_key:', $uniqueKey, 'string');
-            $sqlPartial = $this->dbConn->bindVars($sqlPartial, ':name:', $plugin[$pluginVersion]['pluginName'],
-                                                  'string');
-            $sqlPartial = $this->dbConn->bindVars($sqlPartial, ':description:', $plugin[$pluginVersion]['pluginDescription'],
-                                                  'string');
+            $sqlPartial = $this->dbConn->bindVars($sqlPartial, ':name:', $plugin[$pluginVersion]['pluginName'], 'string');
+            $sqlPartial = $this->dbConn->bindVars($sqlPartial, ':description:', $plugin[$pluginVersion]['pluginDescription'], 'string');
             $sqlPartial = $this->dbConn->bindVars($sqlPartial, ':author:', $plugin[$pluginVersion]['pluginAuthor'], 'string');
-            $sqlPartial = $this->dbConn->bindVars($sqlPartial, ':pluginId:', $plugin[$pluginVersion]['pluginId'], 'string');
+            $sqlPartial = $this->dbConn->bindVars($sqlPartial, ':pluginId:', $plugin[$pluginVersion]['pluginId'], 'integer');
             $sql .= $sqlPartial;
         }
         $sql = rtrim($sql, ',');
@@ -150,7 +148,6 @@ class PluginManager
         $this->dbConn->execute($sql);
         $sql = "DELETE FROM " .TABLE_PLUGIN_CONTROL . " WHERE infs = 0";
         $this->dbConn->execute($sql);
-
     }
 
     protected function updatePluginControlVersions($pluginsFromFilesystem)
