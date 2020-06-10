@@ -43,6 +43,12 @@ foreach ($installedPlugins as $plugin) {
         <link rel="stylesheet" href="<?php echo $relativeDir . 'admin/includes/css/' . basename($PHP_SELF, '.php') . '.css'; ?>">
 <?php
     }
+    $directory_array = $template->get_template_part($absoluteDir . 'admin/includes/css/', '/^' . basename($PHP_SELF, '.php') . '_/', '.css');
+    foreach ($directory_array as $key => $value) {
+        ?>
+        <link rel="stylesheet" href="<?php echo $relativeDir . 'admin/includes/css/' . $value; ?>">
+        <?php
+    }
 }
 $directory_array = $template->get_template_part('includes/css/', '/^' . basename($PHP_SELF, '.php') . '_/', '.css');
 foreach ($directory_array as $key => $value) {
