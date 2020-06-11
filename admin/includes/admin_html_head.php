@@ -38,10 +38,22 @@ if (!defined('IS_ADMIN_FLAG')) {
 foreach ($installedPlugins as $plugin) {
     $relativeDir = $fs->getPluginRelativeDirectory($plugin['unique_key']);
     $absoluteDir = $fs->getPluginAbsoluteDirectory($plugin['unique_key']);
+    $directory_array = $template->get_template_part($absoluteDir . 'admin/includes/css/', '/^global_stylesheet/', '.css');
+    foreach ($directory_array as $key => $value) {
+        ?>
+        <link rel="stylesheet" href="<?php echo $relativeDir . 'admin/includes/css/' . $value; ?>">
+        <?php
+    }
     if (file_exists($absoluteDir . 'admin/includes/css/' . basename($PHP_SELF, '.php') . '.css')) {
 ?>
         <link rel="stylesheet" href="<?php echo $relativeDir . 'admin/includes/css/' . basename($PHP_SELF, '.php') . '.css'; ?>">
 <?php
+    }
+    $directory_array = $template->get_template_part($absoluteDir . 'admin/includes/css/', '/^' . basename($PHP_SELF, '.php') . '_/', '.css');
+    foreach ($directory_array as $key => $value) {
+        ?>
+        <link rel="stylesheet" href="<?php echo $relativeDir . 'admin/includes/css/' . $value; ?>">
+        <?php
     }
 }
 $directory_array = $template->get_template_part('includes/css/', '/^' . basename($PHP_SELF, '.php') . '_/', '.css');

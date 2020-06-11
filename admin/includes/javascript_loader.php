@@ -54,6 +54,17 @@ foreach ($directory_array as $key => $value) {
 foreach ($installedPlugins as $plugin) {
     $relativeDir = $fs->getPluginRelativeDirectory($plugin['unique_key']);
     $absoluteDir = $fs->getPluginAbsoluteDirectory($plugin['unique_key']);
+    $directory_array = $template->get_template_part($absoluteDir . 'admin/includes/javascript/', '/^global_jscript/', '.php');
+    foreach ($directory_array as $key => $value) {
+        require $absoluteDir . 'admin/includes/javascript/' . $value;
+    }
+    $directory_array = $template->get_template_part($absoluteDir . 'admin/includes/javascript/', '/^global_jscript/', '.js');
+    foreach ($directory_array as $key => $value) {
+        echo "\n";
+        ?>
+        <script src="<?php echo $relativeDir; ?>admin/includes/javascript/<?php echo $value; ?>"></script>
+        <?php
+    }
     if (file_exists($absoluteDir . 'admin/includes/javascript/' . basename($PHP_SELF, '.php') . '.php')) {
         echo "\n";
         require $absoluteDir . 'admin/includes/javascript/' . basename($PHP_SELF, '.php') . '.php';
@@ -64,7 +75,18 @@ foreach ($installedPlugins as $plugin) {
         <script src="<?php echo $relativeDir ?>admin/includes/javascript/<?php echo basename($PHP_SELF, '.php') . '.js'; ?>"></script>
 <?php 
     }
-}
+    $directory_array = $template->get_template_part($absoluteDir . 'admin/includes/javascript/', '/^' . basename($PHP_SELF, '.php') . '_/', '.js');
+    foreach ($directory_array as $key => $value) {
+        echo "\n";
+        ?>
+        <script src="<?php echo $relativeDir; ?>admin/includes/javascript/<?php echo $value; ?>"></script>
+        <?php
+    }
+    $directory_array = $template->get_template_part($absoluteDir . 'admin/includes/javascript/', '/^' . basename($PHP_SELF, '.php') . '_/', '.php');
+    foreach ($directory_array as $key => $value) {
+        echo "\n";
+        require $absoluteDir . 'admin/includes/javascript/' . $value;
+    }}
 if (file_exists(DIR_WS_INCLUDES . 'keepalive_module.php')) {
     echo "\n";
     require(DIR_WS_INCLUDES . 'keepalive_module.php');
