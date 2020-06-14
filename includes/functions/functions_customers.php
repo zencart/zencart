@@ -34,7 +34,7 @@ function zen_address_format($address_format_id = 1, $incoming = array(), $html =
     $address['hr'] = $html ? '<hr>' : '----------------------------------------';
     $address['cr'] = $html ? ($boln == '' && $eoln == "\n" ? '<br>' : $eoln . $boln) : $eoln;
 
-    if (ACCOUNT_SUBURB !== 'true') $incoming['suburb'] = ''; 
+    if (ACCOUNT_SUBURB !== 'true') $incoming['suburb'] = '';
     $address['company'] = !empty($incoming['company']) ? zen_output_string_protected($incoming['company']) : '';
     $address['firstname'] = !empty($incoming['firstname']) ? zen_output_string_protected($incoming['firstname']) : (!empty($incoming['name']) ? zen_output_string_protected($incoming['name']) : '');
     $address['lastname'] = !empty($incoming['lastname']) ? zen_output_string_protected($incoming['lastname']) : '';
@@ -76,7 +76,7 @@ function zen_address_format($address_format_id = 1, $incoming = array(), $html =
 
     // store translated values into original array, just for the sake of the notifier
     $incoming = $address;
-    
+
     // convert into $-prefixed keys
     foreach ($address as $key => $value) {
         $address['$' . $key] = $value;
@@ -89,7 +89,7 @@ function zen_address_format($address_format_id = 1, $incoming = array(), $html =
     if (ACCOUNT_COMPANY == 'true' && !empty($address['$company']) && false === strpos($fmt, '$company')) {
         $address_out = $address['$company'] . $address['$cr'] . $address_out;
     }
-    if (ACCOUNT_SUBURB !== 'true') $address['suburb'] = ''; 
+    if (ACCOUNT_SUBURB !== 'true') $address['suburb'] = '';
 
     // -----
     // "Package up" the various elements of an address and issue a notification that will enable
@@ -180,7 +180,7 @@ function zen_address_format($address_format_id = 1, $incoming = array(), $html =
     if (!zen_is_logged_in() || zen_in_guest_checkout()) {
         return 0;
     }
-    
+
     if (is_numeric($id) == false) {
       if (!empty($_SESSION['customer_id'])) {
         $id = $_SESSION['customer_id'];
@@ -213,7 +213,7 @@ function zen_address_format($address_format_id = 1, $incoming = array(), $html =
     if (!zen_is_logged_in() || zen_in_guest_checkout()) {
         return 0;
     }
-    
+
     if (is_numeric($id) == false) {
       if (!empty($_SESSION['customer_id'])) {
         $id = $_SESSION['customer_id'];
@@ -285,7 +285,7 @@ function zen_validate_storefront_admin_login($password, $email_address)
 {
     global $db;
     $admin_authorized = false;
-    
+
     // -----
     // Admin passwords might be 'sanitized', e.g. this&that becomes this&amp;that, so we'll check
     // either the as-entered or 'sanitized' versions.
@@ -301,7 +301,7 @@ function zen_validate_storefront_admin_login($password, $email_address)
         $admin_authorized = true;
         $_SESSION['emp_admin_login'] = true;
         $_SESSION['emp_admin_id'] = EMP_LOGIN_ADMIN_ID;
-        
+
     } else {
         $profile_array = explode(',', str_replace(' ', '', EMP_LOGIN_ADMIN_PROFILE_ID));
         foreach ($profile_array as $index => $current_id) {
@@ -329,7 +329,7 @@ function zen_validate_storefront_admin_login($password, $email_address)
 
     if ($admin_authorized) {
         $_SESSION['emp_customer_email_address'] = $email_address;
-        $sql_data_array = array( 
+        $sql_data_array = array(
             'access_date' => 'now()',
             'admin_id' => $_SESSION['emp_admin_id'],
             'page_accessed' => 'login.php',
@@ -437,7 +437,7 @@ function zen_validate_hmac_admin_id($adminId)
 {
     global $db;
     $check = $db->Execute(
-        "SELECT admin_id, admin_pass 
+        "SELECT admin_id 
            FROM " . TABLE_ADMIN . " 
           WHERE admin_id = " . (int)EMP_LOGIN_ADMIN_ID . "
           LIMIT 1"
@@ -455,7 +455,7 @@ function zen_validate_hmac_admin_id($adminId)
     if (count($profile_array) == 0) return false;
     $profile_list = implode(', ', $profile_array);
     $admin_profiles = $db->Execute(
-        "SELECT admin_id, admin_pass 
+        "SELECT admin_id 
                    FROM " . TABLE_ADMIN . " 
                   WHERE admin_profile IN ($profile_list)"
     );
