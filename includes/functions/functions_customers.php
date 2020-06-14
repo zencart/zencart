@@ -305,7 +305,7 @@ function zen_validate_storefront_admin_login($password, $email_address)
     } else {
         $profile_array = explode(',', str_replace(' ', '', EMP_LOGIN_ADMIN_PROFILE_ID));
         foreach ($profile_array as $index => $current_id) {
-            if (!(int)$current_id == 0) {
+            if (empty($current_id)) {
                 unset($profile_array[$index]);
             }
         }
@@ -448,7 +448,7 @@ function zen_validate_hmac_admin_id($adminId)
 
     $profile_array = explode(',', str_replace(' ', '', EMP_LOGIN_ADMIN_PROFILE_ID));
     foreach ($profile_array as $index => $current_id) {
-        if (!(int)$current_id == 0) {
+        if (empty($current_id)) {
             unset($profile_array[$index]);
         }
     }
