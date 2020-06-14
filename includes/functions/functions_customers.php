@@ -124,7 +124,7 @@ function zen_address_format($address_format_id = 1, $incoming = array(), $html =
 /**
  * Return a formatted address, based on customer's address's country format
  */
-  function zen_address_label($customers_id, $address_id = 1, $html = false, $boln = '', $eoln = "\n") {
+function zen_address_label($customers_id, $address_id = 1, $html = false, $boln = '', $eoln = "\n") {
     global $db;
     $address_query = "select entry_firstname as firstname, entry_lastname as lastname,
                              entry_company as company, entry_street_address as street_address,
@@ -142,10 +142,10 @@ function zen_address_format($address_format_id = 1, $incoming = array(), $html =
 
     $format_id = zen_get_address_format_id($address->fields['country_id']);
     return zen_address_format($format_id, $address->fields, $html, $boln, $eoln);
-  }
+}
 
 // look up customers default or primary address
-  function zen_get_customers_address_primary($customer_id) {
+function zen_get_customers_address_primary($customer_id) {
     global $db;
 
     $lookup_customers_primary_address_query = "SELECT customers_default_address_id
@@ -155,22 +155,22 @@ function zen_address_format($address_format_id = 1, $incoming = array(), $html =
     $lookup_customers_primary_address = $db->Execute($lookup_customers_primary_address_query);
 
     return $lookup_customers_primary_address->fields['customers_default_address_id'];
-  }
+}
 
 ////
 // Return a customer greeting
-  function zen_customer_greeting() {
+function zen_customer_greeting() {
 
     if (zen_is_logged_in() && !zen_in_guest_checkout() && !empty($_SESSION['customer_first_name'])) {
-      $greeting_string = sprintf(TEXT_GREETING_PERSONAL, zen_output_string_protected($_SESSION['customer_first_name']), zen_href_link(FILENAME_PRODUCTS_NEW));
+        $greeting_string = sprintf(TEXT_GREETING_PERSONAL, zen_output_string_protected($_SESSION['customer_first_name']), zen_href_link(FILENAME_PRODUCTS_NEW));
     } else {
-      $greeting_string = sprintf(TEXT_GREETING_GUEST, zen_href_link(FILENAME_LOGIN, '', 'SSL'), zen_href_link(FILENAME_CREATE_ACCOUNT, '', 'SSL'));
+        $greeting_string = sprintf(TEXT_GREETING_GUEST, zen_href_link(FILENAME_LOGIN, '', 'SSL'), zen_href_link(FILENAME_CREATE_ACCOUNT, '', 'SSL'));
     }
 
     return $greeting_string;
-  }
+}
 
-  function zen_count_customer_orders($id = '', $check_session = true) {
+function zen_count_customer_orders($id = '', $check_session = true) {
     global $db;
 
     // -----
@@ -182,17 +182,17 @@ function zen_address_format($address_format_id = 1, $incoming = array(), $html =
     }
 
     if (is_numeric($id) == false) {
-      if (!empty($_SESSION['customer_id'])) {
-        $id = $_SESSION['customer_id'];
-      } else {
-        return 0;
-      }
+        if (!empty($_SESSION['customer_id'])) {
+            $id = $_SESSION['customer_id'];
+        } else {
+            return 0;
+        }
     }
 
     if ($check_session == true) {
-      if (empty($_SESSION['customer_id']) || $id != $_SESSION['customer_id']) {
-        return 0;
-      }
+        if (empty($_SESSION['customer_id']) || $id != $_SESSION['customer_id']) {
+            return 0;
+        }
     }
 
     $orders_check_query = "select count(*) as total
@@ -202,9 +202,9 @@ function zen_address_format($address_format_id = 1, $incoming = array(), $html =
     $orders_check = $db->Execute($orders_check_query);
 
     return $orders_check->fields['total'];
-  }
+}
 
-  function zen_count_customer_address_book_entries($id = '', $check_session = true) {
+function zen_count_customer_address_book_entries($id = '', $check_session = true) {
     global $db;
 
     // -----
@@ -215,17 +215,17 @@ function zen_address_format($address_format_id = 1, $incoming = array(), $html =
     }
 
     if (is_numeric($id) == false) {
-      if (!empty($_SESSION['customer_id'])) {
-        $id = $_SESSION['customer_id'];
-      } else {
-        return 0;
-      }
+        if (!empty($_SESSION['customer_id'])) {
+            $id = $_SESSION['customer_id'];
+        } else {
+            return 0;
+        }
     }
 
     if ($check_session == true) {
-      if (empty($_SESSION['customer_id']) || $id != $_SESSION['customer_id']) {
-        return 0;
-      }
+        if (empty($_SESSION['customer_id']) || $id != $_SESSION['customer_id']) {
+            return 0;
+        }
     }
 
     $addresses_query = "select count(*) as total
@@ -235,25 +235,25 @@ function zen_address_format($address_format_id = 1, $incoming = array(), $html =
     $addresses = $db->Execute($addresses_query);
 
     return $addresses->fields['total'];
-  }
+}
 
 ////
 // validate customer matches session
-  function zen_get_customer_validate_session($customer_id) {
+function zen_get_customer_validate_session($customer_id) {
     global $db, $messageStack;
     $zc_check_customer = $db->Execute("SELECT customers_id, customers_authorization from " . TABLE_CUSTOMERS . " WHERE customers_id=" . (int)$customer_id);
     if ($zc_check_customer->EOF || $zc_check_customer->fields['customers_authorization'] == 4) {    // Banned status is 4
-      $db->Execute("DELETE from " . TABLE_CUSTOMERS_BASKET . " WHERE customers_id= " . $customer_id);
-      $db->Execute("DELETE from " . TABLE_CUSTOMERS_BASKET_ATTRIBUTES . " WHERE customers_id= " . $customer_id);
-      $_SESSION['cart']->reset(TRUE);
-      unset($_SESSION['customer_id']);
-      if ($zc_check_customer->fields['customers_authorization'] != 4) {
-          $messageStack->add_session('header', ERROR_CUSTOMERS_ID_INVALID, 'error');
-      }
-      return false;
+        $db->Execute("DELETE from " . TABLE_CUSTOMERS_BASKET . " WHERE customers_id= " . $customer_id);
+        $db->Execute("DELETE from " . TABLE_CUSTOMERS_BASKET_ATTRIBUTES . " WHERE customers_id= " . $customer_id);
+        $_SESSION['cart']->reset(TRUE);
+        unset($_SESSION['customer_id']);
+        if ($zc_check_customer->fields['customers_authorization'] != 4) {
+            $messageStack->add_session('header', ERROR_CUSTOMERS_ID_INVALID, 'error');
+        }
+        return false;
     }
     return true;
-  }
+}
 
 /**
  * This function identifies whether (true) or not (false) the current customer session is
@@ -286,43 +286,46 @@ function zen_validate_storefront_admin_login($password, $email_address)
     global $db;
     $admin_authorized = false;
 
-    // -----
-    // Admin passwords might be 'sanitized', e.g. this&that becomes this&amp;that, so we'll check
-    // either the as-entered or 'sanitized' versions.
-    //
+    // Before v1.5.7 Admin passwords might be 'sanitized', e.g. this&that becomes this&amp;that, so we'll check both versions.
     $pwd2 = htmlspecialchars($password, ENT_COMPAT, CHARSET);
-    $check = $db->Execute(
-        "SELECT admin_id, admin_pass 
-           FROM " . TABLE_ADMIN . " 
-          WHERE admin_id = " . (int)EMP_LOGIN_ADMIN_ID . "
-          LIMIT 1"
-    );
-    if (!$check->EOF && (zen_validate_password($password, $check->fields['admin_pass']) || zen_validate_password($pwd2, $check->fields['admin_pass']))) {
-        $admin_authorized = true;
-        $_SESSION['emp_admin_login'] = true;
-        $_SESSION['emp_admin_id'] = EMP_LOGIN_ADMIN_ID;
 
-    } else {
-        $profile_array = explode(',', str_replace(' ', '', EMP_LOGIN_ADMIN_PROFILE_ID));
-        foreach ($profile_array as $index => $current_id) {
-            if (empty($current_id)) {
-                unset($profile_array[$index]);
-            }
+    if (!empty(EMP_LOGIN_ADMIN_ID)) {
+        $check = $db->Execute(
+            "SELECT admin_id, admin_pass
+               FROM " . TABLE_ADMIN . "
+              WHERE admin_id = " . (int)EMP_LOGIN_ADMIN_ID . "
+              LIMIT 1"
+        );
+        if (!$check->EOF && (zen_validate_password($password, $check->fields['admin_pass']) || zen_validate_password($pwd2, $check->fields['admin_pass']))) {
+            $admin_authorized = true;
+            $_SESSION['emp_admin_login'] = true;
+            $_SESSION['emp_admin_id'] = (int)EMP_LOGIN_ADMIN_ID;
         }
-        if (count($profile_array) != 0) {
-            $profile_list = implode(', ', $profile_array);
-            $admin_profiles = $db->Execute(
-                "SELECT admin_id, admin_pass 
-                   FROM " . TABLE_ADMIN . " 
-                  WHERE admin_profile IN ($profile_list)"
-            );
-            while (!$admin_profiles->EOF && !$admin_authorized) {
-                $admin_authorized = (zen_validate_password($pwd2, $admin_profiles->fields['admin_pass']) || zen_validate_password($pwd2, $admin_profiles->fields['admin_pass']));
-                if ($admin_authorized) {
-                    $_SESSION['emp_admin_login'] = true;
-                    $_SESSION['emp_admin_id'] = $admin_profiles->fields['admin_id'];
-                }
-                $admin_profiles->MoveNext();
+    }
+
+    if (!$admin_authorized && empty(EMP_LOGIN_ADMIN_PROFILE_ID)) {
+        return false;
+    }
+
+    $profile_array = explode(',', str_replace(' ', '', EMP_LOGIN_ADMIN_PROFILE_ID));
+    foreach ($profile_array as $index => $current_id) {
+        if (empty($current_id)) {
+            unset($profile_array[$index]);
+        }
+    }
+    if (count($profile_array)) {
+        $profile_list = implode(',', $profile_array);
+        $admin_profiles = $db->Execute(
+            "SELECT admin_id, admin_pass 
+               FROM " . TABLE_ADMIN . " 
+              WHERE admin_profile IN (" . $profile_list . ")"
+        );
+        foreach ($admin_profiles as $profile) {
+            $admin_authorized = (zen_validate_password($pwd2, $profile['admin_pass']) || zen_validate_password($pwd2, $profile['admin_pass']));
+            if ($admin_authorized) {
+                $_SESSION['emp_admin_login'] = true;
+                $_SESSION['emp_admin_id'] = (int)$profile['admin_id'];
+                break;
             }
         }
     }
@@ -419,22 +422,24 @@ function zen_validate_hmac_timestamp()
 {
     $currentTime = time();
     $hmacTime = (isset($_POST['timestamp'])) ? $_POST['timestamp'] : 0;
-    if (($currentTime - $hmacTime) > 20) return false;
-    return true;
+    return (($currentTime - $hmacTime) <= 20);
 }
 
 
 function zen_validate_hmac_admin_id($adminId)
 {
     global $db;
-    $check = $db->Execute(
-        "SELECT admin_id 
+
+    if (!empty(EMP_LOGIN_ADMIN_ID)) {
+        $check = $db->Execute(
+            "SELECT admin_id 
            FROM " . TABLE_ADMIN . " 
           WHERE admin_id = " . (int)EMP_LOGIN_ADMIN_ID . "
           LIMIT 1"
-    );
-    if ($check->RecordCount() > 0 && (int)EMP_LOGIN_ADMIN_ID == (int)$adminId) {
-        return (int)$adminId;
+        );
+        if ($check->RecordCount() > 0 && (int)EMP_LOGIN_ADMIN_ID == (int)$adminId) {
+            return (int)$adminId;
+        }
     }
 
     $profile_array = explode(',', str_replace(' ', '', EMP_LOGIN_ADMIN_PROFILE_ID));
@@ -443,12 +448,12 @@ function zen_validate_hmac_admin_id($adminId)
             unset($profile_array[$index]);
         }
     }
-    if (count($profile_array) == 0) return false;
-    $profile_list = implode(', ', $profile_array);
+    if (empty($profile_array)) return false;
+    $profile_list = implode(',', $profile_array);
     $admin_profiles = $db->Execute(
         "SELECT admin_id 
                    FROM " . TABLE_ADMIN . " 
-                  WHERE admin_profile IN ($profile_list)"
+                  WHERE admin_id = " . (int)$adminId . " AND admin_profile IN (" . $profile_list . ")"
     );
     if ($admin_profiles->RecordCount() > 0) {
         return (int)$adminId;
@@ -473,5 +478,4 @@ function zen_log_hmac_login($params)
     );
     zen_db_perform(TABLE_ADMIN_ACTIVITY_LOG, $sql_data_array);
 }
-
 
