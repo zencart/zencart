@@ -329,19 +329,10 @@ function zen_validate_storefront_admin_login($password, $email_address)
 
     if ($admin_authorized) {
         $_SESSION['emp_customer_email_address'] = $email_address;
-        $sql_data_array = array(
-            'access_date' => 'now()',
-            'admin_id' => $_SESSION['emp_admin_id'],
-            'page_accessed' => 'login.php',
-            'page_parameters' => '',
-            'ip_address' => substr($_SERVER['REMOTE_ADDR'],0,45),
-            'gzpost' => gzdeflate(json_encode(array('action' => 'emp_admin_login', 'customer_email_address' => $email_address)), 7),
-            'flagged' => 0,
-            'attention' => '',
-            'severity' => 'info',
-            'logmessage' => 'EMP admin login',
-        );
-        zen_db_perform(TABLE_ADMIN_ACTIVITY_LOG, $sql_data_array);
+        $params['action'] = 'emp_admin_login';
+        $params['emailAddress'] = $email_address;
+        $params['message'] = 'EMP admin login';
+        zen_log_hmac_login($params);
     }
     return $admin_authorized;
 }
