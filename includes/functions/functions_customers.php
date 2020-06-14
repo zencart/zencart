@@ -317,7 +317,7 @@ function zen_validate_storefront_admin_login($password, $email_address)
                   WHERE admin_profile IN ($profile_list)"
             );
             while (!$admin_profiles->EOF && !$admin_authorized) {
-                $admin_authorized = (zen_validate_password($p2, $admin_profiles->fields['admin_pass']) || zen_validate_password($pwd2, $admin_profiles->fields['admin_pass']));
+                $admin_authorized = (zen_validate_password($pwd2, $admin_profiles->fields['admin_pass']) || zen_validate_password($pwd2, $admin_profiles->fields['admin_pass']));
                 if ($admin_authorized) {
                     $_SESSION['emp_admin_login'] = true;
                     $_SESSION['emp_admin_id'] = $admin_profiles->fields['admin_id'];
