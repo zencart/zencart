@@ -54,7 +54,7 @@ if ($result->RecordCount()) {
         <td class="text-right"><?php echo $customers; ?></td>
       </tr>
 <?php } ?>
-<?php if (zen_is_superuser() || check_page(FILENAME_PRODUCTS, '')) { ?>
+<?php if (zen_is_superuser() || check_page(FILENAME_PRODUCT, '')) { ?>
       <tr>
         <td><?php echo BOX_ENTRY_PRODUCTS; ?></td>
         <td class="text-right"><?php echo $products; ?></td>
