@@ -178,8 +178,7 @@ class PluginManager
             $extraSql = $this->dbConn->bindVars($extraSql, ':unique_key:', $uniqueKey, 'string');
             $extraSql = $this->dbConn->bindVars($extraSql, ':author:', $versionInfo['pluginAuthor'], 'string');
             $extraSql = $this->dbConn->bindVars($extraSql, ':version:', $version, 'string');
-            $extraSql = $this->dbConn->bindVars($extraSql, ':zc_versions:', json_encode($versionInfo['zcVersions']),
-                                                'string');
+            $extraSql = $this->dbConn->bindVars($extraSql, ':zc_versions:', json_encode($versionInfo['zcVersions']), 'string');
         }
         return $extraSql;
     }
