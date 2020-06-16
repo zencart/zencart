@@ -331,7 +331,7 @@ class shoppingCart extends base {
 
     // assign a temporary unique ID to the order contents to prevent hack attempts during the checkout procedure
     $this->cartID = $this->generate_cart_id();
-    $this->notify('NOTIFIER_CART_ADD_CART_END');
+    $this->notify('NOTIFIER_CART_ADD_CART_END', array(), $products_id, $qty, $attributes, $notify);
   }
   /**
    * Update the quantity of an item already in the cart
