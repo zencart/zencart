@@ -76,8 +76,8 @@ $version_ini_index_sysinfo = '';
 if (!isset($version_check_sysinfo)) $version_check_sysinfo = false;
 if (!isset($version_check_index)) $version_check_index = false;
 
-if (file_exists(DIR_FS_ADMIN . 'includes/local/skip_version_check.ini')) {
-    $lines = @file(DIR_FS_ADMIN . 'includes/local/skip_version_check.ini');
+$file = DIR_FS_ADMIN . 'includes/local/skip_version_check.ini';
+if (file_exists($file) && $lines = @file($file)) {
     foreach ($lines as $line) {
         if (substr(trim($line), 0, 14) == 'version_check=') $version_from_ini = substr(trim(strtolower(str_replace('version_check=', '', $line))), 0, 3);
         if (substr(trim($line), 0, 41) == 'display_update_link_only_on_sysinfo_page=') $version_ini_sysinfo = trim(strtolower(str_replace('display_update_link_only_on_sysinfo_page=', '', $line)));

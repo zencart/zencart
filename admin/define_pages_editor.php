@@ -170,10 +170,9 @@ if (!$lng_exists) {
       if (isset($_GET['filename'])) {
         ?>
         <?php
-        if (($_SESSION['language']) && ($_GET['filename'])) {
-          if (file_exists($file)) {
-            $file_array = @file($file);
-            $file_contents = @implode('', $file_array);
+        if ($_SESSION['language'] && $_GET['filename']) {
+          if (file_exists($file) && $file_array = @file($file)) {
+            $file_contents = implode('', $file_array);
 
             $file_writeable = true;
             if (!is_writeable($file)) {
