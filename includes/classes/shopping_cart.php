@@ -254,7 +254,7 @@ class shoppingCart extends base {
     if ($this->in_cart($products_id)) {
       $this->update_quantity($products_id, $qty, $attributes);
     } else {
-      $this->contents[] = array($products_id);
+      $this->contents[] = array($products_id);  // @TODO - why is this line here? Appears to be removed in the call to cleanup(), so doesn't really serve any purpose here.
       $this->contents[$products_id] = array('qty' => (float)$qty);
       // insert into database
       if (zen_is_logged_in() && !zen_in_guest_checkout()) {
