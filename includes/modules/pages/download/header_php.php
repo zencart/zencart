@@ -145,8 +145,8 @@ $zco_notifier->notify('NOTIFY_DOWNLOAD_BROWSER_DETECTION', array(), $detectedBro
  * Do we need to transform something?
  * An observer class could stamp PDFs or do other pre-processing of the download media.
  */
-$zco_notifier->notify('NOTIFY_DOWNLOAD_BEFORE_START', $_SESSION['customers_host_address'], $service, $origin_filename, $browser_filename, $source_directory, $downloadFilesize, $mime_type, $downloads->fields, $browser_headers);
-$zco_notifier->notify('NOTIFY_DOWNLOAD_READY_TO_START', $_SESSION['customers_host_address'], $service, $origin_filename, $browser_filename, $source_directory, $downloadFilesize, $mime_type, $downloads->fields, $browser_headers);
+$zco_notifier->notify('NOTIFY_DOWNLOAD_BEFORE_START', $_SESSION['customers_host_address'], $service, $origin_filename, $browser_filename, $source_directory, $downloadFilesize, $mime_type, $downloads->fields, $browser_headers_override);
+$zco_notifier->notify('NOTIFY_DOWNLOAD_READY_TO_START', $_SESSION['customers_host_address'], $service, $origin_filename, $browser_filename, $source_directory, $downloadFilesize, $mime_type, $downloads->fields, $browser_headers_override);
 
 
 /**
