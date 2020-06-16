@@ -49,11 +49,21 @@ class VersionServer
 
     }
 
-    public function getPluginVersion($id)
+    /**
+     * @param int|string $ids An integer or a comma-separated string of integers denoting the plugin ID from the ZC plugin library
+     * @return bool|false|string json string
+     */
+    public function getPluginVersion($ids)
     {
+        $keylist = implode(',', array_map(function($value) {return (int)trim($value);}, explode(',', $ids)));
+        $type = '[' . (int)$ids . ']';
+        if (strpos($ids, -1) > 0) {
+            $type = '[Batch]';
+        }
+
         $currentInfo = $this->getZcVersioninfo();
         $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $this->pluginVersionServer . '/' . (int)$id);
+        curl_setopt($ch, CURLOPT_URL, $this->pluginVersionServer . '/' . $keylist);
         curl_setopt($ch, CURLOPT_POST, 1);
         curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($currentInfo));
         curl_setopt($ch, CURLOPT_VERBOSE, 0);
@@ -61,7 +71,7 @@ class VersionServer
         curl_setopt($ch, CURLOPT_TIMEOUT, 9);
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 9);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_USERAGENT, 'Plugin Version Check [' . (int)$id . '] ' . HTTP_SERVER);
+        curl_setopt($ch, CURLOPT_USERAGENT, 'Plugin Version Check ' . $type . ' ' . HTTP_SERVER);
         $response = curl_exec($ch);
         $error = curl_error($ch);
         $errno = curl_errno($ch);
