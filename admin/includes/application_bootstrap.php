@@ -96,8 +96,8 @@ if (file_exists('includes/defined_paths.php')) {
 /**
  * ignore version-check if INI file setting has been set
  */
-if (file_exists(DIR_FS_ADMIN . 'includes/local/skip_version_check.ini')) {
-    $lines = @file(DIR_FS_ADMIN . 'includes/local/skip_version_check.ini');
+$file = DIR_FS_ADMIN . 'includes/local/skip_version_check.ini';
+if (file_exists($file) && $lines = @file($file)) {
     if (is_array($lines)) {
         foreach($lines as $line) {
             if (substr($line,0,14)=='admin_configure_php_check=') $check_cfg=substr(trim(strtolower(str_replace('admin_configure_php_check=','',$line))),0,3);

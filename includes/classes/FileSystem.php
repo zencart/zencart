@@ -96,7 +96,9 @@ class FileSystem
         }
         $size = array('B', 'kB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB');
         $factor = floor((strlen($bytes) - 1) / 3);
-        return sprintf("%.{$decimals}f", $bytes / pow(1024, $factor)) . @$size[$factor];
+        $suffix = 'bloody huge!';
+        if (isset($size[$factor])) $suffix = $size[$factor];
+        return sprintf("%.{$decimals}f", $bytes / pow(1024, $factor)) . $suffix;
     }
 
     public function fileExistsInDirectory($fileDir, $filePattern)

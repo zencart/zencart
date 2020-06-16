@@ -182,7 +182,7 @@ if (!empty($_GET['action'])) {
                                                    AND layout_box_name NOT LIKE '%ezpages_bar%')
                                                  ORDER BY  layout_box_location, layout_box_sort_order");
               while (!$column_controller->EOF) {
-//    if (((!$_GET['cID']) || (@$_GET['cID'] == $column_controller->fields['layout_id'])) && (!$bInfo) && (substr($_GET['action'], 0, 3) != 'new')) {
+//    if (((!$_GET['cID']) || ($_GET['cID'] == $column_controller->fields['layout_id'])) && (!$bInfo) && (substr($_GET['action'], 0, 3) != 'new')) {
                 if ((empty($_GET['cID']) || ($_GET['cID'] == $column_controller->fields['layout_id'])) && empty($bInfo) && (empty($action) || substr($action, 0, 3) != 'new')) {
                   $bInfo = new objectInfo($column_controller->fields);
                 }
