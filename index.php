@@ -56,9 +56,8 @@
   foreach ($directory_array as $value) { 
     $onload_file = DIR_WS_MODULES . 'pages/' . $current_page_base . '/' . $value;
     $read_contents='';
-    $lines = (array) @file($onload_file);
-    foreach($lines as $line) {
-      $read_contents .= $line;
+    if ($lines = @file($onload_file)) {
+      $read_contents = implode('', $lines);
     }
   $za_onload_array[] = $read_contents;
   }
@@ -71,9 +70,8 @@
   foreach ($directory_array as $value) { 
     $onload_file = $tpl_dir . '/' . $value;
     $read_contents='';
-    $lines = (array) @file($onload_file);
-    foreach($lines as $line) {
-      $read_contents .= $line;
+    if ($lines = @file($onload_file)) {
+      $read_contents = implode('', $lines);
     }
     $za_onload_array[] = $read_contents;
   }
