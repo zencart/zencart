@@ -171,8 +171,7 @@ if (!$lng_exists) {
         ?>
         <?php
         if (($_SESSION['language']) && ($_GET['filename'])) {
-          if (file_exists($file)) {
-            $file_array = (array) @file($file);
+          if (file_exists($file) && $file_array = @file($file)) {
             $file_contents = @implode('', $file_array);
 
             $file_writeable = true;
