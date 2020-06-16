@@ -7,7 +7,7 @@
  * @version $Id: DrByte 2020 May 16 Modified in v1.5.7 $
  */
 /**
- * Functions to support plugin usage
+ * Functions to support plugin usage for plugins that DO NOT use the new zc_plugins folder added in v1.5.7
  */
 
 /*
@@ -38,7 +38,7 @@ if (!defined('LOG_PLUGIN_VERSIONCHECK_FAILURES')) define('LOG_PLUGIN_VERSIONCHEC
  */
 function plugin_version_check_for_updates($plugin_file_id = 0, $version_string_to_compare = '', $strict_zc_version_compare = false)
 {
-    // for v1.5.5f and newer
+    // for v1.5.7 and newer
 
     if ($plugin_file_id === 0) return false;
 
@@ -59,8 +59,8 @@ function plugin_version_check_for_updates($plugin_file_id = 0, $version_string_t
 
     // check whether present ZC version is compatible with the latest available plugin version
     if (!defined('PLUGIN_VERSION_CHECK_MATCHING_OVERRIDE') || empty(PLUGIN_VERSION_CHECK_MATCHING_OVERRIDE)) {
-        $zc_version = PROJECT_VERSION_MAJOR . '.' . preg_replace('/[^0-9.]/', '', PROJECT_VERSION_MINOR);
-        if ($strict_zc_version_compare) $zc_version = PROJECT_VERSION_MAJOR . '.' . PROJECT_VERSION_MINOR;
+        $zc_version = preg_replace('/[^0-9.]/', '', zen_get_zcversion());
+        if ($strict_zc_version_compare) $zc_version = zen_get_zcversion();
         if (!in_array('v' . $zc_version, $data[0]['zcversions'], false)) $new_version_available = false;
     }
 
