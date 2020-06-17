@@ -25,9 +25,10 @@
         "php": ">=5.5"
     },
     "require-dev": {
+        "fzaninotto/faker": "^1.9",
         "laravel/dusk": ">5.8",
         "mikey179/vfsstream": ">1.6",
-        "phpunit/phpunit": "^7.5.19 || ^8.5.1"
+        "phpunit/phpunit": "^7.5.19 || ^8.5.1 || ^9.0"
     },
     "autoload": {
         "classmap": ["includes/classes", "includes/modules"]
