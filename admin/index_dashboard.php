@@ -15,27 +15,9 @@ if (empty($currencies)) {
 <!doctype html>
 <html <?php echo HTML_PARAMS; ?>>
   <head>
-    <meta charset="<?php echo CHARSET; ?>">
-    <title><?php echo TITLE; ?></title>
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    <meta name="robots" content="noindex, nofollow">
-    <link href="includes/stylesheet.css" rel="stylesheet">
-    <link rel="stylesheet" href="includes/cssjsmenuhover.css" media="all" id="hoverJS">
-    <script src="includes/menu.js" title="menu"></script>
-    <script title="menu_init">
-      function init() {
-          cssjsmenu('navbar');
-          if (document.getElementById) {
-              var kill = document.getElementById('hoverJS');
-              kill.disabled = true;
-          }
-      }
-    </script>
-
+    <?php require DIR_WS_INCLUDES . 'admin_html_head.php'; ?>
     <!--Load the AJAX API FOR GOOGLE GRAPHS -->
-    <script src="https://www.google.com/jsapi" title="google_graphs_api"></script>
-
-
+    <script src="https://www.gstatic.com/charts/loader.js" title="google_graphs_api"></script>
     <style>
       /* #coltwo div.row span.left { float: left; text-align: left; width: 50%; white-space: nowrap; }*/
       #colthree div.row span.left { float: left; text-align: left; width: 50%; white-space: nowrap; }
@@ -44,7 +26,6 @@ if (empty($currencies)) {
       div.first { float: left; width: 90px; }
       div.col { float: left; width: 18%; }
     </style>
-
   </head>
   <body class="indexDashboard" onLoad="init()">
     <!-- header //-->
