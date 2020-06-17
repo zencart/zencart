@@ -1098,10 +1098,10 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
             const productEditLink = '<?php echo $productEditLink; ?>';
             jQuery("tr.category-listing-row td").not('.dataTableButtonCell').on('click', (function() {
                 window.location.href = categorySelectlink.replace('[*]', jQuery(this).parent().attr('data-cid'));
-            }));
+            })).css('cursor', 'pointer');
             jQuery("tr.product-listing-row td").not('.dataTableButtonCell').on('click', (function() {
                 window.location.href = productEditLink.replace('[*]', jQuery(this).parent().attr('data-pid'));
-            }));
+            })).css('cursor', 'pointer');
         })
     </script>
     <!-- footer //-->
