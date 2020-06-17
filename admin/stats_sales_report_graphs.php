@@ -82,27 +82,14 @@ if (strlen($sales_report_filter) == 0) {
   <head>
     <meta charset="<?php echo CHARSET; ?>">
     <title><?php echo TITLE; ?></title>
-    <link rel="stylesheet" href="includes/stylesheet.css">
-    <link rel="stylesheet" media="print" href="includes/css/stylesheet_print.css">
-    <link rel="stylesheet" href="includes/cssjsmenuhover.css" media="all" id="hoverJS">
-    <script src="includes/menu.js"></script>
-    <script src="includes/general.js"></script>
-    <script src="https://www.google.com/jsapi"></script>
-    <script title="menu_init">
-      function init() {
-          cssjsmenu('navbar');
-          if (document.getElementById) {
-              var kill = document.getElementById('hoverJS');
-              kill.disabled = true;
-          }
-      }
-    </script>
+    <?php require 'includes/admin_html_head.php'; ?>
+    <script src="https://www.gstatic.com/charts/loader.js"></script>
     <script title="build_graphs">
       // Load the Visualization API and the piechart package.
-      google.load('visualization', '1.0', {'packages': ['corechart']});
+      google.charts.load('current', {packages: ['corechart']});
 
       // Set a callback to run when the Google Visualization API is loaded.
-      google.setOnLoadCallback(drawChart);
+      google.charts.setOnLoadCallback(drawChart);
 
       function drawChart() {
 
@@ -170,7 +157,7 @@ for ($i = 0; $i < $report->size; $i++) {
       }
     </script>
   </head>
-  <body onload="init()">
+  <body>
     <!-- header //-->
     <?php require(DIR_WS_INCLUDES . 'header.php'); ?>
     <!-- header_eof //-->
