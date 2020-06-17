@@ -1008,8 +1008,8 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
         $cPath_back = (zen_not_null($cPath_back)) ? 'cPath=' . $cPath_back . '&' : '';
         ?>
         <div class="row">
-          <div class="col-md-6"><?php echo TEXT_CATEGORIES . '&nbsp;' . $categories_count . '<br>' . TEXT_PRODUCTS . '&nbsp;' . $products_count; ?></div>
-          <div class="col-md-6 text-right">
+          <div class="col-md-3"><?php echo TEXT_CATEGORIES . '&nbsp;' . $categories_count . '<br>' . TEXT_PRODUCTS . '&nbsp;' . $products_count; ?></div>
+          <div class="col-md-9 text-right">
             <?php if (sizeof($cPath_array) > 0) { ?>
               <div class="col-sm-3">
                 <a href="<?php echo zen_href_link(FILENAME_CATEGORY_PRODUCT_LISTING, $cPath_back . 'cID=' . $current_category_id); ?>" class="btn btn-default" role="button"><?php echo IMAGE_BACK; ?></a>
@@ -1025,7 +1025,7 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
 
             <?php if ($zc_skip_products == false) { ?>
               <?php echo zen_draw_form('newproduct', FILENAME_PRODUCT, 'action=new_product', 'post', 'class="form-horizontal"'); ?>
-              <?php echo (empty($_GET['search']) ? '<div class="col-sm-3"><button type="submit" class="btn btn-primary">' . IMAGE_NEW_PRODUCT . '</button></div>' : ''); ?>
+              <?php echo (empty($_GET['search']) ? '<div class="col-xs-6 col-sm-2"><button type="submit" class="btn btn-primary">' . IMAGE_NEW_PRODUCT . '</button></div>' : ''); ?>
               <?php
               // Query product types based on the ones this category is restricted to
               $sql = "SELECT ptc.product_type_id as type_id, pt.type_name
@@ -1051,7 +1051,7 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
               }
               ?>
               <?php
-              echo '<div class="col-sm-6">' . zen_draw_pull_down_menu('product_type', $product_restrict_types_array, '', 'class="form-control"') . '</div>';
+              echo '<div class="col-xs-6 col-sm-4 col-md-3">' . zen_draw_pull_down_menu('product_type', $product_restrict_types_array, '', 'class="form-control"') . '</div>';
               echo zen_hide_session_id();
               echo zen_draw_hidden_field('cPath', $cPath);
               echo zen_draw_hidden_field('action', 'new_product');
