@@ -64,9 +64,9 @@ foreach ($visits as $data) {
   var data;
   var chart;
   // Load the Visualization API and the piechart package.
-  google.load('visualization', '1', {'packages': ['corechart']});
+  google.charts.load('current', {packages: ['corechart']});
   // Set a callback to run when the Google Visualization API is loaded.
-  google.setOnLoadCallback(drawTrafficChart);
+  google.charts.setOnLoadCallback(drawTrafficChart);
 
   // Callback that creates and populates a data table,
   // instantiates the pie chart, passes in the data and draws it.
