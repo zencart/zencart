@@ -128,7 +128,7 @@ if (zen_not_null($action)) {
         ?>
         <div class="row">
             <div><?php echo zen_info_image($rInfo->products_image, $rInfo->products_name, SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT); ?></div>
-            <?php echo zen_draw_form('review', FILENAME_REVIEWS, (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . (isset($_GET['status']) ? 'status=' . $_GET['status'] . '&' : '') . 'rID=' . $_GET['rID'] . '&action=preview'); ?>
+            <?php echo zen_draw_form('update', FILENAME_REVIEWS, (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . (isset($_GET['status']) ? 'status=' . $_GET['status'] . '&' : '') . 'rID=' . $_GET['rID'] . '&action=update'); ?>
           <div class="form-group">
             <strong><?php echo ENTRY_PRODUCT; ?></strong> <?php echo $rInfo->products_name; ?><br>
             <strong><?php echo ENTRY_FROM; ?></strong> <?php echo $rInfo->customers_name; ?><br>
@@ -154,7 +154,8 @@ if (zen_not_null($action)) {
             <?php echo zen_draw_hidden_field('products_name', $rInfo->products_name); ?>
             <?php echo zen_draw_hidden_field('products_image', $rInfo->products_image); ?>
             <?php echo zen_draw_hidden_field('date_added', $rInfo->date_added); ?>
-          <button type="submit" class="btn btn-primary"><?php echo IMAGE_PREVIEW; ?></button> <a href="<?php echo zen_href_link(FILENAME_REVIEWS, (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . (isset($_GET['status']) ? 'status=' . $_GET['status'] . '&' : '') . 'rID=' . $_GET['rID']); ?>" class="btn btn-default" role="button"><?php echo IMAGE_CANCEL; ?></a>
+            <button type="submit" class="btn btn-primary"><?php echo IMAGE_UPDATE; ?></button>
+            <a href="<?php echo zen_href_link(FILENAME_REVIEWS, (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . (isset($_GET['status']) ? 'status=' . $_GET['status'] . '&' : '') . 'rID=' . $_GET['rID']); ?>" class="btn btn-default" role="button"><?php echo IMAGE_CANCEL; ?></a>
         </div>
         <?php echo '</form>'; ?>
         </div>
@@ -201,16 +202,6 @@ if (zen_not_null($action)) {
             <div><?php echo zen_draw_separator('pixel_trans.gif', '1', '10'); ?></div>
 
           <?php
-          if (zen_not_null($_POST)) {
-            /* Re-Post all POST'ed variables */
-            foreach($_POST as $key => $value) {
-                echo zen_draw_hidden_field($key, $value);
-            }
-            ?>
-              <div class="smallText text-right"><?php echo '<a href="' . zen_href_link(FILENAME_REVIEWS, (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . (isset($_GET['status']) ? 'status=' . $_GET['status'] . '&' : '') . 'rID=' . $rInfo->reviews_id . '&action=edit') . '">' . zen_image_button('button_back.gif', IMAGE_BACK) . '</a> ' . zen_image_submit('button_update.gif', IMAGE_UPDATE) . ' <a href="' . zen_href_link(FILENAME_REVIEWS, (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . (isset($_GET['status']) ? 'status=' . $_GET['status'] . '&' : '') . 'rID=' . $rInfo->reviews_id) . '">' . zen_image_button('button_cancel.gif', IMAGE_CANCEL) . '</a>'; ?></div>
-              <?php echo '</form>';
-
-          } else {
             if (isset($_GET['origin'])) {
               $back_url = $_GET['origin'];
               $back_url_params = '';
@@ -219,10 +210,10 @@ if (zen_not_null($action)) {
               $back_url_params = (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . (isset($_GET['status']) ? 'status=' . $_GET['status'] . '&' : '') . 'rID=' . $rInfo->reviews_id;
             }
             ?>
-              <div class="text-right"><?php echo '<a href="' . zen_href_link($back_url, $back_url_params, 'NONSSL') . '">' . zen_image_button('button_back.gif', IMAGE_BACK) . '</a>'; ?></div>
-            <?php
-          }
-          ?>
+            <div class="text-right">
+                <?php echo '<a href="' . zen_href_link($back_url, $back_url_params, 'NONSSL') . '" class="btn btn-default" role="button">' . IMAGE_BACK . '</a>'; ?>
+                <?php echo '<a href="' . zen_href_link(FILENAME_REVIEWS, (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . (isset($_GET['status']) ? 'status=' . $_GET['status'] . '&' : '') . 'rID=' . $rInfo->reviews_id . '&action=edit') . '" class="btn btn-primary" role="button">' . TEXT_EDIT_REVIEW . '</a> '; ?>
+            </div>
         </div>
         <?php
       } else {
