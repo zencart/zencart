@@ -27,7 +27,7 @@ if (empty($currencies)) {
       div.col { float: left; width: 18%; }
     </style>
   </head>
-  <body class="indexDashboard" onLoad="init()">
+  <body class="indexDashboard">
     <!-- header //-->
     <?php require(DIR_WS_INCLUDES . 'header.php'); ?>
     <!-- header_eof //-->
