@@ -57,7 +57,7 @@ class VersionServer
     {
         $keylist = implode(',', array_map(function($value) {return (int)trim($value);}, explode(',', $ids)));
         $type = '[' . (int)$ids . ']';
-        if (strpos($ids, -1) > 0) {
+        if (strpos($ids, ',') > 0) {
             $type = '[Batch]';
         }
 
