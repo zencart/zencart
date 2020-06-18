@@ -145,14 +145,15 @@ foreach ($whos_online as $session) {
     </script>
 
     <!--Load the AJAX API FOR GOOGLE GRAPHS -->
-    <script src="https://www.google.com/jsapi"></script>
+    <script src="https://www.gstatic.com/charts/loader.js"></script>
     <script title="build_graphs">
       var data;
       var chart;
       // Load the Visualization API and the piechart package.
-      google.load('visualization', '1', {'packages': ['corechart']});
+      google.charts.load('current', {packages: ['corechart']});
+
       // Set a callback to run when the Google Visualization API is loaded.
-      google.setOnLoadCallback(drawCharts);
+      google.charts.setOnLoadCallback(drawCharts);
 
       // Callback that creates and populates a data table,
       // instantiates the pie chart, passes in the data and draws it.
