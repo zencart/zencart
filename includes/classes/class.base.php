@@ -61,6 +61,7 @@ class base {
    * NOTE: The $param1 value CAN be an array, and is sometimes typecast to be an array, but can also safely be a string or int etc if the notifier sends such and the observer class expects same.
    */
   function notify($eventID, $param1 = array(), & $param2 = NULL, & $param3 = NULL, & $param4 = NULL, & $param5 = NULL, & $param6 = NULL, & $param7 = NULL, & $param8 = NULL, & $param9 = NULL ) {
+    $eventID = $this->substituteAliasIfExists($eventID);
     // notifier trace logging - for advanced debugging purposes only --- NOTE: This log file can get VERY big VERY quickly!
     if (defined('NOTIFIER_TRACE') && NOTIFIER_TRACE != '' && NOTIFIER_TRACE != 'false' && NOTIFIER_TRACE != 'Off') {
       $file = DIR_FS_LOGS . '/notifier_trace.log';
@@ -132,5 +133,14 @@ class base {
       $rawName[0] = strtoupper($rawName[0]);
     }
     return preg_replace_callback('/[_-]([0-9,a-z])/', function($matches) {return strtoupper($matches[1]);}, $rawName);
+  }
+
+  private function substituteAliasIfExists($eventID)
+  {
+      $aliases = ['NOTIFY_ORDER_CART_SUBTOTAL_CALCULATE' => 'NOTIFIY_ORDER_CART_SUBTOTAL_CALCULATE'];
+      if (key_exists($eventID, $aliases)) {
+          $eventID = $aliases[$eventID];
+      }
+      return $eventID;
   }
 }
