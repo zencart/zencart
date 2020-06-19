@@ -8,14 +8,14 @@
 
 /**
  * Optionally set a MySQL mode during installation. The more strict mode is probably preferable when doing development
- * Ref: https://dev.mysql.com/doc/refman/5.7/en/sql-mode.html
+ * Ref: https://dev.mysql.com/doc/refman/8.0/en/sql-mode.html
  */
 define('DB_MYSQL_MODE', 'TRADITIONAL');
 // define('DB_MYSQL_MODE', 'STRICT_ALL_TABLES,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION,NO_ZERO_DATE,NO_ZERO_IN_DATE,ONLY_FULL_GROUP_BY,NO_AUTO_VALUE_ON_ZERO');
 
 
 // optionally turn on developer mode
-// enabled automagically if environment var is set: HABITAT=zencart
+// enabled automatically if environment var is set: HABITAT=zencart
 // or uncomment below:
 // define('DEVELOPER_MODE', true);
 

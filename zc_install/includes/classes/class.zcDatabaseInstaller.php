@@ -495,10 +495,6 @@ class zcDatabaseInstaller
                 : ", reset_token = '" . (time() + (72 * 60 * 60)) . "}" . zen_encrypt_password($options['admin_password']) . "'") . " where admin_id = 1";
         $this->db->Execute($sql);
 
-// @TODO temporarily disabled
-// enable/disable automatic version-checking
-//    $sql = "update " . $this->dbPrefix . "configuration set configuration_value = '".($this->configInfo['check_for_updates'] ? 'true' : 'false' ) ."' where configuration_key = 'SHOW_VERSION_UPDATE_IN_HEADER'";
-//    $this->db->Execute($sql);
     }
 
     private function camelize($parseString)
