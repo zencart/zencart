@@ -32,3 +32,12 @@ define('DEVELOPER_DBNAME_DEFAULT', $dev_db_default_name);
 define('DEVELOPER_DBUSER_DEFAULT', 'root');
 define('DEVELOPER_DBPASSWORD_DEFAULT', '');
 define('DEVELOPER_INSTALL_DEMO_DATA', true);
+
+// optional configuration table keys to override on new installs when DEVELOPER_MODE===true
+define('DEVELOPER_CONFIGS', [
+    'EMAIL_SMTPAUTH_MAILBOX' => 'Zen Cart',
+    'EMAIL_SMTPAUTH_PASSWORD' => '',
+    'EMAIL_SMTPAUTH_MAIL_SERVER' => 'localhost',
+    'EMAIL_SMTPAUTH_MAIL_SERVER_PORT' => '2525',
+    'EMAIL_TRANSPORT' => 'smtpauth',
+]);
