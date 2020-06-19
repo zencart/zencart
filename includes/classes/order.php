@@ -610,6 +610,8 @@ class order extends base {
       $shown_price = (zen_add_tax($this->products[$index]['final_price'] * $this->products[$index]['qty'], $product_tax_rate))
           + zen_add_tax($this->products[$index]['onetime_charges'], $product_tax_rate);
       $this->info['subtotal'] += $shown_price;
+
+      // NOTE: This misspelled notifier (with an extra "i") will change to NOTIFY_ORDER_CART_SUBTOTAL_CALCULATE in v1.5.8
       $this->notify('NOTIFIY_ORDER_CART_SUBTOTAL_CALCULATE', array('shown_price' => $shown_price));
 
       if (DISPLAY_PRICE_WITH_TAX == 'true') {
