@@ -13,7 +13,10 @@
  *
  */
 class base {
-  /**
+
+    private $aliases = ['NOTIFIY_ORDER_CART_SUBTOTAL_CALCULATE' => 'NOTIFY_ORDER_CART_SUBTOTAL_CALCULATE'];
+
+    /**
    * method used to an attach an observer to the notifier object
    *
    * NB. We have to get a little sneaky here to stop session based classes adding events ad infinitum
@@ -93,13 +96,22 @@ class base {
     }
 
       foreach($observers as $key=>$obs) {
-        if ($obs['eventID'] == $eventID || $obs['eventID'] === '*') {
-         $method = 'update';
-         $testMethod = $method . self::camelize(strtolower($eventID), TRUE);
-         if (method_exists($obs['obs'], $testMethod))
-           $method = $testMethod;
-         $obs['obs']->{$method}($this, $eventID, $param1,$param2,$param3,$param4,$param5,$param6,$param7,$param8,$param9);
-        }
+          $hasAlias = $this->eventIdHasAlias($eventID);
+          $actualEventId = $eventID;
+          $matchMap = [$eventID, '*'];
+          if ($hasAlias) {
+              $eventAlias = $this->substituteAlias($obs['eventID']);
+              $matchMap = [$eventAlias, $obs['eventID'], '*'];
+              $actualEventId = $obs['eventID'];
+          }
+          if (!in_array($obs['eventID'], $matchMap)) {
+              continue;
+          }
+          $method = 'update';
+          $testMethod = $method . self::camelize(strtolower($actualEventId), TRUE);
+          if (method_exists($obs['obs'], $testMethod))
+              $method = $testMethod;
+          $obs['obs']->{$method}($this, $actualEventId, $param1,$param2,$param3,$param4,$param5,$param6,$param7,$param8,$param9);
       }
   }
   function & getStaticProperty($var)
@@ -132,5 +144,19 @@ class base {
       $rawName[0] = strtoupper($rawName[0]);
     }
     return preg_replace_callback('/[_-]([0-9,a-z])/', function($matches) {return strtoupper($matches[1]);}, $rawName);
+  }
+
+
+  private function eventIdHasAlias($eventId)
+  {
+      if (in_array($eventId, $this->aliases)) {
+          return true;
+      }
+      return false;
+  }
+
+  private function substituteAlias($eventId)
+  {
+      return $this->aliases[$eventId];
   }
 }
