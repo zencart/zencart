@@ -34,7 +34,7 @@ class AdminLoggingTest extends zcTestCase
         require_once DIR_FS_ADMIN . 'includes/classes/class.admin.zcObserverLogEventListener.php';
         require_once DIR_FS_ADMIN . 'includes/classes/class.admin.zcObserverLogWriterTextfile.php';
         require_once DIR_FS_ADMIN . 'includes/classes/class.admin.zcObserverLogWriterDatabase.php';
-        require_once(TESTCWD . 'support/zcObserverAliasTest.php');
+        require_once(TESTCWD . 'support/zcObserverAliasTestObject.php');
         vfsStreamWrapper::register();
         vfsStream::useDotFiles(false);
         $_SESSION['securityToken'] = 'abc';
@@ -370,10 +370,10 @@ class AdminLoggingTest extends zcTestCase
 
     public function testObserverAliasing()
     {
-        $zcObserverAliasTest = new zcObserverAliasTest;
-        $result = $zcObserverAliasTest->fireNotifierValid();
+        $zcObserverAliasTestObject = new zcObserverAliasTestObject;
+        $result = $zcObserverAliasTestObject->fireNotifierValid();
         $this->assertTrue($result == 'foobar');
-        $result = $zcObserverAliasTest->fireNotifierInvalid();
+        $result = $zcObserverAliasTestObject->fireNotifierInvalid();
         $this->assertTrue($result == 'bar');
     }
 }

@@ -1,6 +1,6 @@
 <?php
 
-class zcObserverAliasTest extends base
+class zcObserverAliasTestObject extends base
 {
     function __construct()
     {
