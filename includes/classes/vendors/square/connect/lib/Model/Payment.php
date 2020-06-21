@@ -225,7 +225,7 @@ class Payment implements ArrayAccess
       */
     protected $delayed_until;
     /**
-      * $source_type The source type for this payment  Current values include: `CARD`
+      * $source_type The source type for this payment  Current values include: `CARD`.
       * @var string
       */
     protected $source_type;
@@ -250,7 +250,7 @@ class Payment implements ArrayAccess
       */
     protected $reference_id;
     /**
-      * $customer_id An optional customer_id to be entered by the developer when creating a payment.
+      * $customer_id The `Customer` ID of the customer associated with the payment.
       * @var string
       */
     protected $customer_id;
@@ -285,7 +285,7 @@ class Payment implements ArrayAccess
       */
     protected $note;
     /**
-      * $statement_description_identifier Additional payment information that gets added on the customer's card statement as part of the statement description.  Note that the statement_description_identifier may get truncated on the statement description to fit the required information including the Square identifier (SQ *) and name of the merchant taking the payment.
+      * $statement_description_identifier Additional payment information that gets added on the customer's card statement as part of the statement description.  Note that the `statement_description_identifier` may get truncated on the statement description to fit the required information including the Square identifier (SQ *) and name of the merchant taking the payment.
       * @var string
       */
     protected $statement_description_identifier;
@@ -707,7 +707,7 @@ class Payment implements ArrayAccess
   
     /**
      * Sets source_type
-     * @param string $source_type The source type for this payment  Current values include: `CARD`
+     * @param string $source_type The source type for this payment  Current values include: `CARD`.
      * @return $this
      */
     public function setSourceType($source_type)
@@ -802,7 +802,7 @@ class Payment implements ArrayAccess
   
     /**
      * Sets customer_id
-     * @param string $customer_id An optional customer_id to be entered by the developer when creating a payment.
+     * @param string $customer_id The `Customer` ID of the customer associated with the payment.
      * @return $this
      */
     public function setCustomerId($customer_id)
@@ -935,7 +935,7 @@ class Payment implements ArrayAccess
   
     /**
      * Sets statement_description_identifier
-     * @param string $statement_description_identifier Additional payment information that gets added on the customer's card statement as part of the statement description.  Note that the statement_description_identifier may get truncated on the statement description to fit the required information including the Square identifier (SQ *) and name of the merchant taking the payment.
+     * @param string $statement_description_identifier Additional payment information that gets added on the customer's card statement as part of the statement description.  Note that the `statement_description_identifier` may get truncated on the statement description to fit the required information including the Square identifier (SQ *) and name of the merchant taking the payment.
      * @return $this
      */
     public function setStatementDescriptionIdentifier($statement_description_identifier)

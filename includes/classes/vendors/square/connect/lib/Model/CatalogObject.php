@@ -49,7 +49,8 @@ class CatalogObject implements ArrayAccess
         'measurement_unit_data' => '\SquareConnect\Model\CatalogMeasurementUnit',
         'item_option_data' => '\SquareConnect\Model\CatalogItemOption',
         'item_option_value_data' => '\SquareConnect\Model\CatalogItemOptionValue',
-        'custom_attribute_definition_data' => '\SquareConnect\Model\CatalogCustomAttributeDefinition'
+        'custom_attribute_definition_data' => '\SquareConnect\Model\CatalogCustomAttributeDefinition',
+        'quick_amounts_settings_data' => '\SquareConnect\Model\CatalogQuickAmountsSettings'
     );
   
     /** 
@@ -82,7 +83,8 @@ class CatalogObject implements ArrayAccess
         'measurement_unit_data' => 'measurement_unit_data',
         'item_option_data' => 'item_option_data',
         'item_option_value_data' => 'item_option_value_data',
-        'custom_attribute_definition_data' => 'custom_attribute_definition_data'
+        'custom_attribute_definition_data' => 'custom_attribute_definition_data',
+        'quick_amounts_settings_data' => 'quick_amounts_settings_data'
     );
   
     /**
@@ -115,7 +117,8 @@ class CatalogObject implements ArrayAccess
         'measurement_unit_data' => 'setMeasurementUnitData',
         'item_option_data' => 'setItemOptionData',
         'item_option_value_data' => 'setItemOptionValueData',
-        'custom_attribute_definition_data' => 'setCustomAttributeDefinitionData'
+        'custom_attribute_definition_data' => 'setCustomAttributeDefinitionData',
+        'quick_amounts_settings_data' => 'setQuickAmountsSettingsData'
     );
   
     /**
@@ -148,7 +151,8 @@ class CatalogObject implements ArrayAccess
         'measurement_unit_data' => 'getMeasurementUnitData',
         'item_option_data' => 'getItemOptionData',
         'item_option_value_data' => 'getItemOptionValueData',
-        'custom_attribute_definition_data' => 'getCustomAttributeDefinitionData'
+        'custom_attribute_definition_data' => 'getCustomAttributeDefinitionData',
+        'quick_amounts_settings_data' => 'getQuickAmountsSettingsData'
     );
   
     /**
@@ -177,7 +181,7 @@ class CatalogObject implements ArrayAccess
       */
     protected $is_deleted;
     /**
-      * $custom_attribute_values Application-defined key/value attributes that are set at a global (location-independent) level. Values from the `*_data` fields may not be duplicated. Custom Attribute fields are intended to store additional information about a Catalog Object or associations with an entity in another system. Do not use custom attributes to store any sensitive information (personally identifiable information, card details, etc.).  For CustomAttributesDefinitions defined by the app making the request, the map key is the key defined in CustomAttributeDefinition (eg. “reference_id”). For CustomAttributesDefinitions by other apps, the map key is the key defined in CustomAttributeDefinition prefixed with the application ID and a colon (eg. “abcd1234:reference_id”).
+      * $custom_attribute_values Application-defined key/value attributes that are set at a global (location-independent) level. Custom Attribute Values are intended to store additional information about a Catalog Object or associations with an entity in another system. Do not use custom attributes to store any sensitive information (personally identifiable information, card details, etc.).  For CustomAttributesDefinitions defined by the app making the request, the map key is the key defined in the `CatalogCustomAttributeDefinition` (e.g. “reference_id”). For custom attributes created by other apps, the map key is the key defined in `CatalogCustomAttributeDefinition` prefixed with the application ID and a colon (eg. “abcd1234:reference_id”).
       * @var map[string,\SquareConnect\Model\CatalogCustomAttributeValue]
       */
     protected $custom_attribute_values;
@@ -281,6 +285,11 @@ class CatalogObject implements ArrayAccess
       * @var \SquareConnect\Model\CatalogCustomAttributeDefinition
       */
     protected $custom_attribute_definition_data;
+    /**
+      * $quick_amounts_settings_data Structured data for a `CatalogQuickAmountsSettings`, set for CatalogObjects of type `QUICK_AMOUNTS_SETTINGS`.
+      * @var \SquareConnect\Model\CatalogQuickAmountsSettings
+      */
+    protected $quick_amounts_settings_data;
 
     /**
      * Constructor
@@ -419,6 +428,11 @@ class CatalogObject implements ArrayAccess
             } else {
               $this->custom_attribute_definition_data = null;
             }
+            if (isset($data["quick_amounts_settings_data"])) {
+              $this->quick_amounts_settings_data = $data["quick_amounts_settings_data"];
+            } else {
+              $this->quick_amounts_settings_data = null;
+            }
         }
     }
     /**
@@ -527,7 +541,7 @@ class CatalogObject implements ArrayAccess
   
     /**
      * Sets custom_attribute_values
-     * @param map[string,\SquareConnect\Model\CatalogCustomAttributeValue] $custom_attribute_values Application-defined key/value attributes that are set at a global (location-independent) level. Values from the `*_data` fields may not be duplicated. Custom Attribute fields are intended to store additional information about a Catalog Object or associations with an entity in another system. Do not use custom attributes to store any sensitive information (personally identifiable information, card details, etc.).  For CustomAttributesDefinitions defined by the app making the request, the map key is the key defined in CustomAttributeDefinition (eg. “reference_id”). For CustomAttributesDefinitions by other apps, the map key is the key defined in CustomAttributeDefinition prefixed with the application ID and a colon (eg. “abcd1234:reference_id”).
+     * @param map[string,\SquareConnect\Model\CatalogCustomAttributeValue] $custom_attribute_values Application-defined key/value attributes that are set at a global (location-independent) level. Custom Attribute Values are intended to store additional information about a Catalog Object or associations with an entity in another system. Do not use custom attributes to store any sensitive information (personally identifiable information, card details, etc.).  For CustomAttributesDefinitions defined by the app making the request, the map key is the key defined in the `CatalogCustomAttributeDefinition` (e.g. “reference_id”). For custom attributes created by other apps, the map key is the key defined in `CatalogCustomAttributeDefinition` prefixed with the application ID and a colon (eg. “abcd1234:reference_id”).
      * @return $this
      */
     public function setCustomAttributeValues($custom_attribute_values)
@@ -913,6 +927,25 @@ class CatalogObject implements ArrayAccess
     public function setCustomAttributeDefinitionData($custom_attribute_definition_data)
     {
         $this->custom_attribute_definition_data = $custom_attribute_definition_data;
+        return $this;
+    }
+    /**
+     * Gets quick_amounts_settings_data
+     * @return \SquareConnect\Model\CatalogQuickAmountsSettings
+     */
+    public function getQuickAmountsSettingsData()
+    {
+        return $this->quick_amounts_settings_data;
+    }
+  
+    /**
+     * Sets quick_amounts_settings_data
+     * @param \SquareConnect\Model\CatalogQuickAmountsSettings $quick_amounts_settings_data Structured data for a `CatalogQuickAmountsSettings`, set for CatalogObjects of type `QUICK_AMOUNTS_SETTINGS`.
+     * @return $this
+     */
+    public function setQuickAmountsSettingsData($quick_amounts_settings_data)
+    {
+        $this->quick_amounts_settings_data = $quick_amounts_settings_data;
         return $this;
     }
     /**

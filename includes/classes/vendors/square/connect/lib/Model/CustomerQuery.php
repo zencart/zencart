@@ -56,12 +56,12 @@ class CustomerQuery implements ArrayAccess
     );
   
     /**
-      * $filter A list of filter criteria.
+      * $filter A list of filtering criteria.
       * @var \SquareConnect\Model\CustomerFilter
       */
     protected $filter;
     /**
-      * $sort Sort criteria for query results. The default sort behavior is to order customers alphabetically by `given_name` and `last_name`.
+      * $sort Sorting criteria for query results. The default behavior is to sort  customers alphabetically by `given_name` and `family_name`.
       * @var \SquareConnect\Model\CustomerSort
       */
     protected $sort;
@@ -96,7 +96,7 @@ class CustomerQuery implements ArrayAccess
   
     /**
      * Sets filter
-     * @param \SquareConnect\Model\CustomerFilter $filter A list of filter criteria.
+     * @param \SquareConnect\Model\CustomerFilter $filter A list of filtering criteria.
      * @return $this
      */
     public function setFilter($filter)
@@ -115,7 +115,7 @@ class CustomerQuery implements ArrayAccess
   
     /**
      * Sets sort
-     * @param \SquareConnect\Model\CustomerSort $sort Sort criteria for query results. The default sort behavior is to order customers alphabetically by `given_name` and `last_name`.
+     * @param \SquareConnect\Model\CustomerSort $sort Sorting criteria for query results. The default behavior is to sort  customers alphabetically by `given_name` and `family_name`.
      * @return $this
      */
     public function setSort($sort)

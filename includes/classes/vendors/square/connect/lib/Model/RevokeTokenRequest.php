@@ -26,7 +26,8 @@ class RevokeTokenRequest implements ArrayAccess
     static $swaggerTypes = array(
         'client_id' => 'string',
         'access_token' => 'string',
-        'merchant_id' => 'string'
+        'merchant_id' => 'string',
+        'revoke_only_access_token' => 'bool'
     );
   
     /** 
@@ -36,7 +37,8 @@ class RevokeTokenRequest implements ArrayAccess
     static $attributeMap = array(
         'client_id' => 'client_id',
         'access_token' => 'access_token',
-        'merchant_id' => 'merchant_id'
+        'merchant_id' => 'merchant_id',
+        'revoke_only_access_token' => 'revoke_only_access_token'
     );
   
     /**
@@ -46,7 +48,8 @@ class RevokeTokenRequest implements ArrayAccess
     static $setters = array(
         'client_id' => 'setClientId',
         'access_token' => 'setAccessToken',
-        'merchant_id' => 'setMerchantId'
+        'merchant_id' => 'setMerchantId',
+        'revoke_only_access_token' => 'setRevokeOnlyAccessToken'
     );
   
     /**
@@ -56,7 +59,8 @@ class RevokeTokenRequest implements ArrayAccess
     static $getters = array(
         'client_id' => 'getClientId',
         'access_token' => 'getAccessToken',
-        'merchant_id' => 'getMerchantId'
+        'merchant_id' => 'getMerchantId',
+        'revoke_only_access_token' => 'getRevokeOnlyAccessToken'
     );
   
     /**
@@ -74,6 +78,11 @@ class RevokeTokenRequest implements ArrayAccess
       * @var string
       */
     protected $merchant_id;
+    /**
+      * $revoke_only_access_token If `true`, terminate the given single access token, but do not terminate the entire authorization. Default: `false`
+      * @var bool
+      */
+    protected $revoke_only_access_token;
 
     /**
      * Constructor
@@ -96,6 +105,11 @@ class RevokeTokenRequest implements ArrayAccess
               $this->merchant_id = $data["merchant_id"];
             } else {
               $this->merchant_id = null;
+            }
+            if (isset($data["revoke_only_access_token"])) {
+              $this->revoke_only_access_token = $data["revoke_only_access_token"];
+            } else {
+              $this->revoke_only_access_token = null;
             }
         }
     }
@@ -154,6 +168,25 @@ class RevokeTokenRequest implements ArrayAccess
     public function setMerchantId($merchant_id)
     {
         $this->merchant_id = $merchant_id;
+        return $this;
+    }
+    /**
+     * Gets revoke_only_access_token
+     * @return bool
+     */
+    public function getRevokeOnlyAccessToken()
+    {
+        return $this->revoke_only_access_token;
+    }
+  
+    /**
+     * Sets revoke_only_access_token
+     * @param bool $revoke_only_access_token If `true`, terminate the given single access token, but do not terminate the entire authorization. Default: `false`
+     * @return $this
+     */
+    public function setRevokeOnlyAccessToken($revoke_only_access_token)
+    {
+        $this->revoke_only_access_token = $revoke_only_access_token;
         return $this;
     }
     /**

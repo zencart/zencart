@@ -3,13 +3,13 @@
  * Square payments module
  * www.squareup.com
  *
- * Integrated using SquareConnect PHP SDK 3.20200325.0
+ * Integrated using SquareConnect PHP SDK 3.20200528.1
  *
  * REQUIRES PHP 5.4 or newer
  *
  * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2020 May 21 Modified in v1.5.7 $
+ * @version $Id: DrByte 2020 June 20 Modified in v1.5.7 $
  */
 
 if (!defined('TABLE_SQUARE_PAYMENTS')) define('TABLE_SQUARE_PAYMENTS', DB_PREFIX . 'square_payments');
@@ -28,7 +28,7 @@ class square extends base
     /**
      * $moduleVersion is the plugin version number
      */
-    public $moduleVersion = '1.1';
+    public $moduleVersion = '1.3';
     /**
      * $title is the displayed name for this payment method
      *
@@ -74,7 +74,7 @@ class square extends base
     public function __construct()
     {
         require DIR_FS_CATALOG . DIR_WS_CLASSES . 'vendors/square/connect/autoload.php';
-        require_once DIR_FS_CATALOG . 'includes/modules/payment/square_support/ZenCartCreatePaymentRequest.php';
+        require_once DIR_FS_CATALOG . 'includes/modules/payment/square_support/ZenCartConnectCreatePaymentRequest.php';
 
         global $order;
         $this->code = 'square';
@@ -172,6 +172,9 @@ class square extends base
             'id' => $this->code,
             'module' => $this->title,
             'fields' => array(
+                array(
+                    'field' => '<div>' . MODULE_PAYMENT_SQUARE_TEXT_NOTICES_TO_CUSTOMER . '</div>',
+                ),
                 array(
                     'title' => MODULE_PAYMENT_SQUARE_TEXT_CREDIT_CARD_NUMBER,
                     'field' => '<div id="' . $this->code . '_cc-number"></div><div id="sq-card-brand"></div>',
@@ -306,7 +309,7 @@ class square extends base
             );
         }
 
-        $payment_request = new \SquareConnect\Model\ZenCartCreatePaymentRequest();
+        $payment_request = new \SquareConnect\Model\ZenCartConnectCreatePaymentRequest();
         $money = new \SquareConnect\Model\Money();
         $money->setAmount($this->convert_to_cents($payment_amount, $currency_code))->setCurrency((string)$currency_code);
         $payment_request->setAmountMoney($money);
@@ -1154,7 +1157,7 @@ class square extends base
         $api_instance = new \SquareConnect\Api\PaymentsApi($this->_apiConnection);
 
         try {
-            $result = $api_instance->completePayment($payment_id);
+            $result = $api_instance->completePayment($payment_id, new \SquareConnect\Model\CompletePaymentRequest([]));
             $errors_object = $result->getErrors();
             $this->logTransactionData(array('capture request' => 'payment ' . $payment_id), array(), (string)$errors_object);
         } catch (\SquareConnect\ApiException $e) {

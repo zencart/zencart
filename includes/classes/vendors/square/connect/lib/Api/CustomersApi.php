@@ -65,6 +65,116 @@ class CustomersApi
     }
   
     /**
+     * addGroupToCustomer
+     *
+     * AddGroupToCustomer
+     * Note: This endpoint is in beta.
+     *
+     * @param string $customer_id The ID of the customer to add to a group. (required)
+     * @param string $group_id The ID of the customer group to add the customer to. (required)
+     * @return \SquareConnect\Model\AddGroupToCustomerResponse
+     * @throws \SquareConnect\ApiException on non-2xx response
+     */
+    public function addGroupToCustomer($customer_id, $group_id)
+    {
+        list($response, $statusCode, $httpHeader) = $this->addGroupToCustomerWithHttpInfo ($customer_id, $group_id);
+        return $response; 
+    }
+
+
+    /**
+     * addGroupToCustomerWithHttpInfo
+     *
+     * AddGroupToCustomer
+     *
+     * @param string $customer_id The ID of the customer to add to a group. (required)
+     * @param string $group_id The ID of the customer group to add the customer to. (required)
+     * @return Array of \SquareConnect\Model\AddGroupToCustomerResponse, HTTP status code, HTTP response headers (array of strings)
+     * @throws \SquareConnect\ApiException on non-2xx response
+     */
+    public function addGroupToCustomerWithHttpInfo($customer_id, $group_id)
+    {
+        
+        // verify the required parameter 'customer_id' is set
+        if ($customer_id === null) {
+            throw new \InvalidArgumentException('Missing the required parameter $customer_id when calling addGroupToCustomer');
+        }
+        // verify the required parameter 'group_id' is set
+        if ($group_id === null) {
+            throw new \InvalidArgumentException('Missing the required parameter $group_id when calling addGroupToCustomer');
+        }
+  
+        // parse inputs
+        $resourcePath = "/v2/customers/{customer_id}/groups/{group_id}";
+        $httpBody = '';
+        $queryParams = array();
+        $headerParams = array();
+        $formParams = array();
+        $_header_accept = ApiClient::selectHeaderAccept(array('application/json'));
+        if (!is_null($_header_accept)) {
+            $headerParams['Accept'] = $_header_accept;
+        }
+        $headerParams['Content-Type'] = ApiClient::selectHeaderContentType(array('application/json'));
+        $headerParams['Square-Version'] = "2020-05-28";
+
+        
+        
+        // path params
+        if ($customer_id !== null) {
+            $resourcePath = str_replace(
+                "{" . "customer_id" . "}",
+                $this->apiClient->getSerializer()->toPathValue($customer_id),
+                $resourcePath
+            );
+        }// path params
+        if ($group_id !== null) {
+            $resourcePath = str_replace(
+                "{" . "group_id" . "}",
+                $this->apiClient->getSerializer()->toPathValue($group_id),
+                $resourcePath
+            );
+        }
+        // default format to json
+        $resourcePath = str_replace("{format}", "json", $resourcePath);
+
+        
+        
+  
+        // for model (json/xml)
+        if (isset($_tempBody)) {
+            $httpBody = $_tempBody; // $_tempBody is the method argument, if present
+        } elseif (count($formParams) > 0) {
+            $httpBody = $formParams; // for HTTP post (form)
+        }
+        
+        // this endpoint requires OAuth (access token)
+        if (strlen($this->apiClient->getConfig()->getAccessToken()) !== 0) {
+            $headerParams['Authorization'] = 'Bearer ' . $this->apiClient->getConfig()->getAccessToken();
+        }
+        // make the API Call
+        try {
+            list($response, $statusCode, $httpHeader) = $this->apiClient->callApi(
+                $resourcePath, 'PUT',
+                $queryParams, $httpBody,
+                $headerParams, '\SquareConnect\Model\AddGroupToCustomerResponse'
+            );
+            if (!$response) {
+                return array(null, $statusCode, $httpHeader);
+            }
+
+            return array(\SquareConnect\ObjectSerializer::deserialize($response, '\SquareConnect\Model\AddGroupToCustomerResponse', $httpHeader), $statusCode, $httpHeader);
+                    } catch (ApiException $e) {
+            switch ($e->getCode()) { 
+            case 200:
+                $data = \SquareConnect\ObjectSerializer::deserialize($e->getResponseBody(), '\SquareConnect\Model\AddGroupToCustomerResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            }
+  
+            throw $e;
+        }
+    }
+    /**
      * createCustomer
      *
      * CreateCustomer
@@ -108,7 +218,7 @@ class CustomersApi
             $headerParams['Accept'] = $_header_accept;
         }
         $headerParams['Content-Type'] = ApiClient::selectHeaderContentType(array('application/json'));
-        $headerParams['Square-Version'] = "2020-03-25";
+        $headerParams['Square-Version'] = "2020-05-28";
 
         
         
@@ -207,7 +317,7 @@ class CustomersApi
             $headerParams['Accept'] = $_header_accept;
         }
         $headerParams['Content-Type'] = ApiClient::selectHeaderContentType(array('application/json'));
-        $headerParams['Square-Version'] = "2020-03-25";
+        $headerParams['Square-Version'] = "2020-05-28";
 
         
         
@@ -307,7 +417,7 @@ class CustomersApi
             $headerParams['Accept'] = $_header_accept;
         }
         $headerParams['Content-Type'] = ApiClient::selectHeaderContentType(array('application/json'));
-        $headerParams['Square-Version'] = "2020-03-25";
+        $headerParams['Square-Version'] = "2020-05-28";
 
         
         
@@ -409,7 +519,7 @@ class CustomersApi
             $headerParams['Accept'] = $_header_accept;
         }
         $headerParams['Content-Type'] = ApiClient::selectHeaderContentType(array('application/json'));
-        $headerParams['Square-Version'] = "2020-03-25";
+        $headerParams['Square-Version'] = "2020-05-28";
 
         
         
@@ -512,7 +622,7 @@ class CustomersApi
             $headerParams['Accept'] = $_header_accept;
         }
         $headerParams['Content-Type'] = ApiClient::selectHeaderContentType(array('application/json'));
-        $headerParams['Square-Version'] = "2020-03-25";
+        $headerParams['Square-Version'] = "2020-05-28";
 
         // query params
         if ($cursor !== null) {
@@ -567,6 +677,116 @@ class CustomersApi
         }
     }
     /**
+     * removeGroupFromCustomer
+     *
+     * RemoveGroupFromCustomer
+     * Note: This endpoint is in beta.
+     *
+     * @param string $customer_id The ID of the customer to remove from the group. (required)
+     * @param string $group_id The ID of the customer group to remove the customer from. (required)
+     * @return \SquareConnect\Model\RemoveGroupFromCustomerResponse
+     * @throws \SquareConnect\ApiException on non-2xx response
+     */
+    public function removeGroupFromCustomer($customer_id, $group_id)
+    {
+        list($response, $statusCode, $httpHeader) = $this->removeGroupFromCustomerWithHttpInfo ($customer_id, $group_id);
+        return $response; 
+    }
+
+
+    /**
+     * removeGroupFromCustomerWithHttpInfo
+     *
+     * RemoveGroupFromCustomer
+     *
+     * @param string $customer_id The ID of the customer to remove from the group. (required)
+     * @param string $group_id The ID of the customer group to remove the customer from. (required)
+     * @return Array of \SquareConnect\Model\RemoveGroupFromCustomerResponse, HTTP status code, HTTP response headers (array of strings)
+     * @throws \SquareConnect\ApiException on non-2xx response
+     */
+    public function removeGroupFromCustomerWithHttpInfo($customer_id, $group_id)
+    {
+        
+        // verify the required parameter 'customer_id' is set
+        if ($customer_id === null) {
+            throw new \InvalidArgumentException('Missing the required parameter $customer_id when calling removeGroupFromCustomer');
+        }
+        // verify the required parameter 'group_id' is set
+        if ($group_id === null) {
+            throw new \InvalidArgumentException('Missing the required parameter $group_id when calling removeGroupFromCustomer');
+        }
+  
+        // parse inputs
+        $resourcePath = "/v2/customers/{customer_id}/groups/{group_id}";
+        $httpBody = '';
+        $queryParams = array();
+        $headerParams = array();
+        $formParams = array();
+        $_header_accept = ApiClient::selectHeaderAccept(array('application/json'));
+        if (!is_null($_header_accept)) {
+            $headerParams['Accept'] = $_header_accept;
+        }
+        $headerParams['Content-Type'] = ApiClient::selectHeaderContentType(array('application/json'));
+        $headerParams['Square-Version'] = "2020-05-28";
+
+        
+        
+        // path params
+        if ($customer_id !== null) {
+            $resourcePath = str_replace(
+                "{" . "customer_id" . "}",
+                $this->apiClient->getSerializer()->toPathValue($customer_id),
+                $resourcePath
+            );
+        }// path params
+        if ($group_id !== null) {
+            $resourcePath = str_replace(
+                "{" . "group_id" . "}",
+                $this->apiClient->getSerializer()->toPathValue($group_id),
+                $resourcePath
+            );
+        }
+        // default format to json
+        $resourcePath = str_replace("{format}", "json", $resourcePath);
+
+        
+        
+  
+        // for model (json/xml)
+        if (isset($_tempBody)) {
+            $httpBody = $_tempBody; // $_tempBody is the method argument, if present
+        } elseif (count($formParams) > 0) {
+            $httpBody = $formParams; // for HTTP post (form)
+        }
+        
+        // this endpoint requires OAuth (access token)
+        if (strlen($this->apiClient->getConfig()->getAccessToken()) !== 0) {
+            $headerParams['Authorization'] = 'Bearer ' . $this->apiClient->getConfig()->getAccessToken();
+        }
+        // make the API Call
+        try {
+            list($response, $statusCode, $httpHeader) = $this->apiClient->callApi(
+                $resourcePath, 'DELETE',
+                $queryParams, $httpBody,
+                $headerParams, '\SquareConnect\Model\RemoveGroupFromCustomerResponse'
+            );
+            if (!$response) {
+                return array(null, $statusCode, $httpHeader);
+            }
+
+            return array(\SquareConnect\ObjectSerializer::deserialize($response, '\SquareConnect\Model\RemoveGroupFromCustomerResponse', $httpHeader), $statusCode, $httpHeader);
+                    } catch (ApiException $e) {
+            switch ($e->getCode()) { 
+            case 200:
+                $data = \SquareConnect\ObjectSerializer::deserialize($e->getResponseBody(), '\SquareConnect\Model\RemoveGroupFromCustomerResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            }
+  
+            throw $e;
+        }
+    }
+    /**
      * retrieveCustomer
      *
      * RetrieveCustomer
@@ -610,7 +830,7 @@ class CustomersApi
             $headerParams['Accept'] = $_header_accept;
         }
         $headerParams['Content-Type'] = ApiClient::selectHeaderContentType(array('application/json'));
-        $headerParams['Square-Version'] = "2020-03-25";
+        $headerParams['Square-Version'] = "2020-05-28";
 
         
         
@@ -706,7 +926,7 @@ class CustomersApi
             $headerParams['Accept'] = $_header_accept;
         }
         $headerParams['Content-Type'] = ApiClient::selectHeaderContentType(array('application/json'));
-        $headerParams['Square-Version'] = "2020-03-25";
+        $headerParams['Square-Version'] = "2020-05-28";
 
         
         
@@ -805,7 +1025,7 @@ class CustomersApi
             $headerParams['Accept'] = $_header_accept;
         }
         $headerParams['Content-Type'] = ApiClient::selectHeaderContentType(array('application/json'));
-        $headerParams['Square-Version'] = "2020-03-25";
+        $headerParams['Square-Version'] = "2020-05-28";
 
         
         

@@ -115,7 +115,7 @@ class ObtainTokenResponse implements ArrayAccess
       */
     protected $id_token;
     /**
-      * $refresh_token A refresh token. For more information, see [OAuth access token management](https://developer.squareup.com/docs/authz/oauth/how-it-works#oauth-access-token-management).
+      * $refresh_token A refresh token. OAuth refresh tokens are 64 bytes long. For more information, see [OAuth access token management](https://developer.squareup.com/docs/authz/oauth/how-it-works#oauth-access-token-management).
       * @var string
       */
     protected $refresh_token;
@@ -313,7 +313,7 @@ class ObtainTokenResponse implements ArrayAccess
   
     /**
      * Sets refresh_token
-     * @param string $refresh_token A refresh token. For more information, see [OAuth access token management](https://developer.squareup.com/docs/authz/oauth/how-it-works#oauth-access-token-management).
+     * @param string $refresh_token A refresh token. OAuth refresh tokens are 64 bytes long. For more information, see [OAuth access token management](https://developer.squareup.com/docs/authz/oauth/how-it-works#oauth-access-token-management).
      * @return $this
      */
     public function setRefreshToken($refresh_token)

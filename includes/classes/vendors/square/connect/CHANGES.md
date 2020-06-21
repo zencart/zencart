@@ -1,9 +1,118 @@
 # Change Log
 
+## Version 3.20200528.1 (2020-05-28)
+## Square SDK - PHP 
+Square is excited to announce the public release of customized SDK for PHP
+
+To align with other Square SDKs generated for SQUARE API version 2020-05-28, the initial version of this PHP SDK is 5.0.0.20200528
+
+## Version 3.20200528.0 (2020-05-28)
+## API releases
+
+* Loyalty API (beta):
+  * For an overview, see [Loyalty Program Overview](https://developer.squareup.com/docs/loyalty/overview).
+  * For technical reference, see [Loyalty API](https://developer.squareup.com/reference/square/loyalty-api).
+
+## Existing API updates
+
+* Orders API
+  * [CalculateOrder (beta)](https://developer.squareup.com/reference/square/orders-api/calculate-order) endpoint. Use the endpoint to calculate adjustments (for example, taxes and discounts) to an order for preview purposes. In response, the endpoint returns the order showing the calculated totals. You can use this endpoint with an existing order or an order that has not been created.
+  The endpoint does not update an existing order. It only returns a calculated view of the order that you provided in the request. To create or update an order, use the [CreateOrder](https://developer.squareup.com/reference/square/orders-api/create-order) and [UpdateOrder](https://developer.squareup.com/reference/square/orders-api/update-order) endpoints, respectively.
+  * [Order](https://developer.squareup.com/reference/square_2020-05-28/objects/Order) type. Two fields are added in support of the Loyalty API integration. For more information, see [Deferred reward creation](https://developer.squareup.com/docs/loyalty-api/overview#deferred-reward-creation). For an example, see [Redeem Points](https://developer.squareup.com/docs/loyalty-api/walkthrough1/redeem-points).
+    * `Order.rewards` represents rewards added to an order by calling the [CreateLoyaltyReward](https://developer.squareup.com/reference/square/loyalty-api/create-loyalty-reward) endpoint.
+    * `Order.discount.reward_ids` indicates that a discount is the result of the specified rewards that were added to an order using the `CreateLoyaltyReward` endpoint.
+
+* Customers API
+  * The [Search Customers](https://developer.squareup.com/reference/square/customers-api/search-customers) endpoint supports search by email address, phone number, and reference ID with the following additional query filters:
+    * The [`email_address` query filter](https://developer.squareup.com/docs/customers-api/cookbook/search-customers#search-by-email-address) (beta) supports an [exact](https://developer.squareup.com/docs/customers-api/cookbook/search-customers#exact-search-by-email-address) or [fuzzy](https://developer.squareup.com/docs/customers-api/cookbook/search-customers#fuzzy-search-by-email-address) search for customer profiles by their email addresses.
+    * The [`phone_number` query filter](https://developer.squareup.com/docs/customers-api/cookbook/search-customers#search-by-phone-number) (beta) supports an [exact](https://developer.squareup.com/docs/customers-api/cookbook/search-customers#exact-search-by-phone-number) or [fuzzy](https://developer.squareup.com/docs/customers-api/cookbook/search-customers#fuzzy-search-by-phone-number) search for customer profiles by their phone numbers.
+    * The [`reference_id` query filter](https://developer.squareup.com/docs/customers-api/cookbook/search-customers#search-by-reference-id) (beta) supports an [exact](https://developer.squareup.com/docs/customers-api/cookbook/search-customers#exact-search-by-reference-id) or [fuzzy](https://developer.squareup.com/docs/customers-api/cookbook/search-customers#fuzzy-search-by-reference-id) search for customer profiles by their reference IDs.
+  * The [`created_at`](https://developer.squareup.com/reference/square/objects/Customer#definition__property-created_at), [`updated_at`](https://developer.squareup.com/reference/square/objects/Customer#definition__property-updated_at), and [`id`](https://developer.squareup.com/reference/square/objects/Customer#definition__property-id) attributes on the [Customer](https://developer.squareup.com/docs/S%7BSQUARE_TECH_REF%7D/objects/customers) resource are updated to be optional. As a result, they no longer are required input parameters when you call the Square SDKs to create a `Customer` object. You might need to update the dependent SDKs to the latest version to mediate breaking your existing code.
+
+
+## Square Webhooks
+
+* [Square Webhooks](https://developer.squareup.com/reference/square_2020-05-28/webhooks) (formerly v2 Webhooks). The status is changed from beta to general availability (GA).
+* [v1 Webhooks](webhooks-api/v1-tech-ref). The v1 Inventory and Timecards webooks are now deprecated and replaced by [inventory.count.updated](https://developer.squareup.com/reference/square_2020-05-28/webhooks/inventory.count.updated) and [labor.shift.updated](https://developer.squareup.com/reference/square_2020-05-28/webhooks/labor.shift.updated).
+
+
+
+## Version 3.20200422.2 (2020-04-25)
+## Existing API updates
+
+* **OAuth API**
+  * [Obtain Token](https://developer.squareup.com/reference/square/oauth-api/revoke-token) endpoint: Removed the `scopes` property from the request body.
+
+
+## Version 3.20200422.1 (2020-04-22)
+## API releases
+* **Customer Segments API (beta).** `limit` field removed from **ListCustomerSegments** endpoint.
+
+
+**Note:** This release fixes a bug introduced on the [April 22, 2020](changelog/connect-logs/2020-04-22) release of the Square API.
+
+
+## Version 3.20200422.0 (2020-04-22)
+## API releases
+* **Terminal API.** The new Terminal API lets a custom third-party POS app integrate with the Square Terminal to send terminal checkout requests to collect payments.
+  * For an overview, see [Overview](/terminal-api/overview).
+  * For technical reference, see [Terminal API](https://developer.squareup.com/reference/square/terminal-api).
+
+* **Devices API.** The new Devices API lets a custom third-party POS app generate a code used to sign in to a Square Terminal to create a pairing that lets the POS app send terminal checkout requests. For technical reference, see [Devices API](https://developer.squareup.com/reference/square/devices-api).
+
+* **Customer Groups API (beta).** The new Customer Groups API (Beta) enables full CRUD management of customer groups, including the ability to list, retrieve, create, update, and delete customer groups. Previously, this functionality was only available through the Square dashboard and point-of-sale product interfaces. 
+  * For an overview, see [Overview](/customer-groups-api/what-it-does) 
+  * For technical reference, see [Customer Groups](https://developer.squareup.com/reference/square/customer-groups-api).  
+
+* **Customer Segments API (beta).** The new Customer Segments API (Beta) lets you list and retrieve customer segment (also called smart groups) information. Coupled with the new `segment_ids` field on the customer resource, this API lets you better understand and track the customer segments to which a customer belongs.
+  * For an overview, see [Overview](/customer-segmentss-api/what-it-does) 
+  * For technical reference, see [Customer Segments]( https://developer.squareup.com/reference/square/customer-segments-api).  
+
+   
+* **New webhooks.** v2 Webhooks (beta) now supports webhooks for the following APIs:
+  * Orders API. `order.created`, `order.updated`, and `order.fulfillment.updated`
+  * Terminal API. `terminal.checkout.created` and `terminal.checkout.updated`
+  * Devices API. `device.code.paired`
+ 
+  For more information, see [Subscribe to Events](webhooks-api/subscribe-to-events).
+
+## Existing API updates
+* **Customers API**
+	* [AddGroupToCustomer](https://developer.squareup.com/reference/square/customers-api/add-group-to-customer) endpoint. Added to add customer memberships to a customer group.  
+	* [RemoveGroupFromCustomer](https://developer.squareup.com/reference/square/customers-api/remove-group-from-customer) endpoint. Added to remove customer memberships from a customer group.
+	* [Customer](https://developer.squareup.com/reference/square/obects/Customer) object. Updated as follows:
+		* [`group_ids`](https://developer.squareup.com/reference/square/obects/Customer#definition__property-group_ids) field. Added to designate groups the customer is in.
+		* [`segment_ids`](https://developer.squareup.com/reference/square/obects/Customer#definition__property-segment_ids) field. Added to designate segments the customer is in. 
+		* [`groups`](https://developer.squareup.com/reference/square/obects/Customer#definition__property-groups) field. Deprecated to be replaced by `group_ids` and `segment_ids`. It remains supported for one year from this release.
+	* [CustomerQuery](https://developer.squareup.com/reference/square/objects/CustomerQuery) object's `filter` parameter. Updated as follows:  
+		*  `group_ids` filter. Added to search for customers based on whether they belong to any, all, or none of the specified groups.
+
+
+* **Orders API**
+  * [OrderFulfillmentPickupDetails](https://developer.squareup.com/reference/square/objects/OrderFulfillmentPickupDetails) type updated to support curbside pickup:
+    * `is_curbside_pickup`. This Boolean field indicates curbside pickup.
+    * `CurbsidePickupDetails`. This type provides supporting information for curbside pickup, including a buyer description (for example, "buyer is in a red car") and a timestamp when the buyer arrived for the pickup.
+
+
+* **OAuth API**
+  * [RevokeToken](https://developer.squareup.com/reference/square/oauth-api/revoke-token) endpoint. Added a new field called [revoke_only_access_token](https://developer.squareup.com/reference/square/oauth-api/revoke-token#request__property-revoke_only_access_token). This field allows a client to revoke an access token but leave the parent authorization active.
+  * [ObtainToken](https://developer.squareup.com/reference/square/oauth-api/obtain-token) endpoint. Added a new field called [scopes](https://developer.squareup.com/reference/square/oauth-api/obtain-token#request__property-scopes). This field lets a client change the set of permissions for an access token when making a request to refresh the token.
+
+
+* **Catalog API**
+  * [CatalogQuickAmountsSettings](https://developer.squareup.com/reference/square/objects/CatalogQuickAmountsSettings) type. Added to support predefined custom payment amounts in the Square Register checkout dialog box.
+  * ENUM`CatalogItemProductType`. The ENUM value `GIFT_CARD` is now deprecated.
+
+* **Payments API.** See [Take Payments and Collect Fees](/payments-api/take-payments-and-collect-fees) for updated information about permission requirements, Square reporting of the application fee collected by an app, and how to collect fees internationally.   
+
+
+
+
+
 ## Version 3.20200325.0 (2020-03-25)
 ## Existing API updates
-* **[Payments API](${SQUARE_TECH_REF}/payments-api).** In support of the existing [Delayed capture](payments-api/take-payments) for payments, the following fields are added to the [Payment](${SQUARE_TECH_REF}/objects/Payment) type:
-   * `delay_duration`. In a [CreatePayment](${SQUARE_TECH_REF}/payments-api/create-payment) request, you can set `autocomplete` to false to get  payment approval but not charge the payment source. You can now add this field to specify a time period to complete (or cancel) the payment. For more information, see [Delay capture](payments-api/take-payments).
+* **[Payments API](https://developer.squareup.com/reference/square/payments-api).** In support of the existing [Delayed capture](payments-api/take-payments) for payments, the following fields are added to the [Payment](https://developer.squareup.com/reference/square/objects/Payment) type:
+   * `delay_duration`. In a [CreatePayment](https://developer.squareup.com/reference/square/payments-api/create-payment) request, you can set `autocomplete` to false to get  payment approval but not charge the payment source. You can now add this field to specify a time period to complete (or cancel) the payment. For more information, see [Delay capture](payments-api/take-payments).
    * `delay_action`. Defines the action that Square takes on the payment when the `delay_duration` elapses. In this release, the API supports only the cancel payment action.
    * `delayed_until`. Provides the date and time on Square servers when Square applies `delay_action` on the payment.
 
@@ -60,7 +169,7 @@ All SDKs have been updated to support the following changes:
 Square is excited to announce the public release of customized SDKs for [Java](https://github.com/square/square-java-sdk) and [.NET](https://github.com/square/square-dotnet-sdk). For more information, see [Square SDKs](/sdks).
 !!!
 
-* __GA release:__ SDKs updated to support new `receipt_url` and `receipt_number` fields added to the  [Payment](${SQUARE_TECH_REF}/objects/Payment) type.  
+* __GA release:__ SDKs updated to support new `receipt_url` and `receipt_number` fields added to the  [Payment](https://developer.squareup.com/reference/square/objects/Payment) type.  
 
 * __Beta release:__ SDKs updated to support the new [CashDrawerShifts](cashdrawershift-api/reporting) API.
 

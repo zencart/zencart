@@ -57,7 +57,7 @@ class CatalogCustomAttributeDefinitionSelectionConfig implements ArrayAccess
     );
   
     /**
-      * $max_allowed_selections The maximum number of selections that can be set. The maximum value for this attribute is 100. May be modified, but changing the value will not affect existing custom attribute values on objects. Clients need to handle Custom Attributes with more selected values than allowed by this limit.
+      * $max_allowed_selections The maximum number of selections that can be set. The maximum value for this attribute is 100. The default value is 1. The value can be modified, but changing the value will not affect existing custom attribute values on objects. Clients need to handle custom attributes with more selected values than allowed by this limit.
       * @var int
       */
     protected $max_allowed_selections;
@@ -97,7 +97,7 @@ class CatalogCustomAttributeDefinitionSelectionConfig implements ArrayAccess
   
     /**
      * Sets max_allowed_selections
-     * @param int $max_allowed_selections The maximum number of selections that can be set. The maximum value for this attribute is 100. May be modified, but changing the value will not affect existing custom attribute values on objects. Clients need to handle Custom Attributes with more selected values than allowed by this limit.
+     * @param int $max_allowed_selections The maximum number of selections that can be set. The maximum value for this attribute is 100. The default value is 1. The value can be modified, but changing the value will not affect existing custom attribute values on objects. Clients need to handle custom attributes with more selected values than allowed by this limit.
      * @return $this
      */
     public function setMaxAllowedSelections($max_allowed_selections)
