@@ -103,27 +103,26 @@ class base
 
             // Notify the listening observers that this event has been triggered
 
-            // First we check for a snake_cased method name of the notifier Event, IF IT STARTS WITH "notify_" or "notifier_"
+            $methodsToCheck = [];
+            // Check for a snake_cased method name of the notifier Event, ONLY IF it begins with "NOTIFY_" or "NOTIFIER_"
             $snake_case_method = strtolower($actualEventId);
             if (preg_match('/^notif(y|ier)_/', $snake_case_method) && method_exists($obs['obs'], $snake_case_method)) {
-                $obs['obs']->{$snake_case_method}($this, $actualEventId, $param1, $param2, $param3, $param4, $param5, $param6, $param7, $param8, $param9);
-                return;
+                $methodsToCheck[] = $snake_case_method;
             }
-            // If the first check failed, we check for a camelCased version starting with "update" ie: updateNotifierNameCamelCased()
-            // If the camelCased version is not found, we call "update()".
-            $method = 'update';
-            $camelCaseMethod = 'update' . self::camelize(strtolower($actualEventId), true);
-            if (method_exists($obs['obs'], $camelCaseMethod)) {
-                $method = $camelCaseMethod;
-            }
-            // If it doesn't exist then a PHP fatal error will occur.
+            // alternates are a camelCased version starting with "update" ie: updateNotifierNameCamelCased(), or just "update()"
+            $methodsToCheck[] = 'update' . self::camelize(strtolower($actualEventId), true);
+            $methodsToCheck[] = 'update';
+
+            foreach($methodsToCheck as $method) {
                 if (method_exists($obs['obs'], $method)) {
                     $obs['obs']->{$method}($this, $actualEventId, $param1, $param2, $param3, $param4, $param5, $param6, $param7, $param8, $param9);
-            } else {
+                    return;
+                }
+            }
+            // If no update handler method exists then trigger an error so the problem is logged
             $className = (is_object($obs['obs'])) ? get_class($obs['obs']) : $obs['obs'];
             trigger_error('WARNING: No update() method (or matching alternative) found in the ' . $className . ' class for event ' . $actualEventId, E_USER_WARNING);
         }
-    }
     }
 
     function & getStaticProperty($var)
