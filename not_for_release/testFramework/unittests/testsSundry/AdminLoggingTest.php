@@ -34,7 +34,6 @@ class AdminLoggingTest extends zcTestCase
         require_once DIR_FS_ADMIN . 'includes/classes/class.admin.zcObserverLogEventListener.php';
         require_once DIR_FS_ADMIN . 'includes/classes/class.admin.zcObserverLogWriterTextfile.php';
         require_once DIR_FS_ADMIN . 'includes/classes/class.admin.zcObserverLogWriterDatabase.php';
-        require_once(TESTCWD . 'support/zcObserverAliasTestObject.php');
         vfsStreamWrapper::register();
         vfsStream::useDotFiles(false);
         $_SESSION['securityToken'] = 'abc';
@@ -366,14 +365,5 @@ class AdminLoggingTest extends zcTestCase
         $this->assertTrue($result[6]['fieldName'] == 'flagged' && $result[6]['value'] == $flagged);
         $this->assertTrue($result[8]['fieldName'] == 'severity' && $result[8]['value'] == $severity);
         $this->assertTrue($result[9]['fieldName'] == 'logmessage' && $result[9]['value'] == "test1\ntest2"); // note that this test compares using double-quotes, vs the original string which had single quotes
-    }
-
-    public function testObserverAliasing()
-    {
-        $zcObserverAliasTestObject = new zcObserverAliasTestObject;
-        $result = $zcObserverAliasTestObject->fireNotifierValid();
-        $this->assertTrue($result == 'NOTIFIY_ORDER_CART_SUBTOTAL_CALCULATE');
-        $result = $zcObserverAliasTestObject->fireNotifierInvalid();
-        $this->assertTrue($result == 'bar');
     }
 }

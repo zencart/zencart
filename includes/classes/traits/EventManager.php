@@ -9,20 +9,29 @@ namespace Zencart\Traits;
 
 trait EventManager
 {
+    /**
+     * @var array of aliases
+     */
+    private $observerAliases = ['NOTIFIY_ORDER_CART_SUBTOTAL_CALCULATE' => 'NOTIFY_ORDER_CART_SUBTOTAL_CALCULATE'];
 
-    public function notify($eventID, $param1 = array(), & $param2 = null, & $param3 = null, & $param4 = null, & $param5 = null, & $param6 = null, & $param7 = null, & $param8 = null, & $param9 = null)
+    function notify($eventID, $param1 = array(), &$param2 = null, &$param3 = null, &$param4 = null, &$param5 = null, &$param6 = null, &$param7 = null, &$param8 = null, &$param9 = null)
     {
         $this->logNotifier($eventID, $param1, $param2, $param3, $param4, $param5, $param6, $param7, $param8, $param9);
-
 
         $observers = &self::getStaticObserver();
         if (is_null($observers)) {
             return;
         }
         foreach ($observers as $key => $obs) {
-            // identify the event
+            // identify the event or alias
+            $hasAlias = $this->eventIdHasAlias( $obs['eventID']);
             $actualEventId = $eventID;
             $matchMap = [$eventID, '*'];
+            if ($hasAlias) {
+                $eventAlias = $this->substituteAlias($eventID);
+                $matchMap = [$eventAlias, '*'];
+                $actualEventId = $obs['eventID'];
+            }
             if (!in_array($obs['eventID'], $matchMap)) {
                 continue;
             }
@@ -36,7 +45,7 @@ trait EventManager
                 return;
             }
             // If the first check failed, we check for a camelCased version starting with "update" ie: updateNotifierNameCamelCased()
-            // If the camelCased version eis not found, we call "update()".
+            // If the camelCased version is not found, we call "update()".
             $method = 'update';
             $camelCaseMethod = 'update' . \base::camelize(strtolower($actualEventId), true);
             if (method_exists($obs['obs'], $camelCaseMethod)) {
@@ -51,8 +60,9 @@ trait EventManager
             }
         }
     }
+
     protected function & getStaticObserver() {
-        return self::getStaticProperty('observer');
+        return \base::getStaticProperty('observer');
     }
 
     protected function & getStaticProperty($var)
@@ -87,4 +97,17 @@ trait EventManager
         }
         error_log( strftime("%Y-%m-%d %H:%M:%S") . ' [main_page=' . $main_page . '] ' . $eventID . $output . "\n", 3, $file);
     }
+    private function eventIdHasAlias($eventId)
+    {
+        if (key_exists($eventId, $this->observerAliases)) {
+            return true;
+        }
+        return false;
+    }
+
+    private function substituteAlias($eventId)
+    {
+        return array_search($eventId, $this->observerAliases);
+    }
 }
+
