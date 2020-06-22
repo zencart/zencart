@@ -81,12 +81,12 @@ class base
         }
         foreach ($observers as $key => $obs) {
             // identify the event or alias
-            $hasAlias = $this->eventIdHasAlias($eventID);
+            $hasAlias = $this->eventIdHasAlias( $obs['eventID']);
             $actualEventId = $eventID;
             $matchMap = [$eventID, '*'];
             if ($hasAlias) {
-                $eventAlias = $this->substituteAlias($obs['eventID']);
-                $matchMap = [$eventAlias, $obs['eventID'], '*'];
+                $eventAlias = $this->substituteAlias($eventID);
+                $matchMap = [$eventAlias, '*'];
                 $actualEventId = $obs['eventID'];
             }
             if (!in_array($obs['eventID'], $matchMap)) {
@@ -188,7 +188,7 @@ class base
 
     private function eventIdHasAlias($eventId)
     {
-        if (in_array($eventId, $this->observerAliases)) {
+        if (key_exists($eventId, $this->observerAliases)) {
             return true;
         }
         return false;
@@ -196,6 +196,6 @@ class base
 
     private function substituteAlias($eventId)
     {
-        return $this->observerAliases[$eventId];
+        return array_search($eventId, $this->observerAliases);
     }
 }
