@@ -18,7 +18,7 @@ class base
     /**
      * @var array of aliases
      */
-    private $aliases = ['NOTIFIY_ORDER_CART_SUBTOTAL_CALCULATE' => 'NOTIFY_ORDER_CART_SUBTOTAL_CALCULATE'];
+    private $observerAliases = ['NOTIFIY_ORDER_CART_SUBTOTAL_CALCULATE' => 'NOTIFY_ORDER_CART_SUBTOTAL_CALCULATE'];
 
     /**
      * method used to an attach an observer to the notifier object
@@ -98,7 +98,7 @@ class base
             $testMethod = $method . self::camelize(strtolower($actualEventId), true);
             if (method_exists($obs['obs'], $testMethod))
                 $method = $testMethod;
-            $obs['obs']->{$method}($this, $actualEventId, $param1, $param2, $param3, $param4, $param5, $param6, $param7, $param8, $param9);
+                $obs['obs']->{$method}($this, $actualEventId, $param1, $param2, $param3, $param4, $param5, $param6, $param7, $param8, $param9);
         }
     }
 
@@ -172,7 +172,7 @@ class base
 
     private function eventIdHasAlias($eventId)
     {
-        if (in_array($eventId, $this->aliases)) {
+        if (in_array($eventId, $this->observerAliases)) {
             return true;
         }
         return false;
@@ -180,6 +180,6 @@ class base
 
     private function substituteAlias($eventId)
     {
-        return $this->aliases[$eventId];
+        return $this->observerAliases[$eventId];
     }
 }

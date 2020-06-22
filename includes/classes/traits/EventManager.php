@@ -43,7 +43,7 @@ trait EventManager
             return;
         }
         $file = DIR_FS_LOGS . '/notifier_trace.log';
-        $paramArray = (is_array($param1) && sizeof($param1) == 0) ? array() : array('param1' => $param1);
+        $paramArray = (is_array($param1) && count($param1) == 0) ? array() : array('param1' => $param1);
         for ($i = 2; $i < 10; $i++) {
             $param_n = "param$i";
             if ($$param_n !== NULL) {
