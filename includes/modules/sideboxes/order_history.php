@@ -15,7 +15,7 @@ if (!zen_is_logged_in() && zen_in_guest_checkout()) {
 // @TODO - future enhancement could be to weight the results by frequency of times a product has been purchased
 $sql = "SELECT op.products_id
         FROM " . TABLE_ORDERS . " o, " . TABLE_ORDERS_PRODUCTS . " op, " . TABLE_PRODUCTS . " p
-        WHERE o.customers_id = '" . (int)$_SESSION['customer_id'] . "'
+        WHERE o.customers_id = " . (int)$_SESSION['customer_id'] . "
         AND o.orders_id = op.orders_id
         AND op.products_id = p.products_id
         AND p.products_status = 1
