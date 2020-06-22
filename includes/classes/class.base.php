@@ -75,14 +75,12 @@ class base
     {
         $this->logNotifier($eventID, $param1, $param2, $param3, $param4, $param5, $param6, $param7, $param8, $param9);
 
-        // handle observers
-        // observers can fire either a generic update() method, or a notifier-point-specific updateNotifierPointCamelCased() method. The specific one will fire if found; else the generic update() will fire instead.
         $observers = &base::getStaticObserver();
         if (is_null($observers)) {
             return;
         }
-
         foreach ($observers as $key => $obs) {
+            // identify the event or alias
             $hasAlias = $this->eventIdHasAlias($eventID);
             $actualEventId = $eventID;
             $matchMap = [$eventID, '*'];
@@ -94,11 +92,29 @@ class base
             if (!in_array($obs['eventID'], $matchMap)) {
                 continue;
             }
+
+            // Notify the listening observers that this event has been triggered
+
+            // First we check for a snake_cased method name of the notifier Event, IF IT STARTS WITH "notify_" or "notifier_"
+            $snake_case_method = strtolower($actualEventId);
+            if (preg_match('/^notif(y|ier)_/', $snake_case_method) && method_exists($obs['obs'], $snake_case_method)) {
+                $obs['obs']->{$snake_case_method}($this, $actualEventId, $param1, $param2, $param3, $param4, $param5, $param6, $param7, $param8, $param9);
+                return;
+            }
+            // If the first check failed, we check for a camelCased version starting with "update" ie: updateNotifierNameCamelCased()
+            // If the camelCased version is not found, we call "update()".
             $method = 'update';
-            $testMethod = $method . self::camelize(strtolower($actualEventId), true);
-            if (method_exists($obs['obs'], $testMethod))
-                $method = $testMethod;
+            $camelCaseMethod = 'update' . self::camelize(strtolower($actualEventId), true);
+            if (method_exists($obs['obs'], $camelCaseMethod)) {
+                $method = $camelCaseMethod;
+            }
+            // If it doesn't exist then a PHP fatal error will occur.
+            if (method_exists($obs['obs'], $method)) {
                 $obs['obs']->{$method}($this, $actualEventId, $param1, $param2, $param3, $param4, $param5, $param6, $param7, $param8, $param9);
+            } else {
+                $className = (is_object($obs['obs'])) ? get_class($obs['obs']) : $obs['obs'];
+                trigger_error('WARNING: No update() method (or matching alternative) found in the ' . $className . ' class for event ' . $actualEventId, E_USER_WARNING);
+            }
         }
     }
 
