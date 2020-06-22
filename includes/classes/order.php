@@ -610,7 +610,7 @@ class order extends base {
       $shown_price = (zen_add_tax($this->products[$index]['final_price'] * $this->products[$index]['qty'], $product_tax_rate))
           + zen_add_tax($this->products[$index]['onetime_charges'], $product_tax_rate);
       $this->info['subtotal'] += $shown_price;
-      $this->notify('NOTIFIY_ORDER_CART_SUBTOTAL_CALCULATE', array('shown_price' => $shown_price));
+      $this->notify('NOTIFY_ORDER_CART_SUBTOTAL_CALCULATE', array('shown_price' => $shown_price));
 
       if (DISPLAY_PRICE_WITH_TAX == 'true') {
           // calculate the amount of tax "inc"luded in price (used if tax-in pricing is enabled)
