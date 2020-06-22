@@ -9,7 +9,7 @@
  *
  * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2020 June 20 Modified in v1.5.7 $
+ * @version $Id: DrByte 2020 June 21 Modified in v1.5.7 $
  */
 
 if (!defined('TABLE_SQUARE_PAYMENTS')) define('TABLE_SQUARE_PAYMENTS', DB_PREFIX . 'square_payments');
@@ -28,7 +28,11 @@ class square extends base
     /**
      * $moduleVersion is the plugin version number
      */
-    public $moduleVersion = '1.3';
+    public $moduleVersion = '1.4';
+    /**
+     * API version this module was last updated to use
+     */
+    protected $apiVersion = '3.20200528.1';
     /**
      * $title is the displayed name for this payment method
      *
@@ -81,7 +85,17 @@ class square extends base
         $this->enabled = (defined('MODULE_PAYMENT_SQUARE_STATUS') && MODULE_PAYMENT_SQUARE_STATUS == 'True');
         $this->sort_order = defined('MODULE_PAYMENT_SQUARE_SORT_ORDER') ? MODULE_PAYMENT_SQUARE_SORT_ORDER : null;
         $this->title = MODULE_PAYMENT_SQUARE_TEXT_CATALOG_TITLE; // Payment module title in Catalog
-        $this->description = '<strong>Square Payments Module ' . $this->moduleVersion . '</strong><br><br>' . MODULE_PAYMENT_SQUARE_TEXT_DESCRIPTION;
+        $this->description = '<strong>Square Payments Module ' . $this->moduleVersion . '</strong>';
+        $this->description .= '<br>[designed for API: ' . $this->apiVersion . ']';
+
+        if (IS_ADMIN_FLAG === true) {
+            $this->sdkApiVersion = (new \SquareConnect\Configuration())->getUserAgent();
+            //$this->sdkApiVersion = (new \Square\SquareClient())->getSquareVersion();
+            $this->description .= '<br>[using SDK: ' . $this->sdkApiVersion . ']';
+        }
+
+        $this->description .= '<br><br>' . MODULE_PAYMENT_SQUARE_TEXT_DESCRIPTION;
+
         if (IS_ADMIN_FLAG === true) {
             $this->title = MODULE_PAYMENT_SQUARE_TEXT_ADMIN_TITLE;
             if (defined('MODULE_PAYMENT_SQUARE_STATUS')) {
@@ -1253,13 +1267,15 @@ class square extends base
         $msg = '';
         $first_category = null;
         $first_code = null;
-        foreach ($error_object as $err) {
-            $category = method_exists($err, 'getCategory') ? $err->getCategory() : $err->category;
-            $code = method_exists($err, 'getCode') ? $err->getCode() : $err->code;
-            $detail = method_exists($err, 'getDetail') ? $err->getDetail() : $err->detail;
-            $msg .= "$code: $detail\n";
-            if (is_null($first_category)) $first_category = $category;
-            if (is_null($first_code)) $first_code = $code;
+        if (!empty($error_object)) {
+            foreach ($error_object as $err) {
+                $category = method_exists($err, 'getCategory') ? $err->getCategory() : $err->category;
+                $code = method_exists($err, 'getCode') ? $err->getCode() : $err->code;
+                $detail = method_exists($err, 'getDetail') ? $err->getDetail() : $err->detail;
+                $msg .= "$code: $detail\n";
+                if (is_null($first_category)) $first_category = $category;
+                if (is_null($first_code)) $first_code = $code;
+            }
         }
         $msg = trim($msg, "\n");
         $msg = str_replace("\n", "\n<br>", $msg);
@@ -1268,7 +1284,6 @@ class square extends base
 
         return array('detail' => $msg, 'category' => $first_category, 'code' => $first_code);
     }
-
 }
 
 // helper for Square admin configuration: locations selector
