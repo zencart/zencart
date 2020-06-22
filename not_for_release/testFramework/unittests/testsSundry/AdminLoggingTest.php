@@ -372,7 +372,7 @@ class AdminLoggingTest extends zcTestCase
     {
         $zcObserverAliasTestObject = new zcObserverAliasTestObject;
         $result = $zcObserverAliasTestObject->fireNotifierValid();
-        $this->assertTrue($result == 'foobar');
+        $this->assertTrue($result == 'NOTIFIY_ORDER_CART_SUBTOTAL_CALCULATE');
         $result = $zcObserverAliasTestObject->fireNotifierInvalid();
         $this->assertTrue($result == 'bar');
     }
