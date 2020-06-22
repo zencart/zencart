@@ -319,7 +319,7 @@
  * Create order-history record from IPN data
  */
   function ipn_create_order_history_array($insert_id) {
-    $sql_data_array = array ('paypal_ipn_id' => $insert_id,
+    $sql_data_array = array ('paypal_ipn_id' => (int)$insert_id,
                              'txn_id' => $_POST['txn_id'],
                              'parent_txn_id' => $_POST['parent_txn_id'],
                              'payment_status' => $_POST['payment_status'],
@@ -385,6 +385,7 @@
   }
   function getRequestBodyContents(&$handle) {
     if ($handle) {
+      $line = '';
       while(!feof($handle)) {
         $line .= @fgets($handle, 1024);
       }
