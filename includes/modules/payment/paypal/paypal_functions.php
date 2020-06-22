@@ -642,9 +642,9 @@
  */
   function ipn_update_orders_status_and_history($ordersID, $new_status = 1, $txn_type = '') {
     global $db;
-    
+
     ipn_debug_email('IPN NOTICE :: Updating order #' . (int)$ordersID . ' to status: ' . (int)$new_status . ' (txn_type: ' . $txn_type . ')');
-    
+
     $comments = 'PayPal status: ' . $_POST['payment_status'] . ' ' . ' @ ' . $_POST['payment_date'] . (($_POST['parent_txn_id'] !='') ? "\n" . ' Parent Trans ID:' . $_POST['parent_txn_id'] : '') . "\n" . ' Trans ID:' . $_POST['txn_id'] . "\n" . ' Amount: ' . $_POST['mc_gross'] . ' ' . $_POST['mc_currency'];
     zen_update_orders_history($ordersID, $comments, null, $new_status, 0);
 
@@ -1001,13 +1001,3 @@
     return $logfilename;
   }
 
-if (!function_exists('curl_setopt_array')) {
-  function curl_setopt_array(&$ch, $curl_options) {
-    foreach ($curl_options as $option => $value) {
-      if (!curl_setopt($ch, $option, $value)) {
-        return FALSE;
-      }
-    }
-    return TRUE;
-  }
-}
