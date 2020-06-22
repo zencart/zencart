@@ -75,20 +75,28 @@ class base
     {
         $this->logNotifier($eventID, $param1, $param2, $param3, $param4, $param5, $param6, $param7, $param8, $param9);
 
-        $observers = &base::getStaticObserver();
+        $observers = &self::getStaticObserver();
         if (is_null($observers)) {
             return;
         }
         foreach ($observers as $key => $obs) {
-            // identify the event or alias
-            $hasAlias = $this->eventIdHasAlias( $obs['eventID']);
+            // identify the event
             $actualEventId = $eventID;
             $matchMap = [$eventID, '*'];
+
+            // Adjust for aliases
+
+            // if the event fired by the notifier is old and has an alias registered
+            $hasAlias = $this->eventIdHasAlias($obs['eventID']);
             if ($hasAlias) {
+                // then lookup the correct new event name
                 $eventAlias = $this->substituteAlias($eventID);
+                // use the substituted event name in the list of matches
                 $matchMap = [$eventAlias, '*'];
+                // and set the Actual event to the name that was originally attached to in the observer class
                 $actualEventId = $obs['eventID'];
             }
+            // check whether the looped observer's eventID is a match to the event or alias
             if (!in_array($obs['eventID'], $matchMap)) {
                 continue;
             }
@@ -109,13 +117,13 @@ class base
                 $method = $camelCaseMethod;
             }
             // If it doesn't exist then a PHP fatal error will occur.
-            if (method_exists($obs['obs'], $method)) {
-                $obs['obs']->{$method}($this, $actualEventId, $param1, $param2, $param3, $param4, $param5, $param6, $param7, $param8, $param9);
+                if (method_exists($obs['obs'], $method)) {
+                    $obs['obs']->{$method}($this, $actualEventId, $param1, $param2, $param3, $param4, $param5, $param6, $param7, $param8, $param9);
             } else {
-                $className = (is_object($obs['obs'])) ? get_class($obs['obs']) : $obs['obs'];
-                trigger_error('WARNING: No update() method (or matching alternative) found in the ' . $className . ' class for event ' . $actualEventId, E_USER_WARNING);
-            }
+            $className = (is_object($obs['obs'])) ? get_class($obs['obs']) : $obs['obs'];
+            trigger_error('WARNING: No update() method (or matching alternative) found in the ' . $className . ' class for event ' . $actualEventId, E_USER_WARNING);
         }
+    }
     }
 
     function & getStaticProperty($var)
@@ -188,7 +196,7 @@ class base
 
     private function eventIdHasAlias($eventId)
     {
-        if (key_exists($eventId, $this->observerAliases)) {
+        if (array_key_exists($eventId, $this->observerAliases)) {
             return true;
         }
         return false;

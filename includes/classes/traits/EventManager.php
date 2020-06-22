@@ -23,15 +23,23 @@ trait EventManager
             return;
         }
         foreach ($observers as $key => $obs) {
-            // identify the event or alias
-            $hasAlias = $this->eventIdHasAlias( $obs['eventID']);
+            // identify the event
             $actualEventId = $eventID;
             $matchMap = [$eventID, '*'];
+
+            // Adjust for aliases
+
+            // if the event fired by the notifier is old and has an alias registered
+            $hasAlias = $this->eventIdHasAlias($obs['eventID']);
             if ($hasAlias) {
+                // then lookup the correct new event name
                 $eventAlias = $this->substituteAlias($eventID);
+                // use the substituted event name in the list of matches
                 $matchMap = [$eventAlias, '*'];
+                // and set the Actual event to the name that was originally attached to in the observer class
                 $actualEventId = $obs['eventID'];
             }
+            // check whether the looped observer's eventID is a match to the event or alias
             if (!in_array($obs['eventID'], $matchMap)) {
                 continue;
             }
@@ -52,13 +60,13 @@ trait EventManager
                 $method = $camelCaseMethod;
             }
             // If it doesn't exist then a PHP fatal error will occur.
-            if (method_exists($obs['obs'], $method)) {
-                $obs['obs']->{$method}($this, $actualEventId, $param1, $param2, $param3, $param4, $param5, $param6, $param7, $param8, $param9);
+                if (method_exists($obs['obs'], $method)) {
+                    $obs['obs']->{$method}($this, $actualEventId, $param1, $param2, $param3, $param4, $param5, $param6, $param7, $param8, $param9);
             } else {
-                $className = (is_object($obs['obs'])) ? get_class($obs['obs']) : $obs['obs'];
-                trigger_error('WARNING: No update() method (or matching alternative) found in the ' . $className . ' class for event ' . $actualEventId, E_USER_WARNING);
-            }
+            $className = (is_object($obs['obs'])) ? get_class($obs['obs']) : $obs['obs'];
+            trigger_error('WARNING: No update() method (or matching alternative) found in the ' . $className . ' class for event ' . $actualEventId, E_USER_WARNING);
         }
+    }
     }
 
     protected function & getStaticObserver() {
@@ -80,12 +88,15 @@ trait EventManager
         $paramArray = (is_array($param1) && count($param1) == 0) ? array() : array('param1' => $param1);
         for ($i = 2; $i < 10; $i++) {
             $param_n = "param$i";
-            if ($$param_n !== NULL) {
+            if ($$param_n !== null) {
                 $paramArray[$param_n] = $$param_n;
             }
         }
         global $this_is_home_page, $PHP_SELF;
-        $main_page = (isset($this_is_home_page) && $this_is_home_page) ? 'index-home' : ((IS_ADMIN_FLAG) ? basename($PHP_SELF) : (isset($_GET['main_page']) ? $_GET['main_page'] : ''));
+        $main_page = (isset($this_is_home_page) && $this_is_home_page)
+            ? 'index-home'
+            : ((IS_ADMIN_FLAG) ? basename($PHP_SELF)
+                : (isset($_GET['main_page']) ? $_GET['main_page'] : ''));
         $output = '';
         if (count($paramArray)) {
             $output = ', ';
@@ -95,11 +106,12 @@ trait EventManager
                 $output .= print_r($paramArray, true);
             }
         }
-        error_log( strftime("%Y-%m-%d %H:%M:%S") . ' [main_page=' . $main_page . '] ' . $eventID . $output . "\n", 3, $file);
+        error_log(strftime("%Y-%m-%d %H:%M:%S") . ' [main_page=' . $main_page . '] ' . $eventID . $output . "\n", 3, $file);
     }
+
     private function eventIdHasAlias($eventId)
     {
-        if (key_exists($eventId, $this->observerAliases)) {
+        if (array_key_exists($eventId, $this->observerAliases)) {
             return true;
         }
         return false;
@@ -110,4 +122,3 @@ trait EventManager
         return array_search($eventId, $this->observerAliases);
     }
 }
-
