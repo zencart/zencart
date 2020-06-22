@@ -64,29 +64,7 @@ class base {
    * NOTE: The $param1 value CAN be an array, and is sometimes typecast to be an array, but can also safely be a string or int etc if the notifier sends such and the observer class expects same.
    */
   function notify($eventID, $param1 = array(), & $param2 = NULL, & $param3 = NULL, & $param4 = NULL, & $param5 = NULL, & $param6 = NULL, & $param7 = NULL, & $param8 = NULL, & $param9 = NULL ) {
-    // notifier trace logging - for advanced debugging purposes only --- NOTE: This log file can get VERY big VERY quickly!
-    if (defined('NOTIFIER_TRACE') && NOTIFIER_TRACE != '' && NOTIFIER_TRACE != 'false' && NOTIFIER_TRACE != 'Off') {
-      $file = DIR_FS_LOGS . '/notifier_trace.log';
-      $paramArray = (is_array($param1) && sizeof($param1) == 0) ? array() : array('param1' => $param1);
-      for ($i = 2; $i < 10; $i++) {
-        $param_n = "param$i";
-        if ($$param_n !== NULL) {
-          $paramArray[$param_n] = $$param_n;
-        }
-      }
-      global $this_is_home_page, $PHP_SELF;
-      $main_page = (isset($this_is_home_page) && $this_is_home_page) ? 'index-home' : ((IS_ADMIN_FLAG) ? basename($PHP_SELF) : (isset($_GET['main_page']) ? $_GET['main_page'] : ''));
-      $output = '';
-      if (count($paramArray)) {
-        $output = ', ';
-        if (NOTIFIER_TRACE == 'var_export' || NOTIFIER_TRACE == 'var_dump' || NOTIFIER_TRACE == 'true') {
-          $output .= var_export($paramArray, true);
-        } elseif (NOTIFIER_TRACE == 'print_r' || NOTIFIER_TRACE == 'On' || NOTIFIER_TRACE === TRUE) {
-          $output .= print_r($paramArray, true);
-        }
-      }
-      error_log( strftime("%Y-%m-%d %H:%M:%S") . ' [main_page=' . $main_page . '] ' . $eventID . $output . "\n", 3, $file);
-    }
+    $this->logNotifier($eventID, $param1, $param2, $param3, $param4, $param5, $param6, $param7, $param8, $param9);
 
     // handle observers
     // observers can fire either a generic update() method, or a notifier-point-specific updateNotifierPointCamelCased() method. The specific one will fire if found; else the generic update() will fire instead.
@@ -146,6 +124,32 @@ class base {
     return preg_replace_callback('/[_-]([0-9,a-z])/', function($matches) {return strtoupper($matches[1]);}, $rawName);
   }
 
+  protected function logNotifier($eventID, $param1, $param2, $param3, $param4, $param5, $param6, $param7, $param8, $param9)
+  {
+    if (!defined('NOTIFIER_TRACE') || NOTIFIER_TRACE == '' || NOTIFIER_TRACE == 'false' || NOTIFIER_TRACE == 'Off') {
+        return;
+    }
+    $file = DIR_FS_LOGS . '/notifier_trace.log';
+    $paramArray = (is_array($param1) && sizeof($param1) == 0) ? array() : array('param1' => $param1);
+    for ($i = 2; $i < 10; $i++) {
+        $param_n = "param$i";
+        if ($$param_n !== NULL) {
+            $paramArray[$param_n] = $$param_n;
+        }
+    }
+    global $this_is_home_page, $PHP_SELF;
+    $main_page = (isset($this_is_home_page) && $this_is_home_page) ? 'index-home' : ((IS_ADMIN_FLAG) ? basename($PHP_SELF) : (isset($_GET['main_page']) ? $_GET['main_page'] : ''));
+    $output = '';
+    if (count($paramArray)) {
+        $output = ', ';
+        if (NOTIFIER_TRACE == 'var_export' || NOTIFIER_TRACE == 'var_dump' || NOTIFIER_TRACE == 'true') {
+            $output .= var_export($paramArray, true);
+        } elseif (NOTIFIER_TRACE == 'print_r' || NOTIFIER_TRACE == 'On' || NOTIFIER_TRACE === TRUE) {
+            $output .= print_r($paramArray, true);
+        }
+    }
+    error_log( strftime("%Y-%m-%d %H:%M:%S") . ' [main_page=' . $main_page . '] ' . $eventID . $output . "\n", 3, $file);
+  }
 
   private function eventIdHasAlias($eventId)
   {
