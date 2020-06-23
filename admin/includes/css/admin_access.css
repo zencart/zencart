@@ -31,3 +31,11 @@ label {width:15em; float:left}
 .profile {width:20em}
 
 #profile-update input {float:left; margin-right:8px}
+
+input[type=checkbox] {
+  margin-right: 5px;
+}
+
+.checkButton {
+  margin-right: 5px;
+}
