@@ -309,7 +309,7 @@ class paypalwpp extends base {
         });
       };
       </script>
-      <script src=\"//www.paypalobjects.com/api/checkout.js\" async></script>";
+      <script src=\"https://www.paypalobjects.com/api/checkout.js\" async></script>";
   }
   /**
    * Prepare and submit the final authorization to PayPal via the appropriate means as configured
