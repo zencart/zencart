@@ -160,7 +160,7 @@ class CreatePaymentRequest implements ArrayAccess
       */
     protected $order_id;
     /**
-      * $customer_id The ID of the customer associated with the payment. Required if the `source_id` refers to a card on file created using the Customers API.
+      * $customer_id The `Customer` ID of the customer associated with the payment. Required if the `source_id` refers to a card on file created using the Customers API.
       * @var string
       */
     protected $customer_id;
@@ -205,7 +205,7 @@ class CreatePaymentRequest implements ArrayAccess
       */
     protected $note;
     /**
-      * $statement_description_identifier Optional additional payment information to include on the customer's card statement as part of statement description. This can be, for example, an invoice number, ticket number, or short description that uniquely identifies the purchase.  Limit 20 characters.  Note that the statement_description_identifier may get truncated on the statement description to fit the required information including the Square identifier (SQ *) and name of the merchant taking the payment.
+      * $statement_description_identifier Optional additional payment information to include on the customer's card statement as part of statement description. This can be, for example, an invoice number, ticket number, or short description that uniquely identifies the purchase.  Note that the `statement_description_identifier` may get truncated on the statement description to fit the required information including the Square identifier (SQ *) and name of the merchant taking the payment.
       * @var string
       */
     protected $statement_description_identifier;
@@ -472,7 +472,7 @@ class CreatePaymentRequest implements ArrayAccess
   
     /**
      * Sets customer_id
-     * @param string $customer_id The ID of the customer associated with the payment. Required if the `source_id` refers to a card on file created using the Customers API.
+     * @param string $customer_id The `Customer` ID of the customer associated with the payment. Required if the `source_id` refers to a card on file created using the Customers API.
      * @return $this
      */
     public function setCustomerId($customer_id)
@@ -643,7 +643,7 @@ class CreatePaymentRequest implements ArrayAccess
   
     /**
      * Sets statement_description_identifier
-     * @param string $statement_description_identifier Optional additional payment information to include on the customer's card statement as part of statement description. This can be, for example, an invoice number, ticket number, or short description that uniquely identifies the purchase.  Limit 20 characters.  Note that the statement_description_identifier may get truncated on the statement description to fit the required information including the Square identifier (SQ *) and name of the merchant taking the payment.
+     * @param string $statement_description_identifier Optional additional payment information to include on the customer's card statement as part of statement description. This can be, for example, an invoice number, ticket number, or short description that uniquely identifies the purchase.  Note that the `statement_description_identifier` may get truncated on the statement description to fit the required information including the Square identifier (SQ *) and name of the merchant taking the payment.
      * @return $this
      */
     public function setStatementDescriptionIdentifier($statement_description_identifier)

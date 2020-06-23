@@ -14,6 +14,8 @@ define('MODULE_PAYMENT_SQUARE_TEXT_DESCRIPTION', 'Accept credit cards in less th
 define('MODULE_PAYMENT_SQUARE_TEXT_ADMIN_TITLE', 'Square'); // Payment option title as displayed in the admin
 define('MODULE_PAYMENT_SQUARE_TEXT_CATALOG_TITLE', 'Credit Card');  // Payment option title as displayed to the customer
 
+define('MODULE_PAYMENT_SQUARE_TEXT_NOTICES_TO_CUSTOMER', '');  // Payment option sub-text displayed to the customer, above the cc input fields
+
 define('MODULE_PAYMENT_SQUARE_TEXT_CREDIT_CARD_POSTCODE', 'Postal Code:');
 define('MODULE_PAYMENT_SQUARE_TEXT_CREDIT_CARD_NUMBER', 'Card Number:');
 define('MODULE_PAYMENT_SQUARE_TEXT_CREDIT_CARD_EXPIRES', 'Expiry Date:');

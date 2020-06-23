@@ -49,7 +49,8 @@ class Order implements ArrayAccess
         'total_money' => '\SquareConnect\Model\Money',
         'total_tax_money' => '\SquareConnect\Model\Money',
         'total_discount_money' => '\SquareConnect\Model\Money',
-        'total_service_charge_money' => '\SquareConnect\Model\Money'
+        'total_service_charge_money' => '\SquareConnect\Model\Money',
+        'rewards' => '\SquareConnect\Model\OrderReward[]'
     );
   
     /** 
@@ -82,7 +83,8 @@ class Order implements ArrayAccess
         'total_money' => 'total_money',
         'total_tax_money' => 'total_tax_money',
         'total_discount_money' => 'total_discount_money',
-        'total_service_charge_money' => 'total_service_charge_money'
+        'total_service_charge_money' => 'total_service_charge_money',
+        'rewards' => 'rewards'
     );
   
     /**
@@ -115,7 +117,8 @@ class Order implements ArrayAccess
         'total_money' => 'setTotalMoney',
         'total_tax_money' => 'setTotalTaxMoney',
         'total_discount_money' => 'setTotalDiscountMoney',
-        'total_service_charge_money' => 'setTotalServiceChargeMoney'
+        'total_service_charge_money' => 'setTotalServiceChargeMoney',
+        'rewards' => 'setRewards'
     );
   
     /**
@@ -148,7 +151,8 @@ class Order implements ArrayAccess
         'total_money' => 'getTotalMoney',
         'total_tax_money' => 'getTotalTaxMoney',
         'total_discount_money' => 'getTotalDiscountMoney',
-        'total_service_charge_money' => 'getTotalServiceChargeMoney'
+        'total_service_charge_money' => 'getTotalServiceChargeMoney',
+        'rewards' => 'getRewards'
     );
   
     /**
@@ -247,7 +251,7 @@ class Order implements ArrayAccess
       */
     protected $updated_at;
     /**
-      * $closed_at Timestamp for when the order was closed. In RFC 3339 format, e.g., \"2016-09-04T23:59:33.123Z\".
+      * $closed_at Timestamp for when the order reached a terminal [state](#property-state). In RFC 3339 format, e.g., \"2016-09-04T23:59:33.123Z\".
       * @var string
       */
     protected $closed_at;
@@ -281,6 +285,11 @@ class Order implements ArrayAccess
       * @var \SquareConnect\Model\Money
       */
     protected $total_service_charge_money;
+    /**
+      * $rewards A set-like list of rewards that have been added to the order.
+      * @var \SquareConnect\Model\OrderReward[]
+      */
+    protected $rewards;
 
     /**
      * Constructor
@@ -418,6 +427,11 @@ class Order implements ArrayAccess
               $this->total_service_charge_money = $data["total_service_charge_money"];
             } else {
               $this->total_service_charge_money = null;
+            }
+            if (isset($data["rewards"])) {
+              $this->rewards = $data["rewards"];
+            } else {
+              $this->rewards = null;
             }
         }
     }
@@ -793,7 +807,7 @@ class Order implements ArrayAccess
   
     /**
      * Sets closed_at
-     * @param string $closed_at Timestamp for when the order was closed. In RFC 3339 format, e.g., \"2016-09-04T23:59:33.123Z\".
+     * @param string $closed_at Timestamp for when the order reached a terminal [state](#property-state). In RFC 3339 format, e.g., \"2016-09-04T23:59:33.123Z\".
      * @return $this
      */
     public function setClosedAt($closed_at)
@@ -913,6 +927,25 @@ class Order implements ArrayAccess
     public function setTotalServiceChargeMoney($total_service_charge_money)
     {
         $this->total_service_charge_money = $total_service_charge_money;
+        return $this;
+    }
+    /**
+     * Gets rewards
+     * @return \SquareConnect\Model\OrderReward[]
+     */
+    public function getRewards()
+    {
+        return $this->rewards;
+    }
+  
+    /**
+     * Sets rewards
+     * @param \SquareConnect\Model\OrderReward[] $rewards A set-like list of rewards that have been added to the order.
+     * @return $this
+     */
+    public function setRewards($rewards)
+    {
+        $this->rewards = $rewards;
         return $this;
     }
     /**

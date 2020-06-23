@@ -9,25 +9,23 @@
  */
 
 
-$valid_product = false;
 $zco_notifier->notify('NOTIFY_HEADER_START_ASK_A_QUESTION');
 if (isset($_GET['pid'])) {
-    $product_info_query = "SELECT pd.products_name, p.products_image, p.products_model
-                           FROM " . TABLE_PRODUCTS . " p, " . TABLE_PRODUCTS_DESCRIPTION . " pd
-                           WHERE p.products_status = '1'
-                           AND p.products_id = " . (int)$_GET['pid'] . "
-                           AND p.products_id = pd.products_id
-                           AND pd.language_id = " . (int)$_SESSION['languages_id'];
+    $sql = "SELECT pd.products_name, p.products_image, p.products_model
+            FROM " . TABLE_PRODUCTS . " p, " . TABLE_PRODUCTS_DESCRIPTION . " pd
+            WHERE p.products_id = pd.products_id
+            AND p.products_id = " . (int)$_GET['pid'] . "
+            AND pd.language_id = " . (int)$_SESSION['languages_id'] . "
+            AND p.products_status = 1
+            LIMIT 1";
 
-    $product_info = $db->Execute($product_info_query);
+    $result = $db->Execute($sql);
 
-    if ($product_info->RecordCount() > 0) {
-        $valid_product = true;
+    if (empty($result->RecordCount())) {
+        zen_redirect(zen_href_link(zen_get_info_page((!empty($_GET['pid']) ? (int)$_GET['pid'] : 0)), 'pid=' . (!empty($_GET['pid']) ? (int)$_GET['pid'] : 0)));
     }
-}
 
-if ($valid_product == false) {
-    zen_redirect(zen_href_link(zen_get_info_page((!empty($_GET['pid']) ? (int)$_GET['pid'] : 0)), 'pid=' . (!empty($_GET['pid']) ? (int)$_GET['pid'] : 0)));
+    $product_details = $result->fields;
 }
 
 require DIR_WS_MODULES . zen_get_module_directory('require_languages.php');
@@ -104,7 +102,7 @@ if (isset($_GET['action']) && ($_GET['action'] == 'send')) {
             $text_message = OFFICE_FROM . "\t" . $name . "\n" .
             OFFICE_EMAIL . "\t" . $email_address . "\n";
             if (!empty($telephone)) $text_message .= OFFICE_LOGIN_PHONE . "\t" . $telephone . "\n";
-            $text_message .= TEXT_PRODUCT_NAME . "\t" . $product_info->fields['products_name'] . "\n" .
+            $text_message .= TEXT_PRODUCT_NAME . "\t" . $product_details['products_name'] . "\n" .
             zen_href_link(FILENAME_PRODUCT_INFO, 'products_id=' . (int)$_GET['pid']) .
             "\n";
             $text_message .= "\n" .
@@ -113,7 +111,7 @@ if (isset($_GET['action']) && ($_GET['action'] == 'send')) {
             '------------------------------------------------------' . "\n\n" .
             $extra_info['TEXT'];
             // Prepare HTML-portion of message
-            $html_msg['EMAIL_MESSAGE_HTML'] = '<b>'.TEXT_PRODUCT_NAME.': </b><a href="' . zen_href_link(FILENAME_PRODUCT_INFO, 'products_id=' . (int)$_GET['pid']) . '">' . $product_info->fields['products_name'] . '</a><br />' . strip_tags($_POST['enquiry']);
+            $html_msg['EMAIL_MESSAGE_HTML'] = '<b>'.TEXT_PRODUCT_NAME.': </b><a href="' . zen_href_link(FILENAME_PRODUCT_INFO, 'products_id=' . (int)$_GET['pid']) . '">' . $product_details['products_name'] . '</a><br />' . strip_tags($_POST['enquiry']);
             $html_msg['CONTACT_US_OFFICE_FROM'] = OFFICE_FROM . ' ' . $name . '<br />' . OFFICE_EMAIL . '(' . $email_address . ')';
             $html_msg['EXTRA_INFO'] = $extra_info['HTML'];
             // Send message

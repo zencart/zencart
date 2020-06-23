@@ -91,12 +91,12 @@ class CatalogCustomAttributeValue implements ArrayAccess
       */
     protected $string_value;
     /**
-      * $custom_attribute_definition_id __Read-only.__ The custom attribute definition this value belongs to.
+      * $custom_attribute_definition_id __Read-only.__ The id of the `CatalogCustomAttributeDefinition` this value belongs to.
       * @var string
       */
     protected $custom_attribute_definition_id;
     /**
-      * $type __Read-only.__ A copy of type from the associated custom attribute definition. See [CatalogCustomAttributeDefinitionType](#type-catalogcustomattributedefinitiontype) for possible values
+      * $type __Read-only.__ A copy of type from the associated `CatalogCustomAttributeDefinition`. See [CatalogCustomAttributeDefinitionType](#type-catalogcustomattributedefinitiontype) for possible values
       * @var string
       */
     protected $type;
@@ -116,7 +116,7 @@ class CatalogCustomAttributeValue implements ArrayAccess
       */
     protected $selection_uid_values;
     /**
-      * $key __Read-only.__ A copy of key from the associated custom attribute definition.
+      * $key __Read-only.__ A copy of key from the associated `CatalogCustomAttributeDefinition`.
       * @var string
       */
     protected $key;
@@ -219,7 +219,7 @@ class CatalogCustomAttributeValue implements ArrayAccess
   
     /**
      * Sets custom_attribute_definition_id
-     * @param string $custom_attribute_definition_id __Read-only.__ The custom attribute definition this value belongs to.
+     * @param string $custom_attribute_definition_id __Read-only.__ The id of the `CatalogCustomAttributeDefinition` this value belongs to.
      * @return $this
      */
     public function setCustomAttributeDefinitionId($custom_attribute_definition_id)
@@ -238,7 +238,7 @@ class CatalogCustomAttributeValue implements ArrayAccess
   
     /**
      * Sets type
-     * @param string $type __Read-only.__ A copy of type from the associated custom attribute definition. See [CatalogCustomAttributeDefinitionType](#type-catalogcustomattributedefinitiontype) for possible values
+     * @param string $type __Read-only.__ A copy of type from the associated `CatalogCustomAttributeDefinition`. See [CatalogCustomAttributeDefinitionType](#type-catalogcustomattributedefinitiontype) for possible values
      * @return $this
      */
     public function setType($type)
@@ -314,7 +314,7 @@ class CatalogCustomAttributeValue implements ArrayAccess
   
     /**
      * Sets key
-     * @param string $key __Read-only.__ A copy of key from the associated custom attribute definition.
+     * @param string $key __Read-only.__ A copy of key from the associated `CatalogCustomAttributeDefinition`.
      * @return $this
      */
     public function setKey($key)

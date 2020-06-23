@@ -32,7 +32,8 @@ class OrderLineItemDiscount implements ArrayAccess
         'amount_money' => '\SquareConnect\Model\Money',
         'applied_money' => '\SquareConnect\Model\Money',
         'metadata' => 'map[string,string]',
-        'scope' => 'string'
+        'scope' => 'string',
+        'reward_ids' => 'string[]'
     );
   
     /** 
@@ -48,7 +49,8 @@ class OrderLineItemDiscount implements ArrayAccess
         'amount_money' => 'amount_money',
         'applied_money' => 'applied_money',
         'metadata' => 'metadata',
-        'scope' => 'scope'
+        'scope' => 'scope',
+        'reward_ids' => 'reward_ids'
     );
   
     /**
@@ -64,7 +66,8 @@ class OrderLineItemDiscount implements ArrayAccess
         'amount_money' => 'setAmountMoney',
         'applied_money' => 'setAppliedMoney',
         'metadata' => 'setMetadata',
-        'scope' => 'setScope'
+        'scope' => 'setScope',
+        'reward_ids' => 'setRewardIds'
     );
   
     /**
@@ -80,7 +83,8 @@ class OrderLineItemDiscount implements ArrayAccess
         'amount_money' => 'getAmountMoney',
         'applied_money' => 'getAppliedMoney',
         'metadata' => 'getMetadata',
-        'scope' => 'getScope'
+        'scope' => 'getScope',
+        'reward_ids' => 'getRewardIds'
     );
   
     /**
@@ -128,6 +132,11 @@ class OrderLineItemDiscount implements ArrayAccess
       * @var string
       */
     protected $scope;
+    /**
+      * $reward_ids The reward identifiers corresponding to this discount. The application and specification of discounts that have `reward_ids` are completely controlled by the backing criteria corresponding to the reward tiers of the rewards that are added to the order through the Loyalty API. To manually unapply discounts that are the result of added rewards, the rewards must be removed from the order through the Loyalty API.
+      * @var string[]
+      */
+    protected $reward_ids;
 
     /**
      * Constructor
@@ -180,6 +189,11 @@ class OrderLineItemDiscount implements ArrayAccess
               $this->scope = $data["scope"];
             } else {
               $this->scope = null;
+            }
+            if (isset($data["reward_ids"])) {
+              $this->reward_ids = $data["reward_ids"];
+            } else {
+              $this->reward_ids = null;
             }
         }
     }
@@ -352,6 +366,25 @@ class OrderLineItemDiscount implements ArrayAccess
     public function setScope($scope)
     {
         $this->scope = $scope;
+        return $this;
+    }
+    /**
+     * Gets reward_ids
+     * @return string[]
+     */
+    public function getRewardIds()
+    {
+        return $this->reward_ids;
+    }
+  
+    /**
+     * Sets reward_ids
+     * @param string[] $reward_ids The reward identifiers corresponding to this discount. The application and specification of discounts that have `reward_ids` are completely controlled by the backing criteria corresponding to the reward tiers of the rewards that are added to the order through the Loyalty API. To manually unapply discounts that are the result of added rewards, the rewards must be removed from the order through the Loyalty API.
+     * @return $this
+     */
+    public function setRewardIds($reward_ids)
+    {
+        $this->reward_ids = $reward_ids;
         return $this;
     }
     /**

@@ -13,15 +13,17 @@ It's free software, with free community-driven support available 24/7 on the Zen
 --------------------
 
 
-Zen Cart&reg; v1.5.7-dev
+Zen Cart&reg; v1.5.7
 ---------------------
 
 Compatibility
 -------------
 Zen Cart v1.5.7 is designed for:
- * PHP 5.6 to PHP 7.4  (future Zen Cart releases will require PHP 7.1+)
+ * PHP 5.6 to PHP 7.4
  * Apache 2.2 and 2.4
- * MySQL 5.1 to 8.0 or MariaDB 10.0 to 10.4  (future Zen Cart releases will require MySQL 5.7.8+ or MariaDB 10.2.7+)
+ * MySQL 5.1 to 8.0 or MariaDB 10.0 to 10.4
+
+NOTE: future Zen Cart releases will require PHP 7.1+ and MySQL 5.7.8+ or MariaDB 10.2.7+
 
 
 Installation
@@ -39,7 +41,7 @@ Installation is simple:
 7. Also make the `/cache` and `/logs` folders writable. (You will be prompted about making other folders writable during installation)
 8. Follow the instructions that appear in your browser for installation. 
 
-If some of the terms used in these brief instructions are things you don't understand, there is a much more detailed set of instructions in the [/docs/Implementation-Guide](https://www.zen-cart.com/docs/implementation-guide-v156.pdf) PDF.
+If some of the terms used in these brief instructions are things you don't understand, there is a much more detailed set of instructions in the [/docs/Implementation-Guide](https://www.zen-cart.com/docs/implementation-guide-v157.pdf) PDF.
 
 Upgrading
 ---------
@@ -48,12 +50,12 @@ Recommended reading related to upgrading: https://docs.zen-cart.com/user/upgradi
 
 Guidance for Secure Installations
 ---------------------------------
-__The [Implementation Guide](https://www.zen-cart.com/docs/implementation-guide-v156.pdf) document is provided to give detailed instructions on how to install and secure your site in accordance with PCI Compliance requirements.__ Whether your site "needs" PCI Compliance or not is up to you to decide, but you should still follow the documented principles to maximize your site's resilience against troublesome access attempted by any undesired/unauthorized visitors.
+__The [Implementation Guide](https://www.zen-cart.com/docs/implementation-guide-v157.pdf) document is provided to give detailed instructions on how to install and secure your site in accordance with PCI Compliance requirements.__ Whether your site "needs" PCI Compliance or not is up to you to decide, but you should still follow the documented principles to maximize your site's resilience against troublesome access attempted by any undesired/unauthorized visitors.
 
 
 Documentation
 -------------
-Use your browser to open the [/docs/index.html](https://www.zen-cart.com/docs/index.html) page for links to release documentation and the [Implementation Guide](https://www.zen-cart.com/docs/implementation-guide-v156.pdf).  A storeowner documentation repository also exists at [docs.zen-cart.com/user/](https://docs.zen-cart.com/user/). 
+Use your browser to open the [/docs/index.html](https://www.zen-cart.com/docs/index.html) page for links to release documentation and the [Implementation Guide](https://www.zen-cart.com/docs/implementation-guide-v157.pdf).  A storeowner documentation repository also exists at [docs.zen-cart.com/user/](https://docs.zen-cart.com/user/). 
 
 Developer Documentation
 -----------------------

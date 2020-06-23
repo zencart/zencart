@@ -19,7 +19,7 @@ define ('EMAIL_EXTRA_HEADER_INFO', '');
 
 // office use only
 define('OFFICE_FROM','<strong>From:</strong>');
-define('OFFICE_EMAIL','<strong>Email:</strong>');
+define('OFFICE_EMAIL','<strong>Mail:</strong>');
 
 define('OFFICE_USE','<strong>Office Use Only:</strong>');
 define('OFFICE_LOGIN_NAME','<strong>Login Name:</strong>');

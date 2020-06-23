@@ -71,7 +71,7 @@ class PayOrderRequest implements ArrayAccess
       */
     protected $order_version;
     /**
-      * $payment_ids 
+      * $payment_ids The IDs of the `payments` to collect. The payment total must match the order total.
       * @var string[]
       */
     protected $payment_ids;
@@ -149,7 +149,7 @@ class PayOrderRequest implements ArrayAccess
   
     /**
      * Sets payment_ids
-     * @param string[] $payment_ids 
+     * @param string[] $payment_ids The IDs of the `payments` to collect. The payment total must match the order total.
      * @return $this
      */
     public function setPaymentIds($payment_ids)
