@@ -766,12 +766,17 @@ function zen_get_configuration_key_value($lookup)
   function zen_get_products_allow_add_to_cart($lookup) {
     global $db;
 
-    $sql = "select products_type from " . TABLE_PRODUCTS . " where products_id='" . (int)$lookup . "'";
+    $sql = "select products_type, products_model from " . TABLE_PRODUCTS . " where products_id='" . (int)$lookup . "'";
     $type_lookup = $db->Execute($sql);
 
     $sql = "select allow_add_to_cart from " . TABLE_PRODUCT_TYPES . " where type_id = '" . (int)$type_lookup->fields['products_type'] . "'";
     $allow_add_to_cart = $db->Execute($sql);
 
+    if (preg_match('/^GIFT/', addslashes($type_lookup->fields['products_model'])) && ($allow_add_to_cart->fields['allow_add_to_cart'] == 'Y')) {
+      if (MODULE_ORDER_TOTAL_GV_STATUS !== 'true') {
+           $allow_add_to_cart->fields['allow_add_to_cart'] = 'N';
+      }
+    }
     return $allow_add_to_cart->fields['allow_add_to_cart'];
   }
 
