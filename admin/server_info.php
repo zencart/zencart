@@ -27,7 +27,7 @@
       if (isset($hist_details->fields['project_version_patch']) && zen_not_null($hist_details->fields['project_version_patch'])) $sinfo .= '&nbsp;&nbsp;Patch: ' . $hist_details->fields['project_version_patch'];
       if (isset($hist_details->fields['project_version_date_applied']) && zen_not_null($hist_details->fields['project_version_date_applied'])) $sinfo .= ' &nbsp;&nbsp;[' . $hist_details->fields['project_version_date_applied'] . '] ';
       if (isset($hist_details->fields['project_version_comment']) && zen_not_null($hist_details->fields['project_version_comment'])) $sinfo .= ' &nbsp;&nbsp;(' . $hist_details->fields['project_version_comment'] . ')';
-      $sinfo .=  '<br />';
+      $sinfo .=  '<br>';
   $hist_query = "SELECT * from " . TABLE_PROJECT_VERSION_HISTORY . " WHERE project_version_key = 'Zen-Cart Main' ORDER BY project_version_date_applied DESC, project_version_major DESC, project_version_minor DESC, project_version_patch DESC";
   $hist_details = $db->Execute($hist_query);
     while (!$hist_details->EOF) {
@@ -35,10 +35,11 @@
       if (zen_not_null($hist_details->fields['project_version_patch'])) $sinfo .= '&nbsp;&nbsp;Patch: ' . $hist_details->fields['project_version_patch'];
       if (zen_not_null($hist_details->fields['project_version_date_applied'])) $sinfo .= ' &nbsp;&nbsp;[' . $hist_details->fields['project_version_date_applied'] . '] ';
       if (zen_not_null($hist_details->fields['project_version_comment'])) $sinfo .= ' &nbsp;&nbsp;(' . $hist_details->fields['project_version_comment'] . ')';
-      $sinfo .=  '<br />';
+      $sinfo .=  '<br>';
       $hist_details->MoveNext();
     }
-  $sinfo .= '</div></div>';
+    $sinfo .= '<br><a href="https://docs.zen-cart.com/user/first_steps/server_requirements/" rel="noopener" target="_blank">Zen Cart documentation: Server Requirements</a>';
+    $sinfo .= '</div></div>';
 ?>
 <!doctype html public "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html <?php echo HTML_PARAMS; ?>>
@@ -119,7 +120,7 @@ pre {margin: 0; font-family: monospace;}
 <br class="clearBoth">
 <?php echo $sinfo; ?>
 <br>
-<?php 
+<?php
 $disabled_functions = ini_get('disable_functions');
 if (strpos($disabled_functions,"phpinfo") === false) {
 ?>
