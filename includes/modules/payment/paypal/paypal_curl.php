@@ -437,7 +437,7 @@ class paypal_curl extends base {
     } elseif ($this->_mode == 'nvp') {
       $headers[] = 'X-VPS-VIT-Integration-Product: PHP::Zen Cart(R) - PayPal/NVP';
     }
-    $headers[] = 'X-VPS-VIT-Integration-Version: 1.5.7';
+    $headers[] = 'X-VPS-VIT-Integration-Version: 1.5.8';
     $this->lastHeaders = $headers;
 
     $ch = curl_init();

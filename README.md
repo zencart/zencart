@@ -1,4 +1,4 @@
-[![Download Zen Cart E-Commerce Shopping Cart ](https://img.shields.io/sourceforge/dm/zencart.svg)](https://sourceforge.net/projects/zencart/files/latest/download) ![](https://github.com/zencart/zencart/workflows/Zen%20Cart%20Tests/badge.svg?branch=v157)
+[![Download Zen Cart E-Commerce Shopping Cart ](https://img.shields.io/sourceforge/dm/zencart.svg)](https://sourceforge.net/projects/zencart/files/latest/download) ![](https://github.com/zencart/zencart/workflows/Zen%20Cart%20Tests/badge.svg?branch=v158)
 
 
 Zen Cart&reg; - The Art of E-Commerce
@@ -6,24 +6,24 @@ Zen Cart&reg; - The Art of E-Commerce
 
 Zen Cart&reg; was the first Open Source e-Commerce web application to be fully PA-DSS Certified.
 
-Zen Cart&reg; v1.5.7 is an update with several bugfix patches applied on top of the PA-DSS Certified version v1.5.4.
+Zen Cart&reg; v1.5.8 is an update with several bugfix patches applied on top of the PA-DSS Certified version v1.5.4.
 
 It's free software, with free community-driven support available 24/7 on the Zen Cart&reg; Support Site forums at <https://www.zen-cart.com/forum.php>
 
 --------------------
 
 
-Zen Cart&reg; v1.5.7
+Zen Cart&reg; v1.5.8-dev
 ---------------------
 
 Compatibility
 -------------
-Zen Cart v1.5.7 is designed for:
- * PHP 5.6 to PHP 7.4
+Zen Cart v1.5.8 is designed for:
+ * PHP 7.1.3 to PHP 8.0
+ * MySQL 5.7.8+ or MariaDB 10.2.7+
  * Apache 2.2 and 2.4
- * MySQL 5.1 to 8.0 or MariaDB 10.0 to 10.4
-
-NOTE: future Zen Cart releases will require PHP 7.1+ and MySQL 5.7.8+ or MariaDB 10.2.7+
+ 
+Refer to docs site for [compatibility requirements of other versions](https://docs.zen-cart.com/user/first_steps/server_requirements/)
 
 
 Installation
@@ -41,7 +41,7 @@ Installation is simple:
 7. Also make the `/cache` and `/logs` folders writable. (You will be prompted about making other folders writable during installation)
 8. Follow the instructions that appear in your browser for installation. 
 
-If some of the terms used in these brief instructions are things you don't understand, there is a much more detailed set of instructions in the [/docs/Implementation-Guide](https://www.zen-cart.com/docs/implementation-guide-v157.pdf) PDF.
+If some of the terms used in these brief instructions are things you don't understand, there is a much more detailed set of instructions in the [/docs/Implementation-Guide](https://www.zen-cart.com/docs/) PDF.
 
 Upgrading
 ---------
@@ -55,7 +55,7 @@ __The [Implementation Guide](https://www.zen-cart.com/docs/implementation-guide-
 
 Documentation
 -------------
-Use your browser to open the [/docs/index.html](https://www.zen-cart.com/docs/index.html) page for links to release documentation and the [Implementation Guide](https://www.zen-cart.com/docs/implementation-guide-v157.pdf).  A storeowner documentation repository also exists at [docs.zen-cart.com/user/](https://docs.zen-cart.com/user/). 
+Use your browser to open the [/docs/index.html](https://www.zen-cart.com/docs/index.html) page for links to release documentation and the [Implementation Guide](https://www.zen-cart.com/docs/).  A storeowner documentation repository also exists at [docs.zen-cart.com/user/](https://docs.zen-cart.com/user/). 
 
 Developer Documentation
 -----------------------

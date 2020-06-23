@@ -2,7 +2,7 @@
 /**
  * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2019 Jul 05 Modified in v1.5.7 $
+ * @version $Id: DrByte 2019 Jul 05 Modified in v1.5.8 $
  */
 
 $systemChecker = new systemChecker();
@@ -26,6 +26,7 @@ $versionArray[] = '1.5.4';
 $versionArray[] = '1.5.5';
 $versionArray[] = '1.5.6';
 $versionArray[] = '1.5.7';
+$versionArray[] = '1.5.8';
 
 //print_r($versionArray);
 $key = array_search($dbVersion, $versionArray);
