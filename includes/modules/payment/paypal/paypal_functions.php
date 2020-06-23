@@ -6,7 +6,7 @@
  * @copyright Portions Copyright 2003 osCommerce
  * @copyright Portions Copyright 2004 DevosC.com
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2020 May 19 Modified in v1.5.7 $
+ * @version $Id: DrByte 2020 Jun 22 Modified in v1.5.7 $
  */
 
 // Functions for paypal processing
