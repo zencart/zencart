@@ -9,7 +9,7 @@
  *
  * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2020 June 21 Modified in v1.5.7 $
+ * @version $Id: DrByte 2020 June 22 Modified in v1.5.7 $
  */
 
 if (!defined('TABLE_SQUARE_PAYMENTS')) define('TABLE_SQUARE_PAYMENTS', DB_PREFIX . 'square_payments');
@@ -28,7 +28,7 @@ class square extends base
     /**
      * $moduleVersion is the plugin version number
      */
-    public $moduleVersion = '1.4';
+    public $moduleVersion = '1.5';
     /**
      * API version this module was last updated to use
      */
@@ -838,14 +838,14 @@ class square extends base
      * fetch original payment details for an order
      *
      * @param $order_id
-     * @return \SquareConnect\Model\Order
+     * @return \SquareConnect\Model\Order[]
      */
     protected function lookupPaymentForOrder($order_id)
     {
         $records = $this->lookupOrderDetails($order_id);
 
-        if (count($records) < 1) {
-            return '';
+        if (empty($records)) {
+            return (new \SquareConnect\Model\BatchRetrieveOrdersResponse(['orders' => new \SquareConnect\Model\Order()]))->getOrders();
         }
 
         return $records[0];
@@ -1061,7 +1061,7 @@ class square extends base
             }
         }
         if (($errors != '' && stristr(MODULE_PAYMENT_SQUARE_LOGGING, 'Email on Failures')) || strstr(MODULE_PAYMENT_SQUARE_LOGGING, 'Email Always')) {
-            zen_mail(STORE_NAME, STORE_OWNER_EMAIL_ADDRESS, 'Square Alert (customer transaction error) ' . date('M-d-Y h:i:s'), $logMessage, STORE_OWNER, STORE_OWNER_EMAIL_ADDRESS,
+            zen_mail(STORE_NAME, STORE_OWNER_EMAIL_ADDRESS, 'Square Alert (' . (IS_ADMIN_FLAG === true ? 'admin' : 'customer') . ' transaction error) ' . date('M-d-Y h:i:s'), $logMessage, STORE_OWNER, STORE_OWNER_EMAIL_ADDRESS,
                 array('EMAIL_MESSAGE_HTML' => nl2br($logMessage)), 'debug');
         }
     }
@@ -1093,8 +1093,14 @@ class square extends base
 
         $refundNote = strip_tags(zen_db_input($_POST['refnote']));
 
-        $payments = $this->lookupPaymentForOrder($oID)->getTenders();
-        $payment = $payments[0];
+        $record = $this->lookupPaymentForOrder($oID);
+        if (!method_exists($record, 'getTenders')) {
+            $messageStack->add_session('ERROR: Could not look up details. Probable bad record number, or incorrect Square account credentials.', 'error');
+            return false;
+        }
+        $transactions = $record->getTenders();
+
+        $payment = $transactions[0];
         $currency_code = $payment->getAmountMoney()->getCurrency();
 
         $refund_details = array(
@@ -1115,31 +1121,30 @@ class square extends base
             $result = $api_instance->refundPayment($request_body);
             $errors_object = $result->getErrors();
             $transaction = $result->getRefund();
-            $this->logTransactionData($transaction, $refund_details, (string)$errors_object);
+            $this->logTransactionData(['refund request' => 'payment ' . $payment->getId(), 'id' => '[refund]'], $refund_details, (string)$errors_object);
+
+            $currency_code = $transaction->getAmountMoney()->getCurrency();
+            $amount = $currencies->format($transaction->getAmountMoney()->getAmount() / (pow(10, $currencies->get_decimal_places($currency_code))), false, $currency_code);
+
+            $comments = 'REFUNDED: ' . $amount . "\n" . $refundNote;
+            zen_update_orders_history($oID, $comments, null, $new_order_status, 0);
+
+            $messageStack->add_session(sprintf(MODULE_PAYMENT_SQUARE_TEXT_REFUND_INITIATED . $amount), 'success');
+
+            return true;
+
         } catch (\SquareConnect\ApiException $e) {
             $errors_object = $e->getResponseBody()->errors;
             $this->logTransactionData(array($e->getCode() => $e->getMessage()), $refund_details, print_r($e->getResponseBody(), true));
             trigger_error("Square Connect error (REFUNDING). \nResponse Body:\n" . print_r($e->getResponseBody(), true) . "\nResponse Headers:\n" . print_r($e->getResponseHeaders(), true), E_USER_NOTICE);
-            $messageStack->add_session(MODULE_PAYMENT_SQUARE_TEXT_COMM_ERROR, 'error');
+//            $messageStack->add_session(MODULE_PAYMENT_SQUARE_TEXT_COMM_ERROR, 'error');
         }
 
         if (is_array($errors_object) && count($errors_object)) {
             $error = $this->parse_error_response($errors_object);
             $messageStack->add_session(MODULE_PAYMENT_SQUARE_TEXT_UPDATE_FAILED . ' [' . $error['detail'] . ']', 'error');
-
-            return false;
         }
-
-        $currency_code = $transaction->getAmountMoney()->getCurrency();
-        $amount = $currencies->format($transaction->getAmountMoney()->getAmount() / (pow(10, $currencies->get_decimal_places($currency_code))), false, $currency_code);
-
-        // Success, so save the results
-        $comments = 'REFUNDED: ' . $amount . "\n" . $refundNote;
-        zen_update_orders_history($oID, $comments, null, $new_order_status, 0);
-
-        $messageStack->add_session(sprintf(MODULE_PAYMENT_SQUARE_TEXT_REFUND_INITIATED . $amount), 'success');
-
-        return true;
+        return false;
     }
 
     /**
@@ -1162,7 +1167,12 @@ class square extends base
 
         if (!$proceedToCapture) return false;
 
-        $transactions = $this->lookupPaymentForOrder($oID)->getTenders();
+        $record = $this->lookupPaymentForOrder($oID);
+        if (!method_exists($record, 'getTenders')) {
+            $messageStack->add_session('ERROR: Could not look up details. Probable bad record number, or incorrect Square account credentials.', 'error');
+            return false;
+        }
+        $transactions = $record->getTenders();
         $transaction = $transactions[0];
         $payment_id = $transaction->getPaymentId();
 
@@ -1173,28 +1183,27 @@ class square extends base
         try {
             $result = $api_instance->completePayment($payment_id, new \SquareConnect\Model\CompletePaymentRequest([]));
             $errors_object = $result->getErrors();
-            $this->logTransactionData(array('capture request' => 'payment ' . $payment_id), array(), (string)$errors_object);
+            $this->logTransactionData(array('capture request' => 'payment ' . $payment_id, 'id' => '[capture]'), array(), (string)$errors_object);
+
+            $comments = 'FUNDS COLLECTED. Trans ID: ' . $payment_id . "\n" . 'Time: ' . date('Y-m-D h:i:s') . "\n" . $captureNote;
+            zen_update_orders_history($oID, $comments, null, $new_order_status, 0);
+
+            $messageStack->add_session(sprintf(MODULE_PAYMENT_SQUARE_TEXT_CAPT_INITIATED, $payment_id), 'success');
+
+            return true;
+
         } catch (\SquareConnect\ApiException $e) {
             $errors_object = $e->getResponseBody()->errors;
             $this->logTransactionData(array($e->getCode() => $e->getMessage()), array(), print_r($e->getResponseBody(), true));
             trigger_error("Square Connect error (CAPTURE attempt). \nResponse Body:\n" . print_r($e->getResponseBody(), true) . "\nResponse Headers:\n" . print_r($e->getResponseHeaders(), true), E_USER_NOTICE);
-            $messageStack->add_session(MODULE_PAYMENT_SQUARE_TEXT_COMM_ERROR, 'error');
+//            $messageStack->add_session(MODULE_PAYMENT_SQUARE_TEXT_COMM_ERROR, 'error');
         }
 
-        if (count($errors_object)) {
+        if (is_array($errors_object) && count($errors_object)) {
             $error = $this->parse_error_response($errors_object);
             $messageStack->add_session(MODULE_PAYMENT_SQUARE_TEXT_UPDATE_FAILED . ' [' . $error['detail'] . ']', 'error');
-
-            return false;
         }
-
-        // Success, so save the results
-        $comments = 'FUNDS COLLECTED. Trans ID: ' . $payment_id . "\n" . 'Time: ' . date('Y-m-D h:i:s') . "\n" . $captureNote;
-        zen_update_orders_history($oID, $comments, null, $new_order_status, 0);
-
-        $messageStack->add_session(sprintf(MODULE_PAYMENT_SQUARE_TEXT_CAPT_INITIATED, $payment_id), 'success');
-
-        return true;
+        return false;
     }
 
     /**
@@ -1218,7 +1227,12 @@ class square extends base
         }
         if (!$proceedToVoid) return false;
 
-        $transactions = $this->lookupPaymentForOrder($oID)->getTenders();
+        $record = $this->lookupPaymentForOrder($oID);
+        if (!method_exists($record, 'getTenders')) {
+            $messageStack->add_session('ERROR: Could not look up details. Probable bad record number, or incorrect Square account credentials.', 'error');
+            return false;
+        }
+        $transactions = $record->getTenders();
         $transaction = $transactions[0];
         $payment_id = $transaction->getPaymentId();
 
@@ -1227,27 +1241,27 @@ class square extends base
         try {
             $result = $api_instance->cancelPayment($payment_id);
             $errors_object = $result->getErrors();
-            $this->logTransactionData(array('void request' => 'payment ' . $payment_id), array(), (string)$errors_object);
+            $this->logTransactionData(array('void request' => 'payment ' . $payment_id, 'id' => '[void]'), array(), (string)$errors_object);
+
+            $comments = 'VOIDED. Trans ID: ' . $payment_id . "\n" . $voidNote;
+            zen_update_orders_history($oID, $comments, null, $new_order_status, 0);
+
+            $messageStack->add_session(sprintf(MODULE_PAYMENT_SQUARE_TEXT_VOID_INITIATED, $payment_id), 'success');
+
+            return true;
+
         } catch (\SquareConnect\ApiException $e) {
             $errors_object = $e->getResponseBody()->errors;
             $this->logTransactionData(array($e->getCode() => $e->getMessage()), array(), print_r($e->getResponseBody(), true));
             trigger_error("Square Connect error (VOID attempt). \nResponse Body:\n" . print_r($e->getResponseBody(), true) . "\nResponse Headers:\n" . print_r($e->getResponseHeaders(), true), E_USER_NOTICE);
-            $messageStack->add_session(MODULE_PAYMENT_SQUARE_TEXT_COMM_ERROR, 'error');
+//            $messageStack->add_session(MODULE_PAYMENT_SQUARE_TEXT_COMM_ERROR, 'error');
         }
 
-        if (count($errors_object)) {
+        if (is_array($errors_object) && count($errors_object)) {
             $msg = $this->parse_error_response($errors_object);
             $messageStack->add_session(MODULE_PAYMENT_SQUARE_TEXT_UPDATE_FAILED . ' [' . $msg['detail'] . ']', 'error');
-
-            return false;
         }
-        // Success, so save the results
-        $comments = 'VOIDED. Trans ID: ' . $payment_id . "\n" . $voidNote;
-        zen_update_orders_history($oID, $comments, null, $new_order_status, 0);
-
-        $messageStack->add_session(sprintf(MODULE_PAYMENT_SQUARE_TEXT_VOID_INITIATED, $payment_id), 'success');
-
-        return true;
+        return false;
     }
 
     protected function getNewOrderStatus($order_id, $action, $default)
