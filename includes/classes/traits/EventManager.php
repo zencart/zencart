@@ -18,7 +18,7 @@ trait EventManager
     {
         $this->logNotifier($eventID, $param1, $param2, $param3, $param4, $param5, $param6, $param7, $param8, $param9);
 
-        $observers = &self::getStaticObserver();
+        $observers = &$this->getStaticObserver();
         if (is_null($observers)) {
             return;
         }
@@ -69,7 +69,7 @@ trait EventManager
     }
 
     protected function & getStaticObserver() {
-        return \base::getStaticProperty('observer');
+        return (new \base)->getStaticProperty('observer');
     }
 
     protected function & getStaticProperty($var)
