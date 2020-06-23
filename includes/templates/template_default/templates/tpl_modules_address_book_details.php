@@ -19,10 +19,11 @@
   if (ACCOUNT_GENDER == 'true') {
     if (isset($gender)) {
       $male = ($gender == 'm') ? true : false;
+      $female = ($gender == 'f') ? true : false;
     } else {
       $male = ($entry->fields['entry_gender'] == 'm') ? true : false;
+      $female = ($entry->fields['entry_gender'] == 'f') ? true : false;
     }
-    $female = !$male;
 ?>
 <?php echo zen_draw_radio_field('gender', 'm', $male, 'id="gender-male"') . '<label class="radioButtonLabel" for="gender-male">' . MALE . '</label>' . zen_draw_radio_field('gender', 'f', $female, 'id="gender-female"') . '<label class="radioButtonLabel" for="gender-female">' . FEMALE . '</label>' . (zen_not_null(ENTRY_GENDER_TEXT) ? '<span class="alert">' . ENTRY_GENDER_TEXT . '</span>': ''); ?>
 <br class="clearBoth" />

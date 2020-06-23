@@ -6,7 +6,7 @@
  * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Zcwilt 2020 May 23 Modified in v1.5.7 $
+ * @version $Id: Zcwilt 2020 May 23 Modified in v1.5.8 $
  */
 /**
  * Stop execution completely
@@ -864,7 +864,7 @@ function zen_set_field_length($tbl, $fld, $max = 70)
       return $additional_link;
       break;
     case ($button_check->fields['product_is_call'] == '1'):
-      $return_button = '<a href="' . zen_href_link(FILENAME_CONTACT_US, '', 'SSL') . '">' . TEXT_CALL_FOR_PRICE . '</a>';
+      $return_button = '<a href="' . zen_href_link(FILENAME_ASK_A_QUESTION, 'pid='.(int)$product_id, 'SSL') . '">' . TEXT_CALL_FOR_PRICE . '</a>';
       break;
     case ($button_check->fields['products_quantity'] <= 0 and SHOW_PRODUCTS_SOLD_OUT_IMAGE == '1'):
       if ($_GET['main_page'] == zen_get_info_page($product_id)) {
