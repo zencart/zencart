@@ -480,18 +480,15 @@
 
 // don't check for mixed if not attributes
     $chk_attrib = zen_has_product_attributes((int)$product_id);
-    if ($chk_attrib == true) {
-      $the_products_quantity_mixed = $db->Execute("select products_id, products_quantity_mixed from " . TABLE_PRODUCTS . " where products_id = '" . (int)$product_id . "'");
-      if ($the_products_quantity_mixed->fields['products_quantity_mixed'] == '1') {
-        $look_up = true;
-      } else {
-        $look_up = false;
-      }
-    } else {
-      $look_up = 'none';
+    if ($chk_attrib != true) {
+      return 'none';
+    }
+    $the_products_quantity_mixed = $db->Execute("SELECT products_id, products_quantity_mixed FROM " . TABLE_PRODUCTS . " WHERE products_id = " . (int)$product_id . " LIMIT 1");
+    if (($the_products_quantity_mixed->RecordCount() != 0) && $the_products_quantity_mixed->fields['products_quantity_mixed'] == '1') {
+      return true;
     }
 
-    return $look_up;
+    return false;
   }
 
 
