@@ -14,11 +14,10 @@
  * <li>Load application_bottom.php</li>
  * </ul>
  *
- * @package general
- * @copyright Copyright 2003-2005 Zen Cart Development Team
+ * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: index.php 2942 2006-02-02 04:41:23Z drbyte $
+ * @version $Id: DrByte 2020 Jun 16 Modified in v1.5.7 $
  */
 /**
  * Load common library stuff 
