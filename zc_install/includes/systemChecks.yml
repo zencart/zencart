@@ -1,7 +1,7 @@
 #
 # @copyright Copyright 2003-2020 Zen Cart Development Team
 # @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
-# @version $Id: DrByte 2020 May 18 Modified in v1.5.7 $
+# @version $Id: DrByte 2020 June 23 Modified in v1.5.7 $
 #
 
 systemChecks:
@@ -243,8 +243,8 @@ systemChecks:
   checkDBVersion157:
     runLevel: dbVersion
     errorLevel: WARN
-    version: '1.5.7-beta'
-    mainErrorText: <?php echo sprintf(TEXT_DB_VERSION_NOT_FOUND, 'v1.5.7-beta') . PHP_EOL; ?>
+    version: '1.5.7'
+    mainErrorText: <?php echo sprintf(TEXT_DB_VERSION_NOT_FOUND, 'v1.5.7') . PHP_EOL; ?>
     methods:
       dbVersionChecker:
         parameters:

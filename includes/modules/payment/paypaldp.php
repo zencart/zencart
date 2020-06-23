@@ -6,7 +6,7 @@
  * @copyright Portions Copyright 2005 CardinalCommerce
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Scott C Wilson 2020 Apr 12 Modified in v1.5.7 $
+ * @version $Id: DrByte 2020 Jun 23 Modified in v1.5.7 $
  */
 /**
  * The transaction URL for the Cardinal Centinel 3D-Secure service.
@@ -131,7 +131,7 @@ class paypaldp extends base {
     global $order;
     $this->code = 'paypaldp';
     $this->codeTitle = MODULE_PAYMENT_PAYPALDP_TEXT_ADMIN_TITLE_WPP;
-    $this->codeVersion = '1.5.6';
+    $this->codeVersion = '1.5.7';
     $this->enableDirectPayment = true;
     $this->enabled = (defined('MODULE_PAYMENT_PAYPALDP_STATUS') && MODULE_PAYMENT_PAYPALDP_STATUS == 'True');
     // Set the title & description text based on the mode we're in
@@ -883,7 +883,7 @@ class paypaldp extends base {
                      ($this->avs != 'N/A' ? "\nAVS Code: ".$this->avs."\nCVV2 Code: ".$this->cvv2 : '') .
                      (trim($this->amt) != '' ? ("\nAmount: " . $this->amt) : '');
     zen_update_orders_history($insert_id, $commentString, null, $order->info['order_status'], 0);
-    
+
     // 3D-Secure
     if ($this->requiresLookup($order->info['cc_type']) == true) {
       // CardinalCommerce Liability Protection Status
