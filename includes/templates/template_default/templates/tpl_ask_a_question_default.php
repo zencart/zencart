@@ -2,7 +2,7 @@
 /**
  * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Scott C Wilson 2019 Jul 22 New in v1.5.7 $
+ * @version $Id: DrByte 2020 Jun 23 Modified in v1.5.7 $
  */
 ?>
 <div class="centerColumn" id="askAQuestion">
@@ -12,7 +12,7 @@
 <?php if (CONTACT_US_STORE_NAME_ADDRESS== '1') { ?>
 <address><?php echo nl2br(STORE_NAME_ADDRESS); ?></address>
 <?php } ?>
-<h1><?php echo HEADING_TITLE . $product_info->fields['products_name']; ?></h1>
+<h1><?php echo HEADING_TITLE . $product_details['products_name']; ?></h1>
 
 
 <?php
@@ -27,7 +27,7 @@
   } else {
 ?>
 
-<?php echo '<a href="' . zen_href_link(zen_get_info_page((int)$_GET['pid']), 'products_id=' . (int)$_GET['pid'], 'SSL') . '">' . zen_image(DIR_WS_IMAGES . $product_info->fields['products_image'], $product_info->fields['products_name'], IMAGE_PRODUCT_LISTING_WIDTH, IMAGE_PRODUCT_LISTING_HEIGHT) . '</a>'; ?>
+<?php echo '<a href="' . zen_href_link(zen_get_info_page((int)$_GET['pid']), 'products_id=' . (int)$_GET['pid'], 'SSL') . '">' . zen_image(DIR_WS_IMAGES . $product_details['products_image'], $product_details['products_name'], IMAGE_PRODUCT_LISTING_WIDTH, IMAGE_PRODUCT_LISTING_HEIGHT) . '</a>'; ?>
 
 <div id="contactUsNoticeContent" class="content">
 <?php

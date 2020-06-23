@@ -5,7 +5,7 @@
  * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2020 May 04 Modified in v1.5.7 $
+ * @version $Id: DrByte 2020 Jun 23 Modified in v1.5.7 $
  */
 /**
  * load the communications layer code
@@ -106,7 +106,7 @@ class paypalwpp extends base {
     global $order;
     $this->code = 'paypalwpp';
     $this->codeTitle = MODULE_PAYMENT_PAYPALWPP_TEXT_ADMIN_TITLE_EC;
-    $this->codeVersion = '1.5.6';
+    $this->codeVersion = '1.5.7';
     $this->enableDirectPayment = FALSE;
     $this->enabled = (defined('MODULE_PAYMENT_PAYPALWPP_STATUS') && MODULE_PAYMENT_PAYPALWPP_STATUS == 'True');
     // Set the title & description text based on the mode we're in ... EC vs US/UK vs admin
@@ -309,7 +309,7 @@ class paypalwpp extends base {
         });
       };
       </script>
-      <script src=\"//www.paypalobjects.com/api/checkout.js\" async></script>";
+      <script src=\"https://www.paypalobjects.com/api/checkout.js\" async></script>";
   }
   /**
    * Prepare and submit the final authorization to PayPal via the appropriate means as configured

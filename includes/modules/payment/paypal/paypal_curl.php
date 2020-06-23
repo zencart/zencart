@@ -4,13 +4,13 @@
  *
  * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2020 May 19 Modified in v1.5.7 $
+ * @version $Id: DrByte 2020 June 23 Modified in v1.5.7 $
  */
 
 /**
  * PayPal NVP (v124.0) and Payflow Pro (v4 HTTP API) implementation via cURL.
  */
-if (!defined('PAYPAL_DEV_MODE')) define('PAYPAL_DEV_MODE', 'false'); 
+if (!defined('PAYPAL_DEV_MODE')) define('PAYPAL_DEV_MODE', 'false');
 class paypal_curl extends base {
 
   /**
@@ -437,7 +437,7 @@ class paypal_curl extends base {
     } elseif ($this->_mode == 'nvp') {
       $headers[] = 'X-VPS-VIT-Integration-Product: PHP::Zen Cart(R) - PayPal/NVP';
     }
-    $headers[] = 'X-VPS-VIT-Integration-Version: 1.5.6';
+    $headers[] = 'X-VPS-VIT-Integration-Version: 1.5.7';
     $this->lastHeaders = $headers;
 
     $ch = curl_init();
