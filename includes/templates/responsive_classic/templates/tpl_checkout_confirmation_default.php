@@ -124,7 +124,7 @@
         <tr class="<?php echo $order->products[$i]['rowClass']; ?>">
           <td  class="cartQuantity"><?php echo $order->products[$i]['qty']; ?>&nbsp;x</td>
           <td class="cartProductDisplay"><?php echo $order->products[$i]['name']; ?>
-          <?php  echo $stock_check[$i]; ?>
+          <?php  if (!empty($stock_check[$i])) echo $stock_check[$i]; ?>
 
 <?php // if there are attributes, loop thru them and display one per line
     if (isset($order->products[$i]['attributes']) && sizeof($order->products[$i]['attributes']) > 0 ) {
