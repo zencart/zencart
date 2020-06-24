@@ -189,8 +189,7 @@ class ot_coupon {
 
 
 
-      $sql = "SELECT coupon_id, coupon_amount, coupon_type, coupon_minimum_order, uses_per_coupon, uses_per_user,
-              restrict_to_products, restrict_to_categories, coupon_zone_restriction, coupon_calc_base, coupon_order_limit
+      $sql = "SELECT * 
               FROM " . TABLE_COUPONS . "
               WHERE coupon_code= :couponCodeEntered
               AND coupon_active='Y'
