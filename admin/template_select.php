@@ -20,7 +20,8 @@ while ($file = $dir->read()) {
         'version' => $template_version,
         'author' => $template_author,
         'description' => $template_description,
-        'screenshot' => $template_screenshot];
+        'screenshot' => $template_screenshot,
+      ];
     }
   }
 }
@@ -104,6 +105,16 @@ if (zen_not_null($action)) {
                 $template_split = new splitPageResults($_GET['page'], MAX_DISPLAY_SEARCH_RESULTS, $template_query_raw, $template_query_numrows);
                 $templates = $db->Execute($template_query_raw);
                 foreach ($templates as $template) {
+                  if (!isset($template_info[$template['template_dir']])) {
+                     $template_info[$template['template_dir']] = [
+                       'name' => $template['template_dir'],
+                       'version' => '', 
+                       'author' => '', 
+                       'description' => '',
+                       'screenshot' => '', 
+                       'missing' => true, 
+                     ];
+                  }
                   if ((!isset($_GET['tID']) || (isset($_GET['tID']) && ($_GET['tID'] == $template['template_id']))) && !isset($tInfo) && (substr($action, 0, 3) != 'new')) {
                     $tInfo = new objectInfo($template);
                   }
@@ -190,6 +201,7 @@ if (zen_not_null($action)) {
                 $contents = ['form' => zen_draw_form('templateselect', FILENAME_TEMPLATE_SELECT, 'page=' . $_GET['page'] . '&tID=' . $tInfo->template_id . '&action=save', 'post', 'class="form-horizontal"')];
                 $contents[] = ['text' => TEXT_INFO_EDIT_INTRO];
                 foreach($template_info as $key => $value) {
+                  if (isset($value['missing'])) continue; 
                   $template_array[] = ['id' => $key, 'text' => $value['name']];
                 }
                 $contents[] = ['text' => zen_draw_label(TEXT_INFO_TEMPLATE_NAME, 'ln', 'class="control-label"') . zen_draw_pull_down_menu('ln', $template_array, $templates->fields['template_dir'], 'class="form-control" id="ln"')];
