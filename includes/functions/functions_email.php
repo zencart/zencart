@@ -136,6 +136,9 @@ use PHPMailer\PHPMailer\SMTP;
       $zen_fix_currencies = preg_split("/[:,]/" , str_replace(' ', '', CURRENCIES_TRANSLATIONS));
       $size = sizeof($zen_fix_currencies);
       for ($i=0, $n=$size; $i<$n; $i+=2) {
+        if (empty($zen_fix_currencies[$i+1])) {
+          break;
+        }
         $zen_fix_current = $zen_fix_currencies[$i];
         $zen_fix_replace = $zen_fix_currencies[$i+1];
         if (strlen($zen_fix_current)>0) {
