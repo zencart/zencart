@@ -495,7 +495,7 @@ class zcDatabaseInstaller
                 : ", reset_token = '" . (time() + (72 * 60 * 60)) . "}" . zen_encrypt_password($options['admin_password']) . "'") . " where admin_id = 1";
         $this->db->Execute($sql);
 
-        if (DEVELOPER_MODE === true && defined('DEVELOPER_CONFIGS') && is_array(DEVELOPER_CONFIGS)) {
+        if (defined('DEVELOPER_MODE') && DEVELOPER_MODE === true && defined('DEVELOPER_CONFIGS') && is_array(DEVELOPER_CONFIGS)) {
             foreach (DEVELOPER_CONFIGS as $key) {
                 if (defined($key)) {
                     $value = constant($key);
