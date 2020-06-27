@@ -496,13 +496,10 @@ class zcDatabaseInstaller
         $this->db->Execute($sql);
 
         if (defined('DEVELOPER_MODE') && DEVELOPER_MODE === true && defined('DEVELOPER_CONFIGS') && is_array(DEVELOPER_CONFIGS)) {
-            foreach (DEVELOPER_CONFIGS as $key) {
-                if (defined($key)) {
-                    $value = constant($key);
-                    if (null === $value) continue;
-                    $sql = "update " . $this->dbPrefix . "configuration set configuration_value = '" . $this->db->prepareInput($value) . "' where configuration_key = '" . $this->db->prepareInput($key) . "'";
-                    $this->db->Execute($sql);
-                }
+            foreach (DEVELOPER_CONFIGS as $key => $value) {
+                if (null === $value) continue;
+                $sql = "update " . $this->dbPrefix . "configuration set configuration_value = '" . $this->db->prepareInput($value) . "' where configuration_key = '" . $this->db->prepareInput($key) . "'";
+                $this->db->Execute($sql);
             }
         }
     }
