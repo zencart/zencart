@@ -3101,6 +3101,19 @@ function zen_get_master_categories_pulldown($product_id, $fullpath = false)
     $string .= zen_draw_hidden_field($name, '--none--');
     return $string;
   }
+  
+/**
+ * Function for configuration values that are read-only, e.g. a plugin's version
+ * number.  Adapted from the like-named function in the Sitemap XML plugin, provided
+ * by AndrewBerezin (rip).
+ */
+function zen_cfg_read_only($text, $key = '') 
+{
+    $name = ((!empty($key)) ? 'configuration[' . $key . ']' : 'configuration_value');
+    $text = htmlspecialchars_decode($text);
+
+    return $text . zen_draw_hidden_field($name, $text);
+}
 
 /**
  * get products image
