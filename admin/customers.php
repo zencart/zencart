@@ -89,10 +89,9 @@ if (zen_not_null($action)) {
       $customers_lastname = zen_db_prepare_input(zen_sanitize_string($_POST['customers_lastname']));
       $customers_email_address = zen_db_prepare_input($_POST['customers_email_address']);
       $customers_telephone = zen_db_prepare_input($_POST['customers_telephone']);
+      $customers_fax = '';
       if (ACCOUNT_FAX_NUMBER == 'true') {
-        $customers_fax = zen_db_prepare_input($_POST['customers_fax']);
-      } else {
-        $customers_fax = '';
+          $customers_fax = zen_db_prepare_input($_POST['customers_fax']);
       }
       $customers_newsletter = zen_db_prepare_input($_POST['customers_newsletter']);
       $customers_group_pricing = (int)zen_db_prepare_input($_POST['customers_group_pricing']);
