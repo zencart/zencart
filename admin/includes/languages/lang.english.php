@@ -529,6 +529,8 @@ $define = [
     'ARIA_PAGINATION_ELLIPSIS_PREVIOUS' => 'Get previous group of pages',
     'ARIA_PAGINATION_ELLIPSIS_NEXT' => 'Get next group of pages',
     'ARIA_PAGINATION_' => '',
+    'TEXT_EMAIL_ADDRESS_VALIDATE' => 'The text entered does not resolve to an acceptable email address. (I.e. Name &lt;email@domain&gt; or &lt;email@domain&gt; or email@domain or any combination of these separated by a comma.)',
+    'TEXT_BOOLEAN_VALIDATE' => 'The value is required to be a boolean value or equivalent.',
 ];
 
 return $define;
