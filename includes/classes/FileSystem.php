@@ -1,7 +1,8 @@
 <?php
 /**
  *
- * @copyright Copyright 2003-2020 Zen Cart Development Team
+ * @package classes
+ * @copyright Copyright 2003-2019 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: DrByte 2020 Jun 18 Modified in v1.5.7 $
  */
@@ -16,7 +17,7 @@ class FileSystem
 
     protected $installedPlugins;
 
-    public function loadFilesFromDirectory($rootDir, $fileRegx)
+    public function loadFilesFromDirectory($rootDir, $fileRegx = '~^[^\._].*\.php$~i')
     {
         if (!$dir = @dir($rootDir)) return;
         while ($file = $dir->read()) {
@@ -27,7 +28,7 @@ class FileSystem
         $dir->close();
     }
 
-    public function listFilesFromDirectory($rootDir, $fileRegx)
+    public function listFilesFromDirectory($rootDir, $fileRegx = '~^[^\._].*\.php$~i')
     {
         if (!$dir = @dir($rootDir)) return [];
         $fileList = [];
@@ -40,7 +41,7 @@ class FileSystem
         return $fileList;
     }
 
-    public function loadFilesFromPluginsDirectory($installedPlugins, $rootDir, $fileRegx)
+    public function loadFilesFromPluginsDirectory($installedPlugins, $rootDir, $fileRegx = '~^[^\._].*\.php$~i')
     {
         foreach ($installedPlugins as $plugin) {
             $pluginDir = DIR_FS_CATALOG . 'zc_plugins/' . $plugin['unique_key'] . '/' . $plugin['version'];
@@ -141,5 +142,37 @@ class FileSystem
     public function setInstalledPlugins($installedPlugins)
     {
         $this->installedPlugins = $installedPlugins;
+    }
+
+    public function getInstalledPlugins()
+    {
+        return $this->installedPlugins;
+    }
+
+    public function setFileExtension($file, $extension = 'php')
+    {
+        if (preg_match('~\.' . $extension . '~i', $file)) {
+            return $file;
+        }
+        return $file . '.php';
+    }
+
+    public function hasTemplateLanguageOverride($templateDir, $rootPath, $language, $file, $extraPath = '')
+    {
+        $file = $this->setFileExtension($file);
+        $fullPath = $rootPath . $language . $extraPath . '/' . $templateDir . '/' . $file;
+        if (!file_exists($fullPath)) {
+            return false;
+        }
+        return true;
+    }
+
+    public function getExtraPathForTemplateOverrrideOrOriginal($templateDir, $rootPath, $language, $file, $extraPath = '')
+    {
+        if (!$this->hasTemplateLanguageOverride($templateDir, $rootPath, $language, $file, $extraPath)) {
+            return $extraPath;
+        }
+        $extraPath = $extraPath . '/' . $templateDir;
+        return $extraPath;
     }
 }

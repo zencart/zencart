@@ -15,7 +15,7 @@
 ?>
 <div class="centerColumn" id="indexCategories">
 <?php if ($show_welcome == true) { ?>
-<h1 id="indexCategoriesHeading"><?php echo HEADING_TITLE; ?></h1>
+<h1 id="indexCategoriesHeading"><?php echo HEADING_TITLE_NESTED; ?></h1>
 
 <?php if (SHOW_CUSTOMER_GREETING == 1) { ?>
 <h2 class="greeting"><?php echo zen_customer_greeting(); ?></h2>

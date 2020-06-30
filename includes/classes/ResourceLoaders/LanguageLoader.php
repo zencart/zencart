@@ -11,61 +11,75 @@ namespace Zencart\LanguageLoader;
 class LanguageLoader
 {
 
-    public function __construct($pluginList, $currentPage)
+    public function __construct($arraysLoader, $filesLoader)
     {
-        $this->pluginList = $pluginList;
-        $this->currentPage = $currentPage;
+        $this->languageFilesLoaded = ['arrays' => [], 'legacy' => []];
+        $this->arrayLoader = $arraysLoader;
+        $this->fileLoader = $filesLoader;
+        $this->languageFilesLoaded = ['arrays' => [], 'legacy' => []];
     }
 
-    public function loadLanguageDefines()
+    public function loadInitialLanguageDefines()
     {
-        $this->loadLanguageForView();
-        $this->loadLanguageExtraDefinitions();
-        $this->loadBaseLanguageFile();
+        $this->arrayLoader->loadInitialLanguageDefines($this);
+        $this->fileLoader->loadInitialLanguageDefines($this);
     }
 
-
-    protected function loadLanguageForView()
+    public function finalizeLanguageDefines()
     {
-        if (is_file(DIR_WS_LANGUAGES . $_SESSION['language'] . '/' . $this->currentPage)) {
-            include(DIR_WS_LANGUAGES . $_SESSION['language'] . '/' . $this->currentPage);
+        $this->arrayLoader->makeConstants($this->arrayLoader->getLanguageDefines());
+    }
+
+    public function getLanguageFilesLoaded()
+    {
+        return $this->languageFilesLoaded;
+    }
+
+    public function addLanguageFilesLoaded($type, $defineFile)
+    {
+        $this->languageFilesLoaded[$type][] = $defineFile;
+    }
+
+    public function loadDefinesFromFile($baseDirectory, $language, $languageFile)
+    {
+        $this->arrayLoader->loadDefinesFromArrayFile($baseDirectory, $language, $languageFile);
+        $this->fileLoader->loadFileDefineFile(DIR_FS_CATALOG . DIR_WS_LANGUAGES . $language . $baseDirectory . '/' . $languageFile);
+    }
+
+    public function loadLanguageForView()
+    {
+        $this->arrayLoader->loadLanguageForView();
+        $this->fileLoader->loadLanguageForView();
+    }
+
+    public function loadExtraLanguageFiles($rootPath, $language, $fileName, $extraPath = '')
+    {
+        $defineList = $this->arrayLoader->loadDefinesFromArrayFile($rootPath, $language, $fileName, $extraPath);
+        $this->arrayLoader->makeConstants($defineList);
+        $this->fileLoader->loadFileDefineFile($rootPath . $language . $extraPath . '/' . $fileName);
+        // @todo plugins & late extra definitions
+    }
+
+    public function hasLanguageFile($rootPath, $language, $fileName, $extraPath = '')
+    {
+        if (file_exists($rootPath . $language . $extraPath . '/' . $fileName)) {
+            return true;
         }
-        foreach ($this->pluginList as $plugin) {
-            $pluginDir = DIR_FS_CATALOG . 'zc_plugins/' . $plugin['unique_key'] . '/' . $plugin['version'];
-            $langFile = $pluginDir . '/admin/includes/languages/'  . $_SESSION['language'] . '/' . $this->currentPage;
-            if (is_file($langFile)) {
-                include_once($langFile);
-            }
+        if (file_exists($rootPath . $language . $extraPath . '/lang.' . $fileName)) {
+            return true;
         }
     }
 
-    protected function loadLanguageExtraDefinitions()
+    public function isFileAlreadyLoaded($defineFile)
     {
-        $this->loadFilesFromDirectory(DIR_WS_LANGUAGES . $_SESSION['language'] . '/extra_definitions', '~^[^\._].*\.php$~i');
-        foreach ($this->pluginList as $plugin) {
-            $pluginDir = DIR_FS_CATALOG . 'zc_plugins/' . $plugin['unique_key'] . '/' . $plugin['version'];
-            $extrasDir = $pluginDir . '/admin/includes/languages/' . $_SESSION['language'] . '/extra_definitions';
-            $this->loadFilesFromDirectory($extrasDir, '~^[^\._].*\.php$~i');
+        $fileInfo = pathinfo($defineFile);
+        $searchFile = 'lang.' . $fileInfo['basename'];
+        $searchFile = $fileInfo['dirname'] . '/' . $searchFile;
+        if (in_array($searchFile, $this->languageFilesLoaded['arrays'])) {
+            return true;
         }
-
-    }
-
-    protected function loadBaseLanguageFile()
-    {
-        require_once(DIR_WS_LANGUAGES . $_SESSION['language'] . '.php');
-    }
-
-
-////////// move below to filesystemclass ////////////////////
-
-    public function loadFilesFromDirectory($rootDir, $fileRegx)
-    {
-        if (!$dir = @dir($rootDir)) return;
-        while ($file = $dir->read()) {
-            if (preg_match($fileRegx, $file) > 0) {
-                require_once($rootDir . '/' . $file);
-            }
+        if (in_array($searchFile, $this->languageFilesLoaded['legacy'])) {
+            return true;
         }
-        $dir->close();
     }
 }
