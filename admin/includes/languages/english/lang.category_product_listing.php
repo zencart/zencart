@@ -72,6 +72,7 @@ $define = [
     'TEXT_SUBCATEGORIES_STATUS_NOCHANGE' => 'Unchanged',
     'WARNING_PRODUCTS_IN_TOP_INFO' => 'WARNING: You have Products in the Top Level Category. This will cause pricing to not work properly in the Catalog. Products found: ',
     'TEXT_COPY_MEDIA_MANAGER' => 'Copy media?',
+    'SUCCESS_ATTRIBUTES_DELETED' => 'Attributes successfully deleted',
 ];
 
 return $define;
