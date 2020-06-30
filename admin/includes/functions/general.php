@@ -3154,6 +3154,7 @@ function zen_get_master_categories_pulldown($product_id, $fullpath = false)
     $dir_info[] = array('id' => '', 'text' => $default_text);
 
     $dir = @dir($parent_folder);
+    if ($dir == null) return []; 
     while ($file = $dir->read()) {
       if (is_dir($parent_folder . $file) && $file != "." && $file != "..") {
         $dir_info[] = array('id' => $file . '/', 'text' => $file);
