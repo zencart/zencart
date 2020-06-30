@@ -325,6 +325,7 @@ function executeSql($lines, $database, $table_prefix = '') {
       } //endif $complete_line
     } //endif ! # or -
   } // end foreach $lines
+  $_POST['query_string'] = $lines; 
   zen_record_admin_activity('Admin SQL Patch tool executed a query.', 'notice');
   return array('queries' => $results, 'string' => $string, 'output' => $return_output, 'ignored' => ($ignored_count), 'errors' => $errors);
 }
