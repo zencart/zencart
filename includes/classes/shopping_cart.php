@@ -236,7 +236,17 @@ class shoppingCart extends base {
   function add_cart($products_id, $qty = '1', $attributes = '', $notify = true) {
     global $db, $messageStack;
     if ($this->display_debug_messages) $messageStack->add_session('header', 'FUNCTION ' . __FUNCTION__, 'caution');
-
+    if (zen_has_product_attributes($products_id, 'false') && empty($attributes)) {
+      if (!zen_requires_attribute_selection($products_id)) {
+        // Build attributes array; determine correct qty
+        $attributes = array();
+        $query = $db->Execute("SELECT options_id, options_values_id FROM " . TABLE_PRODUCTS_ATTRIBUTES . " WHERE products_id = " . (int)$products_id); 
+        foreach ($query as $attr_rec) {
+          $attributes[$attr_rec['options_id']] = $attr_rec['options_values_id']; 
+        }
+        $qty += $this->in_cart_product_total_quantity($products_id); 
+      }
+    }
     if (!is_numeric($qty) || $qty < 0) {
       // adjust quantity when not a value
       $chk_link = '<a href="' . zen_href_link(zen_get_info_page($products_id), 'cPath=' . (zen_get_generated_category_path_rev(zen_get_products_category_id($products_id))) . '&products_id=' . $products_id) . '">' . zen_get_products_name($products_id) . '</a>';
@@ -1977,7 +1987,7 @@ class shoppingCart extends base {
 
     $this->flag_duplicate_msgs_set = FALSE;
     if (isset($_GET['products_id'])) {
-      if (zen_has_product_attributes($_GET['products_id'])) {
+      if (zen_requires_attribute_selection($_GET['products_id'])) {
         zen_redirect(zen_href_link(zen_get_info_page($_GET['products_id']), 'products_id=' . $_GET['products_id']));
       } else {
         $add_max = zen_get_products_quantity_order_max($_GET['products_id']);

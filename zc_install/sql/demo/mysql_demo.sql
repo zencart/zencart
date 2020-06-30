@@ -980,7 +980,8 @@ INSERT INTO products_attributes_download (products_attributes_id, products_attri
 (1093, 'test.zip', 7, 5),
 (1094, 'test2.zip', 7, 5),
 (1100, 'ms_word_sample.zip', 7, 5),
-(1103, 'pdf_sample.zip', 7, 5);
+(1103, 'pdf_sample.zip', 7, 5),
+(1105, 'pdf_sample.zip', 7, 5);
 
 #
 # Dumping data for table `products_description`
