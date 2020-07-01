@@ -18,7 +18,7 @@ $config = new Configuration;
 $authkey = $config->where('configuration_key', 'GLOBAL_AUTH_KEY')->value('configuration_value');
 if (empty($authkey)) {
     $hashable = hash('sha256', openssl_random_pseudo_bytes(64));
-    $config->update(['comnfiguration_value' => $hashable])->where('configuration_key', 'GLOBAL_AUTH_KEY');
+    $config->update(['configuration_value' => $hashable])->where('configuration_key', 'GLOBAL_AUTH_KEY');
 }
 
 $config->loadConfigSettings();
