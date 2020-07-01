@@ -64,6 +64,8 @@ abstract class zcTestCase extends PHPUnit\Framework\TestCase
         require_once(DIR_FS_INCLUDES . 'defined_paths.php');
         require_once(DIR_FS_INCLUDES . 'database_tables.php');
         require_once(DIR_FS_INCLUDES . 'filenames.php');
+        require_once DIR_FS_CATALOG . DIR_WS_CLASSES. 'traits/NotifierManager.php';
+        require_once DIR_FS_CATALOG . DIR_WS_CLASSES. 'traits/ObserverManager.php';
 //        require_once(DIR_FS_CATALOG . DIR_WS_CLASSES . 'class.base.php');
 //        require_once(DIR_FS_CATALOG . DIR_WS_CLASSES . 'class.notifier.php');
 

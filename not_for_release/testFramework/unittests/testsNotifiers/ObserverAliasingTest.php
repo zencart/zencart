@@ -15,7 +15,9 @@ class ObserverAliasingTest extends zcTestCase
     public function setUp(): void
     {
         parent::setUp();
-        require_once DIR_FS_CATALOG . DIR_WS_CLASSES. 'traits/EventManager.php';
+        require_once DIR_FS_CATALOG . DIR_WS_CLASSES. 'traits/NotifierManager.php';
+        require_once DIR_FS_CATALOG . DIR_WS_CLASSES. 'traits/ObserverManager.php';
+        require_once DIR_FS_CATALOG . DIR_WS_CLASSES. 'EventDto.php';
         require_once(TESTCWD . 'support/zcObserverAliasTestObject.php');
         require_once(TESTCWD . 'support/zcNotifierBaseAliasTestObject.php');
         require_once(TESTCWD . 'support/zcNotifierTraitAliasTestObject.php');
@@ -28,12 +30,12 @@ class ObserverAliasingTest extends zcTestCase
         $result = $zcNotifierBaseAliasTestObject->fireNotifierValid();
         $this->assertEquals($result, 'NOTIFIY_ORDER_CART_SUBTOTAL_CALCULATE');
         $result = $zcNotifierBaseAliasTestObject->fireNotifierInvalid();
-        $this->assertEquals($result, 'bar');
+        $this->assertEquals($result, 'invalid');
 
         $zcNotifierTraitAliasTestObject = new zcNotifierTraitAliasTestObject;
         $result = $zcNotifierTraitAliasTestObject->fireNotifierValid();
         $this->assertEquals($result, 'NOTIFIY_ORDER_CART_SUBTOTAL_CALCULATE');
         $result = $zcNotifierTraitAliasTestObject->fireNotifierInvalid();
-        $this->assertEquals($result, 'bar');
+        $this->assertEquals($result, 'invalid');
     }
 }

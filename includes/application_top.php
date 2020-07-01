@@ -95,7 +95,7 @@ define('DEBUG_AUTOLOAD', false);
  */
 if (DEBUG_AUTOLOAD || (defined('STRICT_ERROR_REPORTING') && STRICT_ERROR_REPORTING == true)) {
   @ini_set('display_errors', TRUE);
-  error_reporting(E_ALL); 
+  error_reporting(E_ALL);
 } else {
   error_reporting(0);
 }
@@ -171,12 +171,12 @@ if (( (!file_exists('includes/configure.php') && !file_exists('includes/local/co
 /**
  * psr-4 autoloading
  */
-require DIR_FS_CATALOG . DIR_WS_CLASSES . 'class.base.php';
+
 require DIR_FS_CATALOG . DIR_WS_CLASSES . 'vendors/AuraAutoload/src/Loader.php';
 $psr4Autoloader = new \Aura\Autoload\Loader;
 $psr4Autoloader->register();
 require('includes/psr4Autoload.php');
-
+require DIR_FS_CATALOG . DIR_WS_CLASSES . 'class.base.php';
 require DIR_FS_CATALOG . DIR_WS_CLASSES . 'query_cache.php';
 $queryCache = new QueryCache();
 require DIR_FS_CATALOG . DIR_WS_CLASSES . 'cache.php';
