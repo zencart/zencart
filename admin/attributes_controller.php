@@ -681,45 +681,7 @@ function zen_js_option_values_list($selectedName, $fieldName)
 <!doctype html>
 <html <?php echo HTML_PARAMS; ?>>
   <head>
-    <meta charset="<?php echo CHARSET; ?>">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title><?php echo TITLE; ?></title>
-    <link rel="stylesheet" href="includes/stylesheet.css">
-    <style>
-      .menuItemButton {
-        background: none;
-        color: #333;
-        border: none;
-        padding: 3px 20px;
-        font: inherit;
-        display: block;
-        font-weight: 400;
-        line-height: 1.42857143;
-        white-space: nowrap;
-        font-size: 11px;
-      }
-      .menuItemButton:hover {
-        color: #262626;
-        text-decoration: none;
-        background-color: #f5f5f5;
-      }
-      .read-only-attr {background-color: #ff0;}
-      .is-free-attr {background-color: #2c54f5;}
-      .default-attr {background-color: #ffa346;}
-      .is-discounted-attr {background-color: #f0f;}
-      .base-included-attr {background-color: #d200f0;}
-      .required-attr {background-color: #ff0606;}
-      .read-only-attr-txt {color: #ff0;}
-      .is-free-attr-txt {color: #2c54f5;}
-      .default-attr-txt {color: #ffa346;}
-      .is-discounted-attr-txt {color: #f0f;}
-      .base-included-attr-txt {color: #d200f0;}
-      .required-attr-txt {color: #ff0606;}
-      .opacity-25 {opacity: 0.25;}
-      .red-txt {color: #f00;}
-      .black-txt {color: #000;}
-    </style>
+    <?php require DIR_WS_INCLUDES . 'admin_html_head.php'; ?>
     <script>
       function popupWindow(url) {
         window.open(url, 'popupWindow', 'toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=no,resizable=yes,copyhistory=no,width=600,height=460,screenX=150,screenY=150,top=150,left=150')

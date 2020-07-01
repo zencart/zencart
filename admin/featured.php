@@ -112,31 +112,17 @@ if (zen_not_null($action)) {
 <!doctype html>
 <html <?php echo HTML_PARAMS; ?>>
 <head>
-    <meta charset="<?php echo CHARSET; ?>">
-    <title><?php echo TITLE; ?></title>
-    <link rel="stylesheet" type="text/css" href="includes/stylesheet.css">
-    <link rel="stylesheet" type="text/css" href="includes/cssjsmenuhover.css" media="all" id="hoverJS">
-    <script src="includes/menu.js"></script>
-    <script src="includes/general.js"></script>
+    <?php require DIR_WS_INCLUDES . 'admin_html_head.php'; ?>
     <?php
     if (($action === 'new') || ($action === 'edit')) {
         ?>
-        <link rel="stylesheet" type="text/css" href="includes/javascript/spiffyCal/spiffyCal_v2_1.css">
+        <link rel="stylesheet" href="includes/javascript/spiffyCal/spiffyCal_v2_1.css">
         <script src="includes/javascript/spiffyCal/spiffyCal_v2_1.js"></script>
         <?php
     }
     ?>
-    <script>
-        function init() {
-            cssjsmenu('navbar');
-            if (document.getElementById) {
-                var kill = document.getElementById('hoverJS');
-                kill.disabled = true;
-            }
-        }
-    </script>
 </head>
-<body onload="init()">
+<body>
 <div id="spiffycalendar" class="text"></div>
 <!-- header //-->
 <?php require(DIR_WS_INCLUDES . 'header.php'); ?>

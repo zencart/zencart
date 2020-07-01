@@ -437,15 +437,8 @@ if (zen_not_null($action)) {
 <!doctype html>
 <html <?php echo HTML_PARAMS; ?>>
   <head>
-    <meta charset="<?php echo CHARSET; ?>">
-    <title><?php echo TITLE; ?></title>
-    <link rel="stylesheet" type="text/css" href="includes/stylesheet.css">
-    <link rel="stylesheet" type="text/css" href="includes/cssjsmenuhover.css" media="all" id="hoverJS">
-    <script src="includes/menu.js"></script>
-    <script src="includes/general.js"></script>
-    <?php
-    if ($action == 'edit' || $action == 'update') {
-      ?>
+    <?php require DIR_WS_INCLUDES . 'admin_html_head.php'; ?>
+    <?php if ($action == 'edit' || $action == 'update') { ?>
       <script>
         function check_form() {
             var error = 0;
@@ -506,18 +499,14 @@ if (zen_not_null($action)) {
                 error = 1;
             }
 
-  <?php
-  if (ACCOUNT_STATE == 'true') {
-    ?>
+  <?php if (ACCOUNT_STATE == 'true') { ?>
               if (document.customers.elements['entry_state'].type != 'hidden') {
                   if (document.customers.entry_state.value == '' || document.customers.entry_state.value.length < <?php echo ENTRY_STATE_MIN_LENGTH; ?>) {
                       error_message = error_message + '<?php echo JS_STATE; ?>';
                       error = 1;
                   }
               }
-    <?php
-  }
-  ?>
+    <?php } ?>
 
             if (document.customers.elements['entry_country_id'].type != 'hidden') {
                 if (document.customers.entry_country_id.value == 0) {
@@ -540,20 +529,9 @@ if (zen_not_null($action)) {
             }
         }
       </script>
-      <?php
-    }
-    ?>
-    <script>
-      function init() {
-          cssjsmenu('navbar');
-          if (document.getElementById) {
-              var kill = document.getElementById('hoverJS');
-              kill.disabled = true;
-          }
-      }
-    </script>
+      <?php } ?>
   </head>
-  <body onLoad="init()">
+  <body>
     <!-- header //-->
     <?php require(DIR_WS_INCLUDES . 'header.php'); ?>
     <!-- header_eof //-->

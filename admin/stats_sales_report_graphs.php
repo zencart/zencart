@@ -80,9 +80,7 @@ if (strlen($sales_report_filter) == 0) {
 <!doctype html>
 <html <?php echo HTML_PARAMS; ?>>
   <head>
-    <meta charset="<?php echo CHARSET; ?>">
-    <title><?php echo TITLE; ?></title>
-    <?php require 'includes/admin_html_head.php'; ?>
+      <?php require DIR_WS_INCLUDES . 'admin_html_head.php'; ?>
     <script src="https://www.gstatic.com/charts/loader.js"></script>
     <script title="build_graphs">
       // Load the Visualization API and the piechart package.

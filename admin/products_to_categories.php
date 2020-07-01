@@ -634,75 +634,9 @@ if ($target_subcategory_count > $max_input_vars) { //warning when in excess of P
 <!doctype html>
 <html <?php echo HTML_PARAMS; ?>>
 <head>
-    <meta charset="<?php echo CHARSET; ?>">
-    <title><?php echo TITLE; ?></title>
-    <link rel="stylesheet" href="includes/stylesheet.css">
-    <link rel="stylesheet" href="includes/cssjsmenuhover.css" media="all" id="hoverJS">
-    <script src="includes/menu.js"></script>
-    <script src="includes/general.js"></script>
-    <script>
-        function init() {
-            cssjsmenu('navbar');
-            if (document.getElementById) {
-                var kill = document.getElementById('hoverJS');
-                kill.disabled = true;
-            }
-        }
-    </script>
-    <style>
-        select#target_product_id { /*hack to limit the width of the "Copy Linked Categories to Another Product" drop-down surrounding container, otherwise over-long option values push page layout to the right */
-            width: 600px;
-            text-overflow: ellipsis;
-        }
-
-        label, input[type="checkbox"] { /*override bootstrap*/
-            font-weight: normal;
-            padding: 0;
-            margin: 0;
-        }
-
-        .TargetCategoryCheckbox:checked + span { /*highlight linked category checkboxes*/
-            background: yellow;
-        }
-
-        .floatButton {
-            -webkit-box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.8);
-            -moz-box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.8);
-            box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.8);
-            bottom: 200px;
-        }
-
-        .floatButton span { /*product name and model in Update Categories button*/
-            font-style: italic;
-        }
-
-        #infoBox {
-            border: 1px solid darkgrey;
-        }
-
-        .dataTableHeadingRow {
-            padding: 0 0 5px 5px;
-            border: 1px black solid;
-            margin-bottom: 10px;
-        }
-
-        .form-group-row div { /*to get three boxes bottom-aligned*/
-            float: none;
-            display: table-cell;
-            vertical-align: bottom;
-        }
-
-        .form-group-row div label { /*to get three boxes bottom-aligned*/
-            font-weight: bold;
-            text-align: left !important;
-        }
-
-        .form-control {
-            width: 100%;
-        }
-    </style>
+    <?php require DIR_WS_INCLUDES . 'admin_html_head.php'; ?>
 </head>
-<body onload="init();">
+<body>
 <!-- header //-->
 <?php require(DIR_WS_INCLUDES . 'header.php'); ?>
 <!-- header_eof //-->

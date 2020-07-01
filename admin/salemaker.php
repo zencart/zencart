@@ -153,21 +153,7 @@ if (zen_not_null($action)) {
 <!doctype html>
 <html <?php echo HTML_PARAMS; ?>>
   <head>
-    <meta charset="<?php echo CHARSET; ?>">
-    <title><?php echo TITLE; ?></title>
-    <link rel="stylesheet" href="includes/stylesheet.css">
-    <link rel="stylesheet" href="includes/cssjsmenuhover.css" media="all" id="hoverJS">
-    <script src="includes/menu.js"></script>
-    <script src="includes/general.js"></script>
-    <script>
-      function init() {
-          cssjsmenu('navbar');
-          if (document.getElementById) {
-              var kill = document.getElementById('hoverJS');
-              kill.disabled = true;
-          }
-      }
-    </script>
+    <?php require DIR_WS_INCLUDES . 'admin_html_head.php'; ?>
     <?php
     if (($action == 'new') || ($action == 'edit')) {
       ?>
@@ -185,13 +171,6 @@ if (zen_not_null($action)) {
 //            window.open("<?php echo zen_href_link(FILENAME_SALEMAKER_POPUP, 'cid=' . $category['categories_id']); ?>//", "salemaker_info", "height=460,width=600,scrollbars=yes,resizable=yes").focus();
 //        }
 */?>
-        function init() {
-            cssjsmenu('navbar');
-            if (document.getElementById) {
-                var kill = document.getElementById('hoverJS');
-                kill.disabled = true;
-            }
-        }
         function RowClick(RowValue) {
             for (i = 0; i < document.sale_form.length; i++) {
                 if (document.sale_form.elements[i].type == 'checkbox') {
@@ -259,10 +238,10 @@ if (zen_not_null($action)) {
     </head>
 <?php } ?>
 <?php if ($action == 'new' || $action == 'edit') { ?>
-       <body onload="SetCategories(); SetFocus(); init()">
+       <body onload="SetCategories();">
        <div id="spiffycalendar" class="text"></div>
 <?php } else { ?>
-       <body onload="SetFocus(); init()">
+       <body>
 <?php } ?>
   <!-- header //-->
   <?php require(DIR_WS_INCLUDES . 'header.php'); ?>

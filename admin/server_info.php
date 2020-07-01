@@ -44,52 +44,9 @@
 <!doctype html public "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html <?php echo HTML_PARAMS; ?>>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=<?php echo CHARSET; ?>">
-<title><?php echo TITLE; ?></title>
-<link rel="stylesheet" type="text/css" href="includes/stylesheet.css">
-<link rel="stylesheet" type="text/css" href="includes/cssjsmenuhover.css" media="all" id="hoverJS">
-<script type="text/javascript" src="includes/menu.js"></script>
-<script type="text/javascript">
-  function init()
-  {
-    cssjsmenu('navbar');
-    if (document.getElementById)
-    {
-      var kill = document.getElementById('hoverJS');
-      kill.disabled = true;
-    }
-  }
-</script>
-<style type="text/css">
-.pageHeading {font-size: 2em;}
-.serverInfo{max-width: 800px; margin-left: auto; margin-right: auto; font-size: 1.1em;}
-.infocell {float:left; width: 380px;margin-right:10px;}
-.sysinfo {max-width:700px; margin: auto;border: 2px solid black;padding:1.5em;margin-top:2em;}
-.clearBoth{clear:both}
-
-.phpinfo table{border:none;padding:0;margin:0; border-spacing:0;border-collapse:collapse;}
-.phpinfo table {width: 768px !important;}
-.phpinfo {margin:auto;}
-.phpinfo hr {display: none;}
-.phpinfo DIV {background-color: #fff; color: #222; font-family: sans-serif;}
-pre {margin: 0; font-family: monospace;}
-.phpinfo table {border-collapse: collapse; border: 0; width: 934px; box-shadow: 1px 2px 3px #ccc;}
-.center {text-align: center;}
-.center table {margin: 1em auto; text-align: left;}
-.center th {text-align: center !important;}
-
-.phpinfo h1, .phpinfo h1 a {font-size: 150%;}
-.phpinfo h2, .phpinfo h2 a {font-size: 125%;}
-.p {text-align: left;}
-.e {background-color: #ccf; width: 300px; font-weight: bold;}
-.h {background-color: #99c; font-weight: bold;}
-.v {background-color: #ddd; max-width: 300px; overflow-x: auto; word-wrap: break-word;}
-.v i {color: #999;}
-.phpinfo img {float: right; border: 0;}
-.phpinfo-is-disabled {color: red; font-weight: bold; text-align: center; padding-top: 1em; border: 1px solid red; height: 4em; width: 75%;}
-</style>
+    <?php require DIR_WS_INCLUDES . 'admin_html_head.php'; ?>
 </head>
-<body onLoad="init()" class="sysinfoBody">
+<body class="sysinfoBody">
 <!-- header //-->
 <?php require(DIR_WS_INCLUDES . 'header.php'); ?>
 <!-- header_eof //-->
