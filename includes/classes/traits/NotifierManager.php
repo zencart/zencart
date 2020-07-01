@@ -7,19 +7,40 @@
 
 namespace Zencart\Traits;
 
-trait EventManager
+use  Zencart\Events\EventDto;
+
+trait NotifierManager
 {
     /**
      * @var array of aliases
      */
     private $observerAliases = ['NOTIFIY_ORDER_CART_SUBTOTAL_CALCULATE' => 'NOTIFY_ORDER_CART_SUBTOTAL_CALCULATE'];
 
+    /**
+     * method to notify observers that an event has occurred in the notifier object
+     * Can optionally pass parameters and variables to the observer, useful for passing stuff which is outside of the 'scope' of the observed class.
+     * Any of params 2-9 can be passed by reference, and will be updated in the calling location if the observer "update" function also receives them by reference
+     *
+     * @param string $eventID The event ID to notify.
+     * @param mixed $param1 passed as value only.
+     * @param mixed $param2 passed by reference.
+     * @param mixed $param3 passed by reference.
+     * @param mixed $param4 passed by reference.
+     * @param mixed $param5 passed by reference.
+     * @param mixed $param6 passed by reference.
+     * @param mixed $param7 passed by reference.
+     * @param mixed $param8 passed by reference.
+     * @param mixed $param9 passed by reference.
+     *
+     * NOTE: The $param1 is not received-by-reference, but params 2-9 are.
+     * NOTE: The $param1 value CAN be an array, and is sometimes typecast to be an array, but can also safely be a string or int etc if the notifier sends such and the observer class expects same.
+     */
     function notify($eventID, $param1 = array(), &$param2 = null, &$param3 = null, &$param4 = null, &$param5 = null, &$param6 = null, &$param7 = null, &$param8 = null, &$param9 = null)
     {
         $this->logNotifier($eventID, $param1, $param2, $param3, $param4, $param5, $param6, $param7, $param8, $param9);
 
-        $observers = &$this->getStaticObserver();
-        if (is_null($observers)) {
+        $observers = EventDto::getInstance()->getObservers();
+        if (empty($observers)) {
             return;
         }
         foreach ($observers as $key => $obs) {
@@ -66,16 +87,6 @@ trait EventManager
             $className = (is_object($obs['obs'])) ? get_class($obs['obs']) : $obs['obs'];
             trigger_error('WARNING: No update() method (or matching alternative) found in the ' . $className . ' class for event ' . $actualEventId, E_USER_WARNING);
         }
-    }
-
-    protected function & getStaticObserver() {
-        return (new \base)->getStaticProperty('observer');
-    }
-
-    protected function & getStaticProperty($var)
-    {
-        static $staticProperty;
-        return $staticProperty;
     }
 
     protected function logNotifier($eventID, $param1, $param2, $param3, $param4, $param5, $param6, $param7, $param8, $param9)

@@ -7,12 +7,12 @@
 
 namespace Zencart\TableViewControllers;
 
-use Zencart\Traits\EventManager;
+use Zencart\Traits\NotifierManager;
 use Zencart\Paginator\Paginator;
 
 class BaseController implements TableViewController
 {
-    use EventManager;
+    use NotifierManager;
 
     protected $filters = [];
     protected $queryParts = [];

@@ -146,11 +146,11 @@ define('DIR_WS_TEMPLATES', DIR_WS_INCLUDES . 'templates/');
 /**
  * psr-4 autoloading
  */
-require DIR_FS_CATALOG . DIR_WS_CLASSES . 'class.base.php';
 require DIR_FS_CATALOG . DIR_WS_CLASSES . 'vendors/AuraAutoload/src/Loader.php';
 $psr4Autoloader = new \Aura\Autoload\Loader;
 $psr4Autoloader->register();
-require('includes/psr4Autoload.php');
+require(DIR_FS_CATALOG . 'includes/psr4Autoload.php');
+require DIR_FS_CATALOG . DIR_WS_CLASSES . 'class.base.php';
 
 require 'includes/classes/AdminRequestSanitizer.php';
 require 'includes/init_includes/init_file_db_names.php';
