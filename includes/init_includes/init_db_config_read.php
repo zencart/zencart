@@ -12,32 +12,16 @@
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
 }
+use App\Model\Configuration;
+use App\Model\ProductTypeLayout;
 
+// need to enable caching in eloquent. for now, no caching @todo
 $use_cache = (isset($_GET['nocache']) ? false : true ) ;
-$configuration = $db->Execute('SELECT configuration_key AS cfgkey, configuration_value AS cfgvalue, configuration_group_id  
-                                 FROM ' . TABLE_CONFIGURATION, '', $use_cache, 150);
-while (!$configuration->EOF) {
-  /**
- * dynamic define based on info read from DB
- */
-  if ($configuration->fields['configuration_group_id'] == 2 || $configuration->fields['configuration_group_id'] == 3) {
-    define(strtoupper($configuration->fields['cfgkey']), (int)$configuration->fields['cfgvalue']);
-  } else { 
-    define(strtoupper($configuration->fields['cfgkey']), $configuration->fields['cfgvalue']);
-  }
-  $configuration->MoveNext();
-}
-$configuration = $db->Execute('SELECT configuration_key AS cfgkey, configuration_value AS cfgvalue
-                               FROM ' . TABLE_PRODUCT_TYPE_LAYOUT, '', $use_cache, 150);
+$config = new Configuration;
+$config->loadConfigSettings();
+$config = new ProductTypeLayout;
+$config->loadConfigSettings();
 
-while (!$configuration->EOF) {
-  /**
- * dynamic define based on info read from DB
- * @ignore
- */
-  define(strtoupper($configuration->fields['cfgkey']), $configuration->fields['cfgvalue']);
-  $configuration->MoveNext();
-}
 if (file_exists(DIR_WS_CLASSES . 'db/' . DB_TYPE . '/define_queries.php')) {
   /**
  * Load the database dependant query defines

@@ -1,0 +1,40 @@
+{
+    "name": "zencart/zencart",
+    "description": "Open Source E-commerce Application",
+    "homepage": "https://www.zen-cart.com",
+    "license": "GPL-2.0",
+    "authors": [
+        {
+            "name": "The Zen-Cart Team",
+            "homepage": "https://github.com/zencart/zencart/graphs/contributors"
+        }
+    ],
+    "funding": [
+        {
+            "type": "other",
+            "url": "https://zen-cart.com/donate"
+        }
+    ],
+    "support": {
+        "forum": "https://zen-cart.com/forum",
+        "source": "https://zen-cart.com/getit",
+        "docs": "https://docs.zen-cart.com"
+    },
+    "_comment": "compatible with PHP 7.1.3-8.0",
+    "require": {
+        "php": ">=7.1.3",
+        "filp/whoops": "1.1.2",
+        "illuminate/database": "5.8.*",
+        "illuminate/events": "5.8.*"
+    },
+    "autoload": {
+        "psr-4": {
+            "App\\": "../app/"
+        }
+    },
+    "config": {
+        "bin-dir": "vendor/bin",
+        "sort-packages": true,
+        "optimize-autoloader": true
+    }
+}
