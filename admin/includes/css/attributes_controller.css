@@ -1,0 +1,32 @@
+.menuItemButton {
+  background: none;
+  color: #333;
+  border: none;
+  padding: 3px 20px;
+  font: inherit;
+  display: block;
+  font-weight: 400;
+  line-height: 1.42857143;
+  white-space: nowrap;
+  font-size: 11px;
+}
+.menuItemButton:hover {
+  color: #262626;
+  text-decoration: none;
+  background-color: #f5f5f5;
+}
+.read-only-attr {background-color: #ff0;}
+.is-free-attr {background-color: #2c54f5;}
+.default-attr {background-color: #ffa346;}
+.is-discounted-attr {background-color: #f0f;}
+.base-included-attr {background-color: #d200f0;}
+.required-attr {background-color: #ff0606;}
+.read-only-attr-txt {color: #ff0;}
+.is-free-attr-txt {color: #2c54f5;}
+.default-attr-txt {color: #ffa346;}
+.is-discounted-attr-txt {color: #f0f;}
+.base-included-attr-txt {color: #d200f0;}
+.required-attr-txt {color: #ff0606;}
+.opacity-25 {opacity: 0.25;}
+.red-txt {color: #f00;}
+.black-txt {color: #000;}

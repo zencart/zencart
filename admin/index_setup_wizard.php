@@ -78,21 +78,9 @@ $zone_string = zen_draw_pull_down_menu('zone_id', zen_get_country_zones($store_c
 <!doctype html>
 <html <?php echo HTML_PARAMS; ?>>
   <head>
-    <meta charset="<?php echo CHARSET; ?>">
-    <title><?php echo TITLE; ?></title>
-    <meta name="robots" content="noindex, nofollow">
-    <script src="includes/menu.js"></script>
-    <link href="includes/stylesheet.css" rel="stylesheet">
-    <link rel="stylesheet" href="includes/cssjsmenuhover.css" media="all" id="hoverJS">
+    <?php require DIR_WS_INCLUDES . 'admin_html_head.php'; ?>
     <link rel="stylesheet" href="includes/css/admin_access.css">
     <script>
-      function init() {
-          cssjsmenu('navbar');
-          if (document.getElementById) {
-              var kill = document.getElementById('hoverJS');
-              kill.disabled = true;
-          }
-      }
       function update_zone(theForm) {
           // if there is no zone_id field to update, or if it is hidden from display, then exit performing no updates
           if (!theForm || !theForm.elements["zone_id"])

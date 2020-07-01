@@ -45,62 +45,23 @@ $listingURL = FILENAME_WHOS_ONLINE . '.php?' . zen_get_all_get_params(['q', 't',
 <!doctype html>
 <html <?php echo HTML_PARAMS; ?>>
   <head>
-    <meta charset="<?php echo CHARSET; ?>">
-    <title><?php echo TITLE; ?></title>
-    <link rel="stylesheet" href="includes/stylesheet.css">
-    <link rel="stylesheet" href="includes/cssjsmenuhover.css" media="all" id="hoverJS">
-    <script src="includes/menu.js"></script>
-    <script src="includes/general.js"></script>
+    <?php require DIR_WS_INCLUDES . 'admin_html_head.php'; ?>
     <script>
-      function init() {
-          cssjsmenu('navbar');
-          if (document.getElementById) {
-              var kill = document.getElementById('hoverJS');
-              kill.disabled = true;
-          }
-      }
       function refreshTimer(time) {
-          if (time.length >= 2) {
-              clearTimeout(initTimer);
-              if (theTimer != null) {
-                  clearTimeout(theTimer);
-              }
-              var theTimer = setTimeout('window.location="<?php echo $optURL; ?>t=' + time + '&auto=true"', (time * 1000));
+        if (time.length >= 2) {
+          clearTimeout(initTimer);
+          if (theTimer != null) {
+            clearTimeout(theTimer);
           }
+          var theTimer = setTimeout('window.location="<?php echo $optURL; ?>t=' + time + '&auto=true"', (time * 1000));
+        }
       }
 <?php if (isset($_SESSION['wo_timeout']) && (int)$_SESSION['wo_timeout'] > 0) { ?>
         var initTimer = setTimeout('location.reload(true)', <?php echo isset($_SESSION['wo_timeout']) ? $_SESSION['wo_timeout'] * 1000 : '60000'; ?>);
 <?php } ?>
     </script>
-    <style>
-      .whos-online td {
-          color:#444;
-          font-family:Helvetica, Arial, sans-serif;
-      }
-      .whos-online td.infoBoxHeading {
-          color:#fff;
-      }
-      .last-url-link {
-          background:#fff;
-          border:1px dashed #aaa;
-          margin:5px 0;
-          padding:5px;
-      }
-      .last-url-link a {
-          color:green;
-      }
-      .dataTableRowBot .last-url-link a {color: #333;}
-      .dataTableRowSelectedBot .last-url-link a {color: #333;}
-      .dataTableRowBot .last-url-link {background: #f0cbfa;}
-      .dataTableRowSelectedBot .last-url-link {background: #f0cbfa;}
-
-      #wo-legend {float: left;}
-      #wo-filters { float: right; background-color: #599659; color: #fff}
-      #wo-filters .optionClick { display: inline-block; color: #fff; border: 1px solid #fff; font-weight: bold; padding: 1px; margin: 2px 1px;}
-      #wo-filters .chosen {background-color: #003D00;}
-    </style>
   </head>
-  <body onLoad="init()">
+  <body>
     <!-- header //-->
     <?php require(DIR_WS_INCLUDES . 'header.php'); ?>
     <!-- header_eof //-->

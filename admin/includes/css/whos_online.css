@@ -1,0 +1,25 @@
+.whos-online td {
+  color:#444;
+  font-family:Helvetica, Arial, sans-serif;
+}
+.whos-online td.infoBoxHeading {
+  color:#fff;
+}
+.last-url-link {
+  background:#fff;
+  border:1px dashed #aaa;
+  margin:5px 0;
+  padding:5px;
+}
+.last-url-link a {
+  color:green;
+}
+.dataTableRowBot .last-url-link a {color: #333;}
+.dataTableRowSelectedBot .last-url-link a {color: #333;}
+.dataTableRowBot .last-url-link {background: #f0cbfa;}
+.dataTableRowSelectedBot .last-url-link {background: #f0cbfa;}
+
+#wo-legend {float: left;}
+#wo-filters { float: right; background-color: #599659; color: #fff}
+#wo-filters .optionClick { display: inline-block; color: #fff; border: 1px solid #fff; font-weight: bold; padding: 1px; margin: 2px 1px;}
+#wo-filters .chosen {background-color: #003D00;}
