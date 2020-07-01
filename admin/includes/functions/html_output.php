@@ -207,7 +207,6 @@ function zen_image_submit($image, $alt = '', $parameters = '')
                               WHERE zone_country_id = '" . $countries->fields['zone_country_id'] . "'
                               ORDER BY zone_name");
 
-
       $num_state = 1;
       while (!$states->EOF) {
         if ($num_state == 1) $output_string .= '    ' . $form . '.' . $field . '.options[0] = new Option("' . PLEASE_SELECT . '", "");' . "\n";
