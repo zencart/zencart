@@ -44,7 +44,7 @@ jQuery(function(){
     'extendUrl': 'keepalive.php', // admin URL to request in order to extend the session.
     'logoutUrl': 'logoff.php', // admin URL to request in order to force a logout after the timeout.
     'loginUrl': '<?php echo $camefrom; ?>', // admin URL to send the user to when they want to log back in
-    'secondsPrior': <?php echo (int)$timeoutAfter/3; ?>, //how many seconds before timing out to run the next callback (onPriorCallback)
+    'secondsPrior': <?php echo round((int)$timeoutAfter/3); ?>, //how many seconds before timing out to run the next callback (onPriorCallback)
     'onPriorCallback': function(timeout, seconds){
         jQuery.jAlert({
             'id': 'jTimeoutAlert',
