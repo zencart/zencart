@@ -1,26 +1,6 @@
 CHANGELOG
 =========
 
-5.1.0
------
-
- * added support for `name` attribute on `unit` element from xliff2 to be used as a translation key instead of always the `source` element
-
-5.0.0
------
-
- * removed support for using `null` as the locale in `Translator`
- * removed `TranslatorInterface`
- * removed `MessageSelector`
- * removed `ChoiceMessageFormatterInterface`
- * removed `PluralizationRule`
- * removed `Interval`
- * removed `transChoice()` methods, use the trans() method instead with a %count% parameter
- * removed `FileDumper::setBackup()` and `TranslationWriter::disableBackup()`
- * removed `MessageFormatter::choiceFormat()`
- * added argument `$filename` to `PhpExtractor::parseTokens()`
- * removed support for implicit STDIN usage in the `lint:xliff` command, use `lint:xliff -` (append a dash) instead to make it explicit.
-
 4.4.0
 -----
 

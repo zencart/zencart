@@ -44,23 +44,29 @@ interface OperationInterface
     /**
      * Returns all valid messages ('all') after operation.
      *
+     * @param string $domain
+     *
      * @return array
      */
-    public function getMessages(string $domain);
+    public function getMessages($domain);
 
     /**
      * Returns new messages ('new') after operation.
      *
+     * @param string $domain
+     *
      * @return array
      */
-    public function getNewMessages(string $domain);
+    public function getNewMessages($domain);
 
     /**
      * Returns obsolete messages ('obsolete') after operation.
      *
+     * @param string $domain
+     *
      * @return array
      */
-    public function getObsoleteMessages(string $domain);
+    public function getObsoleteMessages($domain);
 
     /**
      * Returns resulting catalogue ('result').

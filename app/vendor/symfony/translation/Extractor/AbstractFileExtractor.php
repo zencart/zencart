@@ -49,11 +49,13 @@ abstract class AbstractFileExtractor
     }
 
     /**
+     * @param string $file
+     *
      * @return bool
      *
      * @throws InvalidArgumentException
      */
-    protected function isFile(string $file)
+    protected function isFile($file)
     {
         if (!is_file($file)) {
             throw new InvalidArgumentException(sprintf('The "%s" file does not exist.', $file));
@@ -63,9 +65,11 @@ abstract class AbstractFileExtractor
     }
 
     /**
+     * @param string $file
+     *
      * @return bool
      */
-    abstract protected function canBeExtracted(string $file);
+    abstract protected function canBeExtracted($file);
 
     /**
      * @param string|array $resource Files, a file or a directory
