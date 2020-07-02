@@ -263,11 +263,12 @@ function zen_image_submit($image, $alt = '', $parameters = '')
 
     if (zen_not_null($parameters)) $field .= ' ' . $parameters;
 
+    if ($required && strpos($parameters, 'required') === false) {
+        $field .= ' required';
+    }
+
     $field .= ' />';
 
-    if ($required && !empty(TEXT_FIELD_REQUIRED)) {
-      $field .= '&nbsp;<span class="alert">' . TEXT_FIELD_REQUIRED . '</span>';
-    }
     return $field;
   }
 
@@ -371,11 +372,14 @@ function zen_image_submit($image, $alt = '', $parameters = '')
  * @return string
  */
   function zen_draw_pull_down_menu($name, $values, $default = '', $parameters = '', $required = false) {
-  //    $field = '<select name="' . zen_output_string($name) . '"';
     $field = '<select rel="dropdown" name="' . zen_output_string($name) . '"';
 
     if (zen_not_null($parameters)) {
       $field .= ' ' . $parameters;
+    }
+
+    if ($required && strpos($parameters, 'required') === false) {
+          $field .= ' required';
     }
 
     $field .= '>' . "\n";
@@ -393,10 +397,6 @@ function zen_image_submit($image, $alt = '', $parameters = '')
       $field .= '>' . zen_output_string($value['text'], array('"' => '&quot;', '\'' => '&#039;', '<' => '&lt;', '>' => '&gt;')) . '</option>' . "\n";
     }
     $field .= '</select>' . "\n";
-
-    if ($required == true) {
-      $field .= TEXT_FIELD_REQUIRED;
-    }
 
     return $field;
   }
