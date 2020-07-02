@@ -15,7 +15,6 @@ use Symfony\Component\Config\Resource\FileResource;
 use Symfony\Component\Config\Util\XmlUtils;
 use Symfony\Component\Translation\Exception\InvalidResourceException;
 use Symfony\Component\Translation\Exception\NotFoundResourceException;
-use Symfony\Component\Translation\Exception\RuntimeException;
 use Symfony\Component\Translation\MessageCatalogue;
 use Symfony\Component\Translation\Util\XliffUtils;
 
@@ -29,12 +28,8 @@ class XliffFileLoader implements LoaderInterface
     /**
      * {@inheritdoc}
      */
-    public function load($resource, string $locale, string $domain = 'messages')
+    public function load($resource, $locale, $domain = 'messages')
     {
-        if (!class_exists(XmlUtils::class)) {
-            throw new RuntimeException('Loading translations from the Xliff format requires the Symfony Config component.');
-        }
-
         if (!stream_is_local($resource)) {
             throw new InvalidResourceException(sprintf('This is not a local file "%s".', $resource));
         }
@@ -140,12 +135,11 @@ class XliffFileLoader implements LoaderInterface
 
         foreach ($xml->xpath('//xliff:unit') as $unit) {
             foreach ($unit->segment as $segment) {
-                $attributes = $unit->attributes();
-                $source = $attributes['name'] ?? $segment->source;
+                $source = $segment->source;
 
                 // If the xlf file has another encoding specified, try to convert it because
                 // simple_xml will always return utf-8 encoded values
-                $target = $this->utf8ToCharset((string) ($segment->target ?? $segment->source), $encoding);
+                $target = $this->utf8ToCharset((string) (isset($segment->target) ? $segment->target : $source), $encoding);
 
                 $catalogue->set((string) $source, $target, $domain);
 

@@ -15,22 +15,21 @@ use Symfony\Component\Config\ConfigCacheFactory;
 use Symfony\Component\Config\ConfigCacheFactoryInterface;
 use Symfony\Component\Config\ConfigCacheInterface;
 use Symfony\Component\Translation\Exception\InvalidArgumentException;
+use Symfony\Component\Translation\Exception\LogicException;
 use Symfony\Component\Translation\Exception\NotFoundResourceException;
 use Symfony\Component\Translation\Exception\RuntimeException;
+use Symfony\Component\Translation\Formatter\ChoiceMessageFormatterInterface;
 use Symfony\Component\Translation\Formatter\IntlFormatterInterface;
 use Symfony\Component\Translation\Formatter\MessageFormatter;
 use Symfony\Component\Translation\Formatter\MessageFormatterInterface;
 use Symfony\Component\Translation\Loader\LoaderInterface;
-use Symfony\Contracts\Translation\LocaleAwareInterface;
+use Symfony\Component\Translation\TranslatorInterface as LegacyTranslatorInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
-
-// Help opcache.preload discover always-needed symbols
-class_exists(MessageCatalogue::class);
 
 /**
  * @author Fabien Potencier <fabien@symfony.com>
  */
-class Translator implements TranslatorInterface, TranslatorBagInterface, LocaleAwareInterface
+class Translator implements LegacyTranslatorInterface, TranslatorInterface, TranslatorBagInterface
 {
     /**
      * @var MessageCatalogueInterface[]
@@ -89,9 +88,13 @@ class Translator implements TranslatorInterface, TranslatorBagInterface, LocaleA
     /**
      * @throws InvalidArgumentException If a locale contains invalid characters
      */
-    public function __construct(string $locale, MessageFormatterInterface $formatter = null, string $cacheDir = null, bool $debug = false, array $cacheVary = [])
+    public function __construct(?string $locale, MessageFormatterInterface $formatter = null, string $cacheDir = null, bool $debug = false, array $cacheVary = [])
     {
-        $this->setLocale($locale);
+        if (null === $locale) {
+            @trigger_error(sprintf('Passing "null" as the $locale argument to %s() is deprecated since Symfony 4.4.', __METHOD__), E_USER_DEPRECATED);
+        }
+
+        $this->setLocale($locale, false);
 
         if (null === $formatter) {
             $formatter = new MessageFormatter();
@@ -114,7 +117,7 @@ class Translator implements TranslatorInterface, TranslatorBagInterface, LocaleA
      *
      * @param string $format The name of the loader (@see addResource())
      */
-    public function addLoader(string $format, LoaderInterface $loader)
+    public function addLoader($format, LoaderInterface $loader)
     {
         $this->loaders[$format] = $loader;
     }
@@ -124,13 +127,19 @@ class Translator implements TranslatorInterface, TranslatorBagInterface, LocaleA
      *
      * @param string $format   The name of the loader (@see addLoader())
      * @param mixed  $resource The resource name
+     * @param string $locale   The locale
+     * @param string $domain   The domain
      *
      * @throws InvalidArgumentException If the locale contains invalid characters
      */
-    public function addResource(string $format, $resource, string $locale, string $domain = null)
+    public function addResource($format, $resource, $locale, $domain = null)
     {
         if (null === $domain) {
             $domain = 'messages';
+        }
+
+        if (null === $locale) {
+            @trigger_error(sprintf('Passing "null" to the third argument of the "%s" method has been deprecated since Symfony 4.4 and will throw an error in 5.0.', __METHOD__), E_USER_DEPRECATED);
         }
 
         $this->assertValidLocale($locale);
@@ -147,8 +156,12 @@ class Translator implements TranslatorInterface, TranslatorBagInterface, LocaleA
     /**
      * {@inheritdoc}
      */
-    public function setLocale(string $locale)
+    public function setLocale($locale)
     {
+        if (null === $locale && (2 > \func_num_args() || func_get_arg(1))) {
+            @trigger_error(sprintf('Passing "null" as the $locale argument to %s() is deprecated since Symfony 4.4.', __METHOD__), E_USER_DEPRECATED);
+        }
+
         $this->assertValidLocale($locale);
         $this->locale = $locale;
     }
@@ -174,6 +187,9 @@ class Translator implements TranslatorInterface, TranslatorBagInterface, LocaleA
         $this->catalogues = [];
 
         foreach ($locales as $locale) {
+            if (null === $locale) {
+                @trigger_error(sprintf('Passing "null" as the $locale argument to %s() is deprecated since Symfony 4.4.', __METHOD__), E_USER_DEPRECATED);
+            }
             $this->assertValidLocale($locale);
         }
 
@@ -183,9 +199,11 @@ class Translator implements TranslatorInterface, TranslatorBagInterface, LocaleA
     /**
      * Gets the fallback locales.
      *
-     * @internal
+     * @internal since Symfony 4.2
+     *
+     * @return array The fallback locales
      */
-    public function getFallbackLocales(): array
+    public function getFallbackLocales()
     {
         return $this->fallbackLocales;
     }
@@ -193,9 +211,9 @@ class Translator implements TranslatorInterface, TranslatorBagInterface, LocaleA
     /**
      * {@inheritdoc}
      */
-    public function trans(?string $id, array $parameters = [], string $domain = null, string $locale = null)
+    public function trans($id, array $parameters = [], $domain = null, $locale = null)
     {
-        if (null === $id || '' === $id) {
+        if ('' === $id = (string) $id) {
             return '';
         }
 
@@ -223,8 +241,47 @@ class Translator implements TranslatorInterface, TranslatorBagInterface, LocaleA
 
     /**
      * {@inheritdoc}
+     *
+     * @deprecated since Symfony 4.2, use the trans() method instead with a %count% parameter
      */
-    public function getCatalogue(string $locale = null)
+    public function transChoice($id, $number, array $parameters = [], $domain = null, $locale = null)
+    {
+        @trigger_error(sprintf('The "%s()" method is deprecated since Symfony 4.2, use the trans() one instead with a "%%count%%" parameter.', __METHOD__), E_USER_DEPRECATED);
+
+        if ('' === $id = (string) $id) {
+            return '';
+        }
+
+        if (!$this->formatter instanceof ChoiceMessageFormatterInterface) {
+            throw new LogicException(sprintf('The formatter "%s" does not support plural translations.', \get_class($this->formatter)));
+        }
+
+        if (null === $domain) {
+            $domain = 'messages';
+        }
+
+        $catalogue = $this->getCatalogue($locale);
+        $locale = $catalogue->getLocale();
+        while (!$catalogue->defines($id, $domain)) {
+            if ($cat = $catalogue->getFallbackCatalogue()) {
+                $catalogue = $cat;
+                $locale = $catalogue->getLocale();
+            } else {
+                break;
+            }
+        }
+
+        if ($this->hasIntlFormatter && $catalogue->defines($id, $domain.MessageCatalogue::INTL_DOMAIN_SUFFIX)) {
+            return $this->formatter->formatIntl($catalogue->get($id, $domain), $locale, ['%count%' => $number] + $parameters);
+        }
+
+        return $this->formatter->choiceFormat($catalogue->get($id, $domain), $number, $locale, $parameters);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getCatalogue($locale = null)
     {
         if (null === $locale) {
             $locale = $this->getLocale();
@@ -249,7 +306,10 @@ class Translator implements TranslatorInterface, TranslatorBagInterface, LocaleA
         return $this->loaders;
     }
 
-    protected function loadCatalogue(string $locale)
+    /**
+     * @param string $locale
+     */
+    protected function loadCatalogue($locale)
     {
         if (null === $this->cacheDir) {
             $this->initializeCatalogue($locale);
@@ -258,7 +318,10 @@ class Translator implements TranslatorInterface, TranslatorBagInterface, LocaleA
         }
     }
 
-    protected function initializeCatalogue(string $locale)
+    /**
+     * @param string $locale
+     */
+    protected function initializeCatalogue($locale)
     {
         $this->assertValidLocale($locale);
 
@@ -394,7 +457,7 @@ EOF
         }
     }
 
-    protected function computeFallbackLocales(string $locale)
+    protected function computeFallbackLocales($locale)
     {
         if (null === $this->parentLocales) {
             $parentLocales = json_decode(file_get_contents(__DIR__.'/Resources/data/parents.json'), true);
@@ -438,9 +501,11 @@ EOF
     /**
      * Asserts that the locale is valid, throws an Exception if not.
      *
+     * @param string $locale Locale to tests
+     *
      * @throws InvalidArgumentException If the locale contains invalid characters
      */
-    protected function assertValidLocale(string $locale)
+    protected function assertValidLocale($locale)
     {
         if (1 !== preg_match('/^[a-z0-9@_\\.\\-]*$/i', $locale)) {
             throw new InvalidArgumentException(sprintf('Invalid "%s" locale.', $locale));

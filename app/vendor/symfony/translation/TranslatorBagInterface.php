@@ -29,5 +29,5 @@ interface TranslatorBagInterface
      *
      * @throws InvalidArgumentException If the locale contains invalid characters
      */
-    public function getCatalogue(string $locale = null);
+    public function getCatalogue($locale = null);
 }

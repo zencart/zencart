@@ -25,7 +25,11 @@
         "php": ">=7.1.3",
         "filp/whoops": "1.1.2",
         "illuminate/database": "5.8.*",
-        "illuminate/events": "5.8.*"
+        "illuminate/events": "5.8.*",
+        "illuminate/filesystem": "5.8.*",
+        "illuminate/routing": "5.8.*",
+        "illuminate/validation": "5.8.*",
+        "illuminate/view": "5.8.*"
     },
     "autoload": {
         "psr-4": {
