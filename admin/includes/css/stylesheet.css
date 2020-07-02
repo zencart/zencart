@@ -168,52 +168,6 @@ body {
     clear: both;
 }
 
-body#login {
-    margin-top: 100px;
-    text-align: center;
-}
-
-body#login .button {
-    cursor: pointer;
-    padding: 5px 20px;
-    background: #fff;
-    border: 0;
-    font-weight: bold;
-    margin: 5px;
-}
-
-body#login .button:hover {
-    color: #fff;
-    background-color: #333;
-}
-
-body#login fieldset {
-    margin: 0 auto;
-    background-color: #05a5cb;
-    padding-bottom: 30px;
-}
-
-.loginLabel {
-    margin-left: 60px;
-    margin-right: 5px;
-    text-align: right;
-    line-height: 1.5;
-}
-
-body#login legend {
-    background: #333;
-    border: 1px solid #333;
-    color: #fff;
-    padding: 0.2em 0.5em;
-}
-
-#login a {
-    float: right;
-    color: #fff;
-    font-size: 1em;
-    margin: 20px;
-}
-
 input, select, textarea {
     font-size: 11px;
 }
