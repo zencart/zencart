@@ -116,7 +116,7 @@ class base
             foreach($methodsToCheck as $method) {
                 if (method_exists($obs['obs'], $method)) {
                     $obs['obs']->{$method}($this, $actualEventId, $param1, $param2, $param3, $param4, $param5, $param6, $param7, $param8, $param9);
-                    return;
+                    continue 2;
                 }
             }
             // If no update handler method exists then trigger an error so the problem is logged
