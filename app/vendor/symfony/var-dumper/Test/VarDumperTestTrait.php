@@ -42,17 +42,20 @@ trait VarDumperTestTrait
         $this->varDumperConfig['flags'] = null;
     }
 
-    public function assertDumpEquals($expected, $data, int $filter = 0, string $message = '')
+    public function assertDumpEquals($expected, $data, $filter = 0, $message = '')
     {
         $this->assertSame($this->prepareExpectation($expected, $filter), $this->getDump($data, null, $filter), $message);
     }
 
-    public function assertDumpMatchesFormat($expected, $data, int $filter = 0, string $message = '')
+    public function assertDumpMatchesFormat($expected, $data, $filter = 0, $message = '')
     {
         $this->assertStringMatchesFormat($this->prepareExpectation($expected, $filter), $this->getDump($data, null, $filter), $message);
     }
 
-    protected function getDump($data, $key = null, int $filter = 0): ?string
+    /**
+     * @return string|null
+     */
+    protected function getDump($data, $key = null, $filter = 0)
     {
         if (null === $flags = $this->varDumperConfig['flags']) {
             $flags = getenv('DUMP_LIGHT_ARRAY') ? CliDumper::DUMP_LIGHT_ARRAY : 0;

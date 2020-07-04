@@ -15,7 +15,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\VarDumper\Cloner\Stub;
 
 /**
- * @final
+ * @final since Symfony 4.4
  */
 class SymfonyCaster
 {
@@ -28,7 +28,7 @@ class SymfonyCaster
         'format' => 'getRequestFormat',
     ];
 
-    public static function castRequest(Request $request, array $a, Stub $stub, bool $isNested)
+    public static function castRequest(Request $request, array $a, Stub $stub, $isNested)
     {
         $clone = null;
 
@@ -45,7 +45,7 @@ class SymfonyCaster
         return $a;
     }
 
-    public static function castHttpClient($client, array $a, Stub $stub, bool $isNested)
+    public static function castHttpClient($client, array $a, Stub $stub, $isNested)
     {
         $multiKey = sprintf("\0%s\0multi", \get_class($client));
         if (isset($a[$multiKey])) {
@@ -55,7 +55,7 @@ class SymfonyCaster
         return $a;
     }
 
-    public static function castHttpClientResponse($response, array $a, Stub $stub, bool $isNested)
+    public static function castHttpClientResponse($response, array $a, Stub $stub, $isNested)
     {
         $stub->cut += \count($a);
         $a = [];
