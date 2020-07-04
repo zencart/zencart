@@ -214,6 +214,7 @@ class InitSystem
 
     protected function getLoadersFromFilelist($fileList)
     {
+        $autoLoadConfig = [];
         foreach ($fileList as $file) {
             require($file);
         }

@@ -96,13 +96,10 @@ define('DEBUG_AUTOLOAD', false);
  */
 if (DEBUG_AUTOLOAD || (defined('STRICT_ERROR_REPORTING') && STRICT_ERROR_REPORTING == true)) {
   @ini_set('display_errors', TRUE);
-  error_reporting(E_ALL);
+  error_reporting(defined('STRICT_REPORTING_LEVEL') ? STRICT_REPORTING_LEVEL : 0);
 } else {
-  error_reporting(0);
+    error_reporting(0);
 }
-/*
- * Get time zone info from PHP config
- */
 @date_default_timezone_set(date_default_timezone_get());
 /**
  * check for and include load application parameters
