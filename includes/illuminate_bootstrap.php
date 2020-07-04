@@ -9,11 +9,11 @@ $kernel = $app->make(Illuminate\Contracts\Http\Kernel::class);
 $response = $kernel->handle(
     $request = Illuminate\Http\Request::capture()
 );
-
 $route = Route::current();
+
 // if the route is not a fallback then laravel matched something
 // so we serve the laravel response and terminate
-if (!$route->isFallback) {
+if (isset($route) && !$route->isFallback) {
     $response->send();
     $kernel->terminate($request, $response);
 }
