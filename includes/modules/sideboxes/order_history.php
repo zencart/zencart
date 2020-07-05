@@ -8,7 +8,7 @@
  * @version $Id: DrByte 2020 Jun 22 Modified in v1.5.7 $
  */
 
-if (!zen_is_logged_in() && zen_in_guest_checkout()) {
+if (!zen_is_logged_in() || zen_in_guest_checkout()) {
     return;
 }
 // retrieve the last x products purchased
