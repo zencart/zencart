@@ -29,7 +29,7 @@ if (isset($_POST) && !empty($_POST)) {
   if (isset($_POST['language_key'])) {
     $language_key = zen_db_prepare_input($_POST['language_key']);
   }
-  if (empty($page_key)) {
+  if (empty($language_key)) {
     $error = TRUE;
     $messageStack->add(ERROR_LANGUAGE_KEY_NOT_ENTERED, 'error');
   } elseif (!defined($language_key)) {
