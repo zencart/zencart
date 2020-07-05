@@ -15,60 +15,57 @@ $sort_order = 0;
 if (isset($_POST) && !empty($_POST)) {
   $error = FALSE;
 
-  if (isset($_POST['page_key'])) {
-    $page_key = zen_db_prepare_input($_POST['page_key']);
-  }
-  if (empty($page_key)) {
-    $error = TRUE;
-    $messageStack->add(ERROR_PAGE_KEY_NOT_ENTERED, 'error');
-  } elseif (zen_page_key_exists($page_key)) {
-    $error = TRUE;
-    $messageStack->add(ERROR_PAGE_KEY_ALREADY_EXISTS, 'error');
+  $keys = [
+            'page_key' => [
+                            'empty' => true,
+                            'elseif' => 'zen_page_key_exists',
+                          ],
+            'language_key' => [
+                                'empty' => true,
+                                'elseif' => 'defined',
+                                'elseifNot' => true,
+                              ],
+            'main_page' => [
+                            'empty' => true,
+                            'elseif' => 'defined',
+                            'elseifNot' => true,
+                           ],
+            'page_params',
+            'menu_key' => [
+                            'empty' => true,
+                          ],
+            'sort_order' => [
+                              'valueType' => 'integer',
+                            ],
+          ];
+
+  foreach ($keys as $key => $value) {
+    if (isset($_POST[$key])) {
+      if (!empty($value['valueType'])) {
+        ${$key} = $db->bindVars(':val:', ':val:', $_POST[$key], $value['valueType']);
+      } else {
+        ${$key} = zen_db_prepare_input($_POST[$key]);
+      }
+    }
+    if (!empty($value['empty']) && !empty($value['elseif'])) {
+      if (empty(${$key})) {
+        $error = TRUE;
+        $messageStack->add(constant('ERROR_' . strtoupper($key) . '_NOT_ENTERED'), 'error');
+      } else if ((!empty($value['elseif']) && $value['elseif'](${$key})) ? empty($value['elseifNot']) /* result was true */ : !empty($value['elseif']) && !empty($value['elseifNot']) /*result was false */) {
+        $error = TRUE;
+        $message = 'ERROR_' . strtoupper($key) . '_ALREADY_EXISTS';
+        if ($value['elseif'] == 'defined' && !empty($value['elseifNot'])) {
+          $message = 'ERROR_' . strtoupper($key) . '_HAS_NOT_BEEN_DEFINED';
+        }
+        $messageStack->add(constant($message), 'error');
+      }
+    }
   }
 
-  if (isset($_POST['language_key'])) {
-    $language_key = zen_db_prepare_input($_POST['language_key']);
-  }
-  if (empty($language_key)) {
-    $error = TRUE;
-    $messageStack->add(ERROR_LANGUAGE_KEY_NOT_ENTERED, 'error');
-  } elseif (!defined($language_key)) {
-    $error = TRUE;
-    $messageStack->add(ERROR_LANGUAGE_KEY_HAS_NOT_BEEN_DEFINED, 'error');
-  }
-
-  if (isset($_POST['main_page'])) {
-    $main_page = zen_db_prepare_input($_POST['main_page']);
-  }
-  if (empty($main_page)) {
-    $error = TRUE;
-    $messageStack->add(ERROR_MAIN_PAGE_NOT_ENTERED, 'error');
-  } elseif (!defined($main_page)) {
-    $error = TRUE;
-    $messageStack->add(ERROR_FILENAME_HAS_NOT_BEEN_DEFINED, 'error');
-  }
-
-  if (isset($_POST['page_params'])) {
-    $page_params = zen_db_prepare_input($_POST['page_params']);
-  }
-
-  if (isset($_POST['menu_key'])) {
-    $menu_key = zen_db_prepare_input($_POST['menu_key']);
-  }
-  if (empty($menu_key)) {
-    $error = TRUE;
-    $messageStack->add(ERROR_MENU_NOT_CHOSEN, 'error');
-  }
-
+  $display_on_menu = 'N';
   if (isset($_POST['display_on_menu'])) {
     $checked = 'checked="true"';
     $display_on_menu = 'Y';
-  } else {
-    $display_on_menu = 'N';
-  }
-
-  if (isset($_POST['sort_order'])) {
-    $sort_order = (int)$_POST['sort_order'];
   }
 
   if (!$error) {

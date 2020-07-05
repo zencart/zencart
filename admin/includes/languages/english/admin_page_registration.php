@@ -27,6 +27,8 @@ define('ERROR_PAGE_KEY_ALREADY_EXISTS', 'Page key already exists. Page keys must
 define('ERROR_LANGUAGE_KEY_NOT_ENTERED', 'Language key not entered. All admin page must have a language key that defines the text on any menu link.');
 define('ERROR_LANGUAGE_KEY_HAS_NOT_BEEN_DEFINED', 'The language key entered has not been defined. Please check that it has been spelt correctly.');
 define('ERROR_MAIN_PAGE_NOT_ENTERED', 'The filename definition for the page has not been entered.');
+define('ERROR_MAIN_PAGE_HAS_NOT_BEEN_DEFINED', 'The filename definition entered does not exist. Please check that it has been spelt correctly.');
 define('ERROR_FILENAME_HAS_NOT_BEEN_DEFINED', 'The filename definition entered does not exist. Please check that it has been spelt correctly.');
+define('ERROR_MENU_KEY_NOT_ENTERED', 'Menu not chosen. You must associate the new page with a menu, even if it will not be displayed on that menu.');
 define('ERROR_MENU_NOT_CHOSEN', 'Menu not chosen. You must associate the new page with a menu, even if it will not be displayed on that menu.');
 define('SUCCESS_ADMIN_PAGE_REGISTERED', 'Your admin page has been registered.');
