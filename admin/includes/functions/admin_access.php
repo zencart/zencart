@@ -111,11 +111,11 @@ function zen_delete_user($id)
     } elseif ($id == $_SESSION['admin_id']) {
         $messageStack->add(ERROR_CANNOT_DELETE_SELF, 'error');
     } else {
-        $delname = preg_replace('/[^\d\w._-]/', '*', zen_get_admin_name($id)) . ' [id: ' . (int)$id . ']';
+        $delname = preg_replace('/[^\w._-]/', '*', zen_get_admin_name($id)) . ' [id: ' . (int)$id . ']';
         $sql = "DELETE FROM " . TABLE_ADMIN . " WHERE admin_id = :user:";
         $sql = $db->bindVars($sql, ':user:', $id, 'integer');
         $db->Execute($sql);
-        $admname = '{' . preg_replace('/[^\d\w._-]/', '*', zen_get_admin_name()) . ' [id: ' . (int)$_SESSION['admin_id'] . ']}';
+        $admname = '{' . preg_replace('/[^\w._-]/', '*', zen_get_admin_name()) . ' [id: ' . (int)$_SESSION['admin_id'] . ']}';
         zen_record_admin_activity(sprintf(TEXT_EMAIL_MESSAGE_ADMIN_USER_DELETED, $delname, $admname), 'warning');
         $email_text = sprintf(TEXT_EMAIL_MESSAGE_ADMIN_USER_DELETED, $delname, $admname);
         $block = array('EMAIL_MESSAGE_HTML' => $email_text);
@@ -222,7 +222,7 @@ function zen_update_user($name, $email, $id, $profile)
         $db->Execute($sql);
         // Now notify admin and user of changes
         $newData = zen_read_user(zen_get_admin_name($id));
-        $admname = preg_replace('/[^\d\w._-]/', '*', zen_get_admin_name()) . '[' . (int)$_SESSION['admin_id'] . ']';
+        $admname = preg_replace('/[^\w._-]/', '*', zen_get_admin_name()) . '[' . (int)$_SESSION['admin_id'] . ']';
         $changes = array();
         if ($oldData['admin_email'] != $newData['admin_email']) {
             $changes['email'] = array('old' => $oldData['admin_email'], 'new' => $newData['admin_email']);
