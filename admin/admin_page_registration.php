@@ -47,7 +47,7 @@ if (isset($_POST) && !empty($_POST)) {
         ${$key} = zen_db_prepare_input($_POST[$key]);
       }
     }
-    if (!empty($value['empty']) && !empty($value['elseif'])) {
+    if (!empty($value['empty'])) {
       if (empty(${$key})) {
         $error = TRUE;
         $messageStack->add(constant('ERROR_' . strtoupper($key) . '_NOT_ENTERED'), 'error');
