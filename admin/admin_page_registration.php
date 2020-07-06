@@ -5,7 +5,7 @@
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: DrByte 2020 Jun 07 Modified in v1.5.7 $
  */
-require('includes/application_top.php');
+require 'includes/application_top.php';
 
 // initialise form values
 $page_key = $language_key = $main_page = $page_params = $menu_key = $checked = '';
@@ -13,72 +13,72 @@ $sort_order = 0;
 
 // check if we are receiving form content and if so validate and process it
 if (isset($_POST) && !empty($_POST)) {
-  $error = FALSE;
+    $error = FALSE;
 
-  $keys = [
-            'page_key' => [
-                            'empty' => true,
-                            'elseif' => 'zen_page_key_exists',
-                          ],
-            'language_key' => [
-                                'empty' => true,
-                                'elseif' => 'defined',
-                                'elseifNot' => true,
-                              ],
-            'main_page' => [
-                            'empty' => true,
-                            'elseif' => 'defined',
-                            'elseifNot' => true,
-                           ],
-            'page_params',
-            'menu_key' => [
-                            'empty' => true,
-                          ],
-            'sort_order' => [
-                              'valueType' => 'integer',
-                            ],
-          ];
+    $keys = [
+        'page_key' => [
+            'empty' => true,
+            'elseif' => 'zen_page_key_exists',
+        ],
+        'language_key' => [
+            'empty' => true,
+            'elseif' => 'defined',
+            'elseifNot' => true,
+        ],
+        'main_page' => [
+            'empty' => true,
+            'elseif' => 'defined',
+            'elseifNot' => true,
+        ],
+        'page_params',
+        'menu_key' => [
+            'empty' => true,
+        ],
+        'sort_order' => [
+            'valueType' => 'integer',
+        ],
+    ];
 
-  foreach ($keys as $key => $value) {
-    if (isset($_POST[$key])) {
-      if (!empty($value['valueType'])) {
-        ${$key} = $db->bindVars(':val:', ':val:', $_POST[$key], $value['valueType']);
-      } else {
-        ${$key} = zen_db_prepare_input($_POST[$key]);
-      }
-    }
-    if (!empty($value['empty'])) {
-      if (empty(${$key})) {
-        $error = TRUE;
-        $messageStack->add(constant('ERROR_' . strtoupper($key) . '_NOT_ENTERED'), 'error');
-      } else if ((!empty($value['elseif']) && $value['elseif'](${$key})) ? empty($value['elseifNot']) /* result was true */ : !empty($value['elseif']) && !empty($value['elseifNot']) /*result was false */) {
-        $error = TRUE;
-        $message = 'ERROR_' . strtoupper($key) . '_ALREADY_EXISTS';
-        if ($value['elseif'] == 'defined' && !empty($value['elseifNot'])) {
-          $message = 'ERROR_' . strtoupper($key) . '_HAS_NOT_BEEN_DEFINED';
+    foreach ($keys as $key => $value) {
+        if (isset($_POST[$key])) {
+            if (!empty($value['valueType'])) {
+                ${$key} = $db->bindVars(':val:', ':val:', $_POST[$key], $value['valueType']);
+            } else {
+                ${$key} = zen_db_prepare_input($_POST[$key]);
+            }
         }
-        $messageStack->add(constant($message), 'error');
-      }
+        if (!empty($value['empty'])) {
+            if (empty(${$key})) {
+                $error = TRUE;
+                $messageStack->add(constant('ERROR_' . strtoupper($key) . '_NOT_ENTERED'), 'error');
+            } else if ((!empty($value['elseif']) && $value['elseif'](${$key})) ? empty($value['elseifNot']) /* result was true */ : !empty($value['elseif']) && !empty($value['elseifNot']) /*result was false */) {
+                $error = TRUE;
+                $message = 'ERROR_' . strtoupper($key) . '_ALREADY_EXISTS';
+                if ($value['elseif'] == 'defined' && !empty($value['elseifNot'])) {
+                    $message = 'ERROR_' . strtoupper($key) . '_HAS_NOT_BEEN_DEFINED';
+                }
+                $messageStack->add(constant($message), 'error');
+            }
+        }
     }
-  }
 
-  $display_on_menu = 'N';
-  if (isset($_POST['display_on_menu'])) {
-    $checked = 'checked="true"';
-    $display_on_menu = 'Y';
-  }
+    $display_on_menu = 'N';
+    if (isset($_POST['display_on_menu'])) {
+        $checked = 'checked="true"';
+        $display_on_menu = 'Y';
+    }
 
-  if (!$error) {
-    // register page
-    zen_register_admin_page($page_key, $language_key, $main_page, $page_params, $menu_key, $display_on_menu, $sort_order);
+    if (!$error) {
+        // register page
+        zen_register_admin_page($page_key, $language_key, $main_page, $page_params, $menu_key, $display_on_menu, $sort_order);
 
-    // prepare success message
-    $messageStack->add(SUCCESS_ADMIN_PAGE_REGISTERED, 'success');
+        // prepare success message
+        $messageStack->add(SUCCESS_ADMIN_PAGE_REGISTERED, 'success');
 
-    // reset form values
-    $page_key = $language_key = $main_page = $page_params = $menu_key = $checked = '';
-    $sort_order = 0;
-  }
+        // reset form values
+        $page_key = $language_key = $main_page = $page_params = $menu_key = $checked = '';
+        $sort_order = 0;
+    }
 }
 
 // prepare options for menu pulldown
@@ -86,7 +86,7 @@ $menu_titles = zen_get_menu_titles();
 $menu_options = array();
 $menu_options[0] = array('id' => NULL, 'text' => TEXT_SELECT_MENU);
 foreach ($menu_titles as $id => $title) {
-  $menu_options[] = array('id' => $id, 'text' => $title);
+    $menu_options[] = array('id' => $id, 'text' => $title);
 }
 ?>
 <!doctype html>
