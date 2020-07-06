@@ -185,8 +185,8 @@ require 'includes/init_includes/init_file_db_names.php';
 require 'includes/init_includes/init_database.php';
 require DIR_FS_CATALOG . 'includes/illuminate_bootstrap.php';
 
-$pluginManager = new PluginManager($db);
-$installedPlugins = $pluginManager->getInstalledPlugins();
+$installedPlugins = $laravel->make('installedPlugins');
+$pluginManager = new PluginManager(new App\Model\PluginControl, new App\Model\PluginControlVersion);
 
 $fs = FileSystem::getInstance();
 $fs->loadFilesFromPluginsDirectory($installedPlugins, 'catalog/includes/extra_datafiles', '~^[^\._].*\.php$~i');

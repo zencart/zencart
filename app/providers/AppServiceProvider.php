@@ -3,6 +3,9 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use Zencart\PluginManager\PluginManager;
+use App\Model\PluginControl;
+use App\Model\PluginControlVersion;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -22,7 +25,6 @@ class AppServiceProvider extends ServiceProvider
             $currentPaths[] = DIR_FS_ADMIN . 'includes/templates/views';
             config(['view.paths' => $currentPaths]);
         }
-        //
     }
 
     /**
@@ -44,5 +46,8 @@ class AppServiceProvider extends ServiceProvider
         } else {
             error_reporting(0);
         }
+        $pluginManager = new PluginManager(new PluginControl, new PluginControlVersion);
+        $installedPlugins = $pluginManager->getInstalledPlugins();
+        $this->app->instance('installedPlugins', $installedPlugins);
     }
 }

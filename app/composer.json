@@ -23,10 +23,11 @@
     "_comment": "compatible with PHP 7.1.3-8.0",
     "require": {
         "php": ">=7.1.3",
-        "laravel/laravel": "5.8.*",
-        "zcwilt/rest-api": "^0.9.93"
         "ext-curl": "*",
         "ext-json": "*",
+        "guidocella/eloquent-insert-on-duplicate-key": "^2.2",
+        "laravel/laravel": "5.8.*",
+        "zcwilt/rest-api": "^0.9.93"
     },
     "autoload": {
         "psr-4": {

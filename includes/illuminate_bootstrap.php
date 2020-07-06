@@ -1,8 +1,8 @@
 <?php
 
 // Create main laravel application
-$app = require_once DIR_FS_CATALOG . 'app/bootstrap/app.php';
-$kernel = $app->make(Illuminate\Contracts\Http\Kernel::class);
+$laravel = require_once DIR_FS_CATALOG . 'app/bootstrap/app.php';
+$kernel = $laravel->make(Illuminate\Contracts\Http\Kernel::class);
 //dump($app);
 
 //see if we can match any laravel routes

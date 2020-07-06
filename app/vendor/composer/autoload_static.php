@@ -95,6 +95,7 @@ class ComposerStaticInit38976b38ee8f02b829ea04de92ca3793
         ),
         'I' => 
         array (
+            'InsertOnDuplicateKey\\' => 21,
             'Illuminate\\' => 11,
         ),
         'F' => 
@@ -280,6 +281,10 @@ class ComposerStaticInit38976b38ee8f02b829ea04de92ca3793
         array (
             0 => __DIR__ . '/..' . '/jakub-onderka/php-console-color/src',
         ),
+        'InsertOnDuplicateKey\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/guidocella/eloquent-insert-on-duplicate-key/src',
+        ),
         'Illuminate\\' => 
         array (
             0 => __DIR__ . '/..' . '/laravel/framework/src/Illuminate',
@@ -336,6 +341,8 @@ class ComposerStaticInit38976b38ee8f02b829ea04de92ca3793
     public static $classMap = array (
         'App\\Console\\Kernel' => __DIR__ . '/../..' . '/Console/Kernel.php',
         'App\\Exceptions\\Handler' => __DIR__ . '/../..' . '/Exceptions/Handler.php',
+        'App\\Http\\Controllers\\Api\\AdminActivityController' => __DIR__ . '/../..' . '/Http/Controllers/Api/AdminActivityController.php',
+        'App\\Http\\Controllers\\Api\\CustomersController' => __DIR__ . '/../..' . '/Http/Controllers/Api/CustomersController.php',
         'App\\Http\\Controllers\\Auth\\ForgotPasswordController' => __DIR__ . '/..' . '/laravel/laravel/app/Http/Controllers/Auth/ForgotPasswordController.php',
         'App\\Http\\Controllers\\Auth\\LoginController' => __DIR__ . '/..' . '/laravel/laravel/app/Http/Controllers/Auth/LoginController.php',
         'App\\Http\\Controllers\\Auth\\RegisterController' => __DIR__ . '/..' . '/laravel/laravel/app/Http/Controllers/Auth/RegisterController.php',
@@ -350,8 +357,10 @@ class ComposerStaticInit38976b38ee8f02b829ea04de92ca3793
         'App\\Http\\Middleware\\TrimStrings' => __DIR__ . '/../..' . '/Http/Middleware/TrimStrings.php',
         'App\\Http\\Middleware\\TrustProxies' => __DIR__ . '/../..' . '/Http/Middleware/TrustProxies.php',
         'App\\Http\\Middleware\\VerifyCsrfToken' => __DIR__ . '/../..' . '/Http/Middleware/VerifyCsrfToken.php',
+        'App\\Model\\AdminActivityLog' => __DIR__ . '/../..' . '/Model/AdminActivityLog.php',
         'App\\Model\\Configuration' => __DIR__ . '/../..' . '/Model/Configuration.php',
         'App\\Model\\Customer' => __DIR__ . '/../..' . '/Model/Customer.php',
+        'App\\Model\\PluginControl' => __DIR__ . '/../..' . '/Model/PluginControl.php',
         'App\\Model\\ProductTypeLayout' => __DIR__ . '/../..' . '/Model/ProductTypeLayout.php',
         'App\\Model\\ProjectVersion' => __DIR__ . '/../..' . '/Model/ProjectVersion.php',
         'App\\Providers\\AppServiceProvider' => __DIR__ . '/../..' . '/providers/AppServiceProvider.php',
@@ -1404,6 +1413,7 @@ class ComposerStaticInit38976b38ee8f02b829ea04de92ca3793
         'Illuminate\\View\\ViewFinderInterface' => __DIR__ . '/..' . '/laravel/framework/src/Illuminate/View/ViewFinderInterface.php',
         'Illuminate\\View\\ViewName' => __DIR__ . '/..' . '/laravel/framework/src/Illuminate/View/ViewName.php',
         'Illuminate\\View\\ViewServiceProvider' => __DIR__ . '/..' . '/laravel/framework/src/Illuminate/View/ViewServiceProvider.php',
+        'InsertOnDuplicateKey\\InsertOnDuplicateKeyServiceProvider' => __DIR__ . '/..' . '/guidocella/eloquent-insert-on-duplicate-key/src/InsertOnDuplicateKeyServiceProvider.php',
         'JakubOnderka\\PhpConsoleColor\\ConsoleColor' => __DIR__ . '/..' . '/jakub-onderka/php-console-color/src/ConsoleColor.php',
         'JakubOnderka\\PhpConsoleColor\\InvalidStyleException' => __DIR__ . '/..' . '/jakub-onderka/php-console-color/src/InvalidStyleException.php',
         'JakubOnderka\\PhpConsoleHighlighter\\Highlighter' => __DIR__ . '/..' . '/jakub-onderka/php-console-highlighter/src/Highlighter.php',
