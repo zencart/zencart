@@ -646,7 +646,7 @@ function zen_get_admin_pages($menu_only)
             $sorted_menus = explode(",", MENU_CATEGORIES_TO_SORT_BY_NAME);
             foreach (array_keys($retVal) as $key) {
                 if (in_array($key, $sorted_menus)) {
-                    usort($retVal[$key], 'menu_name_sort');
+                    usort($retVal[$key], 'admin_menu_name_sort_callback');
                 }
             }
         }
@@ -924,7 +924,10 @@ function zen_admin_authorized_to_place_order()
     return ($_SESSION['admin_id'] == (int)EMP_LOGIN_ADMIN_ID || $admin_in_profile);
 }
 
-function menu_name_sort($a, $b)
+/**
+ * callback function for sorting admin menu entries
+ */
+function admin_menu_name_sort_callback($a, $b)
 {
     if ($a['name'] == $b['name'])
         return 0;
