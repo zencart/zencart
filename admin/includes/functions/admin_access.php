@@ -8,9 +8,12 @@
 
 if (!defined('ADMIN_PASSWORD_MIN_LENGTH')) define('ADMIN_PASSWORD_MIN_LENGTH', 7);
 /**
- * This function checks whether the currently logged on user has permission to access
+ * Checks whether the currently logged on user has permission to access
  * the page passed as parameter $page, with GET $params . The function returns boolean
  * true if the user is allowed access to the page, and boolean false otherwise.
+ * @param string $page FILENAME_XYZ page name
+ * @param array $params
+ * @return bool
  */
 function check_page($page, $params)
 {
@@ -35,29 +38,34 @@ function check_page($page, $params)
             AND ap2p.page_key NOT LIKE '_productTypes_%'";
     $sql = $db->bindVars($sql, ':adminId:', $_SESSION['admin_id'], 'integer');
     $result = $db->Execute($sql);
-    $retVal = false;
-    while (!$result->EOF) {
-        if ($result->fields['main_page'] != '' && defined($result->fields['main_page']) && basename(constant($result->fields['main_page']), '.php') == $page && $result->fields['page_params'] == $page_params) {
-            $retVal = true;
-        }
-        $result->MoveNext();
-    }
-    if (!$retVal) {
-        $sql = "SELECT *
-                FROM " . TABLE_ADMIN . " a
-                LEFT JOIN " . TABLE_ADMIN_PAGES_TO_PROFILES . " ap2p ON ap2p.profile_id = a.admin_profile
-                WHERE admin_id = :adminId:";
-        $sql = $db->bindVars($sql, ':adminId:', $_SESSION['admin_id'], 'integer');
-        $result = $db->Execute($sql);
-        while (!$result->EOF) {
-            $adjustedPageKey = preg_replace('/_productTypes_/', '', $result->fields['page_key']);
-            if ($adjustedPageKey == $page) $retVal = true;
-            $result->MoveNext();
+    foreach ($result as $row) {
+        if (!empty($row['main_page']) && defined($row['main_page']) && basename(constant($row['main_page']), '.php') === $page && $row['page_params'] === $page_params) {
+            return true;
         }
     }
-    return $retVal;
+    $sql = "SELECT *
+            FROM " . TABLE_ADMIN . " a
+            LEFT JOIN " . TABLE_ADMIN_PAGES_TO_PROFILES . " ap2p ON ap2p.profile_id = a.admin_profile
+            WHERE admin_id = :adminId:";
+    $sql = $db->bindVars($sql, ':adminId:', $_SESSION['admin_id'], 'integer');
+    $result = $db->Execute($sql);
+    foreach ($result as $row) {
+        $adjustedPageKey = preg_replace('/_productTypes_/', '', $row['page_key']);
+        if ($adjustedPageKey === $page) {
+            return true;
+        }
+    }
+    return false;
 }
 
+/**
+ * Some pages have sub-pages. This function checks for those and responds accordingly.
+ * This way permission profiles only need to register the parent page.
+ *
+ * @param string $page FILENAME_XYZ page name
+ * @param array $params
+ * @return bool
+ */
 function check_related_page($page, $params)
 {
     if ($page == FILENAME_BANNER_STATISTICS) {
@@ -78,26 +86,30 @@ function zen_is_superuser()
     return $result->RecordCount() > 0;
 }
 
-function zen_get_users($limit = '')
+/**
+ * Get array of registered admin users
+ * @param int $limit
+ * @return array of Admin Users
+ */
+function zen_get_users($limit = null)
 {
     global $db;
     $retVal = array();
     $sql = 'SELECT a.*, p.profile_name FROM ' . TABLE_ADMIN . ' a
             LEFT JOIN ' . TABLE_ADMIN_PROFILES . ' p ON p.profile_id = a.admin_profile';
-    if ($limit != '') {
+    if (!empty($limit)) {
         $sql .= ' WHERE a.admin_id = :adminid: LIMIT 1 ';
         $sql = $db->bindVars($sql, ':adminid:', $limit, 'integer');
     }
     $result = $db->Execute($sql);
-    while (!$result->EOF) {
+    foreach ($result as $row) {
         $retVal[] = array(
-            'id' => $result->fields['admin_id'],
-            'name' => $result->fields['admin_name'],
-            'email' => $result->fields['admin_email'],
-            'profile' => $result->fields['admin_profile'],
-            'profileName' => $result->fields['profile_name'],
+            'id' => $row['admin_id'],
+            'name' => $row['admin_name'],
+            'email' => $row['admin_email'],
+            'profile' => $row['admin_profile'],
+            'profileName' => $row['profile_name'],
         );
-        $result->MoveNext();
     }
     return $retVal;
 }
@@ -261,32 +273,34 @@ function zen_read_user($name)
 
 /**
  * Lookup admin user name based on admin id
- * @param string $name
+ * @param int $id
+ * @return string
  */
-function zen_get_admin_name($id = '')
+function zen_get_admin_name($id = null)
 {
     global $db;
     if (empty($id)) $id = $_SESSION['admin_id'];
-    $sql = "SELECT admin_name FROM " . TABLE_ADMIN . " WHERE admin_id = :adminid:  LIMIT 1";
+    $sql = "SELECT admin_name FROM " . TABLE_ADMIN . " WHERE admin_id = :adminid: LIMIT 1";
     $sql = $db->bindVars($sql, ':adminid:', $id, 'integer');
     $result = $db->Execute($sql);
-    return $result->fields['admin_name'];
+    return $result->RecordCount() ? $result->fields['admin_name'] : null;
 }
 
 /**
  * Verify login according to security requirements
- * @param $admin_name
- * @param $admin_pass
+ * @param string $admin_name
+ * @param string $admin_pass
+ * @return array
  */
 function zen_validate_user_login($admin_name, $admin_pass)
 {
     global $db;
-    $camefrom = isset($_GET['camefrom']) ? $_GET['camefrom'] : FILENAME_DEFAULT;
+    $camefrom = $_GET['camefrom'] ?? FILENAME_DEFAULT;
     $error = $expired = false;
     $message = $redirect = '';
     $expired_token = 0;
     $result = zen_read_user($admin_name);
-    if (empty($result) || $admin_name != $result['admin_name']) {
+    if (empty($result) || $admin_name !== $result['admin_name']) {
         // invalid login
         $error = true;
         $message = ERROR_WRONG_LOGIN;
@@ -298,7 +312,7 @@ function zen_validate_user_login($admin_name, $admin_pass)
             $message = ERROR_SECURITY_ERROR; // account locked. Simply give generic error, since otherwise we alert that the account name is correct
             zen_record_admin_activity(TEXT_ERROR_ATTEMPTED_TO_LOG_IN_TO_LOCKED_ACCOUNT . ' ' . $admin_name, 'warning');
         }
-        if ($result['reset_token'] != '') {
+        if ($result['reset_token'] !== '') {
             list ($token_expires_at, $token) = explode('}', $result['reset_token']);
             if ($token_expires_at > 0) {
                 if ($token_expires_at <= time() && $result['admin_pass'] != '') {
@@ -339,9 +353,9 @@ function zen_validate_user_login($admin_name, $admin_pass)
             }
         }
         // BEGIN 2-factor authentication
-        if ($error == false && defined('ZC_ADMIN_TWO_FACTOR_AUTHENTICATION_SERVICE') && ZC_ADMIN_TWO_FACTOR_AUTHENTICATION_SERVICE != '') {
+        if ($error === false && defined('ZC_ADMIN_TWO_FACTOR_AUTHENTICATION_SERVICE') && ZC_ADMIN_TWO_FACTOR_AUTHENTICATION_SERVICE !== '') {
             if (function_exists(ZC_ADMIN_TWO_FACTOR_AUTHENTICATION_SERVICE)) {
-                $response = zen_call_function(ZC_ADMIN_TWO_FACTOR_AUTHENTICATION_SERVICE, array($result['admin_id'], $result['admin_email'], $result['admin_name']));
+                $response = zen_call_function(ZC_ADMIN_TWO_FACTOR_AUTHENTICATION_SERVICE, [$result['admin_id'], $result['admin_email'], $result['admin_name']]);
                 if ($response !== true) {
                     $error = true;
                     $message = ERROR_WRONG_LOGIN;
@@ -354,7 +368,7 @@ function zen_validate_user_login($admin_name, $admin_pass)
     }
 
     // BEGIN LOGIN SLAM PREVENTION
-    if ($error == true) {
+    if ($error) {
         if (!isset($_SESSION['login_attempt'])) $_SESSION['login_attempt'] = 0;
         $_SESSION['login_attempt']++;
         $sql = "UPDATE " . TABLE_ADMIN . " SET failed_logins = failed_logins + 1, last_failed_attempt = now(), last_failed_ip = :ip: WHERE admin_name = :adminname: ";
@@ -386,7 +400,7 @@ function zen_validate_user_login($admin_name, $admin_pass)
     if (PADSS_PWD_EXPIRY_ENFORCED == 1 && $error == false && $result['pwd_last_change_date'] == '1990-01-01 14:02:22') {
         $expired = true;
         $error = true;
-        $message = ($message == '' ? '' : $message . '<br><br>') . EXPIRED_DUE_TO_SSL;
+        $message = ($message === '' ? '' : $message . '<br><br>') . EXPIRED_DUE_TO_SSL;
     }
     // deal with expireds for PA-DSS
     if ($error == false && PADSS_PWD_EXPIRY_ENFORCED == 1 && $result['pwd_last_change_date'] < date('Y-m-d H:i:s', ADMIN_PASSWORD_EXPIRES_INTERVAL)) {
@@ -420,6 +434,7 @@ function zen_validate_user_login($admin_name, $admin_pass)
  *
  * @param string $password
  * @param int $adminID
+ * @return bool Error status
  */
 function zen_check_for_password_problems($password, $adminID = 0)
 {
@@ -456,18 +471,18 @@ function zen_check_for_password_problems($password, $adminID = 0)
  * THIS IS A PA-DSS REQUIREMENT AND MUST NOT BE CHANGED WITHOUT VOIDING COMPLIANCE
  *
  * @param string $adminID
+ * @return bool
  */
 function zen_check_for_expired_pwd($adminID)
 {
-    if (PADSS_PWD_EXPIRY_ENFORCED == 0) return 0;
+    if (PADSS_PWD_EXPIRY_ENFORCED == 0) return false;
     global $db;
     $sql = "SELECT admin_id FROM " . TABLE_ADMIN . "
             WHERE admin_id = :adminID:
             AND pwd_last_change_date < DATE_SUB(CURDATE(),INTERVAL 90 DAY)";
     $sql = $db->bindVars($sql, ':adminID:', $adminID, 'integer');
     $result = $db->Execute($sql);
-    $retVal = $result->RecordCount();
-    return $retVal;
+    return (bool)$result->RecordCount();
 }
 
 function zen_reset_password($id, $password, $compare)
@@ -506,6 +521,7 @@ function zen_reset_password($id, $password, $compare)
  * @param string $adm_old_pwd
  * @param string $adm_new_pwd
  * @param string $adm_conf_pwd
+ * @return array error messages
  */
 function zen_validate_pwd_reset_request($admin_name, $adm_old_pwd, $adm_new_pwd, $adm_conf_pwd)
 {
@@ -564,6 +580,7 @@ function zen_validate_pwd_reset_request($admin_name, $adm_old_pwd, $adm_new_pwd,
 /**
  * Retrieve profiles list
  * @param bool $withUsers
+ * @return array
  */
 function zen_get_profiles($withUsers = false)
 {
@@ -575,16 +592,21 @@ function zen_get_profiles($withUsers = false)
                 LEFT JOIN " . TABLE_ADMIN . " a ON a.admin_profile = p.profile_id
                 GROUP BY p.profile_id, p.profile_name";
         $result = $db->Execute($sql);
-        while (!$result->EOF) {
-            $retVal[] = array('id' => $result->fields['profile_id'], 'name' => $result->fields['profile_name'], 'users' => $result->fields['profile_users']);
-            $result->MoveNext();
+        foreach ($result as $row) {
+            $retVal[] = [
+                'id' => $row['profile_id'],
+                'name' => $row['profile_name'],
+                'users' => $row['profile_users'],
+                ];
         }
     } else {
         $sql = 'SELECT * FROM ' . TABLE_ADMIN_PROFILES;
         $result = $db->Execute($sql);
-        while (!$result->EOF) {
-            $retVal[] = array('id' => $result->fields['profile_id'], 'text' => $result->fields['profile_name']);
-            $result->MoveNext();
+        foreach ($result as $row) {
+            $retVal[] = [
+                'id' => $row['profile_id'],
+                'text' => $row['profile_name'],
+            ];
         }
     }
     return $retVal;
@@ -620,9 +642,12 @@ function zen_get_admin_pages($menu_only)
      */
     $sql = "SELECT * FROM " . TABLE_PRODUCT_TYPES . " WHERE type_handler != 'product'";
     $result = $db->Execute($sql);
-    while (!$result->EOF) {
-        $productTypes['_productTypes_' . $result->fields['type_handler']] = array('name' => $result->fields['type_name'], 'file' => $result->fields['type_handler'], 'params' => '');
-        $result->MoveNext();
+    foreach ($result as $row) {
+        $productTypes['_productTypes_' . $row['type_handler']] = [
+            'name' => $row['type_name'],
+            'file' => $row['type_handler'],
+            'params' => '',
+        ];
     }
     $sql = "SELECT ap.menu_key, ap.page_key, ap.main_page, ap.page_params, ap.language_key as page_name
             FROM " . TABLE_ADMIN_PAGES . " ap
@@ -630,16 +655,15 @@ function zen_get_admin_pages($menu_only)
     if ($menu_only) $sql .= "WHERE ap.display_on_menu = 'Y' ";
     $sql .= "ORDER BY am.sort_order, ap.sort_order";
     $result = $db->Execute($sql);
-    while (!$result->EOF) {
-        if (defined($result->fields['main_page']) && defined($result->fields['page_name'])) {
-            $retVal[$result->fields['menu_key']][$result->fields['page_key']] = [
-                'name' => constant($result->fields['page_name']),
-                'file' => constant($result->fields['main_page']),
-                'params' => $result->fields['page_params'],
+    foreach ($result as $row) {
+        if (defined($row['main_page']) && defined($row['page_name'])) {
+            $retVal[$row['menu_key']][$row['page_key']] = [
+                'name' => constant($row['page_name']),
+                'file' => constant($row['main_page']),
+                'params' => $row['page_params'],
             ];
 
         }
-        $result->MoveNext();
     }
     if ($menu_only) {
         if (defined('MENU_CATEGORIES_TO_SORT_BY_NAME') && !empty(MENU_CATEGORIES_TO_SORT_BY_NAME)) {
@@ -697,9 +721,8 @@ function zen_get_permitted_pages_for_profile($profile)
     $sql = "SELECT page_key FROM " . TABLE_ADMIN_PAGES_TO_PROFILES . " WHERE profile_id = :profile:";
     $sql = $db->bindVars($sql, ':profile:', $profile, 'integer');
     $result = $db->Execute($sql);
-    while (!$result->EOF) {
-        $retVal[] = $result->fields['page_key'];
-        $result->MoveNext();
+    foreach ($result as $row) {
+        $retVal[] = $row['page_key'];
     }
     return $retVal;
 }
@@ -804,15 +827,14 @@ function zen_get_admin_menu_for_user()
                 ORDER BY am.sort_order, ap.sort_order";
         $sql = $db->bindVars($sql, ':user:', $_SESSION['admin_id'], 'integer');
         $result = $db->Execute($sql);
-        while (!$result->EOF) {
-            if (defined($result->fields['pageName']) && defined($result->fields['main_page'])) {
-                $retVal[$result->fields['menu_key']][$result->fields['page_key']] = array(
-                    'name' => constant($result->fields['pageName']),
-                    'file' => constant($result->fields['main_page']),
-                    'params' => $result->fields['page_params'],
+        foreach ($result as $row) {
+            if (defined($row['pageName']) && defined($row['main_page'])) {
+                $retVal[$row['menu_key']][$row['page_key']] = array(
+                    'name' => constant($row['pageName']),
+                    'file' => constant($row['main_page']),
+                    'params' => $row['page_params'],
                 );
             }
-            $result->MoveNext();
         }
     }
     return $retVal;
@@ -824,9 +846,8 @@ function zen_get_menu_titles()
     $retval = array();
     $sql = "SELECT menu_key, language_key FROM " . TABLE_ADMIN_MENUS . " ORDER BY sort_order";
     $result = $db->Execute($sql);
-    while (!$result->EOF) {
-        $retVal[$result->fields['menu_key']] = constant($result->fields['language_key']);
-        $result->MoveNext();
+    foreach ($result as $row) {
+        $retVal[$row['menu_key']] = constant($row['language_key']);
     }
     $retVal['_productTypes'] = BOX_HEADING_PRODUCT_TYPES;
     return $retVal;
@@ -879,7 +900,7 @@ function zen_deregister_admin_pages($pages)
                 $sql .= ":page_key:,";
                 $sql = $db->bindVars($sql, ':page_key:', $page, 'stringIgnoreNull');
             }
-            $sql = substr($sql, 0, -1) . ")";
+            $sql = trim($sql, ',') . ")";
         } else {
             $sql = "DELETE FROM " . TABLE_ADMIN_PAGES . " WHERE page_key = :page_key:";
             $sql = $db->bindVars($sql, ':page_key:', $pages, 'stringIgnoreNull');
@@ -889,12 +910,13 @@ function zen_deregister_admin_pages($pages)
     }
 }
 
-function zen_updated_by_admin($admin_id = '')
+function zen_updated_by_admin($admin_id = null)
 {
-    if ($admin_id === '') {
+    if (empty($admin_id)) {
         $admin_id = $_SESSION['admin_id'];
     }
-    return zen_get_admin_name($admin_id) . " [$admin_id]";
+    $name = zen_get_admin_name($admin_id);
+    return ($name ?? 'Unknown Name') . " [$admin_id]";
 }
 
 function zen_admin_authorized_to_place_order()
@@ -905,11 +927,11 @@ function zen_admin_authorized_to_place_order()
         $admin_profiles = explode(',', str_replace(' ', '', EMP_LOGIN_ADMIN_PROFILE_ID));
         $profile_list = [];
         foreach ($admin_profiles as $current_profile) {
-            if (((int)$current_profile) != 0) {
+            if (((int)$current_profile) !== 0) {
                 $profile_list[] = (int)$current_profile;
             }
         }
-        if (count($profile_list) != 0) {
+        if (count($profile_list) > 0) {
             $profile_clause = ' AND admin_profile IN (' . implode(',', $profile_list) . ')';
             $emp_sql =
                 "SELECT admin_profile, admin_pass
@@ -921,7 +943,7 @@ function zen_admin_authorized_to_place_order()
             $admin_in_profile = !$emp_result->EOF;
         }
     }
-    return ($_SESSION['admin_id'] == (int)EMP_LOGIN_ADMIN_ID || $admin_in_profile);
+    return ((int)$_SESSION['admin_id'] === (int)EMP_LOGIN_ADMIN_ID || $admin_in_profile);
 }
 
 /**
