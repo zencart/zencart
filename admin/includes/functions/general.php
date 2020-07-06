@@ -3103,6 +3103,17 @@ function zen_get_master_categories_pulldown($product_id, $fullpath = false)
   }
 
 /**
+ * Function for configuration values that are read-only, e.g. a plugin's version number
+ */
+function zen_cfg_read_only($text, $key = '') 
+{
+    $name = (!empty($key)) ? 'configuration[' . $key . ']' : 'configuration_value';
+    $text = htmlspecialchars_decode($text);
+
+    return $text . zen_draw_hidden_field($name, $text);
+}
+
+/**
  * get products image
  */
   function zen_get_products_image($product_id) {
