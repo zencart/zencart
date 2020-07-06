@@ -74,6 +74,7 @@ function page_has_help()
         FILENAME_PRODUCT => 'https://docs.zen-cart.com/user/admin_pages/catalog/products_expected/',
         FILENAME_PRODUCTS_TO_CATEGORIES => 'https://docs.zen-cart.com/user/admin_pages/catalog/products_to_categories/',
         FILENAME_MODULES => 'https://docs.zen-cart.com/user/admin_pages/modules/',
+        FILENAME_PLUGIN_MANAGER=> 'https://docs.zen-cart.com/user/admin_pages/modules/plugin_manager',
         FILENAME_CUSTOMERS => 'https://docs.zen-cart.com/user/admin_pages/customers/customers/',
         FILENAME_ORDERS => 'https://docs.zen-cart.com/user/admin_pages/customers/orders/',
         FILENAME_GROUP_PRICING => 'https://docs.zen-cart.com/user/admin_pages/customers/group_pricing/',
