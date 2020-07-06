@@ -1,6 +1,6 @@
 <?php
 
-if (!defined('ALLOW_LARAVEL_API_ROUTES') || ALLOW_LARAVEL_API_ROUTES == false) {
+if (!app()->runningInConsole() && (!defined('ALLOW_LARAVEL_API_ROUTES') || ALLOW_LARAVEL_API_ROUTES == false)) {
     return;
 }
 

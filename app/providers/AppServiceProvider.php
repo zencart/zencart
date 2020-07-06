@@ -13,6 +13,15 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
+        /**
+         * Add the admin path to view directories
+         *
+         */
+        if (defined('DIR_FS_ADMIN')) {
+            $currentPaths = config('view.paths');
+            $currentPaths[] = DIR_FS_ADMIN . 'includes/templates/views';
+            config(['view.paths' => $currentPaths]);
+        }
         //
     }
 

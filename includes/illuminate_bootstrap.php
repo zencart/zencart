@@ -7,7 +7,7 @@ $kernel = $app->make(Illuminate\Contracts\Http\Kernel::class);
 
 //see if we can match any laravel routes
 $response = $kernel->handle(
-    $request = Illuminate\Http\Request::capture()
+    $unsanitizedRequest = Illuminate\Http\Request::capture()
 );
 $route = Route::current();
 
@@ -15,7 +15,7 @@ $route = Route::current();
 // so we serve the laravel response and terminate
 if (isset($route) && !$route->isFallback) {
     $response->send();
-    $kernel->terminate($request, $response);
+    $kernel->terminate($unsanitizedRequest, $response);
 }
 
 // route was a fallback so carry on and use Zen Cart

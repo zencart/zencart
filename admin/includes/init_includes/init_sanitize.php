@@ -289,3 +289,5 @@ $group = array('query_string' => array('sanitizerType' => 'NULL_ACTION', 'method
 $sanitizer->addComplexSanitization($group);
 
 $sanitizer->runSanitizers();
+
+$sanitizedRequest = Request::capture();
