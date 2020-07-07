@@ -15,7 +15,8 @@
     }
   },
   "require": {
-    "laravel/framework": "^5.4|^7.0"
+    "illuminate/database": "^5.4|^7.0",
+    "illuminate/auth": "^5.4|^7.0"
   },
   "require-dev": {
     "orchestra/testbench": "~3.0",

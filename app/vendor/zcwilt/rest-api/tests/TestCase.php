@@ -13,6 +13,24 @@ use Tests\Fixtures\Models\ZcwiltUser;
 
 abstract class TestCase extends Orchestra
 {
+    public function setUp()
+    {
+        parent::setUp();
+        $this->setUpDatabase($this->app);
+    }
+
+    protected function setUpDatabase($app)
+    {
+        $app['config']->set('database.default', 'sqlite');
+        $app['config']->set('database.connections.sqlite', [
+            'driver'   => 'sqlite',
+            'database' => ':memory:',
+            'prefix'   => '',
+        ]);
+
+
+    }
+
     public function createTables()
     {
         Schema::dropIfExists('zcwilt_dummy');
