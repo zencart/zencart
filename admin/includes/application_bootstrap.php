@@ -158,7 +158,7 @@ require 'includes/init_includes/init_file_db_names.php';
 require 'includes/init_includes/init_database.php';
 require DIR_FS_CATALOG . 'includes/illuminate_bootstrap.php';
 
-$installedPlugins = $laravel->make('installedPlugins');
+$installedPlugins = $laravelApp->make('installedPlugins');
 $pluginManager = new PluginManager(new App\Model\PluginControl, new App\Model\PluginControlVersion);
 
 $fs = FileSystem::getInstance();
