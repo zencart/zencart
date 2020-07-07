@@ -18,16 +18,16 @@ $parameters = [
 $cInfo = new objectInfo($parameters);
 
 $categoryId = (isset($_GET['cID']) ? (int)$_GET['cID'] : '');
-if ($categoryId != '') {
+if (!empty($categoryId)) {
   $category = $db->Execute("SELECT c.categories_id, cd.categories_name, cd.categories_description, c.categories_image,
                                    c.sort_order, c.date_added, c.last_modified
-                            FROM " . TABLE_CATEGORIES . " c, " . TABLE_CATEGORIES_DESCRIPTION . " cd
+                            FROM " . TABLE_CATEGORIES . " c
+                            LEFT JOIN " . TABLE_CATEGORIES_DESCRIPTION . " cd USING (categories_id)
                             WHERE c.categories_id = " . $categoryId . "
-                            AND c.categories_id = cd.categories_id
                             AND cd.language_id = " . (int)$_SESSION['languages_id']);
   $cInfo->updateObjectInfo($category->fields);
 }
-$action = (isset($_GET['action']) ? $_GET['action'] : '');
+$action = $_GET['action'] ?? '';
 
 if (isset($_GET['page'])) {
   $_GET['page'] = (int)$_GET['page'];
