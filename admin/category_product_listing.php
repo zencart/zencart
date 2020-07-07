@@ -650,7 +650,7 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
                         <i class="fa fa-trash-o fa-lg" aria-hidden="true"></i>
                       </a>
                       <a href="<?php echo zen_href_link(FILENAME_CATEGORY_PRODUCT_LISTING, 'cPath=' . $cPath . '&cID=' . $category['categories_id'] . '&action=move_category' . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '')); ?>" class="btn btn-sm btn-default btn-move" role="button" title="<?php echo ICON_MOVE; ?>"><strong>M</strong></a>
-                      <?php if (zen_get_category_metatags_keywords($category['categories_id'], (int)$_SESSION['languages_id']) || zen_get_category_metatags_description($category['categories_id'], (int)$_SESSION['languages_id'])) { ?>
+                      <?php if (zen_get_category_metatag_fields($category['categories_id'], (int)$_SESSION['languages_id'], 'metatags_keywords') || zen_get_category_metatag_fields($category['categories_id'], (int)$_SESSION['languages_id'], 'metatags_description')) { ?>
                         <a href="<?php echo zen_href_link(FILENAME_CATEGORIES, 'cPath=' . $cPath . '&cID=' . $category['categories_id'] . '&action=edit_category_meta_tags'); ?>" class="btn btn-sm btn-default btn-metatags-on" role="button" title="<?php echo ICON_EDIT_METATAGS; ?>">
                           <i class="fa fa-asterisk fa-lg" aria-hidden="true"></i>
                         </a>
@@ -825,7 +825,7 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
                         <?php
                       }
 // meta tags
-                      if (zen_get_metatags_keywords($product['products_id'], (int)$_SESSION['languages_id']) or zen_get_metatags_description($product['products_id'], (int)$_SESSION['languages_id'])) {
+                      if (zen_get_product_metatag_fields($product['products_id'], (int)$_SESSION['languages_id'], 'metatags_keywords') or zen_get_product_metatag_fields($product['products_id'], (int)$_SESSION['languages_id'], 'metatags_description')) {
                         ?>
                         <a href="<?php echo zen_href_link(FILENAME_PRODUCT, 'page=' . $_GET['page'] . '&product_type=' . $product['products_type'] . '&cPath=' . $cPath . '&pID=' . $product['products_id'] . '&action=new_product_meta_tags'); ?>" class="btn btn-sm btn-default btn-metatags-on" role="button" title="<?php echo ICON_EDIT_METATAGS; ?>">
                           <i class="fa fa-asterisk fa-lg" aria-hidden="true"></i>
