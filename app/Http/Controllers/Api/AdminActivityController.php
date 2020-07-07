@@ -6,5 +6,5 @@ use Zcwilt\Api\Controllers\ApiController;
 
 class AdminActivityController extends ApiController
 {
-    protected $modelName = '\\App\\Model\\AdminActivityLog';
+    protected $modelName = '\\App\\Models\\AdminActivityLog';
 }

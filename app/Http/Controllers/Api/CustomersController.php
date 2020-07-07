@@ -6,5 +6,5 @@ use Zcwilt\Api\Controllers\ApiController;
 
 class CustomersController extends ApiController
 {
-    protected $modelName = '\\App\\Model\\Customer';
+    protected $modelName = '\\App\\Models\\Customer';
 }

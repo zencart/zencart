@@ -5,9 +5,9 @@
  * @version $Id:  $
  */
 
-use App\Model\Configuration;
-use App\Model\ProjectVersion;
-use App\Model\ProductTypeLayout;
+use App\Models\Configuration;
+use App\Models\ProjectVersion;
+use App\Models\ProductTypeLayout;
 
 if (!defined('IS_ADMIN_FLAG')) {
     die('Illegal Access');
