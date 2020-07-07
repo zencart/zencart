@@ -26,8 +26,8 @@
         "ext-curl": "*",
         "ext-json": "*",
         "guidocella/eloquent-insert-on-duplicate-key": "^2.2",
-        "laravel/laravel": "5.8.*",
-        "zcwilt/rest-api": "^0.9.93"
+        "laravel/framework": "5.8.*",
+        "zcwilt/rest-api": "dev-master"
     },
     "autoload": {
         "psr-4": {
