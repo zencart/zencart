@@ -6,69 +6,27 @@
  * @version $Id: Steve 2020 May 19 Modified in v1.5.7 $
  */
 require('includes/application_top.php');
-// get an array of template info
-$dir = @dir(DIR_FS_CATALOG_TEMPLATES);
-if (!$dir) {
-  die('DIR_FS_CATALOG_TEMPLATES NOT SET');
-}
-while ($file = $dir->read()) {
-  if (is_dir(DIR_FS_CATALOG_TEMPLATES . $file) && $file != 'template_default') {
-    if (file_exists(DIR_FS_CATALOG_TEMPLATES . $file . '/template_info.php')) {
-      require(DIR_FS_CATALOG_TEMPLATES . $file . '/template_info.php');
-      $template_info[$file] = [
-        'name' => $template_name,
-        'version' => $template_version,
-        'author' => $template_author,
-        'description' => $template_description,
-        'screenshot' => $template_screenshot,
-      ];
-    }
-  }
-}
-$dir->close();
 
+if (isset($_GET['tID'])) $selected_template = (int)$_GET['tID'];
 $action = (isset($_GET['action']) ? $_GET['action'] : '');
+$template_info = zen_get_catalog_template_directories();
 
 if (zen_not_null($action)) {
   switch ($action) {
     case 'insert':
-      // @TODO: add duplicate-detection and empty-submission detection
-      $sql = "SELECT *
-              FROM " . TABLE_TEMPLATE_SELECT . "
-              WHERE template_language = :lang:";
-      $sql = $db->bindVars($sql, ':lang:', $_POST['lang'], 'string');
-      $check_query = $db->Execute($sql);
-      if ($check_query->RecordCount() < 1) {
-        $sql = "INSERT INTO " . TABLE_TEMPLATE_SELECT . " (template_dir, template_language)
-                VALUES (:tpl:, :lang:)";
-        $sql = $db->bindVars($sql, ':tpl:', $_POST['ln'], 'string');
-        $sql = $db->bindVars($sql, ':lang:', $_POST['lang'], 'string');
-        $db->Execute($sql);
-        $_GET['tID'] = $db->insert_ID();
-      }
+      $selected_template = zen_register_new_template($_POST['ln'], $_POST['lang']);
       $action = '';
       break;
 
     case 'save':
-      $sql = "UPDATE " . TABLE_TEMPLATE_SELECT . "
-              SET template_dir = :tpl:
-              WHERE template_id = :id:";
-      $sql = $db->bindVars($sql, ':tpl:', $_POST['ln'], 'string');
-      $sql = $db->bindVars($sql, ':id:', $_GET['tID'], 'integer');
-      $db->Execute($sql);
+      zen_update_template_name_for_id($selected_template, $_POST['ln']);
       zen_redirect(zen_href_link(FILENAME_TEMPLATE_SELECT, zen_get_all_get_params(['action'])));
       break;
 
     case 'deleteconfirm':
-      $check_query = $db->Execute("SELECT template_language
-                                   FROM " . TABLE_TEMPLATE_SELECT . "
-                                   WHERE template_id = " . (int)$_POST['tID']);
-      if ($check_query->fields['template_language'] != '0') {
-        $db->Execute("DELETE FROM " . TABLE_TEMPLATE_SELECT . "
-                      WHERE template_id = " . (int)$_POST['tID']);
+        zen_deregister_template_id($_POST['tID']);
         zen_redirect(zen_href_link(FILENAME_TEMPLATE_SELECT, 'page=' . $_GET['page']));
-      }
-      $action = '';
+        $action = '';
       break;
   }
 }
@@ -100,22 +58,21 @@ if (zen_not_null($action)) {
             </thead>
             <tbody>
                 <?php
-                $template_query_raw = "SELECT *
-                                       FROM " . TABLE_TEMPLATE_SELECT;
+                $template_query_raw = "SELECT * FROM " . TABLE_TEMPLATE_SELECT;
                 $template_split = new splitPageResults($_GET['page'], MAX_DISPLAY_SEARCH_RESULTS, $template_query_raw, $template_query_numrows);
                 $templates = $db->Execute($template_query_raw);
                 foreach ($templates as $template) {
                   if (!isset($template_info[$template['template_dir']])) {
                      $template_info[$template['template_dir']] = [
                        'name' => '<strong class="errorText"> MISSING DIRECTORY: ' . $template['template_dir'] . '</strong>',
-                       'version' => '', 
-                       'author' => '', 
+                       'version' => '',
+                       'author' => '',
                        'description' => '',
-                       'screenshot' => '', 
-                       'missing' => true, 
+                       'screenshot' => '',
+                       'missing' => true,
                      ];
                   }
-                  if ((!isset($_GET['tID']) || (isset($_GET['tID']) && ($_GET['tID'] == $template['template_id']))) && !isset($tInfo) && (substr($action, 0, 3) != 'new')) {
+                  if ((!isset($selected_template) || $selected_template == $template['template_id']) && !isset($tInfo) && $action != 'new') {
                     $tInfo = new objectInfo($template);
                   }
 
@@ -131,10 +88,7 @@ if (zen_not_null($action)) {
                   if ($template['template_language'] == '0') {
                     $template_language = TEXT_INFO_DEFAULT_LANGUAGE;
                   } else {
-                    $ln = $db->Execute("SELECT name
-                                        FROM " . TABLE_LANGUAGES . "
-                                        WHERE languages_id = '" . $template['template_language'] . "'");
-                    $template_language = $ln->fields['name'];
+                    $template_language = zen_get_language_name($template['template_language']);
                   }
                   ?>
               <td class="dataTableContent"><?php echo $template_language; ?></td>
@@ -166,8 +120,7 @@ if (zen_not_null($action)) {
                 if ($tInfo->template_language == '0') {
                     $template_language = TEXT_INFO_DEFAULT_LANGUAGE;
                 } else {
-                    $ln = $db->Execute("SELECT name FROM " . TABLE_LANGUAGES . " WHERE languages_id = " . (int)$tInfo->template_language);
-                    $template_language = $ln->fields['name'];
+                    $template_language = zen_get_language_name($tInfo->template_language);
                 }
             }
             $heading = [];
@@ -183,13 +136,15 @@ if (zen_not_null($action)) {
                   if (isset($value['missing'])) continue;
                   $template_array[] = [
                     'id' => $key,
-                    'text' => $value['name']];
+                    'text' => $value['name'],
+                      ];
                 }
-                $lns = $db->Execute("SELECT lng.name, lng.languages_id FROM " . TABLE_LANGUAGES . " lng WHERE lng.languages_id NOT IN (SELECT tms.template_language FROM " . TABLE_TEMPLATE_SELECT . " tms)");
+                $lns = zen_get_template_languages_not_registered();
                 foreach ($lns as $ln) {
                   $language_array[] = [
-                    'text' => $ln['name'],
-                    'id' => $ln['languages_id']];
+                      'id' => $ln['language_id'],
+                      'text' => $ln['language_name'],
+                      ];
                 }
                 $contents[] = ['text' => zen_draw_label(TEXT_INFO_TEMPLATE_NAME, 'ln', 'class="control-label"') . zen_draw_pull_down_menu('ln', $template_array, '', 'class="form-control" id="ln"')];
                 $contents[] = ['text' => zen_draw_label(TEXT_INFO_LANGUAGE_NAME, 'lang', 'class="control-label"') . zen_draw_pull_down_menu('lang', $language_array, '', 'class="form-control" id="lang"')];
@@ -202,7 +157,7 @@ if (zen_not_null($action)) {
                 $contents = ['form' => zen_draw_form('templateselect', FILENAME_TEMPLATE_SELECT, 'page=' . $_GET['page'] . '&tID=' . $tInfo->template_id . '&action=save', 'post', 'class="form-horizontal"')];
                 $contents[] = ['text' => TEXT_INFO_EDIT_INTRO];
                 foreach($template_info as $key => $value) {
-                  if (isset($value['missing'])) continue; 
+                  if (isset($value['missing'])) continue;
                   $template_array[] = ['id' => $key, 'text' => $value['name']];
                 }
                 $contents[] = ['text' => zen_draw_label(TEXT_INFO_TEMPLATE_NAME, 'ln', 'class="control-label"') . zen_draw_pull_down_menu('ln', $template_array, $templates->fields['template_dir'], 'class="form-control" id="ln"')];
@@ -241,7 +196,7 @@ if (zen_not_null($action)) {
                 break;
             }
 
-            if ((zen_not_null($heading)) && (zen_not_null($contents))) {
+            if (!empty($heading) && !empty($contents)) {
               $box = new box();
               echo $box->infoBox($heading, $contents);
             }
@@ -254,9 +209,13 @@ if (zen_not_null($action)) {
                   $template_languages[] = $template['template_language'];
               }
               foreach ($languages as $language) {
-                  if (!in_array($language['id'], $template_languages)) { ?>
-                      <div class="row text-right"><a href="<?php echo zen_href_link(FILENAME_TEMPLATE_SELECT, 'page=' . $_GET['page'] . '&action=new'); ?>" class="btn btn-primary" role="button"><?php echo IMAGE_NEW_TEMPLATE; ?></a></div>
-                      <?php break;
+                  if (!in_array($language['id'], $template_languages)) {
+              ?>
+                      <div class="row text-right">
+                          <a href="<?php echo zen_href_link(FILENAME_TEMPLATE_SELECT, 'page=' . $_GET['page'] . '&action=new'); ?>" class="btn btn-primary" role="button"><?php echo IMAGE_NEW_TEMPLATE; ?></a>
+                      </div>
+              <?php
+                    break;
                   }
               }
           }
