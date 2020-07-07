@@ -511,6 +511,12 @@ class queryFactory extends base {
     return $sqlNew;
   }
 
+    /**
+     * Alias to prepare_input()
+     * @see $this->prepare_input()
+     * @param $string
+     * @return string
+     */
   function prepareInput($string) {
     return $this->prepare_input($string);
   }
