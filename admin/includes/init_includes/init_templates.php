@@ -8,6 +8,9 @@
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
 }
+
+require DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'functions_templates.php';
+
 // Set theme related directories
 if (!isset($template_dir) || $template_dir == '') {
   $template_query = $db->Execute("SELECT template_dir FROM " . TABLE_TEMPLATE_SELECT . " WHERE template_language in (" . (int)$_SESSION['languages_id'] . ', 0' . ") order by template_language DESC");
