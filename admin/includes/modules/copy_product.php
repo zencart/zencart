@@ -51,9 +51,9 @@ if (zen_has_product_attributes($pInfo->products_id, 'false')) {
 //are any metatags defined
 $metatags_defined = false;
 for ($i = 0, $n = count($languages); $i < $n; $i++) {
-    if (zen_get_metatags_description($pInfo->products_id,
-            $languages[$i]['id']) . zen_get_metatags_keywords($pInfo->products_id,
-            $languages[$i]['id']) . zen_get_metatags_title($pInfo->products_id, $languages[$i]['id']) != '') {
+    if (zen_get_product_metatag_fields($pInfo->products_id, $languages[$i]['id'], 'metatags_description')
+        . zen_get_product_metatag_fields($pInfo->products_id, $languages[$i]['id'], 'metatags_keywords')
+        . zen_get_product_metatag_fields($pInfo->products_id, $languages[$i]['id'], 'metatags_title') != '') {
         $metatags_defined = true;
     }
 }
@@ -84,7 +84,7 @@ if (zen_has_product_discounts($pInfo->products_id) == 'true') {
 }
 $contents[] = array('text' => '<label>' . zen_draw_checkbox_field('edit_duplicate', '1', true) . TEXT_COPY_EDIT_DUPLICATE . '</label>');
 $contents[] = array('text' => zen_image(DIR_WS_IMAGES . 'pixel_black.gif', '', '', '3', 'style="width:100%"'));
-$contents[] = array('align' => 'center', 'text' => '<button type="submit" class="btn btn-primary">' . IMAGE_COPY . '</button> 
+$contents[] = array('align' => 'center', 'text' => '<button type="submit" class="btn btn-primary">' . IMAGE_COPY . '</button>
 <a href="' . zen_href_link(FILENAME_CATEGORY_PRODUCT_LISTING, 'cPath=' . $cPath . '&pID=' . $pInfo->products_id . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '')) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>'
 );
 
