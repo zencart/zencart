@@ -3,7 +3,7 @@
 // Create main laravel application
 $laravelApp = require_once DIR_FS_CATALOG . 'app/bootstrap/app.php';
 $laravelKernel = $laravelApp->make(Illuminate\Contracts\Http\Kernel::class);
-//dump($app);
+//dump($laravelApp);
 
 //see if we can match any laravel routes
 $laravelResponse = $laravelKernel->handle(

@@ -85,6 +85,10 @@ class ComposerStaticInit38976b38ee8f02b829ea04de92ca3793
             'InsertOnDuplicateKey\\' => 21,
             'Illuminate\\' => 11,
         ),
+        'F' => 
+        array (
+            'Fideloper\\Proxy\\' => 16,
+        ),
         'E' => 
         array (
             'Egulias\\EmailValidator\\' => 23,
@@ -247,6 +251,10 @@ class ComposerStaticInit38976b38ee8f02b829ea04de92ca3793
         'Illuminate\\' => 
         array (
             0 => __DIR__ . '/..' . '/laravel/framework/src/Illuminate',
+        ),
+        'Fideloper\\Proxy\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/fideloper/proxy/src',
         ),
         'Egulias\\EmailValidator\\' => 
         array (
@@ -529,6 +537,8 @@ class ComposerStaticInit38976b38ee8f02b829ea04de92ca3793
         'Egulias\\EmailValidator\\Warning\\QuotedString' => __DIR__ . '/..' . '/egulias/email-validator/src/Warning/QuotedString.php',
         'Egulias\\EmailValidator\\Warning\\TLD' => __DIR__ . '/..' . '/egulias/email-validator/src/Warning/TLD.php',
         'Egulias\\EmailValidator\\Warning\\Warning' => __DIR__ . '/..' . '/egulias/email-validator/src/Warning/Warning.php',
+        'Fideloper\\Proxy\\TrustProxies' => __DIR__ . '/..' . '/fideloper/proxy/src/TrustProxies.php',
+        'Fideloper\\Proxy\\TrustedProxyServiceProvider' => __DIR__ . '/..' . '/fideloper/proxy/src/TrustedProxyServiceProvider.php',
         'Illuminate\\Auth\\Access\\AuthorizationException' => __DIR__ . '/..' . '/laravel/framework/src/Illuminate/Auth/Access/AuthorizationException.php',
         'Illuminate\\Auth\\Access\\Gate' => __DIR__ . '/..' . '/laravel/framework/src/Illuminate/Auth/Access/Gate.php',
         'Illuminate\\Auth\\Access\\HandlesAuthorization' => __DIR__ . '/..' . '/laravel/framework/src/Illuminate/Auth/Access/HandlesAuthorization.php',
