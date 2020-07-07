@@ -1,23 +1,29 @@
 <?php
 
 // Create main laravel application
-$laravel = require_once DIR_FS_CATALOG . 'app/bootstrap/app.php';
-$kernel = $laravel->make(Illuminate\Contracts\Http\Kernel::class);
+$laravelApp = require_once DIR_FS_CATALOG . 'app/bootstrap/app.php';
+$laravelKernel = $laravelApp->make(Illuminate\Contracts\Http\Kernel::class);
 //dump($app);
 
 //see if we can match any laravel routes
-$response = $kernel->handle(
+$laravelResponse = $laravelKernel->handle(
     $unsanitizedRequest = Illuminate\Http\Request::capture()
 );
-$route = Route::current();
+$laravelRoute = Route::current();
 
-// if the route is not a fallback then laravel matched something
-// so we serve the laravel response and terminate
-if (isset($route) && !$route->isFallback) {
-    $response->send();
-    $kernel->terminate($unsanitizedRequest, $response);
+// if the route is null or a fallback then laravel didn't
+// match anything so return and let Zen Cart handle it.
+if (!isset($laravelRoute) || $laravelRoute->isFallback) {
+    return;
 }
+// use a 204 response to indicate that we want to use the response
+// in Zen Cart
+if ($laravelResponse->getStatusCode() == 204) {
+    return;
+}
+$laravelResponse->send();
+$laravelKernel->terminate($unsanitizedRequest, $laravelResponse);
 
-// route was a fallback so carry on and use Zen Cart
-
+// Note:$kernel->terminate doesn't actually exit the application.
+exit();
 
