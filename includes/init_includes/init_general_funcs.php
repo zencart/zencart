@@ -17,7 +17,7 @@ if (!defined('IS_ADMIN_FLAG')) {
 require(DIR_WS_FUNCTIONS . 'functions_general.php');
 require(DIR_WS_FUNCTIONS . 'functions_general_shared.php');
 /**
- * Database 
+ * Database
  */
 require(DIR_WS_FUNCTIONS . 'database.php');
 
@@ -25,6 +25,8 @@ require(DIR_WS_FUNCTIONS . 'database.php');
  * Product Functions
  */
 require(DIR_WS_FUNCTIONS . 'functions_products.php');
+
+require(DIR_WS_FUNCTIONS . 'functions_dates.php');
 /**
  * html_output functions (href_links, input types etc)
  */
