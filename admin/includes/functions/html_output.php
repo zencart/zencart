@@ -423,3 +423,52 @@ function zen_draw_label($text, $for, $parameters = '')
     $label = '<label for="' . $for . '"' . (!empty($parameters) ? ' ' . $parameters : '') . '>' . $text . '</label>';
     return $label;
 }
+
+
+/**
+ * Output a day/month/year dropdown selector
+ * @param string $fieldname_prefix
+ * @param string $default_date
+ * @return string
+ */
+function zen_draw_date_selector($fieldname_prefix, $default_date='') {
+    $month_array = array();
+    $month_array[1] =_JANUARY;
+    $month_array[2] =_FEBRUARY;
+    $month_array[3] =_MARCH;
+    $month_array[4] =_APRIL;
+    $month_array[5] =_MAY;
+    $month_array[6] =_JUNE;
+    $month_array[7] =_JULY;
+    $month_array[8] =_AUGUST;
+    $month_array[9] =_SEPTEMBER;
+    $month_array[10] =_OCTOBER;
+    $month_array[11] =_NOVEMBER;
+    $month_array[12] =_DECEMBER;
+    $usedate = getdate($default_date);
+    $day = $usedate['mday'];
+    $month = $usedate['mon'];
+    $year = $usedate['year'];
+    $date_selector = '<select name="'. $fieldname_prefix .'_day">';
+    for ($i=1;$i<32;$i++){
+        $date_selector .= '<option value="' . $i . '"';
+        if ($i==$day) $date_selector .= ' selected';
+        $date_selector .= '>' . $i . '</option>';
+    }
+    $date_selector .= '</select>';
+    $date_selector .= '<select name="'. $fieldname_prefix .'_month">';
+    for ($i=1;$i<13;$i++){
+        $date_selector .= '<option value="' . $i . '"';
+        if ($i==$month) $date_selector .= ' selected';
+        $date_selector .= '>' . $month_array[$i] . '</option>';
+    }
+    $date_selector .= '</select>';
+    $date_selector .= '<select name="'. $fieldname_prefix .'_year">';
+    for ($i = date('Y') - 5, $j = date('Y') + 11; $i < $j; $i++) {
+        $date_selector .= '<option value="' . $i . '"';
+        if ($i==$year) $date_selector .= ' selected';
+        $date_selector .= '>' . $i . '</option>';
+    }
+    $date_selector .= '</select>';
+    return $date_selector;
+}
