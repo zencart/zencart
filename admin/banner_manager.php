@@ -6,7 +6,7 @@
  * @version $Id: Erik Kerkhoven 2020 Apr 14 Modified in v1.5.7 $
  */
 require('includes/application_top.php');
-require('includes/functions/functions_graphs.php');
+require('includes/functions/functions_banner_graphs.php');
 
 $action = (isset($_GET['action']) ? $_GET['action'] : '');
 if (isset($_GET['flagbanners_on_ssl'])) {
