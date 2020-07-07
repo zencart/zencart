@@ -25,7 +25,7 @@ if (!defined('IS_ADMIN_FLAG')) {
       $lng->set_language(DEFAULT_LANGUAGE);
     }
 
-    if (!is_file(DIR_WS_LANGUAGES . $lng->language['directory'] . '.php')) {
+    if (!is_file(DIR_WS_LANGUAGES . 'lang.' . $lng->language['directory'] . '.php')) {
       $lng->set_language('en');
     }
 
