@@ -96,13 +96,10 @@ define('DEBUG_AUTOLOAD', false);
  */
 if (DEBUG_AUTOLOAD || (defined('STRICT_ERROR_REPORTING') && STRICT_ERROR_REPORTING == true)) {
   @ini_set('display_errors', TRUE);
-  error_reporting(E_ALL);
+  error_reporting(defined('STRICT_REPORTING_LEVEL') ? STRICT_REPORTING_LEVEL : E_ALL);
 } else {
-  error_reporting(0);
+    error_reporting(0);
 }
-/*
- * Get time zone info from PHP config
- */
 @date_default_timezone_set(date_default_timezone_get());
 /**
  * check for and include load application parameters
@@ -188,8 +185,8 @@ require 'includes/init_includes/init_file_db_names.php';
 require 'includes/init_includes/init_database.php';
 require DIR_FS_CATALOG . 'includes/illuminate_bootstrap.php';
 
-$pluginManager = new PluginManager($db);
-$installedPlugins = $pluginManager->getInstalledPlugins();
+$installedPlugins = $laravelApp->make('installedPlugins');
+$pluginManager = new PluginManager(new App\Model\PluginControl, new App\Model\PluginControlVersion);
 
 $fs = FileSystem::getInstance();
 $fs->loadFilesFromPluginsDirectory($installedPlugins, 'catalog/includes/extra_datafiles', '~^[^\._].*\.php$~i');

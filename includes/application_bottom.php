@@ -12,6 +12,7 @@
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
 }
+//dump($_SESSION);
 // close session (store variables)
 session_write_close();
 

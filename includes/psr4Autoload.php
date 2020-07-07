@@ -19,4 +19,3 @@ $psr4Autoloader->addPrefix('Zencart\Exceptions', DIR_FS_CATALOG . DIR_WS_CLASSES
 if (defined('DIR_FS_ADMIN')) {
     $psr4Autoloader->addPrefix('Zencart\Paginator', DIR_FS_ADMIN . DIR_WS_CLASSES);
 }
-

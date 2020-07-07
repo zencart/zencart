@@ -103,7 +103,7 @@
       zen_redirect(zen_href_link($_GET['main_page'], 'products_id=' . $_GET['products_id']));
     }
   }
- 
+
   $_SESSION['check_valid_prod'] = true;
 /**
  * We do some checks here to ensure $_GET['main_page'] has a sane value
@@ -122,3 +122,5 @@
   $current_page_base = $current_page;
   $code_page_directory = DIR_WS_MODULES . 'pages/' . $current_page_base;
   $page_directory = $code_page_directory;
+
+$sanitizedRequest = Request::capture();

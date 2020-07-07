@@ -88,18 +88,22 @@ class CliDumper extends AbstractDumper
 
     /**
      * Enables/disables colored output.
+     *
+     * @param bool $colors
      */
-    public function setColors(bool $colors)
+    public function setColors($colors)
     {
-        $this->colors = $colors;
+        $this->colors = (bool) $colors;
     }
 
     /**
      * Sets the maximum number of characters per line for dumped strings.
+     *
+     * @param int $maxStringWidth
      */
-    public function setMaxStringWidth(int $maxStringWidth)
+    public function setMaxStringWidth($maxStringWidth)
     {
-        $this->maxStringWidth = $maxStringWidth;
+        $this->maxStringWidth = (int) $maxStringWidth;
     }
 
     /**
@@ -125,7 +129,7 @@ class CliDumper extends AbstractDumper
     /**
      * {@inheritdoc}
      */
-    public function dumpScalar(Cursor $cursor, string $type, $value)
+    public function dumpScalar(Cursor $cursor, $type, $value)
     {
         $this->dumpKey($cursor);
 
@@ -179,7 +183,7 @@ class CliDumper extends AbstractDumper
     /**
      * {@inheritdoc}
      */
-    public function dumpString(Cursor $cursor, string $str, bool $bin, int $cut)
+    public function dumpString(Cursor $cursor, $str, $bin, $cut)
     {
         $this->dumpKey($cursor);
         $attr = $cursor->attr;
@@ -195,7 +199,7 @@ class CliDumper extends AbstractDumper
                 'length' => 0 <= $cut ? mb_strlen($str, 'UTF-8') + $cut : 0,
                 'binary' => $bin,
             ];
-            $str = $bin && false !== strpos($str, "\0") ? [$str] : explode("\n", $str);
+            $str = explode("\n", $str);
             if (isset($str[1]) && !isset($str[2]) && !isset($str[1][0])) {
                 unset($str[1]);
                 $str[0] .= "\n";
@@ -267,7 +271,7 @@ class CliDumper extends AbstractDumper
     /**
      * {@inheritdoc}
      */
-    public function enterHash(Cursor $cursor, int $type, $class, bool $hasChild)
+    public function enterHash(Cursor $cursor, $type, $class, $hasChild)
     {
         $this->dumpKey($cursor);
         $attr = $cursor->attr;
@@ -304,7 +308,7 @@ class CliDumper extends AbstractDumper
     /**
      * {@inheritdoc}
      */
-    public function leaveHash(Cursor $cursor, int $type, $class, bool $hasChild, int $cut)
+    public function leaveHash(Cursor $cursor, $type, $class, $hasChild, $cut)
     {
         if (empty($cursor->attr['cut_hash'])) {
             $this->dumpEllipsis($cursor, $hasChild, $cut);
@@ -539,7 +543,7 @@ class CliDumper extends AbstractDumper
     /**
      * {@inheritdoc}
      */
-    protected function dumpLine(int $depth, bool $endOfValue = false)
+    protected function dumpLine($depth, $endOfValue = false)
     {
         if ($this->colors) {
             $this->line = sprintf("\033[%sm%s\033[m", $this->styles['default'], $this->line);
@@ -595,7 +599,17 @@ class CliDumper extends AbstractDumper
                 || 'xterm' === getenv('TERM');
         }
 
-        return stream_isatty($stream);
+        if (\function_exists('stream_isatty')) {
+            return @stream_isatty($stream);
+        }
+
+        if (\function_exists('posix_isatty')) {
+            return @posix_isatty($stream);
+        }
+
+        $stat = @fstat($stream);
+        // Check if formatted mode is S_IFCHR
+        return $stat ? 0020000 === ($stat['mode'] & 0170000) : false;
     }
 
     /**
@@ -612,7 +626,7 @@ class CliDumper extends AbstractDumper
             || 'xterm' === getenv('TERM')
             || 'Hyper' === getenv('TERM_PROGRAM');
 
-        if (!$result) {
+        if (!$result && \PHP_VERSION_ID >= 70200) {
             $version = sprintf(
                 '%s.%s.%s',
                 PHP_WINDOWS_VERSION_MAJOR,

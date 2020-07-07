@@ -1,0 +1,80 @@
+version: 2
+jobs:
+    build:
+        docker:
+            # Specify the version you desire here
+            # ref: https://circleci.com/docs/2.0/circleci-images/
+            - image: circleci/php:7.2.8-zts-node-browsers
+              environment:
+              - CIRCLE_TEST_REPORTS: /tmp/circleci-test-results
+              - CIRCLE_ARTIFACTS: /tmp/circleci-artifacts
+              - APP_ENV: test
+              - APP_DEBUG: true
+              - DB_CONNECTION: mysql
+              - DB_HOST: 127.0.0.1
+              - DB_PORT: 3306
+              - DB_DATABASE: circle_test
+              - DB_USERNAME: root
+              - DB_PASSWORD: null
+              - APP_KEY: base64:SFHobsqd8WrNhT6QCYsJddCR+eBFc61tSUQmsPJtRdk=
+
+            - image: circleci/mariadb:10.3.8-ram
+
+            # - image: redis:latest
+
+        steps:
+            - run: php -i
+            - run:
+                name: Install Support Libraries
+                command: sudo apt-get install -y libsqlite3-dev libpng-dev
+            - run:
+                name: Install PHP extensions
+                command: sudo docker-php-ext-install pdo pdo_mysql gd
+
+            - checkout
+            - run:
+                name: Create SQLite testing db
+                command: touch testing.sqlite
+            - run:
+                name: Setup CI environment
+                command: cp .env.circleci .env
+            - run: php --version
+
+            - run:
+                name: Set ENV environment variables
+                command: echo -e "export APP_ENV=test\nexport APP_DEBUG=true\nexport APP_KEY=base64:SFHobsqd8WrNhT6QCYsJddCR+eBFc61tSUQmsPJtRdk=\nexport DB_CONNECTION=mysql\nexport DB_HOST=127.0.0.1\nexport DB_PORT=3306\nexport DB_DATABASE=circle_test\nexport DB_USERNAME=root\nexport DB_PASSWORD=null" >> $BASH_ENV
+
+
+            # Download and cache dependencies
+            - restore_cache:
+                keys:
+                # "composer.lock" can be used if it is committed to the repo
+                - v1-dependencies-{{ checksum "composer.json" }}
+                # fallback to using the latest cache if no exact match is found
+                - v1-dependencies-
+
+            - run:
+                name: Install Composer
+                command: composer install --no-interaction --no-suggest --ignore-platform-reqs
+
+            - save_cache:
+                key: v1-dependencies-{{ checksum "composer.json" }}
+                paths:
+                  - ./vendor
+                  - ~/.composer
+
+            - run:
+                name: Wait for MySQL container
+                command: dockerize -wait tcp://localhost:3306 -timeout 1m
+
+            - run:
+                name: Run PHPunit tests
+                command: vendor/bin/phpunit
+
+            # Save artifacts
+            - store_artifacts:
+                path: /tmp/circleci-artifacts
+            - store_artifacts:
+                path: tests/Browser/screenshots
+            - store_artifacts:
+                path: tests/Browser/console

@@ -82,9 +82,11 @@ abstract class AbstractDumper implements DataDumperInterface, DumperInterface
     /**
      * Sets the default character encoding to use for non-UTF8 strings.
      *
+     * @param string $charset The default character encoding to use for non-UTF8 strings
+     *
      * @return string The previous charset
      */
-    public function setCharset(string $charset)
+    public function setCharset($charset)
     {
         $prev = $this->charset;
 
@@ -103,7 +105,7 @@ abstract class AbstractDumper implements DataDumperInterface, DumperInterface
      *
      * @return string The previous indent pad
      */
-    public function setIndentPad(string $pad)
+    public function setIndentPad($pad)
     {
         $prev = $this->indentPad;
         $this->indentPad = $pad;
@@ -161,7 +163,7 @@ abstract class AbstractDumper implements DataDumperInterface, DumperInterface
      * @param int $depth The recursive depth in the dumped structure for the line being dumped,
      *                   or -1 to signal the end-of-dump to the line dumper callable
      */
-    protected function dumpLine(int $depth)
+    protected function dumpLine($depth)
     {
         ($this->lineDumper)($this->line, $depth, $this->indentPad);
         $this->line = '';
@@ -169,8 +171,12 @@ abstract class AbstractDumper implements DataDumperInterface, DumperInterface
 
     /**
      * Generic line dumper callback.
+     *
+     * @param string $line      The line to write
+     * @param int    $depth     The recursive depth in the dumped structure
+     * @param string $indentPad The line indent pad
      */
-    protected function echoLine(string $line, int $depth, string $indentPad)
+    protected function echoLine($line, $depth, $indentPad)
     {
         if (-1 !== $depth) {
             fwrite($this->outputStream, str_repeat($indentPad, $depth).$line."\n");
@@ -180,9 +186,11 @@ abstract class AbstractDumper implements DataDumperInterface, DumperInterface
     /**
      * Converts a non-UTF-8 string to UTF-8.
      *
+     * @param string|null $s The non-UTF-8 string to convert
+     *
      * @return string|null The string converted to UTF-8
      */
-    protected function utf8Encode(?string $s)
+    protected function utf8Encode($s)
     {
         if (null === $s || preg_match('//u', $s)) {
             return $s;
