@@ -31,7 +31,7 @@ if ((basename($PHP_SELF) != FILENAME_DEFINE_LANGUAGE . '.php') and (basename($PH
         $count = 0;
         for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
             $test_directory = DIR_WS_LANGUAGES . $languages[$i]['directory'];
-            $test_file = DIR_WS_LANGUAGES . $languages[$i]['directory'] . '.php';
+            $test_file = DIR_WS_LANGUAGES . 'lang.' . $languages[$i]['directory'] . '.php';
             if (file_exists($test_file) and file_exists($test_directory)) {
                 $count++;
                 $languages_array[] = array('id' => $languages[$i]['code'],
