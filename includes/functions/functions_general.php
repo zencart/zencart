@@ -418,9 +418,9 @@
 // modified to manage restrictions better - leave commented for now
     if ($coupons->RecordCount() == 0) return true;
     if ($coupons->RecordCount() == 1) {
-// If product is restricted(deny) and is same as tested prodcut deny
+// If product is restricted(deny) and is same as tested product deny
       if (($coupons->fields['product_id'] != 0) && $coupons->fields['product_id'] == (int)$product_id && $coupons->fields['coupon_restrict']=='Y') return false;
-// If product is not restricted(allow) and is not same as tested prodcut deny
+// If product is not restricted(allow) and is not same as tested product deny
       if (($coupons->fields['product_id'] != 0) && $coupons->fields['product_id'] != (int)$product_id && $coupons->fields['coupon_restrict']=='N') return false;
 // if category is restricted(deny) and product in category deny
       if (($coupons->fields['category_id'] !=0) && (zen_product_in_category($product_id, $coupons->fields['category_id'])) && ($coupons->fields['coupon_restrict']=='Y')) return false;
