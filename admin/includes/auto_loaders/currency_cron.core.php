@@ -32,7 +32,7 @@ if (!defined('USE_PCONNECT')) define('USE_PCONNECT', 'false');
   $autoLoadConfig[70][] = array('autoType'=>'init_script',
                                 'loadFile'=> 'init_languages.php');
   $autoLoadConfig[90][] = array('autoType'=>'require',
-                                 'loadFile'=> DIR_WS_FUNCTIONS . 'localization.php');
+                                'loadFile'=> DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'functions_exchange_rates.php');
   $autoLoadConfig[120][] = array('autoType'=>'init_script',
                                  'loadFile'=> 'init_special_funcs.php');
 //   $autoLoadConfig[140][] = array('autoType'=>'init_script',
