@@ -107,7 +107,7 @@ if (zen_not_null($action)) {
                 foreach ($templates as $template) {
                   if (!isset($template_info[$template['template_dir']])) {
                      $template_info[$template['template_dir']] = [
-                       'name' => $template['template_dir'],
+                       'name' => '<strong class="errorText"> MISSING DIRECTORY: ' . $template['template_dir'] . '</strong>',
                        'version' => '', 
                        'author' => '', 
                        'description' => '',
@@ -180,6 +180,7 @@ if (zen_not_null($action)) {
                 $contents = ['form' => zen_draw_form('zones', FILENAME_TEMPLATE_SELECT, 'page=' . $_GET['page'] . '&action=insert', 'post', 'class="form-horizontal"')];
                 $contents[] = ['text' => TEXT_INFO_INSERT_INTRO];
                 foreach($template_info as $key => $value) {
+                  if (isset($value['missing'])) continue;
                   $template_array[] = [
                     'id' => $key,
                     'text' => $value['name']];
