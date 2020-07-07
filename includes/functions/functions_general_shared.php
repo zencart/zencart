@@ -1,8 +1,22 @@
 <?php
+/**
+ * @copyright Copyright 2003-2020 Zen Cart Development Team
+ * @copyright Portions Copyright 2003 osCommerce
+ * @license https://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
+ * @version $Id:  Modified in v1.5.8 $
+ */
 
 function zen_get_zcversion()
 {
     return PROJECT_VERSION_MAJOR . '.' . PROJECT_VERSION_MINOR;
+}
+
+/**
+ * Set timeout for the current script.
+ * @param int $limit seconds
+ */
+function zen_set_time_limit($limit) {
+    @set_time_limit($limit);
 }
 
 /**
@@ -356,4 +370,96 @@ function utf8_encode_recurse($mixed_value)
         }
         return $result;
     }
+}
+
+/**
+ * Return whether the browser client is of a certain type
+ * by checking whether the user-agent contains a particular pattern
+ * @param string $lookup_pattern string to search for
+ * @return false|string
+ */
+function zen_browser_detect($lookup_pattern) {
+    if (!isset($_SERVER['HTTP_USER_AGENT'])) return false;
+    return stristr($_SERVER['HTTP_USER_AGENT'], $lookup_pattern);
+}
+
+
+/**
+ * Return all HTTP GET variables, except those passed as a parameter
+ *
+ * The return is a urlencoded string
+ *
+ * @param mixed $exclude_array either a single or array of parameter names to be excluded from output
+ * @return string url_encoded string of GET params
+ */
+function zen_get_all_get_params($exclude_array = array()) {
+    if (!is_array($exclude_array)) $exclude_array = array();
+    $exclude_array = array_merge($exclude_array, array('main_page', 'error', 'x', 'y', 'cmd'));
+    if (function_exists('zen_session_name')) {
+        $exclude_array[] = zen_session_name();
+    }
+    $get_url = '';
+    if (is_array($_GET) && (count($_GET) > 0)) {
+        foreach($_GET as $key => $value) {
+            if (!in_array($key, $exclude_array)) {
+                if (!is_array($value)) {
+                    if (strlen($value) > 0) {
+                        $get_url .= zen_sanitize_string($key) . '=' . rawurlencode(stripslashes($value)) . '&';
+                    }
+                } else {
+                    if (IS_ADMIN_FLAG) continue; // admin (and maybe catalog?) doesn't support passing arrays by GET, so skipping any arrays here
+                    foreach (array_filter($value) as $arr){
+                        if (is_array($arr)) continue;
+                        $get_url .= zen_sanitize_string($key) . '[]=' . rawurlencode(stripslashes($arr)) . '&';
+                    }
+                }
+            }
+        }
+    }
+
+    $get_url = preg_replace('/&{2,}/', '&', $get_url);
+    $get_url = preg_replace('/(&amp;)+/', '&amp;', $get_url);
+
+    return $get_url;
+}
+
+/**
+ * Return all GET params as (usually hidden) POST params
+ * @param array $exclude_array GET keys to exclude from generated output
+ * @param boolean $hidden generate hidden fields instead of regular input fields
+ * @param string $parameters optional 'class="foo"' markup to include in non-hidden input fields
+ * @return string HTML string of input fields
+ */
+function zen_post_all_get_params($exclude_array = array(), $hidden = true, $parameters = '') {
+    if (!is_array($exclude_array)) $exclude_array = array((string)$exclude_array);
+    $exclude_array = array_merge($exclude_array, array('error', 'x', 'y'));
+    if (function_exists('zen_session_name')) {
+        $exclude_array[] = zen_session_name();
+    }
+    $fields = '';
+    if (is_array($_GET) && (count($_GET) > 0)) {
+        foreach($_GET as $key => $value) {
+            if (!in_array($key, $exclude_array)) {
+                if (!is_array($value)) {
+                    if (strlen($value) > 0) {
+                        if ($hidden) {
+                            $fields .= zen_draw_hidden_field($key, $value);
+                        } else {
+                            $fields .= zen_draw_input_field($key, $value, $parameters);
+                        }
+                    }
+                } else {
+                    foreach(array_filter($value) as $arr){
+                        if (is_array($arr)) continue;
+                        if ($hidden) {
+                            $fields .= zen_draw_hidden_field($key . '[]', $arr);
+                        } else {
+                            $fields .= zen_draw_input_field($key . '[]', $arr, $parameters);
+                        }
+                    }
+                }
+            }
+        }
+    }
+    return $fields;
 }

@@ -74,70 +74,6 @@
   }
 
 
-  function zen_get_all_get_params($exclude_array = array()) {
-    if (!is_array($exclude_array)) $exclude_array = array();
-    $exclude_array = array_merge($exclude_array, array(zen_session_name(), 'error', 'x', 'y', 'cmd')); // de-duplicating
-      // this is less performant than just letting it repeat the loop on duplicates
-    $get_url = '';
-    if (is_array($_GET) && (sizeof($_GET) > 0)) {
-      foreach($_GET as $key => $value) {
-        if (!in_array($key, $exclude_array)) {
-          if (!is_array($value)) {
-//             if (is_numeric($value) || (is_string($value) && strlen($value) > 0)) {
-            if (strlen($value) > 0) {
-              $get_url .= zen_output_string_protected($key) . '=' . rawurlencode(stripslashes($value)) . '&';
-            }
-          } else {
-            continue; // legacy code doesn't support passing arrays by GET, so skipping any arrays
-            foreach(array_filter($value) as $arr){
-              $get_url .= zen_output_string_protected($key) . '[]=' . rawurlencode(stripslashes($arr)) . '&';
-            }
-          }
-        }
-      }
-    }
-    $get_url = preg_replace('/&{2,}/', '&', $get_url);
-    $get_url = preg_replace('/(&amp;)+/', '&amp;', $get_url);
-
-    return $get_url;
-  }
-
-  /**
-   * Return all GET params as (usually hidden) POST params
-   * @param array $exclude_array
-   * @param boolean $hidden
-   * @return string
-   */
-  function zen_post_all_get_params($exclude_array = array(), $hidden = true) {
-    if (!is_array($exclude_array)) $exclude_array = array();
-    $exclude_array = array_merge($exclude_array, array(zen_session_name(), 'error', 'x', 'y'));
-    $fields = '';
-    if (is_array($_GET) && (sizeof($_GET) > 0)) {
-      foreach($_GET as $key => $value) {
-        if (!in_array($key, $exclude_array)) {
-          if (!is_array($value)) {
-            if (strlen($value) > 0) {
-              if ($hidden) {
-                $fields .= zen_draw_hidden_field($key, $value);
-              } else {
-                $fields .= zen_draw_input_field($key, $value, 'class="form-control"');
-              }
-            }
-          } else {
-            foreach(array_filter($value) as $arr){
-              if ($hidden) {
-                $fields .= zen_draw_hidden_field($key . '[]', $arr);
-              } else {
-                $fields .= zen_draw_input_field($key . '[]', $arr, 'class="form-control"');
-              }
-            }
-          }
-        }
-      }
-    }
-    return $fields;
-  }
-
 
 
   function zen_get_category_tree($parent_id = '0', $spacing = '', $exclude = '', $category_tree_array = array(), $include_itself = false, $category_has_products = false, $limit = false) {
@@ -316,11 +252,6 @@
     } else {
       return $default_zone;
     }
-  }
-
-  function zen_browser_detect($component) {
-
-    return stristr($_SERVER['HTTP_USER_AGENT'], $component);
   }
 
 
@@ -826,12 +757,6 @@ function zen_set_product_status($products_id, $status)
                 WHERE products_id = " . (int)$products_id);
   return;
 }
-
-////
-// Sets timeout for the current script.
-  function zen_set_time_limit($limit) {
-     @set_time_limit($limit);
-  }
 
 
 ////

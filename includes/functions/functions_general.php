@@ -59,87 +59,6 @@
   }
 
 
-/**
- * Return all HTTP GET variables, except those passed as a parameter
- *
- * The return is a urlencoded string
- *
- * @param mixed either a single or array of parameter names to be excluded from output
-*/
-  function zen_get_all_get_params($exclude_array = array()) {
-    if (!is_array($exclude_array)) $exclude_array = array();
-    $exclude_array = array_merge($exclude_array, array('main_page', 'error', 'x', 'y'));
-    if (function_exists('zen_session_name')) {
-      $exclude_array[] = zen_session_name();
-    }
-    $get_url = '';
-    if (is_array($_GET) && (count($_GET) > 0)) {
-      foreach($_GET as $key => $value) {
-        if (!in_array($key, $exclude_array)) {
-          if (!is_array($value)) {
-            if (strlen($value) > 0) {
-              $get_url .= zen_sanitize_string($key) . '=' . rawurlencode(stripslashes($value)) . '&';
-            }
-          } else {
-            foreach (array_filter($value) as $arr){
-              if (is_array($arr)) continue;
-              $get_url .= zen_sanitize_string($key) . '[]=' . rawurlencode(stripslashes($arr)) . '&';
-            }
-          }
-        }
-      }
-    }
-
-    $get_url = preg_replace('/&{2,}/', '&', $get_url);
-    $get_url = preg_replace('/(&amp;)+/', '&amp;', $get_url);
-
-    return $get_url;
-  }
-/**
- * Return all GET params as (usually hidden) POST params
- * @param array $exclude_array
- * @param boolean $hidden
- * @return string
- */
-  function zen_post_all_get_params($exclude_array = array(), $hidden = true) {
-    if (!is_array($exclude_array)) $exclude_array = array();
-    $exclude_array = array_merge($exclude_array, array(zen_session_name(), 'error', 'x', 'y'));
-    $fields = '';
-    if (is_array($_GET) && (sizeof($_GET) > 0)) {
-      foreach($_GET as $key => $value) {
-        if (!in_array($key, $exclude_array)) {
-          if (!is_array($value)) {
-            if (strlen($value) > 0) {
-              if ($hidden) {
-                $fields .= zen_draw_hidden_field($key, $value);
-              } else {
-                $fields .= zen_draw_input_field($key, $value);
-              }
-            }
-          } else {
-            foreach (array_filter($value) as $arr){
-              if (is_array($arr)) continue;
-              if ($hidden) {
-                $fields .= zen_draw_hidden_field($key . '[]', $arr);
-              } else {
-                $fields .= zen_draw_input_field($key . '[]', $arr);
-              }
-            }
-          }
-        }
-      }
-    }
-    return $fields;
-  }
-
-////
-// Returns the clients browser
-  function zen_browser_detect($component) {
-    if (!isset($_SERVER['HTTP_USER_AGENT'])) return '';
-    return stristr($_SERVER['HTTP_USER_AGENT'], $component);
-  }
-
-
 ////
 // default filler is a 0 or pass filler to be used
   function zen_row_number_format($number, $filler='0') {
@@ -321,7 +240,7 @@
   function zen_word_count($string, $needle) {
     $temp_array = preg_split('/'.$needle.'/', $string);
 
-    return sizeof($temp_array);
+    return count($temp_array);
   }
 
 
@@ -333,7 +252,7 @@
 
     $modules_array = preg_split('/;/', $modules);
 
-    for ($i=0, $n=sizeof($modules_array); $i<$n; $i++) {
+    for ($i=0, $n=count($modules_array); $i<$n; $i++) {
       $class = substr($modules_array[$i], 0, strrpos($modules_array[$i], '.'));
 
       if (isset($GLOBALS[$class]) && is_object($GLOBALS[$class])) {
