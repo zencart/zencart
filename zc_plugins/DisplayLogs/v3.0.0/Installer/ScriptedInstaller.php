@@ -10,7 +10,7 @@ class ScriptedInstaller extends ScriptedInstallBase
         zen_register_admin_page(
             'toolsDisplayLogs', 'BOX_TOOLS_DISPLAY_LOGS', 'FILENAME_DISPLAY_LOGS', '', 'tools', 'Y', 20);
         $sql =
-            "INSERT INTO " . TABLE_CONFIGURATION . " 
+            "INSERT IGNORE INTO " . TABLE_CONFIGURATION . " 
             ( configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added, use_function, set_function ) 
          VALUES 
             
