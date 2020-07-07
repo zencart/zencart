@@ -14,11 +14,12 @@ class Configuration extends Eloquent
     protected $table = TABLE_CONFIGURATION;
     protected $primaryKey = 'configuration_id';
     public $timestamps = false;
+    protected $guarded = ['configuration_id'];
 
     // @todo relocate to service class
     public function loadConfigSettings()
     {
-        $configs = $this->all();
+        $configs = self::all();
         foreach ($configs as $config) {
             $configValue = $config['configuration_value'];
             if (in_array($config['configuration_group_id'], [2,3])) {
