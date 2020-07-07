@@ -148,7 +148,12 @@ function zen_is_whitelisted_admin_ip($ip = null)
     return (int)$pieces[0];
   }
 
-////
+/**
+ * Checks whether a string/array is null/blank/empty or uppercase string 'NULL'
+ * Differs from empty() in that it doesn't test for boolean false or '0' string/int
+ * @param string|array|Countable $value
+ * @return bool
+ */
   function zen_not_null($value) {
     if (null === $value) {
         return false;
@@ -156,10 +161,10 @@ function zen_is_whitelisted_admin_ip($ip = null)
     if (is_array($value)) {
       return count($value) > 0;
     }
-    if (is_a($value, 'queryFactoryResult')) {
-      return count($value->result) > 0;
+    if (is_a($value, \Countable::class)) {
+      return count($value) > 0;
     }
-    return trim($value) !== '' && $value != 'NULL';
+    return trim($value) !== '' && $value !== 'NULL';
   }
 
 ////
