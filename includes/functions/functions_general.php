@@ -779,7 +779,7 @@ function zen_set_field_length($tbl, $fld, $max = 70)
     }
   }
 
-  function zen_get_module_sidebox_directory($check_file) { 
+  function zen_get_module_sidebox_directory($check_file) {
     global $template_dir;
 
     $zv_filename = $check_file;

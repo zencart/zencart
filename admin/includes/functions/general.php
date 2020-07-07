@@ -395,7 +395,7 @@
       $countries_array[] = array('id' => '',
                                  'text' => $default);
     }
-    $countries = $db->Execute("SELECT countries_id, countries_name, status 
+    $countries = $db->Execute("SELECT countries_id, countries_name, status
                                FROM " . TABLE_COUNTRIES . "
                                ORDER BY countries_name");
 
@@ -1233,12 +1233,12 @@ while (!$chk_sale_categories_all->EOF) {
     //
     $tax_rate = false;
     $GLOBALS['zco_notifier']->notify(
-        'NOTIFY_ZEN_GET_TAX_RATE_OVERRIDE', 
+        'NOTIFY_ZEN_GET_TAX_RATE_OVERRIDE',
         array(
-            'class_id' => $class_id, 
-            'country_id' => $country_id, 
+            'class_id' => $class_id,
+            'country_id' => $country_id,
             'zone_id' => $zone_id
-        ), 
+        ),
         $tax_rate
     );
     if ($tax_rate !== false) {
@@ -1335,7 +1335,7 @@ while (!$chk_sale_categories_all->EOF) {
     return zen_draw_order_status_dropdown($name, $order_status_id, array('id' => 0, 'text' => TEXT_DEFAULT), 'class="form-control"');
   }
   /**
-   * Return a pull-down menu of the available order-status values, 
+   * Return a pull-down menu of the available order-status values,
    * optionally prefixed by a "please choose" selection.
   */
   function zen_draw_order_status_dropdown($field_name, $default_value, $first_selection = '', $parms = '')
@@ -1701,7 +1701,7 @@ function zen_copy_products_attributes($products_id_from, $products_id_to) {
       // delete all attributes first from products_id_to
       zen_products_attributes_download_delete($products_id_to);
       $db->Execute("delete from " . TABLE_PRODUCTS_ATTRIBUTES . " where products_id = " . (int)$products_id_to);
-      
+
       // -----
       // Notify that attributes have been deleted for the product.
       //
@@ -1715,7 +1715,7 @@ function zen_copy_products_attributes($products_id_from, $products_id_to) {
       $update_attribute = false;
       $add_attribute = true;
 
-      $check_duplicate = $db->Execute("select * from " . TABLE_PRODUCTS_ATTRIBUTES . " 
+      $check_duplicate = $db->Execute("select * from " . TABLE_PRODUCTS_ATTRIBUTES . "
           where products_id=" . (int)$products_id_to . "
           and options_id= " . (int)$products_copy_from->fields['options_id'] . "
           and options_values_id=" . (int)$products_copy_from->fields['options_values_id']
@@ -1747,13 +1747,13 @@ function zen_copy_products_attributes($products_id_from, $products_id_to) {
 
       // New attribute - insert it
       if ($add_attribute == true) {
-          $db->Execute("INSERT INTO " . TABLE_PRODUCTS_ATTRIBUTES . " 
-              (products_id, options_id, options_values_id, options_values_price, price_prefix, products_options_sort_order, 
-              product_attribute_is_free, products_attributes_weight, products_attributes_weight_prefix, attributes_display_only, 
-              attributes_default, attributes_discounted, attributes_image, attributes_price_base_included, 
-              attributes_price_onetime, attributes_price_factor, attributes_price_factor_offset, attributes_price_factor_onetime, 
-              attributes_price_factor_onetime_offset, attributes_qty_prices, attributes_qty_prices_onetime, 
-              attributes_price_words, attributes_price_words_free, attributes_price_letters, attributes_price_letters_free, 
+          $db->Execute("INSERT INTO " . TABLE_PRODUCTS_ATTRIBUTES . "
+              (products_id, options_id, options_values_id, options_values_price, price_prefix, products_options_sort_order,
+              product_attribute_is_free, products_attributes_weight, products_attributes_weight_prefix, attributes_display_only,
+              attributes_default, attributes_discounted, attributes_image, attributes_price_base_included,
+              attributes_price_onetime, attributes_price_factor, attributes_price_factor_offset, attributes_price_factor_onetime,
+              attributes_price_factor_onetime_offset, attributes_qty_prices, attributes_qty_prices_onetime,
+              attributes_price_words, attributes_price_words_free, attributes_price_letters, attributes_price_letters_free,
               attributes_required)
               VALUES (" . (int)$products_id_to . ",
               '" . $products_copy_from->fields['options_id'] . "',
@@ -1783,7 +1783,7 @@ function zen_copy_products_attributes($products_id_from, $products_id_to) {
               '" . $products_copy_from->fields['attributes_required'] . "')"
           );
           $messageStack->add_session(sprintf(TEXT_ATTRIBUTE_COPY_INSERTING, (int)$products_copy_from->fields['products_attributes_id'], (int)$products_id_from, (int)$products_id_to), 'success');
-          
+
           // -----
           // Notify that an attribute has been added for the product.
           //
@@ -1823,7 +1823,7 @@ function zen_copy_products_attributes($products_id_from, $products_id_to) {
 // and attributes_price_base_included=" . $products_copy_from->fields['attributes_price_base_included']
           );
           $messageStack->add_session(sprintf(TEXT_ATTRIBUTE_COPY_UPDATING, (int)$products_copy_from->fields['products_attributes_id'], (int)$products_id_to), 'success');
-          
+
           // -----
           // Notify that an attribute has been updated for the product.
           //
@@ -1832,7 +1832,7 @@ function zen_copy_products_attributes($products_id_from, $products_id_to) {
 
       $products_copy_from->MoveNext();
     } // end of products attributes while loop
-    
+
     // -----
     // Notify that the attribute-copying has been completed for the product.
     //
@@ -1876,11 +1876,11 @@ function zen_set_field_length($tbl, $fld, $max = 50, $override = false)
 function zen_get_language_icon($lookup)
 {
     global $db;
-    $languages_icon = $db->Execute("SELECT directory, image FROM " . TABLE_LANGUAGES . " 
-        WHERE 
-        languages_id = " . (int)$lookup . " 
+    $languages_icon = $db->Execute("SELECT directory, image FROM " . TABLE_LANGUAGES . "
+        WHERE
+        languages_id = " . (int)$lookup . "
         OR
-        code = '" . zen_db_input($lookup) . "' 
+        code = '" . zen_db_input($lookup) . "'
         LIMIT 1");
     if ($languages_icon->EOF) {
         return '';
@@ -1916,11 +1916,11 @@ function zen_get_language_icon($lookup)
 function zen_get_language_name($lookup)
 {
     global $db;
-    $check_language = $db->Execute("SELECT directory FROM " . TABLE_LANGUAGES . " 
-        WHERE 
-        languages_id = " . (int)$lookup . " 
+    $check_language = $db->Execute("SELECT directory FROM " . TABLE_LANGUAGES . "
+        WHERE
+        languages_id = " . (int)$lookup . "
         OR
-        code = '" . zen_db_input($lookup) . "' 
+        code = '" . zen_db_input($lookup) . "'
         LIMIT 1");
 
     if ($check_language->EOF) {
@@ -2426,7 +2426,7 @@ function zen_get_master_categories_pulldown($product_id, $fullpath = false)
 /**
  * Function for configuration values that are read-only, e.g. a plugin's version number
  */
-function zen_cfg_read_only($text, $key = '') 
+function zen_cfg_read_only($text, $key = '')
 {
     $name = (!empty($key)) ? 'configuration[' . $key . ']' : 'configuration_value';
     $text = htmlspecialchars_decode($text);
@@ -2486,7 +2486,7 @@ function zen_cfg_read_only($text, $key = '')
     $dir_info[] = array('id' => '', 'text' => $default_text);
 
     $dir = @dir($parent_folder);
-    if ($dir == null) return []; 
+    if ($dir == null) return [];
     while ($file = $dir->read()) {
       if (is_dir($parent_folder . $file) && $file != "." && $file != "..") {
         $dir_info[] = array('id' => $file . '/', 'text' => $file);
@@ -3045,19 +3045,19 @@ function get_logs_data($maxToList = 'count') {
 
   function zen_is_option_file($option_id) {
     global $db;
-    $query = $db->Execute("SELECT products_options_type FROM " . TABLE_PRODUCTS_OPTIONS . " WHERE products_options_id = " . (int)$option_id); 
-    $option_type = $query->fields['products_options_type']; 
-    $query = $db->Execute("SELECT products_options_types_name FROM " . TABLE_PRODUCTS_OPTIONS_TYPES . " WHERE products_options_types_id = " . (int)$option_type); 
-    if ($query->fields['products_options_types_name'] == 'File') return true; 
-    return false; 
+    $query = $db->Execute("SELECT products_options_type FROM " . TABLE_PRODUCTS_OPTIONS . " WHERE products_options_id = " . (int)$option_id);
+    $option_type = $query->fields['products_options_type'];
+    $query = $db->Execute("SELECT products_options_types_name FROM " . TABLE_PRODUCTS_OPTIONS_TYPES . " WHERE products_options_types_id = " . (int)$option_type);
+    if ($query->fields['products_options_types_name'] == 'File') return true;
+    return false;
   }
 
   function zen_get_uploaded_file($filename) {
-    global $db; 
+    global $db;
     $parts = explode(". ", $filename, 2);
     $filenum = $parts[0];
-    $filename = $parts[1]; 
+    $filename = $parts[1];
     $file_parts = explode(".", $filename, 2);
-    $filetype = $file_parts[sizeof($file_parts) - 1]; 
-    return $filenum . "." . $filetype; 
+    $filetype = $file_parts[sizeof($file_parts) - 1];
+    return $filenum . "." . $filetype;
   }

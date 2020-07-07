@@ -66,10 +66,10 @@ function zen_get_categories_info($parent_id = 0, $category_path_string = '')
 {
     global $db, $categories_info;
 
-    $categories_sql = "SELECT cd.categories_id, cd.categories_name 
+    $categories_sql = "SELECT cd.categories_id, cd.categories_name
                         FROM " . TABLE_CATEGORIES . " c
                         LEFT JOIN " . TABLE_CATEGORIES_DESCRIPTION . " cd ON c.categories_id = cd.categories_id
-                        WHERE c.parent_id = " . (int)$parent_id . " 
+                        WHERE c.parent_id = " . (int)$parent_id . "
                         AND cd.language_id = " . (int)$_SESSION['languages_id'] . "
                         ORDER BY cd.categories_name";
     $categories_result = $db->Execute($categories_sql);
@@ -126,7 +126,7 @@ function zen_get_target_categories_products($parent_id = 0, $spacing = '', $cate
             }
         }
         if ($type === 'product') {
-            $products_sql = "SELECT p.products_model, pd.products_id, pd.products_name 
+            $products_sql = "SELECT p.products_model, pd.products_id, pd.products_name
                                 FROM " . TABLE_PRODUCTS . " p
                                 LEFT JOIN " . TABLE_PRODUCTS_DESCRIPTION . " pd ON p.products_id = pd.products_id
                                 WHERE p.master_categories_id = " . (int)$category['categories_id'] . "
@@ -282,13 +282,13 @@ if (zen_not_null($action)) {
                 $target_product_master_categories_id = (int)$target_product_master_category_result->fields['master_categories_id'];
 
                 // Get the current product's linked categories
-                $product_categories_result = $db->Execute("SELECT categories_id FROM " . TABLE_PRODUCTS_TO_CATEGORIES . " WHERE products_id = " . $products_filter . " 
-                AND categories_id != " . $source_product_master_categories_id . " 
+                $product_categories_result = $db->Execute("SELECT categories_id FROM " . TABLE_PRODUCTS_TO_CATEGORIES . " WHERE products_id = " . $products_filter . "
+                AND categories_id != " . $source_product_master_categories_id . "
                 AND categories_id != " . $target_product_master_categories_id);
 
                 // Get the target product's linked categories
-                $target_categories_result = $db->Execute("SELECT categories_id FROM " . TABLE_PRODUCTS_TO_CATEGORIES . " WHERE products_id = " . $target_product_id . " 
-                AND categories_id !=" . $target_product_master_categories_id . " 
+                $target_categories_result = $db->Execute("SELECT categories_id FROM " . TABLE_PRODUCTS_TO_CATEGORIES . " WHERE products_id = " . $target_product_id . "
+                AND categories_id !=" . $target_product_master_categories_id . "
                 AND categories_id !=" . $source_product_master_categories_id
                 );
 

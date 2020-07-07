@@ -35,5 +35,3 @@ while (!$categories_tab->EOF) {
   $links_list[] = '<a class="' . $new_style . '" href="' . zen_href_link(FILENAME_DEFAULT, 'cPath=' . (int)$categories_tab->fields['categories_id']) . '">' . $categories_tab_current . '</a> ';
   $categories_tab->MoveNext();
 }
-
-?>
