@@ -31,6 +31,7 @@ class AdminLoggingTest extends zcTestCase
     {
         parent::setUp();
         require_once DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'functions_general.php';
+        require_once DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'functions_general_shared.php';
         require_once DIR_FS_ADMIN . 'includes/classes/class.admin.zcObserverLogEventListener.php';
         require_once DIR_FS_ADMIN . 'includes/classes/class.admin.zcObserverLogWriterTextfile.php';
         require_once DIR_FS_ADMIN . 'includes/classes/class.admin.zcObserverLogWriterDatabase.php';

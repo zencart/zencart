@@ -74,122 +74,6 @@
   }
 
 
-  function zen_get_all_get_params($exclude_array = array()) {
-    if (!is_array($exclude_array)) $exclude_array = array();
-    $exclude_array = array_merge($exclude_array, array(zen_session_name(), 'error', 'x', 'y', 'cmd')); // de-duplicating
-      // this is less performant than just letting it repeat the loop on duplicates
-    $get_url = '';
-    if (is_array($_GET) && (sizeof($_GET) > 0)) {
-      foreach($_GET as $key => $value) {
-        if (!in_array($key, $exclude_array)) {
-          if (!is_array($value)) {
-//             if (is_numeric($value) || (is_string($value) && strlen($value) > 0)) {
-            if (strlen($value) > 0) {
-              $get_url .= zen_output_string_protected($key) . '=' . rawurlencode(stripslashes($value)) . '&';
-            }
-          } else {
-            continue; // legacy code doesn't support passing arrays by GET, so skipping any arrays
-            foreach(array_filter($value) as $arr){
-              $get_url .= zen_output_string_protected($key) . '[]=' . rawurlencode(stripslashes($arr)) . '&';
-            }
-          }
-        }
-      }
-    }
-    $get_url = preg_replace('/&{2,}/', '&', $get_url);
-    $get_url = preg_replace('/(&amp;)+/', '&amp;', $get_url);
-
-    return $get_url;
-  }
-
-  /**
-   * Return all GET params as (usually hidden) POST params
-   * @param array $exclude_array
-   * @param boolean $hidden
-   * @return string
-   */
-  function zen_post_all_get_params($exclude_array = array(), $hidden = true) {
-    if (!is_array($exclude_array)) $exclude_array = array();
-    $exclude_array = array_merge($exclude_array, array(zen_session_name(), 'error', 'x', 'y'));
-    $fields = '';
-    if (is_array($_GET) && (sizeof($_GET) > 0)) {
-      foreach($_GET as $key => $value) {
-        if (!in_array($key, $exclude_array)) {
-          if (!is_array($value)) {
-            if (strlen($value) > 0) {
-              if ($hidden) {
-                $fields .= zen_draw_hidden_field($key, $value);
-              } else {
-                $fields .= zen_draw_input_field($key, $value, 'class="form-control"');
-              }
-            }
-          } else {
-            foreach(array_filter($value) as $arr){
-              if ($hidden) {
-                $fields .= zen_draw_hidden_field($key . '[]', $arr);
-              } else {
-                $fields .= zen_draw_input_field($key . '[]', $arr, 'class="form-control"');
-              }
-            }
-          }
-        }
-      }
-    }
-    return $fields;
-  }
-
-  function zen_date_long($raw_date) {
-    if (empty($raw_date) || $raw_date <= '0001-01-01 00:00:00') return false;
-
-    $year = (int)substr($raw_date, 0, 4);
-    $month = (int)substr($raw_date, 5, 2);
-    $day = (int)substr($raw_date, 8, 2);
-    $hour = (int)substr($raw_date, 11, 2);
-    $minute = (int)substr($raw_date, 14, 2);
-    $second = (int)substr($raw_date, 17, 2);
-
-    $retVal = strftime(DATE_FORMAT_LONG, mktime($hour, $minute, $second, $month, $day, $year));
-    if (stristr(PHP_OS, 'win')) return utf8_encode($retVal);
-    return $retVal;
-  }
-
-
-////
-// Output a raw date string in the selected locale date format
-// $raw_date needs to be in this format: YYYY-MM-DD HH:MM:SS
-// NOTE: Includes a workaround for dates before 01/01/1970 that fail on windows servers
-  function zen_date_short($raw_date) {
-    if (empty($raw_date) || $raw_date <= '0001-01-01 00:00:00') return false;
-
-    $year = (int)substr($raw_date, 0, 4);
-    $month = (int)substr($raw_date, 5, 2);
-    $day = (int)substr($raw_date, 8, 2);
-    $hour = (int)substr($raw_date, 11, 2);
-    $minute = (int)substr($raw_date, 14, 2);
-    $second = (int)substr($raw_date, 17, 2);
-
-// error on 1969 only allows for leap year
-    if ($year != 1969 && @date('Y', mktime($hour, $minute, $second, $month, $day, $year)) == $year) {
-      return date(DATE_FORMAT, mktime($hour, $minute, $second, $month, $day, $year));
-    } else {
-      return preg_replace('/2037$/', $year, date(DATE_FORMAT, mktime($hour, $minute, $second, $month, $day, 2037)));
-    }
-
-  }
-
-
-  function zen_datetime_short($raw_datetime) {
-    if (empty($raw_datetime) || $raw_datetime <= '0001-01-01 00:00:00') return false;
-
-    $year = (int)substr($raw_datetime, 0, 4);
-    $month = (int)substr($raw_datetime, 5, 2);
-    $day = (int)substr($raw_datetime, 8, 2);
-    $hour = (int)substr($raw_datetime, 11, 2);
-    $minute = (int)substr($raw_datetime, 14, 2);
-    $second = (int)substr($raw_datetime, 17, 2);
-
-    return strftime(DATE_TIME_FORMAT, mktime($hour, $minute, $second, $month, $day, $year));
-  }
 
 
   function zen_get_category_tree($parent_id = '0', $spacing = '', $exclude = '', $category_tree_array = array(), $include_itself = false, $category_has_products = false, $limit = false) {
@@ -368,11 +252,6 @@
     } else {
       return $default_zone;
     }
-  }
-
-  function zen_browser_detect($component) {
-
-    return stristr($_SERVER['HTTP_USER_AGENT'], $component);
   }
 
 
@@ -878,12 +757,6 @@ function zen_set_product_status($products_id, $status)
                 WHERE products_id = " . (int)$products_id);
   return;
 }
-
-////
-// Sets timeout for the current script.
-  function zen_set_time_limit($limit) {
-     @set_time_limit($limit);
-  }
 
 
 ////
@@ -3103,6 +2976,17 @@ function zen_get_master_categories_pulldown($product_id, $fullpath = false)
   }
 
 /**
+ * Function for configuration values that are read-only, e.g. a plugin's version number
+ */
+function zen_cfg_read_only($text, $key = '') 
+{
+    $name = (!empty($key)) ? 'configuration[' . $key . ']' : 'configuration_value';
+    $text = htmlspecialchars_decode($text);
+
+    return $text . zen_draw_hidden_field($name, $text);
+}
+
+/**
  * get products image
  */
   function zen_get_products_image($product_id) {
@@ -3154,6 +3038,7 @@ function zen_get_master_categories_pulldown($product_id, $fullpath = false)
     $dir_info[] = array('id' => '', 'text' => $default_text);
 
     $dir = @dir($parent_folder);
+    if ($dir == null) return []; 
     while ($file = $dir->read()) {
       if (is_dir($parent_folder . $file) && $file != "." && $file != "..") {
         $dir_info[] = array('id' => $file . '/', 'text' => $file);
@@ -3252,28 +3137,6 @@ function zen_get_master_categories_pulldown($product_id, $fullpath = false)
       return $zv_key;
     }
 
-/**
- * compute the days between two dates
- */
-  function zen_date_diff($date1, $date2) {
-  //$date1  today, or any other day
-  //$date2  date to check against
-
-    $d1 = explode("-", substr($date1, 0, 10));
-    $y1 = $d1[0];
-    $m1 = $d1[1];
-    $d1 = $d1[2];
-
-    $d2 = explode("-", substr($date2, 0, 10));
-    $y2 = $d2[0];
-    $m2 = $d2[1];
-    $d2 = $d2[2];
-
-    $date1_set = mktime(0,0,0, $m1, $d1, $y1);
-    $date2_set = mktime(0,0,0, $m2, $d2, $y2);
-
-    return(round(($date2_set-$date1_set)/(60*60*24)));
-  }
 
 /**
  * check that the specified download filename exists on the filesystem
@@ -3440,35 +3303,6 @@ function zen_get_master_categories_pulldown($product_id, $fullpath = false)
     return $product_lookup->fields['lookup_field'];
   }
 
-  function zen_count_days($start_date, $end_date, $lookup = 'm') {
-    if ($lookup == 'd') {
-    // Returns number of days
-      $start_datetime = gmmktime (0, 0, 0, substr ($start_date, 5, 2), substr ($start_date, 8, 2), substr ($start_date, 0, 4));
-      $end_datetime = gmmktime (0, 0, 0, substr ($end_date, 5, 2), substr ($end_date, 8, 2), substr ($end_date, 0, 4));
-      $days = (($end_datetime - $start_datetime) / 86400) + 1;
-      $d = $days % 7;
-      $w = date("w", $start_datetime);
-      $result = floor ($days / 7) * 5;
-      $counter = $result + $d - (($d + $w) >= 7) - (($d + $w) >= 8) - ($w == 0);
-    }
-    if ($lookup == 'm') {
-    // Returns whole-month-count between two dates
-    // courtesy of websafe<at>partybitchez<dot>org
-      $start_date_unixtimestamp = strtotime($start_date);
-      $start_date_month = date("m", $start_date_unixtimestamp);
-      $end_date_unixtimestamp = strtotime($end_date);
-      $end_date_month = date("m", $end_date_unixtimestamp);
-      $calculated_date_unixtimestamp = $start_date_unixtimestamp;
-      $counter=0;
-      while ($calculated_date_unixtimestamp < $end_date_unixtimestamp) {
-        $counter++;
-        $calculated_date_unixtimestamp = strtotime($start_date . " +{$counter} months");
-      }
-      if ( ($counter==1) && ($end_date_month==$start_date_month)) $counter=($counter-1);
-    }
-    return $counter;
-  }
-
 /**
  * Get all products_id in a Category and its SubCategories
  * use as:
@@ -3595,29 +3429,6 @@ function zen_get_master_categories_pulldown($product_id, $fullpath = false)
       return 0;
   }
 
-function zen_format_date_raw($date, $formatOut = 'mysql', $formatIn = DATE_FORMAT_DATEPICKER_ADMIN)
-{
-  if ($date == 'null' || $date == '') return $date;
-  $mpos = strpos($formatIn, 'm');
-  $dpos = strpos($formatIn, 'd');
-  $ypos = strpos($formatIn, 'y');
-  $d = substr($date, $dpos, 2);
-  $m = substr($date, $mpos, 2);
-  $y = substr($date, $ypos, 4);
-  switch ($formatOut)
-  {
-    case 'raw':
-      $mdate = $y . $m . $d;
-      break;
-    case 'raw-reverse':
-      $mdate = $d . $m . $y;
-      break;
-    case 'mysql':
-     $mdate = $y . '-' . $m . '-' . $d;
-
-  }
-  return $mdate;
-}
 
 /**
  * Determine visitor's IP address, resolving any proxies where possible.

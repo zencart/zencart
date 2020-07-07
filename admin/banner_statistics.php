@@ -9,7 +9,7 @@
  * @TODO - expand the functionality to enable hover-points and hover-text describing each point on the graphs
  */
 require('includes/application_top.php');
-require('includes/functions/functions_graphs.php');
+require('includes/functions/functions_banner_graphs.php');
 
 $banner_id = (isset($_GET['bID'])) ? (int)$_GET['bID'] : 0;
 $type = (isset($_GET['type']) ? preg_replace('/[^a-z]/', '', $_GET['type']) : '');
