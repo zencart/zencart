@@ -12,8 +12,8 @@
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
 }
-use App\Model\Configuration;
-use App\Model\ProductTypeLayout;
+use App\Models\Configuration;
+use App\Models\ProductTypeLayout;
 
 // need to enable caching in eloquent. for now, no caching @todo
 $use_cache = (isset($_GET['nocache']) ? false : true ) ;

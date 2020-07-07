@@ -4,8 +4,8 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Zencart\PluginManager\PluginManager;
-use App\Model\PluginControl;
-use App\Model\PluginControlVersion;
+use App\Models\PluginControl;
+use App\Models\PluginControlVersion;
 
 class AppServiceProvider extends ServiceProvider
 {

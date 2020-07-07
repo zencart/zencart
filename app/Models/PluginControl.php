@@ -5,13 +5,15 @@
  * @version GIT: $Id: $
  */
 
-namespace App\Model;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model as Eloquent;
 
-class Customer extends Eloquent
+class PluginControl extends Eloquent
 {
-    protected $table = TABLE_CUSTOMERS;
-    protected $primaryKey = 'customers_id';
+    protected $table = TABLE_PLUGIN_CONTROL;
+    protected $primaryKey = 'unique_key';
+    protected $keyType = 'string';
+    public $incrementing = false;
     public $timestamps = false;
 }

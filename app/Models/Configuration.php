@@ -5,7 +5,7 @@
  * @version GIT: $Id: $
  */
 
-namespace App\Model;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model as Eloquent;
 
