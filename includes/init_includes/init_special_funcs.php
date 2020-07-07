@@ -22,10 +22,7 @@ zen_update_whos_online();
 require DIR_WS_FUNCTIONS . 'banner.php';
 zen_activate_banners();
 zen_expire_banners();
-/**
- * require product functions one time such that if previously loaded will not cause an error here.
- */
-require_once DIR_WS_FUNCTIONS . 'functions_products.php';
+
 /**
  * only process once per session do not include banners as banners expire per click as well as per date
  * require the banner functions, auto-activate and auto-expire.
