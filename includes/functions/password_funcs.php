@@ -9,7 +9,7 @@
  * @version $Id: Author: DrByte  Tue Oct 13 15:36:50 2015 -0400 Modified in v1.5.5 $
  */
 // //
-// This function validates a plain text password with an encrpyted password
+// This function validates a plain text password with an encrypted password
 function zen_validate_password($plain, $encrypted, $userRef = NULL)
 {
   $zcPassword = zcPassword::getInstance(PHP_VERSION);
@@ -18,19 +18,12 @@ function zen_validate_password($plain, $encrypted, $userRef = NULL)
 
 /**
  * This function makes a new password from a plaintext password.
- * if php >= 5.5.0 we use inbuilt password_hash function.
- * otherwise we use zen_encrypt_password_new to create a salted sha256 password.
  * @param $plain
  * @return string
  */
 function zen_encrypt_password($plain)
 {
-    if (function_exists('password_hash')) {
-        $password = password_hash($plain, PASSWORD_DEFAULT);
-    } else {
-        $password = zen_encrypt_password_new($plain);
-    }
-    return $password;
+    return password_hash($plain, PASSWORD_DEFAULT);
 }
 
 /**
