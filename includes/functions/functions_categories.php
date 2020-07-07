@@ -109,7 +109,7 @@ function zen_has_category_subcategories($category_id)
  * @param int $status_flag
  * @return array|mixed
  */
-function zen_get_categories($categories_array = array(), $parent_id = 0, $indent = '', $status_flag = null)
+function zen_get_categories($categories_array = array(), $parent_id = TOPMOST_CATEGORY_PARENT_ID, $indent = '', $status_flag = null)
 {
     global $db;
 
@@ -149,7 +149,7 @@ function zen_get_categories($categories_array = array(), $parent_id = 0, $indent
  * @param array $subcategories_array recursive
  * @param int $parent_id
  */
-function zen_get_subcategories(&$subcategories_array, $parent_id = 0)
+function zen_get_subcategories(&$subcategories_array, $parent_id = TOPMOST_CATEGORY_PARENT_ID)
 {
     global $db;
     $subcategories_query = "SELECT categories_id
@@ -184,8 +184,7 @@ function zen_get_parent_categories(&$categories, $categories_id)
 
     foreach ($results as $result) {
 
-        // 0 = top-most parent category
-        if ($result['parent_id'] == 0) return true;
+        if ($result['parent_id'] == TOPMOST_CATEGORY_PARENT_ID) return true;
 
         $categories[count($categories)] = $result['parent_id'];
         if ($result['parent_id'] != $categories_id) {
@@ -210,7 +209,7 @@ function zen_get_product_path($products_id)
 
     $category = $db->Execute($category_query);
 
-    if ($category->RecordCount() > 0) {
+    if ($category->RecordCount()) {
 
         $categories = [];
         zen_get_parent_categories($categories, $category->fields['master_categories_id']);
@@ -273,7 +272,7 @@ function zen_product_in_category($product_id, $cat_id)
             $parent_categories = $db->Execute($parent_categories_query);
 
             while (!$parent_categories->EOF) {
-                if (($parent_categories->fields['parent_id'] != 0)) {
+                if ($parent_categories->fields['parent_id'] != TOPMOST_CATEGORY_PARENT_ID) {
                     if (!$in_cat) $in_cat = zen_product_in_parent_category($product_id, $cat_id, $parent_categories->fields['parent_id']);
                 }
                 $parent_categories->MoveNext();
@@ -305,8 +304,7 @@ function zen_product_in_parent_category($product_id, $cat_id, $parent_cat_id)
         $parent_categories = $db->Execute($parent_categories_query);
 
         while (!$parent_categories->EOF) {
-            // 0 = topmost category root
-            if ($parent_categories->fields['parent_id'] != 0 && !$in_cat) {
+            if ($parent_categories->fields['parent_id'] != TOPMOST_CATEGORY_PARENT_ID && !$in_cat) {
                 $in_cat = zen_product_in_parent_category($product_id, $cat_id, $parent_categories->fields['parent_id']);
             }
             $parent_categories->MoveNext();
@@ -595,7 +593,7 @@ function zen_get_product_types_to_category($lookup)
             WHERE category_id=" . (int)$lookup;
     $result = $db->Execute($sql);
 
-    if ($result->RecordCount() > 0) {
+    if ($result->RecordCount()) {
         return $result->fields['product_type_id'];
     }
 
@@ -633,7 +631,7 @@ function zen_get_categories_parent_name($categories_id)
  * @param string $display_limit
  * @return array|null
  */
-function zen_get_categories_products_list($categories_id, $include_deactivated = false, $include_child = true, $parent_category = '0', $display_limit = '')
+function zen_get_categories_products_list($categories_id, $include_deactivated = false, $include_child = true, $parent_category = TOPMOST_CATEGORY_PARENT_ID, $display_limit = '')
 {
     global $db;
     global $categories_products_id_list;
@@ -648,7 +646,7 @@ function zen_get_categories_products_list($categories_id, $include_deactivated =
 
     $childCatID = str_replace('_', '', substr($categories_id, strrpos($categories_id, '_')));
 
-    $current_cPath = ($parent_category != '0' ? $parent_category . '_' : '') . $categories_id;
+    $current_cPath = ($parent_category != TOPMOST_CATEGORY_PARENT_ID ? $parent_category . '_' : '') . $categories_id;
 
     $sql = "SELECT p.products_id
             FROM " . TABLE_PRODUCTS . " p
@@ -695,8 +693,8 @@ function zen_generate_category_path($id, $from = 'category', $categories_array =
         $categories = $db->Execute($sql);
 
         foreach ($categories as $p2cResult) {
-            if ($p2cResult['categories_id'] == '0') {
-                $categories_array[$index][] = ['id' => '0', 'text' => TEXT_TOP];
+            if ($p2cResult['categories_id'] == TOPMOST_CATEGORY_PARENT_ID) {
+                $categories_array[$index][] = ['id' => TOPMOST_CATEGORY_PARENT_ID, 'text' => TEXT_TOP];
             } else {
                 $category = $db->Execute("SELECT cd.categories_name, c.parent_id
                                     FROM " . TABLE_CATEGORIES . " c
@@ -705,7 +703,7 @@ function zen_generate_category_path($id, $from = 'category', $categories_array =
                                     AND cd.language_id = " . (int)$_SESSION['languages_id']);
 
                 $categories_array[$index][] = ['id' => $p2cResult['categories_id'], 'text' => $category->fields['categories_name']];
-                if (zen_not_null($category->fields['parent_id']) && $category->fields['parent_id'] != '0') {
+                if (zen_not_null($category->fields['parent_id']) && $category->fields['parent_id'] != TOPMOST_CATEGORY_PARENT_ID) {
                     $categories_array = zen_generate_category_path($category->fields['parent_id'], 'category', $categories_array, $index);
                 }
                 $categories_array[$index] = array_reverse($categories_array[$index]);
@@ -721,7 +719,7 @@ function zen_generate_category_path($id, $from = 'category', $categories_array =
 
         if (!$category->EOF) {
             $categories_array[$index][] = ['id' => $id, 'text' => $category->fields['categories_name']];
-            if (zen_not_null($category->fields['parent_id']) && $category->fields['parent_id'] != '0') {
+            if (zen_not_null($category->fields['parent_id']) && $category->fields['parent_id'] != TOPMOST_CATEGORY_PARENT_ID) {
                 $categories_array = zen_generate_category_path($category->fields['parent_id'], 'category', $categories_array, $index);
             }
         }
@@ -805,7 +803,7 @@ function zen_get_generated_category_path_rev($this_categories_id)
  * @param bool $limit
  * @return array
  */
-function zen_get_category_tree($parent_id = '0', $spacing = '', $exclude = '', $category_tree_array = [], $include_itself = false, $check_if_cat_has_prods = false, $limit = false)
+function zen_get_category_tree($parent_id = TOPMOST_CATEGORY_PARENT_ID, $spacing = '', $exclude = '', $category_tree_array = [], $include_itself = false, $check_if_cat_has_prods = false, $limit = false)
 {
     global $db;
 
@@ -814,8 +812,8 @@ function zen_get_category_tree($parent_id = '0', $spacing = '', $exclude = '', $
     if (!is_array($category_tree_array)) $category_tree_array = [];
 
     // init pulldown with Top category if list is empty and top cat not marked as excluded
-    if (count($category_tree_array) < 1 && $exclude != '0') {
-        $category_tree_array[] = ['id' => '0', 'text' => TEXT_TOP];
+    if (count($category_tree_array) < 1 && $exclude != TOPMOST_CATEGORY_PARENT_ID) {
+        $category_tree_array[] = ['id' => TOPMOST_CATEGORY_PARENT_ID, 'text' => TEXT_TOP];
     }
 
     if ($include_itself) {

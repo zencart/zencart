@@ -112,6 +112,7 @@ if (zen_not_null($action)) {
                 WHERE categories_id = '" . (int)$categories_id . "'";
 
         $parent_cat = $db->Execute($sql);
+        // @TODO - should this be checking against TOPMOST_CATEGORY_PARENT_ID?
         if ($parent_cat->fields['parent_id'] != '0') {
           $sql = "SELECT *
                   FROM " . TABLE_PRODUCT_TYPES_TO_CATEGORY . "
