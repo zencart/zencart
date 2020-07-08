@@ -82,23 +82,13 @@ if (isset($_POST['categories_update_id'])) {
 }
 
 if ($action == 'new_cat') {
-  $sql = "SELECT products_id
-          FROM " . TABLE_PRODUCTS_TO_CATEGORIES . "
-          WHERE categories_id = " . (int)$current_category_id . "
-          ORDER BY products_id";
-  $new_product_query = $db->Execute($sql);
-  $products_filter = (!$new_product_query->EOF) ? $new_product_query->fields['products_id'] : '';
+  $products_filter = zen_get_linked_products_for_category($current_category_id, $first_only = true);
   zen_redirect(zen_href_link(FILENAME_ATTRIBUTES_CONTROLLER, 'products_filter=' . $products_filter . '&current_category_id=' . $current_category_id));
 }
 
 // set categories and products if not set
 if ($products_filter == '' && !empty($current_category_id)) {
-  $sql = "SELECT *
-          FROM " . TABLE_PRODUCTS_TO_CATEGORIES . "
-          WHERE categories_id = " . (int)$current_category_id . "
-          ORDER BY products_id";
-  $new_product_query = $db->Execute($sql);
-  $products_filter = (!$new_product_query->EOF) ? $new_product_query->fields['products_id'] : '';
+  $products_filter = zen_get_linked_products_for_category($current_category_id, $first_only = true);
   if ($products_filter != '') {
     zen_redirect(zen_href_link(FILENAME_ATTRIBUTES_CONTROLLER, 'products_filter=' . $products_filter . '&current_category_id=' . $current_category_id));
   }
@@ -106,12 +96,7 @@ if ($products_filter == '' && !empty($current_category_id)) {
   if ($products_filter == '' && empty($current_category_id)) {
     $reset_categories_id = zen_get_category_tree('', '', '0', '', '', true);
     $current_category_id = $reset_categories_id[0]['id'];
-    $sql = "SELECT *
-            FROM " . TABLE_PRODUCTS_TO_CATEGORIES . "
-            WHERE categories_id = " . (int)$current_category_id . "
-            ORDER BY products_id";
-    $new_product_query = $db->Execute($sql);
-    $products_filter = (!$new_product_query->EOF) ? $new_product_query->fields['products_id'] : '';
+    $products_filter = zen_get_linked_products_for_category($current_category_id, $first_only = true);
     $_GET['products_filter'] = $products_filter;
   }
 }
@@ -580,11 +565,9 @@ if (zen_not_null($action)) {
       if ($_POST['categories_update_id'] == '') {
         $messageStack->add_session(WARNING_PRODUCT_COPY_TO_CATEGORY_NONE . ' ID#' . $_POST['products_filter'], 'warning');
       } else {
-        $copy_to_category = $db->Execute("SELECT products_id
-                                          FROM " . TABLE_PRODUCTS_TO_CATEGORIES . "
-                                          WHERE categories_id = " . (int)$_POST['categories_update_id']);
+        $copy_to_category = zen_get_linked_products_for_category((int)$_POST['categories_update_id']);
         foreach ($copy_to_category as $item) {
-          zen_copy_products_attributes($_POST['products_filter'], $item['products_id']);
+          zen_copy_products_attributes($_POST['products_filter'], $item);
         }
       }
       $_GET['action'] = '';

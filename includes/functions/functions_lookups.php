@@ -391,84 +391,8 @@
     return ($attributes->fields['total'] != 0);
   }
 
-/*
- * Find category name from ID, in indicated language
- */
-  function zen_get_category_name($category_id, $fn_language_id) {
-    global $db;
-    $category_query = "select categories_name
-                       from " . TABLE_CATEGORIES_DESCRIPTION . "
-                       where categories_id = '" . $category_id . "'
-                       and language_id = '" . $fn_language_id . "'";
-
-    $category = $db->Execute($category_query);
-
-    return $category->fields['categories_name'];
-  }
-
-
-/*
- * Find category description, from category ID, in given language
- */
-  function zen_get_category_description($category_id, $fn_language_id) {
-    global $db;
-    $category_query = "select categories_description
-                       from " . TABLE_CATEGORIES_DESCRIPTION . "
-                       where categories_id = '" . $category_id . "'
-                       and language_id = '" . $fn_language_id . "'";
-
-    $category = $db->Execute($category_query);
-
-    return $category->fields['categories_description'];
-  }
-
-/*
- * Return a product's category
- * TABLES: products_to_categories
- */
-  function zen_get_products_category_id($products_id) {
-    global $db;
-
-    $the_products_category_query = "select products_id, master_categories_id from " . TABLE_PRODUCTS . " where products_id = '" . (int)$products_id . "'";
-    $the_products_category = $db->Execute($the_products_category_query);
-
-    return $the_products_category->fields['master_categories_id'];
-  }
-
-
-/*
- * Return category's image
- * TABLES: categories
- */
-  function zen_get_categories_image($what_am_i) {
-    global $db;
-
-    $the_categories_image_query= "select categories_image from " . TABLE_CATEGORIES . " where categories_id= '" . (int)$what_am_i . "'";
-    $result = $db->Execute($the_categories_image_query);
-
-    if ($result->EOF) return '';
-    
-    return $result->fields['categories_image'];
-  }
-
-/*
- *  Return category's name from ID, assuming current language
- *  TABLES: categories_description
- */
-  function zen_get_categories_name($who_am_i) {
-    global $db;
-    $the_categories_name_query= "select categories_name from " . TABLE_CATEGORIES_DESCRIPTION . " where categories_id= '" . (int)$who_am_i . "' and language_id= '" . (int)$_SESSION['languages_id'] . "'";
-
-    $the_categories_name = $db->Execute($the_categories_name_query);
-    
-    if ($the_categories_name->EOF) return '';
-
-    return $the_categories_name->fields['categories_name'];
-  }
-
-/*
+/**
  * Return a product's manufacturer's name, from ID
- * TABLES: products, manufacturers
  */
   function zen_get_products_manufacturers_name($product_id) {
     global $db;

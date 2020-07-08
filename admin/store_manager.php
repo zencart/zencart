@@ -163,20 +163,7 @@
     // reset products master categories ID
       if (isset($_POST['confirm']) && $_POST['confirm'] == 'yes')
       {
-
-        $sql = "SELECT products_id FROM " . TABLE_PRODUCTS;
-        $check_products = $db->Execute($sql);
-        while (!$check_products->EOF) {
-          // Note: "USE INDEX ()" is intentional, to retrieve results in original insert order
-          $sql = "SELECT products_id, categories_id FROM " . TABLE_PRODUCTS_TO_CATEGORIES . " USE INDEX () WHERE products_id='" . $check_products->fields['products_id'] . "'";
-          $check_category = $db->Execute($sql);
-
-          $sql = "UPDATE " . TABLE_PRODUCTS . " SET master_categories_id='" . $check_category->fields['categories_id'] . "' WHERE products_id='" . $check_products->fields['products_id'] . "'";
-          $update_viewed = $db->Execute($sql);
-
-          $check_products->MoveNext();
-        }
-
+        zen_reset_all_products_master_categories_id();
         $messageStack->add_session(SUCCESS_UPDATE_ALL_MASTER_CATEGORIES_ID, 'success');
         zen_record_admin_activity('Store Manager executed [update all master categories id]', 'info');
         $action='';

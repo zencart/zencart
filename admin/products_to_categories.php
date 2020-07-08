@@ -9,150 +9,6 @@
 
 require('includes/application_top.php');
 
-//functions: located here as only used here. Future merging/expansion with existing functions to be reviewed when possible.
-/**
- * validate the user-entered categories from the Global Tools
- * @param int $ref_category_id
- * @param int $target_category_id
- * @param bool $reset_master_category set to true if using this function when resetting master_category_id
- * @return bool
- */
-function zen_validate_categories($ref_category_id, $target_category_id = TOPMOST_CATEGORY_PARENT_ID, $reset_master_category = false)
-{
-    global $db, $messageStack;
-
-    $categories_valid = true;
-    if ($ref_category_id === '' || zen_get_categories_status($ref_category_id) === '') {//REF does not exist
-        $categories_valid = false;
-        $messageStack->add_session(sprintf(WARNING_CATEGORY_SOURCE_NOT_EXIST, (int)$ref_category_id), 'warning');
-    }
-    if (!$reset_master_category && ($target_category_id === '' || zen_get_categories_status($target_category_id) === '')) {//TARGET does not exist
-        $categories_valid = false;
-        $messageStack->add_session(sprintf(WARNING_CATEGORY_TARGET_NOT_EXIST, (int)$target_category_id), 'warning');
-    }
-    if (!$reset_master_category && ($categories_valid && $ref_category_id === $target_category_id)) {//category IDs are the same
-        $categories_valid = false;
-        $messageStack->add_session(sprintf(WARNING_CATEGORY_IDS_DUPLICATED, (int)$ref_category_id), 'warning');
-    }
-
-    if ($categories_valid) {
-        $check_category_from = $db->Execute("SELECT products_id FROM " . TABLE_PRODUCTS_TO_CATEGORIES . " WHERE categories_id = " . (int)$ref_category_id . " LIMIT 1");
-        // check if REF has any products
-        if ($check_category_from->RecordCount() < 1) {//there are no products in the FROM category: invalid
-            $categories_valid = false;
-            $messageStack->add_session(sprintf(WARNING_CATEGORY_NO_PRODUCTS, (int)$ref_category_id), 'warning');
-        }
-        // check that TARGET has no subcategories
-        if (!$reset_master_category && zen_childs_in_category_count($target_category_id) > 0) {//subcategories exist in the TO category: invalid
-            $categories_valid = false;
-            $messageStack->add_session(sprintf(WARNING_CATEGORY_SUBCATEGORIES, (int)$target_category_id), 'warning');
-        }
-    }
-    return $categories_valid;
-}
-
-// the following two similar functions are a reduction from three similar functions...and can probably be further reduced/integrated with a revamped core function in the future, so have not been reduced here
-/**
- * Updates a global variable, $categories_info, with a list of all the categories and subcategories
- * of the specified parent category. Code is organised so that the list is in ascending alphabetical
- * order, for the entire path of the category (not simply ordered by individual subcategory
- * names).
- *
- * @param int $parent_id The ID of the parent category.
- * @param string $category_path_string The full path of the names of all the parent categories being included in the path for the (sub)categories info being generated.
- * @return void
- */
-function zen_get_categories_info($parent_id = TOPMOST_CATEGORY_PARENT_ID, $category_path_string = '')
-{
-    global $db, $categories_info;
-
-    $categories_sql = "SELECT cd.categories_id, cd.categories_name
-                        FROM " . TABLE_CATEGORIES . " c
-                        LEFT JOIN " . TABLE_CATEGORIES_DESCRIPTION . " cd ON c.categories_id = cd.categories_id
-                        WHERE c.parent_id = " . (int)$parent_id . "
-                        AND cd.language_id = " . (int)$_SESSION['languages_id'] . "
-                        ORDER BY cd.categories_name";
-    $categories_result = $db->Execute($categories_sql);
-    foreach ($categories_result as $category_result) {
-        $category_id = $category_result['categories_id'];
-        $category_name = ($category_path_string !== '' ? $category_path_string . ' > ' : '') . $category_result['categories_name'];
-        // Does this category have subcategories?
-        $sub_categories_check_sql = "SELECT c.categories_id FROM " . TABLE_CATEGORIES . " c WHERE c.parent_id = " . (int)$category_id;
-        $sub_categories_check_result = $db->Execute($sub_categories_check_sql);
-        if ($sub_categories_check_result->EOF) {
-            $categories_info[] = [
-                'categories_id' => $category_id,
-                'categories_name' => $category_name
-            ];
-        } else {
-            // category has subcategories, get the info for them
-            zen_get_categories_info((int)$category_id, $category_name);
-        }
-    }
-}
-
-/**
- * Builds a list of all the subcategories / subcategories: products of a specified parent category.
- *
- * @param int $parent_id The ID of the parent category.
- * @param string $spacing HTML to be prepended to the names of the categories/products for the specified parent category. Aids a hierarchical display of categories/products when information is used in a select gadget.
- * @param array $category_product_tree_array The array of categories and products being generated. Passed in function parameters so that it can be appended to when used recursively.
- * @param string $type category or product: to determine the array structure
- * @return array
- */
-function zen_get_target_categories_products($parent_id = TOPMOST_CATEGORY_PARENT_ID, $spacing = '', $category_product_tree_array = [], $type = 'category')
-{
-    global $db, $products_filter;
-    $categories = $db->Execute("SELECT cd.categories_id, cd.categories_name, c.parent_id
-                                        FROM " . TABLE_CATEGORIES . " c, " . TABLE_CATEGORIES_DESCRIPTION . " cd
-                                        WHERE c.categories_id = cd.categories_id
-                                        AND cd.language_id = " . (int)$_SESSION['languages_id'] . "
-                                        AND c.parent_id = " . (int)$parent_id . "
-                                        ORDER BY cd.categories_name");
-    foreach ($categories as $category) {
-        // Get all subcategories for the current category
-        $sub_categories_sql = "SELECT c.categories_id FROM " . TABLE_CATEGORIES . " c WHERE c.parent_id = " . (int)$category['categories_id'];
-        $sub_categories_result = $db->Execute($sub_categories_sql);
-
-        if (!$sub_categories_result->EOF) {
-            if ($type === 'product') {
-                $category_product_tree_array = zen_get_target_categories_products((int)$category['categories_id'], $spacing . $category['categories_name'] . ' > ', $category_product_tree_array, 'product');
-            } else {//type is category
-                $category_product_tree_array[] = [
-                    'id' => $category['categories_id'],
-                    'text' => $spacing . $category['categories_name']
-                ];
-                $category_product_tree_array = zen_get_target_categories_products((int)$category['categories_id'], $spacing . '&nbsp;&nbsp;&nbsp;', $category_product_tree_array);
-            }
-        }
-        if ($type === 'product') {
-            $products_sql = "SELECT p.products_model, pd.products_id, pd.products_name
-                                FROM " . TABLE_PRODUCTS . " p
-                                LEFT JOIN " . TABLE_PRODUCTS_DESCRIPTION . " pd ON p.products_id = pd.products_id
-                                WHERE p.master_categories_id = " . (int)$category['categories_id'] . "
-                                AND pd.language_id = " . (int)$_SESSION['languages_id'] . "
-                                ORDER BY p.products_model";
-
-            $products_result = $db->Execute($products_sql);
-
-            foreach ($products_result as $product_result) {
-                if ($product_result['products_id'] !== $products_filter) {
-                    $category_product_tree_array[] = [
-                        'id' => $product_result['products_id'],
-                        'text' => $spacing . htmlentities($category['categories_name']) . ': ' .
-                            htmlentities($product_result['products_model']) . ' - ' .
-                            htmlentities($product_result['products_name']) . ' (#' . $product_result['products_id'] . ')'
-                    ];
-                }
-            }
-        }
-    }
-    return $category_product_tree_array;
-}
-
-//eof new functions
-////////////////////////////////////////////////////////////////////////////////
-
 // products_filter: the selected product
 if (!empty($_POST['products_filter'])) {
     $products_filter = (int)$_POST['products_filter'];
@@ -178,22 +34,22 @@ if (isset($_POST['enable_copy_links_dropdown'])) {// only set if checked
 $_SESSION['enable_copy_links_dropdown'] = $enable_copy_links_dropdown;
 
 // Verify that at least one product exists
-$chk_products = $db->Execute("SELECT *
+$result = $db->Execute("SELECT *
                               FROM " . TABLE_PRODUCTS . "
                               LIMIT 1");
-if ($chk_products->RecordCount() < 1) {
+if ($result->RecordCount() < 1) {
     $messageStack->add_session(ERROR_DEFINE_PRODUCTS, 'caution');
     zen_redirect(zen_href_link(FILENAME_CATEGORY_PRODUCT_LISTING));
 }
 
 // Verify that product has a master_categories_id
 if ($products_filter > 0) {
-    $source_product_details = zen_get_products_model($products_filter) . ' - "' . zen_get_products_name($products_filter,
-            (int)$_SESSION['languages_id']) . '" (#' . $products_filter . ')'; // format used for various messageStack
-    $chk_products = $db->Execute("SELECT master_categories_id
-                              FROM " . TABLE_PRODUCTS . "
-                              WHERE products_id = " . $products_filter . " LIMIT 1");
-    if (!$chk_products->EOF && $chk_products->fields['master_categories_id'] < 1) {
+    $source_product_details = zen_get_products_model($products_filter)
+        . ' - "'
+        . zen_get_products_name($products_filter, (int)$_SESSION['languages_id'])
+        . '" (#' . $products_filter . ')'; // format used for various messageStack
+
+    if (zen_get_products_category_id($products_filter) < 1) {
         $messageStack->add(ERROR_DEFINE_PRODUCTS_MASTER_CATEGORIES_ID, 'error');
     }
 }
@@ -206,15 +62,16 @@ $languages = zen_get_languages();
 $action = (isset($_GET['action']) ? $_GET['action'] : '');
 
 if ($action === 'new_cat') {//this form action is from products_previous_next_display.php when a new category is selected
-    $new_product_query = $db->Execute("SELECT ptc.*
-                                 FROM " . TABLE_PRODUCTS_TO_CATEGORIES . " ptc
-                                 LEFT JOIN " . TABLE_PRODUCTS_DESCRIPTION . " pd ON ptc.products_id = pd.products_id
-                                 JOIN " . TABLE_PRODUCTS . " p ON ptc.products_id = p.products_id
-                                 AND pd.language_id = " . (int)$_SESSION['languages_id'] . "
-                                 WHERE ptc.categories_id = " . $current_category_id . "
-                                 ORDER BY p.products_model"); // Order By determines which product is pre-selected in the list when a new category is viewed
-
-    $products_filter = (!$new_product_query->EOF) ? $new_product_query->fields['products_id'] : ''; // Empty if category has no products/has subcategories
+// @TODO this is a pretty elaborate query for getting a single products_id in order to do a redirect!
+    $sql = "SELECT ptc.*
+            FROM " . TABLE_PRODUCTS_TO_CATEGORIES . " ptc
+            LEFT JOIN " . TABLE_PRODUCTS_DESCRIPTION . " pd USING (products_id)
+            JOIN " . TABLE_PRODUCTS . " p USING (products_id)
+            AND pd.language_id = " . (int)$_SESSION['languages_id'] . "
+            WHERE ptc.categories_id = " . $current_category_id . "
+            ORDER BY p.products_model"; // Order By determines which product is pre-selected in the list when a new category is viewed
+    $result = $db->Execute($sql);
+    $products_filter = (!$result->EOF) ? $result->fields['products_id'] : ''; // Empty if category has no products/has subcategories
     zen_redirect(zen_href_link(FILENAME_PRODUCTS_TO_CATEGORIES, 'products_filter=' . $products_filter . '&current_category_id=' . $current_category_id));
 }
 
@@ -260,45 +117,26 @@ if (zen_not_null($action)) {
             } else {
                 $target_product_details = zen_get_products_model($target_product_id) . ' - "' . zen_get_products_name($target_product_id, (int)$_SESSION['languages_id']) . '" (#' . $target_product_id . ')'; // Used in messageStack
 
-                // Get the master category for the source product
-                $source_product_master_category_sql = "SELECT master_categories_id FROM " . TABLE_PRODUCTS . " WHERE products_id = " . $products_filter . " LIMIT 1";
-                $source_product_master_category_result = $db->Execute($source_product_master_category_sql);
+                $source_product_master_categories_id = (int)zen_get_products_category_id($products_filter);
+                $target_product_master_categories_id = (int)zen_get_products_category_id($target_product_id);
 
-                // Get the master category for the target product
-                $target_product_master_category_sql = "SELECT master_categories_id FROM " . TABLE_PRODUCTS . " WHERE products_id = " . $target_product_id . " LIMIT 1";
-                $target_product_master_category_result = $db->Execute($target_product_master_category_sql);
-
-                if ($source_product_master_category_result->EOF || $target_product_master_category_result->EOF) { // source/target is missing a master category
-                    if ($source_product_master_category_result->EOF) {
+                if ($source_product_master_categories_id === 0 || $target_product_master_categories_id === 0) { // source/target is missing a master category
+                    if ($source_product_master_categories_id === 0) {
                         $messageStack->add(sprintf(ERROR_MASTER_CATEGORY_MISSING, $source_product_details));
                     }
-                    if ($target_product_master_category_result->EOF) {
+                    if ($target_product_master_categories_id === 0) {
                         $messageStack->add(sprintf(ERROR_MASTER_CATEGORY_MISSING, $target_product_details));
                     }
                     break;
                 }
 
-                $source_product_master_categories_id = (int)$source_product_master_category_result->fields['master_categories_id'];
-                $target_product_master_categories_id = (int)$target_product_master_category_result->fields['master_categories_id'];
-
-                // Get the current product's linked categories
-                $product_categories_result = $db->Execute("SELECT categories_id FROM " . TABLE_PRODUCTS_TO_CATEGORIES . " WHERE products_id = " . $products_filter . "
-                AND categories_id != " . $source_product_master_categories_id . "
-                AND categories_id != " . $target_product_master_categories_id);
-
-                // Get the target product's linked categories
-                $target_categories_result = $db->Execute("SELECT categories_id FROM " . TABLE_PRODUCTS_TO_CATEGORIES . " WHERE products_id = " . $target_product_id . "
-                AND categories_id !=" . $target_product_master_categories_id . "
-                AND categories_id !=" . $source_product_master_categories_id
-                );
-
                 $product_categories = [];
-                foreach ($product_categories_result as $row) {
+                foreach (zen_get_linked_categories_for_product($products_filter, [$source_product_master_categories_id, $target_product_master_categories_id]) as $row) {
                     $product_categories[] = (int)$row['categories_id'];
                 }
 
                 $target_categories = [];
-                foreach ($target_categories_result as $row) {
+                foreach (zen_get_linked_categories_for_product($target_product_id, [$source_product_master_categories_id, $target_product_master_categories_id]) as $row) {
                     $target_categories[] = (int)$row['categories_id'];
                 }
 
@@ -313,7 +151,7 @@ if (zen_not_null($action)) {
                         break;
 
                     case 'replace':
-                        $db->Execute("DELETE FROM " . TABLE_PRODUCTS_TO_CATEGORIES . " WHERE products_id = " . $target_product_id . " AND categories_id != " . $target_product_master_categories_id);
+                        zen_unlink_product_from_all_linked_categories($target_product_id, $target_product_master_categories_id);
                         $target_categories_update = $product_categories;
                         break;
                 }
@@ -324,11 +162,8 @@ if (zen_not_null($action)) {
                 }
 
                 foreach ($target_categories_update as $target_category) {
-                    $db->Execute("INSERT INTO " . TABLE_PRODUCTS_TO_CATEGORIES . " (products_id, categories_id) VALUES (" . $target_product_id . ", " . $target_category . ")");
+                    zen_link_product_to_category($target_product_id, $target_category);
                 }
-
-                $target_product_name_sql = "SELECT products_name FROM " . TABLE_PRODUCTS_DESCRIPTION . " WHERE products_id = '" . $target_product_id . "' AND language_id = " . (int)$_SESSION['languages_id'] . " LIMIT 1";
-                $target_product_name_result = $db->Execute($target_product_name_sql);
 
                 $messageStack->add_session(sprintf(($copy_categories_type === 'add' ? SUCCESS_LINKED_CATEGORIES_COPIED_TO_TARGET_PRODUCT_ADD : SUCCESS_LINKED_CATEGORIES_COPIED_TO_TARGET_PRODUCT_REPLACE),
                     count($target_categories_update), $source_product_details, $target_product_details), 'success');
@@ -384,8 +219,7 @@ if (zen_not_null($action)) {
                 $products_copied_message = '';
                 for ($i = 0, $n = count($make_links_result); $i < $n; $i++) {
                     $new_product = $make_links_result[$i]['products_id'];
-                    $sql = "INSERT INTO " . TABLE_PRODUCTS_TO_CATEGORIES . " (products_id, categories_id) VALUES ('" . $new_product . "', '" . $category_id_target . "')";
-                    $db->Execute($sql);
+                    zen_link_product_to_category($new_product, $category_id_target);
                     $product_copied_format = zen_get_products_model($make_links_result[$i]['products_id']) . ' - "' . zen_get_products_name($make_links_result[$i]['products_id'], (int)$_SESSION['languages_id']) . '" (#' . $make_links_result[$i]['products_id'] . ')';
                     $products_copied_message .= sprintf(SUCCESS_PRODUCT_COPIED, $product_copied_format, $category_id_target);
                 }
@@ -464,8 +298,7 @@ if (zen_not_null($action)) {
             } else {
                 $products_removed_message = '';
                 for ($i = 0, $n = count($products_to_remove); $i < $n; $i++) {
-                    $sql = "DELETE FROM " . TABLE_PRODUCTS_TO_CATEGORIES . " WHERE products_id = " . $products_to_remove[$i]['products_id'] . " AND categories_id = " . $category_id_target . " LIMIT 1";
-                    $db->Execute($sql);
+                    zen_unlink_product_from_category($products_to_remove[$i]['products_id'], $category_id_target);
                     $products_removed_format = zen_get_products_model($products_to_remove[$i]['products_id']) . ' - "' . zen_get_products_name($products_to_remove[$i]['products_id'], (int)$_SESSION['languages_id']) . '" (#' . $products_to_remove[$i]['products_id'] . ')';
                     $products_removed_message = sprintf(SUCCESS_REMOVED_PRODUCT, $products_removed_format, $category_id_target);
                 }
@@ -485,29 +318,15 @@ if (zen_not_null($action)) {
                 zen_redirect(zen_href_link(FILENAME_PRODUCTS_TO_CATEGORIES, 'products_filter=' . $products_filter . '&current_category_id=' . $current_category_id));
             }
             // if either category was invalid nothing processes below
+            zen_reset_products_category_as_master($category_id_as_master);
 
-            $reset_master_categories_id = $db->Execute("SELECT p.products_id, p.master_categories_id, ptoc.categories_id
-                                                  FROM " . TABLE_PRODUCTS . " p
-                                                  LEFT JOIN " . TABLE_PRODUCTS_TO_CATEGORIES . " ptoc ON ptoc.products_id = p.products_id
-                                                    AND ptoc.categories_id = " . $category_id_as_master . "
-                                                  WHERE ptoc.categories_id = " . $category_id_as_master);
-
-            foreach ($reset_master_categories_id as $item) {
-                $db->Execute("UPDATE " . TABLE_PRODUCTS . " SET master_categories_id = " . $category_id_as_master . " WHERE products_id = " . (int)$item['products_id']);
-                // reset products_price_sorter for searches etc.
-                zen_update_products_price_sorter($item['products_id']);
-            }
             $messageStack->add_session(sprintf(SUCCESS_RESET_PRODUCTS_MASTER_CATEGORY, $category_id_as_master), 'success');
             zen_redirect(zen_href_link(FILENAME_PRODUCTS_TO_CATEGORIES, 'products_filter=' . $products_filter . '&current_category_id=' . $current_category_id));
             break;
 
         // Change the master category id for the currently selected product
         case 'set_master_categories_id':
-            $db->Execute("UPDATE " . TABLE_PRODUCTS . "
-                    SET master_categories_id = " . (int)$_GET['master_category'] . "
-                    WHERE products_id = " . $products_filter . " LIMIT 1");
-            // reset products_price_sorter for searches etc.
-            zen_update_products_price_sorter($products_filter);
+            zen_set_product_master_categories_id($products_filter, (int)$_GET['master_category']);
 
             zen_redirect(zen_href_link(FILENAME_PRODUCTS_TO_CATEGORIES, 'products_filter=' . $products_filter . '&current_category_id=' . $current_category_id));
             break;
@@ -542,8 +361,7 @@ if (zen_not_null($action)) {
             if (!empty($_POST['current_master_categories_id'])) {
                 $current_master_categories_id = (int)$_POST['current_master_categories_id'];
             } else {
-                $master_category_id_result = $db->Execute("SELECT master_categories_id FROM " . TABLE_PRODUCTS . " WHERE products_id = " . $products_filter . " LIMIT 1");
-                $current_master_categories_id = (int)$master_category_id_result->fields['master_categories_id'];
+                $current_master_categories_id = (int)zen_get_products_category_id($products_filter);
             }
             $new_categories_sort_array = [];
 
@@ -613,10 +431,9 @@ if (zen_not_null($action)) {
 
 if ($products_filter > 0) {
     $product_to_copy = $db->Execute("SELECT p.products_id, pd.products_name, p.products_sort_order, p.products_price_sorter, p.products_model, p.master_categories_id, p.products_image
-                                 FROM " . TABLE_PRODUCTS . " p,
-                                      " . TABLE_PRODUCTS_DESCRIPTION . " pd
+                                 FROM " . TABLE_PRODUCTS . " p
+                                 LEFT JOIN " . TABLE_PRODUCTS_DESCRIPTION . " pd USING (products_id)
                                  WHERE p.products_id = " . $products_filter . "
-                                 AND p.products_id = pd.products_id
                                  AND pd.language_id = " . (int)$_SESSION['languages_id'] . " LIMIT 1");
 
     $product_linked_categories = $db->Execute("SELECT products_id, categories_id FROM " . TABLE_PRODUCTS_TO_CATEGORIES . " WHERE products_id = " . $products_filter);

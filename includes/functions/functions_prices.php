@@ -1518,12 +1518,11 @@ If a special exist * 10
     $zv_categories = $db->Execute("select sale_categories_selected from " . TABLE_SALEMAKER_SALES . " where sale_id = '" . (int)$salemaker_id . "'");
     if ($zv_categories->EOF) return FALSE;
     $za_salemaker_categories = zen_parse_salemaker_categories($zv_categories->fields['sale_categories_selected']);
-    $n = sizeof($za_salemaker_categories);
+    $n = count($za_salemaker_categories);
     for ($i=0; $i<$n; $i++) {
-      $update_products_price = $db->Execute("select products_id from " . TABLE_PRODUCTS_TO_CATEGORIES . " where categories_id='" . (int)$za_salemaker_categories[$i] . "'");
-      while (!$update_products_price->EOF) {
-        zen_update_products_price_sorter($update_products_price->fields['products_id']);
-        $update_products_price->MoveNext();
+      $update_products_price = zen_get_linked_products_for_category((int)$za_salemaker_categories[$i]);
+      foreach ($update_products_price as $item) {
+        zen_update_products_price_sorter($item);
       }
     }
   }

@@ -63,7 +63,7 @@ if (zen_not_null($action)) {
           $products_status = isset($_POST['set_products_status']) && $_POST['set_products_status'] == 'set_products_status_on' ? '1' : ''; //Disable products or no change?
         }
 
-        for ($i = 0, $n = sizeof($categories); $i < $n; $i++) {
+        for ($i = 0, $n = count($categories); $i < $n; $i++) {
 
           //set categories_status
           if ($categories[$i]['id'] == $categories_id) {//always update THIS category
@@ -84,16 +84,9 @@ if (zen_not_null($action)) {
           }
 
           //only execute if a change was selected
-          $sql = "SELECT products_id
-                  FROM " . TABLE_PRODUCTS_TO_CATEGORIES . "
-                  WHERE categories_id = " . (int)$categories[$i]['id'];
-          $category_products = $db->Execute($sql);
-
+          $category_products = zen_get_linked_products_for_category($categories[$i]['id']);
           foreach ($category_products as $category_product) {
-            $sql = "UPDATE " . TABLE_PRODUCTS . "
-                    SET products_status = " . (int)$products_status . "
-                    WHERE products_id = " . (int)$category_product['products_id'];
-            $db->Execute($sql);
+              zen_set_product_status($category_product, $products_status);
           }
         }
       }
@@ -139,24 +132,21 @@ if (zen_not_null($action)) {
         zen_set_time_limit(600);
 
         // loop through this cat and subcats for delete-processing.
-        for ($i = 0, $n = sizeof($categories); $i < $n; $i++) {
-          $sql = "SELECT products_id
-                  FROM " . TABLE_PRODUCTS_TO_CATEGORIES . "
-                  WHERE categories_id = " . $categories[$i]['id'];
-          $category_products = $db->Execute($sql);
+        for ($i = 0, $n = count($categories); $i < $n; $i++) {
+          $category_products = zen_get_linked_products_for_category($categories[$i]['id']);
 
           foreach ($category_products as $category_product) {
-            $cascaded_prod_id_for_delete = $category_product['products_id'];
+            $cascaded_prod_id_for_delete = $category_product;
             $cascaded_prod_cat_for_delete = [];
             $cascaded_prod_cat_for_delete[] = $categories[$i]['id'];
             // determine product-type-specific override script for this product
-            $product_type = zen_get_products_type($category_product['products_id']);
+            $product_type = zen_get_products_type($category_product);
             // now loop thru the delete_product_confirm script for each product in the current category
             // NOTE: Debug code left in to help with creating additional product type delete-scripts
 
             $do_delete_flag = false;
             if (isset($_POST['products_id']) && isset($_POST['product_categories']) && is_array($_POST['product_categories'])) {
-              $product_id = zen_db_prepare_input($_POST['products_id']);
+              $product_id = (int)$_POST['products_id'];
               $product_categories = $_POST['product_categories'];
               $do_delete_flag = true;
             }
@@ -175,17 +165,13 @@ if (zen_not_null($action)) {
               //--------------PRODUCT_TYPE_SPECIFIC_INSTRUCTIONS_GO__ABOVE__HERE--------------------------------------------------------
               // now do regular non-type-specific delete:
               // remove product from all its categories:
-              for ($k = 0, $m = sizeof($product_categories); $k < $m; $k++) {
-                $db->Execute("DELETE FROM " . TABLE_PRODUCTS_TO_CATEGORIES . "
-                              WHERE products_id = " . (int)$product_id . "
-                              AND categories_id = " . (int)$product_categories[$k]);
+              for ($k = 0, $m = count($product_categories); $k < $m; $k++) {
+                  zen_unlink_product_from_category($product_id, $product_categories[$k]);
               }
               // confirm that product is no longer linked to any categories
-              $count_categories = $db->Execute("SELECT COUNT(categories_id) AS total
-                                                FROM " . TABLE_PRODUCTS_TO_CATEGORIES . "
-                                                WHERE products_id = " . (int)$product_id);
+              $count_categories = zen_get_linked_categories_for_product($product_id);
               // if not linked to any categories, do delete:
-              if ($count_categories->fields['total'] == '0') {
+              if (count($count_categories) === 0) {
                 zen_remove_product($product_id, $delete_linked);
               }
             } // endif $do_delete_flag
@@ -231,11 +217,9 @@ if (zen_not_null($action)) {
 
           // fix here - if this is a category with subcats it needs to know to loop through
           // reset all products_price_sorter for moved category products
-          $reset_price_sorter = $db->Execute("SELECT products_id
-                                              FROM " . TABLE_PRODUCTS_TO_CATEGORIES . "
-                                              WHERE categories_id = " . (int)$categories_id);
-          foreach ($reset_price_sorter as $item) {
-            zen_update_products_price_sorter($item['products_id']);
+          $reset_price_sorter = zen_get_linked_products_for_category((int)$categories_id);
+          foreach ($reset_price_sorter as $product_id) {
+            zen_update_products_price_sorter($product_id);
           }
 
           zen_redirect(zen_href_link(FILENAME_CATEGORY_PRODUCT_LISTING, 'cPath=' . $new_parent_id));
@@ -305,11 +289,9 @@ if (zen_not_null($action)) {
       $copy_attributes_delete_first = ($_POST['copy_attributes'] == 'copy_attributes_delete' ? '1' : '0');
       $copy_attributes_duplicates_skipped = ($_POST['copy_attributes'] == 'copy_attributes_ignore' ? '1' : '0');
       $copy_attributes_duplicates_overwrite = ($_POST['copy_attributes'] == 'copy_attributes_update' ? '1' : '0');
-      $copy_to_category = $db->Execute("SELECT products_id
-                                        FROM " . TABLE_PRODUCTS_TO_CATEGORIES . "
-                                        WHERE categories_id = " . (int)$_POST['categories_update_id']);
+      $copy_to_category = zen_get_linked_products_for_category((int)$_POST['categories_update_id']);
       foreach ($copy_to_category as $item) {
-        zen_copy_products_attributes($_POST['products_id'], $item['products_id']);
+        zen_copy_products_attributes($_POST['products_id'], $item);
       }
       //      die('CATEGORIES - I would copy Product ID#' . $_POST['products_id'] . ' to a Category ID#' . $_POST['categories_update_id']  . ' - Existing attributes ' . $_POST['copy_attributes'] . ' Total Products ' . $copy_to_category->RecordCount());
 

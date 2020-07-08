@@ -15,22 +15,14 @@ if (isset($_POST['products_id'], $_POST['categories_id'])) {
 
     if ($_POST['copy_as'] == 'link') {
         if ($categories_id != $current_category_id) {
-            $check = $db->Execute("SELECT COUNT(*) AS total
-                                   FROM " . TABLE_PRODUCTS_TO_CATEGORIES . "
-                                   WHERE products_id = " . $products_id . "
-                                   AND categories_id = " . $categories_id);
-            if ($check->fields['total'] < '1') {
-                $db->Execute("INSERT INTO " . TABLE_PRODUCTS_TO_CATEGORIES . " (products_id, categories_id)
-                              VALUES (" . $products_id . ", " . $categories_id . ")");
-
-                zen_record_admin_activity('Product ' . $products_id . ' copied as link to category ' . $categories_id . ' via admin console.', 'info');
-            }
+            zen_link_product_to_category($products_id, $categories_id);
+            zen_record_admin_activity('Product ' . $products_id . ' copied as link to category ' . $categories_id . ' via admin console.', 'info');
         } else {
             $messageStack->add_session(ERROR_CANNOT_LINK_TO_SAME_CATEGORY, 'error');
         }
     } elseif ($_POST['copy_as'] == 'duplicate') {
 
-        $product = $db->Execute("SELECT * 
+        $product = $db->Execute("SELECT *
                              FROM " . TABLE_PRODUCTS . "
                              WHERE products_id = " . $products_id . "
                              LIMIT 1");
@@ -179,16 +171,11 @@ if (isset($_POST['products_id'], $_POST['categories_id'])) {
 
 // copy linked categories to Duplicate
         if (!empty($_POST['copy_linked_categories']) && $_POST['copy_linked_categories'] == 'copy_linked_categories_yes') {
-            $categories_from = $db->Execute("SELECT categories_id
-                                             FROM " . TABLE_PRODUCTS_TO_CATEGORIES . "
-                                             WHERE products_id = " . $products_id);
+            $categories_from = zen_get_linked_categories_for_product($products_id);
 
             foreach ($categories_from as $row) {
-                //"insert ignore" as the new product already has one entry for the master category
-                $db->Execute("INSERT IGNORE INTO " . TABLE_PRODUCTS_TO_CATEGORIES . "
-                              (products_id, categories_id)
-                              VALUES (" . $dup_products_id . ", " . (int)$row['categories_id'] . ")");
-                $messageStack->add_session(sprintf(TEXT_COPY_AS_DUPLICATE_CATEGORIES, (int)$row['categories_id'], $products_id, $dup_products_id), 'success');
+                zen_link_product_to_category($dup_products_id, (int)$row);
+                $messageStack->add_session(sprintf(TEXT_COPY_AS_DUPLICATE_CATEGORIES, (int)$row, $products_id, $dup_products_id), 'success');
             }
         }
 

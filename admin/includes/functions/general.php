@@ -1968,37 +1968,6 @@ function zen_get_language_name($lookup)
 
 
 /**
- * Return a product's category
- * TABLES: products_to_categories
- */
-  function zen_get_products_category_id($products_id) {
-    global $db;
-
-    $the_products_category_query = "select products_id, master_categories_id from " . TABLE_PRODUCTS . " where products_id = " . (int)$products_id;
-    $the_products_category = $db->Execute($the_products_category_query);
-    if ($the_products_category->EOF) return '';
-    return $the_products_category->fields['master_categories_id'];
-  }
-
-
-/**
- * Count how many subcategories exist in a category
- * TABLES: categories
- */
-  function zen_get_products_master_categories_name($categories_id) {
-    global $db;
-
-    $categories_lookup = $db->Execute("select parent_id
-                                from " . TABLE_CATEGORIES . "
-                                where categories_id = " . (int)$categories_id);
-
-    $parent_name = zen_get_category_name($categories_lookup->fields['parent_id'], (int)$_SESSION['languages_id']);
-
-    return $parent_name;
-  }
-
-
-/**
  * configuration key value lookup
  */
   function zen_get_configuration_key_value($lookup) {
@@ -2606,12 +2575,11 @@ function zen_cfg_read_only($text, $key = '')
     $zv_categories = $db->Execute("select sale_categories_selected from " . TABLE_SALEMAKER_SALES . " where sale_id = " . (int)$salemaker_id);
     if ($zv_categories->EOF) return FALSE;
     $za_salemaker_categories = zen_parse_salemaker_categories($zv_categories->fields['sale_categories_selected']);
-    $n = sizeof($za_salemaker_categories);
+    $n = count($za_salemaker_categories);
     for ($i=0; $i<$n; $i++) {
-      $update_products_price = $db->Execute("select products_id from " . TABLE_PRODUCTS_TO_CATEGORIES . " where categories_id=" . (int)$za_salemaker_categories[$i]);
-      while (!$update_products_price->EOF) {
-        zen_update_products_price_sorter($update_products_price->fields['products_id']);
-        $update_products_price->MoveNext();
+      $update_products_price = zen_get_linked_products_for_category((int)$za_salemaker_categories[$i]);
+      foreach($update_products_price as $product_id) {
+        zen_update_products_price_sorter($product_id);
       }
     }
   }
