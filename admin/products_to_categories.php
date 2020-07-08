@@ -20,7 +20,13 @@ if (!empty($_POST['products_filter'])) {
 $_GET['products_filter'] = $products_filter;
 
 // current_category: the category the selected product is in
-$current_category_id = (int)(isset($_GET['current_category_id']) ? $_GET['current_category_id'] : $current_category_id);
+if (!empty($_POST['current_category_id'])) { // page load from change of selection in product listing form
+    $current_category_id = (int)$_POST['current_category_id'];
+} elseif (!empty($_GET['current_category_id'])) { // page load from a redirect
+    $current_category_id = (int)$_GET['current_category_id'];
+} else {
+    $current_category_id = 0;
+}
 $_GET['current_category_id'] = $current_category_id;
 
 // enable_copy_links_dropdown: checkbox to allow the copy categories to another product dropdown. This is a dropdown of all products so is disabled by default.
