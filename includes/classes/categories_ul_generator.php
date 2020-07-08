@@ -22,7 +22,7 @@
 //
 
 class zen_categories_ul_generator {
-    var $root_category_id = 0,
+    var $root_category_id = TOPMOST_CATEGORY_PARENT_ID,
     $max_level = 0,
     $data = array(),
     $parent_group_start_string = '<ul%s>',
@@ -55,6 +55,7 @@ class zen_categories_ul_generator {
 
     function buildBranch($parent_id, $level = 0, $submenu=true, $parent_link='')
     {
+        $parent_id = (int)$parent_id;
         $level = (int)$level;
         $result = sprintf($this->parent_group_start_string, ($submenu==true) ? ' class="level'. ($level+1) . '"' : '' );
 

@@ -85,7 +85,7 @@ if ($products_filter === '' && !empty($current_category_id)) { // when prev-next
     }
 
 } elseif ($products_filter === '' && empty($current_category_id)) {// on first entry into page from Admin menu
-    $reset_categories_id = zen_get_category_tree('', '', '0', '', '', true);
+    $reset_categories_id = zen_get_category_tree('', '', TOPMOST_CATEGORY_PARENT_ID, '', '', true);
     $current_category_id = (int)$reset_categories_id[0]['id'];
     $new_product_query = $db->Execute("SELECT ptc.products_id FROM " . TABLE_PRODUCTS_TO_CATEGORIES . " ptc WHERE ptc.categories_id = " . $current_category_id . " LIMIT 1");
     $products_filter = (!$new_product_query->EOF) ? $new_product_query->fields['products_id'] : '';// Empty if category has no products/has subcategories
@@ -314,7 +314,7 @@ if (zen_not_null($action)) {
 
             $category_id_as_master = (int)$_POST['category_id_as_master'];
 
-            if (!zen_validate_categories($category_id_as_master, 0, true)) {
+            if (!zen_validate_categories($category_id_as_master, TOPMOST_CATEGORY_PARENT_ID, true)) {
                 zen_redirect(zen_href_link(FILENAME_PRODUCTS_TO_CATEGORIES, 'products_filter=' . $products_filter . '&current_category_id=' . $current_category_id));
             }
             // if either category was invalid nothing processes below
@@ -638,11 +638,11 @@ if ($target_subcategory_count > $max_input_vars) { //warning when in excess of P
                     echo zen_draw_form('set_target_category_form', FILENAME_PRODUCTS_TO_CATEGORIES, 'action=set_target_category' . '&products_filter=' . $products_filter . '&current_category_id=' . $current_category_id, 'post');
                     $select_all_categories_option = [
                         [
-                            'id' => 0,
+                            'id' => TOPMOST_CATEGORY_PARENT_ID,
                             'text' => TEXT_TOP
                         ]
                     ];
-                    $category_select_values = zen_get_target_categories_products(0, '&nbsp;&nbsp;&nbsp;', $select_all_categories_option);
+                    $category_select_values = zen_get_target_categories_products(TOPMOST_CATEGORY_PARENT_ID, '&nbsp;&nbsp;&nbsp;', $select_all_categories_option);
                     ?>
                     <label><?php echo TEXT_LABEL_CATEGORY_DISPLAY_ROOT . zen_draw_pull_down_menu('target_category_id', $category_select_values, $target_category_id, 'onChange="this.form.submit();"'); ?></label>
                     <?php
@@ -784,7 +784,7 @@ if ($target_subcategory_count > $max_input_vars) { //warning when in excess of P
                         'id' => '',
                         'text' => TEXT_OPTION_LINKED_CATEGORIES
                     ];
-                    $category_product_tree_array = zen_get_target_categories_products(0, '', $category_product_tree_array, 'product');
+                    $category_product_tree_array = zen_get_target_categories_products(TOPMOST_CATEGORY_PARENT_ID, '', $category_product_tree_array, 'product');
                     ?>
                     <div class="form-group-row">
                         <div class="col-lg-8">

@@ -17,7 +17,7 @@ if (!defined('IS_ADMIN_FLAG')) {
  * @package general
  */
  class zen_SiteMapTree {
-   var $root_category_id = 0,
+   var $root_category_id = TOPMOST_CATEGORY_PARENT_ID,
        $max_level = 0,
        $data = array(),
        $root_start_string = '',
