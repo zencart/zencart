@@ -63,7 +63,7 @@ if (zen_not_null($action)) {
           $products_status = isset($_POST['set_products_status']) && $_POST['set_products_status'] == 'set_products_status_on' ? '1' : ''; //Disable products or no change?
         }
 
-        for ($i = 0, $n = sizeof($categories); $i < $n; $i++) {
+        for ($i = 0, $n = count($categories); $i < $n; $i++) {
 
           //set categories_status
           if ($categories[$i]['id'] == $categories_id) {//always update THIS category
@@ -84,14 +84,9 @@ if (zen_not_null($action)) {
           }
 
           //only execute if a change was selected
-          $category_products = zen_get_ (int)$categories[$i]['id'];
-          $category_products = $db->Execute($sql);
-
+          $category_products = zen_get_linked_products_for_category($categories[$i]['id']);
           foreach ($category_products as $category_product) {
-            $sql = "UPDATE " . TABLE_PRODUCTS . "
-                    SET products_status = " . (int)$products_status . "
-                    WHERE products_id = " . (int)$category_product['products_id'];
-            $db->Execute($sql);
+              zen_set_product_status($category_product, $products_status);
           }
         }
       }
@@ -137,21 +132,21 @@ if (zen_not_null($action)) {
         zen_set_time_limit(600);
 
         // loop through this cat and subcats for delete-processing.
-        for ($i = 0, $n = sizeof($categories); $i < $n; $i++) {
+        for ($i = 0, $n = count($categories); $i < $n; $i++) {
           $category_products = zen_get_linked_products_for_category($categories[$i]['id']);
 
           foreach ($category_products as $category_product) {
-            $cascaded_prod_id_for_delete = $category_product['products_id'];
+            $cascaded_prod_id_for_delete = $category_product;
             $cascaded_prod_cat_for_delete = [];
             $cascaded_prod_cat_for_delete[] = $categories[$i]['id'];
             // determine product-type-specific override script for this product
-            $product_type = zen_get_products_type($category_product['products_id']);
+            $product_type = zen_get_products_type($category_product);
             // now loop thru the delete_product_confirm script for each product in the current category
             // NOTE: Debug code left in to help with creating additional product type delete-scripts
 
             $do_delete_flag = false;
             if (isset($_POST['products_id']) && isset($_POST['product_categories']) && is_array($_POST['product_categories'])) {
-              $product_id = zen_db_prepare_input($_POST['products_id']);
+              $product_id = (int)$_POST['products_id'];
               $product_categories = $_POST['product_categories'];
               $do_delete_flag = true;
             }
@@ -170,7 +165,7 @@ if (zen_not_null($action)) {
               //--------------PRODUCT_TYPE_SPECIFIC_INSTRUCTIONS_GO__ABOVE__HERE--------------------------------------------------------
               // now do regular non-type-specific delete:
               // remove product from all its categories:
-              for ($k = 0, $m = sizeof($product_categories); $k < $m; $k++) {
+              for ($k = 0, $m = count($product_categories); $k < $m; $k++) {
                   zen_unlink_product_from_category($product_id, $product_categories[$k]);
               }
               // confirm that product is no longer linked to any categories

@@ -1,6 +1,5 @@
 <?php
 /**
- * functions_products.php
  * Functions related to products
  * Note: Several product-related lookup functions are located in functions_lookups.php
  *
@@ -10,7 +9,8 @@
  */
 
 /**
- * Query product details
+ * Query product details, returning a db QueryFactory response to iterate through
+ *
  * @param int $product_id
  * @param int $language_id (optional)
  * @return queryFactoryResult
@@ -84,7 +84,7 @@ function zen_product_set_header_response($product_id, $product_info = null)
     if ($should_throw_404) {
         // if specified product_id doesn't exist, ensure that metatags and breadcrumbs don't share bad data or inappropriate information
         unset($_GET['products_id']);
-        unset($breadcrumb->_trail[sizeof($breadcrumb->_trail)-1]['title']);
+        unset($breadcrumb->_trail[count($breadcrumb->_trail) - 1]['title']);
         $robotsNoIndex = true;
         header('HTTP/1.1 404 Not Found');
         return;
@@ -99,41 +99,55 @@ function zen_product_set_header_response($product_id, $product_info = null)
     if ($response_code === 200) return;
 }
 
-function zen_set_disabled_upcoming_status($products_id, $status) {
-    $sql = "UPDATE " . TABLE_PRODUCTS . "
-            SET products_status = " . (int)$status . ", products_date_available = NULL WHERE products_id = " . (int)$products_id;
+/**
+ * @param int $products_id
+ * @param int $status
+ */
+function zen_set_disabled_upcoming_status($products_id, $status)
+{
+    global $db;
 
-    return $GLOBALS['db']->Execute($sql);
+    $sql = "UPDATE " . TABLE_PRODUCTS . "
+            SET products_status = " . (int)$status . ", products_date_available = NULL
+            WHERE products_id = " . (int)$products_id;
+
+    $db->Execute($sql);
 }
 
-function zen_enable_disabled_upcoming()
+/**
+ * Enable all disabled products whose date_available is prior to the specified date
+ * @param int $datetime optional timestamp
+ */
+function zen_enable_disabled_upcoming($datetime = null)
 {
-    $date_range = time();
+    global $db;
 
-    $zc_disabled_upcoming_date = date('Ymd', $date_range);
+    if (empty($datetime)) $datetime = time();
 
-    $disabled_upcoming_query = "SELECT products_id
-                                FROM " . TABLE_PRODUCTS . "
-                                WHERE products_status = 0
-                                AND products_date_available <= " . $zc_disabled_upcoming_date . "
-                                AND products_date_available != '0001-01-01'
-                                AND products_date_available IS NOT NULL
-                                ";
+    $zc_disabled_upcoming_date = date('Ymd', $datetime);
 
-    $disabled_upcoming = $GLOBALS['db']->Execute($disabled_upcoming_query);
+    $sql = "SELECT products_id
+            FROM " . TABLE_PRODUCTS . "
+            WHERE products_status = 0
+            AND products_date_available <= " . $zc_disabled_upcoming_date . "
+            AND products_date_available != '0001-01-01'
+            AND products_date_available IS NOT NULL
+            ";
 
-    foreach ($disabled_upcoming as $disabled_upcoming_fields) {
-        zen_set_disabled_upcoming_status($disabled_upcoming_fields['products_id'], 1);
+    $results = $db->Execute($sql);
+
+    foreach ($results as $result) {
+        zen_set_disabled_upcoming_status($result['products_id'], 1);
     }
 }
-
 
 /**
  * Return a product's category (master_categories_id)
  * @param int $products_id
  * @return int|string
  */
-function zen_get_products_category_id($products_id) {
+function zen_get_products_category_id($products_id)
+{
     global $db;
 
     $sql = "SELECT products_id, master_categories_id
@@ -215,7 +229,7 @@ function zen_get_linked_categories_for_product($product_id, $exclude = [])
     }
     $results = $db->Execute($sql);
     $categories = [];
-    foreach($results as $result) {
+    foreach ($results as $result) {
         $categories[] = $result['categories_id'];
     }
     return $categories;
@@ -223,8 +237,8 @@ function zen_get_linked_categories_for_product($product_id, $exclude = [])
 
 /**
  * @param int $category_id
- * @param bool $first_only if true, return only the first result
- * @return array of categories_id
+ * @param bool $first_only if true, return only the first result (string)
+ * @return array|string Array of categories_id or empty string if $first-only specified but record not found
  */
 function zen_get_linked_products_for_category($category_id, $first_only = false)
 {
@@ -243,7 +257,7 @@ function zen_get_linked_products_for_category($category_id, $first_only = false)
     }
 
     $products = [];
-    foreach($results as $result) {
+    foreach ($results as $result) {
         $products[] = $result['products_id'];
     }
     return $products;
@@ -287,6 +301,7 @@ function zen_unlink_product_from_all_linked_categories($product_id, $master_cate
         $master_category_id = zen_get_products_category_id($product_id);
     }
     if (empty($master_category_id)) return;
+
     $sql = "DELETE FROM " . TABLE_PRODUCTS_TO_CATEGORIES . "
             WHERE products_id = " . $product_id . "
             AND categories_id != " . $master_category_id;
