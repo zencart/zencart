@@ -130,11 +130,11 @@ if (zen_not_null($action)) {
       }
 
       // delete category and products
-      if (isset($_POST['categories_id']) && $_POST['categories_id'] != '' && is_numeric($_POST['categories_id']) && $_POST['categories_id'] != 0) {
+      if (!empty($_POST['categories_id']) && is_numeric($_POST['categories_id']) && $_POST['categories_id'] != TOPMOST_CATEGORY_PARENT_ID) {
         $categories_id = zen_db_prepare_input($_POST['categories_id']);
 
         // create list of any subcategories in the selected category,
-        $categories = zen_get_category_tree($categories_id, '', '0', '', true);
+        $categories = zen_get_category_tree($categories_id, '', TOPMOST_CATEGORY_PARENT_ID, [], true);
 
         zen_set_time_limit(600);
 
@@ -1069,11 +1069,11 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
         <div class="row text-center alert">
           <?php
           // warning if products are in top level categories
-          $check_products_top_categories = $db->Execute("SELECT COUNT(*) AS products_errors
+          $check_products_top_categories = $db->Execute("SELECT COUNT(*) AS products_in_top_level_error
                                                              FROM " . TABLE_PRODUCTS_TO_CATEGORIES . "
-                                                             WHERE categories_id = 0");
-          if ($check_products_top_categories->fields['products_errors'] > 0) {
-            echo WARNING_PRODUCTS_IN_TOP_INFO . $check_products_top_categories->fields['products_errors'] . '<br>';
+                                                             WHERE categories_id = " . (int)TOPMOST_CATEGORY_PARENT_ID);
+          if ($check_products_top_categories->fields['products_in_top_level_error'] > 0) {
+            echo WARNING_PRODUCTS_IN_TOP_INFO . $check_products_top_categories->fields['products_in_top_level_error'] . '<br>';
           }
           ?>
         </div>

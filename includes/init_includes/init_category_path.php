@@ -13,6 +13,8 @@ if (!defined('IS_ADMIN_FLAG')) {
     die('Illegal Access');
 }
 
+define('TOPMOST_CATEGORY_PARENT_ID', '0');
+
 $show_welcome = false;
 if (isset($_GET['cPath'])) {
     $cPath = $_GET['cPath'];
@@ -32,7 +34,7 @@ if (zen_not_null($cPath)) {
     $cPath = implode('_', $cPath_array);
     $current_category_id = $cPath_array[(count($cPath_array) - 1)];
 } else {
-    $current_category_id = 0;
+    $current_category_id = TOPMOST_CATEGORY_PARENT_ID;
     $cPath_array = [];
 }
 

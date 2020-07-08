@@ -751,7 +751,7 @@ function zen_set_product_status($products_id, $status)
 
 
   function zen_remove_category($category_id) {
-    if ((int)$category_id == 0) return;
+    if ((int)$category_id == TOPMOST_CATEGORY_PARENT_ID) return;
     global $db, $zco_notifier;
     $zco_notifier->notify('NOTIFIER_ADMIN_ZEN_REMOVE_CATEGORY', array(), $category_id);
 
@@ -1984,7 +1984,6 @@ function zen_get_language_name($lookup)
 /**
  * Count how many subcategories exist in a category
  * TABLES: categories
- * old v1.2 name zen_get_parent_category_name
  */
   function zen_get_products_master_categories_name($categories_id) {
     global $db;

@@ -29,7 +29,7 @@ class category_tree extends base {
     if ($product_type == 'all') {
       $categories_query = "select c.categories_id, cd.categories_name, c.parent_id, c.categories_image
                              from " . TABLE_CATEGORIES . " c, " . TABLE_CATEGORIES_DESCRIPTION . " cd
-                             where c.parent_id = 0
+                             where c.parent_id = " . (int)TOPMOST_CATEGORY_PARENT_ID . "
                              and c.categories_id = cd.categories_id
                              and cd.language_id='" . (int)$_SESSION['languages_id'] . "'
                              and c.categories_status= 1
@@ -37,7 +37,7 @@ class category_tree extends base {
     } else {
       $categories_query = "select ptc.category_id as categories_id, cd.categories_name, c.parent_id, c.categories_image
                              from " . TABLE_CATEGORIES . " c, " . TABLE_CATEGORIES_DESCRIPTION . " cd, " . TABLE_PRODUCT_TYPES_TO_CATEGORY . " ptc
-                             where c.parent_id = 0
+                             where c.parent_id = " . (int)TOPMOST_CATEGORY_PARENT_ID . "
                              and ptc.category_id = cd.categories_id
                              and ptc.product_type_id = " . $master_type . "
                              and c.categories_id = ptc.category_id
@@ -146,13 +146,13 @@ class category_tree extends base {
     $this->categories_string = "";
 
     for ($i=0; $i<$this->tree[$counter]['level']; $i++) {
-      if ($this->tree[$counter]['parent'] != 0) {
+      if ($this->tree[$counter]['parent'] != TOPMOST_CATEGORY_PARENT_ID) {
         $this->categories_string .= CATEGORIES_SUBCATEGORIES_INDENT;
       }
     }
 
 
-    if ($this->tree[$counter]['parent'] == 0) {
+    if ($this->tree[$counter]['parent'] == TOPMOST_CATEGORY_PARENT_ID) {
       $cPath_new = 'cPath=' . $counter;
       $this->box_categories_array[$ii]['top'] = 'true';
     } else {
