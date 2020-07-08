@@ -1,49 +1,52 @@
 <?php
 /**
- * Standalone Diagnostics/Debug tool for testing CURL communications to common 3rd party services such as USPS and PayPal and Authorize.net and more.
+ * Standalone Diagnostics/Debug tool for testing CURL communications to common 3rd party ecommerce services such as USPS and PayPal and Authorize.net and more.
  * Accepted parameters:
  *   d=1 or details=1 -- show CURL connection details -- useful for determining cause of communications problems
  *   r=1 -- show Response obtained from destination server -- this may contain an error message, but usually means communication was okay
  *   i=1 -- in conjunction with [d] or [r], will show the detailed curlinfo certificate data from the host being connected to. Helpful for advanced debugging.
  *
+ *
  * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2020 Jun 21 Modified in v1.5.7 $
+ * @version $Id: DrByte 2020 Jun 21 Modified in v1.5.8 $
  */
 // no caching
 header('Cache-Control: no-cache, no-store, must-revalidate');
+
+// show all errors, because we want to be alerted to all possible problems
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
+// since there could be timeouts on each connection being tested, we need to allow this script to run for an extended period of time
+set_time_limit(500);
+
+$showDetails = (isset($_GET['d']) && $_GET['d'] != '0') || (isset($_GET['details']) && $_GET['details'] != '0');
+$errorMessage = '<span style="color:red;font-weight:bold">Error </span>';
+$goodMessage = '<span style="color:green;font-weight:bold">GOOD: </span>';
 ?>
-<html><head><meta name="robots" content="noindex, nofollow" /><title>Communications Test</title></head>
+<html><head><meta name="robots" content="noindex, nofollow"><title>Communications Test</title></head>
 <body>
 <p>
 <?php
-    $ch = curl_init('https://www.howsmyssl.com/a/check');
+    // Assess the capabilities of this server when connecting as a client. To see ciphers and other data add the ?details=on parameter as described above.
+    $ch = curl_init('https://www.howsmytls.com/a/check');
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
     $data = curl_exec($ch);
     curl_close($ch);
-    $json = json_decode($data);
-    echo "Connection uses " . $json->tls_version ."\n";
+    $json = json_decode($data, false);
+    echo (stristr($json->rating, 'Okay')) ? $goodMessage : $errorMessage;
+    echo 'Connection uses ' . $json->tls_version ."<br>\n";
+    if ($showDetails) {
+        echo '<pre>' . print_r(json_decode($data, true), true) . "</pre><br>";
+    }
 ?></p>
-<p>Testing communications to various destinations. This is a simple diagnostic to determine whether your server can connect to common destinations.<br>
+<p>This page is a simple diagnostic to determine whether this server can connect to common destinations.<br>
 <em>For advanced "details" mode, add </em><strong>?details=on</strong><em> to the URL.</em></p>
 <p><em>(Another resource you may find useful for testing your server's overall customer-facing SSL configuration: <a href="https://www.ssllabs.com/ssltest/index.html" rel="noreferrer noopener" target="_blank">https://www.ssllabs.com/ssltest/index.html</a> )</em></p>
 
 <?php
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
-$showDetails = (isset($_GET['d']) && $_GET['d'] != '0') || (isset($_GET['details']) && $_GET['details'] != '0'); // supports ?d= or ?details= and any value other than '0' turns it on.
-set_time_limit(500);
-$errorMessage = '<span style="color:red;font-weight:bold">Error </span>';
-$goodMessage = '<span style="color:green;font-weight:bold">GOOD: </span>';
-
-echo 'Connecting to Zen Cart Version Server (http) ...<br>';
-doCurlTest('http://s3.amazonaws.com/zencart-curltest/endpoint');
-
-echo 'Connecting to Zen Cart Version Server (https) ...<br>';
-doCurlTest('https://s3.amazonaws.com/zencart-curltest/endpoint');
-
-echo 'Connecting to Zen Cart Support Server (https) ...<br>';
-doCurlTest('https://www.zen-cart.com/testcurl.php');
 
 echo 'Connecting to USPS (port 80)...<br>';
 doCurlTest('http://production.shippingapis.com/shippingapi.dll');
@@ -166,7 +169,7 @@ function doCurlTest($url = 'http://s3.amazonaws.com/zencart-curltest/endpoint', 
   curl_setopt($ch, CURLOPT_FRESH_CONNECT, TRUE);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
   curl_setopt($ch, CURLOPT_MAXREDIRS, 10);
-  curl_setopt($ch, CURLOPT_USERAGENT, 'Zen Cart(tm) - CURL TEST v155');
+  curl_setopt($ch, CURLOPT_USERAGENT, 'Zen Cart(tm) - CURL TEST v158');
 
   if (isset($_GET['i'])) curl_setopt($ch, CURLOPT_CERTINFO, TRUE);
 
@@ -214,7 +217,7 @@ function doCurlTest($url = 'http://s3.amazonaws.com/zencart-curltest/endpoint', 
     if ($showResult && $commInfo['http_code'] == 200) echo '<strong>COMMUNICATIONS TEST OKAY.</strong><br>You may see error information below, but that information simply confirms that the server actually responded, which means communications is open.<br>';
     if ($showResult) echo '<br>' . $result . '<br>';
   }
-  if ($showDetails) echo '<pre>Connection Details:' . "\n" . print_r($commInfo, true) . '</pre><br /><br />';
+  if ($showDetails) echo '<pre>Connection Details:' . "\n" . print_r($commInfo, true) . '</pre><br><br>';
 
   if ($showDetails) echo '<hr>';
 
