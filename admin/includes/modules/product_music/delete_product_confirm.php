@@ -33,10 +33,8 @@ if (!empty($cascaded_prod_id_for_delete) && !empty($cascaded_prod_cat_for_delete
 if ($do_delete_flag) {
   //--------------PRODUCT_TYPE_SPECIFIC_INSTRUCTIONS_GO__BELOW_HERE--------------------------------------------------------
   // Delete media components, but only if the product is no longer cross-linked to another:
-  $resVal = $db->Execute("SELECT categories_id
-                          FROM " . TABLE_PRODUCTS_TO_CATEGORIES . "
-                          WHERE products_id = " . (int)$product_id);
-  if ($resVal->RecordCount() < 2) {
+  $resVal = zen_get_linked_categories_for_product($product_id);
+  if (count($resVal) < 2) {
     // First we delete related records from related product-type tables:
     //echo 'SQL=' . "select media_id from " . TABLE_MEDIA_TO_PRODUCTS . " where product_id = '" . (int)$product_id . "'<br />";
 
@@ -72,17 +70,13 @@ if ($do_delete_flag) {
   // now do regular non-type-specific delete:
   // remove product from all its categories:
   for ($k = 0, $m = sizeof($product_categories); $k < $m; $k++) {
-    $db->Execute("DELETE FROM " . TABLE_PRODUCTS_TO_CATEGORIES . "
-                  WHERE products_id = " . (int)$product_id . "
-                  AND categories_id = " . (int)$product_categories[$k]);
+      zen_unlink_product_from_category($product_id, $product_categories[$k]);
   }
   // confirm that product is no longer linked to any categories
-  $count_categories = $db->Execute("SELECT COUNT(categories_id) AS total
-                                    FROM " . TABLE_PRODUCTS_TO_CATEGORIES . "
-                                    WHERE products_id = " . (int)$product_id);
-  // echo 'count of category links for this product=' . $count_categories->fields['total'] . '<br />';
+  $count_categories = zen_get_linked_categories_for_product($product_id);
+  $// echo 'count of category links for this product=' . count($count_categories) . '<br />';
   // if not linked to any categories, do delete:
-  if ($count_categories->fields['total'] == '0') {
+  if (count($count_categories) == '0') {
     zen_remove_product($product_id, $delete_linked);
   }
 } // endif $do_delete_flag

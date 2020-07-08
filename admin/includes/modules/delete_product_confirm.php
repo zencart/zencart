@@ -35,18 +35,14 @@ if ($do_delete_flag) {
   //--------------PRODUCT_TYPE_SPECIFIC_INSTRUCTIONS_GO__ABOVE__HERE--------------------------------------------------------
   // now do regular non-type-specific delete:
   // remove product from all its categories:
-  for ($k = 0, $m = sizeof($product_categories); $k < $m; $k++) {
-    $db->Execute("DELETE FROM " . TABLE_PRODUCTS_TO_CATEGORIES . "
-                  WHERE products_id = " . (int)$product_id . "
-                  AND categories_id = " . (int)$product_categories[$k]);
+  for ($k = 0, $m = count($product_categories); $k < $m; $k++) {
+      zen_unlink_product_from_category($product_id, $product_categories[$k]);
   }
   // confirm that product is no longer linked to any categories
-  $count_categories = $db->Execute("SELECT COUNT(categories_id) AS total
-                                    FROM " . TABLE_PRODUCTS_TO_CATEGORIES . "
-                                    WHERE products_id = " . (int)$product_id);
-  // echo 'count of category links for this product=' . $count_categories->fields['total'] . '<br />';
+  $count_categories = zen_get_linked_categories_for_product((int)$product_id);
+  // echo 'count of category links for this product=' . count($count_categories . '<br />';
   // if not linked to any categories, do delete:
-  if ($count_categories->fields['total'] == '0') {
+  if (count($count_categories) === 0) {
     zen_remove_product($product_id, $delete_linked);
   }
 } // endif $do_delete_flag

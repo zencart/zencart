@@ -23,6 +23,7 @@ if (!defined('IS_ADMIN_FLAG')) {
   require(DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'functions_general_shared.php');
   require(DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'functions_dates.php');
   require(DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'functions_categories.php');
+  require(DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'functions_products.php');
   require(DIR_WS_FUNCTIONS . 'functions_prices.php');
   require(DIR_WS_FUNCTIONS . 'html_output.php');
   require(DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'functions_customers.php');

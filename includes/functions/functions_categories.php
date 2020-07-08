@@ -490,7 +490,7 @@ function zen_draw_products_pull_down_categories($field_name, $parameters = '', $
     foreach ($results as $result) {
         if (!in_array($result['categories_id'], $exclude)) {
             if ($show_parent) {
-                $parent = zen_get_products_master_categories_name($result['categories_id']);
+                $parent = zen_get_categories_parent_name($result['categories_id']);
                 if ($parent != '') {
                     $parent = ' : in ' . $parent;
                 }
@@ -852,6 +852,67 @@ function zen_get_category_tree($parent_id = '0', $spacing = '', $exclude = '', $
     return $category_tree_array;
 }
 
+
+/* @TODO
+ * Find category name from ID, in indicated language
+ */
+function zen_get_category_name($category_id, $fn_language_id) {
+    global $db;
+    $category_query = "select categories_name
+                       from " . TABLE_CATEGORIES_DESCRIPTION . "
+                       where categories_id = '" . $category_id . "'
+                       and language_id = '" . $fn_language_id . "'";
+
+    $category = $db->Execute($category_query);
+
+    return $category->fields['categories_name'];
+}
+
+
+/* @TODO
+ * Find category description, from category ID, in given language
+ */
+function zen_get_category_description($category_id, $fn_language_id) {
+    global $db;
+    $category_query = "select categories_description
+                       from " . TABLE_CATEGORIES_DESCRIPTION . "
+                       where categories_id = '" . $category_id . "'
+                       and language_id = '" . $fn_language_id . "'";
+
+    $category = $db->Execute($category_query);
+
+    return $category->fields['categories_description'];
+}
+
+/* @TODO
+ * Return category's image
+ */
+function zen_get_categories_image($what_am_i) {
+    global $db;
+
+    $the_categories_image_query= "select categories_image from " . TABLE_CATEGORIES . " where categories_id= '" . (int)$what_am_i . "'";
+    $result = $db->Execute($the_categories_image_query);
+
+    if ($result->EOF) return '';
+
+    return $result->fields['categories_image'];
+}
+
+/* @TODO
+ *  Return category's name from ID, assuming current language
+ */
+function zen_get_categories_name($who_am_i) {
+    global $db;
+    $the_categories_name_query= "select categories_name from " . TABLE_CATEGORIES_DESCRIPTION . " where categories_id= '" . (int)$who_am_i . "' and language_id= '" . (int)$_SESSION['languages_id'] . "'";
+
+    $the_categories_name = $db->Execute($the_categories_name_query);
+
+    if ($the_categories_name->EOF) return '';
+
+    return $the_categories_name->fields['categories_name'];
+}
+
+
 /**
  * Get the status of a category
  * @param int $categories_id
@@ -864,6 +925,146 @@ function zen_get_categories_status($categories_id)
             FROM " . TABLE_CATEGORIES .
             (zen_not_null($categories_id) ? " WHERE categories_id=" . (int)$categories_id : "");
     $check_status = $db->Execute($sql);
-    if ($check_status->EOF) return '';
+    if ($check_status->EOF) return ''; // empty string means does not exist in zen_validate_categories()
     return $check_status->fields['categories_status'];
+}
+
+/**
+ * validate the user-entered categories from the Global Tools
+ * @param int $ref_category_id
+ * @param int $target_category_id
+ * @param bool $reset_master_category
+ * @return bool
+ */
+function zen_validate_categories($ref_category_id, $target_category_id = 0, $reset_master_category = false)
+{
+    global $db, $messageStack;
+
+    $categories_valid = true;
+    if ($ref_category_id === '' || zen_get_categories_status($ref_category_id) === '') {//REF does not exist
+        $categories_valid = false;
+        $messageStack->add_session(sprintf(WARNING_CATEGORY_SOURCE_NOT_EXIST, (int)$ref_category_id), 'warning');
+    }
+    if (!$reset_master_category && ($target_category_id === '' || zen_get_categories_status($target_category_id) === '')) {//TARGET does not exist
+        $categories_valid = false;
+        $messageStack->add_session(sprintf(WARNING_CATEGORY_TARGET_NOT_EXIST, (int)$target_category_id), 'warning');
+    }
+    if (!$reset_master_category && ($categories_valid && $ref_category_id === $target_category_id)) {//category IDs are the same
+        $categories_valid = false;
+        $messageStack->add_session(sprintf(WARNING_CATEGORY_IDS_DUPLICATED, (int)$ref_category_id), 'warning');
+    }
+
+    if ($categories_valid) {
+        $check_category_from = zen_get_linked_products_for_category((int)$ref_category_id);
+        // check if REF has any products
+        if (count($check_category_from) < 1) {//there are no products in the FROM category: invalid
+            $categories_valid = false;
+            $messageStack->add_session(sprintf(WARNING_CATEGORY_NO_PRODUCTS, (int)$ref_category_id), 'warning');
+        }
+        // check that TARGET has no subcategories
+        if (!$reset_master_category && zen_childs_in_category_count($target_category_id) > 0) {//subcategories exist in the TO category: invalid
+            $categories_valid = false;
+            $messageStack->add_session(sprintf(WARNING_CATEGORY_SUBCATEGORIES, (int)$target_category_id), 'warning');
+        }
+    }
+    return $categories_valid;
+}
+
+// the following two similar functions are a reduction from three similar functions...and can probably be further reduced/integrated with a revamped core function in the future, so have not been reduced here
+/**
+ * Updates a global variable, $categories_info, with a list of all the categories and subcategories
+ * of the specified parent category. Code is organised so that the list is in ascending alphabetical
+ * order, for the entire path of the category (not simply ordered by individual subcategory
+ * names).
+ *
+ * @param int $parent_id The ID of the parent category.
+ * @param string $category_path_string The full path of the names of all the parent categories being included in the path for the (sub)categories info being generated.
+ * @return void
+ */
+function zen_get_categories_info($parent_id = 0, $category_path_string = '')
+{
+    global $db, $categories_info;
+
+    $categories_sql = "SELECT cd.categories_id, cd.categories_name
+                        FROM " . TABLE_CATEGORIES . " c
+                        LEFT JOIN " . TABLE_CATEGORIES_DESCRIPTION . " cd ON c.categories_id = cd.categories_id
+                        WHERE c.parent_id = " . (int)$parent_id . "
+                        AND cd.language_id = " . (int)$_SESSION['languages_id'] . "
+                        ORDER BY cd.categories_name";
+    $categories_result = $db->Execute($categories_sql);
+    foreach ($categories_result as $category_result) {
+        $category_id = $category_result['categories_id'];
+        $category_name = ($category_path_string !== '' ? $category_path_string . ' > ' : '') . $category_result['categories_name'];
+        // Does this category have subcategories?
+        $sub_categories_check_sql = "SELECT c.categories_id FROM " . TABLE_CATEGORIES . " c WHERE c.parent_id = " . (int)$category_id;
+        $sub_categories_check_result = $db->Execute($sub_categories_check_sql);
+        if ($sub_categories_check_result->EOF) {
+            $categories_info[] = [
+                'categories_id' => $category_id,
+                'categories_name' => $category_name,
+            ];
+        } else {
+            // category has subcategories, get the info for them
+            zen_get_categories_info((int)$category_id, $category_name);
+        }
+    }
+}
+
+/**
+ * Builds a list of all the subcategories / subcategories: products of a specified parent category.
+ *
+ * @param int $parent_id The ID of the parent category.
+ * @param string $spacing HTML to be prepended to the names of the categories/products for the specified parent category. Aids a hierarchical display of categories/products when information is used in a select gadget.
+ * @param array $category_product_tree_array The array of categories and products being generated. Passed in function parameters so that it can be appended to when used recursively.
+ * @param string $type category or product: to determine the array structure
+ * @return array
+ */
+function zen_get_target_categories_products($parent_id = 0, $spacing = '', $category_product_tree_array = [], $type = 'category')
+{
+    global $db, $products_filter;
+    $categories = $db->Execute("SELECT cd.categories_id, cd.categories_name, c.parent_id
+                                        FROM " . TABLE_CATEGORIES . " c, " . TABLE_CATEGORIES_DESCRIPTION . " cd
+                                        WHERE c.categories_id = cd.categories_id
+                                        AND cd.language_id = " . (int)$_SESSION['languages_id'] . "
+                                        AND c.parent_id = " . (int)$parent_id . "
+                                        ORDER BY cd.categories_name");
+    foreach ($categories as $category) {
+        // Get all subcategories for the current category
+        $sub_categories_sql = "SELECT c.categories_id FROM " . TABLE_CATEGORIES . " c WHERE c.parent_id = " . (int)$category['categories_id'];
+        $sub_categories_result = $db->Execute($sub_categories_sql);
+
+        if (!$sub_categories_result->EOF) {
+            if ($type === 'product') {
+                $category_product_tree_array = zen_get_target_categories_products((int)$category['categories_id'], $spacing . $category['categories_name'] . ' > ', $category_product_tree_array, 'product');
+            } else {//type is category
+                $category_product_tree_array[] = [
+                    'id' => $category['categories_id'],
+                    'text' => $spacing . $category['categories_name']
+                ];
+                $category_product_tree_array = zen_get_target_categories_products((int)$category['categories_id'], $spacing . '&nbsp;&nbsp;&nbsp;', $category_product_tree_array);
+            }
+        }
+        if ($type === 'product') {
+            $products_sql = "SELECT p.products_model, pd.products_id, pd.products_name
+                                FROM " . TABLE_PRODUCTS . " p
+                                LEFT JOIN " . TABLE_PRODUCTS_DESCRIPTION . " pd ON p.products_id = pd.products_id
+                                WHERE p.master_categories_id = " . (int)$category['categories_id'] . "
+                                AND pd.language_id = " . (int)$_SESSION['languages_id'] . "
+                                ORDER BY p.products_model";
+
+            $products_result = $db->Execute($products_sql);
+
+            foreach ($products_result as $product_result) {
+                if ($product_result['products_id'] !== $products_filter) {
+                    $category_product_tree_array[] = [
+                        'id' => $product_result['products_id'],
+                        'text' => $spacing . htmlentities($category['categories_name']) . ': ' .
+                            htmlentities($product_result['products_model']) . ' - ' .
+                            htmlentities($product_result['products_name']) . ' (#' . $product_result['products_id'] . ')'
+                    ];
+                }
+            }
+        }
+    }
+    return $category_product_tree_array;
 }
