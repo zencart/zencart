@@ -41,11 +41,11 @@ if (isset($_POST) && !empty($_POST)) {
 
     foreach ($keys as $key => $value) {
         if (isset($_POST[$key])) {
+            ${$key} = $_POST[$key];
             if (!empty($value['valueType'])) {
-                ${$key} = $db->bindVars(':val:', ':val:', $_POST[$key], $value['valueType']);
-            } else {
-                ${$key} = zen_db_prepare_input($_POST[$key]);
+                ${$key} = $db->bindVars(':val:', ':val:', ${$key}, $value['valueType']);
             }
+            ${$key} = zen_db_prepare_input(${$key});
         }
         if (!empty($value['emptyChk'])) {
             if (empty(${$key})) {
