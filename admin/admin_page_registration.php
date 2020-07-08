@@ -51,7 +51,7 @@ if (isset($_POST) && !empty($_POST)) {
             if (empty(${$key})) {
                 $error = TRUE;
                 $messageStack->add(constant('ERROR_' . strtoupper($key) . '_NOT_ENTERED'), 'error');
-            } else if ((!empty($value['elseifFunc']) && $value['elseifFunc'](${$key})) ? empty($value['elseifNot']) /* result was true */ : !empty($value['elseifFunc']) && !empty($value['elseifNot']) /*result was false */) {
+            } else if (!empty($value['elseifFunc']) && ($value['elseifFunc'](${$key})) ? /* result was true */ empty($value['elseifNot']) : /* result was false */ !empty($value['elseifNot'])) {
                 $error = TRUE;
                 $message = 'ERROR_' . strtoupper($key) . '_ALREADY_EXISTS';
                 if ($value['elseifFunc'] == 'defined' && !empty($value['elseifNot'])) {
