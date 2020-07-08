@@ -15,6 +15,13 @@ $sort_order = 0;
 if (isset($_POST) && !empty($_POST)) {
     $error = FALSE;
 
+    /**
+     * $keys = ['key' => ['parameter_value_from_below',], ['next_parameter_from_below',],];
+     * 'emptyChk'   -> If value is true, then test if the 'key' is empty or not.
+     * 'elseifFunc' -> function that returns a `true`/`false` value when tested against the 'key'. If determined to be `empty` then don't do this test.
+     * 'elseifNot'  -> flag used to find the negative/inverse of the result of the `elseifFunc`.
+     * 'valueType'  -> Variable type used in $db->bindVars to prepare/handle the `$_POST`ed 'key' information.
+     **/
     $keys = [
         'page_key' => [
             'emptyChk' => true,
