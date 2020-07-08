@@ -499,7 +499,7 @@ if ($target_subcategory_count > $max_input_vars) { //warning when in excess of P
                     ?>
                     <?php echo zen_draw_label(TEXT_PRODUCT_TO_VIEW, 'products_filter'); ?>
                     <?php echo zen_draw_products_pull_down('products_filter', 'size="10" class="form-control" id="products_filter" onchange="this.form.submit()"', $excluded_products, true, $products_filter, true, true, true); ?>
-                    <noscript><br/><input type="submit" value="<?php echo IMAGE_DISPLAY; ?>"></noscript>
+                    <noscript><br><input type="submit" value="<?php echo IMAGE_DISPLAY; ?>"></noscript>
                     <?php echo '</form>'; ?>
                 </div>
             <?php } ?>
