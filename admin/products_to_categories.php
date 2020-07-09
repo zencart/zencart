@@ -10,24 +10,12 @@
 require('includes/application_top.php');
 
 // products_filter: the selected product
-if (!empty($_POST['products_filter'])) {
-    $products_filter = (int)$_POST['products_filter'];
-} elseif (!empty($_GET['products_filter'])) {
-    $products_filter = (int)$_GET['products_filter'];
-} else {
-    $products_filter = 0;
-}
+$products_filter = (int)($_POST['products_filter'] ?? $_GET['products_filter'] ?? 0);
 $_GET['products_filter'] = $products_filter;
 
-// current_category: the category the selected product is in
-if (!empty($_POST['current_category_id'])) { // page load from change of selection in product listing form
-    $current_category_id = (int)$_POST['current_category_id'];
-} elseif (!empty($_GET['current_category_id'])) { // page load from a redirect
-    $current_category_id = (int)$_GET['current_category_id'];
-} else {
-    $current_category_id = 0;
-}
-$_GET['current_category_id'] = $current_category_id;
+// current_category: the category containing the selected product
+$current_category_id = (int)($_POST['current_category_id'] ?? $_GET['current_category_id'] ?? 0);
+$_GET['current_category_id'] = $current_category_id; // for any redirects
 
 // enable_copy_links_dropdown: checkbox to allow the copy categories to another product dropdown. This is a dropdown of all products so is disabled by default.
 if (isset($_POST['enable_copy_links_dropdown'])) {// only set if checked
@@ -65,7 +53,7 @@ $currencies = new currencies();
 
 $languages = zen_get_languages();
 
-$action = (isset($_GET['action']) ? $_GET['action'] : '');
+$action = ($_GET['action'] ?? '');
 
 if ($action === 'new_cat') {//this form action is from products_previous_next_display.php when a new category is selected
 // @TODO this is a pretty elaborate query for getting a single products_id in order to do a redirect!
@@ -100,14 +88,8 @@ if ($products_filter === '' && !empty($current_category_id)) { // when prev-next
 
 require(DIR_WS_MODULES . FILENAME_PREV_NEXT);
 
-// Category linking: base target category whose subcategories will be displayed
-if (isset($_POST['target_category_id'])) {
-    $target_category_id = (int)$_POST['target_category_id'];
-} elseif (isset($_GET['target_category_id'])) {
-    $target_category_id = (int)$_GET['target_category_id'];
-} else {
-    $target_category_id = (int)P2C_TARGET_CATEGORY_DEFAULT;
-}
+// target_category_id: the root/base target category whose subcategories will be displayed for linking into
+$target_category_id = (int)($_POST['target_category_id'] ?? $_GET['target_category_id'] ?? P2C_TARGET_CATEGORY_DEFAULT);
 $_GET['target_category_id'] = $target_category_id;
 
 if (zen_not_null($action)) {
