@@ -11,7 +11,7 @@
 /**
  * Class objectInfo
  */
-class objectInfo
+class objectInfo implements ArrayAccess
 {
     /**
      * @param $object_array
@@ -31,6 +31,7 @@ class objectInfo
         foreach ($object_array as $key => $value) {
             $this->$key = zen_db_prepare_input($value);
         }
+        $this->object_array = $object_array;
     }
 
     /**
@@ -63,4 +64,25 @@ class objectInfo
 
         return null;
     }
+
+    public function offsetSet($offset, $value) {
+        if (is_null($offset)) {
+            $this->object_array[] = $value;
+        } else {
+            $this->object_array[$offset] = $value;
+        }
+    }
+
+    public function offsetExists($offset) {
+        return isset($this->object_array[$offset]);
+    }
+
+    public function offsetUnset($offset) {
+        unset($this->object_array[$offset]);
+    }
+
+    public function offsetGet($offset) {
+        return isset($this->object_array[$offset]) ? $this->object_array[$offset] : null;
+    }
+
 }
