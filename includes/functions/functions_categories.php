@@ -851,36 +851,38 @@ function zen_get_category_tree($parent_id = TOPMOST_CATEGORY_PARENT_ID, $spacing
 }
 
 
-/* @TODO
- * Find category name from ID, in indicated language
+/**
+ * @TODO - replace these calls with a class call
+ * @param int $category_id
+ * @param int $language_id
+ * @return string
  */
-function zen_get_category_name($category_id, $fn_language_id) {
+function zen_get_category_name($category_id, $language_id = null) {
     global $db;
-    $category_query = "select categories_name
-                       from " . TABLE_CATEGORIES_DESCRIPTION . "
-                       where categories_id = '" . $category_id . "'
-                       and language_id = '" . $fn_language_id . "'";
-
-    $category = $db->Execute($category_query);
-
+    if (empty($language_id)) $language_id = (int)$_SESSION['languages_id'];
+    $category = $db->Execute("SELECT categories_name
+                              FROM " . TABLE_CATEGORIES_DESCRIPTION . "
+                              WHERE categories_id = " . (int)$category_id . "
+                              AND language_id = " . (int)$language_id);
+    if ($category->EOF) return '';
     return $category->fields['categories_name'];
 }
 
 
-/* @TODO
+
+/**
  * Find category description, from category ID, in given language
  */
-function zen_get_category_description($category_id, $fn_language_id) {
+function zen_get_category_description($category_id, $language_id) {
     global $db;
-    $category_query = "select categories_description
-                       from " . TABLE_CATEGORIES_DESCRIPTION . "
-                       where categories_id = '" . $category_id . "'
-                       and language_id = '" . $fn_language_id . "'";
-
-    $category = $db->Execute($category_query);
-
+    $category = $db->Execute("SELECT categories_description
+                              FROM " . TABLE_CATEGORIES_DESCRIPTION . "
+                              WHERE categories_id = " . (int)$category_id . "
+                              AND language_id = " . (int)$language_id);
+    if ($category->EOF) return '';
     return $category->fields['categories_description'];
 }
+
 
 /* @TODO
  * Return category's image
@@ -896,18 +898,12 @@ function zen_get_categories_image($what_am_i) {
     return $result->fields['categories_image'];
 }
 
-/* @TODO
- *  Return category's name from ID, assuming current language
+/**
+ * @deprecated Alias of zen_get_category_name
+ * @param int $category_id
  */
-function zen_get_categories_name($who_am_i) {
-    global $db;
-    $the_categories_name_query= "select categories_name from " . TABLE_CATEGORIES_DESCRIPTION . " where categories_id= '" . (int)$who_am_i . "' and language_id= '" . (int)$_SESSION['languages_id'] . "'";
-
-    $the_categories_name = $db->Execute($the_categories_name_query);
-
-    if ($the_categories_name->EOF) return '';
-
-    return $the_categories_name->fields['categories_name'];
+function zen_get_categories_name($category_id) {
+    return zen_get_category_name($category_id, null);
 }
 
 

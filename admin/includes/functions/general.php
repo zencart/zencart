@@ -216,29 +216,6 @@
     return $languages_array;
   }
 
-
-  function zen_get_category_name($category_id, $language_id) {
-    global $db;
-    $category = $db->Execute("SELECT categories_name
-                              FROM " . TABLE_CATEGORIES_DESCRIPTION . "
-                              WHERE categories_id = " . (int)$category_id . "
-                              AND language_id = " . (int)$language_id);
-    if ($category->EOF) return '';
-    return $category->fields['categories_name'];
-  }
-
-
-  function zen_get_category_description($category_id, $language_id) {
-    global $db;
-    $category = $db->Execute("SELECT categories_description
-                              FROM " . TABLE_CATEGORIES_DESCRIPTION . "
-                              WHERE categories_id = " . (int)$category_id . "
-                              AND language_id = " . (int)$language_id);
-    if ($category->EOF) return '';
-    return $category->fields['categories_description'];
-  }
-
-
   function zen_get_orders_status_name($orders_status_id, $language_id = '') {
     global $db;
 
