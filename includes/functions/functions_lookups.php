@@ -684,11 +684,13 @@ function zen_get_configuration_key_value($lookup)
     }
   }
 
-/*
+/**
  * Look up whether the given product ID is allowed to be added to cart, according to product-type switches set in Admin
+ * @param int $product_id
+ * @return string Y|N
  */
-  function zen_get_products_allow_add_to_cart($lookup) {
-    global $db;
+  function zen_get_products_allow_add_to_cart($product_id) {
+    global $db, $zco_notifier;
 
     $sql = "select products_type, products_model from " . TABLE_PRODUCTS . " where products_id='" . (int)$lookup . "'";
     $type_lookup = $db->Execute($sql);
