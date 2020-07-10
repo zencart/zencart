@@ -19,7 +19,7 @@ class payment extends base {
   var $modules, $selected_module, $doesCollectsCardDataOnsite;
 
   function __construct($module = '') {
-      global $PHP_SELF, $language, $credit_covers, $messageStack;
+      global $PHP_SELF, $language, $credit_covers, $messageStack, $languageLoader;
       $this->doesCollectsCardDataOnsite = false;
 
       if (defined('MODULE_PAYMENT_INSTALLED') && !empty(MODULE_PAYMENT_INSTALLED)) {
@@ -61,8 +61,8 @@ class payment extends base {
 
       for ($i=0, $n=sizeof($include_modules); $i<$n; $i++) {
         $lang_file = zen_get_file_directory(DIR_WS_LANGUAGES . $_SESSION['language'] . '/modules/payment/', $include_modules[$i]['file'], 'false');
-        if (@file_exists($lang_file)) {
-          include_once($lang_file);
+        if ($languageLoader->hasLanguageFile(DIR_FS_CATALOG . DIR_WS_LANGUAGES,  $_SESSION['language'], $include_modules[$i]['file'], '/modules/payment')) {
+          $languageLoader->loadExtraLanguageFiles(DIR_FS_CATALOG . DIR_WS_LANGUAGES,  $_SESSION['language'], $include_modules[$i]['file'], '/modules/payment');
         } else {
           if (is_object($messageStack)) {
             if (IS_ADMIN_FLAG === false) {

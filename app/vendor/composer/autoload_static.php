@@ -103,6 +103,7 @@ class ComposerStaticInit38976b38ee8f02b829ea04de92ca3793
         'C' => 
         array (
             'Cron\\' => 5,
+            'ConsoleApp\\' => 11,
             'Carbon\\' => 7,
         ),
         'A' => 
@@ -279,6 +280,10 @@ class ComposerStaticInit38976b38ee8f02b829ea04de92ca3793
         'Cron\\' => 
         array (
             0 => __DIR__ . '/..' . '/dragonmantank/cron-expression/src/Cron',
+        ),
+        'ConsoleApp\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/app',
         ),
         'Carbon\\' => 
         array (

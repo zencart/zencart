@@ -10,7 +10,6 @@ namespace Zencart\LanguageLoader;
 
 class LanguageLoader
 {
-
     public function __construct($arraysLoader, $filesLoader)
     {
         $this->languageFilesLoaded = ['arrays' => [], 'legacy' => []];
@@ -54,24 +53,26 @@ class LanguageLoader
 
     public function loadExtraLanguageFiles($rootPath, $language, $fileName, $extraPath = '')
     {
-        $defineList = $this->arrayLoader->loadDefinesFromArrayFile($rootPath, $language, $fileName, $extraPath);
-        $this->arrayLoader->makeConstants($defineList);
-        $this->fileLoader->loadFileDefineFile($rootPath . $language . $extraPath . '/' . $fileName);
-        // @todo plugins & late extra definitions
+        $this->arrayLoader->loadExtraLanguageFiles($rootPath, $language, $fileName, $extraPath);
+        $this->fileLoader->loadExtraLanguageFiles($rootPath, $language, $fileName, $extraPath);
     }
 
     public function hasLanguageFile($rootPath, $language, $fileName, $extraPath = '')
     {
-        if (file_exists($rootPath . $language . $extraPath . '/' . $fileName)) {
+        if (is_file($rootPath . $language . $extraPath . '/' . $fileName)) {
             return true;
         }
-        if (file_exists($rootPath . $language . $extraPath . '/lang.' . $fileName)) {
+        if (is_file($rootPath . $language . $extraPath . '/lang.' . $fileName)) {
             return true;
         }
+        return false;
     }
 
     public function isFileAlreadyLoaded($defineFile)
     {
+//        if (in_array(DIR_FS_CATALOG . $defineFile, get_included_files())) {
+//            return true;
+//        }
         $fileInfo = pathinfo($defineFile);
         $searchFile = 'lang.' . $fileInfo['basename'];
         $searchFile = $fileInfo['dirname'] . '/' . $searchFile;

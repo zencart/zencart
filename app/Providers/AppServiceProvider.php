@@ -46,6 +46,8 @@ class AppServiceProvider extends ServiceProvider
         } else {
             error_reporting(0);
         }
+        if ($this->app->runningInConsole()) return;
+
         $pluginManager = new PluginManager(new PluginControl, new PluginControlVersion);
         $installedPlugins = $pluginManager->getInstalledPlugins();
         $this->app->instance('installedPlugins', $installedPlugins);

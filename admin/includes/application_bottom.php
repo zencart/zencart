@@ -8,6 +8,28 @@
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
 }
-// print_r($languageLoader->getLanguageFilesLoaded());
+//  @todo icwtodo Development debug code
+// do not remove for now
+if (defined('DEV_SHOW_APPLICATION_BOTTOM_DEBUG') && DEV_SHOW_APPLICATION_BOTTOM_DEBUG == true) {
+    $langLoaded = $languageLoader->getLanguageFilesLoaded();
+    dump($langLoaded);
+    $files = get_included_files();
+    $langFiles = [];
+    $pattern = '~^' . DIR_FS_CATALOG . DIR_WS_LANGUAGES . '~';
+    foreach ($files as $file) {
+        $shortFile = str_replace(DIR_FS_CATALOG, '', $file);
+        if (in_array($shortFile, $langLoaded['legacy']) || in_array($file, $langLoaded['legacy'])) {
+            continue;
+        }
+        if (in_array($shortFile, $langLoaded['arrays']) || in_array($file, $langLoaded['arrays'])) {
+            continue;
+        }
+        if (preg_match($pattern, $file)) {
+            $langFiles[] = $file;
+        }
+    }
+    dump($langFiles);
+//dump($_SESSION);
+}
 // close session (store variables)
   session_write_close();

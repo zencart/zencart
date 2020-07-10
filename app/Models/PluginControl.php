@@ -16,4 +16,6 @@ class PluginControl extends Eloquent
     protected $keyType = 'string';
     public $incrementing = false;
     public $timestamps = false;
+    protected $fillable = ['infs'];
+    protected $guarded = [];
 }

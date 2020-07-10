@@ -9,6 +9,9 @@
  * @version $Id: DrByte 2020 May 17 Modified in v1.5.7 $
  */
 
+use Zencart\PageLoader\PageLoader;
+use Zencart\FileSystem\FileSystem;
+
   if (!defined('IS_ADMIN_FLAG')) {
     die('Illegal Access');
   }
@@ -110,7 +113,11 @@
  */
   if (empty($_GET['main_page'])) $_GET['main_page'] = 'index';
 
-  if (!is_dir(DIR_WS_MODULES .  'pages/' . $_GET['main_page'])) {
+  $pageLoader = PageLoader::getInstance();
+  $pageLoader->init($installedPlugins, $_GET['main_page'], FileSystem::getInstance());
+
+    $pageDir = $pageLoader->findModulePageDirectory();
+  if ( $pageDir === false) {
     if (MISSING_PAGE_CHECK == 'On' || MISSING_PAGE_CHECK == 'true') {
       $_GET['main_page'] = 'index';
     } elseif (MISSING_PAGE_CHECK == 'Page Not Found') {
@@ -118,9 +125,10 @@
       $_GET['main_page'] = FILENAME_PAGE_NOT_FOUND;
     }
   }
+
   $current_page = $_GET['main_page'];
   $current_page_base = $current_page;
-  $code_page_directory = DIR_WS_MODULES . 'pages/' . $current_page_base;
+  $code_page_directory = $pageDir;
   $page_directory = $code_page_directory;
 
 $sanitizedRequest = Request::capture();

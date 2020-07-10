@@ -580,7 +580,7 @@ define('ARIA_PAGINATION_','');
   define('TEXT_PRODUCTS_LISTING_ALPHA_SORTER', '');
   define('TEXT_PRODUCTS_LISTING_ALPHA_SORTER_NAMES', 'Items starting with ...');
   define('TEXT_PRODUCTS_LISTING_ALPHA_SORTER_NAMES_RESET', '-- Reset --');
-  
+
 // The following message, with the associated severity, is displayed in the storefront header when an admin has logged into
 // a customer's account.
 
@@ -601,10 +601,10 @@ define('TEXT_OPTION_DIVIDER', '&nbsp;-&nbsp;');
 
 ///////////////////////////////////////////////////////////
 
-  $file_list = [FILENAME_EMAIL_EXTRAS, FILENAME_HEADER, FILENAME_BUTTON_NAMES, FILENAME_ICON_NAMES, FILENAME_OTHER_IMAGES_NAMES, FILENAME_CREDIT_CARDS, FILENAME_WHOS_ONLINE, FILENAME_META_TAGS];
-  foreach ($file_list as $file) { 
-    $file = str_replace(".php","",$file); 
-    require_once(zen_get_file_directory(DIR_FS_CATALOG . DIR_WS_LANGUAGES . $_SESSION['language'] . "/", $file . '.php', 'false'));
-  }
+//  $file_list = [FILENAME_EMAIL_EXTRAS, FILENAME_HEADER, FILENAME_BUTTON_NAMES, FILENAME_ICON_NAMES, FILENAME_OTHER_IMAGES_NAMES, FILENAME_CREDIT_CARDS, FILENAME_WHOS_ONLINE, FILENAME_META_TAGS];
+//  foreach ($file_list as $file) {
+//    $file = str_replace(".php","",$file);
+//    require_once(zen_get_file_directory(DIR_FS_CATALOG . DIR_WS_LANGUAGES . $_SESSION['language'] . "/", $file . '.php', 'false'));
+//  }
 
 // END OF EXTERNAL LANGUAGE LINKS
