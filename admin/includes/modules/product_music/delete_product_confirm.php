@@ -74,7 +74,7 @@ if ($do_delete_flag) {
   }
   // confirm that product is no longer linked to any categories
   $count_categories = zen_get_linked_categories_for_product($product_id);
-  $// echo 'count of category links for this product=' . count($count_categories) . '<br />';
+  // echo 'count of category links for this product=' . count($count_categories) . '<br />';
   // if not linked to any categories, do delete:
   if (count($count_categories) == '0') {
     zen_remove_product($product_id, $delete_linked);
