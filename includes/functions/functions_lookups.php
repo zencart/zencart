@@ -701,7 +701,12 @@ function zen_get_configuration_key_value($lookup)
            $allow_add_to_cart->fields['allow_add_to_cart'] = 'N';
       }
     }
-    return $allow_add_to_cart->fields['allow_add_to_cart'];
+
+    $response = $allow_add_to_cart->fields['allow_add_to_cart'];
+
+    $zco_notifier->notify('NOTIFY_GET_PRODUCT_ALLOW_ADD_TO_CART', $lookup, $response);
+
+    return $response;
   }
 
 /*
