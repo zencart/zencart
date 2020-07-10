@@ -10,60 +10,80 @@ namespace Zencart\LanguageLoader;
 
 use Zencart\FileSystem\FileSystem;
 
-class CatalogFilesLanguageLoader extends BaseLanguageLoader
+class CatalogFilesLanguageLoader extends FilesLanguageLoader
 {
-    public function loadLanguageDefines($mainLoader)
+    public function loadInitialLanguageDefines($mainLoader)
     {
         $this->mainLoader = $mainLoader;
-        $this->loadMainLanguageFile();
         $this->loadLanguageExtraDefinitions();
+        $this->loadMainLanguageFiles();
     }
 
-    protected function loadMainLanguageFile()
+    public function loadLanguageForView()
     {
-        $this->loadFileDefineFile(zen_get_file_directory(DIR_WS_LANGUAGES, $_SESSION['language'] . '.php'));
+        foreach ($this->pluginList as $plugin) {
+            $pluginDir = DIR_FS_CATALOG . 'zc_plugins/' . $plugin['unique_key'] . '/' . $plugin['version'];
+            $pluginDir .= '/catalog/includes/languages/'  . $_SESSION['language'];
+            $files = $this->fileSystem->listFilesFromDirectory($pluginDir . '/' . $this->templateDir, '~^' . $this->currentPage  . '(.*)\.php$~i');
+            asort($files);
+            foreach ($files as $file) {
+                $this->loadFileDefineFile($pluginDir . '/' . $this->templateDir . '/' . $file);
+            }
+            $files = $this->fileSystem->listFilesFromDirectory($pluginDir, '~^' . $this->currentPage  . '(.*)\.php$~i');
+            asort($files);
+            foreach ($files as $file) {
+                $this->loadFileDefineFile($pluginDir . '/' . $file);
+            }
+        }
+
+        $directory = DIR_WS_LANGUAGES . $_SESSION['language'] . '/' . $this->templateDir;
+        $files = $this->fileSystem->listFilesFromDirectory($directory, '~^' . $this->currentPage  . '(.*)\.php$~i');
+        asort($files);
+        foreach ($files as $file) {
+            $this->loadFileDefineFile($directory . '/' . $file);
+        }
+        $directory = DIR_WS_LANGUAGES . $_SESSION['language'];
+        $files = $this->fileSystem->listFilesFromDirectory($directory, '~^' . $this->currentPage . '(.*)\.php$~i');
+        asort($files);
+        foreach ($files as $file) {
+            $this->loadFileDefineFile($directory . '/' . $file);
+        }
+    }
+
+    protected function loadMainLanguageFiles()
+    {
+        $extraFiles = [FILENAME_EMAIL_EXTRAS, FILENAME_HEADER, FILENAME_BUTTON_NAMES, FILENAME_ICON_NAMES, FILENAME_OTHER_IMAGES_NAMES, FILENAME_CREDIT_CARDS, FILENAME_WHOS_ONLINE, FILENAME_META_TAGS];
+        $this->loadFileDefineFile(DIR_WS_LANGUAGES . $this->templateDir . '/' . $_SESSION['language'] . '.php');
         $this->loadFileDefineFile(DIR_WS_LANGUAGES . $_SESSION['language'] . '.php');
+        foreach ($extraFiles as $file) {
+            $file = basename($file, '.php') . ".php";
+            $this->loadExtraLanguageFiles(DIR_WS_LANGUAGES, $_SESSION['language'], $file);
+        }
     }
 
     protected function LoadLanguageExtraDefinitions()
     {
-        $lang_extra_defs_dir = DIR_WS_LANGUAGES . $_SESSION['language'] . '/extra_definitions/';
-        $lang_extra_defs_dir_template = DIR_WS_LANGUAGES . $_SESSION['language'] . '/extra_definitions/' . $template_dir . '/';
-        $file_array = array();
-        $folderlist = array($lang_extra_defs_dir_template, $lang_extra_defs_dir);
-        foreach ($folderlist as $folder) {
-            $this_folder = DIR_FS_CATALOG . $folder;
-            if ($dir = @dir($this_folder)) {
-                while (false !== ($file = $dir->read())) {
-                    if (!is_dir($this_folder. $file)) {
-                        if (!array_key_exists($file, $file_array)) {
-                            if (preg_match('~^[^\._].*\.php$~i', $file) > 0) {
-                                $file_array[$file] = $folder . $file;
-                            }
-                        }
-                    }
-                }
-                $dir->close();
+        $extraDefsDir = DIR_WS_LANGUAGES . $_SESSION['language'] . '/extra_definitions';
+        $extraDefsDirTpl = $extraDefsDir . '/' . $this->templateDir;
+        $extraDefs = $this->fileSystem->listFilesFromDirectory($extraDefsDir);
+        $extraDefsTpl = $this->fileSystem->listFilesFromDirectory($extraDefsDirTpl);
+
+        foreach ($this->pluginList as $plugin) {
+            $pluginDir = DIR_FS_CATALOG . 'zc_plugins/' . $plugin['unique_key'] . '/' . $plugin['version'];
+            $pluginDir .= '/catalog/includes/languages/'  . $_SESSION['language'] . '/extra_definitions';
+            $extraDefsPlugin = $this->fileSystem->listFilesFromDirectory($pluginDir);
+            $pluginDirTpl = $pluginDir . '/' . $this->templateDir;
+            $extraDefsPluginTpl = $this->fileSystem->listFilesFromDirectory($pluginDirTpl);
+        }
+        $folderList = [$extraDefsDir => $extraDefs, $extraDefsDirTpl => $extraDefsTpl, $pluginDir => $extraDefsPlugin, $pluginDirTpl => $extraDefsPluginTpl];
+        $foundList = [];
+        foreach ($folderList as $folder => $entries) {
+            foreach ($entries as $entry) {
+                $foundList[$entry] = $folder;
             }
         }
-        if (sizeof($file_array)) {
-            ksort($file_array);
+        foreach ($foundList as $file => $directory) {
+            $this->loadFileDefineFile($directory . '/' . $file);
         }
-        foreach ($file_array as $file => $include_file) {
-            $this->loadFileDefineFile($include_file);
-        }
-
-    }
-
-    public function loadFileDefineFile($defineFile)
-    {
-        if (!is_file($defineFile)) {
-            return;
-        }
-        if ($this->mainLoader->isFileAlreadyLoaded($defineFile)) {
-            return;
-        }
-        $this->mainLoader->addLanguageFilesLoaded('legacy', $defineFile);
-        include_once($defineFile);
     }
 }

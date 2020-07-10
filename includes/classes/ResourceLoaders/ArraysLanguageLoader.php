@@ -39,16 +39,16 @@ class ArraysLanguageLoader extends BaseLanguageLoader
     protected function loadArraysFromDirectory($rootPath, $language, $extraPath)
     {
         $path = $rootPath . $language . $extraPath;
-        $fileList = $this->fileSystem->listFilesFromDirectory($path, '~^(lang\.).*\.php$~i');
+        $fileList = $this->fileSystem->listFilesFromDirectory($path, '~^lang\.(.*)\.php$~i');
         $defineList = $this->processArrayFileList($path, $fileList);
         return $defineList;
     }
 
-    protected function pluginLoadArraysFromDirectory($language, $extraPath)
+    protected function pluginLoadArraysFromDirectory($language, $extraPath, $context = 'admin')
     {
         $defineList = [];
         foreach ($this->pluginList as $plugin) {
-            $pluginDir = DIR_FS_CATALOG . 'zc_plugins/' . $plugin['unique_key'] . '/' . $plugin['version'] . '/admin/includes/languages/';
+            $pluginDir = DIR_FS_CATALOG . 'zc_plugins/' . $plugin['unique_key'] . '/' . $plugin['version'] . '/' . $context . '/includes/languages/';
             $defines = $this->loadArraysFromDirectory($pluginDir, $language, $extraPath);
             $defineList = array_merge($defineList, $defines);
         }
@@ -65,6 +65,15 @@ class ArraysLanguageLoader extends BaseLanguageLoader
         return $defineList;
     }
 
+    public function loadExtraLanguageFiles($rootPath, $language, $fileName, $extraPath = '')
+    {
+        $defineListMain = $this->loadDefinesFromArrayFile($rootPath, $language, $fileName, $extraPath);
+        $extraPath .= '/' . $this->templateDir;
+        $defineListTemplate = $this->loadDefinesFromArrayFile($rootPath, $language, $fileName, $extraPath);
+        $defineList = array_merge($defineListMain, $defineListTemplate);
+        $this->makeConstants($defineList);
+    }
+
     public function loadDefinesFromArrayFile($rootPath, $language, $fileName, $extraPath = '')
     {
         $arrayFileName = 'lang.' . $fileName;
@@ -79,7 +88,8 @@ class ArraysLanguageLoader extends BaseLanguageLoader
         $defineList = [];
         foreach ($this->pluginList as $plugin) {
             $pluginDir = DIR_FS_CATALOG . 'zc_plugins/' . $plugin['unique_key'] . '/' . $plugin['version'];
-            $pluginDefineList = $this->loadDefinesFromArrayFile($pluginDir . '/' . $context . '/includes/languages/', $language, $fileName, $extraPath);
+            $pluginDir .= $pluginDir . '/' . $context . '/includes/languages/';
+            $pluginDefineList = $this->loadDefinesFromArrayFile($pluginDir, $language, $fileName, $extraPath);
             $defineList = array_merge($defineList, $pluginDefineList);
         }
         return $defineList;

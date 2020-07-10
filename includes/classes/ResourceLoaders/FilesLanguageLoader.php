@@ -12,8 +12,21 @@ use Zencart\FileSystem\FileSystem;
 
 class FilesLanguageLoader extends BaseLanguageLoader
 {
+    public function loadExtraLanguageFiles($rootPath, $language, $fileName, $extraPath = '')
+    {
+        if ($this->mainLoader->hasLanguageFile($rootPath, $language, $fileName, $extraPath .  '/' . $this->templateDir)) {
+            $this->loadFileDefineFile($rootPath . $language . $extraPath . '/' . $this->templateDir . '/' . $fileName);
+        } else {
+            $this->loadFileDefineFile($rootPath . $language . $extraPath . '/' . $fileName);
+        }
+    }
+
     public function loadFileDefineFile($defineFile)
     {
+        $pathInfo = pathinfo(($defineFile));
+        if (preg_match('~^lang\.~i', $pathInfo['basename'])) {
+            return false;
+        }
         if (!is_file($defineFile)) {
             return false;
         }

@@ -23,6 +23,11 @@ class template_func extends base {
   }
 
   function get_template_part($page_directory, $template_part, $file_extension = '.php') {
+      $pageLoader = Zencart\PageLoader\PageLoader::getInstance();
+      $directory_array = $pageLoader->getTemplatePart($page_directory, $template_part, $file_extension);
+      return $directory_array;
+
+
     $directory_array = array();
     if ($dir = @dir($page_directory)) {
       while ($file = $dir->read()) {

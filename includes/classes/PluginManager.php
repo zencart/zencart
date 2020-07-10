@@ -192,8 +192,8 @@ class PluginManager
 
     protected function updatePluginControl($pluginsFromFilesystem)
     {
-        $this->pluginControl->update(['infs' => 0]);
-        $this->pluginControlVersion->update(['infs' => 0]);
+        $this->pluginControl->query()->update(['infs' => 0]);
+        $this->pluginControlVersion->query()->update(['infs' => 0]);
         $insertValues = [];
         $versionInsertValues = [];
         foreach ($pluginsFromFilesystem as $uniqueKey => $plugin) {

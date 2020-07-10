@@ -9,6 +9,10 @@
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
 }
+
+$languageLoader->loadLanguageForView();
+return;
+
 // determine language or template language file
 if (file_exists($language_page_directory . $template_dir . '/' . $current_page_base . '.php')) {
   $template_dir_select = $template_dir . '/';
