@@ -152,12 +152,12 @@ if (zen_not_null($action) && $order_exists == true) {
           break;
         default:
           $messageStack->add_session(sprintf(TEXT_EXTENSION_NOT_UNDERSTOOD, $file_extension), 'error');
-          zen_redirect(zen_href_link(FILENAME_ORDERS, zen_get_all_get_params(array('download', 'action'),'action=edit'), 'NONSSL'));
+          zen_redirect(zen_href_link(FILENAME_ORDERS, zen_get_all_get_params(array('download', 'action')) . 'action=edit'), 'NONSSL');
       }
       $fs_path = DIR_FS_CATALOG_IMAGES . 'uploads/' . $fileName;
       if (!file_exists($fs_path)) {
         $messageStack->add_session(TEXT_FILE_NOT_FOUND, 'error');
-        zen_redirect(zen_href_link(FILENAME_ORDERS, zen_get_all_get_params(array('download', 'action'),'action=edit')));
+        zen_redirect(zen_href_link(FILENAME_ORDERS, zen_get_all_get_params(array('download', 'action')) . 'action=edit'));
       }
       header('Content-type: ' . $content);
       header('Content-Disposition: attachment; filename="' . $fileName . '"');
