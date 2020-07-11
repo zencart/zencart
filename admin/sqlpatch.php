@@ -66,6 +66,7 @@ function executeSql($lines, $database, $table_prefix = '') {
   $string = '';
   $result = '';
   $complete_line = false;
+  $counter = 0; 
   if (!isset($_GET['debug'])) {
     $_GET['debug'] = 'OFF';
   }
