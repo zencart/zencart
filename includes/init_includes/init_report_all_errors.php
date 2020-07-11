@@ -10,4 +10,7 @@
 if (defined('REPORT_ALL_ERRORS_STORE') && REPORT_ALL_ERRORS_STORE != 'No') {
     @ini_set('error_reporting', E_ALL );
     set_error_handler('zen_debug_error_handler', E_ALL);
+} else {
+    @ini_set('error_reporting', E_ALL & ~E_DEPRECATED & ~E_NOTICE & ~E_STRICT); 
+    set_error_handler('zen_debug_error_handler', E_ALL);
 }
