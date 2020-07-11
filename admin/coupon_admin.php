@@ -1373,15 +1373,6 @@ function check_form(form_name) {
     switch ($_GET['action']) {
     case 'release':
       break;
-    case 'voucherreport':
-      $heading[] = array('text' => '<b>' . TEXT_HEADING_COUPON_REPORT . '</b>');
-      $contents[] = array('text' => TEXT_NEW_INTRO);
-      break;
-// base code - header for report for basecode
-    case 'voucherreportduplicates':
-      $heading[] = array('text' => '<b>' . TEXT_HEADING_COUPON_REPORT . '</b>');
-      $contents[] = array('text' => TEXT_NEW_INTRO);
-      break;
     case 'new':
       $heading[] = array('text' => '<b>' . TEXT_HEADING_NEW_COUPON . '</b>');
       $contents[] = array('text' => TEXT_NEW_INTRO);
