@@ -22,7 +22,7 @@ function zen_get_product_details($product_id, $language_id = null)
     if ($language_id === null) $language_id = $_SESSION['languages_id'];
 
     $sql = "SELECT p.products_status, p.*, pd.*
-            FROM " . TABLE_PRODUCTS . " p,
+            FROM " . TABLE_PRODUCTS . " p
             LEFT JOIN " . TABLE_PRODUCTS_DESCRIPTION . " pd USING (products_id)
             WHERE p.products_id = " . (int)$product_id . "
             AND pd.language_id = " . (int)$language_id . "
