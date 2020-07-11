@@ -67,7 +67,7 @@ class CatalogFilesLanguageLoader extends FilesLanguageLoader
         $extraDefsDirTpl = $extraDefsDir . '/' . $this->templateDir;
         $extraDefs = $this->fileSystem->listFilesFromDirectory($extraDefsDir);
         $extraDefsTpl = $this->fileSystem->listFilesFromDirectory($extraDefsDirTpl);
-
+        if (empty($this->pluginList)) return; 
         foreach ($this->pluginList as $plugin) {
             $pluginDir = DIR_FS_CATALOG . 'zc_plugins/' . $plugin['unique_key'] . '/' . $plugin['version'];
             $pluginDir .= '/catalog/includes/languages/'  . $_SESSION['language'] . '/extra_definitions';
@@ -78,9 +78,11 @@ class CatalogFilesLanguageLoader extends FilesLanguageLoader
         $folderList = [$extraDefsDir => $extraDefs, $extraDefsDirTpl => $extraDefsTpl, $pluginDir => $extraDefsPlugin, $pluginDirTpl => $extraDefsPluginTpl];
         $foundList = [];
         foreach ($folderList as $folder => $entries) {
-            foreach ($entries as $entry) {
-                $foundList[$entry] = $folder;
-            }
+           if (!empty($entries)) { 
+              foreach ($entries as $entry) {
+                 $foundList[$entry] = $folder;
+              }
+           }
         }
         foreach ($foundList as $file => $directory) {
             $this->loadFileDefineFile($directory . '/' . $file);
