@@ -434,7 +434,7 @@ Processing...
         case 'voided':
         case ($_POST['payment_status'] == 'Refunded' || $_POST['payment_status'] == 'Reversed' || $_POST['payment_status'] == 'Voided'):
           //payment_status=Refunded or payment_status=Voided
-          $new_status = MODULE_PAYMENT_PAYPALWPP_REFUNDED_STATUS_ID;
+          $new_status = defined('MODULE_PAYMENT_PAYPALWPP_REFUNDED_STATUS_ID') ? MODULE_PAYMENT_PAYPALWPP_REFUNDED_STATUS_ID : 1;
           if (defined('MODULE_PAYMENT_PAYPAL_REFUND_ORDER_STATUS_ID') && (int)MODULE_PAYMENT_PAYPAL_REFUND_ORDER_STATUS_ID > 0 && !$isECtransaction) $new_status = MODULE_PAYMENT_PAYPAL_REFUND_ORDER_STATUS_ID;
           break;
         case 'echeck-denied':
