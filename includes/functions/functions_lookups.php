@@ -692,7 +692,7 @@ function zen_get_configuration_key_value($lookup)
   function zen_get_products_allow_add_to_cart($product_id) {
     global $db, $zco_notifier;
 
-    $sql = "select products_type, products_model from " . TABLE_PRODUCTS . " where products_id='" . (int)$lookup . "'";
+    $sql = "select products_type, products_model from " . TABLE_PRODUCTS . " where products_id='" . (int)$product_id. "'";
     $type_lookup = $db->Execute($sql);
 
     $sql = "select allow_add_to_cart from " . TABLE_PRODUCT_TYPES . " where type_id = '" . (int)$type_lookup->fields['products_type'] . "'";
@@ -706,7 +706,7 @@ function zen_get_configuration_key_value($lookup)
 
     $response = $allow_add_to_cart->fields['allow_add_to_cart'];
 
-    $zco_notifier->notify('NOTIFY_GET_PRODUCT_ALLOW_ADD_TO_CART', $lookup, $response);
+    $zco_notifier->notify('NOTIFY_GET_PRODUCT_ALLOW_ADD_TO_CART', $product_id, $response);
 
     return $response;
   }
