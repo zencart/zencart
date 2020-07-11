@@ -13,9 +13,6 @@
  * helper class for managing password hashing for different PHP versions
  *
  * Updates admin/customer tables on successful login
- * For php < 5.3.7 uses custom code to create hashes using SHA256 and longer salts
- * For php >= 5.3.7 and < 5.5.0 uses https://github.com/ircmaxell/PHP-PasswordLib
- * For php >= 5.5.0 uses inbuilt php functions
  *
  * @package classes
  */
@@ -46,11 +43,6 @@ class zcPassword extends base
    */
   public function __construct($phpVersion = PHP_VERSION)
   {
-    if (version_compare($phpVersion, '5.3.7', '<')) {
-      require_once (realpath(dirname(__FILE__)) . '/../functions/password_compat.php');
-    } elseif (version_compare($phpVersion, '5.5.0', '<')) {
-      require_once (realpath(dirname(__FILE__)) . '/vendors/password_compat-master/lib/password.php');
-    }
   }
   /**
    * Determine the password type
