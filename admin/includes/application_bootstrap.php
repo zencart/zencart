@@ -8,6 +8,7 @@
 
 use Zencart\FileSystem\FileSystem;
 use Zencart\PluginManager\PluginManager;
+use Zencart\PageLoader\PageLoader;
 
 /**
  * boolean if true the autoloader scripts will be parsed and their output shown. For debugging purposes only.
@@ -160,6 +161,8 @@ require DIR_FS_CATALOG . 'includes/illuminate_bootstrap.php';
 
 $installedPlugins = $laravelApp->make('installedPlugins');
 $pluginManager = new PluginManager(new App\Models\PluginControl, new App\Models\PluginControlVersion);
+$pageLoader = PageLoader::getInstance();
+$pageLoader->init($installedPlugins, $PHP_SELF, FileSystem::getInstance());
 
 $fs = FileSystem::getInstance();
 $fs->setInstalledPlugins($installedPlugins);

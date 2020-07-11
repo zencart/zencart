@@ -88,7 +88,7 @@ class ArraysLanguageLoader extends BaseLanguageLoader
         $defineList = [];
         foreach ($this->pluginList as $plugin) {
             $pluginDir = DIR_FS_CATALOG . 'zc_plugins/' . $plugin['unique_key'] . '/' . $plugin['version'];
-            $pluginDir .= $pluginDir . '/' . $context . '/includes/languages/';
+            $pluginDir .=  '/' . $context . '/includes/languages/';
             $pluginDefineList = $this->loadDefinesFromArrayFile($pluginDir, $language, $fileName, $extraPath);
             $defineList = array_merge($defineList, $pluginDefineList);
         }
