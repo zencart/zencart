@@ -580,7 +580,7 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
                 <?php if ($show_prod_labels || SHOW_COUNTS_ADMIN == 'true') { ?>
                   <th class="text-right hidden-sm hidden-xs"><?php echo TABLE_HEADING_QUANTITY; ?></th>
                 <?php }; ?>
-                <th class="text-right hidden-sm hidden-xs"><?php echo TABLE_HEADING_STATUS; ?></th>
+                <th class="text-right"><?php echo TABLE_HEADING_STATUS; ?></th>
                 <?php
                 if ($action == '') {
                   ?>
@@ -627,7 +627,7 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
                     ?>
                   </td>
                 <?php } ?>
-                <td class="text-right hidden-sm hidden-xs dataTableButtonCell">
+                <td class="text-right dataTableButtonCell">
                   <?php if (SHOW_CATEGORY_PRODUCTS_LINKED_STATUS == 'true' && zen_get_products_to_categories($category['categories_id'], true, 'products_active') == 'true') { ?>
                     <i class="fa fa-square fa-lg txt-linked" aria-hidden="true" title="<?php echo IMAGE_ICON_LINKED; ?>"></i>
                   <?php } ?>
@@ -768,7 +768,7 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
                 <td class="hidden-sm hidden-xs"><?php echo $product['products_model']; ?></td>
                 <td class="text-right hidden-sm hidden-xs"><?php echo zen_get_products_display_price($product['products_id']); ?></td>
                 <td class="text-right hidden-sm hidden-xs"><?php echo $product['products_quantity']; ?></td>
-                <td class="text-right hidden-sm hidden-xs text-nowrap dataTableButtonCell">
+                <td class="text-right text-nowrap dataTableButtonCell">
                   <?php
                   $additional_icons = '';
                   $zco_notifier->notify('NOTIFY_ADMIN_PROD_LISTING_ADD_ICON', $product, $additional_icons);
