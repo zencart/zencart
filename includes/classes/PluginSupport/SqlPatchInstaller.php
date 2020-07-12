@@ -53,7 +53,7 @@ class SqlPatchInstaller
     {
         $this->dbConn->dieOnErrors = false;
         foreach ($paramLines as $line) {
-            $sql = implode($line, ' ') . ';';
+            $sql = implode(' ', $line) . ';';
             $this->dbConn->execute($sql);
             if ($this->dbConn->error_number !== 0) {
                 $this->errorContainer->addError(0, $this->dbConn->error_text);
