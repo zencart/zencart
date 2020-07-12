@@ -34,12 +34,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        /**
-         * set the level of error reporting
-         *
-         * Note STRICT_ERROR_REPORTING should never be set to true on a production site. <br />
-         * It is mainly there to show php warnings during testing/bug fixing phases.<br />
-         */
         if (DEBUG_AUTOLOAD || (defined('STRICT_ERROR_REPORTING') && STRICT_ERROR_REPORTING == true)) {
             @ini_set('display_errors', TRUE);
             error_reporting(defined('ILLUMINATE_ERROR_REPORTING_LEVEL') ? ILLUMINATE_ERROR_REPORTING_LEVEL : 0);
@@ -47,7 +41,6 @@ class AppServiceProvider extends ServiceProvider
             error_reporting(0);
         }
         if ($this->app->runningInConsole()) return;
-
         $pluginManager = new PluginManager(new PluginControl, new PluginControlVersion);
         $installedPlugins = $pluginManager->getInstalledPlugins();
         $this->app->instance('installedPlugins', $installedPlugins);
