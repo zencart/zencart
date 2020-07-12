@@ -47,11 +47,11 @@ if (!empty($_GET['action'])) {
       $box_id = zen_db_prepare_input($_GET['cID']);
 
       $updateValues = [
-          'layout_box_status' => $_POST['layout_box_status'],
-          'layout_box_location' => $_POST['layout_box_location'],
-          'layout_box_sort_order' => $_POST['layout_box_sort_order'],
-          'layout_box_sort_order_single' => $_POST['layout_box_sort_order_single'],
-          'layout_box_status_single' => $_POST['layout_box_status_single'],
+          'layout_box_status' => (int)$_POST['layout_box_status'],
+          'layout_box_location' => (int)$_POST['layout_box_location'],
+          'layout_box_sort_order' => (int)$_POST['layout_box_sort_order'],
+          'layout_box_sort_order_single' => (int)$_POST['layout_box_sort_order_single'],
+          'layout_box_status_single' => (int)$_POST['layout_box_status_single'],
        ];
       $model->where('layout_id', $box_id)->update($updateValues);
       $messageStack->add_session(SUCCESS_BOX_UPDATED . $_GET['layout_box_name'], 'success');

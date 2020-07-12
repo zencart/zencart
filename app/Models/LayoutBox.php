@@ -15,11 +15,4 @@ class LayoutBox extends Eloquent
     protected $primaryKey = 'layout_id';
     public $timestamps = false;
     protected $guarded = [];
-    protected $casts = [
-        'layout_box_status' => 'integer',
-        'layout_box_location' => 'integer',
-        'layout_box_sort_order' => 'integer',
-        'layout_box_sort_order_single' => 'integer',
-        'layout_box_status_single' => 'integer',
-    ];
 }
