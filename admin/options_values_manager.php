@@ -835,7 +835,7 @@ if (zen_not_null($action)) {
                     ?>
                     <div class="col-md-4">
                       <div class="form-group">
-                        <?php echo zen_draw_pull_down_menu('option_id', $optionsValueArray, '', 'class="form-control"'); ?>
+                        <?php echo zen_draw_pull_down_menu('option_id', $optionsValueArray, $filter, 'class="form-control"'); ?>
                       </div>
                     </div>
                     <div class="col-md-6">
