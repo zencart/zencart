@@ -189,6 +189,7 @@ $installedPlugins = $laravelApp->make('installedPlugins');
 $pluginManager = new PluginManager(new App\Models\PluginControl, new App\Models\PluginControlVersion);
 
 $fs = FileSystem::getInstance();
+$fs->loadFilesFromPluginsDirectory($installedPlugins, 'catalog/includes/extra_configures', '~^[^\._].*\.php$~i');
 $fs->loadFilesFromPluginsDirectory($installedPlugins, 'catalog/includes/extra_datafiles', '~^[^\._].*\.php$~i');
 
 foreach ($installedPlugins as $plugin) {
