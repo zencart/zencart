@@ -134,7 +134,7 @@ class PluginManager
 
     protected function getPluginVersions($uniqueKey)
     {
-        $result = $this->pluginControlVersion->where(['unique_key' => $uniqueKey]);
+        $result = $this->pluginControlVersion->where(['unique_key' => $uniqueKey])->get();
         return $result;
     }
 
