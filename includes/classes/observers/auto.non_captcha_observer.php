@@ -54,11 +54,10 @@ class zcObserverNonCaptchaObserver extends base
 
     protected function generate_random_string($input, $strength = 16)
     {
-        $function = PHP_VERSION_ID >= 70000 ? 'random_int' : 'mt_rand';
         $input_length = strlen($input);
         $random_string = '';
         for ($i = 0; $i < $strength; $i++) {
-            $random_character = $input[$function(0, $input_length - 1)];
+            $random_character = $input[random_int(0, $input_length - 1)];
             $random_string .= $random_character;
         }
 
