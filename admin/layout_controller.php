@@ -130,7 +130,7 @@ if (!empty($_GET['action'])) {
                                                                         ->orderBy('layout_box_sort_order')->get();
               foreach ($layoutBoxes as $index => $layoutBox) {
                 if ((empty($_GET['cID']) || ($_GET['cID'] == $layoutBox['layout_id'])) && empty($bInfo) && (empty($action) || substr($action, 0, 3) != 'new')) {
-                  $bInfo = new objectInfo($layoutBox->getAttributes());
+                  $bInfo = $layoutBoxes[$index];
                 }
 
                 if (isset($bInfo) && is_object($bInfo) && ($layoutBox['layout_id'] == $bInfo->layout_id)) {
