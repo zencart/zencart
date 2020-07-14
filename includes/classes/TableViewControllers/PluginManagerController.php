@@ -231,7 +231,7 @@ class PluginManagerController extends BaseController
         );
         $this->tableDefinition['content']['form'] = zen_draw_form(
                 'pluginupgrade', FILENAME_PLUGIN_MANAGER, 'page=' . $this->page . '&colKey=' .
-                                 $this->tableObjInfo->unique_key . '&action=confirmUpgrade', 'post', 'class="form-horizontal"');
+                                 $this->tableObjInfo->unique_key . '&action=confirmUpgrade', 'post', 'class="form-horizontal"') . zen_draw_hidden_field('oldVersion', $this->tableObjInfo->version);
         $this->tableDefinition['content'][] = [
             'text' => '<br>' . TEXT_INFO_UPGRADE . '<br>'
         ];
@@ -267,6 +267,9 @@ class PluginManagerController extends BaseController
         if ((!isset($_POST['version']))) {
             $error = true;
         }
+        if ((!isset($_POST['oldVersion']))) {
+            $error = true;
+        }
         if (!in_array($_POST['version'], $versions)) {
             $error = true;
         }
@@ -284,7 +287,7 @@ class PluginManagerController extends BaseController
         );
         $this->tableDefinition['content']['form'] = zen_draw_form(
                 'pluginupgrade', FILENAME_PLUGIN_MANAGER, 'page=' . $this->page . '&colKey=' .
-                               $this->tableObjInfo->unique_key . '&action=doUpgrade', 'post', 'class="form-horizontal"') . zen_draw_hidden_field('version', $_POST['version']);
+                               $this->tableObjInfo->unique_key . '&action=doUpgrade', 'post', 'class="form-horizontal"') . zen_draw_hidden_field('version', $_POST['version']) . zen_draw_hidden_field('oldVersion', $_POST['oldVersion']);
         $this->tableDefinition['content'][] = [
             'text' => '<br>' . TEXT_CONFIRM_UPGRADE . '<br>' . sprintf(TEXT_INFO_UPGRADE_CONFIRM, $_POST['version']) . '<br><br>' . TEXT_INFO_UPGRADE_WARNING
         ];
@@ -307,16 +310,30 @@ class PluginManagerController extends BaseController
         if ((!isset($_POST['version']))) {
             $error = true;
         }
+        if ((!isset($_POST['oldVersion']))) {
+            $error = true;
+        }
         if (!in_array($_POST['version'], $versions)) {
             $error = true;
         }
         if ($error) {
+            zen_redirect(zen_href_link(FILENAME_PLUGIN_MANAGER, 'page=' . $this->page . '&colKey=' . $_GET['colKey']));
+        }
+        $installer = $this->installerFactory->make($_GET['colKey'], $_POST['version']);
+        $upgraded = $installer->processUpgrade($_GET['colKey'], $_POST['version'], $_POST['oldVersion']);
+        if (!$upgraded) {
+            $this->outputMessageList($installer->errorContainer->getFriendlyErrors(), 'error');
             zen_redirect(
                 zen_href_link(
                     FILENAME_PLUGIN_MANAGER, 'page=' . $this->page . '&colKey=' .
                                            $_GET['colKey']));
 
         }
+        $this->messageStack->add_session(TEXT_UPGRADE_SUCCESS, 'success');
+        zen_redirect(
+            zen_href_link(
+                FILENAME_PLUGIN_MANAGER, 'page=' . $this->page . '&colKey=' .
+                                       $_GET['colKey']));
 
     }
 

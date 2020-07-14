@@ -29,6 +29,7 @@ $define = [
     'TEXT_NOT_INSTALLED' => 'Not Installed',
     'TEXT_INSTALL_SUCCESS' => 'Plugin installed successfully',
     'TEXT_UNINSTALL_SUCCESS' => 'Plugin un-installed successfully',
+    'TEXT_UPGRADE_SUCCESS' => 'Plugin upgraded successfully',
     'TEXT_DISABLE_SUCCESS' => 'Plugin disabled successfully',
     'TEXT_ENABLE_SUCCESS' => 'Plugin enabled successfully',
     'TEXT_UPGRADE_AVAILABLE' => 'Upgrade Available',
@@ -39,7 +40,7 @@ $define = [
     'TEXT_CONFIRM_ENABLE' => 'Are you sure you want to enable this plugin?',
     'TEXT_INFO_UPGRADE' => 'Please select the version you want to upgrade to.',
     'TEXT_INFO_UPGRADE_CONFIRM' => 'Upgrade version %s',
-    'TEXT_INFO_UPGRADE_WARNING' => 'Warning: blah blah',
+    'TEXT_INFO_UPGRADE_WARNING' => '',
     'TEXT_INFO_CONFIRM_CLEAN' => 'Confirm version directories to clean/remove',
 ];
 
