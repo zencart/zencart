@@ -35,7 +35,7 @@ TRUNCATE TABLE whos_online;
 TRUNCATE TABLE db_cache;
 
 
-
+ALTER TABLE layout_boxes ADD plugin_details varchar(100) NOT NULL default '';
 
 
 #############

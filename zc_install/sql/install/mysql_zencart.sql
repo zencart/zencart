@@ -865,10 +865,11 @@ CREATE TABLE layout_boxes (
   layout_box_sort_order int(11) NOT NULL default '0',
   layout_box_sort_order_single int(11) NOT NULL default '0',
   layout_box_status_single tinyint(4) NOT NULL default '0',
+  plugin_details varchar(100) NOT NULL default '',
   PRIMARY KEY  (layout_id),
   KEY idx_name_template_zen (layout_template,layout_box_name),
   KEY idx_layout_box_status_zen (layout_box_status),
-  KEY idx_layout_box_sort_order_zen (layout_box_sort_order)
+  KEY idx_layout_box_sort_order_zen (layout_box_sort_order),
 ) ENGINE=MyISAM;
 
 # --------------------------------------------------------

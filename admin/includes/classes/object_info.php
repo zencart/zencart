@@ -31,6 +31,7 @@ class objectInfo
         foreach ($object_array as $key => $value) {
             $this->$key = zen_db_prepare_input($value);
         }
+        $this->object_array = $object_array;
     }
 
     /**

@@ -34,10 +34,8 @@ class PageLoader
         return false;
     }
 
-    function getTemplatePart($pageDirectory, $templatePart, $fileExtension = '.php')
+    public function getTemplatePart($pageDirectory, $templatePart, $fileExtension = '.php')
     {
-        //dump('page Directory = ' . $pageDirectory);
-        //dump('template part = ' . $templatePart);
         $directoryArray = [];
         $directoryArray = $this->getTemplatePartFromDirectory($directoryArray, $pageDirectory, $templatePart,
                                                               $fileExtension);
@@ -67,29 +65,32 @@ class PageLoader
         return $directoryArray;
     }
 
-    function getTemplateDir($templateCode, $currentTemplate, $currentPage, $templateDir)
+    function getTemplateDirectory($templateCode, $currentTemplate, $currentPage, $templateDir)
     {
+
+        $path = DIR_WS_TEMPLATES . 'template_default/' . $templateDir;
+
         if ($this->fileSystem->fileExistsInDirectory($currentTemplate . $currentPage, $templateCode)) {
-            return $currentTemplate . $currentPage . '/';
+            $path = $currentTemplate . $currentPage . '/';
         }
         if ($this->fileSystem->fileExistsInDirectory(
             DIR_WS_TEMPLATES . 'template_default/' . $currentPage, preg_replace('/\//', '', $templateCode))) {
-            return DIR_WS_TEMPLATES . 'template_default/' . $currentPage;
+            $path = DIR_WS_TEMPLATES . 'template_default/' . $currentPage;
         }
         if ($this->fileSystem->fileExistsInDirectory(
             $currentTemplate . $templateDir, preg_replace('/\//', '', $templateCode))) {
-            return $currentTemplate . $templateDir;
+            $path = $currentTemplate . $templateDir;
         }
-        if ($tplPluginDir = $this->getTemplatePluginDir($templateCode, $currentTemplate, $currentPage, $templateDir)) {
-            return $tplPluginDir;
+        if ($tplPluginDir = $this->getTemplatePluginDir($templateCode, $templateDir)) {
+            $path = $tplPluginDir;
         }
-        return DIR_WS_TEMPLATES . 'template_default/' . $templateDir;
+        return $path;
     }
 
-    public function getTemplatePluginDir($templateCode)
+    public function getTemplatePluginDir($templateCode, $templateDir)
     {
         foreach ($this->installedPlugins as $plugin) {
-            $checkDir = 'zc_plugins/' . $plugin['unique_key'] . '/' . $plugin['version'] . '/catalog/includes/templates/default/';
+            $checkDir = 'zc_plugins/' . $plugin['unique_key'] . '/' . $plugin['version'] . '/catalog/includes/templates/default/' . $templateDir . '/';
             if (file_exists($checkDir . $templateCode )) {
                 return $checkDir;
             }
