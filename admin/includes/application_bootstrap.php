@@ -66,9 +66,9 @@ if (file_exists('includes/configure.php')) {
  * in php.ini. Otherwise we respect the php.ini setting
  *
  */
-if (defined('STRICT_ERROR_REPORTING') && STRICT_ERROR_REPORTING == true) {
+if (DEBUG_AUTOLOAD || defined('STRICT_ERROR_REPORTING') && STRICT_ERROR_REPORTING == true) {
     @ini_set('display_errors', TRUE);
-    error_reporting(defined('STRICT_REPORTING_LEVEL') ? STRICT_REPORTING_LEVEL : E_ALL);
+    error_reporting(defined('STRICT_ERROR_REPORTING_LEVEL') ? STRICT_ERROR_REPORTING_LEVEL : E_ALL);
 } else {
     error_reporting(0);
 }
