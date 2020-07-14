@@ -163,7 +163,7 @@ if (!empty($_GET['action'])) {
 
               <?php
                   $next = $index++;
-                  if (isset($layoutBoxes[$next]) & $layoutBoxes[$index]->layout_box_location != $layoutBoxes[$next]->layout_box_location) {
+                  if (isset($layoutBoxes[$next]) && $layoutBoxes[$index]->layout_box_location != $layoutBoxes[$next]->layout_box_location) {
                       ?>
                       <tr valign="top">
                           <td colspan="8" height="20" align="center" valign="middle"><?php echo zen_draw_separator('pixel_black.gif', '90%', '3'); ?></td>
