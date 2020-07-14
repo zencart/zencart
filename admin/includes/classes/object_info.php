@@ -11,7 +11,7 @@
 /**
  * Class objectInfo
  */
-class objectInfo implements ArrayAccess
+class objectInfo
 {
     /**
      * @param $object_array
@@ -64,25 +64,4 @@ class objectInfo implements ArrayAccess
 
         return null;
     }
-
-    public function offsetSet($offset, $value) {
-        if (is_null($offset)) {
-            $this->object_array[] = $value;
-        } else {
-            $this->object_array[$offset] = $value;
-        }
-    }
-
-    public function offsetExists($offset) {
-        return isset($this->object_array[$offset]);
-    }
-
-    public function offsetUnset($offset) {
-        unset($this->object_array[$offset]);
-    }
-
-    public function offsetGet($offset) {
-        return isset($this->object_array[$offset]) ? $this->object_array[$offset] : null;
-    }
-
 }
