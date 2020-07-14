@@ -162,7 +162,7 @@ if (!empty($_GET['action'])) {
               </tr>
 
               <?php
-                  $next = $index++;
+                  $next = $index + 1;
                   if (isset($layoutBoxes[$next]) && $layoutBoxes[$index]->layout_box_location != $layoutBoxes[$next]->layout_box_location) {
                       ?>
                       <tr valign="top">
