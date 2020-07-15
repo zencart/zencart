@@ -11,9 +11,8 @@ use Zencart\PluginSupport\ScriptedInstallerFactory;
 use Zencart\PluginSupport\InstallerFactory;
 use Zencart\PluginSupport\Installer;
 use Zencart\PluginSupport\PluginErrorContainer;
-use Zencart\PluginManager\PluginManager;
-use Zencart\QueryBuilder\QueryBuilder;
 use Zencart\TableViewControllers\PluginManagerController;
+use App\Models\ModelFactory;
 
 require('includes/application_top.php');
 
@@ -27,6 +26,7 @@ $installerFactory = new InstallerFactory($db, $pluginInstaller, $errorContainer)
 
 $tableDefinition = [
     'colKey'           => 'unique_key',
+    'maxRowCount'      => 5,
     'actions'          => [
         [
             'action'                => 'new', 'text' => 'new', 'getParams' => [],
@@ -54,8 +54,7 @@ $tableDefinition = [
     ]
 ];
 
-$tableController = (new PluginManagerController(
-    $db, $messageStack, new QueryBuilder($db), $tableDefinition, $installerFactory, $pluginManager))->processRequest();
+$tableController = (new PluginManagerController($sanitizedRequest, $messageStack, $tableDefinition))->init($pluginManager, $installerFactory)->processRequest();
 
 ?>
 <!doctype html>

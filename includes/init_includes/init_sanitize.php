@@ -114,7 +114,7 @@ use Zencart\FileSystem\FileSystem;
   if (empty($_GET['main_page'])) $_GET['main_page'] = 'index';
 
   $pageLoader = PageLoader::getInstance();
-  $pageLoader->init($installedPlugins, $_GET['main_page'], FileSystem::getInstance());
+  $pageLoader->init($installedPlugins, $_GET['main_page'], new FileSystem);
 
     $pageDir = $pageLoader->findModulePageDirectory();
   if ( $pageDir === false) {

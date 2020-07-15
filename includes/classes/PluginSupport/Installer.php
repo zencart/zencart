@@ -93,5 +93,4 @@ class Installer
         $scriptedInstaller = $this->scriptedInstallerFactory->make($pluginDir);
         $scriptedInstaller->doUpgrade($oldVersion);
     }
-
 }

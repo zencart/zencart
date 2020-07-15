@@ -42,16 +42,6 @@ class BasePluginInstaller
         return true;
     }
 
-    public function processDisable($pluginKey, $version)
-    {
-        $this->setPluginVersionStatus($pluginKey, $version, 2);
-    }
-
-    public function processEnable($pluginKey, $version)
-    {
-        $this->setPluginVersionStatus($pluginKey, $version, 1);
-    }
-
     public function processUpgrade($pluginKey, $version, $oldVersion)
     {
         $this->pluginDir = DIR_FS_CATALOG . 'zc_plugins/' . $pluginKey . '/' . $version;
@@ -63,6 +53,16 @@ class BasePluginInstaller
         $this->setPluginVersionStatus($pluginKey, $oldVersion, 0);
         $this->setPluginVersionStatus($pluginKey, $version, 1);
         return true;
+    }
+
+    public function processDisable($pluginKey, $version)
+    {
+        $this->setPluginVersionStatus($pluginKey, $version, 2);
+    }
+
+    public function processEnable($pluginKey, $version)
+    {
+        $this->setPluginVersionStatus($pluginKey, $version, 1);
     }
 
     protected function setPluginVersionStatus($pluginKey, $version, $status)

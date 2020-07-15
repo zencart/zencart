@@ -2,496 +2,485 @@
 
 namespace Zencart\TableViewControllers;
 
+use Symfony\Component\EventDispatcher\LegacyEventProxy;
 use Zencart\FileSystem\FileSystem;
 
 class PluginManagerController extends BaseController
 {
-    public function __construct(
-        $dbConn, $messageStack, $queryBuilder, $tableDefinition, $installerFactory,
-        $pluginManager
-    ) {
-        $this->installerFactory = $installerFactory;
+    public function init($pluginManager, $installerFactory)
+    {
         $this->pluginManager = $pluginManager;
-        parent::__construct($dbConn, $messageStack, $queryBuilder, $tableDefinition);
+        $this->installerFactory = $installerFactory;
+        return $this;
     }
 
-    protected function buildListQuery()
+    protected function buildInitialQuery()
     {
-        $queryParts['mainTable']['table'] = TABLE_PLUGIN_CONTROL;
-        $queryParts['mainTable']['countField'] = 'id';
-        return $queryParts;
+        return $this->pluginManager->getPluginControl();
     }
 
     protected function processDefaultAction()
     {
-        if (!isset($this->tableObjInfo)) {
+        if (!isset($this->currentRow)) {
             return;
         }
-        $this->tableDefinition['header'][] = array(
-            'text' => '<h4>' . zen_output_string_protected
-                (
-                    $this->tableObjInfo->name) . '</h4>'
-        );
-        if ($this->tableObjInfo->status == 1) {
-            $this->tableDefinition['content'][] = [
-                'text' => '<br>' . sprintf(TEXT_VERSION_INSTALLED, $this->tableObjInfo->version) . '<br>'
-            ];
+        $this->setBoxHeader('<h4>' . zen_output_string_protected($this->currentRow->name) . '</h4>');
+        if ($this->currentRow->status == 1) {
+            $this->setBoxContent('<br>' . sprintf(TEXT_VERSION_INSTALLED, $this->currentRow->version) . '<br>');
         }
-        $this->tableDefinition['content'][] = [
-            'text' => '<br>' . TEXT_INFO_DESCRIPTION . '<br>' .
-                $this->tableObjInfo->description
-        ];
-        if ($this->tableObjInfo->status == 0) {
-            $this->tableDefinition['content'][] = array(
-                'align' => 'text-center', 'text' => '<a href="' . zen_href_link
-                    (
-                        FILENAME_PLUGIN_MANAGER,
-                        'page=' . $this->page . '&colKey=' . $this->tableObjInfo->unique_key . '&action=install') . '" class="btn btn-primary" role="button">' . TEXT_INSTALL . '</a>'
+        $this->setBoxContent('<br>' . TEXT_INFO_DESCRIPTION . '<br>' . $this->currentRow->description);
+        if ($this->currentRow->status == 0) {
+            $this->setBoxContent(
+                '<a href="' . zen_href_link(
+                    FILENAME_PLUGIN_MANAGER,
+                    $this->pageLink() . '&' . $this->colKeylink() . '&action=install'
+                ) . '" class="btn btn-primary" role="button">' . TEXT_INSTALL . '</a>'
             );
         }
-        if ($this->pluginManager->isUpgradeAvailable($this->tableObjInfo->unique_key, $this->tableObjInfo->version)) {
-            $this->tableDefinition['content'][] = array(
-                'align' => 'text-center', 'text' => '<a href="' . zen_href_link
-                    (
-                        FILENAME_PLUGIN_MANAGER,
-                        'page=' . $this->page . '&colKey=' . $this->tableObjInfo->unique_key . '&action=upgrade') . '" class="btn btn-primary" role="button">' . TEXT_UPGRADE_AVAILABLE . '</a>'
-            );
-
-        }
-        if ($this->tableObjInfo->status == 1) {
-            $this->tableDefinition['content'][] = array(
-                'align' => 'text-center', 'text' => '<a href="' . zen_href_link
-                    (
-                        FILENAME_PLUGIN_MANAGER,
-                        'page=' . $this->page . '&colKey=' . $this->tableObjInfo->unique_key . '&action=disable') . '" class="btn btn-primary" role="button">' . TEXT_DISABLE . '</a>'
-            );
-            $this->tableDefinition['content'][] = array(
-                'align' => 'text-center', 'text' => '<a href="' . zen_href_link
-                    (
-                        FILENAME_PLUGIN_MANAGER,
-                        'page=' . $this->page . '&colKey=' . $this->tableObjInfo->unique_key . '&action=uninstall') . '" class="btn btn-primary" role="button">' . TEXT_UNINSTALL . '</a>'
+        if ($this->pluginManager->isUpgradeAvailable($this->currentRow->unique_key, $this->currentRow->version)) {
+            $this->setBoxContent(
+                '<a href="' . zen_href_link(
+                    FILENAME_PLUGIN_MANAGER,
+                    $this->pageLink() . '&' . $this->colKeylink() . '&action=upgrade'
+                ) . '" class="btn btn-primary" role="button">' . TEXT_UPGRADE_AVAILABLE . '</a>'
             );
         }
-        if ($this->tableObjInfo->status == 2) {
-            $this->tableDefinition['content'][] = array(
-                'align' => 'text-center', 'text' => '<a href="' . zen_href_link
-                    (
-                        FILENAME_PLUGIN_MANAGER,
-                        'page=' . $this->page . '&colKey=' . $this->tableObjInfo->unique_key . '&action=enable') . '" class="btn btn-primary" role="button">' . TEXT_ENABLE . '</a>'
+        if ($this->currentRow->status == 1) {
+            $this->setBoxContent(
+                '<a href="' . zen_href_link(
+                    FILENAME_PLUGIN_MANAGER,
+                    $this->pageLink() . '&' . $this->colKeylink() . '&action=disable'
+                ) . '" class="btn btn-primary" role="button">' . TEXT_DISABLE . '</a>'
             );
-            $this->tableDefinition['content'][] = array(
-                'align' => 'text-center', 'text' => '<a href="' . zen_href_link
-                    (
-                        FILENAME_PLUGIN_MANAGER,
-                        'page=' . $this->page . '&colKey=' . $this->tableObjInfo->unique_key . '&action=uninstall') . '" class="btn btn-primary" role="button">' . TEXT_UNINSTALL . '</a>'
+            $this->setBoxContent(
+                '<a href="' . zen_href_link(
+                    FILENAME_PLUGIN_MANAGER,
+                    $this->pageLink() . '&' . $this->colKeylink() . '&action=uninstall'
+                ) . '" class="btn btn-primary" role="button">' . TEXT_UNINSTALL . '</a>'
             );
         }
-        if ($this->pluginManager->hasPluginVersionsToClean($this->tableObjInfo->unique_key, $this->tableObjInfo->version)) {
-            $this->tableDefinition['content'][] = ['text' => '<br>' . TEXT_INFO_CLEANUP];
-            $this->tableDefinition['content'][] = array(
-                'align' => 'text-center', 'text' => '<a href="' . zen_href_link
-                    (
-                        FILENAME_PLUGIN_MANAGER,
-                        'page=' . $this->page . '&colKey=' . $this->tableObjInfo->unique_key . '&action=cleanup') . '" class="btn btn-primary" role="button">' . TEXT_CLEANUP . '</a>'
+        if ($this->currentRow->status == 2) {
+            $this->setBoxContent(
+                '<a href="' . zen_href_link(
+                    FILENAME_PLUGIN_MANAGER,
+                    $this->pageLink() . '&' . $this->colKeylink() . '&action=enable'
+                ) . '" class="btn btn-primary" role="button">' . TEXT_ENABLE . '</a>'
+            );
+            $this->setBoxContent(
+                '<a href="' . zen_href_link(
+                    FILENAME_PLUGIN_MANAGER,
+                    $this->pageLink() . '&' . $this->colKeylink() . '&action=uninstall'
+                ) . '" class="btn btn-primary" role="button">' . TEXT_UNINSTALL . '</a>'
+            );
+        }
+        if ($this->pluginManager->hasPluginVersionsToClean($this->currentRow->unique_key, $this->currentRow->version)) {
+            $this->setBoxContent('<br>' . TEXT_INFO_CLEANUP);
+            $this->setBoxContent(
+                '<a href="' . zen_href_link(
+                    FILENAME_PLUGIN_MANAGER,
+                    $this->pageLink() . '&' . $this->colKeylink() . '&action=cleanup'
+                ) . '" class="btn btn-primary" role="button">' . TEXT_CLEANUP . '</a>'
             );
         }
     }
 
     protected function processActionInstall()
     {
-        $this->tableDefinition['header'][] = array(
-            'text' => '<h4>' . zen_output_string_protected
-                (
-                    $this->tableObjInfo->name) . '</h4>'
+        $this->setBoxHeader('<h4>' . zen_output_string_protected($this->currentRow->name) . '</h4>');
+        $this->setBoxForm(
+            zen_draw_form('plugininstall', FILENAME_PLUGIN_MANAGER, $this->pageLink() . '&' . $this->colKeylink() . '&action=doInstall', 'post', 'class="form-horizontal"')
         );
-
-        $this->tableDefinition['content']['form'] = zen_draw_form(
-            'plugininstall', FILENAME_PLUGIN_MANAGER, 'page=' . $_GET['page'] . '&colKey=' .
-                       $this->tableObjInfo->unique_key . '&action=doInstall', 'post', 'class="form-horizontal"');
-        $this->tableDefinition['content'][] = [
-            'text' => '<br>' . TEXT_INFO_DESCRIPTION . '<br>' .
-                $this->tableObjInfo->description
-        ];
-        $versions = $this->pluginManager->getPluginVersionsForPlugin($this->tableObjInfo->unique_key);
+        $this->setBoxContent('<br>' . TEXT_INFO_DESCRIPTION . '<br>' . $this->currentRow->description);
+        $versions = $this->pluginManager->getPluginVersionsForPlugin($this->currentRow->unique_key);
         $hasMultiple = (count($versions) > 1);
         $firstKey = key($versions);
         if ($hasMultiple) {
             foreach ($versions as $version) {
                 $checked = ($version['version'] == $firstKey) ? true : false;
-                $this->tableDefinition['content'][] = array(
-                    'text' => '<br>' . zen_draw_label
-                        (
-                            $version['version'], 'version', 'class="control-label"') . zen_draw_radio_field(
-                            'version',
-                            $version['version'],
-                            $checked
-                        )
-                );
+                $this->setBoxContent('<br>' . zen_draw_label($version['version'], 'version', 'class="control-label"') . zen_draw_radio_field('version', $version['version'], $checked));
             }
         }
         if (!$hasMultiple) {
-            $this->tableDefinition['content'][] = array('text' => zen_draw_hidden_field('version', $firstKey));
+            $this->setBoxContent(zen_draw_hidden_field('version', $firstKey));
         }
-        $this->tableDefinition['content'][] = array(
-            'align' => 'text-center',
-            'text'  => '<br><button type="submit" class="btn btn-primary">'
-                . TEXT_INSTALL . '</button> <a href="' . zen_href_link(
-                    FILENAME_PLUGIN_MANAGER,
-                    'page=' . $this->page . '&colKey=' . $this->tableObjInfo->unique_key) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>'
+        $this->setBoxContent(
+            '<br><button type="submit" class="btn btn-primary">'
+            . TEXT_INSTALL . '</button> <a href="' . zen_href_link(
+                FILENAME_PLUGIN_MANAGER,
+                $this->pageLink() . '&' . $this->colKeylink()
+            ) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>'
         );
     }
 
     protected function processActionDoInstall()
     {
-        if (!isset($_POST['version'])) {
+        if (!$this->request->has('version')) {
             zen_redirect(
                 zen_href_link(
-                    FILENAME_PLUGIN_MANAGER, 'page=' . $this->page . '&colKey=' .
-                                           $_GET['colKey']));
+                    FILENAME_PLUGIN_MANAGER,
+                    $this->pageLink() . '&' . $this->colKeylink()
+                )
+            );
         }
-        $installer = $this->installerFactory->make($_GET['colKey'], $_POST['version']);
-        $installed = $installer->processInstall($_GET['colKey'], $_POST['version']);
+        $installer = $this->installerFactory->make($this->currentRow->unique_key, $this->request->input('version'));
+        $installed = $installer->processInstall($this->currentRow->unique_key, $this->request->input('version'));
         if (!$installed) {
             $this->outputMessageList($installer->errorContainer->getFriendlyErrors(), 'error');
             zen_redirect(
                 zen_href_link(
-                    FILENAME_PLUGIN_MANAGER, 'page=' . $this->page . '&colKey=' .
-                                           $_GET['colKey']));
-
+                    FILENAME_PLUGIN_MANAGER,
+                    $this->pageLink() . '&' . $this->colKeylink()
+                )
+            );
         }
         $this->messageStack->add_session(TEXT_INSTALL_SUCCESS, 'success');
         zen_redirect(
             zen_href_link(
-                FILENAME_PLUGIN_MANAGER, 'page=' . $this->page . '&colKey=' .
-                                       $_GET['colKey']));
-
+                FILENAME_PLUGIN_MANAGER,
+                $this->pageLink() . '&' . $this->colKeylink()
+            )
+        );
     }
 
     protected function processActionUninstall()
     {
-        $this->tableDefinition['header'][] = array(
-            'text' => '<h4>' . zen_output_string_protected
-                (
-                    $this->tableObjInfo->name) . '</h4>'
+        $this->setBoxHeader('<h4>' . zen_output_string_protected($this->currentRow->name) . '</h4>');
+        $this->setBoxForm(
+            zen_draw_form(
+                'pluginuninstall',
+                FILENAME_PLUGIN_MANAGER,
+                $this->pageLink() . '&' . $this->colKeylink() . '&action=doUninstall',
+                'post',
+                'class="form-horizontal"'
+            ) . zen_draw_hidden_field('version', $this->currentRow->version)
         );
-        $this->tableDefinition['content']['form'] = zen_draw_form(
-            'pluginuninstall', FILENAME_PLUGIN_MANAGER, 'page=' . $this->page . '&colKey=' .
-                       $this->tableObjInfo->unique_key . '&action=doUninstall', 'post', 'class="form-horizontal"') . zen_draw_hidden_field('version', $this->tableObjInfo->version);
-        $this->tableDefinition['content'][] = [
-            'text' => '<br>' . TEXT_CONFIRM_UNINSTALL . '<br>'
-        ];
-        $this->tableDefinition['content'][] = array(
-            'align' => 'text-center',
-            'text'  => '<br><button type="submit" class="btn btn-primary">'
-                . TEXT_UNINSTALL . '</button> <a href="' . zen_href_link(
-                    FILENAME_PLUGIN_MANAGER,
-                    'page=' . $this->page . '&colKey=' . $this->tableObjInfo->unique_key) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>'
+        $this->setBoxContent('<br>' . TEXT_CONFIRM_UNINSTALL . '<br>');
+        $this->setBoxContent(
+            '<br><button type="submit" class="btn btn-primary">'
+            . TEXT_UNINSTALL . '</button> <a href="' . zen_href_link(
+                FILENAME_PLUGIN_MANAGER,
+                $this->pageLink() . '&' . $this->colKeylink()
+            ) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>'
         );
     }
 
     protected function processActionDoUninstall()
     {
-        if (!isset($_POST['version'])) {
+        if (!$this->request->has('version')) {
             zen_redirect(
                 zen_href_link(
-                    FILENAME_PLUGIN_MANAGER, 'page=' . $this->page . '&colKey=' .
-                                           $_GET['colKey']));
+                    FILENAME_PLUGIN_MANAGER,
+                    $this->pageLink() . '&' . $this->colKeylink()
+                )
+            );
         }
-        $installer = $this->installerFactory->make($_GET['colKey'], $_POST['version']);
-        $uninstalled = $installer->processUninstall($_GET['colKey'], $_POST['version']);
+        $installer = $this->installerFactory->make($this->currentRow->unique_key, $this->request->input('version'));
+        $uninstalled = $installer->processUninstall($this->currentRow->unique_key, $this->request->input('version'));
         if (!$uninstalled) {
             $this->outputMessageList($installer->errorContainer->getFriendlyErrors(), 'error');
             zen_redirect(
                 zen_href_link(
-                    FILENAME_PLUGIN_MANAGER, 'page=' . $this->page . '&colKey=' .
-                                           $_GET['colKey']));
-
+                    FILENAME_PLUGIN_MANAGER,
+                    $this->pageLink() . '&' . $this->colKeylink()
+                )
+            );
         }
         $this->messageStack->add_session(TEXT_UNINSTALL_SUCCESS, 'success');
         zen_redirect(
             zen_href_link(
-                FILENAME_PLUGIN_MANAGER, 'page=' . $this->page . '&colKey=' .
-                                       $_GET['colKey']));
-
+                FILENAME_PLUGIN_MANAGER,
+                $this->pageLink() . '&' . $this->colKeylink()
+            )
+        );
     }
 
     protected function processActionUpgrade()
     {
-        if (!$this->pluginManager->isUpgradeAvailable($this->tableObjInfo->unique_key, $this->tableObjInfo->version)) {
+        if (!$this->pluginManager->isUpgradeAvailable($this->currentRow->unique_key, $this->currentRow->version)) {
             zen_redirect(
                 zen_href_link(
-                    FILENAME_PLUGIN_MANAGER, 'page=' . $this->page . '&colKey=' .
-                                           $_GET['colKey']));
+                    FILENAME_PLUGIN_MANAGER,
+                    $this->pageLink() . '&' . $this->colKeylink()
+                )
+            );
         }
-        $versions = $this->pluginManager->getVersionsForUpgrade($this->tableObjInfo->unique_key, $this->tableObjInfo->version);
-        $this->tableDefinition['header'][] = array(
-            'text' => '<h4>' . zen_output_string_protected
-                (
-                    $this->tableObjInfo->name) . '</h4>'
-        );
-        $this->tableDefinition['content']['form'] = zen_draw_form(
-                'pluginupgrade', FILENAME_PLUGIN_MANAGER, 'page=' . $this->page . '&colKey=' .
-                                 $this->tableObjInfo->unique_key . '&action=confirmUpgrade', 'post', 'class="form-horizontal"') . zen_draw_hidden_field('oldVersion', $this->tableObjInfo->version);
-        $this->tableDefinition['content'][] = [
-            'text' => '<br>' . TEXT_INFO_UPGRADE . '<br>'
-        ];
+        $versions = $this->pluginManager->getVersionsForUpgrade($this->currentRow->unique_key, $this->currentRow->version);
+        $this->setBoxHeader('<h4>' . zen_output_string_protected($this->currentRow->name) . '</h4>');
+        $this->setBoxForm(zen_draw_form('pluginupgrade', FILENAME_PLUGIN_MANAGER, $this->pageLink() . '&' . $this->colKeylink() . '&action=confirmUpgrade', 'post', 'class="form-horizontal"'));
+        $this->setBoxContent('<br>' . TEXT_INFO_UPGRADE . '<br>');
         $firstKey = key($versions);
         foreach ($versions as $version) {
-            $checked = ($version == $firstKey) ? true : false;
+            $checked = ($version == $firstKey);
             $this->tableDefinition['content'][] = array(
                 'text' => '<br>' . zen_draw_label
                     (
-                        $version, 'version', 'class="control-label"') . zen_draw_radio_field(
+                        $version,
+                        'version',
+                        'class="control-label"'
+                    ) . zen_draw_radio_field(
                         'version',
                         $version,
                         $checked
                     )
             );
         }
-        $this->tableDefinition['content'][] = array(
-            'align' => 'text-center',
-            'text'  => '<br><button type="submit" class="btn btn-primary">'
-                . TEXT_UPGRADE . '</button> <a href="' . zen_href_link(
-                    FILENAME_PLUGIN_MANAGER,
-                    'page=' . $this->page . '&colKey=' . $this->tableObjInfo->unique_key) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>'
+        $this->setBoxContent(
+            '<br><button type="submit" class="btn btn-primary">'
+            . TEXT_UPGRADE . '</button> <a href="' . zen_href_link(
+                FILENAME_PLUGIN_MANAGER,
+                $this->pageLink() . '&' . $this->colKeylink()
+            ) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>'
         );
     }
 
     protected function processActionConfirmUpgrade()
     {
         $error = false;
-        $versions = $this->pluginManager->getVersionsForUpgrade($this->tableObjInfo->unique_key, $this->tableObjInfo->version);
-        if (!$this->pluginManager->isUpgradeAvailable($this->tableObjInfo->unique_key, $this->tableObjInfo->version)) {
+        $versions = $this->pluginManager->getVersionsForUpgrade($this->currentRow->unique_key, $this->currentRow->version);
+        if (!$this->pluginManager->isUpgradeAvailable($this->currentRow->unique_key, $this->currentRow->version)) {
             $error = true;
         }
-        if ((!isset($_POST['version']))) {
+        if ((!$this->request->has('version'))) {
             $error = true;
         }
-        if ((!isset($_POST['oldVersion']))) {
-            $error = true;
-        }
-        if (!in_array($_POST['version'], $versions)) {
+        if (!in_array($this->request->input('version'), $versions)) {
             $error = true;
         }
         if ($error) {
             zen_redirect(
                 zen_href_link(
-                    FILENAME_PLUGIN_MANAGER, 'page=' . $this->page . '&colKey=' .
-                                           $_GET['colKey']));
-
-        }
-        $this->tableDefinition['header'][] = array(
-            'text' => '<h4>' . zen_output_string_protected
-                (
-                    $this->tableObjInfo->name) . '</h4>'
-        );
-        $this->tableDefinition['content']['form'] = zen_draw_form(
-                'pluginupgrade', FILENAME_PLUGIN_MANAGER, 'page=' . $this->page . '&colKey=' .
-                               $this->tableObjInfo->unique_key . '&action=doUpgrade', 'post', 'class="form-horizontal"') . zen_draw_hidden_field('version', $_POST['version']) . zen_draw_hidden_field('oldVersion', $_POST['oldVersion']);
-        $this->tableDefinition['content'][] = [
-            'text' => '<br>' . TEXT_CONFIRM_UPGRADE . '<br>' . sprintf(TEXT_INFO_UPGRADE_CONFIRM, $_POST['version']) . '<br><br>' . TEXT_INFO_UPGRADE_WARNING
-        ];
-        $this->tableDefinition['content'][] = array(
-            'align' => 'text-center',
-            'text'  => '<br><button type="submit" class="btn btn-primary">'
-                . TEXT_UPGRADE . '</button> <a href="' . zen_href_link(
                     FILENAME_PLUGIN_MANAGER,
-                    'page=' . $this->page . '&colKey=' . $this->tableObjInfo->unique_key) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>'
+                    $this->pageLink() . '&' . $this->colKeylink()
+                )
+            );
+        }
+        $this->setBoxHeader('<h4>' . zen_output_string_protected($this->currentRow->name) . '</h4>');
+        $this->setBoxForm(zen_draw_form(
+                'pluginupgrade',
+                FILENAME_PLUGIN_MANAGER,
+                $this->pageLink() . '&' . $this->colKeylink() . '&action=doUpgrade',
+                'post',
+                'class="form-horizontal"'
+            ) . zen_draw_hidden_field('version', $this->request->input('version')));
+        $this->setBoxContent(
+            '<br>' . TEXT_CONFIRM_UPGRADE . '<br>' . sprintf(TEXT_INFO_UPGRADE_CONFIRM, $this->request->input('version')) . '<br><br>' . TEXT_INFO_UPGRADE_WARNING
+        );
+        $this->setBoxContent(
+            '<br><button type="submit" class="btn btn-primary">'
+            . TEXT_UPGRADE . '</button> <a href="' . zen_href_link(
+                FILENAME_PLUGIN_MANAGER,
+                $this->pageLink() . '&' . $this->colKeylink()
+            ) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>'
         );
     }
 
     protected function processActionDoUpgrade()
     {
         $error = false;
-        $versions = $this->pluginManager->getVersionsForUpgrade($this->tableObjInfo->unique_key, $this->tableObjInfo->version);
-        if (!$this->pluginManager->isUpgradeAvailable($this->tableObjInfo->unique_key, $this->tableObjInfo->version)) {
+        $versions = $this->pluginManager->getVersionsForUpgrade($this->currentRow->unique_key, $this->currentRow->version);
+        if (!$this->pluginManager->isUpgradeAvailable($this->currentRow->unique_key, $this->currentRow->version)) {
             $error = true;
         }
-        if ((!isset($_POST['version']))) {
+        if ((!$this->request->has('version'))) {
             $error = true;
         }
-        if ((!isset($_POST['oldVersion']))) {
-            $error = true;
-        }
-        if (!in_array($_POST['version'], $versions)) {
+        if (!in_array($this->request->input('version'), $versions)) {
             $error = true;
         }
         if ($error) {
-            zen_redirect(zen_href_link(FILENAME_PLUGIN_MANAGER, 'page=' . $this->page . '&colKey=' . $_GET['colKey']));
+            zen_redirect(zen_href_link(FILENAME_PLUGIN_MANAGER, $this->pageLink() . '&' . $this->colKeylink()));
         }
-        $installer = $this->installerFactory->make($_GET['colKey'], $_POST['version']);
-        $upgraded = $installer->processUpgrade($_GET['colKey'], $_POST['version'], $_POST['oldVersion']);
+        $installer = $this->installerFactory->make($this->currentRow->unique_key, $this->request->input('version'));
+        $upgraded = $installer->processUpgrade($this->currentRow->unique_key, $this->request->input('version'), $this->currentRow->version);
         if (!$upgraded) {
             $this->outputMessageList($installer->errorContainer->getFriendlyErrors(), 'error');
             zen_redirect(
                 zen_href_link(
-                    FILENAME_PLUGIN_MANAGER, 'page=' . $this->page . '&colKey=' .
-                                           $_GET['colKey']));
-
+                    FILENAME_PLUGIN_MANAGER,
+                    $this->pageLink() . '&' . $this->colKeylink()
+                )
+            );
         }
         $this->messageStack->add_session(TEXT_UPGRADE_SUCCESS, 'success');
         zen_redirect(
             zen_href_link(
-                FILENAME_PLUGIN_MANAGER, 'page=' . $this->page . '&colKey=' .
-                                       $_GET['colKey']));
-
+                FILENAME_PLUGIN_MANAGER,
+                $this->pageLink() . '&' . $this->colKeylink()
+            )
+        );
     }
 
     protected function processActionCleanUp()
     {
-        $versions = $this->pluginManager->getPluginVersionsToClean($this->tableObjInfo->unique_key, $this->tableObjInfo->version);
-        $this->tableDefinition['header'][] = array(
-            'text' => '<h4>' . zen_output_string_protected
-                (
-                    $this->tableObjInfo->name) . '</h4>'
+        $versions = $this->pluginManager->getPluginVersionsToClean($this->currentRow->unique_key, $this->currentRow->version);
+        $this->setBoxHeader(
+            '<h4>' . zen_output_string_protected
+            (
+                $this->currentRow->name
+            ) . '</h4>'
         );
-        $this->tableDefinition['content']['form'] = zen_draw_form(
-            'pluginupgrade', FILENAME_PLUGIN_MANAGER, 'page=' . $this->page . '&colKey=' .
-                           $this->tableObjInfo->unique_key . '&action=confirmCleanUp', 'post', 'class="form-horizontal"');
-        $this->tableDefinition['content'][] = [
-            'text' => '<br>' . TEXT_INFO_SELECT_CLEAN . '<br>'
-        ];
+        $this->setBoxForm(
+            zen_draw_form(
+                'pluginupgrade',
+                FILENAME_PLUGIN_MANAGER,
+                $this->pageLink() . '&' . $this->colKeylink() . '&action=confirmCleanUp',
+                'post',
+                'class="form-horizontal"'
+            )
+        );
+        $this->setBoxContent('<br>' . TEXT_INFO_SELECT_CLEAN . '<br>');
         foreach ($versions as $version) {
             $this->tableDefinition['content'][] = array(
                 'text' => '<br>' . zen_draw_label
                     (
-                        $version['version'], 'version', 'class="control-label"') . zen_draw_checkbox_field(
+                        $version['version'],
+                        'version',
+                        'class="control-label"'
+                    ) . zen_draw_checkbox_field(
                         'version[]',
                         $version['version']
                     )
             );
         }
-        $this->tableDefinition['content'][] = array(
-            'align' => 'text-center',
-            'text'  => '<br><button type="submit" class="btn btn-primary">'
-                . TEXT_CONFIRM . '</button> <a href="' . zen_href_link(
-                    FILENAME_PLUGIN_MANAGER,
-                    'page=' . $this->page . '&colKey=' . $this->tableObjInfo->unique_key) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>'
+        $this->setBoxContent(
+            '<br><button type="submit" class="btn btn-primary">'
+            . TEXT_CONFIRM . '</button> <a href="' . zen_href_link(
+                FILENAME_PLUGIN_MANAGER,
+                $this->pageLink() . '&' . $this->colKeylink()
+            ) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>'
         );
     }
 
     protected function processActionConfirmCleanUp()
     {
-        if (!isset($_POST['version']) || !is_array($_POST['version'])) {
+        if (!$this->request->has('version') || !is_array($this->request->input('version'))) {
             zen_redirect(
                 zen_href_link(
-                    FILENAME_PLUGIN_MANAGER, 'page=' . $this->page . '&colKey=' . $_GET['colKey'] . '&action=cleanup'
+                    FILENAME_PLUGIN_MANAGER,
+                    $this->pageLink() . '&' . $this->colKeylink() . '&action=cleanup'
                 )
             );
         }
-        $this->tableDefinition['header'][] = array(
-            'text' => '<h4>' . zen_output_string_protected
-                (
-                    $this->tableObjInfo->name) . '</h4>'
-        );
-        $this->tableDefinition['content']['form'] = zen_draw_form(
-            'pluginupgrade', FILENAME_PLUGIN_MANAGER, 'page=' . $this->page . '&colKey=' .
-                           $this->tableObjInfo->unique_key . '&action=doCleanUp', 'post', 'class="form-horizontal"');
-        $this->tableDefinition['content'][] = [
-            'text' => '<br>' . TEXT_INFO_CONFIRM_CLEAN . '<br>'
-        ];
-        foreach ($_POST['version'] as $version) {
-            $this->tableDefinition['content'][] = array(
-                'text' => '<br>' . $version . zen_draw_hidden_field('version[]', $version)
-            );
+        $this->setBoxHeader('<h4>' . zen_output_string_protected($this->currentRow->name) . '</h4>');
+        $this->setBoxForm(zen_draw_form(
+            'pluginupgrade',
+            FILENAME_PLUGIN_MANAGER,
+            $this->pageLink() . '&' . $this->colKeylink() . '&action=doCleanUp',
+            'post',
+            'class="form-horizontal"'
+        ));
+        $this->setBoxContent('<br>' . TEXT_INFO_CONFIRM_CLEAN . '<br>');
+        foreach ($this->request->input('version') as $version) {
+            $this->setBoxContent('<br>' . $version . zen_draw_hidden_field('version[]', $version));
         }
-        $this->tableDefinition['content'][] = array(
-            'align' => 'text-center',
-            'text'  => '<br><button type="submit" class="btn btn-primary">'
-                . TEXT_CONFIRM . '</button> <a href="' . zen_href_link(
-                    FILENAME_PLUGIN_MANAGER,
-                    'page=' . $this->page . '&colKey=' . $this->tableObjInfo->unique_key) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>'
+        $this->setBoxContent(
+            '<br><button type="submit" class="btn btn-primary">'
+            . TEXT_CONFIRM . '</button> <a href="' . zen_href_link(
+                FILENAME_PLUGIN_MANAGER,
+                $this->pageLink() . '&' . $this->colKeylink()
+            ) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>'
         );
-
     }
 
     protected function processActionDoCleanup()
     {
-
+        if (!$this->request->has('version') || !is_array($this->request->input('version'))) {
+            zen_redirect(
+                zen_href_link(
+                    FILENAME_PLUGIN_MANAGER,
+                    $this->pageLink() . '&' . $this->colKeylink() . '&action=cleanup'
+                )
+            );
+        }
+        foreach ($this->request->input('version') as $version) {
+            $path = DIR_FS_CATALOG . 'zc_plugins/' . $this->currentRow->unique_key . '/' . $version;
+            (new FileSystem)->deleteDirectory($path);
+        }
+        $this->messageStack->add_session(TEXT_CLEANUP_SUCCESS, 'success');
+        zen_redirect(zen_href_link(FILENAME_PLUGIN_MANAGER, $this->pageLink()));
     }
 
     protected function processActionEnable()
     {
-        $this->tableDefinition['header'][] = array(
-            'text' => '<h4>' . zen_output_string_protected
-                (
-                    $this->tableObjInfo->name) . '</h4>'
-        );
-        $this->tableDefinition['content']['form'] = zen_draw_form(
-                'pluginuninstall', FILENAME_PLUGIN_MANAGER, 'page=' . $this->page . '&colKey=' .
-                                 $this->tableObjInfo->unique_key . '&action=doEnable', 'post', 'class="form-horizontal"') . zen_draw_hidden_field('version', $this->tableObjInfo->version);
-        $this->tableDefinition['content'][] = [
-            'text' => '<br>' . TEXT_CONFIRM_ENABLE . '<br>'
-        ];
-        $this->tableDefinition['content'][] = array(
-            'align' => 'text-center',
-            'text'  => '<br><button type="submit" class="btn btn-primary">'
-                . TEXT_ENABLE . '</button> <a href="' . zen_href_link(
-                    FILENAME_PLUGIN_MANAGER,
-                    'page=' . $this->page . '&colKey=' . $this->tableObjInfo->unique_key) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>'
+        $this->setBoxHeader('<h4>' . zen_output_string_protected($this->currentRow->name) . '</h4>');
+        $this->setBoxForm(zen_draw_form(
+                'pluginuninstall',
+                FILENAME_PLUGIN_MANAGER,
+                $this->pageLink() . '&' . $this->colKeylink() . '&action=doEnable',
+                'post',
+                'class="form-horizontal"'
+            ) . zen_draw_hidden_field('version', $this->currentRow->version));
+        $this->setBoxContent('<br>' . TEXT_CONFIRM_ENABLE . '<br>');
+        $this->setBoxContent(
+            '<br><button type="submit" class="btn btn-primary">'
+            . TEXT_ENABLE . '</button> <a href="' . zen_href_link(
+                FILENAME_PLUGIN_MANAGER,
+                $this->pageLink() . '&' . $this->colKeylink()
+            ) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>'
         );
     }
 
     protected function processActionDoEnable()
     {
-        if (!isset($_POST['version'])) {
+        if (!$this->request->has('version')) {
             zen_redirect(
                 zen_href_link(
-                    FILENAME_PLUGIN_MANAGER, 'page=' . $this->page . '&colKey=' .
-                                           $_GET['colKey']));
+                    FILENAME_PLUGIN_MANAGER,
+                    $this->pageLink() . '&' . $this->colKeylink()
+                )
+            );
         }
-        $installer = $this->installerFactory->make($_GET['colKey'], $_POST['version']);
-        $installer->processEnable($_GET['colKey'], $_POST['version']);
+        $installer = $this->installerFactory->make($this->currentRow->unique_key, $this->request->input('version'));
+        $installer->processEnable($this->currentRow->unique_key, $this->request->input('version'));
         $this->messageStack->add_session(TEXT_ENABLE_SUCCESS, 'success');
         zen_redirect(
             zen_href_link(
-                FILENAME_PLUGIN_MANAGER, 'page=' . $this->page . '&colKey=' .
-                                       $_GET['colKey']));
+                FILENAME_PLUGIN_MANAGER,
+                $this->pageLink() . '&' . $this->colKeylink()
+            )
+        );
     }
 
     protected function processActionDisable()
     {
-        $this->tableDefinition['header'][] = array(
-            'text' => '<h4>' . zen_output_string_protected
-                (
-                    $this->tableObjInfo->name) . '</h4>'
+        $this->setBoxHeader(
+            '<h4>' . zen_output_string_protected
+            (
+                $this->currentRow->name
+            ) . '</h4>'
         );
-        $this->tableDefinition['content']['form'] = zen_draw_form(
-                'pluginuninstall', FILENAME_PLUGIN_MANAGER, 'page=' . $this->page . '&colKey=' .
-                                 $this->tableObjInfo->unique_key . '&action=doDisable', 'post', 'class="form-horizontal"') . zen_draw_hidden_field('version', $this->tableObjInfo->version);
-        $this->tableDefinition['content'][] = [
-            'text' => '<br>' . TEXT_CONFIRM_DISABLE . '<br>'
-        ];
-        $this->tableDefinition['content'][] = array(
-            'align' => 'text-center',
-            'text'  => '<br><button type="submit" class="btn btn-primary">'
-                . TEXT_DISABLE . '</button> <a href="' . zen_href_link(
-                    FILENAME_PLUGIN_MANAGER,
-                    'page=' . $this->page . '&colKey=' . $this->tableObjInfo->unique_key) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>'
+        $this->setBoxForm(zen_draw_form(
+                'pluginuninstall',
+                FILENAME_PLUGIN_MANAGER,
+                $this->pageLink() . '&' . $this->colKeylink() . '&action=doDisable',
+                'post',
+                'class="form-horizontal"'
+            ) . zen_draw_hidden_field('version', $this->currentRow->version));
+        $this->setBoxContent('<br>' . TEXT_CONFIRM_DISABLE . '<br>');
+        $this->setBoxContent(
+            '<br><button type="submit" class="btn btn-primary">'
+            . TEXT_DISABLE . '</button> <a href="' . zen_href_link(
+                FILENAME_PLUGIN_MANAGER,
+                $this->pageLink() . '&' . $this->colKeylink()
+            ) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>'
         );
     }
 
     protected function processActionDoDisable()
     {
-        if (!isset($_POST['version'])) {
-            zen_redirect(
-                zen_href_link(
-                    FILENAME_PLUGIN_MANAGER, 'page=' . $this->page . '&colKey=' .
-                                           $_GET['colKey']));
+        if (!$this->request->has('version')) {
+            zen_redirect(zen_href_link(FILENAME_PLUGIN_MANAGER, $this->pageLink() . '&' . $this->colKeylink()));
         }
-        $installer = $this->installerFactory->make($_GET['colKey'], $_POST['version']);
-        $installer->processDisable($_GET['colKey'], $_POST['version']);
+        $installer = $this->installerFactory->make($this->currentRow->unique_key, $this->request->input('version'));
+        $installer->processDisable($this->currentRow->unique_key, $this->request->input('version'));
         $this->messageStack->add_session(TEXT_DISABLE_SUCCESS, 'success');
-        zen_redirect(
-            zen_href_link(
-                FILENAME_PLUGIN_MANAGER, 'page=' . $this->page . '&colKey=' .
-                                       $_GET['colKey']));
-
+        zen_redirect(zen_href_link(FILENAME_PLUGIN_MANAGER, $this->pageLink() . '&' . $this->colKeylink()));
     }
+
     protected function getPluginFileSize($listResult, $colName, $columnInfo)
     {
         $filePath = DIR_FS_CATALOG . 'zc_plugins/' . $listResult['unique_key'] . '/';
-        $fs = FileSystem::getInstance();
+        $fs = new FileSystem;
         $dirSize = $fs->getDirectorySize($filePath);
         return $dirSize;
     }

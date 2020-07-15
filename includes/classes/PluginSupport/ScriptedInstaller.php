@@ -32,6 +32,7 @@ class ScriptedInstaller
         $upgraded = $this->executeUpgrade();
         return $upgraded;
     }
+
     protected function executeInstall()
     {
         return true;

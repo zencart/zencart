@@ -27,7 +27,7 @@ if (isset($loaderPrefix)) {
   $loaderPrefix = 'config';
 }
 $loader_file = $loaderPrefix . '.core.php';
-$initSystem = new InitSystem('admin', $loaderPrefix, FileSystem::getInstance(), $pluginManager, $installedPlugins);
+$initSystem = new InitSystem('admin', $loaderPrefix, new FileSystem, $pluginManager, $installedPlugins);
 
 if (defined('DEBUG_AUTOLOAD') && DEBUG_AUTOLOAD == true) $initSystem->setDebug(true);
 

@@ -15,38 +15,27 @@ class BaseController implements TableViewController
     use NotifierManager;
 
     protected $filters = [];
-    protected $queryParts = [];
-    protected $queryBuilder;
-    protected $dbConn;
-    protected $listResults;
     protected $tableData;
     protected $tableDefinition;
-    protected $tableObjInfo;
-    protected $splitPage;
     protected $messageStack;
     protected $action;
 
-    public function __construct($dbConn, $messageStack, $queryBuilder, $tableDefinition)
+    public function __construct($request, $messageStack, $tableDefinition)
     {
-        $this->queryBuilder = $queryBuilder;
-        $this->dbConn = $dbConn;
+        $this->request = $request;
         $this->messageStack = $messageStack;
         $this->tableDefinition = $tableDefinition;
-        $this->tableObjInfo = null;
         $this->tableDefinition['configBox'] = ['header' => [], 'content' => []];
-        $this->setTableDefinitionDefaults();
     }
 
     public function processRequest()
     {
+        $this->setTableDefinitionDefaults();
         $this->action = $this->getAction();
-        $this->page = (isset($_GET['page'])) ? $_GET['page'] : 1;
-        $this->queryParts = $this->buildListQuery();
-        $this->queryBuilder->processQuery($this->queryParts);
-        $listingSql = $this->queryBuilder->getQuery()['mainSql'];
-        $this->splitPage = $this->getSplitPageListingSql($listingSql);
-        $results = $this->dbConn->execute($this->splitPage->getSqlQuery());
-        $this->tableData = $this->processTableData($results);
+        $this->page = $this->request->input($this->tableDefinition['pagerVariable'], 1);
+        $this->query = $this->buildInitialQuery();
+        $this->paginatedResults = $this->query->paginate($this->tableDefinition['maxRowCount']);
+        $this->tableData = $this->processTableData($this->paginatedResults);
         $method = ($this->action == '') ? 'processDefaultAction' : 'processAction' . ucfirst($this->action);
         if (method_exists($this, $method)) {
             $result = $this->$method();
@@ -64,11 +53,11 @@ class BaseController implements TableViewController
 
     public function tableRowSelected($tableData)
     {
-        if (!isset($this->tableObjInfo) || !is_object($this->tableObjInfo)) {
+        if (!isset($this->currentRow) || !is_object($this->currentRow)) {
             return false;
         }
         if ($tableData['row'][$this->tableDefinition['colKey']] !=
-            $this->tableObjInfo->{$this->tableDefinition['colKey']}) {
+            $this->currentRow->{$this->tableDefinition['colKey']}) {
             return false;
         }
         return true;
@@ -76,22 +65,20 @@ class BaseController implements TableViewController
 
     public function getSelectedRowLink($tableData)
     {
-        $fn = $_GET['cmd'];
         $params = 'page=' . $this->page;
-        $params .= "&" . $this->getColKeyGetParamName() . "=" . $tableData['row'][$this->tableDefinition['colKey']];
+        $params .= "&" . $this->colKeyName() . "=" . $tableData['row'][$this->tableDefinition['colKey']];
         if ($this->getDefaultRowAction() != '') {
             $params .= "&action=" . $this->getDefaultRowAction();
         }
-        return zen_href_link($fn, $params);
+        return zen_href_link($this->request->input('cmd'), $params);
 
     }
 
     public function getNotSelectedRowLink($tableData)
     {
-        $fn = $_GET['cmd'];
         $params = 'page=' . $this->page;
-        $params .= "&" . $this->getColKeyGetParamName() . "=" . $tableData['row'][$this->tableDefinition['colKey']];
-        return zen_href_link($fn, $params);
+        $params .= "&" . $this->colKeyName() . "=" . $tableData['row'][$this->tableDefinition['colKey']];
+        return zen_href_link($this->request->input('cmd'), $params);
 
     }
 
@@ -118,7 +105,7 @@ class BaseController implements TableViewController
     {
         $listResults = [];
         foreach ($listingData as $listResult) {
-            $this->tableObjInfo = $this->setTableObjInfo($listResult);
+            $this->currentRow = $this->setCurrentRow($listResult);
             $colResults = [];
             foreach ($this->tableDefinition['columns'] as $colName => $column) {
                 $columnClass = 'dataTableContent';
@@ -153,10 +140,10 @@ class BaseController implements TableViewController
         }
     }
 
-    protected function setTableObjInfo($listResult)
+    protected function setCurrentRow($listResult)
     {
-        if (isset($this->tableObjInfo)) {
-            return $this->tableObjInfo;
+        if (isset($this->currentRow)) {
+            return $this->currentRow;
         }
         if (substr($this->getAction(), 0, 3) == 'new') {
             return null;
@@ -164,7 +151,7 @@ class BaseController implements TableViewController
         $listKeyValue = $listResult[$this->tableDefinition['colKey']];
         $colKeyFromGet = $this->getColKeyFromGet();
         if (!isset($colKeyFromGet) || (isset($colKeyFromGet) && $colKeyFromGet == $listKeyValue)) {
-            return new \objectInfo($listResult);
+            return $listResult;
         }
         return null;
 
@@ -172,26 +159,17 @@ class BaseController implements TableViewController
 
     protected function getColKeyFromGet()
     {
-
-        $colKeyGetParamName = $this->getColKeyGetParamName();
-        if (!isset($_GET[$colKeyGetParamName])) {
-            return null;
-        }
-        return $_GET[$colKeyGetParamName];
-
+        return $this->request->input($this->colKeyName(), null);
     }
 
-    protected function getColKeyGetParamName()
+    protected function colKeyName()
     {
-        if (isset($this->tableDefinition['colKeyGetParamName'])) {
-            return $this->tableDefinition['colKeyGetParamName'];
-        }
-        return 'colKey';
+        return $this->tableDefinition['colKeyName'];
     }
 
     protected function getAction()
     {
-        $action = (isset($_GET['action']) ? $_GET['action'] : '');
+        $action = $this->request->input('action', '');
         $this->notify('ADMIN_VIEW_CONTROLLER_GET_ACTION', $action);
         return $action;
     }
@@ -199,12 +177,6 @@ class BaseController implements TableViewController
     public function getPage()
     {
         return $this->page;
-    }
-
-    protected function getSplitPageListingSql($listingSql)
-    {
-        $splitSql = new Paginator($listingSql, 10);
-        return $splitSql;
     }
 
     protected function getColHeaderMainClass($colDef)
@@ -221,12 +193,6 @@ class BaseController implements TableViewController
         return $this->tableDefinition['defaultRowAction'];
     }
 
-    public function getTableObjInfo()
-    {
-        return $this->tableObjInfo;
-
-    }
-
     public function getTableConfigBoxHeader()
     {
         return $this->tableDefinition['header'];
@@ -235,11 +201,6 @@ class BaseController implements TableViewController
     public function getTableConfigBoxContent()
     {
         return $this->tableDefinition['content'];
-    }
-
-    public function getSplitPage()
-    {
-        return $this->splitPage;
     }
 
     public function outputMessageList($errorList, $errorType)
@@ -253,6 +214,9 @@ class BaseController implements TableViewController
     }
     protected function setTableDefinitionDefaults()
     {
+        $this->tableDefinition['maxRowCount'] = $this->tableDefinition['maxRowCount'] ?? 10;
+        $this->tableDefinition['colKeyName'] = $this->tableDefinition['colKeyName'] ?? 'colKey';
+        $this->tableDefinition['pagerVariable'] = $this->tableDefinition['pagerVariable'] ?? 'page';
         $this->notify('TABLE_CONTROLLER_SET_TABLE_DESC_DEFAULTS');
     }
 
@@ -271,5 +235,44 @@ class BaseController implements TableViewController
         $listValue = $listResult[$colName];
         $result = $params[$listValue];
         return $result;
+    }
+
+    public function setBoxHeader($content, $parameters = [])
+    {
+        $this->tableDefinition['header'][] = $this->processBoxContent($content, $parameters);
+    }
+
+    public function setBoxContent($content, $parameters = [])
+    {
+        $this->tableDefinition['content'][] = $this->processBoxContent($content, $parameters);
+    }
+
+    public function setBoxForm($content)
+    {
+        $this->tableDefinition['content']['form'] = $content;
+    }
+
+
+    public function processBoxContent($content, $parameters)
+    {
+        $align = $parameters['align'] ?? 'text-center';
+        $params = $parameters['params'] ?? '';
+        $boxContent = ['align' => $align, 'params' => $params, 'text' => $content];
+        return $boxContent;
+    }
+
+    public function pageLink()
+    {
+        return $this->tableDefinition['pagerVariable'] . '=' . $this->page;
+    }
+
+    public function colKeyLink()
+    {
+        return $this->colKeyName() . '=' . $this->currentRow->{$this->tableDefinition['colKey']};
+    }
+
+    public function getPaginatedResults()
+    {
+        return $this->paginatedResults;
     }
 }

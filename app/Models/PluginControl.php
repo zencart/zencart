@@ -16,6 +16,21 @@ class PluginControl extends Eloquent
     protected $keyType = 'string';
     public $incrementing = false;
     public $timestamps = false;
-    protected $fillable = ['infs'];
     protected $guarded = [];
+
+
+    public function getRelativePath()
+    {
+        $relativePath = '/zc_plugins/' . $this->unique_key . '/' . $this->version . '/';
+        return $relativePath;
+    }
+
+    public function getAbsolutePath()
+    {
+        $relativePath = $this->getRelativePath();
+        $absolutePath = DIR_FS_CATALOG . ltrim('/', $relativePath);
+        return $absolutePath;
+    }
+
+
 }

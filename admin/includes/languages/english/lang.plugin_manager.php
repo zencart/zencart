@@ -32,6 +32,7 @@ $define = [
     'TEXT_UPGRADE_SUCCESS' => 'Plugin upgraded successfully',
     'TEXT_DISABLE_SUCCESS' => 'Plugin disabled successfully',
     'TEXT_ENABLE_SUCCESS' => 'Plugin enabled successfully',
+    'TEXT_CLEANUP_SUCCESS' => 'Directories successfully removed',
     'TEXT_UPGRADE_AVAILABLE' => 'Upgrade Available',
     'TEXT_VERSION_INSTALLED' => 'Version Installed: %s',
     'TEXT_CONFIRM_UNINSTALL' => 'Are you sure you want to uninstall this plugin?',
