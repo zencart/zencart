@@ -65,6 +65,19 @@ class BasePluginInstaller
         $this->setPluginVersionStatus($pluginKey, $version, 1);
     }
 
+    public function processUpgrade($pluginKey, $version, $oldVersion)
+    {
+        $this->pluginDir = DIR_FS_CATALOG . 'zc_plugins/' . $pluginKey . '/' . $version;
+        $this->loadInstallerLanguageFile('main.php', $this->pluginDir);
+        $this->pluginInstaller->executeUpgraders($this->pluginDir, $oldVersion);
+        if ($this->errorContainer->hasErrors()) {
+            return false;
+        }
+        $this->setPluginVersionStatus($pluginKey, $oldVersion, 0);
+        $this->setPluginVersionStatus($pluginKey, $version, 1);
+        return true;
+    }
+
     protected function setPluginVersionStatus($pluginKey, $version, $status)
     {
         $sql = "UPDATE " . TABLE_PLUGIN_CONTROL . " SET status = :status:, version = :version: WHERE unique_key = :uniqueKey:";

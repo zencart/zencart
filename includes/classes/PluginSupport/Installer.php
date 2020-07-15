@@ -36,9 +36,9 @@ class Installer
         $this->executeScriptedUninstaller($pluginDir);
     }
 
-    public function executeUpgraders($pluginDir)
+    public function executeUpgraders($pluginDir, $oldVersion)
     {
-        $this->executeScriptedUpgrader($pluginDir);
+        $this->executeScriptedUpgrader($pluginDir, $oldVersion);
     }
 
     protected function executePatchInstaller($pluginDir)
@@ -85,12 +85,12 @@ class Installer
         $scriptedInstaller->doUninstall();
     }
 
-    protected function executeScriptedUpgrader($pluginDir)
+    protected function executeScriptedUpgrader($pluginDir, $oldVersion)
     {
         if (!file_exists($pluginDir . '/Installer/ScriptedInstaller.php')) {
             return;
         }
         $scriptedInstaller = $this->scriptedInstallerFactory->make($pluginDir);
-        $scriptedInstaller->doUpgrade();
+        $scriptedInstaller->doUpgrade($oldVersion);
     }
 }

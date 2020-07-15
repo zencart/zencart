@@ -45,18 +45,13 @@ class template_func extends base {
   }
 
   function get_template_dir($template_code, $current_template, $current_page, $template_dir, $debug=false) {
-    //	echo 'template_default/' . $template_dir . '=' . $template_code;
-    if ($this->file_exists($current_template . $current_page, $template_code)) {
-      return $current_template . $current_page . '/';
-    } elseif ($this->file_exists(DIR_WS_TEMPLATES . 'template_default/' . $current_page, preg_replace('/\//', '', $template_code), $debug)) {
-      return DIR_WS_TEMPLATES . 'template_default/' . $current_page;
-    } elseif ($this->file_exists($current_template . $template_dir, preg_replace('/\//', '', $template_code), $debug)) {
-      return $current_template . $template_dir;
-    } else {
-      return DIR_WS_TEMPLATES . 'template_default/' . $template_dir;
-      //        return $current_template . $template_dir;
-    }
+      $pageLoader = Zencart\PageLoader\PageLoader::getInstance();
+
+      $path = $pageLoader->getTemplateDirectory($template_code, $current_template, $current_page, $template_dir);
+
+      return $path;
   }
+
   function file_exists($file_dir, $file_pattern, $debug=false) {
     $file_found = false;
     $file_pattern = '/'.str_replace("/", "\/", $file_pattern).'$/';

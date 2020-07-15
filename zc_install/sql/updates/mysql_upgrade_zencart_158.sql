@@ -35,7 +35,9 @@ TRUNCATE TABLE whos_online;
 TRUNCATE TABLE db_cache;
 
 
+ALTER TABLE layout_boxes ADD plugin_details varchar(100) NOT NULL default '';
 
+UPDATE configuration SET configuration_description = 'If there is no weight to the order, does the order have Free Shipping?<br>0= no<br>1= yes<br><br>Note: When using Free Shipping, Enable the Free Shipping Module.  It will only show when shipping is free.' WHERE configuration_key = 'ORDER_WEIGHT_ZERO_STATUS';
 
 
 #############
