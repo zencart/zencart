@@ -26,6 +26,7 @@ $installerFactory = new InstallerFactory($db, $pluginInstaller, $errorContainer)
 
 $tableDefinition = [
     'colKey'           => 'unique_key',
+    'maxRowCount'      => 5,
     'actions'          => [
         [
             'action'                => 'new', 'text' => 'new', 'getParams' => [],

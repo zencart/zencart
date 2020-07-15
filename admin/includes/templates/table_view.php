@@ -64,10 +64,10 @@
             <table class="table">
                 <tr>
                     <td>
-                    <?php //echo $tableController->getSplitPage()->display_count(TEXT_DISPLAY_NUMBER_OF_GENERIC); ?>
+                    <?php echo sprintf(TEXT_DISPLAY_NUMBER_OF_GENERIC, $tableController->getPaginatedResults()->firstItem(), $tableController->getPaginatedResults()->lastItem(), $tableController->getPaginatedResults()->total()); ?>
                     </td>
                     <td class="text-right">
-                    <?php //echo $tableController->getSplitPage()->display_links(MAX_DISPLAY_SEARCH_RESULTS, $tableController->getPage()); ?>
+                    <?php echo $tableController->getPaginatedResults()->appends(['cmd' => request()->input('cmd')])->links(); ?>
                     </td>
                 </tr>
             </table>

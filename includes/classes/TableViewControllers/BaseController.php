@@ -34,8 +34,8 @@ class BaseController implements TableViewController
         $this->action = $this->getAction();
         $this->page = $this->request->input($this->tableDefinition['pagerVariable'], 1);
         $this->query = $this->buildInitialQuery();
-        $results = $this->query->paginate(10);
-        $this->tableData = $this->processTableData($results);
+        $this->paginatedResults = $this->query->paginate($this->tableDefinition['maxRowCount']);
+        $this->tableData = $this->processTableData($this->paginatedResults);
         $method = ($this->action == '') ? 'processDefaultAction' : 'processAction' . ucfirst($this->action);
         if (method_exists($this, $method)) {
             $result = $this->$method();
@@ -169,7 +169,7 @@ class BaseController implements TableViewController
 
     protected function getAction()
     {
-        $action = (isset($_GET['action']) ? $_GET['action'] : '');
+        $action = $this->request->input('action', '');
         $this->notify('ADMIN_VIEW_CONTROLLER_GET_ACTION', $action);
         return $action;
     }
@@ -214,6 +214,7 @@ class BaseController implements TableViewController
     }
     protected function setTableDefinitionDefaults()
     {
+        $this->tableDefinition['maxRowCount'] = $this->tableDefinition['maxRowCount'] ?? 10;
         $this->tableDefinition['colKeyName'] = $this->tableDefinition['colKeyName'] ?? 'colKey';
         $this->tableDefinition['pagerVariable'] = $this->tableDefinition['pagerVariable'] ?? 'page';
         $this->notify('TABLE_CONTROLLER_SET_TABLE_DESC_DEFAULTS');
@@ -268,5 +269,10 @@ class BaseController implements TableViewController
     public function colKeyLink()
     {
         return $this->colKeyName() . '=' . $this->currentRow->{$this->tableDefinition['colKey']};
+    }
+
+    public function getPaginatedResults()
+    {
+        return $this->paginatedResults;
     }
 }
