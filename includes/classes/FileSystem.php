@@ -9,14 +9,10 @@
 
 namespace Zencart\FileSystem;
 
-use Zencart\Traits\Singleton;
+use Illuminate\Filesystem\Filesystem as IlluminateFilesystem;
 
-class FileSystem
+class FileSystem extends IlluminateFilesystem
 {
-    use Singleton;
-
-    protected $installedPlugins;
-
     public function loadFilesFromDirectory($rootDir, $fileRegx = '~^[^\._].*\.php$~i')
     {
         if (!$dir = @dir($rootDir)) return;
@@ -116,37 +112,6 @@ class FileSystem
             $mydir->close();
         }
         return $found;
-    }
-
-    public function getPluginRelativeDirectory($pluginKey)
-    {
-        if (!isset($this->installedPlugins[$pluginKey])) {
-            return null;
-        }
-        $version = $this->installedPlugins[$pluginKey]['version'];
-        $relativePath = '/zc_plugins/' . $pluginKey . '/' . $version . '/';
-        return $relativePath;
-    }
-
-
-    public function getPluginAbsoluteDirectory($pluginKey)
-    {
-        if (!isset($this->installedPlugins[$pluginKey])) {
-            return null;
-        }
-        $version = $this->installedPlugins[$pluginKey]['version'];
-        $absolutePath = DIR_FS_CATALOG . 'zc_plugins/' . $pluginKey . '/' . $version . '/';
-        return $absolutePath;
-    }
-
-    public function setInstalledPlugins($installedPlugins)
-    {
-        $this->installedPlugins = $installedPlugins;
-    }
-
-    public function getInstalledPlugins()
-    {
-        return $this->installedPlugins;
     }
 
     public function setFileExtension($file, $extension = 'php')

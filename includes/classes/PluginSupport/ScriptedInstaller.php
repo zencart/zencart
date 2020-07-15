@@ -27,12 +27,23 @@ class ScriptedInstaller
         return $uninstalled;
     }
 
+    public function doUpgrade()
+    {
+        $upgraded = $this->executeUpgrade();
+        return $upgraded;
+    }
+
     protected function executeInstall()
     {
         return true;
     }
 
     protected function executeUninstall()
+    {
+        return true;
+    }
+
+    protected function executeUpgrade()
     {
         return true;
     }

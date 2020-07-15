@@ -21,7 +21,7 @@
                 </tr>
                 </thead>
                 <tbody>
-                <?php foreach ($tableController->getTableData('contentInfo') as $tableData) { ?>
+                <?php foreach ($tableController->getTableData('contentInfo') as $tableDataIndex => $tableData) { ?>
                     <?php if ($tableController->tableRowSelected($tableData)) { ?>
                         <tr id="defaultSelected" class="dataTableRowSelected" onclick="document.location.href='<?php echo $tableController->getSelectedRowLink(
                             $tableData); ?>'" role="button">
@@ -64,10 +64,10 @@
             <table class="table">
                 <tr>
                     <td>
-                    <?php echo $tableController->getSplitPage()->display_count(TEXT_DISPLAY_NUMBER_OF_GENERIC); ?>
+                    <?php //echo $tableController->getSplitPage()->display_count(TEXT_DISPLAY_NUMBER_OF_GENERIC); ?>
                     </td>
                     <td class="text-right">
-                    <?php echo $tableController->getSplitPage()->display_links(MAX_DISPLAY_SEARCH_RESULTS, $tableController->getPage()); ?>
+                    <?php //echo $tableController->getSplitPage()->display_links(MAX_DISPLAY_SEARCH_RESULTS, $tableController->getPage()); ?>
                     </td>
                 </tr>
             </table>

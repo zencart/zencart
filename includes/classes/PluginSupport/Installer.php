@@ -36,6 +36,11 @@ class Installer
         $this->executeScriptedUninstaller($pluginDir);
     }
 
+    public function executeUpgraders($pluginDir)
+    {
+        $this->executeScriptedUpgrader($pluginDir);
+    }
+
     protected function executePatchInstaller($pluginDir)
     {
         $patchFile = 'install.sql';
@@ -78,5 +83,14 @@ class Installer
         }
         $scriptedInstaller = $this->scriptedInstallerFactory->make($pluginDir);
         $scriptedInstaller->doUninstall();
+    }
+
+    protected function executeScriptedUpgrader($pluginDir)
+    {
+        if (!file_exists($pluginDir . '/Installer/ScriptedInstaller.php')) {
+            return;
+        }
+        $scriptedInstaller = $this->scriptedInstallerFactory->make($pluginDir);
+        $scriptedInstaller->doUpgrade();
     }
 }

@@ -20,7 +20,7 @@ class BaseLanguageLoader
         $this->languageDefines = [];
         $this->currentPage = $currentPage;
         $this->fallback = $fallback;
-        $this->fileSystem = FileSystem::getInstance();
+        $this->fileSystem = new FileSystem;
         $this->templateDir = $templateDir;
     }
 }

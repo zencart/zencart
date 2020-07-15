@@ -36,8 +36,8 @@ if (!defined('IS_ADMIN_FLAG')) {
 <?php
 }
 foreach ($installedPlugins as $plugin) {
-    $relativeDir = $fs->getPluginRelativeDirectory($plugin['unique_key']);
-    $absoluteDir = $fs->getPluginAbsoluteDirectory($plugin['unique_key']);
+    $relativeDir = $plugin->getRelativePath();
+    $absoluteDir = $plugin->getAbsolutePath();
     $directory_array = $template->get_template_part($absoluteDir . 'admin/includes/css/', '/^global_stylesheet/', '.css');
     foreach ($directory_array as $key => $value) {
         ?>

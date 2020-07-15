@@ -134,7 +134,7 @@ class PluginManager
 
     protected function getPluginVersions($uniqueKey)
     {
-        $result = $this->pluginControlVersion->where(['unique_key' => $uniqueKey]);
+        $result = $this->pluginControlVersion->where(['unique_key' => $uniqueKey])->get();
         return $result;
     }
 
@@ -171,7 +171,7 @@ class PluginManager
         return $versionList;
     }
 
-    protected function getPluginsFromDb()
+    public function getPluginsFromDb()
     {
         $pluginList = [];
         $results = $this->pluginControl->all();
@@ -283,5 +283,10 @@ class PluginManager
     public function hasPluginVersionsToClean($uniqueKey, $version)
     {
         return count($this->getPluginVersionsToClean($uniqueKey, $version));
+    }
+
+    public function getPluginControl()
+    {
+        return $this->pluginControl;
     }
 }

@@ -42,6 +42,19 @@ class BasePluginInstaller
         return true;
     }
 
+    public function processUpgrade($pluginKey, $version, $oldVersion)
+    {
+        $this->pluginDir = DIR_FS_CATALOG . 'zc_plugins/' . $pluginKey . '/' . $version;
+        $this->loadInstallerLanguageFile('main.php', $this->pluginDir);
+        $this->pluginInstaller->executeUpgraders($this->pluginDir);
+        if ($this->errorContainer->hasErrors()) {
+            return false;
+        }
+        $this->setPluginVersionStatus($pluginKey, $oldVersion, 0);
+        $this->setPluginVersionStatus($pluginKey, $version, 1);
+        return true;
+    }
+
     public function processDisable($pluginKey, $version)
     {
         $this->setPluginVersionStatus($pluginKey, $version, 2);

@@ -188,7 +188,7 @@ require DIR_FS_CATALOG . 'includes/illuminate_bootstrap.php';
 $installedPlugins = $laravelApp->make('installedPlugins');
 $pluginManager = new PluginManager(new App\Models\PluginControl, new App\Models\PluginControlVersion);
 
-$fs = FileSystem::getInstance();
+$fs = new FileSystem;
 $fs->loadFilesFromPluginsDirectory($installedPlugins, 'catalog/includes/extra_configures', '~^[^\._].*\.php$~i');
 $fs->loadFilesFromPluginsDirectory($installedPlugins, 'catalog/includes/extra_datafiles', '~^[^\._].*\.php$~i');
 
@@ -209,7 +209,7 @@ if (isset($loaderPrefix)) {
     $loaderPrefix = 'config';
 }
 $loader_file = $loaderPrefix . '.core.php';
-$initSystem = new InitSystem('catalog', $loaderPrefix, FileSystem::getInstance(), $pluginManager, $installedPlugins);
+$initSystem = new InitSystem('catalog', $loaderPrefix, new FileSystem, $pluginManager, $installedPlugins);
 
 if (defined('DEBUG_AUTOLOAD') && DEBUG_AUTOLOAD == true) $initSystem->setDebug(true);
 

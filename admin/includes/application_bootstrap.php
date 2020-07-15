@@ -162,10 +162,9 @@ require DIR_FS_CATALOG . 'includes/illuminate_bootstrap.php';
 $installedPlugins = $laravelApp->make('installedPlugins');
 $pluginManager = new PluginManager(new App\Models\PluginControl, new App\Models\PluginControlVersion);
 $pageLoader = PageLoader::getInstance();
-$pageLoader->init($installedPlugins, $PHP_SELF, FileSystem::getInstance());
+$pageLoader->init($installedPlugins, $PHP_SELF, new FileSystem);
 
-$fs = FileSystem::getInstance();
-$fs->setInstalledPlugins($installedPlugins);
+$fs = new FileSystem;
 $fs->loadFilesFromPluginsDirectory($installedPlugins, 'admin/includes/extra_configures', '~^[^\._].*\.php$~i');
 $fs->loadFilesFromPluginsDirectory($installedPlugins, 'admin/includes/extra_datafiles', '~^[^\._].*\.php$~i');
 
