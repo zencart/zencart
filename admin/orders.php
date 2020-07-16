@@ -682,29 +682,44 @@ if (zen_not_null($action) && $order_exists == true) {
               <tr>
                 <td colspan="2"><?php echo zen_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
               </tr>
+              <?php if (zen_not_null($order->info['cc_type'])) { ?>
               <tr>
                 <td class="main"><?php echo ENTRY_CREDIT_CARD_TYPE; ?></td>
                 <td class="main"><?php echo $order->info['cc_type']; ?></td>
               </tr>
+              <?php
+              }
+              if (zen_not_null($order->info['cc_owner'])) { ?>
               <tr>
                 <td class="main"><?php echo ENTRY_CREDIT_CARD_OWNER; ?></td>
                 <td class="main"><?php echo $order->info['cc_owner']; ?></td>
               </tr>
+              <?php
+              }
+              if (zen_not_null($order->info['cc_number'])) {
+                      require DIR_FS_CATALOG . DIR_WS_CLASSES . 'cc_validation.php';
+                      $cc_valid = new cc_validation();
+                      $cc_needs_mask = $cc_valid->validate($order->info['cc_number'], date('m'), date('y')+1);
+                  ?>
               <tr>
                 <td class="main"><?php echo ENTRY_CREDIT_CARD_NUMBER; ?></td>
-                <td class="main"><?php echo $order->info['cc_number'] . (zen_not_null($order->info['cc_number']) && !strstr($order->info['cc_number'], 'X') && !strstr($order->info['cc_number'], '********') ? '&nbsp;&nbsp;<a href="' . zen_href_link(FILENAME_ORDERS, '&action=mask_cc&oID=' . $oID, 'NONSSL') . '" class="noprint">' . TEXT_MASK_CC_NUMBER . '</a>' : ''); ?></td>
+                <td class="main"><?php echo $order->info['cc_number'] . ($cc_needs_mask == 0 ? '&nbsp;&nbsp;<a href="' . zen_href_link(FILENAME_ORDERS, '&action=mask_cc&oID=' . $oID, 'NONSSL') . '" class="noprint">' . TEXT_MASK_CC_NUMBER . '</a>' : ''); ?></td>
               </tr>
-              <?php if (zen_not_null($order->info['cc_cvv'])) { ?>
+              <?php
+                  }
+                  if (zen_not_null($order->info['cc_cvv'])) { ?>
                 <tr>
                   <td class="main"><?php echo ENTRY_CREDIT_CARD_CVV; ?></td>
                   <td class="main"><?php echo $order->info['cc_cvv'] . (zen_not_null($order->info['cc_cvv']) && !strstr($order->info['cc_cvv'], TEXT_DELETE_CVV_REPLACEMENT) ? '&nbsp;&nbsp;<a href="' . zen_href_link(FILENAME_ORDERS, '&action=delete_cvv&oID=' . $oID, 'NONSSL') . '" class="noprint">' . TEXT_DELETE_CVV_FROM_DATABASE . '</a>' : ''); ?></td>
                 </tr>
               <?php } ?>
+              <?php if (zen_not_null($order->info['cc_expires'])) { ?>
               <tr>
                 <td class="main"><?php echo ENTRY_CREDIT_CARD_EXPIRES; ?></td>
                 <td class="main"><?php echo $order->info['cc_expires']; ?></td>
               </tr>
               <?php
+                  }
             }
             ?>
           </table>
@@ -1241,14 +1256,14 @@ if (zen_not_null($action) && $order_exists == true) {
                     $show_payment_type = $orders->fields['payment_module_code'] . '<br>' . $orders->fields['shipping_module_code'];
 
                     $sql = "SELECT op.orders_products_id, op.products_quantity AS qty, op.products_name AS name, op.products_model AS model
-                            FROM " . TABLE_ORDERS_PRODUCTS . " op 
+                            FROM " . TABLE_ORDERS_PRODUCTS . " op
                             WHERE op.orders_id = " . (int)$orders->fields['orders_id'];
                     $orderProducts = $db->Execute($sql, false, true, 1800);
                     $product_details = '';
                     foreach($orderProducts as $product) {
                         $product_details .= $product['qty'] . ' x ' . $product['name'] . ' (' . $product['model'] . ')' . "\n";
-                        $sql = "SELECT products_options, products_options_values 
-                            FROM " .  TABLE_ORDERS_PRODUCTS_ATTRIBUTES . " 
+                        $sql = "SELECT products_options, products_options_values
+                            FROM " .  TABLE_ORDERS_PRODUCTS_ATTRIBUTES . "
                             WHERE orders_products_id = " . (int)$product['orders_products_id'] . " ORDER BY orders_products_attributes_id ASC";
                         $productAttributes = $db->Execute($sql, false, true, 1800);
                         foreach ($productAttributes as $attr) {
@@ -1484,4 +1499,4 @@ if (zen_not_null($action) && $order_exists == true) {
     <!-- footer_eof //-->
   </body>
 </html>
-<?php require(DIR_WS_INCLUDES . 'application_bottom.php'); ?>
+<?php require(DIR_WS_INCLUDES . 'application_bottom.php');
