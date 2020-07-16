@@ -869,7 +869,7 @@ CREATE TABLE layout_boxes (
   PRIMARY KEY  (layout_id),
   KEY idx_name_template_zen (layout_template,layout_box_name),
   KEY idx_layout_box_status_zen (layout_box_status),
-  KEY idx_layout_box_sort_order_zen (layout_box_sort_order),
+  KEY idx_layout_box_sort_order_zen (layout_box_sort_order)
 ) ENGINE=MyISAM;
 
 # --------------------------------------------------------

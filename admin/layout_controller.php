@@ -12,7 +12,7 @@ use App\Models\LayoutBox;
 
 require('includes/application_top.php');
 
-$sideboxFinder = new SideboxFinder(Filesystem::getInstance());
+$sideboxFinder = new SideboxFinder(new Filesystem);
 
 $sideboxes = $sideboxFinder->findFromFilesystem($installedPlugins, $template_dir);
 
