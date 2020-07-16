@@ -99,6 +99,14 @@ class messageStack extends base
     {
         global $template, $current_page_base;
 
+        // -----
+        // Reset the session-based messages, now that message-output has been requested for
+        // at least one $class.  This implies that the 'templating' phase of a page's
+        // rendering is in progress and that all applicable messages will be output at this
+        // time.
+        //
+        $_SESSION['messageToStack'] = array();
+
         if ($this->size($class) === 0) {
             return;
         }
@@ -123,8 +131,6 @@ class messageStack extends base
                 $this->add($next_message['class'], $next_message['text'], $next_message['type']);
             }
         }
-
-        $_SESSION['messageToStack'] = array();
 
         $count = 0;
 
