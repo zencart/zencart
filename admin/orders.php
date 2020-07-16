@@ -703,7 +703,7 @@ if (zen_not_null($action) && $order_exists == true) {
                   ?>
               <tr>
                 <td class="main"><?php echo ENTRY_CREDIT_CARD_NUMBER; ?></td>
-                <td class="main"><?php echo $order->info['cc_number'] . ($cc_needs_mask == 0 ? '&nbsp;&nbsp;<a href="' . zen_href_link(FILENAME_ORDERS, '&action=mask_cc&oID=' . $oID, 'NONSSL') . '" class="noprint">' . TEXT_MASK_CC_NUMBER . '</a>' : ''); ?></td>
+                <td class="main"><?php echo $order->info['cc_number'] . ($cc_needs_mask == 1 ? '&nbsp;&nbsp;<a href="' . zen_href_link(FILENAME_ORDERS, '&action=mask_cc&oID=' . $oID, 'NONSSL') . '" class="noprint">' . TEXT_MASK_CC_NUMBER . '</a>' : ''); ?></td>
               </tr>
               <?php
                   }
