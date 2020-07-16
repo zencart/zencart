@@ -313,12 +313,7 @@ class PluginManagerController extends BaseController
     protected function processActionCleanUp()
     {
         $versions = $this->pluginManager->getPluginVersionsToClean($this->currentRow->unique_key, $this->currentRow->version);
-        $this->setBoxHeader(
-            '<h4>' . zen_output_string_protected
-            (
-                $this->currentRow->name
-            ) . '</h4>'
-        );
+        $this->setBoxHeader('<h4>' . zen_output_string_protected($this->currentRow->name) . '</h4>');
         $this->setBoxForm(
             zen_draw_form(
                 'pluginupgrade',
@@ -443,12 +438,7 @@ class PluginManagerController extends BaseController
 
     protected function processActionDisable()
     {
-        $this->setBoxHeader(
-            '<h4>' . zen_output_string_protected
-            (
-                $this->currentRow->name
-            ) . '</h4>'
-        );
+        $this->setBoxHeader('<h4>' . zen_output_string_protected($this->currentRow->name) . '</h4>');
         $this->setBoxForm(zen_draw_form(
                 'pluginuninstall',
                 FILENAME_PLUGIN_MANAGER,

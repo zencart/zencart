@@ -12,7 +12,7 @@ use Zencart\PluginSupport\InstallerFactory;
 use Zencart\PluginSupport\Installer;
 use Zencart\PluginSupport\PluginErrorContainer;
 use Zencart\TableViewControllers\PluginManagerController;
-use App\Models\ModelFactory;
+use Zencart\Filters\FilterFactory;
 
 require('includes/application_top.php');
 
@@ -29,7 +29,9 @@ $tableDefinition = [
     'maxRowCount'      => 5,
     'actions'          => [
         [
-            'action'                => 'new', 'text' => 'new', 'getParams' => [],
+            'action'                => 'new',
+            'text'                  => 'new',
+            'getParams'             => [],
             'showOnlyOnEmptyAction' => true
         ],
     ],
@@ -38,23 +40,37 @@ $tableDefinition = [
         'name'       => ['title' => TABLE_HEADING_NAME],
         'unique_key' => ['title' => TABLE_HEADING_KEY],
         'filespace'  => [
-            'title' => TABLE_HEADING_FILE_SPACE, 'derivedItem'
+            'title' => TABLE_HEADING_FILE_SPACE,
+            'derivedItem'
                     => [
-                    'type'   => 'local',
-                    'method' => 'getPluginFileSize'
-                ]
+                'type'   => 'local',
+                'method' => 'getPluginFileSize'
+            ]
         ],
         'status'     => [
-            'title' => TABLE_HEADING_STATUS, 'derivedItem' => [
-                'type'   => 'local', 'method' => 'arrayReplace',
+            'title'       => TABLE_HEADING_STATUS,
+            'derivedItem' => [
+                'type'   => 'local',
+                'method' => 'arrayReplace',
                 'params' => ['0' => TEXT_NOT_INSTALLED, '1' => TEXT_INSTALLED_ENABLED, '2' => TEXT_INSTALLED_DISABLED]
             ]
         ],
         'version'    => ['title' => TABLE_HEADING_VERSION_INSTALLED],
+    ],
+    'filters'          => [
+        'statusFilter' => [
+            'type'       => 'selectWhere',
+            'field'      => 'status',
+            'label'     => TEXT_LABEL_STATUS,
+            'source'     => 'options',
+            'selectName' => 'plugin_status',
+            'auto'       => true,
+            'options'    => ['*' => TEXT_ALL_STATUSES, '0' => TEXT_NOT_INSTALLED, '1' => TEXT_INSTALLED_ENABLED, '2' => TEXT_INSTALLED_DISABLED]
+        ]
     ]
 ];
 
-$tableController = (new PluginManagerController($sanitizedRequest, $messageStack, $tableDefinition))->init($pluginManager, $installerFactory)->processRequest();
+$tableController = (new PluginManagerController($sanitizedRequest, $messageStack, $tableDefinition, new FilterFactory))->init($pluginManager, $installerFactory)->processRequest();
 
 ?>
 <!doctype html>
