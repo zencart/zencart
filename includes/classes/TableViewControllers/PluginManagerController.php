@@ -407,7 +407,29 @@ class PluginManagerController extends BaseController
 
     protected function processActionDoCleanup()
     {
+        if (empty($_POST['version'])) return; 
+        $filePath = DIR_FS_CATALOG . 'zc_plugins/' . $_GET['colKey'] . '/'; 
+        foreach($_POST['version'] as $version) {
+           $dir = $filePath . $version; 
+           $this->cleanupOldDir($dir); 
+        }
+        zen_redirect(
+                zen_href_link(
+                    FILENAME_PLUGIN_MANAGER, 'page=' . $this->page)); 
+    }
 
+    protected function cleanupOldDir($dir) {
+       $it = new \RecursiveDirectoryIterator($dir, \RecursiveDirectoryIterator::SKIP_DOTS);
+       $files = new \RecursiveIteratorIterator($it,
+       \RecursiveIteratorIterator::CHILD_FIRST);
+       foreach($files as $file) {
+           if ($file->isDir()){
+               rmdir($file->getRealPath());
+           } else {
+               unlink($file->getRealPath());
+           }
+       }
+       rmdir($dir);
     }
 
     protected function processActionEnable()
