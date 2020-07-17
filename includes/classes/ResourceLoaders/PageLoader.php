@@ -104,7 +104,7 @@ class PageLoader
             $bodyCode = DIR_WS_MODULES . 'pages/' . $this->mainPage . '/main_template_vars.php';
             return $bodyCode;
         }
-        $bodyCode = $this->getTemplateDir('tpl_' . preg_replace('/.php/', '', $this->mainPage) . '_default.php', DIR_WS_TEMPLATE, $this->mainPage, 'templates') . '/tpl_' . $this->mainPage . '_default.php';
+        $bodyCode = $this->getTemplateDirectory('tpl_' . preg_replace('/.php/', '', $this->mainPage) . '_default.php', DIR_WS_TEMPLATE, $this->mainPage, 'templates') . '/tpl_' . $this->mainPage . '_default.php';
         return $bodyCode;
     }
 }
