@@ -113,14 +113,6 @@ class shipping extends base {
       // SHIPPING_BOX_PADDING = Large Box % increase
       // SHIPPING_MAX_WEIGHT = Largest package
 
-      /*
-      if (SHIPPING_BOX_WEIGHT >= $shipping_weight*SHIPPING_BOX_PADDING/100) {
-        $shipping_weight = $shipping_weight+SHIPPING_BOX_WEIGHT;
-      } else {
-        $shipping_weight = $shipping_weight + ($shipping_weight*SHIPPING_BOX_PADDING/100);
-      }
-      */
-
       switch (true) {
         // large box add padding
         case(SHIPPING_MAX_WEIGHT <= $shipping_weight):
