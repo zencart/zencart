@@ -20,10 +20,11 @@ class BaseController implements TableViewController
     protected $messageStack;
     protected $action;
 
-    public function __construct($request, $messageStack, $tableDefinition)
+    public function __construct($request, $messageStack, $tableDefinition, $filterFactory)
     {
         $this->request = $request;
         $this->messageStack = $messageStack;
+        $this->filterFactory = $filterFactory;
         $this->tableDefinition = $tableDefinition;
         $this->tableDefinition['configBox'] = ['header' => [], 'content' => []];
     }
@@ -31,9 +32,11 @@ class BaseController implements TableViewController
     public function processRequest()
     {
         $this->setTableDefinitionDefaults();
+        $this->buildFilters();
         $this->action = $this->getAction();
         $this->page = $this->request->input($this->tableDefinition['pagerVariable'], 1);
         $this->query = $this->buildInitialQuery();
+        $this->query = $this->processFilters($this->request, $this->query);
         $this->paginatedResults = $this->query->paginate($this->tableDefinition['maxRowCount']);
         $this->tableData = $this->processTableData($this->paginatedResults);
         $method = ($this->action == '') ? 'processDefaultAction' : 'processAction' . ucfirst($this->action);
@@ -274,5 +277,46 @@ class BaseController implements TableViewController
     public function getPaginatedResults()
     {
         return $this->paginatedResults;
+    }
+
+    public function hasFilters()
+    {
+        if (!isset($this->tableDefinition['filters'])) {
+            return false;
+        }
+        if (!is_array($this->tableDefinition['filters'])) {
+            return false;
+        }
+        return true;
+    }
+    private function processFilters($request, $query)
+    {
+        if (!$this->hasFilters()) {
+            return $query;
+        }
+        foreach ($this->filters as $filter) {
+
+
+            $query = $filter->processRequest($request, $query);
+        }
+        return $query;
+    }
+
+    public function getFilters()
+    {
+        return $this->filters;
+    }
+
+    private function buildFilters()
+    {
+        $this->filters = [];
+        if (!$this->hasFilters()) {
+            return;
+        }
+        foreach ($this->tableDefinition['filters'] as $filterDefinition) {
+            $filter = $this->filterFactory->make($filterDefinition);
+            $this->filters[] = $filter;
+            $filter->make($filterDefinition);
+        }
     }
 }

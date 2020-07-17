@@ -1,11 +1,19 @@
 <div class="container-fluid">
     <h1><?php echo HEADING_TITLE; ?></h1>
+    <?php if ($tableController->hasFilters()) { ?>
     <div class="row noprint">
         <div class="form-inline">
             <div class="form-group col-xs-4 col-sm-3 col-md-3 col-lg-3">
+                <form method="post" action="<?php echo zen_href_link($PHP_SELF); ?>">
+                    <input type="hidden" name="securityToken" value="<?php echo $_SESSION['securityToken']; ?>">
+                    <?php foreach ($tableController->getFilters() as $filter) { ?>
+                        <?php echo $filter->output(); ?>
+                    <?php } ?>
+                </form>
             </div>
         </div>
     </div>
+    <?php } ?>
 
 
     <div class="row">
@@ -51,8 +59,7 @@
         </div>
         <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3 configurationColumnRight">
             <?php
-            if ((zen_not_null($tableController->getTableConfigBoxHeader())) && (zen_not_null
-                ($tableController->getTableConfigBoxContent()))) {
+            if ((zen_not_null($tableController->getTableConfigBoxHeader())) && (zen_not_null($tableController->getTableConfigBoxContent()))) {
                 $box = new box;
                 echo $box->infoBox($tableController->getTableConfigBoxHeader(), $tableController->getTableConfigBoxContent());
             }
