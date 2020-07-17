@@ -185,6 +185,8 @@ require 'includes/init_includes/init_file_db_names.php';
 require 'includes/init_includes/init_database.php';
 require DIR_FS_CATALOG . 'includes/illuminate_bootstrap.php';
 
+define('ZENCART_RUNNING', true);
+
 $installedPlugins = $laravelApp->make('installedPlugins');
 $pluginManager = new PluginManager(new App\Models\PluginControl, new App\Models\PluginControlVersion);
 
@@ -201,6 +203,7 @@ foreach ($installedPlugins as $plugin) {
     $psr4Autoloader->addPrefix($namespaceAdmin, $filePathAdmin);
     $psr4Autoloader->addPrefix($namespaceCatalog, $filePathCatalog);
 }
+
 
 $autoLoadConfig = array();
 if (isset($loaderPrefix)) {
