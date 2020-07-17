@@ -6,6 +6,16 @@ use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
 class Kernel extends HttpKernel
 {
+
+    protected $mybootstrappers = [
+        \Illuminate\Foundation\Bootstrap\LoadEnvironmentVariables::class,
+        \Illuminate\Foundation\Bootstrap\LoadConfiguration::class,
+        \App\Exceptions\HandleExceptions::class,
+        \Illuminate\Foundation\Bootstrap\RegisterFacades::class,
+        \Illuminate\Foundation\Bootstrap\RegisterProviders::class,
+        \Illuminate\Foundation\Bootstrap\BootProviders::class,
+    ];
+
     /**
      * The application's global HTTP middleware stack.
      *
@@ -78,4 +88,15 @@ class Kernel extends HttpKernel
 //        \Illuminate\Routing\Middleware\SubstituteBindings::class,
 //        \Illuminate\Auth\Middleware\Authorize::class,
     ];
+
+    /**
+     * Get the bootstrap classes for the application.
+     *
+     * @return array
+     */
+    protected function bootstrappers()
+    {
+        return $this->mybootstrappers;
+    }
+
 }
