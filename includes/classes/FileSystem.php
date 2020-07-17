@@ -15,6 +15,7 @@ class FileSystem extends IlluminateFilesystem
 {
     public function loadFilesFromDirectory($rootDir, $fileRegx = '~^[^\._].*\.php$~i')
     {
+        if (!is_dir($rootDir)) return;
         if (!$dir = @dir($rootDir)) return;
         while ($file = $dir->read()) {
             if (preg_match($fileRegx, $file) > 0) {
@@ -26,6 +27,7 @@ class FileSystem extends IlluminateFilesystem
 
     public function listFilesFromDirectory($rootDir, $fileRegx = '~^[^\._].*\.php$~i')
     {
+        if (!is_dir($rootDir)) return[];
         if (!$dir = @dir($rootDir)) return [];
         $fileList = [];
         while ($file = $dir->read()) {
@@ -102,6 +104,7 @@ class FileSystem extends IlluminateFilesystem
     {
         $found = false;
         $filePattern = '/' . str_replace("/", "\/", $filePattern) . '$/';
+        if (!is_dir($fileDir)) return false;
         if ($mydir = @dir($fileDir)) {
             while ($file = $mydir->read()) {
                 if (preg_match($filePattern, $file)) {
