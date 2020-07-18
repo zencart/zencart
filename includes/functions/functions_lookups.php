@@ -176,7 +176,7 @@
                     from " . TABLE_PRODUCTS . "
                     where products_id = " . (int)$products_id . " LIMIT 1";
 
-    $stock_values = $db->Execute($stock_query);
+    $stock_values = $db->ExecuteNoCache($stock_query);
 
     return $stock_values->fields['products_quantity'];
   }

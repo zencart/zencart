@@ -41,7 +41,7 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
                              WHERE  customers_id = :customersID";
 
     $check_customer_query = $db->bindVars($check_customer_query, ':customersID',$_SESSION['customer_id'], 'integer');
-    $check_customer = $db->Execute($check_customer_query);
+    $check_customer = $db->ExecuteNoCache($check_customer_query);
 
     if (zen_validate_password($password_current, $check_customer->fields['customers_password'])) {
       zcPassword::getInstance(PHP_VERSION)->updateLoggedInCustomerPassword($password_new, $_SESSION['customer_id']);

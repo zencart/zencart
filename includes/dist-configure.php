@@ -54,9 +54,9 @@ define('DB_DATABASE', '');
 
 /**
  * This is an advanced setting to determine whether you want to cache SQL queries.
- * Options are 'none' (which is the default) and 'file' and 'database'.
+ * Options are 'none', 'file' and 'database' (the default).
  */
-define('SQL_CACHE_METHOD', 'none');
+define('SQL_CACHE_METHOD', 'database');
 
 /**
  * Reserved for future use

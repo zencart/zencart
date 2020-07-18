@@ -172,7 +172,13 @@ class queryFactory extends base {
     echo '</div>';
   }
 
-  function Execute($zf_sql, $zf_limit = false, $zf_cache = false, $zf_cachetime=0, $remove_from_queryCache = false) {
+  function Execute($zf_sql, $zf_limit = false, $zf_cache = true, $zf_cachetime=3600, $remove_from_queryCache = false) {
+     if (strtoupper(substr($zf_sql,0,6)) != 'SELECT') {
+         $zf_cache = false; 
+     }
+     if (defined('IS_ADMIN_FLAG') && IS_ADMIN_FLAG == 'true') {
+         $zf_cache = false; 
+     }
     // bof: collect database queries
     if (defined('STORE_DB_TRANSACTIONS') && STORE_DB_TRANSACTIONS != 'false') {
       global $PHP_SELF, $box_id, $current_page_base;

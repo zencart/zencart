@@ -61,7 +61,7 @@
 
     $check_address_query = $db->bindVars($check_address_query, ':customersID', $_SESSION['customer_id'], 'integer');
     $check_address_query = $db->bindVars($check_address_query, ':addressBookID', $_SESSION['sendto'], 'integer');
-    $check_address = $db->Execute($check_address_query);
+    $check_address = $db->ExecuteNoCache($check_address_query);
 
     if ($check_address->fields['total'] != '1') {
       $_SESSION['sendto'] = $_SESSION['customer_default_address_id'];

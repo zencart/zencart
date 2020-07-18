@@ -65,7 +65,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'process') {
                            WHERE customers_email_address = :emailAddress";
 
     $check_customer_query  =$db->bindVars($check_customer_query, ':emailAddress', $email_address, 'string');
-    $check_customer = $db->Execute($check_customer_query);
+    $check_customer = $db->ExecuteNoCache($check_customer_query);
 
     if (!$check_customer->RecordCount()) {
       $error = true;
@@ -105,7 +105,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'process') {
 
         $check_country_query = $db->bindVars($check_country_query, ':customersID', $check_customer->fields['customers_id'], 'integer');
         $check_country_query = $db->bindVars($check_country_query, ':addressBookID', $check_customer->fields['customers_default_address_id'], 'integer');
-        $check_country = $db->Execute($check_country_query);
+        $check_country = $db->ExecuteNoCache($check_country_query);
 
         $_SESSION['customer_id'] = $check_customer->fields['customers_id'];
         $_SESSION['customers_email_address'] = $check_customer->fields['customers_email_address'];
@@ -119,9 +119,9 @@ if (isset($_GET['action']) && $_GET['action'] == 'process') {
         // enforce db integrity: make sure related record exists
         $sql = "SELECT customers_info_date_of_last_logon FROM " . TABLE_CUSTOMERS_INFO . " WHERE customers_info_id = :customersID";
         $sql = $db->bindVars($sql, ':customersID',  $_SESSION['customer_id'], 'integer');
-        $result = $db->Execute($sql);
+        $result = $db->ExecuteNoCache($sql);
         if ($result->RecordCount() == 0) {
-          $sql = "insert into " . TABLE_CUSTOMERS_INFO . " (customers_info_id) values (:customersID)";
+          $sql = "INSERT INTO " . TABLE_CUSTOMERS_INFO . " (customers_info_id) VALUES (:customersID)";
           $sql = $db->bindVars($sql, ':customersID',  $_SESSION['customer_id'], 'integer');
           $db->Execute($sql);
         }

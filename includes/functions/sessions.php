@@ -50,7 +50,7 @@ function _sess_read($key)
             where sesskey = '" . zen_db_input($key) . "'
             and expiry > '" . time() . "'";
 
-    $value = $db->Execute($qid);
+    $value = $db->ExecuteNoCache($qid);
 
     if (!empty($value->fields['value'])) {
         $value->fields['value'] = base64_decode($value->fields['value']);

@@ -121,14 +121,14 @@ if (!empty($_SESSION['cc_id'])) {
                             WHERE coupon_id = :couponID";
 
   $discount_coupon_query = $db->bindVars($discount_coupon_query, ':couponID', $_SESSION['cc_id'], 'integer');
-  $discount_coupon = $db->Execute($discount_coupon_query);
+  $discount_coupon = $db->ExecuteNoCache($discount_coupon_query);
 
   $customers_referral_query = "SELECT customers_referral
                                FROM " . TABLE_CUSTOMERS . "
                                WHERE customers_id = :customersID";
 
   $customers_referral_query = $db->bindVars($customers_referral_query, ':customersID', $_SESSION['customer_id'], 'integer');
-  $customers_referral = $db->Execute($customers_referral_query);
+  $customers_referral = $db->ExecuteNoCache($customers_referral_query);
 
   // only use discount coupon if set by coupon
   if ($customers_referral->fields['customers_referral'] == '' and CUSTOMERS_REFERRAL_STATUS == 1) {

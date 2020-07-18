@@ -68,7 +68,7 @@ if (!empty($_SESSION['cc_id'])) {
                             WHERE coupon_id = :couponID";
 
   $discount_coupon_query = $db->bindVars($discount_coupon_query, ':couponID', $_SESSION['cc_id'], 'integer');
-  $discount_coupon = $db->Execute($discount_coupon_query);
+  $discount_coupon = $db->ExecuteNoCache($discount_coupon_query);
 }
 
 // if no billing destination address was selected, use the customers own address as default
@@ -82,7 +82,7 @@ if (empty($_SESSION['billto'])) {
 
   $check_address_query = $db->bindVars($check_address_query, ':customersID', $_SESSION['customer_id'], 'integer');
   $check_address_query = $db->bindVars($check_address_query, ':addressBookID', $_SESSION['billto'], 'integer');
-  $check_address = $db->Execute($check_address_query);
+  $check_address = $db->ExecuteNoCache($check_address_query);
 
   if ($check_address->fields['total'] != '1') {
     $_SESSION['billto'] = $_SESSION['customer_default_address_id'];
@@ -122,4 +122,3 @@ $breadcrumb->add(NAVBAR_TITLE_2);
 
 // This should be last line of the script:
 $zco_notifier->notify('NOTIFY_HEADER_END_CHECKOUT_PAYMENT');
-?>

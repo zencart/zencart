@@ -45,7 +45,7 @@ $sql = "SELECT p.products_id, pd.products_name, sum(v.views) as total_views, l.n
 $sql = $db->bindVars($sql, ':startdate', date('Y-m-d', $startdate), 'string');
 $sql = $db->bindVars($sql, ':enddate', date('Y-m-d', $enddate), 'string');
 $products_split = new splitPageResults($_GET['page'], MAX_DISPLAY_SEARCH_RESULTS_REPORTS, $sql, $products_query_numrows);
-$products = $db->Execute($sql);
+$products = $db->ExecuteNoCache($sql);
 
 ?>
     <!doctype html>

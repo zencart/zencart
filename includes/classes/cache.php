@@ -34,7 +34,7 @@ class cache extends base {
       break;
       case 'database':
       $sql = "select * from " . TABLE_DB_CACHE . " where cache_entry_name = '" . $zp_cache_name . "'";
-      $zp_cache_exists = $db->Execute($sql);
+      $zp_cache_exists = $db->Execute($sql, false, false);
       if ($zp_cache_exists->RecordCount() > 0 && !$this->sql_cache_is_expired($zf_query, $zf_cachetime)) {
         return true;
       } else {
@@ -64,7 +64,7 @@ class cache extends base {
       break;
       case 'database':
       $sql = "select * from " . TABLE_DB_CACHE . " where cache_entry_name = '" . $zp_cache_name ."'";
-      $cache_result = $db->Execute($sql);
+      $cache_result = $db->Execute($sql, false, false);
       if ($cache_result->RecordCount() > 0) {
         $start_time = $cache_result->fields['cache_entry_created'];
         if (time() - $start_time > $zf_cachetime) return true;
@@ -93,7 +93,7 @@ class cache extends base {
       break;
       case 'database':
       $sql = "delete from " . TABLE_DB_CACHE . " where cache_entry_name = '" . $zp_cache_name . "'";
-      $db->Execute($sql);
+      $db->Execute($sql); 
       return true;
       break;
       case 'memory':
@@ -120,7 +120,7 @@ class cache extends base {
       break;
       case 'database':
       $sql = "select * from " . TABLE_DB_CACHE . " where cache_entry_name = '" . $zp_cache_name . "'";
-      $zp_cache_exists = $db->Execute($sql);
+      $zp_cache_exists = $db->Execute($sql, false, false);
       if ($zp_cache_exists->RecordCount() > 0) {
         return true;
       }
@@ -128,7 +128,7 @@ class cache extends base {
       $sql = "insert ignore into " . TABLE_DB_CACHE . " (cache_entry_name, cache_data, cache_entry_created) VALUES (:cachename, :cachedata, unix_timestamp() )";
       $sql = $db->bindVars($sql, ':cachename', $zp_cache_name, 'string');
       $sql = $db->bindVars($sql, ':cachedata', $result_serialize, 'string');
-      $db->Execute($sql);
+      $db->Execute($sql, false, false);
       return true;
       break;
       case 'memory':
@@ -152,7 +152,7 @@ class cache extends base {
       break;
       case 'database':
       $sql = "select * from " . TABLE_DB_CACHE . " where cache_entry_name = '" . $zp_cache_name . "'";
-      $zp_cache_result = $db->Execute($sql);
+      $zp_cache_result = $db->Execute($sql, false, false);
       $zp_result_array = unserialize(base64_decode($zp_cache_result->fields['cache_data']));
       return $zp_result_array;
       break;
@@ -179,19 +179,17 @@ class cache extends base {
         $za_dir->close();
       }
       return true;
-      break;
-      case 'database':
-      $sql = "delete from " . TABLE_DB_CACHE;
-      $db->Execute($sql);
-      return true;
-      break;
+
       case 'memory':
       return true;
-      break;
+
+      case 'database':
       case 'none':
       default:
+      // Do it just in case cache on in catalog but off in admin 
+      $sql = "delete from " . TABLE_DB_CACHE;
+      $db->ExecuteNoCache($sql); 
       return true;
-      break;
     }
   }
 
