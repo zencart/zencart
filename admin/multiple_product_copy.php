@@ -8,12 +8,52 @@
  */
 
 require('includes/application_top.php');
-
+///////////////////////////////////////////////////////
+//temporary debugging code: to be removed if ever this gets into core code....along with the various debugging echo's
+/**steve for phpStorm inspections
+ * @array $_SESSION['messageToStack']
+ * @var messageStack $messageStack
+ * @var zcObserverLogEventListener $zco_notifier
+ * @var products $zc_products
+ */
+$debug_mpc = false;
+if ($debug_mpc) {//steve debug
+    ob_start();
+    if (!function_exists('mv_printVar')) {
+        /**
+         * @param $a
+         */
+        function mv_printVar($a)
+        {
+            $backtrace = debug_backtrace()[0];
+            $fh = fopen($backtrace['file'], 'rb');
+            $line = 0;
+            $code = '';
+            while (++$line <= $backtrace['line']) {
+                $code = fgets($fh);
+            }
+            fclose($fh);
+            preg_match('/' . __FUNCTION__ . '\s*\((.*)\)\s*;/u', $code, $name);
+            echo '<pre><strong>' . trim($name[1]) . ":</strong>\n";
+            print_r($a);
+            echo '</pre><br>';
+        }
+    }
+    mv_printVar($_POST);//steve debug
+    $output = ob_get_clean();//steve debug
+    $messageStack->add($output, 'info');//steve debug
+}
+//eof temporary debugging code
+///////////////////////////////////////////////////////////
 require(DIR_WS_CLASSES . 'currencies.php');
 $currencies = new currencies();
 
 //////////////////////////////////////////////
 //File-specific functions
+/**
+ * @param $manufacturers_id
+ * @return mixed|string
+ */
 function zen_get_manufacturers_name($manufacturers_id)
 {
     global $db;
@@ -26,7 +66,7 @@ function zen_get_manufacturers_name($manufacturers_id)
     return $manufacturer->fields['manufacturers_name'];
 }
 
-//Copied from Catalog functions but with required parameter first
+//Copied from Catalog functions as is, but with required parameter first
 // Parse search string into individual objects
 /**
  * @param $objects
@@ -230,7 +270,8 @@ if (isset($_POST['search_category_id'])) {
 } else {
     $search_category_id = ''; // "Please Select"
 }
-
+$max_input_vars = ini_get("max_input_vars");
+$max_input_vars_limit = $max_input_vars / 2 - 10; //found by empirical tests
 $keywords = (isset($_POST['keywords']) ? zen_db_prepare_input($_POST['keywords']) : '');
 $search_all = isset($_POST['search_all']) && $_POST['search_all'] === '1'; // search filter in name, model or manufacturers only (name) or also descriptions (all)
 $manufacturer_id = isset($_POST['manufacturer_id']) ? (int)$_POST['manufacturer_id'] : 0; // '0' is Any Manufacturer, so an invalid string is set to 0
@@ -285,26 +326,37 @@ if ($action === 'find' || $action === 'confirm') { // validate form values from 
     }
 
     if ($action === 'confirm' && $error_message === '') { // perform additional validations prior to actual Copy/Move/Delete
-        $cnt = (int)$_POST['product_count']; // total of products as found by search / as listed on Preview (find) page
+        if (isset($_POST['product_count'], $_POST['product'])) {
+            $cnt = (int)$_POST['product_count']; // total of products as found by search / as listed on Preview (find) page
+            if ($debug_mpc) {//steve
+                echo __LINE__ . ': $cnt=' . $cnt . '<br>';
+            }
+            $found_string = explode(',', $_POST['items_found']); // make array of product ids as found by the search/displayed on Preview page 2
+            $found = array_map(static function ($value) { // make array of integers
+                return (int)$value;
+            }, $found_string);
 
-        $found_string = explode(',', $_POST['items_found']); // make array of product ids as found by the search/displayed on Preview page 2
-        $found = array_map(static function ($value) { // make array of integers
-            return (int)$value;
-        }, $found_string);
-        $products_selected = array_map(static function ($value) { // make array (integers) of product IDs as selected on Preview page 2
-            return (int)$value;
-        }, $_POST['product']);
+            $products_selected = array_map(static function ($value) { // make array (integers) of product IDs as selected on Preview page 2
+                return (int)$value;
+            }, $_POST['product']);
 
-        // for delete with subcats, need to know in which category was the selected linked product
-        $categories_selected = array_map(static function ($value) { // make array (integers) of category IDs of products as selected on Preview page 2. For Delete One
-            return (int)$value;
-        }, $_POST['category']);
+            // for delete with subcats, need to know in which category was the selected linked product
+            $categories_selected = array_map(static function ($value) { // make array (integers) of category IDs of products as selected on Preview page 2. For Delete One
+                return (int)$value;
+            }, $_POST['category']);
+
+            if ($debug_mpc) {//steve
+                echo __LINE__;
+                mv_printVar($products_selected);
+                mv_printVar($categories_selected);
+            }
+
+        } else { // probably max_input_vars limit exceeded
+            $error_message = sprintf(ERROR_ARRAY_COUNTS, $max_input_vars);
+        }
 
         switch (true) {
-            case ($cnt !== count($found)): // should never happen!
-                $error_message = ERROR_ARRAY_COUNTS;
-                break;
-            case (count($products_selected) === 0): // no checkboxes selected
+            case (!isset($_POST['product'])): // no checkboxes selected
                 $error_message = ERROR_NO_SELECTION;
                 break;
             case (!is_array($products_selected)):  //array of checkboxes is not an array
@@ -419,9 +471,12 @@ FROM ' . TABLE_PRODUCTS . ' p
                 $order_by_str = ' ORDER BY p.products_status';
                 break;
         }
-        $search_sql .= $where_str . $order_by_str; // ORDER BY pd.products_name
+        $limit = ' LIMIT ' . $max_input_vars_limit; //product results + category results + 10 more
+        $search_sql .= $where_str . $order_by_str . $limit;
         $search_results = $db->Execute($search_sql);
-
+        if ($debug_mpc) {//steve debug
+            $messageStack->add($search_sql, 'info');
+        }
         if ($search_results->EOF) {
             $action = '';
             $messageStack->add(TEXT_NO_MATCHING_PRODUCTS_FOUND, 'info');
@@ -430,12 +485,18 @@ FROM ' . TABLE_PRODUCTS . ' p
 
     case 'confirm':
         $products_modified = [];
+        if ($debug_mpc) {//steve
+            echo __LINE__;
+            mv_printVar($products_selected);
+            mv_printVar($categories_selected);
+        }
         foreach ($products_selected as $key => $id) { //$id is an integer
 
-            $found_product = $db->Execute('SELECT p.products_id, p.products_model, p.master_categories_id, p.products_price_sorter, p.products_quantity,  pd.products_name,  m.manufacturers_name FROM ' . TABLE_PRODUCTS . ' p 
+            $found_product = $db->Execute('SELECT p.products_id, p.products_model, p.master_categories_id, p.products_price_sorter, p.products_quantity,  pd.products_name,  m.manufacturers_name 
+                    FROM ' . TABLE_PRODUCTS . ' p 
                     LEFT JOIN ' . TABLE_MANUFACTURERS . ' m ON p.manufacturers_id = m.manufacturers_id, ' . TABLE_PRODUCTS_DESCRIPTION . ' pd 
                     WHERE p.products_id = pd.products_id 
-                    AND pd.language_id =  ' . (int)$_SESSION['languages_id'] . ' 
+                    AND pd.language_id = ' . (int)$_SESSION['languages_id'] . ' 
                     AND p.products_id = ' . $id . ' LIMIT 1');
 
             if ($found_product->RecordCount() === 1) {
@@ -527,15 +588,18 @@ FROM ' . TABLE_PRODUCTS . ' p
 
 // bof: move from one category to another
                 if ($copy_as === 'move') { //if product found
-                    $action = 'multiple_product_copy_return'; // used in move_product_confirm.php (core modification required) to bypass default redirect and so allow multiple moves
+                    $action = 'multiple_product_copy_return'; // used in move_product_confirm.php (core modification required) to prevent default redirect and so allow multiple moves
                     $_POST['products_id'] = $id; // for move_product_confirm
                     $_POST['move_to_category_id'] = $target_category_id;// for move_product_confirm
                     if ($search_category_id === 0) { // 0: search all categories: use the product's master category id as the search/source category
-                        $current_category_id = $found_product['master_categories_id'];// for move_product_confirm
+                        $current_category_id = $found_product['master_categories_id'];// $current_category_id used by move_product_confirm to reset master_category_id
                     } else { // a search category is set: the products therein may be linked or master
-                        $current_category_id = $search_category_id;// for move_product_confirm
+                        $current_category_id = $categories_selected[$key];
                     }
                     $product_type = zen_get_products_type($id);// for move_product_confirm
+                    if ($debug_mpc) {//steve
+                        echo __LINE__ . ': $_POST[\'products_id\']= ' . $_POST['products_id'] . ' | $product_type=' . $product_type . ' | $_POST[\'move_to_category_id\']= ' . $_POST['move_to_category_id'] . ' | $current_category_id=' . $current_category_id . '<br>';
+                    }
                     if (file_exists(DIR_WS_MODULES . $zc_products->get_handler($product_type) . '/move_product_confirm.php')) {
                         require(DIR_WS_MODULES . $zc_products->get_handler($product_type) . '/move_product_confirm.php');
                     } else {
@@ -962,7 +1026,7 @@ require(DIR_WS_INCLUDES . 'header.php');
         <div>
             <?php echo zen_draw_form('select_products', FILENAME_MULTIPLE_PRODUCT_COPY, 'action=confirm');
             /* Re-Post all POST'ed variables */
-            $key = '';//keep phpstorm EA inspection happy
+            $key = '';//initialise variable to keep phpstorm EA inspection happy
             foreach ($_POST as $key => $value) {
                 if (!is_array($_POST[$key])) {
                     echo zen_draw_hidden_field($key, htmlspecialchars(stripslashes($value), ENT_COMPAT, CHARSET));
@@ -970,10 +1034,14 @@ require(DIR_WS_INCLUDES . 'header.php');
             }
             $total_products_found = count($search_results);
             if ($total_products_found > 0) { ?>
-                <p><?php echo sprintf(TEXT_PRODUCTS_FOUND, $total_products_found); ?>
-                    <?php if (!$delete_option) { // not for Delete ?>
-                        <?php echo ' ' . TEXT_EXISTING_PRODUCTS_NOT_SHOWN; ?>
-                    <?php } ?></p>
+                <?php echo '<p>' . sprintf(TEXT_PRODUCTS_FOUND, $total_products_found) . '</p>';
+
+                if ($total_products_found >= $max_input_vars_limit) { //warning when in excess of POST limit
+                    echo '<p class="messageStackError">' . sprintf(WARNING_MAX_INPUT_VARS_LIMIT, $total_products_found, $max_input_vars) . '</p>';
+                }
+                if (!$delete_option) { // not for Delete
+                    echo ' ' . TEXT_EXISTING_PRODUCTS_NOT_SHOWN;
+                } ?>
                 <table class="table table-striped">
                     <thead>
                     <tr class="dataTableHeadingRow">
@@ -1076,7 +1144,7 @@ require(DIR_WS_INCLUDES . 'header.php');
                 <?php
                 echo zen_draw_hidden_field('items_found', implode(',', $items_found));
                 echo zen_draw_hidden_field('product_count', $cnt); ?>
-                <button type="submit" class="btn btn-danger"><?php echo IMAGE_CONFIRM; ?></button>
+                <button type="submit" class="btn btn-danger" id="submitConfirm"><?php echo IMAGE_CONFIRM; ?></button>
                 <?php echo "</form>\n";
             } else { // no matching products were found ?>
                 <h4><?php echo TEXT_NO_MATCHING_PRODUCTS_FOUND; ?></h4>
@@ -1159,6 +1227,22 @@ require(DIR_WS_INCLUDES . 'header.php');
     <?php require(DIR_WS_INCLUDES . 'footer.php'); ?>
 </div>
 <!-- footer_eof //-->
+<?php
+if ($action === 'find') { //disable Confirm button until a selection is made ?>
+    <script>
+        $(function(){
+            $("input[type='checkBox']").change(function(){
+                let len = $("input[type='checkBox']:checked").length;
+                if (len === 0)
+                    $("#submitConfirm").prop("disabled", true);
+                else
+                    $("#submitConfirm").removeAttr("disabled");
+            });
+            $("input[type='checkBox']").trigger('change');
+        });
+    </script>
+<?php }
+?>
 </body>
 </html>
 <?php require(DIR_WS_INCLUDES . 'application_bottom.php'); ?>
