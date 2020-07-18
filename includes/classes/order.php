@@ -120,7 +120,8 @@ class order extends base {
                             'country' => $order->fields['customers_country'],
                             'format_id' => $order->fields['customers_address_format_id'],
                             'telephone' => $order->fields['customers_telephone'],
-                            'email_address' => $order->fields['customers_email_address']);
+                            'email_address' => $order->fields['customers_email_address'],
+    );
 
     $this->delivery = array('name' => $order->fields['delivery_name'],
                             'company' => $order->fields['delivery_company'],
@@ -130,7 +131,8 @@ class order extends base {
                             'postcode' => $order->fields['delivery_postcode'],
                             'state' => $order->fields['delivery_state'],
                             'country' => $order->fields['delivery_country'],
-                            'format_id' => $order->fields['delivery_address_format_id']);
+                            'format_id' => $order->fields['delivery_address_format_id'],
+    );
 
     if (($order->fields['shipping_module_code'] == 'storepickup') ||
         (empty($this->delivery['name']) && empty($this->delivery['street_address']))) {
@@ -145,7 +147,8 @@ class order extends base {
                            'postcode' => $order->fields['billing_postcode'],
                            'state' => $order->fields['billing_state'],
                            'country' => $order->fields['billing_country'],
-                           'format_id' => $order->fields['billing_address_format_id']);
+                           'format_id' => $order->fields['billing_address_format_id'],
+    );
 
     $index = 0;
     $orders_products_query = "SELECT *
@@ -361,7 +364,8 @@ class order extends base {
                               'country' => array('id' => $customer_address->fields['countries_id'], 'title' => $customer_address->fields['countries_name'], 'iso_code_2' => $customer_address->fields['countries_iso_code_2'], 'iso_code_3' => $customer_address->fields['countries_iso_code_3']),
                               'format_id' => (int)$customer_address->fields['address_format_id'],
                               'telephone' => $customer_address->fields['customers_telephone'],
-                              'email_address' => $customer_address->fields['customers_email_address']);
+                              'email_address' => $customer_address->fields['customers_email_address'],
+      );
     }
 
     if ($this->content_type == 'virtual') {
@@ -382,7 +386,7 @@ class order extends base {
             'iso_code_3' => ''
         ),
         'country_id' => 0,
-        'format_id' => 0
+        'format_id' => 0,
       );
     } elseif ($shipping_address->RecordCount() > 0) {
       $this->delivery = array('firstname' => $shipping_address->fields['entry_firstname'],
@@ -397,7 +401,8 @@ class order extends base {
                               'zone_id' => $shipping_address->fields['entry_zone_id'],
                               'country' => array('id' => $shipping_address->fields['countries_id'], 'title' => $shipping_address->fields['countries_name'], 'iso_code_2' => $shipping_address->fields['countries_iso_code_2'], 'iso_code_3' => $shipping_address->fields['countries_iso_code_3']),
                               'country_id' => $shipping_address->fields['entry_country_id'],
-                              'format_id' => (int)$shipping_address->fields['address_format_id']);
+                              'format_id' => (int)$shipping_address->fields['address_format_id'],
+      );
     }
 
     if ($billing_address->RecordCount() > 0) {
@@ -413,7 +418,8 @@ class order extends base {
                              'zone_id' => $billing_address->fields['entry_zone_id'],
                              'country' => array('id' => $billing_address->fields['countries_id'], 'title' => $billing_address->fields['countries_name'], 'iso_code_2' => $billing_address->fields['countries_iso_code_2'], 'iso_code_3' => $billing_address->fields['countries_iso_code_3']),
                              'country_id' => $billing_address->fields['entry_country_id'],
-                             'format_id' => (int)$billing_address->fields['address_format_id']);
+                             'format_id' => (int)$billing_address->fields['address_format_id'],
+      );
     }
 
     list($taxCountryId, $taxZoneId) = $this->determineTaxAddressZones($billto, $sendto);
