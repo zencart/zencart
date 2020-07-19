@@ -92,7 +92,11 @@ if ($action != '') {
                 $html_msg['EMAIL_LAST_NAME'] = $row['customers_lastname'];
 
                 $message .= zen_db_prepare_input($_POST['message']);
-                $html_msg['EMAIL_MESSAGE_HTML'] = zen_db_prepare_input($_POST['message_html']);
+                if (EMAIL_USE_HTML == 'true') { 
+                  $html_msg['EMAIL_MESSAGE_HTML'] = zen_db_prepare_input($_POST['message_html']);
+                } else { 
+                  $html_msg['EMAIL_MESSAGE_HTML'] = '';
+                }
 
                 $gv_value = $currencies->format($_POST['amount']);
                 if (SEARCH_ENGINE_FRIENDLY_URLS == 'true') {
@@ -246,11 +250,13 @@ if (!empty($_GET['mail_sent_to']) && $_GET['mail_sent_to']) {
                 <td><b><?php echo TEXT_AMOUNT; ?></b> <?php echo $currencies->format(nl2br(htmlspecialchars(stripslashes($_POST['amount']), ENT_COMPAT, CHARSET, true))) . ($_POST['amount'] <= 0 ? '&nbsp;<span class="alert">' . ERROR_NO_AMOUNT_ENTERED . '</span>' : ''); ?>
                 </td>
             </tr>
+            <?php if (EMAIL_USE_HTML == 'true') { ?>
             <tr>
                 <td>
                     <hr/>
                     <b><?php echo TEXT_HTML_MESSAGE; ?></b><br><?php echo stripslashes($_POST['message_html']); ?></td>
             </tr>
+            <?php } ?>
             <tr>
                 <td>
                     <hr/>
