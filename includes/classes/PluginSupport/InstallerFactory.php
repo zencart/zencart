@@ -7,7 +7,7 @@
 
 namespace Zencart\PluginSupport;
 
-use Zencart\AdminExceptions\PluginInstallerException;
+use Zencart\Exceptions\PluginInstallerException;
 
 class InstallerFactory
 {
