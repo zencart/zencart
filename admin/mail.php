@@ -90,11 +90,11 @@ if ($action == 'preview') {
     $messageStack->add(ERROR_NO_CUSTOMER_SELECTED, 'error');
   }
 
-  if (!$_POST['subject']) {
+  if (empty($_POST['subject'])) {
     $messageStack->add(ERROR_NO_SUBJECT, 'error');
   }
 
-  if (!$_POST['message'] && !$_POST['message_html']) {
+  if (empty($_POST['message']) && empty($_POST['message_html'])) {
     $messageStack->add(ENTRY_NOTHING_TO_SEND, 'error');
   }
 }
