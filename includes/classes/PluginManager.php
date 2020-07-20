@@ -142,6 +142,7 @@ class PluginManager
     {
         $pluginDir = DIR_FS_CATALOG . 'zc_plugins';
         $pluginList = [];
+        if (!is_dir($pluginDir)) return $pluginList;
         $dir = new \DirectoryIterator($pluginDir);
         foreach ($dir as $fileinfo) {
             if ($fileinfo->isDot() || !$fileinfo->isDir()) {
@@ -183,10 +184,6 @@ class PluginManager
 
     protected function updateDbPlugins($pluginsFromFilesystem)
     {
-        if (count($pluginsFromFilesystem) === 0) {
-            return;
-        }
-// @todo validate plugin entries here
         $this->updatePluginControl($pluginsFromFilesystem);
     }
 

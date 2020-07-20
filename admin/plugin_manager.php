@@ -16,8 +16,6 @@ use Zencart\Filters\FilterFactory;
 
 require('includes/application_top.php');
 
-$pluginManager->inspectAndUpdate();
-
 $errorContainer = new PluginErrorContainer();
 $pluginInstaller = new Installer(new SqlPatchInstaller($db, $errorContainer), new ScriptedInstallerFactory($db, $errorContainer), $errorContainer);
 
