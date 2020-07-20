@@ -225,7 +225,7 @@ function zen_get_linked_categories_for_product($product_id, $exclude = [])
             FROM " . TABLE_PRODUCTS_TO_CATEGORIES . "
             WHERE products_id = " . $product_id;
     if (!empty($exclude) && is_array($exclude)) {
-        $sql .= " AND categories_id NOT IN (" . implode(',', $exclude);
+        $sql .= " AND categories_id NOT IN (" . implode(',', $exclude) . ")";
     }
     $results = $db->Execute($sql);
     $categories = [];

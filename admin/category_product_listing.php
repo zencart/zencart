@@ -870,26 +870,32 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
             );
             break;
           case 'delete_category':
+            $childs_count = zen_childs_in_category_count($cInfo->categories_id);
+            $products_count = zen_products_in_category_count($cInfo->categories_id);
+            $has_linked = false; 
+            $prod_list = zen_get_linked_products_for_category($cInfo->categories_id);
+
+            foreach ($prod_list as $prod) {
+               if (zen_get_linked_categories_for_product($prod, array($cInfo->categories_id))) {
+                  $has_linked = true; 
+                  break; 
+               }
+            }
             $heading[] = array('text' => '<h4>' . TEXT_INFO_HEADING_DELETE_CATEGORY . '</h4>');
 
             $contents = array('form' => zen_draw_form('categories', FILENAME_CATEGORY_PRODUCT_LISTING, 'action=delete_category_confirm&cPath=' . $cPath) . zen_draw_hidden_field('categories_id', $cInfo->categories_id));
             $contents[] = array('text' => TEXT_DELETE_CATEGORY_INTRO);
-            $contents[] = array('text' => TEXT_DELETE_CATEGORY_INTRO_LINKED_PRODUCTS);
+            if ($has_linked) {
+              $contents[] = array('text' => TEXT_DELETE_CATEGORY_INTRO_LINKED_PRODUCTS);
+            }
+
             $contents[] = array('text' => '<strong>' . $cInfo->categories_name . '</strong>');
-            if ($cInfo->childs_count > 0) {
-              $contents[] = array('text' => sprintf(TEXT_DELETE_WARNING_CHILDS, $cInfo->childs_count));
+            if ($childs_count > 0) {
+              $contents[] = array('text' => sprintf(TEXT_DELETE_WARNING_CHILDS, $childs_count));
             }
-            if ($cInfo->products_count > 0) {
-              $contents[] = array('text' => sprintf(TEXT_DELETE_WARNING_PRODUCTS, $cInfo->products_count));
+            if ($products_count > 0) {
+              $contents[] = array('text' => sprintf(TEXT_DELETE_WARNING_PRODUCTS, $products_count));
             }
-            /*
-              // future cat specific
-              if ($cInfo->products_count > 0) {
-              $contents[] = array('text' => TEXT_PRODUCTS_LINKED_INFO . '<br>' .
-              zen_draw_radio_field('delete_linked', 'delete_linked_yes') . ' ' . TEXT_PRODUCTS_DELETE_LINKED_YES . '<br>' .
-              zen_draw_radio_field('delete_linked', 'delete_linked_no', true) . ' ' . TEXT_PRODUCTS_DELETE_LINKED_NO);
-              }
-             */
             $contents[] = array('align' => 'center', 'text' => '<button type="submit" class="btn btn-danger">' . IMAGE_DELETE . '</button> <a href="' . zen_href_link(FILENAME_CATEGORY_PRODUCT_LISTING, 'cPath=' . $cPath . '&cID=' . $cInfo->categories_id) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>');
             break;
           case 'move_category':
