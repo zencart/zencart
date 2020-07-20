@@ -146,6 +146,7 @@ class PluginManager
     {
         $pluginDir = DIR_FS_CATALOG . 'zc_plugins';
         $pluginList = [];
+        if (!is_dir($pluginDir)) return $pluginList;
         $dir = new \DirectoryIterator($pluginDir);
         foreach ($dir as $fileinfo) {
             if ($fileinfo->isDot() || !$fileinfo->isDir()) {
@@ -188,10 +189,6 @@ class PluginManager
 
     protected function updateDbPlugins($pluginsFromFilesystem)
     {
-        if (count($pluginsFromFilesystem) === 0) {
-            return;
-        }
-// @todo validate plugin entries here
         $this->updatePluginControl($pluginsFromFilesystem);
         $this->updatePluginControlVersions($pluginsFromFilesystem);
     }
@@ -200,23 +197,25 @@ class PluginManager
     {
         $sql = "UPDATE " . TABLE_PLUGIN_CONTROL . " SET infs = 0";
         $this->dbConn->execute($sql);
-        $sql = "INSERT INTO " . TABLE_PLUGIN_CONTROL . " 
+        if (count($pluginsFromFilesystem)) {
+            $sql = "INSERT INTO " . TABLE_PLUGIN_CONTROL . " 
         (unique_key, name, description, type, status, author, version, zc_versions, infs, zc_contrib_id) 
         VALUES ";
 
-        foreach ($pluginsFromFilesystem as $uniqueKey => $plugin) {
-            $pluginVersion = $plugin['versions'][0];
-            $sqlPartial = "(:unique_key:, :name:, :description:, '', 0, :author:, '', '', 1, :pluginId:),";
-            $sqlPartial = $this->dbConn->bindVars($sqlPartial, ':unique_key:', $uniqueKey, 'string');
-            $sqlPartial = $this->dbConn->bindVars($sqlPartial, ':name:', $plugin[$pluginVersion]['pluginName'], 'string');
-            $sqlPartial = $this->dbConn->bindVars($sqlPartial, ':description:', $plugin[$pluginVersion]['pluginDescription'], 'string');
-            $sqlPartial = $this->dbConn->bindVars($sqlPartial, ':author:', $plugin[$pluginVersion]['pluginAuthor'], 'string');
-            $sqlPartial = $this->dbConn->bindVars($sqlPartial, ':pluginId:', $plugin[$pluginVersion]['pluginId'], 'integer');
-            $sql .= $sqlPartial;
+            foreach ($pluginsFromFilesystem as $uniqueKey => $plugin) {
+                $pluginVersion = $plugin['versions'][0];
+                $sqlPartial = "(:unique_key:, :name:, :description:, '', 0, :author:, '', '', 1, :pluginId:),";
+                $sqlPartial = $this->dbConn->bindVars($sqlPartial, ':unique_key:', $uniqueKey, 'string');
+                $sqlPartial = $this->dbConn->bindVars($sqlPartial, ':name:', $plugin[$pluginVersion]['pluginName'], 'string');
+                $sqlPartial = $this->dbConn->bindVars($sqlPartial, ':description:', $plugin[$pluginVersion]['pluginDescription'], 'string');
+                $sqlPartial = $this->dbConn->bindVars($sqlPartial, ':author:', $plugin[$pluginVersion]['pluginAuthor'], 'string');
+                $sqlPartial = $this->dbConn->bindVars($sqlPartial, ':pluginId:', $plugin[$pluginVersion]['pluginId'], 'integer');
+                $sql .= $sqlPartial;
+            }
+            $sql = rtrim($sql, ',');
+            $sql .= " ON DUPLICATE KEY UPDATE infs = 1";
+            $this->dbConn->execute($sql);
         }
-        $sql = rtrim($sql, ',');
-        $sql .= " ON DUPLICATE KEY UPDATE infs = 1";
-        $this->dbConn->execute($sql);
         $sql = "DELETE FROM " .TABLE_PLUGIN_CONTROL . " WHERE infs = 0";
         $this->dbConn->execute($sql);
     }
@@ -225,15 +224,15 @@ class PluginManager
     {
         $sql = "UPDATE " . TABLE_PLUGIN_CONTROL_VERSIONS . " SET infs = 0";
         $this->dbConn->execute($sql);
-        $sqlPluginVersion = "INSERT INTO " . TABLE_PLUGIN_CONTROL_VERSIONS . "
-        (unique_key, author, version, zc_versions, infs) VALUES ";
-
-        foreach ($pluginsFromFilesystem as $uniqueKey => $plugin) {
-            $sqlPluginVersion .= $this->processUpdateVersions($uniqueKey, $pluginsFromFilesystem);
+        if (count($pluginsFromFilesystem)) {
+            $sqlPluginVersion = "INSERT INTO " . TABLE_PLUGIN_CONTROL_VERSIONS . "(unique_key, author, version, zc_versions, infs) VALUES ";
+            foreach ($pluginsFromFilesystem as $uniqueKey => $plugin) {
+                $sqlPluginVersion .= $this->processUpdateVersions($uniqueKey, $pluginsFromFilesystem);
+            }
+            $sqlPluginVersion = rtrim($sqlPluginVersion, ',');
+            $sqlPluginVersion .= " ON DUPLICATE KEY UPDATE infs = 1";
+            $this->dbConn->execute($sqlPluginVersion);
         }
-        $sqlPluginVersion = rtrim($sqlPluginVersion, ',');
-        $sqlPluginVersion .= " ON DUPLICATE KEY UPDATE infs = 1";
-        $this->dbConn->execute($sqlPluginVersion);
         $sql = "DELETE FROM " .TABLE_PLUGIN_CONTROL_VERSIONS . " WHERE infs = 0";
         $this->dbConn->execute($sql);
     }
