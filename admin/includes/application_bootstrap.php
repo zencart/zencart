@@ -158,6 +158,7 @@ require 'includes/init_includes/init_database.php';
 
 
 $pluginManager = new PluginManager($db);
+$pluginManager->inspectAndUpdate();
 $installedPlugins = $pluginManager->getInstalledPlugins();
 
 $fs = FileSystem::getInstance();
