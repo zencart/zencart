@@ -267,7 +267,7 @@ class payment extends base {
     if (!$GLOBALS[$this->selected_module]->enabled) return;
     $function = __FUNCTION__;
     if (!method_exists($GLOBALS[$this->selected_module], $function)) return;
-    return $GLOBALS[$this->selected_module]->after_order_create($zf_order_id);
+    return $GLOBALS[$this->selected_module]->$function($zf_order_id);
   }
 
   function admin_notification($zf_order_id) {
@@ -276,7 +276,7 @@ class payment extends base {
     if (!$GLOBALS[$this->selected_module]->enabled) return;
     $function = __FUNCTION__;
     if (!method_exists($GLOBALS[$this->selected_module], $function)) return;
-    return $GLOBALS[$this->selected_module]->admin_notification($zf_order_id);
+    return $GLOBALS[$this->selected_module]->$function($zf_order_id);
   }
 
   function get_error() {
