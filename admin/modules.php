@@ -100,7 +100,7 @@ if (zen_not_null($action)) {
           break;
       }
       if (file_exists($module_directory . $class . $file_extension)) {
-          if ($languageLoader->tryloadLDefinesFromFile( '/modules/' . $module_type . '/', $_SESSION['language'],  $class . $file_extension)) {
+          if ($languageLoader->loadDefinesFromFile( '/modules/' . $module_type . '/', $_SESSION['language'],  $class . $file_extension)) {
               //include DIR_FS_CATALOG_LANGUAGES . $_SESSION['language'] . '/modules/' . $module_type . '/' . $class . $file_extension;
             include $module_directory . $class . $file_extension;
             $module = new $class();

@@ -43,6 +43,7 @@ class LanguageLoader
     {
         $this->arrayLoader->loadDefinesFromArrayFile($baseDirectory, $language, $languageFile);
         $this->fileLoader->loadFileDefineFile(DIR_FS_CATALOG . DIR_WS_LANGUAGES . $language . $baseDirectory . '/' . $languageFile);
+        return true; 
     }
 
     public function loadLanguageForView()
