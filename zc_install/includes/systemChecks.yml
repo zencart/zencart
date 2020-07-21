@@ -39,9 +39,9 @@ systemChecks:
       checkPhpVersionMin:
         method: checkPhpVersion
         parameters:
-          version: 7.1.3
+          version: 7.3.0
           versionTest: ge
-          localErrorText: <?php echo sprintf(TEXT_ERROR_PHP_VERSION_MIN, '7.1.3') . PHP_EOL; ?>
+          localErrorText: <?php echo sprintf(TEXT_ERROR_PHP_VERSION_MIN, '7.3') . PHP_EOL; ?>
       checkPhpVersionMax:
         method: checkPhpVersion
         parameters:
@@ -56,7 +56,7 @@ systemChecks:
       checkPhpVersionRecommended:
         method: checkPhpVersion
         parameters:
-          version: 7.4.7
+          version: 7.4.0
           versionTest: ge
   checkZCversion:
     runLevel: always
