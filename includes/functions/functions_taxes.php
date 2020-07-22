@@ -18,12 +18,12 @@
     //
     $tax_rate = false;
     $GLOBALS['zco_notifier']->notify(
-        'NOTIFY_ZEN_GET_TAX_RATE_OVERRIDE', 
+        'NOTIFY_ZEN_GET_TAX_RATE_OVERRIDE',
         array(
-            'class_id' => $class_id, 
-            'country_id' => $country_id, 
+            'class_id' => $class_id,
+            'country_id' => $country_id,
             'zone_id' => $zone_id
-        ), 
+        ),
         $tax_rate
     );
     if ($tax_rate !== false) {
@@ -76,7 +76,7 @@
 // TABLES: tax_rates;
   function zen_get_tax_description($class_id, $country_id = -1, $zone_id = -1) {
     global $db;
-    
+
     // -----
     // Give an observer the chance to override this function's return.
     //
@@ -93,7 +93,7 @@
     if ($tax_description != '') {
         return $tax_description;
     }
-    
+
     if ( ($country_id == -1) && ($zone_id == -1) ) {
       if (zen_is_logged_in()) {
         $country_id = $_SESSION['customer_country_id'];
@@ -138,8 +138,7 @@
     global $db;
     // -----
     // Give an observer the chance to override this function's return.
-    // It is *intended* to be an empty string; this is not a bug.
-    $rates_array = '';
+    $rates_array = [];
     $GLOBALS['zco_notifier']->notify(
         'NOTIFY_ZEN_GET_MULTIPLE_TAX_RATES_OVERRIDE',
         array(
@@ -150,12 +149,10 @@
         ),
         $rates_array
     );
-    if (is_array($rates_array)) {
+    if (!empty($rates_array)) {
         return $rates_array;
     }
-    
-    $rates_array = array();
-    
+
     if ( ($country_id == -1) && ($zone_id == -1) ) {
       if (zen_is_logged_in()) {
         $country_id = $_SESSION['customer_country_id'];
@@ -267,7 +264,7 @@
       $tax_query = "SELECT tax_rate
                     FROM " . TABLE_TAX_RATES . "
                     WHERE tax_description = :taxDescLookup";
-      $tax_query = $db->bindVars($tax_query, ':taxDescLookup', $tax_description, 'string'); 
+      $tax_query = $db->bindVars($tax_query, ':taxDescLookup', $tax_description, 'string');
 
       $tax = $db->Execute($tax_query);
 
@@ -293,7 +290,7 @@
     if (is_array($tax_address)) {
         return $tax_address;
     }
-    
+
     $tax_address = array();
     global $db;
     switch (STORE_PRODUCT_TAX_BASIS) {
@@ -338,7 +335,7 @@
      $tax_address['country_id'] = $tax_address_result->fields['entry_country_id'];
      return $tax_address;
  }
- function zen_get_all_tax_descriptions($country_id = -1, $zone_id = -1) 
+ function zen_get_all_tax_descriptions($country_id = -1, $zone_id = -1)
  {
    global $db;
     // -----
@@ -356,7 +353,7 @@
     if (is_array($tax_descriptions)) {
         return $tax_descriptions;
     }
-    
+
     if ( ($country_id == -1) && ($zone_id == -1) ) {
       if (zen_is_logged_in()) {
         $country_id = $_SESSION['customer_country_id'];
@@ -366,8 +363,8 @@
         $zone_id = STORE_ZONE;
       }
     }
-    
-   $sql = "select tr.* 
+
+   $sql = "select tr.*
            from (" . TABLE_TAX_RATES . " tr
            left join " . TABLE_ZONES_TO_GEO_ZONES . " za on (tr.tax_zone_id = za.geo_zone_id)
            left join " . TABLE_GEO_ZONES . " tz on (tz.geo_zone_id = tr.tax_zone_id) )
@@ -386,4 +383,4 @@
    }
    return $taxDescriptions;
  }
- 
+
