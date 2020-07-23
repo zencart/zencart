@@ -13,7 +13,7 @@ if (!zen_is_superuser() && !check_page(FILENAME_ORDERS, '')) return;
 $maxRows = 25;
 
 $sql = "SELECT o.orders_id as orders_id, o.customers_name as customers_name, o.customers_id,
-                   o.date_purchased as date_purchased, o.currency, o.currency_value, 
+                   o.date_purchased as date_purchased, o.currency, o.currency_value,
                    ot.class, ot.text as order_total, ot.value as order_value
             FROM " . TABLE_ORDERS . " o
             LEFT JOIN " . TABLE_ORDERS_TOTAL . " ot ON (o.orders_id = ot.orders_id AND class = 'ot_total')
@@ -38,19 +38,19 @@ $currencies = new currencies();
           }
 
           $sql = "SELECT op.orders_products_id, op.products_quantity AS qty, op.products_name AS name, op.products_model AS model
-                  FROM " . TABLE_ORDERS_PRODUCTS . " op 
+                  FROM " . TABLE_ORDERS_PRODUCTS . " op
                   WHERE op.orders_id = " . (int)$order['orders_id'];
 
           $orderProducts = $db->Execute($sql, false, true, 1800);
           $product_details = '';
           foreach($orderProducts as $product) {
-              $product_details .= $product['qty'] . ' x ' . $product['name'] . ' (' . $product['model'] . ')' . "\n";
-              $sql = "SELECT products_options, products_options_values 
-                      FROM " .  TABLE_ORDERS_PRODUCTS_ATTRIBUTES . " 
+              $product_details .= $product['qty'] . ' x ' . $product['name'] . (!empty($product['model']) ? ' (' . $product['model'] . ')' :''). "\n";
+              $sql = "SELECT products_options, products_options_values
+                      FROM " .  TABLE_ORDERS_PRODUCTS_ATTRIBUTES . "
                       WHERE orders_products_id = " . (int)$product['orders_products_id'] . " ORDER BY orders_products_attributes_id ASC";
               $productAttributes = $db->Execute($sql, false, true, 1800);
               foreach ($productAttributes as $attr) {
-                  if (!empty($attr['products_options'])) { 
+                  if (!empty($attr['products_options'])) {
                       $product_details .= '&nbsp;&nbsp;- ' . $attr['products_options'] . ': ' . zen_output_string_protected($attr['products_options_values']) . "\n";
                    }
               }
