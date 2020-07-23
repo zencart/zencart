@@ -205,7 +205,7 @@ class order extends base {
 
       $subindex = 0;
       $attributes_query = "SELECT products_options_id, products_options_values_id, products_options, products_options_values,
-                           options_values_price, price_prefix, product_attribute_is_free 
+                           options_values_price, price_prefix, product_attribute_is_free
                            FROM " . TABLE_ORDERS_PRODUCTS_ATTRIBUTES . "
                            WHERE orders_id = " . (int)$this->orderId . "
                            AND orders_products_id = " . (int)$orders_products->fields['orders_products_id'] . "
@@ -1212,6 +1212,32 @@ class order extends base {
       $email_order . $extra_info['TEXT'], STORE_NAME, EMAIL_FROM, $html_msg, 'checkout_extra', $this->attachArray, $this->customer['firstname'] . ' ' . $this->customer['lastname'], $this->customer['email_address']);
     }
     $this->notify('NOTIFY_ORDER_AFTER_SEND_ORDER_EMAIL', $zf_insert_id, $email_order, $extra_info, $html_msg);
+  }
+
+  function order_products_popover($orders_id) {
+	  global $db;
+	  $sql = "SELECT op.orders_products_id, op.products_quantity AS qty, op.products_name AS name, op.products_model AS model
+                            FROM " . TABLE_ORDERS_PRODUCTS . " op
+                            WHERE op.orders_id = " . (int)$orders_id;
+	  $orderProducts = $db->Execute($sql, false, true, 1800);
+
+	  $product_details = '';
+	  foreach ($orderProducts as $product) {
+		  $product_details .= $product['qty'] . ' x ' . $product['name'] . (!empty($product['model']) ? ' (' . $product['model'] . ')' :'') . "\n";
+		  $sql = "SELECT products_options, products_options_values
+                            FROM " . TABLE_ORDERS_PRODUCTS_ATTRIBUTES . "
+                            WHERE orders_products_id = " . (int)$product['orders_products_id'] . " ORDER BY orders_products_attributes_id ASC";
+		  $productAttributes = $db->Execute($sql, false, true, 1800);
+		  foreach ($productAttributes as $attr) {
+			  if (!empty($attr['products_options'])) {
+				  $product_details .= '&nbsp;&nbsp;- ' . $attr['products_options'] . ': ' . zen_output_string_protected($attr['products_options_values']) . "\n";
+			  }
+		  }
+		  $product_details .= '<hr>'; // add HR
+	  }
+	  $product_details = rtrim($product_details);
+	  $product_details = preg_replace('~<hr>$~', '', $product_details); // remove last HR
+	  return nl2br($product_details);
   }
 
 }
