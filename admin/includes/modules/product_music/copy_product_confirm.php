@@ -14,23 +14,14 @@ if (isset($_POST['products_id'], $_POST['categories_id'])) {
 
     if ($_POST['copy_as'] == 'link') {
         if ($categories_id != $current_category_id) {
-            $check = $db->Execute("SELECT COUNT(*) AS total
-                                   FROM " . TABLE_PRODUCTS_TO_CATEGORIES . "
-                                   WHERE products_id = " . $products_id . "
-                                   AND categories_id = " . $categories_id);
-            if ($check->fields['total'] < '1') {
-                zen_link_product_to_category($products_id, $categories_id);
-                zen_record_admin_activity('Product ' . $products_id . ' copied as link to category ' . $categories_id . ' via admin console.', 'info');
-            }
+            zen_link_product_to_category($products_id, $categories_id);
+            zen_record_admin_activity('Product ' . $products_id . ' copied as link to category ' . $categories_id . ' via admin console.', 'info');
         } else {
             $messageStack->add_session(ERROR_CANNOT_LINK_TO_SAME_CATEGORY, 'error');
         }
     } elseif ($_POST['copy_as'] == 'duplicate') {
 
-        $product = $db->Execute("SELECT *
-                             FROM " . TABLE_PRODUCTS . "
-                             WHERE products_id = " . $products_id . "
-                             LIMIT 1");
+        $product = zen_get_product_details($products_id);
 
         // fix Product copy from if Unit is 0
         if ($product->fields['products_quantity_order_units'] == 0) {

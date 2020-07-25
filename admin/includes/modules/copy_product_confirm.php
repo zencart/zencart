@@ -22,10 +22,7 @@ if (isset($_POST['products_id'], $_POST['categories_id'])) {
         }
     } elseif ($_POST['copy_as'] == 'duplicate') {
 
-        $product = $db->Execute("SELECT *
-                             FROM " . TABLE_PRODUCTS . "
-                             WHERE products_id = " . $products_id . "
-                             LIMIT 1");
+        $product = zen_get_product_details($products_id);
 
         // fix Product copy from if Unit is 0
         if ($product->fields['products_quantity_order_units'] == 0) {
@@ -107,8 +104,7 @@ if (isset($_POST['products_id'], $_POST['categories_id'])) {
                             )");
         }
 
-        $db->Execute("INSERT INTO " . TABLE_PRODUCTS_TO_CATEGORIES . " (products_id, categories_id)
-                      VALUES (" . $dup_products_id . ", " . $categories_id . ")");
+        zen_link_product_to_category($dup_products_id, $categories_id);
 
         // -----
         // Notify that a copy of a "base" product has just been created, enabling an observer to duplicate
