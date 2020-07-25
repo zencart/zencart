@@ -56,7 +56,7 @@ $sql = "SELECT DISTINCT popt.products_options_id, popt.products_options_name, po
             popt.products_options_images_style,
             popt.products_options_rows
         FROM " . TABLE_PRODUCTS_OPTIONS . " popt
-        LEFT JOIN " . TABLE_PRODUCTS_ATTRIBUTES . " patrib ON (patrib.options_id = popt.products_options_id) 
+        LEFT JOIN " . TABLE_PRODUCTS_ATTRIBUTES . " patrib ON (patrib.options_id = popt.products_options_id)
         WHERE patrib.products_id= :products_id
         AND popt.language_id = :language_id " .
         $options_order_by;
@@ -168,7 +168,7 @@ while (!$products_options_names->EOF) {
             // collect price information if it exists
             if ($products_options->fields['attributes_discounted'] == 1) {
                 // apply product discount to attributes if discount is on
-                $new_attributes_price = zen_get_attributes_price_final($products_options->fields["products_attributes_id"], 1, '', 'false', $products_price_is_priced_by_attributes);
+                $new_attributes_price = zen_get_attributes_price_final($products_options->fields["products_attributes_id"], 1, '', false, $products_price_is_priced_by_attributes);
                 //$new_attributes_price = zen_get_discount_calc((int)$_GET['products_id'], true, $new_attributes_price);
             } else {
                 // discount is off do not apply
