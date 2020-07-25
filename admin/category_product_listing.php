@@ -321,7 +321,7 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
     <!-- body //-->
     <div class="container-fluid">
       <h1>
-        <a href="<?php echo zen_catalog_href_link('index', zen_get_path("$current_category_id"), 'NONSSL'); ?>" rel="noopener" target="_blank" title="<?php echo BOX_HEADING_CATALOG; ?>"><?php echo zen_image(DIR_WS_IMAGES . 'icon_popup.gif', BOX_HEADING_CATALOG); ?></a>
+        <a href="<?php echo zen_catalog_href_link('index', zen_get_path($current_category_id), 'NONSSL'); ?>" rel="noopener" target="_blank" title="<?php echo BOX_HEADING_CATALOG; ?>"><?php echo zen_image(DIR_WS_IMAGES . 'icon_popup.gif', BOX_HEADING_CATALOG); ?></a>
         <?php echo HEADING_TITLE; ?>&nbsp;-&nbsp;<?php echo zen_output_generated_category_path($current_category_id); ?>
       </h1>
       <?php if ($action == '') { ?>
