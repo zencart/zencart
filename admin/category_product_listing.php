@@ -676,6 +676,9 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
                               OR p.products_model LIKE '%:search%'
                             ) ";
                 $where = $db->bindVars($where, ':search', $_GET['search'], 'noquotestring');
+            } else {
+                $products_query_raw.= " LEFT JOIN " . TABLE_PRODUCTS_TO_CATEGORIES . " p2c USING (products_id) ";
+                $where .= " AND p2c.categories_id=" . (int)$current_category_id;
             }
 
             $products_query_raw .= $where . $order_by;
