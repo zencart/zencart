@@ -595,7 +595,7 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
                 </td>
                 <?php if ($show_prod_labels) { ?>
                   <td class="hidden-sm hidden-xs">&nbsp;</td>
-                <td class="text-right hidden-sm hidden-xs"><?php echo zen_get_products_sale_discount('', $category['categories_id'], true); ?></td>
+                <td class="text-right hidden-sm hidden-xs"><?php echo zen_get_discount_calc('', $category['categories_id'], true); ?></td>
                 <?php }; ?>
                 <?php if ($search_result || SHOW_COUNTS_ADMIN == 'true') { ?>
                   <td class="text-right hidden-sm hidden-xs">
