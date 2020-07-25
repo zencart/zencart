@@ -200,12 +200,9 @@ if (zen_not_null($action)) {
           zen_redirect(zen_href_link(FILENAME_CATEGORY_PRODUCT_LISTING, 'cPath=' . $cPath));
         } else {
 
-          $sql = "SELECT COUNT(*) AS count
-                  FROM " . TABLE_PRODUCTS_TO_CATEGORIES . "
-                  WHERE categories_id = " . (int)$new_parent_id;
-          $zc_count_products = $db->Execute($sql);
+          $zc_count_products = zen_get_linked_products_for_category($new_parent_id);
 
-          if ($zc_count_products->fields['count'] > 0) {
+          if (!empty($zc_count_products)) {
             $messageStack->add_session(ERROR_CATEGORY_HAS_PRODUCTS, 'error');
           } else {
             $messageStack->add_session(SUCCESS_CATEGORY_MOVED, 'success');
@@ -1054,10 +1051,8 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
         <div class="row text-center alert">
           <?php
           // warning if products are in top level categories
-          $check_products_top_categories = $db->Execute("SELECT COUNT(*) AS products_in_top_level_error
-                                                             FROM " . TABLE_PRODUCTS_TO_CATEGORIES . "
-                                                             WHERE categories_id = " . (int)TOPMOST_CATEGORY_PARENT_ID);
-          if ($check_products_top_categories->fields['products_in_top_level_error'] > 0) {
+          $check_products_top_categories = zen_get_linked_products_for_category(TOPMOST_CATEGORY_PARENT_ID);
+          if (!empty($check_products_top_categories)) {
             echo WARNING_PRODUCTS_IN_TOP_INFO . $check_products_top_categories->fields['products_in_top_level_error'] . '<br>';
           }
           ?>
