@@ -5,7 +5,7 @@
  * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2020 Jun 16 Modified in v1.5.7 $
+ * @version $Id: DrByte 2020 May 19 Modified in v1.5.7 $
  */
 
 if (!defined('IS_ADMIN_FLAG')) {
@@ -1868,6 +1868,24 @@ class shoppingCart extends base {
       $this->flag_duplicate_msgs_set = FALSE;
       if (STOCK_ALLOW_CHECKOUT == 'false' && ($cart_qty + $new_qty > $chk_current_qty)) {
           $new_qty = $chk_current_qty;
+          if ($new_qty != 0) {
+              // Ensure new maximum quantity aligns with units.
+              $check_units = zen_get_products_quantity_order_units($_POST['products_id']);
+              // if new total is not a multiple of units, then adjust the added quantity to highest quantity as a factor of units.
+              if (fmod_round($new_qty + $cart_qty, $check_units) != 0) {
+                  $new_total = $check_units * floor($chk_current_qty/$check_units);
+                  if (($new_qty + $cart_qty) > $new_total) {
+                      $alter_new_qty = $new_total - $cart_qty;
+                      $new_qty = ($alter_new_qty > 0 ? $alter_new_qty : 0);
+                  }
+              
+                  // Offer message as a result of already knowing that too many have been attempted to be added, that available
+                  //  quantity does not align with the units, and that the new max is attempted to be used.
+                  if (!isset($this->flag_duplicate_quantity_msgs_set[(int)$_POST['products_id']]['units']) ) {
+                    // @TODO: Provide message of adjustment based on units if necessary. Otherwise, may want to provide some other message based on a different array value.
+                  }
+              }
+          }
           $messageStack->add_session('shopping_cart', ($this->display_debug_messages ? 'C: FUNCTION ' . __FUNCTION__ . ': ' : '') . WARNING_PRODUCT_QUANTITY_ADJUSTED . zen_get_products_name($_POST['products_id']), 'caution');
           $this->flag_duplicate_msgs_set = TRUE;
       }
@@ -1882,15 +1900,54 @@ class shoppingCart extends base {
           $adjust_new_qty = 'true';
           $alter_qty = $chk_current_qty - $cart_qty;
           $new_qty = ($alter_qty > 0 ? $alter_qty : 0);
+          if ($new_qty != 0) {
+            // Ensure new maximum quantity aligns with units.
+            $check_units = zen_get_products_quantity_order_units($_POST['products_id']);
+            // if new total is not a multiple of units, then adjust the added quantity to highest quantity as a factor of units.
+            if (fmod_round($new_qty + $cart_qty, $check_units) != 0) {
+              $new_total = $check_units * floor($chk_current_qty/$check_units);
+              if (($new_qty + $cart_qty) > $new_total) {
+                  $alter_new_qty = $new_total - $cart_qty;
+                  $new_qty = ($alter_new_qty > 0 ? $alter_new_qty : 0);
+              }
+              
+              // Offer message as a result of already knowing that too many have been attempted to be added, that available
+              //  quantity does not align with the units, and that the new max is attempted to be used.
+              if (!isset($this->flag_duplicate_quantity_msgs_set[(int)$_POST['products_id']]['units']) ) {
+                // @TODO: Provide message of adjustment based on units if necessary. Otherwise, may want to provide some other message based on a different array value.
+              }
+            }
+          }
           if (!$this->flag_duplicate_msgs_set) {
             $messageStack->add_session('shopping_cart', ($this->display_debug_messages ? 'D: FUNCTION ' . __FUNCTION__ . ': ' : '') . WARNING_PRODUCT_QUANTITY_ADJUSTED . zen_get_products_name($_POST['products_id']), 'caution');
           }
         }
 
-        // adjust quantity if needed
+        // adjust quantity if needed and as able for total quantity to be less then $add_max.
+        // Assumption is that $cart_qty is a number already <= $add_max
         if (($new_qty + $cart_qty > $add_max) && $add_max != 0) {
           $adjust_max= 'true';
           $new_qty = $add_max - $cart_qty;
+          if ($new_qty > 0) {
+            // Ensure new quantity aligns with units.
+            $check_units = zen_get_products_quantity_order_units($_POST['products_id']);
+            // if new total is not a multiple of units, then adjust the added quantity.
+            if (fmod_round($new_qty + $cart_qty, $check_units) != 0) {
+              // Identify highest value that is less than $add_max but a factor of $check_units
+              $new_total = $check_units * floor($add_max/$check_units);
+              // Adjust $new_qty to a value that attempts to reach the highest value that is a factor of $check_units
+              if (($new_qty + $cart_qty) > $new_total) {
+                  $alter_qty = $new_total - $cart_qty;
+                  $new_qty = ($alter_qty > 0 ? $alter_qty : 0);
+              }
+              
+              // Offer message as a result of already knowing that too many have been attempted to be added, that available
+              //  quantity does not align with the units, and that the new max is attempted to be used.
+              if (!isset($this->flag_duplicate_quantity_msgs_set[(int)$_POST['products_id']]['units']) ) {
+                // @TODO: Provide message of adjustment based on units if necessary. Otherwise, may want to provide some other message based on a different array value.
+              }
+            }
+          }
         }
       }
       if (zen_get_products_quantity_order_max($_POST['products_id']) == 1 && $this->in_cart_mixed($_POST['products_id']) == 1) {
