@@ -869,13 +869,13 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
           case 'delete_category':
             $childs_count = zen_childs_in_category_count($cInfo->categories_id);
             $products_count = zen_products_in_category_count($cInfo->categories_id);
-            $has_linked = false; 
+            $has_linked = false;
             $prod_list = zen_get_linked_products_for_category($cInfo->categories_id);
 
             foreach ($prod_list as $prod) {
                if (zen_get_linked_categories_for_product($prod, array($cInfo->categories_id))) {
-                  $has_linked = true; 
-                  break; 
+                  $has_linked = true;
+                  break;
                }
             }
             $heading[] = array('text' => '<h4>' . TEXT_INFO_HEADING_DELETE_CATEGORY . '</h4>');
