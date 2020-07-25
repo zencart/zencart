@@ -160,7 +160,7 @@ if (zen_not_null($action)) {
               // confirm that product is no longer linked to any categories
               $count_categories = zen_get_linked_categories_for_product($product_id);
               // if not linked to any categories, do delete:
-              if (count($count_categories) === 0) {
+              if (empty($count_categories)) {
                 zen_remove_product($product_id, $delete_linked);
               }
             } // endif $do_delete_flag
