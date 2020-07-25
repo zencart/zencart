@@ -695,17 +695,14 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
             $products_count = 0;
             $products_query_raw = "SELECT p.products_type, p.products_id, pd.products_name, p.products_quantity,
                                           p.products_price, p.products_status, p.products_model, p.products_sort_order,
-                                          p2c.categories_id, p.master_categories_id
+                                          p.master_categories_id
                                    FROM " . TABLE_PRODUCTS . " p
-                                   LEFT JOIN " . TABLE_PRODUCTS_DESCRIPTION . " pd ON pd.products_id = p.products_id
-                                     AND pd.language_id = " . (int)$_SESSION['languages_id'] . "
-                                   LEFT JOIN " . TABLE_PRODUCTS_TO_CATEGORIES . " p2c ON p2c.products_id = p.products_id ";
+                                   LEFT JOIN " . TABLE_PRODUCTS_DESCRIPTION . " pd USING (products_id)";
 
-            $where = " WHERE p2c.categories_id = " . (int)$current_category_id;
+            $where = " WHERE pd.language_id = " . (int)$_SESSION['languages_id'];
 
             if ($search_result && $action != 'edit_category') {
-                $where = " WHERE p2c.categories_id = p.master_categories_id
-                            AND (pd.products_name LIKE '%:search%'
+                $where .= "  AND (pd.products_name LIKE '%:search%'
                               OR pd.products_description LIKE '%:search%'
                               OR p.products_id = ':search'
                               OR p.products_model LIKE '%:search%'
@@ -745,7 +742,7 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
               $products_count++;
 // Get categories_id for product if search
               if (isset($_GET['search'])) {
-                $cPath = $product['categories_id'];
+                $cPath = $product['master_categories_id'];
               }
 
               if ((!isset($_GET['pID']) && !isset($_GET['cID']) || (isset($_GET['pID']) && ($_GET['pID'] == $product['products_id']))) && !isset($pInfo) && !isset($cInfo) && (substr($action, 0, 3) != 'new')) {
