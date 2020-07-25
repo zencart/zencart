@@ -97,6 +97,8 @@ if (isset($_POST['products_id'], $_POST['categories_id'])) {
         $sql_data_array['products_date_added'] = 'now()';
         $sql_data_array['products_date_available'] = (!empty($product->fields['products_date_available']) ? zen_db_input($product->fields['products_date_available']) : 'null');
 
+        $sql_data_array['master_categories_id'] = $categories_id;
+
         // Everything is set, stick it in the database
         zen_db_perform(TABLE_PRODUCTS, $sql_data_array);
 
