@@ -214,9 +214,10 @@ function zen_set_product_master_categories_id($product_id, $category_id)
 function zen_get_linked_categories_for_product($product_id, $exclude = [])
 {
     global $db;
+    $exclude = array_filter($exclude, function($record) {return is_numeric($record) ? (int)$record : null;});
     $sql = "SELECT categories_id
             FROM " . TABLE_PRODUCTS_TO_CATEGORIES . "
-            WHERE products_id = " . $product_id;
+            WHERE products_id = " . (int)$product_id;
     if (!empty($exclude) && is_array($exclude)) {
         $sql .= " AND categories_id NOT IN (" . implode(',', $exclude) . ")";
     }
@@ -238,7 +239,7 @@ function zen_get_linked_products_for_category($category_id, $first_only = false)
     global $db;
     $sql = "SELECT products_id
             FROM " . TABLE_PRODUCTS_TO_CATEGORIES . "
-            WHERE categories_id = " . $category_id . "
+            WHERE categories_id = " . (int)$category_id . "
             ORDER BY products_id";
     $results = $db->Execute($sql);
 
@@ -296,7 +297,7 @@ function zen_unlink_product_from_all_linked_categories($product_id, $master_cate
     if (empty($master_category_id)) return;
 
     $sql = "DELETE FROM " . TABLE_PRODUCTS_TO_CATEGORIES . "
-            WHERE products_id = " . $product_id . "
-            AND categories_id != " . $master_category_id;
+            WHERE products_id = " . (int)$product_id . "
+            AND categories_id != " . (int)$master_category_id;
     $db->Execute($sql);
 }
