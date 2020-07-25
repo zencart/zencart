@@ -25,9 +25,8 @@ function zen_get_product_details($product_id, $language_id = null)
             FROM " . TABLE_PRODUCTS . " p
             LEFT JOIN " . TABLE_PRODUCTS_DESCRIPTION . " pd USING (products_id)
             WHERE p.products_id = " . (int)$product_id . "
-            AND pd.language_id = " . (int)$language_id . "
-            LIMIT 1";
-    return $db->Execute($sql);
+            AND pd.language_id = " . (int)$language_id;
+    return $db->Execute($sql, 1, true, 900);
 }
 
 /**
@@ -130,7 +129,7 @@ function zen_enable_disabled_upcoming($datetime = null)
             FROM " . TABLE_PRODUCTS . "
             WHERE products_status = 0
             AND products_date_available <= " . $zc_disabled_upcoming_date . "
-            AND products_date_available != '0001-01-01'
+            AND products_date_available >= '0001-01-01'
             AND products_date_available IS NOT NULL
             ";
 
@@ -143,18 +142,12 @@ function zen_enable_disabled_upcoming($datetime = null)
 
 /**
  * Return a product's category (master_categories_id)
- * @param int $products_id
+ * @param int $product_id
  * @return int|string
  */
-function zen_get_products_category_id($products_id)
+function zen_get_products_category_id($product_id)
 {
-    global $db;
-
-    $sql = "SELECT products_id, master_categories_id
-            FROM " . TABLE_PRODUCTS . "
-            WHERE products_id = " . (int)$products_id . "
-            LIMIT 1";
-    $result = $db->Execute($sql);
+    $result = zen_get_product_details($product_id);
     if ($result->EOF) return '';
     return $result->fields['master_categories_id'];
 }
