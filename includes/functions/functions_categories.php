@@ -591,7 +591,7 @@ function zen_get_product_types_to_category($lookup)
     $sql = "SELECT product_type_id
             FROM " . TABLE_PRODUCT_TYPES_TO_CATEGORY . "
             WHERE category_id=" . (int)$lookup;
-    $result = $db->Execute($sql);
+    $result = $db->Execute($sql, 1);
 
     if ($result->RecordCount()) {
         return $result->fields['product_type_id'];
@@ -613,7 +613,7 @@ function zen_get_categories_parent_name($categories_id)
             FROM " . TABLE_CATEGORIES_DESCRIPTION . " cd
             LEFT JOIN " . TABLE_CATEGORIES . " c ON c.parent_id = cd.categories_id
             WHERE categories_id=" . (int)$categories_id . "
-            AND language_id= " . $_SESSION['languages_id'];
+            AND language_id= " . (int)$_SESSION['languages_id'];
     $result = $db->Execute($sql);
 
     return $result->fields['categories_name'];
@@ -696,13 +696,18 @@ function zen_generate_category_path($id, $from = 'category', $categories_array =
             if ($p2cResult['categories_id'] == TOPMOST_CATEGORY_PARENT_ID) {
                 $categories_array[$index][] = ['id' => TOPMOST_CATEGORY_PARENT_ID, 'text' => TEXT_TOP];
             } else {
-                $category = $db->Execute("SELECT cd.categories_name, c.parent_id
-                                    FROM " . TABLE_CATEGORIES . " c
-                                    LEFT JOIN " . TABLE_CATEGORIES_DESCRIPTION . " cd USING (categories_id)
-                                    WHERE c.categories_id = " . (int)$p2cResult['categories_id'] . "
-                                    AND cd.language_id = " . (int)$_SESSION['languages_id']);
+                $sql = "SELECT cd.categories_name, c.parent_id
+                        FROM " . TABLE_CATEGORIES . " c
+                        LEFT JOIN " . TABLE_CATEGORIES_DESCRIPTION . " cd USING (categories_id)
+                        WHERE c.categories_id = " . (int)$p2cResult['categories_id'] . "
+                        AND cd.language_id = " . (int)$_SESSION['languages_id'];
+                $category = $db->Execute($sql);
 
-                $categories_array[$index][] = ['id' => $p2cResult['categories_id'], 'text' => $category->fields['categories_name']];
+                $categories_array[$index][] = [
+                    'id' => $p2cResult['categories_id'],
+                    'text' => $category->fields['categories_name'],
+                    ];
+
                 if (zen_not_null($category->fields['parent_id']) && $category->fields['parent_id'] != TOPMOST_CATEGORY_PARENT_ID) {
                     $categories_array = zen_generate_category_path($category->fields['parent_id'], 'category', $categories_array, $index);
                 }
@@ -711,14 +716,18 @@ function zen_generate_category_path($id, $from = 'category', $categories_array =
             $index++;
         }
     } elseif ($from == 'category') {
-        $category = $db->Execute("SELECT cd.categories_name, c.parent_id
-                                FROM " . TABLE_CATEGORIES . " c
-                                LEFT JOIN " . TABLE_CATEGORIES_DESCRIPTION . " cd USING (categories_id)
-                                WHERE c.categories_id = " . (int)$id . "
-                                AND cd.language_id = " . (int)$_SESSION['languages_id']);
+        $sql = "SELECT cd.categories_name, c.parent_id
+                FROM " . TABLE_CATEGORIES . " c
+                LEFT JOIN " . TABLE_CATEGORIES_DESCRIPTION . " cd USING (categories_id)
+                WHERE c.categories_id = " . (int)$id . "
+                AND cd.language_id = " . (int)$_SESSION['languages_id'];
+        $category = $db->Execute($sql);
 
         if (!$category->EOF) {
-            $categories_array[$index][] = ['id' => $id, 'text' => $category->fields['categories_name']];
+            $categories_array[$index][] = [
+                'id' => $id,
+                'text' => $category->fields['categories_name'],
+            ];
             if (zen_not_null($category->fields['parent_id']) && $category->fields['parent_id'] != TOPMOST_CATEGORY_PARENT_ID) {
                 $categories_array = zen_generate_category_path($category->fields['parent_id'], 'category', $categories_array, $index);
             }
@@ -729,14 +738,14 @@ function zen_generate_category_path($id, $from = 'category', $categories_array =
 }
 
 /**
- * @param int $id
- * @param string $from
+ * @param int $category_id
+ * @param string $from 'category'|'product'
  * @return string|string[]|null
  */
-function zen_output_generated_category_path($id, $from = 'category')
+function zen_output_generated_category_path($category_id, $from = 'category')
 {
     $calculated_category_path_string = '';
-    $calculated_category_path = zen_generate_category_path($id, $from);
+    $calculated_category_path = zen_generate_category_path($category_id, $from);
 
     foreach ($calculated_category_path as $outerKey => $outerValue) {
         foreach ($outerValue as $innerKey => $innerValue) {
@@ -829,11 +838,11 @@ function zen_get_category_tree($parent_id = TOPMOST_CATEGORY_PARENT_ID, $spacing
     }
 
     $sql = "SELECT c.categories_id, cd.categories_name, c.parent_id
-           FROM " . TABLE_CATEGORIES . " c
-           LEFT JOIN " . TABLE_CATEGORIES_DESCRIPTION . " cd USING (categories_id)
-           WHERE cd.language_id = " . (int)$_SESSION['languages_id'] . "
-           AND c.parent_id = " . (int)$parent_id . "
-           ORDER BY c.sort_order, cd.categories_name";
+            FROM " . TABLE_CATEGORIES . " c
+            LEFT JOIN " . TABLE_CATEGORIES_DESCRIPTION . " cd USING (categories_id)
+            WHERE cd.language_id = " . (int)$_SESSION['languages_id'] . "
+            AND c.parent_id = " . (int)$parent_id . "
+            ORDER BY c.sort_order, cd.categories_name";
     $results = $db->Execute($sql);
     foreach ($results as $result) {
         if ($check_if_cat_has_prods && zen_products_in_category_count($result['categories_id'], '', false, true) >= 1) {
@@ -869,12 +878,15 @@ function zen_get_category_name($category_id, $language_id = null) {
 }
 
 
-
 /**
  * Find category description, from category ID, in given language
+ * @param int $category_id
+ * @param int $language_id
+ * @return string
  */
-function zen_get_category_description($category_id, $language_id) {
+function zen_get_category_description($category_id, $language_id = null) {
     global $db;
+    if (empty($language_id)) $language_id = (int)$_SESSION['languages_id'];
     $category = $db->Execute("SELECT categories_description
                               FROM " . TABLE_CATEGORIES_DESCRIPTION . "
                               WHERE categories_id = " . (int)$category_id . "
@@ -884,14 +896,16 @@ function zen_get_category_description($category_id, $language_id) {
 }
 
 
-/* @TODO
+/**
  * Return category's image
+ * @param $category_id
+ * @return string
  */
-function zen_get_categories_image($what_am_i) {
+function zen_get_categories_image($category_id) {
     global $db;
 
-    $the_categories_image_query= "select categories_image from " . TABLE_CATEGORIES . " where categories_id= '" . (int)$what_am_i . "'";
-    $result = $db->Execute($the_categories_image_query);
+    $sql = "SELECT categories_image FROM " . TABLE_CATEGORIES . " WHERE categories_id= " . (int)$category_id;
+    $result = $db->Execute($sql);
 
     if ($result->EOF) return '';
 
@@ -917,7 +931,7 @@ function zen_get_categories_status($categories_id)
     global $db;
     $sql = "SELECT categories_status
             FROM " . TABLE_CATEGORIES .
-            (zen_not_null($categories_id) ? " WHERE categories_id=" . (int)$categories_id : "");
+            (!empty($categories_id) ? " WHERE categories_id=" . (int)$categories_id : "");
     $check_status = $db->Execute($sql);
     if ($check_status->EOF) return ''; // empty string means does not exist in zen_validate_categories()
     return $check_status->fields['categories_status'];
@@ -979,20 +993,22 @@ function zen_get_categories_info($parent_id = 0, $category_path_string = '')
 {
     global $db, $categories_info;
 
-    $categories_sql = "SELECT cd.categories_id, cd.categories_name
-                        FROM " . TABLE_CATEGORIES . " c
-                        LEFT JOIN " . TABLE_CATEGORIES_DESCRIPTION . " cd ON c.categories_id = cd.categories_id
-                        WHERE c.parent_id = " . (int)$parent_id . "
-                        AND cd.language_id = " . (int)$_SESSION['languages_id'] . "
-                        ORDER BY cd.categories_name";
-    $categories_result = $db->Execute($categories_sql);
-    foreach ($categories_result as $category_result) {
-        $category_id = $category_result['categories_id'];
-        $category_name = ($category_path_string !== '' ? $category_path_string . ' > ' : '') . $category_result['categories_name'];
+    $sql = "SELECT cd.categories_id, cd.categories_name
+            FROM " . TABLE_CATEGORIES . " c
+            LEFT JOIN " . TABLE_CATEGORIES_DESCRIPTION . " cd USING (categories_id)
+            WHERE c.parent_id = " . (int)$parent_id . "
+            AND cd.language_id = " . (int)$_SESSION['languages_id'] . "
+            ORDER BY cd.categories_name";
+    $results = $db->Execute($sql);
+    foreach ($results as $result) {
+        $category_id = $result['categories_id'];
+        $category_name = ($category_path_string !== '' ? $category_path_string . ' > ' : '') . $result['categories_name'];
         // Does this category have subcategories?
-        $sub_categories_check_sql = "SELECT c.categories_id FROM " . TABLE_CATEGORIES . " c WHERE c.parent_id = " . (int)$category_id;
-        $sub_categories_check_result = $db->Execute($sub_categories_check_sql);
-        if ($sub_categories_check_result->EOF) {
+        $sql = "SELECT c.categories_id FROM " . TABLE_CATEGORIES . " c WHERE c.parent_id = " . (int)$category_id;
+        $subcategories = $db->Execute($sql);
+
+        if ($subcategories->EOF) {
+            // no subcategories
             $categories_info[] = [
                 'categories_id' => $category_id,
                 'categories_name' => $category_name,
@@ -1016,16 +1032,17 @@ function zen_get_categories_info($parent_id = 0, $category_path_string = '')
 function zen_get_target_categories_products($parent_id = 0, $spacing = '', $category_product_tree_array = [], $type = 'category')
 {
     global $db, $products_filter;
-    $categories = $db->Execute("SELECT cd.categories_id, cd.categories_name, c.parent_id
-                                        FROM " . TABLE_CATEGORIES . " c, " . TABLE_CATEGORIES_DESCRIPTION . " cd
-                                        WHERE c.categories_id = cd.categories_id
-                                        AND cd.language_id = " . (int)$_SESSION['languages_id'] . "
-                                        AND c.parent_id = " . (int)$parent_id . "
-                                        ORDER BY cd.categories_name");
+    $sql = "SELECT cd.categories_id, cd.categories_name, c.parent_id
+            FROM " . TABLE_CATEGORIES . " c
+            LEFT JOIN " . TABLE_CATEGORIES_DESCRIPTION . " cd USING (categories_id)
+            WHERE cd.language_id = " . (int)$_SESSION['languages_id'] . "
+            AND c.parent_id = " . (int)$parent_id . "
+            ORDER BY cd.categories_name";
+    $categories = $db->Execute($sql);
     foreach ($categories as $category) {
         // Get all subcategories for the current category
-        $sub_categories_sql = "SELECT c.categories_id FROM " . TABLE_CATEGORIES . " c WHERE c.parent_id = " . (int)$category['categories_id'];
-        $sub_categories_result = $db->Execute($sub_categories_sql);
+        $sql = "SELECT c.categories_id FROM " . TABLE_CATEGORIES . " c WHERE c.parent_id = " . (int)$category['categories_id'];
+        $sub_categories_result = $db->Execute($sql);
 
         if (!$sub_categories_result->EOF) {
             if ($type === 'product') {
@@ -1033,32 +1050,114 @@ function zen_get_target_categories_products($parent_id = 0, $spacing = '', $cate
             } else {//type is category
                 $category_product_tree_array[] = [
                     'id' => $category['categories_id'],
-                    'text' => $spacing . $category['categories_name']
+                    'text' => $spacing . $category['categories_name'],
                 ];
                 $category_product_tree_array = zen_get_target_categories_products((int)$category['categories_id'], $spacing . '&nbsp;&nbsp;&nbsp;', $category_product_tree_array);
             }
         }
         if ($type === 'product') {
-            $products_sql = "SELECT p.products_model, pd.products_id, pd.products_name
-                                FROM " . TABLE_PRODUCTS . " p
-                                LEFT JOIN " . TABLE_PRODUCTS_DESCRIPTION . " pd ON p.products_id = pd.products_id
-                                WHERE p.master_categories_id = " . (int)$category['categories_id'] . "
-                                AND pd.language_id = " . (int)$_SESSION['languages_id'] . "
-                                ORDER BY p.products_model";
+            $sql = "SELECT p.products_model, pd.products_id, pd.products_name
+                    FROM " . TABLE_PRODUCTS . " p
+                    LEFT JOIN " . TABLE_PRODUCTS_DESCRIPTION . " pd USING (products_id)
+                    WHERE p.master_categories_id = " . (int)$category['categories_id'] . "
+                    AND pd.language_id = " . (int)$_SESSION['languages_id'] . "
+                    ORDER BY p.products_model";
 
-            $products_result = $db->Execute($products_sql);
+            $products = $db->Execute($sql);
 
-            foreach ($products_result as $product_result) {
-                if ($product_result['products_id'] !== $products_filter) {
+            foreach ($products as $product) {
+                if ($product['products_id'] !== $products_filter) {
                     $category_product_tree_array[] = [
-                        'id' => $product_result['products_id'],
-                        'text' => $spacing . htmlentities($category['categories_name']) . ': ' .
-                            htmlentities($product_result['products_model']) . ' - ' .
-                            htmlentities($product_result['products_name']) . ' (#' . $product_result['products_id'] . ')'
+                        'id' => $product['products_id'],
+                        'text' => $spacing .
+                            htmlentities($category['categories_name']) . ': ' .
+                            htmlentities($product['products_model']) . ' - ' .
+                            htmlentities($product['products_name']) . ' (#' . $product['products_id'] . ')',
                     ];
                 }
             }
         }
     }
     return $category_product_tree_array;
+}
+
+/**
+ * Recursive algorithm to restrict all sub_categories of a specified category to a specified product_type
+ * @param int $category_id
+ * @param int $product_type_id
+ */
+function zen_restrict_sub_categories($category_id, $product_type_id) {
+    global $db;
+    $sql = "SELECT categories_id FROM " . TABLE_CATEGORIES . " WHERE parent_id = " . (int)$category_id;
+    $results = $db->Execute($sql);
+    foreach ($results as $result) {
+        $sql = "SELECT * FROM " . TABLE_PRODUCT_TYPES_TO_CATEGORY . "
+                         WHERE category_id = " . (int)$result['categories_id'] . "
+                         AND product_type_id = " . (int)$product_type_id;
+
+        $zq_type_to_cat = $db->Execute($sql);
+
+        if ($zq_type_to_cat->RecordCount() < 1) {
+            $za_insert_sql_data = [
+                'category_id' => (int)$result['categories_id'],
+                'product_type_id' => (int)$product_type_id,
+            ];
+            zen_db_perform(TABLE_PRODUCT_TYPES_TO_CATEGORY, $za_insert_sql_data);
+        }
+        zen_restrict_sub_categories($result['categories_id'], $product_type_id);
+    }
+}
+
+
+/**
+ * Recursive algorithm to UNDO restriction from all sub_categories of a specified category for a specified product_type
+ * @param int $category_id
+ * @param int $product_type_id
+ */
+function zen_remove_restrict_sub_categories($category_id, $product_type_id) {
+    global $db;
+    $sql = "SELECT categories_id FROM " . TABLE_CATEGORIES . " WHERE parent_id = " . (int)$category_id;
+    $results = $db->Execute($sql);
+    foreach($results as $result) {
+        $sql = "DELETE FROM " .  TABLE_PRODUCT_TYPES_TO_CATEGORY . "
+                WHERE category_id = " . (int)$result['categories_id'] . "
+                AND product_type_id = " . (int)$product_type_id;
+
+        $db->Execute($sql);
+        zen_remove_restrict_sub_categories($result['categories_id'], $product_type_id);
+    }
+}
+
+/**
+ * Get an array of product types that the category is restricted to
+ * @param int $category_id
+ * @return array
+ */
+function zen_get_category_restricted_product_types($category_id)
+{
+    global $db;
+    $sql = "SELECT ptc.product_type_id as type_id, pt.type_name
+             FROM " . TABLE_PRODUCT_TYPES_TO_CATEGORY . " ptc,
+             LEFT JOIN " . TABLE_PRODUCT_TYPES . " pt ON (pt.type_id = ptc.product_type_id)
+             WHERE ptc.category_id = " . (int)$category_id;
+    $results = $db->Execute($sql);
+
+    $return = [];
+    foreach($results as $result) {
+        $return[] = $result;
+    }
+    return $return;
+}
+
+/**
+ * @param int $category_id
+ * @param int $status
+ */
+function zen_set_category_status($category_id, $status)
+{
+    global $db;
+    $sql = "UPDATE " . TABLE_CATEGORIES . "
+            SET categories_status = " . (int)$status . "
+            WHERE categories_id = " . (int)$category_id;
+    $db->Execute($sql);
 }

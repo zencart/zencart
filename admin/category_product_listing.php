@@ -67,15 +67,9 @@ if (zen_not_null($action)) {
 
           //set categories_status
           if ($categories[$i]['id'] == $categories_id) {//always update THIS category
-            $sql = "UPDATE " . TABLE_CATEGORIES . "
-                    SET categories_status = " . (int)$category_status . "
-                    WHERE categories_id = " . (int)$categories[$i]['id'];
-            $db->Execute($sql);
+              zen_set_category_status($category_status, $categories[$i]['id']);
           } elseif ($subcategories_status != '') {//optionally update subcategories if a change was selected
-            $sql = "UPDATE " . TABLE_CATEGORIES . "
-                    SET categories_status = " . (int)$subcategories_status . "
-                    WHERE categories_id = " . (int)$categories[$i]['id'];
-            $db->Execute($sql);
+              zen_set_category_status($subcategories_status, $categories[$i]['id']);
           }
 
           //set products_status
@@ -94,11 +88,6 @@ if (zen_not_null($action)) {
       break;
     case 'remove_type':
       if (isset($_POST['type_id'])) {
-        $sql = "DELETE FROM " . TABLE_PRODUCT_TYPES_TO_CATEGORY . "
-                WHERE category_id = " . (int)zen_db_prepare_input($_GET['cID']) . "
-                AND product_type_id = " . (int)zen_db_prepare_input($_POST['type_id']);
-
-        $db->Execute($sql);
         zen_remove_restrict_sub_categories($_GET['cID'], (int)$_POST['type_id']);
         $action = 'edit';
         zen_redirect(zen_href_link(FILENAME_CATEGORY_PRODUCT_LISTING, 'action=edit_category&cPath=' . $_GET['cPath'] . '&cID=' . zen_db_prepare_input($_GET['cID'])));
@@ -977,8 +966,8 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
       <?php
       if ($action == '') {
         $cPath_back = '';
-        if (sizeof($cPath_array) > 0) {
-          for ($i = 0, $n = sizeof($cPath_array) - 1; $i < $n; $i++) {
+        if (count($cPath_array) > 0) {
+          for ($i = 0, $n = count($cPath_array) - 1; $i < $n; $i++) {
             if (empty($cPath_back)) {
               $cPath_back .= $cPath_array[$i];
             } else {
@@ -992,7 +981,7 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
         <div class="row">
           <div class="col-md-3"><?php echo TEXT_CATEGORIES . '&nbsp;' . $categories_count . '<br>' . TEXT_PRODUCTS . '&nbsp;' . $products_count; ?></div>
           <div class="col-md-9 text-right">
-            <?php if (sizeof($cPath_array) > 0) { ?>
+            <?php if (count($cPath_array) > 0) { ?>
               <div class="col-sm-3">
                 <a href="<?php echo zen_href_link(FILENAME_CATEGORY_PRODUCT_LISTING, $cPath_back . 'cID=' . $current_category_id); ?>" class="btn btn-default" role="button"><?php echo IMAGE_BACK; ?></a>
               </div>
@@ -1009,16 +998,10 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
               <?php echo zen_draw_form('newproduct', FILENAME_PRODUCT, 'action=new_product', 'post', 'class="form-horizontal"'); ?>
               <?php echo (empty($_GET['search']) ? '<div class="col-xs-6 col-sm-2"><button type="submit" class="btn btn-primary">' . IMAGE_NEW_PRODUCT . '</button></div>' : ''); ?>
               <?php
-              // Query product types based on the ones this category is restricted to
-              $sql = "SELECT ptc.product_type_id as type_id, pt.type_name
-                      FROM " . TABLE_PRODUCT_TYPES_TO_CATEGORY . " ptc,
-                           " . TABLE_PRODUCT_TYPES . " pt
-                      WHERE ptc.category_id = " . (int)$current_category_id . "
-                      AND pt.type_id = ptc.product_type_id";
-              $product_types = $db->Execute($sql);
+              $product_types = zen_get_category_restricted_product_types($current_category_id);
 
-              if ($product_types->RecordCount() == 0) {
-                // There are no restricted product types so make we offer all types instead
+              if (empty($product_types)) {
+                // There are no restricted product types so offer all types instead
                 $sql = "SELECT * FROM " . TABLE_PRODUCT_TYPES;
                 $product_types = $db->Execute($sql);
               }

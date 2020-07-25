@@ -2384,48 +2384,7 @@ function zen_cfg_read_only($text, $key = '')
     sort($dir_info);
     return $dir_info;
   }
-/**
- * Recursive algorithm to restrict all sub_categories of a specified category to a specified product_type
- */
-  function zen_restrict_sub_categories($zf_cat_id, $zf_type) {
-    global $db;
-    $zp_sql = "select categories_id from " . TABLE_CATEGORIES . " where parent_id = " . (int)$zf_cat_id;
-    $zq_sub_cats = $db->Execute($zp_sql);
-    while (!$zq_sub_cats->EOF) {
-      $zp_sql = "select * from " . TABLE_PRODUCT_TYPES_TO_CATEGORY . "
-                         where category_id = " . (int)$zq_sub_cats->fields['categories_id'] . "
-                         and product_type_id = " . (int)$zf_type;
 
-      $zq_type_to_cat = $db->Execute($zp_sql);
-
-      if ($zq_type_to_cat->RecordCount() < 1) {
-        $za_insert_sql_data = array('category_id' => (int)$zq_sub_cats->fields['categories_id'],
-                                    'product_type_id' => (int)$zf_type);
-        zen_db_perform(TABLE_PRODUCT_TYPES_TO_CATEGORY, $za_insert_sql_data);
-      }
-      zen_restrict_sub_categories($zq_sub_cats->fields['categories_id'], $zf_type);
-      $zq_sub_cats->MoveNext();
-    }
-  }
-
-
-/**
- * Recursive algorithm to UNDO restriction from all sub_categories of a specified category for a specified product_type
- */
-  function zen_remove_restrict_sub_categories($zf_cat_id, $zf_type) {
-    global $db;
-    $zp_sql = "select categories_id from " . TABLE_CATEGORIES . " where parent_id = " . (int)$zf_cat_id;
-    $zq_sub_cats = $db->Execute($zp_sql);
-    while (!$zq_sub_cats->EOF) {
-        $sql = "delete from " .  TABLE_PRODUCT_TYPES_TO_CATEGORY . "
-                where category_id = " . (int)$zq_sub_cats->fields['categories_id'] . "
-                and product_type_id = " . (int)$zf_type;
-
-        $db->Execute($sql);
-      zen_remove_restrict_sub_categories($zq_sub_cats->fields['categories_id'], $zf_type);
-      $zq_sub_cats->MoveNext();
-    }
-  }
 
 /**
  * build configuration_key based on product type and return its value
