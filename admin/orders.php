@@ -1261,7 +1261,7 @@ if (zen_not_null($action) && $order_exists == true) {
                     $orderProducts = $db->Execute($sql, false, true, 1800);
                     $product_details = '';
                     foreach($orderProducts as $product) {
-                        $product_details .= $product['qty'] . ' x ' . $product['name'] . ' (' . $product['model'] . ')' . "\n";
+                        $product_details .= $product['qty'] . ' x ' . $product['name'] . (!empty($product['model']) ? ' (' . $product['model'] . ')' :'') . "\n";
                         $sql = "SELECT products_options, products_options_values
                             FROM " .  TABLE_ORDERS_PRODUCTS_ATTRIBUTES . "
                             WHERE orders_products_id = " . (int)$product['orders_products_id'] . " ORDER BY orders_products_attributes_id ASC";
