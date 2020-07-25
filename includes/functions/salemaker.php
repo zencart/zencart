@@ -3,89 +3,100 @@
  * salemaker functions
  *
  * @package functions
- * @copyright Copyright 2003-2010 Zen Cart Development Team
+ * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: salemaker.php 15974 2010-04-17 00:29:17Z ajeh $
+ * @version $Id: Modified in 1.5.8 $
  */
 
-////
-// Set the status of a salemaker sale
-  function zen_set_salemaker_status($sale_id, $status) {
+/**
+ * Set the status of a salemaker sale
+ * @param int $sale_id
+ * @param int $status 0|1
+ * @return queryFactoryResult
+ */
+function zen_set_salemaker_status($sale_id, $status)
+{
     global $db;
-    $sql = "update " . TABLE_SALEMAKER_SALES . "
-            set sale_status = '" . (int)$status . "', sale_date_status_change = now()
-            where sale_id = '" . (int)$sale_id . "'";
+    $sql = "UPDATE " . TABLE_SALEMAKER_SALES . "
+            SET sale_status = " . (int)$status . ", sale_date_status_change = now()
+            WHERE sale_id = " . (int)$sale_id;
 
     return $db->Execute($sql);
-   }
+}
 
-////
-// Auto expire salemaker sales
-  function zen_expire_salemaker() {
+/**
+ * Auto expire salemaker sales
+ */
+function zen_expire_salemaker()
+{
     global $db;
 
-    $date_range = time();
-    $zc_sale_date = date('Ymd', $date_range);
+    $sale_date = date('Ymd', time());
 
-    $salemaker_query = "select sale_id
-                       from " . TABLE_SALEMAKER_SALES . "
-                       where sale_status = '1'
-                       and ((" . $zc_sale_date . " >= sale_date_end and sale_date_end != '0001-01-01')
-                       or (" . $zc_sale_date . " < sale_date_start and sale_date_start != '0001-01-01'))";
+    $sql = "SELECT sale_id
+            FROM " . TABLE_SALEMAKER_SALES . "
+            WHERE sale_status = 1
+            AND (
+             (" . $sale_date . " >= sale_date_end AND sale_date_end <= '0001-01-01')
+             OR
+             (" . $sale_date . " < sale_date_start AND sale_date_start <= '0001-01-01')
+            )";
 
-    $salemaker = $db->Execute($salemaker_query);
+    $results = $db->Execute($sql);
 
-    if ($salemaker->RecordCount() > 0) {
-      while (!$salemaker->EOF) {
-        zen_set_salemaker_status($salemaker->fields['sale_id'], '0');
-        zen_update_salemaker_product_prices($salemaker->fields['sale_id']);
-        $salemaker->MoveNext();
-      }
+    foreach ($results as $result) {
+        zen_set_salemaker_status($result['sale_id'], 0);
+        zen_update_salemaker_product_prices($result['sale_id']);
     }
-  }
+}
 
-////
-// Auto start salemaker sales
-  function zen_start_salemaker() {
+/**
+ * Auto start salemaker sales
+ */
+function zen_start_salemaker()
+{
     global $db;
 
-    $date_range = time();
-    $zc_sale_date = date('Ymd', $date_range);
+    $sale_date = date('Ymd', time());
 
-    $salemaker_query = "select sale_id
-                       from " . TABLE_SALEMAKER_SALES . "
-                       where sale_status = '0'
-                       and (((sale_date_start <= " . $zc_sale_date . " and sale_date_start != '0001-01-01') and (sale_date_end > " . $zc_sale_date . "))
-                       or ((sale_date_start <= " . $zc_sale_date . " and sale_date_start != '0001-01-01') and (sale_date_end = '0001-01-01'))
-                       or (sale_date_start = '0001-01-01' and sale_date_end > " . $zc_sale_date . "))
-                       ";
+    $sql = "SELECT sale_id
+            FROM " . TABLE_SALEMAKER_SALES . "
+            WHERE sale_status = 0
+            AND (
+            (
+                (sale_date_start <= " . $sale_date . " AND sale_date_start != '0001-01-01')
+                AND
+                (sale_date_end > " . $sale_date . ")
+            )
+            OR
+            (
+                (sale_date_start <= " . $sale_date . " AND sale_date_start != '0001-01-01')
+                AND
+                (sale_date_end <= '0001-01-01')
+            )
+            OR (sale_date_start <= '0001-01-01' AND sale_date_end > " . $sale_date . ")
+            )
+            ";
 
-    $salemaker = $db->Execute($salemaker_query);
+    $results = $db->Execute($sql);
 
-    if ($salemaker->RecordCount() > 0) {
-      while (!$salemaker->EOF) {
-        zen_set_salemaker_status($salemaker->fields['sale_id'], '1');
-        zen_update_salemaker_product_prices($salemaker->fields['sale_id']);
-        $salemaker->MoveNext();
-      }
+    foreach ($results as $result) {
+        zen_set_salemaker_status($result['sale_id'], 1);
+        zen_update_salemaker_product_prices($result['sale_id']);
     }
 
-// turn off salemaker sales if not active yet
-    $salemaker_query = "select sale_id
-                       from " . TABLE_SALEMAKER_SALES . "
-                       where sale_status = '1'
-                       and (" . $zc_sale_date . " < sale_date_start and sale_date_start != '0001-01-01')
-                       ";
+    // turn off salemaker sales if not active yet
+    $sql = "SELECT sale_id
+            FROM " . TABLE_SALEMAKER_SALES . "
+            WHERE sale_status = 1
+            AND (" . $sale_date . " < sale_date_start AND sale_date_start <= '0001-01-01')
+            ";
 
-    $salemaker = $db->Execute($salemaker_query);
+    $results = $db->Execute($sql);
 
-    if ($salemaker->RecordCount() > 0) {
-      while (!$salemaker->EOF) {
-        zen_set_salemaker_status($salemaker->fields['sale_id'], '0');
-        zen_update_salemaker_product_prices($salemaker->fields['sale_id']);
-        $salemaker->MoveNext();
-      }
+    foreach ($results as $result) {
+        zen_set_salemaker_status($result['sale_id'], 0);
+        zen_update_salemaker_product_prices($result['sale_id']);
     }
-  }
-?>
+}

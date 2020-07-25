@@ -2068,18 +2068,6 @@ function zen_get_language_name($lookup)
   }
 
 /**
- * recalculate and set the products_price_sorter field for the specified $product_id
- */
-  function zen_update_products_price_sorter($product_id) {
-    global $db;
-
-    $products_price_sorter = zen_get_products_actual_price($product_id);
-    $db->Execute("update " . TABLE_PRODUCTS . " set
-         products_price_sorter='" . zen_db_prepare_input($products_price_sorter) . "'
-         where products_id=" . (int)$product_id);
-  }
-
-/**
  * Product Types -- configuration key value lookup in TABLE_PRODUCT_TYPE_LAYOUT
  */
   function zen_get_configuration_key_value_layout($lookup, $type=1) {
@@ -2527,39 +2515,6 @@ function zen_cfg_read_only($text, $key = '')
     return $file_parts[0];
   }
 
-/**
- * salemaker categories array
- */
-  function zen_parse_salemaker_categories($clist) {
-    $clist_array = explode(',', $clist);
-
-// make sure no duplicate category IDs exist which could lock the server in a loop
-    $tmp_array = array();
-    $n = sizeof($clist_array);
-    for ($i=0; $i<$n; $i++) {
-      if (!in_array($clist_array[$i], $tmp_array)) {
-        $tmp_array[] = $clist_array[$i];
-      }
-    }
-    return $tmp_array;
-  }
-
-/**
- * update salemaker product prices per category per product for the specified $salemaker_id
- */
-  function zen_update_salemaker_product_prices($salemaker_id) {
-    global $db;
-    $zv_categories = $db->Execute("select sale_categories_selected from " . TABLE_SALEMAKER_SALES . " where sale_id = " . (int)$salemaker_id);
-    if ($zv_categories->EOF) return FALSE;
-    $za_salemaker_categories = zen_parse_salemaker_categories($zv_categories->fields['sale_categories_selected']);
-    $n = count($za_salemaker_categories);
-    for ($i=0; $i<$n; $i++) {
-      $update_products_price = zen_get_linked_products_for_category((int)$za_salemaker_categories[$i]);
-      foreach($update_products_price as $product_id) {
-        zen_update_products_price_sorter($product_id);
-      }
-    }
-  }
 
 /**
  * check if products has quantity-discounts defined

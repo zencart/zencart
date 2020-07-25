@@ -1315,7 +1315,7 @@ class shoppingCart extends base {
         } else {
           $new_qty = $this->contents[$products_id]['qty'];
         }
-        $check_unit_decimals = zen_get_products_quantity_order_units((int)$products->fields['products_id']);
+        $check_unit_decimals = $products->fields['products_quantity_order_units'];
         if (strstr($check_unit_decimals, '.')) {
           $new_qty = round($new_qty, QUANTITY_DECIMALS);
         } else {
