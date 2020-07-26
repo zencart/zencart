@@ -22,11 +22,11 @@ $context = (new FileSystem)->isAdminDir(__DIR__) ? 'admin' : 'catalog';
 $extraFuncsPlugins = [];
 foreach ($installedPlugins as $plugin) {
     $path = DIR_FS_CATALOG . 'zc_plugins/' . $plugin['unique_key'] . '/' . $plugin['version'] . '/' . $context . '/' . DIR_WS_FUNCTIONS . 'extra_functions/';
-    $observersPlugin = (new FileSystem)->listFilesFromDirectory($path, '~^[^\._].*\.php$~i');
-    $observersPlugin = collect($observersPlugin)->map(function ($item, $key) use ($path) {
+    $efPluginFile = (new FileSystem)->listFilesFromDirectory($path, '~^[^\._].*\.php$~i');
+    $efPluginFile = collect($efPluginFile)->map(function ($item, $key) use ($path) {
         return $path . $item;
     })->toArray();
-    $extraFuncsPlugins = array_merge($extraFuncsPlugins, $observersPlugin);
+    $extraFuncsPlugins = array_merge($extraFuncsPlugins, $efPluginFile);
 }
 $extraFuncsFiles = array_merge($extraFuncsPlugins, $extraFuncsMain);
 
@@ -37,4 +37,4 @@ foreach ($extraFuncsFiles as $file) {
     include($file);
 }
 
-unset($extraFuncsMain, $extraFuncsPlugins, $extraFuncsFiles, $file);
+unset($extraFuncsMain, $extraFuncsPlugins, $extraFuncsFiles, $efPluginFile, $file);
