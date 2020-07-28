@@ -22,7 +22,7 @@ $zco_notifier->notify('NOTIFY_TPL_COLUMNAR_DISPLAY_START', $current_page_base, $
  }
  ?>
 <?php
-if (is_array($list_box_contents) > 0 ) {
+if (is_array($list_box_contents)) {
  for($row=0, $n=sizeof($list_box_contents); $row<$n; $row++) {
     $params = "";
     //if (isset($list_box_contents[$row]['params'])) $params .= ' ' . $list_box_contents[$row]['params'];
