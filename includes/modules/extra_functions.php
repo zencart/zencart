@@ -1,45 +1,40 @@
 <?php
 /**
  * Load in any user functions
- * see  {@link  http://www.zen-cart.com/wiki/index.php/Developers_API_Tutorials#InitSystem wikitutorials} for more details.
  *
  * @package initSystem
- * @copyright Copyright 2003-2019 Zen Cart Development Team
+ * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Scott C Wilson 2019 Apr 11 Modified in v1.5.6b $
+ * @version $Id:  Modified in v1.5.8 $
  */
-// must be called appropriately
+use Zencart\FileSystem\FileSystem;
+
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
 }
-// set directories to check for function files
-$extra_functions_directory = DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'extra_functions/';
-$ws_extra_functions_directory = DIR_WS_FUNCTIONS . 'extra_functions/';
 
-// Check for new functions in extra_functions directory
-$directory_array = array();
+$extraFuncsMain = (new FileSystem)->listFilesFromDirectory(DIR_WS_FUNCTIONS . 'extra_functions/', '~^[^\._].*\.php$~i');
+$extraFuncsMain = collect($extraFuncsMain)->map(function ($item, $key) {
+    return DIR_WS_FUNCTIONS . 'extra_functions/' . $item;
+})->toArray();
+$context = (new FileSystem)->isAdminDir(__DIR__) ? 'admin' : 'catalog';
+$extraFuncsPlugins = [];
+foreach ($installedPlugins as $plugin) {
+    $path = DIR_FS_CATALOG . 'zc_plugins/' . $plugin['unique_key'] . '/' . $plugin['version'] . '/' . $context . '/' . DIR_WS_FUNCTIONS . 'extra_functions/';
+    $efPluginFile = (new FileSystem)->listFilesFromDirectory($path, '~^[^\._].*\.php$~i');
+    $efPluginFile = collect($efPluginFile)->map(function ($item, $key) use ($path) {
+        return $path . $item;
+    })->toArray();
+    $extraFuncsPlugins = array_merge($extraFuncsPlugins, $efPluginFile);
+}
+$extraFuncsFiles = array_merge($extraFuncsPlugins, $extraFuncsMain);
 
-if ($dir = @dir($extra_functions_directory)) {
-  while ($file = $dir->read()) {
-    if (!is_dir($extra_functions_directory . $file)) {
-      if (preg_match('~^[^\._].*\.php$~i', $file) > 0) {
-        $directory_array[] = $file;
-      }
+foreach ($extraFuncsFiles as $file) {
+    if (!file_exists($file)) {
+        continue;
     }
-  }
-  if (sizeof($directory_array)) {
-    sort($directory_array);
-  }
-  $dir->close();
+    include($file);
 }
 
-$file_cnt=0;
-for ($i = 0, $n = sizeof($directory_array); $i < $n; $i++) {
-  $file_cnt++;
-  $file = $directory_array[$i];
-
-  if (file_exists($ws_extra_functions_directory . $file)) {
-    include($ws_extra_functions_directory . $file);
-  }
-}
+unset($extraFuncsMain, $extraFuncsPlugins, $extraFuncsFiles, $efPluginFile, $file);
