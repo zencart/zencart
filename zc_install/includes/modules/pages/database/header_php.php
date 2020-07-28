@@ -39,6 +39,11 @@ if (defined('DEVELOPER_MODE') && DEVELOPER_MODE === true) {
     }
     $db_name = isset($db_name) ? $db_name : $db_name_fallback;
 
+    if (empty($db_host_fallback)) {
+        $db_host_fallback = (defined('DEVELOPER_DBHOST_DEFAULT') ? DEVELOPER_DBHOST_DEFAULT : 'localhost');
+    }
+    $db_host = isset($db_host) ? $db_host : $db_host_fallback;
+
     if (defined('DEVELOPER_INSTALL_DEMO_DATA')) $install_demo_data = !empty(DEVELOPER_INSTALL_DEMO_DATA);
 
 } else {

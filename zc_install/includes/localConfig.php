@@ -31,6 +31,7 @@ $dev_db_default_name = 'zencart' . PROJECT_VERSION_MAJOR . preg_replace('/\D/', 
 define('DEVELOPER_DBNAME_DEFAULT', $dev_db_default_name);
 define('DEVELOPER_DBUSER_DEFAULT', 'root');
 define('DEVELOPER_DBPASSWORD_DEFAULT', '');
+define('DEVELOPER_DBHOST_DEFAULT', 'localhost');
 define('DEVELOPER_INSTALL_DEMO_DATA', true);
 
 // optional configuration table keys to override on new installs when DEVELOPER_MODE===true
