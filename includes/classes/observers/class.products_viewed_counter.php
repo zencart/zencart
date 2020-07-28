@@ -33,8 +33,10 @@ class products_viewed_counter extends base
 
     protected function should_be_excluded()
     {
+        global $spider_flag;
+        
         // exclude search-engine spiders
-        if ($this->exclude_spiders && $GLOBALS['spider_flag'] === true) {
+        if ($this->exclude_spiders && $spider_flag === true) {
             return true;
         }
 
