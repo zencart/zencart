@@ -65,7 +65,7 @@ if (isset($_GET['action']) && ($_GET['action'] == 'process')) {
   if ($error == false) {
     if ($antiSpam != '') {
       $zco_notifier->notify('NOTIFY_SPAM_DETECTED_DURING_WRITE_REVIEW');
-      $messageStack->add_session('header', (defined('ERROR_WRITE_REVIEW_SPAM_DETECTED') ? ERROR_WRITE_REVIEW_SPAM_DETECTED : 'Thank you, your post has been submitted for review.'), 'success');
+      $messageStack->add_session('product_info', (defined('ERROR_WRITE_REVIEW_SPAM_DETECTED') ? ERROR_WRITE_REVIEW_SPAM_DETECTED : TEXT_REVIEW_SUBMITTED_FOR_REVIEW), 'success');
     } else {
 
       $review_status = '1';
@@ -75,7 +75,6 @@ if (isset($_GET['action']) && ($_GET['action'] == 'process')) {
 
       $sql = "INSERT INTO " . TABLE_REVIEWS . " (products_id, customers_id, customers_name, reviews_rating, date_added, status)
              VALUES (:productsID, :customersID, :customersName, :rating, now(), " . $review_status . ")";
-
 
       $sql = $db->bindVars($sql, ':productsID', (!empty($_GET['products_id']) ? $_GET['products_id'] : 0), 'integer');
       $sql = $db->bindVars($sql, ':customersID', $_SESSION['customer_id'], 'integer');
@@ -112,10 +111,11 @@ if (isset($_GET['action']) && ($_GET['action'] == 'process')) {
         $extra_info=email_collect_extra_info($name,$email_address, $customer->fields['customers_firstname'] . ' ' . $customer->fields['customers_lastname'] , $customer->fields['customers_email_address'] );
         $html_msg['EXTRA_INFO'] = $extra_info['HTML'];
         $zco_notifier->notify('NOTIFY_EMAIL_READY_WRITE_REVIEW');
-        zen_mail('', SEND_EXTRA_REVIEW_NOTIFICATION_EMAILS_TO, $email_subject ,
-        $email_text . $extra_info['TEXT'], STORE_NAME, EMAIL_FROM, $html_msg, 'reviews_extra');
+        zen_mail('', SEND_EXTRA_REVIEW_NOTIFICATION_EMAILS_TO, $email_subject, $email_text . $extra_info['TEXT'], STORE_NAME, EMAIL_FROM, $html_msg, 'reviews_extra');
       }
       // end send email
+      
+      $messageStack->add_session('product_info', (REVIEWS_APPROVAL == '1') ? TEXT_REVIEW_SUBMITTED_FOR_REVIEW : TEXT_REVIEW_SUBMITTED, 'success');
     }
     zen_redirect(zen_href_link(FILENAME_PRODUCT_REVIEWS, zen_get_all_get_params(array('action'))));
   }
