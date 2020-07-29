@@ -21,3 +21,5 @@ define('EMAIL_REVIEW_PENDING_SUBJECT','Product Review Pending Approval: %s');
 define('EMAIL_PRODUCT_REVIEW_CONTENT_INTRO','A Product Review for %s has been submitted and requires your approval.'."\n\n");
 define('EMAIL_PRODUCT_REVIEW_CONTENT_DETAILS','Review Details: %s');
 
+define('TEXT_REVIEW_SUBMITTED_FOR_REVIEW', 'Thank you, your post has been submitted for review.');
+define('TEXT_REVIEW_SUBMITTED', 'Thank you for submitting your review!');
