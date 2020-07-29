@@ -220,7 +220,7 @@ require(DIR_FS_CATALOG . 'includes/autoload_func.php');
 /**
  * load the counter code
 **/
-if ($spider_flag == false) {
+if (empty($spider_flag)) {
 // counter and counter history
   require(DIR_WS_INCLUDES . 'counter.php');
 }
