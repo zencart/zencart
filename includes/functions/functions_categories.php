@@ -762,7 +762,7 @@ function zen_get_generated_category_path_ids($id, $from = 'category')
         }
         $calculated_category_path_string = rtrim($calculated_category_path_string, '_') . '<br>';
     }
-    $calculated_category_path_string = preg_replace('/<br ?/?>$/', '', $calculated_category_path_string);
+    $calculated_category_path_string = preg_replace('~<br ?/?>$~', '', $calculated_category_path_string);
 
     if (strlen($calculated_category_path_string) < 1) $calculated_category_path_string = TEXT_TOP;
 
