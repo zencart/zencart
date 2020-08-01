@@ -3,9 +3,8 @@
  * File contains the autoloader loop
  *
  * The autoloader loop takes the array from the auto_loaders directory
- * and uses this this to constuct the InitSysytem.
- * see {@link http://www.zen-cart.com/wiki/index.php/Developers_API_Tutorials#InitSystem} for more details.
- *
+ * and uses it to construct the InitSystem.
+ * see  {@link  https://docs.zen-cart.com/dev/code/init_system/} for more details.
  * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0

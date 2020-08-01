@@ -1,8 +1,7 @@
 <?php
 /**
  * initialise template system variables
- * see {@link  http://www.zen-cart.com/wiki/index.php/Developers_API_Tutorials#InitSystem wikitutorials} for more details.
- *
+ * see  {@link  https://docs.zen-cart.com/dev/code/init_system/} for more details.
  * Determines current template name for current language, from database<br />
  * Then loads template-specific language file, followed by master/default language file<br />
  * ie: includes/languages/classic/english.php followed by includes/languages/english.php

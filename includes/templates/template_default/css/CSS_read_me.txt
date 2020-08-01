@@ -26,7 +26,7 @@ Possibly you created a NEW tag and did a <span class="newtag"> in your Privacy S
 
 Use your CSS files and the standard tags as much as possible, just change their properties when needed. If possible, DON'T HACK the core code. Use your CSS files to do the work for you. When the style coding has been removed from the ZenCart code and people have to decide if they want to go without the upgrade ~or~ undo all their hacks and finally learn about CSS... your site will still be up and running.
 
-Additional information is contained in the Zen Cart wiki.
+Additional information is contained in the Zen Cart documentation.
 
 
 Adapted from ideas presented by

@@ -4,8 +4,7 @@
  *
  * Initializes common classes & methods. Controlled by an array which describes
  * the elements to be initialised and the order in which that happens.
- * see {@link  http://www.zen-cart.com/wiki/index.php/Developers_API_Tutorials#InitSystem wikitutorials} for more details.
- *
+ * see  {@link  https://docs.zen-cart.com/dev/code/init_system/} for more details.
  * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
@@ -54,7 +53,7 @@ if ($contaminated)
   exit(0);
 }
 unset($contaminated, $len);
-/* *** END OF INNOCULATION *** */
+/* *** END OF INOCULATION *** */
 /**
  * boolean used to see if we are in the admin script, obviously set to false here.
  */

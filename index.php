@@ -41,8 +41,8 @@
  */
   require($template->get_template_dir('html_header.php',DIR_WS_TEMPLATE, $current_page_base,'common'). '/html_header.php');
 /**
- * Define Template Variables picked up from includes/main_template_vars.php unless a file exists in the
- * includes/pages/{page_name}/directory to overide. Allowing different pages to have different overall
+ * Define Template Variables are picked up from includes/main_template_vars.php unless a file exists in the
+ * includes/pages/{page_name}/directory to override. This allows different pages to have different overall
  * templates.
  */
   require($template->get_template_dir('main_template_vars.php',DIR_WS_TEMPLATE, $current_page_base,'common'). '/main_template_vars.php');

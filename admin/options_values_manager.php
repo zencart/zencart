@@ -187,7 +187,7 @@ if (zen_not_null($action)) {
       break;
 
 ////////////////////////////////////////////////////
-// copy option values based on existance of another option value
+// copy option values based on existence of another option value
     case 'copy_options_values_one_to_another':
 
       $options_id_from = (int)$_POST['options_id_from'];
@@ -264,7 +264,7 @@ if (zen_not_null($action)) {
 ////////////////////////////////////
 // fix here copy_options_values_one_to_another_options_id
 ////////////////////////////////////////////////////
-// copy option values based on existance of another option value
+// copy option values based on existence of another option value
     case 'copy_options_values_one_to_another_options_id':
 
       $options_id_from = (int)$_POST['options_id_from'];

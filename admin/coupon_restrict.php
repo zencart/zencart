@@ -185,8 +185,8 @@ switch ($action) {
                 }
 
                 if ($prod_cat > 0 && $pid == -2) {
-                    // to delete existing products from a given categories_id for a coupon_code that are already in the table
-                    // products in the table from the catategories_id are skipped
+                    // to delete existing products from a given categories_id for a coupon_code that are already in the table,
+                    // products in the table from the categories_id are skipped
                     $new_products_query = 
                         "SELECT products_id 
                            FROM " . TABLE_PRODUCTS_TO_CATEGORIES . " 
@@ -201,7 +201,7 @@ switch ($action) {
                 }
 
                 if ($prod_man > 0 && $pid == -1) {
-                    // to insert new products from a given manufacturers_id for a coupon_code that are not already in the table
+                    // to insert new products from a given manufacturers_id for a coupon_code that are not already in the table,
                     // products in the table from the manufacturers_id are skipped
                     $new_products_query = 
                         "SELECT products_id 
