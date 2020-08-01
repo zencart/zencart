@@ -101,6 +101,7 @@ $define = [
     'TEXT_CONFIRM_COPY' => 'Are you sure you want to Copy this Discount Coupon to another Discount Coupon?',
     'SUCCESS_COUPON_DUPLICATE' => 'Success! Discount Coupon was duplicated ...<br /><br />Be sure to check Coupon Name and Dates ...',
     'WARNING_COUPON_DUPLICATE' => 'Warning! No Discount Coupons were made! Number of Discount Coupons to create was not defined ... ',
+    'WARNING_COUPON_DUPLICATE_FAILED' => 'Warning! Coupon duplication failed', 
     'TEXT_COUPON_COPY_INFO' => 'Copy for multiple duplicates',
     'TEXT_COUPON_COPY_DUPLICATE' => 'Create Multiple Coupons with Base Coupon Code of: ',
     'TEXT_COUPON_COPY_DUPLICATE_CNT' => 'How many duplicate Discount Coupons do you want to create? ',

@@ -21,6 +21,7 @@ $define = [
     'TEXT_CATEGORY_HAS_RESTRICTIONS' => 'This Category has been restricted to these Product Types',
     'MESSAGE_IMAGE_REMOVED_CATEGORY' => 'Image removed from category #%1$u "%2$s".',
     'MESSAGE_IMAGE_ADDED_MANUAL' => 'Image was manually added to category #%1$u "%2$s".',
+    'ERROR_IMAGE_MANUAL_NOT_FOUND' => 'The manually added image "%s" was not found.',
     'TEXT_INFO_HEADING_EDIT_CATEGORY_META_TAGS' => 'Categories Meta Tags Definitions',
     'TEXT_EDIT_CATEGORIES_META_TAGS_INTRO' => 'Define Custom Meta Tags for ID#%1$u - "%2$s"',
     'TEXT_EDIT_CATEGORIES_META_TAGS_TITLE' => 'Page Title (browser tab):',
