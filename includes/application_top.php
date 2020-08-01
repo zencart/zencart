@@ -14,7 +14,6 @@
 use Zencart\FileSystem\FileSystem;
 use Zencart\PluginManager\PluginManager;
 use Zencart\InitSystem\InitSystem;
-use Zencart\LanguageLoader\CatalogLanguageLoader;
 
 /**
  * inoculate against hack attempts which waste CPU cycles
