@@ -36,7 +36,6 @@
         );
         while (!$all_products_attributes->EOF)
         {
-          $count++;
           $product_id_updated .= ' - ' . $all_products_attributes->fields['products_id'] . ':' . $all_products_attributes->fields['products_attributes_id'];
           zen_update_attributes_products_option_values_sort_order($all_products_attributes->fields['products_id']);
           $all_products_attributes->MoveNext();
