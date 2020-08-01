@@ -125,6 +125,13 @@ if (zen_not_null($action)) {
       $entry_state = zen_db_prepare_input($_POST['entry_state']);
       if (isset($_POST['entry_zone_id'])) $entry_zone_id = zen_db_prepare_input($_POST['entry_zone_id']);
 
+      if ((ACCOUNT_GENDER == 'true') && empty($customers_gender)) { 
+        $error = true;
+        $entry_gender_error = true;
+      } else {
+        $entry_gender_error = false;
+      }
+
       if (strlen($customers_firstname) < ENTRY_FIRST_NAME_MIN_LENGTH) {
         $error = true;
         $entry_firstname_error = true;
