@@ -6,7 +6,7 @@
  * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2020 Mar 11 Modified in v1.5.7 $
+ * @version $Id: DrByte 2020 Mar 11 Modified in v1.5.8 $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
@@ -40,7 +40,17 @@ $domainPrefix = (!defined('SESSION_ADD_PERIOD_PREFIX') || SESSION_ADD_PERIOD_PRE
 if (filter_var($cookieDomain, FILTER_VALIDATE_IP)) $domainPrefix = '';
 $secureFlag = ((ENABLE_SSL == 'true' && substr(HTTP_SERVER, 0, 6) == 'https:' && substr(HTTPS_SERVER, 0, 6) == 'https:') || (ENABLE_SSL == 'false' && substr(HTTP_SERVER, 0, 6) == 'https:')) ? TRUE : FALSE;
 
-session_set_cookie_params(0, $path, (zen_not_null($cookieDomain) ? $domainPrefix . $cookieDomain : ''), $secureFlag, TRUE);
+$samesite = (defined('COOKIE_SAMESITE')) ? COOKIE_SAMESITE : 'lax';
+if (!in_array($samesite, ['lax', 'strict', 'none'])) $samesite = 'lax';
+
+session_set_cookie_params([
+    'lifetime' => 0,
+    'path' => $path,
+    'domain' => (zen_not_null($cookieDomain) ? $domainPrefix . $cookieDomain : ''),
+    'secure' => $secureFlag,
+    'httponly' => true,
+    'samesite' => $samesite,
+]);
 
 /**
  * set the session ID if it exists
