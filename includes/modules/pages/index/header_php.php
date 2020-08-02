@@ -13,31 +13,104 @@
 $zco_notifier->notify('NOTIFY_HEADER_START_INDEX');
 
 // the following cPath references come from application_top/initSystem
+// -----
+// If $cPath exists, implying that the $current_category_id has been set, determine whether
+// that category exists and is enabled.  If so, determine whether the valid category has at
+// least one product or one sub-category.
+//
 $category_depth = 'top';
+$current_category_not_found = false;
+$current_category_is_disabled = false;
+$current_category_has_products = false;
+$current_category_has_subcats = false;
 if (isset($cPath) && zen_not_null($cPath)) {
-    $categories_products_query = 
-        "SELECT count(*) AS total
-           FROM   " . TABLE_PRODUCTS_TO_CATEGORIES . "
-          WHERE   categories_id = :categoriesID";
-
-    $categories_products_query = $db->bindVars($categories_products_query, ':categoriesID', $current_category_id, 'integer');
-    $categories_products = $db->Execute($categories_products_query);
-
-    if ($categories_products->fields['total'] > 0) {
-        $category_depth = 'products'; // display products
+    $category_status_query = 
+        "SELECT categories_status
+           FROM " . TABLE_CATEGORIES . "
+          WHERE categories_id = :currentCategoryId
+          LIMIT 1";
+    $category_status_query = $db->bindVars($category_status_query, ':currentCategoryId', $current_category_id, 'integer');
+    $category_status = $db->Execute($category_status_query);
+    if ($category_status->EOF) {
+        $current_category_not_found = true;
+    } elseif ($category_status->fields['categories_status'] == '0') {
+        $current_category_is_disabled = true;
+    }
+    $category_products_query = 
+        "SELECT products_id
+           FROM " . TABLE_PRODUCTS_TO_CATEGORIES . "
+          WHERE categories_id = :currentCategoryId
+          LIMIT 1";
+    $category_products_query = $db->bindVars($category_products_query, ':currentCategoryId', $current_category_id, 'integer');
+    $category_products = $db->Execute($category_products_query);
+    if (!$category_products->EOF) {
+        $current_category_has_products = true;
     } else {
-        $category_parent_query = 
-            "SELECT count(*) AS total
-               FROM   " . TABLE_CATEGORIES . "
-              WHERE  parent_id = :categoriesID";
-
-        $category_parent_query = $db->bindVars($category_parent_query, ':categoriesID', $current_category_id, 'integer');
+        $category_parent_query =
+            "SELECT parent_id
+               FROM " . TABLE_CATEGORIES . "
+              WHERE parent_id = :currentCategoryId
+              LIMIT 1";
+        $category_parent_query = $db->bindVars($category_parent_query, ':currentCategoryId', $current_category_id, 'integer');
         $category_parent = $db->Execute($category_parent_query);
-
-        if ($category_parent->fields['total'] > 0) {
-            $category_depth = 'nested'; // navigate through the categories
+        $current_category_has_subcats = !$category_parent->EOF;
+    }
+    
+    // -----
+    // Give an observer the chance to override the default handling for the category.
+    //
+    $category_redirect_handled = false;
+    $zco_notifier->notify(
+        'NOTIFY_HEADER_INDEX_HTTP_STATUS_CHECK', 
+        array('cPath' => $cPath, 'current_category_id' => $current_category_id),
+        $category_redirect_handled,
+        $current_category_not_found,
+        $current_category_is_disabled,
+        $current_category_has_products,
+        $current_category_has_subcats,
+        $category_depth
+    );
+    
+    // -----
+    // If an observer hasn't overridden the default handling for the category's display:
+    //
+    // 1. Make sure that the current category-id is found for the store.  If not:
+    //    - Remove the 'cPath' parameter for follow-on processing by other modules.
+    //    - Reset the breadcrumbs.
+    //    - Set the flag to cause noindex/nofollow to be included for the page
+    //    - Issue a 404 (Not found)
+    // 2. Otherwise, make sure that the current category-id is enabled.  If not:
+    //    - Set the category_depth to indicate that a products' listing is to be displayed; it'll indicate no products found.
+    //    - Set the flag to cause noindex/nofollow to be included for the page
+    //    - Issue a 410 (Gone).
+    //
+    //    Note: A pseudo-configuration setting is used to allow stores to operate as in Zen Cart versions
+    //    prior to v157a, where a disabled category is still displayed.
+    //
+    // 3. Otherwise, the category is present and not disabled. Determine the category 'depth' to be displayed.
+    //    a. If the current category contains at least one product, display a products' listing.
+    //    b. Otherwise, check to see if the current category has sub-categories.  If so,
+    //       display a categories' listing; otherwise, display a products' listing, enabling the
+    //      'No products in category' message to be displayed.
+    //
+    //      Note: While this final check appears to be redundant, it's maintaining backward compatibility
+    //      of display for stores that have an 'invalid' mix of products and categories within a
+    //      category.
+    //
+    if (!$category_redirect_handled) {
+        if ($current_category_not_found) {
+            unset($_GET['cPath']);
+            $breadcrumb->reset();
+            $robotsNoIndex = true;
+            header('HTTP/1.1 404 Not Found');
+        } elseif ($current_category_is_disabled && (!defined('DISPLAY_DISABLED_CATEGORIES') || DISPLAY_DISABLED_CATEGORIES != 'true')) {
+            $category_depth = 'products';
+            $robotsNoIndex = true;
+            header('HTTP/1.1 410 Gone');
+        } elseif ($current_category_has_products) {
+            $category_depth = 'products';
         } else {
-            $category_depth = 'products'; // category has no products, but display the 'no products' message
+            $category_depth = ($current_category_has_subcats) ? 'nested' : 'products';
         }
     }
 }
