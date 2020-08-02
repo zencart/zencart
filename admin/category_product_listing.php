@@ -670,12 +670,16 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
             $where = " WHERE pd.language_id = " . (int)$_SESSION['languages_id'];
 
             if ($search_result && $action != 'edit_category') {
-                $where .= "  AND (pd.products_name LIKE '%:search%'
-                              OR pd.products_description LIKE '%:search%'
-                              OR p.products_id = ':search'
-                              OR p.products_model LIKE '%:search%'
+                $parts = explode(" ", trim($keywords));
+                foreach ($parts as $k => $v) {
+                    $sql_add = " AND (pd.products_name LIKE '%:part%'
+                              OR pd.products_description LIKE '%:part%'
+                              OR p.products_id = ':part'
+                              OR p.products_model LIKE '%:part%'
                             ) ";
-                $where = $db->bindVars($where, ':search', $_GET['search'], 'noquotestring');
+                    $sql_add = $db->bindVars($sql_add, ':part', $v, 'noquotestring');
+                    $where .= $sql_add;
+                }
             } else {
                 $products_query_raw.= " LEFT JOIN " . TABLE_PRODUCTS_TO_CATEGORIES . " p2c USING (products_id) ";
                 $where .= " AND p2c.categories_id=" . (int)$current_category_id;
