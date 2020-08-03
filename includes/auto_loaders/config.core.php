@@ -1,7 +1,7 @@
 <?php
 /**
  * autoloader array for catalog application_top.php
- * see  {@link  http://www.zen-cart.com/wiki/index.php/Developers_API_Tutorials#InitSystem wikitutorials} for more details.
+ * see  {@link  https://docs.zen-cart.com/dev/code/init_system/} for more details.
  *
  * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0

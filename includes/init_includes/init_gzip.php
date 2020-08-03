@@ -1,8 +1,7 @@
 <?php
 /**
  * if gzip_compression is enabled, start to buffer the output
- * see {@link  http://www.zen-cart.com/wiki/index.php/Developers_API_Tutorials#InitSystem wikitutorials} for more details.
- *
+ * see  {@link  https://docs.zen-cart.com/dev/code/init_system/} for more details.
  * @package initSystem
  * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce

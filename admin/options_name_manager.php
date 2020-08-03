@@ -678,7 +678,7 @@ function translate_type_to_name($opt_type)
     } else {
         $category_path = false;
     }
-    $selectedOptionId = !empty($_SESSION['selectedOptionId']) ? (int)$_SESSION['selectedOptionId'] : ''; // set after change of Option Name select dropdopwn
+    $selectedOptionId = !empty($_SESSION['selectedOptionId']) ? (int)$_SESSION['selectedOptionId'] : ''; // set after change of Option Name select dropdown
 
     $options_names = $db->Execute("SELECT products_options_id, products_options_name
                                         FROM " . TABLE_PRODUCTS_OPTIONS . "

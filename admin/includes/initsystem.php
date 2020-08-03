@@ -3,8 +3,7 @@
  * initsystem.php
  *
  * loads and interprets the autoloader files
- * see {@link  http://www.zen-cart.com/wiki/index.php/Developers_API_Tutorials#InitSystem wikitutorials} for more details.
- *
+ * see  {@link  https://docs.zen-cart.com/dev/code/init_system/} for more details.
  * @package initSystem
  * @copyright Copyright 2003-2012 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
