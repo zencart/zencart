@@ -663,16 +663,6 @@ if (zen_not_null($action)) {
 
                     $contents[] = array('align' => 'text-center', 'text' => '<br><a href="' . zen_href_link(FILENAME_EZPAGES_ADMIN, 'page=' . $_GET['page'] . '&ezID=' . $ezInfo->pages_id . '&action=new') . '" class="btn btn-primary" role="button">' . IMAGE_EDIT . '</a> <a href="' . zen_href_link(FILENAME_EZPAGES_ADMIN, 'page=' . $_GET['page'] . '&ezID=' . $ezInfo->pages_id . '&action=delete') . '" class="btn btn-warning" role="button">' . IMAGE_DELETE . '</a><br><br><br>');
 
-                    if ($ezInfo->date_scheduled) {
-                      $contents[] = array('text' => '<br>' . sprintf(TEXT_PAGES_SCHEDULED_AT_DATE, zen_date_short($ezInfo->date_scheduled)));
-                    }
-
-                    if ($ezInfo->expires_date) {
-                      $contents[] = array('text' => '<br>' . sprintf(TEXT_PAGES_EXPIRES_AT_DATE, zen_date_short($ezInfo->expires_date)));
-                    } elseif ($ezInfo->expires_impressions) {
-                      $contents[] = array('text' => '<br>' . sprintf(TEXT_PAGES_EXPIRES_AT_IMPRESSIONS, $ezInfo->expires_impressions));
-                    }
-
                     if ($ezInfo->date_status_change) {
                       $contents[] = array('text' => '<br>' . sprintf(TEXT_PAGES_STATUS_CHANGE, zen_date_short($ezInfo->date_status_change)));
                     }
