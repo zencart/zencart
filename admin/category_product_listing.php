@@ -1043,7 +1043,7 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
           // warning if products are in top level categories
           $check_products_top_categories = zen_get_linked_products_for_category(TOPMOST_CATEGORY_PARENT_ID);
           if (!empty($check_products_top_categories)) {
-            echo WARNING_PRODUCTS_IN_TOP_INFO . $check_products_top_categories->fields['products_in_top_level_error'] . '<br>';
+            echo WARNING_PRODUCTS_IN_TOP_INFO . count($check_products_top_categories) . '<br>';
           }
           ?>
         </div>
