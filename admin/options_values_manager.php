@@ -553,7 +553,7 @@ if (zen_not_null($action)) {
                 <td colspan="4" class="pageHeading"><?php echo $values_values->fields['products_options_values_name']; ?></td>
               </tr>
               <?php
-              $products_values = $db->Execute("SELECT p.products_id, pd.products_name, po.products_options_name, pa.options_id
+              $products_values = $db->Execute("SELECT p.products_id, pd.products_name, po.products_options_name, pa.options_id, pa.products_options_sort_order 
                                                FROM " . TABLE_PRODUCTS . " p,
                                                     " . TABLE_PRODUCTS_ATTRIBUTES . " pa,
                                                     " . TABLE_PRODUCTS_OPTIONS . " po,
@@ -588,7 +588,7 @@ if (zen_not_null($action)) {
                   <tr>
                     <td class="text-right"><?php echo $products_value['products_id']; ?></td>
                     <td><?php echo $products_value['products_name']; ?></td>
-                    <td class="text-right"><?php echo $options_value["products_options_sort_order"]; ?></td>
+                    <td class="text-right"><?php echo $products_value['products_options_sort_order']; ?></td>
                     <td ><?php echo $products_value['products_options_name']; ?></td>
                   </tr>
                 <?php } ?>
