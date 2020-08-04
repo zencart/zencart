@@ -20,12 +20,6 @@
 
   $product_not_found = $product_info->EOF;
 
-  if (!defined('PRODUCT_THROWS_200_WHEN_DISABLED') || PRODUCT_THROWS_200_WHEN_DISABLED !== true) {
-      if (!$product_not_found && $product_info->fields['products_status'] != 1) {
-      $product_not_found = true;
-    }
-  }
-
   if ($product_not_found) {
     $tpl_page_body = '/tpl_product_info_noproduct.php';
   } else {

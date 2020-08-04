@@ -62,10 +62,6 @@ function zen_product_set_header_response($product_id, $product_info = null)
         $response_code = 410;
     }
 
-    if (defined('PRODUCT_THROWS_200_WHEN_DISABLED') && PRODUCT_THROWS_200_WHEN_DISABLED === true) {
-        $response_code = 200;
-    }
-
     if ($product_status === -1) {
         $response_code = 410;
     }
@@ -85,7 +81,7 @@ function zen_product_set_header_response($product_id, $product_info = null)
     if ($should_throw_404) {
         // if specified product_id doesn't exist, ensure that metatags and breadcrumbs don't share bad data or inappropriate information
         unset($_GET['products_id']);
-        unset($breadcrumb->_trail[sizeof($breadcrumb->_trail)-1]['title']);
+        unset($breadcrumb->_trail[count($breadcrumb->_trail)-1]['title']);
         $robotsNoIndex = true;
         header('HTTP/1.1 404 Not Found');
         return;
