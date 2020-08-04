@@ -168,7 +168,7 @@ if (( (!file_exists('includes/configure.php') && !file_exists('includes/local/co
  * psr-4 autoloading
  */
 require DIR_FS_CATALOG . DIR_WS_CLASSES . 'vendors/AuraAutoload/src/Loader.php';
-require DIR_FS_CATALOG . 'app/vendor/autoload.php';
+require DIR_FS_CATALOG . 'laravel/vendor/autoload.php';
 $psr4Autoloader = new \Aura\Autoload\Loader;
 $psr4Autoloader->register();
 require('includes/psr4Autoload.php');
@@ -182,8 +182,6 @@ $zc_cache = new cache();
 require 'includes/init_includes/init_file_db_names.php';
 require 'includes/init_includes/init_database.php';
 require DIR_FS_CATALOG . 'includes/illuminate_bootstrap.php';
-
-define('ZENCART_RUNNING', true);
 
 $installedPlugins = $laravelApp->make('installedPlugins');
 $pluginManager = new PluginManager(new App\Models\PluginControl, new App\Models\PluginControlVersion);

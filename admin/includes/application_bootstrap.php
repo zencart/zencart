@@ -148,7 +148,7 @@ define('DIR_WS_TEMPLATES', DIR_WS_INCLUDES . 'templates/');
  * psr-4 autoloading
  */
 require DIR_FS_CATALOG . DIR_WS_CLASSES . 'vendors/AuraAutoload/src/Loader.php';
-require DIR_FS_CATALOG . 'app/vendor/autoload.php';
+require DIR_FS_CATALOG . 'laravel/vendor/autoload.php';
 $psr4Autoloader = new \Aura\Autoload\Loader;
 $psr4Autoloader->register();
 require(DIR_FS_CATALOG . 'includes/psr4Autoload.php');
