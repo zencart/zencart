@@ -1,7 +1,8 @@
 <?php
 
 // Create main laravel application
-$laravelApp = require_once DIR_FS_CATALOG . 'app/bootstrap/app.php';
+$laravelApp = require_once DIR_FS_CATALOG . 'laravel/bootstrap/app.php';
+//dump($laravelApp);
 $laravelKernel = $laravelApp->make(Illuminate\Contracts\Http\Kernel::class);
 //dump($laravelApp);
 
