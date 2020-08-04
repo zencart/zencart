@@ -586,21 +586,6 @@ foreach ($products_options_type_array as $products_options_type) {
   $products_options_types_list[$products_options_type['products_options_types_id']] = $products_options_type['products_options_types_name'];
 }
 
-//CLR 030312 add function to draw pulldown list of option types
-// Draw a pulldown for Option Types
-//iii 031103 modified to use results of database option type query from above
-function draw_optiontype_pulldown($name, $default = '')
-{
-  global $products_options_types_list;
-  $values = [];
-  foreach ($products_options_types_list as $id => $text) {
-    $values[] = [
-      'id' => $id,
-      'text' => $text];
-  }
-  return zen_draw_pull_down_menu($name, $values, $default);
-}
-
 //CLR 030312 add function to translate type_id to name
 // Translate option_type_values to english string
 //iii 031103 modified to use results of database option type query from above
