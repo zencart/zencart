@@ -73,6 +73,24 @@ systemChecks:
       checkExtension:
         parameters:
           extension: mysqli
+  pdomysqlExt:
+    runLevel: always
+    errorLevel: FAIL
+    criticalError: true
+    mainErrorText: <?php echo TEXT_ERROR_PDOMYSQL_SUPPORT .PHP_EOL; ?>
+    methods:
+      checkExtension:
+        parameters:
+          extension: pdo_mysql
+  pdosqliteExt:
+    runLevel: always
+    errorLevel: WARN
+    criticalError: true
+    mainErrorText: <?php echo TEXT_ERROR_PDOSQLITE_SUPPORT .PHP_EOL; ?>
+    methods:
+      checkExtension:
+        parameters:
+          extension: pdo_sqlite
   logFolder:
     runLevel: always
     errorLevel: FAIL
@@ -173,6 +191,22 @@ systemChecks:
     mainErrorText: <?php echo TEXT_ERROR_DB_CONNECTION_DEFAULT .PHP_EOL; ?>
     methods:
       checkDBConnection:
+  checkjson:
+    runLevel: always
+    errorLevel: FAIL
+    mainErrorText: <?php echo TEXT_ERROR_JSON .PHP_EOL; ?>
+    methods:
+      checkExtension:
+        parameters:
+          extension: json
+  checkfileinfo:
+    runLevel: always
+    errorLevel: WARN
+    mainErrorText: <?php echo TEXT_ERROR_FILEINFO .PHP_EOL; ?>
+    methods:
+      checkExtension:
+        parameters:
+          extension: fileinfo
   checkGD:
     runLevel: always
     errorLevel: WARN
