@@ -8,7 +8,7 @@
  * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Zcwilt 2020 Jun 08 Modified in v1.5.7 $
+ * @version $Id: Zcwilt 2020 Jun 08 Modified in v1.5.8 $
  */
 use Zencart\FileSystem\FileSystem;
 use Zencart\PluginManager\PluginManager;
@@ -65,11 +65,10 @@ define('PAGE_PARSE_START_TIME', microtime());
 @ini_set("html_errors","0");
 /**
  * Ensure minimum PHP version.
- * This is intended to run before any dependencies like short-array-syntax are loaded, in order to avoid unfriendly fatal errors caused by such incompatibility.
- * This version of Zen Cart actually requires newer than PHP 5.4, but we are only enforcing 5.4 here at this stage for the sake of this syntax matter.
+ * This is intended to run before any dependencies are required
  * See https://www.zen-cart.com/requirements or run zc_install to see actual requirements!
  */
-if (!defined('PHP_VERSION_ID') || PHP_VERSION_ID < 50400) {
+if (!defined('PHP_VERSION_ID') || PHP_VERSION_ID < 70205) {
     require 'includes/templates/template_default/templates/tpl_zc_phpupgrade_default.php';
     exit(0);
 }

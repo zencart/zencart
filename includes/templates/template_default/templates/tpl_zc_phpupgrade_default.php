@@ -4,7 +4,7 @@
  *
  * This page is auto-displayed if the PHP version is too old.
  * It's primarily intended to be a friendlier face than just a blank page
- * which would appear if short-array-syntax is used on PHP 5.3 or older.
+ * which would appear if incompatible PHP expectations were triggered.
  * This way someone installing Zen Cart on an ancient PHP version will at least
  * know this basic need and be able to make the change before proceeding.
  *
@@ -221,10 +221,10 @@ include 'includes/version.php';
     <h1>Welcome to Zen Cart<sup>&reg;</sup></h1>
     <div>
       <h2>We would love to have you use Zen Cart ... however your server is incompatible.</h2>
-        <p>Your PHP version (<?php echo PHP_MAJOR_VERSION . '.' . PHP_MINOR_VERSION;?>) is too old to support modern PHP syntax conventions such as short-array-syntax.</p>
+        <p>Your PHP version (<?php echo PHP_MAJOR_VERSION . '.' . PHP_MINOR_VERSION;?>) is too old to support the modern PHP capabilities required.</p>
         <p>You are currently using Zen Cart version <?php echo PROJECT_VERSION_MAJOR . '.' . PROJECT_VERSION_MINOR; ?>.</p>
         <p>In order to proceed with Zen Cart you must upgrade your PHP version.</p>
-        <p>We recommend using PHP 7.4 or newer. <a href="https://www.zen-cart.com/requirements" rel="noopener" target="_blank">Please refer to our website</a> for the PHP versions supported.</p>
+        <p><a href="https://www.zen-cart.com/requirements" rel="noopener" target="_blank">Please refer to our website</a> for the PHP versions supported.</p>
         <br><br>
     </div>
     <section id="footerBlock">
