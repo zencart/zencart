@@ -106,7 +106,7 @@ function zen_display_files($include_root = false, $filetypesincluded = 1) {
       $root_array[] = DIR_FS_CATALOG . 'page_not_found.php';
     }
 
-    $root_array[] = DIR_FS_CATALOG . 'nddbc.html';
+    $root_array[] = DIR_FS_CATALOG . FILENAME_DATABASE_TEMPORARILY_DOWN; 
     $new_array = array_merge($root_array, $original_array);
     $directory_array = $new_array;
   }

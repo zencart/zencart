@@ -16,7 +16,7 @@ if (!defined('IS_ADMIN_FLAG')) {
 require('includes/classes/db/' .DB_TYPE . '/query_factory.php');
 $db = new queryFactory();
 
-$down_for_maint_source = 'nddbc.html';
+$down_for_maint_source = FILENAME_DATABASE_TEMPORARILY_DOWN; 
 
 if (!defined('USE_PCONNECT')) define('USE_PCONNECT', 'false'); 
 if (!$db->connect(DB_SERVER, DB_SERVER_USERNAME, DB_SERVER_PASSWORD, DB_DATABASE, USE_PCONNECT, false)) {

@@ -148,8 +148,8 @@ class queryFactory extends base {
     if (!headers_sent()) {
       header("HTTP/1.1 503 Service Unavailable");
     }
-    if ($this->error_number == 0 && $this->error_text == DB_ERROR_NOT_CONNECTED && file_exists('nddbc.html') ) {
-      include('nddbc.html');
+    if ($this->error_number == 0 && $this->error_text == DB_ERROR_NOT_CONNECTED && file_exists(FILENAME_DATABASE_TEMPORARILY_DOWN) ) {
+      include(FILENAME_DATABASE_TEMPORARILY_DOWN);
     }
     echo '<div class="systemError">';
     if (defined('STRICT_ERROR_REPORTING') && STRICT_ERROR_REPORTING == true)
