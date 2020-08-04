@@ -56,6 +56,10 @@ class objectInfo
         $this->$field = $value;
     }
 
+    /**
+     * @param $field
+     * @return array|string
+     */
     public function __get($field)
     {
         if (isset($this->$field)) return $this->$field;
