@@ -7,8 +7,7 @@
  */
 require('includes/application_top.php');
 
-//DEBUG:  // these defines will become configuration switches in ADMIN in a future version.
-//DEBUG:  // right now, attachments aren't working right unless only sending HTML messages with NO text-only version supplied.
+// the following are marked as false because they are not fully implemented in this page
 if (!defined('EMAIL_ATTACHMENTS_ENABLED')) {
   define('EMAIL_ATTACHMENTS_ENABLED', false);
 }
