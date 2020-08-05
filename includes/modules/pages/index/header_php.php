@@ -61,7 +61,7 @@ if (isset($cPath) && zen_not_null($cPath)) {
     //
     $category_redirect_handled = false;
     $zco_notifier->notify(
-        'NOTIFY_HEADER_INDEX_HTTP_STATUS_CHECK', 
+        'NOTIFY_INDEX_CATEGORY_STATUS_CHECK', 
         array('cPath' => $cPath, 'current_category_id' => $current_category_id),
         $category_redirect_handled,
         $current_category_not_found,
@@ -84,8 +84,8 @@ if (isset($cPath) && zen_not_null($cPath)) {
     //    - Set the flag to cause noindex/nofollow to be included for the page
     //    - Issue a 410 (Gone).
     //
-    //    Note: A pseudo-configuration setting is used to allow stores to operate as in Zen Cart versions
-    //    prior to v157a, where a disabled category is still displayed.
+    //    Note: Stores that wish to to operate as in Zen Cart versions prior to v157a, where a disabled 
+    //    category is still displayed can comment the above section 'out'.
     //
     // 3. Otherwise, the category is present and not disabled. Determine the category 'depth' to be displayed.
     //    a. If the current category contains at least one product, display a products' listing.
@@ -103,10 +103,12 @@ if (isset($cPath) && zen_not_null($cPath)) {
             $breadcrumb->reset();
             $robotsNoIndex = true;
             header('HTTP/1.1 404 Not Found');
-        } elseif ($current_category_is_disabled && (!defined('DISPLAY_DISABLED_CATEGORIES') || DISPLAY_DISABLED_CATEGORIES != 'true')) {
+//-bof-Comment the following four (4) lines out to display disabled categories
+        } elseif ($current_category_is_disabled) {
             $category_depth = 'products';
             $robotsNoIndex = true;
             header('HTTP/1.1 410 Gone');
+//-eof-Comment the above four (4) lines out to display disabled categories
         } elseif ($current_category_has_products) {
             $category_depth = 'products';
         } else {
