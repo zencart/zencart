@@ -2282,6 +2282,7 @@ class shoppingCart extends base {
  */
   function in_cart_product_total_price($product_id) {
     $products = $this->get_products();
+    $in_cart_product_price = 0; 
 //echo '<pre>'; echo print_r($products); echo '</pre>';
     for ($i=0, $n=sizeof($products); $i<$n; $i++) {
       $productsName = $products[$i]['name'];
@@ -2368,6 +2369,7 @@ class shoppingCart extends base {
  */
   function in_cart_product_total_price_category($category_id) {
     $products = $this->get_products();
+    $in_cart_product_price = 0; 
 //echo '<pre>'; echo print_r($products); echo '</pre>';
     for ($i=0, $n=sizeof($products); $i<$n; $i++) {
       $productsName = $products[$i]['name'];
