@@ -1,13 +1,13 @@
 <?php
 /**
- * Designed for v1.5.7
+ * Designed for v1.5.7+
  *
  * Observer class used to detect spam input
  *
  * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @copyright Portions Copyright 2017-2019 CowboyGeek.com
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2019 Jul 15 New in v1.5.7 $
+ * @version $Id: DrByte  Modified in v1.5.8 $
  */
 
 class zcObserverNonCaptchaObserver extends base
@@ -69,7 +69,7 @@ class zcObserverNonCaptchaObserver extends base
         $test_string = '';
 
         // Simple regex to identify presence of an (unwanted) URL
-        $reg_exUrl = '~(https?|ftps?):/~';
+        $regexPattern = '~(https?|ftps?):/~';
 
         $fields = array(
             'firstname',
@@ -100,13 +100,14 @@ class zcObserverNonCaptchaObserver extends base
             }
         }
 
-        if (empty($test_string)) return;
+        if (empty(trim($test_string))) return;
+
+        $test_string = str_ireplace([HTTP_SERVER, HTTPS_SERVER], '', $test_string);
 
         // inspect
-        if(preg_match($reg_exUrl, $test_string)) {
+        if (preg_match($regexPattern, $test_string)) {
             $GLOBALS['antiSpam'] = 'spam';
         }
     }
-
 }
 
