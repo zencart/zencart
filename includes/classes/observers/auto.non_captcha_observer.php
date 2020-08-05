@@ -103,6 +103,8 @@ class zcObserverNonCaptchaObserver extends base
 
         if (empty($test_string)) return;
 
+        $test_string = str_ireplace([HTTP_SERVER, HTTPS_SERVER], '', $test_string);
+
         // inspect
         if(preg_match($reg_exUrl, $test_string)) {
             $GLOBALS['antiSpam'] = 'spam';
