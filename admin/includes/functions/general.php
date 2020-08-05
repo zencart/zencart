@@ -87,20 +87,6 @@
   }
 
 
-  function zen_get_country_name_cfg() {
-    global $db;
-    $country = $db->Execute("SELECT countries_name
-                             FROM " . TABLE_COUNTRIES . "
-                             WHERE countries_id = " . (int)$country_id);
-
-    if ($country->RecordCount() < 1) {
-      return $country_id;
-    } else {
-      return $country->fields['countries_name'];
-    }
-  }
-
-
   function zen_get_zone_name($country_id, $zone_id, $default_zone) {
     global $db;
     $zone = $db->Execute("SELECT zone_name
