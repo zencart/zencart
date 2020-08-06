@@ -420,10 +420,10 @@ function zen_draw_products_pull_down_attributes($field_name, $parameters = '', $
             break;
         case ((int)$filter_by_option_name > 0) : // an Option Name was selected: show only products using attributes with this Option Name
             $sql .= "AND pa.options_id = " . (int)$filter_by_option_name;
-            $sql .= "ORDER BY " . $order_by;
+            $sql .= " ORDER BY " . $order_by;
             break;
         default: //legacy: show all products with attributes
-            $sql .= "ORDER BY " . $order_by;
+            $sql .= " ORDER BY " . $order_by;
             break;
     }
 
