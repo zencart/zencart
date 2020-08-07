@@ -1,21 +1,20 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: $
+ * @version GIT: $Id: $
  */
-
 
 namespace Zencart\Filters;
 
-
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 
 class SelectWhereFilter extends baseFilter implements RequestFilter
 {
     private $default;
 
-    public function make(array $filterDefinition)
+    public function make(array $filterDefinition) : void
     {
         $this->filterDefinition = $filterDefinition;
         $this->default = $filterDefinition['default'] ?? '';
@@ -23,13 +22,13 @@ class SelectWhereFilter extends baseFilter implements RequestFilter
         $this->parameters = $this->setParameters($filterDefinition);
     }
 
-    public function output()
+    public function output() : string
     {
         $select = $this->makeSelect($this->options, $this->default, $this->parameters);
         return $select;
     }
 
-    public function processRequest(Request $request, $query)
+    public function processRequest(Request $request, Builder $query) : Builder
     {
         $this->default = $request->input($this->filterDefinition['selectName'], '*');
         if ((string)$this->default == '*') {
@@ -39,12 +38,12 @@ class SelectWhereFilter extends baseFilter implements RequestFilter
         return $query;
     }
 
-    private function getOptionsForSelect($filterDefinition)
+    private function getOptionsForSelect(array $filterDefinition) : array
     {
         return $filterDefinition['options'];
     }
 
-    private function setParameters($filterDefinition)
+    private function setParameters($filterDefinition) : array
     {
         $parameters['label'] = $filterDefinition['label'];
         $parameters['name'] = $filterDefinition['selectName'];

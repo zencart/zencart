@@ -5,14 +5,15 @@
  * @version GIT: $Id: $
  */
 
-namespace Zencart\Filters;
+namespace Zencart\ViewBuilders;
 
+use App\Models\PluginControl;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Http\Request;
 
-interface RequestFilter
+class PluginManagerDataSource extends DataTableDataSource
 {
-    public function make(array $filterDefinition) : void;
-    public function processRequest(Request $request, Builder $query);
-    public function output() : string;
+    protected function buildInitialQuery() : Builder
+    {
+        return (new PluginControl())->query();
+    }
 }
