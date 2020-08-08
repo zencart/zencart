@@ -762,9 +762,9 @@ class queryFactoryResult implements Countable, Iterator
 class queryFactoryMeta
 {
 
-    function __construct($zp_field)
+    function __construct($field)
     {
-        $type = $zp_field['Type'];
+        $type = $field['Type'];
         $rgx = preg_match('/^[a-z]*/', $type, $matches);
         $this->type = $matches[0];
         $this->max_length = preg_replace('/[a-z\(\)]/', '', $type);
