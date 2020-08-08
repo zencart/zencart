@@ -270,15 +270,15 @@ class queryFactory extends base
             return $obj;
         }
 
+
+        $time_start = explode(' ', microtime());
+
+        $zp_db_resource = $this->ensureDbConnected($sqlQuery, $remove_from_queryCache);
+
         // do query and cache the result before returning it
         if ($enableCaching) {
             $zc_cache->sql_cache_expire_now($sqlQuery);
-            $time_start = explode(' ', microtime());
-            if (!$this->db_connected) {
-                if (!$this->connect($this->host, $this->user, $this->password, $this->database, $this->pConnect, $this->real))
-                    $this->set_error('0', DB_ERROR_NOT_CONNECTED, $this->dieOnErrors);
-            }
-            $zp_db_resource = $this->query($this->link, $sqlQuery, $remove_from_queryCache);
+
             if (FALSE === $zp_db_resource) {
                 $this->set_error(mysqli_errno($this->link), mysqli_error($this->link), $this->dieOnErrors);
             } else {
@@ -313,19 +313,6 @@ class queryFactory extends base
 
         // do uncached query
 
-        $time_start = explode(' ', microtime());
-        if (!$this->db_connected) {
-            if (!$this->connect($this->host, $this->user, $this->password, $this->database, $this->pConnect, $this->real))
-                $this->set_error('0', DB_ERROR_NOT_CONNECTED, $this->dieOnErrors);
-        }
-        $zp_db_resource = $this->query($this->link, $sqlQuery, $remove_from_queryCache);
-        if (!$zp_db_resource) {
-            if (mysqli_errno($this->link) == 2006) {
-                $this->link = FALSE;
-                $this->connect($this->host, $this->user, $this->password, $this->database, $this->pConnect, $this->real);
-                $zp_db_resource = mysqli_query($this->link, $sqlQuery);
-            }
-        }
         if (FALSE === $zp_db_resource) {
             $this->set_error(mysqli_errno($this->link), mysqli_error($this->link), $this->dieOnErrors);
         } else {
@@ -362,11 +349,9 @@ class queryFactory extends base
         $obj = new queryFactoryResult($this->link);
         $obj->sql_query = $sqlQuery;
         $obj->limit = $limit;
-        if (!$this->db_connected) {
-            if (!$this->connect($this->host, $this->user, $this->password, $this->database, $this->pConnect, $this->real))
-                $this->set_error('0', DB_ERROR_NOT_CONNECTED, $this->dieOnErrors);
-        }
-        $zp_db_resource = $this->query($this->link, $sqlQuery, $remove_from_queryCache);
+
+        $zp_db_resource = $this->ensureDbConnected($sqlQuery, $remove_from_queryCache);
+
         if (FALSE === $zp_db_resource) {
             $this->set_error(mysqli_errno($this->link), mysqli_error($this->link), $this->dieOnErrors);
         } else {
@@ -635,6 +620,30 @@ class queryFactory extends base
             fclose($f);
         }
         unset($f);
+    }
+
+    /**
+     * @param string $sqlQuery
+     * @param bool $remove_from_queryCache
+     * @return bool|mixed|mysqli_result
+     */
+    protected function ensureDbConnected(string $sqlQuery, bool $remove_from_queryCache)
+    {
+        // connect to db
+        if (!$this->db_connected) {
+            if (!$this->connect($this->host, $this->user, $this->password, $this->database, null, $this->dieOnErrors))
+                $this->set_error(0, DB_ERROR_NOT_CONNECTED, $this->dieOnErrors);
+        }
+        $zp_db_resource = $this->query($this->link, $sqlQuery, $remove_from_queryCache);
+        // second attempt in case of 2006 response
+        if (!$zp_db_resource) {
+            if (mysqli_errno($this->link) == 2006) {
+                $this->link = FALSE;
+                $this->connect($this->host, $this->user, $this->password, $this->database, null, $this->dieOnErrors);
+                $zp_db_resource = mysqli_query($this->link, $sqlQuery);
+            }
+        }
+        return $zp_db_resource;
     }
 }
 
