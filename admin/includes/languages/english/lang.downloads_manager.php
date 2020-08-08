@@ -20,7 +20,7 @@ $define = [
     'TABLE_HEADING_OPT_PRICE' => 'Price',
     'TABLE_HEADING_OPT_PRICE_PREFIX' => 'Prefix',
     'TEXT_PRODUCTS_NAME' => 'Product: ',
-    'TEXT_INFO_HEADING_EDIT_PRODUCTS_DOWNLOAD' => 'EDITING DOWNLOAD INFORMATION',
+    'TEXT_INFO_HEADING_EDIT_PRODUCTS_DOWNLOAD' => 'Editing Download Information',
     'TEXT_INFO_EDIT_INTRO' => 'Edit the Download information:',
     'TEXT_DELETE_INTRO' => 'The following filename will be removed from the database. This will not delete the file from the server:',
     'TEXT_INFO_FILENAME' => 'Filename: ',
@@ -28,6 +28,8 @@ $define = [
     'TEXT_INFO_MAX_COUNT' => 'Max Downloads: ',
     'TEXT_INFO_FILENAME_MISSING' => '&nbsp;Missing filename',
     'TEXT_INFO_FILENAME_GOOD' => '&nbsp;Valid filename',
+    'TEXT_WARNING_PRODUCT_MISCONFIGURED_SHORT' => 'Downloadable Product is misconfigured', 
+    'TEXT_WARNING_PRODUCT_MISCONFIGURED' => 'Product should not be free shipping or virtual.  See <a href="https://docs.zen-cart.com/user/products/downloadable/#additional-notes-about-downloads-and-shipping-costs">shipping cost documentation</a>.',  
 ];
 
 return $define;

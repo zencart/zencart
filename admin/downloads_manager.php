@@ -62,6 +62,9 @@ if (zen_not_null($action)) {
           ?>
           <?php echo '</form>'; ?>
       </div>
+      <div class="row text-left">
+        <?php echo zen_image(DIR_WS_IMAGES . 'icon_status_yellow.gif') . TEXT_WARNING_PRODUCT_MISCONFIGURED_SHORT; ?>
+      </div>
       <div class="row text-center">
         <?php echo zen_image(DIR_WS_IMAGES . 'icon_status_red.gif') . TEXT_INFO_FILENAME_MISSING; ?> &nbsp;&nbsp;&nbsp;<?php echo zen_image(DIR_WS_IMAGES . 'icon_status_green.gif') . TEXT_INFO_FILENAME_GOOD; ?>
       </div>
@@ -126,6 +129,10 @@ if (zen_not_null($action)) {
                   } else {
                     $filename_is_missing = zen_image(DIR_WS_IMAGES . 'icon_status_green.gif');
                   }
+                  $product_is_misconfigured= '';
+                  if ($padInfo->product_is_always_free_shipping == 1 || $padInfo->products_virtual == 1) {
+                    $product_is_misconfigured = zen_image(DIR_WS_IMAGES . 'icon_status_yellow.gif');
+                  }
                   ?>
                   <?php
                   if (isset($padInfo) && is_object($padInfo) && ($products_downloads['products_attributes_id'] == $padInfo->products_attributes_id)) {
@@ -136,7 +143,7 @@ if (zen_not_null($action)) {
                   ?>
 
               <td><?php echo $products_downloads['products_attributes_id']; ?></td>
-              <td><?php echo $products_downloads['products_id']; ?></td>
+              <td><?php echo $product_is_misconfigured . '&nbsp;' . $products_downloads['products_id']; ?></td>
               <td><?php echo $products_downloads['products_name']; ?></td>
               <td><?php echo $products_downloads['products_model']; ?></td>
               <td><?php echo zen_options_name($products_downloads['options_id']); ?></td>
@@ -184,6 +191,10 @@ if (zen_not_null($action)) {
                   '<a href="' . zen_href_link(FILENAME_DOWNLOADS_MANAGER, zen_get_all_get_params(array('padID', 'action')) . 'padID=' . $padInfo->products_attributes_id . '&page=' . $_GET['page'] . '&action=edit') . '" class="btn btn-primary" role="button">' . IMAGE_EDIT . '</a>' .
                   '&nbsp;<a href="' . zen_href_link(FILENAME_ATTRIBUTES_CONTROLLER, 'products_filter=' . $padInfo->products_id . '&current_categories_id=' . $padInfo->master_categories_id) . '" class="btn btn-primary" role="button">' . IMAGE_EDIT_ATTRIBUTES . '</a>'
                 );
+                $contents[] = array('align' => 'center', 'text' => '<a href="'  . zen_href_link(FILENAME_PRODUCT, 'product_type=' . $padInfo->products_type . '&pID=' . $padInfo->products_id . '&action=new_product&page=' . $_GET['page']) . '" class="btn btn-primary" role="button">' . IMAGE_EDIT_PRODUCT . '</a>'); 
+                if ($padInfo->product_is_always_free_shipping == 1 || $padInfo->products_virtual == 1) {
+                   $contents[] = array('params'=>'errorText', 'text' => '<br />' . TEXT_WARNING_PRODUCT_MISCONFIGURED); 
+                }
                 $contents[] = array('text' => '<br />' . TEXT_PRODUCTS_NAME . $padInfo->products_name);
                 $contents[] = array('text' => TEXT_PRODUCTS_MODEL . $padInfo->products_model);
                 $contents[] = array('text' => TEXT_INFO_FILENAME . $padInfo->products_attributes_filename);
