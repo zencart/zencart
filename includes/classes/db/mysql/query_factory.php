@@ -360,7 +360,7 @@ class queryFactory extends base
      */
     protected function query($link, string $query, bool $remove_from_queryCache = false)
     {
-        global $queryLog, $queryCache;
+        global $queryCache;
 
         if ($remove_from_queryCache && isset($queryCache)) {
             $queryCache->reset($query);
@@ -372,9 +372,7 @@ class queryFactory extends base
             return ($cached_value);
         }
 
-        if (isset($queryLog)) $queryLog->start($query);
         $result = mysqli_query($link, $query);
-        if (isset($queryLog)) $queryLog->stop($query, $result);
         if (isset($queryCache)) $queryCache->cache($query, $result);
         return $result;
     }
