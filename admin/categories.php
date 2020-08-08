@@ -13,7 +13,7 @@ $parameters = [
   'categories_name' => '',
   'categories_description' => '',
   'categories_image' => '',
-  'sort_order' => ''
+  'sort_order' => '',
 ];
 $cInfo = new objectInfo($parameters);
 

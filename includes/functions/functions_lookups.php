@@ -156,7 +156,7 @@
 */
   function zen_get_products_stock($products_id) {
     global $db;
-    
+
     // -----
     // Give an observer the chance to modify this function's return value.
     //
@@ -190,7 +190,7 @@
 */
   function zen_check_stock($products_id, $products_quantity) {
     $stock_left = zen_get_products_stock($products_id) - $products_quantity;
-    
+
     // -----
     // Give an observer the opportunity to change the out-of-stock message.
     //
@@ -198,11 +198,11 @@
     if ($stock_left < 0) {
         $out_of_stock_message = STOCK_MARK_PRODUCT_OUT_OF_STOCK;
         $GLOBALS['zco_notifier']->notify(
-            'ZEN_CHECK_STOCK_MESSAGE', 
+            'ZEN_CHECK_STOCK_MESSAGE',
             array(
-                $products_id, 
+                $products_id,
                 $products_quantity
-            ), 
+            ),
             $out_of_stock_message
         );
         $the_message = '<span class="markProductOutOfStock">' . $out_of_stock_message . '</span>';
@@ -367,7 +367,7 @@
  */
   function zen_has_product_attributes_values($products_id) {
     global $db;
-    
+
     // -----
     // Allow a watching observer to override this function's return value.
     //
@@ -376,7 +376,7 @@
     if ($value_to_return !== '') {
         return $value_to_return;
     }
-    
+
     $attributes_query = "select count(options_values_price) as total
                          from " . TABLE_PRODUCTS_ATTRIBUTES . "
                          where products_id = " . (int)$products_id . "
@@ -537,7 +537,7 @@
  *  configuration key value lookup
  *  TABLE: configuration
  */
-function zen_get_configuration_key_value($lookup) 
+function zen_get_configuration_key_value($lookup)
 {
     global $db;
     $configuration_query = $db->Execute("select configuration_value from " . TABLE_CONFIGURATION . " where configuration_key='" . $lookup . "' LIMIT 1");
@@ -844,7 +844,7 @@ function zen_check_show_prices(): bool
     return false;
 }
 
-/*
+/**
  * Return any field from products or products_description table
  * Example: zen_products_lookup('3', 'products_date_added');
  */
@@ -864,7 +864,7 @@ function zen_check_show_prices(): bool
     return $return_field;
   }
 
-/*
+/**
  * Return any field from categories or categories_description table
  * Example: zen_categories_lookup('10', 'parent_id');
  */
@@ -1011,7 +1011,7 @@ function zen_has_product_attributes_downloads_status($products_id) {
  * Returns the "name" associated with the specified orders_status_id.
  *
  */
-function zen_get_orders_status_name($orders_status_id, $language_id = '') 
+function zen_get_orders_status_name($orders_status_id, $language_id = '')
 {
     if ($language_id == '') {
         $language_id = $_SESSION['languages_id'];
