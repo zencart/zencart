@@ -113,42 +113,6 @@ function zen_is_whitelisted_admin_ip($ip = null)
 
 
 /**
- * Return a product ID with attributes hash
- * @param string|int $prid
- * @param array|string $params
- * @return string
- */
-  function zen_get_uprid($prid, $params) {
-    $uprid = $prid;
-    if (!is_array($params) || empty($params) || strstr($prid, ':')) return $prid;
-
-    foreach($params as $option => $value) {
-      if (is_array($value)) {
-        foreach($value as $opt => $val) {
-          $uprid .= '{' . $option . '}' . trim($opt);
-        }
-      } else {
-        $uprid .= '{' . $option . '}' . trim($value);
-      }
-    }
-
-    $md_uprid = md5($uprid);
-    return $prid . ':' . $md_uprid;
-  }
-
-
-/**
- * Return a product ID from a product ID with attributes
- * Alternate: simply (int) the product id
- * @param string $uprid   ie: '11:abcdef12345'
- * @return mixed
- */
-  function zen_get_prid($uprid) {
-    $pieces = explode(':', $uprid);
-    return (int)$pieces[0];
-  }
-
-/**
  * Checks whether a string/array is null/blank/empty or uppercase string 'NULL'
  * Differs from empty() in that it doesn't test for boolean false or '0' string/int
  * @param string|array|Countable $value

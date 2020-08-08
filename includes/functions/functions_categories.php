@@ -1143,3 +1143,26 @@ function zen_set_category_status($category_id, $status)
             WHERE categories_id = " . (int)$category_id;
     $db->Execute($sql);
 }
+
+
+
+/**
+ * @TODO - refactor to category object?
+ * Return any field from categories or categories_description table
+ * Example: zen_categories_lookup('10', 'parent_id');
+ */
+function zen_categories_lookup($categories_id, $what_field = 'categories_name', $language = '') {
+    global $db;
+
+    if (empty($language)) $language = $_SESSION['languages_id'];
+
+    $category_lookup = $db->Execute("select " . $what_field . " as lookup_field
+                              from " . TABLE_CATEGORIES . " c, " . TABLE_CATEGORIES_DESCRIPTION . " cd
+                              where c.categories_id ='" . (int)$categories_id . "'
+                              and c.categories_id = cd.categories_id
+                              and cd.language_id = '" . (int)$language . "'");
+
+    $return_field = $category_lookup->fields['lookup_field'];
+
+    return $return_field;
+}
