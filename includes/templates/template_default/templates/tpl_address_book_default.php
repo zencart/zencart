@@ -15,9 +15,9 @@
 <div class="centerColumn" id="addressBookDefault">
 
 <h1 id="addressBookDefaultHeading"><?php echo HEADING_TITLE; ?></h1>
- 
-<?php if ($messageStack->size('addressbook') > 0) echo $messageStack->output('addressbook'); ?> 
-      
+
+<?php if ($messageStack->size('addressbook') > 0) echo $messageStack->output('addressbook'); ?>
+
 <h2 id="addressBookDefaultPrimary"><?php echo PRIMARY_ADDRESS_TITLE; ?></h2>
 <address class="back"><?php echo zen_address_label($_SESSION['customer_id'], $_SESSION['customer_default_address_id'], true, ' ', '<br />'); ?></address>
 <div class="instructions"><?php echo PRIMARY_ADDRESS_DESCRIPTION; ?></div>
@@ -45,7 +45,7 @@
 </fieldset>
 
 <?php
-  if (zen_count_customer_address_book_entries() < MAX_ADDRESS_BOOK_ENTRIES) {
+  if (count($addressArray) < MAX_ADDRESS_BOOK_ENTRIES) {
 ?>
    <div class="buttonRow forward"><?php echo '<a href="' . zen_href_link(FILENAME_ADDRESS_BOOK_PROCESS, '', 'SSL') . '">' . zen_image_button(BUTTON_IMAGE_ADD_ADDRESS, BUTTON_ADD_ADDRESS_ALT) . '</a>'; ?></div>
 <?php

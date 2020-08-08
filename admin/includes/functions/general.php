@@ -27,15 +27,6 @@
   }
 
 
-  function zen_customers_name($customers_id) {
-    global $db;
-    $customers_values = $db->Execute("SELECT customers_firstname, customers_lastname
-                               FROM " . TABLE_CUSTOMERS . "
-                               WHERE customers_id = " . (int)$customers_id);
-    if ($customers_values->EOF) return '';
-    return $customers_values->fields['customers_firstname'] . ' ' . $customers_values->fields['customers_lastname'];
-  }
-
   function zen_options_name($options_id) {
     global $db;
 
@@ -2479,21 +2470,6 @@ function zen_cfg_read_only($text, $key = '')
     $select_string .= '</select>';
 
     return $select_string;
-  }
-
-/**
- * customer lookup of address book
- */
-  function zen_get_customers_address_book($customer_id) {
-    global $db;
-
-    $customer_address_book_count_query = "SELECT c.*, ab.* from " .
-                                          TABLE_CUSTOMERS . " c
-                                          left join " . TABLE_ADDRESS_BOOK . " ab on c.customers_id = ab.customers_id
-                                          WHERE c.customers_id = " . (int)$customer_id;
-
-    $customer_address_book_count = $db->Execute($customer_address_book_count_query);
-    return $customer_address_book_count;
   }
 
 /**

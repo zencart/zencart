@@ -23,30 +23,8 @@ $processed = false;
 if (zen_not_null($action)) {
   switch ($action) {
     case 'list_addresses':
-      $addresses_query = "SELECT address_book_id, entry_firstname as firstname, entry_lastname as lastname,
-                                 entry_company as company, entry_street_address as street_address,
-                                 entry_suburb as suburb, entry_city as city, entry_postcode as postcode,
-                                 entry_state as state, entry_zone_id as zone_id, entry_country_id as country_id
-                          FROM   " . TABLE_ADDRESS_BOOK . "
-                          WHERE  customers_id = :customersID
-                          ORDER BY firstname, lastname";
-
-      $addresses_query = $db->bindVars($addresses_query, ':customersID', $_GET['cID'], 'integer');
-
-      $zco_notifier->notify('NOTIFY_ADMIN_CUSTOMERS_LIST_ADDRESSES', $addresses_query);
-
-      $addresses = $db->Execute($addresses_query);
-      $addressArray = array();
-      foreach ($addresses as $address) {
-        $format_id = zen_get_address_format_id($address['country_id']);
-
-        $addressArray[] = array(
-          'firstname' => $address['firstname'],
-          'lastname' => $address['lastname'],
-          'address_book_id' => $address['address_book_id'],
-          'format_id' => $format_id,
-          'address' => $address);
-      }
+      $customer = new Customer($_GET['cID']);
+      $addressArray = $customer->getData('addresses');
       break;
     case 'list_addresses_done':
       $action = '';
@@ -55,30 +33,26 @@ if (zen_not_null($action)) {
     case 'status':
       if (isset($_POST['current']) && is_numeric($_POST['current'])) {
         if ($_POST['current'] == CUSTOMERS_APPROVAL_AUTHORIZATION) {
-          if (CUSTOMERS_APPROVAL_AUTHORIZATION == 1 || CUSTOMERS_APPROVAL_AUTHORIZATION == 2) { 
-            $customers_authorization = 0; 
+          if (CUSTOMERS_APPROVAL_AUTHORIZATION == 1 || CUSTOMERS_APPROVAL_AUTHORIZATION == 2) {
+            $customers_authorization = 0;
           } else {
-            $customers_authorization = 4; 
+            $customers_authorization = 4;
           }
-          $sql = "UPDATE " . TABLE_CUSTOMERS . "
-                  SET customers_authorization = " . $customers_authorization  . "  
-                  WHERE customers_id = " . (int)$customers_id;
-          $custinfo = $db->Execute("SELECT customers_email_address, customers_firstname, customers_lastname
-                                    FROM " . TABLE_CUSTOMERS . "
-                                    WHERE customers_id = " . (int)$customers_id);
-          if ((int)CUSTOMERS_APPROVAL_AUTHORIZATION > 0 && (int)$_POST['current'] > 0 && $custinfo->RecordCount() > 0) {
+
+          $customer = new Customer($customers_id);
+          $old = $customer->getData('customers_authorization');
+          $custinfo = $customer->setCustomerAuthorizationStatus($customers_authorization);
+          if ((int)CUSTOMERS_APPROVAL_AUTHORIZATION > 0 && (int)$_POST['current'] > 0 && $old != $customers_authorization) {
             $message = EMAIL_CUSTOMER_STATUS_CHANGE_MESSAGE;
             $html_msg['EMAIL_MESSAGE_HTML'] = EMAIL_CUSTOMER_STATUS_CHANGE_MESSAGE;
-            zen_mail($custinfo->fields['customers_firstname'] . ' ' . $custinfo->fields['customers_lastname'], $custinfo->fields['customers_email_address'], EMAIL_CUSTOMER_STATUS_CHANGE_SUBJECT, $message, STORE_NAME, EMAIL_FROM, $html_msg, 'default');
+            zen_mail($custinfo['customers_firstname'] . ' ' . $custinfo['customers_lastname'], $custinfo['customers_email_address'], EMAIL_CUSTOMER_STATUS_CHANGE_SUBJECT, $message, STORE_NAME, EMAIL_FROM, $html_msg, 'default');
           }
           zen_record_admin_activity('Customer-approval-authorization set customer auth status to 0 for customer ID ' . (int)$customers_id, 'info');
         } else {
-          $sql = "UPDATE " . TABLE_CUSTOMERS . "
-                  SET customers_authorization = '" . CUSTOMERS_APPROVAL_AUTHORIZATION . "'
-                  WHERE customers_id = " . (int)$customers_id;
+          $customer = new Customer($customers_id);
+          $customer->setCustomerAuthorizationStatus(CUSTOMERS_APPROVAL_AUTHORIZATION);
           zen_record_admin_activity('Customer-approval-authorization set customer auth status to ' . CUSTOMERS_APPROVAL_AUTHORIZATION . ' for customer ID ' . (int)$customers_id, 'info');
         }
-        $db->Execute($sql);
         $action = '';
         zen_redirect(zen_href_link(FILENAME_CUSTOMERS, 'cID=' . (int)$customers_id . '&page=' . $_GET['page'], 'NONSSL'));
       }
@@ -125,7 +99,7 @@ if (zen_not_null($action)) {
       $entry_state = zen_db_prepare_input($_POST['entry_state']);
       if (isset($_POST['entry_zone_id'])) $entry_zone_id = zen_db_prepare_input($_POST['entry_zone_id']);
 
-      if (ACCOUNT_GENDER == 'true' && empty($customers_gender)) { 
+      if (ACCOUNT_GENDER == 'true' && empty($customers_gender)) {
         $error = true;
         $entry_gender_error = true;
       } else {
@@ -159,18 +133,21 @@ if (zen_not_null($action)) {
         $customers_dob = '0001-01-01 00:00:00';
       }
 
+      $entry_email_address_error = false;
       if (strlen($customers_email_address) < ENTRY_EMAIL_ADDRESS_MIN_LENGTH) {
         $error = true;
         $entry_email_address_error = true;
-      } else {
-        $entry_email_address_error = false;
       }
 
+      $entry_email_address_check_error = false;
       if (!zen_validate_email($customers_email_address)) {
         $error = true;
         $entry_email_address_check_error = true;
-      } else {
-        $entry_email_address_check_error = false;
+      }
+
+      $entry_email_address_exists = !zen_check_email_address_not_already_used($customers_email_address, $customers_id);
+      if ($entry_email_address_exists) {
+        $error = true;
       }
 
       if (strlen($entry_street_address) < ENTRY_STREET_ADDRESS_MIN_LENGTH) {
@@ -238,18 +215,6 @@ if (zen_not_null($action)) {
         $entry_telephone_error = true;
       } else {
         $entry_telephone_error = false;
-      }
-
-      $check_email = $db->Execute("SELECT customers_email_address
-                                   FROM " . TABLE_CUSTOMERS . "
-                                   WHERE customers_email_address = '" . zen_db_input($customers_email_address) . "'
-                                   AND customers_id != " . (int)$customers_id);
-
-      if ($check_email->RecordCount() > 0) {
-        $error = true;
-        $entry_email_address_exists = true;
-      } else {
-        $entry_email_address_exists = false;
       }
 
       $zco_notifier->notify('NOTIFY_ADMIN_CUSTOMERS_UPDATE_VALIDATE', array(), $error);
@@ -335,109 +300,38 @@ if (zen_not_null($action)) {
           $messageStack->add_session(ERROR_PASSWORDS_NOT_MATCHING, 'error');
         }
         if ($error == FALSE) {
-          $sql = "SELECT customers_email_address, customers_firstname, customers_lastname
-                  FROM " . TABLE_CUSTOMERS . "
-                  WHERE customers_id = :customersID";
-          $sql = $db->bindVars($sql, ':customersID', $customers_id, 'integer');
-          $custinfo = $db->Execute($sql);
-          if ($custinfo->RecordCount() == 0) {
-            die('ERROR: customer ID not specified. This error should never happen.');
-          }
+            $customer = new Customer($customers_id);
+            $custinfo = $customer->getData();
+            if (empty($custinfo)) {
+                die('ERROR: customer ID not specified. This error should never happen.');
+            }
+            $customer->setPassword($password_new);
 
-          $sql = "UPDATE " . TABLE_CUSTOMERS . "
-                  SET customers_password = :password
-                  WHERE customers_id = :customersID";
-          $sql = $db->bindVars($sql, ':customersID', $customers_id, 'integer');
-          $sql = $db->bindVars($sql, ':password', zen_encrypt_password($password_new), 'string');
-          $db->Execute($sql);
-          $sql = "UPDATE " . TABLE_CUSTOMERS_INFO . "
-                  SET customers_info_date_account_last_modified = now()
-                  WHERE customers_info_id = :customersID";
-          $sql = $db->bindVars($sql, ':customersID', $customers_id, 'integer');
-          $db->Execute($sql);
+            $message = EMAIL_CUSTOMER_PWD_CHANGE_MESSAGE . "\n\n" . $password_new . "\n\n\n";
+            $html_msg['EMAIL_MESSAGE_HTML'] = nl2br($message);
+            zen_mail($custinfo['customers_firstname'] . ' ' . $custinfo['customers_lastname'], $custinfo['customers_email_address'], EMAIL_CUSTOMER_PWD_CHANGE_SUBJECT, $message, STORE_NAME, EMAIL_FROM, $html_msg, 'default');
+            $userList = zen_get_users($_SESSION['admin_id']);
+            $userDetails = $userList[0];
+            $adminUser = $userDetails['id'] . '-' . $userDetails['name'] . ' ' . zen_get_ip_address();
+            $message = sprintf(EMAIL_CUSTOMER_PWD_CHANGE_MESSAGE_FOR_ADMIN, $custinfo['customers_firstname'] . ' ' . $custinfo['customers_lastname'] . ' ' . $custinfo['customers_email_address'], $adminUser) . "\n";
+            $html_msg['EMAIL_MESSAGE_HTML'] = nl2br($message);
+            zen_mail($userDetails['name'], $userDetails['email'], EMAIL_CUSTOMER_PWD_CHANGE_SUBJECT, $message, STORE_NAME, EMAIL_FROM, $html_msg, 'default');
 
-          $message = EMAIL_CUSTOMER_PWD_CHANGE_MESSAGE . "\n\n" . $password_new . "\n\n\n";
-          $html_msg['EMAIL_MESSAGE_HTML'] = nl2br($message);
-          zen_mail($custinfo->fields['customers_firstname'] . ' ' . $custinfo->fields['customers_lastname'], $custinfo->fields['customers_email_address'], EMAIL_CUSTOMER_PWD_CHANGE_SUBJECT, $message, STORE_NAME, EMAIL_FROM, $html_msg, 'default');
-          $userList = zen_get_users($_SESSION['admin_id']);
-          $userDetails = $userList[0];
-          $adminUser = $userDetails['id'] . '-' . $userDetails['name'] . ' ' . zen_get_ip_address();
-          $message = sprintf(EMAIL_CUSTOMER_PWD_CHANGE_MESSAGE_FOR_ADMIN, $custinfo->fields['customers_firstname'] . ' ' . $custinfo->fields['customers_lastname'] . ' ' . $custinfo->fields['customers_email_address'], $adminUser) . "\n";
-          $html_msg['EMAIL_MESSAGE_HTML'] = nl2br($message);
-          zen_mail($userDetails['name'], $userDetails['email'], EMAIL_CUSTOMER_PWD_CHANGE_SUBJECT, $message, STORE_NAME, EMAIL_FROM, $html_msg, 'default');
-
-          $messageStack->add_session(SUCCESS_PASSWORD_UPDATED, 'success');
+            $messageStack->add_session(SUCCESS_PASSWORD_UPDATED, 'success');
         }
         zen_redirect(zen_href_link(FILENAME_CUSTOMERS, zen_get_all_get_params(array('cID', 'action')) . 'cID=' . $customers_id));
       }
       break;
     case 'deleteconfirm':
       $customers_id = zen_db_prepare_input($_POST['cID']);
-
       $zco_notifier->notify('NOTIFIER_ADMIN_ZEN_CUSTOMERS_DELETE_CONFIRM', array('customers_id' => $customers_id));
-
-      if (isset($_POST['delete_reviews']) && ($_POST['delete_reviews'] == 'on')) {
-        $reviews = $db->Execute("SELECT reviews_id
-                                 FROM " . TABLE_REVIEWS . "
-                                 WHERE customers_id = " . (int)$customers_id);
-        while (!$reviews->EOF) {
-          $db->Execute("DELETE FROM " . TABLE_REVIEWS_DESCRIPTION . "
-                        WHERE reviews_id = " . (int)$reviews->fields['reviews_id']);
-          $reviews->MoveNext();
-        }
-
-        $db->Execute("DELETE FROM " . TABLE_REVIEWS . "
-                      WHERE customers_id = '" . (int)$customers_id . "'");
-      } else {
-        $db->Execute("UPDATE " . TABLE_REVIEWS . "
-                      SET customers_id = null
-                      WHERE customers_id = " . (int)$customers_id);
-      }
-
-      $db->Execute("DELETE FROM " . TABLE_ADDRESS_BOOK . "
-                    WHERE customers_id = " . (int)$customers_id);
-
-      $db->Execute("DELETE FROM " . TABLE_CUSTOMERS . "
-                    WHERE customers_id = " . (int)$customers_id);
-
-      $db->Execute("DELETE FROM " . TABLE_CUSTOMERS_INFO . "
-                    WHERE customers_info_id = " . (int)$customers_id);
-
-      $db->Execute("DELETE FROM " . TABLE_CUSTOMERS_BASKET . "
-                    WHERE customers_id = " . (int)$customers_id);
-
-      $db->Execute("DELETE FROM " . TABLE_CUSTOMERS_BASKET_ATTRIBUTES . "
-                    WHERE customers_id = " . (int)$customers_id);
-
-      $db->Execute("DELETE FROM " . TABLE_WHOS_ONLINE . "
-                    WHERE customer_id = " . (int)$customers_id);
-
-      $db->Execute("DELETE FROM " . TABLE_PRODUCTS_NOTIFICATIONS . "
-                    WHERE customers_id = " . (int)$customers_id);
-
-      zen_record_admin_activity('Customer with customer ID ' . (int)$customers_id . ' deleted.', 'warning');
+      $customer = new Customer($customers_id);
+      $customer->delete(isset($_POST['delete_reviews']) && $_POST['delete_reviews'] == 'on');
       zen_redirect(zen_href_link(FILENAME_CUSTOMERS, zen_get_all_get_params(array('cID', 'action')), 'NONSSL'));
       break;
     default:
-      $customers = $db->Execute("SELECT c.customers_id, c.customers_gender, c.customers_firstname,
-                                        c.customers_lastname, c.customers_dob, c.customers_email_address,
-                                        a.entry_company, a.entry_street_address, a.entry_suburb,
-                                        a.entry_postcode, a.entry_city, a.entry_state, a.entry_zone_id,
-                                        a.entry_country_id, c.customers_telephone, c.customers_fax,
-                                        c.customers_newsletter, c.customers_default_address_id,
-                                        c.customers_email_format, c.customers_group_pricing,
-                                        c.customers_authorization, c.customers_referral, c.customers_secret
-                                 FROM " . TABLE_CUSTOMERS . " c
-                                 LEFT JOIN " . TABLE_ADDRESS_BOOK . " a ON c.customers_default_address_id = a.address_book_id
-                                 WHERE a.customers_id = c.customers_id
-                                 AND c.customers_id = " . (int)$customers_id);
-
-      $reviews = $db->Execute("SELECT COUNT(*) AS number_of_reviews
-                               FROM " . TABLE_REVIEWS . "
-                               WHERE customers_id = " . (int)$customers_id);
-
-      $cInfo_array = array_merge($customers->fields, $reviews->fields);
-      $cInfo = new objectInfo($cInfo_array);
+      $customer = new Customer($customers_id);
+      $cInfo = new objectInfo($customer->getData());
   }
 }
 ?>
@@ -692,12 +586,12 @@ if (zen_not_null($action)) {
                   <?php
                   if ($error == true) {
                     if ($entry_company_error == true) {
-                      echo zen_draw_input_field('entry_company', htmlspecialchars($cInfo->entry_company, ENT_COMPAT, CHARSET, TRUE), zen_set_field_length(TABLE_ADDRESS_BOOK, 'entry_company', 50) . ' class="form-control"') . '&nbsp;' . ENTRY_COMPANY_ERROR;
+                      echo zen_draw_input_field('entry_company', htmlspecialchars($cInfo->company, ENT_COMPAT, CHARSET, TRUE), zen_set_field_length(TABLE_ADDRESS_BOOK, 'entry_company', 50) . ' class="form-control"') . '&nbsp;' . ENTRY_COMPANY_ERROR;
                     } else {
-                      echo $cInfo->entry_company . zen_draw_hidden_field('entry_company');
+                      echo $cInfo->company . zen_draw_hidden_field('entry_company');
                     }
                   } else {
-                    echo zen_draw_input_field('entry_company', htmlspecialchars($cInfo->entry_company, ENT_COMPAT, CHARSET, TRUE), zen_set_field_length(TABLE_ADDRESS_BOOK, 'entry_company', 50) . ' class="form-control"');
+                    echo zen_draw_input_field('entry_company', htmlspecialchars($cInfo->company, ENT_COMPAT, CHARSET, TRUE), zen_set_field_length(TABLE_ADDRESS_BOOK, 'entry_company', 50) . ' class="form-control"');
                   }
                   ?>
               </div>
@@ -744,12 +638,12 @@ if (zen_not_null($action)) {
                 <?php
                 if ($error == true) {
                   if ($entry_street_address_error == true) {
-                    echo zen_draw_input_field('entry_street_address', htmlspecialchars($cInfo->entry_street_address, ENT_COMPAT, CHARSET, TRUE), zen_set_field_length(TABLE_ADDRESS_BOOK, 'entry_street_address', 50) . ' class="form-control"') . '&nbsp;' . ENTRY_STREET_ADDRESS_ERROR;
+                    echo zen_draw_input_field('entry_street_address', htmlspecialchars($cInfo->street_address, ENT_COMPAT, CHARSET, TRUE), zen_set_field_length(TABLE_ADDRESS_BOOK, 'entry_street_address', 50) . ' class="form-control"') . '&nbsp;' . ENTRY_STREET_ADDRESS_ERROR;
                   } else {
-                    echo $cInfo->entry_street_address . zen_draw_hidden_field('entry_street_address');
+                    echo $cInfo->street_address . zen_draw_hidden_field('entry_street_address');
                   }
                 } else {
-                  echo zen_draw_input_field('entry_street_address', htmlspecialchars($cInfo->entry_street_address, ENT_COMPAT, CHARSET, TRUE), zen_set_field_length(TABLE_ADDRESS_BOOK, 'entry_street_address', 50) . ' class="form-control"', true);
+                  echo zen_draw_input_field('entry_street_address', htmlspecialchars($cInfo->street_address, ENT_COMPAT, CHARSET, TRUE), zen_set_field_length(TABLE_ADDRESS_BOOK, 'entry_street_address', 50) . ' class="form-control"', true);
                 }
                 ?>
             </div>
@@ -763,12 +657,12 @@ if (zen_not_null($action)) {
                   <?php
                   if ($error == true) {
                     if ($entry_suburb_error == true) {
-                      echo zen_draw_input_field('suburb', htmlspecialchars($cInfo->entry_suburb, ENT_COMPAT, CHARSET, TRUE), zen_set_field_length(TABLE_ADDRESS_BOOK, 'entry_suburb', 50) . ' class="form-control"') . '&nbsp;' . ENTRY_SUBURB_ERROR;
+                      echo zen_draw_input_field('suburb', htmlspecialchars($cInfo->suburb, ENT_COMPAT, CHARSET, TRUE), zen_set_field_length(TABLE_ADDRESS_BOOK, 'entry_suburb', 50) . ' class="form-control"') . '&nbsp;' . ENTRY_SUBURB_ERROR;
                     } else {
-                      echo $cInfo->entry_suburb . zen_draw_hidden_field('entry_suburb');
+                      echo $cInfo->suburb . zen_draw_hidden_field('entry_suburb');
                     }
                   } else {
-                    echo zen_draw_input_field('entry_suburb', htmlspecialchars($cInfo->entry_suburb, ENT_COMPAT, CHARSET, TRUE), zen_set_field_length(TABLE_ADDRESS_BOOK, 'entry_suburb', 50) . ' class="form-control"');
+                    echo zen_draw_input_field('entry_suburb', htmlspecialchars($cInfo->suburb, ENT_COMPAT, CHARSET, TRUE), zen_set_field_length(TABLE_ADDRESS_BOOK, 'entry_suburb', 50) . ' class="form-control"');
                   }
                   ?>
               </div>
@@ -782,12 +676,12 @@ if (zen_not_null($action)) {
                 <?php
                 if ($error == true) {
                   if ($entry_post_code_error == true) {
-                    echo zen_draw_input_field('entry_postcode', htmlspecialchars($cInfo->entry_postcode, ENT_COMPAT, CHARSET, TRUE), zen_set_field_length(TABLE_ADDRESS_BOOK, 'entry_postcode', 10) . ' class="form-control"') . '&nbsp;' . ENTRY_POST_CODE_ERROR;
+                    echo zen_draw_input_field('entry_postcode', htmlspecialchars($cInfo->postcode, ENT_COMPAT, CHARSET, TRUE), zen_set_field_length(TABLE_ADDRESS_BOOK, 'entry_postcode', 10) . ' class="form-control"') . '&nbsp;' . ENTRY_POST_CODE_ERROR;
                   } else {
-                    echo $cInfo->entry_postcode . zen_draw_hidden_field('entry_postcode');
+                    echo $cInfo->postcode . zen_draw_hidden_field('entry_postcode');
                   }
                 } else {
-                  echo zen_draw_input_field('entry_postcode', htmlspecialchars($cInfo->entry_postcode, ENT_COMPAT, CHARSET, TRUE), zen_set_field_length(TABLE_ADDRESS_BOOK, 'entry_postcode', 10) . ' class="form-control"', true);
+                  echo zen_draw_input_field('entry_postcode', htmlspecialchars($cInfo->postcode, ENT_COMPAT, CHARSET, TRUE), zen_set_field_length(TABLE_ADDRESS_BOOK, 'entry_postcode', 10) . ' class="form-control"', true);
                 }
                 ?></div>
           </div>
@@ -797,12 +691,12 @@ if (zen_not_null($action)) {
                 <?php
                 if ($error == true) {
                   if ($entry_city_error == true) {
-                    echo zen_draw_input_field('entry_city', htmlspecialchars($cInfo->entry_city, ENT_COMPAT, CHARSET, TRUE), zen_set_field_length(TABLE_ADDRESS_BOOK, 'entry_city', 50) . ' class="form-control"') . '&nbsp;' . ENTRY_CITY_ERROR;
+                    echo zen_draw_input_field('entry_city', htmlspecialchars($cInfo->city, ENT_COMPAT, CHARSET, TRUE), zen_set_field_length(TABLE_ADDRESS_BOOK, 'entry_city', 50) . ' class="form-control"') . '&nbsp;' . ENTRY_CITY_ERROR;
                   } else {
-                    echo $cInfo->entry_city . zen_draw_hidden_field('entry_city');
+                    echo $cInfo->city . zen_draw_hidden_field('entry_city');
                   }
                 } else {
-                  echo zen_draw_input_field('entry_city', htmlspecialchars($cInfo->entry_city, ENT_COMPAT, CHARSET, TRUE), zen_set_field_length(TABLE_ADDRESS_BOOK, 'entry_city', 50) . ' class="form-control"', true);
+                  echo zen_draw_input_field('entry_city', htmlspecialchars($cInfo->city, ENT_COMPAT, CHARSET, TRUE), zen_set_field_length(TABLE_ADDRESS_BOOK, 'entry_city', 50) . ' class="form-control"', true);
                 }
                 ?></div>
           </div>
@@ -813,14 +707,14 @@ if (zen_not_null($action)) {
                 <?php echo zen_draw_label(ENTRY_STATE, 'entry_state', 'class="col-sm-3 control-label"'); ?>
               <div class="col-sm-9 col-md-6">
                   <?php
-                  $entry_state = zen_get_zone_name($cInfo->entry_country_id, $cInfo->entry_zone_id, $cInfo->entry_state);
+                  $entry_state = zen_get_zone_name($cInfo->country_id, $cInfo->zone_id, $cInfo->state);
                   if ($error == true) {
                     if ($entry_state_error == true) {
                       if ($entry_state_has_zones == true) {
                         $zones_array = array();
                         $zones_values = $db->Execute("SELECT zone_name
                                                     FROM " . TABLE_ZONES . "
-                                                    WHERE zone_country_id = " . (int)zen_db_input($cInfo->entry_country_id) . "
+                                                    WHERE zone_country_id = " . (int)zen_db_input($cInfo->country_id) . "
                                                     ORDER BY zone_name");
 
                         while (!$zones_values->EOF) {
@@ -829,13 +723,13 @@ if (zen_not_null($action)) {
                         }
                         echo zen_draw_pull_down_menu('entry_state', $zones_array, '', 'class="form-control"') . '&nbsp;' . ENTRY_STATE_ERROR;
                       } else {
-                        echo zen_draw_input_field('entry_state', htmlspecialchars(zen_get_zone_name($cInfo->entry_country_id, $cInfo->entry_zone_id, $cInfo->entry_state), ENT_COMPAT, CHARSET, TRUE), 'class="form-control"') . '&nbsp;' . ENTRY_STATE_ERROR;
+                        echo zen_draw_input_field('entry_state', htmlspecialchars(zen_get_zone_name($cInfo->country_id, $cInfo->zone_id, $cInfo->state), ENT_COMPAT, CHARSET, TRUE), 'class="form-control"') . '&nbsp;' . ENTRY_STATE_ERROR;
                       }
                     } else {
                       echo $entry_state . zen_draw_hidden_field('entry_zone_id') . zen_draw_hidden_field('entry_state');
                     }
                   } else {
-                    echo zen_draw_input_field('entry_state', htmlspecialchars(zen_get_zone_name($cInfo->entry_country_id, $cInfo->entry_zone_id, $cInfo->entry_state), ENT_COMPAT, CHARSET, TRUE), 'class="form-control"');
+                    echo zen_draw_input_field('entry_state', htmlspecialchars(zen_get_zone_name($cInfo->country_id, $cInfo->zone_id, $cInfo->state), ENT_COMPAT, CHARSET, TRUE), 'class="form-control"');
                   }
                   ?>
               </div>
@@ -849,12 +743,12 @@ if (zen_not_null($action)) {
                 <?php
                 if ($error == true) {
                   if ($entry_country_error == true) {
-                    echo zen_draw_pull_down_menu('entry_country_id', zen_get_countries(), $cInfo->entry_country_id, 'class="form-control"') . '&nbsp;' . ENTRY_COUNTRY_ERROR;
+                    echo zen_draw_pull_down_menu('entry_country_id', zen_get_countries(), $cInfo->country_id, 'class="form-control"') . '&nbsp;' . ENTRY_COUNTRY_ERROR;
                   } else {
-                    echo zen_get_country_name($cInfo->entry_country_id) . zen_draw_hidden_field('entry_country_id');
+                    echo zen_get_country_name($cInfo->country_id) . zen_draw_hidden_field('entry_country_id');
                   }
                 } else {
-                  echo zen_draw_pull_down_menu('entry_country_id', zen_get_countries(), $cInfo->entry_country_id, 'class="form-control"');
+                  echo zen_draw_pull_down_menu('entry_country_id', zen_get_countries(), $cInfo->country_id, 'class="form-control"');
                 }
                 ?>
             </div>
@@ -1167,7 +1061,7 @@ if (zen_not_null($action)) {
                   if (isset($_GET['search']) && zen_not_null($_GET['search'])) {
                     $keywords = zen_db_input(zen_db_prepare_input($_GET['search']));
                     $parts = explode(" ", trim($keywords));
-                    $search = 'where ';
+                    $search = 'WHERE ';
                     foreach ($parts as $k => $v) {
                       $sql_add = " (c.customers_lastname LIKE '%:part%'
                          OR c.customers_firstname LIKE '%:part%'
@@ -1189,9 +1083,7 @@ if (zen_not_null($action)) {
 
                   $zco_notifier->notify('NOTIFY_ADMIN_CUSTOMERS_LISTING_NEW_FIELDS', array(), $new_fields, $disp_order);
 
-                  $customers_query_raw = "SELECT c.customers_id, c.customers_lastname, c.customers_firstname, c.customers_email_address, c.customers_group_pricing, c.customers_telephone, c.customers_authorization, c.customers_referral, c.customers_secret,
-                                           a.entry_country_id, a.entry_company, a.entry_company, a.entry_street_address, a.entry_city, a.entry_postcode,
-                                           ci.customers_info_date_of_last_logon, ci.customers_info_date_account_created
+                  $customers_query_raw = "SELECT c.customers_id
                                            " . $new_fields . ",
                                            cgc.amount
                                     FROM " . TABLE_CUSTOMERS . " c
@@ -1222,46 +1114,12 @@ if (zen_not_null($action)) {
 
                   $customers_split = new splitPageResults($_GET['page'], MAX_DISPLAY_SEARCH_RESULTS_CUSTOMER, $customers_query_raw, $customers_query_numrows);
                   $customers = $db->Execute($customers_query_raw);
-                  foreach ($customers as $customer) {
-                    $sql = "SELECT customers_info_date_account_created as date_account_created,
-                             customers_info_date_account_last_modified as date_account_last_modified,
-                             customers_info_date_of_last_logon as date_last_logon,
-                             customers_info_number_of_logons as number_of_logons
-                      FROM " . TABLE_CUSTOMERS_INFO . "
-                      WHERE customers_info_id = " . (int)$customer['customers_id'];
-                    $info = $db->Execute($sql);
-
-                    // if no record found, create one to keep database in sync
-                    if ($info->RecordCount() == 0) {
-                      $insert_sql = "INSERT INTO " . TABLE_CUSTOMERS_INFO . " (customers_info_id)
-                               VALUES ('" . (int)$customer['customers_id'] . "')";
-                      $db->Execute($insert_sql);
-                      $info = $db->Execute($sql);
-                    }
+                  foreach ($customers as $result) {
+                      $cust = new Customer($result['customers_id']);
+                      $customer = $cust->getData();
 
                     if ((!isset($_GET['cID']) || (isset($_GET['cID']) && ($_GET['cID'] == $customer['customers_id']))) && !isset($cInfo)) {
-                      $country = $db->Execute("SELECT countries_name
-                                         FROM " . TABLE_COUNTRIES . "
-                                         WHERE countries_id = " . (int)$customer['entry_country_id']);
-
-                      $reviews = $db->Execute("SELECT COUNT(*) AS number_of_reviews
-                                         FROM " . TABLE_REVIEWS . "
-                                         WHERE customers_id = " . (int)$customer['customers_id']);
-
-                      $customer_info = array_merge($country->fields, $info->fields, $reviews->fields);
-
-                      $cInfo_array = array_merge($customer, $customer_info);
-                      $cInfo = new objectInfo($cInfo_array);
-                    }
-
-                    $group_query = $db->Execute("SELECT group_name, group_percentage
-                                           FROM " . TABLE_GROUP_PRICING . "
-                                           WHERE group_id = " . (int)$customer['customers_group_pricing']);
-
-                    if ($group_query->RecordCount() < 1) {
-                      $group_name_entry = TEXT_NONE;
-                    } else {
-                      $group_name_entry = $group_query->fields['group_name'];
+                      $cInfo = new objectInfo($customer);
                     }
 
                     if (isset($cInfo) && is_object($cInfo) && ($customer['customers_id'] == $cInfo->customers_id)) {
@@ -1270,13 +1128,12 @@ if (zen_not_null($action)) {
                       echo '          <tr class="dataTableRow" onclick="document.location.href=\'' . zen_href_link(FILENAME_CUSTOMERS, zen_get_all_get_params(array('cID', 'action')) . 'cID=' . $customer['customers_id'], 'NONSSL') . '\'" role="button">' . "\n";
                     }
 
-                    $zc_address_book_count_list = zen_get_customers_address_book($customer['customers_id']);
-                    $zc_address_book_count = $zc_address_book_count_list->RecordCount();
+                      $zc_address_book_count = count(zen_get_customer_address_book_entries($customer['customers_id']));
                     ?>
                 <td class="dataTableContent text-right"><?php echo $customer['customers_id'] . ($zc_address_book_count == 1 ? TEXT_INFO_ADDRESS_BOOK_COUNT_SINGLE : sprintf(TEXT_INFO_ADDRESS_BOOK_COUNT, zen_href_link(FILENAME_CUSTOMERS, 'action=list_addresses' . '&cID=' . $customer['customers_id'] . ($_GET['page'] > 0 ? '&page=' . $_GET['page'] : '')), $zc_address_book_count)); ?></td>
                 <td class="dataTableContent"><?php echo $customer['customers_lastname']; ?></td>
                 <td class="dataTableContent"><?php echo $customer['customers_firstname']; ?></td>
-                <td class="dataTableContent"><?php echo $customer['entry_company']; ?></td>
+                <td class="dataTableContent"><?php echo $customer['company']; ?></td>
                 <?php
                 // -----
                 // If a plugin has additional columns to add to the display, it attaches to both this "listing element" and (see above)
@@ -1312,11 +1169,11 @@ if (zen_not_null($action)) {
                   }
                 }
                 ?>
-                <td class="dataTableContent"><?php echo zen_date_short($info->fields['date_account_created']); ?></td>
-                <td class="dataTableContent"><?php echo zen_date_short($customer['customers_info_date_of_last_logon']); ?></td>
-                <td class="dataTableContent"><?php echo $group_name_entry; ?></td>
+                <td class="dataTableContent"><?php echo zen_date_short($customer['date_account_created']); ?></td>
+                <td class="dataTableContent"><?php echo zen_date_short($customer['date_of_last_login']); ?></td>
+                <td class="dataTableContent"><?php echo $customer['pricing_group_name']; ?></td>
                 <?php if (defined('MODULE_ORDER_TOTAL_GV_STATUS') && MODULE_ORDER_TOTAL_GV_STATUS == 'true') { ?>
-                  <td class="dataTableContent text-right"><?php echo $currencies->format($customer['amount']); ?></td>
+                  <td class="dataTableContent text-right"><?php echo $currencies->format($customer['gv_balance']); ?></td>
                 <?php } ?>
                 <td class="dataTableContent text-center">
                       <?php echo zen_draw_form('setstatus_' . (int)$customer['customers_id'], FILENAME_CUSTOMERS, 'action=status&cID=' . $customer['customers_id'] . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '') . (isset($_GET['search']) ? '&search=' . $_GET['search'] : ''));
@@ -1371,19 +1228,12 @@ if (zen_not_null($action)) {
                     $_GET['search'] = zen_output_string_protected($_GET['search']);
                   }
                   if (isset($cInfo) && is_object($cInfo)) {
-                    $customers_orders = $db->Execute("SELECT o.orders_id, o.date_purchased, o.order_total, o.currency, o.currency_value,
-                                                         cgc.amount
-                                                  FROM " . TABLE_ORDERS . " o
-                                                  LEFT JOIN " . TABLE_COUPON_GV_CUSTOMER . " cgc ON o.customers_id = cgc.customer_id
-                                                  WHERE customers_id = " . (int)$cInfo->customers_id . "
-                                                  ORDER BY date_purchased desc");
-
                     $heading[] = array('text' => '<h4>' . TABLE_HEADING_ID . $cInfo->customers_id . ' ' . $cInfo->customers_firstname . ' ' . $cInfo->customers_lastname . '</h4>' . '<br>' . $cInfo->customers_email_address);
 
                     $contents[] = array('align' => 'text-center', 'text' => '<a href="' . zen_href_link(FILENAME_CUSTOMERS, zen_get_all_get_params(array('cID', 'action', 'search')) . 'cID=' . $cInfo->customers_id . '&action=edit', 'NONSSL') . '" class="btn btn-primary" role="button">' . IMAGE_EDIT . '</a> <a href="' . zen_href_link(FILENAME_CUSTOMERS, zen_get_all_get_params(array('cID', 'action', 'search')) . 'cID=' . $cInfo->customers_id . '&action=confirm', 'NONSSL') . '" class="btn btn-warning" role="button">' . IMAGE_DELETE . '</a>');
-                    $contents[] = array('align' => 'text-center', 'text' => ($customers_orders->RecordCount() != 0 ? '<a href="' . zen_href_link(FILENAME_ORDERS, 'cID=' . $cInfo->customers_id, 'NONSSL') . '" class="btn btn-default" role="button">' . IMAGE_ORDERS . '</a>' : '') . ' <a href="' . zen_href_link(FILENAME_MAIL, 'origin=customers.php&customer=' . $cInfo->customers_email_address . '&cID=' . $cInfo->customers_id, 'NONSSL') . '" class="btn btn-default" role="button">' . IMAGE_EMAIL . '</a>');
+                    $contents[] = array('align' => 'text-center', 'text' => ($customer['number_of_orders'] > 0 ? '<a href="' . zen_href_link(FILENAME_ORDERS, 'cID=' . $cInfo->customers_id, 'NONSSL') . '" class="btn btn-default" role="button">' . IMAGE_ORDERS . '</a>' : '') . ' <a href="' . zen_href_link(FILENAME_MAIL, 'origin=customers.php&customer=' . $cInfo->customers_email_address . '&cID=' . $cInfo->customers_id, 'NONSSL') . '" class="btn btn-default" role="button">' . IMAGE_EMAIL . '</a>');
                     $contents[] = array('align' => 'text-center', 'text' => '<a href="' . zen_href_link(FILENAME_CUSTOMERS, zen_get_all_get_params(array('cID', 'action', 'search')) . 'cID=' . $cInfo->customers_id . '&action=pwreset') . '" class="btn btn-warning" role="button">' . IMAGE_RESET_PWD . '</a>');
-                    
+
                     // -----
                     // Give an observer the opportunity to provide an override to the "Place Order" button.
                     //
@@ -1391,8 +1241,7 @@ if (zen_not_null($action)) {
                     $zco_notifier->notify('NOTIFY_ADMIN_CUSTOMERS_PLACE_ORDER_BUTTON', $cInfo, $contents, $place_order_override);
                     if ($place_order_override === false && zen_admin_authorized_to_place_order()) {
                         $login_form_start = '<form rel="noopener" target="_blank" name="login" action="' .
-                            zen_catalog_href_link
-                            (FILENAME_LOGIN, '', 'SSL') . '" method="post">';
+                            zen_catalog_href_link(FILENAME_LOGIN, '', 'SSL') . '" method="post">';
                         $hiddenFields = zen_draw_hidden_field('email_address', $cInfo->customers_email_address);
                         if  (defined('EMP_LOGIN_AUTOMATIC') && EMP_LOGIN_AUTOMATIC == 'true' && ENABLE_SSL_CATALOG == 'true') {
                             $secret = zen_update_customers_secret($cInfo->customers_id);
@@ -1412,35 +1261,23 @@ if (zen_not_null($action)) {
                             'text' => $login_form_start . $hiddenFields . '<input class="btn btn-primary" type="submit" value="' . EMP_BUTTON_PLACEORDER . '" title="' . EMP_BUTTON_PLACEORDER_ALT . '"></form>'
                         );
                     }
-                    
+
                     $zco_notifier->notify('NOTIFY_ADMIN_CUSTOMERS_MENU_BUTTONS', $cInfo, $contents);
 
                     $contents[] = array('text' => '<br>' . TEXT_DATE_ACCOUNT_CREATED . ' ' . zen_date_short($cInfo->date_account_created));
                     $contents[] = array('text' => '<br>' . TEXT_DATE_ACCOUNT_LAST_MODIFIED . ' ' . zen_date_short($cInfo->date_account_last_modified));
-                    $contents[] = array('text' => '<br>' . TEXT_INFO_DATE_LAST_LOGON . ' ' . zen_date_short($cInfo->date_last_logon));
-                    $contents[] = array('text' => '<br>' . TEXT_INFO_NUMBER_OF_LOGONS . ' ' . $cInfo->number_of_logons);
+                    $contents[] = array('text' => '<br>' . TEXT_INFO_DATE_LAST_LOGON . ' ' . zen_date_short($cInfo->date_of_last_login));
+                    $contents[] = array('text' => '<br>' . TEXT_INFO_NUMBER_OF_LOGONS . ' ' . $cInfo->number_of_logins);
 
-                    $customer_gv_balance = zen_user_has_gv_balance($cInfo->customers_id);
-                    $contents[] = array('text' => '<br>' . TEXT_INFO_GV_AMOUNT . ' ' . $currencies->format($customer_gv_balance));
+                    $contents[] = array('text' => '<br>' . TEXT_INFO_GV_AMOUNT . ' ' . $currencies->format($customer['gv_balance']));
 
-                    $contents[] = array('text' => '<br>' . TEXT_INFO_NUMBER_OF_ORDERS . ' ' . $customers_orders->RecordCount());
+                    $contents[] = array('text' => '<br>' . TEXT_INFO_NUMBER_OF_ORDERS . ' ' . $customer['number_of_orders']);
 
-                    if ($customers_orders->RecordCount() != 0) {
-                        $lifetime_value = 0;
-                        $last_order = array(
-                            'date_purchased' => $customers_orders->fields['date_purchased'],
-                            'order_total' => $customers_orders->fields['order_total'], 
-                            'currency' => $customers_orders->fields['currency'], 
-                            'currency_value' => $customers_orders->fields['currency_value'],
-                          );
-                      foreach ($customers_orders as $result) {
-                          $lifetime_value += ($result['order_total'] * $result['currency_value']);
-                      }
-                      $contents[] = array('text' => TEXT_INFO_LIFETIME_VALUE. ' ' . $currencies->format($lifetime_value));
-                      $contents[] = array('text' => TEXT_INFO_LAST_ORDER . ' ' . zen_date_short($last_order['date_purchased']) . '<br>' . TEXT_INFO_ORDERS_TOTAL . ' ' . $currencies->format($last_order['order_total'], true, $last_order['currency'], $last_order['currency_value']));
+                    if (!empty($customer['lifetime_value'])) {
+                      $contents[] = array('text' => TEXT_INFO_LIFETIME_VALUE. ' ' . $currencies->format($customer['lifetime_value']));
+                      $contents[] = array('text' => TEXT_INFO_LAST_ORDER . ' ' . zen_date_short($customer['last_order']['date_purchased']) . '<br>' . TEXT_INFO_ORDERS_TOTAL . ' ' . $currencies->format($customer['last_order']['order_total'], true, $customer['last_order']['currency'], $customer['last_order']['currency_value']));
                     }
-
-                    $contents[] = array('text' => '<br>' . TEXT_INFO_COUNTRY . ' ' . $cInfo->countries_name);
+                    $contents[] = array('text' => '<br>' . TEXT_INFO_COUNTRY . ' ' . $cInfo->country_iso);
                     $contents[] = array('text' => '<br>' . TEXT_INFO_NUMBER_OF_REVIEWS . ' ' . $cInfo->number_of_reviews);
                     $contents[] = array('text' => '<br>' . CUSTOMERS_REFERRAL . ' ' . $cInfo->customers_referral);
                   }
