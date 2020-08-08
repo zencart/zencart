@@ -60,15 +60,6 @@
 
 
 ////
-// default filler is a 0 or pass filler to be used
-  function zen_row_number_format($number, $filler='0') {
-    if ( ($number < 10) && (substr($number, 0, 1) != '0') ) $number = $filler . $number;
-
-    return $number;
-  }
-
-
-////
 // Parse search string into individual objects
   function zen_parse_search_string($search_str = '', &$objects = array()) {
     $search_str = trim(strtolower($search_str));
