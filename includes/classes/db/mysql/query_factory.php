@@ -213,7 +213,7 @@ class queryFactory extends base
         echo '<div class="systemError">';
         if (defined('STRICT_ERROR_REPORTING') && STRICT_ERROR_REPORTING == true) {
             echo $this->error_number . ' ' . $this->error_text;
-            echo '<br />in:<br />[' . (strstr($this->zf_sql, 'db_cache') ? 'db_cache table' : $this->zf_sql) . ']<br />';
+            echo '<br>in:<br>[' . (strstr($this->zf_sql, 'db_cache') ? 'db_cache table' : $this->zf_sql) . ']<br>';
         } else {
             echo 'WARNING: An Error occurred, please refresh the page and try again.';
         }
