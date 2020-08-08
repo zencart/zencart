@@ -43,33 +43,6 @@ class queryFactory extends base
     }
 
     /**
-     * @param mysqli $link
-     * @param string $query
-     * @param false $remove_from_queryCache
-     * @return bool|mixed|mysqli_result
-     */
-    protected function query($link, string $query, bool $remove_from_queryCache = false)
-    {
-        global $queryLog, $queryCache;
-
-        if ($remove_from_queryCache && isset($queryCache)) {
-            $queryCache->reset($query);
-        }
-
-        if (isset($queryCache) && $queryCache->inCache($query)) {
-            $cached_value = $queryCache->getFromCache($query);
-            $this->count_queries--;
-            return ($cached_value);
-        }
-
-        if (isset($queryLog)) $queryLog->start($query);
-        $result = mysqli_query($link, $query);
-        if (isset($queryLog)) $queryLog->stop($query, $result);
-        if (isset($queryCache)) $queryCache->cache($query, $result);
-        return $result;
-    }
-
-    /**
      * @param string $db_host database server hostname
      * @param string $db_user db username
      * @param string $db_password db password
@@ -372,6 +345,33 @@ class queryFactory extends base
     function ExecuteRandomMultiNoCache($sqlQuery)
     {
         return $this->ExecuteRandomMulti($sqlQuery, 0, false, 0, true);
+    }
+
+    /**
+     * @param mysqli $link
+     * @param string $query
+     * @param false $remove_from_queryCache
+     * @return bool|mixed|mysqli_result
+     */
+    protected function query($link, string $query, bool $remove_from_queryCache = false)
+    {
+        global $queryLog, $queryCache;
+
+        if ($remove_from_queryCache && isset($queryCache)) {
+            $queryCache->reset($query);
+        }
+
+        if (isset($queryCache) && $queryCache->inCache($query)) {
+            $cached_value = $queryCache->getFromCache($query);
+            $this->count_queries--;
+            return ($cached_value);
+        }
+
+        if (isset($queryLog)) $queryLog->start($query);
+        $result = mysqli_query($link, $query);
+        if (isset($queryLog)) $queryLog->stop($query, $result);
+        if (isset($queryCache)) $queryCache->cache($query, $result);
+        return $result;
     }
 
     function insert_ID()
