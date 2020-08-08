@@ -357,9 +357,11 @@ class queryFactory extends base
 
     function ExecuteRandomMulti($sqlQuery, $limit = 0, $unusedCacheFlag = null, $unusedCacheTtl = null, $remove_from_queryCache = false)
     {
-        $this->zf_sql = $sqlQuery;
         $time_start = explode(' ', microtime());
+        $this->zf_sql = $sqlQuery;
         $obj = new queryFactoryResult($this->link);
+        $obj->sql_query = $sqlQuery;
+        $obj->limit = $limit;
         if (!$this->db_connected) {
             if (!$this->connect($this->host, $this->user, $this->password, $this->database, $this->pConnect, $this->real))
                 $this->set_error('0', DB_ERROR_NOT_CONNECTED, $this->dieOnErrors);
@@ -369,7 +371,6 @@ class queryFactory extends base
             $this->set_error(mysqli_errno($this->link), mysqli_error($this->link), $this->dieOnErrors);
         } else {
             $obj->resource = $zp_db_resource;
-            $obj->limit = $limit;
 
             $zp_rows = $obj->RecordCount();
             if ($zp_rows > 0 && $limit > 0) {
