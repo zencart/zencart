@@ -364,7 +364,7 @@ class queryFactory extends base
             if (!$this->connect($this->host, $this->user, $this->password, $this->database, $this->pConnect, $this->real))
                 $this->set_error('0', DB_ERROR_NOT_CONNECTED, $this->dieOnErrors);
         }
-        $zp_db_resource = @$this->query($this->link, $sqlQuery, $remove_from_queryCache);
+        $zp_db_resource = $this->query($this->link, $sqlQuery, $remove_from_queryCache);
         if (FALSE === $zp_db_resource) {
             $this->set_error(mysqli_errno($this->link), mysqli_error($this->link), $this->dieOnErrors);
         } else {
@@ -381,7 +381,7 @@ class queryFactory extends base
                 $zp_ii = 0;
                 while ($zp_ii < $limit) {
                     $obj->result[$zp_ii] = [];
-                    $obj->result[$zp_ii] = @mysqli_fetch_assoc($zp_db_resource);
+                    $obj->result[$zp_ii] = mysqli_fetch_assoc($zp_db_resource);
                     if (!$obj->result[$zp_ii]) {
                         unset($obj->result[$zp_ii]);
                         $obj->limit = $zp_ii;
