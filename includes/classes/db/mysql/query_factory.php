@@ -66,7 +66,7 @@ class queryFactory extends base
         $result = mysqli_query($link, $query);
         if (isset($queryLog)) $queryLog->stop($query, $result);
         if (isset($queryCache)) $queryCache->cache($query, $result);
-        return ($result);
+        return $result;
     }
 
     /**
@@ -87,14 +87,18 @@ class queryFactory extends base
         $this->password = $db_password;
         $this->pConnect = $pconnect;
         $this->dieOnErrors = $dieOnErrors;
+
         if (defined('DB_CHARSET')) $dbCharset = DB_CHARSET;
         if (isset($options['dbCharset'])) $dbCharset = $options['dbCharset'];
+
         if (!function_exists('mysqli_connect')) die ('Call to undefined function: mysqli_connect().  Please install the MySQL Connector for PHP');
+
         $connectionRetry = 10;
         while (!isset($this->link) || ($this->link == FALSE && $connectionRetry != 0)) {
             $this->link = mysqli_connect($db_host, $db_user, $db_password, $db_name, (defined('DB_PORT') ? DB_PORT : NULL), (defined('DB_SOCKET') ? DB_SOCKET : NULL));
             $connectionRetry--;
         }
+
         if ($this->link) {
             if (mysqli_select_db($this->link, $db_name)) {
                 if (isset($dbCharset)) {
@@ -119,14 +123,14 @@ class queryFactory extends base
 
                 return true;
 
-            } else {
-                $this->set_error(mysqli_errno($this->link), mysqli_error($this->link), $dieOnErrors);
-                return false;
             }
-        } else {
-            $this->set_error(mysqli_connect_errno(), mysqli_connect_error(), $dieOnErrors);
+
+            $this->set_error(mysqli_errno($this->link), mysqli_error($this->link), $dieOnErrors);
             return false;
         }
+
+        $this->set_error(mysqli_connect_errno(), mysqli_connect_error(), $dieOnErrors);
+        return false;
     }
 
     /**
@@ -265,14 +269,19 @@ class queryFactory extends base
         // eof: collect products_id queries
 
         global $zc_cache;
+
         $obj = new queryFactoryResult($this->link);
+
         if ($limit) {
-            $sqlQuery = $sqlQuery . ' LIMIT ' . $limit;
+            $sqlQuery .= ' LIMIT ' . $limit;
             $obj->limit = $limit;
         }
+
         $this->zf_sql = $sqlQuery;
         $obj->sql_query = $sqlQuery;
-        if ($enableCaching and $zc_cache->sql_cache_exists($sqlQuery, $cacheSeconds)) {
+
+        // Use cached result
+        if ($enableCaching && $zc_cache->sql_cache_exists($sqlQuery, $cacheSeconds)) {
             $obj->is_cached = true;
             $zp_result_array = $zc_cache->sql_cache_read($sqlQuery);
             $obj->result = $zp_result_array;
@@ -280,8 +289,11 @@ class queryFactory extends base
                 $obj->EOF = false;
                 $obj->fields = array_replace($obj->fields, $zp_result_array[0]);
             }
+            return $obj;
+        }
 
-        } elseif ($enableCaching) {
+        // do query and cache the result before returning it
+        if ($enableCaching) {
             $zc_cache->sql_cache_expire_now($sqlQuery);
             $time_start = explode(' ', microtime());
             if (!$this->db_connected) {
@@ -299,7 +311,7 @@ class queryFactory extends base
                     while ($zp_ii < $zp_rows) {
                         $obj->result[$zp_ii] = [];
                         $obj->result[$zp_ii] = mysqli_fetch_assoc($zp_db_resource);
-                        if (!($obj->result[$zp_ii])) {
+                        if (!$obj->result[$zp_ii]) {
                             unset($obj->result[$zp_ii]);
                             $obj->limit = $zp_ii;
                             break;
@@ -318,40 +330,43 @@ class queryFactory extends base
             $this->total_query_time += $query_time;
             $this->count_queries++;
 
-        } else {
-            $time_start = explode(' ', microtime());
-            if (!$this->db_connected) {
-                if (!$this->connect($this->host, $this->user, $this->password, $this->database, $this->pConnect, $this->real))
-                    $this->set_error('0', DB_ERROR_NOT_CONNECTED, $this->dieOnErrors);
-            }
-            $zp_db_resource = $this->query($this->link, $sqlQuery, $remove_from_queryCache);
-            if (!$zp_db_resource) {
-                if (mysqli_errno($this->link) == 2006) {
-                    $this->link = FALSE;
-                    $this->connect($this->host, $this->user, $this->password, $this->database, $this->pConnect, $this->real);
-                    $zp_db_resource = mysqli_query($this->link, $sqlQuery);
-                }
-            }
-            if (FALSE === $zp_db_resource) {
-                $this->set_error(mysqli_errno($this->link), mysqli_error($this->link), $this->dieOnErrors);
-            } else {
-                $obj->resource = $zp_db_resource;
-                if ($obj->RecordCount() > 0) {
-                    $zp_result_array = mysqli_fetch_assoc($zp_db_resource);
-                    if ($zp_result_array) {
-                        $obj->fields = array_replace($obj->fields, $zp_result_array);
-                        $obj->EOF = false;
-                    }
-                }
-
-                $time_end = explode(' ', microtime());
-                $query_time = $time_end[1] + $time_end[0] - $time_start[1] - $time_start[0];
-                $this->total_query_time += $query_time;
-                $this->count_queries++;
-            }
+            return $obj;
         }
 
-        return ($obj);
+        // do uncached query
+
+        $time_start = explode(' ', microtime());
+        if (!$this->db_connected) {
+            if (!$this->connect($this->host, $this->user, $this->password, $this->database, $this->pConnect, $this->real))
+                $this->set_error('0', DB_ERROR_NOT_CONNECTED, $this->dieOnErrors);
+        }
+        $zp_db_resource = $this->query($this->link, $sqlQuery, $remove_from_queryCache);
+        if (!$zp_db_resource) {
+            if (mysqli_errno($this->link) == 2006) {
+                $this->link = FALSE;
+                $this->connect($this->host, $this->user, $this->password, $this->database, $this->pConnect, $this->real);
+                $zp_db_resource = mysqli_query($this->link, $sqlQuery);
+            }
+        }
+        if (FALSE === $zp_db_resource) {
+            $this->set_error(mysqli_errno($this->link), mysqli_error($this->link), $this->dieOnErrors);
+        } else {
+            $obj->resource = $zp_db_resource;
+            if ($obj->RecordCount() > 0) {
+                $zp_result_array = mysqli_fetch_assoc($zp_db_resource);
+                if ($zp_result_array) {
+                    $obj->fields = array_replace($obj->fields, $zp_result_array);
+                    $obj->EOF = false;
+                }
+            }
+
+            $time_end = explode(' ', microtime());
+            $query_time = $time_end[1] + $time_end[0] - $time_start[1] - $time_start[0];
+            $this->total_query_time += $query_time;
+            $this->count_queries++;
+        }
+
+        return $obj;
     }
 
     /**
@@ -414,7 +429,7 @@ class queryFactory extends base
         $query_time = $time_end[1] + $time_end[0] - $time_start[1] - $time_start[0];
         $this->total_query_time += $query_time;
         $this->count_queries++;
-        return ($obj);
+        return $obj;
     }
     /**
      * Use this ExecuteRandomMulti method to ensure that any SELECT result is pulled from the database, bypassing the cache.
