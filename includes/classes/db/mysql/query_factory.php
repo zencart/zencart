@@ -243,30 +243,8 @@ class queryFactory extends base
      */
     public function Execute(string $sqlQuery, string $limit = null, bool $enableCaching = false, int $cacheSeconds = 0, bool $remove_from_queryCache = false): \queryFactoryResult
     {
-        // bof: collect database queries
-        if (defined('STORE_DB_TRANSACTIONS') && STORE_DB_TRANSACTIONS != 'false') {
-            global $PHP_SELF, $box_id, $current_page_base;
-            if (strtoupper(substr($sqlQuery, 0, 6)) == 'SELECT' /*&& strstr($sqlQuery,'products_id')*/) {
-                $f = @fopen(DIR_FS_LOGS . '/query_selects_' . $current_page_base . '_' . time() . '.txt', 'a');
-                if ($f) {
-                    $backtrace = '';
-
-                    if (STORE_DB_TRANSACTIONS == 'backtrace') {
-                        ob_start();
-                        debug_print_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
-                        $backtrace = ob_get_contents();
-                        ob_end_clean();
-                        $backtrace = preg_replace('/^#0\s+' . __FUNCTION__ . '[^\n]*\n/', '', $backtrace, 1);
-                        $backtrace = 'query trace: ' . "\n" . $backtrace . "\n";
-                    }
-
-                    fwrite($f, "\n\n" . 'I AM HERE ' . $current_page_base . /*zen_get_all_get_params() .*/ "\n" . $backtrace . 'sidebox: ' . $box_id . "\n\n" . "Explain \n" . $sqlQuery . ";\n\n");
-                    fclose($f);
-                }
-                unset($f);
-            }
-        }
-        // eof: collect products_id queries
+        // do SELECT logging if enabled
+        $this->logQuery($sqlQuery);
 
         global $zc_cache;
 
@@ -619,6 +597,43 @@ class queryFactory extends base
     function prepareInput($string)
     {
         return $this->prepare_input($string);
+    }
+
+    /**
+     * If logging is enabled, log SELECT queries for later analysis
+     * @param $sqlQuery
+     */
+    protected function logQuery($sqlQuery)
+    {
+        if (!defined('STORE_DB_TRANSACTIONS') || STORE_DB_TRANSACTIONS != 'true') {
+            return;
+        }
+        global $PHP_SELF, $box_id, $current_page_base;
+
+        if (strtoupper(substr($sqlQuery, 0, 6)) != 'SELECT' /*&& strstr($sqlQuery,'products_id')*/) {
+            return;
+        }
+// optional isolation
+//        if (strpos($sqlQuery, 'products_id') === false) {
+//            return;
+//        }
+
+        $f = @fopen(DIR_FS_LOGS . '/query_selects_' . $current_page_base . '_' . time() . '.txt', 'ab');
+        if ($f) {
+            $backtrace = '';
+
+            if (STORE_DB_TRANSACTIONS == 'backtrace') {
+                ob_start();
+                debug_print_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
+                $backtrace = ob_get_clean();
+                $backtrace = preg_replace('/^#0\s+' . __FUNCTION__ . '[^\n]*\n/', '', $backtrace, 1);
+                $backtrace = 'query trace: ' . "\n" . $backtrace . "\n";
+            }
+
+            fwrite($f, "\n\n" . 'I AM HERE ' . $current_page_base . /*zen_get_all_get_params() .*/ "\n" . $backtrace . 'sidebox: ' . $box_id . "\n\n" . "Explain \n" . $sqlQuery . ";\n\n");
+            fclose($f);
+        }
+        unset($f);
     }
 }
 
