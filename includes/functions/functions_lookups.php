@@ -759,27 +759,29 @@ function zen_get_configuration_key_value($lookup)
       }
     }
 
-/*
+/**
  *  Look up whether a product is always free shipping
  */
-  function zen_get_product_is_always_free_shipping($lookup) {
+function zen_get_product_is_always_free_shipping($lookup): bool
+{
     global $db;
 
     $sql = "select p.product_is_always_free_shipping from " . TABLE_PRODUCTS . " p  where p.products_id='" . (int)$lookup . "'";
     $look_up = $db->Execute($sql);
 
     if ($look_up->fields['product_is_always_free_shipping'] == '1') {
-      return true;
-    } else {
-      return false;
+        return true;
     }
-  }
 
-/*
+    return false;
+}
+
+/**
  *  stop regular behavior based on customer/store settings
  *  Used to disable various activities if store is in an operating mode that should prevent those activities
  */
-  function zen_run_normal() {
+  function zen_run_normal(): bool
+  {
     $zc_run = false;
     switch (true) {
       case (zen_is_whitelisted_admin_ip()):
@@ -823,16 +825,23 @@ function zen_get_configuration_key_value($lookup)
     return $zc_run;
   }
 
-/*
+/**
  *  Look up whether to show prices, based on customer-authorization levels
  */
-function zen_check_show_prices() 
+function zen_check_show_prices(): bool
 {
-    if (!(CUSTOMERS_APPROVAL == '2' and !zen_is_logged_in()) and !((CUSTOMERS_APPROVAL_AUTHORIZATION > 0 and CUSTOMERS_APPROVAL_AUTHORIZATION < 3) and ($_SESSION['customers_authorization'] > '0' or !zen_is_logged_in())) and STORE_STATUS != 1) {
+    if (
+        !(CUSTOMERS_APPROVAL == '2' && !zen_is_logged_in())
+        && !(
+            (CUSTOMERS_APPROVAL_AUTHORIZATION > 0 && CUSTOMERS_APPROVAL_AUTHORIZATION < 3)
+            && ($_SESSION['customers_authorization'] > '0' || !zen_is_logged_in())
+            )
+        && STORE_STATUS != '1'
+    ) {
       return true;
-    } else {
-      return false;
     }
+
+    return false;
 }
 
 /*
@@ -875,7 +884,7 @@ function zen_check_show_prices()
     return $return_field;
   }
 
-/*
+/**
  * Find index_filters directory
  * suitable for including template-specific immediate /modules files, such as:
  * new_products, products_new_listing, featured_products, featured_products_listing, product_listing, specials_index, upcoming,
