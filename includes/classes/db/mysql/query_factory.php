@@ -866,11 +866,11 @@ class queryFactoryResult implements Countable, Iterator
      */
     public function RecordCount()
     {
-        if ($this->is_cached) {
+        if ($this->is_cached && is_countable($this->result)) {
             return count($this->result);
         }
 
-        if ($this->resource !== null && $this->resource !== true) {
+        if (!empty($this->resource)) {
             return @mysqli_num_rows($this->resource);
         }
         return 0;
