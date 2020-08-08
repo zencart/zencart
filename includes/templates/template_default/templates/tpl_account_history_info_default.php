@@ -34,16 +34,16 @@
         <th scope="col" id="myAccountTotal"><?php echo HEADING_TOTAL; ?></th>
     </tr>
 <?php
-  for ($i=0, $n=sizeof($order->products); $i<$n; $i++) {
+  foreach($order->products as $op) {
   ?>
     <tr>
-        <td class="accountQuantityDisplay"><?php echo  $order->products[$i]['qty'] . QUANTITY_SUFFIX; ?></td>
-        <td class="accountProductDisplay"><?php echo  $order->products[$i]['name'];
+        <td class="accountQuantityDisplay"><?php echo  $op['qty'] . QUANTITY_SUFFIX; ?></td>
+        <td class="accountProductDisplay"><?php echo  $op['name'];
 
-    if ( (isset($order->products[$i]['attributes'])) && (sizeof($order->products[$i]['attributes']) > 0) ) {
+    if ( (isset($op['attributes'])) && (!empty($op['attributes'])) ) {
       echo '<ul class="orderAttribsList">';
-      for ($j=0, $n2=sizeof($order->products[$i]['attributes']); $j<$n2; $j++) {
-        echo '<li>' . $order->products[$i]['attributes'][$j]['option'] . TEXT_OPTION_DIVIDER . nl2br(zen_output_string_protected($order->products[$i]['attributes'][$j]['value'])) . '</li>';
+      foreach($op['attributes'] as $attr) {
+        echo '<li>' . $attr['option'] . TEXT_OPTION_DIVIDER . nl2br(zen_output_string_protected($attr['value'])) . '</li>';
       }
         echo '</ul>';
     }
@@ -52,16 +52,16 @@
 <?php
     if (isset($order->info['tax_groups']) && count($order->info['tax_groups']) > 1) {
 ?>
-        <td class="accountTaxDisplay"><?php echo zen_display_tax_value($order->products[$i]['tax']) . '%' ?></td>
+        <td class="accountTaxDisplay"><?php echo zen_display_tax_value($op['tax']) . '%' ?></td>
 <?php
     }
 ?>
         <td class="accountTotalDisplay">
         <?php
-         $ppe = zen_round(zen_add_tax($order->products[$i]['final_price'], $order->products[$i]['tax']), $currencies->get_decimal_places($order->info['currency']));
-         $ppt = $ppe * $order->products[$i]['qty'];
-        //        echo $currencies->format(zen_add_tax($order->products[$i]['final_price'], $order->products[$i]['tax']) * $order->products[$i]['qty'], true, $order->info['currency'], $order->info['currency_value']) . ($order->products[$i]['onetime_charges'] != 0 ? '<br />' . $currencies->format(zen_add_tax($order->products[$i]['onetime_charges'], $order->products[$i]['tax']), true, $order->info['currency'], $order->info['currency_value']) : '')
-        echo $currencies->format($ppt, true, $order->info['currency'], $order->info['currency_value']) . ($order->products[$i]['onetime_charges'] != 0 ? '<br />' . $currencies->format(zen_add_tax($order->products[$i]['onetime_charges'], $order->products[$i]['tax']), true, $order->info['currency'], $order->info['currency_value']) : '');
+         $ppe = zen_round(zen_add_tax($op['final_price'], $op['tax']), $currencies->get_decimal_places($order->info['currency']));
+         $ppt = $ppe * $op['qty'];
+        //        echo $currencies->format(zen_add_tax($op['final_price'], $op['tax']) * $op['qty'], true, $order->info['currency'], $order->info['currency_value']) . ($op['onetime_charges'] != 0 ? '<br />' . $currencies->format(zen_add_tax($op['onetime_charges'], $op['tax']), true, $order->info['currency'], $order->info['currency_value']) : '')
+        echo $currencies->format($ppt, true, $order->info['currency'], $order->info['currency_value']) . ($op['onetime_charges'] != 0 ? '<br />' . $currencies->format(zen_add_tax($op['onetime_charges'], $op['tax']), true, $order->info['currency'], $order->info['currency_value']) : '');
         ?></td>
     </tr>
 <?php
@@ -71,10 +71,10 @@
 <hr />
 <div id="orderTotals">
 <?php
-  for ($i=0, $n=sizeof($order->totals); $i<$n; $i++) {
+  foreach($order->totals as $ot) {
 ?>
-     <div class="amount larger forward"><?php echo $order->totals[$i]['text'] ?></div>
-     <div class="lineTitle larger forward"><?php echo $order->totals[$i]['title'] ?></div>
+     <div class="amount larger forward"><?php echo $ot['text'] ?></div>
+     <div class="lineTitle larger forward"><?php echo $ot['title'] ?></div>
 <br class="clearBoth" />
 <?php
   }
