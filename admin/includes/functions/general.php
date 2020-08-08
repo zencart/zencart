@@ -1142,26 +1142,6 @@ while (!$chk_sale_categories_all->EOF) {
     }
   }
 
-  function zen_supported_image_extension() {
-    if (function_exists('imagetypes')) {
-      if (imagetypes() & IMG_PNG) {
-        return 'png';
-      } elseif (imagetypes() & IMG_JPG) {
-        return 'jpg';
-      } elseif (imagetypes() & IMG_GIF) {
-        return 'gif';
-      }
-    } elseif (function_exists('imagecreatefrompng') && function_exists('imagepng')) {
-      return 'png';
-    } elseif (function_exists('imagecreatefromjpeg') && function_exists('imagejpeg')) {
-      return 'jpg';
-    } elseif (function_exists('imagecreatefromgif') && function_exists('imagegif')) {
-      return 'gif';
-    }
-
-    return false;
-  }
-
 
 /**
  * Add tax to a products price
