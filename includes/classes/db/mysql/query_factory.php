@@ -292,7 +292,15 @@ class queryFactory extends base
         return $this->Execute($sqlQuery, false, false, 0, true);
     }
 
-    function ExecuteRandomMulti($sqlQuery, $limit = 0, $unusedCacheFlag = null, $unusedCacheTtl = null, $removeFromQueryCache = false)
+    /**
+     * Execute a SELECT query and return the results in a random order
+     * The results should be iterated with MoveNextRandom()
+     *
+     * @param string $sqlQuery
+     * @param int $limit
+     * @return queryFactoryResult
+     */
+    public function ExecuteRandomMulti(string $sqlQuery, $limit = 0): \queryFactoryResult
     {
         $time_start = explode(' ', microtime());
         $this->zf_sql = $sqlQuery;
@@ -300,7 +308,7 @@ class queryFactory extends base
         $obj->sql_query = $sqlQuery;
         $obj->limit = $limit;
 
-        $zp_db_resource = $this->runQuery($sqlQuery, $removeFromQueryCache);
+        $zp_db_resource = $this->runQuery($sqlQuery, true);
 
         if (false === $zp_db_resource) {
             $this->set_error(mysqli_errno($this->link), mysqli_error($this->link), $this->dieOnErrors);
@@ -350,11 +358,13 @@ class queryFactory extends base
     }
 
     /**
-     * Use this ExecuteRandomMulti method to ensure that any SELECT result is pulled from the database, bypassing the cache.
+     * @deprecated since 1.5.8 use ExecuteRandomMulti
      */
     function ExecuteRandomMultiNoCache($sqlQuery)
     {
-        return $this->ExecuteRandomMulti($sqlQuery, 0, false, 0, true);
+        trigger_error('Call to deprecated function ExecuteRandomMultiNoCache. Use ExecuteRandomMulti() instead', E_USER_DEPRECATED);
+
+        return $this->ExecuteRandomMulti($sqlQuery, 0);
     }
 
     /**
