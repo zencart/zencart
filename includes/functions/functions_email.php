@@ -165,9 +165,9 @@ use PHPMailer\PHPMailer\SMTP;
       $sql = $db->bindVars($sql, ':custEmailAddress:', $to_email_address, 'string');
       $result = $db->Execute($sql);
       $customers_email_format = ($result->RecordCount() > 0) ? $result->fields['customers_email_format'] : '';
-      
+
       /**
-       * Valid formats: 
+       * Valid formats:
        * HTML - if HTML content has been provided/prepared, it will be used. EMAIL_USE_HTML must be set to true in configs
        * TEXT - a text-only version of the email will be sent, and the HTML version ignored
        * NONE or OUT - implies opt-out, ie: send no emails, so aborts sending
@@ -689,12 +689,12 @@ use PHPMailer\PHPMailer\SMTP;
  *     first last@host.com
  *     'first@host.com
  *
- * @param string The email address to validate
- * @return boolean true if valid else false
+ * @param string $email address to validate
+ * @return boolean
 **/
   function zen_validate_email($email) {
     global $zco_notifier;
-    $valid_address = TRUE;
+    $valid_address = true;
 
     // fail if contains no @ symbol or more than one @ symbol
     if (substr_count($email,'@') != 1) return false;
@@ -724,13 +724,11 @@ use PHPMailer\PHPMailer\SMTP;
         if ($digit[$i] > 255) {
           $valid_address = false;
           return $valid_address;
-          exit;
         }
         // stop crafty people from using internal IP addresses
         if (($digit[0] == 192) || ($digit[0] == 10)) {
           $valid_address = false;
           return $valid_address;
-          exit;
         }
       }
     }
@@ -738,7 +736,6 @@ use PHPMailer\PHPMailer\SMTP;
     if (!preg_match('/'.$valid_email_pattern.'/i', $email)) { // validate against valid email pattern
       $valid_address = false;
       return $valid_address;
-      exit;
     }
 
     $zco_notifier->notify('NOTIFY_EMAIL_VALIDATION_TEST', array($email, $valid_address));
