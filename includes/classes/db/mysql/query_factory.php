@@ -374,7 +374,12 @@ class queryFactory extends base
         return $result;
     }
 
-    function insert_ID()
+    /**
+     * Get ID of last inserted record
+     *
+     * @return int|string
+     */
+    public function insert_ID()
     {
         return @mysqli_insert_id($this->link);
     }
@@ -387,17 +392,34 @@ class queryFactory extends base
         return ($this->link) ? $this->link->affected_rows : 0;
     }
 
-    function queryCount()
+    /**
+     * Return the number of queries executed since the counter started
+     * @return int
+     */
+    public function queryCount(): int
     {
         return $this->count_queries;
     }
 
-    function queryTime()
+    /**
+     * Return the number of seconds elapsed for querying, since the counter started
+     * @return int
+     */
+    public function queryTime(): int
     {
         return $this->total_query_time;
     }
 
-    function perform($tableName, $tableData, $performType = 'INSERT', $performFilter = '', $debug = false)
+    /**
+     * Performs an INSERT or UPDATE based on a supplied array of field data
+     *
+     * @param string $tableName table on which to perform the insert/update
+     * @param array $tableData data to be inserted/deleted containing sub-arrays with fieldName/value/type keys (where type is the BindVar rule to apply)
+     * @param string $performType INSERT or UPDATE
+     * @param string $whereCondition condition for UPDATE (exclude the word "WHERE")
+     * @param false $debug developer use only
+     */
+    public function perform(string $tableName, array $tableData, $performType = 'INSERT', string $whereCondition = '', $debug = false): void
     {
         switch (strtolower($performType)) {
             case 'insert':
@@ -444,7 +466,29 @@ class queryFactory extends base
         }
     }
 
-    function getBindVarValue($value, $type)
+    /**
+     * bind variables to a query
+     * @param string $sql SQL query fragment to perform binding substitution on
+     * @param string $parameterToReplace the string to replace in the origin $sql
+     * @param mixed $valueToBind  the variable/value to be bound
+     * @param string $bindingRule the pattern to cast the value to
+     * @return string original $sql query fragment with patterns substituted
+     */
+    public function bindVars(string $sql, string $parameterToReplace, $valueToBind, string $bindingRule): string
+    {
+        $sqlNew = $this->getBindVarValue($valueToBind, $bindingRule);
+        $sqlNew = str_replace($parameterToReplace, $sqlNew, $sql);
+        return $sqlNew;
+    }
+
+    /**
+     * Applies binding/sanitization to values in preparation for safe execution
+     *
+     * @param mixed $value value to be bound/sanitized
+     * @param string $type binding rule to apply
+     * @return float|int|string
+     */
+    protected function getBindVarValue($value, string $type)
     {
         $typeArray = explode(':', $type);
         $type = $typeArray[0];
@@ -515,16 +559,6 @@ class queryFactory extends base
     }
 
     /**
-     * bind variables to a query
-     */
-    function bindVars($sql, $bindVarString, $bindVarValue, $bindVarType)
-    {
-        $sqlNew = $this->getBindVarValue($bindVarValue, $bindVarType);
-        $sqlNew = str_replace($bindVarString, $sqlNew, $sql);
-        return $sqlNew;
-    }
-
-    /**
      * @param string $db_name
      * @return bool
      */
@@ -537,18 +571,27 @@ class queryFactory extends base
         return false;
     }
 
-    public function close()
+    /**
+     * Close db connection
+     */
+    public function close(): void
     {
         @mysqli_close($this->link);
         unset($this->link);
     }
 
+    /**
+     * Close db connection on destroy/shutdown/exit
+     */
     public function __destruct()
     {
         $this->close();
     }
 
-    protected function set_error($err_num, $err_text, $dieOnErrors = true)
+    /**
+     * Internal queryfactory error handling
+     */
+    protected function set_error($err_num, $err_text, $dieOnErrors = true): void
     {
         $this->error_number = $err_num;
         $this->error_text = $err_text;
@@ -558,6 +601,10 @@ class queryFactory extends base
         }
     }
 
+    /**
+     * Display DB Connection Failure error message
+     * and trigger error logging
+     */
     protected function show_error()
     {
         if (!headers_sent()) {
