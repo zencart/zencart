@@ -220,9 +220,10 @@ class queryFactory extends base
 
         $time_start = explode(' ', microtime());
 
+        // Get MySQL query result
         $zp_db_resource = $this->runQuery($sqlQuery, $removeFromQueryCache);
 
-        // do query and cache the result before returning it
+        // iterate over query results and cache it before returning it
         if ($enableCaching) {
             $zc_cache->sql_cache_expire_now($sqlQuery);
 
@@ -258,7 +259,7 @@ class queryFactory extends base
             return $obj;
         }
 
-        // do uncached query
+        // process query results without caching them
 
         if (false === $zp_db_resource) {
             $this->set_error(mysqli_errno($this->link), mysqli_error($this->link), $this->dieOnErrors);
@@ -746,11 +747,18 @@ class queryFactoryResult implements Countable, Iterator
     public $is_cached = false;
 
     /**
-     * Contains stored results (if any). Typically used by cached results.
+     * Contains stored results of query
      *
      * @var array
      */
     public $result = [];
+
+    /**
+     * Contains randomized results if ExecuteRandomMulti was called
+     *
+     * @var array
+     */
+    public $result_random = [];
 
     /**
      * The maximum number of rows allowed to be iterated over.
