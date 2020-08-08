@@ -733,18 +733,11 @@ class queryFactoryResult implements Countable, Iterator
     public $is_cached = false;
 
     /**
-     * Contains stored results (if any). Typically used by cached results and RandomMulti queries.
+     * Contains stored results (if any). Typically used by cached results.
      *
      * @var array
      */
-    public $result = null;
-
-    /**
-     * An array of randomly selected keys. Typically used by RandomMulti queries.
-     *
-     * @var array
-     */
-    public $result_random = null;
+    public $result = [];
 
     /**
      * The maximum number of rows allowed to be iterated over.
