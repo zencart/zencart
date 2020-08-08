@@ -67,8 +67,8 @@ class queryFactory extends base
         if (!function_exists('mysqli_connect')) die ('Call to undefined function: mysqli_connect().  Please install the MySQL Connector for PHP');
 
         $connectionRetry = 10;
-        while (!isset($this->link) || ($this->link == FALSE && $connectionRetry != 0)) {
-            $this->link = mysqli_connect($db_host, $db_user, $db_password, $db_name, (defined('DB_PORT') ? DB_PORT : NULL), (defined('DB_SOCKET') ? DB_SOCKET : NULL));
+        while (!isset($this->link) || ($this->link == false && $connectionRetry != 0)) {
+            $this->link = mysqli_connect($db_host, $db_user, $db_password, $db_name, (defined('DB_PORT') ? DB_PORT : null), (defined('DB_SOCKET') ? DB_SOCKET : null));
             $connectionRetry--;
         }
 
@@ -119,7 +119,7 @@ class queryFactory extends base
         $this->user = $db_user;
         $this->host = $db_host;
         $this->password = $db_password;
-        $this->link = mysqli_connect($db_host, $db_user, $db_password, $db_name, (defined('DB_PORT') ? DB_PORT : NULL), (defined('DB_SOCKET') ? DB_SOCKET : NULL));
+        $this->link = mysqli_connect($db_host, $db_user, $db_password, $db_name, (defined('DB_PORT') ? DB_PORT : null), (defined('DB_SOCKET') ? DB_SOCKET : null));
 
         if ($this->link) {
             $this->db_connected = true;
@@ -146,7 +146,7 @@ class queryFactory extends base
         // second attempt in case of 2006 response
         if (!$zp_db_resource) {
             if (mysqli_errno($this->link) == 2006) {
-                $this->link = FALSE;
+                $this->link = false;
                 $this->connect($this->host, $this->user, $this->password, $this->database, null, $this->dieOnErrors);
                 $zp_db_resource = mysqli_query($this->link, $sqlQuery);
             }
@@ -222,7 +222,7 @@ class queryFactory extends base
         if ($enableCaching) {
             $zc_cache->sql_cache_expire_now($sqlQuery);
 
-            if (FALSE === $zp_db_resource) {
+            if (false === $zp_db_resource) {
                 $this->set_error(mysqli_errno($this->link), mysqli_error($this->link), $this->dieOnErrors);
             } else {
                 $obj->resource = $zp_db_resource;
@@ -256,7 +256,7 @@ class queryFactory extends base
 
         // do uncached query
 
-        if (FALSE === $zp_db_resource) {
+        if (false === $zp_db_resource) {
             $this->set_error(mysqli_errno($this->link), mysqli_error($this->link), $this->dieOnErrors);
         } else {
             $obj->resource = $zp_db_resource;
@@ -279,8 +279,10 @@ class queryFactory extends base
 
     /**
      * Use this form of the Execute method to ensure that any SELECT result is pulled from the database, bypassing the cache.
+     * @param string $sqlQuery
+     * @return queryFactoryResult
      */
-    function ExecuteNoCache($sqlQuery)
+    function ExecuteNoCache(string $sqlQuery)
     {
         return $this->Execute($sqlQuery, false, false, 0, true);
     }
@@ -295,7 +297,7 @@ class queryFactory extends base
 
         $zp_db_resource = $this->ensureDbConnected($sqlQuery, $remove_from_queryCache);
 
-        if (FALSE === $zp_db_resource) {
+        if (false === $zp_db_resource) {
             $this->set_error(mysqli_errno($this->link), mysqli_error($this->link), $this->dieOnErrors);
         } else {
             $obj->resource = $zp_db_resource;
