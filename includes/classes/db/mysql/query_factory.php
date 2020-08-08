@@ -132,22 +132,26 @@ class queryFactory extends base
 
     /**
      * @param string $sqlQuery
-     * @param bool $remove_from_queryCache
+     * @param bool $removeFromQueryCache Whether to skip the MySQL resource cache for repeats of the same query string during the same page-load
      * @return bool|mixed|mysqli_result
      */
-    protected function ensureDbConnected(string $sqlQuery, bool $remove_from_queryCache)
+    protected function runQuery(string $sqlQuery, bool $removeFromQueryCache)
     {
-        // connect to db
+        // ensure db connection
         if (!$this->db_connected) {
-            if (!$this->connect($this->host, $this->user, $this->password, $this->database, null, $this->dieOnErrors))
+            if (!$this->connect($this->host, $this->user, $this->password, $this->database, null, $this->dieOnErrors)) {
                 $this->set_error(0, DB_ERROR_NOT_CONNECTED, $this->dieOnErrors);
+            }
         }
-        $zp_db_resource = $this->query($this->link, $sqlQuery, $remove_from_queryCache);
+        // run the query
+        $zp_db_resource = $this->query($this->link, $sqlQuery, $removeFromQueryCache);
+
         // second attempt in case of 2006 response
         if (!$zp_db_resource) {
             if (mysqli_errno($this->link) == 2006) {
                 $this->link = false;
                 $this->connect($this->host, $this->user, $this->password, $this->database, null, $this->dieOnErrors);
+                // run the query directly, bypassing the queryCache
                 $zp_db_resource = mysqli_query($this->link, $sqlQuery);
             }
         }
@@ -181,10 +185,10 @@ class queryFactory extends base
      * @param string|null $limit
      * @param bool $enableCaching
      * @param int $cacheSeconds
-     * @param bool $remove_from_queryCache
+     * @param bool $removeFromQueryCache
      * @return queryFactoryResult
      */
-    public function Execute(string $sqlQuery, string $limit = null, bool $enableCaching = false, int $cacheSeconds = 0, bool $remove_from_queryCache = false): \queryFactoryResult
+    public function Execute(string $sqlQuery, string $limit = null, bool $enableCaching = false, int $cacheSeconds = 0, bool $removeFromQueryCache = false): \queryFactoryResult
     {
         // do SELECT logging if enabled
         $this->logQuery($sqlQuery);
@@ -216,9 +220,10 @@ class queryFactory extends base
 
         $time_start = explode(' ', microtime());
 
-        $zp_db_resource = $this->ensureDbConnected($sqlQuery, $remove_from_queryCache);
+        // Get MySQL query result
+        $zp_db_resource = $this->runQuery($sqlQuery, $removeFromQueryCache);
 
-        // do query and cache the result before returning it
+        // iterate over query results and cache it before returning it
         if ($enableCaching) {
             $zc_cache->sql_cache_expire_now($sqlQuery);
 
@@ -254,7 +259,7 @@ class queryFactory extends base
             return $obj;
         }
 
-        // do uncached query
+        // process query results without caching them
 
         if (false === $zp_db_resource) {
             $this->set_error(mysqli_errno($this->link), mysqli_error($this->link), $this->dieOnErrors);
@@ -303,7 +308,7 @@ class queryFactory extends base
         $obj->sql_query = $sqlQuery;
         $obj->limit = $limit;
 
-        $zp_db_resource = $this->ensureDbConnected($sqlQuery, true);
+        $zp_db_resource = $this->runQuery($sqlQuery, true);
 
         if (false === $zp_db_resource) {
             $this->set_error(mysqli_errno($this->link), mysqli_error($this->link), $this->dieOnErrors);
@@ -361,29 +366,33 @@ class queryFactory extends base
     }
 
     /**
+     * Execute the database query, using the queryCache memoization cache to re-use same Resource for repeat queries
+     *
      * @param mysqli $link
      * @param string $query
-     * @param false $remove_from_queryCache
+     * @param bool $removeFromQueryCache
      * @return bool|mixed|mysqli_result
      */
-    protected function query($link, string $query, bool $remove_from_queryCache = false)
+    protected function query($link, string $query, bool $removeFromQueryCache = false)
     {
-        global $queryLog, $queryCache;
+        global $queryCache;
 
-        if ($remove_from_queryCache && isset($queryCache)) {
-            $queryCache->reset($query);
+        if (isset($queryCache)) {
+            if ($removeFromQueryCache) {
+                $queryCache->reset($query);
+            }
+
+            if ($queryCache->inCache($query)) {
+                $cached_value = $queryCache->getFromCache($query);
+                $this->count_queries--;
+                return $cached_value;
+            }
         }
 
-        if (isset($queryCache) && $queryCache->inCache($query)) {
-            $cached_value = $queryCache->getFromCache($query);
-            $this->count_queries--;
-            return ($cached_value);
-        }
-
-        if (isset($queryLog)) $queryLog->start($query);
         $result = mysqli_query($link, $query);
-        if (isset($queryLog)) $queryLog->stop($query, $result);
+
         if (isset($queryCache)) $queryCache->cache($query, $result);
+
         return $result;
     }
 
@@ -746,11 +755,18 @@ class queryFactoryResult implements Countable, Iterator
     public $is_cached = false;
 
     /**
-     * Contains stored results (if any). Typically used by cached results.
+     * Contains stored results of query
      *
      * @var array
      */
     public $result = [];
+
+    /**
+     * Contains randomized results if ExecuteRandomMulti was called
+     *
+     * @var array
+     */
+    public $result_random = [];
 
     /**
      * The maximum number of rows allowed to be iterated over.
@@ -821,6 +837,12 @@ class queryFactoryResult implements Countable, Iterator
                 $this->EOF = true;
             } else {
                 $this->fields = array_replace($this->fields, $this->result[$this->cursor]);
+            }
+        } else if (!empty($this->result_random)) {
+            if ($this->cursor < $this->limit) {
+                $this->fields = array_replace($this->fields, $this->result[$this->result_random[$this->cursor]]);
+            } else {
+                $this->EOF = true;
             }
         } else {
             $zp_result_array = @mysqli_fetch_assoc($this->resource);
