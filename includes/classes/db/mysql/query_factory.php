@@ -132,22 +132,26 @@ class queryFactory extends base
 
     /**
      * @param string $sqlQuery
-     * @param bool $remove_from_queryCache
+     * @param bool $removeFromQueryCache Whether to skip the MySQL resource cache for repeats of the same query string during the same page-load
      * @return bool|mixed|mysqli_result
      */
-    protected function ensureDbConnected(string $sqlQuery, bool $remove_from_queryCache)
+    protected function runQuery(string $sqlQuery, bool $removeFromQueryCache)
     {
-        // connect to db
+        // ensure db connection
         if (!$this->db_connected) {
-            if (!$this->connect($this->host, $this->user, $this->password, $this->database, null, $this->dieOnErrors))
+            if (!$this->connect($this->host, $this->user, $this->password, $this->database, null, $this->dieOnErrors)) {
                 $this->set_error(0, DB_ERROR_NOT_CONNECTED, $this->dieOnErrors);
+            }
         }
-        $zp_db_resource = $this->query($this->link, $sqlQuery, $remove_from_queryCache);
+        // run the query
+        $zp_db_resource = $this->query($this->link, $sqlQuery, $removeFromQueryCache);
+
         // second attempt in case of 2006 response
         if (!$zp_db_resource) {
             if (mysqli_errno($this->link) == 2006) {
                 $this->link = false;
                 $this->connect($this->host, $this->user, $this->password, $this->database, null, $this->dieOnErrors);
+                // run the query directly, bypassing the queryCache
                 $zp_db_resource = mysqli_query($this->link, $sqlQuery);
             }
         }
@@ -181,10 +185,10 @@ class queryFactory extends base
      * @param string|null $limit
      * @param bool $enableCaching
      * @param int $cacheSeconds
-     * @param bool $remove_from_queryCache
+     * @param bool $removeFromQueryCache
      * @return queryFactoryResult
      */
-    public function Execute(string $sqlQuery, string $limit = null, bool $enableCaching = false, int $cacheSeconds = 0, bool $remove_from_queryCache = false): \queryFactoryResult
+    public function Execute(string $sqlQuery, string $limit = null, bool $enableCaching = false, int $cacheSeconds = 0, bool $removeFromQueryCache = false): \queryFactoryResult
     {
         // do SELECT logging if enabled
         $this->logQuery($sqlQuery);
@@ -216,7 +220,7 @@ class queryFactory extends base
 
         $time_start = explode(' ', microtime());
 
-        $zp_db_resource = $this->ensureDbConnected($sqlQuery, $remove_from_queryCache);
+        $zp_db_resource = $this->runQuery($sqlQuery, $removeFromQueryCache);
 
         // do query and cache the result before returning it
         if ($enableCaching) {
@@ -357,15 +361,15 @@ class queryFactory extends base
      *
      * @param mysqli $link
      * @param string $query
-     * @param bool $remove_from_queryCache
+     * @param bool $removeFromQueryCache
      * @return bool|mixed|mysqli_result
      */
-    protected function query($link, string $query, bool $remove_from_queryCache = false)
+    protected function query($link, string $query, bool $removeFromQueryCache = false)
     {
         global $queryCache;
 
         if (isset($queryCache)) {
-            if ($remove_from_queryCache) {
+            if ($removeFromQueryCache) {
                 $queryCache->reset($query);
             }
 
