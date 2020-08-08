@@ -830,6 +830,12 @@ class queryFactoryResult implements Countable, Iterator
             } else {
                 $this->fields = array_replace($this->fields, $this->result[$this->cursor]);
             }
+        } else if (!empty($this->result_random)) {
+            if ($this->cursor < $this->limit) {
+                $this->fields = array_replace($this->fields, $this->result[$this->result_random[$this->cursor]]);
+            } else {
+                $this->EOF = true;
+            }
         } else {
             $zp_result_array = @mysqli_fetch_assoc($this->resource);
             $this->fields = array_replace($this->fields, $zp_result_array);
