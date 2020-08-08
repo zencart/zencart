@@ -284,7 +284,7 @@ if (zen_not_null($action)) {
                   $reviews = $db->Execute($reviews_query_raw);
                   foreach ($reviews as $review) {
                     if ((!isset($_GET['rID']) || (isset($_GET['rID']) && ($_GET['rID'] == $review['reviews_id']))) && !isset($rInfo)) {
-                      $reviews_text = $db->Execute("SELECT r.reviews_read, r.customers_name, length(rd.reviews_text) AS reviews_text_size, rd.languages_id 
+                      $reviews_text = $db->Execute("SELECT r.reviews_read, r.customers_name, length(rd.reviews_text) AS reviews_text_size, rd.languages_id
                                                     FROM " . TABLE_REVIEWS . " r,
                                                          " . TABLE_REVIEWS_DESCRIPTION . " rd
                                                     WHERE r.reviews_id = " . (int)$review['reviews_id'] . "

@@ -14,7 +14,7 @@ $oID = zen_db_prepare_input($_GET['oID']);
 
 include DIR_FS_CATALOG . DIR_WS_CLASSES . 'order.php';
 $order = new order($oID);
-$show_including_tax = (DISPLAY_PRICE_WITH_TAX == 'true'); 
+$show_including_tax = (DISPLAY_PRICE_WITH_TAX == 'true');
 
 // prepare order-status pulldown list
 $orders_statuses = array();

@@ -205,7 +205,7 @@ class order extends base {
 
       $subindex = 0;
       $attributes_query = "SELECT products_options_id, products_options_values_id, products_options, products_options_values,
-                           options_values_price, price_prefix, product_attribute_is_free 
+                           options_values_price, price_prefix, product_attribute_is_free
                            FROM " . TABLE_ORDERS_PRODUCTS_ATTRIBUTES . "
                            WHERE orders_id = " . (int)$this->orderId . "
                            AND orders_products_id = " . (int)$orders_products->fields['orders_products_id'] . "
@@ -213,7 +213,7 @@ class order extends base {
 
       $attributes = $db->Execute($attributes_query);
       if ($attributes->RecordCount()) {
-        $this->products[$index]['attributes'] = []; 
+        $this->products[$index]['attributes'] = [];
         while (!$attributes->EOF) {
           $this->products[$index]['attributes'][$subindex] = array(
               'option' => $attributes->fields['products_options'],
@@ -809,7 +809,7 @@ class order extends base {
           // Will work with only one option for downloadable products
           // otherwise, we have to build the query dynamically with a loop
           // NOTE: Need the (int) cast on the option_id, since checkbox-type attributes' are formatted like '46_chk887'.
-          if (!empty($this->products[$i]['attributes'])) { 
+          if (!empty($this->products[$i]['attributes'])) {
             $products_attributes = $this->products[$i]['attributes'];
             $stock_query_raw .= " AND pa.options_id = " . (int)$products_attributes[0]['option_id'] . " AND pa.options_values_id = " . $products_attributes[0]['value_id'];
           }
