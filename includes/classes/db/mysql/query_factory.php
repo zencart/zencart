@@ -19,12 +19,22 @@ if (!defined('IS_ADMIN_FLAG')) {
  */
 class queryFactory extends base
 {
-    var $link;
+    var $link; // mysqli object
     var $count_queries = 0;
     var $total_query_time;
     var $dieOnErrors = false;
     var $error_number = 0;
     var $error_text = '';
+    /**
+     * @var bool
+     */
+    private $db_connected = false;
+
+    private $host = '';
+    private $database = '';
+    private $user = '';
+    private $password = '';
+    private $zf_sql = '';
 
     function __construct()
     {
@@ -32,7 +42,13 @@ class queryFactory extends base
         $this->total_query_time = 0;
     }
 
-    function query($link, $query, $remove_from_queryCache = false)
+    /**
+     * @param mysqli $link
+     * @param string $query
+     * @param false $remove_from_queryCache
+     * @return bool|mixed|mysqli_result
+     */
+    protected function query($link, string $query, bool $remove_from_queryCache = false)
     {
         global $queryLog, $queryCache;
 
@@ -53,7 +69,17 @@ class queryFactory extends base
         return ($result);
     }
 
-    function connect($db_host, $db_user, $db_password, $db_name, $pconnect = 'unused', $dieOnErrors = false, $options = [])
+    /**
+     * @param string $db_host database server hostname
+     * @param string $db_user db username
+     * @param string $db_password db password
+     * @param string $db_name database name
+     * @param string $pconnect unused
+     * @param false $dieOnErrors debug flag
+     * @param array $options additional configuration
+     * @return bool
+     */
+    public function connect(string $db_host, string $db_user, string $db_password, string $db_name, $pconnect = 'unused', bool $dieOnErrors = false, array $options = []): bool
     {
         $this->database = $db_name;
         $this->user = $db_user;
@@ -103,7 +129,14 @@ class queryFactory extends base
         }
     }
 
-    function simpleConnect($db_host, $db_user, $db_password, $db_name)
+    /**
+     * @param string $db_host database server hostname
+     * @param string $db_user db username
+     * @param string $db_password db password
+     * @param string $db_name database name
+     * @return bool
+     */
+    public function simpleConnect($db_host, $db_user, $db_password, $db_name): bool
     {
         $this->database = $db_name;
         $this->user = $db_user;
@@ -120,7 +153,11 @@ class queryFactory extends base
         return false;
     }
 
-    function selectdb($db_name)
+    /**
+     * @param string $db_name
+     * @return bool
+     */
+    public function selectdb(string $db_name): bool
     {
         $result = mysqli_select_db($this->link, $db_name);
         if ($result) return $result;
@@ -129,23 +166,29 @@ class queryFactory extends base
         return false;
     }
 
-    function prepare_input($string)
+    /**
+     * Escape SQL query value for binding
+     *
+     * @param string $string
+     * @return string
+     */
+    public function prepare_input(string $string): string
     {
         return mysqli_real_escape_string($this->link, $string);
     }
 
-    function close()
+    public function close()
     {
         @mysqli_close($this->link);
         unset($this->link);
     }
 
-    function __destruct()
+    public function __destruct()
     {
         $this->close();
     }
 
-    function set_error($err_num, $err_text, $dieOnErrors = true)
+    protected function set_error($err_num, $err_text, $dieOnErrors = true)
     {
         $this->error_number = $err_num;
         $this->error_text = $err_text;
@@ -155,7 +198,7 @@ class queryFactory extends base
         }
     }
 
-    function show_error()
+    protected function show_error()
     {
         if (!headers_sent()) {
             header("HTTP/1.1 503 Service Unavailable");
@@ -186,7 +229,15 @@ class queryFactory extends base
         echo '</div>';
     }
 
-    function Execute($sqlQuery, $limit = false, $enableCaching = false, $cacheSeconds = 0, $remove_from_queryCache = false)
+    /**
+     * @param string $sqlQuery
+     * @param string|null $limit
+     * @param bool $enableCaching
+     * @param int $cacheSeconds
+     * @param bool $remove_from_queryCache
+     * @return queryFactoryResult
+     */
+    public function Execute(string $sqlQuery, string $limit = null, bool $enableCaching = false, int $cacheSeconds = 0, bool $remove_from_queryCache = false): \queryFactoryResult
     {
         // bof: collect database queries
         if (defined('STORE_DB_TRANSACTIONS') && STORE_DB_TRANSACTIONS != 'false') {
@@ -614,6 +665,11 @@ class queryFactoryResult implements Countable, Iterator
      * @var mysqli_result
      */
     public $resource;
+
+    /**
+     * @var string
+     */
+    public $sql_query;
 
     /**
      * Constructs a new Query Factory Result
