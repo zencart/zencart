@@ -20,6 +20,7 @@ class order extends base {
       $products_ordered, $products_ordered_email, $products_ordered_html, $attachArray, $email_order_message, $extra_header_text,
       $doStockDecrement, $send_low_stock_emails, $queryReturnFlag, $bestSellersUpdate, $use_external_tax_handler_only;
   var $products_ordered_attributes_html = array();
+  var $statuses = [];
 
   function __construct($order_id = null) {
     $this->info = array();
@@ -88,6 +89,7 @@ class order extends base {
     }
 
     $this->info = array('order_id' => $this->orderId,
+                        'customer_id' => $order->fields['customers_id'],
                         'currency' => $order->fields['currency'],
                         'currency_value' => $order->fields['currency_value'],
                         'payment_method' => $order->fields['payment_method'],
@@ -205,7 +207,7 @@ class order extends base {
 
       $subindex = 0;
       $attributes_query = "SELECT products_options_id, products_options_values_id, products_options, products_options_values,
-                           options_values_price, price_prefix, product_attribute_is_free 
+                           options_values_price, price_prefix, product_attribute_is_free
                            FROM " . TABLE_ORDERS_PRODUCTS_ATTRIBUTES . "
                            WHERE orders_id = " . (int)$this->orderId . "
                            AND orders_products_id = " . (int)$orders_products->fields['orders_products_id'] . "
@@ -237,6 +239,8 @@ class order extends base {
       $orders_products->MoveNext();
     }
 
+    $this->statuses = $this->getStatusHistory($this->orderId);
+
     $this->notify('NOTIFY_ORDER_AFTER_QUERY', IS_ADMIN_FLAG, $this->orderId);
 
     /**
@@ -245,7 +249,40 @@ class order extends base {
     if (IS_ADMIN_FLAG === true) {
         $this->notify('ORDER_QUERY_ADMIN_COMPLETE', array('orders_id' => $this->orderId));
     }
+  }
 
+  function getStatusHistory($order_id, $language_id = null)
+  {
+      global $db;
+
+      if (empty($language_id)) {
+// @TODO - provide lookup in language class
+//          if (!empty($this->info['language_code'])) {
+//              global $lng;
+//              $language_id = $lng->getLanguageIdFromCode($this->info['language_code']);
+//          }
+          if (empty($language_id)) {
+              $language_id = $_SESSION['languages_id'];
+          }
+      }
+
+      $sql = "SELECT os.orders_status_name, osh.*
+                FROM   " . TABLE_ORDERS_STATUS . " os
+                LEFT JOIN " . TABLE_ORDERS_STATUS_HISTORY . " osh USING (orders_status_id)
+                WHERE osh.orders_id = :ordersID
+                AND os.language_id = :languageID
+                AND osh.customer_notified >= 0
+                ORDER BY osh.date_added";
+
+      $sql = $db->bindVars($sql, ':ordersID', $order_id, 'integer');
+      $sql = $db->bindVars($sql, ':languageID', $language_id, 'integer');
+      $results = $db->Execute($sql);
+
+      $statusArray = [];
+      foreach ($results as $result) {
+          $statusArray[] = $result;
+      }
+      return $statusArray;
   }
 
   function cart() {

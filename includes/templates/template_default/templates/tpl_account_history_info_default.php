@@ -94,7 +94,7 @@
 /**
  * Used to loop thru and display order status information
  */
-if (sizeof($statusArray)) {
+if (!empty($order->statuses)) {
 ?>
 
 <h2 id="orderHistoryStatus"><?php echo HEADING_ORDER_HISTORY; ?></h2>
@@ -105,24 +105,24 @@ if (sizeof($statusArray)) {
         <th scope="col" id="myAccountStatusComments"><?php echo TABLE_HEADING_STATUS_COMMENTS; ?></th>
        </tr>
 <?php
-  $first = true; 
-  foreach ($statusArray as $statuses) {
+  $first = true;
+  foreach ($order->statuses as $statuses) {
 ?>
     <tr>
         <td><?php echo zen_date_short($statuses['date_added']); ?></td>
         <td><?php echo $statuses['orders_status_name']; ?></td>
         <td>
-<?php 
+<?php
     if (!empty($statuses['comments'])) {
-      if ($first) { 
+      if ($first) {
          echo nl2br(zen_output_string_protected($statuses['comments']));
-         $first = false; 
+         $first = false;
       } else {
          echo nl2br(zen_output_string($statuses['comments']));
       }
     }
 ?>
-       </td> 
+       </td>
      </tr>
 <?php
   }
