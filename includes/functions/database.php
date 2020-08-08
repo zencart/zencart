@@ -1,58 +1,32 @@
-<?php 
-  function zen_db_perform($table, $data, $action = 'insert', $parameters = '') {
-    global $db;
-    if (strtolower($action) == 'insert') {
-      $query = 'INSERT INTO ' . $table . ' (';
-      foreach($data as $columns => $value) {
-        $query .= $columns . ', ';
-      }
-      $query = substr($query, 0, -2) . ') VALUES (';
-      foreach($data as $value) {
-        switch ((string)$value) {
-          case 'now()':
-            $query .= 'now(), ';
-            break;
-          case 'NULL':
-          case 'null':
-            $query .= 'null, ';
-            break;
-          default:
-            $query .= '\'' . zen_db_input($value) . '\', ';
-            break;
-        }
-      }
-      $query = substr($query, 0, -2) . ')';
-    } elseif (strtolower($action) == 'update') {
-      $query = 'UPDATE ' . $table . ' SET ';
-      foreach($data as $columns => $value) {
-        switch ((string)$value) {
-          case 'now()':
-            $query .= $columns . ' = now(), ';
-            break;
-          case 'NULL':
-          case 'null':
-            $query .= $columns . ' = null, ';
-            break;
-          default:
-            $query .= $columns . ' = \'' . zen_db_input($value) . '\', ';
-            break;
-        }
-      }
-      $query = substr($query, 0, -2) . ' WHERE ' . $parameters;
-    }
-
-    return $db->Execute($query);
-  }
+<?php
+/**
+ * database functions and aliases into the $db queryFactory class
+ *
+ * @copyright Copyright 2003-2020 Zen Cart Development Team
+ * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
+ * @version $Id:  Modified in v1.5.8 $
+ */
 
 /**
- * Alias to $db->prepareInput() for sanitizing db inserts
+ * Alias to $db->insert_ID() to get id of last inserted record
+ * @return int
+ */
+function zen_db_insert_id()
+{
+    global $db;
+    return $db->insert_ID();
+}
+
+/**
+ * Alias to $db->prepare_input() for sanitizing db inserts
  * @param string $string
  * @return string
  */
-  function zen_db_input($string) {
+function zen_db_input($string)
+{
     global $db;
-    return $db->prepareInput($string);
-  }
+    return $db->prepare_input($string);
+}
 
   function zen_db_output($string) {
     if (IS_ADMIN_FLAG) {
@@ -62,64 +36,136 @@
     }
   }
 
-  function zen_db_prepare_input($string, $trimspace = true) {
+/**
+ * Rudimentary input sanitizer
+ * NOTE: SHOULD NOT BE USED FOR DB QUERIES!!!  Use $db->prepare_input() or zen_db_input() instead
+ *
+ * @param string $string
+ * @param bool $trimspace
+ * @return array|string
+ */
+function zen_db_prepare_input(string $string, bool $trimspace = true)
+{
     if (is_string($string)) {
-      if ($trimspace == true) {
-        return trim(stripslashes($string));
-      } else {
-        return stripslashes($string);
-      }
+        if ($trimspace == true) {
+            return trim(stripslashes($string));
+        } else {
+            return stripslashes($string);
+        }
     } elseif (is_array($string)) {
-      foreach($string as $key => $value) {
-        $string[$key] = zen_db_prepare_input($value);
-      }
-      return $string;
+        foreach ($string as $key => $value) {
+            $string[$key] = zen_db_prepare_input($value);
+        }
+        return $string;
     } else {
-      return $string;
+        return $string;
     }
-  }
+}
 
-  function zen_db_perform_language($table, $data, $keyIdName, $keyId, $languageId) {
+
+/**
+ * Performs an INSERT or UPDATE based on a supplied array of field data.
+ * (Similar to $db->perform() but with only a 2D array.
+ *  If type-cast binding is required, use $db->perform instead.)
+ *
+ * @param string $tableName table on which to perform the insert/update
+ * @param array $tableData key-value pairs -- all will be treated as strings, and will be escaped
+ * @param string $performType INSERT or UPDATE
+ * @param string $whereCondition condition for UPDATE (exclude the word "WHERE")
+ * @return queryFactoryResult
+ */
+function zen_db_perform(string $tableName, array $tableData, $performType = 'INSERT', string $whereCondition = '')
+{
     global $db;
-    $sql = "INSERT INTO " . $table . "(" . $keyIdName . ", languages_id, ";
-    foreach($data as $columns => $value) {
-      $sql .= $columns . ', ';
+    if (strtolower($performType) == 'insert') {
+        $query = 'INSERT INTO ' . $tableName . ' (';
+        foreach ($tableData as $columns => $value) {
+            $query .= $columns . ', ';
+        }
+        $query = substr($query, 0, -2) . ') VALUES (';
+        foreach ($tableData as $value) {
+            switch ((string)$value) {
+                case 'now()':
+                    $query .= 'now(), ';
+                    break;
+                case 'NULL':
+                case 'null':
+                    $query .= 'null, ';
+                    break;
+                default:
+                    $query .= '\'' . $db->prepare_input($value) . '\', ';
+                    break;
+            }
+        }
+        $query = substr($query, 0, -2) . ')';
+    } elseif (strtolower($performType) == 'update') {
+        $query = 'UPDATE ' . $tableName . ' SET ';
+        foreach ($tableData as $columns => $value) {
+            switch ((string)$value) {
+                case 'now()':
+                    $query .= $columns . ' = now(), ';
+                    break;
+                case 'NULL':
+                case 'null':
+                    $query .= $columns . ' = null, ';
+                    break;
+                default:
+                    $query .= $columns . ' = \'' . $db->prepare_input($value) . '\', ';
+                    break;
+            }
+        }
+        $query = substr($query, 0, -2) . ' WHERE ' . $whereCondition;
+    }
+
+    return $db->Execute($query);
+}
+
+/**
+ * zen_db_perform equiv for language-specific inserts
+ *
+ * @param string $tableName
+ * @param array $tableData
+ * @param string $keyIdName
+ * @param int $keyId
+ * @param int $languageId
+ * @return queryFactoryResult
+ */
+function zen_db_perform_language(string $tableName, array $tableData, string $keyIdName, int $keyId, int $languageId)
+{
+    global $db;
+    $sql = "INSERT INTO " . $tableName . "(" . $db->prepare_input($keyIdName) . ", languages_id, ";
+    foreach ($tableData as $columns => $value) {
+        $sql .= $columns . ', ';
     }
     $sql = substr($sql, 0, -2) . ') values (' . (int)$keyId . ", " . (int)$languageId . ", ";
-    foreach($data as $value) {
-      switch ((string)$value) {
-        case 'now()':
-          $sql .= 'now(), ';
-          break;
-        case 'null':
-          $sql .= 'null, ';
-          break;
-        default:
-          $sql .= '\'' . zen_db_input($value) . '\', ';
-          break;
-      }
+    foreach ($tableData as $value) {
+        switch ((string)$value) {
+            case 'now()':
+                $sql .= 'now(), ';
+                break;
+            case 'null':
+                $sql .= 'null, ';
+                break;
+            default:
+                $sql .= '\'' . $db->prepare_input($value) . '\', ';
+                break;
+        }
     }
     $sql = substr($sql, 0, -2) . ')';
     $sql .= ' ON DUPLICATE KEY UPDATE ';
-    foreach($data as $columns => $value) {
-      switch ((string)$value) {
-        case 'now()':
-          $sql .= $columns . ' = now(), ';
-          break;
-        case 'null':
-          $sql .= $columns .= ' = null, ';
-          break;
-        default:
-          $sql .= $columns . ' = \'' . zen_db_input($value) . '\', ';
-          break;
-      }
+    foreach ($tableData as $columns => $value) {
+        switch ((string)$value) {
+            case 'now()':
+                $sql .= $columns . ' = now(), ';
+                break;
+            case 'null':
+                $sql .= $columns .= ' = null, ';
+                break;
+            default:
+                $sql .= $columns . ' = \'' . $db->prepare_input($value) . '\', ';
+                break;
+        }
     }
     $sql = substr($sql, 0, -2);
     return $db->Execute($sql);
-  }
-
-  function zen_db_insert_id() {
-    global $db;
-    return $db->insert_ID();
-  }
-
+}
