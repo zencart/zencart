@@ -618,7 +618,7 @@ class queryFactory extends base
             echo $this->error_number . ' ' . $this->error_text;
             echo '<br>in:<br>[' . (strstr($this->zf_sql, 'db_cache') ? 'db_cache table' : $this->zf_sql) . ']<br>';
         } else {
-            echo 'WARNING: An Error occurred, please refresh the page and try again.';
+            echo 'WARNING: An Error occurred, please let us know!';
         }
 
         $backtrace_array = debug_backtrace();
@@ -631,7 +631,9 @@ class queryFactory extends base
         }
         trigger_error($this->error_number . ':' . $this->error_text . ' :: ' . $this->zf_sql . $query_factory_caller, E_USER_ERROR);
 
-        if (defined('IS_ADMIN_FLAG') && IS_ADMIN_FLAG == true) echo 'If you were entering information, press the BACK button in your browser and re-check the information you had entered to be sure you left no blank fields.<br>';
+        if (defined('IS_ADMIN_FLAG') && IS_ADMIN_FLAG == true) {
+            echo ' If you were entering information, press the BACK button in your browser and re-check the information you had entered to be sure you entered valid data.<br>';
+        }
 
         echo '</div>';
     }
