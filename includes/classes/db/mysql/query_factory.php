@@ -452,8 +452,8 @@ class queryFactory extends base
                     $updateString .= $value['fieldName'] . '=' . $bindVarValue . ', ';
                 }
                 $updateString = substr($updateString, 0, strlen($updateString) - 2);
-                if ($performFilter != '') {
-                    $updateString .= ' WHERE ' . $performFilter;
+                if (!empty($whereCondition)) {
+                    $updateString .= ' WHERE ' . $whereCondition;
                 }
                 if ($debug === true) {
                     echo $updateString;
