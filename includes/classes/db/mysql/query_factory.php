@@ -157,17 +157,17 @@ class queryFactory extends base
     /**
      * Escape SQL query value for binding
      *
-     * @param string $string
+     * @param string|null|mixed $string
      * @return string
      */
-    public function prepare_input(string $string): string
+    public function prepare_input($string): string
     {
         return mysqli_real_escape_string($this->link, $string);
     }
 
     /**
      * Alias to prepare_input()
-     * @param $string
+     * @param string|null|mixed $string
      * @return string
      * @see $this->prepare_input()
      */
