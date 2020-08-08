@@ -303,6 +303,9 @@ class queryFactory extends base
             $obj->resource = $zp_db_resource;
 
             $zp_rows = $obj->RecordCount();
+            if (empty($limit)) {
+                $limit = $zp_rows;
+            }
             if ($zp_rows > 0 && $limit > 0) {
                 $zp_start_row = 0;
                 if ($limit) {
