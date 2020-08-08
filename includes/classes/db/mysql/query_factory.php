@@ -291,7 +291,7 @@ class queryFactory extends base
         return $this->Execute($sqlQuery, false, false, 0, true);
     }
 
-    function ExecuteRandomMulti($sqlQuery, $limit = 0, $unusedCacheFlag = null, $unusedCacheTtl = null, $remove_from_queryCache = false)
+    function ExecuteRandomMulti($sqlQuery, $limit = 0, $unusedCacheFlag = null, $unusedCacheTtl = null, $removeFromQueryCache = false)
     {
         $time_start = explode(' ', microtime());
         $this->zf_sql = $sqlQuery;
@@ -299,7 +299,7 @@ class queryFactory extends base
         $obj->sql_query = $sqlQuery;
         $obj->limit = $limit;
 
-        $zp_db_resource = $this->ensureDbConnected($sqlQuery, $remove_from_queryCache);
+        $zp_db_resource = $this->runQuery($sqlQuery, $removeFromQueryCache);
 
         if (false === $zp_db_resource) {
             $this->set_error(mysqli_errno($this->link), mysqli_error($this->link), $this->dieOnErrors);
