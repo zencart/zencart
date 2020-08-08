@@ -1,13 +1,13 @@
 <?php
 /**
- * MySQL query_factory Class.
+ * MySQL query_factory class.
  * Class used for database abstraction to MySQL via mysqli
  *
  * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @copyright Portions adapted from http://www.data-diggers.com/
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2020 Jan 21 Modified in v1.5.7 $
+ * @version $Id:  Modified in v1.5.8 $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
@@ -47,12 +47,12 @@ class queryFactory extends base {
       return($result);
   }
 
-  function connect($zf_host, $zf_user, $zf_password, $zf_database, $zf_pconnect = 'false', $dieOnErrors = false, $options = array()) {
-    $this->database = $zf_database;
-    $this->user = $zf_user;
-    $this->host = $zf_host;
-    $this->password = $zf_password;
-    $this->pConnect = $zf_pconnect;
+  function connect($db_host, $db_user, $db_password, $db_name, $pconnect = 'unused', $dieOnErrors = false, $options = array()) {
+    $this->database = $db_name;
+    $this->user = $db_user;
+    $this->host = $db_host;
+    $this->password = $db_password;
+    $this->pConnect = $pconnect;
     $this->dieOnErrors = $dieOnErrors;
     if (defined('DB_CHARSET')) $dbCharset = DB_CHARSET;
     if (isset($options['dbCharset'])) $dbCharset = $options['dbCharset'];
@@ -60,11 +60,11 @@ class queryFactory extends base {
     $connectionRetry = 10;
     while (!isset($this->link) || ($this->link == FALSE && $connectionRetry !=0) )
     {
-      $this->link = mysqli_connect($zf_host, $zf_user, $zf_password, $zf_database, (defined('DB_PORT') ? DB_PORT : NULL), (defined('DB_SOCKET') ? DB_SOCKET : NULL));
+      $this->link = mysqli_connect($db_host, $db_user, $db_password, $db_name, (defined('DB_PORT') ? DB_PORT : NULL), (defined('DB_SOCKET') ? DB_SOCKET : NULL));
       $connectionRetry--;
     }
     if ($this->link) {
-      if (mysqli_select_db($this->link, $zf_database)) {
+      if (mysqli_select_db($this->link, $db_name)) {
         if (isset($dbCharset) ) {
           mysqli_query($this->link, "SET NAMES '" . $dbCharset . "'");
           if (function_exists('mysqli_set_charset')) {
@@ -93,12 +93,12 @@ class queryFactory extends base {
     }
   }
 
-  function simpleConnect($zf_host, $zf_user, $zf_password, $zf_database) {
-    $this->database = $zf_database;
-    $this->user = $zf_user;
-    $this->host = $zf_host;
-    $this->password = $zf_password;
-    $this->link = mysqli_connect($zf_host, $zf_user, $zf_password, $zf_database, (defined('DB_PORT') ? DB_PORT : NULL), (defined('DB_SOCKET') ? DB_SOCKET : NULL));
+  function simpleConnect($db_host, $db_user, $db_password, $db_name) {
+    $this->database = $db_name;
+    $this->user = $db_user;
+    $this->host = $db_host;
+    $this->password = $db_password;
+    $this->link = mysqli_connect($db_host, $db_user, $db_password, $db_name, (defined('DB_PORT') ? DB_PORT : NULL), (defined('DB_SOCKET') ? DB_SOCKET : NULL));
     if ($this->link) {
       $this->db_connected = true;
       return true;
@@ -108,8 +108,8 @@ class queryFactory extends base {
     }
   }
 
-  function selectdb($zf_database) {
-    $result = mysqli_select_db($this->link, $zf_database);
+  function selectdb($db_name) {
+    $result = mysqli_select_db($this->link, $db_name);
     if ($result) return $result;
       $this->set_error(mysqli_errno($this->link), mysqli_error($this->link), $this->dieOnErrors);
      return false;
@@ -135,10 +135,10 @@ class queryFactory extends base {
     $this->close();
   }
 
-  function set_error($zp_err_num, $zp_err_text, $dieOnErrors = true) {
-    $this->error_number = $zp_err_num;
-    $this->error_text = $zp_err_text;
-    if ($dieOnErrors && $zp_err_num != 1141) { // error 1141 is okay ... should not die on 1141, but just continue on instead
+  function set_error($err_num, $err_text, $dieOnErrors = true) {
+    $this->error_number = $err_num;
+    $this->error_text = $err_text;
+    if ($dieOnErrors && $err_num != 1141) { // error 1141 is okay ... should not die on 1141, but just continue on instead
       $this->show_error();
       die();
     }
@@ -172,11 +172,11 @@ class queryFactory extends base {
     echo '</div>';
   }
 
-  function Execute($zf_sql, $zf_limit = false, $zf_cache = false, $zf_cachetime=0, $remove_from_queryCache = false) {
+  function Execute($sqlQuery, $limit = false, $enableCaching = false, $cacheSeconds=0, $remove_from_queryCache = false) {
     // bof: collect database queries
     if (defined('STORE_DB_TRANSACTIONS') && STORE_DB_TRANSACTIONS != 'false') {
       global $PHP_SELF, $box_id, $current_page_base;
-      if (strtoupper(substr($zf_sql,0,6))=='SELECT' /*&& strstr($zf_sql,'products_id')*/) {
+      if (strtoupper(substr($sqlQuery,0,6))=='SELECT' /*&& strstr($sqlQuery,'products_id')*/) {
         $f=@fopen(DIR_FS_LOGS.'/query_selects_' . $current_page_base . '_' . time() . '.txt','a');
         if ($f) {
           $backtrace = '';
@@ -190,7 +190,7 @@ class queryFactory extends base {
             $backtrace = 'query trace: ' . "\n" . $backtrace . "\n";
           }
 
-          fwrite($f,  "\n\n" . 'I AM HERE ' . $current_page_base . /*zen_get_all_get_params() .*/ "\n" . $backtrace . 'sidebox: ' . $box_id . "\n\n" . "Explain \n" . $zf_sql.";\n\n");
+          fwrite($f,  "\n\n" . 'I AM HERE ' . $current_page_base . /*zen_get_all_get_params() .*/ "\n" . $backtrace . 'sidebox: ' . $box_id . "\n\n" . "Explain \n" . $sqlQuery.";\n\n");
           fclose($f);
         }
         unset($f);
@@ -199,29 +199,29 @@ class queryFactory extends base {
     // eof: collect products_id queries
     global $zc_cache;
     $obj = new queryFactoryResult($this->link);
-    if ($zf_limit) {
-      $zf_sql = $zf_sql . ' LIMIT ' . $zf_limit;
-      $obj->limit = $zf_limit;
+    if ($limit) {
+      $sqlQuery = $sqlQuery . ' LIMIT ' . $limit;
+      $obj->limit = $limit;
     }
-    $this->zf_sql = $zf_sql;
-    $obj->sql_query = $zf_sql;
-    if ( $zf_cache AND $zc_cache->sql_cache_exists($zf_sql, $zf_cachetime) ) {
+    $this->zf_sql = $sqlQuery;
+    $obj->sql_query = $sqlQuery;
+    if ( $enableCaching AND $zc_cache->sql_cache_exists($sqlQuery, $cacheSeconds) ) {
       $obj->is_cached = true;
-      $zp_result_array = $zc_cache->sql_cache_read($zf_sql);
+      $zp_result_array = $zc_cache->sql_cache_read($sqlQuery);
       $obj->result = $zp_result_array;
-      if (sizeof($zp_result_array) > 0 ) {
+      if (count($zp_result_array) > 0 ) {
         $obj->EOF = false;
         $obj->fields = array_replace($obj->fields, $zp_result_array[0]);
       }
-    } elseif ($zf_cache) {
-      $zc_cache->sql_cache_expire_now($zf_sql);
+    } elseif ($enableCaching) {
+      $zc_cache->sql_cache_expire_now($sqlQuery);
       $time_start = explode(' ', microtime());
       if (!$this->db_connected)
       {
         if (!$this->connect($this->host, $this->user, $this->password, $this->database, $this->pConnect, $this->real))
         $this->set_error('0', DB_ERROR_NOT_CONNECTED, $this->dieOnErrors);
       }
-      $zp_db_resource = $this->query($this->link, $zf_sql, $remove_from_queryCache);
+      $zp_db_resource = $this->query($this->link, $sqlQuery, $remove_from_queryCache);
       if (FALSE === $zp_db_resource) {
         $this->set_error(mysqli_errno($this->link), mysqli_error($this->link), $this->dieOnErrors);
       } else {
@@ -244,7 +244,7 @@ class queryFactory extends base {
         }
         unset($zp_ii);
       }
-      $zc_cache->sql_cache_store($zf_sql, $obj->result);
+      $zc_cache->sql_cache_store($sqlQuery, $obj->result);
       $obj->is_cached = true;
       $time_end = explode (' ', microtime());
       $query_time = $time_end[1]+$time_end[0]-$time_start[1]-$time_start[0];
@@ -257,12 +257,12 @@ class queryFactory extends base {
         if (!$this->connect($this->host, $this->user, $this->password, $this->database, $this->pConnect, $this->real))
         $this->set_error('0', DB_ERROR_NOT_CONNECTED, $this->dieOnErrors);
       }
-      $zp_db_resource = $this->query($this->link, $zf_sql, $remove_from_queryCache);
+      $zp_db_resource = $this->query($this->link, $sqlQuery, $remove_from_queryCache);
       if (!$zp_db_resource) {
         if (mysqli_errno($this->link) == 2006) {
           $this->link = FALSE;
           $this->connect($this->host, $this->user, $this->password, $this->database, $this->pConnect, $this->real);
-          $zp_db_resource = mysqli_query($this->link, $zf_sql);
+          $zp_db_resource = mysqli_query($this->link, $sqlQuery);
         }
       }
       if (FALSE === $zp_db_resource) {
@@ -289,13 +289,13 @@ class queryFactory extends base {
     // Use this form of the Execute method to ensure that any SELECT result is pulled from the
     // database, bypassing the cache.
     //
-    function ExecuteNoCache ($zf_sql)
+    function ExecuteNoCache ($sqlQuery)
     {
-        return $this->Execute ($zf_sql, false, false, 0, true);
+        return $this->Execute ($sqlQuery, false, false, 0, true);
     }
 
-  function ExecuteRandomMulti($zf_sql, $zf_limit = 0, $zf_cache = false, $zf_cachetime=0, $remove_from_queryCache = false) {
-    $this->zf_sql = $zf_sql;
+  function ExecuteRandomMulti($sqlQuery, $limit = 0, $unusedCacheFlag = null, $unusedCacheTtl=null, $remove_from_queryCache = false) {
+    $this->zf_sql = $sqlQuery;
     $time_start = explode(' ', microtime());
     $obj = new queryFactoryResult($this->link);
     if (!$this->db_connected)
@@ -303,22 +303,22 @@ class queryFactory extends base {
       if (!$this->connect($this->host, $this->user, $this->password, $this->database, $this->pConnect, $this->real))
       $this->set_error('0', DB_ERROR_NOT_CONNECTED, $this->dieOnErrors);
     }
-    $zp_db_resource = @$this->query($this->link, $zf_sql, $remove_from_queryCache);
+    $zp_db_resource = @$this->query($this->link, $sqlQuery, $remove_from_queryCache);
     if (FALSE === $zp_db_resource ){
       $this->set_error(mysqli_errno($this->link), mysqli_error($this->link), $this->dieOnErrors);
     } else {
       $obj->resource = $zp_db_resource;
-      $obj->limit = $zf_limit;
+      $obj->limit = $limit;
 
       $zp_rows = $obj->RecordCount();
-      if ($zp_rows > 0 && $zf_limit > 0) {
+      if ($zp_rows > 0 && $limit > 0) {
         $zp_start_row = 0;
-        if ($zf_limit) {
-          $zp_start_row = zen_rand(0, $zp_rows - $zf_limit);
+        if ($limit) {
+          $zp_start_row = zen_rand(0, $zp_rows - $limit);
         }
         mysqli_data_seek($zp_db_resource, $zp_start_row);
         $zp_ii = 0;
-        while ($zp_ii < $zf_limit) {
+        while ($zp_ii < $limit) {
           $obj->result[$zp_ii] = array();
           $obj->result[$zp_ii] = @mysqli_fetch_assoc($zp_db_resource);
           if (!$obj->result[$zp_ii]) {
@@ -353,9 +353,9 @@ class queryFactory extends base {
     // Use this ExecuteRandomMulti method to ensure that any SELECT result is pulled from the
     // database, bypassing the cache.
     //
-    function ExecuteRandomMultiNoCache ($zf_sql)
+    function ExecuteRandomMultiNoCache ($sqlQuery)
     {
-        return $this->ExecuteRandomMulti ($zf_sql, 0, false, 0, true);
+        return $this->ExecuteRandomMulti ($sqlQuery, 0, false, 0, true);
     }
 
     // -----
