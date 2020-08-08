@@ -193,7 +193,7 @@ if (zen_not_null($action)) {
                 <strong><?php echo ENTRY_FROM; ?></strong> <?php echo $rInfo->customers_name; ?><br>
                 <strong><?php echo ENTRY_DATE; ?></strong> <?php echo zen_date_short($rInfo->date_added); ?>
             </div>
-             <div class="main"><b><?php echo ENTRY_REVIEW; ?></b><br><br><?php echo nl2br(zen_db_output(zen_break_string($rInfo->reviews_text, 15))); ?></div>
+             <div class="main"><b><?php echo ENTRY_REVIEW; ?></b><br><br><?php echo nl2br(zen_output_string_protected(zen_break_string($rInfo->reviews_text, 15))); ?></div>
 
             <?php echo zen_draw_separator('pixel_trans.gif', '1', '10'); ?>
 

@@ -28,13 +28,15 @@ function zen_db_input($string)
     return $db->prepare_input($string);
 }
 
-  function zen_db_output($string) {
-    if (IS_ADMIN_FLAG) {
-       return htmlspecialchars($string, ENT_COMPAT, CHARSET, TRUE);
-    } else {
-       return htmlspecialchars($string);
-    }
-  }
+/**
+ * @deprecated use zen_output_string_protected() instead
+ * @param string $string
+ * @return string
+ */
+function zen_db_output(string $string)
+{
+    return zen_output_string_protected($string);
+}
 
 /**
  * Rudimentary input sanitizer
