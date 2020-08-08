@@ -35,6 +35,8 @@ function zen_db_input($string)
  */
 function zen_db_output(string $string)
 {
+    trigger_error('Call to deprecated function zen_db_output. Use zen_output_string_protected() instead', E_USER_DEPRECATED);
+
     return zen_output_string_protected($string);
 }
 
