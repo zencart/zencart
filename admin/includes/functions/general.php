@@ -1340,15 +1340,7 @@ while (!$chk_sale_categories_all->EOF) {
     }
   }
 
-////
-  /**
-   * alias to zen_create_coupon_code()
-   *
-   * @deprecated: use zen_create_coupon_code() instead (since v1.5.6)
-   */
-  function create_coupon_code($salt="secret", $length=SECURITY_CODE_LENGTH, $prefix = '') {
-    return zen_create_coupon_code($salt, $length, $prefix);
-  }
+
 /**
  * Create a Coupon Code. Returns blank if cannot generate a unique code using the passed criteria.
  * @param string $salt - this is an optional string to help seed the random code with greater entropy
