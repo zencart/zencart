@@ -149,8 +149,12 @@ class ot_gv {
       // check if GV was purchased on Special
       $gv_original_price = zen_products_lookup((int)$order->products[$i]['id'], 'products_price');
        // if prices differ assume Special and get Special Price
-       // Do not use this on GVs Priced by Attribute
-      if (MODULE_ORDER_TOTAL_GV_SPECIAL == 'true' && ($gv_original_price != 0 && $gv_original_price != $order->products[$i]['final_price'] && !zen_get_products_price_is_priced_by_attributes((int)$order->products[$i]['id']))) {
+
+        // Do not use this on GVs Priced by Attribute
+      if (defined('MODULE_ORDER_TOTAL_GV_SPECIAL') && MODULE_ORDER_TOTAL_GV_SPECIAL == 'true'
+          && $gv_original_price != 0 && $gv_original_price != $order->products[$i]['final_price']
+          && !zen_get_products_price_is_priced_by_attributes((int)$order->products[$i]['id'])
+      ) {
         $gv_order_amount = ($gv_original_price * $order->products[$i]['qty']);
       } else {
         $gv_order_amount = ($order->products[$i]['final_price'] * $order->products[$i]['qty']);
