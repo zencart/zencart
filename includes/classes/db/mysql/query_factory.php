@@ -158,16 +158,27 @@ class queryFactory extends base
     }
 
     /**
-     * @param string $db_name
-     * @return bool
+     * @param string $sqlQuery
+     * @param bool $remove_from_queryCache
+     * @return bool|mixed|mysqli_result
      */
-    public function selectdb(string $db_name): bool
+    protected function ensureDbConnected(string $sqlQuery, bool $remove_from_queryCache)
     {
-        $result = mysqli_select_db($this->link, $db_name);
-        if ($result) return $result;
-
-        $this->set_error(mysqli_errno($this->link), mysqli_error($this->link), $this->dieOnErrors);
-        return false;
+        // connect to db
+        if (!$this->db_connected) {
+            if (!$this->connect($this->host, $this->user, $this->password, $this->database, null, $this->dieOnErrors))
+                $this->set_error(0, DB_ERROR_NOT_CONNECTED, $this->dieOnErrors);
+        }
+        $zp_db_resource = $this->query($this->link, $sqlQuery, $remove_from_queryCache);
+        // second attempt in case of 2006 response
+        if (!$zp_db_resource) {
+            if (mysqli_errno($this->link) == 2006) {
+                $this->link = FALSE;
+                $this->connect($this->host, $this->user, $this->password, $this->database, null, $this->dieOnErrors);
+                $zp_db_resource = mysqli_query($this->link, $sqlQuery);
+            }
+        }
+        return $zp_db_resource;
     }
 
     /**
@@ -181,56 +192,15 @@ class queryFactory extends base
         return mysqli_real_escape_string($this->link, $string);
     }
 
-    public function close()
+    /**
+     * Alias to prepare_input()
+     * @param $string
+     * @return string
+     * @see $this->prepare_input()
+     */
+    function prepareInput($string)
     {
-        @mysqli_close($this->link);
-        unset($this->link);
-    }
-
-    public function __destruct()
-    {
-        $this->close();
-    }
-
-    protected function set_error($err_num, $err_text, $dieOnErrors = true)
-    {
-        $this->error_number = $err_num;
-        $this->error_text = $err_text;
-        if ($dieOnErrors && $err_num != 1141) { // error 1141 is okay ... should not die on 1141, but just continue on instead
-            $this->show_error();
-            die();
-        }
-    }
-
-    protected function show_error()
-    {
-        if (!headers_sent()) {
-            header("HTTP/1.1 503 Service Unavailable");
-        }
-        if ($this->error_number == 0 && $this->error_text == DB_ERROR_NOT_CONNECTED && file_exists(FILENAME_DATABASE_TEMPORARILY_DOWN)) {
-            include(FILENAME_DATABASE_TEMPORARILY_DOWN);
-        }
-        echo '<div class="systemError">';
-        if (defined('STRICT_ERROR_REPORTING') && STRICT_ERROR_REPORTING == true) {
-            echo $this->error_number . ' ' . $this->error_text;
-            echo '<br>in:<br>[' . (strstr($this->zf_sql, 'db_cache') ? 'db_cache table' : $this->zf_sql) . ']<br>';
-        } else {
-            echo 'WARNING: An Error occurred, please refresh the page and try again.';
-        }
-
-        $backtrace_array = debug_backtrace();
-        $query_factory_caller = '';
-        foreach ($backtrace_array as $current_caller) {
-            if (strcmp($current_caller['file'], __FILE__) != 0) {
-                $query_factory_caller = ' ==> (as called by) ' . $current_caller['file'] . ' on line ' . $current_caller['line'] . ' <==';
-                break;
-            }
-        }
-        trigger_error($this->error_number . ':' . $this->error_text . ' :: ' . $this->zf_sql . $query_factory_caller, E_USER_ERROR);
-
-        if (defined('IS_ADMIN_FLAG') && IS_ADMIN_FLAG == true) echo 'If you were entering information, press the BACK button in your browser and re-check the information you had entered to be sure you left no blank fields.<br>';
-
-        echo '</div>';
+        return $this->prepare_input($string);
     }
 
     /**
@@ -395,6 +365,7 @@ class queryFactory extends base
         $this->count_queries++;
         return $obj;
     }
+
     /**
      * Use this ExecuteRandomMulti method to ensure that any SELECT result is pulled from the database, bypassing the cache.
      */
@@ -403,38 +374,17 @@ class queryFactory extends base
         return $this->ExecuteRandomMulti($sqlQuery, 0, false, 0, true);
     }
 
+    function insert_ID()
+    {
+        return @mysqli_insert_id($this->link);
+    }
+
     /**
      * Return the number of rows affected by the last INSERT, UPDATE, REPLACE or DELETE query.
      */
     public function affectedRows()
     {
         return ($this->link) ? $this->link->affected_rows : 0;
-    }
-
-    function insert_ID()
-    {
-        return @mysqli_insert_id($this->link);
-    }
-
-    function metaColumns($zp_table)
-    {
-        $sql = "SHOW COLUMNS from :tableName:";
-        $sql = $this->bindVars($sql, ':tableName:', $zp_table, 'noquotestring');
-        $res = $this->execute($sql);
-        while (!$res->EOF) {
-            $obj [strtoupper($res->fields['Field'])] = new queryFactoryMeta($res->fields);
-            $res->MoveNext();
-        }
-        return $obj;
-    }
-
-    function get_server_info()
-    {
-        if ($this->link) {
-            return mysqli_get_server_info($this->link);
-        }
-
-        return defined('UNKNOWN') ? UNKNOWN : 'UNKNOWN';
     }
 
     function queryCount()
@@ -575,14 +525,89 @@ class queryFactory extends base
     }
 
     /**
-     * Alias to prepare_input()
-     * @param $string
-     * @return string
-     * @see $this->prepare_input()
+     * @param string $db_name
+     * @return bool
      */
-    function prepareInput($string)
+    public function selectdb(string $db_name): bool
     {
-        return $this->prepare_input($string);
+        $result = mysqli_select_db($this->link, $db_name);
+        if ($result) return $result;
+
+        $this->set_error(mysqli_errno($this->link), mysqli_error($this->link), $this->dieOnErrors);
+        return false;
+    }
+
+    public function close()
+    {
+        @mysqli_close($this->link);
+        unset($this->link);
+    }
+
+    public function __destruct()
+    {
+        $this->close();
+    }
+
+    protected function set_error($err_num, $err_text, $dieOnErrors = true)
+    {
+        $this->error_number = $err_num;
+        $this->error_text = $err_text;
+        if ($dieOnErrors && $err_num != 1141) { // error 1141 is okay ... should not die on 1141, but just continue on instead
+            $this->show_error();
+            die();
+        }
+    }
+
+    protected function show_error()
+    {
+        if (!headers_sent()) {
+            header("HTTP/1.1 503 Service Unavailable");
+        }
+        if ($this->error_number == 0 && $this->error_text == DB_ERROR_NOT_CONNECTED && file_exists(FILENAME_DATABASE_TEMPORARILY_DOWN)) {
+            include(FILENAME_DATABASE_TEMPORARILY_DOWN);
+        }
+        echo '<div class="systemError">';
+        if (defined('STRICT_ERROR_REPORTING') && STRICT_ERROR_REPORTING == true) {
+            echo $this->error_number . ' ' . $this->error_text;
+            echo '<br>in:<br>[' . (strstr($this->zf_sql, 'db_cache') ? 'db_cache table' : $this->zf_sql) . ']<br>';
+        } else {
+            echo 'WARNING: An Error occurred, please refresh the page and try again.';
+        }
+
+        $backtrace_array = debug_backtrace();
+        $query_factory_caller = '';
+        foreach ($backtrace_array as $current_caller) {
+            if (strcmp($current_caller['file'], __FILE__) != 0) {
+                $query_factory_caller = ' ==> (as called by) ' . $current_caller['file'] . ' on line ' . $current_caller['line'] . ' <==';
+                break;
+            }
+        }
+        trigger_error($this->error_number . ':' . $this->error_text . ' :: ' . $this->zf_sql . $query_factory_caller, E_USER_ERROR);
+
+        if (defined('IS_ADMIN_FLAG') && IS_ADMIN_FLAG == true) echo 'If you were entering information, press the BACK button in your browser and re-check the information you had entered to be sure you left no blank fields.<br>';
+
+        echo '</div>';
+    }
+
+    function metaColumns($zp_table)
+    {
+        $sql = "SHOW COLUMNS from :tableName:";
+        $sql = $this->bindVars($sql, ':tableName:', $zp_table, 'noquotestring');
+        $res = $this->execute($sql);
+        while (!$res->EOF) {
+            $obj [strtoupper($res->fields['Field'])] = new queryFactoryMeta($res->fields);
+            $res->MoveNext();
+        }
+        return $obj;
+    }
+
+    function get_server_info()
+    {
+        if ($this->link) {
+            return mysqli_get_server_info($this->link);
+        }
+
+        return defined('UNKNOWN') ? UNKNOWN : 'UNKNOWN';
     }
 
     /**
@@ -620,30 +645,6 @@ class queryFactory extends base
             fclose($f);
         }
         unset($f);
-    }
-
-    /**
-     * @param string $sqlQuery
-     * @param bool $remove_from_queryCache
-     * @return bool|mixed|mysqli_result
-     */
-    protected function ensureDbConnected(string $sqlQuery, bool $remove_from_queryCache)
-    {
-        // connect to db
-        if (!$this->db_connected) {
-            if (!$this->connect($this->host, $this->user, $this->password, $this->database, null, $this->dieOnErrors))
-                $this->set_error(0, DB_ERROR_NOT_CONNECTED, $this->dieOnErrors);
-        }
-        $zp_db_resource = $this->query($this->link, $sqlQuery, $remove_from_queryCache);
-        // second attempt in case of 2006 response
-        if (!$zp_db_resource) {
-            if (mysqli_errno($this->link) == 2006) {
-                $this->link = FALSE;
-                $this->connect($this->host, $this->user, $this->password, $this->database, null, $this->dieOnErrors);
-                $zp_db_resource = mysqli_query($this->link, $sqlQuery);
-            }
-        }
-        return $zp_db_resource;
     }
 }
 
