@@ -1340,14 +1340,6 @@ while (!$chk_sale_categories_all->EOF) {
     }
   }
 
-  /**
-   * @deprecated - use nl2br() instead
-   */
-  function zen_convert_linefeeds($from, $to, $string) {
-    return str_replace($from, $to, $string);
-  }
-
-
 ////
   /**
    * alias to zen_create_coupon_code()
