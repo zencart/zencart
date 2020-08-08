@@ -362,6 +362,8 @@ class queryFactory extends base
      */
     function ExecuteRandomMultiNoCache($sqlQuery)
     {
+        trigger_error('Call to deprecated function ExecuteRandomMultiNoCache. Use ExecuteRandomMulti() instead', E_USER_DEPRECATED);
+
         return $this->ExecuteRandomMulti($sqlQuery, 0);
     }
 
