@@ -353,27 +353,33 @@ class queryFactory extends base
     }
 
     /**
+     * Execute the database query, using the queryCache memoization cache to re-use same Resource for repeat queries
+     *
      * @param mysqli $link
      * @param string $query
-     * @param false $remove_from_queryCache
+     * @param bool $remove_from_queryCache
      * @return bool|mixed|mysqli_result
      */
     protected function query($link, string $query, bool $remove_from_queryCache = false)
     {
         global $queryCache;
 
-        if ($remove_from_queryCache && isset($queryCache)) {
-            $queryCache->reset($query);
-        }
+        if (isset($queryCache)) {
+            if ($remove_from_queryCache) {
+                $queryCache->reset($query);
+            }
 
-        if (isset($queryCache) && $queryCache->inCache($query)) {
-            $cached_value = $queryCache->getFromCache($query);
-            $this->count_queries--;
-            return ($cached_value);
+            if ($queryCache->inCache($query)) {
+                $cached_value = $queryCache->getFromCache($query);
+                $this->count_queries--;
+                return $cached_value;
+            }
         }
 
         $result = mysqli_query($link, $query);
+
         if (isset($queryCache)) $queryCache->cache($query, $result);
+
         return $result;
     }
 
