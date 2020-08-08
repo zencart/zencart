@@ -80,6 +80,9 @@ if (!defined('USE_PCONNECT')) define('USE_PCONNECT', 'false');
   $autoLoadConfig[0][] = array('autoType'=>'class',
                                'loadFile'=> 'WhosOnline.php',
                                'classPath'=>DIR_WS_CLASSES);
+  $autoLoadConfig[0][] = array('autoType'=>'class',
+                               'loadFile'=> 'Customer.php',
+                               'classPath'=>DIR_FS_CATALOG . DIR_WS_CLASSES);
 
 /**
  * Breakpoint 10.
