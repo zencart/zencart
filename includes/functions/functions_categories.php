@@ -899,6 +899,8 @@ function zen_get_categories_image($category_id) {
  * @param int $category_id
  */
 function zen_get_categories_name($category_id) {
+    trigger_error('Call to deprecated function zen_get_categories_name. Use zen_get_category_name() instead', E_USER_DEPRECATED);
+
     return zen_get_category_name($category_id, null);
 }
 
