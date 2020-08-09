@@ -21,6 +21,7 @@ if (!defined('IS_ADMIN_FLAG')) {
 // define our general functions used application-wide
   require(DIR_WS_FUNCTIONS . 'general.php');
   require(DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'functions_general_shared.php');
+require DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'functions_attributes.php';
 require DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'functions_files.php';
 require DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'functions_traffic.php';
 require DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'functions_strings.php';

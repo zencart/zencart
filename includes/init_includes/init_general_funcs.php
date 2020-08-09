@@ -15,6 +15,7 @@ if (!defined('IS_ADMIN_FLAG')) {
  */
 require(DIR_WS_FUNCTIONS . 'functions_general.php');
 require(DIR_WS_FUNCTIONS . 'functions_general_shared.php');
+require DIR_WS_FUNCTIONS . 'functions_attributes.php';
 require DIR_WS_FUNCTIONS . 'functions_files.php';
 require DIR_WS_FUNCTIONS . 'functions_traffic.php';
 require DIR_WS_FUNCTIONS . 'functions_strings.php';
