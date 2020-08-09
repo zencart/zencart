@@ -23,6 +23,8 @@ $global_query = "SELECT global_product_notifications
 
 $global_query = $db->bindVars($global_query, ':customersID',$_SESSION['customer_id'], 'integer');
 $global = $db->Execute($global_query);
+//$flag_global_notifications = $global->fields['global_product_notifications'];
+$flag_global_notifications = 0; // @TODO - fix template layout, and then use the flag value from db, above.
 
 if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
   if (isset($_POST['product_global']) && is_numeric($_POST['product_global'])) {
