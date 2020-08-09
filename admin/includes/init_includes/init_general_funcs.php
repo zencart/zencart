@@ -8,51 +8,51 @@
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
 }
-/**
- * load the system wide functions
- *
-**/
+
 // customization for the design layout
-  define('BOX_WIDTH', 125); // how wide the boxes should be in pixels (default: 125)
+define('BOX_WIDTH', 125); // how wide the boxes should be in pixels (default: 125)
 
-// include the database functions
-  require(DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'database.php');
 
-// define our general functions used application-wide
-  require(DIR_WS_FUNCTIONS . 'general.php');
-  require(DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'functions_general_shared.php');
+
+require DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'database.php';
+
+require DIR_WS_FUNCTIONS . 'general.php';
+
+require DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'functions_general_shared.php';
 require DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'functions_attributes.php';
 require DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'functions_files.php';
 require DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'functions_traffic.php';
 require DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'functions_strings.php';
 require DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'functions_search.php';
 require DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'functions_addresses.php';
-require(DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'functions_dates.php');
+require DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'functions_dates.php';
 require DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'functions_products.php';
 require DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'functions_categories.php';
-  require(DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'functions_prices.php');
+require DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'functions_prices.php';
 require DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'functions_taxes.php';
+require DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'functions_gvcoupons.php';
+require DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'functions_customers.php';
+require DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'functions_lookups.php';
 require DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'functions_urls.php';
-  require(DIR_WS_FUNCTIONS . 'html_output.php');
-  require(DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'functions_customers.php');
-  require(DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'functions_email.php');
+
+require DIR_WS_FUNCTIONS . 'html_output.php';
+
+require DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'functions_email.php';
+require DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'functions_ezpages.php';
+require DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'plugin_support.php';
+require DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'password_funcs.php';
 
 /**
- * require the plugin support functions
+ * meta-tag editing functions
  */
-require(DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'plugin_support.php');
-
-/**
- * Per-Page meta-tag editing functions
- */
-require(DIR_WS_FUNCTIONS . 'functions_metatags.php');
+require DIR_WS_FUNCTIONS . 'functions_metatags.php';
 
 
 // include the list of extra functions
   if ($za_dir = @dir(DIR_WS_FUNCTIONS . 'extra_functions')) {
     while ($zv_file = $za_dir->read()) {
       if (preg_match('~^[^\._].*\.php$~i', $zv_file) > 0) {
-        require(DIR_WS_FUNCTIONS . 'extra_functions/' . $zv_file);
+        require DIR_WS_FUNCTIONS . 'extra_functions/' . $zv_file;
       }
     }
     $za_dir->close();

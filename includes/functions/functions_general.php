@@ -221,20 +221,3 @@ function zen_get_buy_now_button(int $product_id, string $buy_now_link, $addition
 
     return $return_button;
 }
-
-  /////////////////////////////////////////////
-////
-// call additional function files
-// prices and quantities
-  require(DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'functions_prices.php');
-// gv and coupons
-  require(DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'functions_gvcoupons.php');
-// categories, paths, pulldowns
-  require(DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'functions_categories.php');
-// customers and addresses
-  require(DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'functions_customers.php');
-// lookup information
-  require(DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'functions_lookups.php');
-////
-/////////////////////////////////////////////
-
