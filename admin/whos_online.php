@@ -39,6 +39,8 @@ $selectedView = isset($_GET['q']) ? $_GET['q'] : '';
 $wo = new WhosOnline();
 $whos_online = $wo->retrieve($selectedView, (empty($_GET['inspect']) ? '' : $_GET['inspect']), $_SESSION['wo_exclude_spiders'], $_SESSION['wo_exclude_admins']);
 
+if (!defined('WHOIS_SHOW_HOST')) define('WHOIS_SHOW_HOST', '1');
+
 $optURL = FILENAME_WHOS_ONLINE . '.php?' . zen_get_all_get_params(['t', 'na', 'ns']);
 $listingURL = FILENAME_WHOS_ONLINE . '.php?' . zen_get_all_get_params(['q', 't', 'na', 'ns']);
 ?>
