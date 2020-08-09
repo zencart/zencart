@@ -283,21 +283,6 @@ function zen_set_field_length($tbl, $fld, $max = 70)
 
 
 ////
-// Return a random row from a database query
-  function zen_random_select($query) {
-    global $db;
-    $random_product = '';
-    $random_query = $db->Execute($query);
-    $num_rows = $random_query->RecordCount();
-    if ($num_rows > 1) {
-      $random_row = zen_rand(0, ($num_rows - 1));
-      $random_query->Move($random_row);
-    }
-    return $random_query;
-  }
-
-
-////
 // set current box id
   function zen_get_box_id($box_id) {
     $box_id = str_replace('_', '', $box_id);
