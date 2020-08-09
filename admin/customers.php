@@ -743,12 +743,12 @@ if (zen_not_null($action)) {
                 <?php
                 if ($error == true) {
                   if ($entry_country_error == true) {
-                    echo zen_draw_pull_down_menu('entry_country_id', zen_get_countries(), $cInfo->country_id, 'class="form-control"') . '&nbsp;' . ENTRY_COUNTRY_ERROR;
+                    echo zen_draw_pull_down_menu('entry_country_id', zen_get_countries_for_admin_pulldown(), $cInfo->country_id, 'class="form-control"') . '&nbsp;' . ENTRY_COUNTRY_ERROR;
                   } else {
-                    echo zen_get_country_name($cInfo->country_id) . zen_draw_hidden_field('entry_country_id');
+                    echo zen_get_country_name($cInfo->country_id, false) . zen_draw_hidden_field('entry_country_id');
                   }
                 } else {
-                  echo zen_draw_pull_down_menu('entry_country_id', zen_get_countries(), $cInfo->country_id, 'class="form-control"');
+                  echo zen_draw_pull_down_menu('entry_country_id', zen_get_countries_for_admin_pulldown(), $cInfo->country_id, 'class="form-control"');
                 }
                 ?>
             </div>

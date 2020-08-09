@@ -55,64 +55,6 @@
   }
 
 /*
- *  Alias function to zen_get_countries()
- */
-  function zen_get_country_name($country_id, $activeOnly = TRUE) {
-    $country_array = zen_get_countries($country_id, FALSE, $activeOnly);
-    return $country_array['countries_name'];
-  }
-
-/**
- * Alias function to zen_get_countries, which also returns the countries iso codes
- *
- * @param int If set limits to a single country
-*/
-  function zen_get_countries_with_iso_codes($countries_id, $activeOnly = TRUE) {
-    return zen_get_countries($countries_id, true, $activeOnly);
-  }
-
-/*
- * Return the zone (State/Province) name
- * TABLES: zones
- */
-  function zen_get_zone_name($country_id, $zone_id, $default_zone) {
-    global $db;
-    $zone_query = "select zone_name
-                   from " . TABLE_ZONES . "
-                   where zone_country_id = '" . (int)$country_id . "'
-                   and zone_id = '" . (int)$zone_id . "'";
-
-    $zone = $db->Execute($zone_query);
-
-    if ($zone->RecordCount()) {
-      return $zone->fields['zone_name'];
-    } else {
-      return $default_zone;
-    }
-  }
-
-/*
- * Returns the zone (State/Province) code
- * TABLES: zones
- */
-  function zen_get_zone_code($country_id, $zone_id, $default_zone) {
-    global $db;
-    $zone_query = "select zone_code
-                   from " . TABLE_ZONES . "
-                   where zone_country_id = '" . (int)$country_id . "'
-                   and zone_id = '" . (int)$zone_id . "'";
-
-    $zone = $db->Execute($zone_query);
-
-    if ($zone->RecordCount() > 0) {
-      return $zone->fields['zone_code'];
-    } else {
-      return $default_zone;
-    }
-  }
-
-
-/*
  * List manufacturers (returned in an array)
  */
   function zen_get_manufacturers($manufacturers_array = array(), $have_products = false) {

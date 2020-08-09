@@ -312,57 +312,6 @@ function zen_set_field_length($tbl, $fld, $max = 70)
     return $results;
   }
 
-
-
-/**
- * returns a pulldown array with zones defined for the specified country
- * used by zen_prepare_country_zones_pull_down()
- *
- * @param int $country_id
- * @return array for pulldown
- */
-  function zen_get_country_zones($country_id) {
-    global $db;
-    $zones_array = array();
-    $zones = $db->Execute("SELECT zone_id, zone_name
-                           FROM " . TABLE_ZONES . "
-                           WHERE zone_country_id = " . (int)$country_id . "
-                           ORDER BY zone_name");
-    foreach ($zones as $zone) {
-      $zones_array[] = array('id' => $zone['zone_id'], 'text' => $zone['zone_name']);
-    }
-
-    return $zones_array;
-  }
-
-/**
- * return an array with country names and matching zones to be used in pulldown menus
- */
-  function zen_prepare_country_zones_pull_down($country_id = '') {
-// preset the width of the drop-down for Netscape
-    $pre = '';
-    if ( (!zen_browser_detect('MSIE')) && (zen_browser_detect('Mozilla/4')) ) {
-      for ($i=0; $i<45; $i++) $pre .= '&nbsp;';
-    }
-
-    $zones = zen_get_country_zones($country_id);
-
-    if (sizeof($zones) > 0) {
-      $zones_select = array(array('id' => '', 'text' => PLEASE_SELECT));
-      $zones = array_merge($zones_select, $zones);
-    } else {
-      $zones = array(array('id' => '', 'text' => TYPE_BELOW));
-// create dummy options for Netscape to preset the height of the drop-down
-      if ( (!zen_browser_detect('MSIE')) && (zen_browser_detect('Mozilla/4')) ) {
-        for ($i=0; $i<9; $i++) {
-          $zones[] = array('id' => '', 'text' => $pre);
-        }
-      }
-    }
-
-    return $zones;
-  }
-
 /**
  * supplies javascript to dynamically update the states/provinces list when the country is changed
  * TABLES: zones

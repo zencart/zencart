@@ -24,6 +24,7 @@ require DIR_WS_FUNCTIONS . 'functions_strings.php';
 require(DIR_WS_FUNCTIONS . 'database.php');
 
 require DIR_WS_FUNCTIONS . 'functions_search.php';
+require DIR_WS_FUNCTIONS . 'functions_addresses.php';
 require(DIR_WS_FUNCTIONS . 'functions_products.php');
 
 require(DIR_WS_FUNCTIONS . 'functions_dates.php');

@@ -43,36 +43,6 @@
     return $image;
   }
 
-
-  function zen_get_country_name($country_id) {
-    global $db;
-    $country = $db->Execute("SELECT countries_name
-                             FROM " . TABLE_COUNTRIES . "
-                             WHERE countries_id = " . (int)$country_id);
-
-    if ($country->RecordCount() < 1) {
-      return $country_id;
-    } else {
-      return $country->fields['countries_name'];
-    }
-  }
-
-
-  function zen_get_zone_name($country_id, $zone_id, $default_zone) {
-    global $db;
-    $zone = $db->Execute("SELECT zone_name
-                                FROM " . TABLE_ZONES . "
-                                WHERE zone_country_id = " . (int)$country_id . "
-                                AND zone_id = " . (int)$zone_id);
-
-    if ($zone->RecordCount() > 0) {
-      return $zone->fields['zone_name'];
-    } else {
-      return $default_zone;
-    }
-  }
-
-
   function zen_tax_classes_pull_down($parameters, $selected = '') {
     global $db;
     $select_string = '<select ' . $parameters . '>';
@@ -126,35 +96,6 @@
     return $geo_zone_name;
   }
 
-
-  ////////////////////////////////////////////////////////////////////////////////////////////////
-  //
-  // Function    : zen_get_zone_code
-  //
-  // Arguments   : country_id           country code string
-  //               zone_id              state/province zone_id
-  //               default_zone         default string if zone==0
-  //
-  // Return      : state_prov_code   s  tate/province code
-  //
-  // Description : Function to retrieve the state/province code (as in FL for Florida etc)
-  //
-  ////////////////////////////////////////////////////////////////////////////////////////////////
-  function zen_get_zone_code($country_id, $zone_id, $default_zone) {
-    global $db;
-    $zone_query = "SELECT zone_code
-                   FROM " . TABLE_ZONES . "
-                   WHERE zone_country_id = " . (int)$country_id . "
-                   AND zone_id = " . (int)$zone_id;
-
-    $zone = $db->Execute($zone_query);
-
-    if ($zone->RecordCount() > 0) {
-      return $zone->fields['zone_code'];
-    } else {
-      return $default_zone;
-    }
-  }
 
   function zen_get_languages() {
     global $db;
@@ -316,96 +257,6 @@
     }
 
     return $categories_count;
-  }
-
-
-////
-// Returns an array with countries
-// TABLES: countries
-  function zen_get_countries($default = '') {
-    global $db;
-    $countries_array = array();
-    if ($default) {
-      $countries_array[] = array('id' => '',
-                                 'text' => $default);
-    }
-    $countries = $db->Execute("SELECT countries_id, countries_name, status
-                               FROM " . TABLE_COUNTRIES . "
-                               ORDER BY countries_name");
-
-    while (!$countries->EOF) {
-      $countries_array[] = array('id' => $countries->fields['countries_id'],
-        'text' => $countries->fields['countries_name'],
-        'status' => $countries->fields['status'],
-      );
-      $countries->MoveNext();
-    }
-
-    return $countries_array;
-  }
-
-
-////
-// return an array with country zones
-  function zen_get_country_zones($country_id) {
-    global $db;
-    $zones_array = array();
-    $zones = $db->Execute("SELECT zone_id, zone_name
-                           FROM " . TABLE_ZONES . "
-                           WHERE zone_country_id = " . (int)$country_id . "
-                           ORDER BY zone_name");
-
-    while (!$zones->EOF) {
-      $zones_array[] = array('id' => $zones->fields['zone_id'],
-                             'text' => $zones->fields['zone_name']);
-      $zones->MoveNext();
-    }
-
-    return $zones_array;
-  }
-
-
-  function zen_prepare_country_zones_pull_down($country_id = '') {
-// preset the width of the drop-down for Netscape
-    $pre = '';
-    if ( (!zen_browser_detect('MSIE')) && (zen_browser_detect('Mozilla/4')) ) {
-      for ($i=0; $i<45; $i++) $pre .= '&nbsp;';
-    }
-
-    $zones = zen_get_country_zones($country_id);
-
-    if (sizeof($zones) > 0) {
-      $zones_select = array(array('id' => '', 'text' => PLEASE_SELECT));
-      $zones = array_merge($zones_select, $zones);
-    } else {
-      $zones = array(array('id' => '', 'text' => TYPE_BELOW));
-// create dummy options for Netscape to preset the height of the drop-down
-      if ( (!zen_browser_detect('MSIE')) && (zen_browser_detect('Mozilla/4')) ) {
-        for ($i=0; $i<9; $i++) {
-          $zones[] = array('id' => '', 'text' => $pre);
-        }
-      }
-    }
-
-    return $zones;
-  }
-
-
-////
-// Get list of address_format_id's
-  function zen_get_address_formats() {
-    global $db;
-    $address_format_values = $db->Execute("SELECT address_format_id
-                                           FROM " . TABLE_ADDRESS_FORMAT . "
-                                           ORDER BY address_format_id");
-
-    $address_format_array = array();
-    while (!$address_format_values->EOF) {
-      $address_format_array[] = array('id' => $address_format_values->fields['address_format_id'],
-                                      'text' => $address_format_values->fields['address_format_id']);
-      $address_format_values->MoveNext();
-    }
-    return $address_format_array;
   }
 
 
