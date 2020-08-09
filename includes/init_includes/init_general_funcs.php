@@ -20,9 +20,7 @@ require(DIR_WS_FUNCTIONS . 'functions_general_shared.php');
  */
 require(DIR_WS_FUNCTIONS . 'database.php');
 
-/**
- * Product Functions
- */
+require DIR_WS_FUNCTIONS . 'functions_search.php';
 require(DIR_WS_FUNCTIONS . 'functions_products.php');
 
 require(DIR_WS_FUNCTIONS . 'functions_dates.php');
