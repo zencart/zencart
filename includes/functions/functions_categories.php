@@ -1168,3 +1168,388 @@ function zen_categories_lookup($categories_id, $what_field = 'categories_name', 
 
     return $return_field;
 }
+
+
+/**
+ * @param int $category_id
+ */
+function zen_remove_category($category_id)
+{
+    if ((int)$category_id == TOPMOST_CATEGORY_PARENT_ID) return;
+    global $db, $zco_notifier;
+    $zco_notifier->notify('NOTIFIER_ADMIN_ZEN_REMOVE_CATEGORY', array(), $category_id);
+
+    // delete from salemaker - sale_categories_selected
+    $chk_sale_categories_selected = $db->Execute("select * from " . TABLE_SALEMAKER_SALES . "
+        WHERE
+        sale_categories_selected = " . (int)$category_id . "
+        OR sale_categories_selected LIKE '%," . (int)$category_id . ",%'
+        OR sale_categories_selected LIKE '%," . (int)$category_id . "'
+        OR sale_categories_selected LIKE '" . (int)$category_id . ",%'");
+
+    // delete from salemaker - sale_categories_all
+    $chk_sale_categories_all = $db->Execute("select * from " . TABLE_SALEMAKER_SALES . "
+        WHERE
+        sale_categories_all = " . (int)$category_id . "
+        OR sale_categories_all LIKE '%," . (int)$category_id . ",%'
+        OR sale_categories_all LIKE '%," . (int)$category_id . "'
+        OR sale_categories_all LIKE '" . (int)$category_id . ",%'");
+
+//echo 'WORKING ON: ' . (int)$category_id . ' chk_sale_categories_selected: ' . $chk_sale_categories_selected->RecordCount() . ' chk_sale_categories_all: ' . $chk_sale_categories_all->RecordCount() . '<br>';
+    while (!$chk_sale_categories_selected->EOF) {
+        $skip_cats = false; // used when deleting
+        $skip_sale_id = 0;
+//echo '<br>FIRST LOOP: sale_id ' . $chk_sale_categories_selected->fields['sale_id'] . ' sale_categories_selected: ' . $chk_sale_categories_selected->fields['sale_categories_selected'] . '<br>';
+        // 9 or ,9 or 9,
+        // delete record if sale_categories_selected = 9 and  sale_categories_all = ,9,
+        if ($chk_sale_categories_selected->fields['sale_categories_selected'] == (int)$category_id and $chk_sale_categories_selected->fields['sale_categories_all'] == ',' . (int)$category_id . ',') { // delete record
+//echo 'A: I should delete this record sale_id: ' . $chk_sale_categories_selected->fields['sale_id'] . '<br><br>';
+            $skip_cats = true;
+            $skip_sale_id = $chk_sale_categories_selected->fields['sale_id'];
+            $salemakerdelete = "DELETE from " . TABLE_SALEMAKER_SALES . " WHERE sale_id="  . (int)$skip_sale_id;
+        }
+
+        // if in the front - remove 9,
+        //  if ($chk_sale_categories_selected->fields['sale_categories_selected'] == (int)$category_id . ',') { // front
+        if (!$skip_cats && (preg_match('/^' . (int)$category_id . ',/', $chk_sale_categories_selected->fields['sale_categories_selected'])) ) { // front
+//echo 'B: I need to remove - ' . (int)$category_id . ', - from the front of ' . $chk_sale_categories_selected->fields['sale_categories_selected'] . '<br>';
+            $new_sale_categories_selected = substr($chk_sale_categories_selected->fields['sale_categories_selected'], strlen((int)$category_id . ','));
+//echo 'B: new_sale_categories_selected: ' . $new_sale_categories_selected . '<br><br>';
+        }
+
+        // if in the middle or end - remove ,9,
+        if (!$skip_cats && (strpos($chk_sale_categories_selected->fields['sale_categories_selected'], ',' . (int)$category_id . ',')) ) { // middle or end
+//echo 'C: I need to remove - ,' . (int)$category_id . ', - from the middle or end ' . $chk_sale_categories_selected->fields['sale_categories_selected'] . '<br>';
+            $start_cat = (int)strpos($chk_sale_categories_selected->fields['sale_categories_selected'], ',' . (int)$category_id . ',') + strlen(',' . (int)$category_id . ',');
+            $end_cat = (int)strpos($chk_sale_categories_selected->fields['sale_categories_selected'], ',' . (int)$category_id . ',', $start_cat+strlen(',' . (int)$category_id . ','));
+            $new_sale_categories_selected = substr($chk_sale_categories_selected->fields['sale_categories_selected'], 0, $start_cat - (strlen(',' . (int)$category_id . ',') - 1)) . substr($chk_sale_categories_selected->fields['sale_categories_selected'], $start_cat);
+//echo 'C: new_sale_categories_selected: ' . $new_sale_categories_selected. '<br><br>';
+            $skip_cat_last = true;
+        }
+
+
+// not needed in loop 1 if middle does end
+        // if on the end - remove ,9 skip if middle cleaned it
+        if (!$skip_cats && !$skip_cat_last && (strripos($chk_sale_categories_selected->fields['sale_categories_selected'], ',' . (int)$category_id)) ) { // end
+            $start_cat = (int)strpos($chk_sale_categories_selected->fields['sale_categories_selected'], ',' . (int)$category_id) + strlen(',' . (int)$category_id);
+//echo 'D: I need to remove - ,' . (int)$category_id . ' - from the end ' . $chk_sale_categories_selected->fields['sale_categories_selected'] . '<br>';
+            $new_sale_categories_selected = substr($chk_sale_categories_selected->fields['sale_categories_selected'], 0, $start_cat - (strlen(',' . (int)$category_id . ',') - 1));
+//echo 'D: new_sale_categories_selected: ' . $new_sale_categories_selected. '<br><br>';
+        }
+
+        if (!$skip_cats) {
+            $salemakerupdate =
+                "UPDATE " . TABLE_SALEMAKER_SALES . "
+                 SET sale_categories_selected='" . $new_sale_categories_selected . "'
+                 WHERE sale_id = " . (int)$chk_sale_categories_selected->fields['sale_id'];
+//echo 'Update new_sale_categories_selected: ' . $salemakerupdate . '<br>';
+            $db->Execute($salemakerupdate);
+        } else {
+//echo 'Record was deleted sale_id ' . $skip_sale_id . '<br>' . $salemakerdelete;
+            $db->Execute($salemakerdelete);
+        }
+
+        $chk_sale_categories_selected->MoveNext();
+    }
+
+    while (!$chk_sale_categories_all->EOF) {
+//echo '<br><br>SECOND LOOP: sale_id ' . $chk_sale_categories_all->fields['sale_id'] . ' sale_categories_all: ' . $chk_sale_categories_all->fields['sale_categories_all'] . '<br><br>';
+        // remove ,9 if on front as ,9, - remove ,9 if in the middle as ,9, - remove ,9 if on the end as ,9,
+        // beware of ,79, or ,98, or ,99, when cleaning 9
+        // if ($chk_sale_categories_all->fields['sale_categories_all'] == ',9') { // front
+        // if (something for the middle) { // middle
+        // if (right($chk_sale_categories_all->fields['sale_categories_all']) == ',9,') { // end
+
+        $skip_cats = false;
+        if ($skip_sale_id == $chk_sale_categories_all->fields['sale_id']) { // was deleted
+//echo 'A: I should delete this record sale_id: ' . $chk_sale_categories_all->fields['sale_id'] . ' but already done' . '<br><br>';
+            $skip_cats = true;
+        }
+
+        // if in the front - remove 9,
+        //  if ($chk_sale_categories_all->fields['sale_categories_all'] == (int)$category_id . ',') { // front
+        if (!$skip_cats && (preg_match('/^' . ',' . (int)$category_id . ',/', $chk_sale_categories_all->fields['sale_categories_all'])) ) { // front
+//echo 'B: I need to remove - ' . (int)$category_id . ', - from the front of ' . $chk_sale_categories_all->fields['sale_categories_all'] . '<br>';
+            $new_sale_categories_all = substr($chk_sale_categories_all->fields['sale_categories_all'], strlen(',' . (int)$category_id));
+//echo 'B: new_sale_categories_all: ' . $new_sale_categories_all . '<br><br>';
+        }
+
+        // if in the middle or end - remove ,9,
+        if (!$skip_cats && (strpos($chk_sale_categories_all->fields['sale_categories_all'], ',' . (int)$category_id . ',')) ) { // middle
+//echo 'C: I need to remove - ,' . (int)$category_id . ', - from the middle or end ' . $chk_sale_categories_all->fields['sale_categories_all'] . '<br>';
+            $start_cat = (int)strpos($chk_sale_categories_all->fields['sale_categories_all'], ',' . (int)$category_id . ',') + strlen(',' . (int)$category_id . ',');
+            $end_cat = (int)strpos($chk_sale_categories_all->fields['sale_categories_all'], ',' . (int)$category_id . ',', $start_cat+strlen(',' . (int)$category_id . ','));
+            $new_sale_categories_all = substr($chk_sale_categories_all->fields['sale_categories_all'], 0, $start_cat - (strlen(',' . (int)$category_id . ',') - 1)) . substr($chk_sale_categories_all->fields['sale_categories_all'], $start_cat);
+//echo 'C: new_sale_categories_all: ' . $new_sale_categories_all. '<br><br>';
+        }
+
+        /*
+        // not needed in loop 2
+          // if on the end - remove ,9,
+          if (!$skip_cats && (strripos($chk_sale_categories_all->fields['sale_categories_all'], ',' . (int)$category_id . ',')) ) { // end
+            $start_cat = (int)strpos($chk_sale_categories_all->fields['sale_categories_all'], ',' . (int)$category_id) + strlen(',' . (int)$category_id . ',');
+            echo 'D: I need to remove from the end - ,' . (int)$category_id . ', - from the end ' . $chk_sale_categories_all->fields['sale_categories_all'] . '<br>';
+            $new_sale_categories_all = substr($chk_sale_categories_all->fields['sale_categories_all'], 0, $start_cat - (strlen(',' . (int)$category_id . ',') - 1));
+            echo 'D: new_sale_categories_all: ' . $new_sale_categories_all. '<br><br>';
+          }
+        */
+        $salemakerupdate = "UPDATE " . TABLE_SALEMAKER_SALES . " SET sale_categories_all='" . $new_sale_categories_all . "' WHERE sale_id = " . (int)$chk_sale_categories_all->fields['sale_id'];
+
+//echo 'Update sale_categories_all: ' . $salemakerupdate . '<br>';
+
+        $db->Execute($salemakerupdate);
+
+        $chk_sale_categories_all->MoveNext();
+    }
+
+//die('DONE TESTING');
+
+    $category_image = $db->Execute("SELECT categories_image
+                                    FROM " . TABLE_CATEGORIES . "
+                                    WHERE categories_id = " . (int)$category_id);
+
+    $duplicate_image = $db->Execute("SELECT count(*) as total
+                                     FROM " . TABLE_CATEGORIES . "
+                                     WHERE categories_image = '" . zen_db_input($category_image->fields['categories_image']) . "'");
+    if ($duplicate_image->fields['total'] < 2) {
+        if (file_exists(DIR_FS_CATALOG_IMAGES . $category_image->fields['categories_image'])) {
+            @unlink(DIR_FS_CATALOG_IMAGES . $category_image->fields['categories_image']);
+        }
+    }
+
+    $db->Execute("DELETE FROM " . TABLE_CATEGORIES . "
+                  WHERE categories_id = " . (int)$category_id);
+
+    $db->Execute("DELETE FROM " . TABLE_CATEGORIES_DESCRIPTION . "
+                  WHERE categories_id = " . (int)$category_id);
+
+    $db->Execute("DELETE FROM " . TABLE_PRODUCTS_TO_CATEGORIES . "
+                  WHERE categories_id = " . (int)$category_id);
+
+    $db->Execute("DELETE FROM " . TABLE_METATAGS_CATEGORIES_DESCRIPTION . "
+                  WHERE categories_id = " . (int)$category_id);
+
+    $db->Execute("DELETE FROM " . TABLE_COUPON_RESTRICT . "
+                  WHERE category_id = " . (int)$category_id);
+
+    zen_record_admin_activity('Deleted category ' . (int)$category_id . ' from database via admin console.', 'warning');
+}
+
+
+/**
+ * Count how many products exist in a category
+ * @param int $category_id
+ * @param bool $include_deactivated
+ * @param bool $include_child
+ * @param bool $limit
+ * @return int
+ */
+function zen_products_in_category_count($category_id, $include_deactivated = false, $include_child = true, $limit = false) {
+    global $db;
+    $products_count = 0;
+
+    $sql = "SELECT COUNT(*) AS total
+                FROM " . TABLE_PRODUCTS . " p
+                LEFT JOIN " . TABLE_PRODUCTS_TO_CATEGORIES . " p2c USING (products_id)
+                WHERE p2c.categories_id = " . (int)$category_id;
+
+    if ($include_deactivated) {
+        $sql .= " AND products_status = 1";
+    }
+
+    $products = $db->Execute($sql, ($limit ? 1 : false));
+
+    $products_count += $products->fields['total'];
+
+    if ($include_child) {
+        $childs = $db->Execute("SELECT categories_id FROM " . TABLE_CATEGORIES . "
+                                WHERE parent_id = " . (int)$category_id);
+        if ($childs->RecordCount() > 0 ) {
+            foreach ($childs as $child) {
+                $products_count += zen_products_in_category_count($child['categories_id'], $include_deactivated);
+            }
+        }
+    }
+    return $products_count;
+}
+
+
+/**
+ * Count how many subcategories exist in a category
+ * @param int $category_id
+ * @return int
+ */
+function zen_childs_in_category_count($category_id) {
+    global $db;
+    $categories_count = 0;
+
+    $categories = $db->Execute("SELECT categories_id
+                                FROM " . TABLE_CATEGORIES . "
+                                WHERE parent_id = " . (int)$category_id);
+
+    foreach ($categories as $result) {
+        $categories_count++;
+        $categories_count += zen_childs_in_category_count($result['categories_id']);
+    }
+
+    return $categories_count;
+}
+
+
+/**
+ * @TODO - is this even used?
+ * get categories_name for product
+ * @param int $product_id
+ * @return string
+ * @deprecated
+ */
+function zen_get_categories_name_from_product($product_id) {
+    trigger_error('Call to deprecated function zen_get_categories_name_from_product. Use zen_get_product_details() instead', E_USER_DEPRECATED);
+
+    global $db;
+
+    $check_products_category = $db->Execute("SELECT products_id, master_categories_id
+                                             FROM " . TABLE_PRODUCTS . "
+                                             WHERE products_id = " . (int)$product_id
+    );
+    if ($check_products_category->EOF) return '';
+    $the_categories_name= $db->Execute("SELECT categories_name
+                                        FROM " . TABLE_CATEGORIES_DESCRIPTION . "
+                                        WHERE categories_id= " . (int)$check_products_category->fields['master_categories_id'] . "
+                                        AND language_id= " . (int)$_SESSION['languages_id']
+    );
+    if ($the_categories_name->EOF) return '';
+    return $the_categories_name->fields['categories_name'];
+}
+
+/**
+ * @TODO - is this even used?
+ * @param int $category_id
+ * @return array
+ */
+function zen_count_products_in_cats($category_id) {
+    global $db;
+    $c_array = [];
+    $cat_products_query = "SELECT COUNT(IF (p.products_status=1,1,NULL)) AS pr_on, COUNT(*) AS total
+                           FROM " . TABLE_PRODUCTS . " p
+                           LEFT JOIN " . TABLE_PRODUCTS_TO_CATEGORIES . " p2c USING (products_id)
+                           WHERE p2c.categories_id = " . (int)$category_id;
+
+    $pr_count = $db->Execute($cat_products_query);
+//    echo $pr_count->RecordCount();
+    $c_array['this_count'] += $pr_count->fields['total'];
+    $c_array['this_count_on'] += $pr_count->fields['pr_on'];
+
+    $child_categories_query = "SELECT categories_id
+                               FROM " . TABLE_CATEGORIES . "
+                               WHERE parent_id = " . (int)$category_id;
+
+    $results = $db->Execute($child_categories_query);
+
+    if ($results->RecordCount() > 0) {
+        foreach ($results as $result) {
+            $m_array = zen_count_products_in_cats($result['categories_id']);
+            $c_array['this_count'] += $m_array['this_count'];
+            $c_array['this_count_on'] += $m_array['this_count_on'];
+
+//          $this_count_on += $pr_count->fields['pr_on'];
+        }
+    }
+    return $c_array;
+}
+
+/**
+ * Return the number of products in a category
+ * TABLES: products, products_to_categories, categories
+ * syntax for count: zen_get_products_to_categories($categories->fields['categories_id'], true)
+ * syntax for linked products: zen_get_products_to_categories($categories->fields['categories_id'], true, 'products_active')
+ *
+ * @TODO - refactor to use only a boolean response instead of string 'true'
+ *
+ * @param int $category_id
+ * @param bool $include_inactive
+ * @param string $counts_what products|products_active
+ * @return bool|string
+ */
+function zen_get_products_to_categories($category_id, $include_inactive = false, $counts_what = 'products') {
+    global $db;
+
+    $products_count = $cat_products_count = 0;
+    $products_linked = '';
+    if ($include_inactive == true) {
+        switch ($counts_what) {
+            case ('products'):
+                $cat_products_query = "SELECT count(*) as total
+                           FROM " . TABLE_PRODUCTS . " p, " . TABLE_PRODUCTS_TO_CATEGORIES . " p2c
+                           WHERE p.products_id = p2c.products_id
+                           AND p2c.categories_id = " . (int)$category_id;
+                break;
+            case ('products_active'):
+                $cat_products_query = "SELECT p.products_id
+                           FROM " . TABLE_PRODUCTS . " p, " . TABLE_PRODUCTS_TO_CATEGORIES . " p2c
+                           WHERE p.products_id = p2c.products_id
+                           AND p2c.categories_id = " . (int)$category_id;
+                break;
+        }
+
+    } else {
+        switch ($counts_what) {
+            case ('products'):
+                $cat_products_query = "SELECT count(*) as total
+                             FROM " . TABLE_PRODUCTS . " p, " . TABLE_PRODUCTS_TO_CATEGORIES . " p2c
+                             WHERE p.products_id = p2c.products_id
+                             AND p.products_status = 1
+                             AND p2c.categories_id = " . (int)$category_id;
+                break;
+            case ('products_active'):
+                $cat_products_query = "SELECT p.products_id
+                             FROM " . TABLE_PRODUCTS . " p, " . TABLE_PRODUCTS_TO_CATEGORIES . " p2c
+                             WHERE p.products_id = p2c.products_id
+                             AND p.products_status = 1
+                             AND p2c.categories_id = " . (int)$category_id;
+                break;
+        }
+    }
+    $cat_products = $db->Execute($cat_products_query);
+    switch ($counts_what) {
+        case ('products'):
+            if (!$cat_products->EOF) $cat_products_count += $cat_products->fields['total'];
+            break;
+        case ('products_active'):
+            while (!$cat_products->EOF) {
+                if (zen_get_product_is_linked($cat_products->fields['products_id']) == 'true') {
+                    return $products_linked = 'true';
+                }
+                $cat_products->MoveNext();
+            }
+            break;
+    }
+
+    $child_categories_query = "SELECT categories_id
+                               FROM " . TABLE_CATEGORIES . "
+                               WHERE parent_id = " . (int)$category_id;
+
+    $cat_child_categories = $db->Execute($child_categories_query);
+
+    if ($cat_child_categories->RecordCount() > 0) {
+        while (!$cat_child_categories->EOF) {
+            switch ($counts_what) {
+                case ('products'):
+                    $cat_products_count += zen_get_products_to_categories($cat_child_categories->fields['categories_id'], $include_inactive);
+                    break;
+                case ('products_active'):
+                    if (zen_get_products_to_categories($cat_child_categories->fields['categories_id'], true, 'products_active') == 'true') {
+                        return $products_linked = 'true';
+                    }
+                    break;
+            }
+            $cat_child_categories->MoveNext();
+        }
+    }
+
+    if ($counts_what === 'products') {
+        return $cat_products_count;
+    }
+
+    return $products_linked;
+}

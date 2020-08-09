@@ -9,50 +9,21 @@
  * @version $Id: DrByte 2020 May 19 Modified in v1.5.7 $
  */
 
+
 /**
- * Returns an array with countries
- *
- * @param int If set limits to a single country
- * @param boolean If true adds the iso codes to the array
+ * get the type_handler value for the specified product_type
+ * @param int $product_type
  */
-  function zen_get_countries($countries_id = '', $with_iso_codes = false, $activeOnly = TRUE) {
+function zen_get_handler_from_type($product_type)
+{
     global $db;
-    $countries_array = array();
-    if (zen_not_null($countries_id)) {
-      $countries_array['countries_name'] = '';
-      $countries = "select countries_name, countries_iso_code_2, countries_iso_code_3
-                    from " . TABLE_COUNTRIES . "
-                    where countries_id = '" . (int)$countries_id . "'";
-      if ($activeOnly) $countries .= " and status != 0 ";
-      $countries .= " order by countries_name";
-      $countries_values = $db->Execute($countries);
 
-      if ($with_iso_codes == true) {
-        $countries_array['countries_iso_code_2'] = '';
-        $countries_array['countries_iso_code_3'] = '';
-        if (!$countries_values->EOF) {
-          $countries_array = array('countries_name' => $countries_values->fields['countries_name'],
-                                   'countries_iso_code_2' => $countries_values->fields['countries_iso_code_2'],
-                                   'countries_iso_code_3' => $countries_values->fields['countries_iso_code_3']);
-        }
-      } else {
-        if (!$countries_values->EOF) $countries_array = array('countries_name' => $countries_values->fields['countries_name']);
-      }
-    } else {
-      $countries = "select countries_id, countries_name
-                    from " . TABLE_COUNTRIES . " ";
-      if ($activeOnly) $countries .= " where status != 0 ";
-      $countries .= " order by countries_name";
-      $countries_values = $db->Execute($countries);
-      while (!$countries_values->EOF) {
-        $countries_array[] = array('countries_id' => $countries_values->fields['countries_id'],
-                                   'countries_name' => $countries_values->fields['countries_name']);
-        $countries_values->MoveNext();
-      }
-    }
+    $sql = "select type_handler from " . TABLE_PRODUCT_TYPES . " where type_id = " . (int)$product_type;
+    $handler = $db->Execute($sql);
+    if ($handler->EOF) return 'ERROR: Invalid type_handler. Your product_type settings are wrong, incomplete, or damaged.';
+    return $handler->fields['type_handler'];
+}
 
-    return $countries_array;
-  }
 
 /*
  * List manufacturers (returned in an array)
@@ -63,14 +34,14 @@ function zen_get_manufacturers($manufacturers_array = array(), $have_products = 
     if (!is_array($manufacturers_array)) $manufacturers_array = array();
 
     if ($have_products == true) {
-      $manufacturers_query = "SELECT DISTINCT m.manufacturers_id, m.manufacturers_name
+        $manufacturers_query = "SELECT DISTINCT m.manufacturers_id, m.manufacturers_name
                               FROM " . TABLE_MANUFACTURERS . " m
                               LEFT JOIN " . TABLE_PRODUCTS . " p ON m.manufacturers_id = p.manufacturers_id
                               WHERE p.products_status = 1
                               AND p.products_quantity > 0
                               ORDER BY m.manufacturers_name";
     } else {
-      $manufacturers_query = "SELECT manufacturers_id, manufacturers_name
+        $manufacturers_query = "SELECT manufacturers_id, manufacturers_name
                               FROM " . TABLE_MANUFACTURERS . "
                               ORDER BY manufacturers_name";
     }
@@ -78,14 +49,29 @@ function zen_get_manufacturers($manufacturers_array = array(), $have_products = 
     $manufacturers = $db->Execute($manufacturers_query);
 
     foreach ($manufacturers as $manufacturer) {
-      $manufacturers_array[] = array(
-        'id' => $manufacturer['manufacturers_id'],
-        'text' => $manufacturer['manufacturers_name']
-      );
+        $manufacturers_array[] = array(
+            'id' => $manufacturer['manufacturers_id'],
+            'text' => $manufacturer['manufacturers_name']
+        );
     }
 
     return $manufacturers_array;
-  }
+}
+
+////
+// Return the manufacturers URL in the needed language
+// TABLES: manufacturers_info
+function zen_get_manufacturer_url($manufacturer_id, $language_id)
+{
+    global $db;
+    $manufacturer = $db->Execute("SELECT manufacturers_url
+                                  FROM " . TABLE_MANUFACTURERS_INFO . "
+                                  WHERE manufacturers_id = " . (int)$manufacturer_id . "
+                                  AND languages_id = " . (int)$language_id);
+    if ($manufacturer->EOF) return '';
+    return $manufacturer->fields['manufacturers_url'];
+}
+
 
 /**
  *  configuration key value lookup
@@ -127,83 +113,83 @@ function zen_get_cc_enabled($text_image = 'TEXT_', $cc_seperate = ' ', $cc_make_
     $cc_check_accepted = '';
     $cc_counter = 0;
     if ($cc_make_columns == 0) {
-      while (!$cc_check_accepted_query->EOF) {
-        $check_it = $text_image . $cc_check_accepted_query->fields['configuration_key'];
-        if (defined($check_it)) {
-          $cc_check_accepted .= constant($check_it) . $cc_seperate;
+        while (!$cc_check_accepted_query->EOF) {
+            $check_it = $text_image . $cc_check_accepted_query->fields['configuration_key'];
+            if (defined($check_it)) {
+                $cc_check_accepted .= constant($check_it) . $cc_seperate;
+            }
+            $cc_check_accepted_query->MoveNext();
         }
-        $cc_check_accepted_query->MoveNext();
-      }
     } else {
-      // build a table
-      $cc_check_accepted = '<table class="ccenabled">' . "\n";
-      $cc_check_accepted .= '<tr class="ccenabled">' . "\n";
-      while (!$cc_check_accepted_query->EOF) {
-        $check_it = $text_image . $cc_check_accepted_query->fields['configuration_key'];
-        if (defined($check_it)) {
-          $cc_check_accepted .= '<td class="ccenabled">' . constant($check_it) . '</td>' . "\n";
+        // build a table
+        $cc_check_accepted = '<table class="ccenabled">' . "\n";
+        $cc_check_accepted .= '<tr class="ccenabled">' . "\n";
+        while (!$cc_check_accepted_query->EOF) {
+            $check_it = $text_image . $cc_check_accepted_query->fields['configuration_key'];
+            if (defined($check_it)) {
+                $cc_check_accepted .= '<td class="ccenabled">' . constant($check_it) . '</td>' . "\n";
+            }
+            $cc_check_accepted_query->MoveNext();
+            $cc_counter++;
+            if ($cc_counter >= $cc_make_columns) {
+                $cc_check_accepted .= '</tr>' . "\n" . '<tr class="ccenabled">' . "\n";
+                $cc_counter = 0;
+            }
         }
-        $cc_check_accepted_query->MoveNext();
-        $cc_counter++;
-        if ($cc_counter >= $cc_make_columns) {
-          $cc_check_accepted .= '</tr>' . "\n" . '<tr class="ccenabled">' . "\n";
-          $cc_counter = 0;
-        }
-      }
-      $cc_check_accepted .= '</tr>' . "\n" . '</table>' . "\n";
+        $cc_check_accepted .= '</tr>' . "\n" . '</table>' . "\n";
     }
     return $cc_check_accepted;
-  }
+}
 
 
 /**
  *  stop regular behavior based on customer/store settings
  *  Used to disable various activities if store is in an operating mode that should prevent those activities
  */
-  function zen_run_normal(): bool
-  {
+function zen_run_normal(): bool
+{
     $zc_run = false;
     switch (true) {
-      case (zen_is_whitelisted_admin_ip()):
-      // down for maintenance not for ADMIN
-        $zc_run = true;
-        break;
-      case (DOWN_FOR_MAINTENANCE == 'true'):
-      // down for maintenance
-        $zc_run = false;
-        break;
-      case (STORE_STATUS >= 1):
-      // showcase no prices
-        $zc_run = false;
-        break;
-      case (CUSTOMERS_APPROVAL == '1' && !zen_is_logged_in()):
-      // customer must be logged in to browse
-        $zc_run = false;
-        break;
-      case (CUSTOMERS_APPROVAL == '2' && !zen_is_logged_in()):
-      // show room only
-      // customer may browse but no prices
-        $zc_run = false;
-        break;
-      case (CUSTOMERS_APPROVAL == '3'):
-      // show room only
-        $zc_run = false;
-        break;
-      case (CUSTOMERS_APPROVAL_AUTHORIZATION != '0' && !zen_is_logged_in()):
-      // customer must be logged in to browse
-        $zc_run = false;
-        break;
-      case (CUSTOMERS_APPROVAL_AUTHORIZATION != '0' && isset($_SESSION['customers_authorization']) && (int)$_SESSION['customers_authorization'] > 0):
-      // customer must be logged in to browse
-        $zc_run = false;
-        break;
-      default:
-      // proceed normally
-        $zc_run = true;
-        break;
+        case (zen_is_whitelisted_admin_ip()):
+            // down for maintenance not for ADMIN
+            $zc_run = true;
+            break;
+        case (DOWN_FOR_MAINTENANCE == 'true'):
+            // down for maintenance
+            $zc_run = false;
+            break;
+        case (STORE_STATUS >= 1):
+            // showcase no prices
+            $zc_run = false;
+            break;
+        case (CUSTOMERS_APPROVAL == '1' && !zen_is_logged_in()):
+            // customer must be logged in to browse
+            $zc_run = false;
+            break;
+        case (CUSTOMERS_APPROVAL == '2' && !zen_is_logged_in()):
+            // show room only
+            // customer may browse but no prices
+            $zc_run = false;
+            break;
+        case (CUSTOMERS_APPROVAL == '3'):
+            // show room only
+            $zc_run = false;
+            break;
+        case (CUSTOMERS_APPROVAL_AUTHORIZATION != '0' && !zen_is_logged_in()):
+            // customer must be logged in to browse
+            $zc_run = false;
+            break;
+        case (CUSTOMERS_APPROVAL_AUTHORIZATION != '0' && isset($_SESSION['customers_authorization']) && (int)$_SESSION['customers_authorization'] > 0):
+            // customer must be logged in to browse
+            $zc_run = false;
+            break;
+        default:
+            // proceed normally
+            $zc_run = true;
+            break;
     }
     return $zc_run;
-  }
+}
 
 /**
  *  Look up whether to show prices, based on customer-authorization levels
@@ -215,35 +201,77 @@ function zen_check_show_prices(): bool
         && !(
             (CUSTOMERS_APPROVAL_AUTHORIZATION > 0 && CUSTOMERS_APPROVAL_AUTHORIZATION < 3)
             && ($_SESSION['customers_authorization'] > '0' || !zen_is_logged_in())
-            )
+        )
         && STORE_STATUS != '1'
     ) {
-      return true;
+        return true;
     }
 
     return false;
 }
 
 
-
-/*
- * This function, added to the storefront in zc1.5.6, mimics the like-named admin function in
- * support of plugins that "span" both the storefront and admin.
- *
- * Returns the "name" associated with the specified orders_status_id.
- *
+/**
+ * check to see if database stored GET terms are in the URL as $_GET parameters
+ * This is used to determine which filters should be applied
+ * @return bool
  */
-function zen_get_orders_status_name($orders_status_id, $language_id = '')
+function zen_check_url_get_terms()
 {
-    if ($language_id == '') {
-        $language_id = $_SESSION['languages_id'];
+    global $db;
+    $sql = "SELECT * FROM " . TABLE_GET_TERMS_TO_FILTER;
+    $query_result = $db->Execute($sql);
+
+    foreach ($query_result as $row) {
+        if (isset($_GET[$row['get_term_name']]) && zen_not_null($_GET[$row['get_term_name']])) {
+            return true;
+        }
     }
-    $orders_status = $GLOBALS['db']->Execute(
-        "SELECT orders_status_name
-           FROM " . TABLE_ORDERS_STATUS . "
-          WHERE orders_status_id = " . (int)$orders_status_id . "
-            AND language_id = " . (int)$language_id . "
-          LIMIT 1"
-    );
-    return ($orders_status->EOF) ? '' : $orders_status->fields['orders_status_name'];
+    return false;
 }
+
+
+/**
+ * Returns the "name" associated with the specified orders_status_id.
+ * @param int $order_status_id
+ * @param int $language_id
+ * @return string
+ */
+function zen_get_orders_status_name(int $order_status_id, int $language_id = 0)
+{
+    global $db;
+    if (empty($language_id)) $language_id = $_SESSION['languages_id'];
+
+    $sql = "SELECT orders_status_name
+            FROM " . TABLE_ORDERS_STATUS . "
+            WHERE orders_status_id = " . (int)$order_status_id . "
+            AND language_id = " . (int)$language_id;
+    $result = $db->Execute($sql);
+
+    if ($result->EOF) return '';
+    return $result->fields['orders_status_name'];
+}
+
+/**
+ * @TODO collapse with zen_get_orders_status_name()
+ * @param int $order_status_id
+ * @param int $language_id
+ * @return string
+ */
+function zen_get_order_status_name(int $order_status_id, int $language_id = 0)
+{
+    global $db;
+
+    if ($order_status_id < 1) return TEXT_DEFAULT;
+
+    if (empty($language_id)) $language_id = $_SESSION['languages_id'];
+
+    $sql = "SELECT orders_status_name
+            FROM " . TABLE_ORDERS_STATUS . "
+            WHERE orders_status_id = " . (int)$order_status_id . "
+            AND language_id = " . (int)$language_id;
+    $result = $db->Execute($sql);
+    if ($result->EOF) return 'ERROR: INVALID STATUS ID: ' . (int)$order_status_id;
+    return $result->fields['orders_status_name'] . ' [' . (int)$order_status_id . ']';
+}
+

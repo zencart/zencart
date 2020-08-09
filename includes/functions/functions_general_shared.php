@@ -261,6 +261,61 @@ function zen_sort_array($data, $columnName1 = '', $order1 = SORT_ASC, $columnNam
     return $data;
 }
 
+
+/**
+ * check to see if free shipping rules allow the specified shipping module to be enabled or to disable it in lieu of being free
+ * @param $shipping_module
+ * @return bool
+ */
+function zen_get_shipping_enabled(string $shipping_module): bool
+{
+    global $PHP_SELF;
+
+    // for admin always true
+    if (IS_ADMIN_FLAG && strstr($PHP_SELF, FILENAME_MODULES)) {
+        return true;
+    }
+
+    $check_cart_free = $_SESSION['cart']->in_cart_check('product_is_always_free_shipping', '1');
+    $check_cart_cnt = $_SESSION['cart']->count_contents();
+    $check_cart_weight = $_SESSION['cart']->show_weight();
+
+    // Free Shipping when 0 weight - enable freeshipper - ORDER_WEIGHT_ZERO_STATUS must be on
+    if (ORDER_WEIGHT_ZERO_STATUS == '1' && ($check_cart_weight == 0 && $shipping_module == 'freeshipper')) {
+        return true;
+    }
+
+    // Free Shipping when 0 weight - disable everyone - ORDER_WEIGHT_ZERO_STATUS must be on
+    if (ORDER_WEIGHT_ZERO_STATUS == '1' && ($check_cart_weight == 0 && $shipping_module != 'freeshipper')) {
+        return false;
+    }
+
+    if ($_SESSION['cart']->free_shipping_items() == $check_cart_cnt && $shipping_module == 'freeshipper') {
+        return true;
+    }
+
+    if ($_SESSION['cart']->free_shipping_items() == $check_cart_cnt && $shipping_module != 'freeshipper') {
+        return false;
+    }
+
+    // Always free shipping only true - enable freeshipper
+    if ($check_cart_free == $check_cart_cnt && $shipping_module == 'freeshipper') {
+        return true;
+    }
+
+    // Always free shipping only true - disable everyone
+    if ($check_cart_free == $check_cart_cnt && $shipping_module != 'freeshipper') {
+        return false;
+    }
+
+    // Always free shipping only is false - disable freeshipper
+    if ($check_cart_free != $check_cart_cnt && $shipping_module == 'freeshipper') {
+        return false;
+    }
+    return true;
+}
+
+
 /**
  * @param $from
  * @param $to
