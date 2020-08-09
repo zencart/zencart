@@ -12,7 +12,8 @@
  * @param string $raw_date needs to be in this format: YYYY-MM-DD HH:MM:SS
  * @return bool|false|string
  */
-function zen_date_long($raw_date) {
+function zen_date_long($raw_date)
+{
     if (empty($raw_date) || $raw_date <= '0001-01-01 00:00:00') return false;
 
     $year = (int)substr($raw_date, 0, 4);
@@ -35,7 +36,8 @@ function zen_date_long($raw_date) {
  * @param string $raw_date needs to be in this format: YYYY-MM-DD HH:MM:SS
  * @return bool|false|string|string[]|null
  */
-function zen_date_short($raw_date) {
+function zen_date_short($raw_date)
+{
     if (empty($raw_date) || $raw_date <= '0001-01-01 00:00:00') return false;
 
     $year = (int)substr($raw_date, 0, 4);
@@ -55,7 +57,8 @@ function zen_date_short($raw_date) {
 }
 
 
-function zen_datetime_short($raw_datetime) {
+function zen_datetime_short($raw_datetime)
+{
     if (empty($raw_datetime) || $raw_datetime <= '0001-01-01 00:00:00') return false;
 
     $year = (int)substr($raw_datetime, 0, 4);
@@ -84,8 +87,7 @@ function zen_format_date_raw($date, $formatOut = 'mysql', $formatIn = null)
     $d = substr($date, $dpos, 2);
     $m = substr($date, $mpos, 2);
     $y = substr($date, $ypos, 4);
-    switch ($formatOut)
-    {
+    switch ($formatOut) {
         case 'raw':
             $mdate = $y . $m . $d;
             break;
@@ -106,11 +108,12 @@ function zen_format_date_raw($date, $formatOut = 'mysql', $formatIn = null)
  * @param array $date_array updated by reference
  * @return bool and also updates $date_array by reference
  */
-function zen_checkdate($date_to_check, $format_string, &$date_array) {
+function zen_checkdate($date_to_check, $format_string, &$date_array)
+{
     $separator_idx = -1;
 
     $separators = array('-', ' ', '/', '.');
-    $month_abbr = array('jan','feb','mar','apr','may','jun','jul','aug','sep','oct','nov','dec');
+    $month_abbr = array('jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec');
     $no_of_days = array(31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31);
 
     $format_string = strtolower($format_string);
@@ -120,7 +123,7 @@ function zen_checkdate($date_to_check, $format_string, &$date_array) {
     }
 
     $size = count($separators);
-    for ($i=0; $i<$size; $i++) {
+    for ($i = 0; $i < $size; $i++) {
         $pos_separator = strpos($date_to_check, $separators[$i]);
         if ($pos_separator != false) {
             $date_separator_idx = $i;
@@ -128,7 +131,7 @@ function zen_checkdate($date_to_check, $format_string, &$date_array) {
         }
     }
 
-    for ($i=0; $i<$size; $i++) {
+    for ($i = 0; $i < $size; $i++) {
         $pos_separator = strpos($format_string, $separators[$i]);
         if ($pos_separator != false) {
             $format_separator_idx = $i;
@@ -141,29 +144,29 @@ function zen_checkdate($date_to_check, $format_string, &$date_array) {
     }
 
     if ($date_separator_idx != -1) {
-        $format_string_array = explode( $separators[$date_separator_idx], $format_string );
+        $format_string_array = explode($separators[$date_separator_idx], $format_string);
         if (count($format_string_array) != 3) {
             return false;
         }
 
-        $date_to_check_array = explode( $separators[$date_separator_idx], $date_to_check );
+        $date_to_check_array = explode($separators[$date_separator_idx], $date_to_check);
         if (count($date_to_check_array) != 3) {
             return false;
         }
 
         $size = count($format_string_array);
-        for ($i=0; $i<$size; $i++) {
+        for ($i = 0; $i < $size; $i++) {
             if ($format_string_array[$i] == 'mm' || $format_string_array[$i] == 'mmm') $month = $date_to_check_array[$i];
             if ($format_string_array[$i] == 'dd') $day = $date_to_check_array[$i];
-            if ( ($format_string_array[$i] == 'yyyy') || ($format_string_array[$i] == 'aaaa') ) $year = $date_to_check_array[$i];
+            if (($format_string_array[$i] == 'yyyy') || ($format_string_array[$i] == 'aaaa')) $year = $date_to_check_array[$i];
         }
     } else {
         if (strlen($format_string) == 8 || strlen($format_string) == 9) {
             $pos_month = strpos($format_string, 'mmm');
             if ($pos_month != false) {
-                $month = substr( $date_to_check, $pos_month, 3 );
+                $month = substr($date_to_check, $pos_month, 3);
                 $size = count($month_abbr);
-                for ($i=0; $i<$size; $i++) {
+                for ($i = 0; $i < $size; $i++) {
                     if ($month == $month_abbr[$i]) {
                         $month = $i;
                         break;
@@ -214,7 +217,8 @@ function zen_checkdate($date_to_check, $format_string, &$date_array) {
  * @param int $year
  * @return bool
  */
-function zen_is_leap_year($year) {
+function zen_is_leap_year($year)
+{
     if ($year % 100 == 0) {
         if ($year % 400 == 0) return true;
     } else {
@@ -231,7 +235,8 @@ function zen_is_leap_year($year) {
  * @param string $date2
  * @return bool|int
  */
-function zen_date_diff($date1, $date2) {
+function zen_date_diff($date1, $date2)
+{
     //$date1  today, or any other day
     //$date2  date to check against
 
@@ -245,10 +250,10 @@ function zen_date_diff($date1, $date2) {
     $m2 = $d2[1];
     $d2 = $d2[2];
 
-    $date1_set = mktime(0,0,0, $m1, $d1, $y1);
-    $date2_set = mktime(0,0,0, $m2, $d2, $y2);
+    $date1_set = mktime(0, 0, 0, $m1, $d1, $y1);
+    $date2_set = mktime(0, 0, 0, $m2, $d2, $y2);
 
-    return round(($date2_set-$date1_set)/(60*60*24));
+    return round(($date2_set - $date1_set) / (60 * 60 * 24));
 }
 
 
@@ -287,9 +292,9 @@ function zen_date_diff($date1, $date2) {
  * $end2 raw_datetime, raw_date or effectively blank (if $start2 is array, the value here is replaced, otherwise this datetime is considered eternally effective)
  * $future_only boolean or string of 'past': values should be true, false, or 'past'
  * returns a boolean true/false.  In error case of array provided without proper keys true returned and warning log also generated
- **/
-
-function zen_datetime_overlap($start1, $start2, $end1 = NULL, $end2 = NULL, $future_only = true) {
+ */
+function zen_datetime_overlap($start1, $start2, $end1 = null, $end2 = null, $future_only = true)
+{
     $cur_datetime = date("Y-m-d h:i:s", time());
 
     // BOF if variable is provided as an array, validate properly setup and if so, assign and replace the other applicable values.
@@ -380,15 +385,16 @@ function zen_datetime_overlap($start1, $start2, $end1 = NULL, $end2 = NULL, $fut
 }
 
 
-function zen_count_days($start_date, $end_date, $lookup = 'm') {
+function zen_count_days($start_date, $end_date, $lookup = 'm')
+{
     if ($lookup == 'd') {
         // Returns number of days
-        $start_datetime = gmmktime (0, 0, 0, substr ($start_date, 5, 2), substr ($start_date, 8, 2), substr ($start_date, 0, 4));
-        $end_datetime = gmmktime (0, 0, 0, substr ($end_date, 5, 2), substr ($end_date, 8, 2), substr ($end_date, 0, 4));
+        $start_datetime = gmmktime(0, 0, 0, substr($start_date, 5, 2), substr($start_date, 8, 2), substr($start_date, 0, 4));
+        $end_datetime = gmmktime(0, 0, 0, substr($end_date, 5, 2), substr($end_date, 8, 2), substr($end_date, 0, 4));
         $days = (($end_datetime - $start_datetime) / 86400) + 1;
         $d = $days % 7;
         $w = date("w", $start_datetime);
-        $result = floor ($days / 7) * 5;
+        $result = floor($days / 7) * 5;
         $counter = $result + $d - (($d + $w) >= 7) - (($d + $w) >= 8) - ($w == 0);
     }
     if ($lookup == 'm') {
@@ -399,12 +405,12 @@ function zen_count_days($start_date, $end_date, $lookup = 'm') {
         $end_date_unixtimestamp = strtotime($end_date);
         $end_date_month = date("m", $end_date_unixtimestamp);
         $calculated_date_unixtimestamp = $start_date_unixtimestamp;
-        $counter=0;
+        $counter = 0;
         while ($calculated_date_unixtimestamp < $end_date_unixtimestamp) {
             $counter++;
             $calculated_date_unixtimestamp = strtotime($start_date . " +{$counter} months");
         }
-        if ( ($counter==1) && ($end_date_month==$start_date_month)) $counter=($counter-1);
+        if (($counter == 1) && ($end_date_month == $start_date_month)) $counter = ($counter - 1);
     }
     return $counter;
 }

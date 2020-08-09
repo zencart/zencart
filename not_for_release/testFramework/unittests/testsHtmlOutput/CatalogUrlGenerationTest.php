@@ -18,7 +18,8 @@ class CatalogUrlGenerationTest extends zcTestCase
         require_once(TESTCWD . 'support/zcURLTestObserver.php');
         $GLOBALS['zcURLTestObserver'] = new zcURLTestObserver();
         require DIR_FS_CATALOG . 'includes/functions/functions_general.php';
-        require DIR_FS_CATALOG . 'includes/functions/functions_general_shared.php';
+        require DIR_FS_CATALOG . 'includes/functions/functions_urls.php';
+        require DIR_FS_CATALOG . 'includes/functions/functions_strings.php';
         require DIR_FS_CATALOG . 'includes/functions/html_output.php';
         if (!array_key_exists('https_domain', $GLOBALS)) {
             $GLOBALS['https_domain'] = zen_get_top_level_domain(HTTPS_SERVER);

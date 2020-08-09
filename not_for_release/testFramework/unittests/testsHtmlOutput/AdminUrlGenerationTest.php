@@ -18,7 +18,7 @@ class AdminUrlGenerationTest extends zcTestCase
         parent::setUp();
         require DIR_FS_ADMIN . 'includes/defined_paths.php';
         require DIR_FS_ADMIN . DIR_WS_FUNCTIONS . 'general.php';
-        require DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'functions_general_shared.php';
+        require DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'functions_strings.php';
         require DIR_FS_ADMIN . 'includes/functions/html_output.php';
 
         if (!defined('ENABLE_SSL')) {

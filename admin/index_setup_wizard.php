@@ -72,7 +72,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'update') {
   $store_address = STORE_NAME_ADDRESS;
 }
 
-$country_string = zen_draw_pull_down_menu('zone_country_id', zen_get_countries(), $store_country, 'id="zone_country_id" class="form-control" onchange="update_zone(this.form);"');
+$country_string = zen_draw_pull_down_menu('zone_country_id', zen_get_countries_for_admin_pulldown(), $store_country, 'id="zone_country_id" class="form-control" onchange="update_zone(this.form);"');
 $zone_string = zen_draw_pull_down_menu('zone_id', zen_get_country_zones($store_country), $store_zone, 'id="zone_id" class="form-control"');
 ?>
 <!doctype html>

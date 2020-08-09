@@ -38,17 +38,17 @@ function zen_db_output(string $string)
     trigger_error('Call to deprecated function zen_db_output. Use zen_output_string_protected() instead', E_USER_DEPRECATED);
 
     return zen_output_string_protected($string);
-}
+  }
 
 /**
  * Rudimentary input sanitizer
  * NOTE: SHOULD NOT BE USED FOR DB QUERIES!!!  Use $db->prepare_input() or zen_db_input() instead
  *
- * @param string $string
+ * @param string|null $string
  * @param bool $trimspace
  * @return array|string
  */
-function zen_db_prepare_input(string $string, bool $trimspace = true)
+function zen_db_prepare_input($string, bool $trimspace = true)
 {
     if (is_string($string)) {
         if ($trimspace == true) {
@@ -172,4 +172,21 @@ function zen_db_perform_language(string $tableName, array $tableData, string $ke
     }
     $sql = substr($sql, 0, -2);
     return $db->Execute($sql);
+}
+
+
+/** @deprecated
+ * Return a random row from a database query
+ */
+function zen_random_select($query) {
+    trigger_error('Call to deprecated function zen_random_select. Use $db->ExecuteRandomMulti() instead', E_USER_DEPRECATED);
+
+    global $db;
+    $random_query = $db->Execute($query);
+    $num_rows = $random_query->RecordCount();
+    if ($num_rows > 1) {
+        $random_row = zen_rand(0, ($num_rows - 1));
+        $random_query->Move($random_row);
+    }
+    return $random_query;
 }

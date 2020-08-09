@@ -351,11 +351,9 @@ function zen_catalog_href_link($page = '', $parameters = '', $connection = 'NONS
         }
       }
 
-      // -----
       // Give an observer the chance to provide alternate formatting for the button (it's set to an empty
       // string above).  If the value is still empty after the notification, create the standard-format
       // of the button.
-      //
       $GLOBALS['zco_notifier']->notify(
             'NOTIFY_ZEN_CSS_BUTTON_SUBMIT',
             array(
@@ -377,7 +375,6 @@ function zen_catalog_href_link($page = '', $parameters = '', $connection = 'NONS
       // Give an observer the chance to provide alternate formatting for the button (it's set to an empty string
       // above).  If the value is still empty after the notification, create the standard-format
       // of the button.
-      //
       $GLOBALS['zco_notifier']->notify(
             'NOTIFY_ZEN_CSS_BUTTON_BUTTON',
             array(
@@ -411,6 +408,53 @@ function zen_catalog_href_link($page = '', $parameters = '', $connection = 'NONS
     }
     return zen_image($image, '', $width, $height);
   }
+
+
+/**
+ * generates javascript for dynamically updating the states/provinces list when the country is changed
+ *
+ * @param string $country number
+ * @param string $form html form name to attach to
+ * @param string $field html field to attach to
+ * @return string javascript segment
+ */
+function zen_js_zone_list(string $country, string $form, string $field) {
+    global $db;
+    $sql = "SELECT DISTINCT zone_country_id
+            FROM " . TABLE_ZONES . "
+            ORDER BY zone_country_id";
+    $countries = $db->Execute($sql);
+    $num_country = 1;
+    $output_string = '';
+    while (!$countries->EOF) {
+        if ($num_country == 1) {
+            $output_string .= '  if (' . $country . ' == "' . $countries->fields['zone_country_id'] . '") {' . "\n";
+        } else {
+            $output_string .= '  } else if (' . $country . ' == "' . $countries->fields['zone_country_id'] . '") {' . "\n";
+        }
+
+        $sql = "SELECT zone_name, zone_id
+                FROM " . TABLE_ZONES . "
+                WHERE zone_country_id = " . (int)$countries->fields['zone_country_id'] . "
+                ORDER BY zone_name";
+        $results = $db->Execute($sql);
+        $num_state = 1;
+        foreach ($results as $state) {
+            if ($num_state == 1) $output_string .= '    ' . $form . '.' . $field . '.options[0] = new Option("' . PLEASE_SELECT . '", "");' . "\n";
+            $output_string .= '    ' . $form . '.' . $field . '.options[' . $num_state . '] = new Option("' . $state['zone_name'] . '", "' . $state['zone_id'] . '");' . "\n";
+            $num_state++;
+        }
+        $num_country++;
+        $countries->MoveNext();
+        $output_string .= '    hideStateField(' . $form . ');' . "\n" ;
+    }
+    $output_string .= '  } else {' . "\n" .
+        '    ' . $form . '.' . $field . '.options[0] = new Option("' . TYPE_BELOW . '", "");' . "\n" .
+        '    showStateField(' . $form . ');' . "\n" .
+        '  }' . "\n";
+    return $output_string;
+}
+
 
 /*
  *  Output a form
