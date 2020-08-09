@@ -942,7 +942,7 @@ if (zen_not_null($action) && $order_exists == true) {
                     <td>
 <?php
                         if ($first) {
-                           echo nl2br(zen_db_output($item['comments']));
+                           echo nl2br(zen_output_string_protected($item['comments']));
                            $first = false;
                         } else {
                            echo nl2br($item['comments']);

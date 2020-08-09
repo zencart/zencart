@@ -33,21 +33,23 @@ function zen_is_whitelisted_admin_ip($ip = null)
 
 /**
  * Returns a string with conversions for security.
- * @param string The string to be parsed
- * @param string contains a string to be translated, otherwise just quote is translated
- * @param boolean Do we run htmlspecialchars over the string
-*/
-  function zen_output_string($string, $translate = false, $protected = false) {
-    if ($protected == true) {
+ * @param string $string The string to be parsed
+ * @param string|bool $translate contains a string to be translated, otherwise just quote is translated
+ * @param bool $protected Do we run htmlspecialchars over the string
+ * @return string
+ */
+  function zen_output_string($string, $translate = false, $protected = false): string
+  {
+    if ($protected === true) {
       $double_encode = (IS_ADMIN_FLAG ? FALSE : TRUE);
       return htmlspecialchars($string, ENT_COMPAT, CHARSET, $double_encode);
-    } else {
-      if ($translate === false) {
-        return zen_parse_input_field_data($string, array('"' => '&quot;'));
-      } else {
-        return zen_parse_input_field_data($string, $translate);
-      }
     }
+
+    if ($translate === false) {
+      return zen_parse_input_field_data($string, array('"' => '&quot;'));
+    }
+
+    return zen_parse_input_field_data($string, $translate);
   }
 
 /**
