@@ -720,22 +720,7 @@ function zen_set_field_length($tbl, $fld, $max = 70)
     }
     return $url;
   }
-  function zen_update_music_artist_clicked($artistId, $languageId)
-  {
-    global $db;
-    $sql = "UPDATE " . TABLE_RECORD_ARTISTS_INFO . " SET url_clicked = url_clicked +1, date_last_click = NOW() WHERE artists_id = :artistId: AND languages_id = :languageId:";
-    $sql = $db->bindVars($sql, ':artistId:', $artistId, 'integer');
-    $sql = $db->bindVars($sql, ':languageId:', $languageId, 'integer');
-    $db->execute($sql);
-  }
-  function zen_update_record_company_clicked($recordCompanyId, $languageId)
-  {
-    global $db;
-    $sql = "UPDATE " . TABLE_RECORD_COMPANY_INFO . " SET url_clicked = url_clicked +1, date_last_click = NOW() WHERE record_company_id = :rcId: AND languages_id = :languageId:";
-    $sql = $db->bindVars($sql, ':rcId:', $recordCompanyId, 'integer');
-    $sql = $db->bindVars($sql, ':languageId:', $languageId, 'integer');
-    $db->execute($sql);
-  }
+
 
   /////////////////////////////////////////////
 ////
