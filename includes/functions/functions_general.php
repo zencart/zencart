@@ -388,8 +388,6 @@ function zen_set_field_length($tbl, $fld, $max = 70)
 // call additional function files
 // prices and quantities
   require(DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'functions_prices.php');
-// taxes
-  require(DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'functions_taxes.php');
 // gv and coupons
   require(DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'functions_gvcoupons.php');
 // categories, paths, pulldowns

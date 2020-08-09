@@ -29,6 +29,7 @@ require DIR_WS_FUNCTIONS . 'functions_addresses.php';
 require(DIR_WS_FUNCTIONS . 'functions_products.php');
 
 require(DIR_WS_FUNCTIONS . 'functions_dates.php');
+require DIR_WS_FUNCTIONS . 'functions_taxes.php';
 require DIR_WS_FUNCTIONS . 'functions_urls.php';
 require(DIR_WS_FUNCTIONS . 'html_output.php');
 /**
