@@ -7,13 +7,6 @@
  */
 
 
-////
-// Parse the data used in the html tags to ensure the tags will not break
-  function zen_parse_input_field_data($data, $parse) {
-    return strtr(trim($data), $parse);
-  }
-
-
   function zen_options_name($options_id) {
     global $db;
 
@@ -2123,30 +2116,6 @@ function zen_cfg_read_only($text, $key = '')
                                    where products_id = " . (int)$product_id);
     if ($product_image->EOF) return '';
     return $product_image->fields['products_image'];
-  }
-
-
-/**
- * remove common HTML from text for display as paragraph
- */
-  function zen_clean_html($clean_it) {
-
-    // remove any embedded javascript
-    $clean_it = preg_replace('#<script(.*?)>(.*?)</script>#is', '', $clean_it);
-
-    $clean_it = preg_replace('/\r/', ' ', $clean_it);
-    $clean_it = preg_replace('/\t/', ' ', $clean_it);
-    $clean_it = preg_replace('/\n/', ' ', $clean_it);
-
-    $clean_it= nl2br($clean_it);
-
-// update breaks with a space for text displays in all listings with descriptions
-    $clean_it = preg_replace('~(<br ?/?>|</?p>)~', ' ', $clean_it);
-    $clean_it = preg_replace('/[ ]+/', ' ', $clean_it);
-
-// remove other html code to prevent problems on display of text
-    $clean_it = strip_tags($clean_it);
-    return $clean_it;
   }
 
 

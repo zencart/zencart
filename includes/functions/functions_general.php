@@ -10,17 +10,6 @@
  */
 
 
-/**
- * Parse the data used in the html tags to ensure the tags will not break.
- * Basically just an extension to the php strtr function
- * @param string The string to be parsed
- * @param string The needle to find
-*/
-  function zen_parse_input_field_data($data, $parse) {
-    return strtr(trim($data), $parse);
-  }
-
-
 ////
 // Return table heading with sorting capabilities
   function zen_create_sort_heading($sortby, $colnum, $heading) {
@@ -35,14 +24,6 @@
     return $sort_prefix . $heading . $sort_suffix;
   }
 
-
-////
-// Get the number of times a word/character is present in a string
-  function zen_word_count($string, $needle) {
-    $temp_array = preg_split('/'.$needle.'/', $string);
-
-    return count($temp_array);
-  }
 
 
 ////
@@ -74,26 +55,6 @@
   function zen_count_shipping_modules() {
     return zen_count_modules(MODULE_SHIPPING_INSTALLED);
   }
-
-////
-  function zen_array_to_string($array, $exclude = '', $equals = '=', $separator = '&') {
-    if (!is_array($exclude)) $exclude = array();
-    if (!is_array($array)) $array = array();
-
-    $get_string = '';
-    if (sizeof($array) > 0) {
-      foreach($array as $key => $value) {
-        if ( (!in_array($key, $exclude)) && ($key != 'x') && ($key != 'y') ) {
-          $get_string .= $key . $equals . $value . $separator;
-        }
-      }
-      $remove_chars = strlen($separator);
-      $get_string = substr($get_string, 0, -$remove_chars);
-    }
-
-    return $get_string;
-  }
-
 
 ////
 // Checks to see if the currency code exists as a currency
@@ -317,63 +278,6 @@ function zen_set_field_length($tbl, $fld, $max = 70)
   }
 
 
-////
-  function zen_html_entity_decode($given_html, $quote_style = ENT_QUOTES) {
-    $trans_table = array_flip(get_html_translation_table( HTML_SPECIALCHARS, $quote_style ));
-    $trans_table['&#39;'] = "'";
-    return ( strtr( $given_html, $trans_table ) );
-  }
-
-////
-//CLR 030228 Add function zen_decode_specialchars
-// Decode string encoded with htmlspecialchars()
-  function zen_decode_specialchars($string){
-    $string=str_replace('&gt;', '>', $string);
-    $string=str_replace('&lt;', '<', $string);
-    $string=str_replace('&#039;', "'", $string);
-    $string=str_replace('&quot;', "\"", $string);
-    $string=str_replace('&amp;', '&', $string);
-
-    return $string;
-  }
-
-////
-// remove common HTML from text for display as paragraph
-  function zen_clean_html($clean_it, $extraTags = '') {
-    if (!is_array($extraTags)) $extraTags = array($extraTags);
-
-    // remove any embedded javascript
-    $clean_it = preg_replace('#<script(.*?)>(.*?)</script>#is', '', $clean_it);
-
-    $clean_it = preg_replace('/\r/', ' ', $clean_it);
-    $clean_it = preg_replace('/\t/', ' ', $clean_it);
-    $clean_it = preg_replace('/\n/', ' ', $clean_it);
-
-    $clean_it= nl2br($clean_it);
-
-// update breaks with a space for text displays in all listings with descriptions
-    $clean_it = preg_replace('~(<br ?/?>|</?p>)~', ' ', $clean_it);
-
-// temporary fix more for reviews than anything else
-    $clean_it = str_replace('<span class="smallText">', ' ', $clean_it);
-    $clean_it = str_replace('</span>', ' ', $clean_it);
-
-// clean general and specific tags:
-    $taglist = array('strong','b','u','i','em');
-    $taglist = array_merge($taglist, (is_array($extraTags) ? $extraTags : array($extraTags)));
-    foreach ($taglist as $tofind) {
-      if ($tofind != '') $clean_it = preg_replace("/<[\/\!]*?" . $tofind . "[^<>]*?>/si", ' ', $clean_it);
-    }
-
-// remove any double-spaces created by cleanups:
-    $clean_it = preg_replace('/[ ]+/', ' ', $clean_it);
-
-// remove other html code to prevent problems on display of text
-    $clean_it = strip_tags($clean_it);
-    return $clean_it;
-  }
-
-
 
 /**
  * check to see if database stored GET terms are in the URL as $_GET parameters
@@ -408,22 +312,6 @@ function zen_set_field_length($tbl, $fld, $max = 70)
     return $results;
   }
 
-////
-// return truncated paragraph
-  function zen_truncate_paragraph($paragraph, $size = 100) {
-    $zv_paragraph = "";
-    $word = explode(" ", $paragraph);
-    $zv_total = count($word);
-    if ($zv_total > $size) {
-      for ($x=0; $x < $size; $x++) {
-        $zv_paragraph = $zv_paragraph . $word[$x] . " ";
-      }
-      $zv_paragraph = trim($zv_paragraph);
-    } else {
-      $zv_paragraph = trim($paragraph);
-    }
-    return $zv_paragraph;
-  }
 
 
 /**
@@ -519,46 +407,6 @@ function zen_set_field_length($tbl, $fld, $max = 70)
 
 
 
-
-
-/**
- * strip out accented characters to reasonable approximations of english equivalents
- */
-  function replace_accents($s) {
-    $skipPreg = (defined('OVERRIDE_REPLACE_ACCENTS_WITH_HTMLENTITIES') && OVERRIDE_REPLACE_ACCENTS_WITH_HTMLENTITIES == 'TRUE') ? TRUE : FALSE;
-    $s = htmlentities($s, ENT_COMPAT, CHARSET);
-    if ($skipPreg == FALSE) {
-      $s = preg_replace ('/&([a-zA-Z])(uml|acute|elig|grave|circ|tilde|cedil|ring|quest|slash|caron);/', '$1', $s);
-    }
-    $s = html_entity_decode($s);
-    return $s;
-  }
-
-/**
- * convert supplied string to UTF-8, dropping any symbols which cannot be translated easily
- * useful for submitting cleaned-up data to payment gateways or other external services, esp if the data was copy+pasted from windows docs via windows browser to store in database
- *
- * @param string $string
- */
-  function charsetConvertWinToUtf8($string) {
-    if (function_exists('iconv')) $string = iconv("Windows-1252", "ISO-8859-1//IGNORE", $string);
-    $string = htmlentities($string, ENT_QUOTES, 'UTF-8');
-    return $string;
-  }
-
-/**
- * Convert supplied string to/from entities between charsets, to sanitize data from payment gateway
- * @param $string
- * @return string
- */
-  function charsetClean($string) {
-    if (preg_replace('/[^a-z0-9]/', '', strtolower(CHARSET)) == 'utf8') return $string;
-    if (function_exists('iconv')) $string = iconv("Windows-1252", CHARSET . "//IGNORE", $string);
-    $string = htmlentities($string, ENT_QUOTES, 'UTF-8');
-    $string = html_entity_decode($string, ENT_QUOTES, CHARSET);
-    return $string;
-  }
-
   // Helper function to check whether the current instance is using SSL or not.
   // Returns SSL or NONSSL
   function getConnectionType() {
@@ -583,13 +431,6 @@ function zen_set_field_length($tbl, $fld, $max = 70)
     } else if ($out == 'echo' || $out == 'e') {
       echo $val;
     }
-  }
-  function fixup_url($url)
-  {
-    if (!preg_match('#^https?://#', $url)) {
-      $url = 'http://' . $url;
-    }
-    return $url;
   }
 
 

@@ -231,7 +231,7 @@ function zen_get_product_path($product_id)
 function zen_parse_category_path($cPath)
 {
     // make sure the category IDs are integers
-    $cPath_array = array_map('zen_string_to_int', explode('_', $cPath));
+    $cPath_array = array_map(function($value) {return (int)trim($value);}, explode('_', $cPath));
 
     // make sure no duplicate category IDs exist which could lock us into a loop
     $tmp_array = [];

@@ -31,79 +31,6 @@ function zen_is_whitelisted_admin_ip($ip = null)
     return strpos(EXCLUDE_ADMIN_IP_FOR_MAINTENANCE, $ip) !== false;
 }
 
-/**
- * Returns a string with conversions for security.
- * @param string $string The string to be parsed
- * @param string|bool $translate contains a string to be translated, otherwise just quote is translated
- * @param bool $protected Do we run htmlspecialchars over the string
- * @return string
- */
-  function zen_output_string($string, $translate = false, $protected = false): string
-  {
-    if ($protected === true) {
-      $double_encode = (IS_ADMIN_FLAG ? FALSE : TRUE);
-      return htmlspecialchars($string, ENT_COMPAT, CHARSET, $double_encode);
-    }
-
-    if ($translate === false) {
-      return zen_parse_input_field_data($string, array('"' => '&quot;'));
-    }
-
-    return zen_parse_input_field_data($string, $translate);
-  }
-
-/**
- * Returns a string with conversions for security.
- *
- * Simply calls the zen_output_string function
- * with parameters that run htmlspecialchars over the string
- * and converts quotes to html entities
- *
- * @param string The string to be parsed
-*/
-  function zen_output_string_protected($string) {
-    return zen_output_string($string, false, true);
-  }
-
-
-/**
- * Returns a string with conversions for security.
- *
- * @param string The string to be parsed
-*/
-
-  function zen_sanitize_string($string) {
-    $string = preg_replace('/ +/', ' ', $string);
-    return preg_replace("/[<>]/", '_', $string);
-  }
-
-/**
- * Break a word in a string if it is longer than a specified length ($len)
- *
- * @param string The string to be broken up
- * @param int The maximum length allowed
- * @param string The character to use at the end of the broken line
-*/
-  function zen_break_string($string, $len, $break_char = '-') {
-    $l = 0;
-    $output = '';
-    for ($i=0, $n=strlen($string); $i<$n; $i++) {
-      $char = substr($string, $i, 1);
-      if ($char != ' ') {
-        $l++;
-      } else {
-        $l = 0;
-      }
-      if ($l > $len) {
-        $l = 1;
-        $output .= $break_char;
-      }
-      $output .= $char;
-    }
-
-    return $output;
-  }
-
 
 ////
 // Wrapper function for round()
@@ -114,29 +41,6 @@ function zen_is_whitelisted_admin_ip($ip = null)
   }
 
 
-/**
- * Checks whether a string/array is null/blank/empty or uppercase string 'NULL'
- * Differs from empty() in that it doesn't test for boolean false or '0' string/int
- * @param string|array|Countable $value
- * @return bool
- */
-  function zen_not_null($value) {
-    if (null === $value) {
-        return false;
-    }
-    if (is_array($value)) {
-      return count($value) > 0;
-    }
-    if (is_a($value, \Countable::class)) {
-      return count($value) > 0;
-    }
-    return trim($value) !== '' && $value !== 'NULL';
-  }
-
-////
-  function zen_string_to_int($string) {
-    return (int)$string;
-  }
 
 
 
@@ -189,34 +93,7 @@ function zen_is_whitelisted_admin_ip($ip = null)
   }
 
 
-// Truncate a string
-  function zen_trunc_string($str = "", $len = 150, $more = 'true') {
-    if ($str == "") return $str;
-    if (is_array($str)) return $str;
-    $str = trim($str);
-    $len = (int)$len;
-    if ($len == 0) return '';
-    // if it's les than the size given, then return it
-    if (strlen($str) <= $len) return $str;
-    // else get that size of text
-    $str = substr($str, 0, $len);
-    // backtrack to the end of a word
-    if ($str != "") {
-      // check to see if there are any spaces left
-      if (!substr_count($str , " ")) {
-        if ($more == 'true') $str .= "...";
-        return $str;
-      }
-      // backtrack
-      while(strlen($str) && ($str[strlen($str)-1] != " ")) {
-        $str = substr($str, 0, -1);
-      }
-      $str = substr($str, 0, -1);
-      if ($more == 'true') $str .= "...";
-      if ($more != 'true' and $more != 'false') $str .= $more;
-    }
-    return $str;
-  }
+
 
 /**
  * function issetorArray
@@ -233,44 +110,6 @@ function issetorArray(array $array, $key, $default = null)
     return isset($array[$key]) ? $array[$key] : $default;
 }
 
-/**
- * Recursively apply htmlentities on the passed string
- * Useful for preparing json output and ajax responses
- *
- * @param string|array $mixed_value
- * @param int $flags
- * @param string $encoding
- * @param bool $double_encode
- * @return array|string
- */
-function htmlentities_recurse($mixed_value, $flags = ENT_QUOTES, $encoding = 'utf-8', $double_encode = true) {
-    $result = array();
-    if (!is_array ($mixed_value)) {
-        return htmlentities ((string)$mixed_value, $flags, $encoding, $double_encode);
-    }
-    if (is_array($mixed_value)) {
-        $result = array ();
-        foreach ($mixed_value as $key => $value) {
-            $result[$key] = htmlentities_recurse ($value, $flags, $encoding, $double_encode);
-        }
-    }
-    return $result;
-}
-
-function utf8_encode_recurse($mixed_value)
-{
-    if (strtolower(CHARSET) == 'utf-8') {
-        return $mixed_value;
-    } elseif (!is_array($mixed_value)) {
-        return utf8_encode((string)$mixed_value);
-    } else {
-        $result = array();
-        foreach ($mixed_value as $key => $value) {
-            $result[$key] = utf8_encode($value);
-        }
-        return $result;
-    }
-}
 
 /**
  * Return all HTTP GET variables, except those passed as a parameter
