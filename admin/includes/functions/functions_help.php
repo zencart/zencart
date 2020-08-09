@@ -53,6 +53,26 @@ function page_has_help()
       return $fallback; 
     }
 
+    // Go to correct help file - category or product level. 
+    if ($page == FILENAME_CATEGORY_PRODUCT_LISTING) {
+       $show_category_help = false; 
+       if (!isset($_GET['cPath'])) {
+          $show_category_help = true; 
+       } else {
+          $cPath_array = zen_parse_category_path($_GET['cPath']);
+          $cPath = implode('_', $cPath_array);
+          $current_category_id = $cPath_array[(sizeof($cPath_array)-1)];
+          if (zen_products_in_category_count($current_category_id, true, false) == 0) {
+             $show_category_help = true; 
+          }
+       }
+       if ($show_category_help) {
+           return 'https://docs.zen-cart.com/user/admin_pages/catalog/categories/';
+       } else {
+           return 'https://docs.zen-cart.com/user/admin_pages/catalog/categories_products/';
+       }
+    }
+
     $pagelist = array(
         FILENAME_CONFIGURATION => 'https://docs.zen-cart.com/user/admin_pages/configuration/',
         FILENAME_CATEGORIES => 'https://docs.zen-cart.com/user/admin_pages/catalog/categories/',

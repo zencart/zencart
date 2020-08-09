@@ -668,7 +668,6 @@ function zen_cfg_read_only($text, $key = '')
     return $text . zen_draw_hidden_field($name, $text);
 }
 
-
 // @TODO can this be merged with another pulldown, not specific to coupon admin?
 function zen_geo_zones_pull_down_coupon($parameters, $selected = '')
 {
