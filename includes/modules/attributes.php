@@ -110,6 +110,7 @@ while (!$products_options_names->EOF) {
     $tmp_radio = '';
     $tmp_checkbox = '';
     $tmp_html = '';
+    $selected_attribute = $selected_dropdown_attribute = false; // boolean, used for radio/checkbox/select
 
     $tmp_attributes_image = '';
     $tmp_attributes_image_row = 0;
@@ -540,10 +541,11 @@ while (!$products_options_names->EOF) {
 
 
         // default
-        // find default attribute if set for default dropdown
+        // find default attribute if set. Intended for dropdown's default
         if ($products_options->fields['attributes_default'] == '1') {
-            $selected_attribute = $products_options_value_id;
+            $selected_dropdown_attribute = $products_options_value_id;
         }
+        $selected_attribute = $selected_dropdown_attribute;
 
         $products_options->MoveNext();
         // end of inner while() loop
