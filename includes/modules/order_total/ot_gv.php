@@ -68,7 +68,7 @@ class ot_gv {
       if ($od_amount['total'] > 0) {
         $tax = 0;
         foreach($order->info['tax_groups'] as $key => $value) {
-          if ($od_amount['tax_groups'][$key]) {
+          if (isset($od_amount['tax_groups'][$key])) {
             $order->info['tax_groups'][$key] -= $od_amount['tax_groups'][$key];
             $tax += $od_amount['tax_groups'][$key];
           }
