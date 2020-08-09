@@ -48,7 +48,7 @@ function zen_db_output(string $string)
  * @param bool $trimspace
  * @return array|string
  */
-function zen_db_prepare_input(string $string, bool $trimspace = true)
+function zen_db_prepare_input($string, bool $trimspace = true)
 {
     if (is_string($string)) {
         if ($trimspace == true) {
