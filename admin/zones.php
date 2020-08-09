@@ -125,7 +125,7 @@ if (zen_not_null($action)) {
                 $contents[] = array('text' => TEXT_INFO_INSERT_INTRO);
                 $contents[] = array('text' => '<br>' . zen_draw_label(TEXT_INFO_ZONES_NAME, 'zone_name', 'class="control-label"') . zen_draw_input_field('zone_name', '', 'class="form-control"'));
                 $contents[] = array('text' => '<br>' . zen_draw_label(TEXT_INFO_ZONES_CODE, 'zone_code', 'class="control-label"') . zen_draw_input_field('zone_code', '', 'class="form-control"'));
-                $contents[] = array('text' => '<br>' . zen_draw_label(TEXT_INFO_COUNTRY_NAME, 'zone_country_id', 'class="control-label"') . zen_draw_pull_down_menu('zone_country_id', zen_get_countries(), '', 'class="form-control"'));
+                $contents[] = array('text' => '<br>' . zen_draw_label(TEXT_INFO_COUNTRY_NAME, 'zone_country_id', 'class="control-label"') . zen_draw_pull_down_menu('zone_country_id', zen_get_countries_for_admin_pulldown(), '', 'class="form-control"'));
                 $contents[] = array('align' => 'text-center', 'text' => '<br><button type="submit" class="btn btn-primary">' . IMAGE_INSERT . '</button> <a href="' . zen_href_link(FILENAME_ZONES, 'page=' . $_GET['page']) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>');
                 break;
               case 'edit':
@@ -135,7 +135,7 @@ if (zen_not_null($action)) {
                 $contents[] = array('text' => TEXT_INFO_EDIT_INTRO);
                 $contents[] = array('text' => '<br>' . zen_draw_label(TEXT_INFO_ZONES_NAME, 'zone_name', 'class="control-label"') . zen_draw_input_field('zone_name', htmlspecialchars($cInfo->zone_name, ENT_COMPAT, CHARSET, TRUE), 'class="form-control"'));
                 $contents[] = array('text' => '<br>' . zen_draw_label(TEXT_INFO_ZONES_CODE, 'zone_code', 'class="control-label"') . zen_draw_input_field('zone_code', $cInfo->zone_code, 'class="form-control"'));
-                $contents[] = array('text' => '<br>' . zen_draw_label(TEXT_INFO_COUNTRY_NAME, 'zone_country_id', 'class="control-label"') . zen_draw_pull_down_menu('zone_country_id', zen_get_countries(), $cInfo->countries_id, 'class="form-control"'));
+                $contents[] = array('text' => '<br>' . zen_draw_label(TEXT_INFO_COUNTRY_NAME, 'zone_country_id', 'class="control-label"') . zen_draw_pull_down_menu('zone_country_id', zen_get_countries_for_admin_pulldown(), $cInfo->countries_id, 'class="form-control"'));
                 $contents[] = array('align' => 'text-center', 'text' => '<br><button type="submit" class="btn btn-primary">' . IMAGE_UPDATE . '</button> <a href="' . zen_href_link(FILENAME_ZONES, 'page=' . $_GET['page'] . '&cID=' . $cInfo->zone_id) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>');
                 break;
               case 'delete':

@@ -119,8 +119,6 @@ if (WARN_DATABASE_VERSION_PROBLEM != 'false') {
 }
 
 // check for insecure default passwords, and present warning if found
-// include the password crypto functions
-  require_once(DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'password_funcs.php');
   $admin_security = false;
   $demo_check = $db->Execute("SELECT * FROM " . TABLE_ADMIN . " WHERE admin_name='demo' OR admin_name='Admin'");
   if (!$demo_check->EOF) {

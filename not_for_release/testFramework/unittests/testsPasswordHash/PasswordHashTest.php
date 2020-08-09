@@ -13,7 +13,7 @@ class PasswordHashTest extends zcTestCase
     public function setUp(): void
     {
         parent::setUp();
-        require_once DIR_FS_CATALOG . 'includes/functions/functions_general_shared.php';
+        require_once DIR_FS_CATALOG . 'includes/functions/functions_strings.php';
         require_once DIR_FS_CATALOG . DIR_WS_CLASSES . 'class.zcPassword.php';
         require_once DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'password_funcs.php';
 

@@ -14,7 +14,7 @@ class AttributeLookupsTest extends zcTestCase
     {
         parent::setUp();
         require_once DIR_FS_CATALOG . DIR_WS_CLASSES . 'db/mysql/query_factory.php';
-        require DIR_FS_CATALOG . 'includes/functions/functions_lookups.php';
+        require DIR_FS_CATALOG . 'includes/functions/functions_attributes.php';
     }
 
     public function testZenHasProductAttributesDownloadsStatusWhenDownloadEnabledIsFalse()

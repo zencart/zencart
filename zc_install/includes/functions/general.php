@@ -129,9 +129,9 @@ function zen_get_select_options($optionList, $setDefault)
       return htmlspecialchars($string, ENT_COMPAT, 'utf-8', TRUE);
     } else {
       if ($translate == false) {
-        return zen_parse_input_field_data($string, array('"' => '&quot;'));
+        return strtr($string, array('"' => '&quot;'));
       } else {
-        return zen_parse_input_field_data($string, $translate);
+        return strtr($string, $translate);
       }
     }
   }

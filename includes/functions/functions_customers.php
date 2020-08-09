@@ -517,3 +517,18 @@ function zen_log_hmac_login($params)
     zen_db_perform(TABLE_ADMIN_ACTIVITY_LOG, $sql_data_array);
 }
 
+
+
+/** @deprecated  */
+function zen_user_has_gv_balance($c_id) {
+    trigger_error('Call to deprecated function zen_user_has_gv_balance. Use Customer object instead', E_USER_DEPRECATED);
+
+    global $db;
+    $gv_result = $db->Execute("select amount from " . TABLE_COUPON_GV_CUSTOMER . " where customer_id = " . (int)$c_id);
+    if ($gv_result->RecordCount() > 0) {
+        if ($gv_result->fields['amount'] > 0) {
+            return $gv_result->fields['amount'];
+        }
+    }
+    return 0;
+}
