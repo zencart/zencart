@@ -25,9 +25,7 @@ require DIR_WS_FUNCTIONS . 'functions_search.php';
 require(DIR_WS_FUNCTIONS . 'functions_products.php');
 
 require(DIR_WS_FUNCTIONS . 'functions_dates.php');
-/**
- * html_output functions (href_links, input types etc)
- */
+require DIR_WS_FUNCTIONS . 'functions_urls.php';
 require(DIR_WS_FUNCTIONS . 'html_output.php');
 /**
  * basic email functions

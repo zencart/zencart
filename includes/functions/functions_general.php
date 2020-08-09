@@ -16,37 +16,6 @@
    exit();
   }
 
-/**
- * Redirect to another page or site
- * @param string The url to redirect to
-*/
-  function zen_redirect($url, $httpResponseCode = '') {
-    global $request_type;
-    // Are we loading an SSL page?
-    if ( (ENABLE_SSL == 'true') && ($request_type == 'SSL') ) {
-      // yes, but a NONSSL url was supplied
-      if (substr($url, 0, strlen(HTTP_SERVER . DIR_WS_CATALOG)) == HTTP_SERVER . DIR_WS_CATALOG) {
-        // So, change it to SSL, based on site's configuration for SSL
-        $url = HTTPS_SERVER . DIR_WS_HTTPS_CATALOG . substr($url, strlen(HTTP_SERVER . DIR_WS_CATALOG));
-      }
-    }
-
-  // clean up URL before executing it
-    $url = preg_replace('/&{2,}/', '&', $url);
-    $url = preg_replace('/(&amp;)+/', '&amp;', $url);
-    // header locates should not have the &amp; in the address it breaks things
-    $url = preg_replace('/(&amp;)+/', '&', $url);
-
-    if ($httpResponseCode == '') {
-      session_write_close();
-      header('Location: ' . $url);
-    } else {
-      session_write_close();
-      header('Location: ' . $url, TRUE, (int)$httpResponseCode);
-    }
-
-    exit();
-  }
 
 /**
  * Parse the data used in the html tags to ensure the tags will not break.
@@ -258,28 +227,6 @@ function zen_set_field_length($tbl, $fld, $max = 70)
     return $length;
 }
 
-////
-// Set back button
-  function zen_back_link($link_only = false) {
-    if (sizeof($_SESSION['navigation']->path)-2 >= 0) {
-      $back = sizeof($_SESSION['navigation']->path)-2;
-      $link = zen_href_link($_SESSION['navigation']->path[$back]['page'], zen_array_to_string($_SESSION['navigation']->path[$back]['get'], array('action')), $_SESSION['navigation']->path[$back]['mode']);
-    } else {
-      if (isset($_SERVER['HTTP_REFERER']) && preg_match("~^".HTTP_SERVER."~i", $_SERVER['HTTP_REFERER']) ) {
-      //if (isset($_SERVER['HTTP_REFERER']) && strstr($_SERVER['HTTP_REFERER'], str_replace(array('http://', 'https://'), '', HTTP_SERVER) ) ) {
-        $link= $_SERVER['HTTP_REFERER'];
-      } else {
-        $link = zen_href_link(FILENAME_DEFAULT);
-      }
-      $_SESSION['navigation'] = new navigationHistory;
-    }
-
-    if ($link_only == true) {
-      return $link;
-    } else {
-      return '<a href="' . $link . '">';
-    }
-  }
 
 
 ////

@@ -6,19 +6,6 @@
  * @version $Id: DrByte 2020 May 17 Modified in v1.5.7 $
  */
 
-////
-// Redirect to another page or site
-  function zen_redirect($url) {
-    // clean up URL before executing it
-    $url = preg_replace('/&{2,}/', '&', $url);
-    $url = preg_replace('/(&amp;)+/', '&amp;', $url);
-    // header locates should not have the &amp; in the address it breaks things
-    $url = str_replace('&amp;', '&', $url);
-
-    session_write_close();
-    header('Location: ' . $url);
-    exit;
-  }
 
 ////
 // Parse the data used in the html tags to ensure the tags will not break
