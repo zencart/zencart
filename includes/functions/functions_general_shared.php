@@ -44,6 +44,55 @@ function zen_round($value, $precision)
 
 
 /**
+ * replacement for fmod to manage values < 1
+ */
+function fmod_round($x, $y)
+{
+    if ($y == 0) {
+        return 0;
+    }
+    $x = (string)$x;
+    $y = (string)$y;
+    $zc_round = ($x * 1000) / ($y * 1000);
+    $zc_round_ceil = round($zc_round, 0);
+    $multiplier = $zc_round_ceil * $y;
+    $results = abs(round($x - $multiplier, 6));
+    return $results;
+}
+
+
+/**
+ * Convert value to a float -- mainly used for sanitizing and returning non-empty strings or nulls
+ * @param int|float|string $input
+ * @return float|int
+ */
+function convertToFloat($input = 0)
+{
+    if ($input === null) return 0;
+    $val = preg_replace('/[^0-9,\.\-]/', '', $input);
+    // do a non-strict compare here:
+    if ($val == 0) return 0;
+    return (float)$val;
+}
+
+
+/**
+ * function issetorArray
+ *
+ * returns an array[key] or default value if key does not exist
+ *
+ * @param array $array
+ * @param $key
+ * @param null $default
+ * @return mixed
+ */
+function issetorArray(array $array, $key, $default = null)
+{
+    return isset($array[$key]) ? $array[$key] : $default;
+}
+
+
+/**
  * Get a shortened filename to fit within the db field constraints
  *
  * @param string $filename (could also be a URL)
@@ -92,22 +141,6 @@ function zen_field_length($tbl, $fld)
     $rs = $db->MetaColumns($tbl);
     $length = $rs[strtoupper($fld)]->max_length;
     return $length;
-}
-
-
-/**
- * function issetorArray
- *
- * returns an array[key] or default value if key does not exist
- *
- * @param array $array
- * @param $key
- * @param null $default
- * @return mixed
- */
-function issetorArray(array $array, $key, $default = null)
-{
-    return isset($array[$key]) ? $array[$key] : $default;
 }
 
 
@@ -191,4 +224,97 @@ function zen_post_all_get_params($exclude_array = array(), $hidden = true, $para
         }
     }
     return $fields;
+}
+
+
+/**
+ * Perform an array multisort, based on 1 or 2 columns being passed
+ * (defaults to sorting by first column ascendingly then second column ascendingly unless otherwise specified)
+ *
+ * @param $data        multidimensional array to be sorted
+ * @param $columnName1 string representing the named column to sort by as first criteria
+ * @param $order1      either SORT_ASC or SORT_DESC (default SORT_ASC)
+ * @param $columnName2 string representing named column as second criteria
+ * @param $order2      either SORT_ASC or SORT_DESC (default SORT_ASC)
+ * @return array   Original array sorted as specified
+ */
+function zen_sort_array($data, $columnName1 = '', $order1 = SORT_ASC, $columnName2 = '', $order2 = SORT_ASC)
+{
+    // simple validations
+    $keys = array_keys($data);
+    if ($columnName1 == '') {
+        $columnName1 = $keys[0];
+    }
+    if (!in_array($order1, array(SORT_ASC, SORT_DESC))) $order1 = SORT_ASC;
+    if ($columnName2 == '') {
+        $columnName2 = $keys[1];
+    }
+    if (!in_array($order2, array(SORT_ASC, SORT_DESC))) $order2 = SORT_ASC;
+
+    // prepare sub-arrays for aiding in sorting
+    foreach ($data as $key => $val) {
+        $sort1[] = $val[$columnName1];
+        $sort2[] = $val[$columnName2];
+    }
+    // do actual sort based on specified fields.
+    array_multisort($sort1, $order1, $sort2, $order2, $data);
+    return $data;
+}
+
+/**
+ * @param $from
+ * @param $to
+ * @param $string
+ * @return string|string[]
+ * @deprecated
+ */
+function zen_convert_linefeeds($from, $to, $string)
+{
+    trigger_error('Call to deprecated function zen_convert_linefeeds.', E_USER_DEPRECATED);
+
+    return str_replace($from, $to, $string);
+}
+
+/**
+ * Return a random value
+ */
+function zen_rand($min = null, $max = null)
+{
+    static $seeded;
+
+    if (!isset($seeded)) {
+        mt_srand((double)microtime() * 1000000);
+        $seeded = true;
+    }
+
+    if (isset($min) && isset($max)) {
+        if ($min >= $max) {
+            return $min;
+        } else {
+            return mt_rand($min, $max);
+        }
+    } else {
+        return mt_rand();
+    }
+}
+
+
+// debug utility only
+function utilDumpRequest($mode = 'p', $out = 'log')
+{
+    if ($mode == 'p') {
+        $val = '<pre>DEBUG request: ' . print_r($_REQUEST, TRUE);
+    } else {
+        @ob_start();
+        var_dump('DEBUG request: ', $_REQUEST);
+        $val = @ob_get_contents();
+        @ob_end_clean();
+    }
+    if ($out == 'log' || $out == 'l') {
+        error_log($val);
+    } else if ($out == 'die' || $out == 'd') {
+        die($val);
+    } else if ($out == 'echo' || $out == 'e') {
+        echo $val;
+    }
 }

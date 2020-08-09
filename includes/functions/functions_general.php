@@ -91,30 +91,6 @@ function zen_currency_exists(string $code, bool $getFirstDefault = false)
     return false;
 }
 
-////
-// Return a random value
-  function zen_rand($min = null, $max = null) {
-    static $seeded;
-
-    if (!isset($seeded)) {
-      mt_srand((double)microtime()*1000000);
-      $seeded = true;
-    }
-
-    if (isset($min) && isset($max)) {
-      if ($min >= $max) {
-        return $min;
-      } else {
-        return mt_rand($min, $max);
-      }
-    } else {
-      return mt_rand();
-    }
-  }
-
-  function zen_convert_linefeeds($from, $to, $string) {
-    return str_replace($from, $to, $string);
-  }
 
 /**
  * return the size and maxlength settings in the form size="blah" maxlength="blah" based on maximum size being 70

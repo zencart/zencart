@@ -948,28 +948,6 @@ function zen_draw_order_status_dropdown($field_name, $default_value, $first_sele
   }
 
 /**
- * Return a random value
- */
-  function zen_rand($min = null, $max = null) {
-    static $seeded;
-
-    if (!$seeded) {
-      mt_srand((double)microtime()*1000000);
-      $seeded = true;
-    }
-
-    if (isset($min) && isset($max)) {
-      if ($min >= $max) {
-        return $min;
-      } else {
-        return mt_rand($min, $max);
-      }
-    } else {
-      return mt_rand();
-    }
-  }
-
-/**
  * lookup attributes model
  */
   function zen_get_products_model($products_id) {
@@ -1569,21 +1547,6 @@ function zen_cfg_read_only($text, $key = '')
     return $categories_lookup->fields['master_categories_id'];
   }
 
-/**
- * replacement for fmod to manage values < 1
- */
-  function fmod_round($x, $y) {
-    if ($y == 0) {
-      return 0;
-    }
-    $x = strval($x);
-    $y = strval($y);
-    $zc_round = ($x*1000)/($y*1000);
-    $zc_round_ceil = (int)($zc_round);
-    $multiplier = $zc_round_ceil * $y;
-    $results = abs(round($x - $multiplier, 6));
-     return $results;
-  }
 
 /**
  * return any field from products or products_description table
@@ -1662,55 +1625,6 @@ function zen_geo_zones_pull_down_coupon($parameters, $selected = '')
     return ($product->RecordCount() > 0) ? $product->fields['manufacturers_name'] : "";
   }
 
-
-
-/**
- * Perform an array multisort, based on 1 or 2 columns being passed
- * (defaults to sorting by first column ascendingly then second column ascendingly unless otherwise specified)
- *
- * @param $data        multidimensional array to be sorted
- * @param $columnName1 string representing the named column to sort by as first criteria
- * @param $order1      either SORT_ASC or SORT_DESC (default SORT_ASC)
- * @param $columnName2 string representing named column as second criteria
- * @param $order2      either SORT_ASC or SORT_DESC (default SORT_ASC)
- * @return array   Original array sorted as specified
- */
-function zen_sort_array($data, $columnName1 = '', $order1 = SORT_ASC, $columnName2 = '', $order2 = SORT_ASC)
-{
-  // simple validations
-  $keys = array_keys($data);
-  if ($columnName1 == '') {
-    $columnName1 = $keys[0];
-  }
-  if (!in_array($order1, array(SORT_ASC, SORT_DESC))) $order1=SORT_ASC;
-  if ($columnName2 == '') {
-    $columnName2 = $keys[1];
-  }
-  if (!in_array($order2, array(SORT_ASC, SORT_DESC))) $order2=SORT_ASC;
-
-  // prepare sub-arrays for aiding in sorting
-  foreach($data as $key=>$val)
-  {
-    $sort1[] = $val[$columnName1];
-    $sort2[] = $val[$columnName2];
-  }
-  // do actual sort based on specified fields.
-  array_multisort($sort1, $order1, $sort2, $order2, $data);
-  return $data;
-}
-
-/**
- * Convert value to a float -- mainly used for sanitizing and returning non-empty strings or nulls
- * @param int|float|string $input
- * @return float|int
- */
-    function convertToFloat($input = 0) {
-        if ($input === null) return 0;
-        $val = preg_replace('/[^0-9,\.\-]/', '', $input);
-        // do a non-strict compare here:
-        if ($val == 0) return 0;
-        return (float)$val;
-    }
 
 function zen_set_ezpage_status($pages_id, $status, $status_field)
 {
