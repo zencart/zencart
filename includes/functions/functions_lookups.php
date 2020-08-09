@@ -543,29 +543,6 @@ function zen_check_show_prices(): bool
 
 
 
-/**
- * Find index_filters directory
- * suitable for including template-specific immediate /modules files, such as:
- * new_products, products_new_listing, featured_products, featured_products_listing, product_listing, specials_index, upcoming,
- * products_all_listing, products_discount_prices, also_purchased_products
- */
-  function zen_get_index_filters_directory($check_file, $dir_only = 'false') {
-    global $template_dir;
-    $zv_filename = $check_file;
-    if (!strstr($zv_filename, '.php')) $zv_filename .= '.php';
-    $checkArray = array();
-    $checkArray[] = DIR_WS_INCLUDES . 'index_filters/' . $template_dir . '/' . $zv_filename;
-    $checkArray[] = DIR_WS_INCLUDES . 'index_filters/' . $zv_filename;
-    $checkArray[] = DIR_WS_INCLUDES . 'index_filters/' . $template_dir . '/' . 'default_filter.php';
-    foreach($checkArray as $key => $val) {
-      if (file_exists($val)) {
-        return ($dir_only == 'true') ? $val = substr($val, 0, strpos($val, '/')) : $val;
-      }
-    }
-    return DIR_WS_INCLUDES . 'index_filters/' . 'default_filter.php';
-  }
-
-
 /*
  * This function, added to the storefront in zc1.5.6, mimics the like-named admin function in
  * support of plugins that "span" both the storefront and admin.

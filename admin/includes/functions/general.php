@@ -1005,85 +1005,6 @@ while (!$chk_sale_categories_all->EOF) {
     zen_record_admin_activity('Deleted order ' . (int)$order_id . ' from database via admin console.', 'warning');
   }
 
-  function zen_get_file_permissions($mode) {
-// determine type
-    if ( ($mode & 0xC000) == 0xC000) { // unix domain socket
-      $type = 's';
-    } elseif ( ($mode & 0x4000) == 0x4000) { // directory
-      $type = 'd';
-    } elseif ( ($mode & 0xA000) == 0xA000) { // symbolic link
-      $type = 'l';
-    } elseif ( ($mode & 0x8000) == 0x8000) { // regular file
-      $type = '-';
-    } elseif ( ($mode & 0x6000) == 0x6000) { //bBlock special file
-      $type = 'b';
-    } elseif ( ($mode & 0x2000) == 0x2000) { // character special file
-      $type = 'c';
-    } elseif ( ($mode & 0x1000) == 0x1000) { // named pipe
-      $type = 'p';
-    } else { // unknown
-      $type = '?';
-    }
-
-// determine permissions
-    $owner['read']    = ($mode & 00400) ? 'r' : '-';
-    $owner['write']   = ($mode & 00200) ? 'w' : '-';
-    $owner['execute'] = ($mode & 00100) ? 'x' : '-';
-    $group['read']    = ($mode & 00040) ? 'r' : '-';
-    $group['write']   = ($mode & 00020) ? 'w' : '-';
-    $group['execute'] = ($mode & 00010) ? 'x' : '-';
-    $world['read']    = ($mode & 00004) ? 'r' : '-';
-    $world['write']   = ($mode & 00002) ? 'w' : '-';
-    $world['execute'] = ($mode & 00001) ? 'x' : '-';
-
-// adjust for SUID, SGID and sticky bit
-    if ($mode & 0x800 ) $owner['execute'] = ($owner['execute'] == 'x') ? 's' : 'S';
-    if ($mode & 0x400 ) $group['execute'] = ($group['execute'] == 'x') ? 's' : 'S';
-    if ($mode & 0x200 ) $world['execute'] = ($world['execute'] == 'x') ? 't' : 'T';
-
-    return $type .
-           $owner['read'] . $owner['write'] . $owner['execute'] .
-           $group['read'] . $group['write'] . $group['execute'] .
-           $world['read'] . $world['write'] . $world['execute'];
-  }
-
-  function zen_remove($source) {
-    global $messageStack, $zen_remove_error;
-
-    $zen_remove_error = false;
-
-    if (is_dir($source)) {
-      $dir = dir($source);
-      while ($file = $dir->read()) {
-        if ( ($file != '.') && ($file != '..') ) {
-          if (is_writeable($source . '/' . $file)) {
-            zen_remove($source . '/' . $file);
-          } else {
-            $messageStack->add(sprintf(ERROR_FILE_NOT_REMOVEABLE, $source . '/' . $file), 'error');
-            $zen_remove_error = true;
-          }
-        }
-      }
-      $dir->close();
-
-      if (is_writeable($source)) {
-        rmdir($source);
-        zen_record_admin_activity('Removed directory from server: [' . $source . ']', 'notice');
-      } else {
-        $messageStack->add(sprintf(ERROR_DIRECTORY_NOT_REMOVEABLE, $source), 'error');
-        $zen_remove_error = true;
-      }
-    } else {
-      if (is_writeable($source)) {
-        unlink($source);
-        zen_record_admin_activity('Deleted file from server: [' . $source . ']', 'notice');
-      } else {
-        $messageStack->add(sprintf(ERROR_FILE_NOT_REMOVEABLE, $source), 'error');
-        $zen_remove_error = true;
-      }
-    }
-  }
-
 /**
  * Output the tax percentage with optional padded decimals
  */
@@ -2242,32 +2163,6 @@ function zen_cfg_read_only($text, $key = '')
   }
 
 
-/**
-   * build a list of directories in a specified parent folder
-   * (formatted in id/text pairs for SELECT boxes)
-   *
-   * @todo convert to a directory-iterator instead
-   * @todo - this will be deprecated after converting remaining admin pages to LEAD format
-   *
-   * @return array (id/text pairs)
-   */
-  function zen_build_subdirectories_array($parent_folder = '', $default_text = 'Main Directory') {
-    if ($parent_folder == '') $parent_folder = DIR_FS_CATALOG_IMAGES;
-    $dir_info = array();
-    $dir_info[] = array('id' => '', 'text' => $default_text);
-
-    $dir = @dir($parent_folder);
-    if ($dir == null) return [];
-    while ($file = $dir->read()) {
-      if (is_dir($parent_folder . $file) && $file != "." && $file != "..") {
-        $dir_info[] = array('id' => $file . '/', 'text' => $file);
-      }
-    }
-    $dir->close();
-    sort($dir_info);
-    return $dir_info;
-  }
-
 
 /**
  * build configuration_key based on product type and return its value
@@ -2605,65 +2500,6 @@ function zen_sort_array($data, $columnName1 = '', $order1 = SORT_ASC, $columnNam
 }
 
 /**
- * Obtain a list of .log/.xml files from the /logs/ folder
- * (and also /cache/ folder for backward compatibility of older modules which store logs there)
- *
- * If $maxToList == 'count' then it returns the total number of files found
- * If an integer is passed, then an array of files is returned, including paths, filenames, and datetime details
- *
- * @param $maxToList mixed (integer or 'count')
- * @return array or integer
- *
- * inspired by log checking suggestion from Steve Sherratt (torvista)
- */
-function get_logs_data($maxToList = 'count') {
-  if (!defined('DIR_FS_LOGS')) define('DIR_FS_LOGS', DIR_FS_CATALOG . 'logs');
-  if (!defined('DIR_FS_SQL_CACHE')) define('DIR_FS_SQL_CACHE', DIR_FS_CATALOG . 'cache');
-  $logs = array();
-  $file = array();
-  $i = 0;
-  foreach(array(DIR_FS_LOGS, DIR_FS_SQL_CACHE) as $purgeFolder) {
-    $purgeFolder = rtrim($purgeFolder, '/');
-    if (!file_exists($purgeFolder) || !is_dir($purgeFolder)) continue;
-
-    $dir = dir($purgeFolder);
-    while ($logfile = $dir->read()) {
-      if (substr($logfile, 0, 1) == '.') continue;
-      if (!preg_match('/.*(\.log|\.xml)$/', $logfile)) continue; // xml allows for usps debug
-
-      if ($maxToList != 'count') {
-        $filename = $purgeFolder . '/' . $logfile;
-        $logs[$i]['path'] = $purgeFolder . "/";
-        $logs[$i]['filename'] = $logfile;
-        $logs[$i]['filesize'] = @filesize($filename);
-        $logs[$i]['unixtime'] = @filemtime($filename);
-        $logs[$i]['datetime'] = strftime(DATE_TIME_FORMAT, $logs[$i]['unixtime']);
-      }
-      $i++;
-      if ($maxToList != 'count' && $i >= $maxToList) break;
-    }
-    $dir->close();
-    unset($dir);
-  }
-
-  if ($maxToList == 'count') return $i;
-
-  $logs = zen_sort_array($logs, 'unixtime', SORT_DESC);
-  return $logs;
-}
-
-/**
- * attempts to make the specified file read-only
- *
- * @var string
- * @return boolean
- */
-  function set_unwritable($filepath) {
-    return @chmod($filepath, 0444);
-  }
-
-
-/**
  * Convert value to a float -- mainly used for sanitizing and returning non-empty strings or nulls
  * @param int|float|string $input
  * @return float|int
@@ -2696,14 +2532,4 @@ function get_logs_data($maxToList = 'count') {
     $query = $db->Execute("SELECT products_options_types_name FROM " . TABLE_PRODUCTS_OPTIONS_TYPES . " WHERE products_options_types_id = " . (int)$option_type);
     if ($query->fields['products_options_types_name'] == 'File') return true;
     return false;
-  }
-
-  function zen_get_uploaded_file($filename) {
-    global $db;
-    $parts = explode(". ", $filename, 2);
-    $filenum = $parts[0];
-    $filename = $parts[1];
-    $file_parts = explode(".", $filename, 2);
-    $filetype = $file_parts[sizeof($file_parts) - 1];
-    return $filenum . "." . $filetype;
   }

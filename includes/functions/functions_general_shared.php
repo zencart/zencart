@@ -213,53 +213,6 @@ function zen_is_whitelisted_admin_ip($ip = null)
   }
 
 
-/**
- * find template or default file
- */
-  function zen_get_file_directory($check_directory, $check_file, $dir_only = 'false') {
-    global $template_dir;
-
-    $zv_filename = $check_file;
-    if (!strstr($zv_filename, '.php')) $zv_filename .= '.php';
-
-    if (file_exists($check_directory . $template_dir . '/' . $zv_filename)) {
-      $zv_directory = $check_directory . $template_dir . '/';
-    } else {
-      $zv_directory = $check_directory;
-    }
-
-    if ($dir_only == 'true') {
-      return $zv_directory;
-    } else {
-      return $zv_directory . $zv_filename;
-    }
-  }
-
-
-/**
- * function to override PHP's is_writable() which can occasionally be unreliable due to O/S and F/S differences
- * attempts to open the specified file for writing. Returns true if successful, false if not.
- * if a directory is specified, uses PHP's is_writable() anyway
- *
- * @var string
- * @return boolean
- */
-  function is__writeable($filepath, $make_unwritable = true) {
-    if (is_dir($filepath)) return is_writable($filepath);
-    $fp = @fopen($filepath, 'a');
-    if ($fp) {
-      @fclose($fp);
-      if ($make_unwritable) set_unwritable($filepath);
-      $fp = @fopen($filepath, 'a');
-      if ($fp) {
-        @fclose($fp);
-        return true;
-      }
-    }
-    return false;
-  }
-
-
 // Truncate a string
   function zen_trunc_string($str = "", $len = 150, $more = 'true') {
     if ($str == "") return $str;

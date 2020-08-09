@@ -503,45 +503,6 @@ function zen_set_field_length($tbl, $fld, $max = 70)
   }
 
 
-////
-// find module directory
-// include template specific immediate /modules files
-// new_products, products_new_listing, featured_products, featured_products_listing, product_listing, specials_index, upcoming,
-// products_all_listing, products_discount_prices, also_purchased_products
-  function zen_get_module_directory($check_file, $dir_only = 'false') {
-    global $template_dir;
-
-    $zv_filename = $check_file;
-    if (!strstr($zv_filename, '.php')) $zv_filename .= '.php';
-
-    if (file_exists(DIR_WS_MODULES . $template_dir . '/' . $zv_filename)) {
-      $template_dir_select = $template_dir . '/';
-    } else {
-      $template_dir_select = '';
-    }
-
-    if ($dir_only == 'true') {
-      return $template_dir_select;
-    } else {
-      return $template_dir_select . $zv_filename;
-    }
-  }
-
-  function zen_get_module_sidebox_directory($check_file) {
-    global $template_dir;
-
-    $zv_filename = $check_file;
-    if (!strstr($zv_filename, '.php')) $zv_filename .= '.php';
-
-    if (file_exists(DIR_WS_MODULES . 'sideboxes/' . $template_dir . '/' . $zv_filename)) {
-      $template_dir_select = 'sideboxes/' . $template_dir . '/';
-    } else {
-      $template_dir_select = 'sideboxes/';
-    }
-
-    return $template_dir_select . $zv_filename;
-  }
-
 
 /**
  * check to see if database stored GET terms are in the URL as $_GET parameters
@@ -702,15 +663,6 @@ function zen_set_field_length($tbl, $fld, $max = 70)
     return $s;
   }
 
-/**
- * attempts to make the specified file read-only
- *
- * @var string
- * @return boolean
- */
-  function set_unwritable($filepath) {
-    return @chmod($filepath, 0444);
-  }
 /**
  * convert supplied string to UTF-8, dropping any symbols which cannot be translated easily
  * useful for submitting cleaned-up data to payment gateways or other external services, esp if the data was copy+pasted from windows docs via windows browser to store in database
