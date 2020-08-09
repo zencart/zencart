@@ -625,7 +625,7 @@ function zen_has_product_attributes_downloads($product_id, $check_if_valid = fal
     }
     $sql = "SELECT pa.products_attributes_id, pad.products_attributes_filename
             FROM " . TABLE_PRODUCTS_ATTRIBUTES . " pa
-            LEFT JOIN " . TABLE_PRODUCTS_ATTRIBUTES_DOWNLOAD . " pad USING (products_attributes_id)
+            INNER JOIN " . TABLE_PRODUCTS_ATTRIBUTES_DOWNLOAD . " pad USING (products_attributes_id)
             WHERE pa.products_id=" . (int)$product_id;
     $results = $db->Execute($sql);
 
@@ -663,13 +663,15 @@ function zen_is_option_file($option_id)
 }
 
 /**
- * check that the specified download filename exists on the filesystem
+ * Check that the specified download filename exists on the filesystem (or is defined as a downloadable URL)
  * @param string $check_filename
  * @return bool
  */
-function zen_orders_products_downloads(string $check_filename)
+function zen_orders_products_downloads($check_filename)
 {
     global $zco_notifier;
+
+    if (empty($check_filename)) return false;
 
     $handler = zen_get_download_handler($check_filename);
 
