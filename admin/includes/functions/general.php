@@ -2398,17 +2398,6 @@ function zen_cfg_read_only($text, $key = '')
     return ($product->RecordCount() > 0) ? $product->fields['manufacturers_name'] : "";
   }
 
-  function zen_user_has_gv_balance($c_id) {
-    global $db;
-      $gv_result = $db->Execute("select amount from " . TABLE_COUPON_GV_CUSTOMER . " where customer_id = " . (int)$c_id);
-      if ($gv_result->RecordCount() > 0) {
-        if ($gv_result->fields['amount'] > 0) {
-          return $gv_result->fields['amount'];
-        }
-      }
-      return 0;
-  }
-
 
 /**
  * Determine visitor's IP address, resolving any proxies where possible.
