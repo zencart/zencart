@@ -278,18 +278,20 @@ function zen_cfg_select_coupon_id($coupon_id, $key = '')
 
 ////
 // Alias function for Store configuration values in the Administration Tool
-  function zen_cfg_pull_down_country_list($country_id, $key = '') {
+function zen_cfg_pull_down_country_list($country_id, $key = '')
+{
     $name = (($key) ? 'configuration[' . $key . ']' : 'configuration_value');
-    return zen_draw_pull_down_menu($name, zen_get_countries(), $country_id, 'class="form-control"');
-  }
+    return zen_draw_pull_down_menu($name, zen_get_countries_for_admin_pulldown(), $country_id, 'class="form-control"');
+}
 
 
 ////
-  function zen_cfg_pull_down_country_list_none($country_id, $key = '') {
-    $country_array = zen_get_countries('None');
+function zen_cfg_pull_down_country_list_none($country_id, $key = '')
+{
+    $country_array = zen_get_countries_for_admin_pulldown('None');
     $name = (($key) ? 'configuration[' . $key . ']' : 'configuration_value');
     return zen_draw_pull_down_menu($name, $country_array, $country_id, 'class="form-control"');
-  }
+}
 
 
 ////
