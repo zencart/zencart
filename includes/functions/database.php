@@ -38,17 +38,17 @@ function zen_db_output(string $string)
     trigger_error('Call to deprecated function zen_db_output. Use zen_output_string_protected() instead', E_USER_DEPRECATED);
 
     return zen_output_string_protected($string);
-}
+  }
 
 /**
  * Rudimentary input sanitizer
  * NOTE: SHOULD NOT BE USED FOR DB QUERIES!!!  Use $db->prepare_input() or zen_db_input() instead
  *
- * @param string $string
+ * @param string|null $string
  * @param bool $trimspace
  * @return array|string
  */
-function zen_db_prepare_input(string $string, bool $trimspace = true)
+function zen_db_prepare_input($string, bool $trimspace = true)
 {
     if (is_string($string)) {
         if ($trimspace == true) {

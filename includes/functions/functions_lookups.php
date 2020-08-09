@@ -57,7 +57,8 @@
 /*
  * List manufacturers (returned in an array)
  */
-  function zen_get_manufacturers($manufacturers_array = array(), $have_products = false) {
+function zen_get_manufacturers($manufacturers_array = array(), $have_products = false)
+{
     global $db;
     if (!is_array($manufacturers_array)) $manufacturers_array = array();
 
@@ -86,16 +87,30 @@
     return $manufacturers_array;
   }
 
-/*
+/**
  *  configuration key value lookup
- *  TABLE: configuration
  */
 function zen_get_configuration_key_value($lookup)
 {
     global $db;
-    $configuration_query = $db->Execute("select configuration_value from " . TABLE_CONFIGURATION . " where configuration_key='" . $lookup . "' LIMIT 1");
+    $configuration_query = $db->Execute("select configuration_value from " . TABLE_CONFIGURATION . " where configuration_key='" . zen_db_input($lookup) . "' LIMIT 1");
     $lookup_value = ($configuration_query->EOF) ? '' : $configuration_query->fields['configuration_value'];
     if (empty($lookup_value)) {
+        $lookup_value = '<span class="lookupAttention">' . $lookup . '</span>';
+    }
+    return $lookup_value;
+}
+
+/**
+ * Product Types -- configuration key value lookup in TABLE_PRODUCT_TYPE_LAYOUT
+ * Used to determine keys/flags used on a per-product-type basis for template-use, etc
+ */
+function zen_get_configuration_key_value_layout($lookup, $type = 1)
+{
+    global $db;
+    $configuration_query = $db->Execute("select configuration_value from " . TABLE_PRODUCT_TYPE_LAYOUT . " where configuration_key='" . zen_db_input($lookup) . "' and product_type_id='" . (int)$type . "'");
+    $lookup_value = $configuration_query->fields['configuration_value'];
+    if (!($lookup_value)) {
         $lookup_value = '<span class="lookupAttention">' . $lookup . '</span>';
     }
     return $lookup_value;
@@ -105,7 +120,8 @@ function zen_get_configuration_key_value($lookup)
  * Get accepted credit cards
  * There needs to be a define on the accepted credit card in the language file credit_cards.php example: TEXT_CC_ENABLED_VISA
  */
-  function zen_get_cc_enabled($text_image = 'TEXT_', $cc_seperate = ' ', $cc_make_columns = 0) {
+function zen_get_cc_enabled($text_image = 'TEXT_', $cc_seperate = ' ', $cc_make_columns = 0)
+{
     global $db;
     $cc_check_accepted_query = $db->Execute(SQL_CC_ENABLED);
     $cc_check_accepted = '';
@@ -139,20 +155,6 @@ function zen_get_configuration_key_value($lookup)
     return $cc_check_accepted;
   }
 
-
-/*
- * configuration key value lookup in TABLE_PRODUCT_TYPE_LAYOUT
- * Used to determine keys/flags used on a per-product-type basis for template-use, etc
- */
-  function zen_get_configuration_key_value_layout($lookup, $type=1) {
-    global $db;
-    $configuration_query= $db->Execute("select configuration_value from " . TABLE_PRODUCT_TYPE_LAYOUT . " where configuration_key='" . $lookup . "' and product_type_id='". (int)$type . "'");
-    $lookup_value= $configuration_query->fields['configuration_value'];
-    if ( !($lookup_value) ) {
-      $lookup_value='<span class="lookupAttention">' . $lookup . '</span>';
-    }
-    return $lookup_value;
-  }
 
 /**
  *  stop regular behavior based on customer/store settings

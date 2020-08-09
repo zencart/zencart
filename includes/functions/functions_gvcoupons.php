@@ -111,7 +111,7 @@ function zen_create_coupon_code(string $salt = "secret", int $length = SECURITY_
  * @param int $coupon_id
  * @return bool
  */
-function is_coupon_valid_for_sales(int $product_id, int $coupon_id)
+function is_coupon_valid_for_sales($product_id, $coupon_id): bool
 {
     global $db;
     $sql = "SELECT coupon_id, coupon_is_valid_for_sales
@@ -148,7 +148,7 @@ function is_coupon_valid_for_sales(int $product_id, int $coupon_id)
  * @param int $coupon_id
  * @return bool
  */
-function is_product_valid(int $product_id, int $coupon_id): bool
+function is_product_valid($product_id, $coupon_id): bool
 {
     global $db;
     $coupons_query = "SELECT * FROM " . TABLE_COUPON_RESTRICT . "
@@ -166,16 +166,16 @@ function is_product_valid(int $product_id, int $coupon_id): bool
         return false;
     }
 
-// modified to manage restrictions better - leave commented for now
+    // modified to manage restrictions better - leave commented for now
     if ($coupons->RecordCount() == 0) return true;
     if ($coupons->RecordCount() == 1) {
-// If product is restricted(deny) and is same as tested product deny
+        // If product is restricted(deny) and is same as tested product deny
         if (($coupons->fields['product_id'] != 0) && $coupons->fields['product_id'] == (int)$product_id && $coupons->fields['coupon_restrict'] == 'Y') return false;
-// If product is not restricted(allow) and is not same as tested product deny
+        // If product is not restricted(allow) and is not same as tested product deny
         if (($coupons->fields['product_id'] != 0) && $coupons->fields['product_id'] != (int)$product_id && $coupons->fields['coupon_restrict'] == 'N') return false;
-// if category is restricted(deny) and product in category deny
+        // if category is restricted(deny) and product in category deny
         if (($coupons->fields['category_id'] != 0) && (zen_product_in_category($product_id, $coupons->fields['category_id'])) && ($coupons->fields['coupon_restrict'] == 'Y')) return false;
-// if category is not restricted(allow) and product not in category deny
+        // if category is not restricted(allow) and product not in category deny
         if (($coupons->fields['category_id'] != 0) && (!zen_product_in_category($product_id, $coupons->fields['category_id'])) && ($coupons->fields['coupon_restrict'] == 'N')) return false;
         return true;
     }

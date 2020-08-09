@@ -133,7 +133,7 @@ function zen_get_products_display_price($product_id)
                 // customer may browse but no prices
                 return TEXT_LOGIN_FOR_PRICE_PRICE;
                 break;
-            case (CUSTOMERS_APPROVAL == '3' and TEXT_LOGIN_FOR_PRICE_PRICE_SHOWROOM != ''):
+            case (CUSTOMERS_APPROVAL == '3' && TEXT_LOGIN_FOR_PRICE_PRICE_SHOWROOM != ''):
                 // customer may browse but no prices
                 return TEXT_LOGIN_FOR_PRICE_PRICE_SHOWROOM;
                 break;
@@ -176,7 +176,7 @@ function zen_get_products_display_price($product_id)
     }
 
     $show_sale_discount = '';
-    if (SHOW_SALE_DISCOUNT_STATUS == '1' and ($display_special_price != 0 or $display_sale_price != 0)) {
+    if (SHOW_SALE_DISCOUNT_STATUS == '1' && ($display_special_price != 0 || $display_sale_price != 0)) {
         // -----
         // Allows an observer to inject any override to the "Sale Price" formatting.
         // If an override is performed, the observer sets the 'pricing_handled' value to true.
@@ -184,13 +184,13 @@ function zen_get_products_display_price($product_id)
         $pricing_handled = false;
         $zco_notifier->notify(
             'NOTIFY_ZEN_GET_PRODUCTS_DISPLAY_PRICE_SALE',
-            array(
+            [
                 'products_id' => $product_id,
                 'display_sale_price' => $display_sale_price,
                 'display_special_price' => $display_special_price,
                 'display_normal_price' => $display_normal_price,
                 'products_tax_class_id' => $product_check->fields['products_tax_class_id']
-            ),
+            ],
             $pricing_handled,
             $show_sale_discount
         );
@@ -203,7 +203,7 @@ function zen_get_products_display_price($product_id)
                         $show_discount_amount = '';
                     }
                     $show_sale_discount = '<span class="productPriceDiscount">';
-                    $show_sale_discount .= '<br />';
+                    $show_sale_discount .= '<br>';
                     $show_sale_discount .= PRODUCT_PRICE_DISCOUNT_PREFIX;
                     $show_sale_discount .= $show_discount_amount;
                     $show_sale_discount .= PRODUCT_PRICE_DISCOUNT_PERCENTAGE;
@@ -211,7 +211,7 @@ function zen_get_products_display_price($product_id)
 
                 } else {
                     $show_sale_discount = '<span class="productPriceDiscount">';
-                    $show_sale_discount .= '<br />';
+                    $show_sale_discount .= '<br>';
                     $show_sale_discount .= PRODUCT_PRICE_DISCOUNT_PREFIX;
                     $show_sale_discount .= $currencies->display_price(($display_normal_price - $display_sale_price), zen_get_tax_rate($product_check->fields['products_tax_class_id']));
                     $show_sale_discount .= PRODUCT_PRICE_DISCOUNT_AMOUNT;
@@ -220,14 +220,14 @@ function zen_get_products_display_price($product_id)
             } else {
                 if (SHOW_SALE_DISCOUNT == 1) {
                     $show_sale_discount = '<span class="productPriceDiscount">';
-                    $show_sale_discount .= '<br />';
+                    $show_sale_discount .= '<br>';
                     $show_sale_discount .= PRODUCT_PRICE_DISCOUNT_PREFIX;
                     $show_sale_discount .= number_format(100 - (($display_special_price / $display_normal_price) * 100), SHOW_SALE_DISCOUNT_DECIMALS);
                     $show_sale_discount .= PRODUCT_PRICE_DISCOUNT_PERCENTAGE;
                     $show_sale_discount .= '</span>';
                 } else {
                     $show_sale_discount = '<span class="productPriceDiscount">';
-                    $show_sale_discount .= '<br />';
+                    $show_sale_discount .= '<br>';
                     $show_sale_discount .= PRODUCT_PRICE_DISCOUNT_PREFIX;
                     $show_sale_discount .= $currencies->display_price(($display_normal_price - $display_special_price), zen_get_tax_rate($product_check->fields['products_tax_class_id']));
                     $show_sale_discount .= PRODUCT_PRICE_DISCOUNT_AMOUNT;
@@ -244,14 +244,14 @@ function zen_get_products_display_price($product_id)
         $pricing_handled = false;
         $zco_notifier->notify(
             'NOTIFY_ZEN_GET_PRODUCTS_DISPLAY_PRICE_SPECIAL',
-            array(
+            [
                 'products_id' => $product_id,
                 'display_sale_price' => $display_sale_price,
                 'display_special_price' => $display_special_price,
                 'display_normal_price' => $display_normal_price,
                 'products_tax_class_id' => $product_check->fields['products_tax_class_id'],
                 'product_is_free' => $product_check->fields['product_is_free']
-            ),
+            ],
             $pricing_handled,
             $show_normal_price,
             $show_special_price,
@@ -268,7 +268,7 @@ function zen_get_products_display_price($product_id)
                 $show_special_price .= $currencies->display_price($display_special_price, zen_get_tax_rate($product_check->fields['products_tax_class_id']));
                 $show_special_price .= '</span>';
                 if ($product_check->fields['product_is_free'] == 1) {
-                    $show_sale_price = '<br />';
+                    $show_sale_price = '<br>';
                     $show_sale_price .= '<span class="productSalePrice">';
                     $show_sale_price .= PRODUCT_PRICE_SALE;
                     $show_sale_price .= '<s>';
@@ -276,7 +276,7 @@ function zen_get_products_display_price($product_id)
                     $show_sale_price .= '</s>';
                     $show_sale_price .= '</span>';
                 } else {
-                    $show_sale_price = '<br />';
+                    $show_sale_price = '<br>';
                     $show_sale_price .= '<span class="productSalePrice">';
                     $show_sale_price .= PRODUCT_PRICE_SALE;
                     $show_sale_price .= $currencies->display_price($display_sale_price, zen_get_tax_rate($product_check->fields['products_tax_class_id']));
@@ -306,14 +306,14 @@ function zen_get_products_display_price($product_id)
         $pricing_handled = false;
         $zco_notifier->notify(
             'NOTIFY_ZEN_GET_PRODUCTS_DISPLAY_PRICE_NORMAL',
-            array(
+            [
                 'products_id' => $product_id,
                 'display_sale_price' => $display_sale_price,
                 'display_special_price' => $display_special_price,
                 'display_normal_price' => $display_normal_price,
                 'products_tax_class_id' => $product_check->fields['products_tax_class_id'],
                 'product_is_free' => $product_check->fields['product_is_free']
-            ),
+            ],
             $pricing_handled,
             $show_normal_price,
             $show_special_price,
@@ -327,7 +327,7 @@ function zen_get_products_display_price($product_id)
 
                 $show_special_price = '';
 
-                $show_sale_price = '<br />';
+                $show_sale_price = '<br>';
                 $show_sale_price .= '<span class="productSalePrice">';
                 $show_sale_price .= PRODUCT_PRICE_SALE;
                 $show_sale_price .= $currencies->display_price($display_sale_price, zen_get_tax_rate($product_check->fields['products_tax_class_id']));
@@ -363,10 +363,10 @@ function zen_get_products_display_price($product_id)
     $tags_handled = false;
     $zco_notifier->notify(
         'NOTIFY_ZEN_GET_PRODUCTS_DISPLAY_PRICE_FREE_OR_CALL',
-        array(
+        [
             'product_is_free' => $product_check->fields['product_is_free'],
             'product_is_call' => $product_check->fields['product_is_call'],
-        ),
+        ],
         $tags_handled,
         $free_tag,
         $call_tag
@@ -406,9 +406,7 @@ function zen_get_products_base_price($product_id)
 {
     global $db, $zco_notifier;
 
-    // -----
     // Give an observer the opportunity to override the product's base price.
-    //
     $products_base_price = 0;
     $base_price_is_handled = false;
     $zco_notifier->notify('ZEN_GET_PRODUCTS_BASE_PRICE', $product_id, $products_base_price, $base_price_is_handled);
@@ -440,7 +438,7 @@ function zen_get_products_base_price($product_id)
 
     // add attributes price to price
 
-    foreach($results as $result) {
+    foreach ($results as $result) {
         if ($the_options_id != $result['options_id']) {
             $the_options_id = $result['options_id'];
             $factor = $result['price_prefix'] == '-' ? -1 : 1;
@@ -581,7 +579,7 @@ function zen_get_products_quantity_min_units_display($product_id, $include_break
             $the_min_units .= '<span class="qmix">';
             if (($check_min > 0 || $check_units > 0)) {
                 if ($include_break) {
-                    $the_min_units .= '<br />';
+                    $the_min_units .= '<br>';
                 } else {
                     $the_min_units .= '&nbsp;&nbsp;';
                 }
@@ -589,7 +587,7 @@ function zen_get_products_quantity_min_units_display($product_id, $include_break
 
             } else {
                 if ($include_break) {
-                    $the_min_units .= '<br />';
+                    $the_min_units .= '<br>';
                 } else {
                     $the_min_units .= '&nbsp;&nbsp;';
                 }
@@ -602,7 +600,7 @@ function zen_get_products_quantity_min_units_display($product_id, $include_break
     if ($check_max > 0) {
         $the_min_units .= '<span class="qmax">';
         if ($include_break == true) {
-            $the_min_units .= ($the_min_units != '' ? '<br />' : '');
+            $the_min_units .= ($the_min_units != '' ? '<br>' : '');
         } else {
             $the_min_units .= ($the_min_units != '' ? '&nbsp;&nbsp;' : '');
         }
@@ -647,7 +645,7 @@ function zen_get_buy_now_qty($product_id)
         case ($mixed_products_in_cart > $check_min):
             // set to units or difference in units to balance cart
             $new_units = $check_units - fmod_round($mixed_products_in_cart, $check_units);
-//echo 'Cart: ' . $mixed_products_in_cart . ' Min: ' . $check_min . ' Units: ' . $check_units . ' fmod: ' . fmod($mixed_products_in_cart, $check_units) . '<br />';
+//echo 'Cart: ' . $mixed_products_in_cart . ' Min: ' . $check_min . ' Units: ' . $check_units . ' fmod: ' . fmod($mixed_products_in_cart, $check_units) . '<br>';
             $buy_now_qty = ($new_units > 0 ? $new_units : $check_units);
             break;
         default:
@@ -669,7 +667,7 @@ function zen_get_buy_now_qty($product_id)
  * @param int|float $check_qty
  * @return bool|float|int|mixed|string
  */
-function zen_get_discount_calc($product_id, $attribute_id = null, $attributes_amount = 0, $check_qty = 0)
+function zen_get_discount_calc($product_id, $attribute_id = 0, $attributes_amount = 0, $check_qty = 0)
 {
     global $discount_type_id, $sale_maker_discount;
 
@@ -713,7 +711,7 @@ function zen_get_discount_calc($product_id, $attribute_id = null, $attributes_am
             // discount quantities exist and this is not an attribute
             // $this->contents[$product_id]['qty']
             $check_discount_qty_price = zen_get_products_discount_price_qty($product_id, $qty, $attributes_amount);
-//echo 'How much 1 ' . $qty . ' : ' . $attributes_amount . ' vs ' . $check_discount_qty_price . '<br />';
+//echo 'How much 1 ' . $qty . ' : ' . $attributes_amount . ' vs ' . $check_discount_qty_price . '<br>';
             return $check_discount_qty_price;
             break;
 
@@ -721,7 +719,7 @@ function zen_get_discount_calc($product_id, $attribute_id = null, $attributes_am
             // discount quantities exist and this is priced by attribute
             // $this->contents[$products_id]['qty']
             $check_discount_qty_price = zen_get_products_discount_price_qty($product_id, $qty, $attributes_amount);
-//echo 'How much 2 ' . $qty . ' : ' . $attributes_amount . ' vs ' . $check_discount_qty_price . '<br />';
+//echo 'How much 2 ' . $qty . ' : ' . $attributes_amount . ' vs ' . $check_discount_qty_price . '<br>';
 
             return $check_discount_qty_price;
             break;
@@ -754,7 +752,7 @@ function zen_get_discount_calc($product_id, $attribute_id = null, $attributes_am
                     $sale_maker_discount = $sale_maker_discount;
                 }
             }
-//echo 'How much 3 - ' . $qty . ' : ' . $product_id . ' : ' . $qty . ' x ' .  $attributes_amount . ' vs ' . $check_discount_qty_price . ' - ' . $sale_maker_discount . '<br />';
+//echo 'How much 3 - ' . $qty . ' : ' . $product_id . ' : ' . $qty . ' x ' .  $attributes_amount . ' vs ' . $check_discount_qty_price . ' - ' . $sale_maker_discount . '<br>';
             break;
         case ($discount_type_id == 59):
             // No Sale and has a Special OR there is Sale and a special but the price is the special
@@ -930,7 +928,7 @@ function zen_get_discount_calc($product_id, $attribute_id = null, $attributes_am
                 if ($attributes_amount != 0) {
                     $calc = ($attributes_amount * $sale_price_discount);
                     $sale_maker_discount = $calc;
-//echo '<br />attr ' . $attributes_amount . ' spec ' . $special_price_discount . ' Calc ' . $calc . 'Calc2 ' . $calc2 . '<br />';
+//echo '<br>attr ' . $attributes_amount . ' spec ' . $special_price_discount . ' Calc ' . $calc . 'Calc2 ' . $calc2 . '<br>';
                 } else {
                     $sale_maker_discount = $sale_maker_discount;
                 }
@@ -946,7 +944,7 @@ function zen_get_discount_calc($product_id, $attribute_id = null, $attributes_am
                 // compute attribute amount
                 if ($attributes_amount != 0) {
                     $calc = ($attributes_amount * $special_price_discount);
-//echo '<br />attr ' . $attributes_amount . ' spec ' . $special_price_discount . ' Calc ' . $calc . 'Calc2 ' . $calc2 . '<br />';
+//echo '<br>attr ' . $attributes_amount . ' spec ' . $special_price_discount . ' Calc ' . $calc . 'Calc2 ' . $calc2 . '<br>';
                     $sale_maker_discount = $calc;
                 } else {
                     $sale_maker_discount = $sale_maker_discount;
@@ -1105,7 +1103,7 @@ function zen_get_products_sale_discount($product_id = false, $categories_id = fa
  * Get display price, using Actual Price
  * Specials and Tax Included
  * @param int $product_id
- * @return bool|float|int|mixed|string
+ * @return bool|float|string
  */
 function zen_get_products_actual_price($product_id)
 {
@@ -1191,6 +1189,8 @@ function zen_get_attributes_qty_prices_onetime($string, $qty)
  */
 function zen_get_attributes_quantity_price($check_what, $check_for)
 {
+    trigger_error('Call to deprecated function zen_get_attributes_quantity_price. Use zen_get_attributes_qty_prices_onetime() instead', E_USER_DEPRECATED);
+
     return zen_get_attributes_qty_prices_onetime($check_what, $check_for);
 }
 
@@ -1273,7 +1273,7 @@ function zen_get_attributes_price_final_onetime($attribute_id, $qty = 1, $pre_se
 
     // re-query the db if necessary
     if (empty($pre_selected_onetime) || $attribute_id != $pre_selected_onetime->fields['products_attributes_id']) {
-        $pre_selected = $db->Execute("SELECT pa.* FROM " . TABLE_PRODUCTS_ATTRIBUTES . " pa WHERE pa.products_attributes_id = " . (int)$attribute_id);
+        $pre_selected_onetime = $db->Execute("SELECT pa.* FROM " . TABLE_PRODUCTS_ATTRIBUTES . " pa WHERE pa.products_attributes_id = " . (int)$attribute_id);
     }
 
     // onetime charges
@@ -1313,7 +1313,7 @@ function zen_get_attributes_type($attribute_id)
 
 /**
  * calculate words in a string
- * @param strint $string
+ * @param string $string
  * @param int $free number of free words to allow
  * @return int
  */
@@ -1398,7 +1398,7 @@ function zen_get_letters_count_price($string, $free = 0, $price = 0)
  * @param int $product_id
  * @param int|float $check_qty Quantity to check against (eg: how many are in the cart)
  * @param int $check_amount
- * @return bool|float|int|mixed|string
+ * @return bool|float|string
  */
 function zen_get_products_discount_price_qty($product_id, $check_qty, $check_amount = 0)
 {
