@@ -273,18 +273,6 @@ function utf8_encode_recurse($mixed_value)
 }
 
 /**
- * Return whether the browser client is of a certain type
- * by checking whether the user-agent contains a particular pattern
- * @param string $lookup_pattern string to search for
- * @return false|string
- */
-function zen_browser_detect($lookup_pattern) {
-    if (!isset($_SERVER['HTTP_USER_AGENT'])) return false;
-    return stristr($_SERVER['HTTP_USER_AGENT'], $lookup_pattern);
-}
-
-
-/**
  * Return all HTTP GET variables, except those passed as a parameter
  *
  * The return is a urlencoded string
