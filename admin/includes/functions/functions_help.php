@@ -73,6 +73,23 @@ function page_has_help()
        }
     }
 
+    // These pages have subpages - point to correct helpfile 
+    if ($page == FILENAME_PRODUCT_TYPES) {
+       if (isset($_GET['action']) && $_GET['action'] == 'layout') {
+          return 'https://docs.zen-cart.com/user/admin_pages/catalog/product_types_edit_layout/'; 
+       }
+    }
+    if ($page == FILENAME_CATEGORIES) {
+       if (isset($_GET['action']) && $_GET['action'] == 'edit_category_meta_tags') {
+          return 'https://docs.zen-cart.com/user/admin_pages/catalog/categories_meta_tags_editor/'; 
+       }
+    }
+    if ($page == FILENAME_PRODUCT) {
+       if (isset($_GET['action']) && $_GET['action'] == 'new_product_meta_tags') {
+          return 'https://docs.zen-cart.com/user/admin_pages/catalog/products_meta_tags_editor/'; 
+       }
+    }
+
     $pagelist = array(
         FILENAME_CONFIGURATION => 'https://docs.zen-cart.com/user/admin_pages/configuration/',
         FILENAME_CATEGORIES => 'https://docs.zen-cart.com/user/admin_pages/catalog/categories/',
@@ -91,7 +108,7 @@ function page_has_help()
         FILENAME_FEATURED => 'https://docs.zen-cart.com/user/admin_pages/catalog/featured/',
         FILENAME_SALEMAKER => 'https://docs.zen-cart.com/user/admin_pages/catalog/salemaker/',
         FILENAME_PRODUCTS_EXPECTED => 'https://docs.zen-cart.com/user/admin_pages/catalog/products_expected/',
-        FILENAME_PRODUCT => 'https://docs.zen-cart.com/user/admin_pages/catalog/products_expected/',
+        FILENAME_PRODUCT => 'https://docs.zen-cart.com/user/products/product_management_admin/', 
         FILENAME_PRODUCTS_TO_CATEGORIES => 'https://docs.zen-cart.com/user/admin_pages/catalog/products_to_categories/',
         FILENAME_MODULES => 'https://docs.zen-cart.com/user/admin_pages/modules/',
         FILENAME_PLUGIN_MANAGER=> 'https://docs.zen-cart.com/user/admin_pages/modules/plugin_manager',
