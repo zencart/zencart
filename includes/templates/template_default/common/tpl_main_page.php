@@ -127,6 +127,7 @@ if (!isset($flag_disable_left) || !$flag_disable_left) {
 <!-- bof upload alerts -->
 <?php if ($messageStack->size('upload') > 0) echo $messageStack->output('upload'); ?>
 <!-- eof upload alerts -->
+<?php if ($messageStack->size('main_content') > 0) echo $messageStack->output('main_content'); ?>
 
 <?php
  /**
