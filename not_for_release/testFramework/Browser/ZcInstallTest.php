@@ -4,23 +4,24 @@ namespace Tests\Browser;
 
 use Tests\Browser\Pages\zcInstallPage;
 use Laravel\Dusk\Browser;
+use Tests\Browser\Traits\ConfigureFileConcerns;
+use Tests\Browser\Traits\DatabaseConcerns;
 
 class ZcInstallTest extends DuskTestCase
 {
+    use ConfigureFileConcerns;
+    use DatabaseConcerns;
+
     public function setUp(): void
     {
         parent::setUp();
-        @unlink(DIR_FS_CATALOG . 'includes/configure.php');
-        @unlink(DIR_FS_CATALOG . 'admin/includes/configure.php');
-        $conn = new \mysqli(DB_SERVER, DB_SERVER_USERNAME, DB_SERVER_PASSWORD, DB_DATABASE, '3306');
-        $sql = "DROP DATABASE IF EXISTS " . DB_DATABASE;
-        $conn->query($sql);
-        $sql = "CREATE DATABASE IF NOT EXISTS " . DB_DATABASE;
-        $conn->query($sql);
+
+        $this->makeEmptyConfigures(DIR_FS_ROOT);
+        $this->createDatabase();
     }
 
     /** @test */
-    public function zcinstall_page_displays()
+    public function do_a_full_install()
     {
         $this->browse(function (Browser $browser) {
             $browser->resize(1920, 1080);
@@ -29,13 +30,11 @@ class ZcInstallTest extends DuskTestCase
                 ->click('#btnsubmit')
                 ->assertSee('Admin Settings')
                 ->check('#agreeLicense')
-                ->check('#enable_ssl_catalog')
                 ->click('#btnsubmit')
-                ->assertSee('Basic Settings')
-                ->type('#db_host', DB_SERVER)
-                ->type('#db_user', DB_SERVER_USERNAME)
-                ->type('#db_password', DB_SERVER_PASSWORD)
-                ->type('#db_name', DB_DATABASE)
+                ->type('#db_host', TESTING_DB_SERVER)
+                ->type('#db_user', TESTING_DB_SERVER_USERNAME)
+                ->type('#db_password', TESTING_DB_SERVER_PASSWORD)
+                ->type('#db_name', TESTING_DB_DATABASE)
                 ->click('#btnsubmit')
                 ->waitFor('#admin_user', 1000)
                 ->type('#admin_user', ADMIN_NAME)

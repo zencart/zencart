@@ -13,7 +13,7 @@ class AdminHomePage extends Page
      */
     public function url()
     {
-        return defined('ADMIN_HTTP_SERVER') ? ADMIN_HTTP_SERVER : '/admin/';
+        return '/admin/';
     }
 
     /**
