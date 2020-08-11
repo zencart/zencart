@@ -3,7 +3,7 @@
  * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2020 May 21 Modified in v1.5.7 $
+ * @version $Id: DrByte 2020 May 21 Modified in v1.5.8 $
  */
 
 // FOLLOWING WERE moved to meta_tags.php
@@ -65,6 +65,7 @@
 
 // manufacturers box text in sideboxes/manufacturers.php
   define('BOX_HEADING_MANUFACTURERS', 'Manufacturers');
+  define('BOX_HEADING_BRANDS', 'Shop by Brand');
 
 // whats_new box text in sideboxes/whats_new.php
   define('BOX_HEADING_WHATS_NEW', 'New Products');

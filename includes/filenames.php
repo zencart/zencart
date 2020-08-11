@@ -33,6 +33,7 @@ define('FILENAME_ATTRIBUTES', 'attributes');
 define('FILENAME_ATTRIBUTES_CONTROLLER', 'attributes_controller');
 define('FILENAME_BANNER_MANAGER', 'banner_manager');
 define('FILENAME_BANNER_STATISTICS', 'banner_statistics');
+define('FILENAME_BRANDS', 'brands');
 define('FILENAME_CATALOG_ACCOUNT_HISTORY_INFO', 'account_history_info');
 define('FILENAME_CATEGORIES', 'categories');
 define('FILENAME_CATEGORY_ICON_DISPLAY', 'category_icon_display');

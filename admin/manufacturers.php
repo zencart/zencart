@@ -3,7 +3,7 @@
  * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Scott C Wilson 2020 Apr 13 Modified in v1.5.7 $
+ * @version $Id:  Modified in v1.5.8 $
  */
 require('includes/application_top.php');
 
@@ -18,7 +18,11 @@ if (zen_not_null($action)) {
       }
       $manufacturers_name = zen_db_prepare_input($_POST['manufacturers_name']);
 
+      $featured = (!empty($_POST['featured'])) ? (int)$_POST['featured'] : 0;
+
       $sql_data_array = array('manufacturers_name' => $manufacturers_name);
+
+      $sql_data_array['featured'] = $featured;
 
       if ($action == 'insert') {
         $insert_sql_data = array('date_added' => 'now()');
@@ -141,14 +145,15 @@ if (zen_not_null($action)) {
               <tr class="dataTableHeadingRow">
                 <th class="dataTableHeadingContent">&nbsp;</th>
                 <th class="dataTableHeadingContent"><?php echo TABLE_HEADING_MANUFACTURERS; ?></th>
+                <th class="dataTableHeadingContent"><?php echo TABLE_HEADING_MANUFACTURER_FEATURED; ?></th>
                 <th class="dataTableHeadingContent text-right"><?php echo TABLE_HEADING_ACTION; ?>&nbsp;</th>
               </tr>
             </thead>
             <tbody>
                 <?php
-                $manufacturers_query_raw = "SELECT manufacturers_id, manufacturers_name, manufacturers_image, date_added, last_modified
+                $manufacturers_query_raw = "SELECT manufacturers_id, manufacturers_name, manufacturers_image, date_added, last_modified, featured, (featured=1) AS weighted
                                             FROM " . TABLE_MANUFACTURERS . "
-                                            ORDER BY manufacturers_name";
+                                            ORDER BY weighted DESC, manufacturers_name";
 
 // reset page when page is unknown
                 if ((empty($_GET['page']) || $_GET['page'] == '1') && !empty($_GET['mID'])) {
@@ -187,6 +192,7 @@ if (zen_not_null($action)) {
                   ?>
               <td class="dataTableContent"><?php echo $manufacturer['manufacturers_id']; ?></td>
               <td class="dataTableContent"><?php echo $manufacturer['manufacturers_name']; ?></td>
+              <td class="dataTableContent"><?php echo $manufacturer['featured'] ? '<strong>' . TEXT_YES . '</strong>' : TEXT_NO; ?></td>
               <td class="dataTableContent" align="right">
                   <?php echo '<a href="' . zen_href_link(FILENAME_MANUFACTURERS, 'page=' . $_GET['page'] . '&mID=' . $manufacturer['manufacturers_id'] . '&action=edit') . '">' . zen_image(DIR_WS_IMAGES . 'icon_edit.gif', ICON_EDIT) . '</a>'; ?>
                   <?php echo '<a href="' . zen_href_link(FILENAME_MANUFACTURERS, 'page=' . $_GET['page'] . '&mID=' . $manufacturer['manufacturers_id'] . '&action=delete') . '">' . zen_image(DIR_WS_IMAGES . 'icon_delete.gif', ICON_DELETE) . '</a>'; ?>
@@ -216,6 +222,7 @@ if (zen_not_null($action)) {
                 $contents = array('form' => zen_draw_form('manufacturers', FILENAME_MANUFACTURERS, 'action=insert', 'post', 'enctype="multipart/form-data" class="form-horizontal"'));
                 $contents[] = array('text' => TEXT_NEW_INTRO);
                 $contents[] = array('text' => '<br>' . zen_draw_label(TEXT_MANUFACTURERS_NAME, 'manufacturers_name', 'class="control-label"') . zen_draw_input_field('manufacturers_name', '', zen_set_field_length(TABLE_MANUFACTURERS, 'manufacturers_name') . 'class="form-control"'));
+                $contents[] = array('text' => '<br><div class="radio"><label>' . zen_draw_checkbox_field('featured') . ' ' . TEXT_MANUFACTURER_FEATURED_LABEL . '</label></div>');
                 $contents[] = array('text' => '<br>' . zen_draw_label(TEXT_MANUFACTURERS_IMAGE, 'manufacturers_image', 'class="control-label"') . zen_draw_file_field('manufacturers_image'));
                 $dir_info = zen_build_subdirectories_array(DIR_FS_CATALOG_IMAGES);
                 $default_directory = 'manufacturers/';
@@ -238,6 +245,7 @@ if (zen_not_null($action)) {
                 $contents = array('form' => zen_draw_form('manufacturers', FILENAME_MANUFACTURERS, 'page=' . $_GET['page'] . '&mID=' . $mInfo->manufacturers_id . '&action=save', 'post', 'enctype="multipart/form-data" class="form-horizontal"'));
                 $contents[] = array('text' => TEXT_EDIT_INTRO);
                 $contents[] = array('text' => '<br>' . zen_draw_label(TEXT_MANUFACTURERS_NAME, 'manufacturers_name', 'class="control-label"') . zen_draw_input_field('manufacturers_name', htmlspecialchars($mInfo->manufacturers_name, ENT_COMPAT, CHARSET, TRUE), zen_set_field_length(TABLE_MANUFACTURERS, 'manufacturers_name') . ' class="form-control"'));
+                $contents[] = array('text' => '<br><div class="radio"><label>' . zen_draw_checkbox_field('featured', '1', $mInfo->featured) . ' ' . TEXT_MANUFACTURER_FEATURED_LABEL . '</label></div>');
                 $contents[] = array('text' => '<br>' . zen_draw_label(TEXT_MANUFACTURERS_IMAGE, 'manufacturers_image', 'class="control-label"') . zen_draw_file_field('manufacturers_image') . '<br>' . $mInfo->manufacturers_image);
                 $dir_info = zen_build_subdirectories_array(DIR_FS_CATALOG_IMAGES);
                 $default_directory = substr($mInfo->manufacturers_image, 0, strpos($mInfo->manufacturers_image, '/') + 1);
@@ -275,6 +283,7 @@ if (zen_not_null($action)) {
                   $heading[] = array('text' => '<h4>' . $mInfo->manufacturers_name . '</h4>');
 
                   $contents[] = array('align' => 'text-center', 'text' => '<a href="' . zen_href_link(FILENAME_MANUFACTURERS, 'page=' . $_GET['page'] . '&mID=' . $mInfo->manufacturers_id . '&action=edit') . '" class="btn btn-primary" role="button">' . IMAGE_EDIT . '</a> <a href="' . zen_href_link(FILENAME_MANUFACTURERS, 'page=' . $_GET['page'] . '&mID=' . $mInfo->manufacturers_id . '&action=delete') . '" class="btn btn-warning" role="button">' . IMAGE_DELETE . '</a>');
+                  if ($mInfo->featured) $contents[] = array('align' => 'text-center', 'text' => '<strong>' . TEXT_MANUFACTURER_IS_FEATURED . '</strong>');
                   $contents[] = array('text' => '<br>' . TEXT_DATE_ADDED . ' ' . zen_date_short($mInfo->date_added));
                   if (zen_not_null($mInfo->last_modified)) {
                     $contents[] = array('text' => TEXT_LAST_MODIFIED . ' ' . zen_date_short($mInfo->last_modified));
