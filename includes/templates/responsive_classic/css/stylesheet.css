@@ -483,3 +483,8 @@ table{border:none;padding:0;margin:0; border-spacing:0;border-collapse:collapse;
   margin-left: 20px;
   margin-bottom: 5px;
 }
+
+/** Brands page */
+.brandCell {height: 126px !important;}
+.brandImage {margin-top: 20px;}
+.brandCell a {text-decoration: none;}

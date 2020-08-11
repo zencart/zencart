@@ -885,6 +885,7 @@ CREATE TABLE manufacturers (
   manufacturers_image varchar(255) default NULL,
   date_added datetime default NULL,
   last_modified datetime default NULL,
+  featured tinyint default 0,
   PRIMARY KEY  (manufacturers_id),
   KEY idx_mfg_name_zen (manufacturers_name)
 ) ENGINE=MyISAM;

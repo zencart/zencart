@@ -28,6 +28,9 @@ $define = [
     'TEXT_DELETE_IMAGE' => 'Delete manufacturers image?',
     'TEXT_DELETE_PRODUCTS' => 'Delete products from this manufacturer? (including product reviews, products on special, upcoming products)',
     'TEXT_DELETE_WARNING_PRODUCTS' => '<b>WARNING:</b> There are %s products still linked to this manufacturer!',
+    'TABLE_HEADING_MANUFACTURER_FEATURED' => 'Featured?',
+    'TEXT_MANUFACTURER_FEATURED_LABEL' => 'Featured?',
+    'TEXT_MANUFACTURER_IS_FEATURED' => 'Featured',
 ];
 
 return $define;

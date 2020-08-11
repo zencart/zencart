@@ -11,6 +11,8 @@
   unset($information);
   $information = array();
 
+  $information[] = '<a href="' . zen_href_link(FILENAME_BRANDS) . '">' . BOX_HEADING_BRANDS . '</a>';
+
   if (DEFINE_SHIPPINGINFO_STATUS <= 1) {
     $information[] = '<a href="' . zen_href_link(FILENAME_SHIPPING) . '">' . BOX_INFORMATION_SHIPPING . '</a>';
   }
