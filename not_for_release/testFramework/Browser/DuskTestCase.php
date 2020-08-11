@@ -39,16 +39,15 @@ abstract class DuskTestCase extends \PHPUnit\Framework\TestCase
         if (!defined('DIR_FS_ROOT')) {
             define('DIR_FS_ROOT', \getcwd());
 
-            if (file_exists($configFile = 'includes/local/configure.dusk.php')) {
-                require $configFile;
-            } elseif (file_exists($configFile = 'includes/local/configure.php')) {
+            $user = $_SERVER['USER'];
+
+            $configFile = 'NO CONFIG FILE FOUND';
+            if (file_exists($configFile = 'not_for_release/testFramework/' . $user . '.configure.dusk.php')) {
                 require $configFile;
             } elseif (file_exists($configFile = 'not_for_release/testFramework/configure.dusk.php')) {
                 require $configFile;
-            } elseif (file_exists($configFile = 'includes/configure.php')) {
-                require $configFile;
             }
-//            echo 'Using config file: ' . $configFile;
+            //echo 'Using Config file ' . $configFile;
         }
 
         Browser::$baseUrl = $this->baseUrl();
