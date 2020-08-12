@@ -11,3 +11,5 @@ define('BREADCRUMB_BRANDS', 'Shop By Brand');
 
 define('FEATURED_BRANDS', 'Featured Brands');
 define('OTHER_BRANDS', 'Related Brands');
+
+define('NO_BRANDS_AVAILABLE', 'No brands are currently active for this store.');
