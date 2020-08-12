@@ -12,8 +12,6 @@
 
 // class constructor
     function __construct() {
-      global $order, $db;
-
       $this->code = 'freeshipper';
       $this->title = MODULE_SHIPPING_FREESHIPPER_TEXT_TITLE;
       $this->description = MODULE_SHIPPING_FREESHIPPER_TEXT_DESCRIPTION;
@@ -29,7 +27,20 @@
         $this->enabled = ((MODULE_SHIPPING_FREESHIPPER_STATUS == 'True') ? true : false);
       }
 
-      if ( ($this->enabled == true) && ((int)MODULE_SHIPPING_FREESHIPPER_ZONE > 0) ) {
+      $this->update_status();
+    }
+
+// class methods
+
+  /**
+   * Perform various checks to see whether this module should be visible
+   */
+    function update_status() {
+      global $order, $db;
+      if (!$this->enabled) return;
+      if (IS_ADMIN_FLAG === true) return;
+
+      if ((int)MODULE_SHIPPING_FREESHIPPER_ZONE > 0) {
         $check_flag = false;
         $check = $db->Execute("select zone_id from " . TABLE_ZONES_TO_GEO_ZONES . " where geo_zone_id = '" . MODULE_SHIPPING_FREESHIPPER_ZONE . "' and zone_country_id = '" . $order->delivery['country']['id'] . "' order by zone_id");
         while (!$check->EOF) {
@@ -49,7 +60,6 @@
       }
     }
 
-// class methods
     function quote($method = '') {
       global $order;
 
