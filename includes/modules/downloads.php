@@ -91,7 +91,7 @@ if ($downloadsOnThisOrder) {
     $zv_filesize = TEXT_FILESIZE_UNKNOWN;
     if ($data['filesize'] > 0) {
       $zv_filesize = $data['filesize'];
-      if ($zv_filesize >= 11000) {
+      if ($zv_filesize >= 1024*1024/10) {
         $zv_filesize = number_format($zv_filesize/1024/1024,1);
         $zv_filesize_units = TEXT_FILESIZE_MEGS;
       } else if ($zv_filesize >= 1024) {
