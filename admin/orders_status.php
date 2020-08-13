@@ -61,7 +61,7 @@ if (zen_not_null($action)) {
                                      FROM " . TABLE_CONFIGURATION . "
                                      WHERE configuration_key = 'DEFAULT_ORDERS_STATUS_ID'");
 
-      if ($status['configuration_value'] == $oID) {
+      if ($orders_status['configuration_value'] == $oID) {
         $db->Execute("UPDATE " . TABLE_CONFIGURATION . "
                       SET configuration_value = ''
                       WHERE configuration_key = 'DEFAULT_ORDERS_STATUS_ID'");
