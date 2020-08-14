@@ -51,7 +51,6 @@ jobs:
           MYSQL_USER: user
           MYSQL_PASSWORD: password
           MYSQL_ROOT_PASSWORD: password
-          MYSQL_DATABASE: zencart
         ports:
           - 3306:3306
         options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
@@ -80,7 +79,6 @@ jobs:
 
       - name: Prepare the application
         run: |
-          touch includes/configure.php
           mkdir -p not_for_release/testFramework/logs/screenshots
           mkdir -p not_for_release/testFramework/logs/console
 
