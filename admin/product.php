@@ -37,9 +37,9 @@ if (zen_not_null($action)) {
       if (!isset($_POST['master_categories_id'])
           || ((isset($_POST['products_model']) ? $_POST['products_model'] : '') . (isset($_POST['products_url']) ? implode('', $_POST['products_url']) : '') . (isset($_POST['products_name']) ? implode('', $_POST['products_name']) : '') . (isset($_POST['products_description']) ? implode('', $_POST['products_description']) : '') == '')
       ) {
-          $messageStack->add_session(ERROR_NO_DATA_TO_SAVE, 'error');
-          zen_redirect(zen_href_link(FILENAME_PRODUCT, 'cPath=' . $cPath . (isset($_GET['pID']) ? '&pID=' . $_GET['pID'] : '') . '&action=new_product'));
-//          zen_redirect(zen_href_link(FILENAME_CATEGORY_PRODUCT_LISTING, 'cPath=' . $cPath . (isset($_GET['pID']) ? '&pID=' . $_GET['pID'] : '')));
+          $messageStack->add(ERROR_NO_DATA_TO_SAVE, 'error');
+          $action = 'new_product';
+          break;
       }
       if (file_exists(DIR_WS_MODULES . $zc_products->get_handler($product_type) . '/new_product_preview.php')) {
         require(DIR_WS_MODULES . $zc_products->get_handler($product_type) . '/new_product_preview.php');
@@ -49,8 +49,8 @@ if (zen_not_null($action)) {
       break;
     case 'new_product_preview_meta_tags':
       if (!isset($_POST['products_price_sorter']) || !isset($_POST['products_model'])) {
-          $messageStack->add_session(ERROR_NO_DATA_TO_SAVE, 'error');
-          zen_redirect(zen_href_link(FILENAME_PRODUCT, 'cPath=' . $cPath . (isset($_GET['pID']) ? '&pID=' . $_GET['pID'] : '') . '&action=new_product_meta_tags'));
+          $messageStack->add(ERROR_NO_DATA_TO_SAVE, 'error');
+          $action = 'new_product_meta_tags';
       }
       break;
   }
