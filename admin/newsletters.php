@@ -274,8 +274,7 @@ if (zen_not_null($action)) {
 
         $nInfo = new objectInfo($newsletter->fields);
 
-        $languageLoader->tryLoadDefinesFromFile( DIR_WS_LANGUAGES, $_SESSION['language'],  $nInfo->module . substr($PHP_SELF, strrpos($PHP_SELF, '.')), '/modules/newsletters/');
-        //include(DIR_WS_LANGUAGES . $_SESSION['language'] . '/modules/newsletters/' . $nInfo->module . substr($PHP_SELF, strrpos($PHP_SELF, '.')));
+        $languageLoader->loadExtraLanguageFiles( DIR_WS_LANGUAGES, $_SESSION['language'],  $nInfo->module . substr($PHP_SELF, strrpos($PHP_SELF, '.')), '/modules/newsletters/');
         include(DIR_WS_MODULES . 'newsletters/' . $nInfo->module . substr($PHP_SELF, strrpos($PHP_SELF, '.')));
         $module_name = $nInfo->module;
         $module = new $module_name($nInfo->title, $nInfo->content, $nInfo->content_html);
@@ -299,7 +298,7 @@ if (zen_not_null($action)) {
 
         $nInfo = new objectInfo($newsletter->fields);
 
-        include(DIR_WS_LANGUAGES . $_SESSION['language'] . '/modules/newsletters/' . $nInfo->module . substr($PHP_SELF, strrpos($PHP_SELF, '.')));
+        $languageLoader->loadExtraLanguageFiles( DIR_WS_LANGUAGES, $_SESSION['language'],  $nInfo->module . substr($PHP_SELF, strrpos($PHP_SELF, '.')), '/modules/newsletters/');
         include(DIR_WS_MODULES . 'newsletters/' . $nInfo->module . substr($PHP_SELF, strrpos($PHP_SELF, '.')));
         $module_name = $nInfo->module;
         $module = new $module_name($nInfo->title, $nInfo->content, $nInfo->content_html);
@@ -315,7 +314,7 @@ if (zen_not_null($action)) {
 
         $nInfo = new objectInfo($newsletter->fields);
 
-        include(DIR_WS_LANGUAGES . $_SESSION['language'] . '/modules/newsletters/' . $nInfo->module . substr($PHP_SELF, strrpos($PHP_SELF, '.')));
+        $languageLoader->loadExtraLanguageFiles( DIR_WS_LANGUAGES, $_SESSION['language'],  $nInfo->module . substr($PHP_SELF, strrpos($PHP_SELF, '.')), '/modules/newsletters/');
         include(DIR_WS_MODULES . 'newsletters/' . $nInfo->module . substr($PHP_SELF, strrpos($PHP_SELF, '.')));
         $module_name = $nInfo->module;
         $module = new $module_name($nInfo->title, $nInfo->content, $nInfo->content_html, $_POST['audience_selected']);
