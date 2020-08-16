@@ -12,7 +12,7 @@ require(DIR_WS_CLASSES . 'currencies.php');
 $currencies = new currencies();
 $product_type = (isset($_POST['product_type']) ? $_POST['product_type'] : (isset($_GET['pID']) ? zen_get_products_type($_GET['pID']) : 1));
 $type_handler = $zc_products->get_admin_handler($product_type);
-$zco_notifier->notify('NOTIFY_BEGIN_ADMIN_PRODUCTS', $action);
+$zco_notifier->notify('NOTIFY_BEGIN_ADMIN_PRODUCTS', $action, $action);
 
 if (zen_not_null($action)) {
   switch ($action) {
