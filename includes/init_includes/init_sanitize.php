@@ -115,13 +115,13 @@ use Zencart\FileSystem\FileSystem;
   $pageLoader = PageLoader::getInstance();
   $pageLoader->init($installedPlugins, $_GET['main_page'], new FileSystem);
 
-    $pageDir = $pageLoader->findModulePageDirectory();
+  $pageDir = $pageLoader->findModulePageDirectory();
   if ( $pageDir === false) {
     if (MISSING_PAGE_CHECK == 'On' || MISSING_PAGE_CHECK == 'true') {
-      $_GET['main_page'] = 'index';
+      zen_redirect(zen_href_link(FILENAME_DEFAULT));
     } elseif (MISSING_PAGE_CHECK == 'Page Not Found') {
       header('HTTP/1.1 404 Not Found');
-      $_GET['main_page'] = FILENAME_PAGE_NOT_FOUND;
+      zen_redirect(zen_href_link(FILENAME_PAGE_NOT_FOUND));
     }
   }
 
