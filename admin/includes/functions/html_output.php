@@ -261,8 +261,9 @@ function zen_image_submit($image, $alt = '', $parameters = '')
 function zen_draw_input_field($name, $value = '~*~*#', $parameters = '', $required = false, $type = 'text', $reinsert_value = true)
 {
   $type = zen_output_string($type);
-  if ($type === 'price')
+  if ($type === 'price') {
     $type = 'number" step="0.01';
+  }
   $field = ($required ? '<div class="input-group alert-danger">' . PHP_EOL : '');
   $field .= '<input type="' . $type . '" name="' . zen_output_string($name) . '"';
 
@@ -272,8 +273,9 @@ function zen_draw_input_field($name, $value = '~*~*#', $parameters = '', $requir
     $field .= ' value="' . zen_output_string($value) . '"';
   }
 
-  if (zen_not_null($parameters))
+  if (zen_not_null($parameters)) {
     $field .= ' ' . $parameters;
+  }
 
   if ($required && strpos($parameters, 'required') === false) {
     $field .= ' required';
