@@ -21,5 +21,6 @@ define('PAGE_CHECKOUT_SHIPPING', 'Checkout');
 define('PAGE_ADVANCED_SEARCH', 'Advanced Search');
 define('PAGE_PRODUCTS_NEW', 'New Products');
 define('PAGE_SPECIALS', 'Specials');
+define('PAGE_FEATURED', 'Featured');
+define('PAGE_PRODUCTS_ALL', 'All Products');
 define('PAGE_REVIEWS', 'Reviews');
-?>
