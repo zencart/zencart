@@ -24,3 +24,8 @@
   $sData['pfrom'] =    (isset($_GET['pfrom']) ? zen_output_string($_GET['pfrom']) : '');
   $sData['pto'] =      (isset($_GET['pto'])   ? zen_output_string($_GET['pto']) : '');
 
+  // check manufacturers 
+  $mfr_query = $db->Execute("SELECT manufacturers_id FROM " . TABLE_MANUFACTURERS . " LIMIT 1"); 
+  if ($mfr_query->EOF) { 
+     $skip_manufacturers = true;
+  }
