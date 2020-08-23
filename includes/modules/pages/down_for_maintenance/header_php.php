@@ -24,6 +24,6 @@ if (DOWN_FOR_MAINTENANCE == 'true') {
   define('TEXT_DATE_TIME', $maintenance_on_at_time->fields['last_modified']);
 }
 
+$define_page = zen_get_file_directory(DIR_WS_LANGUAGES . $_SESSION['language'] . '/html_includes/', FILENAME_DEFINE_DOWN_FOR_MAINTENANCE, 'false');
 header("HTTP/1.1 503 Service Unavailable"); 
 
-?>

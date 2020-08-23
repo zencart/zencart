@@ -65,6 +65,7 @@ define('FILENAME_DEFINE_CHECKOUT_SUCCESS', 'define_checkout_success');
 define('FILENAME_DEFINE_CONDITIONS', 'define_conditions');
 define('FILENAME_DEFINE_CONTACT_US', 'define_contact_us');
 define('FILENAME_DEFINE_DISCOUNT_COUPON', 'define_discount_coupon');
+define('FILENAME_DEFINE_DOWN_FOR_MAINTENANCE', 'define_down_for_maintenance');
 define('FILENAME_DEFINE_PAGE_2', 'define_page_2');
 define('FILENAME_DEFINE_PAGE_3', 'define_page_3');
 define('FILENAME_DEFINE_PAGE_4', 'define_page_4');

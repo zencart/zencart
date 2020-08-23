@@ -21,6 +21,13 @@
 
 <h2 id="maintenanceDefaultMainContent"><?php echo DOWN_FOR_MAINTENANCE_TEXT_INFORMATION; ?></h2>
 
+<div id="down_for_maintenance" class="content"><?php
+/**
+ * require the html_define for the shopping_cart page
+ */
+    require($define_page);
+?></div>
+
 <?php if (DISPLAY_MAINTENANCE_TIME == 'true') { ?>
 <h3 id="maintenanceDefaultTime"><?php echo TEXT_MAINTENANCE_ON_AT_TIME . '<br />' . TEXT_DATE_TIME; ?></h3>
 <?php } ?>
