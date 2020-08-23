@@ -143,11 +143,11 @@ $userList = zen_get_users();
         <?php if ($action == 'add') { ?>
             <tr>
                 <td class="id">&nbsp;</td>
-                <td class="name"><?php echo zen_draw_input_field('name', isset($_POST['name']) ? $_POST['name'] : '', 'class="form-control" required autofocus autocomplete="off"', false, 'text', true) ?></td>
-                <td class="email"><?php echo zen_draw_input_field('email', isset($_POST['email']) ? $_POST['email'] : '', 'class="form-control" required autocomplete="off"', false, 'email', true) ?></td>
-                <td class="profile"><?php echo zen_draw_pull_down_menu('profile', $profilesList, isset($_POST['profile']) ? $_POST['profile'] : '', 'class="form-control" required') ?></td>
-                <td class="password"><?php echo zen_draw_input_field('password', isset($_POST['password']) ? $_POST['password'] : '', 'class="form-control" required autocomplete="off"', false, 'password'); ?></td>
-                <td class="confirm"><?php echo zen_draw_input_field('confirm', isset($_POST['confirm']) ? $_POST['confirm'] : '', 'class="form-control" required autocomplete="off"', false, 'password'); ?></td>
+                <td class="name"><?php echo zen_draw_input_field('name', isset($_POST['name']) ? $_POST['name'] : '', 'class="form-control" autofocus autocomplete="off"', true, 'text', true) ?></td>
+                <td class="email"><?php echo zen_draw_input_field('email', isset($_POST['email']) ? $_POST['email'] : '', 'class="form-control" autocomplete="off"', true, 'email', true) ?></td>
+                <td class="profile"><?php echo zen_draw_pull_down_menu('profile', $profilesList, isset($_POST['profile']) ? $_POST['profile'] : '', 'class="form-control"', true) ?></td>
+                <td class="password"><?php echo zen_draw_input_field('password', isset($_POST['password']) ? $_POST['password'] : '', 'class="form-control" autocomplete="off"', true, 'password'); ?></td>
+                <td class="confirm"><?php echo zen_draw_input_field('confirm', isset($_POST['confirm']) ? $_POST['confirm'] : '', 'class="form-control" autocomplete="off"', true, 'password'); ?></td>
                 <td class="actions">
                     <button type="submit" class="btn btn-primary"><?php echo IMAGE_INSERT; ?></button>
                     <a href="<?php echo zen_href_link(FILENAME_USERS) ?>" class="btn btn-default" role="button"><?php echo IMAGE_CANCEL; ?></a></td>
@@ -174,8 +174,8 @@ $userList = zen_get_users();
                     <td class="profile"><?php echo $userDetails['profileName'] ?></td>
                 <?php } ?>
                 <?php if ($action == 'password' && $user == $userDetails['id']) { ?>
-                    <td class="password"><?php echo zen_draw_input_field('password', '', 'class="form-control" required', false, 'password', true) ?></td>
-                    <td class="confirm"><?php echo zen_draw_input_field('confirm', '', 'class="form-control" required', false, 'password', true) ?></td>
+                    <td class="password"><?php echo zen_draw_input_field('password', '', 'class="form-control"', true, 'password', true) ?></td>
+                    <td class="confirm"><?php echo zen_draw_input_field('confirm', '', 'class="form-control"', true, 'password', true) ?></td>
                 <?php } elseif ($action == 'add' || $action == 'password') { ?>
                     <td class="password">&nbsp;</td>
                     <td class="confirm">&nbsp;</td>
