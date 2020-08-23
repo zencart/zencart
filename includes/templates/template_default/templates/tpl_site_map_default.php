@@ -40,8 +40,10 @@
           <li><?php echo '<a href="' . zen_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL') . '">' . PAGE_CHECKOUT_SHIPPING . '</a>'; ?></li>
 <?php } //endif ?>
           <li><?php echo '<a href="' . zen_href_link(FILENAME_ADVANCED_SEARCH) . '">' . PAGE_ADVANCED_SEARCH . '</a>'; ?></li>
+          <li><?php echo '<a href="' . zen_href_link(FILENAME_PRODUCTS_ALL) . '">' . PAGE_PRODUCTS_ALL. '</a>'; ?></li>
           <li><?php echo '<a href="' . zen_href_link(FILENAME_PRODUCTS_NEW) . '">' . PAGE_PRODUCTS_NEW . '</a>'; ?></li>
           <li><?php echo '<a href="' . zen_href_link(FILENAME_SPECIALS) . '">' . PAGE_SPECIALS . '</a>'; ?></li>
+          <li><?php echo '<a href="' . zen_href_link(FILENAME_FEATURED) . '">' . PAGE_FEATURED . '</a>'; ?></li>
           <li><?php echo '<a href="' . zen_href_link(FILENAME_REVIEWS) . '">' . PAGE_REVIEWS . '</a>'; ?></li>
           <li><?php echo BOX_HEADING_INFORMATION; ?>
           <ul>
@@ -127,7 +129,7 @@
       }
       if (!empty($page_query_list)) { 
 ?>
-          <li><?php echo BOX_HEADING_MORE_INFORMATION; ?>
+          <li><?php echo BOX_HEADING_EZPAGES; ?>
           <ul>
 <?php foreach ($page_query_list as $item) {  ?>
             <li><?php echo '<a href="' . $item['link'] . '">' . $item['name'] . '</a>'; ?></li>
