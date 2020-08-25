@@ -380,7 +380,9 @@ class Customer extends base
     public function setCustomerAuthorizationStatus(int $status)
     {
         global $db;
-        $db->Execute("UPDATE " . TABLE_CUSTOMERS . " SET customers_authorization = 4 WHERE customers_id=" . $this->customer_id, 1);
+        $db->Execute("UPDATE " . TABLE_CUSTOMERS . "
+                      SET customers_authorization = " . (int)$status . "
+                      WHERE customers_id = " . (int)$this->customer_id, 1);
         $this->data['customers_authorization'] = (int)$status;
 
         return $this->data;
