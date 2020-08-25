@@ -359,13 +359,12 @@ class Customer extends base
 
     public function banCustomer()
     {
-        global $db;
         $proceed_with_ban = true;
         $reset_shopping_session_and_basket = true;
         $this->notify('NOTIFY_BAN_CUSTOMER', $this->data, $proceed_with_ban, $reset_shopping_session_and_basket);
 
         if ($proceed_with_ban) {
-            $db->Execute("UPDATE " . TABLE_CUSTOMERS . " SET customers_authorization = 4 WHERE customers_id=" . $this->customer_id, 1);
+            $this->setCustomerAuthorizationStatus(4);
 
             if ($reset_shopping_session_and_basket) {
                 $this->resetCustomerCart();
