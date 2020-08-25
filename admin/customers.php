@@ -1183,7 +1183,7 @@ if (zen_not_null($action)) {
                     <?php } else { ?>
                       <input type="image" src="<?php echo DIR_WS_IMAGES ?>icon_red_on.gif" title="<?php echo IMAGE_ICON_STATUS_OFF; ?>" />
                     <?php } ?>
-                    <?php echo zen_draw_hidden_field('current', $customer['customers_authorization']); ?>
+                    <?php echo zen_draw_hidden_field('current', strval($customer['customers_authorization'])); ?>
                     <?php echo '</form>'; ?>
                 </td>
                 <td class="dataTableContent text-right"><?php
