@@ -85,15 +85,15 @@ if (EMAIL_ATTACHMENTS_ENABLED && $action == 'preview') {
 } //end attachments upload
 // error detection
 if ($action == 'preview') {
-  if (!isset($_POST['customers_email_address'])) {
+  if (empty($_POST['customers_email_address'])) {
     $messageStack->add(ERROR_NO_CUSTOMER_SELECTED, 'error');
   }
 
-  if (!$_POST['subject']) {
+  if (empty($_POST['subject'])) {
     $messageStack->add(ERROR_NO_SUBJECT, 'error');
   }
 
-  if (!$_POST['message'] && !$_POST['message_html']) {
+  if (empty($_POST['message']) && empty($_POST['message_html'])) {
     $messageStack->add(ENTRY_NOTHING_TO_SEND, 'error');
   }
 }
