@@ -1,5 +1,6 @@
 <?php
-/**
+
+/*
  * featured-products functions
  *
  * @package functions
@@ -9,81 +10,92 @@
  * @version $Id: featured.php 18695 2011-05-04 05:24:19Z drbyte $
  */
 
-////
-// Set the status of a featured product
-  function zen_set_featured_status($featured_id, $status) {
-    global $db;
-    $sql = "update " . TABLE_FEATURED . "
-            set status = '" . (int)$status . "', date_status_change = now()
-            where featured_id = '" . (int)$featured_id . "'";
+/**
+ * Set the status of a featured product
+ * 
+ * @global object $db
+ * @param int $featured_id
+ * @param int $status
+ */
+function zen_set_featured_status(int $featured_id, int $status)
+{
+  global $db;
+  $sql = "UPDATE " . TABLE_FEATURED . "
+          SET status = " . (int)$status . ",
+              date_status_change = now()
+          WHERE featured_id = " . (int)$featured_id;
 
-    return $db->Execute($sql);
-   }
+  $db->Execute($sql);
+}
 
-////
-// Auto expire products on featured
-  function zen_expire_featured() {
-    global $db;
+/**
+ * Auto expire products on featured
+ * 
+ * @global object $db
+ */
+function zen_expire_featured()
+{
+  global $db;
 
-    $date_range = time();
-    $zc_featured_date = date('Ymd', $date_range);
+  $date_range = time();
+  $zc_featured_date = date('Ymd', $date_range);
 
-    $featured_query = "select featured_id
-                       from " . TABLE_FEATURED . "
-                       where status = '1'
-                       and ((" . $zc_featured_date . " >= expires_date and expires_date != '0001-01-01')
-                       or (" . $zc_featured_date . " < featured_date_available and featured_date_available != '0001-01-01'))";
+  $featured_query = "SELECT featured_id
+                     FROM " . TABLE_FEATURED . "
+                     WHERE status = 1
+                     AND (
+                       (" . $zc_featured_date . " >= expires_date
+                         AND expires_date != '0001-01-01')
+                       OR (" . $zc_featured_date . " < featured_date_available
+                         AND featured_date_available != '0001-01-01'))";
 
-    $featured = $db->Execute($featured_query);
+  $featureds = $db->Execute($featured_query);
 
-    if ($featured->RecordCount() > 0) {
-      while (!$featured->EOF) {
-        zen_set_featured_status($featured->fields['featured_id'], '0');
-        $featured->MoveNext();
-      }
+  if ($featureds->RecordCount() > 0) {
+    foreach ($featureds as $featured) {
+      zen_set_featured_status((int)$featured['featured_id'], 0);
     }
   }
+}
 
-////
-// Auto start products on featured
-  function zen_start_featured() {
-    global $db;
+/**
+ * Auto start products on featured
+ * 
+ * @global object $db
+ */
+function zen_start_featured()
+{
+  global $db;
 
-    $date_range = time();
-    $zc_featured_date = date('Ymd', $date_range);
+  $date_range = time();
+  $zc_featured_date = date('Ymd', $date_range);
 
-    $featured_query = "select featured_id
-                       from " . TABLE_FEATURED . "
-                       where status = '0'
-                       and (((featured_date_available <= " . $zc_featured_date . " and featured_date_available != '0001-01-01') and (expires_date > " . $zc_featured_date . "))
-                       or ((featured_date_available <= " . $zc_featured_date . " and featured_date_available != '0001-01-01') and (expires_date = '0001-01-01'))
-                       or (featured_date_available = '0001-01-01' and expires_date > " . $zc_featured_date . "))
-                       ";
+  $featured_query = "SELECT featured_id
+                     FROM " . TABLE_FEATURED . "
+                     WHERE status = 0
+                     AND (((featured_date_available <= " . $zc_featured_date . " AND featured_date_available != '0001-01-01') AND (expires_date > " . $zc_featured_date . "))
+                     OR ((featured_date_available <= " . $zc_featured_date . " AND featured_date_available != '0001-01-01') AND (expires_date = '0001-01-01'))
+                     OR (featured_date_available = '0001-01-01' AND expires_date > " . $zc_featured_date . "))";
 
-    $featured = $db->Execute($featured_query);
+  $featureds_on = $db->Execute($featured_query);
 
-    if ($featured->RecordCount() > 0) {
-      while (!$featured->EOF) {
-        zen_set_featured_status($featured->fields['featured_id'], '1');
-        $featured->MoveNext();
-      }
+  if ($featureds_on->RecordCount() > 0) {
+    foreach ($featureds_on as $featured) {
+      zen_set_featured_status((int)$featured['featured_id'], 1);
     }
+  }
 
 // turn off featured if not active yet
-    $featured_query = "select featured_id
-                       from " . TABLE_FEATURED . "
-                       where status = '1'
-                       and (" . $zc_featured_date . " < featured_date_available and featured_date_available != '0001-01-01')
-                       ";
+  $featured_query = "SELECT featured_id
+                     FROM " . TABLE_FEATURED . "
+                     WHERE status = 1
+                     AND (" . $zc_featured_date . " < featured_date_available AND featured_date_available != '0001-01-01')";
 
-    $featured = $db->Execute($featured_query);
+  $featureds_off = $db->Execute($featured_query);
 
-    if ($featured->RecordCount() > 0) {
-      while (!$featured->EOF) {
-        zen_set_featured_status($featured->fields['featured_id'], '0');
-        $featured->MoveNext();
-      }
+  if ($featureds_off->RecordCount() > 0) {
+    foreach ($featureds_off as $featured) {
+      zen_set_featured_status((int)$featured['featured_id'], 0);
     }
-
   }
-?>
+}
