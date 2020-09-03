@@ -924,7 +924,7 @@ if (zen_not_null($action)) {
                     <?php if (defined('MODULE_ORDER_TOTAL_GV_STATUS') && MODULE_ORDER_TOTAL_GV_STATUS == 'true') { ?>
                       <td class="dataTableContent text-right"><?php echo $currencies->format($customer['gv_balance']); ?></td>
                     <?php } ?>
-                    <td class="dataTableContent text-center dataTableButtonCell">
+                    <td class="dataTableContent text-center">
                       <?php echo zen_draw_form('set_status_' . (int)$customer['customers_id'], FILENAME_CUSTOMERS, 'action=status&cID=' . $customer['customers_id'] . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '') . (isset($_GET['search']) ? '&search=' . $_GET['search'] : '')); ?>
                       <button type="submit" class="btn btn-status">
                         <?php if ($customer['customers_authorization'] == 0) { ?>
