@@ -264,7 +264,7 @@ function zen_draw_input_field($name, $value = '~*~*#', $parameters = '', $requir
   if ($type === 'price') {
     $type = 'number" step="0.01';
   }
-  $field = ($required ? '<div class="input-group alert-danger">' . PHP_EOL : '');
+  $field = ($required ? '<div class="input-group">' . PHP_EOL : '');
   $field .= '<input type="' . $type . '" name="' . zen_output_string($name) . '"';
 
   if ($value == '~*~*#' && (isset($GLOBALS[$name]) && is_string($GLOBALS[$name])) && ($reinsert_value == true)) {
