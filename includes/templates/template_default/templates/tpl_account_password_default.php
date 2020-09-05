@@ -23,7 +23,7 @@
 <?php if ($messageStack->size('account_password') > 0) echo $messageStack->output('account_password'); ?>
 
 <label class="inputLabel" for="password-current"><?php echo ENTRY_PASSWORD_CURRENT; ?></label>
-<?php echo zen_draw_password_field('password_current','','id="password-current" autocomplete="off" placeholder="' . ENTRY_PASSWORD_CURRENT_TEXT . '" required'); ?>
+<?php echo zen_draw_password_field('password_current','','id="password-current" autocomplete="off" placeholder="' . ENTRY_PASSWORD_CURRENT_TEXT . '" required autofocus'); ?>
 <br class="clearBoth" />
 
 <label class="inputLabel" for="password-new"><?php echo ENTRY_PASSWORD_NEW; ?></label>
