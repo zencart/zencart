@@ -156,3 +156,45 @@ function zen_parse_search_string($search_str = '', &$objects = array()) {
 
     return false;
 }
+
+    function zen_build_where($fields, $string)
+    {
+        global $db;
+        if (zen_parse_search_string(stripslashes($string), $search_keywords)) {
+            $where_str = " AND (";
+            for ($i = 0, $n = sizeof($search_keywords); $i < $n; $i++) {
+                switch ($search_keywords[$i]) {
+                    case '(':
+                    case ')':
+                    case 'and':
+                    case 'or':
+                        $where_str .= " " . $search_keywords[$i] . " ";
+                        break;
+                    default:
+                        $sql_add = " (";
+                        $first = true;
+                        foreach ($fields as $k => $v) {
+                            if (!$first) {
+                                $sql_add .= ' OR ';
+                            }
+                            $first = false;
+                            if (strpos($v, '_id')) {
+                                $sql_add .= " :field = :keyword_num";
+                                $sql_add = $db->bindVars($sql_add, ':keyword_num', $search_keywords[$i], 'integer');
+                            } else {
+                                $sql_add .= " :field LIKE '%:keyword%'";
+                            }
+                            $sql_add = $db->bindVars($sql_add, ':field', $v, 'noquotestring');
+                        }
+                        $sql_add .= ") ";
+
+                        $where_str .= $sql_add;
+
+                        $where_str = $db->bindVars($where_str, ':keyword', $search_keywords[$i], 'noquotestring');
+                        break;
+                }
+            }
+            $where_str .= " )";
+        }
+        return $where_str;
+    }
