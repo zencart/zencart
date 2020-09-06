@@ -157,7 +157,7 @@ function zen_parse_search_string($search_str = '', &$objects = array()) {
     return false;
 }
 
-    function zen_build_where($fields, $string)
+    function zen_build_keyword_where_clause($fields, $string)
     {
         global $db;
         if (zen_parse_search_string(stripslashes($string), $search_keywords)) {
@@ -172,25 +172,26 @@ function zen_parse_search_string($search_str = '', &$objects = array()) {
                         break;
                     default:
                         $sql_add = " (";
-                        $first = true;
-                        foreach ($fields as $k => $v) {
-                            if (!$first) {
+                        $first_field = true;
+                        foreach ($fields as $field_name) {
+                            if (!$first_field) {
                                 $sql_add .= ' OR ';
                             }
-                            $first = false;
-                            if (strpos($v, '_id')) {
-                                $sql_add .= " :field = :keyword_num";
-                                $sql_add = $db->bindVars($sql_add, ':keyword_num', $search_keywords[$i], 'integer');
+                            $first_field = false;
+                            if (strpos($field_name, '_id')) {
+                                $sql_add .= " :field_name = :numeric_keyword";
+
                             } else {
-                                $sql_add .= " :field LIKE '%:keyword%'";
+                                $sql_add .= " :field_name LIKE '%:keyword%'";
                             }
-                            $sql_add = $db->bindVars($sql_add, ':field', $v, 'noquotestring');
+                            $sql_add = $db->bindVars($sql_add, ':field_name', $field_name, 'noquotestring');
                         }
                         $sql_add .= ") ";
 
                         $where_str .= $sql_add;
 
                         $where_str = $db->bindVars($where_str, ':keyword', $search_keywords[$i], 'noquotestring');
+                        $where_str = $db->bindVars($where_str, ':numeric_keyword', $search_keywords[$i], 'integer');
                         break;
                 }
             }

@@ -676,7 +676,7 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
                     'pd.products_description',
                     'p.products_id',
                 ];
-                $where .= zen_build_where($fields, trim($keywords));
+                $where .= zen_build_keyword_where_clause($fields, trim($keywords));
             } else {
                 $products_query_raw.= " LEFT JOIN " . TABLE_PRODUCTS_TO_CATEGORIES . " p2c USING (products_id) ";
                 $where .= " AND p2c.categories_id=" . (int)$current_category_id;
