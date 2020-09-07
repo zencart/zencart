@@ -94,10 +94,13 @@ if (zen_not_null($action)) {
                 $search = '';
                 if (isset($_GET['search']) && zen_not_null($_GET['search'])) {
                   $keywords = zen_db_input(zen_db_prepare_input($_GET['search']));
-                  $search = " and pd.products_name like '%" . $keywords . "%'
-                              or pad.products_attributes_filename like '%" . $keywords . "%'
-                              or pd.products_description like '%" . $keywords . "%'
-                              or p.products_model like '%" . $keywords . "%'";
+                    $keyword_search_fields = [
+                        'pd.products_name',
+                        'p.products_model',
+                        'pd.products_description',
+                        'pad.products_attributes_filename',
+                    ];
+                    $search = zen_build_keyword_where_clause($keyword_search_fields, trim($keywords));
                 }
 
 // order of display
@@ -191,9 +194,9 @@ if (zen_not_null($action)) {
                   '<a href="' . zen_href_link(FILENAME_DOWNLOADS_MANAGER, zen_get_all_get_params(array('padID', 'action')) . 'padID=' . $padInfo->products_attributes_id . '&page=' . $_GET['page'] . '&action=edit') . '" class="btn btn-primary" role="button">' . IMAGE_EDIT . '</a>' .
                   '&nbsp;<a href="' . zen_href_link(FILENAME_ATTRIBUTES_CONTROLLER, 'products_filter=' . $padInfo->products_id . '&current_categories_id=' . $padInfo->master_categories_id) . '" class="btn btn-primary" role="button">' . IMAGE_EDIT_ATTRIBUTES . '</a>'
                 );
-                $contents[] = array('align' => 'center', 'text' => '<a href="'  . zen_href_link(FILENAME_PRODUCT, 'product_type=' . $padInfo->products_type . '&pID=' . $padInfo->products_id . '&action=new_product&page=' . $_GET['page']) . '" class="btn btn-primary" role="button">' . IMAGE_EDIT_PRODUCT . '</a>'); 
+                $contents[] = array('align' => 'center', 'text' => '<a href="'  . zen_href_link(FILENAME_PRODUCT, 'product_type=' . $padInfo->products_type . '&pID=' . $padInfo->products_id . '&action=new_product&page=' . $_GET['page']) . '" class="btn btn-primary" role="button">' . IMAGE_EDIT_PRODUCT . '</a>');
                 if ($padInfo->product_is_always_free_shipping == 1 || $padInfo->products_virtual == 1) {
-                   $contents[] = array('params'=>'errorText', 'text' => '<br />' . TEXT_WARNING_PRODUCT_MISCONFIGURED); 
+                   $contents[] = array('params'=>'errorText', 'text' => '<br />' . TEXT_WARNING_PRODUCT_MISCONFIGURED);
                 }
                 $contents[] = array('text' => '<br />' . TEXT_PRODUCTS_NAME . $padInfo->products_name);
                 $contents[] = array('text' => TEXT_PRODUCTS_MODEL . $padInfo->products_model);

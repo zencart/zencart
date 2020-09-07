@@ -240,12 +240,15 @@ if (zen_not_null($action)) {
 // create search filter
                   $search = '';
                   if (isset($_GET['search']) && zen_not_null($_GET['search'])) {
-                    $keywords = zen_db_input(zen_db_prepare_input($_GET['search']));
-                    $search = " AND (r.customers_name LIKE '%" . $keywords . "%'
-                                OR rd.reviews_text LIKE '%" . $keywords . "%'
-                                OR pd.products_name LIKE '%" . $keywords . "%'
-                                OR pd.products_description LIKE '%" . $keywords . "%'
-                                OR p.products_model LIKE '%" . $keywords . "%') ";
+                      $keywords = zen_db_input(zen_db_prepare_input($_GET['search']));
+                      $keyword_search_fields = [
+                          'r.customers_name',
+                          'rd.reviews_text',
+                          'pd.products_name',
+                          'pd.products_description',
+                          'p.products_model',
+                      ];
+                      $search = zen_build_keyword_where_clause($keyword_search_fields, trim($keywords));
                   }
 
                   if ($status_filter != '' && $status_filter > 0) {

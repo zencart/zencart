@@ -168,7 +168,7 @@ function zen_parse_search_string($search_str = '', &$objects = array()) {
                     case ')':
                     case 'and':
                     case 'or':
-                        $where_str .= " " . $search_keywords[$i] . " ";
+                        $where_str .= " " . strtoupper($search_keywords[$i]) . " ";
                         break;
                     default:
                         $sql_add = " (";

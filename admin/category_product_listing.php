@@ -670,13 +670,13 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
             $where = " WHERE pd.language_id = " . (int)$_SESSION['languages_id'];
 
             if ($search_result && $action != 'edit_category') {
-                $fields = [
+                $keyword_search_fields = [
                     'pd.products_name',
                     'p.products_model',
                     'pd.products_description',
                     'p.products_id',
                 ];
-                $where .= zen_build_keyword_where_clause($fields, trim($keywords));
+                $where .= zen_build_keyword_where_clause($keyword_search_fields, trim($keywords));
             } else {
                 $products_query_raw.= " LEFT JOIN " . TABLE_PRODUCTS_TO_CATEGORIES . " p2c USING (products_id) ";
                 $where .= " AND p2c.categories_id=" . (int)$current_category_id;
