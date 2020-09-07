@@ -242,8 +242,8 @@ function executeSql($lines, $database, $table_prefix = '') {
             }
           }
           break;
-        case (substr($line_upper, 0, 7) == 'SELECT ' && substr_count($line, 'FROM ') > 0):
-          $line = str_replace('FROM ', 'FROM ' . $table_prefix, $line);
+        case (substr($line_upper, 0, 7) == 'SELECT ' && substr_count($line_upper, 'FROM ') > 0):
+          $line = str_ireplace('FROM ', 'FROM ' . $table_prefix, $line);
           break;
         case (substr($line_upper, 0, 10) == 'LEFT JOIN '):
           $line = 'LEFT JOIN ' . $table_prefix . ltrim(substr($line, 10));
@@ -259,7 +259,7 @@ function executeSql($lines, $database, $table_prefix = '') {
               $line = substr($line, 0, (strlen($line) - 1)); // remove trailing ','
             }
           } else { //didn't have a comma, but starts with "FROM ", so insert table prefix
-            $line = str_replace('FROM ', 'FROM ' . $table_prefix, $line);
+            $line = str_ireplace('FROM ', 'FROM ' . $table_prefix, $line);
           }//endif substr_count(,)
           break;
         default:
