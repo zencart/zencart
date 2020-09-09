@@ -33,7 +33,7 @@ $_GET['keyword'] = isset($_GET['keyword']) ? trim($_GET['keyword']) : '';
 $search_additional_clause = false;
 $zco_notifier->notify('NOTIFY_ADVANCED_SEARCH_RESULTS_ADDL_CLAUSE', array(), $search_additional_clause);
 
-if ($search_additional_clause === false && 
+if ($search_additional_clause === false &&
 (empty($_GET['keyword']) || $_GET['keyword'] == HEADER_SEARCH_DEFAULT_TEXT || $_GET['keyword'] == KEYWORD_FORMAT_STRING) &&
 (isset($_GET['dfrom']) && (empty($_GET['dfrom']) || ($_GET['dfrom'] == DOB_FORMAT_STRING))) &&
 (isset($_GET['dto']) && (empty($_GET['dto']) || ($_GET['dto'] == DOB_FORMAT_STRING))) &&
@@ -217,8 +217,8 @@ $zco_notifier->notify('NOTIFY_SEARCH_COLUMNLIST_STRING');
 
 //  $select_str = "select distinct " . $select_column_list . " m.manufacturers_id, p.products_id, pd.products_name, p.products_price, p.products_tax_class_id, IF(s.status = 1, s.specials_new_products_price, NULL) as specials_new_products_price, IF(s.status = 1, s.specials_new_products_price, p.products_price) as final_price ";
 $select_str = "SELECT DISTINCT " . $select_column_list .
-              " p.products_sort_order, m.manufacturers_id, p.products_id, pd.products_name, 
-                p.products_price, p.products_tax_class_id, p.products_price_sorter, 
+              " p.products_sort_order, m.manufacturers_id, p.products_id, pd.products_name,
+                p.products_price, p.products_tax_class_id, p.products_price_sorter,
                 p.products_qty_box_status, p.master_categories_id, p.product_is_call ";
 
 if ((DISPLAY_PRICE_WITH_TAX == 'true') && ((isset($_GET['pfrom']) && zen_not_null($_GET['pfrom'])) || (isset($_GET['pto']) && zen_not_null($_GET['pto'])))) {
@@ -233,9 +233,9 @@ $zco_notifier->notify('NOTIFY_SEARCH_SELECT_STRING');
 $from_str = "FROM (" . TABLE_PRODUCTS . " p
              LEFT JOIN " . TABLE_MANUFACTURERS . " m
              USING(manufacturers_id), " . TABLE_PRODUCTS_DESCRIPTION . " pd, " . TABLE_CATEGORIES . " c, " . TABLE_PRODUCTS_TO_CATEGORIES . " p2c )";
-             
+
 if (ADVANCED_SEARCH_INCLUDE_METATAGS == 'true') {
-    $from_str .= 
+    $from_str .=
         " LEFT JOIN " . TABLE_META_TAGS_PRODUCTS_DESCRIPTION . " mtpd
              ON mtpd.products_id= p2c.products_id
             AND mtpd.language_id = :languagesID";
@@ -315,48 +315,24 @@ if (isset($_GET['manufacturers_id']) && zen_not_null($_GET['manufacturers_id']))
 }
 
 if (isset($keywords) && zen_not_null($keywords)) {
-  if (zen_parse_search_string(stripslashes($_GET['keyword']), $search_keywords)) {
-    $where_str .= " AND (";
-    for ($i=0, $n=sizeof($search_keywords); $i<$n; $i++ ) {
-      switch ($search_keywords[$i]) {
-        case '(':
-        case ')':
-        case 'and':
-        case 'or':
-        $where_str .= " " . $search_keywords[$i] . " ";
-        break;
-        default:
-        $where_str .= "(pd.products_name LIKE '%:keywords%'
-                                         OR p.products_model
-                                         LIKE '%:keywords%'
-                                         OR m.manufacturers_name
-                                         LIKE '%:keywords%'";
+    $keyword_search_fields = [
+        'pd.products_name',
+        'p.products_model',
+        'm.manufacturers_name',
+    ];
 
-        $where_str = $db->bindVars($where_str, ':keywords', $search_keywords[$i], 'noquotestring');
-        
-        // conditionally include meta tags in search
-        if (ADVANCED_SEARCH_INCLUDE_METATAGS == 'true') {
-            $where_str .= " OR (mtpd.metatags_keywords != '' AND mtpd.metatags_keywords LIKE '%:keywords%')";
-            $where_str .= " OR (mtpd.metatags_description != '' AND mtpd.metatags_description LIKE '%:keywords%')";
-            $where_str = $db->bindVars($where_str, ':keywords', $search_keywords[$i], 'noquotestring');
-        }
-
-        if (isset($_GET['search_in_description']) && ($_GET['search_in_description'] == '1')) {
-          $where_str .= " OR pd.products_description
-                          LIKE '%:keywords%'";
-
-          $where_str = $db->bindVars($where_str, ':keywords', $search_keywords[$i], 'noquotestring');
-        }
-        $where_str .= ')';
-        break;
-      }
+    if (ADVANCED_SEARCH_INCLUDE_METATAGS == 'true') {
+        $keyword_search_fields[] = 'mtpd.metatags_keywords';
+        $keyword_search_fields[] = 'mtpd.metatags_description';
     }
-    $where_str .= " ))";
-  }
+
+    if (isset($_GET['search_in_description']) && ($_GET['search_in_description'] == '1')) {
+        $keyword_search_fields[] = 'pd.products_description';
+    }
+
+    $where_str .= zen_build_keyword_where_clause($keyword_search_fields, trim($keywords));
 }
-if (!isset($keywords) || $keywords == "") {
   $where_str .= ')';
-}
   if (isset($_GET['alpha_filter_id']) && (int)$_GET['alpha_filter_id'] > 0) {
     $alpha_sort = " and (pd.products_name LIKE '" . chr((int)$_GET['alpha_filter_id']) . "%') ";
     $where_str .= $alpha_sort;
