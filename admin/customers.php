@@ -635,28 +635,7 @@ if (zen_not_null($action)) {
         </div>
       <?php } else { ?>
         <div class="col-sm-offset-8 col-sm-4">
-          <?php echo zen_draw_form('search', FILENAME_CUSTOMERS, '', 'get', 'class="form-horizontal"', true); ?>
-          <div class="form-group">
-            <?php echo zen_draw_label(HEADING_TITLE_SEARCH_DETAIL, 'search', 'class="control-label col-sm-3"'); ?>
-            <div class="col-sm-9">
-              <?php echo zen_draw_input_field('search', '', 'class="form-control" id="search"'); ?>
-            </div>
-          </div>
-          <?php
-          echo zen_hide_session_id();
-          if (isset($_GET['search']) && zen_not_null($_GET['search'])) {
-            $keywords = zen_db_prepare_input($_GET['search']);
-            ?>
-            <div class="form-group">
-              <div class="col-sm-3">
-                <p class="control-label"><?php echo TEXT_INFO_SEARCH_DETAIL_FILTER; ?></p>
-              </div>
-              <div class="col-sm-9 text-right">
-                <?php echo zen_output_string_protected($keywords); ?>&nbsp;<a href="<?php echo zen_href_link(FILENAME_CUSTOMERS); ?>" class="btn btn-default" role="button"><?php echo IMAGE_RESET; ?></a>
-              </div>
-            </div>
-          <?php } ?>
-          <?php echo '</form>'; ?>
+          <?php include DIR_WS_MODULES . 'search_box.php'; ?>
         </div>
         <?php
 // Sort Listing
@@ -807,24 +786,18 @@ if (zen_not_null($action)) {
                 $search = '';
                 if (isset($_GET['search']) && zen_not_null($_GET['search'])) {
                   $keywords = zen_db_input(zen_db_prepare_input($_GET['search']));
-                  $parts = explode(" ", trim($keywords));
-                  $search = 'WHERE ';
-                  foreach ($parts as $k => $v) {
-                    $sql_add = " (c.customers_lastname LIKE '%:part%'
-                         OR c.customers_firstname LIKE '%:part%'
-                         OR c.customers_email_address LIKE '%:part%'
-                         OR c.customers_telephone RLIKE ':keywords:'
-                         OR a.entry_company RLIKE ':keywords:'
-                         OR a.entry_street_address RLIKE ':keywords:'
-                         OR a.entry_city RLIKE ':keywords:'
-                         OR a.entry_postcode RLIKE ':keywords:')";
-                    if ($k != 0) {
-                      $sql_add = ' AND ' . $sql_add;
-                    }
-                    $sql_add = $db->bindVars($sql_add, ':part', $v, 'noquotestring');
-                    $sql_add = $db->bindVars($sql_add, ':keywords:', $v, 'regexp');
-                    $search .= $sql_add;
-                  }
+                  $keyword_search_fields = [
+                    'c.customers_lastname',
+                    'c.customers_firstname',
+                    'c.customers_email_address',
+                    'c.customers_telephone',
+                    'a.entry_company',
+                    'a.entry_street_address',
+                    'a.entry_city',
+                    'a.entry_postcode',
+                  ];
+                  $search = zen_build_keyword_where_clause($keyword_search_fields, trim($keywords));
+                  $search = (trim($search) != '') ? preg_replace('/ *AND /i', ' WHERE ', $search, 1) : '';
                 }
                 $new_fields = '';
 
