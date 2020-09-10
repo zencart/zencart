@@ -1059,25 +1059,19 @@ if (zen_not_null($action)) {
                   <?php
                   $search = '';
                   if (isset($_GET['search']) && zen_not_null($_GET['search'])) {
-                    $keywords = zen_db_input(zen_db_prepare_input($_GET['search']));
-                    $parts = explode(" ", trim($keywords));
-                    $search = 'WHERE ';
-                    foreach ($parts as $k => $v) {
-                      $sql_add = " (c.customers_lastname LIKE '%:part%'
-                         OR c.customers_firstname LIKE '%:part%'
-                         OR c.customers_email_address LIKE '%:part%'
-                         OR c.customers_telephone RLIKE ':keywords:'
-                         OR a.entry_company RLIKE ':keywords:'
-                         OR a.entry_street_address RLIKE ':keywords:'
-                         OR a.entry_city RLIKE ':keywords:'
-                         OR a.entry_postcode RLIKE ':keywords:')";
-                      if ($k != 0) {
-                        $sql_add = ' AND ' . $sql_add;
-                      }
-                      $sql_add = $db->bindVars($sql_add, ':part', $v, 'noquotestring');
-                      $sql_add = $db->bindVars($sql_add, ':keywords:', $v, 'regexp');
-                      $search .= $sql_add;
-                    }
+                      $keywords = zen_db_input(zen_db_prepare_input($_GET['search']));
+                      $keyword_search_fields = [
+                          'c.customers_lastname',
+                          'c.customers_firstname',
+                          'c.customers_email_address',
+                          'c.customers_telephone',
+                          'a.entry_company',
+                          'a.entry_street_address',
+                          'a.entry_city',
+                          'a.entry_postcode',
+                      ];
+                      $search = zen_build_keyword_where_clause($keyword_search_fields, trim($keywords));
+                      $search = (trim($search) != '') ? preg_replace('/ *AND /i', ' WHERE ', $search, 1) : '';
                   }
                   $new_fields = '';
 
