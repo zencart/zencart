@@ -189,7 +189,6 @@ class ot_gv {
    */
   function credit_selection() {
     global $db, $currencies;
-    $selection = array();
     $gv_query = $db->Execute("SELECT coupon_id FROM " . TABLE_COUPONS . " WHERE coupon_type = 'G' AND coupon_active='Y'");
     // checks to see if any GVs are in the system and active or if the current customer has any GV balance
     if ($gv_query->RecordCount() > 0 || $this->use_credit_amount()) {
@@ -201,9 +200,8 @@ class ot_gv {
                          'field' => zen_draw_input_field('gv_redeem_code', '', 'id="disc-'.$this->code.'" onkeyup="submitFunction(0,0)"'),
                          'tag' => 'disc-'.$this->code,
                          )));
-
+      return $selection;
     }
-    return $selection;
   }
   /**
    * Verify that the customer has entered a valid redemption amount, and return the amount that can be applied to this order
