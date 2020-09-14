@@ -336,6 +336,7 @@ define('ARIA_PAGINATION_','');
   define('SUCCESS_ADDED_TO_CART_PRODUCT', 'Successfully added Product to the cart ...');
 // only for where multiple add to cart is used:
   define('SUCCESS_ADDED_TO_CART_PRODUCTS', 'Successfully added selected Product(s) to the cart ...');
+  define('FAILURE_ADDED_TO_CART_PRODUCTS', 'The selected Product(s) are not currently available for purchase...');
 
   define('TEXT_PRODUCT_WEIGHT_UNIT','lbs');
 
