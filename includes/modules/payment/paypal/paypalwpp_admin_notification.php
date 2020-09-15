@@ -430,10 +430,10 @@ $authcapt_on = (isset($_GET['authcapt']) && $_GET['authcapt'] == 'on');
 
 if (isset($response['RESPMSG']) /*|| defined('MODULE_PAYMENT_PAYFLOW_STATUS')*/) { // payflow
     $output .= $outputPFmain;
-    if (method_exists($this, '_doVoid') && (MODULE_PAYMENT_PAYPALDP_TRANSACTION_MODE == 'Auth Only' || MODULE_PAYMENT_PAYFLOW_TRANSACTION_MODE == 'Auth Only' || $authcapt_on)) {
+    if (method_exists($this, '_doVoid') && (MODULE_PAYMENT_PAYPALDP_TRANSACTION_MODE == 'Auth Only' || (defined('MODULE_PAYMENT_PAYFLOW_TRANSACTION_MODE') && MODULE_PAYMENT_PAYFLOW_TRANSACTION_MODE == 'Auth Only') || $authcapt_on)) {
         $output .= $outputVoid;
     }
-    if (method_exists($this, '_doCapt') && (MODULE_PAYMENT_PAYPALDP_TRANSACTION_MODE == 'Auth Only' || MODULE_PAYMENT_PAYFLOW_TRANSACTION_MODE == 'Auth Only' || $authcapt_on)) {
+    if (method_exists($this, '_doCapt') && (MODULE_PAYMENT_PAYPALDP_TRANSACTION_MODE == 'Auth Only' || (defined('MODULE_PAYMENT_PAYFLOW_TRANSACTION_MODE') && MODULE_PAYMENT_PAYFLOW_TRANSACTION_MODE == 'Auth Only') || $authcapt_on)) {
         $output .= $outputCapt;
     }
     if (method_exists($this, '_doRefund')) {
