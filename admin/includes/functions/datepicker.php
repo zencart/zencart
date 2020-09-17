@@ -14,6 +14,7 @@ function zen_datepicker_format_full()
 {
   return str_replace("YY", "YYYY", strtoupper(DATE_FORMAT_DATE_PICKER));
 }
+
 /**
  * converts mm-dd-yy to m-d-Y
  * @return string
@@ -26,6 +27,7 @@ function zen_datepicker_format_fordate()
   $date = str_replace('yy', 'Y', $date);
   return $date;
 }
+
 /**
  * converts mm-dd-yy to %m-%d-%Y
  * @return string
@@ -38,12 +40,14 @@ function zen_datepicker_format_forsql()
   $date = str_replace('yy', '%Y', $date);
   return $date;
 }
+
 /**
- * 
- * @param string $raw_date
+ * Convet Date to the corect farmat
+ * @param string $raw_date Date value
+ * @param boolean $past_date_null Set the date value to null is the dat is in the past
  * @return string
  */
-function zen_prepare_date($raw_date)
+function zen_prepare_date($raw_date, $past_date_null = false)
 {
   $date = zen_db_prepare_input($raw_date);
   if (DATE_FORMAT_DATE_PICKER != 'yy-mm-dd' && !empty($date)) {
@@ -54,6 +58,8 @@ function zen_prepare_date($raw_date)
       $date = $dt->format('Y-m-d');
     }
   }
-  $date = (date('Y-m-d') < $date) ? $date : 'null';
+  if ($past_date_null == true) {
+    $date = (date('Y-m-d') < $date) ? $date : 'null';
+  }
   return $date;
 }

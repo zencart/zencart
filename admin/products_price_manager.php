@@ -103,7 +103,7 @@ if (zen_not_null($action)) {
         $master_categories_id = $_POST['master_categories_id'];
       }
 
-      $products_date_available = zen_prepare_date($_POST['products_date_available']);
+      $products_date_available = zen_prepare_date($_POST['products_date_available'], true);
 
       $specials_date_available = zen_prepare_date($_POST['specials_date_available']);
       $specials_expires_date = zen_prepare_date($_POST['specials_expires_date']);
