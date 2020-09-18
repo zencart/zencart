@@ -12,7 +12,7 @@ $define = [
     'TEXT_HEADING_PRODUCT_SELECT' => 'Select Product',
     'WARNING_PRODUCTS_LINK_TO_CATEGORY_REMOVED' => 'WARNING: The previously-selected product is no longer linked into this category.',
     'TEXT_PRODUCTS_ID_INVALID' => 'WARNING: Product ID#%u is invalid/does not exist in the database.',
-    'TEXT_INFO_MASTER_CATEGORY_CHANGE' => 'A product has a Master Category ID (for pricing purposes) that can be considered as the category where the product actually <i>resides</i>. Additionally, a product can be <i>linked</i> (copied) to any number of other categories, where the price may be modified due to conditions on those linked categories.<br>The Master Category ID can be changed by using this Master Category dropdown, that only offers the <strong>currently linked</strong> categories as possible alternatives.<br>To set the Master Category ID to <strong>another</strong> category, first link it to a new category using the table below, and Update. Then use this dropdown to reassign the master category to that new category.',
+    'TEXT_INFO_MASTER_CATEGORY_CHANGE' => 'A product has a Master Category ID (for pricing purposes) that can be considered as the category where the product actually <i>resides</i>. Additionally, a product may be <i>linked</i> to any number of other categories, so that it displays in multiple places. <br>The Master Category ID can be changed by using this Master Category dropdown, that only offers the <strong>currently linked</strong> categories as possible alternatives.<br>To set the Master Category ID to <strong>another</strong> category, first link it to a new category using the table below, and Update. Then use this dropdown to reassign the master category to that new category.',
     'TEXT_INFOBOX_HEADING_SELECT_PRODUCT' => 'Select Product by ID#',
     'TEXT_SET_PRODUCTS_TO_CATEGORIES_LINKS' => 'Show Product to Categories Links for: ',
     'TEXT_PRODUCTS_ID' => 'Product ID# ',
@@ -23,7 +23,8 @@ $define = [
     'BUTTON_CATEGORY_LISTING' => 'Category Listing',
     'TEXT_HEADING_LINKED_CATEGORIES' => 'Linked Categories',
     'TEXT_SET_MASTER_CATEGORIES_ID' => '<strong>WARNING:</strong> a MASTER CATEGORIES ID must be assigned',
-    'TEXT_INFO_PRODUCTS_TO_CATEGORIES_LINKER_INTRO' => '<p>This product is currently linked to the categories selected below (you may change the number of columns displayed on <a target="_blank" href="configuration.php?&amp;gID=3">this page</a>).<br>To add/remove links, select/deselect the checkboxes as required and then click on the ' . BUTTON_UPDATE_CATEGORY_LINKS . ' button.</p><p>Note that additional product/category actions are available using the Global Tools below.</p>',
+    'TEXT_INFO_PRODUCTS_TO_CATEGORIES_LINKER_INTRO' => '<p>This product is currently linked to the categories selected below. <br>To add/remove links, select/deselect the checkboxes as required and then click on the ' . BUTTON_UPDATE_CATEGORY_LINKS . ' button.</p><p>Note that additional product/category actions are available using the Global Tools below. <br><br>
+    You may also change the number of columns displayed in this table by updating "Maximum Display Columns Products to Multiple Categories Manager" on <a target="_blank" href="configuration.php?&amp;gID=3">this page</a>.</p>',
     'TEXT_LABEL_CATEGORY_DISPLAY_ROOT' => 'Display the SubCategories under:',
     'BUTTON_SET_DEFAULT_TARGET_CATEGORY' => 'Set as Default',
     'BUTTON_SET_DEFAULT_TARGET_CATEGORY_TITLE' => 'Set this selected Target Category as the Default to display',
