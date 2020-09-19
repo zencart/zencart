@@ -175,14 +175,14 @@ if (zen_not_null($action)) {
       <script src="includes/javascript/spiffyCal/spiffyCal_v2_1.js"></script>
       <script>
         function session_win() {
-            window.open("<?php echo zen_href_link(FILENAME_SALEMAKER_INFO); ?>", "salemaker_info", "height=460,width=600,scrollbars=yes,resizable=yes").focus();
+            window.open("<?php echo zen_href_link(FILENAME_SALEMAKER_INFO); ?>", "salemaker_info", "height=460,width=600,scrollbars=yes,resizable=yes,noreferrer").focus();
         }
         function popupWindow(url) {
-            window.open(url, 'popupWindow', 'toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=no,resizable=yes,copyhistory=no,width=600,height=460,screenX=150,screenY=150,top=150,left=150')
+            window.open(url, 'popupWindow', 'toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=no,resizable=yes,copyhistory=no,width=600,height=460,screenX=150,screenY=150,top=150,left=150,noreferrer')
         }
 <?php /*
 //        function session_win1() {
-//            window.open("<?php echo zen_href_link(FILENAME_SALEMAKER_POPUP, 'cid=' . $category['categories_id']); ?>//", "salemaker_info", "height=460,width=600,scrollbars=yes,resizable=yes").focus();
+//            window.open("<?php echo zen_href_link(FILENAME_SALEMAKER_POPUP, 'cid=' . $category['categories_id']); ?>//", "salemaker_info", "height=460,width=600,scrollbars=yes,resizable=yes,noreferrer").focus();
 //        }
 */?>
         function init() {

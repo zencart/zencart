@@ -357,9 +357,9 @@ class paypaldp extends base {
       // 3D-Secure
       $selection['fields'][] = array('title' => '',
                                'field' => '<div id="' . $this->code.'-cc-securetext"><p>' .
-                                     '<a href="javascript:void window.open(\'vbv_learn_more.html\',\'vbv_service\',\'width=550,height=450\')">' .
+                                     '<a href="javascript:void window.open(\'vbv_learn_more.html\',\'vbv_service\',\'width=550,height=450,noreferrer\')">' .
                                      zen_image(DIR_WS_IMAGES.'3ds/vbv_learn_more.gif') . '</a>' .
-                                     '<a href="javascript:void window.open(\'mcs_learn_more.html\',\'mcsc_service\',\'width=550,height=450\')">' .
+                                     '<a href="javascript:void window.open(\'mcs_learn_more.html\',\'mcsc_service\',\'width=550,height=450,noreferrer\')">' .
                                      zen_image(DIR_WS_IMAGES.'3ds/mcsc_learn_more.gif') . '</a>' .
                                      '</p>' .
                                      '<p>' . TEXT_3DS_CARD_MAY_BE_ENROLLED . '</p></div>',
@@ -556,9 +556,9 @@ class paypaldp extends base {
           $confirmation['fields'][count($confirmation['fields'])] = array(
               'title' => '',
               'field' => '<div id="' . $this->code.'-cc-securetext"><p>' .
-                         '<a href="javascript:void window.open(\'vbv_learn_more.html\',\'vbv_service\',\'width=550,height=450\')">' .
+                         '<a href="javascript:void window.open(\'vbv_learn_more.html\',\'vbv_service\',\'width=550,height=450,noreferrer\')">' .
                          zen_image(DIR_WS_IMAGES.'3ds/vbv_learn_more.gif') . '</a>' .
-                         '<a href="javascript:void window.open(\'mcs_learn_more.html\',\'mcsc_service\',\'width=550,height=450\')">' .
+                         '<a href="javascript:void window.open(\'mcs_learn_more.html\',\'mcsc_service\',\'width=550,height=450,noreferrer\')">' .
                          zen_image(DIR_WS_IMAGES.'3ds/mcsc_learn_more.gif') . '</a></p>' .
                          '<p>' . TEXT_3DS_CARD_MAY_BE_ENROLLED . '</p></div>');
     }
