@@ -170,7 +170,7 @@ if (zen_not_null($action)) {
         foreach ($remove_attributes_query as $remove_attribute) {
 
           $db->Execute("DELETE FROM " . TABLE_PRODUCTS_ATTRIBUTES_DOWNLOAD . "
-                        WHERE products_attributes_id = " . $remove_attribute['products_attributes_id']);
+                        WHERE products_attributes_id = " . (int)$remove_attribute['products_attributes_id']);
         }
         $db->Execute("DELETE FROM " . TABLE_PRODUCTS_ATTRIBUTES . "
                       WHERE options_values_id = " . (int)$value_id);
