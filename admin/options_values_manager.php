@@ -36,6 +36,8 @@ for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
 $action = (isset($_GET['action']) ? $_GET['action'] : '');
 $currentPage = (isset($_GET['page']) && $_GET['page'] != '' ? (int)$_GET['page'] : 0);
 $filter = (isset($_GET['set_filter']) && $_GET['set_filter'] != '' ? (int)$_GET['set_filter'] : 0);
+$last_mod = (int)(isset($_SESSION['options_names_values_last_mod']) ? $_SESSION['options_names_values_last_mod'] : 0);
+unset($_SESSION['options_names_values_last_mod']);
 $max_search_results = (isset($_GET['max_search_results']) && $_GET['max_search_results'] != '' ? (int)$_GET['max_search_results'] : (int)MAX_DISPLAY_SEARCH_RESULTS);
 
 // display or hide copier features
@@ -64,7 +66,7 @@ if (zen_not_null($action)) {
     case 'add_product_option_values':
       $value_name_array = $_POST['value_name'];
       $value_id = (int)$_POST['value_id'];
-      $option_id = (int)$_POST['option_id'];
+      $_SESSION['options_names_values_last_mod'] = $option_id = (int)$_POST['option_id'];
       $products_options_values_sort_order = (int)$_POST['products_options_values_sort_order'];
 
       for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
@@ -110,7 +112,7 @@ if (zen_not_null($action)) {
     case 'update_value':
       $value_name_array = $_POST['value_name'];
       $value_id = (int)$_POST['value_id'];
-      $option_id = (int)$_POST['option_id'];
+      $_SESSION['options_names_values_last_mod'] = $option_id = (int)$_POST['option_id'];
       $products_options_values_sort_order = (int)$_POST['products_options_values_sort_order'];
 
       for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
@@ -736,7 +738,7 @@ if (zen_not_null($action)) {
 // fetch products_options_id for use if the option value is deleted
 // with TEXT and FILE Options, there are multiple options for the single TEXT
 // value and only the single reference should be deleted
-                $option_id = $values_value['products_options_id'];
+                $option_id = (!empty($last_mod) ? (string)$last_mod : $values_value['products_options_id']);
 
                 $values_name = $values_value['products_options_values_name'];
                 $products_options_values_sort_order = $values_value['products_options_values_sort_order'];
