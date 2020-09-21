@@ -105,6 +105,8 @@ use PHPMailer\PHPMailer\SMTP;
         if (!isset($block['EMAIL_SUBJECT']) || $block['EMAIL_SUBJECT'] == '')       $block['EMAIL_SUBJECT'] = $email_subject;
         if (!isset($block['EMAIL_FROM_NAME']) || $block['EMAIL_FROM_NAME'] == '')   $block['EMAIL_FROM_NAME'] = $from_email_name;
         if (!isset($block['EMAIL_FROM_ADDRESS']) || $block['EMAIL_FROM_ADDRESS'] == '') $block['EMAIL_FROM_ADDRESS'] = $from_email_address;
+        if (!isset($block['EMAIL_SALUTATION'])) $block['EMAIL_SALUTATION'] = EMAIL_SALUTATION; 
+        if (!isset($block['EMAIL_ORDER_UPDATE_MESSAGE'])) $block['EMAIL_ORDER_UPDATE_MESSAGE'] = ''; 
       }
       $email_html = (!is_array($block) && substr($block, 0, 6) == '<html>') ? $block : zen_build_html_email_from_template($module, $block);
       if (!is_array($block) && ($block == '' || $block == 'none')) $email_html = '';
