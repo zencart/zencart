@@ -807,7 +807,7 @@ if (zen_not_null($action)) {
       <script src="includes/menu.js"></script>
       <script>
         function popupHelpWindow(url) {
-            window.open(url, 'popupImageWindow', 'toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=no,resizable=yes,copyhistory=no,width=100,height=100,screenX=150,screenY=150,top=150,left=150')
+            window.open(url, 'popupImageWindow', 'toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=no,resizable=yes,copyhistory=no,width=100,height=100,screenX=150,screenY=150,top=150,left=150,noreferrer')
         }
         function init() {
             cssjsmenu('navbar');
