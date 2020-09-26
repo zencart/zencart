@@ -32,15 +32,15 @@ function zen_expire_salemaker()
 {
     global $db;
 
-    $sale_date = date('Ymd', time());
+    $sale_date = date('Y-m-d', time());
 
     $sql = "SELECT sale_id
             FROM " . TABLE_SALEMAKER_SALES . "
             WHERE sale_status = 1
             AND (
-             (" . $sale_date . " >= sale_date_end AND sale_date_end <= '0001-01-01')
+             (" . $sale_date . " >= sale_date_end AND sale_date_end != '0001-01-01')
              OR
-             (" . $sale_date . " < sale_date_start AND sale_date_start <= '0001-01-01')
+             (" . $sale_date . " < sale_date_start AND sale_date_start != '0001-01-01')
             )";
 
     $results = $db->Execute($sql);
@@ -90,7 +90,7 @@ function zen_start_salemaker()
     $sql = "SELECT sale_id
             FROM " . TABLE_SALEMAKER_SALES . "
             WHERE sale_status = 1
-            AND (" . $sale_date . " < sale_date_start AND sale_date_start <= '0001-01-01')
+            AND (" . $sale_date . " < sale_date_start AND sale_date_start != '0001-01-01')
             ";
 
     $results = $db->Execute($sql);
