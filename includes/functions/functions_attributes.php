@@ -177,13 +177,14 @@ function zen_has_product_attributes_downloads_status($product_id)
         return false;
     }
 
+    global $db;
+
     $sql = "SELECT pad.products_attributes_id
             FROM " . TABLE_PRODUCTS_ATTRIBUTES . " pa
             INNER JOIN " . TABLE_PRODUCTS_ATTRIBUTES_DOWNLOAD . " pad USING (products_attributes_id)
             WHERE pa.products_id = " . (int)$product_id;
 
-    global $db;
-    return ($db->Execute($sql)->RecordCount() > 0);
+    return ($db->Execute($sql, 1)->RecordCount() > 0);
 }
 
 
