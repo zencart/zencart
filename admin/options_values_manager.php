@@ -170,7 +170,7 @@ if (zen_not_null($action)) {
         foreach ($remove_attributes_query as $remove_attribute) {
 
           $db->Execute("DELETE FROM " . TABLE_PRODUCTS_ATTRIBUTES_DOWNLOAD . "
-                        WHERE products_attributes_id = " . $remove_attribute['products_attributes_id']);
+                        WHERE products_attributes_id = " . (int)$remove_attribute['products_attributes_id']);
         }
         $db->Execute("DELETE FROM " . TABLE_PRODUCTS_ATTRIBUTES . "
                       WHERE options_values_id = " . (int)$value_id);
@@ -553,7 +553,7 @@ if (zen_not_null($action)) {
                 <td colspan="4" class="pageHeading"><?php echo $values_values->fields['products_options_values_name']; ?></td>
               </tr>
               <?php
-              $products_values = $db->Execute("SELECT p.products_id, pd.products_name, po.products_options_name, pa.options_id, pa.products_options_sort_order 
+              $products_values = $db->Execute("SELECT p.products_id, pd.products_name, po.products_options_name, pa.options_id, pa.products_options_sort_order
                                                FROM " . TABLE_PRODUCTS . " p,
                                                     " . TABLE_PRODUCTS_ATTRIBUTES . " pa,
                                                     " . TABLE_PRODUCTS_OPTIONS . " po,

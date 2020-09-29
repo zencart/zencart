@@ -370,7 +370,7 @@ use PHPMailer\PHPMailer\SMTP;
         } else {
           error_log($msg);
         }
-        $ErrorInfo .= ($mail->ErrorInfo != '') ? $mail->ErrorInfo . '<br />' : '';
+        $ErrorInfo .= ($mail->ErrorInfo != '') ? $mail->ErrorInfo . "\n" : '';
       }
       $zco_notifier->notify('NOTIFY_EMAIL_AFTER_SEND');
       foreach($oldVars as $key => $val) {
@@ -390,7 +390,7 @@ use PHPMailer\PHPMailer\SMTP;
       trigger_error('Email Error: ' . $ErrorInfo);
     }
 
-    return isset($ErrorInfo) ? $ErrorInfo : '';
+    return isset($ErrorInfo) ? nl2br($ErrorInfo) : '';
   }  // end function
 
 /**

@@ -346,7 +346,13 @@ if (zen_not_null($action)) {
             </div>
             <?php echo '</form>'; ?>
             <hr/>
-            <?php echo TEXT_SPECIALS_PRICE_NOTES; ?>
+            <?php 
+                   echo TEXT_SPECIALS_PRICE_NOTES_HEAD; 
+                   echo '<ul>'; 
+                   echo TEXT_SPECIALS_PRICE_NOTES_BODY; 
+                   echo '<li>' . TEXT_INFO_PRE_ADD_INTRO . '</li>'; 
+                   echo '</ul>'; 
+            ?>
         </div>
     <?php
     } else {

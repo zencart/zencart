@@ -61,8 +61,8 @@ if ($action === 'new_cat') {//this form action is from products_previous_next_di
             FROM " . TABLE_PRODUCTS_TO_CATEGORIES . " ptc
             LEFT JOIN " . TABLE_PRODUCTS_DESCRIPTION . " pd USING (products_id)
             JOIN " . TABLE_PRODUCTS . " p USING (products_id)
-            AND pd.language_id = " . (int)$_SESSION['languages_id'] . "
             WHERE ptc.categories_id = " . $current_category_id . "
+            AND pd.language_id = " . (int)$_SESSION['languages_id'] . "
             ORDER BY p.products_model"; // Order By determines which product is pre-selected in the list when a new category is viewed
     $result = $db->Execute($sql);
     $products_filter = (!$result->EOF) ? $result->fields['products_id'] : ''; // Empty if category has no products/has subcategories
