@@ -5,7 +5,7 @@
  *
  * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2020 May 07 New in v1.5.7 $
+ * @version $Id:  $
  */
 
 /**
@@ -477,8 +477,9 @@ function zen_get_products_name($product_id, $language_id = 0)
 
 /**
  * lookup attributes model
+ * @param int $product_id
  */
-function zen_get_products_model(int $product_id)
+function zen_get_products_model($product_id)
 {
     global $db;
     $check = $db->Execute("SELECT products_model
@@ -491,6 +492,7 @@ function zen_get_products_model(int $product_id)
 
 /**
  * Get the status of a product
+ * @param int $product_id
  */
 function zen_get_products_status($product_id)
 {
@@ -503,6 +505,7 @@ function zen_get_products_status($product_id)
 
 /**
  * check if linked
+ * @param int $product_id
  */
 function zen_get_product_is_linked($product_id, $show_count = 'false')
 {
@@ -587,7 +590,7 @@ function zen_check_stock($products_id, $products_quantity)
  * @param int $product_id
  * @return string
  */
-function zen_get_products_manufacturers_name(int $product_id)
+function zen_get_products_manufacturers_name($product_id)
 {
     global $db;
 
@@ -644,7 +647,7 @@ function zen_get_products_manufacturers_id($product_id)
  * @param int $language_id
  * @return string
  */
-function zen_get_products_url(int $product_id, int $language_id)
+function zen_get_products_url($product_id, $language_id)
 {
     global $db;
     $product = $db->Execute("SELECT products_url
@@ -656,12 +659,12 @@ function zen_get_products_url(int $product_id, int $language_id)
 }
 
 /**
- *  Return product description, based on specified language (or current lang if not specified)
+ * Return product description, based on specified language (or current lang if not specified)
  * @param int $product_id
  * @param int $language_id
  * @return string
  */
-function zen_get_products_description(int $product_id, int $language_id = 0)
+function zen_get_products_description($product_id, $language_id = 0)
 {
     global $db;
 
@@ -884,7 +887,8 @@ function zen_get_show_product_switch_name($lookup, $field, $prefix = 'SHOW_', $s
 
 /**
  * @TODO - refactor to use zen_get_product_details()
- *  Look up whether a product is always free shipping
+ * Look up whether a product is always free shipping
+ * @param int $product_id
  */
 function zen_get_product_is_always_free_shipping($product_id): bool
 {
@@ -900,6 +904,9 @@ function zen_get_product_is_always_free_shipping($product_id): bool
 /**
  * @TODO - refactor to product object? or at least leverage zen_get_product_details() instead.
  * Return any field from products or products_description table
+ * @param int $product_id
+ * @param string $what_field
+ * @param int $language ID
  */
 function zen_products_lookup($product_id, $what_field = 'products_name', $language = 0)
 {
