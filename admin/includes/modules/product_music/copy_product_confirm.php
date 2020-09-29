@@ -89,7 +89,19 @@ if (isset($_POST['products_id'], $_POST['categories_id'])) {
 
         $sql_data_array['master_categories_id'] = $categories_id;
 
-        // Everything is set, stick it in the database
+        // skip fields that belong to TABLE_PRODUCTS_DESCRIPTION
+        $fields_to_skip = [
+            'language_id',
+            'products_name',
+            'products_description',
+            'products_url',
+            'products_viewed', // old, but must be excluded if present
+        ];
+        foreach ($fields_to_skip as $field) {
+            unset($sql_data_array[$field]);
+        }
+
+        // store new record
         zen_db_perform(TABLE_PRODUCTS, $sql_data_array);
 
         $dup_products_id = (int)$db->insert_ID();
