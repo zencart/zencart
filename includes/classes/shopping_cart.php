@@ -1702,6 +1702,9 @@ class shoppingCart extends base {
     $change_state = array();
     $this->flag_duplicate_quantity_msgs_set = array();
     $cart_delete = (isset($_POST['cart_delete']) && is_array($_POST['cart_delete'])) ? $_POST['cart_delete'] : array();
+    if (empty($_POST['products_id']) || !is_array($_POST['products_id'])) {
+      $_POST['products_id'] = [];
+    }
     for ($i=0, $n=sizeof($_POST['products_id']); $i<$n; $i++) {
       $adjust_max= 'false';
       if ($_POST['cart_quantity'][$i] == '') {
