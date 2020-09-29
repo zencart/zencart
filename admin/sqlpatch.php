@@ -833,7 +833,7 @@ if (zen_not_null($action)) {
           <div class="col-sm-12 text-danger"><strong><?php echo HEADING_WARNING2; ?></strong></div>
         </div>
         <?php
-        if ($action == 'execute' && $_POST['query_string'] != '') {
+        if ($action == 'execute' && !empty($_POST['query_string'])) {
           ?>
           <div class="row">
             <div class="col-sm-12 text-danger"><strong><?php echo TEXT_QUERY_RESULTS; ?></strong></div>
