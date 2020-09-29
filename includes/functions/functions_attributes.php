@@ -391,7 +391,7 @@ function zen_copy_products_attributes($products_id_from, $products_id_to)
     $already_has_attributes = zen_has_product_attributes($products_id_to, false);
 
     if ($copy_attributes_delete_first == '1' and $already_has_attributes == true) {
-        // delete all attributes first from products_id_to
+        // delete all attributes first from destination products_id_to
         zen_products_attributes_download_delete($products_id_to);
         // delete the attributes
         $db->Execute("DELETE FROM " . TABLE_PRODUCTS_ATTRIBUTES . " WHERE products_id = " . (int)$products_id_to);
@@ -476,39 +476,61 @@ function zen_copy_products_attributes($products_id_from, $products_id_to)
             );
             $messageStack->add_session(sprintf(TEXT_ATTRIBUTE_COPY_INSERTING, (int)$copy_from['products_attributes_id'], (int)$products_id_from, (int)$products_id_to), 'success');
 
+            $new_products_attributes_id = $db->Insert_ID();
+
             // Notify that an attribute has been added for the product.
             $zco_notifier->notify('ZEN_COPY_PRODUCTS_ATTRIBUTES_ADD', ['pID' => (int)$products_id_to, 'fields' => $copy_from]);
+
+
+            // Downloads
+            if (DOWNLOAD_ENABLED == 'true') {
+                $sql = "SELECT products_attributes_id, products_attributes_filename, products_attributes_maxdays, products_attributes_maxcount
+                        FROM " . TABLE_PRODUCTS_ATTRIBUTES_DOWNLOAD . "
+                        WHERE products_attributes_id = " . (int)$copy_from['products_attributes_id'];
+                $results = $db->Execute($sql);
+                foreach ($results as $result) {
+                    $db->Execute("INSERT INTO " . TABLE_PRODUCTS_ATTRIBUTES_DOWNLOAD . "
+                        (products_attributes_id, products_attributes_filename, products_attributes_maxdays, products_attributes_maxcount)
+                        VALUES (" . (int)$new_products_attributes_id . ",
+                                '" . zen_db_input($result['products_attributes_filename']) . "',
+                                " . (int)$result['products_attributes_maxdays'] . ",
+                                " . (int)$result['products_attributes_maxcount'] . ")");
+
+                    $new_attribute_id = $db->Insert_ID();
+                    $zco_notifier->notify('ZEN_COPY_PRODUCTS_ATTRIBUTES_ADDED_DOWNLOAD', (int)$products_id_to, $new_products_attributes_id, $new_attribute_id);
+                }
+            }
         }
 
         // Update attribute - Just attribute settings not ids
         if ($update_attribute == true) {
             $db->Execute("UPDATE " . TABLE_PRODUCTS_ATTRIBUTES . " SET
-              options_values_price='" . $copy_from['options_values_price'] . "',
-              price_prefix='" . $copy_from['price_prefix'] . "',
-              products_options_sort_order='" . $copy_from['products_options_sort_order'] . "',
-              product_attribute_is_free='" . $copy_from['product_attribute_is_free'] . "',
-              products_attributes_weight='" . $copy_from['products_attributes_weight'] . "',
-              products_attributes_weight_prefix='" . $copy_from['products_attributes_weight_prefix'] . "',
-              attributes_display_only='" . $copy_from['attributes_display_only'] . "',
-              attributes_default='" . $copy_from['attributes_default'] . "',
-              attributes_discounted='" . $copy_from['attributes_discounted'] . "',
-              attributes_image='" . $copy_from['attributes_image'] . "',
-              attributes_price_base_included='" . $copy_from['attributes_price_base_included'] . "',
-              attributes_price_onetime='" . $copy_from['attributes_price_onetime'] . "',
-              attributes_price_factor='" . $copy_from['attributes_price_factor'] . "',
-              attributes_price_factor_offset='" . $copy_from['attributes_price_factor_offset'] . "',
-              attributes_price_factor_onetime='" . $copy_from['attributes_price_factor_onetime'] . "',
-              attributes_price_factor_onetime_offset='" . $copy_from['attributes_price_factor_onetime_offset'] . "',
-              attributes_qty_prices='" . $copy_from['attributes_qty_prices'] . "',
-              attributes_qty_prices_onetime='" . $copy_from['attributes_qty_prices_onetime'] . "',
-              attributes_price_words='" . $copy_from['attributes_price_words'] . "',
-              attributes_price_words_free='" . $copy_from['attributes_price_words_free'] . "',
-              attributes_price_letters='" . $copy_from['attributes_price_letters'] . "',
-              attributes_price_letters_free='" . $copy_from['attributes_price_letters_free'] . "',
-              attributes_required='" . $copy_from['attributes_required'] . "
-              WHERE products_id=" . (int)$products_id_to . "
-               AND options_id=" . (int)$copy_from['options_id'] . "
-               AND options_values_id=" . (int)$copy_from['options_values_id']
+                  options_values_price='" . $copy_from['options_values_price'] . "',
+                  price_prefix='" . $copy_from['price_prefix'] . "',
+                  products_options_sort_order='" . $copy_from['products_options_sort_order'] . "',
+                  product_attribute_is_free='" . $copy_from['product_attribute_is_free'] . "',
+                  products_attributes_weight='" . $copy_from['products_attributes_weight'] . "',
+                  products_attributes_weight_prefix='" . $copy_from['products_attributes_weight_prefix'] . "',
+                  attributes_display_only='" . $copy_from['attributes_display_only'] . "',
+                  attributes_default='" . $copy_from['attributes_default'] . "',
+                  attributes_discounted='" . $copy_from['attributes_discounted'] . "',
+                  attributes_image='" . $copy_from['attributes_image'] . "',
+                  attributes_price_base_included='" . $copy_from['attributes_price_base_included'] . "',
+                  attributes_price_onetime='" . $copy_from['attributes_price_onetime'] . "',
+                  attributes_price_factor='" . $copy_from['attributes_price_factor'] . "',
+                  attributes_price_factor_offset='" . $copy_from['attributes_price_factor_offset'] . "',
+                  attributes_price_factor_onetime='" . $copy_from['attributes_price_factor_onetime'] . "',
+                  attributes_price_factor_onetime_offset='" . $copy_from['attributes_price_factor_onetime_offset'] . "',
+                  attributes_qty_prices='" . $copy_from['attributes_qty_prices'] . "',
+                  attributes_qty_prices_onetime='" . $copy_from['attributes_qty_prices_onetime'] . "',
+                  attributes_price_words='" . $copy_from['attributes_price_words'] . "',
+                  attributes_price_words_free='" . $copy_from['attributes_price_words_free'] . "',
+                  attributes_price_letters='" . $copy_from['attributes_price_letters'] . "',
+                  attributes_price_letters_free='" . $copy_from['attributes_price_letters_free'] . "',
+                  attributes_required='" . $copy_from['attributes_required'] . "
+                  WHERE products_id=" . (int)$products_id_to . "
+                   AND options_id=" . (int)$copy_from['options_id'] . "
+                   AND options_values_id=" . (int)$copy_from['options_values_id']
 // and attributes_image='" . $copy_from['attributes_image'] . "'
 // and attributes_price_base_included=" . $copy_from['attributes_price_base_included']
             );
@@ -517,7 +539,6 @@ function zen_copy_products_attributes($products_id_from, $products_id_to)
             // Notify that an attribute has been updated for the product.
             $zco_notifier->notify('ZEN_COPY_PRODUCTS_ATTRIBUTES_UPDATE', ['pID' => (int)$products_id_to, 'fields' => $copy_from]);
         }
-
     }
 
     // Notify that the attribute-copying has been completed for the product.
@@ -527,7 +548,7 @@ function zen_copy_products_attributes($products_id_from, $products_id_to)
     zen_update_products_price_sorter($products_id_to);
 
     return true;
-} // eof: zen_copy_products_attributes
+}
 
 
 /**
