@@ -683,6 +683,20 @@ a.btn-metatags-on {
   color: #ffa500;
 }
 
+.btn-status {
+  background: transparent;
+  padding: 0;
+  border: none;
+}
+.btn-status:active {
+  webkit-box-shadow: none;
+  box-shadow: none;
+}
+.btn-status:focus, .btn-status:active:focus {
+  outline: none;
+  outline-offset: 0;
+}
+
 .fa-folder, .fa-folder-open {color: #deb887;}
 .folder, .folder:hover {
   text-decoration: none;
@@ -812,11 +826,6 @@ input.faint {
     color: #333;
 }
 
-/* Forms - put this last */
-.form-control {
-    width: 90%;
-    display: inline-block;
-}
 .control-label {/*for multiple inputs*/
     font-weight: 700;
 }

@@ -155,9 +155,9 @@ if (zen_not_null($action)) {
         } elseif (($action === 'new') && isset($_GET['preID'])) { //update existing Featured
             $form_action = 'insert';
 
-            $product = $db->Execute("SELECT p.products_id, p.products_model, pd.products_name, p.products_price, p.products_priced_by_attribute 
+            $product = $db->Execute("SELECT p.products_id, p.products_model, pd.products_name, p.products_price, p.products_priced_by_attribute
                                    FROM " . TABLE_PRODUCTS . " p,
-                                        " . TABLE_PRODUCTS_DESCRIPTION . " pd 
+                                        " . TABLE_PRODUCTS_DESCRIPTION . " pd
                                    WHERE p.products_id = pd.products_id
                                    AND pd.language_id = " . (int)$_SESSION['languages_id'] . "
                                    AND p.products_id = " . (int)$_GET['preID']);
@@ -315,9 +315,13 @@ if (zen_not_null($action)) {
                     $search = '';
                     if (isset($_GET['search']) && zen_not_null($_GET['search'])) {
                         $keywords = zen_db_input(zen_db_prepare_input($_GET['search']));
-                        $search = " and (pd.products_name like '%" . $keywords . "%'
-                                  or pd.products_description like '%" . $keywords . "%'
-                                  or p.products_model like '%" . $keywords . "%')";
+                        $keyword_search_fields = [
+                            'pd.products_name',
+                            'p.products_model',
+                            'pd.products_description',
+                            'p.products_id',
+                        ];
+                        $search = zen_build_keyword_where_clause($keyword_search_fields, trim($keywords));
                     }
 
                     // order of display
@@ -466,7 +470,7 @@ if (zen_not_null($action)) {
                                 'align' => 'text-center',
                                 'text' => '
                         <a href="' . zen_href_link(FILENAME_FEATURED, 'page=' . $_GET['page'] . '&fID=' . $fInfo->featured_id . '&action=edit' .
-                                        (isset($_GET['search']) ? '&search=' . $_GET['search'] : '')) . '" class="btn btn-primary" role="button">' . IMAGE_EDIT . '</a> 
+                                        (isset($_GET['search']) ? '&search=' . $_GET['search'] : '')) . '" class="btn btn-primary" role="button">' . IMAGE_EDIT . '</a>
                         <a href="' . zen_href_link(FILENAME_FEATURED, 'page=' . $_GET['page'] . '&fID=' . $fInfo->featured_id . '&action=delete' .
                                         (isset($_GET['search']) ? '&search=' . $_GET['search'] : '')) . '" class="btn btn-warning" role="button">' . TEXT_INFO_HEADING_DELETE_FEATURED . '</a>'
                             ];
