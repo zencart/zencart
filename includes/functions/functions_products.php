@@ -1084,10 +1084,9 @@ function zen_products_attributes_download_delete($product_id)
     $zco_notifier->notify('NOTIFIER_ADMIN_ZEN_PRODUCTS_ATTRIBUTES_DOWNLOAD_DELETE', array(), $product_id);
 
     // remove downloads if they exist
-    $remove_downloads = $db->Execute("select products_attributes_id from " . TABLE_PRODUCTS_ATTRIBUTES . " where products_id= " . (int)$product_id);
-    while (!$remove_downloads->EOF) {
-        $db->Execute("delete from " . TABLE_PRODUCTS_ATTRIBUTES_DOWNLOAD . " where products_attributes_id= " . (int)$remove_downloads->fields['products_attributes_id']);
-        $remove_downloads->MoveNext();
+    $results = $db->Execute("select products_attributes_id from " . TABLE_PRODUCTS_ATTRIBUTES . " where products_id= " . (int)$product_id);
+    foreach ($result as $row) {
+        $db->Execute("delete from " . TABLE_PRODUCTS_ATTRIBUTES_DOWNLOAD . " where products_attributes_id= " . (int)$row['products_attributes_id']);
     }
 }
 
