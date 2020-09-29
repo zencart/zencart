@@ -9,23 +9,28 @@
 
 /**
  * Check if product has attributes
+ *
+ * (On catalog-side, this is often used to determine if attributes must be selected to add to cart)
+ *
  * @param int $product_id
- * @param string $not_readonly
+ * @param bool|string $not_readonly
  * @return bool
  */
-function zen_has_product_attributes($product_id, $not_readonly = 'true')
+function zen_has_product_attributes($product_id, $not_readonly = true)
 {
     global $db;
 
-    if (PRODUCTS_OPTIONS_TYPE_READONLY_IGNORED == '1' and $not_readonly == 'true') {
-        // don't include READONLY attributes to determine if attributes must be selected to add to cart
+    $exclude_readonly = ($not_readonly === true || $not_readonly === 'true');
+
+    if (PRODUCTS_OPTIONS_TYPE_READONLY_IGNORED == '1' && $exclude_readonly) {
+        // don't include READONLY attributes
         $sql = "SELECT pa.products_attributes_id
                 FROM " . TABLE_PRODUCTS_ATTRIBUTES . " pa
                 LEFT JOIN " . TABLE_PRODUCTS_OPTIONS . " po ON (pa.options_id = po.products_options_id)
                 WHERE pa.products_id = " . (int)$product_id . "
                 AND po.products_options_type != '" . $db->prepare_input(PRODUCTS_OPTIONS_TYPE_READONLY) . "'";
     } else {
-        // regardless of READONLY attributes no add to cart buttons
+        // regardless of READONLY attributes
         $sql = "SELECT pa.products_attributes_id
                 FROM " . TABLE_PRODUCTS_ATTRIBUTES . " pa
                 WHERE pa.products_id = " . (int)$product_id;
@@ -33,7 +38,7 @@ function zen_has_product_attributes($product_id, $not_readonly = 'true')
 
     $result = $db->Execute($sql, 1);
 
-    return $result->recordCount() > 0 && $result->fields['products_attributes_id'] > 0;
+    return $result->RecordCount() > 0 && $result->fields['products_attributes_id'] > 0;
 }
 
 
@@ -369,7 +374,7 @@ function zen_copy_products_attributes($products_id_from, $products_id_to)
         return false;
     }
     // no attributes found to copy
-    if (!zen_has_product_attributes($products_id_from, 'false')) {
+    if (!zen_has_product_attributes($products_id_from, false)) {
         $messageStack->add_session(sprintf(WARNING_ATTRIBUTE_COPY_NO_ATTRIBUTES, $products_id_from, zen_get_products_name($products_id_from)), 'caution');
         return false;
     }
@@ -383,7 +388,7 @@ function zen_copy_products_attributes($products_id_from, $products_id_to)
     $zco_notifier->notify('ZEN_COPY_PRODUCTS_ATTRIBUTES_START', ['from' => (int)$products_id_from, 'to' => (int)$products_id_to]);
 
     // check if product already has attributes
-    $already_has_attributes = zen_has_product_attributes($products_id_to, 'false');
+    $already_has_attributes = zen_has_product_attributes($products_id_to, false);
 
     if ($copy_attributes_delete_first == '1' and $already_has_attributes == true) {
         // delete all attributes first from products_id_to

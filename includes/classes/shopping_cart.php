@@ -244,7 +244,7 @@ class shoppingCart extends base
     {
         global $db, $messageStack;
         if ($this->display_debug_messages) $messageStack->add_session('header', 'FUNCTION ' . __FUNCTION__, 'caution');
-        if (zen_has_product_attributes($product_id, 'false') && empty($attributes)) {
+        if (zen_has_product_attributes($product_id, false) && empty($attributes)) {
             if (!zen_requires_attribute_selection($product_id)) {
                 // Build attributes array; determine correct qty
                 $attributes = [];
@@ -673,7 +673,7 @@ class shoppingCart extends base
                 }
 
                 // adjust price for discounts when priced by attribute
-                if ($product->fields['products_priced_by_attribute'] == '1' && zen_has_product_attributes($product->fields['products_id'], 'false')) {
+                if ($product->fields['products_priced_by_attribute'] == '1' && zen_has_product_attributes($product->fields['products_id'], false)) {
                     if ($special_price) {
                         $products_price = $special_price;
                     } else {
@@ -1232,7 +1232,7 @@ class shoppingCart extends base
                 }
 
                 // adjust price for discounts when priced by attribute
-                if ($products->fields['products_priced_by_attribute'] == '1' && zen_has_product_attributes($products->fields['products_id'], 'false')) {
+                if ($products->fields['products_priced_by_attribute'] == '1' && zen_has_product_attributes($products->fields['products_id'], false)) {
                     if ($special_price) {
                         $products_price = $special_price;
                     } else {
@@ -1745,7 +1745,7 @@ class shoppingCart extends base
         $change_state = [];
         $this->flag_duplicate_quantity_msgs_set = [];
         $cart_delete = (isset($_POST['cart_delete']) && is_array($_POST['cart_delete'])) ? $_POST['cart_delete'] : [];
-        
+
         if (empty($_POST['products_id']) || !is_array($_POST['products_id'])) {
             $_POST['products_id'] = [];
         }
