@@ -536,14 +536,15 @@ use PHPMailer\PHPMailer\SMTP;
     $template_filename_base_en = DIR_FS_EMAIL_TEMPLATES . "email_template_";
     $template_filename = DIR_FS_EMAIL_TEMPLATES . $langfolder . "email_template_" . $current_page_base . ".html";
 
-    $filesToTest = array(DIR_FS_EMAIL_TEMPLATES . $langfolder . "email_template_" . $current_page_base . ".html",
-                         DIR_FS_EMAIL_TEMPLATES . "email_template_" . $current_page_base . ".html",
-                         (isset($block['EMAIL_TEMPLATE_FILENAME']) && $block['EMAIL_TEMPLATE_FILENAME'] != '' ? $block['EMAIL_TEMPLATE_FILENAME'] . '.html' : NULL),
-                         $template_filename_base . str_replace(array('_extra','_admin'),'',$module) . '.html',
-                         $template_filename_base_en . str_replace(array('_extra','_admin'),'',$module) . '.html',
-                         $template_filename_base . 'default' . '.html',
-                         $template_filename_base_en . 'default' . '.html',
-                        );
+    $filesToTest = array(
+       $template_filename_base . str_replace(array('_extra','_admin'),'',$module) . '.html',
+       $template_filename_base_en . str_replace(array('_extra','_admin'),'',$module) . '.html',
+       DIR_FS_EMAIL_TEMPLATES . $langfolder . "email_template_" . $current_page_base . ".html",
+       DIR_FS_EMAIL_TEMPLATES . "email_template_" . $current_page_base . ".html",
+       (isset($block['EMAIL_TEMPLATE_FILENAME']) && $block['EMAIL_TEMPLATE_FILENAME'] != '' ? $block['EMAIL_TEMPLATE_FILENAME'] . '.html' : NULL),
+       $template_filename_base . 'default' . '.html',
+       $template_filename_base_en . 'default' . '.html',
+       );
     $found = FALSE;
     foreach($filesToTest as $val) {
       if (file_exists($val)) {
