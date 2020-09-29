@@ -855,11 +855,11 @@ function zen_get_show_product_switch_name($lookup, $field, $prefix = 'SHOW_', $s
     global $db;
     $type_lookup = 0;
     $type_handler = '';
-    $sql = "select products_type from " . TABLE_PRODUCTS . " where products_id=" . (int)$lookup;
+    $sql = "SELECT products_type FROM " . TABLE_PRODUCTS . " WHERE products_id=" . (int)$lookup;
     $result = $db->Execute($sql);
     if (!$result->EOF) $type_lookup = $result->fields['products_type'];
 
-    $sql = "select type_handler from " . TABLE_PRODUCT_TYPES . " where type_id = " . (int)$type_lookup;
+    $sql = "SELECT type_handler FROM " . TABLE_PRODUCT_TYPES . " WHERE type_id = " . (int)$type_lookup;
     $result = $db->Execute($sql);
     if (!$result->EOF) $type_handler = $result->fields['type_handler'];
     $keyName = strtoupper($prefix . $type_handler . $suffix . $field_prefix . $field . $field_suffix);
@@ -936,9 +936,9 @@ function zen_get_parent_category_id($product_id)
 {
     global $db;
 
-    $categories_lookup = $db->Execute("select master_categories_id
-                                from " . TABLE_PRODUCTS . "
-                                where products_id = " . (int)$product_id);
+    $categories_lookup = $db->Execute("SELECT master_categories_id
+                                FROM " . TABLE_PRODUCTS . "
+                                WHERE products_id = " . (int)$product_id);
     if ($categories_lookup->EOF) return '';
     return $categories_lookup->fields['master_categories_id'];
 }
@@ -954,7 +954,7 @@ function zen_has_product_discounts($product_id)
 {
     global $db;
 
-    $check_discount_query = "select products_id from " . TABLE_PRODUCTS_DISCOUNT_QUANTITY . " where products_id=" . (int)$product_id;
+    $check_discount_query = "SELECT products_id FROM " . TABLE_PRODUCTS_DISCOUNT_QUANTITY . " WHERE products_id=" . (int)$product_id;
     $check_discount = $db->Execute($check_discount_query);
 
     // @TODO - check calling references to see whether true/false string responses can be changed to boolean
@@ -988,13 +988,13 @@ function zen_remove_product($product_id, $ptc = 'true')
     global $db, $zco_notifier;
     $zco_notifier->notify('NOTIFIER_ADMIN_ZEN_REMOVE_PRODUCT', array(), $product_id, $ptc);
 
-    $product_image = $db->Execute("select products_image
-                                   from " . TABLE_PRODUCTS . "
-                                   where products_id = " . (int)$product_id);
+    $product_image = $db->Execute("SELECT products_image
+                                   FROM " . TABLE_PRODUCTS . "
+                                   WHERE products_id = " . (int)$product_id);
 
-    $duplicate_image = $db->Execute("select count(*) as total
-                                     from " . TABLE_PRODUCTS . "
-                                     where products_image = '" . zen_db_input($product_image->fields['products_image']) . "'");
+    $duplicate_image = $db->Execute("SELECT count(*) as total
+                                     FROM " . TABLE_PRODUCTS . "
+                                     WHERE products_image = '" . zen_db_input($product_image->fields['products_image']) . "'");
 
     if ($duplicate_image->fields['total'] < 2 and $product_image->fields['products_image'] != '' && PRODUCTS_IMAGE_NO_IMAGE != substr($product_image->fields['products_image'], strrpos($product_image->fields['products_image'], '/') + 1)) {
         $products_image = $product_image->fields['products_image'];
@@ -1015,61 +1015,60 @@ function zen_remove_product($product_id, $ptc = 'true')
         }
     }
 
-    $db->Execute("delete from " . TABLE_SPECIALS . "
-                  where products_id = " . (int)$product_id);
+    $db->Execute("DELETE FROM " . TABLE_SPECIALS . "
+                  WHERE products_id = " . (int)$product_id);
 
-    $db->Execute("delete from " . TABLE_PRODUCTS . "
-                  where products_id = " . (int)$product_id);
+    $db->Execute("DELETE FROM " . TABLE_PRODUCTS . "
+                  WHERE products_id = " . (int)$product_id);
 
 //    if ($ptc == 'true') {
-    $db->Execute("delete from " . TABLE_PRODUCTS_TO_CATEGORIES . "
-                    where products_id = " . (int)$product_id);
+    $db->Execute("DELETE FROM " . TABLE_PRODUCTS_TO_CATEGORIES . "
+                    WHERE products_id = " . (int)$product_id);
 //    }
 
-    $db->Execute("delete from " . TABLE_PRODUCTS_DESCRIPTION . "
-                  where products_id = " . (int)$product_id);
+    $db->Execute("DELETE FROM " . TABLE_PRODUCTS_DESCRIPTION . "
+                  WHERE products_id = " . (int)$product_id);
 
-    $db->Execute("delete from " . TABLE_META_TAGS_PRODUCTS_DESCRIPTION . "
-                  where products_id = " . (int)$product_id);
+    $db->Execute("DELETE FROM " . TABLE_META_TAGS_PRODUCTS_DESCRIPTION . "
+                  WHERE products_id = " . (int)$product_id);
 
     zen_products_attributes_download_delete($product_id);
 
-    $db->Execute("delete from " . TABLE_PRODUCTS_ATTRIBUTES . "
-                  where products_id = " . (int)$product_id);
+    $db->Execute("DELETE FROM " . TABLE_PRODUCTS_ATTRIBUTES . "
+                  WHERE products_id = " . (int)$product_id);
 
-    $db->Execute("delete from " . TABLE_CUSTOMERS_BASKET . "
-                  where products_id = " . (int)$product_id);
+    $db->Execute("DELETE FROM " . TABLE_CUSTOMERS_BASKET . "
+                  WHERE products_id = " . (int)$product_id);
 
-    $db->Execute("delete from " . TABLE_CUSTOMERS_BASKET_ATTRIBUTES . "
-                  where products_id = " . (int)$product_id);
+    $db->Execute("DELETE FROM " . TABLE_CUSTOMERS_BASKET_ATTRIBUTES . "
+                  WHERE products_id = " . (int)$product_id);
 
 
-    $product_reviews = $db->Execute("select reviews_id
-                                     from " . TABLE_REVIEWS . "
-                                     where products_id = " . (int)$product_id);
+    $product_reviews = $db->Execute("SELECT reviews_id
+                                     FROM " . TABLE_REVIEWS . "
+                                     WHERE products_id = " . (int)$product_id);
 
-    while (!$product_reviews->EOF) {
-        $db->Execute("delete from " . TABLE_REVIEWS_DESCRIPTION . "
-                    where reviews_id = " . (int)$product_reviews->fields['reviews_id']);
-        $product_reviews->MoveNext();
+    foreach ($product_reviews as $row) {
+        $db->Execute("DELETE FROM " . TABLE_REVIEWS_DESCRIPTION . "
+                    WHERE reviews_id = " . (int)$row['reviews_id']);
     }
-    $db->Execute("delete from " . TABLE_REVIEWS . "
-                  where products_id = " . (int)$product_id);
+    $db->Execute("DELETE FROM " . TABLE_REVIEWS . "
+                  WHERE products_id = " . (int)$product_id);
 
-    $db->Execute("delete from " . TABLE_FEATURED . "
-                  where products_id = " . (int)$product_id);
+    $db->Execute("DELETE FROM " . TABLE_FEATURED . "
+                  WHERE products_id = " . (int)$product_id);
 
-    $db->Execute("delete from " . TABLE_PRODUCTS_DISCOUNT_QUANTITY . "
-                  where products_id = " . (int)$product_id);
+    $db->Execute("DELETE FROM " . TABLE_PRODUCTS_DISCOUNT_QUANTITY . "
+                  WHERE products_id = " . (int)$product_id);
 
-    $db->Execute("delete from " . TABLE_COUPON_RESTRICT . "
-                  where product_id = " . (int)$product_id);
+    $db->Execute("DELETE FROM " . TABLE_COUPON_RESTRICT . "
+                  WHERE product_id = " . (int)$product_id);
 
-    $db->Execute("delete from " . TABLE_PRODUCTS_NOTIFICATIONS . "
-                  where products_id = " . (int)$product_id);
+    $db->Execute("DELETE FROM " . TABLE_PRODUCTS_NOTIFICATIONS . "
+                  WHERE products_id = " . (int)$product_id);
 
-    $db->Execute("delete from " . TABLE_COUNT_PRODUCT_VIEWS . "
-                  where product_id = " . (int)$product_id);
+    $db->Execute("DELETE FROM " . TABLE_COUNT_PRODUCT_VIEWS . "
+                  WHERE product_id = " . (int)$product_id);
 
     zen_record_admin_activity('Deleted product ' . (int)$product_id . ' from database via admin console.', 'warning');
 }
@@ -1084,9 +1083,9 @@ function zen_products_attributes_download_delete($product_id)
     global $db, $zco_notifier;
     $zco_notifier->notify('NOTIFIER_ADMIN_ZEN_PRODUCTS_ATTRIBUTES_DOWNLOAD_DELETE', array(), $product_id);
 
-    $results = $db->Execute("select products_attributes_id from " . TABLE_PRODUCTS_ATTRIBUTES . " where products_id= " . (int)$product_id);
+    $results = $db->Execute("SELECT products_attributes_id FROM " . TABLE_PRODUCTS_ATTRIBUTES . " WHERE products_id= " . (int)$product_id);
     foreach ($results as $row) {
-        $db->Execute("delete from " . TABLE_PRODUCTS_ATTRIBUTES_DOWNLOAD . " where products_attributes_id= " . (int)$row['products_attributes_id']);
+        $db->Execute("DELETE FROM " . TABLE_PRODUCTS_ATTRIBUTES_DOWNLOAD . " WHERE products_attributes_id= " . (int)$row['products_attributes_id']);
     }
 }
 
@@ -1101,20 +1100,19 @@ function zen_copy_discounts_to_product($copy_from, $copy_to)
 {
     global $db;
 
-    $check_discount_type_query = "select products_discount_type, products_discount_type_from, products_mixed_discount_quantity from " . TABLE_PRODUCTS . " where products_id=" . (int)$copy_from;
+    $check_discount_type_query = "SELECT products_discount_type, products_discount_type_from, products_mixed_discount_quantity FROM " . TABLE_PRODUCTS . " WHERE products_id=" . (int)$copy_from;
     $check_discount_type = $db->Execute($check_discount_type_query);
     if ($check_discount_type->EOF) return FALSE;
 
     $db->Execute("update " . TABLE_PRODUCTS . " set products_discount_type='" . $check_discount_type->fields['products_discount_type'] . "', products_discount_type_from='" . $check_discount_type->fields['products_discount_type_from'] . "', products_mixed_discount_quantity='" . $check_discount_type->fields['products_mixed_discount_quantity'] . "' where products_id=" . (int)$copy_to);
 
-    $check_discount_query = "select * from " . TABLE_PRODUCTS_DISCOUNT_QUANTITY . " where products_id=" . (int)$copy_from . " order by discount_id";
-    $check_discount = $db->Execute($check_discount_query);
+    $check_discount_query = "SELECT * FROM " . TABLE_PRODUCTS_DISCOUNT_QUANTITY . " WHERE products_id=" . (int)$copy_from . " ORDER BY discount_id";
+    $results = $db->Execute($check_discount_query);
     $cnt_discount = 1;
-    while (!$check_discount->EOF) {
-        $db->Execute("insert into " . TABLE_PRODUCTS_DISCOUNT_QUANTITY . "
+    foreach ($results as $result) {
+        $db->Execute("INSERT INTO " . TABLE_PRODUCTS_DISCOUNT_QUANTITY . "
                   (discount_id, products_id, discount_qty, discount_price )
-                  values (" . (int)$cnt_discount . ", " . (int)$copy_to . ", '" . $check_discount->fields['discount_qty'] . "', '" . $check_discount->fields['discount_price'] . "')");
+                  VALUES (" . (int)$cnt_discount . ", " . (int)$copy_to . ", '" . $result['discount_qty'] . "', '" . $result['discount_price'] . "')");
         $cnt_discount++;
-        $check_discount->MoveNext();
     }
 }
