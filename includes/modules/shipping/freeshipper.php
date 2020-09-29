@@ -10,7 +10,6 @@
   class freeshipper {
     var $code, $title, $description, $icon, $enabled;
 
-// class constructor
     function __construct() {
       $this->code = 'freeshipper';
       $this->title = MODULE_SHIPPING_FREESHIPPER_TEXT_TITLE;
@@ -29,8 +28,6 @@
 
       $this->update_status();
     }
-
-// class methods
 
   /**
    * Perform various checks to see whether this module should be visible

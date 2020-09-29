@@ -9,7 +9,6 @@
   class flat {
     var $code, $title, $description, $icon, $enabled;
 
-// class constructor
     function __construct() {
       $this->code = 'flat';
       $this->title = MODULE_SHIPPING_FLAT_TEXT_TITLE;
@@ -28,8 +27,6 @@
 
       $this->update_status();
     }
-
-// class methods
 
   /**
    * Perform various checks to see whether this module should be visible

@@ -10,7 +10,6 @@
     var $code, $title, $description, $icon, $enabled;
     var $ck_freeoptions_total, $ck_freeoptions_weight, $ck_freeoptions_items;
 
-// class constructor
     function __construct() {
       $this->code = 'freeoptions';
       $this->title = MODULE_SHIPPING_FREEOPTIONS_TEXT_TITLE;
@@ -29,8 +28,6 @@
 
       $this->update_status();
     }
-
-// class methods
 
   /**
    * Perform various checks to see whether this module should be visible
