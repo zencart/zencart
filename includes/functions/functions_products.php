@@ -505,6 +505,8 @@ function zen_get_products_status($product_id)
 
 /**
  * check if linked
+ * @TODO - check to see whether true/false string responses can be changed to boolean
+ *
  * @param int $product_id
  */
 function zen_get_product_is_linked($product_id, $show_count = 'false')
@@ -955,11 +957,8 @@ function zen_has_product_discounts($product_id)
     $check_discount_query = "select products_id from " . TABLE_PRODUCTS_DISCOUNT_QUANTITY . " where products_id=" . (int)$product_id;
     $check_discount = $db->Execute($check_discount_query);
 
-    if ($check_discount->RecordCount() > 0) {
-        return 'true';
-    } else {
-        return 'false';
-    }
+    // @TODO - check calling references to see whether true/false string responses can be changed to boolean
+    return ($check_discount->RecordCount()) ? 'true' : 'false';
 }
 
 /**
