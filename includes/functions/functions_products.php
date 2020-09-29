@@ -1075,6 +1075,8 @@ function zen_remove_product($product_id, $ptc = 'true')
 }
 
 /**
+ * Remove downloads (if any) from specified product
+ *
  * @param int $product_id
  */
 function zen_products_attributes_download_delete($product_id)
@@ -1082,9 +1084,8 @@ function zen_products_attributes_download_delete($product_id)
     global $db, $zco_notifier;
     $zco_notifier->notify('NOTIFIER_ADMIN_ZEN_PRODUCTS_ATTRIBUTES_DOWNLOAD_DELETE', array(), $product_id);
 
-    // remove downloads if they exist
     $results = $db->Execute("select products_attributes_id from " . TABLE_PRODUCTS_ATTRIBUTES . " where products_id= " . (int)$product_id);
-    foreach ($result as $row) {
+    foreach ($results as $row) {
         $db->Execute("delete from " . TABLE_PRODUCTS_ATTRIBUTES_DOWNLOAD . " where products_attributes_id= " . (int)$row['products_attributes_id']);
     }
 }
