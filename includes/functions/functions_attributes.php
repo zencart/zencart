@@ -578,7 +578,6 @@ function zen_delete_products_attributes($product_id)
     global $db, $zco_notifier;
     $zco_notifier->notify('NOTIFIER_ADMIN_ZEN_DELETE_PRODUCTS_ATTRIBUTES', [], $product_id);
 
-    // first delete associated downloads
     $sql = "SELECT pa.products_id, pad.products_attributes_id
             FROM " . TABLE_PRODUCTS_ATTRIBUTES . " pa
             LEFT JOIN " . TABLE_PRODUCTS_ATTRIBUTES_DOWNLOAD . " pad USING (products_attributes_id)
