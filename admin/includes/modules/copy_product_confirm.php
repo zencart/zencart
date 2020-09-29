@@ -73,6 +73,8 @@ if (isset($_POST['products_id'], $_POST['categories_id'])) {
           if (array_key_exists($key, $casted_fields)) {
             if ($casted_fields[$key] == 'int') {
               $sql_data_array[$key] = (int)$value;
+            } else if ($casted_fields[$key] == 'float') {
+              $sql_data_array[$key] = (float)$value;
             } else {
               $sql_data_array[$key] = (!zen_not_null($value) || $value == '' || $value == 0) ? 0 : $value;
             }

@@ -20,8 +20,6 @@
 //  $Id: salemaker_info.php 1969 2005-09-13 06:57:21Z drbyte $
 //
 require("includes/application_top.php");
-
-require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/' . FILENAME_SALEMAKER_INFO . '.php');
 ?>
 <!doctype html>
 <html <?php echo HTML_PARAMS; ?>>
@@ -40,4 +38,3 @@ require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/' . FILENAME_SALEMAKER_INFO
 </html>
 <?php
 require(DIR_WS_INCLUDES . 'application_bottom.php');
-?>
