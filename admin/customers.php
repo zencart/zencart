@@ -782,24 +782,24 @@ if (zen_not_null($action)) {
                 </tr>
               </thead>
               <tbody>
-                <?php
-                $search = '';
-                if (isset($_GET['search']) && zen_not_null($_GET['search'])) {
-                  $keywords = zen_db_input(zen_db_prepare_input($_GET['search']));
-                  $keyword_search_fields = [
-                    'c.customers_lastname',
-                    'c.customers_firstname',
-                    'c.customers_email_address',
-                    'c.customers_telephone',
-                    'a.entry_company',
-                    'a.entry_street_address',
-                    'a.entry_city',
-                    'a.entry_postcode',
-                  ];
-                  $search = zen_build_keyword_where_clause($keyword_search_fields, trim($keywords));
-                  $search = (trim($search) != '') ? preg_replace('/ *AND /i', ' WHERE ', $search, 1) : '';
-                }
-                $new_fields = '';
+                  <?php
+                  $search = '';
+                  if (isset($_GET['search']) && zen_not_null($_GET['search'])) {
+                      $keywords = zen_db_input(zen_db_prepare_input($_GET['search']));
+                      $keyword_search_fields = [
+                          'c.customers_lastname',
+                          'c.customers_firstname',
+                          'c.customers_email_address',
+                          'c.customers_telephone',
+                          'a.entry_company',
+                          'a.entry_street_address',
+                          'a.entry_city',
+                          'a.entry_postcode',
+                      ];
+                      $search = zen_build_keyword_where_clause($keyword_search_fields, trim($keywords));
+                      $search = (trim($search) != '') ? preg_replace('/ *AND /i', ' WHERE ', $search, 1) : '';
+                  }
+                  $new_fields = '';
 
                 $zco_notifier->notify('NOTIFY_ADMIN_CUSTOMERS_LISTING_NEW_FIELDS', array(), $new_fields, $disp_order);
 
@@ -857,6 +857,7 @@ if (zen_not_null($action)) {
                     <td class="dataTableContent"><?php echo $customer['customers_firstname']; ?></td>
                     <td class="dataTableContent"><?php echo $customer['company']; ?></td>
                     <?php
+
                     // -----
                     // If a plugin has additional columns to add to the display, it attaches to both this "listing element" and (see above)
                     // the "listing heading" notifications.

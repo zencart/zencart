@@ -3,7 +3,7 @@
  * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2020 May 08 Modified in v1.5.7 $
+ * @version $Id: DrByte 2020  Modified in v1.5.8 $
  */
 require('includes/application_top.php');
 
@@ -243,8 +243,8 @@ function executeSql($lines, $database, $table_prefix = '') {
             }
           }
           break;
-        case (substr($line_upper, 0, 7) == 'SELECT ' && substr_count($line, 'FROM ') > 0):
-          $line = str_replace('FROM ', 'FROM ' . $table_prefix, $line);
+        case (substr($line_upper, 0, 7) == 'SELECT ' && substr_count($line_upper, 'FROM ') > 0):
+          $line = str_ireplace('FROM ', 'FROM ' . $table_prefix, $line);
           break;
         case (substr($line_upper, 0, 10) == 'LEFT JOIN '):
           $line = 'LEFT JOIN ' . $table_prefix . ltrim(substr($line, 10));
@@ -260,7 +260,7 @@ function executeSql($lines, $database, $table_prefix = '') {
               $line = substr($line, 0, (strlen($line) - 1)); // remove trailing ','
             }
           } else { //didn't have a comma, but starts with "FROM ", so insert table prefix
-            $line = str_replace('FROM ', 'FROM ' . $table_prefix, $line);
+            $line = str_ireplace('FROM ', 'FROM ' . $table_prefix, $line);
           }//endif substr_count(,)
           break;
         default:
@@ -835,7 +835,7 @@ if (zen_not_null($action)) {
           <div class="col-sm-12 text-danger"><strong><?php echo HEADING_WARNING2; ?></strong></div>
         </div>
         <?php
-        if ($action == 'execute' && $_POST['query_string'] != '') {
+        if ($action == 'execute' && !empty($_POST['query_string'])) {
           ?>
           <div class="row">
             <div class="col-sm-12 text-danger"><strong><?php echo TEXT_QUERY_RESULTS; ?></strong></div>

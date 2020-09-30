@@ -61,7 +61,7 @@
 ?>
 
 <label class="inputLabel" for="contactname"><?php echo ENTRY_NAME; ?></label>
-<?php echo zen_draw_input_field('contactname', $name, ' size="40" id="contactname" placeholder="' . ENTRY_REQUIRED_SYMBOL . '" required'); ?>
+<?php echo zen_draw_input_field('contactname', $name, ' size="40" id="contactname" placeholder="' . ENTRY_REQUIRED_SYMBOL . '" autofocus required'); ?>
 <br class="clearBoth" />
 
 <label class="inputLabel" for="email-address"><?php echo ENTRY_EMAIL; ?></label>
@@ -69,7 +69,7 @@
 <br class="clearBoth" />
 
 <label class="inputLabel" for="telephone"><?php echo ENTRY_TELEPHONE; ?></label>
-<?php echo zen_draw_input_field('telephone', ($telephone), ' size="20" id="telephone" autocomplete="off"'); ?>
+<?php echo zen_draw_input_field('telephone', ($telephone), ' size="20" id="telephone" autocomplete="off"', 'tel'); ?>
 <br class="clearBoth" />
 
 <label for="enquiry"><?php echo ENTRY_ENQUIRY; ?></label>

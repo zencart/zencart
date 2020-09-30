@@ -721,21 +721,16 @@ function zen_get_orders_comments($orders_id)
  * @param int $pages_id
  * @param int $status 0|1
  * @param string $status_field
- * @return int
  */
-function zen_set_ezpage_status($pages_id, $status, $status_field)
+function zen_set_ezpage_status(int $pages_id, int $status, string $status_field)
 {
     global $db;
-    if ($status == '1') {
-        zen_record_admin_activity('EZ-Page ID ' . (int)$pages_id . ' [' . $status_field . '] changed to 0', 'info');
-        $db->Execute("update " . TABLE_EZPAGES . " set " . zen_db_input($status_field) . " = '0'  where pages_id = " . (int)$pages_id);
-        return 1;
-    } elseif ($status == '0') {
-        zen_record_admin_activity('EZ-Page ID ' . (int)$pages_id . ' [' . $status_field . '] changed to 1', 'info');
-        $db->Execute("update " . TABLE_EZPAGES . " set " . zen_db_input($status_field) . " = '1'  where pages_id = " . (int)$pages_id);
-        return 0;
+    if ($status == '1' || $status == '0') {
+        zen_record_admin_activity('EZ-Page ID ' . (int)$pages_id . ' [' . $status_field . '] changed to ' . $status, 'info');
+        $db->Execute("UPDATE " . TABLE_EZPAGES . "
+                      SET " . zen_db_input($status_field) . " = " . (int)$status . "
+                      WHERE pages_id = " . (int)$pages_id);
     }
-    return -1;
 }
 
 

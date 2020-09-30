@@ -40,7 +40,8 @@ $define = [
     'TEXT_INFO_HEADING_PRE_ADD_SPECIALS' => 'Add Special Price by Product ID',
     'TEXT_INFO_PRE_ADD_INTRO' => 'You may add a Special Price by Product ID. This method may be appropriate for shops with many products if the selection page takes too long to render or selecting a product from the dropdown becomes unwieldy.',
     'TEXT_PRE_ADD_PRODUCTS_ID' => 'Enter the Product ID: ',
-    'TEXT_SPECIALS_PRICE_NOTES' => '<b>Notes:</b><ul><li>Special Price may be a price (ex-tax). The decimal separator must be a "." (decimal-point), eg: <b>49.99</b>. The calculated percentage discount is shown next to the product\'s new price in the catalog.</li><li>Special Price may be a percentage discount, eg: <b>20%</b>.</li><li>Start/End dates are not obligatory. You may leave the expiry date empty for no expiration.</li><li>When dates are set, the status of the Special Price is automatically enabled/disabled accordingly.</li><li>' . TEXT_INFO_PRE_ADD_INTRO . '</li></ul>',
+    'TEXT_SPECIALS_PRICE_NOTES_HEAD' => '<b>Notes:</b>', 
+    'TEXT_SPECIALS_PRICE_NOTES_BODY' => '<li>Special Price may be a price (ex-tax). The decimal separator must be a "." (decimal-point), eg: <b>49.99</b>. The calculated percentage discount is shown next to the product\'s new price in the catalog.</li><li>Special Price may be a percentage discount, eg: <b>20%</b>.</li><li>Start/End dates are not obligatory. You may leave the expiry date empty for no expiration.</li><li>When dates are set, the status of the Special Price is automatically enabled/disabled accordingly.</li>', 
 ];
 
 return $define;
