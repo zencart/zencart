@@ -2071,11 +2071,10 @@ class shoppingCart extends base
         } else {
             if (DISPLAY_CART == 'false'  && ($allow_into_cart !== 'Y')) {
                 //zen_redirect(zen_href_link(FILENAME_SHOPPING_CART));
-                $messageStack->add_session('header', ($this->display_debug_messages ? 'FUNCTION ' . __FUNCTION__ . ': ' : '') . FAILURE_ADDED_TO_CART_PRODUCTS, 'error');
+                $messageStack->add_session('header', ($this->display_debug_messages ? 'FUNCTION ' . __FUNCTION__ . ': ' : '') . FAILED_TO_ADD_UNAVAILABLE_PRODUCTS, 'error');
             }
         }
         $exclude[] = 'action';
-        if (is_array($parameters) && !in_array('products_id', $parameters) && !(strpos($goto, 'reviews') > 5)) $parameters[] = 'products_id';
         zen_redirect(zen_href_link($goto, zen_get_all_get_params($exclude)));
     }
 
