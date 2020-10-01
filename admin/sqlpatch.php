@@ -281,9 +281,6 @@ function executeSql($lines, $database, $table_prefix = '') {
           $complete_line = false;
         }
       } //endif found ';'
-        else {
-            $messageStack->add(ERROR_LINE_INCOMPLETE, 'error');
-        }
 
       if ($complete_line) {
         if ($debug == true) {
@@ -325,6 +322,10 @@ function executeSql($lines, $database, $table_prefix = '') {
       } //endif $complete_line
     } //endif ! # or -
   } // end foreach $lines
+
+  if (zen_not_null($newline)) {
+    $messageStack->add(ERROR_LINE_INCOMPLETE, 'error'); // Why not attempt to process this line instead of alert about it?
+  }
   zen_record_admin_activity('Admin SQL Patch tool executed a query.', 'notice');
   return array('queries' => $results, 'string' => $string, 'output' => $return_output, 'ignored' => ($ignored_count), 'errors' => $errors);
 }
