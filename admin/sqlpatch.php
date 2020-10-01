@@ -282,9 +282,6 @@ function executeSql($lines, $database, $table_prefix = '') {
           $complete_line = false;
         }
       } //endif found ';'
-        else {
-            $messageStack->add(ERROR_LINE_INCOMPLETE, 'error');
-        }
 
       if ($complete_line) {
         if ($debug == true) {
@@ -326,6 +323,11 @@ function executeSql($lines, $database, $table_prefix = '') {
       } //endif $complete_line
     } //endif ! # or -
   } // end foreach $lines
+
+  if (zen_not_null($newline)) {
+    $messageStack->add(ERROR_LINE_INCOMPLETE, 'error'); // Why not attempt to process this line instead of alert about it?
+  }
+
   $_POST['query_string'] = $lines; 
   zen_record_admin_activity('Admin SQL Patch tool executed a query.', 'notice');
   return array('queries' => $results, 'string' => $string, 'output' => $return_output, 'ignored' => ($ignored_count), 'errors' => $errors);
@@ -809,7 +811,7 @@ if (zen_not_null($action)) {
       <script src="includes/menu.js"></script>
       <script>
         function popupHelpWindow(url) {
-            window.open(url, 'popupImageWindow', 'toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=no,resizable=yes,copyhistory=no,width=100,height=100,screenX=150,screenY=150,top=150,left=150')
+            window.open(url, 'popupImageWindow', 'toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=no,resizable=yes,copyhistory=no,width=100,height=100,screenX=150,screenY=150,top=150,left=150,noreferrer')
         }
         function init() {
             cssjsmenu('navbar');
