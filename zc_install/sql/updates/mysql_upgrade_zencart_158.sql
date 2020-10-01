@@ -30,18 +30,21 @@
 #
 #####################################################
 
-# Fix greater than sign in query_builder
-UPDATE query_builder SET query_name = 'Customers Dormant for 3+ months (Subscribers)' WHERE query_id = 3;
-
-# Remove deprecated defines
-DELETE FROM configuration WHERE configuration_key = 'CATEGORIES_SPLIT_DISPLAY';
-
 # Clear out active customer sessions. Truncating helps the database clean up behind itself.
 TRUNCATE TABLE whos_online;
 TRUNCATE TABLE db_cache;
 
 ALTER TABLE layout_boxes ADD plugin_details varchar(100) NOT NULL default '';
 ALTER TABLE manufacturers ADD COLUMN featured tinyint default 0;
+
+
+
+# Remove greater-than sign in query_builder
+UPDATE query_builder SET query_name = 'Customers Dormant for 3+ months (Subscribers)' WHERE query_id = 3;
+
+# Remove deprecated defines
+DELETE FROM configuration WHERE configuration_key = 'CATEGORIES_SPLIT_DISPLAY';
+
 
 # Update configuration descriptions
 UPDATE configuration SET configuration_description = 'Enter your PayPal Merchant ID here. This is used for the more user-friendly In-Context checkout mode. You can obtain this value by going to your PayPal account, clicking on your account name at the top right, then clicking Account Settings, and navigating to the Business Information section; You will find your Merchant Account ID on that screen. A typical Merchant ID looks like FDEFDEFDEFDE11.' WHERE configuration_key = 'MODULE_PAYMENT_PAYPALWPP_MERCHANTID';
