@@ -536,6 +536,5 @@ systemChecks:
     methods:
       dbVersionChecker:
         parameters:
-          - checkType: configValue
-            fieldName: CATEGORIES_TABS_STATUS
-            expectedResult: 'Categories-Tabs Menu ON/OFF'
+          - checkType: configKeyExists
+            keyName: CATEGORIES_TABS_STATUS
