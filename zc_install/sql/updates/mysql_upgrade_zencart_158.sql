@@ -30,11 +30,11 @@
 #
 #####################################################
 
-# Fix greater than sign in query_builder 
-UPDATE query_builder SET query_name = 'Customers Dormant for 3+ months (Subscribers)' WHERE query_id = 3; 
+# Fix greater than sign in query_builder
+UPDATE query_builder SET query_name = 'Customers Dormant for 3+ months (Subscribers)' WHERE query_id = 3;
 
-# Remove deprecated defines 
-DELETE FROM configuration WHERE configuration_key = 'CATEGORIES_SPLIT_DISPLAY'; 
+# Remove deprecated defines
+DELETE FROM configuration WHERE configuration_key = 'CATEGORIES_SPLIT_DISPLAY';
 
 # Clear out active customer sessions. Truncating helps the database clean up behind itself.
 TRUNCATE TABLE whos_online;
