@@ -45,6 +45,8 @@ UPDATE query_builder SET query_name = 'Customers Dormant for 3+ months (Subscrib
 # Remove deprecated defines
 DELETE FROM configuration WHERE configuration_key = 'CATEGORIES_SPLIT_DISPLAY';
 DELETE FROM configuration WHERE configuration_key = 'CUSTOMERS_AUTHORIZATION_PRICES_OFF';
+DELETE FROM configuration WHERE configuration_key = 'EMAIL_FRIENDLY_ERRORS';
+DELETE FROM configuration WHERE configuration_key = 'EMAIL_LINEFEED';
 
 
 # Update configuration descriptions
