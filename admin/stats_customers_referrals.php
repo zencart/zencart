@@ -131,8 +131,8 @@ include DIR_FS_CATALOG . DIR_WS_CLASSES . 'order.php';
           <tr>
             <td class="main"><?php echo zen_date_long($customers_order['date_purchased']); ?></td>
             <td class="main"><?php echo TEXT_ORDER_NUMBER; ?> <?php echo $customers_order['orders_id']; ?></td>
-            <td class="main"><?php echo TEXT_COUPON_ID; ?> <?php echo $customers_order['coupon_code']; ?></td>
-            <td class="main"><a href="<?php echo zen_href_link(FILENAME_ORDERS, zen_get_all_get_params(array('oID', 'action')) . 'oID=' . $customers_order['orders_id'] . '&action=edit', 'NONSSL'); ?>" class="btn btn-primary" role="button"><?php echo IMAGE_EDIT; ?></a></td>
+            <td class="main"><?php echo (!empty($customers_order['coupon_code']) ? TEXT_COUPON_ID . ' ' . $customers_order['coupon_code'] : ''); ?></td>
+            <td class="main"><a href="<?php echo zen_href_link(FILENAME_ORDERS, zen_get_all_get_params(array('oID', 'action')) . 'oID=' . $customers_order['orders_id'] . '&action=edit', 'NONSSL'); ?>" class="btn btn-primary" role="button"><?php echo IMAGE_DETAILS; ?></a></td>
           </tr>
 
           <?php for ($i = 0, $n = sizeof($order->totals); $i < $n; $i++) { ?>
