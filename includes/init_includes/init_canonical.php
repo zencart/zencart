@@ -55,12 +55,6 @@ foreach($_GET as $key => $val) {
 $canonicalLink = '';
 switch (true) {
 /**
- * SSL Pages get no special treatment, since they don't usually require being indexed uniquely differently from non-SSL pages
- */
-  case ($request_type == 'SSL' && substr(HTTP_SERVER, 0, 5) != 'https'):
-    $canonicalLink = '';
-    break;
-/**
  * for products (esp those linked to multiple categories):
  */
   case (strstr($current_page, '_info') && isset($_GET['products_id'])):
