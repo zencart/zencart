@@ -94,10 +94,9 @@ while (!$products_options_names->EOF) {
     */
     $sql = "SELECT pov.products_options_values_id, pov.products_options_values_name, pa.*
             FROM  " . TABLE_PRODUCTS_ATTRIBUTES . " pa
-            LEFT JOIN " . TABLE_PRODUCTS_OPTIONS_VALUES . " pov ON (pa.options_values_id = pov.products_options_values_id)
+            LEFT JOIN " . TABLE_PRODUCTS_OPTIONS_VALUES . " pov ON (pa.options_values_id = pov.products_options_values_id AND pov.language_id = :language_id)
             WHERE pa.products_id = :products_id
-            AND   pa.options_id = :options_id
-            AND   pov.language_id = :language_id " .
+            AND   pa.options_id = :options_id " .
             $order_by;
     $sql = $db->bindVars($sql, ':products_id', $_GET['products_id'], 'integer');
     $sql = $db->bindVars($sql, ':options_id', $products_options_id, 'integer');
@@ -174,6 +173,14 @@ while (!$products_options_names->EOF) {
             } else {
                 // discount is off do not apply
                 $new_attributes_price = $products_options->fields['options_values_price'];
+                
+                // -----
+                // If the attribute's price is 0, set it to an (int) 0 so that follow-on checks
+                // using empty() will find that value 'empty'.
+                //
+                if ($new_attributes_price === '0.0000') {
+                    $new_attributes_price = 0;
+                }
             }
 
             // reverse negative values for display
