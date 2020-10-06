@@ -26,8 +26,8 @@ $define = [
     'TEXT_INFO_FILENAME' => 'Filename: ',
     'TEXT_INFO_MAX_DAYS' => 'Max Days: ',
     'TEXT_INFO_MAX_COUNT' => 'Max Downloads: ',
-    'TEXT_INFO_FILENAME_MISSING' => '&nbsp;Missing filename',
-    'TEXT_INFO_FILENAME_GOOD' => '&nbsp;Valid filename',
+    'TEXT_INFO_FILENAME_MISSING' => 'Missing filename',
+    'TEXT_INFO_FILENAME_GOOD' => 'Valid filename',
     'TEXT_WARNING_PRODUCT_MISCONFIGURED_SHORT' => 'Downloadable Product is misconfigured', 
     'TEXT_WARNING_PRODUCT_MISCONFIGURED' => 'Product should not be free shipping or virtual.  See <a href="https://docs.zen-cart.com/user/products/downloadable/#additional-notes-about-downloads-and-shipping-costs">shipping cost documentation</a>.',  
 ];
