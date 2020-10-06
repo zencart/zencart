@@ -266,7 +266,7 @@ td.cartProductDisplay{display:block;width:100%;}
 #shoppingCartDefault .rowEven{background:#eee;}
 td.cartQuantity br, td.cartQuantityUpdate br{display:none;}
 td.cartQuantity{padding:20px 10px 0 10px;}
-td.cartQuantityUpdate{padding:25px 0 0 0;}
+td.cartQuantityUpdate{padding:25px 0 0 10px;}
 .cartAttribsList{text-align:left;margin-left:15%;}
 span.cartProdTitle{text-align:left;float:left;margin-top:15px;width:70%;}
 .cartImage{float:left;width:18%;}
