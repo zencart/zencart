@@ -135,17 +135,17 @@ if (zen_not_null($action)) {
               $order_by = " ORDER BY pd.products_name ";
 
 // create split page control
-              $products_downloads_query_raw = ("SELECT pad.*, pa.*, pd.*, p.*
-                                                  FROM " . TABLE_PRODUCTS_ATTRIBUTES_DOWNLOAD . " pad
-                                                  LEFT JOIN " . TABLE_PRODUCTS_ATTRIBUTES . " pa ON pad.products_attributes_id = pa.products_attributes_id
-                                                  LEFT JOIN " . TABLE_PRODUCTS_DESCRIPTION . " pd ON pa.products_id = pd.products_id
-                                                    AND pd.language_id = " . (int)$_SESSION['languages_id'] . "
-                                                  LEFT JOIN " . TABLE_PRODUCTS . " p ON p.products_id = pd.products_id
-                                                  WHERE pa.products_attributes_id = pad.products_attributes_id
-                                                  " . $search . "
-                                                  " . $order_by);
-              $products_downloads_split = new splitPageResults($_GET['page'], MAX_DISPLAY_SEARCH_RESULTS_DOWNLOADS_MANAGER, $products_downloads_query_raw, $products_downloads_query_numrows);
-              $products_downloads_query = $db->Execute($products_downloads_query_raw);
+              $sql = "SELECT pad.*, pa.*, pd.*, p.*
+                      FROM " . TABLE_PRODUCTS_ATTRIBUTES_DOWNLOAD . " pad
+                      LEFT JOIN " . TABLE_PRODUCTS_ATTRIBUTES . " pa ON pad.products_attributes_id = pa.products_attributes_id
+                      LEFT JOIN " . TABLE_PRODUCTS_DESCRIPTION . " pd ON pa.products_id = pd.products_id
+                        AND pd.language_id = " . (int)$_SESSION['languages_id'] . "
+                      LEFT JOIN " . TABLE_PRODUCTS . " p ON p.products_id = pd.products_id
+                      WHERE pa.products_attributes_id = pad.products_attributes_id
+                      " . $search . "
+                      " . $order_by;
+              $products_downloads_split = new splitPageResults($_GET['page'], MAX_DISPLAY_SEARCH_RESULTS_DOWNLOADS_MANAGER, $sql, $products_downloads_query_numrows);
+              $products_downloads_query = $db->Execute($sql);
 
               foreach ($products_downloads_query as $products_downloads) {
 
