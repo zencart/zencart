@@ -164,7 +164,7 @@ if (zen_not_null($action)) {
                 }
                 ?>
                 <?php if (isset($padInfo) && is_object($padInfo) && ($products_downloads['products_attributes_id'] == $padInfo->products_attributes_id)) { ?>
-                  <tr id="defaultSelected" class="dataTableRowSelected" onclick="document.location.href = '<?php echo zen_href_link(FILENAME_DOWNLOADS_MANAGER, zen_get_all_get_params(array('padID', 'action', 'page')) . ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . 'padID=' . $padInfo->products_attributes_id . '&action=edit'); ?>'" role="button">;
+                  <tr id="defaultSelected" class="dataTableRowSelected" onclick="document.location.href = '<?php echo zen_href_link(FILENAME_DOWNLOADS_MANAGER, zen_get_all_get_params(array('padID', 'action', 'page')) . ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . 'padID=' . $padInfo->products_attributes_id . '&action=edit'); ?>'" role="button">
                   <?php } else { ?>
                   <tr class="dataTableRow" onclick="document.location.href = '<?php echo zen_href_link(FILENAME_DOWNLOADS_MANAGER, zen_get_all_get_params(array('padID', 'action', 'page')) . ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . 'padID=' . $products_downloads['products_attributes_id']); ?>'" role="button">
                   <?php } ?>
