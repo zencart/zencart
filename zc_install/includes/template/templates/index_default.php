@@ -1,15 +1,14 @@
 <?php
 /**
- * @package Installer
- * @copyright Copyright 2003-2019 Zen Cart Development Team
+ * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: mc12345678 2019 Jan 30 Modified in v1.5.6b $
+ * @version $Id: Zcwilt 2020 May 19 Modified in v1.5.7 $
  */
 require(DIR_FS_INSTALL . DIR_WS_INSTALL_TEMPLATE . 'partials/partial_modal_help.php');
 $adjustWarnIssues = false;
 ?>
 <form id="systemCheck" name="systemCheck" method="post" action="index.php?main_page=<?php echo $formAction; ?>">
-<input type="hidden" name="lng" value="<?php echo $lng; ?>" >
+<input type="hidden" name="lng" value="<?php echo $installer_lng; ?>" >
 <?php if ($hasMultipleAdmins) { ?>
 	<?php $adjustWarnIssues = True ?>
     <div class="alert-box alert">
@@ -93,7 +92,7 @@ $adjustWarnIssues = false;
     <?php } ?>
     <?php foreach ($listWarnErrors as $error) { ?>
     	<?php if (strpos($error['mainErrorText'], 'PRO TIP:') !== false) { ?>
-    <div class="alert-box">
+    <div class="alert-box alert">
       <?php echo($error['mainErrorText']); ?>
       	<?php } else { ?>
     <div class="alert-box secondary">
@@ -166,9 +165,9 @@ $(function()
     var textId = $(this).attr('id');
     $.ajax({
       type: "POST",
-       timeout: 100000,
+      timeout: 100000,
       dataType: "json",
-      data: 'id='+textId,
+      data: 'id='+textId + '&lng=<?php echo $installer_lng; ?>',
       url: '<?php echo "ajaxGetHelpText.php"; ?>',
        success: function(data) {
          $('#modal-help-title').html(data.title);

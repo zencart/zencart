@@ -1,10 +1,9 @@
 <?php
 /**
- * @package languageDefines
- * @copyright Copyright 2003-2008 Zen Cart Development Team
+ * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: address_book_process.php 9647 2008-09-17 00:10:08Z drbyte $
+ * @version $Id: Scott C Wilson 2020 Apr 12 Modified in v1.5.7 $
  */
 
 define('NAVBAR_TITLE_1', 'My Account');

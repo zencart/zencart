@@ -1,11 +1,10 @@
 /**
  * Main CSS Stylesheet
  *
- * @package templateSystem
- * @copyright Copyright 2003-2016 Zen Cart Development Team
+ * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: picaflor-azul Thu Mar 17 12:13:18 2016 -0500 New in v1.5.5 $
+ * @version $Id: DrByte 2020 May 23 Modified in v1.5.7 $
  */
 
 /*bof basic elements*/
@@ -115,6 +114,7 @@ select#country, select#stateZone, #state {margin-left:0;}
 #navMain ul  {margin:0;padding:0.5em 0;width:60%;list-style-type:none;text-align:left;line-height:1.5em;}
 #navMain ul li {display:inline;}
 #navMain ul li a {text-decoration:none;padding:0 0.8em;margin:0;white-space:nowrap;}
+#navMain ul li a.navCartContentsIndicator {padding: 10px;border-radius: 10px;margin-right: 5px;}
 /*top right search*/
 #navMainSearch {width:38%;text-align:right;}
 #navMainSearch input[type=text]{vertical-align:top;display:inline-block;border:0;width:65% !important;height:32px;margin:0;font-size:0.9em;-moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box;}
@@ -324,6 +324,19 @@ span.list-addtext{display:block;text-align:center;}
 #specialsListing .prod-list-wrap{padding:20px 20px 0 20px;}
 #productListing{margin-bottom:20px;}
 #no-products{padding:20px;margin:20px 0;}
+
+/*product listing column-layout overrides*/
+.gridlayout.centerBoxContentsProducts { padding: 2em 0; }
+.gridlayout .list-image {float:none}
+.gridlayout .list-image {min-height: revert; min-width: revert}
+.gridlayout .list-image {margin-right: inherit;}
+.gridlayout .list-more {float: none;}
+#indexProductList .gridlayout .list-more {margin: auto; width: 30%}
+.gridlayout .itemTitle {width:90%;margin:5px auto}
+.gridlayout .listingDescription {width:90%;margin:10px auto}
+.gridlayout .cart-add {float:none;}
+.gridlayout .list-input {float:none;width:30%;margin:auto}
+
 
 /*bof new, featured, all listing*/
 .listing-wrapper:nth-child(odd) {}

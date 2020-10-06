@@ -1,19 +1,20 @@
 <?php
 /**
  *
- * @package classes
- * @copyright Copyright 2003-2019 Zen Cart Development Team
+ * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id:  $
+ * @version $Id: DrByte 2020 Jun 18 Modified in v1.5.7 $
  */
 
-namespace  Zencart\FileSystem;
+namespace Zencart\FileSystem;
 
 use Zencart\Traits\Singleton;
 
 class FileSystem
 {
     use Singleton;
+
+    protected $installedPlugins;
 
     public function loadFilesFromDirectory($rootDir, $fileRegx)
     {
@@ -64,7 +65,7 @@ class FileSystem
 
     public function isAdminDir($filePath)
     {
-        if (!defined(DIR_FS_ADMIN)) return false;
+        if (!defined('DIR_FS_ADMIN')) return false;
         $test = str_replace(DIR_FS_ADMIN, '', $filePath);
         if ($test != $filePath) return false;
         return true;
@@ -73,7 +74,7 @@ class FileSystem
     public function isCatalogDir($filePath)
     {
         if ($this->isAdminDir($filePath)) return false;
-        if (!defined(DIR_FS_CATALOG)) return false;
+        if (!defined('DIR_FS_CATALOG')) return false;
         $test = str_replace(DIR_FS_CATALOG, '', $filePath);
         if ($test != $filePath) return false;
         return true;
@@ -90,18 +91,20 @@ class FileSystem
     public function getDirectorySize($path, $decimals = 2, $addSuffix = true)
     {
         $bytes = 0;
-        foreach(new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($path)) as $file)
-        {
+        foreach (new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($path)) as $file) {
             $bytes += $file->getSize();
         }
-        $size = array('B','kB','MB','GB','TB','PB','EB','ZB','YB');
+        $size = array('B', 'kB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB');
         $factor = floor((strlen($bytes) - 1) / 3);
-        return sprintf("%.{$decimals}f", $bytes / pow(1024, $factor)) . @$size[$factor];
+        $suffix = 'bloody huge!';
+        if (isset($size[$factor])) $suffix = $size[$factor];
+        return sprintf("%.{$decimals}f", $bytes / pow(1024, $factor)) . $suffix;
     }
 
-    public function fileExistsInDirectory($fileDir, $filePattern) {
+    public function fileExistsInDirectory($fileDir, $filePattern)
+    {
         $found = false;
-        $filePattern = '/'.str_replace("/", "\/", $filePattern).'$/';
+        $filePattern = '/' . str_replace("/", "\/", $filePattern) . '$/';
         if ($mydir = @dir($fileDir)) {
             while ($file = $mydir->read()) {
                 if (preg_match($filePattern, $file)) {
@@ -112,5 +115,31 @@ class FileSystem
             $mydir->close();
         }
         return $found;
+    }
+
+    public function getPluginRelativeDirectory($pluginKey)
+    {
+        if (!isset($this->installedPlugins[$pluginKey])) {
+            return null;
+        }
+        $version = $this->installedPlugins[$pluginKey]['version'];
+        $relativePath = '/zc_plugins/' . $pluginKey . '/' . $version . '/';
+        return $relativePath;
+    }
+
+
+    public function getPluginAbsoluteDirectory($pluginKey)
+    {
+        if (!isset($this->installedPlugins[$pluginKey])) {
+            return null;
+        }
+        $version = $this->installedPlugins[$pluginKey]['version'];
+        $absolutePath = DIR_FS_CATALOG . 'zc_plugins/' . $pluginKey . '/' . $version . '/';
+        return $absolutePath;
+    }
+
+    public function setInstalledPlugins($installedPlugins)
+    {
+        $this->installedPlugins = $installedPlugins;
     }
 }

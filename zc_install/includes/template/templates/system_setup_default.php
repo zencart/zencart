@@ -1,15 +1,14 @@
 <?php
 /**
- * @package Installer
- * @copyright Copyright 2003-2016 Zen Cart Development Team
+ * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: zcwilt  Mon Dec 28 19:34:40 2015 +0000 New in v1.5.5 $
+ * @version $Id: Zcwilt 2020 May 19 Modified in v1.5.7 $
  */
 require(DIR_FS_INSTALL . DIR_WS_INSTALL_TEMPLATE . 'partials/partial_modal_help.php');
 ?>
 <form id="system_setup" name="system_setup" method="post" action="index.php?main_page=database" data-abide="ajax">
   <input type="hidden" name="action" value="process">
-  <input type="hidden" name="lng" value="<?php echo $lng; ?>" >
+  <input type="hidden" name="lng" value="<?php echo $installer_lng; ?>" >
   <input type="hidden" name="dir_ws_http_catalog" value="<?php echo $dir_ws_http_catalog; ?>">
   <input type="hidden" name="dir_ws_https_catalog" value="<?php echo $dir_ws_https_catalog; ?>">
   <input type="hidden" name="detected_detected_http_server_catalog" value="<?php echo $catalogHttpServer; ?>">
@@ -148,9 +147,9 @@ $(function()
         var textId = $(this).attr('id');
         $.ajax({
           type: "POST",
-           timeout: 100000,
+          timeout: 100000,
           dataType: "json",
-          data: 'id='+textId,
+          data: 'id='+textId + '&lng=<?php echo $installer_lng; ?>',
           url: '<?php echo "ajaxGetHelpText.php"; ?>',
            success: function(data) {
              $('#modal-help-title').html(data.title);

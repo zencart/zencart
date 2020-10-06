@@ -1,9 +1,8 @@
 <?php
 /**
- * @package templateSystem
- * @copyright Copyright 2003-2016 Zen Cart Development Team
+ * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: rbarbour zcadditions.com Wed Mar 16 19:21:17 2016 -0500 New in v1.5.5 $
+ * @version $Id: rbarbour zcadditions.com 2019 Jun 03 Modified in v1.5.7 $
  */
 ?>
 

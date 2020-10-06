@@ -33,6 +33,7 @@ class CatalogCustomAttributeDefinition implements ArrayAccess
         'seller_visibility' => 'string',
         'app_visibility' => 'string',
         'string_config' => '\SquareConnect\Model\CatalogCustomAttributeDefinitionStringConfig',
+        'number_config' => '\SquareConnect\Model\CatalogCustomAttributeDefinitionNumberConfig',
         'selection_config' => '\SquareConnect\Model\CatalogCustomAttributeDefinitionSelectionConfig',
         'custom_attribute_usage_count' => 'int',
         'key' => 'string'
@@ -51,6 +52,7 @@ class CatalogCustomAttributeDefinition implements ArrayAccess
         'seller_visibility' => 'seller_visibility',
         'app_visibility' => 'app_visibility',
         'string_config' => 'string_config',
+        'number_config' => 'number_config',
         'selection_config' => 'selection_config',
         'custom_attribute_usage_count' => 'custom_attribute_usage_count',
         'key' => 'key'
@@ -69,6 +71,7 @@ class CatalogCustomAttributeDefinition implements ArrayAccess
         'seller_visibility' => 'setSellerVisibility',
         'app_visibility' => 'setAppVisibility',
         'string_config' => 'setStringConfig',
+        'number_config' => 'setNumberConfig',
         'selection_config' => 'setSelectionConfig',
         'custom_attribute_usage_count' => 'setCustomAttributeUsageCount',
         'key' => 'setKey'
@@ -87,6 +90,7 @@ class CatalogCustomAttributeDefinition implements ArrayAccess
         'seller_visibility' => 'getSellerVisibility',
         'app_visibility' => 'getAppVisibility',
         'string_config' => 'getStringConfig',
+        'number_config' => 'getNumberConfig',
         'selection_config' => 'getSelectionConfig',
         'custom_attribute_usage_count' => 'getCustomAttributeUsageCount',
         'key' => 'getKey'
@@ -113,7 +117,7 @@ class CatalogCustomAttributeDefinition implements ArrayAccess
       */
     protected $source_application;
     /**
-      * $allowed_object_types The set of Catalog Object Types that this Custom Attribute may be applied to. Currently, only `ITEM` and `ITEM_VARIATION` are allowed. See [CatalogObjectType](#type-catalogobjecttype) for possible values
+      * $allowed_object_types The set of Catalog Object Types that this Custom Attribute may be applied to. Currently, only `ITEM` and `ITEM_VARIATION` are allowed. At least one type must be included. See [CatalogObjectType](#type-catalogobjecttype) for possible values
       * @var string[]
       */
     protected $allowed_object_types;
@@ -133,6 +137,11 @@ class CatalogCustomAttributeDefinition implements ArrayAccess
       */
     protected $string_config;
     /**
+      * $number_config 
+      * @var \SquareConnect\Model\CatalogCustomAttributeDefinitionNumberConfig
+      */
+    protected $number_config;
+    /**
       * $selection_config Populated when `type` is set to `SELECTION`, unset otherwise.
       * @var \SquareConnect\Model\CatalogCustomAttributeDefinitionSelectionConfig
       */
@@ -143,7 +152,7 @@ class CatalogCustomAttributeDefinition implements ArrayAccess
       */
     protected $custom_attribute_usage_count;
     /**
-      * $key The name of the desired custom attribute key that can be used to access the custom attribute value on catalog objects. Cannot be modified after the custom attribute definition has been created.
+      * $key The name of the desired custom attribute key that can be used to access the custom attribute value on catalog objects. Cannot be modified after the custom attribute definition has been created. Must be between 1 and 60 characters, and may only contain the characters [a-zA-Z0-9_-].
       * @var string
       */
     protected $key;
@@ -194,6 +203,11 @@ class CatalogCustomAttributeDefinition implements ArrayAccess
               $this->string_config = $data["string_config"];
             } else {
               $this->string_config = null;
+            }
+            if (isset($data["number_config"])) {
+              $this->number_config = $data["number_config"];
+            } else {
+              $this->number_config = null;
             }
             if (isset($data["selection_config"])) {
               $this->selection_config = $data["selection_config"];
@@ -299,7 +313,7 @@ class CatalogCustomAttributeDefinition implements ArrayAccess
   
     /**
      * Sets allowed_object_types
-     * @param string[] $allowed_object_types The set of Catalog Object Types that this Custom Attribute may be applied to. Currently, only `ITEM` and `ITEM_VARIATION` are allowed. See [CatalogObjectType](#type-catalogobjecttype) for possible values
+     * @param string[] $allowed_object_types The set of Catalog Object Types that this Custom Attribute may be applied to. Currently, only `ITEM` and `ITEM_VARIATION` are allowed. At least one type must be included. See [CatalogObjectType](#type-catalogobjecttype) for possible values
      * @return $this
      */
     public function setAllowedObjectTypes($allowed_object_types)
@@ -365,6 +379,25 @@ class CatalogCustomAttributeDefinition implements ArrayAccess
         return $this;
     }
     /**
+     * Gets number_config
+     * @return \SquareConnect\Model\CatalogCustomAttributeDefinitionNumberConfig
+     */
+    public function getNumberConfig()
+    {
+        return $this->number_config;
+    }
+  
+    /**
+     * Sets number_config
+     * @param \SquareConnect\Model\CatalogCustomAttributeDefinitionNumberConfig $number_config 
+     * @return $this
+     */
+    public function setNumberConfig($number_config)
+    {
+        $this->number_config = $number_config;
+        return $this;
+    }
+    /**
      * Gets selection_config
      * @return \SquareConnect\Model\CatalogCustomAttributeDefinitionSelectionConfig
      */
@@ -413,7 +446,7 @@ class CatalogCustomAttributeDefinition implements ArrayAccess
   
     /**
      * Sets key
-     * @param string $key The name of the desired custom attribute key that can be used to access the custom attribute value on catalog objects. Cannot be modified after the custom attribute definition has been created.
+     * @param string $key The name of the desired custom attribute key that can be used to access the custom attribute value on catalog objects. Cannot be modified after the custom attribute definition has been created. Must be between 1 and 60 characters, and may only contain the characters [a-zA-Z0-9_-].
      * @return $this
      */
     public function setKey($key)

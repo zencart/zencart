@@ -2,11 +2,10 @@
 /**
  * authorize.net SIM payment method class
  *
- * @package paymentMethod
- * @copyright Copyright 2003-2019 Zen Cart Development Team
+ * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2019 Feb 26 Modified in v1.5.6b $
+ * @version $Id: DrByte 2020 May 16 Modified in v1.5.7 $
  */
 /**
  * authorize.net SIM payment method class
@@ -458,7 +457,7 @@ class authorizenet extends base {
   function after_process() {
     global $insert_id, $order, $currencies;
     $this->notify('NOTIFY_PAYMENT_AUTHNETSIM_POSTPROCESS_HOOK');
-    
+
     $comments = 'Credit Card payment.  AUTH: ' . $this->auth_code . ' TransID: ' . $this->transaction_id;
     if ($order->info['currency'] != $this->gateway_currency) {
       $comments .= ' (' . number_format($order->info['total'] * $currencies->get_value($this->gateway_currency), 2) . ' ' . $this->gateway_currency . ')';
@@ -494,8 +493,8 @@ class authorizenet extends base {
     }
     $db->Execute("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) VALUES ('Enable Authorize.net Module', 'MODULE_PAYMENT_AUTHORIZENET_STATUS', 'True', 'Do you want to accept Authorize.net payments?', '6', '0', 'zen_cfg_select_option(array(\'True\', \'False\'), ', now())");
     $db->Execute("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) VALUES ('Login ID', 'MODULE_PAYMENT_AUTHORIZENET_LOGIN', 'testing', 'The API Login ID used for your Authorize.net account.', '6', '0', now())");
-    $db->Execute("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added, use_function) VALUES ('Transaction Key', 'MODULE_PAYMENT_AUTHORIZENET_TXNKEY', 'Test', 'Transaction Key used for sending transaction data.<br>See <a href=\"https://support.authorize.net/s/article/How-do-I-obtain-my-API-Login-ID-and-Transaction-Key\" target=\"_blank\">How-do-I-obtain-my-API-Login-ID-and-Transaction-Key</a>', '6', '0', now(), 'zen_cfg_password_display')");
-    $db->Execute("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added, use_function) VALUES ('Security Key', 'MODULE_PAYMENT_AUTHORIZENET_SECURITYKEY', '*Get from Authorizenet Account*', 'Security Key used for validating transactions (128 characters).<br>See <a href=\"https://support.authorize.net/s/article/What-is-a-Signature-Key\" target=\"_blank\">What-is-a-Signature-Key</a> for instructions.', '6', '0', now(), 'zen_cfg_password_display')");
+    $db->Execute("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added, use_function) VALUES ('Transaction Key', 'MODULE_PAYMENT_AUTHORIZENET_TXNKEY', 'Test', 'Transaction Key used for sending transaction data.<br>See <a href=\"https://support.authorize.net/s/article/How-do-I-obtain-my-API-Login-ID-and-Transaction-Key\" rel=\"noopener\" target=\"_blank\">How-do-I-obtain-my-API-Login-ID-and-Transaction-Key</a>', '6', '0', now(), 'zen_cfg_password_display')");
+    $db->Execute("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added, use_function) VALUES ('Security Key', 'MODULE_PAYMENT_AUTHORIZENET_SECURITYKEY', '*Get from Authorizenet Account*', 'Security Key used for validating transactions (128 characters).<br>See <a href=\"https://support.authorize.net/s/article/What-is-a-Signature-Key\" rel=\"noopener\" target=\"_blank\">What-is-a-Signature-Key</a> for instructions.', '6', '0', now(), 'zen_cfg_password_display')");
     $db->Execute("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) VALUES ('Transaction Mode', 'MODULE_PAYMENT_AUTHORIZENET_TESTMODE', 'Test', 'Transaction mode used for processing orders.<br><strong>Production</strong>=Live processing with real account credentials<br><strong>Test</strong>=Simulations with real account credentials<br><strong>Sandbox</strong>=use special sandbox transaction key to do special testing of success/fail transaction responses (obtain sandbox credentials via <a href=\"https://developer.authorize.net/hello_world/sandbox/\">developer.authorize.net</a>)', '6', '0', 'zen_cfg_select_option(array(\'Test\', \'Production\', \'Sandbox\'), ', now())");
     $db->Execute("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) VALUES ('Transaction Method', 'MODULE_PAYMENT_AUTHORIZENET_METHOD', 'Credit Card', 'Transaction method used for processing orders', '6', '0', 'zen_cfg_select_option(array(\'Credit Card\'), ', now())");//, \'eCheck\'
     $db->Execute("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) VALUES ('Authorization Type', 'MODULE_PAYMENT_AUTHORIZENET_AUTHORIZATION_TYPE', 'Authorize', 'Do you want submitted credit card transactions to be authorized only, or captured immediately?', '6', '0', 'zen_cfg_select_option(array(\'Authorize\', \'Capture\'), ', now())");
@@ -529,7 +528,7 @@ class authorizenet extends base {
         $db->Execute("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) VALUES ('Currency Supported', 'MODULE_PAYMENT_AUTHORIZENET_CURRENCY', 'USD', 'Which currency is your Authnet Gateway Account configured to accept?<br>(Purchases in any other currency will be pre-converted to this currency before submission using the exchange rates in your store admin.)', '6', '0', 'zen_cfg_select_option(array(\'USD\', \'CAD\', \'GBP\', \'EUR\', \'AUD\', \'NZD\'), ', now())");
       }
       if (!defined('MODULE_PAYMENT_AUTHORIZENET_SECURITYKEY')) {
-        $db->Execute("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added, use_function) VALUES ('Security Key', 'MODULE_PAYMENT_AUTHORIZENET_SECURITYKEY', '*Get from Authorizenet Account*', 'REQUIRED Security Key used for validating transactions (128 characters). See <a href=\"https://support.authorize.net/s/article/What-is-a-Signature-Key\" target=\"_blank\">What-is-a-Signature-Key</a> for instructions.', '6', '0', now(), 'zen_cfg_password_display')");
+        $db->Execute("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added, use_function) VALUES ('Security Key', 'MODULE_PAYMENT_AUTHORIZENET_SECURITYKEY', '*Get from Authorizenet Account*', 'REQUIRED Security Key used for validating transactions (128 characters). See <a href=\"https://support.authorize.net/s/article/What-is-a-Signature-Key\" rel=\"noopener\" target=\"_blank\">What-is-a-Signature-Key</a> for instructions.', '6', '0', now(), 'zen_cfg_password_display')");
       }
       if (defined('MODULE_PAYMENT_AUTHORIZENET_MD5HASH')) {
         // update description

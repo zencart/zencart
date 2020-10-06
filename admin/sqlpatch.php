@@ -1,10 +1,9 @@
 <?php
 /**
- * @package admin
- * @copyright Copyright 2003-2018 Zen Cart Development Team
+ * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Zen4All Mon Nov 26 12:28:26 2018 +0100 Modified in v1.5.6 $
+ * @version $Id: DrByte 2020 May 08 Modified in v1.5.7 $
  */
 require('includes/application_top.php');
 
@@ -189,7 +188,7 @@ function executeSql($lines, $database, $table_prefix = '') {
           // RENAME TABLE command cannot be parsed to insert table prefixes, so skip if zen is using prefixes
           if (zen_not_null(DB_PREFIX)) {
             zen_write_to_upgrade_exceptions_table($line, 'RENAME TABLE command not supported by upgrader. Please use phpMyAdmin instead.', $sql_file);
-            $messageStack->add('RENAME TABLE command not supported by upgrader. Please use phpMyAdmin instead.', 'caution');
+            $messageStack->add(ERROR_RENAME_TABLE, 'caution');
 
             $ignore_line = true;
           }
@@ -243,8 +242,8 @@ function executeSql($lines, $database, $table_prefix = '') {
             }
           }
           break;
-        case (substr($line_upper, 0, 7) == 'SELECT ' && substr_count($line, 'FROM ') > 0):
-          $line = str_replace('FROM ', 'FROM ' . $table_prefix, $line);
+        case (substr($line_upper, 0, 7) == 'SELECT ' && substr_count($line_upper, 'FROM ') > 0):
+          $line = str_ireplace('FROM ', 'FROM ' . $table_prefix, $line);
           break;
         case (substr($line_upper, 0, 10) == 'LEFT JOIN '):
           $line = 'LEFT JOIN ' . $table_prefix . ltrim(substr($line, 10));
@@ -260,7 +259,7 @@ function executeSql($lines, $database, $table_prefix = '') {
               $line = substr($line, 0, (strlen($line) - 1)); // remove trailing ','
             }
           } else { //didn't have a comma, but starts with "FROM ", so insert table prefix
-            $line = str_replace('FROM ', 'FROM ' . $table_prefix, $line);
+            $line = str_ireplace('FROM ', 'FROM ' . $table_prefix, $line);
           }//endif substr_count(,)
           break;
         default:
@@ -323,6 +322,10 @@ function executeSql($lines, $database, $table_prefix = '') {
       } //endif $complete_line
     } //endif ! # or -
   } // end foreach $lines
+
+  if (zen_not_null($newline)) {
+    $messageStack->add(ERROR_LINE_INCOMPLETE, 'error'); // Why not attempt to process this line instead of alert about it?
+  }
   zen_record_admin_activity('Admin SQL Patch tool executed a query.', 'notice');
   return array('queries' => $results, 'string' => $string, 'output' => $return_output, 'ignored' => ($ignored_count), 'errors' => $errors);
 }
@@ -732,9 +735,9 @@ if (zen_not_null($action)) {
         $query_string = explode($linebreak, ($query_string));
         $query_results = executeSql($query_string, DB_DATABASE, DB_PREFIX);
         if ($query_results['queries'] > 0 && $query_results['queries'] != $query_results['ignored']) {
-          $messageStack->add($query_results['queries'] . ' statements processed.', 'success');
+          $messageStack->add(sprintf(TEXT_EXECUTE_SUCCESS, (int)$query_results['queries']), 'success');
         } else {
-          $messageStack->add('Failed: ' . $query_results['queries'], 'error');
+          $messageStack->add(sprintf(ERROR_EXECUTE_FAILED, (int)$query_results['queries']), 'error');
         }
         if (zen_not_null($query_results['errors'])) {
           foreach ($query_results['errors'] as $value) {
@@ -742,7 +745,7 @@ if (zen_not_null($action)) {
           }
         }
         if ($query_results['ignored'] != 0) {
-          $messageStack->add('Note: ' . $query_results['ignored'] . ' statements ignored. See "upgrade_exceptions" table for additional details.', 'caution');
+          $messageStack->add(sprintf(ERROR_EXECUTE_IGNORED, (int)$query_results['ignored']), 'caution');
         }
         if (zen_not_null($query_results['output'])) {
           foreach ($query_results['output'] as $value) {
@@ -764,17 +767,17 @@ if (zen_not_null($action)) {
       if ($query_string != '') {
         $query_results = executeSql($query_string, DB_DATABASE, DB_PREFIX);
         if ($query_results['queries'] > 0 && $query_results['queries'] != $query_results['ignored']) {
-          $messageStack->add($query_results['queries'] . ' statements processed.', 'success');
+          $messageStack->add(sprintf(TEXT_UPLOADQUERY_SUCCESS, (int)$query_results['queries']), 'success');
         } else {
-          $messageStack->add('Failed: ' . $query_results['queries'], 'error');
+          $messageStack->add(sprintf(ERROR_UPLOADQUERY_FAILED, (int)$query_results['queries']), 'error');
         }
         if (zen_not_null($query_results['errors'])) {
           foreach ($query_results['errors'] as $value) {
-            $messageStack->add('ERROR: ' . $value, 'error');
+            $messageStack->add(ICON_ERROR . ': ' . $value, 'error');
           }
         }
         if ($query_results['ignored'] != 0) {
-          $messageStack->add('Note: ' . $query_results['ignored'] . ' statements ignored. See "upgrade_exceptions" table for additional details.', 'caution');
+          $messageStack->add(ERROR_UPLOADQUERY_IGNORED, 'caution');
         }
         if (zen_not_null($query_results['output'])) {
           foreach ($query_results['output'] as $value) {
@@ -805,7 +808,7 @@ if (zen_not_null($action)) {
       <script src="includes/menu.js"></script>
       <script>
         function popupHelpWindow(url) {
-            window.open(url, 'popupImageWindow', 'toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=no,resizable=yes,copyhistory=no,width=100,height=100,screenX=150,screenY=150,top=150,left=150')
+            window.open(url, 'popupImageWindow', 'toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=no,resizable=yes,copyhistory=no,width=100,height=100,screenX=150,screenY=150,top=150,left=150,noreferrer')
         }
         function init() {
             cssjsmenu('navbar');
@@ -831,7 +834,7 @@ if (zen_not_null($action)) {
           <div class="col-sm-12 text-danger"><strong><?php echo HEADING_WARNING2; ?></strong></div>
         </div>
         <?php
-        if ($action == 'execute' && $_POST['query_string'] != '') {
+        if ($action == 'execute' && !empty($_POST['query_string'])) {
           ?>
           <div class="row">
             <div class="col-sm-12 text-danger"><strong><?php echo TEXT_QUERY_RESULTS; ?></strong></div>
@@ -846,7 +849,7 @@ if (zen_not_null($action)) {
         <?php echo zen_draw_form('getquery', FILENAME_SQLPATCH, 'action=execute' . (($debug == true) ? '&debug=ON' : '') . (($skip_stripslashes == true) ? '&keepslashes=1' : ''), 'post', 'class="form-horizontal"'); ?>
         <div class="form-group">
             <?php echo zen_draw_label(TEXT_ENTER_QUERY_STRING, 'query_string', 'class="control-label col-sm-3"'); ?>
-          <div class="col-sm-9 col-md-6"><?php echo zen_draw_textarea_field('query_string', 'soft', '80%', '10', '', 'id="sqlpatchKeyedQuery" class="form-control noEditor"', false); ?></div>
+          <div class="col-sm-9 col-md-6"><?php echo zen_draw_textarea_field('query_string', 'soft', '80', '10', '', 'id="query_string" class="form-control noEditor"', false); ?></div>
         </div>
         <div class="form-group">
           <div class="col-sm-12 text-right"><button type="submit" class="btn btn-primary"><?php echo IMAGE_SEND; ?></button></div>
@@ -865,7 +868,7 @@ if (zen_not_null($action)) {
         ?>
         <div class="form-group">
   <?php echo zen_draw_label(TEXT_QUERY_FILENAME, 'sql_file', 'class="control-label col-sm-3"'); ?>
-          <div class="col-sm-9 col-md-6"><?php echo zen_draw_file_field('sql_file', '', 'class="form-control"'); ?></div>
+          <div class="col-sm-9 col-md-6"><?php echo zen_draw_file_field('sql_file', '', 'class="form-control" id="sql_file"'); ?></div>
         </div>
         <div class="form-group">
           <div class="col-sm-12 text-right"><button type="submit" class="btn btn-primary"><?php echo IMAGE_UPLOAD; ?></button></div>

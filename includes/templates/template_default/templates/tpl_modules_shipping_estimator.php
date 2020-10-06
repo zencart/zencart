@@ -2,16 +2,17 @@
 /**
  * Module Template - for shipping-estimator display
  *
- * @package templateSystem
- * @copyright Copyright 2003-2019 Zen Cart Development Team
+ * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: mc12345678 2019 Apr 30 Modified in v1.5.6b $
+ * @version $Id: Steve 2020 May 07 Modified in v1.5.7 $
  */
 ?>
 <div id="shippingEstimatorContent">
 <?php echo zen_draw_form('estimator', zen_href_link($show_in . '#view', '', $request_type), 'post'); ?>
-<?php echo zen_draw_hidden_field('scid', $selected_shipping['id']); ?>
+<?php if (is_array($selected_shipping)) {
+    zen_draw_hidden_field('scid', $selected_shipping['id']);
+} ?>
 <?php echo zen_draw_hidden_field('action', 'submit'); ?>
 <?php
   if($_SESSION['cart']->count_contents()) {

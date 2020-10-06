@@ -110,7 +110,7 @@ class EmployeesApi
             $headerParams['Accept'] = $_header_accept;
         }
         $headerParams['Content-Type'] = ApiClient::selectHeaderContentType(array('application/json'));
-        $headerParams['Square-Version'] = "2020-03-25";
+        $headerParams['Square-Version'] = "2020-05-28";
 
         // query params
         if ($location_id !== null) {
@@ -211,7 +211,7 @@ class EmployeesApi
             $headerParams['Accept'] = $_header_accept;
         }
         $headerParams['Content-Type'] = ApiClient::selectHeaderContentType(array('application/json'));
-        $headerParams['Square-Version'] = "2020-03-25";
+        $headerParams['Square-Version'] = "2020-05-28";
 
         
         

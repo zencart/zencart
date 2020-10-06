@@ -2,11 +2,10 @@
 /**
  * shopping_cart header_php.php
  *
- * @package page
- * @copyright Copyright 2003-2016 Zen Cart Development Team
+ * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: DrByte  Fri Dec 4 16:31:15 2015 -0500 Modified in v1.5.5 $
+ * @version $Id: DrByte 2020 May 16 Modified in v1.5.7 $
  */
 
 // This should be first line of the script:
@@ -127,7 +126,7 @@ for ($i=0, $n=sizeof($products); $i<$n; $i++) {
   $showFixedQuantity = (($show_products_quantity_max == 1 or zen_get_products_qty_box_status($products[$i]['id']) == 0) ? true : false);
   $showFixedQuantityAmount = $products[$i]['quantity'] . zen_draw_hidden_field('cart_quantity[]', $products[$i]['quantity']);
   $showMinUnits = zen_get_products_quantity_min_units_display($products[$i]['id']);
-  $quantityField = zen_draw_input_field('cart_quantity[]', $products[$i]['quantity'], 'size="4" class="cart_input_'.$products[$i]['id'].'"');
+  $quantityField = zen_draw_input_field('cart_quantity[]', $products[$i]['quantity'], 'size="4" class="cart_input_'.$products[$i]['id'].'" aria-label="' . ARIA_EDIT_QTY_IN_CART . '"');
   $ppe = $products[$i]['final_price'];
   $ppe = zen_round(zen_add_tax($ppe, zen_get_tax_rate($products[$i]['tax_class_id'])), $currencies->get_decimal_places($_SESSION['currency']));
   $ppt = $ppe * $products[$i]['quantity'];

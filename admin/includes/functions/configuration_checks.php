@@ -1,9 +1,8 @@
 <?php
 /**
- * @package admin
- * @copyright Copyright 2003-2018 Zen Cart Development Team
+ * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Drbyte Tue Jan 16 14:28:27 2018 -0500 New in v1.5.6 $
+ * @version $Id: Scott C Wilson 2020 May 02 Modified in v1.5.7 $
  */
  
   /**
@@ -15,7 +14,7 @@
   *     options: per http://php.net/manual/en/function.filter-var.php
   *   @return - NULL; failure results in redirection inline.
   */ 
-  function zen_validate_configuration_entry($variable, $check_string) { 
+  function zen_validate_configuration_entry($variable, $check_string, $config_name = '') { 
      global $messageStack; 
      $data = json_decode($check_string, true); 
      // check inputs - error should be a defined constant in the language files
@@ -33,7 +32,11 @@
             $error_msg = TEXT_DATA_OUT_OF_RANGE;
         }
      } else { 
-        $error_msg = constant($data['error']); 
+        if (!empty($config_name)) { 
+          $error_msg = sprintf(constant($data['error']), $config_name); 
+        } else { 
+          $error_msg = constant($data['error']); 
+        }
      }
      if (defined($data['id'])) { 
         $id = constant($data['id']); 
@@ -50,7 +53,7 @@
      $result = filter_var($variable, $id, $options); 
      if ($result === false) { 
         $messageStack->add_session($error_msg, 'error');
-        zen_redirect(zen_href_link(FILENAME_CONFIGURATION, 'gID=' . $_GET['gID'] . '&cID=' . (int)$_GET['cID'] . '&action=edit'));
+        return false;
      }
-     return; 
+     return true; 
   }

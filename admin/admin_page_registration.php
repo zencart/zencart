@@ -1,10 +1,9 @@
 <?php
 /**
- * @package admin
- * @copyright Copyright 2003-2018 Zen Cart Development Team
+ * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Zen4All Thu Nov 15 22:35:14 2018 +0100 Modified in v1.5.6 $
+ * @version $Id: DrByte 2020 Jun 07 Modified in v1.5.7 $
  */
 require('includes/application_top.php');
 
@@ -30,7 +29,7 @@ if (isset($_POST) && !empty($_POST)) {
   if (isset($_POST['language_key'])) {
     $language_key = zen_db_prepare_input($_POST['language_key']);
   }
-  if (empty($page_key)) {
+  if (empty($language_key)) {
     $error = TRUE;
     $messageStack->add(ERROR_LANGUAGE_KEY_NOT_ENTERED, 'error');
   } elseif (!defined($language_key)) {
@@ -111,21 +110,21 @@ foreach ($menu_titles as $id => $title) {
       <div class="form-group">
           <?php echo zen_draw_label(TEXT_PAGE_KEY, 'page_key', 'class="col-sm-3 control-label"'); ?>
         <div class="col-sm-9 col-md-6">
-            <?php echo zen_draw_input_field('page_key', $page_key, 'class="form-control" id="pageKey"'); ?>
+            <?php echo zen_draw_input_field('page_key', $page_key, 'class="form-control" id="pageKey" required autofocus'); ?>
           <span class="help-block"><?php echo TEXT_EXAMPLE_PAGE_KEY ?></span>
         </div>
       </div>
       <div class="form-group">
           <?php echo zen_draw_label(TEXT_LANGUAGE_KEY, 'language_key', 'class="col-sm-3 control-label"'); ?>
         <div class="col-sm-9 col-md-6">
-            <?php echo zen_draw_input_field('language_key', $language_key, 'class="form-control" id="languageKey"'); ?>
+            <?php echo zen_draw_input_field('language_key', $language_key, 'class="form-control" id="languageKey" required'); ?>
           <span class="help-block"><?php echo TEXT_EXAMPLE_LANGUAGE_KEY ?></span>
         </div>
       </div>
       <div class="form-group">
           <?php echo zen_draw_label(TEXT_MAIN_PAGE, 'main_page', 'class="col-sm-3 control-label"'); ?>
         <div class="col-sm-9 col-md-6">
-            <?php echo zen_draw_input_field('main_page', $main_page, 'class="form-control" id="mainPage"'); ?>
+            <?php echo zen_draw_input_field('main_page', $main_page, 'class="form-control" id="mainPage" required'); ?>
           <span class="help-block"><?php echo TEXT_EXAMPLE_MAIN_PAGE ?></span>
         </div>
       </div>
@@ -139,7 +138,7 @@ foreach ($menu_titles as $id => $title) {
       <div class="form-group">
           <?php echo zen_draw_label(TEXT_MENU_KEY, 'menu_key', 'class="col-sm-3 control-label"'); ?>
         <div class="col-sm-9 col-md-6">
-            <?php echo zen_draw_pull_down_menu('menu_key', $menu_options, $menu_key, 'class="form-control" id="menuKey"'); ?>
+            <?php echo zen_draw_pull_down_menu('menu_key', $menu_options, $menu_key, 'class="form-control" id="menuKey" required'); ?>
         </div>
       </div>
       <div class="form-group">
@@ -150,8 +149,8 @@ foreach ($menu_titles as $id => $title) {
       </div>
       <div class="form-group">
           <?php echo zen_draw_label(TEXT_SORT_ORDER, 'sort_order', 'class="col-sm-3 control-label"'); ?>
-        <div class="col-sm-9 col-md-6">
-            <?php echo zen_draw_input_field('sort_order', $sort_order, 'class="form-control" id="sortOrder"'); ?>
+        <div class="col-sm-3 col-md-1">
+            <?php echo zen_draw_input_field('sort_order', $sort_order, 'class="form-control" id="sortOrder" required', false, 'number'); ?>
         </div>
       </div>
       <div class="row">

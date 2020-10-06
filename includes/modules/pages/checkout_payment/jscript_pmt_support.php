@@ -2,10 +2,9 @@
 /**
  * jscript_pmt_support
  *
- * @package page
  * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Jan 09 2020  New in v1.5.7 $
+ * @version $Id: DrByte 2020 Jan 09 New in v1.5.7 $
  */
 ?>
 <script type="text/javascript">

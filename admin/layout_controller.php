@@ -1,10 +1,9 @@
 <?php
 /**
- * @package admin
- * @copyright Copyright 2003-2019 Zen Cart Development Team
+ * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: mc12345678 2019 May 08 Modified in v1.5.6b $
+ * @version $Id: DrByte 2020 Jun 16 Modified in v1.5.7 $
  */
 require('includes/application_top.php');
 
@@ -182,7 +181,7 @@ if (!empty($_GET['action'])) {
                                                    AND layout_box_name NOT LIKE '%ezpages_bar%')
                                                  ORDER BY  layout_box_location, layout_box_sort_order");
               while (!$column_controller->EOF) {
-//    if (((!$_GET['cID']) || (@$_GET['cID'] == $column_controller->fields['layout_id'])) && (!$bInfo) && (substr($_GET['action'], 0, 3) != 'new')) {
+//    if (((!$_GET['cID']) || ($_GET['cID'] == $column_controller->fields['layout_id'])) && (!$bInfo) && (substr($_GET['action'], 0, 3) != 'new')) {
                 if ((empty($_GET['cID']) || ($_GET['cID'] == $column_controller->fields['layout_id'])) && empty($bInfo) && (empty($action) || substr($action, 0, 3) != 'new')) {
                   $bInfo = new objectInfo($column_controller->fields);
                 }

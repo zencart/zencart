@@ -5,11 +5,10 @@
  * NOTE: Download-by-Redirect often works only on Unix/Linux hosts since
  *       Windows hosts require special setup (and Windows servers couldn't do any symlinking in PHP versions older than 5.3.0)
  *
- * @package page
- * @copyright Copyright 2003-2019 Zen Cart Development Team
+ * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: mc12345678 2019 Apr 30 Modified in v1.5.6b $
+ * @version $Id: DrByte 2020 Jun 16 Modified in v1.5.7 $
  */
 
 // This should be first line of the script:
@@ -145,8 +144,8 @@ $zco_notifier->notify('NOTIFY_DOWNLOAD_BROWSER_DETECTION', array(), $detectedBro
  * Do we need to transform something?
  * An observer class could stamp PDFs or do other pre-processing of the download media.
  */
-$zco_notifier->notify('NOTIFY_DOWNLOAD_BEFORE_START', $_SESSION['customers_host_address'], $service, $origin_filename, $browser_filename, $source_directory, $downloadFilesize, $mime_type, $downloads->fields, $browser_headers);
-$zco_notifier->notify('NOTIFY_DOWNLOAD_READY_TO_START', $_SESSION['customers_host_address'], $service, $origin_filename, $browser_filename, $source_directory, $downloadFilesize, $mime_type, $downloads->fields, $browser_headers);
+$zco_notifier->notify('NOTIFY_DOWNLOAD_BEFORE_START', $_SESSION['customers_host_address'], $service, $origin_filename, $browser_filename, $source_directory, $downloadFilesize, $mime_type, $downloads->fields, $browser_headers_override);
+$zco_notifier->notify('NOTIFY_DOWNLOAD_READY_TO_START', $_SESSION['customers_host_address'], $service, $origin_filename, $browser_filename, $source_directory, $downloadFilesize, $mime_type, $downloads->fields, $browser_headers_override);
 
 
 /**

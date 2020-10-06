@@ -1,10 +1,9 @@
 <?php
 /**
- * @package admin
- * @copyright Copyright 2003-2019 Zen Cart Development Team
+ * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2019 May 15 Modified in v1.5.6b $
+ * @version $Id: DrByte 2020 Jun 16 Modified in v1.5.7 $
  */
 
 use Zencart\FileSystem\FileSystem;
@@ -97,8 +96,8 @@ if (file_exists('includes/defined_paths.php')) {
 /**
  * ignore version-check if INI file setting has been set
  */
-if (file_exists(DIR_FS_ADMIN . 'includes/local/skip_version_check.ini')) {
-    $lines = @file(DIR_FS_ADMIN . 'includes/local/skip_version_check.ini');
+$file = DIR_FS_ADMIN . 'includes/local/skip_version_check.ini';
+if (file_exists($file) && $lines = @file($file)) {
     if (is_array($lines)) {
         foreach($lines as $line) {
             if (substr($line,0,14)=='admin_configure_php_check=') $check_cfg=substr(trim(strtolower(str_replace('admin_configure_php_check=','',$line))),0,3);
@@ -159,9 +158,12 @@ require 'includes/init_includes/init_database.php';
 
 
 $pluginManager = new PluginManager($db);
+$pluginManager->inspectAndUpdate();
 $installedPlugins = $pluginManager->getInstalledPlugins();
 
 $fs = FileSystem::getInstance();
+$fs->setInstalledPlugins($installedPlugins);
+$fs->loadFilesFromPluginsDirectory($installedPlugins, 'admin/includes/extra_configures', '~^[^\._].*\.php$~i');
 $fs->loadFilesFromPluginsDirectory($installedPlugins, 'admin/includes/extra_datafiles', '~^[^\._].*\.php$~i');
 
 foreach ($installedPlugins as $plugin) {

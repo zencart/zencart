@@ -1,10 +1,9 @@
 <?php
 /**
- * @package admin
- * @copyright Copyright 2003-2014 Zen Cart Development Team
+ * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte  Jun 30 2014 Modified in v1.5.4 $
+ * @version $Id: DrByte 2020 Jun 16 Modified in v1.5.7 $
  */
 
   require('includes/application_top.php');
@@ -14,7 +13,7 @@
 
   if (isset($_GET['order'])) $_GET['order'] = (int)$_GET['order'];
   if (isset($_GET['gid'])) $_GET['gid'] = (int)$_GET['gid'];
-  if (!isset($_GET['action'])) $_GET['action'] = '';  
+  if (!isset($_GET['action'])) $_GET['action'] = '';
 
 // bof: find gv for a particular order and set page
   if (!empty($_GET['order'])) {
@@ -164,7 +163,7 @@
   $gv_split = new splitPageResults($_GET['page'], MAX_DISPLAY_SEARCH_RESULTS, $gv_query_raw, $gv_query_numrows);
   $gv_list = $db->Execute($gv_query_raw);
   while (!$gv_list->EOF) {
-    if (((!isset($_GET['gid'])) || (@$_GET['gid'] == $gv_list->fields['unique_id'])) && (!isset($gInfo))) {
+    if ((!isset($_GET['gid']) || $_GET['gid'] == $gv_list->fields['unique_id']) && (!isset($gInfo))) {
       $gInfo = new objectInfo($gv_list->fields);
     }
     if ( (is_object($gInfo)) && ($gv_list->fields['unique_id'] == $gInfo->unique_id) ) {
@@ -202,10 +201,10 @@
 //      $contents[] = array('align' => 'center', 'text' => '<a href="' . zen_href_link('gv_queue.php', 'action=confirmrelease&gid=' . $gInfo->unique_id . '&page=' . $_GET['page'],'NONSSL') . '">' . zen_image_button('button_confirm_red.gif', IMAGE_CONFIRM) . '</a> <a href="' . zen_href_link('gv_queue.php', 'action=cancel&gid=' . $gInfo->unique_id . '&page=' . $_GET['page'],'NONSSL') . '">' . zen_image_button('button_cancel.gif', IMAGE_CANCEL) . '</a>');
       break;
     default:
-      if (!isset($gInfo) || !is_object($gInfo)) { 
+      if (!isset($gInfo) || !is_object($gInfo)) {
         $gInfo = new objectInfo(array(
-                    'unique_id' => 0, 
-                    'date_created' => '0001-01-01 00:00:00', 
+                    'unique_id' => 0,
+                    'date_created' => '0001-01-01 00:00:00',
                     'amount' => '0.0000',
                     )
                     );

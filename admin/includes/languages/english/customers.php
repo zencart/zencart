@@ -1,10 +1,9 @@
 <?php
 /**
- * @package admin
- * @copyright Copyright 2003-2018 Zen Cart Development Team
+ * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Drbyte Mon Nov 12 20:38:09 2018 -0500 Modified in v1.5.6 $
+ * @version $Id: Scott C Wilson 2020 Apr 08 Modified in v1.5.7 $
  */
 
 define('HEADING_TITLE', 'Customers');

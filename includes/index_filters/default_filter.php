@@ -6,12 +6,11 @@
  * index filter for the default product type
  * show the products of a specified manufacturer
  *
- * @package productTypes
- * @copyright Copyright 2003-2019 Zen Cart Development Team
+ * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @todo Need to add/fine-tune ability to override or insert entry-points on a per-product-type basis
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2019 May 13 Modified in v1.5.6b $
+ * @version $Id: DrByte 2019 Jul 16 Modified in v1.5.7 $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');

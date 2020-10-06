@@ -1,10 +1,9 @@
 <?php
 /**
- * @package admin
- * @copyright Copyright 2003-2019 Zen Cart Development Team
+ * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2019 May 26 Modified in v1.5.7 $
+ * @version $Id: DrByte 2020 Jun 17 Modified in v1.5.7 $
  */
 require 'includes/application_top.php';
 $languages = zen_get_languages();
@@ -14,7 +13,7 @@ $currencies = new currencies();
 $product_type = (isset($_POST['products_id']) ? zen_get_products_type($_POST['products_id']) : (isset($_GET['product_type']) ? $_GET['product_type'] : 1));
 
 $action = (isset($_GET['action']) ? $_GET['action'] : '');
-$search_result = isset($_GET['search']) && zen_not_null($_GET['search']) ? true : false;
+$search_result = isset($_GET['search']) && zen_not_null($_GET['search']);
 if (isset($_GET['page'])) {
   $_GET['page'] = (int)$_GET['page'];
 }
@@ -358,7 +357,7 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
     <!-- body //-->
     <div class="container-fluid">
       <h1>
-        <a href="<?php echo zen_catalog_href_link('index', zen_get_path("$current_category_id"), 'NONSSL'); ?>" target="_blank" title="<?php echo BOX_HEADING_CATALOG; ?>"><?php echo zen_image(DIR_WS_IMAGES . 'icon_popup.gif', BOX_HEADING_CATALOG); ?></a>
+        <a href="<?php echo zen_catalog_href_link('index', zen_get_path("$current_category_id"), 'NONSSL'); ?>" rel="noopener" target="_blank" title="<?php echo BOX_HEADING_CATALOG; ?>"><?php echo zen_image(DIR_WS_IMAGES . 'icon_popup.gif', BOX_HEADING_CATALOG); ?></a>
         <?php echo HEADING_TITLE; ?>&nbsp;-&nbsp;<?php echo zen_output_generated_category_path($current_category_id); ?>
       </h1>
       <?php if ($action == '') { ?>
@@ -554,40 +553,38 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
           }
 
           $categories_count = 0;
-          if (isset($_GET['search'])) {
-            $search = zen_db_prepare_input($_GET['search']);
+          $sql = "SELECT c.categories_id, cd.categories_name, c.parent_id, c.sort_order, c.categories_status
+                  FROM " . TABLE_CATEGORIES . " c
+                  LEFT JOIN " . TABLE_CATEGORIES_DESCRIPTION . " cd ON c.categories_id = cd.categories_id
+                    AND cd.language_id = " . (int)$_SESSION['languages_id'];
 
-            $categories = $db->Execute("SELECT c.categories_id, cd.categories_name, cd.categories_description, c.categories_image,
-                                               c.parent_id, c.sort_order, c.date_added, c.last_modified, c.categories_status
-                                        FROM " . TABLE_CATEGORIES . " c, " . TABLE_CATEGORIES_DESCRIPTION . " cd
-                                        WHERE c.categories_id = cd.categories_id
-                                        AND cd.language_id = " . (int)$_SESSION['languages_id'] . "
-                                        AND cd.categories_name like '%" . zen_db_input($search) . "%'" .
-                    $order_by);
+          if (isset($_GET['search'])) {
+              $sql .= " WHERE cd.categories_name like '%:search%'";
+              $sql = $db->bindVars($sql, ':search', $_GET['search'], 'noquotestring');
           } else {
-            $categories = $db->Execute("SELECT c.categories_id, cd.categories_name, cd.categories_description, c.categories_image,
-                                               c.parent_id, c.sort_order, c.date_added, c.last_modified, c.categories_status
-                                        FROM " . TABLE_CATEGORIES . " c, " . TABLE_CATEGORIES_DESCRIPTION . " cd
-                                        WHERE c.parent_id = " . (int)$current_category_id . "
-                                        AND c.categories_id = cd.categories_id
-                                        AND cd.language_id = " . (int)$_SESSION['languages_id'] .
-                    $order_by);
+              $sql .= " WHERE c.parent_id = :category";
+              $sql = $db->bindVars($sql, ':category', $current_category_id, 'integer');
           }
 
-          $show_prod_labels = ($search_result || $categories->EOF) ? true : false;
+          $sql .= $order_by;
+
+          $categories = $db->Execute($sql);
+
+          $show_prod_labels = ($search_result || $categories->EOF);
           ?>
-          <table class="table table-striped">
+          <table id="categories-products-table" class="table table-striped">
             <thead>
               <tr>
                 <th class="text-right shrink"><?php echo TABLE_HEADING_ID; ?></th>
-                <th><?php echo TABLE_HEADING_CATEGORIES_PRODUCTS; ?></th>
+                <th colspan="2"><?php echo TABLE_HEADING_CATEGORIES_PRODUCTS; ?></th>
                 <?php if ($show_prod_labels) { ?>
-                  <th class="hidden-sm hidden-xs"><?php echo TABLE_HEADING_MODEL; ?></th><?php }; ?>
+                  <th class="hidden-sm hidden-xs"><?php echo TABLE_HEADING_MODEL; ?></th>
                 <th class="text-right hidden-sm hidden-xs"><?php echo TABLE_HEADING_PRICE; ?></th>
+                <?php }; ?>
                 <?php if ($show_prod_labels || SHOW_COUNTS_ADMIN == 'true') { ?>
                   <th class="text-right hidden-sm hidden-xs"><?php echo TABLE_HEADING_QUANTITY; ?></th>
                 <?php }; ?>
-                <th class="text-right hidden-sm hidden-xs"><?php echo TABLE_HEADING_STATUS; ?></th>
+                <th class="text-right"><?php echo TABLE_HEADING_STATUS; ?></th>
                 <?php
                 if ($action == '') {
                   ?>
@@ -613,14 +610,15 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
                 $cInfo = new objectInfo($category);
               }
               ?>
-              <tr>
+              <tr class="category-listing-row" data-cid="<?php echo $category['categories_id']; ?>">
                 <td class="text-right"><?php echo $category['categories_id']; ?></td>
-                <td>
+                <td colspan="2">
                   <a href="<?php echo zen_href_link(FILENAME_CATEGORY_PRODUCT_LISTING, zen_get_path($category['categories_id'])); ?>" class="folder"><i class="fa fa-lg fa-folder"></i>&nbsp;<strong><?php echo $category['categories_name']; ?></strong></a>
                 </td>
                 <?php if ($show_prod_labels) { ?>
-                  <td class="hidden-sm hidden-xs">&nbsp;</td><?php }; ?>
+                  <td class="hidden-sm hidden-xs">&nbsp;</td>
                 <td class="text-right hidden-sm hidden-xs"><?php echo zen_get_products_sale_discount('', $category['categories_id'], true); ?></td>
+                <?php }; ?>
                 <?php if ($search_result || SHOW_COUNTS_ADMIN == 'true') { ?>
                   <td class="text-right hidden-sm hidden-xs">
                     <?php
@@ -633,7 +631,7 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
                     ?>
                   </td>
                 <?php } ?>
-                <td class="text-right hidden-sm hidden-xs">
+                <td class="text-right dataTableButtonCell">
                   <?php if (SHOW_CATEGORY_PRODUCTS_LINKED_STATUS == 'true' && zen_get_products_to_categories($category['categories_id'], true, 'products_active') == 'true') { ?>
                     <i class="fa fa-square fa-lg txt-linked" aria-hidden="true" title="<?php echo IMAGE_ICON_LINKED; ?>"></i>
                   <?php } ?>
@@ -647,7 +645,7 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
                 if ($action == '') {
                   ?>
                   <td class="text-right hidden-sm hidden-xs"><?php echo $category['sort_order']; ?></td>
-                  <td class="text-right">
+                  <td class="text-right dataTableButtonCell">
                     <div class="btn-group">
                       <a href="<?php echo zen_href_link(FILENAME_CATEGORIES, 'cPath=' . $cPath . '&cID=' . $category['categories_id'] . '&action=edit_category' . ($search_result ? '&search=' . $_GET['search'] : '')); ?>" class="btn btn-sm btn-default btn-edit" role="button" title="<?php echo ICON_EDIT; ?>">
                         <i class="fa fa-pencil fa-lg" aria-hidden="true"></i>
@@ -699,55 +697,28 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
             }
 
             $products_count = 0;
+            $products_query_raw = "SELECT p.products_type, p.products_id, pd.products_name, p.products_quantity,
+                                          p.products_price, p.products_status, p.products_model, p.products_sort_order,
+                                          p.master_categories_id
+                                   FROM " . TABLE_PRODUCTS . " p
+                                   LEFT JOIN " . TABLE_PRODUCTS_DESCRIPTION . " pd USING (products_id)";
+
+            $where = " WHERE pd.language_id = " . (int)$_SESSION['languages_id'];
+
             if ($search_result && $action != 'edit_category') {
-// fix duplicates and force search to use master_categories_id
-              /*
-                $products_query_raw = ("select p.products_type, p.products_id, pd.products_name, p.products_quantity,
-                p.products_image, p.products_price, p.products_date_added,
-                p.products_last_modified, p.products_date_available,
-                p.products_status, p2c.categories_id,
-                p.products_model,
-                p.products_quantity_order_min, p.products_quantity_order_units, p.products_priced_by_attribute,
-                p.product_is_free, p.product_is_call, p.products_quantity_mixed, p.product_is_always_free_shipping,
-                p.products_quantity_order_max, p.products_sort_order
-                from " . TABLE_PRODUCTS . " p, " . TABLE_PRODUCTS_DESCRIPTION . " pd, "
-                . TABLE_PRODUCTS_TO_CATEGORIES . " p2c
-                where p.products_id = pd.products_id
-                and pd.language_id = '" . (int)$_SESSION['languages_id'] . "'
-                and p.products_id = p2c.products_id
-                and (
-                pd.products_name like '%" . zen_db_input($_GET['search']) . "%'
-                or pd.products_description like '%" . zen_db_input($_GET['search']) . "%'
-                or p.products_model like '%" . zen_db_input($_GET['search']) . "%')" .
-                $order_by);
-               */
-              $products_query_raw = ("SELECT p.products_type, p.products_id, pd.products_name, p.products_quantity, p.products_image, p.products_price,
-                                             p.products_date_added, p.products_last_modified, p.products_date_available, p.products_status, p2c.categories_id,
-                                             p.products_model, p.products_quantity_order_min, p.products_quantity_order_units, p.products_priced_by_attribute,
-                                             p.product_is_free, p.product_is_call, p.products_quantity_mixed, p.product_is_always_free_shipping,
-                                             p.products_quantity_order_max, p.products_sort_order, p.master_categories_id
-                                      FROM " . TABLE_PRODUCTS . " p
-                                      LEFT JOIN " . TABLE_PRODUCTS_DESCRIPTION . " pd ON pd.products_id = p.products_id AND pd.language_id = " . (int)$_SESSION['languages_id'] . "
-                                      LEFT JOIN " . TABLE_PRODUCTS_TO_CATEGORIES . " p2c ON p2c.products_id = p.products_id
-                                      WHERE p2c.categories_id = p.master_categories_id
-                                      AND (pd.products_name LIKE '%" . zen_db_input($_GET['search']) . "%'
-                                        OR pd.products_description LIKE '%" . zen_db_input($_GET['search']) . "%'
-                                        OR p.products_id = '" . zen_db_input($_GET['search']) . "'
-                                        OR p.products_model like '%" . zen_db_input($_GET['search']) . "%'
-                                        )
-                                      " . $order_by);
+                $where .= "  AND (pd.products_name LIKE '%:search%'
+                              OR pd.products_description LIKE '%:search%'
+                              OR p.products_id = ':search'
+                              OR p.products_model LIKE '%:search%'
+                            ) ";
+                $where = $db->bindVars($where, ':search', $_GET['search'], 'noquotestring');
             } else {
-              $products_query_raw = ("SELECT p.products_type, p.products_id, pd.products_name, p.products_quantity, p.products_image, p.products_price,
-                                             p.products_date_added, p.products_last_modified, p.products_date_available, p.products_status, p.products_model,
-                                             p.products_quantity_order_min, p.products_quantity_order_units, p.products_priced_by_attribute, p.product_is_free,
-                                             p.product_is_call, p.products_quantity_mixed, p.product_is_always_free_shipping, p.products_quantity_order_max,
-                                             p.products_sort_order
-                                      FROM " . TABLE_PRODUCTS . " p
-                                      LEFT JOIN " . TABLE_PRODUCTS_DESCRIPTION . " pd ON pd.products_id = p.products_id AND pd.language_id = " . (int)$_SESSION['languages_id'] . "
-                                      LEFT JOIN " . TABLE_PRODUCTS_TO_CATEGORIES . " p2c ON p2c.products_id = p.products_id
-                                      WHERE p2c.categories_id = " . (int)$current_category_id .
-                      $order_by);
+                $products_query_raw.= " LEFT JOIN " . TABLE_PRODUCTS_TO_CATEGORIES . " p2c USING (products_id) ";
+                $where .= " AND p2c.categories_id=" . (int)$current_category_id;
             }
+
+            $products_query_raw .= $where . $order_by;
+
 // Split Page
 // reset page when page is unknown
             if ((isset($_GET['page']) && ($_GET['page'] == '1' || $_GET['page'] == '')) && isset($_GET['pID']) && $_GET['pID'] != '') {
@@ -778,7 +749,7 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
               $products_count++;
 // Get categories_id for product if search
               if (isset($_GET['search'])) {
-                $cPath = $product['categories_id'];
+                $cPath = $product['master_categories_id'];
               }
 
               if ((!isset($_GET['pID']) && !isset($_GET['cID']) || (isset($_GET['pID']) && ($_GET['pID'] == $product['products_id']))) && !isset($pInfo) && !isset($cInfo) && (substr($action, 0, 3) != 'new')) {
@@ -787,13 +758,21 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
 
               $type_handler = $zc_products->get_handler($product['products_type']);
               ?>
-              <tr>
+              <tr class="product-listing-row" data-pid="<?php echo $product['products_id']; ?>">
                 <td class="text-right"><?php echo $product['products_id']; ?></td>
-                <td><a href="<?php echo zen_catalog_href_link($type_handler . '_info', 'cPath=' . $cPath . '&products_id=' . $product['products_id'] . '&language=' . $_SESSION['languages_code'] . '&product_type=' . $product['products_type']); ?>" target="_blank"><?php echo zen_image(DIR_WS_ICONS . 'preview.gif', ICON_PREVIEW); ?></a>&nbsp;<a href="<?php echo zen_href_link(FILENAME_PRODUCT, 'cPath=' . $cPath . '&product_type=' . $product['products_type'] . '&pID=' . $product['products_id'] . '&action=new_product' . (isset($_GET['search']) ? '&search=' . $_GET['search'] : '')); ?>" title="<?php echo IMAGE_EDIT; ?>" style="text-decoration: none"><?php echo $product['products_name']; ?></a></td>
+                <td class="dataTableButtonCell" style="width:16px;"><a href="<?php echo zen_catalog_href_link($type_handler . '_info', 'cPath=' . $cPath . '&products_id=' . $product['products_id'] . '&language=' . $_SESSION['languages_code'] . '&product_type=' . $product['products_type']); ?>" rel="noopener" target="_blank">
+                        <?php echo zen_image(DIR_WS_ICONS . 'preview.gif', ICON_PREVIEW); ?>
+                    </a>
+                </td>
+                <td>
+                    <a href="<?php echo zen_href_link(FILENAME_PRODUCT, 'cPath=' . $cPath . '&product_type=' . $product['products_type'] . '&pID=' . $product['products_id'] . '&action=new_product' . (isset($_GET['search']) ? '&search=' . $_GET['search'] : '')); ?>" title="<?php echo IMAGE_EDIT; ?>" style="text-decoration: none">
+                        <?php echo $product['products_name']; ?>
+                    </a>
+                </td>
                 <td class="hidden-sm hidden-xs"><?php echo $product['products_model']; ?></td>
                 <td class="text-right hidden-sm hidden-xs"><?php echo zen_get_products_display_price($product['products_id']); ?></td>
                 <td class="text-right hidden-sm hidden-xs"><?php echo $product['products_quantity']; ?></td>
-                <td class="text-right hidden-sm hidden-xs text-nowrap">
+                <td class="text-right text-nowrap dataTableButtonCell">
                   <?php
                   $additional_icons = '';
                   $zco_notifier->notify('NOTIFY_ADMIN_PROD_LISTING_ADD_ICON', $product, $additional_icons);
@@ -818,7 +797,7 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
                 </td>
                 <?php if ($action == '') { ?>
                   <td class="text-right hidden-sm hidden-xs"><?php echo $product['products_sort_order']; ?></td>
-                  <td class="text-right">
+                  <td class="text-right dataTableButtonCell">
                     <div class="btn-group">
                       <a href="<?php echo zen_href_link(FILENAME_PRODUCT, 'cPath=' . $cPath . '&product_type=' . $product['products_type'] . '&pID=' . $product['products_id'] . '&action=new_product' . (isset($_GET['search']) ? '&search=' . $_GET['search'] : '')); ?>" class="btn btn-sm btn-default btn-edit" role="button" title="<?php echo IMAGE_EDIT_PRODUCT; ?>">
                         <i class="fa fa-pencil fa-lg" aria-hidden="true"></i>
@@ -1033,8 +1012,8 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
         $cPath_back = (zen_not_null($cPath_back)) ? 'cPath=' . $cPath_back . '&' : '';
         ?>
         <div class="row">
-          <div class="col-md-6"><?php echo TEXT_CATEGORIES . '&nbsp;' . $categories_count . '<br>' . TEXT_PRODUCTS . '&nbsp;' . $products_count; ?></div>
-          <div class="col-md-6 text-right">
+          <div class="col-md-3"><?php echo TEXT_CATEGORIES . '&nbsp;' . $categories_count . '<br>' . TEXT_PRODUCTS . '&nbsp;' . $products_count; ?></div>
+          <div class="col-md-9 text-right">
             <?php if (sizeof($cPath_array) > 0) { ?>
               <div class="col-sm-3">
                 <a href="<?php echo zen_href_link(FILENAME_CATEGORY_PRODUCT_LISTING, $cPath_back . 'cID=' . $current_category_id); ?>" class="btn btn-default" role="button"><?php echo IMAGE_BACK; ?></a>
@@ -1050,7 +1029,7 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
 
             <?php if ($zc_skip_products == false) { ?>
               <?php echo zen_draw_form('newproduct', FILENAME_PRODUCT, 'action=new_product', 'post', 'class="form-horizontal"'); ?>
-              <?php echo (empty($_GET['search']) ? '<div class="col-sm-3"><button type="submit" class="btn btn-primary">' . IMAGE_NEW_PRODUCT . '</button></div>' : ''); ?>
+              <?php echo (empty($_GET['search']) ? '<div class="col-xs-6 col-sm-2"><button type="submit" class="btn btn-primary">' . IMAGE_NEW_PRODUCT . '</button></div>' : ''); ?>
               <?php
               // Query product types based on the ones this category is restricted to
               $sql = "SELECT ptc.product_type_id as type_id, pt.type_name
@@ -1076,7 +1055,7 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
               }
               ?>
               <?php
-              echo '<div class="col-sm-6">' . zen_draw_pull_down_menu('product_type', $product_restrict_types_array, '', 'class="form-control"') . '</div>';
+              echo '<div class="col-xs-6 col-sm-4 col-md-3">' . zen_draw_pull_down_menu('product_type', $product_restrict_types_array, '', 'class="form-control"') . '</div>';
               echo zen_hide_session_id();
               echo zen_draw_hidden_field('cPath', $cPath);
               echo zen_draw_hidden_field('action', 'new_product');
@@ -1112,6 +1091,23 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
         </div>
       <?php } ?>
     </div>
+    <!--  enable on-page script tools -->
+    <script>
+        <?php
+        $categorySelectLink = str_replace('&amp;', '&', zen_href_link(FILENAME_CATEGORY_PRODUCT_LISTING, zen_get_all_get_params(array('cPath', 'action')) . "cPath=[*]"));
+        $productEditLink = str_replace('&amp;', '&', zen_href_link(FILENAME_PRODUCT, zen_get_all_get_params(array('pID', 'action')) . "pID=[*]&action=new_product"));
+        ?>
+        jQuery(function () {
+            const categorySelectlink = '<?php echo $categorySelectLink; ?>';
+            const productEditLink = '<?php echo $productEditLink; ?>';
+            jQuery("tr.category-listing-row td").not('.dataTableButtonCell').on('click', (function() {
+                window.location.href = categorySelectlink.replace('[*]', jQuery(this).parent().attr('data-cid'));
+            })).css('cursor', 'pointer');
+            jQuery("tr.product-listing-row td").not('.dataTableButtonCell').on('click', (function() {
+                window.location.href = productEditLink.replace('[*]', jQuery(this).parent().attr('data-pid'));
+            })).css('cursor', 'pointer');
+        })
+    </script>
     <!-- footer //-->
     <?php require DIR_WS_INCLUDES . 'footer.php'; ?>
     <!-- footer_eof //-->

@@ -5,7 +5,7 @@
  * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id:  Modified in v1.5.7 $
+ * @version $Id: DrByte 2020 Apr 07 Modified in v1.5.7 $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
@@ -14,7 +14,6 @@ if (!defined('IS_ADMIN_FLAG')) {
  * Payment Class.
  * This class interfaces with payment modules
  *
- * @package classes
  */
 class payment extends base {
   var $modules, $selected_module, $doesCollectsCardDataOnsite;
@@ -268,7 +267,7 @@ class payment extends base {
     if (!$GLOBALS[$this->selected_module]->enabled) return;
     $function = __FUNCTION__;
     if (!method_exists($GLOBALS[$this->selected_module], $function)) return;
-    return $GLOBALS[$this->selected_module]->after_order_create($function);
+    return $GLOBALS[$this->selected_module]->$function($zf_order_id);
   }
 
   function admin_notification($zf_order_id) {
@@ -277,7 +276,7 @@ class payment extends base {
     if (!$GLOBALS[$this->selected_module]->enabled) return;
     $function = __FUNCTION__;
     if (!method_exists($GLOBALS[$this->selected_module], $function)) return;
-    return $GLOBALS[$this->selected_module]->admin_notification($function);
+    return $GLOBALS[$this->selected_module]->$function($zf_order_id);
   }
 
   function get_error() {

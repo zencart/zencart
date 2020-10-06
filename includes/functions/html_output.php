@@ -3,11 +3,10 @@
  * html_output.php
  * HTML-generating functions used throughout the core
  *
- * @package functions
- * @copyright Copyright 2003-2019 Zen Cart Development Team
+ * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: mc12345678 2019 Apr 30 Modified in v1.5.6b $
+ * @version $Id: mc12345678 2020 May 17 Modified in v1.5.7 $
  */
 
 /*
@@ -754,8 +753,10 @@ function zen_draw_pull_down_menu($name, $values, $default = '', $parameters = ''
     $countriesAtTopOfList[] = STORE_COUNTRY;
     // IF YOU WANT TO ADD MORE DEFAULTS TO THE TOP OF THIS LIST, SIMPLY ENTER THEIR NUMBERS HERE.
     // Duplicate more lines as needed
-    // Example: Canada is 108, so use 108 as shown:
-    //$countriesAtTopOfList[] = 108;
+    // Example: Canada is 38, so use 38 as shown:
+    //$countriesAtTopOfList[] = 38;
+    // United Kingdom is 222, so would use 222 as shown:
+    //$countriesAtTopOfList[] = 222;
 
     //process array of top-of-list entries:
     foreach ($countriesAtTopOfList as $key=>$val) {
@@ -792,7 +793,14 @@ function zen_draw_pull_down_menu($name, $values, $default = '', $parameters = ''
   }
 ////
 // output label for input fields
-  function zen_draw_label($text, $for, $parameters = ''){
-    $label = '<label for="' . $for . '" ' . $parameters . '>' . $text . '</label>';
+/**
+ * @param string $text
+ * @param string $for
+ * @param string $parameters
+ * @return string
+ */
+function zen_draw_label($text, $for, $parameters = '')
+{
+    $label = '<label for="' . $for . '"' . (!empty($parameters) ? ' ' . $parameters : '') . '>' . $text . '</label>';
     return $label;
-  }
+}

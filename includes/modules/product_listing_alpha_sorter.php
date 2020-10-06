@@ -2,11 +2,10 @@
 /**
  * product_listing_alpha_sorter module
  *
- * @package modules
- * @copyright Copyright 2003-2019 Zen Cart Development Team
+ * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Drbyte Tue Sep 11 10:57:58 2018 -0400 Modified in v1.5.6 $
+ * @version $Id: DrByte 2020 May 16 Modified in v1.5.7 $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
@@ -30,8 +29,9 @@ if (!defined('IS_ADMIN_FLAG')) {
     $zco_notifier->notify('NOTIFY_PRODUCT_LISTING_ALPHA_SORTER_SELECTLIST', isset($prefix) ? $prefix : '', $letters_list);
 
     if (TEXT_PRODUCTS_LISTING_ALPHA_SORTER != '') {
-      echo '<label class="inputLabel">' . TEXT_PRODUCTS_LISTING_ALPHA_SORTER . '</label>' . zen_draw_pull_down_menu('alpha_filter_id', $letters_list, (isset($_GET['alpha_filter_id']) ? $_GET['alpha_filter_id'] : ''), 'onchange="this.form.submit()"');
+        echo '<label class="inputLabel" for="select-alpha_filter_id">' . TEXT_PRODUCTS_LISTING_ALPHA_SORTER . '</label>';
     } else {
-      echo zen_draw_pull_down_menu('alpha_filter_id', $letters_list, (isset($_GET['alpha_filter_id']) ? $_GET['alpha_filter_id'] : ''), 'onchange="this.form.submit()"');
+        echo '<label class="inputLabel sr-only" for="select-alpha_filter_id">' . TEXT_PRODUCTS_LISTING_ALPHA_SORTER_NAMES . '</label>';
     }
+    echo zen_draw_pull_down_menu('alpha_filter_id', $letters_list, (isset($_GET['alpha_filter_id']) ? $_GET['alpha_filter_id'] : ''), 'onchange="this.form.submit()"');
   }

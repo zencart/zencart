@@ -1,10 +1,9 @@
 <?php
 /**
- * @package admin
- * @copyright Copyright 2003-2010 Zen Cart Development Team
+ * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: options_values_manager.php 15883 2010-04-11 16:41:26Z wilt $
+ * @version $Id: Scott C Wilson 2020 Apr 07 Modified in v1.5.7 $
  */
 
 define('HEADING_TITLE_OPT', 'Product Options');

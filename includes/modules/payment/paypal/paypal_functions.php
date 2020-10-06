@@ -2,12 +2,11 @@
 /**
  * functions used by payment module class for Paypal IPN payment method
  *
- * @package paymentMethod
- * @copyright Copyright 2003-2019 Zen Cart Development Team
+ * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @copyright Portions Copyright 2004 DevosC.com
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2019 Mar 26 Modified in v1.5.6b $
+ * @version $Id: DrByte 2020 Jun 22 Modified in v1.5.7 $
  */
 
 // Functions for paypal processing
@@ -320,7 +319,7 @@
  * Create order-history record from IPN data
  */
   function ipn_create_order_history_array($insert_id) {
-    $sql_data_array = array ('paypal_ipn_id' => $insert_id,
+    $sql_data_array = array ('paypal_ipn_id' => (int)$insert_id,
                              'txn_id' => $_POST['txn_id'],
                              'parent_txn_id' => $_POST['parent_txn_id'],
                              'payment_status' => $_POST['payment_status'],
@@ -386,6 +385,7 @@
   }
   function getRequestBodyContents(&$handle) {
     if ($handle) {
+      $line = '';
       while(!feof($handle)) {
         $line .= @fgets($handle, 1024);
       }
@@ -640,11 +640,11 @@
 /**
  * Write order-history update to ZC tables denoting the update supplied by the IPN
  */
-  function ipn_update_orders_status_and_history($ordersID, $new_status = 1, $txn_type) {
+  function ipn_update_orders_status_and_history($ordersID, $new_status = 1, $txn_type = '') {
     global $db;
-    
+
     ipn_debug_email('IPN NOTICE :: Updating order #' . (int)$ordersID . ' to status: ' . (int)$new_status . ' (txn_type: ' . $txn_type . ')');
-    
+
     $comments = 'PayPal status: ' . $_POST['payment_status'] . ' ' . ' @ ' . $_POST['payment_date'] . (($_POST['parent_txn_id'] !='') ? "\n" . ' Parent Trans ID:' . $_POST['parent_txn_id'] : '') . "\n" . ' Trans ID:' . $_POST['txn_id'] . "\n" . ' Amount: ' . $_POST['mc_gross'] . ' ' . $_POST['mc_currency'];
     zen_update_orders_history($ordersID, $comments, null, $new_status, 0);
 
@@ -1001,13 +1001,3 @@
     return $logfilename;
   }
 
-if (!function_exists('curl_setopt_array')) {
-  function curl_setopt_array(&$ch, $curl_options) {
-    foreach ($curl_options as $option => $value) {
-      if (!curl_setopt($ch, $option, $value)) {
-        return FALSE;
-      }
-    }
-    return TRUE;
-  }
-}

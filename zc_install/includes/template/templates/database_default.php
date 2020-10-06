@@ -1,9 +1,8 @@
 <?php
 /**
- * @package Installer
- * @copyright Copyright 2003-2016 Zen Cart Development Team
+ * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: zcwilt  Wed Sep 23 20:04:38 2015 +0100 New in v1.5.5 $
+ * @version $Id: Zcwilt 2020 May 19 Modified in v1.5.7 $
  */
 ?>
 <?php require(DIR_FS_INSTALL . DIR_WS_INSTALL_TEMPLATE . 'partials/partial_modal_progress_bar.php'); ?>
@@ -16,7 +15,7 @@
 
 <form id="db_setup" name="db_setup" method="post" action="index.php?main_page=admin_setup" data-abide="ajax">
   <input type="hidden" name="action" value="process" >
-  <input type="hidden" name="lng" value="<?php echo $lng; ?>" >
+  <input type="hidden" name="lng" value="<?php echo $installer_lng; ?>" >
   <?php foreach ($_POST as $key=>$value) {  ?>
   <?php if ($key != 'action') { ?>
     <input type="hidden" name="<?php echo $key; ?>" value="<?php echo $value; ?>" >
@@ -68,12 +67,13 @@
         <label class="inline" for="demoData"><a href="#" class="hasHelpText" id="DEMODATA"><?php echo TEXT_DATABASE_SETUP_LOAD_DEMO; ?></a></label>
       </div>
       <div class="small-9 columns">
-        <input type="checkbox" name="demoData" id="demoData" tabindex="5"><label class="inline" for="demoData"><?php echo TEXT_DATABASE_SETUP_LOAD_DEMO_DESCRIPTION; ?></label>
+        <input type="checkbox" name="demoData" id="demoData" tabindex="5" <?php echo $install_demo_data ? 'checked' : ''; ?>><label class="inline" for="demoData"><?php echo TEXT_DATABASE_SETUP_LOAD_DEMO_DESCRIPTION; ?></label>
       </div>
     </div>
   </fieldset>
   <fieldset>
     <legend><?php echo TEXT_DATABASE_SETUP_ADVANCED_SETTINGS; ?></legend>
+    <input type="hidden" name="db_charset" value="utf8mb4">
     <div class="row">
       <div class="small-3 columns">
         <label class="inline" for="db_prefix"><a href="#" class="hasHelpText" id="DBPREFIX"><?php echo TEXT_DATABASE_SETUP_DB_PREFIX; ?></a></label>
@@ -213,9 +213,9 @@ $(function()
         var textId = $(this).attr('id');
         $.ajax({
           type: "POST",
-           timeout: 100000,
+          timeout: 100000,
           dataType: "json",
-          data: 'id='+textId,
+          data: 'id='+textId + '&lng=<?php echo $installer_lng; ?>',
           url: '<?php echo "ajaxGetHelpText.php"; ?>',
            success: function(data) {
              $('#modal-help-title').html(data.title);

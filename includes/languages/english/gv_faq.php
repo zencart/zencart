@@ -1,16 +1,15 @@
 <?php
 /**
- * @package languageDefines
- * @copyright Copyright 2003-2019 Zen Cart Development Team
+ * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Scott C Wilson 2019 Jan 15 Modified in v1.5.6b $
+ * @version $Id: Steve 2020 May 27 Modified in v1.5.7 $
  */
 
 define('NAVBAR_TITLE', TEXT_GV_NAME . ' FAQ');
 define('HEADING_TITLE', TEXT_GV_NAME . ' FAQ');
 
-define('TEXT_INFORMATION', '<a name="Top"></a>
+define('TEXT_INFORMATION', '<a id="Top"></a>
   <a href="'.zen_href_link(FILENAME_GV_FAQ,'faq_item=1','NONSSL').'">Purchasing ' . TEXT_GV_NAMES . '</a><br />
   <a href="'.zen_href_link(FILENAME_GV_FAQ,'faq_item=2','NONSSL').'">How to send ' . TEXT_GV_NAMES . '</a><br />
   <a href="'.zen_href_link(FILENAME_GV_FAQ,'faq_item=3','NONSSL').'">Buying with ' . TEXT_GV_NAMES . '</a><br />
@@ -18,7 +17,7 @@ define('TEXT_INFORMATION', '<a name="Top"></a>
   <a href="'.zen_href_link(FILENAME_GV_FAQ,'faq_item=5','NONSSL').'">When problems occur</a><br />
 ');
 if (empty($_GET['faq_item'])) {
-  $_GET['faq_item'] == '0';
+  $_GET['faq_item'] = '0';
 }
 switch ($_GET['faq_item']) {
   case '1':

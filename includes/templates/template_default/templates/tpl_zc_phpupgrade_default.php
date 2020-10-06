@@ -10,7 +10,7 @@
  *
  * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @license https://www.zen-cart.com/license/2_0.txt GNU Public License v2.0
- * @version $Id: New in v1.5.7 $
+ * @version $Id: DrByte 2020 May 16 New in v1.5.7 $
  */
 $relPath = (file_exists('includes/templates/template_default/images/logo.gif')) ? '' : '../';
 include 'includes/version.php';
@@ -224,7 +224,7 @@ include 'includes/version.php';
         <p>Your PHP version (<?php echo PHP_MAJOR_VERSION . '.' . PHP_MINOR_VERSION;?>) is too old to support modern PHP syntax conventions such as short-array-syntax.</p>
         <p>You are currently using Zen Cart version <?php echo PROJECT_VERSION_MAJOR . '.' . PROJECT_VERSION_MINOR; ?>.</p>
         <p>In order to proceed with Zen Cart you must upgrade your PHP version.</p>
-        <p>We recommend using PHP 7.4 or newer. <a href="https://www.zen-cart.com/requirements" target="_blank">Please refer to our website</a> for the PHP versions supported.</p>
+        <p>We recommend using PHP 7.4 or newer. <a href="https://www.zen-cart.com/requirements" rel="noopener" target="_blank">Please refer to our website</a> for the PHP versions supported.</p>
         <br><br>
     </div>
     <section id="footerBlock">
@@ -250,7 +250,7 @@ include 'includes/version.php';
           <br><br>
           Zen Cart&reg;
           <br>
-          <a href="https://www.zen-cart.com" target="_blank">www.zen-cart.com</a>
+          <a href="https://www.zen-cart.com" rel="noopener" target="_blank">www.zen-cart.com</a>
         </p>
       </div>
     </section> <!-- End footerBlock //-->

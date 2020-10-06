@@ -1,9 +1,8 @@
 <?php
 /**
- * @package Installer
- * @copyright Copyright 2003-2016 Zen Cart Development Team
+ * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Merge: 7837e74 7d692ea Author: Chris Brown <drbyte@zen-cart.com> New in v1.5.5 $
+ * @version $Id: Zcwilt 2020 May 19 Modified in v1.5.7 $
  */
 ?>
 
@@ -22,7 +21,7 @@
 
 <form id="admin_setup" name="admin_setup" method="post" action="index.php?main_page=completion" data-abide>
   <input type="hidden" name="action" value="process" >
-  <input type="hidden" name="lng" value="<?php echo $lng; ?>" >
+  <input type="hidden" name="lng" value="<?php echo $installer_lng; ?>" >
   <?php foreach ($_POST as $key=>$value) {  ?>
     <?php if ($key != 'action') { ?>
     <input type="hidden" name="<?php echo $key; ?>" value="<?php echo $value; ?>" >
@@ -101,9 +100,9 @@ $(function()
         var textId = $(this).attr('id');
         $.ajax({
           type: "POST",
-           timeout: 100000,
+          timeout: 100000,
           dataType: "json",
-          data: 'id='+textId,
+          data: 'id='+textId + '&lng=<?php echo $installer_lng; ?>',
           url: '<?php echo "ajaxGetHelpText.php"; ?>',
            success: function(data) {
              $('#modal-help-title').html(data.title);

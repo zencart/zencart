@@ -2,13 +2,12 @@
 /**
  * Page Template
  *
- * This page is auto-displayed if the configure.php file cannot be read properly. 
+ * This page is auto-displayed if the configure.php file cannot be read properly.
  * It is intended simply to recommend clicking on the zc_install link to begin installation.
  *
- * @package templateSystem
- * @copyright Copyright 2003-2019 Zen Cart Development Team
+ * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @license https://www.zen-cart.com/license/2_0.txt GNU Public License v2.0
- * @version $Id: DrByte 2019 Jan 04 Modified in v1.5.6a $
+ * @version $Id: DrByte 2020 May 16 Modified in v1.5.7 $
  */
 $relPath = (file_exists('includes/templates/template_default/images/logo.gif')) ? '' : '../';
 $instPath = (file_exists('zc_install/index.php')) ? 'zc_install/index.php' : (file_exists('../zc_install/index.php') ? '../zc_install/index.php' : '');
@@ -35,7 +34,7 @@ $docsPath = (file_exists('docs/index.html')) ? 'docs/index.html' : (file_exists(
         	margin: 10px auto;
         	padding: 0 2rem;
         }
-        
+
         h1 {
         	font-size: 2.25rem;
         	font-weight: 100;
@@ -43,7 +42,7 @@ $docsPath = (file_exists('docs/index.html')) ? 'docs/index.html' : (file_exists(
         	letter-spacing: 1px;
         	margin: 3rem 0 1.5rem;
         }
-        
+
         h2 {
         	font-size: 2rem;
         	border-bottom: 1px solid #e3e3e3;
@@ -51,7 +50,7 @@ $docsPath = (file_exists('docs/index.html')) ? 'docs/index.html' : (file_exists(
         	margin: 2.25rem 0 1rem;
         	padding: 0.5rem 0 1rem;
         }
-        
+
         h3 {
         	font-size: 1.5rem;
         	font-weight: 400;
@@ -259,7 +258,7 @@ $docsPath = (file_exists('docs/index.html')) ? 'docs/index.html' : (file_exists(
               <br>
             </li>
             <li>
-              See the <a href="https://docs.zen-cart.com" target="_blank">Online Documentation</a> area on the Zen Cart<sup>&reg;</sup> website for assistance.
+              See the <a href="https://docs.zen-cart.com" rel="noopener" target="_blank">Online Documentation</a> area on the Zen Cart<sup>&reg;</sup> website for assistance.
             </li>
           </ul>
         </li>
@@ -280,7 +279,7 @@ $docsPath = (file_exists('docs/index.html')) ? 'docs/index.html' : (file_exists(
           </li>
         <?php } else { ?>
           <li>
-            Installation documentation is normally found in the /docs folder of the Zen Cart&reg; distribution files/zip. You can also find documentation in the <a href="https://docs.zen-cart.com" target="_blank">Online Help</a>.
+            Installation documentation is normally found in the /docs folder of the Zen Cart&reg; distribution files/zip. You can also find documentation in the <a href="https://docs.zen-cart.com" rel="noopener" target="_blank">Online Help</a>.
           </li>
         <?php } ?>
         <?php if ($instPath) { ?>
@@ -293,7 +292,7 @@ $docsPath = (file_exists('docs/index.html')) ? 'docs/index.html' : (file_exists(
           </li>
         <?php } ?>
         <li>
-          Please refer to the <a href="https://docs.zen-cart.com" target="_blank">Online Help</a> area on the Zen Cart<sup>&reg;</sup> website if you run into difficulties.
+          Please refer to the <a href="https://docs.zen-cart.com" rel="noopener" target="_blank">Online Help</a> area on the Zen Cart<sup>&reg;</sup> website if you run into difficulties.
         </li>
       </ol>
     </div>
@@ -318,9 +317,9 @@ $docsPath = (file_exists('docs/index.html')) ? 'docs/index.html' : (file_exists(
         <p class="zenData">
           Copyright 2003 - <?php echo date('Y'); ?> Zen Ventures, LLC
           <br><br>
-          Zen Cart&reg; 
+          Zen Cart&reg;
           <br>
-          <a href="https://www.zen-cart.com" target="_blank">www.zen-cart.com</a>
+          <a href="https://www.zen-cart.com" rel="noopener" target="_blank">www.zen-cart.com</a>
         </p>
       </div>
     </section> <!-- End footerBlock //-->

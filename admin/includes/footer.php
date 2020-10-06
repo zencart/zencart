@@ -1,10 +1,9 @@
 <?php
 /**
- * @package admin
- * @copyright Copyright 2003-2019 Zen Cart Development Team
+ * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: mc12345678 2019 Mar 08 Modified in v1.5.6b $
+ * @version $Id: DrByte 2020 May 16 Modified in v1.5.7 $
  */
 
 // check and display zen cart version and history version in footer
@@ -18,9 +17,9 @@
 ?>
 <footer>
   <div id="footer">
-    <a href="http://www.zen-cart.com" target="_blank"><img src="images/small_zen_logo.gif" alt="Zen Cart:: the art of e-commerce"></a><br />
+    <a href="https://www.zen-cart.com" rel="noopener" target="_blank"><img src="images/small_zen_logo.gif" alt="Zen Cart:: the art of e-commerce"></a><br />
     <br />
-    E-Commerce Engine Copyright &copy; 2003-<?php echo date('Y'); ?> <a href="http://www.zen-cart.com" target="_blank">Zen Cart&reg;</a><br />
+    E-Commerce Engine Copyright &copy; 2003-<?php echo date('Y'); ?> <a href="https://www.zen-cart.com" rel="noopener" target="_blank">Zen Cart&reg;</a><br />
     <?php echo '<a href="' . zen_href_link(FILENAME_SERVER_INFO) . '">' . $current_sinfo . '</a>'; ?>
   </div>
 </footer>

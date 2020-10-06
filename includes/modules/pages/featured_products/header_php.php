@@ -2,11 +2,10 @@
 /**
  * Featured Products
  *
- * @package page
- * @copyright Copyright 2003-2018 Zen Cart Development Team
+ * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: lat9 Mon Jul 23 14:00:26 2018 -0400 Modified in v1.5.6 $
+ * @version $Id: DrByte 2020 May 14 Modified in v1.5.7 $
  */
 
 // This should be first line of the script:
@@ -34,10 +33,10 @@ $order_by;
 
 $featured_products_query_raw = $db->bindVars($featured_products_query_raw, ':languagesID', $_SESSION['languages_id'], 'integer');
 
-// Notifier Point
-$zco_notifier->notify('NOTIFY_FEATURED_PRODUCTS_SQL_STRING', array(), $featured_products_query_raw);
+$count_key = '*';
+$zco_notifier->notify('NOTIFY_FEATURED_PRODUCTS_SQL_STRING', array(), $featured_products_query_raw, $count_key);
 
-$featured_products_split = new splitPageResults($featured_products_query_raw, MAX_DISPLAY_PRODUCTS_FEATURED_PRODUCTS);
+$featured_products_split = new splitPageResults($featured_products_query_raw, MAX_DISPLAY_PRODUCTS_FEATURED_PRODUCTS, $count_key);
 
 //check to see if we are in normal mode ... not showcase, not maintenance, etc
 $show_submit = zen_run_normal();

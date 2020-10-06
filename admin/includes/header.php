@@ -1,10 +1,9 @@
 <?php
 /**
- * @package admin
- * @copyright Copyright 2003-2019 Zen Cart Development Team
+ * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: torvista 2019 May 06 Modified in v1.5.6b $
+ * @version $Id: DrByte 2020 May 19 Modified in v1.5.7 $
  */
 if (!defined('IS_ADMIN_FLAG')) {
     die('Illegal Access');
@@ -77,8 +76,8 @@ $version_ini_index_sysinfo = '';
 if (!isset($version_check_sysinfo)) $version_check_sysinfo = false;
 if (!isset($version_check_index)) $version_check_index = false;
 
-if (file_exists(DIR_FS_ADMIN . 'includes/local/skip_version_check.ini')) {
-    $lines = @file(DIR_FS_ADMIN . 'includes/local/skip_version_check.ini');
+$skip_file = DIR_FS_ADMIN . 'includes/local/skip_version_check.ini';
+if (file_exists($skip_file) && $lines = @file($skip_file)) {
     foreach ($lines as $line) {
         if (substr(trim($line), 0, 14) == 'version_check=') $version_from_ini = substr(trim(strtolower(str_replace('version_check=', '', $line))), 0, 3);
         if (substr(trim($line), 0, 41) == 'display_update_link_only_on_sysinfo_page=') $version_ini_sysinfo = trim(strtolower(str_replace('display_update_link_only_on_sysinfo_page=', '', $line)));
@@ -124,7 +123,7 @@ if ((SHOW_VERSION_UPDATE_IN_HEADER == 'true' && $version_from_ini != 'off' && ($
     }
 
     // display download link
-    if ($new_version != '' && $new_version != TEXT_VERSION_CHECK_CURRENT) $new_version .= '<br /><a href="' . $newinfo['versionDownloadURI'] . '" target="_blank"><input type="button" class="btn btn-success" value="' . TEXT_VERSION_CHECK_DOWNLOAD . '"/></a>';
+    if ($new_version != '' && $new_version != TEXT_VERSION_CHECK_CURRENT) $new_version .= '<br /><a href="' . $newinfo['versionDownloadURI'] . '" rel="noopener" target="_blank"><input type="button" class="btn btn-success" value="' . TEXT_VERSION_CHECK_DOWNLOAD . '"/></a>';
 }
 
 if (!$doVersionCheck || $versionCheckError) {
@@ -133,8 +132,8 @@ if (!$doVersionCheck || $versionCheckError) {
         $new_version = ERROR_CONTACTING_PROJECT_VERSION_SERVER . '<br>';
     }
     // display the "check for updated version" button.  The button link should be the current page and all params
-    $url = zen_href_link(basename($PHP_SELF), zen_get_all_get_params(array('vcheck'), 'SSL'));
-    $url .= (strpos($url, '?') > 5 ? '&amp;' : '?') . 'vcheck=yes';
+    $url = zen_href_link(basename($PHP_SELF), zen_get_all_get_params(array('vcheck')), 'SSL');
+    $url .= (strpos($url, '?') !== false ? '&amp;' : '?') . 'vcheck=yes';
     if ($zv_db_patch_ok == true || $version_check_sysinfo == true) $new_version .= '<a href="' . $url . '" role="button" class="btn btn-link">' . TEXT_VERSION_CHECK_BUTTON . '</a>';
 }
 /////////////////
@@ -212,8 +211,8 @@ if (defined('MODULE_ORDER_TOTAL_GV_SHOW_QUEUE_IN_ADMIN') && MODULE_ORDER_TOTAL_G
     <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 noprint">
         <ul class="nav nav-pills upperMenu">
             <li><a href="<?php echo zen_href_link(FILENAME_DEFAULT, '', 'NONSSL'); ?>" class="headerLink"><?php echo HEADER_TITLE_TOP; ?></a></li>
-            <li><a href="<?php echo zen_catalog_href_link(FILENAME_DEFAULT); ?>" class="headerLink" target="_blank"><?php echo HEADER_TITLE_ONLINE_CATALOG; ?></a></li>
-            <li><a href="https://www.zen-cart.com/forum" class="headerLink" target="_blank"><?php echo HEADER_TITLE_SUPPORT_SITE; ?></a></li>
+            <li><a href="<?php echo zen_catalog_href_link(FILENAME_DEFAULT); ?>" class="headerLink" rel="noopener" target="_blank"><?php echo HEADER_TITLE_ONLINE_CATALOG; ?></a></li>
+            <li><a href="https://www.zen-cart.com/forum" class="headerLink" rel="noopener" target="_blank"><?php echo HEADER_TITLE_SUPPORT_SITE; ?></a></li>
             <li><a href="<?php echo zen_href_link(FILENAME_SERVER_INFO, '', 'NONSSL'); ?>" class="headerLink"><?php echo HEADER_TITLE_VERSION; ?></a></li>
             <li><a href="<?php echo zen_href_link(FILENAME_ADMIN_ACCOUNT, '', 'NONSSL'); ?>" class="headerLink"><?php echo HEADER_TITLE_ACCOUNT; ?></a></li>
             <li><a href="<?php echo zen_href_link(FILENAME_LOGOFF, '', 'NONSSL'); ?>" class="headerLink"><?php echo HEADER_TITLE_LOGOFF; ?></a></li>

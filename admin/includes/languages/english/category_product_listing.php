@@ -1,11 +1,10 @@
 <?php
 
 /**
- * @package admin
- * @copyright Copyright 2003-2019 Zen Cart Development Team
+ * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2019 May 13 Modified in v1.5.6b $
+ * @version $Id: Scott C Wilson 2020 Apr 08 Modified in v1.5.7 $
  */
 define('HEADING_TITLE', 'Categories / Products');
 define('HEADING_TITLE_GOTO', 'Go To:');
@@ -86,4 +85,7 @@ define('TEXT_SUBCATEGORIES_STATUS_NOCHANGE', 'Unchanged');
 define('WARNING_PRODUCTS_IN_TOP_INFO', 'WARNING: You have Products in the Top Level Category. This will cause pricing to not work properly in the Catalog. Products found: ');
 
 define('TEXT_COPY_MEDIA_MANAGER', 'Copy media?');
+
 define('TEXT_ERROR_NO_MOVE_IF_SUBCATS','Categories with subcategories cannot also contain products'); 
+
+define('SUCCESS_ATTRIBUTES_DELETED','Attributes deleted');

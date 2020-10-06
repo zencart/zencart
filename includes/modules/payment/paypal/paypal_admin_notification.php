@@ -2,12 +2,11 @@
 /**
  * admin subtemplate for Paypal Website Payments Standard payment method
  *
- * @package paymentMethod
  * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @copyright Portions Copyright 2004 DevosC.com
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id:  Modified in v1.5.7 $
+ * @version $Id: DrByte 2020 May 16 Modified in v1.5.7 $
  */
 
 // strip slashes in case they were added to handle apostrophes:
@@ -108,7 +107,7 @@
           $output .= '<tr><td class="main">'."\n";
           $output .= MODULE_PAYMENT_PAYPAL_ENTRY_TXN_ID."\n";
           $output .= '</td><td class="main">'."\n";
-          $output .= '<a href="https://www.paypal.com/us/cgi-bin/webscr?cmd=_view-a-trans&id=' . $ipn->fields['txn_id'] . '" target="_blank">' . $ipn->fields['txn_id'] . '</a>' ."\n";
+          $output .= '<a href="https://www.paypal.com/us/cgi-bin/webscr?cmd=_view-a-trans&id=' . $ipn->fields['txn_id'] . '" rel="noopener" target="_blank">' . $ipn->fields['txn_id'] . '</a>' ."\n";
           $output .= '</td></tr>'."\n";
 
           $output .= '<tr><td class="main">'."\n";

@@ -1,10 +1,9 @@
 <?php
 /**
- * @package admin
- * @copyright Copyright 2003-2019 Zen Cart Development Team
+ * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2019 Jan 04 Modified in v1.5.6a $
+ * @version $Id: DrByte 2020 May 21 Modified in v1.5.7 $
  */
 require('includes/application_top.php');
 
@@ -35,10 +34,23 @@ if (zen_not_null($action)) {
       }
       break;
     case 'new_product_preview':
+      if (!isset($_POST['master_categories_id'])
+          || ((isset($_POST['products_model']) ? $_POST['products_model'] : '') . (isset($_POST['products_url']) ? implode('', $_POST['products_url']) : '') . (isset($_POST['products_name']) ? implode('', $_POST['products_name']) : '') . (isset($_POST['products_description']) ? implode('', $_POST['products_description']) : '') == '')
+      ) {
+          $messageStack->add_session(ERROR_NO_DATA_TO_SAVE, 'error');
+          zen_redirect(zen_href_link(FILENAME_PRODUCT, 'cPath=' . $cPath . (isset($_GET['pID']) ? '&pID=' . $_GET['pID'] : '') . '&action=new_product'));
+//          zen_redirect(zen_href_link(FILENAME_CATEGORY_PRODUCT_LISTING, 'cPath=' . $cPath . (isset($_GET['pID']) ? '&pID=' . $_GET['pID'] : '')));
+      }
       if (file_exists(DIR_WS_MODULES . $zc_products->get_handler($product_type) . '/new_product_preview.php')) {
         require(DIR_WS_MODULES . $zc_products->get_handler($product_type) . '/new_product_preview.php');
       } else {
         require(DIR_WS_MODULES . 'new_product_preview.php');
+      }
+      break;
+    case 'new_product_preview_meta_tags':
+      if (!isset($_POST['products_price_sorter']) || !isset($_POST['products_model'])) {
+          $messageStack->add_session(ERROR_NO_DATA_TO_SAVE, 'error');
+          zen_redirect(zen_href_link(FILENAME_PRODUCT, 'cPath=' . $cPath . (isset($_GET['pID']) ? '&pID=' . $_GET['pID'] : '') . '&action=new_product_meta_tags'));
       }
       break;
   }
@@ -69,58 +81,8 @@ $languages = zen_get_languages();
 <!doctype html>
 <html <?php echo HTML_PARAMS; ?>>
   <head>
-    <meta charset="<?php echo CHARSET; ?>">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title><?php echo TITLE; ?></title>
-    <link rel="stylesheet" href="includes/stylesheet.css">
-    <script src="includes/general.js"></script>
-    <script>
-      let tax_rates = [];
-<?php
-for ($i = 0, $n = sizeof($tax_class_array); $i < $n; $i++) {
-  if ($tax_class_array[$i]['id'] > 0) {
-    echo 'tax_rates["' . $tax_class_array[$i]['id'] . '"] = ' . zen_get_tax_rate_value($tax_class_array[$i]['id']) . ';' . "\n";
-  }
-}
-?>
-
-      function doRound(x, places) {
-        return Math.round(x * Math.pow(10, places)) / Math.pow(10, places);
-      }
-
-      function getTaxRate() {
-        const parameterVal = $('select[name="products_tax_class_id"]').val();
-        if ((parameterVal > 0) && (tax_rates[parameterVal] > 0)) {
-          return tax_rates[parameterVal];
-        } else {
-          return 0;
-        }
-      }
-
-      function updateGross() {
-        const taxRate = getTaxRate();
-        let grossValue = $('input[name="products_price"]').val();
-
-        if (taxRate > 0) {
-          grossValue = grossValue * ((taxRate / 100) + 1);
-        }
-
-        $('input[name="products_price_gross"]').val(doRound(grossValue, 4));
-      }
-
-      function updateNet() {
-        const taxRate = getTaxRate();
-        let netValue = $('input[name="products_price_gross"]').val();
-
-        if (taxRate > 0) {
-          netValue = netValue / ((taxRate / 100) + 1);
-        }
-
-        $('input[name="products_price"]').val(doRound(netValue, 4));
-      }
-    </script>
     <?php
+    require DIR_WS_INCLUDES . 'admin_html_head.php';
     if ($action != 'new_product_meta_tags' && $editor_handler != '') {
       include ($editor_handler);
     }

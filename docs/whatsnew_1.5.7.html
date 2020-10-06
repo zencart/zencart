@@ -1,23 +1,21 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <!--
     /**
-     * @package documentation
      * @copyright Copyright 2003-2020 Zen Cart Development Team
      * @license https://www.zen-cart.com/license/2_0.txt GNU Public License v2.0
-     * @version $Id:  New in v1.5.7 $
+     * @version $Id: Scott C Wilson 2020 May 21 New in v1.5.7 $
      */
 //-->
 <head>
-    <title>What's New in Zen Cart&reg; v1.5.7</title>
     <meta charset="utf-8">
+    <title>What's New in Zen Cart&trade; v1.5.7</title>
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <meta http-equiv="Content-Type" content="text/html">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="keywords" content="">
     <meta name="description" content="">
-    <meta name="authors" content="The Zen Cart&reg; Team">
-    <meta name="generator" content="shopping cart program by Zen Cart&reg;, https://www.zen-cart.com">
+    <meta name="authors" content="The Zen Cart&trade; Team">
+    <meta name="generator" content="shopping cart program by Zen Cart&trade;, https://www.zen-cart.com">
     <meta name="robots" content="noindex, nofollow">
     <link rel="stylesheet" href="./zen.css">
 </head>
@@ -28,7 +26,7 @@
         <div class="row">
             <div class="col-md-6 col-sm-12">
                 <a href="./index.html">
-                    <img src="../includes/templates/template_default/images/logo.gif" alt="Zen Cart&reg;" title="Zen Cart&reg;" width="192" height="68" border="0" />
+                    <img src="../includes/templates/template_default/images/logo.gif" alt="Zen Cart&trade;" title="Zen Cart&trade;" width="192" height="68">
                 </a>
             </div>
             <div class="col-md-6 hidden-xs hidden-sm text-right">
@@ -40,22 +38,22 @@
     </section> <!-- End pageHeader //-->
     
     <section id="zenTeamMessage">
-        <h1>Welcome to Zen Cart&reg;</h1>    
+        <h1>Welcome to Zen Cart&trade;</h1>    
         <div class="alert add-shadow">
-            <em>Dear Zen Cart&reg; User</em>,
+            <em>Dear Zen Cart User</em>,
             <p>
-                Zen Cart&reg; is made available to you for your use, addition, changes, modification, etc. without charge, under Version 2 of the GNU General Public License.
+                Zen Cart is made available to you for your use, addition, changes, modification, etc. without charge, under Version 2 of the GNU General Public License.
             </p>
             <p>
                 While we do not charge for this software, donations are greatly appreciated, each time you install a new version, to help cover the expenses of maintenance, upgrades, updates, the free support forum and the continued development of this software for your online E-Commerce store.
             </p>
             <p>
-                Donations can be made on the <a href="https://www.zen-cart.com/donate" target="_blank">Zen Cart&reg; Team Page</a>
+                Donations can be made on the <a href="https://www.zen-cart.com/donate" target="_blank">Zen Cart Team Page</a>
             </p>
             <p>
                 We appreciate your support.
                 <br>
-                <em>The Zen Cart&reg; Team</em>
+                <em>The Zen Cart Team</em>
             </p>
         </div>
     </section> <!-- End zenTeamMessage //-->
@@ -66,7 +64,7 @@
                 About PHP versions
             </h1>
             <p>
-                Zen Cart&reg; v1.5.7 is designed for PHP 5.6 to 7.4, with MySQL 5.1 to 5.7 (or MariaDB 10.0-10.4) and Apache 2.2/2.4
+                Zen Cart v1.5.7 is designed for PHP 5.6 to 7.4, with MySQL 5.1 to 5.7 (or MariaDB 10.0-10.4) and Apache 2.2/2.4
             </p>
         </div>
     </section> <!-- End aboutPHPVersions //-->
@@ -77,7 +75,10 @@
                 Upgrade Instructions
             </h1>
             <p>
-                This document only mentions the actual changes specific to v1.5.7 since v1.5.6.
+                See the online docs for Release-Specific considerations to note regarding this version. <a href="https://docs.zen-cart.com/user/upgrading/">https://docs.zen-cart.com/user/upgrading/</a>
+                <br>
+                <br>
+                This document only mentions the actual changes specific to v1.5.7 since v1.5.6, and additional notes may have been added to the online notes.
             </p>
             <h2>
                 From v1.5.6
@@ -86,13 +87,14 @@
                 If you are already using v1.5.6 and <em>*have NOT customized or altered*</em> any of the files listed in the changed_files-v1.5.7.html document, then simply replace those files with the new files as listed.
             </p>
             <p>
-                If you have <em>*have customized or altered*</em> certain files, simply re-do your customizations in the new version of those particular files by making the same changes needed.
+            <p>
+                If you have <em>*customized or altered*</em> certain files, you must merge your customizations into the new versions of those files.
             </p>
             <p>
-                If you are using Addons/Plugins that have made alterations to those files, it is best to compare those changed files against the original Zen Cart files for the version those plugins were built for, and see what changes were there ... and then re-build those changes in the v1.5.7 file.
+                If you are using Addons/Plugins that use modified versions of those files, you must compare those plugin files to the original Zen Cart files of the version for which those plugins were built, to identify the modifications. Subsequently you must replicate those modifications in the v1.5.7 file.
             </p>
             <h2>
-                To v1.5.7 from v1.5.5 or older
+                From v1.5.5 or older
             </h2>
             <p>
                 If you are upgrading from a version OLDER than v1.5.6, then please do a <a href="https://www.zen-cart.com/upgrades" target="_blank">standard site upgrade</a>. Be sure to review all the links in this article, including tips on staging the upgrade in a separate directory/folder.
@@ -101,7 +103,7 @@
                 CHANGELOG - List of Changed Files 
             </h1>
             <p>
-                For a list of files that have been changed since v1.5.6, see the <a href="changed_files-v1.5.7.html" target="_blank">changed_files-v1.5.7.html</a> document.
+                For a list of files that have been changed since v1.5.6, see the <a href="changed_files-v1-5-7.html" target="_blank">changed_files-v1-5-7.html</a> document.
             </p>
         </div>
     </section> <!-- End upgradeInstructions //-->
@@ -109,22 +111,10 @@
     <section id="upgradingToResponsiveClassic">
         <div>
             <h1>
-                A Note About Upgrading to the New Responsive Classic Template Added in v1.5.5
+                Upgrading to the New Responsive Classic Template added in v1.5.5
             </h1>
             <p>
-                While Zen Cart&reg; v1.5.5-v1.5.7 contains a newer "responsive_classic" template, we <em>STRONGLY</em> recommend that upgraders first upgrade the site using everything (including template_default) <em>EXCEPT</em> the contents of responsive_classic template.
-            </p>
-            <p>
-                Then once the upgraded site is working properly you can consider what changes you might want to make to your own active template. 
-            </p>
-            <p>
-                (Important notes about <em>template_default</em> are shown below)
-            </p>
-            <p>
-                AGAIN: The responsive_classic template should NOT be implemented immediately as part of an upgrade; it should be a separate step ... if it is even used at all.
-            </p>
-            <p>
-                It is not <em>NECESSARY</em> to use responsive_classic <em>ON YOUR EXISTING SITE</em>, and you should <em>UPGRADE THE REST OF YOUR SITE FIRST</em> before attempting to convert/adapt it for use.
+            Zen Cart contains a newer "responsive_classic" template, which performs well on mobile devices such as phones and tablets. If you are upgrading an older site, we recommend that you use this template (rather than template_default or any older non-responsive template) as the starting point for your upgraded site.
             </p>
         </div>
     </section> <!-- End upgradingToResponsiveClassice //-->
@@ -148,12 +138,10 @@
             </p>
             <p>
                 With that explained, it is important that whenever you upgrade your site, you should also inspect ALL the template_default files to determine which changes in those files need to be replicated in your customized files.
+                Comparison/Merging Tools are essential for this process; see the <a href="https://docs.zen-cart.com/user/first_steps/useful_tools/">Zen Cart Developer Tools</a> for recommendations.
             </p>
             <p>
-                Often a tool like <a href="https://www.scootersoftware.com/download.php" target="_blank">Beyond Compare</a> or Araxis Merge or GnuDiff can be helpful for this.
-            </p>
-            <p>
-                The process is simple: compare the template_default directory files from your <em>*old*</em> version against the template_default files in the <em>*new*</em> version, and use those results as a reference to copy those updated changes into each of the files you have customized in your custom/personalized template in your store.
+                The process is simple: compare the template_default directory files from your <em>*old*</em> version to the template_default files in the <em>*new*</em> version, and replicate any differences in the files in your custom/personalized template in your store. If you based your template on responsive_classic, you should also compare and merge any changes from that template.
             </p>
             <p>
                 Then, and only after you have done all those comparisons and updated your customized files in your custom template folder, you will copy the template_default files from the new version into the template_default directory of your store. This way you will be left with updated personalized files <em>*and*</em> updated template_default files.
@@ -173,25 +161,47 @@
                 The most notable improvements and bugfixes in v1.5.7 since v1.5.6 include:
             </h2>
             <ul>
-                <li>Core - Updated hundreds of files for compatibility with PHP 7.2, 7.3 and 7.4</li>
-                <li>Admin - Default notification behavior for order update (send email/do not send email/hide update) may now be set</li>
-                <li>Admin - Admins can now login to customer accounts to place orders</li>
-                <li>Admin - Added product-details popover to allow quick visibility into products bought in an order without opening the order</li>
-                <li>Admin - Validation for integer min and max values and email addresses</li>
-                <li>Admin - Add sort order to order statuses so the admin order update dropdown can mirror your business workflow</li>
-                <li>Admin - Improve many configuration setting descriptions</li>
-                <li>Admin - Help buttons now link to new documentation</li>
-                <li>Storefront - products with single-valued attributes (such as downloads) can now be added to cart from the listing page</li>
+                <li>Core - Many files have been updated for compatibility with PHP 7.2, 7.3 and 7.4. <b>These changes, along with updating your PHP version, will make your cart faster.</b></li>
+                <li>Storefront - Products with single-valued attributes (such as downloads) can now be added to the cart from the listing page.</li>
+                <li>Storefront - Site map now includes all EZ-Pages</li>
                 <li>Storefront - Product page now includes Ask a Question</li>
                 <li>Storefront - Contact Us page now includes a telephone number</li>
-                <li>Email - SPAM prevention built in to forms</li>
-                <li>Checkout - Updated Square Payment module.  Start taking credit card payments in just 5 minutes! See www.zen-cart.com/partners/square_setup </li>
+                <li>Storefront - Improved handling of product restrictions such as units and minimum quantities.</li>
+                <li>Storefront - Define page added to shopping cart page for static content.</li>
+                <li>Storefront - The responsive classic template now meets accessibility standards for both desktop and mobile.</li>
+                <li>Admin - Plugin Manager for admin side plugins now available, consolidating management and file placement.</li>
+                <li>Admin - Admins can now login to a customer account (login as that customer), to place an order on their behalf.</li>
+                <li>Admin - Order Status may be updated from the order listing screen.</li>
+                <li>Admin - Order Status emails are now sent in the language of the order.</li>
+                <li>Admin - Order Status dropdown can now be sorted to match your business workflow.</li>
+                <li>Admin - Order Status notification behavior for an Order Status update (send email/do not send email/hide update) may now be configured by an admin switch.</li>
+                <li>Admin - Order Listing - hover for quick view of the products ordered or to see customer comments, without opening the order details. (Inspired by Info-At-A-Glance plugin).</li>
+                <li>Admin - Improved customer search.</li>
+                <li>Admin – Products to Categories Link Manager - Addition of a global tool to copy linked categories to another product.</li>
+                <li>Admin – Product Copy expanded to include copy of metatags and linked categories.</li>
+                <li>Admin - Setting added to auto enable (make available) product on or after the set available date.
+                <li>Admin - Validation for integer min and max values and email addresses.</li>
+                <li>Admin - Improved configuration settings descriptions.</li>
+                <li>Admin - Countries page is easier to perform enable/disable actions.</li>
+                <li>Admin - Improved error messaging.</li>
+                <li>Admin - Help links to the documentation website added to all pages.</li>
+                <li>Admin - Products Viewed report now excludes bots and admins, and its database storage restructured to improve site performance.</li>
+                <li>Admin - Alphabetical sorting of Reports and Tools menus.</li>
+                <li>Admin - Validation and alerts for updating configuration settings, and other updates to sanitization layer.</li>
+                <li>Admin - Improvements in Option Name/Value management.</li>
+                <li>Admin - UI improvements for Attributes Controller, Featured, Option Names Manager, Option Values Manager, Products to Multiple Categories, Specials.</li>
+                <li>Admin - Fixed last-order details on customer preview box on right.</li>
+                <li>Email - SPAM prevention built in to forms (Credits @davewest for zenNonCAPTCHA).</li>
+                <li>Email - Improvements made to increase email deliverability.</li>
+                <li>Email - Untranslatable text removed from email templates.
+                <li>Checkout - Updated Square Payment module.  Start taking credit card payments in just 5 minutes! See <a href="https://www.zen-cart.com/partners/square_setup">Square Setup</a>.</li>
+                <li>Checkout - Correction of order total layout issues on mobile in responsive_classic template.</li>
                 <li>All known v1.5.6 bugfixes and security fixes are included in v1.5.7</li>
-                <li>... and numerous other small improvements to make things work faster, sleeker, smarter and be easier to use</li>
+                <li>... and many other incremental improvements to make Zen Cart more efficient, more robust and easier to use.</li>
             </ul>
             <div>
                 <p>
-                    A detailed list of all edits to all files can be seen on Github at: <a href="https://github.com/zencart/zencart/compare/v156...v157">v1.5.6...v1.5.7</a><br>
+                    A detailed list of all edits to all files can be seen on Github at: <a href="https://github.com/zencart/zencart/compare/v156...v157">v1.5.6...v1.5.7</a>
                 </p>
             </div>
             <div class="back-to-top">
@@ -204,7 +214,7 @@
         <div>
             <h1>Help and Support</h1>
             <p>
-                For additional help and support, visit the <a href="https://docs.zen-cart.com/" target="_blank">Zen Cart&reg; Docs</a> and the <a href="https://www.zen-cart.com/forum.php" target="_blank">Zen Cart&reg; Support Forum</a>.
+                For additional help and support, visit the <a href="https://docs.zen-cart.com/" target="_blank">Zen Cart Docs</a> and the <a href="https://www.zen-cart.com/forum.php" target="_blank">Zen Cart Support Forum</a>.
             </p>
         </div>
     </section> <!-- End helpSupport //-->
@@ -212,7 +222,7 @@
     <section id="footerBlock">
         <div class="appInfo">
             <p>
-                Zen Cart&reg; is derived from: Copyright 2003 osCommerce
+                Zen Cart is derived from: Copyright 2003 osCommerce
                 <br><br>
                 This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
                 <br>
@@ -230,7 +240,7 @@
             <p class="zenData">
                 Copyright 2003 - 2020 Zen Ventures, LLC
                 <br><br>
-                Zen Cart&reg; 
+                Zen Cart
                 <br>
                 <a href="https://www.zen-cart.com" target="_blank">www.zen-cart.com</a>
             </p>

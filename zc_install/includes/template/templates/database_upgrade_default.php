@@ -1,9 +1,8 @@
 <?php
 /**
- * @package Installer
- * @copyright Copyright 2003-2016 Zen Cart Development Team
+ * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: zcwilt  Wed Sep 23 20:04:38 2015 +0100 New in v1.5.5 $
+ * @version $Id: Zcwilt 2020 May 19 Modified in v1.5.7 $
  */
 ?>
 <?php require(DIR_FS_INSTALL . DIR_WS_INSTALL_TEMPLATE . 'partials/partial_modal_admin_validation_errors.php'); ?>
@@ -18,7 +17,7 @@
 <div id="upgradeResponsesHolder"></div>
 
 <form id="db_upgrade<?php echo (count($newArray)) ? '' : '_done'; ?>" name="db_upgrade" method="post" action="index.php?main_page=completion" data-abide="ajax">
-  <input type="hidden" name="lng" value="<?php echo $lng; ?>" >
+  <input type="hidden" name="lng" value="<?php echo $installer_lng; ?>" >
   <input type="hidden" name="action" value="process">
 <?php if (sizeof($newArray)) { ?>
   <input type="hidden" name="upgrade_mode" value="yes">
@@ -187,9 +186,9 @@ $(function()
       var textId = $(this).attr('id');
       $.ajax({
         type: "POST",
-         timeout: 100000,
+        timeout: 100000,
         dataType: "json",
-        data: 'id='+textId,
+        data: 'id='+textId + '&lng=<?php echo $installer_lng; ?>',
         url: '<?php echo "ajaxGetHelpText.php"; ?>',
          success: function(data) {
            $('#modal-help-title').html(data.title);

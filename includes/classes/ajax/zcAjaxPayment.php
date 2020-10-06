@@ -2,10 +2,9 @@
 /**
  * zcAjaxPayment
  *
- * @package templateSystem
- * @copyright Copyright 2003-2019 Zen Cart Development Team
+ * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: mc12345678 2019 Apr 30 Modified in v1.5.6b $
+ * @version $Id: Scott C Wilson 2019 Jul 23 Modified in v1.5.7 $
  */
 class zcAjaxPayment extends base
 {

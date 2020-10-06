@@ -1,10 +1,9 @@
 <?php
 /**
- * @package shippingMethod
- * @copyright Copyright 2003-2018 Zen Cart Development Team
+ * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Drbyte Sun Jan 7 21:29:34 2018 -0500 Modified in v1.5.6 $
+ * @version $Id: Scott C Wilson 2019 Jul 05 Modified in v1.5.7 $
  */
 /**
  * Enter description here...
@@ -47,7 +46,7 @@ class table extends base {
    * @return table
    */
   function __construct() {
-    global $order, $db;
+    global $db;
 
     $this->code = 'table';
     $this->title = MODULE_SHIPPING_TABLE_TEXT_TITLE;
@@ -71,7 +70,18 @@ class table extends base {
       }
     }
 
-    if ( ($this->enabled == true) && ((int)MODULE_SHIPPING_TABLE_ZONE > 0) ) {
+    $this->update_status();
+  }
+
+  /**
+   * Perform various checks to see whether this module should be visible
+   */
+  function update_status() {
+    global $order, $db;
+    if (!$this->enabled) return;
+    if (IS_ADMIN_FLAG === true) return;
+
+    if ((int)MODULE_SHIPPING_TABLE_ZONE > 0) {
       $check_flag = false;
       $check = $db->Execute("select zone_id from " . TABLE_ZONES_TO_GEO_ZONES . "
                              where geo_zone_id = '" . MODULE_SHIPPING_TABLE_ZONE . "'

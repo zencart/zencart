@@ -2,10 +2,9 @@
 <html>
 <!--
     /**
-     * @package documentation
-     * @copyright Copyright 2003-2019 Zen Cart Development Team
+ * @copyright Copyright 2003-2020 Zen Cart Development Team
      * @license https://www.zen-cart.com/license/2_0.txt GNU Public License v2.0
-     * @version $Id: DrByte 2019 Jul 16 Modified in v1.5.6c $
+     * @version $Id: Scott C Wilson 2020 Apr 29 Modified in v1.5.7 $
      */
 //-->
 <head>
@@ -254,13 +253,17 @@
             </h2>
             <ul>
                 <li>Core - Updated dozens of files for compatibility with PHP 7.2, and 7.3</li>
-                <li>Admin - Sales-Report graphs on Admin dashboard and as a full page report</li>
+                <li>Admin - Sales Report with Graphs added to reports list</li>
                 <li>Admin - Admin session timeout and password expiry can now be configured via the admin</li>
                 <li>Checkout - customer confirmation emails now include customer delivery telephone number</li>
                 <li>Checkout - customer confirmation emails now include language-file defined message</li>
                 <li>Checkout - Square Payment support is now built-in. Start taking credit card payments in just 5 minutes! See www.zen-cart.com/partners/square_setup </li>
+                <li>Checkout - permit downloads from AWS as well as traditional methods</li>
                 <li>Admin - Reworded "in stock"/"out of stock" to "enabled"/"disabled" on product-edit pages due to popular request</li>
-                <li>Admin - Most of the Admin pages have received styling updates for consistency and improved support for smaller screens (credits @Zen4All)</li>
+                <li>Admin - Most of the Admin pages have been recreated using Twitter Bootstrap.  These styling updates provide greater consistency and improved support for smaller screens (credits @Zen4All)</li>
+                <li>Admin - Most buttons have been converted from images to CSS buttons (credits @Zen4All).</li>
+                <li>Admin - Visitor history shown in graphical format on admin dashboard</li>
+                <li>Admin - Monthly sales graph shown on Admin dashboard</li>
                 <li>Admin - Admin pages now show their name in browser tabs, instead of generic "Admin"</li>
                 <li>Admin - Order pages now have some observer hooks to allow plugins to display "more data" with less code-changes</li>
                 <li>Admin - GV Queue indicator in Admin Header bar can be enabled/disabled in GV Module settings</li>
@@ -282,6 +285,7 @@
                 <li>Utility - CurlTester has more links to external diagnostic tools, including TLS Testing verification</li>
                 <li>Utility - Plugin version-check utility optimized to allow specific version-comparisons, and adapt to timeouts more quickly.</li>
                 <li>DB: Remove unused basket 'final_price' field from database</li>
+                <li>Structure query result to facilitate looping through results with "foreach" instead of "MoveNext".</li>
                 <li>Removed old sagepay_form payment module, and old authorizenet_echeck payment module.</li>
                 <li>All known v1.5.5 bugfixes and security fixes are included in v1.5.6</li>
                 <li>... and numerous other small improvements to make things work faster, sleeker, smarter and be easier to use</li>

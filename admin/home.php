@@ -1,10 +1,9 @@
 <?php
 /**
- * @package admin
- * @copyright Copyright 2003-2018 Zen Cart Development Team
+ * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Zen4All Fri Nov 16 10:31:29 2018 +0100 Modified in v1.5.6 $
+ * @version $Id: DrByte 2020 May 16 New in v1.5.7 $
  */
 $version_check_index=true;
 require('includes/application_top.php');
@@ -35,7 +34,7 @@ if (STORE_NAME == '' || STORE_OWNER =='' || STORE_OWNER_EMAIL_ADDRESS =='' || ST
         Please leave this comment intact together with the
         following copyright announcement. //-->
 
-        <div class="copyrightrow"><a href="https://www.zen-cart.com" target="_blank"><img src="images/small_zen_logo.gif" alt="Zen Cart:: the art of e-commerce" /></a><br /><br />E-Commerce Engine Copyright &copy; 2003-<?php echo date('Y'); ?> <a href="https://www.zen-cart.com" target="_blank">Zen Cart&reg;</a></div><div class="warrantyrow"><br /><br />Zen Cart is derived from: Copyright &copy; 2003 osCommerce<br />This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;<br />without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE<br />and is redistributable under the <a href="https://www.zen-cart.com/license/2_0.txt" target="_blank">GNU General Public License</a><br />
+        <div class="copyrightrow"><a href="https://www.zen-cart.com" rel="noopener" target="_blank"><img src="images/small_zen_logo.gif" alt="Zen Cart:: the art of e-commerce" /></a><br /><br />E-Commerce Engine Copyright &copy; 2003-<?php echo date('Y'); ?> <a href="https://www.zen-cart.com" rel="noopener" target="_blank">Zen Cart&reg;</a></div><div class="warrantyrow"><br /><br />Zen Cart is derived from: Copyright &copy; 2003 osCommerce<br />This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;<br />without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE<br />and is redistributable under the <a href="https://www.zen-cart.com/license/2_0.txt" rel="noopener" target="_blank">GNU General Public License</a><br />
         </div>
     </footer>
     </body>

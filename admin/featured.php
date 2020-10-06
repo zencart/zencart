@@ -1,10 +1,9 @@
 <?php
 /**
- * @package admin
- * @copyright Copyright 2003-2019 Zen Cart Development Team
+ * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: torvista 2020 April 05 Modified in v1.5.7 $
+ * @version $Id: Steve 2020 Apr 04 Modified in v1.5.7 $
  * structurally identical to specials.php, modifications should be replicated
  */
 require('includes/application_top.php');

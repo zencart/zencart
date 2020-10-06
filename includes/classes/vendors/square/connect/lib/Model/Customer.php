@@ -40,7 +40,9 @@ class Customer implements ArrayAccess
         'note' => 'string',
         'preferences' => '\SquareConnect\Model\CustomerPreferences',
         'groups' => '\SquareConnect\Model\CustomerGroupInfo[]',
-        'creation_source' => 'string'
+        'creation_source' => 'string',
+        'group_ids' => 'string[]',
+        'segment_ids' => 'string[]'
     );
   
     /** 
@@ -64,7 +66,9 @@ class Customer implements ArrayAccess
         'note' => 'note',
         'preferences' => 'preferences',
         'groups' => 'groups',
-        'creation_source' => 'creation_source'
+        'creation_source' => 'creation_source',
+        'group_ids' => 'group_ids',
+        'segment_ids' => 'segment_ids'
     );
   
     /**
@@ -88,7 +92,9 @@ class Customer implements ArrayAccess
         'note' => 'setNote',
         'preferences' => 'setPreferences',
         'groups' => 'setGroups',
-        'creation_source' => 'setCreationSource'
+        'creation_source' => 'setCreationSource',
+        'group_ids' => 'setGroupIds',
+        'segment_ids' => 'setSegmentIds'
     );
   
     /**
@@ -112,21 +118,23 @@ class Customer implements ArrayAccess
         'note' => 'getNote',
         'preferences' => 'getPreferences',
         'groups' => 'getGroups',
-        'creation_source' => 'getCreationSource'
+        'creation_source' => 'getCreationSource',
+        'group_ids' => 'getGroupIds',
+        'segment_ids' => 'getSegmentIds'
     );
   
     /**
-      * $id A unique, Square-assigned object ID.
+      * $id A unique Square-assigned ID for the customer profile.
       * @var string
       */
     protected $id;
     /**
-      * $created_at The time when the customer profile was created, in RFC 3339 format.
+      * $created_at The timestamp when the customer profile was created, in RFC 3339 format.
       * @var string
       */
     protected $created_at;
     /**
-      * $updated_at The time when the customer profile was last updated, in RFC 3339 format.
+      * $updated_at The timestamp when the customer profile was last updated, in RFC 3339 format.
       * @var string
       */
     protected $updated_at;
@@ -191,7 +199,7 @@ class Customer implements ArrayAccess
       */
     protected $preferences;
     /**
-      * $groups The groups the customer belongs to.
+      * $groups The customer groups and segments the customer belongs to. This deprecated field has been replaced with  the dedicated `group_ids` for customer groups and the dedicated `segment_ids` field for customer segments. You can retrieve information about a given customer group and segment respectively using the Customer Groups API and Customer Segments API.
       * @var \SquareConnect\Model\CustomerGroupInfo[]
       */
     protected $groups;
@@ -200,6 +208,16 @@ class Customer implements ArrayAccess
       * @var string
       */
     protected $creation_source;
+    /**
+      * $group_ids The IDs of customer groups the customer belongs to.
+      * @var string[]
+      */
+    protected $group_ids;
+    /**
+      * $segment_ids The IDs of segments the customer belongs to.
+      * @var string[]
+      */
+    protected $segment_ids;
 
     /**
      * Constructor
@@ -293,6 +311,16 @@ class Customer implements ArrayAccess
             } else {
               $this->creation_source = null;
             }
+            if (isset($data["group_ids"])) {
+              $this->group_ids = $data["group_ids"];
+            } else {
+              $this->group_ids = null;
+            }
+            if (isset($data["segment_ids"])) {
+              $this->segment_ids = $data["segment_ids"];
+            } else {
+              $this->segment_ids = null;
+            }
         }
     }
     /**
@@ -306,7 +334,7 @@ class Customer implements ArrayAccess
   
     /**
      * Sets id
-     * @param string $id A unique, Square-assigned object ID.
+     * @param string $id A unique Square-assigned ID for the customer profile.
      * @return $this
      */
     public function setId($id)
@@ -325,7 +353,7 @@ class Customer implements ArrayAccess
   
     /**
      * Sets created_at
-     * @param string $created_at The time when the customer profile was created, in RFC 3339 format.
+     * @param string $created_at The timestamp when the customer profile was created, in RFC 3339 format.
      * @return $this
      */
     public function setCreatedAt($created_at)
@@ -344,7 +372,7 @@ class Customer implements ArrayAccess
   
     /**
      * Sets updated_at
-     * @param string $updated_at The time when the customer profile was last updated, in RFC 3339 format.
+     * @param string $updated_at The timestamp when the customer profile was last updated, in RFC 3339 format.
      * @return $this
      */
     public function setUpdatedAt($updated_at)
@@ -591,7 +619,7 @@ class Customer implements ArrayAccess
   
     /**
      * Sets groups
-     * @param \SquareConnect\Model\CustomerGroupInfo[] $groups The groups the customer belongs to.
+     * @param \SquareConnect\Model\CustomerGroupInfo[] $groups The customer groups and segments the customer belongs to. This deprecated field has been replaced with  the dedicated `group_ids` for customer groups and the dedicated `segment_ids` field for customer segments. You can retrieve information about a given customer group and segment respectively using the Customer Groups API and Customer Segments API.
      * @return $this
      */
     public function setGroups($groups)
@@ -616,6 +644,44 @@ class Customer implements ArrayAccess
     public function setCreationSource($creation_source)
     {
         $this->creation_source = $creation_source;
+        return $this;
+    }
+    /**
+     * Gets group_ids
+     * @return string[]
+     */
+    public function getGroupIds()
+    {
+        return $this->group_ids;
+    }
+  
+    /**
+     * Sets group_ids
+     * @param string[] $group_ids The IDs of customer groups the customer belongs to.
+     * @return $this
+     */
+    public function setGroupIds($group_ids)
+    {
+        $this->group_ids = $group_ids;
+        return $this;
+    }
+    /**
+     * Gets segment_ids
+     * @return string[]
+     */
+    public function getSegmentIds()
+    {
+        return $this->segment_ids;
+    }
+  
+    /**
+     * Sets segment_ids
+     * @param string[] $segment_ids The IDs of segments the customer belongs to.
+     * @return $this
+     */
+    public function setSegmentIds($segment_ids)
+    {
+        $this->segment_ids = $segment_ids;
         return $this;
     }
     /**

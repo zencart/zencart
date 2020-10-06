@@ -114,7 +114,7 @@ class OrdersApi
             $headerParams['Accept'] = $_header_accept;
         }
         $headerParams['Content-Type'] = ApiClient::selectHeaderContentType(array('application/json'));
-        $headerParams['Square-Version'] = "2020-03-25";
+        $headerParams['Square-Version'] = "2020-05-28";
 
         
         
@@ -163,6 +163,100 @@ class OrdersApi
             switch ($e->getCode()) { 
             case 200:
                 $data = \SquareConnect\ObjectSerializer::deserialize($e->getResponseBody(), '\SquareConnect\Model\BatchRetrieveOrdersResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            }
+  
+            throw $e;
+        }
+    }
+    /**
+     * calculateOrder
+     *
+     * CalculateOrder
+     * Note: This endpoint is in beta.
+     *
+     * @param \SquareConnect\Model\CalculateOrderRequest $body An object containing the fields to POST for the request.  See the corresponding object definition for field details. (required)
+     * @return \SquareConnect\Model\CalculateOrderResponse
+     * @throws \SquareConnect\ApiException on non-2xx response
+     */
+    public function calculateOrder($body)
+    {
+        list($response, $statusCode, $httpHeader) = $this->calculateOrderWithHttpInfo ($body);
+        return $response; 
+    }
+
+
+    /**
+     * calculateOrderWithHttpInfo
+     *
+     * CalculateOrder
+     *
+     * @param \SquareConnect\Model\CalculateOrderRequest $body An object containing the fields to POST for the request.  See the corresponding object definition for field details. (required)
+     * @return Array of \SquareConnect\Model\CalculateOrderResponse, HTTP status code, HTTP response headers (array of strings)
+     * @throws \SquareConnect\ApiException on non-2xx response
+     */
+    public function calculateOrderWithHttpInfo($body)
+    {
+        
+        // verify the required parameter 'body' is set
+        if ($body === null) {
+            throw new \InvalidArgumentException('Missing the required parameter $body when calling calculateOrder');
+        }
+  
+        // parse inputs
+        $resourcePath = "/v2/orders/calculate";
+        $httpBody = '';
+        $queryParams = array();
+        $headerParams = array();
+        $formParams = array();
+        $_header_accept = ApiClient::selectHeaderAccept(array('application/json'));
+        if (!is_null($_header_accept)) {
+            $headerParams['Accept'] = $_header_accept;
+        }
+        $headerParams['Content-Type'] = ApiClient::selectHeaderContentType(array('application/json'));
+        $headerParams['Square-Version'] = "2020-05-28";
+
+        
+        
+        
+        // default format to json
+        $resourcePath = str_replace("{format}", "json", $resourcePath);
+
+        
+        // body params
+        $_tempBody = null;
+        if (isset($body)) {
+            $_tempBody = $body;
+        }
+  
+        // for model (json/xml)
+        if (isset($_tempBody)) {
+            $httpBody = $_tempBody; // $_tempBody is the method argument, if present
+        } elseif (count($formParams) > 0) {
+            $httpBody = $formParams; // for HTTP post (form)
+        }
+        
+        // this endpoint requires OAuth (access token)
+        if (strlen($this->apiClient->getConfig()->getAccessToken()) !== 0) {
+            $headerParams['Authorization'] = 'Bearer ' . $this->apiClient->getConfig()->getAccessToken();
+        }
+        // make the API Call
+        try {
+            list($response, $statusCode, $httpHeader) = $this->apiClient->callApi(
+                $resourcePath, 'POST',
+                $queryParams, $httpBody,
+                $headerParams, '\SquareConnect\Model\CalculateOrderResponse'
+            );
+            if (!$response) {
+                return array(null, $statusCode, $httpHeader);
+            }
+
+            return array(\SquareConnect\ObjectSerializer::deserialize($response, '\SquareConnect\Model\CalculateOrderResponse', $httpHeader), $statusCode, $httpHeader);
+                    } catch (ApiException $e) {
+            switch ($e->getCode()) { 
+            case 200:
+                $data = \SquareConnect\ObjectSerializer::deserialize($e->getResponseBody(), '\SquareConnect\Model\CalculateOrderResponse', $e->getResponseHeaders());
                 $e->setResponseObject($data);
                 break;
             }
@@ -220,7 +314,7 @@ class OrdersApi
             $headerParams['Accept'] = $_header_accept;
         }
         $headerParams['Content-Type'] = ApiClient::selectHeaderContentType(array('application/json'));
-        $headerParams['Square-Version'] = "2020-03-25";
+        $headerParams['Square-Version'] = "2020-05-28";
 
         
         
@@ -327,7 +421,7 @@ class OrdersApi
             $headerParams['Accept'] = $_header_accept;
         }
         $headerParams['Content-Type'] = ApiClient::selectHeaderContentType(array('application/json'));
-        $headerParams['Square-Version'] = "2020-03-25";
+        $headerParams['Square-Version'] = "2020-05-28";
 
         
         
@@ -427,7 +521,7 @@ class OrdersApi
             $headerParams['Accept'] = $_header_accept;
         }
         $headerParams['Content-Type'] = ApiClient::selectHeaderContentType(array('application/json'));
-        $headerParams['Square-Version'] = "2020-03-25";
+        $headerParams['Square-Version'] = "2020-05-28";
 
         
         
@@ -533,7 +627,7 @@ class OrdersApi
             $headerParams['Accept'] = $_header_accept;
         }
         $headerParams['Content-Type'] = ApiClient::selectHeaderContentType(array('application/json'));
-        $headerParams['Square-Version'] = "2020-03-25";
+        $headerParams['Square-Version'] = "2020-05-28";
 
         
         

@@ -1,10 +1,9 @@
 <?php
 /**
- * @package admin
  * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id:  Modified in v1.5.7 $
+ * @version $Id: Scott C Wilson 2020 Apr 30 Modified in v1.5.7 $
  */
 require('includes/application_top.php');
 require(DIR_WS_CLASSES . 'currencies.php');
@@ -566,7 +565,7 @@ function check_form(form_name) {
         $cInfo = new objectInfo($cc_list->fields);
       }
       if ( (isset($cInfo)) && ($cc_list->fields['unique_id'] == $cInfo->unique_id) ) {
-        echo '          <tr class="dataTableRowSelected" onmouseover="this.style.cursor=\'hand\'" onclick="document.location.href=\'' . zen_href_link(FILENAME_COUPON_ADMIN, zen_get_all_get_params(array('cid', 'action', 'uid')) . 'cid=' . $cInfo->coupon_id . '&action=voucherreport&uid=' . $cinfo->unique_id) . '\'">' . "\n";
+        echo '          <tr class="dataTableRowSelected" onmouseover="this.style.cursor=\'hand\'" onclick="document.location.href=\'' . zen_href_link(FILENAME_COUPON_ADMIN, zen_get_all_get_params(array('cid', 'action', 'uid')) . 'cid=' . $cInfo->coupon_id . '&action=voucherreport&uid=' . $cInfo->unique_id) . '\'">' . "\n";
       } else {
         echo '          <tr class="dataTableRow" onmouseover="this.className=\'dataTableRowOver\';this.style.cursor=\'hand\'" onmouseout="this.className=\'dataTableRow\'" onclick="document.location.href=\'' . zen_href_link(FILENAME_COUPON_ADMIN, zen_get_all_get_params(array('cid', 'action', 'uid')) . 'cid=' . $cc_list->fields['coupon_id'] . '&action=voucherreport&uid=' . $cc_list->fields['unique_id']) . '\'">' . "\n";
       }
@@ -662,7 +661,7 @@ function check_form(form_name) {
         $cInfo = new objectInfo($cc_list->fields);
       }
       if ( (isset($cInfo)) && ($cc_list->fields['unique_id'] == $cInfo->unique_id) ) {
-        echo '          <tr class="dataTableRowSelected" onmouseover="this.style.cursor=\'hand\'" onclick="document.location.href=\'' . zen_href_link(FILENAME_COUPON_ADMIN, zen_get_all_get_params(array('cid', 'action', 'uid')) . 'cid=' . $cInfo->coupon_id . '&action=voucherreport&uid=' . $cinfo->unique_id) . '\'">' . "\n";
+        echo '          <tr class="dataTableRowSelected" onmouseover="this.style.cursor=\'hand\'" onclick="document.location.href=\'' . zen_href_link(FILENAME_COUPON_ADMIN, zen_get_all_get_params(array('cid', 'action', 'uid')) . 'cid=' . $cInfo->coupon_id . '&action=voucherreport&uid=' . $cInfo->unique_id) . '\'">' . "\n";
       } else {
         echo '          <tr class="dataTableRow" onmouseover="this.className=\'dataTableRowOver\';this.style.cursor=\'hand\'" onmouseout="this.className=\'dataTableRow\'" onclick="document.location.href=\'' . zen_href_link(FILENAME_COUPON_ADMIN, zen_get_all_get_params(array('cid', 'action', 'uid')) . 'cid=' . $cc_list->fields['coupon_id'] . '&action=voucherreport&uid=' . $cc_list->fields['unique_id']) . '\'">' . "\n";
       }
@@ -1408,7 +1407,11 @@ function check_form(form_name) {
       $contents[] = array('text' => '<br />' . COUPON_USES_COUPON . '<br />' . zen_draw_input_field('voucher_number_of'));
       break;
     default:
-      $heading[] = array('text'=>'['.$cInfo->coupon_id.']  '.$cInfo->coupon_code . ($cInfo->coupon_id == '' ? ' - (' . (!empty($_GET['cid']) ? $_GET['cid'] : 0) . ')' : ''));
+      if ($cc_list->RecordCount() > 0) {
+        $heading[] = array('text'=>'['.$cInfo->coupon_id.']  '.$cInfo->coupon_code . ($cInfo->coupon_id == '' ? ' - (' . (!empty($_GET['cid']) ? $_GET['cid'] : 0) . ')' : ''));
+      } else {
+        $heading[] = array('text'=>ERROR_NO_COUPONS);
+      }
       $amount = $cInfo->coupon_amount;
       if ($cInfo->coupon_type == 'P' || $cInfo->coupon_type == 'E') {
         $amount .= '%';

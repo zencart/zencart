@@ -1,10 +1,9 @@
 <?php
 /**
- * @package admin
- * @copyright Copyright 2003-2019 Zen Cart Development Team
+ * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Scott C Wilson 2019 Apr 17 Modified in v1.5.6b $
+ * @version $Id: Scott C Wilson 2020 Apr 30 Modified in v1.5.7 $
  */
 
 define('HEADING_TITLE', 'Discount Coupons');
@@ -149,3 +148,4 @@ define('TEXT_CONFIRM_REACTIVATE', 'Are you sure you want to restore this Coupon?
 define('SUCCESS_COUPON_FOUND', 'Discount Coupon found!');
 define('ERROR_COUPON_NOT_FOUND', 'Discount Coupon not found!');
 define('ERROR_NO_COUPON_CODE', 'Discount Coupon coupon code not entered!');
+define('ERROR_NO_COUPONS', 'No coupons'); 

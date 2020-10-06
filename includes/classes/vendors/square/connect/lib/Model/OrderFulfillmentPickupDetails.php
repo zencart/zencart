@@ -39,7 +39,9 @@ class OrderFulfillmentPickupDetails implements ArrayAccess
         'expired_at' => 'string',
         'picked_up_at' => 'string',
         'canceled_at' => 'string',
-        'cancel_reason' => 'string'
+        'cancel_reason' => 'string',
+        'is_curbside_pickup' => 'bool',
+        'curbside_pickup_details' => '\SquareConnect\Model\OrderFulfillmentPickupDetailsCurbsidePickupDetails'
     );
   
     /** 
@@ -62,7 +64,9 @@ class OrderFulfillmentPickupDetails implements ArrayAccess
         'expired_at' => 'expired_at',
         'picked_up_at' => 'picked_up_at',
         'canceled_at' => 'canceled_at',
-        'cancel_reason' => 'cancel_reason'
+        'cancel_reason' => 'cancel_reason',
+        'is_curbside_pickup' => 'is_curbside_pickup',
+        'curbside_pickup_details' => 'curbside_pickup_details'
     );
   
     /**
@@ -85,7 +89,9 @@ class OrderFulfillmentPickupDetails implements ArrayAccess
         'expired_at' => 'setExpiredAt',
         'picked_up_at' => 'setPickedUpAt',
         'canceled_at' => 'setCanceledAt',
-        'cancel_reason' => 'setCancelReason'
+        'cancel_reason' => 'setCancelReason',
+        'is_curbside_pickup' => 'setIsCurbsidePickup',
+        'curbside_pickup_details' => 'setCurbsidePickupDetails'
     );
   
     /**
@@ -108,7 +114,9 @@ class OrderFulfillmentPickupDetails implements ArrayAccess
         'expired_at' => 'getExpiredAt',
         'picked_up_at' => 'getPickedUpAt',
         'canceled_at' => 'getCanceledAt',
-        'cancel_reason' => 'getCancelReason'
+        'cancel_reason' => 'getCancelReason',
+        'is_curbside_pickup' => 'getIsCurbsidePickup',
+        'curbside_pickup_details' => 'getCurbsidePickupDetails'
     );
   
     /**
@@ -191,6 +199,16 @@ class OrderFulfillmentPickupDetails implements ArrayAccess
       * @var string
       */
     protected $cancel_reason;
+    /**
+      * $is_curbside_pickup If true, indicates this pickup order is for curbside pickup, not in-store pickup.
+      * @var bool
+      */
+    protected $is_curbside_pickup;
+    /**
+      * $curbside_pickup_details Specific details for curbside pickup. Can only be populated if `is_curbside_pickup` is true.
+      * @var \SquareConnect\Model\OrderFulfillmentPickupDetailsCurbsidePickupDetails
+      */
+    protected $curbside_pickup_details;
 
     /**
      * Constructor
@@ -278,6 +296,16 @@ class OrderFulfillmentPickupDetails implements ArrayAccess
               $this->cancel_reason = $data["cancel_reason"];
             } else {
               $this->cancel_reason = null;
+            }
+            if (isset($data["is_curbside_pickup"])) {
+              $this->is_curbside_pickup = $data["is_curbside_pickup"];
+            } else {
+              $this->is_curbside_pickup = null;
+            }
+            if (isset($data["curbside_pickup_details"])) {
+              $this->curbside_pickup_details = $data["curbside_pickup_details"];
+            } else {
+              $this->curbside_pickup_details = null;
             }
         }
     }
@@ -583,6 +611,44 @@ class OrderFulfillmentPickupDetails implements ArrayAccess
     public function setCancelReason($cancel_reason)
     {
         $this->cancel_reason = $cancel_reason;
+        return $this;
+    }
+    /**
+     * Gets is_curbside_pickup
+     * @return bool
+     */
+    public function getIsCurbsidePickup()
+    {
+        return $this->is_curbside_pickup;
+    }
+  
+    /**
+     * Sets is_curbside_pickup
+     * @param bool $is_curbside_pickup If true, indicates this pickup order is for curbside pickup, not in-store pickup.
+     * @return $this
+     */
+    public function setIsCurbsidePickup($is_curbside_pickup)
+    {
+        $this->is_curbside_pickup = $is_curbside_pickup;
+        return $this;
+    }
+    /**
+     * Gets curbside_pickup_details
+     * @return \SquareConnect\Model\OrderFulfillmentPickupDetailsCurbsidePickupDetails
+     */
+    public function getCurbsidePickupDetails()
+    {
+        return $this->curbside_pickup_details;
+    }
+  
+    /**
+     * Sets curbside_pickup_details
+     * @param \SquareConnect\Model\OrderFulfillmentPickupDetailsCurbsidePickupDetails $curbside_pickup_details Specific details for curbside pickup. Can only be populated if `is_curbside_pickup` is true.
+     * @return $this
+     */
+    public function setCurbsidePickupDetails($curbside_pickup_details)
+    {
+        $this->curbside_pickup_details = $curbside_pickup_details;
         return $this;
     }
     /**

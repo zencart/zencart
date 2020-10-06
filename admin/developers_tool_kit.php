@@ -1,10 +1,9 @@
 <?php
 /**
- * @package admin
- * @copyright Copyright 2003-2019 Zen Cart Development Team
+ * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: mc12345678 2019 Apr 30 Modified in v1.5.6b $
+ * @version $Id: Erik Kerkhoven 2020 Apr 14 Modified in v1.5.7 $
  */
 require('includes/application_top.php');
 
@@ -666,6 +665,20 @@ switch ($action) {
           $check_directory[] = $check_dir[$i] . '/';
         }
         break;
+
+      case (4): // all plugins
+        $zv_check_root = false;
+        $filename_listing = '';
+
+        $check_directory = array();
+
+        $sub_dir_files = array();
+        getDirList(DIR_FS_CATALOG . '/zc_plugins', $zv_filestype_group);
+        $check_dir = $sub_dir_files;
+        for ($i = 0, $n = sizeof($check_dir); $i < $n; $i++) {
+          $check_directory[] = $check_dir[$i] . '/';
+        }
+        break;
     }
 
     $result = zen_display_files($zv_check_root, $zv_filestype_group);
@@ -1030,7 +1043,8 @@ if ($found == false) {
             $za_lookup = array(
               array('id' => '1', 'text' => TEXT_ALL_FILES_LOOKUP_CURRENT),
               array('id' => '2', 'text' => TEXT_ALL_FILES_LOOKUP_CURRENT_CATALOG),
-              array('id' => '3', 'text' => TEXT_ALL_FILES_LOOKUP_CURRENT_ADMIN)
+              array('id' => '3', 'text' => TEXT_ALL_FILES_LOOKUP_CURRENT_ADMIN),
+              array('id' => '4', 'text' => TEXT_ALL_FILES_LOOKUP_CURRENT_PLUGINS),
             );
             ?>
             <?php echo zen_draw_label(TEXT_ALL_FILES_LOOKUPS, 'zv_files', 'class="control-label col-sm-3"'); ?>

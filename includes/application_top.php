@@ -6,11 +6,10 @@
  * the elements to be initialised and the order in which that happens.
  * see {@link  http://www.zen-cart.com/wiki/index.php/Developers_API_Tutorials#InitSystem wikitutorials} for more details.
  *
- * @package initSystem
- * @copyright Copyright 2003-2019 Zen Cart Development Team
+ * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2019 May 15 Modified in v1.5.6b $
+ * @version $Id: Zcwilt 2020 Jun 08 Modified in v1.5.7 $
  */
 use Zencart\FileSystem\FileSystem;
 use Zencart\PluginManager\PluginManager;
@@ -209,7 +208,10 @@ if (isset($loaderPrefix)) {
     $loaderPrefix = 'config';
 }
 $loader_file = $loaderPrefix . '.core.php';
-$initSystem = new InitSystem('admin', $loaderPrefix, FileSystem::getInstance(), $pluginManager, $installedPlugins);
+$initSystem = new InitSystem('catalog', $loaderPrefix, FileSystem::getInstance(), $pluginManager, $installedPlugins);
+
+if (defined('DEBUG_AUTOLOAD') && DEBUG_AUTOLOAD == true) $initSystem->setDebug(true);
+
 $loaderList = $initSystem->loadAutoLoaders();
 
 $initSystemList = $initSystem->processLoaderList($loaderList);
@@ -218,7 +220,7 @@ require(DIR_FS_CATALOG . 'includes/autoload_func.php');
 /**
  * load the counter code
 **/
-if ($spider_flag == false) {
+if (empty($spider_flag)) {
 // counter and counter history
   require(DIR_WS_INCLUDES . 'counter.php');
 }

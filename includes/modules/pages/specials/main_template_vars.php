@@ -2,11 +2,10 @@
 /**
  * Specials
  *
- * @package page
- * @copyright Copyright 2003-2018 Zen Cart Development Team
+ * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: lat9 Mon Jul 23 14:00:26 2018 -0400 Modified in v1.5.6 $
+ * @version $Id: mc12345678 2020 May 12 Modified in v1.5.7 $
  */
 
 if (MAX_DISPLAY_SPECIAL_PRODUCTS > 0 ) {
@@ -22,9 +21,10 @@ if (MAX_DISPLAY_SPECIAL_PRODUCTS > 0 ) {
 
   $specials_query_raw = $db->bindVars($specials_query_raw, ':languagesID', $_SESSION['languages_id'], 'integer');
   
-  $zco_notifier->notify('NOTIFY_SPECIALS_MAIN_TEMPLATE_VARS_SQL_STRING', array(), $specials_query_raw);
+  $count_key = '*';
+  $zco_notifier->notify('NOTIFY_SPECIALS_MAIN_TEMPLATE_VARS_SQL_STRING', array(), $specials_query_raw, $count_key);
   
-  $specials_split = new splitPageResults($specials_query_raw, MAX_DISPLAY_SPECIAL_PRODUCTS);
+  $specials_split = new splitPageResults($specials_query_raw, MAX_DISPLAY_SPECIAL_PRODUCTS, $count_key);
   $specials = $db->Execute($specials_split->sql_query);
   $row = 0;
   $col = 0;

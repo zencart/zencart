@@ -3,11 +3,10 @@
  * database_tables.php
  * Defines the database table names used in the project
  *
- * @package initSystem
- * @copyright Copyright 2003-2018 Zen Cart Development Team
+ * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Zcwilt Thu Nov 1 17:28:42 2018 +0000 Modified in v1.5.6 $
+ * @version $Id: DrByte 2020 May 17 Modified in v1.5.7 $
  * @private
  */
 
@@ -30,6 +29,7 @@ define('TABLE_CONFIGURATION', DB_PREFIX . 'configuration');
 define('TABLE_CONFIGURATION_GROUP', DB_PREFIX . 'configuration_group');
 define('TABLE_COUNTER', DB_PREFIX . 'counter');
 define('TABLE_COUNTER_HISTORY', DB_PREFIX . 'counter_history');
+define('TABLE_COUNT_PRODUCT_VIEWS', DB_PREFIX . 'count_product_views');
 define('TABLE_COUNTRIES', DB_PREFIX . 'countries');
 define('TABLE_COUPON_GV_QUEUE', DB_PREFIX . 'coupon_gv_queue');
 define('TABLE_COUPON_GV_CUSTOMER', DB_PREFIX . 'coupon_gv_customer');

@@ -2,11 +2,10 @@
 /**
  * paypal.php payment module class for PayPal Payments Standard (IPN) method
  *
- * @package paymentMethod
- * @copyright Copyright 2003-2018 Zen Cart Development Team
+ * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Drbyte Thu Sep 13 14:51:41 2018 -0400 Modified in v1.5.6 $
+ * @version $Id: DrByte 2020 Jun 23 Modified in v1.5.7 $
  */
 
 define('MODULE_PAYMENT_PAYPAL_TAX_OVERRIDE', 'true');
@@ -54,7 +53,7 @@ class paypal extends base {
   function __construct($paypal_ipn_id = '') {
     global $order, $messageStack;
     $this->code = 'paypal';
-    $this->codeVersion = '1.5.6';
+    $this->codeVersion = '1.5.7';
     $this->sort_order = defined('MODULE_PAYMENT_PAYPAL_SORT_ORDER') ? MODULE_PAYMENT_PAYPAL_SORT_ORDER : null;
     $this->enabled = (defined('MODULE_PAYMENT_PAYPAL_STATUS') && MODULE_PAYMENT_PAYPAL_STATUS == 'True');
     if (IS_ADMIN_FLAG === true) {
@@ -421,7 +420,7 @@ class paypal extends base {
     } else {
     // PDT found order to be approved, so add a new OSH record for this order's PP details
       unset($_SESSION['paypal_transaction_PDT_passed']);
-      
+
       $comments = 'PayPal status: ' . $this->pdtData['payment_status'] . ' ' . ' @ ' . $this->pdtData['payment_date'] . "\n" . ' Trans ID:' . $this->pdtData['txn_id'] . "\n" . ' Amount: ' . $this->pdtData['mc_gross'] . ' ' . $this->pdtData['mc_currency'] . '.';
       zen_update_orders_history($insert_id, $comments, null, $this->order_status, 0);
 
