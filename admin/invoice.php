@@ -7,6 +7,25 @@
  */
 require('includes/application_top.php');
 
+$show_product_images = true;
+$show_attrib_images = true;
+$img_width = defined('IMAGE_ON_INVOICE_IMAGE_WIDTH') ? (int)IMAGE_ON_INVOICE_IMAGE_WIDTH : '100';
+$attr_img_width = '25';
+
+if (!function_exists('zen_get_attributes_image')) {
+    function zen_get_attributes_image($product_id, $option_id, $value_id)
+    {
+        global $db;
+        $sql = "SELECT attributes_image FROM " . TABLE_PRODUCTS_ATTRIBUTES . " 
+                WHERE products_id = " . (int)$product_id . "
+                AND options_id = " . (int)$option_id . "
+                AND options_values_id = " . (int)$value_id;
+        $result = $db->Execute($sql, 1);
+        if ($result->EOF) return '';
+        return $result->fields['attributes_image'];
+    }
+}
+
 require(DIR_WS_CLASSES . 'currencies.php');
 $currencies = new currencies();
 
@@ -14,7 +33,7 @@ $oID = zen_db_prepare_input($_GET['oID']);
 
 include DIR_FS_CATALOG . DIR_WS_CLASSES . 'order.php';
 $order = new order($oID);
-$show_including_tax = (DISPLAY_PRICE_WITH_TAX == 'true'); 
+$show_including_tax = (DISPLAY_PRICE_WITH_TAX == 'true');
 
 // prepare order-status pulldown list
 $orders_statuses = array();
@@ -120,7 +139,11 @@ if ($order->billing['street_address'] != $order->delivery['street_address']) {
       <table class="table table-striped">
         <thead>
           <tr class="dataTableHeadingRow">
-            <th class="dataTableHeadingContent" colspan="2"><?php echo TABLE_HEADING_PRODUCTS; ?></th>
+              <?php if ($show_product_images) { ?>
+            <th class="dataTableHeadingContent" style="width: <?php echo (int)$img_width . 'px'; ?>">&nbsp;</th>
+              <?php } ?>
+            <th class="dataTableHeadingContent">&nbsp;</th>
+            <th class="dataTableHeadingContent"><?php echo TABLE_HEADING_PRODUCTS; ?></th>
             <th class="dataTableHeadingContent"><?php echo TABLE_HEADING_PRODUCTS_MODEL; ?></th>
             <th class="dataTableHeadingContent text-right"><?php echo TABLE_HEADING_TAX; ?></th>
             <th class="dataTableHeadingContent text-right"><?php echo ($show_including_tax) ? TABLE_HEADING_PRICE_EXCLUDING_TAX : TABLE_HEADING_PRICE; ?></th>
@@ -137,6 +160,7 @@ if ($order->billing['street_address'] != $order->delivery['street_address']) {
             <?php
             $decimals = $currencies->get_decimal_places($order->info['currency']);
             for ($i = 0, $n = sizeof($order->products); $i < $n; $i++) {
+              $product_name = $order->products[$i]['name'];
               if (DISPLAY_PRICE_WITH_TAX_ADMIN == 'true') {
                 $priceIncTax = $currencies->format(zen_round(zen_add_tax($order->products[$i]['final_price'], $order->products[$i]['tax']), $decimals) * $order->products[$i]['qty'], true, $order->info['currency'], $order->info['currency_value']);
               } else {
@@ -144,21 +168,34 @@ if ($order->billing['street_address'] != $order->delivery['street_address']) {
               }
               ?>
             <tr class="dataTableRow">
+              <?php if ($show_product_images) { ?>
+              <td class="dataTableContent">
+                  <?php echo zen_image(DIR_WS_CATALOG . DIR_WS_IMAGES . zen_get_products_image($order->products[$i]['id']), $product_name, (int)$img_width); ?>
+              </td>
+              <?php } ?>
+
               <td class="dataTableContent text-right">
                 <?php echo $order->products[$i]['qty']; ?>&nbsp;x
               </td>
-              <td class="dataTableContent"><?php echo $order->products[$i]['name']; ?>
+              <td class="dataTableContent"><?php echo $product_name; ?>
                   <?php
                   if (isset($order->products[$i]['attributes']) && (($k = sizeof($order->products[$i]['attributes'])) > 0)) {
                     ?>
                   <ul>
                       <?php
                       for ($j = 0; $j < $k; $j++) {
-                        ?>
+                          $attribute_name = $order->products[$i]['attributes'][$j]['option'] . ': ' . nl2br(zen_output_string_protected($order->products[$i]['attributes'][$j]['value']));
+                          $attribute_image = zen_get_attributes_image($order->products[$i]['id'], $order->products[$i]['attributes'][$j]['option_id'], $order->products[$i]['attributes'][$j]['value_id']);
+                      ?>
                       <li>
+                          <?php
+                          if ($show_attrib_images && !empty($attribute_image)) {
+                              echo zen_image(DIR_WS_CATALOG.DIR_WS_IMAGES . $attribute_image, $attribute_name, (int)$attr_img_width);
+                          }
+                          ?>
                         <small>
                           <i>
-                          <?php echo $order->products[$i]['attributes'][$j]['option'] . ': ' . nl2br(zen_output_string_protected($order->products[$i]['attributes'][$j]['value'])); ?>
+                          <?php echo $attribute_name; ?>
                           <?php
                                 if ($order->products[$i]['attributes'][$j]['price'] != '0') {
                                   echo ' (' . $order->products[$i]['attributes'][$j]['prefix'] . $currencies->format($order->products[$i]['attributes'][$j]['price'] * $order->products[$i]['qty'], true, $order->info['currency'], $order->info['currency_value']) . ')';
