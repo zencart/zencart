@@ -35,7 +35,7 @@ include DIR_FS_CATALOG . DIR_WS_CLASSES . 'order.php';
       <h1 class="pageHeading"><?php echo HEADING_TITLE; ?></h1>
       <?php
 // select all customer_referrals
-      $customers_referral_query = "select distinct customers_referral from " . TABLE_CUSTOMERS . " where customers_referral != ''";
+      $customers_referral_query = "SELECT customers_referral, count(*) AS count FROM " . TABLE_CUSTOMERS . " WHERE customers_referral != '' GROUP BY customers_referral";
       $customers_referral = $db->Execute($customers_referral_query);
 
       $customers_referrals = array();
@@ -46,7 +46,7 @@ include DIR_FS_CATALOG . DIR_WS_CLASSES . 'order.php';
       foreach ($customers_referral as $customer_referral) {
         $customers_referrals[] = array(
           'id' => $customer_referral['customers_referral'],
-          'text' => $customer_referral['customers_referral']);
+          'text' => $customer_referral['customers_referral'] . ' (' . $customer_referral['count'] . ')');
       }
       ?>
       <?php echo zen_draw_form('new_date', FILENAME_STATS_CUSTOMERS_REFERRALS, '', 'get', 'class="form-horizontal"'); ?>
