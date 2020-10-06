@@ -119,14 +119,17 @@ if (zen_not_null($action)) {
             <tbody>
               <?php
 // create search filter
-              $search = '';
-              if (isset($_GET['search']) && zen_not_null($_GET['search'])) {
-                $keywords = zen_db_input(zen_db_prepare_input($_GET['search']));
-                $search = " AND pd.products_name like '%" . $keywords . "%'
-                            OR pad.products_attributes_filename like '%" . $keywords . "%'
-                            OR pd.products_description like '%" . $keywords . "%'
-                            OR p.products_model like '%" . $keywords . "%'";
-              }
+                $search = '';
+                if (isset($_GET['search']) && zen_not_null($_GET['search'])) {
+                  $keywords = zen_db_input(zen_db_prepare_input($_GET['search']));
+                    $keyword_search_fields = [
+                        'pd.products_name',
+                        'p.products_model',
+                        'pd.products_description',
+                        'pad.products_attributes_filename',
+                    ];
+                    $search = zen_build_keyword_where_clause($keyword_search_fields, trim($keywords));
+                }
 
 // order of display
               $order_by = " ORDER BY pd.products_name ";

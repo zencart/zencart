@@ -26,11 +26,11 @@
 <legend><?php echo HEADING_RETURNING_CUSTOMER; ?></legend>
 
 <label class="inputLabel" for="login-email-address"><?php echo ENTRY_EMAIL_ADDRESS; ?></label>
-<?php echo zen_draw_input_field('email_address', '', zen_set_field_length(TABLE_CUSTOMERS, 'customers_email_address', '40') . ' id="login-email-address" autocomplete="off"', 'email'); ?>
+<?php echo zen_draw_input_field('email_address', '', zen_set_field_length(TABLE_CUSTOMERS, 'customers_email_address', '40') . ' id="login-email-address" autocomplete="username"', 'email'); ?>
 <br class="clearBoth" />
 
 <label class="inputLabel" for="login-password"><?php echo ENTRY_PASSWORD; ?></label>
-<?php echo zen_draw_password_field('password', '', zen_set_field_length(TABLE_CUSTOMERS, 'customers_password', 40) . ' id="login-password" autocomplete="off"'); ?>
+<?php echo zen_draw_password_field('password', '', zen_set_field_length(TABLE_CUSTOMERS, 'customers_password', 40) . ' id="login-password" autocomplete="current-password"'); ?>
 <br class="clearBoth" />
 <?php echo zen_draw_hidden_field('securityToken', $_SESSION['securityToken']); ?>
 </fieldset>

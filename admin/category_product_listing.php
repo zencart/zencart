@@ -670,16 +670,13 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
             $where = " WHERE pd.language_id = " . (int)$_SESSION['languages_id'];
 
             if ($search_result && $action != 'edit_category') {
-                $parts = explode(" ", trim($keywords));
-                foreach ($parts as $k => $v) {
-                    $sql_add = " AND (pd.products_name LIKE '%:part%'
-                              OR pd.products_description LIKE '%:part%'
-                              OR p.products_id = ':part'
-                              OR p.products_model LIKE '%:part%'
-                            ) ";
-                    $sql_add = $db->bindVars($sql_add, ':part', $v, 'noquotestring');
-                    $where .= $sql_add;
-                }
+                $keyword_search_fields = [
+                    'pd.products_name',
+                    'p.products_model',
+                    'pd.products_description',
+                    'p.products_id',
+                ];
+                $where .= zen_build_keyword_where_clause($keyword_search_fields, trim($keywords));
             } else {
                 $products_query_raw.= " LEFT JOIN " . TABLE_PRODUCTS_TO_CATEGORIES . " p2c USING (products_id) ";
                 $where .= " AND p2c.categories_id=" . (int)$current_category_id;
@@ -781,7 +778,7 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
                           <i class="fa fa-image fa-lg" aria-hidden="true"></i>
                         </a>
                       <?php } ?>
-                      <?php if (zen_has_product_attributes($product['products_id'], 'false')) { ?>
+                      <?php if (zen_has_product_attributes($product['products_id'], false)) { ?>
                         <a href="<?php echo zen_href_link(FILENAME_CATEGORY_PRODUCT_LISTING, 'cPath=' . $cPath . '&pID=' . $product['products_id'] . '&action=attribute_features' . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '')); ?>" class="btn btn-sm btn-default btn-attributes-on" role="button" title="<?php echo BOX_CATALOG_CATEGORIES_ATTRIBUTES_CONTROLLER; ?>"><strong>A</strong></a>
                       <?php } else { ?>
                         <a href="<?php echo zen_href_link(FILENAME_ATTRIBUTES_CONTROLLER, 'products_filter=' . $product['products_id'] . '&current_category_id=' . $current_category_id); ?>" class="btn btn-sm btn-default btn-attributes-off" role="button" title="<?php echo BOX_CATALOG_CATEGORIES_ATTRIBUTES_CONTROLLER; ?>"><strong>A</strong></a>

@@ -95,7 +95,6 @@
   class zones {
     var $code, $title, $description, $enabled, $num_zones;
 
-// class constructor
     function __construct() {
       $this->code = 'zones';
       $this->title = MODULE_SHIPPING_ZONES_TEXT_TITLE;
@@ -142,7 +141,6 @@
       }
     }
 
-// class methods
     function quote($method = '') {
       global $order, $shipping_weight, $shipping_num_boxes, $total_count;
       $dest_country = $order->delivery['country']['iso_code_2'];

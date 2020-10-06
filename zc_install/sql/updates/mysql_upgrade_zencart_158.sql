@@ -34,11 +34,34 @@
 TRUNCATE TABLE whos_online;
 TRUNCATE TABLE db_cache;
 
-
 ALTER TABLE layout_boxes ADD plugin_details varchar(100) NOT NULL default '';
 ALTER TABLE manufacturers ADD COLUMN featured tinyint default 0;
 
+
+
+# Remove greater-than sign in query_builder
+UPDATE query_builder SET query_name = 'Customers Dormant for 3+ months (Subscribers)' WHERE query_id = 3;
+
+# Remove deprecated defines
+DELETE FROM configuration WHERE configuration_key = 'CATEGORIES_SPLIT_DISPLAY';
+DELETE FROM configuration WHERE configuration_key = 'CUSTOMERS_AUTHORIZATION_PRICES_OFF';
+DELETE FROM configuration WHERE configuration_key = 'EMAIL_FRIENDLY_ERRORS';
+DELETE FROM configuration WHERE configuration_key = 'EMAIL_LINEFEED';
+
+
+# Update configuration descriptions
+UPDATE configuration SET configuration_description = 'Enter your PayPal Merchant ID here. This is used for the more user-friendly In-Context checkout mode. You can obtain this value by going to your PayPal account, clicking on your account name at the top right, then clicking Account Settings, and navigating to the Business Information section; You will find your Merchant Account ID on that screen. A typical Merchant ID looks like FDEFDEFDEFDE11.' WHERE configuration_key = 'MODULE_PAYMENT_PAYPALWPP_MERCHANTID';
 UPDATE configuration SET configuration_description = 'If there is no weight to the order, does the order have Free Shipping?<br>0= no<br>1= yes<br><br>Note: When using Free Shipping, Enable the Free Shipping Module.  It will only show when shipping is free.' WHERE configuration_key = 'ORDER_WEIGHT_ZERO_STATUS';
+UPDATE configuration SET configuration_title = 'Category Header Menu ON/OFF', configuration_description = 'Category Header Nav<br />This enables the display of your store\'s categories as a menu across the top of your header. There are many potential creative uses for this.<br />0= Hide Categories Tabs<br />1= Show Categories Tabs' WHERE configuration_key = 'CATEGORIES_TABS_STATUS';
+
+UPDATE configuration SET configuration_description = 'Defines the method for sending mail.<br><br><strong>PHP</strong> is the default, and uses built-in PHP wrappers for processing.<br><strong>smtpauth</strong> should be used by most sites, as it provides secure sending of authenticated email. You must also configure your smtpauth settings in the appropriate fields in this admin section.<br><strong>Gmail</strong> is used for sending emails using the Google mail service, and requires the [less secure] setting enabled in your gmail account.<br><strong>sendmail</strong> is for linux/unix hosts using the sendmail program on the server<br><strong>sendmail-f</strong> is only for servers which require the use of the -f parameter to use sendmail. This is a security setting often used to prevent spoofing. Will cause errors if your host mailserver is not configured to use it.<br><strong>Qmail</strong> is used for linux/unix hosts running Qmail as sendmail wrapper at /var/qmail/bin/sendmail.<br><br>MOST SITES WILL USE [smtpauth].', set_function='zen_cfg_select_option(array(\'PHP\', \'sendmail\', \'sendmail-f\', \'smtp\', \'smtpauth\', \'Gmail\',\'Qmail\'),' WHERE configuration_key = 'EMAIL_TRANSPORT';
+
+
+UPDATE configuration SET configuration_description = 'Customers Referral Code is created from<br />0= Off<br />1= 1st Discount Coupon Code used<br />2= Customer can add during create account or edit if blank<br /><br />NOTE: Once the Customers Referral Code has been set it can only be changed by the Administrator' WHERE configuration_key = 'CUSTOMERS_REFERRAL_STATUS'; 
+
+#############
+# Incorporate setting for Column-Grid-Layout template control
+INSERT IGNORE INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES ('Columns Per Row', 'PRODUCT_LISTING_COLUMNS_PER_ROW', '1', 'Select the number of columns of products to show per row in the product listing.<br>Recommended: 3<br>1=[rows] mode.', '8', '45', NULL, now(), NULL, NULL);
 
 
 #############

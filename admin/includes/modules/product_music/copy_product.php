@@ -40,7 +40,7 @@ $contents[] = array(
 $contents[] = array('text' => '<div class="checkbox"><label>'.zen_draw_checkbox_field('copy_media',true, true) . TEXT_COPY_MEDIA_MANAGER . '</label></div>');
 
 // only ask about attributes if defined
-if (zen_has_product_attributes($pInfo->products_id, 'false')) {
+if (zen_has_product_attributes($pInfo->products_id, false)) {
     $contents[] = array(
         'text' => '<h6>' . TEXT_COPY_ATTRIBUTES . '</h6>' .
             '<div class="radio"><label>' . zen_draw_radio_field('copy_attributes', 'copy_attributes_yes', true) . TEXT_YES . '</label></div>' .

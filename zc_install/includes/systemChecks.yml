@@ -279,6 +279,14 @@ systemChecks:
     errorLevel: WARN
     version: '1.5.8-dev'
     mainErrorText: <?php echo sprintf(TEXT_DB_VERSION_NOT_FOUND, 'v1.5.8-dev') . PHP_EOL; ?>
+    methods:
+      dbVersionChecker:
+        parameters:
+          - checkType: configKeyExists
+            keyName: PRODUCT_LISTING_COLUMNS_PER_ROW
+          - checkType: configValue
+            fieldName: CATEGORIES_TABS_STATUS
+            expectedResult: 'Category Header Menu ON/OFF'
 
   checkDBVersion157:
     runLevel: dbVersion
@@ -536,6 +544,5 @@ systemChecks:
     methods:
       dbVersionChecker:
         parameters:
-          - checkType: configValue
-            fieldName: CATEGORIES_TABS_STATUS
-            expectedResult: 'Categories-Tabs Menu ON/OFF'
+          - checkType: configKeyExists
+            keyName: CATEGORIES_TABS_STATUS

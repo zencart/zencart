@@ -23,7 +23,7 @@
 <br class="clearBoth" />
 
 <label for="email-address"><?php echo ENTRY_EMAIL_ADDRESS; ?></label>
-<?php echo zen_draw_input_field('email_address', '', zen_set_field_length(TABLE_CUSTOMERS, 'customers_email_address', '40') . ' id="email-address" autocomplete="off" placeholder="' . ENTRY_EMAIL_ADDRESS_TEXT . '" required', 'email'); ?>
+<?php echo zen_draw_input_field('email_address', '', zen_set_field_length(TABLE_CUSTOMERS, 'customers_email_address', '40') . ' id="email-address" autocomplete="username" placeholder="' . ENTRY_EMAIL_ADDRESS_TEXT . '" required', 'email'); ?>
 <br class="clearBoth" />
 </fieldset>
 

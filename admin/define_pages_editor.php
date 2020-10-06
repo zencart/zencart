@@ -157,8 +157,8 @@ if (!$lng_exists) {
         ?>
         <?php
         if ($_SESSION['language'] && $_GET['filename']) {
-          if (file_exists($file) && $file_array = @file($file)) {
-            $file_contents = implode('', $file_array);
+          if (file_exists($file)) {
+            $file_contents = file_get_contents($file);
 
             $file_writeable = true;
             if (!is_writeable($file)) {
