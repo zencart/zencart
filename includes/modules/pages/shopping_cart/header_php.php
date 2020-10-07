@@ -66,7 +66,7 @@ for ($i = 0, $n = count($products); $i < $n; $i++) {
             $options_order_by = ' ORDER BY popt.products_options_name';
         }
         foreach ($products[$i]['attributes'] as $option => $value) {
-            $sql = "SELECT popt.products_options_name, poval.products_options_values_name, pa.options_values_price, pa.price_prefix
+            $sql = "SELECT popt.products_options_name, poval.products_options_values_name, pa.options_values_price, pa.price_prefix, pa.attributes_image
                     FROM " . TABLE_PRODUCTS_OPTIONS . " popt, " . TABLE_PRODUCTS_OPTIONS_VALUES . " poval, " . TABLE_PRODUCTS_ATTRIBUTES . " pa
                     WHERE pa.products_id = :productsID
                     AND pa.options_id = :optionsID
@@ -81,6 +81,7 @@ for ($i = 0, $n = count($products); $i < $n; $i++) {
             $sql = $db->bindVars($sql, ':optionsValuesID', $value, 'integer');
             $sql = $db->bindVars($sql, ':languageID', $_SESSION['languages_id'], 'integer');
             $attributes_values = $db->Execute($sql);
+
             if ($value == PRODUCTS_OPTIONS_VALUES_TEXT_ID) {
                 $attributeHiddenField .= zen_draw_hidden_field('id[' . $products[$i]['id'] . '][' . TEXT_PREFIX . $option . ']', $products[$i]['attributes_values'][$option]);
                 $attr_value = htmlspecialchars($products[$i]['attributes_values'][$option], ENT_COMPAT, CHARSET, TRUE);
@@ -94,6 +95,7 @@ for ($i = 0, $n = count($products); $i < $n; $i++) {
             $attrArray[$option]['products_options_values_name'] = $attr_value;
             $attrArray[$option]['options_values_price'] = $attributes_values->fields['options_values_price'];
             $attrArray[$option]['price_prefix'] = $attributes_values->fields['price_prefix'];
+            $attrArray[$option]['image'] = $attributes_values->fields['attributes_image'];
 
             $zco_notifier->notify('NOTIFY_HEADER_SHOPPING_CART_IN_ATTRIBUTES_LOOP', $option, $attrArray, $attributes_values->fields, $value, $products, $i);
         }
