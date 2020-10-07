@@ -32,24 +32,17 @@ $cartTotalPrice = $_SESSION['cart']->show_total();
 
 $flagAnyOutOfStock = false;
 $products = $_SESSION['cart']->get_products();
-for ($i=0, $n=sizeof($products); $i<$n; $i++) {
+for ($i=0, $n=count($products); $i<$n; $i++) {
   $flagStockCheck = '';
   $rowClass = (($i / 2) == floor($i / 2)) ? "rowEven" : "rowOdd";
 
-  switch (true) {
-    case (SHOW_SHOPPING_CART_DELETE == 1):
     $buttonDelete = true;
+  $checkBoxDelete = true;
+  if (SHOW_SHOPPING_CART_DELETE == 1) {
     $checkBoxDelete = false;
-    break;
-    case (SHOW_SHOPPING_CART_DELETE == 2):
+  } elseif (SHOW_SHOPPING_CART_DELETE == 2) {
     $buttonDelete = false;
-    $checkBoxDelete = true;
-    break;
-    default:
-    $buttonDelete = true;
-    $checkBoxDelete = true;
-    break;
-  } // end switch
+  }
 
   $attributeHiddenField = "";
   $attrArray = false;
