@@ -52,6 +52,8 @@ for ($i=0, $n=count($products); $i<$n; $i++) {
   }
   $buttonUpdate = ((SHOW_SHOPPING_CART_UPDATE == 1 || SHOW_SHOPPING_CART_UPDATE == 3) ? zen_image_submit(ICON_IMAGE_UPDATE, ICON_UPDATE_ALT) : '') . zen_draw_hidden_field('products_id[]', $products[$i]['id']);
 
+  // initialize these here in case they need to be used/overridden within the attribute loop instead of later at the broader product-level
+  $ppe = $ppt = 0;
 
   $attributeHiddenField = "";
   $attrArray = [];
