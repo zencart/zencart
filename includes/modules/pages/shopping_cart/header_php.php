@@ -48,11 +48,8 @@ $flagAnyOutOfStock = false;
 $products = $_SESSION['cart']->get_products();
 for ($i=0, $n=sizeof($products); $i<$n; $i++) {
   $flagStockCheck = '';
-  if (($i/2) == floor($i/2)) {
-    $rowClass="rowEven";
-  } else {
-    $rowClass="rowOdd";
-  }
+  $rowClass = (($i / 2) == floor($i / 2)) ? "rowEven" : "rowOdd";
+
   switch (true) {
     case (SHOW_SHOPPING_CART_DELETE == 1):
     $buttonDelete = true;
