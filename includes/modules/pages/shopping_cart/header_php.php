@@ -5,7 +5,7 @@
  * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2020 May 16 Modified in v1.5.7 $
+ * @version $Id: DrByte 2020 May 16 Modified in v1.5.8 $
  */
 
 // This should be first line of the script:
@@ -30,13 +30,20 @@ $shipping_weight = $_SESSION['cart']->show_weight();
 $numberOfItemsInCart = $_SESSION['cart']->count_contents();
 $cartTotalPrice = $_SESSION['cart']->show_total();
 
+
+$prodImgWidth = (int)IMAGE_SHOPPING_CART_WIDTH;
+$prodImgHeight = (int)IMAGE_SHOPPING_CART_HEIGHT;
+
 $flagAnyOutOfStock = false;
+
+$zco_notifier->notify('NOTIFY_HEADER_SHOPPING_CART_BEFORE_PRODUCTS_LOOP');
+
 $products = $_SESSION['cart']->get_products();
 for ($i=0, $n=count($products); $i<$n; $i++) {
   $flagStockCheck = '';
   $rowClass = (($i / 2) == floor($i / 2)) ? "rowEven" : "rowOdd";
 
-    $buttonDelete = true;
+  $buttonDelete = true;
   $checkBoxDelete = true;
   if (SHOW_SHOPPING_CART_DELETE == 1) {
     $checkBoxDelete = false;
@@ -98,7 +105,7 @@ for ($i=0, $n=count($products); $i<$n; $i++) {
 
   $linkProductsImage = zen_href_link(zen_get_info_page($products[$i]['id']), 'products_id=' . $products[$i]['id']);
   $linkProductsName = zen_href_link(zen_get_info_page($products[$i]['id']), 'products_id=' . $products[$i]['id']);
-  $productsImage = (IMAGE_SHOPPING_CART_STATUS == 1 ? zen_image(DIR_WS_IMAGES . $products[$i]['image'], $products[$i]['name'], IMAGE_SHOPPING_CART_WIDTH, IMAGE_SHOPPING_CART_HEIGHT) : '');
+  $productsImage = (IMAGE_SHOPPING_CART_STATUS == 1 ? zen_image(DIR_WS_IMAGES . $products[$i]['image'], $products[$i]['name'], $prodImgWidth, $prodImgHeight) : '');
   $show_products_quantity_max = zen_get_products_quantity_order_max($products[$i]['id']);
   $showFixedQuantity = (($show_products_quantity_max == 1 or zen_get_products_qty_box_status($products[$i]['id']) == 0) ? true : false);
   $showFixedQuantityAmount = $products[$i]['quantity'] . zen_draw_hidden_field('cart_quantity[]', $products[$i]['quantity']);
