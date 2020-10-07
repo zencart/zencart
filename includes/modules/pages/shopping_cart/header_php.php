@@ -36,9 +36,9 @@ $prodImgHeight = (int)IMAGE_SHOPPING_CART_HEIGHT;
 
 $flagAnyOutOfStock = false;
 
-$zco_notifier->notify('NOTIFY_HEADER_SHOPPING_CART_BEFORE_PRODUCTS_LOOP');
-
 $products = $_SESSION['cart']->get_products();
+$zco_notifier->notify('NOTIFY_HEADER_SHOPPING_CART_BEFORE_PRODUCTS_LOOP', null, $products);
+
 for ($i = 0, $n = count($products); $i < $n; $i++) {
     $flagStockCheck = '';
     $rowClass = (($i / 2) == floor($i / 2)) ? "rowEven" : "rowOdd";
@@ -94,6 +94,8 @@ for ($i = 0, $n = count($products); $i < $n; $i++) {
             $attrArray[$option]['products_options_values_name'] = $attr_value;
             $attrArray[$option]['options_values_price'] = $attributes_values->fields['options_values_price'];
             $attrArray[$option]['price_prefix'] = $attributes_values->fields['price_prefix'];
+
+            $zco_notifier->notify('NOTIFY_HEADER_SHOPPING_CART_IN_ATTRIBUTES_LOOP', $option, $attrArray, $attributes_values->fields, $value, $products, $i);
         }
     } //end foreach [attributes]
 
@@ -146,7 +148,12 @@ for ($i = 0, $n = count($products); $i < $n; $i++) {
         'id' => $products[$i]['id'],
         'attributes' => empty($attrArray) ? false : $attrArray,
     ];
+
+    $zco_notifier->notify('NOTIFY_HEADER_SHOPPING_CART_IN_PRODUCTS_LOOP', $i, $productArray);
+
 } // end FOR loop
+
+$zco_notifier->notify('NOTIFY_HEADER_SHOPPING_CART_AFTER_PRODUCTS_LOOP', $productArray);
 
 $flagHasCartContents = ($numberOfItemsInCart > 0);
 $cartShowTotal = $currencies->format($cartTotalPrice);
