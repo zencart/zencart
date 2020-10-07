@@ -356,6 +356,23 @@ function zen_get_products_options_name_from_value($option_values_id)
     return $result2->fields['products_options_name'];
 }
 
+/**
+ * @param int $product_id
+ * @param int $option_id
+ * @param int $value_id
+ * @return mixed|string
+ */
+function zen_get_attributes_image(int $product_id, $option_id, $value_id)
+{
+    global $db;
+    $sql = "SELECT attributes_image FROM " . TABLE_PRODUCTS_ATTRIBUTES . "
+            WHERE products_id = " . (int)$product_id . "
+            AND options_id = " . (int)$option_id . "
+            AND options_values_id = " . (int)$value_id;
+    $result = $db->Execute($sql, 1);
+    if ($result->EOF) return '';
+    return $result->fields['attributes_image'];
+}
 
 /**
  * @param int $products_id_from
