@@ -26,23 +26,9 @@ if (isset($_SESSION['valid_to_checkout']) && $_SESSION['valid_to_checkout'] == f
   $messageStack->add('shopping_cart', ERROR_CART_UPDATE . $_SESSION['cart_errors'] , 'caution');
 }
 
-// build shipping with Tare included
 $shipping_weight = $_SESSION['cart']->show_weight();
-$totalsDisplay = '';
-switch (true) {
-  case (SHOW_TOTALS_IN_CART == '1'):
-  $totalsDisplay = TEXT_TOTAL_ITEMS . $_SESSION['cart']->count_contents() . TEXT_TOTAL_WEIGHT . $shipping_weight . TEXT_PRODUCT_WEIGHT_UNIT . TEXT_TOTAL_AMOUNT . $currencies->format($_SESSION['cart']->show_total());
-  break;
-  case (SHOW_TOTALS_IN_CART == '2'):
-  $totalsDisplay = TEXT_TOTAL_ITEMS . $_SESSION['cart']->count_contents() . ($shipping_weight > 0 ? TEXT_TOTAL_WEIGHT . $shipping_weight . TEXT_PRODUCT_WEIGHT_UNIT : '') . TEXT_TOTAL_AMOUNT . $currencies->format($_SESSION['cart']->show_total());
-  break;
-  case (SHOW_TOTALS_IN_CART == '3'):
-  $totalsDisplay = TEXT_TOTAL_ITEMS . $_SESSION['cart']->count_contents() . TEXT_TOTAL_AMOUNT . $currencies->format($_SESSION['cart']->show_total());
-  break;
-}
-
-$flagHasCartContents = ($_SESSION['cart']->count_contents() > 0);
-$cartShowTotal = $currencies->format($_SESSION['cart']->show_total());
+$numberOfItemsInCart = $_SESSION['cart']->count_contents();
+$cartTotalPrice = $_SESSION['cart']->show_total();
 
 $flagAnyOutOfStock = false;
 $products = $_SESSION['cart']->get_products();
@@ -64,6 +50,7 @@ for ($i=0, $n=sizeof($products); $i<$n; $i++) {
     $checkBoxDelete = true;
     break;
   } // end switch
+
   $attributeHiddenField = "";
   $attrArray = false;
   $productsName = $products[$i]['name'];
@@ -154,6 +141,23 @@ for ($i=0, $n=sizeof($products); $i<$n; $i++) {
                             'attributes'=>$attrArray,
                           );
 } // end FOR loop
+
+$flagHasCartContents = ($numberOfItemsInCart > 0);
+$cartShowTotal = $currencies->format($cartTotalPrice);
+
+// build shipping/items message with Tare included. We do this here in case any custom product stuff needs to alter the original values from the cart class
+$totalsDisplay = '';
+switch (true) {
+    case (SHOW_TOTALS_IN_CART == '1'):
+        $totalsDisplay = TEXT_TOTAL_ITEMS . $numberOfItemsInCart . TEXT_TOTAL_WEIGHT . $shipping_weight . TEXT_PRODUCT_WEIGHT_UNIT . TEXT_TOTAL_AMOUNT . $cartShowTotal;
+        break;
+    case (SHOW_TOTALS_IN_CART == '2'):
+        $totalsDisplay = TEXT_TOTAL_ITEMS . $numberOfItemsInCart . ($shipping_weight > 0 ? TEXT_TOTAL_WEIGHT . $shipping_weight . TEXT_PRODUCT_WEIGHT_UNIT : '') . TEXT_TOTAL_AMOUNT . $cartShowTotal;
+        break;
+    case (SHOW_TOTALS_IN_CART == '3'):
+        $totalsDisplay = TEXT_TOTAL_ITEMS . $numberOfItemsInCart . TEXT_TOTAL_AMOUNT . $cartShowTotal;
+        break;
+}
 
 $define_page = zen_get_file_directory(DIR_WS_LANGUAGES . $_SESSION['language'] . '/html_includes/', FILENAME_DEFINE_SHOPPING_CART, 'false');
 
