@@ -52,7 +52,7 @@ for ($i=0, $n=count($products); $i<$n; $i++) {
   }
 
   $attributeHiddenField = "";
-  $attrArray = false;
+  $attrArray = [];
   $productsName = $products[$i]['name'];
   // Push all attributes information in an array
   if (isset($products[$i]['attributes']) && is_array($products[$i]['attributes'])) {
@@ -138,7 +138,7 @@ for ($i=0, $n=count($products); $i<$n; $i++) {
                             'buttonDelete'=>$buttonDelete,
                             'checkBoxDelete'=>$checkBoxDelete,
                             'id'=>$products[$i]['id'],
-                            'attributes'=>$attrArray,
+                            'attributes'=> empty($attrArray) ? false : $attrArray,
                           );
 } // end FOR loop
 
