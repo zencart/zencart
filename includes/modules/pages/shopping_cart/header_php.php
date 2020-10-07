@@ -36,7 +36,9 @@ $prodImgHeight = (int)IMAGE_SHOPPING_CART_HEIGHT;
 
 $flagAnyOutOfStock = false;
 
+$productArray = [];
 $products = $_SESSION['cart']->get_products();
+
 $zco_notifier->notify('NOTIFY_HEADER_SHOPPING_CART_BEFORE_PRODUCTS_LOOP', null, $products);
 
 for ($i = 0, $n = count($products); $i < $n; $i++) {
