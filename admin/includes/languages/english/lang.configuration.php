@@ -63,7 +63,6 @@ $define = [
     'TEXT_MAX_ADMIN_DISPLAY_RESULTS_CATEGORIES_LENGTH' => 'Value must be an integer.',
     'TEXT_MAX_ADMIN_DISPLAY_PRODUCTS_LISTING_LENGTH' => 'Value must be an integer.',
     'TEXT_MAX_ADMIN_ROW_LISTS_OPTIONS_LENGTH' => 'Value must be an integer.',
-    'TEXT_MAX_ADMIN_ROW_LISTS_ATTRIBUTES_CONTROLLER_LENGTH' => 'Value must be an integer.',
     'TEXT_MAX_ADMIN_DISPLAY_SEARCH_RESULTS_DOWNLOADS_MANAGER_LENGTH' => 'Value must be an integer.',
     'TEXT_MAX_ADMIN_DISPLAY_SEARCH_RESULTS_FEATURED_ADMIN_LENGTH' => 'Value must be an integer.',
     'TEXT_MAX_ADMIN_DISPLAY_SEARCH_RESULTS_FEATURED_LENGTH' => 'Value must be an integer.',
