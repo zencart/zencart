@@ -30,7 +30,6 @@ $define = [
     'TEXT_MIN_ADMIN_PASSWORD_LENGTH' => 'Value must be an integer',
     'TEXT_MIN_ADMIN_CC_OWNER_LENGTH' => 'Value must be an integer',
     'TEXT_MIN_ADMIN_CC_NUMBER_LENGTH' => 'Value must be an integer',
-    'TEXT_MIN_ADMIN_CC_CVV_LENGTH' => 'Value must be an integer',
     'TEXT_MIN_ADMIN_REVIEW_LENGTH' => 'Value must be an integer',
     'TEXT_MIN_ADMIN_DISPLAY_BESTSELLERS_LENGTH' => 'Value must be an integer',
     'TEXT_MIN_ADMIN_DISPLAY_ALSO_PURCHASED_LENGTH' => 'Value must be an integer',
