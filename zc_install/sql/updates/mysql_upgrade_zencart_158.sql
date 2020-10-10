@@ -47,6 +47,8 @@ DELETE FROM configuration WHERE configuration_key = 'CATEGORIES_SPLIT_DISPLAY';
 DELETE FROM configuration WHERE configuration_key = 'CUSTOMERS_AUTHORIZATION_PRICES_OFF';
 DELETE FROM configuration WHERE configuration_key = 'EMAIL_FRIENDLY_ERRORS';
 DELETE FROM configuration WHERE configuration_key = 'EMAIL_LINEFEED';
+DELETE FROM configuration WHERE configuration_key = 'CC_CVV_MIN_LENGTH';
+DELETE FROM configuration WHERE configuration_key = 'MAX_ROW_LISTS_ATTRIBUTES_CONTROLLER';
 
 
 # Update configuration descriptions
