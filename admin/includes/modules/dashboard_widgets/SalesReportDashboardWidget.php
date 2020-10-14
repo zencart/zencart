@@ -47,8 +47,8 @@ $currencies = new currencies();
 
   function drawSalesGraph() {
       data = new google.visualization.DataTable();
-      data.addColumn('string', '<?php echo DASHBOARD_MONTH; ?>');
-      data.addColumn('number', '<?php echo DASHBOARD_SALES; ?>');
+      data.addColumn('string', '<?php echo html_entity_decode(DASHBOARD_MONTH); ?>');
+      data.addColumn('number', '<?php echo html_entity_decode(DASHBOARD_SALES); ?>');
       data.addRows(<?php echo "[" . $salesData . "]"; ?>);
 
       var options = {
