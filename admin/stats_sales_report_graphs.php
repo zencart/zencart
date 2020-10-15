@@ -96,9 +96,9 @@ if (strlen($sales_report_filter) == 0) {
           // Create the data table.
           var data = new google.visualization.DataTable();
           data.addColumn('string', 'label');
-          data.addColumn('number', '<?php echo CHART_TOTAL_SALES; ?>');
+          data.addColumn('number', '<?php echo html_entity_decode(CHART_TOTAL_SALES); ?>');
 <?php if ($sales_report_view < statsSalesReportGraph::YEARLY_VIEW) { ?>
-            data.addColumn('number', '<?php echo CHART_AVERAGE_SALE_AMOUNT; ?>');
+            data.addColumn('number', '<?php echo html_entity_decode(CHART_AVERAGE_SALE_AMOUNT); ?>');
 <?php } ?>
 
           data.addRows([
@@ -144,7 +144,7 @@ for ($i = 0; $i < $report->size; $i++) {
 
           // Set chart options
           var options = {
-              'title': '<?php echo $report_desc; ?>',
+              'title': '<?php echo html_entity_decode($report_desc); ?>',
               'legend': 'bottom',
               'is3D': false,
               'width': 600,
