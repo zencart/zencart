@@ -9,6 +9,7 @@
  */
 // This should be first line of the script:
 $zco_notifier->notify('NOTIFY_HEADER_START_LOGIN');
+$login_page = true; 
 
 // redirect the customer to a friendly cookie-must-be-enabled page if cookies are disabled (or the session has not started)
 if ($session_started == false) {
