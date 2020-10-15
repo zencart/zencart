@@ -21,7 +21,8 @@ if (!zen_in_guest_checkout() && zen_is_logged_in()) {
 }
 
 require(DIR_WS_MODULES . zen_get_module_directory('require_languages.php'));
-include(DIR_WS_MODULES . zen_get_module_directory(FILENAME_CREATE_ACCOUNT));
+include(DIR_WS_MODULES . zen_get_module_directory('create_account_initialization'));
+include(DIR_WS_MODULES . zen_get_module_directory('create_account_settings'));
 
 // -----
 // Gather any posted email_address prior to the processing loop, in case this is a 'Place Order'

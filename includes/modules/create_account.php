@@ -1,6 +1,6 @@
 <?php
 /**
- * create_account header_php.php
+ * create_account
  *
  * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
@@ -13,22 +13,8 @@ $zco_notifier->notify('NOTIFY_MODULE_START_CREATE_ACCOUNT');
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
 }
-/**
- * Set some defaults
- */
-  $process = false;
-  $zone_name = '';
-  $entry_state_has_zones = '';
-  $error_state_input = false;
-  $state = '';
-  $zone_id = 0;
-  $error = false;
-  $email_format = (ACCOUNT_EMAIL_PREFERENCE == '1' ? 'HTML' : 'TEXT');
-  $newsletter = (ACCOUNT_NEWSLETTER_STATUS == '1' || ACCOUNT_NEWSLETTER_STATUS == '0' ? false : true);
-  $extra_welcome_text = '';
-  $send_welcome_email = true;
 
-  $antiSpamFieldName = isset($_SESSION['antispam_fieldname']) ? $_SESSION['antispam_fieldname'] : 'should_be_empty';
+require(DIR_WS_MODULES . zen_get_module_directory('create_account_initialization.php'));
 
 /**
  * Process form contents
@@ -390,18 +376,7 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
   } //endif !error
 }
 
-
-/*
- * Set flags for template use:
- */
-  $selected_country = (isset($_POST['zone_country_id']) && $_POST['zone_country_id'] != '') ? $country : SHOW_CREATE_ACCOUNT_DEFAULT_COUNTRY;
-  $flag_show_pulldown_states = ((($process == true || $entry_state_has_zones == true) && $zone_name == '') || ACCOUNT_STATE_DRAW_INITIAL_DROPDOWN == 'true' || $error_state_input) ? true : false;
-  $state = ($flag_show_pulldown_states) ? ($state == '' ? '&nbsp;' : $state) : $zone_name;
-  $state_field_label = ($flag_show_pulldown_states) ? '' : ENTRY_STATE;
-
-  $display_nick_field = false;
-  $zco_notifier->notify('NOTIFY_NICK_SET_TEMPLATE_FLAG', 0, $display_nick_field);
-
+require(DIR_WS_MODULES . zen_get_module_directory('create_account_settings.php'));
 
 // This should be last line of the script:
 $zco_notifier->notify('NOTIFY_MODULE_END_CREATE_ACCOUNT');
