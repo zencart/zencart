@@ -33,7 +33,7 @@ if (!defined('IS_ADMIN_FLAG')) {
 /**
  * Process form contents
  */
-if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
+if (isset($_POST['action']) && ($_POST['action'] == 'process') && !isset($login_page)) {
   $process = true;
   $antiSpam = !empty($_POST[$antiSpamFieldName]) ? 'spam' : '';
   if (!empty($_POST['firstname']) && preg_match('~https?://?~', $_POST['firstname'])) $antiSpam = 'spam';
