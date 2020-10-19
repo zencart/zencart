@@ -38,7 +38,9 @@
   ?>
     <tr>
         <td class="accountQuantityDisplay"><?php echo  $op['qty'] . QUANTITY_SUFFIX; ?></td>
-        <td class="accountProductDisplay"><?php echo  $op['name'];
+        <td class="accountProductDisplay"><?php 
+        
+            echo  $op['name'];
 
     if ( (isset($op['attributes'])) && (!empty($op['attributes'])) ) {
       echo '<ul class="orderAttribsList">';
