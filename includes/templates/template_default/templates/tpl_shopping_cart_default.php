@@ -98,7 +98,11 @@
     foreach ($product['attributes'] as $option => $value) {
 ?>
 
-<li><?php echo $value['products_options_name'] . TEXT_OPTION_DIVIDER . nl2br($value['products_options_values_name']); ?></li>
+<li>
+    <?php
+    echo $value['products_options_name'] . TEXT_OPTION_DIVIDER . nl2br($value['products_options_values_name']);
+    ?>
+</li>
 
 <?php
     }
