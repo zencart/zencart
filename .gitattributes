@@ -1,7 +1,12 @@
+/.github          export-ignore
 /.gitattributes   export-ignore
 /testFramework    export-ignore
 *not_for_release* export-ignore
-/.github          export-ignore
+/phpunit.xml      export-ignore
+/phpunit.xml.dist export-ignore
 
 # Auto detect text files and perform LF normalization
 * text=auto
+
+# Configure diff output for .php files
+*.php diff=php
