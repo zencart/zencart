@@ -153,7 +153,7 @@ if (zen_not_null($action)) {
         $db->Execute("UPDATE " . TABLE_SPECIALS . "
                       SET specials_new_products_price = " . (float)$specials_price . ",
                           specials_date_available = '" . ($specials_date_available != 'null' ? $specials_date_available : '0001-01-01') . "',
-                          specials_last_modified = now(),
+                          specials_last_modified = NOW(),
                           expires_date = '" . ($specials_expires_date != 'null' ? $specials_expires_date : '0001-01-01') . "',
                           status = " . (int)$_POST['special_status'] . "
                       WHERE products_id = " . (int)$products_filter);
@@ -164,7 +164,7 @@ if (zen_not_null($action)) {
         $db->Execute("UPDATE " . TABLE_FEATURED . "
                       SET featured_date_available = '" . ($featured_date_available != 'null' ? $featured_date_available : '0001-01-01') . "',
                           expires_date = '" . ($featured_expires_date != 'null' ? $featured_expires_date : '0001-01-01') . "',
-                          featured_last_modified = now(),
+                          featured_last_modified = NOW(),
                           status = " . (int)$_POST['featured_status'] . "
                       WHERE products_id = " . (int)$products_filter);
       }
@@ -325,10 +325,9 @@ if (zen_not_null($action)) {
 
         $productsFeatured = $db->Execute("SELECT p.products_id,
                                                  f.featured_id, f.expires_date, f.featured_date_available, f.status
-                                          FROM " . TABLE_PRODUCTS . " p,
-                                               " . TABLE_FEATURED . " f
-                                          WHERE p.products_id = f.products_id
-                                          AND f.products_id = " . (int)$_GET['products_filter']);
+                                          FROM " . TABLE_PRODUCTS . " p
+                                          INNER JOIN " . TABLE_FEATURED . " f USING (products_id)
+                                          WHERE f.products_id = " . (int)$_GET['products_filter']);
 
         if ($productsFeatured->RecordCount() > 0) {
           $fInfo->updateObjectInfo($productsFeatured->fields);
@@ -347,10 +346,9 @@ if (zen_not_null($action)) {
 
         $productsSpecial = $db->Execute("SELECT p.products_id,
                                                 s.specials_id, s.specials_new_products_price, s.expires_date, s.specials_date_available, s.status
-                                         FROM " . TABLE_PRODUCTS . " p,
-                                              " . TABLE_SPECIALS . " s
-                                         WHERE p.products_id = s.products_id
-                                         AND s.products_id = " . (int)$_GET['products_filter']);
+                                         FROM " . TABLE_PRODUCTS . " p
+                                         INNER JOIN " . TABLE_SPECIALS . " s USING (products_id)
+                                         WHERE s.products_id = " . (int)$_GET['products_filter']);
 
         if ($productsSpecial->RecordCount() > 0) {
           $sInfo->updateObjectInfo($productsSpecial->fields);
