@@ -263,7 +263,7 @@ if ($action != '')
 <head>
 <meta charset="<?php echo CHARSET; ?>">
 <title><?php echo HEADING_TITLE; ?></title>
-<link href="includes/template/css/stylesheet.css" rel="stylesheet" type="text/css"/>
+<link href="includes/css/stylesheet.css" rel="stylesheet" type="text/css"/>
 </head>
 <body>
 <?php
@@ -304,7 +304,7 @@ if ($action != '')
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=<?php echo CHARSET; ?>">
 <title><?php echo TITLE; ?></title>
-<link rel="stylesheet" type="text/css" href="includes/stylesheet.css">
+<link rel="stylesheet" type="text/css" href="includes/css/stylesheet.css">
 <link rel="stylesheet" type="text/css" href="includes/cssjsmenuhover.css" media="all" id="hoverJS">
 <script type="text/javascript" src="includes/menu.js"></script>
 <script type="text/javascript">

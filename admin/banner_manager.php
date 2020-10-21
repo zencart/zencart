@@ -198,7 +198,7 @@ if (zen_not_null($action)) {
 <html <?php echo HTML_PARAMS; ?>>
   <head>
     <?php require DIR_WS_INCLUDES . 'admin_html_head.php'; ?>
-    <link rel="stylesheet" href="includes/banner_tools.css">
+    <link rel="stylesheet" href="includes/css/banner_tools.css">
     <script>
       function popupImageWindow(url) {
           window.open(url, 'popupImageWindow', 'toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=no,resizable=yes,copyhistory=no,width=100,height=100,screenX=150,screenY=150,top=150,left=150,noreferrer')
