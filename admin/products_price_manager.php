@@ -378,8 +378,8 @@ if (zen_not_null($action)) {
         ];
         $pInfo = new objectInfo($productParameters);
         $products = $db->Execute("SELECT p.products_id, p.products_model,
-                                         p.products_price, date_format(p.products_date_available, '" . zen_datepicker_format_forsql() . "') AS products_date_available,
-                                         p.products_tax_class_id,
+                                         p.products_price, p.products_tax_class_id,
+                                         DATE_FORMAT(p.products_date_available, '" . zen_datepicker_format_forsql() . "') AS products_date_available,
                                          p.products_quantity_order_min, products_quantity_order_units, p.products_quantity_order_max,
                                          p.product_is_free, p.product_is_call, p.products_quantity_mixed, p.products_priced_by_attribute, p.products_status,
                                          p.products_discount_type, p.products_discount_type_from, p.products_price_sorter,
