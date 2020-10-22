@@ -618,7 +618,7 @@ if (zen_not_null($action)) {
                       ?></td>
                     <td class="dataTableContent text-right">
                       <?php echo $page['header_sort_order'] . '&nbsp;'; ?>
-                      <?php echo zen_draw_form('header_sort_order', FILENAME_EZPAGES_ADMIN, 'action=update_status'); ?>
+                      <?php echo zen_draw_form('header_status', FILENAME_EZPAGES_ADMIN, 'action=update_status'); ?>
                       <button type="submit" class="btn btn-status">
                         <?php if ($page['status_header'] == '1') { ?>
                           <i class="fa fa-square fa-lg txt-status-on" title="<?php echo IMAGE_ICON_STATUS_ON; ?>"></i>
@@ -634,7 +634,7 @@ if (zen_not_null($action)) {
                       ?></td>
                     <td class="dataTableContent text-right">
                       <?php echo $page['sidebox_sort_order'] . '&nbsp;'; ?>
-                      <?php echo zen_draw_form('status_sidebox', FILENAME_EZPAGES_ADMIN, 'action=update_status'); ?>
+                      <?php echo zen_draw_form('sidebox_status', FILENAME_EZPAGES_ADMIN, 'action=update_status'); ?>
                       <button type="submit" class="btn btn-status">
                         <?php if ($page['status_sidebox'] == '1') { ?>
                           <i class="fa fa-square fa-lg txt-status-on" title="<?php echo IMAGE_ICON_STATUS_ON; ?>"></i>
@@ -650,9 +650,9 @@ if (zen_not_null($action)) {
                       ?></td>
                     <td class="dataTableContent text-right">
                       <?php echo $page['footer_sort_order'] . '&nbsp;'; ?>
-                      <?php echo zen_draw_form('footer_sort_order', FILENAME_EZPAGES_ADMIN, 'action=update_status'); ?>
+                      <?php echo zen_draw_form('footer_status', FILENAME_EZPAGES_ADMIN, 'action=update_status'); ?>
                       <button type="submit" class="btn btn-status">
-                        <?php if ($page['footer_sort_order'] == '1') { ?>
+                        <?php if ($page['status_footer'] == '1') { ?>
                           <i class="fa fa-square fa-lg txt-status-on" title="<?php echo IMAGE_ICON_STATUS_ON; ?>"></i>
                         <?php } else { ?>
                           <i class="fa fa-square fa-lg txt-status-off" title="<?php echo IMAGE_ICON_STATUS_OFF; ?>"></i>
@@ -660,8 +660,8 @@ if (zen_not_null($action)) {
                       </button>
                       <?php
                       echo zen_draw_hidden_field('ezID', $page['pages_id']);
-                      echo zen_draw_hidden_field('new_status', ($page['footer_sort_order'] == '1' ? '0' : '1'));
-                      echo zen_draw_hidden_field('fieldName', 'footer_sort_order');
+                      echo zen_draw_hidden_field('new_status', ($page['status_footer'] == '1' ? '0' : '1'));
+                      echo zen_draw_hidden_field('fieldName', 'status_footer');
                       echo '</form>';
                       ?>
                     </td>

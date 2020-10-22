@@ -25,7 +25,6 @@ $define = [
     'TEXT_PRODUCTS_STATUS' => 'Products Status:',
     'TEXT_PRODUCT_AVAILABLE' => 'Enabled',
     'TEXT_PRODUCT_NOT_AVAILABLE' => 'Disabled',
-    'TEXT_PRODUCT_INFO_NONE' => 'Please select a Product from above ...',
     'TEXT_PRODUCT_IS_FREE' => 'Product is Free:',
     'TEXT_PRODUCTS_IS_FREE_EDIT' => '<br />*Product marked FREE',
     'TEXT_PRODUCT_IS_CALL' => 'Call for Price:',
