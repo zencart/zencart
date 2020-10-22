@@ -68,7 +68,8 @@ Developers wishing to contribute documentation should fork [zencart/documentatio
 
 Support
 -------
-For free support, visit our support site: https://www.zen-cart.com/forum.php
+For free community-driven support with Zen Cart, visit our support site: https://www.zen-cart.com/forum.php
+
 
 Follow Us
 ---------
