@@ -2,10 +2,9 @@
 /**
  * init_sanitize
  *
- * @package initSystem
- * @copyright Copyright 2003-2019 Zen Cart Development Team
+ * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: lat9 2019 May 15 Modified in v1.5.6b $
+ * @version $Id: DrByte 2020 May 06 Modified in v1.5.7 $
  */
 
 if (!defined('DO_STRICT_SANITIZATION')) {
@@ -83,6 +82,7 @@ $group = array(
     'go_back',
     'id',
     'info',
+    'inspect',
     'ipnID',
     'keepslashes',
     'layout_box_name',
@@ -286,6 +286,15 @@ $group = array('products_name' => array('sanitizerType' => 'WORDS_AND_SYMBOLS_RE
 $sanitizer->addComplexSanitization($group);
 
 $group = array('query_string' => array('sanitizerType' => 'NULL_ACTION', 'method' => 'post', 'pages' => array('sqlpatch')));
+$sanitizer->addComplexSanitization($group);
+
+$group = array(
+    'password' => array('sanitizerType' => 'NULL_ACTION', 'method' => 'post', 'pages' => array('admin_account', 'users')),
+    'confirm' => array('sanitizerType' => 'NULL_ACTION', 'method' => 'post', 'pages' => array('admin_account', 'users')),
+    'admin_pass' => array('sanitizerType' => 'NULL_ACTION', 'method' => 'post', 'pages' => array('login')),
+    'newpassword' => array('sanitizerType' => 'NULL_ACTION', 'method' => 'post', 'pages' => array('customers')),
+    'newpasswordConfirm' => array('sanitizerType' => 'NULL_ACTION', 'method' => 'post', 'pages' => array('customers')),
+    );
 $sanitizer->addComplexSanitization($group);
 
 $sanitizer->runSanitizers();

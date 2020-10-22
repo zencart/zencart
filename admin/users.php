@@ -1,10 +1,9 @@
 <?php
 /**
- * @package admin
  * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce<br />
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: torvista April 12 2020 Modified in v1.5.7 $
+ * @version $Id: DrByte 2020 Jun 07 Modified in v1.5.7 $
  */
 require('includes/application_top.php');
 
@@ -41,11 +40,11 @@ if (($action == 'update' || $action == 'reset') && isset($_POST['user'])) {
 switch ($action) {
     case 'add': // display unpopulated form for adding a new user
         $formAction = 'insert';
-        $profilesList = array_merge([['id' => 0, 'text' => TEXT_CHOOSE_PROFILE]], zen_get_profiles());
+        $profilesList = array_merge([['id' => null, 'text' => TEXT_CHOOSE_PROFILE]], zen_get_profiles());
         break;
     case 'edit': // display populated form for editing existing user Name/Email/Profile
         $formAction = 'update';
-        $profilesList = array_merge([['id' => 0, 'text' => TEXT_CHOOSE_PROFILE]], zen_get_profiles());
+        $profilesList = array_merge([['id' => null, 'text' => TEXT_CHOOSE_PROFILE]], zen_get_profiles());
         break;
     case 'password': // display form input fields for resetting existing user's Password
         $formAction = 'reset';
@@ -63,7 +62,7 @@ switch ($action) {
             }
             $action = 'add';
             $formAction = 'insert';
-            $profilesList = array_merge([['id' => 0, 'text' => TEXT_CHOOSE_PROFILE]], zen_get_profiles());
+            $profilesList = array_merge([['id' => null, 'text' => TEXT_CHOOSE_PROFILE]], zen_get_profiles());
         } else {
             $action = '';
             $messageStack->add(sprintf(SUCCESS_NEW_USER_ADDED, zen_output_string_protected($_POST['name'])), 'success');
@@ -77,7 +76,7 @@ switch ($action) {
             }
             $action = 'edit';
             $formAction = 'update';
-            $profilesList = array_merge([['id' => 0, 'text' => TEXT_CHOOSE_PROFILE]], zen_get_profiles());
+            $profilesList = array_merge([['id' => null, 'text' => TEXT_CHOOSE_PROFILE]], zen_get_profiles());
         } else {
             $action = '';
             $messageStack->add(SUCCESS_USER_DETAILS_UPDATED, 'success');
@@ -109,7 +108,7 @@ $userList = zen_get_users();
     <title><?php echo TITLE; ?></title>
     <link rel="stylesheet" href="includes/stylesheet.css">
     <link rel="stylesheet" href="includes/cssjsmenuhover.css" media="all" id="hoverJS">
-    <link rel="stylesheet" href="includes/admin_access.css">
+    <link rel="stylesheet" href="includes/css/admin_access.css">
     <script src="includes/menu.js"></script>
     <script src="includes/general.js"></script>
     <script>
@@ -158,11 +157,11 @@ $userList = zen_get_users();
         <?php if ($action == 'add') { ?>
             <tr>
                 <td class="id">&nbsp;</td>
-                <td class="name"><?php echo zen_draw_input_field('name', isset($_POST['name']) ? $_POST['name'] : '', 'class="form-control" required', true, 'text', true) ?></td>
-                <td class="email"><?php echo zen_draw_input_field('email', isset($_POST['email']) ? $_POST['email'] : '', 'class="form-control" required', true, 'email', true) ?></td>
-                <td class="profile"><?php echo zen_draw_pull_down_menu('profile', $profilesList, isset($_POST['profile']) ? $_POST['profile'] : 0, 'class="form-control"', true) ?></td>
-                <td class="password"><?php echo zen_draw_input_field('password', isset($_POST['password']) ? $_POST['password'] : '', 'class="form-control" required', true, 'password'); ?></td>
-                <td class="confirm"><?php echo zen_draw_input_field('confirm', isset($_POST['confirm']) ? $_POST['confirm'] : '', 'class="form-control" required', true, 'password'); ?></td>
+                <td class="name"><?php echo zen_draw_input_field('name', isset($_POST['name']) ? $_POST['name'] : '', 'class="form-control" required autofocus autocomplete="off"', false, 'text', true) ?></td>
+                <td class="email"><?php echo zen_draw_input_field('email', isset($_POST['email']) ? $_POST['email'] : '', 'class="form-control" required autocomplete="off"', false, 'email', true) ?></td>
+                <td class="profile"><?php echo zen_draw_pull_down_menu('profile', $profilesList, isset($_POST['profile']) ? $_POST['profile'] : '', 'class="form-control" required') ?></td>
+                <td class="password"><?php echo zen_draw_input_field('password', isset($_POST['password']) ? $_POST['password'] : '', 'class="form-control" required autocomplete="off"', false, 'password'); ?></td>
+                <td class="confirm"><?php echo zen_draw_input_field('confirm', isset($_POST['confirm']) ? $_POST['confirm'] : '', 'class="form-control" required autocomplete="off"', false, 'password'); ?></td>
                 <td class="actions">
                     <button type="submit" class="btn btn-primary"><?php echo IMAGE_INSERT; ?></button>
                     <a href="<?php echo zen_href_link(FILENAME_USERS) ?>" class="btn btn-default" role="button"><?php echo IMAGE_CANCEL; ?></a></td>
@@ -207,7 +206,7 @@ $userList = zen_get_users();
                 <?php } elseif ($action != 'add') { ?>
                     <td class="actions">
                         <?php if ($action != 'delete') { ?>
-                            <a href="<?php echo zen_href_link(FILENAME_USERS, 'action=edit&user=' . $userDetails['id']) ?>" class="btn btn-primary" role="button"><?php echo IMAGE_EDIT; ?></a> 
+                            <a href="<?php echo zen_href_link(FILENAME_USERS, 'action=edit&user=' . $userDetails['id']) ?>" class="btn btn-primary" role="button"><?php echo IMAGE_EDIT; ?></a>
 			    <a href="<?php echo zen_href_link(FILENAME_USERS, 'action=password&user=' . $userDetails['id']) ?>" class="btn btn-primary"><?php echo IMAGE_RESET_PWD; ?></a>
                         <?php } ?>
                         <?php

@@ -1,10 +1,9 @@
 <?php
 /**
- * @package admin
- * @copyright Copyright 2003-2019 Zen Cart Development Team
+ * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: lat9 2019 Mar 23 Modified in v1.5.6b $
+ * @version $Id: DrByte 2020 May 17 Modified in v1.5.7 $
  */
 if (!defined('USE_PCONNECT')) define('USE_PCONNECT', 'false');
 /**
@@ -77,6 +76,9 @@ if (!defined('USE_PCONNECT')) define('USE_PCONNECT', 'false');
                                'classPath'=>DIR_WS_CLASSES);
   $autoLoadConfig[0][] = array('autoType'=>'class',
                                'loadFile'=> 'configurationValidation.php',
+                               'classPath'=>DIR_WS_CLASSES);
+  $autoLoadConfig[0][] = array('autoType'=>'class',
+                               'loadFile'=> 'WhosOnline.php',
                                'classPath'=>DIR_WS_CLASSES);
 
 /**
@@ -256,11 +258,14 @@ if (!defined('USE_PCONNECT')) define('USE_PCONNECT', 'false');
  * Breakpoint 175.
  *
  * require(DIR_WS_CLASSES . 'configurationValidation');
+ * require(DIR_FS_CATALOG . 'includes/init_includes/init_observers.php');
  *
  */
   $autoLoadConfig[175][] = array('autoType'=>'classInstantiate',
                                  'className'=>'configurationValidation',
                                  'objectName'=>'configurationValidation');
+  $autoLoadConfig[175][] = array('autoType'=>'include',
+                                 'loadFile'=> DIR_FS_CATALOG . 'includes/init_includes/init_observers.php');
 /**
  * Breakpoint 180.
  *
@@ -278,3 +283,7 @@ if (!defined('USE_PCONNECT')) define('USE_PCONNECT', 'false');
  */
   $autoLoadConfig[181][] = array('autoType'=>'init_script',
                                  'loadFile'=> 'init_errors.php');
+
+/**
+ * NOTE: Most plugins should be added from point 200 onward.
+ */

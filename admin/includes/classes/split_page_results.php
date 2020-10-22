@@ -1,10 +1,9 @@
 <?php
 /**
- * @package admin
- * @copyright Copyright 2003-2018 Zen Cart Development Team
+ * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Drbyte Sun Jan 7 21:39:26 2018 -0500 Modified in v1.5.6 $
+ * @version $Id: Steve 2020 May 01 Modified in v1.5.7 $
  */
 class splitPageResults
 {
@@ -77,7 +76,7 @@ class splitPageResults
         if ($current_page_number > 1) {
           $display_links .= '<a href="' . zen_href_link(basename($PHP_SELF), $parameters . $page_name . '=' . ($current_page_number - 1), 'NONSSL') . '" class="splitPageLink">' . PREVNEXT_BUTTON_PREV . '</a>&nbsp;&nbsp;';
         } else {
-          $display_links .= PREVNEXT_BUTTON_PREV . '&nbsp;&nbsp;';
+          $display_links .= '<span style="visibility:hidden;">'. PREVNEXT_BUTTON_PREV . '&nbsp;&nbsp;</span>';
         }
 
         $display_links .= sprintf(TEXT_RESULT_PAGE, zen_draw_pull_down_menu($page_name, $pages_array, $current_page_number, 'onChange="this.form.submit();"'), $num_pages);
@@ -85,7 +84,7 @@ class splitPageResults
         if (($current_page_number < $num_pages) && ($num_pages != 1)) {
           $display_links .= '&nbsp;&nbsp;<a href="' . zen_href_link(basename($PHP_SELF), $parameters . $page_name . '=' . ($current_page_number + 1), 'NONSSL') . '" class="splitPageLink">' . PREVNEXT_BUTTON_NEXT . '</a>';
         } else {
-          $display_links .= '&nbsp;&nbsp;' . PREVNEXT_BUTTON_NEXT;
+          $display_links .= '<span style="visibility:hidden;">&nbsp;&nbsp;' . PREVNEXT_BUTTON_NEXT . '</span>';
         }
 
         if ($parameters != '') {

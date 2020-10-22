@@ -1,10 +1,9 @@
 <?php
 /**
- * @package languageDefines
- * @copyright Copyright 2003-2018 Zen Cart Development Team
+ * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Scott C Wilson Mon Apr 23 08:06:02 2018 -0400 Modified in v1.5.6 $
+ * @version $Id: DrByte 2020 Jun 19 Modified in v1.5.7 $
  */
 
 define ('EMAIL_LOGO_FILENAME', 'header.jpg');  //-File is present in /email folder
@@ -20,7 +19,7 @@ define ('EMAIL_EXTRA_HEADER_INFO', '');
 
 // office use only
 define('OFFICE_FROM','<strong>From:</strong>');
-define('OFFICE_EMAIL','<strong>Email:</strong>');
+define('OFFICE_EMAIL','<strong>Mail:</strong>');
 
 define('OFFICE_USE','<strong>Office Use Only:</strong>');
 define('OFFICE_LOGIN_NAME','<strong>Login Name:</strong>');
@@ -39,7 +38,7 @@ define('EMAIL_DISCLAIMER', 'This email address was given to us by you or by one 
 define('EMAIL_SPAM_DISCLAIMER','');
 // Define a message you'd like to add to an order confirmation email
 define('EMAIL_ORDER_MESSAGE','');
-define('EMAIL_FOOTER_COPYRIGHT','Copyright (c) ' . date('Y') . ' <a href="' . zen_href_link(FILENAME_DEFAULT) . '" target="_blank">' . STORE_NAME . '</a>. Powered by <a href="http://www.zen-cart.com" target="_blank">Zen Cart</a>');
+define('EMAIL_FOOTER_COPYRIGHT','Copyright (c) ' . date('Y') . ' <a href="' . zen_href_link(FILENAME_DEFAULT) . '">' . STORE_NAME . '</a>. Powered by <a href="https://www.zen-cart.com">Zen Cart</a>');
 define('TEXT_UNSUBSCRIBE', "\n\nTo unsubscribe from future newsletter and promotional mailings, simply click on the following link: \n");
 
 // email advisory for all emails customer generate - tell-a-friend and GV send

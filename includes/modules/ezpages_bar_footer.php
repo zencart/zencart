@@ -2,11 +2,10 @@
 /**
  * ezpages bar (footer) - used to display links to EZ-Pages content in horizontal format (usually as a footer element)
  *
- * @package templateSystem
- * @copyright Copyright 2003-2019 Zen Cart Development Team
+ * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2019 Mar 22 Modified in v1.5.6b $
+ * @version $Id: DrByte 2020 May 19 Modified in v1.5.7 $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
@@ -16,7 +15,7 @@ $zco_notifier->notify('NOTIFY_START_EZPAGES_FOOTERBAR');
 $var_linksList = array();
 
 // test if bar should display:
-if (EZPAGES_STATUS_FOOTER == '1' || (EZPAGES_STATUS_FOOTER == '2' && (strstr(EXCLUDE_ADMIN_IP_FOR_MAINTENANCE, $_SERVER['REMOTE_ADDR'])))) {
+if (EZPAGES_STATUS_FOOTER == '1' || (EZPAGES_STATUS_FOOTER == '2' && zen_is_whitelisted_admin_ip())) {
 
   if (!$sniffer->table_exists(TABLE_EZPAGES_CONTENT)) {
     return; // early exit; db not upgraded

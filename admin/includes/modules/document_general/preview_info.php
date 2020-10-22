@@ -1,10 +1,9 @@
 <?php
 /**
- * @package admin
- * @copyright Copyright 2003-2019 Zen Cart Development Team
+ * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2019 May 25 Modified in v1.5.6b $
+ * @version $Id: Steve 2020 Apr 01 Modified in v1.5.7 $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
@@ -24,15 +23,8 @@ if (zen_not_null($_POST)) {
   }
   unset ($url);
 } else {
-  $product = $db->Execute("SELECT p.products_id, pd.language_id, pd.products_name,
-                                  pd.products_description, pd.products_url, p.products_quantity,
-                                  p.products_model, p.products_image, p.products_price, p.products_virtual,
-                                  p.products_weight, p.products_date_added, p.products_last_modified,
-                                  p.products_date_available, p.products_status, p.manufacturers_id,
-                                  p.products_quantity_order_min, p.products_quantity_order_units, p.products_priced_by_attribute,
-                                  p.product_is_free, p.product_is_call, p.products_quantity_mixed,
-                                  p.product_is_always_free_shipping, p.products_qty_box_status, p.products_quantity_order_max,
-                                  p.products_sort_order
+  $product = $db->Execute("SELECT p.*,
+                                  pd.language_id, pd.products_name, pd.products_description, pd.products_url
                            FROM " . TABLE_PRODUCTS . " p,
                                 " . TABLE_PRODUCTS_DESCRIPTION . " pd
                            WHERE p.products_id = pd.products_id
@@ -165,10 +157,10 @@ $form_action = (isset($_GET['pID'])) ? 'update_product' : 'insert_product';
       ?>
       <a href="<?php echo zen_href_link(FILENAME_CATEGORY_PRODUCT_LISTING, 'cPath=' . $cPath . (isset($_GET['pID']) ? '&pID=' . $_GET['pID'] : '') . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '') . (isset($_GET['search']) ? '&search=' . $_GET['search'] : '')); ?>" class="btn btn-default" role="button"><?php echo IMAGE_CANCEL; ?></a>
     </div>
-      <?php 
+      <?php
   }
       if (!(isset($_GET['read']) && ($_GET['read'] === 'only'))) {
-        echo '</form>'; 
+        echo '</form>';
   }
   ?>
 </div>

@@ -2,11 +2,10 @@
 /**
  * payer_auth_frame page
  *
- * @package paymentMethod
- * @copyright Copyright 2003-2010 Zen Cart Development Team
+ * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @copyright Portions Copyright 2005 CardinalCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: header_php.php 15519 2010-02-19 11:01:58Z drbyte $
+ * @version $Id: lat9 2019 Dec 16 Modified in v1.5.7 $
  */
 /**
  * Purpose:

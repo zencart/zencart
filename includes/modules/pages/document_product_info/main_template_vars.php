@@ -2,11 +2,10 @@
 /**
  *  document_product_info main_template_vars.php
  *
- * @package productTypes
- * @copyright Copyright 2003-2018 Zen Cart Development Team
+ * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: mc12345678 Sat Sep 1 17:50:42 2018 -0400 Modified in v1.5.6 $
+ * @version $Id: DrByte 2020 May 19 Modified in v1.5.7 $
  */
 /*
  * Extracts and constructs the data to be used in the product-type template tpl_TYPEHANDLER_info_display.php
@@ -22,15 +21,13 @@
   $product_not_found = $product_info->EOF;
 
   if (!defined('PRODUCT_THROWS_200_WHEN_DISABLED') || PRODUCT_THROWS_200_WHEN_DISABLED !== true) {
-    if ($product_info->fields['products_status'] != 1) {
+      if (!$product_not_found && $product_info->fields['products_status'] != 1) {
       $product_not_found = true;
     }
   }
 
   if ($product_not_found) {
-
     $tpl_page_body = '/tpl_product_info_noproduct.php';
-
   } else {
 
     $tpl_page_body = '/tpl_document_product_info_display.php';
@@ -53,29 +50,24 @@
     require(DIR_WS_MODULES . zen_get_module_directory(FILENAME_ATTRIBUTES));
 
 // if review must be approved or disabled do not show review
-    $review_status = " and r.status = '1'";
+    $review_status = " AND r.status = 1";
 
-    $reviews_query = "select count(*) as count from " . TABLE_REVIEWS . " r, "
+    $reviews_query = "SELECT count(*) AS count FROM " . TABLE_REVIEWS . " r, "
                                                        . TABLE_REVIEWS_DESCRIPTION . " rd
-                       where r.products_id = '" . (int)$_GET['products_id'] . "'
-                       and r.reviews_id = rd.reviews_id
-                       and rd.languages_id = '" . (int)$_SESSION['languages_id'] . "'" .
+                       WHERE r.products_id = " . (int)$_GET['products_id'] . "
+                       AND r.reviews_id = rd.reviews_id
+                       AND rd.languages_id = " . (int)$_SESSION['languages_id'] .
                        $review_status;
 
     $reviews = $db->Execute($reviews_query);
-
-  }
-
-  require(DIR_WS_MODULES . zen_get_module_directory('product_prev_next.php'));
 
   $products_name = $product_info->fields['products_name'];
   $products_model = $product_info->fields['products_model'];
   // if no common markup tags in description, add line breaks for readability:
   $products_description = (!preg_match('/(<br|<p|<div|<dd|<li|<span)/i', $product_info->fields['products_description']) ? nl2br($product_info->fields['products_description']) : $product_info->fields['products_description']);
 
-  if ($product_info->fields['products_image'] == '' and PRODUCTS_IMAGE_NO_IMAGE_STATUS == '1') {
-    $products_image = PRODUCTS_IMAGE_NO_IMAGE;
-  } else {
+  $products_image = (($product_not_found || $product_info->fields['products_image'] == '') && PRODUCTS_IMAGE_NO_IMAGE_STATUS == '1') ? PRODUCTS_IMAGE_NO_IMAGE : '';
+  if ($product_info->fields['products_image'] != '' || PRODUCTS_IMAGE_NO_IMAGE_STATUS != '1') {
     $products_image = $product_info->fields['products_image'];
   }
 
@@ -97,12 +89,16 @@
 
   $products_tax_class_id = $product_info->fields['products_tax_class_id'];
 
+    $products_discount_type = $product_info->fields['products_discount_type'];
+    $products_discount_type_from = $product_info->fields['products_discount_type_from'];
+  }
+
+  require(DIR_WS_MODULES . zen_get_module_directory('product_prev_next.php'));
+
   $module_show_categories = PRODUCT_INFO_CATEGORIES;
   $module_next_previous = PRODUCT_INFO_PREVIOUS_NEXT;
 
   $products_id_current = (int)$_GET['products_id'];
-  $products_discount_type = $product_info->fields['products_discount_type'];
-  $products_discount_type_from = $product_info->fields['products_discount_type_from'];
 
 /**
  * Load product-type-specific main_template_vars

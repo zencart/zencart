@@ -1,11 +1,10 @@
 <?php
 
 /**
- * @package admin
- * @copyright Copyright 2003-2019 Zen Cart Development Team
+ * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: mc12345678 2019 Jan 06 Modified in v1.5.6b $
+ * @version $Id: DrByte 2020 May 18 Modified in v1.5.7 $
  */
 require('includes/application_top.php');
 
@@ -294,7 +293,7 @@ if (zen_not_null($action)) {
           'status_sidebox' => '1',
           'status_footer' => '1',
           'status_toc' => '1',
-          'page_open_new_window' => '1',
+          'page_open_new_window' => '0',
           'page_is_ssl' => '1'
         );
 
@@ -347,7 +346,7 @@ if (zen_not_null($action)) {
                 ?>
               <div class="input-group">
                 <span class="input-group-addon"><?php echo zen_image(DIR_WS_CATALOG_LANGUAGES . $languages[$i]['directory'] . '/images/' . $languages[$i]['image'], $languages[$i]['name']); ?></span>
-                <?php echo zen_draw_input_field('pages_title[' . $languages[$i]['id'] . ']', htmlspecialchars($pages_title, ENT_COMPAT, CHARSET, TRUE), zen_set_field_length(TABLE_EZPAGES_CONTENT, 'pages_title') . ' class="form-control"', true); ?>
+                <?php echo zen_draw_input_field('pages_title[' . $languages[$i]['id'] . ']', htmlspecialchars($pages_title, ENT_COMPAT, CHARSET, TRUE), zen_set_field_length(TABLE_EZPAGES_CONTENT, 'pages_title') . ' class="form-control" required', false); ?>
               </div>
               <br>
               <?php

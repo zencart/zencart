@@ -56,12 +56,12 @@ class CustomerGroupInfo implements ArrayAccess
     );
   
     /**
-      * $id The ID of the customer group.
+      * $id The ID of the Customer Group.
       * @var string
       */
     protected $id;
     /**
-      * $name The name of the customer group.
+      * $name The name of the Customer Group.
       * @var string
       */
     protected $name;
@@ -96,7 +96,7 @@ class CustomerGroupInfo implements ArrayAccess
   
     /**
      * Sets id
-     * @param string $id The ID of the customer group.
+     * @param string $id The ID of the Customer Group.
      * @return $this
      */
     public function setId($id)
@@ -115,7 +115,7 @@ class CustomerGroupInfo implements ArrayAccess
   
     /**
      * Sets name
-     * @param string $name The name of the customer group.
+     * @param string $name The name of the Customer Group.
      * @return $this
      */
     public function setName($name)

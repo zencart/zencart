@@ -4,14 +4,22 @@ on: [push, pull_request]
 
 jobs:
   unit-tests:
-    name: Unit Tests
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        php-versions: ['7.3', '7.4']
+    name: PHP ${{ matrix.php-versions }} Unit Tests
     steps:
-      - uses: actions/checkout@master
+      - name: Checkout
+        uses: actions/checkout@v2
         with:
           fetch-depth: 1
-      - name: Show PHP version
-        run: php --version
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-versions }}
+          tools: composer, phpunit
 
       - name: Get composer cache directory
         id: composer-cache
@@ -39,7 +47,7 @@ jobs:
     runs-on: ubuntu-latest
     services:
       mysql:
-        image: mysql:5.7
+        image: mysql:8.0
         env:
           MYSQL_ALLOW_EMPTY_PASSWORD: false
           MYSQL_ROOT_PASSWORD: password
@@ -102,4 +110,3 @@ jobs:
         with:
           name: Screenshots
           path: not_for_release/testFramework/logs
-

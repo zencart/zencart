@@ -2,11 +2,10 @@
 /**
  * Coupon Exporter
  *
- * @package admin
- * @copyright Copyright 2003-2018 Zen Cart Development Team
+ * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Drbyte Thu Aug 3 14:19:18 2017 -0400 New in v1.5.6 $
+ * @version $Id: Scott C Wilson 2020 Apr 12 Modified in v1.5.7 $
  *
  */
 require ('includes/application_top.php');
@@ -264,7 +263,7 @@ if ($action != '')
 <head>
 <meta charset="<?php echo CHARSET; ?>">
 <title><?php echo HEADING_TITLE; ?></title>
-<link href="includes/template/css/stylesheet.css" rel="stylesheet" type="text/css"/>
+<link href="includes/css/stylesheet.css" rel="stylesheet" type="text/css"/>
 </head>
 <body>
 <?php
@@ -305,7 +304,7 @@ if ($action != '')
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=<?php echo CHARSET; ?>">
 <title><?php echo TITLE; ?></title>
-<link rel="stylesheet" type="text/css" href="includes/stylesheet.css">
+<link rel="stylesheet" type="text/css" href="includes/css/stylesheet.css">
 <link rel="stylesheet" type="text/css" href="includes/cssjsmenuhover.css" media="all" id="hoverJS">
 <script type="text/javascript" src="includes/menu.js"></script>
 <script type="text/javascript">

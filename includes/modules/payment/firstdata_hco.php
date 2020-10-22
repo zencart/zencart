@@ -2,11 +2,10 @@
 /**
  * First Data Hosted Checkout Payment Pages Module
  *
- * @package paymentMethod
- * @copyright Copyright 2003-2019 Zen Cart Development Team
+ * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2019 Jan 04 Modified in v1.5.6a $
+ * @version $Id: DrByte 2020 May 16 Modified in v1.5.7 $
  */
 /**
  * First Data Hosted Checkout Payment Pages Module
@@ -80,7 +79,7 @@ class firstdata_hco extends base {
       if (defined('MODULE_PAYMENT_FIRSTDATA_PAYMENTPAGES_STATUS')) {
         $new_version_details = plugin_version_check_for_updates(2051, $this->moduleVersion);
         if ($new_version_details !== false) {
-          $this->title .= '<span class="alert">' . ' - NOTE: A NEW VERSION OF THIS PLUGIN IS AVAILABLE. <a href="' . $new_version_details['link'] . '" target="_blank">[Details]</a>' . '</span>';
+          $this->title .= '<span class="alert">' . ' - NOTE: A NEW VERSION OF THIS PLUGIN IS AVAILABLE. <a href="' . $new_version_details['link'] . '" rel="noopener" target="_blank">[Details]</a>' . '</span>';
         }
       }
     }
@@ -381,9 +380,9 @@ class firstdata_hco extends base {
   function after_process() {
     global $insert_id, $order, $currencies;
     $this->notify('MODULE_PAYMENT_FIRSTDATA_PAYMENTPAGES_POSTPROCESS_HOOK');
-    
+
     zen_update_orders_history($insert_id, $this->authorize['exact_ctr'], null, $this->order_status, 0);
-    
+
     $comment = 'Credit Card payment.  AUTH: ' . $this->auth_code . ' TransID: ' . $this->transaction_id;
     if ($order->info['currency'] != $this->gateway_currency) {
       $comment .= ' (' . round($order->info['total'] * $currencies->get_value($this->gateway_currency), 2) . ' ' . $this->gateway_currency . ')';

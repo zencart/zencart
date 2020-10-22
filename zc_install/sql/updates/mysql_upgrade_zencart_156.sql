@@ -1,12 +1,11 @@
 #
 # * This SQL script upgrades the core Zen Cart database structure from v1.5.5 to v1.5.6
 # *
-# * @package Installer
 # * @access private
-# * @copyright Copyright 2003-2019 Zen Cart Development Team
+# * @copyright Copyright 2003-2020 Zen Cart Development Team
 # * @copyright Portions Copyright 2003 osCommerce
 # * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
-# * @version $Id: DrByte 2019 May 13 Modified in v1.5.6b $
+# * @version $Id: Scott C Wilson 2020 Apr 16 Modified in v1.5.7 $
 #
 
 ############ IMPORTANT INSTRUCTIONS ###############
@@ -176,7 +175,8 @@ VALUES ('categoriesProductListing', 'BOX_CATALOG_CATEGORIES_PRODUCTS', 'FILENAME
 
 DELETE FROM admin_pages WHERE page_key = 'linkpointReview';
 
-ALTER TABLE customers_basket DROP final_price;
+# This was moved to the 1.5.7 upgrade; DROP did not work in 1.5.6
+# ALTER TABLE customers_basket DROP final_price;
 
 ## add support for multi lingual ezpages
 #NEXT_X_ROWS_AS_ONE_COMMAND:8
@@ -194,7 +194,11 @@ INSERT IGNORE INTO ezpages_content (pages_id, languages_id, pages_title, pages_h
 SELECT e.pages_id, l.languages_id, e.pages_title, e.pages_html_text
 FROM ezpages e
 LEFT JOIN languages l ON 1;
-ALTER TABLE ezpages DROP languages_id, DROP pages_title, DROP pages_html_text;
+
+# This was moved to the 1.5.7 upgrade; DROP did not work in 1.5.6
+# Note that these should have been done on separate lines
+# ALTER TABLE ezpages DROP languages_id, DROP pages_title, DROP pages_html_text;
+
 ALTER TABLE ezpages ADD status_visible int(1) NOT NULL default '0';
 ## support for utf8mb4 index limitations in MySQL 5.5-5.6
 ALTER TABLE admin_menus MODIFY menu_key VARCHAR(191) NOT NULL DEFAULT '';

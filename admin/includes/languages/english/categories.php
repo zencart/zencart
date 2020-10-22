@@ -1,11 +1,10 @@
 <?php
 
 /**
- * @package admin
- * @copyright Copyright 2003-2018 Zen Cart Development Team
+ * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Zen4All Thu Feb 1 15:28:42 2018 +0100 Modified in v1.5.6 $
+ * @version $Id: Scott C Wilson 2020 Apr 08 Modified in v1.5.7 $
  */
 
 define('HEADING_TITLE', 'Category');
@@ -20,7 +19,9 @@ define('TEXT_CATEGORIES_IMAGE_MANUAL', 'Use an existing image file in the above 
 define('TEXT_EDIT_SORT_ORDER', 'Sort Order:');
 define('TEXT_RESTRICT_PRODUCT_TYPE', 'Restrict to Product Type');
 define('TEXT_CATEGORY_HAS_RESTRICTIONS', 'This Category has been restricted to these Product Types');
-
+define('MESSAGE_IMAGE_REMOVED_CATEGORY', 'Image removed from category #%1$u "%2$s".');
+define('MESSAGE_IMAGE_ADDED_MANUAL', 'Image was manually added to category #%1$u "%2$s".');
+define('ERROR_IMAGE_MANUAL_NOT_FOUND', 'The manually added image "%s" was not found.');
 // Metatags
 define('TEXT_INFO_HEADING_EDIT_CATEGORY_META_TAGS', 'Categories Meta Tags Definitions');
 define('TEXT_EDIT_CATEGORIES_META_TAGS_INTRO', 'Define Custom Meta Tags for ID#%1$u - "%2$s"');

@@ -104,7 +104,7 @@ class V1LocationsApi
             $headerParams['Accept'] = $_header_accept;
         }
         $headerParams['Content-Type'] = ApiClient::selectHeaderContentType(array('application/json'));
-        $headerParams['Square-Version'] = "2020-03-25";
+        $headerParams['Square-Version'] = "2020-05-28";
 
         
         
@@ -189,7 +189,7 @@ class V1LocationsApi
             $headerParams['Accept'] = $_header_accept;
         }
         $headerParams['Content-Type'] = ApiClient::selectHeaderContentType(array('application/json'));
-        $headerParams['Square-Version'] = "2020-03-25";
+        $headerParams['Square-Version'] = "2020-05-28";
 
         
         

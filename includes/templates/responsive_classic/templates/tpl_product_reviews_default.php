@@ -2,14 +2,14 @@
 /**
  * Page Template
  *
- * @package templateSystem
- * @copyright Copyright 2003-2016 Zen Cart Development Team
+ * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: picaflor-azul Sat Jan 9 13:13:41 2016 -0500 New in v1.5.5 $
+ * @version $Id: DrByte 2020 Feb 29 Modified in v1.5.7 $
  */
 ?>
 <div class="centerColumn" id="reviewsDefault">
+<?php if ($messageStack->size('product_info') > 0) echo $messageStack->output('product_info'); ?>
 <div id="reviews-top">
 <?php
   if (zen_not_null($products_image)) {

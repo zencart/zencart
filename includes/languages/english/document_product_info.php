@@ -1,15 +1,14 @@
 <?php
 /**
- * @package languageDefines
- * @copyright Copyright 2003-2007 Zen Cart Development Team
+ * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: document_product_info.php 6371 2007-05-25 19:55:59Z ajeh $
+ * @version $Id: DrByte 2020 May 16 Modified in v1.5.7 $
  */
 
 define('TEXT_PRODUCT_NOT_FOUND', 'Sorry, the product was not found.');
 define('TEXT_CURRENT_REVIEWS', 'Current Reviews:');
-define('TEXT_MORE_INFORMATION', 'For more information, please visit this product\'s <a href="%s" target="_blank">webpage</a>.');
+define('TEXT_MORE_INFORMATION', 'For more information, please visit this product\'s <a href="%s" rel="noreferrer noopener" target="_blank">webpage</a>.');
 define('TEXT_DATE_ADDED', 'This product was added to our catalog on %s.');
 define('TEXT_DATE_AVAILABLE', 'This product will be in stock on %s.');
 define('TEXT_ALSO_PURCHASED_PRODUCTS', 'Customers who bought this product also purchased...');

@@ -3,14 +3,13 @@
  * Square payments module
  * www.squareup.com
  *
- * Integrated using SquareConnect PHP SDK 3.20200325.0
+ * Integrated using SquareConnect PHP SDK 3.20200528.1
  *
  * REQUIRES PHP 5.4 or newer
  *
- * @package square
  * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: Chris Brown <drbyte@zen-cart.com> Modified 2020-04-08 $
+ * @version $Id: DrByte 2020 Jun 22 Modified in v1.5.7 $
  */
 
 if (!defined('TABLE_SQUARE_PAYMENTS')) define('TABLE_SQUARE_PAYMENTS', DB_PREFIX . 'square_payments');
@@ -29,7 +28,11 @@ class square extends base
     /**
      * $moduleVersion is the plugin version number
      */
-    public $moduleVersion = '1.1';
+    public $moduleVersion = '1.5';
+    /**
+     * API version this module was last updated to use
+     */
+    protected $apiVersion = '3.20200528.1';
     /**
      * $title is the displayed name for this payment method
      *
@@ -75,14 +78,24 @@ class square extends base
     public function __construct()
     {
         require DIR_FS_CATALOG . DIR_WS_CLASSES . 'vendors/square/connect/autoload.php';
-        require_once DIR_FS_CATALOG . 'includes/modules/payment/square_support/ZenCartCreatePaymentRequest.php';
+        require_once DIR_FS_CATALOG . 'includes/modules/payment/square_support/ZenCartConnectCreatePaymentRequest.php';
 
         global $order;
         $this->code = 'square';
         $this->enabled = (defined('MODULE_PAYMENT_SQUARE_STATUS') && MODULE_PAYMENT_SQUARE_STATUS == 'True');
         $this->sort_order = defined('MODULE_PAYMENT_SQUARE_SORT_ORDER') ? MODULE_PAYMENT_SQUARE_SORT_ORDER : null;
         $this->title = MODULE_PAYMENT_SQUARE_TEXT_CATALOG_TITLE; // Payment module title in Catalog
-        $this->description = '<strong>Square Payments Module ' . $this->moduleVersion . '</strong><br><br>' . MODULE_PAYMENT_SQUARE_TEXT_DESCRIPTION;
+        $this->description = '<strong>Square Payments Module ' . $this->moduleVersion . '</strong>';
+        $this->description .= '<br>[designed for API: ' . $this->apiVersion . ']';
+
+        if (IS_ADMIN_FLAG === true) {
+            $this->sdkApiVersion = (new \SquareConnect\Configuration())->getUserAgent();
+            //$this->sdkApiVersion = (new \Square\SquareClient())->getSquareVersion();
+            $this->description .= '<br>[using SDK: ' . $this->sdkApiVersion . ']';
+        }
+
+        $this->description .= '<br><br>' . MODULE_PAYMENT_SQUARE_TEXT_DESCRIPTION;
+
         if (IS_ADMIN_FLAG === true) {
             $this->title = MODULE_PAYMENT_SQUARE_TEXT_ADMIN_TITLE;
             if (defined('MODULE_PAYMENT_SQUARE_STATUS')) {
@@ -107,7 +120,7 @@ class square extends base
                 if (MODULE_PAYMENT_SQUARE_TESTING_MODE === 'Sandbox') $this->title .= '<span class="alert"> (Sandbox mode)</span>';
                 $new_version_details = plugin_version_check_for_updates(156, $this->moduleVersion);
                 if ($new_version_details !== false) {
-                    $this->title .= '<span class="alert">' . ' - NOTE: A NEW VERSION OF THIS PLUGIN IS AVAILABLE. <a href="' . $new_version_details['link'] . '" target="_blank">[Details]</a>' . '</span>';
+                    $this->title .= '<span class="alert">' . ' - NOTE: A NEW VERSION OF THIS PLUGIN IS AVAILABLE. <a href="' . $new_version_details['link'] . '" rel="noopener" target="_blank">[Details]</a>' . '</span>';
                 }
             }
             $this->tableCheckup();
@@ -173,6 +186,9 @@ class square extends base
             'id' => $this->code,
             'module' => $this->title,
             'fields' => array(
+                array(
+                    'field' => '<div>' . MODULE_PAYMENT_SQUARE_TEXT_NOTICES_TO_CUSTOMER . '</div>',
+                ),
                 array(
                     'title' => MODULE_PAYMENT_SQUARE_TEXT_CREDIT_CARD_NUMBER,
                     'field' => '<div id="' . $this->code . '_cc-number"></div><div id="sq-card-brand"></div>',
@@ -307,7 +323,7 @@ class square extends base
             );
         }
 
-        $payment_request = new \SquareConnect\Model\ZenCartCreatePaymentRequest();
+        $payment_request = new \SquareConnect\Model\ZenCartConnectCreatePaymentRequest();
         $money = new \SquareConnect\Model\Money();
         $money->setAmount($this->convert_to_cents($payment_amount, $currency_code))->setCurrency((string)$currency_code);
         $payment_request->setAmountMoney($money);
@@ -822,14 +838,14 @@ class square extends base
      * fetch original payment details for an order
      *
      * @param $order_id
-     * @return \SquareConnect\Model\Order
+     * @return \SquareConnect\Model\Order[]
      */
     protected function lookupPaymentForOrder($order_id)
     {
         $records = $this->lookupOrderDetails($order_id);
 
-        if (count($records) < 1) {
-            return '';
+        if (empty($records)) {
+            return (new \SquareConnect\Model\BatchRetrieveOrdersResponse(['orders' => new \SquareConnect\Model\Order()]))->getOrders();
         }
 
         return $records[0];
@@ -1045,7 +1061,7 @@ class square extends base
             }
         }
         if (($errors != '' && stristr(MODULE_PAYMENT_SQUARE_LOGGING, 'Email on Failures')) || strstr(MODULE_PAYMENT_SQUARE_LOGGING, 'Email Always')) {
-            zen_mail(STORE_NAME, STORE_OWNER_EMAIL_ADDRESS, 'Square Alert (customer transaction error) ' . date('M-d-Y h:i:s'), $logMessage, STORE_OWNER, STORE_OWNER_EMAIL_ADDRESS,
+            zen_mail(STORE_NAME, STORE_OWNER_EMAIL_ADDRESS, 'Square Alert (' . (IS_ADMIN_FLAG === true ? 'admin' : 'customer') . ' transaction error) ' . date('M-d-Y h:i:s'), $logMessage, STORE_OWNER, STORE_OWNER_EMAIL_ADDRESS,
                 array('EMAIL_MESSAGE_HTML' => nl2br($logMessage)), 'debug');
         }
     }
@@ -1077,8 +1093,14 @@ class square extends base
 
         $refundNote = strip_tags(zen_db_input($_POST['refnote']));
 
-        $payments = $this->lookupPaymentForOrder($oID)->getTenders();
-        $payment = $payments[0];
+        $record = $this->lookupPaymentForOrder($oID);
+        if (!method_exists($record, 'getTenders')) {
+            $messageStack->add_session('ERROR: Could not look up details. Probable bad record number, or incorrect Square account credentials.', 'error');
+            return false;
+        }
+        $transactions = $record->getTenders();
+
+        $payment = $transactions[0];
         $currency_code = $payment->getAmountMoney()->getCurrency();
 
         $refund_details = array(
@@ -1099,31 +1121,30 @@ class square extends base
             $result = $api_instance->refundPayment($request_body);
             $errors_object = $result->getErrors();
             $transaction = $result->getRefund();
-            $this->logTransactionData($transaction, $refund_details, (string)$errors_object);
+            $this->logTransactionData(['refund request' => 'payment ' . $payment->getId(), 'id' => '[refund]'], $refund_details, (string)$errors_object);
+
+            $currency_code = $transaction->getAmountMoney()->getCurrency();
+            $amount = $currencies->format($transaction->getAmountMoney()->getAmount() / (pow(10, $currencies->get_decimal_places($currency_code))), false, $currency_code);
+
+            $comments = 'REFUNDED: ' . $amount . "\n" . $refundNote;
+            zen_update_orders_history($oID, $comments, null, $new_order_status, 0);
+
+            $messageStack->add_session(sprintf(MODULE_PAYMENT_SQUARE_TEXT_REFUND_INITIATED . $amount), 'success');
+
+            return true;
+
         } catch (\SquareConnect\ApiException $e) {
             $errors_object = $e->getResponseBody()->errors;
             $this->logTransactionData(array($e->getCode() => $e->getMessage()), $refund_details, print_r($e->getResponseBody(), true));
             trigger_error("Square Connect error (REFUNDING). \nResponse Body:\n" . print_r($e->getResponseBody(), true) . "\nResponse Headers:\n" . print_r($e->getResponseHeaders(), true), E_USER_NOTICE);
-            $messageStack->add_session(MODULE_PAYMENT_SQUARE_TEXT_COMM_ERROR, 'error');
+//            $messageStack->add_session(MODULE_PAYMENT_SQUARE_TEXT_COMM_ERROR, 'error');
         }
 
-        if (count($errors_object)) {
+        if (is_array($errors_object) && count($errors_object)) {
             $error = $this->parse_error_response($errors_object);
             $messageStack->add_session(MODULE_PAYMENT_SQUARE_TEXT_UPDATE_FAILED . ' [' . $error['detail'] . ']', 'error');
-
-            return false;
         }
-
-        $currency_code = $transaction->getAmountMoney()->getCurrency();
-        $amount = $currencies->format($transaction->getAmountMoney()->getAmount() / (pow(10, $currencies->get_decimal_places($currency_code))), false, $currency_code);
-
-        // Success, so save the results
-        $comments = 'REFUNDED: ' . $amount . "\n" . $refundNote;
-        zen_update_orders_history($oID, $comments, null, $new_order_status, 0);
-
-        $messageStack->add_session(sprintf(MODULE_PAYMENT_SQUARE_TEXT_REFUND_INITIATED . $amount), 'success');
-
-        return true;
+        return false;
     }
 
     /**
@@ -1146,7 +1167,12 @@ class square extends base
 
         if (!$proceedToCapture) return false;
 
-        $transactions = $this->lookupPaymentForOrder($oID)->getTenders();
+        $record = $this->lookupPaymentForOrder($oID);
+        if (!method_exists($record, 'getTenders')) {
+            $messageStack->add_session('ERROR: Could not look up details. Probable bad record number, or incorrect Square account credentials.', 'error');
+            return false;
+        }
+        $transactions = $record->getTenders();
         $transaction = $transactions[0];
         $payment_id = $transaction->getPaymentId();
 
@@ -1155,30 +1181,29 @@ class square extends base
         $api_instance = new \SquareConnect\Api\PaymentsApi($this->_apiConnection);
 
         try {
-            $result = $api_instance->completePayment($payment_id);
+            $result = $api_instance->completePayment($payment_id, new \SquareConnect\Model\CompletePaymentRequest([]));
             $errors_object = $result->getErrors();
-            $this->logTransactionData(array('capture request' => 'payment ' . $payment_id), array(), (string)$errors_object);
+            $this->logTransactionData(array('capture request' => 'payment ' . $payment_id, 'id' => '[capture]'), array(), (string)$errors_object);
+
+            $comments = 'FUNDS COLLECTED. Trans ID: ' . $payment_id . "\n" . 'Time: ' . date('Y-m-D h:i:s') . "\n" . $captureNote;
+            zen_update_orders_history($oID, $comments, null, $new_order_status, 0);
+
+            $messageStack->add_session(sprintf(MODULE_PAYMENT_SQUARE_TEXT_CAPT_INITIATED, $payment_id), 'success');
+
+            return true;
+
         } catch (\SquareConnect\ApiException $e) {
             $errors_object = $e->getResponseBody()->errors;
             $this->logTransactionData(array($e->getCode() => $e->getMessage()), array(), print_r($e->getResponseBody(), true));
             trigger_error("Square Connect error (CAPTURE attempt). \nResponse Body:\n" . print_r($e->getResponseBody(), true) . "\nResponse Headers:\n" . print_r($e->getResponseHeaders(), true), E_USER_NOTICE);
-            $messageStack->add_session(MODULE_PAYMENT_SQUARE_TEXT_COMM_ERROR, 'error');
+//            $messageStack->add_session(MODULE_PAYMENT_SQUARE_TEXT_COMM_ERROR, 'error');
         }
 
-        if (count($errors_object)) {
+        if (is_array($errors_object) && count($errors_object)) {
             $error = $this->parse_error_response($errors_object);
             $messageStack->add_session(MODULE_PAYMENT_SQUARE_TEXT_UPDATE_FAILED . ' [' . $error['detail'] . ']', 'error');
-
-            return false;
         }
-
-        // Success, so save the results
-        $comments = 'FUNDS COLLECTED. Trans ID: ' . $payment_id . "\n" . 'Time: ' . date('Y-m-D h:i:s') . "\n" . $captureNote;
-        zen_update_orders_history($oID, $comments, null, $new_order_status, 0);
-
-        $messageStack->add_session(sprintf(MODULE_PAYMENT_SQUARE_TEXT_CAPT_INITIATED, $payment_id), 'success');
-
-        return true;
+        return false;
     }
 
     /**
@@ -1202,7 +1227,12 @@ class square extends base
         }
         if (!$proceedToVoid) return false;
 
-        $transactions = $this->lookupPaymentForOrder($oID)->getTenders();
+        $record = $this->lookupPaymentForOrder($oID);
+        if (!method_exists($record, 'getTenders')) {
+            $messageStack->add_session('ERROR: Could not look up details. Probable bad record number, or incorrect Square account credentials.', 'error');
+            return false;
+        }
+        $transactions = $record->getTenders();
         $transaction = $transactions[0];
         $payment_id = $transaction->getPaymentId();
 
@@ -1211,27 +1241,27 @@ class square extends base
         try {
             $result = $api_instance->cancelPayment($payment_id);
             $errors_object = $result->getErrors();
-            $this->logTransactionData(array('void request' => 'payment ' . $payment_id), array(), (string)$errors_object);
+            $this->logTransactionData(array('void request' => 'payment ' . $payment_id, 'id' => '[void]'), array(), (string)$errors_object);
+
+            $comments = 'VOIDED. Trans ID: ' . $payment_id . "\n" . $voidNote;
+            zen_update_orders_history($oID, $comments, null, $new_order_status, 0);
+
+            $messageStack->add_session(sprintf(MODULE_PAYMENT_SQUARE_TEXT_VOID_INITIATED, $payment_id), 'success');
+
+            return true;
+
         } catch (\SquareConnect\ApiException $e) {
             $errors_object = $e->getResponseBody()->errors;
             $this->logTransactionData(array($e->getCode() => $e->getMessage()), array(), print_r($e->getResponseBody(), true));
             trigger_error("Square Connect error (VOID attempt). \nResponse Body:\n" . print_r($e->getResponseBody(), true) . "\nResponse Headers:\n" . print_r($e->getResponseHeaders(), true), E_USER_NOTICE);
-            $messageStack->add_session(MODULE_PAYMENT_SQUARE_TEXT_COMM_ERROR, 'error');
+//            $messageStack->add_session(MODULE_PAYMENT_SQUARE_TEXT_COMM_ERROR, 'error');
         }
 
-        if (count($errors_object)) {
+        if (is_array($errors_object) && count($errors_object)) {
             $msg = $this->parse_error_response($errors_object);
             $messageStack->add_session(MODULE_PAYMENT_SQUARE_TEXT_UPDATE_FAILED . ' [' . $msg['detail'] . ']', 'error');
-
-            return false;
         }
-        // Success, so save the results
-        $comments = 'VOIDED. Trans ID: ' . $payment_id . "\n" . $voidNote;
-        zen_update_orders_history($oID, $comments, null, $new_order_status, 0);
-
-        $messageStack->add_session(sprintf(MODULE_PAYMENT_SQUARE_TEXT_VOID_INITIATED, $payment_id), 'success');
-
-        return true;
+        return false;
     }
 
     protected function getNewOrderStatus($order_id, $action, $default)
@@ -1251,13 +1281,15 @@ class square extends base
         $msg = '';
         $first_category = null;
         $first_code = null;
-        foreach ($error_object as $err) {
-            $category = method_exists($err, 'getCategory') ? $err->getCategory() : $err->category;
-            $code = method_exists($err, 'getCode') ? $err->getCode() : $err->code;
-            $detail = method_exists($err, 'getDetail') ? $err->getDetail() : $err->detail;
-            $msg .= "$code: $detail\n";
-            if (is_null($first_category)) $first_category = $category;
-            if (is_null($first_code)) $first_code = $code;
+        if (!empty($error_object)) {
+            foreach ($error_object as $err) {
+                $category = method_exists($err, 'getCategory') ? $err->getCategory() : $err->category;
+                $code = method_exists($err, 'getCode') ? $err->getCode() : $err->code;
+                $detail = method_exists($err, 'getDetail') ? $err->getDetail() : $err->detail;
+                $msg .= "$code: $detail\n";
+                if (is_null($first_category)) $first_category = $category;
+                if (is_null($first_code)) $first_code = $code;
+            }
         }
         $msg = trim($msg, "\n");
         $msg = str_replace("\n", "\n<br>", $msg);
@@ -1266,7 +1298,6 @@ class square extends base
 
         return array('detail' => $msg, 'category' => $first_category, 'code' => $first_code);
     }
-
 }
 
 // helper for Square admin configuration: locations selector
@@ -1293,74 +1324,5 @@ if (!function_exists('zen_update_orders_history'))
             'comments' => zen_db_input($message),
         );
         zen_db_perform (TABLE_ORDERS_STATUS_HISTORY, $data);
-    }
-}
-
-// for backward compatibility with older ZC versions before v152 which didn't have this function:
-if (!function_exists('plugin_version_check_for_updates')) {
-    function plugin_version_check_for_updates($plugin_file_id = 0, $version_string_to_compare = '', $strict_zc_version_compare = false)
-    {
-        if ($plugin_file_id == 0) return false;
-        $new_version_available = false;
-        $lookup_index = $errno = 0;
-        $response = $error = '';
-        $url1 = 'https://plugins.zen-cart.com/versioncheck/' . (int)$plugin_file_id;
-        $url2 = 'https://www.zen-cart.com/versioncheck/' . (int)$plugin_file_id;
-
-        if (function_exists('curl_init')) {
-            $ch = curl_init();
-            curl_setopt($ch, CURLOPT_URL, $url1);
-            curl_setopt($ch, CURLOPT_VERBOSE, 0);
-            curl_setopt($ch, CURLOPT_HEADER, false);
-            curl_setopt($ch, CURLOPT_TIMEOUT, 9);
-            curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 9);
-            curl_setopt($ch, CURLOPT_USERAGENT, 'Plugin Version Check [' . (int)$plugin_file_id . '] ' . HTTP_SERVER);
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-            $response = curl_exec($ch);
-            $error = curl_error($ch);
-            $errno = curl_errno($ch);
-
-            if ($errno > 0) {
-                trigger_error('CURL error checking plugin versions: ' . $errno . ':' . $error . "\nTrying http instead.");
-                curl_setopt($ch, CURLOPT_URL, str_replace('tps:', 'tp:', $url1));
-                $response = curl_exec($ch);
-                $error = curl_error($ch);
-                $errno = curl_errno($ch);
-            }
-            if ($errno > 0) {
-                trigger_error('CURL error checking plugin versions: ' . $errno . ':' . $error . "\nTrying www instead.");
-                curl_setopt($ch, CURLOPT_URL, str_replace('tps:', 'tp:', $url2));
-                $response = curl_exec($ch);
-                $error = curl_error($ch);
-                $errno = curl_errno($ch);
-            }
-            curl_close($ch);
-        } else {
-            $errno = 9999;
-            $error = 'curl_init not found in PHP';
-        }
-        if ($errno > 0 || $response == '') {
-            trigger_error('CURL error checking plugin versions: ' . $errno . ':' . $error . "\nTrying file_get_contents() instead.");
-            $ctx = stream_context_create(array('http' => array('timeout' => 5)));
-            $response = file_get_contents($url1, null, $ctx);
-            if ($response === false) {
-                trigger_error('file_get_contents() error checking plugin versions.' . "\nTrying http instead.");
-                $response = file_get_contents(str_replace('tps:', 'tp:', $url1), null, $ctx);
-            }
-            if ($response === false) {
-                trigger_error('file_get_contents() error checking plugin versions.' . "\nAborting.");
-                return false;
-            }
-        }
-
-        $data = json_decode($response, true);
-        if (!$data || !is_array($data)) return false;
-        // compare versions
-        if (strcmp($data[$lookup_index]['latest_plugin_version'], $version_string_to_compare) > 0) $new_version_available = true;
-        // check whether present ZC version is compatible with the latest available plugin version
-        $zc_version = PROJECT_VERSION_MAJOR . '.' . preg_replace('/[^0-9.]/', '', PROJECT_VERSION_MINOR);
-        if ($strict_zc_version_compare) $zc_version = PROJECT_VERSION_MAJOR . '.' . PROJECT_VERSION_MINOR;
-        if (!in_array('v' . $zc_version, $data[$lookup_index]['zcversions'])) $new_version_available = false;
-        return ($new_version_available) ? $data[$lookup_index] : false;
     }
 }

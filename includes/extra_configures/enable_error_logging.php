@@ -9,7 +9,7 @@
  *
  * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Modified in v1.5.7 $
+ * @version $Id: mc12345678 2020 May 19 Modified in v1.5.7 $
  */
 if (!defined('IS_ADMIN_FLAG')) {
     exit('Invalid Access');
@@ -21,8 +21,9 @@ function zen_debug_error_handler($errno, $errstr, $errfile, $errline)
         return;
     }
 
+    static $last_log_suffix;
     if (!isset($last_log_suffix)) {
-        static $last_log_suffix = '.log';
+        $last_log_suffix = '.log';
     }
     $ignore_dups = false;
     if (IS_ADMIN_FLAG === true) {

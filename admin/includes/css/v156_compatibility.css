@@ -1,0 +1,61 @@
+/** 
+ * This is for compatibility with v1.5.6 CSS that was upgraded in v1.5.7; 
+ * Plugins relying on these older CSS rules can include this CSS if needed ... but do not expect this file to be kept/maintained in future versions.
+ */
+
+.edit i.base {
+  color: #008000;
+}
+
+.delete i.base {
+  color: #f00;
+}
+
+.move i.base {
+  color: #800080;
+}
+
+.copy i.base {
+  color: #00f;
+}
+
+.imagehandler i.base {
+  color: #fa8072;
+}
+
+.attributes-on i.base {
+  color: #87cefa;
+}
+
+.attributes-off i.base, .metatags-on i.base, .metatags-off i.base {
+  color: #000;
+}
+
+.pricemanager-on i.base {
+  color: #32cd32;
+}
+
+.pricemanager-off i.base {
+  color: #d3d3d3;
+}
+
+.edit i.overlay, .delete i.overlay, .move i.overlay, .copy i.overlay, .attributes-off i.overlay, .pricemanager-on i.overlay, .metatags-off i.overlay {
+  color: #fff;
+}
+
+.imagehandler i.overlay, .attributes-on i.overlay {
+  color: #000;
+}
+
+.pricemanager-off i.overlay {
+  color: #a9a9a9;
+}
+
+.metatags-on i.overlay {
+  color: #ffa500;
+}
+
+.edit i.overlay:hover, .delete i.overlay:hover, .move i.overlay:hover, .copy i.overlay:hover, .imagehandler i.overlay:hover, .attributes-on i.overlay:hover, .attributes-off i.overlay:hover, .pricemanager-on i.overlay:hover, .metatags-on i.overlay:hover, .metatags-off i.overlay:hover {
+  color: #ccc;
+  text-shadow: 0px 0px 4px rgba(0,0,0,0.5)
+}

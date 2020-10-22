@@ -5,11 +5,10 @@
  * Loaded by index.php?main_page=site_map <br />
  * Displays site-map and some hard-coded navigation components
  *
- * @package templateSystem
- * @copyright Copyright 2003-2019 Zen Cart Development Team
+ * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2019 Jan 04 Modified in v1.5.6a $
+ * @version $Id: DrByte 2020 May 16 Modified in v1.5.7 $
  */
 ?>
 <div class="centerColumn" id="siteMap">
@@ -59,7 +58,7 @@
             <li><?php echo '<a href="' . zen_href_link(FILENAME_CONTACT_US, '', 'SSL') . '">' . BOX_INFORMATION_CONTACT . '</a>'; ?></li>
 <?php } ?>
 <?php if (!empty($external_bb_url) && !empty($external_bb_text)) { ?>
-            <li><?php echo '<a href="' . $external_bb_url . '" target="_blank">' . $external_bb_text . '</a>'; ?></li>
+            <li><?php echo '<a href="' . $external_bb_url . '" rel="noopener" target="_blank">' . $external_bb_text . '</a>'; ?></li>
 <?php } ?>
 <?php if (defined('MODULE_ORDER_TOTAL_GV_STATUS') && MODULE_ORDER_TOTAL_GV_STATUS == 'true') { ?>
             <li><?php echo '<a href="' . zen_href_link(FILENAME_GV_FAQ) . '">' . BOX_INFORMATION_GV . '</a>'; ?></li>

@@ -1,9 +1,8 @@
 <?php
 /**
- * @package Installer
- * @copyright Copyright 2003-2019 Zen Cart Development Team
+ * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2019 May 26 Modified in v1.5.6b $
+ * @version $Id: Zcwilt 2020 May 19 Modified in v1.5.7 $
  */
 ?>
 <?php require(DIR_FS_INSTALL . DIR_WS_INSTALL_TEMPLATE . 'partials/partial_modal_help.php'); ?>
@@ -31,12 +30,12 @@
 <?php } ?>
 
 		<h5 style="color:white">
-		
+
 <?php if ($isUpgrade) { ?>
 		<?php echo TEXT_COMPLETION_UPGRADE_COMPLETE; ?>
 <?php } else { ?>
 		<?php echo TEXT_COMPLETION_INSTALL_COMPLETE; ?>
-		
+
 		<br>
 	<?php if ($catalogLink != '#') echo TEXT_COMPLETION_INSTALL_LINKS_BELOW; ?>
 <?php } ?>
@@ -45,15 +44,15 @@
 <?php if (!$isUpgrade && $catalogLink != '#') { ?>
 
 		<div class="text-center">
-			<a class="radius button" href="<?php echo $adminLink; ?>" target="_blank" tabindex="1">
+			<a class="radius button" href="<?php echo $adminLink; ?>" rel="noopener" target="_blank" tabindex="1">
 				<?php echo TEXT_COMPLETION_ADMIN_LINK_TEXT; ?>:
-				
+
 				<br><br>
 				<u><?php echo $adminLink; ?></u>
 			</a>
-			<a class="radius button" href="<?php echo $catalogLink; ?>" target="_blank" tabindex="2">
+			<a class="radius button" href="<?php echo $catalogLink; ?>" rel="noopener" target="_blank" tabindex="2">
 				<?php echo TEXT_COMPLETION_CATALOG_LINK_TEXT; ?>:
-				
+
 				<br><br>
 				<u><?php echo $catalogLink; ?></u>
 			</a>
@@ -71,9 +70,9 @@
 				type: "POST",
 				timeout: 100000,
 				dataType: "json",
-				data: 'id='+textId,
+                data: 'id='+textId + '&lng=<?php echo $installer_lng; ?>',
 				url: '<?php echo "ajaxGetHelpText.php"; ?>',
-				success: function(data) 
+				success: function(data)
 				{
 					$('#modal-help-title').html(data.title);
 					$('#modal-help-content').html(data.text);

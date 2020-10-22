@@ -1,10 +1,9 @@
 <?php
 /**
- * @package Installer
- * @copyright Copyright 2003-2019 Zen Cart Development Team
+ * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2019 Jan 04 Modified in v1.5.6a $
+ * @version $Id: Scott C Wilson 2019 Jul 17 Modified in v1.5.7 $
  */
 
 if (!file_exists(DIR_FS_INSTALL . 'includes/custom_settings.php')) {

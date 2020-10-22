@@ -1,10 +1,9 @@
 <?php
 /**
- * @package languageDefines
- * @copyright Copyright 2003-2019 Zen Cart Development Team
+ * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Modified in v1.5.7 $
+ * @version $Id: Steve 2020 May 27 Modified in v1.5.7 $
  */
 
 define('EMAIL_TEXT_SUBJECT', 'Order Confirmation');
@@ -13,8 +12,8 @@ define('EMAIL_TEXT_FROM',' from ');  //added to the EMAIL_TEXT_HEADER, above on 
 define('EMAIL_THANKS_FOR_SHOPPING','Thanks for shopping with us today!');
 define('EMAIL_DETAILS_FOLLOW','The following are the details of your order.');
 define('EMAIL_TEXT_ORDER_NUMBER', 'Order Number:');
-define('EMAIL_TEXT_INVOICE_URL', 'Detailed Invoice:');
-define('EMAIL_TEXT_INVOICE_URL_CLICK', 'Click here for a Detailed Invoice');
+define('EMAIL_TEXT_INVOICE_URL', 'Order Details:');
+define('EMAIL_TEXT_INVOICE_URL_CLICK', 'Click here for Order Details');
 define('EMAIL_TEXT_DATE_ORDERED', 'Date Ordered:');
 define('EMAIL_TEXT_PRODUCTS', 'Products');
 define('EMAIL_TEXT_DELIVERY_ADDRESS', 'Delivery Address');

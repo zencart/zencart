@@ -1,10 +1,9 @@
 <?php
 /**
- * @package admin
  * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2020 Jan 07 Modified in v1.5.7 $
+ * @version $Id: DrByte 2020 Jun 16 Modified in v1.5.7 $
  */
 /**
  * Dependencies:
@@ -90,7 +89,7 @@ function quote_ecb_currency($currencyCode = '', $base = DEFAULT_CURRENCY)
   $url = 'https://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml';
   if (empty($XMLContent)) {
     $XMLContent = @file($url);
-    if (! is_object($XMLContent) && function_exists('curl_init')) {
+    if (empty($XMLContent) && function_exists('curl_init')) {
       $XMLContent = doCurlCurrencyRequest('GET', $url);
       $XMLContent = explode("\n", $XMLContent);
     }
@@ -199,18 +198,18 @@ function quote_boc_currency($currencyCode = '', $base = DEFAULT_CURRENCY)
 
   function zen_datepicker_format_fordate() {
     // converts mm-dd-yy to m-d-Y
-    $date = DATE_FORMAT_DATE_PICKER; 
-    $date = str_replace('mm','m', $date); 
-    $date = str_replace('dd','d', $date); 
-    $date = str_replace('yy','Y', $date); 
-    return $date; 
+    $date = DATE_FORMAT_DATE_PICKER;
+    $date = str_replace('mm','m', $date);
+    $date = str_replace('dd','d', $date);
+    $date = str_replace('yy','Y', $date);
+    return $date;
   }
 
   function zen_datepicker_format_forsql() {
     // converts mm-dd-yy to %m-%d-%Y
-    $date = DATE_FORMAT_DATE_PICKER; 
-    $date = str_replace('mm','%m', $date); 
-    $date = str_replace('dd','%d', $date); 
-    $date = str_replace('yy','%Y', $date); 
-    return $date; 
+    $date = DATE_FORMAT_DATE_PICKER;
+    $date = str_replace('mm','%m', $date);
+    $date = str_replace('dd','%d', $date);
+    $date = str_replace('yy','%Y', $date);
+    return $date;
   }

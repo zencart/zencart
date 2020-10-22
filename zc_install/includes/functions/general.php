@@ -2,11 +2,10 @@
 /**
  * general functions
  *
- * @package functions
- * @copyright Copyright 2003-2018 Zen Cart Development Team
+ * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Drbyte Mon Nov 12 15:55:25 2018 -0500 Modified in v1.5.6 $
+ * @version $Id: DrByte 2020 May 17 Modified in v1.5.7 $
  */
 
 if (!defined('TABLE_UPGRADE_EXCEPTIONS')) define('TABLE_UPGRADE_EXCEPTIONS','upgrade_exceptions');
@@ -114,22 +113,6 @@ function zen_get_select_options($optionList, $setDefault)
 
   function zen_sanitize_request()
   {
-    if (isset($_POST) && count($_POST) > 0)
-    {
-      foreach($_POST as $key=>$value)
-      {
-        if(is_array($value))
-        {
-          foreach($value as $key2 => $val2)
-          {
-            unset($GLOBALS[$key]);
-          }
-        } else {
-          unset($GLOBALS[$key]);
-        }
-      }
-    }
-    $ignoreArray = array();
     foreach ($_POST as $key => $value)
     {
       $_POST[htmlspecialchars($key, ENT_COMPAT, 'UTF-8', FALSE)] = addslashes($value);
@@ -195,8 +178,8 @@ function zen_get_select_options($optionList, $setDefault)
     $httpServer = zen_parse_url($url, 'host', true);
     $adminServer = ($request_type == 'SSL') ? 'https://' : 'http://';
     $adminServer .= $httpServer;
-    $catalogHttpServer = 'http://' . $httpServer;
-    $catalogHttpUrl = 'http://' . $httpServer . '/' . zen_parse_url($url, 'path', true);
+    $catalogHttpServer = ($request_type == 'SSL' ? 'https://' : 'http://') . $httpServer;
+    $catalogHttpUrl = ($request_type == 'SSL' ? 'https://' :'http://') . $httpServer . '/' . zen_parse_url($url, 'path', true);
     $catalogHttpsServer = 'https://' . $httpServer;
     $catalogHttpsUrl = 'https://' . $httpServer . '/' . zen_parse_url($url, 'path', true);
     $dir_ws_http_catalog = str_replace($catalogHttpServer, '', $catalogHttpUrl) .'/';

@@ -1,12 +1,12 @@
 <?php
 /**
- * @package admin
- * @copyright Copyright 2003-2019 Zen Cart Development Team
+ * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Scott C Wilson 2019 Jan 19 Modified in v1.5.6b $
+ * @version $Id: Scott C Wilson 2020 May 12 Modified in v1.5.7 $
  */
 
-require 'gv_name.php';
+
+require DIR_WS_LANGUAGES . $_SESSION['language'] . '/' . 'gv_name.php';
 define('HEADING_TITLE', TEXT_GV_NAMES . ' Sent');
 
 define('TABLE_HEADING_SENDERS_NAME', 'Senders Name');

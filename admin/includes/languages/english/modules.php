@@ -1,10 +1,9 @@
 <?php
 /**
- * @package admin
- * @copyright Copyright 2003-2016 Zen Cart Development Team
+ * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: DrByte  Tue Dec 29 15:53:14 2015 -0500 Modified in v1.5.5 $
+ * @version $Id: DrByte 2020 May 16 Modified in v1.5.7 $
  */
 
 define('HEADING_TITLE_MODULES_PAYMENT', 'Payment Modules');
@@ -23,5 +22,9 @@ define('TEXT_EMAIL_MESSAGE_ADMIN_SETTINGS_CHANGED', 'This is an automated email 
 define('TEXT_EMAIL_MESSAGE_ADMIN_MODULE_INSTALLED', 'This is an automated email from your Zen Cart store to alert you of a change that was just made to your administrative settings: ' . "\n\n" . 'NOTE: Admin settings have been changed. The [%s] module has been INSTALLED by your Zen Cart admin user %s.' . "\n\n" . 'If you did not initiate these changes, it is advisable that you verify the settings immediately.' . "\n\n" . 'If you are already aware of these changes, you can ignore this automated email.');
 define('TEXT_EMAIL_MESSAGE_ADMIN_MODULE_REMOVED', 'This is an automated email from your Zen Cart store to alert you of a change that was just made to your administrative settings: ' . "\n\n" . 'NOTE: Admin settings have been changed. The [%s] module has been REMOVED by your Zen Cart admin user %s.' . "\n\n" . 'If you did not initiate these changes, it is advisable that you verify the settings immediately.' . "\n\n" . 'If you are already aware of these changes, you can ignore this automated email.');
 define('TEXT_DELETE_INTRO', 'Are you sure you want to remove this module?');
-define('TEXT_WARNING_SSL_EDIT', 'ALERT: <a href="https://docs.zen-cart.com/user/installing/enable_ssl/" target="_blank">For security reasons, Editing of this module is disabled until your Admin is configured for SSL</a>.');
-define('TEXT_WARNING_SSL_INSTALL', 'ALERT: <a href="https://docs.zen-cart.com/user/installing/enable_ssl/" target="_blank">For security reasons, Installation of this module is disabled until your Admin is configured for SSL</a>.');
+define('TEXT_WARNING_SSL_EDIT', 'ALERT: <a href="https://docs.zen-cart.com/user/installing/enable_ssl/" rel="noopener" target="_blank">For security reasons, Editing of this module is disabled until your Admin is configured for SSL</a>.');
+define('TEXT_WARNING_SSL_INSTALL', 'ALERT: <a href="https://docs.zen-cart.com/user/installing/enable_ssl/" rel="noopener" target="_blank">For security reasons, Installation of this module is disabled until your Admin is configured for SSL</a>.');
+
+// Generic validation messages for modules
+define('TEXT_POSITIVE_INT','%s must be an integer greater than or equal to 0');
+define('TEXT_POSITIVE_FLOAT','%s must be a decimal greater than or equal to 0');

@@ -6,6 +6,7 @@
 TRUNCATE TABLE address_book; 
 TRUNCATE TABLE categories;
 TRUNCATE TABLE categories_description;
+TRUNCATE TABLE count_product_views;
 TRUNCATE TABLE customers;
 TRUNCATE TABLE customers_info; 
 TRUNCATE TABLE ezpages; 

@@ -1,10 +1,9 @@
 <?php
 /**
  *
- * @package classes
- * @copyright Copyright 2003-2019 Zen Cart Development Team
+ * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id:  $
+ * @version $Id: Zcwilt 2020 Jun 09 Modified in v1.5.7 $
  */
 
 namespace Zencart\InitSystem;
@@ -32,8 +31,7 @@ class InitSystem
     public function loadAutoLoaders()
     {
         $coreLoaderList = $this->loadAutoLoadersFromSystem('core', DIR_WS_INCLUDES . 'auto_loaders');
-//        $pluginLoaderList = $this->loadPluginAutoLoaders('plugin');
-        $pluginLoaderList = []; //@todo temp
+        $pluginLoaderList = $this->loadPluginAutoLoaders('plugin');
         $mainLoaderList = $this->mergeAutoLoaders($coreLoaderList, $pluginLoaderList);
         return $mainLoaderList;
     }
@@ -60,6 +58,7 @@ class InitSystem
     protected function processActionPointEntries($entries)
     {
         foreach ($entries as $entry) {
+            if (!isset($entry['forceLoad'])) $entry['forceLoad'] = false;
             $this->processActionPointEntry($entry);
             $this->debugList[] = '=================================================================';
         }
@@ -86,7 +85,7 @@ class InitSystem
         $result = 'FAILED';
         if (file_exists($filePath . $entry['loadFile'])) {
             $result = 'SUCCESS';
-            $this->actionList[] = ['type' => 'include', 'filePath' => $filePath . $entry['loadFile']];
+            $this->actionList[] = ['type' => 'include', 'filePath' => $filePath . $entry['loadFile'], 'forceLoad' => $entry['forceLoad']];
         }
         $this->debugList[] = 'loading class - ' . $filePath . $entry['loadFile'] . ' - ' . $result;
     }
@@ -130,7 +129,7 @@ class InitSystem
         $result = 'FAILED';
         if (file_exists($filePath)) {
             $result = 'SUCCESS';
-            $this->actionList[] = ['type' => 'require', 'filePath' => $filePath];
+            $this->actionList[] = ['type' => 'require', 'filePath' => $filePath, 'forceLoad' => $entry['forceLoad']];
         }
         $this->debugList[] = 'loading require - ' . $filePath . ' - ' . $result;
 
@@ -146,7 +145,7 @@ class InitSystem
         $result = 'FAILED';
         if (file_exists($filePath)) {
             $result = 'SUCCESS';
-            $this->actionList[] = ['type' => 'include', 'filePath' => $filePath];
+            $this->actionList[] = ['type' => 'include', 'filePath' => $filePath, 'forceLoad' => $entry['forceLoad']];
         }
         $this->debugList[] = 'loading include - ' . $filePath . ' - ' . $result;
     }
@@ -160,7 +159,7 @@ class InitSystem
         if (file_exists($actualDir . 'overrides/' . $entry['loadFile'])) {
             $actualDir = $actualDir . 'overrides/';
         }
-        $this->actionList[] = ['type' => 'require', 'filePath' => $actualDir . $entry['loadFile']];
+        $this->actionList[] = ['type' => 'require', 'filePath' => $actualDir . $entry['loadFile'], 'forceLoad' => $entry['forceLoad']];
         $this->debugList[] = 'loading init_script - ' . $actualDir . $entry['loadFile'];
 
     }
@@ -215,6 +214,7 @@ class InitSystem
 
     protected function getLoadersFromFilelist($fileList)
     {
+        $autoLoadConfig = [];
         foreach ($fileList as $file) {
             require($file);
         }

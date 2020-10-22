@@ -1,6 +1,5 @@
 <?php
 /**
- * @package tests
  * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  */
@@ -9,7 +8,7 @@ require_once(__DIR__ . '/../support/zcDiscountCouponTest.php');
 /**
  * Unit Tests for discount coupons
  */
-class testDiscountCoupons extends zcDiscountCouponTest
+class DiscountCouponsTest extends zcDiscountCouponTest
 {
     public function setUp(): void
     {

@@ -2,11 +2,10 @@
 /**
  * ot_coupon order-total module
  *
- * @package orderTotal
- * @copyright Copyright 2003-2019 Zen Cart Development Team
+ * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2019 May 26 Modified in v1.5.6b $
+ * @version $Id: Scott C Wilson 2020 May 18 Modified in v1.5.7 $
  */
 /**
  * Order Total class  to handle discount coupons
@@ -590,7 +589,13 @@ class ot_coupon {
               if ($od_amount['total'] >= $orderTotalDetails['orderTotal']) $ratio = 1;
               foreach ($orderTotalDetails['orderTaxGroups'] as $key=>$value)
               {
-                $od_amount['tax_groups'][$key] = zen_round($orderTotalDetails['orderTaxGroups'][$key] * $ratio, $currencyDecimalPlaces);
+                $this_tax = $orderTotalDetails['orderTaxGroups'][$key]; 
+                if ($this->include_shipping != 'true') {
+                   if (isset($_SESSION['shipping_tax_description']) && $_SESSION['shipping_tax_description'] == $key) {
+                     $this_tax -= $orderTotalDetails['shippingTax']; 
+                   }
+                }
+                $od_amount['tax_groups'][$key] = zen_round($this_tax * $ratio, $currencyDecimalPlaces); 
                 $od_amount['tax'] += $od_amount['tax_groups'][$key];
               }
               if (DISPLAY_PRICE_WITH_TAX == 'true' && $coupon->fields['coupon_type'] == 'F') $od_amount['total'] = $od_amount['total'] + $od_amount['tax'];

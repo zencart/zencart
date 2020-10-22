@@ -31,6 +31,7 @@ $excludeParams[] = 'utm_content';
 $excludeParams[] = 'utm_campaign';
 $excludeParams[] = 'language';
 $excludeParams[] = 'number_of_uploads';
+if (isset($_GET['page']) && (!is_numeric($_GET['page']) || $_GET['page'] < 2)) $excludeParams[] = 'page';
 
 // The following are additional whitelisted params used for sanitizing the generated canonical URL (to prevent rogue params from getting added to canonical maliciously)
 $keepableParams = array('page', 'id', 'chapter', 'keyword', 'products_id', 'product_id', 'cPath', 'manufacturers_id', 'categories_id',
@@ -54,12 +55,6 @@ foreach($_GET as $key => $val) {
 
 $canonicalLink = '';
 switch (true) {
-/**
- * SSL Pages get no special treatment, since they don't usually require being indexed uniquely differently from non-SSL pages
- */
-  case ($request_type == 'SSL' && substr(HTTP_SERVER, 0, 5) != 'https'):
-    $canonicalLink = '';
-    break;
 /**
  * for products (esp those linked to multiple categories):
  */

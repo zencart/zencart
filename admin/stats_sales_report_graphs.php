@@ -1,10 +1,9 @@
 <?php
 /**
- * @package admin
- * @copyright Copyright 2003-2019 Zen Cart Development Team
+ * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @author inspired from sales_report_graphs.php,v 0.01 2002/11/27 19:02:22 cwi Exp  Released under the GNU General Public License $
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: mc12345678 2019 Jan 24 Modified in v1.5.6b $
+ * @version $Id: Erik Kerkhoven 2020 Jun 17 Modified in v1.5.7 $
  */
 require 'includes/application_top.php';
 
@@ -83,36 +82,23 @@ if (strlen($sales_report_filter) == 0) {
   <head>
     <meta charset="<?php echo CHARSET; ?>">
     <title><?php echo TITLE; ?></title>
-    <link rel="stylesheet" href="includes/stylesheet.css">
-    <link rel="stylesheet" media="print" href="includes/stylesheet_print.css">
-    <link rel="stylesheet" href="includes/cssjsmenuhover.css" media="all" id="hoverJS">
-    <script src="includes/menu.js"></script>
-    <script src="includes/general.js"></script>
-    <script src="https://www.google.com/jsapi"></script>
-    <script title="menu_init">
-      function init() {
-          cssjsmenu('navbar');
-          if (document.getElementById) {
-              var kill = document.getElementById('hoverJS');
-              kill.disabled = true;
-          }
-      }
-    </script>
+    <?php require 'includes/admin_html_head.php'; ?>
+    <script src="https://www.gstatic.com/charts/loader.js"></script>
     <script title="build_graphs">
       // Load the Visualization API and the piechart package.
-      google.load('visualization', '1.0', {'packages': ['corechart']});
+      google.charts.load('current', {packages: ['corechart']});
 
       // Set a callback to run when the Google Visualization API is loaded.
-      google.setOnLoadCallback(drawChart);
+      google.charts.setOnLoadCallback(drawChart);
 
       function drawChart() {
 
           // Create the data table.
           var data = new google.visualization.DataTable();
           data.addColumn('string', 'label');
-          data.addColumn('number', '<?php echo CHART_TOTAL_SALES; ?>');
+          data.addColumn('number', '<?php echo html_entity_decode(CHART_TOTAL_SALES); ?>');
 <?php if ($sales_report_view < statsSalesReportGraph::YEARLY_VIEW) { ?>
-            data.addColumn('number', '<?php echo CHART_AVERAGE_SALE_AMOUNT; ?>');
+            data.addColumn('number', '<?php echo html_entity_decode(CHART_AVERAGE_SALE_AMOUNT); ?>');
 <?php } ?>
 
           data.addRows([
@@ -158,7 +144,7 @@ for ($i = 0; $i < $report->size; $i++) {
 
           // Set chart options
           var options = {
-              'title': '<?php echo $report_desc; ?>',
+              'title': '<?php echo html_entity_decode($report_desc); ?>',
               'legend': 'bottom',
               'is3D': false,
               'width': 600,
@@ -171,7 +157,7 @@ for ($i = 0; $i < $report->size; $i++) {
       }
     </script>
   </head>
-  <body onload="init()">
+  <body>
     <!-- header //-->
     <?php require(DIR_WS_INCLUDES . 'header.php'); ?>
     <!-- header_eof //-->

@@ -1,10 +1,9 @@
 <?php
 /**
- * @package admin
  * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Modified in v1.5.7 $
+ * @version $Id: DrByte 2020 Apr 16 Modified in v1.5.7 $
  */
 require('includes/application_top.php');
 
@@ -386,7 +385,7 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
         <hr>
             <h2><?php echo TEXT_CATEGORIES_IMAGE; ?></h2>
             <?php
-            if (!empty($cInfo->categories_image)) { ?>
+            if (!empty($cInfo->categories_image) && file_exists(DIR_FS_CATALOG_IMAGES . $cInfo->categories_image)) { ?>
                 <div class="form-group">
                     <div class="col-sm-offset-3 col-sm-9 col-md-6">
                         <div><?php echo zen_info_image($cInfo->categories_image, $cInfo->categories_name, '', '', 'class="table-bordered img-responsive"'); ?></div>

@@ -1,10 +1,9 @@
 <?php
 /**
- * @package admin
- * @copyright Copyright 2003-2019 Zen Cart Development Team
+ * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Scott C Wilson 2019 Feb 28 Modified in v1.5.6b $
+ * @version $Id: John 2020 May 02 Modified in v1.5.7 $
  */
 require 'includes/application_top.php';
 $languages = zen_get_languages();
@@ -37,6 +36,8 @@ for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
 $action = (isset($_GET['action']) ? $_GET['action'] : '');
 $currentPage = (isset($_GET['page']) && $_GET['page'] != '' ? (int)$_GET['page'] : 0);
 $filter = (isset($_GET['set_filter']) && $_GET['set_filter'] != '' ? (int)$_GET['set_filter'] : 0);
+$last_mod = (int)(isset($_SESSION['options_names_values_last_mod']) ? $_SESSION['options_names_values_last_mod'] : 0);
+unset($_SESSION['options_names_values_last_mod']);
 $max_search_results = (isset($_GET['max_search_results']) && $_GET['max_search_results'] != '' ? (int)$_GET['max_search_results'] : (int)MAX_DISPLAY_SEARCH_RESULTS);
 
 // display or hide copier features
@@ -65,7 +66,7 @@ if (zen_not_null($action)) {
     case 'add_product_option_values':
       $value_name_array = $_POST['value_name'];
       $value_id = (int)$_POST['value_id'];
-      $option_id = (int)$_POST['option_id'];
+      $_SESSION['options_names_values_last_mod'] = $option_id = (int)$_POST['option_id'];
       $products_options_values_sort_order = (int)$_POST['products_options_values_sort_order'];
 
       for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
@@ -111,7 +112,7 @@ if (zen_not_null($action)) {
     case 'update_value':
       $value_name_array = $_POST['value_name'];
       $value_id = (int)$_POST['value_id'];
-      $option_id = (int)$_POST['option_id'];
+      $_SESSION['options_names_values_last_mod'] = $option_id = (int)$_POST['option_id'];
       $products_options_values_sort_order = (int)$_POST['products_options_values_sort_order'];
 
       for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
@@ -241,7 +242,7 @@ if (zen_not_null($action)) {
                                               AND options_values_id = " . (int)$options_values_values_id_to . "
                                               LIMIT 1");
               // do not add duplicate attributes
-              if ($check_previous->RecordCount() < 1) {
+              if ($check_previous->fields['count'] < 1) {
                 $db->Execute($sql);
                 $new_attribute++;
               }
@@ -385,7 +386,7 @@ if (zen_not_null($action)) {
                                             AND options_values_id = " . (int)$options_values_values_id_from . "
                                             LIMIT 1");
             // do not add duplicate attributes
-            if ($check_previous->RecordCount() < 1) {
+            if ($check_previous->fields['count'] < 1) {
               // add new attribute
               $db->Execute($sql);
               //echo $sql . '<br>';
@@ -737,7 +738,7 @@ if (zen_not_null($action)) {
 // fetch products_options_id for use if the option value is deleted
 // with TEXT and FILE Options, there are multiple options for the single TEXT
 // value and only the single reference should be deleted
-                $option_id = $values_value['products_options_id'];
+                $option_id = (!empty($last_mod) ? (string)$last_mod : $values_value['products_options_id']);
 
                 $values_name = $values_value['products_options_values_name'];
                 $products_options_values_sort_order = $values_value['products_options_values_sort_order'];
@@ -746,7 +747,7 @@ if (zen_not_null($action)) {
                   <?php
 // edit option values
                   if (($action == 'update_option_value') && ($_GET['value_id'] == $values_value['products_options_values_id'])) {
-                    echo zen_draw_form('values', FILENAME_OPTIONS_VALUES_MANAGER, 'action=update_value' . '&' . ($currentPage !== 0 ? 'page=' . $currentPage . '&' : '') . ($filter !== 0 ? 'set_filter=' . $filter . '&' : '') . ($max_search_results != 0 ? 'max_search_results=' . $max_search_results : ''), 'post', 'class="form-horizontal"');
+                    echo zen_draw_form('values', FILENAME_OPTIONS_VALUES_MANAGER, 'action=update_value' . ($currentPage !== 0 && $currentPage !== 1 ? '&page=' . $currentPage: '') . ($filter !== 0 ? '&set_filter=' . $filter : '') . ($max_search_results != 0 ? '&max_search_results=' . $max_search_results : ''), 'post', 'class="form-horizontal"');
                     $inputs = '';
                     for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
                       $value_name = $db->Execute("SELECT products_options_values_name
@@ -806,7 +807,7 @@ if (zen_not_null($action)) {
                       <td>&nbsp;</td>
                     <?php } else { ?>
                       <td class="text-right">
-                        <a href="<?php echo zen_href_link(FILENAME_OPTIONS_VALUES_MANAGER, 'action=update_option_value&value_id=' . $values_value['products_options_values_id'] . '&' . ($currentPage !== 0 ? 'page=' . $currentPage . '&' : '') . ($filter !== 0 ? 'set_filter=' . $filter . '&' : '') . ($max_search_results != 0 ? 'max_search_results=' . $max_search_results : '')); ?>" class="btn btn-primary" role="button"><?php echo IMAGE_UPDATE; ?></a>
+                        <a href="<?php echo zen_href_link(FILENAME_OPTIONS_VALUES_MANAGER, 'action=update_option_value&value_id=' . $values_value['products_options_values_id'] . '&' . ($currentPage !== 0 ? 'page=' . $currentPage . '&' : '') . ($filter !== 0 ? 'set_filter=' . $filter . '&' : '') . ($max_search_results != 0 ? 'max_search_results=' . $max_search_results : '')); ?>" class="btn btn-primary" role="button"><?php echo IMAGE_EDIT; ?></a>
                         <a href="<?php echo zen_href_link(FILENAME_OPTIONS_VALUES_MANAGER, 'action=delete_option_value&value_id=' . $values_value['products_options_values_id'] . '&' . ($currentPage !== 0 ? 'page=' . $currentPage . '&' : '') . ($filter !== 0 ? 'set_filter=' . $filter . '&' : '') . ($max_search_results != 0 ? 'max_search_results=' . $max_search_results : '')); ?>" class="btn btn-default" role="button"><?php echo IMAGE_DELETE; ?></a>
                       </td>
                     <?php } ?>
@@ -821,7 +822,7 @@ if (zen_not_null($action)) {
               </tr>
               <?php if ($action != 'update_option_value') { ?>
                 <tr>
-                  <?php echo zen_draw_form('values', FILENAME_OPTIONS_VALUES_MANAGER, 'action=add_product_option_values' . '&' . ($currentPage !== 0 ? 'page=' . $currentPage . '&' : '') . ($filter !== 0 ? 'set_filter=' . $filter . '&' : '') . ($max_search_results != 0 ? 'max_search_results=' . $max_search_results : ''), 'post', 'class="form-horizontal"'); ?>
+                  <?php echo zen_draw_form('values', FILENAME_OPTIONS_VALUES_MANAGER, 'action=add_product_option_values' . ($currentPage !== 0 && $currentPage !== 1 ? '&page=' . $currentPage : '') . ($filter !== 0 ? '&set_filter=' . $filter : '') . ($max_search_results != 0 ? '&max_search_results=' . $max_search_results : ''), 'post', 'class="form-horizontal"'); ?>
                   <td colspan="4">
                     <?php
                     $options_values = $db->Execute("SELECT products_options_id, products_options_name, products_options_type
@@ -840,7 +841,7 @@ if (zen_not_null($action)) {
                     ?>
                     <div class="col-md-4">
                       <div class="form-group">
-                        <?php echo zen_draw_pull_down_menu('option_id', $optionsValueArray, '', 'class="form-control"'); ?>
+                        <?php echo zen_draw_pull_down_menu('option_id', $optionsValueArray, $filter, 'class="form-control"'); ?>
                       </div>
                     </div>
                     <div class="col-md-6">
@@ -953,7 +954,7 @@ if (zen_not_null($action)) {
               <td colspan="4"><?php echo TEXT_INFO_OPTION_VALUE_COPY_ALL; ?></td>
             </tr>
             <tr class="dataTableHeadingRow">
-              <?php echo zen_draw_form('quick_jump', FILENAME_OPTIONS_VALUES_MANAGER, 'action=copy_options_values_one_to_another', '', 'post', 'class="form-horizontal"'); ?>
+              <?php echo zen_draw_form('quick_jump', FILENAME_OPTIONS_VALUES_MANAGER, 'action=copy_options_values_one_to_another', 'post', 'class="form-horizontal"'); ?>
               <td class="dataTableHeadingContent">
                 <?php echo zen_draw_label(TEXT_SELECT_OPTION_FROM, 'options_id_from', 'class="control-label"') . zen_draw_pull_down_menu('options_id_from', $option_from_dropdown, '', 'class="form-control"'); ?><br />
                 <?php echo zen_draw_label(TEXT_SELECT_OPTION_VALUES_FROM, 'options_values_values_id_from', 'class="control-label"') . zen_draw_pull_down_menu('options_values_values_id_from', $option_values_from_dropdown, '', 'class="form-control"'); ?>
@@ -988,7 +989,7 @@ if (zen_not_null($action)) {
               <td colspan="3"><?php echo TEXT_INFO_OPTION_VALUE_DELETE_ALL; ?></td>
             </tr>
             <tr class="dataTableHeadingRow">
-              <?php echo zen_draw_form('quick_jump', FILENAME_OPTIONS_VALUES_MANAGER, 'action=delete_options_values_of_option_name', '', 'post', 'class="form-horizontal"'); ?>
+              <?php echo zen_draw_form('quick_jump', FILENAME_OPTIONS_VALUES_MANAGER, 'action=delete_options_values_of_option_name', 'post', 'class="form-horizontal"'); ?>
               <td class="dataTableHeadingContent">
                 <?php echo zen_draw_label(TEXT_SELECT_DELETE_OPTION_FROM, 'options_id_from', 'class="control-label"') . zen_draw_pull_down_menu('options_id_from', $option_from_dropdown, '', 'class="form-control"'); ?><br />
                 <?php echo zen_draw_label(TEXT_SELECT_DELETE_OPTION_VALUES_FROM, 'options_values_values_id_from', 'class="control-label"') . zen_draw_pull_down_menu('options_values_values_id_from', $option_values_from_dropdown, '', 'class="form-control"'); ?>
@@ -1019,7 +1020,7 @@ if (zen_not_null($action)) {
               <td colspan="4"><?php echo TEXT_INFO_OPTION_VALUE_COPY_OPTIONS_TO; ?></td>
             </tr>
             <tr class="dataTableHeadingRow">
-              <?php echo zen_draw_form('quick_jump', FILENAME_OPTIONS_VALUES_MANAGER, 'action=copy_options_values_one_to_another_options_id', '', 'post', 'class="form-horizontal"'); ?>
+              <?php echo zen_draw_form('quick_jump', FILENAME_OPTIONS_VALUES_MANAGER, 'action=copy_options_values_one_to_another_options_id', 'post', 'class="form-horizontal"'); ?>
               <td class="dataTableHeadingContent">
                 <?php echo zen_draw_label(TEXT_SELECT_OPTION_FROM_ADD, 'options_id_from', 'class="control-label"') . zen_draw_pull_down_menu('options_id_from', $option_from_dropdown, '', 'class="form-control"'); ?><br />
                 <?php echo zen_draw_label(TEXT_SELECT_OPTION_VALUES_FROM_ADD, 'options_values_values_id_from', 'class="control-label"') . zen_draw_pull_down_menu('options_values_values_id_from', $option_values_from_dropdown, '', 'class="form-control"'); ?><br />

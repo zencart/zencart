@@ -1,9 +1,8 @@
 <?php
 /**
- * @package Installer
- * @copyright Copyright 2003-2016 Zen Cart Development Team
+ * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: DrByte  Mon Dec 28 14:43:01 2015 -0500 New in v1.5.5 $
+ * @version $Id: Zcwilt 2020 May 19 Modified in v1.5.7 $
  */
 ?>
 <body id="<?php echo $body_id; ?>">
@@ -30,7 +29,7 @@
                <label class="inline" for="lng"><a href="#" class="hasHelpText" id="choose_lang"><?php echo TEXT_INSTALLER_CHOOSE_LANGUAGE; ?></a></label>
              </div>
              <div class="small-9 columns">
-               <select name="lng" id="lng" class="medium"><?php echo zen_get_install_languages_list($lng); ?></select>
+               <select name="lng" id="lng" class="medium"><?php echo zen_get_install_languages_list($installer_lng); ?></select>
              </div>
            </div>
            </fieldset>
@@ -47,7 +46,7 @@
         <?php require($body_code); ?>
         </div>
          <footer class="footer">
-           <p>Copyright &copy; 2003-<?php echo date('Y'); ?> <a href="http://www.zen-cart.com" target="_blank">Zen Cart&reg;</a></p>
+           <p>Copyright &copy; 2003-<?php echo date('Y'); ?> <a href="https://www.zen-cart.com" rel="noopener" target="_blank">Zen Cart&reg;</a></p>
          </footer>
       </div>
       </div>

@@ -2,12 +2,11 @@
 /**
  * paypaldp.php payment module class for Paypal Payments Pro (aka Website Payments Pro)
  *
- * @package paymentMethod
- * @copyright Copyright 2003-2019 Zen Cart Development Team
+ * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @copyright Portions Copyright 2005 CardinalCommerce
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2019 May 10 Modified in v1.5.6b $
+ * @version $Id: DrByte 2020 Jun 23 Modified in v1.5.7 $
  */
 /**
  * The transaction URL for the Cardinal Centinel 3D-Secure service.
@@ -132,7 +131,7 @@ class paypaldp extends base {
     global $order;
     $this->code = 'paypaldp';
     $this->codeTitle = MODULE_PAYMENT_PAYPALDP_TEXT_ADMIN_TITLE_WPP;
-    $this->codeVersion = '1.5.6';
+    $this->codeVersion = '1.5.7';
     $this->enableDirectPayment = true;
     $this->enabled = (defined('MODULE_PAYMENT_PAYPALDP_STATUS') && MODULE_PAYMENT_PAYPALDP_STATUS == 'True');
     // Set the title & description text based on the mode we're in
@@ -358,9 +357,9 @@ class paypaldp extends base {
       // 3D-Secure
       $selection['fields'][] = array('title' => '',
                                'field' => '<div id="' . $this->code.'-cc-securetext"><p>' .
-                                     '<a href="javascript:void window.open(\'vbv_learn_more.html\',\'vbv_service\',\'width=550,height=450\')">' .
+                                     '<a href="javascript:void window.open(\'vbv_learn_more.html\',\'vbv_service\',\'width=550,height=450,noreferrer\')">' .
                                      zen_image(DIR_WS_IMAGES.'3ds/vbv_learn_more.gif') . '</a>' .
-                                     '<a href="javascript:void window.open(\'mcs_learn_more.html\',\'mcsc_service\',\'width=550,height=450\')">' .
+                                     '<a href="javascript:void window.open(\'mcs_learn_more.html\',\'mcsc_service\',\'width=550,height=450,noreferrer\')">' .
                                      zen_image(DIR_WS_IMAGES.'3ds/mcsc_learn_more.gif') . '</a>' .
                                      '</p>' .
                                      '<p>' . TEXT_3DS_CARD_MAY_BE_ENROLLED . '</p></div>',
@@ -557,9 +556,9 @@ class paypaldp extends base {
           $confirmation['fields'][count($confirmation['fields'])] = array(
               'title' => '',
               'field' => '<div id="' . $this->code.'-cc-securetext"><p>' .
-                         '<a href="javascript:void window.open(\'vbv_learn_more.html\',\'vbv_service\',\'width=550,height=450\')">' .
+                         '<a href="javascript:void window.open(\'vbv_learn_more.html\',\'vbv_service\',\'width=550,height=450,noreferrer\')">' .
                          zen_image(DIR_WS_IMAGES.'3ds/vbv_learn_more.gif') . '</a>' .
-                         '<a href="javascript:void window.open(\'mcs_learn_more.html\',\'mcsc_service\',\'width=550,height=450\')">' .
+                         '<a href="javascript:void window.open(\'mcs_learn_more.html\',\'mcsc_service\',\'width=550,height=450,noreferrer\')">' .
                          zen_image(DIR_WS_IMAGES.'3ds/mcsc_learn_more.gif') . '</a></p>' .
                          '<p>' . TEXT_3DS_CARD_MAY_BE_ENROLLED . '</p></div>');
     }
@@ -884,7 +883,7 @@ class paypaldp extends base {
                      ($this->avs != 'N/A' ? "\nAVS Code: ".$this->avs."\nCVV2 Code: ".$this->cvv2 : '') .
                      (trim($this->amt) != '' ? ("\nAmount: " . $this->amt) : '');
     zen_update_orders_history($insert_id, $commentString, null, $order->info['order_status'], 0);
-    
+
     // 3D-Secure
     if ($this->requiresLookup($order->info['cc_type']) == true) {
       // CardinalCommerce Liability Protection Status
