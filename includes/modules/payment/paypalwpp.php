@@ -2339,6 +2339,19 @@ if (false) { // disabled until clarification is received about coupons in PayPal
           return false;
         }
       }
+      
+      // -----
+      // Give a watching observer the opportunity to bypass this address-override.  An observer
+      // can disable the address-override processing by setting the $disable_address_override
+      // parameter to specifically (bool)true.
+      //
+      $disable_address_override = false;
+      $this->notify('NOTIFY_PAYPALWPP_DISABLE_GET_OVERRIDE_ADDRESS', $address_id, $disable_address_override);
+      if ($disable_address_override === true) {
+        $this->zcLog('getOverrideAddress - 1a', "Override disabled by observer request.\n");
+        return false;
+      }
+      
       // now grab the address from the database and set it as the overridden address
       $sql = "SELECT entry_firstname, entry_lastname, entry_company,
                      entry_street_address, entry_suburb, entry_city, entry_postcode,
