@@ -123,7 +123,7 @@ class FileSystem
             return null;
         }
         $version = $this->installedPlugins[$pluginKey]['version'];
-        $relativePath = '/zc_plugins/' . $pluginKey . '/' . $version . '/';
+        $relativePath = ($GLOBALS['request_type'] == 'SSL' ? DIR_WS_HTTPS_CATALOG : DIR_WS_CATALOG) . 'zc_plugins/' . $pluginKey . '/' . $version . '/';
         return $relativePath;
     }
 
