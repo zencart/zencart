@@ -133,9 +133,9 @@ if (zen_not_null($action)) {
         $error = true;
       }
 
+      $zone_id = 0;
+      $entry_state_error = false;
       if (ACCOUNT_STATE == 'true') {
-        $zone_id = 0;
-        $entry_state_error = false;
         $entry_state_has_zones = count(zen_get_country_zones($entry_country_id)) > 0;
         if ($entry_state_has_zones) {
           $zone_query = $db->Execute("SELECT zone_id
@@ -470,7 +470,7 @@ if (zen_not_null($action)) {
               <div class="col-sm-9 col-md-6">
                 <?php
                 $entry_state = zen_get_zone_name($cInfo->country_id, $cInfo->zone_id, $cInfo->state);
-                if ($entry_state_has_zones == true) {
+                if (count(zen_get_country_zones($cInfo->country_id))) {
                   $zones_array = [];
                   $zones_values = $db->Execute("SELECT zone_name
                                                 FROM " . TABLE_ZONES . "
@@ -483,7 +483,7 @@ if (zen_not_null($action)) {
                       'text' => $zones_value['zone_name']
                     ];
                   }
-                  echo zen_draw_pull_down_menu('entry_state', $zones_array, '', 'class="form-control" id="entry_state"');
+                  echo zen_draw_pull_down_menu('entry_state', $zones_array, $entry_state, 'class="form-control" id="entry_state"');
                 } else {
                   echo zen_draw_input_field('entry_state', htmlspecialchars(zen_get_zone_name($cInfo->country_id, $cInfo->zone_id, $cInfo->state), ENT_COMPAT, CHARSET, TRUE), 'class="form-control" id="entry_state" minlength="' . ENTRY_STATE_MIN_LENGTH . '"');
                 }
@@ -846,7 +846,7 @@ if (zen_not_null($action)) {
                       <?php
                     }
 
-                    $zc_address_book_count = count(zen_get_customer_address_book_entries($customer['customers_id']));
+                    $zc_address_book_count = count($customer['addresses']);
                     ?>
                     <td class="dataTableContent text-right"><?php echo $customer['customers_id'] . ($zc_address_book_count == 1 ? TEXT_INFO_ADDRESS_BOOK_COUNT_SINGLE : sprintf(TEXT_INFO_ADDRESS_BOOK_COUNT, zen_href_link(FILENAME_CUSTOMERS, 'action=list_addresses' . '&cID=' . $customer['customers_id'] . ($_GET['page'] > 0 ? '&page=' . $_GET['page'] : '')), $zc_address_book_count)); ?></td>
                     <td class="dataTableContent"><?php echo $customer['customers_lastname']; ?></td>
