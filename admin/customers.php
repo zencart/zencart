@@ -694,6 +694,9 @@ if (zen_not_null($action)) {
                     <?php echo TABLE_HEADING_ID; ?>
                   </th>
                   <th class="dataTableHeadingContent">
+                      &nbsp;
+                  </th>
+                  <th class="dataTableHeadingContent">
                     <?php echo (($_GET['list_order'] == 'lastname' or $_GET['list_order'] == 'lastname-desc') ? '<span class="SortOrderHeader">' . TABLE_HEADING_LASTNAME . '</span>' : TABLE_HEADING_LASTNAME); ?><br>
                     <a href="<?php echo zen_href_link(basename($PHP_SELF), zen_get_all_get_params(array('list_order', 'page')) . 'list_order=lastname', 'NONSSL'); ?>"><?php echo ($_GET['list_order'] == 'lastname' ? '<span class="SortOrderHeader">Asc</span>' : '<span class="SortOrderHeaderLink">Asc</span>'); ?></a>&nbsp;
                     <a href="<?php echo zen_href_link(basename($PHP_SELF), zen_get_all_get_params(array('list_order', 'page')) . 'list_order=lastname-desc', 'NONSSL'); ?>"><?php echo ($_GET['list_order'] == 'lastname-desc' ? '<span class="SortOrderHeader">Desc</span>' : '<span class="SortOrderHeaderLink">Desc</span>'); ?></a>
@@ -848,7 +851,8 @@ if (zen_not_null($action)) {
 
                     $zc_address_book_count = count($customer['addresses']);
                     ?>
-                    <td class="dataTableContent text-right"><?php echo $customer['customers_id'] . ($zc_address_book_count == 1 ? TEXT_INFO_ADDRESS_BOOK_COUNT_SINGLE : sprintf(TEXT_INFO_ADDRESS_BOOK_COUNT, zen_href_link(FILENAME_CUSTOMERS, 'action=list_addresses' . '&cID=' . $customer['customers_id'] . ($_GET['page'] > 0 ? '&page=' . $_GET['page'] : '')), $zc_address_book_count)); ?></td>
+                    <td class="dataTableContent text-right"><?php echo $customer['customers_id']; ?></td>
+                    <td class="dataTableContent text"><?php echo ($zc_address_book_count == 1) ? TEXT_INFO_ADDRESS_BOOK_COUNT_SINGLE : sprintf(TEXT_INFO_ADDRESS_BOOK_COUNT, zen_href_link(FILENAME_CUSTOMERS, 'action=list_addresses' . '&cID=' . $customer['customers_id'] . ($_GET['page'] > 0 ? '&page=' . $_GET['page'] : '')), $zc_address_book_count); ?></td>
                     <td class="dataTableContent"><?php echo $customer['customers_lastname']; ?></td>
                     <td class="dataTableContent"><?php echo $customer['customers_firstname']; ?></td>
                     <td class="dataTableContent"><?php echo $customer['company']; ?></td>
