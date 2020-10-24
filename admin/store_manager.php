@@ -27,8 +27,6 @@
 
 // update all products in catalog
     case ('update_all_products_attributes_sort_order'):
-      if (isset($_POST['confirm']) && $_POST['confirm'] == 'yes')
-      {
         $all_products_attributes= $db->Execute("SELECT p.products_id, pa.products_attributes_id FROM " .
         TABLE_PRODUCTS . " p, " .
         TABLE_PRODUCTS_ATTRIBUTES . " pa " . "
@@ -44,12 +42,9 @@
         zen_record_admin_activity('Store Manager executed [update all products attributes sort order]', 'info');
         $action='';
         zen_redirect(zen_href_link(FILENAME_STORE_MANAGER));
-      }
       break;
 
     case ('update_all_products_price_sorter'):
-      if (isset($_POST['confirm']) && $_POST['confirm'] == 'yes')
-      {
       // reset products_price_sorter for searches etc.
         $sql = "SELECT products_id FROM " . TABLE_PRODUCTS;
         $update_prices = $db->Execute($sql);
@@ -63,13 +58,10 @@
         zen_record_admin_activity('Store Manager executed [update all products price sorter]', 'info');
         $action='';
         zen_redirect(zen_href_link(FILENAME_STORE_MANAGER));
-      }
     break;
 
 //    case ('update_all_products_viewed'):
 //    // reset products_viewed to 0
-//      if (isset($_POST['confirm']) && $_POST['confirm'] == 'yes')
-//      {
 ////        $sql = "UPDATE " . TABLE_PRODUCTS_DESCRIPTION . " SET products_viewed = 0";
 ////        $db->Execute($sql);
 //        $sql = "TRUNCATE TABLE " . TABLE_COUNT_PRODUCT_VIEWS;
@@ -79,12 +71,9 @@
 //        zen_record_admin_activity('Store Manager executed [update all products viewed]', 'info');
 //        $action='';
 //        zen_redirect(zen_href_link(FILENAME_STORE_MANAGER));
-//      }
 //    break;
 
     case ('update_all_products_ordered'):
-      if (isset($_POST['confirm']) && $_POST['confirm'] == 'yes')
-      {
       // reset products_ordered to 0
         $sql = "UPDATE " . TABLE_PRODUCTS . " SET products_ordered= '0'";
         $update_viewed = $db->Execute($sql);
@@ -93,7 +82,6 @@
         zen_record_admin_activity('Store Manager executed [update all products ordered]', 'info');
         $action='';
         zen_redirect(zen_href_link(FILENAME_STORE_MANAGER));
-      }
     break;
 
     case ('update_counter'):
@@ -113,8 +101,6 @@
     break;
     case ('optimize_db_do'):
     // clean out unused space in database
-      if (isset($_POST['confirm']) && $_POST['confirm'] == 'yes')
-      {
         $sql = "SHOW TABLE STATUS FROM `" . DB_DATABASE ."`";
         $tables = $db->Execute($sql);
         while(!$tables->EOF) {
@@ -133,7 +119,6 @@
         zen_record_admin_activity('Store Manager executed [optimize database tables]', 'info');
         $action='';
         zen_redirect(zen_href_link(FILENAME_STORE_MANAGER));
-      }
     break;
 
 // clean out old DEBUG logfiles
@@ -160,14 +145,11 @@
 
     case ('update_all_master_categories_id'):
     // reset products master categories ID
-      if (isset($_POST['confirm']) && $_POST['confirm'] == 'yes')
-      {
         zen_reset_all_products_master_categories_id();
         $messageStack->add_session(SUCCESS_UPDATE_ALL_MASTER_CATEGORIES_ID, 'success');
         zen_record_admin_activity('Store Manager executed [update all master categories id]', 'info');
         $action='';
         zen_redirect(zen_href_link(FILENAME_STORE_MANAGER));
-      }
     break;
 
     case ('update_orders_id'):
@@ -230,7 +212,7 @@ if ($processing_message != '') {
         <td colspan="2"><br /><table border="0" cellspacing="0" cellpadding="2">
           <tr>
             <td class="main" align="left" valign="top"><?php echo TEXT_INFO_ATTRIBUTES_FEATURES_UPDATES; ?></td>
-            <td class="main" align="right" valign="middle"><?php echo zen_draw_form('update_all_products_attributes_sort_order', FILENAME_STORE_MANAGER, 'action=update_all_products_attributes_sort_order')?><input type="hidden" name="confirm" value="yes" /><input class="btn btn-default btn-sm" type="submit" value="<?php echo IMAGE_UPDATE; ?>"></form></td>
+            <td class="main" align="right" valign="middle"><?php echo zen_draw_form('update_all_products_attributes_sort_order', FILENAME_STORE_MANAGER, 'action=update_all_products_attributes_sort_order')?><input class="btn btn-default btn-sm" type="submit" value="<?php echo IMAGE_UPDATE; ?>"></form></td>
           </tr>
         </table></td>
       </tr>
@@ -241,7 +223,7 @@ if ($processing_message != '') {
         <td colspan="2"><br /><table border="0" cellspacing="0" cellpadding="2">
           <tr>
             <td class="main" align="left" valign="top"><?php echo TEXT_INFO_PRODUCTS_PRICE_SORTER_UPDATE; ?></td>
-            <td class="main" align="right" valign="middle"><?php echo zen_draw_form('update_all_products_price_sorter', FILENAME_STORE_MANAGER, 'action=update_all_products_price_sorter')?><input type="hidden" name="confirm" value="yes" /><input class="btn btn-default btn-sm" type="submit" value="<?php echo IMAGE_UPDATE; ?>"></form></td>
+            <td class="main" align="right" valign="middle"><?php echo zen_draw_form('update_all_products_price_sorter', FILENAME_STORE_MANAGER, 'action=update_all_products_price_sorter')?><input class="btn btn-default btn-sm" type="submit" value="<?php echo IMAGE_UPDATE; ?>"></form></td>
           </tr>
         </table></td>
       </tr>
@@ -266,7 +248,7 @@ if ($processing_message != '') {
         <td colspan="2"><br /><table border="0" cellspacing="0" cellpadding="2">
           <tr>
             <td class="main" align="left" valign="top"><?php echo TEXT_INFO_PRODUCTS_VIEWED_UPDATE; ?></td>
-            <td class="main" align="right" valign="middle"><?php echo zen_draw_form('update_all_products_viewed', FILENAME_STORE_MANAGER, 'action=update_all_products_viewed')?><input type="hidden" name="confirm" value="yes" /><input class="btn btn-default btn-sm" type="submit" value="<?php echo IMAGE_RESET; ?>"></form></td>
+            <td class="main" align="right" valign="middle"><?php echo zen_draw_form('update_all_products_viewed', FILENAME_STORE_MANAGER, 'action=update_all_products_viewed')?><input class="btn btn-default btn-sm" type="submit" value="<?php echo IMAGE_RESET; ?>"></form></td>
           </tr>
         </table></td>
       </tr>
@@ -279,7 +261,7 @@ if ($processing_message != '') {
         <td colspan="2"><br /><table border="0" cellspacing="0" cellpadding="2">
           <tr>
             <td class="main" align="left" valign="top"><?php echo TEXT_INFO_PRODUCTS_ORDERED_UPDATE; ?></td>
-            <td class="main" align="right" valign="middle"><?php echo zen_draw_form('update_all_products_ordered', FILENAME_STORE_MANAGER, 'action=update_all_products_ordered')?><input type="hidden" name="confirm" value="yes" /><input class="btn btn-default btn-sm" type="submit" value="<?php echo IMAGE_RESET; ?>"></form></td>
+            <td class="main" align="right" valign="middle"><?php echo zen_draw_form('update_all_products_ordered', FILENAME_STORE_MANAGER, 'action=update_all_products_ordered')?><input class="btn btn-default btn-sm" type="submit" value="<?php echo IMAGE_RESET; ?>"></form></td>
           </tr>
         </table></td>
       </tr>
@@ -290,7 +272,7 @@ if ($processing_message != '') {
         <td colspan="2"><br /><table border="0" cellspacing="0" cellpadding="2">
           <tr>
             <td class="main" align="left" valign="top"><?php echo TEXT_INFO_MASTER_CATEGORIES_ID_UPDATE; ?></td>
-            <td class="main" align="right" valign="middle"><?php echo zen_draw_form('update_all_master_categories_id', FILENAME_STORE_MANAGER, 'action=update_all_master_categories_id')?><input type="hidden" name="confirm" value="yes" /><input class="btn btn-default btn-sm" type="submit" value="<?php echo IMAGE_RESET; ?>"></form></td>
+            <td class="main" align="right" valign="middle"><?php echo zen_draw_form('update_all_master_categories_id', FILENAME_STORE_MANAGER, 'action=update_all_master_categories_id')?><input class="btn btn-default btn-sm" type="submit" value="<?php echo IMAGE_RESET; ?>"></form></td>
           </tr>
         </table></td>
       </tr>
@@ -317,7 +299,7 @@ if ($processing_message != '') {
         <td colspan="2"><br /><br /><table border="0" cellspacing="0" cellpadding="2">
           <tr>
             <td class="main" align="left" valign="top"><?php echo TEXT_INFO_DATABASE_OPTIMIZE; ?></td>
-            <td class="main" align="right" valign="middle"><?php echo zen_draw_form('optimize_db_start', FILENAME_STORE_MANAGER, 'action=optimize_db_start')?><input type="hidden" name="confirm" value="yes" /><input class="btn btn-default btn-sm" type="submit" value="<?php echo IMAGE_RESET; ?>"></form></td>
+            <td class="main" align="right" valign="middle"><?php echo zen_draw_form('optimize_db_start', FILENAME_STORE_MANAGER, 'action=optimize_db_start')?><input class="btn btn-default btn-sm" type="submit" value="<?php echo IMAGE_RESET; ?>"></form></td>
           </tr>
         </table></td>
       </tr>

@@ -3,14 +3,19 @@
  * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license https://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2020 Jan 12 Modified in v1.5.7 $
+ * @version $Id: DrByte 2020 Oct 05 Modified in v1.5.8 $
  */
 require('includes/application_top.php');
+
+$show_product_images = true;
+$show_attrib_images = true;
+$img_width = defined('IMAGE_ON_INVOICE_IMAGE_WIDTH') ? (int)IMAGE_ON_INVOICE_IMAGE_WIDTH : '100';
+$attr_img_width = '25';
 
 require(DIR_WS_CLASSES . 'currencies.php');
 $currencies = new currencies();
 
-$oID = zen_db_prepare_input($_GET['oID']);
+$oID = (int)$_GET['oID'];
 
 include DIR_FS_CATALOG . DIR_WS_CLASSES . 'order.php';
 $order = new order($oID);
@@ -114,31 +119,50 @@ if ($order->billing['street_address'] != $order->delivery['street_address']) {
       <table class="table table-striped">
         <thead>
           <tr class="dataTableHeadingRow">
-            <th class="dataTableHeadingContent" colspan="2"><?php echo TABLE_HEADING_PRODUCTS; ?></th>
+            <?php if ($show_product_images) { ?>
+            <th class="dataTableHeadingContent" style="width: <?php echo (int)$img_width . 'px'; ?>">&nbsp;</th>
+            <?php } ?>
+            <th class="dataTableHeadingContent">&nbsp;</th>
+            <th class="dataTableHeadingContent" style="width: 70%"><?php echo TABLE_HEADING_PRODUCTS; ?></th>
             <th class="dataTableHeadingContent"><?php echo TABLE_HEADING_PRODUCTS_MODEL; ?></th>
           </tr>
         </thead>
         <tbody>
             <?php
-            for ($i = 0, $n = sizeof($order->products); $i < $n; $i++) {
-              ?>
+            for ($i = 0, $n = count($order->products); $i < $n; $i++) {
+            $product_name = $order->products[$i]['name'];
+            ?>
             <tr class="dataTableRow">
+                <?php if ($show_product_images) { ?>
+                <td class="dataTableContent">
+                    <?php echo zen_image(DIR_WS_CATALOG . DIR_WS_IMAGES . zen_get_products_image($order->products[$i]['id']), $product_name, (int)$img_width); ?>
+                </td>
+                <?php } ?>
+
               <td class="dataTableContent text-right">
                 <?php echo $order->products[$i]['qty']; ?>&nbsp;x
               </td>
               <td class="dataTableContent">
-                <?php echo $order->products[$i]['name']; ?>
+                    <?php echo $product_name; ?>
                 <?php
-                  if (isset($order->products[$i]['attributes']) && (sizeof($order->products[$i]['attributes']) > 0)) {
+                  if (isset($order->products[$i]['attributes']) && (count($order->products[$i]['attributes']) > 0)) {
                 ?>
                   <ul>
                   <?php
-                      for ($j = 0, $k = sizeof($order->products[$i]['attributes']); $j < $k; $j++) {
+                      for ($j = 0, $k = count($order->products[$i]['attributes']); $j < $k; $j++) {
+                          $attribute_name = $order->products[$i]['attributes'][$j]['option'] . ': ' . nl2br(zen_output_string_protected($order->products[$i]['attributes'][$j]['value']));
+                          $attribute_image = zen_get_attributes_image($order->products[$i]['id'], $order->products[$i]['attributes'][$j]['option_id'], $order->products[$i]['attributes'][$j]['value_id']);
                   ?>
                       <li>
+                        <?php
+
+                                    if ($show_attrib_images && !empty($attribute_image)) {
+                                        echo zen_image(DIR_WS_CATALOG.DIR_WS_IMAGES . $attribute_image, $attribute_name, (int)$attr_img_width);
+                        }
+                        ?>
                         <small>
                             <i>
-                            <?php echo $order->products[$i]['attributes'][$j]['option'] . ': ' . nl2br(zen_output_string_protected($order->products[$i]['attributes'][$j]['value'])); ?>
+                                <?php echo $attribute_name; ?>
                             </i>
                         </small>
                       </li>

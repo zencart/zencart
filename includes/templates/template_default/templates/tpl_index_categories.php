@@ -21,16 +21,6 @@
 <h2 class="greeting"><?php echo zen_customer_greeting(); ?></h2>
 <?php } ?>
 
-<!-- deprecated - to use - uncomment
-<?php if (TEXT_MAIN) { ?>
-<div id="" class="content"><?php echo TEXT_MAIN; ?></div>
-<?php } ?>-->
-
-<!-- deprecated - to use - uncomment
-<?php if (TEXT_INFORMATION) { ?>
-<div id="" class="content"><?php echo TEXT_INFORMATION; ?></div>
-<?php } ?>-->
-
 <?php if (DEFINE_MAIN_PAGE_STATUS >= 1 and DEFINE_MAIN_PAGE_STATUS <= 2) { ?>
 <div id="indexCategoriesMainContent" class="content"><?php
 /**

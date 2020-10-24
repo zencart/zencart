@@ -85,15 +85,15 @@ if (EMAIL_ATTACHMENTS_ENABLED && $action == 'preview') {
 } //end attachments upload
 // error detection
 if ($action == 'preview') {
-  if (!isset($_POST['customers_email_address'])) {
+  if (empty($_POST['customers_email_address'])) {
     $messageStack->add(ERROR_NO_CUSTOMER_SELECTED, 'error');
   }
 
-  if (!$_POST['subject']) {
+  if (empty($_POST['subject'])) {
     $messageStack->add(ERROR_NO_SUBJECT, 'error');
   }
 
-  if (!$_POST['message'] && !$_POST['message_html']) {
+  if (empty($_POST['message']) && empty($_POST['message_html'])) {
     $messageStack->add(ENTRY_NOTHING_TO_SEND, 'error');
   }
 }
@@ -261,7 +261,7 @@ if ($action == 'preview') {
         <div class="row">
             <?php echo zen_draw_form('mail', FILENAME_MAIL, 'action=preview' . (isset($_GET['cID']) ? '&cID=' . (int)$_GET['cID'] : '') . (isset($_GET['customer']) ? '&customer=' . zen_output_string_protected($_GET['customer']) : '') . (isset($_GET['origin']) ? '&origin=' . zen_output_string_protected($_GET['origin']) : ''), 'post', 'onsubmit="return check_form(mail);" enctype="multipart/form-data" class="form-horizontal"'); ?>
             <?php
-            $customers = get_audiences_list('email', 'customers_email_address', (isset($_GET['customer']) ? zen_output_string_protected($_GET['customer']) : ''));
+            $customers = get_audiences_list('email', 'false', (isset($_GET['customer']) ? zen_output_string_protected($_GET['customer']) : ''));
             ?>
           <div class="form-group">
               <?php echo zen_draw_label(TEXT_CUSTOMER, 'customers_email_address', 'class="col-sm-3 control-label"'); ?>

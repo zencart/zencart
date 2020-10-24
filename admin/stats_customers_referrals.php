@@ -35,7 +35,7 @@ include DIR_FS_CATALOG . DIR_WS_CLASSES . 'order.php';
       <h1 class="pageHeading"><?php echo HEADING_TITLE; ?></h1>
       <?php
 // select all customer_referrals
-      $customers_referral_query = "select distinct customers_referral from " . TABLE_CUSTOMERS . " where customers_referral != ''";
+      $customers_referral_query = "SELECT customers_referral, count(*) AS count FROM " . TABLE_CUSTOMERS . " WHERE customers_referral != '' GROUP BY customers_referral";
       $customers_referral = $db->Execute($customers_referral_query);
 
       $customers_referrals = array();
@@ -46,7 +46,7 @@ include DIR_FS_CATALOG . DIR_WS_CLASSES . 'order.php';
       foreach ($customers_referral as $customer_referral) {
         $customers_referrals[] = array(
           'id' => $customer_referral['customers_referral'],
-          'text' => $customer_referral['customers_referral']);
+          'text' => $customer_referral['customers_referral'] . ' (' . $customer_referral['count'] . ')');
       }
       ?>
       <?php echo zen_draw_form('new_date', FILENAME_STATS_CUSTOMERS_REFERRALS, '', 'get', 'class="form-horizontal"'); ?>
@@ -131,8 +131,8 @@ include DIR_FS_CATALOG . DIR_WS_CLASSES . 'order.php';
           <tr>
             <td class="main"><?php echo zen_date_long($customers_order['date_purchased']); ?></td>
             <td class="main"><?php echo TEXT_ORDER_NUMBER; ?> <?php echo $customers_order['orders_id']; ?></td>
-            <td class="main"><?php echo TEXT_COUPON_ID; ?> <?php echo $customers_order['coupon_code']; ?></td>
-            <td class="main"><a href="<?php echo zen_href_link(FILENAME_ORDERS, zen_get_all_get_params(array('oID', 'action')) . 'oID=' . $customers_order['orders_id'] . '&action=edit', 'NONSSL'); ?>" class="btn btn-primary" role="button"><?php echo IMAGE_EDIT; ?></a></td>
+            <td class="main"><?php echo (!empty($customers_order['coupon_code']) ? TEXT_COUPON_ID . ' ' . $customers_order['coupon_code'] : ''); ?></td>
+            <td class="main"><a href="<?php echo zen_href_link(FILENAME_ORDERS, zen_get_all_get_params(array('oID', 'action')) . 'oID=' . $customers_order['orders_id'] . '&action=edit', 'NONSSL'); ?>" class="btn btn-primary" role="button"><?php echo IMAGE_DETAILS; ?></a></td>
           </tr>
 
           <?php for ($i = 0, $n = sizeof($order->totals); $i < $n; $i++) { ?>

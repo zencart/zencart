@@ -244,7 +244,7 @@ class shoppingCart extends base
     {
         global $db, $messageStack;
         if ($this->display_debug_messages) $messageStack->add_session('header', 'FUNCTION ' . __FUNCTION__, 'caution');
-        if (zen_has_product_attributes($product_id, 'false') && empty($attributes)) {
+        if (zen_has_product_attributes($product_id, false) && empty($attributes)) {
             if (!zen_requires_attribute_selection($product_id)) {
                 // Build attributes array; determine correct qty
                 $attributes = [];
@@ -673,7 +673,7 @@ class shoppingCart extends base
                 }
 
                 // adjust price for discounts when priced by attribute
-                if ($product->fields['products_priced_by_attribute'] == '1' && zen_has_product_attributes($product->fields['products_id'], 'false')) {
+                if ($product->fields['products_priced_by_attribute'] == '1' && zen_has_product_attributes($product->fields['products_id'], false)) {
                     if ($special_price) {
                         $products_price = $special_price;
                     } else {
@@ -1232,7 +1232,7 @@ class shoppingCart extends base
                 }
 
                 // adjust price for discounts when priced by attribute
-                if ($products->fields['products_priced_by_attribute'] == '1' && zen_has_product_attributes($products->fields['products_id'], 'false')) {
+                if ($products->fields['products_priced_by_attribute'] == '1' && zen_has_product_attributes($products->fields['products_id'], false)) {
                     if ($special_price) {
                         $products_price = $special_price;
                     } else {
@@ -1745,6 +1745,10 @@ class shoppingCart extends base
         $change_state = [];
         $this->flag_duplicate_quantity_msgs_set = [];
         $cart_delete = (isset($_POST['cart_delete']) && is_array($_POST['cart_delete'])) ? $_POST['cart_delete'] : [];
+
+        if (empty($_POST['products_id']) || !is_array($_POST['products_id'])) {
+            $_POST['products_id'] = [];
+        }
         for ($i = 0, $n = count($_POST['products_id']); $i < $n; $i++) {
             $adjust_max = 'false';
             if ($_POST['cart_quantity'][$i] == '') {
@@ -2033,10 +2037,13 @@ class shoppingCart extends base
         if ($this->display_debug_messages) $messageStack->add_session('header', 'FUNCTION ' . __FUNCTION__ . ' $_GET[products_id]: ' . $_GET['products_id'], 'caution');
 
         $this->flag_duplicate_msgs_set = FALSE;
+        $allow_into_cart = 'N';
         if (isset($_GET['products_id'])) {
             if (zen_requires_attribute_selection($_GET['products_id'])) {
                 zen_redirect(zen_href_link(zen_get_info_page($_GET['products_id']), 'products_id=' . $_GET['products_id']));
-            } else {
+            }
+            $allow_into_cart = zen_get_products_allow_add_to_cart((int)$_GET['products_id']);
+            if ($allow_into_cart == 'Y') {
                 $add_max = zen_get_products_quantity_order_max($_GET['products_id']);
                 $cart_qty = $this->in_cart_mixed($_GET['products_id']);
                 $new_qty = zen_get_buy_now_qty($_GET['products_id']);
@@ -2064,15 +2071,16 @@ class shoppingCart extends base
             }
         }
         // display message if all is good and not on shopping_cart page
-        if ((DISPLAY_CART == 'false' && $_GET['main_page'] != FILENAME_SHOPPING_CART) && $messageStack->size('shopping_cart') == 0) {
+        if ((DISPLAY_CART == 'false' && $_GET['main_page'] != FILENAME_SHOPPING_CART) && $messageStack->size('shopping_cart') == 0 && ($allow_into_cart == 'Y')) {
             $messageStack->add_session('header', ($this->display_debug_messages ? 'FUNCTION ' . __FUNCTION__ . ': ' : '') . SUCCESS_ADDED_TO_CART_PRODUCTS, 'success');
         } else {
-            if (DISPLAY_CART == 'false') {
-                zen_redirect(zen_href_link(FILENAME_SHOPPING_CART));
+            if (DISPLAY_CART == 'false'  && ($allow_into_cart !== 'Y')) {
+                //zen_redirect(zen_href_link(FILENAME_SHOPPING_CART));
+                $messageStack->add_session('header', ($this->display_debug_messages ? 'FUNCTION ' . __FUNCTION__ . ': ' : '') . FAILED_TO_ADD_UNAVAILABLE_PRODUCTS, 'error');
             }
         }
-        if (is_array($parameters) && !in_array('products_id', $parameters) && !(strpos($goto, 'reviews') > 5)) $parameters[] = 'products_id';
-        zen_redirect(zen_href_link($goto, zen_get_all_get_params($parameters)));
+        $exclude[] = 'action';
+        zen_redirect(zen_href_link($goto, zen_get_all_get_params($exclude)));
     }
 
     /**
