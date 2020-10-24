@@ -138,10 +138,10 @@ function zen_get_country_zones($country_id)
  * Return the zone (State/Province) name
  * @param int $country_id
  * @param int $zone_id
- * @param string $default_zone
+ * @param string|null $default_zone
  * @return string
  */
-function zen_get_zone_name(int $country_id, int $zone_id, string $default_zone = '')
+function zen_get_zone_name(int $country_id, int $zone_id, ?string $default_zone = '')
 {
     global $db;
     $sql = "SELECT zone_name
@@ -162,10 +162,10 @@ function zen_get_zone_name(int $country_id, int $zone_id, string $default_zone =
  * Returns the zone (State/Province) code
  * @param int $country_id
  * @param int $zone_id
- * @param string $default_zone
+ * @param string|null $default_zone
  * @return string
  */
-function zen_get_zone_code(int $country_id, int $zone_id, string $default_zone = '')
+function zen_get_zone_code(int $country_id, int $zone_id, ?string $default_zone = '')
 {
     global $db;
     $sql = "SELECT zone_code
