@@ -209,10 +209,10 @@ if (zen_not_null($action)) {
         if (ACCOUNT_STATE == 'true') {
           if ($entry_zone_id > 0) {
             $sql_data_array[] = array('fieldName' => 'entry_zone_id', 'value' => $entry_zone_id, 'type' => 'integer');
-            $sql_data_array[] = array('fieldName' => 'entry_state', 'value' => '', 'type' => 'stringIgnoreNull');
+            $sql_data_array[] = array('fieldName' => 'entry_state', 'value' => '', 'type' => 'string');
           } else {
             $sql_data_array[] = array('fieldName' => 'entry_zone_id', 'value' => 0, 'type' => 'integer');
-            $sql_data_array[] = array('fieldName' => 'entry_state', 'value' => $entry_state, 'type' => 'stringIgnoreNull');
+            $sql_data_array[] = array('fieldName' => 'entry_state', 'value' => $entry_state, 'type' => 'string');
           }
         }
 
