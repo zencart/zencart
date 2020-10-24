@@ -68,7 +68,7 @@ if (zen_not_null($action)) {
           $page_error = true;
         }
         if (empty($pages_html_text)) {
-          
+
         }
       }
 
@@ -388,7 +388,7 @@ if (zen_not_null($action)) {
         </div>
         <div class="form-group">
           <?php echo zen_draw_label(TEXT_HEADER_SORT_ORDER, 'header_sort_order', 'class="control-label col-sm-3"'); ?>
-          <div class="col-sm-9 col-md-6">
+          <div class="col-sm-2">
             <?php echo zen_draw_input_field('header_sort_order', $ezInfo->header_sort_order, zen_set_field_length(TABLE_EZPAGES, 'header_sort_order') . ' class="form-control" id="header_sort_order"'); ?>
           </div>
         </div>
@@ -404,7 +404,7 @@ if (zen_not_null($action)) {
         </div>
         <div class="form-group">
           <?php echo zen_draw_label(TEXT_SIDEBOX_SORT_ORDER, 'sidebox_sort_order', 'class="control-label col-sm-3"'); ?>
-          <div class="col-sm-9 col-md-6">
+          <div class="col-sm-2">
             <?php echo zen_draw_input_field('sidebox_sort_order', $ezInfo->sidebox_sort_order, zen_set_field_length(TABLE_EZPAGES, 'sidebox_sort_order') . ' class="form-control" id="sidebox_sort_order"'); ?>
           </div>
         </div>
@@ -420,21 +420,21 @@ if (zen_not_null($action)) {
         </div>
         <div class="form-group">
           <?php echo zen_draw_label(TEXT_FOOTER_SORT_ORDER, 'status_footer', 'class="control-label col-sm-3"'); ?>
-          <div class="col-sm-9 col-md-6">
+          <div class="col-sm-2">
             <?php echo zen_draw_input_field('footer_sort_order', $ezInfo->footer_sort_order, zen_set_field_length(TABLE_EZPAGES, 'footer_sort_order') . ' class="form-control" id="footer_sort_order"'); ?>
           </div>
         </div>
         <hr>
         <div class="form-group">
           <?php echo zen_draw_label(TABLE_HEADING_CHAPTER_PREV_NEXT, 'toc_chapter', 'class="control-label col-sm-3"'); ?>
-          <div class="col-sm-9 col-md-6">
+          <div class="col-sm-2">
             <?php echo zen_draw_input_field('toc_chapter', $ezInfo->toc_chapter, zen_set_field_length(TABLE_EZPAGES, 'toc_chapter', '6') . ' class="form-control" id="toc_chapter"'); ?>
           </div>
         </div>
         <hr>
         <div class="form-group">
           <div class="col-sm-3">
-            <p class="control-label"><?php echo TABLE_HEADING_STATUS_TOC; ?>`</p>
+            <p class="control-label"><?php echo TABLE_HEADING_STATUS_TOC; ?></p>
           </div>
           <div class="col-sm-9 col-md-6">
             <label class="radio-inline"><?php echo zen_draw_radio_field('status_toc', '1', ($ezInfo->status_toc == 1)) . TEXT_YES; ?></label>
@@ -443,7 +443,7 @@ if (zen_not_null($action)) {
         </div>
         <div class="form-group">
           <?php echo zen_draw_label(TEXT_TOC_SORT_ORDER, 'toc_sort_order', 'class="control-label col-sm-3"'); ?>
-          <div class="col-sm-9 col-md-6">
+          <div class="col-sm-2">
             <?php echo zen_draw_input_field('toc_sort_order', $ezInfo->toc_sort_order, zen_set_field_length(TABLE_EZPAGES, 'toc_sort_order') . ' class="form-control" id="toc_sort_order"'); ?>
           </div>
         </div>
