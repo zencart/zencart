@@ -62,7 +62,7 @@ function zen_product_set_header_response($product_id, $product_info = null)
         $response_code = 410;
     }
 
-    if (defined('PRODUCT_THROWS_200_WHEN_DISABLED') && PRODUCT_THROWS_200_WHEN_DISABLED === true) {
+    if (defined('DISABLED_PRODUCTS_TRIGGER_HTTP200') && DISABLED_PRODUCTS_TRIGGER_HTTP200 === 'true') {
         $response_code = 200;
     }
 

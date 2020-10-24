@@ -20,7 +20,7 @@
 
   $product_not_found = $product_info->EOF;
 
-  if (!defined('PRODUCT_THROWS_200_WHEN_DISABLED') || PRODUCT_THROWS_200_WHEN_DISABLED !== true) {
+  if (!defined('DISABLED_PRODUCTS_TRIGGER_HTTP200') || DISABLED_PRODUCTS_TRIGGER_HTTP200 !== 'true') {
       if (!$product_not_found && $product_info->fields['products_status'] != 1) {
           $product_not_found = true;
       }
