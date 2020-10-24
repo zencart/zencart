@@ -10,8 +10,11 @@ if (!zen_is_superuser() && !check_page(FILENAME_ORDERS, '')) return;
 // to disable this module for everyone, uncomment the following "return" statement so the rest of this file is ignored
 // return;
 
+// Configure settings
 $maxRows = 25;
+$includeAttributesInPopoverRows = true;
 
+// Get data
 $sql = "SELECT o.orders_id as orders_id, o.customers_name as customers_name, o.customers_id,
                    o.date_purchased as date_purchased, o.currency, o.currency_value,
                    ot.class, ot.text as order_total, ot.value as order_value
@@ -45,14 +48,17 @@ $currencies = new currencies();
           $product_details = '';
           foreach($orderProducts as $product) {
               $product_details .= $product['qty'] . ' x ' . $product['name'] . (!empty($product['model']) ? ' (' . $product['model'] . ')' :''). "\n";
-              $sql = "SELECT products_options, products_options_values
-                      FROM " .  TABLE_ORDERS_PRODUCTS_ATTRIBUTES . "
-                      WHERE orders_products_id = " . (int)$product['orders_products_id'] . " ORDER BY orders_products_attributes_id ASC";
-              $productAttributes = $db->Execute($sql, false, true, 1800);
-              foreach ($productAttributes as $attr) {
-                  if (!empty($attr['products_options'])) {
-                      $product_details .= '&nbsp;&nbsp;- ' . $attr['products_options'] . ': ' . zen_output_string_protected($attr['products_options_values']) . "\n";
-                   }
+
+              if ($includeAttributesInPopoverRows) {
+                  $sql = "SELECT products_options, products_options_values
+                          FROM " . TABLE_ORDERS_PRODUCTS_ATTRIBUTES . "
+                          WHERE orders_products_id = " . (int)$product['orders_products_id'] . " ORDER BY orders_products_attributes_id ASC";
+                  $productAttributes = $db->Execute($sql, false, true, 1800);
+                  foreach ($productAttributes as $attr) {
+                      if (!empty($attr['products_options'])) {
+                          $product_details .= '&nbsp;&nbsp;- ' . $attr['products_options'] . ': ' . zen_output_string_protected($attr['products_options_values']) . "\n";
+                      }
+                  }
               }
               $product_details .= '<hr>'; // add HR
           }
