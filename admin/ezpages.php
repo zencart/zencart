@@ -10,6 +10,8 @@ require 'includes/application_top.php';
 if (!isset($_SESSION['ez_sort_order'])) {
   $_SESSION['ez_sort_order'] = 0;
 }
+$currentSortOrder = $_SESSION['ez_sort_order'];
+
 $currentPage = (isset($_GET['page']) && $_GET['page'] != '' ? (int)$_GET['page'] : 0);
 
 if (isset($_GET['action']) && $_GET['action'] == 'set_editor') {
@@ -24,7 +26,7 @@ $action = (isset($_GET['action']) ? $_GET['action'] : '');
 if (zen_not_null($action)) {
   switch ($action) {
     case 'set_ez_sort_order':
-      $_SESSION['ez_sort_order'] = $_GET['reset_ez_sort_order'];
+      $currentSortOrder = $_SESSION['ez_sort_order'] = (int)$_GET['reset_ez_sort_order'];
       zen_redirect(zen_href_link(FILENAME_EZPAGES_ADMIN, zen_get_all_get_params(['action'])));
       break;
     case 'update_status':
@@ -217,7 +219,7 @@ if (zen_not_null($action)) {
             <div class="form-group">
               <?php echo zen_draw_label(TEXT_SORT_CHAPTER_TOC_TITLE_INFO, 'reset_ez_sort_order', 'class="control-label col-sm-3"'); ?>
               <div class="col-sm-9">
-                <?php echo zen_draw_pull_down_menu('reset_ez_sort_order', $ez_sort_order_array, $_GET['reset_ez_sort_order'], 'onChange="this.form.submit();" class="form-control" id="reset_ez_sort_order"'); ?>
+                <?php echo zen_draw_pull_down_menu('reset_ez_sort_order', $ez_sort_order_array, $currentSortOrder, 'onChange="this.form.submit();" class="form-control" id="reset_ez_sort_order"'); ?>
               </div>
             </div>
             <?php echo zen_hide_session_id(); ?>
@@ -527,23 +529,23 @@ if (zen_not_null($action)) {
 
                 <?php
 // set display order
-                switch (true) {
-                  case ($_SESSION['ez_sort_order'] == 0):
+                switch ($currentSortOrder) {
+                  case (0):
                     $ez_order_by = " ORDER BY e.toc_chapter, e.toc_sort_order, ec.pages_title";
                     break;
-                  case ($_SESSION['ez_sort_order'] == 1):
+                  case (1):
                     $ez_order_by = " ORDER BY e.header_sort_order, ec.pages_title";
                     break;
-                  case ($_SESSION['ez_sort_order'] == 2):
+                  case (2):
                     $ez_order_by = " ORDER BY e.sidebox_sort_order, ec.pages_title";
                     break;
-                  case ($_SESSION['ez_sort_order'] == 3):
+                  case (3):
                     $ez_order_by = " ORDER BY e.footer_sort_order, ec.pages_title";
                     break;
-                  case ($_SESSION['ez_sort_order'] == 4):
+                  case (4):
                     $ez_order_by = " ORDER BY ec.pages_title";
                     break;
-                  case ($_SESSION['ez_sort_order'] == 5):
+                  case (5):
                     $ez_order_by = " ORDER BY e.pages_id, ec.pages_title";
                     break;
                   default:
