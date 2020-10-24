@@ -451,7 +451,7 @@ class Customer extends base
                        countries_iso_code_3 as country_iso
                 FROM " . TABLE_ADDRESS_BOOK . " ab
                 INNER JOIN " . TABLE_COUNTRIES . " c ON (ab.entry_country_id=c.countries_id)
-                INNER JOIN " . TABLE_ZONES . " z ON (ab.entry_zone_id=z.zone_id AND z.zone_country_id=c.countries_id)
+                LEFT JOIN " . TABLE_ZONES . " z ON (ab.entry_zone_id=z.zone_id AND z.zone_country_id=c.countries_id)
                 WHERE customers_id = :customersID
                 ORDER BY firstname, lastname";
 
