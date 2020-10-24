@@ -17,13 +17,13 @@ $parameters = array(
   'products_model' => '',
   'products_image' => '',
   'products_price' => '0.0000',
-  'products_virtual' => 0, 
+  'products_virtual' => 0,
   'products_weight' => '0',
   'products_date_added' => '',
   'products_last_modified' => '',
   'products_date_available' => '',
   'products_status' => '1',
-  'products_tax_class_id' => 0, 
+  'products_tax_class_id' => 0,
   'manufacturers_id' => '',
   'products_quantity_order_min' => '1',
   'products_quantity_order_units' => '1',
@@ -45,7 +45,7 @@ $pInfo = new objectInfo($parameters);
 
 if (isset($_GET['pID']) && empty($_POST)) {
   $product = $db->Execute("SELECT pd.products_name, pd.products_description, pd.products_url,
-                                  p.*, 
+                                  p.*,
                                   date_format(p.products_date_available, '" .  zen_datepicker_format_forsql() . "') as products_date_available
                            FROM " . TABLE_PRODUCTS . " p,
                                 " . TABLE_PRODUCTS_DESCRIPTION . " pd
@@ -145,10 +145,10 @@ if (zen_get_categories_status($current_category_id) == 0 && $pInfo->products_sta
   echo zen_draw_hidden_field('products_quantity_order_units', $pInfo->products_quantity_order_units);
   echo zen_draw_hidden_field('products_quantity', $pInfo->products_quantity) .
        zen_draw_hidden_field('products_model', $pInfo->products_model) .
-       zen_draw_hidden_field('products_price', $pInfo->products_price) .       
-       zen_draw_hidden_field('products_weight', $pInfo->products_weight) .       
-       zen_draw_hidden_field('products_virtual', $pInfo->products_virtual) .       
-       zen_draw_hidden_field('products_tax_class_id', $pInfo->products_tax_class_id) .       
+       zen_draw_hidden_field('products_price', $pInfo->products_price) .
+       zen_draw_hidden_field('products_weight', $pInfo->products_weight) .
+       zen_draw_hidden_field('products_virtual', $pInfo->products_virtual) .
+       zen_draw_hidden_field('products_tax_class_id', $pInfo->products_tax_class_id) .
        zen_draw_hidden_field('manufacturers_id', $pInfo->manufacturers_id) .
        zen_draw_hidden_field('products_priced_by_attribute', $pInfo->products_priced_by_attribute) .
        zen_draw_hidden_field('product_is_free', $pInfo->product_is_free) .
@@ -196,7 +196,7 @@ if (zen_get_categories_status($current_category_id) == 0 && $pInfo->products_sta
       ?>
     </div>
   </div>
-  
+
 <?php
     // -----
     // Give an observer the chance to supply some additional product-related inputs.  Each
@@ -310,7 +310,7 @@ if (zen_get_categories_status($current_category_id) == 0 && $pInfo->products_sta
           <span class="input-group-addon">
               <?php echo zen_image(DIR_WS_CATALOG_LANGUAGES . $languages[$i]['directory'] . '/images/' . $languages[$i]['image'], $languages[$i]['name']); ?>
           </span>
-          <?php echo zen_draw_input_field('products_url[' . $languages[$i]['id'] . ']', htmlspecialchars(isset($products_url[$languages[$i]['id']]) ? $products_url[$languages[$i]['id']] : zen_get_products_url($pInfo->products_id, $languages[$i]['id']), ENT_COMPAT, CHARSET, TRUE), zen_set_field_length(TABLE_PRODUCTS_DESCRIPTION, 'products_url') . ' class="form-control"'); ?>
+          <?php echo zen_draw_input_field('products_url[' . $languages[$i]['id'] . ']', htmlspecialchars(isset($products_url[$languages[$i]['id']]) ? $products_url[$languages[$i]['id']] : zen_get_products_url($pInfo->products_id, $languages[$i]['id']), ENT_COMPAT, CHARSET, TRUE), zen_set_field_length(TABLE_PRODUCTS_DESCRIPTION, 'products_url') . ' class="form-control"', 'url'); ?>
         </div>
         <br>
         <?php

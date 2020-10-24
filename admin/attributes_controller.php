@@ -182,7 +182,7 @@ if (zen_not_null($action)) {
 // update by product
     case 'update_attribute_sort':
       if (isset($_POST['confirm']) && $_POST['confirm'] == 'y') {
-        if (!zen_has_product_attributes($products_filter, 'false')) {
+        if (!zen_has_product_attributes($products_filter, false)) {
           $messageStack->add_session(SUCCESS_PRODUCT_UPDATE_SORT_NONE . $products_filter . ' ' . zen_get_products_name($products_filter, $_SESSION['languages_id']), 'error');
         } else {
           zen_update_attributes_products_option_values_sort_order($products_filter);
@@ -683,7 +683,7 @@ function zen_js_option_values_list($selectedName, $fieldName)
                   <li role="presentation"><a role="menuitem" href="<?php echo zen_href_link(FILENAME_PRODUCTS_PRICE_MANAGER, '&products_filter=' . $products_filter . '&current_category_id=' . $current_category_id); ?>"><?php echo IMAGE_PRODUCTS_PRICE_MANAGER; ?></a></li>
                 <?php } ?>
                 <?php
-                if (zen_has_product_attributes($products_filter, 'false')) {
+                if (zen_has_product_attributes($products_filter, false)) {
                   ?>
                   <li role="presentation">
                     <?php echo zen_draw_form('update_sort', FILENAME_ATTRIBUTES_CONTROLLER, 'action=update_attribute_sort' . '&products_filter=' . $products_filter . '&current_category_id=' . $current_category_id); ?>

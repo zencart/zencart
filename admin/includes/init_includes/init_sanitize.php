@@ -288,6 +288,15 @@ $sanitizer->addComplexSanitization($group);
 $group = array('query_string' => array('sanitizerType' => 'NULL_ACTION', 'method' => 'post', 'pages' => array('sqlpatch')));
 $sanitizer->addComplexSanitization($group);
 
+$group = array(
+    'password' => array('sanitizerType' => 'NULL_ACTION', 'method' => 'post', 'pages' => array('admin_account', 'users')),
+    'confirm' => array('sanitizerType' => 'NULL_ACTION', 'method' => 'post', 'pages' => array('admin_account', 'users')),
+    'admin_pass' => array('sanitizerType' => 'NULL_ACTION', 'method' => 'post', 'pages' => array('login')),
+    'newpassword' => array('sanitizerType' => 'NULL_ACTION', 'method' => 'post', 'pages' => array('customers')),
+    'newpasswordConfirm' => array('sanitizerType' => 'NULL_ACTION', 'method' => 'post', 'pages' => array('customers')),
+    );
+$sanitizer->addComplexSanitization($group);
+
 $sanitizer->runSanitizers();
 
 $sanitizedRequest = Request::capture();

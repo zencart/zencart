@@ -26,12 +26,12 @@ a:visited {color:#0066cc;}
 .coupon-code {font-weight:bold;}
 .gv-block { padding: 5px; border: 1px #cccccc solid; background-color: #99FF99; }
 .content-line-title {font-weight:bold; font-size:11px; padding-top:3px;}
-.order-detail-area {background-color:#CCCC99; border:1px #9a9a9a; width:542px; padding:2px; font-size:10px; }
+.order-detail-area {background-color:#CCCC99; border:1px #9a9a9a; padding:5px; font-size:10px; }
 .product-details {font-size:10px;}
 .product-details-num {font-size:10px; font-weight:bold;}
 .order-totals-text {font-size:10px; font-weight:bold;}
 .order-totals-num {font-size:10px; }
-.comments {background-color:#FF6699; border:1px #9a9a9a; width:542px; padding:2px; font-size:10px; }
+.comments {background-color:#D2B48C; border:1px #9a9a9a; padding:5px; font-size:10px; }
 .address-block {background-color:#E4E8F3; border:1px solid #9a9a9a; margin-top:3px;}
 .address {font-size:10px;}
 .payment-detail, .payment-footer {font-size:10px;}

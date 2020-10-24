@@ -68,7 +68,8 @@ Developers wishing to contribute documentation should fork [zencart/documentatio
 
 Support
 -------
-For free support, visit our support site: https://www.zen-cart.com/forum.php
+For free community-driven support with Zen Cart, visit our support site: https://www.zen-cart.com/forum.php
+
 
 Follow Us
 ---------
@@ -78,6 +79,14 @@ Sign up for our free [Newsletter](http://eepurl.com/bafnNj)
 
 Subscribe to [Critical News Updates And Release Announcements](https://www.zen-cart.com/subscription.php?do=addsubscription&f=2)
 
+&nbsp;  
+
+<p>This project is supported by:</p>
+<p>
+  <a href="https://www.digitalocean.com/">
+    <img src="https://opensource.nyc3.cdn.digitaloceanspaces.com/attribution/assets/SVG/DO_Logo_horizontal_blue.svg" width="201px">
+  </a>
+</p>
 
 &nbsp;  
 

@@ -233,9 +233,9 @@ if (zen_not_null($action)) {
         } elseif (($action === 'new') && isset($_GET['preID'])) { //update existing Special
           $form_action = 'insert';
 
-          $product = $db->Execute("SELECT p.products_id, p.products_model, pd.products_name, p.products_price, p.products_priced_by_attribute 
+          $product = $db->Execute("SELECT p.products_id, p.products_model, pd.products_name, p.products_price, p.products_priced_by_attribute
                                    FROM " . TABLE_PRODUCTS . " p,
-                                        " . TABLE_PRODUCTS_DESCRIPTION . " pd 
+                                        " . TABLE_PRODUCTS_DESCRIPTION . " pd
                                    WHERE p.products_id = pd.products_id
                                    AND pd.language_id = " . (int)$_SESSION['languages_id'] . "
                                    AND p.products_id = " . (int)$_GET['preID']);
@@ -366,8 +366,15 @@ if (zen_not_null($action)) {
           <div class="col-sm-12 text-right">
             <button type="submit" class="btn btn-primary"><?php echo(($form_action === 'insert') ? IMAGE_INSERT : IMAGE_UPDATE); ?></button> <a class="btn btn-default" role="button" href="<?php echo $cancel_link; ?>"><?php echo IMAGE_CANCEL; ?></a>
           </div>
-          <?php echo '</form>'; ?>
-          <?php echo TEXT_SPECIALS_PRICE_NOTES; ?>
+            <?php echo '</form>'; ?>
+            <hr/>
+            <?php 
+                   echo TEXT_SPECIALS_PRICE_NOTES_HEAD; 
+                   echo '<ul>'; 
+                   echo TEXT_SPECIALS_PRICE_NOTES_BODY; 
+                   echo '<li>' . TEXT_INFO_PRE_ADD_INTRO . '</li>'; 
+                   echo '</ul>'; 
+            ?>
         </div>
       <?php } else { ?>
         <div class="row">
@@ -402,32 +409,36 @@ if (zen_not_null($action)) {
           </div>
         </div>
         <div class="row">
-          <div><?php echo TEXT_STATUS_WARNING; ?></div>
-          <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9 configurationColumnLeft">
-            <table class="table table-hover">
-              <thead>
-                <tr class="dataTableHeadingRow">
-                  <th class="dataTableHeadingContent text-right"><?php echo 'ID'; ?></th>
-                  <th class="dataTableHeadingContent"><?php echo TABLE_HEADING_PRODUCTS_MODEL; ?></th>
-                  <th class="dataTableHeadingContent"><?php echo TABLE_HEADING_PRODUCTS; ?></th>
-                  <th class="dataTableHeadingContent text-center"><?php echo TABLE_HEADING_STOCK; ?></th>
-                  <th class="dataTableHeadingContent text-right"><?php echo TABLE_HEADING_PRODUCTS_PRICE; ?></th>
-                  <th class="dataTableHeadingContent text-center"><?php echo TABLE_HEADING_AVAILABLE_DATE; ?></th>
-                  <th class="dataTableHeadingContent text-center"><?php echo TABLE_HEADING_EXPIRES_DATE; ?></th>
-                  <th class="dataTableHeadingContent text-center"><?php echo TABLE_HEADING_STATUS; ?></th>
-                  <th class="dataTableHeadingContent text-right"><?php echo TABLE_HEADING_ACTION; ?></th>
-                </tr>
-              </thead>
-              <tbody>
-                <?php
-                // create search filter
-                $search = '';
-                if (isset($_GET['search']) && zen_not_null($_GET['search'])) {
-                  $keywords = zen_db_input(zen_db_prepare_input($_GET['search']));
-                  $search = " AND (pd.products_name LIKE '%" . $keywords . "%'
-                                OR pd.products_description LIKE '%" . $keywords . "%'
-                                OR p.products_model LIKE '%" . $keywords . "%')";
-                }
+            <div><?php echo TEXT_STATUS_WARNING; ?></div>
+            <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9 configurationColumnLeft">
+                <table class="table table-hover">
+                    <thead>
+                    <tr class="dataTableHeadingRow">
+                        <th class="dataTableHeadingContent text-right"><?php echo 'ID'; ?></th>
+                        <th class="dataTableHeadingContent"><?php echo TABLE_HEADING_PRODUCTS_MODEL; ?></th>
+                        <th class="dataTableHeadingContent"><?php echo TABLE_HEADING_PRODUCTS; ?></th>
+                        <th class="dataTableHeadingContent text-center"><?php echo TABLE_HEADING_STOCK; ?></th>
+                        <th class="dataTableHeadingContent text-right"><?php echo TABLE_HEADING_PRODUCTS_PRICE; ?></th>
+                        <th class="dataTableHeadingContent text-center"><?php echo TABLE_HEADING_AVAILABLE_DATE; ?></th>
+                        <th class="dataTableHeadingContent text-center"><?php echo TABLE_HEADING_EXPIRES_DATE; ?></th>
+                        <th class="dataTableHeadingContent text-center"><?php echo TABLE_HEADING_STATUS; ?></th>
+                        <th class="dataTableHeadingContent text-right"><?php echo TABLE_HEADING_ACTION; ?></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <?php
+                    // create search filter
+                    $search = '';
+                    if (isset($_GET['search']) && zen_not_null($_GET['search'])) {
+                        $keywords = zen_db_input(zen_db_prepare_input($_GET['search']));
+                        $keyword_search_fields = [
+                            'pd.products_name',
+                            'p.products_model',
+                            'pd.products_description',
+                            'p.products_id',
+                        ];
+                        $search = zen_build_keyword_where_clause($keyword_search_fields, trim($keywords));
+                    }
 
                 // order of display
                 $order_by = " ORDER BY p.products_model"; //set sort order of table listing
@@ -532,60 +543,76 @@ if (zen_not_null($action)) {
               </tbody>
             </table>
             <div class="row">
-                                      <div class="fa-stack fa-fw">
-                          <i class="fa fa-circle fa-stack-2x txt-status-on"></i>
-                          <i class="fa fa-pencil fa-stack-1x fa-inverse"></i>
-                        </div>
+                <div class="fa-stack fa-fw">
+                    <i class="fa fa-circle fa-stack-2x txt-status-on"></i>
+                    <i class="fa fa-pencil fa-stack-1x fa-inverse"></i>
+                </div>
               <div class="col-sm-6"><?php echo $specials_split->display_count($specials_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, $_GET['page'], TEXT_DISPLAY_NUMBER_OF_SPECIALS); ?></div>
               <div class="col-sm-6 text-right"><?php echo $specials_split->display_links($specials_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, MAX_DISPLAY_PAGE_LINKS, $_GET['page'], zen_get_all_get_params(['page', 'sID'])); ?></div>
             </div>
-          </div>
-          <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3 configurationColumnRight">
-            <?php
-            $heading = [];
-            $contents = [];
+            <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3 configurationColumnRight">
+                <?php
+                $heading = [];
+                $contents = [];
 
-            switch ($action) {
-              case 'delete':
-                $heading[] = ['text' => '<h4>' . TEXT_INFO_HEADING_DELETE_SPECIALS . '</h4>'];
-                $contents = ['form' => zen_draw_form('specials', FILENAME_SPECIALS, ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . (isset($_GET['search']) ? 'search=' . $_GET['search'] . '&' : '') . 'action=deleteconfirm') . zen_draw_hidden_field('sID', $sInfo->specials_id)];
-                $contents[] = ['text' => TEXT_INFO_DELETE_INTRO];
-                $contents[] = ['text' => '<b>' . $sInfo->products_model . ' - "' . zen_clean_html($sInfo->products_name) . '"</b>'];
-                $contents[] = ['align' => 'text-center', 'text' => '<br><button type="submit" class="btn btn-danger">' . IMAGE_DELETE . '</button> <a href="' . zen_href_link(FILENAME_SPECIALS, ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . (isset($_GET['search']) ? 'search=' . $_GET['search'] . '&' : '') . 'sID=' . $sInfo->specials_id) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>'];
-                break;
+                switch ($action) {
+                    case 'delete':
+                        $heading[] = ['text' => '<h4>' . TEXT_INFO_HEADING_DELETE_SPECIALS . '</h4>'];
+                        $contents = ['form' => zen_draw_form('specials', FILENAME_SPECIALS, 'action=deleteconfirm' . ($currentPage != 0 ? '&page=' . $currentPage : '') . (isset($_GET['search']) ? '&search=' . $_GET['search'] : '')) . zen_draw_hidden_field('sID', $sInfo->specials_id)];
+                        $contents[] = ['text' => TEXT_INFO_DELETE_INTRO];
+                        $contents[] = ['text' => '<b>' . $sInfo->products_model . ' - "' . zen_clean_html($sInfo->products_name) . '"</b>'];
+                        $contents[] = ['align' => 'text-center', 'text' => '<br><button type="submit" class="btn btn-danger">' . IMAGE_DELETE . '</button> <a href="' . zen_href_link(FILENAME_SPECIALS, 'sID=' . $sInfo->specials_id . ($currentPage != 0 ? '&page=' . $currentPage : '') . (isset($_GET['search']) ? '&search=' . $_GET['search'] : '')) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>'];
+                        break;
 
-              case 'pre_add':
-                $heading[] = ['text' => '<h4>' . TEXT_INFO_HEADING_PRE_ADD_SPECIALS . '</h4>'];
-                $contents = ['form' => zen_draw_form('specials', FILENAME_SPECIALS, ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . (isset($_GET['search']) ? 'search=' . $_GET['search'] . '&' : '') . 'action=pre_add_confirmation', 'post', 'class="form-horizontal"')];
-                $contents[] = ['text' => TEXT_INFO_PRE_ADD_INTRO];
-                $result = $db->Execute("SELECT MAX(products_id) AS lastproductid FROM " . TABLE_PRODUCTS);
-                $max_product_id = $result->fields['lastproductid'];
-                $contents[] = ['text' => zen_draw_label(TEXT_PRE_ADD_PRODUCTS_ID, 'pre_add_products_id', 'class="control-label"') . zen_draw_input_field('pre_add_products_id', '', zen_set_field_length(TABLE_SPECIALS, 'products_id') . 'class="form-control" id="pre_add_products_id" required max="' . $max_product_id . '"', '', 'number')];
-                $contents[] = ['align' => 'text-center', 'text' => '<button type="submit" class="btn btn-primary">' . IMAGE_CONFIRM . '</button> <a href="' . zen_href_link(FILENAME_SPECIALS, ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . (isset($_GET['search']) ? 'search=' . $_GET['search'] . '&' : '') . (!empty($sInfo->specials_id) ? 'sID=' . $sInfo->specials_id : '')) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>'];
-                break;
+                    case 'pre_add':
+                        $heading[] = ['text' => '<h4>' . TEXT_INFO_HEADING_PRE_ADD_SPECIALS . '</h4>'];
+                        $contents = ['form' => zen_draw_form('specials', FILENAME_SPECIALS, 'action=pre_add_confirmation' . ($currentPage != 0 ? '&page=' . $currentPage : '') . (isset($_GET['search']) ? '&search=' . $_GET['search'] : ''), 'post', 'class="form-horizontal"')];
+                        $contents[] = ['text' => TEXT_INFO_PRE_ADD_INTRO];
+                        $result = $db->Execute("SELECT MAX(products_id) AS lastproductid FROM " . TABLE_PRODUCTS);
+                        $max_product_id = $result->fields['lastproductid'];
+                        $contents[] = ['text' => zen_draw_label(TEXT_PRE_ADD_PRODUCTS_ID, 'pre_add_products_id', 'class="control-label"') . zen_draw_input_field('pre_add_products_id', '', zen_set_field_length(TABLE_SPECIALS, 'products_id') . ' class="form-control" id="pre_add_products_id" required max="' . $max_product_id . '"', '', 'number')];
+                        $contents[] = ['align' => 'text-center', 'text' => '<button type="submit" class="btn btn-primary">' . IMAGE_CONFIRM . '</button> <a href="' . zen_href_link(FILENAME_SPECIALS, (!empty($sInfo->specials_id) ? '&sID=' . $sInfo->specials_id : '') . ($currentPage != 0 ? '&page=' . $currentPage : '') . (isset($_GET['search']) ? '&search=' . $_GET['search'] : '')) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>'];
+                        break;
 
-              default:
-                if (isset($sInfo) && is_object($sInfo)) {
-                  $heading[] = ['text' => '<h4>ID#' . $sInfo->products_id . ': ' . $sInfo->products_model . ' - "' . zen_clean_html($sInfo->products_name) . '"</h4>'];
-                  if ($sInfo->products_priced_by_attribute === '1') {
-                    $specials_current_price = zen_get_products_base_price($sInfo->products_id);
-                  } else {
-                    $specials_current_price = $sInfo->products_price;
-                  }
-                  $contents[] = ['align' => 'text-center', 'text' => '<a href="' . zen_href_link(FILENAME_SPECIALS, ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . (isset($_GET['search']) ? 'search=' . $_GET['search'] . '&' : '') . 'action=edit' . '&sID=' . $sInfo->specials_id) . '" class="btn btn-primary" role="button">' . IMAGE_EDIT . '</a> <a href="' . zen_href_link(FILENAME_SPECIALS, ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . (isset($_GET['search']) ? 'search=' . $_GET['search'] . '&' : '') . 'action=delete' . '&sID=' . $sInfo->specials_id) . '" class="btn btn-warning" role="button">' . TEXT_INFO_HEADING_DELETE_SPECIALS . '</a>'];
-                  $contents[] = ['align' => 'text-center', 'text' => '<a href="' . zen_href_link(FILENAME_PRODUCTS_PRICE_MANAGER, 'action=edit' . '&products_filter=' . $sInfo->products_id) . '" class="btn btn-primary" role="button">' . IMAGE_PRODUCTS_PRICE_MANAGER . '</a>'];
-                  $contents[] = ['text' => TEXT_INFO_ORIGINAL_PRICE . ' ' . $currencies->format($specials_current_price)];
-                  $contents[] = ['text' => TEXT_INFO_NEW_PRICE . ' ' . $currencies->format($sInfo->specials_new_products_price)];
-                  $contents[] = ['text' => '<b>' . TEXT_INFO_DISPLAY_PRICE . '<br>' . zen_get_products_display_price($sInfo->products_id) . '</b>'];
-                  $contents[] = ['text' => TEXT_SPECIALS_AVAILABLE_DATE . ' ' . (($sInfo->specials_date_available !== '0001-01-01' && $sInfo->specials_date_available !== '') ? zen_date_short($sInfo->specials_date_available) : TEXT_NONE)];
-                  $contents[] = ['text' => TEXT_SPECIALS_EXPIRES_DATE . ' ' . (($sInfo->expires_date !== '0001-01-01' && $sInfo->expires_date !== '') ? zen_date_short($sInfo->expires_date) : TEXT_NONE)];
-                  if ($sInfo->date_status_change !== null && $sInfo->date_status_change !== '0001-01-01 00:00:00') {
-                    $contents[] = ['text' => TEXT_INFO_STATUS_CHANGED . ' ' . zen_date_short($sInfo->date_status_change)];
-                  }
-                  $contents[] = ['text' => TEXT_INFO_LAST_MODIFIED . ' ' . zen_date_short($sInfo->specials_last_modified)];
-                  $contents[] = ['text' => TEXT_INFO_DATE_ADDED . ' ' . zen_date_short($sInfo->specials_date_added)];
-                  $contents[] = ['align' => 'text-center', 'text' => zen_info_image($sInfo->products_image, htmlspecialchars($sInfo->products_name), SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT)];
-                  $contents[] = ['align' => 'text-center', 'text' => '<a href="' . zen_href_link(FILENAME_PRODUCT, 'action=new_product' . '&cPath=' . zen_get_product_path($sInfo->products_id) . '&pID=' . $sInfo->products_id . '&product_type=' . zen_get_products_type($sInfo->products_id)) . '" class="btn btn-primary" role="button">' . IMAGE_EDIT_PRODUCT . '</a>'];
+                    default:
+                        if (isset($sInfo) && is_object($sInfo)) {
+                            $heading[] = ['text' => '<h4>ID#' . $sInfo->products_id . ': ' . $sInfo->products_model . ' - "' . zen_clean_html($sInfo->products_name) . '"</h4>'];
+                            if ($sInfo->products_priced_by_attribute === '1') {
+                                $specials_current_price = zen_get_products_base_price($sInfo->products_id);
+                            } else {
+                                $specials_current_price = $sInfo->products_price;
+                            }
+                            $contents[] = [
+                                'align' => 'text-center',
+                                'text' => '
+                                <a href="' . zen_href_link(FILENAME_SPECIALS, 'sID=' . $sInfo->specials_id . '&action=edit' . ($currentPage != 0 ? '&page=' . $currentPage : '') . (isset($_GET['search']) ? '&search=' . $_GET['search'] : '')) . '" class="btn btn-primary" role="button">' . IMAGE_EDIT . '</a>
+                                <a href="' . zen_href_link(FILENAME_SPECIALS, 'sID=' . $sInfo->specials_id . '&action=delete' . ($currentPage != 0 ? '&page=' . $currentPage : '') . (isset($_GET['search']) ? '&search=' . $_GET['search'] : '')) . '" class="btn btn-warning" role="button">' . TEXT_INFO_HEADING_DELETE_SPECIALS . '</a>'
+                            ];
+                            $contents[] = [
+                                'align' => 'text-center',
+                                'text' => '<a href="' . zen_href_link(FILENAME_PRODUCTS_PRICE_MANAGER, 'action=edit&products_filter=' . $sInfo->products_id) . '" class="btn btn-primary" role="button">' . IMAGE_PRODUCTS_PRICE_MANAGER . '</a>'
+                            ];
+                            $contents[] = ['text' => TEXT_INFO_ORIGINAL_PRICE . ' ' . $currencies->format($specials_current_price)];
+                            $contents[] = ['text' => TEXT_INFO_NEW_PRICE . ' ' . $currencies->format($sInfo->specials_new_products_price)];
+                            $contents[] = ['text' => '<b>' . TEXT_INFO_DISPLAY_PRICE . '<br>' . zen_get_products_display_price($sInfo->products_id) . '</b>'];
+                            $contents[] = ['text' => TEXT_SPECIALS_AVAILABLE_DATE . ' ' . (($sInfo->specials_date_available !== '0001-01-01' && $sInfo->specials_date_available !== '') ? zen_date_short($sInfo->specials_date_available) : TEXT_NONE)];
+                            $contents[] = ['text' => TEXT_SPECIALS_EXPIRES_DATE . ' ' . (($sInfo->expires_date !== '0001-01-01' && $sInfo->expires_date !== '') ? zen_date_short($sInfo->expires_date) : TEXT_NONE)];
+                            if ($sInfo->date_status_change !== null && $sInfo->date_status_change !== '0001-01-01 00:00:00') {
+                                $contents[] = ['text' => TEXT_INFO_STATUS_CHANGED . ' ' . zen_date_short($sInfo->date_status_change)];
+                            }
+                            $contents[] = ['text' => TEXT_INFO_LAST_MODIFIED . ' ' . zen_date_short($sInfo->specials_last_modified)];
+                            $contents[] = ['text' => TEXT_INFO_DATE_ADDED . ' ' . zen_date_short($sInfo->specials_date_added)];
+                            $contents[] = ['align' => 'text-center', 'text' => zen_info_image($sInfo->products_image, htmlspecialchars($sInfo->products_name), SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT)];
+                            $contents[] = [
+                                'align' => 'text-center',
+                                'text' => '<a href="' . zen_href_link(FILENAME_PRODUCT, 'action=new_product' . '&cPath=' . zen_get_product_path($sInfo->products_id) . '&pID=' . $sInfo->products_id . '&product_type=' . zen_get_products_type($sInfo->products_id)) . '" class="btn btn-primary" role="button">' . IMAGE_EDIT_PRODUCT . '</a>'
+                            ];
+                        }
+                        break;
+                }
+                if ((zen_not_null($heading)) && (zen_not_null($contents))) {
+                    $box = new box();
+                    echo $box->infoBox($heading, $contents);
                 }
                 break;
             }

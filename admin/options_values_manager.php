@@ -36,6 +36,8 @@ for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
 $action = (isset($_GET['action']) ? $_GET['action'] : '');
 $currentPage = (isset($_GET['page']) && $_GET['page'] != '' ? (int)$_GET['page'] : 0);
 $filter = (isset($_GET['set_filter']) && $_GET['set_filter'] != '' ? (int)$_GET['set_filter'] : 0);
+$last_mod = (int)(isset($_SESSION['options_names_values_last_mod']) ? $_SESSION['options_names_values_last_mod'] : 0);
+unset($_SESSION['options_names_values_last_mod']);
 $max_search_results = (isset($_GET['max_search_results']) && $_GET['max_search_results'] != '' ? (int)$_GET['max_search_results'] : (int)MAX_DISPLAY_SEARCH_RESULTS);
 
 // display or hide copier features
@@ -64,7 +66,7 @@ if (zen_not_null($action)) {
     case 'add_product_option_values':
       $value_name_array = $_POST['value_name'];
       $value_id = (int)$_POST['value_id'];
-      $option_id = (int)$_POST['option_id'];
+      $_SESSION['options_names_values_last_mod'] = $option_id = (int)$_POST['option_id'];
       $products_options_values_sort_order = (int)$_POST['products_options_values_sort_order'];
 
       for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
@@ -110,7 +112,7 @@ if (zen_not_null($action)) {
     case 'update_value':
       $value_name_array = $_POST['value_name'];
       $value_id = (int)$_POST['value_id'];
-      $option_id = (int)$_POST['option_id'];
+      $_SESSION['options_names_values_last_mod'] = $option_id = (int)$_POST['option_id'];
       $products_options_values_sort_order = (int)$_POST['products_options_values_sort_order'];
 
       for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
@@ -170,7 +172,7 @@ if (zen_not_null($action)) {
         foreach ($remove_attributes_query as $remove_attribute) {
 
           $db->Execute("DELETE FROM " . TABLE_PRODUCTS_ATTRIBUTES_DOWNLOAD . "
-                        WHERE products_attributes_id = " . $remove_attribute['products_attributes_id']);
+                        WHERE products_attributes_id = " . (int)$remove_attribute['products_attributes_id']);
         }
         $db->Execute("DELETE FROM " . TABLE_PRODUCTS_ATTRIBUTES . "
                       WHERE options_values_id = " . (int)$value_id);
@@ -553,7 +555,7 @@ if (zen_not_null($action)) {
                 <td colspan="4" class="pageHeading"><?php echo $values_values->fields['products_options_values_name']; ?></td>
               </tr>
               <?php
-              $products_values = $db->Execute("SELECT p.products_id, pd.products_name, po.products_options_name, pa.options_id, pa.products_options_sort_order 
+              $products_values = $db->Execute("SELECT p.products_id, pd.products_name, po.products_options_name, pa.options_id, pa.products_options_sort_order
                                                FROM " . TABLE_PRODUCTS . " p,
                                                     " . TABLE_PRODUCTS_ATTRIBUTES . " pa,
                                                     " . TABLE_PRODUCTS_OPTIONS . " po,
@@ -640,7 +642,7 @@ if (zen_not_null($action)) {
             foreach ($filter_values as $filter_value) {
               $filter_values_array[] = [
                 'id' => $filter_value['products_options_id'],
-                'text' => $filter_value['products_options_name']
+                'text' => "(" . $filter_value['products_options_id'] . ") " . $filter_value['products_options_name']
               ];
             }
             ?>
@@ -732,7 +734,7 @@ if (zen_not_null($action)) {
 // fetch products_options_id for use if the option value is deleted
 // with TEXT and FILE Options, there are multiple options for the single TEXT
 // value and only the single reference should be deleted
-                $option_id = $values_value['products_options_id'];
+                $option_id = (!empty($last_mod) ? (string)$last_mod : $values_value['products_options_id']);
 
                 $values_name = $values_value['products_options_values_name'];
                 $products_options_values_sort_order = $values_value['products_options_values_sort_order'];
@@ -741,7 +743,7 @@ if (zen_not_null($action)) {
                   <?php
 // edit option values
                   if (($action == 'update_option_value') && ($_GET['value_id'] == $values_value['products_options_values_id'])) {
-                    echo zen_draw_form('values', FILENAME_OPTIONS_VALUES_MANAGER, 'action=update_value' . '&' . ($currentPage !== 0 ? 'page=' . $currentPage . '&' : '') . ($filter !== 0 ? 'set_filter=' . $filter . '&' : '') . ($max_search_results != 0 ? 'max_search_results=' . $max_search_results : ''), 'post', 'class="form-horizontal"');
+                    echo zen_draw_form('values', FILENAME_OPTIONS_VALUES_MANAGER, 'action=update_value' . ($currentPage !== 0 && $currentPage !== 1 ? '&page=' . $currentPage: '') . ($filter !== 0 ? '&set_filter=' . $filter : '') . ($max_search_results != 0 ? '&max_search_results=' . $max_search_results : ''), 'post', 'class="form-horizontal"');
                     $inputs = '';
                     for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
                       $value_name = $db->Execute("SELECT products_options_values_name
@@ -778,7 +780,7 @@ if (zen_not_null($action)) {
                       foreach ($options_values as $options_value) {
                         $optionsValueArray[] = array(
                           'id' => $options_value['products_options_id'],
-                          'text' => $options_value['products_options_name']);
+                          'text' => "(" . $options_value['products_options_id'] . ") " . $options_value['products_options_name']);
                       }
                       ?>
                       <?php echo zen_draw_pull_down_menu('option_id', $optionsValueArray, $values_value['products_options_id'], 'class="form-control"'); ?>
@@ -816,7 +818,7 @@ if (zen_not_null($action)) {
               </tr>
               <?php if ($action != 'update_option_value') { ?>
                 <tr>
-                  <?php echo zen_draw_form('values', FILENAME_OPTIONS_VALUES_MANAGER, 'action=add_product_option_values' . '&' . ($currentPage !== 0 ? 'page=' . $currentPage . '&' : '') . ($filter !== 0 ? 'set_filter=' . $filter . '&' : '') . ($max_search_results != 0 ? 'max_search_results=' . $max_search_results : ''), 'post', 'class="form-horizontal"'); ?>
+                  <?php echo zen_draw_form('values', FILENAME_OPTIONS_VALUES_MANAGER, 'action=add_product_option_values' . ($currentPage !== 0 && $currentPage !== 1 ? '&page=' . $currentPage : '') . ($filter !== 0 ? '&set_filter=' . $filter : '') . ($max_search_results != 0 ? '&max_search_results=' . $max_search_results : ''), 'post', 'class="form-horizontal"'); ?>
                   <td colspan="4">
                     <?php
                     $options_values = $db->Execute("SELECT products_options_id, products_options_name, products_options_type
@@ -904,8 +906,8 @@ if (zen_not_null($action)) {
         $option_from_dropdown = [];
         foreach ($options_values_from as $item) {
           $option_from_dropdown[] = array(
-            'id' => $options_values_from->fields['products_options_id'],
-            'text' => $options_values_from->fields['products_options_name']);
+            'id' => $item['products_options_id'],
+            'text' => $item['products_options_name']);
         }
 
         $option_to_dropdown = $option_from_dropdown;

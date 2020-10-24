@@ -24,7 +24,7 @@
 <legend><?php echo HEADING_SEARCH_CRITERIA; ?></legend>
 <div class="forward"><?php echo '<a href="javascript:popupWindow(\'' . zen_href_link(FILENAME_POPUP_SEARCH_HELP) . '\')">' . TEXT_SEARCH_HELP_LINK . '</a>'; ?></div>
 <br class="clearBoth" />
-    <div class="centeredContent"><?php echo zen_draw_input_field('keyword', $sData['keyword'], 'placeholder="' . KEYWORD_FORMAT_STRING . '" autofocus aria-label="' . KEYWORD_FORMAT_STRING . '"'); ?>
+    <div class="centeredContent"><?php echo zen_draw_input_field('keyword', $sData['keyword'], 'placeholder="' . KEYWORD_FORMAT_STRING . '" autofocus aria-label="' . KEYWORD_FORMAT_STRING . '"', 'search'); ?>
         &nbsp;&nbsp;&nbsp;<?php echo zen_draw_checkbox_field('search_in_description', '1', $sData['search_in_description'], 'id="search-in-description"'); ?>
         <label class="checkboxLabel" for="search-in-description"><?php echo TEXT_SEARCH_IN_DESCRIPTION; ?></label></div>
 <br class="clearBoth" />
@@ -50,11 +50,11 @@
 <legend><?php echo ENTRY_PRICE_RANGE; ?></legend>
 <fieldset class="floatLeft">
     <label for="pfrom"><?php echo ENTRY_PRICE_FROM; ?></label>
-    <?php echo zen_draw_input_field('pfrom', $sData['pfrom'], 'id="pfrom"'); ?>
+    <?php echo zen_draw_input_field('pfrom', $sData['pfrom'], 'id="pfrom" inputmode="decimal"'); ?>
 </fieldset>
 <fieldset class="floatLeft">
     <label for="pto"><?php echo ENTRY_PRICE_TO; ?></label>
-    <?php echo zen_draw_input_field('pto', $sData['pto'], 'id="pto"'); ?>
+    <?php echo zen_draw_input_field('pto', $sData['pto'], 'id="pto" inputmode="decimal"'); ?>
 </fieldset>
 </fieldset>
 
