@@ -463,6 +463,10 @@ class Customer extends base
         foreach ($results as $result) {
             $format_id = zen_get_address_format_id($result['country_id']);
 
+            if (empty($result['state']) && !empty($result['zone_name'])) {
+                $result['state'] = $result['zone_name'];
+            }
+
             $addressArray[] = [
                 'firstname' => $result['firstname'],
                 'lastname' => $result['lastname'],
