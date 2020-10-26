@@ -624,7 +624,10 @@ class systemChecker
     function checkIsZCVersionCurrent()
     {
         $new_version = TEXT_VERSION_CHECK_CURRENT; //set to "current" by default
-        $lines = @file(NEW_VERSION_CHECKUP_URL . '?v=' . PROJECT_VERSION_MAJOR . '.' . PROJECT_VERSION_MINOR . '&p=' . PHP_VERSION . '&a=' . $_SERVER['SERVER_SOFTWARE'] . '&r=' . urlencode($_SERVER['HTTP_HOST']) . '&m=zc_install');
+
+        $url = NEW_VERSION_CHECKUP_URL . '?v=' . PROJECT_VERSION_MAJOR . '.' . PROJECT_VERSION_MINOR . '&p=' . PHP_VERSION . '&a=' . $_SERVER['SERVER_SOFTWARE'] . '&r=' . urlencode($_SERVER['HTTP_HOST']) . '&m=zc_install';
+        $lines = @file($url);
+        if (!in_array(trim($lines[0]), ['1', '2', '3']))
         if (empty($lines)) return true;
 
         //check for major/minor version info
