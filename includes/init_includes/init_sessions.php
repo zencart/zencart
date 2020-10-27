@@ -53,8 +53,7 @@ if (PHP_VERSION_ID >= 70300) {
     'samesite' => $samesite,
   ]);
 } else {
-  session_set_cookie_params(0, $path, (zen_not_null($cookieDomain) ? $domainPrefix . $cookieDomain : ''), $secureFlag, true);
-  ini_set('session.cookie_samesite', $samesite);
+  session_set_cookie_params(0, $path .'; samesite='.$samesite, (zen_not_null($cookieDomain) ? $domainPrefix . $cookieDomain : ''), $secureFlag, true);
 }
 
 /**
