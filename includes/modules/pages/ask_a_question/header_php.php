@@ -20,7 +20,7 @@ if ($pid === false) {
     $sql = "SELECT pd.products_name, p.products_image, p.products_model
             FROM " . TABLE_PRODUCTS . " p, " . TABLE_PRODUCTS_DESCRIPTION . " pd
             WHERE p.products_id = pd.products_id
-            AND p.products_id = " . $pid . "
+            AND p.products_id = " . (int)$pid . "
             AND pd.language_id = " . (int)$_SESSION['languages_id'] . "
             AND p.products_status = 1
             LIMIT 1";
