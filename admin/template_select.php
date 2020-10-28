@@ -63,7 +63,7 @@ if (zen_not_null($action)) {
       $check_query = $db->Execute("SELECT template_language
                                    FROM " . TABLE_TEMPLATE_SELECT . "
                                    WHERE template_id = " . (int)$_POST['tID']);
-      if ($check_query->fields['template_language'] != '0') {
+      if ($check_query->RecordCount() > 0 && $check_query->fields['template_language'] != '0') {
         $db->Execute("DELETE FROM " . TABLE_TEMPLATE_SELECT . "
                       WHERE template_id = " . (int)$_POST['tID']);
         zen_redirect(zen_href_link(FILENAME_TEMPLATE_SELECT, 'page=' . $_GET['page']));
