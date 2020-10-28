@@ -665,7 +665,7 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
                                           p.products_price, p.products_status, p.products_model, p.products_sort_order,
                                           p.master_categories_id
                                    FROM " . TABLE_PRODUCTS . " p
-                                   LEFT JOIN " . TABLE_PRODUCTS_DESCRIPTION . " pd USING (products_id)";
+                                   LEFT JOIN " . TABLE_PRODUCTS_DESCRIPTION . " pd ON (pd.products_id = p.products_id)";
 
             $where = " WHERE pd.language_id = " . (int)$_SESSION['languages_id'];
 
@@ -678,13 +678,14 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
                 ];
                 $where .= zen_build_keyword_where_clause($keyword_search_fields, trim($keywords));
             } else {
-                $products_query_raw.= " LEFT JOIN " . TABLE_PRODUCTS_TO_CATEGORIES . " p2c USING (products_id) ";
+                $products_query_raw.= " LEFT JOIN " . TABLE_PRODUCTS_TO_CATEGORIES . " p2c ON (p2c.products_id = p.products_id) ";
                 $where .= " AND p2c.categories_id=" . (int)$current_category_id;
             }
 
             $products_query_raw .= $where . $order_by;
 
 // Split Page
+
 // reset page when page is unknown
             if ((isset($_GET['page']) && ($_GET['page'] == '1' || $_GET['page'] == '')) && isset($_GET['pID']) && $_GET['pID'] != '') {
               $old_page = $_GET['page'];
