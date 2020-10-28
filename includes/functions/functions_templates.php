@@ -106,7 +106,7 @@ function zen_deregister_template_id($id)
     $check_query = $db->Execute("SELECT template_language
                                  FROM " . TABLE_TEMPLATE_SELECT . "
                                  WHERE template_id = " . (int)$id);
-    if ($check_query->fields['template_language'] != '0') {
+    if ($check_query->RecordCount() && $check_query->fields['template_language'] != '0') {
         $db->Execute("DELETE FROM " . TABLE_TEMPLATE_SELECT . "
                       WHERE template_id = " . (int)$id);
         return true;
