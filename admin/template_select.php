@@ -115,7 +115,7 @@ if (zen_not_null($action)) {
                        'missing' => true, 
                      ];
                   }
-                  if ((!isset($_GET['tID']) || (isset($_GET['tID']) && ($_GET['tID'] == $template['template_id']))) && !isset($tInfo) && (substr($action, 0, 3) != 'new')) {
+                  if ((!isset($_GET['tID']) || ($_GET['tID'] == $template['template_id'])) && !isset($tInfo) && (substr($action, 0, 3) != 'new')) {
                     $tInfo = new objectInfo($template);
                   }
 
