@@ -803,7 +803,7 @@ class order extends base {
           // Will work with only one option for downloadable products
           // otherwise, we have to build the query dynamically with a loop
           // NOTE: Need the (int) cast on the option_id, since checkbox-type attributes' are formatted like '46_chk887'.
-          if (!empty($this->products[$i]['attributes'])) { 
+          if (!empty($this->products[$i]['attributes']) && is_array($this->products[$i]['attributes'])) {
             $products_attributes = $this->products[$i]['attributes'];
             $stock_query_raw .= " AND pa.options_id = " . (int)$products_attributes[0]['option_id'] . " AND pa.options_values_id = " . $products_attributes[0]['value_id'];
           }
