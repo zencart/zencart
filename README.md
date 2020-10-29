@@ -66,6 +66,12 @@ Visit [docs.zen-cart.com/dev/](https://docs.zen-cart.com/dev/) for guidance on i
 Developers wishing to contribute documentation should fork [zencart/documentation](https://github.com/zencart/documentation) and contribute PRs.  Please see [CONTRIBUTING to documentation](https://github.com/zencart/documentation/blob/master/CONTRIBUTING.md).
 
 
+
+Source
+------
+
+The Zen Cart source code is available at: https://github.com/zencart/zencart
+
 Support
 -------
 For free community-driven support with Zen Cart, visit our support site: https://www.zen-cart.com/forum.php
