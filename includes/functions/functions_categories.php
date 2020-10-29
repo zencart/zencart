@@ -544,7 +544,7 @@ function zen_draw_products_pull_down_categories_attributes($field_name, $paramet
             if (!in_array($category['categories_id'], $exclude, false)) {
 
                 $select_string .= '<option value="' . $category['categories_id'] . '">';
-                if ($show_full_path) {//todo full sorting on category paths
+                if ($show_full_path) {
                     $select_string .= zen_output_generated_category_path($category['categories_id']);
                 } else {
                     $select_string .= $category['categories_name'];
