@@ -135,7 +135,7 @@ if ($order->billing['street_address'] != $order->delivery['street_address']) {
             <tr class="dataTableRow">
                 <?php if ($show_product_images) { ?>
                 <td class="dataTableContent">
-                    <?php echo zen_image(DIR_WS_CATALOG . DIR_WS_IMAGES . zen_get_products_image($order->products[$i]['id']), $product_name, (int)$img_width); ?>
+                    <?php echo zen_image(DIR_WS_CATALOG . DIR_WS_IMAGES . zen_get_products_image($order->products[$i]['id']), zen_output_string($product_name), (int)$img_width); ?>
                 </td>
                 <?php } ?>
 
@@ -157,7 +157,7 @@ if ($order->billing['street_address'] != $order->delivery['street_address']) {
                         <?php
 
                                     if ($show_attrib_images && !empty($attribute_image)) {
-                                        echo zen_image(DIR_WS_CATALOG.DIR_WS_IMAGES . $attribute_image, $attribute_name, (int)$attr_img_width);
+                                        echo zen_image(DIR_WS_CATALOG.DIR_WS_IMAGES . $attribute_image, zen_output_string($attribute_name), (int)$attr_img_width);
                         }
                         ?>
                         <small>
