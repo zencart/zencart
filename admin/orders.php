@@ -12,6 +12,8 @@ if (isset($module)) {
   unset($module);
 }
 
+$quick_view_popover_enabled = false;
+
 require(DIR_WS_CLASSES . 'currencies.php');
 $currencies = new currencies();
 
@@ -1114,7 +1116,9 @@ if (zen_not_null($action) && $order_exists == true) {
                   <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_PAYMENT_METHOD; ?></td>
                   <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_CUSTOMERS; ?></td>
                   <td class="dataTableHeadingContent text-right"><?php echo TABLE_HEADING_ORDER_TOTAL; ?></td>
+<?php if ($quick_view_popover_enabled) { ?>
                   <td></td>
+<?php } ?>
                   <td class="dataTableHeadingContent text-center"><?php echo TABLE_HEADING_DATE_PURCHASED; ?></td>
                   <td class="dataTableHeadingContent text-right"><?php echo TABLE_HEADING_STATUS; ?></td>
                   <td class="dataTableHeadingContent text-center"><?php echo TABLE_HEADING_CUSTOMER_COMMENTS; ?></td>
@@ -1267,6 +1271,7 @@ if (zen_not_null($action) && $order_exists == true) {
                 <td class="dataTableContent text-right" title="<?php echo zen_output_string($product_details, array('"' => '&quot;', "'" => '&#39;', '<br />' => '', '<hr>' => "----\n")); ?>">
                   <?php echo strip_tags($currencies->format($orders->fields['order_total'], true, $orders->fields['currency'], $orders->fields['currency_value'])); ?>
                 </td>
+<?php if ($quick_view_popover_enabled) { ?>
                 <td class="dataTableContent text-right dataTableButtonCell">
                     <a tabindex="0" class="btn btn-xs btn-link orderProductsPopover" role="button" data-toggle="popover"
                        data-trigger="focus"
@@ -1277,6 +1282,7 @@ if (zen_not_null($action) && $order_exists == true) {
                         <?php echo TEXT_PRODUCT_POPUP_BUTTON; ?>
                     </a>
                 </td>
+<?php } ?>
                 <td class="dataTableContent text-center"><?php echo zen_datetime_short($orders->fields['date_purchased']); ?></td>
                 <td class="dataTableContent text-right"><?php echo ($orders->fields['orders_status_name'] != '' ? $orders->fields['orders_status_name'] : TEXT_INVALID_ORDER_STATUS); ?></td>
                 <?php $order_comments = zen_output_string_protected(zen_get_orders_comments($orders->fields['orders_id'])); ?>
