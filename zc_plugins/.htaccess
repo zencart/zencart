@@ -29,7 +29,7 @@
 </FilesMatch>
 
 # but now allow just *certain* necessary files:
-<FilesMatch "(?i).*\.(js|css|html?|ico|jpe?g|gif|webp|png|swf|flv|xml|xsl|otf|ttf|woff|eot|svg|map)$">
+<FilesMatch "(?i).*\.(js|css|html?|jpe?g|gif|webp|png|otf|ico|cur|map|eot|svgz?|ttf|woff2?|xml|xsl)$">
   <IfModule mod_authz_core.c>
     Require all granted
   </IfModule>
@@ -96,4 +96,5 @@ IndexIgnore */*
   ExpiresByType image/x-icon A86400
   ExpiresByType image/jpeg A2592000
   ExpiresByType image/png A2592000
+  ExpiresByType image/svg A2592000
 </ifmodule>
