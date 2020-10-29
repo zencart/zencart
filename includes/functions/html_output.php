@@ -315,7 +315,7 @@ function zen_catalog_href_link($page = '', $parameters = '', $connection = 'NONS
  * concept from contributions by Seb Rouleau and paulm, subsequently adapted to Zen Cart
  * note: any hard-coded buttons will not be able to use this function
 **/
-  function zenCssButton($image = '', $text, $type, $sec_class = '', $parameters = '') {
+  function zenCssButton($image = '', $text = '', $type = 'button', $sec_class = '', $parameters = '') {
    global $css_button_text, $css_button_opts, $template, $current_page_base, $language;
 
    $button_name = basename($image, '.gif');

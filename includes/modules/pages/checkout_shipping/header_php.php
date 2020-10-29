@@ -187,7 +187,7 @@ if (isset($_SESSION['cart']->cartID)) {
   if (isset($_SESSION['shipping']['id'])) {
     $checklist = array();
     foreach ($quotes as $key=>$val) {
-      if ($val['methods'] != '') {
+      if (!empty($val['methods'])) {
         foreach($val['methods'] as $key2=>$method) {
           $checklist[] = $val['id'] . '_' . $method['id'];
         }
