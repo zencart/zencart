@@ -84,6 +84,7 @@ csci
 curl
 cyberspyder
 datanyse
+datanyze
 depspid
 digger
 digimarc
