@@ -13,7 +13,7 @@ It's free software, with free community-driven support available 24/7 on the Zen
 --------------------
 
 
-Zen Cart&reg; v1.5.7
+Zen Cart&reg; v1.5.7a
 ---------------------
 
 Compatibility
@@ -65,6 +65,11 @@ Visit [docs.zen-cart.com/dev/](https://docs.zen-cart.com/dev/) for guidance on i
 
 Developers wishing to contribute documentation should fork [zencart/documentation](https://github.com/zencart/documentation) and contribute PRs.  Please see [CONTRIBUTING to documentation](https://github.com/zencart/documentation/blob/master/CONTRIBUTING.md).
 
+
+Source
+------
+
+The Zen Cart source code is available at: https://github.com/zencart/zencart
 
 Support
 -------
