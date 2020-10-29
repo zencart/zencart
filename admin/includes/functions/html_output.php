@@ -130,7 +130,9 @@ function zen_catalog_base_link($connection = '')
 ////
 // The HTML image wrapper function
   function zen_image($src, $alt = '', $width = '', $height = '', $params = '') {
-      $image = '<img src="' . $src . '" alt="' . $alt . '"';
+    $image = '<img src="' . $src . '" alt="' . $alt . '"';
+    // soft clean the alt tag
+    $alt = zen_clean_html($alt);
     if ($alt) {
       $image .= ' title="' . $alt . '"';
     }
