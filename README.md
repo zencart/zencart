@@ -23,7 +23,7 @@ Zen Cart v1.5.7 is designed for:
  * Apache 2.2 and 2.4
  * MySQL 5.1 to 8.0 or MariaDB 10.0 to 10.4
 
-NOTE: future Zen Cart releases after v1.5.7 will require PHP 7.3+ and MySQL 5.7.8+ or MariaDB 10.2.7+
+Refer to [compatibility requirements](https://docs.zen-cart.com/user/first_steps/server_requirements/) for additional details.
 
 
 Installation
