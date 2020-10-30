@@ -4,7 +4,7 @@
     /**
      * @copyright Copyright 2003-2020 Zen Cart Development Team
      * @license https://www.zen-cart.com/license/2_0.txt GNU Public License v2.0
-     * @version $Id: Scott C Wilson 2020 May 21 New in v1.5.7 $
+     * @version $Id: DrByte 2020 Oct 29 Modified in v1.5.7a $
      */
 //-->
 <head>
@@ -17,7 +17,7 @@
     <meta name="authors" content="The Zen Cart&trade; Team">
     <meta name="generator" content="shopping cart program by Zen Cart&trade;, https://www.zen-cart.com">
     <meta name="robots" content="noindex, nofollow">
-    <link rel="stylesheet" href="./zen.css">
+    <link rel="stylesheet" href="./zen2.css">
 </head>
 <body>
 <div class="container">
@@ -26,7 +26,7 @@
         <div class="row">
             <div class="col-md-6 col-sm-12">
                 <a href="./index.html">
-                    <img src="../includes/templates/template_default/images/logo.gif" alt="Zen Cart&trade;" title="Zen Cart&trade;" width="192" height="68">
+                    <img src="logo.gif" alt="Zen Cart&trade;" title="Zen Cart&trade;" width="192" height="68">
                 </a>
             </div>
             <div class="col-md-6 hidden-xs hidden-sm text-right">
@@ -45,7 +45,7 @@
                 Zen Cart is made available to you for your use, addition, changes, modification, etc. without charge, under Version 2 of the GNU General Public License.
             </p>
             <p>
-                While we do not charge for this software, we greatly appreciate donations to help cover the expenses of maintenance, upgrades, updates, the free support forum and the continued development of this software for your online E-Commerce store.  Please consider making a donation each time you install a new version.
+                While we do not charge for this software, donations are greatly appreciated, each time you install a new version, to help cover the expenses of maintenance, upgrades, updates, the free support forum and the continued development of this software for your online E-Commerce store.
             </p>
             <p>
                 Donations can be made on the <a href="https://www.zen-cart.com/donate" target="_blank">Zen Cart Team Page</a>
@@ -103,7 +103,7 @@
                 CHANGELOG - List of Changed Files 
             </h1>
             <p>
-                For a list of files that have been changed since v1.5.6, see the <a href="changed_files-v1.5.7.html" target="_blank">changed_files-v1.5.7.html</a> document.
+                For a list of files that have been changed since v1.5.6, see the <a href="changed_files-v1-5-7.html" target="_blank">changed_files-v1-5-7.html</a> document.
             </p>
         </div>
     </section> <!-- End upgradeInstructions //-->
@@ -158,6 +158,46 @@
                 What's New ... Changes from prior versions
             </h1>
             <h2>
+                The fixes/changes in v1.5.7a since v1.5.7 include:
+            </h2>
+            <ul>
+               <li> Admin: Correct issues with adding category images.</li>
+               <li> Admin: Fix product-available date handling.</li>
+               <li> Admin: Improve order printing.</li>
+               <li> Admin: Fix product copying operation, particularly in relation to master category id.</li>
+               <li> Admin: Search now finds disabled items.</li>
+               <li> Admin: Recent Orders dashboard widget may now be configured to exclude attributes in popover rows for performance.</li>
+               <li> Admin: Popover will not show model if product does not define a model number.</li>
+               <li> Admin: CSS paths fixed in Banner Manager, Coupon Exporter.</li>
+               <li> Admin: Add attribute images to invoice and packing slip.</li>
+               <li> Core: Set samesite cookie parameter (site must be run entirely https)</li>
+               <li> Core: Ensure .htaccess permits .woff2 and svg files to be served.</li>
+               <li> Core: Fix new/featured/all pages not adding to cart.</li>
+               <li> Core: Fix allowing special characters in passwords (admin and storefront).</li>
+               <li> Core: Fix issue with adding items with single-valued attributes from listing page.</li>
+               <li> Core: PHPMailer Update to v6.1.8.</li>
+               <li> Core: Ensure error messages are displayed after a page redirect.</li>
+               <li> Core: Fix early issues with plugin manager.</li>
+               <li> Core: Improve performance of email page.</li>
+               <li> Core: Fix small layout issues in responsive_mobile CSS.</li>
+               <li> Core: Introduce grid layout feature for listing pages.</li>
+               <li> Core: Ensure external pages are loaded with noreferrer.</li>
+               <li> Core: Hide shipping modules where appropriate.</li>
+               <li> Core: Fix PHP notices produced by more recent versions of PHP.</li>
+               <li> Core: Fix multilanguage issues with Sales Report with Graphs.</li>
+               <li> Core: Tax behavior aligned between admin and storefront.</li>
+               <li> Core: Fix issues in also purchased products display.</li>
+               <li> Core: Fix button truncation on checkout confirmation page.</li>
+               <li> Core: Improve mobile display of EZ-Pages.</li>
+               <li> Core: Fix PayPal issues which could result in missed orders.</li>
+               <li> Core: Ask a Question improvements.</li>
+               <li> Core: Simplify use of private template on storefront.</li>
+               <li> Core: New config variable "Disabled Product Status for Search Engines" allows stores to optionally not throw 404 for disabled products.</li>
+               <li> Core: Notifier calls during checkout now include the order number.</li>
+               <li> Core: Notifier NOTIFY_PAYPALWPP_DISABLE_GET_OVERRIDE_ADDRESS added.</li>
+               <li> Define Pages: Correct issues with editing.</li>
+            </ul>
+            <h2>
                 The most notable improvements and bugfixes in v1.5.7 since v1.5.6 include:
             </h2>
             <ul>
@@ -170,8 +210,6 @@
                 <li>Storefront - Define page added to shopping cart page for static content.</li>
                 <li>Storefront - The responsive classic template now meets accessibility standards for both desktop and mobile.</li>
                 <li>Admin - Plugin Manager for admin side plugins now available, consolidating management and file placement.</li>
-                <li>Admin - Display Logs plugin now built in (requires activation).</li>
-                <li>Admin - Report All Errors plugin now built in (requires activation).</li>
                 <li>Admin - Admins can now login to a customer account (login as that customer), to place an order on their behalf.</li>
                 <li>Admin - Order Status may be updated from the order listing screen.</li>
                 <li>Admin - Order Status emails are now sent in the language of the order.</li>
@@ -181,6 +219,7 @@
                 <li>Admin - Improved customer search.</li>
                 <li>Admin – Products to Categories Link Manager - Addition of a global tool to copy linked categories to another product.</li>
                 <li>Admin – Product Copy expanded to include copy of metatags and linked categories.</li>
+                <li>Admin - Setting added to auto enable (make available) product on or after the set available date.
                 <li>Admin - Validation for integer min and max values and email addresses.</li>
                 <li>Admin - Improved configuration settings descriptions.</li>
                 <li>Admin - Countries page is easier to perform enable/disable actions.</li>
@@ -202,7 +241,8 @@
             </ul>
             <div>
                 <p>
-                    A detailed list of all edits to all files can be seen on Github at: <a href="https://github.com/zencart/zencart/compare/v156...v157">v1.5.6...v1.5.7</a>
+                A detailed list of all edits to all files can be seen on Github at: <a href="https://github.com/zencart/zencart/compare/v156...v157">v1.5.6...v1.5.7a</a><br>
+                And a full list for just v1.5.7-to-v1.5.7a on Github at: <a href="https://github.com/zencart/zencart/compare/v1.5.7...v1.5.7a">v1.5.7...v1.5.7a</a>
                 </p>
             </div>
             <div class="back-to-top">

@@ -4,7 +4,7 @@
     /**
  * @copyright Copyright 2003-2020 Zen Cart Development Team
      * @license https://www.zen-cart.com/license/2_0.txt GNU Public License v2.0
-     * @version $Id: DrByte 2020 Jun 23 New in v1.5.7 $
+     * @version $Id: DrByte 2020 Oct 30 Modified in v1.5.7a $
      */
 //-->
 <head>
@@ -46,7 +46,7 @@
                 Zen Cart&reg; is made available to you for your use, addition, changes, modification, etc. without charge, under Version 2 of the GNU General Public License.
             </p>
             <p>
-                While we do not charge for this software, we greatly appreciate donations to help cover the expenses of maintenance, upgrades, updates, the free support forum and the continued development of this software for your online E-Commerce store.  Please consider making a donation each time you install a new version.
+                While we do not charge for this software, donations are greatly appreciated, each time you install a new version, to help cover the expenses of maintenance, upgrades, updates, the free support forum and the continued development of this software for your online E-Commerce store.
             </p>
             <p>
                 Donations can be made on the <a href="https://www.zen-cart.com/donate" target="_blank">Zen Cart&reg; Team Page</a>
@@ -68,13 +68,172 @@
                 Consult the online docs for Release-Specific considerations to note regarding this version. <a href="https://docs.zen-cart.com/user/upgrading/">https://docs.zen-cart.com/user/upgrading/</a><br>
                 <br>
                 A detailed list of all edits to all files can be seen on Github at:<br>
-                <a href="https://github.com/zencart/zencart/compare/v156...v1.5.7">v1.5.6...v1.5.7</a><br>
-                <a href="https://github.com/zencart/zencart/compare/v1.5.6c...v1.5.7">v1.5.6c...v1.5.7</a><br>
+                <a href="https://github.com/zencart/zencart/compare/v156...v1.5.7">v1.5.6...v1.5.7a</a><br>
+                <a href="https://github.com/zencart/zencart/compare/v1.5.6c...v1.5.7a">v1.5.6c...v1.5.7a</a><br>
+                <a href="https://github.com/zencart/zencart/compare/v1.5.7...v1.5.7a">v1.5.7...v1.5.7a</a><br>
             </p>
         </div>
     </section> <!-- End introCenter //-->
     
     <section id="changedFiles">
+        <div>
+            <h1>CHANGED Files in v1.5.7a (since v1.5.7)</h1>
+            <ul>
+               <li><strong>ADDED</strong>: includes/modules/responsive_classic/ezpages_bar_header.php</li>
+               <li>admin/.htaccess</li>
+               <li>admin/admin_page_registration.php</li>
+               <li>admin/attributes_controller.php</li>
+               <li>admin/banner_manager.php</li>
+               <li>admin/categories.php</li>
+               <li>admin/category_product_listing.php</li>
+               <li>admin/countries.php</li>
+               <li>admin/coupon_admin.php</li>
+               <li>admin/coupon_admin_export.php</li>
+               <li>admin/define_pages_editor.php</li>
+               <li>admin/developers_tool_kit.php</li>
+               <li>admin/gv_mail.php</li>
+               <li>admin/includes/.htaccess</li>
+               <li>admin/includes/admin_html_head.php</li>
+               <li>admin/includes/application_bootstrap.php</li>
+               <li>admin/includes/css/stylesheet_print.css</li>
+               <li>admin/includes/functions/admin_access.php</li>
+               <li>admin/includes/functions/functions_help.php</li>
+               <li>admin/includes/functions/functions_prices.php</li>
+               <li>admin/includes/functions/general.php</li>
+               <li>admin/includes/header.php</li>
+               <li>admin/includes/header_navigation.php</li>
+               <li>admin/includes/init_includes/init_sanitize.php</li>
+               <li>admin/includes/init_includes/init_sessions.php</li>
+               <li>admin/includes/languages/english/categories.php</li>
+               <li>admin/includes/languages/english/category_product_listing.php</li>
+               <li>admin/includes/languages/english/developers_tool_kit.php</li>
+               <li>admin/includes/languages/english/mail.php</li>
+               <li>admin/includes/modules/copy_product_confirm.php</li>
+               <li>admin/includes/modules/dashboard_widgets/RecentOrdersDashboardWidget.php</li>
+               <li>admin/includes/modules/dashboard_widgets/SalesReportDashboardWidget.php</li>
+               <li>admin/includes/modules/product_music/copy_product_confirm.php</li>
+               <li>admin/includes/modules/product_music/update_product.php</li>
+               <li>admin/includes/modules/update_product.php</li>
+               <li>admin/invoice.php</li>
+               <li>admin/mail.php</li>
+               <li>admin/options_name_manager.php</li>
+               <li>admin/options_values_manager.php</li>
+               <li>admin/orders.php</li>
+               <li>admin/packingslip.php</li>
+               <li>admin/plugin_manager.php</li>
+               <li>admin/salemaker.php</li>
+               <li>admin/sqlpatch.php</li>
+               <li>admin/stats_sales_report_graphs.php</li>
+               <li>admin/template_select.php</li>
+               <li>download/.htaccess</li>
+               <li>editors/.htaccess</li>
+               <li>email/.htaccess</li>
+               <li>images/.htaccess</li>
+               <li>includes/.htaccess</li>
+               <li>includes/application_top.php</li>
+               <li>includes/classes/FileSystem.php</li>
+               <li>includes/classes/InitSystem.php</li>
+               <li>includes/classes/PluginManager.php</li>
+               <li>includes/classes/PluginSupport/ScriptedInstaller.php</li>
+               <li>includes/classes/PluginSupport/SqlPatchInstaller.php</li>
+               <li>includes/classes/TableViewControllers/BaseController.php</li>
+               <li>includes/classes/class.base.php</li>
+               <li>includes/classes/db/mysql/define_queries.php</li>
+               <li>includes/classes/message_stack.php</li>
+               <li>includes/classes/observers/auto.non_captcha_observer.php</li>
+               <li>includes/classes/order.php</li>
+               <li>includes/classes/payment.php</li>
+               <li>includes/classes/shipping.php</li>
+               <li>includes/classes/shopping_cart.php</li>
+               <li>includes/classes/split_page_results.php</li>
+               <li>includes/classes/vendors/PHPMailer/ - entire directory </li>
+               <li>includes/functions/audience.php</li>
+               <li>includes/functions/functions_general.php</li>
+               <li>includes/functions/functions_general_shared.php</li>
+               <li>includes/functions/functions_products.php</li>
+               <li>includes/functions/html_output.php</li>
+               <li>includes/init_includes/init_canonical.php</li>
+               <li>includes/init_includes/init_sanitize.php</li>
+               <li>includes/init_includes/init_sessions.php</li>
+               <li>includes/init_includes/init_templates.php</li>
+               <li>includes/languages/english/html_includes/classic/define_main_page.php</li>
+               <li>includes/languages/english/html_includes/define_main_page.php</li>
+               <li>includes/languages/english/html_includes/responsive_classic/define_main_page.php</li>
+               <li>includes/languages/english/product_reviews_write.php</li>
+               <li>includes/modules/also_purchased_products.php</li>
+               <li>includes/modules/attributes.php</li>
+               <li>includes/modules/checkout_process.php</li>
+               <li>includes/modules/create_account.php</li>
+               <li>includes/modules/order_total/ot_gv.php</li>
+               <li>includes/modules/pages/account_history_info/jscript_main.php</li>
+               <li>includes/modules/pages/account_notifications/header_php.php</li>
+               <li>includes/modules/pages/advanced_search/jscript_main.php</li>
+               <li>includes/modules/pages/ask_a_question/header_php.php</li>
+               <li>includes/modules/pages/checkout_confirmation/header_php.php</li>
+               <li>includes/modules/pages/checkout_confirmation/jscript_main.php</li>
+               <li>includes/modules/pages/checkout_payment/jscript_main.php</li>
+               <li>includes/modules/pages/checkout_shipping/header_php.php</li>
+               <li>includes/modules/pages/document_general_info/jscript_main.php</li>
+               <li>includes/modules/pages/document_general_info/main_template_vars.php</li>
+               <li>includes/modules/pages/document_product_info/jscript_main.php</li>
+               <li>includes/modules/pages/document_product_info/main_template_vars.php</li>
+               <li>includes/modules/pages/index/header_php.php</li>
+               <li>includes/modules/pages/login/header_php.php</li>
+               <li>includes/modules/pages/login/jscript_main.php</li>
+               <li>includes/modules/pages/product_free_shipping_info/jscript_main.php</li>
+               <li>includes/modules/pages/product_free_shipping_info/main_template_vars.php</li>
+               <li>includes/modules/pages/product_info/jscript_main.php</li>
+               <li>includes/modules/pages/product_info/main_template_vars.php</li>
+               <li>includes/modules/pages/product_music_info/jscript_main.php</li>
+               <li>includes/modules/pages/product_music_info/main_template_vars.php</li>
+               <li>includes/modules/pages/product_reviews/jscript_main.php</li>
+               <li>includes/modules/pages/product_reviews_info/jscript_main.php</li>
+               <li>includes/modules/pages/product_reviews_write/header_php.php</li>
+               <li>includes/modules/pages/product_reviews_write/jscript_main.php</li>
+               <li>includes/modules/pages/shopping_cart/jscript_main.php</li>
+               <li>includes/modules/payment/paypal/paypalwpp_admin_notification.php</li>
+               <li>includes/modules/payment/paypaldp.php</li>
+               <li>includes/modules/payment/paypalwpp.php</li>
+               <li>includes/modules/responsive_classic/product_listing.php</li>
+               <li>includes/modules/shipping/flat.php</li>
+               <li>includes/modules/shipping/freeoptions.php</li>
+               <li>includes/modules/shipping/freeshipper.php</li>
+               <li>includes/modules/shipping/item.php</li>
+               <li>includes/modules/shipping/perweightunit.php</li>
+               <li>includes/modules/shipping/table.php</li>
+               <li>includes/modules/sideboxes/order_history.php</li>
+               <li>includes/spiders.txt</li>
+               <li>includes/templates/responsive_classic/common/tpl_columnar_display.php</li>
+               <li>includes/templates/responsive_classic/common/tpl_main_page.php</li>
+               <li>includes/templates/responsive_classic/css/responsive_mobile.css</li>
+               <li>includes/templates/responsive_classic/css/stylesheet.css</li>
+               <li>includes/templates/responsive_classic/css/stylesheet_colors.css</li>
+               <li>includes/templates/responsive_classic/templates/tpl_checkout_confirmation_default.php</li>
+               <li>includes/templates/responsive_classic/templates/tpl_modules_product_listing.php</li>
+               <li>includes/templates/responsive_classic/templates/tpl_modules_products_all_listing.php</li>
+               <li>includes/templates/responsive_classic/templates/tpl_modules_products_featured_listing.php</li>
+               <li>includes/templates/responsive_classic/templates/tpl_modules_products_new_listing.php</li>
+               <li>includes/templates/responsive_classic/templates/tpl_product_reviews_default.php</li>
+               <li>includes/templates/responsive_classic/templates/tpl_shopping_cart_default.php</li>
+               <li>includes/templates/template_default/common/tpl_columnar_display.php</li>
+               <li>includes/templates/template_default/common/tpl_main_page.php</li>
+               <li>includes/templates/template_default/templates/tpl_account_history_info_default.php</li>
+               <li>includes/templates/template_default/templates/tpl_ask_a_question_default.php</li>
+               <li>includes/templates/template_default/templates/tpl_checkout_confirmation_default.php</li>
+               <li>includes/templates/template_default/templates/tpl_checkout_payment_default.php</li>
+               <li>includes/templates/template_default/templates/tpl_checkout_shipping_default.php</li>
+               <li>includes/templates/template_default/templates/tpl_gv_redeem_default.php</li>
+               <li>includes/templates/template_default/templates/tpl_index_categories.php</li>
+               <li>includes/templates/template_default/templates/tpl_index_default.php</li>
+               <li>includes/templates/template_default/templates/tpl_product_reviews_default.php</li>
+               <li>includes/templates/template_default/templates/tpl_shopping_cart_default.php</li>
+               <li>includes/version.php</li>
+               <li>ipn_main_handler.php</li>
+               <li>zc_plugins/.htaccess</li>
+               <li>zc_plugins/DisplayLogs/v3.0.0/Installer/ScriptedInstaller.php</li>
+               <li>zc_install - <strong>assume all of it is changed</strong></li>
+            </ul>
+        </div>
         <div>
             <h1>CHANGED Files in v1.5.7 (since v1.5.6c)</h1>
             <ul>

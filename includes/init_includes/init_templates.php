@@ -9,7 +9,7 @@
  * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2020 May 19 Modified in v1.5.7 $
+ * @version $Id: DrByte 2020 Sep 30 Modified in v1.5.7a $
  */
 
 use Zencart\LanguageLoader\LanguageLoaderFactory;
@@ -78,10 +78,6 @@ if (zen_is_whitelisted_admin_ip()) {
 
 
 /**
- * send the content charset "now" so that all content is impacted by it
- */
-
-/**
  * include the extra language definitions
  */
 //  include(DIR_WS_MODULES . zen_get_module_directory('extra_definitions.php'));
@@ -90,4 +86,7 @@ $languageLoaderFactory = new LanguageLoaderFactory();
 $languageLoader = $languageLoaderFactory->make('catalog', $installedPlugins, $current_page, $template_dir);
 $languageLoader->loadInitialLanguageDefines();
 $languageLoader->finalizeLanguageDefines();
+/**
+ * send the content charset "now" so that all content is impacted by it
+ */
 header("Content-Type: text/html; charset=" . CHARSET);
