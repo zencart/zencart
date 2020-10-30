@@ -1,10 +1,9 @@
 <?php
 /**
- * @package shippingMethod
- * @copyright Copyright 2003-2018 Zen Cart Development Team
+ * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Drbyte Tue Nov 20 12:58:03 2018 -0500 Modified in v1.5.6 $
+ * @version $Id: DrByte 2020 Sep 29 Modified in v1.5.7a $
  */
 /**
  * "Per Weight Unit" shipping module, allowing you to offer per-unit-rate shipping options

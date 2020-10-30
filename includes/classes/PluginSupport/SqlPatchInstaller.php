@@ -2,7 +2,7 @@
 /**
  * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Zcwilt 2020 May 20 New in v1.5.7 $
+ * @version $Id: Scott C Wilson 2020 Jul 12 Modified in v1.5.7a $
  */
 
 namespace Zencart\PluginSupport;
