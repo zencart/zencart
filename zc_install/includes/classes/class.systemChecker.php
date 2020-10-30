@@ -233,6 +233,15 @@ class systemChecker
         return false;
     }
 
+    public function dbVersionCheckConfigKeyExists($db, $dbPrefix, $parameters)
+    {
+        $retVal = FALSE;
+        $sql = "select configuration_key from " . $dbPrefix . "configuration where configuration_key = '" . $parameters['fieldName'] . "'";
+        $result = $db->Execute($sql, 1);
+
+        return $result->RecordCount();
+    }
+
     public function dbVersionCheckConfigValue($db, $dbPrefix, $parameters)
     {
         $retVal = FALSE;
