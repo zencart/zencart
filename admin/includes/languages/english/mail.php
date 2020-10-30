@@ -9,7 +9,6 @@
 
 define('HEADING_TITLE', 'Send Email To Customers');
 
-define('TEXT_CUSTOMER', 'Customer:');
 define('TEXT_SUBJECT', 'Subject:');
 define('TEXT_FROM', 'From:');
 define('TEXT_MESSAGE', 'Text-Only <br />Message:');

@@ -19,6 +19,11 @@
 
 <div id="gvRedeemDefaultMainContent" class="content"><?php echo TEXT_INFORMATION; ?></div>
 
-<div class="buttonRow forward"><?php echo '<a href="' . ($_GET['goback'] == 'true' ? zen_href_link(FILENAME_GV_FAQ) : zen_href_link(FILENAME_DEFAULT)) . '">' . zen_image_button(BUTTON_IMAGE_CONTINUE, BUTTON_CONTINUE_ALT) . '</a>'; ?></div>
+<?php
+$link = zen_href_link(FILENAME_DEFAULT);
+if (isset($_GET['goback']) && $_GET['goback'] == 'true') $link = zen_href_link(FILENAME_GV_FAQ);
+?>
+
+<div class="buttonRow forward"><?php echo '<a href="' . $link . '">' . zen_image_button(BUTTON_IMAGE_CONTINUE, BUTTON_CONTINUE_ALT) . '</a>'; ?></div>
 
 </div>

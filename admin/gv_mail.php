@@ -19,6 +19,7 @@ if (!empty($_GET['action']) && $_GET['action'] == 'set_editor') {
 
 $_POST['amount'] = !empty($_POST['amount']) ? preg_replace('/[^0-9.%]/', '', $_POST['amount']) : 0;
 $_POST['amount'] = abs($_POST['amount']);
+if (!isset($_POST['message_html'])) $_POST['message_html'] = '';
 $action = isset($_GET['action']) ? zen_db_prepare_input($_GET['action']) : '';
 if ($action != '') {
     switch ($action) {
