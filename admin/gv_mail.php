@@ -96,9 +96,9 @@ if ($action != '') {
 
                 $gv_value = $currencies->format($_POST['amount']);
                 if (SEARCH_ENGINE_FRIENDLY_URLS == 'true') {
-                    $url = HTTP_CATALOG_SERVER . DIR_WS_CATALOG . 'index.php/gv_redeem/gv_no/' . $id1;
+                    $url = HTTP_CATALOG_SERVER . DIR_WS_CATALOG . 'index.php/gv_redeem/gv_no/'; 
                 } else {
-                    $url = HTTP_CATALOG_SERVER . DIR_WS_CATALOG . 'index.php?main_page=gv_redeem&gv_no=' . $id1;
+                    $url = HTTP_CATALOG_SERVER . DIR_WS_CATALOG . 'index.php?main_page=gv_redeem&gv_no='; 
                 }
 
                 $message .= "\n\n" . sprintf(TEXT_GV_ANNOUNCE, $gv_value) . "\n\n";
