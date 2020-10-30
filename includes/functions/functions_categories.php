@@ -505,7 +505,7 @@ function zen_draw_products_pull_down_categories($field_name, $parameters = '', $
  * @param string $filter_by_option_name
  * @return string
  */
-function zen_draw_products_pull_down_categories_attributes($field_name, $parameters = '', $exclude = [], $show_full_path = false, $filter_by_option_name = '')
+function zen_draw_products_pull_down_categories_attributes($field_name, $parameters = '', $exclude = [], $show_full_path = false, $filter_by_option_name = null)
 {
     global $db, $currencies;
 
