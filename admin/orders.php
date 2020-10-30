@@ -13,6 +13,7 @@ if (isset($module)) {
 }
 
 $quick_view_popover_enabled = false;
+$includeAttributesInProductDetailRows = true;
 
 require(DIR_WS_CLASSES . 'currencies.php');
 $currencies = new currencies();
@@ -1248,7 +1249,8 @@ if (zen_not_null($action) && $order_exists == true) {
                             WHERE op.orders_id = " . (int)$orders->fields['orders_id'];
                     $orderProducts = $db->Execute($sql, false, true, 1800);
                     $product_details = '';
-                    foreach($orderProducts as $product) {
+                    if ($includeAttributesInProductDetailRows) {
+                      foreach($orderProducts as $product) {
                         $product_details .= $product['qty'] . ' x ' . $product['name'] . (!empty($product['model']) ? ' (' . $product['model'] . ')' :'') . "\n";
                         $sql = "SELECT products_options, products_options_values
                             FROM " .  TABLE_ORDERS_PRODUCTS_ATTRIBUTES . "
@@ -1260,10 +1262,11 @@ if (zen_not_null($action) && $order_exists == true) {
                           }
                         }
                         $product_details .= '<hr>'; // add HR
+                      }
+                      $product_details = rtrim($product_details);
+                      $product_details = preg_replace('~<hr>$~', '', $product_details); // remove last HR
+                      $product_details = nl2br($product_details);
                     }
-                    $product_details = rtrim($product_details);
-                    $product_details = preg_replace('~<hr>$~', '', $product_details); // remove last HR
-                    $product_details = nl2br($product_details);
                     ?>
                 <td class="dataTableContent text-center"><?php echo $show_difference . $orders->fields['orders_id']; ?></td>
                 <td class="dataTableContent"><?php echo $show_payment_type; ?></td>
