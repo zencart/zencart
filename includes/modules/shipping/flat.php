@@ -3,16 +3,13 @@
  * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Scott C Wilson 2020 May 02 Modified in v1.5.7 $
+ * @version $Id: DrByte 2020 Sep 29 Modified in v1.5.7a $
  */
 
   class flat {
     var $code, $title, $description, $icon, $enabled;
 
-// class constructor
     function __construct() {
-      global $order, $db;
-
       $this->code = 'flat';
       $this->title = MODULE_SHIPPING_FLAT_TEXT_TITLE;
       $this->description = MODULE_SHIPPING_FLAT_TEXT_DESCRIPTION;
@@ -28,7 +25,18 @@
         $this->enabled = (MODULE_SHIPPING_FLAT_STATUS == 'True');
       }
 
-      if ( ($this->enabled == true) && ((int)MODULE_SHIPPING_FLAT_ZONE > 0) ) {
+      $this->update_status();
+    }
+
+  /**
+   * Perform various checks to see whether this module should be visible
+   */
+    function update_status() {
+      global $order, $db;
+      if (!$this->enabled) return;
+      if (IS_ADMIN_FLAG === true) return;
+
+      if ((int)MODULE_SHIPPING_FLAT_ZONE > 0) {
         $check_flag = false;
         $check = $db->Execute("select zone_id from " . TABLE_ZONES_TO_GEO_ZONES . " where geo_zone_id = '" . MODULE_SHIPPING_FLAT_ZONE . "' and zone_country_id = '" . $order->delivery['country']['id'] . "' order by zone_id");
         while (!$check->EOF) {
@@ -48,7 +56,6 @@
       }
     }
 
-// class methods
     function quote($method = '') {
       global $order;
 

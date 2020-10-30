@@ -5,7 +5,7 @@
  * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Zcwilt 2020 Apr 07 Modified in v1.5.7 $
+ * @version $Id: lat9 2020 Jul 16 Modified in v1.5.7a $
  */
 if (!defined('IS_ADMIN_FLAG')) {
     die('Illegal Access');
@@ -99,6 +99,14 @@ class messageStack extends base
     {
         global $template, $current_page_base;
 
+        // -----
+        // Reset the session-based messages, now that message-output has been requested for
+        // at least one $class.  This implies that the 'templating' phase of a page's
+        // rendering is in progress and that all applicable messages will be output at this
+        // time.
+        //
+        $_SESSION['messageToStack'] = array();
+
         if ($this->size($class) === 0) {
             return;
         }
@@ -123,8 +131,6 @@ class messageStack extends base
                 $this->add($next_message['class'], $next_message['text'], $next_message['type']);
             }
         }
-
-        $_SESSION['messageToStack'] = array();
 
         $count = 0;
 

@@ -2,7 +2,7 @@
 /**
  * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2020 Jun 19 Modified in v1.5.7 $
+ * @version $Id: DrByte 2020 Jun 27 Modified in v1.5.7a $
  *
  */
 
@@ -495,14 +495,11 @@ class zcDatabaseInstaller
                 : ", reset_token = '" . (time() + (72 * 60 * 60)) . "}" . zen_encrypt_password($options['admin_password']) . "'") . " where admin_id = 1";
         $this->db->Execute($sql);
 
-        if (DEVELOPER_MODE === true && defined('DEVELOPER_CONFIGS') && is_array(DEVELOPER_CONFIGS)) {
-            foreach (DEVELOPER_CONFIGS as $key) {
-                if (defined($key)) {
-                    $value = constant($key);
-                    if (null === $value) continue;
-                    $sql = "update " . $this->dbPrefix . "configuration set configuration_value = '" . $this->db->prepareInput($value) . "' where configuration_key = '" . $this->db->prepareInput($key) . "'";
-                    $this->db->Execute($sql);
-                }
+        if (defined('DEVELOPER_MODE') && DEVELOPER_MODE === true && defined('DEVELOPER_CONFIGS') && is_array(DEVELOPER_CONFIGS)) {
+            foreach (DEVELOPER_CONFIGS as $key => $value) {
+                if (null === $value) continue;
+                $sql = "update " . $this->dbPrefix . "configuration set configuration_value = '" . $this->db->prepareInput($value) . "' where configuration_key = '" . $this->db->prepareInput($key) . "'";
+                $this->db->Execute($sql);
             }
         }
     }

@@ -3,7 +3,7 @@
  * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2020 May 16 Modified in v1.5.7 $
+ * @version $Id: Scott C Wilson 2020 Oct 01 Modified in v1.5.7a $
  */
 
 if (!defined('IS_ADMIN_FLAG')) die('Illegal Access');
@@ -43,7 +43,7 @@ $menuTitles = zen_get_menu_titles();
   </div><!-- /.navbar-collapse -->
 </nav>
 <?php if ($url = page_has_help()) { ?>
-<div class="pull-right">
+<div class="pull-right noprint">
   <a href="<?php echo $url; ?>" rel="noopener" target="_blank" class="btn btn-sm btn-default btn-help" role="button" title="Help">
     <i class="fa fa-question fa-lg" aria-hidden="true"></i>
   </a>

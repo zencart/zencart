@@ -6,7 +6,7 @@
  * @copyright Portions Copyright 2005 CardinalCommerce
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2020 Jun 23 Modified in v1.5.7 $
+ * @version $Id: DrByte 2020 Sep 19 Modified in v1.5.7a $
  */
 /**
  * The transaction URL for the Cardinal Centinel 3D-Secure service.
@@ -357,9 +357,9 @@ class paypaldp extends base {
       // 3D-Secure
       $selection['fields'][] = array('title' => '',
                                'field' => '<div id="' . $this->code.'-cc-securetext"><p>' .
-                                     '<a href="javascript:void window.open(\'vbv_learn_more.html\',\'vbv_service\',\'width=550,height=450\')">' .
+                                     '<a href="javascript:void window.open(\'vbv_learn_more.html\',\'vbv_service\',\'width=550,height=450,noreferrer\')">' .
                                      zen_image(DIR_WS_IMAGES.'3ds/vbv_learn_more.gif') . '</a>' .
-                                     '<a href="javascript:void window.open(\'mcs_learn_more.html\',\'mcsc_service\',\'width=550,height=450\')">' .
+                                     '<a href="javascript:void window.open(\'mcs_learn_more.html\',\'mcsc_service\',\'width=550,height=450,noreferrer\')">' .
                                      zen_image(DIR_WS_IMAGES.'3ds/mcsc_learn_more.gif') . '</a>' .
                                      '</p>' .
                                      '<p>' . TEXT_3DS_CARD_MAY_BE_ENROLLED . '</p></div>',
@@ -556,9 +556,9 @@ class paypaldp extends base {
           $confirmation['fields'][count($confirmation['fields'])] = array(
               'title' => '',
               'field' => '<div id="' . $this->code.'-cc-securetext"><p>' .
-                         '<a href="javascript:void window.open(\'vbv_learn_more.html\',\'vbv_service\',\'width=550,height=450\')">' .
+                         '<a href="javascript:void window.open(\'vbv_learn_more.html\',\'vbv_service\',\'width=550,height=450,noreferrer\')">' .
                          zen_image(DIR_WS_IMAGES.'3ds/vbv_learn_more.gif') . '</a>' .
-                         '<a href="javascript:void window.open(\'mcs_learn_more.html\',\'mcsc_service\',\'width=550,height=450\')">' .
+                         '<a href="javascript:void window.open(\'mcs_learn_more.html\',\'mcsc_service\',\'width=550,height=450,noreferrer\')">' .
                          zen_image(DIR_WS_IMAGES.'3ds/mcsc_learn_more.gif') . '</a></p>' .
                          '<p>' . TEXT_3DS_CARD_MAY_BE_ENROLLED . '</p></div>');
     }

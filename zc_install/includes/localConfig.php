@@ -2,7 +2,7 @@
 /**
  * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2020 Jun 22 Modified in v1.5.7 $
+ * @version $Id: DrByte 2020 Jun 30 Modified in v1.5.7a $
  *
  */
 
@@ -34,10 +34,12 @@ define('DEVELOPER_DBPASSWORD_DEFAULT', '');
 define('DEVELOPER_INSTALL_DEMO_DATA', true);
 
 // optional configuration table keys to override on new installs when DEVELOPER_MODE===true
-define('DEVELOPER_CONFIGS', [
-    'EMAIL_SMTPAUTH_MAILBOX' => 'Zen Cart',
-    'EMAIL_SMTPAUTH_PASSWORD' => '',
-    'EMAIL_SMTPAUTH_MAIL_SERVER' => 'localhost',
-    'EMAIL_SMTPAUTH_MAIL_SERVER_PORT' => '2525',
-    'EMAIL_TRANSPORT' => 'smtpauth',
-]);
+if (PHP_MAJOR_VERSION > 5) {
+    define('DEVELOPER_CONFIGS', [
+        'EMAIL_SMTPAUTH_MAILBOX' => 'Zen Cart',
+        'EMAIL_SMTPAUTH_PASSWORD' => '',
+        'EMAIL_SMTPAUTH_MAIL_SERVER' => 'localhost',
+        'EMAIL_SMTPAUTH_MAIL_SERVER_PORT' => '2525',
+        'EMAIL_TRANSPORT' => 'smtpauth',
+    ]);
+}

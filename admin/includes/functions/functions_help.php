@@ -2,7 +2,7 @@
 /**
  * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Scott C Wilson 2020 May 04 New in v1.5.7 $
+ * @version $Id: Scott C Wilson 2020 Aug 10 Modified in v1.5.7a $
  */
 
 function page_has_help()
@@ -53,6 +53,43 @@ function page_has_help()
       return $fallback; 
     }
 
+    // Go to correct help file - category or product level. 
+    if ($page == FILENAME_CATEGORY_PRODUCT_LISTING) {
+       $show_category_help = false; 
+       if (!isset($_GET['cPath'])) {
+          $show_category_help = true; 
+       } else {
+          $cPath_array = zen_parse_category_path($_GET['cPath']);
+          $cPath = implode('_', $cPath_array);
+          $current_category_id = $cPath_array[(sizeof($cPath_array)-1)];
+          if (zen_products_in_category_count($current_category_id, true, false) == 0) {
+             $show_category_help = true; 
+          }
+       }
+       if ($show_category_help) {
+           return 'https://docs.zen-cart.com/user/admin_pages/catalog/categories/';
+       } else {
+           return 'https://docs.zen-cart.com/user/admin_pages/catalog/categories_products/';
+       }
+    }
+
+    // These pages have subpages - point to correct helpfile 
+    if ($page == FILENAME_PRODUCT_TYPES) {
+       if (isset($_GET['action']) && $_GET['action'] == 'layout') {
+          return 'https://docs.zen-cart.com/user/admin_pages/catalog/product_types_edit_layout/'; 
+       }
+    }
+    if ($page == FILENAME_CATEGORIES) {
+       if (isset($_GET['action']) && $_GET['action'] == 'edit_category_meta_tags') {
+          return 'https://docs.zen-cart.com/user/admin_pages/catalog/categories_meta_tags_editor/'; 
+       }
+    }
+    if ($page == FILENAME_PRODUCT) {
+       if (isset($_GET['action']) && $_GET['action'] == 'new_product_meta_tags') {
+          return 'https://docs.zen-cart.com/user/admin_pages/catalog/products_meta_tags_editor/'; 
+       }
+    }
+
     $pagelist = array(
         FILENAME_CONFIGURATION => 'https://docs.zen-cart.com/user/admin_pages/configuration/',
         FILENAME_CATEGORIES => 'https://docs.zen-cart.com/user/admin_pages/catalog/categories/',
@@ -71,9 +108,10 @@ function page_has_help()
         FILENAME_FEATURED => 'https://docs.zen-cart.com/user/admin_pages/catalog/featured/',
         FILENAME_SALEMAKER => 'https://docs.zen-cart.com/user/admin_pages/catalog/salemaker/',
         FILENAME_PRODUCTS_EXPECTED => 'https://docs.zen-cart.com/user/admin_pages/catalog/products_expected/',
-        FILENAME_PRODUCT => 'https://docs.zen-cart.com/user/admin_pages/catalog/products_expected/',
+        FILENAME_PRODUCT => 'https://docs.zen-cart.com/user/products/product_management_admin/', 
         FILENAME_PRODUCTS_TO_CATEGORIES => 'https://docs.zen-cart.com/user/admin_pages/catalog/products_to_categories/',
         FILENAME_MODULES => 'https://docs.zen-cart.com/user/admin_pages/modules/',
+        FILENAME_PLUGIN_MANAGER=> 'https://docs.zen-cart.com/user/admin_pages/modules/plugin_manager',
         FILENAME_CUSTOMERS => 'https://docs.zen-cart.com/user/admin_pages/customers/customers/',
         FILENAME_ORDERS => 'https://docs.zen-cart.com/user/admin_pages/customers/orders/',
         FILENAME_GROUP_PRICING => 'https://docs.zen-cart.com/user/admin_pages/customers/group_pricing/',

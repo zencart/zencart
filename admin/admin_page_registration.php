@@ -3,7 +3,7 @@
  * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2020 Jun 07 Modified in v1.5.7 $
+ * @version $Id: mc12345678 2020 Jul 05 Modified in v1.5.7a $
  */
 require('includes/application_top.php');
 
@@ -29,7 +29,7 @@ if (isset($_POST) && !empty($_POST)) {
   if (isset($_POST['language_key'])) {
     $language_key = zen_db_prepare_input($_POST['language_key']);
   }
-  if (empty($page_key)) {
+  if (empty($language_key)) {
     $error = TRUE;
     $messageStack->add(ERROR_LANGUAGE_KEY_NOT_ENTERED, 'error');
   } elseif (!defined($language_key)) {

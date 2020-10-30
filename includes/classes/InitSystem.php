@@ -3,7 +3,7 @@
  *
  * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Zcwilt 2020 Jun 09 Modified in v1.5.7 $
+ * @version $Id: mc12345678 2020 Sep 23 Modified in v1.5.7a $
  */
 
 namespace Zencart\InitSystem;
@@ -214,6 +214,7 @@ class InitSystem
 
     protected function getLoadersFromFilelist($fileList)
     {
+        $autoLoadConfig = [];
         foreach ($fileList as $file) {
             require($file);
         }

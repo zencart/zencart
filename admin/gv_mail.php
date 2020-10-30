@@ -3,7 +3,7 @@
  * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Steve 2019 Oct 01 Modified in v1.5.7 $
+ * @version $Id: DrByte 2020 Oct 30 Modified in v1.5.7a $
  */
 
 require('includes/application_top.php');
@@ -19,6 +19,7 @@ if (!empty($_GET['action']) && $_GET['action'] == 'set_editor') {
 
 $_POST['amount'] = !empty($_POST['amount']) ? preg_replace('/[^0-9.%]/', '', $_POST['amount']) : 0;
 $_POST['amount'] = abs($_POST['amount']);
+if (!isset($_POST['message_html'])) $_POST['message_html'] = '';
 $action = isset($_GET['action']) ? zen_db_prepare_input($_GET['action']) : '';
 if ($action != '') {
     switch ($action) {
@@ -96,9 +97,9 @@ if ($action != '') {
 
                 $gv_value = $currencies->format($_POST['amount']);
                 if (SEARCH_ENGINE_FRIENDLY_URLS == 'true') {
-                    $url = HTTP_CATALOG_SERVER . DIR_WS_CATALOG . 'index.php/gv_redeem/gv_no/' . $id1;
+                    $url = HTTP_CATALOG_SERVER . DIR_WS_CATALOG . 'index.php/gv_redeem/gv_no/'; 
                 } else {
-                    $url = HTTP_CATALOG_SERVER . DIR_WS_CATALOG . 'index.php?main_page=gv_redeem&gv_no=' . $id1;
+                    $url = HTTP_CATALOG_SERVER . DIR_WS_CATALOG . 'index.php?main_page=gv_redeem&gv_no='; 
                 }
 
                 $message .= "\n\n" . sprintf(TEXT_GV_ANNOUNCE, $gv_value) . "\n\n";

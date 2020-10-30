@@ -1,7 +1,7 @@
 #
 # @copyright Copyright 2003-2020 Zen Cart Development Team
 # @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
-# @version $Id: DrByte 2019 Sep 12 Modified in v1.5.7 $
+# @version $Id: DrByte 2020 Oct 29 Modified in v1.5.7a $
 #
 # This is used with Apache WebServers
 #
@@ -41,7 +41,7 @@ DirectoryIndex index.php
 </FilesMatch>
 
 # but now allow just *certain* necessary files:
-<FilesMatch "(?i).*\.(php|js|css|html?|ico|otf|jpe?g|gif|webp|png|swf|flv|xml|xsl|csv|txt)$">
+<FilesMatch "(?i).*\.(php|html?|js|css|jpe?g|gif|webp|png|otf|ico|cur|map|eot|svgz?|ttf|woff2?|xml|xsl|csv|txt)$">
   <IfModule mod_authz_core.c>
     Require all granted
   </IfModule>
@@ -78,7 +78,7 @@ IndexIgnore */*
   FileETag None
   Header unset ETag
   #Header set Cache-Control "no-transform"
-  <FilesMatch "(?i).*\.(ico|jpe?g|gif|otf|webp|png|swf|flv|svg|svgz)$">
+  <FilesMatch "(?i).*\.(ico|jpe?g|gif|otf|webp|png|svgz?)$">
     Header set Cache-control "max-age=864000, public, must-revalidate"
     Header unset Last-Modified
   </FilesMatch>
@@ -102,14 +102,13 @@ IndexIgnore */*
   ExpiresByType application/x-javascript A3600
   ExpiresByType text/css A3600
   ExpiresByType image/gif A604800
-  ExpiresByType video/x-flv A604800
   ExpiresByType application/pdf A604800
   ExpiresByType text/html A300
   ExpiresByType image/x-icon A86400
   ExpiresByType image/jpeg A2592000
   ExpiresByType image/png A2592000
   ExpiresByType text/cache-manifest "access plus 0 seconds"
-
+  ExpiresByType image/svg A2592000
 </ifmodule>
 
 

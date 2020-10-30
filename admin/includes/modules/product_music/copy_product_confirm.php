@@ -4,7 +4,7 @@
  * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2020 May 17 Modified in v1.5.7 $
+ * @version $Id: DrByte 2020 Jul 25 Modified in v1.5.7a $
  */
 if (!defined('IS_ADMIN_FLAG')) {
     die('Illegal Access');
@@ -96,6 +96,8 @@ if (isset($_POST['products_id'], $_POST['categories_id'])) {
         $sql_data_array['products_status'] = 0;
         $sql_data_array['products_date_added'] = 'now()';
         $sql_data_array['products_date_available'] = (!empty($product->fields['products_date_available']) ? zen_db_input($product->fields['products_date_available']) : 'null');
+
+        $sql_data_array['master_categories_id'] = $categories_id;
 
         // Everything is set, stick it in the database
         zen_db_perform(TABLE_PRODUCTS, $sql_data_array);

@@ -8,7 +8,7 @@
  * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2020 May 16 Modified in v1.5.7 $
+ * @version $Id: DrByte 2020 Oct 29 Modified in v1.5.7a $
  */
 ?>
 <div class="centerColumn" id="checkoutShipping">
@@ -62,8 +62,8 @@
       for ($i=0, $n=sizeof($quotes); $i<$n; $i++) {
       // bof: field set
 // allows FedEx to work comment comment out Standard and Uncomment FedEx
-//      if ($quotes[$i]['id'] != '' || $quotes[$i]['module'] != '') { // FedEx
-      if ($quotes[$i]['module'] != '') { // Standard
+//      if (!empty($quotes[$i]['id']) || !empty($quotes[$i]['module'])) { // FedEx
+      if (!empty($quotes[$i]['module'])) { // Standard
 ?>
 <fieldset>
 <legend><?php echo $quotes[$i]['module']; ?>&nbsp;<?php if (isset($quotes[$i]['icon']) && zen_not_null($quotes[$i]['icon'])) { echo $quotes[$i]['icon']; } ?></legend>

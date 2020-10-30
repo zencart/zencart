@@ -1,7 +1,7 @@
 #
 # @copyright Copyright 2003-2020 Zen Cart Development Team
 # @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
-# @version $Id: DrByte 2020 June 23 Modified in v1.5.7 $
+# @version $Id: DrByte 2020 Oct 30 Modified in v1.5.7a $
 #
 
 systemChecks:
@@ -45,9 +45,9 @@ systemChecks:
       checkPhpVersionMax:
         method: checkPhpVersion
         parameters:
-          version: 7.5.0
+          version: 8.1.0
           versionTest: lt
-          localErrorText: <?php echo sprintf(TEXT_ERROR_PHP_VERSION_MAX, '7.5.x') . PHP_EOL; ?>
+          localErrorText: <?php echo sprintf(TEXT_ERROR_PHP_VERSION_MAX, '8.0.x') . PHP_EOL; ?>
   checkPhpVersionRecommendation:
     runLevel: always
     errorLevel: WARN

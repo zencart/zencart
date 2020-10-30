@@ -3,7 +3,7 @@
  * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2020 May 17 Modified in v1.5.7 $
+ * @version $Id: lat9 2020 Jul 27 Modified in v1.5.7a $
  */
 
 ////
@@ -1557,9 +1557,9 @@ while (!$chk_sale_categories_all->EOF) {
     global $currencies;
 
     if (DISPLAY_PRICE_WITH_TAX_ADMIN == 'true' || $force) {
-      return zen_round($price, $currencies->currencies[DEFAULT_CURRENCY]['decimal_places']) + zen_calculate_tax($price, $tax);
+      return $price + zen_calculate_tax($price, $tax);
     } else {
-      return zen_round($price, $currencies->currencies[DEFAULT_CURRENCY]['decimal_places']);
+      return $price;
     }
   }
 
@@ -3154,6 +3154,7 @@ function zen_get_master_categories_pulldown($product_id, $fullpath = false)
     $dir_info[] = array('id' => '', 'text' => $default_text);
 
     $dir = @dir($parent_folder);
+    if ($dir == null) return []; 
     while ($file = $dir->read()) {
       if (is_dir($parent_folder . $file) && $file != "." && $file != "..") {
         $dir_info[] = array('id' => $file . '/', 'text' => $file);

@@ -3,7 +3,7 @@
  * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Erik Kerkhoven 2020 Apr 14 Modified in v1.5.7 $
+ * @version $Id: DrByte 2020 Oct 21 Modified in v1.5.7a $
  */
 require('includes/application_top.php');
 require('includes/functions/functions_graphs.php');
@@ -198,10 +198,10 @@ if (zen_not_null($action)) {
 <html <?php echo HTML_PARAMS; ?>>
   <head>
     <?php require DIR_WS_INCLUDES . 'admin_html_head.php'; ?>
-    <link rel="stylesheet" href="includes/banner_tools.css">
+    <link rel="stylesheet" href="includes/css/banner_tools.css">
     <script>
       function popupImageWindow(url) {
-          window.open(url, 'popupImageWindow', 'toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=no,resizable=yes,copyhistory=no,width=100,height=100,screenX=150,screenY=150,top=150,left=150')
+          window.open(url, 'popupImageWindow', 'toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=no,resizable=yes,copyhistory=no,width=100,height=100,screenX=150,screenY=150,top=150,left=150,noreferrer')
       }
     </script>
     <?php if ($editor_handler != '') include ($editor_handler); ?>

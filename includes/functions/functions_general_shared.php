@@ -1,5 +1,19 @@
 <?php
+/**
+ * functions_general_shared.php
+ * Functions shared throughout Zen Cart in both the storefront and the admin
+ *
+ * @copyright Copyright 2003-2020 Zen Cart Development Team
+ * @copyright Portions Copyright 2003 osCommerce
+ * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
+ * @version $Id: DrByte 2020 Jul 02 Modified in v1.5.7a $
+ */
 
+/**
+ * Get which Zen Cart version is installed
+ * exists since v1.5.7
+ * @return string "eg: 1.5.7a"
+ */
 function zen_get_zcversion()
 {
     return PROJECT_VERSION_MAJOR . '.' . PROJECT_VERSION_MINOR;

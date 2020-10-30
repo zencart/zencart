@@ -6,7 +6,7 @@
  * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Zcwilt 2020 May 23 Modified in v1.5.7 $
+ * @version $Id: lat9 2020 Oct 27 Modified in v1.5.7a $
  */
 /**
  * Stop execution completely
@@ -743,7 +743,7 @@ function zen_set_field_length($tbl, $fld, $max = 70)
             $length = 'size="' . ($max + 1) . '" maxlength="' . $field_length . '"';
             break;
         default:
-            $length = 'size="' . ($field_length + 1) . '"maxlength="' . $field_length . '"';
+            $length = 'size="' . ($field_length + 1) . '" maxlength="' . $field_length . '"';
             break;
     }
     return $length;

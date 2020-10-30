@@ -3,7 +3,7 @@
  *
  * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2020 Jun 18 Modified in v1.5.7 $
+ * @version $Id: mc12345678 2020 Oct 23 Modified in v1.5.7a $
  */
 
 namespace Zencart\FileSystem;
@@ -123,7 +123,7 @@ class FileSystem
             return null;
         }
         $version = $this->installedPlugins[$pluginKey]['version'];
-        $relativePath = '/zc_plugins/' . $pluginKey . '/' . $version . '/';
+        $relativePath = ($GLOBALS['request_type'] == 'SSL' ? DIR_WS_HTTPS_CATALOG : DIR_WS_CATALOG) . 'zc_plugins/' . $pluginKey . '/' . $version . '/';
         return $relativePath;
     }
 

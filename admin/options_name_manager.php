@@ -3,7 +3,7 @@
  * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Steve 2020 Apr 30 Modified in v1.5.7 $
+ * @version $Id: DrByte 2020 Oct 22 Modified in v1.5.7a $
  */
 require 'includes/application_top.php';
 $languages = zen_get_languages();
@@ -640,7 +640,7 @@ function translate_type_to_name($opt_type)
                                 $inputs .= '<div>';
                                 $inputs .= zen_draw_label(TABLE_HEADING_OPTION_NAME . ':', 'option_name[' . $languages[$i]['id'] . ']', 'class="control-label"');
                                 $inputs .= '<div class="input-group">';
-                                $inputs .= '<span class="input-group-addon">' . zen_image(DIR_WS_CATALOG_LANGUAGES . $languages[$i]['directory'] . '/images/' . $languages[$i]['image'], $languages[$i]['name']) . '</span>';
+                                $inputs .= '<span class="input-group-addon">' . zen_get_language_icon($languages[$i]['id']) . '</span>';
                                 $inputs .= zen_draw_input_field('option_name[' . $languages[$i]['id'] . ']', '', zen_set_field_length(TABLE_PRODUCTS_OPTIONS, 'products_options_name', 40) . ' class="form-control" id="option_name[' . $languages[$i]['id'] . ']" placeholder="' . $languages[$i]['directory'] . '" required');
                                 $inputs .= '</div>';
                                 $inputs .= '</div>';

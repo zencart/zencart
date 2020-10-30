@@ -1,7 +1,7 @@
 #
-# @copyright Copyright 2003-2013 Zen Cart Development Team
+# @copyright Copyright 2003-2020 Zen Cart Development Team
 # @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
-# @version GIT: $Id: Author: DrByte  Fri May 17 14:29:18 2013 -0400 Modified in v1.5.2 $
+# @version $Id: DrByte 2020 Oct 29 Modified in v1.5.7a $
 #
 # This is used with Apache WebServers
 #
@@ -29,7 +29,7 @@
 </FilesMatch>
 
 # but now allow just *certain* necessary files:
-<FilesMatch "(?i).*\.(js|css|jpg|gif|png|html?|xml)$">
+<FilesMatch "(?i).*\.(js|css|jpg|gif|webp|png|html?|xml|svgz?)$">
   <IfModule mod_authz_core.c>
     Require all granted
   </IfModule>

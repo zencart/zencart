@@ -5,7 +5,7 @@
  * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Scott C Wilson 2020 Mar 27 Modified in v1.5.7 $
+ * @version $Id: DrByte 2020 Oct 29 Modified in v1.5.7a $
  */
 // This should be first line of the script:
   $zco_notifier->notify('NOTIFY_HEADER_START_CHECKOUT_SHIPPING');
@@ -136,7 +136,7 @@ if (isset($_SESSION['cart']->cartID)) {
 // process the selected shipping method
   if ( isset($_POST['action']) && ($_POST['action'] == 'process') ) {
     if (isset($_POST['comments'])) {
-      $_SESSION['comments'] = zen_output_string_protected($_POST['comments']);
+      $_SESSION['comments'] = $_POST['comments'];
     }
     $comments = isset($_SESSION['comments']) ? $_SESSION['comments'] : '';
     $quote = array();
@@ -187,7 +187,7 @@ if (isset($_SESSION['cart']->cartID)) {
   if (isset($_SESSION['shipping']['id'])) {
     $checklist = array();
     foreach ($quotes as $key=>$val) {
-      if ($val['methods'] != '') {
+      if (!empty($val['methods'])) {
         foreach($val['methods'] as $key2=>$method) {
           $checklist[] = $val['id'] . '_' . $method['id'];
         }

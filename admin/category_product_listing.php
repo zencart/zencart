@@ -3,7 +3,7 @@
  * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2020 Jun 17 Modified in v1.5.7 $
+ * @version $Id: DrByte 2020 Oct 28 Modified in v1.5.7a $
  */
 require 'includes/application_top.php';
 $languages = zen_get_languages();
@@ -580,7 +580,7 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
                 <?php if ($show_prod_labels || SHOW_COUNTS_ADMIN == 'true') { ?>
                   <th class="text-right hidden-sm hidden-xs"><?php echo TABLE_HEADING_QUANTITY; ?></th>
                 <?php }; ?>
-                <th class="text-right hidden-sm hidden-xs"><?php echo TABLE_HEADING_STATUS; ?></th>
+                <th class="text-right"><?php echo TABLE_HEADING_STATUS; ?></th>
                 <?php
                 if ($action == '') {
                   ?>
@@ -627,7 +627,7 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
                     ?>
                   </td>
                 <?php } ?>
-                <td class="text-right hidden-sm hidden-xs dataTableButtonCell">
+                <td class="text-right dataTableButtonCell">
                   <?php if (SHOW_CATEGORY_PRODUCTS_LINKED_STATUS == 'true' && zen_get_products_to_categories($category['categories_id'], true, 'products_active') == 'true') { ?>
                     <i class="fa fa-square fa-lg txt-linked" aria-hidden="true" title="<?php echo IMAGE_ICON_LINKED; ?>"></i>
                   <?php } ?>
@@ -695,27 +695,28 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
             $products_count = 0;
             $products_query_raw = "SELECT p.products_type, p.products_id, pd.products_name, p.products_quantity,
                                           p.products_price, p.products_status, p.products_model, p.products_sort_order,
-                                          p2c.categories_id, p.master_categories_id
+                                          p.master_categories_id
                                    FROM " . TABLE_PRODUCTS . " p
-                                   LEFT JOIN " . TABLE_PRODUCTS_DESCRIPTION . " pd ON pd.products_id = p.products_id
-                                     AND pd.language_id = " . (int)$_SESSION['languages_id'] . "
-                                   LEFT JOIN " . TABLE_PRODUCTS_TO_CATEGORIES . " p2c ON p2c.products_id = p.products_id ";
+                                   LEFT JOIN " . TABLE_PRODUCTS_DESCRIPTION . " pd ON (pd.products_id = p.products_id)";
 
-            $where = " WHERE p2c.categories_id = " . (int)$current_category_id;
+            $where = " WHERE pd.language_id = " . (int)$_SESSION['languages_id'];
 
             if ($search_result && $action != 'edit_category') {
-                $where = " WHERE p2c.categories_id = p.master_categories_id
-                            AND (pd.products_name LIKE '%:search%'
+                $where .= "  AND (pd.products_name LIKE '%:search%'
                               OR pd.products_description LIKE '%:search%'
                               OR p.products_id = ':search'
                               OR p.products_model LIKE '%:search%'
                             ) ";
                 $where = $db->bindVars($where, ':search', $_GET['search'], 'noquotestring');
+            } else {
+                $products_query_raw.= " LEFT JOIN " . TABLE_PRODUCTS_TO_CATEGORIES . " p2c ON (p2c.products_id = p.products_id) ";
+                $where .= " AND p2c.categories_id=" . (int)$current_category_id;
             }
 
             $products_query_raw .= $where . $order_by;
 
 // Split Page
+
 // reset page when page is unknown
             if ((isset($_GET['page']) && ($_GET['page'] == '1' || $_GET['page'] == '')) && isset($_GET['pID']) && $_GET['pID'] != '') {
               $old_page = $_GET['page'];
@@ -745,7 +746,7 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
               $products_count++;
 // Get categories_id for product if search
               if (isset($_GET['search'])) {
-                $cPath = $product['categories_id'];
+                $cPath = $product['master_categories_id'];
               }
 
               if ((!isset($_GET['pID']) && !isset($_GET['cID']) || (isset($_GET['pID']) && ($_GET['pID'] == $product['products_id']))) && !isset($pInfo) && !isset($cInfo) && (substr($action, 0, 3) != 'new')) {
@@ -768,7 +769,7 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
                 <td class="hidden-sm hidden-xs"><?php echo $product['products_model']; ?></td>
                 <td class="text-right hidden-sm hidden-xs"><?php echo zen_get_products_display_price($product['products_id']); ?></td>
                 <td class="text-right hidden-sm hidden-xs"><?php echo $product['products_quantity']; ?></td>
-                <td class="text-right hidden-sm hidden-xs text-nowrap dataTableButtonCell">
+                <td class="text-right text-nowrap dataTableButtonCell">
                   <?php
                   $additional_icons = '';
                   $zco_notifier->notify('NOTIFY_ADMIN_PROD_LISTING_ADD_ICON', $product, $additional_icons);

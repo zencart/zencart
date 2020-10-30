@@ -5,7 +5,7 @@
  * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Scott C Wilson 2020 Apr 09 Modified in v1.5.7 $
+ * @version $Id: DrByte 2020 Aug 08 Modified in v1.5.7a $
  */
 /**
  * Enter description here...
@@ -68,7 +68,7 @@ class ot_gv {
       if ($od_amount['total'] > 0) {
         $tax = 0;
         foreach($order->info['tax_groups'] as $key => $value) {
-          if ($od_amount['tax_groups'][$key]) {
+          if (isset($od_amount['tax_groups'][$key])) {
             $order->info['tax_groups'][$key] -= $od_amount['tax_groups'][$key];
             $tax += $od_amount['tax_groups'][$key];
           }
@@ -122,7 +122,7 @@ class ot_gv {
       $od_amount = $this->calculate_deductions($order_total);
       $order->info['total'] = $order->info['total'] - $od_amount['total'];
       if (DISPLAY_PRICE_WITH_TAX != 'true') {
-        $order->info['total'] -= $tax;
+        $order->info['total'] -= $od_amount['tax'];
       }
       return $od_amount['total'] + $od_amount['tax'];
     }
@@ -149,8 +149,12 @@ class ot_gv {
       // check if GV was purchased on Special
       $gv_original_price = zen_products_lookup((int)$order->products[$i]['id'], 'products_price');
        // if prices differ assume Special and get Special Price
-       // Do not use this on GVs Priced by Attribute
-      if (MODULE_ORDER_TOTAL_GV_SPECIAL == 'true' && ($gv_original_price != 0 && $gv_original_price != $order->products[$i]['final_price'] && !zen_get_products_price_is_priced_by_attributes((int)$order->products[$i]['id']))) {
+
+        // Do not use this on GVs Priced by Attribute
+      if (defined('MODULE_ORDER_TOTAL_GV_SPECIAL') && MODULE_ORDER_TOTAL_GV_SPECIAL == 'true'
+          && $gv_original_price != 0 && $gv_original_price != $order->products[$i]['final_price']
+          && !zen_get_products_price_is_priced_by_attributes((int)$order->products[$i]['id'])
+      ) {
         $gv_order_amount = ($gv_original_price * $order->products[$i]['qty']);
       } else {
         $gv_order_amount = ($order->products[$i]['final_price'] * $order->products[$i]['qty']);

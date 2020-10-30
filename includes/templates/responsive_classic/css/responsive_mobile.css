@@ -5,7 +5,7 @@
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @author ZCAdditions.com, ZCA Responsive Template Default
  * @author picaflor-azul.com
- * @version $Id: DrByte 2020 May 23 Modified in v1.5.7 $
+ * @version $Id: Scott C Wilson 2020 Oct 07 Modified in v1.5.7a $
  *
  */
 
@@ -266,7 +266,7 @@ td.cartProductDisplay{display:block;width:100%;}
 #shoppingCartDefault .rowEven{background:#eee;}
 td.cartQuantity br, td.cartQuantityUpdate br{display:none;}
 td.cartQuantity{padding:20px 10px 0 10px;}
-td.cartQuantityUpdate{padding:25px 0 0 0;}
+td.cartQuantityUpdate{padding:25px 0 0 10px;}
 .cartAttribsList{text-align:left;margin-left:15%;}
 span.cartProdTitle{text-align:left;float:left;margin-top:15px;width:70%;}
 .cartImage{float:left;width:18%;}
@@ -290,7 +290,7 @@ h2{text-align:center;}
 #checkoutConfirmDefault .back{width:100%;}
 #checkoutConfirmDefault .forward{float:right !important;width:100%;}
 #checkoutConfirmDefault td{padding:15px;}
-#checkoutConfirmDefault span.cssButton.normal_button.button.small_edit, .small_edit:hover{width:20%;margin-left:7px;}
+#checkoutConfirmDefault span.cssButton.normal_button.button.small_edit, .small_edit:hover{}
 #checkoutSuccessLogoff .forward{margin:25px;}
 
 /*bof account pages*/
@@ -308,7 +308,7 @@ div#accountLinksWrapper.back {float:none;width:100%;}
 .forward, .back{float:none;}
 .button{display:block;text-align:center;padding:12px 20px;}
 input.cssButton.submit_button.button.button_send, .button_send:hover, input.cssButton.submit_button.button.button_login, .button_login:hover, input.cssButton.submit_button.button.button_update, .button_update:hover, input.cssButton.submit_button.button.button_submit, .button_submit:hover{width:100%;padding: 12px 30px 30px 30px;}
-span.cssButton.normal_button.button.small_edit, .small_edit:hover{float:left;width:33%;}
+span.cssButton.normal_button.button.small_edit, .small_edit:hover{float:left;}
 span.cssButton.normal_button.button.button_delete_small, .button_delete_small:hover{float:right;width:33%;} 
 #accountDefault .forward, #accountHistInfo .forward{float:none;text-align:center;}
 .amount{float:right !important;}

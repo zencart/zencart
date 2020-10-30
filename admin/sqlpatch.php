@@ -3,7 +3,7 @@
  * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2020 May 08 Modified in v1.5.7 $
+ * @version $Id: DrByte 2020 Oct 01 Modified in v1.5.7a $
  */
 require('includes/application_top.php');
 
@@ -242,8 +242,8 @@ function executeSql($lines, $database, $table_prefix = '') {
             }
           }
           break;
-        case (substr($line_upper, 0, 7) == 'SELECT ' && substr_count($line, 'FROM ') > 0):
-          $line = str_replace('FROM ', 'FROM ' . $table_prefix, $line);
+        case (substr($line_upper, 0, 7) == 'SELECT ' && substr_count($line_upper, 'FROM ') > 0):
+          $line = str_ireplace('FROM ', 'FROM ' . $table_prefix, $line);
           break;
         case (substr($line_upper, 0, 10) == 'LEFT JOIN '):
           $line = 'LEFT JOIN ' . $table_prefix . ltrim(substr($line, 10));
@@ -259,7 +259,7 @@ function executeSql($lines, $database, $table_prefix = '') {
               $line = substr($line, 0, (strlen($line) - 1)); // remove trailing ','
             }
           } else { //didn't have a comma, but starts with "FROM ", so insert table prefix
-            $line = str_replace('FROM ', 'FROM ' . $table_prefix, $line);
+            $line = str_ireplace('FROM ', 'FROM ' . $table_prefix, $line);
           }//endif substr_count(,)
           break;
         default:
@@ -281,9 +281,6 @@ function executeSql($lines, $database, $table_prefix = '') {
           $complete_line = false;
         }
       } //endif found ';'
-        else {
-            $messageStack->add(ERROR_LINE_INCOMPLETE, 'error');
-        }
 
       if ($complete_line) {
         if ($debug == true) {
@@ -325,6 +322,10 @@ function executeSql($lines, $database, $table_prefix = '') {
       } //endif $complete_line
     } //endif ! # or -
   } // end foreach $lines
+
+  if (zen_not_null($newline)) {
+    $messageStack->add(ERROR_LINE_INCOMPLETE, 'error'); // Why not attempt to process this line instead of alert about it?
+  }
   zen_record_admin_activity('Admin SQL Patch tool executed a query.', 'notice');
   return array('queries' => $results, 'string' => $string, 'output' => $return_output, 'ignored' => ($ignored_count), 'errors' => $errors);
 }
@@ -807,7 +808,7 @@ if (zen_not_null($action)) {
       <script src="includes/menu.js"></script>
       <script>
         function popupHelpWindow(url) {
-            window.open(url, 'popupImageWindow', 'toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=no,resizable=yes,copyhistory=no,width=100,height=100,screenX=150,screenY=150,top=150,left=150')
+            window.open(url, 'popupImageWindow', 'toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=no,resizable=yes,copyhistory=no,width=100,height=100,screenX=150,screenY=150,top=150,left=150,noreferrer')
         }
         function init() {
             cssjsmenu('navbar');
@@ -833,7 +834,7 @@ if (zen_not_null($action)) {
           <div class="col-sm-12 text-danger"><strong><?php echo HEADING_WARNING2; ?></strong></div>
         </div>
         <?php
-        if ($action == 'execute' && $_POST['query_string'] != '') {
+        if ($action == 'execute' && !empty($_POST['query_string'])) {
           ?>
           <div class="row">
             <div class="col-sm-12 text-danger"><strong><?php echo TEXT_QUERY_RESULTS; ?></strong></div>

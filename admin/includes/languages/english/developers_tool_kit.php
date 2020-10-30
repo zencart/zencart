@@ -1,10 +1,9 @@
 <?php
 /**
- * @package admin
- * @copyright Copyright 2003-2016 Zen Cart Development Team
+ * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: DrByte  Mon Oct 19 01:39:59 2015 -0400 Modified in v1.5.5 $
+ * @version $Id: DrByte 2020 Jul 21 Modified in v1.5.7a $
  */
   define('HEADING_TITLE', 'Developers Tool Kit');
   define('TABLE_CONFIGURATION_TABLE', 'Lookup CONSTANT Definitions');
@@ -59,11 +58,12 @@
   define('TEXT_TEMPLATE_LOOKUP_CURRENT_SIDEBOXES', 'All Template files - /sideboxes');
   define('TEXT_TEMPLATE_LOOKUP_CURRENT_PAGES', 'All Template files - /pages');
 
-  define('TEXT_ALL_FILES_CONSTANT', '<strong>Look-up in all files</strong>');
+  define('TEXT_ALL_FILES_CONSTANT', '<strong>Look-up in all files (including zc_plugins)</strong>');
   define('TEXT_ALL_FILES_LOOKUPS', 'All Files Look-ups:');
   define('TEXT_ALL_FILES_LOOKUP_CURRENT', 'All Files - Catalog/Admin');
   define('TEXT_ALL_FILES_LOOKUP_CURRENT_CATALOG', 'All Files - Catalog');
   define('TEXT_ALL_FILES_LOOKUP_CURRENT_ADMIN', 'All Files - Admin');
+  define('TEXT_ALL_FILES_LOOKUP_CURRENT_PLUGINS', 'All Files - Plugins');
 
   define('TEXT_INFO_NO_EDIT_AVAILABLE','No edit available');
   define('TEXT_INFO_CONFIGURATION_HIDDEN', ' or, HIDDEN');

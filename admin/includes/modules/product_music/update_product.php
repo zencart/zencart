@@ -4,7 +4,7 @@
  * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2020 May 11 Modified in v1.5.7 $
+ * @version $Id: DrByte 2020 Jul 01 Modified in v1.5.7a $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
@@ -16,10 +16,13 @@ if (isset($_POST['edit']) && $_POST['edit'] == 'edit') {
   $action = 'new_product';
 } elseif ((isset($_POST['products_model']) ? $_POST['products_model'] : '') . (isset($_POST['products_url']) ? implode('', $_POST['products_url']) : '') . (isset($_POST['products_name']) ? implode('', $_POST['products_name']) : '') . (isset($_POST['products_description']) ? implode('', $_POST['products_description']) : '') != '') {
   $products_date_available = zen_db_prepare_input($_POST['products_date_available']);
-  if (DATE_FORMAT_DATE_PICKER != 'yy-mm-dd') {
+  if (DATE_FORMAT_DATE_PICKER != 'yy-mm-dd' && !empty($products_date_available)) {
     $local_fmt = zen_datepicker_format_fordate(); 
-    $dt = DateTime::createFromFormat($local_fmt, $products_date_available); 
-    $products_date_available = $dt->format('Y-m-d'); 
+    $dt = DateTime::createFromFormat($local_fmt, $products_date_available);
+      $products_date_available = 'null';
+      if (!empty($dt)) {
+        $products_date_available = $dt->format('Y-m-d'); 
+      }
   }
   $products_date_available = (date('Y-m-d') < $products_date_available) ? $products_date_available : 'null';
 

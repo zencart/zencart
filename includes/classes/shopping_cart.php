@@ -5,7 +5,7 @@
  * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2020 Jun 16 Modified in v1.5.7 $
+ * @version $Id: Scott C Wilson 2020 Aug 05 Modified in v1.5.7a $
  */
 
 if (!defined('IS_ADMIN_FLAG')) {
@@ -236,7 +236,17 @@ class shoppingCart extends base {
   function add_cart($products_id, $qty = '1', $attributes = '', $notify = true) {
     global $db, $messageStack;
     if ($this->display_debug_messages) $messageStack->add_session('header', 'FUNCTION ' . __FUNCTION__, 'caution');
-
+    if (zen_has_product_attributes($products_id, 'false') && empty($attributes)) {
+      if (!zen_requires_attribute_selection($products_id)) {
+        // Build attributes array; determine correct qty
+        $attributes = array();
+        $query = $db->Execute("SELECT options_id, options_values_id FROM " . TABLE_PRODUCTS_ATTRIBUTES . " WHERE products_id = " . (int)$products_id); 
+        foreach ($query as $attr_rec) {
+          $attributes[$attr_rec['options_id']] = $attr_rec['options_values_id']; 
+        }
+        $qty += $this->in_cart_product_total_quantity($products_id); 
+      }
+    }
     if (!is_numeric($qty) || $qty < 0) {
       // adjust quantity when not a value
       $chk_link = '<a href="' . zen_href_link(zen_get_info_page($products_id), 'cPath=' . (zen_get_generated_category_path_rev(zen_get_products_category_id($products_id))) . '&products_id=' . $products_id) . '">' . zen_get_products_name($products_id) . '</a>';
@@ -1692,6 +1702,9 @@ class shoppingCart extends base {
     $change_state = array();
     $this->flag_duplicate_quantity_msgs_set = array();
     $cart_delete = (isset($_POST['cart_delete']) && is_array($_POST['cart_delete'])) ? $_POST['cart_delete'] : array();
+    if (empty($_POST['products_id']) || !is_array($_POST['products_id'])) {
+      $_POST['products_id'] = [];
+    }
     for ($i=0, $n=sizeof($_POST['products_id']); $i<$n; $i++) {
       $adjust_max= 'false';
       if ($_POST['cart_quantity'][$i] == '') {
@@ -1977,7 +1990,7 @@ class shoppingCart extends base {
 
     $this->flag_duplicate_msgs_set = FALSE;
     if (isset($_GET['products_id'])) {
-      if (zen_has_product_attributes($_GET['products_id'])) {
+      if (zen_requires_attribute_selection($_GET['products_id'])) {
         zen_redirect(zen_href_link(zen_get_info_page($_GET['products_id']), 'products_id=' . $_GET['products_id']));
       } else {
         $add_max = zen_get_products_quantity_order_max($_GET['products_id']);
@@ -2272,6 +2285,7 @@ class shoppingCart extends base {
  */
   function in_cart_product_total_price($product_id) {
     $products = $this->get_products();
+    $in_cart_product_price = 0; 
 //echo '<pre>'; echo print_r($products); echo '</pre>';
     for ($i=0, $n=sizeof($products); $i<$n; $i++) {
       $productsName = $products[$i]['name'];
@@ -2358,6 +2372,7 @@ class shoppingCart extends base {
  */
   function in_cart_product_total_price_category($category_id) {
     $products = $this->get_products();
+    $in_cart_product_price = 0; 
 //echo '<pre>'; echo print_r($products); echo '</pre>';
     for ($i=0, $n=sizeof($products); $i<$n; $i++) {
       $productsName = $products[$i]['name'];

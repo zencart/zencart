@@ -5,24 +5,30 @@
  * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2020 Jun 23 Modified in v1.5.7 $
+ * @version $Id: DrByte 2020 Oct 28 Modified in v1.5.7a $
  */
-
-
 $zco_notifier->notify('NOTIFY_HEADER_START_ASK_A_QUESTION');
-if (isset($_GET['pid'])) {
+
+$pid = (isset($_GET['pid'])) ? (int)$_GET['pid'] : false;
+
+// -----
+// Redirect to the site's main page if no pid parameter supplied.
+//
+if ($pid === false) {
+    zen_redirect(zen_href_link(FILENAME_DEFAULT));
+} else {
     $sql = "SELECT pd.products_name, p.products_image, p.products_model
             FROM " . TABLE_PRODUCTS . " p, " . TABLE_PRODUCTS_DESCRIPTION . " pd
             WHERE p.products_id = pd.products_id
-            AND p.products_id = " . (int)$_GET['pid'] . "
+            AND p.products_id = " . (int)$pid . "
             AND pd.language_id = " . (int)$_SESSION['languages_id'] . "
             AND p.products_status = 1
             LIMIT 1";
 
     $result = $db->Execute($sql);
 
-    if (empty($result->RecordCount())) {
-        zen_redirect(zen_href_link(zen_get_info_page((!empty($_GET['pid']) ? (int)$_GET['pid'] : 0)), 'pid=' . (!empty($_GET['pid']) ? (int)$_GET['pid'] : 0)));
+    if ($result->EOF) {
+        zen_redirect(zen_href_link(zen_get_info_page($pid), 'pid=' . $pid));
     }
 
     $product_details = $result->fields;
@@ -53,7 +59,7 @@ if (isset($_GET['action']) && ($_GET['action'] == 'send')) {
         // if anti-spam is not triggered, prepare and send email:
         if ($antiSpam != '') {
             $zco_notifier->notify('NOTIFY_SPAM_DETECTED_USING_CONTACT_US', $_POST);
-        } else if ($antiSpam == '') {
+        } else {
 
             // auto complete when logged in
             if (zen_is_logged_in() && !zen_in_guest_checkout()) {
@@ -103,7 +109,7 @@ if (isset($_GET['action']) && ($_GET['action'] == 'send')) {
             OFFICE_EMAIL . "\t" . $email_address . "\n";
             if (!empty($telephone)) $text_message .= OFFICE_LOGIN_PHONE . "\t" . $telephone . "\n";
             $text_message .= TEXT_PRODUCT_NAME . "\t" . $product_details['products_name'] . "\n" .
-            zen_href_link(FILENAME_PRODUCT_INFO, 'products_id=' . (int)$_GET['pid']) .
+            zen_href_link(FILENAME_PRODUCT_INFO, 'products_id=' . $pid) .
             "\n";
             $text_message .= "\n" .
             '------------------------------------------------------' . "\n\n" .
@@ -111,13 +117,13 @@ if (isset($_GET['action']) && ($_GET['action'] == 'send')) {
             '------------------------------------------------------' . "\n\n" .
             $extra_info['TEXT'];
             // Prepare HTML-portion of message
-            $html_msg['EMAIL_MESSAGE_HTML'] = '<b>'.TEXT_PRODUCT_NAME.': </b><a href="' . zen_href_link(FILENAME_PRODUCT_INFO, 'products_id=' . (int)$_GET['pid']) . '">' . $product_details['products_name'] . '</a><br />' . strip_tags($_POST['enquiry']);
+            $html_msg['EMAIL_MESSAGE_HTML'] = '<b>'.TEXT_PRODUCT_NAME.': </b><a href="' . zen_href_link(FILENAME_PRODUCT_INFO, 'products_id=' . $pid) . '">' . $product_details['products_name'] . '</a><br />' . strip_tags($_POST['enquiry']);
             $html_msg['CONTACT_US_OFFICE_FROM'] = OFFICE_FROM . ' ' . $name . '<br />' . OFFICE_EMAIL . '(' . $email_address . ')';
             $html_msg['EXTRA_INFO'] = $extra_info['HTML'];
             // Send message
             zen_mail($send_to_name, $send_to_email, EMAIL_SUBJECT, $text_message, $name, $email_address, $html_msg,'ask_a_question');
         }
-        zen_redirect(zen_href_link(FILENAME_ASK_A_QUESTION, 'action=success&pid=' . $_GET['pid'], 'SSL'));
+        zen_redirect(zen_href_link(FILENAME_ASK_A_QUESTION, 'action=success&pid=' . $pid, 'SSL'));
     } else {
         $error = true;
         if (empty($name)) {
@@ -141,7 +147,7 @@ $email_address = '';
 $name = '';
 
 // default email and name if customer is logged in
-if(zen_is_logged_in()) {
+if (zen_is_logged_in() && !zen_in_guest_checkout()) {
     $sql = "SELECT customers_id, customers_firstname, customers_lastname, customers_password, customers_email_address, customers_default_address_id, customers_telephone
             FROM " . TABLE_CUSTOMERS . "
             WHERE customers_id = :customersID";
@@ -149,7 +155,7 @@ if(zen_is_logged_in()) {
     $sql = $db->bindVars($sql, ':customersID', $_SESSION['customer_id'], 'integer');
     $check_customer = $db->Execute($sql);
     $email_address = $check_customer->fields['customers_email_address'];
-    $name= $check_customer->fields['customers_firstname'] . ' ' . $check_customer->fields['customers_lastname'];
+    $name = $check_customer->fields['customers_firstname'] . ' ' . $check_customer->fields['customers_lastname'];
     $telephone = $check_customer->fields['customers_telephone'];
 }
 

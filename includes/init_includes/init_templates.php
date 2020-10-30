@@ -1,8 +1,7 @@
 <?php
 /**
  * initialise template system variables
- * see {@link  http://www.zen-cart.com/wiki/index.php/Developers_API_Tutorials#InitSystem wikitutorials} for more details.
- *
+ * see  {@link  https://docs.zen-cart.com/dev/code/init_system/} for more details.
  * Determines current template name for current language, from database<br />
  * Then loads template-specific language file, followed by master/default language file<br />
  * ie: includes/languages/classic/english.php followed by includes/languages/english.php
@@ -10,7 +9,7 @@
  * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2020 May 19 Modified in v1.5.7 $
+ * @version $Id: DrByte 2020 Sep 30 Modified in v1.5.7a $
  */
 if (!defined('IS_ADMIN_FLAG')) {
     die('Illegal Access');
@@ -31,19 +30,14 @@ $template_dir = $result->fields['template_dir'];
  * Allow admins to switch templates using &t= URL parameter
  */
 if (zen_is_whitelisted_admin_ip()) {
-    $templates = array();
-    foreach($result as $row) {
-        $templates[] = $row['template_dir'];
-    }
-    // check if a template override was requested and that it matches an available choice and it exists on the filesystem
-    if (isset($_GET['t']) && in_array($_GET['t'], $templates, true) && file_exists(DIR_WS_TEMPLATES . $_GET['t'])) {
+    // check if a template override was requested and that the template exists on the filesystem
+    if (isset($_GET['t']) && file_exists(DIR_WS_TEMPLATES . $_GET['t'])) {
         $_SESSION['tpl_override'] = $_GET['t'];
     }
     if (isset($_GET['t']) && $_GET['t'] === 'off') {
         unset($_SESSION['tpl_override']);
     }
     if (isset($_SESSION['tpl_override'])) $template_dir = $_SESSION['tpl_override'];
-    unset($templates, $row);
 }
 
 

@@ -4,7 +4,7 @@
  * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2020 May 23 Modified in v1.5.7 $
+ * @version $Id: DrByte 2020 Sep 20 Modified in v1.5.7a $
  */
 
 /*bof basic elements*/
@@ -324,6 +324,19 @@ span.list-addtext{display:block;text-align:center;}
 #specialsListing .prod-list-wrap{padding:20px 20px 0 20px;}
 #productListing{margin-bottom:20px;}
 #no-products{padding:20px;margin:20px 0;}
+
+/*product listing column-layout overrides*/
+.gridlayout.centerBoxContentsProducts { padding: 2em 0; }
+.gridlayout .list-image {float:none}
+.gridlayout .list-image {min-height: revert; min-width: revert}
+.gridlayout .list-image {margin-right: inherit;}
+.gridlayout .list-more {float: none;}
+#indexProductList .gridlayout .list-more {margin: auto; width: 30%}
+.gridlayout .itemTitle {width:90%;margin:5px auto}
+.gridlayout .listingDescription {width:90%;margin:10px auto}
+.gridlayout .cart-add {float:none;}
+.gridlayout .list-input {float:none;width:30%;margin:auto}
+
 
 /*bof new, featured, all listing*/
 .listing-wrapper:nth-child(odd) {}

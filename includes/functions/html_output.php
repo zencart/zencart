@@ -6,7 +6,7 @@
  * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: mc12345678 2020 May 17 Modified in v1.5.7 $
+ * @version $Id: DrByte 2020 Oct 29 Modified in v1.5.7a $
  */
 
 /*
@@ -315,7 +315,7 @@ function zen_catalog_href_link($page = '', $parameters = '', $connection = 'NONS
  * concept from contributions by Seb Rouleau and paulm, subsequently adapted to Zen Cart
  * note: any hard-coded buttons will not be able to use this function
 **/
-  function zenCssButton($image = '', $text, $type, $sec_class = '', $parameters = '') {
+  function zenCssButton($image = '', $text = '', $type = 'button', $sec_class = '', $parameters = '') {
    global $css_button_text, $css_button_opts, $template, $current_page_base, $language;
 
    $button_name = basename($image, '.gif');

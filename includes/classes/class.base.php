@@ -4,7 +4,7 @@
  *
  * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2020 Jun 22 Modified in v1.5.7 $
+ * @version $Id: mc12345678 2020 Jul 03 Modified in v1.5.7a $
  */
 
 /**
@@ -116,7 +116,7 @@ class base
             foreach($methodsToCheck as $method) {
                 if (method_exists($obs['obs'], $method)) {
                     $obs['obs']->{$method}($this, $actualEventId, $param1, $param2, $param3, $param4, $param5, $param6, $param7, $param8, $param9);
-                    return;
+                    continue 2;
                 }
             }
             // If no update handler method exists then trigger an error so the problem is logged

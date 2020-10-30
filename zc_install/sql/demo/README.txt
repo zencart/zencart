@@ -1,4 +1,13 @@
-The demo_cleanup.sql script deletes ALL of records in the 
+Notes on Demo Data:
+
+mysql_demo.sql can be rerun after demo_cleanup.sql is used if you are
+tweaking the demo data and want to reload each time (without going through a
+full re-install). 
+
+Note that mysql_demo.sql should be used from the command line only, 
+not from Admin > Tools > MySQL Patches (the lines are too long). 
+
+demo_cleanup.sql deletes ALL of records in the 
 tables listed below.  It is intended for developers of demo data only.
 In particular, it should not be used if you have begun adding real
 data on top of demo data, because it removes data indiscriminately. 
@@ -37,5 +46,4 @@ reviews
 reviews_description 
 salemaker_sales 
 specials 
-
 

@@ -2,11 +2,10 @@
 /**
  * checkout_confirmation header_php.php
  *
- * @package page
- * @copyright Copyright 2003-2019 Zen Cart Development Team
+ * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: mc12345678 2019 Apr 30 Modified in v1.5.6b $
+ * @version $Id: Zcwilt 2020 Jun 30 Modified in v1.5.7a $
  */
 
 // This should be first line of the script:
@@ -46,7 +45,7 @@ if (isset($_SESSION['shipping']['id']) && $_SESSION['shipping']['id'] == 'free_f
 
 if (isset($_POST['payment'])) $_SESSION['payment'] = $_POST['payment'];
 
-$_SESSION['comments'] = zen_output_string_protected($_POST['comments']);
+$_SESSION['comments'] = $_POST['comments'];
 
 //'checkout_payment_discounts'
 //zen_redirect(zen_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'));

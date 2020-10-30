@@ -6,7 +6,7 @@
  *
  * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Steve 2020 Feb 15 Modified in v1.5.7 $
+ * @version $Id: Scott C Wilson 2020 Aug 07 Modified in v1.5.7a $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
@@ -29,6 +29,5 @@ DEFINE('SQL_ALSO_PURCHASED', "SELECT p.products_id, p.products_image, max(o.date
                      AND opb.orders_id = o.orders_id
                      AND p.products_status = 1
                      GROUP BY p.products_id, p.products_image
-                     ORDER BY date_purchased desc, p.products_id
-                     LIMIT %u");
+                     ORDER BY date_purchased desc, p.products_id"); 
 DEFINE('SQL_SHOW_SHOPPING_CART_EMPTY',"select configuration_key, configuration_value from " . TABLE_CONFIGURATION . " where configuration_key RLIKE 'SHOW_SHOPPING_CART_EMPTY' and configuration_value > 0 order by configuration_value");

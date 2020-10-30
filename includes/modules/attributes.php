@@ -8,7 +8,7 @@
  * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: lat9 2019 Dec 16 Modified in v1.5.7 $
+ * @version $Id: lat9 2020 Oct 06 Modified in v1.5.7a $
  */
 if (!defined('IS_ADMIN_FLAG')) {
     die('Illegal Access');
@@ -94,10 +94,9 @@ while (!$products_options_names->EOF) {
     */
     $sql = "SELECT pov.products_options_values_id, pov.products_options_values_name, pa.*
             FROM  " . TABLE_PRODUCTS_ATTRIBUTES . " pa
-            LEFT JOIN " . TABLE_PRODUCTS_OPTIONS_VALUES . " pov ON (pa.options_values_id = pov.products_options_values_id)
+            LEFT JOIN " . TABLE_PRODUCTS_OPTIONS_VALUES . " pov ON (pa.options_values_id = pov.products_options_values_id AND pov.language_id = :language_id)
             WHERE pa.products_id = :products_id
-            AND   pa.options_id = :options_id
-            AND   pov.language_id = :language_id " .
+            AND   pa.options_id = :options_id " .
             $order_by;
     $sql = $db->bindVars($sql, ':products_id', $_GET['products_id'], 'integer');
     $sql = $db->bindVars($sql, ':options_id', $products_options_id, 'integer');
@@ -110,6 +109,7 @@ while (!$products_options_names->EOF) {
     $tmp_radio = '';
     $tmp_checkbox = '';
     $tmp_html = '';
+    $selected_attribute = $selected_dropdown_attribute = false; // boolean, used for radio/checkbox/select
 
     $tmp_attributes_image = '';
     $tmp_attributes_image_row = 0;
@@ -173,6 +173,14 @@ while (!$products_options_names->EOF) {
             } else {
                 // discount is off do not apply
                 $new_attributes_price = $products_options->fields['options_values_price'];
+                
+                // -----
+                // If the attribute's price is 0, set it to an (int) 0 so that follow-on checks
+                // using empty() will find that value 'empty'.
+                //
+                if ($new_attributes_price === '0.0000') {
+                    $new_attributes_price = 0;
+                }
             }
 
             // reverse negative values for display
@@ -540,10 +548,11 @@ while (!$products_options_names->EOF) {
 
 
         // default
-        // find default attribute if set for default dropdown
+        // find default attribute if set. Intended for dropdown's default
         if ($products_options->fields['attributes_default'] == '1') {
-            $selected_attribute = $products_options_value_id;
+            $selected_dropdown_attribute = $products_options_value_id;
         }
+        $selected_attribute = $selected_dropdown_attribute;
 
         $products_options->MoveNext();
         // end of inner while() loop

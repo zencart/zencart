@@ -7,7 +7,7 @@
  * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @copyright Portions Copyright 2017-2019 CowboyGeek.com
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2019 Jul 15 New in v1.5.7 $
+ * @version $Id: DrByte 2020 Aug 05 Modified in v1.5.7a $
  */
 
 class zcObserverNonCaptchaObserver extends base
@@ -102,6 +102,8 @@ class zcObserverNonCaptchaObserver extends base
         }
 
         if (empty($test_string)) return;
+
+        $test_string = str_ireplace([HTTP_SERVER, HTTPS_SERVER], '', $test_string);
 
         // inspect
         if(preg_match($reg_exUrl, $test_string)) {

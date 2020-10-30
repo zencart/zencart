@@ -4,7 +4,7 @@
  * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2020 May 17 Modified in v1.5.7 $
+ * @version $Id: lat9 2020 Aug 11 Modified in v1.5.7a $
  */
 if (!defined('IS_ADMIN_FLAG')) {
     die('Illegal Access');
@@ -97,6 +97,8 @@ if (isset($_POST['products_id'], $_POST['categories_id'])) {
         $sql_data_array['products_date_added'] = 'now()';
         $sql_data_array['products_date_available'] = (!empty($product->fields['products_date_available']) ? zen_db_input($product->fields['products_date_available']) : 'null');
 
+        $sql_data_array['master_categories_id'] = $categories_id;
+
         // Everything is set, stick it in the database
         zen_db_perform(TABLE_PRODUCTS, $sql_data_array);
 
@@ -117,12 +119,6 @@ if (isset($_POST['products_id'], $_POST['categories_id'])) {
 
         $db->Execute("INSERT INTO " . TABLE_PRODUCTS_TO_CATEGORIES . " (products_id, categories_id)
                       VALUES (" . $dup_products_id . ", " . $categories_id . ")");
-
-        // -----
-        // Notify that a copy of a "base" product has just been created, enabling an observer to duplicate
-        // additional product-related fields.
-        //
-        $zco_notifier->notify('NOTIFY_MODULES_COPY_TO_CONFIRM_DUPLICATE', compact('products_id', 'dup_products_id'));
 
 // FIX HERE
 /////////////////////////////////////////////////////////////////////////////////////////////

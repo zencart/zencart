@@ -5,7 +5,7 @@
  * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Scott C Wilson 2020 Apr 08 Modified in v1.5.7 $
+ * @version $Id: Scott C Wilson 2020 Oct 15 Modified in v1.5.7a $
  */
 // This should be first line of the script:
 $zco_notifier->notify('NOTIFY_MODULE_START_CREATE_ACCOUNT');
@@ -33,7 +33,7 @@ if (!defined('IS_ADMIN_FLAG')) {
 /**
  * Process form contents
  */
-if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
+if (isset($_POST['action']) && ($_POST['action'] == 'process') && !isset($login_page)) {
   $process = true;
   $antiSpam = !empty($_POST[$antiSpamFieldName]) ? 'spam' : '';
   if (!empty($_POST['firstname']) && preg_match('~https?://?~', $_POST['firstname'])) $antiSpam = 'spam';

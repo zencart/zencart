@@ -3,7 +3,7 @@
  * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2020 Jun 16 Modified in v1.5.7 $
+ * @version $Id: DrByte 2020 Sep 08 Modified in v1.5.7a $
  */
 require('includes/application_top.php');
 
@@ -171,8 +171,8 @@ if (!$lng_exists) {
         ?>
         <?php
         if ($_SESSION['language'] && $_GET['filename']) {
-          if (file_exists($file) && $file_array = @file($file)) {
-            $file_contents = implode('', $file_array);
+          if (file_exists($file)) {
+            $file_contents = file_get_contents($file);
 
             $file_writeable = true;
             if (!is_writeable($file)) {

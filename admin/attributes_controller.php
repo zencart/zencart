@@ -3,7 +3,7 @@
  * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2020 May 26 Modified in v1.5.7 $
+ * @version $Id: DrByte 2020 Sep 19 Modified in v1.5.7a $
  */
 require('includes/application_top.php');
 
@@ -722,7 +722,7 @@ function zen_js_option_values_list($selectedName, $fieldName)
     </style>
     <script>
       function popupWindow(url) {
-        window.open(url, 'popupWindow', 'toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=no,resizable=yes,copyhistory=no,width=600,height=460,screenX=150,screenY=150,top=150,left=150')
+        window.open(url, 'popupWindow', 'toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=no,resizable=yes,copyhistory=no,width=600,height=460,screenX=150,screenY=150,top=150,left=150,noreferrer')
       }
     </script>
   </head>

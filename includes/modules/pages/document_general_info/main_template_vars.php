@@ -5,7 +5,7 @@
  * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2020 May 20 Modified in v1.5.7 $
+ * @version $Id: DrByte 2020 Oct 22 Modified in v1.5.7a $
  */
 /*
  * Extracts and constructs the data to be used in the product-type template tpl_TYPEHANDLER_info_display.php
@@ -20,8 +20,8 @@
 
   $product_not_found = $product_info->EOF;
 
-  if (!defined('PRODUCT_THROWS_200_WHEN_DISABLED') || PRODUCT_THROWS_200_WHEN_DISABLED !== true) {
-      if (!$product_not_found && $product_info->fields['products_status'] != 1) {
+  if (!defined('DISABLED_PRODUCTS_TRIGGER_HTTP200') || DISABLED_PRODUCTS_TRIGGER_HTTP200 !== 'true') {
+    if (!$product_not_found && $product_info->fields['products_status'] != 1) {
       $product_not_found = true;
     }
   }

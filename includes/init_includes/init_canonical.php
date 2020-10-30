@@ -2,11 +2,10 @@
 /**
  * canonical link handling
  *
- * @package initSystem
- * @copyright Copyright 2003-2016 Zen Cart Development Team
+ * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: DrByte  Wed Dec 30 11:49:27 2015 -0500 Modified in v1.5.5 $
+ * @version $Id: DrByte 2020 Oct 06 Modified in v1.5.7a $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
@@ -31,6 +30,7 @@ $excludeParams[] = 'utm_content';
 $excludeParams[] = 'utm_campaign';
 $excludeParams[] = 'language';
 $excludeParams[] = 'number_of_uploads';
+if (isset($_GET['page']) && (!is_numeric($_GET['page']) || $_GET['page'] < 2)) $excludeParams[] = 'page';
 
 // The following are additional whitelisted params used for sanitizing the generated canonical URL (to prevent rogue params from getting added to canonical maliciously)
 $keepableParams = array('page', 'id', 'chapter', 'keyword', 'products_id', 'product_id', 'cPath', 'manufacturers_id', 'categories_id',
@@ -54,12 +54,6 @@ foreach($_GET as $key => $val) {
 
 $canonicalLink = '';
 switch (true) {
-/**
- * SSL Pages get no special treatment, since they don't usually require being indexed uniquely differently from non-SSL pages
- */
-  case ($request_type == 'SSL' && substr(HTTP_SERVER, 0, 5) != 'https'):
-    $canonicalLink = '';
-    break;
 /**
  * for products (esp those linked to multiple categories):
  */

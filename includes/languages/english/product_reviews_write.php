@@ -3,7 +3,7 @@
  * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Scott C Wilson 2020 Apr 10 Modified in v1.5.7 $
+ * @version $Id: DrByte 2020 Jul 29 Modified in v1.5.7a $
  */
 
 define('NAVBAR_TITLE', 'Reviews');
@@ -21,3 +21,5 @@ define('EMAIL_REVIEW_PENDING_SUBJECT','Product Review Pending Approval: %s');
 define('EMAIL_PRODUCT_REVIEW_CONTENT_INTRO','A Product Review for %s has been submitted and requires your approval.'."\n\n");
 define('EMAIL_PRODUCT_REVIEW_CONTENT_DETAILS','Review Details: %s');
 
+define('TEXT_REVIEW_SUBMITTED_FOR_REVIEW', 'Thank you, your post has been submitted for review.');
+define('TEXT_REVIEW_SUBMITTED', 'Thank you for submitting your review!');

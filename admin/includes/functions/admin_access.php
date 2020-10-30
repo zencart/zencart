@@ -3,7 +3,7 @@
  * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2020 Jun 09 Modified in v1.5.7 $
+ * @version $Id: proseLA 2020 Jul 06 Modified in v1.5.7a $
  */
 
 if (!defined('ADMIN_PASSWORD_MIN_LENGTH')) define('ADMIN_PASSWORD_MIN_LENGTH', 7);
@@ -36,7 +36,7 @@ function check_page($page, $params) {
   $result = $db->Execute($sql);
   $retVal = FALSE;
   while (!$result->EOF) {
-    if ($result->fields['main_page'] != '' && defined($result->fields['main_page']) && (constant($result->fields['main_page']) == $page || constant($result->fields['main_page']) . '.php' == $page) && $result->fields['page_params'] == $page_params) {
+    if ($result->fields['main_page'] != '' && defined($result->fields['main_page']) && basename(constant($result->fields['main_page']), '.php') == $page && $result->fields['page_params'] == $page_params) {
       $retVal = TRUE;
     }
     $result->MoveNext();
@@ -966,8 +966,8 @@ function zen_admin_authorized_to_place_order()
         if (count($profile_list) != 0) {
             $profile_clause = ' AND admin_profile IN (' . implode(',', $profile_list) . ')';
             $emp_sql =
-                "SELECT admin_profile, admin_pass 
-                   FROM " . TABLE_ADMIN . " 
+                "SELECT admin_profile, admin_pass
+                   FROM " . TABLE_ADMIN . "
                   WHERE admin_id = :adminId:$profile_clause
                   LIMIT 1";
             $emp_sql = $db->bindVars($emp_sql, ':adminId:', $_SESSION['admin_id'], 'integer');

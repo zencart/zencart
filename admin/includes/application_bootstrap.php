@@ -3,7 +3,7 @@
  * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2020 Jun 16 Modified in v1.5.7 $
+ * @version $Id: lat9 2020 Oct 28 Modified in v1.5.7a $
  */
 
 use Zencart\FileSystem\FileSystem;
@@ -39,6 +39,22 @@ if (!defined('__DIR__')) define('__DIR__', dirname(__FILE__));
 if (!defined('DIR_FS_ADMIN')) define('DIR_FS_ADMIN', preg_replace('#/includes/$#', '/', realpath(__DIR__ . '/../') . '/'));
 
 /**
+ * set the level of error reporting
+ *
+ * Note STRICT_ERROR_REPORTING should never be set to true on a production site. <br />
+ * It is mainly there to show php warnings during testing/bug fixing phases.<br />
+ * note for strict error reporting we also turn on show_errors as this may be disabled<br />
+ * in php.ini. Otherwise we respect the php.ini setting
+ *
+ */
+if (defined('STRICT_ERROR_REPORTING') && STRICT_ERROR_REPORTING == true) {
+    @ini_set('display_errors', TRUE);
+    error_reporting(E_ALL);
+} else {
+    error_reporting(0);
+}
+
+/**
  * Set the local configuration parameters - mainly for developers
  */
 if (file_exists('includes/local/configure.php')) {
@@ -56,21 +72,7 @@ if (file_exists('includes/configure.php')) {
      */
     include('includes/configure.php');
 }
-/**
- * set the level of error reporting
- *
- * Note STRICT_ERROR_REPORTING should never be set to true on a production site. <br />
- * It is mainly there to show php warnings during testing/bug fixing phases.<br />
- * note for strict error reporting we also turn on show_errors as this may be disabled<br />
- * in php.ini. Otherwise we respect the php.ini setting
- *
- */
-if (defined('STRICT_ERROR_REPORTING') && STRICT_ERROR_REPORTING == true) {
-    @ini_set('display_errors', TRUE);
-    error_reporting(E_ALL);
-} else {
-    error_reporting(0);
-}
+
 if (!defined('DIR_FS_CATALOG') || !is_dir(DIR_FS_CATALOG.'/includes/classes') || !defined('DB_TYPE') || DB_TYPE == '') {
     if (file_exists('../includes/templates/template_default/templates/tpl_zc_install_suggested_default.php')) {
         require('../includes/templates/template_default/templates/tpl_zc_install_suggested_default.php');
@@ -158,10 +160,12 @@ require 'includes/init_includes/init_database.php';
 
 
 $pluginManager = new PluginManager($db);
+$pluginManager->inspectAndUpdate();
 $installedPlugins = $pluginManager->getInstalledPlugins();
 
 $fs = FileSystem::getInstance();
 $fs->setInstalledPlugins($installedPlugins);
+$fs->loadFilesFromPluginsDirectory($installedPlugins, 'admin/includes/extra_configures', '~^[^\._].*\.php$~i');
 $fs->loadFilesFromPluginsDirectory($installedPlugins, 'admin/includes/extra_datafiles', '~^[^\._].*\.php$~i');
 
 foreach ($installedPlugins as $plugin) {

@@ -3,7 +3,7 @@
  * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2020 May 19 Modified in v1.5.7 $
+ * @version $Id: mc12345678 2020 Sep 17 Modified in v1.5.7a $
  */
 if (!defined('IS_ADMIN_FLAG')) {
     die('Illegal Access');
@@ -76,8 +76,8 @@ $version_ini_index_sysinfo = '';
 if (!isset($version_check_sysinfo)) $version_check_sysinfo = false;
 if (!isset($version_check_index)) $version_check_index = false;
 
-$file = DIR_FS_ADMIN . 'includes/local/skip_version_check.ini';
-if (file_exists($file) && $lines = @file($file)) {
+$skip_file = DIR_FS_ADMIN . 'includes/local/skip_version_check.ini';
+if (file_exists($skip_file) && $lines = @file($skip_file)) {
     foreach ($lines as $line) {
         if (substr(trim($line), 0, 14) == 'version_check=') $version_from_ini = substr(trim(strtolower(str_replace('version_check=', '', $line))), 0, 3);
         if (substr(trim($line), 0, 41) == 'display_update_link_only_on_sysinfo_page=') $version_ini_sysinfo = trim(strtolower(str_replace('display_update_link_only_on_sysinfo_page=', '', $line)));
@@ -132,7 +132,7 @@ if (!$doVersionCheck || $versionCheckError) {
         $new_version = ERROR_CONTACTING_PROJECT_VERSION_SERVER . '<br>';
     }
     // display the "check for updated version" button.  The button link should be the current page and all params
-    $url = zen_href_link(basename($PHP_SELF), zen_get_all_get_params(array('vcheck'), 'SSL'));
+    $url = zen_href_link(basename($PHP_SELF), zen_get_all_get_params(array('vcheck')), 'SSL');
     $url .= (strpos($url, '?') !== false ? '&amp;' : '?') . 'vcheck=yes';
     if ($zv_db_patch_ok == true || $version_check_sysinfo == true) $new_version .= '<a href="' . $url . '" role="button" class="btn btn-link">' . TEXT_VERSION_CHECK_BUTTON . '</a>';
 }
