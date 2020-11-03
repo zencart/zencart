@@ -179,7 +179,6 @@ return [
 'TEXT_FORM_VALIDATION_CATALOG_HTTPS_URL' => 'A URL is required here, even if you have temporarily opted not to enable SSL yet. Try using your normal domain name.',
 'TEXT_NAVBAR_INSTALLATION_INSTRUCTIONS' => 'Installation Instructions',
 'TEXT_NAVBAR_FORUM_LINK' => 'Forum',
-'TEXT_NAVBAR_WIKI_LINK' => 'Wiki',
 'TEXT_HELP_TITLE_HTACCESSSUPPORT' => '.htaccess support',
 'TEXT_HELP_CONTENT_HTACCESSSUPPORT' => 'There appears to be a problem with support for ".htaccess" files.<br>Sensitive files and folders on your site, that should normally be blocked by security rules in the built-in ".htaccess" files that come with Zen Cart, are currently accessible.<br><br>Possible causes:
 <ul style="list-style-type:square"><li>You may not be using Apache as your Web Server (".htaccess" files are unique to the Apache Web Server), or,</li><li>Support for ".htaccess" is disabled or misconfigured, or,</li><li>The ".htaccess" files that come with Zen Cart have not been uploaded to your site.<br><strong><i>Files starting with ".", such as ".htaccess" files, are usually treated as "hidden" files and your FTP program may have failed to upload these if you have turned off the display and/or transfer of such hidden files in its settings.</i></strong></li></ul><br>
