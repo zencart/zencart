@@ -24,8 +24,6 @@ class newsletter {
   }
 
   function choose_audience() {
-    global $_GET;
-
     $choose_audience_string = zen_draw_form('audience', FILENAME_NEWSLETTERS, 'page=' . $_GET['page'] . '&nID=' . $_GET['nID'] . '&action=confirm', 'post', 'onsubmit="return check_form(audience);" class="form-horizontal"') . PHP_EOL;
     $choose_audience_string .= '<div class="form-group">' . PHP_EOL;
     $choose_audience_string .= zen_draw_label(TEXT_PLEASE_SELECT_AUDIENCE, 'audience_selected', 'class="control-label col-sm-3"') . PHP_EOL;
