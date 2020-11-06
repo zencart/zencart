@@ -85,9 +85,11 @@ if ($credit_covers) {
 
 //@debug echo ($credit_covers == true) ? 'TRUE' : 'FALSE';
 
-$payment_modules = new payment($_SESSION['payment']);
-$payment_modules->update_status();
-if ( ($_SESSION['payment'] == '' || !is_object(${$_SESSION['payment']}) ) && $credit_covers === FALSE) {
+if (!empty($_SESSION['payment'])) {
+    $payment_modules = new payment($_SESSION['payment']);
+    $payment_modules->update_status();
+}
+if ( (empty($_SESSION['payment']) || !is_object(${$_SESSION['payment']}) ) && $credit_covers === FALSE) {
   $messageStack->add_session('checkout_payment', ERROR_NO_PAYMENT_MODULE_SELECTED, 'error');
 }
 
