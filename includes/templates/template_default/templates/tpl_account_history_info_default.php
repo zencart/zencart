@@ -25,7 +25,7 @@
         <th scope="col" id="myAccountQuantity"><?php echo HEADING_QUANTITY; ?></th>
         <th scope="col" id="myAccountProducts"><?php echo HEADING_PRODUCTS; ?></th>
 <?php
-  if (isset($order->info['tax_groups']) && count($order->info['tax_groups']) > 1) {
+  if (!empty($order->info['tax_groups'])) {
 ?>
         <th scope="col" id="myAccountTax"><?php echo HEADING_TAX; ?></th>
 <?php
@@ -52,7 +52,7 @@
 ?>
         </td>
 <?php
-    if (isset($order->info['tax_groups']) && count($order->info['tax_groups']) > 1) {
+    if (!empty($order->info['tax_groups'])) {
 ?>
         <td class="accountTaxDisplay"><?php echo zen_display_tax_value($op['tax']) . '%' ?></td>
 <?php
