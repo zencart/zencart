@@ -115,7 +115,7 @@ if ($num_products_count > 0) {
     if ($product_listing_layout_style == 'rows') {
         $rows++;
 
-        if ((($rows - $extra_row) / 2) == floor(($rows - $extra_row) / 2)) {
+        if (($rows - $extra_row) % 2 == 0) {
             $list_box_contents[$rows] = array('params' => 'class="productListing-even"');
         } else {
             $list_box_contents[$rows] = array('params' => 'class="productListing-odd"');
