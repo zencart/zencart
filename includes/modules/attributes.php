@@ -474,6 +474,8 @@ while (!$products_options_names->EOF) {
                     $tmp_html = '<input type="text" name="id[' . TEXT_PREFIX . $products_options_id . ']" size="' . $products_options_names->fields['products_options_size'] . '" maxlength="' . $products_options_names->fields['products_options_length'] . '" value="' . htmlspecialchars($tmp_value, ENT_COMPAT, CHARSET, true) . '" id="' . $inputFieldId . '"'  . $data_properties . $field_disabled . '>  ';
                 }
                 $tmp_html .= $products_options_details;
+                
+               if (defined('ATTRIBUTES_ENABLED_TEXT_PRICES') && ATTRIBUTES_ENABLED_TEXT_PRICES == 'true') { // test ATTRIBUTES_ENABLED_TEXT_PRICES
                 $tmp_word_cnt_string = '';
                 // calculate word charges
                 $tmp_word_cnt = 0;
@@ -501,6 +503,7 @@ while (!$products_options_names->EOF) {
                     $tmp_letters_price = $currencies->display_price($tmp_letters_price, zen_get_tax_rate($product_info->fields['products_tax_class_id']));
                     $tmp_html .= '<br>' . TEXT_CHARGES_LETTERS . ' ' . $tmp_letters_cnt . ' = ' . $tmp_letters_price;
                 }
+               } // test ATTRIBUTES_ENABLED_TEXT_PRICES
                 $tmp_html .= "\n";
             }
         }
