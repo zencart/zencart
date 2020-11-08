@@ -134,8 +134,8 @@ class ot_coupon {
             'id' => $this->code,
             'module' => $this->title,
             'redeem_instructions' => MODULE_ORDER_TOTAL_COUPON_REDEEM_INSTRUCTIONS .
-                MODULE_ORDER_TOTAL_COUPON_REMOVE_INSTRUCTIONS .
-                '<p>' . MODULE_ORDER_TOTAL_COUPON_TEXT_CURRENT_CODE . $couponLink . '</p><br />',
+                (!empty($coupon_code) ? MODULE_ORDER_TOTAL_COUPON_REMOVE_INSTRUCTIONS : '') .
+                (!empty($coupon_code) ? '<p>' . MODULE_ORDER_TOTAL_COUPON_TEXT_CURRENT_CODE . $couponLink . '</p><br>' : ''),
             'fields' => array(
                 array(
                     'title' => MODULE_ORDER_TOTAL_COUPON_TEXT_ENTER_CODE,
