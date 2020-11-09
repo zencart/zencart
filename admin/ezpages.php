@@ -276,7 +276,7 @@ if (zen_not_null($action)) {
           $ezID = (int)$_GET['ezID'];
 
           $page_query = "SELECT e.*, ec.*
-                         FROM " . TABLE_EZPAGES . " e,
+                         FROM " . TABLE_EZPAGES . " e
                          INNER JOIN " . TABLE_EZPAGES_CONTENT . " ec USING (pages_id)
                          WHERE e.pages_id = " . (int)$_GET['ezID'] . "
                          AND ec.languages_id = " . (int)$_SESSION['languages_id'];
