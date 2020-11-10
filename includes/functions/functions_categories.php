@@ -1050,7 +1050,7 @@ function zen_get_target_categories_products($parent_id = 0, $spacing = '', $cate
             $products = $db->Execute($sql);
 
             foreach ($products as $product) {
-                if ($product['products_id'] !== $products_filter) {
+                if ((int)$product['products_id'] !== $products_filter) {
                     $category_product_tree_array[] = [
                         'id' => $product['products_id'],
                         'text' => $spacing .
