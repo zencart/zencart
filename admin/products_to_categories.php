@@ -120,12 +120,12 @@ if (zen_not_null($action)) {
 
                 $product_categories = [];
                 foreach (zen_get_linked_categories_for_product($products_filter, [$source_product_master_categories_id, $target_product_master_categories_id]) as $row) {
-                    $product_categories[] = (int)$row['categories_id'];
+                    $product_categories[] = (int)$row;
                 }
 
                 $target_categories = [];
                 foreach (zen_get_linked_categories_for_product($target_product_id, [$source_product_master_categories_id, $target_product_master_categories_id]) as $row) {
-                    $target_categories[] = (int)$row['categories_id'];
+                    $target_categories[] = (int)$row;
                 }
 
                 $target_categories_update = [];
