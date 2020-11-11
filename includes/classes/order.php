@@ -84,7 +84,7 @@ class order extends base {
                               'text' => $totals->fields['text'],
                               'class' => $totals->fields['class'],
                               'value' => $totals->fields['value'],
-			     );
+      );
       $totals->MoveNext();
     }
 
@@ -109,6 +109,7 @@ class order extends base {
                         'last_modified' => $order->fields['last_modified'],
                         'ip_address' => $order->fields['ip_address'],
                         'language_code' => $order->fields['language_code'],
+                        'order_weight' => $order->fields['order_weight'],
                         );
 
     $this->customer = array('id' => $order->fields['customers_id'],
@@ -759,6 +760,7 @@ class order extends base {
                             'currency_value' => $this->info['currency_value'],
                             'ip_address' => $_SESSION['customers_ip_address'] . ' - ' . $_SERVER['REMOTE_ADDR'],
                             'language_code' => $_SESSION['languages_code'],
+                            'order_weight' => $_SESSION['cart']->weight,
                             );
 
     zen_db_perform(TABLE_ORDERS, $sql_data_array);
