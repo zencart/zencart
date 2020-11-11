@@ -543,13 +543,10 @@ if (zen_not_null($action)) {
               </tbody>
             </table>
             <div class="row">
-                <div class="fa-stack fa-fw">
-                    <i class="fa fa-circle fa-stack-2x txt-status-on"></i>
-                    <i class="fa fa-pencil fa-stack-1x fa-inverse"></i>
-                </div>
               <div class="col-sm-6"><?php echo $specials_split->display_count($specials_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, $_GET['page'], TEXT_DISPLAY_NUMBER_OF_SPECIALS); ?></div>
               <div class="col-sm-6 text-right"><?php echo $specials_split->display_links($specials_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, MAX_DISPLAY_PAGE_LINKS, $_GET['page'], zen_get_all_get_params(['page', 'sID'])); ?></div>
             </div>
+          </div>
             <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3 configurationColumnRight">
                 <?php
                 $heading = [];
