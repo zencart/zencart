@@ -433,7 +433,7 @@ if (zen_not_null($action) && $order_exists == true) {
       }
       ?>
   </head>
-  <body onLoad = "init()">
+  <body>
     <!-- header //-->
     <?php
     require(DIR_WS_INCLUDES . 'header.php');

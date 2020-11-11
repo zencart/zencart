@@ -70,7 +70,7 @@ if (zen_not_null($action)) {
         include($editor_handler);
     } ?>
   </head>
-  <body onLoad="init()">
+  <body>
     <!-- header //-->
     <?php require(DIR_WS_INCLUDES . 'header.php'); ?>
     <!-- header_eof //-->
