@@ -614,12 +614,6 @@ if (zen_not_null($action)) {
                     $box = new box();
                     echo $box->infoBox($heading, $contents);
                 }
-                break;
-            }
-            if ((zen_not_null($heading)) && (zen_not_null($contents))) {
-              $box = new box();
-              echo $box->infoBox($heading, $contents);
-            }
             ?>
           </div>
         </div>
