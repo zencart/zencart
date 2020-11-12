@@ -32,6 +32,7 @@
         TABLE_PRODUCTS_ATTRIBUTES . " pa " . "
         WHERE p.products_id= pa.products_id"
         );
+        $product_id_updated = '';
         while (!$all_products_attributes->EOF)
         {
           $product_id_updated .= ' - ' . $all_products_attributes->fields['products_id'] . ':' . $all_products_attributes->fields['products_attributes_id'];
