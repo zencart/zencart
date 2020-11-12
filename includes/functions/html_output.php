@@ -6,7 +6,7 @@
  * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2020 Oct 29 Modified in v1.5.7a $
+ * @version $Id: DrByte 2020 Oct 29 Modified in v1.5.8 $
  */
 
 /*
@@ -18,7 +18,7 @@
     $zco_notifier->notify('NOTIFY_SEFU_INTERCEPT', array(), $link, $page, $parameters, $connection, $add_session_id, $static, $use_dir_ws_catalog);
     if($link !== null) return $link;
 
-    if (!zen_not_null($page)) {
+    if (empty($page)) {
       trigger_error("zen_href_link($page, $parameters, $connection), unable to determine the page link.",
             E_USER_ERROR);
       die('</td></tr></table></td></tr></table><br /><br /><strong class="note">Error!<br /><br />Unable to determine the page link!</strong><br /><br /><!--' . $page . '<br />' . $parameters . ' -->');
@@ -96,6 +96,7 @@
     while (strstr($link, '&amp;&amp;')) $link = str_replace('&amp;&amp;', '&amp;', $link);
 
     $link = preg_replace('/&/', '&amp;', $link);
+    $link = preg_replace('~//$~', '/', $link);
     return $link;
   }
 
