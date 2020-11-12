@@ -26,7 +26,7 @@
 
     if ($connection == 'NONSSL') {
       $link = HTTP_SERVER;
-    } elseif ($connection == 'SSL') {
+    } elseif ($connection == 'SSL' || $connection == '') {
       if (ENABLE_SSL == 'true') {
         $link = HTTPS_SERVER ;
       } else {
