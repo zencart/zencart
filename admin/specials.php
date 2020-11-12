@@ -368,8 +368,8 @@ if (zen_not_null($action)) {
           </div>
             <?php echo '</form>'; ?>
             <hr/>
-            <?php 
-                   echo TEXT_SPECIALS_PRICE_NOTES_HEAD; 
+            <?php
+                   echo TEXT_SPECIALS_PRICE_NOTES_HEAD;
                    echo '<ul>'; 
                    echo TEXT_SPECIALS_PRICE_NOTES_BODY; 
                    echo '<li>' . TEXT_INFO_PRE_ADD_INTRO . '</li>'; 
@@ -513,18 +513,18 @@ if (zen_not_null($action)) {
                           </button>
                           <?php echo zen_draw_hidden_field('flag', '1'); ?>
                         <?php } ?>
-                        <?php echo zen_draw_hidden_field('id', $special['featured_id']); ?>
+                        <?php echo zen_draw_hidden_field('id', $special['products_id']); ?>
                         <?php echo '</form>'; ?>
                       <?php } ?>
                     </td>
                     <td class="dataTableContent text-right">
-                      <a href="<?php echo zen_href_link(FILENAME_SPECIALS, ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . (isset($_GET['search']) ? 'search=' . $_GET['search'] . '&' : '') . 'action=edit' . '&sID=' . $special['featured_id']); ?>" title="<?php echo ICON_EDIT; ?>" role="button">
+                      <a href="<?php echo zen_href_link(FILENAME_SPECIALS, ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . (isset($_GET['search']) ? 'search=' . $_GET['search'] . '&' : '') . 'action=edit' . '&sID=' . $special['products_id']); ?>" title="<?php echo ICON_EDIT; ?>" role="button">
                         <div class="fa-stack fa-fw">
                           <i class="fa fa-circle fa-stack-2x txt-status-on"></i>
                           <i class="fa fa-pencil fa-stack-1x fa-inverse"></i>
                         </div>
                       </a>
-                      <a href="<?php echo zen_href_link(FILENAME_SPECIALS, ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . (isset($_GET['search']) ? 'search=' . $_GET['search'] . '&' : '') . 'action=delete' . '&sID=' . $special['featured_id']); ?>" title="<?php echo ICON_DELETE; ?>" role="button">
+                      <a href="<?php echo zen_href_link(FILENAME_SPECIALS, ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . (isset($_GET['search']) ? 'search=' . $_GET['search'] . '&' : '') . 'action=delete' . '&sID=' . $special['products_id']); ?>" title="<?php echo ICON_DELETE; ?>" role="button">
                         <div class="fa-stack fa-fw">
                           <i class="fa fa-circle fa-stack-2x txt-status-off"></i>
                           <i class="fa fa-trash fa-stack-1x fa-inverse"></i>
@@ -549,6 +549,7 @@ if (zen_not_null($action)) {
                 </div>
               <div class="col-sm-6"><?php echo $specials_split->display_count($specials_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, $_GET['page'], TEXT_DISPLAY_NUMBER_OF_SPECIALS); ?></div>
               <div class="col-sm-6 text-right"><?php echo $specials_split->display_links($specials_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, MAX_DISPLAY_PAGE_LINKS, $_GET['page'], zen_get_all_get_params(['page', 'sID'])); ?></div>
+            </div>
             </div>
             <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3 configurationColumnRight">
                 <?php
@@ -614,12 +615,6 @@ if (zen_not_null($action)) {
                     $box = new box();
                     echo $box->infoBox($heading, $contents);
                 }
-                break;
-            }
-            if ((zen_not_null($heading)) && (zen_not_null($contents))) {
-              $box = new box();
-              echo $box->infoBox($heading, $contents);
-            }
             ?>
           </div>
         </div>
