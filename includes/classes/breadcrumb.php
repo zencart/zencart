@@ -32,12 +32,12 @@ class breadcrumb extends base
 
     function reset()
     {
-        $this->_trail = array();
+        $this->_trail = [];
     }
 
     function add($title, $link = '')
     {
-        $this->_trail[] = array('title' => $title, 'link' => $link);
+        $this->_trail[] = ['title' => $title, 'link' => $link];
     }
 
     function trail($separator = '&nbsp;&nbsp;', $prefix = '', $suffix = '')
@@ -45,7 +45,7 @@ class breadcrumb extends base
         $trail_string = '';
 
         for ($i = 0, $n = count($this->_trail); $i < $n; $i++) {
-//    echo 'breadcrumb ' . $i . ' of ' . $n . ': ' . $this->_trail[$i]['title'] . '<br />';
+        // echo 'breadcrumb ' . $i . ' of ' . $n . ': ' . $this->_trail[$i]['title'] . '<br />';
             $skip_link = false;
             if ($i == ($n - 1) && DISABLE_BREADCRUMB_LINKS_ON_LAST_ITEM == 'true') {
                 $skip_link = true;
