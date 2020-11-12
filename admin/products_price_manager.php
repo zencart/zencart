@@ -278,7 +278,7 @@ if (!empty($action)) {
 //  }
                 ?>
               </div>
-              <div class="col-xs-8 col-sm-8 col-md-6 col-lg-4 text-center"><?php echo zen_draw_products_pull_down('products_filter', 'class="form-control"', '', true, $_GET['products_filter'], true, true); ?></div>
+              <div class="col-xs-8 col-sm-8 col-md-6 col-lg-4 text-center"><?php echo zen_draw_pulldown_products('products_filter', 'class="form-control"', '', true, $_GET['products_filter'], true, true); ?></div>
               <div class="col-xs-2 col-sm-3 col-md-5 col-lg-7">
                 <button type="submit" class="btn btn-primary"><?php echo IMAGE_DISPLAY; ?></button>
               </div>

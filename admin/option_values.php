@@ -216,7 +216,7 @@ switch ($_GET['action']) {
         <div class="row">
             <?php echo zen_draw_form('update_product_attributes', FILENAME_PRODUCTS_OPTIONS_VALUES, 'action=update_product', 'post', 'class="form-horizontal"'); ?>
             <?php echo zen_draw_hidden_field('products_update_id'); ?>
-          <div class="col-sm-6"><?php echo zen_draw_products_pull_down_attributes('products_update_id', 'class="form-control"'); ?></div>
+          <div class="col-sm-6"><?php echo zen_draw_pulldown_products_having_attributes('products_update_id', 'class="form-control"'); ?></div>
           <div class="col-sm-2">
             <button type="submit" class="btn btn-warning"><?php echo IMAGE_UPDATE; ?></button>
           </div>
@@ -235,7 +235,7 @@ switch ($_GET['action']) {
         <div class="row">
             <?php echo zen_draw_form('update_categories_attributes', FILENAME_PRODUCTS_OPTIONS_VALUES, 'action=update_categories_attributes', 'post', 'class="form-horizontal"'); ?>
             <?php echo zen_draw_hidden_field('categories_update_id'); ?>
-          <div class="col-sm-3"><?php echo zen_draw_products_pull_down_categories_attributes('categories_update_id', 'class="form-control"'); ?></div>
+          <div class="col-sm-3"><?php echo zen_draw_pulldown_categories_having_products_with_attributes('categories_update_id', 'class="form-control"'); ?></div>
           <div class="col-sm-2"><button type="submit" class="btn btn-warning"><?php echo IMAGE_UPDATE; ?></button></div>
           <?php echo '</form>'; ?>
         </div>
