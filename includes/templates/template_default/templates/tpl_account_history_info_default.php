@@ -1,20 +1,17 @@
 <?php
 /**
- * Page Template
- *
- * Loaded automatically by index.php?main_page=account_edit.<br />
- * Displays information related to a single specific order
+ * Displays information related to a single specific order, both for checkout_success and in account_history_info
  *
  * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2020 May 07 Modified in v1.5.7 $
+ * @version $Id: DrByte 2020 May 07 Modified in v1.5.8 $
  */
 ?>
 <div class="centerColumn" id="accountHistInfo">
 
 <div class="forward"><?php echo HEADING_ORDER_DATE . ' ' . zen_date_long($order->info['date_purchased']); ?></div>
-<br class="clearBoth" />
+<br class="clearBoth">
 
 <?php if ($current_page != FILENAME_CHECKOUT_SUCCESS) { ?>
 <h2 id="orderHistoryDetailedOrder"><?php echo HEADING_TITLE . ORDER_HEADING_DIVIDER . sprintf(HEADING_ORDER_NUMBER, zen_output_string_protected($_GET['order_id'])); ?></h2>
@@ -37,12 +34,12 @@
   foreach($order->products as $op) {
   ?>
     <tr>
-        <td class="accountQuantityDisplay"><?php echo  $op['qty'] . QUANTITY_SUFFIX; ?></td>
-        <td class="accountProductDisplay"><?php 
-        
-            echo  $op['name'];
+        <td class="accountQuantityDisplay"><?php echo $op['qty'] . QUANTITY_SUFFIX; ?></td>
+        <td class="accountProductDisplay"><?php
 
-    if ( (isset($op['attributes'])) && (!empty($op['attributes'])) ) {
+            echo $op['name'];
+
+    if (isset($op['attributes']) && !empty($op['attributes'])) {
       echo '<ul class="orderAttribsList">';
       foreach($op['attributes'] as $attr) {
         echo '<li>' . $attr['option'] . TEXT_OPTION_DIVIDER . nl2br(zen_output_string_protected($attr['value'])) . '</li>';
@@ -77,7 +74,7 @@
 ?>
      <div class="amount larger forward"><?php echo $ot['text'] ?></div>
      <div class="lineTitle larger forward"><?php echo $ot['title'] ?></div>
-<br class="clearBoth" />
+<br class="clearBoth">
 <?php
   }
 ?>
@@ -162,5 +159,5 @@ if (!empty($order->statuses)) {
 <h4><?php echo HEADING_PAYMENT_METHOD; ?></h4>
 <div><?php echo $order->info['payment_method']; ?></div>
 </div>
-<br class="clearBoth" />
+<br class="clearBoth">
 </div>
