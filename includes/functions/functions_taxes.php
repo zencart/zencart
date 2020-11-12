@@ -72,7 +72,7 @@ function zen_get_tax_rate($class_id, $country_id = -1, $zone_id = -1)
         return ($tax_multiplier - 1.0) * 100;
     }
 
-    return 1;
+    return 0;
 }
 
 /**
