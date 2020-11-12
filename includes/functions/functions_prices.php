@@ -593,7 +593,7 @@
     global $discount_type_id, $sale_maker_discount;
 
     // no charge
-    if ($attributes_id > 0 and $attributes_amount == 0) {
+    if (!empty($attributes_id) && empty($attributes_amount)) {
       return 0;
     }
 
