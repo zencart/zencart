@@ -76,6 +76,25 @@ class breadcrumb extends base
         return $this->_trail[$trail_size - 1]['title'];
     }
 
+    function removeLast()
+    {
+        $trail_size = count($this->_trail);
+        unset($this->_trail[$trail_size - 1]);
+    }
+
+    function replaceLast($title = null, $link = null)
+    {
+        if ($title === null && $link === null) return $this->removeLast();
+
+        $trail_size = count($this->_trail);
+        if ($title !== null) {
+            $this->_trail[$trail_size - 1]['title'] = $title;
+        }
+        if ($link !== null) {
+            $this->_trail[$trail_size - 1]['link'] = $link;
+        }
+    }
+
     function isEmpty()
     {
         return empty($this->_trail);
