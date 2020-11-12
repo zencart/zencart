@@ -513,18 +513,18 @@ if (zen_not_null($action)) {
                           </button>
                           <?php echo zen_draw_hidden_field('flag', '1'); ?>
                         <?php } ?>
-                        <?php echo zen_draw_hidden_field('id', $special['products_id']); ?>
+                        <?php echo zen_draw_hidden_field('id', $special['specials_id']); ?>
                         <?php echo '</form>'; ?>
                       <?php } ?>
                     </td>
                     <td class="dataTableContent text-right">
-                      <a href="<?php echo zen_href_link(FILENAME_SPECIALS, ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . (isset($_GET['search']) ? 'search=' . $_GET['search'] . '&' : '') . 'action=edit' . '&sID=' . $special['products_id']); ?>" title="<?php echo ICON_EDIT; ?>" role="button">
+                      <a href="<?php echo zen_href_link(FILENAME_SPECIALS, ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . (isset($_GET['search']) ? 'search=' . $_GET['search'] . '&' : '') . 'action=edit' . '&sID=' . $special['specials_id']); ?>" title="<?php echo ICON_EDIT; ?>" role="button">
                         <div class="fa-stack fa-fw">
                           <i class="fa fa-circle fa-stack-2x txt-status-on"></i>
                           <i class="fa fa-pencil fa-stack-1x fa-inverse"></i>
                         </div>
                       </a>
-                      <a href="<?php echo zen_href_link(FILENAME_SPECIALS, ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . (isset($_GET['search']) ? 'search=' . $_GET['search'] . '&' : '') . 'action=delete' . '&sID=' . $special['products_id']); ?>" title="<?php echo ICON_DELETE; ?>" role="button">
+                      <a href="<?php echo zen_href_link(FILENAME_SPECIALS, ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . (isset($_GET['search']) ? 'search=' . $_GET['search'] . '&' : '') . 'action=delete' . '&sID=' . $special['specials_id']); ?>" title="<?php echo ICON_DELETE; ?>" role="button">
                         <div class="fa-stack fa-fw">
                           <i class="fa fa-circle fa-stack-2x txt-status-off"></i>
                           <i class="fa fa-trash fa-stack-1x fa-inverse"></i>
