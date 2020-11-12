@@ -24,7 +24,7 @@ if (isset($_GET['download_reset_on'])) {
 if (isset($_GET['download_reset_off'])) {
   $_GET['download_reset_off'] = (int)$_GET['download_reset_off'];
 }
-if (!isset($_GET['status'])) $_GET['status'] = '';
+if (!isset($_GET['statusFilterSelect'])) $_GET['statusFilterSelect'] = '';
 if (!isset($_GET['list_order'])) $_GET['list_order'] = '';
 if (!isset($_GET['page'])) $_GET['page'] = '';
 
@@ -233,7 +233,7 @@ if (zen_not_null($action) && $order_exists == true) {
       $oID = zen_db_prepare_input($_GET['oID']);
       $comments = !empty($_POST['comments']) ? zen_db_prepare_input($_POST['comments']) : '';
       $admin_language = zen_db_prepare_input(isset($_POST['admin_language']) ? $_POST['admin_language'] : $_SESSION['languages_code']);
-      $status = (int)$_POST['status'];
+      $status = (int)$_POST['statusUpdateSelect'];
       if ($status < 1) {
          break;
       }
@@ -496,9 +496,9 @@ if (zen_not_null($action) && $order_exists == true) {
             </div>
             <div class="form-group col-xs-4 col-sm-3 col-md-3 col-lg-3">
                 <?php
-                echo zen_draw_form('status', FILENAME_ORDERS, '', 'get', '', true);
-                echo zen_draw_label(HEADING_TITLE_STATUS, 'selectstatus', 'class="sr-only"');
-                echo zen_draw_order_status_dropdown('status', (int)$_GET['status'], array('id' => '', 'text' => TEXT_ALL_ORDERS), 'class="form-control" onChange="this.form.submit();" id="selectstatus"');
+                echo zen_draw_form('statusFilterForm', FILENAME_ORDERS, '', 'get', '', true);
+                echo zen_draw_label(HEADING_TITLE_STATUS, 'statusFilterSelect', 'class="sr-only"');
+                echo zen_draw_order_status_dropdown('statusFilterSelect', (int)$_GET['statusFilterSelect'], array('id' => '', 'text' => TEXT_ALL_ORDERS), 'class="form-control" onChange="this.form.submit();" id="statusFilterSelect"');
                 echo '</form>';
                 ?>
             </div>
@@ -976,7 +976,7 @@ if (zen_not_null($action) && $order_exists == true) {
         <div class="row noprint"><?php echo zen_draw_separator('pixel_trans.gif', '1', '5'); ?></div>
         <div class="row noprint">
           <div class="formArea">
-              <?php echo zen_draw_form('statusUpdate', FILENAME_ORDERS, zen_get_all_get_params(array('action', 'language')) . 'action=update_order&language=' . $order->info['language_code'], 'post', 'class="form-horizontal"', true);
+              <?php echo zen_draw_form('statusUpdateForm', FILENAME_ORDERS, zen_get_all_get_params(array('action', 'language')) . 'action=update_order&language=' . $order->info['language_code'], 'post', 'class="form-horizontal"', true);
                echo zen_draw_hidden_field('camefrom', 'orderEdit'); // identify from where the form was submitted (infoBox/listing or details), to redirect back to this same page ?>
               <div class="form-group">
                   <?php echo zen_draw_label(TABLE_HEADING_COMMENTS, 'comments', 'class="col-sm-3 control-label"'); ?>
@@ -993,9 +993,9 @@ if (zen_not_null($action) && $order_exists == true) {
     $zco_notifier->notify('NOTIFY_ADMIN_ORDERS_ADDL_HISTORY_INPUTS', array());
 ?>
             <div class="form-group">
-                <?php echo zen_draw_label(ENTRY_STATUS, 'status', 'class="col-sm-3 control-label"'); ?>
+                <?php echo zen_draw_label(ENTRY_STATUS, 'statusUpdateSelect', 'class="col-sm-3 control-label"'); ?>
               <div class="col-sm-9">
-                  <?php echo zen_draw_order_status_dropdown('status', $order->info['orders_status'], '', 'id="status" class="form-control"'); ?>
+                  <?php echo zen_draw_order_status_dropdown('statusUpdateSelect', $order->info['orders_status'], '', 'id="statusUpdateSelect" class="form-control"'); ?>
               </div>
             </div>
 <?php
@@ -1225,9 +1225,9 @@ if (zen_not_null($action) && $order_exists == true) {
                   if (!empty($_GET['cID'])) {
                     $cID = (int)zen_db_prepare_input($_GET['cID']);
                     $orders_query_raw .= " WHERE o.customers_id = " . (int)$cID;
-                  } elseif ($_GET['status'] != '') {
-                    $status = (int)zen_db_prepare_input($_GET['status']);
-                    $orders_query_raw .= " WHERE s.orders_status_id = " . (int)$status . $search;
+                  } elseif ($_GET['statusFilterSelect'] != '') {
+                    $status_filter = (int)zen_db_prepare_input($_GET['statusFilterSelect']);
+                    $orders_query_raw .= " WHERE s.orders_status_id = " . (int)$status_filter . $search;
                   } else {
                     $orders_query_raw .= (trim($search) != '') ? preg_replace('/ *AND /i', ' WHERE ', $search, 1) : '';
                   }
@@ -1417,13 +1417,13 @@ if (zen_not_null($action) && $order_exists == true) {
 
                     // each contents array is drawn in a div, so this form block must be a single array element.
                     $contents[] = ['text' =>
-                        zen_draw_form('statusUpdate', FILENAME_ORDERS, zen_get_all_get_params(['action','language']) . 'action=update_order' . (!isset($_GET['oID']) ? '&oID=' . $oInfo->orders_id : '') . '&language=' . $oInfo->language_code, 'post', '', true) . // form action uses the order language to change the session language on the update. On initial page load (from another page), $_GET['oID'] is not set, hence clause in form action
+                        zen_draw_form('statusUpdateForm', FILENAME_ORDERS, zen_get_all_get_params(['action','language']) . 'action=update_order' . (!isset($_GET['oID']) ? '&oID=' . $oInfo->orders_id : '') . '&language=' . $oInfo->language_code, 'post', '', true) . // form action uses the order language to change the session language on the update. On initial page load (from another page), $_GET['oID'] is not set, hence clause in form action
                         '<fieldset style="border:solid thin slategray;padding:5px"><legend style="width:inherit;">&nbsp;' . IMAGE_UPDATE . '&nbsp;</legend>' .
                         ($oInfo->language_code !== $_SESSION['languages_code'] ? zen_draw_hidden_field('admin_language', $_SESSION['languages_code']) : '') . // if the order language is different to the current admin language, record the admin language, to restore it in the redirect after the status update email has been sent
                         zen_draw_label(IMAGE_SEND_EMAIL, 'notify', 'class="control-label"') .
                         zen_draw_checkbox_field('notify', '1', $notify_email, '', 'class="checkbox-inline" id="notify"') . "<br>\n" .
-                        zen_draw_label(ENTRY_STATUS, 'status', 'class="control-label"') .
-                        zen_draw_order_status_dropdown('status', $oInfo->orders_status, '', 'onChange="this.form.submit();" id="status" class="form-control"') . "\n" .
+                        zen_draw_label(ENTRY_STATUS, 'statusUpdateSelect', 'class="control-label"') .
+                        zen_draw_order_status_dropdown('statusUpdateSelect', $oInfo->orders_status, '', 'onChange="this.form.submit();" id="statusUpdateSelect" class="form-control"') . "\n" .
                         '</fieldset></form>' . "\n"];
 
                     $contents[] = array('text' => '<br>' . TEXT_DATE_ORDER_CREATED . ' ' . zen_date_short($oInfo->date_purchased));
