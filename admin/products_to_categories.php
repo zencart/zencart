@@ -288,7 +288,7 @@ if (zen_not_null($action)) {
                 for ($i = 0, $n = count($products_to_remove); $i < $n; $i++) {
                     zen_unlink_product_from_category($products_to_remove[$i]['products_id'], $category_id_target);
                     $products_removed_format = zen_get_products_model($products_to_remove[$i]['products_id']) . ' - "' . zen_get_products_name($products_to_remove[$i]['products_id'], (int)$_SESSION['languages_id']) . '" (#' . $products_to_remove[$i]['products_id'] . ')';
-                    $products_removed_message = sprintf(SUCCESS_REMOVED_PRODUCT, $products_removed_format, $category_id_target);
+                    $products_removed_message .= sprintf(SUCCESS_REMOVED_PRODUCT, $products_removed_format, $category_id_target);
                 }
                 $products_removed_message .= sprintf(SUCCESS_REMOVE_LINKED_PRODUCTS, $i);
                 $messageStack->add_session($products_removed_message, 'success');
