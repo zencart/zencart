@@ -210,6 +210,10 @@ if (zen_not_null($action)) {
       <h1><?php echo HEADING_TITLE; ?></h1>
       <!-- body_text //-->
       <?php
+      // create an array of products on special, which will be excluded from the pull down menu of products
+      // (when creating a new product on special)
+      $specials_array = [];
+
       if (($action === 'new') || ($action === 'edit')) {
         $form_action = 'insert';
         if (($action === 'edit') && isset($_GET['sID'])) { //update existing Special
@@ -248,9 +252,6 @@ if (zen_not_null($action)) {
         } elseif (empty($_GET['preID'])) { // insert by product select dropdown
           $sInfo = new objectInfo([]);
 
-// create an array of products on special, which will be excluded from the pull down menu of products
-// (when creating a new product on special)
-          $specials_array = [];
           $specials = $db->Execute("SELECT p.products_id, p.products_model
                                     FROM " . TABLE_PRODUCTS . " p,
                                          " . TABLE_SPECIALS . " s
@@ -370,10 +371,10 @@ if (zen_not_null($action)) {
             <hr/>
             <?php
                    echo TEXT_SPECIALS_PRICE_NOTES_HEAD;
-                   echo '<ul>'; 
-                   echo TEXT_SPECIALS_PRICE_NOTES_BODY; 
-                   echo '<li>' . TEXT_INFO_PRE_ADD_INTRO . '</li>'; 
-                   echo '</ul>'; 
+                   echo '<ul>';
+                   echo TEXT_SPECIALS_PRICE_NOTES_BODY;
+                   echo '<li>' . TEXT_INFO_PRE_ADD_INTRO . '</li>';
+                   echo '</ul>';
             ?>
         </div>
       <?php } else { ?>
