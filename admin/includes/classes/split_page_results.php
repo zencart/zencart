@@ -17,7 +17,7 @@
   class splitPageResults {
 	  var $pages_array;
 
-    function splitPageResults(&$current_page_number, $max_rows_per_page, &$sql_query, &$query_num_rows, $a2zColumn='', $len=1) {
+    function __construct(&$current_page_number, $max_rows_per_page, &$sql_query, &$query_num_rows, $a2zColumn='', $len=1) {
       global $db;
 	  $this->raw_sql_query = $sql_query;
 	  // len of -1 means use default behavior
