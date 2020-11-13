@@ -210,6 +210,10 @@ if (zen_not_null($action)) {
       <h1><?php echo HEADING_TITLE; ?></h1>
       <!-- body_text //-->
       <?php
+      // create an array of products on special, which will be excluded from the pull down menu of products
+      // (when creating a new product on special)
+      $specials_array = [];
+
       if (($action === 'new') || ($action === 'edit')) {
         $form_action = 'insert';
         if (($action === 'edit') && isset($_GET['sID'])) { //update existing Special
@@ -248,9 +252,6 @@ if (zen_not_null($action)) {
         } elseif (empty($_GET['preID'])) { // insert by product select dropdown
           $sInfo = new objectInfo([]);
 
-// create an array of products on special, which will be excluded from the pull down menu of products
-// (when creating a new product on special)
-          $specials_array = [];
           $specials = $db->Execute("SELECT p.products_id, p.products_model
                                     FROM " . TABLE_PRODUCTS . " p,
                                          " . TABLE_SPECIALS . " s
@@ -370,10 +371,10 @@ if (zen_not_null($action)) {
             <hr/>
             <?php
                    echo TEXT_SPECIALS_PRICE_NOTES_HEAD;
-                   echo '<ul>'; 
-                   echo TEXT_SPECIALS_PRICE_NOTES_BODY; 
-                   echo '<li>' . TEXT_INFO_PRE_ADD_INTRO . '</li>'; 
-                   echo '</ul>'; 
+                   echo '<ul>';
+                   echo TEXT_SPECIALS_PRICE_NOTES_BODY;
+                   echo '<li>' . TEXT_INFO_PRE_ADD_INTRO . '</li>';
+                   echo '</ul>';
             ?>
         </div>
       <?php } else { ?>
@@ -513,18 +514,18 @@ if (zen_not_null($action)) {
                           </button>
                           <?php echo zen_draw_hidden_field('flag', '1'); ?>
                         <?php } ?>
-                        <?php echo zen_draw_hidden_field('id', $special['products_id']); ?>
+                        <?php echo zen_draw_hidden_field('id', $special['specials_id']); ?>
                         <?php echo '</form>'; ?>
                       <?php } ?>
                     </td>
                     <td class="dataTableContent text-right">
-                      <a href="<?php echo zen_href_link(FILENAME_SPECIALS, ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . (isset($_GET['search']) ? 'search=' . $_GET['search'] . '&' : '') . 'action=edit' . '&sID=' . $special['products_id']); ?>" title="<?php echo ICON_EDIT; ?>" role="button">
+                      <a href="<?php echo zen_href_link(FILENAME_SPECIALS, ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . (isset($_GET['search']) ? 'search=' . $_GET['search'] . '&' : '') . 'action=edit' . '&sID=' . $special['specials_id']); ?>" title="<?php echo ICON_EDIT; ?>" role="button">
                         <div class="fa-stack fa-fw">
                           <i class="fa fa-circle fa-stack-2x txt-status-on"></i>
                           <i class="fa fa-pencil fa-stack-1x fa-inverse"></i>
                         </div>
                       </a>
-                      <a href="<?php echo zen_href_link(FILENAME_SPECIALS, ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . (isset($_GET['search']) ? 'search=' . $_GET['search'] . '&' : '') . 'action=delete' . '&sID=' . $special['products_id']); ?>" title="<?php echo ICON_DELETE; ?>" role="button">
+                      <a href="<?php echo zen_href_link(FILENAME_SPECIALS, ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . (isset($_GET['search']) ? 'search=' . $_GET['search'] . '&' : '') . 'action=delete' . '&sID=' . $special['specials_id']); ?>" title="<?php echo ICON_DELETE; ?>" role="button">
                         <div class="fa-stack fa-fw">
                           <i class="fa fa-circle fa-stack-2x txt-status-off"></i>
                           <i class="fa fa-trash fa-stack-1x fa-inverse"></i>
