@@ -97,7 +97,7 @@ if (zen_not_null($action)) {
         <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9 configurationColumnLeft">
           <table class="table table-hover">
             <thead>
-              <tr class="dataTableHeadingRow">
+              <tr class="dataTableHeadingRow"> 
                 <th class="dataTableHeadingContent" width="50%"><?php echo TABLE_HEADING_COUNTRY_NAME; ?></th>
                 <th class="dataTableHeadingContent text-center" colspan="2"><?php echo TABLE_HEADING_COUNTRY_CODES; ?></th>
                 <th class="dataTableHeadingContent text-center"><?php echo TABLE_HEADING_COUNTRY_STATUS; ?></th>
