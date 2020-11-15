@@ -33,7 +33,7 @@ foreach ($var as $key)
 
                 CKEDITOR.replace(jQuery(this).attr('name'),
                     {
-                        customConfig: '<?php echo (function_exists('zen_catalog_base_link') ? zen_catalog_base_link() : '/') . DIR_WS_EDITORS . 'ckeditor/config.js'; ?>',
+                        customConfig: '<?php echo (function_exists('zen_catalog_base_link') ? zen_catalog_base_link() : DIR_WS_HTTPS_CATALOG) . DIR_WS_EDITORS . 'ckeditor/config.js'; ?>',
                         language: lang[index]
                     });
             }
