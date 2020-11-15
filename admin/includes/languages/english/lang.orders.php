@@ -49,6 +49,7 @@ $define = [
     'ENTRY_CREDIT_CARD_NUMBER' => 'Credit Card Number:',
     'ENTRY_CREDIT_CARD_CVV' => 'Credit Card CVV Number:',
     'ENTRY_CREDIT_CARD_EXPIRES' => 'Credit Card Expires:',
+    'TEXT_ADDITIONAL_PAYMENT_OPTIONS' => 'Click for Additional Payment Handling Options',
     'ENTRY_SHIPPING' => 'Shipping:',
     'ENTRY_DATE_PURCHASED' => 'Date Purchased:',
     'ENTRY_STATUS' => 'Status:',

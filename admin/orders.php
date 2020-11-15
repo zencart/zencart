@@ -728,7 +728,7 @@ if (zen_not_null($action) && $order_exists == true) {
         <?php
         if (isset($module) && (is_object($module) && method_exists($module, 'admin_notification'))) {
           ?>
-          <div class="row noprint"><?php echo zen_draw_separator('pixel_trans.gif', '1', '10'); ?><br><a href="#" id="payinfo" class="noprint">Click for Additional Payment Handling Options</a></div>
+          <div class="row noprint"><?php echo zen_draw_separator('pixel_trans.gif', '1', '10'); ?><br><a href="#" id="payinfo" class="noprint"><?php echo TEXT_ADDITIONAL_PAYMENT_OPTIONS; ?></a></div>
           <div class="row" id="payment-details-section" style="display: none;"><?php echo $module->admin_notification($oID); ?></div>
           <div class="row noprint"><?php echo zen_draw_separator('pixel_trans.gif', '1', '10'); ?></div>
           <?php
