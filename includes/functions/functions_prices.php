@@ -1231,7 +1231,7 @@ If a special exist * 10
 
 ////
 // attributes final price
-  function zen_get_attributes_price_final($attribute, $qty = 1, $pre_selected, $include_onetime = 'false', $prod_priced_by_attr = false, $attributes_discounted = 0, $include_products_price_in = false) {
+  function zen_get_attributes_price_final($attribute, $qty = 1, $pre_selected = null, $include_onetime = 'false', $prod_priced_by_attr = false, $attributes_discounted = 0, $include_products_price_in = false) {
     global $db;
 
     $attributes_price_final = 0;
