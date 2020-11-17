@@ -30,7 +30,7 @@ function zen_update_whos_online()
     }
 
     $wo_session_id = zen_session_id();
-    $wo_ip_address = (isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : 'Unknown');
+    $wo_ip_address = substr(isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : 'Unknown', 0, 45);
     $wo_user_agent = substr(zen_db_prepare_input(isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : ''), 0, 254);
 
     $_SERVER['QUERY_STRING'] = (isset($_SERVER['QUERY_STRING']) && $_SERVER['QUERY_STRING'] != '') ? $_SERVER['QUERY_STRING'] : zen_get_all_get_params();
@@ -50,8 +50,8 @@ function zen_update_whos_online()
     $xx_mins_ago = ($current_time - 900);
 
     // remove entries that have expired
-    $sql = "delete from " . TABLE_WHOS_ONLINE . "
-          where time_last_click < '" . $xx_mins_ago . "'";
+    $sql = "DELETE FROM " . TABLE_WHOS_ONLINE . "
+            WHERE time_last_click < '" . $xx_mins_ago . "'";
 
     $db->Execute($sql);
 
@@ -83,14 +83,12 @@ function zen_update_whos_online()
         $sql = "INSERT INTO " . TABLE_WHOS_ONLINE . "
                 (customer_id, full_name, session_id, ip_address, time_entry,
                  time_last_click, last_page_url, host_address, user_agent)
-              VALUES ('" . (int)$wo_customer_id . "', '" . zen_db_input($wo_full_name) . "', '"
-            . zen_db_input($wo_session_id) . "', '" . zen_db_input($wo_ip_address)
-            . "', '" . zen_db_input($current_time) . "', '" . zen_db_input($current_time)
-            . "', '" . zen_db_input($wo_last_page_url)
-            . "', '" . zen_db_input($_SESSION['customers_host_address'])
-            . "', '" . zen_db_input($wo_user_agent)
-            . "')";
-
+                VALUES ('" . (int)$wo_customer_id . "', '" . zen_db_input($wo_full_name) . "', 
+                '" . zen_db_input($wo_session_id) . "', '" . zen_db_input($wo_ip_address) . "',
+                '" . zen_db_input($current_time) . "', '" . zen_db_input($current_time) . "',
+                '" . zen_db_input($wo_last_page_url) . "',
+                '" . zen_db_input($_SESSION['customers_host_address']) . "',
+                '" . zen_db_input($wo_user_agent) . "')";
         $db->Execute($sql);
     }
 }
