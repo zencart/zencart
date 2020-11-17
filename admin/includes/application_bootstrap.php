@@ -3,7 +3,7 @@
  * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: lat9 2020 Oct 28 Modified in v1.5.7a $
+ * @version $Id: DrByte   Updated 11-17-2020 $
  */
 
 use Zencart\FileSystem\FileSystem;
@@ -25,7 +25,9 @@ define('PAGE_PARSE_START_TIME', microtime());
 // set php_self in the local scope
 $serverScript = basename($_SERVER['SCRIPT_NAME']);
 $PHP_SELF = isset($_SERVER['SCRIPT_NAME']) ? $serverScript : 'home.php';
-$PHP_SELF = isset($_GET['cmd']) ? basename($_GET['cmd'] . '.php') : $PHP_SELF;
+if (basename($PHP_SELF, '.php') === 'index') {
+    $PHP_SELF = isset($_GET['cmd']) ? basename($_GET['cmd'] . '.php') : $PHP_SELF;
+}
 $PHP_SELF = htmlspecialchars($PHP_SELF);
 $_SERVER['SCRIPT_NAME'] = str_replace($serverScript, '', $_SERVER['SCRIPT_NAME']) . $PHP_SELF;
 // Suppress html from error messages
