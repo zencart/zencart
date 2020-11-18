@@ -268,8 +268,8 @@ if (zen_not_null($action)) {
               <div class="col-xs-2 col-sm-1 col-md-1 col-lg-1 text-center">
                 <?php
                 $display_priced_by_attributes = zen_get_products_price_is_priced_by_attributes($_GET['products_filter']);
-                echo ($display_priced_by_attributes ? '<span class="text-warning"><strong>' . TEXT_PRICED_BY_ATTRIBUTES . '</strong></span>' . '<br />' : '');
-                echo zen_get_products_display_price($_GET['products_filter']) . '<br /><br />';
+                echo ($display_priced_by_attributes ? '<span class="text-warning"><strong>' . TEXT_PRICED_BY_ATTRIBUTES . '</strong></span>' . '<br>' : '');
+                echo zen_get_products_display_price($_GET['products_filter']) . '<br><br>';
                 echo zen_get_products_quantity_min_units_display($_GET['products_filter'], $include_break = true);
                 $excluded_products = [];
 //  $not_for_cart = $db->Execute("select p.products_id from " . TABLE_PRODUCTS . " p left join " . TABLE_PRODUCT_TYPES . " pt on p.products_type= pt.type_id where pt.allow_add_to_cart = 'N'");
@@ -574,9 +574,9 @@ if (zen_not_null($action)) {
               <div class="form-group">
                 <div class="col-sm-12 main text-center">
                   <?php if ($action == '') { ?>
-                    <a href="<?php echo zen_href_link(FILENAME_PRODUCTS_PRICE_MANAGER, 'action=edit' . '&products_filter=' . $products_filter . '&current_category_id=' . $current_category_id); ?>" class="btn btn-primary" role="button"><?php echo IMAGE_EDIT_PRODUCT; ?></a><br /><?php echo TEXT_INFO_EDIT_CAUTION; ?>
+                    <a href="<?php echo zen_href_link(FILENAME_PRODUCTS_PRICE_MANAGER, 'action=edit' . '&products_filter=' . $products_filter . '&current_category_id=' . $current_category_id); ?>" class="btn btn-primary" role="button"><?php echo IMAGE_EDIT_PRODUCT; ?></a><br><?php echo TEXT_INFO_EDIT_CAUTION; ?>
                   <?php } else { ?>
-                    <button type="submit" class="btn btn-primary"><?php echo IMAGE_UPDATE_PRICE_CHANGES; ?></button>&nbsp;<a href="<?php echo zen_href_link(FILENAME_PRODUCTS_PRICE_MANAGER, 'action=cancel' . '&products_filter=' . $products_filter . '&current_category_id=' . $current_category_id); ?>" class="btn btn-default" role="button"><?php echo IMAGE_CANCEL; ?></a><br /><?php echo TEXT_UPDATE_COMMIT; ?>
+                    <button type="submit" class="btn btn-primary"><?php echo IMAGE_UPDATE_PRICE_CHANGES; ?></button>&nbsp;<a href="<?php echo zen_href_link(FILENAME_PRODUCTS_PRICE_MANAGER, 'action=cancel' . '&products_filter=' . $products_filter . '&current_category_id=' . $current_category_id); ?>" class="btn btn-default" role="button"><?php echo IMAGE_CANCEL; ?></a><br><?php echo TEXT_UPDATE_COMMIT; ?>
                   <?php } ?>
                 </div>
               </div>
@@ -590,7 +590,7 @@ if (zen_not_null($action)) {
                   <div class="col-sm-9 col-md-6">
                     <div class="input-group">
                       <span class="input-group-addon"><i class="fa fa-square fa-lg txt-linked" aria-hidden="true" title="<?php echo IMAGE_ICON_LINKED; ?>"></i></span>
-                      <?php echo zen_draw_pull_down_menu('master_category', zen_get_master_categories_pulldown($products_filter), $pInfo->master_categories_id, 'class="form-control"'); ?>
+                      <?php echo zen_draw_pull_down_menu('master_category', zen_get_master_categories_pulldown($products_filter), $pInfo->master_categories_id, 'class="form-control" id="master_category"'); ?>
                     </div>
                     <span class="help-block"><?php echo TEXT_INFO_MASTER_CATEGORIES_ID; ?></span>
                   </div>
@@ -610,7 +610,7 @@ if (zen_not_null($action)) {
                   <div class="form-group">
                     <?php echo zen_draw_label(TEXT_PRODUCTS_TAX_CLASS, 'products_tax_class_id', 'class="col-sm-3 control-label"'); ?>
                     <div class="col-sm-9 col-md-6">
-                      <?php echo zen_draw_pull_down_menu('products_tax_class_id', $tax_class_array, $pInfo->products_tax_class_id, 'class="form-control" id="products_tax_class_id"' . $readonly); ?>
+                      <?php echo zen_draw_pull_down_menu('products_tax_class_id', $tax_class_array, $pInfo->products_tax_class_id, 'class="form-control" id="products_tax_class_id"'); ?>
                     </div>
                   </div>
                 </div>
@@ -804,7 +804,7 @@ if (zen_not_null($action)) {
                 </div>
               <?php } else { ?>
                 <div class="form-group">
-                  <?php echo zen_draw_label(TEXT_SPECIALS_PRODUCT_INFO, '', 'class="control-label col-sm-3"'); ?>
+                    <div class="control-label col-sm-3"><?php echo TEXT_SPECIALS_PRODUCT_INFO; ?></div>
                   <div class="col-sm-9 col-md-6 text-center">
                     <?php
 // Specials cannot be added to Gift Vouchers when false
@@ -870,7 +870,7 @@ if (zen_not_null($action)) {
               <?php } else { ?>
                 <div class="row"><?php echo zen_draw_separator('pixel_black.gif', '100%', '2'); ?></div>
                 <div class="form-group">
-                  <?php echo zen_draw_label(TEXT_FEATURED_PRODUCT_INFO, '', 'class="control-label col-sm-3"'); ?>
+                    <div class="control-label col-sm-3"><?php echo TEXT_FEATURED_PRODUCT_INFO; ?></div>
                   <div class="col-sm-9 col-md-6 text-center">
                     <a href="<?php echo zen_href_link(FILENAME_FEATURED, 'add_products_id=' . $_GET['products_filter'] . '&go_back=ON' . '&action=new' . '&current_category_id=' . $current_category_id); ?>" class="btn btn-info" role="button"><i class="fa fa-plus"></i> <?php echo IMAGE_INSTALL_FEATURED; ?></a>
                   </div>
@@ -1015,7 +1015,7 @@ if (zen_not_null($action)) {
 
               <?php if ($action == 'edit_update') { ?>
                 <div class="form-group">
-                  <?php echo zen_draw_label(TEXT_ADD_ADDITIONAL_DISCOUNT, '', 'class="control-label col-sm-3"'); ?>
+                  <div class="control-label col-sm-3"><?php echo TEXT_ADD_ADDITIONAL_DISCOUNT; ?></div>
                   <div class="col-sm-9 col-md-6 text-center">
                     <a href="<?php echo zen_href_link(FILENAME_PRODUCTS_PRICE_MANAGER, 'products_filter=' . $products_filter . '&current_category_id=' . $current_category_id . '&action=add_discount_qty_id'); ?>" class="btn btn-info" role="button"><?php echo IMAGE_ADD_BLANK_DISCOUNTS; ?></a>
                     <span class="help-block"><?php echo TEXT_BLANKS_INFO; ?></span>
@@ -1040,9 +1040,9 @@ if (zen_not_null($action)) {
                 <div class="col-sm-12">
                   <div class="main text-center">
                     <?php if ($action == '') { ?>
-                      <a href="<?php echo zen_href_link(FILENAME_PRODUCTS_PRICE_MANAGER, 'action=edit' . '&products_filter=' . $products_filter . '&current_category_id=' . $current_category_id); ?>" class="btn btn-primary" role="button"><?php echo IMAGE_EDIT_PRODUCT; ?></a><br /><?php echo TEXT_INFO_EDIT_CAUTION; ?>
+                      <a href="<?php echo zen_href_link(FILENAME_PRODUCTS_PRICE_MANAGER, 'action=edit' . '&products_filter=' . $products_filter . '&current_category_id=' . $current_category_id); ?>" class="btn btn-primary" role="button"><?php echo IMAGE_EDIT_PRODUCT; ?></a><br><?php echo TEXT_INFO_EDIT_CAUTION; ?>
                     <?php } else { ?>
-                      <button type="submit" class="btn btn-primary"><?php echo IMAGE_UPDATE_PRICE_CHANGES; ?></button> <a href="<?php echo zen_href_link(FILENAME_PRODUCTS_PRICE_MANAGER, 'action=cancel' . '&products_filter=' . $products_filter . '&current_category_id=' . $current_category_id); ?>" class="btn btn-default" role="button"><?php echo IMAGE_CANCEL; ?></a><br /><?php echo TEXT_UPDATE_COMMIT; ?>
+                      <button type="submit" class="btn btn-primary"><?php echo IMAGE_UPDATE_PRICE_CHANGES; ?></button> <a href="<?php echo zen_href_link(FILENAME_PRODUCTS_PRICE_MANAGER, 'action=cancel' . '&products_filter=' . $products_filter . '&current_category_id=' . $current_category_id); ?>" class="btn btn-default" role="button"><?php echo IMAGE_CANCEL; ?></a><br><?php echo TEXT_UPDATE_COMMIT; ?>
                     <?php } ?>
                   </div>
                 </div>
