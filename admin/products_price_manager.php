@@ -1022,9 +1022,9 @@ if (zen_not_null($action)) {
                   </div>
                 </div>
               <?php } else { ?>
-                <?php if (empty($discount_name)) { ?> 
+                <?php if (empty($discount_name)) { ?>
                   <div class="col-sm-12"><?php echo TEXT_INFO_NO_DISCOUNTS; ?></div>
-                <?php } ?> 
+                <?php } ?>
               <?php } ?>
               <div class="row"><?php echo zen_draw_separator('pixel_black.gif', '100%', '2'); ?></div>
               <?php if ($action == '') { ?>
