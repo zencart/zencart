@@ -1356,7 +1356,7 @@ function zen_js_option_values_list($selectedName, $fieldName)
                         <div class="row">
                           <div class="form-group">
                             <div class="col-sm-4"><?php echo zen_draw_label(TEXT_ATTRIBUTES_IMAGE_DIR, 'img_dir', 'class="control-label"') . zen_draw_pull_down_menu('img_dir', $dir_info, $default_directory, 'class="form-control" id="img_dir"'); ?></div>
-                            <div class="col-sm-4"><?php echo zen_draw_label(TEXT_IMAGES_OVERWRITE, 'overwrite'); ?>
+                            <div class="col-sm-4"><?php echo TEXT_IMAGES_OVERWRITE; ?>
                               <div class="radio">
                                 <label><?php echo zen_draw_radio_field('overwrite', '0', false) . TABLE_HEADING_NO; ?></label>
                               </div>
@@ -1364,7 +1364,7 @@ function zen_js_option_values_list($selectedName, $fieldName)
                                 <label><?php echo zen_draw_radio_field('overwrite', '1', true) . TABLE_HEADING_YES; ?></label>
                               </div>
                             </div>
-                            <div class="col-sm-4"><?php echo zen_draw_label(TEXT_IMAGES_DELETE, 'image_delete'); ?>
+                            <div class="col-sm-4"><?php echo TEXT_IMAGES_DELETE; ?>
                               <div class="radio">
                                 <label><?php echo zen_draw_radio_field('image_delete', '0', true) . TABLE_HEADING_NO; ?></label>
                               </div>
