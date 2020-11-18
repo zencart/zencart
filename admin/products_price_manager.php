@@ -103,13 +103,13 @@ if (zen_not_null($action)) {
         $master_categories_id = $_POST['master_categories_id'];
       }
 
-      $products_date_available = zen_prepare_date($_POST['products_date_available'], true);
+      $products_date_available = zen_prepare_date($_POST['products_date_available'] ?? 'null', true);
 
-      $specials_date_available = zen_prepare_date($_POST['specials_date_available']);
-      $specials_expires_date = zen_prepare_date($_POST['specials_expires_date']);
+      $specials_date_available = zen_prepare_date($_POST['specials_date_available'] ?? 'null');
+      $specials_expires_date = zen_prepare_date($_POST['specials_expires_date'] ?? 'null');
 
-      $featured_date_available = zen_prepare_date($_POST['featured_date_available']);
-      $featured_expires_date = zen_prepare_date($_POST['featured_expires_date']);
+      $featured_date_available = zen_prepare_date($_POST['featured_date_available'] ?? 'null');
+      $featured_expires_date = zen_prepare_date($_POST['featured_expires_date'] ?? 'null');
 
       $tmp_value = (isset($_POST['products_price_sorter']) ? zen_db_prepare_input($_POST['products_price_sorter']) : '');
       $products_price_sorter = (!zen_not_null($tmp_value) || $tmp_value == '' || $tmp_value == 0) ? 0 : $tmp_value;
@@ -127,11 +127,11 @@ if (zen_not_null($action)) {
                   product_is_call = " . (int)$_POST['product_is_call'] . ",
                   products_quantity_mixed = " . (int)$_POST['products_quantity_mixed'] . ",
                   products_priced_by_attribute = " . (int)$_POST['products_priced_by_attribute'] . ",
-                  products_discount_type = " . (int)$_POST['products_discount_type'] . ",
-                  products_discount_type_from = " . (int)$_POST['products_discount_type_from'] . ",
+                  products_discount_type = " . (isset($_POST['products_discount_type']) ? (int)$_POST['products_discount_type'] : 0) . ",
+                  products_discount_type_from = " . (isset($_POST['products_discount_type_from']) ? (int)$_POST['products_discount_type_from'] : 0) . ",
                   products_price_sorter = " . (int)$products_price_sorter . ",
                   master_categories_id = " . (int)$master_categories_id . ",
-                  products_mixed_discount_quantity = " . (int)$_POST['products_mixed_discount_quantity'] . "
+                  products_mixed_discount_quantity = " . (isset($_POST['products_mixed_discount_quantity']) ? (int)$_POST['products_mixed_discount_quantity'] : 0) . "
               WHERE products_id = " . (int)$products_filter;
 
       $db->Execute($sql);
@@ -259,7 +259,7 @@ if (zen_not_null($action)) {
           <?php echo zen_draw_hidden_field('products_filter', isset($_GET['products_filter']) ? $_GET['products_filter'] : ''); ?>
           <?php echo zen_draw_hidden_field('current_category_id', isset($_GET['current_category_id']) ? $_GET['current_category_id'] : ''); ?>
           <?php
-          if ($_GET['products_filter'] != '') {
+          if (!empty($_GET['products_filter'])) {
             ?>
             <div class="form-group">
               <div class="col-xs-offset-2 col-offset-sm-1 col-xs-7 col-sm-7"><?php echo TEXT_PRODUCT_TO_VIEW; ?></div>
