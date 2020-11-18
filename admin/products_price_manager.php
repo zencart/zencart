@@ -547,7 +547,7 @@ if (zen_not_null($action)) {
             <?php
             case 'edit':
             case 'edit_upgrade':
-            default
+            default:
               ?>
               <?php echo zen_draw_form('new_prices', FILENAME_PRODUCTS_PRICE_MANAGER, zen_get_all_get_params(['action', 'info', $_GET['products_filter']]) . 'action=update', 'post', 'onsubmit="return check_dates_ppm(featured_start,FeaturedStartDate.required, featured_end, FeaturedEndDate.required, product_start, ProductStartDate.required);" class="form-horizontal"'); ?>
               <?php
