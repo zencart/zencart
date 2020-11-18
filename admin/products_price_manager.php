@@ -804,7 +804,7 @@ if (zen_not_null($action)) {
                 </div>
               <?php } else { ?>
                 <div class="form-group">
-                  <?php echo zen_draw_label(TEXT_SPECIALS_PRODUCT_INFO, '', 'class="control-label col-sm-3"'); ?>
+                    <div class="control-label col-sm-3"><?php echo TEXT_SPECIALS_PRODUCT_INFO; ?></div>
                   <div class="col-sm-9 col-md-6 text-center">
                     <?php
 // Specials cannot be added to Gift Vouchers when false
@@ -870,7 +870,7 @@ if (zen_not_null($action)) {
               <?php } else { ?>
                 <div class="row"><?php echo zen_draw_separator('pixel_black.gif', '100%', '2'); ?></div>
                 <div class="form-group">
-                  <?php echo zen_draw_label(TEXT_FEATURED_PRODUCT_INFO, '', 'class="control-label col-sm-3"'); ?>
+                    <div class="control-label col-sm-3"><?php echo TEXT_FEATURED_PRODUCT_INFO; ?></div>
                   <div class="col-sm-9 col-md-6 text-center">
                     <a href="<?php echo zen_href_link(FILENAME_FEATURED, 'add_products_id=' . $_GET['products_filter'] . '&go_back=ON' . '&action=new' . '&current_category_id=' . $current_category_id); ?>" class="btn btn-info" role="button"><i class="fa fa-plus"></i> <?php echo IMAGE_INSTALL_FEATURED; ?></a>
                   </div>
@@ -1015,7 +1015,7 @@ if (zen_not_null($action)) {
 
               <?php if ($action == 'edit_update') { ?>
                 <div class="form-group">
-                  <?php echo zen_draw_label(TEXT_ADD_ADDITIONAL_DISCOUNT, '', 'class="control-label col-sm-3"'); ?>
+                  <div class="control-label col-sm-3"><?php echo TEXT_ADD_ADDITIONAL_DISCOUNT; ?></div>
                   <div class="col-sm-9 col-md-6 text-center">
                     <a href="<?php echo zen_href_link(FILENAME_PRODUCTS_PRICE_MANAGER, 'products_filter=' . $products_filter . '&current_category_id=' . $current_category_id . '&action=add_discount_qty_id'); ?>" class="btn btn-info" role="button"><?php echo IMAGE_ADD_BLANK_DISCOUNTS; ?></a>
                     <span class="help-block"><?php echo TEXT_BLANKS_INFO; ?></span>
