@@ -610,7 +610,7 @@ if (zen_not_null($action)) {
                   <div class="form-group">
                     <?php echo zen_draw_label(TEXT_PRODUCTS_TAX_CLASS, 'products_tax_class_id', 'class="col-sm-3 control-label"'); ?>
                     <div class="col-sm-9 col-md-6">
-                      <?php echo zen_draw_pull_down_menu('products_tax_class_id', $tax_class_array, $pInfo->products_tax_class_id, 'class="form-control" id="products_tax_class_id"' . $readonly); ?>
+                      <?php echo zen_draw_pull_down_menu('products_tax_class_id', $tax_class_array, $pInfo->products_tax_class_id, 'class="form-control" id="products_tax_class_id"'); ?>
                     </div>
                   </div>
                 </div>
