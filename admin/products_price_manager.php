@@ -590,7 +590,7 @@ if (zen_not_null($action)) {
                   <div class="col-sm-9 col-md-6">
                     <div class="input-group">
                       <span class="input-group-addon"><i class="fa fa-square fa-lg txt-linked" aria-hidden="true" title="<?php echo IMAGE_ICON_LINKED; ?>"></i></span>
-                      <?php echo zen_draw_pull_down_menu('master_category', zen_get_master_categories_pulldown($products_filter), $pInfo->master_categories_id, 'class="form-control"'); ?>
+                      <?php echo zen_draw_pull_down_menu('master_category', zen_get_master_categories_pulldown($products_filter), $pInfo->master_categories_id, 'class="form-control" id="master_category"'); ?>
                     </div>
                     <span class="help-block"><?php echo TEXT_INFO_MASTER_CATEGORIES_ID; ?></span>
                   </div>
