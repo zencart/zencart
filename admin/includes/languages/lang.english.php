@@ -171,7 +171,7 @@ $define = [
     'ENTRY_PRICING_GROUP' => 'Discount Pricing Group',
     'ENTRY_STREET_ADDRESS' => 'Street Address:',
     'ENTRY_STREET_ADDRESS_ERROR' => '&nbsp;<span class="errorText">min ' . ENTRY_STREET_ADDRESS_MIN_LENGTH . ' chars</span>',
-    'ENTRY_SUBURB' => 'Suburb:',
+    'ENTRY_SUBURB' => 'Address Line 2:',
     'ENTRY_SUBURB_ERROR' => '',
     'ENTRY_POST_CODE' => 'Post Code:',
     'ENTRY_POST_CODE_ERROR' => '&nbsp;<span class="errorText">min ' . ENTRY_POSTCODE_MIN_LENGTH . ' chars</span>',
