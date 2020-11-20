@@ -17,6 +17,7 @@ if (!defined('IS_ADMIN_FLAG')) {
 $zv_collection_query = "select media_id, product_id from " . TABLE_MEDIA_TO_PRODUCTS . "
                         where product_id = '" . (int)$_GET['products_id'] . "'";
 $zq_collections = $db->Execute($zv_collection_query);
+$za_media_manager = array();
 $zv_product_has_media = false;
 /**
  * loop thru collections to identify actual media clips
