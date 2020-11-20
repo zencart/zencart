@@ -94,15 +94,13 @@ if (zen_not_null($action)) {
 
       $default_address_id = zen_db_prepare_input($_POST['default_address_id']);
       $entry_street_address = zen_db_prepare_input($_POST['entry_street_address']);
-      $entry_suburb = zen_db_prepare_input($_POST['entry_suburb']);
+      $entry_suburb = !empty($_POST['entry_suburb']) ? zen_db_prepare_input($_POST['entry_suburb']) : '';
       $entry_postcode = zen_db_prepare_input($_POST['entry_postcode']);
       $entry_city = zen_db_prepare_input($_POST['entry_city']);
       $entry_country_id = zen_db_prepare_input($_POST['entry_country_id']);
-      $entry_company = zen_db_prepare_input($_POST['entry_company']);
-      $entry_state = zen_db_prepare_input($_POST['entry_state']);
-      if (isset($_POST['entry_zone_id'])) {
-        $entry_zone_id = zen_db_prepare_input($_POST['entry_zone_id']);
-      }
+      $entry_company = !empty($_POST['entry_company']) ? zen_db_prepare_input($_POST['entry_company']) : '';
+      $entry_state = !empty($_POST['entry_state'])? zen_db_prepare_input($_POST['entry_state']) : '' ;
+      $entry_zone_id = isset($_POST['entry_zone_id']) ? zen_db_prepare_input($_POST['entry_zone_id']) : 0;
 
       if (ACCOUNT_GENDER == 'true' && empty($customers_gender)) {
         $error = true;
@@ -706,12 +704,13 @@ if (zen_not_null($action)) {
                     <a href="<?php echo zen_href_link(basename($PHP_SELF), zen_get_all_get_params(array('list_order', 'page')) . 'list_order=firstname', 'NONSSL'); ?>"><?php echo ($_GET['list_order'] == 'firstname' ? '<span class="SortOrderHeader">Asc</span>' : '<span class="SortOrderHeaderLink">Asc</span>'); ?></a>&nbsp;
                     <a href="<?php echo zen_href_link(basename($PHP_SELF), zen_get_all_get_params(array('list_order', 'page')) . 'list_order=firstname-desc', 'NONSSL'); ?>"><?php echo ($_GET['list_order'] == 'firstname-desc' ? '<span class="SortOrderHeader">Desc</span>' : '<span class="SortOrderHeaderLink">Desc</span>'); ?></a>
                   </th>
+                  <?php if (ACCOUNT_COMPANY === 'true') { ?>
                   <th class="dataTableHeadingContent">
                     <?php echo (($_GET['list_order'] == 'company' or $_GET['list_order'] == 'company-desc') ? '<span class="SortOrderHeader">' . TABLE_HEADING_COMPANY . '</span>' : TABLE_HEADING_COMPANY); ?><br>
                     <a href="<?php echo zen_href_link(basename($PHP_SELF), zen_get_all_get_params(array('list_order', 'page')) . 'list_order=company', 'NONSSL'); ?>"><?php echo ($_GET['list_order'] == 'company' ? '<span class="SortOrderHeader">Asc</span>' : '<span class="SortOrderHeaderLink">Asc</span>'); ?></a>&nbsp;
                     <a href="<?php echo zen_href_link(basename($PHP_SELF), zen_get_all_get_params(array('list_order', 'page')) . 'list_order=company-desc', 'NONSSL'); ?>"><?php echo ($_GET['list_order'] == 'company-desc' ? '<span class="SortOrderHeader">Desc</span>' : '<span class="SortOrderHeaderLink">Desc</span>'); ?></a>
                   </th>
-                  <?php
+                  <?php }
                   // -----
                   // If a plugin has additional columns to add to the display, it attaches to both this "listing header" and (see below)
                   // the "listing data" notifications.
@@ -855,8 +854,9 @@ if (zen_not_null($action)) {
                     <td class="dataTableContent text"><?php echo ($zc_address_book_count == 1) ? TEXT_INFO_ADDRESS_BOOK_COUNT_SINGLE : sprintf(TEXT_INFO_ADDRESS_BOOK_COUNT, zen_href_link(FILENAME_CUSTOMERS, 'action=list_addresses' . '&cID=' . $customer['customers_id'] . ($_GET['page'] > 0 ? '&page=' . $_GET['page'] : '')), $zc_address_book_count); ?></td>
                     <td class="dataTableContent"><?php echo $customer['customers_lastname']; ?></td>
                     <td class="dataTableContent"><?php echo $customer['customers_firstname']; ?></td>
+                 <?php if (ACCOUNT_COMPANY === 'true') { ?>
                     <td class="dataTableContent"><?php echo $customer['company']; ?></td>
-                    <?php
+                 <?php }
 
                     // -----
                     // If a plugin has additional columns to add to the display, it attaches to both this "listing element" and (see above)
