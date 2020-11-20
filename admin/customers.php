@@ -94,15 +94,13 @@ if (zen_not_null($action)) {
 
       $default_address_id = zen_db_prepare_input($_POST['default_address_id']);
       $entry_street_address = zen_db_prepare_input($_POST['entry_street_address']);
-      $entry_suburb = zen_db_prepare_input($_POST['entry_suburb']);
+      $entry_suburb = !empty($_POST['entry_suburb']) ? zen_db_prepare_input($_POST['entry_suburb']) : '';
       $entry_postcode = zen_db_prepare_input($_POST['entry_postcode']);
       $entry_city = zen_db_prepare_input($_POST['entry_city']);
       $entry_country_id = zen_db_prepare_input($_POST['entry_country_id']);
-      $entry_company = zen_db_prepare_input($_POST['entry_company']);
-      $entry_state = zen_db_prepare_input($_POST['entry_state']);
-      if (isset($_POST['entry_zone_id'])) {
-        $entry_zone_id = zen_db_prepare_input($_POST['entry_zone_id']);
-      }
+      $entry_company = !empty($_POST['entry_company']) ? zen_db_prepare_input($_POST['entry_company']) : '';
+      $entry_state = !empty($_POST['entry_state'])? zen_db_prepare_input($_POST['entry_state']) : '' ;
+      $entry_zone_id = isset($_POST['entry_zone_id']) ? zen_db_prepare_input($_POST['entry_zone_id']) : 0;
 
       if (ACCOUNT_GENDER == 'true' && empty($customers_gender)) {
         $error = true;
