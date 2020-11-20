@@ -606,19 +606,19 @@ class Customer extends base
             $db->Execute("DELETE FROM " . TABLE_REVIEWS . "
                           WHERE customers_id = '" . (int)$this->customer_id . "'");
         } else {
+        //replace customer name
             $db->Execute("UPDATE " . TABLE_REVIEWS . "
-                          SET customers_id = null
+                          SET customers_name = 'anonymous'
                           WHERE customers_id = " . (int)$this->customer_id);
         }
-
-        $db->Execute("DELETE FROM " . TABLE_ADDRESS_BOOK . "
+        //delete personal fields from addresses
+        $db->Execute("UPDATE " . TABLE_ADDRESS_BOOK . "
+                      SET entry_gender = '',	entry_company = '',	entry_firstname = '', entry_lastname = 'deleted', entry_telephone = '',	entry_street_address = 'deleted'
                       WHERE customers_id = " . (int)$this->customer_id);
 
-        $db->Execute("DELETE FROM " . TABLE_CUSTOMERS . "
+        $db->Execute("UPDATE " . TABLE_CUSTOMERS . "
+                      SET customers_gender = '', customers_firstname = 'deleted', customers_lastname = 'deleted " . date("Y-m-d") . "', customers_dob = '0001-01-01 00:00:00', customers_email_address = 'deleted', customers_nick = '', customers_telephone = '', customers_fax = '', customers_password = ''
                       WHERE customers_id = " . (int)$this->customer_id);
-
-        $db->Execute("DELETE FROM " . TABLE_CUSTOMERS_INFO . "
-                      WHERE customers_info_id = " . (int)$this->customer_id);
 
         $db->Execute("DELETE FROM " . TABLE_CUSTOMERS_BASKET . "
                       WHERE customers_id = " . (int)$this->customer_id);
