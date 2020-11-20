@@ -41,8 +41,9 @@ if ($product_listing_layout_style == 'rows') {
     $list_box_contents[0] = array('params' => 'class="productListing-rowheading"');
 
     $zc_col_count_description = 0;
-    $lc_align = '';
     for ($col = 0, $n = count($column_list); $col < $n; $col++) {
+        $lc_align = '';
+        $lc_text = '';
         switch ($column_list[$col]) {
             case 'PRODUCT_LIST_MODEL':
                 $lc_text = TABLE_HEADING_MODEL;
@@ -132,6 +133,7 @@ if ($num_products_count > 0) {
 
     for ($col=0, $n=count($column_list); $col<$n; $col++) {
       $lc_align = '';
+      $lc_text = '';
       switch ($column_list[$col]) {
         case 'PRODUCT_LIST_MODEL':
         $lc_align = '';
