@@ -2,10 +2,9 @@
 /**
  * iterates thru media collections/clips
  *
- * @package productTypes
- * @copyright Copyright 2003-2018 Zen Cart Development Team
+ * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Drbyte Sun Jan 7 21:28:50 2018 -0500 Modified in v1.5.6 $
+ * @version $Id: DrByte 2020 Nov 20 Modified in v1.5.7b $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
