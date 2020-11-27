@@ -378,6 +378,7 @@ class ot_coupon {
               // use delivery address
               $check_zone_country_id = $order->delivery['country']['id'];
               break;
+            case 'G': // GV coupon
             default:
               // use billing address
               $check_zone_country_id = $order->billing['country']['id'];
@@ -409,6 +410,7 @@ class ot_coupon {
               // use delivery address
               $check_zone_id = $order->delivery['zone_id'];
               break;
+            case 'G': // GV coupon
             default:
               // use billing address
               $check_zone_id = $order->billing['zone_id'];
@@ -562,6 +564,8 @@ class ot_coupon {
               }
 
               break;
+            case 'G': // GV coupon
+            default:
           }
 //@@TODO - Standard and Credit_Note
           switch ($this->calculate_tax)
