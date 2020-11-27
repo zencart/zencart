@@ -85,11 +85,11 @@ if (isset($_GET['action']) && ($_GET['action'] == 'send')) {
             if (!empty($telephone)) $text_message .= OFFICE_LOGIN_PHONE . "\t" . $telephone . "\n"; 
             $text_message .= "\n" .
             '------------------------------------------------------' . "\n\n" .
-            strip_tags($_POST['enquiry']) .  "\n\n" .
+            $enquiry .  "\n\n" .
             '------------------------------------------------------' . "\n\n" .
             $extra_info['TEXT'];
             // Prepare HTML-portion of message
-            $html_msg['EMAIL_MESSAGE_HTML'] = strip_tags($_POST['enquiry']);
+            $html_msg['EMAIL_MESSAGE_HTML'] = $enquiry;
             $html_msg['CONTACT_US_OFFICE_FROM'] = OFFICE_FROM . ' ' . $name . '<br />' . OFFICE_EMAIL . '(' . $email_address . ')';
             $html_msg['EXTRA_INFO'] = $extra_info['HTML'];
             // Send message
