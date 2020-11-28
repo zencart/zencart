@@ -356,66 +356,27 @@ class ot_coupon {
 
           $check_flag = false;
 
-          // base restrictions zone restrictions for Delivery or Billing address
-          switch($coupon_result->fields['coupon_type']) {
-            case 'S': // shipping
-              // use delivery address
-              $check_zone_country_id = $order->delivery['country']['id'];
-              break;
-            case 'F': // amount
-              // use billing address
-              $check_zone_country_id = $order->billing['country']['id'];
-              break;
-            case 'O': // amount off and free shipping
-              // use delivery address
-              $check_zone_country_id = $order->delivery['country']['id'];
-              break;
-            case 'P': // percentage
-              // use billing address
-              $check_zone_country_id = $order->billing['country']['id'];
-              break;
-            case 'E': // percentage and Free Shipping
-              // use delivery address
-              $check_zone_country_id = $order->delivery['country']['id'];
-              break;
-            case 'G': // GV coupon
-            default:
-              // use billing address
-              $check_zone_country_id = $order->billing['country']['id'];
-              break;
-          }
+	        // base restrictions zone restrictions for Delivery or Billing address
+	        switch ($coupon_result->fields['coupon_type']) {
+		        case 'S': // shipping
+		        case 'O': // amount off and free shipping
+		        case 'E': // percentage and Free Shipping
+			        // use delivery address
+			        $check_zone_country_id = $order->delivery['country']['id'];
+			        $check_zone_id = $order->delivery['zone_id'];
+			        break;
+		        case 'F': // amount
+		        case 'P': // percentage
+		        case 'G': // GV coupon
+		        default:
+			        // use billing address
+			        $check_zone_country_id = $order->billing['country']['id'];
+			        $check_zone_id = $order->billing['zone_id'];
+			        break;
+	        }
 
           $sql = "SELECT zone_id, zone_country_id FROM " . TABLE_ZONES_TO_GEO_ZONES . " WHERE geo_zone_id = '" . $coupon_result->fields['coupon_zone_restriction'] . "' AND zone_country_id = '" . (int)$check_zone_country_id . "' ORDER BY zone_id";
           $check = $db->Execute($sql);
-
-          // base restrictions zone restrictions for Delivery or Billing address
-          switch($coupon_result->fields['coupon_type']) {
-            case 'S': // shipping
-              // use delivery address
-              $check_zone_id = $order->delivery['zone_id'];
-              break;
-            case 'F': // amount
-              // use billing address
-              $check_zone_id = $order->billing['zone_id'];
-              break;
-            case 'O': // amount off and free shipping
-              // use delivery address
-              $check_zone_id = $order->delivery['zone_id'];
-              break;
-            case 'P': // percentage
-              // use billing address
-              $check_zone_id = $order->billing['zone_id'];
-              break;
-            case 'E': // percentage and free shipping
-              // use delivery address
-              $check_zone_id = $order->delivery['zone_id'];
-              break;
-            case 'G': // GV coupon
-            default:
-              // use billing address
-              $check_zone_id = $order->billing['zone_id'];
-              break;
-          }
 
           if ($coupon_result->fields['coupon_zone_restriction'] > 0) {
             while (!$check->EOF) {
