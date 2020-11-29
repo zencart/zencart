@@ -21,8 +21,10 @@ $contaminated = (isset($_FILES['GLOBALS']) || isset($_REQUEST['GLOBALS'])) ? tru
 $paramsToAvoid = array('GLOBALS', '_COOKIE', '_ENV', '_FILES', '_GET', '_POST', '_REQUEST', '_SERVER', '_SESSION', 'HTTP_COOKIE_VARS', 'HTTP_ENV_VARS', 'HTTP_GET_VARS', 'HTTP_POST_VARS', 'HTTP_POST_FILES', 'HTTP_RAW_POST_DATA', 'HTTP_SERVER_VARS', 'HTTP_SESSION_VARS');
 $paramsToAvoid[] = 'autoLoadConfig';
 $paramsToAvoid[] = 'mosConfig_absolute_path';
+$paramsToAvoid[] = 'function';
 $paramsToAvoid[] = 'hash';
 $paramsToAvoid[] = 'main';
+$paramsToAvoid[] = 'vars';
 foreach($paramsToAvoid as $key) {
   if (isset($_GET[$key]) || isset($_POST[$key]) || isset($_COOKIE[$key])) {
     $contaminated = true;
