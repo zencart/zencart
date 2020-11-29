@@ -544,7 +544,7 @@ function zen_copy_products_attributes($products_id_from, $products_id_to)
                   attributes_price_words_free='" . $copy_from['attributes_price_words_free'] . "',
                   attributes_price_letters='" . $copy_from['attributes_price_letters'] . "',
                   attributes_price_letters_free='" . $copy_from['attributes_price_letters_free'] . "',
-                  attributes_required='" . $copy_from['attributes_required'] . "
+                  attributes_required='" . $copy_from['attributes_required'] . "' 
                   WHERE products_id=" . (int)$products_id_to . "
                    AND options_id=" . (int)$copy_from['options_id'] . "
                    AND options_values_id=" . (int)$copy_from['options_values_id']
