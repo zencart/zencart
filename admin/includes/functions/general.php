@@ -2182,7 +2182,7 @@ function zen_copy_products_attributes($products_id_from, $products_id_to) {
               attributes_price_words_free='" . $products_copy_from->fields['attributes_price_words_free'] . "',
               attributes_price_letters='" . $products_copy_from->fields['attributes_price_letters'] . "',
               attributes_price_letters_free='" . $products_copy_from->fields['attributes_price_letters_free'] . "',
-              attributes_required='" . $products_copy_from->fields['attributes_required'] . "
+              attributes_required='" . $products_copy_from->fields['attributes_required'] . "' 
               WHERE products_id=" . (int)$products_id_to . "
                AND options_id= " . (int)$products_copy_from->fields['options_id'] . "
                AND options_values_id=" . (int)$products_copy_from->fields['options_values_id']
