@@ -9,7 +9,7 @@
  * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: mc12345678 2020 Jul 28 Modified in v1.5.7a $
+ * @version $Id: Modified in v1.5.7c $
  */
 use Zencart\FileSystem\FileSystem;
 use Zencart\PluginManager\PluginManager;
@@ -22,8 +22,10 @@ $contaminated = (isset($_FILES['GLOBALS']) || isset($_REQUEST['GLOBALS'])) ? tru
 $paramsToAvoid = array('GLOBALS', '_COOKIE', '_ENV', '_FILES', '_GET', '_POST', '_REQUEST', '_SERVER', '_SESSION', 'HTTP_COOKIE_VARS', 'HTTP_ENV_VARS', 'HTTP_GET_VARS', 'HTTP_POST_VARS', 'HTTP_POST_FILES', 'HTTP_RAW_POST_DATA', 'HTTP_SERVER_VARS', 'HTTP_SESSION_VARS');
 $paramsToAvoid[] = 'autoLoadConfig';
 $paramsToAvoid[] = 'mosConfig_absolute_path';
+$paramsToAvoid[] = 'function';
 $paramsToAvoid[] = 'hash';
 $paramsToAvoid[] = 'main';
+$paramsToAvoid[] = 'vars';
 foreach($paramsToAvoid as $key) {
   if (isset($_GET[$key]) || isset($_POST[$key]) || isset($_COOKIE[$key])) {
     $contaminated = true;
