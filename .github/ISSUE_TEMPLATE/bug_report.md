@@ -9,16 +9,14 @@ assignees: ''
 
 **Describe the bug**
 A clear and concise description of what the bug is.
+Be sure to explain the business problem that this bug is affecting.
 
 **Version**
 Zen Cart version: 
 PHP version: 
 MySQL version: 
 Plugins that may be related: 
-
-**Describe the bug**
-A clear and concise description of what the bug is.
-Be sure to explain the business problem that this bug is affecting.
+What older/newer versions were also tested?
 
 **To Reproduce**
 Steps to reproduce/demonstrate the behavior:
