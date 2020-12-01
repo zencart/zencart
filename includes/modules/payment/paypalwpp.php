@@ -2339,7 +2339,7 @@ if (false) { // disabled until clarification is received about coupons in PayPal
           return false;
         }
       }
-      
+
       // -----
       // Give a watching observer the opportunity to bypass this address-override.  An observer
       // can disable the address-override processing by setting the $disable_address_override
@@ -2351,7 +2351,7 @@ if (false) { // disabled until clarification is received about coupons in PayPal
         $this->zcLog('getOverrideAddress - 1a', "Override disabled by observer request.\n");
         return false;
       }
-      
+
       // now grab the address from the database and set it as the overridden address
       $sql = "SELECT entry_firstname, entry_lastname, entry_company,
                      entry_street_address, entry_suburb, entry_city, entry_postcode,
@@ -2639,6 +2639,14 @@ if (false) { // disabled until clarification is received about coupons in PayPal
         $zone_id = 0;
       }
     }
+
+    // truncate long data
+    $address_question_arr['company'] = substr($address_question_arr['company'], 0, zen_field_length(TABLE_ADDRESS_BOOK, 'entry_company'));
+    $address_question_arr['street_address'] = substr($address_question_arr['street_address'], 0, zen_field_length(TABLE_ADDRESS_BOOK, 'entry_street_address'));
+    $address_question_arr['suburb'] = substr($address_question_arr['suburb'], 0, zen_field_length(TABLE_ADDRESS_BOOK, 'entry_suburb'));
+    $address_question_arr['city'] = substr($address_question_arr['city'], 0, zen_field_length(TABLE_ADDRESS_BOOK, 'entry_city'));
+    $address_question_arr['state'] = substr($address_question_arr['state'], 0, zen_field_length(TABLE_ADDRESS_BOOK, 'entry_state'));
+    $address_question_arr['postcode'] = substr($address_question_arr['postcode'], 0, zen_field_length(TABLE_ADDRESS_BOOK, 'entry_postcode'));
 
     // now run the insert
 
