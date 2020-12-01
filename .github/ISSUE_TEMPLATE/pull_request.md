@@ -12,6 +12,7 @@ Zen Cart version:
 PHP version: 
 MySQL version: 
 Plugins that may be related: 
+What older/newer versions were tested with this change? :
 
 **Describe what is being fixed/changed and why**
 A clear and concise description of what problem is being fixed/changed.
