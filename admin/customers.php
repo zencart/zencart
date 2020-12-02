@@ -261,7 +261,9 @@ if (zen_not_null($action)) {
       $customers_id = zen_db_prepare_input($_POST['cID']);
       $zco_notifier->notify('NOTIFIER_ADMIN_ZEN_CUSTOMERS_DELETE_CONFIRM', array('customers_id' => $customers_id));
       $customer = new Customer($customers_id);
-      $customer->delete(isset($_POST['delete_reviews']) && $_POST['delete_reviews'] == 'on');
+      $delete_reviews = (isset($_POST['delete_reviews']) && $_POST['delete_reviews'] == 'on');
+      $forget_only = (isset($_POST['delete_type_forget']) && $_POST['delete_type_forget'] == 'forget');
+      $customer->delete($delete_reviews, $forget_only);
       zen_redirect(zen_href_link(FILENAME_CUSTOMERS, zen_get_all_get_params(array('cID', 'action')), 'NONSSL'));
       break;
     default:
@@ -936,7 +938,11 @@ if (zen_not_null($action)) {
                 $contents[] = array('text' => TEXT_DELETE_INTRO . '<br><br><b>' . $cInfo->customers_firstname . ' ' . $cInfo->customers_lastname . '</b>');
                 if (isset($cInfo->number_of_reviews) && ($cInfo->number_of_reviews) > 0)
                   $contents[] = array('text' => '<br>' . zen_draw_checkbox_field('delete_reviews', 'on', true) . ' ' . sprintf(TEXT_DELETE_REVIEWS, $cInfo->number_of_reviews));
-                $contents[] = array('align' => 'text-center', 'text' => '<br><button type="submit" class="btn btn-danger">' . IMAGE_DELETE . '</button> <a href="' . zen_href_link(FILENAME_CUSTOMERS, zen_get_all_get_params(array('cID', 'action')) . 'cID=' . $cInfo->customers_id, 'NONSSL') . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>');
+                $contents[] = array('align' => 'text-center',
+                                    'text' => '<br>
+                                               <button type="submit" name="delete_type_forget" value="forget" class="btn btn-primary">' . IMAGE_FORGET_ONLY . '</button>
+                                               <button type="submit" name="delete_type_full" value="delete" class="btn btn-danger">' . IMAGE_DELETE . '</button>
+                                               <a href="' . zen_href_link(FILENAME_CUSTOMERS, zen_get_all_get_params(array('cID', 'action')) . 'cID=' . $cInfo->customers_id, 'NONSSL') . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>');
                 break;
               case 'pwreset':
                 $heading[] = array('text' => '<h4>' . TEXT_INFO_HEADING_RESET_CUSTOMER_PASSWORD . '</h4>');

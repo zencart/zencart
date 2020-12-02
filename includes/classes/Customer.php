@@ -589,8 +589,9 @@ class Customer extends base
      * Delete customer and all relations
      *
      * @param bool $delete_reviews
+     * @param bool $forget_only Instead of delete, simply obfuscate address/name data
      */
-    public function delete(bool $delete_reviews = false)
+    public function delete(bool $delete_reviews = false, $forget_only = false)
     {
         global $db;
 
@@ -606,19 +607,51 @@ class Customer extends base
             $db->Execute("DELETE FROM " . TABLE_REVIEWS . "
                           WHERE customers_id = '" . (int)$this->customer_id . "'");
         } else {
-            $db->Execute("UPDATE " . TABLE_REVIEWS . "
-                          SET customers_id = null
+            $fields = 'customers_id = null';
+            if ($forget_only) {
+                $text_anonymous = (defined('DB_TEXT_ANONYMOUS')) ? zen_db_input(constant('DB_TEXT_ANONYMOUS')) : 'anonymous';
+                $fields = "customers_name = '" . $text_anonymous . "'";
+            }
+            $db->Execute("UPDATE " . TABLE_REVIEWS . " SET " . $fields . "
                           WHERE customers_id = " . (int)$this->customer_id);
         }
 
-        $db->Execute("DELETE FROM " . TABLE_ADDRESS_BOOK . "
+        $text_deleted = (defined('DB_TEXT_DELETED')) ? zen_db_input(constant('DB_TEXT_DELETED')) : 'deleted';
+
+        if ($forget_only) {
+            $db->Execute("UPDATE " . TABLE_ADDRESS_BOOK . "
+                          SET entry_gender = '',
+                              entry_company = '',
+                              entry_firstname = '',
+                              entry_lastname = '" . $text_deleted . "',
+                              entry_street_address = '" . $text_deleted . "',
+                              entry_suburb = ''
+                          WHERE customers_id = " . (int)$this->customer_id);
+
+            $db->Execute("UPDATE " . TABLE_CUSTOMERS . "
+                       SET customers_gender = '',
+                           customers_firstname = '" . $text_deleted . "',
+                           customers_lastname = '" . $text_deleted . " " . date("Y-m-d") . "',
+                           customers_email_address = '" . $text_deleted . "',
+                           customers_dob = '0001-01-01 00:00:00',
+                           customers_newsletter = null,
+                           customers_nick = '',
+                           customers_paypal_payerid = '',
+                           customers_secret = '',
+                           customers_password = '',
+                           customers_telephone = '',
+                           customers_fax = ''
+                       WHERE customers_id = " . (int)$this->customer_id);
+        } else {
+            $db->Execute("DELETE FROM " . TABLE_ADDRESS_BOOK . "
+                          WHERE customers_id = " . (int)$this->customer_id);
+
+            $db->Execute("DELETE FROM " . TABLE_CUSTOMERS . "
                       WHERE customers_id = " . (int)$this->customer_id);
 
-        $db->Execute("DELETE FROM " . TABLE_CUSTOMERS . "
-                      WHERE customers_id = " . (int)$this->customer_id);
-
-        $db->Execute("DELETE FROM " . TABLE_CUSTOMERS_INFO . "
+            $db->Execute("DELETE FROM " . TABLE_CUSTOMERS_INFO . "
                       WHERE customers_info_id = " . (int)$this->customer_id);
+        }
 
         $db->Execute("DELETE FROM " . TABLE_CUSTOMERS_BASKET . "
                       WHERE customers_id = " . (int)$this->customer_id);

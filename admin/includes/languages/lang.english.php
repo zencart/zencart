@@ -200,6 +200,7 @@ $define = [
     'IMAGE_DELETE' => 'Delete',
     'IMAGE_EDIT' => 'Edit',
     'IMAGE_EMAIL' => 'Email',
+    'IMAGE_FORGET_ONLY' => 'Forget Only',
     'IMAGE_GO' => 'Go',
     'IMAGE_ICON_STATUS_GREEN' => 'Active',
     'IMAGE_ICON_STATUS_RED' => 'Inactive',
