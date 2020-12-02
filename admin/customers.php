@@ -396,38 +396,37 @@ if (zen_not_null($action)) {
                 <?php echo zen_draw_input_field('entry_company', htmlspecialchars($cInfo->company, ENT_COMPAT, CHARSET, TRUE), zen_set_field_length(TABLE_ADDRESS_BOOK, 'entry_company', 50) . ' class="form-control" id="entry_company" minlength="' . ENTRY_COMPANY_MIN_LENGTH . '"'); ?>
               </div>
             </div>
-            <?php
-            // -----
-            // If a plugin has additional fields to add to the form, it supplies that information here.  The
-            // additional fields are specified as a simply array of arrays, with each array element identifying
-            // a new input element:
-            //
-            // $additional_fields = array(
-            //      array(
-            //          'label' => 'The text to include for the field label',
-            //          'input' => 'The form-related portion of the field',
-            //      ),
-            //      ...
-            // );
-            //
-            $additional_fields = array();
-            $zco_notifier->notify('NOTIFY_ADMIN_CUSTOMERS_CUSTOMER_EDIT', $cInfo, $additional_fields);
-            if (is_array($additional_fields)) {
-              foreach ($additional_fields as $current_field) {
-                ?>
-                <div class="form-group">
-                  <?php echo zen_draw_label($current_field['label'], '', 'class="col-sm-3 control-label"'); ?>
-                  <div class="col-sm-9 col-md-6"><?php echo $current_field['input']; ?></div>
-                </div>
-                <?php
-              }
-            }
-            ?>
           </div>
           <?php
         }
         ?>
-        <div class="row">
+          <?php
+          // -----
+          // If a plugin has additional fields to add to the form, it supplies that information here.
+          // Additional fields are specified as a simple array of arrays,
+          // with each array element identifying a new input element:
+          //
+          // $additional_fields = [
+          //      [
+          //          'label' => 'The text to include for the field label',
+          //          'input' => 'The form-related portion of the field',
+          //      ],
+          //      ...
+          // ];
+          //
+          $additional_fields = [];
+          $zco_notifier->notify('NOTIFY_ADMIN_CUSTOMERS_CUSTOMER_EDIT', $cInfo, $additional_fields);
+          if (is_array($additional_fields)) {
+              foreach ($additional_fields as $current_field) {
+                  ?>
+                  <div class="form-group">
+                      <?php echo zen_draw_label($current_field['label'], '', 'class="col-sm-3 control-label"'); ?>
+                      <div class="col-sm-9 col-md-6"><?php echo $current_field['input']; ?></div>
+                  </div>
+                  <?php
+              }
+          }
+          ?>        <div class="row">
           <?php echo zen_draw_separator('pixel_trans.gif', '1', '10'); ?>
         </div>
         <div class="row formAreaTitle"><?php echo CATEGORY_ADDRESS; ?></div>
