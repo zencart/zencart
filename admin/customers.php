@@ -467,8 +467,8 @@ if (zen_not_null($action)) {
               <?php echo zen_draw_label(ENTRY_STATE, 'entry_state', 'class="col-sm-3 control-label"'); ?>
               <div class="col-sm-9 col-md-6">
                 <?php
-                $entry_state = zen_get_zone_name($cInfo->country_id, $cInfo->zone_id, $cInfo->state);
-                if (count(zen_get_country_zones($cInfo->country_id))) {
+                $entry_state = zen_get_zone_name((int)$cInfo->country_id, (int)$cInfo->zone_id, $cInfo->state);
+                if (count(zen_get_country_zones((int)$cInfo->country_id))) {
                   $zones_array = [];
                   $zones_values = $db->Execute("SELECT zone_name
                                                 FROM " . TABLE_ZONES . "
@@ -483,7 +483,7 @@ if (zen_not_null($action)) {
                   }
                   echo zen_draw_pull_down_menu('entry_state', $zones_array, $entry_state, 'class="form-control" id="entry_state"');
                 } else {
-                  echo zen_draw_input_field('entry_state', htmlspecialchars(zen_get_zone_name($cInfo->country_id, $cInfo->zone_id, $cInfo->state), ENT_COMPAT, CHARSET, TRUE), 'class="form-control" id="entry_state" minlength="' . ENTRY_STATE_MIN_LENGTH . '"');
+                  echo zen_draw_input_field('entry_state', htmlspecialchars(zen_get_zone_name((int)$cInfo->country_id, (int)$cInfo->zone_id, $cInfo->state), ENT_COMPAT, CHARSET, TRUE), 'class="form-control" id="entry_state" minlength="' . ENTRY_STATE_MIN_LENGTH . '"');
                 }
                 ?>
               </div>

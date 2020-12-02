@@ -91,7 +91,7 @@
       <td colspan="2" class="seDisplayedAddressLabel">
         <?php echo CART_SHIPPING_QUOTE_CRITERIA; ?><br />
         <?php echo '<span class="seDisplayedAddressInfo">' .
-            zen_get_zone_name($selected_country, $state_zone_id, '') .
+            zen_get_zone_name((int)$selected_country, (int)$state_zone_id, '') .
             ($selectedState != '' ? ' ' . $selectedState : '') . ' ' .
             (isset($order->delivery['postcode']) ? $order->delivery['postcode'] : '') . ' ' .
             zen_get_country_name($order->delivery['country_id']) .
