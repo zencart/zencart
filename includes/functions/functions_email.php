@@ -359,7 +359,12 @@ use PHPMailer\PHPMailer\SMTP;
       /**
        * Send the email. If an error occurs, trap it and display it in the messageStack
        */
-      if (!$mail->send()) {
+      $success = false;
+      try { 
+         $success = $mail->send(); 
+      } catch (Exception $e) {
+      }
+      if (!$success) { 
         $msg = sprintf(EMAIL_SEND_FAILED . '&nbsp;'. $mail->ErrorInfo, $to_name, $to_email_address, $email_subject);
         if ($messageStack !== NULL) {
           if (IS_ADMIN_FLAG === true) {
