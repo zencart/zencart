@@ -278,13 +278,13 @@ function zen_is_hmac_login()
 
 function zen_validate_hmac_login()
 {
-    global $db;
+    global $db, $zenSessionId;
     $postCheck = ['cid', 'aid', 'email_address'];
     foreach ($postCheck as $entry) {
         if (!isset($_POST[$entry])) return false;
     }
     $data = $_REQUEST;
-    $unsetArray = ['action', 'main_page', 'securityToken', 'zenid', 'zenInstallerId'];
+    $unsetArray = ['action', 'main_page', 'securityToken', 'zenid', 'zenInstallerId', $zenSessionId];
     foreach ($unsetArray as $entry) {
         unset($data[$entry]);
     }

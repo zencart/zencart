@@ -15,7 +15,7 @@ if (!defined('IS_ADMIN_FLAG')) {
 $includeCPath = FALSE;
 
 // EXCLUDE certain parameters which should not be included in canonical links:
-$excludeParams = array('zenid', 'action', 'main_page', 'currency', 'typefilter', 'gclid', 'search_in_description', 'pto', 'pfrom',
+$excludeParams = array($zenSessionId, 'zenid', 'action', 'main_page', 'currency', 'typefilter', 'gclid', 'search_in_description', 'pto', 'pfrom',
                        'dto', 'dfrom', 'inc_subcat', 'notify', 'edit', 'act', 'method', 'type', 'ec_cancel', 'token', 'addr', 'goto',
                        'authcapt', 'delete', 'goback', 'gv_no', 'markflow', 'nocache', 'override', 'order', 'pos', 'referer', 'tx',
                        'products_tax_class_id', 'set_session_login');

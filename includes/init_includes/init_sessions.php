@@ -11,14 +11,12 @@ if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
 }
 /**
- * sanity check in case zenid has been incorrectly supplied as an htmlencoded param name
+ * sanity check in case session id has been incorrectly supplied as an htmlencoded param name
  */
-if (!isset($_GET['zenid']) && isset($_GET['amp;zenid'])) {
-  $_GET['zenid'] = $_GET['amp;zenid'];
-  unset($_GET['amp;zenid']);
-} else if (isset($_GET['amp;zenid'])) {
-  unset($_GET['amp;zenid']);
+if (!isset($_GET[$zenSessionId]) && isset($_GET['amp;' .$zenSessionId])) {
+    $_GET[$zenSessionId] = $_GET['amp;' . $zenSessionId];
 }
+unset($_GET['amp;' . $zenSessionId]);
 
 /**
  * require the session handling functions
@@ -27,7 +25,7 @@ require(DIR_WS_FUNCTIONS . 'sessions.php');
 /**
  * set the session name and save path
  */
-zen_session_name('zenid');
+zen_session_name($zenSessionId);
 zen_session_save_path(SESSION_WRITE_DIRECTORY);
 /**
  * set the session cookie parameters
@@ -97,10 +95,10 @@ if (SESSION_FORCE_COOKIE_USE == 'True') {
     zen_session_start();
     $session_started = true;
   } else {
-    if (isset($_GET['zenid']) && $_GET['zenid'] != '') {
+    if (isset($_GET[$zenSessionId]) && $_GET[$zenSessionId] != '') {
       $tmp = (isset($_GET['main_page']) && $_GET['main_page'] != '') ? $_GET['main_page'] : FILENAME_DEFAULT;
       @header("HTTP/1.1 301 Moved Permanently");
-      @zen_redirect(@zen_href_link($tmp, @zen_get_all_get_params(array('zenid')), $request_type, FALSE));
+      @zen_redirect(@zen_href_link($tmp, @zen_get_all_get_params(array($zenSessionId)), $request_type, FALSE));
       unset($tmp);
       die();
     }
