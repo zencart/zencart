@@ -215,7 +215,7 @@ if ($_SESSION['cart']->count_contents() > 0) {
                 }
             }
 
-            if (isset($selected_quote[0]['error']) && $selected_quote[0]['error'] || !zen_not_null($selected_quote[0]['methods'][0]['cost'])) {
+            if (!isset($selected_quote) || (isset($selected_quote[0]['error']) && $selected_quote[0]['error']) || !zen_not_null($selected_quote[0]['methods'][0]['cost'])) {
                 $order->info['shipping_method'] = isset($selected_shipping['title']) ? $selected_shipping['title'] : '';
                 $order->info['shipping_cost'] = isset($selected_shipping['cost']) ? $selected_shipping['cost'] : 0;
                 $order->info['total']+= isset($selected_shipping['cost']) ? $selected_shipping['cost'] : 0;
