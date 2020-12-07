@@ -36,8 +36,8 @@ TRUNCATE TABLE db_cache;
 
 ALTER TABLE layout_boxes ADD plugin_details varchar(100) NOT NULL default '';
 ALTER TABLE manufacturers ADD COLUMN featured tinyint default 0;
-
-
+ALTER TABLE customers ADD registration_ip varchar(45) NOT NULL default '';
+ALTER TABLE customers ADD last_login_ip varchar(45) NOT NULL default '';
 
 # Remove greater-than sign in query_builder
 UPDATE query_builder SET query_name = 'Customers Dormant for 3+ months (Subscribers)' WHERE query_id = 3;

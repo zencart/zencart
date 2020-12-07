@@ -141,6 +141,10 @@ class Customer extends base
                 WHERE customers_info_id = " . (int)$customer_id;
         $db->Execute($sql);
 
+        $sql = "UPDATE " . TABLE_CUSTOMERS . "
+                SET last_login_ip = '" . zen_db_input(zen_get_ip_address()) . "'
+                WHERE customers_id = " . (int)$customer_id;
+
         // these session variables are used in various places across the catalog
         $_SESSION['customer_id'] = (int)$customer_id;
         $_SESSION['customers_email_address'] = $this->data['customers_email_address'];
@@ -640,6 +644,8 @@ class Customer extends base
                            customers_secret = '',
                            customers_password = '',
                            customers_telephone = '',
+                           registration_ip = '',
+                           last_login_ip = '',
                            customers_fax = ''
                        WHERE customers_id = " . (int)$this->customer_id);
         } else {
@@ -673,6 +679,8 @@ class Customer extends base
     {
         global $db;
 
+        $this->notify('NOTIFY_MODULE_CREATE_ACCOUNT_ADDING_CUSTOMER_RECORD', null, $data);
+
         $sql_data_array = [
             ['fieldName'=>'customers_firstname', 'value'=> $data['firstname'], 'type'=>'stringIgnoreNull'],
             ['fieldName'=>'customers_lastname', 'value'=> $data['lastname'], 'type'=>'stringIgnoreNull'],
@@ -685,6 +693,11 @@ class Customer extends base
             ['fieldName'=>'customers_default_address_id', 'value'=>0, 'type'=>'integer'],
             ['fieldName'=>'customers_password', 'value'=>zen_encrypt_password($data['password']), 'type'=>'stringIgnoreNull'],
             ['fieldName'=>'customers_authorization', 'value'=> $data['customers_authorization'], 'type'=>'integer'],
+        ];
+
+        $sql_data_array += [
+            ['fieldName'=>'registration_ip', 'value'=> $data['ip_address'], 'type'=>'string'],
+            ['fieldName'=>'last_login_ip', 'value'=> $data['ip_address'], 'type'=>'string'],
         ];
 
         if (CUSTOMERS_REFERRAL_STATUS == '2' && !empty($data['customers_referral'])) {
