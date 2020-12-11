@@ -1,3 +1,4 @@
+SET SQL_MODE = "ALLOW_INVALID_DATES";
 UPDATE admin SET pwd_last_change_date = '0001-01-01 00:00:00' WHERE pwd_last_change_date < '0001-01-01' and pwd_last_change_date is not null;
 UPDATE admin SET last_modified = '0001-01-01 00:00:00' WHERE last_modified < '0001-01-01' and last_modified is not null;
 UPDATE admin SET last_login_date = '0001-01-01 00:00:00' WHERE last_login_date < '0001-01-01' and last_login_date is not null;
