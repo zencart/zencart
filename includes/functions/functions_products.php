@@ -763,7 +763,7 @@ function zen_get_products_allow_add_to_cart($product_id)
 {
     global $db, $zco_notifier;
 
-    $sql = "SELECT products_type, products_model FROM " . TABLE_PRODUCTS . " WHERE products_id=" . (int)$product_id;
+    $sql = "SELECT * FROM " . TABLE_PRODUCTS . " WHERE products_id=" . (int)$product_id;
     $type_lookup = $db->Execute($sql);
 
     $sql = "SELECT allow_add_to_cart FROM " . TABLE_PRODUCT_TYPES . " WHERE type_id=" . (int)$type_lookup->fields['products_type'];
