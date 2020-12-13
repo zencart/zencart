@@ -16,8 +16,12 @@ What older/newer versions were tested with this change? :
 
 **Describe what is being fixed/changed and why**
 A clear and concise description of what problem is being fixed/changed.
-Include background information regarding how you came to believe this needs fixing.
-When reviewing submissions it is very helpful if you explain the Business Problem that this change is solving.
+- Include background information regarding how you came to believe this needs fixing.
+- When reviewing submissions it is very helpful if you explain the Business Problem that this change is solving.
+
+**Provide an example**
+- Did you provide an example of the way this would be used? 
+- or an example of the problem this is aiming to solve?
 
 **To Reproduce**
 Steps to reproduce/demonstrate the behavior:
