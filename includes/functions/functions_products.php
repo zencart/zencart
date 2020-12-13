@@ -21,11 +21,11 @@ function zen_get_product_details($product_id, $language_id = null)
 
     if ($language_id === null) $language_id = $_SESSION['languages_id'];
 
-    $sql = "SELECT p.*, pd.*
+    $sql = "SELECT p.*, pd.*, pt.allow_add_to_cart, pt.type_handler
             FROM " . TABLE_PRODUCTS . " p
-            LEFT JOIN " . TABLE_PRODUCTS_DESCRIPTION . " pd USING (products_id)
-            WHERE p.products_id = " . (int)$product_id . "
-            AND pd.language_id = " . (int)$language_id;
+            LEFT JOIN " . TABLE_PRODUCT_TYPES . " pt ON (p.products_type = pt.type_id)
+            LEFT JOIN " . TABLE_PRODUCTS_DESCRIPTION . " pd ON (p.products_id = pd.products_id AND pd.language_id = " . (int)$language_id . ")
+            WHERE p.products_id = " . (int)$product_id;
     return $db->Execute($sql, 1, true, 900);
 }
 
