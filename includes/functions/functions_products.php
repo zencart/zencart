@@ -763,25 +763,28 @@ function zen_get_products_allow_add_to_cart($product_id)
 {
     global $db, $zco_notifier;
 
-    $sql = "SELECT products_type, products_model FROM " . TABLE_PRODUCTS . " WHERE products_id=" . (int)$product_id;
-    $type_lookup = $db->Execute($sql);
+    $sql = "SELECT p.*, pt.allow_add_to_cart FROM " . TABLE_PRODUCTS . " p
+            LEFT JOIN " . TABLE_PRODUCT_TYPES . " pt ON (p.products_type = pt.type_id)
+            WHERE products_id=" . (int)$product_id;
 
-    $sql = "SELECT allow_add_to_cart FROM " . TABLE_PRODUCT_TYPES . " WHERE type_id=" . (int)$type_lookup->fields['products_type'];
-    $allow_add_to_cart = $db->Execute($sql);
+    $product_query_results = $db->Execute($sql, 1);
 
-    if (preg_match('/^GIFT/', addslashes($type_lookup->fields['products_model'])) && ($allow_add_to_cart->fields['allow_add_to_cart'] == 'Y')) {
+    // If product found, and product_type's allow_add_to_cart is not 'N', allow
+    $allow_add_to_cart = !$product_query_results->EOF && $product_query_results->fields['allow_add_to_cart'] != 'N';
+
+
+    // If product is encoded as GV but GV feature is turned off, disallow add-to-cart
+    if (preg_match('/^GIFT/', addslashes($product_query_results->fields['products_model'])) && $allow_add_to_cart) {
         if (MODULE_ORDER_TOTAL_GV_STATUS !== 'true') {
-            $allow_add_to_cart->fields['allow_add_to_cart'] = 'N';
+            $allow_add_to_cart = false;
         }
     }
 
-    $response = $allow_add_to_cart->fields['allow_add_to_cart'];
+    $zco_notifier->notify('NOTIFY_GET_PRODUCT_ALLOW_ADD_TO_CART', $product_id, $allow_add_to_cart, $product_query_results);
 
-    $zco_notifier->notify('NOTIFY_GET_PRODUCT_ALLOW_ADD_TO_CART', $product_id, $response);
-
-    return $response;
+    // test for boolean and for 'Y', since observer might try to return 'Y'
+    return in_array($allow_add_to_cart, [true, 'Y'], true) ? 'Y' : 'N';
 }
-
 
 /**
  * build configuration_key based on product type and return its value
