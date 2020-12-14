@@ -278,7 +278,7 @@ if (zen_not_null($action)) {
       <div class="row">
         <div class="col-sm-6"><?php echo TEXT_SALEMAKER_POPUP; ?></div>
         <div class="col-sm-6 text-right">
-          <button type="submit" class="btn btn-primary"><?php echo (($form_action == 'insert') ? IMAGE_INSERT : IMAGE_UPDATE); ?></button> <a href="<?php echo zen_href_link(FILENAME_SALEMAKER, 'page=' . $_GET['page'] . ($_GET['sID'] > 0 ? '&sID=' . $_GET['sID'] : '')); ?>" class="btn btn-default" role="button"><?php echo IMAGE_CANCEL; ?></a></div>
+          <button type="submit" class="btn btn-primary"><?php echo (($form_action == 'insert') ? IMAGE_INSERT : IMAGE_UPDATE); ?></button> <a href="<?php echo zen_href_link(FILENAME_SALEMAKER, 'page=' . $_GET['page'] . (!empty($_GET['sID']) ? '&sID=' . $_GET['sID'] : '')); ?>" class="btn btn-default" role="button"><?php echo IMAGE_CANCEL; ?></a></div>
       </div>
       <div class="form-group">
           <?php echo zen_draw_label(TEXT_SALEMAKER_NAME, 'name', 'class="col-sm-3 control-label"'); ?>
