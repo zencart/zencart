@@ -64,7 +64,7 @@
   $products_record_company_name = !empty($record_company->fields['record_company_name']) ? $record_company->fields['record_company_name'] : '';
   $products_record_company_url = !empty($record_company_info->fields['record_company_url']) ? $record_company_info->fields['record_company_url'] : '';
   $products_music_genre_name = !empty($music_genre->fields['music_genre_name']) ? $music_genre->fields['music_genre_name'] : '';
-  if (!empty($products_artist_url)) $products_artist_name = '<a href="' . zen_href_link(FILENAME_REDIRECT, 'action=music_arist&artists_id=' . zen_output_string_protected($music_extras->fields['artists_id']), 'NONSSL', true, false) . '" rel="noopener noreferrer" target="_blank">'.$products_artist_name.'</a>';
+  if (!empty($products_artist_url)) $products_artist_name = '<a href="' . zen_href_link(FILENAME_REDIRECT, 'action=music_artist&artists_id=' . zen_output_string_protected($music_extras->fields['artists_id']), 'NONSSL', true, false) . '" rel="noopener noreferrer" target="_blank">'.$products_artist_name.'</a>';
   if (!empty($products_record_company_url)) $products_record_company_name = '<a href="' . zen_href_link(FILENAME_REDIRECT, 'action=music_record_company&record_company_id=' . zen_output_string_protected($music_extras->fields['record_company_id']), 'NONSSL', true, false) . '" rel="noopener noreferrer" target="_blank">'.$products_record_company_name.'</a>';
 
   // This should be last line of the script:

@@ -3,7 +3,7 @@
  * redirect handler
  *
  * @package page
- * @copyright Copyright 2003-2014 Zen Cart Development Team
+ * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: $
@@ -33,7 +33,7 @@ switch ($_GET['action']) {
       }
     }
     break;
-  case 'music_arist':
+  case 'music_artist':
     if (isset($_GET['artists_id']) && zen_not_null($_GET['artists_id'])) {
       $sql = "SELECT artists_url from " . TABLE_RECORD_ARTISTS_INFO . " WHERE artists_id = :artistId: AND languages_id = :languageId:";
       $sql = $db->bindVars($sql, ':artistId:', $_GET['artists_id'], 'integer');
