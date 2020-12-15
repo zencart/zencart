@@ -293,7 +293,7 @@ function executeSql($lines, $database, $table_prefix = '') {
         }
         $results++;
         $string .= $newline . '<br>';
-        $return_output[] = $output;
+//        $return_output[] = $output;
         if (zen_not_null($result)) {
           $errors[] = $result;
         }
@@ -750,13 +750,13 @@ if (zen_not_null($action)) {
         if ($query_results['ignored'] != 0) {
           $messageStack->add(sprintf(ERROR_EXECUTE_IGNORED, (int)$query_results['ignored']), 'caution');
         }
-        if (zen_not_null($query_results['output'])) {
-          foreach ($query_results['output'] as $value) {
-            if (zen_not_null($value)) {
-              $messageStack->add('INFO: ' . $value, 'caution');
-            }
-          }
-        }
+//        if (zen_not_null($query_results['output'])) {
+//          foreach ($query_results['output'] as $value) {
+//            if (zen_not_null($value)) {
+//              $messageStack->add('INFO: ' . $value, 'caution');
+//            }
+//          }
+//        }
       } else {
         $messageStack->add(ERROR_NOTHING_TO_DO, 'error');
       }
