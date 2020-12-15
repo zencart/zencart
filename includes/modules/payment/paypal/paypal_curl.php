@@ -206,7 +206,7 @@ class paypal_curl extends base {
    *
    * PAYMENTREQUEST_0_PAYMENTACTION = Authorization (auth/capt) or Sale (final)
    */
-  function DoDirectPayment($cc, $cvv2 = '', $exp, $fname = null, $lname = null, $cc_type, $options = array(), $nvp = array() ) {
+  function DoDirectPayment($cc, $cvv2 = '', $exp = '', $fname = null, $lname = null, $cc_type = '', $options = array(), $nvp = array() ) {
     $values = $options;
     $values['ACCT'] = $cc;
     if ($cvv2 != '') $values['CVV2'] = $cvv2;

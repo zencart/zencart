@@ -1130,7 +1130,7 @@ class paypaldp extends base {
   /**
    * Debug Emailing support
    */
-  function _doDebug($subject = 'PayPal debug data', $data, $useSession = true) {
+  function _doDebug($subject = 'PayPal debug data', $data = '', $useSession = true) {
     if (MODULE_PAYMENT_PAYPALDP_DEBUGGING == 'Log and Email') {
       $data =  urldecode($data) . "\n\n";
       if ($useSession) $data .= "\nSession data: " . print_r($_SESSION, true);
