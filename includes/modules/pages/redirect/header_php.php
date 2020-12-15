@@ -44,7 +44,7 @@ switch ($_GET['action']) {
         zen_update_music_artist_clicked($_GET['artists_id'], $_SESSION['languages_id']);
         zen_redirect(fixup_url($result->fields['artists_url']));
       } else {
-        $sql = "SELECT products_url from " . TABLE_RECORD_ARTISTS_INFO . " WHERE artists_id = :artistId: AND languages_id = :languageId:";
+        $sql = "SELECT artists_url from " . TABLE_RECORD_ARTISTS_INFO . " WHERE artists_id = :artistId: AND languages_id = :languageId:";
         $sql = $db->bindVars($sql, ':artistId:', $_GET['artists_id'], 'integer');
         $sql = $db->bindVars($sql, ':languageId:', DEFAULT_LANGUAGE, 'integer');
         $result = $db->execute($sql);
