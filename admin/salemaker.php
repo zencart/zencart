@@ -519,7 +519,7 @@ if (zen_not_null($action)) {
                 $contents = array('form' => zen_draw_form('sales', FILENAME_SALEMAKER, 'page=' . $_GET['page'] . '&action=deleteconfirm') . zen_draw_hidden_field('sID', $sInfo->sale_id));
                 $contents[] = array('text' => TEXT_INFO_DELETE_INTRO);
                 $contents[] = array('text' => '<br><b>' . $sInfo->sale_name . '</b>');
-                $contents[] = array('align' => 'center', 'text' => '<br>' . '<input type="submit" name="submit" value="Delete" id="delete_btn" class="btn btn-danger">' . '&nbsp;<a href="' . zen_href_link(FILENAME_SALEMAKER, 'page=' . $_GET['page'] . '&sID=' . $sInfo->sale_id) . '"' . ' class="btn btn-warning" role="button">' . IMAGE_CANCEL . '</a>');
+                $contents[] = array('align' => 'center', 'text' => '<br>' . '<input type="submit" name="submit" value="'. IMAGE_DELETE . '" id="delete_btn" class="btn btn-danger">' . '&nbsp;<a href="' . zen_href_link(FILENAME_SALEMAKER, 'page=' . $_GET['page'] . '&sID=' . $sInfo->sale_id) . '"' . ' class="btn btn-warning" role="button">' . IMAGE_CANCEL . '</a>');
                 break;
               default:
                 if (!empty($sInfo) && is_object($sInfo)) {
