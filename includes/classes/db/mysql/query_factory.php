@@ -182,13 +182,13 @@ class queryFactory extends base
 
     /**
      * @param string $sqlQuery
-     * @param string|null $limit
+     * @param string|int|null $limit
      * @param bool $enableCaching
      * @param int $cacheSeconds
      * @param bool $removeFromQueryCache
      * @return queryFactoryResult
      */
-    public function Execute(string $sqlQuery, string $limit = null, bool $enableCaching = false, int $cacheSeconds = 0, bool $removeFromQueryCache = false): \queryFactoryResult
+    public function Execute(string $sqlQuery, $limit = null, bool $enableCaching = false, int $cacheSeconds = 0, bool $removeFromQueryCache = false): \queryFactoryResult
     {
         // do SELECT logging if enabled
         $this->logQuery($sqlQuery);
