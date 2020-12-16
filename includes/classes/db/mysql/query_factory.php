@@ -1,13 +1,13 @@
 <?php
 /**
- * MySQL query_factory Class.
+ * MySQL query_factory class.
  * Class used for database abstraction to MySQL via mysqli
  *
  * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @copyright Portions adapted from http://www.data-diggers.com/
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2020 Jan 21 Modified in v1.5.7 $
+ * @version $Id: DrByte 2020 Dec 21 Modified in v1.5.7c $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
@@ -671,10 +671,12 @@ class queryFactoryResult implements Countable, Iterator {
    *
    * @return int
    */
-  public function RecordCount() {
-    if($this->is_cached) {
-      return sizeof($this->result);
-    } else if($this->resource !== null && $this->resource !== true) {
+    public function RecordCount() {
+        if ($this->is_cached && is_countable($this->result)) {
+            return count($this->result);
+        }
+
+        if (!empty($this->resource) && $this->resource instanceof mysqli_result) {
       return @mysqli_num_rows($this->resource);
     }
     return 0;
