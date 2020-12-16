@@ -355,7 +355,7 @@ require (DIR_WS_INCLUDES . 'header.php');
               </td>
           </tr>
           <tr>
-            <td class="main" align="right"><?php echo zen_image_submit('button_go.gif', IMAGE_GO) . '&nbsp;&nbsp;<a href="' . zen_href_link(FILENAME_COUPON_ADMIN, 'cid=' . $_GET['cid'] . (isset($_GET['status']) ? '&status=' . $_GET['status'] : '') . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '')) . '">' . zen_image_button('button_cancel.gif', IMAGE_CANCEL) . '</a>'; ?></td>
+            <td class="main" align="right"><?php echo '<input type="submit" name="submit" value="'. (defined('BUTTON_TEXT_EXPORT') ? BUTTON_TEXT_EXPORT : IMAGE_GO) . '" id="export_btn" class="btn btn-danger">' . '&nbsp;&nbsp;<a href="' . zen_href_link(FILENAME_COUPON_ADMIN, 'cid=' . $_GET['cid'] . (isset($_GET['status']) ? '&status=' . $_GET['status'] : '') . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '')) . '" class="btn btn-warning" role="button">' . IMAGE_CANCEL . '</a>'; ?></td>
           </tr>
         </table>
         </td>

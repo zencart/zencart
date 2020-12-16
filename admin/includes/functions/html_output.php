@@ -150,9 +150,9 @@ function zen_catalog_base_link($connection = '')
     return $image;
   }
 
-////
-// The HTML form submit button wrapper function
-// Outputs a button in the selected language
+/**
+ * @deprecated since v1.5.8. Use <button> markup instead
+ */
 function zen_image_submit($image, $alt = '', $parameters = '')
 {
     $image_submit = '<input type="image" src="' . zen_output_string(DIR_WS_LANGUAGES . $_SESSION['language'] . '/images/buttons/' . $image) . '" alt="' . zen_output_string($alt) . '"';
@@ -179,10 +179,10 @@ function zen_image_submit($image, $alt = '', $parameters = '')
     return zen_image(DIR_WS_IMAGES . $image, '', '', $height, 'style="width:' . $width . ';"');
   }
 
-////
-// Output a function button in the selected language
+/**
+ * @deprecated since v1.5.8. Use <button> markup instead
+ */
   function zen_image_button($image, $alt = '', $params = '') {
-
     return zen_image(DIR_WS_LANGUAGES . $_SESSION['language'] . '/images/buttons/' . $image, $alt, '', '', $params);
   }
 

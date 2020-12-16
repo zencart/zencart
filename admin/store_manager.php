@@ -214,7 +214,7 @@ if ($processing_message != '') {
           <tr>
             <td class="main"><?php echo TEXT_INFO_ATTRIBUTES_FEATURES_UPDATES; ?></td>
             <td class="main"><?php echo zen_draw_form('update_all_products_attributes_sort_order', FILENAME_STORE_MANAGER, 'action=update_all_products_attributes_sort_order')?>
-                <input class="btn btn-default btn-sm" type="submit" value="<?php echo IMAGE_UPDATE; ?>">
+                <button type="submit" class="btn btn-default btn-sm"><?php echo IMAGE_UPDATE; ?></button>
                 <?php echo '</form>'; ?></td>
           </tr>
         </table></td>
@@ -227,7 +227,7 @@ if ($processing_message != '') {
           <tr>
             <td class="main"><?php echo TEXT_INFO_PRODUCTS_PRICE_SORTER_UPDATE; ?></td>
             <td class="main"><?php echo zen_draw_form('update_all_products_price_sorter', FILENAME_STORE_MANAGER, 'action=update_all_products_price_sorter')?>
-                <input class="btn btn-default btn-sm" type="submit" value="<?php echo IMAGE_UPDATE; ?>">
+                <button type="submit" class="btn btn-default btn-sm"><?php echo IMAGE_UPDATE; ?></button>
                 <?php echo '</form>'; ?></td>
           </tr>
         </table></td>
@@ -243,7 +243,7 @@ if ($processing_message != '') {
                     <tr>
                         <td class="main"><?php echo TEXT_INFO_COUNTER_UPDATE; ?></td>
                         <td class="main"><?php echo zen_draw_input_field('new_counter'); ?></td>
-                        <td class="main"><input class="btn btn-default btn-sm" type="submit" value="<?php echo IMAGE_UPDATE; ?>"></td>
+                        <td class="main"><button type="submit" class="btn btn-default btn-sm"><?php echo IMAGE_UPDATE; ?></button></td>
                     </tr>
                 </table>
                 <?php echo '</form>'; ?>
@@ -302,7 +302,7 @@ if ($processing_message != '') {
                     <tr>
                         <td class="main"><?php echo TEXT_INFO_SET_NEXT_ORDER_NUMBER; ?><br>
                             <?php echo TEXT_NEW_ORDERS_ID . '&nbsp;' . zen_draw_input_field('new_orders_id', (isset($new_orders_id) ? $new_orders_id : '')); ?>
-                            <input class="btn btn-default btn-sm" type="submit" value="<?php echo IMAGE_UPDATE; ?>">
+                            <button type="submit" class="btn btn-default btn-sm"><?php echo IMAGE_UPDATE; ?></button>
                         </td>
                     </tr>
                 </table>

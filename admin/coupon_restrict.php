@@ -296,7 +296,7 @@ require DIR_WS_INCLUDES . 'header.php';
 <?php
 $allowed_icon = '<i class="fa fa-lg fa-check text-success" title="' . TEXT_ALLOWED . '"></i>';
 $denied_icon = '<i class="fa fa-lg fa-ban text-danger" title="' . TEXT_DENIED . '"></i>';
-$remove_image = zen_image(DIR_WS_IMAGES . 'icons/delete.gif', IMAGE_REMOVE);
+$remove_image = '<i class="fa fa-lg fa-trash text-default" title="' . IMAGE_REMOVE . '"></i>';
 $toggle_button = '&nbsp;&nbsp;<button type="button" class="cr-toggle" title="' . TEXT_STATUS_TOGGLE_TITLE . '">' . TEXT_STATUS_TOGGLE . '</button>';
 
 $cpage = (isset($_GET['cpage'])) ? (int)$_GET['cpage'] : 1;
