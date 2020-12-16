@@ -907,7 +907,7 @@ class queryFactoryResult implements Countable, Iterator
             return count($this->result);
         }
 
-        if (!empty($this->resource)) {
+        if (!empty($this->resource) && $this->resource instanceof mysqli_result) {
             return @mysqli_num_rows($this->resource);
         }
         return 0;
