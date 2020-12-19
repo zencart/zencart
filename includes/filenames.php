@@ -6,11 +6,12 @@
  * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Zcwilt 2020 May 20 Modified in v1.5.7 $
+ * @version $Id: Zcwilt 2020 May 20 Modified in v1.5.8 $
  */
 /**
  * define project filenames
  */
+define('FILENAME_ABOUT_US', 'about_us');
 define('FILENAME_ACCOUNT', 'account');
 define('FILENAME_ACCOUNT_EDIT', 'account_edit');
 define('FILENAME_ACCOUNT_HISTORY', 'account_history');
@@ -58,6 +59,7 @@ define('FILENAME_CREATE_ACCOUNT_SUCCESS', 'create_account_success');
 define('FILENAME_CURRENCIES', 'currencies');
 define('FILENAME_CUSTOMERS', 'customers');
 define('FILENAME_DEFAULT', 'index');
+define('FILENAME_DEFINE_ABOUT_US', 'define_about_us');
 define('FILENAME_DEFINE_ASK_A_QUESTION', 'define_ask_a_question');
 define('FILENAME_DEFINE_PAGES_EDITOR', 'define_pages_editor');
 define('FILENAME_DEFINE_MAIN_PAGE', 'define_main_page');

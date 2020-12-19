@@ -28,6 +28,8 @@
 
     <div id="siteMapList"><?php echo $zen_SiteMapTree->buildTree(); ?>
       <ul>
+          <li><?php echo '<a href="' . zen_href_link(FILENAME_ABOUT_US) . '">' . BOX_INFORMATION_ABOUT_US . '</a>'; ?></li>
+
 <?php if (SHOW_ACCOUNT_LINKS_ON_SITE_MAP=='Yes') { ?>
         <li><?php echo '<a href="' . zen_href_link(FILENAME_ACCOUNT, '', 'SSL') . '">' . PAGE_ACCOUNT . '</a>'; ?>
         <ul>

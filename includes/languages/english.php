@@ -127,6 +127,7 @@
   define('BOX_INFORMATION_CONTACT', 'Contact Us');
   define('BOX_INFORMATION_UNSUBSCRIBE', 'Newsletter Unsubscribe');
 
+  define('BOX_INFORMATION_ABOUT_US', 'About Us');
   define('BOX_INFORMATION_SITE_MAP', 'Site Map');
 
 // information box text in sideboxes/more_information.php - were TUTORIAL_
