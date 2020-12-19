@@ -43,7 +43,7 @@ $menulist = str_replace('"level1"','"level2"',$menulist);
 $menulist = str_replace('<li>','<li>',$menulist);
 $menulist = str_replace("</li>\n</ul>\n</li>\n</ul>\n","</li>\n</ul>\n",$menulist);
 echo $menulist;
-?>       
+?>
     </li>
 
 <?php
@@ -51,7 +51,7 @@ echo $menulist;
    $show_this = $db->Execute("select s.products_id from " . TABLE_SPECIALS . " s where s.status= 1 limit 1");
    if ($show_this->RecordCount() > 0) { ?>
     <li><a class="category-links" href="<?php echo zen_href_link(FILENAME_SPECIALS); ?>"><?php echo CATEGORIES_BOX_HEADING_SPECIALS; ?></a></li>
-<?php  
+<?php
     }
   }
 ?>
@@ -64,16 +64,16 @@ echo $menulist;
       $show_this = $db->Execute("select p.products_id
                                  from " . TABLE_PRODUCTS . " p
                                  where p.products_status = 1 " . $display_limit . " limit 1");
-      if ($show_this->RecordCount() > 0) { 
+      if ($show_this->RecordCount() > 0) {
 ?>
     <li><a class="category-links" href="<?php echo zen_href_link(FILENAME_PRODUCTS_NEW); ?>"><?php echo CATEGORIES_BOX_HEADING_WHATS_NEW; ?></a></li>
-<?php 
+<?php
     }
-  } 
+  }
 ?>
 <?php if (SHOW_CATEGORIES_BOX_FEATURED_PRODUCTS == 'true') {
        $show_this = $db->Execute("select products_id from " . TABLE_FEATURED . " where status= 1 limit 1");
-       if ($show_this->RecordCount() > 0) { 
+       if ($show_this->RecordCount() > 0) {
 ?>
     <li><a class="category-links" href="<?php echo zen_href_link(FILENAME_FEATURED_PRODUCTS); ?>"><?php echo CATEGORIES_BOX_HEADING_FEATURED_PRODUCTS; ?></a></li>
 <?php
