@@ -623,6 +623,8 @@ class shoppingCart extends base
         $this->weight = 0;
         $this->total_before_discounts = 0;
         $decimalPlaces = $currencies->get_decimal_places($_SESSION['currency']);
+        if (DISPLAY_PRICE_WITH_TAX == 'true') $decimalPlaces += 3; // round with less precision due to VAT
+
         // shipping adjustment
         $this->free_shipping_item = 0;
         $this->free_shipping_price = 0;
@@ -1054,7 +1056,9 @@ class shoppingCart extends base
             $_SESSION['cart_errors'] .= zen_get_products_name($attribute_price->fields['products_id'], $_SESSION['languages_id'])  . ERROR_PRODUCT_OPTION_SELECTION . '<br />';
             }
             */
-            $total_attributes_price += zen_round($attributes_price, $currencies->get_decimal_places($_SESSION['currency']));
+            $decimalPlaces = $currencies->get_decimal_places($_SESSION['currency']);
+            if (DISPLAY_PRICE_WITH_TAX == 'true') $decimalPlaces += 3; // round with less precision due to VAT
+            $total_attributes_price += zen_round($attributes_price, $decimalPlaces);
         }
 
         return $total_attributes_price;
