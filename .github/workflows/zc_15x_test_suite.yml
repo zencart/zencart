@@ -55,14 +55,14 @@ jobs:
           - 3306:3306
         options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
     steps:
-      - uses: actions/checkout@master
+      - uses: actions/checkout@v2
         with:
           fetch-depth: 1
       - name: Show User
         run: echo $USER
       - name: Show PHP version
         run: php --version
-      - name: Show Mysql version
+      - name: Show MySQL version
         run: mysqld --version
       - name: Get composer cache directory
         id: composer-cache
@@ -79,6 +79,7 @@ jobs:
 
       - name: Prepare the application
         run: |
+          touch includes/configure.php
           mkdir -p not_for_release/testFramework/logs/screenshots
           mkdir -p not_for_release/testFramework/logs/console
 
