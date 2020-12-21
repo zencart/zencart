@@ -96,6 +96,7 @@ if (file_exists('includes/defined_paths.php')) {
     die('ERROR: /includes/defined_paths.php file not found. Cannot continue.');
     exit;
 }
+require DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'php_polyfills.php';
 /**
  * ignore version-check if INI file setting has been set
  */
