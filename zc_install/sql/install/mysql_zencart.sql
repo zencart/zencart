@@ -600,6 +600,8 @@ CREATE TABLE customers (
   customers_email_format varchar(4) NOT NULL default 'TEXT',
   customers_authorization int(1) NOT NULL default '0',
   customers_referral varchar(32) NOT NULL default '',
+  registration_ip varchar(45) NOT NULL default '',
+  last_login_ip varchar(45) NOT NULL default '',
   customers_paypal_payerid VARCHAR(20) NOT NULL default '',
   customers_paypal_ec TINYINT(1) UNSIGNED DEFAULT 0 NOT NULL,
   PRIMARY KEY  (customers_id),

@@ -272,13 +272,15 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process') && !isset($login_
     zen_redirect(zen_href_link(FILENAME_SHOPPING_CART));
   } else {
 
+      $ip_address = zen_get_ip_address();
+
       $customer = new Customer;
 
       $data = compact(
           'firstname', 'lastname', 'email_address', 'nick', 'email_format', 'telephone', 'fax',
           'newsletter', 'password', 'customers_authorization', 'customers_referral',
           'gender', 'dob', 'company', 'street_address',
-          'suburb', 'city', 'zone_id', 'state', 'postcode', 'country'
+          'suburb', 'city', 'zone_id', 'state', 'postcode', 'country', 'ip_address'
       );
 
       $result = $customer->create($data);
