@@ -63,7 +63,7 @@ validated and the amount added to your ' . TEXT_GV_NAME . ' Balance. You can the
 
   define('SUB_HEADING_TITLE_5','When problems occur.');
   define('SUB_HEADING_TEXT_5','For any queries regarding the ' . TEXT_GV_NAME . ' System, please contact the store
-  using our <a href="index.php?main_page=contact_us">Contact Us</a> page. Please make sure you give
+  using our <a href="' . zen_href_link(FILENAME_CONTACT_US, '', 'SSL') . '">Contact Us</a> page. Please make sure you give
   as much information as possible regarding the issue so that we can fully address the problem.');
 
   define('SUB_HEADING_TITLE_0','');
