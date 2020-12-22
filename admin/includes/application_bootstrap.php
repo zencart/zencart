@@ -42,6 +42,16 @@ if (!defined('__DIR__')) define('__DIR__', dirname(__FILE__));
 if (!defined('DIR_FS_ADMIN')) define('DIR_FS_ADMIN', preg_replace('#/includes/$#', '/', realpath(__DIR__ . '/../') . '/'));
 
 /**
+ * Ensure minimum PHP version.
+ * This is intended to run before any dependencies are required
+ * See https://www.zen-cart.com/requirements or run zc_install to see actual requirements!
+ */
+if (!defined('PHP_VERSION_ID') || PHP_VERSION_ID < 70205) {
+    chdir(realpath(__DIR__ . '/../'));
+    require 'includes/application_top.php';
+    exit(0);
+}
+/**
  * Set the local configuration parameters - mainly for developers
  */
 if (file_exists('includes/local/configure.php')) {
