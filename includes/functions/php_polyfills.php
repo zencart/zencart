@@ -126,25 +126,26 @@ if (!defined('PHP_FLOAT_MAX')) {
     define('PHP_FLOAT_MAX', 1.7976931348623157E+308);
 }
 if (!defined('PHP_OS_FAMILY')) {
-    define('PHP_OS_FAMILY', static function ()
-        {
-            if ('\\' === \DIRECTORY_SEPARATOR) {
-                return 'Windows';
-            }
-
-            $map = array(
-                'Darwin' => 'Darwin',
-                'DragonFly' => 'BSD',
-                'FreeBSD' => 'BSD',
-                'NetBSD' => 'BSD',
-                'OpenBSD' => 'BSD',
-                'Linux' => 'Linux',
-                'SunOS' => 'Solaris',
-            );
-
-            return isset($map[PHP_OS]) ? $map[PHP_OS] : 'Unknown';
+    function php_os_family()
+    {
+        if ('\\' === \DIRECTORY_SEPARATOR) {
+            return 'Windows';
         }
-    );
+
+        $map = array(
+            'Darwin' => 'Darwin',
+            'DragonFly' => 'BSD',
+            'FreeBSD' => 'BSD',
+            'NetBSD' => 'BSD',
+            'OpenBSD' => 'BSD',
+            'Linux' => 'Linux',
+            'SunOS' => 'Solaris',
+        );
+
+        return isset($map[PHP_OS]) ? $map[PHP_OS] : 'Unknown';
+    }
+
+    define('PHP_OS_FAMILY', php_os_family());
 }
 if (!function_exists('utf8_encode')) {
     function utf8_encode($s)
