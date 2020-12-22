@@ -437,9 +437,10 @@ function zen_get_prid(string $uprid)
 
 
 /**
- * Check if product_id is valid
+ * @param int|string $product_id (while a hashed string is accepted, only the (int) portion is used)
+ * Check if product_id exists in database
  */
-function zen_products_id_valid(int $product_id)
+function zen_products_id_valid($product_id)
 {
     global $db;
     $sql = "SELECT products_id
