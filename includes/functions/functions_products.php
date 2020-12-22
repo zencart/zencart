@@ -469,7 +469,7 @@ function zen_get_products_name($product_id, $language_id = 0)
             WHERE products_id = " . (int)$product_id . "
             AND language_id = " . (int)$language_id;
 
-    $result = $db->Execute($sql);
+    $result = $db->Execute($sql, 1);
     if ($result->EOF) return '';
 
     return $result->fields['products_name'];
@@ -485,7 +485,7 @@ function zen_get_products_model($product_id)
     global $db;
     $check = $db->Execute("SELECT products_model
                     FROM " . TABLE_PRODUCTS . "
-                    WHERE products_id=" . (int)$product_id);
+                    WHERE products_id=" . (int)$product_id, 1);
     if ($check->EOF) return '';
     return $check->fields['products_model'];
 }
@@ -499,7 +499,7 @@ function zen_get_products_status($product_id)
 {
     global $db;
     $sql = "SELECT products_status FROM " . TABLE_PRODUCTS . (zen_not_null($product_id) ? " where products_id=" . (int)$product_id : "");
-    $check_status = $db->Execute($sql);
+    $check_status = $db->Execute($sql, 1);
     if ($check_status->EOF) return '';
     return $check_status->fields['products_status'];
 }
@@ -568,18 +568,20 @@ function zen_get_products_stock($products_id)
  */
 function zen_check_stock($products_id, $products_quantity)
 {
+    global $zco_notifier;
+
     $stock_left = zen_get_products_stock($products_id) - $products_quantity;
 
     // Give an observer the opportunity to change the out-of-stock message.
     $the_message = '';
     if ($stock_left < 0) {
         $out_of_stock_message = STOCK_MARK_PRODUCT_OUT_OF_STOCK;
-        $GLOBALS['zco_notifier']->notify(
+        $zco_notifier->notify(
             'ZEN_CHECK_STOCK_MESSAGE',
-            array(
+            [
                 $products_id,
                 $products_quantity
-            ),
+            ],
             $out_of_stock_message
         );
         $the_message = '<span class="markProductOutOfStock">' . $out_of_stock_message . '</span>';
@@ -602,7 +604,7 @@ function zen_get_products_manufacturers_name($product_id)
             LEFT JOIN " . TABLE_MANUFACTURERS . " m USING (manufacturers_id)
             WHERE p.products_id = " . (int)$product_id;
 
-    $product = $db->Execute($sql);
+    $product = $db->Execute($sql, 1);
 
     return ($product->RecordCount() > 0) ? $product->fields['manufacturers_name'] : '';
 }
@@ -617,18 +619,17 @@ function zen_get_products_manufacturers_image($product_id)
     global $db;
 
     $product_query = "SELECT m.manufacturers_image
-                      FROM " . TABLE_PRODUCTS . " p, " .
-        TABLE_MANUFACTURERS . " m
-                      WHERE p.products_id = '" . (int)$product_id . "'
-                      AND p.manufacturers_id = m.manufacturers_id";
+                      FROM " . TABLE_PRODUCTS . " p
+                      INNER JOIN " . TABLE_MANUFACTURERS . " m ON manufacturers_id
+                      WHERE p.products_id = " . (int)$product_id;
 
-    $product = $db->Execute($product_query);
+    $product = $db->Execute($product_query, 1);
     if ($product->EOF) return '';
     return $product->fields['manufacturers_image'];
 }
 
 /**
- * Return a product's manufacturer's id, from Prod ID
+ * Return a product's manufacturer's id
  * @param int $product_id
  * @return int
  */
@@ -638,9 +639,9 @@ function zen_get_products_manufacturers_id($product_id)
 
     $product_query = "SELECT p.manufacturers_id
                       FROM " . TABLE_PRODUCTS . " p
-                      WHERE p.products_id = '" . (int)$product_id . "'";
+                      WHERE p.products_id = " . (int)$product_id;
 
-    $product = $db->Execute($product_query);
+    $product = $db->Execute($product_query, 1);
 
     return (int)$product->fields['manufacturers_id'];
 }
@@ -656,7 +657,7 @@ function zen_get_products_url($product_id, $language_id)
     $product = $db->Execute("SELECT products_url
                              FROM " . TABLE_PRODUCTS_DESCRIPTION . "
                              WHERE products_id = " . (int)$product_id . "
-                             AND language_id = " . (int)$language_id);
+                             AND language_id = " . (int)$language_id, 1);
     if ($product->EOF) return '';
     return $product->fields['products_url'];
 }
@@ -676,7 +677,7 @@ function zen_get_products_description($product_id, $language_id = 0)
     $product = $db->Execute("SELECT products_description
                              FROM " . TABLE_PRODUCTS_DESCRIPTION . "
                              WHERE products_id = " . (int)$product_id . "
-                             AND language_id = " . (int)$language_id);
+                             AND language_id = " . (int)$language_id, 1);
     if ($product->EOF) return '';
     return $product->fields['products_description'];
 }
@@ -690,13 +691,13 @@ function zen_get_info_page($product_id)
 {
     global $db;
     $sql = "SELECT products_type FROM " . TABLE_PRODUCTS . " WHERE products_id = " . (int)$product_id;
-    $result = $db->Execute($sql);
+    $result = $db->Execute($sql, 1);
     if ($result->EOF) {
         return 'product_info';
     }
 
     $sql = "SELECT type_handler FROM " . TABLE_PRODUCT_TYPES . " WHERE type_id = " . (int)$result->fields['products_type'];
-    $result = $db->Execute($sql);
+    $result = $db->Execute($sql, 1);
     return $result->fields['type_handler'] . '_info';
 }
 
@@ -710,7 +711,7 @@ function zen_get_products_type($product_id)
 {
     global $db;
 
-    $result = $db->Execute("SELECT products_type FROM " . TABLE_PRODUCTS . " WHERE products_id=" . (int)$product_id);
+    $result = $db->Execute("SELECT products_type FROM " . TABLE_PRODUCTS . " WHERE products_id=" . (int)$product_id, 1);
     if ($result->EOF) return '';
     return (int)$result->fields['products_type'];
 }
@@ -730,7 +731,7 @@ function zen_get_products_image($product_id, $width = SMALL_IMAGE_WIDTH, $height
     $sql = "SELECT p.products_image
             FROM " . TABLE_PRODUCTS . " p
             WHERE products_id=" . (int)$product_id;
-    $result = $db->Execute($sql);
+    $result = $db->Execute($sql, 1);
 
     if ($result->EOF) return '';
 
@@ -750,14 +751,14 @@ function zen_get_products_virtual($product_id)
     global $db;
 
     $sql = "SELECT p.products_virtual FROM " . TABLE_PRODUCTS . " p  WHERE p.products_id=" . (int)$product_id;
-    $look_up = $db->Execute($sql);
+    $look_up = $db->Execute($sql, 1);
 
     return $look_up->fields['products_virtual'] == '1';
 }
 
 /**
  * Look up whether the given product ID is allowed to be added to cart, according to product-type switches set in Admin
- * @param int $product_id
+ * @param int|string $product_id  (while a hashed string is accepted, only the (int) portion is used)
  * @return string Y|N
  */
 function zen_get_products_allow_add_to_cart($product_id)
@@ -801,14 +802,14 @@ function zen_get_show_product_switch($lookup, $field, $prefix = 'SHOW_', $suffix
     global $db;
     $keyName = zen_get_show_product_switch_name($lookup, $field, $prefix, $suffix, $field_prefix, $field_suffix);
     $sql = "SELECT configuration_key, configuration_value FROM " . TABLE_PRODUCT_TYPE_LAYOUT . " WHERE configuration_key='" . zen_db_input($keyName) . "'";
-    $zv_key_value = $db->Execute($sql);
+    $zv_key_value = $db->Execute($sql, 1);
 //echo 'I CAN SEE - look ' . $lookup . ' - field ' . $field . ' - key ' . $keyName . ' value ' . $zv_key_value->fields['configuration_value'] .'<br>';
 
     if ($zv_key_value->RecordCount() > 0) {
         return $zv_key_value->fields['configuration_value'];
     }
     $sql = "SELECT configuration_key, configuration_value FROM " . TABLE_CONFIGURATION . " WHERE configuration_key='" . zen_db_input($keyName) . "'";
-    $zv_key_value = $db->Execute($sql);
+    $zv_key_value = $db->Execute($sql, 1);
     if ($zv_key_value->RecordCount() > 0) {
         return $zv_key_value->fields['configuration_value'];
     }
@@ -860,11 +861,11 @@ function zen_get_show_product_switch_name($lookup, $field, $prefix = 'SHOW_', $s
     $type_lookup = 0;
     $type_handler = '';
     $sql = "SELECT products_type FROM " . TABLE_PRODUCTS . " WHERE products_id=" . (int)$lookup;
-    $result = $db->Execute($sql);
+    $result = $db->Execute($sql, 1);
     if (!$result->EOF) $type_lookup = $result->fields['products_type'];
 
     $sql = "SELECT type_handler FROM " . TABLE_PRODUCT_TYPES . " WHERE type_id = " . (int)$type_lookup;
-    $result = $db->Execute($sql);
+    $result = $db->Execute($sql, 1);
     if (!$result->EOF) $type_handler = $result->fields['type_handler'];
     $keyName = strtoupper($prefix . $type_handler . $suffix . $field_prefix . $field . $field_suffix);
 
@@ -901,7 +902,7 @@ function zen_get_product_is_always_free_shipping($product_id): bool
     global $db;
 
     $sql = "SELECT p.product_is_always_free_shipping FROM " . TABLE_PRODUCTS . " p  WHERE p.products_id=" . (int)$product_id;
-    $look_up = $db->Execute($sql);
+    $look_up = $db->Execute($sql, 1);
 
     return ($look_up->fields['product_is_always_free_shipping'] == '1');
 }
@@ -921,10 +922,9 @@ function zen_products_lookup($product_id, $what_field = 'products_name', $langua
     if (empty($language)) $language = $_SESSION['languages_id'];
 
     $product_lookup = $db->Execute("SELECT " . zen_db_input($what_field) . " AS lookup_field
-                              FROM " . TABLE_PRODUCTS . " p, " . TABLE_PRODUCTS_DESCRIPTION . " pd
-                              WHERE  p.products_id = " . (int)$product_id . "
-                              AND pd.products_id = p.products_id
-                              AND pd.language_id = " . (int)$language);
+                              FROM " . TABLE_PRODUCTS . " p
+                              INNER JOIN " . TABLE_PRODUCTS_DESCRIPTION . " pd USING (pd.products_id = p.products_id AND pd.language_id = " . (int)$language .")
+                              WHERE  p.products_id = " . (int)$product_id);
     if ($product_lookup->EOF) return '';
     return $product_lookup->fields['lookup_field'];
 }
@@ -942,7 +942,7 @@ function zen_get_parent_category_id($product_id)
 
     $categories_lookup = $db->Execute("SELECT master_categories_id
                                 FROM " . TABLE_PRODUCTS . "
-                                WHERE products_id = " . (int)$product_id);
+                                WHERE products_id = " . (int)$product_id, 1);
     if ($categories_lookup->EOF) return '';
     return $categories_lookup->fields['master_categories_id'];
 }
@@ -959,9 +959,9 @@ function zen_has_product_discounts($product_id)
     global $db;
 
     $check_discount_query = "SELECT products_id FROM " . TABLE_PRODUCTS_DISCOUNT_QUANTITY . " WHERE products_id=" . (int)$product_id;
-    $check_discount = $db->Execute($check_discount_query);
+    $check_discount = $db->Execute($check_discount_query, 1);
 
-    // @TODO - check calling references to see whether true/false string responses can be changed to boolean
+    // @TODO - check calling references in application code to see whether true/false string responses can be changed to boolean
     return ($check_discount->RecordCount()) ? 'true' : 'false';
 }
 
