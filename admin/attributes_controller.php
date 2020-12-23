@@ -3,7 +3,7 @@
  * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2020 May 26 Modified in v1.5.7 $
+ * @version $Id: DrByte 2020 Dec 23 Modified in v1.5.8 $
  */
 require('includes/application_top.php');
 
@@ -1546,7 +1546,7 @@ function zen_js_option_values_list($selectedName, $fieldName)
                               <i class="fa fa-square fa-stack-2x required-attr-txt opacity-25" aria-hidden="true"></i>
                               <i class="fa fa-times fa-stack-1x red-txt" aria-hidden="true"></i>
                             <?php } else { ?>
-                              <i class="fa fa-square fa-stack-2xrequired-attr-txt" aria-hidden="true"></i>
+                              <i class="fa fa-square fa-stack-2x required-attr-txt" aria-hidden="true"></i>
                               <i class="fa fa-check fa-stack-1x black-txt" aria-hidden="true"></i>
                             <?php } ?>
                           </span>
