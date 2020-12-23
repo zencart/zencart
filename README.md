@@ -8,7 +8,7 @@ Zen Cart&reg; was the first Open Source e-Commerce web application to be fully P
 
 Zen Cart&reg; v1.5.7 is an update with several bugfix patches applied on top of the PA-DSS Certified version v1.5.4.
 
-It's free software, with free community-driven support available 24/7 on the Zen Cart&reg; Support Site forums at [zen-cart.com/forum.php](https://www.zen-cart.com/forum.php)
+It's free software, with free community-driven support available 24/7 on the Zen Cart&reg; Support Site forums at [zen-cart.com/forum/](https://www.zen-cart.com/forum.php)
 
 --------------------
 
