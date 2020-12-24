@@ -66,10 +66,7 @@ function zen_not_null($value)
     if (null === $value) {
         return false;
     }
-    if (is_array($value)) {
-        return count($value) > 0;
-    }
-    if (is_a($value, \Countable::class)) {
+    if (is_countable($value)) {
         return count($value) > 0;
     }
     return trim($value) !== '' && $value !== 'NULL';
