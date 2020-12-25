@@ -16,7 +16,7 @@ $languages = zen_get_languages();
 $action = (isset($_GET['action']) ? $_GET['action'] : '');
 $currentPage = (isset($_GET['page']) && $_GET['page'] != '' ? (int)$_GET['page'] : 0);
 
-if (zen_not_null($action)) {
+if (!empty($action)) {
   switch ($action) {
     case 'insert':
     case 'save':
@@ -236,7 +236,7 @@ if (zen_not_null($action)) {
               break;
           }
 
-          if ((zen_not_null($heading)) && (zen_not_null($contents))) {
+          if (!empty($heading) && !empty($contents)) {
             $box = new box();
             echo $box->infoBox($heading, $contents);
           }

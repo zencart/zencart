@@ -2,7 +2,7 @@
 /**
  * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
- * @copyright Portions Copyright (c) 2004 DevosC.com    
+ * @copyright Portions Copyright (c) 2004 DevosC.com
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: Steve 2020 May 22 Modified in v1.5.7 $
  */
@@ -168,7 +168,7 @@ $paypal_ipn_sort_order_array = [
       break;
   }
 
-  if ( (zen_not_null($heading)) && (zen_not_null($contents)) ) {
+  if (!empty($heading) && !empty($contents)) {
     $box = new box();
       echo '<div class="col-sm-12 col-md-3 configurationColumnRight">';
     echo $box->infoBox($heading, $contents);

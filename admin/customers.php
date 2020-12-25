@@ -26,7 +26,7 @@ if (!isset($_GET['list_order'])) {
 $error = false;
 $processed = false;
 
-if (zen_not_null($action)) {
+if (!empty($action)) {
   switch ($action) {
     case 'list_addresses':
       $customer = new Customer($_GET['cID']);
@@ -1014,7 +1014,7 @@ if (zen_not_null($action)) {
             }
             $zco_notifier->notify('NOTIFY_ADMIN_CUSTOMERS_MENU_BUTTONS_END', (isset($cInfo) ? $cInfo : new stdClass), $contents);
 
-            if ((zen_not_null($heading)) && (zen_not_null($contents))) {
+            if (!empty($heading) && !empty($contents)) {
               $box = new box;
               echo $box->infoBox($heading, $contents);
             }

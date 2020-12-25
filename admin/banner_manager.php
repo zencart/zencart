@@ -25,7 +25,7 @@ if (isset($_GET['flagbanners_open_new_windows'])) {
   $_GET['flagbanners_open_new_windows'] = (int)$_GET['flagbanners_open_new_windows'];
 }
 
-if (zen_not_null($action)) {
+if (!empty($action)) {
   switch ($action) {
     case 'setflag':
       if (($_GET['flag'] == '0') || ($_GET['flag'] == '1')) {
@@ -306,7 +306,7 @@ if (zen_not_null($action)) {
                                   WHERE banners_id = " . (int)$bID);
 
           $bInfo->updateObjectInfo($banner->fields);
-        } elseif (zen_not_null($_POST)) {
+        } elseif (!empty($_POST)) {
           $bInfo->updateObjectInfo($_POST);
         }
 
@@ -665,7 +665,7 @@ if (zen_not_null($action)) {
                 break;
             }
 
-            if ((zen_not_null($heading)) && (zen_not_null($contents))) {
+            if (!empty($heading) && !empty($contents)) {
               $box = new box();
               echo $box->infoBox($heading, $contents);
             }

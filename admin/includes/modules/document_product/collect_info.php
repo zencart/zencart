@@ -54,7 +54,7 @@ if (isset($_GET['pID']) && empty($_POST)) {
                            AND pd.language_id = " . (int)$_SESSION['languages_id']);
 
   $pInfo->updateObjectInfo($product->fields);
-} elseif (zen_not_null($_POST)) {
+} elseif (!empty($_POST)) {
   $pInfo->updateObjectInfo($_POST);
   $products_name = isset($_POST['products_name']) ? $_POST['products_name'] : '';
   $products_description = isset($_POST['products_description']) ? $_POST['products_description'] : '';

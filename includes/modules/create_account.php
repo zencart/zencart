@@ -168,7 +168,7 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process') && !isset($login_
   if ($nick_error) $error = true;
 
   // check Zen Cart for duplicate nickname
-  if (!$error && zen_not_null($nick)) {
+  if (!$error && !empty($nick)) {
       $sql = "SELECT * FROM " . TABLE_CUSTOMERS  . " WHERE customers_nick = :nick:";
       $check_nick_query = $db->bindVars($sql, ':nick:', $nick, 'string');
       $check_nick = $db->Execute($check_nick_query);

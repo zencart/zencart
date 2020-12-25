@@ -41,7 +41,7 @@ require($template->get_template_dir('/tpl_products_next_previous.php',DIR_WS_TEM
 
 <!--bof Main Product Image -->
 <?php
-  if (zen_not_null($products_image)) {
+  if (!empty($products_image)) {
   ?>
 <?php
 /**
@@ -130,7 +130,7 @@ if (CUSTOMERS_APPROVAL == 3 and TEXT_LOGIN_FOR_PRICE_BUTTON_REPLACE_SHOWROOM == 
 <?php
 if ($flag_show_ask_a_question) {
 ?>
-<!-- bof Ask a Question --> 
+<!-- bof Ask a Question -->
 <br />
 <span id="productQuestions" class="biggerText">
 <b><?php echo '<a href="' . zen_href_link(FILENAME_ASK_A_QUESTION, 'pid=' . $_GET['products_id'], 'SSL') . '">' . ASK_A_QUESTION . '</a>'; ?></b>
@@ -234,7 +234,7 @@ if ($flag_show_ask_a_question) {
 
 <!--bof Product URL -->
 <?php
-  if (zen_not_null($products_record_company_url)) {
+  if (!empty($products_record_company_url)) {
     if ($flag_show_product_music_info_record_company == 1) {
 ?>
     <p id="productInfoLink" class="productMusic centeredContent"><?php echo sprintf(TEXT_RECORD_COMPANY_URL, zen_href_link(FILENAME_REDIRECT, 'action=music_record_company&record_company_id=' . zen_output_string_protected($music_extras->fields['record_company_id']), 'NONSSL', true, false)); ?></p>

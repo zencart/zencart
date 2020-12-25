@@ -43,7 +43,7 @@ if (!in_array($samesite, ['lax', 'strict', 'none'])) $samesite = 'lax';
 session_set_cookie_params([
     'lifetime' => 0,
     'path' => $path,
-    'domain' => (zen_not_null($cookieDomain) ? $domainPrefix . $cookieDomain : ''),
+    'domain' => (!empty($cookieDomain) ? $domainPrefix . $cookieDomain : ''),
     'secure' => $secureFlag,
     'httponly' => true,
     'samesite' => $samesite,
@@ -68,7 +68,7 @@ $_SERVER['REMOTE_ADDR'] = $ipAddress;
  */
 $session_started = false;
 if (SESSION_FORCE_COOKIE_USE == 'True') {
-  setcookie('cookie_test', 'please_accept_for_session', time()+60*60*24*30, $path, (zen_not_null($cookieDomain) ? $domainPrefix . $cookieDomain : ''), $secureFlag);
+  setcookie('cookie_test', 'please_accept_for_session', time()+60*60*24*30, $path, (!empty($cookieDomain) ? $domainPrefix . $cookieDomain : ''), $secureFlag);
 
   if (isset($_COOKIE['cookie_test'])) {
     zen_session_start();
@@ -80,10 +80,10 @@ if (SESSION_FORCE_COOKIE_USE == 'True') {
     $user_agent = strtolower($_SERVER['HTTP_USER_AGENT']);
   }
   $spider_flag = false;
-  if (zen_not_null($user_agent)) {
+  if (!empty($user_agent)) {
     $spiders = file(DIR_WS_INCLUDES . 'spiders.txt');
     for ($i=0, $n=sizeof($spiders); $i<$n; $i++) {
-      if (zen_not_null($spiders[$i]) && substr($spiders[$i], 0, 4) != '$Id:') {
+      if (!empty($spiders[$i]) && substr($spiders[$i], 0, 4) != '$Id:') {
         if (is_integer(strpos($user_agent, trim($spiders[$i])))) {
           $spider_flag = true;
           break;

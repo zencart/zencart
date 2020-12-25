@@ -268,7 +268,7 @@ switch ($metatag_page_name) {
         $meta_products_price = '';
       }
 
-      if (META_TAG_INCLUDE_MODEL == '1' && zen_not_null($product_info_metatags->fields['products_model'])) {
+      if (META_TAG_INCLUDE_MODEL == '1' && !empty($product_info_metatags->fields['products_model'])) {
         $meta_products_name = $product_info_metatags->fields['products_name'] . ' [' . $product_info_metatags->fields['products_model'] . ']';
       } else {
         $meta_products_name = $product_info_metatags->fields['products_name'];
@@ -304,7 +304,7 @@ switch ($metatag_page_name) {
       $meta_products_price = '';
     }
 
-    if (zen_not_null($review_metatags->fields['products_model'])) {
+    if (!empty($review_metatags->fields['products_model'])) {
       $meta_products_name = $review_metatags->fields['products_name'] . ' [' . $review_metatags->fields['products_model'] . ']';
     } else {
       $meta_products_name = $review_metatags->fields['products_name'];

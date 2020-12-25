@@ -48,7 +48,7 @@ if (!isset($_GET['reset_option_names_values_copier'])) {
   $reset_option_names_values_copier = $_SESSION['option_names_values_copier'];
 }
 
-if (zen_not_null($action)) {
+if (!empty($action)) {
   switch ($action) {
     case 'set_filter':
       $exclude_array = ['action', 'page'];

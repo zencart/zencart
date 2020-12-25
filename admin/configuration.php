@@ -9,7 +9,7 @@ require('includes/application_top.php');
 
 $action = (isset($_GET['action']) ? $_GET['action'] : '');
 
-if (zen_not_null($action)) {
+if (!empty($action)) {
   switch ($action) {
     case 'save':
       $cID = zen_db_prepare_input($_GET['cID']);
@@ -105,7 +105,7 @@ if ($gID == 7) {
                                                WHERE configuration_group_id = " . (int)$gID . "
                                                ORDER BY sort_order");
                 foreach ($configuration as $item) {
-                  if (zen_not_null($item['use_function'])) {
+                  if (!empty($item['use_function'])) {
                     $use_function = $item['use_function'];
                     if (preg_match('/->/', $use_function)) {
                       $class_method = explode('->', $use_function);
@@ -148,13 +148,13 @@ if ($gID == 7) {
                   }
                   ?>
               <td class="dataTableContent"><?php echo $item['configuration_title']; ?></td>
-              <td class="dataTableContent"><?php 
-                   $setting = htmlspecialchars($cfgValue, ENT_COMPAT, CHARSET, TRUE); 
-                   if (strlen($setting) > 40) { 
+              <td class="dataTableContent"><?php
+                   $setting = htmlspecialchars($cfgValue, ENT_COMPAT, CHARSET, TRUE);
+                   if (strlen($setting) > 40) {
 
-                      echo htmlspecialchars(substr($cfgValue,0,35), ENT_COMPAT, CHARSET, TRUE) . "..."; 
-                   } else { 
-                      echo $setting; 
+                      echo htmlspecialchars(substr($cfgValue,0,35), ENT_COMPAT, CHARSET, TRUE) . "...";
+                   } else {
+                      echo $setting;
                    }
               ?></td>
               <td class="dataTableContent text-right">
@@ -219,7 +219,7 @@ if ($gID == 7) {
               break;
           }
 
-          if ((zen_not_null($heading)) && (zen_not_null($contents))) {
+          if (!empty($heading) && !empty($contents)) {
             $box = new box;
             echo $box->infoBox($heading, $contents);
           }

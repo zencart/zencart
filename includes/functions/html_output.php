@@ -46,13 +46,13 @@
     }
 
     if (!$static) {
-      if (zen_not_null($parameters)) {
+      if (!empty($parameters)) {
         $link .= 'index.php?main_page='. $page . "&" . zen_output_string($parameters);
       } else {
         $link .= 'index.php?main_page=' . $page;
       }
     } else {
-      if (zen_not_null($parameters)) {
+      if (!empty($parameters)) {
         $link .= $page . "?" . zen_output_string($parameters);
       } else {
         $link .= $page;
@@ -64,7 +64,7 @@
     while (substr($link, -1) == '&' || substr($link, -1) == '?') $link = substr($link, 0, -1);
 // Add the session ID when moving from different HTTP and HTTPS servers, or when SID is defined
     if ($add_session_id == true && $session_started == true && SESSION_FORCE_COOKIE_USE == 'False') {
-      if (defined('SID') && zen_not_null(constant('SID'))) {
+      if (defined('SID') && !empty(constant('SID'))) {
         $sid = constant('SID');
       } elseif ( ($request_type == 'NONSSL' && $connection == 'SSL' && ENABLE_SSL == 'true') || ($request_type == 'SSL' && $connection == 'NONSSL') ) {
         if ($http_domain != $https_domain) {
@@ -135,7 +135,7 @@ function zen_catalog_href_link($page = '', $parameters = '', $connection = 'NONS
 // the image filename as default
     $image = '<img src="' . zen_output_string($src) . '" alt="' . zen_output_string($alt) . '"';
 
-    if (zen_not_null($alt)) {
+    if (!empty($alt)) {
       $image .= ' title="' . zen_output_string($alt) . '"';
     }
 
@@ -160,9 +160,9 @@ function zen_catalog_href_link($page = '', $parameters = '', $connection = 'NONS
       $image .= ' width="' . zen_output_string($width) . '" height="' . zen_output_string($height) . '"';
     }
 
-    if (zen_not_null($parameters)) $image .= ' ' . $parameters;
+    if (!empty($parameters)) $image .= ' ' . $parameters;
 
-    $image .= ' />';
+    $image .= '>';
 
     return $image;
   }
@@ -214,7 +214,7 @@ function zen_catalog_href_link($page = '', $parameters = '', $connection = 'NONS
 // the image filename as default
     $image = '<img src="' . zen_output_string($src) . '" alt="' . zen_output_string($alt) . '"';
 
-    if (zen_not_null($alt)) {
+    if (!empty($alt)) {
       $image .= ' title="' . zen_output_string($alt) . '"';
     }
 
@@ -264,12 +264,12 @@ function zen_catalog_href_link($page = '', $parameters = '', $connection = 'NONS
 
     // inject rollover class if one is defined. NOTE: This could end up with 2 "class" elements if $parameters contains "class" already.
     if (defined('IMAGE_ROLLOVER_CLASS') && IMAGE_ROLLOVER_CLASS != '') {
-      $parameters .= (zen_not_null($parameters) ? ' ' : '') . 'class="rollover"';
+      $parameters .= (!empty($parameters) ? ' ' : '') . 'class="rollover"';
     }
     // add $parameters to the tag output
-    if (zen_not_null($parameters)) $image .= ' ' . $parameters;
+    if (!empty($parameters)) $image .= ' ' . $parameters;
 
-    $image .= ' />';
+    $image .= '>';
 
     return $image;
   }
@@ -285,9 +285,9 @@ function zen_catalog_href_link($page = '', $parameters = '', $connection = 'NONS
 
     $image_submit = '<input type="image" src="' . zen_output_string($template->get_template_dir($image, DIR_WS_TEMPLATE, $current_page_base, 'buttons/' . $_SESSION['language'] . '/') . $image) . '" alt="' . zen_output_string($alt) . '"';
 
-    if (zen_not_null($alt)) $image_submit .= ' title="' . zen_output_string($alt) . '"';
+    if (!empty($alt)) $image_submit .= ' title="' . zen_output_string($alt) . '"';
 
-    if (zen_not_null($parameters)) $image_submit .= ' ' . $parameters;
+    if (!empty($parameters)) $image_submit .= ' ' . $parameters;
 
     $image_submit .= ' />';
 
@@ -302,7 +302,7 @@ function zen_catalog_href_link($page = '', $parameters = '', $connection = 'NONS
 
     // inject rollover class if one is defined. NOTE: This could end up with 2 "class" elements if $parameters contains "class" already.
     if (defined('IMAGE_ROLLOVER_CLASS') && IMAGE_ROLLOVER_CLASS != '') {
-      $parameters .= (zen_not_null($parameters) ? ' ' : '') . 'class="rollover"';
+      $parameters .= (!empty($parameters) ? ' ' : '') . 'class="rollover"';
     }
 
     $zco_notifier->notify('PAGE_OUTPUT_IMAGE_BUTTON');
@@ -463,7 +463,7 @@ function zen_js_zone_list(string $country, string $form, string $field) {
   function zen_draw_form($name, $action, $method = 'post', $parameters = '') {
     $form = '<form name="' . zen_output_string($name) . '" action="' . zen_output_string($action) . '" method="' . zen_output_string($method) . '"';
 
-    if (zen_not_null($parameters)) $form .= ' ' . $parameters;
+    if (!empty($parameters)) $form .= ' ' . $parameters;
 
     $form .= '>';
     if (strtolower($method) == 'post') $form .= '<input type="hidden" name="securityToken" value="' . $_SESSION['securityToken'] . '" />';
@@ -501,7 +501,7 @@ function zen_js_zone_list(string $country, string $form, string $field) {
       $field .= ' value="' . zen_output_string($value) . '"';
     }
 
-    if (zen_not_null($parameters)) $field .= ' ' . $parameters;
+    if (!empty($parameters)) $field .= ' ' . $parameters;
 
     $field .= ' />';
 
@@ -571,7 +571,7 @@ function zen_js_zone_list(string $country, string $form, string $field) {
       $selection .= ' checked="checked"';
     }
 
-    if (zen_not_null($parameters)) $selection .= ' ' . $parameters;
+    if (!empty($parameters)) $selection .= ' ' . $parameters;
 
     $selection .= ' />';
 
@@ -632,7 +632,7 @@ function zen_js_zone_list(string $country, string $form, string $field) {
 
     $field = '<textarea name="' . zen_output_string($name) . '" cols="' . zen_output_string($width) . '" rows="' . zen_output_string($height) . '"';
 
-    if (zen_not_null($parameters)) $field .= ' ' . $parameters;
+    if (!empty($parameters)) $field .= ' ' . $parameters;
 
     $field .= '>';
 
@@ -674,9 +674,9 @@ function zen_js_zone_list(string $country, string $form, string $field) {
       $field .= ' value="' . zen_output_string(stripslashes($GLOBALS[$name])) . '"';
     }
 
-    if (zen_not_null($parameters)) $field .= ' ' . $parameters;
+    if (!empty($parameters)) $field .= ' ' . $parameters;
 
-    $field .= ' />';
+    $field .= '>';
 
     return $field;
   }
@@ -701,7 +701,7 @@ function zen_js_zone_list(string $country, string $form, string $field) {
   function zen_hide_session_id() {
     global $session_started;
 
-    if ($session_started == true && defined('SID') && zen_not_null(SID) ) {
+    if ($session_started == true && defined('SID') && !empty(SID) ) {
       return zen_draw_hidden_field(zen_session_name(), zen_session_id());
     }
   }
@@ -745,7 +745,7 @@ function zen_draw_pull_down_menu($name, $values, $default = '', $parameters = ''
 
   $field .= ' name="' . zen_output_string($name) . '"';
 
-  if (zen_not_null($parameters)) {
+  if (!empty($parameters)) {
     $field .= ' ' . $parameters;
   }
 

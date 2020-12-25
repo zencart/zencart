@@ -73,7 +73,7 @@
         $this->quotes['tax'] = zen_get_tax_rate($this->tax_class, $order->delivery['country']['id'], $order->delivery['zone_id']);
       }
 
-      if (zen_not_null($this->icon)) $this->quotes['icon'] = zen_image($this->icon, $this->title);
+      if (!empty($this->icon)) $this->quotes['icon'] = zen_image($this->icon, $this->title);
 
       return $this->quotes;
     }

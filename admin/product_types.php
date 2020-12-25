@@ -11,7 +11,7 @@ $action = (isset($_GET['action']) ? $_GET['action'] : '');
 if (!isset($_GET['cID'])) $_GET['cID'] = '';
 if (!isset($_GET['gID'])) $_GET['gID'] = '';
 
-if (zen_not_null($action)) {
+if (!empty($action)) {
   switch ($action) {
     case 'layout_save':
       $configuration_value = zen_db_prepare_input($_POST['configuration_value']);
@@ -155,7 +155,7 @@ if (zen_not_null($action)) {
                                                WHERE product_type_id = " . (int)$_GET['ptID'] . "
                                                ORDER BY sort_order");
                 foreach ($configuration as $item) {
-                  if (zen_not_null($item['use_function'])) {
+                  if (!empty($item['use_function'])) {
                     $use_function = $item['use_function'];
                     if (preg_match('/->/', $use_function)) {
                       $class_method = explode('->', $use_function);
@@ -241,7 +241,7 @@ if (zen_not_null($action)) {
                 break;
             }
 
-            if ((zen_not_null($heading)) && (zen_not_null($contents))) {
+            if (!empty($heading) && !empty($contents)) {
               $box = new box;
               echo $box->infoBox($heading, $contents);
             }
@@ -370,7 +370,7 @@ if (zen_not_null($action)) {
                 break;
             }
 
-            if ((zen_not_null($heading)) && (zen_not_null($contents))) {
+            if (!empty($heading) && !empty($contents)) {
               $box = new box;
               echo $box->infoBox($heading, $contents);
             }

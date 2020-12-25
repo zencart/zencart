@@ -98,7 +98,7 @@ if (!empty($oID) && !empty($action)) {
                 break;
         }
 
-if (zen_not_null($action) && $order_exists == true) {
+if (!empty($action) && $order_exists == true) {
   switch ($action) {
     case 'download':
 
@@ -677,26 +677,26 @@ if (zen_not_null($action) && $order_exists == true) {
               <td class="main"><?php echo $order->info['payment_method']; ?></td>
             </tr>
             <?php
-            if (zen_not_null($order->info['cc_type']) || zen_not_null($order->info['cc_owner']) || zen_not_null($order->info['cc_number'])) {
+            if (!empty($order->info['cc_type']) || !empty($order->info['cc_owner']) || !empty($order->info['cc_number'])) {
               ?>
               <tr class="noprint">
                 <td colspan="2"><?php echo zen_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
               </tr>
-              <?php if (zen_not_null($order->info['cc_type'])) { ?>
+              <?php if (!empty($order->info['cc_type'])) { ?>
               <tr>
                 <td class="main"><?php echo ENTRY_CREDIT_CARD_TYPE; ?></td>
                 <td class="main"><?php echo $order->info['cc_type']; ?></td>
               </tr>
               <?php
               }
-              if (zen_not_null($order->info['cc_owner'])) { ?>
+              if (!empty($order->info['cc_owner'])) { ?>
               <tr>
                 <td class="main"><?php echo ENTRY_CREDIT_CARD_OWNER; ?></td>
                 <td class="main"><?php echo $order->info['cc_owner']; ?></td>
               </tr>
               <?php
               }
-              if (zen_not_null($order->info['cc_number'])) {
+              if (!empty($order->info['cc_number'])) {
                       require DIR_FS_CATALOG . DIR_WS_CLASSES . 'cc_validation.php';
                       $cc_valid = new cc_validation();
                       $cc_needs_mask = $cc_valid->validate($order->info['cc_number'], date('m'), date('y')+1);
@@ -707,13 +707,13 @@ if (zen_not_null($action) && $order_exists == true) {
               </tr>
               <?php
                   }
-                  if (zen_not_null($order->info['cc_cvv'])) { ?>
+                  if (!empty($order->info['cc_cvv'])) { ?>
                 <tr>
                   <td class="main"><?php echo ENTRY_CREDIT_CARD_CVV; ?></td>
-                  <td class="main"><?php echo $order->info['cc_cvv'] . (zen_not_null($order->info['cc_cvv']) && !strstr($order->info['cc_cvv'], TEXT_DELETE_CVV_REPLACEMENT) ? '&nbsp;&nbsp;<a href="' . zen_href_link(FILENAME_ORDERS, '&action=delete_cvv&oID=' . $oID, 'NONSSL') . '" class="noprint">' . TEXT_DELETE_CVV_FROM_DATABASE . '</a>' : ''); ?></td>
+                  <td class="main"><?php echo $order->info['cc_cvv'] . (!empty($order->info['cc_cvv']) && !strstr($order->info['cc_cvv'], TEXT_DELETE_CVV_REPLACEMENT) ? '&nbsp;&nbsp;<a href="' . zen_href_link(FILENAME_ORDERS, '&action=delete_cvv&oID=' . $oID, 'NONSSL') . '" class="noprint">' . TEXT_DELETE_CVV_FROM_DATABASE . '</a>' : ''); ?></td>
                 </tr>
               <?php } ?>
-              <?php if (zen_not_null($order->info['cc_expires'])) { ?>
+              <?php if (!empty($order->info['cc_expires'])) { ?>
               <tr>
                 <td class="main"><?php echo ENTRY_CREDIT_CARD_EXPIRES; ?></td>
                 <td class="main"><?php echo $order->info['cc_expires']; ?></td>
@@ -1483,7 +1483,7 @@ if (zen_not_null($action) && $order_exists == true) {
               }
               $zco_notifier->notify('NOTIFY_ADMIN_ORDERS_MENU_BUTTONS_END', (isset($oInfo) ? $oInfo : array()), $contents);
 
-              if ((zen_not_null($heading)) && (zen_not_null($contents))) {
+              if (!empty($heading) && !empty($contents)) {
                 $box = new box;
                 echo $box->infoBox($heading, $contents);
               }

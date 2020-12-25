@@ -30,7 +30,7 @@ class order extends base {
     $this->delivery = array();
 
     $this->notify('NOTIFY_ORDER_INSTANTIATE', array(), $order_id);
-    if (zen_not_null($order_id)) {
+    if (!empty($order_id)) {
       $this->query($order_id);
     } else {
       $this->cart();
@@ -1003,7 +1003,7 @@ class order extends base {
           $opa_insert_id = $db->insert_ID();
           $this->notify('NOTIFY_ORDER_DURING_CREATE_ADDED_ATTRIBUTE_LINE_ITEM', array_merge(array('orders_products_attributes_id' => $opa_insert_id), $sql_data_array), $opa_insert_id);
 
-          if ((DOWNLOAD_ENABLED == 'true') && isset($attributes_values->fields['products_attributes_filename']) && zen_not_null($attributes_values->fields['products_attributes_filename'])) {
+          if ((DOWNLOAD_ENABLED == 'true') && !empty($attributes_values->fields['products_attributes_filename'])) {
             $sql_data_array = array('orders_id' => $zf_insert_id,
                                     'orders_products_id' => $order_products_id,
                                     'orders_products_filename' => $attributes_values->fields['products_attributes_filename'],
@@ -1166,7 +1166,7 @@ class order extends base {
        $html_msg['ADDRESS_DELIVERY_DETAIL']    = 'n/a';
     }
     $html_msg['SHIPPING_METHOD_TITLE']      = HEADING_SHIPPING_METHOD;
-    $html_msg['SHIPPING_METHOD_DETAIL']     = (zen_not_null($this->info['shipping_method'])) ? $this->info['shipping_method'] : 'n/a';
+    $html_msg['SHIPPING_METHOD_DETAIL']     = (!empty($this->info['shipping_method'])) ? $this->info['shipping_method'] : 'n/a';
 
     if ($this->content_type != 'virtual' && !$storepickup) {
       $email_order .= "\n" . EMAIL_TEXT_DELIVERY_ADDRESS . "\n" .

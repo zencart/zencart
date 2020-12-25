@@ -223,7 +223,7 @@ if ($_GET['action'] == 'confirmrelease' && isset($_POST['gid'])) {
               break;
           }
 
-          if ((zen_not_null($heading)) && (zen_not_null($contents))) {
+          if (!empty($heading) && !empty($contents)) {
             $box = new box();
             echo $box->infoBox($heading, $contents);
           }

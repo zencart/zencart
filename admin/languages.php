@@ -7,7 +7,7 @@
  */
 require('includes/application_top.php');
 $action = (isset($_GET['action']) ? $_GET['action'] : '');
-if (zen_not_null($action)) {
+if (!empty($action)) {
   switch ($action) {
     case 'insert':
       $name = zen_db_prepare_input($_POST['name']);
@@ -254,7 +254,7 @@ if (zen_not_null($action)) {
         $_SESSION['languages_id'] = $lng->fields['languages_id'];
 
       $zco_notifier->notify('NOTIFY_ADMIN_LANGUAGE_DELETE', (int)$lID);
-      
+
       zen_redirect(zen_href_link(FILENAME_LANGUAGES, 'page=' . $_GET['page']));
       break;
     case 'delete':
@@ -382,7 +382,7 @@ if (zen_not_null($action)) {
                 break;
             }
 
-            if ((zen_not_null($heading)) && (zen_not_null($contents))) {
+            if (!empty($heading) && !empty($contents)) {
               $box = new box;
               echo $box->infoBox($heading, $contents);
             }

@@ -12,7 +12,7 @@
 <?php if ($messageStack->size('product_info') > 0) echo $messageStack->output('product_info'); ?>
 <div id="reviews-top">
 <?php
-  if (zen_not_null($products_image)) {
+  if (!empty($products_image)) {
   /**
    * require the image display code
    */

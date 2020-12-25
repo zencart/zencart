@@ -59,7 +59,7 @@ if ($products_filter == '' && !empty($current_category_id)) {
 }
 
 require DIR_WS_MODULES . FILENAME_PREV_NEXT;
-if (zen_not_null($action)) {
+if (!empty($action)) {
   switch ($action) {
     case 'delete_special_confirm' :
       if (isset($_POST['product_id'])) {

@@ -92,7 +92,7 @@ require(DIR_WS_MODULES . FILENAME_PREV_NEXT);
 $target_category_id = (int)($_POST['target_category_id'] ?? $_GET['target_category_id'] ?? P2C_TARGET_CATEGORY_DEFAULT);
 $_GET['target_category_id'] = $target_category_id;
 
-if (zen_not_null($action)) {
+if (!empty($action)) {
     switch ($action) {
 
         // Global Tools: Copy Linked categories from this product to another
@@ -597,7 +597,7 @@ if ($target_subcategory_count > $max_input_vars) { //warning when in excess of P
                             break;
                     }
 
-                    if ((zen_not_null($heading)) && (zen_not_null($contents))) {
+                    if (!empty($heading) && !empty($contents)) {
                         $box = new box();
                         echo $box->infoBox($heading, $contents);
                     }

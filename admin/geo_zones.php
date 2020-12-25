@@ -18,7 +18,7 @@ if (isset($_GET['spage'])) {
   $_GET['spage'] = (int)$_GET['spage'];
 }
 
-if (zen_not_null($saction)) {
+if (!empty($saction)) {
   switch ($saction) {
     case 'insert_sub':
       $zID = zen_db_prepare_input($_GET['zID']);
@@ -45,7 +45,7 @@ if (zen_not_null($saction)) {
       $db->Execute("UPDATE " . TABLE_ZONES_TO_GEO_ZONES . "
                     SET geo_zone_id = " . (int)$zID . ",
                         zone_country_id = " . (int)$zone_country_id . ",
-                        zone_id = " . (zen_not_null($zone_id) ? (int)$zone_id : 'null') . ",
+                        zone_id = " . (!empty($zone_id) ? (int)$zone_id : 'null') . ",
                         last_modified = now()
                     WHERE association_id = " . (int)$sID);
 
@@ -65,7 +65,7 @@ if (zen_not_null($saction)) {
 
 $action = (isset($_GET['action']) ? $_GET['action'] : '');
 
-if (zen_not_null($action)) {
+if (!empty($action)) {
   switch ($action) {
     case 'insert_zone':
       $geo_zone_name = zen_db_prepare_input($_POST['geo_zone_name']);
@@ -282,7 +282,7 @@ if (zen_not_null($action)) {
                                                      WHERE tax_zone_id = " . (int)$zone['geo_zone_id'] . "
                                                      GROUP BY tax_zone_id");
 
-                      if (!$num_tax_rates->EOF) { 
+                      if (!$num_tax_rates->EOF) {
                         $zone['num_tax_rates'] = $num_tax_rates->fields['num_tax_rates'];
                       } else {
                         $zone['num_tax_rates'] = 0;
@@ -367,7 +367,7 @@ if (zen_not_null($action)) {
 
                       $contents[] = array('align' => 'text-center', 'text' => '<a href="' . zen_href_link(FILENAME_GEO_ZONES, 'zpage=' . $_GET['zpage'] . '&zID=' . $_GET['zID'] . '&action=list&spage=' . $_GET['spage'] . '&sID=' . $sInfo->association_id . '&saction=edit') . '" class="btn btn-primary" role="button">' . IMAGE_EDIT . '</a> <a href="' . zen_href_link(FILENAME_GEO_ZONES, 'zpage=' . $_GET['zpage'] . '&zID=' . $_GET['zID'] . '&action=list&spage=' . $_GET['spage'] . '&sID=' . $sInfo->association_id . '&saction=delete') . '" class="btn btn-warning" role="button">' . IMAGE_DELETE . '</a>');
                       $contents[] = array('text' => '<br>' . TEXT_INFO_DATE_ADDED . ' ' . zen_date_short($sInfo->date_added));
-                      if (zen_not_null($sInfo->last_modified)) {
+                      if (!empty($sInfo->last_modified)) {
                         $contents[] = array('text' => TEXT_INFO_LAST_MODIFIED . ' ' . zen_date_short($sInfo->last_modified));
                       }
                     }
@@ -410,7 +410,7 @@ if (zen_not_null($action)) {
                       $contents[] = array('text' => '<br>' . TEXT_INFO_NUMBER_ZONES . ' ' . $zInfo->num_zones);
                       $contents[] = array('text' => '<br>' . TEXT_INFO_NUMBER_TAX_RATES . ' ' . $zInfo->num_tax_rates);
                       $contents[] = array('text' => '<br>' . TEXT_INFO_DATE_ADDED . ' ' . zen_date_short($zInfo->date_added));
-                      if (zen_not_null($zInfo->last_modified)) {
+                      if (!empty($zInfo->last_modified)) {
                         $contents[] = array('text' => TEXT_INFO_LAST_MODIFIED . ' ' . zen_date_short($zInfo->last_modified));
                       }
                       $contents[] = array('text' => '<br>' . TEXT_INFO_ZONE_DESCRIPTION . '<br>' . $zInfo->geo_zone_description);
@@ -419,7 +419,7 @@ if (zen_not_null($action)) {
                 }
               }
 
-              if ((zen_not_null($heading)) && (zen_not_null($contents))) {
+              if (!empty($heading) && !empty($contents)) {
                 $box = new box;
                 echo $box->infoBox($heading, $contents);
               }

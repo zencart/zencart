@@ -57,7 +57,7 @@ class splitPageResults
     function display_links($query_numrows, $max_rows_per_page, $max_page_links, $current_page_number, $parameters = '', $page_name = 'page') {
       global $PHP_SELF;
       $current_page_number = (int)$current_page_number;
-      if ( zen_not_null($parameters) && (substr($parameters, -1) != '&') ) $parameters .= '&';
+      if (!empty($parameters) && substr($parameters, -1) != '&') $parameters .= '&';
       if ($max_rows_per_page == 0) $max_rows_per_page = 20;
       if ($query_numrows == 0) return '';
 

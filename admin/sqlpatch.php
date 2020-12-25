@@ -29,13 +29,13 @@ if (!isset($_POST['debug2'])) {
 if (!isset($_POST['debug3'])) {
   $_POST['debug3'] = '';
 }
-if (!isset($_GET['debug']) && !zen_not_null($_POST['debug']) && $debug != true) {
+if (!isset($_GET['debug']) && empty($_POST['debug']) && $debug != true) {
   define('ZC_UPG_DEBUG', false);
 }
-if (!isset($_GET['debug2']) && !zen_not_null($_POST['debug2']) && $debug != true) {
+if (!isset($_GET['debug2']) && empty($_POST['debug2']) && $debug != true) {
   define('ZC_UPG_DEBUG2', false);
 }
-if (!isset($_GET['debug3']) && !zen_not_null($_POST['debug3']) && $debug != true) {
+if (!isset($_GET['debug3']) && empty($_POST['debug3']) && $debug != true) {
   define('ZC_UPG_DEBUG3', false);
 }
 
@@ -52,7 +52,7 @@ $linebreak = '
 // NOTE: this line break is intentional!!!!
 
 function executeSql($lines, $database, $table_prefix = '') {
-  zen_set_time_limit(1200); 
+  zen_set_time_limit(1200);
   global $db, $debug, $messageStack;
   $sql_file = 'SQLPATCH';
   $newline = '';
@@ -66,7 +66,7 @@ function executeSql($lines, $database, $table_prefix = '') {
   $string = '';
   $result = '';
   $complete_line = false;
-  $counter = 0; 
+  $counter = 0;
   if (!isset($_GET['debug'])) {
     $_GET['debug'] = 'OFF';
   }
@@ -81,7 +81,7 @@ function executeSql($lines, $database, $table_prefix = '') {
     $line = $saveline . $line;
     $keep_together = 1; // count of number of lines to treat as a single command
     // split the line into words ... starts at $param[0] and so on.  Also remove the ';' from end of last param if exists
-     $no_semi_line = rtrim($line, ';'); 
+     $no_semi_line = rtrim($line, ';');
      $param = preg_split('/\s+/', $no_semi_line);
 
     // The following command checks to see if we're asking for a block of commands to be run at once.
@@ -103,10 +103,10 @@ function executeSql($lines, $database, $table_prefix = '') {
           if (!$checkprivs = zen_check_database_privs('DROP')) {
             $result = sprintf(REASON_NO_PRIVILEGES, 'DROP');
           }
-          if (!zen_table_exists($param[2]) || zen_not_null($result)) {
-            zen_write_to_upgrade_exceptions_table($line, (zen_not_null($result) ? $result : sprintf(REASON_TABLE_DOESNT_EXIST, $param[2])), $sql_file);
+          if (!zen_table_exists($param[2]) || !empty($result)) {
+            zen_write_to_upgrade_exceptions_table($line, (!empty($result) ? $result : sprintf(REASON_TABLE_DOESNT_EXIST, $param[2])), $sql_file);
             $ignore_line = true;
-            $result = (zen_not_null($result) ? $result : sprintf(REASON_TABLE_DOESNT_EXIST, $param[2])); //duplicated here for on-screen error-reporting
+            $result = (!empty($result) ? $result : sprintf(REASON_TABLE_DOESNT_EXIST, $param[2])); //duplicated here for on-screen error-reporting
             break;
           } else {
             $line = 'DROP TABLE ' . $table_prefix . ltrim(substr($line, 11));
@@ -187,7 +187,7 @@ function executeSql($lines, $database, $table_prefix = '') {
           break;
         case (substr($line_upper, 0, 13) == 'RENAME TABLE '):
           // RENAME TABLE command cannot be parsed to insert table prefixes, so skip if zen is using prefixes
-          if (zen_not_null(DB_PREFIX)) {
+          if (!empty(DB_PREFIX)) {
             zen_write_to_upgrade_exceptions_table($line, 'RENAME TABLE command not supported by upgrader. Please use phpMyAdmin instead.', $sql_file);
             $messageStack->add(ERROR_RENAME_TABLE, 'caution');
 
@@ -294,7 +294,7 @@ function executeSql($lines, $database, $table_prefix = '') {
         $results++;
         $string .= $newline . '<br>';
 //        $return_output[] = $output;
-        if (zen_not_null($result)) {
+        if (!empty($result)) {
           $errors[] = $result;
         }
         // reset var's
@@ -324,11 +324,11 @@ function executeSql($lines, $database, $table_prefix = '') {
     } //endif ! # or -
   } // end foreach $lines
 
-  if (zen_not_null($newline)) {
+  if (!empty($newline)) {
     $messageStack->add(ERROR_LINE_INCOMPLETE, 'error'); // Why not attempt to process this line instead of alert about it?
   }
 
-  $_POST['query_string'] = $lines; 
+  $_POST['query_string'] = $lines;
   zen_record_admin_activity('Admin SQL Patch tool executed a query.', 'notice');
   return array('queries' => $results, 'string' => $string, 'output' => $return_output, 'ignored' => ($ignored_count), 'errors' => $errors);
 }
@@ -370,7 +370,7 @@ function zen_check_database_privs($priv = '', $table = '', $show_privs = false) 
   global $db_test;
   $granted_privs_list = '';
   if (defined('ZC_UPG_DEBUG3') && ZC_UPG_DEBUG3 == true) {
-    echo '<br>Checking for priv: [' . (zen_not_null($priv) ? $priv : 'none specified') . ']<br>';
+    echo '<br>Checking for priv: [' . (!empty($priv) ? $priv : 'none specified') . ']<br>';
   }
   if (!defined('DB_SERVER')) {
     define('DB_SERVER', $zdb_server);
@@ -413,7 +413,7 @@ function zen_check_database_privs($priv = '', $table = '', $show_privs = false) 
       $granted_privs = substr($granted_privs, 0, strpos($granted_privs, ' ON ')); //remove anything after the "ON" keyword
       $granted_privs_list .= ($granted_privs_list == '') ? $granted_privs : ', ' . $granted_privs;
 
-      $specific_priv_found = (zen_not_null($priv) && substr_count($granted_privs, $priv) == 1);
+      $specific_priv_found = (!empty($priv) && substr_count($granted_privs, $priv) == 1);
       if (ZC_UPG_DEBUG3 == true) {
         echo 'specific priv[' . $priv . '] found =' . $specific_priv_found . '<br>';
       }
@@ -446,7 +446,7 @@ function zen_drop_index_command($param) {
   }
   //this is only slightly different from the ALTER TABLE DROP INDEX command
   global $db;
-  if (!zen_not_null($param)) {
+  if (!!empty($param)) {
     return "Empty SQL Statement";
   }
   $index = $param[2];
@@ -471,7 +471,7 @@ function zen_create_index_command($param) {
     return sprintf(REASON_NO_PRIVILEGES, 'INDEX');
   }
   global $db;
-  if (!zen_not_null($param)) {
+  if (!!empty($param)) {
     return "Empty SQL Statement";
   }
   $index = (strtoupper($param[1]) == 'INDEX') ? $param[2] : $param[3];
@@ -498,7 +498,7 @@ function zen_create_index_command($param) {
 
 function zen_check_alter_command($param) {
   global $db;
-  if (!zen_not_null($param)) {
+  if (!!empty($param)) {
     return "Empty SQL Statement";
   }
   if (!$checkprivs = zen_check_database_privs('ALTER')) {
@@ -727,7 +727,7 @@ function zen_create_exceptions_table() {
 
 $debug = (isset($_GET['debug']) && $_GET['debug'] == 'ON');
 $action = (isset($_GET['action']) ? $_GET['action'] : '');
-if (zen_not_null($action)) {
+if (!empty($action)) {
   switch ($action) {
     case 'execute':
       if (isset($_POST['query_string']) && $_POST['query_string'] != '') {
@@ -742,7 +742,7 @@ if (zen_not_null($action)) {
         } else {
           $messageStack->add(sprintf(ERROR_EXECUTE_FAILED, (int)$query_results['queries']), 'error');
         }
-        if (zen_not_null($query_results['errors'])) {
+        if (!empty($query_results['errors'])) {
           foreach ($query_results['errors'] as $value) {
             $messageStack->add('ERROR: ' . $value, 'error');
           }
@@ -750,9 +750,9 @@ if (zen_not_null($action)) {
         if ($query_results['ignored'] != 0) {
           $messageStack->add(sprintf(ERROR_EXECUTE_IGNORED, (int)$query_results['ignored']), 'caution');
         }
-//        if (zen_not_null($query_results['output'])) {
+//        if (!empty($query_results['output'])) {
 //          foreach ($query_results['output'] as $value) {
-//            if (zen_not_null($value)) {
+//            if (!empty($value)) {
 //              $messageStack->add('INFO: ' . $value, 'caution');
 //            }
 //          }
@@ -774,7 +774,7 @@ if (zen_not_null($action)) {
         } else {
           $messageStack->add(sprintf(ERROR_UPLOADQUERY_FAILED, (int)$query_results['queries']), 'error');
         }
-        if (zen_not_null($query_results['errors'])) {
+        if (!empty($query_results['errors'])) {
           foreach ($query_results['errors'] as $value) {
             $messageStack->add(ICON_ERROR . ': ' . $value, 'error');
           }
@@ -782,9 +782,9 @@ if (zen_not_null($action)) {
         if ($query_results['ignored'] != 0) {
           $messageStack->add(ERROR_UPLOADQUERY_IGNORED, 'caution');
         }
-        if (zen_not_null($query_results['output'])) {
+        if (!empty($query_results['output'])) {
           foreach ($query_results['output'] as $value) {
-            if (zen_not_null($value)) {
+            if (!empty($value)) {
               $messageStack->add('ERROR: ' . $value, 'error');
             }
           }

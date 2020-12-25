@@ -38,11 +38,11 @@ function zen_href_link($page = '', $parameters = '', $connection = 'SSL', $add_s
     // Keep track of the separator
     $separator = '&';
 
-    if (!zen_not_null($page) || ($page == FILENAME_DEFAULT && !zen_not_null($parameters))) {
+    if (empty($page) || ($page == FILENAME_DEFAULT && empty($parameters))) {
         // If the request was for the homepage, do nothing
         $separator = '?';
     }
-    else if (zen_not_null($parameters)) {
+    else if (!empty($parameters)) {
         $link .= 'index.php?cmd='. $page . '&' . zen_output_string($parameters);
     }
     else {
@@ -232,13 +232,13 @@ function zen_image_submit($image, $alt = '', $parameters = '')
 // Output a form
   function zen_draw_form($name, $action, $parameters = '', $method = 'post', $params = '', $usessl = 'false') {
     $form = '<form name="' . zen_output_string($name) . '" action="';
-    if (zen_not_null($parameters)) {
+    if (!empty($parameters)) {
       $form .= zen_href_link($action, $parameters, 'NONSSL');
     } else {
       $form .= zen_href_link($action, '', 'NONSSL');
     }
     $form .= '" method="' . zen_output_string($method) . '"';
-    if (zen_not_null($params)) {
+    if (!empty($params)) {
       $form .= ' ' . $params;
     }
     $form .= '>';
@@ -275,7 +275,7 @@ function zen_draw_input_field($name, $value = '~*~*#', $parameters = '', $requir
     $field .= ' value="' . zen_output_string($value) . '"';
   }
 
-  if (zen_not_null($parameters)) {
+  if (!empty($parameters)) {
     $field .= ' ' . $parameters;
   }
 
@@ -318,13 +318,18 @@ function zen_draw_input_field($name, $value = '~*~*#', $parameters = '', $requir
 
     if (zen_not_null($value)) $selection .= ' value="' . zen_output_string($value) . '"';
 
-    if ( ($checked == true) || (isset($GLOBALS[$name]) && is_string($GLOBALS[$name]) && ($GLOBALS[$name] == 'on')) || (isset($value) && isset($GLOBALS[$name]) && is_string($GLOBALS[$name]) && (stripslashes($GLOBALS[$name]) == $value)) || (zen_not_null($value) && zen_not_null($compare) && ($value == $compare)) ) {
+    if (
+        ($checked == true)
+        || (isset($GLOBALS[$name]) && is_string($GLOBALS[$name]) && ($GLOBALS[$name] == 'on'))
+        || (isset($value) && isset($GLOBALS[$name]) && is_string($GLOBALS[$name]) && (stripslashes($GLOBALS[$name]) == $value))
+        || (zen_not_null($value) && zen_not_null($compare) && ($value == $compare))
+    ) {
       $selection .= ' checked="checked"';
     }
 
-    if (zen_not_null($parameters)) $selection .= ' ' . $parameters;
+    if (!empty($parameters)) $selection .= ' ' . $parameters;
 
-    $selection .= ' />';
+    $selection .= '>';
 
     return $selection;
   }
@@ -346,7 +351,7 @@ function zen_draw_input_field($name, $value = '~*~*#', $parameters = '', $requir
   function zen_draw_textarea_field($name, $wrap, $width, $height, $text = '~*~*#', $parameters = '', $reinsert_value = true) {
     $field = '<textarea name="' . zen_output_string($name) . '" wrap="' . zen_output_string($wrap) . '" cols="' . zen_output_string($width) . '" rows="' . zen_output_string($height) . '"';
 
-    if (zen_not_null($parameters)) $field .= ' ' . $parameters;
+    if (!empty($parameters)) $field .= ' ' . $parameters;
 
     $field .= '>';
 
@@ -374,7 +379,7 @@ function zen_draw_input_field($name, $value = '~*~*#', $parameters = '', $requir
       $field .= ' value="' . zen_output_string(stripslashes($GLOBALS[$name])) . '"';
     }
 
-    if (zen_not_null($parameters)) $field .= ' ' . $parameters;
+    if (!empty($parameters)) $field .= ' ' . $parameters;
 
     $field .= ' />';
 
@@ -395,7 +400,7 @@ function zen_draw_pull_down_menu($name, $values, $default = '', $parameters = ''
   $field = ($required ? '<div class="input-group">' . PHP_EOL : '');
   $field .= '<select rel="dropdown" name="' . zen_output_string($name) . '"';
 
-  if (zen_not_null($parameters)) {
+  if (!empty($parameters)) {
     $field .= ' ' . $parameters;
   }
 
@@ -431,7 +436,7 @@ function zen_draw_pull_down_menu($name, $values, $default = '', $parameters = ''
   function zen_hide_session_id() {
     global $session_started;
 
-    if ( ($session_started == true) && defined('SID') && zen_not_null(SID) ) {
+    if ( ($session_started == true) && defined('SID') && !empty(SID) ) {
       return zen_draw_hidden_field(zen_session_name(), zen_session_id());
     }
   }

@@ -11,7 +11,7 @@
   $action = (isset($_GET['action']) ? $_GET['action'] : '');
   $current_category_id = (isset($_GET['current_category_id']) ? (int)$_GET['current_category_id'] : (int)$current_category_id);
 
-  if (zen_not_null($action)) {
+  if (!empty($action)) {
     switch ($action) {
       case 'edit':
         if (!is_writable(DIR_FS_CATALOG_MEDIA)) $messageStack->add(TEXT_WARNING_FOLDER_UNWRITABLE, 'caution');
@@ -302,7 +302,7 @@
       break;
   }
 
-  if ( (zen_not_null($heading)) && (zen_not_null($contents)) ) {
+  if (!empty($heading) && !empty($contents)) {
     echo '            <td width="25%" valign="top">' . "\n";
 
     $box = new box;

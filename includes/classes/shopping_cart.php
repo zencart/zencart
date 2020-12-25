@@ -1966,7 +1966,7 @@ class shoppingCart extends base
                          */
                         include_once(DIR_WS_CLASSES . 'upload.php');
                         for ($i = 1, $n = $_GET['number_of_uploads']; $i <= $n; $i++) {
-                            if (isset($_POST[UPLOAD_PREFIX . $i]) && isset($_FILES['id']['tmp_name'][TEXT_PREFIX . $_POST[UPLOAD_PREFIX . $i]]) && zen_not_null($_FILES['id']['tmp_name'][TEXT_PREFIX . $_POST[UPLOAD_PREFIX . $i]]) && (!isset($_POST[UPLOAD_PREFIX . $i]) || !isset($_FILES['id']['tmp_name'][TEXT_PREFIX . $_POST[UPLOAD_PREFIX . $i]]) || ($_FILES['id']['tmp_name'][TEXT_PREFIX . $_POST[UPLOAD_PREFIX . $i]] != 'none'))) {
+                            if (isset($_POST[UPLOAD_PREFIX . $i]) && !empty($_FILES['id']['tmp_name'][TEXT_PREFIX . $_POST[UPLOAD_PREFIX . $i]]) && (!isset($_POST[UPLOAD_PREFIX . $i]) || !isset($_FILES['id']['tmp_name'][TEXT_PREFIX . $_POST[UPLOAD_PREFIX . $i]]) || ($_FILES['id']['tmp_name'][TEXT_PREFIX . $_POST[UPLOAD_PREFIX . $i]] != 'none'))) {
                                 $products_options_file = new upload('id');
                                 $products_options_file->set_destination(DIR_FS_UPLOADS);
                                 $products_options_file->set_output_messages('session');
@@ -2276,7 +2276,7 @@ class shoppingCart extends base
      */
     public function actionRemoveProduct($goto, $parameters)
     {
-        if (isset($_GET['product_id']) && zen_not_null($_GET['product_id'])) $this->remove($_GET['product_id']);
+        if (!empty($_GET['product_id'])) $this->remove($_GET['product_id']);
         zen_redirect(zen_href_link($goto, zen_get_all_get_params($parameters)));
     }
 

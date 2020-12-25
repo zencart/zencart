@@ -107,7 +107,7 @@ $currencies = new currencies();
                 $contents[] = array('text' => '<br>' . TEXT_INFO_NOT_REDEEMED);
               }
 
-              if ((zen_not_null($heading)) && (zen_not_null($contents))) {
+              if (!empty($heading) && !empty($contents)) {
                 $box = new box();
                 echo $box->infoBox($heading, $contents);
               }

@@ -10,7 +10,7 @@ require('includes/application_top.php');
 
 $action = (isset($_GET['action']) ? $_GET['action'] : '');
 
-if (zen_not_null($action)) {
+if (!empty($action)) {
   switch ($action) {
     case 'insert':
     case 'save':
@@ -23,7 +23,7 @@ if (zen_not_null($action)) {
       if (isset($_POST['type_name'])) {
         $type_name = zen_db_prepare_input($_POST['type_name']);
       }
-      
+
       $sql_data_array = array('type_ext' => $type_ext);
 
       if ($action == 'insert') {
@@ -153,7 +153,7 @@ if (zen_not_null($action)) {
                   break;
                 }
 
-            if ((zen_not_null($heading)) && (zen_not_null($contents))) {
+            if (!empty($heading) && !empty($contents)) {
               $box = new box;
               echo $box->infoBox($heading, $contents);
             }

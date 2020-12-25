@@ -137,7 +137,7 @@ if ($numLogFiles > $max_logs_to_display) {
 // If any file delete requests have been made, process them first.
 //
 $action = (isset($_GET['action'])) ? $_GET['action'] : '';
-if (zen_not_null($action) && $action == 'delete') {
+if ($action == 'delete') {
     if (isset($_POST['dList']) && count($_POST['dList']) != 0) {
         $numFiles = count($_POST['dList']);
         $filesDeleted = 0;
@@ -302,7 +302,7 @@ if ($max_log_file_size < 1) {
                                                 ?>
                                             </table></td>
                                         <?php
-                                        if (zen_not_null($heading) && zen_not_null($contents)) {
+                                        if (!empty($heading) && !empty($contents)) {
                                             ?>
                                             <td id="contentsOuter" width="50%">
                                                 <?php

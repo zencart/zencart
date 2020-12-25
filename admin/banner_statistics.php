@@ -212,7 +212,7 @@ $opts = array(
       <div class="form-group">
           <?php echo zen_draw_label(TITLE_TYPE, 'type', 'class="control-label col-sm-3"'); ?>
         <div class="col-sm-9 col-md-6">
-            <?php echo zen_draw_pull_down_menu('type', $type_array, (zen_not_null($type) ? $type : 'daily'), 'onChange="this.form.submit();" class="form-control"'); ?>
+            <?php echo zen_draw_pull_down_menu('type', $type_array, (!empty($type) ? $type : 'daily'), 'onChange="this.form.submit();" class="form-control"'); ?>
           <noscript><input type="submit" value="GO"></noscript>
         </div>
       </div>

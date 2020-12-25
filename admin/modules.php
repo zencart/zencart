@@ -14,7 +14,7 @@ $set = (isset($_GET['set']) ? $_GET['set'] : (isset($_POST['set']) ? $_POST['set
 
 $is_ssl_protected = (substr(HTTP_SERVER, 0, 5) == 'https') ? TRUE : FALSE;
 
-if (zen_not_null($set)) {
+if (!empty($set)) {
   switch ($set) {
     case 'shipping':
       $module_type = 'shipping';
@@ -58,7 +58,7 @@ $notifications = new AdminNotifications();
 $availableNotifications = $notifications->getNotifications($notificationType, $_SESSION['admin_id']);
 
 $action = (isset($_GET['action']) ? $_GET['action'] : '');
-if (zen_not_null($action)) {
+if (!empty($action)) {
   $admname = '{' . preg_replace('/[^\w]/', '*', zen_get_admin_name()) . '[' . (int)$_SESSION['admin_id'] . ']}';
   switch ($action) {
     case 'save':
@@ -382,7 +382,7 @@ if (zen_not_null($action)) {
           }
           ?>
           <?php
-          if ((zen_not_null($heading)) && (zen_not_null($contents))) {
+          if (!empty($heading) && !empty($contents)) {
             $box = new box();
             echo $box->infoBox($heading, $contents);
           }

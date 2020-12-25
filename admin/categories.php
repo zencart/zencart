@@ -41,7 +41,7 @@ if (isset($_GET['cID'])) {
 
 $zco_notifier->notify('NOTIFY_BEGIN_ADMIN_CATEGORIES', $action);
 
-if (zen_not_null($action)) {
+if (!empty($action)) {
   switch ($action) {
 
     case 'remove_type':

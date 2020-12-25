@@ -12,7 +12,7 @@
 <div class="centerColumn" id="reviewsInfoDefault">
 
 <?php
-  if (zen_not_null($products_image)) {
+  if (!empty($products_image)) {
    	/**
      * require the image display code
      */

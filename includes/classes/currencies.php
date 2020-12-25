@@ -129,7 +129,7 @@ class currencies extends base
 
     function is_set($code)
     {
-        return isset($this->currencies[$code]) && zen_not_null($this->currencies[$code]);
+        return !empty($this->currencies[$code]);
     }
 
     /**

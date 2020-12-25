@@ -70,7 +70,7 @@ use PHPMailer\PHPMailer\SMTP;
     }
 
     // if no text or html-msg supplied, exit
-    if (trim($email_text) == '' && (!zen_not_null($block) || (isset($block['EMAIL_MESSAGE_HTML']) && $block['EMAIL_MESSAGE_HTML'] == '')) ) return false;
+    if (trim($email_text) == '' && (empty($block) || (isset($block['EMAIL_MESSAGE_HTML']) && $block['EMAIL_MESSAGE_HTML'] == '')) ) return false;
 
     // Parse "from" addresses for "name" <email@address.com> structure, and supply name/address info from it.
     if (preg_match("/ *([^<]*) *<([^>]*)> */i",$from_email_address,$regs)) {
@@ -211,13 +211,13 @@ use PHPMailer\PHPMailer\SMTP;
           $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
           $mail->Port = 587;
           $mail->Host = 'smtp.gmail.com';
-          $mail->Username = (zen_not_null(trim(EMAIL_SMTPAUTH_MAILBOX))) ? trim(EMAIL_SMTPAUTH_MAILBOX) : EMAIL_FROM;
+          $mail->Username = (!empty(trim(EMAIL_SMTPAUTH_MAILBOX))) ? trim(EMAIL_SMTPAUTH_MAILBOX) : EMAIL_FROM;
           if (trim(EMAIL_SMTPAUTH_PASSWORD) != '') $mail->Password = trim(EMAIL_SMTPAUTH_PASSWORD);
           break;
         case 'smtpauth':
           $mail->isSMTP();
           $mail->SMTPAuth = true;
-          $mail->Username = (zen_not_null(trim(EMAIL_SMTPAUTH_MAILBOX))) ? trim(EMAIL_SMTPAUTH_MAILBOX) : EMAIL_FROM;
+          $mail->Username = (!empty(trim(EMAIL_SMTPAUTH_MAILBOX))) ? trim(EMAIL_SMTPAUTH_MAILBOX) : EMAIL_FROM;
           if (trim(EMAIL_SMTPAUTH_PASSWORD) != '') $mail->Password = trim(EMAIL_SMTPAUTH_PASSWORD);
           $mail->Host = (trim(EMAIL_SMTPAUTH_MAIL_SERVER) != '') ? trim(EMAIL_SMTPAUTH_MAIL_SERVER) : 'localhost';
           if ((int)EMAIL_SMTPAUTH_MAIL_SERVER_PORT != 25 && (int)EMAIL_SMTPAUTH_MAIL_SERVER_PORT != 0) $mail->Port = (int)EMAIL_SMTPAUTH_MAIL_SERVER_PORT;
@@ -360,11 +360,11 @@ use PHPMailer\PHPMailer\SMTP;
        * Send the email. If an error occurs, trap it and display it in the messageStack
        */
       $success = false;
-      try { 
-         $success = $mail->send(); 
+      try {
+         $success = $mail->send();
       } catch (Exception $e) {
       }
-      if (!$success) { 
+      if (!$success) {
         $msg = sprintf(EMAIL_SEND_FAILED . '&nbsp;'. $mail->ErrorInfo, $to_name, $to_email_address, $email_subject);
         if ($messageStack !== NULL) {
           if (IS_ADMIN_FLAG === true) {

@@ -20,8 +20,8 @@ $available_export_formats[0] = array('id' => '0' , 'text' => 'Export as HTML (id
 $available_export_formats[1] = array('id' => '1' , 'text' => 'Export to CSV (ideal for importing to spreadsheets)', 'format' => 'CSV'); // export to CSV
 //  $available_export_formats[2]=array('id' => '2', 'text' => 'Export to TXT', 'format' => 'TXT');
 //  $available_export_formats[3]=array('id' => '3', 'text' => 'Export to XML', 'format' => 'XML');
-$save_to_file_checked = (isset($_POST['savetofile']) && zen_not_null($_POST['savetofile']) ? $_POST['savetofile'] : 0);
-$post_format = (isset($_POST['format']) && zen_not_null($_POST['format']) ? $_POST['format'] : 1);
+$save_to_file_checked = (isset($_POST['savetofile']) && !empty($_POST['savetofile']) ? $_POST['savetofile'] : 0);
+$post_format = (isset($_POST['format']) && !empty($_POST['format']) ? $_POST['format'] : 1);
 $format = $available_export_formats[$post_format]['format'];
 $file = (isset($_POST['filename']) ? preg_replace('/[^\w\.\-]/', '', $_POST['filename']) : 'coupon_export_' . date('Y-m-d_H-i-s') . '.csv');
 if (!preg_match('/.*\.(csv|txt|html?|xml)$/', $file)) $file .= '.txt';
@@ -79,7 +79,7 @@ if ($action != '')
                  uses_per_coupon, uses_per_user, coupon_zone_restriction, coupon_active, coupon_calc_base, coupon_order_limit,
                  coupon_is_valid_for_sales, coupon_product_count
                  , coupon_name, coupon_description
-              FROM " . TABLE_COUPONS . " c 
+              FROM " . TABLE_COUPONS . " c
               LEFT JOIN " . TABLE_COUPONS_DESCRIPTION . " cd ON (c.coupon_id = cd.coupon_id AND cd.language_id = :language)
               WHERE c.coupon_code LIKE :search ORDER BY c.coupon_active, c.coupon_id " . $sort;
       $sql = $db->bindVars($sql, ':search', $_GET['codebase'] . '%', 'string');

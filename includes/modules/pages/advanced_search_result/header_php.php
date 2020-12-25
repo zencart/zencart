@@ -169,7 +169,7 @@ for ($col=0, $n=sizeof($column_list); $col<$n; $col++) {
     continue;
   }
 
-  if (zen_not_null($select_column_list)) {
+  if (!empty($select_column_list)) {
     $select_column_list .= ', ';
   }
 
@@ -207,7 +207,7 @@ if (PRODUCT_LIST_QUANTITY < 1) {
   }
 }
 
-if (zen_not_null($select_column_list)) {
+if (!empty($select_column_list)) {
   $select_column_list .= ', ';
 }
 
@@ -278,7 +278,7 @@ if (!isset($_GET['search_in_description'])) {
 }
 $_GET['search_in_description'] = (int)$_GET['search_in_description'];
 
-if (isset($_GET['categories_id']) && zen_not_null($_GET['categories_id'])) {
+if (!empty($_GET['categories_id'])) {
   if ($_GET['inc_subcat'] == '1') {
     $subcategories_array = array();
     zen_get_subcategories($subcategories_array, $_GET['categories_id']);
@@ -309,7 +309,7 @@ if (isset($_GET['categories_id']) && zen_not_null($_GET['categories_id'])) {
   }
 }
 
-if (isset($_GET['manufacturers_id']) && zen_not_null($_GET['manufacturers_id'])) {
+if (!empty($_GET['manufacturers_id'])) {
   $where_str .= " AND m.manufacturers_id = :manufacturersID";
   $where_str = $db->bindVars($where_str, ':manufacturersID', $_GET['manufacturers_id'], 'integer');
 }

@@ -23,7 +23,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'set_editor') {
 $languages = zen_get_languages();
 
 $action = (isset($_GET['action']) ? $_GET['action'] : '');
-if (zen_not_null($action)) {
+if (!empty($action)) {
   switch ($action) {
     case 'set_ez_sort_order':
       $currentSortOrder = $_SESSION['ez_sort_order'] = (int)$_GET['reset_ez_sort_order'];
@@ -282,7 +282,7 @@ if (zen_not_null($action)) {
                          AND ec.languages_id = " . (int)$_SESSION['languages_id'];
           $page = $db->Execute($page_query);
           $ezInfo->updateObjectInfo($page->fields);
-        } elseif (zen_not_null($_POST)) {
+        } elseif (!empty($_POST)) {
           $ezInfo->updateObjectInfo($_POST);
         }
 
@@ -305,7 +305,7 @@ if (zen_not_null($action)) {
             <?php
             $pages_title = '';
             for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
-              if (isset($_GET['ezID']) && zen_not_null($_GET['ezID'])) {
+              if (!empty($_GET['ezID'])) {
                 $title_query_sql = "SELECT pages_title
                                     FROM " . TABLE_EZPAGES_CONTENT . "
                                     WHERE pages_id = " . (int)$_GET['ezID'] . "
@@ -467,7 +467,7 @@ if (zen_not_null($action)) {
             $pages_html_text = '';
 
             for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
-              if (isset($_GET['ezID']) && zen_not_null($_GET['ezID'])) {
+              if (!empty($_GET['ezID'])) {
                 $text_query_sql = "SELECT pages_html_text
                                    FROM " . TABLE_EZPAGES_CONTENT . "
                                    WHERE pages_id = " . (int)$_GET['ezID'] . "
@@ -777,7 +777,7 @@ if (zen_not_null($action)) {
                 break;
             }
 
-            if ((zen_not_null($heading)) && (zen_not_null($contents))) {
+            if (!empty($heading) && !empty($contents)) {
               $box = new box;
               echo $box->infoBox($heading, $contents);
             }

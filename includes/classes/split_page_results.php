@@ -107,7 +107,7 @@ class splitPageResults extends base {
 
     $class = '';
 
-    if (zen_not_null($parameters) && (substr($parameters, -1) != '&') && ($this->current_page_number > 1)) $parameters .= '&';
+    if (!empty($parameters) && (substr($parameters, -1) != '&') && ($this->current_page_number > 1)) $parameters .= '&';
 
     // previous button - not displayed on first page
     $link = '<a href="' . zen_href_link($_GET['main_page'], $parameters . ($this->current_page_number > 2 ? $this->page_name . '=' . ($this->current_page_number - 1) : ''), $request_type) . '" title="' . PREVNEXT_TITLE_PREVIOUS_PAGE . '">' . PREVNEXT_BUTTON_PREV . '</a>';

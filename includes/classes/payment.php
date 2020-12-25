@@ -31,7 +31,7 @@ class payment extends base {
 
       $include_modules = array();
 
-      if ( (zen_not_null($module)) && (in_array($module . '.' . substr($PHP_SELF, (strrpos($PHP_SELF, '.')+1)), $this->modules)) ) {
+      if (!empty($module) && (in_array($module . '.' . substr($PHP_SELF, (strrpos($PHP_SELF, '.')+1)), $this->modules)) ) {
         $this->selected_module = $module;
 
         $include_modules[] = array('class' => $module, 'file' => $module . '.php');
@@ -95,7 +95,7 @@ class payment extends base {
         if (!isset($credit_covers) || $credit_covers == FALSE) $_SESSION['payment'] = $include_modules[0]['class'];
       }
 
-      if (zen_not_null($module) && in_array($module, $this->modules) && isset($GLOBALS[$module]->form_action_url)) {
+      if (!empty($module) && in_array($module, $this->modules) && isset($GLOBALS[$module]->form_action_url)) {
         $this->form_action_url = $GLOBALS[$module]->form_action_url;
       }
   }

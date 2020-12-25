@@ -498,7 +498,7 @@ function zen_get_products_model($product_id)
 function zen_get_products_status($product_id)
 {
     global $db;
-    $sql = "SELECT products_status FROM " . TABLE_PRODUCTS . (zen_not_null($product_id) ? " where products_id=" . (int)$product_id : "");
+    $sql = "SELECT products_status FROM " . TABLE_PRODUCTS . (!empty($product_id) ? " where products_id=" . (int)$product_id : "");
     $check_status = $db->Execute($sql, 1);
     if ($check_status->EOF) return '';
     return $check_status->fields['products_status'];
@@ -514,7 +514,7 @@ function zen_get_product_is_linked($product_id, $show_count = 'false')
 {
     global $db;
 
-    $sql = "SELECT * FROM " . TABLE_PRODUCTS_TO_CATEGORIES . (zen_not_null($product_id) ? " where products_id=" . (int)$product_id : "");
+    $sql = "SELECT * FROM " . TABLE_PRODUCTS_TO_CATEGORIES . (!empty($product_id) ? " where products_id=" . (int)$product_id : "");
     $check_linked = $db->Execute($sql);
     if ($check_linked->RecordCount() > 1) {
         if ($show_count == 'true') {

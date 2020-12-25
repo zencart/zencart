@@ -18,7 +18,7 @@
 <div id="pinfo-left" class="group">
 <!--bof Main Product Image -->
 <?php
-  if (zen_not_null($products_image)) {
+  if (!empty($products_image)) {
 ?>
   <div id="reviewWriteMainImage" class="centeredContent back"><?php
 /**

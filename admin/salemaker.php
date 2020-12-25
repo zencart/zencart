@@ -25,7 +25,7 @@ $deduction_type_array = array(
 
 $action = (isset($_GET['action']) ? $_GET['action'] : '');
 
-if (zen_not_null($action)) {
+if (!empty($action)) {
   switch ($action) {
     case 'setflag':
       if (isset($_POST['flag']) && ($_POST['flag'] == 1 || $_POST['flag'] == 0)) {
@@ -98,7 +98,7 @@ if (zen_not_null($action)) {
       break;
     case 'copyconfirm':
       $newname = zen_db_prepare_input($_POST['newname']);
-      if (zen_not_null($newname)) {
+      if (!empty($newname)) {
         $salemaker_sales = $db->Execute("SELECT *
                                          FROM " . TABLE_SALEMAKER_SALES . "
                                          WHERE sale_id = " . zen_db_input($_GET['sID']));
@@ -352,7 +352,7 @@ if (zen_not_null($action)) {
       }
       $categories_selected = explode(',', $sInfo->sale_categories_selected);
       if (zen_not_null($sInfo->sale_categories_selected)) {
-        $selected = in_array(0, $categories_selected);
+        $selected = in_array(TOPMOST_CATEGORY_PARENT_ID, $categories_selected);
       } else {
         $selected = false;
       }
@@ -539,7 +539,7 @@ if (zen_not_null($action)) {
                 }
                 break;
             }
-            if ((zen_not_null($heading)) && (zen_not_null($contents))) {
+            if (!empty($heading) && !empty($contents)) {
               $box = new box;
               echo $box->infoBox($heading, $contents);
             }

@@ -141,7 +141,7 @@ if (!empty($order->statuses)) {
 ?>
 
 <?php
-    if (zen_not_null($order->info['shipping_method'])) {
+    if (!empty($order->info['shipping_method'])) {
 ?>
 <h4><?php echo HEADING_SHIPPING_METHOD; ?></h4>
 <div><?php echo $order->info['shipping_method']; ?></div>

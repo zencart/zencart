@@ -11,7 +11,7 @@
 <div class="centerColumn" id="reviewsDefault">
 <?php if ($messageStack->size('product_info') > 0) echo $messageStack->output('product_info'); ?>
 <?php
-  if (zen_not_null($products_image)) {
+  if (!empty($products_image)) {
   /**
    * require the image display code
    */

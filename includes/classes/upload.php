@@ -32,14 +32,14 @@ class upload extends base
         $this->set_destination($destination);
         $this->set_permissions($permissions);
 
-        if (!zen_not_null($extensions)) {
+        if (!!empty($extensions)) {
             $extensions = explode(" ", preg_replace('/[.,;\s]+/', ' ', UPLOAD_FILENAME_EXTENSIONS_LIST));
         }
         $this->set_extensions($extensions);
 
         $this->set_output_messages('direct');
 
-        if (zen_not_null($this->file) && zen_not_null($this->destination)) {
+        if (!empty($this->file) && !empty($this->destination)) {
             $this->set_output_messages('session');
 
             if (($this->parse() == true) && ($this->save() == true)) {
@@ -193,7 +193,7 @@ class upload extends base
      */
     function set_extensions($extensions)
     {
-        if (zen_not_null($extensions)) {
+        if (!empty($extensions)) {
             if (is_array($extensions)) {
                 $this->extensions = $extensions;
             } else {
