@@ -106,7 +106,7 @@ function zen_display_files($include_root = false, $filetypesincluded = 1) {
       $root_array[] = DIR_FS_CATALOG . 'page_not_found.php';
     }
 
-    $root_array[] = DIR_FS_CATALOG . FILENAME_DATABASE_TEMPORARILY_DOWN; 
+    $root_array[] = DIR_FS_CATALOG . FILENAME_DATABASE_TEMPORARILY_DOWN;
     $new_array = array_merge($root_array, $original_array);
     $directory_array = $new_array;
   }
@@ -130,7 +130,7 @@ function zen_display_files($include_root = false, $filetypesincluded = 1) {
       $check_configure = $db->Execute($sql);
     }
     if ($check_configure->RecordCount() >= 1) {
-      $links = '<strong><span class="alert">' . TEXT_SEARCH_DATABASE_TABLES . '</span></strong> ' . '<a href="' . zen_href_link(FILENAME_DEVELOPERS_TOOL_KIT, 'action=' . 'locate_configuration' . '&configuration_key_lookup=' . zen_output_string_protected($configuration_key_lookup)) . '">' . zen_output_string_protected($configuration_key_lookup) . '</a><br /><br />';
+      $links = '<strong><span class="alert">' . TEXT_SEARCH_DATABASE_TABLES . '</span></strong> ' . '<a href="' . zen_href_link(FILENAME_DEVELOPERS_TOOL_KIT, 'action=' . 'locate_configuration' . '&configuration_key_lookup=' . zen_output_string_protected($configuration_key_lookup)) . '">' . zen_output_string_protected($configuration_key_lookup) . '</a><br><br>';
     } else {
       // do nothing
     }
@@ -769,7 +769,7 @@ if ($found == false) {
                     if ($page != '') {
                       echo '<a href="' . zen_href_link(FILENAME_MODULES, 'set=' . $page) . '" class="btn btn-primary" role="button">' . IMAGE_EDIT . '</a>';
                     } else {
-                      echo TEXT_INFO_NO_EDIT_AVAILABLE . '<br />';
+                      echo TEXT_INFO_NO_EDIT_AVAILABLE . '<br>';
                     }
                   }
                 }
@@ -780,7 +780,7 @@ if ($found == false) {
           <tr class="infoBoxContent">
             <td colspan="2" class="pageHeading" align="center">
                 <?php
-                $links = '<br /><strong><span class="alert">' . TEXT_SEARCH_ALL_FILES . '</span></strong> ' . '<a href="' . zen_href_link(FILENAME_DEVELOPERS_TOOL_KIT, 'action=' . 'locate_all_files' . '&configuration_key_lookup=' . zen_output_string_protected($configuration_key_lookup) . '&zv_files=1') . '">' . zen_output_string_protected($configuration_key_lookup) . '</a><br />';
+                $links = '<br><strong><span class="alert">' . TEXT_SEARCH_ALL_FILES . '</span></strong> ' . '<a href="' . zen_href_link(FILENAME_DEVELOPERS_TOOL_KIT, 'action=' . 'locate_all_files' . '&configuration_key_lookup=' . zen_output_string_protected($configuration_key_lookup) . '&zv_files=1') . '">' . zen_output_string_protected($configuration_key_lookup) . '</a><br>';
                 echo $links;
                 ?>
             </td>
@@ -914,7 +914,7 @@ if ($found == false) {
 
                     <td class="<?php echo $tdClass; ?>"><?php echo $keySearchResult['configuration_description']; ?> &nbsp;</td>
                     <td class="<?php echo $tdClass; ?>"><?php echo $keySearchResult['configuration_key']; ?></td>
-                    <td class="<?php echo $tdClass; ?>"><?php echo $keySearchResult['configuration_value']; /* implode("<br />\n", preg_split("/[\s,.]+/", $configuration->fields['configuration_value'])) */ ?></td>
+                    <td class="<?php echo $tdClass; ?>"><?php echo $keySearchResult['configuration_value']; /* implode("<br>\n", preg_split("/[\s,.]+/", $configuration->fields['configuration_value'])) */ ?></td>
                     <td class="<?php echo $tdClass; ?> text-center" onclick="document.location.href = '<?php echo $viewlink; ?>'"><a href="<?php echo $editlink; ?>" class="btn btn-primary" role="button"><?php echo IMAGE_EDIT; ?></a></td>
                   </tr>
                   <?php

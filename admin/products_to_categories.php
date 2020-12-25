@@ -578,7 +578,7 @@ if ($target_subcategory_count > $max_input_vars) { //warning when in excess of P
                                                 '<a href="' . zen_href_link(FILENAME_PRODUCT,
                                                     'action=new_product' . '&cPath=' . zen_get_parent_category_id($products_filter) . '&pID=' . $products_filter . '&product_type=' . zen_get_products_type($products_filter)) . '" class="btn btn-info" role="button">' . IMAGE_EDIT_PRODUCT . '</a>&nbsp;' .
                                                 '<a href="' . zen_href_link(FILENAME_CATEGORY_PRODUCT_LISTING,
-                                                    'cPath=' . zen_get_parent_category_id($products_filter) . '&pID=' . $products_filter) . '" class="btn btn-info" role="button">' . BUTTON_CATEGORY_LISTING . '</a><br /><br />' .
+                                                    'cPath=' . zen_get_parent_category_id($products_filter) . '&pID=' . $products_filter) . '" class="btn btn-info" role="button">' . BUTTON_CATEGORY_LISTING . '</a><br><br>' .
                                                 '<a href="' . zen_href_link(FILENAME_ATTRIBUTES_CONTROLLER,
                                                     'products_filter=' . $products_filter . '&current_category_id=' . $current_category_id) . '" class="btn btn-info" role="button">' . IMAGE_EDIT_ATTRIBUTES . '</a>&nbsp;' .
                                                 '<a href="' . zen_href_link(FILENAME_PRODUCTS_PRICE_MANAGER,

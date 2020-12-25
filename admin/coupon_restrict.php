@@ -507,7 +507,7 @@ unset($products);
                     <?php echo 
                     zen_draw_form('prod-sel', FILENAME_COUPON_RESTRICT, zen_get_all_get_params(array('action')), 'get', 'id="prod-cat-man"') .
                     zen_draw_pull_down_menu('cPath_prod', zen_get_category_tree(), $cPath_prod, 'id="prod-path"') .
-                    '<br /><br />' .
+                    '<br><br>' .
                     zen_draw_pull_down_menu('manufacturers_id', $manufacturers_array, $current_manufacturers_id, 'id="prod-man"') .
                     zen_draw_hidden_field('cid', $cid) .
                     '</form>'; ?>

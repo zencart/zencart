@@ -210,7 +210,7 @@ if ($action == 'preview') {
           <div class="col-sm-12"><hr></div>
           <div class="col-sm-3 text-right"><b><?php echo strip_tags(TEXT_MESSAGE_HTML); ?></b></div>
           <div class="col-sm-9">
-              <?php if (EMAIL_USE_HTML != 'true') echo TEXT_WARNING_HTML_DISABLED . '<br />'; ?>
+              <?php if (EMAIL_USE_HTML != 'true') echo TEXT_WARNING_HTML_DISABLED . '<br>'; ?>
               <?php
               $html_preview = zen_output_string(isset($_POST['message_html']) ? $_POST['message_html'] : '');
               echo (false !== stripos($html_preview, '<br') ? $html_preview : nl2br($html_preview));

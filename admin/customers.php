@@ -613,7 +613,7 @@ if (!empty($action)) {
           <fieldset>
             <legend><?php echo ADDRESS_BOOK_TITLE; ?></legend>
             <div class="alert forward"><?php echo sprintf(TEXT_MAXIMUM_ENTRIES, MAX_ADDRESS_BOOK_ENTRIES); ?></div>
-            <br class="clearBoth" />
+            <br class="clearBoth">
             <?php
             /**
              * Used to loop thru and display address book entries
@@ -621,7 +621,7 @@ if (!empty($action)) {
             foreach ($addressArray as $addresses) {
               ?>
               <h3 class="addressBookDefaultName"><?php echo zen_output_string_protected($addresses['firstname'] . ' ' . $addresses['lastname']); ?><?php echo ($addresses['address_book_id'] == zen_get_customers_address_primary($_GET['cID']) ? '&nbsp;' . PRIMARY_ADDRESS : ''); ?></h3>
-              <address><?php echo zen_address_format($addresses['format_id'], $addresses['address'], true, ' ', '<br />'); ?></address>
+              <address><?php echo zen_address_format($addresses['format_id'], $addresses['address'], true, ' ', '<br>'); ?></address>
 
               <br class="clearBoth">
             <?php } ?>

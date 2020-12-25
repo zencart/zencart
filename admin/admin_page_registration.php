@@ -144,7 +144,7 @@ foreach ($menu_titles as $id => $title) {
       <div class="form-group">
           <?php echo zen_draw_label(TEXT_DISPLAY_ON_MENU, 'display_on_menu', 'class="col-sm-3 control-label"'); ?>
         <div class="col-sm-9 col-md-6">
-          <input type="checkbox" name="display_on_menu" id="displayOnMenu" <?php echo $checked ?> />
+          <input type="checkbox" name="display_on_menu" id="displayOnMenu" <?php echo $checked ?>>
         </div>
       </div>
       <div class="form-group">

@@ -895,7 +895,7 @@ if (!empty($action)) {
   <!doctype html>
   <html  <?php echo HTML_PARAMS; ?>>
     <head>
-      <meta charset="<?php echo CHARSET; ?>" />
+      <meta charset="<?php echo CHARSET; ?>">
       <title>HELP - <?php echo HEADING_TITLE; ?> - Zen Cart&reg;</title>
       <link rel="stylesheet" href="includes/stylesheet.css">
     </head>

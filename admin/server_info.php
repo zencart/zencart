@@ -13,7 +13,7 @@
 
 // the following is for display later
   $sinfo =  '<div class="sysinfo wrapper">' .
-         '  <div class="center"><a href="https://www.zen-cart.com"><img border="0" src="images/small_zen_logo.gif" alt=" Zen Cart " /></a></div>' .
+         '  <div class="center"><a href="https://www.zen-cart.com"><img border="0" src="images/small_zen_logo.gif" alt=" Zen Cart "></a></div>' .
          '  <div class="center"><h2> ' . PROJECT_VERSION_NAME . ' ' . PROJECT_VERSION_MAJOR . '.' . PROJECT_VERSION_MINOR . '</h2>' .
                ((PROJECT_VERSION_PATCH1 =='') ? '' : '<h3>Patch: ' . PROJECT_VERSION_PATCH1 . '::' . PROJECT_VERSION_PATCH1_SOURCE . '</h3>') .
                ((PROJECT_VERSION_PATCH2 =='') ? '' : '<h3>Patch: ' . PROJECT_VERSION_PATCH2 . '::' . PROJECT_VERSION_PATCH2_SOURCE . '</h3>') .
