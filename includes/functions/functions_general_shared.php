@@ -6,7 +6,7 @@
  * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2020 Jul 02 Modified in v1.5.7a $
+ * @version $Id: DrByte 2020 Dec 24 Modified in v1.5.7c $
  */
 
 /**
@@ -156,8 +156,13 @@ function zen_is_whitelisted_admin_ip($ip = null)
     if (is_array($value)) {
       return count($value) > 0;
     }
+    if (function_exists('is_countable')) {
+        if (is_countable($value)) {
+            return count($value) > 0;
+        }
+    }
     if (is_a($value, 'queryFactoryResult')) {
-      return count($value->result) > 0;
+      return count($value) > 0;
     }
     return trim($value) !== '' && $value != 'NULL';
   }
