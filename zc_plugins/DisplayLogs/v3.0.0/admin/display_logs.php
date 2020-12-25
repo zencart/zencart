@@ -267,8 +267,8 @@ if ($max_log_file_size < 1) {
                                         <td valign="top" width="50%"><table border="0" width="100%" cellspacing="0" cellpadding="2">
                                                 <tr class="dataTableHeadingRow">
                                                     <td class="dataTableHeadingContent" align="left"><?php echo TABLE_HEADING_FILENAME; ?></td>
-                                                    <td class="dataTableHeadingContent" align="center"><?php echo TABLE_HEADING_MODIFIED; ?><br /><a href="<?php echo zen_href_link(FILENAME_DISPLAY_LOGS, zen_get_all_get_params(array('sort')) . 'sort=date_a', 'NONSSL'); ?>"><?php echo LOG_SORT_ASC; ?></a>&nbsp;&nbsp;<a href="<?php echo zen_href_link(FILENAME_DISPLAY_LOGS, zen_get_all_get_params(array('sort')) . 'sort=date_d', 'NONSSL'); ?>"><?php echo LOG_SORT_DESC; ?></a></td>
-                                                    <td class="dataTableHeadingContent" align="center"><?php echo TABLE_HEADING_FILESIZE; ?><br /><a href="<?php echo zen_href_link (FILENAME_DISPLAY_LOGS, zen_get_all_get_params(array('sort')) . 'sort=size_a', 'NONSSL'); ?>"><?php echo LOG_SORT_ASC; ?></a>&nbsp;&nbsp;<a href="<?php echo zen_href_link(FILENAME_DISPLAY_LOGS, zen_get_all_get_params(array('sort')) . 'sort=size_d', 'NONSSL'); ?>"><?php echo LOG_SORT_DESC; ?></a></td>
+                                                    <td class="dataTableHeadingContent" align="center"><?php echo TABLE_HEADING_MODIFIED; ?><br><a href="<?php echo zen_href_link(FILENAME_DISPLAY_LOGS, zen_get_all_get_params(array('sort')) . 'sort=date_a', 'NONSSL'); ?>"><?php echo LOG_SORT_ASC; ?></a>&nbsp;&nbsp;<a href="<?php echo zen_href_link(FILENAME_DISPLAY_LOGS, zen_get_all_get_params(array('sort')) . 'sort=date_d', 'NONSSL'); ?>"><?php echo LOG_SORT_DESC; ?></a></td>
+                                                    <td class="dataTableHeadingContent" align="center"><?php echo TABLE_HEADING_FILESIZE; ?><br><a href="<?php echo zen_href_link (FILENAME_DISPLAY_LOGS, zen_get_all_get_params(array('sort')) . 'sort=size_a', 'NONSSL'); ?>"><?php echo LOG_SORT_ASC; ?></a>&nbsp;&nbsp;<a href="<?php echo zen_href_link(FILENAME_DISPLAY_LOGS, zen_get_all_get_params(array('sort')) . 'sort=size_d', 'NONSSL'); ?>"><?php echo LOG_SORT_DESC; ?></a></td>
                                                     <td class="dataTableHeadingContent" align="center"><?php echo TABLE_HEADING_DELETE; ?></td>
                                                     <td class="dataTableHeadingContent" align="right"><?php echo TABLE_HEADING_ACTION; ?>&nbsp;</td>
                                                 </tr>
@@ -340,7 +340,7 @@ if ($max_log_file_size < 1) {
     <!-- footer //-->
     <?php require(DIR_WS_INCLUDES . 'footer.php'); ?>
     <!-- footer_eof //-->
-    <br />
+    <br>
     </body>
     </html>
 <?php require(DIR_WS_INCLUDES . 'application_bottom.php'); ?>
