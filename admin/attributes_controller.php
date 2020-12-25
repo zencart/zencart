@@ -103,7 +103,7 @@ if ($products_filter == '' && !empty($current_category_id)) {
 
 require(DIR_WS_MODULES . FILENAME_PREV_NEXT);
 
-if (zen_not_null($action)) {
+if (!empty($action)) {
   switch ($action) {
 /////////////////////////////////////////
 //// BOF OF FLAGS
@@ -265,7 +265,7 @@ if (zen_not_null($action)) {
 // when set to none remove from database
 // only processes image once for multiple selection of options_values_id
           if ($i == 0) {
-            if (isset($_POST['attributes_image']) && zen_not_null($_POST['attributes_image']) && ($_POST['attributes_image'] != 'none')) {
+            if (!empty($_POST['attributes_image']) && ($_POST['attributes_image'] != 'none')) {
               $attributes_image = zen_db_prepare_input($_POST['attributes_image']);
             } else {
               $attributes_image = '';
@@ -405,7 +405,7 @@ if (zen_not_null($action)) {
 // edit
 // attributes images
 // when set to none remove from database
-          if (isset($_POST['attributes_image']) && zen_not_null($_POST['attributes_image']) && ($_POST['attributes_image'] != 'none')) {
+          if (!empty($_POST['attributes_image']) && ($_POST['attributes_image'] != 'none')) {
             $attributes_image = zen_db_prepare_input($_POST['attributes_image']);
             $attributes_image_none = false;
           } else {
@@ -467,7 +467,7 @@ if (zen_not_null($action)) {
             $products_attributes_maxdays = (int)$_POST['products_attributes_maxdays'];
             $products_attributes_maxcount = (int)$_POST['products_attributes_maxcount'];
 
-            if (zen_not_null($products_attributes_filename)) {
+            if (!empty($products_attributes_filename)) {
               $db->Execute("REPLACE INTO " . TABLE_PRODUCTS_ATTRIBUTES_DOWNLOAD . "
                             SET products_attributes_id = " . $attribute_id . ",
                                 products_attributes_filename = '" . zen_db_input($products_attributes_filename) . "',

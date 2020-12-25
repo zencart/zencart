@@ -22,7 +22,7 @@ require_once (DIR_FS_ROOT . '/includes/classes/class.zcPassword.php');
  * @return bool
  */
 function zen_validate_password($plain, $encrypted) {
-  if (!zen_not_null($plain) || !zen_not_null($encrypted)) {
+  if (empty($plain) || empty($encrypted)) {
     return false;
   }
 
