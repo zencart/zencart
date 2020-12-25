@@ -11,8 +11,8 @@
  * @version $Id: DrByte 2020 May 16 Modified in v1.5.7 $
  */
 ?>
-<?php 
-  if (!isset($display_as_mobile)) $display_as_mobile = ($detect->isMobile() && !$detect->isTablet() || $_SESSION['layoutType'] == 'mobile' or $detect->isTablet() || $_SESSION['layoutType'] == 'tablet'); 
+<?php
+  if (!isset($display_as_mobile)) $display_as_mobile = ($detect->isMobile() && !$detect->isTablet() || $_SESSION['layoutType'] == 'mobile' or $detect->isTablet() || $_SESSION['layoutType'] == 'tablet');
 ?>
 <div class="centerColumn" id="shoppingCartDefault">
 <?php
@@ -81,9 +81,9 @@
   } else {
     echo $product['quantityField'];
   }
-?><br />
-        <span class="alert bold"><?php echo $product['flagStockCheck'];?></span><br />
-        <br /><?php echo $product['showMinUnits']; ?>
+?><br>
+        <span class="alert bold"><?php echo $product['flagStockCheck'];?></span><br>
+        <br><?php echo $product['showMinUnits']; ?>
        </td>
 
        <td class="cartQuantityUpdate"><?php echo $product['buttonUpdate']; ?></td>
@@ -94,7 +94,7 @@
        <td class="cartProductDisplay">
 
 <a href="<?php echo $product['linkProductsName']; ?>"><span class="cartImage back"><?php echo $product['productsImage']; ?></span><span class="cartProdTitle"><?php echo $product['productsName'] . '<span class="alert bold">' . $product['flagStockCheck'] . '</span>'; ?></span></a>
-<br class="clearBoth" />
+<br class="clearBoth">
 <?php
   echo $product['attributeHiddenField'];
   if (isset($product['attributes']) && is_array($product['attributes'])) {
@@ -122,9 +122,9 @@
        <td class="cartQuantity">
 <?php
   if ($product['flagShowFixedQuantity']) {
-    echo $product['showFixedQuantityAmount'] . '<br /><span class="alert bold">' . $product['flagStockCheck'] . '</span><br /><br />' . $product['showMinUnits'];
+    echo $product['showFixedQuantityAmount'] . '<br><span class="alert bold">' . $product['flagStockCheck'] . '</span><br><br>' . $product['showMinUnits'];
   } else {
-    echo $product['quantityField'] . '<br /><span class="alert bold">' . $product['flagStockCheck'] . '</span><br /><br />' . $product['showMinUnits'];
+    echo $product['quantityField'] . '<br><span class="alert bold">' . $product['flagStockCheck'] . '</span><br><br>' . $product['showMinUnits'];
   }
 ?>
        </td>
@@ -157,7 +157,7 @@
 </table>
 
 <div id="cartSubTotal"><?php echo SUB_TITLE_SUB_TOTAL; ?> <?php echo $cartShowTotal; ?></div>
-<br class="clearBoth" />
+<br class="clearBoth">
 
 <!--bof shopping cart buttons-->
 <div class="buttonRow forward"><?php echo '<a href="' . zen_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL') . '">' . zen_image_button(BUTTON_IMAGE_CHECKOUT, BUTTON_CHECKOUT_ALT) . '</a>'; ?></div>
@@ -176,7 +176,7 @@
 <!--eof shopping cart buttons-->
 </form>
 
-<br class="clearBoth" />
+<br class="clearBoth">
 <?php
     if (SHOW_SHIPPING_ESTIMATOR_BUTTON == '1') {
 ?>

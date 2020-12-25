@@ -39,7 +39,7 @@
   }
   $the_button = $link;
   $products_link = '';
-  echo zen_get_buy_now_button($review->fields['products_id'], $the_button, $products_link) . '<br />' . zen_get_products_quantity_min_units_display($review->fields['products_id']);
+  echo zen_get_buy_now_button($review->fields['products_id'], $the_button, $products_link) . '<br>' . zen_get_products_quantity_min_units_display($review->fields['products_id']);
 ?>
 
 
@@ -84,7 +84,7 @@
   } else {
 ?>
 
-<div id="productReviewsDefaultNoReviews" class="content group"><?php echo TEXT_NO_REVIEWS . (REVIEWS_APPROVAL == '1' ? '<br />' . TEXT_APPROVAL_REQUIRED: ''); ?></div>
+<div id="productReviewsDefaultNoReviews" class="content group"><?php echo TEXT_NO_REVIEWS . (REVIEWS_APPROVAL == '1' ? '<br>' . TEXT_APPROVAL_REQUIRED: ''); ?></div>
 
 <?php
   }
