@@ -289,7 +289,7 @@ function zen_catalog_href_link($page = '', $parameters = '', $connection = 'NONS
 
     if (!empty($parameters)) $image_submit .= ' ' . $parameters;
 
-    $image_submit .= ' />';
+    $image_submit .= '>';
 
     return $image_submit;
   }
@@ -342,7 +342,7 @@ function zen_catalog_href_link($page = '', $parameters = '', $connection = 'NONS
     if ($type == 'submit'){
       // form input button
       if ($parameters != '') {
-        // If the input parameters include a "name" attribute, need to emulate an <input type="image" /> return value by adding a _x to the name parameter (creds to paulm)
+        // If the input parameters include a "name" attribute, need to emulate an <input type="image"> return value by adding a _x to the name parameter (creds to paulm)
         if (preg_match('/name="([a-zA-Z0-9\-_]+)"/', $parameters, $matches)) {
           $parameters = str_replace('name="' . $matches[1], 'name="' . $matches[1] . '_x', $parameters);
         }
@@ -366,7 +366,7 @@ function zen_catalog_href_link($page = '', $parameters = '', $connection = 'NONS
             $css_button
       );
       if ($css_button == '') {
-        $css_button = '<input class="' . $mouse_out_class . '" ' . $css_button_js . ' type="submit" value="' . $text . '"' . $tooltip . $parameters . ' />';
+        $css_button = '<input class="' . $mouse_out_class . '" ' . $css_button_js . ' type="submit" value="' . $text . '"' . $tooltip . $parameters . '>';
       }
     }
 
@@ -466,7 +466,7 @@ function zen_js_zone_list(string $country, string $form, string $field) {
     if (!empty($parameters)) $form .= ' ' . $parameters;
 
     $form .= '>';
-    if (strtolower($method) == 'post') $form .= '<input type="hidden" name="securityToken" value="' . $_SESSION['securityToken'] . '" />';
+    if (strtolower($method) == 'post') $form .= '<input type="hidden" name="securityToken" value="' . $_SESSION['securityToken'] . '">';
     return $form;
   }
 
@@ -503,7 +503,7 @@ function zen_js_zone_list(string $country, string $form, string $field) {
 
     if (!empty($parameters)) $field .= ' ' . $parameters;
 
-    $field .= ' />';
+    $field .= '>';
 
     // -----
     // Give an observer the opportunity to modify the just-rendered field.
@@ -573,7 +573,7 @@ function zen_js_zone_list(string $country, string $form, string $field) {
 
     if (!empty($parameters)) $selection .= ' ' . $parameters;
 
-    $selection .= ' />';
+    $selection .= '>';
 
     // -----
     // Give an observer the opportunity to modify the just-rendered field.
