@@ -653,13 +653,13 @@ class systemChecker
                 if ($new_version == TEXT_VERSION_CHECK_CURRENT) $new_version = '';
                 //check for patch #1
                 if (trim($lines[3]) > intval(PROJECT_VERSION_PATCH1)) {
-                    // if ($new_version != '') $new_version .= '<br />';
-                    $new_version .= (($new_version != '') ? '<br />' : '') .
+                    // if ($new_version != '') $new_version .= '<br>';
+                    $new_version .= (($new_version != '') ? '<br>' : '') .
                         '<span class="alert">' . TEXT_VERSION_CHECK_NEW_PATCH . trim($lines[0]) . '.' . trim($lines[1]) . ' - ' . TEXT_VERSION_CHECK_PATCH . ': [' . trim($lines[3]) . '] :: ' . $lines[5] . '</span>';
                 }
                 if (trim($lines[4]) > intval(PROJECT_VERSION_PATCH2)) {
-                    // if ($new_version != '') $new_version .= '<br />';
-                    $new_version .= (($new_version != '') ? '<br />' : '') .
+                    // if ($new_version != '') $new_version .= '<br>';
+                    $new_version .= (($new_version != '') ? '<br>' : '') .
                         '<span class="alert">' . TEXT_VERSION_CHECK_NEW_PATCH . trim($lines[0]) . '.' . trim($lines[1]) . ' - ' . TEXT_VERSION_CHECK_PATCH . ': [' . trim($lines[4]) . '] :: ' . $lines[5] . '</span>';
                 }
             }
