@@ -95,7 +95,7 @@ if ($isExpired) {
 // FIX HERE AND GIVE ERROR PAGE FOR MISSING FILE
 // Die if file is not there
 if (!$file_exists) {
-    die('Sorry. File not found. Please contact the webmaster to report this error.<br />c/f: ' . $origin_filename);
+    die('Sorry. File not found. Please contact the webmaster to report this error.<br>c/f: ' . $origin_filename);
 }
 
 // Now decrement counter

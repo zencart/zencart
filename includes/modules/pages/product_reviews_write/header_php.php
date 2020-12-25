@@ -106,7 +106,7 @@ if (isset($_GET['action']) && ($_GET['action'] == 'process')) {
         $email_subject = sprintf(EMAIL_REVIEW_PENDING_SUBJECT,$product_info->fields['products_name']);
         $html_msg['EMAIL_SUBJECT'] = sprintf(EMAIL_REVIEW_PENDING_SUBJECT,$product_info->fields['products_name']);
         $html_msg['EMAIL_MESSAGE_HTML'] = str_replace('\n','',sprintf(EMAIL_PRODUCT_REVIEW_CONTENT_INTRO, $product_info->fields['products_name']));
-        $html_msg['EMAIL_MESSAGE_HTML'] .= '<br />';
+        $html_msg['EMAIL_MESSAGE_HTML'] .= '<br>';
         $html_msg['EMAIL_MESSAGE_HTML'] .= str_replace('\n','',sprintf(EMAIL_PRODUCT_REVIEW_CONTENT_DETAILS, $review_text));
         $extra_info=email_collect_extra_info($name,$email_address, $customer->fields['customers_firstname'] . ' ' . $customer->fields['customers_lastname'] , $customer->fields['customers_email_address'] );
         $html_msg['EXTRA_INFO'] = $extra_info['HTML'];
@@ -127,7 +127,7 @@ $products_name = $product_info->fields['products_name'];
 
 $products_model = '';
 if ($product_info->fields['products_model'] != '') {
-  $products_model = '<br /><span class="smallText">[' . $product_info->fields['products_model'] . ']</span>';
+  $products_model = '<br><span class="smallText">[' . $product_info->fields['products_model'] . ']</span>';
 }
 
 // set image
