@@ -2,7 +2,7 @@
 /**
  * Page Template
  *
- * Loaded automatically by index.php?main_page=account_history.<br />
+ * Loaded automatically by index.php?main_page=account_history.
  * Displays all customers previous orders
  *
  * @package templateSystem

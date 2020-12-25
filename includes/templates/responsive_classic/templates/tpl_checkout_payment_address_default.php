@@ -2,7 +2,7 @@
 /**
  * Page Template
  *
- * Loaded automatically by index.php?main_page=checkout_payment_address.<br />
+ * Loaded automatically by index.php?main_page=checkout_payment_address.
  * Allows customer to change the billing address.
  *
  * @copyright Copyright 2003-2020 Zen Cart Development Team

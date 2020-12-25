@@ -2,8 +2,8 @@
 /**
  * Page Template
  *
- * Main index page<br />
- * Displays greetings, welcome text (define-page content), and various centerboxes depending on switch settings in Admin<br />
+ * Main index page
+ * Displays greetings, welcome text (define-page content), and various centerboxes depending on switch settings in Admin
  * Centerboxes are called as necessary
  *
  * @package templateSystem

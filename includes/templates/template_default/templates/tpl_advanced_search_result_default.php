@@ -2,7 +2,7 @@
 /**
  * Page Template
  *
- * Loaded automatically by index.php?main_page=advanced_search_result.<br />
+ * Loaded automatically by index.php?main_page=advanced_search_result.
  * Displays results of advanced search
  *
  * @package templateSystem

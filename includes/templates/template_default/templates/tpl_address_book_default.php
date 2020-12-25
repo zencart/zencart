@@ -2,7 +2,7 @@
 /**
  * Page Template
  *
- * Loaded automatically by index.php?main_page=adress_book.<br />
+ * Loaded automatically by index.php?main_page=adress_book.
  * Allows customer to manage entries in their address book
  *
  * @package templateSystem

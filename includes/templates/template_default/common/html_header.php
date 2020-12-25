@@ -2,7 +2,7 @@
 /**
  * Common Template
  *
- * outputs the html header. i,e, everything that comes before the \</head\> tag <br />
+ * outputs the html header. i,e, everything that comes before the \</head\> tag
  *
  * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce

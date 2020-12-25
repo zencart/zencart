@@ -2,7 +2,7 @@
 /**
  * Page Template
  *
- * Loaded automatically by index.php?main_page=checkout_confirmation.<br />
+ * Loaded automatically by index.php?main_page=checkout_confirmation.
  * Displays final checkout details, cart, payment and shipping info details.
  *
  * @package templateSystem

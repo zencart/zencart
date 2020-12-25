@@ -2,7 +2,7 @@
 /**
  * Page Template
  *
- * Loaded automatically by index.php?main_page=address_book_process.<br />
+ * Loaded automatically by index.php?main_page=address_book_process.
  * Allows customer to add a new address book entry
  *
  * @package templateSystem

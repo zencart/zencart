@@ -2,7 +2,7 @@
 /**
  * Page Template
  *
- * Loaded automatically by index.php?main_page=contact_us.<br />
+ * Loaded automatically by index.php?main_page=contact_us.
  * Displays contact us page form.
  *
  * @copyright Copyright 2003-2020 Zen Cart Development Team

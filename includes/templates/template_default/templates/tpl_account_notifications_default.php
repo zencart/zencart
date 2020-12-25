@@ -2,7 +2,7 @@
 /**
  * Page Template
  *
- * Loaded automatically by index.php?main_page=account_notifications.<br />
+ * Loaded automatically by index.php?main_page=account_notifications.
  * Allows customer to manage product notifications
  *
  * @package templateSystem

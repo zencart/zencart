@@ -2,7 +2,7 @@
 /**
  * Page Template
  *
- * Loaded automatically by index.php?main_page=account_password.<br />
+ * Loaded automatically by index.php?main_page=account_password.
  * Allows customer to change their password
  *
  * @package templateSystem

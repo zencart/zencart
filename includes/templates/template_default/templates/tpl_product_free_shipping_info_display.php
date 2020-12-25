@@ -2,7 +2,7 @@
 /**
  * Page Template
  *
- * Loaded automatically by index.php?main_page=product_free_shipping_info.<br />
+ * Loaded automatically by index.php?main_page=product_free_shipping_info.
  * Displays details of a "free-shipping" product (provided it is assigned to the product-free-shipping product type)
  *
  * @copyright Copyright 2003-2020 Zen Cart Development Team

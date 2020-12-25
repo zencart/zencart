@@ -2,7 +2,7 @@
 /**
  * Module Template
  *
- * Loaded automatically by index.php?main_page=featured_products.<br />
+ * Loaded automatically by index.php?main_page=featured_products.
  * Displays listing of Featured Products
  *
  * @copyright Copyright 2003-2020 Zen Cart Development Team

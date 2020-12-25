@@ -2,7 +2,7 @@
 /**
  * Page Template
  *
- * Displays the FAQ pages for the Gift-Certificate/Voucher system.<br />
+ * Displays the FAQ pages for the Gift-Certificate/Voucher system.
  *
  * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce

@@ -2,7 +2,7 @@
 /**
  * Page Template
  *
- * Loaded automatically by index.php?main_page=create-account_success.<br />
+ * Loaded automatically by index.php?main_page=create-account_success.
  * Displays confirmation that a new account has been created.
  *
  * @package templateSystem

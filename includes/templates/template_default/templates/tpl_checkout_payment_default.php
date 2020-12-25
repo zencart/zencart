@@ -2,7 +2,7 @@
 /**
  * Page Template
  *
- * Loaded automatically by index.php?main_page=checkout_payment.<br />
+ * Loaded automatically by index.php?main_page=checkout_payment.
  * Displays the allowed payment modules, for selection by customer.
  *
  * @copyright Copyright 2003-2020 Zen Cart Development Team

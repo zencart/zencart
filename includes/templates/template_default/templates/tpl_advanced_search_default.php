@@ -2,7 +2,7 @@
 /**
  * Page Template
  *
- * Loaded automatically by index.php?main_page=advanced_search.<br />
+ * Loaded automatically by index.php?main_page=advanced_search.
  * Displays options fields upon which a product search will be run
  *
  * @copyright Copyright 2003-2020 Zen Cart Development Team

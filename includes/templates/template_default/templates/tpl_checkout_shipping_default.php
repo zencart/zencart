@@ -2,7 +2,7 @@
 /**
  * Page Template
  *
- * Loaded automatically by index.php?main_page=checkout_shipping.<br />
+ * Loaded automatically by index.php?main_page=checkout_shipping.
  * Displays allowed shipping modules for selection by customer.
  *
  * @copyright Copyright 2003-2020 Zen Cart Development Team

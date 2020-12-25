@@ -2,8 +2,8 @@
 /**
  * Page Template
  *
- * Loaded by main_page=index<br />
- * Displays category/sub-category listing<br />
+ * Loaded by main_page=index
+ * Displays category/sub-category listing
  * Uses tpl_index_category_row.php to render individual items
  *
  * @package templateSystem

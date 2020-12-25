@@ -2,7 +2,7 @@
 /**
  * Page Template
  *
- * Loaded automatically by index.php?main_page=customers_authorization.<br />
+ * Loaded automatically by index.php?main_page=customers_authorization.
  * Displays information if customer authorization checks fail.
  *
  * @copyright Copyright 2003-2020 Zen Cart Development Team

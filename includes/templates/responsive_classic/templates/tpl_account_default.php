@@ -2,7 +2,7 @@
 /**
  * Page Template
  *
- * Loaded automatically by index.php?main_page=account.<br />
+ * Loaded automatically by index.php?main_page=account.
  * Displays previous orders and options to change various Customer Account settings
  *
  * @package templateSystem

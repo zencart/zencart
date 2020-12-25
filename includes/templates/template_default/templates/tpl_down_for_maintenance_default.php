@@ -2,7 +2,7 @@
 /**
  * Page Template
  *
- * Loaded automatically by index.php?main_page=down_for_maintenance.<br />
+ * Loaded automatically by index.php?main_page=down_for_maintenance.
  * When site is down for maintenance (and database is still active), this page is displayed to the customer
  *
  * @package templateSystem

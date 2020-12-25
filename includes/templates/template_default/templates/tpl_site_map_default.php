@@ -2,7 +2,7 @@
 /**
  * Page Template
  *
- * Loaded by index.php?main_page=site_map <br />
+ * Loaded by index.php?main_page=site_map
  * Displays site-map and some hard-coded navigation components
  *
  * @copyright Copyright 2003-2020 Zen Cart Development Team

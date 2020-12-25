@@ -2,7 +2,7 @@
 /**
  * Page Template
  *
- * Loaded automatically by index.php?main_page=document_general_info.<br />
+ * Loaded automatically by index.php?main_page=document_general_info.
  * Displays template according to "document-general" product-type needs
  *
  * @copyright Copyright 2003-2020 Zen Cart Development Team

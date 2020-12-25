@@ -2,7 +2,7 @@
 /**
  * Page Template
  *
- * Loaded automatically by index.php?main_page=checkout_success.<br />
+ * Loaded automatically by index.php?main_page=checkout_success.
  * Displays confirmation details after order has been successfully processed.
  *
  * @copyright Copyright 2003-2020 Zen Cart Development Team

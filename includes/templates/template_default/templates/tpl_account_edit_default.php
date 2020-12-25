@@ -2,7 +2,7 @@
 /**
  * Page Template
  *
- * Loaded automatically by index.php?main_page=account_edit.<br />
+ * Loaded automatically by index.php?main_page=account_edit.
  * View or change Customer Account Information
  *
  * @package templateSystem

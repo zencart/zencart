@@ -2,7 +2,7 @@
 /**
  * Page Template
  *
- * Loaded by main_page=index<br />
+ * Loaded by main_page=index
  * Displays product-listing when a particular category/subcategory is selected for browsing
  *
  * @package templateSystem

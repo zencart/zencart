@@ -2,7 +2,7 @@
 /**
  * Page Template
  *
- * Loaded automatically by index.php?main_page=shopping_cart.<br />
+ * Loaded automatically by index.php?main_page=shopping_cart.
  * Displays shopping-cart contents
  *
  * @copyright Copyright 2003-2020 Zen Cart Development Team

@@ -2,7 +2,7 @@
 /**
  * Page Template
  *
- * Loaded automatically by index.php?main_page=cookie_usage.<br />
+ * Loaded automatically by index.php?main_page=cookie_usage.
  * Displays information page, if cookie only is set in admin and cookies disabled in users browser.
  *
  * @package templateSystem

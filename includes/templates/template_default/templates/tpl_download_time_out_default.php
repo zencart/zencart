@@ -2,7 +2,7 @@
 /**
  * Page Template
  *
- * Loaded automatically by index.php?main_page=download_time_out.<br />
+ * Loaded automatically by index.php?main_page=download_time_out.
  * Displays "your download session has timed out" if such timeout has occurred
  *
  * @package templateSystem

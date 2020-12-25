@@ -2,7 +2,7 @@
 /**
  * Page Template
  *
- * Loaded automatically by index.php?main_page=product_music_info.<br />
+ * Loaded automatically by index.php?main_page=product_music_info.
  * Displays details of a music product
  *
  * @copyright Copyright 2003-2020 Zen Cart Development Team

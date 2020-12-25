@@ -2,7 +2,7 @@
 /**
  * Page Template
  *
- * Template used to collect/display details of sending a GV to a friend from own GV balance. <br />
+ * Template used to collect/display details of sending a GV to a friend from own GV balance.
  *
  * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce

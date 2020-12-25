@@ -2,7 +2,7 @@
 /**
  * Page Template
  *
- * Displays EZ-Pages Header-Bar content.<br />
+ * Displays EZ-Pages Header-Bar content.
  *
  * @package templateSystem
  * @copyright Copyright 2003-2019 Zen Cart Development Team

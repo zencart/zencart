@@ -99,8 +99,8 @@ define('DEBUG_AUTOLOAD', false);
 /**
  * set the level of error reporting
  *
- * Note STRICT_ERROR_REPORTING should never be set to true on a production site. <br />
- * It is mainly there to show php warnings during testing/bug fixing phases.<br />
+ * Note STRICT_ERROR_REPORTING should never be set to true on a production site.
+ * It is mainly there to show php warnings during testing/bug fixing phases.
  */
 if (DEBUG_AUTOLOAD || (defined('STRICT_ERROR_REPORTING') && STRICT_ERROR_REPORTING == true)) {
   @ini_set('display_errors', TRUE);

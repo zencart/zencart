@@ -2,7 +2,7 @@
 /**
  * Page Template
  *
- * Loaded automatically by index.php?main_page=account_newsletters.<br />
+ * Loaded automatically by index.php?main_page=account_newsletters.
  * Subscribe/Unsubscribe from General Newsletter
  *
  * @package templateSystem

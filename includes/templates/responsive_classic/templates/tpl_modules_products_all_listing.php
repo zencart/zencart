@@ -2,7 +2,7 @@
 /**
  * Module Template
  *
- * Loaded automatically by index.php?main_page=products_all.<br />
+ * Loaded automatically by index.php?main_page=products_all.
  * Displays listing of All Products
  *
  * @copyright Copyright 2003-2020 Zen Cart Development Team
