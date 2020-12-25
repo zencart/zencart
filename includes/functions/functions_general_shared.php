@@ -164,7 +164,7 @@ function zen_is_whitelisted_admin_ip($ip = null)
     if (is_a($value, 'queryFactoryResult')) {
       return count($value) > 0;
     }
-    return trim($value) !== '' && $value != 'NULL';
+    return trim($value) !== '' && $value !== 'NULL';
   }
 
 ////
