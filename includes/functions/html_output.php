@@ -21,7 +21,7 @@
     if (empty($page)) {
       trigger_error("zen_href_link($page, $parameters, $connection), unable to determine the page link.",
             E_USER_ERROR);
-      die('</td></tr></table></td></tr></table><br /><br /><strong class="note">Error!<br /><br />Unable to determine the page link!</strong><br /><br /><!--' . $page . '<br />' . $parameters . ' -->');
+      die('</td></tr></table></td></tr></table><br><br><strong class="note">Error!<br><br>Unable to determine the page link!</strong><br><br><!--' . $page . '<br>' . $parameters . ' -->');
     }
 
     if ($connection == 'NONSSL') {
@@ -34,7 +34,7 @@
       }
     } else {
       trigger_error("zen_href_link($page, $parameters, $connection), Unable to determine connection method on a link! Known methods: NONSSL SSL", E_USER_ERROR);
-      die('</td></tr></table></td></tr></table><br /><br /><strong class="note">Error!<br /><br />Unable to determine connection method on a link!<br /><br />Known methods: NONSSL SSL</strong><br /><br />');
+      die('</td></tr></table></td></tr></table><br><br><strong class="note">Error!<br><br>Unable to determine connection method on a link!<br><br>Known methods: NONSSL SSL</strong><br><br>');
     }
 
     if ($use_dir_ws_catalog) {
