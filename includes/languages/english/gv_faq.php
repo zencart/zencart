@@ -10,11 +10,11 @@ define('NAVBAR_TITLE', TEXT_GV_NAME . ' FAQ');
 define('HEADING_TITLE', TEXT_GV_NAME . ' FAQ');
 
 define('TEXT_INFORMATION', '<a id="Top"></a>
-  <a href="'.zen_href_link(FILENAME_GV_FAQ,'faq_item=1','NONSSL').'">Purchasing ' . TEXT_GV_NAMES . '</a><br />
-  <a href="'.zen_href_link(FILENAME_GV_FAQ,'faq_item=2','NONSSL').'">How to send ' . TEXT_GV_NAMES . '</a><br />
-  <a href="'.zen_href_link(FILENAME_GV_FAQ,'faq_item=3','NONSSL').'">Buying with ' . TEXT_GV_NAMES . '</a><br />
-  <a href="'.zen_href_link(FILENAME_GV_FAQ,'faq_item=4','NONSSL').'">Redeeming ' . TEXT_GV_NAMES . '</a><br />
-  <a href="'.zen_href_link(FILENAME_GV_FAQ,'faq_item=5','NONSSL').'">When problems occur</a><br />
+  <a href="'.zen_href_link(FILENAME_GV_FAQ,'faq_item=1','NONSSL').'">Purchasing ' . TEXT_GV_NAMES . '</a><br>
+  <a href="'.zen_href_link(FILENAME_GV_FAQ,'faq_item=2','NONSSL').'">How to send ' . TEXT_GV_NAMES . '</a><br>
+  <a href="'.zen_href_link(FILENAME_GV_FAQ,'faq_item=3','NONSSL').'">Buying with ' . TEXT_GV_NAMES . '</a><br>
+  <a href="'.zen_href_link(FILENAME_GV_FAQ,'faq_item=4','NONSSL').'">Redeeming ' . TEXT_GV_NAMES . '</a><br>
+  <a href="'.zen_href_link(FILENAME_GV_FAQ,'faq_item=5','NONSSL').'">When problems occur</a><br>
 ');
 define('SUB_HEADING_TITLE_1','Purchasing ' . TEXT_GV_NAMES);
 define('SUB_HEADING_TEXT_1', TEXT_GV_NAMES . ' are purchased just like any other item in our store. You can
@@ -51,11 +51,11 @@ define('SUB_HEADING_TEXT_2','You may send a ' . TEXT_GV_NAME . ' from the My Acc
   you the ' . TEXT_GV_NAME . ', along with a short message from them. The email
   will also contain the ' . TEXT_GV_NAME . ' ' . TEXT_GV_REDEEM . '. It is probably a good idea to print
   out this email for future reference. You can now redeem the ' . TEXT_GV_NAME . ' in
-  one of two ways:<br /><br />
+  one of two ways:<br><br>
   1. By clicking on the link contained within the email for this express purpose.
   This will take you to the store\'s Redeem ' . TEXT_GV_NAME . ' page. You will then be requested
   to create an account before the ' . TEXT_GV_NAME . ' is validated and placed in your
-   ' . TEXT_GV_NAME . ' Balance. You can then use the amount to purchase any item from our store.<br /><br />
+   ' . TEXT_GV_NAME . ' Balance. You can then use the amount to purchase any item from our store.<br><br>
   2. During the checkout process on the same page that you select a payment method,
 there will be a box to enter a ' . TEXT_GV_REDEEM . '. Enter the ' . TEXT_GV_REDEEM . ' here, and
 click the Redeem button. The code will be

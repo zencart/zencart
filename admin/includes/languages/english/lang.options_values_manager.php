@@ -21,7 +21,7 @@ $define = [
     'TABLE_TEXT_FILENAME' => 'Filename:',
     'TABLE_TEXT_MAX_DAYS' => 'Expiry days:',
     'TABLE_TEXT_MAX_COUNT' => 'Maximum download count:',
-    'TEXT_WARNING_OF_DELETE' => '<span class="alert">This option has products and values linked to it - it is not safe to delete it.<br />NOTE: Any associated Download files for this Option Value will not be removed from the server.</span>',
+    'TEXT_WARNING_OF_DELETE' => '<span class="alert">This option has products and values linked to it - it is not safe to delete it.<br>NOTE: Any associated Download files for this Option Value will not be removed from the server.</span>',
     'TEXT_OK_TO_DELETE' => 'This option has no products and values linked to it - it is safe to delete it.',
     'TEXT_OPTION_ID' => 'Option ID',
     'TEXT_OPTION_NAME' => 'Option Name',
@@ -51,12 +51,12 @@ $define = [
     'TEXT_OPTION_VALUE_MAX' => 'Maximum length: ',
     'TEXT_ATTRIBUTES_IMAGE' => 'Attributes Image Swatch:',
     'TEXT_ATTRIBUTES_IMAGE_DIR' => 'Attributes Image Directory:',
-    'TEXT_ATTRIBUTES_FLAGS' => 'Attribute<br />Flags:',
-    'TEXT_ATTRIBUTES_DISPLAY_ONLY' => 'Used For<br />Display Purposes Only:',
-    'TEXT_ATTRIBUTES_IS_FREE' => 'Attribute is Free<br />When Product is Free:',
-    'TEXT_ATTRIBUTES_DEFAULT' => 'Default Attribute<br />to be Marked Selected:',
-    'TEXT_ATTRIBUTE_IS_DISCOUNTED' => 'Apply Same Discounts<br />Used by Product:',
-    'TEXT_ATTRIBUTE_PRICE_BASE_INCLUDED' => 'Include in Base Price<br />When Priced by Attributes',
+    'TEXT_ATTRIBUTES_FLAGS' => 'Attribute<br>Flags:',
+    'TEXT_ATTRIBUTES_DISPLAY_ONLY' => 'Used For<br>Display Purposes Only:',
+    'TEXT_ATTRIBUTES_IS_FREE' => 'Attribute is Free<br>When Product is Free:',
+    'TEXT_ATTRIBUTES_DEFAULT' => 'Default Attribute<br>to be Marked Selected:',
+    'TEXT_ATTRIBUTE_IS_DISCOUNTED' => 'Apply Same Discounts<br>Used by Product:',
+    'TEXT_ATTRIBUTE_PRICE_BASE_INCLUDED' => 'Include in Base Price<br>When Priced by Attributes',
     'TEXT_PRODUCT_OPTIONS_INFO' => 'Edit Product Options for additional settings',
     'TEXT_OPTION_VALUE_COPY_ALL' => '<strong>Copy to ALL Products where Option Name and Value ...</strong>',
     'TEXT_INFO_OPTION_VALUE_COPY_ALL' => 'Select an Option Name and Value that currently exists on a product or products that you then want to copy another Option Name and Value to for all products with this existing Option Name and Value',
@@ -64,12 +64,12 @@ $define = [
     'TEXT_SELECT_OPTION_VALUES_FROM' => 'Option Value to match:',
     'TEXT_SELECT_OPTION_TO' => 'Option Name to add:',
     'TEXT_SELECT_OPTION_VALUES_TO' => 'Option Value to add:',
-    'TEXT_SELECT_OPTION_VALUES_TO_CATEGORIES_ID' => 'Leave blank for ALL Products or<br />enter a Category ID for Products to update',
+    'TEXT_SELECT_OPTION_VALUES_TO_CATEGORIES_ID' => 'Leave blank for ALL Products or<br>enter a Category ID for Products to update',
     'TEXT_OPTION_VALUE_COPY_OPTIONS_TO' => '<strong>Copy Option Name/Value to Products with existing Option Name ...</strong>',
     'TEXT_INFO_OPTION_VALUE_COPY_OPTIONS_TO' => 'Select an Option Name and Value that currently exists on a product or products to add to all products or to only the products in the selected category that have the selected Option Name.
-                                                   <br /><strong>Example:</strong> Add Option Name: Color Option Value: Red to all Products with Option Name: Size
-                                                   <br /><strong>Example:</strong> Add Option Name: Color Option Value: Green with default values from Products ID: 34 to all Products with Option Name: Size
-                                                   <br /><strong>Example:</strong> Add Option Name: Color Option Value: Green with default values from Products ID: 34 to all Products with Option Name: Size for Categories ID: 65
+                                                   <br><strong>Example:</strong> Add Option Name: Color Option Value: Red to all Products with Option Name: Size
+                                                   <br><strong>Example:</strong> Add Option Name: Color Option Value: Green with default values from Products ID: 34 to all Products with Option Name: Size
+                                                   <br><strong>Example:</strong> Add Option Name: Color Option Value: Green with default values from Products ID: 34 to all Products with Option Name: Size for Categories ID: 65
         ',
     'TEXT_SELECT_OPTION_TO_ADD_TO' => 'Option Name to add to:',
     'TEXT_SELECT_OPTION_FROM_ADD' => 'Option Name to add:',

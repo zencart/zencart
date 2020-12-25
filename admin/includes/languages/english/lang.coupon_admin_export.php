@@ -17,7 +17,7 @@ $define = [
     'TEXT_PROCESSED' => ' Processed.',
     'SUCCESS_EXPORT_DISCOUNT_COUPON_LOG' => 'Export complete. ',
     'FAILURE_EXPORT_DISCOUNT_COUPON_LOG' => 'ALERT: Export failed. Could not successfully write to file ',
-    'TEXT_INSTRUCTIONS' => '<u>INSTRUCTIONS</u><br />You can use this page to export your Discount Coupons to a CSV file.<br />
+    'TEXT_INSTRUCTIONS' => '<u>INSTRUCTIONS</u><br>You can use this page to export your Discount Coupons to a CSV file.<br>
 <ol><li>Choose whether to display or export to a file.<li>Enter a filename. (must end in one of: .csv .txt .htm .html .xml)<li>Click Save to proceed.<li>Choose whether to save or open the file, depending on what your browser offers.</ol>',
 ];
 

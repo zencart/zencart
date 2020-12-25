@@ -18,8 +18,8 @@
   if (IS_ADMIN_FLAG === true) {
     if (defined('MODULE_PAYMENT_FIRSTDATA_PAYMENTPAGES_STATUS') && MODULE_PAYMENT_FIRSTDATA_PAYMENTPAGES_STATUS == 'True') {
       define('MODULE_PAYMENT_FIRSTDATA_PAYMENTPAGES_TEXT_DESCRIPTION', '<a rel="noreferrer noopener" target="_blank" href="https://' . (MODULE_PAYMENT_FIRSTDATA_PAYMENTPAGES_TESTMODE == 'Sandbox' ? 'demo.' : '') . 'globalgatewaye4.firstdata.com">First Data GGe4 Merchant Login</a>' .
-        (MODULE_PAYMENT_FIRSTDATA_PAYMENTPAGES_TESTMODE != 'Production' ? '<br /><br />For TEST CARDS refer to <a href="https://support.payeezy.com/hc/en-us/articles/204504235-Using-test-credit-card-numbers" rel="noreferrer noopener" target="_blank">Using Test Credit Cards</a>' : '') .
-        '<br /><br /><strong>SETTINGS</strong><br />Your "Receipt Link URL" setting in your First Data Payment Page configuration needs to point to <u>' . zen_catalog_href_link('checkout_process', '', 'SSL') . '</u><br>' .
+        (MODULE_PAYMENT_FIRSTDATA_PAYMENTPAGES_TESTMODE != 'Production' ? '<br><br>For TEST CARDS refer to <a href="https://support.payeezy.com/hc/en-us/articles/204504235-Using-test-credit-card-numbers" rel="noreferrer noopener" target="_blank">Using Test Credit Cards</a>' : '') .
+        '<br><br><strong>SETTINGS</strong><br>Your "Receipt Link URL" setting in your First Data Payment Page configuration needs to point to <u>' . zen_catalog_href_link('checkout_process', '', 'SSL') . '</u><br>' .
         'Then obtain the Payment Page ID, Transaction Key and Response Key from First Data and enter them here. They can be found by logging into your First Data account, choosing Payment Pages, and clicking on the desired Page ID and navigating to the Security section.'
       );
     } else {
