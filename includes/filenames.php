@@ -24,8 +24,8 @@ define('FILENAME_ADDRESS_BOOK_PROCESS', 'address_book_process');
 define('FILENAME_ADMIN_ACCOUNT', 'admin_account');
 define('FILENAME_ADMIN_ACTIVITY', 'admin_activity');
 define('FILENAME_ADMIN_PAGE_REGISTRATION', 'admin_page_registration');
-define('FILENAME_ADVANCED_SEARCH', 'advanced_search');
-define('FILENAME_ADVANCED_SEARCH_RESULT', 'advanced_search_result');
+define('FILENAME_ADVANCED_SEARCH', 'search'); // alias since 1.5.8; to be removed later
+define('FILENAME_ADVANCED_SEARCH_RESULT', 'search_result'); // alias since 1.5.8; to be removed later
 define('FILENAME_AJAX', 'ajax');
 define('FILENAME_ALT_NAV', 'alt_nav');
 define('FILENAME_ALERT_PAGE', 'alert_page');
@@ -151,6 +151,8 @@ define('FILENAME_REVIEWS', 'reviews');
 define('FILENAME_SALEMAKER', 'salemaker');
 define('FILENAME_SALEMAKER_INFO', 'salemaker_info');
 define('FILENAME_SALEMAKER_POPUP', 'salemaker_popup');
+define('FILENAME_SEARCH', 'search');
+define('FILENAME_SEARCH_RESULT', 'search_result');
 define('FILENAME_SERVER_INFO', 'server_info');
 define('FILENAME_SHIPPING', 'shippinginfo');
 define('FILENAME_SHOPPING_CART', 'shopping_cart');

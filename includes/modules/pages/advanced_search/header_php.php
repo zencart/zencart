@@ -1,31 +1,17 @@
 <?php
 /**
- * Header code file for the Advanced Search Input page
+ * Redirect stub for the search page
  *
- * @package page
- * @copyright Copyright 2003-2016 Zen Cart Development Team
- * @copyright Portions Copyright 2003 osCommerce
+ * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: DrByte  Fri Feb 26 00:22:54 2016 -0500 Modified in v1.5.5 $
+ * @version $Id: DrByte 2020 Dec 30  Modified in v1.5.8 $
  */
-  require(DIR_WS_MODULES . zen_get_module_directory('require_languages.php'));
-  $breadcrumb->add(NAVBAR_TITLE_1);
 
-//test:
-//&keyword=die+hard&categories_id=10&inc_subcat=1&manufacturers_id=4&pfrom=1&pto=50&dfrom=01%2F01%2F2003&dto=12%2F20%2F2005
+// NOTE: For search page preparation, see the search page module.
+// This file is just a redirect for backward compatibility.
+//
+// If you are looking at this file in order to merge an older plugin,
+// consider making those changes in the "search" directory, not "advanced_search".
 
-  $sData['keyword'] =  stripslashes(isset($_GET['keyword']) ? zen_output_string_protected($_GET['keyword']) : '');
-  $sData['search_in_description'] = (isset($_GET['search_in_description']) ? zen_output_string((int)$_GET['search_in_description']) : 1);
-  $sData['categories_id'] = (isset($_GET['categories_id'])    ? zen_output_string((int)$_GET['categories_id']) : 0);
-  $sData['inc_subcat'] = (isset($_GET['inc_subcat'])       ? zen_output_string((int)$_GET['inc_subcat']) : 1);
-  $sData['manufacturers_id'] = (isset($_GET['manufacturers_id']) ? zen_output_string((int)$_GET['manufacturers_id']) : 0);
-  $sData['dfrom'] =    (isset($_GET['dfrom']) ? zen_output_string($_GET['dfrom']) : zen_output_string(DOB_FORMAT_STRING));
-  $sData['dto'] =      (isset($_GET['dto'])   ? zen_output_string($_GET['dto']) : zen_output_string(DOB_FORMAT_STRING));
-  $sData['pfrom'] =    (isset($_GET['pfrom']) ? zen_output_string($_GET['pfrom']) : '');
-  $sData['pto'] =      (isset($_GET['pto'])   ? zen_output_string($_GET['pto']) : '');
-
-  // check manufacturers 
-  $mfr_query = $db->Execute("SELECT manufacturers_id FROM " . TABLE_MANUFACTURERS . " LIMIT 1"); 
-  if ($mfr_query->EOF) { 
-     $skip_manufacturers = true;
-  }
+header('HTTP/1.1 301 Moved Permanently');
+zen_redirect(zen_href_link(FILENAME_SEARCH, zen_get_all_get_params(), 'SSL', true, false));
