@@ -49,10 +49,10 @@
   $text_coupon_help .= '<strong>' . TEXT_COUPON_HELP_RESTRICT . '</strong>';
 
   if ($coupon->fields['coupon_zone_restriction'] > 0) {
-    $text_coupon_help .= '<br /><br />' . TEXT_COUPON_GV_RESTRICTION_ZONES;
+    $text_coupon_help .= '<br><br>' . TEXT_COUPON_GV_RESTRICTION_ZONES;
   }
 
-  $text_coupon_help .= '<br /><br />' .  TEXT_COUPON_HELP_CATEGORIES;
+  $text_coupon_help .= '<br><br>' .  TEXT_COUPON_HELP_CATEGORIES;
   $sql = "select * from " . TABLE_COUPON_RESTRICT . "  where coupon_id=:couponID: and category_id !='0'";
   $sql = $db->bindVars($sql, ':couponID:', $_GET['cID'], 'integer');
   $get_result=$db->Execute($sql);

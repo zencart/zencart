@@ -38,7 +38,7 @@ if (is_array($list_box_contents)) {
       }
     }
 ?>
-<br class="clearBoth" />
+<br class="clearBoth">
 <?php
   }
 }

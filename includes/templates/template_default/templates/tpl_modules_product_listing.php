@@ -16,7 +16,7 @@
     if ($show_top_submit_button == true) {
 ?>
 <div class="buttonRow forward"><?php echo zen_image_submit(BUTTON_IMAGE_ADD_PRODUCTS_TO_CART, BUTTON_ADD_PRODUCTS_TO_CART_ALT, 'id="submit1" name="submit1"'); ?></div>
-<br class="clearBoth" />
+<br class="clearBoth">
 <?php
     } // show top submit
 ?>
@@ -25,7 +25,7 @@
 ?>
 <div id="productsListingTopNumber" class="navSplitPagesResult back"><?php echo $listing_split->display_count(TEXT_DISPLAY_NUMBER_OF_PRODUCTS); ?></div>
 <div id="productsListingListingTopLinks" class="navSplitPagesLinks forward"><?php echo TEXT_RESULT_PAGE . $listing_split->display_links($max_display_page_links, zen_get_all_get_params(array('page', 'info', 'x', 'y', 'main_page')), $paginateAsUL); ?></div>
-<br class="clearBoth" />
+<br class="clearBoth">
 <?php
 }
 ?>
@@ -41,7 +41,7 @@
 ?>
 <div id="productsListingBottomNumber" class="navSplitPagesResult back"><?php echo $listing_split->display_count(TEXT_DISPLAY_NUMBER_OF_PRODUCTS); ?></div>
 <div  id="productsListingListingBottomLinks" class="navSplitPagesLinks forward"><?php echo TEXT_RESULT_PAGE . $listing_split->display_links($max_display_page_links, zen_get_all_get_params(array('page', 'info', 'x', 'y')), $paginateAsUL); ?></div>
-<br class="clearBoth" />
+<br class="clearBoth">
 <?php
   }
 ?>
@@ -51,7 +51,7 @@
     if ($show_bottom_submit_button == true) {
 ?>
 <div class="buttonRow forward"><?php echo zen_image_submit(BUTTON_IMAGE_ADD_PRODUCTS_TO_CART, BUTTON_ADD_PRODUCTS_TO_CART_ALT, 'id="submit2" name="submit1"'); ?></div>
-<br class="clearBoth" />
+<br class="clearBoth">
 <?php
     } // show_bottom_submit_button
 ?>

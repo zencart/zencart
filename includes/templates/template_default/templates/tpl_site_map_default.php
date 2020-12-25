@@ -84,16 +84,16 @@
 <?php } ?>
 
          </ul></li>
-<?php 
+<?php
     $pages_query = $db->Execute("SELECT e.*, ec.*
                                 FROM " . TABLE_EZPAGES . " e,
                                      " . TABLE_EZPAGES_CONTENT . " ec
                                 WHERE e.pages_id = ec.pages_id
                                 AND ec.languages_id = " . (int)$_SESSION['languages_id'] . "
-                                AND ( 
-                                  (e.status_sidebox = 1 AND e.sidebox_sort_order > 0) OR 
-                                  (e.status_header = 1 AND e.header_sort_order > 0) OR 
-                                  (e.status_footer = 1 AND e.footer_sort_order > 0) OR 
+                                AND (
+                                  (e.status_sidebox = 1 AND e.sidebox_sort_order > 0) OR
+                                  (e.status_header = 1 AND e.header_sort_order > 0) OR
+                                  (e.status_footer = 1 AND e.footer_sort_order > 0) OR
                                   (e.status_visible = 1) )
                                 ORDER BY e.sidebox_sort_order, ec.pages_title");
     if ($pages_query->RecordCount()>0) {
@@ -129,7 +129,7 @@
         $page_query_list[$rows]['altURL'];
         $page_query_list[$rows]['link'] .= ($page_query['page_open_new_window'] == '1' ? '" rel="noreferrer noopener" target="_blank' : '');
       }
-      if (!empty($page_query_list)) { 
+      if (!empty($page_query_list)) {
 ?>
           <li><?php echo BOX_HEADING_EZPAGES; ?>
           <ul>
@@ -142,6 +142,6 @@
           <ul>
      </ul>
 </div>
-<br class="clearBoth" />
+<br class="clearBoth">
 <div class="buttonRow back"><?php echo zen_back_link() . zen_image_button(BUTTON_IMAGE_BACK, BUTTON_BACK_ALT) . '</a>'; ?></div>
 </div>

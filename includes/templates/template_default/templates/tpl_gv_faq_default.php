@@ -32,7 +32,7 @@
 <div id="gvFaqDefaultContent" class="content"><?php echo $subHeadingText; ?></div>
 
 <div class="buttonRow back"><?php echo zen_back_link() . zen_image_button(BUTTON_IMAGE_BACK, BUTTON_BACK_ALT) . '</a>'; ?></div>
-<br class="clearBoth" />
+<br class="clearBoth">
 
 
 <form action="<?php echo zen_href_link(FILENAME_GV_REDEEM, '', 'NONSSL', false); ?>" method="get">

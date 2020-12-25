@@ -32,7 +32,7 @@
         }
         $the_button = $link;
         $products_link = '';
-        echo zen_get_buy_now_button($review->fields['products_id'], $the_button, $products_link) . '<br />' . zen_get_products_quantity_min_units_display($review->fields['products_id']);
+        echo zen_get_buy_now_button($review->fields['products_id'], $the_button, $products_link) . '<br>' . zen_get_products_quantity_min_units_display($review->fields['products_id']);
       ?>
 </div>
 <div id="productReviewsDefaultProductPageLink" class="buttonRow"><?php echo '<a href="' . zen_href_link(zen_get_info_page($_GET['products_id']), zen_get_all_get_params(array('reviews_id'))) . '">' . zen_image_button(BUTTON_IMAGE_GOTO_PROD_DETAILS , BUTTON_GOTO_PROD_DETAILS_ALT) . '</a>'; ?></div>
@@ -42,7 +42,7 @@
 
 <h2 id="productReviewsDefaultPrice" class=""><?php echo $products_price; ?></h2>
 
-<br class="clearBoth" />
+<br class="clearBoth">
 
 <?php
   if ($reviews_split->number_of_rows > 0) {
@@ -57,7 +57,7 @@
     }
     foreach ($reviewsArray as $reviews) {
 ?>
-<hr />
+<hr>
 
 <div class="buttonRow forward"><?php echo '<a href="' . zen_href_link(FILENAME_PRODUCT_REVIEWS_INFO, 'products_id=' . (int)$_GET['products_id'] . '&reviews_id=' . $reviews['id']) . '">' . zen_image_button(BUTTON_IMAGE_READ_REVIEWS , BUTTON_READ_REVIEWS_ALT) . '</a>'; ?></div>
 
@@ -68,22 +68,22 @@
 <div class="productReviewsDefaultProductMainContent content"><?php echo zen_trunc_string(zen_output_string_protected(stripslashes($reviews['reviewsText'])), MAX_PREVIEW); ?></div>
 
 
-<br class="clearBoth" />
+<br class="clearBoth">
 <?php
     }
 ?>
 <?php
   } else {
 ?>
-<hr />
-<div id="productReviewsDefaultNoReviews" class="content"><?php echo TEXT_NO_REVIEWS . (REVIEWS_APPROVAL == '1' ? '<br />' . TEXT_APPROVAL_REQUIRED: ''); ?></div>
-<br class="clearBoth" />
+<hr>
+<div id="productReviewsDefaultNoReviews" class="content"><?php echo TEXT_NO_REVIEWS . (REVIEWS_APPROVAL == '1' ? '<br>' . TEXT_APPROVAL_REQUIRED: ''); ?></div>
+<br class="clearBoth">
 <?php
   }
 
   if (($reviews_split->number_of_rows > 0) && ((PREV_NEXT_BAR_LOCATION == '2') || (PREV_NEXT_BAR_LOCATION == '3'))) {
 ?>
-<hr />
+<hr>
 <div id="productReviewsDefaultListingBottomNumber" class="navSplitPagesResult"><?php echo $reviews_split->display_count(TEXT_DISPLAY_NUMBER_OF_REVIEWS); ?></div>
 <div id="productReviewsDefaultListingBottomLinks" class="navSplitPagesLinks"><?php echo TEXT_RESULT_PAGE . $reviews_split->display_links($max_display_page_links, zen_get_all_get_params(array('page', 'info', 'main_page')), $paginateAsUL); ?></div>
 

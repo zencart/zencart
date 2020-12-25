@@ -84,7 +84,7 @@ if (PRODUCT_LIST_CATEGORIES_IMAGE_STATUS == 'true') {
 <?php
   }
 ?>
-<br class="clearBoth" />
+<br class="clearBoth">
 
 <?php
 /**

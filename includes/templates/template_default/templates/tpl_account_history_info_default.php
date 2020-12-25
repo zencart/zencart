@@ -59,15 +59,15 @@
         <?php
          $ppe = zen_round(zen_add_tax($op['final_price'], $op['tax']), $currencies->get_decimal_places($order->info['currency']));
          $ppt = $ppe * $op['qty'];
-        //        echo $currencies->format(zen_add_tax($op['final_price'], $op['tax']) * $op['qty'], true, $order->info['currency'], $order->info['currency_value']) . ($op['onetime_charges'] != 0 ? '<br />' . $currencies->format(zen_add_tax($op['onetime_charges'], $op['tax']), true, $order->info['currency'], $order->info['currency_value']) : '')
-        echo $currencies->format($ppt, true, $order->info['currency'], $order->info['currency_value']) . ($op['onetime_charges'] != 0 ? '<br />' . $currencies->format(zen_add_tax($op['onetime_charges'], $op['tax']), true, $order->info['currency'], $order->info['currency_value']) : '');
+        //        echo $currencies->format(zen_add_tax($op['final_price'], $op['tax']) * $op['qty'], true, $order->info['currency'], $order->info['currency_value']) . ($op['onetime_charges'] != 0 ? '<br>' . $currencies->format(zen_add_tax($op['onetime_charges'], $op['tax']), true, $order->info['currency'], $order->info['currency_value']) : '')
+        echo $currencies->format($ppt, true, $order->info['currency'], $order->info['currency_value']) . ($op['onetime_charges'] != 0 ? '<br>' . $currencies->format(zen_add_tax($op['onetime_charges'], $op['tax']), true, $order->info['currency'], $order->info['currency_value']) : '');
         ?></td>
     </tr>
 <?php
   }
 ?>
 </table>
-<hr />
+<hr>
 <div id="orderTotals">
 <?php
   foreach($order->totals as $ot) {
@@ -129,13 +129,13 @@ if (!empty($order->statuses)) {
 </table>
 <?php } ?>
 
-<hr />
+<hr>
 <div id="myAccountShipInfo" class="floatingBox back">
 <?php
   if (!empty($order->delivery['format_id'])) {
 ?>
 <h3><?php echo HEADING_DELIVERY_ADDRESS; ?></h3>
-<address><?php echo zen_address_format($order->delivery['format_id'], $order->delivery, 1, ' ', '<br />'); ?></address>
+<address><?php echo zen_address_format($order->delivery['format_id'], $order->delivery, 1, ' ', '<br>'); ?></address>
 <?php
   }
 ?>
@@ -154,7 +154,7 @@ if (!empty($order->statuses)) {
 
 <div id="myAccountPaymentInfo" class="floatingBox forward">
 <h3><?php echo HEADING_BILLING_ADDRESS; ?></h3>
-<address><?php echo zen_address_format($order->billing['format_id'], $order->billing, 1, ' ', '<br />'); ?></address>
+<address><?php echo zen_address_format($order->billing['format_id'], $order->billing, 1, ' ', '<br>'); ?></address>
 
 <h4><?php echo HEADING_PAYMENT_METHOD; ?></h4>
 <div><?php echo $order->info['payment_method']; ?></div>

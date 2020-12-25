@@ -20,7 +20,7 @@
   require($template->get_template_dir('/tpl_modules_listing_display_order.php',DIR_WS_TEMPLATE, $current_page_base,'templates'). '/tpl_modules_listing_display_order.php');
 ?>
 
-<br class="clearBoth" />
+<br class="clearBoth">
 
 <?php
   if (PRODUCT_FEATURED_LISTING_MULTIPLE_ADD_TO_CART > 0 and $show_submit == true and $featured_products_split->number_of_rows > 0) {
@@ -37,7 +37,7 @@
 <?php
   } // end show top button
 ?>
-<br class="clearBoth" />
+<br class="clearBoth">
 
 <?php
 
@@ -48,7 +48,7 @@
 <?php
   }
 ?>
-<br class="clearBoth" />
+<br class="clearBoth">
 
 <?php
 /**
@@ -64,7 +64,7 @@ require($template->get_template_dir('/tpl_modules_products_featured_listing.php'
 <?php
   }
 ?>
-<br class="clearBoth" />
+<br class="clearBoth">
 
 <?php
   if ($show_bottom_submit_button == true) {

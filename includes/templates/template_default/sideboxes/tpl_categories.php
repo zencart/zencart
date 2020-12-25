@@ -54,19 +54,19 @@
         }
       }
 
-      $content .= '<br />' . "\n";
+      $content .= '<br>' . "\n";
     }
   }
 
   if (SHOW_CATEGORIES_BOX_SPECIALS == 'true' or SHOW_CATEGORIES_BOX_PRODUCTS_NEW == 'true' or SHOW_CATEGORIES_BOX_FEATURED_PRODUCTS == 'true' or SHOW_CATEGORIES_BOX_PRODUCTS_ALL == 'true') {
 // display a separator between categories and links
     if (SHOW_CATEGORIES_SEPARATOR_LINK == '1') {
-      $content .= '<hr id="catBoxDivider" />' . "\n";
+      $content .= '<hr id="catBoxDivider">' . "\n";
     }
     if (SHOW_CATEGORIES_BOX_SPECIALS == 'true') {
       $show_this = $db->Execute("select s.products_id from " . TABLE_SPECIALS . " s where s.status= 1 limit 1");
       if ($show_this->RecordCount() > 0) {
-        $content .= '<a class="category-links" href="' . zen_href_link(FILENAME_SPECIALS) . '">' . CATEGORIES_BOX_HEADING_SPECIALS . '</a>' . '<br />' . "\n";
+        $content .= '<a class="category-links" href="' . zen_href_link(FILENAME_SPECIALS) . '">' . CATEGORIES_BOX_HEADING_SPECIALS . '</a>' . '<br>' . "\n";
       }
     }
     if (SHOW_CATEGORIES_BOX_PRODUCTS_NEW == 'true') {
@@ -78,13 +78,13 @@
                                  from " . TABLE_PRODUCTS . " p
                                  where p.products_status = 1 " . $display_limit . " limit 1");
       if ($show_this->RecordCount() > 0) {
-        $content .= '<a class="category-links" href="' . zen_href_link(FILENAME_PRODUCTS_NEW) . '">' . CATEGORIES_BOX_HEADING_WHATS_NEW . '</a>' . '<br />' . "\n";
+        $content .= '<a class="category-links" href="' . zen_href_link(FILENAME_PRODUCTS_NEW) . '">' . CATEGORIES_BOX_HEADING_WHATS_NEW . '</a>' . '<br>' . "\n";
       }
     }
     if (SHOW_CATEGORIES_BOX_FEATURED_PRODUCTS == 'true') {
       $show_this = $db->Execute("select products_id from " . TABLE_FEATURED . " where status= 1 limit 1");
       if ($show_this->RecordCount() > 0) {
-        $content .= '<a class="category-links" href="' . zen_href_link(FILENAME_FEATURED_PRODUCTS) . '">' . CATEGORIES_BOX_HEADING_FEATURED_PRODUCTS . '</a>' . '<br />' . "\n";
+        $content .= '<a class="category-links" href="' . zen_href_link(FILENAME_FEATURED_PRODUCTS) . '">' . CATEGORIES_BOX_HEADING_FEATURED_PRODUCTS . '</a>' . '<br>' . "\n";
       }
     }
     if (SHOW_CATEGORIES_BOX_PRODUCTS_ALL == 'true') {

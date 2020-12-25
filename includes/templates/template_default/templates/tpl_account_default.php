@@ -22,7 +22,7 @@
     if (zen_count_customer_orders() > 0) {
   ?>
 <p class="forward"><?php echo '<a href="' . zen_href_link(FILENAME_ACCOUNT_HISTORY, '', 'SSL') . '">' . OVERVIEW_SHOW_ALL_ORDERS . '</a>'; ?></p>
-<br class="clearBoth" />
+<br class="clearBoth">
 <h2 id="previous-orders"><?php echo OVERVIEW_PREVIOUS_ORDERS; ?></h2>
 <table id="prevOrders">
     <tr class="tableHeading">
@@ -39,7 +39,7 @@
   <tr>
     <td class="accountOrderDate"><?php echo zen_date_short($orders['date_purchased']); ?></td>
     <td class="accountOrderId"><?php echo TEXT_NUMBER_SYMBOL . $orders['orders_id']; ?></td>
-    <td class="accountAddress"><address><?php echo zen_output_string_protected($orders['order_name']) . '<br />' . $orders['order_country']; ?></address></td>
+    <td class="accountAddress"><address><?php echo zen_output_string_protected($orders['order_name']) . '<br>' . $orders['order_country']; ?></address></td>
     <td class="accountOrderStatus"><?php echo $orders['orders_status_name']; ?></td>
     <td class="accountOrderTotal alignRight"><?php echo $orders['order_total']; ?></td>
     <td class="accountOrderViewButton alignRight"><?php echo '<a href="' . zen_href_link(FILENAME_ACCOUNT_HISTORY_INFO, 'order_id=' . $orders['orders_id'], 'SSL') . '"> ' . zen_image_button(BUTTON_IMAGE_VIEW_SMALL, BUTTON_VIEW_SMALL_ALT) . '</a>'; ?></td>
@@ -52,7 +52,7 @@
 <?php
   }
 ?>
-<br class="clearBoth" />
+<br class="clearBoth">
 <div id="accountLinksWrapper" class="back">
 <h2><?php echo MY_ACCOUNT_TITLE; ?></h2>
 <ul id="myAccountGen" class="list">
@@ -93,5 +93,5 @@
 <?php
   }
 ?>
-<br class="clearBoth" />
+<br class="clearBoth">
 </div>

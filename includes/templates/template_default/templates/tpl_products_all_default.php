@@ -16,7 +16,7 @@
 <?php
 require($template->get_template_dir('/tpl_modules_listing_display_order.php',DIR_WS_TEMPLATE, $current_page_base,'templates'). '/tpl_modules_listing_display_order.php'); ?>
 
-<br class="clearBoth" />
+<br class="clearBoth">
 
 <?php
   if (PRODUCT_ALL_LISTING_MULTIPLE_ADD_TO_CART > 0 and $show_submit == true and $products_all_split->number_of_rows > 0) {
@@ -38,7 +38,7 @@ require($template->get_template_dir('/tpl_modules_listing_display_order.php',DIR
 <?php
   } // top submit button
 ?>
-<br class="clearBoth" />
+<br class="clearBoth">
 
 <?php
   if (($products_all_split->number_of_rows > 0) && ((PREV_NEXT_BAR_LOCATION == '1') || (PREV_NEXT_BAR_LOCATION == '3'))) {
@@ -48,7 +48,7 @@ require($template->get_template_dir('/tpl_modules_listing_display_order.php',DIR
 <?php
   }
 ?>
-<br class="clearBoth" />
+<br class="clearBoth">
 
 <?php
 /**
@@ -64,7 +64,7 @@ require($template->get_template_dir('/tpl_modules_products_all_listing.php',DIR_
 <?php
   }
 ?>
-<br class="clearBoth" />
+<br class="clearBoth">
 
 <?php
   if ($show_bottom_submit_button == true) {

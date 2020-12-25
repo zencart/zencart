@@ -38,7 +38,7 @@
 <h2 id="reviewsWritePrice"><?php echo $products_price; ?></h2>
 
 <h3 id="reviewsWriteReviewer" class=""><?php echo SUB_TITLE_FROM, zen_output_string_protected($customer->fields['customers_firstname'] . ' ' . $customer->fields['customers_lastname']); ?></h3>
-<br class="clearBoth" />
+<br class="clearBoth">
 
 <?php if ($messageStack->size('review_text') > 0) echo $messageStack->output('review_text'); ?>
 
@@ -66,8 +66,8 @@
 <?php echo zen_draw_input_field($antiSpamFieldName, '', ' size="60" id="RAS" style="visibility:hidden; display:none;" autocomplete="off"'); ?>
 
     <div class="buttonRow forward"><?php echo zen_image_submit(BUTTON_IMAGE_SUBMIT, BUTTON_SUBMIT_ALT); ?></div>
-<br class="clearBoth" />
+<br class="clearBoth">
 
-<div id="reviewsWriteReviewsNotice" class="notice"><?php echo TEXT_NO_HTML . (REVIEWS_APPROVAL == '1' ? '<br />' . TEXT_APPROVAL_REQUIRED: ''); ?></div>
+<div id="reviewsWriteReviewsNotice" class="notice"><?php echo TEXT_NO_HTML . (REVIEWS_APPROVAL == '1' ? '<br>' . TEXT_APPROVAL_REQUIRED: ''); ?></div>
 </form>
 </div>

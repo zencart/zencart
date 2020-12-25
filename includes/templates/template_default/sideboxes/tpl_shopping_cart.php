@@ -42,9 +42,9 @@
   }
 
   if ($_SESSION['cart']->count_contents() > 0) {
-    $content .= '<hr />';
+    $content .= '<hr>';
     $content .= '<div class="cartBoxTotal">' . $currencies->format($_SESSION['cart']->show_total()) . '</div>';
-    $content .= '<br class="clearBoth" />';
+    $content .= '<br class="clearBoth">';
   }
 
   if (zen_is_logged_in() && !zen_in_guest_checkout()) {

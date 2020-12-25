@@ -14,15 +14,15 @@ $content .= zen_draw_hidden_field('main_page', FILENAME_ADVANCED_SEARCH_RESULT);
 $content .= zen_draw_hidden_field('search_in_description', '1') . zen_hide_session_id();
 
 $content .= zen_draw_input_field('keyword', '', 'size="18" maxlength="100" style="width: ' . ((int)$column_width - 30) . 'px" placeholder="' . SEARCH_DEFAULT_TEXT . '"  aria-label="' . SEARCH_DEFAULT_TEXT . '"');
-$content .= '<br />';
+$content .= '<br>';
 
 if (strtolower(IMAGE_USE_CSS_BUTTONS) == 'yes') {
     $content .= zen_image_submit(BUTTON_IMAGE_SEARCH, HEADER_SEARCH_BUTTON);
 } else {
-    $content .= '<input type="submit" value="' . HEADER_SEARCH_BUTTON . '" style="width: 55px" />';
+    $content .= '<input type="submit" value="' . HEADER_SEARCH_BUTTON . '" style="width: 55px">';
 }
 
-$content .= '<br />';
+$content .= '<br>';
 $content .= '<a href="' . zen_href_link(FILENAME_ADVANCED_SEARCH) . '">' . BOX_SEARCH_ADVANCED_SEARCH . '</a>';
 
 $content .= "</form>";

@@ -32,7 +32,7 @@
       $content .= zen_display_banner('static', $banners_all->fields['banners_id']);
       // add spacing between banners
       if ($banner_cnt < $banners_all->RecordCount()) {
-        $content .= '<br /><br />';
+        $content .= '<br><br>';
       }
       $banners_all->MoveNext();
     }

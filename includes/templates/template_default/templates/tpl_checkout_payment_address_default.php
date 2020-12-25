@@ -19,9 +19,9 @@
 
 <h2 id="checkoutPayAddressDefaultAddress"><?php echo TITLE_PAYMENT_ADDRESS; ?></h2>
 
-<address class="back"><?php echo zen_address_label($_SESSION['customer_id'], $_SESSION['billto'], true, ' ', '<br />'); ?></address>
+<address class="back"><?php echo zen_address_label($_SESSION['customer_id'], $_SESSION['billto'], true, ' ', '<br>'); ?></address>
 <div class="instructions"><?php echo TEXT_SELECTED_PAYMENT_DESTINATION; ?></div>
-<br class="clearBoth" />
+<br class="clearBoth">
 
 <?php
      if ($addresses_count < MAX_ADDRESS_BOOK_ENTRIES) {
@@ -52,7 +52,7 @@
      }
 ?>
 
-<div class="buttonRow back"><?php echo TITLE_CONTINUE_CHECKOUT_PROCEDURE . '<br />' . TEXT_CONTINUE_CHECKOUT_PROCEDURE; ?></div>
+<div class="buttonRow back"><?php echo TITLE_CONTINUE_CHECKOUT_PROCEDURE . '<br>' . TEXT_CONTINUE_CHECKOUT_PROCEDURE; ?></div>
 
 <?php
   if ($process == true) {
