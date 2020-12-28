@@ -3,8 +3,13 @@
  * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2020 May 21 Modified in v1.5.8 $
+ * @version $Id: DrByte 2020 Dec 28 Modified in v1.5.8 $
  */
+
+// TIP: In most cases you can override anything in this file by copying it to
+// /includes/languages/YOUR_TEMPLATE_NAME/english.php and customizing it there.
+// Anything in that file is used before what's in this file.
+// That makes it less necessary to need to touch this large base file.
 
 // FOLLOWING WERE moved to meta_tags.php
 //define('TITLE', 'Zen Cart!');
@@ -131,7 +136,7 @@
   define('BOX_INFORMATION_SITE_MAP', 'Site Map');
   define('BOX_INFORMATION_ORDER_STATUS', 'Order Status');
 
-// information box text in sideboxes/more_information.php - were TUTORIAL_
+// information box text in sideboxes/more_information.php
   define('BOX_HEADING_MORE_INFORMATION', 'More Information');
   define('BOX_INFORMATION_PAGE_2', 'Page 2');
   define('BOX_INFORMATION_PAGE_3', 'Page 3');
@@ -589,26 +594,16 @@ define('ARIA_PAGINATION_','');
 // a customer's account.
 
 // -----
-// init_customer_auth.php substitutes the customer's name (%$1s) and customer's email address (%$2s)
-// into this message.
+// init_customer_auth.php substitutes the customer's name (%$1s) and customer's email address (%$2s) into this message.
 //
 define('EMP_SHOPPING_FOR_MESSAGE', 'Currently shopping for %1$s (%2$s).');
 
 // -----
-// Identify the messageStack "severity" to be applied to the above message, one of 'success',
-// 'warning', 'caution', 'error' (defaults to 'success').
+// Identify the messageStack "severity" to be applied to the above message,
+// Options are of 'success', 'warning', 'caution', 'error' (defaults to 'success').
 //
 define('EMP_SHOPPING_FOR_MESSAGE_SEVERITY', 'success');
 
 // Constants shared between multiple pages
 define('TEXT_OPTION_DIVIDER', '&nbsp;-&nbsp;');
 
-///////////////////////////////////////////////////////////
-
-//  $file_list = [FILENAME_EMAIL_EXTRAS, FILENAME_HEADER, FILENAME_BUTTON_NAMES, FILENAME_ICON_NAMES, FILENAME_OTHER_IMAGES_NAMES, FILENAME_CREDIT_CARDS, FILENAME_WHOS_ONLINE, FILENAME_META_TAGS];
-//  foreach ($file_list as $file) {
-//    $file = str_replace(".php","",$file);
-//    require_once(zen_get_file_directory(DIR_FS_CATALOG . DIR_WS_LANGUAGES . $_SESSION['language'] . "/", $file . '.php', 'false'));
-//  }
-
-// END OF EXTERNAL LANGUAGE LINKS
