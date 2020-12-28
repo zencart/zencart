@@ -2,14 +2,6 @@
 /**
  * Common Template - tpl_header.php
  *
- * this file can be copied to /templates/your_template_dir/pagename
- * example: to override the privacy page
- * make a directory /templates/my_template/privacy
- * copy /templates/templates_defaults/common/tpl_footer.php to /templates/my_template/privacy/tpl_header.php
- * to override the global settings and turn off the footer un-comment the following line:
- *
- * $flag_disable_header = true;
- *
  * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
@@ -22,19 +14,20 @@
   if ($messageStack->size('header') > 0) {
     echo $messageStack->output('header');
   }
-  if (isset($_GET['error_message']) && !empty($_GET['error_message'])) {
+  if (!empty($_GET['error_message'])) {
     echo zen_output_string_protected(urldecode($_GET['error_message']));
   }
-  if (isset($_GET['info_message']) && !empty($_GET['info_message'])) {
+  if (!empty($_GET['info_message'])) {
    echo zen_output_string_protected($_GET['info_message']);
   }
+// check whether to only display errors/alerts, or to also display the rest of the header
+if (isset($flag_disable_header) && $flag_disable_header === true) {
+  // do early-return from this template since $flag_disable_header is true
+  return;
+}
 ?>
-
 
 <!--bof-header logo and navigation display-->
-<?php
-if (!isset($flag_disable_header) || !$flag_disable_header) {
-?>
 
 <div id="headerWrapper">
 <!--bof-navigation display-->
@@ -106,4 +99,3 @@ if (!isset($flag_disable_header) || !$flag_disable_header) {
 <?php } ?>
 <!--eof-header ezpage links-->
 </div>
-<?php } ?>
