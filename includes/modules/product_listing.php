@@ -68,7 +68,8 @@ for ($col=0, $n=count($column_list); $col<$n; $col++) {
     $zc_col_count_description++;
     break;
     case 'PRODUCT_LIST_IMAGE':
-    $lc_text = TABLE_HEADING_IMAGE;
+    $lc_text = '&nbsp;';
+    //$lc_text = TABLE_HEADING_IMAGE;   //-Uncomment this line if you want the "Products Image" header title
     $lc_align = 'center';
     $zc_col_count_description++;
     break;
@@ -115,10 +116,12 @@ if ($num_products_count > 0) {
       switch ($column_list[$col]) {
         case 'PRODUCT_LIST_MODEL':
         $lc_align = '';
-        $lc_text = $record['products_model'];
+        $lc_text = '';
+        //if ($product_listing_layout_style == 'columns') $lc_text .= '<label>' . TABLE_HEADING_MODEL . '</label>';
+        $lc_text .= $record['products_model'];
         break;
         case 'PRODUCT_LIST_NAME':
-        $lc_align = '';
+        if ($product_listing_layout_style == 'columns') $lc_align = 'center';
         $lc_text = '<h3 class="itemTitle">
             <a href="' . zen_href_link(zen_get_info_page($record['products_id']), 'cPath=' . zen_get_generated_category_path_rev($linkCpath) . '&products_id=' . $record['products_id']) . '">' . $record['products_name'] . '</a>
             </h3>';
@@ -128,13 +131,17 @@ if ($num_products_count > 0) {
         }
         break;
         case 'PRODUCT_LIST_MANUFACTURER':
-        $lc_align = '';
-        $lc_text = '<a href="' . zen_href_link(FILENAME_DEFAULT, 'manufacturers_id=' . $record['manufacturers_id']) . '">' . $record['manufacturers_name'] . '</a>';
+            $lc_align = '';
+            $lc_text = '';
+            //if ($product_listing_layout_style == 'columns') $lc_text .= '<label>' . TABLE_HEADING_MANUFACTURER . '</label>';
+            $lc_text .= '<a href="' . zen_href_link(FILENAME_DEFAULT, 'manufacturers_id=' . $record['manufacturers_id']) . '">' . $record['manufacturers_name'] . '</a>';
         break;
         case 'PRODUCT_LIST_PRICE':
         $lc_price = zen_get_products_display_price($record['products_id']) . '<br>';
         $lc_align = 'right';
-        $lc_text =  $lc_price;
+        $lc_text = '';
+        // if ($product_listing_layout_style == 'columns') $lc_text .= '<label>' . TABLE_HEADING_PRICE . '</label>';
+        $lc_text .=  $lc_price;
 
         // more info in place of buy now
         $lc_button = '';
@@ -160,7 +167,9 @@ if ($num_products_count > 0) {
             if ($record['products_qty_box_status'] == 0) {
               $lc_button = '<a href="' . zen_href_link($_GET['main_page'], zen_get_all_get_params(array('action')) . 'action=buy_now&products_id=' . $record['products_id']) . '">' . zen_image_button(BUTTON_IMAGE_BUY_NOW, BUTTON_BUY_NOW_ALT, 'class="listingBuyNowButton"') . '</a>';
             } else {
-              $lc_button = TEXT_PRODUCT_LISTING_MULTIPLE_ADD_TO_CART . '<input type="text" name="products_id[' . $record['products_id'] . ']" value="0" size="4" aria-label="' . ARIA_QTY_ADD_TO_CART . '">';
+              $lc_button = '';
+              $lc_button .= TEXT_PRODUCT_LISTING_MULTIPLE_ADD_TO_CART;
+              $lc_button .= '<input type="text" name="products_id[' . $record['products_id'] . ']" value="0" size="4" aria-label="' . ARIA_QTY_ADD_TO_CART . '">';
             }
           } else {
 // qty box with add to cart button
@@ -182,11 +191,15 @@ if ($num_products_count > 0) {
         break;
         case 'PRODUCT_LIST_QUANTITY':
         $lc_align = 'right';
-        $lc_text = $record['products_quantity'];
+        $lc_text = '';
+        //if ($product_listing_layout_style == 'columns') $lc_text .= '<label>' . TABLE_HEADING_QUANTITY . '</label>';
+        $lc_text .= $record['products_quantity'];
         break;
         case 'PRODUCT_LIST_WEIGHT':
         $lc_align = 'right';
-        $lc_text = $record['products_weight'];
+        $lc_text = '';
+        //if ($product_listing_layout_style == 'columns') $lc_text .= '<label>' . TABLE_HEADING_WEIGHT . '</label>';
+        $lc_text .= $record['products_weight'];
         break;
         case 'PRODUCT_LIST_IMAGE':
         $lc_align = 'center';
