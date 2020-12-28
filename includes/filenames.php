@@ -6,7 +6,7 @@
  * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Zcwilt 2020 May 20 Modified in v1.5.8 $
+ * @version $Id: Zcwilt 2020 Dec 28 Modified in v1.5.8 $
  */
 /**
  * define project filenames
@@ -109,6 +109,7 @@ define('FILENAME_ORDERS', 'orders');
 define('FILENAME_ORDERS_INVOICE', 'invoice');
 define('FILENAME_ORDERS_PACKINGSLIP', 'packingslip');
 define('FILENAME_ORDERS_STATUS', 'orders_status');
+define('FILENAME_ORDER_STATUS', 'order_status');
 define('FILENAME_OPTIONS_NAME_MANAGER', 'options_name_manager');
 define('FILENAME_OPTIONS_VALUES_MANAGER', 'options_values_manager');
 define('FILENAME_PAGE_NOT_FOUND', 'page_not_found');

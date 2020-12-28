@@ -129,6 +129,7 @@
 
   define('BOX_INFORMATION_ABOUT_US', 'About Us');
   define('BOX_INFORMATION_SITE_MAP', 'Site Map');
+  define('BOX_INFORMATION_ORDER_STATUS', 'Order Status');
 
 // information box text in sideboxes/more_information.php - were TUTORIAL_
   define('BOX_HEADING_MORE_INFORMATION', 'More Information');
