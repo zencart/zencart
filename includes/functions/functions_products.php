@@ -923,7 +923,7 @@ function zen_products_lookup($product_id, $what_field = 'products_name', $langua
 
     $product_lookup = $db->Execute("SELECT " . zen_db_input($what_field) . " AS lookup_field
                               FROM " . TABLE_PRODUCTS . " p
-                              INNER JOIN " . TABLE_PRODUCTS_DESCRIPTION . " pd USING (pd.products_id = p.products_id AND pd.language_id = " . (int)$language .")
+                              INNER JOIN " . TABLE_PRODUCTS_DESCRIPTION . " pd ON (pd.products_id = p.products_id AND pd.language_id = " . (int)$language .")
                               WHERE  p.products_id = " . (int)$product_id);
     if ($product_lookup->EOF) return '';
     return $product_lookup->fields['lookup_field'];
