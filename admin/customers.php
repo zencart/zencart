@@ -577,7 +577,7 @@ if (!empty($action)) {
                 }
                 echo zen_draw_hidden_field('customers_group_pricing', $cInfo->customers_group_pricing);
               } else {
-                $group_array_query = $db->execute("SELECT group_id, group_name, group_percentage
+                $group_array_query = $db->Execute("SELECT group_id, group_name, group_percentage
                                                    FROM " . TABLE_GROUP_PRICING);
                 $group_array[] = [
                   'id' => 0,
