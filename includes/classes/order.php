@@ -299,18 +299,18 @@ class order extends base {
 
     $this->content_type = $_SESSION['cart']->get_content_type();
 
-    $customer_address_query = "select c.customers_firstname, c.customers_lastname, c.customers_telephone,
+    $customer_address_query = "SELECT c.customers_firstname, c.customers_lastname, c.customers_telephone,
                                     c.customers_email_address, ab.entry_company, ab.entry_street_address,
                                     ab.entry_suburb, ab.entry_postcode, ab.entry_city, ab.entry_zone_id,
                                     z.zone_code, z.zone_name, co.countries_id, co.countries_name,
                                     co.countries_iso_code_2, co.countries_iso_code_3,
                                     co.address_format_id, ab.entry_state
-                                   from (" . TABLE_CUSTOMERS . " c, " . TABLE_ADDRESS_BOOK . " ab )
-                                   left join " . TABLE_ZONES . " z on (ab.entry_zone_id = z.zone_id)
-                                   left join " . TABLE_COUNTRIES . " co on (ab.entry_country_id = co.countries_id)
-                                   where c.customers_id = " . (!empty($_SESSION['customer_id']) ? (int)$_SESSION['customer_id'] : 0) . "
-                                   and ab.customers_id = " . (!empty($_SESSION['customer_id']) ? (int)$_SESSION['customer_id'] : 0) . "
-                                   and c.customers_default_address_id = ab.address_book_id";
+                                   FROM " . TABLE_CUSTOMERS . " c
+                                   INNER JOIN " . TABLE_ADDRESS_BOOK . " ab ON (c.customers_id = ab.customers_id)
+                                   LEFT JOIN " . TABLE_ZONES . " z ON (ab.entry_zone_id = z.zone_id)
+                                   LEFT JOIN " . TABLE_COUNTRIES . " co ON (ab.entry_country_id = co.countries_id)
+                                   WHERE c.customers_id = " . (!empty($_SESSION['customer_id']) ? (int)$_SESSION['customer_id'] : 0) . "
+                                   AND c.customers_default_address_id = ab.address_book_id";
 
     $customer_address = $db->Execute($customer_address_query);
 

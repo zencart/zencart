@@ -1172,8 +1172,8 @@ if (!empty($action) && $order_exists == true) {
                   $new_fields = '';
                   $keywords = '';
                   if (!empty($_GET['search_orders_products'])) {
-                    $search_distinct = ' distinct ';
-                    $new_table = " left join " . TABLE_ORDERS_PRODUCTS . " op on (op.orders_id = o.orders_id) ";
+                    $search_distinct = ' DISTINCT ';
+                    $new_table = " LEFT JOIN " . TABLE_ORDERS_PRODUCTS . " op ON (op.orders_id = o.orders_id) ";
                     $keywords = zen_db_input(zen_db_prepare_input($_GET['search_orders_products']));
                       $keyword_search_fields = [
                           'op.products_name',
@@ -1182,7 +1182,7 @@ if (!empty($action) && $order_exists == true) {
                       $search = zen_build_keyword_where_clause($keyword_search_fields, trim($keywords));
                     if (substr(strtoupper($_GET['search_orders_products']), 0, 3) == 'ID:') {
                       $keywords = TRIM(substr($_GET['search_orders_products'], 3));
-                      $search = " and op.products_id ='" . (int)$keywords . "'";
+                      $search = " AND op.products_id ='" . (int)$keywords . "'";
                     }
                   } elseif (!empty($_GET['search'])) {
 // create search filter

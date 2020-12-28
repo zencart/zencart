@@ -59,10 +59,9 @@ if ($action === 'new_cat') {//this form action is from products_previous_next_di
 // @TODO this is a pretty elaborate query for getting a single products_id in order to do a redirect!
     $sql = "SELECT ptc.*
             FROM " . TABLE_PRODUCTS_TO_CATEGORIES . " ptc
-            LEFT JOIN " . TABLE_PRODUCTS_DESCRIPTION . " pd USING (products_id)
+            LEFT JOIN " . TABLE_PRODUCTS_DESCRIPTION . " pd ON (p.products_id = pd.products_id AND pd.language_id = " . (int)$_SESSION['languages_id'] . ")
             INNER JOIN " . TABLE_PRODUCTS . " p USING (products_id)
             WHERE ptc.categories_id = " . $current_category_id . "
-            AND pd.language_id = " . (int)$_SESSION['languages_id'] . "
             ORDER BY p.products_model"; // Order By determines which product is pre-selected in the list when a new category is viewed
     $result = $db->Execute($sql);
     $products_filter = (!$result->EOF) ? $result->fields['products_id'] : ''; // Empty if category has no products/has subcategories
@@ -420,9 +419,8 @@ if (!empty($action)) {
 if ($products_filter > 0) {
     $product_to_copy = $db->Execute("SELECT p.products_id, pd.products_name, p.products_sort_order, p.products_price_sorter, p.products_model, p.master_categories_id, p.products_image
                                  FROM " . TABLE_PRODUCTS . " p
-                                 LEFT JOIN " . TABLE_PRODUCTS_DESCRIPTION . " pd USING (products_id)
-                                 WHERE p.products_id = " . $products_filter . "
-                                 AND pd.language_id = " . (int)$_SESSION['languages_id'] . " LIMIT 1");
+                                 LEFT JOIN " . TABLE_PRODUCTS_DESCRIPTION . " pd ON (p.products_id = pd.products_id AND pd.language_id = " . (int)$_SESSION['languages_id'] . ")
+                                 WHERE p.products_id = " . $products_filter, 1);
 
     $product_linked_categories = $db->Execute("SELECT products_id, categories_id FROM " . TABLE_PRODUCTS_TO_CATEGORIES . " WHERE products_id = " . $products_filter);
 }

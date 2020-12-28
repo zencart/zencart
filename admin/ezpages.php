@@ -277,9 +277,8 @@ if (!empty($action)) {
 
           $page_query = "SELECT e.*, ec.*
                          FROM " . TABLE_EZPAGES . " e
-                         INNER JOIN " . TABLE_EZPAGES_CONTENT . " ec USING (pages_id)
-                         WHERE e.pages_id = " . (int)$_GET['ezID'] . "
-                         AND ec.languages_id = " . (int)$_SESSION['languages_id'];
+                         INNER JOIN " . TABLE_EZPAGES_CONTENT . " ec ON (e.pages_id=ec.pages_id AND ec.languages_id = " . (int)$_SESSION['languages_id'] . ")
+                         WHERE e.pages_id = " . (int)$_GET['ezID'];
           $page = $db->Execute($page_query);
           $ezInfo->updateObjectInfo($page->fields);
         } elseif (!empty($_POST)) {
@@ -554,8 +553,7 @@ if (!empty($action)) {
 
                 $pages_query_raw = "SELECT e.*, ec.*
                                     FROM " . TABLE_EZPAGES . " e
-                                    INNER JOIN " . TABLE_EZPAGES_CONTENT . " ec USING (pages_id)
-                                    WHERE ec.languages_id = " . (int)$_SESSION['languages_id'] . "
+                                    INNER JOIN " . TABLE_EZPAGES_CONTENT . " ec ON (e.pages_id=ec.pages_id AND ec.languages_id = " . (int)$_SESSION['languages_id'] . ")
                                     " . $ez_order_by;
 
 // Split Page

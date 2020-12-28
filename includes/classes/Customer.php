@@ -203,13 +203,13 @@ class Customer extends base
 
         $sql = "SELECT c.*,
                     cgc.amount as gv_balance,
-                    customers_info_date_account_created as date_account_created,
-                    customers_info_date_account_last_modified as date_account_last_modified,
-                    customers_info_date_of_last_logon as date_of_last_login,
-                    customers_info_number_of_logons as number_of_logins
+                    customers_info_date_account_created AS date_account_created,
+                    customers_info_date_account_last_modified AS date_account_last_modified,
+                    customers_info_date_of_last_logon AS date_of_last_login,
+                    customers_info_number_of_logons AS number_of_logins
                 FROM " . TABLE_CUSTOMERS . " c
                 LEFT JOIN " . TABLE_CUSTOMERS_INFO . " ci ON (c.customers_id = ci.customers_info_id)
-                LEFT JOIN " . TABLE_COUPON_GV_CUSTOMER . " cgc ON c.customers_id = cgc.customer_id
+                LEFT JOIN " . TABLE_COUPON_GV_CUSTOMER . " cgc ON (c.customers_id = cgc.customer_id)
                 WHERE c.customers_id = " . (int)$customer_id;
 
         $result = $db->Execute($sql, 1);
@@ -444,15 +444,15 @@ class Customer extends base
         if (empty($customer_id)) return [];
 
         $sql = "SELECT address_book_id,
-                       entry_firstname as firstname, entry_lastname as lastname,
-                       entry_company as company, entry_street_address as street_address,
-                       entry_suburb as suburb, entry_city as city, entry_postcode as postcode,
-                       entry_state as state,
-                       entry_zone_id as zone_id,
-                       zone_name, zone_code as zone_iso,
-                       entry_country_id as country_id,
-                       countries_name as country_name,
-                       countries_iso_code_3 as country_iso
+                       entry_firstname AS firstname, entry_lastname AS lastname,
+                       entry_company AS company, entry_street_address AS street_address,
+                       entry_suburb AS suburb, entry_city AS city, entry_postcode AS postcode,
+                       entry_state AS state,
+                       entry_zone_id AS zone_id,
+                       zone_name, zone_code AS zone_iso,
+                       entry_country_id AS country_id,
+                       countries_name AS country_name,
+                       countries_iso_code_3 AS country_iso
                 FROM " . TABLE_ADDRESS_BOOK . " ab
                 INNER JOIN " . TABLE_COUNTRIES . " c ON (ab.entry_country_id=c.countries_id)
                 LEFT JOIN " . TABLE_ZONES . " z ON (ab.entry_zone_id=z.zone_id AND z.zone_country_id=c.countries_id)

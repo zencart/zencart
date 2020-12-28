@@ -15,9 +15,8 @@ $order_by = " order by c.sort_order, cd.categories_name ";
 
 $sql = "SELECT c.sort_order, c.categories_id, cd.categories_name
         FROM " . TABLE_CATEGORIES . " c
-        LEFT JOIN " . TABLE_CATEGORIES_DESCRIPTION . " cd USING (categories_id)
+        LEFT JOIN " . TABLE_CATEGORIES_DESCRIPTION . " cd ON (c.categories_id = cd.categories_id AND cd.language_id = " . (int)$_SESSION['languages_id'] . ")
         WHERE c.parent_id= " . (int)TOPMOST_CATEGORY_PARENT_ID . "
-        AND cd.language_id=" . (int)$_SESSION['languages_id'] . "
         AND c.categories_status=1 " .
         $order_by;
 $categories_tab = $db->Execute($sql);
