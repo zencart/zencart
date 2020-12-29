@@ -632,7 +632,7 @@ function zen_get_buy_now_qty($product_id)
         case ($mixed_products_in_cart == 0):
             if ($check_min >= $check_units) {
                 // Set the buy now quantity (associated product is not yet in the cart) to the first value satisfying both the minimum and the units.
-                if ($check_units == 0) $check_units = 1; 
+                if ($check_units == 0) $check_units = 1;
                 $buy_now_qty = $check_units * ceil($check_min / $check_units);
                 // Uncomment below to set the buy now quantity to the value of the minimum required regardless if it is a multiple of the units.
                 //$buy_now_qty = $check_min;
