@@ -22,19 +22,20 @@
   if ($messageStack->size('header') > 0) {
     echo $messageStack->output('header');
   }
-  if (isset($_GET['error_message']) && !empty($_GET['error_message'])) {
+  if (!empty($_GET['error_message'])) {
     echo zen_output_string_protected(urldecode($_GET['error_message']));
   }
-  if (isset($_GET['info_message']) && !empty($_GET['info_message'])) {
+  if (!empty($_GET['info_message'])) {
    echo zen_output_string_protected($_GET['info_message']);
+}
+// check whether to only display errors/alerts, or to also display the rest of the header
+if (isset($flag_disable_header) && $flag_disable_header === true) {
+  // do early-return from this template since $flag_disable_header is true
+  return;
 }
 ?>
 
-
 <!--bof-header logo and navigation display-->
-<?php
-if (!isset($flag_disable_header) || !$flag_disable_header) {
-?>
 
 <div id="headerWrapper">
 
@@ -241,5 +242,3 @@ echo '<div class="header Fixed"><a href="#menu" title="Menu"><i class="fa fa-bar
 <?php } ?>
 <!--eof header ezpage links-->
 </div>
-
-<?php } ?>

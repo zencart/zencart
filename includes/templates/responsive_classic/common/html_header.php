@@ -45,6 +45,9 @@ if (!class_exists('Mobile_Detect')) {
 <!DOCTYPE html>
 <html <?php echo HTML_PARAMS; ?>>
   <head>
+    <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
+    <link rel="dns-prefetch" href="https://code.jquery.com">
+
   <meta charset="<?php echo CHARSET; ?>">
   <title><?php echo META_TAG_TITLE; ?></title>
   <meta name="keywords" content="<?php echo META_TAG_KEYWORDS; ?>">
@@ -207,7 +210,7 @@ if (in_array($current_page_base,explode(",",'popup_image,popup_image_additional'
 }
 ?>
   <script type="text/javascript">document.documentElement.className = 'no-fouc';</script>
-  <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha512-SfTiTlX6kk+qitfevl/7LibUOeJWlt9rbyDn92a1DqWOw9vWG2MFoays0sgObmWazO5BQPiFucnnEAjpAB+/Sw==" crossorigin="anonymous" />
 <?php // ZCAdditions.com, ZCA Responsive Template Default (EOF-addition 2 of 2) ?>
 <?php
   $zco_notifier->notify('NOTIFY_HTML_HEAD_END', $current_page_base);
