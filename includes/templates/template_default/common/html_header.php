@@ -30,13 +30,16 @@ require(DIR_WS_MODULES . zen_get_module_directory('meta_tags.php'));
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" <?php echo HTML_PARAMS; ?>>
 <head>
-<title><?php echo META_TAG_TITLE; ?></title>
+    <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
+    <link rel="dns-prefetch" href="https://code.jquery.com">
+
 <meta http-equiv="Content-Type" content="text/html; charset=<?php echo CHARSET; ?>" />
+<title><?php echo META_TAG_TITLE; ?></title>
 <meta name="keywords" content="<?php echo META_TAG_KEYWORDS; ?>" />
 <meta name="description" content="<?php echo META_TAG_DESCRIPTION; ?>" />
 <meta http-equiv="imagetoolbar" content="no" />
 <meta name="author" content="<?php echo STORE_NAME ?>" />
-<meta name="generator" content="shopping cart program by Zen Cart&reg;, http://www.zen-cart.com eCommerce" />
+<meta name="generator" content="shopping cart program by Zen Cart&reg;, https://www.zen-cart.com eCommerce" />
 <?php if (defined('ROBOTS_PAGES_TO_SKIP') && in_array($current_page_base,explode(",",constant('ROBOTS_PAGES_TO_SKIP'))) || $current_page_base=='down_for_maintenance' || $robotsNoIndex === true) { ?>
 <meta name="robots" content="noindex, nofollow" />
 <?php } ?>

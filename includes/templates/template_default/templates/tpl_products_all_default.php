@@ -14,6 +14,9 @@
 <h1 id="allProductsDefaultHeading"><?php echo HEADING_TITLE; ?></h1>
 
 <?php
+/**
+ * display the product sort dropdown
+ */
 require($template->get_template_dir('/tpl_modules_listing_display_order.php',DIR_WS_TEMPLATE, $current_page_base,'templates'). '/tpl_modules_listing_display_order.php'); ?>
 
 <br class="clearBoth">
@@ -24,7 +27,8 @@ require($template->get_template_dir('/tpl_modules_listing_display_order.php',DIR
 
 <?php
     if ($show_top_submit_button == true or $show_bottom_submit_button == true) {
-      echo zen_draw_form('multiple_products_cart_quantity', zen_href_link(FILENAME_PRODUCTS_ALL, zen_get_all_get_params(array('action')) . 'action=multiple_products_add_product'), 'post', 'enctype="multipart/form-data"');
+      echo zen_draw_form('multiple_products_cart_quantity', zen_href_link(FILENAME_PRODUCTS_ALL, zen_get_all_get_params(array('action')) . 'action=multiple_products_add_product', 'SSL'), 'post', 'enctype="multipart/form-data"');
+    }
     }
   }
 ?>

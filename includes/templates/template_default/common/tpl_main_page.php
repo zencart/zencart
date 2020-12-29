@@ -34,7 +34,7 @@
  * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2020 May 08 Modified in v1.5.7 $
+ * @version $Id: DrByte 2020 Aug 10 Modified in v1.5.7a $
  */
 
 if (!defined('IS_ADMIN_FLAG')) {
@@ -52,10 +52,13 @@ if (!defined('IS_ADMIN_FLAG')) {
 
 
 
-// the following IF statement can be duplicated/modified as needed to set additional flags
-  if (in_array($current_page_base,explode(",",'list_pages_to_skip_all_right_sideboxes_on_here,separated_by_commas,and_no_spaces')) ) {
+// the following statements can be modified as needed to set additional flags
+if (in_array($current_page_base,explode(",",'list_pages_to_skip_all_left_sideboxes_on_here,separated_by_commas,and_no_spaces')) ) {
+    $flag_disable_left = true;
+}
+if (in_array($current_page_base,explode(",",'list_pages_to_skip_all_right_sideboxes_on_here,separated_by_commas,and_no_spaces')) ) {
     $flag_disable_right = true;
-  }
+}
 
 
   $header_template = 'tpl_header.php';
@@ -103,7 +106,8 @@ if (!isset($flag_disable_left) || !$flag_disable_left) {
   *
   */
 ?>
-<div id="navColumnOneWrapper" style="width: <?php echo (int)BOX_WIDTH_LEFT; ?>px"><?php require(DIR_WS_MODULES . zen_get_module_directory('column_left.php')); ?></div></td>
+<div id="navColumnOneWrapper" style="width: <?php echo (int)BOX_WIDTH_LEFT; ?>px"><?php require(DIR_WS_MODULES . zen_get_module_directory('column_left.php')); ?></div>
+</td>
 <?php
 }
 ?>
@@ -134,7 +138,8 @@ if (!isset($flag_disable_left) || !$flag_disable_left) {
   * prepares and displays center column
   *
   */
- require($body_code); ?>
+ require($body_code);
+?>
 
 <?php
   if (SHOW_BANNERS_GROUP_SET4 != '' && $banner = zen_banner_exists('dynamic', SHOW_BANNERS_GROUP_SET4)) {
@@ -144,7 +149,8 @@ if (!isset($flag_disable_left) || !$flag_disable_left) {
 <?php
     }
   }
-?></td>
+?>
+    </td>
 
 <?php
 //if (COLUMN_RIGHT_STATUS == 0 || (CUSTOMERS_APPROVAL == '1' and $_SESSION['customer_id'] == '') || (CUSTOMERS_APPROVAL_AUTHORIZATION == 1 && CUSTOMERS_AUTHORIZATION_COLUMN_RIGHT_OFF == 'true' && $_SESSION['customers_authorization'] != 0)) {
@@ -161,7 +167,8 @@ if (!isset($flag_disable_right) || !$flag_disable_right) {
   *
   */
 ?>
-<div id="navColumnTwoWrapper" style="width: <?php echo (int)BOX_WIDTH_RIGHT; ?>"px><?php require(DIR_WS_MODULES . zen_get_module_directory('column_right.php')); ?></div></td>
+<div id="navColumnTwoWrapper" style="width: <?php echo (int)BOX_WIDTH_RIGHT; ?>"px><?php require(DIR_WS_MODULES . zen_get_module_directory('column_right.php')); ?></div>
+</td>
 <?php
 }
 ?>
