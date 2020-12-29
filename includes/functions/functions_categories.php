@@ -590,7 +590,7 @@ function zen_get_categories_parent_name($categories_id)
     $sql = "SELECT categories_name
             FROM " . TABLE_CATEGORIES_DESCRIPTION . " cd
             LEFT JOIN " . TABLE_CATEGORIES . " c ON (c.categories_id = cd.categories_id AND cd.language_id = " . (int)$_SESSION['languages_id'] . ")
-            WHERE categories_id=" . (int)$categories_id;
+            WHERE cd.categories_id=" . (int)$categories_id;
     $result = $db->Execute($sql);
 
     return $result->fields['categories_name'];
