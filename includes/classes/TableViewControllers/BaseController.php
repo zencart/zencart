@@ -2,7 +2,7 @@
 /**
  * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: mc12345678 2020 Oct 05 Modified in v1.5.7a $
+ * @version $Id: 2020 Dec 28 Modified in v1.5.7c $
  */
 
 namespace Zencart\TableViewControllers;
@@ -229,12 +229,12 @@ class BaseController implements TableViewController
 
     public function getTableConfigBoxHeader()
     {
-        return $this->tableDefinition['header'] ?? [];
+        return !empty($this->tableDefinition['header']) ? $this->tableDefinition['header'] : [];
     }
 
     public function getTableConfigBoxContent()
     {
-        return $this->tableDefinition['content'] ?? [];
+        return !empty($this->tableDefinition['content']) ? $this->tableDefinition['content'] : [];
     }
 
     public function getSplitPage()
