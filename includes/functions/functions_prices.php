@@ -5,7 +5,7 @@
  * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2020 Nov 17 Modified in v1.5.7b $
+ * @version $Id: DrByte 2020 Dec 29 Modified in v1.5.7c $
  */
 
 ////
@@ -995,15 +995,15 @@ possible return values in numerical order:
                                   array('id' => '1', 'text' => DEDUCTION_TYPE_DROPDOWN_1),
                                   array('id' => '2', 'text' => DEDUCTION_TYPE_DROPDOWN_2));
 */
-    $sale_exists = 'false';
-    $sale_maker_discount = '';
-    $sale_maker_special_condition = '';
+    $sale_exists = false;
+    $sale_maker_discount = 0;
+    $sale_maker_special_condition = 0;
     $salemaker_sales = $db->Execute("select sale_id, sale_status, sale_name, sale_categories_all, sale_deduction_value, sale_deduction_type, sale_pricerange_from, sale_pricerange_to, sale_specials_condition, sale_categories_selected, sale_date_start, sale_date_end, sale_date_added, sale_date_last_modified, sale_date_status_change from " . TABLE_SALEMAKER_SALES . " where sale_status='1'");
     while (!$salemaker_sales->EOF) {
       $categories = explode(',', $salemaker_sales->fields['sale_categories_all']);
       foreach($categories as $key => $value) {
         if ($value == $check_category) {
-          $sale_exists = 'true';
+          $sale_exists = true;
           $sale_maker_discount = $salemaker_sales->fields['sale_deduction_value'];
           $sale_maker_special_condition = $salemaker_sales->fields['sale_specials_condition'];
           $sale_maker_discount_type = $salemaker_sales->fields['sale_deduction_type'];
@@ -1015,7 +1015,7 @@ possible return values in numerical order:
 
     $check_special = zen_get_products_special_price($product_id, true);
 
-    if ($sale_exists == 'true' and $sale_maker_special_condition != 0) {
+    if ($sale_exists == true && $sale_maker_special_condition != 0) {
       $sale_maker_discount_type = (($sale_maker_discount_type * 100) + ($sale_maker_special_condition * 10));
     } else {
       $sale_maker_discount_type = 5;
