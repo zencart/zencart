@@ -2,7 +2,7 @@
 /**
  * Common Template - tpl_columnar_display.php
  *
- * This file is used for generating tabular output where needed, based on the supplied array of table-cell contents.
+ * This file is used for generating columnar output where needed, based on the supplied array of table-cell contents.
  *
  * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
@@ -11,36 +11,55 @@
  */
 
 $zco_notifier->notify('NOTIFY_TPL_COLUMNAR_DISPLAY_START', $current_page_base, $list_box_contents, $title);
+?>
 
-?>
-<?php
-  if ($title) {
-?>
+<div class="">
+
+<?php if ($title) { ?>
 <?php echo $title; ?>
-<?php
- }
-?>
+<?php } ?>
+
+<div class="">
 <?php
 if (is_array($list_box_contents)) {
     foreach ($list_box_contents as $row => $cols) {
-        $params = '';
-    //if (isset($list_box_contents[$row]['params'])) $params .= ' ' . $list_box_contents[$row]['params'];
+
+        $r_params = 'class=""';
+        if (isset($list_box_contents[$row]['params'])) {
+            $r_params = $list_box_contents[$row]['params'];
+        }
 ?>
 
+<div <?php echo $r_params; ?>>
 <?php
     foreach ($cols as $col) {
-      $r_params = "";
-      if (isset($col['params'])) $r_params .= ' ' . (string)$col['params'];
-      if (isset($col['text'])) {
-?>
-    <?php echo '<div' . $r_params . '>' . $col['text'] .  '</div>' . "\n"; ?>
-<?php
-      }
+        if ($cols === 'params') {
+            continue; // a $cols index named 'params' is only display-instructions ($r_params above) for the row, no data, so skip this iteration
+        }
+
+        if (!empty($col['wrap_with_classes'])) { 
+            echo '<div class="' . $col['wrap_with_classes'] . '">';
+        }
+
+        $c_params = "";
+        if (isset($col['params'])) $c_params .= ' ' . (string)$col['params'];
+        if (isset($col['text'])) {
+            echo '<div' . $c_params . '>' . $col['text'] .  '</div>';
+        }
+
+        if (!empty($col['wrap_with_classes'])) { 
+            echo '</div>';
+        }
+        echo PHP_EOL;
     }
 ?>
+</div>
 
 <?php
   }
 }
+?>
+</div>
+</div>
 
-$zco_notifier->notify('NOTIFY_TPL_COLUMNAR_DISPLAY_END', $current_page_base, $list_box_contents, $title);
+<?php $zco_notifier->notify('NOTIFY_TPL_COLUMNAR_DISPLAY_END', $current_page_base, $list_box_contents, $title);

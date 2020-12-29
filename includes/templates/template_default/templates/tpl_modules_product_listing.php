@@ -34,7 +34,11 @@
 /**
  * load the list_box_content template to display the products
  */
+if (in_array($product_listing_layout_style, ['columns', 'fluid'])) {
+  require($template->get_template_dir('tpl_columnar_display.php',DIR_WS_TEMPLATE, $current_page_base,'common'). '/tpl_columnar_display.php');
+} else {
   require($template->get_template_dir('tpl_tabular_display.php',DIR_WS_TEMPLATE, $current_page_base,'common'). '/tpl_tabular_display.php');
+}
 ?>
 
 <?php if ( ($listing_split->number_of_rows > 0) && ((PREV_NEXT_BAR_LOCATION == '2') || (PREV_NEXT_BAR_LOCATION == '3')) ) {
@@ -58,7 +62,7 @@
 </div>
 
 <?php
-// if ($show_top_submit_button == true or $show_bottom_submit_button == true or (PRODUCT_LISTING_MULTIPLE_ADD_TO_CART != 0 and $show_submit == true and $listing_split->number_of_rows > 0)) {
+// if ($show_top_submit_button == true || $show_bottom_submit_button == true || (PRODUCT_LISTING_MULTIPLE_ADD_TO_CART != 0 && $show_submit == true && $listing_split->number_of_rows > 0)) {
   if ($show_top_submit_button == true or $show_bottom_submit_button == true) {
 ?>
 </form>
