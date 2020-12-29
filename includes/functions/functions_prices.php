@@ -1050,8 +1050,8 @@ function zen_get_products_sale_discount_type($product_id = false, $categories_id
                                       array('id' => '2', 'text' => DEDUCTION_TYPE_DROPDOWN_2));
     */
     $sale_exists = false;
-    $sale_maker_discount = '';
-    $sale_maker_special_condition = '';
+    $sale_maker_discount = 0;
+    $sale_maker_special_condition = 0;
     $sql = "SELECT * FROM " . TABLE_SALEMAKER_SALES . " WHERE sale_status=1";
     $results = $db->Execute($sql);
     foreach ($results as $result) {
