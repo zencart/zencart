@@ -5,4 +5,4 @@
  * @version $Id: New in v1.5.7c $
  */
 
-include DIR_FS_CATALOG . '/includes/functions/extra_functions/php_polyfills.php';
+include DIR_FS_CATALOG . 'includes/functions/php_polyfills.php';
