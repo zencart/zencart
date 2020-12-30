@@ -5,11 +5,10 @@
  * Loaded automatically by index.php?main_page=account_edit.
  * View or change Customer Account Information
  *
- * @package templateSystem
- * @copyright Copyright 2003-2016 Zen Cart Development Team
+ * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: rbarbour zcadditions.com Fri Feb 26 00:03:33 2016 -0500 Modified in v1.5.5 $
+ * @version $Id:  Modified in v1.5.8 $
  */
 ?>
 <div class="centerColumn" id="accountEditDefault">
@@ -71,7 +70,7 @@ if (ACCOUNT_FAX_NUMBER == 'true' ) {
   if (CUSTOMERS_REFERRAL_STATUS == 2 and $customers_referral == '') {
 ?>
 <label class="inputLabel" for="customers-referral"><?php echo ENTRY_CUSTOMERS_REFERRAL; ?></label>
-<?php echo zen_draw_input_field('customers_referral', '', zen_set_field_length(TABLE_CUSTOMERS, 'customers_referral', 15) . 'id="customers-referral"'); ?>
+<?php echo zen_draw_input_field('customers_referral', '', zen_set_field_length(TABLE_CUSTOMERS, 'customers_referral', 15) . ' id="customers-referral"'); ?>
 <br class="clearBoth">
 <?php } ?>
 
