@@ -23,19 +23,21 @@ $current_category_is_disabled = false;
 $current_category_has_products = false;
 $current_category_has_subcats = false;
 if (isset($cPath) && zen_not_null($cPath)) {
-    $category_status_query = 
-        "SELECT categories_status
-           FROM " . TABLE_CATEGORIES . "
-          WHERE categories_id = :currentCategoryId
-          LIMIT 1";
-    $category_status_query = $db->bindVars($category_status_query, ':currentCategoryId', $current_category_id, 'integer');
-    $category_status = $db->Execute($category_status_query);
-    if ($category_status->EOF) {
-        $current_category_not_found = true;
-    } elseif ($category_status->fields['categories_status'] == '0') {
-        $current_category_is_disabled = true;
+    if ($cPath > 0) {
+        $category_status_query =
+            "SELECT categories_status
+               FROM " . TABLE_CATEGORIES . "
+              WHERE categories_id = :currentCategoryId
+              LIMIT 1";
+        $category_status_query = $db->bindVars($category_status_query, ':currentCategoryId', $current_category_id, 'integer');
+        $category_status = $db->Execute($category_status_query);
+        if ($category_status->EOF) {
+            $current_category_not_found = true;
+        } elseif ($category_status->fields['categories_status'] == '0') {
+            $current_category_is_disabled = true;
+        }
     }
-    $category_products_query = 
+    $category_products_query =
         "SELECT products_id
            FROM " . TABLE_PRODUCTS_TO_CATEGORIES . "
           WHERE categories_id = :currentCategoryId
