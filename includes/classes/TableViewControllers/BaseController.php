@@ -229,12 +229,12 @@ class BaseController implements TableViewController
 
     public function getTableConfigBoxHeader()
     {
-        return !empty($this->tableDefinition['header']) ? $this->tableDefinition['header'] : [];
+        return isset($this->tableDefinition['header']) ? $this->tableDefinition['header'] : [];
     }
 
     public function getTableConfigBoxContent()
     {
-        return !empty($this->tableDefinition['content']) ? $this->tableDefinition['content'] : [];
+        return isset($this->tableDefinition['content']) ? $this->tableDefinition['content'] : [];
     }
 
     public function getSplitPage()
