@@ -133,12 +133,17 @@ class WhosOnline extends base
 
         $ip_array = [];
 
+        $sessionInspectAll = false; // Limit the session inspection to just the one $sessionToInspect
         // make the first entry show cart by default
         if (empty($sessionToInspect) && !$results->EOF) {
             $sessionToInspect = $results->fields['session_id']; // uses the fields array because we're not iterating the array yet
+            $sessionInspectAll = true; // No specific session was requested, so make all available.
         }
 
         foreach ($results as $result) {
+            if ($sessionInspectAll === true) {
+                $sessionToInspect = $result['session_id'];
+            }
             $result['time_online'] = (time() - $result['time_entry']);
             $result['is_a_bot'] = empty($result['session_id']);
             $result['time_since_last_click'] = $this->getHumanFriendlyTimeSince($result['time_last_click']);
