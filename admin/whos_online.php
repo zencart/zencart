@@ -39,14 +39,14 @@ $selectedView = isset($_GET['q']) ? $_GET['q'] : '';
 $wo = new WhosOnline();
 if (!empty($_GET['inspect'])) {
     $sql = "SELECT s.sesskey
-          FROM " . TABLE_SESSIONS . " s
-          WHERE s.sesskey = :session_id:";
-    $sql = $db->bindVars($sql, ':session_id:', $_GET['inspect'], 'stringIgnoreNull');
+            FROM " . TABLE_SESSIONS . " s
+            WHERE s.sesskey = :session_id:";
+    $sql = $db->bindVars($sql, ':session_id:', $_GET['inspect'], 'string');
 
-    $sql_result = $db->Execute($sql);
+    $result = $db->Execute($sql);
 
-    if ($sql_result->EOF) {
-      unset($_GET['inspect']);
+    if ($result->EOF) {
+        unset($_GET['inspect']);
     }
 }
 $whos_online = $wo->retrieve($selectedView, (empty($_GET['inspect']) ? '' : $_GET['inspect']), $_SESSION['wo_exclude_spiders'], $_SESSION['wo_exclude_admins']);
