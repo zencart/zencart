@@ -2,7 +2,7 @@
 /**
  * Class for managing the Shopping Cart
  *
- * @copyright Copyright 2003-2020 Zen Cart Development Team
+ * @copyright Copyright 2003-2021 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id:  Modified in v1.5.8 $
@@ -539,7 +539,7 @@ class shoppingCart extends base
     /**
      * Check whether a product exists in the cart
      *
-     * @param mixed $product_id product ID of item to check
+     * @param mixed $product_id product ID of product to check
      * @return boolean
      */
     public function in_cart($product_id)
@@ -555,9 +555,9 @@ class shoppingCart extends base
     }
 
     /**
-     * Remove an item from the cart
+     * Remove a product from the cart
      *
-     * @param string|int $product_id product ID of item to remove
+     * @param string|int $product_id product ID of product to remove
      * @return void
      */
     public function remove($product_id)
