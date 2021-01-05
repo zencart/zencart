@@ -128,7 +128,7 @@ class order_total extends base {
   }
 
 
-  // update_credit_account is called in checkout process on a per product basis. It's purpose
+  // update_credit_account is called in checkout process on a per product basis. Its purpose
   // is to decide whether each product in the cart should add something to a credit account.
   // e.g. for the Gift Voucher it checks whether the product is a Gift voucher and then adds the amount
   // to the Gift Voucher account.
