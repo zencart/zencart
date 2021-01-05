@@ -209,16 +209,15 @@ if ($num_products_count > 0) {
             $lc_text = '';
 
             $href = zen_href_link(zen_get_info_page($record['products_id']), 'cPath=' . zen_get_generated_category_path_rev($linkCpath) . '&products_id=' . $record['products_id']);
-            $listing_product_name = $record['products_name'];
+            $listing_product_name = (isset($record['products_name'])) ? $record['products_name'] : '';
             $listing_description = '';
             if ((int)PRODUCT_LIST_DESCRIPTION > 0) {
                 $listing_description = zen_trunc_string(zen_clean_html(stripslashes(zen_get_products_description($record['products_id'], $_SESSION['languages_id']))), PRODUCT_LIST_DESCRIPTION);
                 $lc_text .= '<div class="listingDescription">' . $listing_description . '</div>';
             }
-            $listing_model = $record['products_model'];
-            $listing_mfg_name = $record['manufacturers_name'];
-            $listing_quantity = $record['products_quantity'];
-            $listing_weight = $record['products_quantity'];
+            $listing_model = (isset($record['products_model'])) ? $record['products_model'] : '';
+            $listing_mfg_name = (isset($record['manufacturers_name'])) ? $record['manufacturers_name'] : '';
+            $listing_quantity = (isset($record['products_quantity'])) ? $record['products_quantity'] : '';
             $listing_weight = (isset($record['products_weight'])) ? $record['products_weight'] : '';
             $listing_mfg_link = zen_href_link(FILENAME_DEFAULT, 'manufacturers_id=' . (int)$record['manufacturers_id']);
             $listing_price = zen_get_products_display_price($record['products_id']);
