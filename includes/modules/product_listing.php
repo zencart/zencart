@@ -219,6 +219,7 @@ if ($num_products_count > 0) {
             $listing_mfg_name = $record['manufacturers_name'];
             $listing_quantity = $record['products_quantity'];
             $listing_weight = $record['products_quantity'];
+            $listing_weight = (isset($record['products_weight'])) ? $record['products_weight'] : '';
             $listing_mfg_link = zen_href_link(FILENAME_DEFAULT, 'manufacturers_id=' . (int)$record['manufacturers_id']);
             $listing_price = zen_get_products_display_price($record['products_id']);
             $more_info_button = '<a class="moreinfoLink list-more" href="' . $href . '">' . MORE_INFO_TEXT . '</a>';
