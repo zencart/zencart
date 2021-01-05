@@ -67,8 +67,8 @@ div#loginDefault fieldset {float:none;width:93%;margin-bottom:20px;min-height:0;
 div#createAcctDefault input[type="text"], div#createAcctDefault input[type="password"], div#createAcctDefault select {width:85%;}
 div#createAcctDefault fieldset {float:none;width:97%;}
 
-/* bof advanced search */
-div#advSearchDefault fieldset {float:none;width:95%;}
+/* bof search */
+div#searchDefault fieldset {float:none;width:95%;}
 
 /*bof shopping cart*/
 div#shoppingCartDefault tr {display:block;clear:both;height:auto;}
@@ -248,8 +248,8 @@ div#loginDefault fieldset { float:none;width:93%;margin-bottom:20px;min-height:0
 div#createAcctDefault input[type="text"], div#createAcctDefault input[type="password"], div#createAcctDefault select {width:85%;}
 div#createAcctDefault fieldset {float:none;width:97%;}
 
-/*bof advanced search*/
-div#advSearchDefault fieldset {float:none;width:95%;}
+/*bof search*/
+div#searchDefault fieldset {float:none;width:95%;}
 
 /*bof shopping cart*/
 div#shoppingCartDefault tr {display:block;clear:both;height:auto;}

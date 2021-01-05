@@ -2,21 +2,21 @@
 /**
  * Page Template
  *
- * Loaded automatically by index.php?main_page=advanced_search.
+ * Loaded automatically by index.php?main_page=search.
  * Displays options fields upon which a product search will be run
  *
  * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2020 May 16 Modified in v1.5.7 $
+ * @version $Id: DrByte 2020 Dec 30  Modified in v1.5.8 $
  */
 ?>
-<div class="centerColumn" id="advSearchDefault">
+<div class="centerColumn" id="searchDefault">
 
-<?php echo zen_draw_form('advanced_search', zen_href_link(FILENAME_ADVANCED_SEARCH_RESULT, '', $request_type, false), 'get', 'onsubmit="return check_form(this);"') . zen_hide_session_id(); ?>
-<?php echo zen_draw_hidden_field('main_page', FILENAME_ADVANCED_SEARCH_RESULT); ?>
+<?php echo zen_draw_form('search', zen_href_link(FILENAME_SEARCH_RESULT, '', $request_type, false), 'get', 'onsubmit="return check_form(this);"') . zen_hide_session_id(); ?>
+<?php echo zen_draw_hidden_field('main_page', FILENAME_SEARCH_RESULT); ?>
 
-<h1 id="advSearchDefaultHeading"><?php echo HEADING_TITLE_1; ?></h1>
+<h1 id="searchDefaultHeading"><?php echo HEADING_TITLE_1; ?></h1>
 
 <?php if ($messageStack->size('search') > 0) echo $messageStack->output('search'); ?>
 

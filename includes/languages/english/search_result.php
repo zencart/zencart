@@ -1,5 +1,4 @@
 <?php
-
 /**
  * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
@@ -7,11 +6,11 @@
  * @version $Id: Scott C Wilson 2019 Jul 27 Modified in v1.5.7 $
  */
 
-define('NAVBAR_TITLE_1', 'Advanced Search');
+define('NAVBAR_TITLE_1', 'Search');
 define('NAVBAR_TITLE_2', 'Search Results');
 
-//define('HEADING_TITLE_1', 'Advanced Search');
-define('HEADING_TITLE', 'Advanced Search');
+//define('HEADING_TITLE_1', 'Search');
+define('HEADING_TITLE', 'Search');
 
 define('HEADING_SEARCH_CRITERIA', 'Search Criteria');
 
