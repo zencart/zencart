@@ -224,6 +224,8 @@ class shoppingCart extends base
 
         unset($this->cartID);
         $_SESSION['cartID'] = '';
+        $_SESSION['cart_errors'] = '';
+        $_SESSION['valid_to_checkout'] = true;
         $this->notify('NOTIFIER_CART_RESET_END');
     }
 
