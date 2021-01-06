@@ -456,23 +456,17 @@ function zen_get_categories($categories_array = array(), $parent_id = '0', $inde
   function zen_get_categories_parent_name($categories_id) {
     global $db;
 
-    $categories_parent_name = '';
-    $lookup_query = "SELECT parent_id FROM " . TABLE_CATEGORIES . " WHERE categories_id = " . (int)$categories_id . " LIMIT 1";
+    $lookup_query =
+        "SELECT cd.categories_name
+           FROM " . TABLE_CATEGORIES_DESCRIPTION . " cd
+                INNER JOIN " . TABLE_CATEGORIES . " c
+                    ON c.categories_id = $categories_id
+          WHERE cd.categories_id = c.parent_id
+            AND cd.language_id = " . (int)$_SESSION['languages_id'] . "
+          LIMIT 1";
     $lookup = $db->Execute($lookup_query);
     
-    if (!$lookup->EOF) {
-        $lookup_query = 
-            "SELECT categories_name 
-               FROM " . TABLE_CATEGORIES_DESCRIPTION . " 
-              WHERE categories_id = " . $lookup->fields['parent_id'] . " 
-                AND language_id = " . $_SESSION['languages_id'] . "
-              LIMIT 1";
-        $lookup = $db->Execute($lookup_query);
-        if (!$lookup->EOF) {
-            $categories_parent_name = $lookup->fields['categories_name'];
-        }
-    }
-    return $categories_parent_name;
+    return ($lookup->EOF) ? '' : $lookup->fields['categories_name'];
   }
 
 ////
