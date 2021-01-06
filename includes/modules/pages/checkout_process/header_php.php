@@ -28,7 +28,7 @@
   $order_total_modules->clear_posts();//ICW ADDED FOR CREDIT CLASS SYSTEM
 
   // This should be before the zen_redirect:
-  $zco_notifier->notify('NOTIFY_HEADER_END_CHECKOUT_PROCESS');
+  $zco_notifier->notify('NOTIFY_HEADER_END_CHECKOUT_PROCESS', $insert_id);
 
   zen_redirect(zen_href_link(FILENAME_CHECKOUT_SUCCESS, (isset($_GET['action']) && $_GET['action'] == 'confirm' ? 'action=confirm' : ''), 'SSL'));
 
