@@ -102,6 +102,8 @@ class ot_gv {
   }
   /**
    * Check for validity of redemption amounts and recalculate order totals to include proposed GV redemption deductions
+   *
+   * @TODO - Per order_total class, this function is not used. See process() instead.
    */
   function pre_confirmation_check($order_total) {
     global $order, $currencies, $messageStack;

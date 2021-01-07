@@ -129,6 +129,10 @@ class ot_group_pricing {
     }
     return $od_amount;
   }
+
+  /**
+   * @TODO - Per order_total class, this function is not used. See process() instead.
+   */
   function pre_confirmation_check($order_total) {
     global $order;
     $od_amount = $this->calculate_deductions($order_total);
