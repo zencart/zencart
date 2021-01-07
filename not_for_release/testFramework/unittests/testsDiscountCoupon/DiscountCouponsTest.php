@@ -82,6 +82,7 @@ class DiscountCouponsTest extends zcDiscountCouponTest
         );
         define('DISPLAY_PRICE_WITH_TAX', 'false');
         $this->instantiateQfr(array(
+            'coupon_id' => '1',
             'coupon_code' => 'test',
             'coupon_total' => 0,
             'coupon_minimum_order' => 0,
@@ -113,6 +114,7 @@ class DiscountCouponsTest extends zcDiscountCouponTest
         );
         define('DISPLAY_PRICE_WITH_TAX', 'false');
         $this->instantiateQfr(array(
+            'coupon_id' => '1',
             'coupon_code' => 'test',
             'coupon_total' => 0,
             'coupon_minimum_order' => 0,
@@ -144,6 +146,7 @@ class DiscountCouponsTest extends zcDiscountCouponTest
         );
         define('DISPLAY_PRICE_WITH_TAX', 'false');
         $this->instantiateQfr(array(
+            'coupon_id' => '1',
             'coupon_code' => 'test',
             'coupon_total' => 0,
             'coupon_minimum_order' => 0,
@@ -175,6 +178,7 @@ class DiscountCouponsTest extends zcDiscountCouponTest
         );
         define('DISPLAY_PRICE_WITH_TAX', 'false');
         $this->instantiateQfr(array(
+            'coupon_id' => '1',
             'coupon_code' => 'test',
             'coupon_total' => 0,
             'coupon_minimum_order' => 0,
@@ -206,6 +210,7 @@ class DiscountCouponsTest extends zcDiscountCouponTest
         );
         define('DISPLAY_PRICE_WITH_TAX', 'false');
         $this->instantiateQfr(array(
+            'coupon_id' => '1',
             'coupon_code' => 'test',
             'coupon_total' => 0,
             'coupon_minimum_order' => 0,
@@ -237,6 +242,7 @@ class DiscountCouponsTest extends zcDiscountCouponTest
         );
         define('DISPLAY_PRICE_WITH_TAX', 'false');
         $this->instantiateQfr(array(
+            'coupon_id' => '1',
             'coupon_code' => 'test',
             'coupon_total' => 0,
             'coupon_minimum_order' => 0,
@@ -268,6 +274,7 @@ class DiscountCouponsTest extends zcDiscountCouponTest
         );
         define('DISPLAY_PRICE_WITH_TAX', 'false');
         $this->instantiateQfr(array(
+            'coupon_id' => '1',
             'coupon_code' => 'test',
             'coupon_total' => 0,
             'coupon_minimum_order' => 0,
@@ -299,6 +306,7 @@ class DiscountCouponsTest extends zcDiscountCouponTest
         );
         define('DISPLAY_PRICE_WITH_TAX', 'false');
         $this->instantiateQfr(array(
+            'coupon_id' => '1',
             'coupon_code' => 'test',
             'coupon_total' => 0,
             'coupon_minimum_order' => 0,
@@ -330,6 +338,7 @@ class DiscountCouponsTest extends zcDiscountCouponTest
         );
         define('DISPLAY_PRICE_WITH_TAX', 'false');
         $this->instantiateQfr(array(
+            'coupon_id' => '1',
             'coupon_code' => 'test',
             'coupon_total' => 0,
             'coupon_minimum_order' => 0,
@@ -361,6 +370,7 @@ class DiscountCouponsTest extends zcDiscountCouponTest
         );
         define('DISPLAY_PRICE_WITH_TAX', 'false');
         $this->instantiateQfr(array(
+            'coupon_id' => '1',
             'coupon_code' => 'test',
             'coupon_total' => 0,
             'coupon_minimum_order' => 0,
