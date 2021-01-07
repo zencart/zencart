@@ -1,9 +1,9 @@
 <?php
 /**
  * file contains systemChecker Class
- * @copyright Copyright 2003-2020 Zen Cart Development Team
+ * @copyright Copyright 2003-2021 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2020 Dec 21 Modified in v1.5.7c $
+ * @version $Id: DrByte  Modified in v1.5.7c $
  */
 
 /**
@@ -223,8 +223,20 @@ class systemChecker
         while (!$result->EOF) {
             // if found the specified field ...
             if ($result->fields['Field'] == $parameters['fieldName']) {
-                // then return true if the test was simply "Exists", or check that the field's type matches the fieldCheck test
-                if ($parameters['fieldCheck'] == 'Exists' || strtoupper($result->fields[$parameters['fieldCheck']]) == $parameters['expectedResult']) {
+                // then return true if the test was simply "Exists"
+                if ($parameters['fieldCheck'] == 'Exists') {
+                    return true;
+                }
+
+                // else check that the field's type matches the fieldCheck test
+                $expected = strtoupper($parameters['expectedResult']);
+                if (strtoupper($result->fields[$parameters['fieldCheck']]) === $expected) {
+                    return true;
+                }
+                // Accommodate MySQL 8.0.17+ case where "INT(11)" only returns "INT", except for TINYINT(1)
+                $found = preg_replace('~INT\([\d]*\)~', 'INT', strtoupper($result->fields[$parameters['fieldCheck']]));
+                $expected = preg_replace('~INT\([\d]*\)~', 'INT', $expected);
+                if ($expected !== 'TINYINT(1)' && $found === $expected) {
                     return true;
                 }
             }
