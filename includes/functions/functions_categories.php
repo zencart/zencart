@@ -64,7 +64,7 @@ function zen_count_products_in_category($category_id, $include_inactive = false)
             LEFT JOIN " . TABLE_PRODUCTS_TO_CATEGORIES . " p2c USING (products_id)
             WHERE p2c.categories_id = " . (int)$category_id;
 
-    if ($include_inactive) {
+    if (!$include_inactive) {
         $sql .= " AND p.products_status = 1";
 
     }
@@ -629,7 +629,7 @@ function zen_get_categories_products_list($categories_id, $include_deactivated =
             FROM " . TABLE_PRODUCTS . " p
             LEFT JOIN " . TABLE_PRODUCTS_TO_CATEGORIES . " p2c USING (products_id)
             WHERE p2c.categories_id = " . (int)$childCatID .
-        ($include_deactivated ? " AND p.products_status = 1" : '') .
+        (!$include_deactivated ? " AND p.products_status = 1" : '') .
         $display_limit;
 
     $results = $db->Execute($sql);
@@ -1342,7 +1342,7 @@ function zen_products_in_category_count($category_id, $include_deactivated = fal
                 LEFT JOIN " . TABLE_PRODUCTS_TO_CATEGORIES . " p2c USING (products_id)
                 WHERE p2c.categories_id = " . (int)$category_id;
 
-    if ($include_deactivated) {
+    if (!$include_deactivated) {
         $sql .= " AND products_status = 1";
     }
 
