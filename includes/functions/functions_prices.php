@@ -687,12 +687,12 @@ function zen_get_discount_calc($product_id, $attribute_id = 0, $attributes_amoun
 
     $discount_type_id = zen_get_products_sale_discount_type($product_id);
 
+    $special_price_discount = 0;
     if ($new_products_price != 0) {
         $special_price_discount = ($new_special_price != 0 ? ($new_special_price / $new_products_price) : 1);
-    } else {
-        $special_price_discount = '';
     }
-    $sale_price_discount = '';
+
+    $sale_price_discount = 0;
     if ($new_products_price != 0) {
         $sale_price_discount = ($new_sale_price != 0 ? ($new_sale_price / $new_products_price) : 1);
     }
