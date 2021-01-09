@@ -619,8 +619,13 @@ switch ($action) {
         $sub_dir_files = array();
         getDirList(DIR_FS_ADMIN, $zv_filestype_group);
         $sub_dir_files_admin = $sub_dir_files;
+        
+// get zc_plugins
+        $sub_dir_files = array();
+        getDirList(DIR_FS_CATALOG . '/zc_plugins', $zv_filestype_group);
+        $sub_dir_files_plugins = $sub_dir_files;
 
-        $check_dir = array_merge($sub_dir_files_catalog, $sub_dir_files_email, $sub_dir_files_admin);
+        $check_dir = array_merge($sub_dir_files_catalog, $sub_dir_files_email, $sub_dir_files_admin, $sub_dir_files_plugins);
         for ($i = 0, $n = sizeof($check_dir); $i < $n; $i++) {
           $check_directory[] = $check_dir[$i] . '/';
         }
@@ -659,8 +664,13 @@ switch ($action) {
         $sub_dir_files = array();
         getDirList(DIR_FS_ADMIN, $zv_filestype_group);
         $sub_dir_files_admin = $sub_dir_files;
+        
+// get zc_plugins
+        $sub_dir_files = array();
+        getDirList(DIR_FS_CATALOG . '/zc_plugins', $zv_filestype_group);
+        $sub_dir_files_plugins = $sub_dir_files;
 
-        $check_dir = array_merge($sub_dir_files_admin);
+        $check_dir = array_merge($sub_dir_files_admin, $sub_dir_files_plugins);
         for ($i = 0, $n = sizeof($check_dir); $i < $n; $i++) {
           $check_directory[] = $check_dir[$i] . '/';
         }
