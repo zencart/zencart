@@ -2,10 +2,10 @@
 /**
  * functions_categories.php
  *
- * @copyright Copyright 2003-2020 Zen Cart Development Team
+ * @copyright Copyright 2003-2021 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2020 Jan 20 Modified in v1.5.7 $
+ * @version $Id: DrByte 2021 Jan 09 Modified in v1.5.7c $
  */
 
 /**
@@ -462,7 +462,7 @@ function zen_get_categories($categories_array = array(), $parent_id = '0', $inde
     $lookup_query = "select categories_name from " . TABLE_CATEGORIES_DESCRIPTION . " where categories_id='" . (int)$lookup->fields['parent_id'] . "' and language_id= " . $_SESSION['languages_id'];
     $lookup = $db->Execute($lookup_query);
 
-    return $lookup->fields['categories_name'];
+    return $lookup->EOF ? '' : $lookup->fields['categories_name'];
   }
 
 ////
