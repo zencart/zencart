@@ -457,10 +457,10 @@ function zen_get_categories($categories_array = array(), $parent_id = '0', $inde
     global $db;
 
     $lookup_query = "select parent_id from " . TABLE_CATEGORIES . " where categories_id='" . (int)$categories_id . "'";
-    $lookup = $db->Execute($lookup_query);
+    $lookup = $db->Execute($lookup_query, 1);
 
     $lookup_query = "select categories_name from " . TABLE_CATEGORIES_DESCRIPTION . " where categories_id='" . (int)$lookup->fields['parent_id'] . "' and language_id= " . $_SESSION['languages_id'];
-    $lookup = $db->Execute($lookup_query);
+    $lookup = $db->Execute($lookup_query, 1);
 
     return $lookup->EOF ? '' : $lookup->fields['categories_name'];
   }
