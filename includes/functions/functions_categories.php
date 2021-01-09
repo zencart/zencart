@@ -579,7 +579,7 @@ function zen_get_product_types_to_category($lookup)
 }
 
 /**
- * look up parent categories name
+ * look up parent category's name
  * @param int $categories_id
  * @return string name of parent category, or blank if none
  */
@@ -587,11 +587,12 @@ function zen_get_categories_parent_name($categories_id)
 {
     global $db;
 
-    $sql = "SELECT categories_name
-            FROM " . TABLE_CATEGORIES_DESCRIPTION . " cd
-            LEFT JOIN " . TABLE_CATEGORIES . " c ON (c.categories_id = cd.categories_id AND cd.language_id = " . (int)$_SESSION['languages_id'] . ")
-            WHERE cd.categories_id=" . (int)$categories_id;
-    $result = $db->Execute($sql);
+    $sql = "SELECT parent_id FROM " . TABLE_CATEGORIES . " WHERE categories_id='" . (int)$categories_id . "'";
+    $result = $db->Execute($sql, 1);
+    if ($result->EOF) return '';
+
+    $sql = "SELECT categories_name FROM " . TABLE_CATEGORIES_DESCRIPTION . " WHERE categories_id=" . (int)$result->fields['parent_id'] . " AND language_id= " . $_SESSION['languages_id'];
+    $result = $db->Execute($sql, 1);
 
     return $result->EOF ? '' : $result->fields['categories_name'];
 }
