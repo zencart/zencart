@@ -465,9 +465,9 @@ function zen_draw_products_pull_down_categories($field_name, $parameters = '', $
     $select_string .= '>';
 
     $sql = "SELECT DISTINCT c.categories_id, cd.categories_name
-            FROM " . TABLE_CATEGORIES . " c,
+            FROM " . TABLE_CATEGORIES . " c
             LEFT JOIN " . TABLE_CATEGORIES_DESCRIPTION . " cd ON (c.categories_id = cd.categories_id AND cd.language_id = " . (int)$_SESSION['languages_id'] . ")
-            LEFT JOIN " . TABLE_PRODUCTS_TO_CATEGORIES . " ptoc USING (categories_id)
+            LEFT JOIN " . TABLE_PRODUCTS_TO_CATEGORIES . " ptoc ON (ptoc.categories_id = c.categories_id)
             ORDER BY categories_name";
     $results = $db->Execute($sql);
     foreach ($results as $result) {
@@ -519,7 +519,7 @@ function zen_draw_products_pull_down_categories_attributes($field_name, $paramet
     $sql = "SELECT DISTINCT c.categories_id, cd.categories_name
             FROM " . TABLE_CATEGORIES . " c
             LEFT JOIN " . TABLE_CATEGORIES_DESCRIPTION . " cd ON (c.categories_id = cd.categories_id AND cd.language_id = " . (int)$_SESSION['languages_id'] . ")
-            LEFT JOIN " .TABLE_PRODUCTS_TO_CATEGORIES . " ptoc  USING (categories_id)
+            LEFT JOIN " .TABLE_PRODUCTS_TO_CATEGORIES . " ptoc ON (ptoc.categories_id = c.categories_id)
             LEFT JOIN " . TABLE_PRODUCTS_ATTRIBUTES . " pa USING (products_id)";
     $condition = " WHERE pa.options_id =" . (int)$filter_by_option_name;
     $sort = " ORDER BY categories_name";
