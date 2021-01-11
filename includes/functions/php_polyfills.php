@@ -7,6 +7,30 @@
  */
 
 
+if (PHP_VERSION_ID >= 80100) {
+    return;
+}
+if (!function_exists('array_is_list')) {
+    function array_is_list(array $array): bool
+    {
+        if ([] === $array) {
+            return true;
+        }
+
+        $nextKey = -1;
+
+        foreach ($array as $k => $v) {
+            if ($k !== ++$nextKey) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+}
+
+
+
 if (PHP_VERSION_ID >= 80000) {
     return;
 }
