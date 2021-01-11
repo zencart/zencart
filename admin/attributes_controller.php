@@ -1,9 +1,9 @@
 <?php
 /**
- * @copyright Copyright 2003-2020 Zen Cart Development Team
+ * @copyright Copyright 2003-2021 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2020 Dec 23 Modified in v1.5.8 $
+ * @version $Id: DrByte 2021 Jan 11 Modified in v1.5.8 $
  */
 require('includes/application_top.php');
 
@@ -676,9 +676,15 @@ function zen_js_option_values_list($selectedName, $fieldName)
             <ul class="dropdown-menu" role="menu" aria-labelledby="menu1">
               <li role="presentation"><a role="menuitem" href="<?php echo zen_href_link(FILENAME_OPTIONS_NAME_MANAGER) ?>" target="_blank"><?php echo IMAGE_OPTION_NAMES; ?></a></li>
               <li role="presentation"><a role="menuitem" href="<?php echo zen_href_link(FILENAME_OPTIONS_VALUES_MANAGER) ?>" target="_blank"><?php echo IMAGE_OPTION_VALUES; ?></a></li>
+              <?php
+              $zco_notifier->notify('NOTIFY_ATTRIBUTE_CONTROLLER_ADDITIONAL_ACTIONS_DROPDOWN_UPPER', $zc_products, $action, $products_filter, $current_category_id);
+              ?>
               <?php if ($products_filter != '' && $action != 'attribute_features_copy_to_product' && $action != 'attribute_features_copy_to_category' && $action != 'delete_all_attributes_confirm') { ?>
                 <li role="presentation" class="divider"></li>
                 <li role="presentation"><a role="menuitem" href="<?php echo zen_href_link(FILENAME_PRODUCT, 'action=new_product' . '&cPath=' . zen_get_product_path($products_filter) . '&pID=' . $products_filter . '&product_type=' . zen_get_products_type($products_filter)); ?>"><?php echo IMAGE_EDIT_PRODUCT; ?></a></li>
+                <?php
+                $zco_notifier->notify('NOTIFY_ATTRIBUTE_CONTROLLER_ADDITIONAL_ACTIONS_DROPDOWN_SUBMENU', $zc_products, $action, $products_filter, $current_category_id);
+                ?>
                 <?php if ($zc_products->get_allow_add_to_cart($products_filter) == "Y") { ?>
                   <li role="presentation"><a role="menuitem" href="<?php echo zen_href_link(FILENAME_PRODUCTS_PRICE_MANAGER, '&products_filter=' . $products_filter . '&current_category_id=' . $current_category_id); ?>"><?php echo IMAGE_PRODUCTS_PRICE_MANAGER; ?></a></li>
                 <?php } ?>
