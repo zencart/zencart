@@ -733,7 +733,7 @@ function zen_js_option_values_list($selectedName, $fieldName)
           <div class="col-xs-6 col-sm-4 text-danger"><strong><?php echo TEXT_DELETE_ALL_ATTRIBUTES . $products_filter . '<br>' . zen_get_products_name($products_filter); ?></strong></div>
           <div class="col-xs-6 col-sm-8">
             <button type="submit" class="btn btn-danger"><i class="fa fa-trash" aria-hidden="true"></i> <?php echo IMAGE_DELETE; ?></button>
-            <?php echo '<a href="' . zen_href_link(FILENAME_ATTRIBUTES_CONTROLLER, 'products_filter=' . $products_filter . '&current_category_id=' . $current_category_id . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '')) . '" class="btn btn-default" role=""button>' . IMAGE_CANCEL . '</a>'; ?>
+            <?php echo '<a href="' . zen_href_link(FILENAME_ATTRIBUTES_CONTROLLER, 'products_filter=' . $products_filter . '&current_category_id=' . $current_category_id . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '')) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>'; ?>
           </div>
           <?php echo '</form>'; ?>
         </div>
