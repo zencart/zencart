@@ -662,7 +662,8 @@ CREATE TABLE customers_info (
   customers_info_date_account_created datetime default NULL,
   customers_info_date_account_last_modified datetime default NULL,
   global_product_notifications int(1) default '0',
-  PRIMARY KEY  (customers_info_id)
+  PRIMARY KEY  (customers_info_id),
+  KEY idx_date_created_cust_id_zen (customers_info_date_account_created, customers_info_id)
 ) ENGINE=MyISAM;
 
 # --------------------------------------------------------
