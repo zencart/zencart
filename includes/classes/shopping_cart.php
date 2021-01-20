@@ -1786,7 +1786,7 @@ class shoppingCart extends base
                         // Verify minuses are good, and affect the items to be changed
                         //  This leaves only increases or 'netzero' to be at play.
                         foreach ($change_state[zen_get_prid($_POST['products_id'][$i])]['decrease'] as $prod_id) {
-                            $attributes = ($_POST['id'][$prod_id]) ? $_POST['id'][$prod_id] : '';
+                            $attributes = (!empty($_POST['id'][$prod_id]) && is_array($_POST['id'][$prod_id])) ? $_POST['id'][$prod_id] : [];
                             $this_curr_qty = $this->get_quantity($prod_id);
                             $this_new_qty = $this_curr_qty + $change_state[zen_get_prid($_POST['products_id'][$i])]['changed'][$prod_id];
                             $this->add_cart($prod_id, $this_new_qty, $attributes, false);
@@ -1849,11 +1849,11 @@ class shoppingCart extends base
                         }
 // eof: notify about adjustment to new quantity to be same as current in stock or maximum to add
 
-                        $attributes = isset($_POST['id'][$_POST['products_id'][$i]]) ? $_POST['id'][$_POST['products_id'][$i]] : '';
+                        $attributes = isset($_POST['id'][$_POST['products_id'][$i]]) ? $_POST['id'][$_POST['products_id'][$i]] : [];
                         $this->add_cart($_POST['products_id'][$i], $new_qty, $attributes, false);
                     } else {
                         // adjust minimum and units
-                        $attributes = isset($_POST['id'][$_POST['products_id'][$i]]) ? $_POST['id'][$_POST['products_id'][$i]] : '';
+                        $attributes = isset($_POST['id'][$_POST['products_id'][$i]]) ? $_POST['id'][$_POST['products_id'][$i]] : [];
                         $this->add_cart($_POST['products_id'][$i], $new_qty, $attributes, false);
                     }
                 }
