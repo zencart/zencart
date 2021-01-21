@@ -2,10 +2,10 @@
 /**
  * Side Box Template
  *
- * @copyright Copyright 2003-2020 Zen Cart Development Team
+ * @copyright Copyright 2003-2021 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2020 May 20 Modified in v1.5.7 $
+ * @version $Id: DrByte Modified in v1.5.8 $
  */
   $content ="";
 
@@ -13,28 +13,21 @@
   if ($_SESSION['cart']->count_contents() > 0) {
   $content .= '<div id="cartBoxListWrapper">' . "\n" . '<ul class="list-links">' . "\n";
     $products = $_SESSION['cart']->get_products();
-    for ($i=0, $n=sizeof($products); $i<$n; $i++) {
+    foreach ($products as $product) {
       $content .= '<li>';
 
-      if (isset($_SESSION['new_products_id_in_cart']) && ($_SESSION['new_products_id_in_cart'] == $products[$i]['id'])) {
-        $content .= '<span class="cartNewItem">';
-      } else {
-        $content .= '<span class="cartOldItem">';
-      }
-
-      $content .= $products[$i]['quantity'] . BOX_SHOPPING_CART_DIVIDER . '</span><a href="' . zen_href_link(zen_get_info_page($products[$i]['id']), 'products_id=' . $products[$i]['id']) . '">';
-
-      if (isset($_SESSION['new_products_id_in_cart']) && ($_SESSION['new_products_id_in_cart'] == $products[$i]['id'])) {
-        $content .= '<span class="cartNewItem">';
-      } else {
-        $content .= '<span class="cartOldItem">';
-      }
-
-      $content .= $products[$i]['name'] . '</span></a></li>' . "\n";
-
-      if (isset($_SESSION['new_products_id_in_cart']) && ($_SESSION['new_products_id_in_cart'] == $products[$i]['id'])) {
+      $css_class = 'cartOldItem';
+      if (isset($_SESSION['new_products_id_in_cart']) && ($_SESSION['new_products_id_in_cart'] == $product['id'])) {
+        $css_class = 'cartNewItem';
         $_SESSION['new_products_id_in_cart'] = '';
       }
+
+      $content .= '<span class="' . $css_class . '">' . $product['quantity'] . ' x ' . '</span>';
+
+      $content .= '<a href="' . zen_href_link(zen_get_info_page($product['id']), 'products_id=' . $product['id']) . '">';
+      $content .= '<span class="' . $css_class . '">' . $product['name'] . '</span></a>';
+
+      $content .= '</li>' . "\n";
     }
     $content .= '</ul>' . "\n" . '</div>';
   } else {
