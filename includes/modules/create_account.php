@@ -73,7 +73,7 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process') && !isset($login_
   }
   $country = zen_db_prepare_input($_POST['zone_country_id']);
   $telephone = zen_db_prepare_input($_POST['telephone']);
-  $fax = zen_db_prepare_input($_POST['fax']);
+  $fax = isset($_POST['fax']) ? zen_db_prepare_input($_POST['fax']) : '';
   $customers_authorization = (int)CUSTOMERS_APPROVAL_AUTHORIZATION;
   $customers_referral = (isset($_POST['customers_referral']) ? zen_db_prepare_input($_POST['customers_referral']) : '');
 
