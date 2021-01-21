@@ -34,7 +34,7 @@
   foreach($order->products as $op) {
   ?>
     <tr>
-        <td class="accountQuantityDisplay"><?php echo $op['qty'] . QUANTITY_SUFFIX; ?></td>
+        <td class="accountQuantityDisplay"><?php echo $op['qty'] . CART_QUANTITY_SUFFIX; ?></td>
         <td class="accountProductDisplay"><?php
 
             echo $op['name'];

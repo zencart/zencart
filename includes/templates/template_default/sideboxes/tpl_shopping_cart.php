@@ -22,7 +22,7 @@
         $_SESSION['new_products_id_in_cart'] = '';
       }
 
-      $content .= '<span class="' . $css_class . '">' . $product['quantity'] . ' x ' . '</span>';
+      $content .= '<span class="' . $css_class . '">' . $product['quantity'] . CART_QUANTITY_SUFFIX . '</span>';
 
       $content .= '<a href="' . zen_href_link(zen_get_info_page($product['id']), 'products_id=' . $product['id']) . '">';
       $content .= '<span class="' . $css_class . '">' . $product['name'] . '</span></a>';

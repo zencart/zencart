@@ -1,9 +1,9 @@
 <?php
 /**
- * @copyright Copyright 2003-2020 Zen Cart Development Team
+ * @copyright Copyright 2003-2021 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2020 Dec 28 Modified in v1.5.8 $
+ * @version $Id: DrByte  Modified in v1.5.8 $
  */
 
 // TIP: In most cases you can override anything in this file by copying it to
@@ -100,7 +100,7 @@
 // shopping_cart box text in sideboxes/shopping_cart.php
   define('BOX_HEADING_SHOPPING_CART', 'Shopping Cart');
   define('BOX_SHOPPING_CART_EMPTY', 'Your cart is empty.');
-  define('BOX_SHOPPING_CART_DIVIDER', 'ea.-&nbsp;');
+  // define('BOX_SHOPPING_CART_DIVIDER', ' x '); // deprecated in 1.5.8
 
 // order_history box text in sideboxes/order_history.php
   define('BOX_HEADING_CUSTOMER_ORDERS', 'Quick Re-Order');
@@ -606,4 +606,8 @@ define('EMP_SHOPPING_FOR_MESSAGE_SEVERITY', 'success');
 
 // Constants shared between multiple pages
 define('TEXT_OPTION_DIVIDER', '&nbsp;-&nbsp;');
+
+define('CART_QUANTITY_SUFFIX', '&nbsp;x ');
+
+
 
