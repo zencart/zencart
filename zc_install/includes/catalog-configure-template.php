@@ -1,7 +1,7 @@
 <?php
 /**
  * @package Configuration Settings
- * @copyright Copyright 2003-2018 Zen Cart Development Team
+ * @copyright Copyright 2003-2021 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * File Built by %%_INSTALLER_METHOD_%% on %%_DATE_NOW_%%
@@ -12,14 +12,13 @@
 
 /**
  * Enter the domain for your store
- * HTTP_SERVER is your Main webserver: eg-http://www.yourdomain.com
- * HTTPS_SERVER is your Secure/SSL webserver: eg-https://www.yourdomain.com
+ * If you have SSL, enter the correct https address in BOTH the HTTP_SERVER and HTTPS_SERVER settings, instead of just an http address.
  */
 define('HTTP_SERVER', '%%_CATALOG_HTTP_SERVER_%%');
 define('HTTPS_SERVER', '%%_CATALOG_HTTPS_SERVER_%%');
 
 /**
- *  If you want to tell Zen Cart to use your HTTPS URL on sensitive pages like login and checkout, set this to 'true'. Otherwise 'false'. (Keep the quotes)
+ * If you have https enabled on your website, set this to 'true'
  */
 define('ENABLE_SSL', '%%_ENABLE_SSL_CATALOG_%%');
 
