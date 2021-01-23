@@ -109,7 +109,7 @@ function zen_set_field_length($tbl, $fld, $max = 70)
             $length = 'size="' . ($max + 1) . '" maxlength="' . $field_length . '"';
             break;
         default:
-            $length = 'size="' . ($field_length + 1) . '"maxlength="' . $field_length . '"';
+            $length = 'size="' . ($field_length + 1) . '" maxlength="' . $field_length . '"';
             break;
     }
     return $length;
