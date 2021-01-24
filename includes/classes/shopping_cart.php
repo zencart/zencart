@@ -2595,7 +2595,7 @@ class shoppingCart extends base
         }
 
         $product_changed = [];
-        $product_total_change = [$pr_id => 0,];
+        $product_total_change = [$pr_id => 0];
         $product_tracked_changed = [];
         $product_last_changed = [];
         $product_increase = [];
@@ -2608,7 +2608,7 @@ class shoppingCart extends base
             if (!is_numeric($_POST['cart_quantity'][$i]) || $_POST['cart_quantity'][$i] < 0) {
                 $_POST['cart_quantity'][$i] = $current_qty; // Default response behavior in cart.
             }
-            // Ensure that array key exists before use in assignment.
+            // Ensure array key exists before use in assignment.
             if (!array_key_exists($prs_id, $product_last_changed)) {
                 $product_last_changed[$prs_id] = null;
             }
