@@ -162,6 +162,8 @@ function zen_get_products_display_price($product_id)
 
     $product_check = zen_get_product_details($product_id);
 
+    if ($product_check->EOF) return '';
+
     // no prices on Document General
     if ($product_check->fields['products_type'] == 3) {
         return '';
@@ -557,6 +559,9 @@ function zen_get_products_quantity_mixed($product_id)
 function zen_get_products_quantity_min_units_display($product_id, $include_break = true, $message_is_for_shopping_cart = false)
 {
     $result = zen_get_product_details($product_id);
+
+    if ($result->EOF) return '';
+
     $check_min = $result->fields['products_quantity_order_min'];
     $check_max = $result->fields['products_quantity_order_max'];
     $check_units = $result->fields['products_quantity_order_units'];
