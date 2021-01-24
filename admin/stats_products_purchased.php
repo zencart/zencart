@@ -119,7 +119,7 @@ $products_filter_name_model = (isset($_GET['products_filter_name_model']) ? $_GE
                 <td class="dataTableContent"><?php echo zen_date_short($orders_products['date_purchased']); ?></td>
                 <td class="dataTableContent"><?php echo $orders_products['customers_name'] . ($orders_products['customers_company'] != '' ? '<br>' . $orders_products['customers_company'] : '') . '<br>' . $orders_products['customers_email_address']; ?></td>
                 <td class="dataTableContent text-center"><?php echo $orders_products['products_quantity']; ?></td>
-                <td class="dataTableContent text-center"><a href="<?php echo zen_href_link($type_handler, '&product_type=' . $product_type . '&cPath=' . $cPath . '&pID=' . $orders_products['products_id'] . '&action=new_product'); ?>"><?php echo $orders_products['products_name']; ?></a></td>
+                <td class="dataTableContent text-center"><a href="<?php echo zen_href_link(FILENAME_PRODUCT, '&product_type=' . $product_type . '&cPath=' . $cPath . '&pID=' . $orders_products['products_id'] . '&action=new_product'); ?>"><?php echo $orders_products['products_name']; ?></a></td>
                 <td class="dataTableContent text-center"><?php echo $orders_products['products_model']; ?></td>
               </tr>
             <?php } ?>
@@ -157,9 +157,9 @@ $products_filter_name_model = (isset($_GET['products_filter_name_model']) ? $_GE
             $product_type = zen_get_products_type($product['products_id']);
             $type_handler = $zc_products->get_admin_handler($product_type);
             ?>
-            <tr class="dataTableRow" onclick="document.location.href = '<?php echo zen_href_link($type_handler, '&product_type=' . $product_type . '&cPath=' . $cPath . '&pID=' . $product['products_id'] . '&action=new_product'); ?>'">
+            <tr class="dataTableRow" onclick="document.location.href = '<?php echo zen_href_link(FILENAME_PRODUCT, '&product_type=' . $product_type . '&cPath=' . $cPath . '&pID=' . $product['products_id'] . '&action=new_product'); ?>'">
               <td class="dataTableContent text-right"><a href="<?php echo zen_href_link(FILENAME_STATS_PRODUCTS_PURCHASED, zen_get_all_get_params(array('oID', 'action', 'page', 'products_filter')) . 'products_filter=' . $product['products_id']); ?>"><?php echo $product['products_id']; ?></a></td>
-              <td class="dataTableContent"><a href="<?php echo zen_href_link($type_handler, '&product_type=' . $product_type . '&cPath=' . $cPath . '&pID=' . $product['products_id'] . '&action=new_product'); ?>"><?php echo $product['products_name']; ?></a></td>
+              <td class="dataTableContent"><a href="<?php echo zen_href_link(FILENAME_PRODUCT, '&product_type=' . $product_type . '&cPath=' . $cPath . '&pID=' . $product['products_id'] . '&action=new_product'); ?>"><?php echo $product['products_name']; ?></a></td>
               <td class="dataTableContent text-center"><?php echo $product['products_ordered']; ?></td>
             </tr>
           <?php } ?>
