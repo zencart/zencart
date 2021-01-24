@@ -1786,7 +1786,7 @@ class shoppingCart extends base
                         // Verify minuses are good, and affect the items to be changed
                         //  This leaves only increases or 'netzero' to be at play.
                         foreach ($change_state[zen_get_prid($_POST['products_id'][$i])]['decrease'] as $prod_id) {
-                            $attributes = ($_POST['id'][$prod_id]) ? $_POST['id'][$prod_id] : '';
+                            $attributes = (!empty($_POST['id'][$prod_id]) && is_array($_POST['id'][$prod_id])) ? $_POST['id'][$prod_id] : [];
                             $this_curr_qty = $this->get_quantity($prod_id);
                             $this_new_qty = $this_curr_qty + $change_state[zen_get_prid($_POST['products_id'][$i])]['changed'][$prod_id];
                             $this->add_cart($prod_id, $this_new_qty, $attributes, false);
@@ -1849,11 +1849,11 @@ class shoppingCart extends base
                         }
 // eof: notify about adjustment to new quantity to be same as current in stock or maximum to add
 
-                        $attributes = isset($_POST['id'][$_POST['products_id'][$i]]) ? $_POST['id'][$_POST['products_id'][$i]] : '';
+                        $attributes = isset($_POST['id'][$_POST['products_id'][$i]]) ? $_POST['id'][$_POST['products_id'][$i]] : [];
                         $this->add_cart($_POST['products_id'][$i], $new_qty, $attributes, false);
                     } else {
                         // adjust minimum and units
-                        $attributes = isset($_POST['id'][$_POST['products_id'][$i]]) ? $_POST['id'][$_POST['products_id'][$i]] : '';
+                        $attributes = isset($_POST['id'][$_POST['products_id'][$i]]) ? $_POST['id'][$_POST['products_id'][$i]] : [];
                         $this->add_cart($_POST['products_id'][$i], $new_qty, $attributes, false);
                     }
                 }
@@ -2581,6 +2581,10 @@ class shoppingCart extends base
         global $db;
 
         $pr_id = zen_get_prid($product_id);
+        
+        if ($pr_id === 0) {
+            return true;
+        }
 
         // check if mixed is on
         $product = $db->Execute("SELECT products_id, products_quantity_mixed FROM " . TABLE_PRODUCTS . " WHERE products_id=" . (int)$pr_id, 1);
@@ -2591,7 +2595,7 @@ class shoppingCart extends base
         }
 
         $product_changed = [];
-        $product_total_change = [];
+        $product_total_change = [$pr_id => 0];
         $product_tracked_changed = [];
         $product_last_changed = [];
         $product_increase = [];
@@ -2603,6 +2607,13 @@ class shoppingCart extends base
             $current_qty = $this->get_quantity($products_id); // $products[$i]['quantity']
             if (!is_numeric($_POST['cart_quantity'][$i]) || $_POST['cart_quantity'][$i] < 0) {
                 $_POST['cart_quantity'][$i] = $current_qty; // Default response behavior in cart.
+            }
+            // Ensure array key exists before use in assignment.
+            if (!array_key_exists($prs_id, $product_last_changed)) {
+                $product_last_changed[$prs_id] = null;
+            }
+            if (!array_key_exists($prs_id, $product_total_change)) {
+                $product_total_change[$prs_id] = 0;
             }
             if ($_POST['cart_quantity'][$i] != $current_qty) { // identify that quantity changed
                 $product_changed[$products_id] = $_POST['cart_quantity'][$i] - $current_qty;  // Identify that the specific product changed and by how much the customer increased it.
