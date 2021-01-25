@@ -324,9 +324,6 @@ function zen_draw_products_pull_down($field_name, $parameters = '', $exclude = [
 {
     global $currencies, $db, $current_category_id, $prev_next_order;
 
-    // $prev_next_order set by products_previous_next.php, if category navigation in use
-    $order_by = $db->prepare_input(!empty($prev_next_order) ? $prev_next_order : ' ORDER BY products_name');
-
     if (!is_array($exclude)) {
         $exclude = [];
     }
@@ -339,18 +336,25 @@ function zen_draw_products_pull_down($field_name, $parameters = '', $exclude = [
 
     $select_string .= '>';
 
-    $sql = "SELECT p.products_id, pd.products_name, p.products_sort_order, p.products_price, p.products_model, ptc.categories_id
-                FROM " . TABLE_PRODUCTS . " p
-                LEFT JOIN " . TABLE_PRODUCTS_TO_CATEGORIES . " ptc USING (products_id)
-                LEFT JOIN " . TABLE_PRODUCTS_DESCRIPTION . " pd USING (products_id)
-                WHERE pd.language_id = " . (int)$_SESSION['languages_id'];
-    $condition = '';
+    $sql = "SELECT p.products_id, pd.products_name, p.products_sort_order, p.products_price, p.products_model
+            FROM " . TABLE_PRODUCTS . " p
+            INNER JOIN " . TABLE_PRODUCTS_DESCRIPTION . " pd ON (p.products_id = pd.products_id)
+            WHERE pd.language_id = " . (int)$_SESSION['languages_id'];
 
     if ($show_current_category) {
         // only show $current_categories_id
-        $condition = " AND ptc.categories_id = " . (int)$current_category_id;
+        $sql = "SELECT p.products_id, pd.products_name, p.products_sort_order, p.products_price, p.products_model, ptc.categories_id
+                FROM " . TABLE_PRODUCTS . " p
+                LEFT JOIN " . TABLE_PRODUCTS_TO_CATEGORIES . " ptc ON (ptc.products_id = p.products_id)
+                INNER JOIN " . TABLE_PRODUCTS_DESCRIPTION . " pd ON (p.products_id = pd.products_id)
+                WHERE pd.language_id = " . (int)$_SESSION['languages_id'] . "
+                AND ptc.categories_id = " . (int)$current_category_id;
     }
-    $results = $db->Execute($sql . $condition . $order_by);
+
+    // $prev_next_order set by products_previous_next.php, if category navigation in use
+    $order_by = $db->prepare_input(!empty($prev_next_order) ? $prev_next_order : ' ORDER BY products_name');
+
+    $results = $db->Execute($sql . $order_by);
 
     foreach ($results as $result) {
         if (!in_array($result['products_id'], $exclude)) {
