@@ -3,7 +3,7 @@
  * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2020 Jun 16 Modified in v1.5.7 $
+ * @version $Id: DrByte   Updated 11-17-2020 $
  */
 
 use Zencart\FileSystem\FileSystem;
@@ -26,7 +26,9 @@ define('PAGE_PARSE_START_TIME', microtime());
 // set php_self in the local scope
 $serverScript = basename($_SERVER['SCRIPT_NAME']);
 $PHP_SELF = isset($_SERVER['SCRIPT_NAME']) ? $serverScript : 'home.php';
-$PHP_SELF = isset($_GET['cmd']) ? basename($_GET['cmd'] . '.php') : $PHP_SELF;
+if (basename($PHP_SELF, '.php') === 'index') {
+    $PHP_SELF = isset($_GET['cmd']) ? basename($_GET['cmd'] . '.php') : $PHP_SELF;
+}
 $PHP_SELF = htmlspecialchars($PHP_SELF);
 $_SERVER['SCRIPT_NAME'] = str_replace($serverScript, '', $_SERVER['SCRIPT_NAME']) . $PHP_SELF;
 // Suppress html from error messages
@@ -39,6 +41,16 @@ $_SERVER['SCRIPT_NAME'] = str_replace($serverScript, '', $_SERVER['SCRIPT_NAME']
 if (!defined('__DIR__')) define('__DIR__', dirname(__FILE__));
 if (!defined('DIR_FS_ADMIN')) define('DIR_FS_ADMIN', preg_replace('#/includes/$#', '/', realpath(__DIR__ . '/../') . '/'));
 
+/**
+ * Ensure minimum PHP version.
+ * This is intended to run before any dependencies are required
+ * See https://www.zen-cart.com/requirements or run zc_install to see actual requirements!
+ */
+if (!defined('PHP_VERSION_ID') || PHP_VERSION_ID < 70205) {
+    chdir(realpath(__DIR__ . '/../'));
+    require 'includes/application_top.php';
+    exit(0);
+}
 /**
  * Set the local configuration parameters - mainly for developers
  */
@@ -60,9 +72,9 @@ if (file_exists('includes/configure.php')) {
 /**
  * set the level of error reporting
  *
- * Note STRICT_ERROR_REPORTING should never be set to true on a production site. <br />
- * It is mainly there to show php warnings during testing/bug fixing phases.<br />
- * note for strict error reporting we also turn on show_errors as this may be disabled<br />
+ * Note STRICT_ERROR_REPORTING should never be set to true on a production site.
+ * It is mainly there to show php warnings during testing/bug fixing phases.
+ * note for strict error reporting we also turn on show_errors as this may be disabled
  * in php.ini. Otherwise we respect the php.ini setting
  *
  */
@@ -94,6 +106,7 @@ if (file_exists('includes/defined_paths.php')) {
     die('ERROR: /includes/defined_paths.php file not found. Cannot continue.');
     exit;
 }
+require DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'php_polyfills.php';
 /**
  * ignore version-check if INI file setting has been set
  */
@@ -119,9 +132,9 @@ if (file_exists($file) && $lines = @file($file)) {
     if (!defined('DIR_WS_ADMIN') || $zc_pagepath != $zc_adminpage ) {
       echo ('ERROR: The admin/includes/configure.php file has invalid configuration. Please rebuild, or verify specified paths.');
       if (file_exists('../zc_install/index.php')) {
-        echo '<br /><a href="../zc_install/index.php">Click here for installation</a>';
+        echo '<br><a href="../zc_install/index.php">Click here for installation</a>';
       }
-      echo '<br /><br /><br /><br />['.$zc_pagepath.']&nbsp;&nbsp;&nbsp;&laquo;&raquo;&nbsp;&nbsp;&nbsp;[' .$zc_adminpage.']<br />';
+      echo '<br><br><br><br>['.$zc_pagepath.']&nbsp;&nbsp;&nbsp;&laquo;&raquo;&nbsp;&nbsp;&nbsp;[' .$zc_adminpage.']<br>';
     }
   }
 */

@@ -45,6 +45,7 @@ if ($metatag_page_name != 'index') {
 // Get different meta tag values depending on main_page values
 switch ($metatag_page_name) {
   case 'advanced_search':
+  case 'search':
   case 'account_edit':
   case 'account_history':
   case 'account_history_info':
@@ -63,6 +64,7 @@ switch ($metatag_page_name) {
   define('META_TAG_KEYWORDS', KEYWORDS . METATAGS_DIVIDER . NAVBAR_TITLE_ADD_ENTRY);
   break;
 
+  case 'search_result':
   case 'advanced_search_result':
   define('META_TAG_TITLE', NAVBAR_TITLE_2 . ' -> ' . zen_output_string_protected($keywords) . ' ' . PRIMARY_SECTION . TITLE . TAGLINE);
   define('META_TAG_DESCRIPTION', '');
@@ -268,7 +270,7 @@ switch ($metatag_page_name) {
         $meta_products_price = '';
       }
 
-      if (META_TAG_INCLUDE_MODEL == '1' && zen_not_null($product_info_metatags->fields['products_model'])) {
+      if (META_TAG_INCLUDE_MODEL == '1' && !empty($product_info_metatags->fields['products_model'])) {
         $meta_products_name = $product_info_metatags->fields['products_name'] . ' [' . $product_info_metatags->fields['products_model'] . ']';
       } else {
         $meta_products_name = $product_info_metatags->fields['products_name'];
@@ -304,7 +306,7 @@ switch ($metatag_page_name) {
       $meta_products_price = '';
     }
 
-    if (zen_not_null($review_metatags->fields['products_model'])) {
+    if (!empty($review_metatags->fields['products_model'])) {
       $meta_products_name = $review_metatags->fields['products_name'] . ' [' . $review_metatags->fields['products_model'] . ']';
     } else {
       $meta_products_name = $review_metatags->fields['products_name'];

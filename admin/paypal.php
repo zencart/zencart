@@ -2,7 +2,7 @@
 /**
  * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
- * @copyright Portions Copyright (c) 2004 DevosC.com    
+ * @copyright Portions Copyright (c) 2004 DevosC.com
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: Steve 2020 May 22 Modified in v1.5.7 $
  */
@@ -153,7 +153,7 @@ $paypal_ipn_sort_order_array = [
         $ipn = $db->Execute("SELECT * FROM " . TABLE_PAYPAL_PAYMENT_STATUS_HISTORY . " WHERE paypal_ipn_id = '" . $ipnInfo->paypal_ipn_id . "'");
         $ipn_count = $ipn->RecordCount();
 
-        $contents[] = ['align' => 'center', 'text' => '<a href="' . zen_href_link(FILENAME_ORDERS, zen_get_all_get_params(['ipnID', 'action']) . 'oID=' . $ipnInfo->order_id .'&' . 'ipnID=' . $ipnInfo->paypal_ipn_id .'&action=edit' . '&referer=ipn') . '">' . zen_image_button('button_orders.gif', IMAGE_ORDERS) . '</a>'];
+        $contents[] = ['align' => 'center', 'text' => '<a href="' . zen_href_link(FILENAME_ORDERS, zen_get_all_get_params(['ipnID', 'action']) . 'oID=' . $ipnInfo->order_id .'&' . 'ipnID=' . $ipnInfo->paypal_ipn_id .'&action=edit' . '&referer=ipn') . '" class="btn btn-default" role="button">' . IMAGE_ORDERS . '</a>'];
         $contents[] = ['text' => TABLE_HEADING_NUM_HISTORY_ENTRIES . ': '. $ipn_count];
         $count = 1;
         foreach ($ipn as $ipn_status_history) {
@@ -168,7 +168,7 @@ $paypal_ipn_sort_order_array = [
       break;
   }
 
-  if ( (zen_not_null($heading)) && (zen_not_null($contents)) ) {
+  if (!empty($heading) && !empty($contents)) {
     $box = new box();
       echo '<div class="col-sm-12 col-md-3 configurationColumnRight">';
     echo $box->infoBox($heading, $contents);

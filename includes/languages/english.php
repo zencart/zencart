@@ -1,10 +1,15 @@
 <?php
 /**
- * @copyright Copyright 2003-2020 Zen Cart Development Team
+ * @copyright Copyright 2003-2021 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2020 May 21 Modified in v1.5.8 $
+ * @version $Id: DrByte  Modified in v1.5.8 $
  */
+
+// TIP: In most cases you can override anything in this file by copying it to
+// /includes/languages/YOUR_TEMPLATE_NAME/english.php and customizing it there.
+// Anything in that file is used before what's in this file.
+// That makes it less necessary to need to touch this large base file.
 
 // FOLLOWING WERE moved to meta_tags.php
 //define('TITLE', 'Zen Cart!');
@@ -95,7 +100,7 @@
 // shopping_cart box text in sideboxes/shopping_cart.php
   define('BOX_HEADING_SHOPPING_CART', 'Shopping Cart');
   define('BOX_SHOPPING_CART_EMPTY', 'Your cart is empty.');
-  define('BOX_SHOPPING_CART_DIVIDER', 'ea.-&nbsp;');
+  // define('BOX_SHOPPING_CART_DIVIDER', ' x '); // deprecated in 1.5.8
 
 // order_history box text in sideboxes/order_history.php
   define('BOX_HEADING_CUSTOMER_ORDERS', 'Quick Re-Order');
@@ -127,9 +132,11 @@
   define('BOX_INFORMATION_CONTACT', 'Contact Us');
   define('BOX_INFORMATION_UNSUBSCRIBE', 'Newsletter Unsubscribe');
 
+  define('BOX_INFORMATION_ABOUT_US', 'About Us');
   define('BOX_INFORMATION_SITE_MAP', 'Site Map');
+  define('BOX_INFORMATION_ORDER_STATUS', 'Order Status');
 
-// information box text in sideboxes/more_information.php - were TUTORIAL_
+// information box text in sideboxes/more_information.php
   define('BOX_HEADING_MORE_INFORMATION', 'More Information');
   define('BOX_INFORMATION_PAGE_2', 'Page 2');
   define('BOX_INFORMATION_PAGE_3', 'Page 3');
@@ -587,26 +594,20 @@ define('ARIA_PAGINATION_','');
 // a customer's account.
 
 // -----
-// init_customer_auth.php substitutes the customer's name (%$1s) and customer's email address (%$2s)
-// into this message.
+// init_customer_auth.php substitutes the customer's name (%$1s) and customer's email address (%$2s) into this message.
 //
 define('EMP_SHOPPING_FOR_MESSAGE', 'Currently shopping for %1$s (%2$s).');
 
 // -----
-// Identify the messageStack "severity" to be applied to the above message, one of 'success',
-// 'warning', 'caution', 'error' (defaults to 'success').
+// Identify the messageStack "severity" to be applied to the above message,
+// Options are of 'success', 'warning', 'caution', 'error' (defaults to 'success').
 //
 define('EMP_SHOPPING_FOR_MESSAGE_SEVERITY', 'success');
 
 // Constants shared between multiple pages
 define('TEXT_OPTION_DIVIDER', '&nbsp;-&nbsp;');
 
-///////////////////////////////////////////////////////////
+define('CART_QUANTITY_SUFFIX', '&nbsp;x ');
 
-//  $file_list = [FILENAME_EMAIL_EXTRAS, FILENAME_HEADER, FILENAME_BUTTON_NAMES, FILENAME_ICON_NAMES, FILENAME_OTHER_IMAGES_NAMES, FILENAME_CREDIT_CARDS, FILENAME_WHOS_ONLINE, FILENAME_META_TAGS];
-//  foreach ($file_list as $file) {
-//    $file = str_replace(".php","",$file);
-//    require_once(zen_get_file_directory(DIR_FS_CATALOG . DIR_WS_LANGUAGES . $_SESSION['language'] . "/", $file . '.php', 'false'));
-//  }
 
-// END OF EXTERNAL LANGUAGE LINKS
+

@@ -17,4 +17,4 @@
     <p><?php echo TEXT_SEND_OR_SPEND; ?></p>
     <p><?php echo  TEXT_BALANCE_IS . $customer_gv_balance; ?></p>
     <div class="buttonRow forward"><?php echo '<a href="' . zen_href_link(FILENAME_GV_SEND, '', 'SSL') . '">' . zen_image_button(BUTTON_IMAGE_SEND_A_GIFT_CERT , BUTTON_SEND_A_GIFT_CERT_ALT) . '</a>'; ?></div>
-<br class="clearBoth" />
+<br class="clearBoth">

@@ -112,7 +112,7 @@ class Paginator extends \base {
 
     $class = '';
 
-    if (zen_not_null($parameters) && (substr($parameters, -1) != '&')) $parameters .= '&';
+    if (!empty($parameters) && (substr($parameters, -1) != '&')) $parameters .= '&';
 
     // previous button - not displayed on first page
     $link = '<a href="' . zen_href_link($this->cmd, $parameters . $this->page_name . '=' . ($this->current_page_number - 1), $request_type) . '" title="' . PREVNEXT_TITLE_PREVIOUS_PAGE . '">' . PREVNEXT_BUTTON_PREV . '</a>';

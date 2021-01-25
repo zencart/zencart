@@ -128,7 +128,7 @@ class order_total extends base {
   }
 
 
-  // update_credit_account is called in checkout process on a per product basis. It's purpose
+  // update_credit_account is called in checkout process on a per product basis. Its purpose
   // is to decide whether each product in the cart should add something to a credit account.
   // e.g. for the Gift Voucher it checks whether the product is a Gift voucher and then adds the amount
   // to the Gift Voucher account.
@@ -147,7 +147,7 @@ class order_total extends base {
 
 
   // This function is called in checkout confirmation.
-  // It's main use is for credit classes that use the credit_selection() method. This is usually for
+  // Its main use is for credit classes that use the credit_selection() method. This is usually for
   // entering redeem codes(Gift Vouchers/Discount Coupons). This function is used to validate these codes.
   // If they are valid then the necessary actions are taken, if not valid we are returned to checkout payment
   // with an error
@@ -164,7 +164,7 @@ class order_total extends base {
       }
     }
   }
-  // pre_confirmation_check is called on checkout confirmation. It's function is to decide whether the
+  // pre_confirmation_check is called on checkout confirmation. Its function is to decide whether the
   // credits available are greater than the order total. If they are then a variable (credit_covers) is set to
   // true. This is used to bypass the payment method. In other words if the Gift Voucher is more than the order
   // total, we don't want to go to paypal etc.

@@ -14,6 +14,9 @@ use Zencart\FileSystem\FileSystem;
 use Zencart\PluginManager\PluginManager;
 use Zencart\InitSystem\InitSystem;
 
+// Set session ID
+$zenSessionId = 'zenid';
+
 /**
  * inoculate against hack attempts which waste CPU cycles
  */
@@ -21,15 +24,17 @@ $contaminated = (isset($_FILES['GLOBALS']) || isset($_REQUEST['GLOBALS'])) ? tru
 $paramsToAvoid = array('GLOBALS', '_COOKIE', '_ENV', '_FILES', '_GET', '_POST', '_REQUEST', '_SERVER', '_SESSION', 'HTTP_COOKIE_VARS', 'HTTP_ENV_VARS', 'HTTP_GET_VARS', 'HTTP_POST_VARS', 'HTTP_POST_FILES', 'HTTP_RAW_POST_DATA', 'HTTP_SERVER_VARS', 'HTTP_SESSION_VARS');
 $paramsToAvoid[] = 'autoLoadConfig';
 $paramsToAvoid[] = 'mosConfig_absolute_path';
+$paramsToAvoid[] = 'function';
 $paramsToAvoid[] = 'hash';
 $paramsToAvoid[] = 'main';
+$paramsToAvoid[] = 'vars';
 foreach($paramsToAvoid as $key) {
   if (isset($_GET[$key]) || isset($_POST[$key]) || isset($_COOKIE[$key])) {
     $contaminated = true;
     break;
   }
 }
-$paramsToCheck = array('main_page', 'cPath', 'products_id', 'language', 'currency', 'action', 'manufacturers_id', 'pID', 'pid', 'reviews_id', 'filter_id', 'zenid', 'sort', 'number_of_uploads', 'notify', 'page_holder', 'chapter', 'alpha_filter_id', 'typefilter', 'disp_order', 'id', 'key', 'music_genre_id', 'record_company_id', 'set_session_login', 'faq_item', 'edit', 'delete', 'search_in_description', 'dfrom', 'pfrom', 'dto', 'pto', 'inc_subcat', 'payment_error', 'order', 'gv_no', 'pos', 'addr', 'error', 'count', 'error_message', 'info_message', 'cID', 'page', 'credit_class_error_code');
+$paramsToCheck = array($zenSessionId, 'main_page', 'cPath', 'products_id', 'language', 'currency', 'action', 'manufacturers_id', 'pID', 'pid', 'reviews_id', 'filter_id', 'sort', 'number_of_uploads', 'notify', 'page_holder', 'chapter', 'alpha_filter_id', 'typefilter', 'disp_order', 'id', 'key', 'music_genre_id', 'record_company_id', 'set_session_login', 'faq_item', 'edit', 'delete', 'search_in_description', 'dfrom', 'pfrom', 'dto', 'pto', 'inc_subcat', 'payment_error', 'order', 'gv_no', 'pos', 'addr', 'error', 'count', 'error_message', 'info_message', 'cID', 'page', 'credit_class_error_code');
 if (!$contaminated) {
   foreach($paramsToCheck as $key) {
     if (isset($_GET[$key]) && !is_array($_GET[$key])) {
@@ -37,7 +42,7 @@ if (!$contaminated) {
         $contaminated = true;
         break;
       }
-      $len = (in_array($key, array('zenid', 'error_message', 'payment_error'))) ? 255 : 43;
+      $len = (in_array($key, array($zenSessionId, 'error_message', 'payment_error'))) ? 255 : 43;
       if (isset($_GET[$key]) && strlen($_GET[$key]) > $len) {
         $contaminated = true;
         break;
@@ -53,6 +58,12 @@ if ($contaminated)
 }
 unset($contaminated, $len);
 /* *** END OF INOCULATION *** */
+
+// if session id is reconfigured, then we want to exclude its use immediately
+if ($zenSessionId !== 'zenid') {
+    unset($_GET['zenid'], $_GET['amp;zenid'], $_REQUEST['zenid']);
+}
+
 /**
  * boolean used to see if we are in the admin script, obviously set to false here.
  */
@@ -88,8 +99,8 @@ define('DEBUG_AUTOLOAD', false);
 /**
  * set the level of error reporting
  *
- * Note STRICT_ERROR_REPORTING should never be set to true on a production site. <br />
- * It is mainly there to show php warnings during testing/bug fixing phases.<br />
+ * Note STRICT_ERROR_REPORTING should never be set to true on a production site.
+ * It is mainly there to show php warnings during testing/bug fixing phases.
  */
 if (DEBUG_AUTOLOAD || (defined('STRICT_ERROR_REPORTING') && STRICT_ERROR_REPORTING == true)) {
   @ini_set('display_errors', TRUE);
@@ -131,6 +142,7 @@ if (file_exists('includes/defined_paths.php')) {
     die('ERROR: /includes/defined_paths.php file not found. Cannot continue.');
     exit;
 }
+require DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'php_polyfills.php';
 /**
  * include the list of extra configure files
  */

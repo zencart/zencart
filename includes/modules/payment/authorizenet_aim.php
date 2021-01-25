@@ -678,7 +678,7 @@ class authorizenet_aim extends base {
 
     // if in 'echo' mode, dump the returned data to the browser and stop execution
     if ((defined('AUTHORIZENET_DEVELOPER_MODE') && AUTHORIZENET_DEVELOPER_MODE == 'echo') || MODULE_PAYMENT_AUTHORIZENET_AIM_DEBUGGING == 'echo') {
-      echo $this->authorize . ($this->commErrNo != 0 ? '<br />' . $this->commErrNo . ' ' . $this->commError : '') . '<br />';
+      echo $this->authorize . ($this->commErrNo != 0 ? '<br>' . $this->commErrNo . ' ' . $this->commError : '') . '<br>';
       die('Press the BACK button in your browser to return to the previous page.');
     }
 

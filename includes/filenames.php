@@ -6,11 +6,12 @@
  * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Zcwilt 2020 May 20 Modified in v1.5.7 $
+ * @version $Id: Zcwilt 2020 Dec 28 Modified in v1.5.8 $
  */
 /**
  * define project filenames
  */
+define('FILENAME_ABOUT_US', 'about_us');
 define('FILENAME_ACCOUNT', 'account');
 define('FILENAME_ACCOUNT_EDIT', 'account_edit');
 define('FILENAME_ACCOUNT_HISTORY', 'account_history');
@@ -23,8 +24,8 @@ define('FILENAME_ADDRESS_BOOK_PROCESS', 'address_book_process');
 define('FILENAME_ADMIN_ACCOUNT', 'admin_account');
 define('FILENAME_ADMIN_ACTIVITY', 'admin_activity');
 define('FILENAME_ADMIN_PAGE_REGISTRATION', 'admin_page_registration');
-define('FILENAME_ADVANCED_SEARCH', 'advanced_search');
-define('FILENAME_ADVANCED_SEARCH_RESULT', 'advanced_search_result');
+define('FILENAME_ADVANCED_SEARCH', 'search'); // alias since 1.5.8; to be removed later
+define('FILENAME_ADVANCED_SEARCH_RESULT', 'search_result'); // alias since 1.5.8; to be removed later
 define('FILENAME_AJAX', 'ajax');
 define('FILENAME_ALT_NAV', 'alt_nav');
 define('FILENAME_ALERT_PAGE', 'alert_page');
@@ -58,6 +59,7 @@ define('FILENAME_CREATE_ACCOUNT_SUCCESS', 'create_account_success');
 define('FILENAME_CURRENCIES', 'currencies');
 define('FILENAME_CUSTOMERS', 'customers');
 define('FILENAME_DEFAULT', 'index');
+define('FILENAME_DEFINE_ABOUT_US', 'define_about_us');
 define('FILENAME_DEFINE_ASK_A_QUESTION', 'define_ask_a_question');
 define('FILENAME_DEFINE_PAGES_EDITOR', 'define_pages_editor');
 define('FILENAME_DEFINE_MAIN_PAGE', 'define_main_page');
@@ -107,6 +109,7 @@ define('FILENAME_ORDERS', 'orders');
 define('FILENAME_ORDERS_INVOICE', 'invoice');
 define('FILENAME_ORDERS_PACKINGSLIP', 'packingslip');
 define('FILENAME_ORDERS_STATUS', 'orders_status');
+define('FILENAME_ORDER_STATUS', 'order_status');
 define('FILENAME_OPTIONS_NAME_MANAGER', 'options_name_manager');
 define('FILENAME_OPTIONS_VALUES_MANAGER', 'options_values_manager');
 define('FILENAME_PAGE_NOT_FOUND', 'page_not_found');
@@ -148,6 +151,8 @@ define('FILENAME_REVIEWS', 'reviews');
 define('FILENAME_SALEMAKER', 'salemaker');
 define('FILENAME_SALEMAKER_INFO', 'salemaker_info');
 define('FILENAME_SALEMAKER_POPUP', 'salemaker_popup');
+define('FILENAME_SEARCH', 'search');
+define('FILENAME_SEARCH_RESULT', 'search_result');
 define('FILENAME_SERVER_INFO', 'server_info');
 define('FILENAME_SHIPPING', 'shippinginfo');
 define('FILENAME_SHOPPING_CART', 'shopping_cart');

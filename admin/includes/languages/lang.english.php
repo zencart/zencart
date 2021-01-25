@@ -171,7 +171,7 @@ $define = [
     'ENTRY_PRICING_GROUP' => 'Discount Pricing Group',
     'ENTRY_STREET_ADDRESS' => 'Street Address:',
     'ENTRY_STREET_ADDRESS_ERROR' => '&nbsp;<span class="errorText">min ' . ENTRY_STREET_ADDRESS_MIN_LENGTH . ' chars</span>',
-    'ENTRY_SUBURB' => 'Suburb:',
+    'ENTRY_SUBURB' => 'Address Line 2:',
     'ENTRY_SUBURB_ERROR' => '',
     'ENTRY_POST_CODE' => 'Post Code:',
     'ENTRY_POST_CODE_ERROR' => '&nbsp;<span class="errorText">min ' . ENTRY_POSTCODE_MIN_LENGTH . ' chars</span>',
@@ -200,6 +200,7 @@ $define = [
     'IMAGE_DELETE' => 'Delete',
     'IMAGE_EDIT' => 'Edit',
     'IMAGE_EMAIL' => 'Email',
+    'IMAGE_FORGET_ONLY' => 'Forget Only',
     'IMAGE_GO' => 'Go',
     'IMAGE_ICON_STATUS_GREEN' => 'Active',
     'IMAGE_ICON_STATUS_RED' => 'Inactive',
@@ -531,6 +532,8 @@ $define = [
     'ARIA_PAGINATION_' => '',
     'TEXT_EMAIL_ADDRESS_VALIDATE' => 'The text entered does not resolve to an acceptable email address. (I.e. Name &lt;email@domain&gt; or &lt;email@domain&gt; or email@domain or any combination of these separated by a comma.)',
     'TEXT_BOOLEAN_VALIDATE' => 'The value is required to be a boolean value or equivalent.',
+    'TEXT_ASC' => 'asc',
+    'TEXT_DESC' => 'desc',
 ];
 
 return $define;

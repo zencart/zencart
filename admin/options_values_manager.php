@@ -48,7 +48,7 @@ if (!isset($_GET['reset_option_names_values_copier'])) {
   $reset_option_names_values_copier = $_SESSION['option_names_values_copier'];
 }
 
-if (zen_not_null($action)) {
+if (!empty($action)) {
   switch ($action) {
     case 'set_filter':
       $exclude_array = ['action', 'page'];
@@ -952,11 +952,11 @@ if (zen_not_null($action)) {
             <tr class="dataTableHeadingRow">
               <?php echo zen_draw_form('quick_jump', FILENAME_OPTIONS_VALUES_MANAGER, 'action=copy_options_values_one_to_another', 'post', 'class="form-horizontal"'); ?>
               <td class="dataTableHeadingContent">
-                <?php echo zen_draw_label(TEXT_SELECT_OPTION_FROM, 'options_id_from', 'class="control-label"') . zen_draw_pull_down_menu('options_id_from', $option_from_dropdown, '', 'class="form-control"'); ?><br />
+                <?php echo zen_draw_label(TEXT_SELECT_OPTION_FROM, 'options_id_from', 'class="control-label"') . zen_draw_pull_down_menu('options_id_from', $option_from_dropdown, '', 'class="form-control"'); ?><br>
                 <?php echo zen_draw_label(TEXT_SELECT_OPTION_VALUES_FROM, 'options_values_values_id_from', 'class="control-label"') . zen_draw_pull_down_menu('options_values_values_id_from', $option_values_from_dropdown, '', 'class="form-control"'); ?>
               </td>
               <td class="dataTableHeadingContent">
-                <?php echo zen_draw_label(TEXT_SELECT_OPTION_TO, 'options_id_to', 'class="control-label"') . zen_draw_pull_down_menu('options_id_to', $option_to_dropdown, '', 'class="form-control"'); ?><br />
+                <?php echo zen_draw_label(TEXT_SELECT_OPTION_TO, 'options_id_to', 'class="control-label"') . zen_draw_pull_down_menu('options_id_to', $option_to_dropdown, '', 'class="form-control"'); ?><br>
                 <?php echo zen_draw_label(TEXT_SELECT_OPTION_VALUES_TO, 'options_values_values_id_to', 'class="control-label"') . zen_draw_pull_down_menu('options_values_values_id_to', $option_values_to_dropdown, '', 'class="form-control"'); ?>
               </td>
               <td class="dataTableHeadingContent"><?php echo $to_categories_id; ?></td>
@@ -987,7 +987,7 @@ if (zen_not_null($action)) {
             <tr class="dataTableHeadingRow">
               <?php echo zen_draw_form('quick_jump', FILENAME_OPTIONS_VALUES_MANAGER, 'action=delete_options_values_of_option_name', 'post', 'class="form-horizontal"'); ?>
               <td class="dataTableHeadingContent">
-                <?php echo zen_draw_label(TEXT_SELECT_DELETE_OPTION_FROM, 'options_id_from', 'class="control-label"') . zen_draw_pull_down_menu('options_id_from', $option_from_dropdown, '', 'class="form-control"'); ?><br />
+                <?php echo zen_draw_label(TEXT_SELECT_DELETE_OPTION_FROM, 'options_id_from', 'class="control-label"') . zen_draw_pull_down_menu('options_id_from', $option_from_dropdown, '', 'class="form-control"'); ?><br>
                 <?php echo zen_draw_label(TEXT_SELECT_DELETE_OPTION_VALUES_FROM, 'options_values_values_id_from', 'class="control-label"') . zen_draw_pull_down_menu('options_values_values_id_from', $option_values_from_dropdown, '', 'class="form-control"'); ?>
               </td>
               <td class="dataTableHeadingContent"><?php echo $to_categories_id; ?></td>
@@ -1018,16 +1018,16 @@ if (zen_not_null($action)) {
             <tr class="dataTableHeadingRow">
               <?php echo zen_draw_form('quick_jump', FILENAME_OPTIONS_VALUES_MANAGER, 'action=copy_options_values_one_to_another_options_id', 'post', 'class="form-horizontal"'); ?>
               <td class="dataTableHeadingContent">
-                <?php echo zen_draw_label(TEXT_SELECT_OPTION_FROM_ADD, 'options_id_from', 'class="control-label"') . zen_draw_pull_down_menu('options_id_from', $option_from_dropdown, '', 'class="form-control"'); ?><br />
-                <?php echo zen_draw_label(TEXT_SELECT_OPTION_VALUES_FROM_ADD, 'options_values_values_id_from', 'class="control-label"') . zen_draw_pull_down_menu('options_values_values_id_from', $option_values_from_dropdown, '', 'class="form-control"'); ?><br />
+                <?php echo zen_draw_label(TEXT_SELECT_OPTION_FROM_ADD, 'options_id_from', 'class="control-label"') . zen_draw_pull_down_menu('options_id_from', $option_from_dropdown, '', 'class="form-control"'); ?><br>
+                <?php echo zen_draw_label(TEXT_SELECT_OPTION_VALUES_FROM_ADD, 'options_values_values_id_from', 'class="control-label"') . zen_draw_pull_down_menu('options_values_values_id_from', $option_values_from_dropdown, '', 'class="form-control"'); ?><br>
                 <?php echo $options_id_from_products_id; ?>
               </td>
               <td class="dataTableHeadingContent">
                 <?php echo zen_draw_label(TEXT_SELECT_OPTION_TO_ADD_TO, 'options_id_to', 'class="control-label"') . zen_draw_pull_down_menu('options_id_to', $option_to_dropdown, '', 'class="form-control"'); ?>
               </td>
               <td class="dataTableHeadingContent">
-                <?php echo $to_categories_id; ?><br />
-                <?php echo TEXT_COPY_ATTRIBUTES_CONDITIONS; ?><br />
+                <?php echo $to_categories_id; ?><br>
+                <?php echo TEXT_COPY_ATTRIBUTES_CONDITIONS; ?><br>
                 <div class="radio">
                   <label>
                     <?php echo zen_draw_radio_field('copy_attributes', 'copy_attributes_update') . TEXT_COPY_ATTRIBUTES_UPDATE; ?>

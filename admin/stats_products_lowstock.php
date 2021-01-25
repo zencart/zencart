@@ -57,9 +57,9 @@ require('includes/application_top.php');
                 $type_handler = $zc_products->get_admin_handler($product['products_type']);
                 $cPath = zen_get_product_path($product['products_id']);
                 ?>
-              <tr class="dataTableRow" onclick="document.location.href = '<?php echo zen_href_link($type_handler, '&product_type=' . $product['products_type'] . '&cPath=' . $cPath . '&pID=' . $product['products_id'] . '&action=new_product'); ?>'">
+              <tr class="dataTableRow" onclick="document.location.href = '<?php echo zen_href_link(FILENAME_PRODUCT, '&product_type=' . $product['products_type'] . '&cPath=' . $cPath . '&pID=' . $product['products_id'] . '&action=new_product'); ?>'">
                 <td class="dataTableContent text-right"><?php echo $product['products_id']; ?></td>
-                <td class="dataTableContent"><a href="<?php echo zen_href_link($type_handler, '&product_type=' . $product['products_type'] . '&cPath=' . $cPath . '&pID=' . $product['products_id'] . '&action=new_product'); ?>"><?php echo $product['products_name']; ?></a></td>
+                <td class="dataTableContent"><a href="<?php echo zen_href_link(FILENAME_PRODUCT, '&product_type=' . $product['products_type'] . '&cPath=' . $cPath . '&pID=' . $product['products_id'] . '&action=new_product'); ?>"><?php echo $product['products_name']; ?></a></td>
                 <td class="dataTableContent text-center"><?php echo $product['products_quantity']; ?></td>
               </tr>
               <?php

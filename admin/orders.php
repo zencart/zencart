@@ -98,7 +98,7 @@ if (!empty($oID) && !empty($action)) {
                 break;
         }
 
-if (zen_not_null($action) && $order_exists == true) {
+if (!empty($action) && $order_exists == true) {
   switch ($action) {
     case 'download':
 
@@ -195,7 +195,7 @@ if (zen_not_null($action) && $order_exists == true) {
           $zc_max_days = (DOWNLOAD_MAX_DAYS == 0 ? 0 : zen_date_diff($check_status->fields['date_purchased'], date('Y-m-d H:i:s', time())) + DOWNLOAD_MAX_DAYS);
           $update_downloads_query = "UPDATE " . TABLE_ORDERS_PRODUCTS_DOWNLOAD . "
                                      SET download_maxdays = " . (int)$zc_max_days . ",
-                                         download_count = '" . (int)DOWNLOAD_MAX_COUNT . "
+                                         download_count = " . (int)DOWNLOAD_MAX_COUNT . "
                                      WHERE orders_id = " . (int)$_GET['oID'] . "
                                      AND orders_products_download_id = " . (int)$_GET['download_reset_on'];
         } else {
@@ -677,26 +677,26 @@ if (zen_not_null($action) && $order_exists == true) {
               <td class="main"><?php echo $order->info['payment_method']; ?></td>
             </tr>
             <?php
-            if (zen_not_null($order->info['cc_type']) || zen_not_null($order->info['cc_owner']) || zen_not_null($order->info['cc_number'])) {
+            if (!empty($order->info['cc_type']) || !empty($order->info['cc_owner']) || !empty($order->info['cc_number'])) {
               ?>
               <tr class="noprint">
                 <td colspan="2"><?php echo zen_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
               </tr>
-              <?php if (zen_not_null($order->info['cc_type'])) { ?>
+              <?php if (!empty($order->info['cc_type'])) { ?>
               <tr>
                 <td class="main"><?php echo ENTRY_CREDIT_CARD_TYPE; ?></td>
                 <td class="main"><?php echo $order->info['cc_type']; ?></td>
               </tr>
               <?php
               }
-              if (zen_not_null($order->info['cc_owner'])) { ?>
+              if (!empty($order->info['cc_owner'])) { ?>
               <tr>
                 <td class="main"><?php echo ENTRY_CREDIT_CARD_OWNER; ?></td>
                 <td class="main"><?php echo $order->info['cc_owner']; ?></td>
               </tr>
               <?php
               }
-              if (zen_not_null($order->info['cc_number'])) {
+              if (!empty($order->info['cc_number'])) {
                       require DIR_FS_CATALOG . DIR_WS_CLASSES . 'cc_validation.php';
                       $cc_valid = new cc_validation();
                       $cc_needs_mask = $cc_valid->validate($order->info['cc_number'], date('m'), date('y')+1);
@@ -707,13 +707,13 @@ if (zen_not_null($action) && $order_exists == true) {
               </tr>
               <?php
                   }
-                  if (zen_not_null($order->info['cc_cvv'])) { ?>
+                  if (!empty($order->info['cc_cvv'])) { ?>
                 <tr>
                   <td class="main"><?php echo ENTRY_CREDIT_CARD_CVV; ?></td>
-                  <td class="main"><?php echo $order->info['cc_cvv'] . (zen_not_null($order->info['cc_cvv']) && !strstr($order->info['cc_cvv'], TEXT_DELETE_CVV_REPLACEMENT) ? '&nbsp;&nbsp;<a href="' . zen_href_link(FILENAME_ORDERS, '&action=delete_cvv&oID=' . $oID, 'NONSSL') . '" class="noprint">' . TEXT_DELETE_CVV_FROM_DATABASE . '</a>' : ''); ?></td>
+                  <td class="main"><?php echo $order->info['cc_cvv'] . (!empty($order->info['cc_cvv']) && !strstr($order->info['cc_cvv'], TEXT_DELETE_CVV_REPLACEMENT) ? '&nbsp;&nbsp;<a href="' . zen_href_link(FILENAME_ORDERS, '&action=delete_cvv&oID=' . $oID, 'NONSSL') . '" class="noprint">' . TEXT_DELETE_CVV_FROM_DATABASE . '</a>' : ''); ?></td>
                 </tr>
               <?php } ?>
-              <?php if (zen_not_null($order->info['cc_expires'])) { ?>
+              <?php if (!empty($order->info['cc_expires'])) { ?>
               <tr>
                 <td class="main"><?php echo ENTRY_CREDIT_CARD_EXPIRES; ?></td>
                 <td class="main"><?php echo $order->info['cc_expires']; ?></td>
@@ -728,7 +728,7 @@ if (zen_not_null($action) && $order_exists == true) {
         <?php
         if (isset($module) && (is_object($module) && method_exists($module, 'admin_notification'))) {
           ?>
-          <div class="row noprint"><?php echo zen_draw_separator('pixel_trans.gif', '1', '10'); ?><br><a href="#" id="payinfo" class="noprint">Click for Additional Payment Handling Options</a></div>
+          <div class="row noprint"><?php echo zen_draw_separator('pixel_trans.gif', '1', '10'); ?><br><a href="#" id="payinfo" class="noprint"><?php echo TEXT_ADDITIONAL_PAYMENT_OPTIONS; ?></a></div>
           <div class="row" id="payment-details-section" style="display: none;"><?php echo $module->admin_notification($oID); ?></div>
           <div class="row noprint"><?php echo zen_draw_separator('pixel_trans.gif', '1', '10'); ?></div>
           <?php
@@ -1172,8 +1172,8 @@ if (zen_not_null($action) && $order_exists == true) {
                   $new_fields = '';
                   $keywords = '';
                   if (!empty($_GET['search_orders_products'])) {
-                    $search_distinct = ' distinct ';
-                    $new_table = " left join " . TABLE_ORDERS_PRODUCTS . " op on (op.orders_id = o.orders_id) ";
+                    $search_distinct = ' DISTINCT ';
+                    $new_table = " LEFT JOIN " . TABLE_ORDERS_PRODUCTS . " op ON (op.orders_id = o.orders_id) ";
                     $keywords = zen_db_input(zen_db_prepare_input($_GET['search_orders_products']));
                       $keyword_search_fields = [
                           'op.products_name',
@@ -1182,7 +1182,7 @@ if (zen_not_null($action) && $order_exists == true) {
                       $search = zen_build_keyword_where_clause($keyword_search_fields, trim($keywords));
                     if (substr(strtoupper($_GET['search_orders_products']), 0, 3) == 'ID:') {
                       $keywords = TRIM(substr($_GET['search_orders_products'], 3));
-                      $search = " and op.products_id ='" . (int)$keywords . "'";
+                      $search = " AND op.products_id ='" . (int)$keywords . "'";
                     }
                   } elseif (!empty($_GET['search'])) {
 // create search filter
@@ -1483,7 +1483,7 @@ if (zen_not_null($action) && $order_exists == true) {
               }
               $zco_notifier->notify('NOTIFY_ADMIN_ORDERS_MENU_BUTTONS_END', (isset($oInfo) ? $oInfo : array()), $contents);
 
-              if ((zen_not_null($heading)) && (zen_not_null($contents))) {
+              if (!empty($heading) && !empty($contents)) {
                 $box = new box;
                 echo $box->infoBox($heading, $contents);
               }

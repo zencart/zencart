@@ -2,7 +2,7 @@
 /**
  * Page Template
  *
- * Loaded automatically by index.php?main_page=conditions.<br />
+ * Loaded automatically by index.php?main_page=conditions.
  * Displays conditions page.
  *
  * @package templateSystem

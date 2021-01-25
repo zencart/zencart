@@ -9,7 +9,7 @@ require('includes/application_top.php');
 
 $action = (isset($_GET['action']) ? $_GET['action'] : '');
 
-if (zen_not_null($action)) {
+if (!empty($action)) {
   switch ($action) {
     case 'insert':
     case 'save':
@@ -52,7 +52,7 @@ if (zen_not_null($action)) {
         }
       } else {
         $db->Execute("UPDATE " . TABLE_PRODUCT_MUSIC_EXTRA . "
-                      SET music_genre_id = 0 
+                      SET music_genre_id = 0
                       WHERE music_genre_id = " . (int)$music_genre_id);
       }
 
@@ -169,7 +169,7 @@ if (zen_not_null($action)) {
                 break;
             }
 
-            if ((zen_not_null($heading)) && (zen_not_null($contents))) {
+            if (!empty($heading) && !empty($contents)) {
               $box = new box;
               echo $box->infoBox($heading, $contents);
             }

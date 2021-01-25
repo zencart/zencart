@@ -1,6 +1,6 @@
 <?php
 /**
- * listing_display_order module 
+ * listing_display_order module
  *
  * @package templateSystem
  * @copyright Copyright 2003-2006 Zen Cart Development Team
@@ -11,7 +11,7 @@
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
 }
-if (!isset($_GET['main_page']) || !zen_not_null($_GET['main_page'])) $_GET['main_page'] = 'index';
+if (empty($_GET['main_page'])) $_GET['main_page'] = 'index';
 if (!isset($_GET['disp_order'])) {
   $_GET['disp_order'] = $disp_order_default;
   $disp_order = $disp_order_default;

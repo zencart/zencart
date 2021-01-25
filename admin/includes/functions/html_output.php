@@ -38,11 +38,11 @@ function zen_href_link($page = '', $parameters = '', $connection = 'SSL', $add_s
     // Keep track of the separator
     $separator = '&';
 
-    if (!zen_not_null($page) || ($page == FILENAME_DEFAULT && !zen_not_null($parameters))) {
+    if (empty($page) || ($page == FILENAME_DEFAULT && empty($parameters))) {
         // If the request was for the homepage, do nothing
         $separator = '?';
     }
-    else if (zen_not_null($parameters)) {
+    else if (!empty($parameters)) {
         $link .= 'index.php?cmd='. $page . '&' . zen_output_string($parameters);
     }
     else {
@@ -150,9 +150,9 @@ function zen_catalog_base_link($connection = '')
     return $image;
   }
 
-////
-// The HTML form submit button wrapper function
-// Outputs a button in the selected language
+/**
+ * @deprecated since v1.5.8. Use <button> markup instead
+ */
 function zen_image_submit($image, $alt = '', $parameters = '')
 {
     $image_submit = '<input type="image" src="' . zen_output_string(DIR_WS_LANGUAGES . $_SESSION['language'] . '/images/buttons/' . $image) . '" alt="' . zen_output_string($alt) . '"';
@@ -179,10 +179,10 @@ function zen_image_submit($image, $alt = '', $parameters = '')
     return zen_image(DIR_WS_IMAGES . $image, '', '', $height, 'style="width:' . $width . ';"');
   }
 
-////
-// Output a function button in the selected language
+/**
+ * @deprecated since v1.5.8. Use <button> markup instead
+ */
   function zen_image_button($image, $alt = '', $params = '') {
-
     return zen_image(DIR_WS_LANGUAGES . $_SESSION['language'] . '/images/buttons/' . $image, $alt, '', '', $params);
   }
 
@@ -232,17 +232,17 @@ function zen_image_submit($image, $alt = '', $parameters = '')
 // Output a form
   function zen_draw_form($name, $action, $parameters = '', $method = 'post', $params = '', $usessl = 'false') {
     $form = '<form name="' . zen_output_string($name) . '" action="';
-    if (zen_not_null($parameters)) {
+    if (!empty($parameters)) {
       $form .= zen_href_link($action, $parameters, 'NONSSL');
     } else {
       $form .= zen_href_link($action, '', 'NONSSL');
     }
     $form .= '" method="' . zen_output_string($method) . '"';
-    if (zen_not_null($params)) {
+    if (!empty($params)) {
       $form .= ' ' . $params;
     }
     $form .= '>';
-    if (strtolower($method) == 'post') $form .= '<input type="hidden" name="securityToken" value="' . $_SESSION['securityToken'] . '" />';
+    if (strtolower($method) == 'post') $form .= '<input type="hidden" name="securityToken" value="' . $_SESSION['securityToken'] . '">';
     if (strtolower($method) == 'get') {
       $form .= '<input type="hidden" name="cmd" value="' . (isset($_GET['cmd']) ? $_GET['cmd'] : 'home') . '">';
     }
@@ -275,7 +275,7 @@ function zen_draw_input_field($name, $value = '~*~*#', $parameters = '', $requir
     $field .= ' value="' . zen_output_string($value) . '"';
   }
 
-  if (zen_not_null($parameters)) {
+  if (!empty($parameters)) {
     $field .= ' ' . $parameters;
   }
 
@@ -318,13 +318,18 @@ function zen_draw_input_field($name, $value = '~*~*#', $parameters = '', $requir
 
     if (zen_not_null($value)) $selection .= ' value="' . zen_output_string($value) . '"';
 
-    if ( ($checked == true) || (isset($GLOBALS[$name]) && is_string($GLOBALS[$name]) && ($GLOBALS[$name] == 'on')) || (isset($value) && isset($GLOBALS[$name]) && is_string($GLOBALS[$name]) && (stripslashes($GLOBALS[$name]) == $value)) || (zen_not_null($value) && zen_not_null($compare) && ($value == $compare)) ) {
+    if (
+        ($checked == true)
+        || (isset($GLOBALS[$name]) && is_string($GLOBALS[$name]) && ($GLOBALS[$name] == 'on'))
+        || (isset($value) && isset($GLOBALS[$name]) && is_string($GLOBALS[$name]) && (stripslashes($GLOBALS[$name]) == $value))
+        || (zen_not_null($value) && zen_not_null($compare) && ($value == $compare))
+    ) {
       $selection .= ' checked="checked"';
     }
 
-    if (zen_not_null($parameters)) $selection .= ' ' . $parameters;
+    if (!empty($parameters)) $selection .= ' ' . $parameters;
 
-    $selection .= ' />';
+    $selection .= '>';
 
     return $selection;
   }
@@ -346,7 +351,7 @@ function zen_draw_input_field($name, $value = '~*~*#', $parameters = '', $requir
   function zen_draw_textarea_field($name, $wrap, $width, $height, $text = '~*~*#', $parameters = '', $reinsert_value = true) {
     $field = '<textarea name="' . zen_output_string($name) . '" wrap="' . zen_output_string($wrap) . '" cols="' . zen_output_string($width) . '" rows="' . zen_output_string($height) . '"';
 
-    if (zen_not_null($parameters)) $field .= ' ' . $parameters;
+    if (!empty($parameters)) $field .= ' ' . $parameters;
 
     $field .= '>';
 
@@ -374,9 +379,9 @@ function zen_draw_input_field($name, $value = '~*~*#', $parameters = '', $requir
       $field .= ' value="' . zen_output_string(stripslashes($GLOBALS[$name])) . '"';
     }
 
-    if (zen_not_null($parameters)) $field .= ' ' . $parameters;
+    if (!empty($parameters)) $field .= ' ' . $parameters;
 
-    $field .= ' />';
+    $field .= '>';
 
     return $field;
   }
@@ -395,7 +400,7 @@ function zen_draw_pull_down_menu($name, $values, $default = '', $parameters = ''
   $field = ($required ? '<div class="input-group">' . PHP_EOL : '');
   $field .= '<select rel="dropdown" name="' . zen_output_string($name) . '"';
 
-  if (zen_not_null($parameters)) {
+  if (!empty($parameters)) {
     $field .= ' ' . $parameters;
   }
 
@@ -431,7 +436,7 @@ function zen_draw_pull_down_menu($name, $values, $default = '', $parameters = ''
   function zen_hide_session_id() {
     global $session_started;
 
-    if ( ($session_started == true) && defined('SID') && zen_not_null(SID) ) {
+    if ( ($session_started == true) && defined('SID') && !empty(SID) ) {
       return zen_draw_hidden_field(zen_session_name(), zen_session_id());
     }
   }

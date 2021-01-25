@@ -22,9 +22,8 @@ if (!empty($categoryId)) {
   $category = $db->Execute("SELECT c.categories_id, cd.categories_name, cd.categories_description, c.categories_image,
                                    c.sort_order, c.date_added, c.last_modified
                             FROM " . TABLE_CATEGORIES . " c
-                            LEFT JOIN " . TABLE_CATEGORIES_DESCRIPTION . " cd USING (categories_id)
-                            WHERE c.categories_id = " . $categoryId . "
-                            AND cd.language_id = " . (int)$_SESSION['languages_id']);
+                            LEFT JOIN " . TABLE_CATEGORIES_DESCRIPTION . " cd ON (c.categories_id = cd.categories_id AND cd.language_id = " . (int)$_SESSION['languages_id'] . ")
+                            WHERE c.categories_id = " . $categoryId);
   $cInfo->updateObjectInfo($category->fields);
 }
 $action = $_GET['action'] ?? '';
@@ -41,7 +40,7 @@ if (isset($_GET['cID'])) {
 
 $zco_notifier->notify('NOTIFY_BEGIN_ADMIN_CATEGORIES', $action);
 
-if (zen_not_null($action)) {
+if (!empty($action)) {
   switch ($action) {
 
     case 'remove_type':

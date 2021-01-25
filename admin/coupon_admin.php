@@ -718,7 +718,7 @@ switch ($_GET['action']) {
               </tr>
               <?php if (EMAIL_USE_HTML == 'true') { ?>
                 <tr>
-                  <td class="text-right"><hr /><b><?php echo TEXT_RICH_TEXT_MESSAGE; ?></b></td>
+                  <td class="text-right"><hr><b><?php echo TEXT_RICH_TEXT_MESSAGE; ?></b></td>
                   <td><?php echo stripslashes($_POST['message_html']); ?></td>
                 </tr>
               <?php } ?>

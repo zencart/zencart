@@ -32,7 +32,7 @@ if (!isset($_GET['reset_categories_products_sort_order'])) {
   $reset_categories_products_sort_order = $_SESSION['categories_products_sort_order'];
 }
 
-if (zen_not_null($action)) {
+if (!empty($action)) {
   switch ($action) {
     case 'set_categories_products_sort_order':
       $_SESSION['categories_products_sort_order'] = $_GET['reset_categories_products_sort_order'];
@@ -140,7 +140,7 @@ if (zen_not_null($action)) {
               $do_delete_flag = true;
             }
 
-            if (zen_not_null($cascaded_prod_id_for_delete) && zen_not_null($cascaded_prod_cat_for_delete)) {
+            if (!empty($cascaded_prod_id_for_delete) && !empty($cascaded_prod_cat_for_delete)) {
               $product_id = $cascaded_prod_id_for_delete;
               $product_categories = $cascaded_prod_cat_for_delete;
               $do_delete_flag = true;
@@ -960,7 +960,7 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
             $contents[] = array('align' => 'center', 'text' => '<button type="submit" class="btn btn-primary">' . IMAGE_COPY_TO . '</button> <a href="' . zen_href_link(FILENAME_CATEGORY_PRODUCT_LISTING, 'cPath=' . $cPath . '&pID=' . $pInfo->products_id . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '')) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>');
             break;
         }
-        if ((zen_not_null($heading)) && (zen_not_null($contents))) {
+        if (!empty($heading) && !empty($contents)) {
           $box = new box;
           echo '<div class="col-xs-12 col-sm-12 col-md-3 col-lg-3 configurationColumnRight">';
           echo $box->infoBox($heading, $contents);

@@ -11,7 +11,7 @@ if (!defined('IS_ADMIN_FLAG')) {
 }
 $languages = zen_get_languages();
 
-if (zen_not_null($_POST)) {
+if (!empty($_POST)) {
   $pInfo = new objectInfo($_POST);
   $metatags_title = $_POST['metatags_title'];
   $metatags_keywords = $_POST['metatags_keywords'];
@@ -94,7 +94,7 @@ $form_action = (isset($_GET['pID'])) ? 'update_product_meta_tags' : 'insert_prod
     }
 ?>
     <button type="submit" name="edit" value="edit" class="btn btn-default"><?php echo IMAGE_BACK; ?></button>
-    <button type="submit" class="btn btn-primary"><?php echo (isset($_GET['pID']) ? IMAGE_UPDATE : IMAGE_INSERT); ?></button> 
+    <button type="submit" class="btn btn-primary"><?php echo (isset($_GET['pID']) ? IMAGE_UPDATE : IMAGE_INSERT); ?></button>
     <a href="<?php echo zen_href_link(FILENAME_CATEGORY_PRODUCT_LISTING, 'cPath=' . $cPath . (isset($_GET['pID']) ? '&pID=' . $_GET['pID'] : '') . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '')); ?>" class="btn btn-default" role="button"><?php echo IMAGE_CANCEL; ?></a>
   </div>
   <?php echo '</form>'; ?>

@@ -23,19 +23,6 @@ function zen_get_select_options($optionList, $setDefault)
   return $optionString;
 }
 
-  function zen_not_null($value) {
-    if (null === $value) {
-        return false;
-    }
-    if (is_array($value)) {
-        return count($value) > 0;
-    }
-    if (is_a($value, 'queryFactoryResult')) {
-        return count($value->result) > 0;
-    }
-    return trim($value) !== '' && strtolower($value) != 'null';
-  }
-
   function logDetails($details, $location = "General") {
       if (!isset($_SESSION['logfilename']) || $_SESSION['logfilename'] == '') $_SESSION['logfilename'] = date('m-d-Y_h-i-s-') . zen_create_random_value(6);
       if ($fp = @fopen(DEBUG_LOG_FOLDER . '/zcInstallLog_' . $_SESSION['logfilename'] . '.log', 'a')) {

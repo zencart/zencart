@@ -296,7 +296,7 @@ require DIR_WS_INCLUDES . 'header.php';
 <?php
 $allowed_icon = '<i class="fa fa-lg fa-check text-success" title="' . TEXT_ALLOWED . '"></i>';
 $denied_icon = '<i class="fa fa-lg fa-ban text-danger" title="' . TEXT_DENIED . '"></i>';
-$remove_image = zen_image(DIR_WS_IMAGES . 'icons/delete.gif', IMAGE_REMOVE);
+$remove_image = '<i class="fa fa-lg fa-trash text-default" title="' . IMAGE_REMOVE . '"></i>';
 $toggle_button = '&nbsp;&nbsp;<button type="button" class="cr-toggle" title="' . TEXT_STATUS_TOGGLE_TITLE . '">' . TEXT_STATUS_TOGGLE . '</button>';
 
 $cpage = (isset($_GET['cpage'])) ? (int)$_GET['cpage'] : 1;
@@ -507,7 +507,7 @@ unset($products);
                     <?php echo 
                     zen_draw_form('prod-sel', FILENAME_COUPON_RESTRICT, zen_get_all_get_params(array('action')), 'get', 'id="prod-cat-man"') .
                     zen_draw_pull_down_menu('cPath_prod', zen_get_category_tree(), $cPath_prod, 'id="prod-path"') .
-                    '<br /><br />' .
+                    '<br><br>' .
                     zen_draw_pull_down_menu('manufacturers_id', $manufacturers_array, $current_manufacturers_id, 'id="prod-man"') .
                     zen_draw_hidden_field('cid', $cid) .
                     '</form>'; ?>

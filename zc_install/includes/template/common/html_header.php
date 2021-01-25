@@ -11,17 +11,17 @@
 <html class="no-js" <?php echo HTML_PARAMS; ?> >
 
 <head>
-<meta charset="utf-8" />
+<meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title><?php echo META_TAG_TITLE; ?></title>
 <!-- <base href="<?php echo str_replace(DIR_FS_ROOT, '', DIR_FS_INSTALL); ?>"> -->
-<meta name="robots" content="noindex, nofollow" />
-<link rel="icon" href="favicon.ico" type="image/x-icon" />
-<link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" href="favicon.ico" type="image/x-icon">
+<link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
 
-<link rel="stylesheet" type="text/css" href="<?php echo DIR_WS_INSTALL_TEMPLATE . 'css/normalize.css'; ?>" />
-<link rel="stylesheet" type="text/css" href="<?php echo DIR_WS_INSTALL_TEMPLATE . 'css/foundation.min.css'; ?>" />
-<link rel="stylesheet" type="text/css" href="<?php echo DIR_WS_INSTALL_TEMPLATE . 'css/stylesheet.css'; ?>" />
+<link rel="stylesheet" type="text/css" href="<?php echo DIR_WS_INSTALL_TEMPLATE . 'css/normalize.css'; ?>">
+<link rel="stylesheet" type="text/css" href="<?php echo DIR_WS_INSTALL_TEMPLATE . 'css/foundation.min.css'; ?>">
+<link rel="stylesheet" type="text/css" href="<?php echo DIR_WS_INSTALL_TEMPLATE . 'css/stylesheet.css'; ?>">
 
 <script src="<?php echo DIR_WS_INSTALL_TEMPLATE . 'foundation/modernizr.js'; ?>"></script>
 

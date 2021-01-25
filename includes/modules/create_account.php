@@ -66,14 +66,14 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process') && !isset($login_
   $postcode = zen_db_prepare_input($_POST['postcode']);
   $city = zen_db_prepare_input($_POST['city']);
   if (ACCOUNT_STATE == 'true') {
-    $state = zen_db_prepare_input($_POST['state']);
+    $state = zen_db_prepare_input(isset($_POST['state']) ? $_POST['state'] : '');
     if (isset($_POST['zone_id'])) {
       $zone_id = zen_db_prepare_input($_POST['zone_id']);
     }
   }
   $country = zen_db_prepare_input($_POST['zone_country_id']);
   $telephone = zen_db_prepare_input($_POST['telephone']);
-  $fax = zen_db_prepare_input($_POST['fax']);
+  $fax = isset($_POST['fax']) ? zen_db_prepare_input($_POST['fax']) : '';
   $customers_authorization = (int)CUSTOMERS_APPROVAL_AUTHORIZATION;
   $customers_referral = (isset($_POST['customers_referral']) ? zen_db_prepare_input($_POST['customers_referral']) : '');
 
@@ -168,7 +168,7 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process') && !isset($login_
   if ($nick_error) $error = true;
 
   // check Zen Cart for duplicate nickname
-  if (!$error && zen_not_null($nick)) {
+  if (!$error && !empty($nick)) {
       $sql = "SELECT * FROM " . TABLE_CUSTOMERS  . " WHERE customers_nick = :nick:";
       $check_nick_query = $db->bindVars($sql, ':nick:', $nick, 'string');
       $check_nick = $db->Execute($check_nick_query);
@@ -272,13 +272,15 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process') && !isset($login_
     zen_redirect(zen_href_link(FILENAME_SHOPPING_CART));
   } else {
 
+      $ip_address = zen_get_ip_address();
+
       $customer = new Customer;
 
       $data = compact(
           'firstname', 'lastname', 'email_address', 'nick', 'email_format', 'telephone', 'fax',
           'newsletter', 'password', 'customers_authorization', 'customers_referral',
           'gender', 'dob', 'company', 'street_address',
-          'suburb', 'city', 'zone_id', 'state', 'postcode', 'country'
+          'suburb', 'city', 'zone_id', 'state', 'postcode', 'country', 'ip_address'
       );
 
       $result = $customer->create($data);
@@ -349,7 +351,7 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process') && !isset($login_
       EMAIL_GV_LINK . zen_href_link(FILENAME_GV_REDEEM, 'gv_no=' . $coupon_code, 'NONSSL', false) . "\n\n" .
       EMAIL_GV_LINK_OTHER . EMAIL_SEPARATOR;
       $html_msg['GV_WORTH'] = str_replace('\n','',sprintf(EMAIL_GV_INCENTIVE_HEADER, $currencies->format(NEW_SIGNUP_GIFT_VOUCHER_AMOUNT)) );
-      $html_msg['GV_REDEEM'] = str_replace('\n','',str_replace('\n\n','<br />',sprintf(EMAIL_GV_REDEEM, '<strong>' . $coupon_code . '</strong>')));
+      $html_msg['GV_REDEEM'] = str_replace('\n','',str_replace('\n\n','<br>',sprintf(EMAIL_GV_REDEEM, '<strong>' . $coupon_code . '</strong>')));
       $html_msg['GV_CODE_NUM'] = $coupon_code;
       $html_msg['GV_CODE_URL'] = str_replace('\n','',EMAIL_GV_LINK . '<a href="' . zen_href_link(FILENAME_GV_REDEEM, 'gv_no=' . $coupon_code, 'NONSSL', false) . '">' . TEXT_GV_NAME . ': ' . $coupon_code . '</a>');
       $html_msg['GV_LINK_OTHER'] = EMAIL_GV_LINK_OTHER;

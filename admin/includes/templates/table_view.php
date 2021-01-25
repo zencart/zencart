@@ -51,7 +51,7 @@
 
         <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3 configurationColumnRight">
             <?php
-            if ((zen_not_null($tableController->getBoxHeader())) && (zen_not_null($tableController->getBoxContent()))) {
+            if (!empty($tableController->getBoxHeader()) && !empty($tableController->getBoxContent())) {
                 $box = new box;
                 echo $box->infoBox($tableController->getBoxHeader(), $tableController->getBoxContent());
             }

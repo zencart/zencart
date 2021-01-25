@@ -13,7 +13,7 @@ if (empty($products_description)) $products_description = [];
 if (empty($products_name)) $products_name = [];
 if (empty($products_url)) $products_url = [];
 
-if (zen_not_null($_POST)) {
+if (!empty($_POST)) {
   $pInfo = new objectInfo($_POST);
   $products_name = $_POST['products_name'];
   $products_description = $_POST['products_description'];

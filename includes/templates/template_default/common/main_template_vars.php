@@ -2,12 +2,12 @@
 /**
  * Common Template main_template_vars handler
  *
- * Normally a page will automatically load its own template based on the page name.<br />
- * so that a page called some_page will load tpl_some_page_default.php from the template directory.<br />
- * <br />
- * However sometimes a page may need to choose the template it displays based on a set of criteria.<br />
- * Placing a file in the includes/modules/pages/some_page/ directory called main_template_vars.php<br />
- * allows you to override this page and choose the template that loads.<br />
+ * Normally a page will automatically load its own template based on the page name.
+ * so that a page called some_page will load tpl_some_page_default.php from the template directory.
+ *
+ * However sometimes a page may need to choose the template it displays based on a set of criteria.
+ * Placing a file in the includes/modules/pages/some_page/ directory called main_template_vars.php
+ * allows you to override this page and choose the template that loads.
  *
  * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0

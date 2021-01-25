@@ -89,9 +89,9 @@ function selectAll(FormName, SelectBox) {
 
     $choose_audience_string .= zen_draw_form('notifications' ,FILENAME_NEWSLETTERS, 'page=' . $_GET['page'] . '&nID=' . $_GET['nID'] . '&action=confirm', 'post', 'onSubmit="return selectAll(\'notifications\', \'chosen[]\')"') . PHP_EOL;;
     $choose_audience_string .= '<div class="row">' . PHP_EOL;
-    $choose_audience_string .= '<div class="col-sm-4"><b>' . TEXT_PRODUCTS . '</b><br />' . zen_draw_pull_down_menu('products', $products_array, '', 'size="20" class="form-control" multiple') . '</div>' . PHP_EOL;
+    $choose_audience_string .= '<div class="col-sm-4"><b>' . TEXT_PRODUCTS . '</b><br>' . zen_draw_pull_down_menu('products', $products_array, '', 'size="20" class="form-control" multiple') . '</div>' . PHP_EOL;
     $choose_audience_string .= '<div class="col-sm-4 text-center"><div class="btn-group-vertical">' . $global_button . '<input type="button" value="' . BUTTON_SELECT . '" onClick="mover(\'remove\');" class="btn btn-default"><input type="button" value="' . BUTTON_UNSELECT . '" onClick="mover(\'add\');" class="btn btn-default"><input type="submit" value="' . BUTTON_SUBMIT . '" class="btn btn-default">' . $cancel_button . '</div></div>' . PHP_EOL;
-    $choose_audience_string .= '<div class="col-sm-4"><b>' . TEXT_SELECTED_PRODUCTS . '</b><br />' . zen_draw_pull_down_menu('chosen[]', array(), '', 'size="20" class="form-control" multiple') . '</div>' . PHP_EOL;
+    $choose_audience_string .= '<div class="col-sm-4"><b>' . TEXT_SELECTED_PRODUCTS . '</b><br>' . zen_draw_pull_down_menu('chosen[]', array(), '', 'size="20" class="form-control" multiple') . '</div>' . PHP_EOL;
     $choose_audience_string .= '</div>' . PHP_EOL;
     $choose_audience_string .= '</form>' . PHP_EOL;
 

@@ -14,7 +14,7 @@ if (!defined('IS_ADMIN_FLAG')) {
 <!-- heading -->
 <div class="row"><strong>
         <?php echo(HEADING_TITLE == '' ? HEADING_TITLE2 : HEADING_TITLE); ?>&nbsp;-&nbsp;<?php echo zen_output_generated_category_path($current_category_id); ?></strong>
-    <?php echo '<br />' . TEXT_CATEGORIES_PRODUCTS; ?>
+    <?php echo '<br>' . TEXT_CATEGORIES_PRODUCTS; ?>
 </div>
 <!-- heading eof -->
 <!-- category/product status -->

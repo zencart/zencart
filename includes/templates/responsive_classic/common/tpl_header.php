@@ -2,13 +2,13 @@
 /**
  * Common Template - tpl_header.php
  *
- * this file can be copied to /templates/your_template_dir/pagename<br />
- * example: to override the privacy page<br />
- * make a directory /templates/my_template/privacy<br />
- * copy /templates/templates_defaults/common/tpl_footer.php to /templates/my_template/privacy/tpl_header.php<br />
- * to override the global settings and turn off the footer un-comment the following line:<br />
- * <br />
- * $flag_disable_header = true;<br />
+ * this file can be copied to /templates/your_template_dir/pagename
+ * example: to override the privacy page
+ * make a directory /templates/my_template/privacy
+ * copy /templates/templates_defaults/common/tpl_footer.php to /templates/my_template/privacy/tpl_header.php
+ * to override the global settings and turn off the footer un-comment the following line:
+ *
+ * $flag_disable_header = true;
  *
  * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
@@ -22,36 +22,37 @@
   if ($messageStack->size('header') > 0) {
     echo $messageStack->output('header');
   }
-  if (isset($_GET['error_message']) && zen_not_null($_GET['error_message'])) {
+  if (!empty($_GET['error_message'])) {
     echo zen_output_string_protected(urldecode($_GET['error_message']));
   }
-  if (isset($_GET['info_message']) && zen_not_null($_GET['info_message'])) {
+  if (!empty($_GET['info_message'])) {
    echo zen_output_string_protected($_GET['info_message']);
+}
+// check whether to only display errors/alerts, or to also display the rest of the header
+if (isset($flag_disable_header) && $flag_disable_header === true) {
+  // do early-return from this template since $flag_disable_header is true
+  return;
 }
 ?>
 
-
 <!--bof-header logo and navigation display-->
-<?php
-if (!isset($flag_disable_header) || !$flag_disable_header) {
-?>
 
 <div id="headerWrapper">
 
 <!--bof navigation display-->
 <div id="navMainWrapper" class="group onerow-fluid">
-<?php 
+<?php
  if ( $detect->isMobile() && !$detect->isTablet() || $_SESSION['layoutType'] == 'mobile' ) {
 echo '<div class="header Fixed"><a href="#menu" title="Menu"><i class="fa fa-bars"></i></a></div>';
  } else if ( $detect->isTablet() || $_SESSION['layoutType'] == 'tablet' ){
 echo '<div class="header Fixed"><a href="#menu" title="Menu"><i class="fa fa-bars"></i></a></div>';
-} else { 
+} else {
 //
 }
 ?>
 
 <?php if ( $detect->isMobile() && !$detect->isTablet() || $_SESSION['layoutType'] == 'mobile' ) { ?>
-  
+
 <div id="navMain">
   <ul>
     <li><?php echo '<a href="' . HTTP_SERVER . DIR_WS_CATALOG . '">'; ?><i class="fa fa-home" title="Home"></i></a></li>
@@ -74,9 +75,9 @@ echo '<div class="header Fixed"><a href="#menu" title="Menu"><i class="fa fa-bar
 <?php } else { ?>
     <li class="last"><a href="<?php echo zen_href_link(FILENAME_LOGIN, '', 'SSL'); ?>"><i class="fa fa-sign-in" title="Log In"></i></a></li>
 <?php } ?>
-<?php 
-  } 
-} 
+<?php
+  }
+}
 ?>
 
 <?php if ($_SESSION['cart']->count_contents() != 0) { ?>
@@ -92,7 +93,7 @@ echo '<div class="header Fixed"><a href="#menu" title="Menu"><i class="fa fa-bar
 
 <!--eof navigation display-->
 
-<?php  } else if ( $detect->isTablet() || $_SESSION['layoutType'] == 'tablet' ){ ?> 
+<?php  } else if ( $detect->isTablet() || $_SESSION['layoutType'] == 'tablet' ){ ?>
 
 <div id="navMain">
     <ul>
@@ -106,7 +107,7 @@ echo '<div class="header Fixed"><a href="#menu" title="Menu"><i class="fa fa-bar
 <li><a href="<?php echo zen_href_link(FILENAME_ACCOUNT, '', 'SSL'); ?>"><?php echo HEADER_TITLE_MY_ACCOUNT; ?></a></li>
 	    <?php } else { ?>
 <li class="last"><a href="<?php echo zen_href_link(FILENAME_ACCOUNT, '', 'SSL'); ?>"><?php echo HEADER_TITLE_MY_ACCOUNT; ?></a></li>
-      
+
       <?php } ?>
 <?php
       } else {
@@ -121,8 +122,8 @@ echo '<div class="header Fixed"><a href="#menu" title="Menu"><i class="fa fa-bar
 <?php } } ?>
 
 <?php if ($_SESSION['cart']->count_contents() != 0) { ?>
-    <li><a class="navCartContentsIndicator" href="<?php echo zen_href_link(FILENAME_SHOPPING_CART, '', 'NONSSL'); ?>"><i class="fa fa-shopping-cart" title="Shopping Cart"></i> 
-     <?php 
+    <li><a class="navCartContentsIndicator" href="<?php echo zen_href_link(FILENAME_SHOPPING_CART, '', 'NONSSL'); ?>"><i class="fa fa-shopping-cart" title="Shopping Cart"></i>
+     <?php
         echo HEADER_TITLE_CART_CONTENTS;
         // Alternatively, if you want to display cart quantity and value, use the following line instead of the one above. Adapt for multiple languages if relevant.
         // echo $_SESSION['cart']->count_contents().' item(s) '. $currencies->format($_SESSION['cart']->show_total());
@@ -169,7 +170,7 @@ echo '<div class="header Fixed"><a href="#menu" title="Menu"><i class="fa fa-bar
 <?php if ($_SESSION['cart']->count_contents() != 0) { ?>
     <li>
       <a class="navCartContentsIndicator" href="<?php echo zen_href_link(FILENAME_SHOPPING_CART, '', 'NONSSL'); ?>"><i class="fa fa-shopping-cart" title="Shopping Cart"></i>
-     <?php 
+     <?php
         echo HEADER_TITLE_CART_CONTENTS;
         // Alternatively, if you want to display cart quantity and value, use the following line instead of the one above. Adapt for multiple languages if relevant.
         // echo $_SESSION['cart']->count_contents().' item(s) '. $currencies->format($_SESSION['cart']->show_total());
@@ -241,5 +242,3 @@ echo '<div class="header Fixed"><a href="#menu" title="Menu"><i class="fa fa-bar
 <?php } ?>
 <!--eof header ezpage links-->
 </div>
-
-<?php } ?>

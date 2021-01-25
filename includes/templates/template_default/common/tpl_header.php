@@ -2,14 +2,6 @@
 /**
  * Common Template - tpl_header.php
  *
- * this file can be copied to /templates/your_template_dir/pagename<br />
- * example: to override the privacy page<br />
- * make a directory /templates/my_template/privacy<br />
- * copy /templates/templates_defaults/common/tpl_footer.php to /templates/my_template/privacy/tpl_header.php<br />
- * to override the global settings and turn off the footer un-comment the following line:<br />
- * <br />
- * $flag_disable_header = true;<br />
- *
  * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
@@ -22,19 +14,20 @@
   if ($messageStack->size('header') > 0) {
     echo $messageStack->output('header');
   }
-  if (isset($_GET['error_message']) && zen_not_null($_GET['error_message'])) {
+  if (!empty($_GET['error_message'])) {
     echo zen_output_string_protected(urldecode($_GET['error_message']));
   }
-  if (isset($_GET['info_message']) && zen_not_null($_GET['info_message'])) {
+  if (!empty($_GET['info_message'])) {
    echo zen_output_string_protected($_GET['info_message']);
   }
+// check whether to only display errors/alerts, or to also display the rest of the header
+if (isset($flag_disable_header) && $flag_disable_header === true) {
+  // do early-return from this template since $flag_disable_header is true
+  return;
+}
 ?>
-
 
 <!--bof-header logo and navigation display-->
-<?php
-if (!isset($flag_disable_header) || !$flag_disable_header) {
-?>
 
 <div id="headerWrapper">
 <!--bof-navigation display-->
@@ -63,7 +56,7 @@ if (!isset($flag_disable_header) || !$flag_disable_header) {
 <div id="navMainSearch">
   <?php require(DIR_WS_MODULES . zen_get_module_sidebox_directory('search_header.php')); ?>
 </div>
-<br class="clearBoth" />
+<br class="clearBoth">
 </div>
 <!--eof-navigation display-->
 
@@ -91,7 +84,7 @@ if (!isset($flag_disable_header) || !$flag_disable_header) {
     </div>
 <?php } // no HEADER_SALES_TEXT or SHOW_BANNERS_GROUP_SET2 ?>
 </div>
-<br class="clearBoth" />
+<br class="clearBoth">
 <!--eof-branding display-->
 
 <!--eof-header logo and navigation display-->
@@ -106,4 +99,3 @@ if (!isset($flag_disable_header) || !$flag_disable_header) {
 <?php } ?>
 <!--eof-header ezpage links-->
 </div>
-<?php } ?>

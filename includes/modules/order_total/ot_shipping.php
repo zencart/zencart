@@ -78,7 +78,7 @@ class ot_shipping extends base
                 $shipping_tax_description
             );
 
-            if ($external_shipping_tax_handler === true || ($module !== 'free' && $GLOBALS[$module]->tax_class > 0)) {
+            if ($external_shipping_tax_handler === true || (!empty($module) && $module !== 'free' && isset($GLOBALS[$module]->tax_class) && $GLOBALS[$module]->tax_class > 0)) {
                 if ($external_shipping_tax_handler !== true) {
                     if (!isset($GLOBALS[$module]->tax_basis)) {
                         $shipping_tax_basis = STORE_SHIPPING_TAX_BASIS;

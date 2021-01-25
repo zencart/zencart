@@ -3,7 +3,7 @@
  * redirect handler
  *
  * @package page
- * @copyright Copyright 2003-2014 Zen Cart Development Team
+ * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: $
@@ -13,7 +13,7 @@ if (!defined('IS_ADMIN_FLAG')) {
 }
 switch ($_GET['action']) {
   case 'product':
-    if (isset($_GET['products_id']) && zen_not_null($_GET['products_id'])) {
+    if (!empty($_GET['products_id'])) {
       $sql = "SELECT products_url from " . TABLE_PRODUCTS_DESCRIPTION . " WHERE products_id = :productId: AND language_id = :languageId:";
       $sql = $db->bindVars($sql, ':productId:', $_GET['products_id'], 'integer');
       $sql = $db->bindVars($sql, ':languageId:', $_SESSION['languages_id'], 'integer');
@@ -33,8 +33,8 @@ switch ($_GET['action']) {
       }
     }
     break;
-  case 'music_arist':
-    if (isset($_GET['artists_id']) && zen_not_null($_GET['artists_id'])) {
+  case 'music_artist':
+    if (!empty($_GET['artists_id'])) {
       $sql = "SELECT artists_url from " . TABLE_RECORD_ARTISTS_INFO . " WHERE artists_id = :artistId: AND languages_id = :languageId:";
       $sql = $db->bindVars($sql, ':artistId:', $_GET['artists_id'], 'integer');
       $sql = $db->bindVars($sql, ':languageId:', $_SESSION['languages_id'], 'integer');
@@ -44,7 +44,7 @@ switch ($_GET['action']) {
         zen_update_music_artist_clicked($_GET['artists_id'], $_SESSION['languages_id']);
         zen_redirect(fixup_url($result->fields['artists_url']));
       } else {
-        $sql = "SELECT products_url from " . TABLE_RECORD_ARTISTS_INFO . " WHERE artists_id = :artistId: AND languages_id = :languageId:";
+        $sql = "SELECT artists_url from " . TABLE_RECORD_ARTISTS_INFO . " WHERE artists_id = :artistId: AND languages_id = :languageId:";
         $sql = $db->bindVars($sql, ':artistId:', $_GET['artists_id'], 'integer');
         $sql = $db->bindVars($sql, ':languageId:', DEFAULT_LANGUAGE, 'integer');
         $result = $db->execute($sql);
@@ -57,7 +57,7 @@ switch ($_GET['action']) {
     }
     break;
   case 'music_record_company':
-    if (isset($_GET['record_company_id']) && zen_not_null($_GET['record_company_id'])) {
+    if (!empty($_GET['record_company_id'])) {
       $sql = "SELECT record_company_url from " . TABLE_RECORD_COMPANY_INFO . " WHERE record_company_id = :rcId: AND languages_id = :languageId:";
       $sql = $db->bindVars($sql, ':rcId:', $_GET['record_company_id'], 'integer');
       $sql = $db->bindVars($sql, ':languageId:', $_SESSION['languages_id'], 'integer');
@@ -92,7 +92,7 @@ switch ($_GET['action']) {
   }
   break;
   case 'manufacturer':
-  if (isset($_GET['manufacturers_id']) && zen_not_null($_GET['manufacturers_id'])) {
+  if (isset($_GET['manufacturers_id']) && !empty($_GET['manufacturers_id'])) {
     $sql = "SELECT manufacturers_url
             FROM " . TABLE_MANUFACTURERS_INFO . "
             WHERE manufacturers_id = :manufacturersID
@@ -105,7 +105,7 @@ switch ($_GET['action']) {
     if ($manufacturer->RecordCount()) {
       // url exists in selected language
 
-      if (zen_not_null($manufacturer->fields['manufacturers_url'])) {
+      if (!empty($manufacturer->fields['manufacturers_url'])) {
         $sql = "UPDATE " . TABLE_MANUFACTURERS_INFO . "
                 SET url_clicked = url_clicked+1, date_last_click = now()
                 WHERE manufacturers_id = :manufacturersID
@@ -129,7 +129,7 @@ switch ($_GET['action']) {
 
       if ($manufacturer->RecordCount() > 0) {
 
-        if (zen_not_null($manufacturer->fields['manufacturers_url'])) {
+        if (!empty($manufacturer->fields['manufacturers_url'])) {
           $sql = "UPDATE " . TABLE_MANUFACTURERS_INFO . "
                   SET url_clicked = url_clicked+1, date_last_click = now()
                   WHERE manufacturers_id = :manufacturersID

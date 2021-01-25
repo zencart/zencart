@@ -2,8 +2,8 @@
 /**
  * Page Template
  *
- * Loaded by main_page=index<br />
- * Displays category/sub-category listing<br />
+ * Loaded by main_page=index
+ * Displays category/sub-category listing
  * Uses tpl_index_category_row.php to render individual items
  *
  * @package templateSystem
@@ -27,10 +27,12 @@
  * require the html_define for the index/categories page
  */
   include($define_page);
-?></div>
+?>
+</div>
 <?php } ?>
 
-<?php } else { ?>
+<?php } else { //show_welcome ?>
+
 <h1 id="indexCategoriesHeading"><?php echo $current_categories_name; ?></h1>
 <?php } ?>
 
@@ -100,7 +102,8 @@ while (!$show_display_category->EOF) {
 <?php } ?>
 
 <?php if ($show_display_category->fields['configuration_key'] == 'SHOW_PRODUCT_INFO_CATEGORY_UPCOMING') { ?>
-<?php include(DIR_WS_MODULES . zen_get_module_directory(FILENAME_UPCOMING_PRODUCTS)); ?><?php } ?>
+<?php include(DIR_WS_MODULES . zen_get_module_directory(FILENAME_UPCOMING_PRODUCTS)); ?>
+<?php } ?>
 <?php
   $show_display_category->MoveNext();
 } // !EOF

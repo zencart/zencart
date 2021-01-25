@@ -2,7 +2,7 @@
 /**
  * functions_categories.php
  *
- * @copyright Copyright 2003-2020 Zen Cart Development Team
+ * @copyright Copyright 2003-2021 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: DrByte  Modified in v1.5.8 $
@@ -61,10 +61,10 @@ function zen_count_products_in_category($category_id, $include_inactive = false)
 
     $sql = "SELECT count(*) as total
             FROM " . TABLE_PRODUCTS . " p
-             LEFT JOIN " . TABLE_PRODUCTS_TO_CATEGORIES . " p2c USING (products_id)
+            LEFT JOIN " . TABLE_PRODUCTS_TO_CATEGORIES . " p2c USING (products_id)
             WHERE p2c.categories_id = " . (int)$category_id;
 
-    if ($include_inactive) {
+    if (!$include_inactive) {
         $sql .= " AND p.products_status = 1";
 
     }
@@ -125,10 +125,9 @@ function zen_get_categories($categories_array = array(), $parent_id = TOPMOST_CA
 
     $categories_query = "SELECT c.categories_id, cd.categories_name, c.categories_status, c.sort_order
                          FROM " . TABLE_CATEGORIES . " c
-                         LEFT JOIN " . TABLE_CATEGORIES_DESCRIPTION . " cd USING (categories_id)
+                         LEFT JOIN " . TABLE_CATEGORIES_DESCRIPTION . " cd ON (c.categories_id = cd.categories_id AND cd.language_id = " . (int)$_SESSION['languages_id'] . ")
                          WHERE parent_id = " . (int)$parent_id . "
                          " . $status_filter . "
-                         AND cd.language_id = " . (int)$_SESSION['languages_id'] . "
                          ORDER BY c.sort_order, cd.categories_name";
     $results = $db->Execute($categories_query);
 
@@ -345,7 +344,6 @@ function zen_draw_products_pull_down($field_name, $parameters = '', $exclude = [
                 LEFT JOIN " . TABLE_PRODUCTS_TO_CATEGORIES . " ptc USING (products_id)
                 LEFT JOIN " . TABLE_PRODUCTS_DESCRIPTION . " pd USING (products_id)
                 WHERE pd.language_id = " . (int)$_SESSION['languages_id'];
-
     $condition = '';
 
     if ($show_current_category) {
@@ -467,10 +465,9 @@ function zen_draw_products_pull_down_categories($field_name, $parameters = '', $
     $select_string .= '>';
 
     $sql = "SELECT DISTINCT c.categories_id, cd.categories_name
-            FROM " . TABLE_CATEGORIES . " c,
-            LEFT JOIN " . TABLE_CATEGORIES_DESCRIPTION . " cd USING (categories_id)
-            LEFT JOIN " . TABLE_PRODUCTS_TO_CATEGORIES . " ptoc USING (categories_id)
-            WHERE cd.language_id = " . (int)$_SESSION['languages_id'] . "
+            FROM " . TABLE_CATEGORIES . " c
+            LEFT JOIN " . TABLE_CATEGORIES_DESCRIPTION . " cd ON (c.categories_id = cd.categories_id AND cd.language_id = " . (int)$_SESSION['languages_id'] . ")
+            LEFT JOIN " . TABLE_PRODUCTS_TO_CATEGORIES . " ptoc ON (ptoc.categories_id = c.categories_id)
             ORDER BY categories_name";
     $results = $db->Execute($sql);
     foreach ($results as $result) {
@@ -521,11 +518,10 @@ function zen_draw_products_pull_down_categories_attributes($field_name, $paramet
 
     $sql = "SELECT DISTINCT c.categories_id, cd.categories_name
             FROM " . TABLE_CATEGORIES . " c
-            LEFT JOIN " . TABLE_CATEGORIES_DESCRIPTION . " cd USING (categories_id)
-            LEFT JOIN " .TABLE_PRODUCTS_TO_CATEGORIES . " ptoc  USING (categories_id)
-            LEFT JOIN " . TABLE_PRODUCTS_ATTRIBUTES . " pa USING (products_id)
-            WHERE cd.language_id = " . (int)$_SESSION['languages_id'];
-    $condition = " AND pa.options_id =" . (int)$filter_by_option_name;
+            LEFT JOIN " . TABLE_CATEGORIES_DESCRIPTION . " cd ON (c.categories_id = cd.categories_id AND cd.language_id = " . (int)$_SESSION['languages_id'] . ")
+            LEFT JOIN " .TABLE_PRODUCTS_TO_CATEGORIES . " ptoc ON (ptoc.categories_id = c.categories_id)
+            LEFT JOIN " . TABLE_PRODUCTS_ATTRIBUTES . " pa USING (products_id)";
+    $condition = " WHERE pa.options_id =" . (int)$filter_by_option_name;
     $sort = " ORDER BY categories_name";
 
     switch (true) {
@@ -583,7 +579,7 @@ function zen_get_product_types_to_category($lookup)
 }
 
 /**
- * look up parent categories name
+ * look up parent category's name
  * @param int $categories_id
  * @return string name of parent category, or blank if none
  */
@@ -591,14 +587,14 @@ function zen_get_categories_parent_name($categories_id)
 {
     global $db;
 
-    $sql = "SELECT categories_name
-            FROM " . TABLE_CATEGORIES_DESCRIPTION . " cd
-            LEFT JOIN " . TABLE_CATEGORIES . " c ON c.parent_id = cd.categories_id
-            WHERE categories_id=" . (int)$categories_id . "
-            AND language_id= " . (int)$_SESSION['languages_id'];
-    $result = $db->Execute($sql);
+    $sql = "SELECT parent_id FROM " . TABLE_CATEGORIES . " WHERE categories_id='" . (int)$categories_id . "'";
+    $result = $db->Execute($sql, 1);
+    if ($result->EOF) return '';
 
-    return $result->fields['categories_name'];
+    $sql = "SELECT categories_name FROM " . TABLE_CATEGORIES_DESCRIPTION . " WHERE categories_id=" . (int)$result->fields['parent_id'] . " AND language_id= " . $_SESSION['languages_id'];
+    $result = $db->Execute($sql, 1);
+
+    return $result->EOF ? '' : $result->fields['categories_name'];
 }
 
 /**
@@ -634,7 +630,7 @@ function zen_get_categories_products_list($categories_id, $include_deactivated =
             FROM " . TABLE_PRODUCTS . " p
             LEFT JOIN " . TABLE_PRODUCTS_TO_CATEGORIES . " p2c USING (products_id)
             WHERE p2c.categories_id = " . (int)$childCatID .
-        ($include_deactivated ? " AND p.products_status = 1" : '') .
+        (!$include_deactivated ? " AND p.products_status = 1" : '') .
         $display_limit;
 
     $results = $db->Execute($sql);
@@ -680,9 +676,8 @@ function zen_generate_category_path($id, $from = 'category', $categories_array =
             } else {
                 $sql = "SELECT cd.categories_name, c.parent_id
                         FROM " . TABLE_CATEGORIES . " c
-                        LEFT JOIN " . TABLE_CATEGORIES_DESCRIPTION . " cd USING (categories_id)
-                        WHERE c.categories_id = " . (int)$p2cResult['categories_id'] . "
-                        AND cd.language_id = " . (int)$_SESSION['languages_id'];
+                        LEFT JOIN " . TABLE_CATEGORIES_DESCRIPTION . " cd ON (c.categories_id = cd.categories_id AND cd.language_id = " . (int)$_SESSION['languages_id'] . ")
+                        WHERE c.categories_id = " . (int)$p2cResult['categories_id'];
                 $category = $db->Execute($sql);
 
                 $categories_array[$index][] = [
@@ -700,9 +695,8 @@ function zen_generate_category_path($id, $from = 'category', $categories_array =
     } elseif ($from == 'category') {
         $sql = "SELECT cd.categories_name, c.parent_id
                 FROM " . TABLE_CATEGORIES . " c
-                LEFT JOIN " . TABLE_CATEGORIES_DESCRIPTION . " cd USING (categories_id)
-                WHERE c.categories_id = " . (int)$id . "
-                AND cd.language_id = " . (int)$_SESSION['languages_id'];
+                LEFT JOIN " . TABLE_CATEGORIES_DESCRIPTION . " cd ON (c.categories_id = cd.categories_id AND cd.language_id = " . (int)$_SESSION['languages_id'] . ")
+                WHERE c.categories_id = " . (int)$id;
         $category = $db->Execute($sql);
 
         if (!$category->EOF) {
@@ -821,9 +815,8 @@ function zen_get_category_tree($parent_id = TOPMOST_CATEGORY_PARENT_ID, $spacing
 
     $sql = "SELECT c.categories_id, cd.categories_name, c.parent_id
             FROM " . TABLE_CATEGORIES . " c
-            LEFT JOIN " . TABLE_CATEGORIES_DESCRIPTION . " cd USING (categories_id)
-            WHERE cd.language_id = " . (int)$_SESSION['languages_id'] . "
-            AND c.parent_id = " . (int)$parent_id . "
+            LEFT JOIN " . TABLE_CATEGORIES_DESCRIPTION . " cd ON (c.categories_id = cd.categories_id AND cd.language_id = " . (int)$_SESSION['languages_id'] . ")
+            WHERE c.parent_id = " . (int)$parent_id . "
             ORDER BY c.sort_order, cd.categories_name";
     $results = $db->Execute($sql);
     foreach ($results as $result) {
@@ -979,9 +972,8 @@ function zen_get_categories_info($parent_id = 0, $category_path_string = '')
 
     $sql = "SELECT cd.categories_id, cd.categories_name
             FROM " . TABLE_CATEGORIES . " c
-            LEFT JOIN " . TABLE_CATEGORIES_DESCRIPTION . " cd USING (categories_id)
+            LEFT JOIN " . TABLE_CATEGORIES_DESCRIPTION . " cd ON (c.categories_id = cd.categories_id AND cd.language_id = " . (int)$_SESSION['languages_id'] . ")
             WHERE c.parent_id = " . (int)$parent_id . "
-            AND cd.language_id = " . (int)$_SESSION['languages_id'] . "
             ORDER BY cd.categories_name";
     $results = $db->Execute($sql);
     foreach ($results as $result) {
@@ -1018,9 +1010,8 @@ function zen_get_target_categories_products($parent_id = 0, $spacing = '', $cate
     global $db, $products_filter;
     $sql = "SELECT cd.categories_id, cd.categories_name, c.parent_id
             FROM " . TABLE_CATEGORIES . " c
-            LEFT JOIN " . TABLE_CATEGORIES_DESCRIPTION . " cd USING (categories_id)
-            WHERE cd.language_id = " . (int)$_SESSION['languages_id'] . "
-            AND c.parent_id = " . (int)$parent_id . "
+            LEFT JOIN " . TABLE_CATEGORIES_DESCRIPTION . " cd ON (c.categories_id = cd.categories_id AND cd.language_id = " . (int)$_SESSION['languages_id'] . ")
+            WHERE c.parent_id = " . (int)$parent_id . "
             ORDER BY cd.categories_name";
     $categories = $db->Execute($sql);
     foreach ($categories as $category) {
@@ -1042,9 +1033,8 @@ function zen_get_target_categories_products($parent_id = 0, $spacing = '', $cate
         if ($type === 'product') {
             $sql = "SELECT p.products_model, pd.products_id, pd.products_name
                     FROM " . TABLE_PRODUCTS . " p
-                    LEFT JOIN " . TABLE_PRODUCTS_DESCRIPTION . " pd USING (products_id)
+                    LEFT JOIN " . TABLE_PRODUCTS_DESCRIPTION . " pd ON (p.products_id = pd.products_id AND pd.language_id = " . (int)$_SESSION['languages_id'] . ")
                     WHERE p.master_categories_id = " . (int)$category['categories_id'] . "
-                    AND pd.language_id = " . (int)$_SESSION['languages_id'] . "
                     ORDER BY p.products_model";
 
             $products = $db->Execute($sql);
@@ -1353,7 +1343,7 @@ function zen_products_in_category_count($category_id, $include_deactivated = fal
                 LEFT JOIN " . TABLE_PRODUCTS_TO_CATEGORIES . " p2c USING (products_id)
                 WHERE p2c.categories_id = " . (int)$category_id;
 
-    if ($include_deactivated) {
+    if (!$include_deactivated) {
         $sql .= " AND products_status = 1";
     }
 

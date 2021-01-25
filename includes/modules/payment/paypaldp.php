@@ -621,7 +621,7 @@ class paypaldp extends base {
       $this->zcLog('before_process - DP-1', 'Beginning DP mode' /* . print_r($_POST, TRUE)*/);
       // Set state fields depending on what PayPal wants to see for that country
       $this->setStateAndCountry($order->billing);
-      if (zen_not_null($order->delivery['street_address'])) {
+      if (!empty($order->delivery['street_address'])) {
         $this->setStateAndCountry($order->delivery);
       }
 
@@ -1056,7 +1056,7 @@ class paypaldp extends base {
     }
     // cannot install DP if EC not already enabled:
     if (!defined('MODULE_PAYMENT_PAYPALWPP_STATUS') || MODULE_PAYMENT_PAYPALWPP_STATUS != 'True') {
-      $messageStack->add_session('<strong>Sorry, you must install and configure PayPal Express Checkout first.</strong> PayPal Website Payments Pro requires that you offer Express Checkout to your customers.<br /><a href="' . zen_href_link('modules.php?set=payment&module=paypalwpp', '', 'NONSSL') . '">Click here to set up Express Checkout.</a>' , 'error');
+      $messageStack->add_session('<strong>Sorry, you must install and configure PayPal Express Checkout first.</strong> PayPal Website Payments Pro requires that you offer Express Checkout to your customers.<br><a href="' . zen_href_link('modules.php?set=payment&module=paypalwpp', '', 'NONSSL') . '">Click here to set up Express Checkout.</a>' , 'error');
       zen_redirect(zen_href_link(FILENAME_MODULES, 'set=payment&module=paypaldp', 'NONSSL'));
       return 'failed';
     }
@@ -1130,7 +1130,7 @@ class paypaldp extends base {
   /**
    * Debug Emailing support
    */
-  function _doDebug($subject = 'PayPal debug data', $data, $useSession = true) {
+  function _doDebug($subject = 'PayPal debug data', $data = '', $useSession = true) {
     if (MODULE_PAYMENT_PAYPALDP_DEBUGGING == 'Log and Email') {
       $data =  urldecode($data) . "\n\n";
       if ($useSession) $data .= "\nSession data: " . print_r($_SESSION, true);
@@ -1493,7 +1493,7 @@ class paypaldp extends base {
       $subtotalPRE = $optionsST;
       // Move shipping tax amount from Tax subtotal into Shipping subtotal for submission to PayPal, since PayPal applies tax to each line-item individually
       $module = substr($_SESSION['shipping']['id'], 0, strpos($_SESSION['shipping']['id'], '_'));
-      if (zen_not_null($order->info['shipping_method']) && DISPLAY_PRICE_WITH_TAX != 'true') {
+      if (!empty($order->info['shipping_method']) && DISPLAY_PRICE_WITH_TAX != 'true') {
         if ($GLOBALS[$module]->tax_class > 0) {
           $shipping_tax_basis = (!isset($GLOBALS[$module]->tax_basis)) ? STORE_SHIPPING_TAX_BASIS : $GLOBALS[$module]->tax_basis;
           $shippingOnBilling = zen_get_tax_rate($GLOBALS[$module]->tax_class, $order->billing['country']['id'], $order->billing['zone_id']);
@@ -1820,7 +1820,7 @@ class paypaldp extends base {
       }
       return (sizeof($this->fmfErrors)>0) ? $this->fmfErrors : FALSE;
     }
-    //echo '<br />basicError='.$basicError.'<br />' . urldecode(print_r($response,true)); die('halted');
+    //echo '<br>basicError='.$basicError.'<br>' . urldecode(print_r($response,true)); die('halted');
     if (!isset($response['L_SHORTMESSAGE0']) && isset($response['RESPMSG']) && $response['RESPMSG'] != '') $response['L_SHORTMESSAGE0'] = $response['RESPMSG'];
     if (IS_ADMIN_FLAG === false) {
     $errorInfo = 'Problem occurred while customer ' . zen_output_string_protected($_SESSION['customer_id'] . ' ' . $_SESSION['customer_first_name'] . ' ' . $_SESSION['customer_last_name']) . ' was attempting checkout with PayPal Website Payments Pro.';

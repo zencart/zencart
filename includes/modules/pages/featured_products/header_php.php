@@ -23,13 +23,13 @@ $featured_products_array = array();
 $featured_products_query_raw = "SELECT p.products_id, p.products_type, pd.products_name, p.products_image, p.products_price, p.products_tax_class_id, p.products_date_added, m.manufacturers_name, p.products_model, p.products_quantity, p.products_weight, p.product_is_call,
                                   p.product_is_always_free_shipping, p.products_qty_box_status,
                                   p.master_categories_id
-                                  FROM (" . TABLE_PRODUCTS . " p
-                                  LEFT JOIN " . TABLE_MANUFACTURERS . " m on (p.manufacturers_id = m.manufacturers_id), " .
-TABLE_PRODUCTS_DESCRIPTION . " pd
-                                  LEFT JOIN " . TABLE_FEATURED . " f on pd.products_id = f.products_id )
-                                  WHERE p.products_status = 1 and p.products_id = f.products_id and f.status = 1
-                                  AND p.products_id = pd.products_id and pd.language_id = :languagesID " .
-$order_by;
+                                  FROM " . TABLE_PRODUCTS . " p
+                                  LEFT JOIN " . TABLE_MANUFACTURERS . " m ON (p.manufacturers_id = m.manufacturers_id)
+                                  INNER JOIN " . TABLE_PRODUCTS_DESCRIPTION . " pd ON (p.products_id = pd.products_id AND pd.language_id = :languagesID)
+                                  LEFT JOIN " . TABLE_FEATURED . " f ON (p.products_id = f.products_id)
+                                  WHERE p.products_status = 1
+                                  AND f.status = 1
+                                  " . $order_by;
 
 $featured_products_query_raw = $db->bindVars($featured_products_query_raw, ':languagesID', $_SESSION['languages_id'], 'integer');
 

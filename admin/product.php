@@ -14,7 +14,7 @@ $product_type = (isset($_POST['product_type']) ? $_POST['product_type'] : (isset
 $type_handler = $zc_products->get_admin_handler($product_type);
 $zco_notifier->notify('NOTIFY_BEGIN_ADMIN_PRODUCTS', $action, $action);
 
-if (zen_not_null($action)) {
+if (!empty($action)) {
   switch ($action) {
 
     case 'insert_product_meta_tags':

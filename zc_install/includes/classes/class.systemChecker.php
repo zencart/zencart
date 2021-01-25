@@ -1,9 +1,9 @@
 <?php
 /**
  * file contains systemChecker Class
- * @copyright Copyright 2003-2020 Zen Cart Development Team
+ * @copyright Copyright 2003-2021 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2020 May 18 Modified in v1.5.7 $
+ * @version $Id: DrByte  Modified in v1.5.7c $
  */
 
 /**
@@ -223,8 +223,20 @@ class systemChecker
         while (!$result->EOF) {
             // if found the specified field ...
             if ($result->fields['Field'] == $parameters['fieldName']) {
-                // then return true if the test was simply "Exists", or check that the field's type matches the fieldCheck test
-                if ($parameters['fieldCheck'] == 'Exists' || strtoupper($result->fields[$parameters['fieldCheck']]) == $parameters['expectedResult']) {
+                // then return true if the test was simply "Exists"
+                if ($parameters['fieldCheck'] == 'Exists') {
+                    return true;
+                }
+
+                // else check that the field's type matches the fieldCheck test
+                $expected = strtoupper($parameters['expectedResult']);
+                if (strtoupper($result->fields[$parameters['fieldCheck']]) === $expected) {
+                    return true;
+                }
+                // Accommodate MySQL 8.0.17+ case where "INT(11)" only returns "INT", except for TINYINT(1)
+                $found = preg_replace('~INT\([\d]*\)~', 'INT', strtoupper($result->fields[$parameters['fieldCheck']]));
+                $expected = preg_replace('~INT\([\d]*\)~', 'INT', $expected);
+                if ($expected !== 'TINYINT(1)' && $found === $expected) {
                     return true;
                 }
             }
@@ -235,11 +247,10 @@ class systemChecker
 
     public function dbVersionCheckConfigKeyExists($db, $dbPrefix, $parameters)
     {
-        $retVal = FALSE;
-        $sql = "select configuration_key from " . $dbPrefix . "configuration where configuration_key = '" . $parameters['fieldName'] . "'";
+        $sql = "select configuration_key from " . $dbPrefix . "configuration where configuration_key = '" . $parameters['keyName'] . "'";
         $result = $db->Execute($sql, 1);
 
-        return $result->RecordCount();
+        return $result->RecordCount() > 0;
     }
 
     public function dbVersionCheckConfigValue($db, $dbPrefix, $parameters)
@@ -636,8 +647,10 @@ class systemChecker
 
         $url = NEW_VERSION_CHECKUP_URL . '?v=' . PROJECT_VERSION_MAJOR . '.' . PROJECT_VERSION_MINOR . '&p=' . PHP_VERSION . '&a=' . $_SERVER['SERVER_SOFTWARE'] . '&r=' . urlencode($_SERVER['HTTP_HOST']) . '&m=zc_install';
         $lines = @file($url);
-        if (!in_array(trim($lines[0]), ['1', '2', '3']))
+
+        // silently ignore if online check fails
         if (empty($lines)) return true;
+        if (!in_array(trim($lines[0]), ['1', '2', '3'])) return true;
 
         //check for major/minor version info
         if ((trim($lines[0]) > PROJECT_VERSION_MAJOR) || (trim($lines[0]) == PROJECT_VERSION_MAJOR && trim($lines[1]) > PROJECT_VERSION_MINOR)) {
@@ -652,13 +665,13 @@ class systemChecker
                 if ($new_version == TEXT_VERSION_CHECK_CURRENT) $new_version = '';
                 //check for patch #1
                 if (trim($lines[3]) > intval(PROJECT_VERSION_PATCH1)) {
-                    // if ($new_version != '') $new_version .= '<br />';
-                    $new_version .= (($new_version != '') ? '<br />' : '') .
+                    // if ($new_version != '') $new_version .= '<br>';
+                    $new_version .= (($new_version != '') ? '<br>' : '') .
                         '<span class="alert">' . TEXT_VERSION_CHECK_NEW_PATCH . trim($lines[0]) . '.' . trim($lines[1]) . ' - ' . TEXT_VERSION_CHECK_PATCH . ': [' . trim($lines[3]) . '] :: ' . $lines[5] . '</span>';
                 }
                 if (trim($lines[4]) > intval(PROJECT_VERSION_PATCH2)) {
-                    // if ($new_version != '') $new_version .= '<br />';
-                    $new_version .= (($new_version != '') ? '<br />' : '') .
+                    // if ($new_version != '') $new_version .= '<br>';
+                    $new_version .= (($new_version != '') ? '<br>' : '') .
                         '<span class="alert">' . TEXT_VERSION_CHECK_NEW_PATCH . trim($lines[0]) . '.' . trim($lines[1]) . ' - ' . TEXT_VERSION_CHECK_PATCH . ': [' . trim($lines[4]) . '] :: ' . $lines[5] . '</span>';
                 }
             }

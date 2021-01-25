@@ -2,10 +2,10 @@
 /**
  * dist-configure.php - SAMPLE FILE!
  *
- * @copyright Copyright 2003-2020 Zen Cart Development Team
+ * @copyright Copyright 2003-2021 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Scott C Wilson 2019 Jun 20 Modified in v1.5.7 $
+ * @version $Id: Author: DrByte  Modified in v1.5.7 $
  * @private
  */
 
@@ -86,7 +86,7 @@ define('SESSION_STORAGE', 'temporary value added by zc_install');
  * Advanced use only:
  * The following are OPTIONAL, and should NOT be set unless you intend to change their normal use. Most sites will leave these untouched.
  * To use them, uncomment AND add a proper defined value to them.
- * For your security, if you are using the backups or downloads folders, 
+ * For your security, if you are using the backups or downloads folders,
  * move them ABOVE your public_html folder.
  */
 // define('DIR_FS_SQL_CACHE' ...

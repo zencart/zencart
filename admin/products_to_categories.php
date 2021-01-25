@@ -59,10 +59,9 @@ if ($action === 'new_cat') {//this form action is from products_previous_next_di
 // @TODO this is a pretty elaborate query for getting a single products_id in order to do a redirect!
     $sql = "SELECT ptc.*
             FROM " . TABLE_PRODUCTS_TO_CATEGORIES . " ptc
-            LEFT JOIN " . TABLE_PRODUCTS_DESCRIPTION . " pd USING (products_id)
+            LEFT JOIN " . TABLE_PRODUCTS_DESCRIPTION . " pd ON (p.products_id = pd.products_id AND pd.language_id = " . (int)$_SESSION['languages_id'] . ")
             INNER JOIN " . TABLE_PRODUCTS . " p USING (products_id)
             WHERE ptc.categories_id = " . $current_category_id . "
-            AND pd.language_id = " . (int)$_SESSION['languages_id'] . "
             ORDER BY p.products_model"; // Order By determines which product is pre-selected in the list when a new category is viewed
     $result = $db->Execute($sql);
     $products_filter = (!$result->EOF) ? $result->fields['products_id'] : ''; // Empty if category has no products/has subcategories
@@ -92,7 +91,7 @@ require(DIR_WS_MODULES . FILENAME_PREV_NEXT);
 $target_category_id = (int)($_POST['target_category_id'] ?? $_GET['target_category_id'] ?? P2C_TARGET_CATEGORY_DEFAULT);
 $_GET['target_category_id'] = $target_category_id;
 
-if (zen_not_null($action)) {
+if (!empty($action)) {
     switch ($action) {
 
         // Global Tools: Copy Linked categories from this product to another
@@ -420,9 +419,8 @@ if (zen_not_null($action)) {
 if ($products_filter > 0) {
     $product_to_copy = $db->Execute("SELECT p.products_id, pd.products_name, p.products_sort_order, p.products_price_sorter, p.products_model, p.master_categories_id, p.products_image
                                  FROM " . TABLE_PRODUCTS . " p
-                                 LEFT JOIN " . TABLE_PRODUCTS_DESCRIPTION . " pd USING (products_id)
-                                 WHERE p.products_id = " . $products_filter . "
-                                 AND pd.language_id = " . (int)$_SESSION['languages_id'] . " LIMIT 1");
+                                 LEFT JOIN " . TABLE_PRODUCTS_DESCRIPTION . " pd ON (p.products_id = pd.products_id AND pd.language_id = " . (int)$_SESSION['languages_id'] . ")
+                                 WHERE p.products_id = " . $products_filter, 1);
 
     $product_linked_categories = $db->Execute("SELECT products_id, categories_id FROM " . TABLE_PRODUCTS_TO_CATEGORIES . " WHERE products_id = " . $products_filter);
 }
@@ -578,7 +576,7 @@ if ($target_subcategory_count > $max_input_vars) { //warning when in excess of P
                                                 '<a href="' . zen_href_link(FILENAME_PRODUCT,
                                                     'action=new_product' . '&cPath=' . zen_get_parent_category_id($products_filter) . '&pID=' . $products_filter . '&product_type=' . zen_get_products_type($products_filter)) . '" class="btn btn-info" role="button">' . IMAGE_EDIT_PRODUCT . '</a>&nbsp;' .
                                                 '<a href="' . zen_href_link(FILENAME_CATEGORY_PRODUCT_LISTING,
-                                                    'cPath=' . zen_get_parent_category_id($products_filter) . '&pID=' . $products_filter) . '" class="btn btn-info" role="button">' . BUTTON_CATEGORY_LISTING . '</a><br /><br />' .
+                                                    'cPath=' . zen_get_parent_category_id($products_filter) . '&pID=' . $products_filter) . '" class="btn btn-info" role="button">' . BUTTON_CATEGORY_LISTING . '</a><br><br>' .
                                                 '<a href="' . zen_href_link(FILENAME_ATTRIBUTES_CONTROLLER,
                                                     'products_filter=' . $products_filter . '&current_category_id=' . $current_category_id) . '" class="btn btn-info" role="button">' . IMAGE_EDIT_ATTRIBUTES . '</a>&nbsp;' .
                                                 '<a href="' . zen_href_link(FILENAME_PRODUCTS_PRICE_MANAGER,
@@ -597,7 +595,7 @@ if ($target_subcategory_count > $max_input_vars) { //warning when in excess of P
                             break;
                     }
 
-                    if ((zen_not_null($heading)) && (zen_not_null($contents))) {
+                    if (!empty($heading) && !empty($contents)) {
                         $box = new box();
                         echo $box->infoBox($heading, $contents);
                     }

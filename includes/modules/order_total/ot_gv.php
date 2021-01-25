@@ -47,7 +47,7 @@ class ot_gv {
     $this->credit_class = true;
     if (!(isset($_SESSION['cot_gv']) && zen_not_null(ltrim($_SESSION['cot_gv'], ' 0'))) || $_SESSION['cot_gv'] == '0') $_SESSION['cot_gv'] = '0.00';
     if (IS_ADMIN_FLAG !== true) {
-      $this->checkbox = $this->user_prompt . '<input type="text" size="6" onkeyup="submitFunction()" name="cot_gv" value="' . number_format($_SESSION['cot_gv'], 2) . '" onfocus="if (this.value == \'' . number_format($_SESSION['cot_gv'], 2) . '\') this.value = \'\';" />' . ($this->user_has_gv_account($_SESSION['customer_id']) > 0 ? '<br />' . MODULE_ORDER_TOTAL_GV_USER_BALANCE . $currencies->format($this->user_has_gv_account($_SESSION['customer_id'])) : '');
+      $this->checkbox = $this->user_prompt . '<input type="text" size="6" onkeyup="submitFunction()" name="cot_gv" value="' . number_format($_SESSION['cot_gv'], 2) . '" onfocus="if (this.value == \'' . number_format($_SESSION['cot_gv'], 2) . '\') this.value = \'\';">' . ($this->user_has_gv_account($_SESSION['customer_id']) > 0 ? '<br>' . MODULE_ORDER_TOTAL_GV_USER_BALANCE . $currencies->format($this->user_has_gv_account($_SESSION['customer_id'])) : '');
     }
     $this->output = array();
     if (IS_ADMIN_FLAG === true) {
@@ -102,6 +102,8 @@ class ot_gv {
   }
   /**
    * Check for validity of redemption amounts and recalculate order totals to include proposed GV redemption deductions
+   *
+   * @TODO - Per order_total class, this function is not used. See process() instead.
    */
   function pre_confirmation_check($order_total) {
     global $order, $currencies, $messageStack;

@@ -54,7 +54,7 @@ if (isset($_GET['pID']) && empty($_POST)) {
                            AND pd.language_id = " . (int)$_SESSION['languages_id']);
 
   $pInfo->updateObjectInfo($product->fields);
-} elseif (zen_not_null($_POST)) {
+} elseif (!empty($_POST)) {
   $pInfo->updateObjectInfo($_POST);
   $products_name = isset($_POST['products_name']) ? $_POST['products_name'] : '';
   $products_description = isset($_POST['products_description']) ? $_POST['products_description'] : '';
@@ -406,7 +406,7 @@ if (zen_get_categories_status($current_category_id) == 0 && $pInfo->products_sta
           <span class="input-group-addon">
               <?php echo zen_image(DIR_WS_CATALOG_LANGUAGES . $languages[$i]['directory'] . '/images/' . $languages[$i]['image'], $languages[$i]['name']); ?>
           </span>
-          <?php echo zen_draw_input_field('products_url[' . $languages[$i]['id'] . ']', htmlspecialchars(isset($products_url[$languages[$i]['id']]) ? $products_url[$languages[$i]['id']] : zen_get_products_url($pInfo->products_id, $languages[$i]['id']), ENT_COMPAT, CHARSET, TRUE), zen_set_field_length(TABLE_PRODUCTS_DESCRIPTION, 'products_url') . ' class="form-control"', 'url'); ?>
+          <?php echo zen_draw_input_field('products_url[' . $languages[$i]['id'] . ']', htmlspecialchars(isset($products_url[$languages[$i]['id']]) ? $products_url[$languages[$i]['id']] : zen_get_products_url($pInfo->products_id, $languages[$i]['id']), ENT_COMPAT, CHARSET, TRUE), zen_set_field_length(TABLE_PRODUCTS_DESCRIPTION, 'products_url') . ' class="form-control"', false, 'url'); ?>
         </div>
         <br>
         <?php

@@ -2,7 +2,7 @@
 /**
  * Page Template
  *
- * Loaded automatically by index.php?main_page=account_notifications.<br />
+ * Loaded automatically by index.php?main_page=account_notifications.
  * Allows customer to manage product notifications
  *
  * @package templateSystem
@@ -24,7 +24,7 @@
 
 <?php echo zen_draw_checkbox_field('product_global', '1', (($global->fields['global_product_notifications'] == '1') ? true : false), 'id="globalnotify"'); ?>
 <label class="checkboxLabel" for="globalnotify"><?php echo GLOBAL_NOTIFICATIONS_DESCRIPTION; ?></label>
-<br class="clearBoth" />
+<br class="clearBoth">
 </fieldset>
 
 <?php
@@ -41,11 +41,11 @@
 /**
  * Used to loop thru and display product notifications
  */
-  foreach ($notificationsArray as $notifications) { 
+  foreach ($notificationsArray as $notifications) {
 ?>
 <?php echo zen_draw_checkbox_field('notify[]', $notifications['products_id'], true, 'id="notify-' . $notifications['counter'] . '"'); ?>
 <label class="checkboxLabel" for="<?php echo 'notify-' . $notifications['counter']; ?>"><?php echo $notifications['products_name']; ?></label>
-<br />
+<br>
 <?php
   }
 ?>
@@ -69,5 +69,5 @@
   }
 ?>
 
-</form>    
+</form>
 </div>

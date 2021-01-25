@@ -350,7 +350,7 @@ class firstdata_hco extends base {
 
     // if in 'echo' mode, dump the returned data to the browser and stop execution
     if (MODULE_PAYMENT_FIRSTDATA_PAYMENTPAGES_DEBUGGING == 'echo') {
-      echo 'Returned Response Codes:<br /><pre>' . print_r($_POST, true) . '</pre><br />';
+      echo 'Returned Response Codes:<br><pre>' . print_r($_POST, true) . '</pre><br>';
       die('Press the BACK button in your browser to return to the previous page.');
     }
 

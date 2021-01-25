@@ -109,7 +109,7 @@ function zen_set_field_length($tbl, $fld, $max = 70)
             $length = 'size="' . ($max + 1) . '" maxlength="' . $field_length . '"';
             break;
         default:
-            $length = 'size="' . ($field_length + 1) . '"maxlength="' . $field_length . '"';
+            $length = 'size="' . ($field_length + 1) . '" maxlength="' . $field_length . '"';
             break;
     }
     return $length;
@@ -131,12 +131,12 @@ function zen_get_box_id(string $box_id)
 
 /**
  * Switch buy now button based on call for price sold out etc.
- * @param int $product_id used for calculating whether to swap
+ * @param int|string $product_id used for calculating whether to swap (while a hashed string is accepted, only the (int) portion is used)
  * @param string $buy_now_link the actual button link to use if "buy now" is allowed
  * @param string|bool $additional_link
  * @return string
  */
-function zen_get_buy_now_button(int $product_id, string $buy_now_link, $additional_link = false)
+function zen_get_buy_now_button($product_id, string $buy_now_link, $additional_link = false)
 {
     global $db;
 

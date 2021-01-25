@@ -43,32 +43,14 @@ $zco_notifier->notify('NOTIFY_HEADER_SHOPPING_CART_BEFORE_PRODUCTS_LOOP', null, 
 
 for ($i = 0, $n = count($products); $i < $n; $i++) {
     $flagStockCheck = '';
-    $rowClass = (($i / 2) == floor($i / 2)) ? "rowEven" : "rowOdd";
-
-    $buttonDelete = true;
-    $checkBoxDelete = true;
-    if (SHOW_SHOPPING_CART_DELETE == 1) {
-        $checkBoxDelete = false;
-    } elseif (SHOW_SHOPPING_CART_DELETE == 2) {
-        $buttonDelete = false;
-    }
-
-    $buttonUpdate = ''; 
-    if (SHOW_SHOPPING_CART_UPDATE == 1 or SHOW_SHOPPING_CART_UPDATE == 3) {
-       if (!$showFixedQuantity) { 
-          $buttonUpdate = zen_image_submit(ICON_IMAGE_UPDATE, ICON_UPDATE_ALT); 
-       } else {
-          $buttonUpdate = zen_image_submit(ICON_IMAGE_UPDATE, ICON_UPDATE_ALT, 'style="opacity: 0.25" disabled="disabled"'); 
-       }
-    }
-    $buttonUpdate .= zen_draw_hidden_field('products_id[]', $products[$i]['id']);
-    // initialize these here in case they need to be used/overridden within the attribute loop instead of later at the broader product-level
     $ppe = $ppt = 0;
+    $rowClass = (($i / 2) == floor($i / 2)) ? "rowEven" : "rowOdd";
 
     $attributeHiddenField = "";
     $attrArray = [];
+
     $productsName = $products[$i]['name'];
-    // Push all attributes information in an array
+    // Push all attribute information into an array
     if (isset($products[$i]['attributes']) && is_array($products[$i]['attributes'])) {
         if (PRODUCTS_OPTIONS_SORT_ORDER == '0') {
             $options_order_by = ' ORDER BY LPAD(popt.products_options_sort_order,11,"0")';
@@ -138,6 +120,24 @@ for ($i = 0, $n = count($products); $i < $n; $i++) {
 
     $productsPriceEach = $currencies->format($ppe) . ($products[$i]['onetime_charges'] != 0 ? '<br>' . $currencies->display_price($products[$i]['onetime_charges'], zen_get_tax_rate($products[$i]['tax_class_id']), 1) : '');
     $productsPriceTotal = $currencies->format($ppt) . ($products[$i]['onetime_charges'] != 0 ? '<br>' . $currencies->display_price($products[$i]['onetime_charges'], zen_get_tax_rate($products[$i]['tax_class_id']), 1) : '');
+
+    $buttonDelete = true;
+    $checkBoxDelete = true;
+    if (SHOW_SHOPPING_CART_DELETE == 1) {
+        $checkBoxDelete = false;
+    } elseif (SHOW_SHOPPING_CART_DELETE == 2) {
+        $buttonDelete = false;
+    }
+
+    $buttonUpdate = '';
+    if (SHOW_SHOPPING_CART_UPDATE == 1 or SHOW_SHOPPING_CART_UPDATE == 3) {
+        if (!$showFixedQuantity) {
+            $buttonUpdate = zen_image_submit(ICON_IMAGE_UPDATE, ICON_UPDATE_ALT);
+        } else {
+            $buttonUpdate = zen_image_submit(ICON_IMAGE_UPDATE, ICON_UPDATE_ALT, 'style="opacity: 0.25" disabled="disabled"');
+        }
+    }
+    $buttonUpdate .= zen_draw_hidden_field('products_id[]', $products[$i]['id']);
 
     $productArray[$i] = [
         'attributeHiddenField' => $attributeHiddenField,

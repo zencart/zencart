@@ -31,7 +31,7 @@ if (!isset($languages_array)) {
   $languages_array = zen_get_languages();
 }
 
-if (zen_not_null($action)) {
+if (!empty($action)) {
   switch ($action) {
     case 'edit':
     // same as 'preview'
@@ -92,7 +92,7 @@ if (zen_not_null($action)) {
       <!-- body_text //-->
       <?php
       if ($action == 'edit' || $action == 'preview') {
-        if (zen_not_null($_POST)) {
+        if (!empty($_POST)) {
           $rInfo = new objectInfo($_POST);
         } else {
           $rID = (int)$_GET['rID'];
@@ -394,7 +394,7 @@ if (zen_not_null($action)) {
                 break;
             }
 
-            if ((zen_not_null($heading)) && (zen_not_null($contents))) {
+            if (!empty($heading) && !empty($contents)) {
               $box = new box();
               echo $box->infoBox($heading, $contents);
             }

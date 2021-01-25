@@ -41,7 +41,7 @@
   $products_name = $review->fields['products_name'];
 
   if ($review->fields['products_model'] != '') {
-    $products_model = '<br /><span class="smallText">[' . $review->fields['products_model'] . ']</span>';
+    $products_model = '<br><span class="smallText">[' . $review->fields['products_model'] . ']</span>';
   } else {
     $products_model = '';
   }

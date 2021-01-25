@@ -68,7 +68,7 @@ if (($action == 'send_email_to_user') && isset($_POST['customers_email_address']
 
 if (EMAIL_ATTACHMENTS_ENABLED && $action == 'preview') {
   // PROCESS UPLOAD ATTACHMENTS
-  if (isset($_FILES['upload_file']) && zen_not_null($_FILES['upload_file']) && ($_POST['upload_file'] != 'none')) {
+  if (isset($_FILES['upload_file']) && !empty($_FILES['upload_file']) && ($_POST['upload_file'] != 'none')) {
     if ($attachments_obj = new upload('upload_file')) {
       $attachments_obj->set_extensions(array('jpg', 'jpeg', 'gif', 'png', 'zip', 'gzip', 'pdf', 'mp3', 'wma', 'wmv', 'wav', 'epub', 'ogg', 'webm', 'm4v', 'm4a'));
       $attachments_obj->set_destination(DIR_WS_ADMIN_ATTACHMENTS . $_POST['attach_dir']);
@@ -210,7 +210,7 @@ if ($action == 'preview') {
           <div class="col-sm-12"><hr></div>
           <div class="col-sm-3 text-right"><b><?php echo strip_tags(TEXT_MESSAGE_HTML); ?></b></div>
           <div class="col-sm-9">
-              <?php if (EMAIL_USE_HTML != 'true') echo TEXT_WARNING_HTML_DISABLED . '<br />'; ?>
+              <?php if (EMAIL_USE_HTML != 'true') echo TEXT_WARNING_HTML_DISABLED . '<br>'; ?>
               <?php
               $html_preview = zen_output_string(isset($_POST['message_html']) ? $_POST['message_html'] : '');
               echo (false !== stripos($html_preview, '<br') ? $html_preview : nl2br($html_preview));
@@ -231,7 +231,7 @@ if ($action == 'preview') {
           <?php if (EMAIL_ATTACHMENTS_ENABLED && ($upload_file_name != '' || $attachment_file != '')) { ?>
             <div class="col-sm-3 text-right"><b><?php echo TEXT_ATTACHMENTS_LIST; ?></b></div>
             <div class="col-sm-9">
-                <?php echo ((EMAIL_ATTACHMENT_UPLOADS_ENABLED && zen_not_null($upload_file_name)) ? $upload_file_name : $attachment_file); ?>
+                <?php echo ((EMAIL_ATTACHMENT_UPLOADS_ENABLED && !empty($upload_file_name)) ? $upload_file_name : $attachment_file); ?>
             </div>
           <?php } ?>
           <div class="col-sm-12"><?php echo zen_draw_separator('pixel_trans.gif', '1', '10'); ?></div>

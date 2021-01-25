@@ -56,7 +56,7 @@ if (isset($_GET['pID']) && empty($_POST)) {
   }
 
   $pInfo->updateObjectInfo($product->fields);
-} elseif (zen_not_null($_POST)) {
+} elseif (!empty($_POST)) {
   $pInfo->updateObjectInfo($_POST);
   $metatags_title = $_POST['metatags_title'];
   $metatags_keywords = $_POST['metatags_keywords'];

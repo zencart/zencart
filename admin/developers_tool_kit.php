@@ -106,7 +106,7 @@ function zen_display_files($include_root = false, $filetypesincluded = 1) {
       $root_array[] = DIR_FS_CATALOG . 'page_not_found.php';
     }
 
-    $root_array[] = DIR_FS_CATALOG . FILENAME_DATABASE_TEMPORARILY_DOWN; 
+    $root_array[] = DIR_FS_CATALOG . FILENAME_DATABASE_TEMPORARILY_DOWN;
     $new_array = array_merge($root_array, $original_array);
     $directory_array = $new_array;
   }
@@ -130,7 +130,7 @@ function zen_display_files($include_root = false, $filetypesincluded = 1) {
       $check_configure = $db->Execute($sql);
     }
     if ($check_configure->RecordCount() >= 1) {
-      $links = '<strong><span class="alert">' . TEXT_SEARCH_DATABASE_TABLES . '</span></strong> ' . '<a href="' . zen_href_link(FILENAME_DEVELOPERS_TOOL_KIT, 'action=' . 'locate_configuration' . '&configuration_key_lookup=' . zen_output_string_protected($configuration_key_lookup)) . '">' . zen_output_string_protected($configuration_key_lookup) . '</a><br /><br />';
+      $links = '<strong><span class="alert">' . TEXT_SEARCH_DATABASE_TABLES . '</span></strong> ' . '<a href="' . zen_href_link(FILENAME_DEVELOPERS_TOOL_KIT, 'action=' . 'locate_configuration' . '&configuration_key_lookup=' . zen_output_string_protected($configuration_key_lookup)) . '">' . zen_output_string_protected($configuration_key_lookup) . '</a><br><br>';
     } else {
       // do nothing
     }
@@ -619,8 +619,13 @@ switch ($action) {
         $sub_dir_files = array();
         getDirList(DIR_FS_ADMIN, $zv_filestype_group);
         $sub_dir_files_admin = $sub_dir_files;
+        
+// get zc_plugins
+        $sub_dir_files = array();
+        getDirList(DIR_FS_CATALOG . '/zc_plugins', $zv_filestype_group);
+        $sub_dir_files_plugins = $sub_dir_files;
 
-        $check_dir = array_merge($sub_dir_files_catalog, $sub_dir_files_email, $sub_dir_files_admin);
+        $check_dir = array_merge($sub_dir_files_catalog, $sub_dir_files_email, $sub_dir_files_admin, $sub_dir_files_plugins);
         for ($i = 0, $n = sizeof($check_dir); $i < $n; $i++) {
           $check_directory[] = $check_dir[$i] . '/';
         }
@@ -659,8 +664,13 @@ switch ($action) {
         $sub_dir_files = array();
         getDirList(DIR_FS_ADMIN, $zv_filestype_group);
         $sub_dir_files_admin = $sub_dir_files;
+        
+// get zc_plugins
+        $sub_dir_files = array();
+        getDirList(DIR_FS_CATALOG . '/zc_plugins', $zv_filestype_group);
+        $sub_dir_files_plugins = $sub_dir_files;
 
-        $check_dir = array_merge($sub_dir_files_admin);
+        $check_dir = array_merge($sub_dir_files_admin, $sub_dir_files_plugins);
         for ($i = 0, $n = sizeof($check_dir); $i < $n; $i++) {
           $check_directory[] = $check_dir[$i] . '/';
         }
@@ -749,10 +759,11 @@ if ($found == false) {
             </tr>
           <?php } ?>
           <tr>
-            <td class="main" align="center" valign="middle">
+              <td>&nbsp;</td>
+            <td class="main" align="center">
                 <?php
                 if ($show_products_type_layout == false and ( $check_configure->fields['configuration_id'] != 0 and $check_configure_group->fields['visible'] != 0)) {
-                  echo '<a href="' . zen_href_link(FILENAME_CONFIGURATION, 'gID=' . $check_configure_group->fields['configuration_group_id'] . '&cID=' . $check_configure->fields['configuration_id']) . '">' . zen_image_button('button_edit.gif', IMAGE_EDIT) . '</a>';
+                  echo '<a href="' . zen_href_link(FILENAME_CONFIGURATION, 'gID=' . $check_configure_group->fields['configuration_group_id'] . '&cID=' . $check_configure->fields['configuration_id']) . '" class="btn btn-primary" role="button">' . IMAGE_EDIT . '</a>';
                 } else {
                   $page = '';
                   if (strstr($check_configure->fields['configuration_key'], 'MODULE_SHIPPING'))
@@ -763,23 +774,23 @@ if ($found == false) {
                     $page .= 'ordertotal';
 
                   if ($show_products_type_layout == true) {
-                    echo '<a href="' . zen_href_link(FILENAME_PRODUCT_TYPES) . '">' . zen_image_button('button_edit.gif', IMAGE_EDIT) . '</a>';
+                    echo '<a href="' . zen_href_link(FILENAME_PRODUCT_TYPES) . '" class="btn btn-primary" role="button">' . IMAGE_EDIT . '</a>';
                   } else {
                     if ($page != '') {
-                      echo '<a href="' . zen_href_link(FILENAME_MODULES, 'set=' . $page) . '">' . zen_image_button('button_edit.gif', IMAGE_EDIT) . '</a>';
+                      echo '<a href="' . zen_href_link(FILENAME_MODULES, 'set=' . $page) . '" class="btn btn-primary" role="button">' . IMAGE_EDIT . '</a>';
                     } else {
-                      echo TEXT_INFO_NO_EDIT_AVAILABLE . '<br />';
+                      echo TEXT_INFO_NO_EDIT_AVAILABLE . '<br>';
                     }
                   }
                 }
                 ?>
+                <?php echo '<a href="' . zen_href_link(FILENAME_DEVELOPERS_TOOL_KIT) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>'; ?>
             </td>
-            <td class="main" align="center" valign="middle"><?php echo '<a href="' . zen_href_link(FILENAME_DEVELOPERS_TOOL_KIT) . '">' . zen_image_button('button_cancel.gif', IMAGE_CANCEL) . '</a>'; ?></td>
           </tr>
           <tr class="infoBoxContent">
             <td colspan="2" class="pageHeading" align="center">
                 <?php
-                $links = '<br /><strong><span class="alert">' . TEXT_SEARCH_ALL_FILES . '</span></strong> ' . '<a href="' . zen_href_link(FILENAME_DEVELOPERS_TOOL_KIT, 'action=' . 'locate_all_files' . '&configuration_key_lookup=' . zen_output_string_protected($configuration_key_lookup) . '&zv_files=1') . '">' . zen_output_string_protected($configuration_key_lookup) . '</a><br />';
+                $links = '<br><strong><span class="alert">' . TEXT_SEARCH_ALL_FILES . '</span></strong> ' . '<a href="' . zen_href_link(FILENAME_DEVELOPERS_TOOL_KIT, 'action=' . 'locate_all_files' . '&configuration_key_lookup=' . zen_output_string_protected($configuration_key_lookup) . '&zv_files=1') . '">' . zen_output_string_protected($configuration_key_lookup) . '</a><br>';
                 echo $links;
                 ?>
             </td>
@@ -798,7 +809,7 @@ if ($found == false) {
           <table border="0" cellspacing="0" cellpadding="2">
             <tr>
               <td class="main" align="left" valign="top"><?php echo TEXT_INFO_PRODUCTS_PRICE_SORTER_UPDATE; ?></td>
-              <td class="main" align="right" valign="middle"><?php echo '<a href="' . zen_href_link(FILENAME_DEVELOPERS_TOOL_KIT, 'action=update_all_products_price_sorter') . '">' . zen_image_button('button_update.gif', IMAGE_UPDATE) . '</a>'; ?></td>
+              <td class="main" align="right" valign="middle"><?php echo '<a href="' . zen_href_link(FILENAME_DEVELOPERS_TOOL_KIT, 'action=update_all_products_price_sorter') . '" class="btn btn-primary" role="button">' . IMAGE_UPDATE . '</a>'; ?></td>
             </tr>
           </table>
           <!-- eof: update all products price sorter -->
@@ -913,8 +924,8 @@ if ($found == false) {
 
                     <td class="<?php echo $tdClass; ?>"><?php echo $keySearchResult['configuration_description']; ?> &nbsp;</td>
                     <td class="<?php echo $tdClass; ?>"><?php echo $keySearchResult['configuration_key']; ?></td>
-                    <td class="<?php echo $tdClass; ?>"><?php echo $keySearchResult['configuration_value']; /* implode("<br />\n", preg_split("/[\s,.]+/", $configuration->fields['configuration_value'])) */ ?></td>
-                    <td class="<?php echo $tdClass; ?> text-center" onclick="document.location.href = '<?php echo $viewlink; ?>'"><a href="<?php echo $editlink; ?>"><?php echo zen_image(DIR_WS_IMAGES . 'icon_edit.gif', IMAGE_EDIT); ?></a></td>
+                    <td class="<?php echo $tdClass; ?>"><?php echo $keySearchResult['configuration_value']; /* implode("<br>\n", preg_split("/[\s,.]+/", $configuration->fields['configuration_value'])) */ ?></td>
+                    <td class="<?php echo $tdClass; ?> text-center" onclick="document.location.href = '<?php echo $viewlink; ?>'"><a href="<?php echo $editlink; ?>" class="btn btn-primary" role="button"><?php echo IMAGE_EDIT; ?></a></td>
                   </tr>
                   <?php
                   $groupChanged = FALSE;

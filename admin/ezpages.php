@@ -23,7 +23,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'set_editor') {
 $languages = zen_get_languages();
 
 $action = (isset($_GET['action']) ? $_GET['action'] : '');
-if (zen_not_null($action)) {
+if (!empty($action)) {
   switch ($action) {
     case 'set_ez_sort_order':
       $currentSortOrder = $_SESSION['ez_sort_order'] = (int)$_GET['reset_ez_sort_order'];
@@ -277,12 +277,11 @@ if (zen_not_null($action)) {
 
           $page_query = "SELECT e.*, ec.*
                          FROM " . TABLE_EZPAGES . " e
-                         INNER JOIN " . TABLE_EZPAGES_CONTENT . " ec USING (pages_id)
-                         WHERE e.pages_id = " . (int)$_GET['ezID'] . "
-                         AND ec.languages_id = " . (int)$_SESSION['languages_id'];
+                         INNER JOIN " . TABLE_EZPAGES_CONTENT . " ec ON (e.pages_id=ec.pages_id AND ec.languages_id = " . (int)$_SESSION['languages_id'] . ")
+                         WHERE e.pages_id = " . (int)$_GET['ezID'];
           $page = $db->Execute($page_query);
           $ezInfo->updateObjectInfo($page->fields);
-        } elseif (zen_not_null($_POST)) {
+        } elseif (!empty($_POST)) {
           $ezInfo->updateObjectInfo($_POST);
         }
 
@@ -305,7 +304,7 @@ if (zen_not_null($action)) {
             <?php
             $pages_title = '';
             for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
-              if (isset($_GET['ezID']) && zen_not_null($_GET['ezID'])) {
+              if (!empty($_GET['ezID'])) {
                 $title_query_sql = "SELECT pages_title
                                     FROM " . TABLE_EZPAGES_CONTENT . "
                                     WHERE pages_id = " . (int)$_GET['ezID'] . "
@@ -374,7 +373,7 @@ if (zen_not_null($action)) {
           <div class="col-sm-9 col-md-6">
             <label class="radio-inline"><?php echo zen_draw_radio_field('status_visible', '1', ($ezInfo->status_visible == 1)) . TEXT_YES; ?></label>
             <label class="radio-inline"><?php echo zen_draw_radio_field('status_visible', '0', ($ezInfo->status_visible == 0)) . TEXT_NO; ?></label>
-            <br /><br /><?php echo TABLE_HEADING_PAGE_IS_VISIBLE_EXPLANATION; ?>
+            <br><br><?php echo TABLE_HEADING_PAGE_IS_VISIBLE_EXPLANATION; ?>
           </div>
         </div>
         <div class="row"><?php echo zen_draw_separator('pixel_black.gif', '100%', '1'); ?></div>
@@ -467,7 +466,7 @@ if (zen_not_null($action)) {
             $pages_html_text = '';
 
             for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
-              if (isset($_GET['ezID']) && zen_not_null($_GET['ezID'])) {
+              if (!empty($_GET['ezID'])) {
                 $text_query_sql = "SELECT pages_html_text
                                    FROM " . TABLE_EZPAGES_CONTENT . "
                                    WHERE pages_id = " . (int)$_GET['ezID'] . "
@@ -554,8 +553,7 @@ if (zen_not_null($action)) {
 
                 $pages_query_raw = "SELECT e.*, ec.*
                                     FROM " . TABLE_EZPAGES . " e
-                                    INNER JOIN " . TABLE_EZPAGES_CONTENT . " ec USING (pages_id)
-                                    WHERE ec.languages_id = " . (int)$_SESSION['languages_id'] . "
+                                    INNER JOIN " . TABLE_EZPAGES_CONTENT . " ec ON (e.pages_id=ec.pages_id AND ec.languages_id = " . (int)$_SESSION['languages_id'] . ")
                                     " . $ez_order_by;
 
 // Split Page
@@ -777,7 +775,7 @@ if (zen_not_null($action)) {
                 break;
             }
 
-            if ((zen_not_null($heading)) && (zen_not_null($contents))) {
+            if (!empty($heading) && !empty($contents)) {
               $box = new box;
               echo $box->infoBox($heading, $contents);
             }

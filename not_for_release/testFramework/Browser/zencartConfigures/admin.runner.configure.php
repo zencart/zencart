@@ -65,7 +65,7 @@ define('DB_TYPE', 'mysql'); // always 'mysql'
 define('DB_PREFIX', ''); // prefix for database table names -- preferred to be left empty
 define('DB_CHARSET', 'utf8mb4'); // 'utf8mb4' or older 'utf8' / 'latin1' are most common
 define('DB_SERVER', '127.0.0.1');  // address of your db server
-define('DB_SERVER_USERNAME', 'root');
+define('DB_SERVER_USERNAME', 'user');
 define('DB_SERVER_PASSWORD', 'password');
 define('DB_DATABASE', 'zencart');
 
@@ -93,3 +93,4 @@ define('SESSION_STORAGE', 'reserved for future use');
 
 // The following are for github ci only
 define('ADMIN_BLOCK_WARNING_OVERRIDE', true);
+define('WARN_INSTALL_EXISTENCE', 'false');

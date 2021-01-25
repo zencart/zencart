@@ -2,7 +2,7 @@
 /**
  * Page Template
  *
- * Loaded automatically by index.php?main_page=product_music_info.<br />
+ * Loaded automatically by index.php?main_page=product_music_info.
  * Displays details of a music product
  *
  * @copyright Copyright 2003-2020 Zen Cart Development Team
@@ -41,7 +41,7 @@ require($template->get_template_dir('/tpl_products_next_previous.php',DIR_WS_TEM
 
 <!--bof Main Product Image -->
 <?php
-  if (zen_not_null($products_image)) {
+  if (!empty($products_image)) {
   ?>
 <?php
 /**
@@ -62,7 +62,7 @@ require($template->get_template_dir('/tpl_products_next_previous.php',DIR_WS_TEM
 <?php
 // base price
   if ($show_onetime_charges_description == 'true') {
-    $one_time = '<span >' . TEXT_ONETIME_CHARGE_SYMBOL . TEXT_ONETIME_CHARGE_DESCRIPTION . '</span><br />';
+    $one_time = '<span >' . TEXT_ONETIME_CHARGE_SYMBOL . TEXT_ONETIME_CHARGE_DESCRIPTION . '</span><br>';
   } else {
     $one_time = '';
   }
@@ -81,7 +81,7 @@ require($template->get_template_dir('/tpl_products_next_previous.php',DIR_WS_TEM
 <div id="productDescription" class="productGeneral biggerText"><?php echo stripslashes($products_description); ?></div>
 <?php } ?>
 <!--eof Product description -->
-<br class="clearBoth" />
+<br class="clearBoth">
 
 <!--bof Add to Cart Box -->
 <?php
@@ -93,10 +93,10 @@ if (CUSTOMERS_APPROVAL == 3 and TEXT_LOGIN_FOR_PRICE_BUTTON_REPLACE_SHOWROOM == 
     $display_qty = (($flag_show_product_info_in_cart_qty == 1 and $_SESSION['cart']->in_cart($_GET['products_id'])) ? '<p>' . PRODUCTS_ORDER_QTY_TEXT_IN_CART . $_SESSION['cart']->get_quantity($_GET['products_id']) . '</p>' : '');
             if ($products_qty_box_status == 0 or $products_quantity_order_max== 1) {
               // hide the quantity box and default to 1
-              $the_button = '<input type="hidden" name="cart_quantity" value="1" />' . zen_draw_hidden_field('products_id', (int)$_GET['products_id']) . zen_image_submit(BUTTON_IMAGE_IN_CART, BUTTON_IN_CART_ALT);
+              $the_button = '<input type="hidden" name="cart_quantity" value="1">' . zen_draw_hidden_field('products_id', (int)$_GET['products_id']) . zen_image_submit(BUTTON_IMAGE_IN_CART, BUTTON_IN_CART_ALT);
             } else {
               // show the quantity box
-    $the_button = PRODUCTS_ORDER_QTY_TEXT . '<input type="text" name="cart_quantity" value="' . $products_get_buy_now_qty . '" maxlength="6" size="4" aria-label="' . ARIA_QTY_ADD_TO_CART . '"><br />' . zen_get_products_quantity_min_units_display((int)$_GET['products_id']) . '<br />' . zen_draw_hidden_field('products_id', (int)$_GET['products_id']) . zen_image_submit(BUTTON_IMAGE_IN_CART, BUTTON_IN_CART_ALT);
+    $the_button = PRODUCTS_ORDER_QTY_TEXT . '<input type="text" name="cart_quantity" value="' . $products_get_buy_now_qty . '" maxlength="6" size="4" aria-label="' . ARIA_QTY_ADD_TO_CART . '"><br>' . zen_get_products_quantity_min_units_display((int)$_GET['products_id']) . '<br>' . zen_draw_hidden_field('products_id', (int)$_GET['products_id']) . zen_image_submit(BUTTON_IMAGE_IN_CART, BUTTON_IN_CART_ALT);
             }
     $display_button = zen_get_buy_now_button($_GET['products_id'], $the_button);
   ?>
@@ -121,7 +121,7 @@ if (CUSTOMERS_APPROVAL == 3 and TEXT_LOGIN_FOR_PRICE_BUTTON_REPLACE_SHOWROOM == 
   <?php echo (($flag_show_product_music_info_artist == 1 and !empty($products_artist_name)) ? '<li>' . TEXT_PRODUCT_ARTIST . $products_artist_name . '</li>' : '') . "\n"; ?>
   <?php echo (($flag_show_product_music_info_genre == 1 and !empty($products_music_genre_name)) ? '<li>' . TEXT_PRODUCT_MUSIC_GENRE . $products_music_genre_name . '</li>' : '') . "\n"; ?>
 </ul>
-<br class="clearBoth" />
+<br class="clearBoth">
 <?php
   }
 ?>
@@ -130,12 +130,12 @@ if (CUSTOMERS_APPROVAL == 3 and TEXT_LOGIN_FOR_PRICE_BUTTON_REPLACE_SHOWROOM == 
 <?php
 if ($flag_show_ask_a_question) {
 ?>
-<!-- bof Ask a Question --> 
-<br />
+<!-- bof Ask a Question -->
+<br>
 <span id="productQuestions" class="biggerText">
 <b><?php echo '<a href="' . zen_href_link(FILENAME_ASK_A_QUESTION, 'pid=' . $_GET['products_id'], 'SSL') . '">' . ASK_A_QUESTION . '</a>'; ?></b>
 </span>
-<br class="clearBoth" />
+<br class="clearBoth">
 <!-- eof Ask a Question -->
 <?php
 }
@@ -174,9 +174,9 @@ if ($flag_show_ask_a_question) {
  * display the products related media clips
  */
  require($template->get_template_dir('/tpl_modules_media_manager.php',DIR_WS_TEMPLATE, $current_page_base,'templates'). '/tpl_modules_media_manager.php'); ?>
-<br class="clearBoth" /></div>
+<br class="clearBoth"></div>
 <!--eof Media Manager -->
-<br class="clearBoth" />
+<br class="clearBoth">
 
 <!--bof Additional Product Images -->
 <?php
@@ -202,11 +202,11 @@ if ($flag_show_ask_a_question) {
     // if more than 0 reviews, then show reviews button; otherwise, show the "write review" button
     if ($reviews->fields['count'] > 0 ) { ?>
 <div id="productReviewLink" class="buttonRow back"><?php echo '<a href="' . zen_href_link(FILENAME_PRODUCT_REVIEWS, zen_get_all_get_params()) . '">' . zen_image_button(BUTTON_IMAGE_REVIEWS, BUTTON_REVIEWS_ALT) . '</a>'; ?></div>
-<br class="clearBoth" />
+<br class="clearBoth">
 <p class="reviewCount"><?php echo ($flag_show_product_info_reviews_count == 1 ? TEXT_CURRENT_REVIEWS . ' ' . $reviews->fields['count'] : ''); ?></p>
 <?php } else { ?>
 <div id="productReviewLink" class="buttonRow back"><?php echo '<a href="' . zen_href_link(FILENAME_PRODUCT_REVIEWS_WRITE, zen_get_all_get_params(array())) . '">' . zen_image_button(BUTTON_IMAGE_WRITE_REVIEW, BUTTON_WRITE_REVIEW_ALT) . '</a>'; ?></div>
-<br class="clearBoth" />
+<br class="clearBoth">
 <?php
 }
 }
@@ -234,7 +234,7 @@ if ($flag_show_ask_a_question) {
 
 <!--bof Product URL -->
 <?php
-  if (zen_not_null($products_record_company_url)) {
+  if (!empty($products_record_company_url)) {
     if ($flag_show_product_music_info_record_company == 1) {
 ?>
     <p id="productInfoLink" class="productMusic centeredContent"><?php echo sprintf(TEXT_RECORD_COMPANY_URL, zen_href_link(FILENAME_REDIRECT, 'action=music_record_company&record_company_id=' . zen_output_string_protected($music_extras->fields['record_company_id']), 'NONSSL', true, false)); ?></p>

@@ -197,7 +197,7 @@ if ($_GET['action'] == 'confirmrelease' && isset($_POST['gid'])) {
               $heading[] = array('text' => '<h4>[' . $gInfo->unique_id . '] ' . zen_datetime_short($gInfo->date_created) . ' ' . $currencies->format($gInfo->amount) . '</h4>');
               $contents = array('form' => zen_draw_form('gv_release', FILENAME_GV_QUEUE, 'action=confirmrelease&page=' . $_GET['page']));
               $contents[] = array('align' => 'text-center', 'text' => zen_draw_hidden_field('gid', $gInfo->unique_id) . '<button type="submit" class="btn btn-primary">' . IMAGE_CONFIRM . '</button>&nbsp;<a href="' . zen_href_link('gv_queue.php', 'action=cancel&gid=' . $gInfo->unique_id . '&page=' . $_GET['page'], 'NONSSL') . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>');
-//      $contents[] = array('align' => 'center', 'text' => '<a href="' . zen_href_link('gv_queue.php', 'action=confirmrelease&gid=' . $gInfo->unique_id . '&page=' . $_GET['page'],'NONSSL') . '">' . zen_image_button('button_confirm_red.gif', IMAGE_CONFIRM) . '</a> <a href="' . zen_href_link('gv_queue.php', 'action=cancel&gid=' . $gInfo->unique_id . '&page=' . $_GET['page'],'NONSSL') . '">' . zen_image_button('button_cancel.gif', IMAGE_CANCEL) . '</a>');
+//      $contents[] = array('align' => 'center', 'text' => '<a href="' . zen_href_link('gv_queue.php', 'action=confirmrelease&gid=' . $gInfo->unique_id . '&page=' . $_GET['page'],'NONSSL') . '" class="btn btn-danger" role="button">' . IMAGE_CONFIRM . '</a> <a href="' . zen_href_link('gv_queue.php', 'action=cancel&gid=' . $gInfo->unique_id . '&page=' . $_GET['page'],'NONSSL') . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>');
               break;
             default:
               if (!isset($gInfo) || !is_object($gInfo)) {
@@ -223,7 +223,7 @@ if ($_GET['action'] == 'confirmrelease' && isset($_POST['gid'])) {
               break;
           }
 
-          if ((zen_not_null($heading)) && (zen_not_null($contents))) {
+          if (!empty($heading) && !empty($contents)) {
             $box = new box();
             echo $box->infoBox($heading, $contents);
           }

@@ -17,7 +17,7 @@ if (!defined('IS_ADMIN_FLAG')) {
     include(DIR_FS_CATALOG . DIR_WS_CLASSES . 'language.php');
     $lng = new language();
 
-    if (isset($_GET['language']) && zen_not_null($_GET['language'])) {
+    if (isset($_GET['language']) && !empty($_GET['language'])) {
       $lng->set_language($_GET['language']);
       $zco_notifier->notify('NOTIFY_LANGUAGE_CHANGE_REQUESTED_BY_ADMIN_VISITOR', $_GET['language'], $lng);
     } else {
@@ -29,9 +29,9 @@ if (!defined('IS_ADMIN_FLAG')) {
       $lng->set_language('en');
     }
 
-    $_SESSION['language'] = (zen_not_null($lng->language['directory']) ? $lng->language['directory'] : 'english');
-    $_SESSION['languages_id'] = (zen_not_null($lng->language['id']) ? (int)$lng->language['id'] : 1);
-    $_SESSION['languages_code'] = (zen_not_null($lng->language['code']) ? $lng->language['code'] : 'en');
+    $_SESSION['language'] = (!empty($lng->language['directory']) ? $lng->language['directory'] : 'english');
+    $_SESSION['languages_id'] = (!empty($lng->language['id']) ? (int)$lng->language['id'] : 1);
+    $_SESSION['languages_code'] = (!empty($lng->language['code']) ? $lng->language['code'] : 'en');
   }
 
 // temporary patch for lang override chicken/egg quirk

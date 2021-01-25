@@ -26,7 +26,7 @@ $define = [
     'TEXT_LAST_MODIFIED' => 'Date Modified:',
     'TEXT_CUSTOMERS' => 'Customers in Group:',
     'ERROR_GROUP_PRICING_CUSTOMERS_EXIST' => 'ERROR: Customers exist in that group. Please confirm that you wish to remove all members from the group and delete it.',
-    'ERROR_MODULE_NOT_CONFIGURED' => 'NOTE: You have group pricing definitions, but you have not enabled the group-pricing Order Total module.<br />Please go to Admin->Modules->Order Total->Membership Discount (ot_group_pricing) and install/configure the module.',
+    'ERROR_MODULE_NOT_CONFIGURED' => 'NOTE: You have group pricing definitions, but you have not enabled the group-pricing Order Total module.<br>Please go to Admin->Modules->Order Total->Membership Discount (ot_group_pricing) and install/configure the module.',
 ];
 
 return $define;

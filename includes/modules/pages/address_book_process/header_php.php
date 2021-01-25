@@ -20,7 +20,7 @@ require(DIR_WS_MODULES . zen_get_module_directory('require_languages.php'));
 /**
  * Process deletes
  */
-if (isset($_GET['action']) && ($_GET['action'] == 'deleteconfirm') && isset($_POST['delete']) && is_numeric($_POST['delete'])) 
+if (isset($_GET['action']) && ($_GET['action'] == 'deleteconfirm') && isset($_POST['delete']) && is_numeric($_POST['delete']))
 {
   $sql = "DELETE FROM " . TABLE_ADDRESS_BOOK . "
           WHERE  address_book_id = :delete
@@ -271,7 +271,7 @@ if (isset($_GET['edit']) && is_numeric($_GET['edit'])) {
 
     zen_redirect(zen_href_link(FILENAME_ADDRESS_BOOK, '', 'SSL'));
   }
-  if (!isset($zone_name) || (int)$zone_name == 0) $zone_name = zen_get_zone_name($entry->fields['entry_country_id'], $entry->fields['entry_zone_id'], $entry->fields['entry_state']);
+  if (!isset($zone_name) || (int)$zone_name == 0) $zone_name = zen_get_zone_name((int)$entry->fields['entry_country_id'], (int)$entry->fields['entry_zone_id'], $entry->fields['entry_state']);
   if (!isset($zone_id) || (int)$zone_id == 0) $zone_id = $entry->fields['entry_zone_id'];
 
 } elseif (isset($_GET['delete']) && is_numeric($_GET['delete'])) {
@@ -304,7 +304,7 @@ if (isset($_GET['edit']) && is_numeric($_GET['edit'])) {
 
   $entry_query = $db->bindVars($entry_query, ':customersID', $_SESSION['customer_id'], 'integer');
   $entry = $db->Execute($entry_query);
-  
+
   $entry->fields['entry_gender'] = 'm';
   $entry->fields['entry_firstname'] = '';
   $entry->fields['entry_lastname'] = '';

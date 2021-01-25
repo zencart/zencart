@@ -11,7 +11,7 @@ if (!defined('IS_ADMIN_FLAG')) {
 }
 $languages = zen_get_languages();
 
-if (zen_not_null($_POST)) {
+if (!empty($_POST)) {
   $pInfo = new objectInfo($_POST);
   $metatags_title = $_POST['metatags_title'];
   $metatags_keywords = $_POST['metatags_keywords'];

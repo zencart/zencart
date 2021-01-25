@@ -17,6 +17,7 @@ $sql = "SELECT c.customers_id as customers_id, c.customers_firstname as customer
                    a.customers_info_date_account_created as customers_info_date_account_created, a.customers_info_id
             FROM " . TABLE_CUSTOMERS . " c
             LEFT JOIN " . TABLE_CUSTOMERS_INFO . " a ON c.customers_id = a.customers_info_id
+            WHERE c.customers_id = a.customers_info_id
             ORDER BY a.customers_info_date_account_created DESC";
 $customers = $db->Execute($sql, (int)$maxRows, true, 1800);
 

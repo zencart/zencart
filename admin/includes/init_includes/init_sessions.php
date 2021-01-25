@@ -29,7 +29,7 @@ if (!in_array($samesite, ['lax', 'strict', 'none'])) $samesite = 'lax';
 session_set_cookie_params([
     'lifetime' => 0,
     'path' => $path,
-    'domain' => (zen_not_null($cookieDomain) ? $domainPrefix . $cookieDomain : ''),
+    'domain' => (!empty($cookieDomain) ? $domainPrefix . $cookieDomain : ''),
     'secure' => $secureFlag,
     'httponly' => true,
     'samesite' => $samesite,

@@ -1,5 +1,4 @@
 <?php
-
 /**
  * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
@@ -7,11 +6,11 @@
  * @version $Id: Scott C Wilson 2019 Jul 27 Modified in v1.5.7 $
  */
 
-define('NAVBAR_TITLE_1', 'Advanced Search');
+define('NAVBAR_TITLE_1', 'Search');
 define('NAVBAR_TITLE_2', 'Search Results');
 
-//define('HEADING_TITLE_1', 'Advanced Search');
-define('HEADING_TITLE', 'Advanced Search');
+//define('HEADING_TITLE_1', 'Search');
+define('HEADING_TITLE', 'Search');
 
 define('HEADING_SEARCH_CRITERIA', 'Search Criteria');
 
@@ -30,7 +29,7 @@ define('TEXT_ALL_CATEGORIES', 'All Categories');
 define('TEXT_ALL_MANUFACTURERS', 'All Manufacturers');
 
 define('HEADING_SEARCH_HELP', 'Search Help');
-define('TEXT_SEARCH_HELP', 'Keywords may be separated by AND and/or OR statements for greater control of the search results.<br /><br />For example, Microsoft AND mouse would generate a result set that contain both words. However, for mouse OR keyboard, the result set returned would contain both or either words.<br /><br />Exact matches can be searched for by enclosing keywords in double-quotes.<br /><br />For example, "notebook computer" would generate a result set which match the exact string.<br /><br />Brackets can be used for further control on the result set.<br /><br />For example, Microsoft and (keyboard or mouse or "visual basic").');
+define('TEXT_SEARCH_HELP', 'Keywords may be separated by AND and/or OR statements for greater control of the search results.<br><br>For example, Microsoft AND mouse would generate a result set that contain both words. However, for mouse OR keyboard, the result set returned would contain both or either words.<br><br>Exact matches can be searched for by enclosing keywords in double-quotes.<br><br>For example, "notebook computer" would generate a result set which match the exact string.<br><br>Brackets can be used for further control on the result set.<br><br>For example, Microsoft and (keyboard or mouse or "visual basic").');
 define('TEXT_CLOSE_WINDOW', 'Close Window [x]');
 
 define('TABLE_HEADING_IMAGE', '');

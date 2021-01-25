@@ -12,7 +12,7 @@
 <div class="centerColumn" id="reviewsInfoDefault">
 
 <?php
-  if (zen_not_null($products_image)) {
+  if (!empty($products_image)) {
    	/**
      * require the image display code
      */
@@ -34,7 +34,7 @@
 
   $the_button = $link;
   $products_link = '';
-  echo zen_get_buy_now_button($review_info->fields['products_id'], $the_button, $products_link) . '<br />' . zen_get_products_quantity_min_units_display($review_info->fields['products_id']);
+  echo zen_get_buy_now_button($review_info->fields['products_id'], $the_button, $products_link) . '<br>' . zen_get_products_quantity_min_units_display($review_info->fields['products_id']);
 ?>
 </div>
 <div id="reviewsInfoDefaultProductPageLink" class="buttonRow"><?php echo '<a href="' . zen_href_link(zen_get_info_page($_GET['products_id']), zen_get_all_get_params(array('reviews_id'))) . '">' . zen_image_button(BUTTON_IMAGE_GOTO_PROD_DETAILS , BUTTON_GOTO_PROD_DETAILS_ALT) . '</a>'; ?></div>

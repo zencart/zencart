@@ -13,7 +13,7 @@ $define = [
     'TEXT_HEADING_NEW_MEDIA_COLLECTION' => 'New Media Collection',
     'TEXT_NEW_INTRO' => 'Please enter the details of the new media collection below',
     'TEXT_MEDIA_COLLECTION_NAME' => 'Media Collection Name',
-    'TEXT_MEDIA_EDIT_INSTRUCTIONS' => 'Use the section above to change the Media Collection Name, then clicking on the save button.<br /><br />
+    'TEXT_MEDIA_EDIT_INSTRUCTIONS' => 'Use the section above to change the Media Collection Name, then clicking on the save button.<br><br>
                                         Use the selection below to add or remove media clips from the media collection.',
     'TEXT_DATE_ADDED' => 'Date Added:',
     'TEXT_LAST_MODIFIED' => 'Last Modified:',

@@ -270,7 +270,7 @@ class paypalwpp extends base {
      * since we are NOT processing via the gateway, we will only display MarkFlow payment option, and no CC fields
      */
     return array('id' => $this->code,
-                 'module' => '<img src="' . MODULE_PAYMENT_PAYPALEC_MARK_BUTTON_IMG . '" alt="' . MODULE_PAYMENT_PAYPALWPP_TEXT_BUTTON_ALTTEXT . '" /><span style="font-size:11px; font-family: Arial, Verdana;"> ' . MODULE_PAYMENT_PAYPALWPP_MARK_BUTTON_TXT . '</span>');
+                 'module' => '<img src="' . MODULE_PAYMENT_PAYPALEC_MARK_BUTTON_IMG . '" alt="' . MODULE_PAYMENT_PAYPALWPP_TEXT_BUTTON_ALTTEXT . '"><span style="font-size:11px; font-family: Arial, Verdana;"> ' . MODULE_PAYMENT_PAYPALWPP_MARK_BUTTON_TXT . '</span>');
   }
   function pre_confirmation_check() {
     // Since this is an EC checkout, do nothing.
@@ -734,7 +734,7 @@ if (false) { // disabled until clarification is received about coupons in PayPal
     // cannot remove EC if DP installed:
     if (defined('MODULE_PAYMENT_PAYPALDP_STATUS')) {
       // this language text is hard-coded in english since Website Payments Pro is not yet available in any countries that speak any other language at this time.
-      $messageStack->add_session('<strong>Sorry, you must remove PayPal Payments Pro (paypaldp) first.</strong> PayPal Payments Pro (Website Payments Pro) requires that you offer Express Checkout to your customers.<br /><a href="' . zen_href_link('modules.php?set=payment&module=paypaldp', '', 'NONSSL') . '">Click here to edit or remove your PayPal Payments Pro module.</a>' , 'error');
+      $messageStack->add_session('<strong>Sorry, you must remove PayPal Payments Pro (paypaldp) first.</strong> PayPal Payments Pro (Website Payments Pro) requires that you offer Express Checkout to your customers.<br><a href="' . zen_href_link('modules.php?set=payment&module=paypaldp', '', 'NONSSL') . '">Click here to edit or remove your PayPal Payments Pro module.</a>' , 'error');
       zen_redirect(zen_href_link(FILENAME_MODULES, 'set=payment&module=paypalwpp', 'NONSSL'));
       return 'failed';
     }
@@ -785,7 +785,7 @@ if (false) { // disabled until clarification is received about coupons in PayPal
   /**
    * Debug Emailing support
    */
-  function _doDebug($subject = 'PayPal debug data', $data, $useSession = true) {
+  function _doDebug($subject = 'PayPal debug data', $data = '', $useSession = true) {
     if (MODULE_PAYMENT_PAYPALWPP_DEBUGGING == 'Log and Email') {
       $data =  urldecode($data) . "\n\n";
       if ($useSession) $data .= "\nSession data: " . print_r($_SESSION, true);
@@ -1255,7 +1255,7 @@ if (false) { // disabled until clarification is received about coupons in PayPal
       $subtotalPRE = $optionsST;
       // Move shipping tax amount from Tax subtotal into Shipping subtotal for submission to PayPal, since PayPal applies tax to each line-item individually
       $module = substr($_SESSION['shipping']['id'], 0, strpos($_SESSION['shipping']['id'], '_'));
-      if (zen_not_null($order->info['shipping_method']) && DISPLAY_PRICE_WITH_TAX != 'true') {
+      if (!empty($order->info['shipping_method']) && DISPLAY_PRICE_WITH_TAX != 'true') {
         if (isset($GLOBALS[$module]) && $GLOBALS[$module]->tax_class > 0) {
           $shipping_tax_basis = (!isset($GLOBALS[$module]->tax_basis)) ? STORE_SHIPPING_TAX_BASIS : $GLOBALS[$module]->tax_basis;
           $shippingOnBilling = zen_get_tax_rate($GLOBALS[$module]->tax_class, $order->billing['country']['id'], $order->billing['zone_id']);
@@ -2339,7 +2339,7 @@ if (false) { // disabled until clarification is received about coupons in PayPal
           return false;
         }
       }
-      
+
       // -----
       // Give a watching observer the opportunity to bypass this address-override.  An observer
       // can disable the address-override processing by setting the $disable_address_override
@@ -2351,7 +2351,7 @@ if (false) { // disabled until clarification is received about coupons in PayPal
         $this->zcLog('getOverrideAddress - 1a', "Override disabled by observer request.\n");
         return false;
       }
-      
+
       // now grab the address from the database and set it as the overridden address
       $sql = "SELECT entry_firstname, entry_lastname, entry_company,
                      entry_street_address, entry_suburb, entry_city, entry_postcode,
@@ -2640,6 +2640,14 @@ if (false) { // disabled until clarification is received about coupons in PayPal
       }
     }
 
+    // truncate long data
+    $address_question_arr['company'] = substr($address_question_arr['company'], 0, zen_field_length(TABLE_ADDRESS_BOOK, 'entry_company'));
+    $address_question_arr['street_address'] = substr($address_question_arr['street_address'], 0, zen_field_length(TABLE_ADDRESS_BOOK, 'entry_street_address'));
+    $address_question_arr['suburb'] = substr($address_question_arr['suburb'], 0, zen_field_length(TABLE_ADDRESS_BOOK, 'entry_suburb'));
+    $address_question_arr['city'] = substr($address_question_arr['city'], 0, zen_field_length(TABLE_ADDRESS_BOOK, 'entry_city'));
+    $address_question_arr['state'] = substr($address_question_arr['state'], 0, zen_field_length(TABLE_ADDRESS_BOOK, 'entry_state'));
+    $address_question_arr['postcode'] = substr($address_question_arr['postcode'], 0, zen_field_length(TABLE_ADDRESS_BOOK, 'entry_postcode'));
+
     // now run the insert
 
     // this isn't the best way to get fname/lname but it will get the majority of cases
@@ -2917,7 +2925,7 @@ if (false) { // disabled until clarification is received about coupons in PayPal
       return (sizeof($this->fmfErrors)>0) ? $this->fmfErrors : FALSE;
     }
     if (!isset($response['L_SHORTMESSAGE0']) && isset($response['RESPMSG']) && $response['RESPMSG'] != '') $response['L_SHORTMESSAGE0'] = $response['RESPMSG'];
-    //echo '<br />basicError='.$basicError.'<br />' . urldecode(print_r($response,true)); die('halted');
+    //echo '<br>basicError='.$basicError.'<br>' . urldecode(print_r($response,true)); die('halted');
     $errorInfo = '';
     if (IS_ADMIN_FLAG === false) {
         $errorInfo = 'Problem occurred while customer ' . zen_output_string_protected($_SESSION['customer_id'] . ' ' . $_SESSION['customer_first_name'] . ' ' . $_SESSION['customer_last_name']) . ' was attempting checkout with PayPal Express Checkout.' . "\n\n";

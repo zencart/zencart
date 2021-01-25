@@ -17,7 +17,7 @@
     $lng_cnt ++;
     if ($lng_cnt >= MAX_LANGUAGE_FLAGS_COLUMNS) {
       $lng_cnt = 0;
-      $content .= '<br />';
+      $content .= '<br>';
     }
   }
 $content .= '</div>';

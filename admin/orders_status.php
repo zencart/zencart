@@ -10,7 +10,7 @@ require('includes/application_top.php');
 $action = (isset($_GET['action']) ? $_GET['action'] : '');
 $languages = zen_get_languages();
 
-if (zen_not_null($action)) {
+if (!empty($action)) {
   switch ($action) {
     case 'insert':
     case 'save':
@@ -203,7 +203,7 @@ if (zen_not_null($action)) {
                 if (DEFAULT_ORDERS_STATUS_ID != $oInfo->orders_status_id) {
                   $contents[] = array('text' => '<br>' . zen_draw_checkbox_field('default') . ' ' . TEXT_SET_DEFAULT);
                 }
-                $contents[] = array('text' => '<br>' . TEXT_INFO_SORT_ORDER . '<br />&nbsp;&nbsp;&nbsp;&nbsp;' . zen_draw_input_field('sort_order', $oInfo->sort_order, 'class="form-control"'));
+                $contents[] = array('text' => '<br>' . TEXT_INFO_SORT_ORDER . '<br>&nbsp;&nbsp;&nbsp;&nbsp;' . zen_draw_input_field('sort_order', $oInfo->sort_order, 'class="form-control"'));
                 $contents[] = array('align' => 'text-center', 'text' => '<br><button type="submit" class="btn btn-primary">' . IMAGE_UPDATE . '</button> <a href="' . zen_href_link(FILENAME_ORDERS_STATUS, 'page=' . $_GET['page'] . '&oID=' . $oInfo->orders_status_id) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>');
                 break;
               case 'delete':
@@ -231,7 +231,7 @@ if (zen_not_null($action)) {
                 break;
             }
 
-            if ((zen_not_null($heading)) && (zen_not_null($contents))) {
+            if (!empty($heading) && !empty($contents)) {
               $box = new box;
               echo $box->infoBox($heading, $contents);
             }

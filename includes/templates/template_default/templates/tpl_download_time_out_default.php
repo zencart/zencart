@@ -2,7 +2,7 @@
 /**
  * Page Template
  *
- * Loaded automatically by index.php?main_page=download_time_out.<br />
+ * Loaded automatically by index.php?main_page=download_time_out.
  * Displays "your download session has timed out" if such timeout has occurred
  *
  * @package templateSystem
@@ -14,7 +14,7 @@
 ?>
 <div class="centerColumn" id="downloadTimeOut">
 
-<h1 id="downloadTimeOutHeading"><?php echo HEADING_TITLE; ?></h1> 
+<h1 id="downloadTimeOutHeading"><?php echo HEADING_TITLE; ?></h1>
 
 <div id="downloadTimeOutMainContent" class="content"><?php echo TEXT_INFORMATION; ?></div>
-</div> 
+</div>

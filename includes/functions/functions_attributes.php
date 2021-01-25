@@ -68,9 +68,8 @@ function zen_requires_attribute_selection($products_id)
 
     $query = "SELECT products_options_id, count(pa.options_values_id) AS number_of_choices, po.products_options_type AS options_type
               FROM " . TABLE_PRODUCTS_ATTRIBUTES . " pa
-              LEFT JOIN " . TABLE_PRODUCTS_OPTIONS . " po ON (pa.options_id = po.products_options_id)
+              LEFT JOIN " . TABLE_PRODUCTS_OPTIONS . " po ON (pa.options_id = po.products_options_id AND po.language_id = " . (int)$_SESSION['languages_id'] . ")
               WHERE pa.products_id = " . (int)$products_id . "
-              AND po.language_id = " . (int)$_SESSION['languages_id'] . "
               GROUP BY products_options_id, options_type";
 
     $zco_notifier->notify('NOTIFY_FUNCTIONS_LOOKUPS_REQUIRES_ATTRIBUTES_SELECTION', '', $query, $noSingles, $noDoubles);
@@ -544,7 +543,7 @@ function zen_copy_products_attributes($products_id_from, $products_id_to)
                   attributes_price_words_free='" . $copy_from['attributes_price_words_free'] . "',
                   attributes_price_letters='" . $copy_from['attributes_price_letters'] . "',
                   attributes_price_letters_free='" . $copy_from['attributes_price_letters_free'] . "',
-                  attributes_required='" . $copy_from['attributes_required'] . "
+                  attributes_required='" . $copy_from['attributes_required'] . "'
                   WHERE products_id=" . (int)$products_id_to . "
                    AND options_id=" . (int)$copy_from['options_id'] . "
                    AND options_values_id=" . (int)$copy_from['options_values_id']
@@ -611,7 +610,7 @@ function zen_delete_products_attributes($product_id)
     $sql = "SELECT pa.products_id, pad.products_attributes_id
             FROM " . TABLE_PRODUCTS_ATTRIBUTES . " pa
             LEFT JOIN " . TABLE_PRODUCTS_ATTRIBUTES_DOWNLOAD . " pad USING (products_attributes_id)
-            HERE pa.products_id=" . (int)$product_id;
+            WHERE pa.products_id=" . (int)$product_id;
     $results = $db->Execute($sql);
     foreach ($results as $result) {
         $db->Execute("DELETE FROM " . TABLE_PRODUCTS_ATTRIBUTES_DOWNLOAD . " WHERE products_attributes_id = " . (int)$results->fields['products_attributes_id']);

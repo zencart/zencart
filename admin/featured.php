@@ -14,7 +14,7 @@ $currencies = new currencies();
 $action = (isset($_GET['action']) ? $_GET['action'] : '');
 $currentPage = (isset($_GET['page']) && $_GET['page'] != '' ? (int)$_GET['page'] : 0);
 
-if (zen_not_null($action)) {
+if (!empty($action)) {
   switch ($action) {
     case 'setflag':
       if (isset($_POST['flag']) && ($_POST['flag'] === '1' || $_POST['flag'] === '0')) {
@@ -175,7 +175,7 @@ if (zen_not_null($action)) {
         } elseif (($action === 'new') && isset($_GET['preID'])) { //update existing Featured
           $form_action = 'insert';
 
-          $product = $db->Execute("SELECT p.products_id, p.products_model, pd.products_name, p.products_price, p.products_priced_by_attribute 
+          $product = $db->Execute("SELECT p.products_id, p.products_model, pd.products_name, p.products_price, p.products_priced_by_attribute
                                    FROM " . TABLE_PRODUCTS . " p,
                                         " . TABLE_PRODUCTS_DESCRIPTION . " pd
                                    WHERE p.products_id = pd.products_id
@@ -520,7 +520,7 @@ if (zen_not_null($action)) {
                         }
                         break;
                 }
-                if ((zen_not_null($heading)) && (zen_not_null($contents))) {
+                if (!empty($heading) && !empty($contents)) {
                     $box = new box();
                     echo $box->infoBox($heading, $contents);
                 }

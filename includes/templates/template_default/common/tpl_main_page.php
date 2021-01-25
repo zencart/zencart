@@ -2,39 +2,39 @@
 /**
  * Common Template - tpl_main_page.php
  *
- * Governs the overall layout of an entire page<br />
- * Normally consisting of a header, left side column. center column. right side column and footer<br />
- * For customizing, this file can be copied to /templates/your_template_dir/pagename<br />
- * example: to override the privacy page<br />
- * - make a directory /templates/my_template/privacy<br />
- * - copy /templates/templates_defaults/common/tpl_main_page.php to /templates/my_template/privacy/tpl_main_page.php<br />
- * <br />
- * to override the global settings and turn off columns un-comment the lines below for the correct column to turn off<br />
- * to turn off the header and/or footer uncomment the lines below<br />
- * Note: header can be disabled in the tpl_header.php<br />
- * Note: footer can be disabled in the tpl_footer.php<br />
- * <br />
- * $flag_disable_header = true;<br />
- * $flag_disable_left = true;<br />
- * $flag_disable_right = true;<br />
- * $flag_disable_footer = true;<br />
- * <br />
- * // example to not display right column on main page when Always Show Categories is OFF<br />
- * <br />
- * if ($current_page_base == 'index' and $cPath == '') {<br />
- *  $flag_disable_right = true;<br />
- * }<br />
- * <br />
- * example to not display right column on main page when Always Show Categories is ON and set to categories_id 3<br />
- * <br />
- * if ($current_page_base == 'index' and $cPath == '' or $cPath == '3') {<br />
- *  $flag_disable_right = true;<br />
- * }<br />
+ * Governs the overall layout of an entire page
+ * Normally consisting of a header, left side column. center column. right side column and footer
+ * For customizing, this file can be copied to /templates/your_template_dir/pagename
+ * example: to override the privacy page
+ * - make a directory /templates/my_template/privacy
+ * - copy /templates/templates_defaults/common/tpl_main_page.php to /templates/my_template/privacy/tpl_main_page.php
+ *
+ * to override the global settings and turn off columns un-comment the lines below for the correct column to turn off
+ * to turn off the header and/or footer uncomment the lines below
+ * Note: header can be disabled in the tpl_header.php
+ * Note: footer can be disabled in the tpl_footer.php
+ *
+ * $flag_disable_header = true;
+ * $flag_disable_left = true;
+ * $flag_disable_right = true;
+ * $flag_disable_footer = true;
+ *
+ * // example to not display right column on main page when Always Show Categories is OFF
+ *
+ * if ($current_page_base == 'index' and $cPath == '') {
+ *  $flag_disable_right = true;
+ * }
+ *
+ * example to not display right column on main page when Always Show Categories is ON and set to categories_id 3
+ *
+ * if ($current_page_base == 'index' and $cPath == '' or $cPath == '3') {
+ *  $flag_disable_right = true;
+ * }
  *
  * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2020 May 08 Modified in v1.5.7 $
+ * @version $Id: DrByte 2020 Aug 10 Modified in v1.5.7a $
  */
 
 if (!defined('IS_ADMIN_FLAG')) {
@@ -52,10 +52,13 @@ if (!defined('IS_ADMIN_FLAG')) {
 
 
 
-// the following IF statement can be duplicated/modified as needed to set additional flags
-  if (in_array($current_page_base,explode(",",'list_pages_to_skip_all_right_sideboxes_on_here,separated_by_commas,and_no_spaces')) ) {
+// the following statements can be modified as needed to set additional flags
+if (in_array($current_page_base,explode(",",'list_pages_to_skip_all_left_sideboxes_on_here,separated_by_commas,and_no_spaces')) ) {
+    $flag_disable_left = true;
+}
+if (in_array($current_page_base,explode(",",'list_pages_to_skip_all_right_sideboxes_on_here,separated_by_commas,and_no_spaces')) ) {
     $flag_disable_right = true;
-  }
+}
 
 
   $header_template = 'tpl_header.php';
@@ -103,7 +106,8 @@ if (!isset($flag_disable_left) || !$flag_disable_left) {
   *
   */
 ?>
-<div id="navColumnOneWrapper" style="width: <?php echo (int)BOX_WIDTH_LEFT; ?>px"><?php require(DIR_WS_MODULES . zen_get_module_directory('column_left.php')); ?></div></td>
+<div id="navColumnOneWrapper" style="width: <?php echo (int)BOX_WIDTH_LEFT; ?>px"><?php require(DIR_WS_MODULES . zen_get_module_directory('column_left.php')); ?></div>
+</td>
 <?php
 }
 ?>
@@ -134,7 +138,8 @@ if (!isset($flag_disable_left) || !$flag_disable_left) {
   * prepares and displays center column
   *
   */
- require($body_code); ?>
+ require($body_code);
+?>
 
 <?php
   if (SHOW_BANNERS_GROUP_SET4 != '' && $banner = zen_banner_exists('dynamic', SHOW_BANNERS_GROUP_SET4)) {
@@ -144,7 +149,8 @@ if (!isset($flag_disable_left) || !$flag_disable_left) {
 <?php
     }
   }
-?></td>
+?>
+    </td>
 
 <?php
 //if (COLUMN_RIGHT_STATUS == 0 || (CUSTOMERS_APPROVAL == '1' and $_SESSION['customer_id'] == '') || (CUSTOMERS_APPROVAL_AUTHORIZATION == 1 && CUSTOMERS_AUTHORIZATION_COLUMN_RIGHT_OFF == 'true' && $_SESSION['customers_authorization'] != 0)) {
@@ -161,7 +167,8 @@ if (!isset($flag_disable_right) || !$flag_disable_right) {
   *
   */
 ?>
-<div id="navColumnTwoWrapper" style="width: <?php echo (int)BOX_WIDTH_RIGHT; ?>"px><?php require(DIR_WS_MODULES . zen_get_module_directory('column_right.php')); ?></div></td>
+<div id="navColumnTwoWrapper" style="width: <?php echo (int)BOX_WIDTH_RIGHT; ?>"px><?php require(DIR_WS_MODULES . zen_get_module_directory('column_right.php')); ?></div>
+</td>
 <?php
 }
 ?>

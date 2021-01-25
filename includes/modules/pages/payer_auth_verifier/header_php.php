@@ -178,9 +178,9 @@ header("Cache-Control: max-age=1");  // stores for only 1 second, which prevents
 <body onLoad="onLoadHandler();">
 <center>
 <form name="frmResultPage" target="_top" method="post" action="<?php echo $redirectPage; ?>">
-<br />Processing. Please wait.
-<br /><br /><em>This may take a few moments...</em>
-<br /><br /><?php echo zen_image(DIR_WS_IMAGES.'3ds/pleasewait.gif');?>
+<br>Processing. Please wait.
+<br><br><em>This may take a few moments...</em>
+<br><br><?php echo zen_image(DIR_WS_IMAGES.'3ds/pleasewait.gif');?>
 
 <?php
   // Call pre_confirmation_check on the underlying payment module.

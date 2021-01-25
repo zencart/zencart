@@ -36,8 +36,8 @@
 ?>
 
 <div class="bold back" id="seShipTo"><?php echo CART_SHIPPING_METHOD_TO; ?></div>
-<address class="back"><?php echo zen_address_format($order->delivery['format_id'], $order->delivery, 1, ' ', '<br />'); ?></address>
-<br class="clearBoth" />
+<address class="back"><?php echo zen_address_format($order->delivery['format_id'], $order->delivery, 1, ' ', '<br>'); ?></address>
+<br class="clearBoth">
 <?php
     } else {
 ?>
@@ -51,27 +51,27 @@
 
 <label class="inputLabel" for="country"><?php echo ENTRY_COUNTRY; ?></label>
 <?php echo zen_get_country_list('zone_country_id', $selected_country, 'id="country" onchange="update_zone(this.form);"'); ?>
-<br class="clearBoth" />
+<br class="clearBoth">
 
 <a name="view"></a>
 <label class="inputLabel" for="stateZone" id="zoneLabel"><?php echo ENTRY_STATE; ?></label>
 <?php echo zen_draw_pull_down_menu('zone_id', zen_prepare_country_zones_pull_down($selected_country), $state_zone_id, 'id="stateZone"');?>
-<br class="clearBoth" id="stBreak" />
+<br class="clearBoth" id="stBreak">
 <label class="inputLabel" for="state" id="stateLabel"><?php echo (isset($state_field_label) ? $state_field_label : ''); ?></label>
 <?php echo zen_draw_input_field('state', $selectedState, zen_set_field_length(TABLE_ADDRESS_BOOK, 'entry_state', '40') . ' id="state"') .'&nbsp;<span class="alert" id="stText">&nbsp;</span>'; ?>
-<br class="clearBoth" />
+<br class="clearBoth">
 
 <?php
         if(CART_SHIPPING_METHOD_ZIP_REQUIRED == "true"){
 ?>
 <label class="inputLabel"><?php echo ENTRY_POST_CODE; ?></label>
 <?php echo  zen_draw_input_field('zip_code', $zip_code, 'size="7"'); ?>
-<br class="clearBoth" />
+<br class="clearBoth">
 <?php
         }
 ?>
 <div class="buttonRow forward"><?php echo  zen_image_submit(BUTTON_IMAGE_UPDATE, BUTTON_UPDATE_ALT); ?></div>
-<br class="clearBoth" />
+<br class="clearBoth">
 <?php
       }
     }
@@ -89,9 +89,9 @@
 <?php if (!zen_is_logged_in() || zen_in_guest_checkout()) { ?>
     <tr>
       <td colspan="2" class="seDisplayedAddressLabel">
-        <?php echo CART_SHIPPING_QUOTE_CRITERIA; ?><br />
+        <?php echo CART_SHIPPING_QUOTE_CRITERIA; ?><br>
         <?php echo '<span class="seDisplayedAddressInfo">' .
-            zen_get_zone_name($selected_country, $state_zone_id, '') .
+            zen_get_zone_name((int)$selected_country, (int)$state_zone_id, '') .
             ($selectedState != '' ? ' ' . $selectedState : '') . ' ' .
             (isset($order->delivery['postcode']) ? $order->delivery['postcode'] : '') . ' ' .
             zen_get_country_name($order->delivery['country_id']) .

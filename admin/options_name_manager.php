@@ -40,7 +40,7 @@ if (!empty($_POST['form_wrapper_id'])) { // id of surrounding div of the submitt
     $form_id = zen_db_prepare_input($_POST['form_wrapper_id']);
 }
 
-if (zen_not_null($action)) {
+if (!empty($action)) {
     switch ($action) {
         case 'add_product_options': // insert a new Option Name
             $option_name_array = $_POST['option_name']; // array

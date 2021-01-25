@@ -25,11 +25,10 @@
                                     p.product_is_always_free_shipping, p.products_qty_box_status,
                                     p.master_categories_id
                              FROM " . TABLE_PRODUCTS . " p
-                             LEFT JOIN " . TABLE_MANUFACTURERS . " m
-                             ON (p.manufacturers_id = m.manufacturers_id), " . TABLE_PRODUCTS_DESCRIPTION . " pd
+                             LEFT JOIN " . TABLE_MANUFACTURERS . " m ON (p.manufacturers_id = m.manufacturers_id)
+                             INNER JOIN " . TABLE_PRODUCTS_DESCRIPTION . " pd ON (p.products_id = pd.products_id AND pd.language_id = :languageID)
                              WHERE p.products_status = 1
-                             AND p.products_id = pd.products_id
-                             AND pd.language_id = :languageID " . $display_limit . $order_by;
+                             " . $display_limit . $order_by;
 
   $products_new_query_raw = $db->bindVars($products_new_query_raw, ':languageID', $_SESSION['languages_id'], 'integer');
   $products_new_split = new splitPageResults($products_new_query_raw, MAX_DISPLAY_PRODUCTS_NEW);

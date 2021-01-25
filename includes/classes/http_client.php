@@ -36,7 +36,7 @@ if (!defined('IS_ADMIN_FLAG')) {
  * Note: when host and port are defined, the connection is immediate
  **/
     function __construct($host = '', $port = '') {
-      if (zen_not_null($host)) {
+      if (!empty($host)) {
         $this->connect($host, $port);
       }
     }
@@ -120,7 +120,7 @@ if (!defined('IS_ADMIN_FLAG')) {
     function Connect($host, $port = '') {
       $this->url['scheme'] = 'http';
       $this->url['host'] = $host;
-      if (zen_not_null($port)) $this->url['port'] = $port;
+      if (!empty($port)) $this->url['port'] = $port;
 
       return true;
     }
@@ -300,13 +300,13 @@ if (!defined('IS_ADMIN_FLAG')) {
           $port = $this->url['port'];
         }
 
-        if (!zen_not_null($port)) $port = 80;
+        if (!!empty($port)) $port = 80;
 
         if (!$this->socket = @fsockopen($host, $port, $this->reply, $this->replyString, $this->timeout)) {
           return false;
         }
 
-        if (zen_not_null($this->requestBody)) {
+        if (!empty($this->requestBody)) {
           $this->addHeader('Content-Length', strlen($this->requestBody));
         }
 
@@ -318,7 +318,7 @@ if (!defined('IS_ADMIN_FLAG')) {
           }
         }
 
-        if (zen_not_null($this->requestBody)) {
+        if (!empty($this->requestBody)) {
           $cmd .= "\r\n" . $this->requestBody;
         }
 

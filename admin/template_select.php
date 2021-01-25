@@ -11,7 +11,7 @@ if (isset($_GET['tID'])) $selected_template = (int)$_GET['tID'];
 $action = (isset($_GET['action']) ? $_GET['action'] : '');
 $template_info = zen_get_catalog_template_directories();
 
-if (zen_not_null($action)) {
+if (!empty($action)) {
   switch ($action) {
     case 'insert':
       $selected_template = zen_register_new_template($_POST['ln'], $_POST['lang']);

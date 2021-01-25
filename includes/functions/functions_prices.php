@@ -162,6 +162,8 @@ function zen_get_products_display_price($product_id)
 
     $product_check = zen_get_product_details($product_id);
 
+    if ($product_check->EOF) return '';
+
     // no prices on Document General
     if ($product_check->fields['products_type'] == 3) {
         return '';
@@ -425,7 +427,7 @@ function zen_get_products_base_price($product_id)
     // do not select display only attributes and attributes_price_base_included is true
     $sql = "SELECT options_id, price_prefix, options_values_price,
                    attributes_display_only, attributes_price_base_included,
-            ROUND(CONCAT(price_prefix, options_values_price), 5) AS value
+            CONCAT(price_prefix, options_values_price) AS value
             FROM " . TABLE_PRODUCTS_ATTRIBUTES . "
             WHERE products_id = " . (int)$product_id . "
             AND attributes_display_only != 1
@@ -557,6 +559,9 @@ function zen_get_products_quantity_mixed($product_id)
 function zen_get_products_quantity_min_units_display($product_id, $include_break = true, $message_is_for_shopping_cart = false)
 {
     $result = zen_get_product_details($product_id);
+
+    if ($result->EOF) return '';
+
     $check_min = $result->fields['products_quantity_order_min'];
     $check_max = $result->fields['products_quantity_order_max'];
     $check_units = $result->fields['products_quantity_order_units'];
@@ -632,7 +637,7 @@ function zen_get_buy_now_qty($product_id)
         case ($mixed_products_in_cart == 0):
             if ($check_min >= $check_units) {
                 // Set the buy now quantity (associated product is not yet in the cart) to the first value satisfying both the minimum and the units.
-                if ($check_units == 0) $check_units = 1; 
+                if ($check_units == 0) $check_units = 1;
                 $buy_now_qty = $check_units * ceil($check_min / $check_units);
                 // Uncomment below to set the buy now quantity to the value of the minimum required regardless if it is a multiple of the units.
                 //$buy_now_qty = $check_min;
@@ -687,12 +692,12 @@ function zen_get_discount_calc($product_id, $attribute_id = 0, $attributes_amoun
 
     $discount_type_id = zen_get_products_sale_discount_type($product_id);
 
+    $special_price_discount = 0;
     if ($new_products_price != 0) {
         $special_price_discount = ($new_special_price != 0 ? ($new_special_price / $new_products_price) : 1);
-    } else {
-        $special_price_discount = '';
     }
-    $sale_price_discount = '';
+
+    $sale_price_discount = 0;
     if ($new_products_price != 0) {
         $sale_price_discount = ($new_sale_price != 0 ? ($new_sale_price / $new_products_price) : 1);
     }
@@ -1050,8 +1055,8 @@ function zen_get_products_sale_discount_type($product_id = false, $categories_id
                                       array('id' => '2', 'text' => DEDUCTION_TYPE_DROPDOWN_2));
     */
     $sale_exists = false;
-    $sale_maker_discount = '';
-    $sale_maker_special_condition = '';
+    $sale_maker_discount = 0;
+    $sale_maker_special_condition = 0;
     $sql = "SELECT * FROM " . TABLE_SALEMAKER_SALES . " WHERE sale_status=1";
     $results = $db->Execute($sql);
     foreach ($results as $result) {

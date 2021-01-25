@@ -47,7 +47,7 @@ class language extends base {
   }
 
   function set_language($language) {
-    if ( (zen_not_null($language)) && (isset($this->catalog_languages[$language])) ) {
+    if (!empty($language) && isset($this->catalog_languages[$language])) {
       $this->language = $this->catalog_languages[$language];
     } else {
       $this->language = $this->catalog_languages[DEFAULT_LANGUAGE];

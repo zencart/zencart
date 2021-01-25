@@ -2,7 +2,7 @@
 /**
  * Page Template
  *
- * Loaded automatically by index.php?main_page=shopping_cart.<br />
+ * Loaded automatically by index.php?main_page=shopping_cart.
  * Displays shopping-cart contents
  *
  * @copyright Copyright 2003-2020 Zen Cart Development Team
@@ -38,7 +38,7 @@
 
 <?php if (!empty($totalsDisplay)) { ?>
   <div class="cartTotalsDisplay important"><?php echo $totalsDisplay; ?></div>
-  <br class="clearBoth" />
+  <br class="clearBoth">
 <?php } ?>
 
 <?php  if ($flagAnyOutOfStock) { ?>
@@ -70,9 +70,9 @@
        <td class="cartQuantity">
 <?php
   if ($product['flagShowFixedQuantity']) {
-    echo $product['showFixedQuantityAmount'] . '<br /><span class="alert bold">' . $product['flagStockCheck'] . '</span><br /><br />' . $product['showMinUnits'];
+    echo $product['showFixedQuantityAmount'] . '<br><span class="alert bold">' . $product['flagStockCheck'] . '</span><br><br>' . $product['showMinUnits'];
   } else {
-    echo $product['quantityField'] . '<br /><span class="alert bold">' . $product['flagStockCheck'] . '</span><br /><br />' . $product['showMinUnits'];
+    echo $product['quantityField'] . '<br><span class="alert bold">' . $product['flagStockCheck'] . '</span><br><br>' . $product['showMinUnits'];
   }
 ?>
        </td>
@@ -87,7 +87,7 @@
        </td>
        <td class="cartProductDisplay">
 <a href="<?php echo $product['linkProductsName']; ?>"><span class="cartImage back"><?php echo $product['productsImage']; ?></span><span class="cartProdTitle"><?php echo $product['productsName'] . '<span class="alert bold">' . $product['flagStockCheck'] . '</span>'; ?></span></a>
-<br class="clearBoth" />
+<br class="clearBoth">
 
 
 <?php
@@ -133,7 +133,7 @@
       </table>
 
 <div id="cartSubTotal"><?php echo SUB_TITLE_SUB_TOTAL; ?> <?php echo $cartShowTotal; ?></div>
-<br class="clearBoth" />
+<br class="clearBoth">
 
 <!--bof shopping cart buttons-->
 <div class="buttonRow forward"><?php echo '<a href="' . zen_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL') . '">' . zen_image_button(BUTTON_IMAGE_CHECKOUT, BUTTON_CHECKOUT_ALT) . '</a>'; ?></div>
@@ -152,7 +152,7 @@
 <!--eof shopping cart buttons-->
 </form>
 
-<br class="clearBoth" />
+<br class="clearBoth">
 <?php
     if (SHOW_SHIPPING_ESTIMATOR_BUTTON == '1') {
 ?>

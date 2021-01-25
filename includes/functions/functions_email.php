@@ -70,7 +70,7 @@ use PHPMailer\PHPMailer\SMTP;
     }
 
     // if no text or html-msg supplied, exit
-    if (trim($email_text) == '' && (!zen_not_null($block) || (isset($block['EMAIL_MESSAGE_HTML']) && $block['EMAIL_MESSAGE_HTML'] == '')) ) return false;
+    if (trim($email_text) == '' && (empty($block) || (isset($block['EMAIL_MESSAGE_HTML']) && $block['EMAIL_MESSAGE_HTML'] == '')) ) return false;
 
     // Parse "from" addresses for "name" <email@address.com> structure, and supply name/address info from it.
     if (preg_match("/ *([^<]*) *<([^>]*)> */i",$from_email_address,$regs)) {
@@ -112,7 +112,7 @@ use PHPMailer\PHPMailer\SMTP;
       // Build the email based on whether customer has selected HTML or TEXT, and whether we have supplied HTML or TEXT-only components
       // special handling for XML content
       if ($email_text == '') {
-        $email_text = str_replace(array('<br>','<br />'), "<br />\n", $block['EMAIL_MESSAGE_HTML']);
+        $email_text = str_replace(array('<br>','<br />'), "<br>\n", $block['EMAIL_MESSAGE_HTML']);
         $email_text = str_replace('</p>', "</p>\n", $email_text);
         $email_text = ($module != 'xml_record') ? zen_output_string_protected(stripslashes(strip_tags($email_text))) : $email_text;
       } else if ($module != 'xml_record') {
@@ -211,13 +211,13 @@ use PHPMailer\PHPMailer\SMTP;
           $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
           $mail->Port = 587;
           $mail->Host = 'smtp.gmail.com';
-          $mail->Username = (zen_not_null(trim(EMAIL_SMTPAUTH_MAILBOX))) ? trim(EMAIL_SMTPAUTH_MAILBOX) : EMAIL_FROM;
+          $mail->Username = (!empty(trim(EMAIL_SMTPAUTH_MAILBOX))) ? trim(EMAIL_SMTPAUTH_MAILBOX) : EMAIL_FROM;
           if (trim(EMAIL_SMTPAUTH_PASSWORD) != '') $mail->Password = trim(EMAIL_SMTPAUTH_PASSWORD);
           break;
         case 'smtpauth':
           $mail->isSMTP();
           $mail->SMTPAuth = true;
-          $mail->Username = (zen_not_null(trim(EMAIL_SMTPAUTH_MAILBOX))) ? trim(EMAIL_SMTPAUTH_MAILBOX) : EMAIL_FROM;
+          $mail->Username = (!empty(trim(EMAIL_SMTPAUTH_MAILBOX))) ? trim(EMAIL_SMTPAUTH_MAILBOX) : EMAIL_FROM;
           if (trim(EMAIL_SMTPAUTH_PASSWORD) != '') $mail->Password = trim(EMAIL_SMTPAUTH_PASSWORD);
           $mail->Host = (trim(EMAIL_SMTPAUTH_MAIL_SERVER) != '') ? trim(EMAIL_SMTPAUTH_MAIL_SERVER) : 'localhost';
           if ((int)EMAIL_SMTPAUTH_MAIL_SERVER_PORT != 25 && (int)EMAIL_SMTPAUTH_MAIL_SERVER_PORT != 0) $mail->Port = (int)EMAIL_SMTPAUTH_MAIL_SERVER_PORT;
@@ -359,7 +359,12 @@ use PHPMailer\PHPMailer\SMTP;
       /**
        * Send the email. If an error occurs, trap it and display it in the messageStack
        */
-      if (!$mail->send()) {
+      $success = false;
+      try {
+         $success = $mail->send();
+      } catch (Exception $e) {
+      }
+      if (!$success) {
         $msg = sprintf(EMAIL_SEND_FAILED . '&nbsp;'. $mail->ErrorInfo, $to_name, $to_email_address, $email_subject);
         if ($messageStack !== NULL) {
           if (IS_ADMIN_FLAG === true) {
@@ -592,12 +597,12 @@ use PHPMailer\PHPMailer\SMTP;
 
     $block['COUPON_BLOCK'] = '';
     if (isset($block['COUPON_TEXT_VOUCHER_IS']) && $block['COUPON_TEXT_VOUCHER_IS'] != '' && isset($block['COUPON_TEXT_TO_REDEEM']) && $block['COUPON_TEXT_TO_REDEEM'] != '') {
-      $block['COUPON_BLOCK'] = '<div class="coupon-block">' . $block['COUPON_TEXT_VOUCHER_IS'] . $block['COUPON_DESCRIPTION'] . '<br />' . $block['COUPON_TEXT_TO_REDEEM'] . '<span class="coupon-code">' . $block['COUPON_CODE'] . '</span></div>';
+      $block['COUPON_BLOCK'] = '<div class="coupon-block">' . $block['COUPON_TEXT_VOUCHER_IS'] . $block['COUPON_DESCRIPTION'] . '<br>' . $block['COUPON_TEXT_TO_REDEEM'] . '<span class="coupon-code">' . $block['COUPON_CODE'] . '</span></div>';
     }
 
     $block['GV_BLOCK'] = '';
       if ( (isset($block['GV_ANNOUNCE']) && $block['GV_ANNOUNCE'] != '') && (isset($block['GV_REDEEM']) && $block['GV_REDEEM'] != '') ) {
-          $block['GV_BLOCK'] = '<div class="gv-block">' . $block['GV_ANNOUNCE'] . '<br />' . $block['GV_REDEEM'] . '</div>';
+          $block['GV_BLOCK'] = '<div class="gv-block">' . $block['GV_ANNOUNCE'] . '<br>' . $block['GV_REDEEM'] . '</div>';
       }
 
     //prepare the "unsubscribe" link:
