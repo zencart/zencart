@@ -794,7 +794,7 @@ function zen_js_option_values_list($selectedName, $fieldName)
           <div class="form-group">
             <div class="col-sm-6 text-center">
               <span class="text-danger"><strong><?php echo TEXT_INFO_ATTRIBUTES_FEATURE_COPY_TO; ?></strong></span><br>
-              <?php echo zen_draw_products_pull_down('products_update_id', 'size="15" class="form-control"', $products_exclude_array, true, '', true); ?></div>
+              <?php echo zen_draw_pulldown_products('products_update_id', 'size="15" class="form-control"', $products_exclude_array, true, '', true); ?></div>
             <div class="col-sm-6 text-center">
               <button type="submit" class="btn btn-primary"><i class="fa fa-copy" aria-hidden="true"></i> <?php echo IMAGE_COPY; ?></button>
               <?php echo '<a href="' . zen_href_link(FILENAME_ATTRIBUTES_CONTROLLER, 'products_filter=' . $products_filter . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '')) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>'; ?></div>
@@ -828,7 +828,7 @@ function zen_js_option_values_list($selectedName, $fieldName)
           <div class="form-group">
             <div class="col-sm-6 text-center">
               <span class="text-danger"><strong><?php echo TEXT_INFO_ATTRIBUTES_FEATURE_CATEGORIES_COPY_TO; ?></strong></span><br>
-              <?php echo zen_draw_products_pull_down_categories('categories_update_id', 'size="5" class="form-control"', '', true, true); ?></div>
+              <?php echo zen_draw_pulldown_categories_having_products('categories_update_id', 'size="5" class="form-control"', '', true, true); ?></div>
             <div class="col-sm-6 text-center">
               <button type="submit" class="btn btn-primary"><i class="fa fa-copy" aria-hidden="true"></i> <?php echo IMAGE_COPY; ?></button>
               <?php echo '<a href="' . zen_href_link(FILENAME_ATTRIBUTES_CONTROLLER, 'products_filter=' . $products_filter . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '')) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>'; ?></div>
@@ -865,7 +865,7 @@ function zen_js_option_values_list($selectedName, $fieldName)
                   echo zen_get_products_quantity_min_units_display($_GET['products_filter'], $include_break = true);
                   ?>
                 </div>
-                <div class="col-xs-8 col-sm-8 col-md-6 col-lg-4 text-center"><?php echo zen_draw_products_pull_down('products_filter', 'class="form-control"', '', true, $_GET['products_filter'], true, true); ?></div>
+                <div class="col-xs-8 col-sm-8 col-md-6 col-lg-4 text-center"><?php echo zen_draw_pulldown_products('products_filter', 'class="form-control"', '', true, $_GET['products_filter'], true, true); ?></div>
                 <div class="col-xs-2 col-sm-3 col-md-5 col-lg-7">
                   <button type="submit" class="btn btn-primary"><?php echo IMAGE_DISPLAY; ?></button>
                 </div>

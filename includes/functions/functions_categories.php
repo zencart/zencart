@@ -310,7 +310,7 @@ function zen_product_in_parent_category($product_id, $cat_id, $parent_cat_id)
 
 
 /**
- * products with name, model and price pulldown
+ * pulldown menu for products, containing name, model and price
  * @param string $field_name
  * @param string $parameters
  * @param array $exclude array of ids to exclude
@@ -320,7 +320,7 @@ function zen_product_in_parent_category($product_id, $cat_id, $parent_cat_id)
  * @param bool $show_current_category
  * @return string
  */
-function zen_draw_products_pull_down($field_name, $parameters = '', $exclude = [], $show_id = false, $set_selected = 0, $show_model = false, $show_current_category = false)
+function zen_draw_pulldown_products($field_name, $parameters = '', $exclude = [], $show_id = false, $set_selected = 0, $show_model = false, $show_current_category = false)
 {
     global $currencies, $db, $current_category_id, $prev_next_order;
 
@@ -378,7 +378,7 @@ function zen_draw_products_pull_down($field_name, $parameters = '', $exclude = [
 
 
 /**
- * products with attributes pulldown
+ * pulldown for products that have attributes
  * @param string $field_name
  * @param string $parameters
  * @param array $exclude to exclude
@@ -386,7 +386,7 @@ function zen_draw_products_pull_down($field_name, $parameters = '', $exclude = [
  * @param int $filter_by_option_name -1|0|option_name_id
  * @return string
  */
-function zen_draw_products_pull_down_attributes($field_name, $parameters = '', $exclude = [], $order_by = 'name', $filter_by_option_name = null)
+function zen_draw_pulldown_products_having_attributes($field_name, $parameters = '', $exclude = [], $order_by = 'name', $filter_by_option_name = null)
 {
     global $db, $currencies;
 
@@ -444,7 +444,7 @@ function zen_draw_products_pull_down_attributes($field_name, $parameters = '', $
 }
 
 /**
- * categories pulldown with products
+ * categories pulldown for categories that have products
  * @param string $field_name
  * @param string $parameters
  * @param array $exclude to exclude
@@ -452,7 +452,7 @@ function zen_draw_products_pull_down_attributes($field_name, $parameters = '', $
  * @param bool $show_parent
  * @return string
  */
-function zen_draw_products_pull_down_categories($field_name, $parameters = '', $exclude = [], $show_id = false, $show_parent = false)
+function zen_draw_pulldown_categories_having_products($field_name, $parameters = '', $exclude = [], $show_id = false, $show_parent = false)
 {
     global $db, $currencies;
 
@@ -498,7 +498,7 @@ function zen_draw_products_pull_down_categories($field_name, $parameters = '', $
 }
 
 /**
- * categories pulldown for products with attributes
+ * categories pulldown for categories having products with attributes
  * @param string $field_name
  * @param string $parameters
  * @param array $exclude
@@ -506,7 +506,7 @@ function zen_draw_products_pull_down_categories($field_name, $parameters = '', $
  * @param string|null $filter_by_option_name
  * @return string
  */
-function zen_draw_products_pull_down_categories_attributes($field_name, $parameters = '', $exclude = [], $show_full_path = false, $filter_by_option_name = null)
+function zen_draw_pulldown_categories_having_products_with_attributes($field_name, $parameters = '', $exclude = [], $show_full_path = false, $filter_by_option_name = null)
 {
     global $db, $currencies;
 
