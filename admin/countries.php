@@ -97,7 +97,7 @@ if (!empty($action)) {
         <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9 configurationColumnLeft">
           <table class="table table-hover">
             <thead>
-              <tr class="dataTableHeadingRow">
+              <tr class="dataTableHeadingRow"> 
                 <th class="dataTableHeadingContent" width="50%"><?php echo TABLE_HEADING_COUNTRY_NAME; ?></th>
                 <th class="dataTableHeadingContent text-center" colspan="2"><?php echo TABLE_HEADING_COUNTRY_CODES; ?></th>
                 <th class="dataTableHeadingContent text-center"><?php echo TABLE_HEADING_COUNTRY_STATUS; ?></th>
@@ -109,7 +109,7 @@ if (!empty($action)) {
               $countries_query_raw = "SELECT countries_id, countries_name, countries_iso_code_2, countries_iso_code_3, address_format_id, status
                                       FROM " . TABLE_COUNTRIES . "
                                       ORDER BY countries_name";
-              $countries_split = new splitPageResults($_GET['page'], MAX_DISPLAY_SEARCH_RESULTS, $countries_query_raw, $countries_query_numrows);
+              $countries_split = new splitPageResults($_GET['page'], MAX_DISPLAY_SEARCH_RESULTS, $countries_query_raw, $countries_query_numrows, 'countries_name', 1);
               $countries = $db->Execute($countries_query_raw);
               foreach ($countries as $country) {
                 if ((!isset($_GET['cID']) || (isset($_GET['cID']) && ($_GET['cID'] == $country['countries_id']))) && !isset($cInfo) && (substr($action, 0, 3) != 'new')) {
