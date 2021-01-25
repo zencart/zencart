@@ -159,6 +159,12 @@ a.splitPageLink:active {
     text-decoration: none;
 }
 
+a.splitPageLinkCurrent {
+    font-weight: bold;
+    border: 1px solid #0000FF;
+    padding: 2px;
+}
+
 body {
     background-color: #ffffff;
     color: #333333;
