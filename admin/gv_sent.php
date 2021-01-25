@@ -21,7 +21,7 @@ $currencies = new currencies();
     <!-- body //-->
     <div class="container-fluid">
       <!-- body_text //-->
-      <hi class="pageHeading"><?php echo HEADING_TITLE; ?></h1>
+      <h1 class="pageHeading"><?php echo HEADING_TITLE; ?></h1>
         <div class="row">
           <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9 configurationColumnLeft"">
             <table class="table table-hover table-striped">
