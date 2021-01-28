@@ -15,6 +15,14 @@
 
 <h1 id="searchResultsDefaultHeading"><?php echo HEADING_TITLE; ?></h1>
 
+<div id="searchResultMainContent" class="content">
+<?php
+/**
+ * require the html_define for the search result page
+ */
+  require($define_page);
+?>
+</div>
 <?php
   if ($do_filter_list || PRODUCT_LIST_ALPHA_SORTER == 'true') {
   $form = zen_draw_form('filter', zen_href_link(FILENAME_SEARCH_RESULT), 'get');

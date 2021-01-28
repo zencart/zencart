@@ -72,6 +72,7 @@ define('FILENAME_DEFINE_PAGE_3', 'define_page_3');
 define('FILENAME_DEFINE_PAGE_4', 'define_page_4');
 define('FILENAME_DEFINE_PAGE_NOT_FOUND', 'define_page_not_found');
 define('FILENAME_DEFINE_PRIVACY', 'define_privacy');
+define('FILENAME_DEFINE_SEARCH_RESULT', 'define_search_result');
 define('FILENAME_DEFINE_SHIPPINGINFO', 'define_shippinginfo');
 define('FILENAME_DEFINE_SHOPPING_CART', 'define_shopping_cart');
 define('FILENAME_DEFINE_SITE_MAP', 'define_site_map');
