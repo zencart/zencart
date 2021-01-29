@@ -10,9 +10,13 @@
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: Zcwilt 2020 Jun 08 Modified in v1.5.8 $
  */
+
+use App\Models\PluginControl;
+use App\Models\PluginControlVersion;
 use Zencart\FileSystem\FileSystem;
 use Zencart\PluginManager\PluginManager;
 use Zencart\InitSystem\InitSystem;
+use Illuminate\Database\Capsule\Manager as Capsule;
 
 // Set session ID
 $zenSessionId = 'zenid';
@@ -192,10 +196,24 @@ $zc_cache = new cache();
 
 require 'includes/init_includes/init_file_db_names.php';
 require 'includes/init_includes/init_database.php';
-require DIR_FS_CATALOG . 'includes/illuminate_bootstrap.php';
 
-$installedPlugins = $laravelApp->make('installedPlugins');
-$pluginManager = new PluginManager(new App\Models\PluginControl, new App\Models\PluginControlVersion);
+$capsule = new Capsule;
+$capsule->addConnection([
+    'driver'    => DB_TYPE,
+    'host'      => DB_SERVER,
+    'database'  => DB_DATABASE,
+    'username'  => DB_SERVER_USERNAME,
+    'password'  => DB_SERVER_PASSWORD,
+    'charset'   => DB_CHARSET,
+    'prefix'    => DB_PREFIX,
+]);
+$capsule->setAsGlobal();
+$capsule->bootEloquent();
+
+$pluginManager = new PluginManager(new PluginControl(), new \App\Models\PluginControlVersion());
+$pluginManager->inspectAndUpdate();
+$installedPlugins = $pluginManager->getInstalledPlugins();
+$pluginManager = new PluginManager(new PluginControl, new App\Models\PluginControlVersion);
 
 $fs = new FileSystem;
 $fs->loadFilesFromPluginsDirectory($installedPlugins, 'catalog/includes/extra_configures', '~^[^\._].*\.php$~i');

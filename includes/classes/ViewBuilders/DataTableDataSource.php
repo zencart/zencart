@@ -8,7 +8,7 @@
 namespace Zencart\ViewBuilders;
 
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Http\Request;
+use Zencart\Request\Request;
 use Illuminate\Pagination\LengthAwarePaginator as Paginator;
 use Zencart\Traits\NotifierManager;
 

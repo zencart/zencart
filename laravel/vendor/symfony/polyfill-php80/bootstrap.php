@@ -11,16 +11,16 @@
 
 use Symfony\Polyfill\Php80 as p;
 
-if (PHP_VERSION_ID >= 80000) {
+if (\PHP_VERSION_ID >= 80000) {
     return;
 }
 
 if (!defined('FILTER_VALIDATE_BOOL') && defined('FILTER_VALIDATE_BOOLEAN')) {
-    define('FILTER_VALIDATE_BOOL', FILTER_VALIDATE_BOOLEAN);
+    define('FILTER_VALIDATE_BOOL', \FILTER_VALIDATE_BOOLEAN);
 }
 
 if (!function_exists('fdiv')) {
-    function fdiv(float $dividend, float $divisor): float { return p\Php80::fdiv($dividend, $divisor); }
+    function fdiv(float $num1, float $num2): float { return p\Php80::fdiv($num1, $num2); }
 }
 if (!function_exists('preg_last_error_msg')) {
     function preg_last_error_msg(): string { return p\Php80::preg_last_error_msg(); }
@@ -38,5 +38,5 @@ if (!function_exists('get_debug_type')) {
     function get_debug_type($value): string { return p\Php80::get_debug_type($value); }
 }
 if (!function_exists('get_resource_id')) {
-    function get_resource_id($res): int { return p\Php80::get_resource_id($res); }
+    function get_resource_id($resource): int { return p\Php80::get_resource_id($resource); }
 }

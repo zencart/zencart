@@ -373,3 +373,13 @@ function utilDumpRequest($mode = 'p', $out = 'log')
         echo $val;
     }
 }
+
+/**
+ * this function will need to be removed if
+ * we ever revert to a full laravel install
+ */
+
+function request()
+{
+    return \Zencart\Request\Request::getInstance();
+}

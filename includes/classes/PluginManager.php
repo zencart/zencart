@@ -211,17 +211,15 @@ class PluginManager
                 ];
 
         }
-        $this->pluginControl->insertOnDuplicateKey(
+        $this->pluginControl->upsert(
             $insertValues,
-            [
-                'infs' => 1
-            ]
+            ['id'],
+            ['infs']
         );
-        $this->pluginControlVersion->insertOnDuplicateKey(
+        $this->pluginControlVersion->upsert(
             $versionInsertValues,
-            [
-                'infs' => 1
-            ]
+            ['id'],
+            ['infs' => 1]
         );
         $this->pluginControl->where(['infs' => 0])->delete();
         $this->pluginControlVersion->where(['infs' => 0])->delete();
