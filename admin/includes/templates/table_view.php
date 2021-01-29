@@ -1,3 +1,11 @@
+<?php
+/**
+ * @var \Zencart\Filters\FilterManager $filterManager
+ * @var \Zencart\ViewBuilders\SimpleDataFormatter $formatter
+ * @var \Zencart\TableViewControllers\BaseController $tableController
+ * @var string $PHP_SELF
+ */
+?>
 <div class="container-fluid">
     <h1><?php echo HEADING_TITLE; ?></h1>
     <?php if ($filterManager->hasFilters()) { ?>

@@ -16,7 +16,8 @@ class baseFilter
         $parameters['default'] = $default;
         $class = isset($parameters['class']) ? ' class="' . $parameters['class'] . '"' : '';
         $parameters['class'] = $class;
-        $view = view('filters.searchWhere', ['tpl' => $parameters]);
-        return $view->render();
+//        $view = view('filters.searchWhere', ['tpl' => $parameters]);
+//        return $view->render();
+        return '';
     }
 }

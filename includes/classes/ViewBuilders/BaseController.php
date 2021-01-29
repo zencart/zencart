@@ -7,7 +7,7 @@
 
 namespace Zencart\ViewBuilders;
 
-use Illuminate\Http\Request;
+use Zencart\Request\Request;
 use Zencart\Traits\NotifierManager;
 
 class BaseController

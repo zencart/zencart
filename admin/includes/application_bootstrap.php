@@ -6,9 +6,12 @@
  * @version $Id: DrByte   Updated 11-17-2020 $
  */
 
+use App\Models\PluginControl;
+use App\Models\PluginControlVersion;
 use Zencart\FileSystem\FileSystem;
 use Zencart\PluginManager\PluginManager;
 use Zencart\PageLoader\PageLoader;
+use Illuminate\Database\Capsule\Manager as Capsule;
 
 /**
  * boolean if true the autoloader scripts will be parsed and their output shown. For debugging purposes only.
@@ -170,9 +173,24 @@ require DIR_FS_CATALOG . DIR_WS_CLASSES . 'class.base.php';
 require 'includes/classes/AdminRequestSanitizer.php';
 require 'includes/init_includes/init_file_db_names.php';
 require 'includes/init_includes/init_database.php';
-require DIR_FS_CATALOG . 'includes/illuminate_bootstrap.php';
 
-$installedPlugins = $laravelApp->make('installedPlugins');
+$capsule = new Capsule;
+$capsule->addConnection([
+    'driver'    => DB_TYPE,
+    'host'      => DB_SERVER,
+    'database'  => DB_DATABASE,
+    'username'  => DB_SERVER_USERNAME,
+    'password'  => DB_SERVER_PASSWORD,
+    'charset'   => DB_CHARSET,
+    'prefix'    => DB_PREFIX,
+]);
+$capsule->setAsGlobal();
+$capsule->bootEloquent();
+
+
+$pluginManager = new PluginManager(new PluginControl, new PluginControlVersion);
+$pluginManager->inspectAndUpdate();
+$installedPlugins = $pluginManager->getInstalledPlugins();
 $pluginManager = new PluginManager(new App\Models\PluginControl, new App\Models\PluginControlVersion);
 $pageLoader = PageLoader::getInstance();
 $pageLoader->init($installedPlugins, $PHP_SELF, new FileSystem);

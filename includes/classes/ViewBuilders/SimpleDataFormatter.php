@@ -7,7 +7,7 @@
 
 namespace Zencart\ViewBuilders;
 
-use Illuminate\Http\Request;
+use Zencart\Request\Request;
 use Illuminate\Pagination\LengthAwarePaginator as Paginator;
 use Illuminate\Support\Collection;
 

@@ -7,6 +7,8 @@
  * @version $Id: DrByte 2020 May 06 Modified in v1.5.7 $
  */
 
+use Zencart\Request\Request;
+
 if (!defined('DO_STRICT_SANITIZATION')) {
     DEFINE('DO_STRICT_SANITIZATION', true);
 }

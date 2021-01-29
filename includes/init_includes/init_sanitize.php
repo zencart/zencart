@@ -10,6 +10,7 @@
 
 use Zencart\PageLoader\PageLoader;
 use Zencart\FileSystem\FileSystem;
+use Zencart\Request\Request;
 
   if (!defined('IS_ADMIN_FLAG')) {
     die('Illegal Access');

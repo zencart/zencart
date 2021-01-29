@@ -8,7 +8,7 @@
 namespace Zencart\Filters;
 
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Http\Request;
+use Zencart\Request\Request;
 
 class SelectWhereFilter extends baseFilter implements RequestFilter
 {
