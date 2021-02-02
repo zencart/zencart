@@ -16,7 +16,11 @@ if (!zen_is_logged_in()) {
 }
 
 require(DIR_WS_MODULES . zen_get_module_directory('require_languages.php'));
-if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
+
+$error = false;
+$gender = $firstname = $lastname = $nick = $dob = $email_address = $telephone = $fax = $email_format = $customers_referral = '';
+
+if (!empty($_POST['action']) && $_POST['action'] == 'process') {
   if (ACCOUNT_GENDER == 'true') $gender = zen_db_prepare_input($_POST['gender']);
   $firstname = zen_db_prepare_input($_POST['firstname']);
   $lastname = zen_db_prepare_input($_POST['lastname']);
@@ -28,8 +32,6 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
   $email_format = in_array($_POST['email_format'], array('HTML', 'TEXT', 'NONE', 'OUT'), true) ? $_POST['email_format'] : 'TEXT';
 
   if (CUSTOMERS_REFERRAL_STATUS == '2' and $_POST['customers_referral'] != '') $customers_referral = zen_db_prepare_input($_POST['customers_referral']);
-
-  $error = false;
 
   if (ACCOUNT_GENDER == 'true') {
     if ( ($gender != 'm') && ($gender != 'f') ) {
