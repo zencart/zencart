@@ -9,35 +9,22 @@
     "license": "MIT",
     "require": {
         "php": "^7.3|^8.0",
-        "illuminate/database": "^8.24",
-        "illuminate/filesystem": "^8.25",
-        "illuminate/pagination": "^8.25"
-    },
-    "require-dev": {
+        "illuminate/database": "^8.26.1",
+        "illuminate/filesystem": "^8.26.1",
+        "illuminate/pagination": "^8.26.1",
+        "symfony/var-dumper": "^5.2"
     },
     "config": {
         "optimize-autoloader": true,
         "preferred-install": "dist",
         "sort-packages": true
     },
-    "extra": {
-        "laravel": {
-            "dont-discover": []
-        }
-    },
     "autoload": {
         "psr-4": {
             "App\\": "app/"
         },
         "classmap": [
-            "database/seeds",
-            "database/factories"
         ]
-    },
-    "autoload-dev": {
-        "psr-4": {
-            "Tests\\": "tests/"
-        }
     },
     "minimum-stability": "dev",
     "prefer-stable": true
