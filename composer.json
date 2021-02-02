@@ -22,7 +22,7 @@
     },
     "_comment": "compatible with PHP 7.3-8.0",
     "require": {
-        "php": ">=7.3.0",
+        "php": "^7.3|^8.0",
         "ext-curl": "*",
         "ext-json": "*"
     },
