@@ -773,11 +773,17 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
             
             $products_query_raw = "SELECT p.products_type, p.products_id, pd.products_name, p.products_quantity,
                                           p.products_price, p.products_status, p.products_model, p.products_sort_order,
-                                          p.master_categories_id" . $extra_select;
-            $products_query_raw .= " FROM " . TABLE_PRODUCTS . " p" . $extra_from;
-            $products_query_raw .= " LEFT JOIN " . TABLE_PRODUCTS_DESCRIPTION . " pd ON (pd.products_id = p.products_id)" . $extra_joins;
+                                          p.master_categories_id";
+            $products_query_raw .= $extra_select;
 
-            $where = " WHERE pd.language_id = " . (int)$_SESSION['languages_id'] . $extra_ands;
+            $products_query_raw .= " FROM " . TABLE_PRODUCTS . " p";
+            $products_query_raw .= $extra_from;
+
+            $products_query_raw .= " LEFT JOIN " . TABLE_PRODUCTS_DESCRIPTION . " pd ON (pd.products_id = p.products_id)";
+            $products_query_raw .= $extra_joins;
+
+            $where = " WHERE pd.language_id = " . (int)$_SESSION['languages_id'];
+            $where .= $extra_ands;
 
             if ($search_result && $action != 'edit_category') {
                 $where .= "  AND (pd.products_name LIKE '%:search%'
