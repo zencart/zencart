@@ -729,20 +729,22 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
             // -----
             // Give a watching observer the chance to modify the products' query to gather additional fields for the display.
             //
-            // Notes:
-            // 1. Any modification of the $extra_select must include a leading comma (,).
-            // 2. Any modification of the $extra_from must include a leading comma (,).
-            // 3. Any modification of the $extra_ands must include a leading ' AND' ... note the leading space requirement!
+            // Note the leading space requirements!
+            //
+            // 1. Any modification of the $extra_select must include a leading ' ,'.
+            // 2. Any modification of the $extra_from must include a leading ' ,'.
+            // 3. Any modification of the $extra_ands must include a leading ' AND'
             //
             $extra_select = $extra_from = $extra_joins = $extra_ands = '';
             $zco_notifier->notify('NOTIFY_ADMIN_PROD_LISTING_PRODUCTS_QUERY', '', $extra_select, $extra_from, $extra_joins, $extra_ands, $order_by);
+            
             $products_query_raw = "SELECT p.products_type, p.products_id, pd.products_name, p.products_quantity,
                                           p.products_price, p.products_status, p.products_model, p.products_sort_order,
-                                          p.master_categories_id $extra_select
-                                   FROM " . TABLE_PRODUCTS . " p $extra_from
-                                   LEFT JOIN " . TABLE_PRODUCTS_DESCRIPTION . " pd ON (pd.products_id = p.products_id)";
-            $products_query_raw .= $extra_joins;
-            $where = " WHERE pd.language_id = " . (int)$_SESSION['languages_id'] .$extra_ands;
+                                          p.master_categories_id" . $extra_select;
+            $products_query_raw .= " FROM " . TABLE_PRODUCTS . " p" . $extra_from;
+            $products_query_raw .= " LEFT JOIN " . TABLE_PRODUCTS_DESCRIPTION . " pd ON (pd.products_id = p.products_id)" . $extra_joins;
+
+            $where = " WHERE pd.language_id = " . (int)$_SESSION['languages_id'] . $extra_ands;
 
             if ($search_result && $action != 'edit_category') {
                 $keyword_search_fields = [
@@ -826,7 +828,7 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
               // );
               //
               // Observer notes:  
-              // - Be sure to check that the $p2/$extra_headings value is specifically (bool)false before initializing, since
+              // - Be sure to check that the $p2/$extra_data value is specifically (bool)false before initializing, since
               //   multiple observers might be injecting content!
               // - If heading-columns are added, be sure to add the associated header columns, too, via the
               //   'NOTIFY_ADMIN_PROD_LISTING_HEADERS_B4_QTY' notification.
@@ -835,7 +837,7 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
               $zco_notifier->notify('NOTIFY_ADMIN_PROD_LISTING_DATA_B4_QTY', '', $extra_data);
               if (is_array($extra_data)) {
                   foreach ($extra_data as $data_info) {
-                      $align = (isset($heading_info['align'])) ? (' text-' . $heading_info['align']) : '';
+                      $align = (isset($data_info['align'])) ? (' text-' . $data_info['align']) : '';
 ?>
                 <td class="hidden-sm hidden-xs<?php echo $align; ?>"><?php echo $data_info['text']; ?></td>
 <?php
@@ -857,7 +859,7 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
               // );
               //
               // Observer notes:  
-              // - Be sure to check that the $p2/$extra_headings value is specifically (bool)false before initializing, since
+              // - Be sure to check that the $p2/$extra_data value is specifically (bool)false before initializing, since
               //   multiple observers might be injecting content!
               // - If heading-columns are added, be sure to add the associated header columns, too, via the
               //   'NOTIFY_ADMIN_PROD_LISTING_HEADERS_AFTER_QTY' notification.
@@ -866,7 +868,7 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
               $zco_notifier->notify('NOTIFY_ADMIN_PROD_LISTING_DATA_AFTER_QTY', '', $extra_data);
               if (is_array($extra_data)) {
                   foreach ($extra_data as $data_info) {
-                      $align = (isset($heading_info['align'])) ? (' text-' . $heading_info['align']) : '';
+                      $align = (isset($data_info['align'])) ? (' text-' . $data_info['align']) : '';
 ?>
                 <td class="hidden-sm hidden-xs<?php echo $align; ?>"><?php echo $data_info['text']; ?></td>
 <?php
