@@ -891,7 +891,7 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
               // );
               //
               // Observer notes:  
-              // - Be sure to check that the $p2/$extra_headings value is specifically (bool)false before initializing, since
+              // - Be sure to check that the $p2/$extra_data value is specifically (bool)false before initializing, since
               //   multiple observers might be injecting content!
               // - If heading-columns are added, be sure to add the associated header columns, too, via the
               //   'NOTIFY_ADMIN_PROD_LISTING_HEADERS_AFTER_QTY' notification.
