@@ -295,6 +295,7 @@ if (!empty($action)) {
     case 'attribute_features_copy_to_category':
       break;
     default:
+      $zco_notifier->notify('NOTIFY_ADMIN_PROD_LISTING_DEFAULT_ACTION');
       $action = $_GET['action'] = '';
       break;
   }
@@ -545,9 +546,73 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
                   <th class="hidden-sm hidden-xs"><?php echo TABLE_HEADING_MODEL; ?></th>
                 <th class="text-right hidden-sm hidden-xs"><?php echo TABLE_HEADING_PRICE; ?></th>
                 <?php }; ?>
+<?php
+          // -----
+          // Additional column-headings can be added before the Quantity column.
+          //
+          // A watching observer can provide an associative array in the following format (for the products' listing ONLY):
+          //
+          // $extra_headings = array(
+          //     array(
+          //       'align' => $alignment,    // One of 'center', 'right', or 'left' (optional)
+          //       'text' => $value
+          //     ),
+          // );
+          //
+          // Observer notes:  
+          // - Be sure to check that the $p2/$extra_headings value is specifically (bool)false before initializing, since
+          //   multiple observers might be injecting content!
+          // - If heading-columns are added, be sure to add the associated data columns, too, via the
+          //   'NOTIFY_ADMIN_PROD_LISTING_DATA_B4_QTY' notification.
+          //
+          if ($show_prod_labels) {
+              $extra_headings = false;
+              $zco_notifier->notify('NOTIFY_ADMIN_PROD_LISTING_HEADERS_B4_QTY', '', $extra_headings);
+              if (is_array($extra_headings)) {
+                  foreach ($extra_headings as $heading_info) {
+                      $align = (isset($heading_info['align'])) ? (' text-' . $heading_info['align']) : '';
+?>
+                <th class="hidden-sm hidden-xs<?php echo $align; ?>"><?php echo $heading_info['text']; ?></th>
+<?php
+                  }
+              }
+          }
+?>
                 <?php if ($show_prod_labels || SHOW_COUNTS_ADMIN == 'true') { ?>
                   <th class="text-right hidden-sm hidden-xs"><?php echo TABLE_HEADING_QUANTITY; ?></th>
                 <?php }; ?>
+<?php
+          // -----
+          // Additional column-headings can be added after the Quantity column.
+          //
+          // A watching observer can provide an associative array in the following format (for the products' listing ONLY):
+          //
+          // $extra_headings = array(
+          //     array(
+          //       'align' => $alignment,    // One of 'center', 'right', or 'left' (optional)
+          //       'text' => $value
+          //     ),
+          // );
+          //
+          // Observer notes:  
+          // - Be sure to check that the $p2/$extra_headings value is specifically (bool)false before initializing, since
+          //   multiple observers might be injecting content!
+          // - If heading-columns are added, be sure to add the associated data columns, too, via the
+          //   'NOTIFY_ADMIN_PROD_LISTING_DATA_AFTER_QTY' notification.
+          //
+          if ($show_prod_labels) {
+              $extra_headings = false;
+              $zco_notifier->notify('NOTIFY_ADMIN_PROD_LISTING_HEADERS_AFTER_QTY', '', $extra_headings);
+              if (is_array($extra_headings)) {
+                  foreach ($extra_headings as $heading_info) {
+                      $align = (isset($heading_info['align'])) ? (' text-' . $heading_info['align']) : '';
+?>
+                <th class="hidden-sm hidden-xs<?php echo $align; ?>"><?php echo $heading_info['text']; ?></th>
+<?php
+                  }
+              }
+          }
+?>
                 <th class="text-right"><?php echo TABLE_HEADING_STATUS; ?></th>
                 <?php
                 if ($action == '') {
@@ -661,13 +726,31 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
             }
 
             $products_count = 0;
+            // -----
+            // Give a watching observer the chance to modify the products' query to gather additional fields for the display.
+            //
+            // Note the leading space requirements!
+            //
+            // 1. Any modification of the $extra_select must include a leading ' ,'.
+            // 2. Any modification of the $extra_from must include a leading ' ,'.
+            // 3. Any modification of the $extra_ands must include a leading ' AND'
+            //
+            $extra_select = $extra_from = $extra_joins = $extra_ands = '';
+            $zco_notifier->notify('NOTIFY_ADMIN_PROD_LISTING_PRODUCTS_QUERY', '', $extra_select, $extra_from, $extra_joins, $extra_ands, $order_by);
+            
             $products_query_raw = "SELECT p.products_type, p.products_id, pd.products_name, p.products_quantity,
                                           p.products_price, p.products_status, p.products_model, p.products_sort_order,
-                                          p.master_categories_id
-                                   FROM " . TABLE_PRODUCTS . " p
-                                   LEFT JOIN " . TABLE_PRODUCTS_DESCRIPTION . " pd ON (pd.products_id = p.products_id)";
+                                          p.master_categories_id";
+            $products_query_raw .= $extra_select;
+
+            $products_query_raw .= " FROM " . TABLE_PRODUCTS . " p";
+            $products_query_raw .= $extra_from;
+
+            $products_query_raw .= " LEFT JOIN " . TABLE_PRODUCTS_DESCRIPTION . " pd ON (pd.products_id = p.products_id)";
+            $products_query_raw .= $extra_joins;
 
             $where = " WHERE pd.language_id = " . (int)$_SESSION['languages_id'];
+            $where .= $extra_ands;
 
             if ($search_result && $action != 'edit_category') {
                 $keyword_search_fields = [
@@ -737,7 +820,67 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
                 </td>
                 <td class="hidden-sm hidden-xs"><?php echo $product['products_model']; ?></td>
                 <td class="text-right hidden-sm hidden-xs"><?php echo zen_get_products_display_price($product['products_id']); ?></td>
+<?php
+              // -----
+              // Additional fields can be added into columns before the Quantity column.
+              //
+              // A watching observer can provide an associative array in the following format:
+              //
+              // $extra_data = array(
+              //     array(
+              //       'align' => $alignment,    // One of 'center', 'right', or 'left' (optional)
+              //       'text' => $value
+              //     ),
+              // );
+              //
+              // Observer notes:  
+              // - Be sure to check that the $p2/$extra_data value is specifically (bool)false before initializing, since
+              //   multiple observers might be injecting content!
+              // - If heading-columns are added, be sure to add the associated header columns, too, via the
+              //   'NOTIFY_ADMIN_PROD_LISTING_HEADERS_B4_QTY' notification.
+              //
+              $extra_data = false;
+              $zco_notifier->notify('NOTIFY_ADMIN_PROD_LISTING_DATA_B4_QTY', '', $extra_data);
+              if (is_array($extra_data)) {
+                  foreach ($extra_data as $data_info) {
+                      $align = (isset($data_info['align'])) ? (' text-' . $data_info['align']) : '';
+?>
+                <td class="hidden-sm hidden-xs<?php echo $align; ?>"><?php echo $data_info['text']; ?></td>
+<?php
+                  }
+              }
+?>
                 <td class="text-right hidden-sm hidden-xs"><?php echo $product['products_quantity']; ?></td>
+<?php
+              // -----
+              // Additional fields can be added into columns after the Quantity column.
+              //
+              // A watching observer can provide an associative array in the following format:
+              //
+              // $extra_data = array(
+              //     array(
+              //       'align' => $alignment,    // One of 'center', 'right', or 'left' (optional)
+              //       'text' => $value
+              //     ),
+              // );
+              //
+              // Observer notes:  
+              // - Be sure to check that the $p2/$extra_data value is specifically (bool)false before initializing, since
+              //   multiple observers might be injecting content!
+              // - If heading-columns are added, be sure to add the associated header columns, too, via the
+              //   'NOTIFY_ADMIN_PROD_LISTING_HEADERS_AFTER_QTY' notification.
+              //
+              $extra_data = false;
+              $zco_notifier->notify('NOTIFY_ADMIN_PROD_LISTING_DATA_AFTER_QTY', '', $extra_data);
+              if (is_array($extra_data)) {
+                  foreach ($extra_data as $data_info) {
+                      $align = (isset($data_info['align'])) ? (' text-' . $data_info['align']) : '';
+?>
+                <td class="hidden-sm hidden-xs<?php echo $align; ?>"><?php echo $data_info['text']; ?></td>
+<?php
+                  }
+              }
+?>
                 <td class="text-right text-nowrap dataTableButtonCell">
                   <?php
                   $additional_icons = '';
