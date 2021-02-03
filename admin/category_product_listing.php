@@ -875,7 +875,7 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
               $zco_notifier->notify('NOTIFY_ADMIN_PROD_LISTING_DATA_B4_QTY', '', $extra_data);
               if (is_array($extra_data)) {
                   foreach ($extra_data as $data_info) {
-                      $align = (isset($heading_info['align'])) ? (' text-' . $heading_info['align']) : '';
+                      $align = (isset($data_info['align'])) ? (' text-' . $data_info['align']) : '';
 ?>
                 <td class="hidden-sm hidden-xs<?php echo $align; ?>"><?php echo $data_info['text']; ?></td>
 <?php
