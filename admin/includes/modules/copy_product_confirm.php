@@ -90,13 +90,15 @@ if (isset($_POST['products_id'], $_POST['categories_id'])) {
 
         $sql_data_array['master_categories_id'] = $categories_id;
 
-        // skip fields that belong to TABLE_PRODUCTS_DESCRIPTION
+        // skip fields that belong to TABLE_PRODUCTS_DESCRIPTION and TABLE_PRODUCT_TYPES
         $fields_to_skip = [
             'language_id',
             'products_name',
             'products_description',
             'products_url',
             'products_viewed', // old, but must be excluded if present
+            'allow_add_to_cart',
+            'type_handler',
             ];
         foreach ($fields_to_skip as $field) {
             unset($sql_data_array[$field]);
