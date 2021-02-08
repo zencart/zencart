@@ -45,9 +45,10 @@ if (zen_has_product_attributes($pInfo->products_id, false)) {
             '<div class="radio"><label>' . zen_draw_radio_field('copy_attributes', 'copy_attributes_yes', true) . TEXT_YES . '</label></div>' .
             '<div class="radio"><label>' . zen_draw_radio_field('copy_attributes', 'copy_attributes_no') . TEXT_NO . '</label></div>'
     );
-
-    $zco_notifier->notify('NOTIFY_ADMIN_PRODUCT_COPY_TO_ATTRIBUTES', $pInfo, $contents);
 }
+
+$zco_notifier->notify('NOTIFY_ADMIN_PRODUCT_COPY_TO_ATTRIBUTES', $pInfo, $contents);
+
 //are any metatags defined
 $metatags_defined = false;
 for ($i = 0, $n = count($languages); $i < $n; $i++) {
