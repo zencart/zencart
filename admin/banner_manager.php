@@ -1,9 +1,9 @@
 <?php
 /**
- * @copyright Copyright 2003-2020 Zen Cart Development Team
+ * @copyright Copyright 2003-2021 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2020 Oct 21 Modified in v1.5.7a $
+ * @version $Id: DrByte  Modified in v1.5.7c $
  */
 require('includes/application_top.php');
 require('includes/functions/functions_graphs.php');
@@ -283,7 +283,7 @@ if (zen_not_null($action)) {
         <script src="includes/javascript/spiffyCal/spiffyCal_v2_1.js"></script>
         <script>
       var dateExpires = new ctlSpiffyCalendarBox("dateExpires", "new_banner", "expires_date", "btnDate1", "<?php echo zen_date_short($bInfo->expires_date); ?>", scBTNMODE_CUSTOMBLUE);
-      var dateScheduled = new ctlSpiffyCalendarBox("dateScheduled", "new_banner", "date_scheduled", "btnDate2", "<?php echo zen_date_short($bInfo->date_scheduled); ?> ", scBTNMODE_CUSTOMBLUE);
+      var dateScheduled = new ctlSpiffyCalendarBox("dateScheduled", "new_banner", "date_scheduled", "btnDate2", "<?php echo zen_date_short($bInfo->date_scheduled); ?>", scBTNMODE_CUSTOMBLUE);
         </script>
 
         <div class="row">
