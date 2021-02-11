@@ -693,9 +693,6 @@ class Customer extends base
             ['fieldName'=>'customers_default_address_id', 'value'=>0, 'type'=>'integer'],
             ['fieldName'=>'customers_password', 'value'=>zen_encrypt_password($data['password']), 'type'=>'stringIgnoreNull'],
             ['fieldName'=>'customers_authorization', 'value'=> $data['customers_authorization'], 'type'=>'integer'],
-        ];
-
-        $sql_data_array += [
             ['fieldName'=>'registration_ip', 'value'=> $data['ip_address'], 'type'=>'string'],
             ['fieldName'=>'last_login_ip', 'value'=> $data['ip_address'], 'type'=>'string'],
         ];

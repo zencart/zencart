@@ -994,8 +994,14 @@ if (!empty($action)) {
                   $zco_notifier->notify('NOTIFY_ADMIN_CUSTOMERS_MENU_BUTTONS', $cInfo, $contents);
 
                   $contents[] = array('text' => '<br>' . TEXT_DATE_ACCOUNT_CREATED . ' ' . zen_date_short($cInfo->date_account_created));
+                  if (!empty($cInfo->registration_ip)) { 
+                     $contents[] = array('text' => '<br>' . TEXT_REGISTRATION_IP . ' ' . $cInfo->registration_ip);
+                  }
                   $contents[] = array('text' => '<br>' . TEXT_DATE_ACCOUNT_LAST_MODIFIED . ' ' . zen_date_short($cInfo->date_account_last_modified));
                   $contents[] = array('text' => '<br>' . TEXT_INFO_DATE_LAST_LOGON . ' ' . zen_date_short($cInfo->date_of_last_login));
+                  if (!empty($cInfo->last_login_ip)) { 
+                     $contents[] = array('text' => '<br>' . TEXT_LAST_LOGIN_IP . ' ' . $cInfo->last_login_ip);
+                  }
                   $contents[] = array('text' => '<br>' . TEXT_INFO_NUMBER_OF_LOGONS . ' ' . $cInfo->number_of_logins);
 
                   $contents[] = array('text' => '<br>' . TEXT_INFO_GV_AMOUNT . ' ' . $currencies->format($customer['gv_balance']));
