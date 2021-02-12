@@ -995,7 +995,9 @@ if (!empty($action)) {
 
                   $contents[] = array('text' => '<br>' . TEXT_DATE_ACCOUNT_CREATED . ' ' . zen_date_short($cInfo->date_account_created));
                   if (!empty($cInfo->registration_ip)) { 
-                     $contents[] = array('text' => '<br>' . TEXT_REGISTRATION_IP . ' ' . $cInfo->registration_ip);
+                     $whois_url = 'https://whois.domaintools.com/' . $cInfo->registration_ip; 
+                     $lookup_link = ' <a href="' . $whois_url . '" rel="noreferrer noopener" target="_blank">'; 
+                     $contents[] = array('text' => '<br>' . TEXT_REGISTRATION_IP . ' ' . $lookup_link . $cInfo->registration_ip . '</a>');
                   }
                   $contents[] = array('text' => '<br>' . TEXT_DATE_ACCOUNT_LAST_MODIFIED . ' ' . zen_date_short($cInfo->date_account_last_modified));
                   $contents[] = array('text' => '<br>' . TEXT_INFO_DATE_LAST_LOGON . ' ' . zen_date_short($cInfo->date_of_last_login));
