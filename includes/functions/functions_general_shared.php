@@ -165,13 +165,13 @@ function zen_get_all_get_params($exclude_array = array())
             if (!in_array($key, $exclude_array)) {
                 if (!is_array($value)) {
                     if (strlen($value) > 0) {
-                        $get_url .= zen_sanitize_string($key) . '=' . rawurlencode(stripslashes($value)) . '&';
+                        $get_url .= rawurlencode(stripslashes($key)) . '=' . rawurlencode(stripslashes($value)) . '&';
                     }
                 } else {
                     if (IS_ADMIN_FLAG) continue; // admin (and maybe catalog?) doesn't support passing arrays by GET, so skipping any arrays here
                     foreach (array_filter($value) as $arr) {
                         if (is_array($arr)) continue;
-                        $get_url .= zen_sanitize_string($key) . '[]=' . rawurlencode(stripslashes($arr)) . '&';
+                        $get_url .= rawurlencode(stripslashes($key)) . '[]=' . rawurlencode(stripslashes($arr)) . '&';
                     }
                 }
             }
