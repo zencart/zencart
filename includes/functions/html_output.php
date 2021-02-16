@@ -219,10 +219,10 @@ function zen_catalog_href_link($page = '', $parameters = '', $connection = 'NONS
 
     if (CONFIG_CALCULATE_IMAGE_SIZE == 'true' && (empty($width) || empty($height))) {
       if ($image_size = @getimagesize($src)) {
-        if (empty($width) && zen_not_null($height)) {
+        if (empty($width) && !empty($height)) {
           $ratio = $height / $image_size[1];
           $width = $image_size[0] * $ratio;
-        } elseif (zen_not_null($width) && empty($height)) {
+        } elseif (!empty($width) && empty($height)) {
           $ratio = $width / $image_size[0];
           $height = $image_size[1] * $ratio;
         } elseif (empty($width) && empty($height)) {
@@ -235,7 +235,7 @@ function zen_catalog_href_link($page = '', $parameters = '', $connection = 'NONS
     }
 
 
-    if (zen_not_null($width) && zen_not_null($height) && file_exists($src)) {
+    if (!empty($width) && !empty($height) && file_exists($src)) {
 // proportional images
       $image_size = @getimagesize($src);
       // fix division by zero error
