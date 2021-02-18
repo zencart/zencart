@@ -39,6 +39,8 @@ function update_zone(theForm) {
     theForm.state.disabled = true;
     theForm.state.className = 'hiddenField';
     theForm.state.setAttribute('className', 'hiddenField');
+    theForm.state.required = false;
+    theForm.zone_id.required = true;
     document.getElementById("stateLabel").className = 'hiddenField';
     document.getElementById("stateLabel").setAttribute('className', 'hiddenField');
 
@@ -54,6 +56,8 @@ function update_zone(theForm) {
     theForm.state.disabled = false;
     theForm.state.className = 'inputLabel visibleField';
     theForm.state.setAttribute('className', 'visibleField');
+    theForm.state.required = true;
+    theForm.zone_id.required = false;
     document.getElementById("stateLabel").className = 'inputLabel visibleField';
     document.getElementById("stateLabel").setAttribute('className', 'inputLabel visibleField');
     document.getElementById("stText").className = 'alert visibleField';
