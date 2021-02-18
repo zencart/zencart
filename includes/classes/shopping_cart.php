@@ -762,7 +762,7 @@ class shoppingCart extends base
                             // appears to confuse products priced by attributes
                             if ($product->fields['product_is_always_free_shipping'] == '1' || $product->fields['products_virtual'] == '1') {
                                 $shipping_attributes_price = zen_get_discount_calc($product->fields['products_id'], $attribute_price->fields['products_attributes_id'], $attribute_price->fields['options_values_price'], $qty);
-                                $freeShippingTotal += $shipping_attributes_price;
+                                $freeShippingTotal += (float)$shipping_attributes_price;
                             }
                             if ($attribute_price->fields['attributes_discounted'] == '1') {
                                 // calculate proper discount for attributes
