@@ -77,7 +77,7 @@
     case ('update_all_products_ordered'):
       // reset products_ordered to 0
         $sql = "UPDATE " . TABLE_PRODUCTS . " SET products_ordered= '0'";
-        $update_viewed = $db->Execute($sql);
+        $db->Execute($sql);
 
         $messageStack->add_session(SUCCESS_PRODUCT_UPDATE_PRODUCTS_ORDERED, 'success');
         zen_record_admin_activity('Store Manager executed [update all products ordered]', 'info');
@@ -88,7 +88,7 @@
     case ('update_counter'):
     if ($_POST['new_counter'] == '' || strval($_POST['new_counter']) != strval((int)$_POST['new_counter'])) break;
     $sql = "UPDATE " . TABLE_COUNTER . " SET counter= '" . (int)$_POST['new_counter'] . "'";
-    $update_counter = $db->Execute($sql);
+    $db->Execute($sql);
 
     $messageStack->add_session(SUCCESS_UPDATE_COUNTER . (int)$_POST['new_counter'], 'success');
     zen_record_admin_activity('Store Manager executed [update counter], set to ' . (int)$_POST['new_counter'], 'info');
