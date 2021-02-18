@@ -331,7 +331,7 @@ if (zen_not_null($action)) {
               foreach($mInfo->keys as $key => $value) {
                 $keys .= '<b>' . $value['title'] . '</b><br>' . $value['description'] . '<br>';
                 if ($value['set_function']) {
-                  eval('$keys .= ' . $value['set_function'] . "'" . $value['value'] . "', '" . $key . "');");
+                  eval('$keys .= ' . $value['set_function'] . '"' . zen_output_string($value['value'], array('"' => '&quot;', '`' => 'null;return;exit;')) . '", "' . $key . '");');
                 } else {
                   $keys .= zen_draw_input_field('configuration[' . $key . ']', htmlspecialchars($value['value'], ENT_COMPAT, CHARSET, TRUE), 'class="form-control"');
                 }
