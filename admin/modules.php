@@ -277,6 +277,7 @@ if (zen_not_null($action)) {
                       <?php
                       if (isset($mInfo) && is_object($mInfo) && ($class == $mInfo->code)) {
                         echo zen_image(DIR_WS_IMAGES . 'icon_arrow_right.gif');
+                        $_GET['module'] = !isset($_GET['module']) ? $mInfo->code : $_GET['module'];
                       } else {
                         echo '<a href="' . zen_href_link(FILENAME_MODULES, 'set=' . $set . '&module=' . $class, 'SSL') . '">' . zen_image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>';
                       }
