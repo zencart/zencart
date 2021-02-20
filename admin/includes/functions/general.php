@@ -74,33 +74,31 @@
   }
 
 
-  function zen_get_all_get_params($exclude_array = array()) {
+function zen_get_all_get_params($exclude_array = array())
+{
     if (!is_array($exclude_array)) $exclude_array = array();
-    $exclude_array = array_merge($exclude_array, array(zen_session_name(), 'error', 'x', 'y', 'cmd')); // de-duplicating
-      // this is less performant than just letting it repeat the loop on duplicates
-    $get_url = '';
-    if (is_array($_GET) && (sizeof($_GET) > 0)) {
-      foreach($_GET as $key => $value) {
-        if (!in_array($key, $exclude_array)) {
-          if (!is_array($value)) {
-//             if (is_numeric($value) || (is_string($value) && strlen($value) > 0)) {
-            if (strlen($value) > 0) {
-              $get_url .= zen_output_string_protected($key) . '=' . rawurlencode(stripslashes($value)) . '&';
-            }
-          } else {
-            continue; // legacy code doesn't support passing arrays by GET, so skipping any arrays
-            foreach(array_filter($value) as $arr){
-              $get_url .= zen_output_string_protected($key) . '[]=' . rawurlencode(stripslashes($arr)) . '&';
-            }
-          }
-        }
-      }
+    $exclude_array = array_merge($exclude_array, array('error', 'x', 'y', 'cmd'));
+    if (function_exists('zen_session_name')) {
+        $exclude_array[] = zen_session_name();
     }
+    $get_url = '';
+    if (is_array($_GET) && (count($_GET) > 0)) {
+        foreach ($_GET as $key => $value) {
+            if (!in_array($key, $exclude_array)) {
+                if (!is_array($value)) {
+                    if (strlen($value) > 0) {
+                        $get_url .= rawurlencode(stripslashes($key)) . '=' . rawurlencode(stripslashes($value)) . '&';
+                    }
+                }
+            }
+        }
+    }
+
     $get_url = preg_replace('/&{2,}/', '&', $get_url);
     $get_url = preg_replace('/(&amp;)+/', '&amp;', $get_url);
 
     return $get_url;
-  }
+}
 
   /**
    * Return all GET params as (usually hidden) POST params
