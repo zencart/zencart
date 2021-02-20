@@ -18,7 +18,6 @@ if (!zen_is_logged_in()) {
 require(DIR_WS_MODULES . zen_get_module_directory('require_languages.php'));
 
 $error = false;
-$gender = $firstname = $lastname = $nick = $dob = $email_address = $telephone = $fax = $email_format = $customers_referral = '';
 
 if (!empty($_POST['action']) && $_POST['action'] == 'process') {
   if (ACCOUNT_GENDER == 'true') $gender = zen_db_prepare_input($_POST['gender']);
@@ -188,7 +187,7 @@ if (!(isset($_POST['action']) && ($_POST['action'] == 'process'))) {
   }
 }
 // if DOB field has database default setting, show blank:
-$dob = ($dob == '0001-01-01 00:00:00') ? '' : $dob;
+$dob = (empty($dob) || $dob == '0001-01-01 00:00:00') ? '' : $dob;
 
 $customers_referral = $account->fields['customers_referral'];
 
