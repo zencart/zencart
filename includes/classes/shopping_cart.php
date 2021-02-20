@@ -1743,7 +1743,7 @@ class shoppingCart extends base
      * Handle updateProduct cart Action
      *
      * @param string $goto forward destination
-     * @param array|string $parameters URL parameters to ignore
+     * @param array $parameters URL parameters to ignore
      */
     public function actionUpdateProduct($goto, $parameters)
     {
@@ -2172,9 +2172,9 @@ class shoppingCart extends base
      * @TODO - extract externally
      *
      * @param string $goto forward destination
-     * @param array|string $parameters URL parameters to ignore
+     * @param array $parameters URL parameters to ignore
      */
-    public function actionNotify($goto, $parameters = 'ignored')
+    public function actionNotify($goto, $parameters = ['ignored'])
     {
         global $db;
         if (zen_is_logged_in() && !zen_in_guest_checkout()) {
@@ -2216,9 +2216,9 @@ class shoppingCart extends base
      * @TODO - extract to handle externally
      *
      * @param string $goto forward destination
-     * @param array|string $parameters URL parameters to ignore
+     * @param array $parameters URL parameters to ignore
      */
-    public function actionNotifyRemove($goto, $parameters = 'ignored')
+    public function actionNotifyRemove($goto, $parameters = ['ignored'])
     {
         global $db;
         if (zen_is_logged_in() && !zen_in_guest_checkout() && isset($_GET['products_id'])) {
@@ -2245,7 +2245,7 @@ class shoppingCart extends base
      * Handle CustomerOrder cart Action
      *
      * @param string $goto forward destination
-     * @param array|string $parameters URL parameters to ignore
+     * @param array $parameters URL parameters to ignore
      */
     public function actionCustomerOrder($goto, $parameters)
     {
@@ -2274,11 +2274,12 @@ class shoppingCart extends base
      * Handle RemoveProduct cart Action
      *
      * @param string $goto forward destination
-     * @param array|string $parameters URL parameters to ignore
+     * @param array $parameters URL parameters to ignore
      */
     public function actionRemoveProduct($goto, $parameters)
     {
         if (!empty($_GET['product_id'])) $this->remove($_GET['product_id']);
+        $parameters[] = 'product_id';
         zen_redirect(zen_href_link($goto, zen_get_all_get_params($parameters)));
     }
 
@@ -2287,7 +2288,7 @@ class shoppingCart extends base
      * This just fires any NOTIFY_CART_USER_ACTION observers.
      *
      * @param string $goto forward destination
-     * @param array|string $parameters URL parameters to ignore
+     * @param array $parameters URL parameters to ignore
      */
     public function actionCartUserAction($goto, $parameters)
     {
@@ -2581,7 +2582,7 @@ class shoppingCart extends base
         global $db;
 
         $pr_id = zen_get_prid($product_id);
-        
+
         if ($pr_id === 0) {
             return true;
         }
