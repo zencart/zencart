@@ -67,7 +67,7 @@ if (isset($_POST['action']) && (($_POST['action'] == 'process') || ($_POST['acti
    * error checking when updating or adding an entry
    */
   if (ACCOUNT_STATE == 'true') {
-    $state = (isset($_POST['state'])) ? zen_db_prepare_input($_POST['state']) : FALSE;
+    $state = (isset($_POST['state'])) ? zen_db_prepare_input($_POST['state']) : '';
     if (isset($_POST['zone_id'])) {
       $zone_id = zen_db_prepare_input($_POST['zone_id']);
     } else {
@@ -327,7 +327,7 @@ if (!isset($_GET['delete'])) {
     $entry->fields['entry_country_id'] = $selected_country;
   }
   $flag_show_pulldown_states = ((($process == true || $entry_state_has_zones == true) && $zone_name == '') || ACCOUNT_STATE_DRAW_INITIAL_DROPDOWN == 'true' || $error_state_input) ? true : false;
-  $state = ($flag_show_pulldown_states && $state != FALSE) ? $state : $zone_name;
+  $state = ($flag_show_pulldown_states && $state !== '') ? $state : $zone_name;
   $state_field_label = ($flag_show_pulldown_states) ? '' : ENTRY_STATE;
 }
 
