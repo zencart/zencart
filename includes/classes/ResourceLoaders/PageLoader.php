@@ -67,6 +67,7 @@ class PageLoader
 
     function getTemplateDirectory($templateCode, $currentTemplate, $currentPage, $templateDir)
     {
+        if ($currentTemplate === 'template_default') $currentTemplate = DIR_WS_TEMPLATES . $currentTemplate . '/';
 
         $path = DIR_WS_TEMPLATES . 'template_default/' . $templateDir;
 
