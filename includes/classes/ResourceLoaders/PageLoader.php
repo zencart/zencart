@@ -72,18 +72,18 @@ class PageLoader
         $path = DIR_WS_TEMPLATES . 'template_default/' . $templateDir;
 
         if ($this->fileSystem->fileExistsInDirectory($currentTemplate . $currentPage, $templateCode)) {
-            $path = $currentTemplate . $currentPage . '/';
+            return $currentTemplate . $currentPage . '/';
         }
         if ($this->fileSystem->fileExistsInDirectory(
             DIR_WS_TEMPLATES . 'template_default/' . $currentPage, preg_replace('/\//', '', $templateCode))) {
-            $path = DIR_WS_TEMPLATES . 'template_default/' . $currentPage;
+            return DIR_WS_TEMPLATES . 'template_default/' . $currentPage;
         }
         if ($this->fileSystem->fileExistsInDirectory(
             $currentTemplate . $templateDir, preg_replace('/\//', '', $templateCode))) {
-            $path = $currentTemplate . $templateDir;
+            return $currentTemplate . $templateDir;
         }
         if ($tplPluginDir = $this->getTemplatePluginDir($templateCode, $templateDir)) {
-            $path = $tplPluginDir;
+            return $tplPluginDir;
         }
         return $path;
     }
