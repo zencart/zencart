@@ -11,7 +11,7 @@ if (PHP_VERSION_ID >= 80100) {
     return;
 }
 if (!function_exists('array_is_list')) {
-    function array_is_list(array $array): bool
+    function array_is_list(array $array)
     {
         if ([] === $array) {
             return true;
