@@ -4,7 +4,7 @@
  * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: mc12345678 Tue Aug 28 21:18:16 2018 -0400 Modified in v1.5.6 $
+ * @version $Id:  Modified in v1.5.8 $
  */
 /*
 
@@ -277,7 +277,7 @@
 
       if (!empty($this->icon)) $this->quotes['icon'] = zen_image($this->icon, $this->title);
 
-      if (strstr(MODULE_SHIPPING_ZONES_SKIPPED, $dest_country)) {
+      if (strpos(MODULE_SHIPPING_ZONES_SKIPPED, $dest_country) !== false) {
         // don't show anything for this country
         $this->quotes = array();
       } else {
