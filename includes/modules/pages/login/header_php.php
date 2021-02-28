@@ -30,8 +30,8 @@ include(DIR_WS_MODULES . zen_get_module_directory(FILENAME_CREATE_ACCOUNT));
 //
 $email_address = zen_db_prepare_input(isset($_POST['email_address']) ? trim($_POST['email_address']) : '');
 
-$error = false;
-if (isset($_GET['action']) && $_GET['action'] == 'process') {
+$error = filter_var($email_address, FILTER_VALIDATE_EMAIL); 
+if (!$error && isset($_GET['action']) && $_GET['action'] == 'process') {
     $loginAuthorized = false;
 
     if (isset($_GET['hmac'])) {
