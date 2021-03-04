@@ -948,5 +948,10 @@ class queryFactoryMeta
         $rgx = preg_match('/^[a-z]*/', $type, $matches);
         $this->type = $matches[0];
         $this->max_length = preg_replace('/[a-z\(\)]/', '', $type);
+        if (empty($this->max_length)) {
+            if (strtoupper($type) === 'DATE') $this->max_length = 10;
+            if (strtoupper($type) === 'DATETIME') $this->max_length = 19; // ignores fractional which would be 26
+            if (strtoupper($type) === 'TIMESTAMP') $this->max_length = 19; // ignores fractional which would be 26
+        }
     }
 }
