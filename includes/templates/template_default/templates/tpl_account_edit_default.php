@@ -5,10 +5,10 @@
  * Loaded automatically by index.php?main_page=account_edit.<br />
  * View or change Customer Account Information
  *
- * @copyright Copyright 2003-2020 Zen Cart Development Team
+ * @copyright Copyright 2003-2021 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: 2020 Dec 30 Modified in v1.5.7c $
+ * @version $Id: DrByte 2020 Dec 30 Modified in v1.5.7c $
  */
 ?>
 <div class="centerColumn" id="accountEditDefault">

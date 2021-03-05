@@ -3,10 +3,10 @@
  * html_output.php
  * HTML-generating functions used throughout the core
  *
- * @copyright Copyright 2003-2020 Zen Cart Development Team
+ * @copyright Copyright 2003-2021 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2020 Oct 29 Modified in v1.5.7a $
+ * @version $Id: lat9 2021 Feb 16 Modified in v1.5.7c $
  */
 
 /*

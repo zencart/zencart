@@ -1,8 +1,8 @@
 <?php
 /**
- * @copyright Copyright 2003-2020 Zen Cart Development Team
+ * @copyright Copyright 2003-2021 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id:  New in v1.5.7 $
+ * @version $Id: mc12345678 2021 Jan 03 Modified in v1.5.7c $
  */
 
 class WhosOnline extends base
