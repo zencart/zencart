@@ -9,13 +9,13 @@
  *
  * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2020 Nov 23 Modified in v1.5.7b $
+ * @version $Id: DrByte 2021-03-05 Modified in v1.5.7c $
  * @private
  */
 
 define('PROJECT_VERSION_NAME', 'Zen Cart');
 define('PROJECT_VERSION_MAJOR', '1');
-define('PROJECT_VERSION_MINOR', '5.7b');
+define('PROJECT_VERSION_MINOR', '5.7c');
 define('PROJECT_VERSION_PATCH1', '');
 define('PROJECT_VERSION_PATCH2', '');
 define('PROJECT_VERSION_PATCH1_SOURCE', '');
