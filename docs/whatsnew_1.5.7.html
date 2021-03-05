@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 <!--
-    /**
-     * @copyright Copyright 2003-2020 Zen Cart Development Team
-     * @license https://www.zen-cart.com/license/2_0.txt GNU Public License v2.0
-     * @version $Id: Scott C Wilson 2020 Nov 21 Modified in v1.5.7b $
-     */
+/**
+ * @copyright Copyright 2003-2021 Zen Cart Development Team
+ * @license https://www.zen-cart.com/license/2_0.txt GNU Public License v2.0
+ * @version $Id: DrByte 2021-03-05 Modified in v1.5.7c $
+ */
 //-->
 <head>
     <meta charset="utf-8">
@@ -64,7 +64,8 @@
                 About PHP versions
             </h1>
             <p>
-                Zen Cart v1.5.7 is designed for PHP 5.6 to 7.4, with MySQL 5.1 to 5.7 (or MariaDB 10.0-10.4) and Apache 2.2/2.4
+                Zen Cart v1.5.7 is designed for PHP 5.6 to 8.0, with MySQL 5.1 to 5.7 (or MariaDB 10.0-10.5) and Apache 2.2/2.4<br>
+                (Some older plugins may show deprecations and warnings when using PHP 8)
             </p>
         </div>
     </section> <!-- End aboutPHPVersions //-->
@@ -157,6 +158,26 @@
             <h1>
                 What's New ... Changes from prior versions
             </h1>
+            <h2>
+                The fixes/changes in v1.5.7c since v1.5.7b include:
+            </h2>
+            <ul>
+               <li>(Note: no database changes between v157/v157a/v157b/v157c, so no need to run zc_install if v157/v157a/v157b is already installed.)</li>
+               <li> All: Security Patches Applied.</li>
+               <li> All: Improved PHP 8.0 compatibility.</li>
+               <li> All: Upgraded PHPMailer to latest version 6.3.0</li>
+               <li> All: Fix some "is_countable" or "must be Array or Countable" errors/notices.</li>
+               <li> Admin: Fix incorrect "required" error when editing banners if start/end date existed</li>
+               <li> Admin: Fixed incorrect URL generated when accessing customer-submitted images.</li>
+               <li> Admin: Improve plugin compatibility on category/product-listing page.</li>
+               <li> Admin: Attributes Controller fix for broken button, and improved compatibility with plugins.</li>
+               <li> Admin: Improved DTK search for zc_plugins.</li>
+               <li> Admin: Fix long-time error in zen_copy_attributes() function.</li>
+               <li> Storefront: Fix attribute-related error causing "A-non-numeric-value-encountered-in-shopping_cart.php".</li>
+               <li> Storefront: Restore "Always Show Categories on Main Page" feature from v156</li>
+               <li> Storefront: Improved compatibility with Image Handler for empty image dimensions.</li>
+               <li> Storefront: Added new capabilities to breadcrumb class so templates can override defaults.</li>
+            </ul>
             <h2>
                 The fixes/changes in v1.5.7b since v1.5.7a include:
             </h2>

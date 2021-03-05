@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html>
 <!--
-    /**
- * @copyright Copyright 2003-2020 Zen Cart Development Team
-     * @license https://www.zen-cart.com/license/2_0.txt GNU Public License v2.0
-     * @version $Id: DrByte 2020 Nov 23 Modified in v1.5.7b $
-     */
+/**
+ * @copyright Copyright 2003-2021 Zen Cart Development Team
+ * @license https://www.zen-cart.com/license/2_0.txt GNU Public License v2.0
+ * @version $Id: DrByte 2021-03-05 Modified in v1.5.7c $
+ */
 //-->
 <head>
     <title>Zen Cart&reg; Changed Files</title>
@@ -61,21 +61,53 @@
     
     <section id="introCenter">
         <div>
-            <h1>Zen Cart&reg; Version 1.5.7b</h1>
+            <h1>Zen Cart&reg; Version 1.5.7c</h1>
             <p>
                 For a listing of what is new in this release, please see the <a href="whatsnew_1.5.7.html">whatsnew_1.5.7.html</a> file in the <span class="filename">/docs</span> folder.<br>
                 You may also consult the <a href="https://www.zen-cart.com/forumdisplay.php?2-Zen-Cart-Release-Announcements" target="_blank">Zen Cart&reg; Support Forum</a>.<br>
                 Consult the online docs for Release-Specific considerations to note regarding this version. <a href="https://docs.zen-cart.com/user/upgrading/">https://docs.zen-cart.com/user/upgrading/</a><br>
                 <br>
                 A detailed list of all edits to all files can be seen on Github at:<br>
-                <a href="https://github.com/zencart/zencart/compare/v156...v1.5.7">v1.5.6...v1.5.7b</a><br>
-                <a href="https://github.com/zencart/zencart/compare/v1.5.6c...v1.5.7b">v1.5.6c...v1.5.7b</a><br>
-                <a href="https://github.com/zencart/zencart/compare/v1.5.7...v1.5.7b">v1.5.7...v1.5.7b</a><br>
+                <a href="https://github.com/zencart/zencart/compare/v156...v1.5.7">v1.5.6...v1.5.7c</a><br>
+                <a href="https://github.com/zencart/zencart/compare/v1.5.6c...v1.5.7c">v1.5.6c...v1.5.7c</a><br>
+                <a href="https://github.com/zencart/zencart/compare/v1.5.7...v1.5.7b">v1.5.7...v1.5.7c</a><br>
+                <a href="https://github.com/zencart/zencart/compare/v1.5.7b...v1.5.7b">v1.5.7b...v1.5.7c</a><br>
             </p>
         </div>
     </section> <!-- End introCenter //-->
     
     <section id="changedFiles">
+        <div>
+            <h1>CHANGED Files in v1.5.7c (since v1.5.7b)</h1>
+            <ul>
+                <li>/admin/modules.php</li>
+                <li>/admin/orders.php</li>
+                <li>/admin/whos_online.php</li>
+                <li>/admin/attributes_controller.php</li>
+                <li>/admin/banner_manager.php</li>
+                <li>/admin/category_product_listing.php</li>
+                <li>/admin/developers_tool_kit.php</li>
+                <li>/admin/includes/application_bootstrap.php</li>
+                <li>/admin/includes/classes/WhosOnline.php</li>
+                <li>/admin/includes/functions/functions_prices.php</li>
+                <li>/admin/includes/functions/general.php</li>
+                <li>/includes/application_top.php</li>
+                <li>/includes/classes/TableViewControllers/BaseController.php</li>
+                <li>/includes/classes/breadcrumb.php</li>
+                <li>/includes/classes/db/mysql/query_factory.php</li>
+                <li>/includes/classes/vendors/PHPMailer/  (ENTIRE DIRECTORY)</li>
+                <li>/includes/functions/functions_categories.php</li>
+                <li>/includes/functions/functions_general_shared.php</li>
+                <li>/includes/functions/functions_prices.php</li>
+                <li>/includes/functions/html_output.php</li>
+                <li>/includes/functions/php_polyfills.php  (NEW FILE)</li>
+                <li>/includes/languages/english/time_out.php</li>
+                <li>/includes/modules/pages/index/header_php.php</li>
+                <li>/includes/templates/template_default/templates/tpl_account_edit_default.php</li>
+                <li>/includes/version.php</li>
+                <li>/zc_install/ (ENTIRE DIRECTORY) (Note: no database changes between v157/v157a/v157b/v15c, so no need to run zc_install if v157/v157a/v157b already installed.)</li>
+            </ul>
+        </div>
         <div>
             <h1>CHANGED Files in v1.5.7b (since v1.5.7a)</h1>
             <ul>
