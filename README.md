@@ -13,16 +13,16 @@ It's free software, with free community-driven support available 24/7 on the Zen
 --------------------
 
 
-Zen Cart&reg; v1.5.7c-beta
+Zen Cart&reg; v1.5.7c
 ---------------------
 
 Compatibility
 -------------
 Zen Cart v1.5.7 is designed for:
 
- * PHP 5.6 to PHP 7.4 (may show various "warnings" on PHP 8.0)
+ * PHP 5.6 to PHP 8.0 (older plugins may show various "warnings" on PHP 8.0)
  * Apache 2.2 and 2.4
- * MySQL 5.1 to 8.0 or MariaDB 10.0 to 10.4
+ * MySQL 5.1 to 8.0 or MariaDB 10.0 to 10.5
 
 Refer to [compatibility requirements](https://docs.zen-cart.com/user/first_steps/server_requirements/) for additional details.
 
@@ -87,5 +87,5 @@ Subscribe to [Critical News Updates And Release Announcements](https://www.zen-c
 
 &nbsp;  
 
-*&copy;Copyright 2003-2020, Zen Cart&reg;. All rights reserved.*
+*&copy;Copyright 2003-2021, Zen Cart&reg;. All rights reserved.*
 
