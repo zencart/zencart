@@ -19,9 +19,7 @@ if (!defined('IS_ADMIN_FLAG')) {
 if (!defined('DISABLE_BREADCRUMB_LINKS_ON_LAST_ITEM')) define('DISABLE_BREADCRUMB_LINKS_ON_LAST_ITEM', 'true');
 
 /**
- * breadcrumb Class.
- * Class to handle page breadcrumbs
- *
+ * Handle page breadcrumbs
  */
 class breadcrumb extends base
 {
@@ -34,12 +32,12 @@ class breadcrumb extends base
 
     function reset()
     {
-        $this->_trail = array();
+        $this->_trail = [];
     }
 
     function add($title, $link = '')
     {
-        $this->_trail[] = array('title' => $title, 'link' => $link);
+        $this->_trail[] = ['title' => $title, 'link' => $link];
     }
 
     function trail($separator = '&nbsp;&nbsp;', $prefix = '', $suffix = '')
@@ -55,7 +53,7 @@ class breadcrumb extends base
             if (!empty($this->_trail[$i]['link']) && !$skip_link) {
                 // this line simply sets the "Home" link to be the domain/url, not main_page=index?blahblah:
                 if ($this->_trail[$i]['title'] == HEADER_TITLE_CATALOG) {
-                    $trail_string .= '  ' . $prefix . '<a href="' . HTTP_SERVER . DIR_WS_CATALOG . '">' . $this->_trail[$i]['title'] . '</a>' . $suffix;
+                    $trail_string .= '  ' . $prefix . '<a href="' . zen_href_link('/', '', 'SSL', false, true, true) . '">' . $this->_trail[$i]['title'] . '</a>' . $suffix;
                 } else {
                     $trail_string .= '  ' . $prefix . '<a href="' . $this->_trail[$i]['link'] . '">' . $this->_trail[$i]['title'] . '</a>' . $suffix;
                 }
@@ -76,6 +74,25 @@ class breadcrumb extends base
     {
         $trail_size = count($this->_trail);
         return $this->_trail[$trail_size - 1]['title'];
+    }
+
+    function removeLast()
+    {
+        $trail_size = count($this->_trail);
+        unset($this->_trail[$trail_size - 1]);
+    }
+
+    function replaceLast($title = null, $link = null)
+    {
+        if ($title === null && $link === null) return $this->removeLast();
+
+        $trail_size = count($this->_trail);
+        if ($title !== null) {
+            $this->_trail[$trail_size - 1]['title'] = $title;
+        }
+        if ($link !== null) {
+            $this->_trail[$trail_size - 1]['link'] = $link;
+        }
     }
 
     function isEmpty()
