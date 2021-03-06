@@ -802,7 +802,7 @@ class ot_coupon
      */
     protected function validateCouponStartDate($coupon_details)
     {
-        if (date("Y-m-d H:i:s") < $coupon_details['coupon_start_date']) {
+        if (date_create(date("Y-m-d")) < date_create($coupon_details['coupon_start_date'])) {
             return false;
         }
 
@@ -819,7 +819,7 @@ class ot_coupon
      */
     protected function validateCouponEndDate($coupon_details)
     {
-        if (date("Y-m-d H:i:s") >= $coupon_details['coupon_expire_date']) {
+        if (date_create(date("Y-m-d")) > date_create($coupon_details['coupon_expire_date'])) {
             return false;
         }
 
