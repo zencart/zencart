@@ -2,10 +2,10 @@
 # * This SQL script upgrades the core Zen Cart database structure from v1.5.7 to v1.5.8
 # *
 # * @access private
-# * @copyright Copyright 2003-2020 Zen Cart Development Team
+# * @copyright Copyright 2003-2021 Zen Cart Development Team
 # * @copyright Portions Copyright 2003 osCommerce
 # * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
-# * @version $Id: DrByte 2020 Jun 23 New in v1.5.8 $
+# * @version $Id:  New in v1.5.8 $
 #
 
 ############ IMPORTANT INSTRUCTIONS ###############
@@ -39,6 +39,10 @@ ALTER TABLE manufacturers ADD COLUMN featured tinyint default 0;
 ALTER TABLE customers ADD registration_ip varchar(45) NOT NULL default '';
 ALTER TABLE customers ADD last_login_ip varchar(45) NOT NULL default '';
 ALTER TABLE customers_info ADD INDEX idx_date_created_cust_id_zen (customers_info_date_account_created, customers_info_id);
+
+ALTER TABLE orders_products MODIFY products_name varchar(254) NOT NULL default '';
+ALTER TABLE products_description MODIFY products_name varchar(254) NOT NULL default '';
+
 
 # Remove greater-than sign in query_builder
 UPDATE query_builder SET query_name = 'Customers Dormant for 3+ months (Subscribers)' WHERE query_id = 3;
