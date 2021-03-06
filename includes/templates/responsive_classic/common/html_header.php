@@ -58,7 +58,7 @@ if (!class_exists('Mobile_Detect')) {
   <meta name="robots" content="noindex, nofollow">
 <?php } ?>
 
-  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=yes"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=yes">
 
 <?php if (defined('FAVICON')) { ?>
   <link rel="icon" href="<?php echo FAVICON; ?>" type="image/x-icon">
