@@ -45,18 +45,18 @@ systemChecks:
       checkPhpVersionMax:
         method: checkPhpVersion
         parameters:
-          version: 8.1.0
+          version: 8.2.0
           versionTest: lt
-          localErrorText: <?php echo sprintf(TEXT_ERROR_PHP_VERSION_MAX, '8.0.x') . PHP_EOL; ?>
+          localErrorText: <?php echo sprintf(TEXT_ERROR_PHP_VERSION_MAX, '8.1.x') . PHP_EOL; ?>
   checkPhpVersionRecommendation:
     runLevel: always
     errorLevel: WARN
-    mainErrorText: <?php echo sprintf(TEXT_ERROR_PHP_VERSION_RECOMMENDED, '7.4') . PHP_EOL; ?>
+    mainErrorText: <?php echo sprintf(TEXT_ERROR_PHP_VERSION_RECOMMENDED, '8.0') . PHP_EOL; ?>
     methods:
       checkPhpVersionRecommended:
         method: checkPhpVersion
         parameters:
-          version: 7.4.0
+          version: 8.0.0
           versionTest: ge
   checkZCversion:
     runLevel: always
