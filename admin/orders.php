@@ -1,9 +1,9 @@
 <?php
 /**
- * @copyright Copyright 2003-2020 Zen Cart Development Team
+ * @copyright Copyright 2003-2021 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2020 Jun 08 Modified in v1.5.7 $
+ * @version $Id: mc12345678 2021 Feb 22 Modified in v1.5.7c $
  */
 require('includes/application_top.php');
 
@@ -11,6 +11,9 @@ require('includes/application_top.php');
 if (isset($module)) {
   unset($module);
 }
+
+$quick_view_popover_enabled = false;
+$includeAttributesInProductDetailRows = true;
 
 require(DIR_WS_CLASSES . 'currencies.php');
 $currencies = new currencies();
@@ -152,7 +155,7 @@ if (!empty($action) && $order_exists == true) {
           break;
         default:
           $messageStack->add_session(sprintf(TEXT_EXTENSION_NOT_UNDERSTOOD, $file_extension), 'error');
-          zen_redirect(zen_href_link(FILENAME_ORDERS, zen_get_all_get_params(array('download', 'action')) . 'action=edit'), 'NONSSL');
+          zen_redirect(zen_href_link(FILENAME_ORDERS, zen_get_all_get_params(array('download', 'action')) . 'action=edit', 'NONSSL'));
       }
       $fs_path = DIR_FS_CATALOG_IMAGES . 'uploads/' . $fileName;
       if (!file_exists($fs_path)) {
@@ -1130,7 +1133,9 @@ if (!empty($action) && $order_exists == true) {
                   <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_PAYMENT_METHOD; ?></td>
                   <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_CUSTOMERS; ?></td>
                   <td class="dataTableHeadingContent text-right"><?php echo TABLE_HEADING_ORDER_TOTAL; ?></td>
+<?php if ($quick_view_popover_enabled) { ?>
                   <td></td>
+<?php } ?>
                   <td class="dataTableHeadingContent text-center"><?php echo TABLE_HEADING_DATE_PURCHASED; ?></td>
                   <td class="dataTableHeadingContent text-right"><?php echo TABLE_HEADING_STATUS; ?></td>
                   <td class="dataTableHeadingContent text-center"><?php echo TABLE_HEADING_CUSTOMER_COMMENTS; ?></td>
@@ -1285,6 +1290,7 @@ if (!empty($action) && $order_exists == true) {
                             WHERE op.orders_id = " . (int)$orders->fields['orders_id'];
                     $orderProducts = $db->Execute($sql, false, true, 1800);
                     $product_details = '';
+                    if ($includeAttributesInProductDetailRows) {
                     foreach($orderProducts as $product) {
                         $product_details .= $product['qty'] . ' x ' . $product['name'] . (!empty($product['model']) ? ' (' . $product['model'] . ')' :'') . "\n";
                         $sql = "SELECT products_options, products_options_values
@@ -1301,6 +1307,7 @@ if (!empty($action) && $order_exists == true) {
                     $product_details = rtrim($product_details);
                     $product_details = preg_replace('~<hr>$~', '', $product_details); // remove last HR
                     $product_details = nl2br($product_details);
+                    }
                     ?>
                 <td class="dataTableContent text-center"><?php echo $show_difference . $orders->fields['orders_id']; ?></td>
                 <td class="dataTableContent"><?php echo $show_payment_type; ?></td>
@@ -1308,6 +1315,7 @@ if (!empty($action) && $order_exists == true) {
                 <td class="dataTableContent text-right" title="<?php echo zen_output_string($product_details, array('"' => '&quot;', "'" => '&#39;', '<br />' => '', '<hr>' => "----\n")); ?>">
                   <?php echo strip_tags($currencies->format($orders->fields['order_total'], true, $orders->fields['currency'], $orders->fields['currency_value'])); ?>
                 </td>
+<?php if ($quick_view_popover_enabled) { ?>
                 <td class="dataTableContent text-right dataTableButtonCell">
                     <a tabindex="0" class="btn btn-xs btn-link orderProductsPopover" role="button" data-toggle="popover"
                        data-trigger="focus"
@@ -1318,6 +1326,7 @@ if (!empty($action) && $order_exists == true) {
                         <?php echo TEXT_PRODUCT_POPUP_BUTTON; ?>
                     </a>
                 </td>
+<?php } ?>
                 <td class="dataTableContent text-center"><?php echo zen_datetime_short($orders->fields['date_purchased']); ?></td>
                 <td class="dataTableContent text-right"><?php echo ($orders->fields['orders_status_name'] != '' ? $orders->fields['orders_status_name'] : TEXT_INVALID_ORDER_STATUS); ?></td>
                 <?php $order_comments = zen_output_string_protected(zen_get_orders_comments($orders->fields['orders_id'])); ?>

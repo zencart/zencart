@@ -1,8 +1,8 @@
 <?php
 /**
- * @copyright Copyright 2003-2020 Zen Cart Development Team
+ * @copyright Copyright 2003-2021 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id:  New in v1.5.7 $
+ * @version $Id: mc12345678 2021 Jan 03 Modified in v1.5.7c $
  */
 
 class WhosOnline extends base
@@ -133,12 +133,17 @@ class WhosOnline extends base
 
         $ip_array = [];
 
+        $sessionInspectAll = false; // Limit the session inspection to just the one $sessionToInspect
         // make the first entry show cart by default
         if (empty($sessionToInspect) && !$results->EOF) {
             $sessionToInspect = $results->fields['session_id']; // uses the fields array because we're not iterating the array yet
+            $sessionInspectAll = true; // No specific session was requested, so make all available.
         }
 
         foreach ($results as $result) {
+            if ($sessionInspectAll === true) {
+                $sessionToInspect = $result['session_id'];
+            }
             $result['time_online'] = (time() - $result['time_entry']);
             $result['is_a_bot'] = empty($result['session_id']);
             $result['time_since_last_click'] = $this->getHumanFriendlyTimeSince($result['time_last_click']);

@@ -1,9 +1,9 @@
 <?php
 /**
- * @copyright Copyright 2003-2020 Zen Cart Development Team
+ * @copyright Copyright 2003-2021 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2020 May 19 Modified in v1.5.7 $
+ * @version $Id: DrByte 2021 Jan 03 Modified in v1.5.7c $
  */
 // Default refresh interval (0=off).  NOTE: Using automated refresh may put you in breach of PCI Compliance
 $defaultRefreshInterval = 0;
@@ -37,6 +37,18 @@ if (!isset($_SESSION['wo_timeout']) || $_SESSION['wo_timeout'] < 3) {
 
 $selectedView = isset($_GET['q']) ? $_GET['q'] : '';
 $wo = new WhosOnline();
+if (!empty($_GET['inspect'])) {
+    $sql = "SELECT s.sesskey
+            FROM " . TABLE_SESSIONS . " s
+            WHERE s.sesskey = :session_id:";
+    $sql = $db->bindVars($sql, ':session_id:', $_GET['inspect'], 'string');
+
+    $result = $db->Execute($sql);
+
+    if ($result->EOF) {
+        unset($_GET['inspect']);
+    }
+}
 $whos_online = $wo->retrieve($selectedView, (empty($_GET['inspect']) ? '' : $_GET['inspect']), $_SESSION['wo_exclude_spiders'], $_SESSION['wo_exclude_admins']);
 
 if (!defined('WHOIS_SHOW_HOST')) define('WHOIS_SHOW_HOST', '1');
