@@ -159,7 +159,7 @@ if (!empty($action)) {
                 }
 
                 $product_is_misconfigured = '';
-                if ($padInfo->product_is_always_free_shipping == 1 || $padInfo->products_virtual == 1) {
+                if ($products_downloads['product_is_always_free_shipping'] == 1 || $products_downloads['products_virtual'] == 1) {
                   $product_is_misconfigured = '<div class="fa-stack fa-fw"><i class="fa fa-circle fa-stack-1x" style="color: #ff0;"></i><i class="fa fa-circle-o fa-stack-1x" style="color: #000;"></i></div>';
                 }
                 ?>
