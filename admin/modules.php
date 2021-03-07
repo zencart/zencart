@@ -215,6 +215,10 @@ if (!empty($action)) {
                           }
                         }
                         $module_info['keys'] = $keys_extra;
+                        if (method_exists($module, 'verify')) { 
+                          $module_info['verify_msg'] = $module->verify(); 
+                        }
+
                         $mInfo = new objectInfo($module_info);
                       }
                         if (isset($mInfo) && is_object($mInfo) && ($class == $mInfo->code)) { // a module row is selected
@@ -370,6 +374,10 @@ if (!empty($action)) {
                 }
                 $contents[] = ['align' => 'text-center', 'text' => '<a href="' . zen_href_link(FILENAME_MODULES, 'set=' . $set . '&module=' . $mInfo->code . '&action=remove', 'SSL') . '" class="btn btn-warning" role="button" id="removeButton"><i class="fa fa-minus"></i> ' . IMAGE_MODULE_REMOVE . '</a>'];
                 $contents[] = ['text' => '<br>' . $mInfo->description];
+
+                if (!empty($mInfo->verify_msg)) { 
+                  $contents[] = ['text' => $mInfo->verify_msg . '<br>'];  // warnings, etc. 
+                }
                 $contents[] = ['text' => '<br>' . $keys];
               } else {
                 if (!(!$is_ssl_protected && in_array($mInfo->code, ['paypaldp', 'authorizenet_aim', 'authorizenet_echeck']))) {

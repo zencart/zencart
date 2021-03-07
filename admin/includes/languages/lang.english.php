@@ -534,6 +534,7 @@ $define = [
     'TEXT_BOOLEAN_VALIDATE' => 'The value is required to be a boolean value or equivalent.',
     'TEXT_ASC' => 'asc',
     'TEXT_DESC' => 'desc',
+    'TEXT_DOWNLOADABLE_PRODUCTS_MISCONFIGURED' => 'Some downloadable products are misconfigured.  See Admin &gt; Catalog &gt; Downloads Manager.',
 ];
 
 return $define;

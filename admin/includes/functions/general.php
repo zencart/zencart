@@ -758,3 +758,31 @@ function zen_get_orders_status_pulldown_array()
 
     return $orders_status_array;
 }
+
+/***
+ * Do the misconfiguration check which Admin > Catalog > Downloads Manager 
+ * does to verify that downloads don't have invalid shipping settings.
+ */
+function zen_check_downloads_shipping() {
+   global $db; 
+   if (DOWNLOAD_ENABLED == 'false') return true; 
+   // use SELECT from admin/downloads_manager.php
+   $sql = "SELECT pad.*, pa.*, pd.*, p.*
+                      FROM " . TABLE_PRODUCTS_ATTRIBUTES_DOWNLOAD . " pad
+                      LEFT JOIN " . TABLE_PRODUCTS_ATTRIBUTES . " pa ON pad.products_attributes_id = pa.products_attributes_id
+                      LEFT JOIN " . TABLE_PRODUCTS_DESCRIPTION . " pd ON pa.products_id = pd.products_id
+                        AND pd.language_id = " . (int)$_SESSION['languages_id'] . "
+                      LEFT JOIN " . TABLE_PRODUCTS . " p ON p.products_id = pd.products_id
+                      WHERE pa.products_attributes_id = pad.products_attributes_id";
+   
+   $products_downloads_query = $db->Execute($sql); 
+   $valid = true; 
+   foreach ($products_downloads_query as $products_downloads) {
+
+      if ($products_downloads['product_is_always_free_shipping'] == 1 || $products_downloads['products_virtual'] == 1) {
+         $valid = false; 
+         break;
+      }
+   }
+   return $valid; 
+}
