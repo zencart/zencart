@@ -36,6 +36,7 @@ $option_order_by = !empty($_GET['option_order_by']) && $_GET['option_order_by'] 
 if (!empty($_POST['options_id'])) { // selected Option Name from Global Tools dropdowns (not used for ADD ALL/DELETE ALL)
     $_SESSION['selectedOptionId'] = (int)$_POST['options_id'];
 }
+$form_id = '';
 if (!empty($_POST['form_wrapper_id'])) { // id of surrounding div of the submitted form: on redirect, focus browser viewport on same id/anchor
     $form_id = zen_db_prepare_input($_POST['form_wrapper_id']);
 }
@@ -746,7 +747,7 @@ function translate_type_to_name($opt_type)
                         <div class="col-sm-7">
                             <?php
                             echo zen_draw_label(TEXT_SELECT_PRODUCT, 'product_to_update_add', 'class="control-label"') . '<br>';
-                            echo zen_draw_pulldown_products_having_attributes('product_to_update', 'size="5" class="form-control" id="product_to_update_add" required', '', $products_order_by, $selectedOptionId);
+                            echo zen_draw_pulldown_products_having_attributes('product_to_update', 'size="5" class="form-control" id="product_to_update_add" required', [], $products_order_by, $selectedOptionId);
                             if ($selectedOptionId !== '') {
                                 $products_sort_link = ($products_order_by === 'name' ?
                                     '<a href="' . zen_href_link(FILENAME_OPTIONS_NAME_MANAGER, zen_get_all_get_params(['products_order_by']) . '&products_order_by=model#addOptionValuesOneWrapper') . '">' . TEXT_ORDER_BY . ' ' . TABLE_HEADING_MODEL . '</a>' :
@@ -780,7 +781,7 @@ function translate_type_to_name($opt_type)
                         <div class="col-sm-7">
                             <?php
                             echo zen_draw_label(TEXT_SELECT_CATEGORY, 'category_to_update_add', 'class="control-label"') . '<br>';
-                            echo zen_draw_pulldown_categories_having_products_with_attributes('category_to_update', 'size="5" class="form-control" id="category_to_update_add" required', '', $category_path, $selectedOptionId);
+                            echo zen_draw_pulldown_categories_having_products_with_attributes('category_to_update', 'size="5" class="form-control" id="category_to_update_add" required', [], $category_path, $selectedOptionId);
                             if ($selectedOptionId !== '') {
                                 $show_category_path_link = ($category_path ?
                                     '<a href="' . zen_href_link(FILENAME_OPTIONS_NAME_MANAGER, zen_get_all_get_params(['category_path']) . '&category_path=0#addOptionValuesCategoryWrapper') . '">' . TEXT_SHOW_CATEGORY_NAME . '</a>' :
@@ -845,7 +846,7 @@ function translate_type_to_name($opt_type)
                         <div class="col-sm-7">
                             <?php
                             echo zen_draw_label(TEXT_SELECT_PRODUCT, 'product_to_update_delete', 'class="control-label"') . '<br>';
-                            echo zen_draw_pulldown_products_having_attributes('product_to_update', 'size="5" class="form-control" id="product_to_update_delete" required', '', $products_order_by, $selectedOptionId);
+                            echo zen_draw_pulldown_products_having_attributes('product_to_update', 'size="5" class="form-control" id="product_to_update_delete" required', [], $products_order_by, $selectedOptionId);
                             if ($selectedOptionId !== '') {
                                 $products_sort_link = ($products_order_by === 'name' ?
                                     '<a href="' . zen_href_link(FILENAME_OPTIONS_NAME_MANAGER, zen_get_all_get_params(['products_order_by']) . '&products_order_by=model#deleteOptionValuesOneWrapper') . '">' . TEXT_ORDER_BY . ' ' . TABLE_HEADING_MODEL . '</a>' :
@@ -880,7 +881,7 @@ function translate_type_to_name($opt_type)
                         <div class="col-sm-7">
                             <?php
                             echo zen_draw_label(TEXT_SELECT_CATEGORY, 'category_to_update_delete', 'class="control-label"') . '<br>';
-                            echo zen_draw_pulldown_categories_having_products_with_attributes('category_to_update', 'size="5" class="form-control" id="category_to_update_delete" required', '', $category_path, $selectedOptionId);
+                            echo zen_draw_pulldown_categories_having_products_with_attributes('category_to_update', 'size="5" class="form-control" id="category_to_update_delete" required', [], $category_path, $selectedOptionId);
                             if ($selectedOptionId !== '') {
                                 $show_category_path_link = ($category_path ?
                                     '<a href="' . zen_href_link(FILENAME_OPTIONS_NAME_MANAGER, zen_get_all_get_params(['category_path']) . '&category_path=0#deleteOptionValuesCategoryWrapper') . '">' . TEXT_SHOW_CATEGORY_NAME . '</a>' :
