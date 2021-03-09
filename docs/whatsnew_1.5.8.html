@@ -48,7 +48,7 @@
                 While we do not charge for this software, we greatly appreciate donations to help cover the expenses of maintenance, upgrades, updates, the free support forum and the continued development of this software for your online E-Commerce store.  Please consider making a donation each time you install a new version.
             </p>
             <p>
-                Donations can be made on the <a href="https://www.zen-cart.com/donate" target="_blank">Zen Cart Team Page</a>
+                Donations can be made on the <a href="https://www.zen-cart.com/donate" rel="noreferrer noopener" target="_blank">Zen Cart Team Page</a>
             </p>
             <p>
                 We appreciate your support.
@@ -97,13 +97,13 @@
                 From v1.5.6 or older
             </h2>
             <p>
-                If you are upgrading from a version OLDER than v1.5.7, then please do a <a href="https://www.zen-cart.com/upgrades" target="_blank">standard site upgrade</a>. Be sure to review all the links in this article, including tips on staging the upgrade in a separate directory/folder.
+                If you are upgrading from a version OLDER than v1.5.7, then please do a <a href="https://www.zen-cart.com/upgrades" rel="noreferrer noopener" target="_blank">standard site upgrade</a>. Be sure to review all the links in this article, including tips on staging the upgrade in a separate directory/folder.
             </p>
             <h1>
                 CHANGELOG - List of Changed Files 
             </h1>
             <p>
-                For a list of files that have been changed since v1.5.7, see the <a href="changed_files-v1.5.8.html" target="_blank">changed_files-v1.5.8.html</a> document.
+                For a list of files that have been changed since v1.5.7, see the <a href="changed_files-v1.5.8.html" rel="noreferrer noopener" target="_blank">changed_files-v1.5.8.html</a> document.
             </p>
         </div>
     </section> <!-- End upgradeInstructions //-->
@@ -161,15 +161,19 @@
                 The most notable improvements and bugfixes in v1.5.8 since v1.5.7 include:
             </h2>
             <ul>
-               <li>Storefront: Shop by Brand page added, listing all your manufacturers, with featured manufacturers at the top.</li>
+               <li>Admin: Improved dashboard performance.</li>
+               <li>Admin: Implement "forget" option for customer deletion to support GDPR.</li>
                <li>Admin: multiple per page javascript now supported in Admin.</li>
                <li>Admin: multiple per page CSS now supported in Admin.</li>
+               <li>Admin: more notifiers for category_product_listing.</li>
                <li>Admin: Improved appearance of pages: Manufacturers, EZ-Pages, Countries.</li>
                <li>Admin: Manufacturers edit page now allows you to feature specific manufacturers on the storefront Brands page.</li>
-               <li>Admin: Warning when downloadable products are misconfigured.</li>
+               <li>Admin: Warning when downloadable products are misconfigured, both on Downloads Manager and shipping module screens.</li>
                <li>Admin: Product search in admin improved.</li>
+               <li>Admin: Show image when viewing categories containing products.</li>
                <li>Admin: Copy product now correctly copies downloads.</li>
-               <li>Email: Improved appearance of HTML email.</li>
+               <li>Admin: Help now available for modules.</li>
+               <li>Core: Stores may be configured to return HTTP 200 for disabled products instead of HTTP 404.</li>
                <li>Core: Added notifier hook on add-to-cart attempt.</li>
                <li>Core: Grid layout option added for listing pages.</li>
                <li>Core: Event aliasing added so notifier names can be changed without breaking older plugins.</li>
@@ -179,6 +183,9 @@
                <li>Core: Customer class introduced to consolidate customer table related logic.</li>
                <li>Core: Manufacturer list not shown on advanced search page if no manufacturers defined.</li>
                <li>Core: Plugin manager improvements (<i>FIXME more details here</i>).</li>
+               <li>Email: Improved appearance of HTML email.</li>
+               <li>Storefront: Log account creation IP Address for fraud tracking and GDPR delete requests.</li>
+               <li>Storefront: Shop by Brand page added, listing all your manufacturers, with featured manufacturers at the top.</li>
                <li>All known v1.5.7 bugfixes and security fixes are included in v1.5.8</li>
                <li>... and many other incremental improvements to make Zen Cart more efficient, more robust and easier to use.</li>
             </ul>
@@ -197,7 +204,7 @@
         <div>
             <h1>Help and Support</h1>
             <p>
-                For additional help and support, visit the <a href="https://docs.zen-cart.com/" target="_blank">Zen Cart Docs</a> and the <a href="https://www.zen-cart.com/forum.php" target="_blank">Zen Cart Support Forum</a>.
+                For additional help and support, visit the <a href="https://docs.zen-cart.com/" rel="noreferrer noopener" target="_blank">Zen Cart Docs</a> and the <a href="https://www.zen-cart.com/forum.php" rel="noreferrer noopener" target="_blank">Zen Cart Support Forum</a>.
             </p>
         </div>
     </section> <!-- End helpSupport //-->
@@ -225,7 +232,7 @@
                 <br><br>
                 Zen Cart
                 <br>
-                <a href="https://www.zen-cart.com" target="_blank">www.zen-cart.com</a>
+                <a href="https://www.zen-cart.com" rel="noreferrer noopener" target="_blank">www.zen-cart.com</a>
             </p>
         </div>
     </section> <!-- End footerBlock //-->
