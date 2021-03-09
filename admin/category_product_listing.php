@@ -846,7 +846,7 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
               //   'NOTIFY_ADMIN_PROD_LISTING_HEADERS_B4_QTY' notification.
               //
               $extra_data = false;
-              $zco_notifier->notify('NOTIFY_ADMIN_PROD_LISTING_DATA_B4_QTY', '', $extra_data);
+              $zco_notifier->notify('NOTIFY_ADMIN_PROD_LISTING_DATA_B4_QTY', $product, $extra_data);
               if (is_array($extra_data)) {
                   foreach ($extra_data as $data_info) {
                       $align = (isset($data_info['align'])) ? (' text-' . $data_info['align']) : '';
@@ -877,7 +877,7 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
               //   'NOTIFY_ADMIN_PROD_LISTING_HEADERS_AFTER_QTY' notification.
               //
               $extra_data = false;
-              $zco_notifier->notify('NOTIFY_ADMIN_PROD_LISTING_DATA_AFTER_QTY', '', $extra_data);
+              $zco_notifier->notify('NOTIFY_ADMIN_PROD_LISTING_DATA_AFTER_QTY', $product, $extra_data);
               if (is_array($extra_data)) {
                   foreach ($extra_data as $data_info) {
                       $align = (isset($data_info['align'])) ? (' text-' . $data_info['align']) : '';
