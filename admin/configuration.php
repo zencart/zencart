@@ -54,6 +54,10 @@ $cfg_group = $db->Execute("SELECT configuration_group_title
                            FROM " . TABLE_CONFIGURATION_GROUP . "
                            WHERE configuration_group_id = " . (int)$gID);
 
+if ($cfg_group->RecordCount() == 0) {
+  $cfg_group->fields['configuration_group_title'] = '';
+}
+
 if ($gID == 7) {
   $shipping_errors = '';
   if (zen_get_configuration_key_value('SHIPPING_ORIGIN_ZIP') == 'NONE' or zen_get_configuration_key_value('SHIPPING_ORIGIN_ZIP') == '') {
@@ -178,10 +182,10 @@ if ($gID == 7) {
           $contents = array();
 
           // Translation for contents
-          if (defined('CFGTITLE_' . $cInfo->configuration_key)) {
+          if (isset($cInfo) && isset($cInfo->configuration_key) && defined('CFGTITLE_' . $cInfo->configuration_key)) {
             $cInfo->configuration_title = constant('CFGTITLE_' . $cInfo->configuration_key);
           }
-          if (defined('CFGDESC_' . $cInfo->configuration_key)) {
+          if (isset($cInfo) && isset($cInfo->configuration_key) && defined('CFGDESC_' . $cInfo->configuration_key)) {
             $cInfo->configuration_description = constant('CFGDESC_' . $cInfo->configuration_key);
           }
 
