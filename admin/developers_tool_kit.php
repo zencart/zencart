@@ -101,9 +101,11 @@ function zen_display_files($include_root = false, $filetypesincluded = 1) {
     $root_array = array();
 // if not html/txt
     if ($filetypesincluded != 3 && $filetypesincluded != 4 && $filetypesincluded != 5) {
+      $root_array[] = DIR_FS_CATALOG . 'ajax.php';
       $root_array[] = DIR_FS_CATALOG . 'index.php';
       $root_array[] = DIR_FS_CATALOG . 'ipn_main_handler.php';
       $root_array[] = DIR_FS_CATALOG . 'page_not_found.php';
+      $root_array[] = DIR_FS_CATALOG . 'square_handler.php';
     }
 
     $root_array[] = DIR_FS_CATALOG . FILENAME_DATABASE_TEMPORARILY_DOWN;
