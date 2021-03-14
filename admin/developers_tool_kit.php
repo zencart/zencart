@@ -26,7 +26,17 @@ $q_const = $q_func = $q_class = $q_tpl = $q_all = '';
 
 function getDirList($dirName, $filetypes = 1) {
   global $directory_array, $sub_dir_files;
-// add directory name to the sub_dir_files list;
+
+  $dirName = str_replace('//', '/', $dirName);
+
+  $excluded = [];
+  $excluded[] = DIR_FS_CATALOG . 'includes/classes/vendors';
+  $excluded[] = DIR_FS_CATALOG . 'zc_install';
+  if (in_array(rtrim($dirName, '/'), $excluded)) {
+      return $sub_dir_files;
+  }
+
+  // add directory name to the sub_dir_files list;
   $sub_dir_files[] = $dirName;
   $d = @dir($dirName);
   if ($d) {
