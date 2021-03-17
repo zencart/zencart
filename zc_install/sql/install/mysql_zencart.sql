@@ -1123,7 +1123,7 @@ CREATE TABLE orders_products (
   orders_id int(11) NOT NULL default '0',
   products_id int(11) NOT NULL default '0',
   products_model varchar(32) default NULL,
-  products_name varchar(254) NOT NULL default '',
+  products_name varchar(191) NOT NULL default '',
   products_price decimal(15,4) NOT NULL default '0.0000',
   final_price decimal(15,4) NOT NULL default '0.0000',
   products_tax decimal(7,4) NOT NULL default '0.0000',
@@ -1694,7 +1694,7 @@ DROP TABLE IF EXISTS products_description;
 CREATE TABLE products_description (
   products_id int(11) NOT NULL,
   language_id int(11) NOT NULL default '1',
-  products_name varchar(254) NOT NULL default '',
+  products_name varchar(191) NOT NULL default '',
   products_description text,
   products_url varchar(255) default NULL,
   products_viewed int(5) default '0',

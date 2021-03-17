@@ -40,8 +40,8 @@ ALTER TABLE customers ADD registration_ip varchar(45) NOT NULL default '';
 ALTER TABLE customers ADD last_login_ip varchar(45) NOT NULL default '';
 ALTER TABLE customers_info ADD INDEX idx_date_created_cust_id_zen (customers_info_date_account_created, customers_info_id);
 
-ALTER TABLE orders_products MODIFY products_name varchar(254) NOT NULL default '';
-ALTER TABLE products_description MODIFY products_name varchar(254) NOT NULL default '';
+ALTER TABLE orders_products MODIFY products_name varchar(191) NOT NULL default '';
+ALTER TABLE products_description MODIFY products_name varchar(191) NOT NULL default '';
 
 
 # Remove greater-than sign in query_builder
