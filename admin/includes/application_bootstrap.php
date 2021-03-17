@@ -1,9 +1,9 @@
 <?php
 /**
- * @copyright Copyright 2003-2020 Zen Cart Development Team
+ * @copyright Copyright 2003-2021 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte   Updated 11-17-2020 $
+ * @version $Id: DrByte  $
  */
 
 use App\Models\PluginControl;
@@ -41,7 +41,6 @@ $_SERVER['SCRIPT_NAME'] = str_replace($serverScript, '', $_SERVER['SCRIPT_NAME']
 */
 @date_default_timezone_set(date_default_timezone_get());
 
-if (!defined('__DIR__')) define('__DIR__', dirname(__FILE__));
 if (!defined('DIR_FS_ADMIN')) define('DIR_FS_ADMIN', preg_replace('#/includes/$#', '/', realpath(__DIR__ . '/../') . '/'));
 
 /**
