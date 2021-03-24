@@ -441,6 +441,3 @@ if (!empty($action)) {
   </body>
 </html>
 <?php require(DIR_WS_INCLUDES . 'application_bottom.php'); ?>
-  </body>
-</html>
-<?php require(DIR_WS_INCLUDES . 'application_bottom.php'); ?>
