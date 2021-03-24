@@ -94,6 +94,10 @@
       $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Sort Order', 'MODULE_SHIPPING_FREESHIPPER_SORT_ORDER', '0', 'Sort order of display.', '6', '0', now())");
     }
 
+    function help() {
+       return array('link' => 'https://docs.zen-cart.com/user/shipping/free_shipping/'); 
+    }
+
     function remove() {
       global $db;
       $db->Execute("delete from " . TABLE_CONFIGURATION . " where configuration_key like 'MODULE\_SHIPPING\_FREESHIPPER\_%'");
