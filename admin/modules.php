@@ -345,8 +345,12 @@ if (!empty($action)) {
                     $module = new $class;
                     if (method_exists($module, 'help')) { 
                        $help_text = $module->help();
-                       $help_title = $module->title; 
-                       $help_button = array('align' => 'text-center', 'text' => '<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#helpModal">' . IMAGE_MODULE_HELP . '</button>');
+                       if (isset($help_text['link'])) { 
+                          $help_button = array('align' => 'text-center', 'text' => '<a href="' . $help_text['link'] . '" target="_blank" rel="noreferrer noopener">' . '<button type="submit" class="btn btn-primary " id="helpButton">' . IMAGE_MODULE_HELP. '</button></a>'); 
+                       } else if (isset($help_text['body'])) { 
+                          $help_title = $module->title; 
+                          $help_button = array('align' => 'text-center', 'text' => '<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#helpModal">' . IMAGE_MODULE_HELP . '</button>');
+                       }
                     }
                   }
               }
@@ -419,7 +423,7 @@ if (!empty($action)) {
     <?php require(DIR_WS_INCLUDES . 'footer.php'); ?>
     <!-- footer_eof //-->
 
-<?php if (!empty($help_text)) { ?>
+<?php if (!empty($help_text['body'])) { ?>
 <div id="helpModal" class="modal fade">
       <div class="modal-dialog">
            <div class="modal-content">
@@ -428,7 +432,7 @@ if (!empty($action)) {
                      <h4 class="modal-title"><?php echo $help_title . ' ' . IMAGE_MODULE_HELP; ?></h4>
                 </div>
                 <div class="modal-body">
-<?php echo $help_text; ?> 
+<?php echo $help_text['body']; ?> 
                 </div>
                 <div class="modal-footer">
                      <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>

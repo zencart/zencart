@@ -319,6 +319,10 @@
       }
     }
 
+    function help() {
+       return array('link' => 'https://docs.zen-cart.com/user/shipping/zones/');
+    }
+
     function remove() {
       global $db;
       $db->Execute("delete from " . TABLE_CONFIGURATION . " where configuration_key like 'MODULE\_SHIPPING\_ZONES\_%'");

@@ -674,8 +674,6 @@ class paypal extends base {
   }
 
   function help() {
-       return '
- <a href="https://docs.zen-cart.com/user/payment/paypal/" target="_blank" rel="noreferrer noopener">' . TEXT_DOCS_HELP . '</a><br>' . 
-       MODULES_PAYMENT_PAYPALSTD_NOT_RECOMMENDED . '<br>';  
+       return array('body' => '<a href="https://docs.zen-cart.com/user/payment/paypal/" target="_blank" rel="noreferrer noopener">' . TEXT_DOCS_HELP . '</a><br>' .  MODULES_PAYMENT_PAYPALSTD_NOT_RECOMMENDED . '<br>');  
     }
 }
