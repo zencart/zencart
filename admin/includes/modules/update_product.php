@@ -1,10 +1,10 @@
 <?php
 
 /**
- * @copyright Copyright 2003-2020 Zen Cart Development Team
+ * @copyright Copyright 2003-2021 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Scott C Wilson 2020 Apr 13 Modified in v1.5.7 $
+ * @version $Id:  Modified in v1.5.8 $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
@@ -130,27 +130,4 @@ if (isset($_POST['edit']) && $_POST['edit'] == 'edit') {
 } else {
   $messageStack->add_session(ERROR_NO_DATA_TO_SAVE, 'error');
   zen_redirect(zen_href_link(FILENAME_CATEGORY_PRODUCT_LISTING, 'cPath=' . $cPath . '&pID=' . $products_id . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '') . (isset($_POST['search']) ? '&search=' . $_POST['search'] : '')));
-}
-
-/**
- * NOTE: THIS IS HERE FOR BACKWARD COMPATIBILITY. The function is properly declared in the functions files instead.
- * Convert value to a float -- mainly used for sanitizing and returning non-empty strings or nulls
- * @param int|float|string $input
- * @return float|int
- */
-if (!function_exists('convertToFloat')) {
-
-  function convertToFloat($input = 0) {
-    if ($input === null) {
-      return 0;
-    }
-    $val = preg_replace('/[^0-9,\.\-]/', '', $input);
-    // do a non-strict compare here:
-    if ($val == 0) {
-      return 0;
-    }
-
-    return (float)$val;
-  }
-
 }
