@@ -2,9 +2,9 @@
 /**
  * zcAjaxPayment
  *
- * @copyright Copyright 2003-2020 Zen Cart Development Team
+ * @copyright Copyright 2003-2021 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Scott C Wilson 2019 Jul 23 Modified in v1.5.7 $
+ * @version $Id:  2021-03-25  Modified in v1.5.7d $
  */
 class zcAjaxPayment extends base
 {
@@ -164,7 +164,7 @@ class zcAjaxPayment extends base
 
     // if shipping-edit button should be overridden, do so
     $editShippingButtonLink = zen_href_link (FILENAME_CHECKOUT_SHIPPING, '', 'SSL');
-    if (method_exists (${$_SESSION['payment']}, 'alterShippingEditButton')) {
+    if (!empty($_SESSION['payment']) && method_exists (${$_SESSION['payment']}, 'alterShippingEditButton')) {
       $theLink = ${$_SESSION['payment']}->alterShippingEditButton ();
       if ($theLink)
         $editShippingButtonLink = $theLink;
