@@ -2,10 +2,10 @@
 /**
  * paypalwpp.php payment module class for PayPal Express Checkout payment method
  *
- * @copyright Copyright 2003-2020 Zen Cart Development Team
+ * @copyright Copyright 2003-2021 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: lat9 2020 Oct 23 Modified in v1.5.7a $
+ * @version $Id: 2021-03-26 Modified in v1.5.7d $
  */
 /**
  * load the communications layer code
@@ -785,7 +785,7 @@ if (false) { // disabled until clarification is received about coupons in PayPal
   /**
    * Debug Emailing support
    */
-  function _doDebug($subject = 'PayPal debug data', $data, $useSession = true) {
+  function _doDebug($subject = 'PayPal debug data', $data = '', $useSession = true) {
     if (MODULE_PAYMENT_PAYPALWPP_DEBUGGING == 'Log and Email') {
       $data =  urldecode($data) . "\n\n";
       if ($useSession) $data .= "\nSession data: " . print_r($_SESSION, true);
