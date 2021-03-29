@@ -43,6 +43,9 @@ ALTER TABLE customers_info ADD INDEX idx_date_created_cust_id_zen (customers_inf
 ALTER TABLE orders_products MODIFY products_name varchar(191) NOT NULL default '';
 ALTER TABLE products_description MODIFY products_name varchar(191) NOT NULL default '';
 
+ALTER TABLE orders MODIFY customers_country varchar(64) NOT NULL default ''; 
+ALTER TABLE orders MODIFY delivery_country varchar(64) NOT NULL default ''; 
+ALTER TABLE orders MODIFY billing_country varchar(64) NOT NULL default ''; 
 
 # Remove greater-than sign in query_builder
 UPDATE query_builder SET query_name = 'Customers Dormant for 3+ months (Subscribers)' WHERE query_id = 3;
