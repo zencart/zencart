@@ -976,17 +976,17 @@ function zen_js_option_values_list($selectedName, $fieldName)
                   </td>
                   <td class="text-center">
                     <span class="fa-stack">
-                      <i class="fa fa-circle fa-stack-1x" aria-hidden="true" style="color: #fc0;"></i>
+                      <i class="fa fa-circle fa-stack-1x txt-orange" aria-hidden="true"></i>
                       <i class="fa fa-circle-o fa-stack-1x" aria-hidden="true"></i>
                     </span>
                   </td>
                   <td class="text-center">
                     <span class="fa-stack">
-                      <i class="fa fa-circle fa-stack-1x" aria-hidden="true" style="color: #5ce400;"></i>
+                      <i class="fa fa-circle fa-stack-1x txt-lime" aria-hidden="true"></i>
                       <i class="fa fa-circle-o fa-stack-1x" aria-hidden="true"></i>
                     </span>
                     <span class="fa-stack">
-                      <i class="fa fa-circle fa-stack-1x" aria-hidden="true" style="color: #f00;"></i>
+                      <i class="fa fa-circle fa-stack-1x txt-red" aria-hidden="true"></i>
                       <i class="fa fa-circle-o fa-stack-1x" aria-hidden="true"></i>
                     </span>
                   </td>
@@ -1480,7 +1480,7 @@ function zen_js_option_values_list($selectedName, $fieldName)
                     <td>
                       <?php if ($attributes_value['attributes_image'] != '') { ?>
                         <span class="fa-stack">
-                          <i class="fa fa-circle fa-stack-1x" aria-hidden="true" style="color: #fc0;"></i>
+                          <i class="fa fa-circle fa-stack-1x txt-orange" aria-hidden="true"></i>
                           <i class="fa fa-circle-o fa-stack-1x" aria-hidden="true"></i>
                         </span>
                       <?php } ?>
@@ -1598,10 +1598,10 @@ function zen_js_option_values_list($selectedName, $fieldName)
                           <span class="smallText">
                             <span class="fa-stack">
                               <?php if (zen_orders_products_downloads($download_display->fields['products_attributes_filename'])) { ?>
-                                <i class="fa fa-circle fa-stack-1x" aria-hidden="true" style="color: #5ce400;"></i>
+                                <i class="fa fa-circle fa-stack-1x txt-lime" aria-hidden="true"></i>
                                 <i class="fa fa-circle-o fa-stack-1x" aria-hidden="true"></i>
                               <?php } else { ?>
-                                <i class="fa fa-circle fa-stack-1x" aria-hidden="true" style="color: #f00;"></i>
+                                <i class="fa fa-circle fa-stack-1x txt-red" aria-hidden="true"></i>
                                 <i class="fa fa-circle-o fa-stack-1x" aria-hidden="true"></i>
                               <?php } ?>
                             </span>

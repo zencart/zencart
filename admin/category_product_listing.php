@@ -356,13 +356,13 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
                   </td>
                   <td class="text-center">
                     <div class="fa fa-stack">
-                      <i class="fa fa-square fa-stack-2x" style="color: #000"></i>
-                      <i class="fa fa-asterisk fa-stack-1x" aria-hidden="true" style="color: #ffa500"></i>
+                      <i class="fa fa-square fa-stack-2x txt-black"></i>
+                      <i class="fa fa-asterisk fa-stack-1x txt-orange" aria-hidden="true"></i>
                     </div>
                     &nbsp;
                     <div class="fa fa-stack">
-                      <i class="fa fa-square fa-stack-2x" style="color: #000"></i>
-                      <i class="fa fa-asterisk fa-stack-1x" aria-hidden="true" style="color: #fff"></i>
+                      <i class="fa fa-square fa-stack-2x txt-black"></i>
+                      <i class="fa fa-asterisk fa-stack-1x txt-white" aria-hidden="true"></i>
                     </div>
                   </td>
                 </tr>
@@ -485,7 +485,7 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
             <div class="form-group">
               <?php if ($_SESSION['display_categories_dropdown'] == 0) { ?>
                 <div class="col-sm-6 col-md-4 control-label">
-                  <a href="<?php echo zen_href_link(FILENAME_CATEGORY_PRODUCT_LISTING, 'set_display_categories_dropdown=1' . (isset($_GET['cID']) ? '&cID=' . (int)$_GET['cID'] : '') . '&cPath=' . $cPath . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '')); ?>" title="<?php echo IMAGE_ICON_STATUS_OFF; ?>"><i class="fa fa-times fa-lg" style="color: #f00;"></i></a>
+                  <a href="<?php echo zen_href_link(FILENAME_CATEGORY_PRODUCT_LISTING, 'set_display_categories_dropdown=1' . (isset($_GET['cID']) ? '&cID=' . (int)$_GET['cID'] : '') . '&cPath=' . $cPath . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '')); ?>" title="<?php echo IMAGE_ICON_STATUS_OFF; ?>"><i class="fa fa-times fa-lg txt-status-off"></i></a>
                   <?php echo zen_draw_label(HEADING_TITLE_GOTO, 'cPath'); ?>
                 </div>
                 <div class="col-sm-6 col-md-8">
@@ -493,7 +493,7 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
                 </div>
               <?php } else { ?>
                 <div class="col-sm-6 col-md-4 control-label">
-                  <a href="<?php echo zen_href_link(FILENAME_CATEGORY_PRODUCT_LISTING, 'set_display_categories_dropdown=0' . (isset($_GET['cID']) ? '&cID=' . (int)$_GET['cID'] : '') . '&cPath=' . $cPath . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '')); ?>" title="<?php echo IMAGE_ICON_STATUS_ON; ?>"><i class="fa fa-check fa-lg" style="color: #008000;"></i></a>
+                  <a href="<?php echo zen_href_link(FILENAME_CATEGORY_PRODUCT_LISTING, 'set_display_categories_dropdown=0' . (isset($_GET['cID']) ? '&cID=' . (int)$_GET['cID'] : '') . '&cPath=' . $cPath . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '')); ?>" title="<?php echo IMAGE_ICON_STATUS_ON; ?>"><i class="fa fa-check fa-lg txt-status-on"></i></a>
                   <strong><?php echo HEADING_TITLE_GOTO; ?></strong>
                 </div>
               <?php } ?>
@@ -896,7 +896,7 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
                   <?php if (zen_get_product_is_linked($product['products_id']) == 'true') { ?>
                     <i class="fa fa-square fa-lg txt-linked" aria-hidden="true" title="<?php echo IMAGE_ICON_LINKED; ?>"></i>
                   <?php } else { ?>
-                    <i class="fa fa-square fa-lg" style="color: transparent;"></i> <!-- blank icon to preserve vertical alignment with additional icons -->
+                    <i class="fa fa-square fa-lg txt-transparent"></i> <!-- blank icon to preserve vertical alignment with additional icons -->
                     <?php
                   }
                   echo zen_draw_form('setflag_products' . $product['products_id'], FILENAME_CATEGORY_PRODUCT_LISTING, 'action=setflag&pID=' . $product['products_id'] . '&cPath=' . $cPath . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '') . $search_parameter);

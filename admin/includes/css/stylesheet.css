@@ -835,3 +835,49 @@ input.faint {
 .control-label {/*for multiple inputs*/
     font-weight: 700;
 }
+
+.txt-black {
+  color:#000;
+}
+.txt-yellow {
+  color: #ff0;
+}
+.txt-orange {
+  color: #ffa500
+}
+.txt-lime {
+  color:#5ce400
+}
+.txt-red {
+  color:#f00;
+}
+.txt-navy {
+  color: #000080;
+}
+.txt-blue {
+  color: #00f;
+}
+.txt-white {
+  color:#fff;
+}
+.txt-pink {
+  color: #ffbaba;
+}
+.txt-transparent {
+  color: transparent;
+}
+.bold {
+  font-weight: bold;
+}
+.valign-middle {
+  vertical-align: middle;
+}
+.valign-top {
+  vertical-align: top;
+}
+.valign-bottom {
+  vertical-align: bottom;
+}
+.opacity-25 {
+  opacity: 25%;
+}

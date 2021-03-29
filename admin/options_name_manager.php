@@ -579,7 +579,7 @@ function translate_type_to_name($opt_type)
                                     <td><?php echo $option_name_input; ?></td>
                                     <td><?php echo $sort_order_input; ?></td>
                                     <td><?php echo zen_draw_label(TABLE_HEADING_OPTION_TYPE . ':', 'edit_options_type', 'class="control-label"') . zen_draw_pull_down_menu('option_type', $optionTypeValuesArray, $options_name['products_options_type'], 'class="form-control" id="edit_options_type"'); ?></td>
-                                    <td class="text-center" style="vertical-align: bottom">
+                                    <td class="text-center valign-bottom">
                                         <button type="submit" class="btn btn-primary"><?php echo IMAGE_UPDATE; ?></button>
                                         <a href="<?php echo zen_href_link(FILENAME_OPTIONS_NAME_MANAGER, ($currentPage !== 0 ? 'page=' . $currentPage . '&' : '') . 'option_order_by=' . $option_order_by); ?>" class="btn btn-default" role="button"><?php echo TEXT_CANCEL; ?></a>
                                     </td>

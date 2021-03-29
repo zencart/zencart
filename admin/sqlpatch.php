@@ -905,13 +905,13 @@ if (!empty($action)) {
           <h1><?php echo 'Zen Cart&reg; ' . HEADING_TITLE; ?></h1>
         </div>
         <div id="popup_content">
-          <span style="color: #FF0000; font-weight: bold;"><?php echo HEADING_WARNING; ?></span><br>
+          <span class="txt-red bold"><?php echo HEADING_WARNING; ?></span><br>
           <?php
           echo SQLPATCH_HELP_TEXT;
           echo '<br><br>';
           ?>
-          <span style="color: #FF0000; font-weight: bold;"><?php echo HEADING_WARNING; ?></span><br>
-          <span style="color: #FF0000; font-weight: bold;"><?php echo HEADING_WARNING2; ?></span><br>
+          <span class="txt-red bold"><?php echo HEADING_WARNING; ?></span><br>
+          <span class="txt-red bold"><?php echo HEADING_WARNING2; ?></span><br>
         </div>
         <div class="row text-center">
           <a href="javascript:window.close()"><?php echo TEXT_CLOSE_WINDOW; ?></a>

@@ -78,20 +78,20 @@ if (!empty($action)) {
       <div class="row">
         <div class="col-sm-6">
           <div class="fa-stack fa-fw">
-            <i class="fa fa-circle fa-stack-1x" style="color: #ff0;"></i>
-            <i class="fa fa-circle-o fa-stack-1x" style="color: #000;"></i>
+            <i class="fa fa-circle fa-stack-1x txt-yellow"></i>
+            <i class="fa fa-circle-o fa-stack-1x txt-black"></i>
           </div>
           <?php echo TEXT_WARNING_PRODUCT_MISCONFIGURED_SHORT; ?>
         </div>
         <div class="col-sm-6">
           <div class="fa-stack fa-fw">
-            <i class="fa fa-circle fa-stack-1x" style="color: #f00;"></i>
-            <i class="fa fa-circle-o fa-stack-1x" style="color: #000;"></i>
+            <i class="fa fa-circle fa-stack-1x txt-red"></i>
+            <i class="fa fa-circle-o fa-stack-1x txt-black"></i>
           </div>
           <?php echo TEXT_INFO_FILENAME_MISSING; ?>&nbsp;&nbsp;
           <div class="fa-stack fa-fw">
-            <i class="fa fa-circle fa-stack-1x" style="color: #32cd32;"></i>
-            <i class="fa fa-circle-o fa-stack-1x" style="color: #000;"></i>
+            <i class="fa fa-circle fa-stack-1x txt-lime"></i>
+            <i class="fa fa-circle-o fa-stack-1x txt-black"></i>
           </div>
           <?php echo TEXT_INFO_FILENAME_GOOD; ?>
         </div>
@@ -160,7 +160,7 @@ if (!empty($action)) {
 
                 $product_is_misconfigured = '';
                 if ($products_downloads['product_is_always_free_shipping'] == 1 || $products_downloads['products_virtual'] == 1) {
-                  $product_is_misconfigured = '<div class="fa-stack fa-fw"><i class="fa fa-circle fa-stack-1x" style="color: #ff0;"></i><i class="fa fa-circle-o fa-stack-1x" style="color: #000;"></i></div>';
+                  $product_is_misconfigured = '<div class="fa-stack fa-fw"><i class="fa fa-circle fa-stack-1x txt-yellow"></i><i class="fa fa-circle-o fa-stack-1x txt-black"></i></div>';
                 }
                 ?>
                 <?php if (isset($padInfo) && is_object($padInfo) && ($products_downloads['products_attributes_id'] == $padInfo->products_attributes_id)) { ?>
@@ -177,18 +177,18 @@ if (!empty($action)) {
                   <td><?php echo zen_values_name($products_downloads['options_values_id']); ?></td>
                   <td>
                     <div class="fa-stack fa-fw">
-                      <i class="fa fa-circle fa-stack-1x" style="color: <?php echo (!zen_orders_products_downloads($products_downloads['products_attributes_filename']) ? '#f00' : '#32cd32'); ?>;"></i>
-                      <i class="fa fa-circle-o fa-stack-1x" style="color: #000;"></i>
+                      <i class="fa fa-circle fa-stack-1x<?php echo (!zen_orders_products_downloads($products_downloads['products_attributes_filename']) ? ' txt-red' : ' txt-lime'); ?>;"></i>
+                      <i class="fa fa-circle-o fa-stack-1x txt-black"></i>
                     </div>
                     <?php echo $products_downloads['products_attributes_filename']; ?></td>
                   <td class="text-right"><?php echo $products_downloads['products_attributes_maxdays']; ?></td>
                   <td class="text-right"><?php echo $products_downloads['products_attributes_maxcount']; ?></td>
                   <td class="text-right">
                     <?php if (isset($padInfo) && is_object($padInfo) && ($products_downloads['products_attributes_id'] == $padInfo->products_attributes_id)) { ?>
-                      <i class="fa fa-caret-right fa-2x fa-fw" style="color:navy; vertical-align: middle;"></i>
+                      <i class="fa fa-caret-right fa-2x fa-fw txt-navy valign-middle"></i>
                     <?php } else { ?>
                       <a href="<?php echo zen_href_link(FILENAME_DOWNLOADS_MANAGER, zen_get_all_get_params(array('padID')) . ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . 'padID=' . $products_downloads['products_attributes_id']); ?>" title="<?php echo IMAGE_ICON_INFO; ?>" role="button">
-                        <i class="fa fa-info-circle fa-2x fa-fw" style="color:#000; vertical-align: middle;"></i>
+                        <i class="fa fa-info-circle fa-2x fa-fw txt-black valign-middle"></i>
                       </a>
                     <?php } ?>
                   </td>
