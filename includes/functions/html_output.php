@@ -96,6 +96,7 @@
     while (strstr($link, '&amp;&amp;')) $link = str_replace('&amp;&amp;', '&amp;', $link);
 
     $link = preg_replace('/&/', '&amp;', $link);
+    $link = preg_replace('~//$~', '/', $link);
     return $link;
   }
 
