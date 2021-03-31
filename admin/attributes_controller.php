@@ -194,15 +194,19 @@ if (!empty($action)) {
       break;
     case 'add_product_attributes':
       $current_image_name = '';
+      if (!isset($_POST['options_id']) || 
+           !isset($_POST['products_id']) || 
+           !empty($_POST['values_id'])) {
+           break;
+      }
+
+      $options_id = (int)$_POST['options_id'];
+      $products_id = (int)$_POST['products_id'];
       for ($i = 0; $i < count($_POST['values_id']); $i++) {
         if (isset($_POST['values_id'][$i])) {
           $value_id = (int)$_POST['values_id'][$i];
-        }
-        if (isset($_POST['options_id'])) {
-          $options_id = (int)$_POST['options_id'];
-        }
-        if (isset($_POST['products_id'])) {
-          $products_id = (int)$_POST['products_id'];
+        } else {
+           continue;
         }
 // check for duplicate and block them
         $check_duplicate = $db->Execute("SELECT products_id, options_id, options_values_id
