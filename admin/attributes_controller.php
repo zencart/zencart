@@ -194,9 +194,7 @@ if (!empty($action)) {
       break;
     case 'add_product_attributes':
       $current_image_name = '';
-      if (!isset($_POST['options_id']) || 
-           !isset($_POST['products_id']) || 
-           !empty($_POST['values_id'])) {
+      if (!isset($_POST['options_id'], $_POST['products_id']) || empty($_POST['values_id'])) {
            break;
       }
 
