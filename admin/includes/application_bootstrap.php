@@ -1,9 +1,9 @@
 <?php
 /**
- * @copyright Copyright 2003-2020 Zen Cart Development Team
+ * @copyright Copyright 2003-2021 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte   Updated 11-17-2020 $
+ * @version $Id: DrByte  $
  */
 
 use App\Models\PluginControl;
@@ -41,7 +41,6 @@ $_SERVER['SCRIPT_NAME'] = str_replace($serverScript, '', $_SERVER['SCRIPT_NAME']
 */
 @date_default_timezone_set(date_default_timezone_get());
 
-if (!defined('__DIR__')) define('__DIR__', dirname(__FILE__));
 if (!defined('DIR_FS_ADMIN')) define('DIR_FS_ADMIN', preg_replace('#/includes/$#', '/', realpath(__DIR__ . '/../') . '/'));
 
 /**
@@ -121,28 +120,8 @@ if (file_exists($file) && $lines = @file($file)) {
         }
     }
 }
-/*
-// turned off for now
-  if ($check_cfg != 'off') {
-    // if the admin/includes/configure.php file doesn't contain admin-related content, throw error
-    $zc_pagepath = str_replace(basename($PHP_SELF),'',__FILE__); //remove page name from full path of current page
-    $zc_pagepath = str_replace(array('\\','\\\\'),'/',$zc_pagepath); // convert '\' marks to '/'
-    $zc_pagepath = str_replace('//','/',$zc_pagepath); //convert doubles to single
-    $zc_pagepath = str_replace(strrchr($zc_pagepath,'/'),'',$zc_pagepath); // remove trailing '/'
-    $zc_adminpage = str_replace('\\','/',DIR_FS_ADMIN); //convert "\" to '/'
-    $zc_adminpage = str_replace('//','/',$zc_adminpage); // remove doubles
-    $zc_adminpage = str_replace(strrchr($zc_adminpage,'/'),'',$zc_adminpage); // remove trailing '/'
-    if (!defined('DIR_WS_ADMIN') || $zc_pagepath != $zc_adminpage ) {
-      echo ('ERROR: The admin/includes/configure.php file has invalid configuration. Please rebuild, or verify specified paths.');
-      if (file_exists('../zc_install/index.php')) {
-        echo '<br><a href="../zc_install/index.php">Click here for installation</a>';
-      }
-      echo '<br><br><br><br>['.$zc_pagepath.']&nbsp;&nbsp;&nbsp;&laquo;&raquo;&nbsp;&nbsp;&nbsp;[' .$zc_adminpage.']<br>';
-    }
-  }
-*/
 /**
- * include the list of extra configure files
+ * include the extra_configures files
  */
 if ($za_dir = @dir(DIR_WS_INCLUDES . 'extra_configures')) {
     while ($zv_file = $za_dir->read()) {

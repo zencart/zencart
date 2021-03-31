@@ -743,6 +743,11 @@ if (false) { // disabled until clarification is received about coupons in PayPal
     $db->Execute("DELETE FROM " . TABLE_CONFIGURATION . " WHERE configuration_key LIKE 'MODULE\_PAYMENT\_PAYPALWPP\_%' OR configuration_key LIKE 'MODULE\_PAYMENT\_PAYPALEC\_%'");
     $this->notify('NOTIFY_PAYMENT_PAYPALWPP_UNINSTALLED');
   }
+
+  function help() {
+       return array('link' => 'https://docs.zen-cart.com/user/payment/paypal_express_checkout/'); 
+  }
+
   /**
    * Check settings and conditions to determine whether we are in an Express Checkout phase or not
    */

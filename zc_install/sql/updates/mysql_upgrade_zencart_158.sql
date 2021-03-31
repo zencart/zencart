@@ -40,9 +40,12 @@ ALTER TABLE customers ADD registration_ip varchar(45) NOT NULL default '';
 ALTER TABLE customers ADD last_login_ip varchar(45) NOT NULL default '';
 ALTER TABLE customers_info ADD INDEX idx_date_created_cust_id_zen (customers_info_date_account_created, customers_info_id);
 
-ALTER TABLE orders_products MODIFY products_name varchar(254) NOT NULL default '';
-ALTER TABLE products_description MODIFY products_name varchar(254) NOT NULL default '';
+ALTER TABLE orders_products MODIFY products_name varchar(191) NOT NULL default '';
+ALTER TABLE products_description MODIFY products_name varchar(191) NOT NULL default '';
 
+ALTER TABLE orders MODIFY customers_country varchar(64) NOT NULL default ''; 
+ALTER TABLE orders MODIFY delivery_country varchar(64) NOT NULL default ''; 
+ALTER TABLE orders MODIFY billing_country varchar(64) NOT NULL default ''; 
 
 # Remove greater-than sign in query_builder
 UPDATE query_builder SET query_name = 'Customers Dormant for 3+ months (Subscribers)' WHERE query_id = 3;
@@ -65,6 +68,8 @@ UPDATE configuration SET configuration_description = 'Defines the method for sen
 
 
 UPDATE configuration SET configuration_description = 'Customers Referral Code is created from<br />0= Off<br />1= 1st Discount Coupon Code used<br />2= Customer can add during create account or edit if blank<br /><br />NOTE: Once the Customers Referral Code has been set it can only be changed by the Administrator' WHERE configuration_key = 'CUSTOMERS_REFERRAL_STATUS';
+
+UPDATE configuration SET configuration_description = 'The shipping cost may be calculated based on the total weight of the items ordered, the total price of the items ordered, or the total number of items ordered.' WHERE configuration_key = 'MODULE_SHIPPING_TABLE_MODE';
 
 #############
 # Incorporate setting for Column-Grid-Layout template control

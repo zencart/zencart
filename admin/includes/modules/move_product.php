@@ -1,10 +1,10 @@
 <?php
 
 /**
- * @copyright Copyright 2003-2020 Zen Cart Development Team
+ * @copyright Copyright 2003-2021 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Steve 2020 Mar 15 Modified in v1.5.7 $
+ * @version $Id:  Modified in v1.5.8 $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
@@ -24,6 +24,8 @@ if (!isset($category_path)) $category_path = '';
         $product_current_category_string = $category_path;
     }
 }
+if (!isset($product_master_category_string)) $product_master_category_string = zen_get_category_name($pInfo->master_categories_id, (int)$_SESSION['languages_id']);
+
 
 $heading = [];
 $heading[] = ['text' => '<h4>' . TEXT_INFO_HEADING_MOVE_PRODUCT . '</h4>'];

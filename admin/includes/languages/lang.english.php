@@ -50,7 +50,7 @@ $define = [
     'BOX_CONFIGURATION_PRODUCT_LISTING' => 'Product Listing',
     'BOX_CONFIGURATION_STOCK' => 'Stock',
     'BOX_CONFIGURATION_LOGGING' => 'Logging',
-    'BOX_CONFIGURATION_EMAIL_OPTIONS' => 'E-Mail Options',
+    'BOX_CONFIGURATION_EMAIL_OPTIONS' => 'Email',
     'BOX_CONFIGURATION_ATTRIBUTE_OPTIONS' => 'Attribute Settings',
     'BOX_CONFIGURATION_GZIP_COMPRESSION' => 'GZip Compression',
     'BOX_CONFIGURATION_SESSIONS' => 'Sessions',
@@ -210,6 +210,7 @@ $define = [
     'IMAGE_INSERT' => 'Insert',
     'IMAGE_MODULE_INSTALL' => 'Install Module',
     'IMAGE_MODULE_REMOVE' => 'Remove Module',
+    'IMAGE_MODULE_HELP' => 'Help',
     'IMAGE_MOVE' => 'Move',
     'IMAGE_NEW_BANNER' => 'New Banner',
     'IMAGE_NEW_CATEGORY' => 'New Category',
@@ -534,7 +535,8 @@ $define = [
     'TEXT_BOOLEAN_VALIDATE' => 'The value is required to be a boolean value or equivalent.',
     'TEXT_ASC' => 'asc',
     'TEXT_DESC' => 'desc',
-    'TEXT_DOWNLOADABLE_PRODUCTS_MISCONFIGURED' => 'Some downloadable products are misconfigured.  See Admin &gt; Catalog &gt; Downloads Manager.',
+    'TEXT_DOWNLOADABLE_PRODUCTS_MISCONFIGURED' => 'Configuration of some downloadable product causes free shipping for all cart items. See Admin > Catalog > Downloads Manager.', 
+    'TEXT_DOCS_HELP' => 'Help on Zen Cart Documentation Site',
 ];
 
 return $define;

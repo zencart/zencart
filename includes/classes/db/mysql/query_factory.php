@@ -600,6 +600,7 @@ class queryFactory extends base
      */
     public function close(): void
     {
+        if (!$this->link) return;
         @mysqli_close($this->link);
         unset($this->link);
     }

@@ -1011,4 +1011,7 @@ class ot_coupon
 
         return false;
     }
+    function help() {
+       return array('link' => 'https://docs.zen-cart.com/user/order_total/coupons/'); 
+    }
 }

@@ -8,6 +8,7 @@
 function page_has_help()
 {
     global $PHP_SELF;
+    global $zco_notifier; 
 
     $page = basename($PHP_SELF, '.php');
 
@@ -163,5 +164,7 @@ function page_has_help()
     if (isset($pagelist[$page])) {
         return $pagelist[$page];
     }
-    return false;
+    $help_page = false; 
+    $zco_notifier->notify('NOTIFIER_PLUGIN_HELP_PAGE_URL_LOOKUP', $page, $help_page); 
+    return $help_page;
 }

@@ -2,18 +2,17 @@
 /**
  * Pop up Image Header
  *
- * @copyright Copyright 2003-2020 Zen Cart Development Team
+ * @copyright Copyright 2003-2021 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: mc12345678 2019 Nov 09 Modified in v1.5.7 $
+ * @version $Id:  Modified in v1.5.8 $
  */
 /**
  * Header code file for the product-larger-images popup window
- *
  */
 
 // This should be first line of the script:
-  $zco_notifier->notify('NOTIFY_HEADER_START_POPUP_IMAGES_ADDITIONAL');
+  $zco_notifier->notify('NOTIFY_HEADER_START_POPUP_IMAGES');
 
   $_SESSION['navigation']->remove_current_page();
 

@@ -216,7 +216,7 @@ if (!empty($action)) {
                         }
                         $module_info['keys'] = $keys_extra;
                         if (method_exists($module, 'verify')) { 
-                          $module_info['verify_msg'] = $module->verify(); 
+                          $module_info['configuration_errors'] = $module->verify(); 
                         }
 
                         $mInfo = new objectInfo($module_info);
@@ -339,6 +339,25 @@ if (!empty($action)) {
             default:
               $heading[] = ['text' => '<h4>' . $mInfo->title . '</h4>'];
 
+              $help_button = [];
+              $file_extension = substr($PHP_SELF, strrpos($PHP_SELF, '.'));
+              $class = basename($_GET['module']);
+              if (file_exists($module_directory . $class . $file_extension)) {
+                  if (file_exists(DIR_FS_CATALOG_LANGUAGES . $_SESSION['language'] . '/modules/' . $module_type . '/' . $class . $file_extension)) {
+                    include DIR_FS_CATALOG_LANGUAGES . $_SESSION['language'] . '/modules/' . $module_type . '/' . $class . $file_extension;
+                    include_once $module_directory . $class . $file_extension;
+                    $module = new $class;
+                    if (method_exists($module, 'help')) { 
+                       $help_text = $module->help();
+                       if (isset($help_text['link'])) { 
+                          $help_button = array('align' => 'text-center', 'text' => '<a href="' . $help_text['link'] . '" target="_blank" rel="noreferrer noopener">' . '<button type="submit" class="btn btn-primary " id="helpButton">' . IMAGE_MODULE_HELP. '</button></a>'); 
+                       } else if (isset($help_text['body'])) { 
+                          $help_title = $module->title; 
+                          $help_button = array('align' => 'text-center', 'text' => '<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#helpModal">' . IMAGE_MODULE_HELP . '</button>');
+                       }
+                    }
+                  }
+              }
               if ($mInfo->status == '1') {
                 $keys = '';
                 foreach($mInfo->keys as $value) {
@@ -373,10 +392,13 @@ if (!empty($action)) {
                   $contents[] = ['align' => 'text-center', 'text' => TEXT_WARNING_SSL_EDIT];
                 }
                 $contents[] = ['align' => 'text-center', 'text' => '<a href="' . zen_href_link(FILENAME_MODULES, 'set=' . $set . '&module=' . $mInfo->code . '&action=remove', 'SSL') . '" class="btn btn-warning" role="button" id="removeButton"><i class="fa fa-minus"></i> ' . IMAGE_MODULE_REMOVE . '</a>'];
+                if (!empty($help_button)) { 
+                   $contents[] = $help_button; 
+                }
                 $contents[] = ['text' => '<br>' . $mInfo->description];
 
-                if (!empty($mInfo->verify_msg)) { 
-                  $contents[] = ['text' => $mInfo->verify_msg . '<br>'];  // warnings, etc. 
+                if (!empty($mInfo->configuration_errors)) { 
+                  $contents[] = ['text' => $mInfo->configuration_errors . '<br>'];  // warnings, etc. 
                 }
                 $contents[] = ['text' => '<br>' . $keys];
               } else {
@@ -384,6 +406,9 @@ if (!empty($action)) {
                   $contents[] = ['align' => 'text-center', 'text' => zen_draw_form('install_module', FILENAME_MODULES, 'set=' . $set . '&action=install') . zen_draw_hidden_field('module', $mInfo->code) . '<button type="submit" id="installButton" class="btn btn-primary"><i class="fa fa-plus"></i> ' . IMAGE_MODULE_INSTALL . '</button></form>'];
                 } else {
                   $contents[] = ['align' => 'text-center', 'text' => TEXT_WARNING_SSL_INSTALL];
+                }
+                if (!empty($help_button)) { 
+                   $contents[] = $help_button; 
                 }
                 $contents[] = ['text' => '<br>' . $mInfo->description];
               }
@@ -405,6 +430,26 @@ if (!empty($action)) {
     <!-- footer //-->
     <?php require(DIR_WS_INCLUDES . 'footer.php'); ?>
     <!-- footer_eof //-->
+
+<?php if (!empty($help_text['body'])) { ?>
+<div id="helpModal" class="modal fade">
+      <div class="modal-dialog">
+           <div class="modal-content">
+                <div class="modal-header">
+                     <button type="button" class="close" data-dismiss="modal">&times;</button>
+                     <h4 class="modal-title"><?php echo $help_title . ' ' . IMAGE_MODULE_HELP; ?></h4>
+                </div>
+                <div class="modal-body">
+<?php echo $help_text['body']; ?> 
+                </div>
+                <div class="modal-footer">
+                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+           </div>
+      </div>
+</div>
+<?php } ?>
+
   </body>
 </html>
 <?php require(DIR_WS_INCLUDES . 'application_bottom.php'); ?>

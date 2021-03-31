@@ -3,7 +3,7 @@
  * @copyright Copyright 2003-2021 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: lat9 2021 Jan 09 Modified in v1.5.7c $
+ * @version $Id:  Modified in v1.5.8 $
  */
 require('includes/application_top.php');
 
@@ -26,7 +26,17 @@ $q_const = $q_func = $q_class = $q_tpl = $q_all = '';
 
 function getDirList($dirName, $filetypes = 1) {
   global $directory_array, $sub_dir_files;
-// add directory name to the sub_dir_files list;
+
+  $dirName = str_replace('//', '/', $dirName);
+
+  $excluded = [];
+  $excluded[] = DIR_FS_CATALOG . 'includes/classes/vendors';
+  $excluded[] = DIR_FS_CATALOG . 'zc_install';
+  if (in_array(rtrim($dirName, '/'), $excluded)) {
+      return $sub_dir_files;
+  }
+
+  // add directory name to the sub_dir_files list;
   $sub_dir_files[] = $dirName;
   $d = @dir($dirName);
   if ($d) {
@@ -50,7 +60,7 @@ function zen_display_files($include_root = false, $filetypesincluded = 1) {
   $max_context_lines_before = $max_context_lines_after = abs((int)$_POST['context_lines']);
 
   $directory_array = array();
-  for ($i = 0, $n = sizeof($check_directory); $i < $n; $i++) {
+  for ($i = 0, $n = count($check_directory); $i < $n; $i++) {
 
     $dir_check = $check_directory[$i];
 
@@ -88,7 +98,7 @@ function zen_display_files($include_root = false, $filetypesincluded = 1) {
           }
         }
       }
-      if (sizeof($directory_array)) {
+      if (count($directory_array)) {
         sort($directory_array);
       }
       $dir->close();
@@ -101,9 +111,11 @@ function zen_display_files($include_root = false, $filetypesincluded = 1) {
     $root_array = array();
 // if not html/txt
     if ($filetypesincluded != 3 && $filetypesincluded != 4 && $filetypesincluded != 5) {
+      $root_array[] = DIR_FS_CATALOG . 'ajax.php';
       $root_array[] = DIR_FS_CATALOG . 'index.php';
       $root_array[] = DIR_FS_CATALOG . 'ipn_main_handler.php';
       $root_array[] = DIR_FS_CATALOG . 'page_not_found.php';
+      $root_array[] = DIR_FS_CATALOG . 'square_handler.php';
     }
 
     $root_array[] = DIR_FS_CATALOG . FILENAME_DATABASE_TEMPORARILY_DOWN;
@@ -142,14 +154,14 @@ function zen_display_files($include_root = false, $filetypesincluded = 1) {
     // only ask if found
     echo '<tr><td>' . $links . '</td></tr>';
   }
-  echo '<tr class="infoBoxContent"><td class="dataTableHeadingContent">' . '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' . TEXT_INFO_SEARCHING . sizeof($directory_array) . TEXT_INFO_FILES_FOR . zen_output_string_protected($configuration_key_lookup) . '</td></tr></table>' . "\n\n";
+  echo '<tr class="infoBoxContent"><td class="dataTableHeadingContent">' . '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' . TEXT_INFO_SEARCHING . count($directory_array) . TEXT_INFO_FILES_FOR . zen_output_string_protected($configuration_key_lookup) . '</td></tr></table>' . "\n\n";
   echo '<tr><td>&nbsp;</td></tr>';
 
 // check all files located
   $file_cnt = 0;
   $cnt_found = 0;
   $case_sensitive = (isset($_POST['case_sensitive']) && $_POST['case_sensitive']);
-  for ($i = 0, $n = sizeof($directory_array); $i < $n; $i++) {
+  for ($i = 0, $n = count($directory_array); $i < $n; $i++) {
     // build file content of matching lines
     $file_cnt++;
     $file = $directory_array[$i];
@@ -170,7 +182,7 @@ function zen_display_files($include_root = false, $filetypesincluded = 1) {
       // loop through the array, show line and line numbers
       $cnt_lines = 0;
       foreach ($lines as $line_num => $line) {
-        $padding_length = strlen(strval(sizeof($lines)));
+        $padding_length = strlen((string)count($lines));
         $cnt_lines++;
 
         // determine correct search pattern rule
@@ -217,7 +229,7 @@ function zen_display_files($include_root = false, $filetypesincluded = 1) {
           if ($max_context_lines_before > 0)
             $show_file .= '</strong>';
 
-          for ($j = 1, $m = min($max_context_lines_after, sizeof($lines) - $line_numpos); $j < $m + 1; $j++) {
+          for ($j = 1, $m = min($max_context_lines_after, count($lines) - $line_numpos); $j < $m + 1; $j++) {
             $show_file .= '<br>Line #<span class="dtk-linenum">' . number_pad_with_spaces($line_numpos + $j, $padding_length) . '</span> : ';
             $show_file .= '<span class="dtk-contextline">';
             $show_file .= cleanup_dtk_output_text($lines[($line_num + $j)]);
@@ -239,7 +251,7 @@ function zen_display_files($include_root = false, $filetypesincluded = 1) {
       echo $show_file . '<div class="row"></div>';
     } // show file
   }
-  echo '<table class="table"><tr class="infoBoxContent"><td class="dataTableHeadingContent">' . TEXT_INFO_MATCHES_FOUND . $cnt_found . ' --- ' . TEXT_INFO_SEARCHING . sizeof($directory_array) . TEXT_INFO_FILES_FOR . zen_output_string_protected($configuration_key_lookup) . '</td></tr></table>';
+  echo '<table class="table"><tr class="infoBoxContent"><td class="dataTableHeadingContent">' . TEXT_INFO_MATCHES_FOUND . $cnt_found . ' --- ' . TEXT_INFO_SEARCHING . count($directory_array) . TEXT_INFO_FILES_FOR . zen_output_string_protected($configuration_key_lookup) . '</td></tr></table>';
   return true;
 }
 
@@ -489,7 +501,7 @@ switch ($action) {
 
         $sub_dir_files = array();
         getDirList(DIR_FS_CATALOG . DIR_WS_CLASSES, 1);
-        for ($i = 0, $n = sizeof($sub_dir_files); $i < $n; $i++) {
+        for ($i = 0, $n = count($sub_dir_files); $i < $n; $i++) {
           $check_directory[] = $sub_dir_files[$i] . '/';
         }
         $check_directory[] = DIR_FS_ADMIN . DIR_WS_CLASSES;
@@ -498,7 +510,7 @@ switch ($action) {
         $check_directory = array();
         $sub_dir_files = array();
         getDirList(DIR_FS_CATALOG . DIR_WS_CLASSES, 1);
-        for ($i = 0, $n = sizeof($sub_dir_files); $i < $n; $i++) {
+        for ($i = 0, $n = count($sub_dir_files); $i < $n; $i++) {
           $check_directory[] = $sub_dir_files[$i] . '/';
         }
         break;
@@ -544,7 +556,7 @@ switch ($action) {
         $sub_dir_files = array();
         getDirList(DIR_FS_CATALOG_MODULES . 'pages');
         $check_dir = $sub_dir_files;
-        for ($i = 0, $n = sizeof($check_dir); $i < $n; $i++) {
+        for ($i = 0, $n = count($check_dir); $i < $n; $i++) {
           $check_directory[] = $check_dir[$i] . '/';
         }
 
@@ -568,7 +580,7 @@ switch ($action) {
         getDirList(DIR_FS_CATALOG_MODULES . 'pages');
 
         $check_dir = array_merge($check_directory, $sub_dir_files);
-        for ($i = 0, $n = sizeof($check_dir); $i < $n; $i++) {
+        for ($i = 0, $n = count($check_dir); $i < $n; $i++) {
           $check_directory[] = $check_dir[$i] . '/';
         }
 
@@ -619,14 +631,14 @@ switch ($action) {
         $sub_dir_files = array();
         getDirList(DIR_FS_ADMIN, $zv_filestype_group);
         $sub_dir_files_admin = $sub_dir_files;
-        
+
 // get zc_plugins
         $sub_dir_files = array();
         getDirList(DIR_FS_CATALOG . '/zc_plugins', $zv_filestype_group);
         $sub_dir_files_plugins = $sub_dir_files;
 
         $check_dir = array_merge($sub_dir_files_catalog, $sub_dir_files_email, $sub_dir_files_admin, $sub_dir_files_plugins);
-        for ($i = 0, $n = sizeof($check_dir); $i < $n; $i++) {
+        for ($i = 0, $n = count($check_dir); $i < $n; $i++) {
           $check_directory[] = $check_dir[$i] . '/';
         }
         break;
@@ -647,7 +659,7 @@ switch ($action) {
         $sub_dir_files_email = $sub_dir_files;
 
         $check_dir = array_merge($sub_dir_files_catalog, $sub_dir_files_email);
-        for ($i = 0, $n = sizeof($check_dir); $i < $n; $i++) {
+        for ($i = 0, $n = count($check_dir); $i < $n; $i++) {
           $zv_add_dir = str_replace('//', '/', $check_dir[$i] . '/');
           if (strstr($zv_add_dir, DIR_WS_ADMIN) == '') {
             $check_directory[] = $zv_add_dir;
@@ -664,14 +676,14 @@ switch ($action) {
         $sub_dir_files = array();
         getDirList(DIR_FS_ADMIN, $zv_filestype_group);
         $sub_dir_files_admin = $sub_dir_files;
-        
+
 // get zc_plugins
         $sub_dir_files = array();
         getDirList(DIR_FS_CATALOG . '/zc_plugins', $zv_filestype_group);
         $sub_dir_files_plugins = $sub_dir_files;
 
         $check_dir = array_merge($sub_dir_files_admin, $sub_dir_files_plugins);
-        for ($i = 0, $n = sizeof($check_dir); $i < $n; $i++) {
+        for ($i = 0, $n = count($check_dir); $i < $n; $i++) {
           $check_directory[] = $check_dir[$i] . '/';
         }
         break;
@@ -685,7 +697,7 @@ switch ($action) {
         $sub_dir_files = array();
         getDirList(DIR_FS_CATALOG . '/zc_plugins', $zv_filestype_group);
         $check_dir = $sub_dir_files;
-        for ($i = 0, $n = sizeof($check_dir); $i < $n; $i++) {
+        for ($i = 0, $n = count($check_dir); $i < $n; $i++) {
           $check_directory[] = $check_dir[$i] . '/';
         }
         break;

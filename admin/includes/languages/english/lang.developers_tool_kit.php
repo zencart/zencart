@@ -1,6 +1,6 @@
 <?php
 /**
- * @copyright Copyright 2003-2020 Zen Cart Development Team
+ * @copyright Copyright 2003-2021 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id:
@@ -54,6 +54,7 @@ $define = [
     'TEXT_ALL_FILES_LOOKUP_CURRENT' => 'All Files - Catalog/Admin',
     'TEXT_ALL_FILES_LOOKUP_CURRENT_CATALOG' => 'All Files - Catalog',
     'TEXT_ALL_FILES_LOOKUP_CURRENT_ADMIN' => 'All Files - Admin',
+    'TEXT_ALL_FILES_LOOKUP_CURRENT_PLUGINS' => 'All Files - Plugins',
     'TEXT_INFO_NO_EDIT_AVAILABLE' => 'No edit available',
     'TEXT_INFO_CONFIGURATION_HIDDEN' => ' or, HIDDEN',
     'TEXT_SEARCH_ALL_FILES' => 'Search ALL files for: ',
