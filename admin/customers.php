@@ -913,10 +913,10 @@ if (!empty($action)) {
                     </td>
                     <td class="dataTableContent text-right">
                       <?php if (isset($cInfo) && is_object($cInfo) && ($customer['customers_id'] == $cInfo->customers_id)) { ?>
-                        <i class="fa fa-caret-right fa-2x fa-fw txt-navy valign-middle"></i>
+                        <i class="fa fa-caret-right fa-2x fa-fw txt-navy align-middle"></i>
                       <?php } else { ?>
                         <a href="<?php echo zen_href_link(FILENAME_CUSTOMERS, zen_get_all_get_params(array('cID')) . 'cID=' . $customer['customers_id'] . ($_GET['page'] > 0 ? '&page=' . $_GET['page'] : ''), 'NONSSL'); ?>" title="<?php echo IMAGE_ICON_INFO; ?>" role="button">
-                          <i class="fa fa-info-circle fa-2x fa-fw txt-black valign-middle"></i>
+                          <i class="fa fa-info-circle fa-2x fa-fw txt-black align-middle"></i>
                         </a>
                       <?php } ?>
                     </td>

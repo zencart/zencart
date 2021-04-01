@@ -142,10 +142,10 @@ if (!empty($action)) {
                   </td>
                   <td class="dataTableContent text-right">
                     <?php if (isset($cInfo) && is_object($cInfo) && ($country['countries_id'] == $cInfo->countries_id)) { ?>
-                      <i class="fa fa-caret-right fa-2x fa-fw txt-navy valign-middle"></i>
+                      <i class="fa fa-caret-right fa-2x fa-fw txt-navy align-middle"></i>
                     <?php } else { ?>
                       <a href="<?php zen_href_link(FILENAME_COUNTRIES, ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . 'cID=' . $country['countries_id']); ?>" title="<?php echo IMAGE_ICON_INFO; ?>" role="button">
-                        <i class="fa fa-info-circle fa-2x fa-fw txt-black valign-middle"></i>
+                        <i class="fa fa-info-circle fa-2x fa-fw txt-black align-middle"></i>
                       </a>
                     <?php } ?>
                   </td>

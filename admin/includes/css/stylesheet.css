@@ -866,18 +866,19 @@ input.faint {
 .txt-transparent {
   color: transparent;
 }
-.bold {
-  font-weight: bold;
-}
-.valign-middle {
-  vertical-align: middle;
-}
-.valign-top {
-  vertical-align: top;
-}
-.valign-bottom {
-  vertical-align: bottom;
-}
 .opacity-25 {
   opacity: 25%;
+}
+/* The classes below are copied from Bootstrap 4 and 5 */
+.font-weight-bold {
+  font-weight: 700 !important;
+}
+.align-middle {
+  vertical-align: middle !important;
+}
+.align-top {
+  vertical-align: top !important;
+}
+.align-bottom {
+  vertical-align: bottom !important;
 }

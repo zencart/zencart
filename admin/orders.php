@@ -1030,7 +1030,7 @@ if (!empty($action) && $order_exists == true) {
         }
 ?>
             <div class="form-group">
-                <div class="col-sm-3 control-label bold"><?php echo ENTRY_NOTIFY_CUSTOMER; ?></div>
+                <div class="col-sm-3 control-label font-weight-bold"><?php echo ENTRY_NOTIFY_CUSTOMER; ?></div>
               <div class="col-sm-9">
                 <div class="radio">
                   <label><?php echo zen_draw_radio_field('notify', '1', $notify_email) . TEXT_EMAIL; ?></label>

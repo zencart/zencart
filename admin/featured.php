@@ -399,7 +399,7 @@ if (!empty($action)) {
                     <td class="dataTableContent"><?php echo $featured['products_model']; ?></td>
                     <td class="dataTableContent"><?php echo zen_clean_html($featured['products_name']); ?></td>
                     <td class="dataTableContent text-right">
-                      <span<?php echo ($featured['products_quantity'] <= 0 ? ' class="txt-red bold"' : ''); ?>><?php echo $featured['products_quantity']; ?></span>
+                      <span<?php echo ($featured['products_quantity'] <= 0 ? ' class="txt-red font-weight-bold"' : ''); ?>><?php echo $featured['products_quantity']; ?></span>
                     </td>
                     <td class="dataTableContent text-right"><?php echo zen_get_products_display_price($featured['products_id']); ?></td>
                     <td class="dataTableContent text-center"><?php echo(($featured['featured_date_available'] !== '0001-01-01' && $featured['featured_date_available'] !== '') ? zen_date_short($featured['featured_date_available']) : TEXT_NONE); ?></td>
@@ -444,10 +444,10 @@ if (!empty($action)) {
                         </div>
                       </a>
                       <?php if (isset($fInfo) && is_object($fInfo) && ($featured['featured_id'] === $fInfo->featured_id)) { ?>
-                        <i class="fa fa-caret-right fa-2x fa-fw txt-navy valign-middle"></i>
+                        <i class="fa fa-caret-right fa-2x fa-fw txt-navy align-middle"></i>
                       <?php } else { ?>
                         <a href="<?php echo zen_href_link(FILENAME_FEATURED, zen_get_all_get_params(['fID']) . 'fID=' . $featured['featured_id']); ?>" title="<?php echo IMAGE_ICON_INFO; ?>" role="button">
-                          <i class="fa fa-info-circle fa-2x fa-fw txt-black valign-middle"></i>
+                          <i class="fa fa-info-circle fa-2x fa-fw txt-black align-middle"></i>
                         </a>
                       <?php } ?>
                     </td>

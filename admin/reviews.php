@@ -346,10 +346,10 @@ if (!empty($action)) {
                     </td>
                     <td class="dataTableContent text-right">
                       <?php if (isset($rinfo) && is_object($rInfo) && ($review['reviews_id'] === $rInfo->reviews_id)) { ?>
-                        <i class="fa fa-caret-right fa-2x fa-fw txt-navy valign-middle"></i>
+                        <i class="fa fa-caret-right fa-2x fa-fw txt-navy align-middle"></i>
                       <?php } else { ?>
                         <a href="<?php echo zen_href_link(FILENAME_REVIEWS, zen_get_all_get_params(['rID']) . 'rID=' . $review['reviews_id']); ?>" title="<?php echo IMAGE_ICON_INFO; ?>" role="button">
-                          <i class="fa fa-info-circle fa-2x fa-fw txt-black valign-middle"></i>
+                          <i class="fa fa-info-circle fa-2x fa-fw txt-black align-middle"></i>
                         </a>
                       <?php } ?>
                     </td>

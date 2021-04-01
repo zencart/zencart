@@ -185,10 +185,10 @@ if (!empty($action)) {
                   <td class="text-right"><?php echo $products_downloads['products_attributes_maxcount']; ?></td>
                   <td class="text-right">
                     <?php if (isset($padInfo) && is_object($padInfo) && ($products_downloads['products_attributes_id'] == $padInfo->products_attributes_id)) { ?>
-                      <i class="fa fa-caret-right fa-2x fa-fw txt-navy valign-middle"></i>
+                      <i class="fa fa-caret-right fa-2x fa-fw txt-navy align-middle"></i>
                     <?php } else { ?>
                       <a href="<?php echo zen_href_link(FILENAME_DOWNLOADS_MANAGER, zen_get_all_get_params(array('padID')) . ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . 'padID=' . $products_downloads['products_attributes_id']); ?>" title="<?php echo IMAGE_ICON_INFO; ?>" role="button">
-                        <i class="fa fa-info-circle fa-2x fa-fw txt-black valign-middle"></i>
+                        <i class="fa fa-info-circle fa-2x fa-fw txt-black align-middle"></i>
                       </a>
                     <?php } ?>
                   </td>

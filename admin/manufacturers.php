@@ -200,10 +200,10 @@ if (!empty($action)) {
                       </div>
                     </a>
                     <?php if (isset($mInfo) && is_object($mInfo) && ($manufacturer['manufacturers_id'] == $mInfo->manufacturers_id)) { ?>
-                      <i class="fa fa-caret-right fa-2x fa-fw txt-navy valign-middle"></i>
+                      <i class="fa fa-caret-right fa-2x fa-fw txt-navy align-middle"></i>
                     <?php } else { ?>
                       <a href="<?php echo zen_href_link(FILENAME_MANUFACTURERS, zen_get_all_get_params(array('mID')) . 'mID=' . $manufacturer['manufacturers_id']); ?>">
-                        <i class="fa fa-info-circle fa-2x fa-fw txt-black valign-middle"></i>
+                        <i class="fa fa-info-circle fa-2x fa-fw txt-black align-middle"></i>
                       </a>
                     <?php } ?>
                   </td>
