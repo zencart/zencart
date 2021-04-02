@@ -134,33 +134,33 @@ $listingURL = FILENAME_WHOS_ONLINE . '.php?' . zen_get_all_get_params(['q', 't',
                   <th class="dataTableHeadingContentWhois text-center"><?php echo TABLE_HEADING_CUSTOMER_ID; ?></th>
                   <th class="dataTableHeadingContentWhois text-center">
                     <?php echo (($selectedView == 'full_name-desc' or $selectedView == 'full_name') ? '<span class="dataTableHeadingContentWhois">' . TABLE_HEADING_FULL_NAME . '</span>' : TABLE_HEADING_FULL_NAME); ?>&nbsp;
-                    <br><a href="<?php echo $listingURL . "q=full_name"; ?>"><?php echo ($selectedView == 'full_name' ? '<span class="dataTableHeadingContentWhois">' . 'Asc' . '</span>' : '<b>' . 'Asc' . '</b>'); ?></a>&nbsp;
-                    &nbsp;<a href="<?php echo $listingURL . "q=full_name-desc"; ?>"><?php echo ($selectedView == 'full_name-desc' ? '<span class="dataTableHeadingContentWhois">' . 'Desc' . '</span>' : '<b>' . 'Desc' . '</b>'); ?></a>&nbsp;
+                    <br><a href="<?php echo $listingURL . "q=full_name"; ?>"><?php echo ($selectedView == 'full_name' ? '<span class="dataTableHeadingContentWhois">' . TEXT_ASC . '</span>' : '<b>' . TEXT_ASC . '</b>'); ?></a>&nbsp;
+                    &nbsp;<a href="<?php echo $listingURL . "q=full_name-desc"; ?>"><?php echo ($selectedView == 'full_name-desc' ? '<span class="dataTableHeadingContentWhois">' . TEXT_DESC . '</span>' : '<b>' . TEXT_DESC . '</b>'); ?></a>&nbsp;
                   </th>
                   <th class="dataTableHeadingContentWhois text-center">
                     <?php echo (($selectedView == 'ip_address-desc' or $selectedView == 'ip_address') ? '<span class="dataTableHeadingContentWhois">' . TABLE_HEADING_IP_ADDRESS . '</span>' : TABLE_HEADING_IP_ADDRESS); ?>&nbsp;
-                    <br><a href="<?php echo $listingURL . "q=ip_address"; ?>"><?php echo ($selectedView == 'ip_address' ? '<span class="dataTableHeadingContentWhois">' . 'Asc' . '</span>' : '<b>' . 'Asc' . '</b>'); ?></a>&nbsp;
-                    &nbsp;<a href="<?php echo $listingURL . "q=ip_address-desc"; ?>"><?php echo ($selectedView == 'ip_address-desc' ? '<span class="dataTableHeadingContentWhois">' . 'Desc' . '</span>' : '<b>' . 'Desc' . '</b>'); ?></a>&nbsp;
+                    <br><a href="<?php echo $listingURL . "q=ip_address"; ?>"><?php echo ($selectedView == 'ip_address' ? '<span class="dataTableHeadingContentWhois">' . TEXT_ASC . '</span>' : '<b>' . TEXT_ASC . '</b>'); ?></a>&nbsp;
+                    &nbsp;<a href="<?php echo $listingURL . "q=ip_address-desc"; ?>"><?php echo ($selectedView == 'ip_address-desc' ? '<span class="dataTableHeadingContentWhois">' . TEXT_DESC . '</span>' : '<b>' . TEXT_DESC . '</b>'); ?></a>&nbsp;
                   </th>
                   <th class="dataTableHeadingContentWhois text-center">
                     <?php echo (($selectedView == 'session_id-desc' or $selectedView == 'session_id') ? '<span class="dataTableHeadingContentWhois">' . TABLE_HEADING_SESSION_ID . '</span>' : TABLE_HEADING_SESSION_ID); ?>&nbsp;
-                    <br><a href="<?php echo $listingURL . "q=session_id"; ?>"><?php echo ($selectedView == 'session_id' ? '<span class="dataTableHeadingContentWhois">' . 'Asc' . '</span>' : '<b>' . 'Asc' . '</b>'); ?></a>&nbsp;
-                    &nbsp;<a href="<?php echo $listingURL . "q=session_id-desc"; ?>"><?php echo ($selectedView == 'session_id-desc' ? '<span class="dataTableHeadingContentWhois">' . 'Desc' . '</span>' : '<b>' . 'Desc' . '</b>'); ?></a>&nbsp;
+                    <br><a href="<?php echo $listingURL . "q=session_id"; ?>"><?php echo ($selectedView == 'session_id' ? '<span class="dataTableHeadingContentWhois">' . TEXT_ASC . '</span>' : '<b>' . TEXT_ASC . '</b>'); ?></a>&nbsp;
+                    &nbsp;<a href="<?php echo $listingURL . "q=session_id-desc"; ?>"><?php echo ($selectedView == 'session_id-desc' ? '<span class="dataTableHeadingContentWhois">' . TEXT_DESC . '</span>' : '<b>' . TEXT_DESC . '</b>'); ?></a>&nbsp;
                   </th>
                   <th class="dataTableHeadingContentWhois text-center">
                     <?php echo (($selectedView == 'time_entry-desc' or $selectedView == 'time_entry') ? '<span class="dataTableHeadingContentWhois">' . TABLE_HEADING_ENTRY_TIME . '</span>' : TABLE_HEADING_ENTRY_TIME); ?>&nbsp;
-                    <br><a href="<?php echo $listingURL . "q=time_entry"; ?>"><?php echo ($selectedView == 'time_entry' ? '<span class="dataTableHeadingContentWhois">' . 'Asc' . '</span>' : '<b>' . 'Asc' . '</b>'); ?></a>&nbsp;
-                    &nbsp;<a href="<?php echo $listingURL . "q=time_entry-desc"; ?>"><?php echo ($selectedView == 'time_entry-desc' ? '<span class="dataTableHeadingContentWhois">' . 'Desc' . '</span>' : '<b>' . 'Desc' . '</b>'); ?></a>&nbsp;
+                    <br><a href="<?php echo $listingURL . "q=time_entry"; ?>"><?php echo ($selectedView == 'time_entry' ? '<span class="dataTableHeadingContentWhois">' . TEXT_ASC . '</span>' : '<b>' . TEXT_ASC . '</b>'); ?></a>&nbsp;
+                    &nbsp;<a href="<?php echo $listingURL . "q=time_entry-desc"; ?>"><?php echo ($selectedView == 'time_entry-desc' ? '<span class="dataTableHeadingContentWhois">' . TEXT_DESC . '</span>' : '<b>' . TEXT_DESC . '</b>'); ?></a>&nbsp;
                   </th>
                   <th class="dataTableHeadingContentWhois text-center">
                     <?php echo (($selectedView == 'time_last_click-desc' or $selectedView == 'time_last_click') ? '<span class="dataTableHeadingContentWhois">' . TABLE_HEADING_LAST_CLICK . '</span>' : TABLE_HEADING_LAST_CLICK); ?>&nbsp;
-                    <br><a href="<?php echo $listingURL . "q=time_last_click"; ?>"><?php echo ($selectedView == 'time_last_click' ? '<span class="dataTableHeadingContentWhois">' . 'Asc' . '</span>' : '<b>' . 'Asc' . '</b>'); ?></a>&nbsp;
-                    &nbsp;<a href="<?php echo $listingURL . "q=time_last_click-desc"; ?>"><?php echo ($selectedView == 'time_last_click-desc' ? '<span class="dataTableHeadingContentWhois">' . 'Desc' . '</span>' : '<b>' . 'Desc' . '</b>'); ?></a>&nbsp;
+                    <br><a href="<?php echo $listingURL . "q=time_last_click"; ?>"><?php echo ($selectedView == 'time_last_click' ? '<span class="dataTableHeadingContentWhois">' . TEXT_ASC . '</span>' : '<b>' . TEXT_ASC . '</b>'); ?></a>&nbsp;
+                    &nbsp;<a href="<?php echo $listingURL . "q=time_last_click-desc"; ?>"><?php echo ($selectedView == 'time_last_click-desc' ? '<span class="dataTableHeadingContentWhois">' . TEXT_DESC . '</span>' : '<b>' . TEXT_DESC . '</b>'); ?></a>&nbsp;
                   </th>
                   <th class="dataTableHeadingContentWhois text-center">
                     <?php echo (($selectedView == 'last_page_url-desc' or $selectedView == 'last_page_url') ? '<span class="dataTableHeadingContentWhois">' . TABLE_HEADING_LAST_PAGE_URL . '</span>' : TABLE_HEADING_LAST_PAGE_URL); ?>&nbsp;
-                    <br><a href="<?php echo $listingURL . "q=last_page_url"; ?>"><?php echo ($selectedView == 'last_page_url' ? '<span class="dataTableHeadingContentWhois">' . 'Asc' . '</span>' : '<b>' . 'Asc' . '</b>'); ?></a>&nbsp;
-                    &nbsp;<a href="<?php echo $listingURL . "q=last_page_url-desc"; ?>"><?php echo ($selectedView == 'last_page_url-desc' ? '<span class="dataTableHeadingContentWhois">' . 'Desc' . '</span>' : '<b>' . 'Desc' . '</b>'); ?></a>&nbsp;
+                    <br><a href="<?php echo $listingURL . "q=last_page_url"; ?>"><?php echo ($selectedView == 'last_page_url' ? '<span class="dataTableHeadingContentWhois">' . TEXT_ASC . '</span>' : '<b>' . TEXT_ASC . '</b>'); ?></a>&nbsp;
+                    &nbsp;<a href="<?php echo $listingURL . "q=last_page_url-desc"; ?>"><?php echo ($selectedView == 'last_page_url-desc' ? '<span class="dataTableHeadingContentWhois">' . TEXT_DESC . '</span>' : '<b>' . TEXT_DESC . '</b>'); ?></a>&nbsp;
                   </th>
                 </tr>
               </thead>
