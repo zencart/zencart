@@ -9,17 +9,19 @@ $version_check_index=true;
 require('includes/application_top.php');
 
 $languages = zen_get_languages();
-$languages_array = array();
+$languages_array = [];
 $languages_selected = DEFAULT_LANGUAGE;
 for ($i = 0, $n = count($languages); $i < $n; $i++) {
-    $languages_array[] = array('id' => $languages[$i]['code'],
-                               'text' => $languages[$i]['name']);
+    $languages_array[] = [
+        'id' => $languages[$i]['code'],
+        'text' => $languages[$i]['name']
+    ];
     if ($languages[$i]['directory'] == $_SESSION['language']) {
         $languages_selected = $languages[$i]['code'];
     }
 }
 
-if (STORE_NAME == '' || STORE_OWNER =='' || STORE_OWNER_EMAIL_ADDRESS =='' || STORE_NAME_ADDRESS =='') {
+if (STORE_NAME == '' || STORE_OWNER == '' || STORE_OWNER_EMAIL_ADDRESS == '' || STORE_NAME_ADDRESS == '') {
     require('index_setup_wizard.php');
 } else {
     require('index_dashboard.php');
