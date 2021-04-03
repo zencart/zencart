@@ -11,7 +11,7 @@ require('includes/application_top.php');
 $languages = zen_get_languages();
 $languages_array = array();
 $languages_selected = DEFAULT_LANGUAGE;
-for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
+for ($i = 0, $n = count($languages); $i < $n; $i++) {
     $languages_array[] = array('id' => $languages[$i]['code'],
                                'text' => $languages[$i]['name']);
     if ($languages[$i]['directory'] == $_SESSION['language']) {
