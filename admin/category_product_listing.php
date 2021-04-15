@@ -564,7 +564,7 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
           //     ),
           // );
           //
-          // Observer notes:  
+          // Observer notes:
           // - Be sure to check that the $p2/$extra_headings value is specifically (bool)false before initializing, since
           //   multiple observers might be injecting content!
           // - If heading-columns are added, be sure to add the associated data columns, too, via the
@@ -599,7 +599,7 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
           //     ),
           // );
           //
-          // Observer notes:  
+          // Observer notes:
           // - Be sure to check that the $p2/$extra_headings value is specifically (bool)false before initializing, since
           //   multiple observers might be injecting content!
           // - If heading-columns are added, be sure to add the associated data columns, too, via the
@@ -742,7 +742,7 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
             //
             $extra_select = $extra_from = $extra_joins = $extra_ands = '';
             $zco_notifier->notify('NOTIFY_ADMIN_PROD_LISTING_PRODUCTS_QUERY', '', $extra_select, $extra_from, $extra_joins, $extra_ands, $order_by);
-            
+
             $products_query_raw = "SELECT p.products_type, p.products_id, pd.products_name, p.products_quantity,
                                           p.products_price, p.products_status, p.products_model, p.products_sort_order,
                                           p.master_categories_id";
@@ -839,7 +839,7 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
               //     ),
               // );
               //
-              // Observer notes:  
+              // Observer notes:
               // - Be sure to check that the $p2/$extra_data value is specifically (bool)false before initializing, since
               //   multiple observers might be injecting content!
               // - If heading-columns are added, be sure to add the associated header columns, too, via the
@@ -870,7 +870,7 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
               //     ),
               // );
               //
-              // Observer notes:  
+              // Observer notes:
               // - Be sure to check that the $p2/$extra_data value is specifically (bool)false before initializing, since
               //   multiple observers might be injecting content!
               // - If heading-columns are added, be sure to add the associated header columns, too, via the
