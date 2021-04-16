@@ -715,5 +715,8 @@ class queryFactoryMeta {
     $rgx = preg_match('/^[a-z]*/', $type, $matches);
     $this->type = $matches[0];
     $this->max_length = preg_replace('/[a-z\(\)]/', '', $type);
+    if ($type == 'datetime') {
+      $this->max_length = '26';
+    }
   }
 }
