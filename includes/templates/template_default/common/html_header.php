@@ -27,8 +27,8 @@ require(DIR_WS_MODULES . zen_get_module_directory('meta_tags.php'));
  * output main page HEAD tag and related headers/meta-tags, etc
  */
 ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" <?php echo HTML_PARAMS; ?>>
+<!DOCTYPE html>
+<html <?php echo HTML_PARAMS; ?>>
 <head>
 <meta charset="<?php echo CHARSET; ?>" />
 <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
