@@ -2,10 +2,10 @@
 /**
  * functions_osh_update
  *
- * @copyright Copyright 2003-2020 Zen Cart Development Team
+ * @copyright Copyright 2003-2021 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2020 Apr 12 Modified in v1.5.7 $
+ * @version $Id:  Modified in v1.5.8 $
  */
 if (!defined('IS_ADMIN_FLAG')) {
     exit('Invalid Access');
@@ -174,7 +174,7 @@ function zen_update_orders_history($orders_id, $message = '', $updated_by = null
             if (empty($updated_by)) {
                 if (IS_ADMIN_FLAG === true && isset($_SESSION['admin_id'])) {
                     $updated_by = zen_updated_by_admin();
-                } elseif (IS_ADMIN_FLAG === false && isset($_SESSION['customers_id'])) {
+                } elseif (IS_ADMIN_FLAG === false && isset($_SESSION['customer_id'])) {
                     $updated_by = '';
                 } else {
                     $updated_by = 'N/A';
