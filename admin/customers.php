@@ -428,7 +428,8 @@ if (!empty($action)) {
                   <?php
               }
           }
-          ?>        <div class="row">
+          ?>
+        <div class="row">
           <?php echo zen_draw_separator('pixel_trans.gif', '1', '10'); ?>
         </div>
         <div class="row formAreaTitle"><?php echo CATEGORY_ADDRESS; ?></div>
