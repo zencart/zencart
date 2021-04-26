@@ -837,7 +837,6 @@ if (!empty($action)) {
                 foreach ($customers as $result) {
                   $cust = new Customer($result['customers_id']);
                   $customer = $cust->getData();
-
                   if ((!isset($_GET['cID']) || (isset($_GET['cID']) && ($_GET['cID'] == $customer['customers_id']))) && !isset($cInfo)) {
                     $cInfo = new objectInfo($customer);
                   }
@@ -961,7 +960,7 @@ if (!empty($action)) {
                   $heading[] = array('text' => '<h4>' . TABLE_HEADING_ID . $cInfo->customers_id . ' ' . $cInfo->customers_firstname . ' ' . $cInfo->customers_lastname . '</h4>' . '<br>' . $cInfo->customers_email_address);
 
                   $contents[] = array('align' => 'text-center', 'text' => '<a href="' . zen_href_link(FILENAME_CUSTOMERS, zen_get_all_get_params(array('cID', 'action', 'search')) . 'cID=' . $cInfo->customers_id . '&action=edit', 'NONSSL') . '" class="btn btn-primary" role="button">' . IMAGE_EDIT . '</a> <a href="' . zen_href_link(FILENAME_CUSTOMERS, zen_get_all_get_params(array('cID', 'action', 'search')) . 'cID=' . $cInfo->customers_id . '&action=confirm', 'NONSSL') . '" class="btn btn-warning" role="button">' . IMAGE_DELETE . '</a>');
-                  $contents[] = array('align' => 'text-center', 'text' => ($customer['number_of_orders'] > 0 ? '<a href="' . zen_href_link(FILENAME_ORDERS, 'cID=' . $cInfo->customers_id, 'NONSSL') . '" class="btn btn-default" role="button">' . IMAGE_ORDERS . '</a>' : '') . ' <a href="' . zen_href_link(FILENAME_MAIL, 'origin=customers.php&customer=' . $cInfo->customers_email_address . '&cID=' . $cInfo->customers_id, 'NONSSL') . '" class="btn btn-default" role="button">' . IMAGE_EMAIL . '</a>');
+                  $contents[] = array('align' => 'text-center', 'text' => ($cInfo->number_of_orders > 0 ? '<a href="' . zen_href_link(FILENAME_ORDERS, 'cID=' . $cInfo->customers_id, 'NONSSL') . '" class="btn btn-default" role="button">' . IMAGE_ORDERS . '</a>' : '') . ' <a href="' . zen_href_link(FILENAME_MAIL, 'origin=customers.php&customer=' . $cInfo->customers_email_address . '&cID=' . $cInfo->customers_id, 'NONSSL') . '" class="btn btn-default" role="button">' . IMAGE_EMAIL . '</a>');
                   $contents[] = array('align' => 'text-center', 'text' => '<a href="' . zen_href_link(FILENAME_CUSTOMERS, zen_get_all_get_params(array('cID', 'action', 'search')) . 'cID=' . $cInfo->customers_id . '&action=pwreset') . '" class="btn btn-warning" role="button">' . IMAGE_RESET_PWD . '</a>');
 
                   // -----
@@ -1007,13 +1006,13 @@ if (!empty($action)) {
                   }
                   $contents[] = array('text' => '<br>' . TEXT_INFO_NUMBER_OF_LOGONS . ' ' . $cInfo->number_of_logins);
 
-                  $contents[] = array('text' => '<br>' . TEXT_INFO_GV_AMOUNT . ' ' . $currencies->format($customer['gv_balance']));
+                  $contents[] = array('text' => '<br>' . TEXT_INFO_GV_AMOUNT . ' ' . $currencies->format($cInfo->gv_balance));
 
-                  $contents[] = array('text' => '<br>' . TEXT_INFO_NUMBER_OF_ORDERS . ' ' . $customer['number_of_orders']);
+                  $contents[] = array('text' => '<br>' . TEXT_INFO_NUMBER_OF_ORDERS . ' ' . $cInfo->number_of_orders);
 
-                  if (!empty($customer['lifetime_value'])) {
-                    $contents[] = array('text' => TEXT_INFO_LIFETIME_VALUE . ' ' . $currencies->format($customer['lifetime_value']));
-                    $contents[] = array('text' => TEXT_INFO_LAST_ORDER . ' ' . zen_date_short($customer['last_order']['date_purchased']) . '<br>' . TEXT_INFO_ORDERS_TOTAL . ' ' . $currencies->format($customer['last_order']['order_total'], true, $customer['last_order']['currency'], $customer['last_order']['currency_value']));
+                  if (!empty($cInfo->lifetime_value)) {
+                    $contents[] = array('text' => TEXT_INFO_LIFETIME_VALUE . ' ' . $currencies->format($cInfo->lifetime_value));
+                    $contents[] = array('text' => TEXT_INFO_LAST_ORDER . ' ' . zen_date_short($cInfo->last_order['date_purchased']) . '<br>' . TEXT_INFO_ORDERS_TOTAL . ' ' . $currencies->format($cInfo->last_order['order_total'], true, $cInfo->last_order['currency'], $cInfo->last_order['currency_value']));
                   }
                   $contents[] = array('text' => '<br>' . TEXT_INFO_COUNTRY . ' ' . $cInfo->country_iso);
                   $contents[] = array('text' => '<br>' . TEXT_INFO_NUMBER_OF_REVIEWS . ' ' . $cInfo->number_of_reviews);
