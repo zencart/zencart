@@ -213,6 +213,11 @@ if (!empty($action)) {
         $zco_notifier->notify('NOTIFY_ADMIN_CUSTOMERS_B4_ADDRESS_UPDATE', array('customers_id' => $customers_id, 'address_book_id' => $default_address_id), $sql_data_array);
 
         $db->perform(TABLE_ADDRESS_BOOK, $sql_data_array, 'update', "customers_id = '" . (int)$customers_id . "' and address_book_id = '" . (int)$default_address_id . "'");
+
+        if (isset($_POST['customer_groups']) && is_array($_POST['customer_groups'])) {
+            zen_sync_customer_group_assignments($customers_id, $_POST['customer_groups']);
+        }
+
         zen_record_admin_activity('Customer record updated for customer ID ' . (int)$customers_id, 'notice');
         $zco_notifier->notify('ADMIN_CUSTOMER_UPDATE', (int)$customers_id, $default_address_id, $sql_data_array);
         zen_redirect(zen_href_link(FILENAME_CUSTOMERS, zen_get_all_get_params(array('cID', 'action')) . 'cID=' . $customers_id, 'NONSSL'));
@@ -600,6 +605,25 @@ if (!empty($action)) {
             <div class="col-sm-9 col-md-6">
               <?php echo zen_draw_input_field('customers_referral', htmlspecialchars($cInfo->customers_referral, ENT_COMPAT, CHARSET, TRUE), zen_set_field_length(TABLE_CUSTOMERS, 'customers_referral', 15) . ' class="form-control" id="customers_referral"'); ?>
             </div>
+          </div>
+          <div class="form-group">
+              <?php echo zen_draw_label(TEXT_CUSTOMER_GROUPS, 'customer_groups', 'class="col-sm-3 control-label"'); ?>
+              <div class="col-sm-9 col-md-6">
+                  <div class="row">
+                      <div class="col-sm-4">
+                          <input type="hidden" name="customer_groups[]" value="0">
+                          <?php $groups_already_in = zen_groups_customer_belongs_to($cInfo->customers_id); ?>
+                          <?php foreach (zen_get_all_customer_groups() as $group) { ?>
+                              <div class="checkbox">
+                                  <label>
+                                      <input type="checkbox" name="customer_groups[]" value="<?php echo $group['id']; ?>" <?php if (array_key_exists($group['id'], $groups_already_in)) echo 'checked'; ?>>
+                                      <?php echo $group['text']; ?>
+                                  </label>
+                              </div>
+                          <?php } ?>
+                      </div>
+                  </div>
+              </div>
           </div>
         </div>
         <div class="row"><?php echo zen_draw_separator('pixel_trans.gif', '1', '10'); ?></div>
