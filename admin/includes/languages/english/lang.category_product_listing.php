@@ -10,6 +10,7 @@ $define = [
     'HEADING_TITLE' => 'Categories / Products',
     'HEADING_TITLE_GOTO' => 'Go To:',
     'TABLE_HEADING_ID' => 'ID',
+    'TABLE_HEADING_IMAGE' => 'Image',
     'TABLE_HEADING_CATEGORIES_PRODUCTS' => 'Categories / Products',
     'TABLE_HEADING_PRICE' => 'Price/Special/Sale',
     'TABLE_HEADING_QUANTITY' => 'Quantity',
