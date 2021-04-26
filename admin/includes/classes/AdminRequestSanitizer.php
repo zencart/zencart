@@ -529,7 +529,7 @@ class AdminRequestSanitizer extends base
         if (isset($_POST[$parameterName])) {
             // Add the parameterName to the base arrayname.
             $this->arrayName = $this->setCurrentArrayName($parameterName);
-            $this->debugMessages[] = 'PROCESSING PRODUCT_URL_REGEX == ' . $this->arrayName;
+            $this->debugMessages[] = 'PROCESSING FILE_PATH_OR_URL_REGEX == ' . $this->arrayName;
             foreach ($_POST[$parameterName] as $pKey => $pValue) {
                 $newValue = filter_var($_POST[$parameterName][$pKey], FILTER_SANITIZE_URL);
                 if ($newValue === false) {
