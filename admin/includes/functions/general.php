@@ -330,7 +330,6 @@ function zen_get_system_information($privacy = false)
 
     $errnum = 0;
     $system = $host = $kernel = $output = '';
-    list($system, $host, $kernel) = array('', $_SERVER['SERVER_NAME'], php_uname());
     $uptime = (DISPLAY_SERVER_UPTIME == 'true') ? 'Unsupported' : 'Disabled/Unavailable';
 
     // check to see if "exec()" is disabled in PHP -- if not, get additional info via command line
@@ -342,6 +341,7 @@ function zen_get_system_information($privacy = false)
         }
     }
     if (!$exec_disabled) {
+        list($system, $host, $kernel) = array('', $_SERVER['SERVER_NAME'], php_uname());
         @exec('uname -a 2>&1', $output, $errnum);
         if ($errnum == 0 && count($output)) list($system, $host, $kernel) = preg_split('/[\s,]+/', $output[0], 5);
         $output = '';
