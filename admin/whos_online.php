@@ -294,7 +294,13 @@ $listingURL = FILENAME_WHOS_ONLINE . '.php?' . zen_get_all_get_params(['q', 't',
                 $contents[] = ['text' => $whos_online[$selectedSession]['full_name'] . ' - ' . $cart['customer_ip'] . ' (' . $cart['language_code']  . ')<br>' . $selectedSession];
 
                 foreach ($cart['products'] as $product) {
-                  $contents[] = ['text' => $product['quantity'] . ' x ' . '<a href="' . zen_href_link(FILENAME_PRODUCT, 'cPath=' . zen_get_product_path($product['id']) . '&pID=' . $product['id']) . '">' . $product['name'] . '</a>'];
+                  $contents[] = ['text' => $product['quantity'] . ' x '
+                         . ' <a href="' . zen_catalog_href_link($zc_products->get_handler($product['products_type']) . '_info', 'cPath=' . zen_get_product_path($product['id']) . '&products_id=' . $product['id'] . '&language=' . $cart['language_code']) . '" target="_blank" rel="noreferrer noopener">'
+                         . $product['name']
+                         . '</a>'
+                         . ' <a href="' . zen_href_link(FILENAME_PRODUCT, 'cPath=' . zen_get_product_path($product['id']) . '&pID=' . $product['id'] . '&action=new_product') . '" role="button" class="btn btn-sm btn-default"><i class="fa fa-pencil fa-lg" aria-hidden="true"></i> ' . IMAGE_EDIT . '</a>'
+                         . ' <a href="' . zen_href_link(FILENAME_CATEGORY_PRODUCT_LISTING, 'cPath=' . zen_get_product_path($product['id']) . '&pID=' . $product['id']) . '" role="button" class="btn btn-sm btn-default"><i class="fa fa-list fa-lg" aria-hidden="true"></i> ' . IMAGE_CATEGORY . '</a>'
+                        ];
                 }
 
                 if (!empty($cart['products'])) {
