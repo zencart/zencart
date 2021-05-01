@@ -151,7 +151,7 @@
 <?php    }  // endif tax info display  ?>
         <td class="cartTotalDisplay">
           <?php echo $currencies->display_price($order->products[$i]['final_price'], $order->products[$i]['tax'], $order->products[$i]['qty']);
-          if ($order->products[$i]['onetime_charges'] != 0 ) echo '<br/> ' . $currencies->display_price($order->products[$i]['onetime_charges'], $order->products[$i]['tax'], 1);
+          if ($order->products[$i]['onetime_charges'] != 0 ) echo '<br> ' . $currencies->display_price($order->products[$i]['onetime_charges'], $order->products[$i]['tax'], 1);
 ?>
         </td>
       </tr>
