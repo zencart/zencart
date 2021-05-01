@@ -58,6 +58,7 @@ define('FILENAME_CREATE_ACCOUNT', 'create_account');
 define('FILENAME_CREATE_ACCOUNT_SUCCESS', 'create_account_success');
 define('FILENAME_CURRENCIES', 'currencies');
 define('FILENAME_CUSTOMERS', 'customers');
+define('FILENAME_CUSTOMER_GROUPS', 'customer_groups');
 define('FILENAME_DEFAULT', 'index');
 define('FILENAME_DEFINE_ABOUT_US', 'define_about_us');
 define('FILENAME_DEFINE_ASK_A_QUESTION', 'define_ask_a_question');

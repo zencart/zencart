@@ -26,6 +26,7 @@ require DIR_WS_FUNCTIONS . 'functions_prices.php';
 require DIR_WS_FUNCTIONS . 'functions_taxes.php';
 require DIR_WS_FUNCTIONS . 'functions_gvcoupons.php';
 require DIR_WS_FUNCTIONS . 'functions_customers.php';
+require DIR_WS_FUNCTIONS . 'functions_customer_groups.php';
 require DIR_WS_FUNCTIONS . 'functions_lookups.php';
 require DIR_WS_FUNCTIONS . 'functions_urls.php';
 require DIR_WS_FUNCTIONS . 'html_output.php';
