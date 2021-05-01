@@ -539,6 +539,7 @@ $define = [
     'TEXT_BOOLEAN_VALIDATE' => 'The value is required to be a boolean value or equivalent.',
     'TEXT_ASC' => 'asc',
     'TEXT_DESC' => 'desc',
+    'TEXT_DOWNLOADABLE_PRODUCTS_MISCONFIGURED' => 'Configuration of some downloadable product causes free shipping for all cart items. See Admin > Catalog > Downloads Manager.', 
     'TEXT_DOCS_HELP' => 'Help on Zen Cart Documentation Site',
 ];
 

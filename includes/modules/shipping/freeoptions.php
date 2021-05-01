@@ -205,6 +205,12 @@
       return $this->_check;
     }
 
+    function get_configuration_errors() {
+      if (!zen_check_downloads_shipping()) {
+         return TEXT_DOWNLOADABLE_PRODUCTS_MISCONFIGURED; 
+      }
+    }
+
     function install() {
       global $db;
       $db->Execute("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) VALUES ('Enable Free Options Shipping', 'MODULE_SHIPPING_FREEOPTIONS_STATUS', 'True', 'Free Options is used to display a Free Shipping option when other Shipping Modules are displayed.

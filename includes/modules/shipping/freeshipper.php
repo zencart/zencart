@@ -84,6 +84,12 @@
       return $this->_check;
     }
 
+    function get_configuration_errors() {
+      if (!zen_check_downloads_shipping()) {
+         return TEXT_DOWNLOADABLE_PRODUCTS_MISCONFIGURED; 
+      }
+    }
+
     function install() {
       global $db;
       $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Enable Free Shipping', 'MODULE_SHIPPING_FREESHIPPER_STATUS', 'True', 'Do you want to offer Free shipping?', '6', '0', 'zen_cfg_select_option(array(\'True\', \'False\'), ', now())");

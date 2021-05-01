@@ -215,6 +215,10 @@ if (!empty($action)) {
                           }
                         }
                         $module_info['keys'] = $keys_extra;
+                        if (method_exists($module, 'get_configuration_errors')) { 
+                          $module_info['configuration_errors'] = $module->get_configuration_errors(); 
+                        }
+
                         $mInfo = new objectInfo($module_info);
                       }
                         if (isset($mInfo) && is_object($mInfo) && ($class == $mInfo->code)) { // a module row is selected
@@ -392,6 +396,10 @@ if (!empty($action)) {
                    $contents[] = $help_button; 
                 }
                 $contents[] = ['text' => '<br>' . $mInfo->description];
+
+                if (!empty($mInfo->configuration_errors)) { 
+                  $contents[] = ['text' => $mInfo->configuration_errors . '<br>'];  // warnings, etc. 
+                }
                 $contents[] = ['text' => '<br>' . $keys];
               } else {
                 if (!(!$is_ssl_protected && in_array($mInfo->code, ['paypaldp', 'authorizenet_aim', 'authorizenet_echeck']))) {
