@@ -124,7 +124,8 @@ if (isset($_GET['action']) && ($_GET['action'] == 'process')) {
 $products_price = zen_get_products_display_price($product_info->fields['products_id']);
 
 $products_name = $product_info->fields['products_name'];
-
+$rating = $rating ?? '';
+$review_text = $review_text ?? '';
 $products_model = '';
 if ($product_info->fields['products_model'] != '') {
   $products_model = '<br><span class="smallText">[' . $product_info->fields['products_model'] . ']</span>';

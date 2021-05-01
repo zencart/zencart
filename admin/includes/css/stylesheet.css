@@ -835,3 +835,50 @@ input.faint {
 .control-label {/*for multiple inputs*/
     font-weight: 700;
 }
+
+.txt-black {
+  color:#000;
+}
+.txt-yellow {
+  color: #ff0;
+}
+.txt-orange {
+  color: #ffa500
+}
+.txt-lime {
+  color:#5ce400
+}
+.txt-red {
+  color:#f00;
+}
+.txt-navy {
+  color: #000080;
+}
+.txt-blue {
+  color: #00f;
+}
+.txt-white {
+  color:#fff;
+}
+.txt-pink {
+  color: #ffbaba;
+}
+.txt-transparent {
+  color: transparent;
+}
+.opacity-25 {
+  opacity: 25%;
+}
+/* The classes below are copied from Bootstrap 4 and 5 */
+.font-weight-bold {
+  font-weight: 700 !important;
+}
+.align-middle {
+  vertical-align: middle !important;
+}
+.align-top {
+  vertical-align: top !important;
+}
+.align-bottom {
+  vertical-align: bottom !important;
+}

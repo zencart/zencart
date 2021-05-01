@@ -40,7 +40,7 @@ $define = [
     'TEXT_INFO_DATE_ADDED' => 'Date Added:',
     'TEXT_INFO_LAST_MODIFIED' => 'Last Modified:',
     'TEXT_GOOD_BOX' => ' ',
-    'TEXT_BAD_BOX' => '<span style="color:#ff0000;"><b>MISSING</b></span><br>',
+    'TEXT_BAD_BOX' => '<span class="txt-red"><b>MISSING</b></span><br>',
     'SUCCESS_BOX_DELETED' => 'Successfully removed from the template of the box: ',
     'SUCCESS_BOX_RESET' => 'Successfully Reset all box settings to the Default settings for Template: ',
     'SUCCESS_BOX_UPDATED' => 'Successfully Updated settings for box: ',

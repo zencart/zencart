@@ -138,7 +138,7 @@ function zen_get_box_id(string $box_id)
  */
 function zen_get_buy_now_button($product_id, string $buy_now_link, $additional_link = false)
 {
-    global $db;
+    global $db, $zco_notifier;
 
 // show case only supercedes all other settings
     if (STORE_STATUS != '0') {
@@ -215,6 +215,12 @@ function zen_get_buy_now_button($product_id, string $buy_now_link, $additional_l
             $return_button = $buy_now_link;
             break;
     }
+
+    // -----
+    // Given an observer the opportunity to modify the to-be-returned button's contents.
+    //
+    $zco_notifier->notify('NOTIFY_ZEN_GET_BUY_NOW_BUTTON_RETURN', array_merge($button_check->fields, ['products_id' => (int)$product_id]), $return_button);
+
     if ($return_button != $buy_now_link && $additional_link != false) {
         return $additional_link . '<br>' . $return_button;
     }

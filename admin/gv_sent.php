@@ -23,7 +23,7 @@ $currencies = new currencies();
       <!-- body_text //-->
       <h1 class="pageHeading"><?php echo HEADING_TITLE; ?></h1>
         <div class="row">
-          <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9 configurationColumnLeft"">
+          <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9 configurationColumnLeft">
             <table class="table table-hover table-striped">
               <thead>
                 <tr>

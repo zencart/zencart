@@ -669,6 +669,37 @@ CREATE TABLE customers_info (
 # --------------------------------------------------------
 
 #
+# Table structure for table customer_groups
+#
+CREATE TABLE customer_groups (
+  group_id int UNSIGNED NOT NULL AUTO_INCREMENT,
+  group_name varchar(191) NOT NULL,
+  group_comment varchar(255),
+  date_added timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (group_id),
+  UNIQUE KEY idx_groupname_zen (group_name)
+);
+
+# --------------------------------------------------------
+
+#
+# Table structure for table customers_to_groups
+#
+CREATE TABLE customers_to_groups (
+  id int UNSIGNED NOT NULL AUTO_INCREMENT,
+  group_id int UNSIGNED NOT NULL,
+  customer_id int UNSIGNED NOT NULL,
+  date_added timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (id),
+  UNIQUE KEY idx_custid_groupid_zen (customer_id, group_id),
+  KEY idx_groupid_custid_zen (group_id, customer_id)
+);
+
+# --------------------------------------------------------
+
+#
 # Table structure for table db_cache
 #
 DROP TABLE IF EXISTS db_cache;
@@ -2257,6 +2288,7 @@ VALUES ('configMyStore', 'BOX_CONFIGURATION_MY_STORE', 'FILENAME_CONFIGURATION',
        ('plugins', 'BOX_MODULES_PLUGINS', 'FILENAME_PLUGIN_MANAGER', '', 'modules', 'Y', 4),
        ('orderTotal', 'BOX_MODULES_ORDER_TOTAL', 'FILENAME_MODULES', 'set=ordertotal', 'modules', 'Y', 3),
        ('customers', 'BOX_CUSTOMERS_CUSTOMERS', 'FILENAME_CUSTOMERS', '', 'customers', 'Y', 1),
+       ('customerGroups', 'BOX_CUSTOMERS_CUSTOMER_GROUPS', 'FILENAME_CUSTOMER_GROUPS', '', 'customers', 'Y', 3),
        ('orders', 'BOX_CUSTOMERS_ORDERS', 'FILENAME_ORDERS', '', 'customers', 'Y', 2),
        ('groupPricing', 'BOX_CUSTOMERS_GROUP_PRICING', 'FILENAME_GROUP_PRICING', '', 'customers', 'Y', 3),
        ('paypal', 'BOX_CUSTOMERS_PAYPAL', 'FILENAME_PAYPAL', '', 'customers', 'Y', 4),

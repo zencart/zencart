@@ -260,18 +260,21 @@ function zen_product_in_category($product_id, $cat_id)
 
     foreach ($categories as $category) {
         if ($category['categories_id'] == $cat_id) {
-            $in_cat = true;
+            return true;
         }
-        if (!$in_cat) {
-            $sql = "SELECT parent_id
+        $sql = "SELECT parent_id
                     FROM " . TABLE_CATEGORIES . "
                     WHERE categories_id = " . (int)$category['categories_id'];
 
-            $parent_categories = $db->Execute($sql);
+        $parent_categories = $db->Execute($sql);
 
-            foreach($parent_categories as $parent) {
-                if ($parent['parent_id'] != TOPMOST_CATEGORY_PARENT_ID) {
-                    if (!$in_cat) $in_cat = zen_product_in_parent_category($product_id, $cat_id, $parent['parent_id']);
+        foreach ($parent_categories as $parent) {
+            if ($parent['parent_id'] != TOPMOST_CATEGORY_PARENT_ID) {
+                if (!$in_cat) {
+                    $in_cat = zen_product_in_parent_category($product_id, $cat_id, $parent['parent_id']);
+                }
+                if ($in_cat) {
+                    return $in_cat;
                 }
             }
         }
@@ -291,18 +294,20 @@ function zen_product_in_parent_category($product_id, $cat_id, $parent_cat_id)
 
     $in_cat = false;
     if ($cat_id == $parent_cat_id) {
-        $in_cat = true;
-    } else {
-        $sql = "SELECT parent_id
+        return true;
+    }
+    $sql = "SELECT parent_id
                 FROM " . TABLE_CATEGORIES . "
                 WHERE categories_id = " . (int)$parent_cat_id;
 
-        $results = $db->Execute($sql);
+    $results = $db->Execute($sql);
 
-        foreach($results as $result) {
-            if ($result['parent_id'] != TOPMOST_CATEGORY_PARENT_ID && !$in_cat) {
-                $in_cat = zen_product_in_parent_category($product_id, $cat_id, $result['parent_id']);
-            }
+    foreach ($results as $result) {
+        if ($result['parent_id'] != TOPMOST_CATEGORY_PARENT_ID && !$in_cat) {
+            $in_cat = zen_product_in_parent_category($product_id, $cat_id, $result['parent_id']);
+        }
+        if ($in_cat) {
+            return $in_cat;
         }
     }
     return $in_cat;

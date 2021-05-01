@@ -311,7 +311,7 @@ class QuestionHelper extends Helper
                         $remainingCharacters = substr($ret, \strlen(trim($this->mostRecentlyEnteredValue($fullChoice))));
                         $output->write($remainingCharacters);
                         $fullChoice .= $remainingCharacters;
-                        $i = self::strlen($fullChoice);
+                        $i = (false === $encoding = mb_detect_encoding($fullChoice, null, true)) ? \strlen($fullChoice) : mb_strlen($fullChoice, $encoding);
 
                         $matches = array_filter(
                             $autocomplete($ret),
@@ -411,7 +411,7 @@ class QuestionHelper extends Helper
                 $exe = $tmpExe;
             }
 
-            $sExec = shell_exec($exe);
+            $sExec = shell_exec('"'.$exe.'"');
             $value = $trimmable ? rtrim($sExec) : $sExec;
             $output->writeln('');
 

@@ -49,7 +49,7 @@ $products_filter_name_model = (isset($_GET['products_filter_name_model']) ? $_GE
           <?php
           if (isset($products_filter_name_model) && zen_not_null($products_filter_name_model)) {
             $products_filter_name_model = zen_db_input(zen_db_prepare_input($products_filter_name_model));
-            echo '<br/ >' . TEXT_INFO_SEARCH_DETAIL_FILTER . zen_db_prepare_input($products_filter_name_model);
+            echo '<br>' . TEXT_INFO_SEARCH_DETAIL_FILTER . zen_db_prepare_input($products_filter_name_model);
             ?>
             <br><a href="<?php echo zen_href_link(FILENAME_STATS_PRODUCTS_PURCHASED, '', 'NONSSL'); ?>" class="btn btn-default btn-xs"><?php echo IMAGE_RESET; ?></a>
           <?php } ?>

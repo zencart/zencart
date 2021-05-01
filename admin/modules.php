@@ -215,8 +215,8 @@ if (!empty($action)) {
                           }
                         }
                         $module_info['keys'] = $keys_extra;
-                        if (method_exists($module, 'verify')) { 
-                          $module_info['configuration_errors'] = $module->verify(); 
+                        if (method_exists($module, 'get_configuration_errors')) { 
+                          $module_info['configuration_errors'] = $module->get_configuration_errors(); 
                         }
 
                         $mInfo = new objectInfo($module_info);

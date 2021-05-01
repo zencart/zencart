@@ -1,9 +1,9 @@
 <?php
 /**
- * @copyright Copyright 2003-2020 Zen Cart Development Team
+ * @copyright Copyright 2003-2021 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2020 May 17 Modified in v1.5.7 $
+ * @version $Id:  Modified in v1.5.8 $
  */
 
 
@@ -152,7 +152,9 @@ function zen_cfg_pull_down_country_list_none($country_id, $key = '')
 function zen_cfg_pull_down_zone_list($zone_id, $key = '')
 {
     $name = (($key) ? 'configuration[' . $key . ']' : 'configuration_value');
-    return zen_draw_pull_down_menu($name, zen_get_country_zones(STORE_COUNTRY), $zone_id, 'class="form-control"');
+    $none = [['id' => 0, 'text' => TEXT_NONE]];
+    $zones = zen_get_country_zones(STORE_COUNTRY);
+    return zen_draw_pull_down_menu($name, array_merge($none, $zones), $zone_id, 'class="form-control"');
 }
 
 
@@ -328,7 +330,6 @@ function zen_get_system_information($privacy = false)
 
     $errnum = 0;
     $system = $host = $kernel = $output = '';
-    list($system, $host, $kernel) = array('', $_SERVER['SERVER_NAME'], php_uname());
     $uptime = (DISPLAY_SERVER_UPTIME == 'true') ? 'Unsupported' : 'Disabled/Unavailable';
 
     // check to see if "exec()" is disabled in PHP -- if not, get additional info via command line
@@ -340,6 +341,7 @@ function zen_get_system_information($privacy = false)
         }
     }
     if (!$exec_disabled) {
+        list($system, $host, $kernel) = array('', $_SERVER['SERVER_NAME'], php_uname());
         @exec('uname -a 2>&1', $output, $errnum);
         if ($errnum == 0 && count($output)) list($system, $host, $kernel) = preg_split('/[\s,]+/', $output[0], 5);
         $output = '';
