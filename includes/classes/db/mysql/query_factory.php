@@ -7,7 +7,7 @@
  * @copyright Portions Copyright 2003 osCommerce
  * @copyright Portions adapted from http://www.data-diggers.com/
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2021-03-22 $
+ * @version $Id: DrByte 2021-04-22 $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
@@ -716,5 +716,10 @@ class queryFactoryMeta {
     $rgx = preg_match('/^[a-z]*/', $type, $matches);
     $this->type = $matches[0];
     $this->max_length = preg_replace('/[a-z\(\)]/', '', $type);
+    if (empty($this->max_length)) {
+        if (strtoupper($type) === 'DATE') $this->max_length = 10;
+        if (strtoupper($type) === 'DATETIME') $this->max_length = 19; // ignores fractional which would be 26
+        if (strtoupper($type) === 'TIMESTAMP') $this->max_length = 19; // ignores fractional which would be 26
+     }
   }
 }
