@@ -487,8 +487,8 @@ if (!empty($action)) {
                     <td class="dataTableContent"><?php echo $special['products_model']; ?></td>
                     <td class="dataTableContent"><?php echo zen_clean_html($special['products_name']); ?></td>
                     <td class="dataTableContent text-right">
-                      <?php $oos_style = $specials->fields['products_quantity'] <= 0 ? ' style="color:red;font-weight:bold"' : ''; ?>
-                      <span<?php echo $oos_style; ?>><?php echo $special['products_quantity']; ?></span></td>
+                      <span<?php echo ($specials->fields['products_quantity'] <= 0 ? ' class="txt-red font-weight-bold"' : ''); ?>><?php echo $special['products_quantity']; ?></span>
+                    </td>
                     <td class="dataTableContent text-right"><?php echo zen_get_products_display_price($special['products_id']); ?></td>
                     <td class="dataTableContent text-center"><?php echo(($special['specials_date_available'] !== '0001-01-01' && $special['specials_date_available'] !== '') ? zen_date_short($special['specials_date_available']) : TEXT_NONE); ?></td>
                     <td class="dataTableContent text-center"><?php echo(($special['expires_date'] !== '0001-01-01' && $special['expires_date'] !== '') ? zen_date_short($special['expires_date']) : TEXT_NONE); ?></td>
@@ -532,10 +532,10 @@ if (!empty($action)) {
                         </div>
                       </a>
                       <?php if (isset($sInfo) && is_object($sInfo) && ($special['specials_id'] === $sInfo->specials_id)) { ?>
-                        <i class="fa fa-caret-right fa-2x fa-fw" style="color:navy; vertical-align: middle;"></i>
+                        <i class="fa fa-caret-right fa-2x fa-fw txt-navy align-middle"></i>
                       <?php } else { ?>
                         <a href="<?php echo zen_href_link(FILENAME_SPECIALS, zen_get_all_get_params(['sID']) . 'sID=' . $special['specials_id']); ?>" title="<?php echo IMAGE_ICON_INFO; ?>" role="button">
-                          <i class="fa fa-info-circle fa-2x fa-fw" style="color:#000; vertical-align: middle;"></i>
+                          <i class="fa fa-info-circle fa-2x fa-fw txt-black align-middle"></i>
                         </a>
                       <?php } ?>
                     </td>
