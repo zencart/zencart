@@ -206,7 +206,7 @@
     }
 
     function get_configuration_errors() {
-      if (!zen_check_downloads_shipping()) {
+      if (!zen_check_for_misconfigured_downloads()) {
          return TEXT_DOWNLOADABLE_PRODUCTS_MISCONFIGURED; 
       }
     }
