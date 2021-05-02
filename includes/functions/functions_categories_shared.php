@@ -51,9 +51,9 @@ function zen_get_path($current_category_id = '') {
 // TABLES: categories
 function zen_has_category_subcategories($category_id) {
   global $db;
-  $child_category_query = "select count(*) as count
-                           from " . TABLE_CATEGORIES . "
-                           where parent_id = " . (int)$category_id;
+  $child_category_query = "SELECT count(*) AS count
+                           FROM " . TABLE_CATEGORIES . "
+                           WHERE parent_id = " . (int)$category_id;
 
   $child_category = $db->Execute($child_category_query);
 
@@ -102,9 +102,9 @@ function zen_get_categories($categories_array = array(), $parent_id = '0', $inde
 // TABLES: categories
 function zen_get_parent_categories(&$categories, $categories_id) {
   global $db;
-  $parent_categories_query = "select parent_id
-                              from " . TABLE_CATEGORIES . "
-                              where categories_id = " . (int)$categories_id . " limit 1";
+  $parent_categories_query = "SELECT parent_id
+                              FROM " . TABLE_CATEGORIES . "
+                              WHERE categories_id = " . (int)$categories_id . " LIMIT 1";
 
   $parent_categories = $db->Execute($parent_categories_query);
 
@@ -124,9 +124,9 @@ function zen_get_product_path($products_id) {
   global $db;
   $cPath = '';
 
-  $category_query = "select p.products_id, p.master_categories_id
-                     from " . TABLE_PRODUCTS . " p
-                     where p.products_id = " . (int)$products_id . " limit 1";
+  $category_query = "SELECT p.products_id, p.master_categories_id
+                     FROM " . TABLE_PRODUCTS . " p
+                     WHERE p.products_id = " . (int)$products_id . " LIMIT 1";
 
 
   $category = $db->Execute($category_query);
@@ -192,16 +192,16 @@ function zen_draw_products_pull_down($name, $parameters = '', $exclude = '', $sh
                               FROM " . TABLE_PRODUCTS . " p
                               LEFT JOIN " . TABLE_PRODUCTS_TO_CATEGORIES . " ptc ON ptc.products_id = p.products_id, " .
                               TABLE_PRODUCTS_DESCRIPTION . " pd
-                              where p.products_id = pd.products_id
-                              and pd.language_id = " . (int)$_SESSION['languages_id'] . "
-                              and ptc.categories_id = " . (int)$current_category_id .
+                              WHERE p.products_id = pd.products_id
+                              AND pd.language_id = " . (int)$_SESSION['languages_id'] . "
+                              AND ptc.categories_id = " . (int)$current_category_id .
                               $order_by);
   } else {
       $products = $db->Execute("SELECT p.products_id, pd.products_name, p.products_sort_order, p.products_price, p.products_model
-                                from " . TABLE_PRODUCTS . " p, " . TABLE_PRODUCTS_DESCRIPTION . " pd
-                                where p.products_id = pd.products_id
-                                and pd.language_id = " . (int)$_SESSION['languages_id'] . "
-                                order by products_name");
+                                FROM " . TABLE_PRODUCTS . " p, " . TABLE_PRODUCTS_DESCRIPTION . " pd
+                                WHERE p.products_id = pd.products_id
+                                AND pd.language_id = " . (int)$_SESSION['languages_id'] . "
+                                ORDER BY products_name");
   }
 
   foreach ($products as $product) {
@@ -253,7 +253,7 @@ function zen_draw_products_pull_down_attributes($name, $parameters = '', $exclud
           // no selection made yet
           break;
       case ((int)$filter_by_option_name > 0) : // an Option Name was selected: show only products using attributes with this Option Name
-          $products = $db->Execute("SELECT distinct p.products_id, pd.products_name, p.products_price, pa.options_id" . $new_fields .
+          $products = $db->Execute("SELECT DISTINCT p.products_id, pd.products_name, p.products_price, pa.options_id" . $new_fields .
               " FROM " . TABLE_PRODUCTS . " p, " .
               TABLE_PRODUCTS_DESCRIPTION . " pd, " .
               TABLE_PRODUCTS_ATTRIBUTES . " pa " . " 
@@ -306,14 +306,14 @@ function zen_draw_products_pull_down_categories($name, $parameters = '', $exclud
 
   $select_string .= '>';
 
-  $categories = $db->Execute("select distinct c.categories_id, cd.categories_name " ."
-                              from " . TABLE_CATEGORIES . " c, " .
+  $categories = $db->Execute("SELECT DISTINCT c.categories_id, cd.categories_name " ."
+                              FROM " . TABLE_CATEGORIES . " c, " .
                                        TABLE_CATEGORIES_DESCRIPTION . " cd, " .
                                        TABLE_PRODUCTS_TO_CATEGORIES . " ptoc " ."
-                              where ptoc.categories_id = c.categories_id
-                              and c.categories_id = cd.categories_id
-                              and cd.language_id = " . (int)$_SESSION['languages_id'] . "
-                              order by categories_name");
+                              WHERE ptoc.categories_id = c.categories_id
+                              AND c.categories_id = cd.categories_id
+                              AND cd.language_id = " . (int)$_SESSION['languages_id'] . "
+                              ORDER BY categories_name");
 
   foreach ($categories as $category) {
     if (!in_array($category['categories_id'], $exclude)) {
@@ -415,11 +415,11 @@ function zen_get_categories_products_list($categories_id, $include_deactivated =
 
   $current_cPath = ($parent_category != '0' ? $parent_category . '_' : '') . $categories_id;
 
-  $sql = "select p.products_id
-          from " . TABLE_PRODUCTS . " p, " . TABLE_PRODUCTS_TO_CATEGORIES . " p2c
-          where p.products_id = p2c.products_id
-          and p2c.categories_id = " . (int)$childCatID .
-          ((IS_ADMIN_FLAG ? !$include_deactivated : $include_deactivated) ? " and p.products_status = 1" : "") .
+  $sql = "SELECT p.products_id
+          FROM " . TABLE_PRODUCTS . " p, " . TABLE_PRODUCTS_TO_CATEGORIES . " p2c
+          WHERE p.products_id = p2c.products_id
+          AND p2c.categories_id = " . (int)$childCatID .
+          ((IS_ADMIN_FLAG ? !$include_deactivated : $include_deactivated) ? " AND p.products_status = 1" : "") .
           $display_limit;
 
   $products = $db->Execute($sql);
@@ -432,8 +432,8 @@ function zen_get_categories_products_list($categories_id, $include_deactivated =
   }
 
   if ($include_child) {
-    $sql = "select categories_id from " . TABLE_CATEGORIES . "
-            where parent_id = '" . (int)$childCatID . "'";
+    $sql = "SELECT categories_id FROM " . TABLE_CATEGORIES . "
+            WHERE parent_id = " . (int)$childCatID;
 
     $childs = $db->Execute($sql);
     if ($childs->RecordCount() > 0 ) {
@@ -456,19 +456,19 @@ function zen_generate_category_path($id, $from = 'category', $categories_array =
   if (!is_array($categories_array)) $categories_array = array();
 
   if ($from == 'product') {
-    $categories = $db->Execute("select categories_id
-                                from " . TABLE_PRODUCTS_TO_CATEGORIES . "
-                                where products_id = " . (int)$id);
+    $categories = $db->Execute("SELECT categories_id
+                                FROM " . TABLE_PRODUCTS_TO_CATEGORIES . "
+                                WHERE products_id = " . (int)$id);
 
     foreach ($categories as $cat) {
       if ($cat['categories_id'] == '0') {
         $categories_array[$index][] = array('id' => '0', 'text' => TEXT_TOP);
       } else {
-        $category = $db->Execute("select cd.categories_name, c.parent_id
-                                  from " . TABLE_CATEGORIES . " c, " . TABLE_CATEGORIES_DESCRIPTION . " cd
-                                  where c.categories_id = " . (int)$cat['categories_id'] . "
-                                  and c.categories_id = cd.categories_id
-                                  and cd.language_id = " . (int)$_SESSION['languages_id']);
+        $category = $db->Execute("SELECT cd.categories_name, c.parent_id
+                                  FROM " . TABLE_CATEGORIES . " c, " . TABLE_CATEGORIES_DESCRIPTION . " cd
+                                  WHERE c.categories_id = " . (int)$cat['categories_id'] . "
+                                  AND c.categories_id = cd.categories_id
+                                  AND cd.language_id = " . (int)$_SESSION['languages_id']);
 
         $categories_array[$index][] = array('id' => $cat['categories_id'], 'text' => $category->fields['categories_name']);
         if ( (zen_not_null($cat['parent_id'])) && ($cat['parent_id'] != '0') ) $categories_array = zen_generate_category_path($cat['parent_id'], 'category', $categories_array, $index);
@@ -477,11 +477,11 @@ function zen_generate_category_path($id, $from = 'category', $categories_array =
       $index++;
     }
   } elseif ($from == 'category') {
-    $category = $db->Execute("select cd.categories_name, c.parent_id
-                              from " . TABLE_CATEGORIES . " c, " . TABLE_CATEGORIES_DESCRIPTION . " cd
-                              where c.categories_id = " . (int)$id . "
-                              and c.categories_id = cd.categories_id
-                              and cd.language_id = " . (int)$_SESSION['languages_id']);
+    $category = $db->Execute("SELECT cd.categories_name, c.parent_id
+                              FROM " . TABLE_CATEGORIES . " c, " . TABLE_CATEGORIES_DESCRIPTION . " cd
+                              WHERE c.categories_id = " . (int)$id . "
+                              AND c.categories_id = cd.categories_id
+                              AND cd.language_id = " . (int)$_SESSION['languages_id']);
     if (!IS_ADMIN_FLAG || !$category->EOF) {
       $categories_array[$index][] = array('id' => $id, 'text' => $category->fields['categories_name']);
       if ( (zen_not_null($category->fields['parent_id'])) && ($category->fields['parent_id'] != '0') ) $categories_array = zen_generate_category_path($category->fields['parent_id'], 'category', $categories_array, $index);
