@@ -11,37 +11,38 @@
 /**
  * Generate a cPath string from current category conditions
  */
-function zen_get_path($current_category_id = '') {
-  global $cPath_array, $db;
+function zen_get_path($current_category_id = '')
+{
+    global $cPath_array, $db;
 
-  if ($current_category_id === '' || empty($cPath_array)) {
-    return 'cPath=' . (!empty($cPath_array) ? implode('_', $cPath_array) : $current_category_id);
-  }
+    if ($current_category_id === '' || empty($cPath_array)) {
+        return 'cPath=' . (!empty($cPath_array) ? implode('_', $cPath_array) : $current_category_id);
+    }
 
-  // make copy so we can manipulate it later
-  $cPath_categories = $cPath_array;
+    // make copy so we can manipulate it later
+    $cPath_categories = $cPath_array;
 
-  $last_category_query = "SELECT parent_id
-                            FROM " . TABLE_CATEGORIES . "
-                            WHERE categories_id = " . (int)$cPath_categories[count($cPath_categories)-1] . " LIMIT 1";
-  $last_category = $db->Execute($last_category_query);
+    $last_category_query = "SELECT parent_id
+                              FROM " . TABLE_CATEGORIES . "
+                              WHERE categories_id = " . (int)$cPath_categories[count($cPath_categories)-1] . " LIMIT 1";
+    $last_category = $db->Execute($last_category_query);
 
-  $current_category_query = "SELECT parent_id
-                               FROM " . TABLE_CATEGORIES . "
-                               WHERE categories_id = " . (int)$current_category_id . " LIMIT 1";
-  $current_category = $db->Execute($current_category_query);
+    $current_category_query = "SELECT parent_id
+                                 FROM " . TABLE_CATEGORIES . "
+                                 WHERE categories_id = " . (int)$current_category_id . " LIMIT 1";
+    $current_category = $db->Execute($current_category_query);
 
-  // Eject last category from array if not found or same as current
-  if (!isset($last_category->fields['parent_id'], $current_category->fields['parent_id'])) {
-    array_pop($cPath_categories);
-  } elseif ($last_category->fields['parent_id'] == $current_category->fields['parent_id']) {
-    array_pop($cPath_categories);
-  }
+    // Eject last category from array if not found or same as current
+    if (!isset($last_category->fields['parent_id'], $current_category->fields['parent_id'])) {
+        array_pop($cPath_categories);
+    } elseif ($last_category->fields['parent_id'] == $current_category->fields['parent_id']) {
+        array_pop($cPath_categories);
+    }
 
-  $cPath_new = implode('_', $cPath_categories) . '_' . $current_category_id;
+    $cPath_new = implode('_', $cPath_categories) . '_' . $current_category_id;
 
-  unset($cPath_categories);
-  return 'cPath=' . trim($cPath_new, '_');
+    unset($cPath_categories);
+    return 'cPath=' . trim($cPath_new, '_');
 }
 
 
@@ -49,353 +50,361 @@ function zen_get_path($current_category_id = '') {
 ////
 // Return true if the category has subcategories
 // TABLES: categories
-function zen_has_category_subcategories($category_id) {
-  global $db;
-  $child_category_query = "SELECT count(*) AS count
-                           FROM " . TABLE_CATEGORIES . "
-                           WHERE parent_id = " . (int)$category_id;
+function zen_has_category_subcategories($category_id)
+{
+    global $db;
+    $child_category_query = "SELECT count(*) AS count
+                             FROM " . TABLE_CATEGORIES . "
+                             WHERE parent_id = " . (int)$category_id;
 
-  $child_category = $db->Execute($child_category_query);
+    $child_category = $db->Execute($child_category_query);
 
-  return ($child_category->fields['count'] > 0);
+    return ($child_category->fields['count'] > 0);
 }
 
 ////
 function zen_get_categories($categories_array = array(), $parent_id = '0', $indent = '', $status_setting = '')
 {
-  global $db;
+    global $db;
 
-  if (!is_array($categories_array)) {
-    $categories_array = array();
-  }
-
-  // show based on status
-  $zc_status = '';
-  if ($status_setting != '') {
-    $zc_status = " c.categories_status=" . (int)$status_setting . " AND ";
-  }
-  $categories_query = "SELECT c.categories_id, cd.categories_name, c.categories_status, c.sort_order
-                         FROM " . TABLE_CATEGORIES . " c, " . TABLE_CATEGORIES_DESCRIPTION . " cd
-                         WHERE " . $zc_status . "
-                         parent_id = " . (int)$parent_id . "
-                         AND c.categories_id = cd.categories_id
-                         AND cd.language_id = " . (int)$_SESSION['languages_id'] . "
-                         ORDER BY c.sort_order, cd.categories_name";
-  $results = $db->Execute($categories_query);
-
-  foreach ($results as $result) {
-    $categories_array[] = [
-        'id' => $result['categories_id'],
-        'text' => $indent . $result['categories_name'],
-    ];
-    if ($result['categories_id'] != $parent_id) {
-      $status_setting = IS_ADMIN_FLAG ? $status_setting : '1';
-      $categories_array = zen_get_categories($categories_array, $result['categories_id'], $indent . '&nbsp;&nbsp;', $status_setting);
+    if (!is_array($categories_array)) {
+        $categories_array = array();
     }
-  }
-  return $categories_array;
+
+    // show based on status
+    $zc_status = '';
+    if ($status_setting != '') {
+        $zc_status = " c.categories_status=" . (int)$status_setting . " AND ";
+    }
+    $categories_query = "SELECT c.categories_id, cd.categories_name, c.categories_status, c.sort_order
+                           FROM " . TABLE_CATEGORIES . " c, " . TABLE_CATEGORIES_DESCRIPTION . " cd
+                           WHERE " . $zc_status . "
+                           parent_id = " . (int)$parent_id . "
+                           AND c.categories_id = cd.categories_id
+                           AND cd.language_id = " . (int)$_SESSION['languages_id'] . "
+                           ORDER BY c.sort_order, cd.categories_name";
+    $results = $db->Execute($categories_query);
+
+    foreach ($results as $result) {
+        $categories_array[] = [
+            'id' => $result['categories_id'],
+            'text' => $indent . $result['categories_name'],
+        ];
+        if ($result['categories_id'] != $parent_id) {
+            $status_setting = IS_ADMIN_FLAG ? $status_setting : '1';
+            $categories_array = zen_get_categories($categories_array, $result['categories_id'], $indent . '&nbsp;&nbsp;', $status_setting);
+        }
+    }
+    return $categories_array;
 }
 
 
 ////
 // Recursively go through the categories and retreive all parent categories IDs
 // TABLES: categories
-function zen_get_parent_categories(&$categories, $categories_id) {
-  global $db;
-  $parent_categories_query = "SELECT parent_id
-                              FROM " . TABLE_CATEGORIES . "
-                              WHERE categories_id = " . (int)$categories_id . " LIMIT 1";
+function zen_get_parent_categories(&$categories, $categories_id)
+{
+    global $db;
+    $parent_categories_query = "SELECT parent_id
+                                FROM " . TABLE_CATEGORIES . "
+                                WHERE categories_id = " . (int)$categories_id . " LIMIT 1";
 
-  $parent_categories = $db->Execute($parent_categories_query);
+    $parent_categories = $db->Execute($parent_categories_query);
 
-  foreach ($parent_categories as $parent) {
-    if ($parent['parent_id'] == 0) return true;
-    $categories[count($categories)] = $parent['parent_id'];
-    if ($parent['parent_id'] != $categories_id) {
-      zen_get_parent_categories($categories, $parent['parent_id']);
+    foreach ($parent_categories as $parent) {
+        if ($parent['parent_id'] == 0) return true;
+        $categories[count($categories)] = $parent['parent_id'];
+        if ($parent['parent_id'] != $categories_id) {
+            zen_get_parent_categories($categories, $parent['parent_id']);
+        }
     }
-  }
 }
 
 ////
 // Construct a category path to the product
 // TABLES: products_to_categories
-function zen_get_product_path($products_id) {
-  global $db;
-  $cPath = '';
+function zen_get_product_path($products_id)
+{
+    global $db;
+    $cPath = '';
 
-  $category_query = "SELECT p.products_id, p.master_categories_id
-                     FROM " . TABLE_PRODUCTS . " p
-                     WHERE p.products_id = " . (int)$products_id . " LIMIT 1";
+    $category_query = "SELECT p.products_id, p.master_categories_id
+                       FROM " . TABLE_PRODUCTS . " p
+                       WHERE p.products_id = " . (int)$products_id . " LIMIT 1";
 
 
-  $category = $db->Execute($category_query);
+    $category = $db->Execute($category_query);
 
-  if ($category->RecordCount() == 0) {
+    if ($category->RecordCount() == 0) {
+        return $cPath;
+    }
+
+    $categories = array();
+    zen_get_parent_categories($categories, $category->fields['master_categories_id']);
+
+    $categories = array_reverse($categories);
+
+    $cPath = implode('_', $categories);
+
+    if (zen_not_null($cPath)) $cPath .= '_';
+    $cPath .= $category->fields['master_categories_id'];
+
     return $cPath;
-  }
-
-  $categories = array();
-  zen_get_parent_categories($categories, $category->fields['master_categories_id']);
-
-  $categories = array_reverse($categories);
-
-  $cPath = implode('_', $categories);
-
-  if (zen_not_null($cPath)) $cPath .= '_';
-  $cPath .= $category->fields['master_categories_id'];
-
-  return $cPath;
 }
 
 ////
 // Parse and secure the cPath parameter values
-function zen_parse_category_path($cPath) {
+function zen_parse_category_path($cPath)
+{
 // make sure the category IDs are integers
-  $cPath_array = array_map('zen_string_to_int', explode('_', $cPath));
+    $cPath_array = array_map('zen_string_to_int', explode('_', $cPath));
 
 // make sure no duplicate category IDs exist which could lock the server in a loop
-  $tmp_array = array();
-  foreach ($cPath_array as $i => $val) {
-    if (!in_array($cPath_array[$i], $tmp_array)) {
-      $tmp_array[] = $cPath_array[$i];
+    $tmp_array = array();
+    foreach ($cPath_array as $i => $val) {
+        if (!in_array($cPath_array[$i], $tmp_array)) {
+            $tmp_array[] = $cPath_array[$i];
+        }
     }
-  }
 
-  return $tmp_array;
+    return $tmp_array;
 }
 
 
 ////
 // products with name, model and price pulldown
-function zen_draw_products_pull_down($name, $parameters = '', $exclude = '', $show_id = false, $set_selected = false, $show_model = false, $show_current_category = false) {
-  global $currencies, $db, $current_category_id, $prev_next_order;
+function zen_draw_products_pull_down($name, $parameters = '', $exclude = '', $show_id = false, $set_selected = false, $show_model = false, $show_current_category = false)
+{
+    global $currencies, $db, $current_category_id, $prev_next_order;
 
-  // $prev_next_order set by products_previous_next.php, if category navigation in use
-  $order_by = $db->prepare_input(!empty($prev_next_order) ? $prev_next_order : ' ORDER BY products_name');
+    // $prev_next_order set by products_previous_next.php, if category navigation in use
+    $order_by = $db->prepare_input(!empty($prev_next_order) ? $prev_next_order : ' ORDER BY products_name');
 
-  if ($exclude == '') {
-    $exclude = array();
-  }
+    if ($exclude == '') {
+        $exclude = array();
+    }
 
-  $select_string = '<select name="' . $name . '"';
+    $select_string = '<select name="' . $name . '"';
 
-  if ($parameters) {
-    $select_string .= ' ' . $parameters;
-  }
+    if ($parameters) {
+        $select_string .= ' ' . $parameters;
+    }
 
-  $select_string .= '>';
+    $select_string .= '>';
 
-  if (IS_ADMIN_FLAG && $show_current_category) {
-// only show $current_categories_id
-      $products = $db->Execute("SELECT p.products_id, pd.products_name, p.products_sort_order, p.products_price, p.products_model, ptc.categories_id
-                              FROM " . TABLE_PRODUCTS . " p
-                              LEFT JOIN " . TABLE_PRODUCTS_TO_CATEGORIES . " ptc ON ptc.products_id = p.products_id, " .
-                              TABLE_PRODUCTS_DESCRIPTION . " pd
-                              WHERE p.products_id = pd.products_id
-                              AND pd.language_id = " . (int)$_SESSION['languages_id'] . "
-                              AND ptc.categories_id = " . (int)$current_category_id .
-                              $order_by);
-  } else {
-      $products = $db->Execute("SELECT p.products_id, pd.products_name, p.products_sort_order, p.products_price, p.products_model
-                                FROM " . TABLE_PRODUCTS . " p, " . TABLE_PRODUCTS_DESCRIPTION . " pd
+    if (IS_ADMIN_FLAG && $show_current_category) {
+  // only show $current_categories_id
+        $products = $db->Execute("SELECT p.products_id, pd.products_name, p.products_sort_order, p.products_price, p.products_model, ptc.categories_id
+                                FROM " . TABLE_PRODUCTS . " p
+                                LEFT JOIN " . TABLE_PRODUCTS_TO_CATEGORIES . " ptc ON ptc.products_id = p.products_id, " .
+                                TABLE_PRODUCTS_DESCRIPTION . " pd
                                 WHERE p.products_id = pd.products_id
                                 AND pd.language_id = " . (int)$_SESSION['languages_id'] . "
-                                ORDER BY products_name");
-  }
-
-  foreach ($products as $product) {
-    if (!in_array($product['products_id'], $exclude)) {
-      $display_price = zen_get_products_base_price($product['products_id']);
-      $select_string .= '<option value="' . $product['products_id'] . '"';
-      if (IS_ADMIN_FLAG && ($set_selected == $product['products_id'])) $select_string .= ' SELECTED';
-      $select_string .= '>' . $product['products_name'] . ' (' . $currencies->format($display_price) . ')' . (IS_ADMIN_FLAG ? ($show_model ? ' [' . $product['products_model'] . '] ' : '') . ($show_id ? ' - ID# ' . $product['products_id'] : '') : '') . '</option>';
+                                AND ptc.categories_id = " . (int)$current_category_id .
+                                $order_by);
+    } else {
+        $products = $db->Execute("SELECT p.products_id, pd.products_name, p.products_sort_order, p.products_price, p.products_model
+                                  FROM " . TABLE_PRODUCTS . " p, " . TABLE_PRODUCTS_DESCRIPTION . " pd
+                                  WHERE p.products_id = pd.products_id
+                                  AND pd.language_id = " . (int)$_SESSION['languages_id'] . "
+                                  ORDER BY products_name");
     }
-  }
 
-  $select_string .= '</select>';
+    foreach ($products as $product) {
+        if (!in_array($product['products_id'], $exclude)) {
+            $display_price = zen_get_products_base_price($product['products_id']);
+            $select_string .= '<option value="' . $product['products_id'] . '"';
+            if (IS_ADMIN_FLAG && ($set_selected == $product['products_id'])) $select_string .= ' SELECTED';
+            $select_string .= '>' . $product['products_name'] . ' (' . $currencies->format($display_price) . ')' . (IS_ADMIN_FLAG ? ($show_model ? ' [' . $product['products_model'] . '] ' : '') . ($show_id ? ' - ID# ' . $product['products_id'] : '') : '') . '</option>';
+        }
+    }
 
-  return $select_string;
+    $select_string .= '</select>';
+
+    return $select_string;
 }
 
 ////
 // product pulldown with attributes
-function zen_draw_products_pull_down_attributes($name, $parameters = '', $exclude = '', $order_by = 'name', $filter_by_option_name = '') {
-  global $db, $currencies;
+function zen_draw_products_pull_down_attributes($name, $parameters = '', $exclude = '', $order_by = 'name', $filter_by_option_name = '')
+{
+    global $db, $currencies;
 
-  if ($exclude == '') {
-      $exclude = [];
-  }
+    if ($exclude == '') {
+        $exclude = [];
+    }
 
-  $select_string = '<select name="' . $name . '"';
+    $select_string = '<select name="' . $name . '"';
 
-  if ($parameters) {
-      $select_string .= ' ' . $parameters;
-  }
+    if ($parameters) {
+        $select_string .= ' ' . $parameters;
+    }
 
-  $select_string .= '>';
+    $select_string .= '>';
 
-  $new_fields = ', p.products_model';
+    $new_fields = ', p.products_model';
 
-  switch ($order_by) {
-      case ('model'):
-          $order_by = 'p.products_model';
-          $output_string = '<option value="%1$u"> %3$s - %2$s (%4$s)</option>'; // format string with model first
-          break;
-      default:
-          $order_by = 'pd.products_name';
-          $output_string = '<option value="%1$u">%2$s (%3$s) (%4$s)</option>';// format string with name first
-          break;
-  }
+    switch ($order_by) {
+        case ('model'):
+            $order_by = 'p.products_model';
+            $output_string = '<option value="%1$u"> %3$s - %2$s (%4$s)</option>'; // format string with model first
+            break;
+        default:
+            $order_by = 'pd.products_name';
+            $output_string = '<option value="%1$u">%2$s (%3$s) (%4$s)</option>';// format string with name first
+            break;
+    }
 
-  switch (true) {
-      case ($filter_by_option_name === -1): // no selection made: do not list any products
-          // no selection made yet
-          break;
-      case ((int)$filter_by_option_name > 0) : // an Option Name was selected: show only products using attributes with this Option Name
-          $products = $db->Execute("SELECT DISTINCT p.products_id, pd.products_name, p.products_price, pa.options_id" . $new_fields .
-              " FROM " . TABLE_PRODUCTS . " p, " .
-              TABLE_PRODUCTS_DESCRIPTION . " pd, " .
-              TABLE_PRODUCTS_ATTRIBUTES . " pa " . " 
-          WHERE p.products_id= pa.products_id 
-          AND p.products_id = pd.products_id 
-          AND pd.language_id = " . (int)$_SESSION['languages_id'] . " 
-          AND pa.options_id = " . (int)$filter_by_option_name . " 
-          ORDER BY " . $order_by);
-          break;
-      default: //legacy: show all products with attributes
-          $products = $db->Execute("SELECT distinct p.products_id, pd.products_name, p.products_price" . $new_fields .
-              " FROM " . TABLE_PRODUCTS . " p, " .
-              TABLE_PRODUCTS_DESCRIPTION . " pd, " .
-              TABLE_PRODUCTS_ATTRIBUTES . " pa " . " 
-          WHERE p.products_id = pa.products_id 
-          AND p.products_id = pd.products_id 
-          AND pd.language_id = " . (int)$_SESSION['languages_id'] . "    
-          ORDER BY " . $order_by);
-          break;
-  }
+    switch (true) {
+        case ($filter_by_option_name === -1): // no selection made: do not list any products
+            // no selection made yet
+            break;
+        case ((int)$filter_by_option_name > 0) : // an Option Name was selected: show only products using attributes with this Option Name
+            $products = $db->Execute("SELECT DISTINCT p.products_id, pd.products_name, p.products_price, pa.options_id" . $new_fields .
+                " FROM " . TABLE_PRODUCTS . " p, " .
+                TABLE_PRODUCTS_DESCRIPTION . " pd, " .
+                TABLE_PRODUCTS_ATTRIBUTES . " pa " . " 
+            WHERE p.products_id= pa.products_id 
+            AND p.products_id = pd.products_id 
+            AND pd.language_id = " . (int)$_SESSION['languages_id'] . " 
+            AND pa.options_id = " . (int)$filter_by_option_name . " 
+            ORDER BY " . $order_by);
+            break;
+        default: //legacy: show all products with attributes
+            $products = $db->Execute("SELECT distinct p.products_id, pd.products_name, p.products_price" . $new_fields .
+                " FROM " . TABLE_PRODUCTS . " p, " .
+                TABLE_PRODUCTS_DESCRIPTION . " pd, " .
+                TABLE_PRODUCTS_ATTRIBUTES . " pa " . " 
+            WHERE p.products_id = pa.products_id 
+            AND p.products_id = pd.products_id 
+            AND pd.language_id = " . (int)$_SESSION['languages_id'] . "    
+            ORDER BY " . $order_by);
+            break;
+    }
 
-  if (isset($products) && is_object($products)) {
-      foreach ($products as $product) {
-          if (!in_array($product['products_id'], $exclude, false)) {
-              $display_price = zen_get_products_base_price($product['products_id']);
-              $select_string .= sprintf($output_string, $product['products_id'], $product['products_name'], $product['products_model'], $currencies->format($display_price));
-          }
-      }
-  }
-  $select_string .= '</select>';
+    if (isset($products) && is_object($products)) {
+        foreach ($products as $product) {
+            if (!in_array($product['products_id'], $exclude, false)) {
+                $display_price = zen_get_products_base_price($product['products_id']);
+                $select_string .= sprintf($output_string, $product['products_id'], $product['products_name'], $product['products_model'], $currencies->format($display_price));
+            }
+        }
+    }
+    $select_string .= '</select>';
 
-  return $select_string;
+    return $select_string;
 }
 
 
 ////
 // categories pulldown with products
-function zen_draw_products_pull_down_categories($name, $parameters = '', $exclude = '', $show_id = false, $show_parent = false) {
-  global $db, $currencies;
+function zen_draw_products_pull_down_categories($name, $parameters = '', $exclude = '', $show_id = false, $show_parent = false)
+{
+    global $db, $currencies;
 
-  if ($exclude == '') {
-    $exclude = array();
-  }
-
-  $select_string = '<select name="' . $name . '"';
-
-  if ($parameters) {
-    $select_string .= ' ' . $parameters;
-  }
-
-  $select_string .= '>';
-
-  $categories = $db->Execute("SELECT DISTINCT c.categories_id, cd.categories_name " ."
-                              FROM " . TABLE_CATEGORIES . " c, " .
-                                       TABLE_CATEGORIES_DESCRIPTION . " cd, " .
-                                       TABLE_PRODUCTS_TO_CATEGORIES . " ptoc " ."
-                              WHERE ptoc.categories_id = c.categories_id
-                              AND c.categories_id = cd.categories_id
-                              AND cd.language_id = " . (int)$_SESSION['languages_id'] . "
-                              ORDER BY categories_name");
-
-  foreach ($categories as $category) {
-    if (!in_array($category['categories_id'], $exclude)) {
-      $parent = '';
-      if (IS_ADMIN_FLAG && $show_parent == true) {
-        $parent = zen_get_products_master_categories_name($category['categories_id']);
-        if ($parent != '') {
-          $parent = ' : in ' . $parent;
-        }
-      }
-      $select_string .= '<option value="' . $category['categories_id'] . '">' . $category['categories_name'] . $parent . (IS_ADMIN_FLAG && $show_id ? ' - ID#' . $category['categories_id'] : '') . '</option>';
+    if ($exclude == '') {
+        $exclude = array();
     }
-  }
 
-  $select_string .= '</select>';
+    $select_string = '<select name="' . $name . '"';
 
-  return $select_string;
+    if ($parameters) {
+        $select_string .= ' ' . $parameters;
+    }
+
+    $select_string .= '>';
+
+    $categories = $db->Execute("SELECT DISTINCT c.categories_id, cd.categories_name " ."
+                                FROM " . TABLE_CATEGORIES . " c, " .
+                                         TABLE_CATEGORIES_DESCRIPTION . " cd, " .
+                                         TABLE_PRODUCTS_TO_CATEGORIES . " ptoc " ."
+                                WHERE ptoc.categories_id = c.categories_id
+                                AND c.categories_id = cd.categories_id
+                                AND cd.language_id = " . (int)$_SESSION['languages_id'] . "
+                                ORDER BY categories_name");
+
+    foreach ($categories as $category) {
+        if (!in_array($category['categories_id'], $exclude)) {
+            $parent = '';
+            if (IS_ADMIN_FLAG && $show_parent == true) {
+                $parent = zen_get_products_master_categories_name($category['categories_id']);
+                if ($parent != '') {
+                    $parent = ' : in ' . $parent;
+                }
+            }
+            $select_string .= '<option value="' . $category['categories_id'] . '">' . $category['categories_name'] . $parent . (IS_ADMIN_FLAG && $show_id ? ' - ID#' . $category['categories_id'] : '') . '</option>';
+        }
+    }
+
+    $select_string .= '</select>';
+
+    return $select_string;
 }
 
 ////
 // categories pulldown with products with attributes
-function zen_draw_products_pull_down_categories_attributes($name, $parameters = '', $exclude = '', $show_full_path = false, $filter_by_option_name = null) {
-  global $db, $currencies;
+function zen_draw_products_pull_down_categories_attributes($name, $parameters = '', $exclude = '', $show_full_path = false, $filter_by_option_name = null)
+{
+    global $db, $currencies;
 
-  if ($exclude == '') {
-      $exclude = [];
-  }
+    if ($exclude == '') {
+        $exclude = [];
+    }
 
-  $select_string = '<select name="' . $name . '"';
+    $select_string = '<select name="' . $name . '"';
 
-  if ($parameters) {
-      $select_string .= ' ' . $parameters;
-  }
+    if ($parameters) {
+        $select_string .= ' ' . $parameters;
+    }
 
-  $select_string .= '>';
+    $select_string .= '>';
 
-  switch (true) {
-      case (IS_ADMIN_FLAG && $filter_by_option_name === ''): // no selection made: do not list any categories
-          // no selection made yet
-          break;
-      case (IS_ADMIN_FLAG && $filter_by_option_name > 0) : // an Option Name was selected: show only categories with products using attributes with this Option Name
-          $categories = $db->Execute("SELECT DISTINCT c.categories_id, cd.categories_name " .
-              " FROM " . TABLE_CATEGORIES . " c, " .
-              TABLE_CATEGORIES_DESCRIPTION . " cd, " .
-              TABLE_PRODUCTS_TO_CATEGORIES . " ptoc, " .
-              TABLE_PRODUCTS_ATTRIBUTES . " pa " . " 
-              WHERE pa.products_id= ptoc.products_id 
-              AND ptoc.categories_id= c.categories_id 
-              AND c.categories_id = cd.categories_id 
-              AND cd.language_id = " . (int)$_SESSION['languages_id'] . " 
-              AND pa.options_id =" . (int)$filter_by_option_name . " 
-              ORDER BY categories_name");
-          break;
-      default: //legacy: show all categories with products with attributes
-          $categories = $db->Execute("SELECT DISTINCT c.categories_id, cd.categories_name " .
-              " FROM " . TABLE_CATEGORIES . " c, " .
-              TABLE_CATEGORIES_DESCRIPTION . " cd, " .
-              TABLE_PRODUCTS_TO_CATEGORIES . " ptoc, " .
-              TABLE_PRODUCTS_ATTRIBUTES . " pa " . " 
-              WHERE pa.products_id= ptoc.products_id 
-              AND ptoc.categories_id= c.categories_id 
-              AND c.categories_id = cd.categories_id 
-              AND cd.language_id = " . (int)$_SESSION['languages_id'] . " 
-              ORDER BY categories_name");
-          break;
-  }
-  if (isset($categories) && is_object($categories)) {
-      foreach ($categories as $category) {
-          if (!in_array($category['categories_id'], $exclude, false)) {
-              $select_string .= '<option value="' . $category['categories_id'] . '">';
-              if (IS_ADMIN_FLAG && $show_full_path) {
-                  $select_string .= zen_output_generated_category_path($category['categories_id']);
-              } else {
-                  $select_string .= $category['categories_name'];
-              }
-              $select_string .= '</option>';
-          }
-      }
-  }
-  $select_string .= '</select>';
+    switch (true) {
+        case (IS_ADMIN_FLAG && $filter_by_option_name === ''): // no selection made: do not list any categories
+            // no selection made yet
+            break;
+        case (IS_ADMIN_FLAG && $filter_by_option_name > 0) : // an Option Name was selected: show only categories with products using attributes with this Option Name
+            $categories = $db->Execute("SELECT DISTINCT c.categories_id, cd.categories_name " .
+                " FROM " . TABLE_CATEGORIES . " c, " .
+                TABLE_CATEGORIES_DESCRIPTION . " cd, " .
+                TABLE_PRODUCTS_TO_CATEGORIES . " ptoc, " .
+                TABLE_PRODUCTS_ATTRIBUTES . " pa " . " 
+                WHERE pa.products_id= ptoc.products_id 
+                AND ptoc.categories_id= c.categories_id 
+                AND c.categories_id = cd.categories_id 
+                AND cd.language_id = " . (int)$_SESSION['languages_id'] . " 
+                AND pa.options_id =" . (int)$filter_by_option_name . " 
+                ORDER BY categories_name");
+            break;
+        default: //legacy: show all categories with products with attributes
+            $categories = $db->Execute("SELECT DISTINCT c.categories_id, cd.categories_name " .
+                " FROM " . TABLE_CATEGORIES . " c, " .
+                TABLE_CATEGORIES_DESCRIPTION . " cd, " .
+                TABLE_PRODUCTS_TO_CATEGORIES . " ptoc, " .
+                TABLE_PRODUCTS_ATTRIBUTES . " pa " . " 
+                WHERE pa.products_id= ptoc.products_id 
+                AND ptoc.categories_id= c.categories_id 
+                AND c.categories_id = cd.categories_id 
+                AND cd.language_id = " . (int)$_SESSION['languages_id'] . " 
+                ORDER BY categories_name");
+            break;
+    }
+    if (isset($categories) && is_object($categories)) {
+        foreach ($categories as $category) {
+            if (!in_array($category['categories_id'], $exclude, false)) {
+                $select_string .= '<option value="' . $category['categories_id'] . '">';
+                if (IS_ADMIN_FLAG && $show_full_path) {
+                    $select_string .= zen_output_generated_category_path($category['categories_id']);
+                } else {
+                    $select_string .= $category['categories_name'];
+                }
+                $select_string .= '</option>';
+            }
+        }
+    }
+    $select_string .= '</select>';
 
-  return $select_string;
+    return $select_string;
 }
 
 ////
@@ -403,153 +412,159 @@ function zen_draw_products_pull_down_categories_attributes($name, $parameters = 
 // use as:
 // $my_products_id_list = array();
 // $my_products_id_list = zen_get_categories_products_list($categories_id)
-function zen_get_categories_products_list($categories_id, $include_deactivated = false, $include_child = true, $parent_category = '0', $display_limit = '') {
-  global $db;
-  global $categories_products_id_list;
+function zen_get_categories_products_list($categories_id, $include_deactivated = false, $include_child = true, $parent_category = '0', $display_limit = '')
+{
+    global $db;
+    global $categories_products_id_list;
 
-  if (!isset($categories_products_id_list) || !is_array($categories_products_id_list)) {
-    $categories_products_id_list = array();
-  }
-
-  $childCatID = str_replace('_', '', substr($categories_id, strrpos($categories_id, '_')));
-
-  $current_cPath = ($parent_category != '0' ? $parent_category . '_' : '') . $categories_id;
-
-  $sql = "SELECT p.products_id
-          FROM " . TABLE_PRODUCTS . " p, " . TABLE_PRODUCTS_TO_CATEGORIES . " p2c
-          WHERE p.products_id = p2c.products_id
-          AND p2c.categories_id = " . (int)$childCatID .
-          ((IS_ADMIN_FLAG ? !$include_deactivated : $include_deactivated) ? " AND p.products_status = 1" : "") .
-          $display_limit;
-
-  $products = $db->Execute($sql);
-  foreach ($products as $product) {
-    if (IS_ADMIN_FLAG) {  
-      $categories_products_id_list[] = $product['products_id'];
-    } else {
-      $categories_products_id_list[$product['products_id']] = $current_cPath;
+    if (!isset($categories_products_id_list) || !is_array($categories_products_id_list)) {
+       $categories_products_id_list = array();
     }
-  }
 
-  if ($include_child) {
-    $sql = "SELECT categories_id FROM " . TABLE_CATEGORIES . "
-            WHERE parent_id = " . (int)$childCatID;
+    $childCatID = str_replace('_', '', substr($categories_id, strrpos($categories_id, '_')));
 
-    $childs = $db->Execute($sql);
-    if ($childs->RecordCount() > 0 ) {
-      if (IS_ADMIN_FLAG) {
-        $current_cPath = '0';
-        $include_child = true;
-      }
-      foreach ($childs as $child) {
-        zen_get_categories_products_list($child['categories_id'], $include_deactivated, $include_child, $current_cPath, $display_limit);
-      }
+    $current_cPath = ($parent_category != '0' ? $parent_category . '_' : '') . $categories_id;
+
+    $sql = "SELECT p.products_id
+            FROM " . TABLE_PRODUCTS . " p, " . TABLE_PRODUCTS_TO_CATEGORIES . " p2c
+            WHERE p.products_id = p2c.products_id
+            AND p2c.categories_id = " . (int)$childCatID .
+            ((IS_ADMIN_FLAG ? !$include_deactivated : $include_deactivated) ? " AND p.products_status = 1" : "") .
+            $display_limit;
+
+    $products = $db->Execute($sql);
+    foreach ($products as $product) {
+        if (IS_ADMIN_FLAG) {  
+//          $next_rec = count($categories_products_id_list);
+            $categories_products_id_list[] = $product['products_id'];
+        } else {
+            $categories_products_id_list[$product['products_id']] = $current_cPath;
+        }
     }
-  }
-  return $categories_products_id_list;
+
+    if ($include_child) {
+        $sql = "SELECT categories_id FROM " . TABLE_CATEGORIES . "
+                WHERE parent_id = " . (int)$childCatID;
+
+        $childs = $db->Execute($sql);
+        if ($childs->RecordCount() > 0 ) {
+            if (IS_ADMIN_FLAG) {
+                $current_cPath = '0';
+                $include_child = true;
+            }
+            foreach ($childs as $child) {
+                zen_get_categories_products_list($child['categories_id'], $include_deactivated, $include_child, $current_cPath, $display_limit);
+            }
+        }
+    }
+    return $categories_products_id_list;
 }
 
 //// bof: manage master_categories_id vs cPath
-function zen_generate_category_path($id, $from = 'category', $categories_array = array(), $index = 0) {
-  global $db;
+function zen_generate_category_path($id, $from = 'category', $categories_array = array(), $index = 0)
+{
+    global $db;
 
-  if (!is_array($categories_array)) $categories_array = array();
+    if (!is_array($categories_array)) $categories_array = array();
 
-  if ($from == 'product') {
-    $categories = $db->Execute("SELECT categories_id
-                                FROM " . TABLE_PRODUCTS_TO_CATEGORIES . "
-                                WHERE products_id = " . (int)$id);
+    if ($from == 'product') {
+        $categories = $db->Execute("SELECT categories_id
+                                    FROM " . TABLE_PRODUCTS_TO_CATEGORIES . "
+                                    WHERE products_id = " . (int)$id);
 
-    foreach ($categories as $cat) {
-      if ($cat['categories_id'] == '0') {
-        $categories_array[$index][] = array('id' => '0', 'text' => TEXT_TOP);
-      } else {
+        foreach ($categories as $cat) {
+            if ($cat['categories_id'] == '0') {
+                $categories_array[$index][] = array('id' => '0', 'text' => TEXT_TOP);
+            } else {
+                $category = $db->Execute("SELECT cd.categories_name, c.parent_id
+                                          FROM " . TABLE_CATEGORIES . " c, " . TABLE_CATEGORIES_DESCRIPTION . " cd
+                                          WHERE c.categories_id = " . (int)$cat['categories_id'] . "
+                                          AND c.categories_id = cd.categories_id
+                                          AND cd.language_id = " . (int)$_SESSION['languages_id']);
+
+                $categories_array[$index][] = array('id' => $cat['categories_id'], 'text' => $category->fields['categories_name']);
+                if ( (zen_not_null($cat['parent_id'])) && ($cat['parent_id'] != '0') ) $categories_array = zen_generate_category_path($cat['parent_id'], 'category', $categories_array, $index);
+                $categories_array[$index] = array_reverse($categories_array[$index]);
+            }
+            $index++;
+        }
+    } elseif ($from == 'category') {
         $category = $db->Execute("SELECT cd.categories_name, c.parent_id
                                   FROM " . TABLE_CATEGORIES . " c, " . TABLE_CATEGORIES_DESCRIPTION . " cd
-                                  WHERE c.categories_id = " . (int)$cat['categories_id'] . "
+                                  WHERE c.categories_id = " . (int)$id . "
                                   AND c.categories_id = cd.categories_id
                                   AND cd.language_id = " . (int)$_SESSION['languages_id']);
-
-        $categories_array[$index][] = array('id' => $cat['categories_id'], 'text' => $category->fields['categories_name']);
-        if ( (zen_not_null($cat['parent_id'])) && ($cat['parent_id'] != '0') ) $categories_array = zen_generate_category_path($cat['parent_id'], 'category', $categories_array, $index);
-        $categories_array[$index] = array_reverse($categories_array[$index]);
-      }
-      $index++;
+        if (!IS_ADMIN_FLAG || !$category->EOF) {
+            $categories_array[$index][] = array('id' => $id, 'text' => $category->fields['categories_name']);
+            if ( (zen_not_null($category->fields['parent_id'])) && ($category->fields['parent_id'] != '0') ) $categories_array = zen_generate_category_path($category->fields['parent_id'], 'category', $categories_array, $index);
+        }
     }
-  } elseif ($from == 'category') {
-    $category = $db->Execute("SELECT cd.categories_name, c.parent_id
-                              FROM " . TABLE_CATEGORIES . " c, " . TABLE_CATEGORIES_DESCRIPTION . " cd
-                              WHERE c.categories_id = " . (int)$id . "
-                              AND c.categories_id = cd.categories_id
-                              AND cd.language_id = " . (int)$_SESSION['languages_id']);
-    if (!IS_ADMIN_FLAG || !$category->EOF) {
-      $categories_array[$index][] = array('id' => $id, 'text' => $category->fields['categories_name']);
-      if ( (zen_not_null($category->fields['parent_id'])) && ($category->fields['parent_id'] != '0') ) $categories_array = zen_generate_category_path($category->fields['parent_id'], 'category', $categories_array, $index);
-    }
-  }
 
-  return $categories_array;
+    return $categories_array;
 }
 
-function zen_output_generated_category_path($id, $from = 'category') {
-  $calculated_category_path_string = '';
-  $calculated_category_path = zen_generate_category_path($id, $from);
-  foreach ($calculated_category_path as $i => $main) {
-    foreach ($calculated_category_path[$i] as $j => $sub) {
-//      $calculated_category_path_string .= $calculated_category_path[$i][$j]['text'] . '&nbsp;&gt;&nbsp;';
-      if (!IS_ADMIN_FLAG || $from == 'category') {
-        $calculated_category_path_string = $calculated_category_path[$i][$j]['text'] . '&nbsp;&gt;&nbsp;' . $calculated_category_path_string;
-      } else {
-        $calculated_category_path_string .= $calculated_category_path[$i][$j]['text'];
-        $calculated_category_path_string .= ' [ ' . TEXT_INFO_ID . $calculated_category_path[$i][$j]['id'] . ' ] ';
-        $calculated_category_path_string .= '<br>';
-        $calculated_category_path_string .= '&nbsp;&nbsp;';
-//           $calculated_category_path_string .= '&nbsp;&gt;&nbsp;';
-      }
+function zen_output_generated_category_path($id, $from = 'category')
+{
+    $calculated_category_path_string = '';
+    $calculated_category_path = zen_generate_category_path($id, $from);
+    foreach ($calculated_category_path as $i => $main) {
+        foreach ($calculated_category_path[$i] as $j => $sub) {
+    //      $calculated_category_path_string .= $calculated_category_path[$i][$j]['text'] . '&nbsp;&gt;&nbsp;';
+          if (!IS_ADMIN_FLAG || $from == 'category') {
+              $calculated_category_path_string = $calculated_category_path[$i][$j]['text'] . '&nbsp;&gt;&nbsp;' . $calculated_category_path_string;
+          } else {
+              $calculated_category_path_string .= $calculated_category_path[$i][$j]['text'];
+              $calculated_category_path_string .= ' [ ' . TEXT_INFO_ID . $calculated_category_path[$i][$j]['id'] . ' ] ';
+              $calculated_category_path_string .= '<br>';
+              $calculated_category_path_string .= '&nbsp;&nbsp;';
+//              $calculated_category_path_string .= '&nbsp;&gt;&nbsp;';
+          }
+        }
+        if (!IS_ADMIN_FLAG) {
+            $calculated_category_path_string = substr($calculated_category_path_string, 0, -16) . '<br>';
+        } elseif ($from == 'product') {
+            $calculated_category_path_string .= '<br>';
+        }
     }
     if (!IS_ADMIN_FLAG) {
-      $calculated_category_path_string = substr($calculated_category_path_string, 0, -16) . '<br>';
-    } elseif ($from == 'product') {
-      $calculated_category_path_string .= '<br>';
-    }
-  }
-  if (!IS_ADMIN_FLAG) {
-    $calculated_category_path_string = substr($calculated_category_path_string, 0, -4);
+        $calculated_category_path_string = substr($calculated_category_path_string, 0, -4);
     } else {
-      $calculated_category_path_string = preg_replace('/&nbsp;&gt;&nbsp;$/', '', $calculated_category_path_string);
+        $calculated_category_path_string = preg_replace('/&nbsp;&gt;&nbsp;$/', '', $calculated_category_path_string);
     }
 
     if (strlen($calculated_category_path_string) < 1) $calculated_category_path_string = TEXT_TOP;
 
     return $calculated_category_path_string;
-  }
+}
 
-  function zen_get_generated_category_path_ids($id, $from = 'category') {
+function zen_get_generated_category_path_ids($id, $from = 'category')
+{
     global $db;
     $calculated_category_path_string = '';
     $calculated_category_path = zen_generate_category_path($id, $from);
     foreach ($calculated_category_path as $i => $main) {
-      foreach ($calculated_category_path as $j => $sub) {
-        $calculated_category_path_string .= $calculated_category_path[$i][$j]['id'] . '_';
-      }
-      if (!IS_ADMIN_FLAG) {
-        $calculated_category_path_string = substr($calculated_category_path_string, 0, -1) . '<br>';
-      } else {
-        $calculated_category_path_string = rtrim($calculated_category_path_string, '_') . '<br>';
-      }
+        foreach ($calculated_category_path as $j => $sub) {
+            $calculated_category_path_string .= $calculated_category_path[$i][$j]['id'] . '_';
+        }
+        if (!IS_ADMIN_FLAG) {
+            $calculated_category_path_string = substr($calculated_category_path_string, 0, -1) . '<br>';
+        } else {
+            $calculated_category_path_string = rtrim($calculated_category_path_string, '_') . '<br>';
+        }
     }
     if (!IS_ADMIN_FLAG) {
-      $calculated_category_path_string = substr($calculated_category_path_string, 0, -4);
+        $calculated_category_path_string = substr($calculated_category_path_string, 0, -4);
     } else {
-      $calculated_category_path_string = preg_replace('/<br>$/', '', $calculated_category_path_string);
+        $calculated_category_path_string = preg_replace('/<br>$/', '', $calculated_category_path_string);
     }
 
     if (strlen($calculated_category_path_string) < 1) $calculated_category_path_string = TEXT_TOP;
 
     return $calculated_category_path_string;
-  }
+}
 
-function zen_get_generated_category_path_rev($this_categories_id) {
+function zen_get_generated_category_path_rev($this_categories_id)
+{
     $categories = array();
     zen_get_parent_categories($categories, $this_categories_id);
 
