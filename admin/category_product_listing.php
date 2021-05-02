@@ -518,7 +518,13 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
                   <?php echo zen_draw_label(HEADING_TITLE_GOTO, 'cPath'); ?>
                 </div>
                 <div class="col-sm-6 col-md-8">
-                  <?php echo zen_draw_pull_down_menu('cPath', zen_get_category_tree(), $current_category_id, 'onchange="this.form.submit();" class="form-control" id="cPath"'); ?>
+                  <?php
+                  $cat_tree = zen_get_category_tree();
+                  foreach ($cat_tree as $catid => &$cat_long) {
+                    $cat_long['id'] = zen_get_generated_category_path_rev($cat_long['id']);
+                  }
+                  unset($catid, $cat_long);
+                  echo zen_draw_pull_down_menu('cPath', $cat_tree, zen_get_generated_category_path_rev($current_category_id), 'onchange="this.form.submit();" class="form-control" id="cPath"'); /*?>*/
                 </div>
               <?php } else { ?>
                 <div class="col-sm-6 col-md-4 control-label">
@@ -671,7 +677,7 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
                 $cInfo = new objectInfo($category);
               }
               ?>
-              <tr class="category-listing-row" data-cid="<?php echo $category['categories_id']; ?>">
+              <tr class="category-listing-row" data-cid="<?php echo (!empty($cPath) ? $cPath . '_' : '') . $category['categories_id']; ?>">
                 <td class="text-right"><?php echo $category['categories_id']; ?></td>
                 <td colspan="2">
                   <a href="<?php echo zen_href_link(FILENAME_CATEGORY_PRODUCT_LISTING, zen_get_path($category['categories_id'])); ?>" class="folder"><i class="fa fa-lg fa-folder"></i>&nbsp;<strong><?php echo $category['categories_name']; ?></strong></a>
@@ -830,7 +836,7 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
               $products_count++;
 // Get categories_id for product if search
               if (isset($_GET['search'])) {
-                $cPath = $product['master_categories_id'];
+                $cPath = zen_get_generated_category_path_rev($product['master_categories_id']);
               }
 
               if ((!isset($_GET['pID']) && !isset($_GET['cID']) || (isset($_GET['pID']) && ($_GET['pID'] == $product['products_id']))) && !isset($pInfo) && !isset($cInfo) && (substr($action, 0, 3) != 'new')) {
