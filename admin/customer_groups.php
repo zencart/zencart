@@ -74,7 +74,7 @@ if (!empty($action)) {
                 <?php
                 $sql = "SELECT cg.*, count(ctg.customer_id) as customer_count 
                         FROM " . TABLE_CUSTOMER_GROUPS . " cg
-                        LEFT JOIN " . TABLE_CUSTOMERS_TO_GROUPS . " ctg ON ctg.group_id = cg.group_id
+                        LEFT JOIN " . TABLE_CUSTOMERS_TO_GROUPS . " ctg USING (group_id)
                         GROUP BY cg.group_id 
                         ORDER BY group_name, group_id";
 
