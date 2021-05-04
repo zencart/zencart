@@ -16,6 +16,11 @@ trait NotifierManager
      */
     private $observerAliases = ['NOTIFIY_ORDER_CART_SUBTOTAL_CALCULATE' => 'NOTIFY_ORDER_CART_SUBTOTAL_CALCULATE'];
 
+    public function getRegisteredObservers()
+    {
+        return EventDto::getInstance()->getObservers();
+    }
+
     /**
      * method to notify observers that an event has occurred in the notifier object
      * Can optionally pass parameters and variables to the observer, useful for passing stuff which is outside of the 'scope' of the observed class.
@@ -39,7 +44,7 @@ trait NotifierManager
     {
         $this->logNotifier($eventID, $param1, $param2, $param3, $param4, $param5, $param6, $param7, $param8, $param9);
 
-        $observers = EventDto::getInstance()->getObservers();
+        $observers = $this->getRegisteredObservers();
         if (empty($observers)) {
             return;
         }
