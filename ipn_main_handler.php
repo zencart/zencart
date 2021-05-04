@@ -114,9 +114,10 @@ Processing...
 
   $extraDebug = (defined('IPN_EXTRA_DEBUG_DETAILS') && IPN_EXTRA_DEBUG_DETAILS == 'All');
 
-  if (  (defined('MODULE_PAYMENT_PAYPALWPP_DEBUGGING') && strstr(MODULE_PAYMENT_PAYPALWPP_DEBUGGING, 'Log')) ||
-      (defined('MODULE_PAYMENT_PAYPAL_IPN_DEBUG') && strstr(MODULE_PAYMENT_PAYPAL_IPN_DEBUG, 'Log')) ||
-      ($_REQUEST['ppdebug'] == 'on' && strstr(EXCLUDE_ADMIN_IP_FOR_MAINTENANCE, $_SERVER['REMOTE_ADDR'])) || $extraDebug  ) {
+  if ((defined('MODULE_PAYMENT_PAYPALWPP_DEBUGGING') && strstr(MODULE_PAYMENT_PAYPALWPP_DEBUGGING, 'Log'))
+      || (defined('MODULE_PAYMENT_PAYPAL_IPN_DEBUG') && strstr(MODULE_PAYMENT_PAYPAL_IPN_DEBUG, 'Log'))
+      || (!empty($_REQUEST['ppdebug']) && $_REQUEST['ppdebug'] == 'on' && strstr(EXCLUDE_ADMIN_IP_FOR_MAINTENANCE, $_SERVER['REMOTE_ADDR']))
+      || $extraDebug) {
     $show_all_errors = true;
     $debug_logfile_path = ipn_debug_email('Breakpoint: 0 - Initializing debugging.');
     $logdir = defined('DIR_FS_LOGS') ? DIR_FS_LOGS : 'includes/modules/payment/paypal/logs';
@@ -151,9 +152,9 @@ Processing...
   }
 
   ipn_debug_email('Breakpoint: 2 - Validated transaction components');
-  if ($_POST['exchange_rate'] == '')  $_POST['exchange_rate'] = 1;
-  if ($_POST['num_cart_items'] == '') $_POST['num_cart_items'] = 1;
-  if ($_POST['settle_amount'] == '')  $_POST['settle_amount'] = 0;
+  if (empty($_POST['exchange_rate']))  $_POST['exchange_rate'] = 1;
+  if (empty($_POST['num_cart_items'])) $_POST['num_cart_items'] = 1;
+  if (empty($_POST['settle_amount']))  $_POST['settle_amount'] = 0;
 
   /**
    * is this a sandbox transaction?
@@ -178,10 +179,10 @@ Processing...
   $txn_type    = $lookupData['txn_type'];
   $parentLookup = $txn_type;
 
-  ipn_debug_email('Breakpoint: 4 - ' . 'Details:  txn_type=' . $txn_type . '    ordersID = '. $ordersID . '  IPN_id=' . $paypalipnID . "\n\n" . '   Relevant data from POST:' . "\n     " . 'txn_type = ' . $txn_type . "\n     " . 'parent_txn_id = ' . ($_POST['parent_txn_id'] =='' ? 'None' : $_POST['parent_txn_id']) . "\n     " . 'txn_id = ' . $_POST['txn_id']);
+  ipn_debug_email('Breakpoint: 4 - ' . 'Details:  txn_type=' . $txn_type . '    ordersID = '. $ordersID . '  IPN_id=' . $paypalipnID . "\n\n" . '   Relevant data from POST:' . "\n     " . 'txn_type = ' . $txn_type . "\n     " . 'parent_txn_id = ' . (empty($_POST['parent_txn_id']) ? 'None' : $_POST['parent_txn_id']) . "\n     " . 'txn_id = ' . $_POST['txn_id']);
 
   // ignore auth_status == 'Expired'
-  if ($_POST['auth_status'] === 'Expired' && $_POST['txn_type'] === 'web_accept') {
+  if (isset($_POST['auth_status']) && $_POST['auth_status'] === 'Expired' && isset($_POST['txn_type']) && $_POST['txn_type'] === 'web_accept') {
     ipn_debug_email('NOTICE :: IPN Processing Aborted -- we do not need to do anything with an "Expired" auth notification.');
     die();
   }
