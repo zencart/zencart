@@ -2,14 +2,20 @@
 /**
  * messageStack Class.
  *
- * @copyright Copyright 2003-2020 Zen Cart Development Team
+ * @copyright Copyright 2003-2021 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Leonard 2021 Jan 15 Modified in v1.5.7b $
+ * @version $Id: Leonard 2021 Jan 15 Modified in v1.5.8 $
  */
 if (!defined('IS_ADMIN_FLAG')) {
     die('Illegal Access');
 }
+
+if (!defined('MESSAGESTACK_ICON_ERROR')) define('MESSAGESTACK_ICON_ERROR',zen_image($template->get_template_dir(ICON_IMAGE_ERROR, DIR_WS_TEMPLATE, $current_page_base,'images/icons'). '/' . ICON_IMAGE_ERROR, ICON_ERROR_ALT));
+if (!defined('MESSAGESTACK_ICON_WARNING')) define('MESSAGESTACK_ICON_WARNING',zen_image($template->get_template_dir(ICON_IMAGE_WARNING, DIR_WS_TEMPLATE, $current_page_base,'images/icons'). '/' . ICON_IMAGE_WARNING, ICON_WARNING_ALT));
+if (!defined('MESSAGESTACK_ICON_CAUTION')) define('MESSAGESTACK_ICON_CAUTION',zen_image($template->get_template_dir(ICON_IMAGE_WARNING, DIR_WS_TEMPLATE, $current_page_base,'images/icons'). '/' . ICON_IMAGE_WARNING, ICON_WARNING_ALT));
+if (!defined('MESSAGESTACK_ICON_SUCCESS')) define('MESSAGESTACK_ICON_SUCCESS',zen_image($template->get_template_dir(ICON_IMAGE_SUCCESS, DIR_WS_TEMPLATE, $current_page_base,'images/icons'). '/' . ICON_IMAGE_SUCCESS, ICON_SUCCESS_ALT));
+
 /**
  * messageStack Class.
  * This class is used to manage messageStack alerts
