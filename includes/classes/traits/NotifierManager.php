@@ -96,7 +96,7 @@ trait NotifierManager
 
     protected function logNotifier($eventID, $param1, $param2, $param3, $param4, $param5, $param6, $param7, $param8, $param9)
     {
-        if (!defined('NOTIFIER_TRACE') || NOTIFIER_TRACE == '' || NOTIFIER_TRACE == 'false' || NOTIFIER_TRACE == 'Off') {
+        if (!defined('NOTIFIER_TRACE') || NOTIFIER_TRACE === '' || NOTIFIER_TRACE === 'false' || NOTIFIER_TRACE === 'Off') {
             return;
         }
         $file = DIR_FS_LOGS . '/notifier_trace.log';
@@ -115,9 +115,9 @@ trait NotifierManager
         $output = '';
         if (count($paramArray)) {
             $output = ', ';
-            if (NOTIFIER_TRACE == 'var_export' || NOTIFIER_TRACE == 'var_dump' || NOTIFIER_TRACE == 'true') {
+            if (NOTIFIER_TRACE === 'var_export' || NOTIFIER_TRACE === 'var_dump' || NOTIFIER_TRACE === 'true') {
                 $output .= var_export($paramArray, true);
-            } elseif (NOTIFIER_TRACE == 'print_r' || NOTIFIER_TRACE == 'On' || NOTIFIER_TRACE === true) {
+            } elseif (NOTIFIER_TRACE === 'print_r' || NOTIFIER_TRACE === 'On' || NOTIFIER_TRACE === true) {
                 $output .= print_r($paramArray, true);
             }
         }
