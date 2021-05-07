@@ -1,10 +1,32 @@
 <?php
 /**
- * @copyright Copyright 2003-2020 Zen Cart Development Team
+ * @copyright Copyright 2003-2021 Zen Cart Development Team
  * @license https://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id:  $
  */
 
+// Normally this zen_date_raw function will ONLY be defined here.
+// It was formerly inside english.php and sometimes in override files, and you should remove from those places now.
+// If you truly need to redefine this function, do that in an extra_configures file so that it takes precedence before this one.
+if (!function_exists('zen_date_raw')) {
+    /**
+     * Return date in raw format
+     *
+     * $date should be in format mm/dd/yyyy
+     * raw date is in format YYYYMMDD, or DDMMYYYY
+     *
+     * @param string $date
+     * @param bool $reverse
+     * @return string
+     */
+    function zen_date_raw($date, $reverse = false) {
+        if ($reverse) {
+            return substr($date, 3, 2) . substr($date, 0, 2) . substr($date, 6, 4);
+        } else {
+            return substr($date, 6, 4) . substr($date, 0, 2) . substr($date, 3, 2);
+        }
+    }
+}
 
 /**
  * Output a raw date string in the selected locale date format
