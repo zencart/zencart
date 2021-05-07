@@ -134,9 +134,9 @@ if (!empty($_GET['action'])) {
                 }
 
                 if (isset($bInfo) && is_object($bInfo) && ($layoutBox['layout_id'] == $bInfo->layout_id)) {
-                  echo '              <tr class="dataTableRowSelected" onclick="document.location.href=\'' . zen_href_link(FILENAME_LAYOUT_CONTROLLER, $cur_page . '&cID=' . $bInfo->layout_id . '&action=edit') . '\'" role="button">' . "\n";
+                  echo '              <tr class="dataTableRowSelected" onclick="document.location.href=\'' . zen_href_link(FILENAME_LAYOUT_CONTROLLER, $cur_page . '&cID=' . $bInfo->layout_id . '&action=edit') . '\'">' . "\n";
                 } else {
-                  echo '              <tr class="dataTableRow" onclick="document.location.href=\'' . zen_href_link(FILENAME_LAYOUT_CONTROLLER, $cur_page . '&cID=' . $layoutBox['layout_id']) . '\'" role="button">' . "\n";
+                  echo '              <tr class="dataTableRow" onclick="document.location.href=\'' . zen_href_link(FILENAME_LAYOUT_CONTROLLER, $cur_page . '&cID=' . $layoutBox['layout_id']) . '\'">' . "\n";
                 }
                 ?>
 
@@ -144,11 +144,11 @@ if (!empty($_GET['action'])) {
                   $boxDirectory = $sideboxFinder->sideboxPath($layoutBox, $template_dir);
                   ?>
               <td class="dataTableContent"><?php echo ($boxDirectory == '') ? '<span class="alert">' . $boxDirectory . $layoutBox['layout_box_name'] .  '</span>':  $boxDirectory . $layoutBox['layout_box_name']; ?></td>
-              <td class="<?php echo ($boxDirectory != '') ? 'dataTableContent' : 'messageStackError'; ?>" align="center"><?php echo ($layoutBox['layout_box_status'] == '1' ? TEXT_ON : '<span class="alert">' . TEXT_OFF . '</span>'); ?></td>
-              <td class="<?php echo ($boxDirectory != '') ? 'dataTableContent' : 'messageStackError'; ?>" align="center"><?php echo ($layoutBox['layout_box_location'] == '0' ? TEXT_LEFT : TEXT_RIGHT); ?></td>
-              <td class="<?php echo ($boxDirectory != '') ? 'dataTableContent' : 'messageStackError'; ?>" align="center"><?php echo $layoutBox['layout_box_sort_order']; ?></td>
-              <td class="<?php echo ($boxDirectory != '') ? 'dataTableContent' : 'messageStackError'; ?>" align="center"><?php echo $layoutBox['layout_box_sort_order_single']; ?></td>
-              <td class="<?php echo ($boxDirectory != '') ? 'dataTableContent' : 'messageStackError'; ?>" align="center"><?php echo ($layoutBox['layout_box_status_single'] == '1' ? TEXT_ON : '<span class="alert">' . TEXT_OFF . '</span>'); ?></td>
+              <td class="<?php echo ($boxDirectory != '') ? 'dataTableContent' : 'messageStackError'; ?> text-center"><?php echo ($layoutBox['layout_box_status'] == '1' ? TEXT_ON : '<span class="alert">' . TEXT_OFF . '</span>'); ?></td>
+              <td class="<?php echo ($boxDirectory != '') ? 'dataTableContent' : 'messageStackError'; ?> text-center"><?php echo ($layoutBox['layout_box_location'] == '0' ? TEXT_LEFT : TEXT_RIGHT); ?></td>
+              <td class="<?php echo ($boxDirectory != '') ? 'dataTableContent' : 'messageStackError'; ?> text-center"><?php echo $layoutBox['layout_box_sort_order']; ?></td>
+              <td class="<?php echo ($boxDirectory != '') ? 'dataTableContent' : 'messageStackError'; ?> text-center"><?php echo $layoutBox['layout_box_sort_order_single']; ?></td>
+              <td class="<?php echo ($boxDirectory != '') ? 'dataTableContent' : 'messageStackError'; ?> text-center"><?php echo ($layoutBox['layout_box_status_single'] == '1' ? TEXT_ON : '<span class="alert">' . TEXT_OFF . '</span>'); ?></td>
 
               <td class="dataTableContent text-right"><?php echo ($boxDirectory != '') ? TEXT_GOOD_BOX : TEXT_BAD_BOX; ?><?php echo '<a href="' . zen_href_link(FILENAME_LAYOUT_CONTROLLER, $cur_page . '&cID=' . $layoutBox['layout_id'] . '&action=edit') . '">' . zen_image(DIR_WS_IMAGES . 'icon_edit.gif', IMAGE_EDIT) . '</a>'; ?></td>
 
@@ -165,8 +165,8 @@ if (!empty($_GET['action'])) {
                   $next = $index + 1;
                   if (isset($layoutBoxes[$next]) && $layoutBoxes[$index]->layout_box_location != $layoutBoxes[$next]->layout_box_location) {
                       ?>
-                      <tr valign="top">
-                          <td colspan="8" height="20" align="center" valign="middle"><?php echo zen_draw_separator('pixel_black.gif', '90%', '3'); ?></td>
+                      <tr>
+                          <td colspan="8" class="text-center"><?php echo zen_draw_separator('pixel_black.gif', '90%', '3'); ?></td>
                       </tr>
                       <?php
 
@@ -178,8 +178,8 @@ if (!empty($_GET['action'])) {
         </div>
         <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3 configurationColumnRight">
             <?php
-            $heading = array();
-            $contents = array();
+            $heading = [];
+            $contents = [];
 
             switch ($bInfo->layout_box_status) {
               case '0': $layout_box_status_status_on = false;
@@ -231,42 +231,42 @@ if (!empty($_GET['action'])) {
                     $out_status_single = false;
                 }
 
-                $heading[] = array('text' => '<h4>' . TEXT_INFO_HEADING_EDIT_BOX . '</h4>');
+                $heading[] = ['text' => '<h4>' . TEXT_INFO_HEADING_EDIT_BOX . '</h4>'];
 
-                $contents = array('form' => zen_draw_form('column_controller', FILENAME_LAYOUT_CONTROLLER, $cur_page . '&cID=' . $bInfo->layout_id . '&action=save' . '&layout_box_name=' . $bInfo->layout_box_name, 'post', 'class="form-horizontal"'));
-                $contents[] = array('text' => TEXT_INFO_EDIT_INTRO);
-                $contents[] = array('text' => TEXT_INFO_LAYOUT_BOX_NAME . ' ' . $bInfo->layout_box_name);
-                $contents[] = array('text' => '<br>' . zen_draw_label(TEXT_INFO_LAYOUT_BOX_STATUS, 'layout_box_status' , 'class="control-label"') . '<div class="radio"><label>' . zen_draw_radio_field('layout_box_status', '1', $in_status) . TEXT_ON . '</label></div><div class="radio"><label class="radio">' . zen_draw_radio_field('layout_box_status', '0', $out_status) . TEXT_OFF . '</label></div>');
-                $contents[] = array('text' => '<br>' . zen_draw_label(TEXT_INFO_LAYOUT_BOX_LOCATION, 'layout_box_location' , 'class="control-label"') . '<div class="radio"><label>' . zen_draw_radio_field('layout_box_location', '0', $left_status) . TEXT_LEFT . '</label></div><div class="radio"><label>' . zen_draw_radio_field('layout_box_location', '1', $right_status) . TEXT_RIGHT . '</label></div>');
-                $contents[] = array('text' => '<br>' . zen_draw_label(TEXT_INFO_LAYOUT_BOX_SORT_ORDER, 'layout_box_sort_order' , 'class="control-label"') . zen_draw_input_field('layout_box_sort_order', $bInfo->layout_box_sort_order, 'size="4" class="form-control"'));
-                $contents[] = array('text' => '<br>' . zen_draw_label(TEXT_INFO_LAYOUT_BOX_SORT_ORDER_SINGLE, 'layout_box_sort_order_single' , 'class="control-label"') . zen_draw_input_field('layout_box_sort_order_single', $bInfo->layout_box_sort_order_single, 'size="4" class="form-control"'));
-                $contents[] = array('text' => '<br>' . zen_draw_label(TEXT_INFO_LAYOUT_BOX_STATUS_SINGLE, 'layout_box_status_single' , 'class="control-label"') . '<div class="radio"><label>' . zen_draw_radio_field('layout_box_status_single', '1', $in_status_single) . TEXT_ON . '</label></div><div class="radio"><label>' . zen_draw_radio_field('layout_box_status_single', '0', $out_status_single) . TEXT_OFF . '</label></div>');
-                $contents[] = array('align' => 'text-center', 'text' => '<br><button type="submit" class="btn btn-primary">' . IMAGE_UPDATE . '</button> <a href="' . zen_href_link(FILENAME_LAYOUT_CONTROLLER, $cur_page . '&cID=' . $bInfo->layout_id . '&layout_box_name=' . $bInfo->layout_box_name) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>');
+                $contents = ['form' => zen_draw_form('column_controller', FILENAME_LAYOUT_CONTROLLER, $cur_page . '&cID=' . $bInfo->layout_id . '&action=save' . '&layout_box_name=' . $bInfo->layout_box_name, 'post', 'class="form-horizontal"')];
+                $contents[] = ['text' => TEXT_INFO_EDIT_INTRO];
+                $contents[] = ['text' => TEXT_INFO_LAYOUT_BOX_NAME . ' ' . $bInfo->layout_box_name];
+                $contents[] = ['text' => '<b>' . TEXT_INFO_LAYOUT_BOX_STATUS . '</b><div class="radio"><label>' . zen_draw_radio_field('layout_box_status', '1', $in_status) . TEXT_ON . '</label></div><div class="radio"><label>' . zen_draw_radio_field('layout_box_status', '0', $out_status) . TEXT_OFF . '</label></div>'];
+                $contents[] = ['text' => '<b>' . TEXT_INFO_LAYOUT_BOX_LOCATION . '</b><div class="radio"><label>' . zen_draw_radio_field('layout_box_location', '0', $left_status) . TEXT_LEFT . '</label></div><div class="radio"><label>' . zen_draw_radio_field('layout_box_location', '1', $right_status) . TEXT_RIGHT . '</label></div>'];
+                $contents[] = ['text' => zen_draw_label(TEXT_INFO_LAYOUT_BOX_SORT_ORDER, 'layout_box_sort_order' , 'class="control-label"') . zen_draw_input_field('layout_box_sort_order', $bInfo->layout_box_sort_order, 'size="4" class="form-control" id="layout_box_sort_order"')];
+                $contents[] = ['text' => zen_draw_label(TEXT_INFO_LAYOUT_BOX_SORT_ORDER_SINGLE, 'layout_box_sort_order_single' , 'class="control-label"') . zen_draw_input_field('layout_box_sort_order_single', $bInfo->layout_box_sort_order_single, 'size="4" class="form-control" id="layout_box_sort_order_single"')];
+                $contents[] = ['text' => '<b>' . TEXT_INFO_LAYOUT_BOX_STATUS_SINGLE . '</b><div class="radio"><label>' . zen_draw_radio_field('layout_box_status_single', '1', $in_status_single) . TEXT_ON . '</label></div><div class="radio"><label>' . zen_draw_radio_field('layout_box_status_single', '0', $out_status_single) . TEXT_OFF . '</label></div>'];
+                $contents[] = ['align' => 'text-center', 'text' => '<button type="submit" class="btn btn-primary">' . IMAGE_UPDATE . '</button> <a href="' . zen_href_link(FILENAME_LAYOUT_CONTROLLER, $cur_page . '&cID=' . $bInfo->layout_id . '&layout_box_name=' . $bInfo->layout_box_name) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>'];
                 break;
               case 'delete':
-                $heading[] = array('text' => '<h4>' . TEXT_INFO_HEADING_DELETE_BOX . '</h4>');
+                $heading[] = ['text' => '<h4>' . TEXT_INFO_HEADING_DELETE_BOX . '</h4>'];
 
-                $contents = array('form' => zen_draw_form('column_controller', FILENAME_LAYOUT_CONTROLLER, $cur_page . '&action=deleteconfirm' . '&layout_box_name=' . $bInfo->layout_box_name) . zen_draw_hidden_field('cID', $bInfo->layout_id));
-                $contents[] = array('text' => TEXT_INFO_DELETE_INTRO);
-                $contents[] = array('text' => '<br><b>' . $bInfo->layout_box_name . '</b>');
-                $contents[] = array('align' => 'text-center', 'text' => '<br><button type="submit" class="btn btn-danger">' . IMAGE_UPDATE . '</button> <a href="' . zen_href_link(FILENAME_LAYOUT_CONTROLLER, $cur_page . '&cID=' . $bInfo->layout_id) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>');
+                $contents = ['form' => zen_draw_form('column_controller', FILENAME_LAYOUT_CONTROLLER, $cur_page . '&action=deleteconfirm' . '&layout_box_name=' . $bInfo->layout_box_name) . zen_draw_hidden_field('cID', $bInfo->layout_id)];
+                $contents[] = ['text' => TEXT_INFO_DELETE_INTRO];
+                $contents[] = ['text' => '<b>' . $bInfo->layout_box_name . '</b>'];
+                $contents[] = ['align' => 'text-center', 'text' => '<button type="submit" class="btn btn-danger">' . IMAGE_UPDATE . '</button> <a href="' . zen_href_link(FILENAME_LAYOUT_CONTROLLER, $cur_page . '&cID=' . $bInfo->layout_id) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>'];
                 break;
               default:
                 if (is_object($bInfo)) {
-                  $heading[] = array('text' => '<h4>' . TEXT_INFO_LAYOUT_BOX . $bInfo->layout_box_name . '</h4>');
-                  $contents[] = array('text' => '<a href="' . zen_href_link(FILENAME_LAYOUT_CONTROLLER, $cur_page . '&cID=' . $bInfo->layout_id . '&action=edit') . '" class="btn btn-primary" role="button">' . IMAGE_EDIT . '</a>');
-                  $contents[] = array('text' => '<strong>' . TEXT_INFO_BOX_DETAILS . '</strong>');
-                  $contents[] = array('text' => TEXT_INFO_LAYOUT_BOX_NAME . ' ' . $bInfo->layout_box_name);
-                  $contents[] = array('text' => TEXT_INFO_LAYOUT_BOX_STATUS . ' ' . ($bInfo->layout_box_status == '1' ? TEXT_ON : TEXT_OFF));
-                  $contents[] = array('text' => TEXT_INFO_LAYOUT_BOX_LOCATION . ' ' . ($bInfo->layout_box_location == '0' ? TEXT_LEFT : TEXT_RIGHT));
-                  $contents[] = array('text' => TEXT_INFO_LAYOUT_BOX_SORT_ORDER . ' ' . $bInfo->layout_box_sort_order);
-                  $contents[] = array('text' => TEXT_INFO_LAYOUT_BOX_SORT_ORDER_SINGLE . ' ' . $bInfo->layout_box_sort_order_single);
-                  $contents[] = array('text' => TEXT_INFO_LAYOUT_BOX_STATUS_SINGLE . ' ' . ($bInfo->layout_box_status_single == '1' ? TEXT_ON : TEXT_OFF));
+                  $heading[] = ['text' => '<h4>' . TEXT_INFO_LAYOUT_BOX . $bInfo->layout_box_name . '</h4>'];
+                  $contents[] = ['text' => '<a href="' . zen_href_link(FILENAME_LAYOUT_CONTROLLER, $cur_page . '&cID=' . $bInfo->layout_id . '&action=edit') . '" class="btn btn-primary" role="button">' . IMAGE_EDIT . '</a>'];
+                  $contents[] = ['text' => '<strong>' . TEXT_INFO_BOX_DETAILS . '</strong>'];
+                  $contents[] = ['text' => TEXT_INFO_LAYOUT_BOX_NAME . ' ' . $bInfo->layout_box_name];
+                  $contents[] = ['text' => TEXT_INFO_LAYOUT_BOX_STATUS . ' ' . ($bInfo->layout_box_status == '1' ? TEXT_ON : TEXT_OFF)];
+                  $contents[] = ['text' => TEXT_INFO_LAYOUT_BOX_LOCATION . ' ' . ($bInfo->layout_box_location == '0' ? TEXT_LEFT : TEXT_RIGHT)];
+                  $contents[] = ['text' => TEXT_INFO_LAYOUT_BOX_SORT_ORDER . ' ' . $bInfo->layout_box_sort_order];
+                  $contents[] = ['text' => TEXT_INFO_LAYOUT_BOX_SORT_ORDER_SINGLE . ' ' . $bInfo->layout_box_sort_order_single];
+                  $contents[] = ['text' => TEXT_INFO_LAYOUT_BOX_STATUS_SINGLE . ' ' . ($bInfo->layout_box_status_single == '1' ? TEXT_ON : TEXT_OFF)];
 
                   if ($sideboxFinder->sideboxPath($bInfo, $template_dir) == '') {
-                    $contents[] = array('text' => '<br><strong>' . TEXT_INFO_DELETE_MISSING_LAYOUT_BOX . '<br>' . $template_dir . '</strong>');
-                    $contents[] = array('text' => TEXT_INFO_DELETE_MISSING_LAYOUT_BOX_NOTE . '<strong>' . $bInfo->layout_box_name . '</strong>');
-                    $contents[] = array('text' => '<a href="' . zen_href_link(FILENAME_LAYOUT_CONTROLLER, $cur_page . '&cID=' . $bInfo->layout_id . '&action=delete' . '&layout_box_name=' . $bInfo->layout_box_name) . '" class="btn btn-warning" role="button">' . IMAGE_DELETE . '</a>');
+                    $contents[] = ['text' => '<strong>' . TEXT_INFO_DELETE_MISSING_LAYOUT_BOX . '<br>' . $template_dir . '</strong>'];
+                    $contents[] = ['text' => TEXT_INFO_DELETE_MISSING_LAYOUT_BOX_NOTE . '<strong>' . $bInfo->layout_box_name . '</strong>'];
+                    $contents[] = ['text' => '<a href="' . zen_href_link(FILENAME_LAYOUT_CONTROLLER, $cur_page . '&cID=' . $bInfo->layout_id . '&action=delete' . '&layout_box_name=' . $bInfo->layout_box_name) . '" class="btn btn-warning" role="button">' . IMAGE_DELETE . '</a>'];
                   }
                 }
                 break;
@@ -285,7 +285,7 @@ if (!empty($_GET['action'])) {
         <table class="table">
           <tr>
             <td>
-                <?php echo '<br>' . TEXT_INFO_RESET_TEMPLATE_SORT_ORDER . '<strong>' . $template_dir . '</strong>'; ?>
+                <?php echo '<p>' . TEXT_INFO_RESET_TEMPLATE_SORT_ORDER . '<strong>' . $template_dir . '</strong></p>'; ?>
             </td>
           </tr>
           <tr>
