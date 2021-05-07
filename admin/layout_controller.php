@@ -134,9 +134,9 @@ if (!empty($_GET['action'])) {
                 }
 
                 if (isset($bInfo) && is_object($bInfo) && ($layoutBox['layout_id'] == $bInfo->layout_id)) {
-                  echo '              <tr class="dataTableRowSelected" onclick="document.location.href=\'' . zen_href_link(FILENAME_LAYOUT_CONTROLLER, $cur_page . '&cID=' . $bInfo->layout_id . '&action=edit') . '\'" role="button">' . "\n";
+                  echo '              <tr class="dataTableRowSelected" onclick="document.location.href=\'' . zen_href_link(FILENAME_LAYOUT_CONTROLLER, $cur_page . '&cID=' . $bInfo->layout_id . '&action=edit') . '\'">' . "\n";
                 } else {
-                  echo '              <tr class="dataTableRow" onclick="document.location.href=\'' . zen_href_link(FILENAME_LAYOUT_CONTROLLER, $cur_page . '&cID=' . $layoutBox['layout_id']) . '\'" role="button">' . "\n";
+                  echo '              <tr class="dataTableRow" onclick="document.location.href=\'' . zen_href_link(FILENAME_LAYOUT_CONTROLLER, $cur_page . '&cID=' . $layoutBox['layout_id']) . '\'">' . "\n";
                 }
                 ?>
 
