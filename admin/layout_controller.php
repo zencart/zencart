@@ -144,11 +144,11 @@ if (!empty($_GET['action'])) {
                   $boxDirectory = $sideboxFinder->sideboxPath($layoutBox, $template_dir);
                   ?>
               <td class="dataTableContent"><?php echo ($boxDirectory == '') ? '<span class="alert">' . $boxDirectory . $layoutBox['layout_box_name'] .  '</span>':  $boxDirectory . $layoutBox['layout_box_name']; ?></td>
-              <td class="<?php echo ($boxDirectory != '') ? 'dataTableContent' : 'messageStackError'; ?>" align="center"><?php echo ($layoutBox['layout_box_status'] == '1' ? TEXT_ON : '<span class="alert">' . TEXT_OFF . '</span>'); ?></td>
-              <td class="<?php echo ($boxDirectory != '') ? 'dataTableContent' : 'messageStackError'; ?>" align="center"><?php echo ($layoutBox['layout_box_location'] == '0' ? TEXT_LEFT : TEXT_RIGHT); ?></td>
-              <td class="<?php echo ($boxDirectory != '') ? 'dataTableContent' : 'messageStackError'; ?>" align="center"><?php echo $layoutBox['layout_box_sort_order']; ?></td>
-              <td class="<?php echo ($boxDirectory != '') ? 'dataTableContent' : 'messageStackError'; ?>" align="center"><?php echo $layoutBox['layout_box_sort_order_single']; ?></td>
-              <td class="<?php echo ($boxDirectory != '') ? 'dataTableContent' : 'messageStackError'; ?>" align="center"><?php echo ($layoutBox['layout_box_status_single'] == '1' ? TEXT_ON : '<span class="alert">' . TEXT_OFF . '</span>'); ?></td>
+              <td class="<?php echo ($boxDirectory != '') ? 'dataTableContent' : 'messageStackError'; ?> text-center"><?php echo ($layoutBox['layout_box_status'] == '1' ? TEXT_ON : '<span class="alert">' . TEXT_OFF . '</span>'); ?></td>
+              <td class="<?php echo ($boxDirectory != '') ? 'dataTableContent' : 'messageStackError'; ?> text-center"><?php echo ($layoutBox['layout_box_location'] == '0' ? TEXT_LEFT : TEXT_RIGHT); ?></td>
+              <td class="<?php echo ($boxDirectory != '') ? 'dataTableContent' : 'messageStackError'; ?> text-center"><?php echo $layoutBox['layout_box_sort_order']; ?></td>
+              <td class="<?php echo ($boxDirectory != '') ? 'dataTableContent' : 'messageStackError'; ?> text-center"><?php echo $layoutBox['layout_box_sort_order_single']; ?></td>
+              <td class="<?php echo ($boxDirectory != '') ? 'dataTableContent' : 'messageStackError'; ?> text-center"><?php echo ($layoutBox['layout_box_status_single'] == '1' ? TEXT_ON : '<span class="alert">' . TEXT_OFF . '</span>'); ?></td>
 
               <td class="dataTableContent text-right"><?php echo ($boxDirectory != '') ? TEXT_GOOD_BOX : TEXT_BAD_BOX; ?><?php echo '<a href="' . zen_href_link(FILENAME_LAYOUT_CONTROLLER, $cur_page . '&cID=' . $layoutBox['layout_id'] . '&action=edit') . '">' . zen_image(DIR_WS_IMAGES . 'icon_edit.gif', IMAGE_EDIT) . '</a>'; ?></td>
 
@@ -165,8 +165,8 @@ if (!empty($_GET['action'])) {
                   $next = $index + 1;
                   if (isset($layoutBoxes[$next]) && $layoutBoxes[$index]->layout_box_location != $layoutBoxes[$next]->layout_box_location) {
                       ?>
-                      <tr valign="top">
-                          <td colspan="8" height="20" align="center" valign="middle"><?php echo zen_draw_separator('pixel_black.gif', '90%', '3'); ?></td>
+                      <tr>
+                          <td colspan="8" class="text-center"><?php echo zen_draw_separator('pixel_black.gif', '90%', '3'); ?></td>
                       </tr>
                       <?php
 
