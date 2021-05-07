@@ -166,6 +166,7 @@ function zen_parse_search_string($search_str = '', &$objects = array()) {
                 switch ($search_keywords[$i]) {
                     case '(':
                     case ')':
+                        break;
                     case 'and':
                     case 'or':
                         $where_str .= " " . strtoupper($search_keywords[$i]) . " ";
