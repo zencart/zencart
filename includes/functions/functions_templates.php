@@ -13,7 +13,7 @@ if (!defined('IS_ADMIN_FLAG')) {
  *
  * @return array
  */
-function zen_get_catalog_template_directories()
+function zen_get_catalog_template_directories($include_template_default = false)
 {
     if (!defined('DIR_FS_CATALOG_TEMPLATES')) {
         die('Fatal error: DIR_FS_CATALOG_TEMPLATES not defined.');
@@ -25,7 +25,10 @@ function zen_get_catalog_template_directories()
     $template_info = [];
     while ($tpl_dir_name = $dir->read()) {
         $path = DIR_FS_CATALOG_TEMPLATES . $tpl_dir_name;
-        if (!is_dir($path) || $tpl_dir_name == 'template_default') {
+        if (!is_dir($path)) {
+            continue;
+        }
+        if ($include_template_default !== true && $tpl_dir_name == 'template_default') {
             continue;
         }
         if (file_exists($path . '/template_info.php')) {
