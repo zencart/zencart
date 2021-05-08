@@ -1,6 +1,6 @@
 <?php
 /**
- * @copyright Copyright 2003-2020 Zen Cart Development Team
+ * @copyright Copyright 2003-2021 Zen Cart Development Team
  * @license https://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: New in v1.5.8 $
  */
@@ -23,15 +23,15 @@ function zen_get_catalog_template_directories()
         die('Fatal error: DIR_FS_CATALOG_TEMPLATES not defined.');
     }
     $template_info = [];
-    while ($file = $dir->read()) {
-        $path = DIR_FS_CATALOG_TEMPLATES . $file;
-        if (!is_dir($path) || $file == 'template_default') {
+    while ($tpl_dir_name = $dir->read()) {
+        $path = DIR_FS_CATALOG_TEMPLATES . $tpl_dir_name;
+        if (!is_dir($path) || $tpl_dir_name == 'template_default') {
             continue;
         }
         if (file_exists($path . '/template_info.php')) {
             require $path . '/template_info.php';
             // expects the following variables to be set inside each respective template_info.php file
-            $template_info[$file] = [
+            $template_info[$tpl_dir_name] = [
                 'name' => $template_name,
                 'version' => $template_version,
                 'author' => $template_author,
