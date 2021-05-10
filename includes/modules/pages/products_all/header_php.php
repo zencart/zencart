@@ -36,12 +36,13 @@
 //check to see if we are in normal mode ... not showcase, not maintenance, etc
   $show_submit = zen_run_normal();
 
+  $how_many = 0;
+
 // check whether to use multiple-add-to-cart, and whether top or bottom buttons are displayed
   if (PRODUCT_ALL_LISTING_MULTIPLE_ADD_TO_CART > 0 and $show_submit == true and $products_all_split->number_of_rows > 0) {
 
     // check how many rows
     $check_products_all = $db->Execute($products_all_split->sql_query);
-    $how_many = 0;
     while (!$check_products_all->EOF) {
       if (zen_has_product_attributes($check_products_all->fields['products_id'])) {
       } else {
