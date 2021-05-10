@@ -41,12 +41,13 @@ $featured_products_split = new splitPageResults($featured_products_query_raw, MA
 //check to see if we are in normal mode ... not showcase, not maintenance, etc
 $show_submit = zen_run_normal();
 
+$how_many = 0;
+
 // check whether to use multiple-add-to-cart, and whether top or bottom buttons are displayed
 if (PRODUCT_FEATURED_LISTING_MULTIPLE_ADD_TO_CART > 0 and $show_submit == true and $featured_products_split->number_of_rows > 0) {
 
   // check how many rows
   $check_products_all = $db->Execute($featured_products_split->sql_query);
-  $how_many = 0;
   while (!$check_products_all->EOF) {
     if (zen_has_product_attributes($check_products_all->fields['products_id'])) {
     } else {
