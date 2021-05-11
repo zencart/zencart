@@ -96,7 +96,7 @@ trait NotifierManager
 
     protected function logNotifier($eventID, $param1, $param2, $param3, $param4, $param5, $param6, $param7, $param8, $param9)
     {
-        if (!defined('NOTIFIER_TRACE') || NOTIFIER_TRACE === '' || NOTIFIER_TRACE === 'false' || NOTIFIER_TRACE === 'Off') {
+        if (!defined('NOTIFIER_TRACE') || empty(NOTIFIER_TRACE) || NOTIFIER_TRACE === 'false' || NOTIFIER_TRACE === 'Off') {
             return;
         }
         $file = DIR_FS_LOGS . '/notifier_trace.log';
