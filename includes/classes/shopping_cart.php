@@ -1382,7 +1382,7 @@ class shoppingCart extends base
                     'products_quantity_order_max' => (float)$products->fields['products_quantity_order_max'],
                     'products_quantity_mixed' => (int)$products->fields['products_quantity_mixed'],
                     'products_mixed_discount_quantity' => (int)$products->fields['products_mixed_discount_quantity'],
-                    'products_type' => $products->fields['products_type'],
+                    'products_type' => (int)$products->fields['products_type'],
                 ];
             }
         }
