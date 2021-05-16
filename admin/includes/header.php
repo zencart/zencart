@@ -29,7 +29,7 @@ if (empty($action)) {
         $languages_selected = $_SESSION['language'];
         $missing_languages = '';
         $count = 0;
-        for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
+        for ($i = 0, $n = count($languages); $i < $n; $i++) {
             $test_directory = DIR_WS_LANGUAGES . $languages[$i]['directory'];
             $test_file = DIR_WS_LANGUAGES . 'lang.' . $languages[$i]['directory'] . '.php';
             if (file_exists($test_file) && file_exists($test_directory)) {
@@ -189,7 +189,7 @@ if (defined('MODULE_ORDER_TOTAL_GV_SHOW_QUEUE_IN_ADMIN') && MODULE_ORDER_TOTAL_G
         <?php
         if (!$hide_languages) {
             echo zen_draw_form('languages', basename($PHP_SELF), '', 'get');
-            echo DEFINE_LANGUAGE . '&nbsp;&nbsp;' . (sizeof($languages) > 1 ? zen_draw_pull_down_menu('language', $languages_array, $languages_selected, 'onChange="this.form.submit();"') : '');
+            echo DEFINE_LANGUAGE . '&nbsp;&nbsp;' . (count($languages) > 1 ? zen_draw_pull_down_menu('language', $languages_array, $languages_selected, 'onChange="this.form.submit();"') : '');
             echo zen_hide_session_id();
             echo zen_post_all_get_params(array('language'));
             echo '</form>';
