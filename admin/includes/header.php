@@ -21,10 +21,10 @@ require_once DIR_WS_INCLUDES . 'javascript_loader.php';
 $version_check_requested = (isset($_GET['vcheck']) && $_GET['vcheck'] != '') ? true : false;
 
 // Show Languages Dropdown for convenience only if main filename and directory exists
-if ((basename($PHP_SELF) != FILENAME_DEFINE_LANGUAGE . '.php') and (basename($PHP_SELF) != FILENAME_PRODUCTS_OPTIONS_NAME . '.php') and empty($action)) {
-    $languages_array = array();
+if (empty($action)) {
+    $languages_array = [];
     $languages = zen_get_languages();
-    if (sizeof($languages) > 1) {
+    if (count($languages) > 1) {
         //$languages_selected = $_GET['language'];
         $languages_selected = $_SESSION['language'];
         $missing_languages = '';
@@ -32,10 +32,12 @@ if ((basename($PHP_SELF) != FILENAME_DEFINE_LANGUAGE . '.php') and (basename($PH
         for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
             $test_directory = DIR_WS_LANGUAGES . $languages[$i]['directory'];
             $test_file = DIR_WS_LANGUAGES . 'lang.' . $languages[$i]['directory'] . '.php';
-            if (file_exists($test_file) and file_exists($test_directory)) {
+            if (file_exists($test_file) && file_exists($test_directory)) {
                 $count++;
-                $languages_array[] = array('id' => $languages[$i]['code'],
-                                           'text' => $languages[$i]['name']);
+                $languages_array[] = [
+                  'id' => $languages[$i]['code'],
+                  'text' => $languages[$i]['name']
+                ];
                 if ($languages[$i]['directory'] == $_SESSION['language']) {
                     $languages_selected = $languages[$i]['code'];
                 }
@@ -45,7 +47,7 @@ if ((basename($PHP_SELF) != FILENAME_DEFINE_LANGUAGE . '.php') and (basename($PH
         }
 
 // if languages in table do not match valid languages show error message
-        if ($count != sizeof($languages)) {
+        if ($count != count($languages)) {
             $messageStack->add('MISSING LANGUAGE FILES OR DIRECTORIES ...' . $missing_languages, 'caution');
         }
         $hide_languages = false;
@@ -169,7 +171,7 @@ if (defined('MODULE_ORDER_TOTAL_GV_SHOW_QUEUE_IN_ADMIN') && MODULE_ORDER_TOTAL_G
     <div class="clearfix visible-xs-block"></div>
     <div class="col-xs-6 col-sm-3 col-sm-pull-3 noprint adminHeaderAlerts">
         <?php
-        if (isset($_SESSION['reset_admin_activity_log']) and ($_SESSION['reset_admin_activity_log'] == true and (basename($PHP_SELF) == FILENAME_DEFAULT . '.php'))) {
+        if (isset($_SESSION['reset_admin_activity_log']) && ($_SESSION['reset_admin_activity_log'] == true && (basename($PHP_SELF) == FILENAME_DEFAULT . '.php'))) {
         ?>
         <a class="btn btn-warning" role="button" href="<?php echo zen_href_link(FILENAME_ADMIN_ACTIVITY); ?>"><?php echo TEXT_BUTTON_RESET_ACTIVITY_LOG;?></a><p class="hidden-xs"><br><?php echo RESET_ADMIN_ACTIVITY_LOG; ?></p>
         <?php
@@ -219,4 +221,4 @@ if (defined('MODULE_ORDER_TOTAL_GV_SHOW_QUEUE_IN_ADMIN') && MODULE_ORDER_TOTAL_G
         </ul>
     </div>
   </div>
-<?php require(DIR_WS_INCLUDES . 'header_navigation.php'); ?>
+<?php require DIR_WS_INCLUDES . 'header_navigation.php'; ?>
