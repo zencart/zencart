@@ -289,8 +289,10 @@ class ot_coupon
 
         $coupon_details = $this->getCouponDetailsFromDb($coupon_code);
 
-        if (empty($coupon_details) || $coupon_details['coupon_active'] !== 'Y') {
-            $this->validation_errors[] = sprintf(TEXT_INVALID_REDEEM_COUPON, $coupon_code);
+        if (empty($coupon_details) || $coupon_details['coupon_active'] !== 'Y')  {
+            if (!$this->isCodeEqualToRemoveCode($coupon_code)) {
+                $this->validation_errors[] = sprintf(TEXT_INVALID_REDEEM_COUPON, $coupon_code);
+            }
             return;
         }
 
@@ -426,8 +428,9 @@ class ot_coupon
 
         $orderAmountTotal = (string)$orderTotalDetails['orderTotal'];  // coupon is applied against value of only qualifying/restricted products in cart
         if ($coupon_details['coupon_calc_base'] == 1) {
-            $orderAmountTotal = (string)$orderTotalDetails['totalFull']; // coupon is applied against value of all products in cart
+            $orderAmountToCompareAgainstCouponMinimum = (string)$orderTotalDetails['totalFull']; // coupon minimum comparison includes sale items that may not be included in deduction
         }
+
 
 //echo 'ot_coupon coupon_total: ' . $coupon_details['coupon_calc_base'] . '<br>$orderTotalDetails[orderTotal]: ' . $orderTotalDetails['orderTotal'] . '<br>$orderTotalDetails[totalFull]: ' . $orderTotalDetails['totalFull'] . '<br>$orderAmountTotal: ' . $orderAmountTotal . '<br><br>$coupon_details[coupon_minimum_order]: ' . $coupon_details['coupon_minimum_order'] . '<br>$orderAmountToCompareAgainstCouponMinimum: ' . $orderAmountToCompareAgainstCouponMinimum . '<br>';
 
@@ -686,12 +689,16 @@ class ot_coupon
 
         if (!defined('TEXT_COMMAND_TO_DELETE_CURRENT_COUPON_FROM_ORDER')) define('TEXT_COMMAND_TO_DELETE_CURRENT_COUPON_FROM_ORDER', 'REMOVE');
 
-        if (strtoupper($coupon_code) == TEXT_COMMAND_TO_DELETE_CURRENT_COUPON_FROM_ORDER) {
+        if ($this->isCodeEqualToRemoveCode($coupon_code)) {
 
             $this->remove_coupon_from_current_session();
 
             $messageStack->add_session('checkout_payment', TEXT_REMOVE_REDEEM_COUPON, 'caution');
         }
+    }
+
+    private function isCodeEqualToRemoveCode($code) {
+        return (strtoupper($code) == TEXT_COMMAND_TO_DELETE_CURRENT_COUPON_FROM_ORDER);
     }
 
     /**
@@ -744,7 +751,6 @@ class ot_coupon
         }
 
         $found_valid = true;
-
         if ($found_valid) {
             $found_valid = false;
             foreach ($products as $product) {
@@ -845,7 +851,7 @@ class ot_coupon
 
         $orderAmountTotal = (string)$orderTotalDetails['orderTotal'];  // coupon is applied against value of only qualifying/restricted products in cart
         if ($coupon_details['coupon_calc_base'] == 1) {
-            $orderAmountTotal = (string)$orderTotalDetails['totalFull']; // coupon is applied against value of all products in cart
+            $orderAmountToCompareAgainstCouponMinimum = (string)$orderTotalDetails['totalFull']; // coupon minimum comparison includes sale items that may not be included in deduction
         }
 
 //echo 'Product: ' . $orderTotalDetails['orderTotal'] . ' Order: ' . $orderTotalDetails['totalFull'] . ' $orderAmountTotal: ' . $orderAmountTotal . '<br>';
