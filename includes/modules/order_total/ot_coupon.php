@@ -289,7 +289,7 @@ class ot_coupon
 
         $coupon_details = $this->getCouponDetailsFromDb($coupon_code);
 
-        if (empty($coupon_details) || $coupon_details['coupon_active'] !== 'Y')  {
+        if (empty($coupon_details) || $coupon_details['coupon_active'] !== 'Y') {
             if (!$this->isCodeEqualToRemoveCode($coupon_code)) {
                 $this->validation_errors[] = sprintf(TEXT_INVALID_REDEEM_COUPON, $coupon_code);
             }
