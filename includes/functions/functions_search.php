@@ -157,11 +157,14 @@ function zen_parse_search_string($search_str = '', &$objects = array()) {
     return false;
 }
 
-    function zen_build_keyword_where_clause($fields, $string)
+    function zen_build_keyword_where_clause($fields, $string, $startWithWhere = false)
     {
         global $db;
         if (zen_parse_search_string(stripslashes($string), $search_keywords)) {
             $where_str = " AND (";
+            if ($startWithWhere) {
+                $where_str = " WHERE (";
+            }
             for ($i = 0, $n = sizeof($search_keywords); $i < $n; $i++) {
                 switch ($search_keywords[$i]) {
                     case '(':
