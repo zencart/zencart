@@ -14,6 +14,7 @@ if (isset($module)) {
 
 $quick_view_popover_enabled = false;
 $includeAttributesInProductDetailRows = true;
+$show_product_tax = true;
 
 require(DIR_WS_CLASSES . 'currencies.php');
 $currencies = new currencies();
@@ -743,7 +744,9 @@ if (!empty($action) && $order_exists == true) {
             <tr class="dataTableHeadingRow">
               <th class="dataTableHeadingContent" colspan="2"><?php echo TABLE_HEADING_PRODUCTS; ?></th>
               <th class="dataTableHeadingContent hidden-xs"><?php echo TABLE_HEADING_PRODUCTS_MODEL; ?></th>
+<?php if ($show_product_tax) { ?>
               <th class="dataTableHeadingContent text-right hidden-xs"><?php echo TABLE_HEADING_TAX; ?></th>
+<?php } ?>
               <th class="dataTableHeadingContent text-right"><?php echo ($show_including_tax) ? TABLE_HEADING_PRICE_EXCLUDING_TAX : TABLE_HEADING_PRICE; ?></th>
 <?php if ($show_including_tax)  { ?>
               <th class="dataTableHeadingContent text-right hidden-xs"><?php echo TABLE_HEADING_PRICE_INCLUDING_TAX; ?></th>
@@ -794,9 +797,11 @@ if (!empty($action) && $order_exists == true) {
                 <td class="dataTableContent hidden-xs">
                   <?php echo $order->products[$i]['model']; ?>
                 </td>
+<?php if ($show_product_tax) { ?>
                 <td class="dataTableContent text-right hidden-xs">
                   <?php echo zen_display_tax_value($order->products[$i]['tax']); ?>%
                 </td>
+<?php } ?>
                 <td class="dataTableContent text-right">
                   <strong><?php echo $currencies->format($order->products[$i]['final_price'], true, $order->info['currency'], $order->info['currency_value']) . ($order->products[$i]['onetime_charges'] != 0 ? '<br>' . $currencies->format($order->products[$i]['onetime_charges'], true, $order->info['currency'], $order->info['currency_value']) : ''); ?></strong>
                 </td>

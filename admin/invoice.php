@@ -15,6 +15,7 @@ $oID = zen_db_prepare_input($_GET['oID']);
 include DIR_FS_CATALOG . DIR_WS_CLASSES . 'order.php';
 $order = new order($oID);
 $show_including_tax = (DISPLAY_PRICE_WITH_TAX == 'true');
+$show_product_tax = true;
 
 // prepare order-status pulldown list
 $orders_statuses = array();
@@ -124,7 +125,9 @@ if ($order->billing['street_address'] != $order->delivery['street_address']) {
             <th class="dataTableHeadingContent">&nbsp;</th>
             <th class="dataTableHeadingContent"><?php echo TABLE_HEADING_PRODUCTS; ?></th>
             <th class="dataTableHeadingContent"><?php echo TABLE_HEADING_PRODUCTS_MODEL; ?></th>
+<?php if ($show_product_tax) { ?>
             <th class="dataTableHeadingContent text-right"><?php echo TABLE_HEADING_TAX; ?></th>
+<?php } ?>
             <th class="dataTableHeadingContent text-right"><?php echo ($show_including_tax) ? TABLE_HEADING_PRICE_EXCLUDING_TAX : TABLE_HEADING_PRICE; ?></th>
 <?php if ($show_including_tax)  { ?>
             <th class="dataTableHeadingContent text-right"><?php echo TABLE_HEADING_PRICE_INCLUDING_TAX; ?></th>
@@ -197,9 +200,11 @@ if ($order->billing['street_address'] != $order->delivery['street_address']) {
               <td class="dataTableContent">
                 <?php echo $order->products[$i]['model']; ?>
               </td>
+<?php if ($show_product_tax) { ?>
               <td class="dataTableContent text-right">
                 <?php echo zen_display_tax_value($order->products[$i]['tax']); ?>%
               </td>
+<?php } ?>
               <td class="dataTableContent text-right">
                 <strong><?php echo $currencies->format($order->products[$i]['final_price'], true, $order->info['currency'], $order->info['currency_value']) . ($order->products[$i]['onetime_charges'] != 0 ? '<br>' . $currencies->format($order->products[$i]['onetime_charges'], true, $order->info['currency'], $order->info['currency_value']) : ''); ?></strong>
               </td>
