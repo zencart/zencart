@@ -310,6 +310,11 @@ function zen_get_tax_rate_from_desc(string $tax_desc)
 
         $result = $db->Execute($sql);
 
+        // If description not found, then no tax to add.
+        if ($result->EOF) {
+          $result->fields['tax_rate'] = 0.0;
+        }
+
         $tax_rate += $result->fields['tax_rate'];
     }
 
