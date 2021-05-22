@@ -271,6 +271,11 @@
 
       $tax = $db->Execute($tax_query);
 
+      // If description not found, then no tax to add.
+      if ($tax->EOF) {
+        $tax->fields['tax_rate'] = 0.0;
+      }
+
       $tax_rate += $tax->fields['tax_rate'];
     }
 
