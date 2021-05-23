@@ -2,7 +2,7 @@
 /**
  * functions_taxes
  *
- * @copyright Copyright 2003-2020 Zen Cart Development Team
+ * @copyright Copyright 2003-2021 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: lat9 2019 Dec 16 Modified in v1.5.7 $
@@ -271,12 +271,9 @@
 
       $tax = $db->Execute($tax_query);
 
-      // If description not found, then no tax to add.
-      if ($tax->EOF) {
-        $tax->fields['tax_rate'] = 0.0;
+      if (!$tax->EOF) {
+          $tax_rate += $tax->fields['tax_rate'];
       }
-
-      $tax_rate += $tax->fields['tax_rate'];
     }
 
     return $tax_rate;
