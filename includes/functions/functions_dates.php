@@ -20,6 +20,11 @@ if (!function_exists('zen_date_raw')) {
      * @return string
      */
     function zen_date_raw($date, $reverse = false) {
+        // sometimes zen_date_short is called with a zero-date value which returns false, which is then passed to $date here, so this just reformats to avoid confusion.
+        if (empty($date) || strpos($date, '0001') || strpos($date, '0000')) {
+            $date = '01/01/0001';
+        }
+
         if ($reverse) {
             return substr($date, 3, 2) . substr($date, 0, 2) . substr($date, 6, 4);
         } else {
