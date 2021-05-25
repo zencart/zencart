@@ -526,9 +526,12 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
                   LEFT JOIN " . TABLE_CATEGORIES_DESCRIPTION . " cd ON c.categories_id = cd.categories_id
                     AND cd.language_id = " . (int)$_SESSION['languages_id'];
 
-          if (isset($_GET['search'])) {
-              $sql .= " WHERE cd.categories_name like '%:search%'";
-              $sql = $db->bindVars($sql, ':search', $_GET['search'], 'noquotestring');
+            if (isset($_GET['search'])) {
+              $keyword_search_fields = [
+                'cd.categories_name',
+                'cd.categories_description',
+              ];
+              $sql .= zen_build_keyword_where_clause($keyword_search_fields, trim($keywords), true);
           } else {
               $sql .= " WHERE c.parent_id = :category";
               $sql = $db->bindVars($sql, ':category', $current_category_id, 'integer');
