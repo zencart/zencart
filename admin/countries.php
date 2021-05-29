@@ -8,7 +8,7 @@
 require 'includes/application_top.php';
 
 $action = (isset($_GET['action']) ? $_GET['action'] : '');
-$currentPage = (isset($_GET['page']) && $_GET['page'] != '' ? (int)$_GET['page'] : 0);
+$currentPage = (isset($_GET['page']) && ctype_alpha($_GET['page'][0]) ? $_GET['page'][0] : '');
 
 if (!empty($action)) {
   switch ($action) {
@@ -44,7 +44,7 @@ if (!empty($action)) {
                         status = " . (int)$status . "
                     WHERE countries_id = " . (int)$countries_id);
       zen_record_admin_activity('Country updated: ' . $countries_iso_code_3, 'info');
-      zen_redirect(zen_href_link(FILENAME_COUNTRIES, ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . 'cID=' . $countries_id));
+      zen_redirect(zen_href_link(FILENAME_COUNTRIES, ($currentPage !== '' ? 'page=' . $currentPage . '&' : '') . 'cID=' . $countries_id));
       break;
     case 'deleteconfirm':
       $countries_id = zen_db_prepare_input($_POST['cID']);
@@ -60,7 +60,7 @@ if (!empty($action)) {
       } else {
         $messageStack->add_session(ERROR_COUNTRY_IN_USE, 'error');
       }
-      zen_redirect(zen_href_link(FILENAME_COUNTRIES, ($currentPage != 0 ? 'page=' . $currentPage : '')));
+      zen_redirect(zen_href_link(FILENAME_COUNTRIES, ($currentPage !== '' ? 'page=' . $currentPage : '')));
       break;
     case 'setstatus':
       $countries_id = (int)$_POST['current_country'];
@@ -70,7 +70,7 @@ if (!empty($action)) {
                 WHERE countries_id = " . (int)$countries_id;
         $db->Execute($sql);
         zen_record_admin_activity('Country with ID number: ' . $countries_id . ' changed status to ' . ($_POST['current_status'] == 0 ? 1 : 0), 'info');
-        zen_redirect(zen_href_link(FILENAME_COUNTRIES, ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . 'cID=' . (int)$countries_id));
+        zen_redirect(zen_href_link(FILENAME_COUNTRIES, ($currentPage !== '' ? 'page=' . $currentPage . '&' : '') . 'cID=' . (int)$countries_id));
       }
       $action = '';
       break;
