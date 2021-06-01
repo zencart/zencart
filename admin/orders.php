@@ -19,9 +19,6 @@ $show_product_tax = true;
 require(DIR_WS_CLASSES . 'currencies.php');
 $currencies = new currencies();
 
-if (isset($_GET['oID'])) {
-  $_GET['oID'] = (int)$_GET['oID'];
-}
 if (isset($_GET['download_reset_on'])) {
   $_GET['download_reset_on'] = (int)$_GET['download_reset_on'];
 }
@@ -46,18 +43,21 @@ foreach ($orders_status as $status) {
 
 $action = (isset($_GET['action']) ? $_GET['action'] : '');
 $order_exists = false;
-if (isset($_GET['oID']) && trim($_GET['oID']) == '') {
+if (isset($_GET['oID']) && empty($_GET['oID'])) {
   unset($_GET['oID']);
+}
+if (isset($_GET['oID'])) {
+  $_GET['oID'] = (int)$_GET['oID'];
 }
 if ($action == 'edit' && !isset($_GET['oID'])) {
   $action = '';
 }
 
-$oID = FALSE;
+$oID = false;
 if (isset($_POST['oID'])) {
-  $oID = zen_db_prepare_input(trim($_POST['oID']));
+  $oID = (int)$_POST['oID'];
 } elseif (isset($_GET['oID'])) {
-  $oID = zen_db_prepare_input(trim($_GET['oID']));
+  $oID = (int)$_GET['oID'];
 }
 if ($oID) {
   $orders = $db->Execute("SELECT orders_id
@@ -78,29 +78,29 @@ if (!empty($oID) && !empty($action)) {
   $zco_notifier->notify('NOTIFY_ADMIN_ORDER_PREDISPLAY_HOOK', $oID, $action);
 }
 
-        // -----
-        // Determine which of the 'Notify Customer' radio buttons should be selected initially,
-        // based on configuration setting in 'My Store'.  Set a default, just in case that configuration
-        // setting isn't set!
-        //
-        if (!defined('NOTIFY_CUSTOMER_DEFAULT')) define('NOTIFY_CUSTOMER_DEFAULT', '1');
-        switch (NOTIFY_CUSTOMER_DEFAULT) {
-            case '0':
-                $notify_email = false;
-                $notify_no_email = true;
-                $notify_hidden = false;
-                break;
-            case '-1':
-                $notify_email = false;
-                $notify_no_email = false;
-                $notify_hidden = true;
-                break;
-            default:
-                $notify_email = true;
-                $notify_no_email = false;
-                $notify_hidden = false;
-                break;
-        }
+// -----
+// Determine which of the 'Notify Customer' radio buttons should be selected initially,
+// based on configuration setting in 'My Store'.  Set a default, just in case that configuration
+// setting isn't set!
+//
+if (!defined('NOTIFY_CUSTOMER_DEFAULT')) define('NOTIFY_CUSTOMER_DEFAULT', '1');
+switch (NOTIFY_CUSTOMER_DEFAULT) {
+    case '0':
+        $notify_email = false;
+        $notify_no_email = true;
+        $notify_hidden = false;
+        break;
+    case '-1':
+        $notify_email = false;
+        $notify_no_email = false;
+        $notify_hidden = true;
+        break;
+    default:
+        $notify_email = true;
+        $notify_no_email = false;
+        $notify_hidden = false;
+        break;
+}
 
 if (!empty($action) && $order_exists == true) {
   switch ($action) {
@@ -331,7 +331,7 @@ if (!empty($action) && $order_exists == true) {
       break;
 
     case 'deleteconfirm':
-      $oID = zen_db_prepare_input($_POST['oID']);
+      $oID = (int)$_POST['oID'];
 
       zen_remove_order($oID, $_POST['restock']);
 
