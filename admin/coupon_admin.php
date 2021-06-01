@@ -1309,7 +1309,7 @@ switch ($_GET['action']) {
               <table class="table">
                 <tr>
                   <td><?php echo $cc_split->display_count($cc_query_numrows, $maxDisplaySearchResults, $_GET['page'], TEXT_DISPLAY_NUMBER_OF_COUPONS); ?></td>
-                  <td class="text-right"><?php echo $cc_split->display_links($cc_query_numrows, $maxDisplaySearchResults, MAX_DISPLAY_PAGE_LINKS, $_GET['page'], (isset($_GET['status']) ? '&status=' . $_GET['status'] : '')); ?></td>
+                  <td class="text-right"><?php echo $cc_split->display_links($cc_query_numrows, $maxDisplaySearchResults, MAX_DISPLAY_PAGE_LINKS, $_GET['page'], (isset($_GET['status']) ? 'status=' . $_GET['status'] : '')); ?></td>
                 </tr>
                 <tr>
                   <td class="text-right" colspan="2"><a name="couponInsert" href="<?php echo zen_href_link(FILENAME_COUPON_ADMIN, (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . 'cid=' . (int)$cInfo->coupon_id . '&action=new'); ?>" class="btn btn-primary" role="button"><?php echo IMAGE_INSERT; ?></a></td>
