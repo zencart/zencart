@@ -782,7 +782,7 @@ if (!empty($action) && $order_exists == true) {
                         if ($order->products[$i]['attributes'][$j]['price'] != '0') {
                           echo ' (' . $order->products[$i]['attributes'][$j]['prefix'] . $currencies->format($order->products[$i]['attributes'][$j]['price'] * $order->products[$i]['qty'], true, $order->info['currency'], $order->info['currency_value']) . ')';
                         }
-                        if ($order->products[$i]['attributes'][$j]['product_attribute_is_free'] == '1' and $order->products[$i]['product_is_free'] == '1') {
+                        if ($order->products[$i]['attributes'][$j]['product_attribute_is_free'] == '1' && $order->products[$i]['product_is_free'] == '1') {
                           echo TEXT_INFO_ATTRIBUTE_FREE;
                         }
                         echo '</i></small></span>';
@@ -1191,7 +1191,7 @@ if (!empty($action) && $order_exists == true) {
                       ];
                       $search = zen_build_keyword_where_clause($keyword_search_fields, trim($keywords));
                     if (substr(strtoupper($_GET['search_orders_products']), 0, 3) == 'ID:') {
-                      $keywords = TRIM(substr($_GET['search_orders_products'], 3));
+                      $keywords = trim(substr($_GET['search_orders_products'], 3));
                       $search = " AND op.products_id ='" . (int)$keywords . "'";
                     }
                   } elseif (!empty($_GET['search'])) {
@@ -1278,10 +1278,10 @@ if (!empty($action) && $order_exists == true) {
                     }
 
                     $show_difference = '';
-                    if ((strtoupper($orders->fields['delivery_name']) != strtoupper($orders->fields['billing_name']) and trim($orders->fields['delivery_name']) != '')) {
+                    if ((strtoupper($orders->fields['delivery_name']) != strtoupper($orders->fields['billing_name']) && trim($orders->fields['delivery_name']) != '')) {
                       $show_difference = zen_image(DIR_WS_IMAGES . 'icon_status_red.gif', TEXT_BILLING_SHIPPING_MISMATCH, 10, 10) . '&nbsp;';
                     }
-                    if ((strtoupper($orders->fields['delivery_street_address']) != strtoupper($orders->fields['billing_street_address']) and trim($orders->fields['delivery_street_address']) != '')) {
+                    if ((strtoupper($orders->fields['delivery_street_address']) != strtoupper($orders->fields['billing_street_address']) && trim($orders->fields['delivery_street_address']) != '')) {
                       $show_difference = zen_image(DIR_WS_IMAGES . 'icon_status_red.gif', TEXT_BILLING_SHIPPING_MISMATCH, 10, 10) . '&nbsp;';
                     }
                     //-Additional "difference" icons can be added on a per-order basis and/or additional icons to be added to the "action" column.
@@ -1483,7 +1483,7 @@ if (!empty($action) && $order_exists == true) {
                           $contents[] = ['text' => '&nbsp;<i> - ' . $order->products[$i]['attributes'][$j]['option'] . ': ' . nl2br(zen_output_string_protected($order->products[$i]['attributes'][$j]['value'])) . '</i>'];
                         }
                       }
-                      if ($i > MAX_DISPLAY_RESULTS_ORDERS_DETAILS_LISTING and MAX_DISPLAY_RESULTS_ORDERS_DETAILS_LISTING != 0) {
+                      if ($i > MAX_DISPLAY_RESULTS_ORDERS_DETAILS_LISTING && MAX_DISPLAY_RESULTS_ORDERS_DETAILS_LISTING != 0) {
                         $contents[] = ['text' => TEXT_MORE];
                         break;
                       }
