@@ -41,7 +41,7 @@ foreach ($orders_status as $status) {
   $orders_status_array[$status['orders_status_id']] = $status['orders_status_name'];
 }
 
-$action = (isset($_GET['action']) ? $_GET['action'] : '');
+$action = ($_GET['action'] ?? '');
 $order_exists = false;
 if (isset($_GET['oID']) && empty($_GET['oID'])) {
   unset($_GET['oID']);
@@ -236,7 +236,7 @@ if (!empty($action) && $order_exists == true) {
     case 'update_order':
       $oID = zen_db_prepare_input($_GET['oID']);
       $comments = !empty($_POST['comments']) ? zen_db_prepare_input($_POST['comments']) : '';
-      $admin_language = zen_db_prepare_input(isset($_POST['admin_language']) ? $_POST['admin_language'] : $_SESSION['languages_code']);
+      $admin_language = zen_db_prepare_input($_POST['admin_language'] ?? $_SESSION['languages_code']);
       $status = (int)$_POST['statusUpdateSelect'];
       if ($status < 1) {
          break;
@@ -914,7 +914,7 @@ if (!empty($action) && $order_exists == true) {
                         <?php
                         if ($item['customer_notified'] == '1') {
                           echo zen_image(DIR_WS_ICONS . 'tick.gif', TEXT_YES);
-                        } else if ($item['customer_notified'] == '-1') {
+                        } elseif ($item['customer_notified'] == '-1') {
                           echo zen_image(DIR_WS_ICONS . 'locked.gif', TEXT_HIDDEN);
                         } else {
                           echo zen_image(DIR_WS_ICONS . 'unlocked.gif', TEXT_VISIBLE);
@@ -1351,7 +1351,7 @@ if (!empty($action) && $order_exists == true) {
   // multiple observers might be injecting content!
   //
   $extra_data = false;
-  $zco_notifier->notify('NOTIFY_ADMIN_ORDERS_LIST_EXTRA_COLUMN_DATA', (isset($oInfo) ? $oInfo : []), $orders->fields, $extra_data);
+  $zco_notifier->notify('NOTIFY_ADMIN_ORDERS_LIST_EXTRA_COLUMN_DATA', ($oInfo ?? []), $orders->fields, $extra_data);
   if (is_array($extra_data)) {
       foreach ($extra_data as $data_info) {
           $align = (isset($data_info['align'])) ? (' text-' . $data_info['align']) : '';
@@ -1495,7 +1495,7 @@ if (!empty($action) && $order_exists == true) {
                   }
                   break;
               }
-              $zco_notifier->notify('NOTIFY_ADMIN_ORDERS_MENU_BUTTONS_END', (isset($oInfo) ? $oInfo : []), $contents);
+              $zco_notifier->notify('NOTIFY_ADMIN_ORDERS_MENU_BUTTONS_END', ($oInfo ?? []), $contents);
 
               if (!empty($heading) && !empty($contents)) {
                 $box = new box();
