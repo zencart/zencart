@@ -59,7 +59,7 @@ if ($_GET['action'] == 'send_email_to_user' && !empty($_POST['customers_email_ad
                                  FROM " . TABLE_COUPONS . " c
                                  LEFT JOIN " . TABLE_COUPONS_DESCRIPTION . " cd ON cd.coupon_id = c.coupon_id
                                    AND language_id = " . (int)$_SESSION['languages_id'] . "
-                                 WHERE coupon_id = " . (int)$_GET['cid']);
+                                 WHERE c.coupon_id = " . (int)$_GET['cid']);
 
   $from = zen_db_prepare_input($_POST['from']);
   $subject = zen_db_prepare_input($_POST['subject']);
@@ -783,7 +783,7 @@ switch ($_GET['action']) {
             <?php if (EMAIL_USE_HTML == 'true') { ?>
               <div class="form-group">
                 <?php echo zen_draw_label(TEXT_RICH_TEXT_MESSAGE, 'message_html', 'class="control-label col-sm-3"'); ?>
-                <div class="col-sm-9 col-md-6"><?php echo zen_draw_textarea_field('message_html', 'soft', '100%', '25', htmlspecialchars(($_POST['message_html'] == '') ? TEXT_COUPON_ANNOUNCE : stripslashes($_POST['message_html']), ENT_COMPAT, CHARSET, TRUE), 'id="message_html" class="editorHook form-control" id="message_html"'); ?></div>
+                <div class="col-sm-9 col-md-6"><?php echo zen_draw_textarea_field('message_html', 'soft', '100%', '25', htmlspecialchars(empty($_POST['message_html']) ? TEXT_COUPON_ANNOUNCE : stripslashes($_POST['message_html']), ENT_COMPAT, CHARSET, TRUE), 'id="message_html" class="editorHook form-control" id="message_html"'); ?></div>
               </div>
             <?php } ?>
             <div class="form-group">
