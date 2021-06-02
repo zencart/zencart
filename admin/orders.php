@@ -757,7 +757,7 @@ if (!empty($action) && $order_exists == true) {
 <?php } ?>
             </tr>
             <?php
-            for ($i = 0, $n = sizeof($order->products); $i < $n; $i++) {
+            for ($i = 0, $n = count($order->products); $i < $n; $i++) {
               if (DISPLAY_PRICE_WITH_TAX_ADMIN == 'true') {
                 $priceIncTax = $currencies->format(zen_round(zen_add_tax($order->products[$i]['final_price'], $order->products[$i]['tax']), $currencies->get_decimal_places($order->info['currency'])) * $order->products[$i]['qty'], true, $order->info['currency'], $order->info['currency_value']);
               } else {
@@ -771,8 +771,8 @@ if (!empty($action) && $order_exists == true) {
                 <td class="dataTableContent">
                 <?php
                     echo $order->products[$i]['name'];
-                    if (isset($order->products[$i]['attributes']) && (sizeof($order->products[$i]['attributes']) > 0)) {
-                      for ($j = 0, $k = sizeof($order->products[$i]['attributes']); $j < $k; $j++) {
+                    if (isset($order->products[$i]['attributes']) && (count($order->products[$i]['attributes']) > 0)) {
+                      for ($j = 0, $k = count($order->products[$i]['attributes']); $j < $k; $j++) {
                         echo '<br><span style="white-space:nowrap;"><small>&nbsp;<i> - ';
                         echo $order->products[$i]['attributes'][$j]['option'] . ': ' . nl2br(zen_output_string_protected($order->products[$i]['attributes'][$j]['value']));
                         if (zen_is_option_file($order->products[$i]['attributes'][$j]['option_id'])) {
@@ -836,7 +836,7 @@ if (!empty($action) && $order_exists == true) {
 <?php } ?>
                 <table style="margin-right: 0; margin-left: auto;">
                     <?php
-                    for ($i = 0, $n = sizeof($order->totals); $i < $n; $i++) {
+                    for ($i = 0, $n = count($order->totals); $i < $n; $i++) {
                       ?>
                     <tr>
                       <td class="<?php echo str_replace('_', '-', $order->totals[$i]['class']); ?>-Text text-right">
@@ -1474,12 +1474,12 @@ if (!empty($action) && $order_exists == true) {
 
                     $contents[] = array('text' => '<br>' . zen_image(DIR_WS_IMAGES . 'pixel_black.gif', '', '', '3', 'style="width:100%"'));
                     $order = new order($oInfo->orders_id);
-                    $contents[] = array('text' => TABLE_HEADING_PRODUCTS . ': ' . sizeof($order->products));
-                    for ($i = 0, $n=sizeof($order->products); $i <$n; $i++) {
+                    $contents[] = array('text' => TABLE_HEADING_PRODUCTS . ': ' . count($order->products));
+                    for ($i = 0, $n=count($order->products); $i <$n; $i++) {
                       $contents[] = array('text' => $order->products[$i]['qty'] . '&nbsp;x&nbsp;' . $order->products[$i]['name']);
 
                       if (!empty($order->products[$i]['attributes'])) {
-                        for ($j = 0, $nn=sizeof($order->products[$i]['attributes']); $j < $nn; $j++) {
+                        for ($j = 0, $nn=count($order->products[$i]['attributes']); $j < $nn; $j++) {
                           $contents[] = array('text' => '&nbsp;<i> - ' . $order->products[$i]['attributes'][$j]['option'] . ': ' . nl2br(zen_output_string_protected($order->products[$i]['attributes'][$j]['value'])) . '</i>');
                         }
                       }
@@ -1489,7 +1489,7 @@ if (!empty($action) && $order_exists == true) {
                       }
                     }
 
-                    if (sizeof($order->products) > 0) {
+                    if (count($order->products) > 0) {
                       $contents[] = array('align' => 'text-center', 'text' => '<a href="' . zen_href_link(FILENAME_ORDERS, zen_get_all_get_params(array('oID', 'action')) . 'oID=' . $oInfo->orders_id . '&action=edit', 'NONSSL') . '" class="btn btn-primary" role="button">' . IMAGE_DETAILS . '</a>');
                     }
                   }
