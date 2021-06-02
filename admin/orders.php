@@ -108,56 +108,48 @@ if (!empty($action) && $order_exists === true) {
 
       $fileName = basename($_GET['filename']);
       $file_extension = strtolower(substr(strrchr($fileName, '.'), 1));
-      switch ($file_extension) {
-        case 'csv':
-          $content = 'text/csv';
-          break;
-        case 'zip':
-          $content = 'application/zip';
-          break;
-        case 'jpg':
-          $content = 'image/jpeg';
-          break;
-        case 'jpeg':
-          $content = 'image/jpeg';
-          break;
-        case 'gif':
-          $content = 'image/gif';
-          break;
-        case 'png':
-          $content = 'image/png';
-          break;
-        case 'eps':
-          $content = 'application/postscript';
-          break;
-        case 'cdr':
-          $content = 'application/cdr';
-          break;
-        case 'ai':
-          $content = 'application/postscript';
-          break;
-        case 'pdf':
-          $content = 'application/pdf';
-          break;
-        case 'tif':
-          $content = 'image/tiff';
-          break;
-        case 'tiff':
-          $content = 'image/tiff';
-          break;
-        case 'bmp':
-          $content = 'image/bmp';
-          break;
-        case 'xls':
-          $content = 'application/vnd.ms-excel';
-          break;
-        case 'numbers':
-          $content = 'application/vnd.ms-excel';
-          break;
-        default:
-          $messageStack->add_session(sprintf(TEXT_EXTENSION_NOT_UNDERSTOOD, $file_extension), 'error');
-          zen_redirect(zen_href_link(FILENAME_ORDERS, zen_get_all_get_params(['download', 'action']) . 'action=edit', 'NONSSL'));
-      }
+        switch ($file_extension) {
+            case 'ai':
+            case 'eps':
+                $content = 'application/postscript';
+                break;
+            case 'bmp':
+                $content = 'image/bmp';
+                break;
+            case 'cdr':
+                $content = 'application/cdr';
+                break;
+            case 'csv':
+                $content = 'text/csv';
+                break;
+            case 'gif':
+                $content = 'image/gif';
+                break;
+            case 'jpg':
+            case 'jpeg':
+                $content = 'image/jpeg';
+                break;
+            case 'numbers':
+            case 'xls':
+                $content = 'application/vnd.ms-excel';
+                break;
+            case 'pdf':
+                $content = 'application/pdf';
+                break;
+            case 'png':
+                $content = 'image/png';
+                break;
+            case 'tif':
+            case 'tiff':
+                $content = 'image/tiff';
+                break;
+            case 'zip':
+                $content = 'application/zip';
+                break;
+            default:
+                $messageStack->add_session(sprintf(TEXT_EXTENSION_NOT_UNDERSTOOD, $file_extension), 'error');
+                zen_redirect(zen_href_link(FILENAME_ORDERS, zen_get_all_get_params(['download', 'action']) . 'action=edit', 'NONSSL'));
+        }
       $fs_path = DIR_FS_CATALOG_IMAGES . 'uploads/' . $fileName;
       if (!file_exists($fs_path)) {
         $messageStack->add_session(TEXT_FILE_NOT_FOUND, 'error');
