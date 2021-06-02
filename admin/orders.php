@@ -62,7 +62,7 @@ if (isset($_POST['oID'])) {
 if ($oID) {
   $orders = $db->Execute("SELECT orders_id
                           FROM " . TABLE_ORDERS . "
-                          WHERE orders_id = " . (int)$oID);
+                          WHERE orders_id = " . $oID);
   $order_exists = true;
   if ($orders->RecordCount() <= 0) {
     $order_exists = false;
@@ -1234,10 +1234,10 @@ if (!empty($action) && $order_exists == true) {
 
                   if (!empty($_GET['cID'])) {
                     $cID = (int)zen_db_prepare_input($_GET['cID']);
-                    $orders_query_raw .= " WHERE o.customers_id = " . (int)$cID;
+                    $orders_query_raw .= " WHERE o.customers_id = " . $cID;
                   } elseif ($_GET['statusFilterSelect'] != '') {
                     $status_filter = (int)zen_db_prepare_input($_GET['statusFilterSelect']);
-                    $orders_query_raw .= " WHERE s.orders_status_id = " . (int)$status_filter . $search;
+                    $orders_query_raw .= " WHERE s.orders_status_id = " . $status_filter . $search;
                   } else {
                     $orders_query_raw .= (trim($search) != '') ? preg_replace('/ *AND /i', ' WHERE ', $search, 1) : '';
                   }
