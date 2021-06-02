@@ -452,7 +452,7 @@ if (!empty($action) && $order_exists == true) {
 
         <div class="row noprint">
           <div class="form-inline">
-            <div class="form-group col-xs-4 col-sm-3 col-md-3 col-lg-3">
+            <div class="form-group col-xs-3 col-sm-3 col-md-3 col-lg-3">
                 <?php
                 echo zen_draw_form('search', FILENAME_ORDERS, '', 'get', '', true);
                 echo zen_draw_label(HEADING_TITLE_SEARCH_ALL, 'searchAll', 'class="sr-only"');
@@ -470,7 +470,7 @@ if (!empty($action) && $order_exists == true) {
               </div>
               <?php echo '</form>'; ?>
             </div>
-            <div class="form-group col-xs-6 col-sm-3 col-md-3 col-lg-3">
+            <div class="form-group col-xs-3 col-sm-3 col-md-3 col-lg-3">
                 <?php
                 echo zen_draw_form('search_orders_products', FILENAME_ORDERS, '', 'get', '', true);
                 echo zen_draw_label(HEADING_TITLE_SEARCH_DETAIL_ORDERS_PRODUCTS, 'searchProduct', 'class="sr-only"');
@@ -489,7 +489,7 @@ if (!empty($action) && $order_exists == true) {
               <span id="helpBlock3" class="help-block"><?php echo HEADING_TITLE_SEARCH_DETAIL_ORDERS_PRODUCTS; ?></span>
               <?php echo '</form>'; ?>
             </div>
-            <div class="form-group col-xs-4 col-sm-3 col-md-3 col-lg-3">
+            <div class="form-group col-xs-3 col-sm-3 col-md-3 col-lg-3">
                 <?php
                 echo zen_draw_form('orders', FILENAME_ORDERS, '', 'get', '', true);
                 echo zen_draw_label(HEADING_TITLE_SEARCH, 'oID', 'class="sr-only"');
@@ -498,7 +498,7 @@ if (!empty($action) && $order_exists == true) {
                 echo '</form>';
                 ?>
             </div>
-            <div class="form-group col-xs-4 col-sm-3 col-md-3 col-lg-3">
+            <div class="form-group col-xs-3 col-sm-3 col-md-3 col-lg-3">
                 <?php
                 echo zen_draw_form('statusFilterForm', FILENAME_ORDERS, '', 'get', '', true);
                 echo zen_draw_label(HEADING_TITLE_STATUS, 'statusFilterSelect', 'class="sr-only"');
