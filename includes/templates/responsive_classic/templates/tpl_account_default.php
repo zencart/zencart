@@ -33,7 +33,7 @@
     <th scope="col"><?php echo TABLE_HEADING_SHIPPED_TO; ?></th>
     <th scope="col"><?php echo TABLE_HEADING_STATUS; ?></th>
     <th scope="col"><?php echo TABLE_HEADING_TOTAL; ?></th>
-    <th scope="col"><?php echo TABLE_HEADING_VIEW; ?></th>
+    <th scope="col" class="alignCenter"><?php echo TABLE_HEADING_VIEW; ?></th>
   </tr>
 <?php
   foreach($ordersArray as $orders) {
@@ -44,7 +44,7 @@
     <td class="accountOrderAddress"><?php if ($display_as_mobile) { echo '<b class="hide">' . TABLE_HEADING_SHIPPED_TO . '&#58;&nbsp;&nbsp;</b>'; }?><address><?php echo zen_output_string_protected($orders['order_name']) . '<br>' . $orders['order_country']; ?></address></td>
     <td class="accountOrderStatus"><?php if ($display_as_mobile) { echo '<b class="hide">' . TABLE_HEADING_STATUS . '&#58;&nbsp;&nbsp;</b>'; }?><?php echo $orders['orders_status_name']; ?></td>
     <td class="accountOrderTotal alignRight"><?php if ($display_as_mobile) { echo '<b class="hide">' . TABLE_HEADING_TOTAL . '&#58;&nbsp;&nbsp;</b>'; }?><?php echo $currencies->format($orders['order_total'], false, $orders['currency']); ?></td>
-    <td class="accountOrderViewButton alignRight"><?php echo '<a href="' . zen_href_link(FILENAME_ACCOUNT_HISTORY_INFO, 'order_id=' . $orders['orders_id'], 'SSL') . '"> ' . zen_image_button(BUTTON_IMAGE_VIEW_SMALL, BUTTON_VIEW_SMALL_ALT) . '</a>'; ?></td>
+    <td class="accountOrderViewButton alignCenter"><?php echo '<a href="' . zen_href_link(FILENAME_ACCOUNT_HISTORY_INFO, 'order_id=' . $orders['orders_id'], 'SSL') . '"> ' . zen_image_button(BUTTON_IMAGE_VIEW_SMALL, BUTTON_VIEW_SMALL_ALT) . '</a>'; ?></td>
   </tr>
 
 <?php
