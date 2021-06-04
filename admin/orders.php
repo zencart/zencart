@@ -1270,10 +1270,10 @@ if (!empty($action) && $order_exists === true) {
                     }
 
                     $show_difference = '';
-                    if (trim($orders->fields['delivery_name']) !== '' && (strtoupper($orders->fields['delivery_name']) !== strtoupper($orders->fields['billing_name']))) {
+                    if (!empty($orders->fields['delivery_name']) && (strtoupper($orders->fields['delivery_name']) !== strtoupper($orders->fields['billing_name']))) {
                       $show_difference = zen_image(DIR_WS_IMAGES . 'icon_status_red.gif', TEXT_BILLING_SHIPPING_MISMATCH, 10, 10) . '&nbsp;';
                     }
-                    if (trim($orders->fields['delivery_street_address']) !== '' && (strtoupper($orders->fields['delivery_street_address']) !== strtoupper($orders->fields['billing_street_address']))) {
+                    if (!empty($orders->fields['delivery_street_address']) && (strtoupper($orders->fields['delivery_street_address']) !== strtoupper($orders->fields['billing_street_address']))) {
                       $show_difference = zen_image(DIR_WS_IMAGES . 'icon_status_red.gif', TEXT_BILLING_SHIPPING_MISMATCH, 10, 10) . '&nbsp;';
                     }
                     //-Additional "difference" icons can be added on a per-order basis and/or additional icons to be added to the "action" column.
