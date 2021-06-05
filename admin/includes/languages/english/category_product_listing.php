@@ -85,4 +85,7 @@ define('TEXT_SUBCATEGORIES_STATUS_NOCHANGE', 'Unchanged');
 define('WARNING_PRODUCTS_IN_TOP_INFO', 'WARNING: You have Products in the Top Level Category. This will cause pricing to not work properly in the Catalog. Products found: ');
 
 define('TEXT_COPY_MEDIA_MANAGER', 'Copy media?');
-define('SUCCESS_ATTRIBUTES_DELETED','Attributes successfully deleted');
+
+define('TEXT_ERROR_NO_MOVE_IF_SUBCATS','Categories with subcategories cannot also contain products'); 
+
+define('SUCCESS_ATTRIBUTES_DELETED','Attributes deleted');
