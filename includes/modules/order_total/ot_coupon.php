@@ -594,7 +594,12 @@ class ot_coupon
                     $orderTotal -= $productsTaxAmount;
                 }
                 $orderTotalTax -= $productsTaxAmount;
-                $orderTaxGroups[zen_get_tax_description($product['tax_class_id'])] -= $productsTaxAmount;
+                $tax_description = zen_get_tax_description($product['tax_class_id']);
+                if (empty($orderTaxGroups[$tax_description])) {
+                    $orderTaxGroups[$tax_description] = 0 - $productsTaxAmount;
+                } else {
+                    $orderTaxGroups[$tax_description] -= $productsTaxAmount;
+                }
             }
         }
 
@@ -606,7 +611,7 @@ class ot_coupon
             }
         }
         if (DISPLAY_PRICE_WITH_TAX != 'true') {
-            $orderTotal -= $order->info['tax'];
+            $orderTotal -= $orderTotalTax;
         }
 
         // change what total is used for Discount Coupon Minimum
@@ -663,7 +668,7 @@ class ot_coupon
     function remove()
     {
         global $db;
-        $keys = implode("','", $this->keys);
+        $keys = implode("','", $this->keys());
 
         $db->Execute("DELETE FROM " . TABLE_CONFIGURATION . " where configuration_key IN ('" . $keys . "')");
     }
