@@ -608,7 +608,9 @@ if (!empty($action)) {
             </div>
           </div>
           <div class="form-group">
-              <?php echo zen_draw_label(TEXT_CUSTOMER_GROUPS, 'customer_groups', 'class="col-sm-3 control-label"'); ?>
+              <div class="col-sm-3">
+                  <p class="control-label"><?php echo TEXT_CUSTOMER_GROUPS; ?></p>
+              </div>
               <div class="col-sm-9 col-md-6">
                   <div class="row">
                       <div class="col-sm-4">
