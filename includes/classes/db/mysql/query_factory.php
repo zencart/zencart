@@ -695,7 +695,7 @@ class queryFactory extends base
      */
     protected function logQuery($sqlQuery)
     {
-        if (!defined('STORE_DB_TRANSACTIONS') || STORE_DB_TRANSACTIONS != 'true') {
+        if (!defined('STORE_DB_TRANSACTIONS') || STORE_DB_TRANSACTIONS === 'false' || STORE_DB_TRANSACTIONS === false) {
             return;
         }
         global $PHP_SELF, $box_id, $current_page_base;
