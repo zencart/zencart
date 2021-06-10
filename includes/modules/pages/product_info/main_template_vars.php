@@ -131,20 +131,22 @@
   }
 
 // build show flags from product type layout settings
-  $flag_show_product_info_starting_at = zen_get_show_product_switch($_GET['products_id'], 'starting_at');
-  $flag_show_product_info_model = zen_get_show_product_switch($_GET['products_id'], 'model');
-  $flag_show_product_info_weight = zen_get_show_product_switch($_GET['products_id'], 'weight');
-  $flag_show_product_info_quantity = zen_get_show_product_switch($_GET['products_id'], 'quantity');
-  $flag_show_product_info_manufacturer = zen_get_show_product_switch($_GET['products_id'], 'manufacturer');
-  $flag_show_product_info_in_cart_qty = zen_get_show_product_switch($_GET['products_id'], 'in_cart_qty');
-  $flag_show_product_info_reviews = zen_get_show_product_switch($_GET['products_id'], 'reviews');
-  $flag_show_product_info_reviews_count = zen_get_show_product_switch($_GET['products_id'], 'reviews_count');
-  $flag_show_product_info_date_available = zen_get_show_product_switch($_GET['products_id'], 'date_available');
-  $flag_show_product_info_date_added = zen_get_show_product_switch($_GET['products_id'], 'date_added');
-  $flag_show_product_info_url = zen_get_show_product_switch($_GET['products_id'], 'url');
-  $flag_show_product_info_additional_images = zen_get_show_product_switch($_GET['products_id'], 'additional_images');
-  $flag_show_product_info_free_shipping = zen_get_show_product_switch($_GET['products_id'], 'always_free_shipping_image_switch');
-  $flag_show_ask_a_question = !empty(zen_get_show_product_switch($_GET['products_id'], 'ask_a_question'));
+  require DIR_WS_CLASSES . 'ProductConfigurationSwitch.php'; 
+  $config_switches = new ProductConfigurationSwitch($_GET['products_id']); 
+  $flag_show_product_info_starting_at = $config_switches->getSwitch('starting_at');
+  $flag_show_product_info_model = $config_switches->getSwitch('model');
+  $flag_show_product_info_weight = $config_switches->getSwitch('weight');
+  $flag_show_product_info_quantity = $config_switches->getSwitch('quantity');
+  $flag_show_product_info_manufacturer = $config_switches->getSwitch('manufacturer');
+  $flag_show_product_info_in_cart_qty = $config_switches->getSwitch('in_cart_qty');
+  $flag_show_product_info_reviews = $config_switches->getSwitch('reviews');
+  $flag_show_product_info_reviews_count = $config_switches->getSwitch('reviews_count');
+  $flag_show_product_info_date_available = $config_switches->getSwitch('date_available');
+  $flag_show_product_info_date_added = $config_switches->getSwitch('date_added');
+  $flag_show_product_info_url = $config_switches->getSwitch('url');
+  $flag_show_product_info_additional_images = $config_switches->getSwitch('additional_images');
+  $flag_show_product_info_free_shipping = $config_switches->getSwitch('always_free_shipping_image_switch');
+  $flag_show_ask_a_question = !empty($config_switches->getSwitch('ask_a_question'));
   require(DIR_WS_MODULES . zen_get_module_directory(FILENAME_PRODUCTS_QUANTITY_DISCOUNTS));
 
   $zco_notifier->notify('NOTIFY_MAIN_TEMPLATE_VARS_EXTRA_PRODUCT_INFO');
