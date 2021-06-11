@@ -98,7 +98,7 @@ if (!empty($action)) {
         $products_price = (float)$_POST['products_price'];
       }
 
-      $tmp_value = (float)$_POST['specials_price'];
+      $tmp_value = zen_db_prepare_input($_POST['specials_price']);
       $specials_price = (!zen_not_null($tmp_value) || $tmp_value === '' || $tmp_value === 0) ? 0 : $tmp_value;
 
       if (substr($specials_price, -1) === '%') {
