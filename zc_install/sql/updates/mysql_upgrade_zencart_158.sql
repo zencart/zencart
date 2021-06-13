@@ -71,6 +71,11 @@ UPDATE configuration SET configuration_description = 'Customers Referral Code is
 
 UPDATE configuration SET configuration_description = 'The shipping cost may be calculated based on the total weight of the items ordered, the total price of the items ordered, or the total number of items ordered.' WHERE configuration_key = 'MODULE_SHIPPING_TABLE_MODE';
 
+UPDATE configuration SET configuration_description = 'Number of products to show per page when viewing an index listing' WHERE configuration_key = 'MAX_DISPLAY_PRODUCTS_LISTING';
+UPDATE configuration SET configuration_description = 'Number of products to show per page when viewing All Products' WHERE configuration_key = 'MAX_DISPLAY_PRODUCTS_ALL';
+UPDATE configuration SET configuration_description = 'Number of products to show per page when viewing New Products' WHERE configuration_key = 'MAX_DISPLAY_PRODUCTS_NEW';
+UPDATE configuration SET configuration_description = 'Number of products to show per page when viewing Featured Products' WHERE configuration_key = 'MAX_DISPLAY_PRODUCTS_FEATURED_PRODUCTS';
+
 #############
 # Incorporate setting for Column-Grid-Layout template control
 INSERT IGNORE INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES ('Columns Per Row', 'PRODUCT_LISTING_COLUMNS_PER_ROW', '1', 'Select the number of columns of products to show per row in the product listing.<br>Recommended: 3<br>1=[rows] mode.', '8', '45', NULL, now(), NULL, NULL);
