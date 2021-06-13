@@ -50,6 +50,7 @@ for ($i = 0, $n = count($products); $i < $n; $i++) {
     $attrArray = [];
 
     $productsName = $products[$i]['name'];
+    $productsModel = $products[$i]['model'];
     // Push all attribute information into an array
     if (isset($products[$i]['attributes']) && is_array($products[$i]['attributes'])) {
         if (PRODUCTS_OPTIONS_SORT_ORDER == '0') {
@@ -147,6 +148,7 @@ for ($i = 0, $n = count($products); $i < $n; $i++) {
         'linkProductsName' => $linkProductsName,
         'productsImage' => $productsImage,
         'productsName' => $productsName,
+        'productsModel' => $productsModel,
         'showFixedQuantity' => $showFixedQuantity,
         'showFixedQuantityAmount' => $showFixedQuantityAmount,
         'showMinUnits' => $showMinUnits,
