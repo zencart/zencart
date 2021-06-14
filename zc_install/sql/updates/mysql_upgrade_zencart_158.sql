@@ -76,6 +76,17 @@ UPDATE configuration SET configuration_description = 'Number of products to show
 UPDATE configuration SET configuration_description = 'Number of products to show per page when viewing New Products' WHERE configuration_key = 'MAX_DISPLAY_PRODUCTS_NEW';
 UPDATE configuration SET configuration_description = 'Number of products to show per page when viewing Featured Products' WHERE configuration_key = 'MAX_DISPLAY_PRODUCTS_FEATURED_PRODUCTS';
 
+UPDATE configuration SET configuration_title = 'New Products Centerbox', configuration_description = 'Number of products to display in the New Products centerbox' WHERE configuration_key = 'MAX_DISPLAY_NEW_PRODUCTS';
+UPDATE configuration SET configuration_title = 'Products on Special Centerbox', configuration_description = 'Number of products to display in the Products on Special centerbox' WHERE configuration_key = 'MAX_DISPLAY_SPECIAL_PRODUCTS_INDEX';
+UPDATE configuration SET configuration_title = 'Upcoming Products Centerbox', configuration_description = 'Number of products to display in the Upcoming Products centerbox' WHERE configuration_key = 'MAX_DISPLAY_UPCOMING_PRODUCTS';
+UPDATE configuration SET configuration_title = 'Featured Products Centerbox', configuration_description = 'Number of products to display in the Featured Products centerbox' WHERE configuration_key = 'MAX_DISPLAY_SEARCH_RESULTS_FEATURED';
+
+UPDATE configuration SET configuration_title = 'Products on Special Page', configuration_description = 'Number of products to display per page on the Specials page' WHERE configuration_key = 'MAX_DISPLAY_SPECIAL_PRODUCTS';
+UPDATE configuration SET configuration_title = 'All Products Page', configuration_description = 'Number of products to display per page on the All Products page' WHERE configuration_key = 'MAX_DISPLAY_PRODUCTS_ALL';
+UPDATE configuration SET configuration_title = 'Featured Products Page', configuration_description = 'Number of products to display per page on the Featured Products page' WHERE configuration_key = 'MAX_DISPLAY_PRODUCTS_FEATURED_PRODUCTS';
+UPDATE configuration SET configuration_title = 'New Products Page', configuration_description = 'Number of products to display per page on the New Products page' WHERE configuration_key = 'MAX_DISPLAY_PRODUCTS_NEW';
+UPDATE configuration SET configuration_title = 'Products Listing Page', configuration_description = 'Number of products to display per page on a Listing page' WHERE configuration_key = 'MAX_DISPLAY_PRODUCTS_LISTING';
+
 #############
 # Incorporate setting for Column-Grid-Layout template control
 INSERT IGNORE INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES ('Columns Per Row', 'PRODUCT_LISTING_COLUMNS_PER_ROW', '1', 'Select the number of columns of products to show per row in the product listing.<br>Recommended: 3<br>1=[rows] mode.', '8', '45', NULL, now(), NULL, NULL);
