@@ -104,10 +104,23 @@ if ($gID == 7) {
             </thead>
             <tbody>
                 <?php
-                $configuration = $db->Execute("SELECT configuration_id, configuration_title, configuration_value, configuration_key, use_function
+                $query = "SELECT configuration_id, configuration_title, configuration_value, configuration_key, use_function
                                                FROM " . TABLE_CONFIGURATION . "
-                                               WHERE configuration_group_id = " . (int)$gID . "
-                                               ORDER BY sort_order");
+                                               WHERE configuration_group_id = " . (int)$gID; 
+
+                $default_sort = true; 
+                if (defined('CONFIGURATION_MENU_ENTRIES_TO_SORT_BY_NAME') && !empty(CONFIGURATION_MENU_ENTRIES_TO_SORT_BY_NAME)) {
+                   $sorted_menus = explode(",", CONFIGURATION_MENU_ENTRIES_TO_SORT_BY_NAME);
+                   if (in_array($gID, $sorted_menus)) {
+                     $default_sort = false; 
+                   }
+                }
+                if ($default_sort) { 
+                   $query .= " ORDER BY sort_order";
+                } else {
+                   $query .= " ORDER BY configuration_title";
+                }
+                $configuration = $db->Execute($query); 
                 foreach ($configuration as $item) {
                   if (!empty($item['use_function'])) {
                     $use_function = $item['use_function'];
