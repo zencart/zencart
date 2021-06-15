@@ -18,7 +18,22 @@
 
   if ($products_new_split->number_of_rows > 0) {
     $products_new = $db->Execute($products_new_split->sql_query);
+    require DIR_WS_CLASSES . 'ProductConfigurationSwitch.php';
     while (!$products_new->EOF) {
+      // Rebuild switch object only if not set or different prod type
+      if (!isset($config_switches)) { 
+        $config_switches = new ProductConfigurationSwitch($products_new->fields['products_id']);
+      } else {
+         if ($products_new->fields['products_type'] != $config_switches->getProductsType()) {
+          $config_switches = new ProductConfigurationSwitch($products_new->fields['products_id']);
+         } 
+      }
+      $flag_show_model = $config_switches->getSwitch('model');
+      $flag_show_weight = $config_switches->getSwitch('weight');
+      $flag_show_quantity = $config_switches->getSwitch('quantity');
+      $flag_show_date_added = $config_switches->getSwitch('date_added');
+      $flag_show_manufacturer = $config_switches->getSwitch('manufacturer');
+      $flag_show_free_shipping_image = $config_switches->getSwitch('ALWAYS_FREE_SHIPPING_IMAGE_SWITCH');
 
       if (PRODUCT_NEW_LIST_IMAGE != '0') {
         if ($products_new->fields['products_image'] == '' and PRODUCTS_IMAGE_NO_IMAGE_STATUS == 0) {
@@ -36,19 +51,19 @@
         $display_products_name = '';
       }
 
-      if (PRODUCT_NEW_LIST_MODEL != '0' and zen_get_show_product_switch($products_new->fields['products_id'], 'model')) {
+      if (PRODUCT_NEW_LIST_MODEL != '0' and $flag_show_model) {
         $display_products_model = '<b>' . TEXT_PRODUCT_MODEL . '</b>' . $products_new->fields['products_model'] . str_repeat('<br>', substr(PRODUCT_NEW_LIST_MODEL, 3, 1));
       } else {
         $display_products_model = '';
       }
 
-      if (PRODUCT_NEW_LIST_WEIGHT != '0' and zen_get_show_product_switch($products_new->fields['products_id'], 'weight')) {
+      if (PRODUCT_NEW_LIST_WEIGHT != '0' and $flag_show_weight) {
         $display_products_weight = '<b>' . TEXT_PRODUCTS_WEIGHT . '</b>' . $products_new->fields['products_weight'] . TEXT_SHIPPING_WEIGHT . str_repeat('<br>', substr(PRODUCT_NEW_LIST_WEIGHT, 3, 1));
       } else {
         $display_products_weight = '';
       }
 
-      if (PRODUCT_NEW_LIST_QUANTITY != '0' and zen_get_show_product_switch($products_new->fields['products_id'], 'quantity')) {
+      if (PRODUCT_NEW_LIST_QUANTITY != '0' and $flag_show_quantity) {
         if ($products_new->fields['products_quantity'] <= 0) {
           $display_products_quantity = TEXT_OUT_OF_STOCK . str_repeat('<br>', substr(PRODUCT_NEW_LIST_QUANTITY, 3, 1));
         } else {
@@ -58,13 +73,13 @@
         $display_products_quantity = '';
       }
 
-      if (PRODUCT_NEW_LIST_DATE_ADDED != '0' and zen_get_show_product_switch($products_new->fields['products_id'], 'date_added')) {
+      if (PRODUCT_NEW_LIST_DATE_ADDED != '0' and $flag_show_date_added) {
         $display_products_date_added = '<b>' . TEXT_DATE_ADDED . '</b> ' . zen_date_long($products_new->fields['products_date_added']) . str_repeat('<br>', substr(PRODUCT_NEW_LIST_DATE_ADDED, 3, 1));
       } else {
         $display_products_date_added = '';
       }
 
-      if (PRODUCT_NEW_LIST_MANUFACTURER != '0' and zen_get_show_product_switch($products_new->fields['products_id'], 'manufacturer')) {
+      if (PRODUCT_NEW_LIST_MANUFACTURER != '0' and $flag_show_manufacturer) {
         $display_products_manufacturers_name = ($products_new->fields['manufacturers_name'] != '' ? '<b>' . TEXT_MANUFACTURER . '</b> ' . $products_new->fields['manufacturers_name'] . str_repeat('<br>', substr(PRODUCT_NEW_LIST_MANUFACTURER, 3, 1)) : '');
       } else {
         $display_products_manufacturers_name = '';
@@ -72,7 +87,7 @@
 
       if ((PRODUCT_NEW_LIST_PRICE != '0' and zen_get_products_allow_add_to_cart($products_new->fields['products_id']) == 'Y') and zen_check_show_prices() == true) {
         $products_price = zen_get_products_display_price($products_new->fields['products_id']);
-        $display_products_price = '<b>' . TEXT_PRICE . '</b> ' . $products_price . str_repeat('<br>', substr(PRODUCT_NEW_LIST_PRICE, 3, 1)) . (zen_get_show_product_switch($products_new->fields['products_id'], 'ALWAYS_FREE_SHIPPING_IMAGE_SWITCH') ? (zen_get_product_is_always_free_shipping($products_new->fields['products_id']) ? TEXT_PRODUCT_FREE_SHIPPING_ICON . '<br>' : '') : '');
+        $display_products_price = '<b>' . TEXT_PRICE . '</b> ' . $products_price . str_repeat('<br>', substr(PRODUCT_NEW_LIST_PRICE, 3, 1)) . ($flag_show_free_shipping_image ? (zen_get_product_is_always_free_shipping($products_new->fields['products_id']) ? TEXT_PRODUCT_FREE_SHIPPING_ICON . '<br>' : '') : '');
       } else {
         $display_products_price = '';
       }
