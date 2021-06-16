@@ -118,13 +118,14 @@ if (isset($_POST['products_id'], $_POST['categories_id'])) {
             if (strlen($name) > $maxlen) {
                $name = substr($name, 0, $maxlen-1); 
             }
-            $db->Execute("INSERT INTO " . TABLE_PRODUCTS_DESCRIPTION . " (products_id, language_id, products_name, products_description, products_url)
-                    VALUES ('" . $dup_products_id . "',
-                            '" . (int)$description['language_id'] . "',
-                            '" . $name . "',
-                            '" . zen_db_input($description['products_description']) . "',
-                            '" . zen_db_input($description['products_url']) . "'
-                            )");
+            $sql_data_array = array(
+                  'products_id' => $dup_products_id, 
+                  'language_id' => (int)$description['language_id'], 
+                  'products_name' => $name, 
+                  'products_description' => zen_db_input($description['products_description']), 
+                  'products_url' => zen_db_input($description['products_url']) ,
+            );
+            zen_db_perform(TABLE_PRODUCTS_DESCRIPTION, $sql_data_array);
         }
 
         zen_link_product_to_category($dup_products_id, $categories_id);
