@@ -633,13 +633,15 @@ if (!empty($action) && $order_exists == true) {
             <table class="table">
               <tr>
                 <td><strong><?php echo ENTRY_SHIPPING_ADDRESS; ?></strong></td>
-                <td><?php echo zen_address_format($order->delivery['format_id'], $order->delivery, 1, '', '<br>'); ?></td>
+                <td><?php echo (empty($order->delivery)) ? TEXT_NONE : zen_address_format($order->delivery['format_id'], $order->delivery, 1, '', '<br>'); ?></td>
               </tr>
+<?php if (!empty($order->delivery)) { ?>
               <tr>
                 <td>&nbsp;</td>
                 <td class="noprint"><a href="https://maps.google.com/maps/search/?api=1&amp;query=<?php echo urlencode($order->delivery['street_address'] . ',' . $order->delivery['city'] . ',' . $order->delivery['state'] . ',' . $order->delivery['postcode']); ?>" rel="noreferrer" target="map"><i class="fa fa-map">&nbsp;</i> <u><?php echo TEXT_MAP_SHIPPING_ADDRESS; ?></u></a></td>
               </tr>
 <?php
+  }
   $address_footer_suffix = '';
   $zco_notifier->notify('NOTIFY_ADMIN_ORDERS_ADDRESS_FOOTERS', 'delivery', $address_footer_suffix, $order->delivery);
   if (!empty($address_footer_suffix)) {
