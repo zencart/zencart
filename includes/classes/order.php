@@ -60,6 +60,8 @@ class order extends base
 
         $this->orderId = $order_id = (int)$order_id;
 
+        $this->totals = [];
+
         $totals_query = "SELECT title, text, class, value
                          FROM " . TABLE_ORDERS_TOTAL . "
                          WHERE orders_id = " . (int)$this->orderId . "
@@ -1161,7 +1163,7 @@ class order extends base
             EMAIL_THANKS_FOR_SHOPPING . "\n" . EMAIL_DETAILS_FOLLOW . "\n" .
             EMAIL_SEPARATOR . "\n" .
             EMAIL_TEXT_ORDER_NUMBER . ' ' . $zf_insert_id . "\n" .
-            EMAIL_TEXT_DATE_ORDERED . ' ' . strftime(DATE_FORMAT_LONG) . "\n" .
+            EMAIL_TEXT_DATE_ORDERED . ' ' . strftime(DATE_FORMAT_LONG, strtotime($this->info['date_purchased'])) . "\n" .
             EMAIL_TEXT_INVOICE_URL . ' ' . zen_href_link(FILENAME_ACCOUNT_HISTORY_INFO, 'order_id=' . $zf_insert_id, 'SSL', false) . "\n\n";
 
         $html_msg['EMAIL_TEXT_HEADER'] = EMAIL_TEXT_HEADER;
@@ -1172,7 +1174,7 @@ class order extends base
         $html_msg['INTRO_ORDER_NUM_TITLE'] = EMAIL_TEXT_ORDER_NUMBER;
         $html_msg['INTRO_ORDER_NUMBER'] = $zf_insert_id;
         $html_msg['INTRO_DATE_TITLE'] = EMAIL_TEXT_DATE_ORDERED;
-        $html_msg['INTRO_DATE_ORDERED'] = strftime(DATE_FORMAT_LONG);
+        $html_msg['INTRO_DATE_ORDERED'] = strftime(DATE_FORMAT_LONG, strtotime($this->info['date_purchased']));
         $html_msg['INTRO_URL_TEXT'] = EMAIL_TEXT_INVOICE_URL_CLICK;
         $html_msg['INTRO_URL_VALUE'] = zen_href_link(FILENAME_ACCOUNT_HISTORY_INFO, 'order_id=' . $zf_insert_id, 'SSL', false);
         $html_msg['EMAIL_CUSTOMER_PHONE'] = $this->customer['telephone'];
@@ -1240,23 +1242,31 @@ class order extends base
         $html_msg['ADDRESS_BILLING_TITLE'] = EMAIL_TEXT_BILLING_ADDRESS;
         $html_msg['ADDRESS_BILLING_DETAIL'] = zen_address_format($this->billing['format_id'], $this->billing, true, '', "<br>");
 
-        if (is_object($GLOBALS[$_SESSION['payment'] ?? ''] ?? $this->info['payment_method'])) {
+        $payment = '';
+        if (file_exists(DIR_WS_MODULES . 'payment/' . ($this->info['payment_module_code'] ?? 'NO_PAYMENT') . '.php')) {
+            require_once(DIR_WS_MODULES . 'payment/' . $this->info['payment_module_code'] . '.php');
+            require_once(DIR_WS_LANGUAGES . $_SESSION['language'] . '/modules/payment/' . $this->info['payment_module_code'] . '.php');
+            $payment = new $this->info['payment_module_code'];
+        }
+
+        if (!empty($payment)) {
             $cc_num_display = (isset($this->info['cc_number']) && $this->info['cc_number'] != '') ? /*substr($this->info['cc_number'], 0, 4) . */
                 str_repeat('X', (strlen($this->info['cc_number']) - 8)) . substr($this->info['cc_number'], -4) . "\n\n" : '';
             $email_order .= EMAIL_TEXT_PAYMENT_METHOD . "\n" .
                 EMAIL_SEPARATOR . "\n";
             $payment_class = $_SESSION['payment'];
-            $email_order .= $GLOBALS[$payment_class]->title . "\n\n";
+            $email_order .= $payment->title . "\n\n";
             $email_order .= (isset($this->info['cc_type']) && $this->info['cc_type'] != '') ? $this->info['cc_type'] . ' ' . $cc_num_display . "\n\n" : '';
-            $email_order .= (isset($GLOBALS[$payment_class]->email_footer) && $GLOBALS[$payment_class]->email_footer) ? $GLOBALS[$payment_class]->email_footer . "\n\n" : '';
+            $email_order .= (isset($payment->email_footer) && $payment->email_footer) ? $payment->email_footer . "\n\n" : '';
         } else {
             $email_order .= EMAIL_TEXT_PAYMENT_METHOD . "\n" .
                 EMAIL_SEPARATOR . "\n";
             $email_order .= PAYMENT_METHOD_GV . "\n\n";
         }
+
         $html_msg['PAYMENT_METHOD_TITLE'] = EMAIL_TEXT_PAYMENT_METHOD;
-        $html_msg['PAYMENT_METHOD_DETAIL'] = (isset($GLOBALS[$_SESSION['payment'] ?? '']) && is_object($GLOBALS[$_SESSION['payment']?? ''] ?? $this->info['payment_method']) ? $GLOBALS[$payment_class]->title : $this->info['payment_method'] ?? PAYMENT_METHOD_GV);
-        $html_msg['PAYMENT_METHOD_FOOTER'] = (isset($GLOBALS[$payment_class ?? '']->email_footer) && is_object($GLOBALS[$_SESSION['payment']]) && $GLOBALS[$payment_class]->email_footer != '') ? nl2br($GLOBALS[$payment_class]->email_footer) : (isset($this->info['cc_type']) && $this->info['cc_type'] != '' ? $this->info['cc_type'] . ' ' . $cc_num_display . "\n\n" : '');
+        $html_msg['PAYMENT_METHOD_DETAIL'] = $this->info['payment_method'] ?? $payment->title ?? PAYMENT_METHOD_GV;
+        $html_msg['PAYMENT_METHOD_FOOTER'] = (isset($payment->email_footer) && !empty($payment) && $payment->email_footer != '') ? nl2br($payment->email_footer) : (isset($this->info['cc_type']) && $this->info['cc_type'] != '' ? $this->info['cc_type'] . ' ' . $cc_num_display . "\n\n" : '');
 
         // Add in store specific order message
         $this->email_order_message = defined('EMAIL_ORDER_MESSAGE') ? constant('EMAIL_ORDER_MESSAGE') : '';
