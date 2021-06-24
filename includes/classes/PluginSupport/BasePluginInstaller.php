@@ -78,7 +78,7 @@ class BasePluginInstaller
     protected function loadInstallerLanguageFile($file)
     {
         $lng = $_SESSION['language'];
-        $filename = $this->pluginDir . '/installer/langauages/' . $lng . '/' . $file;
+        $filename = $this->pluginDir . '/installer/languages/' . $lng . '/' . $file;
         if (file_exists($filename)) {
             require_once($filename);
         }
