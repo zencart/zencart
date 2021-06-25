@@ -310,7 +310,6 @@ class Customer extends base
                     'language_code' => $result['language_code'],
                 ];
             }
-            $result['order_total'] = preg_replace('/[^\d.,-]/', '', $result['order_total']);
             $lifetime_value += ($result['order_total'] * $result['currency_value']);
         }
         $this->data['last_order'] = $last_order;
@@ -492,13 +491,11 @@ class Customer extends base
         $sql = "SELECT o.orders_id, o.date_purchased, o.delivery_name,
                        o.order_total, o.currency, o.currency_value,
                        o.delivery_country, o.billing_name, o.billing_country,
-                       ot.text as order_total, s.orders_status_name,
+                       s.orders_status_name,
                        o.language_code
                  FROM " . TABLE_ORDERS . " o
-                 LEFT JOIN " . TABLE_ORDERS_TOTAL . "  ot USING (orders_id)
                  INNER JOIN " . TABLE_ORDERS_STATUS . " s
                  WHERE o.customers_id = :customersID
-                 AND ot.class = 'ot_total'
                  AND s.orders_status_id =
                      (SELECT orders_status_id FROM " . TABLE_ORDERS_STATUS_HISTORY . " osh
                       WHERE osh.orders_id = o.orders_id AND osh.customer_notified >= 0 ORDER BY osh.date_added DESC LIMIT 1)
@@ -535,7 +532,7 @@ class Customer extends base
                 'order_name' => $order_name,
                 'order_country' => $order_country,
                 'orders_status_name' => $result['orders_status_name'],
-                'order_total' => preg_replace('/[^\d.,-]/', '', $result['order_total']),
+                'order_total' => $result['order_total'],
                 'currency' => $result['currency'],
                 'currency_value' => $result['currency_value'],
                 'language_code' => $result['language_code'],
