@@ -842,11 +842,34 @@ class order extends base
         for ($i = 0, $n = sizeof($this->products); $i < $n; $i++) {
             $this->products_ordered_attributes = '';
             if (isset($this->products[$i]['attributes'])) {
+                $custom_insertable_text = '';
                 $attributes_exist = '1';
                 for ($j = 0, $n2 = sizeof($this->products[$i]['attributes']); $j < $n2; $j++) {
-
+                    $this->products_ordered_attributes .= "\n\t" . $this->products[$i]['attributes'][$j]['option'] . ' ' . zen_decode_specialchars($this->products[$i]['attributes'][$j]['value']);
                 }
             }
+            //------eof: insert customer-chosen options ----
+            $this->notify('NOTIFY_ORDER_PROCESSING_ATTRIBUTES_EXIST', $attributes_exist);
+
+            $this->notify('NOTIFY_ORDER_DURING_CREATE_ADD_PRODUCTS', $i, $custom_insertable_text);
+
+            /* START: ADD MY CUSTOM DETAILS
+             * 1. calculate/prepare custom information to be added to this product entry in order-confirmation, perhaps as a function call to custom code to build a serial number etc:
+             *   Possible parameters to pass to custom functions at this point:
+             *     Product ID ordered (for this line item): $this->products[$i]['id']
+             *     Quantity ordered (of this line-item): $this->products[$i]['qty']
+             *     Order number: $zf_insert_id
+             *     Attribute Option Name ID: (int)$this->products[$i]['attributes'][$j]['option_id']
+             *     Attribute Option Value ID: (int)$this->products[$i]['attributes'][$j]['value_id']
+             *     Attribute Filename: $attributes_values->fields['products_attributes_filename']
+             *
+             * 2. Add that data to the $this->products_ordered_attributes variable, using this sort of format:
+             *      $this->products_ordered_attributes .=  {INSERT CUSTOM INFORMATION HERE};
+             */
+
+            $this->products_ordered_attributes .= $custom_insertable_text;
+
+            /* END: ADD MY CUSTOM DETAILS */
 
             // build output for email notification
             $this->products_ordered .= $this->products[$i]['qty'] . ' x ' . $this->products[$i]['name'] . ($this->products[$i]['model'] != '' ? ' (' . $this->products[$i]['model'] . ') ' : '') . ' = ' .
@@ -890,7 +913,6 @@ class order extends base
         $this->email_low_stock = '';
 
         for ($i = 0, $n = sizeof($this->products); $i < $n; $i++) {
-            $custom_insertable_text = '';
 
             $this->doStockDecrement = (STOCK_LIMITED == 'true');
             $this->notify('NOTIFY_ORDER_PROCESSING_STOCK_DECREMENT_INIT', ['i' => $i], $this->products[$i], $i);
@@ -1092,28 +1114,6 @@ class order extends base
                     $this->products_ordered_attributes .= "\n\t" . $attributes_values->fields['products_options_name'] . ' ' . zen_decode_specialchars($this->products[$i]['attributes'][$j]['value']);
                 }
             }
-            //------eof: insert customer-chosen options ----
-            $this->notify('NOTIFY_ORDER_PROCESSING_ATTRIBUTES_EXIST', $attributes_exist);
-
-            $this->notify('NOTIFY_ORDER_DURING_CREATE_ADD_PRODUCTS', $i, $custom_insertable_text);
-
-            /* START: ADD MY CUSTOM DETAILS
-             * 1. calculate/prepare custom information to be added to this product entry in order-confirmation, perhaps as a function call to custom code to build a serial number etc:
-             *   Possible parameters to pass to custom functions at this point:
-             *     Product ID ordered (for this line item): $this->products[$i]['id']
-             *     Quantity ordered (of this line-item): $this->products[$i]['qty']
-             *     Order number: $zf_insert_id
-             *     Attribute Option Name ID: (int)$this->products[$i]['attributes'][$j]['option_id']
-             *     Attribute Option Value ID: (int)$this->products[$i]['attributes'][$j]['value_id']
-             *     Attribute Filename: $attributes_values->fields['products_attributes_filename']
-             *
-             * 2. Add that data to the $this->products_ordered_attributes variable, using this sort of format:
-             *      $this->products_ordered_attributes .=  {INSERT CUSTOM INFORMATION HERE};
-             */
-
-            $this->products_ordered_attributes .= $custom_insertable_text;
-
-            /* END: ADD MY CUSTOM DETAILS */
 
             // update totals counters
             if (!isset($this->total_weight)) $this->total_weight = 0.0;
@@ -1158,12 +1158,16 @@ class order extends base
         $html_msg = [];
 
         //intro area
+        $purchaseDate = strftime(DATE_FORMAT_LONG);
+        if (!empty($this->info['date_purchased'])) {
+            $purchaseDate = strftime(DATE_FORMAT_LONG, strtotime($this->info['date_purchased']));
+        }
         $email_order = EMAIL_TEXT_HEADER . EMAIL_TEXT_FROM . STORE_NAME . "\n\n" .
             ($this->customer['firstname'] ?? $this->customer['name']) . ' ' . ($this->customer['lastname'] ?? '') . "\n\n" .
             EMAIL_THANKS_FOR_SHOPPING . "\n" . EMAIL_DETAILS_FOLLOW . "\n" .
             EMAIL_SEPARATOR . "\n" .
             EMAIL_TEXT_ORDER_NUMBER . ' ' . $zf_insert_id . "\n" .
-            EMAIL_TEXT_DATE_ORDERED . ' ' . strftime(DATE_FORMAT_LONG, strtotime($this->info['date_purchased'])) . "\n" .
+            EMAIL_TEXT_DATE_ORDERED . ' ' . $purchaseDate . "\n" .
             EMAIL_TEXT_INVOICE_URL . ' ' . zen_href_link(FILENAME_ACCOUNT_HISTORY_INFO, 'order_id=' . $zf_insert_id, 'SSL', false) . "\n\n";
 
         $html_msg['EMAIL_TEXT_HEADER'] = EMAIL_TEXT_HEADER;
@@ -1174,7 +1178,7 @@ class order extends base
         $html_msg['INTRO_ORDER_NUM_TITLE'] = EMAIL_TEXT_ORDER_NUMBER;
         $html_msg['INTRO_ORDER_NUMBER'] = $zf_insert_id;
         $html_msg['INTRO_DATE_TITLE'] = EMAIL_TEXT_DATE_ORDERED;
-        $html_msg['INTRO_DATE_ORDERED'] = strftime(DATE_FORMAT_LONG, strtotime($this->info['date_purchased']));
+        $html_msg['INTRO_DATE_ORDERED'] = $purchaseDate;
         $html_msg['INTRO_URL_TEXT'] = EMAIL_TEXT_INVOICE_URL_CLICK;
         $html_msg['INTRO_URL_VALUE'] = zen_href_link(FILENAME_ACCOUNT_HISTORY_INFO, 'order_id=' . $zf_insert_id, 'SSL', false);
         $html_msg['EMAIL_CUSTOMER_PHONE'] = $this->customer['telephone'];
@@ -1254,7 +1258,6 @@ class order extends base
                 str_repeat('X', (strlen($this->info['cc_number']) - 8)) . substr($this->info['cc_number'], -4) . "\n\n" : '';
             $email_order .= EMAIL_TEXT_PAYMENT_METHOD . "\n" .
                 EMAIL_SEPARATOR . "\n";
-            $payment_class = $_SESSION['payment'];
             $email_order .= $payment->title . "\n\n";
             $email_order .= (isset($this->info['cc_type']) && $this->info['cc_type'] != '') ? $this->info['cc_type'] . ' ' . $cc_num_display . "\n\n" : '';
             $email_order .= (isset($payment->email_footer) && $payment->email_footer) ? $payment->email_footer . "\n\n" : '';
