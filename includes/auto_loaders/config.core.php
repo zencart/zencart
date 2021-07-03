@@ -194,14 +194,19 @@ $autoLoadConfig[96][] = array('autoType'=>'init_script',
 /**
  * Breakpoint 130.
  *
- * require('includes/init_includes/init_customer_auth.php');
  * messageStack = new messageStack();
  *
  */
   $autoLoadConfig[130][] = array('autoType'=>'classInstantiate',
                                  'className'=>'messageStack',
                                  'objectName'=>'messageStack');
-  $autoLoadConfig[130][] = array('autoType'=>'init_script',
+/**
+ * Breakpoint 135.
+ *
+ * require('includes/init_includes/init_customer_auth.php');
+ *
+ */
+  $autoLoadConfig[135][] = array('autoType'=>'init_script',
                                  'loadFile'=> 'init_customer_auth.php');
 /**
  * Breakpoint 140.
