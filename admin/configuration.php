@@ -56,6 +56,12 @@ $cfg_group = $db->Execute("SELECT configuration_group_title
 
 if ($cfg_group->RecordCount() == 0) {
   $cfg_group->fields['configuration_group_title'] = '';
+} else
+// multilanguage support:
+// For example, in admin/includes/languages/spanish/configuration.php
+// define('CFG_GRP_TITLE_IMAGES', 'Imagenes');
+if (defined($const = 'CFG_GRP_TITLE_' . strtoupper($cfg_group->fields['configuration_group_title']))) {
+    $cfg_group->fields['configuration_group_title'] = constant($const);
 }
 
 if ($gID == 7) {
