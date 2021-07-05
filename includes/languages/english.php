@@ -331,10 +331,10 @@ define('ARIA_PAGINATION_','');
   define('SUCCESS_ADDED_TO_CART_PRODUCTS', 'Successfully added selected Product(s) to the cart ...');
   define('FAILED_TO_ADD_UNAVAILABLE_PRODUCTS', 'The selected Product(s) are not currently available for purchase...');
 
-  define('TEXT_PRODUCT_WEIGHT_UNIT','lbs');
+  define('TEXT_PRODUCT_WEIGHT_UNIT',' lbs');
 
 // Shipping
-  define('TEXT_SHIPPING_WEIGHT','lbs');
+  define('TEXT_SHIPPING_WEIGHT',' lbs');
   define('TEXT_SHIPPING_BOXES', 'Boxes');
 
 // Discount Savings
