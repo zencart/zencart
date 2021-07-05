@@ -55,13 +55,17 @@ $cfg_group = $db->Execute("SELECT configuration_group_title
                            WHERE configuration_group_id = " . (int)$gID);
 
 if ($cfg_group->RecordCount() == 0) {
-  $cfg_group->fields['configuration_group_title'] = '';
-} else
-// multilanguage support:
-// For example, in admin/includes/languages/spanish/configuration.php
-// define('CFG_GRP_TITLE_IMAGES', 'Imagenes');
-if (defined($const = 'CFG_GRP_TITLE_' . strtoupper($cfg_group->fields['configuration_group_title']))) {
-    $cfg_group->fields['configuration_group_title'] = constant($const);
+    $cfg_group->fields['configuration_group_title'] = '';
+} else {
+    // multilanguage support:
+    // For example, in admin/includes/languages/spanish/configuration.php
+    // define('CFG_GRP_TITLE_MY_STORE', 'Mi Tienda');
+    $str = $cfg_group->fields['configuration_group_title'];
+    $str = preg_replace('/[^a-zA-Z0-9_\x80-\xff]/', '_', $str);
+    $const = 'CFG_GRP_TITLE_' . strtoupper($str);
+    if (defined($const)) {
+        $cfg_group->fields['configuration_group_title'] = constant($const);
+    }
 }
 
 if ($gID == 7) {
