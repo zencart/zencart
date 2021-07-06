@@ -82,7 +82,7 @@ class configurationValidation extends base
         }
         
         // If there are no email addresses that are valid, then identify that failed validation.
-        if (empty($final_result)) {
+        if (empty($final_result) && zen_not_null($val)) {
             return false;
         }
         
