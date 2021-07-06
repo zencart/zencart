@@ -16,7 +16,12 @@ if (!defined('IS_ADMIN_FLAG')) {
 
 class configurationValidation extends base
 {
-    static public function sanitizeEmail(&$val) {
+    /**
+     *  Usage setting val_function for the configuration key to something similar
+     *    to the below will call on this code to support storage of the email related information.
+     *    val_function = '{"error":"TEXT_EMAIL_ADDRESS_VALIDATE","id":"FILTER_CALLBACK","options":{"options":["configurationValidation","sanitizeEmail"]}}'
+     **/
+    static public function sanitizeEmail($val) {
         $results = array();
         $send_email_array = array();
         $send_to_array = array();
@@ -31,63 +36,67 @@ class configurationValidation extends base
                          'flags' => '',
                          );
         
-        if (isset($val)) {
-            $send_to_array = explode(",", $val);
-            // If count($send_to_array) > 1 then there are multiple addresses to be parsed.
-            foreach ($send_to_array as $key => $address) {
-                $send_to_name = '';
-                $send_to_email = trim($address);
-                // Collect the portion within <> symbols
-                preg_match('/\<[^>]+\>/', $address, $send_email_array);
-                // If there are parts to the above, then set/collect them.
-                if (!empty($send_email_array)) {
-                    $send_to_email = preg_replace ("/>/", "", $send_email_array[0]);
-                    $send_to_email = trim(preg_replace("/</", "", $send_to_email));
-                    $send_to_name  = trim(preg_replace('/\<[^*]*/', '', $address));
-                }
-                
-                // Collect the individual name/email as part of an array.
-                $results[$key]['send_to_name'] = filter_var($send_to_name, FILTER_SANITIZE_STRING, $options);
-                $results[$key]['send_to_email'] = filter_var($send_to_email, FILTER_VALIDATE_EMAIL, $options);
-                
-                // Restore the inner email address back to its state for capture.
-                if (!empty($send_email_array) && $results[$key]['send_to_email'] !== false) {
-                    $results[$key]['send_to_email'] = '<' . $results[$key]['send_to_email'] . '>';
-                }
-                
-                // If the email address is not assigned, but there is content in the name, validate that the name is a correct email address.
-                if ($results[$key]['send_to_email'] === false && !empty($results[$key]['send_to_name'])) {
-                    $results[$key]['send_to_name'] = filter_var($results[$key]['send_to_name'], FILTER_VALIDATE_EMAIL, $options);
-                }
-                
-                // Remove array parameters that have failed validation.
-                foreach ($results[$key] as $key2 => $value2) {
-                    if (empty($value2)) {
-                        unset($results[$key][$key2]);
-                    }
-                }
-                unset($key2, $value2);
-                
-                // If this round of review identified no record, then move to the next record.
-                if (empty($results[$key])) {
-                    continue;
-                }
-                
-                // Collect the filtered email information into a single record.
-                $response[$key] = implode(" ", $results[$key]);
-            }
-            
-            // Collect email addresses entered as a string.
-            $final_result = implode(", ", $response);
+        if (!isset($val)) {
+            return false;
         }
         
+        $send_to_array = explode(",", $val);
+        // If count($send_to_array) > 1 then there are multiple addresses to be parsed.
+        foreach ($send_to_array as $key => $address) {
+            $send_to_name = '';
+            $send_to_email = trim($address);
+            // Collect the portion within <> symbols
+            preg_match('/\<[^>]+\>/', $address, $send_email_array);
+            // If there are parts to the above, then set/collect them.
+            if (!empty($send_email_array)) {
+                $send_to_email = preg_replace ("/>/", "", $send_email_array[0]);
+                $send_to_email = trim(preg_replace("/</", "", $send_to_email));
+                $send_to_name  = trim(preg_replace('/\<[^*]*/', '', $address));
+            }
+            
+            // Collect the individual name/email as part of an array.
+            $results[$key]['send_to_name'] = filter_var($send_to_name, FILTER_SANITIZE_STRING, $options);
+            $results[$key]['send_to_email'] = filter_var($send_to_email, FILTER_VALIDATE_EMAIL, $options);
+            
+            // Restore the inner email address back to its state for capture.
+            if (!empty($send_email_array) && $results[$key]['send_to_email'] !== false) {
+                $results[$key]['send_to_email'] = '<' . $results[$key]['send_to_email'] . '>';
+            }
+            
+            // If the email address is not assigned, but there is content in the name, validate that the name is a correct email address.
+            if ($results[$key]['send_to_email'] === false && !empty($results[$key]['send_to_name'])) {
+                $results[$key]['send_to_name'] = filter_var($results[$key]['send_to_name'], FILTER_VALIDATE_EMAIL, $options);
+            }
+            
+            // Remove array parameters that have failed validation.
+            foreach ($results[$key] as $key2 => $value2) {
+                if (empty($value2)) {
+                    unset($results[$key][$key2]);
+                }
+            }
+            unset($key2, $value2);
+            
+            // If this round of review identified no record, then move to the next record.
+            if (empty($results[$key])) {
+                continue;
+            }
+            
+            // Collect the filtered email information into a single record.
+            $response[$key] = implode(" ", $results[$key]);
+        }
+        
+        // Collect email addresses entered as a string.
+        $final_result = implode(", ", $response);
+        
         // If there are no email addresses that are valid, then identify that failed validation.
-        if (empty($final_result)) {
+        if (empty($final_result) && zen_not_null($val)) {
             return false;
         }
         
         // Provide the filtered value back as $val.
-        $val = $final_result;
+        // Unfortunately call back functions as of PHP 8.0 do not support call by reference modifications and therefore, $val can not be modified.
+        //   The function returns the value that has been determined, so if $val needed to be modified, then $val should become the result of this call.
+        // $val = $final_result;
         
         // Set $configuration_value that is to be stored as the filtered email address.
         return $GLOBALS['configuration_value'] = $final_result;
@@ -95,11 +104,11 @@ class configurationValidation extends base
     
     
     /**
-     *  Usage setting val_function  for the configuration key to something similar
+     *  Usage setting val_function for the configuration key to something similar
      *    to the below will call on this code to support storage of the boolean related value.
      *    val_function = '{"error":"TEXT_BOOLEAN_VALIDATE","id":"FILTER_CALLBACK","options":{"options":["configurationValidation","sanitizeBoolean"]}}'
      **/
-    static public function sanitizeBoolean(&$val) {
+    static public function sanitizeBoolean($val) {
         $options = array(
                          'options' => array(
                                       'default' => null,
