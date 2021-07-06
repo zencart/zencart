@@ -16,6 +16,11 @@ if (!defined('IS_ADMIN_FLAG')) {
 
 class configurationValidation extends base
 {
+    /**
+     *  Usage setting val_function for the configuration key to something similar
+     *    to the below will call on this code to support storage of the email related information.
+     *    val_function = '{"error":"TEXT_EMAIL_ADDRESS_VALIDATE","id":"FILTER_CALLBACK","options":{"options":["configurationValidation","sanitizeEmail"]}}'
+     **/
     static public function sanitizeEmail($val) {
         $results = array();
         $send_email_array = array();
@@ -99,7 +104,7 @@ class configurationValidation extends base
     
     
     /**
-     *  Usage setting val_function  for the configuration key to something similar
+     *  Usage setting val_function for the configuration key to something similar
      *    to the below will call on this code to support storage of the boolean related value.
      *    val_function = '{"error":"TEXT_BOOLEAN_VALIDATE","id":"FILTER_CALLBACK","options":{"options":["configurationValidation","sanitizeBoolean"]}}'
      **/
