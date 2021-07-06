@@ -16,7 +16,7 @@ if (!defined('IS_ADMIN_FLAG')) {
 
 class configurationValidation extends base
 {
-    static public function sanitizeEmail(&$val) {
+    static public function sanitizeEmail($val) {
         $results = array();
         $send_email_array = array();
         $send_to_array = array();
@@ -87,7 +87,9 @@ class configurationValidation extends base
         }
         
         // Provide the filtered value back as $val.
-        $val = $final_result;
+        // Unfortunately call back functions as of PHP 8.0 do not support call by reference modifications and therefore, $val can not be modified.
+        //   The function returns the value that has been determined, so if $val needed to be modified, then $val should become the result of this call.
+        // $val = $final_result;
         
         // Set $configuration_value that is to be stored as the filtered email address.
         return $GLOBALS['configuration_value'] = $final_result;
@@ -99,7 +101,7 @@ class configurationValidation extends base
      *    to the below will call on this code to support storage of the boolean related value.
      *    val_function = '{"error":"TEXT_BOOLEAN_VALIDATE","id":"FILTER_CALLBACK","options":{"options":["configurationValidation","sanitizeBoolean"]}}'
      **/
-    static public function sanitizeBoolean(&$val) {
+    static public function sanitizeBoolean($val) {
         $options = array(
                          'options' => array(
                                       'default' => null,
