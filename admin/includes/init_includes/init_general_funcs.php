@@ -20,6 +20,7 @@ if (!defined('IS_ADMIN_FLAG')) {
 
 // define our general functions used application-wide
   require(DIR_WS_FUNCTIONS . 'general.php');
+  require(DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'functions_categories_shared.php');
   require(DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'functions_general_shared.php');
   require(DIR_WS_FUNCTIONS . 'functions_prices.php');
   require(DIR_WS_FUNCTIONS . 'html_output.php');
