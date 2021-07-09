@@ -91,7 +91,6 @@
 
     $products_discount_type = $product_info->fields['products_discount_type'];
     $products_discount_type_from = $product_info->fields['products_discount_type_from'];
-  }
 
   require(DIR_WS_MODULES . zen_get_module_directory('product_prev_next.php'));
 
@@ -149,6 +148,7 @@
 
   $zco_notifier->notify('NOTIFY_MAIN_TEMPLATE_VARS_EXTRA_PRODUCT_INFO');
 
+  }
 
   require($template->get_template_dir($tpl_page_body,DIR_WS_TEMPLATE, $current_page_base,'templates'). $tpl_page_body);
 
