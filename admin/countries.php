@@ -8,7 +8,7 @@
 require 'includes/application_top.php';
 
 $action = (isset($_GET['action']) ? $_GET['action'] : '');
-$currentPage = (isset($_GET['page']) && ctype_alpha($_GET['page'][0]) ? $_GET['page'][0] : '');
+$currentPage = (!empty($_GET['page']) && ctype_alpha($_GET['page'][0]) ? $_GET['page'][0] : '');
 
 if (!empty($action)) {
   switch ($action) {
