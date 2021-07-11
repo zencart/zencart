@@ -244,7 +244,7 @@ class ot_coupon {
           $coupon_total = $orderTotalDetails['orderTotal']; // restricted products
         }
         if ($coupon_result->fields['coupon_calc_base'] == 1) {
-          $coupon_total_minimum = $orderTotalDetails['orderTotal']; // restricted products
+          $coupon_total_minimum = $orderTotalDetails['totalFull']; // all products
           $coupon_total = $orderTotalDetails['totalFull']; // all products
         }
 //echo 'Product: ' . $orderTotalDetails['orderTotal'] . ' Order: ' . $orderTotalDetails['totalFull'] . ' $coupon_total: ' . $coupon_total . '<br>';
@@ -508,7 +508,7 @@ class ot_coupon {
         $coupon_total = $orderTotalDetails['orderTotal']; // restricted products
       }
       if ($coupon->fields['coupon_calc_base'] == 1) {
-        $coupon_total_minimum = $orderTotalDetails['orderTotal']; // restricted products
+        $coupon_total_minimum = $orderTotalDetails['totalFull']; // all products
         $coupon_total = $orderTotalDetails['totalFull']; // all products
       }
 //echo 'ot_coupon coupon_total: ' . $coupon->fields['coupon_calc_base'] . '<br>$orderTotalDetails[orderTotal]: ' . $orderTotalDetails['orderTotal'] . '<br>$orderTotalDetails[totalFull]: ' . $orderTotalDetails['totalFull'] . '<br>$coupon_total: ' . $coupon_total . '<br><br>$coupon->fields[coupon_minimum_order]: ' . $coupon->fields['coupon_minimum_order'] . '<br>$coupon_total_minimum: ' . $coupon_total_minimum . '<br>';
