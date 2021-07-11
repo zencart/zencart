@@ -841,6 +841,7 @@ class order extends base
 
         for ($i = 0, $n = sizeof($this->products); $i < $n; $i++) {
             $this->products_ordered_attributes = '';
+            $attributes_exist = '0';
             if (isset($this->products[$i]['attributes'])) {
                 $custom_insertable_text = '';
                 $attributes_exist = '1';
@@ -1010,10 +1011,8 @@ class order extends base
             $this->notify('NOTIFY_ORDER_PROCESSING_ATTRIBUTES_BEGIN');
 
             //------ bof: insert customer-chosen options to order--------
-            $attributes_exist = '0';
             $this->products_ordered_attributes = '';
             if (isset($this->products[$i]['attributes'])) {
-                $attributes_exist = '1';
                 for ($j = 0, $n2 = sizeof($this->products[$i]['attributes']); $j < $n2; $j++) {
                     if (DOWNLOAD_ENABLED == 'true') {
                         $attributes_query = "SELECT popt.products_options_name, poval.products_options_values_name,
@@ -1247,7 +1246,9 @@ class order extends base
         $html_msg['ADDRESS_BILLING_DETAIL'] = zen_address_format($this->billing['format_id'], $this->billing, true, '', "<br>");
 
         $payment = '';
-        if (file_exists(DIR_WS_MODULES . 'payment/' . ($this->info['payment_module_code'] ?? 'NO_PAYMENT') . '.php')) {
+        if (isset($_SESSION['payment']) && is_object($GLOBALS[$_SESSION['payment']])) {
+            $payment = $GLOBALS[$_SESSION['payment']];
+        } elseif (file_exists(DIR_WS_MODULES . 'payment/' . ($this->info['payment_module_code'] ?? 'NO_PAYMENT') . '.php')) {
             require_once(DIR_WS_MODULES . 'payment/' . $this->info['payment_module_code'] . '.php');
             require_once(DIR_WS_LANGUAGES . $_SESSION['language'] . '/modules/payment/' . $this->info['payment_module_code'] . '.php');
             $payment = new $this->info['payment_module_code'];
