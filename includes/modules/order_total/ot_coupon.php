@@ -98,6 +98,7 @@ class ot_coupon
             }
 
             $order->info['total'] -= $od_amount['total'];
+            $order->info['coupon_amount'] = $od_amount['total'];
 
             if (DISPLAY_PRICE_WITH_TAX != 'true') {
                 $order->info['total'] -= $tax;
