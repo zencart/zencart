@@ -76,7 +76,6 @@ define('FILENAME_DEFINE_PRIVACY', 'define_privacy');
 define('FILENAME_DEFINE_SHIPPINGINFO', 'define_shippinginfo');
 define('FILENAME_DEFINE_SHOPPING_CART', 'define_shopping_cart');
 define('FILENAME_DEFINE_SITE_MAP', 'define_site_map');
-define('FILENAME_DEFINE_LANGUAGE', 'define_language');
 define('FILENAME_DENIED', 'denied');
 define('FILENAME_DEVELOPERS_TOOL_KIT', 'developers_tool_kit');
 define('FILENAME_DISCOUNT_COUPON', 'discount_coupon');
