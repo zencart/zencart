@@ -50,7 +50,11 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process') && !isset($login_
 
     $email_format = 'TEXT';
     if (isset($_POST['email_format'])) {
-        $email_format = in_array($_POST['email_format'], array('HTML', 'TEXT', 'NONE', 'OUT'), true) ? $_POST['email_format'] : 'TEXT';
+        if (!in_array($_POST['email_format'], ['HTML', 'TEXT', 'NONE', 'OUT'], true)) {
+            $antiSpam = 'spam';
+        } else {
+            $email_format = $_POST['email_format'];
+        }
     }
 
     $company = $dob = $suburb = $state = '';
