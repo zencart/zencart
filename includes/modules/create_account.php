@@ -39,7 +39,7 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process') && !isset($login_
     if (!empty($_POST['firstname']) && preg_match('~https?://?~', $_POST['firstname'])) $antiSpam = 'spam';
     if (!empty($_POST['lastname']) && preg_match('~https?://?~', $_POST['lastname'])) $antiSpam = 'spam';
 
-    $zco_notifier->notify('NOTIFY_CREATE_ACCOUNT_CAPTCHA_CHECK');
+    $zco_notifier->notify('NOTIFY_CREATE_ACCOUNT_CAPTCHA_CHECK', $antiSpamFieldName, $antiSpam);
 
     $gender = false;
     if (ACCOUNT_GENDER == 'true') {
