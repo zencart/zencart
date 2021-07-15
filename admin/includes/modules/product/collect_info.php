@@ -210,8 +210,8 @@ if (zen_get_categories_status($current_category_id) == 0 && $pInfo->products_sta
     $zco_notifier->notify('NOTIFY_ADMIN_PRODUCT_COLLECT_INFO_EXTRA_INPUTS', $pInfo, $extra_product_inputs);
     if (!empty($extra_product_inputs)) {
         foreach ($extra_product_inputs as $extra_input) {
-            $addl_class = (isset($extra_input['label']['addl_class'])) ? (' ' . $extra_input['label']['addl_class']) : '';
-            $parms = (isset($extra_input['label']['parms'])) ? (' ' . $extra_input['label']['parms']) : '';
+            $addl_class = (!empty($extra_input['label']['addl_class'])) ? (' ' . $extra_input['label']['addl_class']) : '';
+            $parms = (!empty($extra_input['label']['parms'])) ? (' ' . $extra_input['label']['parms']) : '';
 ?>
             <div class="form-group">
                 <?php echo zen_draw_label($extra_input['label']['text'], $extra_input['label']['field_name'], 'class="col-sm-3 control-label' . $addl_class . '"' . $parms); ?>
