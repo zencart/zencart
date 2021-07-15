@@ -54,6 +54,12 @@ if (isset($_POST['demoData']))
   $file = DIR_FS_INSTALL . 'sql/demo/mysql_demo.sql';
   logDetails('processing file ' . $file);
   $error = $dbInstaller->parseSqlFile($file, $extendedOptions);
+  // system('unzip --q demo_images/images.zip -d ../images/'); 
+  $za = new ZipArchive;
+  if ($za->open('demo_images/images.zip') === TRUE) {
+    $za->extractTo('../images');
+    $za->close();
+  }
 }
 if ($error)
 {
