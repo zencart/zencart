@@ -1286,9 +1286,9 @@ if (zen_not_null($action)) {
                     $zc_address_book_count = $zc_address_book_count_list->RecordCount();
                     ?>
                 <td class="dataTableContent text-right"><?php echo $customer['customers_id'] . ($zc_address_book_count == 1 ? TEXT_INFO_ADDRESS_BOOK_COUNT_SINGLE : sprintf(TEXT_INFO_ADDRESS_BOOK_COUNT, zen_href_link(FILENAME_CUSTOMERS, 'action=list_addresses' . '&cID=' . $customer['customers_id'] . ($_GET['page'] > 0 ? '&page=' . $_GET['page'] : '')), $zc_address_book_count)); ?></td>
-                <td class="dataTableContent"><?php echo $customer['customers_lastname']; ?></td>
-                <td class="dataTableContent"><?php echo $customer['customers_firstname']; ?></td>
-                <td class="dataTableContent"><?php echo $customer['entry_company']; ?></td>
+                <td class="dataTableContent"><?php echo zen_output_string($customer['customers_lastname']); ?></td>
+                <td class="dataTableContent"><?php echo zen_output_string($customer['customers_firstname']); ?></td>
+                <td class="dataTableContent"><?php echo zen_output_string($customer['entry_company']); ?></td>
                 <?php
                 // -----
                 // If a plugin has additional columns to add to the display, it attaches to both this "listing element" and (see above)
