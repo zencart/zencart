@@ -13,9 +13,8 @@ if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
 }
 
-$use_cache = (isset($_GET['nocache']) ? false : true ) ;
 $configuration = $db->Execute('SELECT configuration_key AS cfgkey, configuration_value AS cfgvalue, configuration_group_id  
-                                 FROM ' . TABLE_CONFIGURATION, '', $use_cache, 150);
+                                 FROM ' . TABLE_CONFIGURATION, '', false, 150);
 while (!$configuration->EOF) {
   /**
  * dynamic define based on info read from DB
@@ -28,7 +27,7 @@ while (!$configuration->EOF) {
   $configuration->MoveNext();
 }
 $configuration = $db->Execute('SELECT configuration_key AS cfgkey, configuration_value AS cfgvalue
-                               FROM ' . TABLE_PRODUCT_TYPE_LAYOUT, '', $use_cache, 150);
+                               FROM ' . TABLE_PRODUCT_TYPE_LAYOUT, '', false, 150);
 
 while (!$configuration->EOF) {
   /**
