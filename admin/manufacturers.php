@@ -7,7 +7,7 @@
  */
 require 'includes/application_top.php';
 
-$action = (isset($_GET['action']) ? $_GET['action'] : '');
+$action = $_GET['action'] ?? '';
 $currentPage = (isset($_GET['page']) && $_GET['page'] != '' ? (int)$_GET['page'] : 0);
 $languages = zen_get_languages();
 if (!empty($action)) {
