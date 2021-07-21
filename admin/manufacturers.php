@@ -25,14 +25,14 @@ if (!empty($action)) {
 
       $sql_data_array['featured'] = $featured;
 
-      if ($action == 'insert') {
+      if ($action === 'insert') {
         $insert_sql_data = ['date_added' => 'now()'];
 
         $sql_data_array = array_merge($sql_data_array, $insert_sql_data);
 
         zen_db_perform(TABLE_MANUFACTURERS, $sql_data_array);
         $manufacturers_id = zen_db_insert_id();
-      } elseif ($action == 'save') {
+      } elseif ($action === 'save') {
         $update_sql_data = ['last_modified' => 'now()'];
 
         $sql_data_array = array_merge($sql_data_array, $update_sql_data);
@@ -52,7 +52,7 @@ if (!empty($action)) {
         $manufacturers_image->set_extensions(['jpg', 'jpeg', 'gif', 'png', 'webp', 'flv', 'webm', 'ogg']);
         $manufacturers_image->set_destination(DIR_FS_CATALOG_IMAGES . $_POST['img_dir']);
         if ($manufacturers_image->parse() && $manufacturers_image->save()) {
-          if ($manufacturers_image->filename != 'none') {
+          if ($manufacturers_image->filename !== 'none') {
             $db_filename = zen_limit_image_filename($manufacturers_image->filename, TABLE_MANUFACTURERS, 'manufacturers_image');
             $db->Execute("UPDATE " . TABLE_MANUFACTURERS . "
                           SET manufacturers_image = '" . zen_db_input($_POST['img_dir'] . $db_filename) . "'
@@ -72,7 +72,7 @@ if (!empty($action)) {
 
         $sql_data_array = ['manufacturers_url' => zen_db_prepare_input($manufacturers_url_array[$language_id])];
 
-        if ($action == 'insert') {
+        if ($action === 'insert') {
           $insert_sql_data = [
             'manufacturers_id' => $manufacturers_id,
             'languages_id' => $language_id
@@ -81,7 +81,7 @@ if (!empty($action)) {
           $sql_data_array = array_merge($sql_data_array, $insert_sql_data);
 
           zen_db_perform(TABLE_MANUFACTURERS_INFO, $sql_data_array);
-        } elseif ($action == 'save') {
+        } elseif ($action === 'save') {
           zen_db_perform(TABLE_MANUFACTURERS_INFO, $sql_data_array, 'update', "manufacturers_id = " . (int)$manufacturers_id . " and languages_id = " . (int)$language_id);
         }
       }
@@ -91,7 +91,7 @@ if (!empty($action)) {
     case 'deleteconfirm':
       $manufacturers_id = zen_db_prepare_input($_POST['mID']);
 
-      if (isset($_POST['delete_image']) && ($_POST['delete_image'] == 'on')) {
+      if (isset($_POST['delete_image']) && ($_POST['delete_image'] === 'on')) {
         $manufacturer = $db->Execute("SELECT manufacturers_image
                                       FROM " . TABLE_MANUFACTURERS . "
                                       WHERE manufacturers_id = " . (int)$manufacturers_id);
@@ -108,7 +108,7 @@ if (!empty($action)) {
       $db->Execute("DELETE FROM " . TABLE_MANUFACTURERS_INFO . "
                     WHERE manufacturers_id = " . (int)$manufacturers_id);
 
-      if (isset($_POST['delete_products']) && ($_POST['delete_products'] == 'on')) {
+      if (isset($_POST['delete_products']) && ($_POST['delete_products'] === 'on')) {
         $products = $db->Execute("SELECT products_id
                                   FROM " . TABLE_PRODUCTS . "
                                   WHERE manufacturers_id = " . (int)$manufacturers_id);
@@ -168,7 +168,7 @@ if (!empty($action)) {
               $manufacturers_split = new splitPageResults($_GET['page'], MAX_DISPLAY_SEARCH_RESULTS, $manufacturers_query_raw, $manufacturers_query_numrows);
               $manufacturers = $db->Execute($manufacturers_query_raw);
               foreach ($manufacturers as $manufacturer) {
-                if ((!isset($_GET['mID']) || (isset($_GET['mID']) && ($_GET['mID'] == $manufacturer['manufacturers_id']))) && !isset($mInfo) && (substr($action, 0, 3) != 'new')) {
+                if ((!isset($_GET['mID']) || (isset($_GET['mID']) && ($_GET['mID'] == $manufacturer['manufacturers_id']))) && !isset($mInfo) && (substr($action, 0, 3) !== 'new')) {
                   $manufacturer_products = $db->Execute("SELECT COUNT(*) AS products_count
                                                          FROM " . TABLE_PRODUCTS . "
                                                          WHERE manufacturers_id = " . (int)$manufacturer['manufacturers_id']);
