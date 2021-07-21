@@ -186,7 +186,7 @@ if (!empty($action)) {
                   <td class="dataTableContent text-right"><?php echo $manufacturer['manufacturers_id']; ?></td>
                   <td class="dataTableContent"><?php echo $manufacturer['manufacturers_name']; ?></td>
                   <td class="dataTableContent"><?php echo $manufacturer['featured'] ? '<strong>' . TEXT_YES . '</strong>' : TEXT_NO; ?></td>
-                  <td class="dataTableContent" align="right">
+                  <td class="dataTableContent text-right">
                     <a href="<?php echo zen_href_link(FILENAME_MANUFACTURERS, ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . 'mID=' . $manufacturer['manufacturers_id'] . '&action=edit'); ?>" title="<?php echo ICON_EDIT; ?>" role="button">
                       <div class="fa-stack fa-fw">
                         <i class="fa fa-circle fa-stack-2x txt-status-on"></i>
