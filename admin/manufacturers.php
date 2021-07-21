@@ -202,7 +202,7 @@ if (!empty($action)) {
                     <?php if (isset($mInfo) && is_object($mInfo) && ($manufacturer['manufacturers_id'] == $mInfo->manufacturers_id)) { ?>
                       <i class="fa fa-caret-right fa-2x fa-fw txt-navy align-middle"></i>
                     <?php } else { ?>
-                      <a href="<?php echo zen_href_link(FILENAME_MANUFACTURERS, zen_get_all_get_params(array('mID')) . 'mID=' . $manufacturer['manufacturers_id']); ?>">
+                      <a href="<?php echo zen_href_link(FILENAME_MANUFACTURERS, zen_get_all_get_params(['mID']) . 'mID=' . $manufacturer['manufacturers_id']); ?>">
                         <i class="fa fa-info-circle fa-2x fa-fw txt-black align-middle"></i>
                       </a>
                     <?php } ?>
@@ -219,81 +219,81 @@ if (!empty($action)) {
 
           switch ($action) {
             case 'new':
-              $heading[] = array('text' => '<h4>' . TEXT_HEADING_NEW_MANUFACTURER . '</h4>');
+              $heading[] = ['text' => '<h4>' . TEXT_HEADING_NEW_MANUFACTURER . '</h4>'];
 
-              $contents = array('form' => zen_draw_form('manufacturers', FILENAME_MANUFACTURERS, 'action=insert', 'post', 'enctype="multipart/form-data" class="form-horizontal"'));
-              $contents[] = array('text' => TEXT_NEW_INTRO);
-              $contents[] = array('text' => zen_draw_label(TEXT_MANUFACTURERS_NAME, 'manufacturers_name', 'class="control-label"') . zen_draw_input_field('manufacturers_name', '', zen_set_field_length(TABLE_MANUFACTURERS, 'manufacturers_name') . 'class="form-control" id="manufacturers_name"'));
-              $contents[] = array('text' => '<label class="checkbox-inline">' . zen_draw_checkbox_field('featured') . TEXT_MANUFACTURER_FEATURED_LABEL . '</label>');
-              $contents[] = array('text' => zen_draw_label(TEXT_MANUFACTURERS_IMAGE, 'manufacturers_image', 'class="control-label"') . zen_draw_file_field('manufacturers_image', '', 'class="form-control" id="manufacturers_image"'));
+              $contents = ['form' => zen_draw_form('manufacturers', FILENAME_MANUFACTURERS, 'action=insert', 'post', 'enctype="multipart/form-data" class="form-horizontal"')];
+              $contents[] = ['text' => TEXT_NEW_INTRO];
+              $contents[] = ['text' => zen_draw_label(TEXT_MANUFACTURERS_NAME, 'manufacturers_name', 'class="control-label"') . zen_draw_input_field('manufacturers_name', '', zen_set_field_length(TABLE_MANUFACTURERS, 'manufacturers_name') . 'class="form-control" id="manufacturers_name"')];
+              $contents[] = ['text' => '<label class="checkbox-inline">' . zen_draw_checkbox_field('featured') . TEXT_MANUFACTURER_FEATURED_LABEL . '</label>'];
+              $contents[] = ['text' => zen_draw_label(TEXT_MANUFACTURERS_IMAGE, 'manufacturers_image', 'class="control-label"') . zen_draw_file_field('manufacturers_image', '', 'class="form-control" id="manufacturers_image"')];
               $dir_info = zen_build_subdirectories_array(DIR_FS_CATALOG_IMAGES);
               $default_directory = 'manufacturers/';
 
-              $contents[] = array('text' => zen_draw_label(TEXT_PRODUCTS_IMAGE_DIR, 'img_dir', 'class="control-label"') . zen_draw_pull_down_menu('img_dir', $dir_info, $default_directory, 'class="form-control" id="img_dir"'));
+              $contents[] = ['text' => zen_draw_label(TEXT_PRODUCTS_IMAGE_DIR, 'img_dir', 'class="control-label"') . zen_draw_pull_down_menu('img_dir', $dir_info, $default_directory, 'class="form-control" id="img_dir"')];
 
-              $contents[] = array('text' => zen_draw_label(TEXT_MANUFACTURERS_IMAGE_MANUAL, 'manufacturers_image_manual', 'class="control-label"') . zen_draw_input_field('manufacturers_image_manual', '', 'class="form-control" id="manufacturers_image_manual"'));
+              $contents[] = ['text' => zen_draw_label(TEXT_MANUFACTURERS_IMAGE_MANUAL, 'manufacturers_image_manual', 'class="control-label"') . zen_draw_input_field('manufacturers_image_manual', '', 'class="form-control" id="manufacturers_image_manual"')];
 
               $manufacturer_inputs_string = '';
               for ($i = 0, $n = count($languages); $i < $n; $i++) {
                 $manufacturer_inputs_string .= '<div class="input-group"><span class="input-group-addon">' . zen_image(DIR_WS_CATALOG_LANGUAGES . $languages[$i]['directory'] . '/images/' . $languages[$i]['image'], $languages[$i]['name']) . '</span>' . zen_draw_input_field('manufacturers_url[' . $languages[$i]['id'] . ']', '', zen_set_field_length(TABLE_MANUFACTURERS_INFO, 'manufacturers_url') . 'class="form-control"') . '</div><br>';
               }
 
-              $contents[] = array('text' => '<p class="p_label control-label">' . TEXT_MANUFACTURERS_URL . '</p>' . $manufacturer_inputs_string);
-              $contents[] = array('align' => 'text-center', 'text' => '<button type="submit" class="btn btn-primary">' . IMAGE_SAVE . '</button> <a href="' . zen_href_link(FILENAME_MANUFACTURERS, ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . 'mID=' . $_GET['mID']) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>');
+              $contents[] = ['text' => '<p class="p_label control-label">' . TEXT_MANUFACTURERS_URL . '</p>' . $manufacturer_inputs_string];
+              $contents[] = ['align' => 'text-center', 'text' => '<button type="submit" class="btn btn-primary">' . IMAGE_SAVE . '</button> <a href="' . zen_href_link(FILENAME_MANUFACTURERS, ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . 'mID=' . $_GET['mID']) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>'];
               break;
             case 'edit':
-              $heading[] = array('text' => '<h4>' . TEXT_HEADING_EDIT_MANUFACTURER . '</h4>');
+              $heading[] = ['text' => '<h4>' . TEXT_HEADING_EDIT_MANUFACTURER . '</h4>'];
 
-              $contents = array('form' => zen_draw_form('manufacturers', FILENAME_MANUFACTURERS, ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . 'mID=' . $mInfo->manufacturers_id . '&action=save', 'post', 'enctype="multipart/form-data" class="form-horizontal"'));
-              $contents[] = array('text' => TEXT_EDIT_INTRO);
-              $contents[] = array('text' => zen_draw_label(TEXT_MANUFACTURERS_NAME, 'manufacturers_name', 'class="control-label"') . zen_draw_input_field('manufacturers_name', htmlspecialchars($mInfo->manufacturers_name, ENT_COMPAT, CHARSET, TRUE), zen_set_field_length(TABLE_MANUFACTURERS, 'manufacturers_name') . ' class="form-control" id="manufacturers_name"'));
-              $contents[] = array('text' => '<label class="checkbox-inline">' . zen_draw_checkbox_field('featured', '1', $mInfo->featured) . TEXT_MANUFACTURER_FEATURED_LABEL . '</label>');
-              $contents[] = array('text' => zen_draw_label(TEXT_MANUFACTURERS_IMAGE, 'manufacturers_image', 'class="control-label"') . zen_draw_file_field('manufacturers_image', '', ' class="form-control" id="manufacturers_image"') . '<br>' . $mInfo->manufacturers_image);
+              $contents = ['form' => zen_draw_form('manufacturers', FILENAME_MANUFACTURERS, ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . 'mID=' . $mInfo->manufacturers_id . '&action=save', 'post', 'enctype="multipart/form-data" class="form-horizontal"')];
+              $contents[] = ['text' => TEXT_EDIT_INTRO];
+              $contents[] = ['text' => zen_draw_label(TEXT_MANUFACTURERS_NAME, 'manufacturers_name', 'class="control-label"') . zen_draw_input_field('manufacturers_name', htmlspecialchars($mInfo->manufacturers_name, ENT_COMPAT, CHARSET, TRUE), zen_set_field_length(TABLE_MANUFACTURERS, 'manufacturers_name') . ' class="form-control" id="manufacturers_name"')];
+              $contents[] = ['text' => '<label class="checkbox-inline">' . zen_draw_checkbox_field('featured', '1', $mInfo->featured) . TEXT_MANUFACTURER_FEATURED_LABEL . '</label>'];
+              $contents[] = ['text' => zen_draw_label(TEXT_MANUFACTURERS_IMAGE, 'manufacturers_image', 'class="control-label"') . zen_draw_file_field('manufacturers_image', '', ' class="form-control" id="manufacturers_image"') . '<br>' . $mInfo->manufacturers_image];
               $dir_info = zen_build_subdirectories_array(DIR_FS_CATALOG_IMAGES);
               $default_directory = substr($mInfo->manufacturers_image, 0, strpos($mInfo->manufacturers_image, '/') + 1);
 
-              $contents[] = array('text' => zen_draw_label(TEXT_PRODUCTS_IMAGE_DIR, 'img_dir', 'class="control-label"') . zen_draw_pull_down_menu('img_dir', $dir_info, $default_directory, 'class="form-control" id="img_dir"'));
+              $contents[] = ['text' => zen_draw_label(TEXT_PRODUCTS_IMAGE_DIR, 'img_dir', 'class="control-label"') . zen_draw_pull_down_menu('img_dir', $dir_info, $default_directory, 'class="form-control" id="img_dir"')];
 
-              $contents[] = array('text' => zen_draw_label(TEXT_MANUFACTURERS_IMAGE_MANUAL, 'manufacturers_image_manual', 'class="control-label"') . zen_draw_input_field('manufacturers_image_manual', '', 'class="form-control" id="manufacturers_image_manual"'));
+              $contents[] = ['text' => zen_draw_label(TEXT_MANUFACTURERS_IMAGE_MANUAL, 'manufacturers_image_manual', 'class="control-label"') . zen_draw_input_field('manufacturers_image_manual', '', 'class="form-control" id="manufacturers_image_manual"')];
 
-              $contents[] = array('text' => zen_info_image($mInfo->manufacturers_image, $mInfo->manufacturers_name));
+              $contents[] = ['text' => zen_info_image($mInfo->manufacturers_image, $mInfo->manufacturers_name)];
               $manufacturer_inputs_string = '';
               for ($i = 0, $n = count($languages); $i < $n; $i++) {
                 $manufacturer_inputs_string .= '<div class="input-group"><span class="input-group-addon">' . zen_image(DIR_WS_CATALOG_LANGUAGES . $languages[$i]['directory'] . '/images/' . $languages[$i]['image'], $languages[$i]['name']) . '</span>' . zen_draw_input_field('manufacturers_url[' . $languages[$i]['id'] . ']', zen_get_manufacturer_url($mInfo->manufacturers_id, $languages[$i]['id']), zen_set_field_length(TABLE_MANUFACTURERS_INFO, 'manufacturers_url') . 'class="form-control"') . '</div><br>';
               }
 
-              $contents[] = array('text' => '<p class="p_label control-label">' . TEXT_MANUFACTURERS_URL . '</p>' . $manufacturer_inputs_string);
-              $contents[] = array('align' => 'text-center', 'text' => '<button type="submit" class="btn btn-primary">' . IMAGE_SAVE . '</button> <a href="' . zen_href_link(FILENAME_MANUFACTURERS, ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . 'mID=' . $mInfo->manufacturers_id) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>');
+              $contents[] = ['text' => '<p class="p_label control-label">' . TEXT_MANUFACTURERS_URL . '</p>' . $manufacturer_inputs_string];
+              $contents[] = ['align' => 'text-center', 'text' => '<button type="submit" class="btn btn-primary">' . IMAGE_SAVE . '</button> <a href="' . zen_href_link(FILENAME_MANUFACTURERS, ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . 'mID=' . $mInfo->manufacturers_id) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>'];
               break;
             case 'delete':
-              $heading[] = array('text' => '<h4>' . TEXT_HEADING_DELETE_MANUFACTURER . '</h4>');
+              $heading[] = ['text' => '<h4>' . TEXT_HEADING_DELETE_MANUFACTURER . '</h4>'];
 
-              $contents = array('form' => zen_draw_form('manufacturers', FILENAME_MANUFACTURERS, ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . 'action=deleteconfirm', 'post', 'class="form-horizontal"') . zen_draw_hidden_field('mID', $mInfo->manufacturers_id));
-              $contents[] = array('text' => TEXT_DELETE_INTRO);
-              $contents[] = array('text' => '<b>' . $mInfo->manufacturers_name . '</b>');
-              $contents[] = array('text' => '<label class="checkbox-inline">' . zen_draw_checkbox_field('delete_image', '', true) . TEXT_DELETE_IMAGE . '</label>');
+              $contents = ['form' => zen_draw_form('manufacturers', FILENAME_MANUFACTURERS, ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . 'action=deleteconfirm', 'post', 'class="form-horizontal"') . zen_draw_hidden_field('mID', $mInfo->manufacturers_id)];
+              $contents[] = ['text' => TEXT_DELETE_INTRO];
+              $contents[] = ['text' => '<b>' . $mInfo->manufacturers_name . '</b>'];
+              $contents[] = ['text' => '<label class="checkbox-inline">' . zen_draw_checkbox_field('delete_image', '', true) . TEXT_DELETE_IMAGE . '</label>'];
 
               if ($mInfo->products_count > 0) {
-                $contents[] = array('text' => '<label class="checkbox-inline">' . zen_draw_checkbox_field('delete_products') . TEXT_DELETE_PRODUCTS . '</label>');
-                $contents[] = array('text' => sprintf(TEXT_DELETE_WARNING_PRODUCTS, $mInfo->products_count));
+                $contents[] = ['text' => '<label class="checkbox-inline">' . zen_draw_checkbox_field('delete_products') . TEXT_DELETE_PRODUCTS . '</label>'];
+                $contents[] = ['text' => sprintf(TEXT_DELETE_WARNING_PRODUCTS, $mInfo->products_count)];
               }
 
-              $contents[] = array('align' => 'text-center', 'text' => '<button type="submit" class="btn btn-danger">' . IMAGE_DELETE . '</button> <a href="' . zen_href_link(FILENAME_MANUFACTURERS, ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . 'mID=' . $mInfo->manufacturers_id) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>');
+              $contents[] = ['align' => 'text-center', 'text' => '<button type="submit" class="btn btn-danger">' . IMAGE_DELETE . '</button> <a href="' . zen_href_link(FILENAME_MANUFACTURERS, ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . 'mID=' . $mInfo->manufacturers_id) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>'];
               break;
             default:
               if (isset($mInfo) && is_object($mInfo)) {
-                $heading[] = array('text' => '<h4>' . $mInfo->manufacturers_name . '</h4>');
+                $heading[] = ['text' => '<h4>' . $mInfo->manufacturers_name . '</h4>'];
 
-                $contents[] = array('align' => 'text-center', 'text' => '<a href="' . zen_href_link(FILENAME_MANUFACTURERS, ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . 'mID=' . $mInfo->manufacturers_id . '&action=edit') . '" class="btn btn-primary" role="button">' . IMAGE_EDIT . '</a> <a href="' . zen_href_link(FILENAME_MANUFACTURERS, ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . 'mID=' . $mInfo->manufacturers_id . '&action=delete') . '" class="btn btn-warning" role="button">' . IMAGE_DELETE . '</a>');
+                $contents[] = ['align' => 'text-center', 'text' => '<a href="' . zen_href_link(FILENAME_MANUFACTURERS, ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . 'mID=' . $mInfo->manufacturers_id . '&action=edit') . '" class="btn btn-primary" role="button">' . IMAGE_EDIT . '</a> <a href="' . zen_href_link(FILENAME_MANUFACTURERS, ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . 'mID=' . $mInfo->manufacturers_id . '&action=delete') . '" class="btn btn-warning" role="button">' . IMAGE_DELETE . '</a>'];
                 if ($mInfo->featured) {
-                  $contents[] = array('align' => 'text-center', 'text' => '<strong>' . TEXT_MANUFACTURER_IS_FEATURED . '</strong>');
+                  $contents[] = ['align' => 'text-center', 'text' => '<strong>' . TEXT_MANUFACTURER_IS_FEATURED . '</strong>'];
                 }
-                $contents[] = array('text' => TEXT_DATE_ADDED . ' ' . zen_date_short($mInfo->date_added));
+                $contents[] = ['text' => TEXT_DATE_ADDED . ' ' . zen_date_short($mInfo->date_added)];
                 if (zen_not_null($mInfo->last_modified)) {
-                  $contents[] = array('text' => TEXT_LAST_MODIFIED . ' ' . zen_date_short($mInfo->last_modified));
+                  $contents[] = ['text' => TEXT_LAST_MODIFIED . ' ' . zen_date_short($mInfo->last_modified)];
                 }
-                $contents[] = array('text' => zen_info_image($mInfo->manufacturers_image, $mInfo->manufacturers_name));
-                $contents[] = array('text' => TEXT_PRODUCTS . ' ' . $mInfo->products_count);
+                $contents[] = ['text' => zen_info_image($mInfo->manufacturers_image, $mInfo->manufacturers_name)];
+                $contents[] = ['text' => TEXT_PRODUCTS . ' ' . $mInfo->products_count];
               }
               break;
           }
