@@ -223,7 +223,7 @@ if (!empty($action)) {
 
               $contents = ['form' => zen_draw_form('manufacturers', FILENAME_MANUFACTURERS, 'action=insert', 'post', 'enctype="multipart/form-data" class="form-horizontal"')];
               $contents[] = ['text' => TEXT_NEW_INTRO];
-              $contents[] = ['text' => zen_draw_label(TEXT_MANUFACTURERS_NAME, 'manufacturers_name', 'class="control-label"') . zen_draw_input_field('manufacturers_name', '', zen_set_field_length(TABLE_MANUFACTURERS, 'manufacturers_name') . 'class="form-control" id="manufacturers_name"')];
+              $contents[] = ['text' => zen_draw_label(TEXT_MANUFACTURERS_NAME, 'manufacturers_name', 'class="control-label"') . zen_draw_input_field('manufacturers_name', '', zen_set_field_length(TABLE_MANUFACTURERS, 'manufacturers_name') . ' class="form-control" id="manufacturers_name"')];
               $contents[] = ['text' => '<label class="checkbox-inline">' . zen_draw_checkbox_field('featured') . TEXT_MANUFACTURER_FEATURED_LABEL . '</label>'];
               $contents[] = ['text' => zen_draw_label(TEXT_MANUFACTURERS_IMAGE, 'manufacturers_image', 'class="control-label"') . zen_draw_file_field('manufacturers_image', '', 'class="form-control" id="manufacturers_image"')];
               $dir_info = zen_build_subdirectories_array(DIR_FS_CATALOG_IMAGES);
@@ -235,7 +235,7 @@ if (!empty($action)) {
 
               $manufacturer_inputs_string = '';
               for ($i = 0, $n = count($languages); $i < $n; $i++) {
-                $manufacturer_inputs_string .= '<div class="input-group"><span class="input-group-addon">' . zen_image(DIR_WS_CATALOG_LANGUAGES . $languages[$i]['directory'] . '/images/' . $languages[$i]['image'], $languages[$i]['name']) . '</span>' . zen_draw_input_field('manufacturers_url[' . $languages[$i]['id'] . ']', '', zen_set_field_length(TABLE_MANUFACTURERS_INFO, 'manufacturers_url') . 'class="form-control"') . '</div><br>';
+                $manufacturer_inputs_string .= '<div class="input-group"><span class="input-group-addon">' . zen_image(DIR_WS_CATALOG_LANGUAGES . $languages[$i]['directory'] . '/images/' . $languages[$i]['image'], $languages[$i]['name']) . '</span>' . zen_draw_input_field('manufacturers_url[' . $languages[$i]['id'] . ']', '', zen_set_field_length(TABLE_MANUFACTURERS_INFO, 'manufacturers_url') . ' class="form-control"') . '</div><br>';
               }
 
               $contents[] = ['text' => '<p class="p_label control-label">' . TEXT_MANUFACTURERS_URL . '</p>' . $manufacturer_inputs_string];
@@ -259,7 +259,7 @@ if (!empty($action)) {
               $contents[] = ['text' => zen_info_image($mInfo->manufacturers_image, $mInfo->manufacturers_name)];
               $manufacturer_inputs_string = '';
               for ($i = 0, $n = count($languages); $i < $n; $i++) {
-                $manufacturer_inputs_string .= '<div class="input-group"><span class="input-group-addon">' . zen_image(DIR_WS_CATALOG_LANGUAGES . $languages[$i]['directory'] . '/images/' . $languages[$i]['image'], $languages[$i]['name']) . '</span>' . zen_draw_input_field('manufacturers_url[' . $languages[$i]['id'] . ']', zen_get_manufacturer_url($mInfo->manufacturers_id, $languages[$i]['id']), zen_set_field_length(TABLE_MANUFACTURERS_INFO, 'manufacturers_url') . 'class="form-control"') . '</div><br>';
+                $manufacturer_inputs_string .= '<div class="input-group"><span class="input-group-addon">' . zen_image(DIR_WS_CATALOG_LANGUAGES . $languages[$i]['directory'] . '/images/' . $languages[$i]['image'], $languages[$i]['name']) . '</span>' . zen_draw_input_field('manufacturers_url[' . $languages[$i]['id'] . ']', zen_get_manufacturer_url($mInfo->manufacturers_id, $languages[$i]['id']), zen_set_field_length(TABLE_MANUFACTURERS_INFO, 'manufacturers_url') . ' class="form-control"') . '</div><br>';
               }
 
               $contents[] = ['text' => '<p class="p_label control-label">' . TEXT_MANUFACTURERS_URL . '</p>' . $manufacturer_inputs_string];
