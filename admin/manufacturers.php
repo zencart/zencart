@@ -250,7 +250,7 @@ if (!empty($action)) {
               $contents[] = ['text' => '<label class="checkbox-inline">' . zen_draw_checkbox_field('featured', '1', $mInfo->featured) . TEXT_MANUFACTURER_FEATURED_LABEL . '</label>'];
               $contents[] = ['text' => zen_draw_label(TEXT_MANUFACTURERS_IMAGE, 'manufacturers_image', 'class="control-label"') . zen_draw_file_field('manufacturers_image', '', ' class="form-control" id="manufacturers_image"') . '<br>' . $mInfo->manufacturers_image];
               $dir_info = zen_build_subdirectories_array(DIR_FS_CATALOG_IMAGES);
-              $default_directory = substr($mInfo->manufacturers_image, 0, strpos($mInfo->manufacturers_image, '/') + 1);
+              $default_directory = substr($mInfo->manufacturers_image, 0, strpos($mInfo->manufacturers_image ?? '', '/') + 1);
 
               $contents[] = ['text' => zen_draw_label(TEXT_PRODUCTS_IMAGE_DIR, 'img_dir', 'class="control-label"') . zen_draw_pull_down_menu('img_dir', $dir_info, $default_directory, 'class="form-control" id="img_dir"')];
 
