@@ -223,9 +223,9 @@ if ($num_products_count > 0) {
             $listing_price = zen_get_products_display_price($record['products_id']);
             $more_info_button = '<a class="moreinfoLink list-more" href="' . $href . '">' . MORE_INFO_TEXT . '</a>';
             $buy_now_link = zen_href_link($_GET['main_page'], zen_get_all_get_params(array('action')) . 'action=buy_now&products_id=' . $record['products_id']);
-            $buy_now_button = '<a class="" href="' . $buy_now_link . '">' . zen_image_button(BUTTON_IMAGE_BUY_NOW, BUTTON_BUY_NOW_ALT, 'class="listingBuyNowButton"') . '</a>';
+            $buy_now_button = '<a href="' . $buy_now_link . '">' . zen_image_button(BUTTON_IMAGE_BUY_NOW, BUTTON_BUY_NOW_ALT, 'class="listingBuyNowButton"') . '</a>';
             $listing_qty_input_form = zen_draw_form('cart_quantity', zen_href_link($_GET['main_page'], zen_get_all_get_params(array('action')) . 'action=add_product&products_id=' . $record['products_id']), 'post', 'enctype="multipart/form-data"')
-                . '<input class="" type="text" name="cart_quantity" value="' . (zen_get_buy_now_qty($record['products_id'])) . '" maxlength="6" size="4" aria-label="' . ARIA_QTY_ADD_TO_CART . '">'
+                . '<input type="text" name="cart_quantity" value="' . (zen_get_buy_now_qty($record['products_id'])) . '" maxlength="6" size="4" aria-label="' . ARIA_QTY_ADD_TO_CART . '">'
                 . '<br>'
                 . zen_draw_hidden_field('products_id', $record['products_id'])
                 . zen_image_submit(BUTTON_IMAGE_IN_CART, BUTTON_IN_CART_ALT)
@@ -258,7 +258,7 @@ if ($num_products_count > 0) {
                     } else {
                         $lc_button = '';
                         $lc_button .= TEXT_PRODUCT_LISTING_MULTIPLE_ADD_TO_CART;
-                        $lc_button .= '<input class="" type="text" name="products_id[' . $record['products_id'] . ']" value="0" size="4" aria-label="' . ARIA_QTY_ADD_TO_CART . '">';
+                        $lc_button .= '<input type="text" name="products_id[' . $record['products_id'] . ']" value="0" size="4" aria-label="' . ARIA_QTY_ADD_TO_CART . '">';
                     }
                 } else {
                     // qty box with add to cart button
@@ -287,7 +287,7 @@ if ($num_products_count > 0) {
                     $lc_align = 'center';
                     if ($product_listing_layout_style === 'table') $lc_align = '';
                     $lc_text = '<h3 class="itemTitle">
-                        <a class="" href="' . $href . '">' . $listing_product_name . '</a>
+                        <a href="' . $href . '">' . $listing_product_name . '</a>
                         </h3>';
 
                     if (!empty($listing_description)) {
