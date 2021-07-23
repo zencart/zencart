@@ -417,6 +417,7 @@ if (!empty($action)) {
           // $additional_fields = [
           //      [
           //          'label' => 'The text to include for the field label',
+          //          'fieldname' => 'label "for" attribute, must match id of input field'
           //          'input' => 'The form-related portion of the field',
           //      ],
           //      ...
@@ -428,7 +429,7 @@ if (!empty($action)) {
               foreach ($additional_fields as $current_field) {
                   ?>
                   <div class="form-group">
-                      <?php echo zen_draw_label($current_field['label'], '', 'class="col-sm-3 control-label"'); ?>
+                      <?php echo zen_draw_label($current_field['label'], $current_field['fieldname'], 'class="col-sm-3 control-label"'); ?>
                       <div class="col-sm-9 col-md-6"><?php echo $current_field['input']; ?></div>
                   </div>
                   <?php
