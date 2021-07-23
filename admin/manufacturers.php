@@ -41,9 +41,12 @@ if (!empty($action)) {
       }
 
 
-      if ($_POST['manufacturers_image_manual'] != '') {
-        // add image manually
-        $manufacturers_image_name = zen_db_input($_POST['img_dir'] . $_POST['manufacturers_image_manual']);
+      if ($_POST['manufacturers_image_manual'] != '') { // add image manually
+        if ($_POST['manufacturers_image_manual'] === 'none') {
+          $manufacturers_image_name = '';
+        } else {
+          $manufacturers_image_name = zen_db_input($_POST['img_dir'] . $_POST['manufacturers_image_manual']);
+        }
         $db->Execute("UPDATE " . TABLE_MANUFACTURERS . "
                       SET manufacturers_image = '" . $manufacturers_image_name . "'
                       WHERE manufacturers_id = " . (int)$manufacturers_id);
