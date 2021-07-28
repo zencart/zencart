@@ -28,7 +28,10 @@ if ($num_categories > 0) {
   }
 
   while (!$categories->EOF) {
-    if (!$categories->fields['categories_image']) $categories->fields['categories_image'] = 'pixel_trans.gif';
+    $zco_notifier->notify('NOTIFY_CATEGORY_ROW_IMAGE', $categories->fields['categories_id'], $categories->fields['categories_image']); 
+    if (empty($categories->fields['categories_image'])) {
+       $categories->fields['categories_image'] = 'pixel_trans.gif';
+    }
     $cPath_new = zen_get_path($categories->fields['categories_id']);
 
     // strip out 0_ from top level cats
