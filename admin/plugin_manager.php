@@ -15,7 +15,12 @@ use Zencart\PluginManager\PluginManager;
 use Zencart\QueryBuilder\QueryBuilder;
 use Zencart\TableViewControllers\PluginManagerController;
 
+/* @var $pluginManager PluginManager*/
+/* @var $db queryFactory */
+/* @var $messageStack messageStack */
+
 require('includes/application_top.php');
+$pluginManager->inspectAndUpdate();
 
 $errorContainer = new PluginErrorContainer();
 $pluginInstaller = new Installer(new SqlPatchInstaller($db, $errorContainer), new ScriptedInstallerFactory($db, $errorContainer), $errorContainer);
