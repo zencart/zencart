@@ -9,6 +9,8 @@
 use Zencart\FileSystem\FileSystem;
 use Zencart\PluginManager\PluginManager;
 
+/* @var $db queryFactory */
+
 /**
  * boolean if true the autoloader scripts will be parsed and their output shown. For debugging purposes only.
  */
@@ -163,7 +165,7 @@ require 'includes/init_includes/init_database.php';
 
 
 $pluginManager = new PluginManager($db);
-$pluginManager->inspectAndUpdate();
+
 $installedPlugins = $pluginManager->getInstalledPlugins();
 
 $fs = FileSystem::getInstance();
