@@ -18,7 +18,7 @@ $extraFuncsMain = (new FileSystem)->listFilesFromDirectory(DIR_WS_FUNCTIONS . 'e
 $extraFuncsMain = collect($extraFuncsMain)->map(function ($item, $key) {
     return DIR_WS_FUNCTIONS . 'extra_functions/' . $item;
 })->toArray();
-$context = (new FileSystem)->isAdminDir(__DIR__) ? 'admin' : 'catalog';
+$context = IS_ADMIN_FLAG ? 'admin' : 'catalog';
 $extraFuncsPlugins = [];
 foreach ($installedPlugins as $plugin) {
     $path = DIR_FS_CATALOG . 'zc_plugins/' . $plugin['unique_key'] . '/' . $plugin['version'] . '/' . $context . '/' . DIR_WS_FUNCTIONS . 'extra_functions/';

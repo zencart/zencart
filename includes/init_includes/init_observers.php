@@ -30,7 +30,7 @@ $observersMain = (new FileSystem)->listFilesFromDirectory(DIR_WS_CLASSES . 'obse
 $observersMain = collect($observersMain)->map(function ($item, $key) {
     return DIR_WS_CLASSES . 'observers/' . $item;
 })->toArray();
-$context = (new FileSystem)->isAdminDir(__DIR__) ? 'admin' : 'catalog';
+$context = IS_ADMIN_FLAG ? 'admin' : 'catalog';
 $observersPlugins = [];
 foreach ($installedPlugins as $plugin) {
     $path = DIR_FS_CATALOG . 'zc_plugins/' . $plugin['unique_key'] . '/' . $plugin['version'] . '/' . $context . '/' . DIR_WS_CLASSES . 'observers/';
