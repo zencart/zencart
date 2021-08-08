@@ -90,6 +90,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'process') {
         $messageStack->add('login', TEXT_LOGIN_ERROR);
       } else {
 
+        $zc_check_basket_before = 0;
         // save current cart contents count if required
         if (SHOW_SHOPPING_CART_COMBINED > 0) {
             $zc_check_basket_before = $_SESSION['cart']->count_contents();
