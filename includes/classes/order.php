@@ -1085,6 +1085,11 @@ class order extends base
 
             $this->notify('NOTIFY_ORDER_PROCESSING_ONE_TIME_CHARGES_BEGIN', $i);
 
+            $products_ordered_email = false;
+            $this->notify('NOTIFY_ORDER_PROCESSING_PRODUCTS_ORDERED_EMAIL', $i, $products_ordered_email);
+            if ($products_ordered_email) {
+                continue;
+            }
             // build output for email notification
             $this->products_ordered .= $this->products[$i]['qty'] . ' x ' . $this->products[$i]['name'] . ($this->products[$i]['model'] != '' ? ' (' . $this->products[$i]['model'] . ') ' : '') . ' = ' .
                 $currencies->display_price($this->products[$i]['final_price'], $this->products[$i]['tax'], $this->products[$i]['qty']) .
