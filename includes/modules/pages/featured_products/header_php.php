@@ -42,6 +42,8 @@ $featured_products_split = new splitPageResults($featured_products_query_raw, MA
 $show_submit = zen_run_normal();
 
 $how_many = 0;
+$show_top_submit_button = false;
+$show_bottom_submit_button = false;
 
 // check whether to use multiple-add-to-cart, and whether top or bottom buttons are displayed
 if (PRODUCT_FEATURED_LISTING_MULTIPLE_ADD_TO_CART > 0 and $show_submit == true and $featured_products_split->number_of_rows > 0) {
@@ -71,13 +73,9 @@ if (PRODUCT_FEATURED_LISTING_MULTIPLE_ADD_TO_CART > 0 and $show_submit == true a
 
   if ( (($how_many > 0 and $show_submit == true and $featured_products_split->number_of_rows > 0) and (PRODUCT_FEATURED_LISTING_MULTIPLE_ADD_TO_CART == 1 or  PRODUCT_FEATURED_LISTING_MULTIPLE_ADD_TO_CART == 3)) ) {
     $show_top_submit_button = true;
-  } else {
-    $show_top_submit_button = false;
   }
   if ( (($how_many > 0 and $show_submit == true and $featured_products_split->number_of_rows > 0) and (PRODUCT_FEATURED_LISTING_MULTIPLE_ADD_TO_CART >= 2)) ) {
     $show_bottom_submit_button = true;
-  } else {
-    $show_bottom_submit_button = false;
   }
 }
 
