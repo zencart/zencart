@@ -1113,9 +1113,6 @@ class shoppingCart extends base
                 //// one time charges
                 // attributes_price_onetime
                 if ($attribute_price->fields['attributes_price_onetime'] > 0) {
-                    if ((int)$product_id != $product_id) {
-                        die('I DO NOT MATCH ' . $product_id);
-                    }
                     $attributes_price_onetime += $attribute_price->fields['attributes_price_onetime'];
                 }
                 // attributes_price_factor_onetime
