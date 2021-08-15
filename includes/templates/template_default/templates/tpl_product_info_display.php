@@ -145,7 +145,7 @@ if ($flag_show_ask_a_question) {
 ?>
 <?php
 /**
- * display the product atributes
+ * display the product attributes
  */
   require($template->get_template_dir('/tpl_modules_attributes.php',DIR_WS_TEMPLATE, $current_page_base,'templates'). '/tpl_modules_attributes.php'); ?>
 <?php
