@@ -107,7 +107,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'process') {
 
         // check current cart contents count if required
         $zc_check_basket_after = $_SESSION['cart']->count_contents();
-        if (SHOW_SHOPPING_CART_COMBINED > 0 && !empty($zc_check_basket_before) && ($zc_check_basket_before != $zc_check_basket_after) && $_SESSION['cart']->count_contents() > 0) {
+        if (SHOW_SHOPPING_CART_COMBINED > 0 && $zc_check_basket_after > 0 && $zc_check_basket_before != $zc_check_basket_after) {
           if (SHOW_SHOPPING_CART_COMBINED == 2) {
             // warning only do not send to cart
             $messageStack->add_session('header', WARNING_SHOPPING_CART_COMBINED, 'caution');
