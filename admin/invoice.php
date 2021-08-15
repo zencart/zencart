@@ -16,6 +16,8 @@ include DIR_FS_CATALOG . DIR_WS_CLASSES . 'order.php';
 $order = new order($oID);
 $show_including_tax = (DISPLAY_PRICE_WITH_TAX == 'true');
 $show_product_tax = true;
+$show_product_images = true;
+$show_attrib_images = true;
 
 // prepare order-status pulldown list
 $orders_statuses = array();
