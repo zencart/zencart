@@ -11,6 +11,10 @@ $show_product_images = true;
 $show_attrib_images = true;
 $img_width = defined('IMAGE_ON_INVOICE_IMAGE_WIDTH') ? (int)IMAGE_ON_INVOICE_IMAGE_WIDTH : '100';
 $attr_img_width = '25';
+/*
+ * Notifier to allow defaults to be changed
+ */
+$zco_notifier->notify('NOTIFY_ADMIN_PACKINGSLIP_DEFAULTS', '', $show_product_images, $show_attrib_images, $attr_img_width);
 
 require(DIR_WS_CLASSES . 'currencies.php');
 $currencies = new currencies();
@@ -125,11 +129,53 @@ if ($order->billing['street_address'] != $order->delivery['street_address']) {
             <th class="dataTableHeadingContent">&nbsp;</th>
             <th class="dataTableHeadingContent" style="width: 70%"><?php echo TABLE_HEADING_PRODUCTS; ?></th>
             <th class="dataTableHeadingContent"><?php echo TABLE_HEADING_PRODUCTS_MODEL; ?></th>
+            <?php
+          // -----
+          // Additional column-headings can be added.
+          //
+          // A watching observer can provide an associative array in the following format (for the products' listing ONLY):
+          //
+          // $extra_headings = array(
+          //     array(
+          //       'align' => $alignment,    // One of 'center', 'right', or 'left' (optional)
+          //       'text' => $value
+          //     ),
+          // );
+          //
+          // Observer notes:
+          // - Be sure to check that the $p2/$extra_headings value is specifically (bool)false before initializing, since
+          //   multiple observers might be injecting content!
+          // - If heading-columns are added, be sure to add the associated data columns, too, via the
+          //   'NOTIFY_ADMIN_PACKINGSLIP_DATA' notification.
+          //
+          $extra_headings = false;
+          $zco_notifier->notify('NOTIFY_ADMIN_PACKINGSLIP_HEADING', '', $extra_headings);
+          if (is_array($extra_headings)) {
+              foreach ($extra_headings as $heading_info) {
+                  $align = (isset($heading_info['align'])) ? (' text-' . $heading_info['align']) : '';
+?>
+            <th class="dataTableHeadingContent<?php echo $align; ?>"><?php echo $heading_info['text']; ?></th>
+<?php
+              }
+          }
+?>
           </tr>
         </thead>
         <tbody>
             <?php
-            for ($i = 0, $n = count($order->products); $i < $n; $i++) {
+            /*
+             * Notifier to allow packing slip to be sorted to required order
+             *
+             * Set $sort_order to the order->products array counter in the sequence you require the invoice to be displayed
+             */
+            $sort_order=false;
+            $zco_notifier->notify('NOTIFY_ADMIN_PACKINGSLIP_SORT_DISPLAY', $order->products, $sort_order);
+            for ($ii = 0, $n = sizeof($order->products); $ii < $n; $ii++) {
+                if (is_array($sort_order)) {
+                    $i=$sort_order[$ii];
+                } else {
+                    $i=$ii;
+                }
             $product_name = $order->products[$i]['name'];
             ?>
             <tr class="dataTableRow">
@@ -177,6 +223,36 @@ if ($order->billing['street_address'] != $order->delivery['street_address']) {
               <td class="dataTableContent">
                 <?php echo $order->products[$i]['model']; ?>
               </td>
+              <?php
+              // -----
+              // Additional fields can be added into columns.
+              //
+              // A watching observer can provide an associative array in the following format:
+              //
+              // $extra_data = array(
+              //     array(
+              //       'align' => $alignment,    // One of 'center', 'right', or 'left' (optional)
+              //       'text' => $value
+              //     ),
+              // );
+              //
+              // Observer notes:
+              // - Be sure to check that the $p2/$extra_data value is specifically (bool)false before initializing, since
+              //   multiple observers might be injecting content!
+              // - If heading-columns are added, be sure to add the associated header columns, too, via the
+              //   'NOTIFY_ADMIN_PACKINGSLIP_HEADERS' notification.
+              //
+              $extra_data = false;
+              $zco_notifier->notify('NOTIFY_ADMIN_PACKINGSLIP_DATA',  $order->products[$i]['id'], $extra_data);
+              if (is_array($extra_data)) {
+                  foreach ($extra_data as $data_info) {
+                      $align = (isset($data_info['align'])) ? (' text-' . $data_info['align']) : '';
+?>
+                <td class="dataTableContent<?php echo $align; ?>"><?php echo $data_info['text']; ?></td>
+<?php
+                  }
+              }
+?>
             </tr>
             <?php
           }
@@ -187,9 +263,9 @@ if ($order->billing['street_address'] != $order->delivery['street_address']) {
         <table class="table table-condensed">
           <thead>
             <tr>
-              <th class="text-center"><strong><?php echo TABLE_HEADING_DATE_ADDED; ?></strong></th>
-              <th class="text-center"><strong><?php echo TABLE_HEADING_STATUS; ?></strong></th>
-              <th class="text-center"><strong><?php echo TABLE_HEADING_COMMENTS; ?></strong></th>
+              <th class="text-left"><strong><?php echo TABLE_HEADING_DATE_ADDED; ?></strong></th>
+              <th class="text-left"><strong><?php echo TABLE_HEADING_STATUS; ?></strong></th>
+              <th class="text-left"><strong><?php echo TABLE_HEADING_COMMENTS; ?></strong></th>
             </tr>
           </thead>
           <tbody>
@@ -206,9 +282,9 @@ if ($order->billing['street_address'] != $order->delivery['street_address']) {
                   $count_comments++;
                   ?>
                 <tr>
-                  <td class="text-center"><?php echo zen_datetime_short($order_history['date_added']); ?></td>
-                  <td><?php echo $orders_status_array[$order_history['orders_status_id']]; ?></td>
-                  <td><?php echo ($order_history['comments'] == '' ? TEXT_NONE : nl2br(zen_output_string_protected($order_history['comments']))); ?>&nbsp;</td>
+                  <td class="text-left"><?php echo zen_datetime_short($order_history['date_added']); ?></td>
+                  <td class="text-left"><?php echo $orders_status_array[$order_history['orders_status_id']]; ?></td>
+                  <td class="text-left"><?php echo ($order_history['comments'] == '' ? TEXT_NONE : nl2br(zen_output_string_protected($order_history['comments']))); ?>&nbsp;</td>
                 </tr>
                 <?php
                 if (ORDER_COMMENTS_PACKING_SLIP == 1 && $count_comments >= 1) {
