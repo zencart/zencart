@@ -2422,7 +2422,7 @@ class paypaldp extends base {
   //   MAPs will return the appropriate error code.
   function getISOCurrency($curr) {
     $out = "";
-    if(ctype_digit($curr) || is_int($curr)) {
+    if(is_int($curr) || ctype_digit((string)$curr)) {
       $numCurr = $curr + 0;
       if($numCurr < 10) {
         $out = "00" . $numCurr;
