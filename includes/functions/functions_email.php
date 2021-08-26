@@ -176,7 +176,7 @@ use PHPMailer\PHPMailer\SMTP;
        */
       $zco_notifier->notify('NOTIFY_EMAIL_DETERMINING_EMAIL_FORMAT', $to_email_address, $customers_email_format, $module);
 
-      if ($customers_email_format == 'NONE' || $customers_email_format == 'OUT') return false; //if requested no mail, then don't send.
+      if ($customers_email_format == 'NONE' || $customers_email_format == 'OUT') continue; //if requested no mail, then don't send, but continue processing others.
 
       // handling admin/"extra"/copy emails:
       if (ADMIN_EXTRA_EMAIL_FORMAT == 'TEXT' && substr($module,-6)=='_extra') {
