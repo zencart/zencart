@@ -48,7 +48,7 @@ $customer = $db->Execute($customer_query);
 $error = false;
 if (isset($_GET['action']) && ($_GET['action'] == 'process')) {
   $rating = (int)$_POST['rating'];
-  $review_text = $_POST['review_text'];
+  $review_text = zen_clean_html($_POST['review_text']);
   $antiSpam = !empty($_POST[$antiSpamFieldName]) ? 'spam' : '';
   $zco_notifier->notify('NOTIFY_REVIEWS_WRITE_CAPTCHA_CHECK');
 
