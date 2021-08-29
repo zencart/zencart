@@ -209,12 +209,14 @@ class queryFactory extends base
         if ($enableCaching && $zc_cache->sql_cache_exists($sqlQuery, $cacheSeconds)) {
             $obj->is_cached = true;
             $zp_result_array = $zc_cache->sql_cache_read($sqlQuery);
-            $obj->result = $zp_result_array;
-            if (count($zp_result_array) > 0) {
-                $obj->EOF = false;
-                $obj->fields = array_replace($obj->fields, $zp_result_array[0]);
+            if ($zp_result_array !== false) {
+                $obj->result = $zp_result_array;
+                if (count($zp_result_array) > 0) {
+                    $obj->EOF = false;
+                    $obj->fields = array_replace($obj->fields, $zp_result_array[0]);
+                }
+                return $obj;
             }
-            return $obj;
         }
 
 

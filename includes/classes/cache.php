@@ -147,6 +147,7 @@ class cache extends base {
     switch (SQL_CACHE_METHOD) {
       case 'file':
       $zp_fa = file(DIR_FS_SQL_CACHE . '/' . $zp_cache_name . '.sql');
+      if ($zp_fa === false) return false;
       $zp_result_array = unserialize(implode('', $zp_fa));
       return $zp_result_array;
       break;
