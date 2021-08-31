@@ -99,7 +99,7 @@ if (!empty($action)) {
       break;
     case 'setflag':
 
-      if (isset($_POST['flag']) && ($_POST['flag'] == '0') || ($_POST['flag'] == '1')) {
+      if (isset($_POST['flag']) && ($_POST['flag'] === '0' || $_POST['flag'] === '1')) {
         if (isset($_GET['pID'])) {
           zen_set_product_status($_GET['pID'], $_POST['flag']);
         }
