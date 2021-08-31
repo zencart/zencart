@@ -1,9 +1,9 @@
 <?php
 /**
- * @copyright Copyright 2003-2020 Zen Cart Development Team
+ * @copyright Copyright 2003-2021 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Scott C Wilson 2020 Nov 11 Modified in v1.5.7b $
+ * @version $Id: 2021-08-31  $
  */
 require('includes/application_top.php');
 
@@ -387,7 +387,7 @@ if (zen_not_null($action)) {
                         $contents[] = array('text' => TEXT_INFO_LAST_MODIFIED . ' ' . zen_date_short($rInfo->last_modified));
                     }
                     $contents[] = array('text' => '<br>' . zen_info_image($rInfo->products_image, $rInfo->products_name, SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT));
-                    $contents[] = array('text' => '<br>' . ENTRY_REVIEW . '<br>' . $rInfo->reviews_text);
+                    $contents[] = array('text' => '<br>' . ENTRY_REVIEW . '<br>' . zen_output_string_protected($rInfo->reviews_text));
                     $contents[] = array('text' => '<br>' . TEXT_INFO_REVIEW_AUTHOR . ' ' . $rInfo->customers_name);
                     $contents[] = array('text' => TEXT_INFO_REVIEW_RATING . ' ' . zen_image(DIR_WS_TEMPLATE_IMAGES . 'stars_' . $rInfo->reviews_rating . '.gif'));
                     $contents[] = array('text' => TEXT_INFO_REVIEW_READ . ' ' . $rInfo->reviews_read);
