@@ -77,14 +77,6 @@ class zcAjaxPayment extends base
         $messageStack->add_session ('checkout_payment', ERROR_CONDITIONS_NOT_ACCEPTED, 'error');
       }
     }
-    // load the selected payment module
-    require (DIR_WS_CLASSES.'payment.php');
-    $payment_modules = new payment ($_POST['payment']);
-    $payment_modules->update_status ();
-    if (($_POST['payment']==''||!is_object ($payment_modules->paymentClass))&&$credit_covers===FALSE) {
-      $messageStack->add_session ('checkout_payment', ERROR_NO_PAYMENT_MODULE_SELECTED, 'error');
-    }
-    $GLOBALS[$_POST['payment']] = $payment_modules->paymentClass;
 
     require (DIR_WS_CLASSES.'order.php');
     $order = new order ();
@@ -102,6 +94,15 @@ class zcAjaxPayment extends base
       unset ($_SESSION['payment']);
       $_SESSION['payment'] = '';
     }
+
+    // load the selected payment module
+    require (DIR_WS_CLASSES.'payment.php');
+    $payment_modules = new payment ($_POST['payment']);
+    $payment_modules->update_status ();
+    if (($_POST['payment']==''||!is_object ($payment_modules->paymentClass))&&$credit_covers===FALSE) {
+      $messageStack->add_session ('checkout_payment', ERROR_NO_PAYMENT_MODULE_SELECTED, 'error');
+    }
+    $GLOBALS[$_POST['payment']] = $payment_modules->paymentClass;
 
     if (is_array ($payment_modules->modules)) {
       $payment_modules->pre_confirmation_check ();
