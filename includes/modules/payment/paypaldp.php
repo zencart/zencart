@@ -6,7 +6,7 @@
  * @copyright Portions Copyright 2005 CardinalCommerce
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2020 Jun 23 Modified in v1.5.7 $
+ * @version $Id: DrByte 2020 Sep 19 Modified in v1.5.7a $
  */
 /**
  * The transaction URL for the Cardinal Centinel 3D-Secure service.
@@ -327,7 +327,7 @@ class paypaldp extends base {
                             'field' => zen_draw_pull_down_menu('paypalwpp_cc_type', $this->cards, '', 'onchange="paypalwpp_cc_type_check();" onblur="paypalwpp_cc_type_check();"' . 'id="'.$this->code.'-cc-type"'. $onFocus),
                            'tag' => $this->code.'-cc-type');
     $fieldsArray[] = array('title' => MODULE_PAYMENT_PAYPALDP_TEXT_CREDIT_CARD_NUMBER,
-                           'field' => zen_draw_input_field('paypalwpp_cc_number', $ccnum, 'id="'.$this->code.'-cc-number"' . $onFocus . ' autocomplete="off"'),
+                           'field' => zen_draw_input_field('paypalwpp_cc_number', '', 'id="'.$this->code.'-cc-number"' . $onFocus . ' autocomplete="off"'),
                            'tag' => $this->code.'-cc-number');
     $fieldsArray[] = array('title' => MODULE_PAYMENT_PAYPALDP_TEXT_CREDIT_CARD_EXPIRES,
                            'field' => zen_draw_pull_down_menu('paypalwpp_cc_expires_month', $expires_month, strftime('%m'), 'id="'.$this->code.'-cc-expires-month"' . $onFocus) . '&nbsp;' . zen_draw_pull_down_menu('paypalwpp_cc_expires_year', $expires_year, '', 'id="'.$this->code.'-cc-expires-year"' . $onFocus),
@@ -352,14 +352,14 @@ class paypaldp extends base {
       // add extra field for Maestro cards
       array_splice($selection['fields'], 4, 0,
                    array(array('title' => MODULE_PAYMENT_PAYPALDP_TEXT_CREDIT_CARD_MAESTRO_ISSUENUMBER,
-                               'field' => zen_draw_input_field('paypalwpp_cc_issuenumber', $maestronum, 'size="4" maxlength="4"' . ' id="'.$this->code.'-cc-issuenumber"' . $onFocus . ' autocomplete="off"'),
+                               'field' => zen_draw_input_field('paypalwpp_cc_issuenumber', '', 'size="4" maxlength="4"' . ' id="'.$this->code.'-cc-issuenumber"' . $onFocus . ' autocomplete="off"'),
                                'tag' => $this->code.'-cc-issuenumber')));
       // 3D-Secure
       $selection['fields'][] = array('title' => '',
                                'field' => '<div id="' . $this->code.'-cc-securetext"><p>' .
-                                     '<a href="javascript:void window.open(\'vbv_learn_more.html\',\'vbv_service\',\'width=550,height=450\')">' .
+                                     '<a href="javascript:void window.open(\'vbv_learn_more.html\',\'vbv_service\',\'width=550,height=450,noreferrer\')">' .
                                      zen_image(DIR_WS_IMAGES.'3ds/vbv_learn_more.gif') . '</a>' .
-                                     '<a href="javascript:void window.open(\'mcs_learn_more.html\',\'mcsc_service\',\'width=550,height=450\')">' .
+                                     '<a href="javascript:void window.open(\'mcs_learn_more.html\',\'mcsc_service\',\'width=550,height=450,noreferrer\')">' .
                                      zen_image(DIR_WS_IMAGES.'3ds/mcsc_learn_more.gif') . '</a>' .
                                      '</p>' .
                                      '<p>' . TEXT_3DS_CARD_MAY_BE_ENROLLED . '</p></div>',
@@ -439,7 +439,12 @@ class paypaldp extends base {
         $_SESSION['3Dsecure_card_type'] = $this->determineCardType($_POST['paypalwpp_cc_number']);
       }
       if (isset($_SESSION['3Dsecure_requires_lookup']) && $_SESSION['3Dsecure_requires_lookup'] == TRUE) {
-        $_SESSION['3Dsecure_merchantData'] = serialize(array('im'=>$_POST['paypalwpp_cc_issue_month'], 'iy'=>$_POST['paypalwpp_cc_issue_year'], 'in'=>$_POST['paypalwpp_cc_issuenumber'], 'fn'=>$_POST['paypalwpp_cc_firstname'], 'ln'=>$_POST['paypalwpp_cc_lastname']));
+        $paypalwpp_cc_issue_month = (isset($_POST['paypalwpp_cc_issue_month'])) ? $_POST['paypalwpp_cc_issue_month'] : '';
+        $paypalwpp_cc_issue_year = (isset($_POST['paypalwpp_cc_issue_year'])) ? $_POST['paypalwpp_cc_issue_year'] : '';
+        $paypalwpp_cc_issuenumber = (isset($_POST['paypalwpp_cc_issuenumber'])) ? $_POST['paypalwpp_cc_issuenumber'] : '';
+
+        $_SESSION['3Dsecure_merchantData'] = serialize(array('im' => $paypalwpp_cc_issue_month, 'iy' => $paypalwpp_cc_issue_year, 'in' => $paypalwpp_cc_issuenumber, 'fn' => $_POST['paypalwpp_cc_firstname'], 'ln' => $_POST['paypalwpp_cc_lastname']));
+
         global $order_total_modules;
         $calculatedOrderTotal = $order_total_modules->pre_confirmation_check(TRUE);
         $lookup_data_array = array('currency' => $order->info['currency'],
@@ -459,8 +464,6 @@ class paypaldp extends base {
         $errorDesc = $lookup_response['error_desc'];
         $_SESSION['3Dsecure_enrolled'] = $lookup_response['enrolled'];
         $_SESSION['3Dsecure_transactionId'] = $lookup_response['transaction_id'];
-        $requestXML = $lookup_response['requestXML'];
-        $rawXML = $lookup_response['rawXML'];
         if (isset($lookup_response['EciFlag'])) $_SESSION['3Dsecure_auth_eci'] = $lookup_response['EciFlag'];
 
         ////////////////////////////////////////////////////////////////////////////
@@ -472,7 +475,7 @@ class paypaldp extends base {
         // rules to determine if the order should continue.
         ////////////////////////////////////////////////////////////////////////////
 
-        if (strcasecmp('0', $errorNo) == 0 && strcasecmp('Y', $_SESSION['3Dsecure_enrolled']) == 0) {
+        if ($errorNo === '0' && $_SESSION['3Dsecure_enrolled'] === 'Y') {
 
           ////////////////////////////////////////////////////////////////////////
           // Card is enrolled, continue to payer authentication
@@ -556,9 +559,9 @@ class paypaldp extends base {
           $confirmation['fields'][count($confirmation['fields'])] = array(
               'title' => '',
               'field' => '<div id="' . $this->code.'-cc-securetext"><p>' .
-                         '<a href="javascript:void window.open(\'vbv_learn_more.html\',\'vbv_service\',\'width=550,height=450\')">' .
+                         '<a href="javascript:void window.open(\'vbv_learn_more.html\',\'vbv_service\',\'width=550,height=450,noreferrer\')">' .
                          zen_image(DIR_WS_IMAGES.'3ds/vbv_learn_more.gif') . '</a>' .
-                         '<a href="javascript:void window.open(\'mcs_learn_more.html\',\'mcsc_service\',\'width=550,height=450\')">' .
+                         '<a href="javascript:void window.open(\'mcs_learn_more.html\',\'mcsc_service\',\'width=550,height=450,noreferrer\')">' .
                          zen_image(DIR_WS_IMAGES.'3ds/mcsc_learn_more.gif') . '</a></p>' .
                          '<p>' . TEXT_3DS_CARD_MAY_BE_ENROLLED . '</p></div>');
     }
@@ -693,6 +696,13 @@ class paypaldp extends base {
       if (MODULE_PAYMENT_PAYPALDP_MERCHANT_COUNTRY == 'UK') {
         // determine the card type and validate that authentication was attempted and completed if applicable
         if (($_SESSION['3Dsecure_requires_lookup'] || $this->requiresLookup($_POST['wpp_cc_number']) == true)) {  // authentication attempt required?
+            $secureflags = [];
+            foreach ($_SESSION as $key => $value) {
+                if (strpos($key, '3Dsecure') === 0) {
+                    $secureflags[$key] = $value;
+                }
+            }
+            $this->zcLog('3Ds processing starts', json_encode($secureflags));
           // validate an acceptable lookup result
           if (isset($_SESSION['3Dsecure_enroll_lookup_attempted']) == false || strcasecmp($_SESSION['3Dsecure_enroll_lookup_attempted'], 'Y') != 0) {
             // lookup never attempted for required card, so need to redirect to payment-selection page
@@ -1123,7 +1133,7 @@ class paypaldp extends base {
     static $tokenHash;
     if ($tokenHash == '') $tokenHash = '_' . zen_create_random_value(4);
     if (MODULE_PAYMENT_PAYPALDP_DEBUGGING == 'Log and Email' || MODULE_PAYMENT_PAYPALDP_DEBUGGING == 'Log File') {
-      $token = (isset($_SESSION['paypal_ec_token'])) ? $_SESSION['paypal_ec_token'] : preg_replace('/[^0-9.A-Z\-]/', '', $_GET['token']);
+      $token = (isset($_SESSION['paypal_ec_token'])) ? $_SESSION['paypal_ec_token'] : (isset($_GET['token']) ? preg_replace('/[^0-9.A-Z\-]/', '', $_GET['token']) : '');
       $token = ($token == '') ? date('m-d-Y-H-i') : $token; // or time()
       $token .= $tokenHash;
       $file = $this->_logDir . '/' . $this->code . '_Paypal_Action_' . $token . '.log';
@@ -2111,7 +2121,7 @@ class paypaldp extends base {
     // determine the appropriate product code for submission
     $prodCode = FALSE;
     if (isset($_SESSION['cart'])) {
-      if ($_SESSION['cart']->get_content_type == 'virtual') {
+      if ($_SESSION['cart']->get_content_type() == 'virtual') {
         $prodCode = 'DIG';
       } else {
         $prodCode = 'PHY';
@@ -2211,7 +2221,7 @@ class paypaldp extends base {
                     'error_no' => $errorNo,
                     'error_desc' => $errorDesc,
                     'acs_url' => $parser->deserializedResponse['ACSUrl'],
-                    'spa_hidden_fields' => $parser->deserializedResponse['SPAHiddenFields'],
+                    'spa_hidden_fields' => (!empty($parser->deserializedResponse['SPAHiddenFields'])) ? $parser->deserializedResponse['SPAHiddenFields'] : '',
                     'payload' => $parser->deserializedResponse['Payload'],
                     'cc3d_card_number' => $parser->deserializedResponse['CardNumber'],
                     'cc3d_checkcode' => $parser->deserializedResponse['CardCode'],
