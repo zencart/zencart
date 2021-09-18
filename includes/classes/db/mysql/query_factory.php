@@ -967,6 +967,7 @@ class queryFactoryMeta
             if (strtoupper($type) === 'DATE') $this->max_length = 10;
             if (strtoupper($type) === 'DATETIME') $this->max_length = 19; // ignores fractional which would be 26
             if (strtoupper($type) === 'TIMESTAMP') $this->max_length = 19; // ignores fractional which would be 26
+            if (strtoupper($type) === 'TINYTEXT') $this->max_length = 255; 
         }
     }
 }
