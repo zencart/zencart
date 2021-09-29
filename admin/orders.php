@@ -557,7 +557,7 @@ if (!empty($action) && $order_exists == true) {
           <div class="col-sm-3 col-lg-4 text-left noprint">
             <?php echo $left_side_buttons; ?>
           </div>
-          <div class="col-sm-6 col-lg-4 noprint">
+          <div class="col-sm-6 col-lg-6 noprint">
             <div class="input-group">
               <span class="input-group-btn">
                   <?php echo $prev_button; ?>
