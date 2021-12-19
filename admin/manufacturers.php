@@ -167,7 +167,7 @@ if (zen_not_null($action)) {
 // reset page when page is unknown
                 if ((empty($_GET['page']) || $_GET['page'] == '1') && !empty($_GET['mID'])) {
                   $check_page = $db->Execute($manufacturers_query_raw);
-                  $check_count = 1;
+                  $check_count = 0;
                   if ($check_page->RecordCount() > MAX_DISPLAY_SEARCH_RESULTS) {
                     foreach ($check_page as $item) {
                       if ($item['manufacturers_id'] == $_GET['mID']) {

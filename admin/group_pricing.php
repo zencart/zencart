@@ -115,7 +115,7 @@ if ($query->fields['count'] > 0 && (!defined('MODULE_ORDER_TOTAL_GROUP_PRICING_S
 // reset page when page is unknown
                 if ((empty($_GET['page']) || $_GET['page'] == '1') && !empty($_GET['gID'])) {
                   $check_page = $db->Execute($groups_query_raw);
-                  $check_count = 1;
+                  $check_count = 0;
                   if ($check_page->RecordCount() > MAX_DISPLAY_SEARCH_RESULTS) {
                     foreach ($check_page as $item) {
                       if ($item['group_id'] == $_GET['gID']) {

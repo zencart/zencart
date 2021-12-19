@@ -802,11 +802,11 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
 // Split Page
 
 // reset page when page is unknown
-            if ((isset($_GET['page']) && ($_GET['page'] == '1' || $_GET['page'] == '')) && isset($_GET['pID']) && $_GET['pID'] != '') {
+            if ((empty($_GET['page']) || $_GET['page'] == '1') && !empty($_GET['pID'])) {
               $old_page = $_GET['page'];
               $check_page = $db->Execute($products_query_raw);
               if ($check_page->RecordCount() > MAX_DISPLAY_RESULTS_CATEGORIES) {
-                $check_count = 1;
+                $check_count = 0;
                 foreach ($check_page as $item) {
                   if ($item['products_id'] == $_GET['pID']) {
                     break;

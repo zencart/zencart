@@ -265,7 +265,7 @@ if (zen_not_null($action)) {
 // reset page when page is unknown
                   if ((empty($_GET['page']) || $_GET['page'] == '1') && !empty($_GET['rID'])) {
                     $check_page = $db->Execute($reviews_query_raw);
-                    $check_count = 1;
+                    $check_count = 0;
                     if ($check_page->RecordCount() > MAX_DISPLAY_SEARCH_RESULTS) {
                       foreach ($check_page as $item) {
                         if ($item['reviews_id'] == $_GET['rID']) {

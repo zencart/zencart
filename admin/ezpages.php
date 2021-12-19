@@ -561,7 +561,7 @@ if (zen_not_null($action)) {
 // reset page when page is unknown
                 if ((empty($_GET['page']) || $_GET['page'] == '1') && !empty($_GET['ezID'])) {
                   $check_page = $db->Execute($pages_query_raw);
-                  $check_count = 1;
+                  $check_count = 0;
                   if ($check_page->RecordCount() > MAX_DISPLAY_SEARCH_RESULTS_EZPAGE) {
                     foreach ($check_page as $item) {
                       if ($item['pages_id'] == $_GET['ezID']) {
