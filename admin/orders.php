@@ -1248,9 +1248,9 @@ if (!empty($action) && $order_exists == true) {
 
 // Split Page
 // reset page when page is unknown
-                  if (($_GET['page'] == '' or $_GET['page'] <= 1) && !empty($_GET['oID'])) {
+                  if ((empty($_GET['page']) || $_GET['page'] <= 1) && !empty($_GET['oID'])) {
                     $check_page = $db->Execute($orders_query_raw);
-                    $check_count = 1;
+                    $check_count = 0;
                     if ($check_page->RecordCount() > MAX_DISPLAY_SEARCH_RESULTS_ORDERS) {
                       while (!$check_page->EOF) {
                         if ($check_page->fields['orders_id'] == $_GET['oID']) {

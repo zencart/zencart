@@ -168,6 +168,23 @@ if (!empty($action)) {
                                           FROM " . TABLE_MANUFACTURERS . "
                                           ORDER BY weighted DESC, manufacturers_name";
 
+              // reset page when page is unknown
+              if ((empty($_GET['page']) || $_GET['page'] == '1') && !empty($_GET['mID'])) {
+                $check_page = $db->Execute($manufacturers_query_raw);
+                $check_count = 0;
+                if ($check_page->RecordCount() > MAX_DISPLAY_SEARCH_RESULTS) {
+                  foreach ($check_page as $item) {
+                    if ($item['manufacturers_id'] == $_GET['mID']) {
+                      break;
+                    }
+                    $check_count++;
+                  }
+                  $_GET['page'] = round((($check_count / MAX_DISPLAY_SEARCH_RESULTS) + (fmod_round($check_count, MAX_DISPLAY_SEARCH_RESULTS) != 0 ? .5 : 0)), 0);
+                } else {
+                  $_GET['page'] = 1;
+                }
+              }
+
               $manufacturers_split = new splitPageResults($_GET['page'], MAX_DISPLAY_SEARCH_RESULTS, $manufacturers_query_raw, $manufacturers_query_numrows);
               $manufacturers = $db->Execute($manufacturers_query_raw);
               foreach ($manufacturers as $manufacturer) {

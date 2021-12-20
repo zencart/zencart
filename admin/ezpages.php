@@ -557,6 +557,22 @@ if (!empty($action)) {
                                     " . $ez_order_by;
 
 // Split Page
+// reset page when page is unknown
+                if ((empty($_GET['page']) || $_GET['page'] == '1') && !empty($_GET['ezID'])) {
+                  $check_page = $db->Execute($pages_query_raw);
+                  $check_count = 0;
+                  if ($check_page->RecordCount() > MAX_DISPLAY_SEARCH_RESULTS_EZPAGE) {
+                    foreach ($check_page as $item) {
+                      if ($item['pages_id'] == $_GET['ezID']) {
+                        break;
+                      }
+                      $check_count++;
+                    }
+                    $_GET['page'] = round((($check_count / MAX_DISPLAY_SEARCH_RESULTS_EZPAGE) + (fmod_round($check_count, MAX_DISPLAY_SEARCH_RESULTS_EZPAGE) != 0 ? .5 : 0)), 0);
+                  } else {
+                    $_GET['page'] = 1;
+                  }
+                }
 
                 $pages_split = new splitPageResults($_GET['page'], MAX_DISPLAY_SEARCH_RESULTS_EZPAGE, $pages_query_raw, $pages_query_numrows);
                 $pages = $db->Execute($pages_query_raw);
