@@ -854,7 +854,7 @@ if ($found == false) {
             ?>
             <?php echo zen_draw_label(TEXT_LANGUAGE_LOOKUPS, 'zv_files', 'class="control-label col-sm-3"'); ?>
           <div class="col-sm-9 col-md-6">
-              <?php echo zen_draw_pull_down_menu('zv_files', $za_lookup, (isset($action) && $action == 'locate_configuration' ? (int)$_POST['zv_files'] : '0'), 'class="form-control"'); ?>
+              <?php echo zen_draw_pull_down_menu('zv_files', $za_lookup, (isset($action) && $action == 'locate_configuration' ? (int)$_POST['zv_files'] : '0'), 'class="form-control" aria-label="zv_files_language"'); ?>
           </div>
         </div>
         <div class="form-group">
@@ -972,7 +972,7 @@ if ($found == false) {
             );
             ?>
             <?php echo zen_draw_label(TEXT_FUNCTION_LOOKUPS, 'zv_files', 'class="control-label col-sm-3"'); ?>
-          <div class="col-sm-9 col-md-6"><?php echo zen_draw_pull_down_menu('zv_files', $za_lookup, (isset($action) && $action == 'locate_function' ? (int)$_POST['zv_files'] : '1'), 'class="form-control"'); ?></div>
+          <div class="col-sm-9 col-md-6"><?php echo zen_draw_pull_down_menu('zv_files', $za_lookup, (isset($action) && $action == 'locate_function' ? (int)$_POST['zv_files'] : '1'), 'class="form-control" aria-label="zv_files_function"'); ?></div>
         </div>
         <div class="form-group">
           <div class="col-sm-12 text-right"><button type="submit" class="btn btn-primary"><?php echo TEXT_BUTTON_SEARCH; ?></button></div>
@@ -1000,7 +1000,7 @@ if ($found == false) {
             );
             ?>
             <?php echo zen_draw_label(TEXT_CLASS_LOOKUPS, 'zv_files', 'class="control-label col-sm-3"'); ?>
-          <div class="col-sm-9 col-md-6"><?php echo zen_draw_pull_down_menu('zv_files', $za_lookup, (isset($action) && $action == 'locate_class' ? (int)$_POST['zv_files'] : '1'), 'class="form-control"'); ?></div>
+          <div class="col-sm-9 col-md-6"><?php echo zen_draw_pull_down_menu('zv_files', $za_lookup, (isset($action) && $action == 'locate_class' ? (int)$_POST['zv_files'] : '1'), 'class="form-control" aria-label="zv_files_class"'); ?></div>
         </div>
         <div class="form-group">
           <div class="col-sm-12 text-right"><button type="submit" class="btn btn-primary"><?php echo TEXT_BUTTON_SEARCH; ?></button></div>
@@ -1029,7 +1029,7 @@ if ($found == false) {
             );
             ?>
             <?php echo zen_draw_label(TEXT_TEMPLATE_LOOKUPS, 'zv_files', 'class="control-label col-sm-3"'); ?>
-          <div class="col-sm-9 col-md-6"><?php echo zen_draw_pull_down_menu('zv_files', $za_lookup, (isset($action) && $action == 'locate_template' ? (int)$_POST['zv_files'] : '1'), 'class="form-control"'); ?></div>
+          <div class="col-sm-9 col-md-6"><?php echo zen_draw_pull_down_menu('zv_files', $za_lookup, (isset($action) && $action == 'locate_template' ? (int)$_POST['zv_files'] : '1'), 'class="form-control" aria-label="zv_files_template"'); ?></div>
         </div>
         <div class="form-group">
           <div class="col-sm-12 text-right"><button type="submit" class="btn btn-primary"><?php echo TEXT_BUTTON_SEARCH; ?></button></div>
@@ -1058,7 +1058,7 @@ if ($found == false) {
             );
             ?>
             <?php echo zen_draw_label(TEXT_ALL_FILES_LOOKUPS, 'zv_files', 'class="control-label col-sm-3"'); ?>
-          <div class="col-sm-9 col-md-6"><?php echo zen_draw_pull_down_menu('zv_files', $za_lookup, (isset($action) && $action == 'locate_all_files' ? (int)$_POST['zv_files'] : '1'), 'class="form-control"'); ?></div>
+          <div class="col-sm-9 col-md-6"><?php echo zen_draw_pull_down_menu('zv_files', $za_lookup, (isset($action) && $action == 'locate_all_files' ? (int)$_POST['zv_files'] : '1'), 'class="form-control" aria-label="zv_files_all"'); ?></div>
         </div>
         <div class="form-group">
             <?php
@@ -1072,7 +1072,7 @@ if ($found == false) {
             );
             ?>
             <?php echo zen_draw_label(TEXT_ALL_FILESTYPE_LOOKUPS, 'zv_filestype', 'class="control-label col-sm-3"'); ?>
-          <div class="col-sm-9 col-md-6"><?php echo zen_draw_pull_down_menu('zv_filestype', $za_lookup_filetype, (!empty($_POST['zv_filestype']) ? $_POST['zv_filestype'] : '1'), 'class="form-control"'); ?></div>
+          <div class="col-sm-9 col-md-6"><?php echo zen_draw_pull_down_menu('zv_filestype', $za_lookup_filetype, (!empty($_POST['zv_filestype']) ? $_POST['zv_filestype'] : '1'), 'class="form-control" aria-label="zv_filestype"'); ?></div>
         </div>
         <div class="form-group">
             <?php echo zen_draw_label(TEXT_CONTEXT_LINES, 'context_lines', 'class="control-label col-sm-3"'); ?>
@@ -1082,7 +1082,7 @@ if ($found == false) {
             <?php echo zen_draw_label(TEXT_CASE_SENSITIVE, 'case_sensitive', 'class="control-label col-sm-3"'); ?>
           <div class="col-sm-9 col-md-6">
             <div class="checkbox">
-              <label><?php echo zen_draw_checkbox_field('case_sensitive', true, $case_sensitive, '', 'id="locate-cs"'); ?></label>
+              <label for="locate-cs"><?php echo zen_draw_checkbox_field('case_sensitive', true, $case_sensitive, '', 'id="locate-cs"'); ?></label>
             </div>
           </div>
         </div>
