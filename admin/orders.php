@@ -890,7 +890,7 @@ if (!empty($action) && $order_exists == true) {
       foreach ($extra_headings as $heading_info) {
           $align = (isset($heading_info['align'])) ? (' class="text-' . $heading_info['align'] . '"') : '';
 ?>
-                <th<?php echo $align; ?>><strong><?php echo $heading_info['text']; ?></th>
+                <th<?php echo $align; ?>><?php echo $heading_info['text']; ?></th>
 <?php
       }
   }
