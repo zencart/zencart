@@ -156,7 +156,7 @@ if (!empty($action)) {
           <table class="table table-hover">
             <thead>
               <tr class="dataTableHeadingRow">
-                <th class="dataTableHeadingContent">&nbsp;</th>
+                <th class="dataTableHeadingContent text-center"><?php echo TABLE_HEADING_ID; ?>#</th>
                 <th class="dataTableHeadingContent"><?php echo TABLE_HEADING_MANUFACTURERS; ?></th>
                 <th class="dataTableHeadingContent"><?php echo TABLE_HEADING_MANUFACTURER_FEATURED; ?></th>
                 <th class="dataTableHeadingContent text-right"><?php echo TABLE_HEADING_ACTION; ?>&nbsp;</th>
@@ -186,7 +186,7 @@ if (!empty($action)) {
                   <?php } else { ?>
                   <tr class="dataTableRow" onclick="document.location.href = '<?php echo zen_href_link(FILENAME_MANUFACTURERS, ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . 'mID=' . $manufacturer['manufacturers_id'] . '&action=edit'); ?>'" style="cursor:pointer">
                   <?php } ?>
-                  <td class="dataTableContent text-right"><?php echo $manufacturer['manufacturers_id']; ?></td>
+                  <td class="dataTableContent text-center"><?php echo $manufacturer['manufacturers_id']; ?></td>
                   <td class="dataTableContent"><?php echo $manufacturer['manufacturers_name']; ?></td>
                   <td class="dataTableContent"><?php echo $manufacturer['featured'] ? '<strong>' . TEXT_YES . '</strong>' : TEXT_NO; ?></td>
                   <td class="dataTableContent text-right">

@@ -9,6 +9,7 @@
 $define = [
     'HEADING_TITLE' => 'Manufacturers',
     'TABLE_HEADING_MANUFACTURERS' => 'Manufacturers',
+    'TABLE_HEADING_ID' => 'ID',
     'TABLE_HEADING_ACTION' => 'Action',
     'TEXT_HEADING_NEW_MANUFACTURER' => 'New Manufacturer',
     'TEXT_HEADING_EDIT_MANUFACTURER' => 'Edit Manufacturer',
