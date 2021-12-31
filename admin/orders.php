@@ -904,7 +904,7 @@ if (!empty($action) && $order_exists == true) {
                 $orders_history = $db->Execute("SELECT *
                                               FROM " . TABLE_ORDERS_STATUS_HISTORY . "
                                               WHERE orders_id = " . zen_db_input($oID) . "
-                                              ORDER BY date_added");
+                                              ORDER BY orders_status_history_id");
 
                 if ($orders_history->RecordCount() > 0) {
                   $first = true;
