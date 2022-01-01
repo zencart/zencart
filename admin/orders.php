@@ -3,7 +3,7 @@
  * @copyright Copyright 2003-2021 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: mc12345678 2021 Feb 22 Modified in v1.5.7c $
+ * @version $Id:  Modified in v1.5.8 $
  */
 require('includes/application_top.php');
 
@@ -14,20 +14,18 @@ if (isset($module)) {
 
 $quick_view_popover_enabled = false;
 $includeAttributesInProductDetailRows = true;
+$show_product_tax = true;
 
 require(DIR_WS_CLASSES . 'currencies.php');
 $currencies = new currencies();
 
-if (isset($_GET['oID'])) {
-  $_GET['oID'] = (int)$_GET['oID'];
-}
 if (isset($_GET['download_reset_on'])) {
   $_GET['download_reset_on'] = (int)$_GET['download_reset_on'];
 }
 if (isset($_GET['download_reset_off'])) {
   $_GET['download_reset_off'] = (int)$_GET['download_reset_off'];
 }
-if (!isset($_GET['status'])) $_GET['status'] = '';
+if (!isset($_GET['statusFilterSelect'])) $_GET['statusFilterSelect'] = '';
 if (!isset($_GET['list_order'])) $_GET['list_order'] = '';
 if (!isset($_GET['page'])) $_GET['page'] = '';
 
@@ -45,18 +43,21 @@ foreach ($orders_status as $status) {
 
 $action = (isset($_GET['action']) ? $_GET['action'] : '');
 $order_exists = false;
-if (isset($_GET['oID']) && trim($_GET['oID']) == '') {
+if (isset($_GET['oID']) && empty($_GET['oID'])) {
   unset($_GET['oID']);
+}
+if (isset($_GET['oID'])) {
+  $_GET['oID'] = (int)$_GET['oID'];
 }
 if ($action == 'edit' && !isset($_GET['oID'])) {
   $action = '';
 }
 
-$oID = FALSE;
+$oID = false;
 if (isset($_POST['oID'])) {
-  $oID = zen_db_prepare_input(trim($_POST['oID']));
+  $oID = (int)$_POST['oID'];
 } elseif (isset($_GET['oID'])) {
-  $oID = zen_db_prepare_input(trim($_GET['oID']));
+  $oID = (int)$_GET['oID'];
 }
 if ($oID) {
   $orders = $db->Execute("SELECT orders_id
@@ -77,29 +78,29 @@ if (!empty($oID) && !empty($action)) {
   $zco_notifier->notify('NOTIFY_ADMIN_ORDER_PREDISPLAY_HOOK', $oID, $action);
 }
 
-        // -----
-        // Determine which of the 'Notify Customer' radio buttons should be selected initially,
-        // based on configuration setting in 'My Store'.  Set a default, just in case that configuration
-        // setting isn't set!
-        //
-        if (!defined('NOTIFY_CUSTOMER_DEFAULT')) define('NOTIFY_CUSTOMER_DEFAULT', '1');
-        switch (NOTIFY_CUSTOMER_DEFAULT) {
-            case '0':
-                $notify_email = false;
-                $notify_no_email = true;
-                $notify_hidden = false;
-                break;
-            case '-1':
-                $notify_email = false;
-                $notify_no_email = false;
-                $notify_hidden = true;
-                break;
-            default:
-                $notify_email = true;
-                $notify_no_email = false;
-                $notify_hidden = false;
-                break;
-        }
+// -----
+// Determine which of the 'Notify Customer' radio buttons should be selected initially,
+// based on configuration setting in 'My Store'.  Set a default, just in case that configuration
+// setting isn't set!
+//
+if (!defined('NOTIFY_CUSTOMER_DEFAULT')) define('NOTIFY_CUSTOMER_DEFAULT', '1');
+switch (NOTIFY_CUSTOMER_DEFAULT) {
+    case '0':
+        $notify_email = false;
+        $notify_no_email = true;
+        $notify_hidden = false;
+        break;
+    case '-1':
+        $notify_email = false;
+        $notify_no_email = false;
+        $notify_hidden = true;
+        break;
+    default:
+        $notify_email = true;
+        $notify_no_email = false;
+        $notify_hidden = false;
+        break;
+}
 
 if (!empty($action) && $order_exists == true) {
   switch ($action) {
@@ -236,7 +237,7 @@ if (!empty($action) && $order_exists == true) {
       $oID = zen_db_prepare_input($_GET['oID']);
       $comments = !empty($_POST['comments']) ? zen_db_prepare_input($_POST['comments']) : '';
       $admin_language = zen_db_prepare_input(isset($_POST['admin_language']) ? $_POST['admin_language'] : $_SESSION['languages_code']);
-      $status = (int)$_POST['status'];
+      $status = (int)$_POST['statusUpdateSelect'];
       if ($status < 1) {
          break;
       }
@@ -330,7 +331,7 @@ if (!empty($action) && $order_exists == true) {
       break;
 
     case 'deleteconfirm':
-      $oID = zen_db_prepare_input($_POST['oID']);
+      $oID = (int)$_POST['oID'];
 
       zen_remove_order($oID, $_POST['restock']);
 
@@ -451,7 +452,7 @@ if (!empty($action) && $order_exists == true) {
 
         <div class="row noprint">
           <div class="form-inline">
-            <div class="form-group col-xs-4 col-sm-3 col-md-3 col-lg-3">
+            <div class="form-group col-xs-6 col-sm-3 col-md-3 col-lg-3">
                 <?php
                 echo zen_draw_form('search', FILENAME_ORDERS, '', 'get', '', true);
                 echo zen_draw_label(HEADING_TITLE_SEARCH_ALL, 'searchAll', 'class="sr-only"');
@@ -488,7 +489,7 @@ if (!empty($action) && $order_exists == true) {
               <span id="helpBlock3" class="help-block"><?php echo HEADING_TITLE_SEARCH_DETAIL_ORDERS_PRODUCTS; ?></span>
               <?php echo '</form>'; ?>
             </div>
-            <div class="form-group col-xs-4 col-sm-3 col-md-3 col-lg-3">
+            <div class="form-group col-xs-6 col-sm-3 col-md-3 col-lg-3">
                 <?php
                 echo zen_draw_form('orders', FILENAME_ORDERS, '', 'get', '', true);
                 echo zen_draw_label(HEADING_TITLE_SEARCH, 'oID', 'class="sr-only"');
@@ -497,11 +498,11 @@ if (!empty($action) && $order_exists == true) {
                 echo '</form>';
                 ?>
             </div>
-            <div class="form-group col-xs-4 col-sm-3 col-md-3 col-lg-3">
+            <div class="form-group col-xs-6 col-sm-3 col-md-3 col-lg-3">
                 <?php
-                echo zen_draw_form('status', FILENAME_ORDERS, '', 'get', '', true);
-                echo zen_draw_label(HEADING_TITLE_STATUS, 'selectstatus', 'class="sr-only"');
-                echo zen_draw_order_status_dropdown('status', (int)$_GET['status'], array('id' => '', 'text' => TEXT_ALL_ORDERS), 'class="form-control" onChange="this.form.submit();" id="selectstatus"');
+                echo zen_draw_form('statusFilterForm', FILENAME_ORDERS, '', 'get', '', true);
+                echo zen_draw_label(HEADING_TITLE_STATUS, 'statusFilterSelect', 'class="sr-only"');
+                echo zen_draw_order_status_dropdown('statusFilterSelect', (int)$_GET['statusFilterSelect'], array('id' => '', 'text' => TEXT_ALL_ORDERS), 'class="form-control" onChange="this.form.submit();" id="statusFilterSelect"');
                 echo '</form>';
                 ?>
             </div>
@@ -632,13 +633,15 @@ if (!empty($action) && $order_exists == true) {
             <table class="table">
               <tr>
                 <td><strong><?php echo ENTRY_SHIPPING_ADDRESS; ?></strong></td>
-                <td><?php echo zen_address_format($order->delivery['format_id'], $order->delivery, 1, '', '<br>'); ?></td>
+                <td><?php echo (empty($order->delivery)) ? TEXT_NONE : zen_address_format($order->delivery['format_id'], $order->delivery, 1, '', '<br>'); ?></td>
               </tr>
+<?php if (!empty($order->delivery)) { ?>
               <tr>
                 <td>&nbsp;</td>
                 <td class="noprint"><a href="https://maps.google.com/maps/search/?api=1&amp;query=<?php echo urlencode($order->delivery['street_address'] . ',' . $order->delivery['city'] . ',' . $order->delivery['state'] . ',' . $order->delivery['postcode']); ?>" rel="noreferrer" target="map"><i class="fa fa-map">&nbsp;</i> <u><?php echo TEXT_MAP_SHIPPING_ADDRESS; ?></u></a></td>
               </tr>
 <?php
+  }
   $address_footer_suffix = '';
   $zco_notifier->notify('NOTIFY_ADMIN_ORDERS_ADDRESS_FOOTERS', 'delivery', $address_footer_suffix, $order->delivery);
   if (!empty($address_footer_suffix)) {
@@ -743,7 +746,9 @@ if (!empty($action) && $order_exists == true) {
             <tr class="dataTableHeadingRow">
               <th class="dataTableHeadingContent" colspan="2"><?php echo TABLE_HEADING_PRODUCTS; ?></th>
               <th class="dataTableHeadingContent hidden-xs"><?php echo TABLE_HEADING_PRODUCTS_MODEL; ?></th>
+<?php if ($show_product_tax) { ?>
               <th class="dataTableHeadingContent text-right hidden-xs"><?php echo TABLE_HEADING_TAX; ?></th>
+<?php } ?>
               <th class="dataTableHeadingContent text-right"><?php echo ($show_including_tax) ? TABLE_HEADING_PRICE_EXCLUDING_TAX : TABLE_HEADING_PRICE; ?></th>
 <?php if ($show_including_tax)  { ?>
               <th class="dataTableHeadingContent text-right hidden-xs"><?php echo TABLE_HEADING_PRICE_INCLUDING_TAX; ?></th>
@@ -794,9 +799,11 @@ if (!empty($action) && $order_exists == true) {
                 <td class="dataTableContent hidden-xs">
                   <?php echo $order->products[$i]['model']; ?>
                 </td>
+<?php if ($show_product_tax) { ?>
                 <td class="dataTableContent text-right hidden-xs">
                   <?php echo zen_display_tax_value($order->products[$i]['tax']); ?>%
                 </td>
+<?php } ?>
                 <td class="dataTableContent text-right">
                   <strong><?php echo $currencies->format($order->products[$i]['final_price'], true, $order->info['currency'], $order->info['currency_value']) . ($order->products[$i]['onetime_charges'] != 0 ? '<br>' . $currencies->format($order->products[$i]['onetime_charges'], true, $order->info['currency'], $order->info['currency_value']) : ''); ?></strong>
                 </td>
@@ -883,7 +890,7 @@ if (!empty($action) && $order_exists == true) {
       foreach ($extra_headings as $heading_info) {
           $align = (isset($heading_info['align'])) ? (' class="text-' . $heading_info['align'] . '"') : '';
 ?>
-                <th<?php echo $align; ?>><strong><?php echo $heading_info['text']; ?></th>
+                <th<?php echo $align; ?>><?php echo $heading_info['text']; ?></th>
 <?php
       }
   }
@@ -897,7 +904,7 @@ if (!empty($action) && $order_exists == true) {
                 $orders_history = $db->Execute("SELECT *
                                               FROM " . TABLE_ORDERS_STATUS_HISTORY . "
                                               WHERE orders_id = " . zen_db_input($oID) . "
-                                              ORDER BY date_added");
+                                              ORDER BY orders_status_history_id");
 
                 if ($orders_history->RecordCount() > 0) {
                   $first = true;
@@ -945,10 +952,10 @@ if (!empty($action) && $order_exists == true) {
                     <td>
 <?php
                         if ($first) {
-                           echo nl2br(zen_output_string_protected($item['comments']));
+                           echo nl2br(zen_output_string_protected($item['comments'] ?? ''));
                            $first = false;
                         } else {
-                           echo nl2br($item['comments']);
+                           echo nl2br($item['comments'] ?? '');
                         }
 ?>
                     </td>
@@ -979,7 +986,7 @@ if (!empty($action) && $order_exists == true) {
         <div class="row noprint"><?php echo zen_draw_separator('pixel_trans.gif', '1', '5'); ?></div>
         <div class="row noprint">
           <div class="formArea">
-              <?php echo zen_draw_form('statusUpdate', FILENAME_ORDERS, zen_get_all_get_params(array('action', 'language')) . 'action=update_order&language=' . $order->info['language_code'], 'post', 'class="form-horizontal"', true);
+              <?php echo zen_draw_form('statusUpdateForm', FILENAME_ORDERS, zen_get_all_get_params(array('action', 'language')) . 'action=update_order&language=' . $order->info['language_code'], 'post', 'class="form-horizontal"', true);
                echo zen_draw_hidden_field('camefrom', 'orderEdit'); // identify from where the form was submitted (infoBox/listing or details), to redirect back to this same page ?>
               <div class="form-group">
                   <?php echo zen_draw_label(TABLE_HEADING_COMMENTS, 'comments', 'class="col-sm-3 control-label"'); ?>
@@ -996,9 +1003,9 @@ if (!empty($action) && $order_exists == true) {
     $zco_notifier->notify('NOTIFY_ADMIN_ORDERS_ADDL_HISTORY_INPUTS', array());
 ?>
             <div class="form-group">
-                <?php echo zen_draw_label(ENTRY_STATUS, 'status', 'class="col-sm-3 control-label"'); ?>
+                <?php echo zen_draw_label(ENTRY_STATUS, 'statusUpdateSelect', 'class="col-sm-3 control-label"'); ?>
               <div class="col-sm-9">
-                  <?php echo zen_draw_order_status_dropdown('status', $order->info['orders_status'], '', 'id="status" class="form-control"'); ?>
+                  <?php echo zen_draw_order_status_dropdown('statusUpdateSelect', $order->info['orders_status'], '', 'id="statusUpdateSelect" class="form-control"'); ?>
               </div>
             </div>
 <?php
@@ -1030,7 +1037,7 @@ if (!empty($action) && $order_exists == true) {
         }
 ?>
             <div class="form-group">
-                <div class="col-sm-3 control-label" style="font-weight: 700;"><?php echo ENTRY_NOTIFY_CUSTOMER; ?></div>
+                <div class="col-sm-3 control-label font-weight-bold"><?php echo ENTRY_NOTIFY_CUSTOMER; ?></div>
               <div class="col-sm-9">
                 <div class="radio">
                   <label><?php echo zen_draw_radio_field('notify', '1', $notify_email) . TEXT_EMAIL; ?></label>
@@ -1230,9 +1237,9 @@ if (!empty($action) && $order_exists == true) {
                   if (!empty($_GET['cID'])) {
                     $cID = (int)zen_db_prepare_input($_GET['cID']);
                     $orders_query_raw .= " WHERE o.customers_id = " . (int)$cID;
-                  } elseif ($_GET['status'] != '') {
-                    $status = (int)zen_db_prepare_input($_GET['status']);
-                    $orders_query_raw .= " WHERE s.orders_status_id = " . (int)$status . $search;
+                  } elseif ($_GET['statusFilterSelect'] != '') {
+                    $status_filter = (int)zen_db_prepare_input($_GET['statusFilterSelect']);
+                    $orders_query_raw .= " WHERE s.orders_status_id = " . (int)$status_filter . $search;
                   } else {
                     $orders_query_raw .= (trim($search) != '') ? preg_replace('/ *AND /i', ' WHERE ', $search, 1) : '';
                   }
@@ -1426,13 +1433,13 @@ if (!empty($action) && $order_exists == true) {
 
                     // each contents array is drawn in a div, so this form block must be a single array element.
                     $contents[] = ['text' =>
-                        zen_draw_form('statusUpdate', FILENAME_ORDERS, zen_get_all_get_params(['action','language']) . 'action=update_order' . (!isset($_GET['oID']) ? '&oID=' . $oInfo->orders_id : '') . '&language=' . $oInfo->language_code, 'post', '', true) . // form action uses the order language to change the session language on the update. On initial page load (from another page), $_GET['oID'] is not set, hence clause in form action
+                        zen_draw_form('statusUpdateForm', FILENAME_ORDERS, zen_get_all_get_params(['action','language']) . 'action=update_order' . (!isset($_GET['oID']) ? '&oID=' . $oInfo->orders_id : '') . '&language=' . $oInfo->language_code, 'post', '', true) . // form action uses the order language to change the session language on the update. On initial page load (from another page), $_GET['oID'] is not set, hence clause in form action
                         '<fieldset style="border:solid thin slategray;padding:5px"><legend style="width:inherit;">&nbsp;' . IMAGE_UPDATE . '&nbsp;</legend>' .
                         ($oInfo->language_code !== $_SESSION['languages_code'] ? zen_draw_hidden_field('admin_language', $_SESSION['languages_code']) : '') . // if the order language is different to the current admin language, record the admin language, to restore it in the redirect after the status update email has been sent
                         zen_draw_label(IMAGE_SEND_EMAIL, 'notify', 'class="control-label"') .
                         zen_draw_checkbox_field('notify', '1', $notify_email, '', 'class="checkbox-inline" id="notify"') . "<br>\n" .
-                        zen_draw_label(ENTRY_STATUS, 'status', 'class="control-label"') .
-                        zen_draw_order_status_dropdown('status', $oInfo->orders_status, '', 'onChange="this.form.submit();" id="status" class="form-control"') . "\n" .
+                        zen_draw_label(ENTRY_STATUS, 'statusUpdateSelect', 'class="control-label"') .
+                        zen_draw_order_status_dropdown('statusUpdateSelect', $oInfo->orders_status, '', 'onChange="this.form.submit();" id="statusUpdateSelect" class="form-control"') . "\n" .
                         '</fieldset></form>' . "\n"];
 
                     $contents[] = array('text' => '<br>' . TEXT_DATE_ORDER_CREATED . ' ' . zen_date_short($oInfo->date_purchased));

@@ -1,8 +1,8 @@
 <?php
 /**
- * @copyright Copyright 2003-2020 Zen Cart Development Team
+ * @copyright Copyright 2003-2021 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2020 Jun 22 Modified in v1.5.7 $
+ * @version $Id: DrByte  Modified in v1.5.8 $
  */
 
 namespace Zencart\Traits;
@@ -15,6 +15,11 @@ trait NotifierManager
      * @var array of aliases
      */
     private $observerAliases = ['NOTIFIY_ORDER_CART_SUBTOTAL_CALCULATE' => 'NOTIFY_ORDER_CART_SUBTOTAL_CALCULATE'];
+
+    public function getRegisteredObservers()
+    {
+        return EventDto::getInstance()->getObservers();
+    }
 
     /**
      * method to notify observers that an event has occurred in the notifier object
@@ -39,7 +44,7 @@ trait NotifierManager
     {
         $this->logNotifier($eventID, $param1, $param2, $param3, $param4, $param5, $param6, $param7, $param8, $param9);
 
-        $observers = EventDto::getInstance()->getObservers();
+        $observers = $this->getRegisteredObservers();
         if (empty($observers)) {
             return;
         }
@@ -91,7 +96,7 @@ trait NotifierManager
 
     protected function logNotifier($eventID, $param1, $param2, $param3, $param4, $param5, $param6, $param7, $param8, $param9)
     {
-        if (!defined('NOTIFIER_TRACE') || NOTIFIER_TRACE == '' || NOTIFIER_TRACE == 'false' || NOTIFIER_TRACE == 'Off') {
+        if (!defined('NOTIFIER_TRACE') || empty(NOTIFIER_TRACE) || NOTIFIER_TRACE === 'false' || NOTIFIER_TRACE === 'Off') {
             return;
         }
         $file = DIR_FS_LOGS . '/notifier_trace.log';
@@ -110,9 +115,9 @@ trait NotifierManager
         $output = '';
         if (count($paramArray)) {
             $output = ', ';
-            if (NOTIFIER_TRACE == 'var_export' || NOTIFIER_TRACE == 'var_dump' || NOTIFIER_TRACE == 'true') {
+            if (NOTIFIER_TRACE === 'var_export' || NOTIFIER_TRACE === 'var_dump' || NOTIFIER_TRACE === 'true') {
                 $output .= var_export($paramArray, true);
-            } elseif (NOTIFIER_TRACE == 'print_r' || NOTIFIER_TRACE == 'On' || NOTIFIER_TRACE === true) {
+            } elseif (NOTIFIER_TRACE === 'print_r' || NOTIFIER_TRACE === 'On' || NOTIFIER_TRACE === true) {
                 $output .= print_r($paramArray, true);
             }
         }

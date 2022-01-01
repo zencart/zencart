@@ -1000,6 +1000,10 @@ class square extends base
         return $keys;
     }
 
+    function help() {
+       return array('link' => 'https://docs.zen-cart.com/user/payment/square/'); 
+    }
+
     /**
      * Check and fix table structure if appropriate
      *

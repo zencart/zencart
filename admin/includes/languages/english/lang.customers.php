@@ -63,6 +63,7 @@ $define = [
     'TEXT_INFO_ADDRESS_BOOK_COUNT_SINGLE' => '',
     'EMP_BUTTON_PLACEORDER_ALT' => 'Place an order for this customer',
     'EMP_BUTTON_PLACEORDER' => 'Place Order',
+    'TEXT_CUSTOMER_GROUPS' => 'Customer Groups',
 ];
 
 return $define;

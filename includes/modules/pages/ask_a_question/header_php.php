@@ -143,8 +143,8 @@ if (ENABLE_SSL == 'true' && $request_type != 'SSL') {
     zen_redirect(zen_href_link(FILENAME_ASK_A_QUESTION, zen_get_all_get_params(), 'SSL'));
 }
 
-$email_address = '';
-$name = '';
+$name = $name ?? '';
+$email_address = $email_address ?? '';
 
 // default email and name if customer is logged in
 if (zen_is_logged_in() && !zen_in_guest_checkout()) {

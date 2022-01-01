@@ -1,6 +1,6 @@
 <?php
 /**
- * @copyright Copyright 2003-2020 Zen Cart Development Team
+ * @copyright Copyright 2003-2021 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version GIT: $Id: $
  */
@@ -25,7 +25,9 @@ class Configuration extends Eloquent
             if (in_array($config['configuration_group_id'], [2,3])) {
                 $configValue = (int)$configValue;
             }
-            define(strtoupper($config['configuration_key']), $configValue);
+            if (!defined(strtoupper($config['configuration_key']))) {
+                define(strtoupper($config['configuration_key']), $configValue);
+            }
         }
     }
 }

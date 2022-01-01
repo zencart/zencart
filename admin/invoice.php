@@ -24,6 +24,8 @@ include DIR_FS_CATALOG . DIR_WS_CLASSES . 'order.php';
 $order = new order($oID);
 $show_including_tax = (DISPLAY_PRICE_WITH_TAX == 'true');
 $show_product_tax = true;
+$show_product_images = true;
+$show_attrib_images = true;
 
 // prepare order-status pulldown list
 $orders_statuses = array();
@@ -389,7 +391,7 @@ if ($order->billing['street_address'] != $order->delivery['street_address']) {
         ?>
       </table>
       <?php if (ORDER_COMMENTS_INVOICE > 0) { ?>
-        <table class="table table-condensed" style="width:100%;">
+        <table class="table table-condensed">
           <thead>
             <tr>
               <th class="text-left"><strong><?php echo TABLE_HEADING_DATE_ADDED; ?></strong></th>

@@ -371,7 +371,7 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
               for ($i = 0, $n = count($languages); $i < $n; $i++) {
                 ?>
               <div class="input-group">
-                <span class="input-group-addon" style="vertical-align: top">
+                <span class="input-group-addon align-top">
                     <?php echo zen_image(DIR_WS_CATALOG_LANGUAGES . $languages[$i]['directory'] . '/images/' . $languages[$i]['image'], $languages[$i]['name']); ?>
                 </span>
                 <?php echo zen_draw_textarea_field('categories_description[' . $languages[$i]['id'] . ']', 'soft', '100', '5', htmlspecialchars(zen_get_category_description($cInfo->categories_id, $languages[$i]['id']), ENT_COMPAT, CHARSET, TRUE), 'class="editorHook form-control" id=categories_description[' . $languages[$i]['id'] . ']'); ?>
@@ -385,15 +385,17 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
         <hr>
             <h2><?php echo TEXT_CATEGORIES_IMAGE; ?></h2>
             <?php
-            if (!empty($cInfo->categories_image) && file_exists(DIR_FS_CATALOG_IMAGES . $cInfo->categories_image)) { ?>
+            if (!empty($cInfo->categories_image)) { ?>
                 <div class="form-group">
                     <div class="col-sm-offset-3 col-sm-9 col-md-6">
                         <div><?php echo zen_info_image($cInfo->categories_image, $cInfo->categories_name, '', '', 'class="table-bordered img-responsive"'); ?></div>
                         <br>
                         <?php
-                        list($width, $height) = getimagesize(DIR_FS_CATALOG_IMAGES . $cInfo->categories_image);
-                        $kb = filesize(DIR_FS_CATALOG_IMAGES . $cInfo->categories_image)/1024;
-                        echo sprintf(TEXT_FILENAME,   '/images/' . $cInfo->categories_image, $width, $height, $kb);
+                        if (file_exists(DIR_FS_CATALOG_IMAGES . $cInfo->categories_image)) {
+                            [$width, $height] = getimagesize(DIR_FS_CATALOG_IMAGES . $cInfo->categories_image);
+                            $kb = filesize(DIR_FS_CATALOG_IMAGES . $cInfo->categories_image) / 1024;
+                        }
+                        echo sprintf(TEXT_FILENAME, '/' . DIR_WS_IMAGES . $cInfo->categories_image, $width ?? 0, $height ?? 0, $kb ?? 0);
                         ?>
                     </div>
                 </div>
@@ -515,7 +517,7 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
               for ($i = 0, $n = count($languages); $i < $n; $i++) {
                 ?>
               <div class="input-group">
-                <span class="input-group-addon" style="vertical-align: top;"><?php echo zen_image(DIR_WS_CATALOG_LANGUAGES . $languages[$i]['directory'] . '/images/' . $languages[$i]['image'], $languages[$i]['name']); ?></span>
+                <span class="input-group-addon align-top"><?php echo zen_image(DIR_WS_CATALOG_LANGUAGES . $languages[$i]['directory'] . '/images/' . $languages[$i]['image'], $languages[$i]['name']); ?></span>
                 <?php echo zen_draw_textarea_field('metatags_keywords[' . $languages[$i]['id'] . ']', 'soft', '100', '3', htmlspecialchars(zen_get_category_metatag_fields($cInfo->categories_id, $languages[$i]['id'], 'metatags_keywords'), ENT_COMPAT, CHARSET, TRUE), 'class="form-control noEditor" id="metatags_keywords[' . $languages[$i]['id'] . ']"');
                 ?>
               </div>
@@ -532,7 +534,7 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
               for ($i = 0, $n = count($languages); $i < $n; $i++) {
                 ?>
               <div class="input-group">
-                <span class="input-group-addon" style="vertical-align: top"><?php echo zen_image(DIR_WS_CATALOG_LANGUAGES . $languages[$i]['directory'] . '/images/' . $languages[$i]['image'], $languages[$i]['name']); ?></span>
+                <span class="input-group-addon align-top"><?php echo zen_image(DIR_WS_CATALOG_LANGUAGES . $languages[$i]['directory'] . '/images/' . $languages[$i]['image'], $languages[$i]['name']); ?></span>
                 <?php echo zen_draw_textarea_field('metatags_description[' . $languages[$i]['id'] . ']', 'soft', '100', '7', htmlspecialchars(zen_get_category_metatag_fields($cInfo->categories_id, $languages[$i]['id'], 'metatags_description'), ENT_COMPAT, CHARSET, TRUE), 'class="form-control noEditor" id="metatags_description[' . $languages[$i]['id'] . ']"');
                 ?>
               </div>

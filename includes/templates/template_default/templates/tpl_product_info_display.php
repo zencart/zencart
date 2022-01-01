@@ -63,7 +63,7 @@ require($template->get_template_dir('/tpl_products_next_previous.php',DIR_WS_TEM
 <?php
 // base price
   if ($show_onetime_charges_description == 'true') {
-    $one_time = '<span >' . TEXT_ONETIME_CHARGE_SYMBOL . TEXT_ONETIME_CHARGE_DESCRIPTION . '</span><br>';
+    $one_time = '<span>' . TEXT_ONETIME_CHARGE_SYMBOL . TEXT_ONETIME_CHARGE_DESCRIPTION . '</span><br>';
   } else {
     $one_time = '';
   }
@@ -145,7 +145,7 @@ if ($flag_show_ask_a_question) {
 ?>
 <?php
 /**
- * display the product atributes
+ * display the product attributes
  */
   require($template->get_template_dir('/tpl_modules_attributes.php',DIR_WS_TEMPLATE, $current_page_base,'templates'). '/tpl_modules_attributes.php'); ?>
 <?php

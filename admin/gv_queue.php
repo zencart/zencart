@@ -179,7 +179,7 @@ if ($_GET['action'] == 'confirmrelease' && isset($_POST['gid'])) {
                   </td>
                 </tr>
               <?php } ?>
-              </body>
+              </tbody>
           </table>
           <table class="table">
             <tr>

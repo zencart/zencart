@@ -252,7 +252,7 @@ class paypal_curl extends base {
       $values['TENDER'] = 'C';
       $values['TRXTYPE'] = 'C';
       $values['AMT'] = round((float)$amount, 2);
-      if ($note != '') $values['COMMENT2'] = $note;
+      if ($note != '') $values['COMMENT2'] = substr($note, 0, 128);
     } elseif ($this->_mode == 'nvp') {
       $values['TRANSACTIONID'] = $txnID;
       if ($amount != 'Full' && (float)$amount > 0) {
@@ -262,7 +262,7 @@ class paypal_curl extends base {
       } else {
         $values['REFUNDTYPE'] = 'Full';
       }
-      if ($note != '') $values['NOTE'] = $note;
+      if ($note != '') $values['NOTE'] = substr($note, 0, 255);
     }
     return $this->_request($values, 'RefundTransaction');
   }
@@ -277,10 +277,10 @@ class paypal_curl extends base {
       $values['ORIGID'] = $txnID;
       $values['TENDER'] = 'C';
       $values['TRXTYPE'] = 'V';
-      if ($note != '') $values['COMMENT2'] = $note;
+      if ($note != '') $values['COMMENT2'] = substr($note, 0, 128);
     } elseif ($this->_mode == 'nvp') {
       $values['AUTHORIZATIONID'] = $txnID;
-      if ($note != '') $values['NOTE'] = $note;
+      if ($note != '') $values['NOTE'] = substr($note, 0, 255);
     }
     return $this->_request($values, 'DoVoid');
   }
@@ -321,14 +321,14 @@ class paypal_curl extends base {
       $values['TRXTYPE'] = 'D';
       $values['VERBOSITY'] = 'MEDIUM';
       if ($invNum != '') $values['INVNUM'] = $invNum;
-      if ($note != '') $values['COMMENT2'] = $note;
+      if ($note != '') $values['COMMENT2'] = substr($note, 0, 128);
     } elseif ($this->_mode == 'nvp') {
       $values['AUTHORIZATIONID'] = $txnID;
       $values['COMPLETETYPE'] = $captureType;
       $values['AMT'] = round((float)$amount, 2);
       $values['CURRENCYCODE'] = $currency;
       if ($invNum != '') $values['INVNUM'] = $invNum;
-      if ($note != '') $values['NOTE'] = $note;
+      if ($note != '') $values['NOTE'] = substr($note, 0, 255);
     }
     return $this->_request($values, 'DoCapture');
   }

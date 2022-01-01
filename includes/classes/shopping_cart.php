@@ -1113,9 +1113,6 @@ class shoppingCart extends base
                 //// one time charges
                 // attributes_price_onetime
                 if ($attribute_price->fields['attributes_price_onetime'] > 0) {
-                    if ((int)$product_id != $product_id) {
-                        die('I DO NOT MATCH ' . $product_id);
-                    }
                     $attributes_price_onetime += $attribute_price->fields['attributes_price_onetime'];
                 }
                 // attributes_price_factor_onetime
@@ -1864,6 +1861,7 @@ class shoppingCart extends base
 // display message if all is good and not on shopping_cart page
                     if ((DISPLAY_CART == 'false' && $_GET['main_page'] != FILENAME_SHOPPING_CART) && $messageStack->size('shopping_cart') == 0) {
                         $messageStack->add_session('header', ($this->display_debug_messages ? 'FUNCTION ' . __FUNCTION__ . ': ' : '') . SUCCESS_ADDED_TO_CART_PRODUCTS, 'success');
+                        $this->notify('NOTIFIER_CART_OPTIONAL_SUCCESS_UPDATED_CART', $_POST, $goto, $parameters);
                     } else {
                         if ($_GET['main_page'] != FILENAME_SHOPPING_CART) {
                             zen_redirect(zen_href_link(FILENAME_SHOPPING_CART));
@@ -2022,6 +2020,7 @@ class shoppingCart extends base
             if (DISPLAY_CART == 'false' && $_GET['main_page'] != FILENAME_SHOPPING_CART && $messageStack->size('shopping_cart') == 0) {
                 if (!isset($_POST['shopping_cart_zero_or_less']) || $_POST['shopping_cart_zero_or_less'] !== true) {
                     $messageStack->add_session('header', ($this->display_debug_messages ? 'FUNCTION ' . __FUNCTION__ . ': ' : '') . SUCCESS_ADDED_TO_CART_PRODUCT, 'success');
+                    $this->notify('NOTIFIER_CART_OPTIONAL_SUCCESS_PRODUCT_ADDED_TO_CART', $_POST, $goto, $parameters);
                 }
                 zen_redirect(zen_href_link($goto, zen_get_all_get_params($parameters)));
             } else {
@@ -2081,6 +2080,7 @@ class shoppingCart extends base
         // display message if all is good and not on shopping_cart page
         if ((DISPLAY_CART == 'false' && $_GET['main_page'] != FILENAME_SHOPPING_CART) && $messageStack->size('shopping_cart') == 0 && ($allow_into_cart == 'Y')) {
             $messageStack->add_session('header', ($this->display_debug_messages ? 'FUNCTION ' . __FUNCTION__ . ': ' : '') . SUCCESS_ADDED_TO_CART_PRODUCTS, 'success');
+            $this->notify('NOTIFIER_CART_OPTIONAL_SUCCESS_BUYNOW_ADDED_TO_CART', $_GET, $goto, $parameters);
         } else {
             if (DISPLAY_CART == 'false'  && ($allow_into_cart !== 'Y')) {
                 //zen_redirect(zen_href_link(FILENAME_SHOPPING_CART));
@@ -2157,6 +2157,7 @@ class shoppingCart extends base
             // display message if all is good and not on shopping_cart page
             if (($addCount && DISPLAY_CART == 'false' && $_GET['main_page'] != FILENAME_SHOPPING_CART) && $messageStack->size('shopping_cart') == 0) {
                 $messageStack->add_session('header', ($this->display_debug_messages ? 'FUNCTION ' . __FUNCTION__ . ': ' : '') . SUCCESS_ADDED_TO_CART_PRODUCTS, 'success');
+                $this->notify('NOTIFIER_CART_OPTIONAL_SUCCESS_MULTIPLE_ADDED_TO_CART', $products_list, $goto, $parameters);
             } else {
                 if (DISPLAY_CART == 'false') {
                     zen_redirect(zen_href_link(FILENAME_SHOPPING_CART));

@@ -1,9 +1,9 @@
 <?php
 /**
- * @copyright Copyright 2003-2020 Zen Cart Development Team
+ * @copyright Copyright 2003-2021 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2020 Jun 17 Modified in v1.5.7 $
+ * @version $Id: DrByte  Modified in v1.5.8 $
  */
 require 'includes/application_top.php';
 $languages = zen_get_languages();
@@ -99,7 +99,7 @@ if (!empty($action)) {
       break;
     case 'setflag':
 
-      if (isset($_POST['flag']) && ($_POST['flag'] == '0') || ($_POST['flag'] == '1')) {
+      if (isset($_POST['flag']) && ($_POST['flag'] === '0' || $_POST['flag'] === '1')) {
         if (isset($_GET['pID'])) {
           zen_set_product_status($_GET['pID'], $_POST['flag']);
         }
@@ -356,13 +356,13 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
                   </td>
                   <td class="text-center">
                     <div class="fa fa-stack">
-                      <i class="fa fa-square fa-stack-2x" style="color: #000"></i>
-                      <i class="fa fa-asterisk fa-stack-1x" aria-hidden="true" style="color: #ffa500"></i>
+                      <i class="fa fa-square fa-stack-2x txt-black"></i>
+                      <i class="fa fa-asterisk fa-stack-1x txt-orange" aria-hidden="true"></i>
                     </div>
                     &nbsp;
                     <div class="fa fa-stack">
-                      <i class="fa fa-square fa-stack-2x" style="color: #000"></i>
-                      <i class="fa fa-asterisk fa-stack-1x" aria-hidden="true" style="color: #fff"></i>
+                      <i class="fa fa-square fa-stack-2x txt-black"></i>
+                      <i class="fa fa-asterisk fa-stack-1x txt-white" aria-hidden="true"></i>
                     </div>
                   </td>
                 </tr>
@@ -485,7 +485,7 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
             <div class="form-group">
               <?php if ($_SESSION['display_categories_dropdown'] == 0) { ?>
                 <div class="col-sm-6 col-md-4 control-label">
-                  <a href="<?php echo zen_href_link(FILENAME_CATEGORY_PRODUCT_LISTING, 'set_display_categories_dropdown=1' . (isset($_GET['cID']) ? '&cID=' . (int)$_GET['cID'] : '') . '&cPath=' . $cPath . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '')); ?>" title="<?php echo IMAGE_ICON_STATUS_OFF; ?>"><i class="fa fa-times fa-lg" style="color: #f00;"></i></a>
+                  <a href="<?php echo zen_href_link(FILENAME_CATEGORY_PRODUCT_LISTING, 'set_display_categories_dropdown=1' . (isset($_GET['cID']) ? '&cID=' . (int)$_GET['cID'] : '') . '&cPath=' . $cPath . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '')); ?>" title="<?php echo IMAGE_ICON_STATUS_OFF; ?>"><i class="fa fa-times fa-lg txt-status-off"></i></a>
                   <?php echo zen_draw_label(HEADING_TITLE_GOTO, 'cPath'); ?>
                 </div>
                 <div class="col-sm-6 col-md-8">
@@ -493,7 +493,7 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
                 </div>
               <?php } else { ?>
                 <div class="col-sm-6 col-md-4 control-label">
-                  <a href="<?php echo zen_href_link(FILENAME_CATEGORY_PRODUCT_LISTING, 'set_display_categories_dropdown=0' . (isset($_GET['cID']) ? '&cID=' . (int)$_GET['cID'] : '') . '&cPath=' . $cPath . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '')); ?>" title="<?php echo IMAGE_ICON_STATUS_ON; ?>"><i class="fa fa-check fa-lg" style="color: #008000;"></i></a>
+                  <a href="<?php echo zen_href_link(FILENAME_CATEGORY_PRODUCT_LISTING, 'set_display_categories_dropdown=0' . (isset($_GET['cID']) ? '&cID=' . (int)$_GET['cID'] : '') . '&cPath=' . $cPath . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '')); ?>" title="<?php echo IMAGE_ICON_STATUS_ON; ?>"><i class="fa fa-check fa-lg txt-status-on"></i></a>
                   <strong><?php echo HEADING_TITLE_GOTO; ?></strong>
                 </div>
               <?php } ?>
@@ -521,14 +521,17 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
           }
 
           $categories_count = 0;
-          $sql = "SELECT c.categories_id, cd.categories_name, c.parent_id, c.sort_order, c.categories_status
+          $sql = "SELECT c.categories_id, c.categories_image, cd.categories_name, c.parent_id, c.sort_order, c.categories_status
                   FROM " . TABLE_CATEGORIES . " c
                   LEFT JOIN " . TABLE_CATEGORIES_DESCRIPTION . " cd ON c.categories_id = cd.categories_id
                     AND cd.language_id = " . (int)$_SESSION['languages_id'];
 
-          if (isset($_GET['search'])) {
-              $sql .= " WHERE cd.categories_name like '%:search%'";
-              $sql = $db->bindVars($sql, ':search', $_GET['search'], 'noquotestring');
+            if (isset($_GET['search'])) {
+              $keyword_search_fields = [
+                'cd.categories_name',
+                'cd.categories_description',
+              ];
+              $sql .= zen_build_keyword_where_clause($keyword_search_fields, trim($keywords), true);
           } else {
               $sql .= " WHERE c.parent_id = :category";
               $sql = $db->bindVars($sql, ':category', $current_category_id, 'integer');
@@ -544,13 +547,12 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
             <thead>
               <tr>
                 <th class="text-right shrink"><?php echo TABLE_HEADING_ID; ?></th>
-                <th colspan="2"><?php echo TABLE_HEADING_CATEGORIES_PRODUCTS; ?></th>
+                <th><?php echo TABLE_HEADING_CATEGORIES_PRODUCTS; ?></th>
+                <th class="hidden-sm hidden-xs"><?php echo TABLE_HEADING_IMAGE; ?></th>
                 <?php if ($show_prod_labels) { ?>
-
-                  <th class="hidden-sm hidden-xs"></th>
                   <th class="hidden-sm hidden-xs"><?php echo TABLE_HEADING_MODEL; ?></th>
+                <?php } ?>
                 <th class="text-right hidden-sm hidden-xs"><?php echo TABLE_HEADING_PRICE; ?></th>
-                <?php }; ?>
 <?php
           // -----
           // Additional column-headings can be added before the Quantity column.
@@ -564,7 +566,7 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
           //     ),
           // );
           //
-          // Observer notes:  
+          // Observer notes:
           // - Be sure to check that the $p2/$extra_headings value is specifically (bool)false before initializing, since
           //   multiple observers might be injecting content!
           // - If heading-columns are added, be sure to add the associated data columns, too, via the
@@ -599,7 +601,7 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
           //     ),
           // );
           //
-          // Observer notes:  
+          // Observer notes:
           // - Be sure to check that the $p2/$extra_headings value is specifically (bool)false before initializing, since
           //   multiple observers might be injecting content!
           // - If heading-columns are added, be sure to add the associated data columns, too, via the
@@ -646,13 +648,15 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
               ?>
               <tr class="category-listing-row" data-cid="<?php echo $category['categories_id']; ?>">
                 <td class="text-right"><?php echo $category['categories_id']; ?></td>
-                <td colspan="2">
+                  <td class="dataTableButtonCell">
+                      <a href="<?php echo zen_catalog_href_link('index', zen_get_path($category['categories_id'])); ?>" rel="noopener" target="_blank" title="<?php echo BOX_HEADING_CATALOG; ?>"><?php echo zen_image(DIR_WS_IMAGES . 'icon_popup.gif', BOX_HEADING_CATALOG); ?></a>
                   <a href="<?php echo zen_href_link(FILENAME_CATEGORY_PRODUCT_LISTING, zen_get_path($category['categories_id'])); ?>" class="folder"><i class="fa fa-lg fa-folder"></i>&nbsp;<strong><?php echo $category['categories_name']; ?></strong></a>
                 </td>
+                  <td class="hidden-sm hidden-xs"><?php echo zen_image(DIR_WS_CATALOG_IMAGES . $category['categories_image'], $category['categories_name'], IMAGE_SHOPPING_CART_WIDTH, IMAGE_SHOPPING_CART_HEIGHT); ?></td>
                 <?php if ($show_prod_labels) { ?>
-                  <td class="hidden-sm hidden-xs">&nbsp;</td>
-                <td class="text-right hidden-sm hidden-xs"><?php echo zen_get_discount_calc('', $category['categories_id'], true); ?></td>
-                <?php }; ?>
+                  <td class="hidden-sm hidden-xs"><!-- no model for categories --></td>
+                <?php } ?>
+                  <td class="text-right hidden-sm hidden-xs"><?php echo zen_get_discount_calc('', $category['categories_id'], true); ?></td>
                 <?php if ($search_result || SHOW_COUNTS_ADMIN == 'true') { ?>
                   <td class="text-right hidden-sm hidden-xs">
                     <?php
@@ -742,7 +746,7 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
             //
             $extra_select = $extra_from = $extra_joins = $extra_ands = '';
             $zco_notifier->notify('NOTIFY_ADMIN_PROD_LISTING_PRODUCTS_QUERY', '', $extra_select, $extra_from, $extra_joins, $extra_ands, $order_by);
-            
+
             $products_query_raw = "SELECT p.products_type, p.products_id, pd.products_name, p.products_quantity,
                                           p.products_price, p.products_status, p.products_model, p.products_sort_order,
                                           p.master_categories_id";
@@ -814,12 +818,10 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
               ?>
               <tr class="product-listing-row" data-pid="<?php echo $product['products_id']; ?>">
                 <td class="text-right"><?php echo $product['products_id']; ?></td>
-                <td class="dataTableButtonCell" style="width:16px;"><a href="<?php echo zen_catalog_href_link($type_handler . '_info', 'cPath=' . $cPath . '&products_id=' . $product['products_id'] . '&language=' . $_SESSION['languages_code'] . '&product_type=' . $product['products_type']); ?>" rel="noopener" target="_blank">
-                        <?php echo zen_image(DIR_WS_ICONS . 'preview.gif', ICON_PREVIEW); ?>
+                <td class="dataTableButtonCell"><a href="<?php echo zen_catalog_href_link($type_handler . '_info', 'cPath=' . $cPath . '&products_id=' . $product['products_id'] . '&language=' . $_SESSION['languages_code'] . '&product_type=' . $product['products_type']); ?>" rel="noopener" target="_blank">
+                        <?php echo zen_image(DIR_WS_IMAGES . 'icon_popup.gif', BOX_HEADING_CATALOG); ?>
                     </a>
-                </td>
-                <td>
-                    <a href="<?php echo zen_href_link(FILENAME_PRODUCT, 'cPath=' . $cPath . '&product_type=' . $product['products_type'] . '&pID=' . $product['products_id'] . '&action=new_product' . (isset($_GET['search']) ? '&search=' . $_GET['search'] : '')); ?>" title="<?php echo IMAGE_EDIT; ?>" style="text-decoration: none">
+                    <a href="<?php echo zen_href_link(FILENAME_PRODUCT, 'cPath=' . $cPath . '&product_type=' . $product['products_type'] . '&pID=' . $product['products_id'] . '&action=new_product' . $search_parameter); ?>" title="<?php echo IMAGE_EDIT; ?>" style="text-decoration: none">
                         <?php echo $product['products_name']; ?>
                     </a>
                 </td>
@@ -839,14 +841,14 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
               //     ),
               // );
               //
-              // Observer notes:  
+              // Observer notes:
               // - Be sure to check that the $p2/$extra_data value is specifically (bool)false before initializing, since
               //   multiple observers might be injecting content!
               // - If heading-columns are added, be sure to add the associated header columns, too, via the
               //   'NOTIFY_ADMIN_PROD_LISTING_HEADERS_B4_QTY' notification.
               //
               $extra_data = false;
-              $zco_notifier->notify('NOTIFY_ADMIN_PROD_LISTING_DATA_B4_QTY', '', $extra_data);
+              $zco_notifier->notify('NOTIFY_ADMIN_PROD_LISTING_DATA_B4_QTY', $product, $extra_data);
               if (is_array($extra_data)) {
                   foreach ($extra_data as $data_info) {
                       $align = (isset($data_info['align'])) ? (' text-' . $data_info['align']) : '';
@@ -870,14 +872,14 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
               //     ),
               // );
               //
-              // Observer notes:  
+              // Observer notes:
               // - Be sure to check that the $p2/$extra_data value is specifically (bool)false before initializing, since
               //   multiple observers might be injecting content!
               // - If heading-columns are added, be sure to add the associated header columns, too, via the
               //   'NOTIFY_ADMIN_PROD_LISTING_HEADERS_AFTER_QTY' notification.
               //
               $extra_data = false;
-              $zco_notifier->notify('NOTIFY_ADMIN_PROD_LISTING_DATA_AFTER_QTY', '', $extra_data);
+              $zco_notifier->notify('NOTIFY_ADMIN_PROD_LISTING_DATA_AFTER_QTY', $product, $extra_data);
               if (is_array($extra_data)) {
                   foreach ($extra_data as $data_info) {
                       $align = (isset($data_info['align'])) ? (' text-' . $data_info['align']) : '';
@@ -896,7 +898,7 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
                   <?php if (zen_get_product_is_linked($product['products_id']) == 'true') { ?>
                     <i class="fa fa-square fa-lg txt-linked" aria-hidden="true" title="<?php echo IMAGE_ICON_LINKED; ?>"></i>
                   <?php } else { ?>
-                    <i class="fa fa-square fa-lg" style="color: transparent;"></i> <!-- blank icon to preserve vertical alignment with additional icons -->
+                    <i class="fa fa-square fa-lg txt-transparent"></i> <!-- blank icon to preserve vertical alignment with additional icons -->
                     <?php
                   }
                   echo zen_draw_form('setflag_products' . $product['products_id'], FILENAME_CATEGORY_PRODUCT_LISTING, 'action=setflag&pID=' . $product['products_id'] . '&cPath=' . $cPath . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '') . $search_parameter);
@@ -914,10 +916,10 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
                   <td class="text-right hidden-sm hidden-xs"><?php echo $product['products_sort_order']; ?></td>
                   <td class="text-right dataTableButtonCell">
                     <div class="btn-group">
-                      <a href="<?php echo zen_href_link(FILENAME_PRODUCT, 'cPath=' . $cPath . '&product_type=' . $product['products_type'] . '&pID=' . $product['products_id'] . '&action=new_product' . (isset($_GET['search']) ? '&search=' . $_GET['search'] : '')); ?>" class="btn btn-sm btn-default btn-edit" role="button" title="<?php echo IMAGE_EDIT_PRODUCT; ?>">
+                      <a href="<?php echo zen_href_link(FILENAME_PRODUCT, 'cPath=' . $cPath . '&product_type=' . $product['products_type'] . '&pID=' . $product['products_id'] . '&action=new_product' . $search_parameter); ?>" class="btn btn-sm btn-default btn-edit" role="button" title="<?php echo IMAGE_EDIT_PRODUCT; ?>">
                         <i class="fa fa-pencil fa-lg" aria-hidden="true"></i>
                       </a>
-                      <a href="<?php echo zen_href_link(FILENAME_CATEGORY_PRODUCT_LISTING, 'cPath=' . $cPath . '&product_type=' . $product['products_type'] . '&pID=' . $product['products_id'] . '&action=delete_product' . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '')); ?>" class="btn btn-sm btn-default btn-delete" role="button" title="<?php echo ICON_DELETE; ?>">
+                      <a href="<?php echo zen_href_link(FILENAME_CATEGORY_PRODUCT_LISTING, 'cPath=' . $cPath . '&product_type=' . $product['products_type'] . '&pID=' . $product['products_id'] . '&action=delete_product' . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '') . $search_parameter); ?>" class="btn btn-sm btn-default btn-delete" role="button" title="<?php echo ICON_DELETE; ?>">
                         <i class="fa fa-trash-o fa-lg" aria-hidden="true"></i>
                       </a>
                       <a href="<?php echo zen_href_link(FILENAME_CATEGORY_PRODUCT_LISTING, 'cPath=' . $cPath . '&product_type=' . $product['products_type'] . '&pID=' . $product['products_id'] . '&action=move_product' . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '') . $search_parameter); ?>" class="btn btn-sm btn-default btn-move" role="button" title="<?php echo ICON_MOVE; ?>"><strong>M</strong></a>

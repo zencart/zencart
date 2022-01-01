@@ -4,10 +4,10 @@
  * Processes all outbound email from Zen Cart
  * Hooks into phpMailer class for actual email encoding and sending
  *
- * @copyright Copyright 2003-2020 Zen Cart Development Team
+ * @copyright Copyright 2003-2021 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2020 Apr 26 Modified in v1.5.7 $
+ * @version $Id: DrByte  Modified in v1.5.8 $
  */
 
 use PHPMailer\PHPMailer\PHPMailer;
@@ -133,17 +133,19 @@ use PHPMailer\PHPMailer\SMTP;
       $email_text = preg_replace('/&{2,}/', '&', $email_text);
 
       // clean up currencies for text emails
-      $zen_fix_currencies = preg_split("/[:,]/" , str_replace(' ', '', CURRENCIES_TRANSLATIONS));
-      $size = sizeof($zen_fix_currencies);
-      for ($i=0, $n=$size; $i<$n; $i+=2) {
-        if (empty($zen_fix_currencies[$i+1])) {
-          break;
-        }
-        $zen_fix_current = $zen_fix_currencies[$i];
-        $zen_fix_replace = $zen_fix_currencies[$i+1];
-        if (strlen($zen_fix_current)>0) {
-          while (strpos($email_text, $zen_fix_current)) $email_text = str_replace($zen_fix_current, $zen_fix_replace, $email_text);
-        }
+      if (defined('CURRENCIES_TRANSLATIONS') && !empty(CURRENCIES_TRANSLATIONS)) {
+          $zen_fix_currencies = preg_split("/[:,]/" , str_replace(' ', '', CURRENCIES_TRANSLATIONS));
+          $size = sizeof($zen_fix_currencies);
+          for ($i=0, $n=$size; $i<$n; $i+=2) {
+              if (empty($zen_fix_currencies[$i+1])) {
+                  break;
+              }
+              $zen_fix_current = $zen_fix_currencies[$i];
+              $zen_fix_replace = $zen_fix_currencies[$i+1];
+              if (strlen($zen_fix_current)>0) {
+                  while (strpos($email_text, $zen_fix_current)) $email_text = str_replace($zen_fix_current, $zen_fix_replace, $email_text);
+              }
+          }
       }
 
       // fix double quotes
@@ -174,7 +176,7 @@ use PHPMailer\PHPMailer\SMTP;
        */
       $zco_notifier->notify('NOTIFY_EMAIL_DETERMINING_EMAIL_FORMAT', $to_email_address, $customers_email_format, $module);
 
-      if ($customers_email_format == 'NONE' || $customers_email_format == 'OUT') return false; //if requested no mail, then don't send.
+      if ($customers_email_format == 'NONE' || $customers_email_format == 'OUT') continue; //if requested no mail, then don't send, but continue processing others.
 
       // handling admin/"extra"/copy emails:
       if (ADMIN_EXTRA_EMAIL_FORMAT == 'TEXT' && substr($module,-6)=='_extra') {

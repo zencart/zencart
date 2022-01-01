@@ -171,7 +171,7 @@ echo '<br><br>Script finished.';
     fclose($fp);
     //break up results into a string
     $info = implode("", $info);
-    $status = (strstr($info,'VERIFIED')) ? 'VERIFIED' : (strstr($info,'SUCCESS')) ? 'SUCCESS' : (strstr($info,'INVALID')) ? 'FSOCKOPEN() RESPONSE RECEIVED - Communications OKAY' : 'FAILED';
+    $status = (strstr($info,'VERIFIED')) ? 'VERIFIED' : (strstr($info,'SUCCESS') ? 'SUCCESS' : (strstr($info,'INVALID') ? 'FSOCKOPEN() RESPONSE RECEIVED - Communications OKAY' : 'FAILED'));
     echo "\n\n" . '<!-- IPN INFO - Confirmation/Validation response ' . "\n-------------\n" . $header_data . $info . "\n--------------\n -->";
 
     return $status;
@@ -234,7 +234,7 @@ echo '<br><br>Script finished.';
       echo nl2br('CURL ERROR: ' . $status . $errors . "\n" . 'ABORTING CURL METHOD ...' . "\n\n");
     }
 
-    $status = (strstr($response,'VERIFIED')) ? 'VERIFIED' : (strstr($response,'SUCCESS')) ? 'SUCCESS' : (strstr($response,'INVALID')) ? 'CURL RESPONSE RECEIVED - Communications OKAY' : 'FAILED';
+    $status = (strstr($response,'VERIFIED')) ? 'VERIFIED' : (strstr($response,'SUCCESS') ? 'SUCCESS' : (strstr($response,'INVALID') ? 'CURL RESPONSE RECEIVED - Communications OKAY' : 'FAILED'));
     echo  $status . '<br />';
 
 

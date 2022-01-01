@@ -1,24 +1,28 @@
 <?php
 /**
- * @copyright Copyright 2003-2020 Zen Cart Development Team
+ * @copyright Copyright 2003-2021 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id:
 */
 
 $define = [
-    'HEADING_TITLE' => 'Column Boxes',
+    'HEADING_TITLE' => 'Editing Sideboxes for template: ',
+    'TEXT_CURRENTLY_VIEWING' => 'Currently Viewing: ',
+    'TEXT_THIS_IS_PRIMARY_TEMPLATE' => ' (Main)',
     'TABLE_HEADING_LAYOUT_BOX_NAME' => 'Box File Name',
     'TABLE_HEADING_LAYOUT_BOX_STATUS' => 'LEFT/RIGHT COLUMN<br>Status',
     'TABLE_HEADING_LAYOUT_BOX_STATUS_SINGLE' => 'SINGLE COLUMN<br>Status',
     'TABLE_HEADING_LAYOUT_BOX_LOCATION' => 'LEFT or RIGHT<br>COLUMN',
     'TABLE_HEADING_LAYOUT_BOX_SORT_ORDER' => 'LEFT/RIGHT COLUMN<br>Sort Order',
     'TABLE_HEADING_LAYOUT_BOX_SORT_ORDER_SINGLE' => 'SINGLE COLUMN<br>Sort Order',
+    'TABLE_HEADING_STATUS' => 'Status',
+    'TABLE_HEADING_SORT_ORDER' => 'Sort Order',
     'TABLE_HEADING_ACTION' => 'Action',
     'TEXT_INFO_EDIT_INTRO' => 'Please make any necessary changes',
     'TEXT_INFO_LAYOUT_BOX' => 'Selected Box: ',
     'TEXT_INFO_LAYOUT_BOX_NAME' => 'Box Name:',
-    'TEXT_INFO_LAYOUT_BOX_LOCATION' => 'Location: (Single Column ignores this setting)',
+    'TEXT_INFO_LAYOUT_BOX_LOCATION' => 'Location: ',
     'TEXT_INFO_LAYOUT_BOX_STATUS' => 'Left/Right Column Status: ',
     'TEXT_INFO_LAYOUT_BOX_STATUS_SINGLE' => 'Single Column Status: ',
     'TEXT_INFO_LAYOUT_BOX_SORT_ORDER' => 'Left/Right Column Sort Order:',
@@ -29,8 +33,11 @@ $define = [
     'TEXT_INFO_HEADING_DELETE_BOX' => 'Delete Box',
     'TEXT_INFO_DELETE_MISSING_LAYOUT_BOX' => 'Delete missing box from Template listing: ',
     'TEXT_INFO_DELETE_MISSING_LAYOUT_BOX_NOTE' => 'NOTE: This does not remove files and you can re-add the box at anytime by adding it to the correct directory.<br><br><strong>Delete box name: </strong>',
-    'TEXT_INFO_RESET_TEMPLATE_SORT_ORDER' => 'Reset All Box Sort Order to match DEFAULT Sort Order for Template: ',
-    'TEXT_INFO_RESET_TEMPLATE_SORT_ORDER_NOTE' => 'This does not remove any of the boxes. It will only reset the current sort order',
+    'TEXT_INFO_RESET_TEMPLATE_SORT_ORDER' => 'Reset box status/sort settings: ',
+    'TEXT_INFO_RESET_TEMPLATE_SORT_ORDER_NOTE' => 'This does not remove any boxes. It will only reset the status/sort of boxes matching boxes in the other template.',
+    'TEXT_SETTINGS_COPY_FROM' => 'Copy status/sort settings FROM: ',
+    'TEXT_SETTINGS_COPY_TO' => ' TO: ',
+    'TEXT_ERROR_INVALID_RESET_SUBMISSION' => 'ERROR: invalid reset choice',
     'TEXT_INFO_BOX_DETAILS' => 'Box Details: ',
     'TABLE_HEADING_LAYOUT_TITLE' => 'Title',
     'TABLE_HEADING_LAYOUT_VALUE' => 'Value',
@@ -40,14 +47,17 @@ $define = [
     'TEXT_INFO_DATE_ADDED' => 'Date Added:',
     'TEXT_INFO_LAST_MODIFIED' => 'Last Modified:',
     'TEXT_GOOD_BOX' => ' ',
-    'TEXT_BAD_BOX' => '<span style="color:#ff0000;"><b>MISSING</b></span><br>',
-    'SUCCESS_BOX_DELETED' => 'Successfully removed from the template of the box: ',
-    'SUCCESS_BOX_RESET' => 'Successfully Reset all box settings to the Default settings for Template: ',
-    'SUCCESS_BOX_UPDATED' => 'Successfully Updated settings for box: ',
+    'TEXT_BAD_BOX' => '<span class="txt-red"><b>MISSING</b></span><br>',
+    'SUCCESS_BOX_DELETED' => 'Removed the box: ',
+    'SUCCESS_BOX_RESET' => 'Settings for [%s] have been reset to current settings from [%s].',
+    'SUCCESS_BOX_UPDATED' => 'Updated settings for box: ',
     'TEXT_ON' => ' ON ',
     'TEXT_OFF' => ' OFF ',
     'TEXT_LEFT' => ' LEFT ',
     'TEXT_RIGHT' => ' RIGHT ',
+    'TEXT_CAUTION_EDITING_NOT_LIVE_TEMPLATE' => 'CAUTION: You are editing settings for a template that is not the main template used by customers.',
+    'TEXT_RESET_SETTINGS' => 'Reset Settings',
+    'TEXT_ORIGINAL_DEFAULTS' => '[Original/Master Zen Cart Defaults]',
 ];
 
 return $define;

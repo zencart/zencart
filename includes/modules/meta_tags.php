@@ -59,7 +59,13 @@ switch ($metatag_page_name) {
   break;
 
   case 'address_book_process':
-  define('META_TAG_TITLE', NAVBAR_TITLE_ADD_ENTRY . PRIMARY_SECTION . TITLE . TAGLINE);
+  if (isset($_GET['edit']) && is_numeric($_GET['edit'])) {
+    define('META_TAG_TITLE', NAVBAR_TITLE_MODIFY_ENTRY . PRIMARY_SECTION . TITLE . TAGLINE);
+  } elseif (isset($_GET['delete']) && is_numeric($_GET['delete'])) {
+    define('META_TAG_TITLE', NAVBAR_TITLE_DELETE_ENTRY . PRIMARY_SECTION . TITLE . TAGLINE);
+  } else {
+    define('META_TAG_TITLE', NAVBAR_TITLE_ADD_ENTRY . PRIMARY_SECTION . TITLE . TAGLINE);
+  }
   define('META_TAG_DESCRIPTION', TITLE . PRIMARY_SECTION . NAVBAR_TITLE_ADD_ENTRY . SECONDARY_SECTION . KEYWORDS);
   define('META_TAG_KEYWORDS', KEYWORDS . METATAGS_DIVIDER . NAVBAR_TITLE_ADD_ENTRY);
   break;

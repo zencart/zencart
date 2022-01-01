@@ -174,6 +174,7 @@ if (!empty($action)) {
           $sql_data_array[] = array('fieldName' => 'customers_dob', 'value' => ($customers_dob == '0001-01-01 00:00:00' ? '0001-01-01 00:00:00' : zen_date_raw($customers_dob)), 'type' => 'date');
         }
 
+        $zco_notifier->notify('NOTIFY_ADMIN_CUSTOMERS_CUSTOMER_UPDATE', $customers_id, $sql_data_array);
         $db->perform(TABLE_CUSTOMERS, $sql_data_array, 'update', "customers_id = " . (int)$customers_id);
 
         $db->Execute("UPDATE " . TABLE_CUSTOMERS_INFO . "
@@ -213,6 +214,11 @@ if (!empty($action)) {
         $zco_notifier->notify('NOTIFY_ADMIN_CUSTOMERS_B4_ADDRESS_UPDATE', array('customers_id' => $customers_id, 'address_book_id' => $default_address_id), $sql_data_array);
 
         $db->perform(TABLE_ADDRESS_BOOK, $sql_data_array, 'update', "customers_id = '" . (int)$customers_id . "' and address_book_id = '" . (int)$default_address_id . "'");
+
+        if (isset($_POST['customer_groups']) && is_array($_POST['customer_groups'])) {
+            zen_sync_customer_group_assignments($customers_id, $_POST['customer_groups']);
+        }
+
         zen_record_admin_activity('Customer record updated for customer ID ' . (int)$customers_id, 'notice');
         $zco_notifier->notify('ADMIN_CUSTOMER_UPDATE', (int)$customers_id, $default_address_id, $sql_data_array);
         zen_redirect(zen_href_link(FILENAME_CUSTOMERS, zen_get_all_get_params(array('cID', 'action')) . 'cID=' . $customers_id, 'NONSSL'));
@@ -411,6 +417,7 @@ if (!empty($action)) {
           // $additional_fields = [
           //      [
           //          'label' => 'The text to include for the field label',
+          //          'fieldname' => 'label "for" attribute, must match id of input field'
           //          'input' => 'The form-related portion of the field',
           //      ],
           //      ...
@@ -422,13 +429,14 @@ if (!empty($action)) {
               foreach ($additional_fields as $current_field) {
                   ?>
                   <div class="form-group">
-                      <?php echo zen_draw_label($current_field['label'], '', 'class="col-sm-3 control-label"'); ?>
+                      <?php echo zen_draw_label($current_field['label'], $current_field['fieldname'], 'class="col-sm-3 control-label"'); ?>
                       <div class="col-sm-9 col-md-6"><?php echo $current_field['input']; ?></div>
                   </div>
                   <?php
               }
           }
-          ?>        <div class="row">
+          ?>
+        <div class="row">
           <?php echo zen_draw_separator('pixel_trans.gif', '1', '10'); ?>
         </div>
         <div class="row formAreaTitle"><?php echo CATEGORY_ADDRESS; ?></div>
@@ -443,7 +451,7 @@ if (!empty($action)) {
           if (ACCOUNT_SUBURB == 'true') {
             ?>
             <div class="form-group">
-              <?php echo zen_draw_label(ENTRY_SUBURB, 'suburb', 'class="col-sm-3 control-label"'); ?>
+              <?php echo zen_draw_label(ENTRY_SUBURB, 'entry_suburb', 'class="col-sm-3 control-label"'); ?>
               <div class="col-sm-9 col-md-6">
                 <?php echo zen_draw_input_field('entry_suburb', htmlspecialchars($cInfo->suburb, ENT_COMPAT, CHARSET, TRUE), zen_set_field_length(TABLE_ADDRESS_BOOK, 'entry_suburb', 50) . ' class="form-control" id="entry_suburb"'); ?>
               </div>
@@ -599,6 +607,27 @@ if (!empty($action)) {
             <div class="col-sm-9 col-md-6">
               <?php echo zen_draw_input_field('customers_referral', htmlspecialchars($cInfo->customers_referral, ENT_COMPAT, CHARSET, TRUE), zen_set_field_length(TABLE_CUSTOMERS, 'customers_referral', 15) . ' class="form-control" id="customers_referral"'); ?>
             </div>
+          </div>
+          <div class="form-group">
+              <div class="col-sm-3">
+                  <p class="control-label"><?php echo TEXT_CUSTOMER_GROUPS; ?></p>
+              </div>
+              <div class="col-sm-9 col-md-6">
+                  <div class="row">
+                      <div class="col-sm-4">
+                          <input type="hidden" name="customer_groups[]" value="0">
+                          <?php $groups_already_in = zen_groups_customer_belongs_to($cInfo->customers_id); ?>
+                          <?php foreach (zen_get_all_customer_groups() as $group) { ?>
+                              <div class="checkbox">
+                                  <label>
+                                      <input type="checkbox" name="customer_groups[]" value="<?php echo $group['id']; ?>" <?php if (array_key_exists($group['id'], $groups_already_in)) echo 'checked'; ?>>
+                                      <?php echo $group['text']; ?>
+                                  </label>
+                              </div>
+                          <?php } ?>
+                      </div>
+                  </div>
+              </div>
           </div>
         </div>
         <div class="row"><?php echo zen_draw_separator('pixel_trans.gif', '1', '10'); ?></div>
@@ -836,7 +865,6 @@ if (!empty($action)) {
                 foreach ($customers as $result) {
                   $cust = new Customer($result['customers_id']);
                   $customer = $cust->getData();
-
                   if ((!isset($_GET['cID']) || (isset($_GET['cID']) && ($_GET['cID'] == $customer['customers_id']))) && !isset($cInfo)) {
                     $cInfo = new objectInfo($customer);
                   }
@@ -852,7 +880,7 @@ if (!empty($action)) {
                     $zc_address_book_count = count($customer['addresses']);
                     ?>
                     <td class="dataTableContent text-right"><?php echo $customer['customers_id']; ?></td>
-                    <td class="dataTableContent text"><?php echo ($zc_address_book_count == 1) ? TEXT_INFO_ADDRESS_BOOK_COUNT_SINGLE : sprintf(TEXT_INFO_ADDRESS_BOOK_COUNT, zen_href_link(FILENAME_CUSTOMERS, 'action=list_addresses' . '&cID=' . $customer['customers_id'] . ($_GET['page'] > 0 ? '&page=' . $_GET['page'] : '')), $zc_address_book_count); ?></td>
+                    <td class="dataTableContent"><?php echo ($zc_address_book_count == 1) ? TEXT_INFO_ADDRESS_BOOK_COUNT_SINGLE : sprintf(TEXT_INFO_ADDRESS_BOOK_COUNT, zen_href_link(FILENAME_CUSTOMERS, 'action=list_addresses' . '&cID=' . $customer['customers_id'] . ($_GET['page'] > 0 ? '&page=' . $_GET['page'] : '')), $zc_address_book_count); ?></td>
                     <td class="dataTableContent"><?php echo $customer['customers_lastname']; ?></td>
                     <td class="dataTableContent"><?php echo $customer['customers_firstname']; ?></td>
                  <?php if (ACCOUNT_COMPANY === 'true') { ?>
@@ -913,10 +941,10 @@ if (!empty($action)) {
                     </td>
                     <td class="dataTableContent text-right">
                       <?php if (isset($cInfo) && is_object($cInfo) && ($customer['customers_id'] == $cInfo->customers_id)) { ?>
-                        <i class="fa fa-caret-right fa-2x fa-fw" style="color:navy; vertical-align: middle;"></i>
+                        <i class="fa fa-caret-right fa-2x fa-fw txt-navy align-middle"></i>
                       <?php } else { ?>
                         <a href="<?php echo zen_href_link(FILENAME_CUSTOMERS, zen_get_all_get_params(array('cID')) . 'cID=' . $customer['customers_id'] . ($_GET['page'] > 0 ? '&page=' . $_GET['page'] : ''), 'NONSSL'); ?>" title="<?php echo IMAGE_ICON_INFO; ?>" role="button">
-                          <i class="fa fa-info-circle fa-2x fa-fw" style="color:#000; vertical-align: middle;"></i>
+                          <i class="fa fa-info-circle fa-2x fa-fw txt-black align-middle"></i>
                         </a>
                       <?php } ?>
                     </td>
@@ -960,7 +988,7 @@ if (!empty($action)) {
                   $heading[] = array('text' => '<h4>' . TABLE_HEADING_ID . $cInfo->customers_id . ' ' . $cInfo->customers_firstname . ' ' . $cInfo->customers_lastname . '</h4>' . '<br>' . $cInfo->customers_email_address);
 
                   $contents[] = array('align' => 'text-center', 'text' => '<a href="' . zen_href_link(FILENAME_CUSTOMERS, zen_get_all_get_params(array('cID', 'action', 'search')) . 'cID=' . $cInfo->customers_id . '&action=edit', 'NONSSL') . '" class="btn btn-primary" role="button">' . IMAGE_EDIT . '</a> <a href="' . zen_href_link(FILENAME_CUSTOMERS, zen_get_all_get_params(array('cID', 'action', 'search')) . 'cID=' . $cInfo->customers_id . '&action=confirm', 'NONSSL') . '" class="btn btn-warning" role="button">' . IMAGE_DELETE . '</a>');
-                  $contents[] = array('align' => 'text-center', 'text' => ($customer['number_of_orders'] > 0 ? '<a href="' . zen_href_link(FILENAME_ORDERS, 'cID=' . $cInfo->customers_id, 'NONSSL') . '" class="btn btn-default" role="button">' . IMAGE_ORDERS . '</a>' : '') . ' <a href="' . zen_href_link(FILENAME_MAIL, 'origin=customers.php&customer=' . $cInfo->customers_email_address . '&cID=' . $cInfo->customers_id, 'NONSSL') . '" class="btn btn-default" role="button">' . IMAGE_EMAIL . '</a>');
+                  $contents[] = array('align' => 'text-center', 'text' => ($cInfo->number_of_orders > 0 ? '<a href="' . zen_href_link(FILENAME_ORDERS, 'cID=' . $cInfo->customers_id, 'NONSSL') . '" class="btn btn-default" role="button">' . IMAGE_ORDERS . '</a>' : '') . ' <a href="' . zen_href_link(FILENAME_MAIL, 'origin=customers.php&customer=' . $cInfo->customers_email_address . '&cID=' . $cInfo->customers_id, 'NONSSL') . '" class="btn btn-default" role="button">' . IMAGE_EMAIL . '</a>');
                   $contents[] = array('align' => 'text-center', 'text' => '<a href="' . zen_href_link(FILENAME_CUSTOMERS, zen_get_all_get_params(array('cID', 'action', 'search')) . 'cID=' . $cInfo->customers_id . '&action=pwreset') . '" class="btn btn-warning" role="button">' . IMAGE_RESET_PWD . '</a>');
 
                   // -----
@@ -1006,13 +1034,13 @@ if (!empty($action)) {
                   }
                   $contents[] = array('text' => '<br>' . TEXT_INFO_NUMBER_OF_LOGONS . ' ' . $cInfo->number_of_logins);
 
-                  $contents[] = array('text' => '<br>' . TEXT_INFO_GV_AMOUNT . ' ' . $currencies->format($customer['gv_balance']));
+                  $contents[] = array('text' => '<br>' . TEXT_INFO_GV_AMOUNT . ' ' . $currencies->format($cInfo->gv_balance));
 
-                  $contents[] = array('text' => '<br>' . TEXT_INFO_NUMBER_OF_ORDERS . ' ' . $customer['number_of_orders']);
+                  $contents[] = array('text' => '<br>' . TEXT_INFO_NUMBER_OF_ORDERS . ' ' . $cInfo->number_of_orders);
 
-                  if (!empty($customer['lifetime_value'])) {
-                    $contents[] = array('text' => TEXT_INFO_LIFETIME_VALUE . ' ' . $currencies->format($customer['lifetime_value']));
-                    $contents[] = array('text' => TEXT_INFO_LAST_ORDER . ' ' . zen_date_short($customer['last_order']['date_purchased']) . '<br>' . TEXT_INFO_ORDERS_TOTAL . ' ' . $currencies->format($customer['last_order']['order_total'], true, $customer['last_order']['currency'], $customer['last_order']['currency_value']));
+                  if (!empty($cInfo->lifetime_value)) {
+                    $contents[] = array('text' => TEXT_INFO_LIFETIME_VALUE . ' ' . $currencies->format($cInfo->lifetime_value));
+                    $contents[] = array('text' => TEXT_INFO_LAST_ORDER . ' ' . zen_date_short($cInfo->last_order['date_purchased']) . '<br>' . TEXT_INFO_ORDERS_TOTAL . ' ' . $currencies->format($cInfo->last_order['order_total'], true, $cInfo->last_order['currency'], $cInfo->last_order['currency_value']));
                   }
                   $contents[] = array('text' => '<br>' . TEXT_INFO_COUNTRY . ' ' . $cInfo->country_iso);
                   $contents[] = array('text' => '<br>' . TEXT_INFO_NUMBER_OF_REVIEWS . ' ' . $cInfo->number_of_reviews);

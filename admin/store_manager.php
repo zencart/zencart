@@ -203,7 +203,7 @@
 if ($processing_message != '') {
 ?>
   <tr><td><?php echo $processing_message; ?></td></tr>
-  <tr><td style="text-align: center"><?php echo zen_image(DIR_WS_IMAGES . 'loadingsmall.gif'); ?></td></tr>
+  <tr><td class="text-center"><?php echo zen_image(DIR_WS_IMAGES . 'loadingsmall.gif'); ?></td></tr>
 <?php
 } else {
 ?>

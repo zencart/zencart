@@ -1,9 +1,9 @@
 <?php
 /**
- * @copyright Copyright 2003-2020 Zen Cart Development Team
+ * @copyright Copyright 2003-2021 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2020 Jun 17 Modified in v1.5.7 $
+ * @version $Id: DrByte 2021 Aug 31 Modified in v1.5.8 $
  */
 require 'includes/application_top.php';
 
@@ -322,7 +322,7 @@ if (!empty($action)) {
                     <tr class="dataTableRow" onclick="document.location.href = '<?php echo zen_href_link(FILENAME_REVIEWS, ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . ($status != 0 ? 'status=' . $status . '&' : '') . 'rID=' . $review['reviews_id']) ?>'">
                     <?php } ?>
                     <td class="dataTableContent" style="white-space:nowrap"><?php echo $review['products_model']; ?></td>
-                    <td class="dataTableContent"><a href="<?php echo zen_href_link(FILENAME_REVIEWS, ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . ($status != 0 ? 'status=' . $status . '&' : '') . 'rID=' . $review['reviews_id'] . '&action=preview'); ?>" title="<?php echo ICON_PREVIEW; ?>"><i class="fa fa-binoculars fa-lg" style="color: #000;"></i></a>&nbsp;<?php echo zen_get_products_name($review['products_id']); ?></td>
+                    <td class="dataTableContent"><a href="<?php echo zen_href_link(FILENAME_REVIEWS, ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . ($status != 0 ? 'status=' . $status . '&' : '') . 'rID=' . $review['reviews_id'] . '&action=preview'); ?>" title="<?php echo ICON_PREVIEW; ?>"><i class="fa fa-binoculars fa-lg txt-black"></i></a>&nbsp;<?php echo zen_get_products_name($review['products_id']); ?></td>
                     <td class="dataTableContent"><?php echo $review['customers_name']; ?></td>
                     <?php if (count($languages_array) > 1) { ?>
                       <td class="dataTableContent text-center"><?php echo zen_get_language_icon($review['languages_id']); ?></td>
@@ -346,10 +346,10 @@ if (!empty($action)) {
                     </td>
                     <td class="dataTableContent text-right">
                       <?php if (isset($rinfo) && is_object($rInfo) && ($review['reviews_id'] === $rInfo->reviews_id)) { ?>
-                        <i class="fa fa-caret-right fa-2x fa-fw" style="color:navy; vertical-align: middle;"></i>
+                        <i class="fa fa-caret-right fa-2x fa-fw txt-navy align-middle"></i>
                       <?php } else { ?>
                         <a href="<?php echo zen_href_link(FILENAME_REVIEWS, zen_get_all_get_params(['rID']) . 'rID=' . $review['reviews_id']); ?>" title="<?php echo IMAGE_ICON_INFO; ?>" role="button">
-                          <i class="fa fa-info-circle fa-2x fa-fw" style="color:#000; vertical-align: middle;"></i>
+                          <i class="fa fa-info-circle fa-2x fa-fw txt-black align-middle"></i>
                         </a>
                       <?php } ?>
                     </td>
@@ -384,7 +384,7 @@ if (!empty($action)) {
                     $contents[] = array('text' => TEXT_INFO_LAST_MODIFIED . ' ' . zen_date_short($rInfo->last_modified));
                   }
                   $contents[] = array('text' => zen_info_image($rInfo->products_image, $rInfo->products_name, SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT));
-                  $contents[] = array('text' => ENTRY_REVIEW . '<br>' . $rInfo->reviews_text);
+                  $contents[] = array('text' => ENTRY_REVIEW . '<br>' . zen_output_string_protected($rInfo->reviews_text));
                   $contents[] = array('text' => TEXT_INFO_REVIEW_AUTHOR . ' ' . $rInfo->customers_name);
                   $contents[] = array('text' => TEXT_INFO_REVIEW_RATING . ' ' . zen_image(DIR_WS_TEMPLATE_IMAGES . 'stars_' . $rInfo->reviews_rating . '.gif'));
                   $contents[] = array('text' => TEXT_INFO_REVIEW_READ . ' ' . $rInfo->reviews_read);

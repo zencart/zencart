@@ -90,15 +90,19 @@ if (strlen($sales_report_filter) == 0) {
       google.charts.setOnLoadCallback(drawChart);
 
       function drawChart() {
-
+<?php for ($j = 0; $j < 2; $j++) {  ?>
           // Create the data table.
           var data = new google.visualization.DataTable();
           data.addColumn('string', 'label');
+<?php if ($j == 0) { ?>
           data.addColumn('number', '<?php echo CHART_TOTAL_SALES; ?>');
-<?php if ($sales_report_view < statsSalesReportGraph::YEARLY_VIEW) { ?>
+<?php } else { ?>
+<?php    if ($sales_report_view < statsSalesReportGraph::YEARLY_VIEW) { ?>
             data.addColumn('number', '<?php echo CHART_AVERAGE_SALE_AMOUNT; ?>');
+<?php    } else { ?>
+   <?php    if ($j == 1) break; // don't show avg sale ?>
+<?php    } ?>
 <?php } ?>
-
           data.addRows([
 <?php
 for ($i = 0; $i < $report->size; $i++) {
@@ -122,15 +126,15 @@ for ($i = 0; $i < $report->size; $i++) {
 
   echo "', ";
 
+  if ($j == 0) {
   // first value
   echo round($report->info[$i]['sum'], 2);
-
-  // second value
-  if ($sales_report_view < statsSalesReportGraph::YEARLY_VIEW) {
-    echo ',';
-    echo round($report->info[$i]['avg'], 2);
+  } else { 
+    // second value
+    if ($sales_report_view < statsSalesReportGraph::YEARLY_VIEW) {
+      echo round($report->info[$i]['avg'], 2);
+    }
   }
-
   echo ']';
   if (($i + 1) < $report->size) {
     echo ',' . "\n";
@@ -146,12 +150,20 @@ for ($i = 0; $i < $report->size; $i++) {
               'legend': 'bottom',
               'is3D': false,
               'width': 600,
-              'height': 450
+              'height': 450,
+              'colors': ['<?php if ($j == 0) echo "#0000FF"; else echo "#FF0000"; ?>'],
+              vAxis: {minValue: 0}
           };
 
           // Instantiate and draw our chart, passing in some options.
+<?php if ($j == 0) { ?>
           var chart = new google.visualization.ColumnChart(document.getElementById('chart_div'));
+
+<?php } else { ?>
+          var chart = new google.visualization.ColumnChart(document.getElementById('chart_div2'));
+<?php } ?>
           chart.draw(data, options);
+<?php   } ?>
       }
     </script>
   </head>
@@ -173,6 +185,7 @@ for ($i = 0; $i < $report->size; $i++) {
 
       <div class="col-sm-12 col-md-6">
         <div id="chart_div"></div>
+        <div id="chart_div2"></div>
       </div>
       <div class="col-sm-12 col-md-6">
         <div class="table-responsive">

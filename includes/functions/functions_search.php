@@ -157,15 +157,19 @@ function zen_parse_search_string($search_str = '', &$objects = array()) {
     return false;
 }
 
-    function zen_build_keyword_where_clause($fields, $string)
+    function zen_build_keyword_where_clause($fields, $string, $startWithWhere = false)
     {
         global $db;
         if (zen_parse_search_string(stripslashes($string), $search_keywords)) {
             $where_str = " AND (";
+            if ($startWithWhere) {
+                $where_str = " WHERE (";
+            }
             for ($i = 0, $n = sizeof($search_keywords); $i < $n; $i++) {
                 switch ($search_keywords[$i]) {
                     case '(':
                     case ')':
+                        break;
                     case 'and':
                     case 'or':
                         $where_str .= " " . strtoupper($search_keywords[$i]) . " ";
@@ -173,15 +177,20 @@ function zen_parse_search_string($search_str = '', &$objects = array()) {
                     default:
                         $sql_add = " (";
                         $first_field = true;
+                        $sql_or = ' ';
                         foreach ($fields as $field_name) {
                             if (!$first_field) {
-                                $sql_add .= ' OR ';
+                                $sql_or = ' OR ';
                             }
-                            $first_field = false;
                             if (strpos($field_name, '_id')) {
-                                $sql_add .= " :field_name = :numeric_keyword";
-
+                                if ((int)$search_keywords[$i] != 0) {
+                                    $first_field = false;
+                                    $sql_add .= $sql_or;
+                                    $sql_add .= " :field_name = :numeric_keyword";
+                                }
                             } else {
+                                $first_field = false;
+                                $sql_add .= $sql_or;
                                 $sql_add .= " :field_name LIKE '%:keyword%'";
                             }
                             $sql_add = $db->bindVars($sql_add, ':field_name', $field_name, 'noquotestring');
@@ -197,5 +206,5 @@ function zen_parse_search_string($search_str = '', &$objects = array()) {
             }
             $where_str .= " )";
         }
-        return $where_str;
+        return $where_str ?? ' ';
     }

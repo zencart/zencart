@@ -8,7 +8,7 @@
 require 'includes/application_top.php';
 
 $action = (isset($_GET['action']) ? $_GET['action'] : '');
-$currentPage = (isset($_GET['page']) && $_GET['page'] != '' ? (int)$_GET['page'] : 0);
+$currentPage = (!empty($_GET['page']) && ctype_alpha($_GET['page'][0]) ? $_GET['page'][0] : '');
 
 if (!empty($action)) {
   switch ($action) {
@@ -44,7 +44,7 @@ if (!empty($action)) {
                         status = " . (int)$status . "
                     WHERE countries_id = " . (int)$countries_id);
       zen_record_admin_activity('Country updated: ' . $countries_iso_code_3, 'info');
-      zen_redirect(zen_href_link(FILENAME_COUNTRIES, ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . 'cID=' . $countries_id));
+      zen_redirect(zen_href_link(FILENAME_COUNTRIES, ($currentPage !== '' ? 'page=' . $currentPage . '&' : '') . 'cID=' . $countries_id));
       break;
     case 'deleteconfirm':
       $countries_id = zen_db_prepare_input($_POST['cID']);
@@ -60,7 +60,7 @@ if (!empty($action)) {
       } else {
         $messageStack->add_session(ERROR_COUNTRY_IN_USE, 'error');
       }
-      zen_redirect(zen_href_link(FILENAME_COUNTRIES, ($currentPage != 0 ? 'page=' . $currentPage : '')));
+      zen_redirect(zen_href_link(FILENAME_COUNTRIES, ($currentPage !== '' ? 'page=' . $currentPage : '')));
       break;
     case 'setstatus':
       $countries_id = (int)$_POST['current_country'];
@@ -70,7 +70,7 @@ if (!empty($action)) {
                 WHERE countries_id = " . (int)$countries_id;
         $db->Execute($sql);
         zen_record_admin_activity('Country with ID number: ' . $countries_id . ' changed status to ' . ($_POST['current_status'] == 0 ? 1 : 0), 'info');
-        zen_redirect(zen_href_link(FILENAME_COUNTRIES, ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . 'cID=' . (int)$countries_id));
+        zen_redirect(zen_href_link(FILENAME_COUNTRIES, ($currentPage !== '' ? 'page=' . $currentPage . '&' : '') . 'cID=' . (int)$countries_id));
       }
       $action = '';
       break;
@@ -97,7 +97,7 @@ if (!empty($action)) {
         <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9 configurationColumnLeft">
           <table class="table table-hover">
             <thead>
-              <tr class="dataTableHeadingRow"> 
+              <tr class="dataTableHeadingRow">
                 <th class="dataTableHeadingContent" width="50%"><?php echo TABLE_HEADING_COUNTRY_NAME; ?></th>
                 <th class="dataTableHeadingContent text-center" colspan="2"><?php echo TABLE_HEADING_COUNTRY_CODES; ?></th>
                 <th class="dataTableHeadingContent text-center"><?php echo TABLE_HEADING_COUNTRY_STATUS; ?></th>
@@ -142,10 +142,10 @@ if (!empty($action)) {
                   </td>
                   <td class="dataTableContent text-right">
                     <?php if (isset($cInfo) && is_object($cInfo) && ($country['countries_id'] == $cInfo->countries_id)) { ?>
-                      <i class="fa fa-caret-right fa-2x fa-fw" style="color:navy; vertical-align: middle;"></i>
+                      <i class="fa fa-caret-right fa-2x fa-fw txt-navy align-middle"></i>
                     <?php } else { ?>
-                      <a href="<?php zen_href_link(FILENAME_COUNTRIES, ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . 'cID=' . $country['countries_id']); ?>" title="<?php echo IMAGE_ICON_INFO; ?>" role="button">
-                        <i class="fa fa-info-circle fa-2x fa-fw" style="color:#000; vertical-align: middle;"></i>
+                      <a href="<?php echo zen_href_link(FILENAME_COUNTRIES, ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . 'cID=' . $country['countries_id']); ?>" title="<?php echo IMAGE_ICON_INFO; ?>" role="button">
+                        <i class="fa fa-info-circle fa-2x fa-fw txt-black align-middle"></i>
                       </a>
                     <?php } ?>
                   </td>

@@ -8,7 +8,7 @@
 
 <?php require(DIR_FS_INSTALL . DIR_WS_INSTALL_TEMPLATE . 'partials/partial_modal_help.php'); ?>
 
-<?php if (count($errors)) { ?>
+<?php if (!empty($errors)) { ?>
     <div class="alert-box alert">
 <?php
       foreach ($errors as $errormessage) {

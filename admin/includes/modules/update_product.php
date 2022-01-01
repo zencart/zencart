@@ -1,10 +1,10 @@
 <?php
 
 /**
- * @copyright Copyright 2003-2020 Zen Cart Development Team
+ * @copyright Copyright 2003-2021 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Scott C Wilson 2020 Apr 13 Modified in v1.5.7 $
+ * @version $Id:  Modified in v1.5.8 $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
@@ -17,11 +17,11 @@ if (isset($_POST['edit']) && $_POST['edit'] == 'edit') {
 } elseif ((isset($_POST['products_model']) ? $_POST['products_model'] : '') . (isset($_POST['products_url']) ? implode('', $_POST['products_url']) : '') . (isset($_POST['products_name']) ? implode('', $_POST['products_name']) : '') . (isset($_POST['products_description']) ? implode('', $_POST['products_description']) : '') != '') {
   $products_date_available = zen_db_prepare_input($_POST['products_date_available']);
   if (DATE_FORMAT_DATE_PICKER != 'yy-mm-dd' && !empty($products_date_available)) {
-    $local_fmt = zen_datepicker_format_fordate(); 
+    $local_fmt = zen_datepicker_format_fordate();
     $dt = DateTime::createFromFormat($local_fmt, $products_date_available);
     $products_date_available = 'null';
     if (!empty($dt)) {
-      $products_date_available = $dt->format('Y-m-d'); 
+      $products_date_available = $dt->format('Y-m-d');
     }
   }
   $products_date_available = (date('Y-m-d') < $products_date_available) ? $products_date_available : 'null';
@@ -130,27 +130,4 @@ if (isset($_POST['edit']) && $_POST['edit'] == 'edit') {
 } else {
   $messageStack->add_session(ERROR_NO_DATA_TO_SAVE, 'error');
   zen_redirect(zen_href_link(FILENAME_CATEGORY_PRODUCT_LISTING, 'cPath=' . $cPath . '&pID=' . $products_id . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '') . (isset($_POST['search']) ? '&search=' . $_POST['search'] : '')));
-}
-
-/**
- * NOTE: THIS IS HERE FOR BACKWARD COMPATIBILITY. The function is properly declared in the functions files instead.
- * Convert value to a float -- mainly used for sanitizing and returning non-empty strings or nulls
- * @param int|float|string $input
- * @return float|int
- */
-if (!function_exists('convertToFloat')) {
-
-  function convertToFloat($input = 0) {
-    if ($input === null) {
-      return 0;
-    }
-    $val = preg_replace('/[^0-9,\.\-]/', '', $input);
-    // do a non-strict compare here:
-    if ($val == 0) {
-      return 0;
-    }
-
-    return (float)$val;
-  }
-
 }

@@ -40,9 +40,12 @@ ALTER TABLE customers ADD registration_ip varchar(45) NOT NULL default '';
 ALTER TABLE customers ADD last_login_ip varchar(45) NOT NULL default '';
 ALTER TABLE customers_info ADD INDEX idx_date_created_cust_id_zen (customers_info_date_account_created, customers_info_id);
 
-ALTER TABLE orders_products MODIFY products_name varchar(254) NOT NULL default '';
-ALTER TABLE products_description MODIFY products_name varchar(254) NOT NULL default '';
+ALTER TABLE orders_products MODIFY products_name varchar(191) NOT NULL default '';
+ALTER TABLE products_description MODIFY products_name varchar(191) NOT NULL default '';
 
+ALTER TABLE orders MODIFY customers_country varchar(64) NOT NULL default ''; 
+ALTER TABLE orders MODIFY delivery_country varchar(64) NOT NULL default ''; 
+ALTER TABLE orders MODIFY billing_country varchar(64) NOT NULL default ''; 
 
 # Remove greater-than sign in query_builder
 UPDATE query_builder SET query_name = 'Customers Dormant for 3+ months (Subscribers)' WHERE query_id = 3;
@@ -66,10 +69,53 @@ UPDATE configuration SET configuration_description = 'Defines the method for sen
 
 UPDATE configuration SET configuration_description = 'Customers Referral Code is created from<br />0= Off<br />1= 1st Discount Coupon Code used<br />2= Customer can add during create account or edit if blank<br /><br />NOTE: Once the Customers Referral Code has been set it can only be changed by the Administrator' WHERE configuration_key = 'CUSTOMERS_REFERRAL_STATUS';
 
+UPDATE configuration SET configuration_description = 'The shipping cost may be calculated based on the total weight of the items ordered, the total price of the items ordered, or the total number of items ordered.' WHERE configuration_key = 'MODULE_SHIPPING_TABLE_MODE';
+
+UPDATE configuration SET configuration_description = 'Number of products to show per page when viewing an index listing' WHERE configuration_key = 'MAX_DISPLAY_PRODUCTS_LISTING';
+UPDATE configuration SET configuration_description = 'Number of products to show per page when viewing All Products' WHERE configuration_key = 'MAX_DISPLAY_PRODUCTS_ALL';
+UPDATE configuration SET configuration_description = 'Number of products to show per page when viewing New Products' WHERE configuration_key = 'MAX_DISPLAY_PRODUCTS_NEW';
+UPDATE configuration SET configuration_description = 'Number of products to show per page when viewing Featured Products' WHERE configuration_key = 'MAX_DISPLAY_PRODUCTS_FEATURED_PRODUCTS';
+
+UPDATE configuration SET configuration_title = 'New Products Centerbox', configuration_description = 'Number of products to display in the New Products centerbox' WHERE configuration_key = 'MAX_DISPLAY_NEW_PRODUCTS';
+UPDATE configuration SET configuration_title = 'Products on Special Centerbox', configuration_description = 'Number of products to display in the Products on Special centerbox' WHERE configuration_key = 'MAX_DISPLAY_SPECIAL_PRODUCTS_INDEX';
+UPDATE configuration SET configuration_title = 'Upcoming Products Centerbox', configuration_description = 'Number of products to display in the Upcoming Products centerbox' WHERE configuration_key = 'MAX_DISPLAY_UPCOMING_PRODUCTS';
+UPDATE configuration SET configuration_title = 'Featured Products Centerbox', configuration_description = 'Number of products to display in the Featured Products centerbox' WHERE configuration_key = 'MAX_DISPLAY_SEARCH_RESULTS_FEATURED';
+
+UPDATE configuration SET configuration_title = 'Products on Special Page', configuration_description = 'Number of products to display per page on the Specials page' WHERE configuration_key = 'MAX_DISPLAY_SPECIAL_PRODUCTS';
+UPDATE configuration SET configuration_title = 'All Products Page', configuration_description = 'Number of products to display per page on the All Products page' WHERE configuration_key = 'MAX_DISPLAY_PRODUCTS_ALL';
+UPDATE configuration SET configuration_title = 'Featured Products Page', configuration_description = 'Number of products to display per page on the Featured Products page' WHERE configuration_key = 'MAX_DISPLAY_PRODUCTS_FEATURED_PRODUCTS';
+UPDATE configuration SET configuration_title = 'New Products Page', configuration_description = 'Number of products to display per page on the New Products page' WHERE configuration_key = 'MAX_DISPLAY_PRODUCTS_NEW';
+UPDATE configuration SET configuration_title = 'Products Listing Page', configuration_description = 'Number of products to display per page on a Listing page' WHERE configuration_key = 'MAX_DISPLAY_PRODUCTS_LISTING';
+
 #############
 # Incorporate setting for Column-Grid-Layout template control
 INSERT IGNORE INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES ('Columns Per Row', 'PRODUCT_LISTING_COLUMNS_PER_ROW', '1', 'Select the number of columns of products to show per row in the product listing.<br>Recommended: 3<br>1=[rows] mode.', '8', '45', NULL, now(), NULL, NULL);
 
+
+#############
+
+INSERT IGNORE INTO admin_pages (page_key, language_key, main_page, page_params, menu_key, display_on_menu, sort_order)
+VALUES ('customerGroups', 'BOX_CUSTOMERS_CUSTOMER_GROUPS', 'FILENAME_CUSTOMER_GROUPS', '', 'customers', 'Y', 3);
+
+CREATE TABLE customer_groups (
+  group_id int UNSIGNED NOT NULL AUTO_INCREMENT,
+  group_name varchar(191) NOT NULL,
+  group_comment varchar(255),
+  date_added timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (group_id),
+  UNIQUE KEY idx_groupname_zen (group_name)
+);
+CREATE TABLE customers_to_groups (
+  id int UNSIGNED NOT NULL AUTO_INCREMENT,
+  group_id int UNSIGNED NOT NULL,
+  customer_id int UNSIGNED NOT NULL,
+  date_added timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (id),
+  UNIQUE KEY idx_custid_groupid_zen (customer_id, group_id),
+  KEY idx_groupid_custid_zen (group_id, customer_id)
+);
 
 #############
 

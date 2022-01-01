@@ -45,10 +45,9 @@ if (!class_exists('Mobile_Detect')) {
 <!DOCTYPE html>
 <html <?php echo HTML_PARAMS; ?>>
   <head>
-    <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
-    <link rel="dns-prefetch" href="https://code.jquery.com">
-
   <meta charset="<?php echo CHARSET; ?>">
+  <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
+  <link rel="dns-prefetch" href="https://code.jquery.com">
   <title><?php echo META_TAG_TITLE; ?></title>
   <meta name="keywords" content="<?php echo META_TAG_KEYWORDS; ?>">
   <meta name="description" content="<?php echo META_TAG_DESCRIPTION; ?>">

@@ -98,6 +98,7 @@ class ot_coupon
             }
 
             $order->info['total'] -= $od_amount['total'];
+            $order->info['coupon_amount'] = $od_amount['total'];
 
             if (DISPLAY_PRICE_WITH_TAX != 'true') {
                 $order->info['total'] -= $tax;
@@ -290,7 +291,9 @@ class ot_coupon
         $coupon_details = $this->getCouponDetailsFromDb($coupon_code);
 
         if (empty($coupon_details) || $coupon_details['coupon_active'] !== 'Y') {
-            $this->validation_errors[] = sprintf(TEXT_INVALID_REDEEM_COUPON, $coupon_code);
+            if (!$this->isCodeEqualToRemoveCode($coupon_code)) {
+                $this->validation_errors[] = sprintf(TEXT_INVALID_REDEEM_COUPON, $coupon_code);
+            }
             return;
         }
 
@@ -426,8 +429,9 @@ class ot_coupon
 
         $orderAmountTotal = (string)$orderTotalDetails['orderTotal'];  // coupon is applied against value of only qualifying/restricted products in cart
         if ($coupon_details['coupon_calc_base'] == 1) {
-            $orderAmountTotal = (string)$orderTotalDetails['totalFull']; // coupon is applied against value of all products in cart
+            $orderAmountToCompareAgainstCouponMinimum = (string)$orderTotalDetails['totalFull']; // coupon minimum comparison includes sale items that may not be included in deduction
         }
+
 
 //echo 'ot_coupon coupon_total: ' . $coupon_details['coupon_calc_base'] . '<br>$orderTotalDetails[orderTotal]: ' . $orderTotalDetails['orderTotal'] . '<br>$orderTotalDetails[totalFull]: ' . $orderTotalDetails['totalFull'] . '<br>$orderAmountTotal: ' . $orderAmountTotal . '<br><br>$coupon_details[coupon_minimum_order]: ' . $coupon_details['coupon_minimum_order'] . '<br>$orderAmountToCompareAgainstCouponMinimum: ' . $orderAmountToCompareAgainstCouponMinimum . '<br>';
 
@@ -591,7 +595,12 @@ class ot_coupon
                     $orderTotal -= $productsTaxAmount;
                 }
                 $orderTotalTax -= $productsTaxAmount;
-                $orderTaxGroups[zen_get_tax_description($product['tax_class_id'])] -= $productsTaxAmount;
+                $tax_description = zen_get_tax_description($product['tax_class_id']);
+                if (empty($orderTaxGroups[$tax_description])) {
+                    $orderTaxGroups[$tax_description] = 0 - $productsTaxAmount;
+                } else {
+                    $orderTaxGroups[$tax_description] -= $productsTaxAmount;
+                }
             }
         }
 
@@ -603,7 +612,7 @@ class ot_coupon
             }
         }
         if (DISPLAY_PRICE_WITH_TAX != 'true') {
-            $orderTotal -= $order->info['tax'];
+            $orderTotal -= $orderTotalTax;
         }
 
         // change what total is used for Discount Coupon Minimum
@@ -660,7 +669,7 @@ class ot_coupon
     function remove()
     {
         global $db;
-        $keys = implode("','", $this->keys);
+        $keys = implode("','", $this->keys());
 
         $db->Execute("DELETE FROM " . TABLE_CONFIGURATION . " where configuration_key IN ('" . $keys . "')");
     }
@@ -686,12 +695,16 @@ class ot_coupon
 
         if (!defined('TEXT_COMMAND_TO_DELETE_CURRENT_COUPON_FROM_ORDER')) define('TEXT_COMMAND_TO_DELETE_CURRENT_COUPON_FROM_ORDER', 'REMOVE');
 
-        if (strtoupper($coupon_code) == TEXT_COMMAND_TO_DELETE_CURRENT_COUPON_FROM_ORDER) {
+        if ($this->isCodeEqualToRemoveCode($coupon_code)) {
 
             $this->remove_coupon_from_current_session();
 
             $messageStack->add_session('checkout_payment', TEXT_REMOVE_REDEEM_COUPON, 'caution');
         }
+    }
+
+    private function isCodeEqualToRemoveCode($code) {
+        return (strtoupper($code) == TEXT_COMMAND_TO_DELETE_CURRENT_COUPON_FROM_ORDER);
     }
 
     /**
@@ -744,7 +757,6 @@ class ot_coupon
         }
 
         $found_valid = true;
-
         if ($found_valid) {
             $found_valid = false;
             foreach ($products as $product) {
@@ -845,7 +857,7 @@ class ot_coupon
 
         $orderAmountTotal = (string)$orderTotalDetails['orderTotal'];  // coupon is applied against value of only qualifying/restricted products in cart
         if ($coupon_details['coupon_calc_base'] == 1) {
-            $orderAmountTotal = (string)$orderTotalDetails['totalFull']; // coupon is applied against value of all products in cart
+            $orderAmountToCompareAgainstCouponMinimum = (string)$orderTotalDetails['totalFull']; // coupon minimum comparison includes sale items that may not be included in deduction
         }
 
 //echo 'Product: ' . $orderTotalDetails['orderTotal'] . ' Order: ' . $orderTotalDetails['totalFull'] . ' $orderAmountTotal: ' . $orderAmountTotal . '<br>';
@@ -1010,5 +1022,8 @@ class ot_coupon
         }
 
         return false;
+    }
+    function help() {
+       return array('link' => 'https://docs.zen-cart.com/user/order_total/coupons/'); 
     }
 }

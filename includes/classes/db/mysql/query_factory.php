@@ -66,6 +66,9 @@ class queryFactory extends base
 
         if (!function_exists('mysqli_connect')) die ('Call to undefined function: mysqli_connect().  Please install the MySQL Connector for PHP');
 
+        // use default reporting setting, so exceptions aren't thrown, since we attempt to catch errors here procedurally.
+        mysqli_report(MYSQLI_REPORT_OFF);
+
         $connectionRetry = 10;
         while (!isset($this->link) || ($this->link == false && $connectionRetry != 0)) {
             $this->link = mysqli_connect($db_host, $db_user, $db_password, $db_name, (defined('DB_PORT') ? DB_PORT : null), (defined('DB_SOCKET') ? DB_SOCKET : null));
@@ -115,6 +118,9 @@ class queryFactory extends base
      */
     public function simpleConnect($db_host, $db_user, $db_password, $db_name): bool
     {
+        // use default reporting setting, so exceptions aren't thrown, since we attempt to catch errors here procedurally.
+        mysqli_report(MYSQLI_REPORT_OFF);
+
         $this->database = $db_name;
         $this->user = $db_user;
         $this->host = $db_host;
@@ -209,12 +215,14 @@ class queryFactory extends base
         if ($enableCaching && $zc_cache->sql_cache_exists($sqlQuery, $cacheSeconds)) {
             $obj->is_cached = true;
             $zp_result_array = $zc_cache->sql_cache_read($sqlQuery);
-            $obj->result = $zp_result_array;
-            if (count($zp_result_array) > 0) {
-                $obj->EOF = false;
-                $obj->fields = array_replace($obj->fields, $zp_result_array[0]);
+            if ($zp_result_array !== false) {
+                $obj->result = $zp_result_array;
+                if (count($zp_result_array) > 0) {
+                    $obj->EOF = false;
+                    $obj->fields = array_replace($obj->fields, $zp_result_array[0]);
+                }
+                return $obj;
             }
-            return $obj;
         }
 
 
@@ -600,6 +608,7 @@ class queryFactory extends base
      */
     public function close(): void
     {
+        if (!$this->link) return;
         @mysqli_close($this->link);
         unset($this->link);
     }
@@ -694,7 +703,7 @@ class queryFactory extends base
      */
     protected function logQuery($sqlQuery)
     {
-        if (!defined('STORE_DB_TRANSACTIONS') || STORE_DB_TRANSACTIONS != 'true') {
+        if (!defined('STORE_DB_TRANSACTIONS') || STORE_DB_TRANSACTIONS === 'false' || STORE_DB_TRANSACTIONS === false) {
             return;
         }
         global $PHP_SELF, $box_id, $current_page_base;
@@ -805,6 +814,7 @@ class queryFactoryResult implements Countable, Iterator
     /* (non-PHPdoc)
      * @see Iterator::current()
      */
+     #[ReturnTypeWillChange]
     public function current()
     {
         return $this->fields;
@@ -812,7 +822,8 @@ class queryFactoryResult implements Countable, Iterator
 
     /* (non-PHPdoc)
      * @see Iterator::key()
-    */
+     */
+     #[ReturnTypeWillChange]
     public function key()
     {
         return $this->cursor;
@@ -821,6 +832,7 @@ class queryFactoryResult implements Countable, Iterator
     /* (non-PHPdoc)
      * @see Iterator::next()
      */
+     #[ReturnTypeWillChange]
     public function next()
     {
         $this->MoveNext();
@@ -872,6 +884,7 @@ class queryFactoryResult implements Countable, Iterator
     /* (non-PHPdoc)
      * @see Iterator::rewind()
      */
+     #[ReturnTypeWillChange]
     public function rewind()
     {
         $this->EOF = ($this->RecordCount() == 0);
@@ -883,6 +896,7 @@ class queryFactoryResult implements Countable, Iterator
     /* (non-PHPdoc)
      * @see Iterator::valid()
      */
+     #[ReturnTypeWillChange]
     public function valid()
     {
         return $this->cursor < $this->RecordCount() && !$this->EOF;
@@ -891,6 +905,7 @@ class queryFactoryResult implements Countable, Iterator
     /* (non-PHPdoc)
      * @see Iterator::count()
      */
+     #[ReturnTypeWillChange]
     public function count()
     {
         return $this->RecordCount();

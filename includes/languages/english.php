@@ -25,20 +25,6 @@
   define('DATE_FORMAT_LONG', '%A %d %B, %Y'); // this is used for strftime()
   define('DATE_FORMAT', 'm/d/Y'); // this is used for date()
 
-////
-// Return date in raw format
-// $date should be in format mm/dd/yyyy
-// raw date is in format YYYYMMDD, or DDMMYYYY
-  if (!function_exists('zen_date_raw')) {
-    function zen_date_raw($date, $reverse = false) {
-      if ($reverse) {
-        return substr($date, 3, 2) . substr($date, 0, 2) . substr($date, 6, 4);
-      } else {
-        return substr($date, 6, 4) . substr($date, 0, 2) . substr($date, 3, 2);
-      }
-    }
-  }
-
 // if USE_DEFAULT_LANGUAGE_CURRENCY is true, use the following currency, instead of the applications default currency (used when changing language)
   define('LANGUAGE_CURRENCY', 'USD');
 
@@ -345,10 +331,10 @@ define('ARIA_PAGINATION_','');
   define('SUCCESS_ADDED_TO_CART_PRODUCTS', 'Successfully added selected Product(s) to the cart ...');
   define('FAILED_TO_ADD_UNAVAILABLE_PRODUCTS', 'The selected Product(s) are not currently available for purchase...');
 
-  define('TEXT_PRODUCT_WEIGHT_UNIT','lbs');
+  define('TEXT_PRODUCT_WEIGHT_UNIT',' lbs');
 
 // Shipping
-  define('TEXT_SHIPPING_WEIGHT','lbs');
+  define('TEXT_SHIPPING_WEIGHT',' lbs');
   define('TEXT_SHIPPING_BOXES', 'Boxes');
 
 // Discount Savings

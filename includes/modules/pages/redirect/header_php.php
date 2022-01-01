@@ -11,6 +11,7 @@
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
 }
+$_GET['action'] = $_GET['action'] ?? '';
 switch ($_GET['action']) {
   case 'product':
     if (!empty($_GET['products_id'])) {

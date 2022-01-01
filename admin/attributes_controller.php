@@ -194,15 +194,17 @@ if (!empty($action)) {
       break;
     case 'add_product_attributes':
       $current_image_name = '';
+      if (!isset($_POST['options_id'], $_POST['products_id']) || empty($_POST['values_id'])) {
+           break;
+      }
+
+      $options_id = (int)$_POST['options_id'];
+      $products_id = (int)$_POST['products_id'];
       for ($i = 0; $i < count($_POST['values_id']); $i++) {
         if (isset($_POST['values_id'][$i])) {
           $value_id = (int)$_POST['values_id'][$i];
-        }
-        if (isset($_POST['options_id'])) {
-          $options_id = (int)$_POST['options_id'];
-        }
-        if (isset($_POST['products_id'])) {
-          $products_id = (int)$_POST['products_id'];
+        } else {
+           continue;
         }
 // check for duplicate and block them
         $check_duplicate = $db->Execute("SELECT products_id, options_id, options_values_id
@@ -976,17 +978,17 @@ function zen_js_option_values_list($selectedName, $fieldName)
                   </td>
                   <td class="text-center">
                     <span class="fa-stack">
-                      <i class="fa fa-circle fa-stack-1x" aria-hidden="true" style="color: #fc0;"></i>
+                      <i class="fa fa-circle fa-stack-1x txt-orange" aria-hidden="true"></i>
                       <i class="fa fa-circle-o fa-stack-1x" aria-hidden="true"></i>
                     </span>
                   </td>
                   <td class="text-center">
                     <span class="fa-stack">
-                      <i class="fa fa-circle fa-stack-1x" aria-hidden="true" style="color: #5ce400;"></i>
+                      <i class="fa fa-circle fa-stack-1x txt-lime" aria-hidden="true"></i>
                       <i class="fa fa-circle-o fa-stack-1x" aria-hidden="true"></i>
                     </span>
                     <span class="fa-stack">
-                      <i class="fa fa-circle fa-stack-1x" aria-hidden="true" style="color: #f00;"></i>
+                      <i class="fa fa-circle fa-stack-1x txt-red" aria-hidden="true"></i>
                       <i class="fa fa-circle-o fa-stack-1x" aria-hidden="true"></i>
                     </span>
                   </td>
@@ -1480,7 +1482,7 @@ function zen_js_option_values_list($selectedName, $fieldName)
                     <td>
                       <?php if ($attributes_value['attributes_image'] != '') { ?>
                         <span class="fa-stack">
-                          <i class="fa fa-circle fa-stack-1x" aria-hidden="true" style="color: #fc0;"></i>
+                          <i class="fa fa-circle fa-stack-1x txt-orange" aria-hidden="true"></i>
                           <i class="fa fa-circle-o fa-stack-1x" aria-hidden="true"></i>
                         </span>
                       <?php } ?>
@@ -1598,10 +1600,10 @@ function zen_js_option_values_list($selectedName, $fieldName)
                           <span class="smallText">
                             <span class="fa-stack">
                               <?php if (zen_orders_products_downloads($download_display->fields['products_attributes_filename'])) { ?>
-                                <i class="fa fa-circle fa-stack-1x" aria-hidden="true" style="color: #5ce400;"></i>
+                                <i class="fa fa-circle fa-stack-1x txt-lime" aria-hidden="true"></i>
                                 <i class="fa fa-circle-o fa-stack-1x" aria-hidden="true"></i>
                               <?php } else { ?>
-                                <i class="fa fa-circle fa-stack-1x" aria-hidden="true" style="color: #f00;"></i>
+                                <i class="fa fa-circle fa-stack-1x txt-red" aria-hidden="true"></i>
                                 <i class="fa fa-circle-o fa-stack-1x" aria-hidden="true"></i>
                               <?php } ?>
                             </span>
