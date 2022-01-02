@@ -365,6 +365,7 @@ $define = [
     'BOX_CATALOG_CATEGORIES_ATTRIBUTES_CONTROLLER' => 'Attributes Controller',
     'TEXT_MODEL' => 'Model:',
     'TEXT_PRODUCTS_MODEL' => 'Products Model:',
+    'TABLE_HEADING_ID' => 'ID',
     'TABLE_HEADING_PRODUCTS_MODEL' => 'Model',
     'TABLE_HEADING_MODEL' => 'Model',
     'BOX_TOOLS_LAYOUT_CONTROLLER' => 'Layout Boxes Controller',

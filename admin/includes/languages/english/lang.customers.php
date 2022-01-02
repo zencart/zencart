@@ -8,7 +8,6 @@
 
 $define = [
     'HEADING_TITLE' => 'Customers',
-    'TABLE_HEADING_ID' => 'ID#',
     'TABLE_HEADING_FIRSTNAME' => 'First Name',
     'TABLE_HEADING_LASTNAME' => 'Last Name',
     'TABLE_HEADING_ACCOUNT_CREATED' => 'Account Created',
