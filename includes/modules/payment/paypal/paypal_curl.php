@@ -548,7 +548,7 @@ class paypal_curl extends base {
       $value = str_replace('"', '', $value);
       // if the value contains a & or = symbol, handle it differently
       if (($this->_mode == 'payflow') && (strpos($value, '&') !== false || strpos($value, '=') !== false)) {
-        $name = str_replace('PAYMENTREQUEST_0_', '', $name);  // For Payflow, remove NVP v63.0+ extras from name
+        $name = str_replace(['PAYMENTREQUEST_0_', 'PAYMENTINFO_0_'], '', $name);  // For Payflow, remove NVP v63.0+ extras from name
         $string[] = $name . '[' . strlen($value) . ']=' . $value;
         if (PAYPAL_DEV_MODE == 'true') $this->log('_buildNameValueList - datacheck - adding braces and string count to: ' . $value . ' (' . $name . ')');
       } else {
