@@ -24,7 +24,6 @@ $define = [
     'ERROR_PAGE_TITLE_REQUIRED' => 'Error: Page title required.',
     'ERROR_UNKNOWN_STATUS_FLAG' => 'Error: Unknown status flag.',
     'ERROR_MULTIPLE_HTML_URL' => 'Error: you have defined multiple settings when only one may be defined per Link ...<br>Only define either: HTML Content -or- Internal Link URL -or- External Link URL',
-    'TABLE_HEADING_ID' => 'ID',
     'TABLE_HEADING_STATUS_HEADER' => 'Header:',
     'TABLE_HEADING_STATUS_SIDEBOX' => 'Sidebox:',
     'TABLE_HEADING_STATUS_FOOTER' => 'Footer:',
