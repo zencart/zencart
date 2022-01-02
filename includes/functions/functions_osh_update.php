@@ -29,13 +29,14 @@ if (!defined('IS_ADMIN_FLAG')) {
 // - $email_subject ........... If specified, overrides the default email subject line.
 // - $send_extra_mails_to ..... If specified, overrides the "standard" database settings SEND_EXTRA_ORDERS_STATUS_ADMIN_EMAILS_TO_STATUS and
 //                              SEND_EXTRA_ORDERS_STATUS_ADMIN_EMAILS_TO.
+// - $filename ................ If specified, passes a filename to zen_mail
 //
 // Returns:
 // - $osh_id ............ A value > 0 if the record has been written (the orders_status_history_id number)
 //                        -2 if no order record was found for the specified $orders_id
 //                        -1 if no status change was detected (i.e. no record written).
 //
-function zen_update_orders_history($orders_id, $message = '', $updated_by = null, $orders_new_status = -1, $notify_customer = -1, $email_include_message = true, $email_subject = '', $send_extra_emails_to = '') 
+function zen_update_orders_history($orders_id, $message = '', $updated_by = null, $orders_new_status = -1, $notify_customer = -1, $email_include_message = true, $email_subject = '', $send_extra_emails_to = '', $filename = '') 
 {
     global $osh_sql, $osh_additional_comments;
     
@@ -147,7 +148,7 @@ function zen_update_orders_history($orders_id, $message = '', $updated_by = null
                 }
 
                 if ($notify_customer == 1) { 
-                    zen_mail($osh_info->fields['customers_name'], $osh_info->fields['customers_email_address'], $email_subject, $email_text, STORE_NAME, EMAIL_FROM, $html_msg, 'order_status');
+                    zen_mail($osh_info->fields['customers_name'], $osh_info->fields['customers_email_address'], $email_subject, $email_text, STORE_NAME, EMAIL_FROM, $html_msg, 'order_status', $filename);
                 } 
 
                 // PayPal Trans ID, if any
@@ -167,7 +168,7 @@ function zen_update_orders_history($orders_id, $message = '', $updated_by = null
                     $send_extra_emails_to = (string)SEND_EXTRA_ORDERS_STATUS_ADMIN_EMAILS_TO;
                 }
                 if (!empty($send_extra_emails_to)) {
-                    zen_mail('', $send_extra_emails_to, SEND_EXTRA_ORDERS_STATUS_ADMIN_EMAILS_TO_SUBJECT . ' ' . $email_subject, $email_text, STORE_NAME, EMAIL_FROM, $html_msg, 'order_status_extra');
+                    zen_mail('', $send_extra_emails_to, SEND_EXTRA_ORDERS_STATUS_ADMIN_EMAILS_TO_SUBJECT . ' ' . $email_subject, $email_text, STORE_NAME, EMAIL_FROM, $html_msg, 'order_status_extra', $filename);
                 }
             }
     
