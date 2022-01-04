@@ -44,7 +44,8 @@ foreach ($installedPlugins as $plugin) {
         <link rel="stylesheet" href="<?php echo $relativeDir . 'admin/includes/css/' . $value; ?>">
         <?php
     }
-    if (file_exists($absoluteDir . 'admin/includes/css/' . basename($PHP_SELF, '.php') . '.css')) {
+
+    if (file_exists($absoluteDir . substr($relativeDir, 1) . 'admin/includes/css/' . basename($PHP_SELF, '.php') . '.css')) {
 ?>
         <link rel="stylesheet" href="<?php echo $relativeDir . 'admin/includes/css/' . basename($PHP_SELF, '.php') . '.css'; ?>">
 <?php
