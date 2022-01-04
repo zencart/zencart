@@ -71,9 +71,9 @@ if (!empty($action)) {
 
           //set categories_status
           if ($categories[$i]['id'] == $categories_id) {//always update THIS category
-              zen_set_category_status($category_status, $categories[$i]['id']);
+              zen_set_category_status($categories[$i]['id'], $category_status);
           } elseif ($subcategories_status != '') {//optionally update subcategories if a change was selected
-              zen_set_category_status($subcategories_status, $categories[$i]['id']);
+              zen_set_category_status($categories[$i]['id'], $subcategories_status);
           }
 
           //set products_status

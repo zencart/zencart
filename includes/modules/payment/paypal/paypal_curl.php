@@ -2,9 +2,9 @@
 /**
  * paypal_curl.php communications class for PayPal Express Checkout / Website Payments Pro / Payflow Pro payment methods
  *
- * @copyright Copyright 2003-2020 Zen Cart Development Team
+ * @copyright Copyright 2003-2021 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2020 June 23 Modified in v1.5.7 $
+ * @version $Id: 2021-03-26 Modified in v1.5.7d $
  */
 
 /**
@@ -548,7 +548,7 @@ class paypal_curl extends base {
       $value = str_replace('"', '', $value);
       // if the value contains a & or = symbol, handle it differently
       if (($this->_mode == 'payflow') && (strpos($value, '&') !== false || strpos($value, '=') !== false)) {
-        $name = str_replace('PAYMENTREQUEST_0_', '', $name);  // For Payflow, remove NVP v63.0+ extras from name
+        $name = str_replace(['PAYMENTREQUEST_0_', 'PAYMENTINFO_0_'], '', $name);  // For Payflow, remove NVP v63.0+ extras from name
         $string[] = $name . '[' . strlen($value) . ']=' . $value;
         if (PAYPAL_DEV_MODE == 'true') $this->log('_buildNameValueList - datacheck - adding braces and string count to: ' . $value . ' (' . $name . ')');
       } else {

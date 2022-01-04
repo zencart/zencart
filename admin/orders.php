@@ -890,7 +890,7 @@ if (!empty($action) && $order_exists == true) {
       foreach ($extra_headings as $heading_info) {
           $align = (isset($heading_info['align'])) ? (' class="text-' . $heading_info['align'] . '"') : '';
 ?>
-                <th<?php echo $align; ?>><strong><?php echo $heading_info['text']; ?></th>
+                <th<?php echo $align; ?>><?php echo $heading_info['text']; ?></th>
 <?php
       }
   }
@@ -904,7 +904,7 @@ if (!empty($action) && $order_exists == true) {
                 $orders_history = $db->Execute("SELECT *
                                               FROM " . TABLE_ORDERS_STATUS_HISTORY . "
                                               WHERE orders_id = " . zen_db_input($oID) . "
-                                              ORDER BY date_added");
+                                              ORDER BY orders_status_history_id");
 
                 if ($orders_history->RecordCount() > 0) {
                   $first = true;

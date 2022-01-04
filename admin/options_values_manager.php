@@ -95,6 +95,7 @@ if (!empty($action)) {
                                  AND pov.products_options_values_name = '" . zen_db_input($value_name) . "'
                                  AND pov2po.products_options_id = " . (int)$option_id);
           if ($check->RecordCount() > 1) {
+              $check_dups = '';
             foreach ($check as $item) {
               $check_dups .= ' - ' . $item['products_options_values_id'];
             }
@@ -144,6 +145,7 @@ if (!empty($action)) {
                                  AND pov2po.products_options_id = " . (int)$option_id);
 
           if ($check->RecordCount() > 1) {
+              $check_dups = '';
             foreach ($check as $item) {
               $check_dups .= ' - ' . $item['products_options_values_id'];
             }

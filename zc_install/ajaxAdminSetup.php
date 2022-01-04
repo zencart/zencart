@@ -12,7 +12,7 @@ define('DIR_FS_ROOT', realpath(__DIR__ . '/../') . '/');
 
 require(DIR_FS_INSTALL . 'includes/application_top.php');
 
-$adminDir = $_POST['adminDir'];
+$adminDir = $_POST['adminDir'] ?? 'admin';
 $wordlist = file(DIR_FS_INSTALL . 'includes/wordlist.csv');
 $max = count($wordlist) - 1;
 $word1 = trim($wordlist[zen_pwd_rand(0,$max)]);

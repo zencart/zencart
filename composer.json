@@ -27,10 +27,10 @@
         "ext-json": "*"
     },
     "require-dev": {
-        "fzaninotto/faker": "^1.9",
         "laravel/dusk": ">5.8",
         "mikey179/vfsstream": ">1.6",
-        "phpunit/phpunit": "^9.0"
+        "phpunit/phpunit": "^9.0",
+        "zcwilt/zcgo": "dev-master"
     },
     "autoload": {
         "classmap": ["includes/classes", "includes/modules"]

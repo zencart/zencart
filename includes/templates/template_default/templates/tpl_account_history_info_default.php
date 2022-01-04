@@ -35,10 +35,9 @@
   ?>
     <tr>
         <td class="accountQuantityDisplay"><?php echo $op['qty'] . CART_QUANTITY_SUFFIX; ?></td>
-        <td class="accountProductDisplay"><?php
-
-            echo $op['name'];
-
+        <td class="accountProductDisplay">
+<a href="<?php echo zen_href_link(zen_get_info_page($op['id']), 'products_id=' . $op['id']); ?>"><?php echo $op['name']; ?></a>
+<?php
     if (isset($op['attributes']) && !empty($op['attributes'])) {
       echo '<ul class="orderAttribsList">';
       foreach($op['attributes'] as $attr) {
