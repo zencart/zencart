@@ -84,7 +84,7 @@ if (!empty($action)) {
                 // reset page when page is unknown
                 if ((empty($_GET['page']) || $_GET['page'] == '1') && !empty($_GET['gID'])) {
                     $check_page = $db->Execute($sql);
-                    $check_count = 1;
+                    $check_count = 0;
                     if ($check_page->RecordCount() > $max_records_per_page) {
                         foreach ($check_page as $item) {
                             if ((int)$item['group_id'] === (int)$_GET['gID']) {
