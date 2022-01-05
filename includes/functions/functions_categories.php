@@ -1145,6 +1145,19 @@ function zen_set_category_status($category_id, $status)
     $db->Execute($sql);
 }
 
+/**
+ * @param int $category_id
+ * @param string $image_name
+ */
+function zen_set_category_image($category_id, $image_name = '')
+{
+    global $db;
+    $sql = "UPDATE " . TABLE_CATEGORIES . "
+            SET categories_image = :image_name
+            WHERE categories_id = " . (int)$category_id;
+    $sql = $db->bindVars($sql, ':image_name', $image_name, 'stringIgnoreNull');
+    $db->Execute($sql);
+}
 
 
 /**
