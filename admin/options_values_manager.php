@@ -665,14 +665,16 @@ if (!empty($action)) {
           ?>
         </div>
         <?php
+        $filter_condition = '';
+        if ($filter !== 0) $filter_condition = " AND po.products_options_id = " . $filter; 
         $values_query_raw = "SELECT pov.products_options_values_id, pov.products_options_values_name, pov2po.products_options_id, pov.products_options_values_sort_order
                              FROM " . TABLE_PRODUCTS_OPTIONS_VALUES . " pov
                              LEFT JOIN " . TABLE_PRODUCTS_OPTIONS_VALUES_TO_PRODUCTS_OPTIONS . " pov2po ON pov2po.products_options_values_id = pov.products_options_values_id
                              LEFT JOIN " . TABLE_PRODUCTS_OPTIONS . " po ON po.products_options_id = pov2po.products_options_id
-                               AND po.language_id = " . (int)$_SESSION['languages_id'] . "
+                             AND po.language_id = " . (int)$_SESSION['languages_id'] . "
                              WHERE pov.language_id = " . (int)$_SESSION['languages_id'] . "
-                             AND pov2po.products_options_values_id != " . PRODUCTS_OPTIONS_VALUES_TEXT_ID . "
-                             " . (isset($filter) && $filter != '' ? " AND po.products_options_id = " . (int)$filter : "") . "
+                             AND pov2po.products_options_values_id != " . PRODUCTS_OPTIONS_VALUES_TEXT_ID . 
+                             $filter_condition . "
                              ORDER BY po.products_options_name, LPAD(pov.products_options_values_sort_order,11,'0'), pov.products_options_values_name";
         $values_split = new splitPageResults($currentPage, $max_search_results, $values_query_raw, $values_query_numrows);
         ?>
