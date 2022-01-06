@@ -235,7 +235,7 @@ if (!empty($action)) {
                             <tr class="dataTableRow" style="cursor:pointer" onclick="document.location.href='<?php echo zen_href_link(FILENAME_MODULES, 'set=' . $set . '&module=' . $class, 'SSL'); ?>'">
                         <?php } ?>
                   <td class="dataTableContent"><?php echo $module->title; ?></td>
-                  <td class="dataTableContent"><?php echo(strstr($module->code, 'paypal') ? 'PayPal' : $module->code); ?></td>
+                  <td class="dataTableContent"><?php echo $module->code; ?></td>
                   <td class="dataTableContent text-right">
                       <?php if (is_numeric($module->sort_order)) {
                           echo $module->sort_order;
