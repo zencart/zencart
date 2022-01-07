@@ -211,7 +211,42 @@ if (!empty($action)) {
 //            $featured_array[] = $item['products_id'];
 //          }
         }
-        ?>
+          $keywords_products = '';
+          if ($action === 'new') {
+              ?>
+              <div class="row">
+                  <div class="col-sm-offset-2 col-sm-4">
+                      <?php echo zen_draw_form('keywords', FILENAME_FEATURED, 'action=new', 'post',
+                        'class="form-horizontal"'); ?>
+                      <?php $keywords_products = (isset($_POST['keywords']) && zen_not_null($_POST['keywords'])) ? zen_db_input(zen_db_prepare_input($_POST['keywords'])) : ''; ?>
+                      <div class="form-group">
+                          <?php echo zen_draw_label(HEADING_TITLE_SEARCH_DETAIL_REPORTS_NAME_MODEL, 'keywords', 'class="control-label col-sm-3"'); ?>
+                          <div class="col-sm-9">
+                              <?php echo zen_draw_input_field('keywords', '', 'class="form-control" id="keywords"'); ?>
+                          </div>
+                      </div>
+                      <?php
+                          echo zen_hide_session_id();
+                          if (isset($_POST['keywords']) && zen_not_null($_POST['keywords'])) {
+                              $keywords_products = zen_db_prepare_input($_POST['keywords']);
+                              ?>
+                              <div class="form-group">
+                                  <div class="col-sm-3">
+                                      <p class="control-label"><?php echo TEXT_INFO_SEARCH_DETAIL_FILTER; ?></p>
+                                  </div>
+                                  <div class="col-sm-9 text-right">
+                                      <?php echo zen_output_string_protected($keywords_products); ?>&nbsp;<a
+                                              href="<?php echo zen_href_link(FILENAME_FEATURED, 'action=new'); ?>"
+                                              class="btn btn-default" role="button"><?php echo IMAGE_RESET; ?></a>
+                                  </div>
+                              </div>
+                          <?php } ?>
+                      </form>
+                  </div>
+              </div>
+              <?php
+          }
+          ?>
         <div class="row">
           <?php echo zen_draw_form('new_featured', FILENAME_FEATURED, zen_get_all_get_params(['action', 'info', 'fID']) . 'action=' . $form_action . (!empty($_GET['go_back']) ? '&go_back=' . $_GET['go_back'] : ''), 'post', 'class="form-horizontal"'); ?>
           <?php
