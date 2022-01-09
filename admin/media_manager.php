@@ -216,7 +216,7 @@
       $heading[] = array('text' => '<strong>' . TEXT_HEADING_EDIT_MEDIA_COLLECTION . '</strong>');
 
       $contents[] = array('text' => zen_draw_form('collections', FILENAME_MEDIA_MANAGER, 'page=' . $_GET['page'] . '&mID=' . $mInfo->media_id . '&action=save', 'post', 'enctype="multipart/form-data"'));
-      $contents[] = array('text' => TEXT_EDIT_INTRO);
+      $contents[] = array('text' => TEXT_INFO_EDIT_INTRO);
       $contents[] = array('text' => '<br>' . TEXT_MEDIA_COLLECTION_NAME . '<br>' . zen_draw_input_field('media_name', htmlspecialchars($mInfo->media_name, ENT_COMPAT, CHARSET, TRUE), zen_set_field_length(TABLE_MEDIA_MANAGER, 'media_name')));
       $contents[] = array('align' => 'center', 'text' => '<br>' . '<button type="submit" class="btn btn-primary">' . IMAGE_SAVE . '</button>' . ' <a href="' . zen_href_link(FILENAME_MEDIA_MANAGER, 'page=' . $_GET['page'] . '&mID=' . $mInfo->media_id) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>');
 
@@ -289,12 +289,12 @@
         $heading[] = array('text' => '<strong>' . $mInfo->media_name . '</strong>');
 
         $contents[] = array('align' => 'center', 'text' => '<a href="' . zen_href_link(FILENAME_MEDIA_MANAGER, 'page=' . $_GET['page'] . '&mID=' . $mInfo->media_id . '&action=edit') . '" class="btn btn-primary" role="button">' . IMAGE_EDIT . '</a> <a href="' . zen_href_link(FILENAME_MEDIA_MANAGER, 'page=' . $_GET['page'] . '&mID=' . $mInfo->media_id . '&action=delete') . '" class="btn btn-danger" role="button">' . IMAGE_DELETE . '</a> ' . '<a href="' . zen_href_link(FILENAME_MEDIA_MANAGER, 'page=' . $_GET['page'] . '&mID=' . $mInfo->media_id . '&action=products') . '" class="btn btn-primary" role="button">' . IMAGE_PRODUCTS . '</a>');
-        $contents[] = array('text' => '<br>' . TEXT_DATE_ADDED . ' ' . zen_date_short($mInfo->date_added));
-        if (zen_not_null($mInfo->last_modified)) $contents[] = array('text' => TEXT_LAST_MODIFIED . ' ' . zen_date_short($mInfo->last_modified));
+        $contents[] = array('text' => '<br>' . TEXT_INFO_DATE_ADDED . ' ' . zen_date_short($mInfo->date_added));
+        if (zen_not_null($mInfo->last_modified)) $contents[] = array('text' => TEXT_INFO_LAST_MODIFIED . ' ' . zen_date_short($mInfo->last_modified));
         $products_linked_query = "SELECT product_id FROM " . TABLE_MEDIA_TO_PRODUCTS . "
                                 WHERE media_id = '" . $mInfo->media_id . "'";
         $products_linked = $db->Execute($products_linked_query);
-        $contents[] = array('text' => '<br>' . TEXT_PRODUCTS . ' ' . $products_linked->RecordCount());
+        $contents[] = array('text' => '<br>' . TEXT_LINKED_PRODUCTS . ' ' . $products_linked->RecordCount());
         $clip_query = "SELECT clip_id FROM " . TABLE_MEDIA_CLIPS . " WHERE media_id = '" . $mInfo->media_id . "'";
         $clips = $db->Execute($clip_query);
         $contents[] = array('text' =>  TEXT_CLIPS . ' ' . $clips->RecordCount());

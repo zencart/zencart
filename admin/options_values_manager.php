@@ -550,7 +550,7 @@ if (!empty($action)) {
                 <?php } ?>
                 <tr class="dataTableHeadingRow">
                   <th class="dataTableHeadingContent text-right"><?php echo TABLE_HEADING_ID; ?></th>
-                  <th class="dataTableHeadingContent"><?php echo TABLE_HEADING_PRODUCT; ?></th>
+                  <th class="dataTableHeadingContent"><?php echo TABLE_HEADING_PRODUCTS_NAME; ?></th>
                   <th class="dataTableHeadingContent text-right"><?php echo TABLE_HEADING_OPTION_SORT_ORDER; ?></th>
                   <th><?php echo TABLE_HEADING_OPT_NAME; ?></th>
                 </tr>

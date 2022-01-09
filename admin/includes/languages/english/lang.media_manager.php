@@ -9,15 +9,11 @@
 $define = [
     'HEADING_TITLE_MEDIA_MANAGER' => 'Media Manager',
     'TABLE_HEADING_MEDIA' => 'Collection Name',
-    'TABLE_HEADING_ACTION' => 'Action',
     'TEXT_HEADING_NEW_MEDIA_COLLECTION' => 'New Media Collection',
     'TEXT_NEW_INTRO' => 'Please enter the details of the new media collection below',
     'TEXT_MEDIA_COLLECTION_NAME' => 'Media Collection Name',
     'TEXT_MEDIA_EDIT_INSTRUCTIONS' => 'Use the section above to change the Media Collection Name, then clicking on the save button.<br><br>
                                         Use the selection below to add or remove media clips from the media collection.',
-    'TEXT_DATE_ADDED' => 'Date Added:',
-    'TEXT_LAST_MODIFIED' => 'Last Modified:',
-    'TEXT_PRODUCTS' => 'Linked Products:',
     'TEXT_CLIPS' => 'Linked Clips:',
     'TEXT_NO_PRODUCTS' => 'No Products in this category',
     'TEXT_HEADING_EDIT_MEDIA_COLLECTION' => 'Edit Media Collection',

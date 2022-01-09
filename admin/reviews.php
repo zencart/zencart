@@ -259,7 +259,7 @@ if (!empty($action)) {
               <thead>
                 <tr class="dataTableHeadingRow">
                   <th class="dataTableHeadingContent"><?php echo TABLE_HEADING_MODEL; ?></th>
-                  <th class="dataTableHeadingContent"><?php echo TABLE_HEADING_PRODUCT; ?></th>
+                  <th class="dataTableHeadingContent"><?php echo TABLE_HEADING_PRODUCTS_NAME; ?></th>
                   <th class="dataTableHeadingContent"><?php echo TABLE_HEADING_CUSTOMER_NAME; ?></th>
                   <?php if (count($languages_array) > 1) { ?>
                     <th class="dataTableHeadingContent text-center"><?php echo TABLE_HEADING_LANGUAGE; ?></th>

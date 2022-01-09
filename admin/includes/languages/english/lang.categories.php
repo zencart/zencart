@@ -8,7 +8,6 @@
 
 $define = [
     'HEADING_TITLE' => 'Category',
-    'TEXT_EDIT_INTRO' => 'Please edit as required',
     'TEXT_EDIT_CATEGORIES_NAME' => 'Category Name:',
     'TEXT_CATEGORIES_DESCRIPTION' => 'Category Description:',
     'TEXT_CATEGORIES_IMAGE' => 'Category Image:',

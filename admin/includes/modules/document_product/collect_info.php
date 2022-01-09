@@ -377,7 +377,7 @@ if (zen_get_categories_status($current_category_id) == 0 && $pInfo->products_sta
     $default_directory = substr($pInfo->products_image, 0, strpos($pInfo->products_image, '/') + 1);
     ?>
     <div class="form-group">
-        <?php echo zen_draw_label(TEXT_PRODUCTS_IMAGE_DIR, 'img_dir', 'class="col-sm-3 control-label"'); ?>
+        <?php echo zen_draw_label(TEXT_UPLOAD_DIR, 'img_dir', 'class="col-sm-3 control-label"'); ?>
         <div class="col-sm-9 col-md-9 col-lg-6">
             <?php echo zen_draw_pull_down_menu('img_dir', $dir_info, $default_directory, 'class="form-control" id="img_dir"'); ?>
         </div>

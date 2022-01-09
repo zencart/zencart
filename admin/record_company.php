@@ -198,7 +198,7 @@ if (!empty($action)) {
                 $default_directory = 'record_company/';
 
                 $contents[] = array('text' => zen_draw_label(TEXT_RECORD_COMPANY_IMAGE_DIR, 'img_dir', 'class="control-label"') . zen_draw_pull_down_menu('img_dir', $dir_info, $default_directory, 'class="form-control"'));
-                $contents[] = array('text' => zen_draw_label(TEXT_RECORD_COMPANY_IMAGE_MANUAL, 'record_company_image_manual', 'class="control-label"') . zen_draw_input_field('record_company_image_manual', '', 'class="form-control"'));
+                $contents[] = array('text' => zen_draw_label(TEXT_IMAGE_MANUAL, 'record_company_image_manual', 'class="control-label"') . zen_draw_input_field('record_company_image_manual', '', 'class="form-control"'));
 
                 $record_company_inputs_string = '';
                 $languages = zen_get_languages();
@@ -212,7 +212,7 @@ if (!empty($action)) {
               case 'edit':
                 $heading[] = array('text' => '<h4>' . TEXT_HEADING_EDIT_RECORD_COMPANY . '</h4>');
                 $contents = array('form' => zen_draw_form('record_company', FILENAME_RECORD_COMPANY, 'page=' . $_GET['page'] . '&mID=' . $aInfo->record_company_id . '&action=save', 'post', 'enctype="multipart/form-data"'));
-                $contents[] = array('text' => TEXT_EDIT_INTRO);
+                $contents[] = array('text' => TEXT_INFO_EDIT_INTRO);
                 $contents[] = array('text' => zen_draw_label(TEXT_RECORD_COMPANY_NAME, 'record_company_name', 'class="control-label"') . zen_draw_input_field('record_company_name', htmlspecialchars($aInfo->record_company_name, ENT_COMPAT, CHARSET, TRUE), zen_set_field_length(TABLE_RECORD_COMPANY, 'record_company_name') . ' class="form-control"'));
                 $contents[] = array('text' => zen_draw_label(TEXT_RECORD_COMPANY_IMAGE, 'record_company_image', 'class="control-label"') . zen_draw_file_field('record_company_image', '', 'class="form-control"') . '<br>' . $aInfo->record_company_image);
 
@@ -220,7 +220,7 @@ if (!empty($action)) {
                 $default_directory = substr($aInfo->record_company_image, 0, strpos($aInfo->record_company_image, '/') + 1);
 
                 $contents[] = array('text' => zen_draw_label(TEXT_RECORD_COMPANY_IMAGE_DIR, 'img_dir', 'class="control-label"') . zen_draw_pull_down_menu('img_dir', $dir_info, $default_directory, 'class="form-control"'));
-                $contents[] = array('text' => zen_draw_label(TEXT_RECORD_COMPANY_IMAGE_MANUAL, 'record_company_image_manual', 'class="control-label"') . zen_draw_input_field('record_company_image_manual', '', 'class="form-control"'));
+                $contents[] = array('text' => zen_draw_label(TEXT_IMAGE_MANUAL, 'record_company_image_manual', 'class="control-label"') . zen_draw_input_field('record_company_image_manual', '', 'class="form-control"'));
                 $contents[] = array('text' => zen_info_image($aInfo->record_company_image, $aInfo->record_company_name));
                 $record_company_inputs_string = '';
                 $languages = zen_get_languages();
@@ -251,12 +251,12 @@ if (!empty($action)) {
                   $heading[] = array('text' => '<h4>' . $aInfo->record_company_name . '</h4>');
 
                   $contents[] = array('align' => 'center', 'text' => '<a href="' . zen_href_link(FILENAME_RECORD_COMPANY, 'page=' . $_GET['page'] . '&mID=' . $aInfo->record_company_id . '&action=edit') . '" class="btn btn-primary" role="button">' . IMAGE_EDIT . '</a> <a href="' . zen_href_link(FILENAME_RECORD_COMPANY, 'page=' . $_GET['page'] . '&mID=' . $aInfo->record_company_id . '&action=delete') . '" class="btn btn-warning" role="button">' . IMAGE_DELETE . '</a>');
-                  $contents[] = array('text' => '<br>' . TEXT_DATE_ADDED . ' ' . zen_date_short($aInfo->date_added));
+                  $contents[] = array('text' => '<br>' . TEXT_INFO_DATE_ADDED . ' ' . zen_date_short($aInfo->date_added));
                   if (zen_not_null($aInfo->last_modified)) {
-                    $contents[] = array('text' => TEXT_LAST_MODIFIED . ' ' . zen_date_short($aInfo->last_modified));
+                    $contents[] = array('text' => TEXT_INFO_LAST_MODIFIED . ' ' . zen_date_short($aInfo->last_modified));
                   }
                   $contents[] = array('text' => '<br>' . zen_info_image($aInfo->record_company_image, $aInfo->record_company_name));
-                  $contents[] = array('text' => '<br>' . TEXT_PRODUCTS . ' ' . $aInfo->products_count);
+                  $contents[] = array('text' => '<br>' . TEXT_LINKED_PRODUCTS . ' ' . $aInfo->products_count);
                 }
                 break;
             }

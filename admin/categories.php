@@ -307,7 +307,7 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
         ?>
         <?php if ($formAction === 'update_category') { ?>
           <div class="form-group">
-            <div class="col-sm-12"><?php echo TEXT_EDIT_INTRO; ?></div>
+            <div class="col-sm-12"><?php echo TEXT_INFO_EDIT_INTRO; ?></div>
           </div>
         <?php } ?>
         <div class="form-group">

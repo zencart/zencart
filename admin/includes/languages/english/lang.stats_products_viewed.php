@@ -9,7 +9,6 @@
 $define = [
     'HEADING_TITLE' => 'Most-Viewed Products',
     'TABLE_HEADING_NUMBER' => 'Product ID',
-    'TABLE_HEADING_PRODUCTS' => 'Product Name (Language)',
     'TABLE_HEADING_VIEWED' => 'Views',
     'TEXT_REPORT_START_DATE' => 'Start Date',
     'TEXT_REPORT_END_DATE' => 'End Date',

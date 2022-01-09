@@ -8,13 +8,9 @@
 
 $define = [
     'HEADING_TITLE' => 'Specials',
-    'TABLE_HEADING_PRODUCTS' => 'Product',
     'TABLE_HEADING_STOCK' => 'Stock',
-    'TABLE_HEADING_PRODUCTS_PRICE' => 'Price/Special/Sale',
     'TABLE_HEADING_AVAILABLE_DATE' => 'Active From',
     'TABLE_HEADING_EXPIRES_DATE' => 'Expires On',
-    'TABLE_HEADING_STATUS' => 'Special Status',
-    'TABLE_HEADING_ACTION' => 'Actions',
     'TEXT_ADD_SPECIAL_SELECT' => 'Add Special by Selection',
     'TEXT_ADD_SPECIAL_PID' => 'Add Special by Product ID',
     'TEXT_SEARCH_SPECIALS' => 'Search current Specials',
@@ -25,8 +21,6 @@ $define = [
     'TEXT_SPECIALS_SPECIAL_PRICE' => 'Special Price:',
     'TEXT_SPECIALS_AVAILABLE_DATE' => 'Date Special Active:',
     'TEXT_SPECIALS_EXPIRES_DATE' => 'Date Special Expires:',
-    'TEXT_INFO_DATE_ADDED' => 'Date Added:',
-    'TEXT_INFO_LAST_MODIFIED' => 'Last Modified:',
     'TEXT_INFO_NEW_PRICE' => 'Special Price:',
     'TEXT_INFO_ORIGINAL_PRICE' => 'Original Price:',
     'TEXT_INFO_DISPLAY_PRICE' => 'Currently Displayed Price:',

@@ -44,7 +44,7 @@ $db->Execute("UPDATE " . TABLE_PRODUCTS . "
           <table class="table table-hover">
             <thead>
               <tr class="dataTableHeadingRow">
-                <th class="dataTableHeadingContent"><?php echo TABLE_HEADING_PRODUCTS; ?></th>
+                <th class="dataTableHeadingContent"><?php echo TABLE_HEADING_PRODUCTS_NAME; ?></th>
                 <th class="dataTableHeadingContent text-center"><?php echo TABLE_HEADING_DATE_EXPECTED; ?></th>
                 <th class="dataTableHeadingContent text-right"><?php echo TABLE_HEADING_ACTION; ?></th>
               </tr>

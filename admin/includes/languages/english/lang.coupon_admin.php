@@ -28,7 +28,6 @@ $define = [
     'TEXT_VISIT' => 'Visit us at %s',
     'TEXT_COUPON_HELP_DATE' => '<p>The coupon is valid between %s and %s</p>',
     'HTML_COUPON_HELP_DATE' => '<p>The coupon is valid between %s and %s</p>',
-    'TABLE_HEADING_ACTION' => 'Action',
     'CUSTOMER_ID' => 'Customer ID',
     'CUSTOMER_NAME' => 'Customer Name',
     'REDEEM_DATE' => 'Date Redeemed',

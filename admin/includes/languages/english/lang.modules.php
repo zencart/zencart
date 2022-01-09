@@ -13,7 +13,6 @@ $define = [
     'TABLE_HEADING_MODULES' => 'Modules',
     'TABLE_HEADING_SORT_ORDER' => 'Sort Order',
     'TABLE_HEADING_ORDERS_STATUS' => 'Orders Status',
-    'TABLE_HEADING_ACTION' => 'Action',
     'TEXT_MODULE_DIRECTORY' => 'Module Directory:',
     'ERROR_MODULE_FILE_NOT_FOUND' => 'ERROR: module not loaded due to missing language file: ',
     'TEXT_EMAIL_SUBJECT_ADMIN_SETTINGS_CHANGED' => 'ALERT: Your Admin settings have been changed in your online store.',

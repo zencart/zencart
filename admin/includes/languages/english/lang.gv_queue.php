@@ -12,7 +12,6 @@ $define = [
     'TABLE_HEADING_ORDERS_ID' => 'Order-No.',
     'TABLE_HEADING_VOUCHER_VALUE' => '%%TEXT_GV_NAME%%' . ' Value',
     'TABLE_HEADING_DATE_PURCHASED' => 'Date Purchased',
-    'TABLE_HEADING_ACTION' => 'Action',
     'TEXT_REDEEM_GV_MESSAGE_HEADER' => 'You recently purchased a ' . '%%TEXT_GV_NAME%%' . ' from our online store.',
     'TEXT_REDEEM_GV_MESSAGE_RELEASED' => 'For security reasons this was not made immediately available to you. ',
     'TEXT_REDEEM_GV_MESSAGE_AMOUNT' => 'The ' . '%%TEXT_GV_NAME%%' . '(s) you purchased are worth %s',

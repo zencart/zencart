@@ -123,7 +123,7 @@ if ($order->billing['street_address'] != $order->delivery['street_address']) {
             <th class="dataTableHeadingContent" style="width: <?php echo (int)$img_width . 'px'; ?>">&nbsp;</th>
             <?php } ?>
             <th class="dataTableHeadingContent">&nbsp;</th>
-            <th class="dataTableHeadingContent" style="width: 70%"><?php echo TABLE_HEADING_PRODUCTS; ?></th>
+            <th class="dataTableHeadingContent" style="width: 70%"><?php echo TABLE_HEADING_PRODUCTS_NAME; ?></th>
             <th class="dataTableHeadingContent"><?php echo TABLE_HEADING_PRODUCTS_MODEL; ?></th>
           </tr>
         </thead>

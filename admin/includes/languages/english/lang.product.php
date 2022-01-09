@@ -29,7 +29,6 @@ $define = [
     'TEXT_PRODUCTS_QUANTITY' => 'Products Quantity:',
     'TEXT_PRODUCTS_IMAGE' => 'Product Image:',
     'TEXT_EDIT_PRODUCTS_IMAGE' => 'Edit Product Image:',
-    'TEXT_PRODUCTS_IMAGE_DIR' => 'Upload to directory:',
     'TEXT_PRODUCTS_URL' => 'Products URL:',
     'TEXT_PRODUCTS_URL_WITHOUT_HTTP' => '<small>(without http://)</small>',
     'TEXT_PRODUCTS_PRICE_NET' => 'Products Price (Net):',

@@ -17,7 +17,6 @@ $define = [
     'TABLE_HEADING_LAST_CLICK' => 'Last Click Time',
     'TIME_PASSED_LAST_CLICKED' => '<strong>Time Since Clicked:</strong> ',
     'TABLE_HEADING_LAST_PAGE_URL' => 'Last URL Viewed',
-    'TABLE_HEADING_ACTION' => 'Action',
     'TABLE_HEADING_SHOPPING_CART' => 'Visitor\'s Shopping Cart',
     'TEXT_SHOPPING_CART_SUBTOTAL' => 'Subtotal',
     'TEXT_NUMBER_OF_CUSTOMERS' => 'Currently there are %s customers online',
