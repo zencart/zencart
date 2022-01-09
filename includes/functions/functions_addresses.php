@@ -308,6 +308,11 @@ function zen_address_format($address_format_id = 1, $incoming = array(), $html =
     $address['HR'] = $address['hr'];
     $address['CR'] = $address['cr'];
 
+    // Add Uppercase lastname 
+    $address['lastnameupper'] = strtoupper($address['lastname']);
+    // Add state bracket
+    $address['statebrackets'] = $address['state'] = '' ? '' : '(' . $address['state'] . ')';
+    
     $sql    = "select address_format as format from " . TABLE_ADDRESS_FORMAT . " where address_format_id = " . (int)$address_format_id;
     $result = $db->Execute($sql);
     $fmt    = (!$result->EOF ? $result->fields['format'] : '');
