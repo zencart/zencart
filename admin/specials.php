@@ -98,7 +98,7 @@ if (!empty($action)) {
         $products_price = (float)$_POST['products_price'];
       }
 
-      $tmp_value = (float)$_POST['specials_price'];
+      $tmp_value = zen_db_prepare_input($_POST['specials_price']);
       $specials_price = (!zen_not_null($tmp_value) || $tmp_value === '' || $tmp_value === 0) ? 0 : $tmp_value;
 
       if (substr($specials_price, -1) === '%') {
@@ -455,6 +455,25 @@ if (!empty($action)) {
                                        " . $order_by;
 
                 // Split Page
+                // reset page when page is unknown
+                if ((empty($_GET['page']) || $_GET['page'] == '1') && !empty($_GET['sID'])) {
+                    $old_page = $_GET['page'];
+                    $check_page = $db->Execute($specials_query_raw);
+                    if ($check_page->RecordCount() > MAX_DISPLAY_SEARCH_RESULTS) {
+                        $check_count = 0;
+                        foreach ($check_page as $item) {
+                            if ((int)$item['specials_id'] === (int)$_GET['sID']) {
+                                break;
+                            }
+                            $check_count++;
+                        }
+                        $_GET['page'] = round((($check_count / MAX_DISPLAY_SEARCH_RESULTS) + (fmod_round($check_count, MAX_DISPLAY_SEARCH_RESULTS) !== 0 ? .5 : 0)));
+                        $page = $_GET['page'];
+                    } else {
+                        $_GET['page'] = 1;
+                    }
+                }
+
                 // create split page control
                 $specials_split = new splitPageResults($_GET['page'], MAX_DISPLAY_SEARCH_RESULTS, $specials_query_raw, $specials_query_numrows);
                 $specials = $db->Execute($specials_query_raw);

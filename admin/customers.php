@@ -417,6 +417,7 @@ if (!empty($action)) {
           // $additional_fields = [
           //      [
           //          'label' => 'The text to include for the field label',
+          //          'fieldname' => 'label "for" attribute, must match id of input field'
           //          'input' => 'The form-related portion of the field',
           //      ],
           //      ...
@@ -428,7 +429,7 @@ if (!empty($action)) {
               foreach ($additional_fields as $current_field) {
                   ?>
                   <div class="form-group">
-                      <?php echo zen_draw_label($current_field['label'], '', 'class="col-sm-3 control-label"'); ?>
+                      <?php echo zen_draw_label($current_field['label'], $current_field['fieldname'], 'class="col-sm-3 control-label"'); ?>
                       <div class="col-sm-9 col-md-6"><?php echo $current_field['input']; ?></div>
                   </div>
                   <?php
@@ -842,9 +843,9 @@ if (!empty($action)) {
 
 // Split Page
 // reset page when page is unknown
-                if (($_GET['page'] == '' || $_GET['page'] == '1') && !empty($_GET['cID'])) {
+                if ((empty($_GET['page']) || $_GET['page'] == '1') && !empty($_GET['cID'])) {
                   $check_page = $db->Execute($customers_query_raw);
-                  $check_count = 1;
+                  $check_count = 0;
                   if ($check_page->RecordCount() > MAX_DISPLAY_SEARCH_RESULTS_CUSTOMER) {
                     foreach ($check_page as $item) {
                       if ($item['customers_id'] == $_GET['cID']) {
@@ -879,7 +880,7 @@ if (!empty($action)) {
                     $zc_address_book_count = count($customer['addresses']);
                     ?>
                     <td class="dataTableContent text-right"><?php echo $customer['customers_id']; ?></td>
-                    <td class="dataTableContent text"><?php echo ($zc_address_book_count == 1) ? TEXT_INFO_ADDRESS_BOOK_COUNT_SINGLE : sprintf(TEXT_INFO_ADDRESS_BOOK_COUNT, zen_href_link(FILENAME_CUSTOMERS, 'action=list_addresses' . '&cID=' . $customer['customers_id'] . ($_GET['page'] > 0 ? '&page=' . $_GET['page'] : '')), $zc_address_book_count); ?></td>
+                    <td class="dataTableContent"><?php echo ($zc_address_book_count == 1) ? TEXT_INFO_ADDRESS_BOOK_COUNT_SINGLE : sprintf(TEXT_INFO_ADDRESS_BOOK_COUNT, zen_href_link(FILENAME_CUSTOMERS, 'action=list_addresses' . '&cID=' . $customer['customers_id'] . ($_GET['page'] > 0 ? '&page=' . $_GET['page'] : '')), $zc_address_book_count); ?></td>
                     <td class="dataTableContent"><?php echo $customer['customers_lastname']; ?></td>
                     <td class="dataTableContent"><?php echo $customer['customers_firstname']; ?></td>
                  <?php if (ACCOUNT_COMPANY === 'true') { ?>

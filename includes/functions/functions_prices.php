@@ -426,13 +426,13 @@ function zen_get_products_base_price($product_id)
 
     // do not select display only attributes and attributes_price_base_included is true
     $sql = "SELECT options_id, price_prefix, options_values_price,
-                   attributes_display_only, attributes_price_base_included,
-            CONCAT(price_prefix, options_values_price) AS value
-            FROM " . TABLE_PRODUCTS_ATTRIBUTES . "
-            WHERE products_id = " . (int)$product_id . "
-            AND attributes_display_only != 1
-            AND attributes_price_base_included=1
-            ORDER BY options_id, value";
+                    attributes_display_only, attributes_price_base_included,
+             CAST(CONCAT(price_prefix, options_values_price) AS decimal(15,4)) AS value
+             FROM " . TABLE_PRODUCTS_ATTRIBUTES . "
+             WHERE products_id = " . (int)$product_id . "
+             AND attributes_display_only != 1
+             AND attributes_price_base_included=1
+             ORDER BY options_id, value";
     $results = $db->Execute($sql);
 
     $the_options_id = 'x';

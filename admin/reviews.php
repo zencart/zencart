@@ -1,9 +1,9 @@
 <?php
 /**
- * @copyright Copyright 2003-2020 Zen Cart Development Team
+ * @copyright Copyright 2003-2021 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2020 Jun 17 Modified in v1.5.7 $
+ * @version $Id: DrByte 2021 Aug 31 Modified in v1.5.8 $
  */
 require 'includes/application_top.php';
 
@@ -308,6 +308,23 @@ if (!empty($action)) {
                                       GROUP BY r.reviews_id, rd.languages_id
                                       " . $order_by;
 
+                // reset page when page is unknown
+                if ((empty($_GET['page']) || $_GET['page'] == '1') && !empty($_GET['rID'])) {
+                  $check_page = $db->Execute($reviews_query_raw);
+                  $check_count = 0;
+                  if ($check_page->RecordCount() > MAX_DISPLAY_SEARCH_RESULTS) {
+                    foreach ($check_page as $item) {
+                      if ($item['reviews_id'] == $_GET['rID']) {
+                        break;
+                      }
+                      $check_count++;
+                    }
+                    $_GET['page'] = round((($check_count / MAX_DISPLAY_SEARCH_RESULTS) + (fmod_round($check_count, MAX_DISPLAY_SEARCH_RESULTS) != 0 ? .5 : 0)), 0);
+                  } else {
+                    $_GET['page'] = 1;
+                  }
+                }
+
                 $reviews_split = new splitPageResults($_GET['page'], MAX_DISPLAY_SEARCH_RESULTS, $reviews_query_raw, $reviews_query_numrows);
                 $reviews = $db->Execute($reviews_query_raw);
                 foreach ($reviews as $review) {
@@ -384,7 +401,7 @@ if (!empty($action)) {
                     $contents[] = array('text' => TEXT_INFO_LAST_MODIFIED . ' ' . zen_date_short($rInfo->last_modified));
                   }
                   $contents[] = array('text' => zen_info_image($rInfo->products_image, $rInfo->products_name, SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT));
-                  $contents[] = array('text' => ENTRY_REVIEW . '<br>' . $rInfo->reviews_text);
+                  $contents[] = array('text' => ENTRY_REVIEW . '<br>' . zen_output_string_protected($rInfo->reviews_text));
                   $contents[] = array('text' => TEXT_INFO_REVIEW_AUTHOR . ' ' . $rInfo->customers_name);
                   $contents[] = array('text' => TEXT_INFO_REVIEW_RATING . ' ' . zen_image(DIR_WS_TEMPLATE_IMAGES . 'stars_' . $rInfo->reviews_rating . '.gif'));
                   $contents[] = array('text' => TEXT_INFO_REVIEW_READ . ' ' . $rInfo->reviews_read);

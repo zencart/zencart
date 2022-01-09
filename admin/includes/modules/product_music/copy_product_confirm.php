@@ -1,9 +1,10 @@
 <?php
+
 /**
- * @copyright Copyright 2003-2020 Zen Cart Development Team
+ * @copyright Copyright 2003-2021 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2020 May 17 Modified in v1.5.7 $
+ * @version $Id:  Modified in v1.5.8 $
  */
 if (!defined('IS_ADMIN_FLAG')) {
     die('Illegal Access');
@@ -89,13 +90,15 @@ if (isset($_POST['products_id'], $_POST['categories_id'])) {
 
         $sql_data_array['master_categories_id'] = $categories_id;
 
-        // skip fields that belong to TABLE_PRODUCTS_DESCRIPTION
+        // skip fields that belong to TABLE_PRODUCTS_DESCRIPTION and TABLE_PRODUCT_TYPES
         $fields_to_skip = [
             'language_id',
             'products_name',
             'products_description',
             'products_url',
             'products_viewed', // old, but must be excluded if present
+            'allow_add_to_cart',
+            'type_handler',
         ];
         foreach ($fields_to_skip as $field) {
             unset($sql_data_array[$field]);
@@ -114,8 +117,8 @@ if (isset($_POST['products_id'], $_POST['categories_id'])) {
                                              WHERE product_id = " . (int)$products_id);
             foreach ($product_media as $item) {
                 $db->Execute("INSERT INTO " . TABLE_MEDIA_TO_PRODUCTS . " (media_id, product_id)
-                              VALUES ('" . $item['media_id'] . "',
-                                      '" . $dup_products_id . "')");
+                              VALUES (" . $item['media_id'] . ",
+                                      " . $dup_products_id . ")");
                 $product_media->MoveNext();
             }
         }
@@ -125,23 +128,29 @@ if (isset($_POST['products_id'], $_POST['categories_id'])) {
                                          WHERE products_id = " . (int)$products_id);
 
         $db->Execute("INSERT INTO " . TABLE_PRODUCT_MUSIC_EXTRA . " (products_id, artists_id, record_company_id, music_genre_id)
-                          VALUES ('" . (int)$dup_products_id . "',
-                                  '" . zen_db_input($music_extra->fields['artists_id']) . "',
-                                  '" . zen_db_input($music_extra->fields['record_company_id']) . "',
-                                  '" . zen_db_input($music_extra->fields['music_genre_id']) . "')");
+                          VALUES (" . (int)$dup_products_id . ",
+                                  " . $music_extra->fields['artists_id'] . ",
+                                  " . $music_extra->fields['record_company_id'] . ",
+                                  " . $music_extra->fields['music_genre_id'] . ")");
 
 
         $descriptions = $db->Execute("SELECT language_id, products_name, products_description, products_url
                                       FROM " . TABLE_PRODUCTS_DESCRIPTION . "
                                       WHERE products_id = " . $products_id);
         foreach ($descriptions as $description) {
-            $db->Execute("INSERT INTO " . TABLE_PRODUCTS_DESCRIPTION . " (products_id, language_id, products_name, products_description, products_url)
-                    VALUES ('" . $dup_products_id . "',
-                            '" . (int)$description['language_id'] . "',
-                            '" . zen_db_input($description['products_name']) . " " . TEXT_DUPLICATE_IDENTIFIER . "',
-                            '" . zen_db_input($description['products_description']) . "',
-                            '" . zen_db_input($description['products_url']) . "'
-                            )");
+            $name = TEXT_DUPLICATE_IDENTIFIER . " " . $description['products_name'];
+            $maxlen = zen_field_length(TABLE_PRODUCTS_DESCRIPTION, 'products_name');
+            if (strlen($name) > $maxlen) {
+               $name = substr($name, 0, $maxlen-1);
+            }
+            $sql_data_array = [
+                  'products_id' => $dup_products_id,
+                  'language_id' => (int)$description['language_id'],
+                  'products_name' => $name,
+                  'products_description' => $description['products_description'],
+                  'products_url' => $description['products_url'],
+            ];
+            zen_db_perform(TABLE_PRODUCTS_DESCRIPTION, $sql_data_array);
         }
 
         zen_link_product_to_category($dup_products_id, $categories_id);

@@ -39,7 +39,7 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process') && !isset($login_
     if (!empty($_POST['firstname']) && preg_match('~https?://?~', $_POST['firstname'])) $antiSpam = 'spam';
     if (!empty($_POST['lastname']) && preg_match('~https?://?~', $_POST['lastname'])) $antiSpam = 'spam';
 
-    $zco_notifier->notify('NOTIFY_CREATE_ACCOUNT_CAPTCHA_CHECK');
+    $zco_notifier->notify('NOTIFY_CREATE_ACCOUNT_CAPTCHA_CHECK', $antiSpamFieldName, $antiSpam);
 
     $gender = false;
     if (ACCOUNT_GENDER == 'true') {
@@ -50,7 +50,11 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process') && !isset($login_
 
     $email_format = 'TEXT';
     if (isset($_POST['email_format'])) {
-        $email_format = in_array($_POST['email_format'], array('HTML', 'TEXT', 'NONE', 'OUT'), true) ? $_POST['email_format'] : 'TEXT';
+        if (!in_array($_POST['email_format'], ['HTML', 'TEXT', 'NONE', 'OUT'], true)) {
+            $antiSpam = 'spam';
+        } else {
+            $email_format = $_POST['email_format'];
+        }
     }
 
     $company = $dob = $suburb = $state = '';

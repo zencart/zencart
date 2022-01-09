@@ -1113,9 +1113,6 @@ class shoppingCart extends base
                 //// one time charges
                 // attributes_price_onetime
                 if ($attribute_price->fields['attributes_price_onetime'] > 0) {
-                    if ((int)$product_id != $product_id) {
-                        die('I DO NOT MATCH ' . $product_id);
-                    }
                     $attributes_price_onetime += $attribute_price->fields['attributes_price_onetime'];
                 }
                 // attributes_price_factor_onetime
@@ -1264,7 +1261,7 @@ class shoppingCart extends base
                         $_SESSION['valid_to_checkout'] = false;
                         $_SESSION['cart_errors'] .= ERROR_PRODUCT . $products->fields['products_name'] . ERROR_PRODUCT_STATUS_SHOPPING_CART . '<br>';
                         $this->remove($products_id);
-                        break;
+                        continue;
                     } else {
                         if (isset($this->contents[$products_id]['attributes'])) {
                             $chkcount = 0;

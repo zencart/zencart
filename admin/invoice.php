@@ -6,6 +6,14 @@
  * @version $Id: DrByte 2020 May 20 Modified in v1.5.7 $
  */
 require('includes/application_top.php');
+$show_product_images = true;
+$show_attrib_images = true;
+$img_width = defined('IMAGE_ON_INVOICE_IMAGE_WIDTH') ? (int)IMAGE_ON_INVOICE_IMAGE_WIDTH : '100';
+$attr_img_width = '25';
+/*
+ * Notifier to allow defaults to be changed
+ */
+$zco_notifier->notify('NOTIFY_ADMIN_INVOICE_DEFAULTS', '', $show_product_images, $show_attrib_images, $attr_img_width);
 
 require(DIR_WS_CLASSES . 'currencies.php');
 $currencies = new currencies();
@@ -125,6 +133,36 @@ if ($order->billing['street_address'] != $order->delivery['street_address']) {
             <th class="dataTableHeadingContent">&nbsp;</th>
             <th class="dataTableHeadingContent"><?php echo TABLE_HEADING_PRODUCTS; ?></th>
             <th class="dataTableHeadingContent"><?php echo TABLE_HEADING_PRODUCTS_MODEL; ?></th>
+<?php
+          // -----
+          // Additional column-headings can be added before the Tax columns.
+          //
+          // A watching observer can provide an associative array in the following format (for the products' listing ONLY):
+          //
+          // $extra_headings = array(
+          //     array(
+          //       'align' => $alignment,    // One of 'center', 'right', or 'left' (optional)
+          //       'text' => $value
+          //     ),
+          // );
+          //
+          // Observer notes:
+          // - Be sure to check that the $p2/$extra_headings value is specifically (bool)false before initializing, since
+          //   multiple observers might be injecting content!
+          // - If heading-columns are added, be sure to add the associated data columns, too, via the
+          //   'NOTIFY_ADMIN_INVOICE_DATA_B4_TAX' notification.
+          //
+          $extra_headings = false;
+          $zco_notifier->notify('NOTIFY_ADMIN_INVOICE_HEADING_B4_TAX', '', $extra_headings);
+          if (is_array($extra_headings)) {
+              foreach ($extra_headings as $heading_info) {
+                  $align = (isset($heading_info['align'])) ? (' text-' . $heading_info['align']) : '';
+?>
+            <th class="dataTableHeadingContent<?php echo $align; ?>"><?php echo $heading_info['text']; ?></th>
+<?php
+              }
+          }
+?>
 <?php if ($show_product_tax) { ?>
             <th class="dataTableHeadingContent text-right"><?php echo TABLE_HEADING_TAX; ?></th>
 <?php } ?>
@@ -136,13 +174,55 @@ if ($order->billing['street_address'] != $order->delivery['street_address']) {
 <?php if ($show_including_tax)  { ?>
             <th class="dataTableHeadingContent text-right"><?php echo TABLE_HEADING_TOTAL_INCLUDING_TAX; ?></th>
 <?php } ?>
+<?php
+          // -----
+          // Additional column-headings can be added after the Tax columns.
+          //
+          // A watching observer can provide an associative array in the following format (for the products' listing ONLY):
+          //
+          // $extra_headings = array(
+          //     array(
+          //       'align' => $alignment,    // One of 'center', 'right', or 'left' (optional)
+          //       'text' => $value
+          //     ),
+          // );
+          //
+          // Observer notes:
+          // - Be sure to check that the $p2/$extra_headings value is specifically (bool)false before initializing, since
+          //   multiple observers might be injecting content!
+          // - If heading-columns are added, be sure to add the associated data columns, too, via the
+          //   'NOTIFY_ADMIN_INVOICE_DATA_AFTER_TAX' notification.
+          //
+          $extra_headings = false;
+          $zco_notifier->notify('NOTIFY_ADMIN_INVOIVE_HEADERS_AFTER_TAX', '', $extra_headings);
+          if (is_array($extra_headings)) {
+              foreach ($extra_headings as $heading_info) {
+                  $align = (isset($heading_info['align'])) ? (' text-' . $heading_info['align']) : '';
+?>
+            <th class="dataTableHeadingContent<?php echo $align; ?>"><?php echo $heading_info['text']; ?></th>
+<?php
+              }
+          }
+?>
           </tr>
         </thead>
         <tbody>
             <?php
             $decimals = $currencies->get_decimal_places($order->info['currency']);
-            for ($i = 0, $n = sizeof($order->products); $i < $n; $i++) {
-              $product_name = $order->products[$i]['name'];
+            /*
+             * Add notifier to allow invoice to be sorted to required order
+             *
+             * Set $sort_order to the order->products array counter in the sequence you require the invoice to be displayed
+             */
+            $sort_order=false;
+            $zco_notifier->notify('NOTIFY_ADMIN_INVOICE_SORT_DISPLAY', $order->products, $sort_order);
+            for ($ii = 0, $n = sizeof($order->products); $ii < $n; $ii++) {
+                if (is_array($sort_order)) {
+                    $i=$sort_order[$ii];
+                } else {
+                    $i=$ii;
+                }
+                $product_name = $order->products[$i]['name'];
               if (DISPLAY_PRICE_WITH_TAX_ADMIN == 'true') {
                 $priceIncTax = $currencies->format(zen_round(zen_add_tax($order->products[$i]['final_price'], $order->products[$i]['tax']), $decimals) * $order->products[$i]['qty'], true, $order->info['currency'], $order->info['currency_value']);
               } else {
@@ -200,6 +280,36 @@ if ($order->billing['street_address'] != $order->delivery['street_address']) {
               <td class="dataTableContent">
                 <?php echo $order->products[$i]['model']; ?>
               </td>
+                            <?php
+              // -----
+              // Additional fields can be added into columns before the Tax columns.
+              //
+              // A watching observer can provide an associative array in the following format:
+              //
+              // $extra_data = array(
+              //     array(
+              //       'align' => $alignment,    // One of 'center', 'right', or 'left' (optional)
+              //       'text' => $value
+              //     ),
+              // );
+              //
+              // Observer notes:
+              // - Be sure to check that the $p2/$extra_data value is specifically (bool)false before initializing, since
+              //   multiple observers might be injecting content!
+              // - If heading-columns are added, be sure to add the associated header columns, too, via the
+              //   'NOTIFY_ADMIN_INVOICE_HEADERS_B4_QTY' notification.
+              //
+              $extra_data = false;
+              $zco_notifier->notify('NOTIFY_ADMIN_INVOICE_DATA_B4_TAX',  $order->products[$i]['id'], $extra_data);
+              if (is_array($extra_data)) {
+                  foreach ($extra_data as $data_info) {
+                      $align = (isset($data_info['align'])) ? (' text-' . $data_info['align']) : '';
+?>
+                <td class="dataTableContent<?php echo $align; ?>"><?php echo $data_info['text']; ?></td>
+<?php
+                  }
+              }
+?>
 <?php if ($show_product_tax) { ?>
               <td class="dataTableContent text-right">
                 <?php echo zen_display_tax_value($order->products[$i]['tax']); ?>%
@@ -226,7 +336,36 @@ if ($order->billing['street_address'] != $order->delivery['street_address']) {
                   ?>
                 </strong>
               </td>
-<?php } ?>
+<?php } 
+              // -----
+              // Additional fields can be added into columns after the Tax columns.
+              //
+              // A watching observer can provide an associative array in the following format:
+              //
+              // $extra_data = array(
+              //     array(
+              //       'align' => $alignment,    // One of 'center', 'right', or 'left' (optional)
+              //       'text' => $value
+              //     ),
+              // );
+              //
+              // Observer notes:
+              // - Be sure to check that the $p2/$extra_data value is specifically (bool)false before initializing, since
+              //   multiple observers might be injecting content!
+              // - If heading-columns are added, be sure to add the associated header columns, too, via the
+              //   'NOTIFY_ADMIN_INVOICE_HEADERS_AFTER_TAX' notification.
+              //
+              $extra_data = false;
+              $zco_notifier->notify('NOTIFY_ADMIN_INVOICE_DATA_AFTER_TAX', $order->products[$i]['id'], $extra_data);
+              if (is_array($extra_data)) {
+                  foreach ($extra_data as $data_info) {
+                      $align = (isset($data_info['align'])) ? (' text-' . $data_info['align']) : '';
+?>
+                <td class="dataTableContent<?php echo $align; ?>"><?php echo $data_info['text']; ?></td>
+<?php
+                  }
+              }
+?>
             </tr>
             <?php
           }
@@ -250,7 +389,7 @@ if ($order->billing['street_address'] != $order->delivery['street_address']) {
         ?>
       </table>
       <?php if (ORDER_COMMENTS_INVOICE > 0) { ?>
-        <table class="table table-condensed">
+        <table class="table table-condensed" style="width:100%;">
           <thead>
             <tr>
               <th class="text-left"><strong><?php echo TABLE_HEADING_DATE_ADDED; ?></strong></th>

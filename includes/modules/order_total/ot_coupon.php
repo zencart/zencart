@@ -98,6 +98,7 @@ class ot_coupon
             }
 
             $order->info['total'] -= $od_amount['total'];
+            $order->info['coupon_amount'] = $od_amount['total'];
 
             if (DISPLAY_PRICE_WITH_TAX != 'true') {
                 $order->info['total'] -= $tax;
@@ -755,24 +756,11 @@ class ot_coupon
             return $found_valid;
         }
 
-        $found_valid = true;
-        if ($found_valid) {
-            $found_valid = false;
-            foreach ($products as $product) {
-                if (is_product_valid($product['id'], $coupon_id)) {
-                    $found_valid = true;
-                    continue;
-                }
-            }
-        }
-        if ($found_valid) {
-            // check if products on special or sale are valid
-            $found_valid = false;
-            foreach ($products as $product) {
-                if (is_coupon_valid_for_sales($product['id'], $coupon_id)) {
-                    $found_valid = true;
-                    continue;
-                }
+        $found_valid = false;
+        foreach ($products as $product) {
+            if (is_product_valid($product['id'], $coupon_id) && is_coupon_valid_for_sales($product['id'], $coupon_id)) {
+                $found_valid = true;
+                break;
             }
         }
 

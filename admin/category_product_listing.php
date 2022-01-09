@@ -71,9 +71,9 @@ if (!empty($action)) {
 
           //set categories_status
           if ($categories[$i]['id'] == $categories_id) {//always update THIS category
-              zen_set_category_status($category_status, $categories[$i]['id']);
+              zen_set_category_status($categories[$i]['id'], $category_status);
           } elseif ($subcategories_status != '') {//optionally update subcategories if a change was selected
-              zen_set_category_status($subcategories_status, $categories[$i]['id']);
+              zen_set_category_status($categories[$i]['id'], $subcategories_status);
           }
 
           //set products_status
@@ -99,7 +99,7 @@ if (!empty($action)) {
       break;
     case 'setflag':
 
-      if (isset($_POST['flag']) && ($_POST['flag'] == '0') || ($_POST['flag'] == '1')) {
+      if (isset($_POST['flag']) && ($_POST['flag'] === '0' || $_POST['flag'] === '1')) {
         if (isset($_GET['pID'])) {
           zen_set_product_status($_GET['pID'], $_POST['flag']);
         }
@@ -779,11 +779,11 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
 // Split Page
 
 // reset page when page is unknown
-            if ((isset($_GET['page']) && ($_GET['page'] == '1' || $_GET['page'] == '')) && isset($_GET['pID']) && $_GET['pID'] != '') {
+            if ((empty($_GET['page']) || $_GET['page'] == '1') && !empty($_GET['pID'])) {
               $old_page = $_GET['page'];
               $check_page = $db->Execute($products_query_raw);
               if ($check_page->RecordCount() > MAX_DISPLAY_RESULTS_CATEGORIES) {
-                $check_count = 1;
+                $check_count = 0;
                 foreach ($check_page as $item) {
                   if ($item['products_id'] == $_GET['pID']) {
                     break;

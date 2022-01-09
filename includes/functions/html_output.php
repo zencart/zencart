@@ -306,20 +306,80 @@ function zen_catalog_href_link($page = '', $parameters = '', $connection = 'NONS
     }
 
     $zco_notifier->notify('PAGE_OUTPUT_IMAGE_BUTTON');
-    if (strtolower(IMAGE_USE_CSS_BUTTONS) == 'yes') return zenCssButton($image, $alt, 'button', $sec_class, $parameters);
+    if (strtolower(IMAGE_USE_CSS_BUTTONS) == 'yes') {
+        if (preg_match('/\.(png|gif|jpe?g|webp)/i', $image)) {
+            return zenCssButton($image, $alt, 'button', $sec_class, $parameters);
+        } else {
+            return zen_draw_button($image, $sec_class, '', $parameters, $alt, 'button');
+        }
+    }
     return zen_image($template->get_template_dir($image, DIR_WS_TEMPLATE, $current_page_base, 'buttons/' . $_SESSION['language'] . '/') . $image, $alt, '', '', $parameters);
   }
 
 
 /**
+ * Draw a <button> element
+ **/
+function zen_draw_button($text = '', $added_classes = '', $id = '', $parameters = '', $title = '', $type = 'button')
+{
+    global $zco_notifier;
+
+    // legacy support
+    // remove .gif etc suffix if any
+    $text = preg_replace('/\.(png|gif|jpe?g|webp)$/', '', $text);
+    $text = str_replace('_', ' ', Illuminate\Support\Str::title($text));
+
+    $classes = '';
+    // optionally force something like 'btn' into the current template's buttons by defining a constant for the template:
+    if (defined('TEMPLATE_BASE_CSS_BUTTON_CLASSES')) {
+        $classes .= constant('TEMPLATE_BASE_CSS_BUTTON_CLASSES');
+    }
+
+    $the_button = '';
+
+    $zco_notifier->notify('NOTIFY_ZEN_DRAW_BUTTON', null, $text, $classes, $added_classes, $id, $parameters, $title, $type, $the_button);
+
+    if (empty($the_button)) {
+        $the_button = '<button class="' . $classes;
+        if (!empty($added_classes)) {
+            $the_button .= (empty($classes) ? '' : ' ') . $added_classes;
+        }
+        $the_button .= '"';
+
+        if (!empty($id)) {
+            $the_button .= ' id="' . $id . '"';
+        }
+
+        if ($type != 'button') {
+            $the_button .= ' type="' . $type . '"';
+        }
+
+        if (!empty($parameters)) {
+            $the_button .= ' ' . $parameters;
+        }
+
+        if (!empty($title)) {
+            $the_button .= ' title="' . $title . '"';
+        }
+
+        $the_button .= '>';
+        $the_button .= $text;
+        $the_button .= '</button>';
+    }
+
+    return $the_button;
+}
+
+/**
  * generate CSS buttons in the current language
  * concept from contributions by Seb Rouleau and paulm, subsequently adapted to Zen Cart
  * note: any hard-coded buttons will not be able to use this function
-**/
+ **/
   function zenCssButton($image = '', $text = '', $type = 'button', $sec_class = '', $parameters = '') {
    global $css_button_text, $css_button_opts, $template, $current_page_base, $language;
 
-   $button_name = basename($image, '.gif');
+   $button_name = basename($image);
+   $button_name = preg_replace('/\.(png|gif|jpe?g|webp)$/', '', $button_name);
 
     // if no secondary class is set use the image name for the sec_class
     if (empty($sec_class)) $sec_class = $button_name;
