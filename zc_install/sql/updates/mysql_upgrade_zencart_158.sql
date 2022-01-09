@@ -125,6 +125,26 @@ INSERT IGNORE INTO configuration (configuration_title, configuration_key, config
 #############
 
 
+#############
+### Updated address formats
+UPDATE address_format SET address_format = '$firstname $lastname$cr$streets$cr$postcode $city $statebrackets$cr$country' , address_summary = '$postcode $city $statebrecket'  WHERE address_format_id = 1;
+UPDATE address_format SET address_format = '$firstname $lastname$cr$streets$cr$city $state    $postcode$cr$country' , address_summary = '$city $state $postcode' WHERE address_format_id = 2;
+UPDATE address_format SET address_format = '$firstname $lastname$cr$streets$cr$postcode $city $state$cr$country' , address_summary = '$postcode $city $state' WHERE address_format_id = 3;
+UPDATE address_format SET address_format = '$firstname $lastname$cr$streets$cr$city $postcode$cr$country' , address_summary = '$city $postcode' WHERE address_format_id = 4;
+UPDATE address_format SET address_format = '$firstname $lastnameupper$cr$streets$cr$postcode  $city$cr$country' , address_summary = '$postcode $city' WHERE address_format_id = 5;
+UPDATE address_format SET address_format = '$firstname $lastname$cr$streets$cr$city$cr$state$cr$postcode$cr$country' , address_summary = '$city / $state / $postcode' WHERE address_format_id = 6 ;
+UPDATE address_format SET address_format = '$firstname $lastname$cr$city$cr$streets$cr$postcode$cr$country' , address_summary = '$city $street / $postcode' WHERE address_format_id = 7;
+
+###Add new address  fromats
+INSERT INTO address_format VALUES (8,'$firstname $lastname$cr$streets$cr$city $state$cr$postcode$cr$country','$city $state / $postcode');
+INSERT INTO address_format VALUES (9,'$firstname $lastname$cr$streets$cr$postcode$cr$city $state$cr$country','$postcode / $city / $state');
+INSERT INTO address_format VALUES (10,'$firstname $lastname$cr$streets$cr$city $postcode$cr$state$cr$country','$city $postcode / $state');
+INSERT INTO address_format VALUES (11,'$firstname $lastname$cr$streets$cr$postcode $city$cr$state$cr$country','$postcode $city / $state');
+INSERT INTO address_format VALUES (12,'$firstname $lastname$cr$streets$cr$postcode$cr$city$cr$state$cr$country','$postcode / $city / $state');
+INSERT INTO address_format VALUES (13,'$firstname $lastname$cr$streets$cr$city $postcode $state$cr$country',' $city $postcode $state');
+INSERT INTO address_format VALUES (14,'$firstname $lastname$cr$streets$cr$city$cr$postcode $state$cr$country',' $city / $postcode $state');
+INSERT INTO address_format VALUES (15,'$firstname $lastname$cr$streets$cr$city$cr$state $postcode$cr$country','$city / $state $postcode');
+
 ################
 
 #### Added in case was missed on upgrades.  also modified to allow for IgnoreDups in case someone had earlier version installed.
