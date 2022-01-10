@@ -139,6 +139,7 @@ return [
 'TEXT_ERROR_MYSQL_SUPPORT' => 'Problems with your MySQL (mysqli) support. Your server appears to be missing the mysqli extension for PHP, and without it we cannot connect to your database. Talk to your hosting company for assistance.',
 'TEXT_ERROR_PDOMYSQL_SUPPORT' => 'Problems with your MySQL (pdo_mysql) support. Your server appears to be missing the pdo_mysql extension for PHP, and without it we cannot connect to your database. Talk to your hosting company for assistance.',
 'TEXT_ERROR_PDOSQLITE_SUPPORT' => 'Your server appears to be missing the pdo_sqlite extension for PHP which is used for small temporary storage and for application testing. Talk to your hosting company for assistance.',
+'TEXT_ERROR_PHPZIP_SUPPORT' => 'Your server appears to be missing the php-zip extension for PHP which is used for unpacking zip files when installing the Demo data Images. Talk to your hosting company for assistance.',
 'TEXT_ERROR_LOG_FOLDER' => DIR_FS_LOGS . ' folder is not writeable',
 'TEXT_ERROR_CACHE_FOLDER' => DIR_FS_SQL_CACHE . ' folder is not writeable',
 'TEXT_ERROR_IMAGES_FOLDER' => '/images/ folder is not writeable',
