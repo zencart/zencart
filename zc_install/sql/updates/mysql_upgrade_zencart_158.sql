@@ -132,7 +132,7 @@ UPDATE address_format SET address_format = '$firstname $lastname$cr$streets$cr$c
 UPDATE address_format SET address_format = '$firstname $lastname$cr$streets$cr$city $state    $postcode$cr$country' , address_summary = '$city $state $postcode' WHERE address_format_id = 2;
 UPDATE address_format SET address_format = '$firstname $lastname$cr$streets$cr$postcode $city $state$cr$country' , address_summary = '$postcode $city $state' WHERE address_format_id = 3;
 UPDATE address_format SET address_format = '$firstname $lastname$cr$streets$cr$city $postcode$cr$country' , address_summary = '$city $postcode' WHERE address_format_id = 4;
-UPDATE address_format SET address_format = '$firstname $lastnameupper$cr$streets$cr$postcode  $city$cr$country' , address_summary = '$postcode $city' WHERE address_format_id = 5;
+UPDATE address_format SET address_format = '$firstname $lastnameupper$cr$streets$cr$postcode &nbsp;$city$cr$country' , address_summary = '$postcode $city' WHERE address_format_id = 5;
 UPDATE address_format SET address_format = '$firstname $lastname$cr$streets$cr$city$cr$state$cr$postcode$cr$country' , address_summary = '$city / $state / $postcode' WHERE address_format_id = 6 ;
 UPDATE address_format SET address_format = '$firstname $lastname$cr$streets$cr$postcode $city $statebrackets$cr$country' , address_summary = '$postcode $city $statebrecket' WHERE address_format_id = 7;
 

@@ -2214,7 +2214,7 @@ INSERT INTO address_format VALUES (1,'$firstname $lastname$cr$streets$cr$city$cr
 INSERT INTO address_format VALUES (2,'$firstname $lastname$cr$streets$cr$city $state    $postcode$cr$country','$city $state $postcode');
 INSERT INTO address_format VALUES (3,'$firstname $lastname$cr$streets$cr$postcode $city $state$cr$country','$postcode $city $state');
 INSERT INTO address_format VALUES (4,'$firstname $lastname$cr$streets$cr$city $postcode$cr$country','$city $postcode');
-INSERT INTO address_format VALUES (5,'$firstname $lastnameupper$cr$streets$cr$postcode  $city$cr$country','$postcode $city');
+INSERT INTO address_format VALUES (5,'$firstname $lastnameupper$cr$streets$cr$postcode &nbsp;$city$cr$country','$postcode $city');
 INSERT INTO address_format VALUES (6,'$firstname $lastname$cr$streets$cr$city$cr$state$cr$postcode$cr$country','$city / $state / $postcode');
 INSERT INTO address_format VALUES (7,'$firstname $lastname$cr$streets$cr$postcode $city $statebrackets$cr$country','$postcode $city $statebrecket');
 INSERT INTO address_format VALUES (8,'$firstname $lastname$cr$streets$cr$city $state$cr$postcode$cr$country','$city $state / $postcode');
