@@ -276,17 +276,18 @@ function zen_address_format($address_format_id = 1, $incoming = array(), $html =
     $address['cr'] = $html ? ($boln == '' && $eoln == "\n" ? '<br>' : $eoln . $boln) : $eoln;
 
     if (ACCOUNT_SUBURB !== 'true') $incoming['suburb'] = '';
-    $address['company'] = !empty($incoming['company']) ? zen_output_string_protected($incoming['company']) : '';
-    $address['firstname'] = !empty($incoming['firstname']) ? zen_output_string_protected($incoming['firstname']) : (!empty($incoming['name']) ? zen_output_string_protected($incoming['name']) : '');
-    $address['lastname'] = !empty($incoming['lastname']) ? zen_output_string_protected($incoming['lastname']) : '';
-    $address['street'] = !empty($incoming['street_address']) ? zen_output_string_protected($incoming['street_address']) : '';
-    $address['suburb'] = !empty($incoming['suburb']) ? zen_output_string_protected($incoming['suburb']) : '';
-    $address['city'] = !empty($incoming['city']) ? zen_output_string_protected($incoming['city']) : '';
-    $address['state'] = !empty($incoming['state']) ? zen_output_string_protected($incoming['state']) : '';
+    $address['company'] = !empty($incoming['company']) ? ucwords(zen_output_string_protected($incoming['company'])) : '';
+    $address['firstname'] = !empty($incoming['firstname']) ? ucwords(zen_output_string_protected($incoming['firstname'])) : (!empty($incoming['name']) ? ucwords(zen_output_string_protected($incoming['name'])) : '');
+    $address['lastname'] = !empty($incoming['lastname']) ? ucwords(zen_output_string_protected($incoming['lastname'])) : '';
+    $address['street'] = !empty($incoming['street_address']) ? ucwords(zen_output_string_protected($incoming['street_address'])) : '';
+    $address['suburb'] = !empty($incoming['suburb']) ? ucwords(zen_output_string_protected($incoming['suburb'])) : '';
+    $address['city'] = !empty($incoming['city']) ? ucwords(zen_output_string_protected($incoming['city'])) : '';
+    $address['state'] = !empty($incoming['state']) ? ucwords(zen_output_string_protected($incoming['state'])) : '';
     $address['postcode'] = !empty($incoming['postcode']) ? zen_output_string_protected($incoming['postcode']) : '';
     $address['zip'] = $address['postcode'];
 
-    $address['streets'] = !empty($address['suburb']) ? $address['street'] . $address['cr'] . $address['suburb'] : $address['street'];
+    $address['streets'] = !empty($address['suburb']) ? $address['street'] . $address['cr'] . ucwords($address['suburb']) : $address['street'];
+    
     $address['statecomma'] = !empty($address['state']) ? $address['state'] . ', ' : '';
 
     $country = '';
