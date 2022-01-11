@@ -91,6 +91,14 @@ systemChecks:
       checkExtension:
         parameters:
           extension: pdo_sqlite
+  phpzipExt:
+    runLevel: always
+    errorLevel: WARN
+    mainErrorText: <?php echo TEXT_ERROR_PHPZIP_SUPPORT .PHP_EOL; ?>
+    methods:
+      checkExtension:
+        parameters:
+          extension: zip
   logFolder:
     runLevel: always
     errorLevel: FAIL
