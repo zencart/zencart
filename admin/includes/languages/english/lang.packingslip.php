@@ -9,12 +9,7 @@
 $define = [
     'TABLE_HEADING_COMMENTS' => 'Comments',
     'TABLE_HEADING_CUSTOMER_NOTIFIED' => 'Customer Notified',
-    'TABLE_HEADING_DATE_ADDED' => 'Date Added',
-    'TABLE_HEADING_STATUS' => 'Status',
-    'TABLE_HEADING_PRODUCTS' => 'Products',
     'ENTRY_CUSTOMER' => 'CUSTOMER:',
-    'ENTRY_SOLD_TO' => 'BILL TO:',
-    'ENTRY_SHIP_TO' => 'SHIP TO:',
     'ENTRY_PAYMENT_METHOD' => 'Payment Method:',
     'ENTRY_DATE_PURCHASED' => 'Date Ordered:',
     'ENTRY_ORDER_ID' => 'Order No. ',

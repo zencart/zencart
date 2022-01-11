@@ -8,13 +8,9 @@
 
 $define = [
     'HEADING_TITLE' => 'Reviews',
-    'TABLE_HEADING_PRODUCT' => 'Product',
     'TABLE_HEADING_CUSTOMER_NAME' => 'Customer Name',
     'TABLE_HEADING_LANGUAGE' => 'Lang',
     'TABLE_HEADING_RATING' => 'Rating',
-    'TABLE_HEADING_DATE_ADDED' => 'Date Added',
-    'TABLE_HEADING_STATUS' => 'Status',
-    'TABLE_HEADING_ACTION' => 'Action',
     'ENTRY_PRODUCT' => 'Product:',
     'ENTRY_FROM' => 'From:',
     'ENTRY_DATE' => 'Date:',
@@ -22,8 +18,6 @@ $define = [
     'ENTRY_REVIEW_TEXT' => '<b>NOTE:</b> HTML is not permitted (will be removed).',
     'ENTRY_RATING' => 'Rating:',
     'TEXT_INFO_DELETE_REVIEW_INTRO' => 'Are you sure you want to delete this review?',
-    'TEXT_INFO_DATE_ADDED' => 'Date Added:',
-    'TEXT_INFO_LAST_MODIFIED' => 'Last Modified:',
     'TEXT_INFO_REVIEW_AUTHOR' => 'Author:',
     'TEXT_INFO_REVIEW_RATING' => 'Rating:',
     'TEXT_INFO_REVIEW_READ' => 'Read:',

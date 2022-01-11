@@ -552,7 +552,7 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
                 <?php if ($show_prod_labels) { ?>
                   <th class="hidden-sm hidden-xs"><?php echo TABLE_HEADING_MODEL; ?></th>
                 <?php } ?>
-                <th class="text-right hidden-sm hidden-xs"><?php echo TABLE_HEADING_PRICE; ?></th>
+                <th class="text-right hidden-sm hidden-xs"><?php echo TABLE_HEADING_PRODUCTS_PRICE; ?></th>
 <?php
           // -----
           // Additional column-headings can be added before the Quantity column.

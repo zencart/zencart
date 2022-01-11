@@ -16,8 +16,6 @@ $define = [
     'TABLE_HEADING_SALE_DEDUCTION' => 'Deduction',
     'TABLE_HEADING_SALE_DATE_START' => 'Startdate',
     'TABLE_HEADING_SALE_DATE_END' => 'Enddate',
-    'TABLE_HEADING_STATUS' => 'Status',
-    'TABLE_HEADING_ACTION' => 'Action',
 ];
 
 return $define;

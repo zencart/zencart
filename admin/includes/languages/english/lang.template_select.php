@@ -13,7 +13,6 @@ $define = [
     'TABLE_HEADING_LANGUAGE' => 'Template Language',
     'TABLE_HEADING_NAME' => 'Template Name',
     'TABLE_HEADING_DIRECTORY' => 'Template Directory',
-    'TABLE_HEADING_ACTION' => 'Action',
     'TEXT_INFO_HEADING_LANGUAGE' => 'Language',
     'TEXT_INFO_DEFAULT_TEMPLATE' => 'This template is used by default / when an installed language does not have an assigned template.',
     'TEXT_INFO_HEADING_EDIT_TEMPLATE' => 'Edit Template Settings',

@@ -385,7 +385,7 @@ if ($pr_list->EOF) {
                 <td class="dataTableHeadingContent text-center"><?php echo TABLE_HEADING_PRODUCT_ID; ?></td>
                 <td class="dataTableHeadingContent text-center"><?php echo TABLE_HEADING_STATUS; ?></td>
                 <td class="dataTableHeadingContent text-left"><?php echo TABLE_HEADING_MODEL; ?></td>
-                <td class="dataTableHeadingContent text-left"><?php echo TABLE_HEADING_PRODUCT_NAME; ?></td>
+                <td class="dataTableHeadingContent text-left"><?php echo TABLE_HEADING_PRODUCTS_NAME; ?></td>
                 <td class="dataTableHeadingContent text-center"><?php echo TABLE_HEADING_RESTRICT; ?></td>
                 <td class="dataTableHeadingContent text-center"><?php echo TABLE_HEADING_RESTRICT_REMOVE; ?></td>
             </tr>

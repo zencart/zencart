@@ -8,13 +8,9 @@
 
 $define = [
     'HEADING_TITLE' => 'Featured Products',
-    'TABLE_HEADING_PRODUCTS' => 'Product',
     'TABLE_HEADING_STOCK' => 'Stock',
-    'TABLE_HEADING_PRODUCTS_PRICE' => 'Price/Special/Sale',
     'TABLE_HEADING_AVAILABLE_DATE' => 'Active From',
     'TABLE_HEADING_EXPIRES_DATE' => 'Expires On',
-    'TABLE_HEADING_STATUS' => 'Featured Status',
-    'TABLE_HEADING_ACTION' => 'Actions',
     'TEXT_ADD_FEATURED_SELECT' => 'Add Featured Product by Selection',
     'TEXT_ADD_FEATURED_PID' => 'Add Featured Product by Product ID',
     'TEXT_SEARCH_FEATURED' => 'Search current Featured Products',
@@ -24,8 +20,6 @@ $define = [
     'TEXT_FEATURED_PRODUCT' => 'Product:',
     'TEXT_FEATURED_AVAILABLE_DATE' => 'Date Featured Active:',
     'TEXT_FEATURED_EXPIRES_DATE' => 'Date Featured Expires:',
-    'TEXT_INFO_DATE_ADDED' => 'Date Added:',
-    'TEXT_INFO_LAST_MODIFIED' => 'Last Modified:',
     'TEXT_INFO_NEW_PRICE' => 'Special Price:',
     'TEXT_INFO_ORIGINAL_PRICE' => 'Original Price:',
     'TEXT_INFO_DISPLAY_PRICE' => 'Currently Displayed Price:',

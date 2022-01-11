@@ -9,7 +9,6 @@
 $define = [
     'HEADING_TITLE' => 'Product Stock Report',
     'TABLE_HEADING_NUMBER' => 'ID#',
-    'TABLE_HEADING_PRODUCTS' => 'Products',
     'TABLE_HEADING_VIEWED' => 'Quantity',
 ];
 

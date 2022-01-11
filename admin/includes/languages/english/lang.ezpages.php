@@ -9,12 +9,10 @@
 $define = [
     'HEADING_TITLE' => 'EZ-Pages',
     'TABLE_HEADING_PAGES' => 'Page Title',
-    'TABLE_HEADING_ACTION' => 'Action',
     'TABLE_HEADING_VSORT_ORDER' => 'Sidebox Sort Order',
     'TABLE_HEADING_HSORT_ORDER' => 'Footer Sort Order',
     'TEXT_PAGES_TITLE' => 'Page Title:',
     'TEXT_PAGES_HTML_TEXT' => 'HTML Content:',
-    'TABLE_HEADING_DATE_ADDED' => 'Date Added:',
     'TEXT_PAGES_STATUS_CHANGE' => 'Status Change: %s',
     'TEXT_INFO_DELETE_INTRO' => 'Are you sure you want to delete this page?',
     'SUCCESS_PAGE_INSERTED' => 'Success: The page has been inserted.',
