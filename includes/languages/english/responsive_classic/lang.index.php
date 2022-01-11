@@ -7,8 +7,6 @@
  */
 
 $defines = [
-   'TEXT_MAIN' => 'This is the main define statement for the page for english when no template defined file exists. It is located in: <strong>/includes/languages/english/index.php</strong>',
-
    'TEXT_GREETING_GUEST' =>  'Welcome <span class="greetUser">Guest!</span> Would you like to <a href="%s">log yourself in</a>?',
    'TEXT_GREETING_GUEST_SHOWCASE' =>  'Welcome, please enjoy our online showcase.',
    'TEXT_GREETING_PERSONAL' =>  'Hello <span class="greetUser">%s</span>! Would you like to see our <a href="%s">newest additions</a>?',
