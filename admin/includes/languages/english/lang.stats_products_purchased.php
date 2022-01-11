@@ -8,7 +8,6 @@
 
 $define = [
     'HEADING_TITLE' => 'Best Products Purchased',
-    'TABLE_HEADING_NUMBER' => 'ID#',
     'TABLE_HEADING_PURCHASED' => 'Purchased',
     'TABLE_HEADING_CUSTOMERS_ID' => 'Customer<br>ID#',
     'TABLE_HEADING_ORDERS_ID' => 'Order<br>ID#',

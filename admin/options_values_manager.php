@@ -117,7 +117,7 @@ if (!empty($action)) {
                       foreach ($check as $item) {
                           $check_dups[] = $item['products_options_values_id'];
                       }
-                      $messageStack->add_session(sprintf(ATTRIBUTE_POSSIBLE_OPTIONS_VALUE_WARNING_DUPLICATE, $value_name,
+                      $messageStack->add_session(sprintf(ATTRIBUTE_POSSIBLE_OPTIONS_VALUE_WARNING_DUPLICATE_SPECIFIC, $value_name,
                           (count($languages) > 1 ? '(' . zen_get_language_name($language['id']) . ')' : ''), zen_get_option_name_language($option_id, $language['id']),
                           implode('/', $check_dups)), 'caution');
                   }
@@ -552,7 +552,7 @@ if (!empty($action)) {
                   <th class="dataTableHeadingContent text-right"><?php echo TABLE_HEADING_ID; ?></th>
                   <th class="dataTableHeadingContent"><?php echo TABLE_HEADING_PRODUCTS_NAME; ?></th>
                   <th class="dataTableHeadingContent text-right"><?php echo TABLE_HEADING_OPTION_SORT_ORDER; ?></th>
-                  <th><?php echo TABLE_HEADING_OPT_NAME; ?></th>
+                  <th><?php echo TABLE_HEADING_OPTION_NAME; ?></th>
                 </tr>
               </thead>
               <tbody>
@@ -690,8 +690,8 @@ if (!empty($action)) {
             <thead>
               <tr class="dataTableHeadingRow">
                 <th class="dataTableHeadingContent text-right"><?php echo TABLE_HEADING_ID; ?></th>
-                <th class="dataTableHeadingContent"><?php echo TABLE_HEADING_OPT_NAME; ?></th>
-                <th class="dataTableHeadingContent"><?php echo TABLE_HEADING_OPT_VALUE; ?></th>
+                <th class="dataTableHeadingContent"><?php echo TABLE_HEADING_OPTION_NAME; ?></th>
+                <th class="dataTableHeadingContent"><?php echo TABLE_HEADING_OPTION_VALUE; ?></th>
                 <th class="dataTableHeadingContent text-right"><?php echo TABLE_HEADING_OPTION_VALUE_SORT_ORDER; ?></th>
                 <th class="dataTableHeadingContent text-right"><?php echo TABLE_HEADING_ACTION; ?></th>
               </tr>

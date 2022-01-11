@@ -8,10 +8,6 @@
 
 $define = [
     'HEADING_TITLE' => 'Newsletter and Product Notifications Manager',
-    'TABLE_HEADING_NEWSLETTERS' => 'Newsletters',
-    'TABLE_HEADING_SIZE' => 'Size',
-    'TABLE_HEADING_MODULE' => 'Module',
-    'TABLE_HEADING_SENT' => 'Sent',
     'TEXT_NEWSLETTER_MODULE' => 'Module:',
     'TEXT_NEWSLETTER_TITLE' => 'Subject:',
     'TEXT_NEWSLETTER_CONTENT' => 'Text-Only <br>Content:',

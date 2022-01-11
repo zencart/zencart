@@ -55,7 +55,6 @@ $define = [
     'TEXT_ALL_FILES_LOOKUP_CURRENT_CATALOG' => 'All Files - Catalog',
     'TEXT_ALL_FILES_LOOKUP_CURRENT_ADMIN' => 'All Files - Admin',
     'TEXT_ALL_FILES_LOOKUP_CURRENT_PLUGINS' => 'All Files - Plugins',
-    'TEXT_INFO_NO_EDIT_AVAILABLE' => 'No edit available',
     'TEXT_INFO_CONFIGURATION_HIDDEN' => ' or, HIDDEN',
     'TEXT_SEARCH_ALL_FILES' => 'Search ALL files for: ',
     'TEXT_SEARCH_DATABASE_TABLES' => 'Search database configuration tables for: ',

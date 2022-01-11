@@ -7,12 +7,8 @@
 */
 
 $define = [
-    'TABLE_HEADING_COMMENTS' => 'Comments',
-    'TABLE_HEADING_CUSTOMER_NOTIFIED' => 'Customer Notified',
     'ENTRY_CUSTOMER' => 'CUSTOMER:',
     'ENTRY_PAYMENT_METHOD' => 'Payment Method:',
-    'ENTRY_DATE_PURCHASED' => 'Date Ordered:',
-    'ENTRY_ORDER_ID' => 'Order No. ',
 ];
 
 return $define;

@@ -12,7 +12,6 @@ $define = [
     'TEXT_NEW_INTRO' => 'Please enter the details of the new Music Genre below.',
     'TEXT_EDIT_INTRO' => 'Please amend the details of the Music Genre below.',
     'TEXT_DELETE_INTRO' => 'Are you sure you want to delete this Music Genre.',
-    'TEXT_DELETE_IMAGE' => 'Delete Image?.',
     'TEXT_MUSIC_GENRE_NAME' => 'Music Genre Name',
     'TEXT_HEADING_NEW_MUSIC_GENRE' => 'New Music Genre',
     'TEXT_HEADING_EDIT_MUSIC_GENRE' => 'Edit Music Genre',

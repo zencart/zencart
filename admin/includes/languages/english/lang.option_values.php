@@ -15,7 +15,6 @@ $define = [
     'TEXT_UPDATE_SUBMIT' => 'Update Sort Order',
     'TEXT_UPDATE_SORT_ORDERS_OPTIONS_PRODUCTS' => '<strong>For a Product:</strong> ',
     'TEXT_UPDATE_SORT_ORDERS_OPTIONS_CATEGORIES' => '<strong>For a Category:</strong> ',
-    'SUCCESS_PRODUCT_UPDATE_SORT' => 'Successful Attribute Sort Order Update for ID# ',
     'SUCCESS_PRODUCT_UPDATE_SORT_ALL' => 'Successful Attribute Sort Order Update for ALL Products ',
     'SUCCESS_OPTION_VALUES_SORT_ORDER' => 'Successful Update of Option Values Sort Order: ',
     'SUCCESS_CATEGORIES_UPDATE_SORT' => 'Successful Attribute Sort Order Update for Categories ID# ',

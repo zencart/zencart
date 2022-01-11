@@ -8,9 +8,6 @@
 
 $define = [
     'HEADING_TITLE' => 'Featured Products',
-    'TABLE_HEADING_STOCK' => 'Stock',
-    'TABLE_HEADING_AVAILABLE_DATE' => 'Active From',
-    'TABLE_HEADING_EXPIRES_DATE' => 'Expires On',
     'TEXT_ADD_FEATURED_SELECT' => 'Add Featured Product by Selection',
     'TEXT_ADD_FEATURED_PID' => 'Add Featured Product by Product ID',
     'TEXT_SEARCH_FEATURED' => 'Search current Featured Products',

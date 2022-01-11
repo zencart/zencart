@@ -10,7 +10,6 @@ $define = [
     'HEADING_TITLE' => 'Option Name Sort Order',
     'TEXT_EDIT_ALL' => 'Editing All Option Names',
     'TEXT_CURRENT_NAME' => 'Current Name',
-    'TEXT_SORT_ORDER' => 'Sort Order',
     'TEXT_OPTION_TYPE' => 'Type',
     'TEXT_SELECTED_LANGUAGE' => 'Selected Language: ',
     'TEXT_UPDATE_SUBMIT' => 'Update Sort Order',

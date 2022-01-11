@@ -7,20 +7,9 @@
 */
 
 $define = [
-    'TABLE_HEADING_COMMENTS' => 'Comments',
-    'TABLE_HEADING_CUSTOMER_NOTIFIED' => 'Customer Notified',
-    'TABLE_HEADING_TAX' => 'Tax',
-    'TABLE_HEADING_TOTAL' => 'Total',
-    'TABLE_HEADING_PRICE_EXCLUDING_TAX' => 'Price (ex)',
-    'TABLE_HEADING_PRICE_INCLUDING_TAX' => 'Price (inc)',
-    'TABLE_HEADING_TOTAL_EXCLUDING_TAX' => 'Total (ex)',
-    'TABLE_HEADING_TOTAL_INCLUDING_TAX' => 'Total (inc)',
-    'TABLE_HEADING_PRICE' => 'Price',
     'ENTRY_CUSTOMER' => 'CUSTOMER:',
     'ENTRY_PAYMENT_METHOD' => 'Payment Method:',
     'ENTRY_SHIPPING' => 'Shipping:',
-    'ENTRY_DATE_PURCHASED' => 'Date Ordered:',
-    'ENTRY_ORDER_ID' => 'Order No. ',
     'TEXT_INFO_ATTRIBUTE_FREE' => '&nbsp;-&nbsp;FREE',
 ];
 

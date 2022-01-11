@@ -10,7 +10,6 @@ $define = [
     'HEADING_TITLE' => 'Admin Login',
     'HEADING_TITLE_EXPIRED' => 'Admin Login - Password Expired',
     'TEXT_SUBMIT' => 'Submit',
-    'TEXT_ADMIN_NAME' => 'Admin Username',
     'TEXT_ADMIN_PASS' => 'Admin Password',
     'TEXT_ADMIN_OLD_PASSWORD' => 'Old Password',
     'TEXT_ADMIN_NEW_PASSWORD' => 'New Password',
