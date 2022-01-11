@@ -46,6 +46,15 @@ class LanguageLoader
         return true; 
     }
 
+    public function loadModuleDefinesFromFile($baseDirectory, $language, $module_type, $languageFile)
+    {
+        $defs = $this->arrayLoader->loadModuleDefinesFromArrayFile(DIR_FS_CATALOG . 'includes/languages/', $language, $module_type, $languageFile);
+
+        $this->arrayLoader->makeConstants($defs); 
+        $this->fileLoader->loadFileDefineFile(DIR_FS_CATALOG . DIR_WS_LANGUAGES . $language . $baseDirectory . $module_type . '/' . $languageFile);
+        return true; 
+    }
+
     public function loadLanguageForView()
     {
         $this->arrayLoader->loadLanguageForView();
