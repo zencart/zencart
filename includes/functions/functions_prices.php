@@ -575,7 +575,7 @@ function zen_get_products_quantity_min_units_display($product_id, $include_break
         }
 
         if ($check_units != 1) {
-            $the_min_units .= '<span class="qunit">' . ($the_min_units ? ' ' : '') . PRODUCTS_QUANTITY_UNIT_TEXT_LISTING . '&nbsp;' . $check_units . '</span>';
+            $the_min_units .= '<span class="qunit">' . (zen_not_null($the_min_units) ? ' ' : '') . PRODUCTS_QUANTITY_UNIT_TEXT_LISTING . '&nbsp;' . $check_units . '</span>';
         }
 
         // don't check for mixed if no attributes
