@@ -5,7 +5,6 @@
         private $keyed_allowed_sort_array = [
             'products_name' => 'pd',
             'products_model' => 'p',
-            'products_name' => 'p',
             'products_id' => 'p',
             'products_price' => 'p',
             'products_sort_order' => 'p',
