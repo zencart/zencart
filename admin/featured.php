@@ -211,7 +211,12 @@ if (!empty($action)) {
 //            $featured_array[] = $item['products_id'];
 //          }
         }
-        ?>
+
+          if ($action === 'new') {
+              $form = addSearchKeywordForm(FILENAME_FEATURED, $action);
+              echo $form;
+          }
+          ?>
         <div class="row">
           <?php echo zen_draw_form('new_featured', FILENAME_FEATURED, zen_get_all_get_params(['action', 'info', 'fID']) . 'action=' . $form_action . (!empty($_GET['go_back']) ? '&go_back=' . $_GET['go_back'] : ''), 'post', 'class="form-horizontal"'); ?>
           <?php
@@ -252,6 +257,7 @@ if (!empty($action)) {
               </div>
             </div>
           <?php } ?>
+        </div>
           <?php echo zen_draw_hidden_field('update_products_id', $fInfo->products_id); ?>
           <div class="form-group">
             <?php echo zen_draw_label(TEXT_FEATURED_AVAILABLE_DATE, 'featured_date_available', 'class="col-sm-3 control-label"'); ?>

@@ -283,6 +283,10 @@ if (!empty($action)) {
 //            $specials_array[] = $item['products_id'];
 //          }
         }
+          if ($action === 'new') {
+              $form = addSearchKeywordForm(FILENAME_SPECIALS, $action);
+              echo $form;
+          }
         ?>
         <div class="row">
           <?php echo zen_draw_form('new_special', FILENAME_SPECIALS, zen_get_all_get_params(['action', 'info', 'sID']) . 'action=' . $form_action . (!empty($_GET['go_back']) ? '&go_back=' . $_GET['go_back'] : ''), 'post', 'class="form-horizontal"'); ?>
@@ -324,6 +328,7 @@ if (!empty($action)) {
               </div>
             </div>
           <?php } ?>
+        </div>
           <?php echo zen_draw_hidden_field('products_priced_by_attribute', $sInfo->products_priced_by_attribute); ?>
           <?php echo zen_draw_hidden_field('products_price', (!empty($sInfo->products_price) ? $sInfo->products_price : '')); ?>
           <?php echo zen_draw_hidden_field('update_products_id', $sInfo->products_id); ?>
