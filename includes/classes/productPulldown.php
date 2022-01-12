@@ -77,7 +77,7 @@
 
         protected function setSQL()
         {
-            $this->sql = "SELECT DISTINCT pd.products_id, p.products_sort_order, p.products_price, p.products_model
+            $this->sql = "SELECT DISTINCT pd.products_id, p.products_sort_order, p.products_price, p.products_model, pd.products_name
                 FROM " . TABLE_PRODUCTS . " p"
                 . $this->categories_join . "
                 INNER JOIN " . TABLE_PRODUCTS_DESCRIPTION . " pd ON (p.products_id = pd.products_id) 
