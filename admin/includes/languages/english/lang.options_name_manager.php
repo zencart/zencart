@@ -16,6 +16,7 @@ $define = [
     'TEXT_WARNING_DUPLICATE_OPTION_NAME' => 'Option ID#%1$u: Duplicate Option Name Added: "%2$s" (%3$s)',
     'TEXT_ORDER_BY' => 'Order by',
     'TEXT_SORT_ORDER' => 'Sort Order',
+    'TABLE_HEADING_OPTION_NAME' => 'Option Name',
     'TABLE_HEADING_OPTION_TYPE' => 'Option Type',
     'TABLE_HEADING_OPTION_NAME_SIZE' => 'Size',
     'TABLE_HEADING_OPTION_NAME_MAX' => 'Max',
