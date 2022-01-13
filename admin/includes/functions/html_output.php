@@ -505,11 +505,15 @@ function zen_draw_date_selector($fieldname_prefix, $default_date='') {
 
 function addSearchKeywordForm($filename, $action) {
     $keywords_products = (isset($_POST['keywords']) && zen_not_null($_POST['keywords'])) ? zen_db_input(zen_db_prepare_input($_POST['keywords'])) : '';
+    $fullAction = '';
+    if (!empty($action)) {
+        $fullAction = 'action=' . $action;
+    }
     $form = '
         <div class="row">
-            <div class="col-sm-offset-2 col-sm-4">' . zen_draw_form('keywords', $filename, 'action=' . $action, 'post', 'class="form-horizontal"') .
+            <div class="col-sm-offset-2 col-sm-4">' . zen_draw_form('keywords', $filename, $fullAction, 'post', 'class="form-horizontal"') .
         '<div class="form-group">' .
-        zen_draw_label(HEADING_TITLE_SEARCH_DETAIL_REPORTS_NAME_MODEL, 'keywords', 'class="control-label col-sm-3"') .
+        zen_draw_label(HEADING_TITLE_SEARCH_DETAIL, 'keywords', 'class="control-label col-sm-3"') .
         '<div class="col-sm-9">' .
         zen_draw_input_field('keywords', '', 'class="form-control" id="keywords"') .
         '</div>
@@ -520,7 +524,7 @@ function addSearchKeywordForm($filename, $action) {
                           <p class="control-label">' . TEXT_INFO_SEARCH_DETAIL_FILTER . '</p>
                       </div>
                       <div class="col-sm-9 text-right">' .
-            zen_output_string_protected($keywords_products) . ' <a href="' . zen_href_link($filename, 'action=' . $action) . '" class="btn btn-default" role="button">' . IMAGE_RESET . '</a>
+            zen_output_string_protected($keywords_products) . ' <a href="' . zen_href_link($filename, $fullAction) . '" class="btn btn-default" role="button">' . IMAGE_RESET . '</a>
                       </div>
                   </div>';
     }

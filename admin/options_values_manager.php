@@ -592,6 +592,10 @@ if (!empty($action)) {
         <div class="row">
           <?php echo zen_draw_separator('pixel_trans.gif', '100%'); ?>
         </div>
+    <?php
+        $form = addSearchKeywordForm(FILENAME_OPTIONS_VALUES_MANAGER, '');
+        echo $form;
+    ?>
         <div class="row">
           <?php
           echo zen_draw_form('set_filter', FILENAME_OPTIONS_VALUES_MANAGER, '', 'get', 'class="form-horizontal"');
@@ -600,23 +604,10 @@ if (!empty($action)) {
           ?>
           <div class="col-sm-6">
             <?php
-            $filter_values_array[] = [
-              'id' => '',
-              'text' => PLEASE_SELECT
-            ];
-            $filter_values_query = "SELECT products_options_id, products_options_name
-                                    FROM " . TABLE_PRODUCTS_OPTIONS . "
-                                    WHERE language_id = " . $_SESSION['languages_id'] . "
-                                    ORDER BY products_options_name";
-            $filter_values = $db->Execute($filter_values_query);
-            foreach ($filter_values as $filter_value) {
-              $filter_values_array[] = [
-                'id' => $filter_value['products_options_id'],
-                'text' => "(" . $filter_value['products_options_id'] . ") " . $filter_value['products_options_name']
-              ];
-            }
+                $pulldown = new productOptionsPulldown();
+                $pulldown->setDefault($filter);
+                echo $pulldown->generatePulldownHtml('set_filter','onchange="this.form.submit();" class="form-control"');
             ?>
-            <?php echo zen_draw_pull_down_menu('set_filter', $filter_values_array, $filter, 'onchange="this.form.submit();" class="form-control"'); ?>
           </div>
           <div class="col-sm-3">
             <?php
