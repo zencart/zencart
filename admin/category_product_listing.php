@@ -551,8 +551,8 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
                 <th class="hidden-sm hidden-xs"><?php echo TABLE_HEADING_IMAGE; ?></th>
                 <?php if ($show_prod_labels) { ?>
                   <th class="hidden-sm hidden-xs"><?php echo TABLE_HEADING_MODEL; ?></th>
+                  <th class="text-right hidden-sm hidden-xs"><?php echo TABLE_HEADING_PRODUCTS_PRICE; ?></th>
                 <?php } ?>
-                <th class="text-right hidden-sm hidden-xs"><?php echo TABLE_HEADING_PRODUCTS_PRICE; ?></th>
 <?php
           // -----
           // Additional column-headings can be added before the Quantity column.
@@ -655,8 +655,8 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
                   <td class="hidden-sm hidden-xs"><?php echo zen_image(DIR_WS_CATALOG_IMAGES . $category['categories_image'], $category['categories_name'], IMAGE_SHOPPING_CART_WIDTH, IMAGE_SHOPPING_CART_HEIGHT); ?></td>
                 <?php if ($show_prod_labels) { ?>
                   <td class="hidden-sm hidden-xs"><!-- no model for categories --></td>
+                  <td class="hidden-sm hidden-xs"><!-- no price for categories --></td>
                 <?php } ?>
-                  <td class="text-right hidden-sm hidden-xs"><?php echo zen_get_discount_calc('', $category['categories_id'], true); ?></td>
                 <?php if ($search_result || SHOW_COUNTS_ADMIN == 'true') { ?>
                   <td class="text-right hidden-sm hidden-xs">
                     <?php

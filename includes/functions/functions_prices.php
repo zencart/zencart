@@ -418,6 +418,7 @@ function zen_get_products_base_price($product_id)
 
     $product_check = zen_get_product_details($product_id);
 
+    if ($product_check->EOF) return false; 
     $products_price = $product_check->fields['products_price'];
 
     if ($product_check->fields['products_priced_by_attribute'] != 1) {
