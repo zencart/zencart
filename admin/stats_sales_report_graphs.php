@@ -254,7 +254,7 @@ for ($i = 0; $i < $report->size; $i++) {
                   </td>
                   <td>&nbsp;</td>
                   <td colspan="2" class="text-right">
-                      <?php if (strlen($report->next) > 0) { ?>
+                      <?php if (!empty($report->next) && strlen($report->next) > 0) { ?>
                       <a href="<?php echo zen_href_link(FILENAME_STATS_SALES_REPORT_GRAPHS, $report->next); ?>"><?php echo TEXT_NEXT_LINK; ?></a>
                     <?php } ?>
                   </td>

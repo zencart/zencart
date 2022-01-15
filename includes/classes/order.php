@@ -1137,7 +1137,7 @@ class order extends base
             EMAIL_THANKS_FOR_SHOPPING . "\n" . EMAIL_DETAILS_FOLLOW . "\n" .
             EMAIL_SEPARATOR . "\n" .
             EMAIL_TEXT_ORDER_NUMBER . ' ' . $zf_insert_id . "\n" .
-            EMAIL_TEXT_DATE_ORDERED . ' ' . strftime(DATE_FORMAT_LONG) . "\n" .
+            EMAIL_TEXT_DATE_ORDERED . ' ' . date(PHP_DATE_FORMAT_LONG) . "\n" .
             EMAIL_TEXT_INVOICE_URL . ' ' . zen_href_link(FILENAME_ACCOUNT_HISTORY_INFO, 'order_id=' . $zf_insert_id, 'SSL', false) . "\n\n";
 
         $html_msg['EMAIL_TEXT_HEADER'] = EMAIL_TEXT_HEADER;
@@ -1148,7 +1148,7 @@ class order extends base
         $html_msg['INTRO_ORDER_NUM_TITLE'] = EMAIL_TEXT_ORDER_NUMBER;
         $html_msg['INTRO_ORDER_NUMBER'] = $zf_insert_id;
         $html_msg['INTRO_DATE_TITLE'] = EMAIL_TEXT_DATE_ORDERED;
-        $html_msg['INTRO_DATE_ORDERED'] = strftime(DATE_FORMAT_LONG);
+        $html_msg['INTRO_DATE_ORDERED'] = date(PHP_DATE_FORMAT_LONG);
         $html_msg['INTRO_URL_TEXT'] = EMAIL_TEXT_INVOICE_URL_CLICK;
         $html_msg['INTRO_URL_VALUE'] = zen_href_link(FILENAME_ACCOUNT_HISTORY_INFO, 'order_id=' . $zf_insert_id, 'SSL', false);
         $html_msg['EMAIL_CUSTOMER_PHONE'] = $this->customer['telephone'];

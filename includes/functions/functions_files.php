@@ -318,7 +318,7 @@ function get_logs_data($maxToList = 'count')
                 $logs[$i]['filename'] = $logfile;
                 $logs[$i]['filesize'] = @filesize($filename);
                 $logs[$i]['unixtime'] = @filemtime($filename);
-                $logs[$i]['datetime'] = strftime(DATE_TIME_FORMAT, $logs[$i]['unixtime']);
+                $logs[$i]['datetime'] = date(PHP_DATE_TIME_FORMAT, $logs[$i]['unixtime']);
             }
             $i++;
             if ($maxToList != 'count' && $i >= $maxToList) break;

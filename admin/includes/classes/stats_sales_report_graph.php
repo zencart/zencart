@@ -202,18 +202,18 @@ class statsSalesReportGraph {
       $tmpStart = $this->startDate - $tmpShift + $tmpUnit;
       $tmpEnd = $this->startDate - $tmpUnit;
       if ($tmpStart >= $this->globalStartDate || $this->mode == self::MONTHLY_VIEW) {
-        //echo strftime("%T %x", $tmpStart). " - " . strftime("%T %x", $tmpEnd) . "<br>";
+        //echo date(PHP_DATE_TIME_FORMAT, $tmpStart). " - " . date(PHP_DATE_TIME_FORMAT, $tmpEnd) . "<br>";
         $this->previous = "report=" . $this->mode . "&startDate=" . $tmpStart . "&endDate=" . $tmpEnd;
       }
       $tmpStart = $this->endDate;
       $tmpEnd = $this->endDate + $tmpShift - 2 * $tmpUnit;
       if ($tmpEnd < mktime(0, 0, 0, date("m"), date("d"), date("Y"))) {
-        //echo strftime("%T %x", $tmpStart). " - " . strftime("%T %x", $tmpEnd);
+        //echo date(PHP_DATE_TIME_FORMAT, $tmpStart). " - " . date(PHP_DATE_TIME_FORMAT, $tmpEnd);
         $this->next = "report=" . $this->mode . "&startDate=" . $tmpStart . "&endDate=" . $tmpEnd;
       } else {
         if ($tmpEnd - $tmpDiff < mktime(0, 0, 0, date("m"), date("d"), date("Y"))) {
           $tmpEnd = mktime(0, 0, 0, date("m"), date("d"), date("Y"));
-          //echo strftime("%T %x", $tmpStart). " - " . strftime("%T %x", $tmpEnd);
+          //echo date(PHP_DATE_TIME_FORMAT, $tmpStart). " - " . date(PHP_DATE_TIME_FORMAT, $tmpEnd);
           $this->next = "report=" . $this->mode . "&startDate=" . $tmpStart . "&endDate=" . $tmpEnd;
         }
       }
@@ -242,7 +242,7 @@ class statsSalesReportGraph {
     $this->filter = $tmp1;
     $this->filter_link = "report=" . $this->mode . "&startDate=" . $startDate . "&endDate=" . $endDate;
     // if ($dateGiven) {
-    //  echo "<br>" . strftime("%H %x", $this->startDate). " - " . strftime("%H %x", $this->endDate);
+//      echo "<br>" . date('H ' . PHP_DATE_FORMAT, $this->startDate). " - " . date('H ' . PHP_DATE_FORMAT, $this->endDate);
     //} else {
       $this->query();
     //}
@@ -257,24 +257,24 @@ class statsSalesReportGraph {
       $report = $db->Execute($tmp_query . " AND o.date_purchased >= '" . zen_db_input(date("Y-m-d\TH:i:s", $this->startDates[$i])) . "' AND o.date_purchased < '" . zen_db_input(date("Y-m-d\TH:i:s", $this->endDates[$i])) . "'", false,true, 1800);
       //$GLOBALS['report_test'] = $report;
 
-      $this->info[$i]['sum'] = $report->fields['value'];
-      $this->info[$i]['avg'] = $report->fields['avg'];
+      $this->info[$i]['sum'] = $report->fields['value'] ?? 0;
+      $this->info[$i]['avg'] = $report->fields['avg'] ?? 0;
       $this->info[$i]['count'] = $report->fields['count'];
       switch ($this->mode) {
       case self::HOURLY_VIEW:
-          $this->info[$i]['text'] = strftime("%H", $this->startDates[$i]) . " - " . strftime("%H", $this->endDates[$i]);
+          $this->info[$i]['text'] = date('H', $this->startDates[$i]) . " - " . date('H', $this->endDates[$i]);
           $this->info[$i]['link'] = '';
           break;
       case self::DAILY_VIEW:
-          $this->info[$i]['text'] = strftime("%x", $this->startDates[$i]);
+          $this->info[$i]['text'] = date(PHP_DATE_FORMAT, $this->startDates[$i]);
           $this->info[$i]['link'] = "report=" . self::HOURLY_VIEW . "&startDate=" . $this->startDates[$i] . "&endDate=" . mktime(0, 0, 0, date("m", $this->endDates[$i]), date("d", $this->endDates[$i]) + 1, date("Y", $this->endDates[$i]));
           break;
       case self::WEEKLY_VIEW:
-          $this->info[$i]['text'] = strftime("%x", $this->startDates[$i]) . " - " . strftime("%x", mktime(0, 0, 0, date("m", $this->endDates[$i]), date("d", $this->endDates[$i]) - 1, date("Y", $this->endDates[$i])));
+          $this->info[$i]['text'] = date(PHP_DATE_FORMAT, $this->startDates[$i]) . " - " . date(PHP_DATE_FORMAT, mktime(0, 0, 0, date("m", $this->endDates[$i]), date("d", $this->endDates[$i]) - 1, date("Y", $this->endDates[$i])));
           $this->info[$i]['link'] = "report=" . self::DAILY_VIEW . "&startDate=" . $this->startDates[$i] . "&endDate=" . mktime(0, 0, 0, date("m", $this->endDates[$i]), date("d", $this->endDates[$i]) - 1, date("Y", $this->endDates[$i]));
           break;
       case self::MONTHLY_VIEW:
-          $this->info[$i]['text'] = strftime("%b %y", $this->startDates[$i]);
+          $this->info[$i]['text'] = date('M y', $this->startDates[$i]);
           $this->info[$i]['link'] = "report=" . self::WEEKLY_VIEW . "&startDate=" . $this->startDates[$i] . "&endDate=" . mktime(0, 0, 0, date("m", $this->endDates[$i]), date("d", $this->endDates[$i]) - 1, date("Y", $this->endDates[$i]));
           break;
       case self::YEARLY_VIEW:

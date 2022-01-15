@@ -121,7 +121,7 @@ trait NotifierManager
                 $output .= print_r($paramArray, true);
             }
         }
-        error_log(strftime("%Y-%m-%d %H:%M:%S") . ' [main_page=' . $main_page . '] ' . $eventID . $output . "\n", 3, $file);
+        error_log(date(DATE_RSS) . ' [main_page=' . $main_page . '] ' . $eventID . $output . "\n", 3, $file);
     }
 
     private function eventIdHasAlias($eventId)

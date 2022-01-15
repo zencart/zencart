@@ -20,13 +20,13 @@ $counterData = '';
 foreach ($visits as $data) {
     // table
     $countdate = $data['startdate'];
-    $visit_date = strftime(DATE_FORMAT_SHORT, mktime(0, 0, 0, substr($countdate, 4, 2), substr($countdate, -2), substr($countdate, 0, 4)));
+    $visit_date = date(PHP_DATE_FORMAT, mktime(0, 0, 0, substr($countdate, 4, 2), substr($countdate, -2), substr($countdate, 0, 4)));
     $visit_history[] = array('date' => $visit_date, 'sessions' => $data['session_counter'], 'count' => $data['counter']);
     // graph
     if ($i > 0) {
         $counterData = "," . $counterData;
     }
-    $date = strftime('%a %d', mktime(0, 0, 0, substr($data['startdate'], 4, 2), substr($data['startdate'], -2)));
+    $date = date('D d', mktime(0, 0, 0, substr($data['startdate'], 4, 2), substr($data['startdate'], -2)));
     $counterData = "['$date'," . $data['session_counter'] . "," . $data['counter'] . "]" . $counterData;
     $i++;
 }

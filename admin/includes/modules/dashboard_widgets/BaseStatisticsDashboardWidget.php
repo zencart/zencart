@@ -32,7 +32,7 @@ $result = $db->Execute("SELECT startdate, counter FROM " . TABLE_COUNTER, false,
 if ($result->RecordCount()) {
     $counter_startdate = $result->fields['startdate'];
     $counter = $result->fields['counter'];
-    $counter_startdate_formatted = strftime(DATE_FORMAT_SHORT, mktime(0, 0, 0, substr($counter_startdate, 4, 2), substr($counter_startdate, -2), substr($counter_startdate, 0, 4)));
+    $counter_startdate_formatted = date(PHP_DATE_FORMAT, mktime(0, 0, 0, substr($counter_startdate, 4, 2), substr($counter_startdate, -2), substr($counter_startdate, 0, 4)));
 }
 
 

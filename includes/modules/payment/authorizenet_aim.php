@@ -207,12 +207,12 @@ class authorizenet_aim extends base {
     global $order;
 
     for ($i=1; $i<13; $i++) {
-      $expires_month[] = array('id' => sprintf('%02d', $i), 'text' => strftime('%B - (%m)',mktime(0,0,0,$i,1,2000)));
+      $expires_month[] = array('id' => sprintf('%02d', $i), 'text' => date('F - (m)',mktime(0,0,0,$i,1,2000)));
     }
 
     $today = getdate();
     for ($i=$today['year']; $i < $today['year']+15; $i++) {
-      $expires_year[] = array('id' => strftime('%y',mktime(0,0,0,1,1,$i)), 'text' => strftime('%Y',mktime(0,0,0,1,1,$i)));
+      $expires_year[] = array('id' => date('y',mktime(0,0,0,1,1,$i)), 'text' => date('Y',mktime(0,0,0,1,1,$i)));
     }
     $onFocus = ' onfocus="methodSelect(\'pmt-' . $this->code . '\')"';
 
@@ -225,7 +225,7 @@ class authorizenet_aim extends base {
                                                'field' => zen_draw_input_field('authorizenet_aim_cc_number', '', 'id="'.$this->code.'-cc-number"' . $onFocus . ' autocomplete="off"'),
                                                'tag' => $this->code.'-cc-number'),
                                          array('title' => MODULE_PAYMENT_AUTHORIZENET_AIM_TEXT_CREDIT_CARD_EXPIRES,
-                                               'field' => zen_draw_pull_down_menu('authorizenet_aim_cc_expires_month', $expires_month, strftime('%m'), 'id="'.$this->code.'-cc-expires-month"' . $onFocus) . '&nbsp;' . zen_draw_pull_down_menu('authorizenet_aim_cc_expires_year', $expires_year, '', 'id="'.$this->code.'-cc-expires-year"' . $onFocus),
+                                               'field' => zen_draw_pull_down_menu('authorizenet_aim_cc_expires_month', $expires_month, date('m'), 'id="'.$this->code.'-cc-expires-month"' . $onFocus) . '&nbsp;' . zen_draw_pull_down_menu('authorizenet_aim_cc_expires_year', $expires_year, '', 'id="'.$this->code.'-cc-expires-year"' . $onFocus),
                                                'tag' => $this->code.'-cc-expires-month')));
     if (MODULE_PAYMENT_AUTHORIZENET_AIM_USE_CVV == 'True') {
       $selection['fields'][] = array('title' => MODULE_PAYMENT_AUTHORIZENET_AIM_TEXT_CVV,
@@ -283,7 +283,7 @@ class authorizenet_aim extends base {
                                             array('title' => MODULE_PAYMENT_AUTHORIZENET_AIM_TEXT_CREDIT_CARD_NUMBER,
                                                   'field' => substr($this->cc_card_number, 0, 4) . str_repeat('X', (strlen($this->cc_card_number) - 8)) . substr($this->cc_card_number, -4)),
                                             array('title' => MODULE_PAYMENT_AUTHORIZENET_AIM_TEXT_CREDIT_CARD_EXPIRES,
-                                                  'field' => strftime('%B, %Y', mktime(0,0,0,$_POST['authorizenet_aim_cc_expires_month'], 1, '20' . $_POST['authorizenet_aim_cc_expires_year']))) ));
+                                                  'field' => date('F Y', mktime(0,0,0,$_POST['authorizenet_aim_cc_expires_month'], 1, '20' . $_POST['authorizenet_aim_cc_expires_year']))) ));
     return $confirmation;
   }
   /**
