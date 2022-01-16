@@ -10,7 +10,6 @@ $define = [
     'HEADING_TITLE_DELETE_ENTRY' => 'Delete Address Book Entry',
     'HEADING_TITLE' => 'Address Details',
     'DELETE_ADDRESS_DESCRIPTION' => 'Are you sure you would like to delete the selected address from your address book?',
-    'SET_AS_PRIMARY' => 'Set as primary address.',
     'SUCCESS_ADDRESS_BOOK_ENTRY_DELETED' => 'The selected address has been successfully removed from your address book.',
     'SUCCESS_ADDRESS_BOOK_ENTRY_UPDATED' => 'Your address book has been successfully updated.',
     'WARNING_PRIMARY_ADDRESS_DELETION' => 'The primary address cannot be deleted. Please set another address as the primary address and try again.',
