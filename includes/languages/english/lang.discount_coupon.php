@@ -1,0 +1,32 @@
+<?php
+$define = [
+    'NAVBAR_TITLE' => 'Discount Coupon',
+    'HEADING_TITLE' => 'Discount Coupon',
+    'TEXT_INFORMATION' => '',
+    'TEXT_COUPON_FAILED' => '<span class="alert important">%s</span> does not appear to be a valid Coupon Redemption Code. Please try typing it in again.',
+    'TEXT_CLOSE_WINDOW' => 'Close Window [x]',
+    'TEXT_COUPON_HELP_HEADER' => '<p class="bold">The Discount Coupon Redemption Code you have entered is for ',
+    'TEXT_COUPON_HELP_NAME' => '\'%s\'. </p>',
+    'TEXT_COUPON_HELP_FIXED' => '',
+    'TEXT_COUPON_HELP_MINORDER' => '<p>You need to spend %s to use this coupon, on qualifying products.</p>',
+    'TEXT_COUPON_HELP_FREESHIP' => '',
+    'TEXT_COUPON_HELP_DESC' => '<p><span class="bold">Discount Offer:</span> %s</p><p class="smallText">Certain other restrictions may apply. Please see below for other details.</p>',
+    'TEXT_COUPON_HELP_DATE' => '<p>The coupon is valid between %s and %s</p>',
+    'TEXT_COUPON_HELP_RESTRICT' => '<p class="biggerText bold">Discount Coupon Restrictions</p>',
+    'TEXT_COUPON_HELP_CATEGORIES' => '<p class="bold">Category Restrictions:</p>',
+    'TEXT_COUPON_HELP_PRODUCTS' => '<p class="bold">Product Restrictions:</p>',
+    'TEXT_NO_CAT_TOP_ONLY_DENY' => '<p>This coupon has specific Product Restrictions.</p>',
+    'TEXT_NO_CAT_RESTRICTIONS' => '<p>This coupon is valid for all categories.</p>',
+    'TEXT_NO_PROD_RESTRICTIONS' => '<p>This coupon is valid for all products.</p>',
+    'TEXT_NO_PROD_SALES' => '<p>This coupon is not valid for products on sale.</p>',
+    'TEXT_CAT_ALLOWED' => ' (Valid for this category)',
+    'TEXT_CAT_DENIED' => ' (Not allowed on this category)',
+    'TEXT_PROD_ALLOWED' => ' (Valid for this product)',
+    'TEXT_PROD_DENIED' => ' (Not allowed product)',
+    'TEXT_COUPON_GV_RESTRICTION' => '<p class="smallText">Discount Coupons may not be applied towards the purchase of ' . TEXT_GV_NAMES . '. Limit 1 coupon per order.</p>',
+    'TEXT_DISCOUNT_COUPON_ID_INFO' => 'Look-up Discount Coupon ... ',
+    'TEXT_DISCOUNT_COUPON_ID' => 'Your Code: ',
+    'TEXT_COUPON_GV_RESTRICTION_ZONES' => 'Billing Address Restrictions apply.',
+];
+
+return $define;
