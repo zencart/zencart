@@ -8,7 +8,6 @@
 
 $define = [
     'HEADING_TITLE' => '%%TEXT_GV_NAME%%' . ' Release Queue',
-    'TABLE_HEADING_CUSTOMERS' => 'Customers',
     'TABLE_HEADING_ORDERS_ID' => 'Order-No.',
     'TABLE_HEADING_VOUCHER_VALUE' => '%%TEXT_GV_NAME%%' . ' Value',
     'TABLE_HEADING_DATE_PURCHASED' => 'Date Purchased',

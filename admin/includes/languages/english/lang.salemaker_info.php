@@ -58,7 +58,6 @@ $define = [
                         Checking a category automatically includes the sub-categories.
                       </li>
                     </ul>',
-    'TEXT_CLOSE_WINDOW' => '[ close window ]',
 ];
 
 return $define;

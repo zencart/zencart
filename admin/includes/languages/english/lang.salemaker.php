@@ -8,10 +8,6 @@
 
 $define = [
     'HEADING_TITLE' => 'SaleMaker',
-    'TABLE_HEADING_SALE_NAME' => 'SaleName',
-    'TABLE_HEADING_SALE_DEDUCTION' => 'Deduction',
-    'TABLE_HEADING_SALE_DATE_START' => 'Startdate',
-    'TABLE_HEADING_SALE_DATE_END' => 'Enddate',
     'TEXT_SALEMAKER_NAME' => 'SaleName:',
     'TEXT_SALEMAKER_DEDUCTION' => 'Deduction:',
     'TEXT_SALEMAKER_DEDUCTION_TYPE' => '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Type:&nbsp;&nbsp;',
@@ -22,8 +18,6 @@ $define = [
     'TEXT_SALEMAKER_DATE_END' => 'End Date:',
     'TEXT_SALEMAKER_CATEGORIES' => '<b>Or</b> check the categories to which this sale applies:',
     'TEXT_SALEMAKER_POPUP' => '<a href="javascript:session_win();"><span class="errorText"><b>Click here for Salemaker Usage Tips.</b></span></a>',
-    'TEXT_SALEMAKER_IMMEDIATELY' => 'Immediately',
-    'TEXT_SALEMAKER_NEVER' => 'Never',
     'TEXT_SALEMAKER_ENTIRE_CATALOG' => 'Check this box if you want the sale to be applied to <b>all products</b>:',
     'TEXT_SALEMAKER_TOP' => 'Entire catalog',
     'TEXT_INFO_DATE_STATUS_CHANGE' => 'Last Status Change:',

@@ -15,7 +15,6 @@ $define = [
     'TEXT_INFO_MASTER_CATEGORY_CHANGE' => 'A product has a Master Category ID (for pricing purposes) that can be considered as the category where the product actually <i>resides</i>. Additionally, a product may be <i>linked</i> to any number of other categories, so that it displays in multiple places. <br>The Master Category ID can be changed by using this Master Category dropdown, that only offers the <strong>currently linked</strong> categories as possible alternatives.<br>To set the Master Category ID to <strong>another</strong> category, first link it to a new category using the table below, and Update. Then use this dropdown to reassign the master category to that new category.',
     'TEXT_INFOBOX_HEADING_SELECT_PRODUCT' => 'Select Product by ID#',
     'TEXT_SET_PRODUCTS_TO_CATEGORIES_LINKS' => 'Show Product to Categories Links for: ',
-    'TEXT_PRODUCTS_ID' => 'Product ID# ',
     'TEXT_PRODUCTS_NAME' => 'Product: ',
     'TEXT_PRODUCTS_PRICE' => 'Price: ',
     'BUTTON_NEW_PRODUCTS_TO_CATEGORIES' => 'Select Another Product by ID#',

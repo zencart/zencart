@@ -12,7 +12,6 @@ $define = [
     'TEXT_NEW_INTRO' => 'Please enter the details of the new recording artist below.',
     'TEXT_EDIT_INTRO' => 'Please amend the details of the recording artist below.',
     'TEXT_DELETE_INTRO' => 'Are you sure you want to delete this artist.',
-    'TEXT_DELETE_IMAGE' => 'Delete Image?.',
     'TEXT_RECORD_ARTIST_NAME' => 'Artists Name',
     'TEXT_RECORD_ARTIST_IMAGE' => 'Artists Image',
     'TEXT_RECORD_ARTIST_URL' => 'Artists Web Site',

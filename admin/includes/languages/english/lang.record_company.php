@@ -12,7 +12,6 @@ $define = [
     'TEXT_NEW_INTRO' => 'Please enter the details of the new Record Company below.',
     'TEXT_EDIT_INTRO' => 'Please amend the details of the Record Company below.',
     'TEXT_DELETE_INTRO' => 'Are you sure you want to delete this Record Company.',
-    'TEXT_DELETE_IMAGE' => 'Delete Image?.',
     'TEXT_RECORD_COMPANY_NAME' => 'Record Company Name',
     'TEXT_RECORD_COMPANY_IMAGE' => 'Record Company Image',
     'TEXT_RECORD_COMPANY_URL' => 'Record Company Web Site',

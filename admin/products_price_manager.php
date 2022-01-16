@@ -636,7 +636,7 @@ if (!empty($action)) {
                 updateGross();
               </script>
               <div class="form-group">
-                <?php echo zen_draw_label(TEXT_PRODUCT_AVAILABLE_DATE, 'products_date_available', 'class="col-sm-3 control-label"'); ?>
+                <?php echo zen_draw_label(TEXT_AVAILABLE_DATE, 'products_date_available', 'class="col-sm-3 control-label"'); ?>
                 <div class="col-sm-9 col-md-6">
                   <div class="date input-group" id="datepicker_products_date_available">
                     <span class="input-group-addon datepicker_icon">
@@ -753,7 +753,7 @@ if (!empty($action)) {
                   updateSpecialsGross();
                 </script>
                 <div class="form-group">
-                  <?php echo zen_draw_label(TEXT_SPECIALS_AVAILABLE_DATE, 'specials_date_available', 'class="col-sm-3 control-label"'); ?>
+                  <?php echo zen_draw_label(TEXT_AVAILABLE_DATE, 'specials_date_available', 'class="col-sm-3 control-label"'); ?>
                   <div class="col-sm-9 col-md-6">
                     <div class="date input-group" id="datepicker_specials_date_available">
                       <span class="input-group-addon datepicker_icon">
@@ -821,7 +821,7 @@ if (!empty($action)) {
                 <div class="row"><?php echo zen_draw_separator('pixel_black.gif', '100%', '2'); ?></div>
                 <div class="col-sm-12"><?php echo TEXT_FEATURED_PRODUCT_INFO; ?></div>
                 <div class="form-group">
-                  <?php echo zen_draw_label(TEXT_FEATURED_AVAILABLE_DATE, 'featured_date_available', 'class="control-label col-sm-3"'); ?>
+                  <?php echo zen_draw_label(TEXT_AVAILABLE_DATE, 'featured_date_available', 'class="control-label col-sm-3"'); ?>
                   <div class="col-sm-9 col-md-6">
                     <div class="date input-group" id="datepicker_featured_date_available">
                       <span class="input-group-addon datepicker_icon">

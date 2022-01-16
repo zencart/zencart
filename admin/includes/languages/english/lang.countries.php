@@ -8,7 +8,6 @@
 
 $define = [
     'HEADING_TITLE' => 'Countries',
-    'TABLE_HEADING_COUNTRY_NAME' => 'Country',
     'TABLE_HEADING_COUNTRY_CODES' => 'ISO Codes',
     'TABLE_HEADING_COUNTRY_STATUS' => 'Status',
     'TEXT_INFO_COUNTRY_NAME' => 'Name:',

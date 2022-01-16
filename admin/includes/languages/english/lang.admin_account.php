@@ -8,9 +8,6 @@
 
 $define = [
     'HEADING_TITLE' => 'Admin Account',
-    'TEXT_ADMIN_NAME' => 'Username',
-    'TEXT_PASSWORD' => 'Password',
-    'TEXT_CONFIRM_PASSWORD' => 'Confirm Password',
     'SUCCESS_PASSWORD_UPDATED' => 'Password updated.',
 ];
 

@@ -8,7 +8,6 @@
 
 $define = [
     'HEADING_TITLE' => 'Zone Definitions - Taxes, Payment and Shipping',
-    'TABLE_HEADING_COUNTRY' => 'Country',
     'TABLE_HEADING_COUNTRY_ZONE' => 'Zone',
     'TABLE_HEADING_TAX_ZONES' => 'Zone Name',
     'TABLE_HEADING_TAX_ZONES_DESCRIPTION' => 'Zone Description',

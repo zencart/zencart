@@ -8,9 +8,6 @@
 
 $define = [
     'HEADING_TITLE' => 'Specials',
-    'TABLE_HEADING_STOCK' => 'Stock',
-    'TABLE_HEADING_AVAILABLE_DATE' => 'Active From',
-    'TABLE_HEADING_EXPIRES_DATE' => 'Expires On',
     'TEXT_ADD_SPECIAL_SELECT' => 'Add Special by Selection',
     'TEXT_ADD_SPECIAL_PID' => 'Add Special by Product ID',
     'TEXT_SEARCH_SPECIALS' => 'Search current Specials',

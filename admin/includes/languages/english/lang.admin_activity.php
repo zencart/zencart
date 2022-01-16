@@ -14,7 +14,6 @@ $define = [
     'TEXT_ACTIVITY_EXPORT_FILENAME' => 'Export Filename:',
     'TEXT_ACTIVITY_EXPORT_SAVETOFILE' => 'Save to file on server? (otherwise will stream for download directly from this window)',
     'TEXT_ACTIVITY_EXPORT_DEST' => 'Destination: ',
-    'TEXT_PROCESSED' => ' Processed.',
     'SUCCESS_EXPORT_ADMIN_ACTIVITY_LOG' => 'Export complete. ',
     'FAILURE_EXPORT_ADMIN_ACTIVITY_LOG' => 'ALERT: Export failed. Could not successfully write to file ',
     'TEXT_INSTRUCTIONS' => '<u>INSTRUCTIONS</u><br>

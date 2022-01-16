@@ -14,7 +14,6 @@ $define = [
     'TEXT_PAGE_PARAMS' => 'Page Parameters',
     'TEXT_MENU_KEY' => 'Menu',
     'TEXT_DISPLAY_ON_MENU' => 'Display on Menu?',
-    'TEXT_SORT_ORDER' => 'Sort Order',
     'TEXT_EXAMPLE_PAGE_KEY' => '(e.g. myModPageName)',
     'TEXT_EXAMPLE_LANGUAGE_KEY' => '(e.g. BOX_MY_MOD_PAGE_NAME)',
     'TEXT_EXAMPLE_MAIN_PAGE' => '(e.g. FILENAME_PAGE_NAME)',

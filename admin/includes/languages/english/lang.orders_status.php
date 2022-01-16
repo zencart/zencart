@@ -10,7 +10,6 @@ $define = [
     'HEADING_TITLE' => 'Orders Status',
     'TABLE_HEADING_ORDERS_STATUS' => 'Orders Status',
     'TABLE_HEADING_ORDERS_STATUS_ID' => 'Orders Status ID',
-    'TABLE_HEADING_SORT_ORDER' => 'Sort Order',
     'TEXT_INFO_SORT_ORDER' => 'Sort Order: ',
     'TEXT_INFO_ORDERS_STATUS_NAME' => 'Orders Status:',
     'TEXT_INFO_INSERT_INTRO' => 'Please enter the new orders status with its related data',
