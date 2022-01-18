@@ -94,6 +94,9 @@ if (isset($_GET['action']) && ($_GET['action'] == 'send')) {
             $html_msg['EXTRA_INFO'] = $extra_info['HTML'];
             // Send message
             zen_mail($send_to_name, $send_to_email, EMAIL_SUBJECT, $text_message, $name, $email_address, $html_msg, 'contact_us');
+            if (!empty(SEND_EXTRA_CONTACT_EMAILS_TO)) {
+               zen_mail('', SEND_EXTRA_CONTACT_EMAILS_TO, EMAIL_SUBJECT, $text_message, $name, $email_address, $html_msg, 'contact_us');
+            }
         }
         zen_redirect(zen_href_link(FILENAME_CONTACT_US, 'action=success', 'SSL'));
     } else {
