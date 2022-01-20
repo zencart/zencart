@@ -227,8 +227,8 @@ if (!empty($action)) {
             echo zen_draw_hidden_field('products_id', $_GET['preID']);
           }
           ?>
-          <div class="form-group">
-            <?php if (isset($fInfo->products_name)) { // Featured is already defined/this is an update ?>
+          <?php if (isset($fInfo->products_name)) { // Featured is already defined/this is an update ?>
+            <div class="form-group">
               <p class="col-sm-3 control-label"><?php echo TEXT_FEATURED_PRODUCT; ?></p>
               <div class="col-sm-9 col-md-6">
                 <span class="form-control" style="border:none; -webkit-box-shadow: none"><?php echo 'ID#' . $fInfo->products_id . ': ' . $fInfo->products_model . ' - "' . zen_clean_html($fInfo->products_name) . '" (' . $currencies->format($fInfo->products_price) . ')'; ?></span>
@@ -257,7 +257,6 @@ if (!empty($action)) {
               </div>
             </div>
           <?php } ?>
-        </div>
           <?php echo zen_draw_hidden_field('update_products_id', $fInfo->products_id); ?>
           <div class="form-group">
             <?php echo zen_draw_label(TEXT_FEATURED_AVAILABLE_DATE, 'featured_date_available', 'class="col-sm-3 control-label"'); ?>
