@@ -23,7 +23,6 @@ $define = [
     'OTHER_REVIEWS_RATING_STARS_THREE_ALT' => 'Three Stars',
     'OTHER_REVIEWS_RATING_STARS_TWO_ALT' => 'Two Stars',
     'OTHER_REVIEWS_RATING_STARS_ONE_ALT' => 'One Star',
-
 ];
 
 return $define;

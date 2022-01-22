@@ -13,4 +13,5 @@ $define = [
 // "Location One, Location Two, Location Three"
 // or leave it blank to simply use the same text as defined in the Admin, regardless of language
 // TIP: This should really be left blank for the default language, otherwise the Admin settings field is never used.
+
 return $define;

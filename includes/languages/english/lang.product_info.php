@@ -16,5 +16,4 @@ $define = [
     'TEXT_ONETIME_CHARGE_SYMBOL' => ' *',
 ];
 
-
 return $define;

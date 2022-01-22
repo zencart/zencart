@@ -9,7 +9,6 @@ $define = [
     'BOX_WHOS_ONLINE_MEMBER' => 'member',
     'BOX_WHOS_ONLINE_MEMBERS' => 'members',
     'BOX_WHOS_ONLINE_ONLINE' => 'online.',
-
 ];
 
 return $define;
