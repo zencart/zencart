@@ -6,8 +6,6 @@ $define = [
     'MODULE_PAYMENT_PAYPAL_MARK_BUTTON_IMG' => 'https://www.paypal.com/en_US/i/logo/PayPal_mark_37x23.gif',
     'MODULE_PAYMENT_PAYPAL_MARK_BUTTON_ALT' => 'Checkout with PayPal',
     'MODULE_PAYMENT_PAYPAL_ACCEPTANCE_MARK_TEXT' => 'Save time. Check out securely. <br>Pay without sharing your financial information.',
-    'MODULE_PAYMENT_PAYPAL_TEXT_CATALOG_LOGO' => '<img src="' . MODULE_PAYMENT_PAYPAL_MARK_BUTTON_IMG . '" alt="' . MODULE_PAYMENT_PAYPAL_MARK_BUTTON_ALT . '" title="' . MODULE_PAYMENT_PAYPAL_MARK_BUTTON_ALT . '"> &nbsp;' .
-        '<span class="smallText">' . MODULE_PAYMENT_PAYPAL_ACCEPTANCE_MARK_TEXT . '</span>',
     'MODULE_PAYMENT_PAYPAL_PURCHASE_DESCRIPTION_TITLE' => 'All the items in your shopping basket (see details in the store and on your store receipt).',
     'MODULE_PAYMENT_PAYPAL_PURCHASE_DESCRIPTION_ITEMNUM' => STORE_NAME . ' Purchase',
     'MODULES_PAYMENT_PAYPALSTD_LINEITEM_TEXT_ONETIME_CHARGES_PREFIX' => 'One-Time Charges related to ',
@@ -52,5 +50,7 @@ if (IS_ADMIN_FLAG === true) {
 } else {
     $define['MODULE_PAYMENT_PAYPAL_TEXT_DESCRIPTION'] = '<strong>PayPal</strong>';
 }
+$define['MODULE_PAYMENT_PAYPAL_TEXT_CATALOG_LOGO'] = '<img src="' . $define['MODULE_PAYMENT_PAYPAL_MARK_BUTTON_IMG'] . '" alt="' . $define['MODULE_PAYMENT_PAYPAL_MARK_BUTTON_ALT'] . '" title="' . $define['MODULE_PAYMENT_PAYPAL_MARK_BUTTON_ALT'] . '"> &nbsp;' .
+        '<span class="smallText">' . $define['MODULE_PAYMENT_PAYPAL_ACCEPTANCE_MARK_TEXT'] . '</span>';
 
 return $define;
