@@ -14,7 +14,7 @@
 <div>
 <?php
   // $products_values->fields['products_image']
-  echo '<a href="javascript:window.close()">' . zen_image($products_image_large, $products_values->fields['products_name'] . ' ' . TEXT_CLOSE_WINDOW) . '</a>';
+  echo '<a href="javascript:window.close()">' . zen_image($products_image_large, $products_values->fields['products_name'] . ' ' . TEXT_CLOSE_WINDOW_IMAGE) . '</a>';
 ?>
 </div>
 </body>

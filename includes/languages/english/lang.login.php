@@ -11,12 +11,8 @@ $define = [
     'HEADING_RETURNING_CUSTOMER' => 'Returning Customers: Please Log In',
     'HEADING_RETURNING_CUSTOMER_SPLIT' => 'Returning Customers',
     'TEXT_RETURNING_CUSTOMER_SPLIT' => 'In order to continue, please login to your <strong>' . STORE_NAME . '</strong> account.',
-    'TEXT_PASSWORD_FORGOTTEN' => 'Forgot your password?',
     'TEXT_LOGIN_ERROR' => 'Error: Sorry, there is no match for that email address and/or password.',
     'TEXT_VISITORS_CART' => '<strong>Note:</strong> If you have shopped with us before and left something in your cart, for your convenience, the contents will be merged if you log back in. <a href="javascript:session_win(,">[More Info]</a>',
-    'TABLE_HEADING_PRIVACY_CONDITIONS' => '<span class="privacyconditions">Privacy Statement</span>',
-    'TEXT_PRIVACY_CONDITIONS_DESCRIPTION' => '<span class="privacydescription">Please acknowledge you agree with our privacy statement by ticking the following box. The privacy statement can be read</span> <a href="' . zen_href_link(FILENAME_PRIVACY) . '"><span class="pseudolink">here</span></a>.',
-    'TEXT_PRIVACY_CONDITIONS_CONFIRM' => '<span class="privacyagree">I have read and agreed to your privacy statement.</span>',
     'ERROR_SECURITY_ERROR' => 'There was a security error when trying to login.',
     'TEXT_LOGIN_BANNED' => 'Error: Access denied.',
 ];
