@@ -204,7 +204,7 @@ $define = [
     'FEMALE' => 'Ms.',
     'FOOTER_TEXT_BODY' => 'Copyright &copy; ' . date('Y') . ' <a href="' . zen_href_link(FILENAME_DEFAULT) . '">' . STORE_NAME . '</a>. Powered by <a href="https://www.zen-cart.com" rel="noopener noreferrer" target="_blank">Zen Cart</a>',
     'FORM_REQUIRED_INFORMATION' => '* Required information',
-    'FREE_SHIPPING_DESCRIPTION' => 'Free shipping for orders over %s'
+    'FREE_SHIPPING_DESCRIPTION' => 'Free shipping for orders over %s',
     'HEADING_ADDRESS_INFORMATION' => 'Address Information',
     'HEADING_BILLING_ADDRESS' => 'Billing Address',
     'HEADING_DELIVERY_ADDRESS' => 'Delivery Address',
