@@ -10,7 +10,7 @@ $define = [
     'MODULE_PAYMENT_PAYPALWPP_TEXT_EC_HEADER' => 'Fast, Secure Checkout with PayPal:',
     'MODULE_PAYMENT_PAYPALWPP_EC_TEXT_TYPE' => 'PayPal Express Checkout',
     'MODULE_PAYMENT_PAYPALWPP_DP_TEXT_TYPE' => 'PayPal Direct Payment',
-    'MODULE_PAYMENT_PAYPALWPP_PF_TEXT_TYPE' => 'Credit Card', 
+    'MODULE_PAYMENT_PAYPALWPP_PF_TEXT_TYPE' => 'Credit Card',
     'MODULE_PAYMENT_PAYPALWPP_ERROR_HEADING' => 'We\'re sorry, but we were unable to process your credit card.',
     'MODULE_PAYMENT_PAYPALWPP_TEXT_CARD_ERROR' => 'The credit card information you entered contains an error.  Please check it and try again.',
     'MODULE_PAYMENT_PAYPALWPP_TEXT_CREDIT_CARD_FIRSTNAME' => 'Credit Card First Name:',
@@ -161,6 +161,5 @@ if (IS_ADMIN_FLAG === true) {
         (MODULE_PAYMENT_PAYPALWPP_MODULE_MODE == 'PayPal' ? '<br><br><span class="alert">3. </span>In your PayPal account, enable <strong>Instant Payment Notification</strong>:<br>under "Profile", select <em>Instant Payment Notification Preferences</em><ul style="margin-top: 0.5em;"><li>click the checkbox to enable IPN</li><li>if there is not already a URL specified, set the URL to:<br><nobr><pre>' . str_replace('index.php?main_page=index', 'ipn_main_handler.php', zen_catalog_href_link(FILENAME_DEFAULT)) . '</pre></nobr></li></ul>' : '') .
         '<font color="green"><hr><strong>Requirements:</strong></font><br><hr>*<strong>CURL</strong> is used for outbound communication with the gateway over ports 80 and 443, so must be active on your hosting server and able to use SSL.<br><hr>';
 }
-
 
 return $define;
