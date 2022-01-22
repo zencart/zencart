@@ -19,4 +19,5 @@ if (IS_ADMIN_FLAG === true) {
              <a rel="noreferrer noopener" target="_blank" href="https://globalgatewaye4.firstdata.com/">Click to Login to the First Data GGe4 Merchant Area</a>';
     }
 }
+
 return $define;

@@ -12,7 +12,6 @@ $define = [
                     It appears after and to the right of your card number.<br />' .
         zen_image(DIR_WS_TEMPLATE_ICONS . 'cvv2amex.gif'),
     'TEXT_CLOSE_CVV_WINDOW' => 'Close Window [x]',
-
 ];
 
 return $define;

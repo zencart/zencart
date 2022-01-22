@@ -6,7 +6,6 @@ $define = [
     'TEXT_MAINTENANCE_ON_AT_TIME' => 'The Admin / Webmaster has enabled maintenance at : ',
     'TEXT_MAINTENANCE_PERIOD' => 'Maintenance period: ',
     'DOWN_FOR_MAINTENANCE_STATUS_TEXT' => 'To verify the site status ... Click here:',
-
 ];
 
 return $define;
