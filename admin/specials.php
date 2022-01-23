@@ -298,8 +298,8 @@ if (!empty($action)) {
             echo zen_draw_hidden_field('products_id', $_GET['preID']);
           }
           ?>
-          <div class="form-group">
-            <?php if (isset($sInfo->products_name)) { // Special is already defined/this is an update ?>
+          <?php if (isset($sInfo->products_name)) { // Special is already defined/this is an update ?>
+            <div class="form-group">
               <p class="col-sm-3 control-label"><?php echo TEXT_SPECIALS_PRODUCT; ?></p>
               <div class="col-sm-9 col-md-6">
                 <span class="form-control" style="border:none; -webkit-box-shadow: none"><?php echo 'ID#' . $sInfo->products_id . ': ' . $sInfo->products_model . ' - "' . zen_clean_html($sInfo->products_name) . '" (' . $currencies->format($sInfo->products_price) . ')'; ?></span>
@@ -328,7 +328,6 @@ if (!empty($action)) {
               </div>
             </div>
           <?php } ?>
-        </div>
           <?php echo zen_draw_hidden_field('products_priced_by_attribute', $sInfo->products_priced_by_attribute); ?>
           <?php echo zen_draw_hidden_field('products_price', (!empty($sInfo->products_price) ? $sInfo->products_price : '')); ?>
           <?php echo zen_draw_hidden_field('update_products_id', $sInfo->products_id); ?>
