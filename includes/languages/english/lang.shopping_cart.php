@@ -7,7 +7,7 @@ $define = [
     'TABLE_HEADING_PRICE' => 'Unit',
     'TEXT_CART_EMPTY' => 'Your Shopping Cart is empty.',
     'SUB_TITLE_SUB_TOTAL' => 'Sub-Total:',
-    'TEXT_CART_HELP' => '<a href="javascript:session_win(,">[help (?)]</a>',
+    'TEXT_CART_HELP' => '<a href="javascript:session_win();">[help (?)]</a>',
 ];
 
 return $define;

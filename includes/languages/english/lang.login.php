@@ -12,7 +12,7 @@ $define = [
     'HEADING_RETURNING_CUSTOMER_SPLIT' => 'Returning Customers',
     'TEXT_RETURNING_CUSTOMER_SPLIT' => 'In order to continue, please login to your <strong>' . STORE_NAME . '</strong> account.',
     'TEXT_LOGIN_ERROR' => 'Error: Sorry, there is no match for that email address and/or password.',
-    'TEXT_VISITORS_CART' => '<strong>Note:</strong> If you have shopped with us before and left something in your cart, for your convenience, the contents will be merged if you log back in. <a href="javascript:session_win(,">[More Info]</a>',
+    'TEXT_VISITORS_CART' => '<strong>Note:</strong> If you have shopped with us before and left something in your cart, for your convenience, the contents will be merged if you log back in. <a href="javascript:session_win();">[More Info]</a>',
     'ERROR_SECURITY_ERROR' => 'There was a security error when trying to login.',
     'TEXT_LOGIN_BANNED' => 'Error: Access denied.',
 ];
