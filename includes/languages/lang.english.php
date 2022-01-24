@@ -516,7 +516,7 @@ $define = [
     $define['BOX_HEADING_GIFT_VOUCHER'] = $define['TEXT_GV_NAME'] . ' Account';
     $define['BOX_INFORMATION_GV'] = $define['TEXT_GV_NAME'] . ' FAQ';
     $define['ENTRY_EMAIL_PREFERENCE'] = 'Newsletter and Email Details';
-    if (ACCOUNT_NEWSLETTER_STATUS == 0) {
+    if (ACCOUNT_NEWSLETTER_STATUS === '0') {
        $define['ENTRY_EMAIL_PREFERENCE'] = 'Email Details';
     }
     $define['ERROR_NO_INVALID_REDEEM_GV'] = 'Invalid ' . $define['TEXT_GV_NAME'] . ' ' . $define['TEXT_GV_REDEEM'];
