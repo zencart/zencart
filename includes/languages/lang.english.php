@@ -12,7 +12,8 @@ $define = [
     'ARIA_PAGINATION_GOTO' => 'Go to ',
     'ARIA_PAGINATION_NEXT_PAGE' => 'Go to Next Page',
     'ARIA_PAGINATION_PAGE_NUM' => 'Page %s',
-    'ARIA_PAGINATION_ROLE_LABEL_FOR' => '%s Pagination', 'ARIA_PAGINATION_PREVIOUS_PAGE' => 'Go to Previous Page',
+    'ARIA_PAGINATION_ROLE_LABEL_FOR' => '%s Pagination',
+    'ARIA_PAGINATION_PREVIOUS_PAGE' => 'Go to Previous Page',
     'ARIA_PAGINATION_ROLE_LABEL_GENERAL' => 'Pagination',
     'ARIA_QTY_ADD_TO_CART' => 'Enter quantity to add to cart',
     'ASK_A_QUESTION' => 'Ask a question about this item',
@@ -81,7 +82,8 @@ $define = [
     'CATEGORY_COMPANY' => 'Company Details',
     'CATEGORY_PERSONAL' => 'Your Personal Details',
     'CHARSET' => 'utf-8',
-    'DATE_FORMAT_LONG' => '%A %d %B, %Y', 'DATE_FORMAT' => 'm/d/Y',
+    'DATE_FORMAT_LONG' => '%A %d %B, %Y',
+    'DATE_FORMAT' => 'm/d/Y',
     'DB_ERROR_NOT_CONNECTED' => 'Error - Could not connect to Database',
     'DOB_FORMAT_STRING' => 'mm/dd/yyyy',
     'DOWNLOADS_CONTROLLER_ON_HOLD_MSG' => 'NOTE: Downloads are not available until payment has been confirmed',
@@ -131,7 +133,8 @@ $define = [
     'ENTRY_NEWSLETTER' => 'Subscribe to Our Newsletter.',
     'ENTRY_NEWSLETTER_TEXT' => '',
     'ENTRY_NICK' => 'Forum Nick Name:',
-    'ENTRY_NICK_TEXT' => '*', 'ENTRY_NICK_DUPLICATE_ERROR' => 'That Nick Name is already being used. Please try another.',
+    'ENTRY_NICK_TEXT' => '*',
+    'ENTRY_NICK_DUPLICATE_ERROR' => 'That Nick Name is already being used. Please try another.',
     'ENTRY_PASSWORD' => 'Password:',
     'ENTRY_PASSWORD_CONFIRMATION' => 'Confirm Password:',
     'ENTRY_PASSWORD_CONFIRMATION_TEXT' => '*',
@@ -336,7 +339,6 @@ $define = [
     'TABLE_HEADING_PHONE_FAX_DETAILS' => 'Additional Contact Details',
     'TABLE_HEADING_PRICE' => 'Price',
     'TABLE_HEADING_PRIVACY_CONDITIONS' => 'Privacy Statement',
-    'TABLE_HEADING_PRODUCTS' => 'Item Name',
     'TABLE_HEADING_PRODUCTS' => 'Product Name',
     'TABLE_HEADING_PRODUCT_NAME' => 'Item Name',
     'TABLE_HEADING_QUANTITY' => 'Qty.',
@@ -436,7 +438,8 @@ $define = [
     'TEXT_LETTERS_FREE' => ' Letter(s) free ',
     'TEXT_LOGIN_FOR_PRICE_BUTTON_REPLACE' => 'Login for price',
     'TEXT_LOGIN_FOR_PRICE_PRICE' => 'Price Unavailable',
-    'TEXT_LOGIN_FOR_PRICE_PRICE_SHOWROOM' => '', 'TEXT_LOGIN_FOR_PRICE_BUTTON_REPLACE_SHOWROOM' => 'Show Room Only',
+    'TEXT_LOGIN_FOR_PRICE_PRICE_SHOWROOM' => '',
+    'TEXT_LOGIN_FOR_PRICE_BUTTON_REPLACE_SHOWROOM' => 'Show Room Only',
     'TEXT_LOGIN_TO_SHOP_BUTTON_REPLACE' => 'Login to Shop',
     'TEXT_MANUFACTURER' => 'Manufacturer:',
     'TEXT_MAXIMUM_CHARACTERS_ALLOWED' => ' maximum characters allowed',
@@ -508,23 +511,23 @@ $define = [
     'WARNING_SHOPPING_CART_COMBINED' => 'NOTICE: For your convenience, your current shopping cart has been combined with your shopping cart from your last visit. Please review your shopping cart before checking out.',
 ];
 
-// Definitions that require references to other definitions 
+// Definitions that require references to other definitions
     $define['ATTRIBUTES_QTY_PRICE_SYMBOL'] = zen_image(DIR_WS_TEMPLATE_ICONS . 'icon_status_green.gif', $define['TEXT_ATTRIBUTES_QTY_PRICE_HELP_LINK'], 10, 10) . '&nbsp;';
-    $define['BOX_HEADING_GIFT_VOUCHER'] = $define['TEXT_GV_NAME'] . ' Account'; 
-    $define['BOX_INFORMATION_GV'] = $define['TEXT_GV_NAME'] . ' FAQ'; 
+    $define['BOX_HEADING_GIFT_VOUCHER'] = $define['TEXT_GV_NAME'] . ' Account';
+    $define['BOX_INFORMATION_GV'] = $define['TEXT_GV_NAME'] . ' FAQ';
     $define['ENTRY_EMAIL_PREFERENCE'] = 'Newsletter and Email Details';
     if (ACCOUNT_NEWSLETTER_STATUS == 0) {
        $define['ENTRY_EMAIL_PREFERENCE'] = 'Email Details';
     }
-    $define['ERROR_NO_INVALID_REDEEM_GV'] = 'Invalid ' . $define['TEXT_GV_NAME'] . ' ' . $define['TEXT_GV_REDEEM']; 
-    $define['ERROR_NO_REDEEM_CODE'] = 'You did not enter a ' . $define['TEXT_GV_REDEEM'] . '.'; 
-    $define['ERROR_REDEEMED_AMOUNT'] = 'Congratulations = you have redeemed '; 
-    $define['GV_FAQ'] = $define['TEXT_GV_NAME'] . ' FAQ'; 
-    $define['TABLE_HEADING_CREDIT'] = 'Credits Available'; 
-    $define['TEXT_AVAILABLE_BALANCE'] = 'Your ' . $define['TEXT_GV_NAME'] . ' Account'; 
-    $define['TEXT_BALANCE_IS'] = 'Your ' . $define['TEXT_GV_NAME'] . ' balance is: '; 
+    $define['ERROR_NO_INVALID_REDEEM_GV'] = 'Invalid ' . $define['TEXT_GV_NAME'] . ' ' . $define['TEXT_GV_REDEEM'];
+    $define['ERROR_NO_REDEEM_CODE'] = 'You did not enter a ' . $define['TEXT_GV_REDEEM'] . '.';
+    $define['ERROR_REDEEMED_AMOUNT'] = 'Congratulations = you have redeemed ';
+    $define['GV_FAQ'] = $define['TEXT_GV_NAME'] . ' FAQ';
+    $define['TABLE_HEADING_CREDIT'] = 'Credits Available';
+    $define['TEXT_AVAILABLE_BALANCE'] = 'Your ' . $define['TEXT_GV_NAME'] . ' Account';
+    $define['TEXT_BALANCE_IS'] = 'Your ' . $define['TEXT_GV_NAME'] . ' balance is: ';
     $define['TEXT_COUPON_GV_RESTRICTION'] = '<p class="smallText">Discount Coupons may not be applied towards the purchase of ' . $define['TEXT_GV_NAMES'] . '. Limit 1 coupon per order.</p>';
-    $define['TEXT_SEND_OR_SPEND'] = 'You have a balance available in your ' . $define['TEXT_GV_NAME'] . ' account. You may spend it or send it to someone else. To send click the button below.'; 
+    $define['TEXT_SEND_OR_SPEND'] = 'You have a balance available in your ' . $define['TEXT_GV_NAME'] . ' account. You may spend it or send it to someone else. To send click the button below.';
     $define['VOUCHER_BALANCE'] = $define['TEXT_GV_NAME'] . ' Balance ';
 
 return $define;
