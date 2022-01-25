@@ -163,6 +163,7 @@ $define = [
     'ENTRY_STREET_ADDRESS_TEXT' => '*',
     'ENTRY_SUBURB' => 'Address Line 2:',
     'ENTRY_SUBURB_TEXT' => '',
+    'ENTRY_TELEPHONE' => ' Telephone:',
     'ENTRY_TELEPHONE_NUMBER' => 'Telephone Number:',
     'ENTRY_TELEPHONE_NUMBER_ERROR' => 'Your Telephone Number must contain a minimum of ' . ENTRY_TELEPHONE_MIN_LENGTH . ' characters.',
     'ENTRY_TELEPHONE_NUMBER_TEXT' => '*',
