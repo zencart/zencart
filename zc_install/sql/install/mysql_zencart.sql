@@ -2210,22 +2210,26 @@ CREATE TABLE zones_to_geo_zones (
 INSERT INTO template_select (template_id, template_dir, template_language) VALUES (1, 'responsive_classic', '0');
 
 # 1 - default, 2 - USA / Austrailia, 3 - italy, 4 - Singapore , 5 - Germany, 6 - UK/GB, 7 - Spain, 8 - Brazil, 9 - Peru, 10 - Nigeria, 11 - Panama, 12 - Oman, 13 - Venezuela, 14 - Philippians, 15 - Vietnam, 16 - Hungary
-INSERT INTO address_format VALUES (1,'$firstname $lastname$cr$streets$cr$city$cr$country','$city');
-INSERT INTO address_format VALUES (2,'$firstname $lastname$cr$streets$cr$city $state    $postcode$cr$country','$city $state $postcode');
-INSERT INTO address_format VALUES (3,'$firstname $lastname$cr$streets$cr$postcode $city $state$cr$country','$postcode $city $state');
-INSERT INTO address_format VALUES (4,'$firstname $lastname$cr$streets$cr$city $postcode$cr$country','$city $postcode');
-INSERT INTO address_format VALUES (5,'$firstname $lastnameupper$cr$streets$cr$postcode &nbsp;$city$cr$country','$postcode $city');
-INSERT INTO address_format VALUES (6,'$firstname $lastname$cr$streets$cr$city$cr$state$cr$postcode$cr$country','$city / $state / $postcode');
-INSERT INTO address_format VALUES (7,'$firstname $lastname$cr$streets$cr$postcode $city $statebrackets$cr$country','$postcode $city $statebrecket');
-INSERT INTO address_format VALUES (8,'$firstname $lastname$cr$streets$cr$city $state$cr$postcode$cr$country','$city $state / $postcode');
-INSERT INTO address_format VALUES (9,'$firstname $lastname$cr$streets$cr$postcode$cr$city $state$cr$country','$postcode / $city / $state');
-INSERT INTO address_format VALUES (10,'$firstname $lastname$cr$streets$cr$city $postcode$cr$state$cr$country','$city $postcode / $state');
-INSERT INTO address_format VALUES (11,'$firstname $lastname$cr$streets$cr$postcode $city$cr$state$cr$country','$postcode $city / $state');
-INSERT INTO address_format VALUES (12,'$firstname $lastname$cr$streets$cr$postcode$cr$city$cr$state$cr$country','$postcode / $city / $state');
-INSERT INTO address_format VALUES (13,'$firstname $lastname$cr$streets$cr$city $postcode $state$cr$country',' $city $postcode $state');
-INSERT INTO address_format VALUES (14,'$firstname $lastname$cr$streets$cr$city$cr$postcode $state$cr$country',' $city / $postcode $state');
-INSERT INTO address_format VALUES (15,'$firstname $lastname$cr$streets$cr$city$cr$state $postcode$cr$country','$city / $state $postcode');
-INSERT INTO address_format VALUES (16,'$firstname $lastname$cr$city$cr$streets$cr$postcode$cr$country','$city $street / $postcode');
+INSERT INTO address_format VALUES (1, '$firstname $lastname$cr$streets$cr$city, $postcode$cr$statecomma$country','Historic');
+INSERT INTO address_format VALUES (2, '$firstname $lastname$cr$streets$cr$city, $state    $postcode$cr$country','Historic');
+INSERT INTO address_format VALUES (3, '$firstname $lastname$cr$streets$cr$city$cr$postcode - $statecomma$country','Historic');
+INSERT INTO address_format VALUES (4, '$firstname $lastname$cr$streets$cr$city ($postcode)$cr$country', 'Historic');
+INSERT INTO address_format VALUES (5, '$firstname $lastname$cr$streets$cr$postcode $city$cr$country','postcode $city');
+INSERT INTO address_format VALUES (6, '$firstname $lastname$cr$streets$cr$city$cr$state$cr$postcode$cr$country','$city / $state / $postcode');
+INSERT INTO address_format VALUES (7, '$firstname $lastname$cr$streets$cr$city $state $postcode$cr$country','$city $state $postcode');
+INSERT INTO address_format VALUES (8,'$firstname $lastname$cr$streets$cr$city$cr$country','$city');
+INSERT INTO address_format VALUES (9,'$firstname $lastname$cr$streets$cr$postcode $city $state$cr$country','$postcode $city $state');
+INSERT INTO address_format VALUES (10,'$firstname $lastname$cr$streets$cr$city $postcode$cr$country','$city $postcode');
+INSERT INTO address_format VALUES (11,'$firstname $lastname$cr$streets$cr$postcode $city $statebrackets$cr$country','$postcode $city $statebrecket');
+INSERT INTO address_format VALUES (12,'$firstname $lastname$cr$streets$cr$city $state$cr$postcode$cr$country','$city $state / $postcode');
+INSERT INTO address_format VALUES (13,'$firstname $lastname$cr$streets$cr$postcode$cr$city $state$cr$country','$postcode / $city / $state');
+INSERT INTO address_format VALUES (14,'$firstname $lastname$cr$streets$cr$city $postcode$cr$state$cr$country','$city $postcode / $state');
+INSERT INTO address_format VALUES (15,'$firstname $lastname$cr$streets$cr$postcode $city$cr$state$cr$country','$postcode $city / $state');
+INSERT INTO address_format VALUES (16,'$firstname $lastname$cr$streets$cr$postcode$cr$city$cr$state$cr$country','$postcode / $city / $state');
+INSERT INTO address_format VALUES (17,'$firstname $lastname$cr$streets$cr$city $postcode $state$cr$country',' $city $postcode $state');
+INSERT INTO address_format VALUES (18,'$firstname $lastname$cr$streets$cr$city$cr$postcode $state$cr$country',' $city / $postcode $state');
+INSERT INTO address_format VALUES (19,'$firstname $lastname$cr$streets$cr$city$cr$state $postcode$cr$country','$city / $state $postcode');
+INSERT INTO address_format VALUES (20,'$firstname $lastname$cr$city$cr$streets$cr$postcode$cr$country','$city $street / $postcode');
 
 INSERT INTO admin (admin_id, admin_name, admin_email, admin_pass, admin_profile, last_modified) VALUES
  (1, 'Admin', 'admin@localhost', '351683ea4e19efe34874b501fdbf9792:9b', 1, now());
