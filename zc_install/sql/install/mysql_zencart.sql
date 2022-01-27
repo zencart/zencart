@@ -2209,7 +2209,7 @@ CREATE TABLE zones_to_geo_zones (
 
 INSERT INTO template_select (template_id, template_dir, template_language) VALUES (1, 'responsive_classic', '0');
 
-# 1 - default, 2 - USA / Austrailia, 3 - italy, 4 - Singapore , 5 - Germany, 6 - UK/GB, 7 - Spain, 8 - Brazil, 9 - Peru, 10 - Nigeria, 11 - Panama, 12 - Oman, 13 - Venezuela, 14 - Philippians, 15 - Vietnam, 16 - Hungary
+# 1-4 Historic -  , 5 - Germany, 6 - UK/GB default, 7 - USA / Austrailia, 8 - Default 9 - italy, 10 - Singapore, 11 - Spain, 12 - Brazil, 13 - Peru, 14 - Nigeria, 15 - Panama, 16 - Oman, 17 - Venezuela, 18 - Philippians, 19 - Vietnam, 20 - Hungary
 INSERT INTO address_format VALUES (1, '$firstname $lastname$cr$streets$cr$city, $postcode$cr$statecomma$country','Historic');
 INSERT INTO address_format VALUES (2, '$firstname $lastname$cr$streets$cr$city, $state    $postcode$cr$country','Historic');
 INSERT INTO address_format VALUES (3, '$firstname $lastname$cr$streets$cr$city$cr$postcode - $statecomma$country','Historic');
