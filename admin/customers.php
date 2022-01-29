@@ -389,25 +389,6 @@ if (!empty($action)) {
               <?php echo zen_draw_input_field('customers_email_address', htmlspecialchars($cInfo->customers_email_address, ENT_COMPAT, CHARSET, TRUE), zen_set_field_length(TABLE_CUSTOMERS, 'customers_email_address', 50) . ' class="form-control" id="customers_email_address" minlength="' . ENTRY_EMAIL_ADDRESS_MIN_LENGTH . '"', true); ?>
             </div>
           </div>
-        </div>
-        <?php
-        if (ACCOUNT_COMPANY == 'true') {
-          ?>
-          <div class="row">
-            <?php echo zen_draw_separator('pixel_trans.gif', '1', '10'); ?>
-          </div>
-          <div class="row formAreaTitle"><?php echo CATEGORY_COMPANY; ?></div>
-          <div class="formArea">
-            <div class="form-group">
-              <?php echo zen_draw_label(ENTRY_COMPANY, 'entry_company', 'class="col-sm-3 control-label"'); ?>
-              <div class="col-sm-9 col-md-6">
-                <?php echo zen_draw_input_field('entry_company', htmlspecialchars($cInfo->company, ENT_COMPAT, CHARSET, TRUE), zen_set_field_length(TABLE_ADDRESS_BOOK, 'entry_company', 50) . ' class="form-control" id="entry_company" minlength="' . ENTRY_COMPANY_MIN_LENGTH . '"'); ?>
-              </div>
-            </div>
-          </div>
-          <?php
-        }
-        ?>
           <?php
           // -----
           // If a plugin has additional fields to add to the form, it supplies that information here.
@@ -436,6 +417,25 @@ if (!empty($action)) {
               }
           }
           ?>
+        </div>
+        <?php
+        if (ACCOUNT_COMPANY == 'true') {
+          ?>
+          <div class="row">
+            <?php echo zen_draw_separator('pixel_trans.gif', '1', '10'); ?>
+          </div>
+          <div class="row formAreaTitle"><?php echo CATEGORY_COMPANY; ?></div>
+          <div class="formArea">
+            <div class="form-group">
+              <?php echo zen_draw_label(ENTRY_COMPANY, 'entry_company', 'class="col-sm-3 control-label"'); ?>
+              <div class="col-sm-9 col-md-6">
+                <?php echo zen_draw_input_field('entry_company', htmlspecialchars($cInfo->company, ENT_COMPAT, CHARSET, TRUE), zen_set_field_length(TABLE_ADDRESS_BOOK, 'entry_company', 50) . ' class="form-control" id="entry_company" minlength="' . ENTRY_COMPANY_MIN_LENGTH . '"'); ?>
+              </div>
+            </div>
+          </div>
+          <?php
+        }
+        ?>
         <div class="row">
           <?php echo zen_draw_separator('pixel_trans.gif', '1', '10'); ?>
         </div>
