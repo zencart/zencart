@@ -406,7 +406,7 @@ if (!empty($action)) {
           //
           $additional_fields = [];
           $zco_notifier->notify('NOTIFY_ADMIN_CUSTOMERS_CUSTOMER_EDIT', $cInfo, $additional_fields);
-          if (is_array($additional_fields)) {
+          if (!empty($additional_fields)) {
               foreach ($additional_fields as $current_field) {
                   ?>
                   <div class="form-group">
