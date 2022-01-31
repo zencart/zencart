@@ -179,7 +179,7 @@
 
   // determine acceptable currencies
   function select_pp_currency() {
-    if (MODULE_PAYMENT_PAYPAL_CURRENCY == 'Selected Currency') {
+    if (!defined('MODULE_PAYMENT_PAYPAL_CURRENCY') || MODULE_PAYMENT_PAYPAL_CURRENCY == 'Selected Currency') {
       $my_currency = $_SESSION['currency'];
     } else {
       $my_currency = substr(MODULE_PAYMENT_PAYPAL_CURRENCY, 5);
