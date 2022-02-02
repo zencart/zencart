@@ -26,12 +26,8 @@ if (!function_exists('makeUnixTimestampFromDate')) {
     }
 }
 
-$convertedFormat = str_replace(['mm', 'MM', 'dd', 'yyyy'], ['m', 'm', 'd', 'Y'], DATE_FORMAT_SPIFFYCAL);
-$startdate = makeUnixTimestampFromDate(date($convertedFormat, strtotime('-30 days')), DATE_FORMAT_SPIFFYCAL);
-$enddate = makeUnixTimestampFromDate(date($convertedFormat), DATE_FORMAT_SPIFFYCAL);
-if (!empty($_POST['start_date'])) $startdate = makeUnixTimestampFromDate(zen_db_input($_POST['start_date']), DATE_FORMAT_SPIFFYCAL);
-if (!empty($_POST['end_date'])) $enddate = makeUnixTimestampFromDate(zen_db_input($_POST['end_date']), DATE_FORMAT_SPIFFYCAL);
-
+$startdate  = zen_db_input($_REQUEST['start_date'] ?? date('Y') . '-01-01');
+$enddate = zen_db_input($_REQUEST['end_date'] ?? date('Y-m-d'));
 
 $sql = "SELECT p.products_id, pd.products_name, sum(v.views) as total_views, l.name as language, p.products_type, pt.type_handler, pt.allow_add_to_cart
         FROM " . TABLE_PRODUCTS . " p
@@ -42,8 +38,9 @@ $sql = "SELECT p.products_id, pd.products_name, sum(v.views) as total_views, l.n
         WHERE date_viewed BETWEEN CAST(:startdate AS DATE) AND CAST(:enddate AS DATE)
         GROUP BY p.products_id, pd.products_name, language, p.products_type, pt.type_handler, pt.allow_add_to_cart
         ORDER BY total_views DESC";
-$sql = $db->bindVars($sql, ':startdate', date('Y-m-d', $startdate), 'string');
-$sql = $db->bindVars($sql, ':enddate', date('Y-m-d', $enddate), 'string');
+$sql = $db->bindVars($sql, ':startdate', $startdate, 'string');
+$sql = $db->bindVars($sql, ':enddate', $enddate, 'string');
+
 $products_split = new splitPageResults($_GET['page'], MAX_DISPLAY_SEARCH_RESULTS_REPORTS, $sql, $products_query_numrows);
 $products = $db->Execute($sql);
 
@@ -52,42 +49,44 @@ $products = $db->Execute($sql);
     <html <?php echo HTML_PARAMS; ?>>
     <head>
         <?php require DIR_WS_INCLUDES . 'admin_html_head.php'; ?>
-        <link rel="stylesheet" type="text/css" href="includes/javascript/spiffyCal/spiffyCal_v2_1.css">
-        <script src="includes/javascript/spiffyCal/spiffyCal_v2_1.js"></script>
-        <script>
-            var StartDate = new ctlSpiffyCalendarBox("StartDate", "date_range", "start_date", "btnDate1", "<?php echo date($convertedFormat, $startdate); ?>", scBTNMODE_CUSTOMBLUE);
-            var EndDate = new ctlSpiffyCalendarBox("EndDate", "date_range", "end_date", "btnDate2", "<?php echo date($convertedFormat, $enddate); ?>", scBTNMODE_CUSTOMBLUE);
-        </script>
     </head>
     <body>
     <!-- header //-->
     <?php require(DIR_WS_INCLUDES . 'header.php'); ?>
     <!-- header_eof //-->
-    <div id="spiffycalendar" class="text"></div>
     <div class="container-fluid">
         <!-- body //-->
         <h1 class="pageHeading"><?php echo HEADING_TITLE; ?></h1>
 
 
         <div class="row">
-            <?php echo zen_draw_form('date_range', FILENAME_STATS_PRODUCTS_VIEWED, '', 'post', 'onsubmit="return check_dates(start_date, StartDate.required, end_date, EndDate.required);" class="form-horizontal"'); ?>
+            <?php echo zen_draw_form('date_range', FILENAME_STATS_PRODUCTS_VIEWED, '', 'post', 'class="form-horizontal"'); ?>
 
             <div class="form-group">
                 <?php echo zen_draw_label(TEXT_REPORT_START_DATE, 'start_date', 'class="col-sm-3 control-label"'); ?>
                 <div class="col-sm-4 col-md-3">
-                    <script>StartDate.writeControl();
-                        StartDate.dateFormat = "<?php echo DATE_FORMAT_SPIFFYCAL; ?>";
-                    </script>
+                    <div class="date input-group" id="datepicker_start_date">
+                <span class="input-group-addon datepicker_icon">
+                  <i class="fa fa-calendar fa-lg"></i>
+                </span>
+                        <?php echo zen_draw_input_field('start_date', $startdate, 'class="form-control" id="start_date"'); ?>
+                    </div>
+                    <span class="help-block errorText">(<?php echo zen_datepicker_format_full(); ?>)</span>
                 </div>
             </div>
             <div class="form-group">
                 <?php echo zen_draw_label(TEXT_REPORT_END_DATE, 'end_date', 'class="col-sm-3 control-label"'); ?>
                 <div class="col-sm-4 col-md-3">
-                    <script>EndDate.writeControl();
-                        EndDate.dateFormat = "<?php echo DATE_FORMAT_SPIFFYCAL; ?>";
-                    </script>
+                    <div class="date input-group" id="datepicker_end_date">
+                <span class="input-group-addon datepicker_icon">
+                  <i class="fa fa-calendar fa-lg"></i>
+                </span>
+                        <?php echo zen_draw_input_field('end_date', $enddate, 'class="form-control" id="end_date"'); ?>
+                    </div>
+                    <span class="help-block errorText">(<?php echo zen_datepicker_format_full(); ?>)</span>
                 </div>
             </div>
+
 
             <div class="col-sm-7 col-md-6 text-right">
                 <button type="submit" class="btn btn-primary"><?php echo IMAGE_SUBMIT; ?></button>
@@ -100,8 +99,8 @@ $products = $db->Execute($sql);
         <table class="table table-hover">
             <thead>
             <tr class="dataTableHeadingRow">
-                <th class="dataTableHeadingContent right"><?php echo TABLE_HEADING_NUMBER; ?></th>
-                <th class="dataTableHeadingContent"><?php echo TABLE_HEADING_PRODUCTS; ?></th>
+                <th class="dataTableHeadingContent right"><?php echo TABLE_HEADING_PRODUCTS_ID; ?></th>
+                <th class="dataTableHeadingContent"><?php echo TABLE_HEADING_PRODUCTS_NAME; ?></th>
                 <th class="dataTableHeadingContent text-center"><?php echo TABLE_HEADING_VIEWED; ?></th>
             </tr>
             </thead>
@@ -128,7 +127,7 @@ $products = $db->Execute($sql);
         <table class="table">
             <tr>
                 <td><?php echo $products_split->display_count($products_query_numrows, MAX_DISPLAY_SEARCH_RESULTS_REPORTS, $_GET['page'], TEXT_DISPLAY_NUMBER_OF_PRODUCTS); ?></td>
-                <td class="text-right"><?php echo $products_split->display_links($products_query_numrows, MAX_DISPLAY_SEARCH_RESULTS_REPORTS, MAX_DISPLAY_PAGE_LINKS, $_GET['page']); ?></td>
+                <td class="text-right"><?php echo $products_split->display_links($products_query_numrows, MAX_DISPLAY_SEARCH_RESULTS_REPORTS, MAX_DISPLAY_PAGE_LINKS, $_GET['page'], 'start_date=' . $startdate . '&end_date=' . $enddate); ?></td>
             </tr>
         </table>
         <!-- body_text_eof //-->
@@ -137,6 +136,13 @@ $products = $db->Execute($sql);
     <!-- footer //-->
     <?php require(DIR_WS_INCLUDES . 'footer.php'); ?>
     <!-- footer_eof //-->
+    <!-- script for datepicker -->
+    <script>
+        $(function () {
+            $('input[name="start_date"]').datepicker();
+            $('input[name="end_date"]').datepicker();
+        })
+    </script>
     </body>
     </html>
 <?php require(DIR_WS_INCLUDES . 'application_bottom.php');

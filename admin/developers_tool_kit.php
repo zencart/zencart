@@ -13,15 +13,15 @@ if (!empty($_POST) && !isset($_POST['context_lines'])) {
   $_POST['context_lines'] = abs((int)$default_context_lines);
 }
 
-if (isset($_GET['configuration_key_lookup']) && $_GET['configuration_key_lookup'] != '') {
+if (!empty($_GET['configuration_key_lookup']))  {
   $_POST['configuration_key'] = strtoupper($_GET['configuration_key_lookup']);
   $_POST['zv_files'] = 1;
   $_POST['zv_filestype'] = !empty($_POST['zv_filestype']) ? $_POST['zv_filestype'] : 0;
   $_POST['case_sensitive'] = !empty($_POST['case_sensitive']) ? $_POST['case_sensitive'] : 0;
 }
-$configuration_key_lookup = (isset($_POST['configuration_key'])) ? $_POST['configuration_key'] : '';
-$default_context_lines = isset($_POST['context_lines']) ? (int)$_POST['context_lines'] : $default_context_lines;
-$case_sensitive = (isset($_POST['case_sensitive']) && $_POST['case_sensitive']);
+$configuration_key_lookup = $_POST['configuration_key'] ?? '';
+$default_context_lines = (int)($_POST['context_lines'] ?? $default_context_lines);
+$case_sensitive = !empty($_POST['case_sensitive']);
 $q_const = $q_func = $q_class = $q_tpl = $q_all = '';
 
 function getDirList($dirName, $filetypes = 1) {
@@ -150,7 +150,7 @@ function zen_display_files($include_root = false, $filetypesincluded = 1) {
     // don't ask about configuration table
   }
   echo '<table class="table">' . "\n";
-  if (isset($check_database) && ($check_database == true && $check_configure->RecordCount() >= 1)) {
+  if (!empty($check_database) && $check_configure->RecordCount() >= 1) {
     // only ask if found
     echo '<tr><td>' . $links . '</td></tr>';
   }
@@ -160,7 +160,7 @@ function zen_display_files($include_root = false, $filetypesincluded = 1) {
 // check all files located
   $file_cnt = 0;
   $cnt_found = 0;
-  $case_sensitive = (isset($_POST['case_sensitive']) && $_POST['case_sensitive']);
+  $case_sensitive = !empty($_POST['case_sensitive']);
   for ($i = 0, $n = count($directory_array); $i < $n; $i++) {
     // build file content of matching lines
     $file_cnt++;
@@ -188,7 +188,7 @@ function zen_display_files($include_root = false, $filetypesincluded = 1) {
         // determine correct search pattern rule
         // uses '#' as regex delimiter
         $search_pattern = preg_quote($configuration_key_lookup, '#');
-        if (isset($_GET['action']) && $_GET['action'] == 'locate_all_files' && isset($_GET['m']) && $_GET['m'] != '') {
+        if (isset($_GET['action']) && $_GET['action'] == 'locate_all_files' && !empty($_GET['m'])) {
           // escape the delimiter character:
           $search_pattern = str_replace('#', '\#', $configuration_key_lookup);
         }
@@ -303,14 +303,14 @@ function number_pad_with_spaces($number, $n = 0) {
 
 /* ==================================================================== */
 
-$action = (isset($_GET['action']) ? $_GET['action'] : '');
+$action = $_GET['action']) ?? '';
 // don't do any 'action' if clicked on the Check for Updates button
 if (isset($_GET['vcheck']) && $_GET['vcheck'] == 'yes')
   $action = '';
 
 $found = true;
 
-$search = (isset($_POST['search']) ? $_POST['search'] : '');
+$search = $_POST['search']) ?? '';
 $flags = (isset($_GET['v']) ? '&v=' : '') . (isset($_GET['s']) ? '&s=' . preg_replace('/[^a-z]/', '', $_GET['s']) : '');
 
 switch ($action) {
@@ -732,7 +732,7 @@ if ($found == false) {
 
       <!-- body_text //-->
       <?php
-      if (isset($show_configuration_info) && $show_configuration_info == true) {
+      if (!empty($show_configuration_info)) {
         $show_configuration_info = false;
         ?>
         <table border="3" cellspacing="4" cellpadding="4">

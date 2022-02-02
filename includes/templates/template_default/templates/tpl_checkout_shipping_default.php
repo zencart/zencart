@@ -34,7 +34,7 @@
   if (zen_count_shipping_modules() > 0) {
 ?>
 
-<h2 id="checkoutShippingHeadingMethod"><?php echo TABLE_HEADING_SHIPPING_METHOD; ?></h2>
+<h2 id="checkoutShippingHeadingMethod"><?php echo HEADING_SHIPPING_METHOD; ?></h2>
 
 <?php
     if (sizeof($quotes) > 1 && sizeof($quotes[0]) > 1) {

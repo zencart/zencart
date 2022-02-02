@@ -9,15 +9,6 @@
 $define = [
     'HEADING_TITLE' => 'Salemaker',
     'SUBHEADING_TITLE' => 'Salemaker Usage Tips:',
-    'TEXT_SALEMAKER_IMMEDIATELY' => 'Immediately',
-    'TEXT_SALEMAKER_NEVER' => 'Never',
-    'TEXT_CLOSE_WINDOW' => '[ close window ]',
-    'TABLE_HEADING_SALE_NAME' => 'SaleName',
-    'TABLE_HEADING_SALE_DEDUCTION' => 'Deduction',
-    'TABLE_HEADING_SALE_DATE_START' => 'Startdate',
-    'TABLE_HEADING_SALE_DATE_END' => 'Enddate',
-    'TABLE_HEADING_STATUS' => 'Status',
-    'TABLE_HEADING_ACTION' => 'Action',
 ];
 
 return $define;

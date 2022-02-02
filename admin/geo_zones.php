@@ -164,7 +164,7 @@ if (!empty($action)) {
             <table class="table table-hover">
               <thead>
                 <tr class="dataTableHeadingRow">
-                  <th class="dataTableHeadingContent"><?php echo TABLE_HEADING_COUNTRY; ?></th>
+                  <th class="dataTableHeadingContent"><?php echo TABLE_HEADING_COUNTRY_NAME; ?></th>
                   <th class="dataTableHeadingContent"><?php echo TABLE_HEADING_COUNTRY_ZONE; ?></th>
                   <th class="dataTableHeadingContent text-right"><?php echo TABLE_HEADING_ACTION; ?>&nbsp;</th>
                 </tr>
@@ -179,9 +179,9 @@ if (!empty($action)) {
                                       ORDER BY c.countries_name, association_id";
 // Split Page
 // reset page when page is unknown
-                  if ((!isset($_GET['spage']) or $_GET['spage'] == '' or $_GET['spage'] == '1') && !empty($_GET['sID'])) {
+                  if ((empty($_GET['spage']) || $_GET['spage'] == '1') && !empty($_GET['sID'])) {
                     $check_page = $db->Execute($zones_query_raw);
-                    $check_count = 1;
+                    $check_count = 0;
                     if ($check_page->RecordCount() > MAX_DISPLAY_SEARCH_RESULTS) {
                       foreach ($check_page as $item) {
                         if ($item['association_id'] == $_GET['sID']) {
@@ -248,9 +248,9 @@ if (!empty($action)) {
                                         ORDER BY geo_zone_name";
 // Split Page
 // reset page when page is unknown
-                    if ((!isset($_GET['zpage']) or $_GET['zpage'] == '' or $_GET['zpage'] == '1') && !empty($_GET['zID'])) {
+                    if ((empty($_GET['zpage']) ||$_GET['zpage'] == '1') && !empty($_GET['zID'])) {
                       $check_page = $db->Execute($zones_query_raw);
-                      $check_count = 1;
+                      $check_count = 0;
                       if ($check_page->RecordCount() > MAX_DISPLAY_SEARCH_RESULTS) {
                         foreach ($check_page as $item) {
                           if ($item['geo_zone_id'] == $_GET['zID']) {

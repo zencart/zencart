@@ -7,12 +7,6 @@
 */
 
 $define = [
-    'TABLE_HEADING_CONFIGURATION_TITLE' => 'Title',
-    'TABLE_HEADING_CONFIGURATION_VALUE' => 'Value',
-    'TABLE_HEADING_ACTION' => 'Action',
-    'TEXT_INFO_EDIT_INTRO' => 'Please make any necessary changes',
-    'TEXT_INFO_DATE_ADDED' => 'Date Added:',
-    'TEXT_INFO_LAST_MODIFIED' => 'Last Modified:',
     'TEXT_MIN_ADMIN_USER_LENGTH' => 'Must be of a length of 4 or more.',
     'TEXT_DATA_OUT_OF_RANGE' => 'Data out of range',
     'TEXT_MIN_GENERAL_ADMIN' => 'The minimum value entered was not a whole number (integer).',

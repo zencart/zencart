@@ -259,7 +259,7 @@ if (!empty($action)) {
               <thead>
                 <tr class="dataTableHeadingRow">
                   <th class="dataTableHeadingContent"><?php echo TABLE_HEADING_MODEL; ?></th>
-                  <th class="dataTableHeadingContent"><?php echo TABLE_HEADING_PRODUCT; ?></th>
+                  <th class="dataTableHeadingContent"><?php echo TABLE_HEADING_PRODUCTS_NAME; ?></th>
                   <th class="dataTableHeadingContent"><?php echo TABLE_HEADING_CUSTOMER_NAME; ?></th>
                   <?php if (count($languages_array) > 1) { ?>
                     <th class="dataTableHeadingContent text-center"><?php echo TABLE_HEADING_LANGUAGE; ?></th>
@@ -307,6 +307,23 @@ if (!empty($action)) {
                                       " . $search . "
                                       GROUP BY r.reviews_id, rd.languages_id
                                       " . $order_by;
+
+                // reset page when page is unknown
+                if ((empty($_GET['page']) || $_GET['page'] == '1') && !empty($_GET['rID'])) {
+                  $check_page = $db->Execute($reviews_query_raw);
+                  $check_count = 0;
+                  if ($check_page->RecordCount() > MAX_DISPLAY_SEARCH_RESULTS) {
+                    foreach ($check_page as $item) {
+                      if ($item['reviews_id'] == $_GET['rID']) {
+                        break;
+                      }
+                      $check_count++;
+                    }
+                    $_GET['page'] = round((($check_count / MAX_DISPLAY_SEARCH_RESULTS) + (fmod_round($check_count, MAX_DISPLAY_SEARCH_RESULTS) != 0 ? .5 : 0)), 0);
+                  } else {
+                    $_GET['page'] = 1;
+                  }
+                }
 
                 $reviews_split = new splitPageResults($_GET['page'], MAX_DISPLAY_SEARCH_RESULTS, $reviews_query_raw, $reviews_query_numrows);
                 $reviews = $db->Execute($reviews_query_raw);

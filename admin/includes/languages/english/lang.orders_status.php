@@ -9,11 +9,8 @@
 $define = [
     'HEADING_TITLE' => 'Orders Status',
     'TABLE_HEADING_ORDERS_STATUS' => 'Orders Status',
-    'TABLE_HEADING_ACTION' => 'Action',
     'TABLE_HEADING_ORDERS_STATUS_ID' => 'Orders Status ID',
-    'TABLE_HEADING_SORT_ORDER' => 'Sort Order',
     'TEXT_INFO_SORT_ORDER' => 'Sort Order: ',
-    'TEXT_INFO_EDIT_INTRO' => 'Please make any necessary changes',
     'TEXT_INFO_ORDERS_STATUS_NAME' => 'Orders Status:',
     'TEXT_INFO_INSERT_INTRO' => 'Please enter the new orders status with its related data',
     'TEXT_INFO_DELETE_INTRO' => 'Are you sure you want to delete this order status?',

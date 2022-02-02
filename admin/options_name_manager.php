@@ -432,7 +432,7 @@ function translate_type_to_name($opt_type)
             <table class="table table-striped">
                 <tr class="dataTableHeadingRow">
                     <th class="dataTableHeadingContent text-center"><?php echo TEXT_OPTION_ID; ?></th>
-                    <th class="dataTableHeadingContent"><?php echo TABLE_HEADING_PRODUCT; ?></th>
+                    <th class="dataTableHeadingContent"><?php echo TABLE_HEADING_PRODUCTS_NAME; ?></th>
                     <th class="dataTableHeadingContent"><?php echo TABLE_HEADING_OPTION_VALUE; ?></th>
                     <th class="dataTableHeadingContent">&nbsp;</th>
                 </tr>

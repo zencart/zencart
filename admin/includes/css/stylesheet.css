@@ -871,14 +871,14 @@ input.faint {
 }
 /* The classes below are copied from Bootstrap 4 and 5 */
 .font-weight-bold {
-  font-weight: 700 !important;
+  font-weight: 700;
 }
 .align-middle {
-  vertical-align: middle !important;
+  vertical-align: middle;
 }
 .align-top {
-  vertical-align: top !important;
+  vertical-align: top;
 }
-.align-bottom {
-  vertical-align: bottom !important;
+tbody>tr>td.align-bottom {
+  vertical-align: bottom;
 }

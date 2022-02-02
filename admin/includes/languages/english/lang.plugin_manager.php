@@ -8,10 +8,8 @@
 
 $define = [
     'HEADING_TITLE' => 'Plugin Manager',
-    'TABLE_HEADING_ACTION' => 'Actions',
     'TABLE_HEADING_KEY' => 'Plugin Key',
     'TABLE_HEADING_NAME' => 'Name',
-    'TABLE_HEADING_STATUS' => 'Status',
     'TABLE_HEADING_FILE_SPACE' => 'File Space',
     'TABLE_HEADING_VERSION_INSTALLED' => 'Version',
     'TEXT_INSTALL' => 'Install',

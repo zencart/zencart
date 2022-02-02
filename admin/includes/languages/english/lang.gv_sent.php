@@ -13,7 +13,6 @@ $define = [
     'TABLE_HEADING_VOUCHER_CODE' => '%%TEXT_GV_REDEEM%%',
     'TABLE_HEADING_DATE_SENT' => 'Date Sent',
     'TEXT_HEADING_DATE_REDEEMED' => 'Date Redeemed',
-    'TABLE_HEADING_ACTION' => 'Action',
     'TEXT_INFO_SENDERS_ID' => 'Senders ID:',
     'TEXT_INFO_AMOUNT_SENT' => 'Amount Sent:',
     'TEXT_INFO_DATE_SENT' => 'Date Sent:',

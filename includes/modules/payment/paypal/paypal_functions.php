@@ -179,7 +179,7 @@
 
   // determine acceptable currencies
   function select_pp_currency() {
-    if (MODULE_PAYMENT_PAYPAL_CURRENCY == 'Selected Currency') {
+    if (!defined('MODULE_PAYMENT_PAYPAL_CURRENCY') || MODULE_PAYMENT_PAYPAL_CURRENCY == 'Selected Currency') {
       $my_currency = $_SESSION['currency'];
     } else {
       $my_currency = substr(MODULE_PAYMENT_PAYPAL_CURRENCY, 5);
@@ -302,7 +302,7 @@
                             'parent_txn_id' => $_POST['parent_txn_id'],
                             'num_cart_items' => (int)$_POST['num_cart_items'],
                             'mc_gross' => $_POST['mc_gross'],
-                            'mc_fee' => $_POST['mc_fee'],
+                            'mc_fee' => $_POST['mc_fee'] ?? 0, 
                             'settle_amount' => (isset($_POST['settle_amount']) && $_POST['settle_amount'] != '' ? $_POST['settle_amount'] : 0),
                             'settle_currency' => $_POST['settle_currency'],
                             'exchange_rate' => (isset($_POST['exchange_rate']) && $_POST['exchange_rate'] != '' ? $_POST['exchange_rate'] : 1),

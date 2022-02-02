@@ -8,9 +8,7 @@
 
 $define = [
     'HEADING_TITLE' => 'Upcoming Products',
-    'TABLE_HEADING_PRODUCTS' => 'Products',
     'TABLE_HEADING_DATE_EXPECTED' => 'Date Expected',
-    'TABLE_HEADING_ACTION' => 'Action',
     'TEXT_INFO_DATE_EXPECTED' => 'Date Expected:',
 ];
 

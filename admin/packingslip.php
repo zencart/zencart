@@ -56,6 +56,17 @@ if ($order->billing['street_address'] != $order->delivery['street_address']) {
         </tr>
       </table>
       <div><?php echo zen_draw_separator(); ?></div>
+      <?php
+        $additional_content = false; 
+        $zco_notifier->notify('NOTIFY_ADMIN_ORDERS_PACKINGSLIP_ADDITIONAL_DATA_TOP', $oID, $additional_content);
+          if ($additional_content !== false) {
+      ?>
+          <table class="table">
+              <tr><td class="main additional_data" colspan="2"><?php echo $additional_content; ?></td></tr>
+          </table>
+      <?php
+          }
+      ?>
       <table class="table">
           <?php
           if ($show_customer == true) {
@@ -123,7 +134,7 @@ if ($order->billing['street_address'] != $order->delivery['street_address']) {
             <th class="dataTableHeadingContent" style="width: <?php echo (int)$img_width . 'px'; ?>">&nbsp;</th>
             <?php } ?>
             <th class="dataTableHeadingContent">&nbsp;</th>
-            <th class="dataTableHeadingContent" style="width: 70%"><?php echo TABLE_HEADING_PRODUCTS; ?></th>
+            <th class="dataTableHeadingContent" style="width: 70%"><?php echo TABLE_HEADING_PRODUCTS_NAME; ?></th>
             <th class="dataTableHeadingContent"><?php echo TABLE_HEADING_PRODUCTS_MODEL; ?></th>
           </tr>
         </thead>
@@ -187,9 +198,9 @@ if ($order->billing['street_address'] != $order->delivery['street_address']) {
         <table class="table table-condensed">
           <thead>
             <tr>
-              <th class="text-left"><strong><?php echo TABLE_HEADING_DATE_ADDED; ?></strong></th>
-              <th class="text-left"><strong><?php echo TABLE_HEADING_STATUS; ?></strong></th>
-              <th class="text-left"><strong><?php echo TABLE_HEADING_COMMENTS; ?></strong></th>
+              <th class="text-center"><strong><?php echo TABLE_HEADING_DATE_ADDED; ?></strong></th>
+              <th class="text-center"><strong><?php echo TABLE_HEADING_STATUS; ?></strong></th>
+              <th class="text-center"><strong><?php echo TABLE_HEADING_COMMENTS; ?></strong></th>
             </tr>
           </thead>
           <tbody>
@@ -206,9 +217,9 @@ if ($order->billing['street_address'] != $order->delivery['street_address']) {
                   $count_comments++;
                   ?>
                 <tr>
-                  <td class="text-left"><?php echo zen_datetime_short($order_history['date_added']); ?></td>
-                  <td class="text-left"><?php echo $orders_status_array[$order_history['orders_status_id']]; ?></td>
-                  <td class="text-left"><?php echo ($order_history['comments'] == '' ? TEXT_NONE : nl2br(zen_output_string_protected($order_history['comments']))); ?>&nbsp;</td>
+                  <td class="text-center"><?php echo zen_datetime_short($order_history['date_added']); ?></td>
+                  <td><?php echo $orders_status_array[$order_history['orders_status_id']]; ?></td>
+                  <td><?php echo ($order_history['comments'] == '' ? TEXT_NONE : nl2br(zen_output_string_protected($order_history['comments']))); ?>&nbsp;</td>
                 </tr>
                 <?php
                 if (ORDER_COMMENTS_PACKING_SLIP == 1 && $count_comments >= 1) {
@@ -226,6 +237,17 @@ if ($order->billing['street_address'] != $order->delivery['street_address']) {
           </tbody>
         </table>
       <?php } // order comments ?>
+      <?php
+        $additional_content = false; 
+        $zco_notifier->notify('NOTIFY_ADMIN_ORDERS_PACKINGSLIP_ADDITIONAL_DATA_BOTTOM', $oID, $additional_content);
+          if ($additional_content !== false) {
+      ?>
+          <table class="table">
+              <tr><td class="main additional_data" colspan="2"><?php echo $additional_content; ?></td></tr>
+          </table>
+      <?php
+          }
+      ?>
     </div>
 
     <!-- body_text_eof //-->

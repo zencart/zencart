@@ -64,102 +64,70 @@ if (!empty($action)) {
       zen_redirect(zen_href_link(FILENAME_OPTIONS_VALUES_MANAGER));
       break;
     case 'add_product_option_values':
-      $value_name_array = $_POST['value_name'];
-      $value_id = (int)$_POST['value_id'];
-      $_SESSION['options_names_values_last_mod'] = $option_id = (int)$_POST['option_id'];
-      $products_options_values_sort_order = (int)$_POST['products_options_values_sort_order'];
-
-      for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
-        $value_name = zen_db_prepare_input($value_name_array[$languages[$i]['id']]);
-
-        $db->Execute("INSERT INTO " . TABLE_PRODUCTS_OPTIONS_VALUES . " (products_options_values_id, language_id, products_options_values_name, products_options_values_sort_order)
-                      VALUES (" . (int)$value_id . ",
-                              " . (int)$languages[$i]['id'] . ",
-                              '" . zen_db_input($value_name) . "',
-                              " . (int)$products_options_values_sort_order . ")");
-      }
-
-      $db->Execute("INSERT INTO " . TABLE_PRODUCTS_OPTIONS_VALUES_TO_PRODUCTS_OPTIONS . " (products_options_id, products_options_values_id)
-                    VALUES (" . (int)$option_id . ", " . (int)$value_id . ")");
-
-// alert if possible duplicate
-      $duplicate_option_values = '';
-      for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
-        $value_name = zen_db_prepare_input($value_name_array[$languages[$i]['id']]);
-
-        if (!empty($value_name)) {
-          $check = $db->Execute("SELECT pov.products_options_values_id, pov.products_options_values_name, pov.language_id
-                                 FROM " . TABLE_PRODUCTS_OPTIONS_VALUES . " pov
-                                 LEFT JOIN " . TABLE_PRODUCTS_OPTIONS_VALUES_TO_PRODUCTS_OPTIONS . " pov2po ON pov.products_options_values_id = pov2po.products_options_values_id
-                                 WHERE pov.language_id = " . (int)$languages[$i]['id'] . "
-                                 AND pov.products_options_values_name = '" . zen_db_input($value_name) . "'
-                                 AND pov2po.products_options_id = " . (int)$option_id);
-          if ($check->RecordCount() > 1) {
-              $check_dups = '';
-            foreach ($check as $item) {
-              $check_dups .= ' - ' . $item['products_options_values_id'];
-            }
-            $duplicate_option_values .= ' <b>' . strtoupper(zen_get_language_name($languages[$i]['id'])) . '</b> : ' . $check_dups;
-          }
-        }
-      }
-      if (!empty($duplicate_option_values)) {
-        $messageStack->add_session(ATTRIBUTE_POSSIBLE_OPTIONS_VALUE_WARNING_DUPLICATE . ' ' . $duplicate_option_values, 'caution');
-      }
-
-      $exclude_array = ['action'];
-      zen_redirect(zen_href_link(FILENAME_OPTIONS_VALUES_MANAGER, zen_get_all_get_params($exclude_array)));
-      break;
     case 'update_value':
       $value_name_array = $_POST['value_name'];
       $value_id = (int)$_POST['value_id'];
-      $_SESSION['options_names_values_last_mod'] = $option_id = (int)$_POST['option_id'];
+      $option_id = (int)$_POST['option_id'];
+      $_SESSION['options_names_values_last_mod'] = $option_id;
       $products_options_values_sort_order = (int)$_POST['products_options_values_sort_order'];
 
-      for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
-        $value_name = zen_db_prepare_input($value_name_array[$languages[$i]['id']]);
+          foreach ($languages as $language) {
+              $value_name = zen_db_prepare_input($value_name_array[$language['id']]);
+              if ($action === 'add_product_option_values') {
+                  $sql = "INSERT INTO " . TABLE_PRODUCTS_OPTIONS_VALUES . " (products_options_values_id, language_id, products_options_values_name, products_options_values_sort_order)
+                      VALUES (" . $value_id . ",
+                              " . (int)$language['id'] . ",
+                              '" . zen_db_input($value_name) . "',
+                              " . $products_options_values_sort_order . ")";
 
-        $db->Execute("UPDATE " . TABLE_PRODUCTS_OPTIONS_VALUES . "
+              } else {
+                  $sql = "UPDATE " . TABLE_PRODUCTS_OPTIONS_VALUES . "
                       SET products_options_values_name = '" . zen_db_input($value_name) . "',
-                          products_options_values_sort_order = " . (int)$products_options_values_sort_order . "
-                      WHERE products_options_values_id = " . (int)$value_id . "
-                      AND language_id = " . (int)$languages[$i]['id']);
-      }
+                          products_options_values_sort_order = " . $products_options_values_sort_order . "
+                      WHERE products_options_values_id = " . $value_id . "
+                      AND language_id = " . (int)$language['id'];
+              }
+              $db->Execute($sql);
+          }
 
-      $db->Execute("UPDATE " . TABLE_PRODUCTS_OPTIONS_VALUES_TO_PRODUCTS_OPTIONS . "
-                    SET products_options_id = " . (int)$option_id . "
-                    WHERE products_options_values_id = " . (int)$value_id);
+          if ($action === 'add_product_option_values') {
+              $sql = "INSERT INTO " . TABLE_PRODUCTS_OPTIONS_VALUES_TO_PRODUCTS_OPTIONS . " (products_options_id, products_options_values_id)
+                    VALUES (" . $option_id . ", " . $value_id . ")";
+          } else {
+              $sql = "UPDATE " . TABLE_PRODUCTS_OPTIONS_VALUES_TO_PRODUCTS_OPTIONS . "
+                    SET products_options_id = " . $option_id . "
+                    WHERE products_options_values_id = " . $value_id;
+          }
+          $db->Execute($sql);
 
 
-// alert if possible duplicate
-      $duplicate_option_values = '';
-      for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
-        $value_name = zen_db_prepare_input($value_name_array[$languages[$i]['id']]);
-
-        if (!empty($value_name)) {
-          $check = $db->Execute("SELECT pov.products_options_values_id, pov.products_options_values_name, pov.language_id
+    // alert if possible duplicate
+          $duplicate_option_values = '';
+          foreach ($languages as $language) {
+              $value_name = zen_db_prepare_input($value_name_array[$language['id']]);
+              if (!empty($value_name)) {
+                  $check = $db->Execute("SELECT pov.products_options_values_id, pov.products_options_values_name, pov.language_id
                                  FROM " . TABLE_PRODUCTS_OPTIONS_VALUES . " pov
                                  LEFT JOIN " . TABLE_PRODUCTS_OPTIONS_VALUES_TO_PRODUCTS_OPTIONS . " pov2po ON pov.products_options_values_id = pov2po.products_options_values_id
-                                 WHERE pov.language_id = " . (int)$languages[$i]['id'] . "
+                                 WHERE pov.language_id = " . (int)$language['id'] . "
                                  AND pov.products_options_values_name = '" . zen_db_input($value_name) . "'
-                                 AND pov2po.products_options_id = " . (int)$option_id);
-
-          if ($check->RecordCount() > 1) {
-              $check_dups = '';
-            foreach ($check as $item) {
-              $check_dups .= ' - ' . $item['products_options_values_id'];
-            }
-            $duplicate_option_values .= ' <strong>' . strtoupper(zen_get_language_name($languages[$i]['id'])) . '</strong> : ' . $check_dups;
+                                 AND pov2po.products_options_id = " . $option_id . " ORDER BY pov.products_options_values_id DESC");
+                  if ($check->RecordCount() > 1) {
+                      $check_dups = [];
+                      foreach ($check as $item) {
+                          $check_dups[] = $item['products_options_values_id'];
+                      }
+                      $messageStack->add_session(sprintf(ATTRIBUTE_POSSIBLE_OPTIONS_VALUE_WARNING_DUPLICATE_SPECIFIC, $value_name,
+                          (count($languages) > 1 ? '(' . zen_get_language_name($language['id']) . ')' : ''), zen_get_option_name_language($option_id, $language['id']),
+                          implode('/', $check_dups)), 'caution');
+                  }
+              }
           }
-        }
-      }
-      if (!empty($duplicate_option_values)) {
-        $messageStack->add_session(ATTRIBUTE_POSSIBLE_OPTIONS_VALUE_WARNING_DUPLICATE . ' ' . $duplicate_option_values, 'caution');
-      }
 
       $exclude_array = ['action'];
       zen_redirect(zen_href_link(FILENAME_OPTIONS_VALUES_MANAGER, zen_get_all_get_params($exclude_array)));
       break;
+
     case 'delete_value':
       $value_id = (int)$_GET['value_id'];
 
@@ -582,9 +550,9 @@ if (!empty($action)) {
                 <?php } ?>
                 <tr class="dataTableHeadingRow">
                   <th class="dataTableHeadingContent text-right"><?php echo TABLE_HEADING_ID; ?></th>
-                  <th class="dataTableHeadingContent"><?php echo TABLE_HEADING_PRODUCT; ?></th>
+                  <th class="dataTableHeadingContent"><?php echo TABLE_HEADING_PRODUCTS_NAME; ?></th>
                   <th class="dataTableHeadingContent text-right"><?php echo TABLE_HEADING_OPTION_SORT_ORDER; ?></th>
-                  <th><?php echo TABLE_HEADING_OPT_NAME; ?></th>
+                  <th><?php echo TABLE_HEADING_OPTION_NAME; ?></th>
                 </tr>
               </thead>
               <tbody>
@@ -665,14 +633,16 @@ if (!empty($action)) {
           ?>
         </div>
         <?php
+        $filter_condition = '';
+        if ($filter !== 0) $filter_condition = " AND po.products_options_id = " . $filter; 
         $values_query_raw = "SELECT pov.products_options_values_id, pov.products_options_values_name, pov2po.products_options_id, pov.products_options_values_sort_order
                              FROM " . TABLE_PRODUCTS_OPTIONS_VALUES . " pov
                              LEFT JOIN " . TABLE_PRODUCTS_OPTIONS_VALUES_TO_PRODUCTS_OPTIONS . " pov2po ON pov2po.products_options_values_id = pov.products_options_values_id
                              LEFT JOIN " . TABLE_PRODUCTS_OPTIONS . " po ON po.products_options_id = pov2po.products_options_id
-                               AND po.language_id = " . (int)$_SESSION['languages_id'] . "
+                             AND po.language_id = " . (int)$_SESSION['languages_id'] . "
                              WHERE pov.language_id = " . (int)$_SESSION['languages_id'] . "
-                             AND pov2po.products_options_values_id != " . PRODUCTS_OPTIONS_VALUES_TEXT_ID . "
-                             " . (isset($filter) && $filter != '' ? " AND po.products_options_id = " . (int)$filter : "") . "
+                             AND pov2po.products_options_values_id != " . PRODUCTS_OPTIONS_VALUES_TEXT_ID . 
+                             $filter_condition . "
                              ORDER BY po.products_options_name, LPAD(pov.products_options_values_sort_order,11,'0'), pov.products_options_values_name";
         $values_split = new splitPageResults($currentPage, $max_search_results, $values_query_raw, $values_query_numrows);
         ?>
@@ -720,8 +690,8 @@ if (!empty($action)) {
             <thead>
               <tr class="dataTableHeadingRow">
                 <th class="dataTableHeadingContent text-right"><?php echo TABLE_HEADING_ID; ?></th>
-                <th class="dataTableHeadingContent"><?php echo TABLE_HEADING_OPT_NAME; ?></th>
-                <th class="dataTableHeadingContent"><?php echo TABLE_HEADING_OPT_VALUE; ?></th>
+                <th class="dataTableHeadingContent"><?php echo TABLE_HEADING_OPTION_NAME; ?></th>
+                <th class="dataTableHeadingContent"><?php echo TABLE_HEADING_OPTION_VALUE; ?></th>
                 <th class="dataTableHeadingContent text-right"><?php echo TABLE_HEADING_OPTION_VALUE_SORT_ORDER; ?></th>
                 <th class="dataTableHeadingContent text-right"><?php echo TABLE_HEADING_ACTION; ?></th>
               </tr>

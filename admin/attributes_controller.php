@@ -1021,11 +1021,11 @@ function zen_js_option_values_list($selectedName, $fieldName)
               <tr class="dataTableHeadingRow">
                 <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_ID; ?></td>
                 <td class="dataTableHeadingContent">&nbsp;</td>
-                <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_OPT_NAME; ?></td>
-                <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_OPT_VALUE; ?></td>
-                <td class="dataTableHeadingContent text-right"><?php echo TABLE_HEADING_OPT_PRICE_PREFIX; ?>&nbsp;<?php echo TABLE_HEADING_OPT_PRICE; ?></td>
-                <td class="dataTableHeadingContent text-right"><?php echo TABLE_HEADING_OPT_WEIGHT_PREFIX; ?>&nbsp;<?php echo TABLE_HEADING_OPT_WEIGHT; ?></td>
-                <td class="dataTableHeadingContent text-right"><?php echo TABLE_HEADING_OPT_SORT_ORDER; ?></td>
+                <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_OPTION_NAME; ?></td>
+                <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_OPTION_VALUE; ?></td>
+                <td class="dataTableHeadingContent text-right"><?php echo TABLE_HEADING_OPTION_PRICE_PREFIX; ?>&nbsp;<?php echo TABLE_HEADING_OPTION_PRICE; ?></td>
+                <td class="dataTableHeadingContent text-right"><?php echo TABLE_HEADING_OPTION_WEIGHT_PREFIX; ?>&nbsp;<?php echo TABLE_HEADING_OPTION_WEIGHT; ?></td>
+                <td class="dataTableHeadingContent text-right"><?php echo TABLE_HEADING_OPTION_SORT_ORDER; ?></td>
                 <td class="dataTableHeadingContent text-center"><?php echo LEGEND_BOX; ?></td>
                 <td class="dataTableHeadingContent text-right"><?php echo TABLE_HEADING_PRICE_TOTAL; ?></td>
                 <td class="dataTableHeadingContent text-center"><?php echo TABLE_HEADING_ACTION; ?></td>
@@ -1114,7 +1114,7 @@ function zen_js_option_values_list($selectedName, $fieldName)
                         <div class="col-xs-5 col-sm-2">
                           <strong><?php echo zen_get_option_name_language($attributes_value['options_id'], $_SESSION['languages_id']); ?>:</strong>
                         </div>
-                        <div class="col-xs-12 col-sm-6 col-md-6 col-lg-5"><?php echo zen_draw_label(TABLE_HEADING_OPT_VALUE, 'values_id', 'class="control-label"'); ?>
+                        <div class="col-xs-12 col-sm-6 col-md-6 col-lg-5"><?php echo zen_draw_label(TABLE_HEADING_OPTION_VALUE, 'values_id', 'class="control-label"'); ?>
                           <?php
 // FIX HERE 2 - editing
                           $values_values = $db->Execute("SELECT pov.products_options_values_id, pov.products_options_values_name
@@ -1173,23 +1173,23 @@ function zen_js_option_values_list($selectedName, $fieldName)
                         $products_attributes_weight_prefix = ($attributes_value['products_attributes_weight_prefix'] == '+' ? 1 : ($attributes_value['price_prefix'] == '-' ? 2 : 0));
                         ?>
                         <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2">
-                          <?php echo zen_draw_label(TABLE_HEADING_OPT_PRICE, 'value_price', 'class="control-label"'); ?>
+                          <?php echo zen_draw_label(TABLE_HEADING_OPTION_PRICE, 'value_price', 'class="control-label"'); ?>
                           <div class="input-group">
-                            <?php echo zen_draw_pull_down_menu('price_prefix', $price_prefix_array, $attributes_value_price_prefix, 'class="form-control" title="' . TABLE_HEADING_OPT_PRICE_PREFIX . '"'); ?>
+                            <?php echo zen_draw_pull_down_menu('price_prefix', $price_prefix_array, $attributes_value_price_prefix, 'class="form-control" title="' . TABLE_HEADING_OPTION_PRICE_PREFIX . '"'); ?>
                             <span class="input-group-btn" style="width:0px;"></span>
                             <?php echo zen_draw_input_field('value_price', $attributes_value['options_values_price'], 'class="form-control" id="value_price"'); ?>
                           </div>
                         </div>
                         <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2">
-                          <?php echo zen_draw_label(TABLE_HEADING_OPT_WEIGHT, 'products_attributes_weight', 'class="control-label"'); ?>
+                          <?php echo zen_draw_label(TABLE_HEADING_OPTION_WEIGHT, 'products_attributes_weight', 'class="control-label"'); ?>
                           <div class="input-group">
-                            <?php echo zen_draw_pull_down_menu('products_attributes_weight_prefix', $weight_prefix_array, $products_attributes_weight_prefix, 'class="form-control" title="' . TABLE_HEADING_OPT_WEIGHT_PREFIX . '"'); ?>
+                            <?php echo zen_draw_pull_down_menu('products_attributes_weight_prefix', $weight_prefix_array, $products_attributes_weight_prefix, 'class="form-control" title="' . TABLE_HEADING_OPTION_WEIGHT_PREFIX . '"'); ?>
                             <span class="input-group-btn" style="width:0px;"></span>
                             <?php echo zen_draw_input_field('products_attributes_weight', $attributes_value['products_attributes_weight'], 'class="form-control" id="products_attributes_weight"'); ?>
                           </div>
                         </div>
                         <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2">
-                          <?php echo zen_draw_label(TABLE_HEADING_OPT_SORT_ORDER, 'products_options_sort_order', 'class="control-label"'); ?>
+                          <?php echo zen_draw_label(TABLE_HEADING_OPTION_SORT_ORDER, 'products_options_sort_order', 'class="control-label"'); ?>
                           <?php echo zen_draw_input_field('products_options_sort_order', $attributes_value['products_options_sort_order'], 'size="4" class="form-control" id="products_options_sort_order"'); ?>
                         </div>
                         <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2">
@@ -1683,11 +1683,11 @@ function zen_js_option_values_list($selectedName, $fieldName)
                       }
                       ?>
                       <div class="col-xs-12 col-sm-5 col-md-5 col-lg-5">
-                        <?php echo zen_draw_label(TABLE_HEADING_OPT_NAME, 'OptionName') . "\n"; ?>
+                        <?php echo zen_draw_label(TABLE_HEADING_OPTION_NAME, 'OptionName') . "\n"; ?>
                         <?php echo zen_draw_pull_down_menu('options_id', $optionsDropDownArray, '', 'id="OptionName" size="' . ($action != 'delete_attribute' ? "15" : "1") . '" onchange="update_option(this.form)" class="form-control"'); ?>
                       </div>
                       <div class="col-xs-12 col-sm-6 col-md-6 col-lg-5">
-                        <?php echo zen_draw_label(TABLE_HEADING_OPT_VALUE, 'OptionValue', 'class="control-label"') . "\n"; ?>
+                        <?php echo zen_draw_label(TABLE_HEADING_OPTION_VALUE, 'OptionValue', 'class="control-label"') . "\n"; ?>
                         <select name="values_id[]" id="OptionValue" class="form-control" multiple="multiple" <?php echo 'size="' . ($action != 'delete_attribute' ? "15" : "1") . '"'; ?>>
                           <option selected>&lt;-- <?php echo PLEASE_SELECT; ?></option>
                         </select>
@@ -1738,23 +1738,23 @@ function zen_js_option_values_list($selectedName, $fieldName)
                       ];
                       ?>
                       <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2">
-                        <?php echo zen_draw_label(TABLE_HEADING_OPT_PRICE, 'value_price', 'class="control-label"'); ?>
+                        <?php echo zen_draw_label(TABLE_HEADING_OPTION_PRICE, 'value_price', 'class="control-label"'); ?>
                         <div class="input-group">
-                          <?php echo zen_draw_pull_down_menu('price_prefix', $price_prefix_array, $default_price_prefix, 'class="form-control" title="' . TABLE_HEADING_OPT_PRICE_PREFIX . '"'); ?>
+                          <?php echo zen_draw_pull_down_menu('price_prefix', $price_prefix_array, $default_price_prefix, 'class="form-control" title="' . TABLE_HEADING_OPTION_PRICE_PREFIX . '"'); ?>
                           <span class="input-group-btn" style="width:0px;"></span>
                           <?php echo zen_draw_input_field('value_price', '', 'class="form-control" id="value_price"'); ?>
                         </div>
                       </div>
                       <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2">
-                        <?php echo zen_draw_label(TABLE_HEADING_OPT_WEIGHT, 'products_attributes_weight', 'class="control-label"'); ?>
+                        <?php echo zen_draw_label(TABLE_HEADING_OPTION_WEIGHT, 'products_attributes_weight', 'class="control-label"'); ?>
                         <div class="input-group">
-                          <?php echo zen_draw_pull_down_menu('products_attributes_weight_prefix', $weight_prefix_array, $default_products_attributes_weight_prefix, 'class="form-control" title="' . TABLE_HEADING_OPT_WEIGHT_PREFIX . '"'); ?>
+                          <?php echo zen_draw_pull_down_menu('products_attributes_weight_prefix', $weight_prefix_array, $default_products_attributes_weight_prefix, 'class="form-control" title="' . TABLE_HEADING_OPTION_WEIGHT_PREFIX . '"'); ?>
                           <span class="input-group-btn" style="width:0px;"></span>
                           <?php echo zen_draw_input_field('products_attributes_weight', '', 'class="form-control" id="products_attributes_weight"'); ?>
                         </div>
                       </div>
                       <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2">
-                        <?php echo zen_draw_label(TABLE_HEADING_OPT_SORT_ORDER, 'products_options_sort_order', 'class="control-label"'); ?>
+                        <?php echo zen_draw_label(TABLE_HEADING_OPTION_SORT_ORDER, 'products_options_sort_order', 'class="control-label"'); ?>
                         <?php echo zen_draw_input_field('products_options_sort_order', '', 'size="4" class="form-control" id="products_options_sort_order"'); ?>
                       </div>
                       <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2">

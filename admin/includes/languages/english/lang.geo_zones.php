@@ -8,12 +8,9 @@
 
 $define = [
     'HEADING_TITLE' => 'Zone Definitions - Taxes, Payment and Shipping',
-    'TABLE_HEADING_COUNTRY' => 'Country',
     'TABLE_HEADING_COUNTRY_ZONE' => 'Zone',
     'TABLE_HEADING_TAX_ZONES' => 'Zone Name',
     'TABLE_HEADING_TAX_ZONES_DESCRIPTION' => 'Zone Description',
-    'TABLE_HEADING_STATUS' => 'Status',
-    'TABLE_HEADING_ACTION' => 'Action',
     'TEXT_LEGEND_TAX_AND_ZONES' => ': Taxes &amp; Zones Defined',
     'TEXT_LEGEND_ONLY_ZONES' => ': Zones Defined but not Taxes ',
     'TEXT_LEGEND_NOT_CONF' => ': Not Configured ',
@@ -29,8 +26,6 @@ $define = [
     'TEXT_INFO_EDIT_SUB_ZONE_INTRO' => 'Please make any necessary changes',
     'TEXT_INFO_HEADING_DELETE_SUB_ZONE' => 'Delete Sub Zone',
     'TEXT_INFO_DELETE_SUB_ZONE_INTRO' => 'Are you sure you want to delete this sub zone?',
-    'TEXT_INFO_DATE_ADDED' => 'Date Added:',
-    'TEXT_INFO_LAST_MODIFIED' => 'Last Modified:',
     'TEXT_INFO_ZONE_NAME' => 'Zone Name:',
     'TEXT_INFO_NUMBER_ZONES' => 'Number of Zones:',
     'TEXT_INFO_ZONE_DESCRIPTION' => 'Description:',

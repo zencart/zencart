@@ -211,7 +211,12 @@ if (!empty($action)) {
 //            $featured_array[] = $item['products_id'];
 //          }
         }
-        ?>
+
+          if ($action === 'new') {
+              $form = addSearchKeywordForm(FILENAME_FEATURED, $action);
+              echo $form;
+          }
+          ?>
         <div class="row">
           <?php echo zen_draw_form('new_featured', FILENAME_FEATURED, zen_get_all_get_params(['action', 'info', 'fID']) . 'action=' . $form_action . (!empty($_GET['go_back']) ? '&go_back=' . $_GET['go_back'] : ''), 'post', 'class="form-horizontal"'); ?>
           <?php
@@ -222,8 +227,8 @@ if (!empty($action)) {
             echo zen_draw_hidden_field('products_id', $_GET['preID']);
           }
           ?>
-          <div class="form-group">
-            <?php if (isset($fInfo->products_name)) { // Featured is already defined/this is an update ?>
+          <?php if (isset($fInfo->products_name)) { // Featured is already defined/this is an update ?>
+            <div class="form-group">
               <p class="col-sm-3 control-label"><?php echo TEXT_FEATURED_PRODUCT; ?></p>
               <div class="col-sm-9 col-md-6">
                 <span class="form-control" style="border:none; -webkit-box-shadow: none"><?php echo 'ID#' . $fInfo->products_id . ': ' . $fInfo->products_model . ' - "' . zen_clean_html($fInfo->products_name) . '" (' . $currencies->format($fInfo->products_price) . ')'; ?></span>
@@ -329,10 +334,10 @@ if (!empty($action)) {
                 <tr class="dataTableHeadingRow">
                   <th class="dataTableHeadingContent text-right"><?php echo 'ID'; ?></th>
                   <th class="dataTableHeadingContent"><?php echo TABLE_HEADING_PRODUCTS_MODEL; ?></th>
-                  <th class="dataTableHeadingContent"><?php echo TABLE_HEADING_PRODUCTS; ?></th>
+                  <th class="dataTableHeadingContent"><?php echo TABLE_HEADING_PRODUCTS_NAME; ?></th>
                   <th class="dataTableHeadingContent text-center"><?php echo TABLE_HEADING_STOCK; ?></th>
                   <th class="dataTableHeadingContent text-right"><?php echo TABLE_HEADING_PRODUCTS_PRICE; ?></th>
-                  <th class="dataTableHeadingContent text-center"><?php echo TABLE_HEADING_AVAILABLE_DATE; ?></th>
+                  <th class="dataTableHeadingContent text-center"><?php echo TABLE_HEADING_ACTIVE_FROM; ?></th>
                   <th class="dataTableHeadingContent text-center"><?php echo TABLE_HEADING_EXPIRES_DATE; ?></th>
                   <th class="dataTableHeadingContent text-center"><?php echo TABLE_HEADING_STATUS; ?></th>
                   <th class="dataTableHeadingContent text-right"><?php echo TABLE_HEADING_ACTION; ?></th>
@@ -367,6 +372,25 @@ if (!empty($action)) {
                                        " . $order_by;
 
                 // Split Page
+                // reset page when page is unknown
+                if ((empty($_GET['page']) || $_GET['page'] == '1') && !empty($_GET['fID'])) {
+                    $old_page = $_GET['page'];
+                    $check_page = $db->Execute($featured_query_raw);
+                    if ($check_page->RecordCount() > MAX_DISPLAY_SEARCH_RESULTS_FEATURED_ADMIN) {
+                        $check_count = 0;
+                        foreach ($check_page as $item) {
+                            if ((int)$item['featured_id'] === (int)$_GET['fID']) {
+                                break;
+                            }
+                            $check_count++;
+                        }
+                        $_GET['page'] = round((($check_count / MAX_DISPLAY_SEARCH_RESULTS_FEATURED_ADMIN) + (fmod_round($check_count, MAX_DISPLAY_SEARCH_RESULTS_FEATURED_ADMIN) !== 0 ? .5 : 0)));
+                        $page = $_GET['page'];
+                    } else {
+                        $_GET['page'] = 1;
+                    }
+                }
+
                 // create split page control
                 $featured_split = new splitPageResults($_GET['page'], MAX_DISPLAY_SEARCH_RESULTS_FEATURED_ADMIN, $featured_query_raw, $featured_query_numrows);
                 $featureds = $db->Execute($featured_query_raw);

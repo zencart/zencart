@@ -17,7 +17,10 @@ $search_result = isset($_GET['search']) && zen_not_null($_GET['search']);
 
 $search_parameter = $search_result ? '&search=' . $_GET['search'] : '';
 $keywords = $search_result ? zen_db_input(zen_db_prepare_input($_GET['search'])) : '';
-
+$max_results = MAX_DISPLAY_RESULTS_CATEGORIES; 
+if (!empty($search_parameter)) {
+   $max_results = MAX_DISPLAY_SEARCH_RESULTS; 
+}
 if (isset($_GET['page'])) {
   $_GET['page'] = (int)$_GET['page'];
 }
@@ -551,8 +554,8 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
                 <th class="hidden-sm hidden-xs"><?php echo TABLE_HEADING_IMAGE; ?></th>
                 <?php if ($show_prod_labels) { ?>
                   <th class="hidden-sm hidden-xs"><?php echo TABLE_HEADING_MODEL; ?></th>
+                  <th class="text-right hidden-sm hidden-xs"><?php echo TABLE_HEADING_PRODUCTS_PRICE; ?></th>
                 <?php } ?>
-                <th class="text-right hidden-sm hidden-xs"><?php echo TABLE_HEADING_PRICE; ?></th>
 <?php
           // -----
           // Additional column-headings can be added before the Quantity column.
@@ -655,8 +658,8 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
                   <td class="hidden-sm hidden-xs"><?php echo zen_image(DIR_WS_CATALOG_IMAGES . $category['categories_image'], $category['categories_name'], IMAGE_SHOPPING_CART_WIDTH, IMAGE_SHOPPING_CART_HEIGHT); ?></td>
                 <?php if ($show_prod_labels) { ?>
                   <td class="hidden-sm hidden-xs"><!-- no model for categories --></td>
+                  <td class="hidden-sm hidden-xs"><!-- no price for categories --></td>
                 <?php } ?>
-                  <td class="text-right hidden-sm hidden-xs"><?php echo zen_get_discount_calc('', $category['categories_id'], true); ?></td>
                 <?php if ($search_result || SHOW_COUNTS_ADMIN == 'true') { ?>
                   <td class="text-right hidden-sm hidden-xs">
                     <?php
@@ -779,18 +782,18 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
 // Split Page
 
 // reset page when page is unknown
-            if ((isset($_GET['page']) && ($_GET['page'] == '1' || $_GET['page'] == '')) && isset($_GET['pID']) && $_GET['pID'] != '') {
+            if ((empty($_GET['page']) || $_GET['page'] == '1') && !empty($_GET['pID'])) {
               $old_page = $_GET['page'];
               $check_page = $db->Execute($products_query_raw);
-              if ($check_page->RecordCount() > MAX_DISPLAY_RESULTS_CATEGORIES) {
-                $check_count = 1;
+              if ($check_page->RecordCount() > $max_results) {
+                $check_count = 0;
                 foreach ($check_page as $item) {
                   if ($item['products_id'] == $_GET['pID']) {
                     break;
                   }
                   $check_count++;
                 }
-                $_GET['page'] = round((($check_count / MAX_DISPLAY_RESULTS_CATEGORIES) + (fmod_round($check_count, MAX_DISPLAY_RESULTS_CATEGORIES) != 0 ? .5 : 0)), 0);
+                $_GET['page'] = round((($check_count / $max_results) + (fmod_round($check_count, $max_results) != 0 ? .5 : 0)), 0);
                 $page = $_GET['page'];
                 if ($old_page != $_GET['page']) {
 //      zen_redirect(zen_href_link(FILENAME_CATEGORIES, 'cPath=' . $_GET['cPath'] . '&pID=' . $_GET['pID'] . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '')));
@@ -799,7 +802,7 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
                 $_GET['page'] = 1;
               }
             }
-            $products_split = new splitPageResults($_GET['page'], MAX_DISPLAY_RESULTS_CATEGORIES, $products_query_raw, $products_query_numrows);
+            $products_split = new splitPageResults($_GET['page'], $max_results, $products_query_raw, $products_query_numrows);
             $products = $db->Execute($products_query_raw);
 // Split Page
 
@@ -1200,7 +1203,7 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
           <?php
 // Split Page
           if ($products_query_numrows > 0) {
-            echo $products_split->display_count($products_query_numrows, MAX_DISPLAY_RESULTS_CATEGORIES, $_GET['page'], TEXT_DISPLAY_NUMBER_OF_PRODUCTS) . '<br>' . $products_split->display_links($products_query_numrows, MAX_DISPLAY_RESULTS_CATEGORIES, MAX_DISPLAY_PAGE_LINKS, $_GET['page'], zen_get_all_get_params(array('page', 'info', 'x', 'y', 'pID')));
+            echo $products_split->display_count($products_query_numrows, $max_results, $_GET['page'], TEXT_DISPLAY_NUMBER_OF_PRODUCTS) . '<br>' . $products_split->display_links($products_query_numrows, $max_results, MAX_DISPLAY_PAGE_LINKS, $_GET['page'], zen_get_all_get_params(array('page', 'info', 'x', 'y', 'pID')));
           }
           ?>
         </div>

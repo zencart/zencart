@@ -15,7 +15,6 @@ $define = [
     'TEXT_ENTER_QUERY_STRING' => 'Enter the query<br>to be executed:&nbsp;&nbsp;<br><br>Ensure that each statement<br>ends with a semicolon ";"',
     'TEXT_QUERY_FILENAME' => 'Upload file:',
     'ERROR_NOTHING_TO_DO' => 'Error: Nothing to do - no query or query-file specified.',
-    'TEXT_CLOSE_WINDOW' => '[ close window ]',
     'SQLPATCH_HELP_TEXT' => 'The SQLPATCH tool lets you install system patches by pasting SQL code directly into the textarea ',
     'REASON_TABLE_ALREADY_EXISTS' => 'Cannot create table %s because it already exists',
     'REASON_TABLE_DOESNT_EXIST' => 'Cannot drop table %s because it does not exist.',

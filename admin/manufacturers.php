@@ -168,6 +168,23 @@ if (!empty($action)) {
                                           FROM " . TABLE_MANUFACTURERS . "
                                           ORDER BY weighted DESC, manufacturers_name";
 
+              // reset page when page is unknown
+              if ((empty($_GET['page']) || $_GET['page'] == '1') && !empty($_GET['mID'])) {
+                $check_page = $db->Execute($manufacturers_query_raw);
+                $check_count = 0;
+                if ($check_page->RecordCount() > MAX_DISPLAY_SEARCH_RESULTS) {
+                  foreach ($check_page as $item) {
+                    if ($item['manufacturers_id'] == $_GET['mID']) {
+                      break;
+                    }
+                    $check_count++;
+                  }
+                  $_GET['page'] = round((($check_count / MAX_DISPLAY_SEARCH_RESULTS) + (fmod_round($check_count, MAX_DISPLAY_SEARCH_RESULTS) != 0 ? .5 : 0)), 0);
+                } else {
+                  $_GET['page'] = 1;
+                }
+              }
+
               $manufacturers_split = new splitPageResults($_GET['page'], MAX_DISPLAY_SEARCH_RESULTS, $manufacturers_query_raw, $manufacturers_query_numrows);
               $manufacturers = $db->Execute($manufacturers_query_raw);
               foreach ($manufacturers as $manufacturer) {
@@ -232,9 +249,9 @@ if (!empty($action)) {
               $dir_info = zen_build_subdirectories_array(DIR_FS_CATALOG_IMAGES);
               $default_directory = 'manufacturers/';
 
-              $contents[] = ['text' => zen_draw_label(TEXT_PRODUCTS_IMAGE_DIR, 'img_dir', 'class="control-label"') . zen_draw_pull_down_menu('img_dir', $dir_info, $default_directory, 'class="form-control" id="img_dir"')];
+              $contents[] = ['text' => zen_draw_label(TEXT_UPLOAD_DIR, 'img_dir', 'class="control-label"') . zen_draw_pull_down_menu('img_dir', $dir_info, $default_directory, 'class="form-control" id="img_dir"')];
 
-              $contents[] = ['text' => zen_draw_label(TEXT_MANUFACTURERS_IMAGE_MANUAL, 'manufacturers_image_manual', 'class="control-label"') . zen_draw_input_field('manufacturers_image_manual', '', 'class="form-control" id="manufacturers_image_manual"')];
+              $contents[] = ['text' => zen_draw_label(TEXT_IMAGE_MANUAL, 'manufacturers_image_manual', 'class="control-label"') . zen_draw_input_field('manufacturers_image_manual', '', 'class="form-control" id="manufacturers_image_manual"')];
 
               $manufacturer_inputs_string = '';
               for ($i = 0, $n = count($languages); $i < $n; $i++) {
@@ -248,16 +265,16 @@ if (!empty($action)) {
               $heading[] = ['text' => '<h4>' . TEXT_HEADING_EDIT_MANUFACTURER . '</h4>'];
 
               $contents = ['form' => zen_draw_form('manufacturers', FILENAME_MANUFACTURERS, ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . 'mID=' . $mInfo->manufacturers_id . '&action=save', 'post', 'enctype="multipart/form-data" class="form-horizontal"')];
-              $contents[] = ['text' => TEXT_EDIT_INTRO];
+              $contents[] = ['text' => TEXT_INFO_EDIT_INTRO];
               $contents[] = ['text' => zen_draw_label(TEXT_MANUFACTURERS_NAME, 'manufacturers_name', 'class="control-label"') . zen_draw_input_field('manufacturers_name', htmlspecialchars($mInfo->manufacturers_name, ENT_COMPAT, CHARSET, TRUE), zen_set_field_length(TABLE_MANUFACTURERS, 'manufacturers_name') . ' class="form-control" id="manufacturers_name" required')];
               $contents[] = ['text' => '<label class="checkbox-inline">' . zen_draw_checkbox_field('featured', '1', $mInfo->featured) . TEXT_MANUFACTURER_FEATURED_LABEL . '</label>'];
               $contents[] = ['text' => zen_draw_label(TEXT_MANUFACTURERS_IMAGE, 'manufacturers_image', 'class="control-label"') . zen_draw_file_field('manufacturers_image', '', ' class="form-control" id="manufacturers_image"') . '<br>' . $mInfo->manufacturers_image];
               $dir_info = zen_build_subdirectories_array(DIR_FS_CATALOG_IMAGES);
               $default_directory = substr($mInfo->manufacturers_image, 0, strpos($mInfo->manufacturers_image ?? '', '/') + 1);
 
-              $contents[] = ['text' => zen_draw_label(TEXT_PRODUCTS_IMAGE_DIR, 'img_dir', 'class="control-label"') . zen_draw_pull_down_menu('img_dir', $dir_info, $default_directory, 'class="form-control" id="img_dir"')];
+              $contents[] = ['text' => zen_draw_label(TEXT_UPLOAD_DIR, 'img_dir', 'class="control-label"') . zen_draw_pull_down_menu('img_dir', $dir_info, $default_directory, 'class="form-control" id="img_dir"')];
 
-              $contents[] = ['text' => zen_draw_label(TEXT_MANUFACTURERS_IMAGE_MANUAL, 'manufacturers_image_manual', 'class="control-label"') . zen_draw_input_field('manufacturers_image_manual', '', 'class="form-control" id="manufacturers_image_manual"')];
+              $contents[] = ['text' => zen_draw_label(TEXT_IMAGE_MANUAL, 'manufacturers_image_manual', 'class="control-label"') . zen_draw_input_field('manufacturers_image_manual', '', 'class="form-control" id="manufacturers_image_manual"')];
 
               $contents[] = ['text' => zen_info_image($mInfo->manufacturers_image, $mInfo->manufacturers_name), SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT];
               $manufacturer_inputs_string = '';
@@ -291,9 +308,9 @@ if (!empty($action)) {
                 if ($mInfo->featured) {
                   $contents[] = ['align' => 'text-center', 'text' => '<strong>' . TEXT_MANUFACTURER_IS_FEATURED . '</strong>'];
                 }
-                $contents[] = ['text' => TEXT_DATE_ADDED . ' ' . zen_date_short($mInfo->date_added)];
+                $contents[] = ['text' => TEXT_INFO_DATE_ADDED . ' ' . zen_date_short($mInfo->date_added)];
                 if (zen_not_null($mInfo->last_modified)) {
-                  $contents[] = ['text' => TEXT_LAST_MODIFIED . ' ' . zen_date_short($mInfo->last_modified)];
+                  $contents[] = ['text' => TEXT_INFO_LAST_MODIFIED . ' ' . zen_date_short($mInfo->last_modified)];
                 }
                 $contents[] = ['text' => zen_info_image($mInfo->manufacturers_image, $mInfo->manufacturers_name, SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT)];
                 $contents[] = ['text' => TEXT_PRODUCTS . ' ' . $mInfo->products_count];

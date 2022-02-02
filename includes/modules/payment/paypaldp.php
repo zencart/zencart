@@ -127,7 +127,6 @@ class paypaldp extends base {
    * class constructor
    */
   function __construct() {
-    include_once(zen_get_file_directory(DIR_FS_CATALOG . DIR_WS_LANGUAGES . $_SESSION['language'] . '/modules/payment/', 'paypaldp.php', 'false'));
     global $order;
     $this->code = 'paypaldp';
     $this->codeTitle = MODULE_PAYMENT_PAYPALDP_TEXT_ADMIN_TITLE_WPP;

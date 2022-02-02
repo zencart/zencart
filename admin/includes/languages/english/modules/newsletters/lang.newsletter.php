@@ -9,12 +9,6 @@
 $define = [
     'TEXT_COUNT_CUSTOMERS' => 'Customers receiving newsletter: %s',
     'HEADING_TITLE' => 'Newsletter Manager',
-    'TABLE_HEADING_NEWSLETTERS' => 'Newsletters',
-    'TABLE_HEADING_SIZE' => 'Size',
-    'TABLE_HEADING_MODULE' => 'Module',
-    'TABLE_HEADING_SENT' => 'Sent',
-    'TABLE_HEADING_STATUS' => 'Status',
-    'TABLE_HEADING_ACTION' => 'Action',
     'TEXT_NEWSLETTER_MODULE' => 'Module:',
     'TEXT_NEWSLETTER_TITLE' => 'Subject:',
     'TEXT_NEWSLETTER_CONTENT' => 'Text-Only <br>Content:',

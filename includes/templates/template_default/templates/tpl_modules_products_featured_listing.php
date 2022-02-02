@@ -63,7 +63,7 @@
       }
 
       if (PRODUCT_FEATURED_LIST_DATE_ADDED != '0' and zen_get_show_product_switch($featured_products->fields['products_id'], 'date_added')) {
-        $display_products_date_added = TEXT_DATE_ADDED . ' ' . zen_date_long($featured_products->fields['products_date_added']) . str_repeat('<br class="clearBoth">', substr(PRODUCT_FEATURED_LIST_DATE_ADDED, 3, 1));
+        $display_products_date_added = TEXT_DATE_ADDED_LISTING . ' ' . zen_date_long($featured_products->fields['products_date_added']) . str_repeat('<br class="clearBoth">', substr(PRODUCT_FEATURED_LIST_DATE_ADDED, 3, 1));
       } else {
         $display_products_date_added = '';
       }

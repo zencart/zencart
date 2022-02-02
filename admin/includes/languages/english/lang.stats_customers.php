@@ -8,8 +8,6 @@
 
 $define = [
     'HEADING_TITLE' => 'Best Customer Orders-Total',
-    'TABLE_HEADING_NUMBER' => 'ID#',
-    'TABLE_HEADING_CUSTOMERS' => 'Customers',
     'TABLE_HEADING_TOTAL_PURCHASED' => 'Total Purchased',
 ];
 

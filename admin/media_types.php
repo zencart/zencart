@@ -129,7 +129,7 @@ if (!empty($action)) {
               case 'edit':
                 $heading[] = array('text' => '<h4>' . TEXT_HEADING_EDIT_MEDIA_TYPE . '</h4>');
                 $contents = array('form' => zen_draw_form('media_type', FILENAME_MEDIA_TYPES, 'page=' . $_GET['page'] . '&mID=' . $mInfo->type_id . '&action=save', 'post', 'enctype="multipart/form-data"'));
-                $contents[] = array('text' => TEXT_EDIT_INTRO);
+                $contents[] = array('text' => TEXT_INFO_EDIT_INTRO);
                 $contents[] = array('text' => zen_draw_label(TEXT_MEDIA_TYPE_NAME, 'type_name', 'class="control-label"') . zen_draw_input_field('type_name', $mInfo->type_name, zen_set_field_length(TABLE_MEDIA_TYPES, 'type_name') . ' class="form-control"'));
                 $contents[] = array('text' => zen_draw_label(TEXT_MEDIA_TYPE_EXT, 'type_ext', 'class="control-label"') . zen_draw_input_field('type_ext', $mInfo->type_ext, zen_set_field_length(TABLE_MEDIA_TYPES, 'type_ext') . ' class="form-control"'));
                 $contents[] = array('align' => 'center', 'text' => '<button type="submit" class="btn btn-primary">' . IMAGE_SAVE . '</button> <a href="' . zen_href_link(FILENAME_MEDIA_TYPES, 'page=' . $_GET['page'] . '&mID=' . $mInfo->type_id) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>');

@@ -137,7 +137,7 @@ if (!empty($action)) {
               case 'edit':
                 $heading[] = array('text' => '<h4>' . TEXT_HEADING_EDIT_MUSIC_GENRE . '</h4>');
                 $contents = array('form' => zen_draw_form('music_genre', FILENAME_MUSIC_GENRE, 'page=' . $_GET['page'] . '&mID=' . $aInfo->music_genre_id . '&action=save', 'post', 'enctype="multipart/form-data"'));
-                $contents[] = array('text' => TEXT_EDIT_INTRO);
+                $contents[] = array('text' => TEXT_INFO_EDIT_INTRO);
                 $contents[] = array('text' => zen_draw_label(TEXT_MUSIC_GENRE_NAME, 'music_genre_name', 'class="control-label"') . zen_draw_input_field('music_genre_name', htmlspecialchars($aInfo->music_genre_name, ENT_COMPAT, CHARSET, TRUE), zen_set_field_length(TABLE_MUSIC_GENRE, 'music_genre_name') . ' class="form-control"'));
                 $contents[] = array('align' => 'center', 'text' => '<button type="submit" class="btn btn-primary">' . IMAGE_SAVE . '</button> <a href="' . zen_href_link(FILENAME_MUSIC_GENRE, 'page=' . $_GET['page'] . '&mID=' . $aInfo->music_genre_id) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>');
                 break;
@@ -160,9 +160,9 @@ if (!empty($action)) {
                   $heading[] = array('text' => '<h4>' . $aInfo->music_genre_name . '</h4>');
 
                   $contents[] = array('align' => 'center', 'text' => '<a href="' . zen_href_link(FILENAME_MUSIC_GENRE, 'page=' . $_GET['page'] . '&mID=' . $aInfo->music_genre_id . '&action=edit') . '" class="btn btn-primary" role="button">' . IMAGE_EDIT . '</a> <a href="' . zen_href_link(FILENAME_MUSIC_GENRE, 'page=' . $_GET['page'] . '&mID=' . $aInfo->music_genre_id . '&action=delete') . '" class="btn btn-warning" role="button">' . IMAGE_DELETE . '</a>');
-                  $contents[] = array('text' => '<br>' . TEXT_DATE_ADDED . ' ' . zen_date_short($aInfo->date_added));
+                  $contents[] = array('text' => '<br>' . TEXT_INFO_DATE_ADDED . ' ' . zen_date_short($aInfo->date_added));
                   if (zen_not_null($aInfo->last_modified)) {
-                    $contents[] = array('text' => TEXT_LAST_MODIFIED . ' ' . zen_date_short($aInfo->last_modified));
+                    $contents[] = array('text' => TEXT_INFO_LAST_MODIFIED . ' ' . zen_date_short($aInfo->last_modified));
                   }
                   $contents[] = array('text' => '<br>' . TEXT_PRODUCTS . ' ' . $aInfo->products_count);
                 }

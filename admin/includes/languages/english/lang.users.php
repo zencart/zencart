@@ -9,12 +9,8 @@
 $define = [
     'HEADING_TITLE' => 'Admin Users',
     'IMAGE_ADD_USER' => 'Add User',
-    'TEXT_ID' => 'ID',
-    'TEXT_ADMIN_NAME' => 'Username',
     'TEXT_ADMIN_PROFILE' => 'Profile',
     'TEXT_CHOOSE_PROFILE' => 'Choose Profile',
-    'TEXT_PASSWORD' => 'Password',
-    'TEXT_CONFIRM_PASSWORD' => 'Confirm Password',
     'TEXT_NO_USERS_FOUND' => 'No Admin Users found',
     'TEXT_CONFIRM_DELETE' => 'Delete requested. Please confirm: ',
     'ERROR_NO_USER_DEFINED' => 'The option requested requires a username to be specified.',

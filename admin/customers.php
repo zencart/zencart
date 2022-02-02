@@ -389,6 +389,34 @@ if (!empty($action)) {
               <?php echo zen_draw_input_field('customers_email_address', htmlspecialchars($cInfo->customers_email_address, ENT_COMPAT, CHARSET, TRUE), zen_set_field_length(TABLE_CUSTOMERS, 'customers_email_address', 50) . ' class="form-control" id="customers_email_address" minlength="' . ENTRY_EMAIL_ADDRESS_MIN_LENGTH . '"', true); ?>
             </div>
           </div>
+          <?php
+          // -----
+          // If a plugin has additional fields to add to the form, it supplies that information here.
+          // Additional fields are specified as a simple array of arrays,
+          // with each array element identifying a new input element:
+          //
+          // $additional_fields = [
+          //      [
+          //          'label' => 'The text to include for the field label',
+          //          'fieldname' => 'label "for" attribute, must match id of input field'
+          //          'input' => 'The form-related portion of the field',
+          //      ],
+          //      ...
+          // ];
+          //
+          $additional_fields = [];
+          $zco_notifier->notify('NOTIFY_ADMIN_CUSTOMERS_CUSTOMER_EDIT', $cInfo, $additional_fields);
+          if (!empty($additional_fields)) {
+              foreach ($additional_fields as $current_field) {
+                  ?>
+                  <div class="form-group">
+                      <?php echo zen_draw_label($current_field['label'], $current_field['fieldname'], 'class="col-sm-3 control-label"'); ?>
+                      <div class="col-sm-9 col-md-6"><?php echo $current_field['input']; ?></div>
+                  </div>
+                  <?php
+              }
+          }
+          ?>
         </div>
         <?php
         if (ACCOUNT_COMPANY == 'true') {
@@ -408,34 +436,6 @@ if (!empty($action)) {
           <?php
         }
         ?>
-          <?php
-          // -----
-          // If a plugin has additional fields to add to the form, it supplies that information here.
-          // Additional fields are specified as a simple array of arrays,
-          // with each array element identifying a new input element:
-          //
-          // $additional_fields = [
-          //      [
-          //          'label' => 'The text to include for the field label',
-          //          'fieldname' => 'label "for" attribute, must match id of input field'
-          //          'input' => 'The form-related portion of the field',
-          //      ],
-          //      ...
-          // ];
-          //
-          $additional_fields = [];
-          $zco_notifier->notify('NOTIFY_ADMIN_CUSTOMERS_CUSTOMER_EDIT', $cInfo, $additional_fields);
-          if (is_array($additional_fields)) {
-              foreach ($additional_fields as $current_field) {
-                  ?>
-                  <div class="form-group">
-                      <?php echo zen_draw_label($current_field['label'], $current_field['fieldname'], 'class="col-sm-3 control-label"'); ?>
-                      <div class="col-sm-9 col-md-6"><?php echo $current_field['input']; ?></div>
-                  </div>
-                  <?php
-              }
-          }
-          ?>
         <div class="row">
           <?php echo zen_draw_separator('pixel_trans.gif', '1', '10'); ?>
         </div>
@@ -843,9 +843,9 @@ if (!empty($action)) {
 
 // Split Page
 // reset page when page is unknown
-                if (($_GET['page'] == '' || $_GET['page'] == '1') && !empty($_GET['cID'])) {
+                if ((empty($_GET['page']) || $_GET['page'] == '1') && !empty($_GET['cID'])) {
                   $check_page = $db->Execute($customers_query_raw);
-                  $check_count = 1;
+                  $check_count = 0;
                   if ($check_page->RecordCount() > MAX_DISPLAY_SEARCH_RESULTS_CUSTOMER) {
                     foreach ($check_page as $item) {
                       if ($item['customers_id'] == $_GET['cID']) {

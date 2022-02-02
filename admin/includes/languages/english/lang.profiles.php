@@ -20,7 +20,6 @@ $define = [
     'SUCCESS_PROFILE_UPDATED' => 'Profile Updated',
     'SUCCESS_PROFILE_NAME_UPDATED' => 'Profile Name Updated',
     'SUCCESS_PROFILE_DELETED' => 'Profile Deleted',
-    'TEXT_ID' => 'ID',
     'TEXT_NAME' => 'Name',
     'TEXT_USERS' => 'Users',
     'TEXT_NO_PROFILES_FOUND' => 'No profiles have been defined yet',

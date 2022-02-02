@@ -106,10 +106,10 @@ if (!empty($action)) {
               <tr class="dataTableHeadingRow">
                 <th class="dataTableHeadingContent text-right"><?php echo TABLE_HEADING_ATTRIBUTES_ID; ?></th>
                 <th class="dataTableHeadingContent text-right"><?php echo TABLE_HEADING_PRODUCTS_ID; ?></th>
-                <th class="dataTableHeadingContent"><?php echo TABLE_HEADING_PRODUCT; ?></th>
+                <th class="dataTableHeadingContent"><?php echo TABLE_HEADING_PRODUCTS_NAME; ?></th>
                 <th class="dataTableHeadingContent"><?php echo TABLE_HEADING_MODEL; ?></th>
-                <th class="dataTableHeadingContent"><?php echo TABLE_HEADING_OPT_NAME; ?></th>
-                <th class="dataTableHeadingContent"><?php echo TABLE_HEADING_OPT_VALUE; ?></th>
+                <th class="dataTableHeadingContent"><?php echo TABLE_HEADING_OPTION_NAME; ?></th>
+                <th class="dataTableHeadingContent"><?php echo TABLE_HEADING_OPTION_VALUE; ?></th>
                 <th class="dataTableHeadingContent"><?php echo TABLE_TEXT_FILENAME; ?></th>
                 <th class="dataTableHeadingContent text-right"><?php echo TABLE_TEXT_MAX_DAYS; ?></th>
                 <th class="dataTableHeadingContent text-right"><?php echo TABLE_TEXT_MAX_COUNT; ?></th>

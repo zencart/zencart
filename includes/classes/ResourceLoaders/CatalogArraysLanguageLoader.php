@@ -22,7 +22,7 @@ class CatalogArraysLanguageLoader extends ArraysLanguageLoader
     public function loadLanguageForView()
     {
         $this->loadExtraLanguageFiles(DIR_WS_LANGUAGES, $_SESSION['language'], $this->currentPage . '.php');
-        $this->loadExtraLanguageFiles(DIR_WS_LANGUAGES, $_SESSION['language'], $this->currentPage . '.php', '/' . $this->templateDir);
+        // $this->loadExtraLanguageFiles(DIR_WS_LANGUAGES, $_SESSION['language'], $this->currentPage . '.php', '/' . $this->templateDir);
         foreach ($this->pluginList as $plugin) {
             $pluginDir = DIR_FS_CATALOG . 'zc_plugins/' . $plugin['unique_key'] . '/' . $plugin['version'] . '/catalog/includes/languages/';
             $this->loadExtraLanguageFiles($pluginDir, $_SESSION['language'], $this->currentPage . '.php');

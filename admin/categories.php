@@ -162,17 +162,13 @@ if (!empty($action)) {
       }
       // remove the existing image
       if (!empty($_POST['image_delete'])) {
-          $db->Execute("UPDATE " . TABLE_CATEGORIES . "
-                            SET categories_image = ''
-                            WHERE categories_id = " . (int)$categories_id);
+          zen_set_category_image($categories_id, '');
           $messageStack->add_session(sprintf(MESSAGE_IMAGE_REMOVED_CATEGORY, (int)$categories_id, zen_get_category_name($categories_id, $_SESSION['languages_id'])), 'success');
           // or assign a manually-typed/existing image
       } elseif ($_POST['categories_image_manual'] !== '') {
           $categories_image_name = zen_db_input($_POST['img_dir'] . $_POST['categories_image_manual']);
           if (file_exists(DIR_FS_CATALOG_IMAGES . $categories_image_name)) {
-              $db->Execute("UPDATE " . TABLE_CATEGORIES . "
-                      SET categories_image = '" . $categories_image_name . "'
-                      WHERE categories_id = " . (int)$categories_id);
+              zen_set_category_image($categories_id, $categories_image_name);
               $messageStack->add_session(sprintf(MESSAGE_IMAGE_ADDED_MANUAL, (int)$categories_id, zen_get_category_name($categories_id, $_SESSION['languages_id']), $categories_image_name), 'success');
           } else {
               $messageStack->add_session(sprintf(ERROR_IMAGE_MANUAL_NOT_FOUND, $categories_image_name));
@@ -187,9 +183,7 @@ if (!empty($action)) {
           if ($categories_image->filename !== 'none' && $categories_image->filename != '') {
               // save filename when not set to none and not blank
               $db_filename = zen_limit_image_filename($categories_image_name, TABLE_CATEGORIES, 'categories_image');
-              $db->Execute("UPDATE " . TABLE_CATEGORIES . "
-                          SET categories_image = '" . $db_filename . "'
-                          WHERE categories_id = " . (int)$categories_id);
+              zen_set_category_image($categories_id, $db_filename);
           }
       }
 
@@ -313,7 +307,7 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
         ?>
         <?php if ($formAction === 'update_category') { ?>
           <div class="form-group">
-            <div class="col-sm-12"><?php echo TEXT_EDIT_INTRO; ?></div>
+            <div class="col-sm-12"><?php echo TEXT_INFO_EDIT_INTRO; ?></div>
           </div>
         <?php } ?>
         <div class="form-group">

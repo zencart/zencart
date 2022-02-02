@@ -68,7 +68,7 @@
 <?php echo zen_draw_input_field('email', ($email_address), ' size="40" id="email-address" autocomplete="off" placeholder="' . ENTRY_REQUIRED_SYMBOL . '" required', 'email'); ?>
 <br class="clearBoth">
 
-<label class="inputLabel" for="telephone"><?php echo ENTRY_TELEPHONE; ?></label>
+<label class="inputLabel" for="telephone"><?php echo ENTRY_TELEPHONE_NUMBER; ?></label>
 <?php echo zen_draw_input_field('telephone', ($telephone), ' size="20" id="telephone" autocomplete="off"', 'tel'); ?>
 <br class="clearBoth">
 

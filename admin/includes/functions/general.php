@@ -318,7 +318,10 @@ function zen_get_system_information($privacy = false)
     $mysql_slow_query_log_status = '';
     $result = $db->Execute("SHOW VARIABLES LIKE 'slow\_query\_log'");
     if (!$result->EOF) {
-        $mysql_slow_query_log_status = $result->fields['Value'];
+       $mysql_slow_query_log_status = '0'; 
+       if (in_array($result->fields['Value'], ['On', 'ON', '1',])) {
+         $mysql_slow_query_log_status = '1'; 
+       } 
     }
     $mysql_slow_query_log_file = '';
     $result = $db->Execute("SHOW VARIABLES LIKE 'slow\_query\_log\_file'");

@@ -85,7 +85,7 @@
 <fieldset>
 <legend><?php echo HEADING_TITLE; ?></legend>
 
-<label class="inputLabel" for="to-name"><?php echo ENTRY_NAME; ?></label>
+<label class="inputLabel" for="to-name"><?php echo ENTRY_RECIPIENT_NAME; ?></label>
 <?php echo zen_draw_input_field('to_name', (!empty($_POST['to_name']) ? $_POST['to_name'] : ''), 'size="40" id="to-name"') . '<span class="alert">' . ENTRY_REQUIRED_SYMBOL . '</span>';?>
 <br class="clearBoth">
 

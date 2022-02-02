@@ -14,6 +14,8 @@ class ArraysLanguageLoader extends BaseLanguageLoader
 {
     public function makeConstants($defines)
     {
+        if (!is_array($defines)) return; 
+
         foreach ($defines as $defineKey => $defineValue) {
             if (defined($defineKey)) {
                 continue;
@@ -83,6 +85,19 @@ class ArraysLanguageLoader extends BaseLanguageLoader
         return $defineList;
     }
 
+    public function loadModuleDefinesFromArrayFile($rootPath, $language, $module_type, $fileName, $extraPath = '')
+    {
+        $arrayFileName = 'lang.' . $fileName;
+        $extraBlock = ''; 
+        if (!empty($extraPath)) { 
+           $extraBlock = $extraPath. '/'; 
+        }
+        $mainFile = $rootPath . $language . '/modules/' . $module_type . '/' . $extraBlock . $arrayFileName;
+        $fallbackFile = $mainFile; // for now no fallback
+        $defineList = $this->loadDefinesWithFallback($mainFile, $fallbackFile);
+        return $defineList;
+    }
+
     public function pluginLoadDefinesFromArrayFile($language, $fileName, $context = 'admin', $extraPath = '')
     {
         $defineList = [];
@@ -117,13 +132,13 @@ class ArraysLanguageLoader extends BaseLanguageLoader
 
     protected function loadArrayDefineFile($definesFile)
     {
-        //echo 'loadArrayDefineFile ' . $definesFile . "<br>";
         $definesList = [];
         if (!is_file($definesFile)) {
             return $definesList;
         }
         $this->mainLoader->addLanguageFilesLoaded('arrays', $definesFile);
-        $definesList = include_once($definesFile);
-        return $definesList;
+        // file should return a variable 
+        $definesList = include($definesFile);
+        return $definesList; 
     }
 }

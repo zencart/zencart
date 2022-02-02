@@ -91,6 +91,14 @@ systemChecks:
       checkExtension:
         parameters:
           extension: pdo_sqlite
+  phpzipExt:
+    runLevel: always
+    errorLevel: WARN
+    mainErrorText: <?php echo TEXT_ERROR_PHPZIP_SUPPORT .PHP_EOL; ?>
+    methods:
+      checkExtension:
+        parameters:
+          extension: zip
   logFolder:
     runLevel: always
     errorLevel: FAIL
@@ -145,6 +153,15 @@ systemChecks:
       checkWriteableDir:
         parameters:
           fileDir: <?php echo DIR_FS_DOWNLOAD_PUBLIC . PHP_EOL; ?>
+  nginxFolder:
+    runLevel: always
+    errorLevel: FAIL
+    mainErrorText: <?php echo TEXT_ERROR_NGINX_FOLDER .PHP_EOL; ?>
+    mainErrorTextHelpId: helpIdFolderPerms
+    methods:
+      checkWriteableDir:
+        parameters:
+          fileDir: <?php echo DIR_FS_ROOT . 'zc_install/includes/nginx_conf' . PHP_EOL; ?>
   htaccessSupport:
     runLevel: always
     errorLevel: WARN

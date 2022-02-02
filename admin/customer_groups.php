@@ -84,7 +84,7 @@ if (!empty($action)) {
                 // reset page when page is unknown
                 if ((empty($_GET['page']) || $_GET['page'] == '1') && !empty($_GET['gID'])) {
                     $check_page = $db->Execute($sql);
-                    $check_count = 1;
+                    $check_count = 0;
                     if ($check_page->RecordCount() > $max_records_per_page) {
                         foreach ($check_page as $item) {
                             if ((int)$item['group_id'] === (int)$_GET['gID']) {
@@ -160,7 +160,7 @@ if (!empty($action)) {
                     $heading[] = ['text' => '<h4>' . TEXT_HEADING_EDIT_GROUP . '</h4>'];
 
                     $contents = ['form' => zen_draw_form('group_edit', FILENAME_CUSTOMER_GROUPS, $href_page_param . 'gID=' . $gInfo->group_id . '&action=save', 'post', 'class="form-horizontal"')];
-                    $contents[] = ['text' => TEXT_EDIT_INTRO];
+                    $contents[] = ['text' => TEXT_INFO_EDIT_INTRO];
                     $contents[] = ['text' => '<br>' . zen_draw_label(TEXT_GROUP_NAME, 'group_name', 'class="control-label"') . zen_draw_input_field('group_name', htmlspecialchars($gInfo->group_name, ENT_COMPAT, CHARSET, TRUE), zen_set_field_length(TABLE_CUSTOMER_GROUPS, 'group_name') . ' class="form-control"')];
                     $contents[] = ['text' => '<br>' . zen_draw_label(TEXT_GROUP_COMMENT, 'group_comment', 'class="control-label"') . zen_draw_input_field('group_comment', zen_output_string_protected($gInfo->group_comment), zen_set_field_length(TABLE_CUSTOMER_GROUPS, 'group_comment') . 'class="form-control"')];
                     $contents[] = ['align' => 'text-center', 'text' => '<br><button type="submit" class="btn btn-primary">' . IMAGE_SAVE . '</button> <a href="' . zen_href_link(FILENAME_CUSTOMER_GROUPS, $href_page_param . 'gID=' . $gInfo->group_id) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>'];
@@ -186,8 +186,8 @@ if (!empty($action)) {
 
                         $contents[] = ['align' => 'text-center', 'text' => '<a href="' . zen_href_link(FILENAME_CUSTOMER_GROUPS, $href_page_param . 'gID=' . $gInfo->group_id . '&action=edit') . '"class="btn btn-primary" role="button">' . IMAGE_EDIT . '</a>
                                 <a href="' . zen_href_link(FILENAME_CUSTOMER_GROUPS, $href_page_param . 'gID=' . $gInfo->group_id . '&action=delete') . '" class="btn btn-warning" role="button">' . IMAGE_DELETE . '</a>'];
-                        $contents[] = ['text' => '<br>' . TEXT_DATE_ADDED . ' ' . zen_date_short($gInfo->date_added)];
-                        if (!empty($gInfo->last_modified)) $contents[] = ['text' => TEXT_LAST_MODIFIED . ' ' . zen_date_short($gInfo->last_modified)];
+                        $contents[] = ['text' => '<br>' . TEXT_INFO_DATE_ADDED . ' ' . zen_date_short($gInfo->date_added)];
+                        if (!empty($gInfo->last_modified)) $contents[] = ['text' => TEXT_INFO_LAST_MODIFIED . ' ' . zen_date_short($gInfo->last_modified)];
                         $contents[] = ['text' => '<br>' . TEXT_CUSTOMERS_IN_GROUP . ' ' . $gInfo->customer_count];
                     }
                     break;
