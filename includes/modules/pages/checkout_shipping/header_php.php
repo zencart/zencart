@@ -32,7 +32,7 @@
   $_SESSION['valid_to_checkout'] = true;
   $_SESSION['cart']->get_products(true);
   if ($_SESSION['valid_to_checkout'] == false) {
-    $messageStack->add('header', ERROR_CART_UPDATE, 'error');
+    $messageStack->add_session('header', ERROR_CART_UPDATE, 'error');
     zen_redirect(zen_href_link(FILENAME_SHOPPING_CART));
   }
 
