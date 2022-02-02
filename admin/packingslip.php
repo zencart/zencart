@@ -56,6 +56,17 @@ if ($order->billing['street_address'] != $order->delivery['street_address']) {
         </tr>
       </table>
       <div><?php echo zen_draw_separator(); ?></div>
+      <?php
+        $additional_content = false; 
+        $zco_notifier->notify('NOTIFY_ADMIN_ORDERS_PACKINGSLIP_ADDITIONAL_DATA_TOP', $oID, $additional_content);
+          if ($additional_content !== false) {
+      ?>
+          <table class="table">
+              <tr><td class="main additional_data" colspan="2"><?php echo $additional_content; ?></td></tr>
+          </table>
+      <?php
+          }
+      ?>
       <table class="table">
           <?php
           if ($show_customer == true) {
@@ -226,6 +237,17 @@ if ($order->billing['street_address'] != $order->delivery['street_address']) {
           </tbody>
         </table>
       <?php } // order comments ?>
+      <?php
+        $additional_content = false; 
+        $zco_notifier->notify('NOTIFY_ADMIN_ORDERS_PACKINGSLIP_ADDITIONAL_DATA_BOTTOM', $oID, $additional_content);
+          if ($additional_content !== false) {
+      ?>
+          <table class="table">
+              <tr><td class="main additional_data" colspan="2"><?php echo $additional_content; ?></td></tr>
+          </table>
+      <?php
+          }
+      ?>
     </div>
 
     <!-- body_text_eof //-->
