@@ -37,7 +37,7 @@ $currencies = new currencies();
               </thead>
               <tbody>
                 <?php
-                $gv_query_raw = "SELECT c.coupon_amount, c.coupon_code, c.coupon_id, et.sent_firstname, et.sent_lastname, et.customer_id_sent, et.emailed_to, et.date_sent, crt.redeem_date, c.coupon_id
+                $gv_query_raw = "SELECT c.coupon_amount, c.coupon_code, c.coupon_id, et.sent_firstname, et.sent_lastname, et.customer_id_sent, et.emailed_to, et.date_sent, crt.redeem_date
                                  FROM " . TABLE_COUPONS . " c
                                  LEFT JOIN " . TABLE_COUPON_REDEEM_TRACK . " crt ON c.coupon_id = crt.coupon_id,
                                       " . TABLE_COUPON_EMAIL_TRACK . " et

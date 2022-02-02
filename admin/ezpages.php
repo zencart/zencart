@@ -275,7 +275,7 @@ if (!empty($action)) {
 
           $ezID = (int)$_GET['ezID'];
 
-          $page_query = "SELECT e.*, ec.*
+          $page_query = "SELECT e.*, ec.pages_title, ec.pages_html_text
                          FROM " . TABLE_EZPAGES . " e
                          INNER JOIN " . TABLE_EZPAGES_CONTENT . " ec ON (e.pages_id=ec.pages_id AND ec.languages_id = " . (int)$_SESSION['languages_id'] . ")
                          WHERE e.pages_id = " . (int)$_GET['ezID'];
@@ -551,7 +551,7 @@ if (!empty($action)) {
                     break;
                 }
 
-                $pages_query_raw = "SELECT e.*, ec.*
+                $pages_query_raw = "SELECT e.*, ec.pages_title, ec.pages_html_text
                                     FROM " . TABLE_EZPAGES . " e
                                     INNER JOIN " . TABLE_EZPAGES_CONTENT . " ec ON (e.pages_id=ec.pages_id AND ec.languages_id = " . (int)$_SESSION['languages_id'] . ")
                                     " . $ez_order_by;
