@@ -64,6 +64,38 @@ function zen_get_file_directory($check_directory, $check_file, $dir_only = false
     return $zv_directory . $zv_filename;
 }
 
+function zen_include_language_file($file, $folder, $page)
+{
+    global $messageStack, $languageLoader;
+    if (IS_ADMIN_FLAG === true) {
+      $lang_file = zen_get_file_directory(DIR_FS_CATALOG . DIR_WS_LANGUAGES . $_SESSION['language'] . $folder, $file, 'false');
+      $module_file = DIR_FS_CATALOG . $module_file;
+    } else {
+      $lang_file = zen_get_file_directory(DIR_WS_LANGUAGES . $_SESSION['language'] . $folder, $file, 'false');
+    }
+      if ($languageLoader->hasLanguageFile(DIR_FS_CATALOG . DIR_WS_LANGUAGES,  $_SESSION['language'], $file, $folder)) {
+          $languageLoader->loadExtraLanguageFiles(DIR_FS_CATALOG . DIR_WS_LANGUAGES,  $_SESSION['language'], $file, $folder);
+    } else {
+       if ($page === 'inline') {
+?>
+          <div class="messageStackCaution">
+             <?php echo WARNING_COULD_NOT_LOCATE_LANG_FILE . $lang_file; ?> 
+          </div>
+<?php
+       } else {
+      if (is_object($messageStack)) {
+          if (IS_ADMIN_FLAG === false) {
+            $messageStack->add($page, WARNING_COULD_NOT_LOCATE_LANG_FILE . $lang_file, 'caution');
+          } else {
+            $messageStack->add_session(WARNING_COULD_NOT_LOCATE_LANG_FILE . $lang_file, 'caution');
+          }
+        }
+       }
+      return false; 
+    }
+    return true; 
+}
+
 /**
  * find module directory
  * include template specific immediate /modules files

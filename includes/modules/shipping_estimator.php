@@ -182,7 +182,7 @@ if ($_SESSION['cart']->count_contents() > 0) {
         }
         if ($pass && $_SESSION['cart']->show_total() >= MODULE_ORDER_TOTAL_SHIPPING_FREE_SHIPPING_OVER) {
             $free_shipping = true;
-            include zen_get_file_directory(DIR_FS_CATALOG . DIR_WS_LANGUAGES . $_SESSION['language'] . '/modules/order_total/', 'ot_shipping.php', 'false');
+            zen_include_language_file('ot_shipping.php', '/modules/order_total/', 'inline');
         }
     }
     // begin shipping cost
