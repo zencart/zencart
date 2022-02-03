@@ -193,7 +193,7 @@ $define = [
     'ERROR_PRODUCT_QUANTITY_MAX_SHOPPING_CART' => ' ... Maximum Quantity errors - ',
     'ERROR_PRODUCT_QUANTITY_MIN' => ',  ... Minimum Quantity errors - ',
     'ERROR_PRODUCT_QUANTITY_MIN_SHOPPING_CART' => ', has a minimum quantity restriction. ',
-    'ERROR_PRODUCT_QUANTITY_ORDERED' => '<br> You ordered a total of: ',
+    'ERROR_PRODUCT_QUANTITY_ORDERED' => '<br>You ordered a total of: ',
     'ERROR_PRODUCT_QUANTITY_UNITS' => ' ... Quantity Units errors - ',
     'ERROR_PRODUCT_QUANTITY_UNITS_SHOPPING_CART' => ' ... Quantity Units errors - ',
     'ERROR_PRODUCT_STATUS_SHOPPING_CART' => '<br>We are sorry but this product has been removed from our inventory at this time.<br>This item has been removed from your shopping cart.',
@@ -521,7 +521,7 @@ $define = [
     }
     $define['ERROR_NO_INVALID_REDEEM_GV'] = 'Invalid ' . $define['TEXT_GV_NAME'] . ' ' . $define['TEXT_GV_REDEEM'];
     $define['ERROR_NO_REDEEM_CODE'] = 'You did not enter a ' . $define['TEXT_GV_REDEEM'] . '.';
-    $define['ERROR_REDEEMED_AMOUNT'] = 'Congratulations = you have redeemed ';
+    $define['ERROR_REDEEMED_AMOUNT'] = 'Congratulations, you have redeemed ';
     $define['GV_FAQ'] = $define['TEXT_GV_NAME'] . ' FAQ';
     $define['TABLE_HEADING_CREDIT'] = 'Credits Available';
     $define['TEXT_AVAILABLE_BALANCE'] = 'Your ' . $define['TEXT_GV_NAME'] . ' Account';
