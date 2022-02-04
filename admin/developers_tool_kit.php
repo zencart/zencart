@@ -303,22 +303,24 @@ function number_pad_with_spaces($number, $n = 0) {
 
 /* ==================================================================== */
 
-$action = $_GET['action']) ?? '';
+$action = $_GET['action'] ?? '';
 // don't do any 'action' if clicked on the Check for Updates button
-if (isset($_GET['vcheck']) && $_GET['vcheck'] == 'yes')
-  $action = '';
+    if (isset($_GET['vcheck']) && $_GET['vcheck'] == 'yes') {
+        $action = '';
+    }
 
 $found = true;
 
-$search = $_POST['search']) ?? '';
+$search = $_POST['search'] ?? '';
 $flags = (isset($_GET['v']) ? '&v=' : '') . (isset($_GET['s']) ? '&s=' . preg_replace('/[^a-z]/', '', $_GET['s']) : '');
 
 switch ($action) {
   case ('search_config_keys'):
     // credits Benjamin Bellamy, torvista
     $search_type = (isset($_GET['t']) && $_GET['t'] == 'all') ? 'all' : 'keyword';
-    if ($search_type == 'all')
-      $search = '';
+      if ($search_type == 'all') {
+          $search = '';
+      }
     // The request that returns the configuration keys:
     // Product-Type info is limited to products_type=1 (general)
     $sql = "(SELECT configuration_id, configuration_key, c.configuration_group_id AS configuration_group_id, configuration_group_title,
@@ -362,7 +364,11 @@ switch ($action) {
     }
     $keySearchResults = $db->Execute($sql);
     if ($keySearchResults->RecordCount() == 0) {
-      $messageStack->add(ERROR_CONFIGURATION_KEY_NOT_ENTERED, 'caution');
+        if (empty($search)) {
+            $messageStack->add(ERROR_CONFIGURATION_KEY_NOT_ENTERED, 'caution');
+        } else {
+            $messageStack->add(ERROR_CONFIGURATION_KEY_NOT_FOUND, 'caution');
+        }
     }
     break;
 
