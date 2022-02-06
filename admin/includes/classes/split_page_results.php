@@ -62,6 +62,11 @@ class splitPageResults
     private $letterGroupLength = 1;
 
     /**
+     * @var int
+     */
+    protected $totalByLetter = 0;
+
+    /**
      * @param int $current_page_number
      * @param int $max_rows_per_page
      * @param string $sql_query
@@ -89,9 +94,6 @@ class splitPageResults
         $query_upper = strtoupper($sql_query);
         $pos_from = strpos($query_upper, ' FROM', 0);
 
-        $pos_distinct_start = strpos($query_upper, ' DISTINCT', 0);
-        $pos_distinct_end = strpos(substr($query_upper, $pos_distinct_start), ',', 0);
-
         $pos_where = strrpos($query_upper, ' WHERE', $pos_from);
         if ($pos_where) {
             $where_sql = " AND ";
@@ -111,12 +113,7 @@ class splitPageResults
         $pos_order_by = strpos($query_upper, ' ORDER BY', $pos_search);
         if (($pos_order_by < $pos_to) && ($pos_order_by != false)) $pos_to = $pos_order_by;
 
-        // prepare count query from parsed sql
-        $sql = ($pos_distinct_start == 0) ? "SELECT COUNT(*) AS total " : "SELECT COUNT(DISTINCT " . substr($sql_query, $pos_distinct_start + 9, $pos_distinct_end - 9) . ") AS total ";
-        $sql .= substr($sql_query, $pos_from, ($pos_to - $pos_from));
-
-        $count_result = $db->Execute($sql);
-        $query_num_rows = $count_result->fields['total'];
+        $query_num_rows = $this->numberRows($sql_query);
 
         // Default behaviour
         if ($this->paginateByLetter === false) {
@@ -152,6 +149,8 @@ class splitPageResults
             if ($current_page_number < $num_pages) $this->nextPage = $current_page_number + 1;
 
         } else {
+            // first store the total results number for display later.
+            $this->totalByLetter = $query_num_rows;
             // store the find-page-by-letter version of the query.
             $this->page_sql = "SELECT DISTINCT UCASE(SUBSTRING(" . $letterGroupColumn . ", 1, " . $letterGroupLength . ")) AS letter";
             $this->page_sql .= substr($sql_query, $pos_from, ($pos_to - $pos_from));
@@ -186,7 +185,31 @@ class splitPageResults
             $sql .= $this->sql_after;
 
             $sql_query = $sql;
+            $query_num_rows = $this->numberRows($sql_query);
         }
+    }
+    /**
+     * NOTE:  Takes a query and counts the number of rows in that query.
+     *
+     * @param string $sql
+     * @return int
+     */
+
+    private function numberRows(string $sql) {
+        global $db;
+        // the following line makes use of a CTE which is only available with mysql 8 or mariadb-10.x
+//        $countSQL = 'WITH countresults AS (' . $sql . ') SELECT count(*) as total FROM countresults';
+        $countSQL = 'SELECT count(*) as total FROM (' . $sql . ') countresults';
+
+        try {
+            $count_result = $db->Execute($countSQL);
+        } catch (Throwable $e) {
+            trigger_error('exception-> ' . json_encode($e));
+        }
+        if ((is_object($count_result) && $count_result->EOF) || !empty($e)) {
+            return 0;
+        }
+        return (int) $count_result->fields['total'];
     }
 
     /**
@@ -293,7 +316,7 @@ class splitPageResults
                     $parameters = rtrim($parameters, '&');
                     $pairs = explode('&', $parameters);
                     foreach ($pairs as $pair) {
-                        list($key, $value) = explode('=', $pair);
+                        [$key, $value] = explode('=', $pair);
                         $display_links .= zen_draw_hidden_field(rawurldecode($key), rawurldecode($value));
                     }
                 }
@@ -319,7 +342,7 @@ class splitPageResults
     public function display_count($query_numrows, $max_rows_per_page, $current_page_number, $text_output)
     {
         if ($this->paginateByLetter) {
-            return sprintf($text_output, $current_page_number, $current_page_number, $query_numrows);
+            return sprintf($text_output, $query_numrows, $this->totalByLetter);
         }
 
         $current_page_number = (int)$current_page_number;
