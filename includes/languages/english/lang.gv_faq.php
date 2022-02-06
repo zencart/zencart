@@ -49,11 +49,11 @@ $define = [
   2. During the checkout process on the same page that you select a payment method,
 there will be a box to enter a ' . TEXT_GV_REDEEM . '. Enter the ' . TEXT_GV_REDEEM . ' here, and
 click the Redeem button. The code will be
-validated and the amount added to your ' . TEXT_GV_NAME . ' Balance. You can then use the amount to purchase any item from our store.',
+ validated and the amount added to your ' . TEXT_GV_NAME . ' Balance. You can then use the amount to purchase any item from our store.',
     'SUB_HEADING_TITLE_5' => 'When problems occur.',
     'SUB_HEADING_TEXT_5' => 'For any queries regarding the ' . TEXT_GV_NAME . ' System, please contact the store
   using our <a href="' . zen_href_link(FILENAME_CONTACT_US) . '">Contact Us</a> page. Please make sure you give
-  as much information as possible regarding the issue so that we can fully address the problem.',
+ as much information as possible regarding the issue so that we can fully address the problem.',
     'SUB_HEADING_TITLE_0' => '',
     'SUB_HEADING_TEXT_0' => 'Please choose from one of the questions above.',
     'TEXT_GV_REDEEM_INFO' => 'Please enter your ' . TEXT_GV_NAME . ' redemption code: ',
