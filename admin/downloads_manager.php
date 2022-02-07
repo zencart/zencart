@@ -135,7 +135,9 @@ if (!empty($action)) {
               $order_by = " ORDER BY pd.products_name ";
 
 // create split page control
-              $sql = "SELECT pad.*, pa.*, pd.*, p.*
+              $sql = "SELECT pad.products_attributes_filename, pad.products_attributes_maxdays, pad.products_attributes_maxcount, 
+                      pa.products_attributes_id, pa.options_id, pa.options_values_id, pd.products_name, 
+                      p.products_model, p.products_id, p.products_virtual, p.product_is_always_free_shipping
                       FROM " . TABLE_PRODUCTS_ATTRIBUTES_DOWNLOAD . " pad
                       LEFT JOIN " . TABLE_PRODUCTS_ATTRIBUTES . " pa ON pad.products_attributes_id = pa.products_attributes_id
                       LEFT JOIN " . TABLE_PRODUCTS_DESCRIPTION . " pd ON pa.products_id = pd.products_id
