@@ -60,7 +60,7 @@ $define = [
     'TEXT_SELECT_DELETE_OPTION_VALUES_FROM' => 'Option Value to match:',
     'ERROR_OPTION_VALUES_DELETE_MISMATCH' => 'Error: Mismatched Option Name and Option Value selected',
     'SUCCESS_OPTION_VALUES_DELETE' => 'Successful: Deletion of: ',
-    'LABEL_FILTER' => 'Select Option Value to filter',
+    'LABEL_FILTER' => 'Select Option Name to filter Values',
     'TEXT_DISPLAY_NUMBER_OF_OPTION_VALUES' => 'Displaying <b>%d</b> to <b>%d</b> (of <b>%d</b> Option Values)',
     'TEXT_SHOW_ALL' => 'Show All',
 ];
