@@ -258,7 +258,7 @@ if (!empty($action) && $order_exists === true) {
       if ($order->info['payment_module_code']) {
         if (file_exists(DIR_FS_CATALOG_MODULES . 'payment/' . $order->info['payment_module_code'] . '.php')) {
           require_once(DIR_FS_CATALOG_MODULES . 'payment/' . $order->info['payment_module_code'] . '.php');
-          require_once(DIR_FS_CATALOG_LANGUAGES . $_SESSION['language'] . '/modules/payment/' . $order->info['payment_module_code'] . '.php');
+          zen_include_language_file($order->info['payment_module_code'] . '.php', '/modules/payment/','inline'); 
           $module = new $order->info['payment_module_code']();
           if (method_exists($module, '_doStatusUpdate')) {
             $response = $module->_doStatusUpdate($oID, $status, $comments, $customer_notified, $check_status->fields['orders_status']);
@@ -352,7 +352,7 @@ if (!empty($action) && $order_exists === true) {
       if ($order->info['payment_module_code']) {
         if (file_exists(DIR_FS_CATALOG_MODULES . 'payment/' . $order->info['payment_module_code'] . '.php')) {
           require_once(DIR_FS_CATALOG_MODULES . 'payment/' . $order->info['payment_module_code'] . '.php');
-          require_once(DIR_FS_CATALOG_LANGUAGES . $_SESSION['language'] . '/modules/payment/' . $order->info['payment_module_code'] . '.php');
+          zen_include_language_file($order->info['payment_module_code'] . '.php', '/modules/payment/','inline'); 
           $module = new $order->info['payment_module_code']();
           if (method_exists($module, '_doRefund')) {
             $module->_doRefund($oID);
@@ -367,7 +367,7 @@ if (!empty($action) && $order_exists === true) {
       if ($order->info['payment_module_code']) {
         if (file_exists(DIR_FS_CATALOG_MODULES . 'payment/' . $order->info['payment_module_code'] . '.php')) {
           require_once(DIR_FS_CATALOG_MODULES . 'payment/' . $order->info['payment_module_code'] . '.php');
-          require_once(DIR_FS_CATALOG_LANGUAGES . $_SESSION['language'] . '/modules/payment/' . $order->info['payment_module_code'] . '.php');
+          zen_include_language_file($order->info['payment_module_code'] . '.php', '/modules/payment/','inline'); 
           $module = new $order->info['payment_module_code']();
           if (method_exists($module, '_doAuth')) {
             $module->_doAuth($oID, $order->info['total'], $order->info['currency']);
@@ -381,7 +381,7 @@ if (!empty($action) && $order_exists === true) {
       if ($order->info['payment_module_code']) {
         if (file_exists(DIR_FS_CATALOG_MODULES . 'payment/' . $order->info['payment_module_code'] . '.php')) {
           require_once(DIR_FS_CATALOG_MODULES . 'payment/' . $order->info['payment_module_code'] . '.php');
-          require_once(DIR_FS_CATALOG_LANGUAGES . $_SESSION['language'] . '/modules/payment/' . $order->info['payment_module_code'] . '.php');
+          zen_include_language_file($order->info['payment_module_code'] . '.php', '/modules/payment/','inline'); 
           $module = new $order->info['payment_module_code']();
           if (method_exists($module, '_doCapt')) {
             $module->_doCapt($oID, 'Complete', $order->info['total'], $order->info['currency']);
@@ -395,7 +395,7 @@ if (!empty($action) && $order_exists === true) {
       if ($order->info['payment_module_code']) {
         if (file_exists(DIR_FS_CATALOG_MODULES . 'payment/' . $order->info['payment_module_code'] . '.php')) {
           require_once(DIR_FS_CATALOG_MODULES . 'payment/' . $order->info['payment_module_code'] . '.php');
-          require_once(DIR_FS_CATALOG_LANGUAGES . $_SESSION['language'] . '/modules/payment/' . $order->info['payment_module_code'] . '.php');
+          zen_include_language_file($order->info['payment_module_code'] . '.php', '/modules/payment/','inline'); 
           $module = new $order->info['payment_module_code']();
           if (method_exists($module, '_doVoid')) {
             $module->_doVoid($oID);
@@ -511,7 +511,7 @@ if (!empty($action) && $order_exists === true) {
         if ($order->info['payment_module_code']) {
           if (file_exists(DIR_FS_CATALOG_MODULES . 'payment/' . $order->info['payment_module_code'] . '.php')) {
             require(DIR_FS_CATALOG_MODULES . 'payment/' . $order->info['payment_module_code'] . '.php');
-            require(DIR_FS_CATALOG_LANGUAGES . $_SESSION['language'] . '/modules/payment/' . $order->info['payment_module_code'] . '.php');
+            zen_include_language_file($order->info['payment_module_code'] . '.php', '/modules/payment/','inline'); 
             $module = new $order->info['payment_module_code']();
 //        echo $module->admin_notification($oID);
           }
