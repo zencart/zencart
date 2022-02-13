@@ -80,7 +80,7 @@ class ArraysLanguageLoader extends BaseLanguageLoader
     {
         $arrayFileName = 'lang.' . $fileName;
         $mainFile = $rootPath . $language . $extraPath. '/' . $arrayFileName;
-        $fallbackFile = $rootPath . $this->fallback . $extraPath . '/' . $arrayFileName;
+        $fallbackFile = $rootPath . $language . '/' . $arrayFileName;
         $defineList = $this->loadDefinesWithFallback($mainFile, $fallbackFile);
         return $defineList;
     }
