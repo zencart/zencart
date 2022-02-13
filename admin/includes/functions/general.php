@@ -763,3 +763,10 @@ function zen_get_orders_status_pulldown_array()
 
     return $orders_status_array;
 }
+
+function zen_get_customer_email_from_id($cid) { 
+   global $db;
+   $query = $db->Execute("SELECT customers_email_address FROM " . TABLE_CUSTOMERS . " WHERE customers_id = " . (int)$cid); 
+   if ($query->EOF) return ''; 
+   return $query->fields['customers_email_address']; 
+}
