@@ -65,7 +65,7 @@ if (!empty($action)) {
             <table class="table table-hover">
                 <thead>
                 <tr class="dataTableHeadingRow">
-                    <th class="dataTableHeadingContent text-center"><?php echo TABLE_HEADING_GROUP_ID; ?></th>
+                    <th class="dataTableHeadingContent text-center"><?php echo TABLE_HEADING_ID; ?></th>
                     <th class="dataTableHeadingContent"><?php echo TABLE_HEADING_GROUP_NAME; ?></th>
                     <th class="dataTableHeadingContent text-center"><?php echo TABLE_HEADING_GROUP_CUSTOMER_COUNT; ?></th>
                     <th class="dataTableHeadingContent"><?php echo TABLE_HEADING_GROUP_COMMENTS; ?></th>
