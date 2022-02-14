@@ -248,7 +248,6 @@ $define = [
     'HEADER_TITLE_SUPPORT_SITE' => 'Support',
     'HEADER_TITLE_TOP' => 'Home',
     'HEADER_TITLE_VERSION' => 'Version',
-    'HEADING_TITLE_OPT' => 'Product Options',
     'HEADING_TITLE_VAL' => 'Option Values',
     'HEADING_TITLE_SEARCH_DETAIL' => 'Search: ',
     'HEADING_TITLE_SEARCH_DETAIL_REPORTS' => 'Search for Product IDs (Delimited by commas)',
