@@ -1,10 +1,10 @@
 <?php
 $define = [
-    'NAVBAR_TITLE_1' => 'Checkout',
+    'NAVBAR_TITLE_1' => 'Checkout - Step 1',
     'NAVBAR_TITLE_2' => 'Shipping Method',
     'HEADING_TITLE' => 'Step 1 of 3 - Delivery Information',
     'TEXT_CHOOSE_SHIPPING_DESTINATION' => 'Your order will be shipped to the address at the left or you may change the shipping address by clicking the <em>Change Address</em> button.',
-    'TITLE_SHIPPING_ADDRESS' => 'Shipping Information:',
+    'TITLE_SHIPPING_ADDRESS' => 'Delivery Information:',
     'TEXT_CHOOSE_SHIPPING_METHOD' => 'Please select the preferred shipping method to use on this order.',
     'TITLE_PLEASE_SELECT' => 'Please Select',
     'TEXT_ENTER_SHIPPING_INFORMATION' => 'This is currently the only shipping method available to use on this order.',
