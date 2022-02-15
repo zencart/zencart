@@ -1,6 +1,6 @@
 <?php
 $define = [
-    'NAVBAR_TITLE_1' => 'Checkout',
+    'NAVBAR_TITLE_1' => 'Checkout - Complete',
     'NAVBAR_TITLE_2' => 'Success - Thank You',
     'HEADING_TITLE' => 'Thank You! We Appreciate your Business!',
     'TEXT_SUCCESS' => '',
