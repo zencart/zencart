@@ -87,6 +87,7 @@ $define = [
     'DB_ERROR_NOT_CONNECTED' => 'Error - Could not connect to Database',
     'DOB_FORMAT_STRING' => 'mm/dd/yyyy',
     'DOWNLOADS_CONTROLLER_ON_HOLD_MSG' => 'NOTE: Downloads are not available until payment has been confirmed',
+    'EMAIL_SALUTATION' => 'Dear',
     'EMAIL_SEND_FAILED' => 'ERROR: Failed sending email to: "%s" <%s> with subject: "%s"',
     'EMPTY_CART_TEXT_NO_QUOTE' => 'Whoops! Your session has expired ... Please update your shopping cart for Shipping Quote ...',
     'EMP_SHOPPING_FOR_MESSAGE' => 'Currently shopping for %1$s (%2$s).',
