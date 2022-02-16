@@ -24,8 +24,19 @@ if (MODULE_PAYMENT_SQUARE_TESTING_MODE === 'Sandbox') {
 
 <script type="text/javascript" title="square">
     var cardNonce;
+    var verificationDetails = { 
+        intent: 'CHARGE', 
+        amount: '<?php echo zen_round ( $order->info['total'], 2 ); ?>', 
+        currencyCode: '<?php echo $_SESSION['currency']; ?>', 
+        billingContact: {
+            givenName: '<?php echo (string)$order->billing['firstname']; ?>',
+            familyName: '<?php echo (string)$order->billing['lastname']; ?>'
+        }
+    };
     var paymentForm = new SqPaymentForm({
         applicationId: '<?php echo MODULE_PAYMENT_SQUARE_APPLICATION_ID; ?>',
+        <?php preg_match_all("/\[([^\]]*)\]/", MODULE_PAYMENT_SQUARE_LOCATION, $location); ?>
+        locationId: '<?php echo $location[1][0]; ?>',
         inputClass: 'paymentInput',
         inputStyles: [
             {
@@ -52,26 +63,33 @@ if (MODULE_PAYMENT_SQUARE_TESTING_MODE === 'Sandbox') {
         },
         callbacks: {
             cardNonceResponseReceived: function (errors, nonce, cardData) {
-                if (errors) {
-                    console.error("Encountered errors:");
-                    var error_html = ""
-                    errors.forEach(function (error) {
-                        console.error('  ' + error.message);
-                        error_html += "<li> " + error.message + " </li>";
-                    });
-                    document.getElementById('card-errors').innerHTML = '<ul>' + error_html + '</ul>';
-                    $('#paymentSubmitButton').disabled = false;
-                } else {
-                    // success
-                    $('#paymentSubmitButton').disabled = true;
-                    $("#card-errors").empty()
-                    document.getElementById('card-nonce').value = nonce;
-                    document.getElementById('card-type').value = cardData.card_brand;
-                    document.getElementById('card-four').value = cardData.last_4;
-                    document.getElementById('card-exp').value = ('0'+cardData.exp_month.toString()).substr(-2) + cardData.exp_year.toString().substr(-2);
-                    document.getElementsByName('checkout_payment')[0].submit();
-                }
-
+                paymentForm.verifyBuyer(
+                   nonce, 
+                   verificationDetails, 
+                   function(err, verificationResult) {
+                       if (err == null) {
+                           if (errors) {
+                               console.error("Encountered errors:");
+                               var error_html = ""
+                               errors.forEach(function (error) {
+                                   console.error('  ' + error.message);
+                                   error_html += "<li> " + error.message + " </li>";
+                               });
+                               document.getElementById('card-errors').innerHTML = '<ul>' + error_html + '</ul>';
+                               $('#paymentSubmitButton').disabled = false;
+                           } else {
+                               // success
+                               $('#paymentSubmitButton').disabled = true;
+                               $("#card-errors").empty()
+                               document.getElementById('card-nonce').value = nonce;
+                               document.getElementById('card-type').value = cardData.card_brand;
+                               document.getElementById('card-four').value = cardData.last_4;
+                               document.getElementById('card-exp').value = ('0'+cardData.exp_month.toString()).substr(-2) + cardData.exp_year.toString().substr(-2);
+                               document.getElementById('token').value = verificationResult.token;
+                               document.getElementsByName('checkout_payment')[0].submit();
+                           }
+                       }
+                });
             },
             unsupportedBrowserDetected: function () {
                 document.getElementById('card-errors').innerHTML = '<p class="error alert">This browser is not supported for Square Payments. Please contact us to let us know!  Meanwhile, please pay using an alternate method; or shop using a different browser such as FireFox or Chrome.</p>';

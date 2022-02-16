@@ -215,6 +215,7 @@ class square extends base
                         '<input type="hidden" id="card-type" name="' . $this->code . '_cc_type">' .
                         '<input type="hidden" id="card-four" name="' . $this->code . '_cc_four">' .
                         '<input type="hidden" id="card-exp" name="' . $this->code . '_cc_exp">',
+                        '<input type="hidden" id="token" name="' . $this->code . '_token">',
                 ),
             ),
         );
@@ -259,6 +260,7 @@ class square extends base
         $process_button_string .= zen_draw_hidden_field('cc_type', zen_output_string_protected($_POST[$this->code . '_cc_type']));
         $process_button_string .= zen_draw_hidden_field('cc_four', zen_output_string_protected($_POST[$this->code . '_cc_four']));
         $process_button_string .= zen_draw_hidden_field('cc_expires', zen_output_string_protected($_POST[$this->code . '_cc_exp']));
+        $process_button_string .= zen_draw_hidden_field('token', zen_output_string_protected($_POST[$this->code . '_token'])); 
 
         return $process_button_string;
     }
@@ -331,6 +333,7 @@ class square extends base
         $payment_request->setSourceId((string)$_POST[$this->code . '_nonce']);
         $payment_request->setReferenceId((string)(substr(zen_session_id(), 0, 40)));
         $payment_request->setLocationId($location->getId());
+        $payment_request->setVerificationToken(zen_output_string_protected($_POST['token'])); 
 
         // brief additional information transmitted as a "note", to max of 500 characters:
         $extraNotes = defined('MODULES_PAYMENT_SQUARE_TEXT_ITEMS_ORDERED') ? MODULES_PAYMENT_SQUARE_TEXT_ITEMS_ORDERED : 'Ordered:';
