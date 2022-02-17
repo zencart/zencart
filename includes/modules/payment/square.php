@@ -214,7 +214,7 @@ class square extends base
                     'field' => '<input type="hidden" id="card-nonce" name="nonce">' .
                         '<input type="hidden" id="card-type" name="' . $this->code . '_cc_type">' .
                         '<input type="hidden" id="card-four" name="' . $this->code . '_cc_four">' .
-                        '<input type="hidden" id="card-exp" name="' . $this->code . '_cc_exp">',
+                        '<input type="hidden" id="card-exp" name="' . $this->code . '_cc_exp">'.
                         '<input type="hidden" id="token" name="' . $this->code . '_token">',
                 ),
             ),
