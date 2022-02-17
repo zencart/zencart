@@ -897,8 +897,8 @@ class order extends base
 
                     // for low stock email
                     if ($stock_left <= STOCK_REORDER_LEVEL) {
-                        // WebMakers.com Added: add to low stock email
-                        $this->email_low_stock .= 'ID# ' . zen_get_prid($this->products[$i]['id']) . "\t\t" . $this->products[$i]['model'] . "\t\t" . $this->products[$i]['name'] . "\t\t" . ' Qty Left: ' . $stock_left . "\n";
+                        // add product to low stock email content
+                        $this->email_low_stock .= ($this->products[$i]['model'] === '' ? ''  : $this->products[$i]['model'] . "\t\t") . ' "' . $this->products[$i]['name'] . '" (#' . zen_get_prid($this->products[$i]['id']) . ')'. "\t\t" . ' ' . TEXT_PRODUCTS_QUANTITY . ' ' . $stock_left . "\n";
                     }
                 }
             }
