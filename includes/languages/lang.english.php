@@ -90,7 +90,6 @@ $define = [
     'EMAIL_SEND_FAILED' => 'ERROR: Failed sending email to: "%s" <%s> with subject: "%s"',
     'EMPTY_CART_TEXT_NO_QUOTE' => 'Whoops! Your session has expired ... Please update your shopping cart for Shipping Quote ...',
     'EMP_SHOPPING_FOR_MESSAGE' => 'Currently shopping for %1$s (%2$s).',
-    'EMP_SHOPPING_FOR_MESSAGE_SEVERITY' => 'success',
     'ENTRY_CITY' => 'City:',
     'ENTRY_CITY_ERROR' => 'Your City must contain a minimum of ' . ENTRY_CITY_MIN_LENGTH . ' characters.',
     'ENTRY_CITY_TEXT' => '*',
