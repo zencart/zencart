@@ -8,7 +8,7 @@
  * @version $Id: Zen4All 2019 Jun 03 Modified in v1.5.7 $
  */
 ?>
-<script type="text/javascript">
+<script>
 
 function couponpopupWindow(url) {
   window.open(url,'couponpopupWindow','toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no,width=450,height=320,screenX=150,screenY=150,top=150,left=150')

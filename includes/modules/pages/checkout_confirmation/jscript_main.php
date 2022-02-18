@@ -8,7 +8,7 @@
  * @version $Id: Scott C Wilson 2019 Jul 11 Modified in v1.5.7 $
  */
 ?>
-<script type="text/javascript">
+<script>
 var submitter = null;
 function popupWindow(url) {
   window.open(url,'popupWindow','toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no,width=450,height=320,screenX=150,screenY=150,top=150,left=150')

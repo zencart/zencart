@@ -7,7 +7,7 @@
  * @version $Id: DrByte 2020 Jan 09 New in v1.5.7 $
  */
 ?>
-<script type="text/javascript">
+<script>
 
 function concatExpiresFields(fields) {
     return $(":input[name=" + fields[0] + "]").val() + $(":input[name=" + fields[1] + "]").val();

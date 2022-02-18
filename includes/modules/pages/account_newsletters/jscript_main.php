@@ -8,7 +8,7 @@
  * @version $Id: Zen4All 2019 Jun 03 Modified in v1.5.7 $
  */
 ?>
-<script type="text/javascript">
+<script>
 function checkBox(object) {
   document.account_newsletter.elements[object].checked = !document.account_newsletter.elements[object].checked;
 }
