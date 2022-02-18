@@ -24,7 +24,7 @@ $define = [
     'OFFICE_DATE_TIME' => 'Date and Time:',
     'EMAIL_DISCLAIMER' => "\n" . 'This email address was given to us by you or by one of our customers. If you feel that you have received this email in error, please send an email to %s',
     'EMAIL_SPAM_DISCLAIMER' => '',
-    'EMAIL_FOOTER_COPYRIGHT' => 'Copyright (c) ' . date('Y') . ' <a href="https://www.zen-cart.com">Zen Cart</a>. Powered by <a href="http://www.zen-cart.com">Zen Cart</a>',
+    'EMAIL_FOOTER_COPYRIGHT' => 'Copyright (c) ' . date('Y') . ' <a href="https://www.zen-cart.com">Zen Cart</a>. Powered by <a href="https://www.zen-cart.com">Zen Cart</a>',
     'SEND_EXTRA_GV_ADMIN_EMAILS_TO_SUBJECT' => '[GV ADMIN SENT]',
     'SEND_EXTRA_DISCOUNT_COUPON_ADMIN_EMAILS_TO_SUBJECT' => '[DISCOUNT COUPONS]',
     'SEND_EXTRA_ORDERS_STATUS_ADMIN_EMAILS_TO_SUBJECT' => '[ORDERS STATUS]',

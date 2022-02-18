@@ -1,7 +1,7 @@
 <?php
 $define = [
-    'NAVBAR_TITLE_1' => 'Checkout - Step 1',
-    'NAVBAR_TITLE_2' => 'Payment Method - Step 2',
+    'NAVBAR_TITLE_1' => 'Checkout - Step 2',
+    'NAVBAR_TITLE_2' => 'Payment Method',
     'HEADING_TITLE' => 'Step 2 of 3 - Payment Information',
     'TEXT_SELECTED_BILLING_DESTINATION' => 'Your billing address is shown to the left. The billing address should match the address on your credit card statement. You can change the billing address by clicking the <em>Change Address</em> button.',
     'TITLE_BILLING_ADDRESS' => 'Billing Address:',

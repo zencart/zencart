@@ -1,7 +1,7 @@
 <?php
 $define = [
-    'NAVBAR_TITLE_1' => 'Checkout',
-    'NAVBAR_TITLE_2' => 'Confirmation',
+    'NAVBAR_TITLE_1' => 'Checkout - Step 3',
+    'NAVBAR_TITLE_2' => 'Order Confirmation',
     'HEADING_TITLE' => 'Step 3 of 3 - Order Confirmation',
     'HEADING_PRODUCTS' => 'Shopping Cart Contents',
     'HEADING_ORDER_COMMENTS' => 'Special Instructions or Order Comments',

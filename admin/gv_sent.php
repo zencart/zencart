@@ -37,7 +37,7 @@ $currencies = new currencies();
               </thead>
               <tbody>
                 <?php
-                $gv_query_raw = "SELECT c.coupon_amount, c.coupon_code, c.coupon_id, et.sent_firstname, et.sent_lastname, et.customer_id_sent, et.emailed_to, et.date_sent, crt.redeem_date, c.coupon_id
+                $gv_query_raw = "SELECT c.coupon_amount, c.coupon_code, c.coupon_id, et.sent_firstname, et.sent_lastname, et.customer_id_sent, et.emailed_to, et.date_sent, crt.redeem_date
                                  FROM " . TABLE_COUPONS . " c
                                  LEFT JOIN " . TABLE_COUPON_REDEEM_TRACK . " crt ON c.coupon_id = crt.coupon_id,
                                       " . TABLE_COUPON_EMAIL_TRACK . " et
@@ -94,7 +94,7 @@ $currencies = new currencies();
               $redeemed = 'No';
               if ($redeem->RecordCount() > 0)
                 $redeemed = 'Yes';
-              $contents[] = array('text' => TEXT_INFO_SENDERS_ID . ' ' . $gInfo->customer_id_sent);
+              $contents[] = array('text' => TEXT_INFO_SENDERS_ID . ' ' . $gInfo->customer_id_sent . ' ' . ($gInfo->customer_id_sent != 0 ? zen_get_customer_email_from_id($gInfo->customer_id_sent) : ''));
               $contents[] = array('text' => TEXT_INFO_AMOUNT_SENT . ' ' . $currencies->format($gInfo->coupon_amount));
               $contents[] = array('text' => TEXT_INFO_DATE_SENT . ' ' . zen_date_short($gInfo->date_sent));
               $contents[] = array('text' => TEXT_INFO_VOUCHER_CODE . ' ' . $gInfo->coupon_code);
@@ -102,7 +102,7 @@ $currencies = new currencies();
               if ($redeemed == 'Yes') {
                 $contents[] = array('text' => '<br>' . TEXT_INFO_DATE_REDEEMED . ' ' . zen_date_short($redeem->fields['redeem_date']));
                 $contents[] = array('text' => TEXT_INFO_IP_ADDRESS . ' ' . $redeem->fields['redeem_ip']);
-                $contents[] = array('text' => TEXT_INFO_CUSTOMERS_ID . ' ' . $redeem->fields['customer_id']);
+                $contents[] = array('text' => TEXT_INFO_CUSTOMERS_ID . ' ' . $redeem->fields['customer_id'] . ' ' . ($redeem->fields['customer_id'] != 0 ? zen_get_customer_email_from_id($redeem->fields['customer_id']) : ''));
               } else {
                 $contents[] = array('text' => '<br>' . TEXT_INFO_NOT_REDEEMED);
               }
