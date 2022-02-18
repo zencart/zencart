@@ -377,7 +377,6 @@ $define = [
     'TEXT_CHARGES_LETTERS' => 'Calculated Charge:',
     'TEXT_CHARGES_WORD' => 'Calculated Charge:',
     'TEXT_CLICK_TO_ENLARGE' => 'larger image',
-    'TEXT_CLOSE_WINDOW' => 'Close Window [x]',
     'TEXT_CLOSE_WINDOW_IMAGE' => ' - Click Image to Close',
     'TEXT_COUPON_GV_RESTRICTION_ZONES' => 'Billing Address Restrictions apply.',
     'TEXT_COUPON_HELP_DATE' => 'The coupon is valid between %s and %s',
