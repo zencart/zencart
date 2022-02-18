@@ -186,8 +186,8 @@
       }
       // ** END PAYPAL EXPRESS CHECKOUT ** ?>
 <fieldset>
-<legend><?php echo TABLE_HEADING_COMMENTS; ?></legend>
-<?php echo zen_draw_textarea_field('comments', '45', '3', (isset($comments) ? $comments : ''), 'aria-label="' . TABLE_HEADING_COMMENTS . '"'); ?>
+<legend><?php echo HEADING_ORDER_COMMENTS; ?></legend>
+<?php echo zen_draw_textarea_field('comments', '45', '3', (isset($comments) ? $comments : ''), 'aria-label="' . HEADING_ORDER_COMMENTS . '"'); ?>
 </fieldset>
 
 <?php
