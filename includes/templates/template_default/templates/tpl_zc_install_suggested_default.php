@@ -25,7 +25,7 @@ $docsPath = (file_exists('docs/index.html')) ? 'docs/index.html' : (file_exists(
     <meta name="generator" content="shopping cart program by Zen Cart&reg;, http://www.zen-cart.com">
     <meta name="robots" content="noindex, nofollow">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-    <style type="text/css">
+    <style>
         body {
         	background: #fff;
         	color: #777;
