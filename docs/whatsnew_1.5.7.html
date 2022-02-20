@@ -2,9 +2,9 @@
 <html lang="en">
 <!--
 /**
- * @copyright Copyright 2003-2021 Zen Cart Development Team
+ * @copyright Copyright 2003-2022 Zen Cart Development Team
  * @license https://www.zen-cart.com/license/2_0.txt GNU Public License v2.0
- * @version $Id: DrByte 2021 Mar 05 Modified in v1.5.7c $
+ * @version $Id: zcwilt 2022 Feb 20 Modified in v1.5.7d $
  */
 //-->
 <head>
@@ -158,6 +158,30 @@
             <h1>
                 What's New ... Changes from prior versions
             </h1>
+            <h2>
+                The fixes/changes in v1.5.7d since v1.5.7c include:
+            </h2>
+            <ul>
+                <li>(Note: no database changes between v157/v157a/v157b/v157c, so no need to run zc_install if v157/v157a/v157b is already installed.)</li>
+                <li> All: Security Patches Applied.</li>
+                <li> All: Upgraded PHPMailer to latest version 6.5.1</li>
+
+                <li>Admin: Sanitize output</li>
+                <li>Admin: Address missing/inconsistent HTML characteristics </li>
+                <li>Admin:  Remove call to inspectAndUpdate from every request and only call on plugin_manager page</li>
+                <li>Admin: include plugins in search</li>
+                <li>Admin: Fix width of comments block in invoice </li>
+                <li>Admin: Sanitize Output</li>
+                <li>Admin: include plugins in search</li>
+                <li>Admin: Sanitize Output</li>
+                <li>Core: Fix typo: langauages -> languages </li>
+                <li>Core: Accommodate field types with zero length</li>
+                <li>Core: Fix "Uncaught TypeError: mysqli_close(): Argument #1 ($mysql) must be of type mysqli, bool given</li>
+                <li>Core:  Fix coupon min. required calculation wrong when calculated from = All Products</li>
+                <li>Storefront: Clean HTML for product_reviews_write, correcting PHP notices regarding missing variables.</li>
+                <li>Core: paypaldp/paypal_curl, correcting PHP notices, partial payflow-uk correction.</li>
+
+            </ul>
             <h2>
                 The fixes/changes in v1.5.7c since v1.5.7b include:
             </h2>
