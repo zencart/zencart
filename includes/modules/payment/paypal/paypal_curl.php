@@ -2,9 +2,9 @@
 /**
  * paypal_curl.php communications class for PayPal Express Checkout / Website Payments Pro / Payflow Pro payment methods
  *
- * @copyright Copyright 2003-2021 Zen Cart Development Team
+ * @copyright Copyright 2003-2022 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: 2021-03-26 Modified in v1.5.7d $
+ * @version $Id: lat9 2021 Sep 01 Modified in v1.5.7d $
  */
 
 /**
