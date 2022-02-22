@@ -9,15 +9,6 @@ use org\bovigo\vfs\visitor\vfsStreamPrintVisitor;
 use org\bovigo\vfs\visitor\vfsStreamStructureVisitor;
 
 require_once(__DIR__ . '/../support/zcTestCase.php');
-/**
- * Test Dummy
- */
-if (!function_exists('zen_get_admin_name')) {
-    function zen_get_admin_name()
-    {
-        return 'TestAdminName';
-    }
-}
 
 /**
  * Testing Library

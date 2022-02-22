@@ -383,3 +383,27 @@ function request()
 {
     return \Zencart\Request\Request::getInstance();
 }
+
+function zen_updated_by_admin($admin_id = null)
+{
+    if (empty($admin_id)) {
+        $admin_id = $_SESSION['admin_id'];
+    }
+    $name = zen_get_admin_name($admin_id);
+    return ($name ?? 'Unknown Name') . " [$admin_id]";
+}
+
+/**
+ * Lookup admin user name based on admin id
+ * @param int $id
+ * @return string
+ */
+function zen_get_admin_name($id = null)
+{
+    global $db;
+    if (empty($id)) $id = $_SESSION['admin_id'];
+    $sql = "SELECT admin_name FROM " . TABLE_ADMIN . " WHERE admin_id = :adminid: LIMIT 1";
+    $sql = $db->bindVars($sql, ':adminid:', $id, 'integer');
+    $result = $db->Execute($sql);
+    return $result->RecordCount() ? $result->fields['admin_name'] : null;
+}
