@@ -503,34 +503,53 @@ function zen_draw_date_selector($fieldname_prefix, $default_date='') {
     return $date_selector;
 }
 
-function addSearchKeywordForm($filename, $action) {
-    $keywords_products = (isset($_POST['keywords']) && zen_not_null($_POST['keywords'])) ? zen_db_input(zen_db_prepare_input($_POST['keywords'])) : '';
-    $fullAction = '';
-    if (!empty($action)) {
-        $fullAction = 'action=' . $action;
-    }
-    $form = '
+    /**
+     * intended to add a universal search for use with any pulldown that extends the
+     * abstract pulldown class.  returns a html string.
+     * @param string $filename
+     * @param string $action
+     * @param bool $includeForm
+     * @param array $extrafieldsArray
+     * @return string
+     */
+
+    function addSearchKeywordForm(string $filename, string $action = '', bool $includeForm = true, array $extrafieldsArray = [])
+    {
+        $keywords_products = (isset($_POST['keywords']) && zen_not_null($_POST['keywords'])) ? zen_db_input(zen_db_prepare_input($_POST['keywords'])) : '';
+        $form = '';
+        $endForm = '';
+        $fullAction = '';
+        if (!empty($action)) {
+            $fullAction = 'action=' . $action;
+        }
+        if ($includeForm) {
+            $form = zen_draw_form('keywords', $filename, $fullAction, 'post', 'class="form-horizontal"');
+            $endForm = '</form>';
+        }
+        $html = '
         <div class="row">
-            <div class="col-sm-offset-2 col-sm-4">' . zen_draw_form('keywords', $filename, $fullAction, 'post', 'class="form-horizontal"') .
-        '<div class="form-group">' .
-        zen_draw_label(HEADING_TITLE_SEARCH_DETAIL, 'keywords', 'class="control-label col-sm-3"') .
-        '<div class="col-sm-9">' .
-        zen_draw_input_field('keywords', '', 'class="form-control" id="keywords"') .
-        '</div>
+            <div class="col-sm-offset-2 col-sm-4">' . $form . '
+                <div class="form-group">' .
+            zen_draw_label(HEADING_TITLE_SEARCH_DETAIL, 'keywords', 'class="control-label col-sm-3"') . '
+                         <div class="col-sm-9">' .
+            zen_draw_input_field('keywords', ($_POST['keywords'] ?? ''), 'class="form-control" id="keywords"') . '
+                         </div>
                 </div>' . zen_hide_session_id();
-    if (!empty($keywords_products)) {
-        $form .= '<div class="form-group">
+        if (!empty($keywords_products)) {
+            $html .= '<div class="form-group">
                       <div class="col-sm-3">
                           <p class="control-label">' . TEXT_INFO_SEARCH_DETAIL_FILTER . '</p>
                       </div>
                       <div class="col-sm-9 text-right">' .
-            zen_output_string_protected($keywords_products) . ' <a href="' . zen_href_link($filename, $fullAction) . '" class="btn btn-default" role="button">' . IMAGE_RESET . '</a>
+                zen_output_string_protected($keywords_products) . ' <a href="' . zen_href_link($filename, $fullAction) . '" class="btn btn-default" role="button">' . IMAGE_RESET . '</a>
                       </div>
                   </div>';
-    }
-    $form .= '
-                </form>
+        }
+        foreach ($extrafieldsArray as $key => $value) {
+            $html .= zen_draw_hidden_field($key, $value) . '<br>';
+        }
+        $html .= '<br>' . $endForm . '
             </div>
         </div>';
-    return $form;
-}
+        return $html;
+    }
