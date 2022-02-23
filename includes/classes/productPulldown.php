@@ -104,9 +104,9 @@
                 $parm_3 = ' (%3$s)';
             }
 
-            $this->output_string = '%1$s ' . $parm_2 . $parm_3; // format string with name first
+            $this->output_string = '%1$s ' . $parm_2 . $parm_3;  // format string with name first
 
-            if (strpos($this->sort, 'model') && (!empty($this->attributes_join))) { // show model first only when attributes exist
+            if (strpos($this->sort, 'model')) {                  // show model first when sorted by model
                 $this->output_string = (!empty($parm_2) ? $parm_2 . '-' : '') . ' %1$s' . $parm_3; // format string with model first
             }
 
