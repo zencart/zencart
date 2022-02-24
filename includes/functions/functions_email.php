@@ -206,35 +206,60 @@ use PHPMailer\PHPMailer\SMTP;
       if ((int)EMAIL_SYSTEM_DEBUG > 0 ) $mail->SMTPDebug = (int)EMAIL_SYSTEM_DEBUG;
       if ((int)EMAIL_SYSTEM_DEBUG > 4 ) $mail->Debugoutput = 'error_log';
 
-      switch (EMAIL_TRANSPORT) {
+      $sending_newsletter = false; 
+      $email_transport = EMAIL_TRANSPORT; 
+      $email_mailbox = EMAIL_SMTPAUTH_MAILBOX; 
+      $email_password = EMAIL_SMTPAUTH_PASSWORD; 
+      $email_mail_server = EMAIL_SMTPAUTH_MAIL_SERVER; 
+      $email_mail_server_port = (int)EMAIL_SMTPAUTH_MAIL_SERVER_PORT; 
+      if (defined('NEWSLETTER_MODULES') && !empty(NEWSLETTER_MODULES) && defined('NEWSLETTER_EMAIL_SMTPAUTH_MAIL_SERVER') && !empty(NEWSLETTER_EMAIL_SMTPAUTH_MAIL_SERVER)) {
+        $modules = explode(',', str_replace(' ', '', NEWSLETTER_MODULES));
+        if (in_array($module, $modules)) { 
+            $sending_newsletter = true; 
+            $email_transport = 'smtpauth'; 
+            $email_mailbox = NEWSLETTER_EMAIL_SMTPAUTH_MAILBOX; 
+            $email_password = NEWSLETTER_EMAIL_SMTPAUTH_PASSWORD; 
+            $email_mail_server = NEWSLETTER_EMAIL_SMTPAUTH_MAIL_SERVER; 
+            $email_mail_server_port = (int)NEWSLETTER_EMAIL_SMTPAUTH_MAIL_SERVER_PORT; 
+        }
+      }
+
+      switch ($email_transport) {
         case ('Gmail'):
           $mail->isSMTP();
           $mail->SMTPAuth = true;
           $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
           $mail->Port = 587;
           $mail->Host = 'smtp.gmail.com';
-          $mail->Username = (!empty(trim(EMAIL_SMTPAUTH_MAILBOX))) ? trim(EMAIL_SMTPAUTH_MAILBOX) : EMAIL_FROM;
-          if (trim(EMAIL_SMTPAUTH_PASSWORD) != '') $mail->Password = trim(EMAIL_SMTPAUTH_PASSWORD);
+          $mail->Username = (!empty(trim($email_mailbox))) ? trim($email_mailbox) : EMAIL_FROM;
+          if (trim($email_password) != '') $mail->Password = trim($email_password);
           break;
         case 'smtpauth':
           $mail->isSMTP();
           $mail->SMTPAuth = true;
-          $mail->Username = (!empty(trim(EMAIL_SMTPAUTH_MAILBOX))) ? trim(EMAIL_SMTPAUTH_MAILBOX) : EMAIL_FROM;
-          if (trim(EMAIL_SMTPAUTH_PASSWORD) != '') $mail->Password = trim(EMAIL_SMTPAUTH_PASSWORD);
-          $mail->Host = (trim(EMAIL_SMTPAUTH_MAIL_SERVER) != '') ? trim(EMAIL_SMTPAUTH_MAIL_SERVER) : 'localhost';
-          if ((int)EMAIL_SMTPAUTH_MAIL_SERVER_PORT != 25 && (int)EMAIL_SMTPAUTH_MAIL_SERVER_PORT != 0) $mail->Port = (int)EMAIL_SMTPAUTH_MAIL_SERVER_PORT;
+          $mail->Username = (!empty(trim($email_mailbox))) ? trim($email_mailbox) : EMAIL_FROM;
+          if (trim($email_password) != '') $mail->Password = trim($email_password);
+          $mail->Host = (trim($email_mail_server) != '') ? trim($email_mail_server) : 'localhost';
+          if ((int)$email_mail_server_port != 25 && (int)$email_mail_server_port != 0) $mail->Port = (int)$email_mail_server_port;
           if ((int)$mail->Port < 30 && $mail->Host == 'smtp.gmail.com') $mail->Port = 587;
           //set encryption protocol to allow support for secured email protocols
           if ($mail->Port == '465') $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
           if ($mail->Port == '587') $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
-          if (defined('SMTPAUTH_EMAIL_PROTOCOL') && SMTPAUTH_EMAIL_PROTOCOL != 'none') {
-            $mail->SMTPSecure = SMTPAUTH_EMAIL_PROTOCOL;
+
+          if (!$sending_newsletter) { 
+             if (defined('SMTPAUTH_EMAIL_PROTOCOL') && SMTPAUTH_EMAIL_PROTOCOL != 'none') {
+               $mail->SMTPSecure = SMTPAUTH_EMAIL_PROTOCOL;
+             }
+          } else {
+             if (defined('NEWSLETTER_SMTPAUTH_EMAIL_PROTOCOL') && NEWSLETTER_SMTPAUTH_EMAIL_PROTOCOL != 'none') {
+               $mail->SMTPSecure = NEWSLETTER_SMTPAUTH_EMAIL_PROTOCOL;
+             }
           }
           break;
         case 'smtp':
           $mail->isSMTP();
-          $mail->Host = trim(EMAIL_SMTPAUTH_MAIL_SERVER);
-          if ((int)EMAIL_SMTPAUTH_MAIL_SERVER_PORT != 25 && (int)EMAIL_SMTPAUTH_MAIL_SERVER_PORT != 0) $mail->Port = (int)EMAIL_SMTPAUTH_MAIL_SERVER_PORT;
+          $mail->Host = trim($email_mail_server);
+          if ((int)$email_mail_server_port != 25 && (int)$email_mail_server_port != 0) $mail->Port = (int)$email_mail_server_port;
           break;
         case 'PHP':
           $mail->isMail();
@@ -252,7 +277,7 @@ use PHPMailer\PHPMailer\SMTP;
 
       $mail->Subject  = $email_subject;
 
-      if (EMAIL_TRANSPORT=='sendmail-f' || EMAIL_SEND_MUST_BE_STORE=='Yes') {
+      if ($email_transport =='sendmail-f' || EMAIL_SEND_MUST_BE_STORE=='Yes') {
         $mail->Sender = EMAIL_FROM;
       }
 
