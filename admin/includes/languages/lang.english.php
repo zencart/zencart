@@ -623,7 +623,7 @@ $define = [
     'WARNING_COULD_NOT_LOCATE_LANG_FILE' => 'WARNING: Could not locate language file: ',
     'WARNING_DATABASE_VERSION_OUT_OF_DATE' => 'Your database appears to need patching to a higher level. See Tools->' . '%%BOX_TOOLS_SERVER_INFO%%' . ' to review patch levels.',
     'WARNING_DOWNLOAD_DIRECTORY_NON_EXISTENT' => 'Warning: The downloadable products directory does not exist: ' . DIR_FS_DOWNLOAD . '. Downloadable products will not work until this directory is valid.',
-    'WARNING_EMAIL_SYSTEM_DEVELOPER_EMAIL' => 'WARNING: ALL emails will be sent to %s (as defined in "DEVELOPER_OVERRIDE_EMAIL_ADDRESS").',
+    'WARNING_EMAIL_SYSTEM_DEVELOPER_EMAIL' => 'WARNING: ALL emails will be sent to %1$s (as defined in "DEVELOPER_OVERRIDE_EMAIL_ADDRESS") using EMAIL_TRANSPORT=%2$s.',
     'WARNING_EMAIL_SYSTEM_DEVELOPER_OVERRIDE' => 'WARNING: The sending of emails has been disabled as developer switch "DEVELOPER_OVERRIDE_EMAIL_STATUS" is set to "false".',
     'WARNING_EMAIL_SYSTEM_DISABLED' => 'WARNING: The email subsystem is disabled. No emails will be sent until it is re-enabled in Admin->Configuration->Email Options.',
     'WARNING_FILE_UPLOADS_DISABLED' => 'Warning: File uploads are disabled in the php.ini configuration file.',
