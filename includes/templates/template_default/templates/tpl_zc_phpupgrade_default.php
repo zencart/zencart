@@ -27,7 +27,7 @@ include 'includes/version.php';
     <meta name="generator" content="shopping cart program by Zen Cart&reg;, https://www.zen-cart.com">
     <meta name="robots" content="noindex, nofollow">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
-    <style type="text/css">
+    <style>
         body {
         	background: #fff;
         	color: #777;

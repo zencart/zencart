@@ -28,11 +28,11 @@ require('includes/application_top.php');
 //
 $restrict_array = array(
     array(
-        'id' => 'Deny', 
+        'id' => 'Deny',
         'text' => TEXT_PULLDOWN_DENY
     ),
     array(
-        'id' => 'Allow', 
+        'id' => 'Allow',
         'text' => TEXT_PULLDOWN_ALLOW
     )
 );
@@ -98,7 +98,7 @@ switch ($action) {
             );
         }
         break;
-        
+
     case 'add_category':
         if (!isset($_POST['cPath'])) {
             break;
@@ -107,7 +107,7 @@ switch ($action) {
             $cPath = -1;
         }
         $test_query = $db->Execute(
-            "SELECT * 
+            "SELECT *
                FROM " . TABLE_COUPON_RESTRICT . "
               WHERE coupon_id = $cid
                 AND category_id = $cPath"
@@ -129,19 +129,19 @@ switch ($action) {
             $db->Execute(
                 "INSERT INTO " . TABLE_COUPON_RESTRICT . "
                     (coupon_id, category_id, coupon_restrict)
-                 VALUES 
+                 VALUES
                     ($cid, $cPath, '$status')"
             );
         }
         break;
-        
+
     case 'add_product':
         if (empty($_POST['pid']) || empty($_POST['restrict_status']) || (empty($_POST['prod_cat']) && empty($_POST['prod_man']))) {
             break;
         }
         $pid = (int)$_POST['pid'];
         $test_query = $db->Execute(
-            "SELECT * 
+            "SELECT *
                FROM " . TABLE_COUPON_RESTRICT . "
               WHERE coupon_id = $cid
                 AND product_id = $pid"
@@ -150,10 +150,10 @@ switch ($action) {
             $messageStack->add_session(ERROR_DISCOUNT_COUPON_DEFINED_PRODUCT . ' ' . $pid, 'caution');
         } else {
             $status = ($_POST['restrict_status'] == 'Deny') ? 'Y' : 'N';
-            
+
             $prod_cat = (!empty($_POST['prod_cat'])) ? (int)$_POST['prod_cat'] : 0;
             $prod_man = (!empty($_POST['prod_man'])) ? (int)$_POST['prod_man'] : 0;
-            
+
             // -----
             // Normal insert of product one-by-one allow/deny to coupon
             //
@@ -172,13 +172,13 @@ switch ($action) {
                 if ($prod_cat > 0 && $pid == -1) {
                     // to insert new products from a given categories_id for a coupon_code that are not already in the table
                     // products in the table from the categories_id are skipped
-                    $new_products_query = 
-                        "SELECT products_id 
-                           FROM " . TABLE_PRODUCTS_TO_CATEGORIES . " 
+                    $new_products_query =
+                        "SELECT products_id
+                           FROM " . TABLE_PRODUCTS_TO_CATEGORIES . "
                           WHERE categories_id = $prod_cat
                             AND products_id NOT IN (
-                                    SELECT product_id 
-                                      FROM " . TABLE_COUPON_RESTRICT . " 
+                                    SELECT product_id
+                                      FROM " . TABLE_COUPON_RESTRICT . "
                                      WHERE coupon_id = $cid
                                 )";
                     $new_products = $db->Execute($new_products_query);
@@ -187,14 +187,14 @@ switch ($action) {
                 if ($prod_cat > 0 && $pid == -2) {
                     // to delete existing products from a given categories_id for a coupon_code that are already in the table,
                     // products in the table from the categories_id are skipped
-                    $new_products_query = 
-                        "SELECT products_id 
-                           FROM " . TABLE_PRODUCTS_TO_CATEGORIES . " 
+                    $new_products_query =
+                        "SELECT products_id
+                           FROM " . TABLE_PRODUCTS_TO_CATEGORIES . "
                           WHERE categories_id = $prod_cat
                             AND products_id IN (
-                                    SELECT product_id 
-                                      FROM " . TABLE_COUPON_RESTRICT . " 
-                                     WHERE coupon_restrict = '" . $status . "' 
+                                    SELECT product_id
+                                      FROM " . TABLE_COUPON_RESTRICT . "
+                                     WHERE coupon_restrict = '" . $status . "'
                                        AND coupon_id = $cid
                                 )";
                     $new_products = $db->Execute($new_products_query);
@@ -203,13 +203,13 @@ switch ($action) {
                 if ($prod_man > 0 && $pid == -1) {
                     // to insert new products from a given manufacturers_id for a coupon_code that are not already in the table,
                     // products in the table from the manufacturers_id are skipped
-                    $new_products_query = 
-                        "SELECT products_id 
-                           FROM " . TABLE_PRODUCTS . " 
+                    $new_products_query =
+                        "SELECT products_id
+                           FROM " . TABLE_PRODUCTS . "
                           WHERE manufacturers_id = $prod_man
                             AND products_id NOT IN (
-                                    SELECT product_id 
-                                      FROM " . TABLE_COUPON_RESTRICT . " 
+                                    SELECT product_id
+                                      FROM " . TABLE_COUPON_RESTRICT . "
                                      WHERE coupon_id = $cid
                                 )";
                     $new_products = $db->Execute($new_products_query);
@@ -218,14 +218,14 @@ switch ($action) {
                 if ($prod_man > 0 && $pid == -2) {
                     // to delete existing products from a given manufacturers_id for a coupon_code that are already in the table
                     // products in the table from the manufacturers_id are skipped
-                    $new_products_query = 
-                        "SELECT products_id 
-                           FROM " . TABLE_PRODUCTS . " 
+                    $new_products_query =
+                        "SELECT products_id
+                           FROM " . TABLE_PRODUCTS . "
                           WHERE manufacturers_id = $prod_man
                             AND products_id IN (
-                                    SELECT product_id 
-                                      FROM " . TABLE_COUPON_RESTRICT . " 
-                                     WHERE coupon_restrict = '" . $status . "' 
+                                    SELECT product_id
+                                      FROM " . TABLE_COUPON_RESTRICT . "
+                                     WHERE coupon_restrict = '" . $status . "'
                                        AND coupon_id = $cid
                                 )";
                     $new_products = $db->Execute($new_products_query);
@@ -242,7 +242,7 @@ switch ($action) {
                         $db->Execute(
                             "INSERT INTO " . TABLE_COUPON_RESTRICT . "
                                 (coupon_id, product_id, coupon_restrict)
-                             VALUES 
+                             VALUES
                                 ($cid, {$new_products->fields['products_id']}, '" . $status . "')"
                         );
                     } else {
@@ -259,16 +259,16 @@ switch ($action) {
             }
         }
         break;
-        
+
     case 'remove':
         $rid = (isset($_POST['rid'])) ? (int)$_POST['rid'] : 0;
         $db->Execute(
-            "DELETE FROM " . TABLE_COUPON_RESTRICT . " 
+            "DELETE FROM " . TABLE_COUPON_RESTRICT . "
               WHERE restrict_id = $rid
               LIMIT 1"
         );
         break;
-        
+
     default:
         break;
 }
@@ -281,12 +281,12 @@ if (!empty($action)) {
 <html <?php echo HTML_PARAMS; ?>>
 <head>
     <?php require DIR_WS_INCLUDES . 'admin_html_head.php'; ?>
-    <link rel="stylesheet" type="text/css" media="print" href="includes/css/stylesheet_print.css">
+    <link rel="stylesheet" media="print" href="includes/css/stylesheet_print.css">
 </head>
 <body>
 <!-- header //-->
-<?php 
-require DIR_WS_INCLUDES . 'header.php'; 
+<?php
+require DIR_WS_INCLUDES . 'header.php';
 ?>
 <!-- header_eof //-->
 <!-- body //-->
@@ -351,7 +351,7 @@ if ($cr_list->EOF) {
             <tr class="smallText text-center">
                 <td class="font-weight-bold"><?php echo TABLE_HEADING_CATEGORY_NAME; ?></td>
                 <td>
-                    <?php echo 
+                    <?php echo
                     zen_draw_form('cat_cpath', FILENAME_COUPON_RESTRICT, zen_get_all_get_params(array('action')), 'get', 'id="cat-path-form"') .
                     zen_draw_pull_down_menu('cPath', zen_get_category_tree(), $cPath, 'id="cat-path"') .
                     zen_draw_hidden_field('cid', $cid) .
@@ -422,7 +422,7 @@ $current_manufacturers_id = (isset($_GET['manufacturers_id'])) ? (int)$_GET['man
 
 $manufacturers_array = array(
     array(
-        'id' => '0', 
+        'id' => '0',
         'text' => TEXT_NONE
     )
 );
@@ -430,7 +430,7 @@ $manufacturers_array = array(
 $manufacturers = $db->Execute(
     "SELECT distinct m.manufacturers_id, m.manufacturers_name
        FROM " . TABLE_MANUFACTURERS . " m
-            LEFT JOIN " . TABLE_PRODUCTS . " p 
+            LEFT JOIN " . TABLE_PRODUCTS . " p
                 ON m.manufacturers_id = p.manufacturers_id
       WHERE p.manufacturers_id = m.manufacturers_id
         AND p.products_status = 1
@@ -449,21 +449,21 @@ unset($manufacturers);
 
 if ($current_manufacturers_id > 0) {
     $products = $db->Execute(
-        "SELECT p.products_id, pd.products_name 
+        "SELECT p.products_id, pd.products_name
            FROM " . TABLE_PRODUCTS . " p, " . TABLE_PRODUCTS_DESCRIPTION . " pd, " . TABLE_MANUFACTURERS . " m
-          WHERE p.products_id = pd.products_id 
+          WHERE p.products_id = pd.products_id
             AND pd.language_id = " . $_SESSION['languages_id'] . "
-            AND p.manufacturers_id = m.manufacturers_id 
+            AND p.manufacturers_id = m.manufacturers_id
             AND m.manufacturers_id = $current_manufacturers_id
           ORDER BY pd.products_name, p.products_id"
     );
 } else {
     $products = $db->Execute(
-        "SELECT p.products_id, pd.products_name 
+        "SELECT p.products_id, pd.products_name
            FROM " . TABLE_PRODUCTS . " p, " . TABLE_PRODUCTS_DESCRIPTION . " pd, " . TABLE_PRODUCTS_TO_CATEGORIES . " p2c
-          WHERE p.products_id = pd.products_id 
+          WHERE p.products_id = pd.products_id
             AND pd.language_id = " . (int)$_SESSION['languages_id'] . "
-            AND p.products_id = p2c.products_id 
+            AND p.products_id = p2c.products_id
             AND p2c.categories_id = $cPath_prod
           ORDER BY pd.products_name, p.products_id"
     );
@@ -504,7 +504,7 @@ unset($products);
             <tr class="smallText">
                 <td><?php echo TABLE_HEADING_CATEGORY_NAME . HEADER_MANUFACTURER_NAME; ?></td>
                 <td colspan="2">
-                    <?php echo 
+                    <?php echo
                     zen_draw_form('prod-sel', FILENAME_COUPON_RESTRICT, zen_get_all_get_params(array('action')), 'get', 'id="prod-cat-man"') .
                     zen_draw_pull_down_menu('cPath_prod', zen_get_category_tree(), $cPath_prod, 'id="prod-path"') .
                     '<br><br>' .
@@ -535,34 +535,34 @@ if (empty($products_array)) {
 <!-- body_eof //-->
 
 <!-- footer //-->
-<?php 
-require DIR_WS_INCLUDES . 'footer.php'; 
+<?php
+require DIR_WS_INCLUDES . 'footer.php';
 ?>
 <!-- footer_eof //-->
 <?php
 // -----
 // A collection of "helper" forms, used by the page's jQuery (see below).
 //
-echo 
+echo
     zen_draw_form('new-cat', FILENAME_COUPON_RESTRICT, zen_get_all_get_params(array('action', 'page')) . '&action=add_category', 'post') .
     zen_draw_hidden_field('cPath', $cPath) .
     zen_draw_hidden_field('restrict_status', '', 'id="new-cat-restrict"') .
     '</form>';
-    
-echo 
+
+echo
     zen_draw_form('new-prod', FILENAME_COUPON_RESTRICT, zen_get_all_get_params(array('action', 'page')) . '&action=add_product', 'post') .
     zen_draw_hidden_field('pid', '0', 'id="new-prod-id"') .
     zen_draw_hidden_field('restrict_status', '', 'id="new-prod-restrict"') .
     zen_draw_hidden_field('prod_cat', '0', 'id="new-prod-cat"') .
     zen_draw_hidden_field('prod_man', '0', 'id="new-prod-man"') .
     '</form>';
-    
+
 echo
     zen_draw_form('toggle', FILENAME_COUPON_RESTRICT, zen_get_all_get_params(array('action', 'page')) . '&action=switch_status', 'post') .
     zen_draw_hidden_field('rid', '0', 'id="switch-rid"') .
     zen_draw_hidden_field('cid', $cid) .
     '</form>';
-    
+
 echo
     zen_draw_form('remove', FILENAME_COUPON_RESTRICT, zen_get_all_get_params(array('action', 'page')) . '&action=remove', 'post') .
     zen_draw_hidden_field('rid', '0', 'id="remove-rid"') .
@@ -574,30 +574,30 @@ $(document).ready(function() {
     $('#cat-path').on('change', function(){
         $('#cat-path-form').submit();
     });
-    
+
     $('#cat-add-submit').on('click', function(){
         $('#new-cat-restrict').val($('#cat-status :selected').val());
         $('form[name="new-cat"]').submit();
     });
-    
+
     $('.cr-remove').hover(function(){
         $(this).css('cursor', 'pointer');
     });
-    
+
     $('.cr-remove').on('click', function(){
         $('#remove-rid').val($(this).closest('tr').data('rid'));
         $('form[name="remove"]').submit();
     });
-    
+
     $('.cr-toggle').on('click', function(){
         $('#switch-rid').val($(this).closest('tr').data('rid'));
         $('form[name="toggle"]').submit();
     });
-    
+
     $('#prod-path, #prod-man').on('change', function(){
         $('#prod-cat-man').submit();
     });
-    
+
     $('#prod-add-submit').on('click', function(){
         $('#new-prod-id').val($('#prod-pid :selected').val());
         $('#new-prod-restrict').val($('#prod-status :selected').val());
@@ -609,5 +609,5 @@ $(document).ready(function() {
 </script>
 </body>
 </html>
-<?php 
+<?php
 require DIR_WS_INCLUDES . 'application_bottom.php';
