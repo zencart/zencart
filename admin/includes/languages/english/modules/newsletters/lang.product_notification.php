@@ -8,6 +8,8 @@
 
 $define = [
     'TEXT_COUNT_CUSTOMERS' => 'Customers receiving this Product Notification: %s',
+    'TEXT_NOTIFICATION_INFO_GLOBAL' => '<p><b>%%BUTTON_GLOBAL%%</b> button: the notification %s will be programmed to be sent to customers who chose to receive <strong>global</strong> product notifications.</p>',
+    'TEXT_NOTIFICATION_INFO_PRODUCTS' => '<p>Optionally, by selecting products and <b>%%BUTTON_SUBMIT%%</b>, the notification will <b>also</b> be sent to customers who chose to receive specific product notifications.</p>',
     'TEXT_PRODUCTS' => 'Products',
     'TEXT_SELECTED_PRODUCTS' => 'Selected Products',
     'JS_PLEASE_SELECT_PRODUCTS' => 'Please select some products.',
