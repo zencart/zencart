@@ -8,14 +8,14 @@
 
 $define = [
     'HEADING_TITLE' => 'SQL Query Executor',
-    'HEADING_WARNING' => 'BE SURE TO BACKUP YOUR DATABASE AND VERIFY THAT BACKUP, BEFORE RUNNING SCRIPTS HERE',
-    'HEADING_WARNING2' => 'If you are installing 3rd-party contributions, note that you do so at your own risk.<br>Zen Cart&reg; makes no warranty as to the safety of scripts supplied by 3rd-party contributors. Test on a development server before using on your live database!',
-    'HEADING_WARNING_INSTALLSCRIPTS' => 'NOTE: Zen Cart database-upgrade scripts should NOT be run from this page.<br>Please upload the new <strong>zc_install</strong> folder and run the upgrade from there instead for better reliability.',
+    'HEADING_INFO' => 'The SQL Query Executor allows you to run SQL queries directly on the database by pasting a script into the textarea or uploading a text file containing the script. It is intended for the manual installation of fields for Plugins and your own corrections/additions.',
+    'HEADING_WARNING_INSTALLSCRIPTS' => 'This tool should <b>NOT</b> be used to execute Zen Cart database-upgrade scripts: use the Zen Cart Installer as per the documentation.',
+    'HEADING_WARNING' => '<p>BEFORE you perform ANY database operation using this tool, ensure you have a VERIFIED backup of your database and you know how to restore it.<br>If you are installing 3rd-party modifications/Plugins, note that you do so at your own risk. Zen Cart&reg; makes no warranty as to the safety of scripts supplied by 3rd-party contributors.</p><p>Always test every script on a DEVELOPMENT server before using on your live shop!</p>',
     'TEXT_QUERY_RESULTS' => 'Query Results:',
     'TEXT_ENTER_QUERY_STRING' => 'Enter the query<br>to be executed:&nbsp;&nbsp;<br><br>Ensure that each statement<br>ends with a semicolon ";"',
     'TEXT_QUERY_FILENAME' => 'Upload file:',
     'ERROR_NOTHING_TO_DO' => 'Error: Nothing to do - no query or query-file specified.',
-    'SQLPATCH_HELP_TEXT' => 'The SQLPATCH tool lets you install system patches by pasting SQL code directly into the textarea ',
+    'SQLPATCH_HELP_TEXT' => 'The SQL Query Executor allows you to run SQL queries directly by pasting a script into the textarea or uploading a text file containing the script.',
     'REASON_TABLE_ALREADY_EXISTS' => 'Cannot create table %s because it already exists',
     'REASON_TABLE_DOESNT_EXIST' => 'Cannot drop table %s because it does not exist.',
     'REASON_TABLE_NOT_FOUND' => 'Cannot execute because table %s does not exist.',

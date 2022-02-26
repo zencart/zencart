@@ -793,14 +793,11 @@ if (!empty($action)) {
         $messageStack->add(ERROR_NOTHING_TO_DO, 'error');
       }
       break;
-    case 'help':
-      break;
     default:
       break;
   }
 }
 ?>
-<?php if ($action != 'help') { ?>
   <!doctype html>
   <html <?php echo HTML_PARAMS; ?>>
     <head>
@@ -810,9 +807,6 @@ if (!empty($action)) {
       <link rel="stylesheet" href="includes/cssjsmenuhover.css" media="all" id="hoverJS">
       <script src="includes/menu.js"></script>
       <script>
-        function popupHelpWindow(url) {
-            window.open(url, 'popupImageWindow', 'toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=no,resizable=yes,copyhistory=no,width=100,height=100,screenX=150,screenY=150,top=150,left=150,noreferrer')
-        }
         function init() {
             cssjsmenu('navbar');
             if (document.getElementById) {
@@ -830,11 +824,11 @@ if (!empty($action)) {
         <!-- body //-->
 
         <h1 class="pageHeading"><?php echo HEADING_TITLE; ?></h1>
+          <div class="row">
+              <div class="col-sm-12"><?php echo HEADING_INFO; ?></div>
+          </div>
         <div class="row">
-          <div class="col-sm-12 text-danger"><?php echo HEADING_WARNING; ?></div>
-        </div>
-        <div class="row">
-          <div class="col-sm-12 text-danger"><strong><?php echo HEADING_WARNING2; ?></strong></div>
+          <div class="col-sm-12 text-danger font-weight-bold"><?php echo HEADING_WARNING; ?></div>
         </div>
         <?php
         if ($action == 'execute' && !empty($_POST['query_string'])) {
@@ -878,9 +872,6 @@ if (!empty($action)) {
         </div>
   <?php echo '</form>'; ?>
 
-        <div class="row">
-          <div class="col-sm-12 text-right"><a href="<?php echo zen_href_link(FILENAME_SQLPATCH, 'action=help'); ?>" target="_blank" class="btn btn-info" role="button"><?php echo IMAGE_DETAILS; ?></a></div>
-        </div>
         <!-- body_text_eof //-->
       </div>
       <!-- body_eof //-->
@@ -891,32 +882,3 @@ if (!empty($action)) {
   </html>
   <?php require(DIR_WS_INCLUDES . 'application_bottom.php'); ?>
 
-<?php } elseif ($action == 'help') { ?>
-  <!doctype html>
-  <html  <?php echo HTML_PARAMS; ?>>
-    <head>
-      <meta charset="<?php echo CHARSET; ?>">
-      <title>HELP - <?php echo HEADING_TITLE; ?> - Zen Cart&reg;</title>
-      <link rel="stylesheet" href="includes/stylesheet.css">
-    </head>
-    <body id="popup">
-      <div class="container-fluid">
-        <div id="popup_header">
-          <h1><?php echo 'Zen Cart&reg; ' . HEADING_TITLE; ?></h1>
-        </div>
-        <div id="popup_content">
-          <span class="txt-red font-weight-bold"><?php echo HEADING_WARNING; ?></span><br>
-          <?php
-          echo SQLPATCH_HELP_TEXT;
-          echo '<br><br>';
-          ?>
-          <span class="txt-red font-weight-bold"><?php echo HEADING_WARNING; ?></span><br>
-          <span class="txt-red font-weight-bold"><?php echo HEADING_WARNING2; ?></span><br>
-        </div>
-        <div class="row text-center">
-          <a href="javascript:window.close()"><?php echo TEXT_CLOSE_WINDOW; ?></a>
-        </div>
-      </div>
-    </body>
-  </html>
-<?php } ?>
