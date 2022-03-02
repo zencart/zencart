@@ -9,15 +9,15 @@
  */
 // This should be first line of the script:
 $zco_notifier->notify('NOTIFY_HEADER_START_LOGIN');
-$login_page = true; 
+$login_page = true;
 
 // redirect the customer to a friendly cookie-must-be-enabled page if cookies are disabled (or the session has not started)
 if ($session_started == false) {
   zen_redirect(zen_href_link(FILENAME_COOKIE_USAGE));
 }
 
-// if the customer is logged in already (and not in guest-checkout), redirect them to the My account page
-if (!zen_in_guest_checkout() && zen_is_logged_in()) {
+// if the customer is logged in already, not in guest-checkout, and not a new EMP Automatic Login, redirect them to the My account page
+if (!zen_in_guest_checkout() && zen_is_logged_in() && !isset($_GET['hmac'])) {
     zen_redirect(zen_href_link(FILENAME_ACCOUNT, '', 'SSL'));
 }
 
