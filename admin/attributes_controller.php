@@ -82,21 +82,21 @@ if (isset($_POST['categories_update_id'])) {
 }
 
 if ($action == 'new_cat') {
-  $products_filter = zen_get_linked_products_for_category($current_category_id, $first_only = true);
+  $products_filter = zen_get_linked_products_for_category($current_category_id, true);
   zen_redirect(zen_href_link(FILENAME_ATTRIBUTES_CONTROLLER, 'products_filter=' . $products_filter . '&current_category_id=' . $current_category_id));
 }
 
 // set categories and products if not set
-if ($products_filter == '' && !empty($current_category_id)) {
-  $products_filter = zen_get_linked_products_for_category($current_category_id, $first_only = true);
-  if ($products_filter != '') {
+if ($products_filter === 0 && !empty($current_category_id)) {
+  $products_filter = zen_get_linked_products_for_category($current_category_id, true);
+  if ($products_filter !== 0) {
     zen_redirect(zen_href_link(FILENAME_ATTRIBUTES_CONTROLLER, 'products_filter=' . $products_filter . '&current_category_id=' . $current_category_id));
   }
 } else {
-  if ($products_filter == '' && empty($current_category_id)) {
+  if ($products_filter === 0 && empty($current_category_id)) {
     $reset_categories_id = zen_get_category_tree('', '', '0', '', '', true);
     $current_category_id = $reset_categories_id[0]['id'];
-    $products_filter = zen_get_linked_products_for_category($current_category_id, $first_only = true);
+    $products_filter = zen_get_linked_products_for_category($current_category_id, true);
     $_GET['products_filter'] = $products_filter;
   }
 }
@@ -681,7 +681,7 @@ function zen_js_option_values_list($selectedName, $fieldName)
               <?php
               $zco_notifier->notify('NOTIFY_ATTRIBUTE_CONTROLLER_ADDITIONAL_ACTIONS_DROPDOWN_UPPER', $zc_products, $action, $products_filter, $current_category_id);
               ?>
-              <?php if ($products_filter != '' && $action != 'attribute_features_copy_to_product' && $action != 'attribute_features_copy_to_category' && $action != 'delete_all_attributes_confirm') { ?>
+              <?php if ($products_filter !== 0 && $action != 'attribute_features_copy_to_product' && $action != 'attribute_features_copy_to_category' && $action != 'delete_all_attributes_confirm') { ?>
                 <li role="presentation" class="divider"></li>
                 <li role="presentation"><a role="menuitem" href="<?php echo zen_href_link(FILENAME_PRODUCT, 'action=new_product' . '&cPath=' . zen_get_product_path($products_filter) . '&pID=' . $products_filter . '&product_type=' . zen_get_products_type($products_filter)); ?>"><?php echo IMAGE_EDIT_PRODUCT; ?></a></li>
                 <?php
@@ -853,7 +853,7 @@ function zen_js_option_values_list($selectedName, $fieldName)
             <?php echo zen_draw_hidden_field('products_filter', $products_filter); ?>
             <?php echo zen_draw_hidden_field('current_category_id', $current_category_id); ?>
             <?php
-            if ($_GET['products_filter'] != '') {
+            if ($_GET['products_filter'] !== 0) {
               ?>
               <div class="form-group">
                 <div class="col-xs-offset-2 col-offset-sm-1 col-xs-7 col-sm-7"><?php echo TEXT_PRODUCT_TO_VIEW; ?></div>
@@ -879,7 +879,7 @@ function zen_js_option_values_list($selectedName, $fieldName)
       <?php } // $action == '' ?>
       <?php
 // start of attributes display
-      if ($_GET['products_filter'] == '') {
+      if ($_GET['products_filter'] === 0) {
         ?>
         <div class="row">
           <h2 class="text-center"><?php echo HEADING_TITLE_ATRIB_SELECT; ?></h2>
@@ -1021,11 +1021,11 @@ function zen_js_option_values_list($selectedName, $fieldName)
               <tr class="dataTableHeadingRow">
                 <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_ID; ?></td>
                 <td class="dataTableHeadingContent">&nbsp;</td>
-                <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_OPT_NAME; ?></td>
-                <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_OPT_VALUE; ?></td>
-                <td class="dataTableHeadingContent text-right"><?php echo TABLE_HEADING_OPT_PRICE_PREFIX; ?>&nbsp;<?php echo TABLE_HEADING_OPT_PRICE; ?></td>
-                <td class="dataTableHeadingContent text-right"><?php echo TABLE_HEADING_OPT_WEIGHT_PREFIX; ?>&nbsp;<?php echo TABLE_HEADING_OPT_WEIGHT; ?></td>
-                <td class="dataTableHeadingContent text-right"><?php echo TABLE_HEADING_OPT_SORT_ORDER; ?></td>
+                <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_OPTION_NAME; ?></td>
+                <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_OPTION_VALUE; ?></td>
+                <td class="dataTableHeadingContent text-right"><?php echo TABLE_HEADING_OPTION_PRICE_PREFIX; ?>&nbsp;<?php echo TABLE_HEADING_OPTION_PRICE; ?></td>
+                <td class="dataTableHeadingContent text-right"><?php echo TABLE_HEADING_OPTION_WEIGHT_PREFIX; ?>&nbsp;<?php echo TABLE_HEADING_OPTION_WEIGHT; ?></td>
+                <td class="dataTableHeadingContent text-right"><?php echo TABLE_HEADING_OPTION_SORT_ORDER; ?></td>
                 <td class="dataTableHeadingContent text-center"><?php echo LEGEND_BOX; ?></td>
                 <td class="dataTableHeadingContent text-right"><?php echo TABLE_HEADING_PRICE_TOTAL; ?></td>
                 <td class="dataTableHeadingContent text-center"><?php echo TABLE_HEADING_ACTION; ?></td>
@@ -1039,7 +1039,7 @@ function zen_js_option_values_list($selectedName, $fieldName)
                 ?>
                 <tr>
                   <td colspan="10" class="pageHeading text-center">
-                    <?php echo ($products_filter == '' ? TEXT_NO_PRODUCTS_SELECTED : TEXT_NO_ATTRIBUTES_DEFINED . $products_filter . ' ' . zen_get_products_model($products_filter) . ' - ' . zen_get_products_name($products_filter)); ?>
+                    <?php echo ($products_filter === 0 ? TEXT_NO_PRODUCTS_SELECTED : TEXT_NO_ATTRIBUTES_DEFINED . $products_filter . ' ' . zen_get_products_model($products_filter) . ' - ' . zen_get_products_name($products_filter)); ?>
                   </td>
                 </tr>
 
@@ -1114,7 +1114,7 @@ function zen_js_option_values_list($selectedName, $fieldName)
                         <div class="col-xs-5 col-sm-2">
                           <strong><?php echo zen_get_option_name_language($attributes_value['options_id'], $_SESSION['languages_id']); ?>:</strong>
                         </div>
-                        <div class="col-xs-12 col-sm-6 col-md-6 col-lg-5"><?php echo zen_draw_label(TABLE_HEADING_OPT_VALUE, 'values_id', 'class="control-label"'); ?>
+                        <div class="col-xs-12 col-sm-6 col-md-6 col-lg-5"><?php echo zen_draw_label(TABLE_HEADING_OPTION_VALUE, 'values_id', 'class="control-label"'); ?>
                           <?php
 // FIX HERE 2 - editing
                           $values_values = $db->Execute("SELECT pov.products_options_values_id, pov.products_options_values_name
@@ -1173,23 +1173,23 @@ function zen_js_option_values_list($selectedName, $fieldName)
                         $products_attributes_weight_prefix = ($attributes_value['products_attributes_weight_prefix'] == '+' ? 1 : ($attributes_value['price_prefix'] == '-' ? 2 : 0));
                         ?>
                         <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2">
-                          <?php echo zen_draw_label(TABLE_HEADING_OPT_PRICE, 'value_price', 'class="control-label"'); ?>
+                          <?php echo zen_draw_label(TABLE_HEADING_OPTION_PRICE, 'value_price', 'class="control-label"'); ?>
                           <div class="input-group">
-                            <?php echo zen_draw_pull_down_menu('price_prefix', $price_prefix_array, $attributes_value_price_prefix, 'class="form-control" title="' . TABLE_HEADING_OPT_PRICE_PREFIX . '"'); ?>
+                            <?php echo zen_draw_pull_down_menu('price_prefix', $price_prefix_array, $attributes_value_price_prefix, 'class="form-control" title="' . TABLE_HEADING_OPTION_PRICE_PREFIX . '"'); ?>
                             <span class="input-group-btn" style="width:0px;"></span>
                             <?php echo zen_draw_input_field('value_price', $attributes_value['options_values_price'], 'class="form-control" id="value_price"'); ?>
                           </div>
                         </div>
                         <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2">
-                          <?php echo zen_draw_label(TABLE_HEADING_OPT_WEIGHT, 'products_attributes_weight', 'class="control-label"'); ?>
+                          <?php echo zen_draw_label(TABLE_HEADING_OPTION_WEIGHT, 'products_attributes_weight', 'class="control-label"'); ?>
                           <div class="input-group">
-                            <?php echo zen_draw_pull_down_menu('products_attributes_weight_prefix', $weight_prefix_array, $products_attributes_weight_prefix, 'class="form-control" title="' . TABLE_HEADING_OPT_WEIGHT_PREFIX . '"'); ?>
+                            <?php echo zen_draw_pull_down_menu('products_attributes_weight_prefix', $weight_prefix_array, $products_attributes_weight_prefix, 'class="form-control" title="' . TABLE_HEADING_OPTION_WEIGHT_PREFIX . '"'); ?>
                             <span class="input-group-btn" style="width:0px;"></span>
                             <?php echo zen_draw_input_field('products_attributes_weight', $attributes_value['products_attributes_weight'], 'class="form-control" id="products_attributes_weight"'); ?>
                           </div>
                         </div>
                         <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2">
-                          <?php echo zen_draw_label(TABLE_HEADING_OPT_SORT_ORDER, 'products_options_sort_order', 'class="control-label"'); ?>
+                          <?php echo zen_draw_label(TABLE_HEADING_OPTION_SORT_ORDER, 'products_options_sort_order', 'class="control-label"'); ?>
                           <?php echo zen_draw_input_field('products_options_sort_order', $attributes_value['products_options_sort_order'], 'size="4" class="form-control" id="products_options_sort_order"'); ?>
                         </div>
                         <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2">
@@ -1683,11 +1683,11 @@ function zen_js_option_values_list($selectedName, $fieldName)
                       }
                       ?>
                       <div class="col-xs-12 col-sm-5 col-md-5 col-lg-5">
-                        <?php echo zen_draw_label(TABLE_HEADING_OPT_NAME, 'OptionName') . "\n"; ?>
+                        <?php echo zen_draw_label(TABLE_HEADING_OPTION_NAME, 'OptionName') . "\n"; ?>
                         <?php echo zen_draw_pull_down_menu('options_id', $optionsDropDownArray, '', 'id="OptionName" size="' . ($action != 'delete_attribute' ? "15" : "1") . '" onchange="update_option(this.form)" class="form-control"'); ?>
                       </div>
                       <div class="col-xs-12 col-sm-6 col-md-6 col-lg-5">
-                        <?php echo zen_draw_label(TABLE_HEADING_OPT_VALUE, 'OptionValue', 'class="control-label"') . "\n"; ?>
+                        <?php echo zen_draw_label(TABLE_HEADING_OPTION_VALUE, 'OptionValue', 'class="control-label"') . "\n"; ?>
                         <select name="values_id[]" id="OptionValue" class="form-control" multiple="multiple" <?php echo 'size="' . ($action != 'delete_attribute' ? "15" : "1") . '"'; ?>>
                           <option selected>&lt;-- <?php echo PLEASE_SELECT; ?></option>
                         </select>
@@ -1738,23 +1738,23 @@ function zen_js_option_values_list($selectedName, $fieldName)
                       ];
                       ?>
                       <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2">
-                        <?php echo zen_draw_label(TABLE_HEADING_OPT_PRICE, 'value_price', 'class="control-label"'); ?>
+                        <?php echo zen_draw_label(TABLE_HEADING_OPTION_PRICE, 'value_price', 'class="control-label"'); ?>
                         <div class="input-group">
-                          <?php echo zen_draw_pull_down_menu('price_prefix', $price_prefix_array, $default_price_prefix, 'class="form-control" title="' . TABLE_HEADING_OPT_PRICE_PREFIX . '"'); ?>
+                          <?php echo zen_draw_pull_down_menu('price_prefix', $price_prefix_array, $default_price_prefix, 'class="form-control" title="' . TABLE_HEADING_OPTION_PRICE_PREFIX . '"'); ?>
                           <span class="input-group-btn" style="width:0px;"></span>
                           <?php echo zen_draw_input_field('value_price', '', 'class="form-control" id="value_price"'); ?>
                         </div>
                       </div>
                       <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2">
-                        <?php echo zen_draw_label(TABLE_HEADING_OPT_WEIGHT, 'products_attributes_weight', 'class="control-label"'); ?>
+                        <?php echo zen_draw_label(TABLE_HEADING_OPTION_WEIGHT, 'products_attributes_weight', 'class="control-label"'); ?>
                         <div class="input-group">
-                          <?php echo zen_draw_pull_down_menu('products_attributes_weight_prefix', $weight_prefix_array, $default_products_attributes_weight_prefix, 'class="form-control" title="' . TABLE_HEADING_OPT_WEIGHT_PREFIX . '"'); ?>
+                          <?php echo zen_draw_pull_down_menu('products_attributes_weight_prefix', $weight_prefix_array, $default_products_attributes_weight_prefix, 'class="form-control" title="' . TABLE_HEADING_OPTION_WEIGHT_PREFIX . '"'); ?>
                           <span class="input-group-btn" style="width:0px;"></span>
                           <?php echo zen_draw_input_field('products_attributes_weight', '', 'class="form-control" id="products_attributes_weight"'); ?>
                         </div>
                       </div>
                       <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2">
-                        <?php echo zen_draw_label(TABLE_HEADING_OPT_SORT_ORDER, 'products_options_sort_order', 'class="control-label"'); ?>
+                        <?php echo zen_draw_label(TABLE_HEADING_OPTION_SORT_ORDER, 'products_options_sort_order', 'class="control-label"'); ?>
                         <?php echo zen_draw_input_field('products_options_sort_order', '', 'size="4" class="form-control" id="products_options_sort_order"'); ?>
                       </div>
                       <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2">

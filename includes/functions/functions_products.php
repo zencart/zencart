@@ -326,7 +326,7 @@ function zen_get_linked_categories_for_product($product_id, $exclude = [])
 /**
  * @param int $category_id
  * @param bool $first_only if true, return only the first result (string)
- * @return array|string Array of categories_id or empty string if $first-only specified but record not found
+ * @return array|integer Array of products_id, or if $first-only true, a single products_id/0 if record not found
  */
 function zen_get_linked_products_for_category($category_id, $first_only = false)
 {
@@ -338,15 +338,12 @@ function zen_get_linked_products_for_category($category_id, $first_only = false)
     $results = $db->Execute($sql);
 
     if ($first_only) {
-        if ($results->RecordCount()) {
-            return $results->fields['products_id'];
-        }
-        return '';
+        return $results->EOF ? 0 : (int)$results->fields['products_id'];
     }
 
     $products = [];
     foreach ($results as $result) {
-        $products[] = $result['products_id'];
+        $products[] = (int)$result['products_id'];
     }
     return $products;
 }
