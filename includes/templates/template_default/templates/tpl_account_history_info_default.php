@@ -114,10 +114,12 @@ if (!empty($order->statuses)) {
     if (!empty($statuses['comments'])) {
       if ($first) {
          echo nl2br(zen_output_string_protected($statuses['comments']));
-         $first = false;
       } else {
          echo nl2br(zen_output_string($statuses['comments']));
       }
+    }
+    if ($first) {
+       $first = false;
     }
 ?>
        </td>
