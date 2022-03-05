@@ -175,6 +175,8 @@ function zen_update_orders_history($orders_id, $message = '', $updated_by = null
             if (empty($updated_by)) {
                 if (IS_ADMIN_FLAG === true && isset($_SESSION['admin_id'])) {
                     $updated_by = zen_updated_by_admin();
+                } else if (isset($_SESSION['emp_admin_id'])) {
+                   $updated_by = zen_updated_by_admin($_SESSION['emp_admin_id']);
                 } elseif (IS_ADMIN_FLAG === false && isset($_SESSION['customer_id'])) {
                     $updated_by = '';
                 } else {

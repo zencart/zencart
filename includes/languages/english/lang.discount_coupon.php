@@ -5,7 +5,7 @@ $define = [
     'TEXT_INFORMATION' => '',
     'TEXT_COUPON_FAILED' => '<span class="alert important">%s</span> does not appear to be a valid Coupon Redemption Code. Please try typing it in again.',
     'TEXT_COUPON_HELP_NAME' => '\'%s\'. </p>',
-    'TEXT_COUPON_INACTIVE', => 'Inactive Coupon', 
+    'TEXT_COUPON_INACTIVE' => 'Inactive Coupon',
     'TEXT_COUPON_HELP_FIXED' => '',
     'TEXT_COUPON_HELP_FREESHIP' => '',
     'TEXT_COUPON_HELP_DESC' => '<p><span class="bold">Discount Offer:</span> %s</p><p class="smallText">Certain other restrictions may apply. Please see below for other details.</p>',

@@ -185,7 +185,7 @@ if ($max_log_file_size < 1) {
     <html <?php echo HTML_PARAMS; ?>>
     <head>
         <?php require DIR_WS_INCLUDES . 'admin_html_head.php'; ?>
-        <style type="text/css">
+        <style>
             <!--
             #theButtons { padding-top: 10px; margin-top: 10px; border-top: 1px solid black; }
             #dButtons, #dSpace { width: 50%; }

@@ -6,7 +6,6 @@ $define = [
     'SUB_TITLE_RATING' => 'Choose a ranking for this item. 1 star is the worst and 5 stars is the best.',
     'TEXT_NO_HTML' => '<strong>NOTE:</strong>  HTML tags are not allowed.',
     'TEXT_BAD' => 'Worst',
-    'TEXT_APPROVAL_REQUIRED' => '<strong>NOTE:</strong>  Reviews require prior approval before they will be displayed',
     'EMAIL_REVIEW_PENDING_SUBJECT' => 'Product Review Pending Approval: %s',
     'EMAIL_PRODUCT_REVIEW_CONTENT_INTRO' => 'A Product Review for %s has been submitted and requires your approval.' . "\n\n",
     'EMAIL_PRODUCT_REVIEW_CONTENT_DETAILS' => 'Review Details: %s',

@@ -355,6 +355,7 @@ $define = [
     'TEXT_ALL_CATEGORIES' => 'All Categories',
     'TEXT_ALL_MANUFACTURERS' => 'All Manufacturers',
     'TEXT_ALSO_PURCHASED_PRODUCTS' => 'Customers who bought this product also purchased...',
+    'TEXT_APPROVAL_REQUIRED' => '<strong>NOTE:</strong>  Reviews require prior approval before they will be displayed.',
     'TEXT_ASCENDINGLY' => 'ascendingly',
     'TEXT_ATTRIBUTES_PRICE_WAS' => ' [was: ',
     'TEXT_ATTRIBUTES_QTY_PRICES_HELP' => 'Option Quantity Discounts',

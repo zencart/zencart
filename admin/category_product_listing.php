@@ -17,9 +17,9 @@ $search_result = isset($_GET['search']) && zen_not_null($_GET['search']);
 
 $search_parameter = $search_result ? '&search=' . $_GET['search'] : '';
 $keywords = $search_result ? zen_db_input(zen_db_prepare_input($_GET['search'])) : '';
-$max_results = MAX_DISPLAY_RESULTS_CATEGORIES; 
+$max_results = MAX_DISPLAY_RESULTS_CATEGORIES;
 if (!empty($search_parameter)) {
-   $max_results = MAX_DISPLAY_SEARCH_RESULTS; 
+   $max_results = MAX_DISPLAY_SEARCH_RESULTS;
 }
 if (isset($_GET['page'])) {
   $_GET['page'] = (int)$_GET['page'];
@@ -416,7 +416,7 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
 
             if ($zc_skip_products == true) {
               // toggle switch for display sort order
-              $categories_products_sort_order_array = array(array('id' => '0', 'text' => TEXT_SORT_CATEGORIES_SORT_ORDER_PRODUCTS_NAME),
+              $categories_products_sort_order_array = array(array('id' => '0', 'text' => TEXT_SORT_CATEGORIES_SORT_ORDER_CATEGORIES_NAME),
                 array('id' => '1', 'text' => TEXT_SORT_CATEGORIES_NAME)
               );
             } else {
