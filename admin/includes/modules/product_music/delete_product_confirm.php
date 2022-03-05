@@ -13,7 +13,7 @@ if (!defined('IS_ADMIN_FLAG')) {
 // NOTE: Debug code left in to help with creating additional product type delete-scripts
 
 $do_delete_flag = false;
-//echo 'products_id=' . $_POST['products_id'] . '<br />';
+//echo 'products_id=' . $_POST['products_id'] . '<br>';
 if (isset($_POST['products_id']) && isset($_POST['product_categories']) && is_array($_POST['product_categories'])) {
   $product_id = zen_db_prepare_input($_POST['products_id']);
   $product_categories = $_POST['product_categories'];
@@ -36,28 +36,28 @@ if ($do_delete_flag) {
   $resVal = zen_get_linked_categories_for_product($product_id);
   if (count($resVal) < 2) {
     // First we delete related records from related product-type tables:
-    //echo 'SQL=' . "select media_id from " . TABLE_MEDIA_TO_PRODUCTS . " where product_id = '" . (int)$product_id . "'<br />";
+    //echo 'SQL=' . "select media_id from " . TABLE_MEDIA_TO_PRODUCTS . " where product_id = '" . (int)$product_id . "'<br>";
 
     $product_media = $db->Execute("SELECT media_id
                                    FROM " . TABLE_MEDIA_TO_PRODUCTS . "
                                    WHERE product_id = " . (int)$product_id);
-    //echo 'media count =' . $product_media->RecordCount() . '<br />';
+    //echo 'media count =' . $product_media->RecordCount() . '<br>';
     foreach ($product_media as $item) {
-      //echo 'media delete=' . $product_media->fields['media_id'] . '<br />';
+      //echo 'media delete=' . $product_media->fields['media_id'] . '<br>';
       $db->Execute("DELETE FROM " . TABLE_MEDIA_TO_PRODUCTS . "
                     WHERE media_id = " . (int)zen_db_input($item['media_id']) . "
                     AND product_id = " . (int)$product_id);
     }
 
-    //echo 'SQL=' . "select artists_id, record_company_id, music_genre_id from " . TABLE_PRODUCT_MUSIC_EXTRA . "                                 where products_id = '" . (int)$product_id . "'<br />";
+    //echo 'SQL=' . "select artists_id, record_company_id, music_genre_id from " . TABLE_PRODUCT_MUSIC_EXTRA . "                                 where products_id = '" . (int)$product_id . "'<br>";
     $music_extra = $db->Execute("SELECT artists_id, record_company_id, music_genre_id
                                  FROM " . TABLE_PRODUCT_MUSIC_EXTRA . "
                                  WHERE products_id = " . (int)$product_id);
-    //echo 'media count =' . $music_extra->RecordCount() . '<br />';
+    //echo 'media count =' . $music_extra->RecordCount() . '<br>';
     if ($music_extra->RecordCount() > 0) {
-      //echo 'artists_id delete=' . $music_extra->fields['artists_id'] . '<br />';
-      //echo 'record_company_id delete=' . $music_extra->fields['record_company_id'] . '<br />';
-      //echo 'music_genre_id delete=' . $music_extra->fields['music_genre_id'] . '<br />';
+      //echo 'artists_id delete=' . $music_extra->fields['artists_id'] . '<br>';
+      //echo 'record_company_id delete=' . $music_extra->fields['record_company_id'] . '<br>';
+      //echo 'music_genre_id delete=' . $music_extra->fields['music_genre_id'] . '<br>';
       $db->Execute("DELETE FROM " . TABLE_PRODUCT_MUSIC_EXTRA . "
                     WHERE products_id = " . (int)$product_id . "
                     AND artists_id = " . (int)zen_db_input($music_extra->fields['artists_id']) . "
@@ -74,7 +74,7 @@ if ($do_delete_flag) {
   }
   // confirm that product is no longer linked to any categories
   $count_categories = zen_get_linked_categories_for_product($product_id);
-  // echo 'count of category links for this product=' . count($count_categories) . '<br />';
+  // echo 'count of category links for this product=' . count($count_categories) . '<br>';
   // if not linked to any categories, do delete:
   if (count($count_categories) == '0') {
     zen_remove_product($product_id, $delete_linked);

@@ -11,13 +11,13 @@
 
 
 if ($debug_on == '1') {
-  echo 'Looking at ' . (int)$_GET['products_id'] . '<br />';
-  echo 'Base Price ' . zen_get_products_base_price((int)$_GET['products_id']) . '<br />';
-  echo 'Actual Price ' . zen_get_products_actual_price((int)$_GET['products_id']) . '<br />';
-  echo 'Special Price ' . zen_get_products_special_price((int)$_GET['products_id'], true) . '<br />';
-  echo 'Sale Maker Discount Type ' . zen_get_products_sale_discount_type((int)$_GET['products_id']) . '<br />';
-  echo 'Discount Calc ' . zen_get_discount_calc((int)$_GET['products_id']) . '<br />';
-  echo 'Discount Calc Attr $100 $75 $50 $25 ' . zen_get_discount_calc((int)$_GET['products_id'], true, 100) . ' | ' . zen_get_discount_calc((int)$_GET['products_id'], true, 75) . ' | ' . zen_get_discount_calc((int)$_GET['products_id'], true, 50) . ' | ' . zen_get_discount_calc((int)$_GET['products_id'], true, 25) . '<br />';
+  echo 'Looking at ' . (int)$_GET['products_id'] . '<br>';
+  echo 'Base Price ' . zen_get_products_base_price((int)$_GET['products_id']) . '<br>';
+  echo 'Actual Price ' . zen_get_products_actual_price((int)$_GET['products_id']) . '<br>';
+  echo 'Special Price ' . zen_get_products_special_price((int)$_GET['products_id'], true) . '<br>';
+  echo 'Sale Maker Discount Type ' . zen_get_products_sale_discount_type((int)$_GET['products_id']) . '<br>';
+  echo 'Discount Calc ' . zen_get_discount_calc((int)$_GET['products_id']) . '<br>';
+  echo 'Discount Calc Attr $100 $75 $50 $25 ' . zen_get_discount_calc((int)$_GET['products_id'], true, 100) . ' | ' . zen_get_discount_calc((int)$_GET['products_id'], true, 75) . ' | ' . zen_get_discount_calc((int)$_GET['products_id'], true, 50) . ' | ' . zen_get_discount_calc((int)$_GET['products_id'], true, 25) . '<br>';
 
   echo '<br> Start of page - product <br>' .
   zen_get_show_product_switch($products_id_current, 'weight') . '<br>' .
@@ -34,12 +34,12 @@ if ($debug_on == '1') {
 ?>
 <?php
 if (false) {
-echo 'Looking at ' . (int)$_GET['products_id'] . '<br />';
-echo 'Base Price ' . zen_get_products_base_price((int)$_GET['products_id']) . '<br />';
-echo 'Actual Price ' . zen_get_products_actual_price((int)$_GET['products_id']) . '<br />';
-echo 'Special Price ' . zen_get_products_special_price((int)$_GET['products_id'], true) . '<br />';
-echo 'Sale Maker Discount Type ' . zen_get_products_sale_discount_type((int)$_GET['products_id']) . '<br />';
-echo 'Discount Calc ' . zen_get_discount_calc((int)$_GET['products_id']) . '<br />';
-echo 'Discount Calc Attr $100 $75 $50 $25 ' . zen_get_discount_calc((int)$_GET['products_id'], true, 100) . ' | ' . zen_get_discount_calc((int)$_GET['products_id'], true, 75) . ' | ' . zen_get_discount_calc((int)$_GET['products_id'], true, 50) . ' | ' . zen_get_discount_calc((int)$_GET['products_id'], true, 25) . '<br />';
+echo 'Looking at ' . (int)$_GET['products_id'] . '<br>';
+echo 'Base Price ' . zen_get_products_base_price((int)$_GET['products_id']) . '<br>';
+echo 'Actual Price ' . zen_get_products_actual_price((int)$_GET['products_id']) . '<br>';
+echo 'Special Price ' . zen_get_products_special_price((int)$_GET['products_id'], true) . '<br>';
+echo 'Sale Maker Discount Type ' . zen_get_products_sale_discount_type((int)$_GET['products_id']) . '<br>';
+echo 'Discount Calc ' . zen_get_discount_calc((int)$_GET['products_id']) . '<br>';
+echo 'Discount Calc Attr $100 $75 $50 $25 ' . zen_get_discount_calc((int)$_GET['products_id'], true, 100) . ' | ' . zen_get_discount_calc((int)$_GET['products_id'], true, 75) . ' | ' . zen_get_discount_calc((int)$_GET['products_id'], true, 50) . ' | ' . zen_get_discount_calc((int)$_GET['products_id'], true, 25) . '<br>';
 }
 ?>

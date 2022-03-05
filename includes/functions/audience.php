@@ -40,7 +40,7 @@
   foreach ($queries_list as $query_list) {
     // if requested, show recordcounts at end of descriptions of each entry
     // This could slow things down considerably, so use sparingly !!!!
-    if ($show_count) { 
+    if ($show_count) {
       $count_array = $db->Execute(parsed_query_string($query_list['query_string']) );
       $count = $count_array->RecordCount();
     }
@@ -83,7 +83,7 @@
       if ($selected_entry == $query_list['query_name']) {
       $query_name   = $query_list['query_name'];
         $query_string = parsed_query_string($query_list['query_string']);
-//echo 'GET_AUD_EM_ADDR_QRY:<br />query_name='.$query_name.'<br />query_string='.$query_string;
+//echo 'GET_AUD_EM_ADDR_QRY:<br>query_name='.$query_name.'<br>query_string='.$query_string;
       }
   }
   //if no match found against queries listed in database, then $selected_entry must be an email address

@@ -68,12 +68,12 @@ if (!defined('IS_ADMIN_FLAG')) {
  * Debug code:
  */
 if (false) {
-  echo '<br /><pre>'; print_r($_GET); echo '</pre>';
-  echo '<br />new_editor_choice = ' . $new_editor_choice;
-  echo '<br />current_editor_key = ' . $current_editor_key;
-  echo '<br />$_SESSION[html_editor_preference_status] = ' . $_SESSION['html_editor_preference_status'];
-  echo '<br />editor_handler = ' . $editor_handler;
-  echo '<br /><pre>'; print_r($editors_list); echo '</pre>';
-  echo '<br /><pre>'; print_r($editors_pulldown); echo '</pre>';
+  echo '<br><pre>'; print_r($_GET); echo '</pre>';
+  echo '<br>new_editor_choice = ' . $new_editor_choice;
+  echo '<br>current_editor_key = ' . $current_editor_key;
+  echo '<br>$_SESSION[html_editor_preference_status] = ' . $_SESSION['html_editor_preference_status'];
+  echo '<br>editor_handler = ' . $editor_handler;
+  echo '<br><pre>'; print_r($editors_list); echo '</pre>';
+  echo '<br><pre>'; print_r($editors_pulldown); echo '</pre>';
   //die('debug end');
 }

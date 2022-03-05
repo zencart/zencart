@@ -37,11 +37,11 @@ class Paginator extends \base {
     $this->page_name = $page_holder;
 
     if ($debug) {
-      echo '<br /><br />';
-      echo 'original_query=' . $query . '<br /><br />';
-      echo 'original_count_query=' . $countQuery . '<br /><br />';
-      echo 'sql_query=' . $this->sql_query . '<br /><br />';
-      echo 'count_query=' . $this->countQuery . '<br /><br />';
+      echo '<br><br>';
+      echo 'original_query=' . $query . '<br><br>';
+      echo 'original_count_query=' . $countQuery . '<br><br>';
+      echo 'sql_query=' . $this->sql_query . '<br><br>';
+      echo 'count_query=' . $this->countQuery . '<br><br>';
     }
     if (isset($_GET[$page_holder])) {
       $page = $_GET[$page_holder];
@@ -77,7 +77,7 @@ class Paginator extends \base {
     }
     $count_query = "select count(" . $count_string . ") as total " . substr($this->countQuery, $pos_from, ($pos_to - $pos_from));
     if ($debug) {
-      echo 'count_query=' . $count_query . '<br /><br />';
+      echo 'count_query=' . $count_query . '<br><br>';
     }
     $count = $db->Execute($count_query);
 
