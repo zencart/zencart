@@ -55,5 +55,7 @@
     "scripts": {
         "tests": "phpunit --verbose --testsuite UnitTests --debug",
         "dusk": "phpunit --verbose --testsuite Browser --debug"
-    }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
 }
