@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "b29251fde0673a00c273dde43e8bb479",
+    "content-hash": "149683b5c427400417b0eb9afca1832b",
     "packages": [],
     "packages-dev": [
         {
@@ -4085,70 +4085,20 @@
             "time": "2021-03-09T10:59:23+00:00"
         },
         {
-            "name": "zcwilt/class-finder",
-            "version": "dev-master",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/zcwilt/class-finder.git",
-                "reference": "6e1658acef01e12f66e56b701bb9d7cacb8c30ac"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/zcwilt/class-finder/zipball/6e1658acef01e12f66e56b701bb9d7cacb8c30ac",
-                "reference": "6e1658acef01e12f66e56b701bb9d7cacb8c30ac",
-                "shasum": ""
-            },
-            "require": {
-                "ext-json": "*",
-                "php": ">=5.3"
-            },
-            "require-dev": {
-                "mikey179/vfsstream": "^1.6",
-                "phpunit/phpunit": "4.8.36"
-            },
-            "default-branch": true,
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "zcwilt\\ClassFinder\\": "src/",
-                    "zcwilt\\ClassFinder\\UnitTest\\": "test/unit"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Hayden Pierce",
-                    "email": "hayden@haydenpierce.com"
-                },
-                {
-                    "name": "Daniil Gentili",
-                    "email": "daniil@daniil.it"
-                }
-            ],
-            "description": "Fork of haydenpierce/class-finder with support for traits, interfaces and functions",
-            "support": {
-                "source": "https://github.com/zcwilt/class-finder/tree/master"
-            },
-            "time": "2022-03-06T17:07:36+00:00"
-        },
-        {
             "name": "zcwilt/zcgo",
             "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/zcwilt/zcgo.git",
-                "reference": "f879bbd7c6e5acb2150654bc1782902149318796"
+                "reference": "cae934243c714a9b09fd1658a5fa9b7f888260c9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/zcwilt/zcgo/zipball/f879bbd7c6e5acb2150654bc1782902149318796",
-                "reference": "f879bbd7c6e5acb2150654bc1782902149318796",
+                "url": "https://api.github.com/repos/zcwilt/zcgo/zipball/cae934243c714a9b09fd1658a5fa9b7f888260c9",
+                "reference": "cae934243c714a9b09fd1658a5fa9b7f888260c9",
                 "shasum": ""
             },
-            "require": {
+            "require-dev": {
                 "symfony/console": "^6",
                 "zcwilt/class-finder": "dev-master"
             },
@@ -4178,53 +4128,13 @@
                 "issues": "https://github.com/zcwilt/zcgo/issues",
                 "source": "https://github.com/zcwilt/zcgo/tree/master"
             },
-            "time": "2022-03-06T17:16:50+00:00"
-        },
-        {
-            "name": "zcwilt/zcgo-dumpadminlogs",
-            "version": "dev-main",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/zcwilt/zcgo-dumpadminlogs.git",
-                "reference": "2b5ebebef5bb9229c4e18c59254a9984fb4ef84f"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/zcwilt/zcgo-dumpadminlogs/zipball/2b5ebebef5bb9229c4e18c59254a9984fb4ef84f",
-                "reference": "2b5ebebef5bb9229c4e18c59254a9984fb4ef84f",
-                "shasum": ""
-            },
-            "require-dev": {
-                "zcwilt/zcgo": "dev-master"
-            },
-            "default-branch": true,
-            "type": "project",
-            "autoload": {
-                "psr-4": {
-                    "Zcgo\\Commands\\": "src/Commands"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "description": "A command line interface for Zen Cart",
-            "keywords": [
-                "Zen Cart",
-                "command"
-            ],
-            "support": {
-                "issues": "https://github.com/zcwilt/zcgo-dumpadminlogs/issues",
-                "source": "https://github.com/zcwilt/zcgo-dumpadminlogs/tree/main"
-            },
-            "time": "2022-03-06T13:38:45+00:00"
+            "time": "2022-03-06T18:54:32+00:00"
         }
     ],
     "aliases": [],
     "minimum-stability": "dev",
     "stability-flags": {
-        "zcwilt/zcgo": 20,
-        "zcwilt/zcgo-dumpadminlogs": 20
+        "zcwilt/zcgo": 20
     },
     "prefer-stable": true,
     "prefer-lowest": false,

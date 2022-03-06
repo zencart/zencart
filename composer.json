@@ -30,8 +30,7 @@
         "laravel/dusk": ">5.8",
         "mikey179/vfsstream": ">1.6",
         "phpunit/phpunit": "^9.0",
-        "zcwilt/zcgo": "dev-master",
-        "zcwilt/zcgo-dumpadminlogs": "dev-main"
+        "zcwilt/zcgo": "dev-master"
     },
     "autoload": {
         "classmap": ["includes/classes", "includes/modules"]
