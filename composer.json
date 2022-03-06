@@ -29,9 +29,8 @@
     "require-dev": {
         "laravel/dusk": ">5.8",
         "mikey179/vfsstream": ">1.6",
-        "phpunit/phpunit": "^9.0",
-        "zcwilt/zcgo": "dev-master"
-    },
+        "phpunit/phpunit": "^9.0"
+   },
     "autoload": {
         "classmap": ["includes/classes", "includes/modules"]
     },
