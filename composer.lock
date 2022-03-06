@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "149683b5c427400417b0eb9afca1832b",
+    "content-hash": "68873946d5a41fcfa6ef7ad2ab550495",
     "packages": [],
     "packages-dev": [
         {
@@ -4083,109 +4083,11 @@
                 "source": "https://github.com/webmozarts/assert/tree/1.10.0"
             },
             "time": "2021-03-09T10:59:23+00:00"
-        },
-        {
-            "name": "zcwilt/class-finder",
-            "version": "dev-master",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/zcwilt/class-finder.git",
-                "reference": "8a0a4cedfc955812a0be7983e282ff784b3d3b22"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/zcwilt/class-finder/zipball/8a0a4cedfc955812a0be7983e282ff784b3d3b22",
-                "reference": "8a0a4cedfc955812a0be7983e282ff784b3d3b22",
-                "shasum": ""
-            },
-            "require": {
-                "ext-json": "*",
-                "php": ">=5.3"
-            },
-            "require-dev": {
-                "mikey179/vfsstream": "^1.6",
-                "phpunit/phpunit": "4.8.36"
-            },
-            "default-branch": true,
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "danog\\ClassFinder\\": "src/",
-                    "danog\\ClassFinder\\UnitTest\\": "test/unit"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Hayden Pierce",
-                    "email": "hayden@haydenpierce.com"
-                },
-                {
-                    "name": "Daniil Gentili",
-                    "email": "daniil@daniil.it"
-                }
-            ],
-            "description": "Fork of haydenpierce/class-finder with support for traits, interfaces and functions",
-            "support": {
-                "source": "https://github.com/zcwilt/class-finder/tree/master"
-            },
-            "time": "2022-03-06T17:34:00+00:00"
-        },
-        {
-            "name": "zcwilt/zcgo",
-            "version": "dev-master",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/zcwilt/zcgo.git",
-                "reference": "bef5def3cbc39e0713dd2642066ac8bd28a0c3f2"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/zcwilt/zcgo/zipball/bef5def3cbc39e0713dd2642066ac8bd28a0c3f2",
-                "reference": "bef5def3cbc39e0713dd2642066ac8bd28a0c3f2",
-                "shasum": ""
-            },
-            "require": {
-                "symfony/console": "^6",
-                "zcwilt/class-finder": "dev-master"
-            },
-            "default-branch": true,
-            "bin": [
-                "dist/zcgo"
-            ],
-            "type": "project",
-            "autoload": {
-                "psr-4": {
-                    "Zcgo\\Lib\\": "src/Lib",
-                    "Zcgo\\Traits\\": "src/Traits",
-                    "Zcgo\\Commands\\": "src/Commands",
-                    "Zcgo\\Exceptions\\": "src/Exceptions"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "description": "A command line interface for Zen Cart",
-            "keywords": [
-                "Zen Cart",
-                "command"
-            ],
-            "support": {
-                "issues": "https://github.com/zcwilt/zcgo/issues",
-                "source": "https://github.com/zcwilt/zcgo/tree/master"
-            },
-            "time": "2022-03-06T19:40:40+00:00"
         }
     ],
     "aliases": [],
     "minimum-stability": "dev",
-    "stability-flags": {
-        "zcwilt/zcgo": 20
-    },
+    "stability-flags": [],
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
