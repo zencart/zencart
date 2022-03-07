@@ -1429,7 +1429,7 @@ class shoppingCart extends base
      * @param int $length length of ID to generate
      * @return string cart ID
      */
-    protected function generate_cart_id($length = 5)
+    public function generate_cart_id($length = 5)
     {
         return zen_create_random_value($length, 'digits');
     }
