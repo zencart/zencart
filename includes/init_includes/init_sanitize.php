@@ -15,6 +15,16 @@ use Zencart\Request\Request;
   if (!defined('IS_ADMIN_FLAG')) {
     die('Illegal Access');
   }
+
+  foreach ($_GET as $getvar) { 
+     if (is_array($getvar)) { 
+        $site_array_override = false;
+        $zco_notifier->notify('NOTIFY_INIT_SANITIZE_GET_VAR_CHECK', ['getvarname' => $getvar], $site_array_override);
+        if ($site_array_override === false) {
+           zen_redirect(zen_href_link(FILENAME_DEFAULT));
+        }
+     }
+  }
   $csrfBlackListLocal = array();
   $csrfBlackList = (isset($csrfBlackListCustom)) ? array_merge($csrfBlackListLocal, $csrfBlackListCustom) : $csrfBlackListLocal;
   if (! isset ( $_SESSION ['securityToken'] ))
