@@ -18,6 +18,7 @@ $define = [
     'TABLE_HEADING_PAYMENT_METHOD' => 'Payment<br>Shipping',
     'TABLE_HEADING_ORDERS_ID' => 'ID',
     'TEXT_BILLING_SHIPPING_MISMATCH' => 'Billing and Shipping do not match ',
+    'TABLE_HEADING_ZONE_INFO' => 'Zone',
     'TABLE_HEADING_ORDER_TOTAL' => 'Order Total',
     'TABLE_HEADING_DATE_PURCHASED' => 'Date Purchased',
     'TABLE_HEADING_TYPE' => 'Order Type',

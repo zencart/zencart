@@ -12,9 +12,11 @@ if (isset($module)) {
   unset($module);
 }
 
-$quick_view_popover_enabled = false;
-$includeAttributesInProductDetailRows = true;
-$show_product_tax = true;
+// To override these values, create a file in admin/includes/extra_configures
+if (!isset($quick_view_popover_enabled)) $quick_view_popover_enabled = false;
+if (!isset($includeAttributesInProductDetailRows)) $includeAttributesInProductDetailRows = true;
+if (!isset($show_product_tax)) $show_product_tax = true;
+if (!isset($show_zone_info)) $show_zone_info = true;
 
 require(DIR_WS_CLASSES . 'currencies.php');
 $currencies = new currencies();
@@ -1131,6 +1133,9 @@ if (!empty($action) && $order_exists === true) {
                   <td class="dataTableHeadingContent text-center"><?php echo TABLE_HEADING_ORDERS_ID; ?></td>
                   <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_PAYMENT_METHOD; ?></td>
                   <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_CUSTOMERS; ?></td>
+<?php if ($show_zone_info) { ?> 
+                  <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_ZONE_INFO; ?></td>
+<?php } ?> 
                   <td class="dataTableHeadingContent text-right"><?php echo TABLE_HEADING_ORDER_TOTAL; ?></td>
 <?php if ($quick_view_popover_enabled) { ?>
                   <td></td>
@@ -1214,7 +1219,7 @@ if (!empty($action) && $order_exists === true) {
                       ];
                       $search = zen_build_keyword_where_clause($keyword_search_fields, trim($keywords));
                   }
-                  $new_fields .= ", o.customers_company, o.customers_email_address, o.customers_street_address, o.delivery_company, o.delivery_name, o.delivery_street_address, o.billing_company, o.billing_name, o.billing_street_address, o.payment_module_code, o.shipping_module_code, o.orders_status, o.ip_address, o.language_code ";
+                  $new_fields .= ", o.customers_company, o.customers_email_address, o.customers_street_address, o.delivery_company, o.delivery_name, o.delivery_street_address, o.billing_company, o.billing_name, o.billing_street_address, o.payment_module_code, o.shipping_module_code, o.orders_status, o.ip_address, o.language_code, o.delivery_state, o.delivery_country ";
 
                   $order_by = " ORDER BY o.orders_id DESC";
                   $zco_notifier->notify('NOTIFY_ADMIN_ORDERS_SEARCH_PARMS', $keywords, $search, $search_distinct, $new_fields, $new_table, $order_by);
@@ -1311,6 +1316,12 @@ if (!empty($action) && $order_exists === true) {
                 <td class="dataTableContent text-center"><?php echo $show_difference . $orders->fields['orders_id']; ?></td>
                 <td class="dataTableContent"><?php echo $show_payment_type; ?></td>
                 <td class="dataTableContent"><?php echo '<a href="' . zen_href_link(FILENAME_CUSTOMERS, 'cID=' . $orders->fields['customers_id'], 'NONSSL') . '">' . zen_image(DIR_WS_ICONS . 'preview.gif', ICON_PREVIEW . ' ' . TABLE_HEADING_CUSTOMERS) . '</a>&nbsp;' . $orders->fields['customers_name'] . ($orders->fields['customers_company'] !== '' ? '<br>' . $orders->fields['customers_company'] : ''); ?></td>
+<?php if ($show_zone_info) { ?> 
+                <td class="dataTableContent text-left">
+<?php echo $orders->fields['delivery_state'] . '<br>' . $orders->fields['delivery_country']; ?>
+                </td>
+                </td>
+<?php } ?> 
                 <td class="dataTableContent text-right" title="<?php echo zen_output_string($product_details, ['"' => '&quot;', "'" => '&#39;', '<br />' => '', '<hr>' => "----\n"]); ?>">
                   <?php echo strip_tags($currencies->format($orders->fields['order_total'], true, $orders->fields['currency'], $orders->fields['currency_value'])); ?>
                 </td>
