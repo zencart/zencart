@@ -51,7 +51,7 @@ $db->Execute("UPDATE " . TABLE_PRODUCTS . "
             </thead>
             <tbody>
                 <?php
-                $products_query_raw = "select pd.products_id, pd.products_name, p.products_date_available from " . TABLE_PRODUCTS_DESCRIPTION . " pd, " . TABLE_PRODUCTS . " p where p.products_id = pd.products_id and p.products_date_available != '' and pd.language_id = '" . (int)$_SESSION['languages_id'] . "' order by p.products_date_available DESC";
+                $products_query_raw = "select pd.products_id, pd.products_name, p.products_date_available from " . TABLE_PRODUCTS_DESCRIPTION . " pd, " . TABLE_PRODUCTS . " p where p.products_id = pd.products_id and p.products_date_available IS NOT NULL and pd.language_id = '" . (int)$_SESSION['languages_id'] . "' order by p.products_date_available DESC";
                 $products_split = new splitPageResults($_GET['page'], MAX_DISPLAY_SEARCH_RESULTS, $products_query_raw, $products_query_numrows);
                 $products = $db->Execute($products_query_raw);
                 foreach ($products as $product) {
