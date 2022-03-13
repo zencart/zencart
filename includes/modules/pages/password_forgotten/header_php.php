@@ -38,9 +38,11 @@ if (isset($_GET['action']) && ($_GET['action'] == 'process')) {
   $check_customer_query = $db->bindVars($check_customer_query, ':emailAddress', $email_address, 'string');
   $check_customer = $db->Execute($check_customer_query);
 
+  $sessionMessage = SUCCESS_PASSWORD_SENT;
+
   if ($check_customer->RecordCount() > 0) {
 
-    $zco_notifier->notify('NOTIFY_PASSWORD_FORGOTTEN_VALIDATED', $email_address);
+    $zco_notifier->notify('NOTIFY_PASSWORD_FORGOTTEN_VALIDATED', $email_address, $sessionMessage);
 
     $new_password = zen_create_PADSS_password( (ENTRY_PASSWORD_MIN_LENGTH > 0 ? ENTRY_PASSWORD_MIN_LENGTH : 5) );
     $crypted_password = zen_encrypt_password($new_password);
@@ -63,10 +65,10 @@ if (isset($_GET['action']) && ($_GET['action'] == 'process')) {
     $zco_notifier->notify('NOTIFY_PASSWORD_FORGOTTEN_CHANGED', $email_address, $check_customer->fields['customers_id'], $new_password);
 
   } else {
-    $zco_notifier->notify('NOTIFY_PASSWORD_FORGOTTEN_NOT_FOUND', $email_address);
+    $zco_notifier->notify('NOTIFY_PASSWORD_FORGOTTEN_NOT_FOUND', $email_address, $sessionMessage);
   }
 
-    $messageStack->add_session('login', SUCCESS_PASSWORD_SENT, 'success');
+    $messageStack->add_session('login', $sessionMessage, 'success');
 
     zen_redirect(zen_href_link(FILENAME_LOGIN, '', 'SSL'));
 }
