@@ -380,6 +380,7 @@ $define = [
     'PRODUCTS_ATTRIBUTES_DELETE' => 'DELETING',
     'PRODUCTS_ATTRIBUTES_EDITING' => 'EDITING',
     'RESET_ADMIN_ACTIVITY_LOG' => 'You can view and archive Admin Activity details via the Admin Access Management menu, if you have appropriate permissions.',
+    'STORE_HOME' => 'Store Home:', 
     'SUCCESS_CATEGORY_MOVED' => 'Success! Category has successfully been moved ...',
     'SUCCESS_FILE_SAVED_SUCCESSFULLY' => 'Success: File upload saved successfully %s',
     'SUCCESS_PRODUCT_UPDATE_SORT' => 'Successful Attribute Sort Order Update for ID# ',
