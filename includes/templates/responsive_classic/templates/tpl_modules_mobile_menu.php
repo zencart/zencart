@@ -122,19 +122,22 @@ echo $menulist;
       </ul>
     </li>
 
-    <li><span><?php echo BOX_HEADING_EZPAGES; ?></span>
-      <ul>
 <?php
   include(DIR_WS_MODULES . zen_get_module_directory('ezpages_bar_header.php'));
   if (!empty($var_linksList)) {
+?>
+    <li><span><?php echo BOX_HEADING_EZPAGES; ?></span>
+      <ul>
+<?php 
     for ($i=1, $n=sizeof($var_linksList); $i<=$n; $i++) {
       echo '<li><a href="' . $var_linksList[$i]['link'] . '">' . $var_linksList[$i]['name'] . '</a></li>' . "\n";
     }
-  }
 ?>
       </ul>
     </li>
-
+<?php
+  }
+?>
 
     <li id="menu-search">
       <?php require(DIR_WS_MODULES . zen_get_module_sidebox_directory('search_header.php')); ?>
