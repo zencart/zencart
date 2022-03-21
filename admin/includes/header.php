@@ -96,7 +96,7 @@ if ((SHOW_VERSION_UPDATE_IN_HEADER == 'true' && $version_from_ini != 'off' && ($
     $versionServer = new VersionServer();
     $newinfo = $versionServer->getProjectVersion();
     $new_version = TEXT_VERSION_CHECK_CURRENT; //set to "current" by default
-    if (isset($newinfo['error'])) {
+    if (empty($newinfo) || isset($newinfo['error'])) {
         $isCurrent = true;
         $versionCheckError = true;
     } else {
