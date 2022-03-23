@@ -819,6 +819,7 @@ if (!empty($action)) {
                           'c.customers_firstname',
                           'c.customers_email_address',
                           'c.customers_telephone',
+                          'c.customers_id',
                           'a.entry_company',
                           'a.entry_street_address',
                           'a.entry_city',
