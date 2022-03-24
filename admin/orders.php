@@ -62,7 +62,7 @@ if (isset($_POST['oID'])) {
 if ($oID) {
   $orders = $db->Execute("SELECT orders_id
                           FROM " . TABLE_ORDERS . "
-                          WHERE orders_id = " . (int)$oID);
+                          WHERE orders_id = " . $oID);
   $order_exists = true;
   if ($orders->RecordCount() <= 0) {
     $order_exists = false;
@@ -103,6 +103,7 @@ switch (NOTIFY_CUSTOMER_DEFAULT) {
 }
 
 if (!empty($action) && $order_exists === true) {
+    $order = new order($oID);
   switch ($action) {
     case 'download':
 
@@ -226,7 +227,6 @@ if (!empty($action) && $order_exists === true) {
       }
       break;
     case 'update_order':
-      $oID = zen_db_prepare_input($_GET['oID']);
       $comments = !empty($_POST['comments']) ? zen_db_prepare_input($_POST['comments']) : '';
       $admin_language = zen_db_prepare_input($_POST['admin_language'] ?? $_SESSION['languages_code']);
       $status = (int)$_POST['statusUpdateSelect'];
@@ -249,12 +249,10 @@ if (!empty($action) && $order_exists === true) {
 
       $check_status = $db->ExecuteNoCache("SELECT customers_name, customers_email_address, orders_status, date_purchased
                                     FROM " . TABLE_ORDERS . "
-                                    WHERE orders_id = " . (int)$oID . "
-                                    LIMIT 1"
+                                    WHERE orders_id = " . $oID
                                     );
 
       // trigger any appropriate updates which should be sent back to the payment gateway:
-      $order = new order((int)$oID);
       if ($order->info['payment_module_code']) {
         if (file_exists(DIR_FS_CATALOG_MODULES . 'payment/' . $order->info['payment_module_code'] . '.php')) {
           require_once(DIR_FS_CATALOG_MODULES . 'payment/' . $order->info['payment_module_code'] . '.php');
@@ -273,7 +271,7 @@ if (!empty($action) && $order_exists === true) {
           $chk_downloads_query = "SELECT opd.*, op.products_id
                                   FROM " . TABLE_ORDERS_PRODUCTS_DOWNLOAD . " opd,
                                        " . TABLE_ORDERS_PRODUCTS . " op
-                                  WHERE op.orders_id = " . (int)$oID . "
+                                  WHERE op.orders_id = " . $oID . "
                                   AND opd.orders_products_id = op.orders_products_id";
           $chk_downloads = $db->Execute($chk_downloads_query);
 
@@ -292,14 +290,14 @@ if (!empty($action) && $order_exists === true) {
               $update_downloads_query = "UPDATE " . TABLE_ORDERS_PRODUCTS_DOWNLOAD . "
                                          SET download_maxdays = " . (int)$zc_max_days . ",
                                              download_count = " . (int)DOWNLOAD_MAX_COUNT . "
-                                         WHERE orders_id = " . (int)$oID . "
+                                         WHERE orders_id = " . $oID . "
                                          AND orders_products_download_id = " . (int)$_GET['download_reset_on'];
             } else {
               $zc_max_days = ($chk_products_download_time->fields['products_attributes_maxdays'] == 0 ? 0 : zen_date_diff($check_status->fields['date_purchased'], date('Y-m-d H:i:s')) + $chk_products_download_time->fields['products_attributes_maxdays']);
               $update_downloads_query = "UPDATE " . TABLE_ORDERS_PRODUCTS_DOWNLOAD . "
                                          SET download_maxdays = " . (int)$zc_max_days . ",
                                              download_count = " . (int)$chk_products_download_time->fields['products_attributes_maxcount'] . "
-                                         WHERE orders_id = " . (int)$oID . "
+                                         WHERE orders_id = " . $oID . "
                                          AND orders_products_download_id = " . (int)$chk_download['orders_products_download_id'];
             }
 
@@ -323,8 +321,6 @@ if (!empty($action) && $order_exists === true) {
       break;
 
     case 'deleteconfirm':
-      $oID = (int)$_POST['oID'];
-
       zen_remove_order($oID, $_POST['restock']);
 
       zen_redirect(zen_href_link(FILENAME_ORDERS, zen_get_all_get_params(['oID', 'action']), 'NONSSL'));
@@ -348,7 +344,6 @@ if (!empty($action) && $order_exists === true) {
       break;
 
     case 'doRefund':
-      $order = new order($oID);
       if ($order->info['payment_module_code']) {
         if (file_exists(DIR_FS_CATALOG_MODULES . 'payment/' . $order->info['payment_module_code'] . '.php')) {
           require_once(DIR_FS_CATALOG_MODULES . 'payment/' . $order->info['payment_module_code'] . '.php');
@@ -363,7 +358,6 @@ if (!empty($action) && $order_exists === true) {
       zen_redirect(zen_href_link(FILENAME_ORDERS, zen_get_all_get_params(['action']) . 'action=edit', 'NONSSL'));
       break;
     case 'doAuth':
-      $order = new order($oID);
       if ($order->info['payment_module_code']) {
         if (file_exists(DIR_FS_CATALOG_MODULES . 'payment/' . $order->info['payment_module_code'] . '.php')) {
           require_once(DIR_FS_CATALOG_MODULES . 'payment/' . $order->info['payment_module_code'] . '.php');
@@ -377,7 +371,6 @@ if (!empty($action) && $order_exists === true) {
       zen_redirect(zen_href_link(FILENAME_ORDERS, zen_get_all_get_params(['action']) . 'action=edit', 'NONSSL'));
       break;
     case 'doCapture':
-      $order = new order($oID);
       if ($order->info['payment_module_code']) {
         if (file_exists(DIR_FS_CATALOG_MODULES . 'payment/' . $order->info['payment_module_code'] . '.php')) {
           require_once(DIR_FS_CATALOG_MODULES . 'payment/' . $order->info['payment_module_code'] . '.php');
@@ -391,7 +384,6 @@ if (!empty($action) && $order_exists === true) {
       zen_redirect(zen_href_link(FILENAME_ORDERS, zen_get_all_get_params(['action']) . 'action=edit', 'NONSSL'));
       break;
     case 'doVoid':
-      $order = new order($oID);
       if ($order->info['payment_module_code']) {
         if (file_exists(DIR_FS_CATALOG_MODULES . 'payment/' . $order->info['payment_module_code'] . '.php')) {
           require_once(DIR_FS_CATALOG_MODULES . 'payment/' . $order->info['payment_module_code'] . '.php');
