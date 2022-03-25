@@ -50,7 +50,9 @@ class InitSystem
             $this->processActionPointEntries($entries);
         }
         if ($this->debug) {
+            echo 'function processLoaderList:<pre>';
             print_r($this->debugList);
+            echo '</pre>';
         }
         return $this->actionList;
     }
