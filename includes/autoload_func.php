@@ -15,7 +15,11 @@ if (!defined('IS_ADMIN_FLAG')) {
 }
 $debugAutoload = false;
 if (defined('DEBUG_AUTOLOAD') && DEBUG_AUTOLOAD == true) $debugAutoload = true;
-if ($debugAutoload) print_r($initSystemList);
+if ($debugAutoload) {
+    echo '<pre>$initSystemList=<br>';
+    print_r($initSystemList);
+    echo '</pre>';
+}
 foreach ($initSystemList as $entry) {
     switch ($entry['type']) {
         case 'include':
