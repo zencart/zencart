@@ -16,14 +16,9 @@ if (DOWN_FOR_MAINTENANCE_COLUMN_LEFT_OFF == 'true') $flag_disable_left = true;
 if (DOWN_FOR_MAINTENANCE_FOOTER_OFF == 'true') $flag_disable_footer = true;
 if (DOWN_FOR_MAINTENANCE_HEADER_OFF == 'true') $flag_disable_header = true;
 
-if (DOWN_FOR_MAINTENANCE == 'true') {
-  $sql = "SELECT last_modified from " . TABLE_CONFIGURATION . " 
+  $sql = "SELECT last_modified from " . TABLE_CONFIGURATION . "
           WHERE configuration_key = 'DOWN_FOR_MAINTENANCE'";
-  
   $maintenance_on_at_time = $db->Execute($sql);
   define('TEXT_DATE_TIME', $maintenance_on_at_time->fields['last_modified']);
-}
 
-header("HTTP/1.1 503 Service Unavailable"); 
-
-?>
+header("HTTP/1.1 503 Service Unavailable");
