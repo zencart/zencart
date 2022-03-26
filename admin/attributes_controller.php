@@ -82,21 +82,21 @@ if (isset($_POST['categories_update_id'])) {
 }
 
 if ($action == 'new_cat') {
-  $products_filter = zen_get_linked_products_for_category($current_category_id, $first_only = true);
+  $products_filter = zen_get_linked_products_for_category($current_category_id, true);
   zen_redirect(zen_href_link(FILENAME_ATTRIBUTES_CONTROLLER, 'products_filter=' . $products_filter . '&current_category_id=' . $current_category_id));
 }
 
 // set categories and products if not set
-if ($products_filter == '' && !empty($current_category_id)) {
-  $products_filter = zen_get_linked_products_for_category($current_category_id, $first_only = true);
-  if ($products_filter != '') {
+if ($products_filter === 0 && !empty($current_category_id)) {
+  $products_filter = zen_get_linked_products_for_category($current_category_id, true);
+  if ($products_filter !== 0) {
     zen_redirect(zen_href_link(FILENAME_ATTRIBUTES_CONTROLLER, 'products_filter=' . $products_filter . '&current_category_id=' . $current_category_id));
   }
 } else {
-  if ($products_filter == '' && empty($current_category_id)) {
+  if ($products_filter === 0 && empty($current_category_id)) {
     $reset_categories_id = zen_get_category_tree('', '', '0', '', '', true);
     $current_category_id = $reset_categories_id[0]['id'];
-    $products_filter = zen_get_linked_products_for_category($current_category_id, $first_only = true);
+    $products_filter = zen_get_linked_products_for_category($current_category_id, true);
     $_GET['products_filter'] = $products_filter;
   }
 }
@@ -681,7 +681,7 @@ function zen_js_option_values_list($selectedName, $fieldName)
               <?php
               $zco_notifier->notify('NOTIFY_ATTRIBUTE_CONTROLLER_ADDITIONAL_ACTIONS_DROPDOWN_UPPER', $zc_products, $action, $products_filter, $current_category_id);
               ?>
-              <?php if ($products_filter != '' && $action != 'attribute_features_copy_to_product' && $action != 'attribute_features_copy_to_category' && $action != 'delete_all_attributes_confirm') { ?>
+              <?php if ($products_filter !== 0 && $action != 'attribute_features_copy_to_product' && $action != 'attribute_features_copy_to_category' && $action != 'delete_all_attributes_confirm') { ?>
                 <li role="presentation" class="divider"></li>
                 <li role="presentation"><a role="menuitem" href="<?php echo zen_href_link(FILENAME_PRODUCT, 'action=new_product' . '&cPath=' . zen_get_product_path($products_filter) . '&pID=' . $products_filter . '&product_type=' . zen_get_products_type($products_filter)); ?>"><?php echo IMAGE_EDIT_PRODUCT; ?></a></li>
                 <?php
@@ -853,7 +853,7 @@ function zen_js_option_values_list($selectedName, $fieldName)
             <?php echo zen_draw_hidden_field('products_filter', $products_filter); ?>
             <?php echo zen_draw_hidden_field('current_category_id', $current_category_id); ?>
             <?php
-            if ($_GET['products_filter'] != '') {
+            if ($_GET['products_filter'] !== 0) {
               ?>
               <div class="form-group">
                 <div class="col-xs-offset-2 col-offset-sm-1 col-xs-7 col-sm-7"><?php echo TEXT_PRODUCT_TO_VIEW; ?></div>
@@ -879,7 +879,7 @@ function zen_js_option_values_list($selectedName, $fieldName)
       <?php } // $action == '' ?>
       <?php
 // start of attributes display
-      if ($_GET['products_filter'] == '') {
+      if ($_GET['products_filter'] === 0) {
         ?>
         <div class="row">
           <h2 class="text-center"><?php echo HEADING_TITLE_ATRIB_SELECT; ?></h2>
@@ -1039,7 +1039,7 @@ function zen_js_option_values_list($selectedName, $fieldName)
                 ?>
                 <tr>
                   <td colspan="10" class="pageHeading text-center">
-                    <?php echo ($products_filter == '' ? TEXT_NO_PRODUCTS_SELECTED : TEXT_NO_ATTRIBUTES_DEFINED . $products_filter . ' ' . zen_get_products_model($products_filter) . ' - ' . zen_get_products_name($products_filter)); ?>
+                    <?php echo ($products_filter === 0 ? TEXT_NO_PRODUCTS_SELECTED : TEXT_NO_ATTRIBUTES_DEFINED . $products_filter . ' ' . zen_get_products_model($products_filter) . ' - ' . zen_get_products_name($products_filter)); ?>
                   </td>
                 </tr>
 
