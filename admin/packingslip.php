@@ -7,8 +7,10 @@
  */
 require('includes/application_top.php');
 
-$show_product_images = true;
-$show_attrib_images = true;
+// To override the $show_* values, see 
+// https://docs.zen-cart.com/user/admin/site_specific_overrides/
+if (!isset($show_product_images)) $show_product_images = true;
+if (!isset($show_attrib_images)) $show_attrib_images = true;
 $img_width = defined('IMAGE_ON_INVOICE_IMAGE_WIDTH') ? (int)IMAGE_ON_INVOICE_IMAGE_WIDTH : '100';
 $attr_img_width = '25';
 
