@@ -430,7 +430,22 @@ if (!empty($action) && $order_exists === true) {
     <!-- body //-->
     <div class="container-fluid">
       <!-- body_text //-->
-      <h1><?php echo ($action === 'edit' && $order_exists) ? sprintf(HEADING_TITLE_DETAILS, (int)$oID) : HEADING_TITLE; ?></h1>
+<?php
+    // -----
+    // Give an observer the chance to (a) change the page's title and (b) insert additional content just below (or after) the level-1 heading.
+    //
+    // Notes:
+    // - The 'oID' value is (bool)false when the orders' listing is being displayed.
+    // - Any added content is printed **only** if an observer sets $print_extra_top_content to (bool)true.
+    //
+    $heading_title = ($action === 'edit' && $order_exists) ? sprintf(HEADING_TITLE_DETAILS, (int)$oID) : HEADING_TITLE;
+    $extra_top_content = '';
+    $zco_notifier->notify('NOTIFY_ADMIN_ORDERS_HEADING_TITLE', ['action' => $action, 'order_exists' => $order_exists, 'oID' => $oID], $heading_title, $extra_top_content);
+?>
+      <h1><?php echo $heading_title; ?></h1>
+<?php
+    echo $extra_top_content;
+?>
 
       <?php $order_list_button = '<a role="button" class="btn btn-default" href="' . zen_href_link(FILENAME_ORDERS) . '"><i class="fa fa-th-list" aria-hidden="true">&nbsp;</i> ' . BUTTON_TO_LIST . '</a>'; ?>
       <?php if ($action === '') { ?>
@@ -842,6 +857,14 @@ if (!empty($action) && $order_exists === true) {
             </tr>
           </table>
         </div>
+<?php
+    // -----
+    // Give an observer the chance to insert content just below the purchased products' table.
+    //
+    $extra_content = '';
+    $zco_notifier->notify('NOTIFY_ADMIN_ORDERS_CONTENT_UNDER_PRODUCTS', ['oID' => $oID], $extra_content);
+    echo $extra_content;
+?>
         <div class="row">
             <?php
             // show downloads
