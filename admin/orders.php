@@ -1305,21 +1305,23 @@ if (!empty($action) && $order_exists === true) {
                     $show_payment_type = $orders->fields['payment_module_code'] . '<br>' . $orders->fields['shipping_module_code'];
 
                     $product_details = '';
-                    if ($includeAttributesInProductDetailRows) {
+                    if ($quick_view_popover_enabled) {
                         $sql = "SELECT op.orders_products_id, op.products_quantity AS qty, op.products_name AS name, op.products_model AS model
                                 FROM " . TABLE_ORDERS_PRODUCTS . " op
                                 WHERE op.orders_id = " . (int)$orders->fields['orders_id'];
                         $orderProducts = $db->Execute($sql, false, true, 1800);
-                        foreach($orderProducts as $product) {
+                        foreach ($orderProducts as $product) {
                             $product_details .= $product['qty'] . ' x ' . $product['name'] . (!empty($product['model']) ? ' (' . $product['model'] . ')' :'') . "\n";
-                            $sql = "SELECT products_options, products_options_values
-                                FROM " .  TABLE_ORDERS_PRODUCTS_ATTRIBUTES . "
-                                WHERE orders_products_id = " . (int)$product['orders_products_id'] . " ORDER BY orders_products_attributes_id ASC";
-                            $productAttributes = $db->Execute($sql, false, true, 1800);
-                            foreach ($productAttributes as $attr) {
-                              if (!empty($attr['products_options'])) {
-                                 $product_details .= '&nbsp;&nbsp;- ' . $attr['products_options'] . ': ' . zen_output_string_protected($attr['products_options_values']) . "\n";
-                              }
+                            if ($includeAttributesInProductDetailRows) {
+                                $sql = "SELECT products_options, products_options_values
+                                    FROM " .  TABLE_ORDERS_PRODUCTS_ATTRIBUTES . "
+                                    WHERE orders_products_id = " . (int)$product['orders_products_id'] . " ORDER BY orders_products_attributes_id ASC";
+                                $productAttributes = $db->Execute($sql, false, true, 1800);
+                                foreach ($productAttributes as $attr) {
+                                  if (!empty($attr['products_options'])) {
+                                     $product_details .= '&nbsp;&nbsp;- ' . $attr['products_options'] . ': ' . zen_output_string_protected($attr['products_options_values']) . "\n";
+                                  }
+                                }
                             }
                             $product_details .= '<hr>'; // add HR
                         }
