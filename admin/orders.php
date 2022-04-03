@@ -170,9 +170,6 @@ if (!empty($action) && $order_exists === true) {
       // reset single download to on
       if (!empty($_GET['download_reset_on'])) {
         // adjust download_maxdays based on current date
-        $check_status = $db->Execute("SELECT customers_name, customers_email_address, orders_status, date_purchased
-                                      FROM " . TABLE_ORDERS . "
-                                      WHERE orders_id = " . (int)$_GET['oID']);
 
         // check for existing product attribute download days and max
         $chk_products_download_query = "SELECT orders_products_id, orders_products_filename, products_prid
@@ -191,14 +188,14 @@ if (!empty($action) && $order_exists === true) {
         $chk_products_download_time = $db->Execute($chk_products_download_time_query);
 
         if ($chk_products_download_time->EOF) {
-          $zc_max_days = (DOWNLOAD_MAX_DAYS == 0 ? 0 : zen_date_diff($check_status->fields['date_purchased'], date('Y-m-d H:i:s')) + DOWNLOAD_MAX_DAYS);
+          $zc_max_days = (DOWNLOAD_MAX_DAYS == 0 ? 0 : zen_date_diff($order->info['date_purchased'], date('Y-m-d H:i:s')) + DOWNLOAD_MAX_DAYS);
           $update_downloads_query = "UPDATE " . TABLE_ORDERS_PRODUCTS_DOWNLOAD . "
                                      SET download_maxdays = " . (int)$zc_max_days . ",
                                          download_count = " . (int)DOWNLOAD_MAX_COUNT . "
                                      WHERE orders_id = " . (int)$_GET['oID'] . "
                                      AND orders_products_download_id = " . (int)$_GET['download_reset_on'];
         } else {
-          $zc_max_days = ($chk_products_download_time->fields['products_attributes_maxdays'] == 0 ? 0 : zen_date_diff($check_status->fields['date_purchased'], date('Y-m-d H:i:s')) + $chk_products_download_time->fields['products_attributes_maxdays']);
+          $zc_max_days = ($chk_products_download_time->fields['products_attributes_maxdays'] == 0 ? 0 : zen_date_diff($order->info['date_purchased'], date('Y-m-d H:i:s')) + $chk_products_download_time->fields['products_attributes_maxdays']);
           $update_downloads_query = "UPDATE " . TABLE_ORDERS_PRODUCTS_DOWNLOAD . "
                                      SET download_maxdays = " . (int)$zc_max_days . ",
                                          download_count = " . (int)$chk_products_download_time->fields['products_attributes_maxcount'] . "
@@ -249,11 +246,6 @@ if (!empty($action) && $order_exists === true) {
       $status_updated = zen_update_orders_history($oID, $comments, null, $status, $customer_notified, $email_include_message);
       $order_updated = ($status_updated > 0);
 
-      $check_status = $db->ExecuteNoCache("SELECT customers_name, customers_email_address, orders_status, date_purchased
-                                    FROM " . TABLE_ORDERS . "
-                                    WHERE orders_id = " . $oID
-                                    );
-
       // trigger any appropriate updates which should be sent back to the payment gateway:
       if ($order->info['payment_module_code']) {
         if (file_exists(DIR_FS_CATALOG_MODULES . 'payment/' . $order->info['payment_module_code'] . '.php')) {
@@ -261,7 +253,7 @@ if (!empty($action) && $order_exists === true) {
           zen_include_language_file($order->info['payment_module_code'] . '.php', '/modules/payment/','inline'); 
           $module = new $order->info['payment_module_code']();
           if (method_exists($module, '_doStatusUpdate')) {
-            $response = $module->_doStatusUpdate($oID, $status, $comments, $customer_notified, $check_status->fields['orders_status']);
+            $response = $module->_doStatusUpdate($oID, $status, $comments, $customer_notified, $order->info['orders_status']);
           }
         }
       }
@@ -288,14 +280,14 @@ if (!empty($action) && $order_exists === true) {
             $chk_products_download_time = $db->Execute($chk_products_download_time_query);
 
             if ($chk_products_download_time->EOF) {
-              $zc_max_days = (DOWNLOAD_MAX_DAYS == 0 ? 0 : zen_date_diff($check_status->fields['date_purchased'], date('Y-m-d H:i:s')) + DOWNLOAD_MAX_DAYS);
+              $zc_max_days = (DOWNLOAD_MAX_DAYS == 0 ? 0 : zen_date_diff($order->info['date_purchased'], date('Y-m-d H:i:s')) + DOWNLOAD_MAX_DAYS);
               $update_downloads_query = "UPDATE " . TABLE_ORDERS_PRODUCTS_DOWNLOAD . "
                                          SET download_maxdays = " . (int)$zc_max_days . ",
                                              download_count = " . (int)DOWNLOAD_MAX_COUNT . "
                                          WHERE orders_id = " . $oID . "
                                          AND orders_products_download_id = " . (int)$_GET['download_reset_on'];
             } else {
-              $zc_max_days = ($chk_products_download_time->fields['products_attributes_maxdays'] == 0 ? 0 : zen_date_diff($check_status->fields['date_purchased'], date('Y-m-d H:i:s')) + $chk_products_download_time->fields['products_attributes_maxdays']);
+              $zc_max_days = ($chk_products_download_time->fields['products_attributes_maxdays'] == 0 ? 0 : zen_date_diff($order->info['date_purchased'], date('Y-m-d H:i:s')) + $chk_products_download_time->fields['products_attributes_maxdays']);
               $update_downloads_query = "UPDATE " . TABLE_ORDERS_PRODUCTS_DOWNLOAD . "
                                          SET download_maxdays = " . (int)$zc_max_days . ",
                                              download_count = " . (int)$chk_products_download_time->fields['products_attributes_maxcount'] . "
@@ -334,10 +326,7 @@ if (!empty($action) && $order_exists === true) {
       zen_redirect(zen_href_link(FILENAME_ORDERS, zen_get_all_get_params(['action']) . 'action=edit', 'NONSSL'));
       break;
     case 'mask_cc':
-      $result = $db->Execute("SELECT cc_number
-                              FROM " . TABLE_ORDERS . "
-                              WHERE orders_id = " . (int)$_GET['oID']);
-      $old_num = $result->fields['cc_number'];
+      $old_num = $order->info['cc_number'];
       $new_num = substr($old_num, 0, 4) . str_repeat('*', (strlen($old_num) - 8)) . substr($old_num, -4);
       $mask_cc = $db->Execute("UPDATE " . TABLE_ORDERS . "
                                SET cc_number = '" . $new_num . "'
