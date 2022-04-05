@@ -297,7 +297,7 @@ function zen_address_format($address_format_id = 1, $incoming = array(), $html =
         }
     } elseif (!empty($incoming['country'])) {
         if (is_array($incoming['country'])) {
-            $country = zen_output_string_protected($incoming['country']['countries_name']);
+            $country = zen_output_string_protected($incoming['country']['countries_name'] ?? $incoming['country']['title']);
         } else {
             $country = zen_output_string_protected($incoming['country']);
         }
