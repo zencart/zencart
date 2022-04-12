@@ -18,7 +18,17 @@
  */
 function zen_has_product_attributes($product_id, $not_readonly = true)
 {
-    global $db;
+    global $db, $zco_notifier;
+
+    // -----
+    // Enable an observer to indicate that the product has customized attributes, possibly outside
+    // of the 'normal' Zen Cart attributes' structure.
+    //
+    $has_attributes = false;
+    $zco_notifier->notify('NOTIFY_ZEN_HAS_PRODUCT_ATTRIBUTES_CHECK', ['products_id' => $products_id, 'not_readonly' => $not_readonly], $has_attributes);
+    if ($has_attributes === true) {
+        return true;
+    }
 
     $exclude_readonly = ($not_readonly === true || $not_readonly === 'true');
 
@@ -53,6 +63,16 @@ function zen_has_product_attributes($product_id, $not_readonly = true)
 function zen_requires_attribute_selection($products_id)
 {
     global $db, $zco_notifier;
+
+    // -----
+    // Give an observer the opportunity to indicate that a customized product requires additional
+    // selections, possibly outside of the 'standard' Zen Cart attributes' handling.
+    //
+    $has_attributes = false;
+    $zco_notifier->notify('NOTIFY_FUNCTIONS_LOOKUPS_REQUIRES_ATTRIBUTES_SELECTION_OTHER', ['products_id' => $products_id], $has_attributes);
+    if ($has_attributes === true) {
+          return true;
+    }
 
     $noDoubles = array();
     $noDoubles[] = PRODUCTS_OPTIONS_TYPE_RADIO;
