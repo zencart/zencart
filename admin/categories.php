@@ -187,6 +187,11 @@ if (!empty($action)) {
           }
       }
 
+      // -----
+      // Enable a watching observer to insert/modify database elements for the just-inserted/updated category.
+      //
+      $zco_notifier->notify('NOTIFY_ADMIN_CATEGORIES_UPDATE_OR_INSERT_FINISH', ['action' => $action, 'categories_id' => (int)$categories_id]);
+
       zen_redirect(zen_href_link(FILENAME_CATEGORY_PRODUCT_LISTING, 'cPath=' . $cPath . '&cID=' . $categories_id . ((isset($_GET['search']) && !empty($_GET['search'])) ? '&search=' . $_GET['search'] : '')));
       break;
 
