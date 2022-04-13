@@ -25,7 +25,7 @@ function zen_has_product_attributes($product_id, $not_readonly = true)
     // of the 'normal' Zen Cart attributes' structure.
     //
     $has_attributes = false;
-    $zco_notifier->notify('NOTIFY_ZEN_HAS_PRODUCT_ATTRIBUTES_CHECK', ['products_id' => $products_id, 'not_readonly' => $not_readonly], $has_attributes);
+    $zco_notifier->notify('NOTIFY_ZEN_HAS_PRODUCT_ATTRIBUTES_CHECK', ['products_id' => $product_id, 'not_readonly' => $not_readonly], $has_attributes);
     if ($has_attributes === true) {
         return true;
     }
@@ -758,12 +758,12 @@ function zen_get_download_handler($filename)
 }
 
 /***
- * Do the misconfiguration check which Admin > Catalog > Downloads Manager 
+ * Do the misconfiguration check which Admin > Catalog > Downloads Manager
  * does to verify that downloads don't have invalid shipping settings.
  */
 function zen_check_for_misconfigured_downloads() {
-   global $db; 
-   if (DOWNLOAD_ENABLED == 'false') return true; 
+   global $db;
+   if (DOWNLOAD_ENABLED == 'false') return true;
    // use SELECT from admin/downloads_manager.php
    $sql = "SELECT pad.*, pa.*, pd.*, p.*
                       FROM " . TABLE_PRODUCTS_ATTRIBUTES_DOWNLOAD . " pad
@@ -772,13 +772,13 @@ function zen_check_for_misconfigured_downloads() {
                         AND pd.language_id = " . (int)$_SESSION['languages_id'] . "
                       LEFT JOIN " . TABLE_PRODUCTS . " p ON p.products_id = pd.products_id
                       WHERE pa.products_attributes_id = pad.products_attributes_id";
-   
-   $results = $db->Execute($sql); 
+
+   $results = $db->Execute($sql);
    foreach ($results as $result) {
 
       if ($result['product_is_always_free_shipping'] == 1 || $result['products_virtual'] == 1) {
-         return false; 
+         return false;
       }
    }
-   return true; 
+   return true;
 }
