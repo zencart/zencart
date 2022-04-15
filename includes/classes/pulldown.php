@@ -3,6 +3,7 @@
     abstract class pulldown extends base
     {
         var $pulldown, $attributes_join, $show_id, $set_selected, $parameters, $condition, $exclude;
+        var $count = 0;
 
 
         function __construct()
@@ -86,6 +87,7 @@
 
             $this->sql .= $this->sort;
             $this->results = $db->Execute($this->sql);
+            $this->count = $this->results->count();
         }
 
         public function generatePullDownHtml(string $name, $parameters = '', bool $required = false)
