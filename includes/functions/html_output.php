@@ -865,7 +865,16 @@ function zen_draw_pull_down_menu($name, $values, $default = '', $parameters = ''
 
     //process array of top-of-list entries:
     foreach ($countriesAtTopOfList as $key=>$val) {
-      $countries_array[] = array('id' => $val, 'text' => zen_get_country_name($val));
+      // -----
+      // Account for the possibility that one of the top-of-list countries has been disabled.  If
+      // that's the case, issue a PHP notice since the condition really shouldn't happen!
+      //
+      $country_name = zen_get_country_name($val);
+      if ($country_name === '') {
+        trigger_error('Country with countries_id = ' . $val . ' is currently disabled.', E_USER_NOTICE);
+      } else {
+        $countries_array[] = array('id' => $val, 'text' => $country_name);
+      }
     }
     // now add anything not in the defaults list:
     for ($i=0, $n=count($countries); $i<$n; $i++) {
