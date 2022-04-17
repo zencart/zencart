@@ -31,13 +31,15 @@ abstract class DataTableDataSource
         return $query;
     }
 
-    public function processQuery($query) : Paginator
+    public function processQuery(Builder $query) : Paginator
     {
         if ($this->tableDefinition->isPaginated())
         {
-            $results = $query->paginate($this->tableDefinition->getParameter('maxRowCount'));
+            //var_dump(request()->input('page'));die('foo');
+            $results = $query->paginate($this->tableDefinition->getParameter('maxRowCount'), '*', 'page', isset($_GET['page']) ? (int)$_GET['page'] :  1);
+            //var_dump($results);die();
         } else {
-            $results = $query->paginate(100000); // icwtodo @todo bit of a hack here to force the return type
+            $results = $query->paginate(100000, '*', 'page', isset($_GET['page']) ? (int)$_GET['page'] :  1); // icwtodo @todo bit of a hack here to force the return type
         }
         return $results;
     }

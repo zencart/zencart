@@ -67,12 +67,12 @@
         </div>
     </div>
     <div class="row">
-        <div class="col">
-            <?php echo sprintf(TEXT_DISPLAY_NUMBER_OF_GENERIC, $formatter->getResultSet()->firstItem(), $formatter->getResultSet()->lastItem(), $formatter->getResultSet()->total()); ?>
-        </div>
-        <div class="col">
-            <?php echo $formatter->getResultSet()->appends(['cmd' => request()->input('cmd')])->links(); ?>
-        </div>
+        <table class="table">
+            <tr>
+                <td><?php echo sprintf(TEXT_DISPLAY_NUMBER_OF_GENERIC, $formatter->getResultSet()->firstItem(), $formatter->getResultSet()->lastItem(), $formatter->getResultSet()->total()); ?></td>
+                <td class="text-right"> <?php echo (new \Zencart\Paginator\LaravelPaginator($formatter->getResultSet()))->display_links($formatter->getResultSet()->total(), MAX_DISPLAY_SEARCH_RESULTS, MAX_DISPLAY_PAGE_LINKS, $_GET['page'] ?? 1); ?></td>
+            </tr>
+        </table>
     </div>
 
     <?php if ($formatter->hasButtonActions()) { ?>
