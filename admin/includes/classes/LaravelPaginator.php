@@ -1,12 +1,12 @@
 <?php
 /**
- * split_page_results Class.
+ * LaravelPaginator Class.
  *
  * @package classes
- * @copyright Copyright 2003-2016 Zen Cart Development Team
+ * @copyright Copyright 2003-2022 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: DrByte  Sat Jan 9 13:13:41 2016 -0500 Modified in v1.5.5 $
+ * @version $Id: Author: zcwilt  Sat Apr 16 13:13:41 2022 -0500 New in v1.5.8 $
  */
 
 namespace Zencart\Paginator;
