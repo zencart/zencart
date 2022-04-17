@@ -871,7 +871,7 @@ function zen_draw_pull_down_menu($name, $values, $default = '', $parameters = ''
       //
       $country_name = zen_get_country_name($val);
       if ($country_name === '') {
-        trigger_error('Country with countries_id = ' . $val . ' is currently disabled.', E_USER_NOTICE);
+        trigger_error('Country with countries_id = ' . $val . ' is either disabled or does not exist.', E_USER_NOTICE);
       } else {
         $countries_array[] = array('id' => $val, 'text' => $country_name);
       }
