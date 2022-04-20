@@ -203,6 +203,16 @@ class shipping extends base {
         if (is_array($cheapest)) {
           // never quote storepickup as lowest - needs to be configured in shipping module
           if ($rates[$i]['cost'] < $cheapest['cost'] and $rates[$i]['module'] != 'storepickup') {
+            // -----
+            // Give a customized shipping module the opportunity to exclude itself from being quoted
+            // as the cheapest.  The observer must set the $exclude_from_cheapest to specifically
+            // (bool)true to be excluded.
+            //
+            $exclude_from_cheapest = false;
+            $this->notify('NOTIFY_SHIPPING_EXCLUDE_FROM_CHEAPEST', $rates[$i]['module'], $exclude_from_cheapest);
+            if ($exclude_from_cheapest === true) {
+                continue;
+            }
             $cheapest = $rates[$i];
           }
         } else {
