@@ -883,7 +883,6 @@ class order extends base
                     // do not decrement quantities if products_attributes_filename exists
                     if ((DOWNLOAD_ENABLED != 'true') || $stock_values->fields['product_is_always_free_shipping'] == 2 || (!$stock_values->fields['products_attributes_filename'])) {
                         $stock_left = $stock_values->fields['products_quantity'] - $this->products[$i]['qty'];
-                        $this->products[$i]['stock_reduce'] = $this->products[$i]['qty'];
                     } else {
                         $stock_left = $stock_values->fields['products_quantity'];
                     }
