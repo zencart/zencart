@@ -247,45 +247,69 @@ if (!empty($action)) {
           $attributes_default = (int)$_POST['attributes_default'];
           $attributes_discounted = (int)$_POST['attributes_discounted'];
           $attributes_price_base_included = (int)$_POST['attributes_price_base_included'];
-
           $attributes_price_onetime = (float)$_POST['attributes_price_onetime'];
-          $attributes_price_factor = (float)$_POST['attributes_price_factor'];
-          $attributes_price_factor_offset = (float)$_POST['attributes_price_factor_offset'];
-          $attributes_price_factor_onetime = (float)$_POST['attributes_price_factor_onetime'];
-          $attributes_price_factor_onetime_offset = (float)$_POST['attributes_price_factor_onetime_offset'];
-          $attributes_qty_prices = zen_db_prepare_input($_POST['attributes_qty_prices']);
-          $attributes_qty_prices_onetime = zen_db_prepare_input($_POST['attributes_qty_prices_onetime']);
 
-          $attributes_price_words = (float)$_POST['attributes_price_words'];
-          $attributes_price_words_free = (int)$_POST['attributes_price_words_free'];
-          $attributes_price_letters = (float)$_POST['attributes_price_letters'];
-          $attributes_price_letters_free = (int)$_POST['attributes_price_letters_free'];
+          if (ATTRIBUTES_ENABLED_PRICE_FACTOR === 'true') {
+              $attributes_price_factor = (float)$_POST['attributes_price_factor'];
+              $attributes_price_factor_offset = (float)$_POST['attributes_price_factor_offset'];
+              $attributes_price_factor_onetime = (float)$_POST['attributes_price_factor_onetime'];
+              $attributes_price_factor_onetime_offset = (float)$_POST['attributes_price_factor_onetime_offset'];
+          } else {
+              $attributes_price_factor = 0;
+              $attributes_price_factor_offset = 0;
+              $attributes_price_factor_onetime = 0;
+              $attributes_price_factor_onetime_offset = 0;
+          }
+
+          if (ATTRIBUTES_ENABLED_QTY_PRICES === 'true') {
+            $attributes_qty_prices = zen_db_prepare_input($_POST['attributes_qty_prices']);
+            $attributes_qty_prices_onetime = zen_db_prepare_input($_POST['attributes_qty_prices_onetime']);
+          } else {
+            $attributes_qty_prices = '';
+            $attributes_qty_prices_onetime = '';
+          }
+
+          if (ATTRIBUTES_ENABLED_TEXT_PRICES === 'true') {
+              $attributes_price_words = (float)$_POST['attributes_price_words'];
+              $attributes_price_words_free = (int)$_POST['attributes_price_words_free'];
+              $attributes_price_letters = (float)$_POST['attributes_price_letters'];
+              $attributes_price_letters_free = (int)$_POST['attributes_price_letters_free'];
+          } else {
+              $attributes_price_words = 0;
+              $attributes_price_words_free = 0;
+              $attributes_price_letters = 0;
+              $attributes_price_letters_free = 0;
+          }
+
           $attributes_required = (int)$_POST['attributes_required'];
 
 // add - update as record exists
 // attributes images
 // when set to none remove from database
 // only processes image once for multiple selection of options_values_id
-          if ($i == 0) {
-            if (!empty($_POST['attributes_image']) && ($_POST['attributes_image'] != 'none')) {
-              $attributes_image = zen_db_prepare_input($_POST['attributes_image']);
-            } else {
-              $attributes_image = '';
-            }
+          $attributes_image_name = '';
+          if (ATTRIBUTES_ENABLED_IMAGES === 'true') {
+              if ($i == 0) {
+                if (!empty($_POST['attributes_image']) && ($_POST['attributes_image'] != 'none')) {
+                  $attributes_image = zen_db_prepare_input($_POST['attributes_image']);
+                } else {
+                  $attributes_image = '';
+                }
 
-            $attributes_image = new upload('attributes_image');
-            $attributes_image->set_extensions(['jpg', 'jpeg', 'gif', 'png', 'webp', 'flv', 'webm', 'ogg']);
-            $attributes_image->set_destination(DIR_FS_CATALOG_IMAGES . $_POST['img_dir']);
-            if ($attributes_image->parse() && $attributes_image->save($_POST['overwrite'])) {
-              $attributes_image_name = $_POST['img_dir'] . $attributes_image->filename;
-            } else {
-              $attributes_image_name = (isset($_POST['attributes_previous_image']) ? $_POST['attributes_previous_image'] : '');
-            }
-            $current_image_name = $attributes_image_name;
-          } else {
-            $attributes_image_name = $current_image_name;
+                $attributes_image = new upload('attributes_image');
+                $attributes_image->set_extensions(['jpg', 'jpeg', 'gif', 'png', 'webp', 'flv', 'webm', 'ogg']);
+                $attributes_image->set_destination(DIR_FS_CATALOG_IMAGES . $_POST['img_dir']);
+                if ($attributes_image->parse() && $attributes_image->save($_POST['overwrite'])) {
+                  $attributes_image_name = $_POST['img_dir'] . $attributes_image->filename;
+                } else {
+                  $attributes_image_name = (isset($_POST['attributes_previous_image']) ? $_POST['attributes_previous_image'] : '');
+                }
+                $current_image_name = $attributes_image_name;
+              } else {
+                $attributes_image_name = $current_image_name;
+              }
+              $attributes_image_name = zen_limit_image_filename($attributes_image_name, TABLE_PRODUCTS_ATTRIBUTES, 'attributes_image');
           }
-          $attributes_image_name = zen_limit_image_filename($attributes_image_name, TABLE_PRODUCTS_ATTRIBUTES, 'attributes_image');
 
           $db->Execute("INSERT INTO " . TABLE_PRODUCTS_ATTRIBUTES . " (products_id, options_id, options_values_id, options_values_price, price_prefix, products_options_sort_order, product_attribute_is_free, products_attributes_weight, products_attributes_weight_prefix, attributes_display_only, attributes_default, attributes_discounted, attributes_image, attributes_price_base_included, attributes_price_onetime, attributes_price_factor, attributes_price_factor_offset, attributes_price_factor_onetime, attributes_price_factor_onetime_offset, attributes_qty_prices, attributes_qty_prices_onetime, attributes_price_words, attributes_price_words_free, attributes_price_letters, attributes_price_letters_free, attributes_required)
                         VALUES (" . (int)$products_id . ",
