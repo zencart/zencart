@@ -305,7 +305,8 @@ if (!empty($action)) {
                                       LEFT JOIN " . TABLE_PRODUCTS . " p ON p.products_id = r.products_id
                                       WHERE r.products_id = p.products_id
                                       " . $search . "
-                                      GROUP BY r.reviews_id, rd.languages_id
+                                      GROUP BY r.reviews_id, rd.languages_id, r.products_id, r.customers_name, r.reviews_rating, r.date_added, r.status, 
+                                       r.last_modified, r.reviews_read, rd.reviews_text, pd.products_name, p.products_model, p.products_image
                                       " . $order_by;
 
                 // reset page when page is unknown
