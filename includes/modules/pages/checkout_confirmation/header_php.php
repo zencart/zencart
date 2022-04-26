@@ -29,8 +29,8 @@ if ($_SESSION['cart']->count_contents() <= 0) {
     }
   }
 
-// avoid hack attempts during the checkout procedure by checking the internal cartID
-if (isset($_SESSION['cart']->cartID) && $_SESSION['cartID']) {
+// Ensure no cart content changes during the checkout procedure by checking the internal cartID
+if (isset($_SESSION['cart']->cartID) && isset($_SESSION['cartID'])) {
   if ($_SESSION['cart']->cartID != $_SESSION['cartID']) {
     zen_redirect(zen_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL'));
   }
