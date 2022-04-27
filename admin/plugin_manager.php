@@ -18,7 +18,12 @@ use Zencart\ViewBuilders\SimpleDataFormatter;
 use Zencart\Filters\FilterManager;
 use Zencart\ViewBuilders\DerivedItemsManager;
 
+/* @var $pluginManager PluginManager*/
+/* @var $db queryFactory */
+/* @var $messageStack messageStack */
+
 require('includes/application_top.php');
+$pluginManager->inspectAndUpdate();
 
 // These next few classes are only needed by the plugin manager
 $errorContainer = new PluginErrorContainer();
