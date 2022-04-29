@@ -220,7 +220,15 @@ if (!empty($action)) {
         }
 
         zen_record_admin_activity('Customer record updated for customer ID ' . (int)$customers_id, 'notice');
+
+        // -----
+        // The following, seemingly duplicate, notifications enable an auto-loaded admin observer to successfully
+        // bind to the notification using the 'NOTIFY_ADMIN_CUSTOMER_UPDATE' version.  The other notification is kept
+        // for downward compatibility with existing plugins' observers.
+        //
+        $zco_notifier->notify('NOTIFY_ADMIN_CUSTOMER_UPDATE', (int)$customers_id, $default_address_id, $sql_data_array);
         $zco_notifier->notify('ADMIN_CUSTOMER_UPDATE', (int)$customers_id, $default_address_id, $sql_data_array);
+
         zen_redirect(zen_href_link(FILENAME_CUSTOMERS, zen_get_all_get_params(array('cID', 'action')) . 'cID=' . $customers_id, 'NONSSL'));
       } else if ($error == true) {
         $cInfo = new objectInfo($_POST);
