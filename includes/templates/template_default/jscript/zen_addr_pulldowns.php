@@ -96,25 +96,5 @@ if (count($c2z) !== 0) {
             jQuery('#state, #stBreak, #stateLabel').show();
         }
     }
-<?php
-    // -----
-    // For the initial update of the form (some pages excluded), locate the name of the form containing the #state input
-    // and update the associated zones.
-    //
-    // Note: Excluding the on-load update for selected pages, where the just-rendered form
-    // already has selected the default/selected zone from the dropdown.  Also giving a watching
-    // observer the opportunity to add site-specific pages to the exclusion.
-    //
-    $no_zone_update_pages = [
-        FILENAME_ADDRESS_BOOK_PROCESS,
-    ];
-    $zco_notifier->notify('NOTIFY_ZEN_ADDR_PULLDOWNS_EXCLUDE_PAGE', $current_page_base, $no_zone_update_pages);
-
-    if (!in_array($current_page_base, $no_zone_update_pages)) {
-?>
-    update_zone(jQuery('#state').closest('form').attr('name'));
-<?php
-    }
-?>
 });
 </script>
