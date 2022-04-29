@@ -211,7 +211,6 @@ $capsule->setAsGlobal();
 $capsule->bootEloquent();
 
 $pluginManager = new PluginManager(new PluginControl(), new \App\Models\PluginControlVersion());
-$pluginManager->inspectAndUpdate();
 $installedPlugins = $pluginManager->getInstalledPlugins();
 $pluginManager = new PluginManager(new PluginControl, new App\Models\PluginControlVersion);
 
