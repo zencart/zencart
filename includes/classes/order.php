@@ -538,7 +538,7 @@ class order extends base
                     if ($value == PRODUCTS_OPTIONS_VALUES_TEXT_ID) {
                         $attr_value = $products[$i]['attributes_values'][$option];
                     } else {
-                        $attr_value = $attributes->fields['products_options_values_name'];
+                        $attr_value = htmlspecialchars_decode($attributes->fields['products_options_values_name'], ENT_COMPAT);
                     }
 
                     $this->products[$index]['attributes'][$subindex] = [
