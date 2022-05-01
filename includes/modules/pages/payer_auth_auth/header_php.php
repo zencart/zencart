@@ -29,7 +29,7 @@ header("Cache-Control: max-age=1");  // stores for only 1 second, which prevents
 ?>
 <html>
 <head>
-<script type="text/javascript">
+<script>
 	function onLoadHandler(){
     document.frmLaunchACS.submit();
   }

@@ -674,7 +674,7 @@ class square extends base
         }
 
         $this->saveAccessToken($response);
-        echo 'Token set. You may now continue configuring the module. <script type="text/javascript">window.close()</script>';
+        echo 'Token set. You may now continue configuring the module. <script>window.close()</script>';
     }
 
     /**
@@ -1001,7 +1001,7 @@ class square extends base
     }
 
     function help() {
-       return array('link' => 'https://docs.zen-cart.com/user/payment/square/'); 
+       return array('link' => 'https://docs.zen-cart.com/user/payment/square/');
     }
 
     /**

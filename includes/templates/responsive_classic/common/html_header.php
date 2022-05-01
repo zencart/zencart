@@ -139,9 +139,9 @@ if (count($lng->catalog_languages) > 1) {
 ?>
 <script src="https://code.jquery.com/jquery-3.5.1.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
 <?php if (file_exists(DIR_WS_TEMPLATE . "jscript/jquery.min.js")) { ?>
-<script type="text/javascript">window.jQuery || document.write(unescape('%3Cscript type="text/javascript" src="<?php echo $template->get_template_dir('.js',DIR_WS_TEMPLATE, $current_page_base,'jscript'); ?>/jquery.min.js"%3E%3C/script%3E'));</script>
+<script>window.jQuery || document.write(unescape('%3Cscript src="<?php echo $template->get_template_dir('.js',DIR_WS_TEMPLATE, $current_page_base,'jscript'); ?>/jquery.min.js"%3E%3C/script%3E'));</script>
 <?php } ?>
-<script type="text/javascript">window.jQuery || document.write(unescape('%3Cscript type="text/javascript" src="<?php echo $template->get_template_dir('.js','template_default', $current_page_base,'jscript'); ?>/jquery.min.js"%3E%3C/script%3E'));</script>
+<script>window.jQuery || document.write(unescape('%3Cscript src="<?php echo $template->get_template_dir('.js','template_default', $current_page_base,'jscript'); ?>/jquery.min.js"%3E%3C/script%3E'));</script>
 
 <?php
 /**
@@ -149,7 +149,7 @@ if (count($lng->catalog_languages) > 1) {
  */
   $directory_array = $template->get_template_part($template->get_template_dir('.js',DIR_WS_TEMPLATE, $current_page_base,'jscript'), '/^jscript_/', '.js');
   foreach($directory_array as $key => $value) {
-    echo '<script type="text/javascript" src="' .  $template->get_template_dir('.js',DIR_WS_TEMPLATE, $current_page_base,'jscript') . '/' . $value . '"></script>'."\n";
+    echo '<script src="' .  $template->get_template_dir('.js',DIR_WS_TEMPLATE, $current_page_base,'jscript') . '/' . $value . '"></script>'."\n";
   }
 
 /**
@@ -157,7 +157,7 @@ if (count($lng->catalog_languages) > 1) {
  */
   $directory_array = $template->get_template_part($page_directory, '/^jscript_/', '.js');
   foreach($directory_array as $key => $value) {
-    echo '<script type="text/javascript" src="' . $page_directory . '/' . $value . '"></script>' . "\n";
+    echo '<script src="' . $page_directory . '/' . $value . '"></script>' . "\n";
   }
 
 /**
@@ -208,7 +208,7 @@ if (in_array($current_page_base,explode(",",'popup_image,popup_image_additional'
   }
 }
 ?>
-  <script type="text/javascript">document.documentElement.className = 'no-fouc';</script>
+  <script>document.documentElement.className = 'no-fouc';</script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha512-SfTiTlX6kk+qitfevl/7LibUOeJWlt9rbyDn92a1DqWOw9vWG2MFoays0sgObmWazO5BQPiFucnnEAjpAB+/Sw==" crossorigin="anonymous" />
 <?php // ZCAdditions.com, ZCA Responsive Template Default (EOF-addition 2 of 2) ?>
 <?php

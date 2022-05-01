@@ -19,10 +19,10 @@ if (MODULE_PAYMENT_SQUARE_TESTING_MODE === 'Sandbox') {
 }
 
 ?>
-<script type="text/javascript" src="<?php echo $jsurl; ?>" title="square js"></script>
+<script src="<?php echo $jsurl; ?>" title="square js"></script>
 
 
-<script type="text/javascript" title="square">
+<script title="square">
     var cardNonce;
     var paymentForm = new SqPaymentForm({
         applicationId: '<?php echo MODULE_PAYMENT_SQUARE_APPLICATION_ID; ?>',

@@ -10,7 +10,7 @@
  * @version $Id: Zen4All 2019 Jun 03 Modified in v1.5.7 $
  */
 ?>
-<script type="text/javascript">
+<script>
 
 function update_zone(theForm) {
   // if there is no zone_id field to update, or if it is hidden from display, then exit performing no updates

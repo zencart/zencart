@@ -120,7 +120,7 @@ class payment extends base {
 
   function javascript_validation() {
     if (!is_array($this->modules) || empty($this->selection())) return '';
-      $js = '<script type="text/javascript">' . "\n" .
+      $js = '<script>' . "\n" .
       'function check_form() {' . "\n" .
       '  var error = 0;' . "\n" .
       '  var error_message = "' . JS_ERROR . '";' . "\n" .

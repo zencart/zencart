@@ -169,7 +169,7 @@ header("Cache-Control: max-age=1");  // stores for only 1 second, which prevents
 <html>
 <head>
 <title>Payer Authentication Window</title>
-<script type="text/javascript">
+<script>
   function onLoadHandler(){
     setTimeout(document.frmResultPage.submit(), 2);
   }

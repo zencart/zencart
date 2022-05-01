@@ -196,7 +196,7 @@ if ($max_log_file_size < 1) {
             .bigfile { font-weight: bold; color: red; }
             -->
         </style>
-        <script type="text/javascript">
+        <script>
             <!--
             function buttonCheck(whichButton) {
                 var submitOK = false;
