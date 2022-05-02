@@ -9,11 +9,14 @@ trait ConfigureFileConcerns
     protected function createInitialConfigures()
     {
         $dest = DIR_FS_ROOT . 'admin/includes/configure.php';
-        $this->removeFile($dest);
+        $this->saveFile($dest);
         $dest = DIR_FS_ROOT . 'includes/configure.php';
-        $this->removeFile($dest);
+        $this->saveFile($dest);
 
         $user = $_SERVER['USER'];
+
+        echo "Detected user " . $user . "\n";
+
         if (file_exists($configFile = DIR_FS_ROOT . 'not_for_release/testFramework/Browser/zencartConfigures/admin.' . $user . '.configure.php')) {
             copy($configFile, DIR_FS_ROOT . 'admin/includes/configure.php');
         } elseif (file_exists($configFile = DIR_FS_ROOT . 'not_for_release/testFramework/Browser/zencartConfigures/admin.default.configure.php')) {
@@ -27,9 +30,9 @@ trait ConfigureFileConcerns
         //echo 'using zencart config file = '. $configFile;
     }
 
-    public function removeFile($fileToRemove)
+    public function copyFile($fileToRemove)
     {
-        @unlink($fileToRemove);
+        copy($fileToRemove, $fileToRemove . '.testsave');
     }
 
     public function createFile($file)
@@ -40,12 +43,12 @@ trait ConfigureFileConcerns
 
     public function makeEmptyConfigures($rootPath)
     {
-        $file = $rootPath . 'includes/configure.php';#
+        $file = $rootPath . 'includes/configure.php';
         $this->removeFile($file);
         $this->createFile($file);
         chmod($file, 0777);
 
-        $file = $rootPath . 'admin/includes/configure.php';#
+        $file = $rootPath . 'admin/includes/configure.php';
         $this->removeFile($file);
         $this->createFile($file);
         chmod($file, 0777);

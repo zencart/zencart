@@ -34,20 +34,8 @@ abstract class DuskTestCase extends \PHPUnit\Framework\TestCase
      */
     protected function setUp(): void
     {
+        echo "Running Test Setup\n";
         parent::setUp();
-
-        if (!defined('DIR_FS_ROOT')) {
-            define('DIR_FS_ROOT', \getcwd() . '/');
-            //echo 'DIR_FS_ROOT = ' . DIR_FS_ROOT;
-            $user = $_SERVER['USER'];
-            $configFile = 'NO CONFIG FILE FOUND';
-            if (file_exists($configFile = DIR_FS_ROOT . '/not_for_release/testFramework/Browser/duskConfigures/' . $user . '.configure.dusk.php')) {
-                require $configFile;
-            } elseif (file_exists($configFile = DIR_FS_ROOT . '/not_for_release/testFramework/Browser/duskConfigures/configure.dusk.php')) {
-                require $configFile;
-            }
-            //echo 'Using Config file ' . $configFile;
-        }
 
         Browser::$baseUrl = $this->baseUrl();
 
@@ -169,6 +157,4 @@ abstract class DuskTestCase extends \PHPUnit\Framework\TestCase
     {
         throw new Exception("User resolver has not been set.");
     }
-
-
  }

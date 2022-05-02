@@ -1,23 +1,36 @@
 <?php
 /**
- * @copyright Copyright 2003-2020 Zen Cart Development Team
+ * @copyright Copyright 2003-2022 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  */
+
+use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\TestResult;
+use PHPUnit\Framework\MockObject\MockObject;
 
 /**
  * Class zcTestCase
  */
-abstract class zcTestCase extends PHPUnit\Framework\TestCase
+abstract class zcTestCase extends TestCase
 {
-    // This allows us to run in full isolation mode including
-    // classes, functions, and defined statements
-    public function run(PHPUnit\Framework\TestResult $result = null): PHPUnit\Framework\TestResult
+    /**
+     * @param TestResult|null $result
+     * @return TestResult
+     *
+     * This allows us to run in full isolation mode including
+     * classes, functions, and defined statements
+     */
+    public function run(TestResult $result = null): TestResult
     {
         $this->setPreserveGlobalState(false);
-
         return parent::run($result);
     }
 
+    /**
+     * @return void
+     *
+     * set some defines where necessary
+     */
     public function setUp(): void
     {
         if (!defined('IS_ADMIN_FLAG')) {
@@ -66,14 +79,10 @@ abstract class zcTestCase extends PHPUnit\Framework\TestCase
         require_once(DIR_FS_INCLUDES . 'filenames.php');
         require_once DIR_FS_CATALOG . DIR_WS_CLASSES. 'traits/NotifierManager.php';
         require_once DIR_FS_CATALOG . DIR_WS_CLASSES. 'traits/ObserverManager.php';
-//        require_once(DIR_FS_CATALOG . DIR_WS_CLASSES . 'class.base.php');
-//        require_once(DIR_FS_CATALOG . DIR_WS_CLASSES . 'class.notifier.php');
-
 
         if (!array_key_exists('zco_notifier', $GLOBALS)) {
             $GLOBALS['zco_notifier'] = new notifier();
         }
-
 
         if (!defined('HTTP_SERVER')) {
             define('HTTP_SERVER', 'http://zencart-git.local');
@@ -104,17 +113,13 @@ abstract class zcTestCase extends PHPUnit\Framework\TestCase
         if (!function_exists('zen_session_name')) {
             eval('function zen_session_name($name = \'\') { return \'zenid\'; }');
         }
-//        if(!function_exists('zen_session_name'))
-//            eval('function zen_session_name($name = \'\') { return \'zenadminid\'; }');
         if (!function_exists('zen_session_id')) {
             eval('function zen_session_id($sessid = \'\') { return \'1234567890\'; }');
         }
-
-
     }
 
 
-    public function mockIterator(PHPUnit\Framework\MockObject\MockObject $iteratorMock, array $items)
+    public function mockIterator(MockObject $iteratorMock, array $items)
     {
         $iteratorData = new \stdClass();
         $iteratorData->array = $items;
@@ -183,9 +188,13 @@ abstract class zcTestCase extends PHPUnit\Framework\TestCase
         return $iteratorMock;
     }
 
+    /**
+     * @param $url
+     * @param $expected
+     * @return void
+     */
     protected function assertURLGenerated($url, $expected)
     {
         return $this->assertEquals($expected, $url, 'An incorrect URL was generated.');
     }
-
 }

@@ -29,8 +29,9 @@
     "require-dev": {
         "laravel/dusk": ">5.8",
         "mikey179/vfsstream": ">1.6",
-        "phpunit/phpunit": "^9.0"
-   },
+        "phpunit/phpunit": "^9.5",
+        "sempro/phpunit-pretty-print": "^1.4"
+    },
     "autoload": {
         "classmap": ["includes/classes", "includes/modules"]
     },
@@ -52,7 +53,7 @@
         "optimize-autoloader": true
     },
     "scripts": {
-        "tests": "phpunit --verbose --testsuite UnitTests --debug",
+        "tests": "phpunit --verbose --testsuite UnitTests --printer 'Sempro\\PHPUnitPrettyPrinter\\PrettyPrinterForPhpUnit9'",
         "dusk": "phpunit --verbose --testsuite Browser --debug"
     },
     "minimum-stability": "dev",

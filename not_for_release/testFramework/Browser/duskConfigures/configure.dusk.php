@@ -1,5 +1,7 @@
 <?php
-
+/**
+ * This is a default
+ */
 define('HTTP_SERVER', 'http://127.0.0.1:8080');
 
 define('TESTING_DB_SERVER', '127.0.0.1');  // address of your db server
