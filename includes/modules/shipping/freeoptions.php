@@ -55,9 +55,14 @@
           $this->enabled = false;
         }
       }
+
+      if ($this->enabled === true) {
+          $this->checkForFreeOptions();
+      }
     }
 
-    function quote($method = '') {
+    protected function checkForFreeOptions()
+    {
       global $order;
       $order_weight = round($_SESSION['cart']->show_weight(),9);
 
@@ -178,7 +183,10 @@
       } else {
         $this->enabled = false;
       }
+    }
 
+    function quote($method = '') {
+      global $order;
       if ($this->enabled) {
         $this->quotes = array('id' => $this->code,
                               'module' => MODULE_SHIPPING_FREEOPTIONS_TEXT_TITLE,
