@@ -13,10 +13,8 @@ abstract class AdminDuskTestCase extends DuskTestCase
         $this->loadDuskConfigure();
         $this->createInitialConfigures();
 
-//        if (!$this->hasDatabase()) {
-            $this->createDatabase();
-            $this->populateDatabase();
-//        }
+        $this->createDatabase();
+        $this->populateDatabase();
         $this->createDummyAdminUser();
         $this->pdoConnection = null;
     }

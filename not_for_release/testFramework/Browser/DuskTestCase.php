@@ -38,12 +38,9 @@ abstract class DuskTestCase extends \PHPUnit\Framework\TestCase
      */
     protected function setUp(): void
     {
-        echo "Running Test Setup\n";
         parent::setUp();
 
         define('DIR_FS_ROOT', getcwd());;
-
-        echo 'DIR_FS_ROOT set to ' . DIR_FS_ROOT . "\n";
 
         $this->user = $this->detectUser();
 
@@ -174,20 +171,16 @@ abstract class DuskTestCase extends \PHPUnit\Framework\TestCase
         if (defined('GITLAB_CI')) {
             $user = 'runner';
         }
-        echo "Detected user " . $user . "\n";
         return $user;
     }
 
     public function loadDuskConfigure()
     {
         $f = DIR_FS_ROOT . self::configPath;
-        echo 'config path = ' . $f . "\n";
-        echo 'Will try to load ' . $f . $this->user . '.configure.dusk.php' . "\n";
         if (!file_exists( $f . $this->user . '.configure.dusk.php')) {
             echo 'Could not find dusk configure';
             die(1);
         }
-        echo 'Loading ' . $f . $this->user . '.configure.dusk.php' . "\n";
         require($f . $this->user . '.configure.dusk.php');
     }
 

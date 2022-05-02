@@ -2,7 +2,6 @@
 
 namespace Tests\Browser;
 
-use Tests\Browser\Pages\zcInstallPage;
 use Laravel\Dusk\Browser;
 
 class ZcInstallTest extends InstallDuskTestCase

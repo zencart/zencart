@@ -20,7 +20,6 @@ trait ConfigureFileConcerns
         } elseif (file_exists($configFile = DIR_FS_ROOT . 'not_for_release/testFramework/Browser/zencartConfigures/catalog.default.configure.php')) {
             copy($configFile, DIR_FS_ROOT . 'includes/configure.php');
         }
-        echo 'using zencart config file = '. $configFile;
     }
 
     public function copyFile($fileToRemove)

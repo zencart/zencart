@@ -45,7 +45,6 @@ trait DatabaseConcerns
     protected function populateDatabase()
     {
         $exec = "/usr/bin/mysql" . $this->buildMysqlCommandLine();
-        //var_dump($exec);die();
         $exec .= " < " . DIR_FS_ROOT .'/zc_install/sql/install/mysql_zencart.sql > /dev/null 2>&1';
         $output = null;
         exec($exec, $output);

@@ -55,7 +55,7 @@
     },
     "scripts": {
         "tests": "phpunit --verbose --testsuite UnitTests --printer 'Sempro\\PHPUnitPrettyPrinter\\PrettyPrinterForPhpUnit9'",
-        "dusk": "phpunit --verbose --testsuite Browser --debug"
+        "dusk": "phpunit --verbose --testsuite Browser --debug --printer 'Sempro\\PHPUnitPrettyPrinter\\PrettyPrinterForPhpUnit9'"
     },
     "minimum-stability": "dev",
     "prefer-stable": true
