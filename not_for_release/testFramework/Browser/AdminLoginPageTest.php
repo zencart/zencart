@@ -17,7 +17,7 @@ class AdminLoginPageTest extends AdminDuskTestCase
     {
         $this->browse(function (Browser $browser) {
             $browser->resize(1920, 1080);
-            $browser->visit(new AdminHomePage)
+            $browser->visit(HTTP_SERVER . '/admin/')
                 ->waitFor('#admin_pass')
                 ->assertSee('Admin Login')
             ;
@@ -29,13 +29,13 @@ class AdminLoginPageTest extends AdminDuskTestCase
     {
         $this->browse(function (Browser $browser) {
             $browser->resize(1920, 1080);
-            $browser->visit(new AdminHomePage);
+            $browser->visit(HTTP_SERVER . '/admin/');
             $this->doLogin($browser);
             $browser->waitFor('#store_name')
                 ->type('#store_name', 'zencart')
                 ->type('#store_owner', 'zencart')
                 ->press('Update')
-                ->assertSee('Your version of Zen Cart')
+                ->assertSee('You are presently using')
             ;
         });
     }

@@ -9,21 +9,18 @@ trait ConfigureFileConcerns
 
     protected function createInitialConfigures()
     {
-        $dest = DIR_FS_ROOT . 'admin/includes/configure.php';
-        $this->saveFile($dest);
-        $dest = DIR_FS_ROOT . 'includes/configure.php';
-        $this->saveFile($dest);
-        if (file_exists($configFile = DIR_FS_ROOT . 'not_for_release/testFramework/Browser/zencartConfigures/admin.' . $user . '.configure.php')) {
+        $this->saveConfigures(DIR_FS_ROOT);
+        if (file_exists($configFile = DIR_FS_ROOT . 'not_for_release/testFramework/Browser/zencartConfigures/admin.' . $this->user . '.configure.php')) {
             copy($configFile, DIR_FS_ROOT . 'admin/includes/configure.php');
         } elseif (file_exists($configFile = DIR_FS_ROOT . 'not_for_release/testFramework/Browser/zencartConfigures/admin.default.configure.php')) {
             copy($configFile, DIR_FS_ROOT . 'admin/includes/configure.php');
         }
-        if (file_exists($configFile = DIR_FS_ROOT . 'not_for_release/testFramework/Browser/zencartConfigures/catalog.' . $user . '.configure.php')) {
+        if (file_exists($configFile = DIR_FS_ROOT . 'not_for_release/testFramework/Browser/zencartConfigures/catalog.' . $this->user . '.configure.php')) {
             copy($configFile, DIR_FS_ROOT . 'includes/configure.php');
         } elseif (file_exists($configFile = DIR_FS_ROOT . 'not_for_release/testFramework/Browser/zencartConfigures/catalog.default.configure.php')) {
             copy($configFile, DIR_FS_ROOT . 'includes/configure.php');
         }
-        //echo 'using zencart config file = '. $configFile;
+        echo 'using zencart config file = '. $configFile;
     }
 
     public function copyFile($fileToRemove)

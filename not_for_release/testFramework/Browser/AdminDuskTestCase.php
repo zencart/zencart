@@ -10,19 +10,19 @@ abstract class AdminDuskTestCase extends DuskTestCase
     public function setUp(): void
     {
         parent::setUp();
+        $this->loadDuskConfigure();
         $this->createInitialConfigures();
 
-        if (!$this->hasDatabase()) {
+//        if (!$this->hasDatabase()) {
             $this->createDatabase();
             $this->populateDatabase();
-        }
+//        }
         $this->createDummyAdminUser();
         $this->pdoConnection = null;
     }
 
     public function doLogin(Browser $browser)
     {
-//        $browser->screenshot('admin-login');
         $browser->waitFor('#admin_pass')
             ->type('admin_name', 'Admin')
             ->type('#admin_pass', 'develop1')
