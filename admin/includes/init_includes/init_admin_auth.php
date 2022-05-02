@@ -69,6 +69,7 @@ if (basename($PHP_SELF) != FILENAME_ALERT_PAGE . '.php')
         zen_record_admin_activity('Attempted access to unauthorized page [' . $page . ']. Redirected to DENIED page instead.', 'notice');
         zen_redirect(zen_href_link(FILENAME_DENIED, '', 'SSL'));
       }
+        $zco_notifier->notify('NOTIFY_ADMIN_NONSUPERUSER_ACTION');
     }
 
   }

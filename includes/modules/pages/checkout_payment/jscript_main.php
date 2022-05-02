@@ -8,7 +8,7 @@
  * @version $Id: DrByte 2020 Jan 09 Modified in v1.5.7 $
  */
 ?>
-<script type="text/javascript">
+<script>
 var selected;
 var submitter = null;
 

@@ -6,7 +6,7 @@
  */
 ?>
 
-<script type="text/javascript">
+<script>
 
 (function($) {
 $(document).ready(function() {
@@ -127,7 +127,7 @@ return false;
 });
 
 $(".categoryListBoxContents").click(function() {
-window.location = $(this).find("a").attr("href"); 
+window.location = $(this).find("a").attr("href");
 return false;
 });
 

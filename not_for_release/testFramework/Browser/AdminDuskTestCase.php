@@ -11,6 +11,7 @@ abstract class AdminDuskTestCase extends DuskTestCase
     {
         parent::setUp();
         $this->createInitialConfigures();
+
         if (!$this->hasDatabase()) {
             $this->createDatabase();
             $this->populateDatabase();

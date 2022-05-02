@@ -303,4 +303,5 @@ if ($_SESSION['cart']->count_contents() > 0) {
 <?php
 }
 ?>
+
 <!-- shipping_estimator_eof //-->

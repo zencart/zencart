@@ -168,7 +168,6 @@ $capsule->bootEloquent();
 
 
 $pluginManager = new PluginManager(new PluginControl, new PluginControlVersion);
-$pluginManager->inspectAndUpdate();
 $installedPlugins = $pluginManager->getInstalledPlugins();
 $pluginManager = new PluginManager(new App\Models\PluginControl, new App\Models\PluginControlVersion);
 $pageLoader = PageLoader::getInstance();

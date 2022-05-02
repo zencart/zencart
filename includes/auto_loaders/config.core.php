@@ -105,6 +105,15 @@ if (!defined('USE_PCONNECT')) define('USE_PCONNECT', 'false');
   $autoLoadConfig[50][] = array('autoType'=>'init_script',
                                 'loadFile'=> 'init_sefu.php');
 /**
+ * Breakpoint 55.
+ *
+ * require('includes/init_includes/init_common_elements.php');
+ */
+$autoLoadConfig[55][] = [
+'autoType' => 'init_script',
+'loadFile' => 'init_common_elements.php',
+];
+/**
  * Breakpoint 60.
  *
  * require('includes/init_includes/init_general_funcs.php');
