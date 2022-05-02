@@ -24,17 +24,29 @@ class MultipleAdminPagesTest extends AdminDuskTestCase
     {
         $this->browse(function (Browser $browser) {
             $browser->resize(1920, 1080);
-            $browser->visit('/admin/index.php')
+            $browser->visit(HTTP_SERVER . '/admin/index.php')
                 ->waitFor('#admin_pass')
                 ->type('admin_name', 'Admin')
                 ->type('#admin_pass', 'develop1')
                 ->press('Submit');
         });
 
+        $this->browse(function (Browser $browser) {
+            $browser->resize(1920, 1080);
+            $browser->visit(HTTP_SERVER . '/admin/');
+            $browser->waitFor('#store_name')
+                ->type('#store_name', 'zencart')
+                ->type('#store_owner', 'zencart')
+                ->press('Update')
+                ->assertSee('You are presently using')
+            ;
+        });
+
+
         foreach ($this->pageMap as $page) {
             $this->browse(function (Browser $browser) use ($page) {
                 $browser->resize(1920, 1080);
-                $browser->visit('/admin/index.php?cmd=' . $page['page'])
+                $browser->visit(HTTP_SERVER . '/admin/index.php?cmd=' . $page['page'])
                     ->screenshot('admin_' . $page['page']);
                 if (isset($page['see'])) {
                     $browser->assertSee($page['see']);
