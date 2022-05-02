@@ -303,5 +303,5 @@ if ($_SESSION['cart']->count_contents() > 0) {
 <?php
 }
 ?>
-<script>update_zone(document.estimator); </script>
+
 <!-- shipping_estimator_eof //-->

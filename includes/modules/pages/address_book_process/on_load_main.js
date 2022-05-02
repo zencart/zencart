@@ -1,1 +1,1 @@
-update_zone(document.addressbook);
+javascript:void(0);

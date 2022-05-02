@@ -1,1 +1,1 @@
-update_zone(document.checkout_address);
+javascript:void(0);
