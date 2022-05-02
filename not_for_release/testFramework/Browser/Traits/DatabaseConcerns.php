@@ -44,12 +44,12 @@ trait DatabaseConcerns
 
     protected function populateDatabase()
     {
-        $exec = "/usr/bin/mysql -h" . TESTING_DB_SERVER . " -u" . TESTING_DB_SERVER_USERNAME . " -p" . TESTING_DB_SERVER_PASSWORD . " " . TESTING_DB_DATABASE;
-        $exec .= " < " . DIR_FS_ROOT .'zc_install/sql/install/mysql_zencart.sql > /dev/null 2>&1';
+        $exec = "/usr/bin/mysql" . $this->buildMysqlCommandLine();
+        $exec .= " < " . DIR_FS_ROOT .'/zc_install/sql/install/mysql_zencart.sql > /dev/null 2>&1';
         $output = null;
         exec($exec, $output);
-        $exec = "/usr/bin/mysql -h" . TESTING_DB_SERVER . " -u" . TESTING_DB_SERVER_USERNAME . " -p" . TESTING_DB_SERVER_PASSWORD . " " . TESTING_DB_DATABASE;
-        $exec .= " < " . DIR_FS_ROOT .'zc_install/sql/demo/mysql_demo.sql > /dev/null 2>&1';
+        $exec = "/usr/bin/mysql" . $this->buildMysqlCommandLine();
+        $exec .= " < " . DIR_FS_ROOT .'/zc_install/sql/demo/mysql_demo.sql > /dev/null 2>&1';
         $output = null;
         exec($exec, $output);
     }
@@ -84,5 +84,17 @@ trait DatabaseConcerns
             print_r($statement->errorInfo());
         }
         return $result;
+    }
+
+    protected function buildMysqlCommandLine()
+    {
+        $line = '';
+        $line .= " -h" . TESTING_DB_SERVER;
+        $line .= " -u" . TESTING_DB_SERVER_USERNAME;
+        if (TESTING_DB_SERVER_PASSWORD != "") {
+            $line .= " -p" . TESTING_DB_SERVER_PASSWORD;
+        }
+        $line .= " " . TESTING_DB_DATABASE;
+        return $line;
     }
 }

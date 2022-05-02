@@ -2,7 +2,6 @@
 
 namespace Tests\Browser;
 
-use Tests\Browser\Pages\zcInstallPage;
 use Laravel\Dusk\Browser;
 
 class ZcInstallTest extends InstallDuskTestCase
@@ -10,7 +9,6 @@ class ZcInstallTest extends InstallDuskTestCase
     /** @test */
     public function do_a_full_install()
     {
-        var_dump(HTTP_SERVER);
         $this->browse(function (Browser $browser) {
             $browser->resize(1920, 1080);
             $browser->visit(HTTP_SERVER . '/zc_install/')
