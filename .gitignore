@@ -18,7 +18,7 @@ dev-*.*
 .project
 .settings
 .buildpath
-# Ignore phpStorm stuff 
+# Ignore phpStorm stuff
 .idea
 
 # dbv
@@ -219,3 +219,7 @@ images/categories/subcategory_simulation.gif
 images/freedown.jpg
 images/b_g_grid.gif
 images/call_for_price.jpg
+
+#testing
+includes/*.config.save
+admin/includes/*.config.save

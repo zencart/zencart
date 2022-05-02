@@ -29,6 +29,7 @@
     "require-dev": {
         "laravel/dusk": ">5.8",
         "mikey179/vfsstream": ">1.6",
+        "orchestra/dusk-updater": "^1.5",
         "phpunit/phpunit": "^9.5",
         "sempro/phpunit-pretty-print": "^1.4"
     },
