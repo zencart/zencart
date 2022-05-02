@@ -4,18 +4,12 @@ namespace Tests\Browser;
 
 use Tests\Browser\Pages\zcInstallPage;
 use Laravel\Dusk\Browser;
-use Tests\Browser\Traits\ConfigureFileConcerns;
-use Tests\Browser\Traits\DatabaseConcerns;
 
-class ZcInstallTest extends DuskTestCase
+class ZcInstallTest extends InstallDuskTestCase
 {
-    use ConfigureFileConcerns;
-    use DatabaseConcerns;
-
     public function setUp(): void
     {
         parent::setUp();
-
         $this->makeEmptyConfigures(DIR_FS_ROOT);
         $this->createDatabase();
     }
