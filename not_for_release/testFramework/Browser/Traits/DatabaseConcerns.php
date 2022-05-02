@@ -34,7 +34,7 @@ trait DatabaseConcerns
 
     protected  function createDatabase()
     {
-        $this->getPdoConnection();
+        $this->getPdoConnection(TESTING_DB_DATABASE);
         $sql = "DROP DATABASE IF EXISTS " . TESTING_DB_DATABASE;
         $this->executePDOQuery($sql);
         $sql = "CREATE DATABASE IF NOT EXISTS " . TESTING_DB_DATABASE;

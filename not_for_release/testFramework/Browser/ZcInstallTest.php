@@ -7,19 +7,13 @@ use Laravel\Dusk\Browser;
 
 class ZcInstallTest extends InstallDuskTestCase
 {
-    public function setUp(): void
-    {
-        parent::setUp();
-        $this->makeEmptyConfigures(DIR_FS_ROOT);
-        $this->createDatabase();
-    }
-
     /** @test */
     public function do_a_full_install()
     {
+        var_dump(HTTP_SERVER);
         $this->browse(function (Browser $browser) {
             $browser->resize(1920, 1080);
-            $browser->visit(new ZcInstallPage)
+            $browser->visit(HTTP_SERVER . '/zc_install/')
                 ->assertSee('System Inspection')
                 ->click('#btnsubmit')
                 ->assertSee('Admin Settings')

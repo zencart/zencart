@@ -13,7 +13,7 @@ class zcInstallPage extends Page
      */
     public function url()
     {
-        return '/zc_install/';
+        return HTTP_SERVER . '/zc_install/';
     }
 
     /**
