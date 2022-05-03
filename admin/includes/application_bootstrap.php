@@ -44,6 +44,22 @@ $_SERVER['SCRIPT_NAME'] = str_replace($serverScript, '', $_SERVER['SCRIPT_NAME']
 if (!defined('DIR_FS_ADMIN')) define('DIR_FS_ADMIN', preg_replace('#/includes/$#', '/', realpath(__DIR__ . '/../') . '/'));
 
 /**
+ * set the level of error reporting
+ *
+ * Note STRICT_ERROR_REPORTING should never be set to true on a production site.
+ * It is mainly there to show php warnings during testing/bug fixing phases.
+ * note for strict error reporting we also turn on show_errors as this may be disabled
+ * in php.ini. Otherwise we respect the php.ini setting
+ *
+ */
+if ((defined('DEBUG_AUTOLOAD') && DEBUG_AUTOLOAD === true) || (defined('STRICT_ERROR_REPORTING') && STRICT_ERROR_REPORTING === true)) {
+    @ini_set('display_errors', TRUE);
+    error_reporting(defined('STRICT_ERROR_REPORTING_LEVEL') ? STRICT_ERROR_REPORTING_LEVEL : E_ALL);
+} else {
+    error_reporting(0);
+}
+
+/**
  * Ensure minimum PHP version.
  * This is intended to run before any dependencies are required
  * See https://www.zen-cart.com/requirements or run zc_install to see actual requirements!
@@ -62,6 +78,7 @@ if (file_exists('includes/local/configure.php')) {
      */
     include('includes/local/configure.php');
 }
+
 /**
  * check for and load application configuration parameters
  */
@@ -71,21 +88,7 @@ if (file_exists('includes/configure.php')) {
      */
     include('includes/configure.php');
 }
-/**
- * set the level of error reporting
- *
- * Note STRICT_ERROR_REPORTING should never be set to true on a production site.
- * It is mainly there to show php warnings during testing/bug fixing phases.
- * note for strict error reporting we also turn on show_errors as this may be disabled
- * in php.ini. Otherwise we respect the php.ini setting
- *
- */
-if (DEBUG_AUTOLOAD || defined('STRICT_ERROR_REPORTING') && STRICT_ERROR_REPORTING == true) {
-    @ini_set('display_errors', TRUE);
-    error_reporting(defined('STRICT_ERROR_REPORTING_LEVEL') ? STRICT_ERROR_REPORTING_LEVEL : E_ALL);
-} else {
-    error_reporting(0);
-}
+
 if (!defined('DIR_FS_CATALOG') || !is_dir(DIR_FS_CATALOG.'/includes/classes') || !defined('DB_TYPE') || DB_TYPE == '') {
     if (file_exists('../includes/templates/template_default/templates/tpl_zc_install_suggested_default.php')) {
         require('../includes/templates/template_default/templates/tpl_zc_install_suggested_default.php');
