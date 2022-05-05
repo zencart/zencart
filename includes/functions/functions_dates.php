@@ -50,7 +50,8 @@ function zen_date_long($raw_date)
     $minute = (int)substr($raw_date, 14, 2);
     $second = (int)substr($raw_date, 17, 2);
 
-    $retVal = strftime(DATE_FORMAT_LONG, mktime($hour, $minute, $second, $month, $day, $year));
+    global $zcDate;
+    $retVal = $zcDate->output(DATE_FORMAT_LONG, mktime($hour, $minute, $second, $month, $day, $year));
     if (stristr(PHP_OS, 'win')) return utf8_encode($retVal);
     return $retVal;
 }
@@ -95,7 +96,8 @@ function zen_datetime_short($raw_datetime)
     $minute = (int)substr($raw_datetime, 14, 2);
     $second = (int)substr($raw_datetime, 17, 2);
 
-    return strftime(DATE_TIME_FORMAT, mktime($hour, $minute, $second, $month, $day, $year));
+    global $zcDate;
+    return $zcDate->output(DATE_TIME_FORMAT, mktime($hour, $minute, $second, $month, $day, $year));
 }
 
 /**

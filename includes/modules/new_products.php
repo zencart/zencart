@@ -84,9 +84,9 @@ if ($num_products_count > 0) {
   if ($new_products->RecordCount() > 0) {
     if (!empty($new_products_category_id)) {
       $category_title = zen_get_category_name((int)$new_products_category_id);
-      $title = '<h2 class="centerBoxHeading">' . sprintf(TABLE_HEADING_NEW_PRODUCTS, strftime('%B')) . ($category_title != '' ? ' - ' . $category_title : '' ) . '</h2>';
+      $title = '<h2 class="centerBoxHeading">' . sprintf(TABLE_HEADING_NEW_PRODUCTS, $zcDate->output('%B')) . ($category_title != '' ? ' - ' . $category_title : '' ) . '</h2>';
     } else {
-      $title = '<h2 class="centerBoxHeading">' . sprintf(TABLE_HEADING_NEW_PRODUCTS, strftime('%B')) . '</h2>';
+      $title = '<h2 class="centerBoxHeading">' . sprintf(TABLE_HEADING_NEW_PRODUCTS, $zcDate->output('%B')) . '</h2>';
     }
     $zc_show_new_products = true;
   }
