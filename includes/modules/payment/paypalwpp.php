@@ -1292,9 +1292,10 @@ if (false) { // disabled until clarification is received about coupons in PayPal
     $decimals = $currencies->get_decimal_places($_SESSION['currency']);
 
     // loop thru all products to prepare details of quantity and price.
-    for ($i=0, $n=sizeof($order->products), $k=-1; $i<$n; $i++) {
-      // PayPal is inconsistent in how it handles zero-value line-items, so skip this entry if price is zero
-      if ($order->products[$i]['final_price'] == 0) {
+    for ($i = 0, $n = count($order->products), $k = -1; $i < $n; $i++) {
+      // PayPal is inconsistent in how it handles zero-value line-items, so skip this entry if price is zero ...
+      // so long as there is more than one product to be submitted.
+      if ($n !== 1 && $order->products[$i]['final_price'] == 0) {
         continue;
       } else {
         $k++;
