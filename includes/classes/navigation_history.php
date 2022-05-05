@@ -102,10 +102,7 @@ class navigationHistory extends base {
     global $request_type;
     $get_vars = array();
     if (is_array($page)) {
-      $this->snapshot = array('page' => $page['page'],
-                              'mode' => $page['mode'],
-                              'get' => $page['get'],
-                              'post' => $page['post']);
+      $this->snapshot = array_merge(['get' => [], 'post' => []], $page);
     } else {
       foreach ($_GET as $key => $value) {
         if ($key != 'main_page') {
