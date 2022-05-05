@@ -638,6 +638,7 @@ class shoppingCart extends base
         foreach ($this->contents as $products_id => $data) {
             $total_before_discounts = 0;
             $freeShippingTotal = $productTotal = $totalOnetimeCharge = $totalOnetimeChargeNoDiscount = 0;
+            $free_shipping_applied = false;
             $qty = $this->contents[$products_id]['qty'];
 
             // products price
@@ -689,7 +690,8 @@ class shoppingCart extends base
                 }
 
                 // shipping adjustments for Product
-                if (($product->fields['product_is_always_free_shipping'] == 1) || ($product->fields['products_virtual'] == 1) || (preg_match('/^GIFT/', addslashes($product->fields['products_model'])))) {
+                if ($product->fields['product_is_always_free_shipping'] === '1' || $product->fields['products_virtual'] === '1' || preg_match('/^GIFT/', addslashes($product->fields['products_model']))) {
+                    $free_shipping_applied = true;
                     $this->free_shipping_item += $qty;
                     $freeShippingTotal += $products_price;
                     $this->free_shipping_weight += ($qty * $product->fields['products_weight']);
@@ -786,7 +788,7 @@ class shoppingCart extends base
                             // count number of downloads
                             $this->download_count += ($check_download->RecordCount() * $qty);
                             // do not count download as free when set to product/download combo
-                            if ($adjust_downloads == 1 and $product->fields['product_is_always_free_shipping'] != 2) {
+                            if ($free_shipping_applied === false && $adjust_downloads === 1 && $product->fields['product_is_always_free_shipping'] !== '2') {
                                 $freeShippingTotal += $products_price;
                                 $this->free_shipping_item += $qty;
                             }
