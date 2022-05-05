@@ -163,9 +163,12 @@ if ($action != '') {
         // output real data
         foreach ($results as $result) {
           $i ++;
-          $postoutput = '';
+          $postoutput = empty($result['gzpost']) ? '' : gzinflate($result['gzpost']);
+          if ($postoutput === false) {
+              $postoutput = '';
+          }
           if ($format == "XML") {
-            $postoutput = nl2br(print_r(json_decode(@gzinflate($result['gzpost'])), true));
+            $postoutput = nl2br(print_r(json_decode($postoutput), true));
             $exporter_output .= "<admin_activity_log>\n";
             $exporter_output .= "  <row>\n";
             $exporter_output .= "    <severity>" . $result['severity'] . "</severity>\n";
@@ -181,7 +184,7 @@ if ($action != '') {
             $exporter_output .= "    <postdata>" . $postoutput . "</postdata>\n";
             $exporter_output .= "  </row>\n";
           } else { // output non-XML data-format
-            $postoutput = print_r(json_decode(@gzinflate($result['gzpost'])), true);
+            $postoutput = print_r(json_decode($postoutput), true);
             if ($format == 'HTML') {
               $postoutput = nl2br(zen_output_string_protected($postoutput));
             } else {
