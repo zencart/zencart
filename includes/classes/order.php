@@ -128,7 +128,7 @@ class order extends base
             'city' => $order->fields['customers_city'],
             'postcode' => $order->fields['customers_postcode'],
             'state' => $order->fields['customers_state'],
-            'country' => $order->fields['customers_country'],
+            'country' => $this->getCountryInfo($order->fields['customers_country']),
             'format_id' => $order->fields['customers_address_format_id'],
             'telephone' => $order->fields['customers_telephone'],
             'email_address' => $order->fields['customers_email_address'],
@@ -142,7 +142,7 @@ class order extends base
             'city' => $order->fields['delivery_city'],
             'postcode' => $order->fields['delivery_postcode'],
             'state' => $order->fields['delivery_state'],
-            'country' => $order->fields['delivery_country'],
+            'country' => $this->getCountryInfo($order->fields['delivery_country']),
             'format_id' => $order->fields['delivery_address_format_id'],
         ];
 
@@ -159,7 +159,7 @@ class order extends base
             'city' => $order->fields['billing_city'],
             'postcode' => $order->fields['billing_postcode'],
             'state' => $order->fields['billing_state'],
-            'country' => $order->fields['billing_country'],
+            'country' => $this->getCountryInfo($order->fields['billing_country']),
             'format_id' => $order->fields['billing_address_format_id'],
         ];
 
@@ -296,6 +296,34 @@ class order extends base
             $statusArray[] = $result;
         }
         return $statusArray;
+    }
+
+    protected function getCountryInfo(string $country)
+    {
+        global $db;
+        $sql = "SELECT countries_id, countries_name, countries_iso_code_2, countries_iso_code_3, status
+            FROM " . TABLE_COUNTRIES . "
+            WHERE countries_name = :country";
+        $sql = $db->bindVars($sql, ':country', $country, 'string');
+        $results = $db->Execute($sql);
+        if (!$results->EOF) {
+            $result = $results->fields;
+            $return = [
+                'id' => $result['countries_id'],
+                'title' => $country,
+                'iso_code_2' => $result['countries_iso_code_2'],
+                'iso_code_3' => $result['countries_iso_code_3'],
+            ];
+        } else {
+            $return = [
+                'id' => 0,
+                'title' => $country,
+                'iso_code_2' => '',
+                'iso_code_3' => '',
+            ];
+
+        }
+        return $return;
     }
 
     function cart()
