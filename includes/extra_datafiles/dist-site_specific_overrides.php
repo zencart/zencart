@@ -13,8 +13,6 @@
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: lat9 2022 Apr 30 Modified in v1.5.8 $
  */
-//-For use on YOUR site, remove the following block-comment start!
-/*
 // -----
 // Identify whether the link to the 'brands' page (added in Zen Cart 1.5.8) is included in the "Information" sidebox.
 //
@@ -22,7 +20,12 @@
 // false ..... Never show in the sidebox.
 // Not set ... (i.e. leave the variable commented-out), the link shows if there are manufacturers with active products (default).
 //
-$flag_show_brand_sidebox_link = false;
+//$flag_show_brand_sidebox_link = false;
 
-//-For use on YOUR site, remove the following block-comment end!
-*/
+// -----
+// Identify whether the zcDate class' (added in Zen Cart 1.5.8) debug-output is initially enabled.
+//
+// true ...... The zcDate debug is enabled.
+// false ..... The zcDate debug is disabled (the default).
+//
+//$zen_date_debug = false;

@@ -281,7 +281,7 @@ class paypaldp extends base {
    * Display Credit Card Information Submission Fields on the Checkout Payment Page
    */
   function selection() {
-    global $order;
+    global $order, $zcDate;
     $this->cc_type_check =
             'var value = document.checkout_payment.paypalwpp_cc_type.value;' .
             'if (value == "Solo" || value == "Maestro") {' .
@@ -304,12 +304,12 @@ class paypaldp extends base {
     $expires_year = array();
     $issue_year = array();
     for ($i = 1; $i < 13; $i++) {
-      $expires_month[] = array('id' => sprintf('%02d', $i), 'text' => strftime('%B - (%m)',mktime(0,0,0,$i,1,2000)));
+      $expires_month[] = array('id' => sprintf('%02d', $i), 'text' => $zcDate->output('%B - (%m)', mktime(0,0,0,$i,1,2000)));
     }
 
     $today = getdate();
     for ($i = $today['year']; $i < $today['year'] + 15; $i++) {
-      $expires_year[] = array('id' => strftime('%y', mktime(0,0,0,1,1,$i)), 'text' => strftime('%Y',mktime(0,0,0,1,1,$i)));
+      $expires_year[] = array('id' => $zcDate->output('%y', mktime(0,0,0,1,1,$i)), 'text' => $zcDate->output('%Y', mktime(0,0,0,1,1,$i)));
     }
 
     $onFocus = ' onfocus="methodSelect(\'pmt-' . $this->code . '\')"';
@@ -329,7 +329,7 @@ class paypaldp extends base {
                            'field' => zen_draw_input_field('paypalwpp_cc_number', '', 'id="'.$this->code.'-cc-number"' . $onFocus . ' autocomplete="off"'),
                            'tag' => $this->code.'-cc-number');
     $fieldsArray[] = array('title' => MODULE_PAYMENT_PAYPALDP_TEXT_CREDIT_CARD_EXPIRES,
-                           'field' => zen_draw_pull_down_menu('paypalwpp_cc_expires_month', $expires_month, strftime('%m'), 'id="'.$this->code.'-cc-expires-month"' . $onFocus) . '&nbsp;' . zen_draw_pull_down_menu('paypalwpp_cc_expires_year', $expires_year, '', 'id="'.$this->code.'-cc-expires-year"' . $onFocus),
+                           'field' => zen_draw_pull_down_menu('paypalwpp_cc_expires_month', $expires_month, $zcDate->output('%m'), 'id="'.$this->code.'-cc-expires-month"' . $onFocus) . '&nbsp;' . zen_draw_pull_down_menu('paypalwpp_cc_expires_year', $expires_year, '', 'id="'.$this->code.'-cc-expires-year"' . $onFocus),
                            'tag' => $this->code.'-cc-expires-month');
     $fieldsArray[] = array('title' => MODULE_PAYMENT_PAYPALDP_TEXT_CREDIT_CARD_CHECKNUMBER,
                            'field' => zen_draw_input_field('paypalwpp_cc_checkcode', '', 'size="4" maxlength="4"' . ' id="'.$this->code.'-cc-cvv"' . $onFocus . ' autocomplete="off"') . '&nbsp;<small>' . MODULE_PAYMENT_PAYPALDP_TEXT_CREDIT_CARD_CHECKNUMBER_LOCATION . '</small><script>paypalwpp_cc_type_check();</script>',
@@ -342,7 +342,7 @@ class paypaldp extends base {
     if (MODULE_PAYMENT_PAYPALDP_MERCHANT_COUNTRY == 'UK' && (CC_ENABLED_MAESTRO=='1' || CC_ENABLED_SOLO=='1')) {
       // add extra fields for UK cards
       for ($i = $today['year'] - 10; $i <= $today['year']; $i++) {
-        $issue_year[] = array('id' => strftime('%y',mktime(0,0,0,1,1,$i)), 'text' => strftime('%Y',mktime(0,0,0,1,1,$i)));
+        $issue_year[] = array('id' => $zcDate->output('%y', mktime(0,0,0,1,1,$i)), 'text' => $zcDate->output('%Y', mktime(0,0,0,1,1,$i)));
       }
       array_splice($selection['fields'], 4, 0,
                    array(array('title' => MODULE_PAYMENT_PAYPALDP_TEXT_CREDIT_CARD_ISSUE,
@@ -539,6 +539,7 @@ class paypaldp extends base {
    * Display Credit Card Information for review on the Checkout Confirmation Page
    */
   function confirmation() {
+    global $zcDate;
     $confirmation = array('title' => '',
                           'fields' => array(array('title' => MODULE_PAYMENT_PAYPALDP_TEXT_CREDIT_CARD_FIRSTNAME,
                                                   'field' => $_POST['paypalwpp_cc_firstname']),
@@ -549,7 +550,7 @@ class paypaldp extends base {
                                             array('title' => MODULE_PAYMENT_PAYPALDP_TEXT_CREDIT_CARD_NUMBER,
                                                   'field' => substr($_POST['paypalwpp_cc_number'], 0, 4) . str_repeat('X', (strlen($_POST['paypalwpp_cc_number']) - 8)) . substr($_POST['paypalwpp_cc_number'], -4)),
                                             array('title' => MODULE_PAYMENT_PAYPALDP_TEXT_CREDIT_CARD_EXPIRES,
-                                                  'field' => strftime('%B, %Y', mktime(0,0,0,$_POST['paypalwpp_cc_expires_month'], 1, '20' . $_POST['paypalwpp_cc_expires_year'])),
+                                                  'field' => $zcDate->output('%B, %Y', mktime(0,0,0,$_POST['paypalwpp_cc_expires_month'], 1, '20' . $_POST['paypalwpp_cc_expires_year'])),
                                             (isset($_POST['paypalwpp_cc_issuenumber']) ? array('title' => MODULE_PAYMENT_PAYPALDP_TEXT_ISSUE_NUMBER,
                                                   'field' => $_POST['paypalwpp_cc_issuenumber']) : '')
                                             )));
