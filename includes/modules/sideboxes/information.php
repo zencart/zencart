@@ -10,7 +10,13 @@
 
 $information = [];
 
-$information[] = '<a href="' . zen_href_link(FILENAME_ABOUT_US) . '">' . BOX_INFORMATION_ABOUT_US . '</a>';
+// -----
+// The following flag is set by /includes/init_includes/init_common_elements.php; refer to that module's
+// comments for the way to override this setting.
+//
+if ($flag_show_about_us_sidebox_link === true) {
+    $information[] = '<a href="' . zen_href_link(FILENAME_ABOUT_US) . '">' . BOX_INFORMATION_ABOUT_US . '</a>';
+}
 
 // -----
 // The following flag is set by /includes/init_includes/init_common_elements.php; refer to that module's

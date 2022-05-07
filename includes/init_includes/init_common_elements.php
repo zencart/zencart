@@ -14,6 +14,12 @@ if (!defined('IS_ADMIN_FLAG')) {
 
 // -----
 // Sets the processing flag (used by /includes/modules/sideboxes/information.php) that
+// indicates whether or not a link to the "About Us" page should be included.
+//
+$flag_show_about_us_sidebox_link = (isset($flag_show_about_us_sidebox_link)) ? (bool)$flag_show_about_us_sidebox_link : true;
+
+// -----
+// Sets the processing flag (used by /includes/modules/sideboxes/information.php) that
 // indicates whether or not a link to the "Brands" page should be included.
 //
 if (isset($flag_show_brand_sidebox_link)) {
