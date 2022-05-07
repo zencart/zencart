@@ -37,14 +37,18 @@ trait ConfigureFileConcerns
     {
         $this->saveConfigures($rootPath);
         $file = $rootPath . '/includes/configure.php';
-        unlink($file);
-        touch($file);
-        chmod($file, 0777);
+        if (file_exists($file)) {
+            unlink($file);
+            touch($file);
+            chmod($file, 0777);
+        }
 
         $file = $rootPath . '/admin/includes/configure.php';
-        unlink($file);
-        touch($file);
-        chmod($file, 0777);
+        if (file_exists($file)) {
+            unlink($file);
+            touch($file);
+            chmod($file, 0777);
+        }
     }
 
     protected function saveConfigures($rootPath)
@@ -57,7 +61,9 @@ trait ConfigureFileConcerns
 
     protected function saveConfigureFile($dest)
     {
-        copy($dest, $dest.'.config.save');
+        if (file_exists($dest)) {
+            copy($dest, $dest . '.config.save');
+        }
     }
 
 }
