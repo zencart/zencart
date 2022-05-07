@@ -9,8 +9,6 @@ use Tests\Browser\Traits\DatabaseConcerns;
 
 class AdminLoginPageTest extends AdminDuskTestCase
 {
-    use DatabaseConcerns;
-    use ConfigureFileConcerns;
 
     /** @test */
     public function admin_login_page_displays()

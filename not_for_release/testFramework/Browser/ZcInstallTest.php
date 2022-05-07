@@ -27,8 +27,7 @@ class ZcInstallTest extends InstallDuskTestCase
                 ->type('#admin_email', ADMIN_EMAIL)
                 ->type('#admin_email2', ADMIN_EMAIL)
                 ->click('#btnsubmit')
-                ->assertSee('Setup Complete')
-            ;
+                ->assertSee('Setup Complete');
         });
     }
 }

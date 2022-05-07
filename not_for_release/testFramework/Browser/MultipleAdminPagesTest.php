@@ -8,9 +8,6 @@ use Tests\Browser\Traits\DatabaseConcerns;
 
 class MultipleAdminPagesTest extends AdminDuskTestCase
 {
-    use DatabaseConcerns;
-    use ConfigureFileConcerns;
-
     protected $pageMap = [
         ['page' => 'home', 'see' => 'Statistics'],
         ['page' => 'admin_account', 'see' => 'Reset Password'],
