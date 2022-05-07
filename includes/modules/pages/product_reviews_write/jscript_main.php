@@ -20,7 +20,7 @@
 // $Id: jscript_main.php 1105 2005-04-04 22:05:35Z birdbrain $
 //
 ?>
-<script type="text/javascript">
+<script>
 var form = "";
 var submitted = false;
 var error = false;

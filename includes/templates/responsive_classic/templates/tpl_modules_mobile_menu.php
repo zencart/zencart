@@ -146,9 +146,9 @@ echo $menulist;
   </ul>
 </nav>
 
-<script src="<?php echo $template->get_template_dir('jquery.mmenu.min.all.js',DIR_WS_TEMPLATE, $current_page_base,'jscript') . '/jquery.mmenu.min.all.js' ?>" type="text/javascript"></script>
-<script src="<?php echo $template->get_template_dir('jquery.mmenu.fixedelements.min.js',DIR_WS_TEMPLATE, $current_page_base,'jscript') . '/jquery.mmenu.fixedelements.min.js' ?>" type="text/javascript"></script>
-<script type="text/javascript">
+<script src="<?php echo $template->get_template_dir('jquery.mmenu.min.all.js',DIR_WS_TEMPLATE, $current_page_base,'jscript') . '/jquery.mmenu.min.all.js' ?>"></script>
+<script src="<?php echo $template->get_template_dir('jquery.mmenu.fixedelements.min.js',DIR_WS_TEMPLATE, $current_page_base,'jscript') . '/jquery.mmenu.fixedelements.min.js' ?>"></script>
+<script>
   $(function() {
     $("#menu")
       .mmenu({

@@ -128,7 +128,7 @@ class order extends base
             'city' => $order->fields['customers_city'],
             'postcode' => $order->fields['customers_postcode'],
             'state' => $order->fields['customers_state'],
-            'country' => $order->fields['customers_country'],
+            'country' => $this->getCountryInfo($order->fields['customers_country']),
             'format_id' => $order->fields['customers_address_format_id'],
             'telephone' => $order->fields['customers_telephone'],
             'email_address' => $order->fields['customers_email_address'],
@@ -142,7 +142,7 @@ class order extends base
             'city' => $order->fields['delivery_city'],
             'postcode' => $order->fields['delivery_postcode'],
             'state' => $order->fields['delivery_state'],
-            'country' => $order->fields['delivery_country'],
+            'country' => $this->getCountryInfo($order->fields['delivery_country']),
             'format_id' => $order->fields['delivery_address_format_id'],
         ];
 
@@ -159,7 +159,7 @@ class order extends base
             'city' => $order->fields['billing_city'],
             'postcode' => $order->fields['billing_postcode'],
             'state' => $order->fields['billing_state'],
-            'country' => $order->fields['billing_country'],
+            'country' => $this->getCountryInfo($order->fields['billing_country']),
             'format_id' => $order->fields['billing_address_format_id'],
         ];
 
@@ -296,6 +296,34 @@ class order extends base
             $statusArray[] = $result;
         }
         return $statusArray;
+    }
+
+    protected function getCountryInfo(string $country)
+    {
+        global $db;
+        $sql = "SELECT countries_id, countries_name, countries_iso_code_2, countries_iso_code_3, status
+            FROM " . TABLE_COUNTRIES . "
+            WHERE countries_name = :country";
+        $sql = $db->bindVars($sql, ':country', $country, 'string');
+        $results = $db->Execute($sql);
+        if (!$results->EOF) {
+            $result = $results->fields;
+            $return = [
+                'id' => $result['countries_id'],
+                'title' => $country,
+                'iso_code_2' => $result['countries_iso_code_2'],
+                'iso_code_3' => $result['countries_iso_code_3'],
+            ];
+        } else {
+            $return = [
+                'id' => 0,
+                'title' => $country,
+                'iso_code_2' => '',
+                'iso_code_3' => '',
+            ];
+
+        }
+        return $return;
     }
 
     function cart()
@@ -538,7 +566,7 @@ class order extends base
                     if ($value == PRODUCTS_OPTIONS_VALUES_TEXT_ID) {
                         $attr_value = $products[$i]['attributes_values'][$option];
                     } else {
-                        $attr_value = $attributes->fields['products_options_values_name'];
+                        $attr_value = htmlspecialchars_decode($attributes->fields['products_options_values_name'], ENT_COMPAT);
                     }
 
                     $this->products[$index]['attributes'][$subindex] = [
@@ -1113,7 +1141,7 @@ class order extends base
      */
     function send_order_email($zf_insert_id = null)
     {
-        global $currencies, $order_totals;
+        global $currencies, $order_totals, $zcDate;
 
         if ($zf_insert_id === null) $zf_insert_id = $this->orderId;
 
@@ -1136,7 +1164,7 @@ class order extends base
             EMAIL_THANKS_FOR_SHOPPING . "\n" . EMAIL_DETAILS_FOLLOW . "\n" .
             EMAIL_SEPARATOR . "\n" .
             EMAIL_TEXT_ORDER_NUMBER . ' ' . $zf_insert_id . "\n" .
-            EMAIL_TEXT_DATE_ORDERED . ' ' . strftime(DATE_FORMAT_LONG) . "\n" .
+            EMAIL_TEXT_DATE_ORDERED . ' ' . $zcDate->output(DATE_FORMAT_LONG) . "\n" .
             EMAIL_TEXT_INVOICE_URL . ' ' . zen_href_link(FILENAME_ACCOUNT_HISTORY_INFO, 'order_id=' . $zf_insert_id, 'SSL', false) . "\n\n";
 
         $html_msg['EMAIL_TEXT_HEADER'] = EMAIL_TEXT_HEADER;
@@ -1147,7 +1175,7 @@ class order extends base
         $html_msg['INTRO_ORDER_NUM_TITLE'] = EMAIL_TEXT_ORDER_NUMBER;
         $html_msg['INTRO_ORDER_NUMBER'] = $zf_insert_id;
         $html_msg['INTRO_DATE_TITLE'] = EMAIL_TEXT_DATE_ORDERED;
-        $html_msg['INTRO_DATE_ORDERED'] = strftime(DATE_FORMAT_LONG);
+        $html_msg['INTRO_DATE_ORDERED'] = $zcDate->output(DATE_FORMAT_LONG);
         $html_msg['INTRO_URL_TEXT'] = EMAIL_TEXT_INVOICE_URL_CLICK;
         $html_msg['INTRO_URL_VALUE'] = zen_href_link(FILENAME_ACCOUNT_HISTORY_INFO, 'order_id=' . $zf_insert_id, 'SSL', false);
         $html_msg['EMAIL_CUSTOMER_PHONE'] = $this->customer['telephone'];

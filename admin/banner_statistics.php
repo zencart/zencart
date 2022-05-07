@@ -18,7 +18,7 @@ $months_array = array();
 for ($i = 1; $i < 13; $i++) {
   $months_array[] = array(
     'id' => $i,
-    'text' => strftime('%B', mktime(0, 0, 0, $i)));
+    'text' => $zcDate->output('%B', mktime(0, 0, 0, $i)));
 }
 $type_array = array(array(
     'id' => 'daily',

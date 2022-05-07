@@ -329,6 +329,8 @@ function zen_get_uploaded_file(string $filename)
  */
 function get_logs_data($maxToList = 'count')
 {
+    global $zcDate;
+
     if (!defined('DIR_FS_LOGS')) define('DIR_FS_LOGS', DIR_FS_CATALOG . 'logs');
     if (!defined('DIR_FS_SQL_CACHE')) define('DIR_FS_SQL_CACHE', DIR_FS_CATALOG . 'cache');
     $logs = array();
@@ -349,7 +351,7 @@ function get_logs_data($maxToList = 'count')
                 $logs[$i]['filename'] = $logfile;
                 $logs[$i]['filesize'] = @filesize($filename);
                 $logs[$i]['unixtime'] = @filemtime($filename);
-                $logs[$i]['datetime'] = strftime(DATE_TIME_FORMAT, $logs[$i]['unixtime']);
+                $logs[$i]['datetime'] = $zcDate->output(DATE_TIME_FORMAT, $logs[$i]['unixtime']);
             }
             $i++;
             if ($maxToList != 'count' && $i >= $maxToList) break;

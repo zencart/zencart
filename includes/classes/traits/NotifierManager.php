@@ -99,6 +99,8 @@ trait NotifierManager
         if (!defined('NOTIFIER_TRACE') || empty(NOTIFIER_TRACE) || NOTIFIER_TRACE === 'false' || NOTIFIER_TRACE === 'Off') {
             return;
         }
+        global $zcDate;
+
         $file = DIR_FS_LOGS . '/notifier_trace.log';
         $paramArray = (is_array($param1) && count($param1) == 0) ? array() : array('param1' => $param1);
         for ($i = 2; $i < 10; $i++) {
@@ -121,7 +123,7 @@ trait NotifierManager
                 $output .= print_r($paramArray, true);
             }
         }
-        error_log(strftime("%Y-%m-%d %H:%M:%S") . ' [main_page=' . $main_page . '] ' . $eventID . $output . "\n", 3, $file);
+        error_log($zcDate->output("%Y-%m-%d %H:%M:%S") . ' [main_page=' . $main_page . '] ' . $eventID . $output . "\n", 3, $file);
     }
 
     private function eventIdHasAlias($eventId)

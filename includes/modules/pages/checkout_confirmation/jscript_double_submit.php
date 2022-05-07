@@ -9,7 +9,7 @@
  * @version $Id: DrByte 2019 May 25 Modified in v1.5.6b $
  */
 ?>
-<script type="text/javascript">
+<script>
 function submitonce()
 {
   var button = document.getElementById("btn_submit");

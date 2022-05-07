@@ -29,6 +29,7 @@ if (!defined('USE_PCONNECT')) define('USE_PCONNECT', 'false');
  * require(DIR_FS_CATALOG . DIR_WS_CLASSES . 'class.zcPassword.php');
  * zcPassword = new zcPassword();
  * require(DIR_WS_CLASSES . VersionServer.php');
+ * require DIR_FS_CATALOG . DIR_WS_CLASSES . 'zcDate.php';
  */
   $autoLoadConfig[0][] = array('autoType'=>'require',
                                'loadFile'=> DIR_FS_CATALOG . DIR_WS_INCLUDES .  'version.php');
@@ -83,7 +84,22 @@ if (!defined('USE_PCONNECT')) define('USE_PCONNECT', 'false');
   $autoLoadConfig[0][] = array('autoType'=>'class',
                                'loadFile'=> 'Customer.php',
                                'classPath'=>DIR_FS_CATALOG . DIR_WS_CLASSES);
-
+  $autoLoadConfig[0][] = [
+    'autoType' => 'class',
+    'loadFile' => 'zcDate.php',
+    'classPath' => DIR_FS_CATALOG . DIR_WS_CLASSES
+  ];
+/**
+ * Breakpoint 5.
+ *
+ * $zcDate = new zcDate();
+ *
+ */
+  $autoLoadConfig[5][] = [
+    'autoType' => 'classInstantiate',
+    'className' => 'zcDate',
+    'objectName' => 'zcDate'
+  ];
 /**
  * Breakpoint 10.
  *

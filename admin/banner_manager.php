@@ -232,7 +232,7 @@ if (!empty($action)) {
     <?php require(DIR_WS_INCLUDES . 'header.php'); ?>
     <!-- header_eof //-->
 
-    <!--[if lte IE 8]><script type="text/javascript" src="includes/javascript/flot/excanvas.min.js"></script><![endif]-->
+    <!--[if lte IE 8]><script src="includes/javascript/flot/excanvas.min.js"></script><![endif]-->
     <script src="includes/javascript/flot/jquery.flot.min.js"></script>
     <script src="includes/javascript/flot/jquery.flot.orderbars.js"></script>
 

@@ -85,7 +85,7 @@ if ($num_products_count > 0) {
   }
 
   if ($specials_index->RecordCount() > 0) {
-    $title = '<h2 class="centerBoxHeading">' . sprintf(TABLE_HEADING_SPECIALS_INDEX, strftime('%B')) . '</h2>';
+    $title = '<h2 class="centerBoxHeading">' . sprintf(TABLE_HEADING_SPECIALS_INDEX, $zcDate->output('%B')) . '</h2>';
     $zc_show_specials = true;
   }
 }

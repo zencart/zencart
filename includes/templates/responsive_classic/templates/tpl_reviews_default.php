@@ -10,7 +10,7 @@
 ?>
 
 
-<script type="text/javascript">
+<script>
   $(function() {
     $(document).ready(function() {
       $('.grids').matchHeight();
