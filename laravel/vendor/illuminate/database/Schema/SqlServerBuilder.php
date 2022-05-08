@@ -7,7 +7,7 @@ class SqlServerBuilder extends Builder
     /**
      * Create a database in the schema.
      *
-     * @param  string $name
+     * @param  string  $name
      * @return bool
      */
     public function createDatabase($name)
@@ -20,7 +20,7 @@ class SqlServerBuilder extends Builder
     /**
      * Drop a database from the schema if the database exists.
      *
-     * @param  string $name
+     * @param  string  $name
      * @return bool
      */
     public function dropDatabaseIfExists($name)
@@ -50,5 +50,29 @@ class SqlServerBuilder extends Builder
     public function dropAllViews()
     {
         $this->connection->statement($this->grammar->compileDropAllViews());
+    }
+
+    /**
+     * Drop all tables from the database.
+     *
+     * @return array
+     */
+    public function getAllTables()
+    {
+        return $this->connection->select(
+            $this->grammar->compileGetAllTables()
+        );
+    }
+
+    /**
+     * Get all of the view names for the database.
+     *
+     * @return array
+     */
+    public function getAllViews()
+    {
+        return $this->connection->select(
+            $this->grammar->compileGetAllViews()
+        );
     }
 }

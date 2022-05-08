@@ -11,6 +11,9 @@
 
 namespace Symfony\Component\Console\Command;
 
+use Symfony\Component\Console\Completion\CompletionInput;
+use Symfony\Component\Console\Completion\CompletionSuggestions;
+use Symfony\Component\Console\Descriptor\ApplicationDescription;
 use Symfony\Component\Console\Helper\DescriptorHelper;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -64,11 +67,9 @@ EOF
     /**
      * {@inheritdoc}
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        if (null === $this->command) {
-            $this->command = $this->getApplication()->find($input->getArgument('command_name'));
-        }
+        $this->command ??= $this->getApplication()->find($input->getArgument('command_name'));
 
         $helper = new DescriptorHelper();
         $helper->describe($output, $this->command, [
@@ -76,8 +77,23 @@ EOF
             'raw_text' => $input->getOption('raw'),
         ]);
 
-        $this->command = null;
+        unset($this->command);
 
         return 0;
+    }
+
+    public function complete(CompletionInput $input, CompletionSuggestions $suggestions): void
+    {
+        if ($input->mustSuggestArgumentValuesFor('command_name')) {
+            $descriptor = new ApplicationDescription($this->getApplication());
+            $suggestions->suggestValues(array_keys($descriptor->getCommands()));
+
+            return;
+        }
+
+        if ($input->mustSuggestOptionValuesFor('format')) {
+            $helper = new DescriptorHelper();
+            $suggestions->suggestValues($helper->getFormats());
+        }
     }
 }

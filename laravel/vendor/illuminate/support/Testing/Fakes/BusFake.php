@@ -36,6 +36,13 @@ class BusFake implements QueueingDispatcher
     protected $commands = [];
 
     /**
+     * The commands that have been dispatched synchronously.
+     *
+     * @var array
+     */
+    protected $commandsSync = [];
+
+    /**
      * The commands that have been dispatched after the response has been sent.
      *
      * @var array
@@ -82,7 +89,8 @@ class BusFake implements QueueingDispatcher
 
         PHPUnit::assertTrue(
             $this->dispatched($command, $callback)->count() > 0 ||
-            $this->dispatchedAfterResponse($command, $callback)->count() > 0,
+            $this->dispatchedAfterResponse($command, $callback)->count() > 0 ||
+            $this->dispatchedSync($command, $callback)->count() > 0,
             "The expected [{$command}] job was not dispatched."
         );
     }
@@ -97,7 +105,8 @@ class BusFake implements QueueingDispatcher
     public function assertDispatchedTimes($command, $times = 1)
     {
         $count = $this->dispatched($command)->count() +
-                 $this->dispatchedAfterResponse($command)->count();
+                 $this->dispatchedAfterResponse($command)->count() +
+                 $this->dispatchedSync($command)->count();
 
         PHPUnit::assertSame(
             $times, $count,
@@ -120,8 +129,78 @@ class BusFake implements QueueingDispatcher
 
         PHPUnit::assertTrue(
             $this->dispatched($command, $callback)->count() === 0 &&
-            $this->dispatchedAfterResponse($command, $callback)->count() === 0,
+            $this->dispatchedAfterResponse($command, $callback)->count() === 0 &&
+            $this->dispatchedSync($command, $callback)->count() === 0,
             "The unexpected [{$command}] job was dispatched."
+        );
+    }
+
+    /**
+     * Assert that no jobs were dispatched.
+     *
+     * @return void
+     */
+    public function assertNothingDispatched()
+    {
+        PHPUnit::assertEmpty($this->commands, 'Jobs were dispatched unexpectedly.');
+    }
+
+    /**
+     * Assert if a job was explicitly dispatched synchronously based on a truth-test callback.
+     *
+     * @param  string|\Closure  $command
+     * @param  callable|int|null  $callback
+     * @return void
+     */
+    public function assertDispatchedSync($command, $callback = null)
+    {
+        if ($command instanceof Closure) {
+            [$command, $callback] = [$this->firstClosureParameterType($command), $command];
+        }
+
+        if (is_numeric($callback)) {
+            return $this->assertDispatchedSyncTimes($command, $callback);
+        }
+
+        PHPUnit::assertTrue(
+            $this->dispatchedSync($command, $callback)->count() > 0,
+            "The expected [{$command}] job was not dispatched synchronously."
+        );
+    }
+
+    /**
+     * Assert if a job was pushed synchronously a number of times.
+     *
+     * @param  string  $command
+     * @param  int  $times
+     * @return void
+     */
+    public function assertDispatchedSyncTimes($command, $times = 1)
+    {
+        $count = $this->dispatchedSync($command)->count();
+
+        PHPUnit::assertSame(
+            $times, $count,
+            "The expected [{$command}] job was synchronously pushed {$count} times instead of {$times} times."
+        );
+    }
+
+    /**
+     * Determine if a job was dispatched based on a truth-test callback.
+     *
+     * @param  string|\Closure  $command
+     * @param  callable|null  $callback
+     * @return void
+     */
+    public function assertNotDispatchedSync($command, $callback = null)
+    {
+        if ($command instanceof Closure) {
+            [$command, $callback] = [$this->firstClosureParameterType($command), $command];
+        }
+
+        PHPUnit::assertCount(
+            0, $this->dispatchedSync($command, $callback),
+            "The unexpected [{$command}] job was dispatched synchronously."
         );
     }
 
@@ -144,7 +223,7 @@ class BusFake implements QueueingDispatcher
 
         PHPUnit::assertTrue(
             $this->dispatchedAfterResponse($command, $callback)->count() > 0,
-            "The expected [{$command}] job was not dispatched for after sending the response."
+            "The expected [{$command}] job was not dispatched after sending the response."
         );
     }
 
@@ -180,7 +259,7 @@ class BusFake implements QueueingDispatcher
 
         PHPUnit::assertCount(
             0, $this->dispatchedAfterResponse($command, $callback),
-            "The unexpected [{$command}] job was dispatched for after sending the response."
+            "The unexpected [{$command}] job was dispatched after sending the response."
         );
     }
 
@@ -272,14 +351,12 @@ class BusFake implements QueueingDispatcher
      */
     protected function assertDispatchedWithChainOfObjects($command, $expectedChain, $callback)
     {
-        $chain = collect($expectedChain)->map(function ($job) {
-            return serialize($job);
-        })->all();
+        $chain = collect($expectedChain)->map(fn ($job) => serialize($job))->all();
 
         PHPUnit::assertTrue(
-            $this->dispatched($command, $callback)->filter(function ($job) use ($chain) {
-                return $job->chained == $chain;
-            })->isNotEmpty(),
+            $this->dispatched($command, $callback)->filter(
+                fn ($job) => $job->chained == $chain
+            )->isNotEmpty(),
             'The expected chain was not dispatched.'
         );
     }
@@ -295,12 +372,12 @@ class BusFake implements QueueingDispatcher
     protected function assertDispatchedWithChainOfClasses($command, $expectedChain, $callback)
     {
         $matching = $this->dispatched($command, $callback)->map->chained->map(function ($chain) {
-            return collect($chain)->map(function ($job) {
-                return get_class(unserialize($job));
-            });
-        })->filter(function ($chain) use ($expectedChain) {
-            return $chain->all() === $expectedChain;
-        });
+            return collect($chain)->map(
+                fn ($job) => get_class(unserialize($job))
+            );
+        })->filter(
+            fn ($chain) => $chain->all() === $expectedChain
+        );
 
         PHPUnit::assertTrue(
             $matching->isNotEmpty(), 'The expected chain was not dispatched.'
@@ -315,9 +392,7 @@ class BusFake implements QueueingDispatcher
      */
     protected function isChainOfObjects($chain)
     {
-        return ! collect($chain)->contains(function ($job) {
-            return ! is_object($job);
-        });
+        return ! collect($chain)->contains(fn ($job) => ! is_object($job));
     }
 
     /**
@@ -335,6 +410,19 @@ class BusFake implements QueueingDispatcher
     }
 
     /**
+     * Assert the number of batches that have been dispatched.
+     *
+     * @param  int  $count
+     * @return void
+     */
+    public function assertBatchCount($count)
+    {
+        PHPUnit::assertCount(
+            $count, $this->batches,
+        );
+    }
+
+    /**
      * Get all of the jobs matching a truth-test callback.
      *
      * @param  string  $command
@@ -347,13 +435,27 @@ class BusFake implements QueueingDispatcher
             return collect();
         }
 
-        $callback = $callback ?: function () {
-            return true;
-        };
+        $callback = $callback ?: fn () => true;
 
-        return collect($this->commands[$command])->filter(function ($command) use ($callback) {
-            return $callback($command);
-        });
+        return collect($this->commands[$command])->filter(fn ($command) => $callback($command));
+    }
+
+    /**
+     * Get all of the jobs dispatched synchronously matching a truth-test callback.
+     *
+     * @param  string  $command
+     * @param  callable|null  $callback
+     * @return \Illuminate\Support\Collection
+     */
+    public function dispatchedSync(string $command, $callback = null)
+    {
+        if (! $this->hasDispatchedSync($command)) {
+            return collect();
+        }
+
+        $callback = $callback ?: fn () => true;
+
+        return collect($this->commandsSync[$command])->filter(fn ($command) => $callback($command));
     }
 
     /**
@@ -369,13 +471,9 @@ class BusFake implements QueueingDispatcher
             return collect();
         }
 
-        $callback = $callback ?: function () {
-            return true;
-        };
+        $callback = $callback ?: fn () => true;
 
-        return collect($this->commandsAfterResponse[$command])->filter(function ($command) use ($callback) {
-            return $callback($command);
-        });
+        return collect($this->commandsAfterResponse[$command])->filter(fn ($command) => $callback($command));
     }
 
     /**
@@ -390,9 +488,7 @@ class BusFake implements QueueingDispatcher
             return collect();
         }
 
-        return collect($this->batches)->filter(function ($batch) use ($callback) {
-            return $callback($batch);
-        });
+        return collect($this->batches)->filter(fn ($batch) => $callback($batch));
     }
 
     /**
@@ -404,6 +500,17 @@ class BusFake implements QueueingDispatcher
     public function hasDispatched($command)
     {
         return isset($this->commands[$command]) && ! empty($this->commands[$command]);
+    }
+
+    /**
+     * Determine if there are any stored commands for a given class.
+     *
+     * @param  string  $command
+     * @return bool
+     */
+    public function hasDispatchedSync($command)
+    {
+        return isset($this->commandsSync[$command]) && ! empty($this->commandsSync[$command]);
     }
 
     /**
@@ -435,7 +542,7 @@ class BusFake implements QueueingDispatcher
     /**
      * Dispatch a command to its appropriate handler in the current process.
      *
-     * Queuable jobs will be dispatched to the "sync" queue.
+     * Queueable jobs will be dispatched to the "sync" queue.
      *
      * @param  mixed  $command
      * @param  mixed  $handler
@@ -444,7 +551,7 @@ class BusFake implements QueueingDispatcher
     public function dispatchSync($command, $handler = null)
     {
         if ($this->shouldFakeJob($command)) {
-            $this->commands[get_class($command)][] = $command;
+            $this->commandsSync[get_class($command)][] = $command;
         } else {
             return $this->dispatcher->dispatchSync($command, $handler);
         }
@@ -534,7 +641,7 @@ class BusFake implements QueueingDispatcher
     /**
      * Record the fake pending batch dispatch.
      *
-     * @param  \Illuminate\Bus\PendingBatch $pendingBatch
+     * @param  \Illuminate\Bus\PendingBatch  $pendingBatch
      * @return \Illuminate\Bus\Batch
      */
     public function recordPendingBatch(PendingBatch $pendingBatch)

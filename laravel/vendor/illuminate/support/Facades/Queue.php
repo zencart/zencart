@@ -19,9 +19,8 @@ use Illuminate\Support\Testing\Fakes\QueueFake;
  * @method static void assertNotPushed(string|\Closure $job, callable $callback = null)
  * @method static void assertNothingPushed()
  * @method static void assertPushed(string|\Closure $job, callable|int $callback = null)
- * @method static void assertPushedOn(string $queue, string|\Closure $job, callable|int $callback = null)
+ * @method static void assertPushedOn(string $queue, string|\Closure $job, callable $callback = null)
  * @method static void assertPushedWithChain(string $job, array $expectedChain = [], callable $callback = null)
- * @method static void popUsing(string $workerName, callable $callback)
  *
  * @see \Illuminate\Queue\QueueManager
  * @see \Illuminate\Queue\Queue
@@ -43,11 +42,12 @@ class Queue extends Facade
     /**
      * Replace the bound instance with a fake.
      *
+     * @param  array|string  $jobsToFake
      * @return \Illuminate\Support\Testing\Fakes\QueueFake
      */
-    public static function fake()
+    public static function fake($jobsToFake = [])
     {
-        static::swap($fake = new QueueFake(static::getFacadeApplication()));
+        static::swap($fake = new QueueFake(static::getFacadeApplication(), $jobsToFake, static::getFacadeRoot()));
 
         return $fake;
     }
