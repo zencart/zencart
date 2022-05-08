@@ -3,8 +3,10 @@
 namespace Illuminate\Support;
 
 use ReflectionClass;
+use ReflectionEnum;
 use ReflectionMethod;
 use ReflectionNamedType;
+use ReflectionUnionType;
 
 class Reflector
 {
@@ -21,8 +23,7 @@ class Reflector
             return is_callable($var, $syntaxOnly);
         }
 
-        if ((! isset($var[0]) || ! isset($var[1])) ||
-            ! is_string($var[1] ?? null)) {
+        if (! isset($var[0], $var[1]) || ! is_string($var[1] ?? null)) {
             return false;
         }
 
@@ -69,6 +70,45 @@ class Reflector
             return;
         }
 
+        return static::getTypeName($parameter, $type);
+    }
+
+    /**
+     * Get the class names of the given parameter's type, including union types.
+     *
+     * @param  \ReflectionParameter  $parameter
+     * @return array
+     */
+    public static function getParameterClassNames($parameter)
+    {
+        $type = $parameter->getType();
+
+        if (! $type instanceof ReflectionUnionType) {
+            return array_filter([static::getParameterClassName($parameter)]);
+        }
+
+        $unionTypes = [];
+
+        foreach ($type->getTypes() as $listedType) {
+            if (! $listedType instanceof ReflectionNamedType || $listedType->isBuiltin()) {
+                continue;
+            }
+
+            $unionTypes[] = static::getTypeName($parameter, $listedType);
+        }
+
+        return array_filter($unionTypes);
+    }
+
+    /**
+     * Get the given type's class name.
+     *
+     * @param  \ReflectionParameter  $parameter
+     * @param  \ReflectionNamedType  $type
+     * @return string
+     */
+    protected static function getTypeName($parameter, $type)
+    {
         $name = $type->getName();
 
         if (! is_null($class = $parameter->getDeclaringClass())) {
@@ -95,8 +135,28 @@ class Reflector
     {
         $paramClassName = static::getParameterClassName($parameter);
 
-        return ($paramClassName && class_exists($paramClassName))
-            ? (new ReflectionClass($paramClassName))->isSubclassOf($className)
-            : false;
+        return $paramClassName
+            && (class_exists($paramClassName) || interface_exists($paramClassName))
+            && (new ReflectionClass($paramClassName))->isSubclassOf($className);
+    }
+
+    /**
+     * Determine if the parameter's type is a Backed Enum with a string backing type.
+     *
+     * @param  \ReflectionParameter  $parameter
+     * @return bool
+     */
+    public static function isParameterBackedEnumWithStringBackingType($parameter)
+    {
+        $backedEnumClass = (string) $parameter->getType();
+
+        if (function_exists('enum_exists') && enum_exists($backedEnumClass)) {
+            $reflectionBackedEnum = new ReflectionEnum($backedEnumClass);
+
+            return $reflectionBackedEnum->isBacked()
+                && $reflectionBackedEnum->getBackingType()->getName() == 'string';
+        }
+
+        return false;
     }
 }

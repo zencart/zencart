@@ -31,15 +31,21 @@ class SqlServerGrammar extends Grammar
             return parent::compileSelect($query);
         }
 
-        // If an offset is present on the query, we will need to wrap the query in
-        // a big "ANSI" offset syntax block. This is very nasty compared to the
-        // other database systems but is necessary for implementing features.
         if (is_null($query->columns)) {
             $query->columns = ['*'];
         }
 
+        $components = $this->compileComponents($query);
+
+        if (! empty($components['orders'])) {
+            return parent::compileSelect($query)." offset {$query->offset} rows fetch next {$query->limit} rows only";
+        }
+
+        // If an offset is present on the query, we will need to wrap the query in
+        // a big "ANSI" offset syntax block. This is very nasty compared to the
+        // other database systems but is necessary for implementing features.
         return $this->compileAnsiOffset(
-            $query, $this->compileComponents($query)
+            $query, $components
         );
     }
 
@@ -61,8 +67,8 @@ class SqlServerGrammar extends Grammar
         // If there is a limit on the query, but not an offset, we will add the top
         // clause to the query, which serves as a "limit" type clause within the
         // SQL Server system similar to the limit keywords available in MySQL.
-        if ($query->limit > 0 && $query->offset <= 0) {
-            $select .= 'top '.$query->limit.' ';
+        if (is_numeric($query->limit) && $query->limit > 0 && $query->offset <= 0) {
+            $select .= 'top '.((int) $query->limit).' ';
         }
 
         return $select.$this->columnize($columns);
@@ -88,6 +94,22 @@ class SqlServerGrammar extends Grammar
         }
 
         return $from;
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @param  \Illuminate\Database\Query\Builder  $query
+     * @param  array  $where
+     * @return string
+     */
+    protected function whereBitwise(Builder $query, $where)
+    {
+        $value = $this->parameter($where['value']);
+
+        $operator = str_replace('?', '??', $where['operator']);
+
+        return '('.$this->wrap($where['column']).' '.$operator.' '.$value.') != 0';
     }
 
     /**
@@ -144,6 +166,31 @@ class SqlServerGrammar extends Grammar
     }
 
     /**
+     * Compile a "JSON contains key" statement into SQL.
+     *
+     * @param  string  $column
+     * @return string
+     */
+    protected function compileJsonContainsKey($column)
+    {
+        $segments = explode('->', $column);
+
+        $lastSegment = array_pop($segments);
+
+        if (preg_match('/\[([0-9]+)\]$/', $lastSegment, $matches)) {
+            $segments[] = Str::beforeLast($lastSegment, $matches[0]);
+
+            $key = $matches[1];
+        } else {
+            $key = "'".str_replace("'", "''", $lastSegment)."'";
+        }
+
+        [$field, $path] = $this->wrapJsonFieldAndPath(implode('->', $segments));
+
+        return $key.' in (select [key] from openjson('.$field.$path.'))';
+    }
+
+    /**
      * Compile a "JSON length" statement into SQL.
      *
      * @param  string  $column
@@ -156,6 +203,36 @@ class SqlServerGrammar extends Grammar
         [$field, $path] = $this->wrapJsonFieldAndPath($column);
 
         return '(select count(*) from openjson('.$field.$path.')) '.$operator.' '.$value;
+    }
+
+    /**
+     * Compile a single having clause.
+     *
+     * @param  array  $having
+     * @return string
+     */
+    protected function compileHaving(array $having)
+    {
+        if ($having['type'] === 'Bitwise') {
+            return $this->compileHavingBitwise($having);
+        }
+
+        return parent::compileHaving($having);
+    }
+
+    /**
+     * Compile a having clause involving a bitwise operator.
+     *
+     * @param  array  $having
+     * @return string
+     */
+    protected function compileHavingBitwise($having)
+    {
+        $column = $this->wrap($having['column']);
+
+        $parameter = $this->parameter($having['value']);
+
+        return '('.$column.' '.$having['operator'].' '.$parameter.') != 0';
     }
 
     /**
@@ -181,6 +258,10 @@ class SqlServerGrammar extends Grammar
 
         unset($components['orders']);
 
+        if ($this->queryOrderContainsSubquery($query)) {
+            $query->bindings = $this->sortBindingsForSubqueryOrderBy($query);
+        }
+
         // Next we need to calculate the constraints that should be placed on the query
         // to get the right offset and limit from our query but if there is no limit
         // set we will just handle the offset only since that is all that matters.
@@ -198,6 +279,36 @@ class SqlServerGrammar extends Grammar
     protected function compileOver($orderings)
     {
         return ", row_number() over ({$orderings}) as row_num";
+    }
+
+    /**
+     * Determine if the query's order by clauses contain a subquery.
+     *
+     * @param  \Illuminate\Database\Query\Builder  $query
+     * @return bool
+     */
+    protected function queryOrderContainsSubquery($query)
+    {
+        if (! is_array($query->orders)) {
+            return false;
+        }
+
+        return Arr::first($query->orders, function ($value) {
+            return $this->isExpression($value['column'] ?? null);
+        }, false) !== false;
+    }
+
+    /**
+     * Move the order bindings to be after the "select" statement to account for an order by subquery.
+     *
+     * @param  \Illuminate\Database\Query\Builder  $query
+     * @return array
+     */
+    protected function sortBindingsForSubqueryOrderBy($query)
+    {
+        return Arr::sort($query->bindings, function ($bindings, $key) {
+            return array_search($key, ['select', 'order', 'from', 'join', 'where', 'groupBy', 'having', 'union', 'unionOrder']);
+        });
     }
 
     /**
@@ -222,10 +333,10 @@ class SqlServerGrammar extends Grammar
      */
     protected function compileRowConstraint($query)
     {
-        $start = $query->offset + 1;
+        $start = (int) $query->offset + 1;
 
         if ($query->limit > 0) {
-            $finish = $query->offset + $query->limit;
+            $finish = (int) $query->offset + (int) $query->limit;
 
             return "between {$start} and {$finish}";
         }

@@ -117,6 +117,8 @@ class Filesystem
      * @param  string  $path
      * @param  array  $data
      * @return mixed
+     *
+     * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
      */
     public function requireOnce($path, array $data = [])
     {
@@ -210,6 +212,19 @@ class Filesystem
     }
 
     /**
+     * Replace a given string within a given file.
+     *
+     * @param  array|string  $search
+     * @param  array|string  $replace
+     * @param  string  $path
+     * @return void
+     */
+    public function replaceInFile($search, $replace, $path)
+    {
+        file_put_contents($path, str_replace($search, $replace, file_get_contents($path)));
+    }
+
+    /**
      * Prepend to a file.
      *
      * @param  string  $path
@@ -267,7 +282,9 @@ class Filesystem
 
         foreach ($paths as $path) {
             try {
-                if (! @unlink($path)) {
+                if (@unlink($path)) {
+                    clearstatcache(false, $path);
+                } else {
                     $success = false;
                 }
             } catch (ErrorException $e) {
@@ -326,6 +343,8 @@ class Filesystem
      * @param  string  $target
      * @param  string  $link
      * @return void
+     *
+     * @throws \RuntimeException
      */
     public function relativeLink($target, $link)
     {
@@ -389,6 +408,8 @@ class Filesystem
      *
      * @param  string  $path
      * @return string|null
+     *
+     * @throws \RuntimeException
      */
     public function guessExtension($path)
     {
@@ -476,6 +497,20 @@ class Filesystem
     public function isWritable($path)
     {
         return is_writable($path);
+    }
+
+    /**
+     * Determine if two files are the same by comparing their hashes.
+     *
+     * @param  string  $firstFile
+     * @param  string  $secondFile
+     * @return bool
+     */
+    public function hasSameHash($firstFile, $secondFile)
+    {
+        $hash = @md5_file($firstFile);
+
+        return $hash && $hash === @md5_file($secondFile);
     }
 
     /**
@@ -638,10 +673,8 @@ class Filesystem
             // If the current items is just a regular file, we will just copy this to the new
             // location and keep looping. If for some reason the copy fails we'll bail out
             // and return false, so the developer is aware that the copy process failed.
-            else {
-                if (! $this->copy($item->getPathname(), $target)) {
-                    return false;
-                }
+            elseif (! $this->copy($item->getPathname(), $target)) {
+                return false;
             }
         }
 

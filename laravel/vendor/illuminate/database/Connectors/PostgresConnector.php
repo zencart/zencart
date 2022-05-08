@@ -2,10 +2,13 @@
 
 namespace Illuminate\Database\Connectors;
 
+use Illuminate\Database\Concerns\ParsesSearchPath;
 use PDO;
 
 class PostgresConnector extends Connector implements ConnectorInterface
 {
+    use ParsesSearchPath;
+
     /**
      * The default PDO connection options.
      *
@@ -33,6 +36,8 @@ class PostgresConnector extends Connector implements ConnectorInterface
             $this->getDsn($config), $config, $this->getOptions($config)
         );
 
+        $this->configureIsolationLevel($connection, $config);
+
         $this->configureEncoding($connection, $config);
 
         // Next, we will check to see if a timezone has been specified in this config
@@ -40,7 +45,7 @@ class PostgresConnector extends Connector implements ConnectorInterface
         // database. Setting this DB timezone is an optional configuration item.
         $this->configureTimezone($connection, $config);
 
-        $this->configureSchema($connection, $config);
+        $this->configureSearchPath($connection, $config);
 
         // Postgres allows an application_name to be set by the user and this name is
         // used to when monitoring the application with pg_stat_activity. So we'll
@@ -50,6 +55,20 @@ class PostgresConnector extends Connector implements ConnectorInterface
         $this->configureSynchronousCommit($connection, $config);
 
         return $connection;
+    }
+
+    /**
+     * Set the connection transaction isolation level.
+     *
+     * @param  \PDO  $connection
+     * @param  array  $config
+     * @return void
+     */
+    protected function configureIsolationLevel($connection, array $config)
+    {
+        if (isset($config['isolation_level'])) {
+            $connection->prepare("set session characteristics as transaction isolation level {$config['isolation_level']}")->execute();
+        }
     }
 
     /**
@@ -85,38 +104,36 @@ class PostgresConnector extends Connector implements ConnectorInterface
     }
 
     /**
-     * Set the schema on the connection.
+     * Set the "search_path" on the database connection.
      *
      * @param  \PDO  $connection
      * @param  array  $config
      * @return void
      */
-    protected function configureSchema($connection, $config)
+    protected function configureSearchPath($connection, $config)
     {
-        if (isset($config['schema'])) {
-            $schema = $this->formatSchema($config['schema']);
+        if (isset($config['search_path']) || isset($config['schema'])) {
+            $searchPath = $this->quoteSearchPath(
+                $this->parseSearchPath($config['search_path'] ?? $config['schema'])
+            );
 
-            $connection->prepare("set search_path to {$schema}")->execute();
+            $connection->prepare("set search_path to {$searchPath}")->execute();
         }
     }
 
     /**
-     * Format the schema for the DSN.
+     * Format the search path for the DSN.
      *
-     * @param  array|string  $schema
+     * @param  array  $searchPath
      * @return string
      */
-    protected function formatSchema($schema)
+    protected function quoteSearchPath($searchPath)
     {
-        if (is_array($schema)) {
-            return '"'.implode('", "', $schema).'"';
-        }
-
-        return '"'.$schema.'"';
+        return count($searchPath) === 1 ? '"'.$searchPath[0].'"' : '"'.implode('", "', $searchPath).'"';
     }
 
     /**
-     * Set the schema on the connection.
+     * Set the application name on the connection.
      *
      * @param  \PDO  $connection
      * @param  array  $config
@@ -146,7 +163,7 @@ class PostgresConnector extends Connector implements ConnectorInterface
 
         $host = isset($host) ? "host={$host};" : '';
 
-        $dsn = "pgsql:{$host}dbname={$database}";
+        $dsn = "pgsql:{$host}dbname='{$database}'";
 
         // If a port was specified, we will add it to this Postgres DSN connections
         // format. Once we have done that we are ready to return this connection
