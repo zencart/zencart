@@ -13,6 +13,30 @@
  * @version $Id: lat9 2022 Apr 30 Modified in v1.5.8 $
  */
 // -----
+// The flag show_attrib_images is used by the files 
+// admin/invoice.php and admin/packingslip.php 
+// to determine whether attribute images should be displayed. 
+//
+// true ...... attribute images are shown on invoice and packingslip (the default) 
+// false ..... attribute images are not shown on invoice and packingslip 
+// $show_attrib_images = false;
+
+// The flag show_product_images is used by the files 
+// admin/invoice.php and admin/packingslip.php 
+// to determine whether product images should be displayed. 
+//
+// true ...... product images are shown on invoice and packingslip (the default) 
+// false ..... product images are not shown on invoice and packingslip 
+// $show_product_images = false;
+
+// The flag show_product_tax is used by the file 
+// admin/invoice.php 
+// to determine whether product tax should be shown.
+//
+// true ...... product tax is shown on invoice (the default) 
+// false ..... product tax is not shown on invoice 
+// $show_product_tax = false;
+
 // Identify whether the zcDate class' (added in Zen Cart 1.5.8) debug-output is initially enabled.
 //
 // true ...... The zcDate debug is enabled.
