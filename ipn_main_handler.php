@@ -224,6 +224,7 @@ Processing...
     case ($_POST['txn_type'] == 'merch_payment'):
     case ($_POST['txn_type'] == 'new_case'):
     case ($_POST['txn_type'] == 'masspay'):
+    case ($_POST['txn_type'] === 'paypal_here'):
       // these types are irrelevant to ZC transactions
       ipn_debug_email('IPN NOTICE :: Transaction txn_type not relevant to Zen Cart processing. IPN handler aborted.' . $_POST['txn_type']);
       die();
