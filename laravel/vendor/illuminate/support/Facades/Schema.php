@@ -15,10 +15,9 @@ namespace Illuminate\Support\Facades;
  * @method static bool hasColumn(string $table, string $column)
  * @method static bool hasColumns(string $table, array $columns)
  * @method static bool dropColumns(string $table, array $columns)
- * @method static void whenTableHasColumn(string $table, string $column, \Closure $callback)
- * @method static void whenTableDoesntHaveColumn(string $table, string $column, \Closure $callback)
  * @method static bool hasTable(string $table)
  * @method static void defaultStringLength(int $length)
+ * @method static void registerCustomDoctrineType(string $class, string $name, string $type)
  * @method static array getColumnListing(string $table)
  * @method static string getColumnType(string $table, string $column)
  * @method static void morphUsingUuids()
@@ -29,13 +28,6 @@ namespace Illuminate\Support\Facades;
  */
 class Schema extends Facade
 {
-    /**
-     * Indicates if the resolved facade should be cached.
-     *
-     * @var bool
-     */
-    protected static $cached = false;
-
     /**
      * Get a schema builder instance for a connection.
      *
@@ -48,12 +40,12 @@ class Schema extends Facade
     }
 
     /**
-     * Get the registered name of the component.
+     * Get a schema builder instance for the default connection.
      *
-     * @return string
+     * @return \Illuminate\Database\Schema\Builder
      */
     protected static function getFacadeAccessor()
     {
-        return 'db.schema';
+        return static::$app['db']->connection()->getSchemaBuilder();
     }
 }

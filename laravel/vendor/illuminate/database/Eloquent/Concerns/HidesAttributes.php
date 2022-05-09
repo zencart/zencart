@@ -2,6 +2,8 @@
 
 namespace Illuminate\Database\Eloquent\Concerns;
 
+use Closure;
+
 trait HidesAttributes
 {
     /**
@@ -86,7 +88,7 @@ trait HidesAttributes
     /**
      * Make the given, typically hidden, attributes visible if the given truth test passes.
      *
-     * @param  bool|\Closure  $condition
+     * @param  bool|Closure  $condition
      * @param  array|string|null  $attributes
      * @return $this
      */
@@ -113,7 +115,7 @@ trait HidesAttributes
     /**
      * Make the given, typically visible, attributes hidden if the given truth test passes.
      *
-     * @param  bool|\Closure  $condition
+     * @param  bool|Closure  $condition
      * @param  array|string|null  $attributes
      * @return $this
      */

@@ -9,9 +9,9 @@
     "license": "MIT",
     "require": {
         "php": "^7.3|^8.0",
-        "illuminate/database": "^9.0",
-        "illuminate/filesystem": "^9.0",
-        "illuminate/pagination": "^9.0",
+        "illuminate/database": "^8.0",
+        "illuminate/filesystem": "^8.0",
+        "illuminate/pagination": "^8.0",
         "symfony/var-dumper": "^5.2"
     },
     "config": {

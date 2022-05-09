@@ -461,7 +461,7 @@ abstract class Model implements Arrayable, ArrayAccess, CanBeEscapedWhenCastToSt
      */
     public function qualifyColumn($column)
     {
-        if (str_contains($column, '.')) {
+        if (Str::contains($column, '.')) {
             return $column;
         }
 
@@ -493,7 +493,7 @@ abstract class Model implements Arrayable, ArrayAccess, CanBeEscapedWhenCastToSt
         // This method just provides a convenient way for us to generate fresh model
         // instances of this current model. It is particularly useful during the
         // hydration of new objects via the Eloquent query builder instances.
-        $model = new static;
+        $model = new static((array) $attributes);
 
         $model->exists = $exists;
 
@@ -504,8 +504,6 @@ abstract class Model implements Arrayable, ArrayAccess, CanBeEscapedWhenCastToSt
         $model->setTable($this->getTable());
 
         $model->mergeCasts($this->casts);
-
-        $model->fill((array) $attributes);
 
         return $model;
     }
@@ -562,7 +560,7 @@ abstract class Model implements Arrayable, ArrayAccess, CanBeEscapedWhenCastToSt
      * Get all of the models from the database.
      *
      * @param  array|mixed  $columns
-     * @return \Illuminate\Database\Eloquent\Collection<int, static>
+     * @return \Illuminate\Database\Eloquent\Collection|static[]
      */
     public static function all($columns = ['*'])
     {
@@ -919,36 +917,6 @@ abstract class Model implements Arrayable, ArrayAccess, CanBeEscapedWhenCastToSt
         }
 
         return $this->fill($attributes)->saveQuietly($options);
-    }
-
-    /**
-     * Increment a column's value by a given amount without raising any events.
-     *
-     * @param  string  $column
-     * @param  float|int  $amount
-     * @param  array  $extra
-     * @return int
-     */
-    protected function incrementQuietly($column, $amount = 1, array $extra = [])
-    {
-        return static::withoutEvents(function () use ($column, $amount, $extra) {
-            return $this->incrementOrDecrement($column, $amount, $extra, 'increment');
-        });
-    }
-
-    /**
-     * Decrement a column's value by a given amount without raising any events.
-     *
-     * @param  string  $column
-     * @param  float|int  $amount
-     * @param  array  $extra
-     * @return int
-     */
-    protected function decrementQuietly($column, $amount = 1, array $extra = [])
-    {
-        return static::withoutEvents(function () use ($column, $amount, $extra) {
-            return $this->incrementOrDecrement($column, $amount, $extra, 'decrement');
-        });
     }
 
     /**
@@ -1529,7 +1497,7 @@ abstract class Model implements Arrayable, ArrayAccess, CanBeEscapedWhenCastToSt
     {
         $json = json_encode($this->jsonSerialize(), $options);
 
-        if (json_last_error() !== JSON_ERROR_NONE) {
+        if (JSON_ERROR_NONE !== json_last_error()) {
             throw JsonEncodingException::forModel($this, json_last_error_msg());
         }
 
@@ -1539,9 +1507,10 @@ abstract class Model implements Arrayable, ArrayAccess, CanBeEscapedWhenCastToSt
     /**
      * Convert the object into something JSON serializable.
      *
-     * @return mixed
+     * @return array
      */
-    public function jsonSerialize(): mixed
+    #[\ReturnTypeWillChange]
+    public function jsonSerialize()
     {
         return $this->toArray();
     }
@@ -1559,7 +1528,6 @@ abstract class Model implements Arrayable, ArrayAccess, CanBeEscapedWhenCastToSt
         }
 
         return $this->setKeysForSelectQuery($this->newQueryWithoutScopes())
-                        ->useWritePdo()
                         ->with(is_string($with) ? func_get_args() : $with)
                         ->first();
     }
@@ -1576,10 +1544,7 @@ abstract class Model implements Arrayable, ArrayAccess, CanBeEscapedWhenCastToSt
         }
 
         $this->setRawAttributes(
-            $this->setKeysForSelectQuery($this->newQueryWithoutScopes())
-                ->useWritePdo()
-                ->firstOrFail()
-                ->attributes
+            $this->setKeysForSelectQuery($this->newQueryWithoutScopes())->firstOrFail()->attributes
         );
 
         $this->load(collect($this->relations)->reject(function ($relation) {
@@ -1864,7 +1829,7 @@ abstract class Model implements Arrayable, ArrayAccess, CanBeEscapedWhenCastToSt
             }
 
             if ($relation instanceof QueueableEntity) {
-                foreach ($relation->getQueueableRelations() as $entityValue) {
+                foreach ($relation->getQueueableRelations() as $entityKey => $entityValue) {
                     $relations[] = $key.'.'.$entityValue;
                 }
             }
@@ -1980,7 +1945,7 @@ abstract class Model implements Arrayable, ArrayAccess, CanBeEscapedWhenCastToSt
     /**
      * Retrieve the model for a bound value.
      *
-     * @param  \Illuminate\Database\Eloquent\Model|\Illuminate\Database\Eloquent\Relations\Relation  $query
+     * @param  \Illuminate\Database\Eloquent\Model|Illuminate\Database\Eloquent\Relations\Relation  $query
      * @param  mixed  $value
      * @param  string|null  $field
      * @return \Illuminate\Database\Eloquent\Relations\Relation
@@ -2082,7 +2047,8 @@ abstract class Model implements Arrayable, ArrayAccess, CanBeEscapedWhenCastToSt
      * @param  mixed  $offset
      * @return bool
      */
-    public function offsetExists($offset): bool
+    #[\ReturnTypeWillChange]
+    public function offsetExists($offset)
     {
         return ! is_null($this->getAttribute($offset));
     }
@@ -2093,7 +2059,8 @@ abstract class Model implements Arrayable, ArrayAccess, CanBeEscapedWhenCastToSt
      * @param  mixed  $offset
      * @return mixed
      */
-    public function offsetGet($offset): mixed
+    #[\ReturnTypeWillChange]
+    public function offsetGet($offset)
     {
         return $this->getAttribute($offset);
     }
@@ -2105,7 +2072,8 @@ abstract class Model implements Arrayable, ArrayAccess, CanBeEscapedWhenCastToSt
      * @param  mixed  $value
      * @return void
      */
-    public function offsetSet($offset, $value): void
+    #[\ReturnTypeWillChange]
+    public function offsetSet($offset, $value)
     {
         $this->setAttribute($offset, $value);
     }
@@ -2116,7 +2084,8 @@ abstract class Model implements Arrayable, ArrayAccess, CanBeEscapedWhenCastToSt
      * @param  mixed  $offset
      * @return void
      */
-    public function offsetUnset($offset): void
+    #[\ReturnTypeWillChange]
+    public function offsetUnset($offset)
     {
         unset($this->attributes[$offset], $this->relations[$offset]);
     }
