@@ -43,9 +43,9 @@ ALTER TABLE customers_info ADD INDEX idx_date_created_cust_id_zen (customers_inf
 ALTER TABLE orders_products MODIFY products_name varchar(191) NOT NULL default '';
 ALTER TABLE products_description MODIFY products_name varchar(191) NOT NULL default '';
 
-ALTER TABLE orders MODIFY customers_country varchar(64) NOT NULL default ''; 
-ALTER TABLE orders MODIFY delivery_country varchar(64) NOT NULL default ''; 
-ALTER TABLE orders MODIFY billing_country varchar(64) NOT NULL default ''; 
+ALTER TABLE orders MODIFY customers_country varchar(64) NOT NULL default '';
+ALTER TABLE orders MODIFY delivery_country varchar(64) NOT NULL default '';
+ALTER TABLE orders MODIFY billing_country varchar(64) NOT NULL default '';
 
 # Remove greater-than sign in query_builder
 UPDATE query_builder SET query_name = 'Customers Dormant for 3+ months (Subscribers)' WHERE query_id = 3;
@@ -60,6 +60,7 @@ DELETE FROM configuration WHERE configuration_key = 'MAX_ROW_LISTS_ATTRIBUTES_CO
 
 
 # Update configuration descriptions
+UPDATE configuration SET configuration_title = 'State field - Display as pulldown when possible?', configuration_description = 'If zones have been defined for a country, the State field may be displayed as a dropdown populated by the defined zones. Otherwise a text field is displayed for customer entry.<br><strong>true</strong>: When a State field is used, display a pulldown menu whenever possible.<br><strong>false</strong>: When a State field is used, always display a text input field.' WHERE configuration_key = 'ACCOUNT_STATE_DRAW_INITIAL_DROPDOWN';
 UPDATE configuration SET configuration_description = 'Enter your PayPal Merchant ID here. This is used for the more user-friendly In-Context checkout mode. You can obtain this value by going to your PayPal account, clicking on your account name at the top right, then clicking Account Settings, and navigating to the Business Information section; You will find your Merchant Account ID on that screen. A typical Merchant ID looks like FDEFDEFDEFDE11.' WHERE configuration_key = 'MODULE_PAYMENT_PAYPALWPP_MERCHANTID';
 UPDATE configuration SET configuration_description = 'If there is no weight to the order, does the order have Free Shipping?<br>0= no<br>1= yes<br><br>Note: When using Free Shipping, Enable the Free Shipping Module.  It will only show when shipping is free.' WHERE configuration_key = 'ORDER_WEIGHT_ZERO_STATUS';
 UPDATE configuration SET configuration_title = 'Category Header Menu ON/OFF', configuration_description = 'Category Header Nav<br />This enables the display of your store\'s categories as a menu across the top of your header. There are many potential creative uses for this.<br />0= Hide Categories Tabs<br />1= Show Categories Tabs' WHERE configuration_key = 'CATEGORIES_TABS_STATUS';
@@ -141,7 +142,7 @@ UPDATE orders SET customers_address_format_id = customers_address_format_id + 13
 UPDATE orders SET  delivery_address_format_id = delivery_address_format_id + 13 WHERE delivery_address_format_id > 7;
 UPDATE orders SET  billing_address_format_id = billing_address_format_id + 13 WHERE billing_address_format_id > 7;
 
-### Updated address summary for original address format address_summary 
+### Updated address summary for original address format address_summary
 UPDATE address_format SET address_summary = 'Default $city $country' WHERE address_format_id = 1;
 UPDATE address_format SET address_summary = '$city, $state $postcode' WHERE address_format_id = 2;
 UPDATE address_format SET address_summary = 'Historic $city / $postcode - $statecomma$country' WHERE address_format_id = 3;
@@ -197,7 +198,7 @@ UPDATE configuration SET configuration_description = 'Do you want create debug-l
 UPDATE configuration SET configuration_description = 'Do you want create debug-log files for <b>all</b> PHP errors, even warnings, that occur during your Zen Cart store\'s processing?  If you want to log all PHP errors <b>except</b> duplicate-language definitions, choose <em>IgnoreDups</em>.<br /><br /><strong>Note:</strong> Choosing \'Yes\' is not suggested for a <em>live</em> store, since it will reduce performance significantly!', set_function = 'zen_cfg_select_option(array(\'Yes\', \'No\', \'IgnoreDups\'),' WHERE configuration_key = 'REPORT_ALL_ERRORS_STORE';
 ############
 
-## Remove remnants of tell a friend 
+## Remove remnants of tell a friend
 DELETE FROM configuration WHERE configuration_key = 'ALLOW_GUEST_TO_TELL_A_FRIEND';
 DELETE FROM configuration WHERE configuration_key = 'SEND_EXTRA_TELL_A_FRIEND_EMAILS_TO';
 DELETE FROM configuration WHERE configuration_key = 'SEND_EXTRA_TELL_A_FRIEND_EMAILS_TO_STATUS';
