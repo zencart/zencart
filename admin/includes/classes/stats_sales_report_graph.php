@@ -26,8 +26,8 @@ class statsSalesReportGraph
         $endDates = [];
     public
         $info = [],
-        $previous,
-        $next,
+        $previous = '',
+        $next = '',
         $filter = '',
         $size = 0;
 
@@ -60,7 +60,11 @@ class statsSalesReportGraph
         $this->status_available = $tmp;
         $this->status_available_size = count($tmp);
 
-        if ($endDate === '' or $startDate === '') {
+        // -----
+        // If supplied, the $startDate and $endDate are expected to be UNIX-timestamp-formatted strings (as pulled
+        // from $_GET variables).  If not, the report starts with all times today and earlier.
+        //
+        if (!ctype_digit($endDate) || !ctype_digit($startDate)) {
             // set startDate to nothing
             $dateGiven = false;
             $startDate = 0;
@@ -260,7 +264,8 @@ class statsSalesReportGraph
 
     protected function query()
     {
-        global $db;
+        global $db, $zcDate;
+
         $tmp_query =
             "SELECT SUM(ot.value) AS value, AVG(ot.value) AS avg, COUNT(ot.value) AS count
                FROM " . TABLE_ORDERS_TOTAL . " ot, " . TABLE_ORDERS . " o
@@ -271,24 +276,24 @@ class statsSalesReportGraph
         }
         for ($i = 0; $i < $this->size; $i++) {
             $report = $db->Execute($tmp_query . " AND o.date_purchased >= '" . zen_db_input(date("Y-m-d\TH:i:s", $this->startDates[$i])) . "' AND o.date_purchased < '" . zen_db_input(date("Y-m-d\TH:i:s", $this->endDates[$i])) . "'", false, true, 1800);
-            $this->info[$i]['sum'] = $report->fields['value'];
-            $this->info[$i]['avg'] = $report->fields['avg'];
+            $this->info[$i]['sum'] = $report->fields['value'] ?? 0;
+            $this->info[$i]['avg'] = $report->fields['avg'] ?? 0;
             $this->info[$i]['count'] = $report->fields['count'];
             switch ($this->mode) {
                 case self::HOURLY_VIEW:
-                    $this->info[$i]['text'] = strftime("%H", $this->startDates[$i]) . " - " . strftime("%H", $this->endDates[$i]);
+                    $this->info[$i]['text'] = $zcDate->output('%H', $this->startDates[$i]) . " - " . $zcDate->output('%H', $this->endDates[$i]);
                     $this->info[$i]['link'] = '';
                     break;
                 case self::DAILY_VIEW:
-                    $this->info[$i]['text'] = strftime("%x", $this->startDates[$i]);
+                    $this->info[$i]['text'] = $zcDate->output('%x', $this->startDates[$i]);
                     $this->info[$i]['link'] = "report=" . self::HOURLY_VIEW . "&startDate=" . $this->startDates[$i] . "&endDate=" . mktime(0, 0, 0, date('m', $this->endDates[$i]), date('d', $this->endDates[$i]) + 1, date('Y', $this->endDates[$i]));
                     break;
                 case self::WEEKLY_VIEW:
-                    $this->info[$i]['text'] = strftime("%x", $this->startDates[$i]) . " - " . strftime("%x", mktime(0, 0, 0, date('m', $this->endDates[$i]), date('d', $this->endDates[$i]) - 1, date('Y', $this->endDates[$i])));
+                    $this->info[$i]['text'] = $zcDate->output('%x', $this->startDates[$i]) . " - " . $zcDate->output('%x', mktime(0, 0, 0, date('m', $this->endDates[$i]), date('d', $this->endDates[$i]) - 1, date('Y', $this->endDates[$i])));
                     $this->info[$i]['link'] = "report=" . self::DAILY_VIEW . "&startDate=" . $this->startDates[$i] . "&endDate=" . mktime(0, 0, 0, date('m', $this->endDates[$i]), date('d', $this->endDates[$i]) - 1, date('Y', $this->endDates[$i]));
                     break;
                 case self::MONTHLY_VIEW:
-                    $this->info[$i]['text'] = strftime("%b %y", $this->startDates[$i]);
+                    $this->info[$i]['text'] = $zcDate->output('%b %y', $this->startDates[$i]);
                     $this->info[$i]['link'] = "report=" . self::WEEKLY_VIEW . "&startDate=" . $this->startDates[$i] . "&endDate=" . mktime(0, 0, 0, date('m', $this->endDates[$i]), date('d', $this->endDates[$i]) - 1, date('Y', $this->endDates[$i]));
                     break;
                 case self::YEARLY_VIEW:
