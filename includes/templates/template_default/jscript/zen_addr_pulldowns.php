@@ -11,17 +11,16 @@
  * @version $Id: Zen4All 2019 Jun 03 Modified in v1.5.7 $
  */
 // -----
-// If the site has NOT enabled states to be displayed as dropdowns, nothing to be done here!
+// If the site does NOT require a 'State' entry in an address or has NOT enabled states to
+// be displayed as dropdowns, nothing to be done here!
 //
-if (ACCOUNT_STATE_DRAW_INITIAL_DROPDOWN !== 'true') {
+if (ACCOUNT_STATE !== 'true' || ACCOUNT_STATE_DRAW_INITIAL_DROPDOWN !== 'true') {
     return;
 }
-?>
-<script>
-jQuery(document).ready(function() {
-<?php
+
 // -----
-// Create a JSON-encoded array of countries-to-zones for use by the jQuery section.
+// If the current site has at least one country enabled that uses zones, a JSON-encoded array of
+// countries-to-zones will be created for use by the jQuery section.
 //
 $countries = $db->Execute(
     "SELECT DISTINCT zone_country_id
@@ -48,21 +47,43 @@ foreach ($countries as $next_country) {
     }
 }
 
-if (count($c2z) !== 0) {
-    echo '    var country_zones = \'' . addslashes(json_encode($c2z)) . '\';' . PHP_EOL;
+// -----
+// If none of the currently-enabled countries use zones, nothing to do here.
+//
+if (count($c2z) === 0) {
+    return;
 }
+?>
+<script>
+jQuery(document).ready(function() {
+<?php
+    echo '    var country_zones = \'' . addslashes(json_encode($c2z)) . '\';' . PHP_EOL;
 
 // -----
-// Initialize the display for the dropdown vs. hand-entry of the state fields.  If the initially-selected
+// Notes:
+//
+// 1. When the site is set to display states as dropdowns, it's **assumed** that the '#stateLabel' label's
+// text has been set to an empty string, thus unneeded.  Since this processing is **only** invoked when
+// dropdown states are enabled, start by hiding that label.  The '#stBreak' <br> is also never needed/wanted
+// since it will 'throw' the state-field input underneath the state/zone label.
+//
+// 2. Initialize the display for the dropdown vs. hand-entry of the state fields.  If the initially-selected
 // country doesn't have zones, the dropdown will contain only 1 element ('Type a choice below ...').
 //
+// 3. There can be unwanted whitespace, e.g. an &nbsp; prior to the (optional) <span class="alert"> following
+// the 'stateZone' dropdown.  In that case, when the <span> is hidden for unzoned countries, the state input
+// field is slightly offset from the other input fields.
+//
 ?>
-    if (jQuery('#stateZone > option').length == 1) {
-        jQuery('#stateZone').hide();
-        jQuery('#state, #stBreak, #stateLabel').show();
-    } else {
-        jQuery('#state, #stBreak, #stateLabel').hide();
+    jQuery('#stateLabel, #stBreak').hide();
+    if (jQuery('#stateZone > option').length > 1) {
+        jQuery('#state').hide();
         jQuery('#stateZone').show();
+        jQuery('#stateZone').next('span.alert').show();
+    } else {
+        jQuery('#state').show();
+        jQuery('#stateZone').hide();
+        jQuery('#stateZone').next('span.alert').hide();
     }
 
     var pleaseSelect = '<?php echo PLEASE_SELECT; ?>';
@@ -88,12 +109,14 @@ if (count($c2z) !== 0) {
             }
         });
         if (countryHasZones) {
-            jQuery('#state, #stBreak, #stateLabel').hide();
+            jQuery('#state').hide();
             jQuery('#stateZone').html(countryZones);
             jQuery('#stateZone').show();
+            jQuery('#stateZone').next('span.alert').show();
         } else {
+            jQuery('#state').show();
             jQuery('#stateZone').hide();
-            jQuery('#state, #stBreak, #stateLabel').show();
+            jQuery('#stateZone').next('span.alert').hide();
         }
     }
 });
