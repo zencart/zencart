@@ -338,7 +338,12 @@ function zen_rand($min = null, $max = null)
     static $seeded;
 
     if (!isset($seeded)) {
-        mt_srand((double)microtime() * 1000000);
+        // -----
+        // By default, microtime returns a string value.  To increase the precision of the
+        // random seed, have it return a float to be multiplied and then convert the value
+        // to an integer, as required by the mt_srand function.
+        //
+        mt_srand((int)(microtime(true) * 1000000));
         $seeded = true;
     }
 
