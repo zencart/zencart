@@ -50,9 +50,8 @@ if (ACCOUNT_STATE_DRAW_INITIAL_DROPDOWN === 'true') {
 ?>
 <script>
 jQuery(document).ready(function() {
+    var country_zones = '<?php echo addslashes(json_encode($c2z)); ?>';
 <?php
-    echo '    var country_zones = \'' . addslashes(json_encode($c2z)) . '\';' . PHP_EOL;
-
 // -----
 // Notes:
 //
@@ -72,7 +71,7 @@ jQuery(document).ready(function() {
 //
 ?>
     jQuery('#stBreak').hide();
-    if (jQuery('#stateLabel').text().length == 0) {
+    if (jQuery('#stateLabel').text().length === 0) {
         jQuery('#stateLabel').hide();
     }
     if (jQuery('#stateZone > option').length > 1) {
@@ -100,7 +99,7 @@ jQuery(document).ready(function() {
         var countryZones = '<option selected="selected" value="0">' + pleaseSelect + '<' + '/option>';
         var selected_country = jQuery('#country option:selected').val();
         jQuery.each(JSON.parse(country_zones), function(country_id, country_zones) {
-            if (selected_country == country_id) {
+            if (selected_country === country_id) {
                 countryHasZones = true;
                 jQuery.each(country_zones, function(zone_id, zone_name) {
                     countryZones += '<option value="' + zone_id + '">' + zone_name + '<' + '/option>';
