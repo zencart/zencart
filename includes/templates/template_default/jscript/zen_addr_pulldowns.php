@@ -41,14 +41,9 @@ if (ACCOUNT_STATE_DRAW_INITIAL_DROPDOWN === 'true') {
         $current_country_id = $next_country['zone_country_id'];
         $c2z[$current_country_id] = [];
 
-        $states = $db->Execute(
-            "SELECT zone_name, zone_id
-               FROM " . TABLE_ZONES . "
-              WHERE zone_country_id = $current_country_id
-           ORDER BY zone_name"
-        );
+        $states = zen_get_country_zones($current_country_id);
         foreach ($states as $next_state) {
-            $c2z[$current_country_id][$next_state['zone_id']] = $next_state['zone_name'];
+            $c2z[$current_country_id][$next_state['id']] = $next_state['text'];
         }
     }
 }
@@ -102,13 +97,13 @@ jQuery(document).ready(function() {
     update_zone = function(theForm)
     {
         var countryHasZones = false;
-        var countryZones = '<option selected="selected" value="0">' + pleaseSelect + '</option>';
+        var countryZones = '<option selected="selected" value="0">' + pleaseSelect + '<' + '/option>';
         var selected_country = jQuery('#country option:selected').val();
         jQuery.each(JSON.parse(country_zones), function(country_id, country_zones) {
             if (selected_country == country_id) {
                 countryHasZones = true;
                 jQuery.each(country_zones, function(zone_id, zone_name) {
-                    countryZones += "<option value='" + zone_id + "'>" + zone_name + "</option>";
+                    countryZones += '<option value="' + zone_id + '">' + zone_name + '<' + '/option>';
                 });
             }
         });
