@@ -124,12 +124,16 @@ function zen_get_country_zones($country_id)
 {
     global $db;
     $zones_array = array();
-    $zones = $db->Execute("SELECT zone_id, zone_name
+    $zones = $db->Execute("SELECT zone_id, zone_name, zone_code
                            FROM " . TABLE_ZONES . "
                            WHERE zone_country_id = " . (int)$country_id . "
                            ORDER BY zone_name");
     foreach ($zones as $zone) {
-        $zones_array[] = array('id' => $zone['zone_id'], 'text' => $zone['zone_name']);
+        $zones_array[] = [
+            'id' => $zone['zone_id'],
+            'text' => $zone['zone_name'],
+            'zone_code' => $zone['zone_code'],
+            ];
     }
 
     return $zones_array;
