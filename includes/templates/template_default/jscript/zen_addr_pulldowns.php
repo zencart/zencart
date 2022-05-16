@@ -50,7 +50,7 @@ if (ACCOUNT_STATE_DRAW_INITIAL_DROPDOWN === 'true') {
 ?>
 <script>
 jQuery(document).ready(function() {
-    var country_zones = '<?php echo addslashes(json_encode($c2z)); ?>';
+    const country_zones = '<?php echo addslashes(json_encode($c2z)); ?>';
 <?php
 // -----
 // Notes:
@@ -83,8 +83,6 @@ jQuery(document).ready(function() {
         jQuery('#stateZone').hide();
         jQuery('#stateZone').next('span.alert').hide();
     }
-
-    var pleaseSelect = '<?php echo PLEASE_SELECT; ?>';
 <?php
     // -----
     // This function provides the processing needed when a country has been changed.  It makes
@@ -96,7 +94,7 @@ jQuery(document).ready(function() {
     update_zone = function(theForm)
     {
         var countryHasZones = false;
-        var countryZones = '<option selected="selected" value="0">' + pleaseSelect + '<' + '/option>';
+        var countryZones = '<option selected="selected" value="0"><?php echo addslashes(PLEASE_SELECT); ?><' + '/option>';
         var selected_country = jQuery('#country option:selected').val();
         jQuery.each(JSON.parse(country_zones), function(country_id, country_zones) {
             if (selected_country === country_id) {
