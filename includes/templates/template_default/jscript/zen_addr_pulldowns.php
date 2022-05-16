@@ -85,6 +85,14 @@ jQuery(document).ready(function() {
     }
 <?php
     // -----
+    // Issue a notification to enable site-specific jQuery/javascript to be inserted during the
+    // script's initialization.
+    //
+    $extra_javascript = '';
+    $GLOBALS['zco_notifier']->notify('NOTIFY_ZEN_ADDR_PULLDOWNS_INIT', $c2z, $extra_javascript);
+    echo $extra_javascript;
+
+    // -----
     // This function provides the processing needed when a country has been changed.  It makes
     // use of the country_zones (countries-to-zones) array, built above.  Normally invoked
     // by the template's 'onchange=update_form(this.form)' parameter applied to the countries'
@@ -114,6 +122,16 @@ jQuery(document).ready(function() {
             jQuery('#stateZone').hide();
             jQuery('#stateZone').next('span.alert').hide();
         }
+<?php
+    // -----
+    // Issue a notification to enable site-specific jQuery/javascript to be inserted to provide
+    // additional processing when the base script is run, indicating a change in selected
+    // country.
+    //
+    $extra_javascript = '';
+    $GLOBALS['zco_notifier']->notify('NOTIFY_ZEN_ADDR_PULLDOWNS_UPDATE', [], $extra_javascript);
+    echo $extra_javascript;
+?>
     }
 });
 </script>
