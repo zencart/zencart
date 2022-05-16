@@ -485,17 +485,13 @@ if (!empty($action)) {
               <div class="col-sm-9 col-md-6">
                 <?php
                 $entry_state = zen_get_zone_name((int)$cInfo->country_id, (int)$cInfo->zone_id, $cInfo->state);
-                if (count(zen_get_country_zones((int)$cInfo->country_id))) {
+                $zones_values = zen_get_country_zones((int)$cInfo->country_id);
+                if (count($zones_values)) {
                   $zones_array = [];
-                  $zones_values = $db->Execute("SELECT zone_name
-                                                FROM " . TABLE_ZONES . "
-                                                WHERE zone_country_id = " . (int)zen_db_input($cInfo->country_id) . "
-                                                ORDER BY zone_name");
-
                   foreach ($zones_values as $zones_value) {
                     $zones_array[] = [
-                      'id' => $zones_value['zone_name'],
-                      'text' => $zones_value['zone_name']
+                      'id' => $zones_value['text'],
+                      'text' => $zones_value['text']
                     ];
                   }
                   echo zen_draw_pull_down_menu('entry_state', $zones_array, $entry_state, 'class="form-control" id="entry_state"');
