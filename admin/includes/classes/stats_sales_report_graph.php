@@ -61,10 +61,14 @@ class statsSalesReportGraph
         $this->status_available_size = count($tmp);
 
         // -----
-        // If supplied, the $startDate and $endDate are expected to be UNIX-timestamp-formatted strings (as pulled
-        // from $_GET variables).  If not, the report starts with all times today and earlier.
+        // If supplied, the $startDate and $endDate are expected to be either:
         //
-        if (!ctype_digit($endDate) || !ctype_digit($startDate)) {
+        // - UNIX-timestamp-formatted integer-strings, as specified by the 'link' parameter returned by this class' 'query' method.
+        // - Integer values, as submitted by the SalesReportDashboardWidget.  In this case, the value must be >= 0.
+        //
+        // If neither, the report starts with all times today and earlier.
+        //
+        if ($this->validDateInput($startDate) === false || $this->validDateInput($endDate) === false) {
             // set startDate to nothing
             $dateGiven = false;
             $startDate = 0;
@@ -260,6 +264,20 @@ class statsSalesReportGraph
         $this->filter_link = "report=" . $this->mode . "&startDate=" . $startDate . "&endDate=" . $endDate;
 
         $this->query();
+    }
+
+    // -----
+    // Called during class construction to validate the $startDate and $endDate submitted.  Each value is
+    // expected to be either:
+    //
+    // - A UNIX-timestamp-formatted integer-string, as specified by the 'link' parameter returned by this class' 'query' method.
+    // - Integer values, as submitted by the SalesReportDashboardWidget.  In this case, the value must be >= 0.
+    //
+    // Returns a boolean indication as to whether the value is (true) or is not (false) valid.
+    //
+    protected function validDateInput($date)
+    {
+        return ((is_int($date) && $date >= 0) || (is_string($date) && ctype_digit($date)));
     }
 
     protected function query()
