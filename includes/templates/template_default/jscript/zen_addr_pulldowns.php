@@ -11,61 +11,78 @@
  * @version $Id: Zen4All 2019 Jun 03 Modified in v1.5.7 $
  */
 // -----
-// If the site has NOT enabled states to be displayed as dropdowns, nothing to be done here!
+// If the site does NOT require a 'State' entry in an address, nothing to be done here!
 //
-if (ACCOUNT_STATE_DRAW_INITIAL_DROPDOWN !== 'true') {
+if (ACCOUNT_STATE !== 'true') {
     return;
+}
+
+// -----
+// If the current site is using the state dropdowns, create the array that identifies the various
+// zones for the currently-active countries.  When state dropdowns aren't being used, the
+// empty $c2z array will 'instruct' the jQuery section to presume that no countries have
+// associated zones.
+//
+$c2z = [];
+if (ACCOUNT_STATE_DRAW_INITIAL_DROPDOWN === 'true') {
+    // -----
+    // If the current site has at least one country enabled that uses zones, a JSON-encoded array of
+    // countries-to-zones will be created for use by the jQuery section.
+    //
+    $countries = $db->Execute(
+        "SELECT DISTINCT zone_country_id
+           FROM " . TABLE_ZONES . "
+                INNER JOIN " . TABLE_COUNTRIES . "
+                    ON countries_id = zone_country_id
+                   AND status = 1
+       ORDER BY zone_country_id"
+    );
+    foreach ($countries as $next_country) {
+        $current_country_id = $next_country['zone_country_id'];
+        $c2z[$current_country_id] = [];
+
+        $states = zen_get_country_zones($current_country_id);
+        foreach ($states as $next_state) {
+            $c2z[$current_country_id][$next_state['id']] = $next_state['text'];
+        }
+    }
 }
 ?>
 <script>
 jQuery(document).ready(function() {
+    const country_zones = '<?php echo addslashes(json_encode($c2z)); ?>';
 <?php
 // -----
-// Create a JSON-encoded array of countries-to-zones for use by the jQuery section.
+// Notes:
 //
-$countries = $db->Execute(
-    "SELECT DISTINCT zone_country_id
-       FROM " . TABLE_ZONES . "
-            INNER JOIN " . TABLE_COUNTRIES . "
-                ON countries_id = zone_country_id
-               AND status = 1
-   ORDER BY zone_country_id"
-);
-
-$c2z = [];
-foreach ($countries as $next_country) {
-    $current_country_id = $next_country['zone_country_id'];
-    $c2z[$current_country_id] = [];
-
-    $states = $db->Execute(
-        "SELECT zone_name, zone_id
-           FROM " . TABLE_ZONES . "
-          WHERE zone_country_id = $current_country_id
-       ORDER BY zone_name"
-    );
-    foreach ($states as $next_state) {
-        $c2z[$current_country_id][$next_state['zone_id']] = $next_state['zone_name'];
-    }
-}
-
-if (count($c2z) !== 0) {
-    echo '    var country_zones = \'' . addslashes(json_encode($c2z)) . '\';' . PHP_EOL;
-}
-
-// -----
-// Initialize the display for the dropdown vs. hand-entry of the state fields.  If the initially-selected
-// country doesn't have zones, the dropdown will contain only 1 element ('Type a choice below ...').
+// 1. The '#stBreak' <br> is also never needed/wanted since it will 'throw' the state-field input underneath
+// the state/zone label.
+//
+// 2. If the '#stateLabel' label is empty, hide it!  It will be when the site uses dropdown states and on
+// the 'shipping_estimator' page.
+//
+// 3. Initialize the display for the dropdown vs. hand-entry of the state fields.  If the initially-selected
+// country doesn't have zones, the dropdown will contain only 1 element ('Type a choice below ...').  In that
+// case, the dropdown and associated elements will be hidden and the hand-input 'state' field will be shown.
+//
+// 4. There can be unwanted whitespace, e.g. an &nbsp; prior to the (optional) <span class="alert"> following
+// the 'stateZone' dropdown.  In that case, when the <span> is hidden for unzoned countries, the state input
+// field is slightly offset from the other input fields.
 //
 ?>
-    if (jQuery('#stateZone > option').length == 1) {
-        jQuery('#stateZone').hide();
-        jQuery('#state, #stBreak, #stateLabel').show();
-    } else {
-        jQuery('#state, #stBreak, #stateLabel').hide();
-        jQuery('#stateZone').show();
+    jQuery('#stBreak').hide();
+    if (jQuery('#stateLabel').text().length === 0) {
+        jQuery('#stateLabel').hide();
     }
-
-    var pleaseSelect = '<?php echo PLEASE_SELECT; ?>';
+    if (jQuery('#stateZone > option').length > 1) {
+        jQuery('#state').hide();
+        jQuery('#stateZone').show();
+        jQuery('#stateZone').next('span.alert').show();
+    } else {
+        jQuery('#state').show();
+        jQuery('#stateZone').hide();
+        jQuery('#stateZone').next('span.alert').hide();
+    }
 <?php
     // -----
     // This function provides the processing needed when a country has been changed.  It makes
@@ -77,23 +94,25 @@ if (count($c2z) !== 0) {
     update_zone = function(theForm)
     {
         var countryHasZones = false;
-        var countryZones = '<option selected="selected" value="0">' + pleaseSelect + '</option>';
+        var countryZones = '<option selected="selected" value="0"><?php echo addslashes(PLEASE_SELECT); ?><' + '/option>';
         var selected_country = jQuery('#country option:selected').val();
-        jQuery.each(jQuery.parseJSON(country_zones), function(country_id, country_zones) {
-            if (selected_country == country_id) {
+        jQuery.each(JSON.parse(country_zones), function(country_id, country_zones) {
+            if (selected_country === country_id) {
                 countryHasZones = true;
                 jQuery.each(country_zones, function(zone_id, zone_name) {
-                    countryZones += "<option value='" + zone_id + "'>" + zone_name + "</option>";
+                    countryZones += '<option value="' + zone_id + '">' + zone_name + '<' + '/option>';
                 });
             }
         });
         if (countryHasZones) {
-            jQuery('#state, #stBreak, #stateLabel').hide();
+            jQuery('#state').hide();
             jQuery('#stateZone').html(countryZones);
             jQuery('#stateZone').show();
+            jQuery('#stateZone').next('span.alert').show();
         } else {
+            jQuery('#state').show();
             jQuery('#stateZone').hide();
-            jQuery('#state, #stBreak, #stateLabel').show();
+            jQuery('#stateZone').next('span.alert').hide();
         }
     }
 });
