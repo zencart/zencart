@@ -111,16 +111,13 @@
        <th scope="col" id="seTotalHeading"><?php echo CART_SHIPPING_METHOD_RATES; ?></th>
      </tr>
 <?php
-      if (empty($extra)) {
-        $extra = '';
-      }
       for ($i=0, $n=sizeof($quotes); $i<$n; $i++) {
         $thisquoteid = '';
         if(isset($quotes[$i]['id']) && sizeof($quotes[$i]['methods'])==1 && isset($quotes[$i]['methods'][0]['id'])){
           // simple shipping method
           $thisquoteid = $quotes[$i]['id'].'_'.$quotes[$i]['methods'][0]['id'];
 ?>
-     <tr class="<?php echo $extra; ?>">
+     <tr<?php echo (empty($extra) ? '' : ' class="' . $extra . '"'); ?>>
 <?php
           if(isset($quotes[$i]['error']) && $quotes[$i]['error']){
 ?>
@@ -150,7 +147,7 @@
                 $thisquoteid = $quotes[$i]['id'].'_'.$quotes[$i]['methods'][$j]['id'];
             }
 ?>
-    <tr class="<?php echo $extra; ?>">
+       <tr<?php echo (empty($extra) ? '' : ' class="' . $extra . '"'); ?>>
 <?php
             if(!empty($quotes[$i]['error'])){
 ?>
