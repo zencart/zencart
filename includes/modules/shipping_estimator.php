@@ -156,7 +156,7 @@ if ($_SESSION['cart']->count_contents() > 0) {
     $quotes = $shipping_modules->quote();
 
     // set selections for displaying
-    $selected_country = $order->delivery['country']['id'];
+    $selected_country = (int)$order->delivery['country']['id'];
     $selected_address = $sendto;
     // eo shipping cost
     // check free shipping based on order $total
