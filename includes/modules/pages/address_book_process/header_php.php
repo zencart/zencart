@@ -329,12 +329,9 @@ if (!isset($_GET['delete'])) {
   $state_field_label = ($flag_show_pulldown_states) ? '' : ENTRY_STATE;
 }
 
-
-if (!isset($_GET['delete']) && !isset($_GET['edit'])) {
-  if (zen_count_customer_address_book_entries() >= MAX_ADDRESS_BOOK_ENTRIES) {
-    $messageStack->add_session('addressbook', ERROR_ADDRESS_BOOK_FULL);
-    zen_redirect(zen_href_link(FILENAME_ADDRESS_BOOK, '', 'SSL'));
-  }
+if (!isset($_GET['delete']) && !isset($_GET['edit']) && count(zen_get_customer_address_book_entries($_SESSION['customer_id'])) >= MAX_ADDRESS_BOOK_ENTRIES) {
+  $messageStack->add_session('addressbook', ERROR_ADDRESS_BOOK_FULL);
+  zen_redirect(zen_href_link(FILENAME_ADDRESS_BOOK, '', 'SSL'));
 }
 
 $breadcrumb->add(NAVBAR_TITLE_1, zen_href_link(FILENAME_ACCOUNT, '', 'SSL'));
