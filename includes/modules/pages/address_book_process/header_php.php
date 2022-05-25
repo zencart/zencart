@@ -255,9 +255,7 @@ if (isset($_POST['action']) && (($_POST['action'] == 'process') || ($_POST['acti
 }
 
 if (isset($_GET['edit']) && is_numeric($_GET['edit'])) {
-  $entry_query = "SELECT entry_gender, entry_company, entry_firstname, entry_lastname,
-                         entry_street_address, entry_suburb, entry_postcode, entry_city,
-                         entry_state, entry_zone_id, entry_country_id
+  $entry_query = "SELECT *
                   FROM   " . TABLE_ADDRESS_BOOK . "
                   WHERE  customers_id = :customersID
                   AND    address_book_id = :addressBookID";
