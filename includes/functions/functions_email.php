@@ -579,7 +579,7 @@ use PHPMailer\PHPMailer\SMTP;
        );
     $found = FALSE;
     foreach($filesToTest as $val) {
-      if (file_exists($val)) {
+      if (!empty($val) && file_exists($val)) {
         $template_filename = $val;
         $found = TRUE;
         break;
