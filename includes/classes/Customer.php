@@ -487,7 +487,7 @@ class Customer extends base
     public function getOrderHistory(int $max_number_to_return = 0): array
     {
         $language = $_SESSION['languages_id'];
-        global $db;
+        global $db, $currencies;
         $sql = "SELECT o.orders_id, o.date_purchased, o.delivery_name,
                        o.order_total, o.currency, o.currency_value,
                        o.delivery_country, o.billing_name, o.billing_country,
@@ -532,7 +532,8 @@ class Customer extends base
                 'order_name' => $order_name,
                 'order_country' => $order_country,
                 'orders_status_name' => $result['orders_status_name'],
-                'order_total' => $result['order_total'],
+                'order_total' => $currencies->format($result['order_total'], false, $result['currency']),
+                'order_total_raw' => $result['order_total'],
                 'currency' => $result['currency'],
                 'currency_value' => $result['currency_value'],
                 'language_code' => $result['language_code'],
