@@ -1171,6 +1171,7 @@ function zen_get_attributes_price_factor($price, $special, $factor, $offset)
  */
 function zen_get_attributes_qty_prices_onetime($string, $qty)
 {
+    if (empty($string)) return 0; 
     $attribute_qty = preg_split("/[:,]/", str_replace(' ', '', $string));
     $new_price = 0;
     $size = count($attribute_qty);
