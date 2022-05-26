@@ -6,8 +6,10 @@
  * @version $Id: DrByte 2020 May 20 Modified in v1.5.7 $
  */
 require('includes/application_top.php');
-$show_product_images = true;
-$show_attrib_images = true;
+// To override the $show_* values, see 
+// https://docs.zen-cart.com/user/admin/site_specific_overrides/
+if (!isset($show_product_images)) $show_product_images = true;
+if (!isset($show_attrib_images)) $show_attrib_images = true;
 $img_width = defined('IMAGE_ON_INVOICE_IMAGE_WIDTH') ? (int)IMAGE_ON_INVOICE_IMAGE_WIDTH : '100';
 $attr_img_width = '25';
 /*
@@ -23,7 +25,7 @@ $oID = zen_db_prepare_input($_GET['oID']);
 include DIR_FS_CATALOG . DIR_WS_CLASSES . 'order.php';
 $order = new order($oID);
 $show_including_tax = (DISPLAY_PRICE_WITH_TAX == 'true');
-$show_product_tax = true;
+if (!isset($show_product_tax)) $show_product_tax = true;
 
 // prepare order-status pulldown list
 $orders_statuses = array();
