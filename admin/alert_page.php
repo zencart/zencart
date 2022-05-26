@@ -6,12 +6,16 @@
  */
 require('includes/application_top.php');
 $adminDirectoryExists = $installDirectoryExists = false;
-if (substr(DIR_WS_ADMIN, -7) == '/admin/' || substr(DIR_WS_HTTPS_ADMIN, -7) == '/admin/') {
-    $adminDirectoryExists = true;
-}
-$check_path = dirname($_SERVER['SCRIPT_FILENAME']) . '/../zc_install';
-if (is_dir($check_path)) {
-    $installDirectoryExists = true;
+if (!(defined('ADMIN_BLOCK_WARNING_OVERRIDE') && ADMIN_BLOCK_WARNING_OVERRIDE === '1')) {
+    if (substr(DIR_WS_ADMIN, -7) === '/admin/' || substr(DIR_WS_HTTPS_ADMIN, -7) === '/admin/') {
+        $adminDirectoryExists = true;
+    }
+    if (!(defined('WARN_INSTALL_EXISTENCE') && WARN_INSTALL_EXISTENCE === 'false')) {
+        $check_path = dirname($_SERVER['SCRIPT_FILENAME']) . '/../zc_install';
+        if (is_dir($check_path)) {
+            $installDirectoryExists = true;
+        }
+    }
 }
 if (!$adminDirectoryExists && !$installDirectoryExists) {
     zen_redirect(zen_href_link(FILENAME_DEFAULT));
