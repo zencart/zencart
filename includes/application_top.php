@@ -205,7 +205,7 @@ $capsule->addConnection([
     'username'  => DB_SERVER_USERNAME,
     'password'  => DB_SERVER_PASSWORD,
     'charset'   => DB_CHARSET,
-    'prefix'    => DB_PREFIX,
+    // do not pass prefix; this is included in the table definition
 ]);
 $capsule->setAsGlobal();
 $capsule->bootEloquent();
