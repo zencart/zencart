@@ -138,7 +138,7 @@ function zen_get_box_id(string $box_id)
  */
 function zen_get_buy_now_button($product_id, string $buy_now_link, $additional_link = false)
 {
-    global $db, $zco_notifier;
+    global $db, $zco_notifier, $current_page_base;
 
 // show case only supercedes all other settings
     if (STORE_STATUS != '0') {
