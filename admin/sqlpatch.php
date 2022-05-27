@@ -84,6 +84,11 @@ function executeSql($lines, $database, $table_prefix = '') {
      $no_semi_line = rtrim($line, ';');
      $param = preg_split('/\s+/', $no_semi_line);
 
+     // Preset entries 0..5 if not set
+     for ($i = 0; $i <= 13; $i++) {
+        if (!isset($param[$i])) $param[$i] = ''; 
+     }
+
     // The following command checks to see if we're asking for a block of commands to be run at once.
     // Syntax: #NEXT_X_ROWS_AS_ONE_COMMAND:6     for running the next 6 commands together (commands denoted by a ;)
     if (substr($line, 0, 28) == '#NEXT_X_ROWS_AS_ONE_COMMAND:') {
